@@ -39,6 +39,9 @@
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/gfx_hud.h"
+#include "portsim/sim/gfx_scene.h"
+#include "portsim/sim/gfx_text.h"
 
 namespace portsim {
 
@@ -193,8 +196,10 @@ static int decode_pcx8(Gfx &g, const std::vector<uint8_t> &data, int32_t ofs, in
 // keeps the cache's other entries, which the backend does not model (reported below).
 int load_image(Gfx &g, Ctx &ctx, uint32_t name_va, uint32_t pal, int32_t ofs, int32_t count, uint32_t flags, Image8 &img) {
   if (name_va == 0) return 3;
+  return load_image_named(g, ctx, vstring(ctx.mem, name_va), pal, ofs, count, flags, img);
+}
+int load_image_named(Gfx &g, Ctx &ctx, std::string name, uint32_t pal, int32_t ofs, int32_t count, uint32_t flags, Image8 &img) {
   if ((flags & 1) && pal != 0) return 3;
-  std::string name = vstring(ctx.mem, name_va);
   bool dot = false;
   for (size_t q = name.size(); q > 0; --q)
     if (name[q] == '.') dot = true;   // name[size] is the NUL: never a '.'
@@ -344,17 +349,14 @@ void copy8(const Image8 &s, Surface16 &d, int32_t x, int32_t y, int32_t w, int32
 static void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   auto it = g.images.find(a[0]);
-  if (it == g.images.end() || a[1] != g.root_va(ctx)) {
+  if (it == g.images.end() || a[1] != g.root_va(ctx) || a[4] != a[8] || a[5] != a[9]) {
+    // roadmap S3.6: a 16-bit source, another destination or a scaled rectangle (gfx_hud.cpp)
+    if (gfxh::surface_blit3(g, ctx, a)) return;
     g.unsup("Surface_blit3: a source or destination the backend does not model");
     return;
   }
   const int32_t x = static_cast<int32_t>(a[2]), y = static_cast<int32_t>(a[3]), w = static_cast<int32_t>(a[4]),
-                h = static_cast<int32_t>(a[5]), x2 = static_cast<int32_t>(a[6]), y2 = static_cast<int32_t>(a[7]),
-                w2 = static_cast<int32_t>(a[8]), h2 = static_cast<int32_t>(a[9]);
-  if (w != w2 || h != h2) {
-    g.unsup("Surface_blit3: a scaled blit");
-    return;
-  }
+                h = static_cast<int32_t>(a[5]), x2 = static_cast<int32_t>(a[6]), y2 = static_cast<int32_t>(a[7]);
   copy8(it->second, g.root, x, y, w, h, x2, y2);
   g.note_root_write(x2, y2, w, h);
 }
@@ -366,11 +368,9 @@ static void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   // the display's blit scale (Display::setScale, gfx_prim_fill.cpp; roadmap S2.4): drawB's blitters scale by nx / den and
   // ny / den, which the backend does not model
-  const int32_t *scale = gfxf::blit_scale(g);
-  if (scale[0] != 1 || scale[1] != 1 || scale[2] != 1) {
-    g.unsup("Image_draw: a display scale other than (1, 1, 1)");
-    return;
-  }
+  // roadmap S3.5: another scale, or a sprite whose palette word the scene family holds, is the scene family's (drawB under
+  // the display scale, gfx_scene.cpp gfxs::image_draw)
+  if (gfxs::image_draw(g, ctx, a)) return;
   if (!gfx_is_local_key(a[0]) && ctx.mem.load<uint32_t>(a[0] + 8) != 0) {
     g.unsup("Image_draw: the load arm (a file name at +8)");
     return;
@@ -420,13 +420,12 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
     return;
   }
   if (text.empty()) return;
+  // roadmap S3.7: markup, tabs and run-palette colours are the text family's (gfx_text.cpp gfxt::draw_string)
+  bool rich = !(colour & 0x80000000u);
   for (char c : text)
-    if (c == '{' || c == '}' || c == '[' || c == ']' || c == '$' || c == '=' || c == '^' || c == '\t') {
-      g.unsup(std::string(who) + ": markup or a tab in the text");
-      return;
-    }
-  if (!(colour & 0x80000000u)) {
-    g.unsup(std::string(who) + ": a palette colour index");
+    if (c == '{' || c == '}' || c == '[' || c == ']' || c == '$' || c == '=' || c == '^' || c == '\t') rich = true;
+  if (rich) {
+    gfxt::draw_string(g, ctx, text, x0, y0, colour, centre, who);
     return;
   }
   const uint32_t font = g.fonts[0];
@@ -483,6 +482,11 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   int32_t half = static_cast<int32_t>(a[0]);
   if (half < w) half = w;
   if (half > sub32(0x320, w)) half = sub32(0x320, w);
+  // roadmap S3.8: the bar is Terrain::drawLine through the overlay body (terrain_overlay.h); without a GL context it draws nothing
+  if (GfxBody bar = gfxb::find_body("drawMapLine")) {
+    const uint32_t la[7] = {static_cast<uint32_t>(sub32(half, w)), a[1], static_cast<uint32_t>(add32(half, w)), a[1], 0x80000000u, 0xau, 5u};
+    bar(g, ctx, la, 7);
+  }
   const uint32_t args[4] = {text, static_cast<uint32_t>(half), static_cast<uint32_t>(sub32(static_cast<int32_t>(a[1]), 5)),
                             0x80007fffu};
   draw_text(g, ctx, args, true, "drawPanelBackdrop");
@@ -499,6 +503,7 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (SG_NEGCTL(g_negctl_gfx) == 4) return;
   g.back.px = g.root.px;
+  gfxh::after_present(g, ctx);
   g.back_terrain = g.root_terrain;
   std::pair<GfxRefreshHook, void *> h{nullptr, nullptr};
   {
@@ -596,7 +601,7 @@ static void b_cam_setup(Gfx &g, Ctx &ctx, const uint32_t *, int) {
 // cells 0..15 (four per course kind); TacksandArrow -> four columns c of four 0x14 x 0x18 cells at (0x32 c, 0x32 r) into cells
 // 16 + 4 c + r; TacksandArrow_A -> the same cells of g_sprites5a4138. WideRow: cells at x = 2 + 0xc8 i, y 0, the first two
 // w0 x h0, the others 0xb6 x h1, kind 1, trim 1.
-static void b_iart_images(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+[[maybe_unused]] static void b_iart_images(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c95f4);
   const uint32_t plates = state_va(ctx, &GameState::g_sprites53c570), masks = state_va(ctx, &GameState::g_sprites5a4138);
   Image8 img;
@@ -658,7 +663,9 @@ const std::array<uint16_t, 0x8000> &shade_lut() {
 // jgld Sprite::drawG -> draw16_10028630 (re/match/jgld_blit16b.cpp) at scale 1: bytes 0xff transparent, 0xf8 replace the
 // destination word w by lut[w], the others the palette's word
 void draw_g16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
-  const auto &lut = shade_lut();
+  draw_g16_lut(g, s, d, x, y, shade_lut().data(), shade_lut().size());
+}
+void draw_g16_lut(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, const uint16_t *lut, size_t lut_n) {
   const int32_t l = std::max(x, 0), t = std::max(y, 0), r = std::min(x + s.w, d.w), b = std::min(y + s.h, d.h);
   for (int32_t yy = t; yy < b; ++yy)
     for (int32_t xx = l; xx < r; ++xx) {
@@ -666,7 +673,7 @@ void draw_g16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
       uint16_t &w = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
       if (c >= 0xff) continue;
       if (c == 0xf8 && SG_NEGCTL(g_negctl_gfx) != 6) {
-        if (w >= 0x8000) {
+        if (w >= lut_n) {
           g.unsup("blitPanel: a destination word above the RGB555 range");
           continue;
         }
@@ -817,36 +824,7 @@ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, u
   if (acc > 0 && y <= 0x248) draw_line(st, len);
 }
 
-// drawWindow(x, y, p3, mode) (c3ei.cpp DrawWindow_re), the drawing after the window height H the port already stored
-// (g_value587ea0): modelled for sel == -1 (no golfer) and mode -2: drawFrameR3(x - 8, y - 8, 0x1a0, H + 0x10, 1), then
-// setDrawTarget(Root, g_font51b360, 0, 0, 0) and drawMessageBuffer(0x63, x + 0xc, y + 0x10, 0x80007fff). With a golfer or
-// an icon selected (sel != -1) the simfoto family's drawWindow.golfer draws (roadmap S2.11; the fifth slot is the unclamped
-// window height tick's drawWindow passes)
-static void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
-  g.ensure_root(ctx);
-  const int32_t sel = ctx.gs().f_w_4c2e00[2];
-  const int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), mode = static_cast<int32_t>(a[3]);
-  if (sel != -1) {   // a golfer or an icon selected: the simfoto family's body (roadmap S2.11, gfx_simfoto.cpp)
-    if (GfxBody b = find_body("drawWindow.golfer")) {
-      uint32_t v[12] = {};
-      for (int i = 0; i < 5; ++i) v[i] = a[i];
-      b(g, ctx, v, 5);
-    } else {
-      g.unsup("drawWindow: a golfer or an icon selected");
-    }
-    return;
-  }
-  if (mode != -2) {
-    g.unsup("drawWindow: a thought or a frame other than drawFrameR3");
-    return;
-  }
-  const uint32_t font = state_va(ctx, &GameState::g_font51b360);
-  if (ctx.mem.load<uint32_t>(font + 4) != 0) g.fonts[0] = font;
-  g.fonts[1] = g.fonts[2] = g.fonts[3] = 0;
-  const int32_t H = ctx.gs().g_value587ea0;
-  draw_frame_r3(g, ctx, sub32(x, 8), sub32(y, 8), 0x1a0, add32(H, 0x10));
-  draw_message_buffer(g, ctx, 0x63, add32(x, 0xc), add32(y, 0x10), 0x80007fffu);
-}
+// drawWindow(x, y, p3, mode): the text family's drawWindow.frame (gfx_text.cpp) is its only body (roadmap S3.13)
 
 const GfxBodyDef kBodies[] = {
     {"showTitleScreen", b_show_title_screen},     {"loadImage", b_load_image},
@@ -855,8 +833,7 @@ const GfxBodyDef kBodies[] = {
     {"drawCenteredText", b_draw_centered_text},   {"drawText4049d0", b_draw_text_4049d0},
     {"Window::refreshFull", b_refresh_full},      {"Surface_fillRegion", b_fill_region},
     {"Surface_stretchBlit", b_stretch_blit},      {"courseActionMenu.setup", b_cam_setup},
-    {"loadInterfaceArt.images", b_iart_images},
-    {"drawPanelBackdrop", b_panel_backdrop},    {"drawWindow.frame", b_draw_window},
+    {"drawPanelBackdrop", b_panel_backdrop},
 };
 
 // Drops that draw nothing (pacing, audio, input, files, the window tree's modal stack): not reported as unsupported drawing.
@@ -979,6 +956,14 @@ void gfx_progress(Ctx &ctx, uint32_t pos) {
     }
     ++g->snap_next;
   }
+}
+
+bool gfx_take_value(Ctx &ctx, int32_t &v) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->has_value) return false;
+  g->has_value = false;
+  v = g->value;
+  return true;
 }
 
 void gfx_end_of_input(Ctx &ctx) {

@@ -325,9 +325,11 @@ def test_image_draw_at_scale_1_draws(glib):
     assert img[10:12, 10:14].tolist() == [[0x7C00] * 4] * 2, log
 
 
-def test_image_draw_at_another_scale_is_unsupported(glib):
-    img, log = _scaled_draw(glib, (1, 1, 5))
-    assert "Image_draw: a display scale other than (1, 1, 1)" in log and not img.any()
+def test_image_draw_at_another_scale_is_drawn_by_the_scene_family(glib):
+    # S3.5: a scale other than (1, 1, 1) is drawB under that scale (gfxs::image_draw), no longer reported; at (1, 1, 5) the
+    # 4 x 2 image scales to (int)(4 * 0.2) = 0 columns, so the magnifying (2, 2, 1) is the one that leaves pixels
+    img, log = _scaled_draw(glib, (2, 2, 1))
+    assert "Image_draw: a display scale other than (1, 1, 1)" not in log and img.any()
 
 
 def test_set_scale_negctl_4_red(glib):
@@ -417,8 +419,9 @@ def test_routing_map_with_holes_differs_only_in_the_hole_overlay(keys_run):
     assert 0 <= r["total"] <= K_DLG_R_BOUND, r
     x0, y0, x1, y1 = r["bbox"]
     assert 0x184 <= x0 and x1 <= 0x1e0 and 0x160 <= y0 and y1 <= 0x1a0, r   # the two holes' map area
-    for drop in ("showRoutingMapScreen.teeSprite", "showRoutingMapScreen.line", "showRoutingMapScreen.flagSprite"):
+    for drop in ("showRoutingMapScreen.teeSprite", "showRoutingMapScreen.flagSprite"):
         assert f"no body: {drop}" in keys_run.log, drop
+    assert "handled\tlineTo\t" in keys_run.log   # roadmap S3.8: the hole line through setLinePoint / lineTo
 
 
 def test_screens_bodies_handled(route_run, keys_run):

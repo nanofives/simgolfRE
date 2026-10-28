@@ -9,6 +9,10 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G10, app priority in test runs, 2026-10-28: Normal for the app only.** The simgolf_port.exe process that the app tests
+  launch (app_drive.launch) runs at NORMAL_PRIORITY_CLASS, as an Explorer launch gives it, switchable (SG_APP_PRIORITY=inherit restores
+  the test slot's class); pytest and every other test stay at BelowNormal under the workspace test-slot rule.
+
 - **G9, merge order and the play test, 2026-10-27: S3 before S4, no preview build.** The S3 resubmission (I12) merges before the
   S4 audio resubmission (I11) so the play test (G8) comes sooner; Mariano plays only the gated, merged build (no ungated preview of S7 + S3).
 

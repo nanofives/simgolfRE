@@ -26,6 +26,7 @@
 #include <string>
 
 #include "gfx_body.h"
+#include "portsim/sim/gfx_text.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 
@@ -43,6 +44,7 @@ int mode() { return SG_NEGCTL(g_negctl_gfx_prim_text); }
 
 void b_set_quad(Gfx &g, Ctx &, const uint32_t *a, int) {
   st(g).quad[a[0]] = {mode() == 1 ? 0x80000000u : a[1], a[2], a[3], a[4]};
+  gfxt::set_quad(g, a[0], 0, st(g).quad[a[0]][0], a[2], a[3], a[4]);   // roadmap S3.7
 }
 
 }  // namespace

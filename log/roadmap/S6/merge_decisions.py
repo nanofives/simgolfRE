@@ -38,6 +38,13 @@ def main():
         out[r["id"]] = dict(r, verified="first pass (model notes, port source)")
     for r in c:
         out[r["id"]] = dict(r, verified="disassembly + Unicorn (S6.6)")
+    # S3 wave 2 (roadmap S3.4 / S3.4b, merged by integrator I6): the tropical-tree fault, decision D5 option a
+    h3, d = read(S6 / "s3_4b_decisions.tsv")
+    assert h3 == h6, h3
+    for r in d:
+        assert r["id"] not in out, r["id"]
+        out[r["id"]] = dict(r, verified="stock-game measurement (S3.4 / S3.4b)")
+    d5_s3 = {r["id"] for r in d}
     cols = list(h6) + ["verified", "decision", "profile_fixed"]
     rows = sorted(out.values(), key=lambda r: key(r["id"]))
     # G3 (Mariano, re/roadmap/DECISIONS_PENDING.md): the two hangs become fix, the other 24 ask rows stay keep.
@@ -49,11 +56,13 @@ def main():
         elif r["recommendation"] == "ask":
             r.update(recommendation="keep", decision="G3 keep")
         elif r["recommendation"] == "fix":
-            r["decision"] = "D5 fix (wave 1)"
+            r["decision"] = "D5 fix (S3 wave 2)" if r["id"] in d5_s3 else "D5 fix (wave 1)"
         if r["recommendation"] == "fix":
             r["switch_state"] = "implemented"
         r["profile_fixed"] = "yes" if r["recommendation"] == "fix" else "no"
-    dest = ROOT / "re" / "port" / "defect_decisions.tsv"
+    # --root <dir>: write <dir>/re/port/defect_decisions.tsv (an integrator's mirror; default the repo this script lives in)
+    root = pathlib.Path(sys.argv[sys.argv.index("--root") + 1]) if "--root" in sys.argv else ROOT
+    dest = root / "re" / "port" / "defect_decisions.tsv"
     if "--write" in sys.argv:
         with open(dest, "w", newline="", encoding="utf-8") as fh:
             fh.write("# re/port/defect_decisions.tsv: every defect of re/analysis/data/model_defects.md and every non-PASS row of "

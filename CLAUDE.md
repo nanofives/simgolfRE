@@ -1529,6 +1529,25 @@ snapshot (U-1301), NULL tile / pivot paths (U-1303), vacuous G2 on 4 localRender
 through sg_gl_*; LiveTerrain's draw passes into the back buffer are step S3.2. U-1120 resolved (S3.3): a boot run with to_end
 ended in its last frame's Blocking pump with no input left, NeedInput (a MissingResource) surfaced as -11 and pending snapshots
 were never taken; run_frames now takes them there (cov_a_champ, championship, cov_k3_career: 22 census rows run).
+Roadmap S3 wave 2, FLIC sheet cells (2026-10-24, steps S3.4 / S3.4b, notes log/roadmap/S3/4_notes.md, 4b_notes.md, U-1330..U-1339): module
+flic (port/src/sim/flic.cpp, portsim/sim/flic.h) decodes the user's .flc files (GameFiles) into loadFlic's sheet cells: cropSprite result,
+SpriteRef geometry +0x10 .. +0x28, jgld Sprite words, pixel bytes, column and sequence counts, slot and shadow palettes; menu.cpp's
+load_flic hands them to an attached gfx backend through flic::sheet_to_gfx (nothing written into the GameState). Oracle: the original's
+sheet memory after every loadFlic (re/tools/flic_cells_rec.py + re/frida/js/flic_cells.js, pinned scenarios, hooks off): 443 / 443
+entries of menu_flics.inc's tables equal for Parkland, Links, Desert and Tropical, 1,698 distinct loads (148,926 cells, boot loads
+included) equal on x64 and Win32; controls (delta chunk skipped, palette chunk ignored, frames reversed, 0xfe drawn: thin, U-1334) RED.
+FINDING IN THE STOCK GAME (U-1330, settles U-1701): the exe names `trees\Tropic\Tree Cerc` / `Tree Drac` (space; v1.00 too) while the
+install, the v1.03 patch and the cab hold Tree_Cerc / Tree_Drac, so the original dies at loadWorldAssets' first tropical tree load
+(flicOpenStream returns 0, then Image_draw reads 0x8 at 0x00473e67) on every tropical course of the shipped install
+(log/roadmap/S3/4_rec_hawaii_stock.log, instances\s3_4); copies under the exe's names (instance only) make all 114 tropical loads
+complete. Decision D5 option a (S3.4b): defect switch flic.treeAliasNames, default 1 = Fault{8, 4} at that load as the original, 0
+(profile fixed) = flic::resolve_name returns the underscore names; it acts in load_flic's column path with or without a backend,
+since the columns decide later cell allocations. Open: U-1332 (the palette a sheet cell is drawn with: sprite-queue step S3.5), U-1333 /
+U-1334 / U-1335 (evidence limits), U-1338 (other missing main files still run on with status 1; no shipped load reaches one).
+Re-merged with S3 waves 4 / 5 (roadmap S3.11): the defect row is D53 of re/port/defect_decisions.tsv (75 rows, 13 fix / 62
+keep, its input log/roadmap/S6/s3_4b_decisions.tsv) and profile fixed has 9 switches. test_menu's emulated original faults like the stock game (Image_draw on loadFlic's NULL stream reads 0x8): its stock tropical cases are
+pinned against that Fault at flic.treeAliasNames = 1 and `_alias` cases (the spaced copies) run the port at 0; test_terrain_live runs
+S3.2's hawaii recording (made with the copies) at 0 and checks the Fault at 1 (roadmap S3.4c).
 Roadmap S3 wave 3, the terrain in the frame (2026-10-24/25, step S3.2, notes log/roadmap/S3/2_notes.md, U-1310..): the
 original's GL draws into the ROOT surface (initTerrain gives Terrain::initSystem the DC of the jgld surface at
 [g_rootWindow + 0x278]; that DIB's memory row 0 is the picture's top row, so GlRaster's buffer and gfx.root are the same
@@ -1547,6 +1566,120 @@ RED. Segments 205 / 205 and boot 58 / 2 / 1 unchanged (the backend writes no Gam
 instance (U-0683 pattern): kill the own PID and retry. Open: U-1310 (rasteriser fixed at 800 x 600), U-1311 (the back surface's
 depth inferred from results), U-1312 (pathUpdateRender never runs organically), U-1313 (one organic strip direction framed),
 U-1315 (two title rows keep the terrain flag at 1).
+Roadmap S3.6, HUD panels and the in-game Surface_blit3 (2026-10-25, notes log/roadmap/S3/6_notes.md, U-1350..U-1359): two
+graphics-backend families. `pixel` (gfx_pixel.cpp): Widget_writePixel (the low word, nothing outside the surface) and
+Widget_fillRect (jgld line16: both ends drawn, a zero-length run draws nothing); the census rows after an in-game frame
+reported Widget_writePixel only because a run's unsupported list is cumulative. `hud` (gfx_hud.cpp): Surface_blit3's 16-bit
+sources, family surfaces and nearest-pixel magnification; loadInterfaceArt(1)'s whole image half (48 generated tables from
+c3fv.cpp, `log/roadmap/S3/6_gen_iart.py --check`) and loadWorldAssets' build-palette cuts, checked against the original's
+SpriteRef records in segment start images (>1,000 per scenario, 0 differ); Surface_blit2 / drawScaled2 (Sprite::drawG with
+g_halfBrightLut), Surface_drawScaled under a display scale (jgld draw16_1001bc40: float scale, 16.16 steps, the x-mirrored
+body), drawFrameR3 / S2, drawTerrainToolbar, the radial menu, showInfoCursorPanel, drawAmenitiesPanel, drawGolferActionPanel and
+drawMatchScoreboard (names and numbers from the registered buildGolferName / appendNumber over a saved and restored GameState).
+The golfer list and the employee detail panel (drawEmployeeViewPanel / drawEmployeeDetailPanel, S3.6b) are drawn from
+c3fb.cpp / c3fc.cpp over the state commands_layout.inc hands over before its own writes (the detail panel's scroll step and
+this frame's list are recomputed); names come through g_textBuffer with the buffer put back. No pinned frame holds the golfer
+list or a selected employee, so their evidence is an EMULATOR CALL ORACLE (test_gfx_hud.py, SG_EMU_ORACLE=1): the original
+functions under Unicorn with every drawing callee a recorder give the same calls (callee, image, position, colour, text) as
+the port's `gfx_hud.recordPanels` log on 240 varied segment start images per panel; the default suite pins the port's log
+digests; controls 11..15 RED. The detail panel's employee figures (addSprite) and its circle (drawCircle) go to S3.5 / S3.8. GATE MEASURE: framegate --no-live (no terrain; S3.2's terrain is judged under G2) and no scene sprites, so `log/roadmap/S3/6_hudgate.py` runs framegate twice with the test-only root fill
+SG_GFX_HUD_BGFILL=0x0000 / 0x7fff after every present; a pixel equal in both was drawn opaquely and is compared with the
+reference per HUD region. Hover tips are reported as `tooltip:` (S3.7 / S3.8) and the sprite queue's draws as `addSprite:`
+(S3.5).
+Roadmap S3.5, scene sprites (2026-10-25, log/roadmap/S3/5_notes.md, 5_merge.md, U-1340..U-1348): body family `scene`
+(port/src/sim/gfx_scene.cpp / portsim/sim/gfx_scene.h, tests port/test/test_gfx_scene.py) draws the sprite queue
+(drawQueuedSprite.draw / .label from tick_render.inc, renderSpriteQueue.end), Sprite_draw, Surface_drawSprite and the scaled
+Image_draw path (gfx.cpp hands them over through gfxs::image_draw), plus the palette objects loadWorldAssets loads
+(`loadWorldAssets.palettes`) and composeGolferSprite's palette layers. The jgld bodies behind them: Sprite vtable 0x1011d380 slots
++0x6c drawG, +0x78 blt16a (plane blit through build16BitColorTable's five blocks), +0x4c blt16c, +0x94 drawAlpha (15 bodies by alpha
+window, programs generated from re/match/jgld_blit16.cpp), +0x44 drawB, all on one 16.16 scaling skeleton under the display scale
+(drawQueuedSprite sets (s, s, d) and restores (zoom, zoom, 4); P6 sets (1, 1, 1)). U-1332 resolved: blt16a / blt16c store the
+key's palette word in the Sprite and never restore it, so a sheet cell draws with its queue entry's g_images palette. Evidence: the
+ORIGINAL jgld bodies in Unicorn on constructed sprites (40 cases, x64 = Win32), sandbox_basic's three checkpoints exact on more than
+50,000 scene px each (one-level only where a blend meets the terrain, U-1347), controls 5 of 6 RED (5, palette-word persistence, is
+blind on the pinned scenes). Cells drawn with no backend sprite are cells whose cut kept nothing; the original's records agree
+(section 6). buildSceneSprites' alpha now reaches the backend as float bits (tick_scene.inc). The exact sprite-pixel oracle for every
+checkpoint, the original's root at renderSpriteQueue's return (5_tools/scene_rec.py), needs a game run and has not been recorded.
+Round 2: the exact oracle ran (5_tools/scene_rec.py on instance s3_5, hooks off: the original's root at
+every renderSpriteQueue return, 66 scenarios SAME as det_b, 585 copies in port/corpus/scene/): 550 of 582 checkpoints equal in every scene
+pixel up to one level, the rest overlay lines the port does not draw and one missing standing figure (U-1349). drawAlpha on the root
+draws the flag-set member of each window's pair (555 masks; round 1 had the 565 members); Surface_drawSprite has one body, gfx_reports.cpp's,
+which hands gfxs::surface_draw_sprite every case outside its quarter band; bodies composeGolferSprite and addSprite and Image_draw's mask
+palette were added for S2.10; the hole flag and the amenities in gfx_hud.cpp draw through gfxs::add_sprite.
+Roadmap S3.5b, S3.5 rebased (2026-10-25, log/roadmap/S3/5b_notes.md, 5b_merge.md, U-1385..U-1387): S3.5's scene family on the
+committed tree plus S3 waves 2-4 (5b_mirror.py), the exact queue oracle re-measured on all 585 recorded checkpoints
+(`5_sprite_gate.py --queue --all`, port/corpus/scene): 584 have a port copy (cov_r_s2_screens end stops the port's boot), 47,950,391
+scene px judged, 29 checkpoints with pixels beyond one level (was 32): the five cov_r_bio rows that were unjudged in the S3.5 base
+now run and hold only the golfer-selection ring (S3.8's), the others are rings, path lines and isolated pixels under blends. The
+standing figure the port missed (cov_k1_animals bought / menu2, cov_b_inject end) is placeAnimal's queue entry
+(`enqueueSprite(sx, sy, sy, 0x1e, 0x28, cell, 4, (n + 0x9c) | 0x100)`, an animal record drawn with the golfer palette path),
+dropped before and now queued for an attached backend (golfers_world.inc): 187 / 216 / 92 px beyond one level -> 0, control 13
+(an entry past the golfer table draws nothing) RED; test_standing_figure_equals_the_original / _negctl_red in test_gfx_scene.py.
+Roadmap S3.7, the marked-up HUD text, the ticker and the hover tips (2026-10-25, notes log/roadmap/S3/7_notes.md, U-1360..U-1368):
+body family `text` (port/src/sim/gfx_text.cpp). The root text object (the Image at g_rootWindow + 0x274) has markup ON from
+Image_ctor (f_cfg_4e4210 = 1), so every frame text is drawRichText's: the family ports the scanners, drawTextRun (style fonts and
+colours, baseline, shadow run, tab stops of 30, '_', the run palette's entry 1) and drawMarkupRun / Text_put, and the core's
+draw_text_string hands it every text with a markup character, a tab or a palette colour. drawWindow is the family's whole body
+(golfer portrait, picture windows, the slide-in, drawFrameR3 / S2 / drawWindowFrame, the centring) with drawMessageBuffer; the
+TICKER had never reached the backend (commands.cpp draw_window_effect handed nothing over) and now does. The HUD panels' hover tips
+(showInfoCursorPanel's tool tip, transcribed from the instructions, with its theme text, and slot tip; drawTerrainToolbar's,
+drawGolferActionPanel's, the employee panels', drawAmenitiesPanel's tip and building row) are drawn through S3.6's gfx_hud.cpp;
+their drawMapLine bars are S3.8's. Text_put became a measuring drop (gfx_take_value: with a backend the frame code gets the width
+that places the thought labels' bars). EVIDENCE: an emulator oracle down to a fake jgld surface (setFont / colours / draws / end)
+over the ORIGINAL text functions (391 random marked-up cases), drawWindow (300) and the six panels' tips (60 per kind), all equal;
+goldens in the default suite; the opaque two-fill frame measure over every pinned scenario: no in-game checkpoint keeps a bad
+pixel the family drew (the 9 rows with any are other steps' content over or under it). The image cursor exists only over an EditBox
+and the widget tooltips only through Tooltip::show: neither is on a pinned frame (U-1360, settles U-1069's cursor / tooltip parts);
+drawWindow's and the tips' texts never take drawTextSurface's shadow (g_font51b360 H 15, g_fontRef_519fd8 H 10), U-1072 resolved.
+Controls: 10 RED on the oracles, 5 on frames.
+Roadmap S3.8, overlay lines (2026-10-25, notes log/roadmap/S3/8_notes.md, U-1370..U-1377): Terrain::drawLine is the only overlay
+primitive the exe reaches (Terrain::drawCircle, both splines and renderTile have no caller), and Terrain::initGL leaves
+GL_LINE_SMOOTH on with GL_NICEST, so the lines are antialiased. Measured with glreplay.exe on synthetic drawLine sequences: coverage
+at a pixel centre = clamp(w / 2 + 0.5 - |n|) * clamp(t + 0.5) * clamp(L - t + 0.5), the segment clipped to the viewport then its
+ends snapped by U-1076's fixed-point setup, width clamped to 10, a zero-length line draws nothing, alpha * coverage blended and
+dithered as the triangles (probes: 108 of 74,466 changed pixels differ; footprint-edge pixels under 0.13 coverage, U-1370). Module
+`terrain_overlay` (overlay.rasterLine, overlay.logStart / logWrite) and the bodies drawMapLine, drawMinimapSegment, setLinePoint,
+lineTo, drawCircle in the terrain family (the line point in the overlay's state; the GL context, flip byte and screen size from the
+Terrain object at gTerrain; no context = nothing drawn); drawPanelBackdrop's bar and the routing map's hole line call them. The
+port's drawLine calls equal the recorded GL streams in count, width, colour and alpha (cov_b_holes18 3,362; cov_b_paths 3,221 + 13
+tooltip bars S3.7 draws); in the census the line pixels are 109,292 of 117,446 equal to the original, judged ones 0.36 % one level.
+Roadmap S3.11, the S3 resubmission (2026-10-25, notes log/roadmap/S3/11_notes.md, merge log/roadmap/S3/MERGE_w5.md): S3 waves 2
+(S3.4 / S3.4b / S3.4c), 4 (S3.6 / S3.6b) and 5 (S3.5 / S3.5b) and S3.7 / S3.8 assembled as ONE tree on HEAD bbc9072f by
+log/roadmap/S3/11_assemble.py (every edit from the steps' own edit lists, each anchor exactly once, `--root <dir>` applies them to
+another tree). One interaction no step's gate ran: S3.5's resolution of U-1332 (a sheet cell draws with its queue entry's palette
+object) failed S3.4's test_flic hook-up test, which drew a cell with no mask; the test now passes the slot palette as Image_draw's mask
+through the TEST-ONLY body gfx_scene.setPalette (11_edits.py). Gates on the tree: port suite x64 68 / 69 files (test_boot's known
+cov_r_s2_screens stop), Win32 S3 files 25 / 26 (test_tick's baseline failure), segments 205 / 205 x64 + Win32 with 0 digests changed,
+boot rows unchanged on both, gfx.check 0 duplicates, census 698 rows PASS 91 (was 87, none lost, no row with more differing px),
+S3.2 terrain verdict 527 / 527 unchanged.
+Roadmap S3.13, the I9 refusal fixed (2026-10-27, notes log/roadmap/S3/13_notes.md, merge log/roadmap/S3/MERGE_w5b.md): integrator I9
+refused S3.11's resubmission on 78ffb06d because S3.7's text family and S2 waves 6 / 7 drew the same things in three places no gate had
+run together. One body per name now. drawStringRightAt is the text family's (S3.7: drawRichText at x - drawMarkupRun, the original's
+pair); the `results` twin and its control are gone. drawWindow.frame is the text family's whole drawWindow, and it calls S2.11's
+held-pixel probe (gfx_simfoto.cpp's exported window_probe / head_probe) for sel >= 0 where S2.11's golfer body ran it, so
+`drawWindow.golfer` is gone; simfoto controls 2..4 and results 1 are text 12..15 (simfoto 4 had read BLIND in I9, text 14 reads RED).
+Two duplicate draws caused I9's dialogs2 and text-frame failures and the skill dialog's 8 px: since S3.7 draw_window_effect draws the
+window, so S2.11's second draw_window_gfx in tickMessage drew the ticker twice, and S2.10's drawWindow.frame drop after
+showCharacterIntro's draw_window_effect drew the intro window again at the ticker's default (0xf0, -8); showCharacterIntro now passes
+its own position (0xc8, 0x172). integrator.py's switch-evidence map gained flic.treeAliasNames (test_defects_flic.py). The edits are
+log/roadmap/S3/13_edits.py (36 anchored edits in 9 files, generated by 13_make_edits.py from the fixed mirror), applied after
+11_assemble.py's steps by 13_assemble.py. Gates on port/build/S3_13: gfx.check 0 duplicates / 131 bodies, static 614 / 2, port suite
+x64 75 / 75 files, Win32 75 files 61 PASS: the known 8 files / 20 tests, 5 x64-only files on the Win32 harness, test_fttext's 2 host-GDI metric tests (U-1393; they pass and fail with the host on x64 and in I9's mirror too); all 9 I9 clash files PASS, segments 205 / 205 x64 + Win32 + freetype with 0 digests changed, boot 70 rows 66 / 2 / 2 on
+all three equal to I9, chains 342 / 342, ledger 1 row without a cause (as at I7), census 698 rows PASS 100 (59 rows with fewer differing
+px than I9, none with more), S3.2 terrain 527 PASS. Process: a background shell's 2-hour limit stopped the suite loop while a pytest ran;
+the pytest finished and wrote its result, but its loop must be restarted (13_suite_rest.sh FROM=<file>), and long suites run detached.
+S3.14 (2026-10-27, notes log/roadmap/S3/14_notes.md, edits 14_edits.py applied by 14_assemble.py after 13_assemble.py): I12 found
+test_app_ingame and test_app_live failing on this tree where d66aa755 passes. Three causes where S3's frame meets S7's app:
+(1) once the course animates every in-game frame presents, so an app session's last present lies in its final frame, and
+run_frames' boot last-frame branch took pending gfx snapshots only on NeedInput; it now takes them when that frame runs to its end
+(U-1394, control tick.frame 12). (2) The test-slot hook runs pytest at BELOW_NORMAL and the app inherited it, which put the host's
+ABOVE_NORMAL sim thread below every normal-priority thread: under 10 busy processes its frame waits ended 1-5 s late, and
+d66aa755 itself failed with I12's `frame 40 never came (at 0)`; app_drive.launch now starts the app in the Normal class (U-1395,
+SG_APP_PRIORITY=inherit is the control, RED on pacing under load). (3) The drivers took 1.5 s without a present as the title menu,
+but S3's boot loading screens are 431-776 ms apart (flic sheets decoded for the backend; 117-174 ms at d66aa755) and a click posted
+among them goes to the boot's load pump; app_replay._to_monterey and test_app_live._to_title now wait for the title menu's frame
+(app_replay.title_menu_hash = the pinned sandbox_basic `menu` reference, U-1396). The app files' pacing gates measure the host:
+run them one file per process at low load.
 Phase 7 defect decisions, section S6 of the roadmap orchestrator (2026-10-24, notes log/roadmap/S6/, U-1550..U-1597): `re/port/defect_decisions.tsv`
 holds every defect of model_defects.md (#1-#52, some split by arm) and every non-PASS row of divergences.tsv (grouped by cause) with its class
 (hang / fault / overrun-silent / wrong-value / dead-state / port-gap / harmless), six effect columns (save / balance / sim / frame / hang / fault),

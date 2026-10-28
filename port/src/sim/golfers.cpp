@@ -10,6 +10,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/bridge.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
 

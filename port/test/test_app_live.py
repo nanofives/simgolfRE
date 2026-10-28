@@ -203,7 +203,12 @@ class Session:
         shutil.rmtree(self.tmp, ignore_errors=True)
 
 
-def _to_title(app, s):
+def _to_title(app, s, title_frame=True):
+    """roadmap S3.14 (U-1396): until the window shows the title menu's frame (past the boot's loading screens), then quiet.
+    title_frame=False for the present-late control, whose window shows each frame only at the next present"""
+    from port.test import app_replay as AR
+    if title_frame:
+        AR.wait_shown_hash(s.rec, AR.title_menu_hash(), 120)
     s.facts["title_rows"] = _wait_quiet(s.rec / "shown.tsv", 1.5, 120)
 
 
@@ -474,7 +479,7 @@ def test_control_stale_present(exe):
     """present-late: the window shows the previous present's frame; shown.tsv and the client pixels disagree with the
     presents"""
     def steps(app, s):
-        _to_title(app, s)
+        _to_title(app, s, title_frame=False)
         app.move(*HOVER[0])
         _wait_quiet(s.rec / "shown.tsv", 1.0, 10, minimum=2)
         s.facts["img"] = app.capture()

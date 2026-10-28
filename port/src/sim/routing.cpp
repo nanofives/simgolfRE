@@ -270,6 +270,7 @@ struct MapDraw {
   void hole_map(int32_t mode, int32_t h, uint32_t rec, uint32_t way) const {
     int32_t tx, ty;
     map_to_screen(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0xc), tx, ty);
+    gx("setLinePoint", {u32(tx), u32(ty)});   // roadmap S3.8: the hole line starts at the tee
     gx("showRoutingMapScreen.teeSprite", {u32(tx), u32(ty)});
     int32_t ax = 0, ay = 0;
     bool have = true;
@@ -287,7 +288,7 @@ struct MapDraw {
     if (have) {
       int32_t sx, sy;
       map_to_screen(ax, ay, sx, sy);
-      gx("showRoutingMapScreen.line", {u32(sx), u32(sy)});
+      gx("lineTo", {u32(sx), u32(sy), 0x80007fffu, 2u, 0xau});
       if (mode != 0)
         with_text(std::to_string(h), [&](uint32_t s) { gx("drawCenteredText2", {s, u32(sx), u32(sub32(sy, 4)), 0x80007ff0u}); });
     } else if (mode != 0) {
@@ -295,7 +296,7 @@ struct MapDraw {
         gx("drawCenteredText2", {s, u32(add32(gx_, tx) / 2), u32(sub32(add32(gy_, ty) / 2, 4)), 0x80007ff0u});
       });
     }
-    gx("showRoutingMapScreen.line", {u32(gx_), u32(gy_)});
+    gx("lineTo", {u32(gx_), u32(gy_), 0x80007fffu, 2u, 0xau});
     gx("showRoutingMapScreen.flagSprite", {u32(gx_), u32(gy_)});
   }
 

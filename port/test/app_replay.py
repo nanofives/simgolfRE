@@ -147,6 +147,36 @@ def _frames(rec: pathlib.Path) -> int:
     return len([l for l in p.read_text().splitlines() if l.strip()]) if p.exists() else 0
 
 
+def title_menu_hash() -> int:
+    """roadmap S3.14 (U-1396): the sgh64 of the title menu's back buffer as the app presents it at 96 dpi: the pinned original's
+    sandbox_basic `menu` checkpoint (its RGB is the RGB555 back buffer as (v << 3) | (v >> 2), so v = c >> 3 restores it), which
+    the app's title present equals (0x193d269df3e3ba0c on the S3 tree and on d66aa755)"""
+    import numpy as np
+
+    from port.test import gfx as GX
+    from port.test import lib as L
+    ref = GX.reference("sandbox_basic", "menu").astype(np.uint16) >> 3
+    px = (ref[..., 0] << 10) | (ref[..., 1] << 5) | ref[..., 2]
+    return L.load(os.environ.get("SG_PORTSIM_DLL")).hash_bytes(px.astype("<u2").tobytes())
+
+
+def wait_shown_hash(rec: pathlib.Path, h: int, timeout: float) -> int:
+    """until the window has taken a frame whose sgh64 is `h` (shown.tsv); returns its row. roadmap S3.14: the title menu is on
+    screen only after the boot's loading screens, whose presents can be more than 1.5 s apart on a loaded PC (S3's boot decodes the
+    flic sheets for the drawing backend: 431-776 ms between them unloaded, 117-174 ms at d66aa755), and a click posted before it
+    goes to the boot's load pump (PumpKind::Load), so the title menu never sees it"""
+    p = rec / "shown.tsv"
+    end = time.time() + timeout
+    while time.time() < end:
+        if p.exists():
+            for i, line in enumerate(p.read_text().splitlines()[1:]):
+                f = line.split("\t")
+                if len(f) >= 2 and f[1].strip() and int(f[1], 16) == h:
+                    return i
+        time.sleep(0.05)
+    raise TimeoutError(f"no frame with sgh64 {h:#x} was shown in {timeout} s")
+
+
 class Driver:
     """posted window messages only (app_drive.App.post), waits measured in the session's own frame heads (frames.tsv) or
     in quiet presents (shown.tsv) while a modal screen waits"""
@@ -234,6 +264,7 @@ class Driver:
 
 
 def _to_monterey(d: Driver):
+    wait_shown_hash(d.rec, title_menu_hash(), 120)   # the title menu is on screen (S3.14: the boot's loading screens are past)
     d.wait_quiet(1.5, 120)                         # the title menu waits
     d.move(130, 445)
     d.wait_quiet(1.0, 20)

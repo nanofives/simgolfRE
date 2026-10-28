@@ -34,6 +34,9 @@ constexpr bool gfx_is_local_key(uint32_t k) { return k >= 0xFFF00000u; }
 // tick.cpp: a drop named `name` called with `a[0..n)`; true when the attached backend handled it (the frame still uses the
 // drop's result). Never throws.
 bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n);
+// tick.cpp: after gfx_drop, the value the body computed for the frame code (roadmap S3.7: Text_put's width); false when the
+// body set none (the frame keeps the drop's result)
+bool gfx_take_value(Ctx &ctx, int32_t &v);
 // tick.cpp: the run consumes a trace item at clock ordinal `pos` (a CURSOR record or a dispatch)
 void gfx_progress(Ctx &ctx, uint32_t pos);
 // tick.cpp: the run stopped because the recorded input ran out (the menus wait for input the trace no longer holds): every

@@ -1,0 +1,14 @@
+[test-slot] all 2 test slots busy, waiting (0s so far). Holders:
+  slot 0: pid 3404 since 10-27 09:16 in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I10: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest port/test/test_terrain_render.py -q -p no:cacheprovider
+  slot 1: pid 16452 since 10-27 09:18 in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_13: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest port/test/test_gfx_dialogs.py -q -p no:cacheprovider
+[test-slot] acquired slot 1/2 after 20s
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_13
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 22 items / 21 deselected / 1 selected
+
+port/test/test_fttext.py::test_font_metrics_equal_gdi_and_the_originals PASSED [100%]
+
+====================== 1 passed, 21 deselected in 2.49s =======================

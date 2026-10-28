@@ -17,6 +17,7 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/course.h"
 #include "portsim/sim/gfx.h"
+#include "portsim/sim/flic.h"
 #include "portsim/sim/loaders.h"
 #include "portsim/sim/util.h"
 
@@ -211,7 +212,7 @@ void load_flic(Ctx &ctx, const FlicCall &f, int mode) {
   vstrcpy(ctx.mem, text, pool + 0x3c);
   vstrcat(ctx.mem, text, path);
   vstrcat(ctx.mem, text, pool + 0x28);
-  const int32_t cols = flic_cols(ctx, read_str(ctx.mem, text));
+  const int32_t cols = flic_cols(ctx, flic::resolve_name(ctx.files(), read_str(ctx.mem, text)));
   gs.g_sheetCols[id] = cols;
   gs.g_sheetRows[id] = frames;
   int32_t saved = gs.g_cellCursor, base;
@@ -233,6 +234,11 @@ void load_flic(Ctx &ctx, const FlicCall &f, int mode) {
     gs.g_sheetFirstCell[id] = base;
     const int32_t cells = frames > 0 && cols > 0 ? (f.delay == -1 ? 1 : mul32(frames, cols)) : 0;
     gs.g_cellCursor = add32(base, cells);
+    // the cells' pixels for an attached graphics backend (S3.4, portsim/sim/flic.h): loadFlic's frame-by-frame cut of the
+    // flic into the sheet's cells g_cellPool[base ..], judged against the original's sheet memory (port/test/test_flic.py)
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0)
+      flic::sheet_to_gfx(ctx, path, f.frames, f.delay, f.flag,
+                         state_va(ctx, &GameState::g_cellPool) + 0x2cu * static_cast<uint32_t>(base));
   }
   if (saved != -1 && mode != 3) gs.g_cellCursor = saved;
 }
@@ -265,6 +271,10 @@ int32_t load_world_assets(Ctx &ctx) {
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c95f4);
   const uint32_t pool2 = state_va(ctx, &GameState::f_strpool_4c8a28);
   gs.g_flag4c89a8 = 0;                         // loadWorldAssets+0x2c6d
+  // phase 5 (roadmap S3.6): an attached graphics backend cuts the build palette's images (gfx_hud.cpp)
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadWorldAssets.images", nullptr, 0);
+  // roadmap S3.5: the palette objects the type's loads fill (gfx_scene.cpp), which the sprite queue draws with
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadWorldAssets.palettes", nullptr, 0);
   // phase 4 (the boot path): the terrain buttons (loadWorldAssets+0xcc3..+0xd27, c3fv.cpp): 13 rows of 4 cells of 0x3e x 0x36
   // cut into the 52 SpriteRefs from g_sprites570cb8 (stride 0x2c). The pixels are the renderer's; the geometry the cut leaves
   // is read by the build palette's hit test (hitTestSlot432f90, the height at +0x1c): the size twice (+0x10 / +0x14 and

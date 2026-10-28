@@ -237,10 +237,12 @@ def recorded_frames(label: str) -> dict:
 
 
 def port_frames(lib, scenario: str, frames: list[int], checkpoint: str, negctl: tuple[str, int] | None = None,
-                trace: pathlib.Path | None = None) -> dict:
+                trace: pathlib.Path | None = None, defects: dict[str, bool] | None = None) -> dict:
     """Boot `scenario` up to `checkpoint`'s budget with gfx + LiveTerrain; {(frame, what): uint16 (600, 800)} for each kept frame
     (what = entry, exit, p<j>_pre, p<j>_post), plus "log" (gfx.log text), "boot" (the BootResult), "passes", "frames".
-    trace: a study scenario's trace (run_trace: to its end, nothing compared; `checkpoint` is not used)."""
+    trace: a study scenario's trace (run_trace: to its end, nothing compared; `checkpoint` is not used).
+    defects: compatibility switches set for the run ({name: on}), reset to their defaults after it (roadmap S3.4c: a recording
+    made on an install the stock game cannot run, such as the tropical Tree alias of U-1330, runs at the switch's fixed value)."""
     from port.test import gfx as GX
     root = TC.CORPUS / ("pin_" + scenario)
     va = TC.calls(root)[0].ret if (root / "calls.txt").exists() else 0
@@ -268,6 +270,8 @@ def port_frames(lib, scenario: str, frames: list[int], checkpoint: str, negctl: 
         live_detach(lib, st)
 
     prev = lib.negctl(negctl[0], negctl[1]) if negctl else None
+    for name, on in (defects or {}).items():
+        lib.defect(name, on)      # raises SgError when the tree has no such switch
     try:
         if trace is None:
             out["boot"] = boot.run(scenario, lib, max_records=max_records, before=before, after=after, to_end=to_end)
@@ -276,6 +280,8 @@ def port_frames(lib, scenario: str, frames: list[int], checkpoint: str, negctl: 
     finally:
         if negctl:
             lib.negctl(negctl[0], prev or 0)
+        if defects:
+            lib.defect_reset()
     return out
 
 

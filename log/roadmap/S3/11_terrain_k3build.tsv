@@ -1,0 +1,13 @@
+scenario	checkpoint	label	frame	drawn	diff	one	big	verdict	boot	detail
+cov_k3_build	sandbox	s32c_cov_k3_build	39	170254	189	188	1	PASS	PASS	
+cov_k3_build	held_sub0	s32c_cov_k3_build	145	219783	189	188	1	PASS	PASS	
+cov_k3_build	held_sub1	s32c_cov_k3_build	220	221540	189	188	1	PASS	PASS	
+cov_k3_build	held_sub2	s32c_cov_k3_build	294	222119	189	188	1	PASS	PASS	
+cov_k3_build	held_sub3	s32c_cov_k3_build	368	222270	189	188	1	PASS	PASS	
+cov_k3_build	held_sub4	s32c_cov_k3_build	443	222135	189	188	1	PASS	PASS	
+cov_k3_build	held_bldg	s32c_cov_k3_build	551	219706	189	188	1	PASS	PASS	
+cov_k3_build	homesites10	s32c_cov_k3_build	608	170809	189	188	1	PASS	PASS	
+cov_k3_build	green19	s32c_cov_k3_build	854	222033	165	164	1	PASS	PASS	
+cov_k3_build	tee19	s32c_cov_k3_build	957	221658	165	164	1	PASS	PASS	
+cov_k3_build	restored	s32c_cov_k3_build	993	170985	165	164	1	PASS	PASS	
+cov_k3_build	end	s32c_cov_k3_build	1025	170973	165	164	1	PASS	PASS	

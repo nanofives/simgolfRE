@@ -321,8 +321,10 @@ int32_t show_character_intro(Ctx &ctx) {
   for (uint32_t k = 0; k < 22; ++k)
     if (m.load<int32_t>(GS(g_bulletinEvents) + 0x28 + 0x30 * k) != 0) points += mode == 1 ? 2 : 3;
   if (mode != 2) ctx.gs().f_w_4c2e00[2] = -1;
-  cm::draw_window_effect(ctx, -2);
-  SkDraw(ctx).gx("drawWindow.frame", {0xc8, 0x172, 0x80007fffu, u32(-2)});   // drawWindow(0xc8, 0x172, 0x80007fff, -2)
+  // drawWindow(0xc8, 0x172, 0x80007fff, -2): draw_window_effect also draws it with a graphics backend (roadmap S3.7); S3.13
+  // removed S2.10's second drawWindow.frame drop, which made the window appear twice (once at draw_window_effect's default
+  // ticker position (0xf0, -8), under the skill dialog's title)
+  cm::draw_window_effect(ctx, -2, 0xc8, 0x172);
   const int32_t r = skill_point_dialog(ctx, GS(g_golferTypes) + 0x10, 0, points, -1, 0xc8);
   m.store<int16_t>(GS(g_skillMaskBlock) + 8, static_cast<int16_t>(r));
   return r;

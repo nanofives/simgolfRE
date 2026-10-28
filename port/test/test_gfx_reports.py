@@ -136,7 +136,7 @@ def test_frame_judged_pixels_equal_the_original(judged, c):
 
 
 def test_frames_report_the_unmodelled_sprites(judged):
-    assert "no body: addSprite" in judged["$log"]
+    assert "no body: addSprite" not in judged["$log"]   # S3.5 registers the addSprite body
 
 
 @pytest.mark.parametrize("mode", [3, 12])
@@ -152,8 +152,10 @@ def test_frame_controls_red_all(rlib, held, judged, mode):
 
 def _control(rlib, held, judged, mode):
     r = judge(JUDGED_CHECKPOINTS, rlib, negctl=(FAMILY, mode), held=held)
-    for c in FRAME_CONTROLS[mode]:
-        assert r[c]["diff"] != judged[c]["diff"] or r[c]["judged"] != judged[c]["judged"], (mode, c, r[c])
+    same = [c for c in FRAME_CONTROLS[mode] if not (r[c]["diff"] != judged[c]["diff"] or r[c]["judged"] != judged[c]["judged"])]
+    # mode 8 (the clip left narrowed): S3.5's sprite draws set their own clip on some frames, so the control keeps its
+    # effect on at least one of its checkpoints instead of all of them
+    assert len(same) < len(FRAME_CONTROLS[mode]) if mode == 8 else not same, (mode, same)
 
 
 # ------------------------------------------------------------------------------------------------ unit tests of the bodies
@@ -297,8 +299,8 @@ def test_draw_sprite_other_alpha_is_unsupported(rlib):
     with _state(rlib) as st:
         _sprite(st)
         _g(st, "Surface_drawSprite", [SPR, ROOT, 0, 0, _alpha(0.5), 0, 0])
-        assert "an alpha outside drawAlpha's quarter band" in _log(st)
-        assert not _root(st).any()
+        # S3.5: drawn by gfxs::surface_draw_sprite (drawAlpha's window bodies), no longer reported
+        assert "an alpha outside drawAlpha's quarter band" not in _log(st)
 
 
 def test_the_reference_dimming_is_the_555_member():

@@ -32,9 +32,22 @@
 //   3 pass skipped: terrain.pass draws nothing
 //   4 renderTerrainStrip's shifted copy made without its shift (source = destination position)
 //   5 Window::paint leaves the root surface as it was
+//
+// Rasteriser workers (roadmap S3.10, log/roadmap/S3/10_notes.md): the passes run the rasteriser's pixel loop on
+// GlRaster::set_threads workers, min(4, max(1, hardware threads / 2)) of them, SG_RASTER_THREADS=<n> to choose (1 = none). The
+// frame is the same for every count (gl_raster.h). Development switch: SG_TERRAIN_PASS_LOG=<file> appends one line per
+// terrain.pass, `<updateTerrainRender call k> <pass j in it> <entry kind> <microseconds in terrain_render_entry> <pixels written>
+// <triangles> <pixels of the checked reciprocal path> <workers>`.
+#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS   // std::getenv / std::fopen of the development switch
+#endif
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "gfx_body.h"
@@ -42,6 +55,7 @@
 #include "portsim/sim/gl_raster.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
+#include "portsim/sim/terrain_overlay.h"
 #include "portsim/sim/terrain_render.h"
 
 namespace portsim {
@@ -77,6 +91,17 @@ void copy16(const std::vector<uint16_t> &src, int32_t sw, int32_t sh, std::vecto
   }
 }
 
+// the rasteriser's pixel-loop workers (GlRaster::set_threads): SG_RASTER_THREADS when set (1 = none), else
+// min(4, max(1, hardware threads / 2))
+int raster_threads() {
+  static const int n = [] {
+    if (const char *e = std::getenv("SG_RASTER_THREADS")) return std::atoi(e) > 1 ? std::atoi(e) : 1;
+    const int hw = static_cast<int>(std::thread::hardware_concurrency()) / 2;
+    return hw < 1 ? 1 : (hw > 4 ? 4 : hw);
+  }();
+  return n;
+}
+
 void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
   if (SG_NEGCTL(g_negctl_gfx_terrain) == 5) return;
@@ -99,13 +124,25 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const bool keep_pass = j < 8;
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
   if (SG_NEGCTL(g_negctl_gfx_terrain) != 3) {
+    if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
     r.pixels() = g.root.px;
     TerrainGlobals &tg = lt->globals();
     r.set_arrays(tg.vertices.data(), tg.vertices.size() / 3, tg.normals.data(), tg.normals.size() / 3);
-    const int64_t before = r.stats.drawn_px;
+    const int64_t before = r.stats.drawn_px, tri_before = r.stats.triangles, fast_before = r.stats.fast_px;
+    const auto t0 = std::chrono::steady_clock::now();
     if (!terrain_render_entry(ctx, r, tg, static_cast<int32_t>(a[0]), a[1], a[2], a[3], a[4])) {
       g.unsup("terrain.pass: an entry kind the renderer does not have");
       return;
+    }
+    r.finish();   // the workers' pixels and counters
+    if (const char *log = std::getenv("SG_TERRAIN_PASS_LOG")) {
+      const long long us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+      if (FILE *f = std::fopen(log, "a")) {
+        std::fprintf(f, "%u %d %u %lld %lld %lld %lld %d\n", v.frames, j, a[0], us, static_cast<long long>(r.stats.drawn_px - before),
+                     static_cast<long long>(r.stats.triangles - tri_before), static_cast<long long>(r.stats.fast_px - fast_before),
+                     r.threads());
+        std::fclose(f);
+      }
     }
     v.pixels_drawn += r.stats.drawn_px - before;
     ++v.passes;
@@ -154,6 +191,10 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
 const GfxBodyDef kBodies[] = {
     {"terrain.windowPaint", b_window_paint}, {"terrain.pass", b_pass},          {"terrain.blit", b_blit},
     {"terrain.frameBegin", b_frame_begin},   {"terrain.frameEnd", b_frame_end},
+    // roadmap S3.8: Terrain::drawLine and the exe drawers over it (terrain_overlay.h)
+    {"drawMapLine", overlay::body_draw_map_line},       {"drawMinimapSegment", overlay::body_draw_minimap_segment},
+    {"setLinePoint", overlay::body_set_line_point},     {"lineTo", overlay::body_line_to},
+    {"drawCircle", overlay::body_draw_circle},
 };
 
 }  // namespace

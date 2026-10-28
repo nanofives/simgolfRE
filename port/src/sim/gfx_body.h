@@ -69,6 +69,9 @@ class Gfx {
   // the terrain picture (gfx_terrain.cpp), cleared by a 2D write that covers the whole root surface, copied to the back buffer
   // at Window::refreshFull; each snapshot keeps the back buffer's (gfx.log `snapshot_terrain`)
   int root_terrain = 0, back_terrain = 0;
+  // a value a body computed for the frame code (roadmap S3.7: Text_put's width), taken once by gfx_take_value
+  bool has_value = false;
+  int32_t value = 0;
   std::vector<int> snap_terrain;
   // a 2D write of the rectangle (x, y, w, h) onto the root surface: clears root_terrain when it covers the whole surface
   void note_root_write(int32_t x, int32_t y, int32_t w, int32_t h) {
@@ -120,6 +123,8 @@ std::vector<uint8_t> surface_bytes(const Surface16 &s);
 // loadImage(this, name, pal, ofs, count, flags) into `img` (8-bit RLE PCX through the context's GameFiles); the original's
 // result code (0 = loaded)
 int load_image(Gfx &g, Ctx &ctx, uint32_t name_va, uint32_t pal, int32_t ofs, int32_t count, uint32_t flags, Image8 &img);
+// the same over a name the caller holds (roadmap S3.6)
+int load_image_named(Gfx &g, Ctx &ctx, std::string name, uint32_t pal, int32_t ofs, int32_t count, uint32_t flags, Image8 &img);
 // cropSprite(self, src, x, y, w, h, kind, trim) into g.sprites[self]; the original's result code
 int crop_sprite(Gfx &g, uint32_t self, const Image8 &src, int32_t x, int32_t y, int32_t w, int32_t h, bool trim);
 // jgld Sprite::draw16 at scale 1: bytes >= 0xfe transparent, the others the sprite palette's word
@@ -128,6 +133,8 @@ void draw16(const Sprite8 &s, Surface16 &d, int32_t x, int32_t y);
 void copy8(const Image8 &s, Surface16 &d, int32_t x, int32_t y, int32_t w, int32_t h, int32_t x2, int32_t y2);
 // jgld Sprite::drawG at scale 1: 0xff transparent, 0xf8 shades the destination through shade_lut(), the others the palette
 void draw_g16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y);
+// the same with the caller's shade table of lut_n words (roadmap S3.6)
+void draw_g16_lut(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, const uint16_t *lut, size_t lut_n);
 // block 1 of build16BitColorTable in RGB555 (the table g_color16Lut points at)
 const std::array<uint16_t, 0x8000> &shade_lut();
 // the text drawers' common path (drawRichText's run drawer): plain text, a direct colour, through the context's TextMetrics

@@ -5677,7 +5677,12 @@ void Ph_004175f2(u32 F) {
 // [[g_graphicsDevice] + 0x9c] (thiscall, 3 arguments, pops 12), called only while [g_graphicsDevice] != 0 (je ML+0x9707 / ML+0xa1aa; ML+0x96ff..ML+0x9711,
 // ML+0xa1a2..ML+0xa1b4). The vtable is read at the time of the call.
 void P6_DisplaySlot9c() {
-    // [[g_graphicsDevice] + 0x9c](1, 1, 1): the display's scale slot, drawing only (dropped; the object is the renderer's)
+    // [[g_graphicsDevice] + 0x9c](1, 1, 1): the display's scale slot, drawing only (the object is the renderer's; an attached
+    // graphics backend keeps the scale, roadmap S3.5)
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+      const uint32_t a[3] = {1, 1, 1};
+      gfx_drop(ctx, "Display::setScale", a, 3);
+    }
 }
 
 // showInfoCursorPanel showInfoCursorPanel (cdecl, 2 arguments, `add esp, 8` at ML+0xa22f). re/c3_hold.tsv records that it

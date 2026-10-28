@@ -73,7 +73,7 @@ int32_t take_code(Ctx &ctx);
 // the line breaks wrapMessageBuffer puts into g_textBuffer) depend on font metrics (Text_put): made when the context has a
 // TextMetrics provider (phase 4), dropped without one (U-0942).
 // Returns 0 (the dropped callees' eax).
-int32_t draw_window_effect(Ctx &ctx, int32_t mode);
+int32_t draw_window_effect(Ctx &ctx, int32_t mode, int32_t x = 0xf0, int32_t y = -8);
 // wrapMessageBuffer(cols): g_textBuffer's line breaks for a cols * 8 width measured with `font` (see commands.cpp)
 int32_t wrap_message_buffer(Ctx &ctx, int32_t cols, uint32_t font);
 // drawWindow's window height H (15 * wrapped lines + 0x20, at least 0x60 with a golfer), wrapping g_textBuffer on the way

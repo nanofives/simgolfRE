@@ -46,12 +46,20 @@ int32_t draw_amenities_panel(Ctx &ctx, int32_t a, int32_t b) {
 // the info panel itself writes only hover counters and text. NOT PORTED: the info-panel path's store at writes
 // the value 6 into the caller's saved esi (re/c3_hold.tsv), which is mainLoop's register state (the frame step's).
 int32_t show_info_cursor_panel(Ctx &ctx, int32_t x, int32_t y) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S3.6: the drawing (gfx_hud.cpp)
+    const uint32_t d[2] = {u32(x), u32(y)};
+    gfx_drop(ctx, "showInfoCursorPanel.draw", d, 2);
+  }
   if (ctx.gs().g_buildPanelSlot != 0) return draw_amenities_panel(ctx, x, y);
   return 0;
 }
 
 // drawEmployeeDetailPanel (x, y)
 int32_t draw_employee_detail_panel(Ctx &ctx, int32_t x, int32_t y) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S3.6: the drawing (gfx_hud.cpp)
+    const uint32_t d[2] = {u32(x), u32(y)};
+    gfx_drop(ctx, "drawEmployeeDetailPanel.draw", d, 2);
+  }
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_detail_panel);
   const Memory &m = ctx.mem;
@@ -115,6 +123,10 @@ int32_t draw_employee_view_panel(Ctx &ctx, int32_t x, int32_t y) {
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_view_panel);
   if (gs.g_ui_561254 != 0) return draw_employee_detail_panel(ctx, x, y);
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S3.6: the drawing (gfx_hud.cpp)
+    const uint32_t d[2] = {u32(x), u32(y)};
+    gfx_drop(ctx, "drawEmployeeViewPanel.draw", d, 2);
+  }
   const Memory &m = ctx.mem;
   const Ptr<int32_t> out0 = state_arr(ctx, &GameState::g_employeeViewList);
   for (int32_t k = 0; k < 0x98; ++k) (out0 + k).set(0);
@@ -152,6 +164,10 @@ int32_t draw_employee_view_panel(Ctx &ctx, int32_t x, int32_t y) {
 // drawing (drawMatchScoreboard and tileType included: they write nothing)
 int32_t draw_golfer_action_panel(Ctx &ctx, int32_t x, int32_t y) {
   if (ctx.gs().g_ui_561254 != 0 && ctx.gs().g_panelListMode != 3) return draw_employee_detail_panel(ctx, x, y);
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S3.6: the drawing (gfx_hud.cpp)
+    const uint32_t d[2] = {u32(x), u32(y)};
+    gfx_drop(ctx, "drawGolferActionPanel.draw", d, 2);
+  }
   return 0;
 }
 
@@ -173,8 +189,7 @@ int32_t tick_message(Ctx &ctx) {
     v = count;
     count = sub32(count, 1);
   }
-  draw_window_effect(ctx, v);
-  draw_window_gfx(ctx, 0xf0, -8, v);   // roadmap S2.11: drawWindow(0xf0, -8, ..)'s drawing (a graphics backend only)
+  draw_window_effect(ctx, v);   // with a graphics backend it also draws drawWindow(0xf0, -8, ..) (roadmap S3.7 / S3.13)
   const uint32_t flags = gs.g_flags;
   if (flags & 0x8000u) return i32(flags);
   const int32_t date = gs.g_date;

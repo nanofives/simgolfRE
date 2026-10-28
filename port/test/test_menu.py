@@ -95,6 +95,20 @@ def first_diff(lib, a: bytes, b: bytes, mask=()) -> str:
 
 # ------------------------------------------------------------------------------------------------ scenarios
 # (id, segment whose start image is used, course type written, extra edits)
+# Tropical courses (type 2, roadmap S3.4c): loadWorldAssets loads `trees\Tropic\Tree Cerc` / `Tree Drac` (spaced), which the
+# install holds as Tree_Cerc / Tree_Drac (U-1330). A plain id models the STOCK install: the original's flicOpenStream returns
+# NULL and loadFlic's Image_draw on it faults, the port at the default flic.treeAliasNames = 1 faults too, and both states at the
+# fault are compared. An id ending `_alias` models the install with copies under the spaced names (what the original needs to
+# complete, log/roadmap/S3/4_rec_hawaii_alias.log): the emulated original sees those names, the port runs at the switch's 0
+# (the underscore names over the stock install).
+TREE_SWITCH = "flic.treeAliasNames"
+TREE_ALIAS = [("Tree Cerc", "Tree_Cerc"), ("Tree Drac", "Tree_Drac")]
+
+
+def is_alias(scen) -> bool:
+    return scen[0].endswith("_alias")
+
+
 def _flip_bump(lib, img):     # no free list: every sheet from the cursor
     put(lib, img, "g_cellFreeStart", struct.pack("<i", -2))
 
@@ -135,12 +149,14 @@ SCEN = [
     ("desert_from_links", "cov_b_career_types/01", 1, None),
     ("parkland_from_desert", "cov_b_career_types/02", 0, None),
     ("tropical_from_parkland", "cov_b_career_types/03", 2, None),
+    ("tropical_from_parkland_alias", "cov_b_career_types/03", 2, None),
     ("links_from_season", "course_season/00", 3, None),
     ("type_minus1", "course_season/00", -1, None),
     ("type_5", "cov_b_career_types/01", 5, None),
     ("parkland_bump", "cov_b_career_types/02", 0, _flip_bump),
     ("desert_near_full", "cov_b_career_types/01", 1, _near_full),
     ("tropical_boot_difficulty", "course_season/00", 2, _boot_difficulty),
+    ("tropical_boot_difficulty_alias", "course_season/00", 2, _boot_difficulty),
     ("links_empty_pool", "cov_b_career_types/00", 3, _empty_pool),
     ("desert_bump_fresh", "cov_b_career_types/01", 1, _bump_fresh),
     ("parkland_full_fresh", "cov_b_career_types/02", 0, _full_fresh),
@@ -167,19 +183,47 @@ def _cstr(uc, p) -> bytes:
         p += 1
 
 
-def _flic_cols(path: bytes) -> int:
-    """flicOpenStream's column count (c3eu.cpp / c3fa.cpp): 0 for a missing or non-FLIC file, else the converted header's word
-    +0x62 (an unconverted one: its frame word +6)"""
+def _install_path(path: bytes, alias=False) -> pathlib.Path:
+    """the install file a game path names; alias: the install plus copies under the spaced tree names (TREE_ALIAS)"""
     p = INSTALL / path.decode("latin-1").replace("\\", "/")
+    if alias and not p.is_file():
+        s = str(p)
+        for spaced, under in TREE_ALIAS:
+            s = s.replace(spaced, under)
+        p = pathlib.Path(s)
+    return p
+
+
+def _flic_header(path: bytes, alias=False):
+    """the converted FLIC header flicOpenStream accepts, or None (missing or not a FLIC: the open returns NULL)"""
+    p = _install_path(path, alias)
     if not p.is_file():
-        return 0
+        return None
     h = p.read_bytes()[:0x64]
     if len(h) < 0x64 or struct.unpack_from("<H", h, 4)[0] != 0xAF12 or struct.unpack_from("<H", h, 0xC)[0] != 8:
+        return None
+    return h
+
+
+def _flic_cols(path: bytes, alias=False) -> int:
+    """flicOpenStream's column count (c3eu.cpp / c3fa.cpp): 0 for a missing or non-FLIC file, else the converted header's word
+    +0x62 (an unconverted one: its frame word +6)"""
+    h = _flic_header(path, alias)
+    if h is None:
         return 0
     return struct.unpack_from("<H", h, 0x62 if struct.unpack_from("<I", h, 0x1A)[0] == 0xF1F1F2F2 else 6)[0]
 
 
-def run_original(lib, entry, args, image):
+# loadFlic's frame draw (S3.4c): `mov ecx, eax` of flicOpenStream's / flicNextFrame's result, then Image_draw (thiscall), whose
+# first read is `mov eax, [esi + 8]` with esi = ecx (Image_draw+0x7). A NULL stream therefore faults reading 0x8, which is the
+# stock game's death on a tropical course (U-1330: access violation reading 0x8 at Image_draw+0x7 from loadFlic). The streams are
+# tokens (never dereferenced: every consumer is a drop); g_flicFrameImage, which stores them, is masked (MASK).
+IMAGE_DRAW, FLIC_NEXT_FRAME = 0x00473E60, 0x00404090
+STREAM_TOKEN = 0x7E000000
+NULL_DRAW_FAULT = "Fault read 0x8: Image_draw on a NULL frame Surface"
+
+
+def run_original(lib, entry, args, image, alias=False):
     from port.test import cmdemu as CE
     emu = CE.Emu()
     for a in DROPS:
@@ -187,16 +231,29 @@ def run_original(lib, entry, args, image):
     for a in TAIL_HELPERS:
         emu.stub(a, 0, 0, False)
     calls = []
+    slots = {}
 
     def open_stream(uc, a, ecx):
-        cols = _flic_cols(_cstr(uc, a[0]))
+        path = _cstr(uc, a[0])
+        cols = _flic_cols(path, alias)
         if a[2]:
             uc.mem_write(a[2], struct.pack("<I", cols))
+        tok = STREAM_TOKEN + 0x10 * (a[1] & 0xFFFF) if _flic_header(path, alias) is not None else 0
+        slots[a[1]] = tok
+        return tok
+
+    def next_frame(uc, a, ecx):
+        return slots.get(a[0], 0)
+
+    image_draw_pop = emu.ret_pop(IMAGE_DRAW)
+
+    def image_draw(uc, a, ecx):
+        if ecx == 0:
+            raise RuntimeError(NULL_DRAW_FAULT)
         return 0
 
     def exists(uc, a, ecx):
-        p = INSTALL / _cstr(uc, a[0]).decode("latin-1").replace("\\", "/")
-        return 1 if p.is_file() else 0
+        return 1 if _install_path(_cstr(uc, a[0]), alias).is_file() else 0
 
     def rec(name, n):
         def fn(uc, a, ecx):
@@ -204,6 +261,8 @@ def run_original(lib, entry, args, image):
             return 0
         return fn
     emu.stub_py(FLIC_OPEN_STREAM, 3, open_stream, name="flicOpenStream")
+    emu.stub_py(FLIC_NEXT_FRAME, 1, next_frame, name="flicNextFrame")
+    emu.stub_py(IMAGE_DRAW, image_draw_pop // 4, image_draw, pops=image_draw_pop > 0, name="Image_draw")
     emu.stub_py(FILE_EXISTS, 1, exists, name="fileExists")
     emu.stub_py(SHOW_LOADING, 1, rec("showLoadingScreen", 1), name="showLoadingScreen")
     emu.stub_py(SCROLL_TEXT, 3, rec("scrollTextWindow", 3), name="scrollTextWindow")
@@ -212,11 +271,14 @@ def run_original(lib, entry, args, image):
 
 
 # ------------------------------------------------------------------------------------------------ the port
-def run_port(lib, name, args, image, mode=0, func_neg=None):
+def run_port(lib, name, args, image, mode=0, func_neg=None, alias=False):
+    """alias: the run at flic.treeAliasNames = 0 (the `_alias` cases)"""
     import ctypes as C
     logbuf = (C.c_uint32 * (1 + 8 * PEER_LOG_CAP))()
     if mode or func_neg:
         lib.negctl(func_neg or name, mode)
+    if alias:
+        lib.defect(TREE_SWITCH, False)      # raises SgError when the tree has no such switch
     try:
         with lib.state() as st:
             st.set_data_base(DATA_VA)
@@ -233,6 +295,8 @@ def run_port(lib, name, args, image, mode=0, func_neg=None):
             out = st.image()
     finally:
         lib.negctl_reset()
+        if alias:
+            lib.defect_reset()
     n = min(logbuf[0], PEER_LOG_CAP)
     calls = [tuple(logbuf[1 + 8 * k:1 + 8 * k + 8]) for k in range(n)]
     calls.append(("count", logbuf[0]))   # the log keeps the first PEER_LOG_CAP calls and counts them all
@@ -244,13 +308,19 @@ def capped(calls):
     return list(calls[:PEER_LOG_CAP]) + [("count", len(calls))]
 
 
-def compare_lwa(lib, scen) -> str:
+def compare_entry(lib, scen, entry, name, args) -> str:
+    """the port against the emulated original on one scenario: eax, the data image (MASK) and the recorded calls; when the
+    original faults on the NULL frame Surface (a stock tropical case) the port must give SG_E_FAULT and the same state at it"""
     img = scen_image(lib, scen)
-    r, calls = run_original(lib, LOAD_WORLD_ASSETS, [], img)
+    alias = is_alias(scen)
+    r, calls = run_original(lib, entry, args, img, alias)
+    eax, code, out, pcalls = run_port(lib, name, args, img, alias=alias)
     if r.err:
-        return f"original: {r.err}"
-    eax, code, out, pcalls = run_port(lib, "loadWorldAssets", [], img)
-    if code != 0:
+        if r.err != NULL_DRAW_FAULT:
+            return f"original: {r.err}"
+        if code != L.SG_E_FAULT:
+            return f"the original faults ({r.err}), the port code {code}"
+    elif code != 0:
         return f"port code {code}"
     d = first_diff(lib, out, r.image, MASK)
     if d:
@@ -258,6 +328,10 @@ def compare_lwa(lib, scen) -> str:
     if pcalls != capped(calls):
         return f"recorded calls differ: port {pcalls[:8]} original {calls[:8]} ({len(calls)})"
     return ""
+
+
+def compare_lwa(lib, scen) -> str:
+    return compare_entry(lib, scen, LOAD_WORLD_ASSETS, "loadWorldAssets", [])
 
 
 @need_exe
@@ -274,23 +348,12 @@ def test_load_world_assets_equals_original(portlib, scen):
 # original's code on both sides: the port calls the registered ports)
 LOAD_INTERFACE_ART = 0x00442180
 LIA_SCEN = [("lia_links", "cov_b_shots/02", 3, None), ("lia_parkland", "course_season/00", 0, None),
-            ("lia_desert", "cov_b_career_types/01", 1, None), ("lia_tropical", "cov_b_career_types/02", 2, None)]
+            ("lia_desert", "cov_b_career_types/01", 1, None), ("lia_tropical", "cov_b_career_types/02", 2, None),
+            ("lia_tropical_alias", "cov_b_career_types/02", 2, None)]
 
 
 def compare_lia(lib, scen) -> str:
-    img = scen_image(lib, scen)
-    r, calls = run_original(lib, LOAD_INTERFACE_ART, [0], img)
-    if r.err:
-        return f"original: {r.err}"
-    eax, code, out, pcalls = run_port(lib, "loadInterfaceArt", [0], img)
-    if code != 0:
-        return f"port code {code}"
-    d = first_diff(lib, out, r.image, MASK)
-    if d:
-        return d
-    if pcalls != capped(calls):
-        return f"recorded calls differ: port {pcalls[:8]} original {calls[:8]} ({len(calls)})"
-    return ""
+    return compare_entry(lib, scen, LOAD_INTERFACE_ART, "loadInterfaceArt", [0])
 
 
 @need_exe
@@ -543,10 +606,10 @@ def _digest(eax, code, image, calls) -> str:
 def _digests(lib, mode=0, func_neg=None) -> dict:
     out = {}
     for sc in SCEN:
-        eax, code, img, calls = run_port(lib, "loadWorldAssets", [], scen_image(lib, sc), mode, func_neg)
+        eax, code, img, calls = run_port(lib, "loadWorldAssets", [], scen_image(lib, sc), mode, func_neg, is_alias(sc))
         out["lwa:" + sc[0]] = _digest(eax, code, img, calls)
     for sc in LIA_SCEN:
-        eax, code, img, calls = run_port(lib, "loadInterfaceArt", [0], scen_image(lib, sc), mode, func_neg)
+        eax, code, img, calls = run_port(lib, "loadInterfaceArt", [0], scen_image(lib, sc), mode, func_neg, is_alias(sc))
         out["lia:" + sc[0]] = _digest(eax, code, img, calls)
     for which, seed in free_cases():
         img, starts, lens = pool_image(lib, seed)
@@ -589,7 +652,8 @@ NEGCTL = [("loadWorldAssets", 1, "the object-type table not copied"), ("loadWorl
           ("loadInterfaceArt", 1, "the ranking cells drawn by Random::range(3)"),
           ("pickAProScreen", 1, "a row press loads the row below"), ("pickAProScreen", 2, "the load button does not load again"),
           ("pickAProScreen", 3, "the theme name not restored"), ("startNewCourse", 1, "the date 0x2c01"),
-          ("startNewCourse", 2, "a refused pro list leaves the flags")]
+          ("startNewCourse", 2, "a refused pro list leaves the flags"),
+          ("flic.load", 5, "the Tree alias applied at flic.treeAliasNames = 1: the stock tropical cases run on")]
 
 
 @need_exe

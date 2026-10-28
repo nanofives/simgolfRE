@@ -283,7 +283,7 @@ int32_t build_tool_action(Ctx &ctx, int32_t r) {
     cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
     gs.f_w_4c2e00[2] = -0x16;
     cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
-    draw_window_effect(ctx, -2);
+    draw_window_effect(ctx, -2, 0xc8, 0x154);
     gs.g_flags &= ~2u;
     gs.g_buildPanelPick = 0;
     gs.g_panelListMode = 1;
@@ -310,7 +310,7 @@ int32_t building_action(Ctx &ctx, int32_t r) {
     cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
     gs.f_w_4c2e00[2] = -0x16;
     cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
-    draw_window_effect(ctx, -2);
+    draw_window_effect(ctx, -2, 0xc8, 0x154);
     pump_and_redraw(ctx, 0, "pickBuilding");
     return 0;
   }

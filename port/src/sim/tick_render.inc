@@ -112,7 +112,17 @@ struct Rend : TkBase {
   // f_strpool_4c4e60 for record flag 0x4000, the golfer number for g_flags bit 5, cleared in panel mode 3 without record
   // flag 0x200). The blits, the display scale and the label bars are drawing. Returns 0 (the original returns its local
   // cache's destructor result, which no frame code reads).
+  // roadmap S3.5: with a graphics backend attached, the entry's blits (gfx_scene.cpp drawQueuedSprite.draw: the golfer
+  // palette layers read the look indices before the simulation part writes them back, as the original's compositor
+  // does) and, after the simulation part has built the name text, the golfer's label (drawQueuedSprite.label)
   int drawQueuedSprite(int i) {
+    const uint32_t a[1] = {static_cast<uint32_t>(i)};
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "drawQueuedSprite.draw", a, 1);
+    const int r = drawQueuedSpriteSim(i);
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "drawQueuedSprite.label", a, 1);
+    return r;
+  }
+  int drawQueuedSpriteSim(int i) {
     const int p7 = qa(GS(g_spriteShade), i);
     if (p7 == 0) return 0;
     const int a8 = qa(GS(g_spriteFlags), i);
@@ -151,6 +161,7 @@ struct Rend : TkBase {
   // renderSpriteQueue (c3ev.cpp): drawQueuedSprite for every entry in list order
   int renderSpriteQueue() {
     for (int i = gs().g_spriteQueueHead; i != -1; i = qa(GS(g_spriteQueueNext), i)) drawQueuedSprite(i);
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "renderSpriteQueue.end", nullptr, 0);
     return 0;
   }
 

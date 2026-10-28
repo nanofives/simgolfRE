@@ -58,6 +58,7 @@
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/gfx_scene.h"
 
 namespace portsim {
 
@@ -117,6 +118,19 @@ void b_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (!gfx_is_local_key(a[0]) && ctx.mem.load<uint32_t>(a[0] + 8) != 0) {
     g.unsup("Surface_drawSprite: the load arm (a file name at +8)");
     return;
+  }
+  // roadmap S3.5: on the root surface, a mask, an alpha outside the quarter band or a display scale other than (1, 1, 1) is
+  // drawn by the scene family (gfx_scene.h surface_draw_sprite: the window's flag-set member, the scale, the mask's palette)
+  if (a[1] == g.root_va(ctx)) {
+    float al;
+    std::memcpy(&al, &a[4], 4);
+    const double ad = static_cast<double>(al);
+    const int32_t *sc0 = gfxf::blit_scale(g);
+    const bool quarter = ad >= 0.25 - 0.03125 && ad <= 0.25 + 0.03125;
+    if (a[5] != 0 || (!quarter && ad >= 0.0 && ad <= 1.0) || sc0[0] != 1 || sc0[1] != 1 || sc0[2] != 1) {
+      gfxs::surface_draw_sprite(g, ctx, a);
+      return;
+    }
   }
   if (a[1] != g.root_va(ctx) || a[5] != 0) {
     g.unsup("Surface_drawSprite: a destination other than the root surface or a mask");

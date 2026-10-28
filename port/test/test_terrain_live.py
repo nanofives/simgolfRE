@@ -101,6 +101,9 @@ FRAME_RECORDINGS = {"s32_sandbox": "sandbox_basic", "s32_course_season": "course
 # with S3.4's Tree alias in the instance, its trace beside the frames (log/roadmap/S3/2_tools/tropical_rec.sh); the port runs that trace
 # with run_trace (no capture to compare sim hashes with: the boot gate never sees it)
 TRACE_RUNS = {"s32t_cov_b_s34_hawaii"}
+# Compatibility switches per recording (roadmap S3.4c): the alias copies stand for flic.treeAliasNames = 0 (the underscore names over
+# the stock install); at the default 1 the port faults at the first Tree Cerc load as the stock game does (test below)
+SWITCHES = {"s32t_cov_b_s34_hawaii": {"flic.treeAliasNames": False}}
 _REC: dict = {}
 _PORT: dict = {}
 
@@ -122,14 +125,16 @@ def _copies(label):
 FRAME_KEYS = [k for lb in FRAME_RECORDINGS for k in _copies(lb)]
 
 
-def _port(lib, label, negctl=None):
-    key = (label, negctl, getattr(lib, "dll", None) is None)
+def _port(lib, label, negctl=None, defects="recording"):
+    defects = SWITCHES.get(label) if defects == "recording" else defects
+    key = (label, negctl, getattr(lib, "dll", None) is None, repr(defects))
     if key not in _PORT:
         rec = _rec(label)
         last = max(rec, key=lambda c: rec[c]["meta"]["frame"])
         frames = sorted({e["meta"]["frame"] for e in rec.values()})
         tr = TL.ROOT / "log" / "p5" / "terrain" / label / "trace.trace" if label in TRACE_RUNS else None
-        _PORT[key] = TL.port_frames(lib, FRAME_RECORDINGS[label], frames, last.split(".")[0], negctl=negctl, trace=tr)
+        _PORT[key] = TL.port_frames(lib, FRAME_RECORDINGS[label], frames, last.split(".")[0], negctl=negctl, trace=tr,
+                                    defects=defects)
     return _PORT[key]
 
 
@@ -151,6 +156,19 @@ def test_course_view_equals_the_original(lib, label, checkpoint, what):
     r = _judge(_rec(label), got, checkpoint, what)
     assert r is not None, f"the port kept no copy of frame {_rec(label)[checkpoint]['meta']['frame']} {what}"
     assert r["pass"], r
+
+
+def test_hawaii_at_the_default_switch_faults_like_the_stock_game(lib):
+    """The tropical recording's trace at flic.treeAliasNames = 1 (the original profile): the boot stops with SG_E_FAULT at the first
+    Tree Cerc load, as the stock game dies there (U-1330, log/roadmap/S3/4_rec_hawaii_stock.log); at 0 it runs (the course view
+    tests above)."""
+    from port.test import lib as L
+    label = "s32t_cov_b_s34_hawaii"
+    if not _rec(label):
+        pytest.skip(f"no recording {label}")
+    got = _port(lib, label, defects=None)
+    assert got["boot"].status == "ERROR" and f"sg_run_boot {L.SG_E_FAULT} " in got["boot"].detail,         (got["boot"].status, got["boot"].detail)
+    assert _port(lib, label)["boot"].status in ("PASS", "KNOWN", "RAN")
 
 
 def test_course_view_draws(lib):

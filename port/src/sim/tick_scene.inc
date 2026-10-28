@@ -100,10 +100,16 @@ void buildSceneSprites(int kind, int variant, int x, int y, int x2, int y2, int 
     }
     auto bitSet = [&]() { return (*bits & 0x4000) != 0; };
     auto col = [&]() { return (Half() + rec[6]) & 3; };               // (half + rotation) & 3, the rotation re-read
-    auto scale = [&]() { return 0.0f; };  // *tbyte * [.rdata double]: only Surface_drawSprite's scale (dropped)
+    // *tbyte * f_k_dbl_4ba818: Surface_drawSprite's alpha (drawing only; read with a graphics backend attached, S3.5)
+    auto scale = [&]() {
+        if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return 0.0f;
+        return static_cast<float>(static_cast<double>(*tbyte) * ctx.exe().get<double>("f_k_dbl_4ba818"));
+    };
     // Surface_drawSprite through [f_stateptr_4c1570] with the lifted y (the tails at buildSceneSprites+0x1ed5 and buildSceneSprites+0x9c9)
     auto sprite = [&](int cell, int dx, int dl, float s, unsigned table) {
-        kDrawSprite((u32)(static_cast<unsigned>(cell)), nullptr, G<int>(GS(f_stateptr_4c1570)), x - dx, y + 5 * (lift - dl), s,
+        uint32_t sbits = 0;
+        std::memcpy(&sbits, &s, 4);   // the float's bits in the argument slot, as the original pushes it
+        kDrawSprite((u32)(static_cast<unsigned>(cell)), nullptr, G<int>(GS(f_stateptr_4c1570)), x - dx, y + 5 * (lift - dl), sbits,
                     static_cast<int>(table), 1);
     };
 
@@ -138,7 +144,10 @@ void buildSceneSprites(int kind, int variant, int x, int y, int x2, int y2, int 
             return;
         }
         // fild / fmul [code:ba480] / fadd [code:ba478] (buildSceneSprites+0x25d..buildSceneSprites+0x267), fstp dword at buildSceneSprites+0x1ed2
-        const float s = 0.0f;  // *tbyte * [.rdata] + [.rdata]: only Surface_drawSprite's scale (dropped)
+        // *tbyte * f_k_dbl_4ba478[1] + f_k_dbl_4ba478[0]: Surface_drawSprite's alpha (drawing only, S3.5)
+        const float s = g_gfx_attached.load(std::memory_order_relaxed) == 0 ? 0.0f
+            : static_cast<float>(static_cast<double>(*tbyte) * ctx.exe().get<double>("f_k_dbl_4ba478", 1) +
+                                 ctx.exe().get<double>("f_k_dbl_4ba478", 0));
         sprite(c, 0x8c, 0x1c, s, (GS(g_images) + 8800) + 0x58u * static_cast<unsigned>(type));
         return;
     }

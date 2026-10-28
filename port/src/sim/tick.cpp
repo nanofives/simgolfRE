@@ -33,6 +33,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
+#include "portsim/execonst.h"
 #include "portsim/sim/integrator.h"
 #include "portsim/sim/live.h"
 #include "portsim/sim/terrain_api.h"
@@ -281,7 +282,11 @@ int TkBase::call(const char *name, const uint32_t *a, int n) {
   switch (e.kind) {
     case 1:
       // phase 5: an attached graphics backend draws what the drop drew; the frame keeps the drop's result
-      if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a, n);
+      if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+        gfx_drop(ctx, name, a, n);
+        int32_t v = 0;
+        if (gfx_take_value(ctx, v)) return v;   // roadmap S3.7: a measuring drop (Text_put)
+      }
       return 0;
     case 2:
       return e.local(*this, a, n);
@@ -576,7 +581,7 @@ int fb_nearest_menu_spot(TkBase &t, const uint32_t *a, int) {
 // menu every frame. No click is handled here; with the drawing dropped, what stays is the hover state: the blink counter
 // g_panelState+0xc while paused, the hover dwell counter g_panelState+0x18 against the last hovered spot g_ui_5aa6b8, and
 // after 10 frames of dwell the spot's label text in g_textBuffer (drawPanelBackdrop draws it: dropped).
-int fb_show_main_radial_menu(TkBase &t, const uint32_t *a, int) {
+int fb_show_main_radial_menu_state(TkBase &t, const uint32_t *a, bool &tip) {
   Ctx &ctx = t.ctx;
   const uint32_t xy[2] = {a[0], a[1]};
   const int s = fb_nearest_menu_spot(t, xy, 2);
@@ -593,6 +598,7 @@ int fb_show_main_radial_menu(TkBase &t, const uint32_t *a, int) {
   if (hover == -1) return 0;
   if (cnt <= 10) return cnt;
   t.GU8(t.kBuf) = 0;
+  tip = true;
   if (!(static_cast<unsigned>(s) > 10)) {
     static const uint32_t kLabel[11] = {0x8c, 0x7c, 0x68, 0x5c, 0, 0x38, 0x24, 0x18, 0xc, 0, 0};  // f_strpool_4c7de0 offsets
     uint32_t label = GS(f_strpool_4c7de0) + kLabel[s];
@@ -600,6 +606,16 @@ int fb_show_main_radial_menu(TkBase &t, const uint32_t *a, int) {
     t.StrCpy(t.kBuf, label);
   }
   return 0;
+}
+// roadmap S3.6: the state steps above, then (a backend attached) the drawing, gfx_hud.cpp showMainRadialMenu.draw
+int fb_show_main_radial_menu(TkBase &t, const uint32_t *a, int) {
+  bool tip = false;
+  const int r = fb_show_main_radial_menu_state(t, a, tip);
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+    const uint32_t d[3] = {a[0], a[1], tip ? 1u : 0u};
+    gfx_drop(t.ctx, "showMainRadialMenu.draw", d, 3);
+  }
+  return r;
 }
 int fb_draw_building_panel(TkBase &t, const uint32_t *a, int) {
   return Panels(t.ctx).drawBuildingPanel(static_cast<int>(a[0]), static_cast<int>(a[1]));
@@ -1685,6 +1701,11 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
           after_frame(f, k, io);
           throw;
         }
+        // roadmap S3.14 (U-1394): the last frame also ends the recording when it runs to its end (the app's session stops at
+        // the next frame head), so a snapshot still pending lies past the last item the run consumed, as above; the last
+        // present of an app session sits in this frame once the course view animates. Negative control tick.frame 12 keeps
+        // it pending
+        if (!out_of_input && SG_NEGCTL(tk::g_negctl_frame) != 12) gfx_end_of_input(ctx);
         after_frame(f, k, io);
         if (detail)
           *detail = out_of_input ? "the last frame ran to the end of the trace: a Blocking pump with no input left"

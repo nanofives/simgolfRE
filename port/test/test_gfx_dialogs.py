@@ -337,7 +337,8 @@ def test_draw_sprite_quarter_band_blends_as_the_blitter(glib):
 
 def test_draw_sprite_other_alpha_is_unsupported(glib):
     _r, log = _alpha(glib, alpha=0x3F000000)   # 0.5: another blitter
-    assert "Surface_drawSprite: an alpha outside drawAlpha's quarter band" in log
+    # S3.5: another alpha is drawn by gfxs::surface_draw_sprite (drawAlpha's window bodies), no longer reported
+    assert "Surface_drawSprite: an alpha outside drawAlpha's quarter band" not in log
 
 
 def test_draw_sprite_negctl_1_red(glib):   # reports mode 1, a half blend (was dialogs mode 7)

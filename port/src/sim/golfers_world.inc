@@ -35,8 +35,12 @@ void place_animal(Ctx &ctx, int32_t idx) {
       const int8_t fr = static_cast<int8_t>(mod32(frame.get(), cols.get()));  // idiv: a frame count 0 faults
       frame.set(fr);
       const int32_t cell = gl::cell_at(ctx, sprite, fr, dir);
-      gs.g_animalCell = cell;                 // drawing state (the sprite queue itself is the renderer's)
-      (void)n;
+      gs.g_animalCell = cell;                 // drawing state
+      // placeAnimal queue entry: enqueueSprite(sx, sy, sy, 0x1e, 0x28, cell, 4, (n + 0x9c) | 0x100), the animal's standing figure
+      // (a golfer-palette entry past the golfer table); queued only for an attached graphics backend, so the vectors that
+      // judge the simulation (and every run without a backend) see no sprite queue write
+      if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gl::registered("enqueueSprite"))
+        gl::call_peer(ctx, "enqueueSprite", {u32(sx), u32(sy), u32(sy), 0x1eu, 0x28u, u32(cell), 4u, u32((n + 0x9c) | 0x100)});
       if (!paused) {
         const int8_t f1 = static_cast<int8_t>(frame.get() + 1);
         frame.set(f1);

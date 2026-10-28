@@ -444,19 +444,28 @@ int32_t window_height(Ctx &ctx) {
   return h;
 }
 
-int32_t draw_window_effect(Ctx &ctx, int32_t mode) {
+int32_t draw_window_effect(Ctx &ctx, int32_t mode, int32_t x, int32_t y) {
   const int32_t sel = ctx.gs().f_w_4c2e00[2];
   // phase 4: the window height H = 15 * wrapMessageBuffer(sel != -1 ? 0x25 : 0x2c) + 0x20 (at least 0x60 with a golfer) into
   // g_value587ea0, which mainLoop reads, and the line breaks in g_textBuffer; with no TextMetrics both stay dropped (U-0942)
-  if (text_metrics(ctx)) ctx.gs().g_value587ea0 = window_height(ctx);
+  if (text_metrics(ctx)) {
+    const int32_t r = wrap_message_buffer(ctx, sel != -1 ? 0x25 : 0x2c, state_va(ctx, &GameState::g_font51b360));
+    const int32_t h = add32(mul32(r, 15), 0x20);
+    ctx.gs().g_value587ea0 = sel != -1 && h < 0x60 ? 0x60 : h;
+    // roadmap S3.7: an attached graphics backend draws the window (gfx_text.cpp drawWindow.frame; a[4] = h)
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+      const uint32_t d[5] = {u32(x), u32(y), 0, u32(mode), u32(h)};
+      gfx_drop(ctx, "drawWindow.frame", d, 5);
+    }
+  }
   if (sel == -1 && mode == 0) call_optional(ctx, "playSound", {0x10b, 0x64, 0, 0, 0});
   if (sel >= 0) call_peer(ctx, "composeGolferSprite", {u32(sel)});
   return 0;
 }
 
-// roadmap S2.11: drawWindow(x, y, p3, mode)'s drawing for an attached graphics backend (gfx.cpp b_draw_window; with a golfer
-// selected the simfoto family's drawWindow.golfer), after draw_window_effect stored H; the unclamped height in the fifth
-// slot. Draws nothing into the GameState.
+// roadmap S2.11: drawWindow(x, y, p3, mode)'s drawing for an attached graphics backend (gfx_text.cpp drawWindow.frame since
+// roadmap S3.13), after window_height stored H; the unclamped height in the fifth slot. Draws nothing into the GameState.
+// Used by draw_window_gfx_saved only: tickMessage and the help windows draw through draw_window_effect (roadmap S3.7).
 void draw_window_gfx(Ctx &ctx, int32_t x, int32_t y, int32_t mode) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
   const uint32_t v[5] = {u32(x), u32(y), 0, u32(mode), u32(text_metrics(ctx) ? t_window_h_raw : 0)};

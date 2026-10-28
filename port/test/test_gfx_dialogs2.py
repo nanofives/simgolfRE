@@ -1,8 +1,10 @@
 """Roadmap S2.11: the dialogs drawn over the course, part 2: the TOURNAMENT RESULTS strip (showTournamentResults), the bulletin
 board (showBulletinBoard), and narrateShot's SimFoto frame with the message ball (drawWindow with a golfer, drawMessageBuffer).
 
-Bodies: family `results` (port/src/sim/gfx_results.cpp: drawStringRightAt, the marker results.begin), family `simfoto`
-(gfx_simfoto.cpp: loadInterfaceArt.ballArt, drawWindow.golfer, the marker simfoto.begin), family `bulletin` (gfx_bulletin.cpp:
+Bodies: family `results` (port/src/sim/gfx_results.cpp: the marker results.begin), family `simfoto` (gfx_simfoto.cpp:
+loadInterfaceArt.ballArt, the marker simfoto.begin, the probe of drawWindow's golfer arm), family `text` (gfx_text.cpp, roadmap
+S3.7: drawWindow.frame with the golfer arm and drawStringRightAt, the only bodies of those names since roadmap S3.13; S2.11's
+drawWindow.golfer and results' drawStringRightAt were folded into them, controls moved), family `bulletin` (gfx_bulletin.cpp:
 loadInterfaceArt.bulletinArt, showBulletinBoard.board / .event / .photo / .fixed); the screens' calls are in tick_panels.inc,
 commands.cpp / commands_layout.inc, shots.cpp (narrateShot), dialogs.cpp (showBulletinBoard) and menu.cpp. Notes:
 log/roadmap/S2/11_notes.md.
@@ -20,9 +22,10 @@ frame (log/c3/alt/refs/<scenario>/det_b/<checkpoint>.png) by log/roadmap/S2/11_t
     the board's image covers the whole screen).
 HELD pixels: the family's probe (negctl modes >= 0x10000, a measurement) fills the rectangle a dialog covers with a probe
 pattern when it starts (the whole root for the results strip); a pixel is judged when three probe runs (0x0000, 0x7fff, a
-pseudo-random pattern) and the run without a probe agree on it. The ball's square is painted by the probe after the ball: the
-head drawThoughtBubble draws there (Surface_drawScaled of a heads cut, roadmap S3.6; its palette composeGolferSprite's, S3.5)
-is not drawn, so the whole square is held. The gate: every judged pixel of every rectangle equals the reference.
+pseudo-random pattern) and the run without a probe agree on it. The ball's square is painted by the probe after the head
+drawThoughtBubble draws there (Surface_drawScaled of a heads cut, roadmap S3.6; its palette composeGolferSprite's, S3.5; drawn
+since roadmap S3.13 and judged by port/test/test_gfx_text.py's frames), so the whole square is held here. The gate: every
+judged pixel of every rectangle equals the reference.
 """
 from __future__ import annotations
 
@@ -168,11 +171,10 @@ def test_bodies_handled(glib):
     run = _normal(glib, "ui_tour")
     for name in ("loadInterfaceArt.ballArt", "drawWindow.frame", "simfoto.begin", "loadInterfaceArt.bulletinArt"):
         assert f"handled\t{name}\t" in run.log, name
-    # drawWindow.golfer is reached through the core's drawWindow.frame (find_body, not a drop, so it has no `handled` count):
-    # the head's reason, which only it reports, shows it ran
-    assert any(l.startswith("unsupported\tdrawThoughtBubble: the head") for l in run.log.splitlines())
-    for bad in ("loadInterfaceArt.ballArt", "loadInterfaceArt.bulletinArt", "no body: drawWindow.golfer",
-                "simfoto: no body", "bulletin: no body"):
+    # drawWindow's golfer arm (the text family's drawWindow.frame since roadmap S3.13) draws the head itself, so no part of it
+    # is reported; that the arm ran on ui_tour is read by the controls text 12 / 13 below (RED on ui_tour menus)
+    for bad in ("loadInterfaceArt.ballArt", "loadInterfaceArt.bulletinArt", "drawWindow", "drawThoughtBubble",
+                "gfx_text: no body", "bulletin: no body"):
         assert not any(l.startswith("unsupported\t" + bad) for l in run.log.splitlines()), bad
 
 
@@ -189,11 +191,11 @@ def test_results_bodies_handled(glib):
 # (family, mode, scenario, checkpoint, what): RED = the checkpoint's rectangles differ from the reference in more pixels than
 # the run without the control
 FRAME_NEGCTL = [
-    ("gfx.family.results", 1, "cov_b_shots", "results", "drawStringRightAt ends one pixel right of x - run"),
+    ("gfx.family.text", 15, "cov_b_shots", "results", "drawStringRightAt ends one pixel right of x - run (was results 1)"),
     ("gfx.family.results", 2, "cov_b_shots", "results", "the rows one pixel further apart (the band heights + 1)"),
-    ("gfx.family.simfoto", 2, "ui_tour", "menus", "the message text one pixel lower"),
-    ("gfx.family.simfoto", 3, "ui_tour", "menus", "the ball's frame one pixel to the left"),
-    ("gfx.family.simfoto", 4, "championship", "tour_0180", "the text offset for a window under 0x60 ignored"),
+    ("gfx.family.text", 12, "ui_tour", "menus", "the message text one pixel lower (was simfoto 2)"),
+    ("gfx.family.text", 13, "ui_tour", "menus", "the ball's frame one pixel to the left (was simfoto 3)"),
+    ("gfx.family.text", 14, "championship", "tour_0180", "the text offset for a window under 0x60 ignored (was simfoto 4)"),
     ("gfx.family.bulletin", 1, "cov_r_s2_screens", "bulletin", "the board image one pixel lower"),
     ("gfx.family.bulletin", 2, "cov_r_s2_screens", "bulletin", "the trophy one pixel to the right"),
     ("gfx.family.bulletin", 3, "cov_r_s2_screens", "bulletin", "the notes' x without the s / 2 term"),
@@ -211,8 +213,8 @@ def test_frames_negctl_red(glib, fam, mode, scen, chk, what):
 
 
 # ------------------------------------------------------------------------------------------------ the ball's cut
-# The ball's square is held on every frame (the head drawn over it is not), so the cut (simfoto mode 1: one row lower) is read
-# on the pixels of the square that equal the reference: the ring the head leaves visible. tour_0180's ball lies at (128, 243)
+# The ball's square is held on every frame (the probe paints it after the head), so the cut (simfoto mode 1: one row lower) is
+# read on the pixels of the square that equal the reference in the run without a probe: the ring the head leaves visible. tour_0180's ball lies at (128, 243)
 # .. 0x8c x 0x8c (drawWindow(0x96, 0xef, .., -2): ex - 0x32, ey - 0x28 with ex = 0x96 + 0x1c, ey = 0xef + 0x2c).
 BALL = (128, 243, 128 + 0x8C - 1, 243 + 0x8C - 1)
 

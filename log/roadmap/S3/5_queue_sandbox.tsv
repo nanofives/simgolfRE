@@ -1,0 +1,10 @@
+scenario	checkpoint	ord	sprite_px	sprite_bad	sprite_bad_beyond	other_beyond	other_one	status
+sandbox_basic	sandbox_00	22	107344	5	0	0	46	PASS
+sandbox_basic	sandbox_05	74	107480	5	0	0	46	PASS
+sandbox_basic	sandbox_10	126	107630	5	0	0	45	PASS
+sandbox_basic	sandbox_15	178	107636	5	0	0	46	PASS
+sandbox_basic	sandbox_20	230	107621	5	0	0	46	PASS
+sandbox_basic	sandbox_25	282	107664	5	0	0	45	PASS
+sandbox_basic	sandbox_30	334	107669	5	0	0	46	PASS
+sandbox_basic	sandbox_35	386	107632	5	0	0	46	PASS
+sandbox_basic	sandbox_40	438	108648	5	0	0	44	PASS

@@ -1,6 +1,31 @@
-# Regression baseline at HEAD 919dbdd5 + S7 waves 1-3 (I10, 2026-10-27)
+# Regression baseline at HEAD d66aa755 + S3 (I13, 2026-10-28)
 
-This file now describes **HEAD + S7**: commit `919dbdd5` (= `78ffb06d`, the I7 state below, plus the user's test-tier commit: pytest.ini
+This file now describes **HEAD d66aa755 + S3**: commit `d66aa755` (= 919dbdd5 + S7 waves 1-3, the I10 state below) plus S3's
+resubmission c, merged as one request (`log/roadmap/S3/14_merge.md` + `14_files.txt`: MERGE_w5b, i.e. S3 waves 2 / 4 / 5 with S3.5,
+S3.7, S3.8, S3.11, S3.13, plus S3.14's seven edits), applied with `log/roadmap/S3/14_assemble.py --root .` and the UNCERTAINTIES rows
+U-1393..U-1398 (`log/roadmap/merges/I13.md`). Measured by I13 in the mirror `port/build/I13` (git archive d66aa755 + I6's junctions +
+`14_assemble.py --dst I13 --commit d66aa755` + `log/roadmap/merges/I13/unc_rows.py`; builds with SG_FREETYPE_ROOT). Raw logs in
+`log/roadmap/merges/I13/`. Every row not named in the table below is equal to I10's. Pass `-m ""` to pytest for these counts.
+
+| Gate | HEAD d66aa755 + S3 (I13) |
+|---|---|
+| repo static | 614 passed, 2 skipped, 46 deselected |
+| test_app_* x64, one file per process | 6 / 6: ingame 12 + 1 xfail, input 16, live 13, present 7, replay 14, shell 18 (= I10); the app starts at Normal class (decision G10, `SG_APP_PRIORITY=inherit` = the old class) |
+| port suite x64 | 82 files (I10's 75 + test_flic, test_defects_flic, test_gfx_hud, test_gfx_pixel, test_gfx_scene, test_gfx_text, test_terrain_overlay): 81 PASS, test_fttext 2 failed (U-1393, host); count changes against I10 are S3's own (test_gfx_s2_10 13, test_gl_raster 177, test_menu 24 + 47 skipped, test_terrain_live 398, test_vectors 298 + 538 skipped, test_win32 179 + 267 skipped); per-file counts in `log/roadmap/merges/I13/suite_compare_x64.log` |
+| port suite Win32 | 66 files (I7's 59 + the 7 S3 files above): the 22 known failing ids of `log/roadmap/merges/I10/win32_failed_ids.txt` (BASELINE's 20 + test_fttext's 2) and nothing else; all 7 S3 files PASS; test_live 39 (alone: in the suite run the background shell's 2-hour limit killed test_equivalence_all's workers) |
+| segments x64 / Win32 | 205 / 205 each, 0 rows (digests included) differ from I10's or between backends |
+| boot x64 / Win32 | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each, 0 rows differ from I10's (HEAD's 61 at 58 / 2 / 1) |
+| S7 live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266; 0 rows differ from I10's |
+| gfx.check | 0 duplicates, 131 bodies + 10 not_drawing |
+| frame census | 698 rows: **PASS 100**, FAIL 537, UNSUPPORTED 51, NOT_RUN 10; 0 of I10's 88 PASS rows lost, 12 gained, the 600 UNSUPPORTED rows now drawn and judged (537 FAIL with fewer differing px, 51 still UNSUPPORTED) |
+| S3.2 terrain verdict | 527 PASS, 75 NOT_MEASURED (= I10) |
+| chains / defects / ledger, freetype segments / boot | not re-run by I13 (S3.14's edits cannot reach them); I12 on MERGE_w5b at d66aa755: chains 342 / 342, 15 switches (I10's 14 + flic.treeAliasNames, 0 segments changed), ledger 1 row without a cause, freetype 205 / 205 and 66 / 2 / 2 |
+
+Reference TSVs for later runs: `log/roadmap/merges/I13/{segs,boot,equiv,app_replay}_{x64,win32}.tsv`, `census.tsv`, `terrain_verdicts.tsv`.
+
+## Before S3 (I10, HEAD 919dbdd5 + S7 waves 1-3, 2026-10-27)
+
+That state described **HEAD + S7**: commit `919dbdd5` (= `78ffb06d`, the I7 state below, plus the user's test-tier commit: pytest.ini
 addopts `-m "not slow and not ghidra"`, which touches no port file) plus S7 waves 1-3 merged as one request (`log/roadmap/S7/9_merge.md`,
 S7.9: the live core `live`, sg_live_* C ABI and runner op 40, the Windows app port/app with freetype.dll beside it, the gfx refresh hook,
 HeadlessTerrain release per context) and the shared-file edits of `9_apply.py` (`log/roadmap/merges/I10.md`). Measured by I10 in the mirror
@@ -177,6 +202,12 @@ record 1,156), 0 PASS rows lost; over S0's 609 rows PASS 73, 0 lost. NOT_RUN 10 
 no trace 10. Terrain verdict: **527 PASS, 0 FAIL**, 75 NOT_MEASURED.
 
 ## What a later run must hold
+
+(HEAD d66aa755 + S3, I13) The I10 list below, with these numbers in place of its: the x64 suite's 82 files with I13's counts
+(`log/roadmap/merges/I13/suite/`, `suite_app/`; test_fttext's 2 on this host); the Win32 suite's 66 files with only the 22 known ids;
+the census at PASS 100 with no PASS row of `log/roadmap/merges/I13/census.tsv` lost, terrain 527 PASS; gfx.check 131 bodies, 0
+duplicates. The app files' pacing gates measure the host: run them one file per process at low load, and restore
+log/roadmap/S7/8_*facts.json to HEAD's content after every app run (U-1398).
 
 (HEAD + S7, I10) Everything below, plus: the x64 suite's 75 files with I10's counts (S7's files as in the summary; test_fttext's two GDI
 metric tests fail on this host until the host change of I10.md section 3 is settled, in every mirror); the Win32 suite's 20 known failures

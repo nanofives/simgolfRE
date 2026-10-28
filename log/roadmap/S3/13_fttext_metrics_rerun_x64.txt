@@ -1,0 +1,37 @@
+[test-slot] all 2 test slots busy, waiting (0s so far). Holders:
+  slot 0: pid 8908 since 10-27 09:07 in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_13: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest port/test/test_gfx_credits.py -q -p no:cacheprovider
+  slot 1: pid 16828 since 10-27 08:51 in C:\Users\maria\Desktop\Proyectos\Mashed: pwsh -NoProfile -File C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\orch-integration\re\orchestrator\merge_train.ps1
+[test-slot] acquired slot 1/2 after 26s
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________________ test_font_metrics_equal_gdi_and_the_originals ________________
+
+portlib = <port.test.lib.Lib object at 0x00000202295BEE10>
+
+    @need_host
+    @pytest.mark.skipif(os.name != "nt", reason="the GDI provider is the reference")
+    def test_font_metrics_equal_gdi_and_the_originals(portlib):
+        _need(portlib)
+        bad = _metrics_vs_gdi(portlib)
+>       assert not bad, bad
+E       AssertionError: [('g_fontRef_821020', [28, 17, 4, 21, 7], [28, 18, 3, 21, 6], [28, 17, 4, 21, 7]), ('g_fontRef_821f08', [25, 14, 5, 19..., 13, 2, 15, 3], [20, 11, 4, 15, 5]), ('g_fontRef_821ee8', [17, 10, 3, 13, 4], [16, 11, 2, 13, 3], [17, 10, 3, 13, 4])]
+E       assert not [('g_fontRef_821020', [28, 17, 4, 21, 7], [28, 18, 3, 21, 6], [28, 17, 4, 21, 7]), ('g_fontRef_821f08', [25, 14, 5, 19..., 13, 2, 15, 3], [20, 11, 4, 15, 5]), ('g_fontRef_821ee8', [17, 10, 3, 13, 4], [16, 11, 2, 13, 3], [17, 10, 3, 13, 4])]
+
+port\test\test_fttext.py:139: AssertionError
+______________________ test_font_metrics_equal_on_win32 _______________________
+
+    @need_host
+    @pytest.mark.skipif(os.name != "nt", reason="the GDI provider is the reference")
+    def test_font_metrics_equal_on_win32():
+        lib = _win32()
+        _need(lib)
+        bad = _metrics_vs_gdi(lib)
+>       assert not bad, bad
+E       AssertionError: [('g_fontRef_821020', [28, 17, 4, 21, 7], [28, 18, 3, 21, 6], [28, 17, 4, 21, 7]), ('g_fontRef_821f08', [25, 14, 5, 19..., 13, 2, 15, 3], [20, 11, 4, 15, 5]), ('g_fontRef_821ee8', [17, 10, 3, 13, 4], [16, 11, 2, 13, 3], [17, 10, 3, 13, 4])]
+E       assert not [('g_fontRef_821020', [28, 17, 4, 21, 7], [28, 18, 3, 21, 6], [28, 17, 4, 21, 7]), ('g_fontRef_821f08', [25, 14, 5, 19..., 13, 2, 15, 3], [20, 11, 4, 15, 5]), ('g_fontRef_821ee8', [17, 10, 3, 13, 4], [16, 11, 2, 13, 3], [17, 10, 3, 13, 4])]
+
+port\test\test_fttext.py:158: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_fttext.py::test_font_metrics_equal_gdi_and_the_originals
+FAILED port/test/test_fttext.py::test_font_metrics_equal_on_win32 - Assertion...
+2 failed, 20 deselected in 4.43s

@@ -1,0 +1,2 @@
+label	scenario	boot	stream_calls	port_calls	compared	equal	first_difference
+g3	cov_b_paths	PASS 1576/1576	3234	3234	3234	3234	

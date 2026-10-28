@@ -1,0 +1,603 @@
+scenario	checkpoint	label	frame	drawn	diff	one	big	verdict	boot	detail
+championship	tournament_start	s32c_championship	82	247131	166	164	2	PASS	PASS	
+championship	tour_0060	s32c_championship	695	265709	166	164	2	PASS	PASS	
+championship	tour_0122	s32c_championship	1332	239979	166	164	2	PASS	PASS	
+championship	tour_0180	s32c_championship	1910	245133	166	164	2	PASS	PASS	
+championship	tournament_end	s32c_championship	2305	244880	166	164	2	PASS	PASS	
+course_season	sandbox	s32_course_season	22	170223	189	188	1	PASS	PASS	
+course_season	hole_open	s32_course_season	167	232102	165	164	1	PASS	PASS	
+course_season	season_060	s32_course_season	780	221433	165	164	1	PASS	PASS	
+course_season	season_120	s32_course_season	1393	219438	165	164	1	PASS	PASS	
+course_season	season_180	s32_course_season	2003	221157	165	164	1	PASS	PASS	
+course_season	season_240	s32_course_season	2616	220550	165	164	1	PASS	PASS	
+course_season	season_300	s32_course_season	3229	221519	165	164	1	PASS	PASS	
+course_season	season_360	s32_course_season	3842	219657	165	164	1	PASS	PASS	
+course_season	season_420	s32_course_season	4455	223743	165	164	1	PASS	PASS	
+course_season	season_480	s32_course_season	5068	220867	165	164	1	PASS	PASS	
+course_season	season_540	s32_course_season	5681	222494	165	164	1	PASS	PASS	
+course_season	season_600	s32_course_season	6295	219570	165	164	1	PASS	PASS	
+course_season_6y	sandbox	s32c_course_season_6y	22	170223	189	188	1	PASS	PASS	
+course_season_6y	hole_open	s32c_course_season_6y	167	232102	165	164	1	PASS	PASS	
+course_season_6y	season_500	s32c_course_season_6y	5267	220255	165	164	1	PASS	PASS	
+course_season_6y	season_1000	s32c_course_season_6y	10335	221196	165	164	1	PASS	PASS	
+course_season_6y	season_1500	s32c_course_season_6y	15437	225526	165	164	1	PASS	PASS	
+course_season_6y	season_2000	s32c_course_season_6y	20526	230428	165	164	1	PASS	PASS	
+course_season_6y	season_2500	s32c_course_season_6y	25617	220750	165	164	1	PASS	PASS	
+course_season_6y	season_3000	s32c_course_season_6y	30719	222245	165	164	1	PASS	PASS	
+course_season_6y	season_3500	s32c_course_season_6y	35809	223216	165	164	1	PASS	PASS	
+course_season_6y	season_4000	s32c_course_season_6y	40911	223599	165	164	1	PASS	PASS	
+course_season_6y	season_4500	s32c_course_season_6y	46000	227306	165	164	1	PASS	PASS	
+course_season_6y	season_5000	s32c_course_season_6y	51091	221880	165	164	1	PASS	PASS	
+cov_a_build	terrain_03	s32c_cov_a_build	395	209482	169	168	1	PASS	PASS	
+cov_a_build	terrain_07	s32c_cov_a_build	730	205257	173	172	1	PASS	PASS	
+cov_a_build	terrain_11	s32c_cov_a_build	1065	198835	169	168	1	PASS	PASS	
+cov_a_build	terrain_15	s32c_cov_a_build	1400	197394	168	167	1	PASS	PASS	
+cov_a_build	amenities	s32c_cov_a_build	1474	195987	168	167	1	PASS	PASS	
+cov_a_build	amen_470	s32c_cov_a_build	1604	195082	168	167	1	PASS	PASS	
+cov_a_build	amen_532	s32c_cov_a_build	1734	195379	168	167	1	PASS	PASS	
+cov_a_build	amen_594	s32c_cov_a_build	1865	196206	168	167	1	PASS	PASS	
+cov_a_build	amen_655	s32c_cov_a_build	1995	196140	167	166	1	PASS	PASS	
+cov_a_build	amen_717	s32c_cov_a_build	2125	196793	167	166	1	PASS	PASS	
+cov_a_build	bldg_2	s32c_cov_a_build	2420	193988	163	162	1	PASS	PASS	
+cov_a_build	bldg_5	s32c_cov_a_build	2672	191855	168	167	1	PASS	PASS	
+cov_a_build	bldg_8	s32c_cov_a_build	2923	191810	168	167	1	PASS	PASS	
+cov_a_build	brush_350	s32c_cov_a_build	3034	205758	168	167	1	PASS	PASS	
+cov_a_build	brush_465	s32c_cov_a_build	3122	205748	168	167	1	PASS	PASS	
+cov_a_build	brush_585	s32c_cov_a_build	3211	205608	176	175	1	PASS	PASS	
+cov_a_build	brush_720	s32c_cov_a_build	3266	191741	176	175	1	PASS	PASS	
+cov_a_build	undo	s32c_cov_a_build	3366	143003	176	175	1	PASS	PASS	
+cov_a_build	end	s32c_cov_a_build	3469	143130	176	175	1	PASS	PASS	
+cov_a_build2	holes	s32c_cov_a_build2	315	233107	165	164	1	PASS	PASS	
+cov_a_build2	second_tee_green	s32c_cov_a_build2	454	220347	166	165	1	PASS	PASS	
+cov_a_build2	paint_over_holes	s32c_cov_a_build2	675	217327	166	165	1	PASS	PASS	
+cov_a_build2	buildings	s32c_cov_a_build2	860	156034	170	169	1	PASS	PASS	
+cov_a_build2	remove_prompt1	s32c_cov_a_build2	904	204197	170	169	1	PASS	PASS	
+cov_a_build2	remove_prompt2	s32c_cov_a_build2	954	204131	170	169	1	PASS	PASS	
+cov_a_build2	removed	s32c_cov_a_build2	1021	155528	170	169	1	PASS	PASS	
+cov_a_build2	demolish	s32c_cov_a_build2	1145	155298	170	169	1	PASS	PASS	
+cov_a_build2	end	s32c_cov_a_build2	1243	154987	170	169	1	PASS	PASS	
+cov_a_build3	amen_sub0	s32c_cov_a_build3	342	219619	165	164	1	PASS	PASS	
+cov_a_build3	amen_sub1	s32c_cov_a_build3	664	222163	165	164	1	PASS	PASS	
+cov_a_build3	amen_sub2	s32c_cov_a_build3	1003	220611	165	164	1	PASS	PASS	
+cov_a_build3	amen_sub3	s32c_cov_a_build3	1342	219668	167	166	1	PASS	PASS	
+cov_a_build3	amen_sub4	s32c_cov_a_build3	1597	221955	166	165	1	PASS	PASS	
+cov_a_build3	path	s32c_cov_a_build3	1660	222006	166	165	1	PASS	PASS	
+cov_a_build3	end	s32c_cov_a_build3	1712	221997	166	165	1	PASS	PASS	
+cov_a_career	game	s32c_cov_a_career	32	221244	72	70	2	PASS	PASS	
+cov_a_career	hole	s32c_cov_a_career	221	221219	74	72	2	PASS	PASS	
+cov_a_career	render	s32c_cov_a_career	262	221094	74	72	2	PASS	PASS	
+cov_a_career	year_100	s32c_cov_a_career	1267	222876	74	72	2	PASS	PASS	
+cov_a_career	year_200	s32c_cov_a_career	2288	221482	74	72	2	PASS	PASS	
+cov_a_career	year_300	s32c_cov_a_career	3309	222511	74	72	2	PASS	PASS	
+cov_a_career	year_400	s32c_cov_a_career	4330	222260	74	72	2	PASS	PASS	
+cov_a_career	year_500	s32c_cov_a_career	5352	222105	74	72	2	PASS	PASS	
+cov_a_career	year_600	s32c_cov_a_career	6373	221680	74	72	2	PASS	PASS	
+cov_a_career	year_700	s32c_cov_a_career	7394	221487	74	72	2	PASS	PASS	
+cov_a_career	year_800	s32c_cov_a_career	8376	222776	74	72	2	PASS	PASS	
+cov_a_career	career_popup	s32c_cov_a_career	8704	222894	74	72	2	PASS	PASS	
+cov_a_career	career_editor	s32c_cov_a_career	8704	222894	74	72	2	PASS	PASS	
+cov_a_career	end	s32c_cov_a_career	8775	223050	74	72	2	PASS	PASS	
+cov_a_champ	tournament_start	s32c_cov_a_champ	82	247131	166	164	2	PASS	PASS	
+cov_a_champ	gary_turn	s32c_cov_a_champ	285	240938	166	164	2	PASS	PASS	
+cov_a_champ	shot_keys	s32c_cov_a_champ	347	240930	166	164	2	PASS	PASS	
+cov_a_champ	champ_CJ	s32c_cov_a_champ	461	240923	166	164	2	PASS	PASS	
+cov_a_champ	champ_render	s32c_cov_a_champ	502	242507	166	164	2	PASS	PASS	
+cov_a_champ	n_prompt	s32c_cov_a_champ	504	242510	166	164	2	PASS	PASS	
+cov_a_champ	n_cancel	s32c_cov_a_champ	539	242226	166	164	2	PASS	PASS	
+cov_a_champ	X	s32c_cov_a_champ	571	242239	166	164	2	PASS	PASS	
+cov_a_flags	mood5	s32c_cov_a_flags	153	227724	174	173	1	PASS	PASS	
+cov_a_flags	mood5_X	s32c_cov_a_flags	186	108598	190	190	0	PASS	PASS	
+cov_a_flags	clubhouse	s32c_cov_a_flags	285	118376	182	182	0	PASS	PASS	
+cov_a_flags	ztut	s32c_cov_a_flags	390	227793	176	175	1	PASS	PASS	
+cov_a_flags	ztut_esc	s32c_cov_a_flags	434	239631	195	194	1	PASS	PASS	
+cov_a_flags	ztut_after	s32c_cov_a_flags	476	243192	195	194	1	PASS	PASS	
+cov_a_flags	zdemo	s32c_cov_a_flags	581	240338	205	202	3	PASS	PASS	
+cov_a_flags	zdemo_clicks	s32c_cov_a_flags	665	229406	205	202	3	PASS	PASS	
+cov_a_flags	zedit	s32c_cov_a_flags	822	240134	197	195	2	PASS	PASS	
+cov_a_flags	end	s32c_cov_a_flags	925	248122	197	195	2	PASS	PASS	
+cov_a_golfer	holes	s32c_cov_a_golfer	337	170838	165	164	1	PASS	KNOWN	
+cov_a_golfer	season	s32c_cov_a_golfer	2377	173901	165	164	1	PASS	KNOWN	
+cov_a_golfer	panel_0	s32c_cov_a_golfer	2494	256963	165	164	1	PASS	KNOWN	
+cov_a_golfer	button_0	s32c_cov_a_golfer	2501	257116	165	164	1	PASS	KNOWN	
+cov_a_golfer	action_0	s32c_cov_a_golfer	2616	173013	165	164	1	PASS	KNOWN	
+cov_a_golfer	panel_1	s32c_cov_a_golfer	2793	302680	165	164	1	PASS	KNOWN	
+cov_a_golfer	button_1	s32c_cov_a_golfer	2821	220247	165	164	1	PASS	KNOWN	
+cov_a_golfer	action_1	s32c_cov_a_golfer	2944	219978	165	164	1	PASS	KNOWN	
+cov_a_golfer	panel_2	s32c_cov_a_golfer	2962	304310	165	164	1	PASS	KNOWN	
+cov_a_golfer	button_2	s32c_cov_a_golfer	2970	304412	165	164	1	PASS	KNOWN	
+cov_a_golfer	action_2	s32c_cov_a_golfer	3087	222067	165	164	1	PASS	KNOWN	
+cov_a_golfer	panel_3	s32c_cov_a_golfer	3160	304759	165	164	1	PASS	KNOWN	
+cov_a_golfer	button_3	s32c_cov_a_golfer	3189	310908	165	164	1	PASS	KNOWN	
+cov_a_golfer	action_3	s32c_cov_a_golfer	3312	223616	165	164	1	PASS	KNOWN	
+cov_a_golfer	q_editor	s32c_cov_a_golfer	3430	271845	165	164	1	PASS	KNOWN	
+cov_a_golfer	q_done	s32c_cov_a_golfer	3486	221805	165	164	1	PASS	KNOWN	
+cov_a_golfer	mod_11	s32c_cov_a_golfer	3616	223093	165	164	1	PASS	KNOWN	
+cov_a_golfer	mod_10	s32c_cov_a_golfer	3745	220873	165	164	1	PASS	KNOWN	
+cov_a_golfer	shift_tee_300	s32c_cov_a_golfer	3785	304364	165	164	1	PASS	KNOWN	
+cov_a_golfer	shift_tee_570	s32c_cov_a_golfer	3861	305401	165	164	1	PASS	KNOWN	
+cov_a_golfer	tee_300	s32c_cov_a_golfer	3929	303352	165	164	1	PASS	KNOWN	
+cov_a_golfer	tee_570	s32c_cov_a_golfer	4013	302696	165	164	1	PASS	KNOWN	
+cov_a_golfer	strip	s32c_cov_a_golfer	4169	206026	167	165	2	PASS	KNOWN	
+cov_a_golfer	pan_rot0	s32c_cov_a_golfer	4252	138236	105	105	0	PASS	KNOWN	
+cov_a_golfer	pan_rot1	s32c_cov_a_golfer	4319	77056	96	96	0	PASS	KNOWN	
+cov_a_golfer	pan_rot2	s32c_cov_a_golfer	4385	65933	104	103	1	PASS	KNOWN	
+cov_a_golfer	pan_rot3	s32c_cov_a_golfer	4451	65662	101	100	1	PASS	KNOWN	
+cov_a_golfer	end	s32c_cov_a_golfer	4503	65662	101	100	1	PASS	KNOWN	
+cov_a_keys	holes	s32c_cov_a_keys	371	170189	165	164	1	PASS	PASS	
+cov_a_keys	k_speed	s32c_cov_a_keys	611	219886	165	164	1	PASS	PASS	
+cov_a_keys	k_misc	s32c_cov_a_keys	737	249320	186	185	1	PASS	PASS	
+cov_a_keys	k_tools	s32c_cov_a_keys	942	198166	186	185	1	PASS	PASS	
+cov_a_keys	k_cheats	s32c_cov_a_keys	1104	195170	186	185	1	PASS	PASS	
+cov_a_keys	k_worldmap	s32c_cov_a_keys	1106	197225	186	185	1	PASS	PASS	
+cov_a_keys	k_cheats2	s32c_cov_a_keys	1203	195566	186	185	1	PASS	PASS	
+cov_a_keys	k_holes	s32c_cov_a_keys	1375	160473	215	214	1	PASS	PASS	
+cov_a_keys	k_terrain	s32c_cov_a_keys	1481	162987	217	216	1	PASS	PASS	
+cov_a_keys	k_vk	s32c_cov_a_keys	1621	162945	213	212	1	PASS	PASS	
+cov_a_keys	k_dlg_S	s32c_cov_a_keys	1623	162916	213	212	1	PASS	PASS	
+cov_a_keys	k_dlg_L	s32c_cov_a_keys	1659	123032	99	95	4	PASS	PASS	
+cov_a_keys	k_dlg_R	s32c_cov_a_keys	1695	152042	96	94	2	PASS	PASS	
+cov_a_keys	k_dlg_J	s32c_cov_a_keys	1731	152656	96	94	2	PASS	PASS	
+cov_a_keys	k_dialogs	s32c_cov_a_keys	1766	153419	96	94	2	PASS	PASS	
+cov_a_keys	k_C	s32c_cov_a_keys	1768	154499	96	94	2	PASS	PASS	
+cov_a_keys	k_B	s32c_cov_a_keys	1833	154320	96	94	2	PASS	PASS	
+cov_a_keys	k_files	s32c_cov_a_keys	1852	153543	96	94	2	PASS	PASS	
+cov_a_keys	k_render_dot	s32c_cov_a_keys	1854	153549	96	94	2	PASS	PASS	
+cov_a_keys	k_render_slash	s32c_cov_a_keys	1894	153353	96	94	2	PASS	PASS	
+cov_a_keys	k_render	s32c_cov_a_keys	1999	152233	96	94	2	PASS	PASS	
+cov_a_keys	end	s32c_cov_a_keys	2102	152309	96	94	2	PASS	PASS	
+cov_a_keys2	holes	s32c_cov_a_keys2	371	170189	165	164	1	PASS	PASS	
+cov_a_keys2	report_space	s32c_cov_a_keys2	428	170369	165	164	1	PASS	PASS	
+cov_a_keys2	tab_brush	s32c_cov_a_keys2	624	171455	165	164	1	PASS	PASS	
+cov_a_keys2	e_build	s32c_cov_a_keys2	699	218720	165	164	1	PASS	PASS	
+cov_a_keys2	holes_keys	s32c_cov_a_keys2	954	231674	171	170	1	PASS	PASS	
+cov_a_keys2	C_prompt	s32c_cov_a_keys2	956	231765	171	170	1	PASS	PASS	
+cov_a_keys2	C_overwrite	s32c_cov_a_keys2	998	306154	171	170	1	PASS	PASS	
+cov_a_keys2	end	s32c_cov_a_keys2	1115	104347	219	219	0	PASS	PASS	
+cov_a_keys3	holes	s32c_cov_a_keys3	371	170189	165	164	1	PASS	PASS	
+cov_a_keys3	season	s32c_cov_a_keys3	2406	174673	165	164	1	PASS	PASS	
+cov_a_keys3	panel	s32c_cov_a_keys3	2540	255982	165	164	1	PASS	PASS	
+cov_a_keys3	q_editor	s32c_cov_a_keys3	2542	255916	165	164	1	PASS	PASS	
+cov_a_keys3	end	s32c_cov_a_keys3	2659	171606	165	164	1	PASS	PASS	
+cov_a_play	hole	s32c_cov_a_play	209	170657	165	164	1	PASS	PASS	
+cov_a_play	match	s32c_cov_a_play	324	219263	165	164	1	PASS	PASS	
+cov_a_play	gary_turn	s32c_cov_a_play	370	221470	165	164	1	PASS	PASS	
+cov_a_play	shot_keys	s32c_cov_a_play	432	221880	165	164	1	PASS	PASS	
+cov_a_play	n_prompt	s32c_cov_a_play	434	221653	165	164	1	PASS	PASS	
+cov_a_play	n_yes	s32c_cov_a_play	511	225342	165	164	1	PASS	PASS	
+cov_a_play	end	s32c_cov_a_play	594	222723	165	164	1	PASS	PASS	
+cov_a_quit	game	s32c_cov_a_quit	209	170657	165	164	1	PASS	PASS	
+cov_a_quit	exit_prompt	s32c_cov_a_quit	216	170479	165	164	1	PASS	PASS	
+cov_a_quit	exit_stay	s32c_cov_a_quit	248	170547	165	164	1	PASS	PASS	
+cov_a_quit	game2	s32c_cov_a_quit	295	99655	174	171	3	PASS	PASS	
+cov_a_quit	exit_save	s32c_cov_a_quit	302	99778	174	171	3	PASS	PASS	
+cov_b_build	sandbox	s32c_cov_b_build	39	170254	189	188	1	PASS	PASS	
+cov_b_build	views	s32c_cov_b_build	209	170456	189	188	1	PASS	PASS	
+cov_b_build	hole	s32c_cov_b_build	391	171374	165	164	1	PASS	PASS	
+cov_b_build	golf_palette	s32c_cov_b_build	1644	171204	164	163	1	PASS	PASS	
+cov_b_build	bldg_palette	s32c_cov_b_build	3150	169238	175	174	1	PASS	PASS	
+cov_b_build	edit	s32c_cov_b_build	3489	231363	174	173	1	PASS	PASS	
+cov_b_build	end	s32c_cov_b_build	4247	217177	174	173	1	PASS	PASS	
+cov_b_career	career	s32c_cov_b_career	42	159345	125	125	0	PASS	PASS	
+cov_b_career	hole	s32c_cov_b_career	242	121115	124	124	0	PASS	PASS	
+cov_b_career	play	s32c_cov_b_career	651	121304	124	124	0	PASS	PASS	
+cov_b_career	offer	s32c_cov_b_career	871	121579	124	124	0	PASS	PASS	
+cov_b_career	year_end	s32c_cov_b_career	1120	121852	124	124	0	PASS	PASS	
+cov_b_career	year2	s32c_cov_b_career	1733	121620	124	124	0	PASS	PASS	
+cov_b_career_types	career_scotland	s32_cov_b_career_types	49	180918	201	195	6	PASS	PASS	
+cov_b_career_types	played_scotland	s32_cov_b_career_types	341	180507	201	195	6	PASS	PASS	
+cov_b_career_types	career_ireland	s32_cov_b_career_types	410	150260	244	238	6	PASS	PASS	
+cov_b_career_types	played_ireland	s32_cov_b_career_types	702	151042	244	238	6	PASS	PASS	
+cov_b_career_types	career_lasvegas	s32_cov_b_career_types	772	63525	275	266	9	PASS	PASS	
+cov_b_career_types	played_lasvegas	s32_cov_b_career_types	1064	63144	275	266	9	PASS	PASS	
+cov_b_career_types	career_carolina	s32_cov_b_career_types	1133	106779	174	171	3	PASS	PASS	
+cov_b_career_types	played_carolina	s32_cov_b_career_types	1425	107270	174	171	3	PASS	PASS	
+cov_b_career_types	career_novascotia	s32_cov_b_career_types	1494	281111	264	255	9	PASS	PASS	
+cov_b_career_types	played_novascotia	s32_cov_b_career_types	1786	220611	264	255	9	PASS	PASS	
+cov_b_career_types	career_wales	s32_cov_b_career_types	1856	136542	250	246	4	PASS	PASS	
+cov_b_career_types	played_wales	s32_cov_b_career_types	2148	136676	250	246	4	PASS	PASS	
+cov_b_decor	sandbox	s32c_cov_b_decor	39	170254	189	188	1	PASS	PASS	
+cov_b_decor	paths	s32c_cov_b_decor	476	218433	165	164	1	PASS	PASS	
+cov_b_decor	decor	s32c_cov_b_decor	3162	228758	165	164	1	PASS	PASS	
+cov_b_decor	terrain	s32c_cov_b_decor	3535	229478	166	165	1	PASS	PASS	
+cov_b_decor	end	s32c_cov_b_decor	4124	230368	166	165	1	PASS	PASS	
+cov_b_holes18	zoom1	s32_cov_b_holes18	68	43104	229	229	0	PASS	KNOWN	
+cov_b_holes18	long_holes	s32_cov_b_holes18	1136	252819	153	153	0	PASS	KNOWN	
+cov_b_holes18	holes	s32_cov_b_holes18	3266	233379	149	149	0	PASS	KNOWN	
+cov_b_holes18	hired	s32_cov_b_holes18	4149	233467	149	149	0	PASS	KNOWN	
+cov_b_holes18	limit	s32_cov_b_holes18	4430	235535	148	148	0	PASS	KNOWN	
+cov_b_holes18	end	s32_cov_b_holes18	4855	180737	148	148	0	PASS	KNOWN	
+cov_b_inject	course	s32c_cov_b_inject	847	165888	169	168	1	PASS	PASS	
+cov_b_inject	debug_overlay	s32c_cov_b_inject	988	228332	169	168	1	PASS	PASS	
+cov_b_inject	zoom_box	s32c_cov_b_inject	1031	474280	169	168	1	PASS	PASS	
+cov_b_inject	forced_events	s32c_cov_b_inject	1523	471881	169	168	1	PASS	PASS	
+cov_b_inject	end	s32c_cov_b_inject	1830	472425	169	168	1	PASS	PASS	
+cov_b_inject2	course	s32c_cov_b_inject2	999	170065	165	164	1	PASS	PASS	
+cov_b_inject2	debug_overlay	s32c_cov_b_inject2	1127	230039	165	164	1	PASS	PASS	
+cov_b_inject2	zoom_box	s32c_cov_b_inject2	1145	474702	165	164	1	PASS	PASS	
+cov_b_inject2	forced_events	s32c_cov_b_inject2	1572	471820	165	164	1	PASS	PASS	
+cov_b_inject2	end	s32c_cov_b_inject2	1879	471821	165	164	1	PASS	PASS	
+cov_b_locations	phoenix	s32c_cov_b_locations	39	101469	186	185	1	PASS	PASS	
+cov_b_locations	end	s32c_cov_b_locations	1035	168573	187	186	1	PASS	PASS	
+cov_b_paths	paths	s32p_cov_b_paths	615	224400	170	169	1	PASS	PASS	
+cov_b_paths	raised	s32p_cov_b_paths	878	177937	169	168	1	PASS	PASS	
+cov_b_paths	water	s32p_cov_b_paths	1113	178122	169	168	1	PASS	PASS	
+cov_b_paths	end	s32p_cov_b_paths	1575	237903	169	168	1	PASS	PASS	
+cov_b_people	course	s32c_cov_b_people	374	170861	165	164	1	PASS	PASS	
+cov_b_people	prefs_off	s32c_cov_b_people	606	169824	165	164	1	PASS	PASS	
+cov_b_people	prefs_on	s32c_cov_b_people	635	171929	165	164	1	PASS	PASS	
+cov_b_people	hover	s32c_cov_b_people	1295	170490	165	164	1	PASS	PASS	
+cov_b_people	end	s32c_cov_b_people	1602	170545	165	164	1	PASS	PASS	
+cov_b_shots	tournament_start	s32c_cov_b_shots	82	246968	166	164	2	PASS	PASS	
+cov_b_shots	results	s32c_cov_b_shots	2475	246445	166	164	2	PASS	PASS	
+cov_b_shots	shot_08	s32c_cov_b_shots	3390	215738	171	171	0	PASS	PASS	
+cov_b_shots	shot_16	s32c_cov_b_shots	5423	215736	171	171	0	PASS	PASS	
+cov_b_shots	results_r2	s32c_cov_b_shots	5785	215799	171	171	0	PASS	PASS	
+cov_b_shots	shot_24	s32c_cov_b_shots	8120	216038	184	184	0	PASS	PASS	
+cov_b_shots	end	s32c_cov_b_shots	8152	235668	184	184	0	PASS	PASS	
+cov_b_shots2	tournament_start	s32c_cov_b_shots2	82	246923	166	164	2	PASS	PASS	
+cov_b_shots2	results	s32c_cov_b_shots2	1659	246720	166	164	2	PASS	PASS	
+cov_b_shots2	shot_08	s32c_cov_b_shots2	2754	241440	165	162	3	PASS	PASS	
+cov_b_shots2	results_r2	s32c_cov_b_shots2	4478	237132	165	162	3	PASS	PASS	
+cov_b_shots2	shot_16	s32c_cov_b_shots2	5497	187143	195	195	0	PASS	PASS	
+cov_b_shots2	results_r3	s32c_cov_b_shots2	7551	190296	195	195	0	PASS	PASS	
+cov_b_shots2	shot_24	s32c_cov_b_shots2	7905	187531	191	188	3	PASS	PASS	
+cov_b_shots2	end	s32c_cov_b_shots2	7937	187650	191	188	3	PASS	PASS	
+cov_b_title	career	s32c_cov_b_title	42	271849	264	262	2	PASS	PASS	
+cov_b_title	month	s32c_cov_b_title	860	251157	239	237	2	PASS	PASS	
+cov_b_title	end	s32c_cov_b_title	1166	252294	239	237	2	PASS	PASS	
+cov_k1_animals	course	s32c_cov_k1_animals	931	160240	167	166	1	PASS	PASS	
+cov_k1_animals	bought	s32c_cov_k1_animals	1032	214260	167	166	1	PASS	PASS	
+cov_k1_animals	session2	s32c_cov_k1_animals	1091	121728	164	164	0	PASS	PASS	
+cov_k1_animals	session2_end	s32c_cov_k1_animals	1296	121762	164	164	0	PASS	PASS	
+cov_k1_label	course	s32c_cov_k1_label	323	203562	296	294	2	PASS	PASS	
+cov_k1_label	label	s32c_cov_k1_label	350	149455	178	178	0	PASS	PASS	
+cov_k1_label	end	s32c_cov_k1_label	402	149350	178	178	0	PASS	PASS	
+cov_k1_magazine_d2900	holes	s32c_cov_k1_magazine_d2900	834	167725	163	162	1	PASS	PASS	
+cov_k1_magazine_d2900	article	s32c_cov_k1_magazine_d2900	1181	169576	163	162	1	PASS	PASS	
+cov_k1_magazine_d2900	end	s32c_cov_k1_magazine_d2900	1284	171124	163	162	1	PASS	PASS	
+cov_k1_paths	bridge	s32q_cov_k1_paths	168	220255	165	164	1	PASS	PASS	
+cov_k1_paths	cart	s32q_cov_k1_paths	437	175755	165	164	1	PASS	PASS	
+cov_k1_paths	end	s32q_cov_k1_paths	490	175585	165	164	1	PASS	PASS	
+cov_k1_river	r00	s32c_cov_k1_river	67	137520	351	350	1	PASS	PASS	
+cov_k1_river	r01	s32c_cov_k1_river	69	137674	351	350	1	PASS	PASS	
+cov_k1_river	r02	s32c_cov_k1_river	71	137748	351	350	1	PASS	PASS	
+cov_k1_river	r03	s32c_cov_k1_river	73	137558	351	350	1	PASS	PASS	
+cov_k1_river	r04	s32c_cov_k1_river	75	137570	351	350	1	PASS	PASS	
+cov_k1_river	r05	s32c_cov_k1_river	77	137654	351	350	1	PASS	PASS	
+cov_k1_river	r06	s32c_cov_k1_river	79	137562	351	350	1	PASS	PASS	
+cov_k1_river	r07	s32c_cov_k1_river	81	137640	351	350	1	PASS	PASS	
+cov_k1_river	r08	s32c_cov_k1_river	83	137489	351	350	1	PASS	PASS	
+cov_k1_river	r09	s32c_cov_k1_river	85	137346	351	350	1	PASS	PASS	
+cov_k1_river	r10	s32c_cov_k1_river	87	137315	351	350	1	PASS	PASS	
+cov_k1_river	r11	s32c_cov_k1_river	89	137296	351	350	1	PASS	PASS	
+cov_k1_river	r12	s32c_cov_k1_river	91	137325	351	350	1	PASS	PASS	
+cov_k1_river	r13	s32c_cov_k1_river	93	137437	351	350	1	PASS	PASS	
+cov_k1_river	r14	s32c_cov_k1_river	95	137554	351	350	1	PASS	PASS	
+cov_k1_river	r15	s32c_cov_k1_river	97	137487	351	350	1	PASS	PASS	
+cov_k1_river	r16	s32c_cov_k1_river	99	137340	351	350	1	PASS	PASS	
+cov_k1_river	r17	s32c_cov_k1_river	101	137352	351	350	1	PASS	PASS	
+cov_k1_river	r18	s32c_cov_k1_river	103	137383	351	350	1	PASS	PASS	
+cov_k1_river	r19	s32c_cov_k1_river	105	137375	351	350	1	PASS	PASS	
+cov_k1_river	r20	s32c_cov_k1_river	107	137738	351	350	1	PASS	PASS	
+cov_k1_river	r21	s32c_cov_k1_river	110	138105	351	350	1	PASS	PASS	
+cov_k1_river	r22	s32c_cov_k1_river	112	138246	351	350	1	PASS	PASS	
+cov_k1_river	r23	s32c_cov_k1_river	114	138540	351	350	1	PASS	PASS	
+cov_k1_river	r24	s32c_cov_k1_river	116	138442	351	350	1	PASS	PASS	
+cov_k1_river	r25	s32c_cov_k1_river	118	138480	351	350	1	PASS	PASS	
+cov_k1_river	r26	s32c_cov_k1_river	120	138049	351	350	1	PASS	PASS	
+cov_k1_river	r27	s32c_cov_k1_river	122	137832	351	350	1	PASS	PASS	
+cov_k1_river	r28	s32c_cov_k1_river	124	137481	351	350	1	PASS	PASS	
+cov_k1_river	r29	s32c_cov_k1_river	126	137356	351	350	1	PASS	PASS	
+cov_k1_river	r30	s32c_cov_k1_river	128	137310	351	350	1	PASS	PASS	
+cov_k1_river	r31	s32c_cov_k1_river	130	137366	351	350	1	PASS	PASS	
+cov_k1_river	r32	s32c_cov_k1_river	132	137445	351	350	1	PASS	PASS	
+cov_k1_river	r33	s32c_cov_k1_river	134	137487	351	350	1	PASS	PASS	
+cov_k1_river	r34	s32c_cov_k1_river	136	137479	351	350	1	PASS	PASS	
+cov_k1_river	r35	s32c_cov_k1_river	138	137318	351	350	1	PASS	PASS	
+cov_k1_river	r36	s32c_cov_k1_river	140	137375	351	350	1	PASS	PASS	
+cov_k1_river	r37	s32c_cov_k1_river	142	137437	351	350	1	PASS	PASS	
+cov_k1_river	r38	s32c_cov_k1_river	144	137417	351	350	1	PASS	PASS	
+cov_k1_river	r39	s32c_cov_k1_river	146	137448	351	350	1	PASS	PASS	
+cov_k1_river	r40	s32c_cov_k1_river	148	137390	351	350	1	PASS	PASS	
+cov_k1_river	r41	s32c_cov_k1_river	150	137382	351	350	1	PASS	PASS	
+cov_k1_river	r42	s32c_cov_k1_river	152	137363	351	350	1	PASS	PASS	
+cov_k1_river	r43	s32c_cov_k1_river	154	137317	351	350	1	PASS	PASS	
+cov_k1_river	r44	s32c_cov_k1_river	156	137354	351	350	1	PASS	PASS	
+cov_k1_river	r45	s32c_cov_k1_river	159	137416	351	350	1	PASS	PASS	
+cov_k1_river	r46	s32c_cov_k1_river	161	137385	351	350	1	PASS	PASS	
+cov_k1_river	r47	s32c_cov_k1_river	163	137341	351	350	1	PASS	PASS	
+cov_k1_river	r48	s32c_cov_k1_river	165	137343	351	350	1	PASS	PASS	
+cov_k1_river	r49	s32c_cov_k1_river	167	137331	351	350	1	PASS	PASS	
+cov_k1_river	r50	s32c_cov_k1_river	169	137361	351	350	1	PASS	PASS	
+cov_k1_river	r51	s32c_cov_k1_river	171	137795	351	350	1	PASS	PASS	
+cov_k1_river	r52	s32c_cov_k1_river	173	138140	351	350	1	PASS	PASS	
+cov_k1_river	r53	s32c_cov_k1_river	175	138483	351	350	1	PASS	PASS	
+cov_k1_river	r54	s32c_cov_k1_river	177	138448	351	350	1	PASS	PASS	
+cov_k1_river	r55	s32c_cov_k1_river	179	138379	351	350	1	PASS	PASS	
+cov_k1_river	r56	s32c_cov_k1_river	181	138307	351	350	1	PASS	PASS	
+cov_k1_river	r57	s32c_cov_k1_river	183	138188	351	350	1	PASS	PASS	
+cov_k1_river	r58	s32c_cov_k1_river	185	137848	351	350	1	PASS	PASS	
+cov_k1_river	r59	s32c_cov_k1_river	187	137828	351	350	1	PASS	PASS	
+cov_k1_river	r60	s32c_cov_k1_river	189	137385	351	350	1	PASS	PASS	
+cov_k1_river	r61	s32c_cov_k1_river	191	137387	351	350	1	PASS	PASS	
+cov_k1_river	r62	s32c_cov_k1_river	193	137312	351	350	1	PASS	PASS	
+cov_k1_river	r63	s32c_cov_k1_river	195	137400	351	350	1	PASS	PASS	
+cov_k1_river	r64	s32c_cov_k1_river	197	137583	351	350	1	PASS	PASS	
+cov_k1_river	r65	s32c_cov_k1_river	199	137679	351	350	1	PASS	PASS	
+cov_k1_river	r66	s32c_cov_k1_river	201	137574	351	350	1	PASS	PASS	
+cov_k1_river	r67	s32c_cov_k1_river	203	137321	351	350	1	PASS	PASS	
+cov_k1_river	r68	s32c_cov_k1_river	205	137314	351	350	1	PASS	PASS	
+cov_k1_river	r69	s32c_cov_k1_river	207	137375	351	350	1	PASS	PASS	
+cov_k1_river	end	s32c_cov_k1_river	210	137414	351	350	1	PASS	PASS	
+cov_k1_routing	trees	s32c_cov_k1_routing	363	172215	164	163	1	PASS	PASS	
+cov_k1_routing	routing	s32c_cov_k1_routing	365	172229	164	163	1	PASS	PASS	
+cov_k1_routing	end	s32c_cov_k1_routing	420	172667	164	163	1	PASS	PASS	
+cov_k1_steps	steps	s32c_cov_k1_steps	568	176512	172	168	4	PASS	PASS	
+cov_k1_steps	end	s32c_cov_k1_steps	620	176472	172	168	4	PASS	PASS	
+cov_k1_terrain	raised	s32p_cov_k1_terrain	333	170994	168	163	5	PASS	PASS	
+cov_k1_terrain	rot6	s32p_cov_k1_terrain	361	169092	175	171	4	PASS	PASS	
+cov_k1_terrain	rot6_end	s32p_cov_k1_terrain	403	169011	175	171	4	PASS	PASS	
+cov_k1_terrain	end	s32p_cov_k1_terrain	432	170982	168	163	5	PASS	PASS	
+cov_k1_washers	washers	s32c_cov_k1_washers	1538	176402	165	164	1	PASS	PASS	
+cov_k1_washers	washers2	s32c_cov_k1_washers	1570	176348	165	164	1	PASS	PASS	
+cov_k1_washers	zoom_in	s32c_cov_k1_washers	1591	176356	165	164	1	PASS	PASS	
+cov_k1_washers	end	s32c_cov_k1_washers	1623	176335	165	164	1	PASS	PASS	
+cov_k2_build	built	s32c_cov_k2_build	157	223041	165	164	1	PASS	PASS	
+cov_k2_build	cached_miss	s32c_cov_k2_build	174	222515	165	164	1	PASS	PASS	
+cov_k2_build	fairway	s32c_cov_k2_build	622	210263	166	165	1	PASS	PASS	
+cov_k2_build	bulldoze	s32c_cov_k2_build	683	210316	172	171	1	PASS	PASS	
+cov_k2_build	opened	s32c_cov_k2_build	956	158939	172	171	1	PASS	PASS	
+cov_k2_build	decay	s32c_cov_k2_build	1039	159058	172	171	1	PASS	PASS	
+cov_k2_build	lot	s32c_cov_k2_build	1101	158988	172	171	1	PASS	PASS	
+cov_k2_build	end	s32c_cov_k2_build	1163	158979	172	171	1	PASS	PASS	
+cov_k2_golfers	paused	s32c_cov_k2_golfers	1057	175037	165	164	1	PASS	PASS	
+cov_k2_golfers	same_y	s32c_cov_k2_golfers	1074	176016	165	164	1	PASS	PASS	
+cov_k2_golfers	state12	s32c_cov_k2_golfers	1090	175974	165	164	1	PASS	PASS	
+cov_k2_golfers	partner	s32c_cov_k2_golfers	1106	175973	165	164	1	PASS	PASS	
+cov_k2_label	career	s32c_cov_k2_label	42	266180	72	70	2	PASS	PASS	
+cov_k2_label	label0	s32c_cov_k2_label	68	220567	72	70	2	PASS	PASS	
+cov_k2_label	label1	s32c_cov_k2_label	76	220885	72	70	2	PASS	PASS	
+cov_k2_label	label2	s32c_cov_k2_label	84	221728	72	70	2	PASS	PASS	
+cov_k2_label	label3	s32c_cov_k2_label	92	221130	72	70	2	PASS	PASS	
+cov_k2_label	label4	s32c_cov_k2_label	100	220342	72	70	2	PASS	PASS	
+cov_k2_simfoto	paused	s32c_cov_k2_simfoto	1073	175039	165	164	1	PASS	PASS	
+cov_k2_simfoto	bottom	s32c_cov_k2_simfoto	1107	146982	104	103	1	PASS	PASS	
+cov_k2_simfoto	right	s32c_cov_k2_simfoto	1146	200446	151	148	3	PASS	PASS	
+cov_k3_build	sandbox	s32c_cov_k3_build	39					FAIL	FAIL	the port kept no course view of frame 39 (boot FAIL)
+cov_k3_build	held_sub0	s32c_cov_k3_build	145					FAIL	FAIL	the port kept no course view of frame 145 (boot FAIL)
+cov_k3_build	held_sub1	s32c_cov_k3_build	220					FAIL	FAIL	the port kept no course view of frame 220 (boot FAIL)
+cov_k3_build	held_sub2	s32c_cov_k3_build	294					FAIL	FAIL	the port kept no course view of frame 294 (boot FAIL)
+cov_k3_build	held_sub3	s32c_cov_k3_build	368					FAIL	FAIL	the port kept no course view of frame 368 (boot FAIL)
+cov_k3_build	held_sub4	s32c_cov_k3_build	443					FAIL	FAIL	the port kept no course view of frame 443 (boot FAIL)
+cov_k3_build	held_bldg	s32c_cov_k3_build	551					FAIL	FAIL	the port kept no course view of frame 551 (boot FAIL)
+cov_k3_build	homesites10	s32c_cov_k3_build	608					FAIL	FAIL	the port kept no course view of frame 608 (boot FAIL)
+cov_k3_build	green19	s32c_cov_k3_build	854					FAIL	FAIL	the port kept no course view of frame 854 (boot FAIL)
+cov_k3_build	tee19	s32c_cov_k3_build	957					FAIL	FAIL	the port kept no course view of frame 957 (boot FAIL)
+cov_k3_build	restored	s32c_cov_k3_build	993					FAIL	FAIL	the port kept no course view of frame 993 (boot FAIL)
+cov_k3_build	end	s32c_cov_k3_build	1025					FAIL	FAIL	the port kept no course view of frame 1025 (boot FAIL)
+cov_k3_camera	sandbox	s32p_cov_k3_camera	39	170254	189	188	1	PASS	PASS	
+cov_k3_camera	edge	s32p_cov_k3_camera	83	39328	32	31	1	PASS	PASS	
+cov_k3_camera	x_edge0	s32p_cov_k3_camera	181	104340	32	31	1	PASS	PASS	
+cov_k3_camera	x_edge1	s32p_cov_k3_camera	182	104336	32	31	1	PASS	PASS	
+cov_k3_camera	x_edge2	s32p_cov_k3_camera	183	104365	32	31	1	PASS	PASS	
+cov_k3_camera	x_edge3	s32p_cov_k3_camera	185	104407	32	31	1	PASS	PASS	
+cov_k3_camera	x_edge4	s32p_cov_k3_camera	186	104381	32	31	1	PASS	PASS	
+cov_k3_camera	x_edge5	s32p_cov_k3_camera	187	220958	65	63	2	PASS	PASS	
+cov_k3_camera	x_edge6	s32p_cov_k3_camera	188	102907	65	63	2	PASS	PASS	
+cov_k3_camera	x_edge7	s32p_cov_k3_camera	189	102922	65	63	2	PASS	PASS	
+cov_k3_camera	x_after	s32p_cov_k3_camera	216	102910	65	63	2	PASS	PASS	
+cov_k3_camera	y_inj0	s32p_cov_k3_camera	217	102884	65	63	2	PASS	PASS	
+cov_k3_camera	y_inj1	s32p_cov_k3_camera	218	102883	65	63	2	PASS	PASS	
+cov_k3_camera	y_inj2	s32p_cov_k3_camera	220	102928	65	63	2	PASS	PASS	
+cov_k3_camera	y_inj3	s32p_cov_k3_camera	221	479889	188	187	1	PASS	PASS	
+cov_k3_camera	y_inj4	s32p_cov_k3_camera	222	470539	135	134	1	PASS	PASS	
+cov_k3_camera	y_inj5	s32p_cov_k3_camera	223	125088	135	134	1	PASS	PASS	
+cov_k3_camera	y_inj6	s32p_cov_k3_camera	224	125094	135	134	1	PASS	PASS	
+cov_k3_camera	y_inj7	s32p_cov_k3_camera	225	125117	135	134	1	PASS	PASS	
+cov_k3_camera	y_after	s32p_cov_k3_camera	251	125117	135	134	1	PASS	PASS	
+cov_k3_camera	end	s32p_cov_k3_camera	288	59945	135	134	1	PASS	PASS	
+cov_k3_camera2	sandbox	s32c_cov_k3_camera2	39	170254	189	188	1	PASS	PASS	
+cov_k3_camera2	edge	s32c_cov_k3_camera2	83	39328	32	31	1	PASS	PASS	
+cov_k3_camera2	x_edge0	s32c_cov_k3_camera2	98	39330	32	31	1	PASS	PASS	
+cov_k3_camera2	x_edge1	s32c_cov_k3_camera2	99	39373	32	31	1	PASS	PASS	
+cov_k3_camera2	x_edge2	s32c_cov_k3_camera2	100	203755	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge3	s32c_cov_k3_camera2	101	39366	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge4	s32c_cov_k3_camera2	102	39369	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge5	s32c_cov_k3_camera2	104	39361	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge6	s32c_cov_k3_camera2	105	39354	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge7	s32c_cov_k3_camera2	106	39343	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge8	s32c_cov_k3_camera2	107	39332	65	63	2	PASS	PASS	
+cov_k3_camera2	x_edge9	s32c_cov_k3_camera2	108	39325	65	63	2	PASS	PASS	
+cov_k3_camera2	x_after	s32c_cov_k3_camera2	134	39307	65	63	2	PASS	PASS	
+cov_k3_camera2	y_inj0	s32c_cov_k3_camera2	149	39366	65	63	2	PASS	PASS	
+cov_k3_camera2	y_inj1	s32c_cov_k3_camera2	150	472145	188	187	1	PASS	PASS	
+cov_k3_camera2	y_inj2	s32c_cov_k3_camera2	151	470405	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj3	s32c_cov_k3_camera2	152	59832	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj4	s32c_cov_k3_camera2	153	59840	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj5	s32c_cov_k3_camera2	155	59859	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj6	s32c_cov_k3_camera2	156	59833	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj7	s32c_cov_k3_camera2	157	59849	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj8	s32c_cov_k3_camera2	158	59873	135	134	1	PASS	PASS	
+cov_k3_camera2	y_inj9	s32c_cov_k3_camera2	159	59878	135	134	1	PASS	PASS	
+cov_k3_camera2	y_after	s32c_cov_k3_camera2	185	59876	135	134	1	PASS	PASS	
+cov_k3_camera2	end	s32c_cov_k3_camera2	207	59857	135	134	1	PASS	PASS	
+cov_k3_career	career	s32c_cov_k3_career	59	221483	72	70	2	PASS	PASS	
+cov_k3_career	prompt	s32c_cov_k3_career	60	221399	72	70	2	PASS	PASS	
+cov_k3_career	prompt2	s32c_cov_k3_career	60	221399	72	70	2	PASS	PASS	
+cov_k3_champ	tournament_start	s32c_cov_k3_champ	82	247131	166	164	2	PASS	PASS	
+cov_k3_champ	gary_turn	s32c_cov_k3_champ	285	240938	166	164	2	PASS	PASS	
+cov_k3_champ	aim0	s32c_cov_k3_champ	292	241603	166	164	2	PASS	PASS	
+cov_k3_champ	aim1	s32c_cov_k3_champ	293	241619	166	164	2	PASS	PASS	
+cov_k3_champ	aim2	s32c_cov_k3_champ	294	241874	166	164	2	PASS	PASS	
+cov_k3_champ	aim3	s32c_cov_k3_champ	295	241860	166	164	2	PASS	PASS	
+cov_k3_champ	aim4	s32c_cov_k3_champ	296	241870	166	164	2	PASS	PASS	
+cov_k3_champ	aim5	s32c_cov_k3_champ	298	241608	166	164	2	PASS	PASS	
+cov_k3_champ	aim6	s32c_cov_k3_champ	299	240195	166	164	2	PASS	PASS	
+cov_k3_champ	aim7	s32c_cov_k3_champ	300	241033	166	164	2	PASS	PASS	
+cov_k3_champ	shot	s32c_cov_k3_champ	362	240549	166	164	2	PASS	PASS	
+cov_k3_champ	end	s32c_cov_k3_champ	425	240723	166	164	2	PASS	PASS	
+cov_k3_hole19	hole	s32c_cov_k3_hole19	221	170464	165	164	1	PASS	PASS	
+cov_k3_hole19	green_line0	s32c_cov_k3_hole19	345	223001	165	164	1	PASS	PASS	
+cov_k3_hole19	green_line1	s32c_cov_k3_hole19	346	222976	165	164	1	PASS	PASS	
+cov_k3_hole19	green19_0	s32c_cov_k3_hole19	353	223866	165	164	1	PASS	PASS	
+cov_k3_hole19	green19_1	s32c_cov_k3_hole19	354	223876	165	164	1	PASS	PASS	
+cov_k3_hole19	green19_2	s32c_cov_k3_hole19	355	223908	165	164	1	PASS	PASS	
+cov_k3_hole19	green19_3	s32c_cov_k3_hole19	356	223827	165	164	1	PASS	PASS	
+cov_k3_hole19	end	s32c_cov_k3_hole19	424	170972	165	164	1	PASS	PASS	
+cov_l_bridge	bridge	s32c_cov_l_bridge	173	221058	165	164	1	PASS	PASS	
+cov_l_bridge	obj0	s32c_cov_l_bridge	218	228844	164	163	1	PASS	PASS	
+cov_l_bridge	obj1	s32c_cov_l_bridge	219	221347	164	163	1	PASS	PASS	
+cov_l_bridge	obj2	s32c_cov_l_bridge	220	222924	164	163	1	PASS	PASS	
+cov_l_bridge	obj3	s32c_cov_l_bridge	221	222989	164	163	1	PASS	PASS	
+cov_l_bridge	obj4	s32c_cov_l_bridge	222	222833	164	163	1	PASS	PASS	
+cov_l_bridge	obj5	s32c_cov_l_bridge	223	222599	164	163	1	PASS	PASS	
+cov_l_bridge	obj6	s32c_cov_l_bridge	225	222601	164	163	1	PASS	PASS	
+cov_l_bridge	obj7	s32c_cov_l_bridge	226	222599	164	163	1	PASS	PASS	
+cov_l_bridge	obj8	s32c_cov_l_bridge	227	222601	164	163	1	PASS	PASS	
+cov_l_bridge	obj9	s32c_cov_l_bridge	228	222575	164	163	1	PASS	PASS	
+cov_l_bridge	end	s32c_cov_l_bridge	249	222669	164	163	1	PASS	PASS	
+cov_l_camera	edge	s32p_cov_l_camera	159	37195	0	0	0	PASS	PASS	
+cov_l_camera	step0	s32p_cov_l_camera	169	37195	0	0	0	PASS	PASS	
+cov_l_camera	step1	s32p_cov_l_camera	170	37195	0	0	0	PASS	PASS	
+cov_l_camera	step2	s32p_cov_l_camera	171	37432	0	0	0	PASS	PASS	
+cov_l_camera	step3	s32p_cov_l_camera	172	37432	0	0	0	PASS	PASS	
+cov_l_camera	step4	s32p_cov_l_camera	173	37432	0	0	0	PASS	PASS	
+cov_l_camera	step5	s32p_cov_l_camera	174	37432	0	0	0	PASS	PASS	
+cov_l_camera	step6	s32p_cov_l_camera	175	37432	0	0	0	PASS	PASS	
+cov_l_camera	step7	s32p_cov_l_camera	176	37432	0	0	0	PASS	PASS	
+cov_l_camera	step8	s32p_cov_l_camera	177	37432	0	0	0	PASS	PASS	
+cov_l_camera	step9	s32p_cov_l_camera	178	37432	0	0	0	PASS	PASS	
+cov_l_camera	after	s32p_cov_l_camera	204	37195	0	0	0	PASS	PASS	
+cov_l_camera	end	s32p_cov_l_camera	226	37195	0	0	0	PASS	PASS	
+cov_l_point	game0	s32c_cov_l_point	11	170169	189	188	1	PASS	PASS	
+cov_l_point	game1	s32c_cov_l_point	22	170223	189	188	1	PASS	PASS	
+cov_l_point	game2	s32c_cov_l_point	33	170329	189	188	1	PASS	PASS	
+cov_l_point	game3	s32c_cov_l_point	44	170490	189	188	1	PASS	PASS	
+cov_r_bio	loaded							NOT_MEASURED		no recording
+cov_r_bio	panel							NOT_MEASURED		no recording
+cov_r_bio	editor							NOT_MEASURED		no recording
+cov_r_bio	bio1_done							NOT_MEASURED		no recording
+cov_r_bio	bio2_done							NOT_MEASURED		no recording
+cov_r_bio	exit							NOT_MEASURED		no recording
+cov_r_bio	end							NOT_MEASURED		no recording
+cov_r_course	loaded	s32c_cov_r_course	153	262989	282	278	4	PASS	PASS	
+cov_r_course	run_a	s32c_cov_r_course	256	265939	282	278	4	PASS	PASS	
+cov_r_course	end	s32c_cov_r_course	667	299338	307	303	4	PASS	PASS	
+cov_r_flic_input	hud							NOT_MEASURED		no recording
+cov_r_flic_input	end							NOT_MEASURED		no recording
+cov_r_palette_hot	sandbox							NOT_MEASURED		no recording
+cov_r_palette_hot	hover_undo							NOT_MEASURED		no recording
+cov_r_palette_hot	undo_help							NOT_MEASURED		no recording
+cov_r_palette_hot	hover_wrench							NOT_MEASURED		no recording
+cov_r_palette_hot	amenities							NOT_MEASURED		no recording
+cov_r_palette_hot	end							NOT_MEASURED		no recording
+cov_r_quit	game	s32c_cov_r_quit	209	170657	165	164	1	PASS	PASS	
+cov_r_quit	exit_prompt	s32c_cov_r_quit	216	170479	165	164	1	PASS	PASS	
+cov_r_quit	exit_stay	s32c_cov_r_quit	248	170547	165	164	1	PASS	PASS	
+cov_r_quit	game2	s32c_cov_r_quit	295	99655	174	171	3	PASS	PASS	
+cov_r_quit	exit_save	s32c_cov_r_quit	302	99778	174	171	3	PASS	PASS	
+cov_r_reload	loaded	s32c_cov_r_reload	153	227724	174	173	1	PASS	PASS	
+cov_r_reload	run_a	s32c_cov_r_reload	358	228062	174	173	1	PASS	PASS	
+cov_r_reload	end	s32c_cov_r_reload	1406	227127	201	199	2	PASS	PASS	
+cov_r_s2_screens	course							NOT_MEASURED		no recording
+cov_r_s2_screens	radial_hover							NOT_MEASURED		no recording
+cov_r_s2_screens	rep_comments							NOT_MEASURED		no recording
+cov_r_s2_screens	rep_histograph							NOT_MEASURED		no recording
+cov_r_s2_screens	rep_financial							NOT_MEASURED		no recording
+cov_r_s2_screens	rep_report1							NOT_MEASURED		no recording
+cov_r_s2_screens	rep_shortcuts							NOT_MEASURED		no recording
+cov_r_s2_screens	rep_roster							NOT_MEASURED		no recording
+cov_r_s2_screens	bulletin							NOT_MEASURED		no recording
+cov_r_s2_screens	hole_stats							NOT_MEASURED		no recording
+cov_r_s2_screens	best_scores							NOT_MEASURED		no recording
+cov_r_s2_screens	system_menu							NOT_MEASURED		no recording
+cov_r_s2_screens	preferences							NOT_MEASURED		no recording
+cov_r_s2_screens	hire							NOT_MEASURED		no recording
+cov_r_s2_screens	end_of_year							NOT_MEASURED		no recording
+cov_r_s2_screens	skill_points							NOT_MEASURED		no recording
+cov_r_s2_screens	skill_popup							NOT_MEASURED		no recording
+cov_r_s2_screens	practice							NOT_MEASURED		no recording
+cov_r_s2_screens	cancel_prompt							NOT_MEASURED		no recording
+cov_r_s2_screens	editor							NOT_MEASURED		no recording
+cov_r_s2_screens	pre_land							NOT_MEASURED		no recording
+cov_r_s2_screens	land_popup							NOT_MEASURED		no recording
+cov_r_s2_screens	buy_land							NOT_MEASURED		no recording
+cov_r_s2_screens	end							NOT_MEASURED		no recording
+cov_r_sve	loaded	s32c_cov_r_sve	153	227724	174	173	1	PASS	PASS	
+cov_r_sve	run_a	s32c_cov_r_sve	358	228062	174	173	1	PASS	PASS	
+cov_r_sve	end	s32c_cov_r_sve	1338	227214	202	200	2	PASS	PASS	
+cov_r_theme_cancel	career							NOT_MEASURED		no recording
+cov_r_theme_cancel	end							NOT_MEASURED		no recording
+cov_r_tutorial	loaded							NOT_MEASURED		no recording
+cov_r_tutorial	armed							NOT_MEASURED		no recording
+cov_r_tutorial	p01							NOT_MEASURED		no recording
+cov_r_tutorial	p02							NOT_MEASURED		no recording
+cov_r_tutorial	p03							NOT_MEASURED		no recording
+cov_r_tutorial	p04							NOT_MEASURED		no recording
+cov_r_tutorial	p05							NOT_MEASURED		no recording
+cov_r_tutorial	p06							NOT_MEASURED		no recording
+cov_r_tutorial	p07							NOT_MEASURED		no recording
+cov_r_tutorial	p08							NOT_MEASURED		no recording
+cov_r_tutorial	p09							NOT_MEASURED		no recording
+cov_r_tutorial	p10							NOT_MEASURED		no recording
+cov_r_tutorial	p11							NOT_MEASURED		no recording
+cov_r_tutorial	p12							NOT_MEASURED		no recording
+cov_r_tutorial	p13							NOT_MEASURED		no recording
+cov_r_tutorial	p14							NOT_MEASURED		no recording
+cov_r_tutorial	p15							NOT_MEASURED		no recording
+cov_r_tutorial	p16							NOT_MEASURED		no recording
+cov_r_tutorial	p17							NOT_MEASURED		no recording
+cov_r_tutorial	p18							NOT_MEASURED		no recording
+cov_r_tutorial	p19							NOT_MEASURED		no recording
+cov_r_tutorial	p20							NOT_MEASURED		no recording
+cov_r_tutorial	p30							NOT_MEASURED		no recording
+cov_r_tutorial	p21							NOT_MEASURED		no recording
+cov_r_tutorial	p22							NOT_MEASURED		no recording
+cov_r_tutorial	p23							NOT_MEASURED		no recording
+cov_r_tutorial	p24							NOT_MEASURED		no recording
+cov_r_tutorial	p25							NOT_MEASURED		no recording
+cov_r_tutorial	p26							NOT_MEASURED		no recording
+cov_r_tutorial	p27							NOT_MEASURED		no recording
+cov_r_tutorial	p28							NOT_MEASURED		no recording
+cov_r_tutorial	p29							NOT_MEASURED		no recording
+cov_r_tutorial	p00_flag_clear							NOT_MEASURED		no recording
+cov_r_tutorial	esc_load							NOT_MEASURED		no recording
+golfer_stories	sandbox	s32c_golfer_stories	22	170223	189	188	1	PASS	PASS	
+golfer_stories	hole_open	s32c_golfer_stories	167	232102	165	164	1	PASS	PASS	
+golfer_stories	holes_built	s32c_golfer_stories	550	230528	168	167	1	PASS	PASS	
+golfer_stories	season_0120	s32c_golfer_stories	1756	219350	168	167	1	PASS	PASS	
+golfer_stories	season_end	s32c_golfer_stories	2083	268468	168	167	1	PASS	PASS	
+mood5_fixture	loaded	s32c_mood5_fixture	81	227794	174	173	1	PASS	PASS	
+mood5_fixture	view	s32c_mood5_fixture	121	244016	219	218	1	PASS	PASS	
+mood5_fixture	season_end	s32c_mood5_fixture	244	244173	219	218	1	PASS	PASS	
+sandbox_basic	sandbox_00	s32_sandbox	22	170223	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_05	s32_sandbox	74	170552	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_10	s32_sandbox	126	170712	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_15	s32_sandbox	178	170709	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_20	s32_sandbox	230	170664	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_25	s32_sandbox	282	170688	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_30	s32_sandbox	334	170723	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_35	s32_sandbox	386	170693	189	188	1	PASS	PASS	
+sandbox_basic	sandbox_40	s32_sandbox	438	171649	189	188	1	PASS	PASS	
+stories9_fixture	loaded	s32c_stories9_fixture	81	264200	282	278	4	PASS	PASS	
+stories9_fixture	view	s32c_stories9_fixture	137	230330	322	318	4	PASS	PASS	
+stories9_fixture	season_end	s32c_stories9_fixture	549	232109	322	318	4	PASS	PASS	
+stories_fixture	loaded	s32c_stories_fixture	81	280826	187	184	3	PASS	PASS	
+stories_fixture	view	s32c_stories_fixture	144	212535	102	101	1	PASS	PASS	
+stories_fixture	season_end	s32c_stories_fixture	268	213239	102	101	1	PASS	PASS	
+ui_tour	game	s32c_ui_tour	62	164763	59	57	2	PASS	PASS	
+ui_tour	people	s32c_ui_tour	1234	246148	165	164	1	PASS	PASS	
+ui_tour	reports	s32c_ui_tour	1482	248146	161	161	0	PASS	PASS	
+ui_tour	menus	s32c_ui_tour	1716	244514	145	145	0	PASS	PASS	
+ui_tour	practice	s32c_ui_tour	2013	244315	145	145	0	PASS	PASS	
+ui_tour	shot	s32c_ui_tour	2183	267066	145	145	0	PASS	PASS	
+ui_tour	cancelled	s32c_ui_tour	2341	244628	145	145	0	PASS	PASS	
+ui_tour	end	s32c_ui_tour	2477	243941	145	145	0	PASS	PASS	
+ui_tour_v	game	s32c_ui_tour_v	62	152476	195	195	0	PASS	PASS	
+ui_tour_v	people	s32c_ui_tour_v	1209	132697	127	127	0	PASS	PASS	
+ui_tour_v	reports	s32c_ui_tour_v	1457	141761	132	132	0	PASS	PASS	
+ui_tour_v	menus	s32c_ui_tour_v	1692	130052	138	138	0	PASS	PASS	
+ui_tour_v	practice	s32c_ui_tour_v	1995	131125	138	138	0	PASS	PASS	
+ui_tour_v	shot	s32c_ui_tour_v	2165	129417	138	138	0	PASS	PASS	
+ui_tour_v	cancelled	s32c_ui_tour_v	2323	128823	138	138	0	PASS	PASS	
+ui_tour_v	end	s32c_ui_tour_v	2459	129978	138	138	0	PASS	PASS	

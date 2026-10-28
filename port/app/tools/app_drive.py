@@ -63,6 +63,17 @@ psapi.GetModuleFileNameExW.argtypes = [W.HANDLE, W.HMODULE, W.LPWSTR, W.DWORD]
 
 SRCCOPY = 0x00CC0020
 CREATE_NO_WINDOW = 0x08000000
+NORMAL_PRIORITY_CLASS = 0x00000020
+
+
+def priority_flags() -> int:
+    """roadmap S3.14 (U-1395): the app starts in the Normal priority class, the class an Explorer launch gives it. A test runner
+    can run below normal (the machine's test-slot hook puts pytest at BELOW_NORMAL, and a child inherits its parent's class), and
+    there the host's ABOVE_NORMAL sim thread (host.cpp, U-1655) ranks below every normal-priority thread on the machine: its
+    frame waits ended 1-5 s late under load (log/roadmap/S3/14_notes.md). Decision G10 (re/roadmap/DECISIONS_PENDING.md, 2026-10-28):
+    Normal for the app only; pytest and every other test stay at BelowNormal. SG_APP_PRIORITY=inherit keeps the parent's class (the
+    switch, and the negative control)."""
+    return 0 if os.environ.get("SG_APP_PRIORITY", "") == "inherit" else NORMAL_PRIORITY_CLASS
 
 
 class BITMAPINFOHEADER(C.Structure):
@@ -195,7 +206,7 @@ def matched(posted: list[tuple[int, int, int]], events: list[dict]) -> int:
 def launch(exe, args: list[str], cwd=None, timeout: float = 300.0) -> App:
     """Starts the app (no console window) and waits for its READY line: hwnd, client size, dpi, recording directory."""
     proc = subprocess.Popen([str(pathlib.Path(exe).resolve()), *args], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-                            creationflags=CREATE_NO_WINDOW)
+                            creationflags=CREATE_NO_WINDOW | priority_flags())
     lines: list[str] = []
     end = time.time() + timeout
     while time.time() < end:
