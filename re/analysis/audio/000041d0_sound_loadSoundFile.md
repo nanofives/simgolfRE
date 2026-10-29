@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x000041d0`), 3762 bytes, 1157 instructions, subsystem 
 
 ## Role (from the naming pass, not a C3 purpose)
 Master audio-file loader: opens a file through mmio and parses RIFF WAV and MIDI ((string in the binary)) content; reads g_100b49b8, g_100b4a08. (`re/names/sound_0.tsv`)
-System writeup: `re/analysis/systems/sound_0.md`.
+System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_19.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x1000507f): callee pops 4 bytes of stack arguments.

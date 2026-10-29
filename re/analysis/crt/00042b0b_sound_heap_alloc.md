@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00042b0b`), 103 bytes in 3 address ranges, 80 instruc
 
 ## Role (from the naming pass, not a C3 purpose)
 CRT core allocator body: allocates from the small-block heap under the heap lock (the worker behind malloc/_nh_malloc). (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_19.md`, `re/analysis/systems/sound_5.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10042c06): callee pops 0 bytes of stack arguments.

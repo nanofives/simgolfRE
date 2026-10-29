@@ -1222,8 +1222,8 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00406250 `showLoadingScreen` at 0x0040f919, 0x00421603
 - 0x004065c0 `showCharacterIntro` at 0x0041cee7
 - 0x00406c30 `canAfford` at 0x0041f42e, 0x00420047
-- 0x00406f20 `FUN_00406f20` at 0x0041dc88
-- 0x00406f90 `FUN_00406f90` at 0x0041dae8
+- 0x00406f20 `raiseCornerLevelsAround` at 0x0041dc88
+- 0x00406f90 `lowerCornerLevelsAround` at 0x0041dae8
 - 0x00407000 `holeQuadrants` at 0x00416e09, 0x004177b5
 - 0x00407280 `appendHoleName` at 0x0041eec5
 - 0x00407340 `nearestHole` at 0x00413285, 0x00416530, 0x00417945, 0x0041d06b, 0x0041fbec
@@ -1231,7 +1231,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004074a0 `landmarkName` at 0x0041a010
 - 0x00407b60 `sceneryLabel` at 0x00412a02
 - 0x00407c60 `drawCircle` at 0x00415a6f, 0x0041a0db, 0x0041d14c, 0x0041d45a
-- 0x00407d30 `FUN_00407d30` at 0x0041ddf9, 0x0041de3b
+- 0x00407d30 `switchToCourse` at 0x0041ddf9, 0x0041de3b
 - 0x004099f0 `addGolferPair` at 0x0041d3ac
 - 0x00409bf0 `updateRollingStats` at 0x00417613
 - 0x00409cb0 `pushTripleEntry` at 0x0041f981
@@ -1244,7 +1244,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0040acd0 `distance` at 0x00414ccd, 0x00419a8a, 0x0041afb0, 0x0041b129, 0x0041b2a1, 0x0041b311, 0x0041b49f, 0x0041c364 (+3 more)
 - 0x0040ad60 `loadTopScores` at 0x0040f8c0
 - 0x0040b4a0 `saveGame` at 0x00417c61, 0x00417c87, 0x00420e26
-- 0x0040b680 `FUN_0040b680` at 0x0041cbcc
+- 0x0040b680 `saveCourse` at 0x0041cbcc
 - 0x0040b9b0 `loadGame` at 0x0041c102
 - 0x0040bf00 `setLinePoint` at 0x0041bb25, 0x0041d5d0
 - 0x0040bf20 `lineTo` at 0x0041bc47, 0x0041bd4c, 0x0041be35, 0x0041bf25, 0x0041bffb, 0x0041c0bd, 0x0041d5f0
@@ -1263,9 +1263,9 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0040cb00 `startMessage` at 0x00410349, 0x004154ed, 0x00417bbe, 0x00417dd9, 0x00417f82, 0x004181af, 0x0041c7f6, 0x0041cc13 (+5 more)
 - 0x0040cef0 `drawFrameR3` at 0x0041a5e3, 0x0041d164
 - 0x0040d6a0 `tickMessage` at 0x0041e090
-- 0x0040d760 `FUN_0040d760` at 0x0041d1b5, 0x0041d1d1, 0x0041d1ed, 0x0041d209
+- 0x0040d760 `shotStyleButtonCode` at 0x0041d1b5, 0x0041d1d1, 0x0041d1ed, 0x0041d209
 - 0x0040d7b0 `appendDate` at 0x00419029
-- 0x0040d890 `FUN_0040d890` at 0x0041c5dc, 0x0041c606, 0x0041c62e, 0x0041c660, 0x0041c694, 0x0041c6b0, 0x0041c6cc
+- 0x0040d890 `panelListSelect` at 0x0041c5dc, 0x0041c606, 0x0041c62e, 0x0041c660, 0x0041c694, 0x0041c6b0, 0x0041c6cc
 - 0x0040daa0 `appendCourseTitle` at 0x00418f7d, 0x0041cab1, 0x0041cae2, 0x0041cb97, 0x0041cbd9, 0x0041f10e
 - 0x0040db90 `evalPlacementArea` at 0x00419d9d, 0x0041f3a3
 - 0x0040df80 `objectAt` at 0x00413436, 0x00413f21, 0x0041e5b6, 0x0041f0bd, 0x0041fcc0, 0x004200a1
@@ -1273,7 +1273,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0040e400 `clearObjectFootprint` at 0x0041f940, 0x0041feb0, 0x00420191
 - 0x0040e720 `announceBuilding` at 0x0041c6e9, 0x0041ed9e
 - 0x0040f190 `customizeCharacter` at 0x0040fd14
-- 0x00421b30 `FUN_00421b30` at 0x0041ccb2, 0x0041d0a0
+- 0x00421b30 `Surface_createFull_fwd1` at 0x0041ccb2, 0x0041d0a0
 - 0x00421b60 `drawScaledSprite421b60` at 0x00419ccb
 - 0x00421b90 `drawScaledSprite421b90` at 0x004194e8, 0x004195dc, 0x004196a1
 - 0x00421bc0 `updateMembership` at 0x0040fe86
@@ -1370,7 +1370,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004672b0 `absDiff` at 0x00413c2c, 0x0041bb88, 0x0041bcad, 0x0041bdac, 0x0041be9c, 0x0041bf85, 0x0041c057
 - 0x004672d0 `angleFixed` at 0x00413987, 0x00413ae0, 0x00413af9, 0x00413b68, 0x0041b562
 - 0x004675d0 `thoughtFlag` at 0x00416c46, 0x00416cfb
-- 0x00467600 `pickGolferName` at 0x00416690
+- 0x00467600 `appendWalkerName` at 0x00416690
 - 0x004676e0 `buildGolferName` at 0x0041540e, 0x00415449, 0x00418a38
 - 0x00467a00 `emitGolferThought` at 0x00416e25, 0x0041c3a4, 0x0041e7d5
 - 0x00469b00 `buildGolferComment` at 0x00416a65
@@ -1382,7 +1382,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0046ddd0 `startNewCourse` at 0x0040fb25
 - 0x0046e7b0 `postEvent` at 0x0041cf11, 0x0041cf45, 0x0041cf7f
 - 0x0046e810 `showBulletinBoard` at 0x0041762a
-- 0x0046f180 `FUN_0046f180` at 0x0041def5
+- 0x0046f180 `runBulletinBoardWithSound` at 0x0041def5
 - 0x0046f2b0 `seedCourseTable` at 0x0042160b
 - 0x00470a00 -> 0x0046f550 `courseActionMenu` (incremental-linking thunk) at 0x0040fb9f
 - 0x00470a60 `generateRandomCourse` at 0x0040fbd5
@@ -1409,8 +1409,8 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0047ab50 `View_toLocal` at 0x00419758, 0x004199f4, 0x0041b253, 0x0041e174, 0x00421050
 - 0x00480b00 `fillWindowRect` at 0x004123fa, 0x00412431, 0x00412466, 0x004158b0, 0x00415910, 0x0041595a, 0x004160e2, 0x00416d38 (+5 more)
 - 0x00480c80 `Window::refreshFull` at 0x0040f928, 0x0041d89a, 0x0041e277, 0x0041e29b, 0x00421265
-- 0x00482fd0 `Cache482fd0::ctor` at 0x0040f663
-- 0x00483010 `Cache483010::dtor` at 0x0040fae7
+- 0x00482fd0 `PaletteCache::ctor` at 0x0040f663
+- 0x00483010 `PaletteCache::dtor` at 0x0040fae7
 - 0x00483bd0 `pumpInput483bd0` at 0x004199e0, 0x00421031
 - 0x00483d30 `enterModal483d30` at 0x0041d8dc, 0x0041e2c1
 - 0x004845e0 `Snd::status` at 0x004104fc

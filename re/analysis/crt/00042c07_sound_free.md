@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00042c07`), 106 bytes in 3 address ranges, 75 instruc
 
 ## Role (from the naming pass, not a C3 purpose)
 CRT free: looks the block up in the small-block heap and releases it under the heap lock, falling back to HeapFree. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_19.md`, `re/analysis/systems/sound_5.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10042cef): callee pops 0 bytes of stack arguments.
