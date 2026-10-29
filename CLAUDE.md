@@ -1968,7 +1968,8 @@ makes a "SimGolf (port)" shortcut; saves live in %LOCALAPPDATA%\SimGolfPort. The
 it and refuses a git checkout (an early version fell back to the current directory and wrote into the repo).
 Release rule (2026-10-29): the roadmap orchestrator publishes on its own after merges, when `scripts/lan_release/release_due.py`
 says DUE (2 commits changing port/ or re/model/include since the commit named in the server manifest's label, or 1 once that
-build is 24 h old); publish.sh appends each release to log/roadmap/lan_releases.tsv.
+build is 24 h old); publish.sh appends each release to log/roadmap/lan_releases.tsv. Every deploy also deletes the server files the
+new manifest no longer lists (refused above half of them unless PRUNE_FORCE=1), so the server holds one copy of the game.
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

@@ -9,7 +9,7 @@
 #
 # Upload: first publish = the whole folder as one tar over SSH; later publishes = diff the local manifest against
 # the server's and send only the changed files (then the manifest last, so a client never sees a manifest that
-# names a file not uploaded yet).
+# names a file not uploaded yet). Then every server file the new manifest no longer lists is deleted (no old copies kept).
 set -euo pipefail
 
 PI_HOST="${PI_HOST:-mariano@mariano-server.local}"
@@ -51,6 +51,28 @@ if [ -s "$list" ]; then
     tar --hard-dereference -czf - -C "$STAGE" -T "$list" | $SSH_CMD "$PI_HOST" "tar -xzmf - -C '$REMOTE_DIR'"
 fi
 tar -czf - -C "$STAGE" manifest.json | $SSH_CMD "$PI_HOST" "tar -xzmf - -C '$REMOTE_DIR'"
+
+# Old copies: delete every file on the server the new manifest no longer lists (Mariano, 2026-10-29), after the new
+# manifest is in place so no client is pointed at a removed file. Only inside REMOTE_DIR, and refused when more than half
+# of the server's files would go (a broken manifest), unless PRUNE_FORCE=1.
+case "$REMOTE_DIR" in */simgolf) ;; *) echo "[!] REMOTE_DIR $REMOTE_DIR does not end in /simgolf: no prune"; exit 3 ;; esac
+remote_list="$(mktemp)"; stale="$(mktemp)"
+trap 'rm -f "$tmp_remote" "$list" "$remote_list" "$stale"' EXIT
+$SSH_CMD "$PI_HOST" "cd '$REMOTE_DIR' && find . -type f | sed 's|^\./||'" > "$remote_list"
+py -3.12 - "$(cygpath -w "$STAGE/manifest.json")" "$(cygpath -w "$remote_list")" "$(cygpath -w "$stale")" "${PRUNE_FORCE:-0}" <<'EOF'
+import json, sys
+keep = {f["path"] for f in json.load(open(sys.argv[1], encoding="utf-8"))["files"]} | {"manifest.json"}
+have = [l.rstrip("\r\n") for l in open(sys.argv[2], encoding="utf-8") if l.strip()]
+gone = sorted(p for p in have if p not in keep)
+if gone and len(gone) * 2 > len(have) and sys.argv[4] != "1":
+    print("[!] prune refused: %d of %d server files are not in the manifest (PRUNE_FORCE=1 to allow)" % (len(gone), len(have)))
+    gone = []
+open(sys.argv[3], "wb").write(b"".join(p.encode("utf-8") + b"\0" for p in gone))
+print("    prune: %d old file(s) to delete of %d on the server%s" % (len(gone), len(have), "".join("\n      - " + p for p in gone[:20])))
+EOF
+if [ -s "$stale" ]; then
+    $SSH_CMD "$PI_HOST" "cd '$REMOTE_DIR' && xargs -0 rm -f -- && find . -mindepth 1 -type d -empty -delete" < "$stale"
+fi
 
 echo "[+] Verifying through nginx on the server ..."
 $SSH_CMD "$PI_HOST" "curl -fsS -o /dev/null http://localhost:$FILES_PORT/simgolf/manifest.json && echo '    OK: http://mariano-server.local:$FILES_PORT/simgolf/manifest.json'"
