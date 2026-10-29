@@ -1966,6 +1966,9 @@ original\ minus the SafeDisc files, shim, dev logs, JPEG.lib and saved games; ma
 (/home/mariano/td5re-release/simgolf). Player PCs: `update.bat` in an empty folder fetches `simgolf_update.ps1` and the build,
 makes a "SimGolf (port)" shortcut; saves live in %LOCALAPPDATA%\SimGolfPort. The updater only updates the folder holding
 it and refuses a git checkout (an early version fell back to the current directory and wrote into the repo).
+Release rule (2026-10-29): the roadmap orchestrator publishes on its own after merges, when `scripts/lan_release/release_due.py`
+says DUE (2 commits changing port/ or re/model/include since the commit named in the server manifest's label, or 1 once that
+build is 24 h old); publish.sh appends each release to log/roadmap/lan_releases.tsv.
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

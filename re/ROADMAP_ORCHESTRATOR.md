@@ -50,7 +50,12 @@ Each wake-up (a child's completion notification, or the heartbeat) runs these st
    - Lead `PARTIAL <reason>` (a session limit, a hard blocker): keep the row `active` if a fresh lead can continue from
      log/roadmap/S<n>/STATUS.md, else `blocked` with the reason.
    - Integrator `MERGED`: commit (below), mark the row `done` or move it to its next wave, re-run the census if the section changed
-     drawing (S2, S3), refresh .happy/project-info.json.
+     drawing (S2, S3), refresh .happy/project-info.json. Then the LAN release rule (Mariano, 2026-10-29): run
+     `py -3.12 scripts/lan_release/release_due.py`; on DUE (2 merge rounds since the build on the mini-server, or 1 once that
+     build is 24 h old) run `bash scripts/lan_release/publish.sh` in the background (a clean build of the committed HEAD, counts
+     as one heavy run; it never ships uncommitted work), log one ORCH_LOG line with the published commit and files sent, and
+     tell Mariano in the turn's text that a new build is on the server (players run update.bat). A failed build or deploy is
+     logged and retried on the next DUE; it never blocks the merge queue.
    - Integrator `REFUSED <gate>`: send the gate's report path back to the section's lead (spawn a fresh lead if it was closed).
 3. If no integrator is running and a section is queued, spawn ONE integrator for it (log/roadmap/merge.lock holds its id).
 4. Spawn leads for `open` rows whose `depends` are all `done` or answered, up to the caps below, highest priority first.

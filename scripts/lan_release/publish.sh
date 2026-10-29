@@ -5,6 +5,8 @@
 #   publish.sh             clean build of HEAD (git archive of port/ + re/model/include), stage, deploy
 #   publish.sh --no-build  stage and deploy the last build again (e.g. after a server reset)
 #
+# The roadmap orchestrator runs it on its own when release_due.py says DUE (every 2 merge rounds, or 1 after 24 h).
+#
 # The build is a fresh `git archive HEAD` so uncommitted work in the shared tree never ships (2026-10-28: a commit
 # that depended on a working-tree file did not build from its archive). Builds into port/build/lan_build, stages into
 # port/build/lan_release (both gitignored), then runs deploy_lan_release.sh.
@@ -37,3 +39,7 @@ py -3.12 "$HERE/stage_lan_release.py" --app "$(cygpath -w "$APP")" --install "$(
 
 echo "[+] Publishing"
 bash "$HERE/deploy_lan_release.sh" "$STAGE"
+
+# history of what went out (release_due.py reads the server's manifest, not this file)
+mkdir -p "$ROOT/log/roadmap"
+printf '%s\t%s\t%s\n' "$(date '+%F %T')" "$sha" "$label" >> "$ROOT/log/roadmap/lan_releases.tsv"
