@@ -34,7 +34,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x100487ae `__fload` at 0x1004878b
 
 ## Callers
-0x100432b0 `CItranscendental1`
+0x100432b0 `_exp`
 
 ## Constants
 - `0x8` at 0x10048790

@@ -15,7 +15,7 @@ sound.dll	0x100431f0	CIsqrt	crt	callee 0x1004320d (sqrt_classify); callee 0x1004
 sound.dll	0x100432e4	log	crt	caller 0x1003da50; callee 0x10048225 (__fload_withFB); falls into the log classify path	CRT log entry: loads the FP argument and computes the natural logarithm, branching to the special-value path.
 sound.dll	0x100432ed	log_classify	crt	string 0x10064f00 ((string in the binary)); callee 0x10048197 (__startOneArgErrorHandling); callee 0x1004828b (__math_exit); caller 0x100432d0 (CIlog)	log special-value/error path: classifies NaN/inf/non-positive input and reports an error (code 0x1a) tagged (string in the binary).
 sound.dll	0x100432d0	CIlog	crt	callee 0x100432ed (log_classify); callee 0x10048268; reads ST0	_CIlog FP-intrinsic forwarder: takes the argument in ST0 and calls the log body.
-sound.dll	0x100432b0	CItranscendental1	crt	callee 0x1004877b (__ctrandisp1); caller 0x1003da50; reads ST0	One-argument transcendental FP-intrinsic forwarder: dispatches an ST0 argument through __ctrandisp1.
+sound.dll	0x100432b0	_exp	crt	callee 0x1004877b (__ctrandisp1); caller 0x1003da50; reads ST0	One-argument transcendental FP-intrinsic forwarder: dispatches an ST0 argument through __ctrandisp1.
 sound.dll	0x10042b72	heapAllocUnlockFunclet	crt	caller 0x10042b0b (heap_alloc); callee 0x10047771 (_unlock, index 9)	SEH __finally funclet that releases the heap lock on exit from heap_alloc.
 sound.dll	0x10042c71	freeUnlockFunclet	crt	caller 0x10042c07 (free); callee 0x10047771 (_unlock)	SEH __finally funclet that releases the heap lock on exit from free.
 sound.dll	0x100453dd	reallocUnlockFunclet	crt	caller 0x10045252 (crtRealloc); callee 0x10047771 (_unlock)	SEH __finally funclet that releases the heap lock on exit from realloc.

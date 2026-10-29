@@ -2090,6 +2090,10 @@ same name sits at the entry (21 FID labels such as __lockexit 0x004a51cf) after 
 drops the label and retries (log/roadmap/merges/I16/ghidra/ApplyNamesI16.java). ApplyNames reads every re/names/*.tsv, other sessions'
 untracked files included: apply from a directory holding only the files being merged. UNCERTAINTIES.md addr cells must be one hex
 number or empty (re_classify parses every row).
+Wave 2: the SimGolf demo's sound.dll (archive.org Simgolfdemo, InstallShield 6) is a debug build with NB11 CodeView records
+(2,146 procedures, 1,493 class layouts; re/tools/cv_debug.py): 58 map to retail by code identity (LPC-10, CRT asm), the rest only
+through vtable slots (45 of 47 tables), giving 13 names and 72 cited field proposals. Two exe misses reach 100% only with SP5's
+front end, but the exe's Rich header lists only build 8168 objects, so they are not evidence (U-1910).
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

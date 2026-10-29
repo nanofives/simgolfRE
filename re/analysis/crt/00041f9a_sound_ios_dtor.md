@@ -38,7 +38,7 @@ Through registers:
 - indirect `call [eax]` at 0x10041fd5
 
 ## Callers
-0x100419af `ostream::scalar_deleting_destructor`, 0x10041abc `ostream::operator_assign`, 0x10041b9d `ostream::scalarDtorAdj8`, 0x10041ecd `ios::scalar_deleting_destructor`, 0x100593ec `Unwind@100593ec`, 0x10059410 `Unwind@10059410`, 0x10059434 `Unwind@10059434`, 0x10059448 `Unwind@10059448`, 0x1005946c `Unwind@1005946c`
+0x100419af `ostream::scalar_deleting_destructor`, 0x10041abc `ostream::operator_assign`, 0x10041b9d `ostream_withassign::scalar_deleting_destructor`, 0x10041ecd `ios::scalar_deleting_destructor`, 0x100593ec `Unwind@100593ec`, 0x10059410 `Unwind@10059410`, 0x10059434 `Unwind@10059434`, 0x10059448 `Unwind@10059448`, 0x1005946c `Unwind@1005946c`
 
 ## Constants
 - `0x0` at 0x10041fc3, 0x10041fd7

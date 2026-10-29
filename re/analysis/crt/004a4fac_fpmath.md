@@ -16,7 +16,7 @@ Globals:
 - `[0x00840a64]` dword at 0x004a4fb6
 
 ## Callees
-- 0x004a4fc4 `initFpControl` at 0x004a4fac
+- 0x004a4fc4 `__cfltcvt_init` at 0x004a4fac
 - 0x004a74ae `__setdefaultprecision` at 0x004a4fbb
 - 0x004a74fe `__ms_p5_mp_test_fdiv` at 0x004a4fb1
 

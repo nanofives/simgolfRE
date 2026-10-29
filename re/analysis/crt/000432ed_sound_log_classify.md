@@ -30,7 +30,7 @@ None.
 
 ## Callees
 - 0x10048197 `__startOneArgErrorHandling` at 0x10043395
-- 0x1004820c `fpStatusExceptionType` at 0x1004335b
+- 0x1004820c `__convertTOStoQNaN` at 0x1004335b
 - 0x1004828b `__math_exit` at 0x10043332
 
 ## Callers

@@ -23,7 +23,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x004a5526 `__local_unwind2`, 0x004a8f7c `__except_handler3`
+0x004a54e4 `__global_unwind2`, 0x004a5526 `__local_unwind2`, 0x004a8f7c `__except_handler3`
 
 ## Constants
 - `0x4e4ad0` (5130960) = address in the image (data) at 0x004a55bc

@@ -36,6 +36,6 @@ sound.dll	0x10045252	crtRealloc	crt	import HeapAlloc, import HeapReAlloc	C runti
 sound.dll	0x10045181	crtExitProcess	crt	import ExitProcess, import TerminateProcess, import GetCurrentProcess	C runtime process exit: ExitProcess, falling back to TerminateProcess(GetCurrentProcess())
 sound.dll	0x10045bc8	crtHeapSelect	crt	import GetEnvironmentVariableA, import GetVersionExA	C runtime heap-mode init: reads env vars (string in the binary)/(string in the binary) to pick the heap implementation
 sound.dll	0x10045d10	crtHeapInit	crt	import HeapCreate, import HeapDestroy	C runtime heap init/term: HeapCreate on startup, HeapDestroy on teardown
-sound.dll	0x10049604	crtValidatePointer	crt	import IsBadWritePtr	validates that the [esp+0xc] pointer is writable with IsBadWritePtr; called from BuildCatchObject (EH)
+sound.dll	0x10049604	_ValidateWrite	crt	import IsBadWritePtr	validates that the [esp+0xc] pointer is writable with IsBadWritePtr; called from BuildCatchObject (EH)
 sound.dll	0x10047771	_unlock	crt	import LeaveCriticalSection (IAT 0x100b84e0); table 0x10067400	LeaveCriticalSection on the CRITICAL_SECTION at g_crtLockTable[index] (0x10067400 + index*4); called by the heap and CRT unlock paths
-sound.dll	0x10047148	crtCommitPages	crt	import VirtualAlloc	C runtime small-block heap: commits pages with VirtualAlloc
+sound.dll	0x10047148	___old_sbh_alloc_block	crt	import VirtualAlloc	C runtime small-block heap: commits pages with VirtualAlloc

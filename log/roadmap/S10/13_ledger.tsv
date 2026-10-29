@@ -1,0 +1,146 @@
+module	va	smsg	verdict	name	pin	reason
+sound.dll	0x10005880	CAmbienceMgr::strip_path	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10005700 SubChannel::get_type below and 0x10005cf0 MidiCtrl::scalarDeletingDtor above do not both carry Sound (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10005900	CAmbienceMgr::make_path_local	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10005700 SubChannel::get_type below and 0x10005cf0 MidiCtrl::scalarDeletingDtor above do not both carry Sound (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10006b50	CAviMgr::start	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10006850 Wave_Device::appendBuffer below and 0x10006b80 CAviMgr::stop above do not both carry CAviMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10006ba0	CAviMgr::discard_frame	REJECT_VERB	-	NEIGHBOUR	body closes the mmio handle in its argument with WINMM.dll!mmioClose (IAT slot 0x100b8670, 0x10006ba7) and decrements the open count 0x100b4a08 (0x10006bb2): nothing ties it to a frame; CVoiceRxMgr::discard_buffer 0x10031120 is the same body
+sound.dll	0x10006fc0	CWaveMixer::fill_mixbuff	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10006dd0 CAviMgr::is_playing below and 0x10008860 CommandQueue::init above do not both carry CWaveMixer (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10007c10	CWaveMixer::mb_2_dsb	REJECT_STUB	-	-	`xor eax, eax`; `ret 0xc` at 0x10007c10
+sound.dll	0x100087a0	CWaveMixer::get_filter_index	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10006dd0 CAviMgr::is_playing below and 0x10008860 CommandQueue::init above do not both carry CWaveMixer (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10008e00	CTimer::get_samples_per_tick	ACCEPT_GET	SoundTimer::get_samples_per_tick	NEIGHBOUR	
+sound.dll	0x10008e30	CTimer::set_rate	ACCEPT_SET	SoundTimer::set_rate	NEIGHBOUR	
+sound.dll	0x10008e80	CTimer::set_wave_format	ACCEPT_SET	SoundTimer::set_wave_format	NEIGHBOUR	
+sound.dll	0x10009240	init_sound	ACCEPT_HAND	init_sound	FREE	
+sound.dll	0x100099d0	get_sound_type	ACCEPT_HAND	get_sound_type	FREE	
+sound.dll	0x10009a70	update_sound	REJECT_STUB	-	FREE	body is `ret` (0x10009a70); its thunk 0x10002671 is stored into the timer object's +0x24 by init_sound_timer (0x1000932f) and init_sound (0x10009294), so it is reachable but does nothing
+sound.dll	0x10009e10	Dll_Midi_Device::init_win_device	ACCEPT_HAND	Midi_Device::init_win_device	NEIGHBOUR	
+sound.dll	0x1000aa60	Dll_Midi_Device::post_GT_request	ACCEPT_HAND	Midi_Device::post_GT_request	NEIGHBOUR	
+sound.dll	0x1000db60	Dll_Wave_Device::post_GT_request	ACCEPT_HAND	Wave_Device::post_GT_request	NEIGHBOUR	
+sound.dll	0x1000e160	Dll_Wave_Device::update_hwbuffers	ACCEPT_HAND	Wave_Device::update_hwbuffers	NEIGHBOUR	
+sound.dll	0x1000e370	Dll_Wave_Device::get_eax	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e370
+sound.dll	0x1000e390	Dll_Wave_Device::get_eax	REJECT_FWD_STUB	-	NEIGHBOUR	forwards its argument to CDSMgr::get_eax 0x10012020 (thunk 0x10001087, 0x1000e3a5) when the device 0x100b49f0 has bit 4 of +0x6c, else returns 0; the target is `mov eax, 0xb; ret 4`, a constant stub
+sound.dll	0x1000e3d0	Dll_Wave_Device::set_eax_volume	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e3d0
+sound.dll	0x1000e3f0	Dll_Wave_Device::get_eax_volume	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e3f0
+sound.dll	0x1000e410	Dll_Wave_Device::set_eax_decay	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e410
+sound.dll	0x1000e430	Dll_Wave_Device::get_eax_decay	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e430
+sound.dll	0x1000e450	Dll_Wave_Device::set_eax_damping	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e450
+sound.dll	0x1000e470	Dll_Wave_Device::get_eax_damping	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret 4` at 0x1000e470
+sound.dll	0x1000f0a0	CDSB::dsbrestore	ACCEPT_HAND	DsBuffer::dsbrestore	NEIGHBOUR	
+sound.dll	0x1000f0f0	CDSB::setsamplerate	ACCEPT_SET	DsBuffer::setsamplerate	NEIGHBOUR	
+sound.dll	0x1000f380	CDSB::setsamplesize	ACCEPT_SET	DsBuffer::setsamplesize	NEIGHBOUR	
+sound.dll	0x1000f400	CDSB::setnumchannels	ACCEPT_SET	DsBuffer::setnumchannels	NEIGHBOUR	
+sound.dll	0x1000f720	CDSB::reinit	ACCEPT_HAND	DsBuffer::reinit	NEIGHBOUR	
+sound.dll	0x10010120	CDSB::get_cur_dsbwrite	ACCEPT_HAND	DsBuffer::get_cur_dsbwrite	NEIGHBOUR	
+sound.dll	0x10010160	CDSB::get_cur_dsbplay	ACCEPT_HAND	DsBuffer::get_cur_dsbplay	NEIGHBOUR	
+sound.dll	0x10010d60	CDSB::release_pointer	ACCEPT_HAND	DsBuffer::release_pointer	NEIGHBOUR	
+sound.dll	0x10010e80	CDSB::set_samples_per_tick	ACCEPT_SET	DsBuffer::set_samples_per_tick	NEIGHBOUR	
+sound.dll	0x10011600	CDSMgr::init	ACCEPT_HAND	DirectSoundDevice::init	NEIGHBOUR	
+sound.dll	0x10011720	CDSMgr::suspend	REJECT_STUB	-	NEIGHBOUR	`ret` at 0x10011720
+sound.dll	0x10011740	CDSMgr::restart	REJECT_STUB	-	NEIGHBOUR	`ret` at 0x10011740
+sound.dll	0x10012020	CDSMgr::get_eax	REJECT_STUB	-	NEIGHBOUR	`mov eax, 0xb`; `ret 4` at 0x10012020
+sound.dll	0x10012060	CDSMgr::init_A3D	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret` at 0x10012060
+sound.dll	0x10012080	CDSMgr::uninit_A3D	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret` at 0x10012080
+sound.dll	0x10013470	CDSMgr::attach_dsb	ACCEPT_HAND	DirectSoundDevice::attach_dsb	NEIGHBOUR	
+sound.dll	0x10013870	filter_stub	REJECT_STUB	-	FREE	`xor eax, eax`; `ret` at 0x10013870
+sound.dll	0x1001b830	MidiCtrlSocket::MidiCtrlSocket	ACCEPT_VT	MidiCtrlSocket::ctor	VT	
+sound.dll	0x1001b9e0	MidiCtrlSocket::insert_after	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001b9a0 Ctrl_appendIfAccepted below and 0x1001bb10 PtrList_deleteAll above do not both carry MidiCtrlSocket (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001c1b0	NoteMap::operator=	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001c080 Ctrl5b58c_dtor below and 0x1001c1e0 Ctrl5b5c0_transposeTable above do not both carry NoteMap (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001c260	NoteMap::map_note	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001c1e0 Ctrl5b5c0_transposeTable below and 0x1001c2a0 CtrlBase_resetElements above do not both carry NoteMap (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001c480	Stepper::Stepper	ACCEPT_VT	Stepper::ctor	VT	
+sound.dll	0x1001cad0	Chooser::do_control	REJECT_STUB	-	-	`xor eax, eax`; `ret` at 0x1001cad0
+sound.dll	0x1001cd70	ProgramCtrl::set_base_filepath	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001cd30 ChanRecord_freeBuffers below and 0x1001ced0 Sound_setName above do not both carry ProgramCtrl (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001d030	ProgramCtrl::get_new_pitch	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001ced0 Sound_setName below and 0x1001d0a0 Sound_setAltName above do not both carry ProgramCtrl (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001d590	CMidiFile::get_pcur_event	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001d4a0 Midi_resetFileState below and 0x1001d780 Seq_listGetAt above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001d620	CMidiFile::get_pfirst_event	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001d4a0 Midi_resetFileState below and 0x1001d780 Seq_listGetAt above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001d6b0	CMidiFile::advance_track	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001d4a0 Midi_resetFileState below and 0x1001d780 Seq_listGetAt above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001e120	CMidiFile::reload	ACCEPT_HAND	Midi_Device::reload	THIS	
+sound.dll	0x1001e150	CMidiFile::post_reset	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001dce0 Midi_Device::loadFromMemory below and 0x1001e1c0 Seq_rewind above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001e510	CMidiFile::mmioerr	REJECT_STUB	-	-	`ret` at 0x1001e510
+sound.dll	0x1001e550	CMidiFile::fade	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001e530 Track_clearFlag8 below and 0x1001e630 Seq_scaleTickRate above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001e570	CMidiFile::fade	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001e530 Track_clearFlag8 below and 0x1001e630 Seq_scaleTickRate above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001e5f0	CMidiFile::set_pan	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001e530 Track_clearFlag8 below and 0x1001e630 Seq_scaleTickRate above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001e6b0	CMidiFile::be2le	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001e680 CMidiFile::set_loop_state below and 0x1001e710 Midi_readVarLen above do not both carry CMidiFile (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1001ea40	CMidiTrack::set_tick_offset	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1001e9f0 Track_advancePos below and 0x1001ef10 Midi_Device::flushMessages above do not both carry CMidiTrack (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10020270	CMidiMgr::reload	ACCEPT_HAND	Seq::reload	NEIGHBOUR	
+sound.dll	0x10020aa0	CMidiMgr::free_all	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10020870 Midi_Device::playEvent below and 0x10020be0 Voice_startPlayback above do not both carry Seq (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10020ae0	CMidiMgr::post_unload	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10020870 Midi_Device::playEvent below and 0x10020be0 Voice_startPlayback above do not both carry Seq (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10021560	CMidiMgr::program_change	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100213d0 Midi_Device::setChannelVolume below and 0x100215a0 dynInit_100b4fe0 above do not both carry Seq (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10021ec0	CMidiMgr::pitch_wheel	REJECT_STUB	-	-	`mov eax, 1`; `ret 8` at 0x10021ec0
+sound.dll	0x10023750	CMidiMgr::TT_play_trackset	ACCEPT_HAND	Seq::TT_play_trackset	NEIGHBOUR	
+sound.dll	0x10023b80	CMidiMgr::TT_xpose_trackset	ACCEPT_HAND	Seq::TT_xpose_trackset	NEIGHBOUR	
+sound.dll	0x10024310	CProgramMgr::unload	REJECT_STUB	-	-	`xor eax, eax`; `ret` at 0x10024310
+sound.dll	0x10024330	CProgramMgr::stop	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10024280 Seq_loadChannelDesc below and 0x10024360 Seq_mergeChannelDesc above do not both carry CProgramMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10024420	CProgramMgr::xlat_pitch	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10024360 Seq_mergeChannelDesc below and 0x10024460 ChannelDesc_ctor above do not both carry CProgramMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10024440	CProgramMgr::xlat_volume	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10024360 Seq_mergeChannelDesc below and 0x10024460 ChannelDesc_ctor above do not both carry CProgramMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x100244c0	CMidiChannel::reset_rnd_prgm_table	REJECT_STUB	-	-	`ret` at 0x100244c0
+sound.dll	0x100244e0	CMidiChannel::xlat_program	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100244a0 ChannelDesc_dtor below and 0x10024500 Seq_selectTrack above do not both carry ChannelDesc (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10025040	CMMError::CMMError	ACCEPT_VT	CMMError::ctor	VT	
+sound.dll	0x10025090	CMMError::~CMMError	ACCEPT_VT	CMMError::dtor	VT	
+sound.dll	0x100250b0	CMMError::handle_error	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10025060 CMMError::scalarDeletingDtor below and 0x100256c0 Voice_renderStream16b above do not both carry CMMError (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10028e70	Sound_Device::attach	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100287c0 SoundWindowObj_unsubclass below and 0x10028fb0 DeviceBase_scalarDtor above do not both carry DeviceBase (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10028ef0	Sound_Device::detach	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100287c0 SoundWindowObj_unsubclass below and 0x10028fb0 DeviceBase_scalarDtor above do not both carry DeviceBase (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10028f70	Sound_Device::Sound_Device	ACCEPT_VT	DeviceBase::ctor	VT	
+sound.dll	0x10029730	Wave_Device::add_to_group	ACCEPT_HAND	VoiceBase::add_to_group	NEIGHBOUR	
+sound.dll	0x100297b0	Wave_Device::pull_from_group	ACCEPT_HAND	VoiceBase::pull_from_group	NEIGHBOUR	
+sound.dll	0x10029880	Wave_Device::set_group_volume	ACCEPT_SET	VoiceBase::set_group_volume	NEIGHBOUR	
+sound.dll	0x10029920	Wave_Device::get_group_volume	ACCEPT_GET	VoiceBase::get_group_volume	NEIGHBOUR	
+sound.dll	0x10029950	Wave_Device::enable_group	ACCEPT_HAND	VoiceBase::enable_group	NEIGHBOUR	
+sound.dll	0x100299d0	Wave_Device::muteGroup	ACCEPT_HAND	VoiceBase::muteGroup	NEIGHBOUR	
+sound.dll	0x10029a50	Wave_Device::unMuteGroup	ACCEPT_HAND	VoiceBase::unMuteGroup	NEIGHBOUR	
+sound.dll	0x10029a80	Wave_Device::disable_group	ACCEPT_HAND	VoiceBase::disable_group	NEIGHBOUR	
+sound.dll	0x10029b20	Wave_Device::is_group_disabled	ACCEPT_GET	VoiceBase::is_group_disabled	NEIGHBOUR	
+sound.dll	0x10029b50	Wave_Device::isGroupMute	ACCEPT_GET	VoiceBase::isGroupMute	NEIGHBOUR	
+sound.dll	0x1002af00	Sound::attach	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002add0 Engine_playSound below and 0x1002b010 SubChannel::attach above do not both carry SubChannel (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002af90	Sound::detach	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002add0 Engine_playSound below and 0x1002b010 SubChannel::attach above do not both carry SubChannel (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002c240	Wave::select_device	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002c1a0 Wave::get_game_hwnd below and 0x1002c270 Ch5bb90_set3DBuffer above do not both carry Wave (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002c790	MpegStream::set_next	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002c5b0 MixerVoiceArray_scalarDtor below and 0x1002c9f0 Mixer_ctor above do not both carry MpegStream (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002c7e0	MpegStream::start	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002c5b0 MixerVoiceArray_scalarDtor below and 0x1002c9f0 Mixer_ctor above do not both carry MpegStream (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002c920	MpegStream::add_to_playlist	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002c5b0 MixerVoiceArray_scalarDtor below and 0x1002c9f0 Mixer_ctor above do not both carry MpegStream (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002c9b0	MpegStream::clear_playlist	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002c5b0 MixerVoiceArray_scalarDtor below and 0x1002c9f0 Mixer_ctor above do not both carry MpegStream (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002cd30	SoundList::scaleVolumeToGroup	REJECT_STUB	-	-	body is `ret 4` (0x1002cd30); called through thunk 0x1000178f by VoiceBase::add_to_group (0x10029765) and VoiceBase::set_group_volume (0x100298c0)
+sound.dll	0x1002cd50	SoundList::add	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002cca0 Mixer::detach below and 0x1002ce60 MultiSound_freeSlots above do not both carry Mixer (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002cde0	SoundList::setListName	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002cca0 Mixer::detach below and 0x1002ce60 MultiSound_freeSlots above do not both carry Mixer (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002d010	KeyMap::~KeyMap	ACCEPT_VT	MixBuffer::dtor	VT	
+sound.dll	0x1002d0b0	KeyMap::unmap_range	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002cf50 MixBuffer::deletingDtor below and 0x1002d240 Voice_setName above do not both carry MixBuffer (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002d2c0	KeyMap::set_base_path	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002d240 Voice_setName below and 0x1002d450 Ch5be88_ctor above do not both carry MixBuffer (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002d710	Midi::set_frame_delay	ACCEPT_SET	Midi::set_frame_delay	NEIGHBOUR	
+sound.dll	0x1002e2f0	Midi::get_tonal_center	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002e2c0 Midi::get_key below and 0x1002e3c0 GlblHeader::init above do not both carry Midi (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002e490	Sound::unloadall	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002e460 TrackSet::set_hi below and 0x1002e500 Patch::scalarDeletingDtor above do not both carry SubChannel (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002e4c0	Patch::Patch	ACCEPT_VT	Patch::ctor	VT	
+sound.dll	0x1002f710	do_message	ACCEPT_HAND	do_message	FREE	
+sound.dll	0x1002fe20	CTrace::CTrace	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002fd80 dllSoundList::set_scaled_volume below and 0x10030080 Sound5c450_ctor above do not both carry CTrace (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x1002fe90	CTrace::~CTrace	REJECT_STUB	-	-	`ret` at 0x1002fe90
+sound.dll	0x1002feb0	CTrace::dump_to_file	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002fd80 dllSoundList::set_scaled_volume below and 0x10030080 Sound5c450_ctor above do not both carry CTrace (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10030000	CTrace::in_data	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002fd80 dllSoundList::set_scaled_volume below and 0x10030080 Sound5c450_ctor above do not both carry CTrace (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10030040	CTrace::operator=	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x1002fd80 dllSoundList::set_scaled_volume below and 0x10030080 Sound5c450_ctor above do not both carry CTrace (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10030730	CVoiceRxMgr::lpc10_write_16bit_samples	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10030710 Sound5c450::openMmio below and 0x10030fb0 Channel_setFormat above do not both carry CVoiceRxMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x100307c0	CVoiceRxMgr::lpc10_read_bits	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10030710 Sound5c450::openMmio below and 0x10030fb0 Channel_setFormat above do not both carry CVoiceRxMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10031120	CVoiceRxMgr::discard_buffer	REJECT_VERB	-	NEIGHBOUR	body closes the mmio handle in its argument with mmioClose (IAT slot 0x100b8670, 0x10031127) and decrements 0x100b4a08 (0x10031132): nothing ties it to a buffer; same body as CAviMgr::discard_frame 0x10006ba0
+sound.dll	0x10031150	CVoiceRxMgr::enable	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret` at 0x10031150
+sound.dll	0x10031170	CVoiceRxMgr::disable	REJECT_STUB	-	NEIGHBOUR	`xor eax, eax`; `ret` at 0x10031170
+sound.dll	0x10031670	CVoiceTxMgr::s2f_and_scale	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10031450 WaveInStream_start below and 0x10031880 CVoiceTxMgr::get_nbuffers above do not both carry CVoiceTxMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10031a50	CVoiceTxMgr::lpc_write_bits	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100319e0 WaveInStream_resetCodec below and 0x10031ac0 PtrList_freeNodesB above do not both carry CVoiceTxMgr (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10032680	CWaveFile::mpeg_load	REJECT_STUB	-	-	`mov eax, 0xb`; `ret 4` at 0x10032680
+sound.dll	0x10033280	CWaveFile::read_from_file	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10032660 return0xb_32660 below and 0x10033990 Channel_parseWaveHeader above do not both carry Channel (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x100338f0	CWaveFile::get_write_pointers	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10032660 return0xb_32660 below and 0x10033990 Channel_parseWaveHeader above do not both carry Channel (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10033f70	CWaveFile::mpeg_unload	REJECT_STUB	-	NEIGHBOUR	`mov eax, 0xb`; `ret` at 0x10033f70
+sound.dll	0x10034410	CWaveFile::mmioerr	REJECT_STUB	-	NEIGHBOUR	`ret` at 0x10034410
+sound.dll	0x10034de0	CWaveFile::fade_in	REJECT_VERB	-	NEIGHBOUR	calls Channel_setReverseRate (thunk 0x1000101e, 0x10034de8) with its argument, moves +0x1e0 / +0x1e4 into +0x210 / +0x214 and zeroes them (0x10034dfb..0x10034e13), sets bit 3 of +0x58 and +0x5c: no instruction ties it to a fade
+sound.dll	0x10034e50	CWaveFile::operator++	ACCEPT_HAND	Channel::operator_inc	NEIGHBOUR	
+sound.dll	0x10034f10	CWaveFile::get_nsamples_left_in_buffer	ACCEPT_GET	Channel::get_nsamples_left_in_buffer	NEIGHBOUR	
+sound.dll	0x10034f80	CWaveFile::advance	ACCEPT_HAND	Channel::advance	NEIGHBOUR	
+sound.dll	0x10035070	CWaveFile::need_to_advance	ACCEPT_HAND	Channel::need_to_advance	NEIGHBOUR	
+sound.dll	0x10035c30	CWaveFile::get_mpeg_samples	REJECT_STUB	-	NEIGHBOUR	returns 0xb on every path (0x10035c72); under flags +0x5c bit 6 and +0x58 bit 28 it only zero-fills arg2 * 16 bytes at arg2 (0x10035c68, `rep stosd`): no decoding
+sound.dll	0x100377b0	CWaveFile::set_buffer_inactive	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10037760 Voice_setLoopFlag below and 0x100377f0 Channel_broadcastVoiceBit1 above do not both carry Channel (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10037e90	WaveBuffer::reset	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10037e10 MmioBuffer_init below and 0x10037f30 Voice_setPanGains above do not both carry Voice (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10037f00	WaveBuffer::get_nsamples_left_in_buffer	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x10037e10 MmioBuffer_init below and 0x10037f30 Voice_setPanGains above do not both carry Voice (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10038270	WaveBuffer::fade_in	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100381f0 Voice_noteOff below and 0x100382c0 Channel_allocVoiceSlot above do not both carry Voice (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10038ed0	WaveInDeviceMgr::add_buffer	ACCEPT_HAND	WaveInDevice::add_buffer	NEIGHBOUR	
+sound.dll	0x10038f40	WaveInDeviceMgr::get_num_devices	ACCEPT_HAND	WaveInDevice::get_num_devices	NEIGHBOUR	
+sound.dll	0x100392c0	WaveInDeviceMgr::handle_error	ACCEPT_HAND	WaveInDevice::handle_error	NEIGHBOUR	
+sound.dll	0x10039380	WaveInDeviceMgr::set_format	ACCEPT_SET	WaveInDevice::set_format	NEIGHBOUR	
+sound.dll	0x10039490	WIBuffer::WIBuffer	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100393d0 WaveInDevice_requeueBuffer below and 0x100394f0 MemBlock_alloc above do not both carry MemBlock (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10039540	WIBuffer::set_next	REJECT_NO_CLASS_PIN	-	-	dead body; nearest class-carrying named neighbours 0x100394f0 MemBlock_alloc below and 0x10039690 MultiSound_ctor above do not both carry MemBlock (SMSG class mapped by classmap.py); no vtable store and no call passing this to a named method
+sound.dll	0x10039560	WIBuffer::get_whdr	REJECT_STUB	-	-	`mov eax, ecx`; `ret` at 0x10039560
+sound.dll	0x10039ca0	CWaveMgr::free_all	REJECT_VERB	-	NEIGHBOUR	calls slots 8 (+0x20) and 5 (+0x14) of the head of g_activeListHead 0x100b5070 until the head is NULL (0x10039caf, 0x10039cb6); what slot 5 does depends on each member's vtable, so no instruction shows a free
+jgld.dll	0x10091200	$$$00001	REJECT_PART_OF_FUNCTION	-	-	a range of _strchr (re/functions_ghidra_jgld.dll.tsv ranges 00091200-00091205;00091210-000912cc): `lea eax, [edx - 1]; pop ebx; ret` reached by `je 0x10091200` at 0x1009122d inside _strchr; an assembler-local label, not a function
+Terrain.dll	0x10024ad0	$$$00001	REJECT_PART_OF_FUNCTION	-	-	a range of _strchr (re/functions_ghidra_Terrain.dll.tsv ranges 00024ad0-00024ad5;00024ae0-00024b9c): `lea eax, [edx - 1]; pop ebx; ret` reached by `je 0x10024ad0` at 0x10024afd inside _strchr; an assembler-local label, not a function

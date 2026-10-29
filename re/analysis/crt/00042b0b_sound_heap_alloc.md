@@ -39,7 +39,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10042b72 `heapAllocUnlockFunclet` at 0x10042b61
 - 0x10042bd1 `heapAllocUnlockFunclet2` at 0x10042bbf
 - 0x10046283 `___sbh_alloc_block` at 0x10042b54
-- 0x10047148 `crtCommitPages` at 0x10042bb2
+- 0x10047148 `___old_sbh_alloc_block` at 0x10042bb2
 - 0x10047710 `__lock` at 0x10042b49, 0x10042b9f
 - import `KERNEL32.dll!HeapAlloc` at 0x10042bf2
 

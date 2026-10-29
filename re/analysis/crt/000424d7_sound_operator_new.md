@@ -20,7 +20,7 @@ None.
 - 0x10042adf `__nh_malloc` at 0x100424dd
 
 ## Callers
-0x100041d0 `loadSoundFile`, 0x10005440 `Wave_Device::readFmtChunk`, 0x10005e30 `appendNodeB`, 0x10006850 `Wave_Device::appendBuffer`, 0x10006e00 `initStreamBuffer`, 0x10006f00 `resizeDynArray`, 0x10009040 `SoundTimer::linkClient`, 0x10009240 `FUN_10009240`, 0x100092e0 `init_sound_timer`, 0x100093e0 `create_sound`, 0x100097d0 `delete_sound`, 0x10009a90 `Dll_Midi_Device::create_device`, 0x1000a240 `CommandQueue::push`, 0x1000b050 `Dll_Wave_Device::create_device`, 0x1000b420 `Wave_Device::open`, 0x1000c2f0 `WaveCmdQueue::pushNode`, 0x1000cd80 `Wave_Device::dispatchCommand`, 0x1000dbe0 `postNotification`, 0x1000e680 `appendNodeC`, 0x1000e910 `Dll_Wave_In_Device::create_device` (+58 more)
+0x100041d0 `loadSoundFile`, 0x10005440 `Wave_Device::readFmtChunk`, 0x10005e30 `appendNodeB`, 0x10006850 `Wave_Device::appendBuffer`, 0x10006e00 `initStreamBuffer`, 0x10006f00 `resizeDynArray`, 0x10009040 `SoundTimer::linkClient`, 0x10009240 `init_sound`, 0x100092e0 `init_sound_timer`, 0x100093e0 `create_sound`, 0x100097d0 `delete_sound`, 0x10009a90 `Dll_Midi_Device::create_device`, 0x1000a240 `CommandQueue::push`, 0x1000b050 `Dll_Wave_Device::create_device`, 0x1000b420 `Wave_Device::open`, 0x1000c2f0 `WaveCmdQueue::pushNode`, 0x1000cd80 `Wave_Device::dispatchCommand`, 0x1000dbe0 `postNotification`, 0x1000e680 `appendNodeC`, 0x1000e910 `Dll_Wave_In_Device::create_device` (+58 more)
 
 ## Constants
 - `0x1` at 0x100424d7

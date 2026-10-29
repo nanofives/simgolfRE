@@ -1,0 +1,73 @@
+class	offset	member	type	declared_in	first_access	access	size	retail_function	demo_method	accesses
+AviSound	0x40	m_pdllsnd	Sound*	Sound	0x1002eb43	r	4	0x1002eb40	AviSound::init	9
+CAviMgr	0x58	m_flags	AviFlags	CAviMgr	0x10006b00	r	4	0x10006b00	CAviMgr::start	4
+CAviMgr	0xb4	m_frame_size	ulong	CAviMgr	0x10006db0	r	4	0x10006db0	CAviMgr::get_frame_size	1
+CAviMgr	0xc8	m_cur_frame	int	CAviMgr	0x10006d96	r	4	0x10006d90	CAviMgr::get_cur_frame	1
+CAviMgr	0xcc	m_start_frame	int	CAviMgr	0x10006d90	r	4	0x10006d90	CAviMgr::get_cur_frame	1
+CMidiMgr	0x20c	m_control_track	ulong	CMidiFile	0x10005f90	r	4	0x10005f90	CMidiMgr::get_control_track	1
+CMidiMgr	0x214	m_flags	mmgr_flags	CMidiMgr	0x10005e0e	r	4	0x10005e00	CMidiMgr::attach	6
+CMidiMgr	0x240	m_nswitch_threads	int	CMidiMgr	0x100227a4	w	4	0x100227a0	CMidiMgr::set_nswitch_threads	1
+CMidiMgr	0x71c	m_time_ticks	ulong	CMidiMgr	0x10021370	r	4	0x10021370	CMidiMgr::get_time	1
+CMidiMgr	0x730	m_volume	ulong	CMidiMgr	0x10020f68	w	4	0x10020f50	CMidiMgr::set_volume	1
+CMidiMgr	0x738	m_current_active_set	ulong	CMidiMgr	0x100231a6	r	4	0x100231a0	CMidiMgr::set_active_tracks	3
+CMidiMgr	0x73c	m_key	int	CMidiMgr	0x10005fb0	r	4	0x10005fb0	CMidiMgr::get_key	1
+CMidiMgr	0x740	m_flic_frame	uint	CMidiMgr	0x10006000	r	4	0x10006000	CMidiMgr::get_frame	1
+CVoiceRxMgr	0x58	m_flags	VRx_Flags_tag	CVoiceRxMgr	0x10031083	r	1	0x10031080	CVoiceRxMgr::start	2
+CVoiceRxMgr	0xb4	m_buffer_size	ulong	CVoiceRxMgr	0x100311b0	r	4	0x100311b0	CVoiceRxMgr::get_buffer_size	1
+CVoiceTxMgr	0x6c	m_buffer_size	ulong	CVoiceTxMgr	0x10031456	w	4	0x10031450	CVoiceTxMgr::init	1
+CVoiceTxMgr	0x70	m_pbuffer_out	_MMIOINFO*	CVoiceTxMgr	0x10031967	r	4	0x10031960	CVoiceTxMgr::return_buffer	1
+CVoiceTxMgr	0x80	m_buffers_processed	int	CVoiceTxMgr	0x100319eb	w	4	0x100319e0	CVoiceTxMgr::start	1
+CVoiceTxMgr	0x84	m_buffers_taken	int	CVoiceTxMgr	0x100319f2	w	4	0x100319e0	CVoiceTxMgr::start	1
+CVoiceTxMgr	0x88	m_buffers_returned	int	CVoiceTxMgr	0x100319fe	w	4	0x100319e0	CVoiceTxMgr::start	1
+CVoiceTxMgr	0x8c	m_start_id	int	CVoiceTxMgr	0x100319e5	r	4	0x100319e0	CVoiceTxMgr::start	2
+CVoiceTxMgr	0x90	m_lpc10_state	lpc10_encoder_state*	CVoiceTxMgr	0x10031a09	w	4	0x100319e0	CVoiceTxMgr::start	1
+ChannelCtrl	0x8	m_total_class_size	int	MidiCtrl	0x1001cb80	w	4	0x1001cb80	ChannelCtrl::set_total_class_size	1
+ChannelCtrl	0x1c	m_type	enum MIDI_CONTROL	MidiCtrl	0x1001cb64	w	4	0x1001cb60	ChannelCtrl::set_type	1
+Dll_Midi_Device	0x24	m_flags	DllMidiDeviceFlags	Dll_Midi_Device	0x1000a1b3	r	1	0x1000a1b0	Dll_Midi_Device::disable	7
+Dll_Midi_Device	0x2c	m_ptimer	CTimer*	Dll_Midi_Device	0x1000a140	r	4	0x1000a140	Dll_Midi_Device::suspend	3
+Dll_Midi_Device	0x30	m_rate	ulong	Dll_Midi_Device	0x1000afa4	w	4	0x1000afa0	Dll_Midi_Device::set_rate	2
+Dll_Midi_Device	0x34	m_time_past	ulong	Dll_Midi_Device	0x1000af24	r	4	0x1000af20	Dll_Midi_Device::add_to_time_past	4
+Dll_Wave_Device	0x1a4	m_flags	DllWaveDeviceFlags	Dll_Wave_Device	0x1000be03	r	1	0x1000be00	Dll_Wave_Device::disable	3
+Dll_Wave_Device	0x1a8	m_ptimer	CTimer*	Dll_Wave_Device	0x1000e7f0	w	4	0x1000e7f0	Dll_Wave_Device::timer_unhook	1
+Dll_Wave_Device	0x1ac	m_rate	ulong	Dll_Wave_Device	0x1000e814	w	4	0x1000e810	Dll_Wave_Device::set_rate	2
+Dll_Wave_Device	0x1b0	m_time_past	ulong	Dll_Wave_Device	0x1000e1d4	r	4	0x1000e1d0	Dll_Wave_Device::add_to_time_past	4
+Dll_Wave_Device	0x1b4	m_time_since_last_update	ulong	Dll_Wave_Device	0x1000e1dc	w	4	0x1000e1d0	Dll_Wave_Device::add_to_time_past	1
+Dll_Wave_In_Device	0x30	m_ptimer	CTimer*	Dll_Wave_In_Device	0x1000ec03	r	4	0x1000ec00	Dll_Wave_In_Device::release	4
+Dll_Wave_In_Device	0x34	m_rate	ulong	Dll_Wave_In_Device	0x1000ee34	w	4	0x1000ee30	Dll_Wave_In_Device::set_rate	2
+Dll_Wave_In_Device	0x38	m_time_past	ulong	Dll_Wave_In_Device	0x1000ece0	w	4	0x1000ece0	Dll_Wave_In_Device::update_sound	5
+Dll_Wave_In_Device	0x3c	m_time_since_last_update	ulong	Dll_Wave_In_Device	0x1000ed09	w	4	0x1000ed00	Dll_Wave_In_Device::add_to_time_past	1
+Midi	0x40	m_pdllsnd	Sound*	Sound	0x1002d690	r	4	0x1002d690	Midi::play	46
+MidiCtrl	0x8	m_total_class_size	int	MidiCtrl	0x1001be80	w	4	0x1001be80	NoteMap::set_total_class_size	2
+MidiCtrl	0x19	m_flags.state	uchar	MidiCtrlFlags	0x10005c70	w	1	0x10005c70	MidiCtrl::refresh	1
+MidiCtrl	0x1c	m_type	enum MIDI_CONTROL	MidiCtrl	0x1001be64	w	4	0x1001be60	NoteMap::set_type	2
+MidiCtrlDiskRead	0x8	m_total_class_size	int	MidiCtrl	0x10005d40	w	4	0x10005d40	MidiCtrlDiskRead::set_total_class_size	1
+Midi_Device	0x14	m_pdll_device	Sound_Device*	Sound_Device	0x10029fa2	r	4	0x10029f90	Midi_Device::init	7
+Randomizer	0x8	m_total_class_size	int	MidiCtrl	0x1001c6c0	w	4	0x1001c6c0	Randomizer::set_total_class_size	1
+Randomizer	0x19	m_flags.state	uchar	MidiCtrlFlags	0x1001c7c3	w	1	0x1001c7a0	Randomizer::do_control	2
+Randomizer	0x1c	m_type	enum MIDI_CONTROL	MidiCtrl	0x1001c6a4	w	4	0x1001c6a0	Randomizer::set_type	1
+Randomizer	0x2c	m_on_off_table	uchar*	Randomizer	0x1001c7b7	r	4	0x1001c7a0	Randomizer::do_control	2
+Randomizer	0x30	m_cur_index	uint	Randomizer	0x1001c7a3	r	4	0x1001c7a0	Randomizer::do_control	6
+Randomizer	0x3c	m_range	uint	Randomizer	0x1001c7a6	r	4	0x1001c7a0	Randomizer::do_control	2
+Sound	0x40	m_pdllsnd	Sound*	Sound	0x1002b136	r	4	0x1002b130	Sound::unload	10
+Sound	0x44	m_sf	SoundFlags_tag	Sound	0x100056a0	r	4	0x100056a0	Sound::is_loaded	6
+Sound	0x48	m_pprev	Sound*	Sound	0x100056e0	r	4	0x100056e0	Sound::get_prev	3
+Sound	0x4c	m_pnext	Sound*	Sound	0x100056c0	r	4	0x100056c0	Sound::get_next	3
+Sound	0x54	m_type	enum SOUNDTYPE	Sound	0x10005700	r	4	0x10005700	Sound::get_type	1
+Stepper	0x8	m_total_class_size	int	MidiCtrl	0x1001c510	w	4	0x1001c510	Stepper::set_total_class_size	1
+Stepper	0x1c	m_type	enum MIDI_CONTROL	MidiCtrl	0x1001c4f4	w	4	0x1001c4f0	Stepper::set_type	1
+Stepper	0x30	m_add	int	Stepper	0x1001c5a0	r	4	0x1001c5a0	Stepper::update	1
+Stepper	0x34	m_cur_add	int	Stepper	0x1001c580	r	4	0x1001c580	Stepper::do_control	3
+TrackCtrl	0x8	m_total_class_size	int	MidiCtrl	0x1001cc80	w	4	0x1001cc80	TrackCtrl::set_total_class_size	1
+TrackCtrl	0x1c	m_type	enum MIDI_CONTROL	MidiCtrl	0x1001cc64	w	4	0x1001cc60	TrackCtrl::set_type	1
+VoiceRx	0x40	m_pdllsnd	Sound*	Sound	0x1002eee0	r	4	0x1002eee0	VoiceRx::get_nbuffers	9
+VoiceTx	0x40	m_pdllsnd	Sound*	Sound	0x1002f510	r	4	0x1002f510	VoiceTx::release	9
+VoiceTx	0x58	m_flags	VTXFlags_tag	VoiceTx	0x1002f533	r	1	0x1002f530	VoiceTx::start	4
+Wave	0x40	m_pdllsnd	Sound*	Sound	0x1002b5d0	r	4	0x1002b5d0	Wave::is_loaded	19
+Wave	0x60	m_reverb_mix	float	Wave	0x1002c274	w	4	0x1002c270	Wave::set_reverb_mix	1
+Wave	0x64	m_ms_length	uint	Wave	0x1002ba80	r	4	0x1002ba80	Wave::get_ms_length	1
+Wave_Device	0x14	m_pdll_device	Sound_Device*	Sound_Device	0x100292e2	r	4	0x100292d0	Wave_Device::init	32
+Wave_In_Device	0x14	m_pdll_device	Sound_Device*	Sound_Device	0x1002a432	r	4	0x1002a420	Wave_In_Device::init	7
+dllSoundList	0xf8	m_pCurSound	CWaveMgr*	dllSoundList	0x1002f850	r	4	0x1002f850	dllSoundList::is_playing	3
+dllSoundList	0xfc	m_pQueuedSound	CWaveMgr*	dllSoundList	0x1002fa63	r	4	0x1002fa60	dllSoundList::play	1
+dllSoundList	0x104	m_curQueued	uint	dllSoundList	0x1002f830	r	4	0x1002f830	dllSoundList::isAlreadyQueued	1
+dllSoundList	0x108	m_curVolume	int	dllSoundList	0x1002fd9d	w	4	0x1002fd80	dllSoundList::set_scaled_volume	1

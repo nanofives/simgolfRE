@@ -1,0 +1,6 @@
+golf_clean.exe 0x00434cf0 ?RenderBuildingToolbar@@YAXHH@Z: 99.9% (681/682 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   !                                            | mov esi, dword ptr [esp + 0x28]
+   ! mov esi, dword ptr [esp + 0x28]            | 
+golf_clean.exe 0x00436e50 ?RenderEmployeePanel@@YAXHH@Z: 99.7% (757/759 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   ! add ecx, eax                               | add eax, ecx
+   ! cmp ecx, 0x14                              | cmp eax, 0x14

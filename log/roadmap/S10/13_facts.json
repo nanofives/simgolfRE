@@ -1,0 +1,5742 @@
+{
+ "sound.dll 0x10005880": {
+  "module": "sound.dll",
+  "va": "0x10005880",
+  "smsg": "CAmbienceMgr::strip_path",
+  "size": 91,
+  "decoded": 91,
+  "body": [
+   "10005880 push ebx",
+   "10005881 push edi",
+   "10005882 lea edi, [ecx + 0x948]",
+   "10005888 test edi, edi",
+   "1000588a jne 0x10005898",
+   "1000588c mov eax, dword ptr [esp + 0xc]",
+   "10005890 pop edi",
+   "10005891 pop ebx",
+   "10005892 mov byte ptr [eax], 0",
+   "10005895 ret 4",
+   "10005898 or ecx, 0xffffffff",
+   "1000589b xor eax, eax",
+   "1000589d repne scasb al, byte ptr es:[edi]",
+   "1000589f mov ebx, dword ptr [esp + 0xc]",
+   "100058a3 push esi",
+   "100058a4 not ecx",
+   "100058a6 sub edi, ecx",
+   "100058a8 push 0x5c",
+   "100058aa mov edx, ecx",
+   "100058ac mov esi, edi",
+   "100058ae mov edi, ebx",
+   "100058b0 push ebx",
+   "100058b1 shr ecx, 2",
+   "100058b4 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "100058b6 mov ecx, edx",
+   "100058b8 and ecx, 3",
+   "100058bb rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "100058bd call 0x100424b0",
+   "100058c2 add esp, 8",
+   "100058c5 test eax, eax",
+   "100058c7 pop esi",
+   "100058c8 je 0x100058d3",
+   "100058ca pop edi",
+   "100058cb mov byte ptr [eax + 1], 0",
+   "100058cf pop ebx",
+   "100058d0 ret 4",
+   "100058d3 mov byte ptr [ebx], 0",
+   "100058d6 pop edi",
+   "100058d7 pop ebx",
+   "100058d8 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424b0 _strrchr"
+  ],
+  "thunks": [
+   "0x100021c6"
+  ],
+  "callers": [
+   "0x100021c6 jmp 0x10005880 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10005900": {
+  "module": "sound.dll",
+  "va": "0x10005900",
+  "smsg": "CAmbienceMgr::make_path_local",
+  "size": 259,
+  "decoded": 259,
+  "body": [
+   "10005900 sub esp, 0x100",
+   "10005906 push ebx",
+   "10005907 push ebp",
+   "10005908 push esi",
+   "10005909 push edi",
+   "1000590a lea edi, [ecx + 0x948]",
+   "10005910 xor ebx, ebx",
+   "10005912 cmp edi, ebx",
+   "10005914 je 0x1000594f",
+   "10005916 or ecx, 0xffffffff",
+   "10005919 xor eax, eax",
+   "1000591b repne scasb al, byte ptr es:[edi]",
+   "1000591d not ecx",
+   "1000591f sub edi, ecx",
+   "10005921 lea edx, [esp + 0x10]",
+   "10005925 mov eax, ecx",
+   "10005927 mov esi, edi",
+   "10005929 mov edi, edx",
+   "1000592b push 0x5c",
+   "1000592d shr ecx, 2",
+   "10005930 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "10005932 mov ecx, eax",
+   "10005934 and ecx, 3",
+   "10005937 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "10005939 lea ecx, [esp + 0x14]",
+   "1000593d push ecx",
+   "1000593e call 0x100424b0",
+   "10005943 add esp, 8",
+   "10005946 cmp eax, ebx",
+   "10005948 je 0x1000594f",
+   "1000594a mov byte ptr [eax + 1], bl",
+   "1000594d jmp 0x10005953",
+   "1000594f mov byte ptr [esp + 0x10], bl",
+   "10005953 mov ebp, dword ptr [esp + 0x118]",
+   "1000595a push 0x5c",
+   "1000595c push ebp",
+   "1000595d call 0x100424b0",
+   "10005962 mov edi, eax",
+   "10005964 add esp, 8",
+   "10005967 cmp edi, ebx",
+   "10005969 je 0x100059a7",
+   "1000596b mov esi, 0x10069988",
+   "10005970 lea ecx, [esp + 0x10]",
+   "10005974 mov al, byte ptr [ecx]",
+   "10005976 mov dl, al",
+   "10005978 cmp al, byte ptr [esi]",
+   "1000597a jne 0x10005998",
+   "1000597c cmp dl, bl",
+   "1000597e je 0x10005994",
+   "10005980 mov al, byte ptr [ecx + 1]",
+   "10005983 mov dl, al",
+   "10005985 cmp al, byte ptr [esi + 1]",
+   "10005988 jne 0x10005998",
+   "1000598a add ecx, 2",
+   "1000598d add esi, 2",
+   "10005990 cmp dl, bl",
+   "10005992 jne 0x10005974",
+   "10005994 xor ecx, ecx",
+   "10005996 jmp 0x1000599d",
+   "10005998 sbb ecx, ecx",
+   "1000599a sbb ecx, -1",
+   "1000599d cmp ecx, ebx",
+   "1000599f je 0x100059a7",
+   "100059a1 lea edx, [esp + 0x10]",
+   "100059a5 jmp 0x100059ad",
+   "100059a7 lea edx, [esp + 0x10]",
+   "100059ab mov edi, ebp",
+   "100059ad or ecx, 0xffffffff",
+   "100059b0 xor eax, eax",
+   "100059b2 repne scasb al, byte ptr es:[edi]",
+   "100059b4 not ecx",
+   "100059b6 sub edi, ecx",
+   "100059b8 mov esi, edi",
+   "100059ba mov ebx, ecx",
+   "100059bc mov edi, edx",
+   "100059be or ecx, 0xffffffff",
+   "100059c1 repne scasb al, byte ptr es:[edi]",
+   "100059c3 mov ecx, ebx",
+   "100059c5 dec edi",
+   "100059c6 shr ecx, 2",
+   "100059c9 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "100059cb mov ecx, ebx",
+   "100059cd and ecx, 3",
+   "100059d0 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "100059d2 lea edi, [esp + 0x10]",
+   "100059d6 or ecx, 0xffffffff",
+   "100059d9 repne scasb al, byte ptr es:[edi]",
+   "100059db not ecx",
+   "100059dd sub edi, ecx",
+   "100059df mov eax, ecx",
+   "100059e1 mov esi, edi",
+   "100059e3 mov edi, dword ptr [esp + 0x114]",
+   "100059ea shr ecx, 2",
+   "100059ed rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "100059ef mov ecx, eax",
+   "100059f1 and ecx, 3",
+   "100059f4 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "100059f6 pop edi",
+   "100059f7 pop esi",
+   "100059f8 pop ebp",
+   "100059f9 pop ebx",
+   "100059fa add esp, 0x100",
+   "10005a00 ret 8"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424b0 _strrchr",
+   "call 0x100424b0 _strrchr"
+  ],
+  "thunks": [
+   "0x100026df"
+  ],
+  "callers": [
+   "0x100026df jmp 0x10005900 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10006b50": {
+  "module": "sound.dll",
+  "va": "0x10006b50",
+  "smsg": "CAviMgr::start",
+  "size": 23,
+  "decoded": 23,
+  "body": [
+   "10006b50 mov eax, dword ptr [ecx + 0x58]",
+   "10006b53 test al, 1",
+   "10006b55 je 0x10006b5d",
+   "10006b57 mov eax, 0xd",
+   "10006b5c ret",
+   "10006b5d and al, 0xfb",
+   "10006b5f or al, 3",
+   "10006b61 mov dword ptr [ecx + 0x58], eax",
+   "10006b64 xor eax, eax",
+   "10006b66 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001e88"
+  ],
+  "callers": [
+   "0x10001e88 jmp 0x10006b50 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10006ba0": {
+  "module": "sound.dll",
+  "va": "0x10006ba0",
+  "smsg": "CAviMgr::discard_frame",
+  "size": 29,
+  "decoded": 29,
+  "body": [
+   "10006ba0 mov eax, dword ptr [esp + 4]",
+   "10006ba4 push 0",
+   "10006ba6 push eax",
+   "10006ba7 call dword ptr [0x100b8670]",
+   "10006bad mov eax, dword ptr [0x100b4a08]",
+   "10006bb2 dec eax",
+   "10006bb3 mov dword ptr [0x100b4a08], eax",
+   "10006bb8 xor eax, eax",
+   "10006bba ret 4"
+  ],
+  "imports": [
+   "WINMM.dll!mmioClose"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x100020ea"
+  ],
+  "callers": [
+   "0x100020ea jmp 0x10006ba0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10006fc0": {
+  "module": "sound.dll",
+  "va": "0x10006fc0",
+  "smsg": "CWaveMixer::fill_mixbuff",
+  "size": 49,
+  "decoded": 49,
+  "body": [
+   "10006fc0 mov edx, dword ptr [ecx + 0xc]",
+   "10006fc3 xor eax, eax",
+   "10006fc5 sub esp, 8",
+   "10006fc8 cmp edx, eax",
+   "10006fca jbe 0x10006feb",
+   "10006fcc mov edx, dword ptr [esp + 0xc]",
+   "10006fd0 mov dword ptr [esp + 4], eax",
+   "10006fd4 mov dword ptr [esp], edx",
+   "10006fd8 fild qword ptr [esp]",
+   "10006fdc mov edx, dword ptr [ecx + 4]",
+   "10006fdf inc eax",
+   "10006fe0 fst qword ptr [edx + eax*8 - 8]",
+   "10006fe4 cmp eax, dword ptr [ecx + 0xc]",
+   "10006fe7 jb 0x10006fdc",
+   "10006fe9 fstp st(0)",
+   "10006feb add esp, 8",
+   "10006fee ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002748"
+  ],
+  "callers": [
+   "0x10002748 jmp 0x10006fc0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10007c10": {
+  "module": "sound.dll",
+  "va": "0x10007c10",
+  "smsg": "CWaveMixer::mb_2_dsb",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "10007c10 xor eax, eax",
+   "10007c12 ret 0xc"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002590"
+  ],
+  "callers": [
+   "0x10002590 jmp 0x10007c10 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100087a0": {
+  "module": "sound.dll",
+  "va": "0x100087a0",
+  "smsg": "CWaveMixer::get_filter_index",
+  "size": 56,
+  "decoded": 56,
+  "body": [
+   "100087a0 mov ecx, dword ptr [esp + 4]",
+   "100087a4 mov edx, dword ptr [esp + 8]",
+   "100087a8 cmp word ptr [ecx + 0xe], 8",
+   "100087ad jne 0x100087c3",
+   "100087af mov ax, word ptr [edx + 0xe]",
+   "100087b3 sub ax, 0x10",
+   "100087b7 neg ax",
+   "100087ba sbb eax, eax",
+   "100087bc and al, 0xfc",
+   "100087be add eax, 8",
+   "100087c1 jmp 0x100087c5",
+   "100087c3 xor eax, eax",
+   "100087c5 cmp word ptr [ecx + 2], 1",
+   "100087ca jne 0x100087cf",
+   "100087cc add eax, 2",
+   "100087cf cmp word ptr [edx + 2], 1",
+   "100087d4 jne 0x100087d7",
+   "100087d6 inc eax",
+   "100087d7 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001631"
+  ],
+  "callers": [
+   "0x10001631 jmp 0x100087a0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10008e00": {
+  "module": "sound.dll",
+  "va": "0x10008e00",
+  "smsg": "CTimer::get_samples_per_tick",
+  "size": 32,
+  "decoded": 32,
+  "body": [
+   "10008e00 mov eax, dword ptr [esp + 4]",
+   "10008e04 test eax, eax",
+   "10008e06 jne 0x10008e0b",
+   "10008e08 ret 4",
+   "10008e0b mov edx, dword ptr [eax + 4]",
+   "10008e0e mov eax, 0x10624dd3",
+   "10008e13 imul edx, dword ptr [ecx]",
+   "10008e16 mul edx",
+   "10008e18 mov eax, edx",
+   "10008e1a shr eax, 6",
+   "10008e1d ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100013c5"
+  ],
+  "callers": [
+   "0x100013c5 jmp 0x10008e00 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10008e30": {
+  "module": "sound.dll",
+  "va": "0x10008e30",
+  "smsg": "CTimer::set_rate",
+  "size": 50,
+  "decoded": 50,
+  "body": [
+   "10008e30 test byte ptr [ecx + 0x3c], 4",
+   "10008e34 je 0x10008e3e",
+   "10008e36 mov eax, 0xd",
+   "10008e3b ret 4",
+   "10008e3e mov eax, dword ptr [esp + 4]",
+   "10008e42 test eax, eax",
+   "10008e44 ja 0x10008e4e",
+   "10008e46 mov eax, 0xa",
+   "10008e4b ret 4",
+   "10008e4e cmp eax, dword ptr [ecx + 0x44]",
+   "10008e51 jae 0x10008e5b",
+   "10008e53 mov eax, 0xb",
+   "10008e58 ret 4",
+   "10008e5b mov dword ptr [ecx], eax",
+   "10008e5d xor eax, eax",
+   "10008e5f ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001acd"
+  ],
+  "callers": [
+   "0x10001acd jmp 0x10008e30 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10008e80": {
+  "module": "sound.dll",
+  "va": "0x10008e80",
+  "smsg": "CTimer::set_wave_format",
+  "size": 54,
+  "decoded": 54,
+  "body": [
+   "10008e80 mov eax, dword ptr [esp + 4]",
+   "10008e84 test eax, eax",
+   "10008e86 jne 0x10008e90",
+   "10008e88 mov eax, 0xa",
+   "10008e8d ret 4",
+   "10008e90 mov edx, dword ptr [eax]",
+   "10008e92 add ecx, 0x28",
+   "10008e95 mov dword ptr [ecx], edx",
+   "10008e97 mov edx, dword ptr [eax + 4]",
+   "10008e9a mov dword ptr [ecx + 4], edx",
+   "10008e9d mov edx, dword ptr [eax + 8]",
+   "10008ea0 mov dword ptr [ecx + 8], edx",
+   "10008ea3 mov edx, dword ptr [eax + 0xc]",
+   "10008ea6 mov dword ptr [ecx + 0xc], edx",
+   "10008ea9 mov ax, word ptr [eax + 0x10]",
+   "10008ead mov word ptr [ecx + 0x10], ax",
+   "10008eb1 xor eax, eax",
+   "10008eb3 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001ded"
+  ],
+  "callers": [
+   "0x10001ded jmp 0x10008e80 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10009240": {
+  "module": "sound.dll",
+  "va": "0x10009240",
+  "smsg": "init_sound",
+  "size": 121,
+  "decoded": 121,
+  "body": [
+   "10009240 mov eax, dword ptr fs:[0]",
+   "10009246 push -1",
+   "10009248 push 0x1005861b",
+   "1000924d push eax",
+   "1000924e mov eax, dword ptr [esp + 0x14]",
+   "10009252 mov dword ptr fs:[0], esp",
+   "10009259 test al, 1",
+   "1000925b mov dword ptr [0x100b49d8], eax",
+   "10009260 jne 0x1000929b",
+   "10009262 push 0x5c",
+   "10009264 call 0x100424d7",
+   "10009269 add esp, 4",
+   "1000926c mov dword ptr [esp + 0x14], eax",
+   "10009270 test eax, eax",
+   "10009272 mov dword ptr [esp + 8], 0",
+   "1000927a je 0x10009285",
+   "1000927c mov ecx, eax",
+   "1000927e call 0x100022b1",
+   "10009283 jmp 0x10009287",
+   "10009285 xor eax, eax",
+   "10009287 mov dword ptr [0x100b49ec], eax",
+   "1000928c mov dword ptr [esp + 8], 0xffffffff",
+   "10009294 mov dword ptr [eax + 0x24], 0x10002671",
+   "1000929b mov eax, dword ptr [esp + 0x10]",
+   "1000929f mov ecx, 0x100b49b8",
+   "100092a4 push eax",
+   "100092a5 call 0x10001177",
+   "100092aa mov ecx, dword ptr [esp]",
+   "100092ae mov dword ptr fs:[0], ecx",
+   "100092b5 add esp, 0xc",
+   "100092b8 ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424d7 operator_new",
+   "call 0x100089f0 SoundTimer::init",
+   "call 0x100286f0 SoundWindowObj_subclass"
+  ],
+  "thunks": [
+   "0x1000207c"
+  ],
+  "callers": [
+   "0x1000207c jmp 0x10009240 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100099d0": {
+  "module": "sound.dll",
+  "va": "0x100099d0",
+  "smsg": "get_sound_type",
+  "size": 114,
+  "decoded": 114,
+  "body": [
+   "100099d0 push esi",
+   "100099d1 mov esi, dword ptr [esp + 8]",
+   "100099d5 test esi, esi",
+   "100099d7 jne 0x100099e0",
+   "100099d9 mov eax, 1",
+   "100099de pop esi",
+   "100099df ret",
+   "100099e0 push 0x10063dc0",
+   "100099e5 push esi",
+   "100099e6 call 0x10042690",
+   "100099eb add esp, 8",
+   "100099ee test eax, eax",
+   "100099f0 je 0x100099f9",
+   "100099f2 mov eax, 1",
+   "100099f7 pop esi",
+   "100099f8 ret",
+   "100099f9 push 0x10063dbc",
+   "100099fe push esi",
+   "100099ff call 0x10042690",
+   "10009a04 add esp, 8",
+   "10009a07 test eax, eax",
+   "10009a09 je 0x10009a12",
+   "10009a0b mov eax, 2",
+   "10009a10 pop esi",
+   "10009a11 ret",
+   "10009a12 push 0x10063db8",
+   "10009a17 push esi",
+   "10009a18 call 0x10042690",
+   "10009a1d add esp, 8",
+   "10009a20 test eax, eax",
+   "10009a22 je 0x10009a2b",
+   "10009a24 mov eax, 3",
+   "10009a29 pop esi",
+   "10009a2a ret",
+   "10009a2b push 0x10063db4",
+   "10009a30 push esi",
+   "10009a31 call 0x10042690",
+   "10009a36 add esp, 8",
+   "10009a39 neg eax",
+   "10009a3b sbb eax, eax",
+   "10009a3d pop esi",
+   "10009a3e and eax, 2",
+   "10009a41 ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function",
+   "call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function",
+   "call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function",
+   "call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function"
+  ],
+  "thunks": [
+   "0x100018de"
+  ],
+  "callers": [
+   "0x100018de jmp 0x100099d0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10009a70": {
+  "module": "sound.dll",
+  "va": "0x10009a70",
+  "smsg": "update_sound",
+  "size": 1,
+  "decoded": 1,
+  "body": [
+   "10009a70 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002671"
+  ],
+  "callers": [
+   "0x10002671 jmp 0x10009a70 from outside every function"
+  ],
+  "refs": [
+   {
+    "ref": "0x10009297",
+    "kind": "table",
+    "detail": "in data; no code stores the address of any slot at or before it",
+    "installers": []
+   },
+   {
+    "ref": "0x1000932f",
+    "kind": "store",
+    "detail": "target 0x10002671 written by code",
+    "installers": [
+     "0x100092e0 init_sound_timer"
+    ]
+   }
+  ]
+ },
+ "sound.dll 0x10009e10": {
+  "module": "sound.dll",
+  "va": "0x10009e10",
+  "smsg": "Dll_Midi_Device::init_win_device",
+  "size": 26,
+  "decoded": 26,
+  "body": [
+   "10009e10 push 0",
+   "10009e12 push 0",
+   "10009e14 push 0",
+   "10009e16 add ecx, 0x3c",
+   "10009e19 push -1",
+   "10009e1b push ecx",
+   "10009e1c call dword ptr [0x100b85f8]",
+   "10009e22 neg eax",
+   "10009e24 sbb eax, eax",
+   "10009e26 and eax, 7",
+   "10009e29 ret"
+  ],
+  "imports": [
+   "WINMM.dll!midiOutOpen"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x10001df7"
+  ],
+  "callers": [
+   "0x10001df7 jmp 0x10009e10 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000aa60": {
+  "module": "sound.dll",
+  "va": "0x1000aa60",
+  "smsg": "Dll_Midi_Device::post_GT_request",
+  "size": 110,
+  "decoded": 110,
+  "body": [
+   "1000aa60 mov ecx, dword ptr [esp + 4]",
+   "1000aa64 mov eax, dword ptr [ecx + 4]",
+   "1000aa67 test eax, eax",
+   "1000aa69 jne 0x1000aa73",
+   "1000aa6b mov eax, 0x13",
+   "1000aa70 ret 4",
+   "1000aa73 push esi",
+   "1000aa74 mov esi, dword ptr [eax + 0x214]",
+   "1000aa7a or esi, 0x40",
+   "1000aa7d mov dword ptr [eax + 0x214], esi",
+   "1000aa83 mov esi, dword ptr [0x100b4a20]",
+   "1000aa89 test esi, esi",
+   "1000aa8b je 0x1000aab6",
+   "1000aa8d mov edx, dword ptr [esi + 0x1a4]",
+   "1000aa93 shr edx, 5",
+   "1000aa96 test dl, 1",
+   "1000aa99 je 0x1000aab6",
+   "1000aa9b mov eax, dword ptr [eax + 0x210]",
+   "1000aaa1 push ecx",
+   "1000aaa2 push 0",
+   "1000aaa4 push 0x7ef",
+   "1000aaa9 push eax",
+   "1000aaaa call dword ptr [0x100b85a0]",
+   "1000aab0 xor eax, eax",
+   "1000aab2 pop esi",
+   "1000aab3 ret 4",
+   "1000aab6 push ecx",
+   "1000aab7 push 0",
+   "1000aab9 push 0x7ef",
+   "1000aabe mov ecx, 0x100b5038",
+   "1000aac3 call 0x100011d6",
+   "1000aac8 xor eax, eax",
+   "1000aaca pop esi",
+   "1000aacb ret 4"
+  ],
+  "imports": [
+   "USER32.dll!PostMessageA"
+  ],
+  "calls": [
+   "call 0x1002aa90 postSoundThreadMessage"
+  ],
+  "thunks": [
+   "0x10001190"
+  ],
+  "callers": [
+   "0x10001190 jmp 0x1000aa60 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000db60": {
+  "module": "sound.dll",
+  "va": "0x1000db60",
+  "smsg": "Dll_Wave_Device::post_GT_request",
+  "size": 95,
+  "decoded": 95,
+  "body": [
+   "1000db60 mov edx, dword ptr [esp + 4]",
+   "1000db64 push esi",
+   "1000db65 mov esi, ecx",
+   "1000db67 mov eax, dword ptr [edx + 4]",
+   "1000db6a test eax, eax",
+   "1000db6c jne 0x1000db77",
+   "1000db6e mov eax, 0x13",
+   "1000db73 pop esi",
+   "1000db74 ret 4",
+   "1000db77 mov cl, byte ptr [eax + 0x1428]",
+   "1000db7d push edx",
+   "1000db7e or cl, 1",
+   "1000db81 push 0",
+   "1000db83 mov byte ptr [eax + 0x1428], cl",
+   "1000db89 mov ecx, dword ptr [esi + 0x1a4]",
+   "1000db8f shr ecx, 5",
+   "1000db92 test cl, 1",
+   "1000db95 push 0x7ee",
+   "1000db9a je 0x1000dbaf",
+   "1000db9c mov edx, dword ptr [eax + 0x1420]",
+   "1000dba2 push edx",
+   "1000dba3 call dword ptr [0x100b85a0]",
+   "1000dba9 xor eax, eax",
+   "1000dbab pop esi",
+   "1000dbac ret 4",
+   "1000dbaf mov ecx, 0x100b5038",
+   "1000dbb4 call 0x100011d6",
+   "1000dbb9 xor eax, eax",
+   "1000dbbb pop esi",
+   "1000dbbc ret 4"
+  ],
+  "imports": [
+   "USER32.dll!PostMessageA"
+  ],
+  "calls": [
+   "call 0x1002aa90 postSoundThreadMessage"
+  ],
+  "thunks": [
+   "0x100017df"
+  ],
+  "callers": [
+   "0x100017df jmp 0x1000db60 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e160": {
+  "module": "sound.dll",
+  "va": "0x1000e160",
+  "smsg": "Dll_Wave_Device::update_hwbuffers",
+  "size": 72,
+  "decoded": 72,
+  "body": [
+   "1000e160 mov eax, dword ptr [0x100b49f0]",
+   "1000e165 push esi",
+   "1000e166 push edi",
+   "1000e167 mov edi, ecx",
+   "1000e169 test eax, eax",
+   "1000e16b je 0x1000e1a5",
+   "1000e16d mov esi, dword ptr [eax + 0x168]",
+   "1000e173 test esi, esi",
+   "1000e175 je 0x1000e1a5",
+   "1000e177 mov ecx, dword ptr [esi + 8]",
+   "1000e17a mov eax, dword ptr [ecx + 0x44]",
+   "1000e17d test eax, eax",
+   "1000e17f je 0x1000e19e",
+   "1000e181 mov edx, dword ptr [edi + 0x1b4]",
+   "1000e187 add eax, edx",
+   "1000e189 test eax, eax",
+   "1000e18b mov dword ptr [ecx + 0x44], eax",
+   "1000e18e jl 0x1000e19e",
+   "1000e190 push 0",
+   "1000e192 mov dword ptr [ecx + 0x44], 0",
+   "1000e199 call 0x10001203",
+   "1000e19e mov esi, dword ptr [esi + 4]",
+   "1000e1a1 test esi, esi",
+   "1000e1a3 jne 0x1000e177",
+   "1000e1a5 pop edi",
+   "1000e1a6 pop esi",
+   "1000e1a7 ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x10010db0 DsBuffer::play"
+  ],
+  "thunks": [
+   "0x10001960"
+  ],
+  "callers": [
+   "0x10001960 jmp 0x1000e160 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e370": {
+  "module": "sound.dll",
+  "va": "0x1000e370",
+  "smsg": "Dll_Wave_Device::get_eax",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e370 xor eax, eax",
+   "1000e372 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000187f"
+  ],
+  "callers": [
+   "0x1000187f jmp 0x1000e370 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e390": {
+  "module": "sound.dll",
+  "va": "0x1000e390",
+  "smsg": "Dll_Wave_Device::get_eax",
+  "size": 34,
+  "decoded": 34,
+  "body": [
+   "1000e390 mov ecx, dword ptr [0x100b49f0]",
+   "1000e396 test ecx, ecx",
+   "1000e398 je 0x1000e3ad",
+   "1000e39a test byte ptr [ecx + 0x6c], 0x10",
+   "1000e39e je 0x1000e3ad",
+   "1000e3a0 mov eax, dword ptr [esp + 4]",
+   "1000e3a4 push eax",
+   "1000e3a5 call 0x10001087",
+   "1000e3aa ret 4",
+   "1000e3ad xor eax, eax",
+   "1000e3af ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x10012020 deferred CDSMgr::get_eax"
+  ],
+  "thunks": [
+   "0x10001122"
+  ],
+  "callers": [
+   "0x10001122 jmp 0x1000e390 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e3d0": {
+  "module": "sound.dll",
+  "va": "0x1000e3d0",
+  "smsg": "Dll_Wave_Device::set_eax_volume",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e3d0 xor eax, eax",
+   "1000e3d2 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001ce4"
+  ],
+  "callers": [
+   "0x10001ce4 jmp 0x1000e3d0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e3f0": {
+  "module": "sound.dll",
+  "va": "0x1000e3f0",
+  "smsg": "Dll_Wave_Device::get_eax_volume",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e3f0 xor eax, eax",
+   "1000e3f2 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001b86"
+  ],
+  "callers": [
+   "0x10001b86 jmp 0x1000e3f0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e410": {
+  "module": "sound.dll",
+  "va": "0x1000e410",
+  "smsg": "Dll_Wave_Device::set_eax_decay",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e410 xor eax, eax",
+   "1000e412 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100018e3"
+  ],
+  "callers": [
+   "0x100018e3 jmp 0x1000e410 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e430": {
+  "module": "sound.dll",
+  "va": "0x1000e430",
+  "smsg": "Dll_Wave_Device::get_eax_decay",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e430 xor eax, eax",
+   "1000e432 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001dc5"
+  ],
+  "callers": [
+   "0x10001dc5 jmp 0x1000e430 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e450": {
+  "module": "sound.dll",
+  "va": "0x1000e450",
+  "smsg": "Dll_Wave_Device::set_eax_damping",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e450 xor eax, eax",
+   "1000e452 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002333"
+  ],
+  "callers": [
+   "0x10002333 jmp 0x1000e450 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000e470": {
+  "module": "sound.dll",
+  "va": "0x1000e470",
+  "smsg": "Dll_Wave_Device::get_eax_damping",
+  "size": 5,
+  "decoded": 5,
+  "body": [
+   "1000e470 xor eax, eax",
+   "1000e472 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000178a"
+  ],
+  "callers": [
+   "0x1000178a jmp 0x1000e470 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000f0a0": {
+  "module": "sound.dll",
+  "va": "0x1000f0a0",
+  "smsg": "CDSB::dsbrestore",
+  "size": 16,
+  "decoded": 16,
+  "body": [
+   "1000f0a0 mov eax, dword ptr [ecx + 0x60]",
+   "1000f0a3 test eax, eax",
+   "1000f0a5 je 0x1000f0ad",
+   "1000f0a7 mov ecx, dword ptr [eax]",
+   "1000f0a9 push eax",
+   "1000f0aa call dword ptr [ecx + 0x50]",
+   "1000f0ad xor eax, eax",
+   "1000f0af ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001bd1"
+  ],
+  "callers": [
+   "0x10001bd1 jmp 0x1000f0a0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000f0f0": {
+  "module": "sound.dll",
+  "va": "0x1000f0f0",
+  "smsg": "CDSB::setsamplerate",
+  "size": 77,
+  "decoded": 77,
+  "body": [
+   "1000f0f0 mov eax, dword ptr [ecx + 0x60]",
+   "1000f0f3 test eax, eax",
+   "1000f0f5 je 0x1000f0ff",
+   "1000f0f7 mov eax, 0xc",
+   "1000f0fc ret 4",
+   "1000f0ff mov eax, dword ptr [esp + 4]",
+   "1000f103 cmp eax, 0xac44",
+   "1000f108 je 0x1000f120",
+   "1000f10a cmp eax, 0x5622",
+   "1000f10f je 0x1000f120",
+   "1000f111 cmp eax, 0x2b11",
+   "1000f116 je 0x1000f120",
+   "1000f118 mov eax, 0xa",
+   "1000f11d ret 4",
+   "1000f120 xor edx, edx",
+   "1000f122 mov dword ptr [ecx + 0xac], eax",
+   "1000f128 mov dx, word ptr [ecx + 0xb4]",
+   "1000f12f imul edx, eax",
+   "1000f132 mov dword ptr [ecx + 0xb0], edx",
+   "1000f138 xor eax, eax",
+   "1000f13a ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001cf8"
+  ],
+  "callers": [
+   "0x10001cf8 jmp 0x1000f0f0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000f380": {
+  "module": "sound.dll",
+  "va": "0x1000f380",
+  "smsg": "CDSB::setsamplesize",
+  "size": 87,
+  "decoded": 87,
+  "body": [
+   "1000f380 mov eax, dword ptr [ecx + 0x60]",
+   "1000f383 test eax, eax",
+   "1000f385 je 0x1000f38f",
+   "1000f387 mov eax, 0xc",
+   "1000f38c ret 4",
+   "1000f38f mov edx, dword ptr [esp + 4]",
+   "1000f393 cmp edx, 0x10",
+   "1000f396 je 0x1000f3a5",
+   "1000f398 cmp edx, 8",
+   "1000f39b je 0x1000f3a5",
+   "1000f39d mov eax, 0xa",
+   "1000f3a2 ret 4",
+   "1000f3a5 mov ax, word ptr [ecx + 0xaa]",
+   "1000f3ac mov word ptr [ecx + 0xb6], dx",
+   "1000f3b3 imul ax, dx",
+   "1000f3b7 mov edx, dword ptr [ecx + 0xac]",
+   "1000f3bd mov word ptr [ecx + 0xb4], ax",
+   "1000f3c4 and eax, 0xffff",
+   "1000f3c9 imul edx, eax",
+   "1000f3cc mov dword ptr [ecx + 0xb0], edx",
+   "1000f3d2 xor eax, eax",
+   "1000f3d4 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002185"
+  ],
+  "callers": [
+   "0x10002185 jmp 0x1000f380 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000f400": {
+  "module": "sound.dll",
+  "va": "0x1000f400",
+  "smsg": "CDSB::setnumchannels",
+  "size": 86,
+  "decoded": 86,
+  "body": [
+   "1000f400 mov eax, dword ptr [ecx + 0x60]",
+   "1000f403 test eax, eax",
+   "1000f405 je 0x1000f40f",
+   "1000f407 mov eax, 0xc",
+   "1000f40c ret 4",
+   "1000f40f mov edx, dword ptr [esp + 4]",
+   "1000f413 test edx, edx",
+   "1000f415 je 0x1000f424",
+   "1000f417 cmp edx, 1",
+   "1000f41a je 0x1000f424",
+   "1000f41c mov eax, 0xa",
+   "1000f421 ret 4",
+   "1000f424 mov ax, word ptr [ecx + 0xb6]",
+   "1000f42b mov word ptr [ecx + 0xaa], dx",
+   "1000f432 imul ax, dx",
+   "1000f436 mov edx, dword ptr [ecx + 0xac]",
+   "1000f43c mov word ptr [ecx + 0xb4], ax",
+   "1000f443 and eax, 0xffff",
+   "1000f448 imul edx, eax",
+   "1000f44b mov dword ptr [ecx + 0xb0], edx",
+   "1000f451 xor eax, eax",
+   "1000f453 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001852"
+  ],
+  "callers": [
+   "0x10001852 jmp 0x1000f400 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1000f720": {
+  "module": "sound.dll",
+  "va": "0x1000f720",
+  "smsg": "CDSB::reinit",
+  "size": 38,
+  "decoded": 38,
+  "body": [
+   "1000f720 lea edx, [ecx + 0x94]",
+   "1000f726 xor eax, eax",
+   "1000f728 mov dword ptr [edx], eax",
+   "1000f72a mov dword ptr [edx + 4], eax",
+   "1000f72d mov dword ptr [edx + 8], eax",
+   "1000f730 mov dword ptr [edx + 0xc], eax",
+   "1000f733 mov dword ptr [edx + 0x10], eax",
+   "1000f736 mov dword ptr [ecx + 8], eax",
+   "1000f739 mov dword ptr [ecx + 0xc], eax",
+   "1000f73c mov dword ptr [ecx + 0x60], eax",
+   "1000f73f mov dword ptr [ecx + 0x4c], eax",
+   "1000f742 mov dword ptr [ecx + 0x48], eax",
+   "1000f745 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100016e5"
+  ],
+  "callers": [
+   "0x100016e5 jmp 0x1000f720 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10010120": {
+  "module": "sound.dll",
+  "va": "0x10010120",
+  "smsg": "CDSB::get_cur_dsbwrite",
+  "size": 37,
+  "decoded": 37,
+  "body": [
+   "10010120 mov eax, dword ptr [ecx + 0x60]",
+   "10010123 test eax, eax",
+   "10010125 jne 0x1001012f",
+   "10010127 mov eax, 0x14",
+   "1001012c ret 4",
+   "1001012f mov edx, dword ptr [eax]",
+   "10010131 push esi",
+   "10010132 mov esi, dword ptr [esp + 8]",
+   "10010136 add ecx, 0xc",
+   "10010139 push esi",
+   "1001013a push ecx",
+   "1001013b push eax",
+   "1001013c call dword ptr [edx + 0x10]",
+   "1001013f xor eax, eax",
+   "10010141 pop esi",
+   "10010142 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001f5f"
+  ],
+  "callers": [
+   "0x10001f5f jmp 0x10010120 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10010160": {
+  "module": "sound.dll",
+  "va": "0x10010160",
+  "smsg": "CDSB::get_cur_dsbplay",
+  "size": 36,
+  "decoded": 36,
+  "body": [
+   "10010160 mov eax, dword ptr [ecx + 0x60]",
+   "10010163 test eax, eax",
+   "10010165 jne 0x1001016f",
+   "10010167 mov eax, 0x14",
+   "1001016c ret 4",
+   "1001016f mov ecx, dword ptr [eax]",
+   "10010171 lea edx, [esp + 4]",
+   "10010175 push edx",
+   "10010176 mov edx, dword ptr [esp + 8]",
+   "1001017a push edx",
+   "1001017b push eax",
+   "1001017c call dword ptr [ecx + 0x10]",
+   "1001017f xor eax, eax",
+   "10010181 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002473"
+  ],
+  "callers": [
+   "0x10002473 jmp 0x10010160 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10010d60": {
+  "module": "sound.dll",
+  "va": "0x10010d60",
+  "smsg": "CDSB::release_pointer",
+  "size": 51,
+  "decoded": 51,
+  "body": [
+   "10010d60 mov eax, dword ptr [ecx + 0x60]",
+   "10010d63 test eax, eax",
+   "10010d65 jne 0x10010d6f",
+   "10010d67 mov eax, 0x14",
+   "10010d6c ret 0x10",
+   "10010d6f mov edx, dword ptr [esp + 0x10]",
+   "10010d73 mov ecx, dword ptr [eax]",
+   "10010d75 push edx",
+   "10010d76 mov edx, dword ptr [esp + 0x10]",
+   "10010d7a push edx",
+   "10010d7b mov edx, dword ptr [esp + 0x10]",
+   "10010d7f push edx",
+   "10010d80 mov edx, dword ptr [esp + 0x10]",
+   "10010d84 push edx",
+   "10010d85 push eax",
+   "10010d86 call dword ptr [ecx + 0x4c]",
+   "10010d89 neg eax",
+   "10010d8b sbb eax, eax",
+   "10010d8d and eax, 0x1b",
+   "10010d90 ret 0x10"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002496"
+  ],
+  "callers": [
+   "0x10002496 jmp 0x10010d60 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10010e80": {
+  "module": "sound.dll",
+  "va": "0x10010e80",
+  "smsg": "CDSB::set_samples_per_tick",
+  "size": 27,
+  "decoded": 27,
+  "body": [
+   "10010e80 mov edx, dword ptr [ecx + 0xac]",
+   "10010e86 mov eax, 0x10624dd3",
+   "10010e8b imul edx, dword ptr [esp + 4]",
+   "10010e90 mul edx",
+   "10010e92 shr edx, 6",
+   "10010e95 mov dword ptr [ecx + 0x34], edx",
+   "10010e98 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100017c1"
+  ],
+  "callers": [
+   "0x100017c1 jmp 0x10010e80 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10011600": {
+  "module": "sound.dll",
+  "va": "0x10011600",
+  "smsg": "CDSMgr::init",
+  "size": 122,
+  "decoded": 122,
+  "body": [
+   "10011600 mov eax, dword ptr [esp + 0xc]",
+   "10011604 push esi",
+   "10011605 mov esi, ecx",
+   "10011607 push edi",
+   "10011608 mov ecx, dword ptr [esp + 0x10]",
+   "1001160c push eax",
+   "1001160d push ecx",
+   "1001160e mov ecx, esi",
+   "10011610 call 0x10002013",
+   "10011615 mov edx, dword ptr [esi + 0x148]",
+   "1001161b mov edi, dword ptr [esp + 0xc]",
+   "1001161f cmp edi, edx",
+   "10011621 jb 0x10011625",
+   "10011623 xor edi, edi",
+   "10011625 test edx, edx",
+   "10011627 jne 0x10011633",
+   "10011629 pop edi",
+   "1001162a mov eax, 3",
+   "1001162f pop esi",
+   "10011630 ret 0xc",
+   "10011633 cmp edi, edx",
+   "10011635 jb 0x10011641",
+   "10011637 pop edi",
+   "10011638 mov eax, 0xa",
+   "1001163d pop esi",
+   "1001163e ret 0xc",
+   "10011641 mov eax, dword ptr [esi + 8]",
+   "10011644 test eax, eax",
+   "10011646 je 0x10011652",
+   "10011648 pop edi",
+   "10011649 mov eax, 6",
+   "1001164e pop esi",
+   "1001164f ret 0xc",
+   "10011652 mov eax, dword ptr [esi + 4]",
+   "10011655 xor ecx, ecx",
+   "10011657 test edx, edx",
+   "10011659 jbe 0x1001166a",
+   "1001165b cmp ecx, edi",
+   "1001165d mov dword ptr [esi + 8], eax",
+   "10011660 je 0x1001166a",
+   "10011662 mov eax, dword ptr [eax + 0x10]",
+   "10011665 inc ecx",
+   "10011666 cmp ecx, edx",
+   "10011668 jb 0x1001165b",
+   "1001166a mov cl, byte ptr [esi + 0x6c]",
+   "1001166d pop edi",
+   "1001166e or cl, 1",
+   "10011671 xor eax, eax",
+   "10011673 mov byte ptr [esi + 0x6c], cl",
+   "10011676 pop esi",
+   "10011677 ret 0xc"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100114e0 DirectSoundDevice::enumerate"
+  ],
+  "thunks": [
+   "0x100015c3"
+  ],
+  "callers": [
+   "0x100015c3 jmp 0x10011600 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10011720": {
+  "module": "sound.dll",
+  "va": "0x10011720",
+  "smsg": "CDSMgr::suspend",
+  "size": 1,
+  "decoded": 1,
+  "body": [
+   "10011720 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000201d"
+  ],
+  "callers": [
+   "0x1000201d jmp 0x10011720 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10011740": {
+  "module": "sound.dll",
+  "va": "0x10011740",
+  "smsg": "CDSMgr::restart",
+  "size": 1,
+  "decoded": 1,
+  "body": [
+   "10011740 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002135"
+  ],
+  "callers": [
+   "0x10002135 jmp 0x10011740 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10012020": {
+  "module": "sound.dll",
+  "va": "0x10012020",
+  "smsg": "CDSMgr::get_eax",
+  "size": 8,
+  "decoded": 8,
+  "body": [
+   "10012020 mov eax, 0xb",
+   "10012025 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001087"
+  ],
+  "callers": [
+   "0x10001087 jmp 0x10012020 from outside every function",
+   "0x1000e3a5 call 0x10001087 from deferred 0x1000e390 Dll_Wave_Device::get_eax"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10012060": {
+  "module": "sound.dll",
+  "va": "0x10012060",
+  "smsg": "CDSMgr::init_A3D",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10012060 xor eax, eax",
+   "10012062 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001ef6"
+  ],
+  "callers": [
+   "0x10001ef6 jmp 0x10012060 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10012080": {
+  "module": "sound.dll",
+  "va": "0x10012080",
+  "smsg": "CDSMgr::uninit_A3D",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10012080 xor eax, eax",
+   "10012082 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001b9a"
+  ],
+  "callers": [
+   "0x10001b9a jmp 0x10012080 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10013470": {
+  "module": "sound.dll",
+  "va": "0x10013470",
+  "smsg": "CDSMgr::attach_dsb",
+  "size": 77,
+  "decoded": 77,
+  "body": [
+   "10013470 mov ecx, dword ptr [0x100b4a38]",
+   "10013476 mov eax, dword ptr [esp + 4]",
+   "1001347a xor edx, edx",
+   "1001347c cmp ecx, edx",
+   "1001347e jne 0x1001349b",
+   "10013480 mov dword ptr [0x100b4a34], eax",
+   "10013485 mov dword ptr [0x100b4a38], eax",
+   "1001348a mov dword ptr [eax + 0xbc], edx",
+   "10013490 mov dword ptr [eax + 0xc0], edx",
+   "10013496 xor eax, eax",
+   "10013498 ret 4",
+   "1001349b mov dword ptr [eax + 0xbc], ecx",
+   "100134a1 mov ecx, dword ptr [0x100b4a38]",
+   "100134a7 mov dword ptr [ecx + 0xc0], eax",
+   "100134ad mov dword ptr [0x100b4a38], eax",
+   "100134b2 mov dword ptr [eax + 0xc0], edx",
+   "100134b8 xor eax, eax",
+   "100134ba ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001424"
+  ],
+  "callers": [
+   "0x10001424 jmp 0x10013470 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10013870": {
+  "module": "sound.dll",
+  "va": "0x10013870",
+  "smsg": "filter_stub",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10013870 xor eax, eax",
+   "10013872 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100019a6"
+  ],
+  "callers": [
+   "0x100019a6 jmp 0x10013870 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001b830": {
+  "module": "sound.dll",
+  "va": "0x1001b830",
+  "smsg": "MidiCtrlSocket::MidiCtrlSocket",
+  "size": 37,
+  "decoded": 37,
+  "body": [
+   "1001b830 mov eax, ecx",
+   "1001b832 xor ecx, ecx",
+   "1001b834 mov dword ptr [eax + 0xc], ecx",
+   "1001b837 mov dword ptr [eax + 0x10], ecx",
+   "1001b83a mov dword ptr [eax + 0x14], ecx",
+   "1001b83d mov dword ptr [eax + 0x18], ecx",
+   "1001b840 mov dword ptr [eax], 0x1005b58c",
+   "1001b846 mov dword ptr [eax + 4], 0x18",
+   "1001b84d mov dword ptr [eax + 8], 0x44444444",
+   "1001b854 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002392"
+  ],
+  "callers": [
+   "0x10002392 jmp 0x1001b830 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001b9e0": {
+  "module": "sound.dll",
+  "va": "0x1001b9e0",
+  "smsg": "MidiCtrlSocket::insert_after",
+  "size": 78,
+  "decoded": 78,
+  "body": [
+   "1001b9e0 mov edx, dword ptr [esp + 4]",
+   "1001b9e4 test edx, edx",
+   "1001b9e6 jne 0x1001b9fa",
+   "1001b9e8 mov eax, dword ptr [esp + 8]",
+   "1001b9ec add ecx, 0xc",
+   "1001b9ef push eax",
+   "1001b9f0 call 0x100012b7",
+   "1001b9f5 xor eax, eax",
+   "1001b9f7 ret 8",
+   "1001b9fa mov eax, dword ptr [ecx + 0xc]",
+   "1001b9fd add ecx, 0xc",
+   "1001ba00 test eax, eax",
+   "1001ba02 je 0x1001ba10",
+   "1001ba04 cmp dword ptr [eax + 8], edx",
+   "1001ba07 je 0x1001ba18",
+   "1001ba09 mov eax, dword ptr [eax + 4]",
+   "1001ba0c test eax, eax",
+   "1001ba0e jne 0x1001ba04",
+   "1001ba10 mov eax, 0xa",
+   "1001ba15 ret 8",
+   "1001ba18 test eax, eax",
+   "1001ba1a je 0x1001ba10",
+   "1001ba1c mov edx, dword ptr [esp + 8]",
+   "1001ba20 mov dword ptr [ecx + 8], eax",
+   "1001ba23 push edx",
+   "1001ba24 call 0x100025db",
+   "1001ba29 xor eax, eax",
+   "1001ba2b ret 8"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001d1d0 PtrList_pushFront",
+   "call 0x1001d250 PtrList_insert"
+  ],
+  "thunks": [
+   "0x10001c80"
+  ],
+  "callers": [
+   "0x10001c80 jmp 0x1001b9e0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001c1b0": {
+  "module": "sound.dll",
+  "va": "0x1001c1b0",
+  "smsg": "NoteMap::operator=",
+  "size": 24,
+  "decoded": 24,
+  "body": [
+   "1001c1b0 mov eax, dword ptr [esp + 4]",
+   "1001c1b4 push esi",
+   "1001c1b5 push edi",
+   "1001c1b6 lea edi, [ecx + 0x5c]",
+   "1001c1b9 lea esi, [eax + 0x5c]",
+   "1001c1bc mov ecx, 0x80",
+   "1001c1c1 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1001c1c3 pop edi",
+   "1001c1c4 pop esi",
+   "1001c1c5 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001f50"
+  ],
+  "callers": [
+   "0x10001f50 jmp 0x1001c1b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001c260": {
+  "module": "sound.dll",
+  "va": "0x1001c260",
+  "smsg": "NoteMap::map_note",
+  "size": 40,
+  "decoded": 40,
+  "body": [
+   "1001c260 mov edx, dword ptr [esp + 4]",
+   "1001c264 cmp edx, 0x80",
+   "1001c26a jge 0x1001c280",
+   "1001c26c mov eax, dword ptr [esp + 8]",
+   "1001c270 cmp eax, 0x80",
+   "1001c275 jge 0x1001c280",
+   "1001c277 mov byte ptr [edx + ecx + 0x5c], al",
+   "1001c27b xor eax, eax",
+   "1001c27d ret 8",
+   "1001c280 mov eax, 0xa",
+   "1001c285 ret 8"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100015be"
+  ],
+  "callers": [
+   "0x100015be jmp 0x1001c260 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001c480": {
+  "module": "sound.dll",
+  "va": "0x1001c480",
+  "smsg": "Stepper::Stepper",
+  "size": 75,
+  "decoded": 75,
+  "body": [
+   "1001c480 mov eax, ecx",
+   "1001c482 or ecx, 0xffffffff",
+   "1001c485 mov dword ptr [eax + 0x14], ecx",
+   "1001c488 mov dword ptr [eax + 0x20], ecx",
+   "1001c48b mov dword ptr [eax + 0x24], ecx",
+   "1001c48e lea ecx, [eax + 0x18]",
+   "1001c491 mov dword ptr [eax + 4], 0x6c727463",
+   "1001c498 mov word ptr [ecx], 0",
+   "1001c49d mov ecx, 0x44444444",
+   "1001c4a2 mov dword ptr [eax + 0xc], 0x18",
+   "1001c4a9 mov dword ptr [eax + 0x10], ecx",
+   "1001c4ac mov dword ptr [eax], 0x1005b5cc",
+   "1001c4b2 mov dword ptr [eax + 0x30], 1",
+   "1001c4b9 mov dword ptr [eax + 0x34], 0",
+   "1001c4c0 mov dword ptr [eax + 0x1c], 4",
+   "1001c4c7 mov dword ptr [eax + 0x2c], ecx",
+   "1001c4ca ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100024e1"
+  ],
+  "callers": [
+   "0x100024e1 jmp 0x1001c480 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001cad0": {
+  "module": "sound.dll",
+  "va": "0x1001cad0",
+  "smsg": "Chooser::do_control",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "1001cad0 xor eax, eax",
+   "1001cad2 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001d61"
+  ],
+  "callers": [
+   "0x10001d61 jmp 0x1001cad0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001cd70": {
+  "module": "sound.dll",
+  "va": "0x1001cd70",
+  "smsg": "ProgramCtrl::set_base_filepath",
+  "size": 268,
+  "decoded": 268,
+  "body": [
+   "1001cd70 sub esp, 0x104",
+   "1001cd76 push ebx",
+   "1001cd77 push ebp",
+   "1001cd78 mov ebp, ecx",
+   "1001cd7a xor ebx, ebx",
+   "1001cd7c push esi",
+   "1001cd7d push edi",
+   "1001cd7e mov eax, dword ptr [ebp + 0x20]",
+   "1001cd81 cmp eax, ebx",
+   "1001cd83 je 0x1001cd8e",
+   "1001cd85 push eax",
+   "1001cd86 call 0x1004249a",
+   "1001cd8b add esp, 4",
+   "1001cd8e mov esi, dword ptr [esp + 0x118]",
+   "1001cd95 or ecx, 0xffffffff",
+   "1001cd98 mov edi, esi",
+   "1001cd9a xor eax, eax",
+   "1001cd9c mov dword ptr [ebp + 0x20], ebx",
+   "1001cd9f repne scasb al, byte ptr es:[edi]",
+   "1001cda1 not ecx",
+   "1001cda3 dec ecx",
+   "1001cda4 lea eax, [esp + 0x14]",
+   "1001cda8 mov edx, ecx",
+   "1001cdaa mov dword ptr [esp + 0x10], eax",
+   "1001cdae mov edi, esi",
+   "1001cdb0 or ecx, 0xffffffff",
+   "1001cdb3 xor eax, eax",
+   "1001cdb5 repne scasb al, byte ptr es:[edi]",
+   "1001cdb7 not ecx",
+   "1001cdb9 sub edi, ecx",
+   "1001cdbb mov eax, ecx",
+   "1001cdbd mov esi, edi",
+   "1001cdbf mov edi, dword ptr [esp + 0x10]",
+   "1001cdc3 shr ecx, 2",
+   "1001cdc6 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1001cdc8 mov ecx, eax",
+   "1001cdca and ecx, 3",
+   "1001cdcd rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1001cdcf cmp byte ptr [esp + edx + 0x13], 0x5c",
+   "1001cdd4 je 0x1001cde0",
+   "1001cdd6 mov byte ptr [esp + edx + 0x14], 0x5c",
+   "1001cddb mov byte ptr [esp + edx + 0x15], bl",
+   "1001cddf inc edx",
+   "1001cde0 inc edx",
+   "1001cde1 push edx",
+   "1001cde2 call 0x100424d7",
+   "1001cde7 mov edx, eax",
+   "1001cde9 lea edi, [esp + 0x18]",
+   "1001cded or ecx, 0xffffffff",
+   "1001cdf0 xor eax, eax",
+   "1001cdf2 add esp, 4",
+   "1001cdf5 mov dword ptr [ebp + 0x20], edx",
+   "1001cdf8 repne scasb al, byte ptr es:[edi]",
+   "1001cdfa not ecx",
+   "1001cdfc sub edi, ecx",
+   "1001cdfe mov eax, ecx",
+   "1001ce00 mov esi, edi",
+   "1001ce02 mov edi, edx",
+   "1001ce04 shr ecx, 2",
+   "1001ce07 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1001ce09 mov ecx, eax",
+   "1001ce0b and ecx, 3",
+   "1001ce0e rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1001ce10 mov edx, dword ptr [ebp + 0x1c]",
+   "1001ce13 cmp edx, ebx",
+   "1001ce15 je 0x1001ce6f",
+   "1001ce17 mov edi, edx",
+   "1001ce19 or ecx, 0xffffffff",
+   "1001ce1c xor eax, eax",
+   "1001ce1e repne scasb al, byte ptr es:[edi]",
+   "1001ce20 not ecx",
+   "1001ce22 dec ecx",
+   "1001ce23 add ecx, edx",
+   "1001ce25 cmp ecx, edx",
+   "1001ce27 je 0x1001ce38",
+   "1001ce29 mov al, byte ptr [ecx - 1]",
+   "1001ce2c dec ecx",
+   "1001ce2d cmp al, 0x5c",
+   "1001ce2f je 0x1001ce37",
+   "1001ce31 cmp ecx, edx",
+   "1001ce33 jne 0x1001ce29",
+   "1001ce35 jmp 0x1001ce38",
+   "1001ce37 inc ecx",
+   "1001ce38 mov edi, ecx",
+   "1001ce3a or ecx, 0xffffffff",
+   "1001ce3d xor eax, eax",
+   "1001ce3f lea edx, [esp + 0x14]",
+   "1001ce43 repne scasb al, byte ptr es:[edi]",
+   "1001ce45 not ecx",
+   "1001ce47 sub edi, ecx",
+   "1001ce49 mov esi, edi",
+   "1001ce4b mov ebx, ecx",
+   "1001ce4d mov edi, edx",
+   "1001ce4f or ecx, 0xffffffff",
+   "1001ce52 repne scasb al, byte ptr es:[edi]",
+   "1001ce54 mov ecx, ebx",
+   "1001ce56 dec edi",
+   "1001ce57 shr ecx, 2",
+   "1001ce5a rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1001ce5c mov ecx, ebx",
+   "1001ce5e lea eax, [esp + 0x14]",
+   "1001ce62 and ecx, 3",
+   "1001ce65 push eax",
+   "1001ce66 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1001ce68 mov ecx, ebp",
+   "1001ce6a call 0x100010f5",
+   "1001ce6f pop edi",
+   "1001ce70 pop esi",
+   "1001ce71 pop ebp",
+   "1001ce72 pop ebx",
+   "1001ce73 add esp, 0x104",
+   "1001ce79 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1004249a operator_delete",
+   "call 0x100424d7 operator_new",
+   "call 0x1001ced0 Sound_setName"
+  ],
+  "thunks": [
+   "0x10001feb"
+  ],
+  "callers": [
+   "0x10001feb jmp 0x1001cd70 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001d030": {
+  "module": "sound.dll",
+  "va": "0x1001d030",
+  "smsg": "ProgramCtrl::get_new_pitch",
+  "size": 70,
+  "decoded": 70,
+  "body": [
+   "1001d030 push edi",
+   "1001d031 mov edi, ecx",
+   "1001d033 test byte ptr [edi + 4], 1",
+   "1001d037 jne 0x1001d03d",
+   "1001d039 xor eax, eax",
+   "1001d03b pop edi",
+   "1001d03c ret",
+   "1001d03d mov eax, dword ptr [edi + 8]",
+   "1001d040 mov ecx, dword ptr [edi + 0xc]",
+   "1001d043 cmp eax, ecx",
+   "1001d045 push esi",
+   "1001d046 jle 0x1001d05f",
+   "1001d048 sub eax, ecx",
+   "1001d04a inc eax",
+   "1001d04b mov esi, eax",
+   "1001d04d call dword ptr [0x100b8654]",
+   "1001d053 xor edx, edx",
+   "1001d055 div esi",
+   "1001d057 mov eax, dword ptr [edi + 0xc]",
+   "1001d05a pop esi",
+   "1001d05b pop edi",
+   "1001d05c add eax, edx",
+   "1001d05e ret",
+   "1001d05f sub ecx, eax",
+   "1001d061 inc ecx",
+   "1001d062 mov esi, ecx",
+   "1001d064 call dword ptr [0x100b8654]",
+   "1001d06a xor edx, edx",
+   "1001d06c div esi",
+   "1001d06e mov eax, dword ptr [edi + 0xc]",
+   "1001d071 pop esi",
+   "1001d072 pop edi",
+   "1001d073 add eax, edx",
+   "1001d075 ret"
+  ],
+  "imports": [
+   "WINMM.dll!timeGetTime"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x100017ee"
+  ],
+  "callers": [
+   "0x100017ee jmp 0x1001d030 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001d590": {
+  "module": "sound.dll",
+  "va": "0x1001d590",
+  "smsg": "CMidiFile::get_pcur_event",
+  "size": 97,
+  "decoded": 97,
+  "body": [
+   "1001d590 mov eax, dword ptr [ecx + 0x19c]",
+   "1001d596 xor edx, edx",
+   "1001d598 test eax, eax",
+   "1001d59a mov dword ptr [ecx + 0x1a4], eax",
+   "1001d5a0 je 0x1001d5a7",
+   "1001d5a2 mov eax, dword ptr [eax + 8]",
+   "1001d5a5 jmp 0x1001d5a9",
+   "1001d5a7 xor eax, eax",
+   "1001d5a9 push esi",
+   "1001d5aa mov esi, dword ptr [esp + 0xc]",
+   "1001d5ae test esi, esi",
+   "1001d5b0 jbe 0x1001d5d5",
+   "1001d5b2 mov eax, dword ptr [ecx + 0x1a4]",
+   "1001d5b8 test eax, eax",
+   "1001d5ba je 0x1001d5d9",
+   "1001d5bc mov eax, dword ptr [eax + 4]",
+   "1001d5bf test eax, eax",
+   "1001d5c1 mov dword ptr [ecx + 0x1a4], eax",
+   "1001d5c7 je 0x1001d5d9",
+   "1001d5c9 mov eax, dword ptr [eax + 8]",
+   "1001d5cc test eax, eax",
+   "1001d5ce je 0x1001d5d9",
+   "1001d5d0 inc edx",
+   "1001d5d1 cmp edx, esi",
+   "1001d5d3 jb 0x1001d5b2",
+   "1001d5d5 test eax, eax",
+   "1001d5d7 jne 0x1001d5e2",
+   "1001d5d9 mov eax, 0x24",
+   "1001d5de pop esi",
+   "1001d5df ret 8",
+   "1001d5e2 mov ecx, dword ptr [esp + 8]",
+   "1001d5e6 mov eax, dword ptr [eax + 0x2c]",
+   "1001d5e9 pop esi",
+   "1001d5ea mov dword ptr [ecx], eax",
+   "1001d5ec xor eax, eax",
+   "1001d5ee ret 8"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001744"
+  ],
+  "callers": [
+   "0x10001744 jmp 0x1001d590 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001d620": {
+  "module": "sound.dll",
+  "va": "0x1001d620",
+  "smsg": "CMidiFile::get_pfirst_event",
+  "size": 107,
+  "decoded": 107,
+  "body": [
+   "1001d620 mov eax, dword ptr [ecx + 0x19c]",
+   "1001d626 xor edx, edx",
+   "1001d628 push esi",
+   "1001d629 push edi",
+   "1001d62a test eax, eax",
+   "1001d62c mov dword ptr [ecx + 0x1a4], eax",
+   "1001d632 je 0x1001d639",
+   "1001d634 mov esi, dword ptr [eax + 8]",
+   "1001d637 jmp 0x1001d63b",
+   "1001d639 xor esi, esi",
+   "1001d63b mov edi, dword ptr [esp + 0x10]",
+   "1001d63f test edi, edi",
+   "1001d641 jbe 0x1001d666",
+   "1001d643 mov eax, dword ptr [ecx + 0x1a4]",
+   "1001d649 test eax, eax",
+   "1001d64b je 0x1001d66a",
+   "1001d64d mov eax, dword ptr [eax + 4]",
+   "1001d650 test eax, eax",
+   "1001d652 mov dword ptr [ecx + 0x1a4], eax",
+   "1001d658 je 0x1001d66a",
+   "1001d65a mov esi, dword ptr [eax + 8]",
+   "1001d65d test esi, esi",
+   "1001d65f je 0x1001d66a",
+   "1001d661 inc edx",
+   "1001d662 cmp edx, edi",
+   "1001d664 jb 0x1001d643",
+   "1001d666 test esi, esi",
+   "1001d668 jne 0x1001d674",
+   "1001d66a pop edi",
+   "1001d66b mov eax, 0x24",
+   "1001d670 pop esi",
+   "1001d671 ret 8",
+   "1001d674 mov ecx, esi",
+   "1001d676 call 0x10001ca3",
+   "1001d67b mov ecx, dword ptr [esp + 0xc]",
+   "1001d67f mov eax, dword ptr [esi + 0x2c]",
+   "1001d682 pop edi",
+   "1001d683 pop esi",
+   "1001d684 mov dword ptr [ecx], eax",
+   "1001d686 xor eax, eax",
+   "1001d688 ret 8"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001e8e0 Seq_rewindTracks"
+  ],
+  "thunks": [
+   "0x10001096"
+  ],
+  "callers": [
+   "0x10001096 jmp 0x1001d620 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001d6b0": {
+  "module": "sound.dll",
+  "va": "0x1001d6b0",
+  "smsg": "CMidiFile::advance_track",
+  "size": 152,
+  "decoded": 152,
+  "body": [
+   "1001d6b0 mov eax, dword ptr [ecx + 0x19c]",
+   "1001d6b6 push esi",
+   "1001d6b7 xor esi, esi",
+   "1001d6b9 push edi",
+   "1001d6ba test eax, eax",
+   "1001d6bc mov dword ptr [ecx + 0x1a4], eax",
+   "1001d6c2 je 0x1001d6c9",
+   "1001d6c4 mov eax, dword ptr [eax + 8]",
+   "1001d6c7 jmp 0x1001d6cb",
+   "1001d6c9 xor eax, eax",
+   "1001d6cb mov edi, dword ptr [esp + 0x10]",
+   "1001d6cf mov edx, eax",
+   "1001d6d1 test edi, edi",
+   "1001d6d3 jbe 0x1001d6fe",
+   "1001d6d5 mov eax, dword ptr [ecx + 0x1a4]",
+   "1001d6db test eax, eax",
+   "1001d6dd je 0x1001d6f1",
+   "1001d6df mov eax, dword ptr [eax + 4]",
+   "1001d6e2 test eax, eax",
+   "1001d6e4 mov dword ptr [ecx + 0x1a4], eax",
+   "1001d6ea je 0x1001d6f1",
+   "1001d6ec mov eax, dword ptr [eax + 8]",
+   "1001d6ef jmp 0x1001d6f3",
+   "1001d6f1 xor eax, eax",
+   "1001d6f3 test eax, eax",
+   "1001d6f5 mov edx, eax",
+   "1001d6f7 je 0x1001d726",
+   "1001d6f9 inc esi",
+   "1001d6fa cmp esi, edi",
+   "1001d6fc jb 0x1001d6d5",
+   "1001d6fe test edx, edx",
+   "1001d700 je 0x1001d726",
+   "1001d702 mov cl, byte ptr [edx + 0x34]",
+   "1001d705 xor eax, eax",
+   "1001d707 test cl, 2",
+   "1001d70a jne 0x1001d743",
+   "1001d70c mov eax, dword ptr [edx + 0x40]",
+   "1001d70f mov esi, dword ptr [esp + 0xc]",
+   "1001d713 mov ecx, dword ptr [edx + 0x44]",
+   "1001d716 add eax, esi",
+   "1001d718 cmp eax, ecx",
+   "1001d71a jbe 0x1001d730",
+   "1001d71c pop edi",
+   "1001d71d mov eax, 0x22",
+   "1001d722 pop esi",
+   "1001d723 ret 8",
+   "1001d726 pop edi",
+   "1001d727 mov eax, 0x24",
+   "1001d72c pop esi",
+   "1001d72d ret 8",
+   "1001d730 jne 0x1001d736",
+   "1001d732 or dword ptr [edx + 0x34], 2",
+   "1001d736 mov ecx, dword ptr [edx + 0x2c]",
+   "1001d739 mov dword ptr [edx + 0x40], eax",
+   "1001d73c add ecx, esi",
+   "1001d73e xor eax, eax",
+   "1001d740 mov dword ptr [edx + 0x2c], ecx",
+   "1001d743 pop edi",
+   "1001d744 pop esi",
+   "1001d745 ret 8"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001843"
+  ],
+  "callers": [
+   "0x10001843 jmp 0x1001d6b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e120": {
+  "module": "sound.dll",
+  "va": "0x1001e120",
+  "smsg": "CMidiFile::reload",
+  "size": 18,
+  "decoded": 18,
+  "body": [
+   "1001e120 mov eax, dword ptr [ecx + 0x4c]",
+   "1001e123 and al, 0xfe",
+   "1001e125 mov dword ptr [ecx + 0x4c], eax",
+   "1001e128 lea eax, [ecx + 0x50]",
+   "1001e12b push eax",
+   "1001e12c call 0x1000270c",
+   "1001e131 ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001d810 Midi_Device::loadFile"
+  ],
+  "thunks": [
+   "0x10001edd"
+  ],
+  "callers": [
+   "0x10001edd jmp 0x1001e120 from outside every function",
+   "0x10020273 jmp 0x10001edd from deferred 0x10020270 CMidiMgr::reload"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e150": {
+  "module": "sound.dll",
+  "va": "0x1001e150",
+  "smsg": "CMidiFile::post_reset",
+  "size": 79,
+  "decoded": 79,
+  "body": [
+   "1001e150 mov eax, dword ptr [ecx + 0x4c]",
+   "1001e153 test al, 0x80",
+   "1001e155 jne 0x1001e19c",
+   "1001e157 or al, 0x80",
+   "1001e159 mov dword ptr [ecx + 0x4c], eax",
+   "1001e15c mov eax, dword ptr [0x100b4a20]",
+   "1001e161 test eax, eax",
+   "1001e163 je 0x1001e18a",
+   "1001e165 mov eax, dword ptr [eax + 0x1a4]",
+   "1001e16b shr eax, 5",
+   "1001e16e test al, 1",
+   "1001e170 je 0x1001e18a",
+   "1001e172 push ecx",
+   "1001e173 mov ecx, dword ptr [ecx + 0x170]",
+   "1001e179 push 0",
+   "1001e17b push 0x7ec",
+   "1001e180 push ecx",
+   "1001e181 call dword ptr [0x100b85a0]",
+   "1001e187 xor eax, eax",
+   "1001e189 ret",
+   "1001e18a push ecx",
+   "1001e18b push 0",
+   "1001e18d push 0x7ec",
+   "1001e192 mov ecx, 0x100b5038",
+   "1001e197 call 0x100011d6",
+   "1001e19c xor eax, eax",
+   "1001e19e ret"
+  ],
+  "imports": [
+   "USER32.dll!PostMessageA"
+  ],
+  "calls": [
+   "call 0x1002aa90 postSoundThreadMessage"
+  ],
+  "thunks": [
+   "0x10001c17"
+  ],
+  "callers": [
+   "0x10001c17 jmp 0x1001e150 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e510": {
+  "module": "sound.dll",
+  "va": "0x1001e510",
+  "smsg": "CMidiFile::mmioerr",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "1001e510 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100018b1"
+  ],
+  "callers": [
+   "0x100018b1 jmp 0x1001e510 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e550": {
+  "module": "sound.dll",
+  "va": "0x1001e550",
+  "smsg": "CMidiFile::fade",
+  "size": 11,
+  "decoded": 11,
+  "body": [
+   "1001e550 mov eax, dword ptr [ecx + 0x4c]",
+   "1001e553 or al, 4",
+   "1001e555 mov dword ptr [ecx + 0x4c], eax",
+   "1001e558 xor eax, eax",
+   "1001e55a ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100018ed"
+  ],
+  "callers": [
+   "0x100018ed jmp 0x1001e550 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e570": {
+  "module": "sound.dll",
+  "va": "0x1001e570",
+  "smsg": "CMidiFile::fade",
+  "size": 82,
+  "decoded": 82,
+  "body": [
+   "1001e570 mov eax, dword ptr [0x100b49ec]",
+   "1001e575 push esi",
+   "1001e576 test eax, eax",
+   "1001e578 je 0x1001e5b4",
+   "1001e57a mov esi, dword ptr [eax]",
+   "1001e57c mov eax, dword ptr [esp + 8]",
+   "1001e580 cmp eax, esi",
+   "1001e582 jbe 0x1001e5a8",
+   "1001e584 xor edx, edx",
+   "1001e586 div esi",
+   "1001e588 xor edx, edx",
+   "1001e58a mov esi, eax",
+   "1001e58c mov eax, dword ptr [ecx + 0x17c]",
+   "1001e592 div esi",
+   "1001e594 pop esi",
+   "1001e595 mov dword ptr [ecx + 0x174], eax",
+   "1001e59b mov eax, dword ptr [ecx + 0x4c]",
+   "1001e59e or al, 4",
+   "1001e5a0 mov dword ptr [ecx + 0x4c], eax",
+   "1001e5a3 xor eax, eax",
+   "1001e5a5 ret 4",
+   "1001e5a8 mov eax, dword ptr [ecx + 0x17c]",
+   "1001e5ae mov dword ptr [ecx + 0x174], eax",
+   "1001e5b4 mov eax, dword ptr [ecx + 0x4c]",
+   "1001e5b7 pop esi",
+   "1001e5b8 or al, 4",
+   "1001e5ba mov dword ptr [ecx + 0x4c], eax",
+   "1001e5bd xor eax, eax",
+   "1001e5bf ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001a6e"
+  ],
+  "callers": [
+   "0x10001a6e jmp 0x1001e570 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e5f0": {
+  "module": "sound.dll",
+  "va": "0x1001e5f0",
+  "smsg": "CMidiFile::set_pan",
+  "size": 42,
+  "decoded": 42,
+  "body": [
+   "1001e5f0 mov eax, dword ptr [esp + 4]",
+   "1001e5f4 cmp eax, -0x40",
+   "1001e5f7 jge 0x1001e607",
+   "1001e5f9 mov eax, 0xffffffc0",
+   "1001e5fe mov dword ptr [ecx + 0x180], eax",
+   "1001e604 ret 4",
+   "1001e607 cmp eax, 0x3f",
+   "1001e60a jle 0x1001e611",
+   "1001e60c mov eax, 0x3f",
+   "1001e611 mov dword ptr [ecx + 0x180], eax",
+   "1001e617 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001a91"
+  ],
+  "callers": [
+   "0x10001a91 jmp 0x1001e5f0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001e6b0": {
+  "module": "sound.dll",
+  "va": "0x1001e6b0",
+  "smsg": "CMidiFile::be2le",
+  "size": 28,
+  "decoded": 28,
+  "body": [
+   "1001e6b0 push ecx",
+   "1001e6b1 xor eax, eax",
+   "1001e6b3 lea ecx, [esp + 0xb]",
+   "1001e6b7 mov dl, byte ptr [ecx]",
+   "1001e6b9 mov byte ptr [esp + eax], dl",
+   "1001e6bd inc eax",
+   "1001e6be dec ecx",
+   "1001e6bf cmp eax, 4",
+   "1001e6c2 jl 0x1001e6b7",
+   "1001e6c4 mov eax, dword ptr [esp]",
+   "1001e6c8 pop ecx",
+   "1001e6c9 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001d9d"
+  ],
+  "callers": [
+   "0x10001d9d jmp 0x1001e6b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1001ea40": {
+  "module": "sound.dll",
+  "va": "0x1001ea40",
+  "smsg": "CMidiTrack::set_tick_offset",
+  "size": 67,
+  "decoded": 67,
+  "body": [
+   "1001ea40 push esi",
+   "1001ea41 push edi",
+   "1001ea42 mov edi, dword ptr [ecx + 0x54]",
+   "1001ea45 test edi, edi",
+   "1001ea47 je 0x1001ea7e",
+   "1001ea49 mov esi, dword ptr [esp + 0xc]",
+   "1001ea4d cmp esi, edi",
+   "1001ea4f jbe 0x1001ea6c",
+   "1001ea51 mov eax, esi",
+   "1001ea53 xor edx, edx",
+   "1001ea55 div edi",
+   "1001ea57 lea eax, [esp + 0xc]",
+   "1001ea5b push eax",
+   "1001ea5c sub esi, edx",
+   "1001ea5e push edx",
+   "1001ea5f mov dword ptr [ecx + 0x50], esi",
+   "1001ea62 call 0x10002356",
+   "1001ea67 pop edi",
+   "1001ea68 pop esi",
+   "1001ea69 ret 4",
+   "1001ea6c lea edx, [esp + 0xc]",
+   "1001ea70 mov dword ptr [ecx + 0x50], 0",
+   "1001ea77 push edx",
+   "1001ea78 push esi",
+   "1001ea79 call 0x10002356",
+   "1001ea7e pop edi",
+   "1001ea7f pop esi",
+   "1001ea80 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001ecc0 FUN_1001ecc0 [match ?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z]",
+   "call 0x1001ecc0 FUN_1001ecc0 [match ?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z]"
+  ],
+  "thunks": [
+   "0x10001375"
+  ],
+  "callers": [
+   "0x10001375 jmp 0x1001ea40 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10020270": {
+  "module": "sound.dll",
+  "va": "0x10020270",
+  "smsg": "CMidiMgr::reload",
+  "size": 8,
+  "decoded": 8,
+  "body": [
+   "10020270 add ecx, 0x60",
+   "10020273 jmp 0x10001edd"
+  ],
+  "imports": [],
+  "calls": [
+   "jmp 0x1001e120 deferred CMidiFile::reload"
+  ],
+  "thunks": [
+   "0x10001c71"
+  ],
+  "callers": [
+   "0x10001c71 jmp 0x10020270 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10020aa0": {
+  "module": "sound.dll",
+  "va": "0x10020aa0",
+  "smsg": "CMidiMgr::free_all",
+  "size": 37,
+  "decoded": 37,
+  "body": [
+   "10020aa0 push esi",
+   "10020aa1 mov esi, dword ptr [0x100b5070]",
+   "10020aa7 test esi, esi",
+   "10020aa9 je 0x10020ac3",
+   "10020aab mov eax, dword ptr [esi]",
+   "10020aad mov ecx, esi",
+   "10020aaf call dword ptr [eax + 0x20]",
+   "10020ab2 mov edx, dword ptr [esi]",
+   "10020ab4 mov ecx, esi",
+   "10020ab6 call dword ptr [edx + 0x14]",
+   "10020ab9 mov esi, dword ptr [0x100b5070]",
+   "10020abf test esi, esi",
+   "10020ac1 jne 0x10020aab",
+   "10020ac3 pop esi",
+   "10020ac4 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100016e0"
+  ],
+  "callers": [
+   "0x100016e0 jmp 0x10020aa0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10020ae0": {
+  "module": "sound.dll",
+  "va": "0x10020ae0",
+  "smsg": "CMidiMgr::post_unload",
+  "size": 90,
+  "decoded": 90,
+  "body": [
+   "10020ae0 mov edx, dword ptr [ecx + 0xac]",
+   "10020ae6 mov eax, 0x100",
+   "10020aeb test eax, edx",
+   "10020aed jne 0x10020b37",
+   "10020aef or edx, eax",
+   "10020af1 mov dword ptr [ecx + 0xac], edx",
+   "10020af7 mov eax, dword ptr [0x100b4a20]",
+   "10020afc test eax, eax",
+   "10020afe je 0x10020b25",
+   "10020b00 mov eax, dword ptr [eax + 0x1a4]",
+   "10020b06 shr eax, 5",
+   "10020b09 test al, 1",
+   "10020b0b je 0x10020b25",
+   "10020b0d push ecx",
+   "10020b0e mov ecx, dword ptr [ecx + 0x210]",
+   "10020b14 push 0",
+   "10020b16 push 0x7e9",
+   "10020b1b push ecx",
+   "10020b1c call dword ptr [0x100b85a0]",
+   "10020b22 xor eax, eax",
+   "10020b24 ret",
+   "10020b25 push ecx",
+   "10020b26 push 0",
+   "10020b28 push 0x7e9",
+   "10020b2d mov ecx, 0x100b5038",
+   "10020b32 call 0x100011d6",
+   "10020b37 xor eax, eax",
+   "10020b39 ret"
+  ],
+  "imports": [
+   "USER32.dll!PostMessageA"
+  ],
+  "calls": [
+   "call 0x1002aa90 postSoundThreadMessage"
+  ],
+  "thunks": [
+   "0x10001348"
+  ],
+  "callers": [
+   "0x10001348 jmp 0x10020ae0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10021560": {
+  "module": "sound.dll",
+  "va": "0x10021560",
+  "smsg": "CMidiMgr::program_change",
+  "size": 35,
+  "decoded": 35,
+  "body": [
+   "10021560 mov eax, dword ptr [esp + 4]",
+   "10021564 xor edx, edx",
+   "10021566 push esi",
+   "10021567 mov dl, byte ptr [eax]",
+   "10021569 mov eax, dword ptr [esp + 0xc]",
+   "1002156d lea esi, [eax + eax*8]",
+   "10021570 lea eax, [eax + esi*2]",
+   "10021573 pop esi",
+   "10021574 mov dword ptr [ecx + eax*4 + 0x25c], edx",
+   "1002157b mov eax, 1",
+   "10021580 ret 8"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000200e"
+  ],
+  "callers": [
+   "0x1000200e jmp 0x10021560 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10021ec0": {
+  "module": "sound.dll",
+  "va": "0x10021ec0",
+  "smsg": "CMidiMgr::pitch_wheel",
+  "size": 8,
+  "decoded": 8,
+  "body": [
+   "10021ec0 mov eax, 1",
+   "10021ec5 ret 8"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001663"
+  ],
+  "callers": [
+   "0x10001663 jmp 0x10021ec0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10023750": {
+  "module": "sound.dll",
+  "va": "0x10023750",
+  "smsg": "CMidiMgr::TT_play_trackset",
+  "size": 230,
+  "decoded": 230,
+  "body": [
+   "10023750 push ebx",
+   "10023751 mov ebx, dword ptr [esp + 0xc]",
+   "10023755 push esi",
+   "10023756 push edi",
+   "10023757 mov edi, dword ptr [esp + 0x10]",
+   "1002375b mov esi, ecx",
+   "1002375d cmp ebx, edi",
+   "1002375f jb 0x1002382b",
+   "10023765 mov eax, dword ptr [esi]",
+   "10023767 call dword ptr [eax + 0xb4]",
+   "1002376d cmp ebx, eax",
+   "1002376f jae 0x1002382b",
+   "10023775 push ebp",
+   "10023776 lea ecx, [esp + 0x18]",
+   "1002377a lea ebp, [esi + 0x60]",
+   "1002377d push 0",
+   "1002377f push ecx",
+   "10023780 mov ecx, ebp",
+   "10023782 call 0x100015fa",
+   "10023787 test eax, eax",
+   "10023789 je 0x10023793",
+   "1002378b mov eax, dword ptr [esp + 0x18]",
+   "1002378f or byte ptr [eax + 0x38], 8",
+   "10023793 mov edx, dword ptr [esi]",
+   "10023795 mov ecx, esi",
+   "10023797 call dword ptr [edx + 0x5c]",
+   "1002379a test eax, eax",
+   "1002379c jne 0x100237cb",
+   "1002379e cmp edi, ebx",
+   "100237a0 mov esi, edi",
+   "100237a2 ja 0x10023822",
+   "100237a4 lea eax, [esp + 0x18]",
+   "100237a8 push esi",
+   "100237a9 push eax",
+   "100237aa mov ecx, ebp",
+   "100237ac call 0x100015fa",
+   "100237b1 test eax, eax",
+   "100237b3 jne 0x100237bd",
+   "100237b5 mov eax, dword ptr [esp + 0x18]",
+   "100237b9 or byte ptr [eax + 0x38], 8",
+   "100237bd inc esi",
+   "100237be cmp esi, ebx",
+   "100237c0 jbe 0x100237a4",
+   "100237c2 pop ebp",
+   "100237c3 pop edi",
+   "100237c4 pop esi",
+   "100237c5 xor eax, eax",
+   "100237c7 pop ebx",
+   "100237c8 ret 0xc",
+   "100237cb cmp edi, ebx",
+   "100237cd ja 0x10023822",
+   "100237cf mov ebp, dword ptr [esp + 0x1c]",
+   "100237d3 lea ecx, [esp + 0x18]",
+   "100237d7 push edi",
+   "100237d8 push ecx",
+   "100237d9 lea ecx, [esi + 0x60]",
+   "100237dc call 0x100015fa",
+   "100237e1 test eax, eax",
+   "100237e3 jne 0x1002381d",
+   "100237e5 mov eax, dword ptr [esp + 0x18]",
+   "100237e9 test eax, eax",
+   "100237eb je 0x1002381d",
+   "100237ed mov cl, byte ptr [eax + 0x38]",
+   "100237f0 push 0",
+   "100237f2 or cl, 8",
+   "100237f5 push ebp",
+   "100237f6 mov byte ptr [eax + 0x38], cl",
+   "100237f9 mov edx, dword ptr [esi + 0x71c]",
+   "100237ff mov eax, dword ptr [esp + 0x20]",
+   "10023803 push edx",
+   "10023804 push eax",
+   "10023805 mov ecx, esi",
+   "10023807 call 0x1000240a",
+   "1002380c mov ecx, dword ptr [esp + 0x18]",
+   "10023810 mov eax, dword ptr [ecx + 0x458]",
+   "10023816 test eax, eax",
+   "10023818 je 0x1002381d",
+   "1002381a inc dword ptr [eax + 0x34]",
+   "1002381d inc edi",
+   "1002381e cmp edi, ebx",
+   "10023820 jbe 0x100237d3",
+   "10023822 pop ebp",
+   "10023823 pop edi",
+   "10023824 pop esi",
+   "10023825 xor eax, eax",
+   "10023827 pop ebx",
+   "10023828 ret 0xc",
+   "1002382b pop edi",
+   "1002382c pop esi",
+   "1002382d mov eax, 0xa",
+   "10023832 pop ebx",
+   "10023833 ret 0xc"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001d780 Seq_listGetAt",
+   "call 0x1001d780 Seq_listGetAt",
+   "call 0x1001d780 Seq_listGetAt",
+   "call 0x10024b80 Seq_scheduleEvent"
+  ],
+  "thunks": [
+   "0x100020fe"
+  ],
+  "callers": [
+   "0x100020fe jmp 0x10023750 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10023b80": {
+  "module": "sound.dll",
+  "va": "0x10023b80",
+  "smsg": "CMidiMgr::TT_xpose_trackset",
+  "size": 119,
+  "decoded": 119,
+  "body": [
+   "10023b80 push ebx",
+   "10023b81 mov ebx, dword ptr [esp + 0xc]",
+   "10023b85 push esi",
+   "10023b86 mov esi, dword ptr [esp + 0xc]",
+   "10023b8a push edi",
+   "10023b8b cmp ebx, esi",
+   "10023b8d mov edi, ecx",
+   "10023b8f jb 0x10023bec",
+   "10023b91 mov eax, dword ptr [edi]",
+   "10023b93 call dword ptr [eax + 0xb4]",
+   "10023b99 cmp ebx, eax",
+   "10023b9b jae 0x10023bec",
+   "10023b9d lea ecx, [esp + 0x14]",
+   "10023ba1 add edi, 0x60",
+   "10023ba4 push 0",
+   "10023ba6 push ecx",
+   "10023ba7 mov ecx, edi",
+   "10023ba9 call 0x100015fa",
+   "10023bae test eax, eax",
+   "10023bb0 je 0x10023bba",
+   "10023bb2 mov eax, dword ptr [esp + 0x14]",
+   "10023bb6 or byte ptr [eax + 0x38], 8",
+   "10023bba cmp esi, ebx",
+   "10023bbc ja 0x10023be4",
+   "10023bbe push ebp",
+   "10023bbf mov ebp, dword ptr [esp + 0x1c]",
+   "10023bc3 lea edx, [esp + 0x18]",
+   "10023bc7 push esi",
+   "10023bc8 push edx",
+   "10023bc9 mov ecx, edi",
+   "10023bcb call 0x100015fa",
+   "10023bd0 test eax, eax",
+   "10023bd2 jne 0x10023bde",
+   "10023bd4 mov eax, dword ptr [esp + 0x18]",
+   "10023bd8 mov dword ptr [eax + 0x45c], ebp",
+   "10023bde inc esi",
+   "10023bdf cmp esi, ebx",
+   "10023be1 jbe 0x10023bc3",
+   "10023be3 pop ebp",
+   "10023be4 pop edi",
+   "10023be5 pop esi",
+   "10023be6 xor eax, eax",
+   "10023be8 pop ebx",
+   "10023be9 ret 0xc",
+   "10023bec pop edi",
+   "10023bed pop esi",
+   "10023bee mov eax, 0xa",
+   "10023bf3 pop ebx",
+   "10023bf4 ret 0xc"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001d780 Seq_listGetAt",
+   "call 0x1001d780 Seq_listGetAt"
+  ],
+  "thunks": [
+   "0x1000248c"
+  ],
+  "callers": [
+   "0x1000248c jmp 0x10023b80 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10024310": {
+  "module": "sound.dll",
+  "va": "0x10024310",
+  "smsg": "CProgramMgr::unload",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10024310 xor eax, eax",
+   "10024312 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001fc3"
+  ],
+  "callers": [
+   "0x10001fc3 jmp 0x10024310 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10024330": {
+  "module": "sound.dll",
+  "va": "0x10024330",
+  "smsg": "CProgramMgr::stop",
+  "size": 30,
+  "decoded": 30,
+  "body": [
+   "10024330 mov eax, dword ptr [0x100b4a20]",
+   "10024335 test eax, eax",
+   "10024337 jne 0x1002433f",
+   "10024339 mov eax, 3",
+   "1002433e ret",
+   "1002433f mov ecx, dword ptr [ecx + 0x30]",
+   "10024342 test ecx, ecx",
+   "10024344 je 0x1002434b",
+   "10024346 call 0x100020f4",
+   "1002434b xor eax, eax",
+   "1002434d ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1001ac40 Voice_notifyChannelNotes"
+  ],
+  "thunks": [
+   "0x100010c3"
+  ],
+  "callers": [
+   "0x100010c3 jmp 0x10024330 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10024420": {
+  "module": "sound.dll",
+  "va": "0x10024420",
+  "smsg": "CProgramMgr::xlat_pitch",
+  "size": 7,
+  "decoded": 7,
+  "body": [
+   "10024420 mov eax, dword ptr [esp + 4]",
+   "10024424 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001ad7"
+  ],
+  "callers": [
+   "0x10001ad7 jmp 0x10024420 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10024440": {
+  "module": "sound.dll",
+  "va": "0x10024440",
+  "smsg": "CProgramMgr::xlat_volume",
+  "size": 7,
+  "decoded": 7,
+  "body": [
+   "10024440 mov eax, dword ptr [esp + 4]",
+   "10024444 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002342"
+  ],
+  "callers": [
+   "0x10002342 jmp 0x10024440 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100244c0": {
+  "module": "sound.dll",
+  "va": "0x100244c0",
+  "smsg": "CMidiChannel::reset_rnd_prgm_table",
+  "size": 1,
+  "decoded": 1,
+  "body": [
+   "100244c0 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000229d"
+  ],
+  "callers": [
+   "0x1000229d jmp 0x100244c0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100244e0": {
+  "module": "sound.dll",
+  "va": "0x100244e0",
+  "smsg": "CMidiChannel::xlat_program",
+  "size": 7,
+  "decoded": 7,
+  "body": [
+   "100244e0 mov eax, dword ptr [esp + 4]",
+   "100244e4 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100013d4"
+  ],
+  "callers": [
+   "0x100013d4 jmp 0x100244e0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10025040": {
+  "module": "sound.dll",
+  "va": "0x10025040",
+  "smsg": "CMMError::CMMError",
+  "size": 9,
+  "decoded": 9,
+  "body": [
+   "10025040 mov eax, ecx",
+   "10025042 mov dword ptr [eax], 0x1005b830",
+   "10025048 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001a28"
+  ],
+  "callers": [
+   "0x10001a28 jmp 0x10025040 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10025090": {
+  "module": "sound.dll",
+  "va": "0x10025090",
+  "smsg": "CMMError::~CMMError",
+  "size": 7,
+  "decoded": 7,
+  "body": [
+   "10025090 mov dword ptr [ecx], 0x1005b830",
+   "10025096 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001ece"
+  ],
+  "callers": [
+   "0x10001ece jmp 0x10025090 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100250b0": {
+  "module": "sound.dll",
+  "va": "0x100250b0",
+  "smsg": "CMMError::handle_error",
+  "size": 86,
+  "decoded": 86,
+  "body": [
+   "100250b0 mov eax, dword ptr [esp + 4]",
+   "100250b4 cmp eax, 0x200",
+   "100250b9 ja 0x100250fe",
+   "100250bb je 0x100250f6",
+   "100250bd cmp eax, 0x14",
+   "100250c0 ja 0x100250fe",
+   "100250c2 jmp dword ptr [eax*4 + 0x10025108]",
+   "100250c9 xor eax, eax",
+   "100250cb ret 4",
+   "100250ce mov eax, 1",
+   "100250d3 ret 4",
+   "100250d6 mov eax, 0x11",
+   "100250db ret 4",
+   "100250de mov eax, 0xb",
+   "100250e3 ret 4",
+   "100250e6 mov eax, 0x10",
+   "100250eb ret 4",
+   "100250ee mov eax, 0xa",
+   "100250f3 ret 4",
+   "100250f6 mov eax, 6",
+   "100250fb ret 4",
+   "100250fe mov eax, 0x2f",
+   "10025103 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000145b"
+  ],
+  "callers": [
+   "0x1000145b jmp 0x100250b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10028e70": {
+  "module": "sound.dll",
+  "va": "0x10028e70",
+  "smsg": "Sound_Device::attach",
+  "size": 81,
+  "decoded": 81,
+  "body": [
+   "10028e70 mov eax, dword ptr [ecx + 0x1c]",
+   "10028e73 xor edx, edx",
+   "10028e75 cmp eax, edx",
+   "10028e77 jne 0x10028ebe",
+   "10028e79 cmp dword ptr [ecx + 0x18], edx",
+   "10028e7c jne 0x10028ebe",
+   "10028e7e mov eax, dword ptr [0x100b5030]",
+   "10028e83 cmp eax, edx",
+   "10028e85 jne 0x10028ea4",
+   "10028e87 mov dword ptr [0x100b502c], ecx",
+   "10028e8d mov dword ptr [0x100b5030], ecx",
+   "10028e93 mov eax, dword ptr [ecx + 4]",
+   "10028e96 mov dword ptr [ecx + 0x1c], edx",
+   "10028e99 or al, 2",
+   "10028e9b mov dword ptr [ecx + 0x18], edx",
+   "10028e9e mov dword ptr [ecx + 4], eax",
+   "10028ea1 xor eax, eax",
+   "10028ea3 ret",
+   "10028ea4 mov dword ptr [ecx + 0x18], eax",
+   "10028ea7 mov dword ptr [0x100b5030], ecx",
+   "10028ead mov eax, dword ptr [ecx + 0x18]",
+   "10028eb0 mov dword ptr [eax + 0x1c], ecx",
+   "10028eb3 mov eax, dword ptr [ecx + 4]",
+   "10028eb6 or al, 2",
+   "10028eb8 mov dword ptr [ecx + 0x1c], edx",
+   "10028ebb mov dword ptr [ecx + 4], eax",
+   "10028ebe xor eax, eax",
+   "10028ec0 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001bf9"
+  ],
+  "callers": [
+   "0x10001bf9 jmp 0x10028e70 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10028ef0": {
+  "module": "sound.dll",
+  "va": "0x10028ef0",
+  "smsg": "Sound_Device::detach",
+  "size": 92,
+  "decoded": 92,
+  "body": [
+   "10028ef0 test byte ptr [ecx + 4], 2",
+   "10028ef4 jne 0x10028ef9",
+   "10028ef6 xor eax, eax",
+   "10028ef8 ret",
+   "10028ef9 mov eax, dword ptr [ecx + 0x18]",
+   "10028efc xor edx, edx",
+   "10028efe cmp eax, edx",
+   "10028f00 push esi",
+   "10028f01 je 0x10028f0b",
+   "10028f03 mov esi, dword ptr [ecx + 0x1c]",
+   "10028f06 mov dword ptr [eax + 0x1c], esi",
+   "10028f09 jmp 0x10028f13",
+   "10028f0b mov eax, dword ptr [ecx + 0x1c]",
+   "10028f0e mov dword ptr [0x100b502c], eax",
+   "10028f13 mov eax, dword ptr [ecx + 0x1c]",
+   "10028f16 cmp eax, edx",
+   "10028f18 je 0x10028f32",
+   "10028f1a mov esi, dword ptr [ecx + 0x18]",
+   "10028f1d mov dword ptr [eax + 0x18], esi",
+   "10028f20 mov eax, dword ptr [ecx + 4]",
+   "10028f23 and al, 0xfd",
+   "10028f25 mov dword ptr [ecx + 0x1c], edx",
+   "10028f28 mov dword ptr [ecx + 4], eax",
+   "10028f2b mov dword ptr [ecx + 0x18], edx",
+   "10028f2e xor eax, eax",
+   "10028f30 pop esi",
+   "10028f31 ret",
+   "10028f32 mov eax, dword ptr [ecx + 0x18]",
+   "10028f35 pop esi",
+   "10028f36 mov dword ptr [0x100b5030], eax",
+   "10028f3b mov eax, dword ptr [ecx + 4]",
+   "10028f3e and al, 0xfd",
+   "10028f40 mov dword ptr [ecx + 0x1c], edx",
+   "10028f43 mov dword ptr [ecx + 4], eax",
+   "10028f46 mov dword ptr [ecx + 0x18], edx",
+   "10028f49 xor eax, eax",
+   "10028f4b ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001c21"
+  ],
+  "callers": [
+   "0x10001c21 jmp 0x10028ef0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10028f70": {
+  "module": "sound.dll",
+  "va": "0x10028f70",
+  "smsg": "Sound_Device::Sound_Device",
+  "size": 40,
+  "decoded": 40,
+  "body": [
+   "10028f70 mov eax, ecx",
+   "10028f72 lea ecx, [eax + 4]",
+   "10028f75 mov dword ptr [eax], 0x1005b8b0",
+   "10028f7b mov edx, ecx",
+   "10028f7d xor ecx, ecx",
+   "10028f7f mov dword ptr [edx], ecx",
+   "10028f81 mov dword ptr [eax + 8], 0x7f",
+   "10028f88 mov dword ptr [eax + 0xc], ecx",
+   "10028f8b mov dword ptr [eax + 0x18], ecx",
+   "10028f8e mov dword ptr [eax + 0x1c], ecx",
+   "10028f91 mov dword ptr [eax + 0x10], ecx",
+   "10028f94 mov dword ptr [eax + 0x14], ecx",
+   "10028f97 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000258b"
+  ],
+  "callers": [
+   "0x1000258b jmp 0x10028f70 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029730": {
+  "module": "sound.dll",
+  "va": "0x10029730",
+  "smsg": "Wave_Device::add_to_group",
+  "size": 93,
+  "decoded": 93,
+  "body": [
+   "10029730 push esi",
+   "10029731 push edi",
+   "10029732 mov edi, dword ptr [esp + 0xc]",
+   "10029736 cmp edi, 0xf",
+   "10029739 ja 0x10029783",
+   "1002973b mov esi, dword ptr [esp + 0x10]",
+   "1002973f test esi, esi",
+   "10029741 je 0x10029783",
+   "10029743 lea eax, [edi + edi*2]",
+   "10029746 push esi",
+   "10029747 lea ecx, [ecx + eax*8 + 0x2c]",
+   "1002974b call 0x10002351",
+   "10029750 mov edx, dword ptr [esi]",
+   "10029752 mov ecx, esi",
+   "10029754 mov dword ptr [esi + 0x3c], edi",
+   "10029757 call dword ptr [edx + 0x78]",
+   "1002975a cmp eax, 8",
+   "1002975d jne 0x10029771",
+   "1002975f mov eax, dword ptr [esi + 4]",
+   "10029762 mov ecx, esi",
+   "10029764 push eax",
+   "10029765 call 0x1000178f",
+   "1002976a pop edi",
+   "1002976b xor eax, eax",
+   "1002976d pop esi",
+   "1002976e ret 8",
+   "10029771 mov eax, dword ptr [esi + 4]",
+   "10029774 mov edx, dword ptr [esi]",
+   "10029776 push eax",
+   "10029777 mov ecx, esi",
+   "10029779 call dword ptr [edx + 0x40]",
+   "1002977c pop edi",
+   "1002977d xor eax, eax",
+   "1002977f pop esi",
+   "10029780 ret 8",
+   "10029783 pop edi",
+   "10029784 mov eax, 0xa",
+   "10029789 pop esi",
+   "1002978a ret 8"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1000e680 appendNodeC",
+   "call 0x1002cd30 deferred SoundList::scaleVolumeToGroup"
+  ],
+  "thunks": [
+   "0x10001730"
+  ],
+  "callers": [
+   "0x10001730 jmp 0x10029730 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100297b0": {
+  "module": "sound.dll",
+  "va": "0x100297b0",
+  "smsg": "Wave_Device::pull_from_group",
+  "size": 151,
+  "decoded": 151,
+  "body": [
+   "100297b0 push edi",
+   "100297b1 mov edi, dword ptr [esp + 8]",
+   "100297b5 test edi, edi",
+   "100297b7 je 0x1002983e",
+   "100297bd mov eax, dword ptr [edi + 0x3c]",
+   "100297c0 cmp eax, 0x10",
+   "100297c3 jae 0x1002983e",
+   "100297c5 lea eax, [eax + eax*2]",
+   "100297c8 push esi",
+   "100297c9 lea esi, [ecx + eax*8 + 0x2c]",
+   "100297cd mov eax, dword ptr [ecx + eax*8 + 0x2c]",
+   "100297d1 test eax, eax",
+   "100297d3 je 0x10029830",
+   "100297d5 cmp dword ptr [eax + 8], edi",
+   "100297d8 je 0x100297ed",
+   "100297da mov eax, dword ptr [eax + 4]",
+   "100297dd test eax, eax",
+   "100297df jne 0x100297d5",
+   "100297e1 mov dword ptr [edi + 0x3c], 0x10",
+   "100297e8 pop esi",
+   "100297e9 pop edi",
+   "100297ea ret 4",
+   "100297ed test eax, eax",
+   "100297ef je 0x10029830",
+   "100297f1 mov ecx, dword ptr [eax]",
+   "100297f3 test ecx, ecx",
+   "100297f5 je 0x100297ff",
+   "100297f7 mov edx, dword ptr [eax + 4]",
+   "100297fa mov dword ptr [ecx + 4], edx",
+   "100297fd jmp 0x10029804",
+   "100297ff mov ecx, dword ptr [eax + 4]",
+   "10029802 mov dword ptr [esi], ecx",
+   "10029804 mov ecx, dword ptr [eax + 4]",
+   "10029807 test ecx, ecx",
+   "10029809 je 0x10029814",
+   "1002980b mov edx, dword ptr [eax]",
+   "1002980d mov dword ptr [ecx], edx",
+   "1002980f mov dword ptr [esi + 8], ecx",
+   "10029812 jmp 0x10029820",
+   "10029814 mov ecx, dword ptr [eax]",
+   "10029816 mov dword ptr [esi + 8], 0",
+   "1002981d mov dword ptr [esi + 4], ecx",
+   "10029820 push eax",
+   "10029821 call 0x1004249a",
+   "10029826 mov eax, dword ptr [esi + 0xc]",
+   "10029829 add esp, 4",
+   "1002982c dec eax",
+   "1002982d mov dword ptr [esi + 0xc], eax",
+   "10029830 mov dword ptr [edi + 0x3c], 0x10",
+   "10029837 pop esi",
+   "10029838 xor eax, eax",
+   "1002983a pop edi",
+   "1002983b ret 4",
+   "1002983e mov eax, 0xa",
+   "10029843 pop edi",
+   "10029844 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1004249a operator_delete"
+  ],
+  "thunks": [
+   "0x100020ef"
+  ],
+  "callers": [
+   "0x100020ef jmp 0x100297b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029880": {
+  "module": "sound.dll",
+  "va": "0x10029880",
+  "smsg": "Wave_Device::set_group_volume",
+  "size": 121,
+  "decoded": 121,
+  "body": [
+   "10029880 mov eax, dword ptr [esp + 4]",
+   "10029884 cmp eax, 0xf",
+   "10029887 ja 0x100298f1",
+   "10029889 mov edx, dword ptr [esp + 8]",
+   "1002988d cmp edx, 0x7f",
+   "10029890 ja 0x100298f1",
+   "10029892 lea eax, [eax + eax*2]",
+   "10029895 push esi",
+   "10029896 push edi",
+   "10029897 lea edi, [ecx + eax*8]",
+   "1002989a mov dword ptr [edi + 0x28], edx",
+   "1002989d mov eax, dword ptr [edi + 0x2c]",
+   "100298a0 test eax, eax",
+   "100298a2 mov dword ptr [edi + 0x34], eax",
+   "100298a5 je 0x100298ea",
+   "100298a7 mov esi, dword ptr [eax + 8]",
+   "100298aa test esi, esi",
+   "100298ac je 0x100298ea",
+   "100298ae mov edx, dword ptr [esi]",
+   "100298b0 mov ecx, esi",
+   "100298b2 call dword ptr [edx + 0x78]",
+   "100298b5 cmp eax, 8",
+   "100298b8 jne 0x100298c7",
+   "100298ba mov eax, dword ptr [esi + 4]",
+   "100298bd mov ecx, esi",
+   "100298bf push eax",
+   "100298c0 call 0x1000178f",
+   "100298c5 jmp 0x100298d2",
+   "100298c7 mov eax, dword ptr [esi + 4]",
+   "100298ca mov edx, dword ptr [esi]",
+   "100298cc push eax",
+   "100298cd mov ecx, esi",
+   "100298cf call dword ptr [edx + 0x40]",
+   "100298d2 mov eax, dword ptr [edi + 0x34]",
+   "100298d5 test eax, eax",
+   "100298d7 je 0x100298ea",
+   "100298d9 mov eax, dword ptr [eax + 4]",
+   "100298dc test eax, eax",
+   "100298de mov dword ptr [edi + 0x34], eax",
+   "100298e1 je 0x100298ea",
+   "100298e3 mov esi, dword ptr [eax + 8]",
+   "100298e6 test esi, esi",
+   "100298e8 jne 0x100298ae",
+   "100298ea pop edi",
+   "100298eb xor eax, eax",
+   "100298ed pop esi",
+   "100298ee ret 8",
+   "100298f1 mov eax, 0xa",
+   "100298f6 ret 8"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1002cd30 deferred SoundList::scaleVolumeToGroup"
+  ],
+  "thunks": [
+   "0x100014f6"
+  ],
+  "callers": [
+   "0x100014f6 jmp 0x10029880 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029920": {
+  "module": "sound.dll",
+  "va": "0x10029920",
+  "smsg": "Wave_Device::get_group_volume",
+  "size": 24,
+  "decoded": 24,
+  "body": [
+   "10029920 mov eax, dword ptr [esp + 4]",
+   "10029924 cmp eax, 0xf",
+   "10029927 jbe 0x1002992e",
+   "10029929 xor eax, eax",
+   "1002992b ret 4",
+   "1002992e lea eax, [eax + eax*2]",
+   "10029931 mov eax, dword ptr [ecx + eax*8 + 0x28]",
+   "10029935 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001488"
+  ],
+  "callers": [
+   "0x10001488 jmp 0x10029920 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029950": {
+  "module": "sound.dll",
+  "va": "0x10029950",
+  "smsg": "Wave_Device::enable_group",
+  "size": 93,
+  "decoded": 93,
+  "body": [
+   "10029950 mov eax, dword ptr [esp + 4]",
+   "10029954 push esi",
+   "10029955 cmp eax, 0xf",
+   "10029958 jbe 0x10029963",
+   "1002995a mov eax, 0xa",
+   "1002995f pop esi",
+   "10029960 ret 4",
+   "10029963 lea eax, [eax + eax*2]",
+   "10029966 lea esi, [ecx + eax*8]",
+   "10029969 mov al, byte ptr [ecx + eax*8 + 0x24]",
+   "1002996d test al, al",
+   "1002996f jne 0x100299a7",
+   "10029971 mov eax, dword ptr [esi + 0x2c]",
+   "10029974 test eax, eax",
+   "10029976 mov dword ptr [esi + 0x34], eax",
+   "10029979 je 0x100299a3",
+   "1002997b mov ecx, dword ptr [eax + 8]",
+   "1002997e test ecx, ecx",
+   "10029980 je 0x100299a3",
+   "10029982 mov eax, dword ptr [ecx + 0x50]",
+   "10029985 mov edx, dword ptr [ecx]",
+   "10029987 push eax",
+   "10029988 call dword ptr [edx + 0x10]",
+   "1002998b mov eax, dword ptr [esi + 0x34]",
+   "1002998e test eax, eax",
+   "10029990 je 0x100299a3",
+   "10029992 mov eax, dword ptr [eax + 4]",
+   "10029995 test eax, eax",
+   "10029997 mov dword ptr [esi + 0x34], eax",
+   "1002999a je 0x100299a3",
+   "1002999c mov ecx, dword ptr [eax + 8]",
+   "1002999f test ecx, ecx",
+   "100299a1 jne 0x10029982",
+   "100299a3 mov byte ptr [esi + 0x24], 1",
+   "100299a7 xor eax, eax",
+   "100299a9 pop esi",
+   "100299aa ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002464"
+  ],
+  "callers": [
+   "0x10002464 jmp 0x10029950 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100299d0": {
+  "module": "sound.dll",
+  "va": "0x100299d0",
+  "smsg": "Wave_Device::muteGroup",
+  "size": 81,
+  "decoded": 81,
+  "body": [
+   "100299d0 mov eax, dword ptr [esp + 4]",
+   "100299d4 cmp eax, 0xf",
+   "100299d7 jbe 0x100299e1",
+   "100299d9 mov eax, 0xa",
+   "100299de ret 4",
+   "100299e1 lea eax, [eax + eax*2]",
+   "100299e4 push esi",
+   "100299e5 lea esi, [ecx + eax*8]",
+   "100299e8 mov eax, dword ptr [ecx + eax*8 + 0x2c]",
+   "100299ec test eax, eax",
+   "100299ee mov dword ptr [esi + 0x34], eax",
+   "100299f1 je 0x10029a17",
+   "100299f3 mov ecx, dword ptr [eax + 8]",
+   "100299f6 test ecx, ecx",
+   "100299f8 je 0x10029a17",
+   "100299fa mov edx, dword ptr [ecx]",
+   "100299fc call dword ptr [edx + 0x20]",
+   "100299ff mov eax, dword ptr [esi + 0x34]",
+   "10029a02 test eax, eax",
+   "10029a04 je 0x10029a17",
+   "10029a06 mov eax, dword ptr [eax + 4]",
+   "10029a09 test eax, eax",
+   "10029a0b mov dword ptr [esi + 0x34], eax",
+   "10029a0e je 0x10029a17",
+   "10029a10 mov ecx, dword ptr [eax + 8]",
+   "10029a13 test ecx, ecx",
+   "10029a15 jne 0x100299fa",
+   "10029a17 mov byte ptr [esi + 0x25], 1",
+   "10029a1b xor eax, eax",
+   "10029a1d pop esi",
+   "10029a1e ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000137f"
+  ],
+  "callers": [
+   "0x1000137f jmp 0x100299d0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029a50": {
+  "module": "sound.dll",
+  "va": "0x10029a50",
+  "smsg": "Wave_Device::unMuteGroup",
+  "size": 30,
+  "decoded": 30,
+  "body": [
+   "10029a50 mov eax, dword ptr [esp + 4]",
+   "10029a54 cmp eax, 0xf",
+   "10029a57 jbe 0x10029a61",
+   "10029a59 mov eax, 0xa",
+   "10029a5e ret 4",
+   "10029a61 lea eax, [eax + eax*2]",
+   "10029a64 mov byte ptr [ecx + eax*8 + 0x25], 0",
+   "10029a69 xor eax, eax",
+   "10029a6b ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100016b8"
+  ],
+  "callers": [
+   "0x100016b8 jmp 0x10029a50 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029a80": {
+  "module": "sound.dll",
+  "va": "0x10029a80",
+  "smsg": "Wave_Device::disable_group",
+  "size": 120,
+  "decoded": 120,
+  "body": [
+   "10029a80 mov eax, dword ptr [esp + 4]",
+   "10029a84 push edi",
+   "10029a85 cmp eax, 0xf",
+   "10029a88 jbe 0x10029a93",
+   "10029a8a mov eax, 0xa",
+   "10029a8f pop edi",
+   "10029a90 ret 4",
+   "10029a93 lea eax, [eax + eax*2]",
+   "10029a96 lea edi, [ecx + eax*8]",
+   "10029a99 mov al, byte ptr [ecx + eax*8 + 0x24]",
+   "10029a9d test al, al",
+   "10029a9f jne 0x10029aa7",
+   "10029aa1 xor eax, eax",
+   "10029aa3 pop edi",
+   "10029aa4 ret 4",
+   "10029aa7 mov eax, dword ptr [edi + 0x2c]",
+   "10029aaa push esi",
+   "10029aab test eax, eax",
+   "10029aad mov dword ptr [edi + 0x34], eax",
+   "10029ab0 je 0x10029aed",
+   "10029ab2 mov esi, dword ptr [eax + 8]",
+   "10029ab5 test esi, esi",
+   "10029ab7 je 0x10029aed",
+   "10029ab9 mov edx, dword ptr [esi]",
+   "10029abb mov ecx, esi",
+   "10029abd call dword ptr [edx + 0x78]",
+   "10029ac0 cmp eax, 8",
+   "10029ac3 jne 0x10029ace",
+   "10029ac5 mov eax, dword ptr [esi]",
+   "10029ac7 mov ecx, esi",
+   "10029ac9 call dword ptr [eax + 0x20]",
+   "10029acc jmp 0x10029ad5",
+   "10029ace mov edx, dword ptr [esi]",
+   "10029ad0 mov ecx, esi",
+   "10029ad2 call dword ptr [edx + 0x14]",
+   "10029ad5 mov eax, dword ptr [edi + 0x34]",
+   "10029ad8 test eax, eax",
+   "10029ada je 0x10029aed",
+   "10029adc mov eax, dword ptr [eax + 4]",
+   "10029adf test eax, eax",
+   "10029ae1 mov dword ptr [edi + 0x34], eax",
+   "10029ae4 je 0x10029aed",
+   "10029ae6 mov esi, dword ptr [eax + 8]",
+   "10029ae9 test esi, esi",
+   "10029aeb jne 0x10029ab9",
+   "10029aed mov byte ptr [edi + 0x24], 0",
+   "10029af1 pop esi",
+   "10029af2 xor eax, eax",
+   "10029af4 pop edi",
+   "10029af5 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001825"
+  ],
+  "callers": [
+   "0x10001825 jmp 0x10029a80 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029b20": {
+  "module": "sound.dll",
+  "va": "0x10029b20",
+  "smsg": "Wave_Device::is_group_disabled",
+  "size": 29,
+  "decoded": 29,
+  "body": [
+   "10029b20 mov eax, dword ptr [esp + 4]",
+   "10029b24 cmp eax, 0xf",
+   "10029b27 jbe 0x10029b2e",
+   "10029b29 mov al, 1",
+   "10029b2b ret 4",
+   "10029b2e lea eax, [eax + eax*2]",
+   "10029b31 mov dl, byte ptr [ecx + eax*8 + 0x24]",
+   "10029b35 test dl, dl",
+   "10029b37 sete al",
+   "10029b3a ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001f0a"
+  ],
+  "callers": [
+   "0x10001f0a jmp 0x10029b20 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10029b50": {
+  "module": "sound.dll",
+  "va": "0x10029b50",
+  "smsg": "Wave_Device::isGroupMute",
+  "size": 29,
+  "decoded": 29,
+  "body": [
+   "10029b50 mov eax, dword ptr [esp + 4]",
+   "10029b54 cmp eax, 0xf",
+   "10029b57 jbe 0x10029b5e",
+   "10029b59 mov al, 1",
+   "10029b5b ret 4",
+   "10029b5e lea eax, [eax + eax*2]",
+   "10029b61 mov dl, byte ptr [ecx + eax*8 + 0x25]",
+   "10029b65 test dl, dl",
+   "10029b67 setne al",
+   "10029b6a ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001ab4"
+  ],
+  "callers": [
+   "0x10001ab4 jmp 0x10029b50 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002af00": {
+  "module": "sound.dll",
+  "va": "0x1002af00",
+  "smsg": "Sound::attach",
+  "size": 99,
+  "decoded": 99,
+  "body": [
+   "1002af00 mov eax, dword ptr [esp + 4]",
+   "1002af04 xor edx, edx",
+   "1002af06 cmp eax, edx",
+   "1002af08 jne 0x1002af10",
+   "1002af0a mov eax, 0xa",
+   "1002af0f ret",
+   "1002af10 cmp dword ptr [eax + 0x4c], edx",
+   "1002af13 jne 0x1002af60",
+   "1002af15 cmp dword ptr [eax + 0x48], edx",
+   "1002af18 jne 0x1002af60",
+   "1002af1a mov ecx, dword ptr [0x100b506c]",
+   "1002af20 cmp ecx, edx",
+   "1002af22 jne 0x1002af43",
+   "1002af24 mov dword ptr [0x100b5070], eax",
+   "1002af29 mov dword ptr [0x100b506c], eax",
+   "1002af2e mov ecx, dword ptr [eax + 0x44]",
+   "1002af31 mov dword ptr [eax + 0x4c], edx",
+   "1002af34 or ecx, 0x202",
+   "1002af3a mov dword ptr [eax + 0x48], edx",
+   "1002af3d mov dword ptr [eax + 0x44], ecx",
+   "1002af40 xor eax, eax",
+   "1002af42 ret",
+   "1002af43 mov dword ptr [eax + 0x48], ecx",
+   "1002af46 mov dword ptr [0x100b506c], eax",
+   "1002af4b mov ecx, dword ptr [eax + 0x48]",
+   "1002af4e mov dword ptr [ecx + 0x4c], eax",
+   "1002af51 mov ecx, dword ptr [eax + 0x44]",
+   "1002af54 or ecx, 0x202",
+   "1002af5a mov dword ptr [eax + 0x4c], edx",
+   "1002af5d mov dword ptr [eax + 0x44], ecx",
+   "1002af60 xor eax, eax",
+   "1002af62 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100018d4"
+  ],
+  "callers": [
+   "0x100018d4 jmp 0x1002af00 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002af90": {
+  "module": "sound.dll",
+  "va": "0x1002af90",
+  "smsg": "Sound::detach",
+  "size": 96,
+  "decoded": 96,
+  "body": [
+   "1002af90 mov eax, dword ptr [esp + 4]",
+   "1002af94 xor edx, edx",
+   "1002af96 cmp eax, edx",
+   "1002af98 jne 0x1002afa0",
+   "1002af9a mov eax, 0xa",
+   "1002af9f ret",
+   "1002afa0 test byte ptr [eax + 0x44], 2",
+   "1002afa4 jne 0x1002afa9",
+   "1002afa6 xor eax, eax",
+   "1002afa8 ret",
+   "1002afa9 mov ecx, dword ptr [eax + 0x48]",
+   "1002afac push esi",
+   "1002afad cmp ecx, edx",
+   "1002afaf je 0x1002afb9",
+   "1002afb1 mov esi, dword ptr [eax + 0x4c]",
+   "1002afb4 mov dword ptr [ecx + 0x4c], esi",
+   "1002afb7 jmp 0x1002afc2",
+   "1002afb9 mov ecx, dword ptr [eax + 0x4c]",
+   "1002afbc mov dword ptr [0x100b5070], ecx",
+   "1002afc2 mov ecx, dword ptr [eax + 0x4c]",
+   "1002afc5 cmp ecx, edx",
+   "1002afc7 je 0x1002afd1",
+   "1002afc9 mov esi, dword ptr [eax + 0x48]",
+   "1002afcc mov dword ptr [ecx + 0x48], esi",
+   "1002afcf jmp 0x1002afda",
+   "1002afd1 mov ecx, dword ptr [eax + 0x48]",
+   "1002afd4 mov dword ptr [0x100b506c], ecx",
+   "1002afda mov ecx, dword ptr [eax + 0x44]",
+   "1002afdd mov dword ptr [eax + 0x4c], edx",
+   "1002afe0 and ecx, 0xfffffdfd",
+   "1002afe6 mov dword ptr [eax + 0x48], edx",
+   "1002afe9 mov dword ptr [eax + 0x44], ecx",
+   "1002afec xor eax, eax",
+   "1002afee pop esi",
+   "1002afef ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100013cf"
+  ],
+  "callers": [
+   "0x100013cf jmp 0x1002af90 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002c240": {
+  "module": "sound.dll",
+  "va": "0x1002c240",
+  "smsg": "Wave::select_device",
+  "size": 22,
+  "decoded": 22,
+  "body": [
+   "1002c240 mov eax, dword ptr [ecx + 0x40]",
+   "1002c243 test eax, eax",
+   "1002c245 je 0x1002c24e",
+   "1002c247 mov eax, dword ptr [eax + 0x40]",
+   "1002c24a test eax, eax",
+   "1002c24c jne 0x1002c247",
+   "1002c24e mov eax, 1",
+   "1002c253 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001fe6"
+  ],
+  "callers": [
+   "0x10001fe6 jmp 0x1002c240 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002c790": {
+  "module": "sound.dll",
+  "va": "0x1002c790",
+  "smsg": "MpegStream::set_next",
+  "size": 51,
+  "decoded": 51,
+  "body": [
+   "1002c790 mov eax, ecx",
+   "1002c792 mov ecx, dword ptr [eax + 0x40]",
+   "1002c795 lea edx, [eax + 0x10c]",
+   "1002c79b test ecx, ecx",
+   "1002c79d mov dword ptr [edx], 0",
+   "1002c7a3 je 0x1002c7be",
+   "1002c7a5 push esi",
+   "1002c7a6 mov esi, dword ptr [ecx]",
+   "1002c7a8 push edx",
+   "1002c7a9 mov edx, dword ptr [esp + 0xc]",
+   "1002c7ad mov eax, dword ptr [eax + edx*4 + 0x6c]",
+   "1002c7b1 push eax",
+   "1002c7b2 call dword ptr [esi + 0xf0]",
+   "1002c7b8 xor eax, eax",
+   "1002c7ba pop esi",
+   "1002c7bb ret 4",
+   "1002c7be xor eax, eax",
+   "1002c7c0 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001e10"
+  ],
+  "callers": [
+   "0x10001e10 jmp 0x1002c790 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002c7e0": {
+  "module": "sound.dll",
+  "va": "0x1002c7e0",
+  "smsg": "MpegStream::start",
+  "size": 242,
+  "decoded": 242,
+  "body": [
+   "1002c7e0 push esi",
+   "1002c7e1 push edi",
+   "1002c7e2 mov edi, dword ptr [esp + 0xc]",
+   "1002c7e6 mov esi, ecx",
+   "1002c7e8 push 0x102",
+   "1002c7ed mov ecx, dword ptr [esi + edi*4 + 0x6c]",
+   "1002c7f1 mov eax, dword ptr [esi]",
+   "1002c7f3 push ecx",
+   "1002c7f4 mov ecx, esi",
+   "1002c7f6 call dword ptr [eax + 0x88]",
+   "1002c7fc mov edx, dword ptr [esi]",
+   "1002c7fe mov ecx, esi",
+   "1002c800 call dword ptr [edx + 0x8c]",
+   "1002c806 test eax, eax",
+   "1002c808 je 0x1002c862",
+   "1002c80a cmp eax, 0xf",
+   "1002c80d jne 0x1002c8cd",
+   "1002c813 mov ecx, dword ptr [esi + 0x40]",
+   "1002c816 test ecx, ecx",
+   "1002c818 je 0x1002c81f",
+   "1002c81a mov eax, dword ptr [ecx]",
+   "1002c81c call dword ptr [eax + 0x14]",
+   "1002c81f mov al, byte ptr [esi + 0x58]",
+   "1002c822 mov dword ptr [esi + 0x40], 0",
+   "1002c829 test al, 2",
+   "1002c82b jne 0x1002c837",
+   "1002c82d mov edx, dword ptr [esi]",
+   "1002c82f mov ecx, esi",
+   "1002c831 call dword ptr [edx + 0x80]",
+   "1002c837 mov edx, dword ptr [esi + 0x44]",
+   "1002c83a mov eax, dword ptr [esi]",
+   "1002c83c and edx, 0xfffffffe",
+   "1002c83f push 0x102",
+   "1002c844 mov dword ptr [esi + 0x44], edx",
+   "1002c847 mov ecx, dword ptr [esi + edi*4 + 0x6c]",
+   "1002c84b push ecx",
+   "1002c84c mov ecx, esi",
+   "1002c84e call dword ptr [eax + 0x88]",
+   "1002c854 mov edx, dword ptr [esi]",
+   "1002c856 mov ecx, esi",
+   "1002c858 call dword ptr [edx + 0x8c]",
+   "1002c85e test eax, eax",
+   "1002c860 jne 0x1002c8cd",
+   "1002c862 mov ecx, dword ptr [esi + 0x40]",
+   "1002c865 xor edi, edi",
+   "1002c867 test ecx, ecx",
+   "1002c869 je 0x1002c874",
+   "1002c86b mov eax, dword ptr [ecx]",
+   "1002c86d call dword ptr [eax + 0x1c]",
+   "1002c870 mov edi, eax",
+   "1002c872 jmp 0x1002c896",
+   "1002c874 test byte ptr [esi + 0x58], 0x10",
+   "1002c878 je 0x1002c891",
+   "1002c87a mov ecx, esi",
+   "1002c87c call 0x100016f4",
+   "1002c881 mov ecx, dword ptr [esi + 0x40]",
+   "1002c884 test ecx, ecx",
+   "1002c886 je 0x1002c896",
+   "1002c888 mov edx, dword ptr [ecx]",
+   "1002c88a call dword ptr [edx + 0x1c]",
+   "1002c88d mov edi, eax",
+   "1002c88f jmp 0x1002c896",
+   "1002c891 mov edi, 0x14",
+   "1002c896 test byte ptr [esi + 0x58], 0x10",
+   "1002c89a je 0x1002c8b6",
+   "1002c89c call dword ptr [0x100b8654]",
+   "1002c8a2 mov dword ptr [esi + 0x68], eax",
+   "1002c8a5 mov eax, dword ptr [esi]",
+   "1002c8a7 mov ecx, esi",
+   "1002c8a9 call dword ptr [eax + 0x80]",
+   "1002c8af mov dword ptr [esi + 0x40], 0",
+   "1002c8b6 test edi, edi",
+   "1002c8b8 je 0x1002c8c1",
+   "1002c8ba mov eax, edi",
+   "1002c8bc pop edi",
+   "1002c8bd pop esi",
+   "1002c8be ret 4",
+   "1002c8c1 mov dword ptr [esi + 0x10c], 1",
+   "1002c8cb xor eax, eax",
+   "1002c8cd pop edi",
+   "1002c8ce pop esi",
+   "1002c8cf ret 4"
+  ],
+  "imports": [
+   "WINMM.dll!timeGetTime"
+  ],
+  "calls": [
+   "call 0x1002bd80 Device_lazyCreateSound"
+  ],
+  "thunks": [
+   "0x10001023"
+  ],
+  "callers": [
+   "0x10001023 jmp 0x1002c7e0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002c920": {
+  "module": "sound.dll",
+  "va": "0x1002c920",
+  "smsg": "MpegStream::add_to_playlist",
+  "size": 105,
+  "decoded": 105,
+  "body": [
+   "1002c920 push ebp",
+   "1002c921 mov ebp, ecx",
+   "1002c923 push esi",
+   "1002c924 xor esi, esi",
+   "1002c926 lea eax, [ebp + 0x6c]",
+   "1002c929 cmp dword ptr [eax], 0",
+   "1002c92c je 0x1002c941",
+   "1002c92e inc esi",
+   "1002c92f add eax, 4",
+   "1002c932 cmp esi, 0x28",
+   "1002c935 jl 0x1002c929",
+   "1002c937 pop esi",
+   "1002c938 mov eax, 0x2b",
+   "1002c93d pop ebp",
+   "1002c93e ret 4",
+   "1002c941 push ebx",
+   "1002c942 mov ebx, dword ptr [esp + 0x10]",
+   "1002c946 push edi",
+   "1002c947 mov edi, ebx",
+   "1002c949 or ecx, 0xffffffff",
+   "1002c94c xor eax, eax",
+   "1002c94e repne scasb al, byte ptr es:[edi]",
+   "1002c950 not ecx",
+   "1002c952 push ecx",
+   "1002c953 call 0x100424d7",
+   "1002c958 mov edx, eax",
+   "1002c95a mov edi, ebx",
+   "1002c95c or ecx, 0xffffffff",
+   "1002c95f xor eax, eax",
+   "1002c961 add esp, 4",
+   "1002c964 mov dword ptr [ebp + esi*4 + 0x6c], edx",
+   "1002c968 repne scasb al, byte ptr es:[edi]",
+   "1002c96a not ecx",
+   "1002c96c sub edi, ecx",
+   "1002c96e mov eax, ecx",
+   "1002c970 mov esi, edi",
+   "1002c972 mov edi, edx",
+   "1002c974 shr ecx, 2",
+   "1002c977 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002c979 mov ecx, eax",
+   "1002c97b xor eax, eax",
+   "1002c97d and ecx, 3",
+   "1002c980 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002c982 pop edi",
+   "1002c983 pop ebx",
+   "1002c984 pop esi",
+   "1002c985 pop ebp",
+   "1002c986 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424d7 operator_new"
+  ],
+  "thunks": [
+   "0x10001c99"
+  ],
+  "callers": [
+   "0x10001c99 jmp 0x1002c920 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002c9b0": {
+  "module": "sound.dll",
+  "va": "0x1002c9b0",
+  "smsg": "MpegStream::clear_playlist",
+  "size": 42,
+  "decoded": 42,
+  "body": [
+   "1002c9b0 push esi",
+   "1002c9b1 push edi",
+   "1002c9b2 lea esi, [ecx + 0x6c]",
+   "1002c9b5 mov edi, 0x28",
+   "1002c9ba mov eax, dword ptr [esi]",
+   "1002c9bc test eax, eax",
+   "1002c9be je 0x1002c9cf",
+   "1002c9c0 push eax",
+   "1002c9c1 call 0x1004249a",
+   "1002c9c6 add esp, 4",
+   "1002c9c9 mov dword ptr [esi], 0",
+   "1002c9cf add esi, 4",
+   "1002c9d2 dec edi",
+   "1002c9d3 jne 0x1002c9ba",
+   "1002c9d5 pop edi",
+   "1002c9d6 xor eax, eax",
+   "1002c9d8 pop esi",
+   "1002c9d9 ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1004249a operator_delete"
+  ],
+  "thunks": [
+   "0x100010a5"
+  ],
+  "callers": [
+   "0x100010a5 jmp 0x1002c9b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002cd30": {
+  "module": "sound.dll",
+  "va": "0x1002cd30",
+  "smsg": "SoundList::scaleVolumeToGroup",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "1002cd30 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000178f"
+  ],
+  "callers": [
+   "0x1000178f jmp 0x1002cd30 from outside every function",
+   "0x10029765 call 0x1000178f from deferred 0x10029730 Wave_Device::add_to_group",
+   "0x100298c0 call 0x1000178f from deferred 0x10029880 Wave_Device::set_group_volume"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002cd50": {
+  "module": "sound.dll",
+  "va": "0x1002cd50",
+  "smsg": "SoundList::add",
+  "size": 105,
+  "decoded": 105,
+  "body": [
+   "1002cd50 push ebp",
+   "1002cd51 mov ebp, ecx",
+   "1002cd53 push esi",
+   "1002cd54 xor esi, esi",
+   "1002cd56 lea eax, [ebp + 0x58]",
+   "1002cd59 cmp dword ptr [eax], 0",
+   "1002cd5c je 0x1002cd71",
+   "1002cd5e inc esi",
+   "1002cd5f add eax, 4",
+   "1002cd62 cmp esi, 0x28",
+   "1002cd65 jl 0x1002cd59",
+   "1002cd67 pop esi",
+   "1002cd68 mov eax, 0x2b",
+   "1002cd6d pop ebp",
+   "1002cd6e ret 4",
+   "1002cd71 push ebx",
+   "1002cd72 mov ebx, dword ptr [esp + 0x10]",
+   "1002cd76 push edi",
+   "1002cd77 mov edi, ebx",
+   "1002cd79 or ecx, 0xffffffff",
+   "1002cd7c xor eax, eax",
+   "1002cd7e repne scasb al, byte ptr es:[edi]",
+   "1002cd80 not ecx",
+   "1002cd82 push ecx",
+   "1002cd83 call 0x100424d7",
+   "1002cd88 mov edx, eax",
+   "1002cd8a mov edi, ebx",
+   "1002cd8c or ecx, 0xffffffff",
+   "1002cd8f xor eax, eax",
+   "1002cd91 add esp, 4",
+   "1002cd94 mov dword ptr [ebp + esi*4 + 0x58], edx",
+   "1002cd98 repne scasb al, byte ptr es:[edi]",
+   "1002cd9a not ecx",
+   "1002cd9c sub edi, ecx",
+   "1002cd9e mov eax, ecx",
+   "1002cda0 mov esi, edi",
+   "1002cda2 mov edi, edx",
+   "1002cda4 shr ecx, 2",
+   "1002cda7 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002cda9 mov ecx, eax",
+   "1002cdab xor eax, eax",
+   "1002cdad and ecx, 3",
+   "1002cdb0 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002cdb2 pop edi",
+   "1002cdb3 pop ebx",
+   "1002cdb4 pop esi",
+   "1002cdb5 pop ebp",
+   "1002cdb6 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424d7 operator_new"
+  ],
+  "thunks": [
+   "0x10001c12"
+  ],
+  "callers": [
+   "0x10001c12 jmp 0x1002cd50 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002cde0": {
+  "module": "sound.dll",
+  "va": "0x1002cde0",
+  "smsg": "SoundList::setListName",
+  "size": 87,
+  "decoded": 87,
+  "body": [
+   "1002cde0 push ebx",
+   "1002cde1 push esi",
+   "1002cde2 mov esi, dword ptr [esp + 0xc]",
+   "1002cde6 mov ebx, ecx",
+   "1002cde8 test esi, esi",
+   "1002cdea jne 0x1002cdf6",
+   "1002cdec pop esi",
+   "1002cded mov eax, 0xa",
+   "1002cdf2 pop ebx",
+   "1002cdf3 ret 4",
+   "1002cdf6 push edi",
+   "1002cdf7 mov edi, esi",
+   "1002cdf9 or ecx, 0xffffffff",
+   "1002cdfc xor eax, eax",
+   "1002cdfe repne scasb al, byte ptr es:[edi]",
+   "1002ce00 not ecx",
+   "1002ce02 push ecx",
+   "1002ce03 call 0x100424d7",
+   "1002ce08 mov edx, eax",
+   "1002ce0a mov edi, esi",
+   "1002ce0c or ecx, 0xffffffff",
+   "1002ce0f xor eax, eax",
+   "1002ce11 add esp, 4",
+   "1002ce14 mov dword ptr [ebx + 0x50], edx",
+   "1002ce17 repne scasb al, byte ptr es:[edi]",
+   "1002ce19 not ecx",
+   "1002ce1b sub edi, ecx",
+   "1002ce1d mov eax, ecx",
+   "1002ce1f mov esi, edi",
+   "1002ce21 mov edi, edx",
+   "1002ce23 shr ecx, 2",
+   "1002ce26 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002ce28 mov ecx, eax",
+   "1002ce2a xor eax, eax",
+   "1002ce2c and ecx, 3",
+   "1002ce2f rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002ce31 pop edi",
+   "1002ce32 pop esi",
+   "1002ce33 pop ebx",
+   "1002ce34 ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424d7 operator_new"
+  ],
+  "thunks": [
+   "0x1000131b"
+  ],
+  "callers": [
+   "0x1000131b jmp 0x1002cde0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002d010": {
+  "module": "sound.dll",
+  "va": "0x1002d010",
+  "smsg": "KeyMap::~KeyMap",
+  "size": 118,
+  "decoded": 118,
+  "body": [
+   "1002d010 push ecx",
+   "1002d011 push ebx",
+   "1002d012 push ebp",
+   "1002d013 mov ebp, ecx",
+   "1002d015 push esi",
+   "1002d016 push edi",
+   "1002d017 xor ebx, ebx",
+   "1002d019 mov dword ptr [ebp], 0x1005be84",
+   "1002d020 mov eax, dword ptr [ebp + ebx*4 + 4]",
+   "1002d024 inc ebx",
+   "1002d025 test eax, eax",
+   "1002d027 je 0x1002d05b",
+   "1002d029 mov eax, dword ptr [eax]",
+   "1002d02b lea ebx, [eax + 1]",
+   "1002d02e mov eax, dword ptr [ebp + eax*4 + 4]",
+   "1002d032 mov edi, dword ptr [eax + 4]",
+   "1002d035 mov esi, dword ptr [eax]",
+   "1002d037 inc esi",
+   "1002d038 lea eax, [ebp + edi*4 + 4]",
+   "1002d03c mov dword ptr [esp + 0x10], eax",
+   "1002d040 mov eax, dword ptr [eax]",
+   "1002d042 push eax",
+   "1002d043 call 0x1004249a",
+   "1002d048 add esp, 4",
+   "1002d04b cmp edi, esi",
+   "1002d04d jae 0x1002d05b",
+   "1002d04f mov ecx, esi",
+   "1002d051 sub ecx, edi",
+   "1002d053 mov edi, dword ptr [esp + 0x10]",
+   "1002d057 xor eax, eax",
+   "1002d059 rep stosd dword ptr es:[edi], eax",
+   "1002d05b cmp ebx, 0x80",
+   "1002d061 jl 0x1002d020",
+   "1002d063 mov eax, dword ptr [ebp + 0x204]",
+   "1002d069 test eax, eax",
+   "1002d06b je 0x1002d080",
+   "1002d06d push eax",
+   "1002d06e call 0x1004249a",
+   "1002d073 add esp, 4",
+   "1002d076 mov dword ptr [ebp + 0x204], 0",
+   "1002d080 pop edi",
+   "1002d081 pop esi",
+   "1002d082 pop ebp",
+   "1002d083 pop ebx",
+   "1002d084 pop ecx",
+   "1002d085 ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1004249a operator_delete",
+   "call 0x1004249a operator_delete"
+  ],
+  "thunks": [
+   "0x100019b0"
+  ],
+  "callers": [
+   "0x100019b0 jmp 0x1002d010 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002d0b0": {
+  "module": "sound.dll",
+  "va": "0x1002d0b0",
+  "smsg": "KeyMap::unmap_range",
+  "size": 50,
+  "decoded": 50,
+  "body": [
+   "1002d0b0 mov eax, dword ptr [esp + 4]",
+   "1002d0b4 push ebx",
+   "1002d0b5 push esi",
+   "1002d0b6 push edi",
+   "1002d0b7 mov ebx, dword ptr [eax + 4]",
+   "1002d0ba mov esi, dword ptr [eax]",
+   "1002d0bc mov eax, dword ptr [ecx + ebx*4 + 4]",
+   "1002d0c0 inc esi",
+   "1002d0c1 lea edi, [ecx + ebx*4 + 4]",
+   "1002d0c5 push eax",
+   "1002d0c6 call 0x1004249a",
+   "1002d0cb add esp, 4",
+   "1002d0ce cmp ebx, esi",
+   "1002d0d0 jae 0x1002d0da",
+   "1002d0d2 mov ecx, esi",
+   "1002d0d4 sub ecx, ebx",
+   "1002d0d6 xor eax, eax",
+   "1002d0d8 rep stosd dword ptr es:[edi], eax",
+   "1002d0da mov eax, esi",
+   "1002d0dc pop edi",
+   "1002d0dd pop esi",
+   "1002d0de pop ebx",
+   "1002d0df ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x1004249a operator_delete"
+  ],
+  "thunks": [
+   "0x1000243c"
+  ],
+  "callers": [
+   "0x1000243c jmp 0x1002d0b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002d2c0": {
+  "module": "sound.dll",
+  "va": "0x1002d2c0",
+  "smsg": "KeyMap::set_base_path",
+  "size": 287,
+  "decoded": 287,
+  "body": [
+   "1002d2c0 sub esp, 0x204",
+   "1002d2c6 mov edx, ecx",
+   "1002d2c8 or ecx, 0xffffffff",
+   "1002d2cb xor eax, eax",
+   "1002d2cd push ebx",
+   "1002d2ce push ebp",
+   "1002d2cf push esi",
+   "1002d2d0 push edi",
+   "1002d2d1 mov edi, dword ptr [esp + 0x218]",
+   "1002d2d8 lea ebx, [esp + 0x14]",
+   "1002d2dc repne scasb al, byte ptr es:[edi]",
+   "1002d2de not ecx",
+   "1002d2e0 sub edi, ecx",
+   "1002d2e2 mov eax, ecx",
+   "1002d2e4 mov esi, edi",
+   "1002d2e6 mov edi, ebx",
+   "1002d2e8 shr ecx, 2",
+   "1002d2eb rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002d2ed mov ecx, eax",
+   "1002d2ef xor eax, eax",
+   "1002d2f1 and ecx, 3",
+   "1002d2f4 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002d2f6 lea edi, [esp + 0x14]",
+   "1002d2fa or ecx, 0xffffffff",
+   "1002d2fd repne scasb al, byte ptr es:[edi]",
+   "1002d2ff not ecx",
+   "1002d301 dec ecx",
+   "1002d302 cmp byte ptr [esp + ecx + 0x13], 0x5c",
+   "1002d307 je 0x1002d313",
+   "1002d309 mov byte ptr [esp + ecx + 0x14], 0x5c",
+   "1002d30e mov byte ptr [esp + ecx + 0x15], 0",
+   "1002d313 lea ebp, [edx + 4]",
+   "1002d316 mov dword ptr [esp + 0x10], 0x80",
+   "1002d31e mov ebx, dword ptr [ebp]",
+   "1002d321 test ebx, ebx",
+   "1002d323 je 0x1002d3c0",
+   "1002d329 add ebx, 0xc",
+   "1002d32c test ebx, ebx",
+   "1002d32e je 0x1002d3c0",
+   "1002d334 lea edi, [esp + 0x14]",
+   "1002d338 or ecx, 0xffffffff",
+   "1002d33b xor eax, eax",
+   "1002d33d lea edx, [esp + 0x114]",
+   "1002d344 repne scasb al, byte ptr es:[edi]",
+   "1002d346 not ecx",
+   "1002d348 sub edi, ecx",
+   "1002d34a push 0x5c",
+   "1002d34c mov eax, ecx",
+   "1002d34e mov esi, edi",
+   "1002d350 mov edi, edx",
+   "1002d352 push ebx",
+   "1002d353 shr ecx, 2",
+   "1002d356 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002d358 mov ecx, eax",
+   "1002d35a and ecx, 3",
+   "1002d35d rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002d35f call 0x100424b0",
+   "1002d364 add esp, 8",
+   "1002d367 test eax, eax",
+   "1002d369 je 0x1002d36e",
+   "1002d36b inc eax",
+   "1002d36c jmp 0x1002d370",
+   "1002d36e mov eax, ebx",
+   "1002d370 mov edi, eax",
+   "1002d372 or ecx, 0xffffffff",
+   "1002d375 xor eax, eax",
+   "1002d377 lea edx, [esp + 0x114]",
+   "1002d37e repne scasb al, byte ptr es:[edi]",
+   "1002d380 not ecx",
+   "1002d382 sub edi, ecx",
+   "1002d384 mov esi, edi",
+   "1002d386 mov edi, edx",
+   "1002d388 mov edx, ecx",
+   "1002d38a or ecx, 0xffffffff",
+   "1002d38d repne scasb al, byte ptr es:[edi]",
+   "1002d38f mov ecx, edx",
+   "1002d391 dec edi",
+   "1002d392 shr ecx, 2",
+   "1002d395 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002d397 mov ecx, edx",
+   "1002d399 and ecx, 3",
+   "1002d39c rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002d39e lea edi, [esp + 0x114]",
+   "1002d3a5 or ecx, 0xffffffff",
+   "1002d3a8 repne scasb al, byte ptr es:[edi]",
+   "1002d3aa not ecx",
+   "1002d3ac sub edi, ecx",
+   "1002d3ae mov eax, ecx",
+   "1002d3b0 mov esi, edi",
+   "1002d3b2 mov edi, ebx",
+   "1002d3b4 shr ecx, 2",
+   "1002d3b7 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002d3b9 mov ecx, eax",
+   "1002d3bb and ecx, 3",
+   "1002d3be rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002d3c0 mov eax, dword ptr [esp + 0x10]",
+   "1002d3c4 add ebp, 4",
+   "1002d3c7 dec eax",
+   "1002d3c8 mov dword ptr [esp + 0x10], eax",
+   "1002d3cc jne 0x1002d31e",
+   "1002d3d2 pop edi",
+   "1002d3d3 pop esi",
+   "1002d3d4 pop ebp",
+   "1002d3d5 pop ebx",
+   "1002d3d6 add esp, 0x204",
+   "1002d3dc ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100424b0 _strrchr"
+  ],
+  "thunks": [
+   "0x1000227f"
+  ],
+  "callers": [
+   "0x1000227f jmp 0x1002d2c0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002d710": {
+  "module": "sound.dll",
+  "va": "0x1002d710",
+  "smsg": "Midi::set_frame_delay",
+  "size": 30,
+  "decoded": 30,
+  "body": [
+   "1002d710 mov eax, dword ptr [ecx + 0x40]",
+   "1002d713 test eax, eax",
+   "1002d715 je 0x1002d724",
+   "1002d717 mov edx, dword ptr [esp + 4]",
+   "1002d71b mov dword ptr [eax + 0x5c], edx",
+   "1002d71e mov dword ptr [ecx + 0x5c], edx",
+   "1002d721 ret 4",
+   "1002d724 mov eax, dword ptr [esp + 4]",
+   "1002d728 mov dword ptr [ecx + 0x5c], eax",
+   "1002d72b ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100024ff"
+  ],
+  "callers": [
+   "0x100024ff jmp 0x1002d710 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002e2f0": {
+  "module": "sound.dll",
+  "va": "0x1002e2f0",
+  "smsg": "Midi::get_tonal_center",
+  "size": 98,
+  "decoded": 98,
+  "body": [
+   "1002e2f0 mov eax, dword ptr [ecx]",
+   "1002e2f2 call dword ptr [eax + 0x12c]",
+   "1002e2f8 sar eax, 8",
+   "1002e2fb movsx eax, al",
+   "1002e2fe add eax, 7",
+   "1002e301 cmp eax, 0xe",
+   "1002e304 ja 0x1002e34f",
+   "1002e306 jmp dword ptr [eax*4 + 0x1002e354]",
+   "1002e30d mov eax, 5",
+   "1002e312 ret",
+   "1002e313 mov eax, 0xa",
+   "1002e318 ret",
+   "1002e319 mov eax, 3",
+   "1002e31e ret",
+   "1002e31f mov eax, 8",
+   "1002e324 ret",
+   "1002e325 mov eax, 0xb",
+   "1002e32a ret",
+   "1002e32b mov eax, 7",
+   "1002e330 ret",
+   "1002e331 mov eax, 2",
+   "1002e336 ret",
+   "1002e337 mov eax, 9",
+   "1002e33c ret",
+   "1002e33d mov eax, 4",
+   "1002e342 ret",
+   "1002e343 mov eax, 6",
+   "1002e348 ret",
+   "1002e349 mov eax, 1",
+   "1002e34e ret",
+   "1002e34f xor eax, eax",
+   "1002e351 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100021e9"
+  ],
+  "callers": [
+   "0x100021e9 jmp 0x1002e2f0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002e490": {
+  "module": "sound.dll",
+  "va": "0x1002e490",
+  "smsg": "Sound::unloadall",
+  "size": 31,
+  "decoded": 31,
+  "body": [
+   "1002e490 mov ecx, dword ptr [0x100b5070]",
+   "1002e496 test ecx, ecx",
+   "1002e498 je 0x1002e4a9",
+   "1002e49a mov eax, dword ptr [ecx]",
+   "1002e49c call dword ptr [eax + 0x14]",
+   "1002e49f mov ecx, dword ptr [0x100b5070]",
+   "1002e4a5 test ecx, ecx",
+   "1002e4a7 jne 0x1002e49a",
+   "1002e4a9 mov eax, 0xb",
+   "1002e4ae ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000277f"
+  ],
+  "callers": [
+   "0x1000277f jmp 0x1002e490 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002e4c0": {
+  "module": "sound.dll",
+  "va": "0x1002e4c0",
+  "smsg": "Patch::Patch",
+  "size": 42,
+  "decoded": 42,
+  "body": [
+   "1002e4c0 mov edx, ecx",
+   "1002e4c2 push edi",
+   "1002e4c3 mov ecx, 9",
+   "1002e4c8 xor eax, eax",
+   "1002e4ca lea edi, [edx + 0xc]",
+   "1002e4cd mov dword ptr [edx], 0x1005bb80",
+   "1002e4d3 mov dword ptr [edx + 4], 0x7f",
+   "1002e4da mov dword ptr [edx + 8], 0",
+   "1002e4e1 rep stosd dword ptr es:[edi], eax",
+   "1002e4e3 mov dword ptr [edx + 0x30], eax",
+   "1002e4e6 mov eax, edx",
+   "1002e4e8 pop edi",
+   "1002e4e9 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001343"
+  ],
+  "callers": [
+   "0x10001343 jmp 0x1002e4c0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002f710": {
+  "module": "sound.dll",
+  "va": "0x1002f710",
+  "smsg": "do_message",
+  "size": 21,
+  "decoded": 21,
+  "body": [
+   "1002f710 mov eax, dword ptr [esp + 8]",
+   "1002f714 mov ecx, dword ptr [esp + 4]",
+   "1002f718 push 0",
+   "1002f71a push eax",
+   "1002f71b push ecx",
+   "1002f71c push 0",
+   "1002f71e call dword ptr [0x100b85ac]",
+   "1002f724 ret"
+  ],
+  "imports": [
+   "USER32.dll!MessageBoxA"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x100024dc"
+  ],
+  "callers": [
+   "0x100024dc jmp 0x1002f710 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002fe20": {
+  "module": "sound.dll",
+  "va": "0x1002fe20",
+  "smsg": "CTrace::CTrace",
+  "size": 79,
+  "decoded": 79,
+  "body": [
+   "1002fe20 push esi",
+   "1002fe21 mov edx, ecx",
+   "1002fe23 push edi",
+   "1002fe24 xor eax, eax",
+   "1002fe26 mov edi, 0x10063e98",
+   "1002fe2b or ecx, 0xffffffff",
+   "1002fe2e mov dword ptr [edx + 0x100], eax",
+   "1002fe34 mov dword ptr [edx + 0x104], eax",
+   "1002fe3a mov dword ptr [edx + 0x108], eax",
+   "1002fe40 mov dword ptr [edx + 0x10c], eax",
+   "1002fe46 mov dword ptr [edx + 0x110], eax",
+   "1002fe4c mov dword ptr [edx + 0x114], eax",
+   "1002fe52 repne scasb al, byte ptr es:[edi]",
+   "1002fe54 not ecx",
+   "1002fe56 sub edi, ecx",
+   "1002fe58 mov eax, ecx",
+   "1002fe5a mov esi, edi",
+   "1002fe5c mov edi, edx",
+   "1002fe5e shr ecx, 2",
+   "1002fe61 rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1002fe63 mov ecx, eax",
+   "1002fe65 mov eax, edx",
+   "1002fe67 and ecx, 3",
+   "1002fe6a rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "1002fe6c pop edi",
+   "1002fe6d pop esi",
+   "1002fe6e ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100023ce"
+  ],
+  "callers": [
+   "0x100023ce jmp 0x1002fe20 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002fe90": {
+  "module": "sound.dll",
+  "va": "0x1002fe90",
+  "smsg": "CTrace::~CTrace",
+  "size": 1,
+  "decoded": 1,
+  "body": [
+   "1002fe90 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000244b"
+  ],
+  "callers": [
+   "0x1000244b jmp 0x1002fe90 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x1002feb0": {
+  "module": "sound.dll",
+  "va": "0x1002feb0",
+  "smsg": "CTrace::dump_to_file",
+  "size": 177,
+  "decoded": 177,
+  "body": [
+   "1002feb0 push esi",
+   "1002feb1 push edi",
+   "1002feb2 mov edi, dword ptr [esp + 0xc]",
+   "1002feb6 mov esi, ecx",
+   "1002feb8 push 0xa",
+   "1002feba mov ecx, edi",
+   "1002febc call 0x10041dc7",
+   "1002fec1 push esi",
+   "1002fec2 mov ecx, edi",
+   "1002fec4 call 0x100418c8",
+   "1002fec9 push 0xa",
+   "1002fecb mov ecx, eax",
+   "1002fecd call 0x10041dc7",
+   "1002fed2 mov eax, dword ptr [esi + 0x100]",
+   "1002fed8 mov ecx, edi",
+   "1002feda push eax",
+   "1002fedb call 0x10041700",
+   "1002fee0 push 0x20",
+   "1002fee2 mov ecx, eax",
+   "1002fee4 call 0x10041dc7",
+   "1002fee9 mov ecx, dword ptr [esi + 0x104]",
+   "1002feef push ecx",
+   "1002fef0 mov ecx, eax",
+   "1002fef2 call 0x10041700",
+   "1002fef7 push 0xa",
+   "1002fef9 mov ecx, eax",
+   "1002fefb call 0x10041dc7",
+   "1002ff00 mov edx, dword ptr [esi + 0x108]",
+   "1002ff06 mov ecx, edi",
+   "1002ff08 push edx",
+   "1002ff09 call 0x1004164f",
+   "1002ff0e push 9",
+   "1002ff10 mov ecx, eax",
+   "1002ff12 call 0x10041dc7",
+   "1002ff17 mov ecx, dword ptr [esi + 0x10c]",
+   "1002ff1d push ecx",
+   "1002ff1e mov ecx, eax",
+   "1002ff20 call 0x1004164f",
+   "1002ff25 push 9",
+   "1002ff27 mov ecx, eax",
+   "1002ff29 call 0x10041dc7",
+   "1002ff2e mov edx, dword ptr [esi + 0x110]",
+   "1002ff34 mov ecx, eax",
+   "1002ff36 push edx",
+   "1002ff37 call 0x1004164f",
+   "1002ff3c push 9",
+   "1002ff3e mov ecx, eax",
+   "1002ff40 call 0x10041dc7",
+   "1002ff45 mov ecx, dword ptr [esi + 0x114]",
+   "1002ff4b push ecx",
+   "1002ff4c mov ecx, eax",
+   "1002ff4e call 0x1004164f",
+   "1002ff53 push 0xa",
+   "1002ff55 mov ecx, eax",
+   "1002ff57 call 0x10041dc7",
+   "1002ff5c pop edi",
+   "1002ff5d pop esi",
+   "1002ff5e ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x100418c8 ostream::operator_lshift_100418c8",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x10041700 ostream::operator_lshift_10041700",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x10041700 ostream::operator_lshift_10041700",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x1004164f ostream::operator_lshift",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x1004164f ostream::operator_lshift",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x1004164f ostream::operator_lshift",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7",
+   "call 0x1004164f ostream::operator_lshift",
+   "call 0x10041dc7 ostream::operator_lshift_10041dc7"
+  ],
+  "thunks": [
+   "0x1000220c"
+  ],
+  "callers": [
+   "0x1000220c jmp 0x1002feb0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10030000": {
+  "module": "sound.dll",
+  "va": "0x10030000",
+  "smsg": "CTrace::in_data",
+  "size": 43,
+  "decoded": 43,
+  "body": [
+   "10030000 mov eax, dword ptr [esp + 4]",
+   "10030004 mov edx, dword ptr [esp + 8]",
+   "10030008 mov dword ptr [ecx + 0x108], eax",
+   "1003000e mov eax, dword ptr [esp + 0xc]",
+   "10030012 mov dword ptr [ecx + 0x10c], edx",
+   "10030018 mov edx, dword ptr [esp + 0x10]",
+   "1003001c mov dword ptr [ecx + 0x110], eax",
+   "10030022 mov dword ptr [ecx + 0x114], edx",
+   "10030028 ret 0x10"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100016b3"
+  ],
+  "callers": [
+   "0x100016b3 jmp 0x10030000 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10030040": {
+  "module": "sound.dll",
+  "va": "0x10030040",
+  "smsg": "CTrace::operator=",
+  "size": 44,
+  "decoded": 44,
+  "body": [
+   "10030040 push esi",
+   "10030041 mov edx, ecx",
+   "10030043 push edi",
+   "10030044 mov edi, dword ptr [esp + 0xc]",
+   "10030048 or ecx, 0xffffffff",
+   "1003004b xor eax, eax",
+   "1003004d repne scasb al, byte ptr es:[edi]",
+   "1003004f not ecx",
+   "10030051 sub edi, ecx",
+   "10030053 mov eax, ecx",
+   "10030055 mov esi, edi",
+   "10030057 mov edi, edx",
+   "10030059 shr ecx, 2",
+   "1003005c rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "1003005e mov ecx, eax",
+   "10030060 mov eax, edx",
+   "10030062 and ecx, 3",
+   "10030065 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "10030067 pop edi",
+   "10030068 pop esi",
+   "10030069 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x1000202c"
+  ],
+  "callers": [
+   "0x1000202c jmp 0x10030040 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10030730": {
+  "module": "sound.dll",
+  "va": "0x10030730",
+  "smsg": "CVoiceRxMgr::lpc10_write_16bit_samples",
+  "size": 110,
+  "decoded": 110,
+  "body": [
+   "10030730 push ebp",
+   "10030731 mov ebp, dword ptr [esp + 0x10]",
+   "10030735 xor eax, eax",
+   "10030737 test ebp, ebp",
+   "10030739 jle 0x1003079a",
+   "1003073b push ebx",
+   "1003073c push esi",
+   "1003073d mov esi, dword ptr [esp + 0x10]",
+   "10030741 push edi",
+   "10030742 mov edi, dword ptr [esp + 0x18]",
+   "10030746 mov ebx, ebp",
+   "10030748 fld dword ptr [edi]",
+   "1003074a fmul dword ptr [0x1005c524]",
+   "10030750 fst dword ptr [esp + 0x1c]",
+   "10030754 fcomp qword ptr [0x1005c518]",
+   "1003075a fnstsw ax",
+   "1003075c test ah, 1",
+   "1003075f je 0x10030768",
+   "10030761 mov word ptr [esi], 0x8000",
+   "10030766 jmp 0x1003078c",
+   "10030768 fld dword ptr [esp + 0x1c]",
+   "1003076c fcomp qword ptr [0x1005c508]",
+   "10030772 fnstsw ax",
+   "10030774 test ah, 0x41",
+   "10030777 jne 0x10030780",
+   "10030779 mov word ptr [esi], 0x7fff",
+   "1003077e jmp 0x1003078c",
+   "10030780 fld dword ptr [esp + 0x1c]",
+   "10030784 call 0x10042550",
+   "10030789 mov word ptr [esi], ax",
+   "1003078c add edi, 4",
+   "1003078f add esi, 2",
+   "10030792 dec ebx",
+   "10030793 jne 0x10030748",
+   "10030795 pop edi",
+   "10030796 pop esi",
+   "10030797 mov eax, ebp",
+   "10030799 pop ebx",
+   "1003079a pop ebp",
+   "1003079b ret 0xc"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x10042550 __ftol"
+  ],
+  "thunks": [
+   "0x10001857"
+  ],
+  "callers": [
+   "0x10001857 jmp 0x10030730 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100307c0": {
+  "module": "sound.dll",
+  "va": "0x100307c0",
+  "smsg": "CVoiceRxMgr::lpc10_read_bits",
+  "size": 85,
+  "decoded": 85,
+  "body": [
+   "100307c0 mov eax, dword ptr [esp + 0xc]",
+   "100307c4 xor edx, edx",
+   "100307c6 test eax, eax",
+   "100307c8 jle 0x10030812",
+   "100307ca push ebx",
+   "100307cb mov ebx, dword ptr [esp + 8]",
+   "100307cf push ebp",
+   "100307d0 push esi",
+   "100307d1 mov esi, dword ptr [esp + 0x14]",
+   "100307d5 push edi",
+   "100307d6 mov edi, dword ptr [esp + 0x1c]",
+   "100307da mov ecx, edx",
+   "100307dc and ecx, 0x80000007",
+   "100307e2 jns 0x100307e9",
+   "100307e4 dec ecx",
+   "100307e5 or ecx, 0xfffffff8",
+   "100307e8 inc ecx",
+   "100307e9 jne 0x100307ef",
+   "100307eb movsx edi, byte ptr [ebx]",
+   "100307ee inc ebx",
+   "100307ef mov ecx, edx",
+   "100307f1 mov ebp, 0x80",
+   "100307f6 and ecx, 7",
+   "100307f9 sar ebp, cl",
+   "100307fb and ebp, edi",
+   "100307fd neg ebp",
+   "100307ff sbb ebp, ebp",
+   "10030801 add esi, 4",
+   "10030804 neg ebp",
+   "10030806 mov dword ptr [esi - 4], ebp",
+   "10030809 inc edx",
+   "1003080a cmp edx, eax",
+   "1003080c jl 0x100307da",
+   "1003080e pop edi",
+   "1003080f pop esi",
+   "10030810 pop ebp",
+   "10030811 pop ebx",
+   "10030812 ret 0xc"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001c49"
+  ],
+  "callers": [
+   "0x10001c49 jmp 0x100307c0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10031120": {
+  "module": "sound.dll",
+  "va": "0x10031120",
+  "smsg": "CVoiceRxMgr::discard_buffer",
+  "size": 29,
+  "decoded": 29,
+  "body": [
+   "10031120 mov eax, dword ptr [esp + 4]",
+   "10031124 push 0",
+   "10031126 push eax",
+   "10031127 call dword ptr [0x100b8670]",
+   "1003112d mov eax, dword ptr [0x100b4a08]",
+   "10031132 dec eax",
+   "10031133 mov dword ptr [0x100b4a08], eax",
+   "10031138 xor eax, eax",
+   "1003113a ret 4"
+  ],
+  "imports": [
+   "WINMM.dll!mmioClose"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x1000143d"
+  ],
+  "callers": [
+   "0x1000143d jmp 0x10031120 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10031150": {
+  "module": "sound.dll",
+  "va": "0x10031150",
+  "smsg": "CVoiceRxMgr::enable",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10031150 xor eax, eax",
+   "10031152 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002702"
+  ],
+  "callers": [
+   "0x10002702 jmp 0x10031150 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10031170": {
+  "module": "sound.dll",
+  "va": "0x10031170",
+  "smsg": "CVoiceRxMgr::disable",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10031170 xor eax, eax",
+   "10031172 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001708"
+  ],
+  "callers": [
+   "0x10001708 jmp 0x10031170 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10031670": {
+  "module": "sound.dll",
+  "va": "0x10031670",
+  "smsg": "CVoiceTxMgr::s2f_and_scale",
+  "size": 50,
+  "decoded": 50,
+  "body": [
+   "10031670 mov edx, dword ptr [esp + 0xc]",
+   "10031674 test edx, edx",
+   "10031676 jle 0x1003169f",
+   "10031678 mov ecx, dword ptr [esp + 4]",
+   "1003167c mov eax, dword ptr [esp + 8]",
+   "10031680 push esi",
+   "10031681 movsx esi, word ptr [eax]",
+   "10031684 mov dword ptr [esp + 0x10], esi",
+   "10031688 add eax, 2",
+   "1003168b fild dword ptr [esp + 0x10]",
+   "1003168f add ecx, 4",
+   "10031692 dec edx",
+   "10031693 fmul dword ptr [0x1005c5e0]",
+   "10031699 fstp dword ptr [ecx - 4]",
+   "1003169c jne 0x10031681",
+   "1003169e pop esi",
+   "1003169f ret 0xc"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001bef"
+  ],
+  "callers": [
+   "0x10001bef jmp 0x10031670 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10031a50": {
+  "module": "sound.dll",
+  "va": "0x10031a50",
+  "smsg": "CVoiceTxMgr::lpc_write_bits",
+  "size": 66,
+  "decoded": 66,
+  "body": [
+   "10031a50 push edi",
+   "10031a51 mov edi, dword ptr [esp + 0x10]",
+   "10031a55 xor al, al",
+   "10031a57 xor ecx, ecx",
+   "10031a59 test edi, edi",
+   "10031a5b mov dl, 0x80",
+   "10031a5d jle 0x10031a8e",
+   "10031a5f push ebx",
+   "10031a60 mov ebx, dword ptr [esp + 0x10]",
+   "10031a64 push ebp",
+   "10031a65 push esi",
+   "10031a66 mov esi, dword ptr [esp + 0x14]",
+   "10031a6a cmp dword ptr [ebx], 0",
+   "10031a6d je 0x10031a71",
+   "10031a6f or al, dl",
+   "10031a71 shr dl, 1",
+   "10031a73 je 0x10031a7c",
+   "10031a75 lea ebp, [edi - 1]",
+   "10031a78 cmp ecx, ebp",
+   "10031a7a jne 0x10031a83",
+   "10031a7c mov byte ptr [esi], al",
+   "10031a7e inc esi",
+   "10031a7f xor al, al",
+   "10031a81 mov dl, 0x80",
+   "10031a83 inc ecx",
+   "10031a84 add ebx, 4",
+   "10031a87 cmp ecx, edi",
+   "10031a89 jl 0x10031a6a",
+   "10031a8b pop esi",
+   "10031a8c pop ebp",
+   "10031a8d pop ebx",
+   "10031a8e pop edi",
+   "10031a8f ret 0xc"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001f91"
+  ],
+  "callers": [
+   "0x10001f91 jmp 0x10031a50 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10032680": {
+  "module": "sound.dll",
+  "va": "0x10032680",
+  "smsg": "CWaveFile::mpeg_load",
+  "size": 8,
+  "decoded": 8,
+  "body": [
+   "10032680 mov eax, 0xb",
+   "10032685 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100017e4"
+  ],
+  "callers": [
+   "0x100017e4 jmp 0x10032680 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10033280": {
+  "module": "sound.dll",
+  "va": "0x10033280",
+  "smsg": "CWaveFile::read_from_file",
+  "size": 90,
+  "decoded": 90,
+  "body": [
+   "10033280 mov edx, dword ptr [esp + 8]",
+   "10033284 push ebx",
+   "10033285 push ebp",
+   "10033286 mov eax, ecx",
+   "10033288 push esi",
+   "10033289 mov esi, dword ptr [edx]",
+   "1003328b mov ecx, dword ptr [eax + 0x2c]",
+   "1003328e push edi",
+   "1003328f mov edi, dword ptr [eax + 0x28]",
+   "10033292 xor ebx, ebx",
+   "10033294 sub ecx, edi",
+   "10033296 cmp esi, ecx",
+   "10033298 jbe 0x100332a1",
+   "1003329a mov dword ptr [edx], ecx",
+   "1003329c mov ebx, 0x2b",
+   "100332a1 mov ecx, dword ptr [edx]",
+   "100332a3 mov esi, dword ptr [eax + 0x28]",
+   "100332a6 mov edi, dword ptr [esp + 0x14]",
+   "100332aa mov ebp, ecx",
+   "100332ac shr ecx, 2",
+   "100332af rep movsd dword ptr es:[edi], dword ptr [esi]",
+   "100332b1 mov ecx, ebp",
+   "100332b3 push 0",
+   "100332b5 and ecx, 3",
+   "100332b8 rep movsb byte ptr es:[edi], byte ptr [esi]",
+   "100332ba mov ecx, dword ptr [edx]",
+   "100332bc mov ebp, dword ptr [eax + 0x28]",
+   "100332bf add ebp, ecx",
+   "100332c1 lea edx, [eax + 0xc]",
+   "100332c4 mov dword ptr [eax + 0x28], ebp",
+   "100332c7 mov eax, dword ptr [eax]",
+   "100332c9 push edx",
+   "100332ca push eax",
+   "100332cb call dword ptr [0x100b8634]",
+   "100332d1 pop edi",
+   "100332d2 pop esi",
+   "100332d3 mov eax, ebx",
+   "100332d5 pop ebp",
+   "100332d6 pop ebx",
+   "100332d7 ret 8"
+  ],
+  "imports": [
+   "WINMM.dll!mmioSetInfo"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x100019fb"
+  ],
+  "callers": [
+   "0x100019fb jmp 0x10033280 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100338f0": {
+  "module": "sound.dll",
+  "va": "0x100338f0",
+  "smsg": "CWaveFile::get_write_pointers",
+  "size": 113,
+  "decoded": 113,
+  "body": [
+   "100338f0 mov eax, dword ptr [ecx + 8]",
+   "100338f3 push esi",
+   "100338f4 mov esi, dword ptr [ecx + 0x1378]",
+   "100338fa push edi",
+   "100338fb mov edx, dword ptr [eax + 0x24]",
+   "100338fe mov eax, dword ptr [esp + 0x1c]",
+   "10033902 lea edi, [esi + eax]",
+   "10033905 cmp edi, edx",
+   "10033907 ja 0x10033934",
+   "10033909 mov edx, dword ptr [esp + 0x10]",
+   "1003390d pop edi",
+   "1003390e pop esi",
+   "1003390f mov dword ptr [edx], eax",
+   "10033911 mov eax, dword ptr [ecx + 0x1378]",
+   "10033917 mov ecx, dword ptr [esp + 4]",
+   "1003391b mov edx, dword ptr [esp + 0x10]",
+   "1003391f mov dword ptr [ecx], eax",
+   "10033921 mov eax, dword ptr [esp + 0xc]",
+   "10033925 mov dword ptr [edx], 0",
+   "1003392b mov dword ptr [eax], 0",
+   "10033931 ret 0x14",
+   "10033934 sub edx, esi",
+   "10033936 mov esi, dword ptr [esp + 0x10]",
+   "1003393a sub eax, edx",
+   "1003393c pop edi",
+   "1003393d mov dword ptr [esi], edx",
+   "1003393f mov edx, dword ptr [esp + 0x14]",
+   "10033943 pop esi",
+   "10033944 mov dword ptr [edx], eax",
+   "10033946 mov edx, dword ptr [esp + 4]",
+   "1003394a mov eax, dword ptr [ecx + 0x1378]",
+   "10033950 mov dword ptr [edx], eax",
+   "10033952 mov eax, dword ptr [ecx + 8]",
+   "10033955 mov edx, dword ptr [esp + 0xc]",
+   "10033959 mov ecx, dword ptr [eax + 0x18]",
+   "1003395c mov dword ptr [edx], ecx",
+   "1003395e ret 0x14"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001e97"
+  ],
+  "callers": [
+   "0x10001e97 jmp 0x100338f0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10033f70": {
+  "module": "sound.dll",
+  "va": "0x10033f70",
+  "smsg": "CWaveFile::mpeg_unload",
+  "size": 6,
+  "decoded": 6,
+  "body": [
+   "10033f70 mov eax, 0xb",
+   "10033f75 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001032"
+  ],
+  "callers": [
+   "0x10001032 jmp 0x10033f70 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10034410": {
+  "module": "sound.dll",
+  "va": "0x10034410",
+  "smsg": "CWaveFile::mmioerr",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10034410 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100018bb"
+  ],
+  "callers": [
+   "0x100018bb jmp 0x10034410 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10034de0": {
+  "module": "sound.dll",
+  "va": "0x10034de0",
+  "smsg": "CWaveFile::fade_in",
+  "size": 78,
+  "decoded": 78,
+  "body": [
+   "10034de0 mov eax, dword ptr [esp + 4]",
+   "10034de4 push esi",
+   "10034de5 mov esi, ecx",
+   "10034de7 push eax",
+   "10034de8 call 0x1000101e",
+   "10034ded mov ecx, dword ptr [esi + 0x1e0]",
+   "10034df3 mov edx, dword ptr [esi + 0x1e4]",
+   "10034df9 xor eax, eax",
+   "10034dfb mov dword ptr [esi + 0x210], ecx",
+   "10034e01 mov ecx, dword ptr [esi + 0x5c]",
+   "10034e04 mov dword ptr [esi + 0x1e0], eax",
+   "10034e0a mov dword ptr [esi + 0x214], edx",
+   "10034e10 mov edx, dword ptr [esi + 0x58]",
+   "10034e13 mov dword ptr [esi + 0x1e4], eax",
+   "10034e19 mov eax, 8",
+   "10034e1e or edx, eax",
+   "10034e20 or ecx, eax",
+   "10034e22 mov dword ptr [esi + 0x58], edx",
+   "10034e25 mov dword ptr [esi + 0x5c], ecx",
+   "10034e28 xor eax, eax",
+   "10034e2a pop esi",
+   "10034e2b ret 4"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x100355d0 Channel_setReverseRate"
+  ],
+  "thunks": [
+   "0x100017f8"
+  ],
+  "callers": [
+   "0x100017f8 jmp 0x10034de0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10034e50": {
+  "module": "sound.dll",
+  "va": "0x10034e50",
+  "smsg": "CWaveFile::operator++",
+  "size": 130,
+  "decoded": 130,
+  "body": [
+   "10034e50 mov al, byte ptr [ecx + 0x58]",
+   "10034e53 push esi",
+   "10034e54 test al, 2",
+   "10034e56 jne 0x10034e5e",
+   "10034e58 xor eax, eax",
+   "10034e5a pop esi",
+   "10034e5b ret 4",
+   "10034e5e mov eax, dword ptr [ecx + 8]",
+   "10034e61 xor edx, edx",
+   "10034e63 mov dx, word ptr [ecx + 0x18c]",
+   "10034e6a mov esi, dword ptr [eax + 0x1c]",
+   "10034e6d add esi, edx",
+   "10034e6f mov dword ptr [eax + 0x1c], esi",
+   "10034e72 mov eax, dword ptr [ecx + 8]",
+   "10034e75 mov edx, dword ptr [eax + 0x20]",
+   "10034e78 mov esi, dword ptr [eax + 0x1c]",
+   "10034e7b cmp esi, edx",
+   "10034e7d jb 0x10034e88",
+   "10034e7f mov dword ptr [eax + 0x1c], edx",
+   "10034e82 xor eax, eax",
+   "10034e84 pop esi",
+   "10034e85 ret 4",
+   "10034e88 mov eax, dword ptr [ecx + 0x16c]",
+   "10034e8e mov edx, dword ptr [ecx + 0x58]",
+   "10034e91 inc eax",
+   "10034e92 test dl, 0x10",
+   "10034e95 mov dword ptr [ecx + 0x16c], eax",
+   "10034e9b jne 0x10034ece",
+   "10034e9d mov esi, dword ptr [ecx + 0x168]",
+   "10034ea3 cmp eax, esi",
+   "10034ea5 jbe 0x10034ec8",
+   "10034ea7 test dl, 4",
+   "10034eaa je 0x10034ebc",
+   "10034eac mov eax, dword ptr [ecx + 0x164]",
+   "10034eb2 pop esi",
+   "10034eb3 mov dword ptr [ecx + 0x16c], eax",
+   "10034eb9 ret 4",
+   "10034ebc or edx, 0x10",
+   "10034ebf mov dword ptr [ecx + 0x16c], esi",
+   "10034ec5 mov dword ptr [ecx + 0x58], edx",
+   "10034ec8 mov eax, dword ptr [ecx + 0x16c]",
+   "10034ece pop esi",
+   "10034ecf ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100010af"
+  ],
+  "callers": [
+   "0x100010af jmp 0x10034e50 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10034f10": {
+  "module": "sound.dll",
+  "va": "0x10034f10",
+  "smsg": "CWaveFile::get_nsamples_left_in_buffer",
+  "size": 72,
+  "decoded": 72,
+  "body": [
+   "10034f10 mov al, byte ptr [ecx + 0x58]",
+   "10034f13 mov edx, dword ptr [ecx + 8]",
+   "10034f16 push esi",
+   "10034f17 mov esi, dword ptr [edx + 0x1c]",
+   "10034f1a test al, 4",
+   "10034f1c mov eax, dword ptr [edx + 0x20]",
+   "10034f1f je 0x10034f32",
+   "10034f21 sub eax, esi",
+   "10034f23 xor esi, esi",
+   "10034f25 mov si, word ptr [ecx + 0x18c]",
+   "10034f2c xor edx, edx",
+   "10034f2e div esi",
+   "10034f30 pop esi",
+   "10034f31 ret",
+   "10034f32 mov edx, dword ptr [ecx + 0x168]",
+   "10034f38 sub eax, esi",
+   "10034f3a mov esi, dword ptr [ecx + 0x16c]",
+   "10034f40 sub edx, esi",
+   "10034f42 xor esi, esi",
+   "10034f44 mov si, word ptr [ecx + 0x18c]",
+   "10034f4b mov ecx, edx",
+   "10034f4d imul ecx, esi",
+   "10034f50 cmp ecx, eax",
+   "10034f52 jae 0x10034f2c",
+   "10034f54 mov eax, edx",
+   "10034f56 pop esi",
+   "10034f57 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100016d6"
+  ],
+  "callers": [
+   "0x100016d6 jmp 0x10034f10 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10034f80": {
+  "module": "sound.dll",
+  "va": "0x10034f80",
+  "smsg": "CWaveFile::advance",
+  "size": 29,
+  "decoded": 29,
+  "body": [
+   "10034f80 mov eax, dword ptr [ecx + 0x58]",
+   "10034f83 test al, 2",
+   "10034f85 jne 0x10034f8d",
+   "10034f87 mov eax, 0x14",
+   "10034f8c ret",
+   "10034f8d test al, 1",
+   "10034f8f jne 0x10034f9a",
+   "10034f91 test al, 0x20",
+   "10034f93 jne 0x10034f9a",
+   "10034f95 call 0x10002022",
+   "10034f9a xor eax, eax",
+   "10034f9c ret"
+  ],
+  "imports": [],
+  "calls": [
+   "call 0x10033300 fillDecodeRing"
+  ],
+  "thunks": [
+   "0x10002126"
+  ],
+  "callers": [
+   "0x10002126 jmp 0x10034f80 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10035070": {
+  "module": "sound.dll",
+  "va": "0x10035070",
+  "smsg": "CWaveFile::need_to_advance",
+  "size": 71,
+  "decoded": 71,
+  "body": [
+   "10035070 mov eax, dword ptr [ecx + 0x58]",
+   "10035073 test al, 2",
+   "10035075 je 0x100350b4",
+   "10035077 test al, 1",
+   "10035079 jne 0x100350b4",
+   "1003507b test al, 0x20",
+   "1003507d jne 0x100350b4",
+   "1003507f test ah, 4",
+   "10035082 jne 0x100350b4",
+   "10035084 mov edx, dword ptr [ecx + 8]",
+   "10035087 push esi",
+   "10035088 push edi",
+   "10035089 mov edi, dword ptr [ecx + 0x1378]",
+   "1003508f mov esi, dword ptr [edx + 0x1c]",
+   "10035092 mov edx, dword ptr [edx + 0x14]",
+   "10035095 sub esi, edi",
+   "10035097 mov edi, dword ptr [ecx + 0x1374]",
+   "1003509d and esi, edi",
+   "1003509f pop edi",
+   "100350a0 shr edx, 2",
+   "100350a3 cmp esi, edx",
+   "100350a5 pop esi",
+   "100350a6 jbe 0x100350b4",
+   "100350a8 or ah, 4",
+   "100350ab mov dword ptr [ecx + 0x58], eax",
+   "100350ae mov eax, 1",
+   "100350b3 ret",
+   "100350b4 xor eax, eax",
+   "100350b6 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001e47"
+  ],
+  "callers": [
+   "0x10001e47 jmp 0x10035070 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10035c30": {
+  "module": "sound.dll",
+  "va": "0x10035c30",
+  "smsg": "CWaveFile::get_mpeg_samples",
+  "size": 74,
+  "decoded": 74,
+  "body": [
+   "10035c30 mov edx, dword ptr [esp + 0xc]",
+   "10035c34 xor al, al",
+   "10035c36 cmp edx, 0xc",
+   "10035c39 jb 0x10035c3d",
+   "10035c3b mov al, 1",
+   "10035c3d mov edx, dword ptr [ecx + 0x5c]",
+   "10035c40 shr edx, 6",
+   "10035c43 test dl, 1",
+   "10035c46 je 0x10035c72",
+   "10035c48 test dword ptr [ecx + 0x58], 0x10000000",
+   "10035c4f je 0x10035c72",
+   "10035c51 test al, al",
+   "10035c53 je 0x10035c72",
+   "10035c55 mov ecx, dword ptr [esp + 8]",
+   "10035c59 push edi",
+   "10035c5a mov edi, dword ptr [esp + 8]",
+   "10035c5e xor eax, eax",
+   "10035c60 shl ecx, 4",
+   "10035c63 mov edx, ecx",
+   "10035c65 shr ecx, 2",
+   "10035c68 rep stosd dword ptr es:[edi], eax",
+   "10035c6a mov ecx, edx",
+   "10035c6c and ecx, 3",
+   "10035c6f rep stosb byte ptr es:[edi], al",
+   "10035c71 pop edi",
+   "10035c72 mov eax, 0xb",
+   "10035c77 ret 0x10"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002739"
+  ],
+  "callers": [
+   "0x10002739 jmp 0x10035c30 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100377b0": {
+  "module": "sound.dll",
+  "va": "0x100377b0",
+  "smsg": "CWaveFile::set_buffer_inactive",
+  "size": 35,
+  "decoded": 35,
+  "body": [
+   "100377b0 mov eax, ecx",
+   "100377b2 mov edx, 1",
+   "100377b7 mov ecx, dword ptr [esp + 4]",
+   "100377bb shl edx, cl",
+   "100377bd mov ecx, dword ptr [eax + 0x58]",
+   "100377c0 not edx",
+   "100377c2 shl edx, 0xc",
+   "100377c5 or edx, 0xf0000fff",
+   "100377cb and ecx, edx",
+   "100377cd mov dword ptr [eax + 0x58], ecx",
+   "100377d0 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100024eb"
+  ],
+  "callers": [
+   "0x100024eb jmp 0x100377b0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10037e90": {
+  "module": "sound.dll",
+  "va": "0x10037e90",
+  "smsg": "WaveBuffer::reset",
+  "size": 65,
+  "decoded": 65,
+  "body": [
+   "10037e90 mov eax, dword ptr [ecx + 0x18]",
+   "10037e93 mov edx, dword ptr [ecx + 0xf8]",
+   "10037e99 mov dword ptr [ecx + 0x1c], eax",
+   "10037e9c xor eax, eax",
+   "10037e9e mov dword ptr [ecx + 0x88], eax",
+   "10037ea4 mov dword ptr [ecx + 0x8c], eax",
+   "10037eaa mov dword ptr [ecx + 0xc0], eax",
+   "10037eb0 mov al, byte ptr [ecx + 0x9c]",
+   "10037eb6 and al, 0xf1",
+   "10037eb8 mov dword ptr [ecx + 0xf0], edx",
+   "10037ebe mov byte ptr [ecx + 0x9c], al",
+   "10037ec4 mov eax, dword ptr [ecx + 0xfc]",
+   "10037eca mov dword ptr [ecx + 0xf4], eax",
+   "10037ed0 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002635"
+  ],
+  "callers": [
+   "0x10002635 jmp 0x10037e90 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10037f00": {
+  "module": "sound.dll",
+  "va": "0x10037f00",
+  "smsg": "WaveBuffer::get_nsamples_left_in_buffer",
+  "size": 24,
+  "decoded": 24,
+  "body": [
+   "10037f00 mov eax, dword ptr [ecx + 0x20]",
+   "10037f03 mov edx, dword ptr [ecx + 0x1c]",
+   "10037f06 push esi",
+   "10037f07 xor esi, esi",
+   "10037f09 mov si, word ptr [ecx + 0xac]",
+   "10037f10 sub eax, edx",
+   "10037f12 xor edx, edx",
+   "10037f14 div esi",
+   "10037f16 pop esi",
+   "10037f17 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100017cb"
+  ],
+  "callers": [
+   "0x100017cb jmp 0x10037f00 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10038270": {
+  "module": "sound.dll",
+  "va": "0x10038270",
+  "smsg": "WaveBuffer::fade_in",
+  "size": 58,
+  "decoded": 58,
+  "body": [
+   "10038270 fld qword ptr [ecx + 0xf0]",
+   "10038276 fcomp qword ptr [0x1005b498]",
+   "1003827c fnstsw ax",
+   "1003827e test ah, 1",
+   "10038281 je 0x100382a9",
+   "10038283 mov al, byte ptr [ecx + 0x9c]",
+   "10038289 test al, 0x28",
+   "1003828b jne 0x100382a9",
+   "1003828d mov edx, dword ptr [ecx + 0x5c]",
+   "10038290 or al, 0x28",
+   "10038292 mov byte ptr [ecx + 0x9c], al",
+   "10038298 mov eax, dword ptr [ecx + 0x58]",
+   "1003829b mov dword ptr [ecx + 0x60], eax",
+   "1003829e xor eax, eax",
+   "100382a0 mov dword ptr [ecx + 0x58], eax",
+   "100382a3 mov dword ptr [ecx + 0x64], edx",
+   "100382a6 mov dword ptr [ecx + 0x5c], eax",
+   "100382a9 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001316"
+  ],
+  "callers": [
+   "0x10001316 jmp 0x10038270 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10038ed0": {
+  "module": "sound.dll",
+  "va": "0x10038ed0",
+  "smsg": "WaveInDeviceMgr::add_buffer",
+  "size": 46,
+  "decoded": 46,
+  "body": [
+   "10038ed0 mov edx, dword ptr [esp + 4]",
+   "10038ed4 test edx, edx",
+   "10038ed6 jne 0x10038ee0",
+   "10038ed8 mov eax, 0xa",
+   "10038edd ret 4",
+   "10038ee0 mov eax, dword ptr [ecx + 0x44]",
+   "10038ee3 test eax, eax",
+   "10038ee5 jne 0x10038eef",
+   "10038ee7 mov eax, 0x13",
+   "10038eec ret 4",
+   "10038eef push 0x20",
+   "10038ef1 push edx",
+   "10038ef2 push eax",
+   "10038ef3 call dword ptr [0x100b8604]",
+   "10038ef9 xor eax, eax",
+   "10038efb ret 4"
+  ],
+  "imports": [
+   "WINMM.dll!waveInAddBuffer"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x10001ba9"
+  ],
+  "callers": [
+   "0x10001ba9 jmp 0x10038ed0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10038f40": {
+  "module": "sound.dll",
+  "va": "0x10038f40",
+  "smsg": "WaveInDeviceMgr::get_num_devices",
+  "size": 6,
+  "decoded": 6,
+  "body": [
+   "10038f40 jmp dword ptr [0x100b861c]"
+  ],
+  "imports": [
+   "WINMM.dll!waveInGetNumDevs"
+  ],
+  "calls": [],
+  "thunks": [
+   "0x10001451"
+  ],
+  "callers": [
+   "0x10001451 jmp 0x10038f40 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x100392c0": {
+  "module": "sound.dll",
+  "va": "0x100392c0",
+  "smsg": "WaveInDeviceMgr::handle_error",
+  "size": 83,
+  "decoded": 83,
+  "body": [
+   "100392c0 mov eax, dword ptr [esp + 4]",
+   "100392c4 add eax, -2",
+   "100392c7 cmp eax, 0x1f",
+   "100392ca ja 0x1003930b",
+   "100392cc xor ecx, ecx",
+   "100392ce mov cl, byte ptr [eax + 0x10039330]",
+   "100392d4 jmp dword ptr [ecx*4 + 0x10039314]",
+   "100392db mov eax, 0xa",
+   "100392e0 ret 4",
+   "100392e3 mov eax, 1",
+   "100392e8 ret 4",
+   "100392eb mov eax, 0xe",
+   "100392f0 ret 4",
+   "100392f3 mov eax, 0xc",
+   "100392f8 ret 4",
+   "100392fb mov eax, 0x11",
+   "10039300 ret 4",
+   "10039303 mov eax, 0x12",
+   "10039308 ret 4",
+   "1003930b mov eax, 0xb",
+   "10039310 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10002216"
+  ],
+  "callers": [
+   "0x10002216 jmp 0x100392c0 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10039380": {
+  "module": "sound.dll",
+  "va": "0x10039380",
+  "smsg": "WaveInDeviceMgr::set_format",
+  "size": 50,
+  "decoded": 50,
+  "body": [
+   "10039380 mov eax, 1",
+   "10039385 mov dword ptr [ecx + 0x4c], 0x1f40",
+   "1003938c mov word ptr [ecx + 0x48], ax",
+   "10039390 mov word ptr [ecx + 0x4a], ax",
+   "10039394 mov dword ptr [ecx + 0x50], 0x3e80",
+   "1003939b mov word ptr [ecx + 0x54], 2",
+   "100393a1 mov word ptr [ecx + 0x56], 0x10",
+   "100393a7 mov word ptr [ecx + 0x58], 0",
+   "100393ad xor eax, eax",
+   "100393af ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001e29"
+  ],
+  "callers": [
+   "0x10001e29 jmp 0x10039380 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10039490": {
+  "module": "sound.dll",
+  "va": "0x10039490",
+  "smsg": "WIBuffer::WIBuffer",
+  "size": 28,
+  "decoded": 28,
+  "body": [
+   "10039490 mov eax, ecx",
+   "10039492 xor ecx, ecx",
+   "10039494 mov dword ptr [eax], ecx",
+   "10039496 mov dword ptr [eax + 4], ecx",
+   "10039499 mov dword ptr [eax + 8], ecx",
+   "1003949c mov dword ptr [eax + 0xc], eax",
+   "1003949f mov dword ptr [eax + 0x10], ecx",
+   "100394a2 mov dword ptr [eax + 0x14], ecx",
+   "100394a5 mov dword ptr [eax + 0x18], ecx",
+   "100394a8 mov dword ptr [eax + 0x1c], ecx",
+   "100394ab ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001131"
+  ],
+  "callers": [
+   "0x10001131 jmp 0x10039490 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10039540": {
+  "module": "sound.dll",
+  "va": "0x10039540",
+  "smsg": "WIBuffer::set_next",
+  "size": 10,
+  "decoded": 10,
+  "body": [
+   "10039540 mov eax, dword ptr [esp + 4]",
+   "10039544 mov dword ptr [ecx + 0x18], eax",
+   "10039547 ret 4"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001898"
+  ],
+  "callers": [
+   "0x10001898 jmp 0x10039540 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10039560": {
+  "module": "sound.dll",
+  "va": "0x10039560",
+  "smsg": "WIBuffer::get_whdr",
+  "size": 3,
+  "decoded": 3,
+  "body": [
+   "10039560 mov eax, ecx",
+   "10039562 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x10001bd6"
+  ],
+  "callers": [
+   "0x10001bd6 jmp 0x10039560 from outside every function"
+  ],
+  "refs": []
+ },
+ "sound.dll 0x10039ca0": {
+  "module": "sound.dll",
+  "va": "0x10039ca0",
+  "smsg": "CWaveMgr::free_all",
+  "size": 37,
+  "decoded": 37,
+  "body": [
+   "10039ca0 push esi",
+   "10039ca1 mov esi, dword ptr [0x100b5070]",
+   "10039ca7 test esi, esi",
+   "10039ca9 je 0x10039cc3",
+   "10039cab mov eax, dword ptr [esi]",
+   "10039cad mov ecx, esi",
+   "10039caf call dword ptr [eax + 0x20]",
+   "10039cb2 mov edx, dword ptr [esi]",
+   "10039cb4 mov ecx, esi",
+   "10039cb6 call dword ptr [edx + 0x14]",
+   "10039cb9 mov esi, dword ptr [0x100b5070]",
+   "10039cbf test esi, esi",
+   "10039cc1 jne 0x10039cab",
+   "10039cc3 pop esi",
+   "10039cc4 ret"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [
+   "0x100026b7"
+  ],
+  "callers": [
+   "0x100026b7 jmp 0x10039ca0 from outside every function"
+  ],
+  "refs": []
+ },
+ "jgld.dll 0x10091200": {
+  "module": "jgld.dll",
+  "va": "0x10091200",
+  "smsg": "$$$00001",
+  "size": 16,
+  "decoded": 16,
+  "body": [
+   "10091200 lea eax, [edx - 1]",
+   "10091203 pop ebx",
+   "10091204 ret",
+   "10091205 lea esp, [esp]",
+   "1009120c lea esp, [esp]"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [],
+  "callers": [],
+  "refs": []
+ },
+ "Terrain.dll 0x10024ad0": {
+  "module": "Terrain.dll",
+  "va": "0x10024ad0",
+  "smsg": "$$$00001",
+  "size": 16,
+  "decoded": 16,
+  "body": [
+   "10024ad0 lea eax, [edx - 1]",
+   "10024ad3 pop ebx",
+   "10024ad4 ret",
+   "10024ad5 lea esp, [esp]",
+   "10024adc lea esp, [esp]"
+  ],
+  "imports": [],
+  "calls": [],
+  "thunks": [],
+  "callers": [],
+  "refs": []
+ }
+}

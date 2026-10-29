@@ -66,7 +66,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x1004aecc `__87except` at 0x10048769
 
 ## Callers
-0x100432b0 `CItranscendental1`
+0x100432b0 `_exp`
 
 ## Constants
 - `0x0` at 0x100485cf, 0x1004864a

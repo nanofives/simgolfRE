@@ -1,0 +1,11 @@
+MARKED sound.dll:00009240 init_sound: transcribed -> dead
+MARKED sound.dll:000099d0 get_sound_type: transcribed -> dead
+MARKED sound.dll:0001b830 MidiCtrlSocket::ctor: transcribed -> dead
+MARKED sound.dll:0001c480 Stepper::ctor: transcribed -> dead
+MARKED sound.dll:00025040 CMMError::ctor: transcribed -> dead
+MARKED sound.dll:00025090 CMMError::dtor: transcribed -> dead
+MARKED sound.dll:00028f70 DeviceBase::ctor: transcribed -> dead
+MARKED sound.dll:0002d010 MixBuffer::dtor: transcribed -> dead
+MARKED sound.dll:0002e4c0 Patch::ctor: transcribed -> dead
+MARKED sound.dll:0002f710 do_message: transcribed -> dead
+mark dead: 10 of 10

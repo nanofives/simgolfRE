@@ -1,0 +1,12 @@
+== sp5 00436e50
+golf_clean.exe 0x00436e50 ?RenderEmployeePanel@@YAXHH@Z: 100.0% (759/759 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl  
+== sp5 00434cf0
+golf_clean.exe 0x00434cf0 ?RenderBuildingToolbar@@YAXHH@Z: 100.0% (682/682 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+== sp5 00427380
+golf_clean.exe 0x00427380 ?ProcessHoleCompletion@@YAXH@Z: 99.9% (1815/1816 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+== sp5c2 00436e50
+golf_clean.exe 0x00436e50 ?RenderEmployeePanel@@YAXHH@Z: 99.7% (757/759 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl  t
+== sp5c2 00434cf0
+golf_clean.exe 0x00434cf0 ?RenderBuildingToolbar@@YAXHH@Z: 99.9% (681/682 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl 
+== sp5c2 00427380
+golf_clean.exe 0x00427380 ?ProcessHoleCompletion@@YAXH@Z: 99.9% (1815/1816 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl

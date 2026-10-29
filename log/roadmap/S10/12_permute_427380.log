@@ -1,0 +1,3 @@
+start 99.9% (regs-renamed 99.9%, in place 99.9%)
+round 1: no improvement (756 variants)
+best 99.9% (regs-renamed 99.9%, in place 99.9%) after 796 compiles -> log\permute\00427380.cpp

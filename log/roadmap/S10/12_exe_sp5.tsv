@@ -1,0 +1,8 @@
+file	addr	symbol	ins	default	sp5
+smsg_golf_FlicBanks.cpp	0x00442180	?ResetAllGameState@@YAXH@Z	7452	100.0	99.72
+smsg_golf_GolferPanel.cpp	0x0045c560	?RenderGolferInfoPanel@@YAXHH@Z	1937	100.0	94.73
+smsg_golf_InfoScreens.cpp	0x0044f6b0	?RenderFinancialReportScreen@@YAXXZ	344	100.0	98.84
+smsg_golf_jackal_Network.cpp	0x0049b970	?add@?$ClassList@UJackalVoiceRx@@@@QAEHH@Z	375	100.0	99.47
+smsg_golf_MainLoop.cpp	0x0040f5c0	?MainLoop@@YAXXZ	21542	100.0	91.45
+smsg_golf_SpriteAssets.cpp	0x0040b680	?SaveCourseToFile@@YAXXZ	154	100.0	97.40
+smsg_golf_SpriteAssets.cpp	0x0040e720	?OpenHoleForPlay@@YAXXZ	852	100.0	99.77

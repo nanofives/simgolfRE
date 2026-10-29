@@ -28,7 +28,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10023110 `FUN_10023110`
+0x10023110 `Seq::set_active_range_hi`
 
 ## Constants
 None.

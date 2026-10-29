@@ -61,8 +61,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10046283 `___sbh_alloc_block` at 0x100452f3
 - 0x10046738 `___sbh_resize_block` at 0x100452e1
 - 0x100470ac `sbhRegionLocate` at 0x1004542a
-- 0x10047103 `sbhPageFree` at 0x10045498, 0x100454df
-- 0x10047148 `crtCommitPages` at 0x10045469
+- 0x10047103 `___old_sbh_free_block` at 0x10045498, 0x100454df
+- 0x10047148 `___old_sbh_alloc_block` at 0x10045469
 - 0x10047474 `sbhResizeBlock` at 0x10045454
 - 0x10047710 `__lock` at 0x100452bb, 0x10045414
 - 0x1004a460 `_memcpy` at 0x10045312, 0x10045369, 0x1004548c, 0x100454d3

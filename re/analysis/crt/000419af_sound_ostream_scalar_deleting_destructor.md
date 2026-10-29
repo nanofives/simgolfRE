@@ -20,7 +20,7 @@ None.
 - `je` (equality) at 0x100419ca
 
 ## Callees
-- 0x10041aad `iosResetVtable` at 0x100419b9
+- 0x10041aad `ostream::dtor` at 0x100419b9
 - 0x10041f9a `ios::dtor` at 0x100419c0
 - 0x1004249a `operator_delete` at 0x100419cd
 

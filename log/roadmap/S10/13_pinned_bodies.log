@@ -1,0 +1,1020 @@
+== 0x10008e00 CTimer::get_samples_per_tick 32 imp:  calls: 
+   10008e00 mov eax, dword ptr [esp + 4]
+   10008e04 test eax, eax
+   10008e06 jne 0x10008e0b
+   10008e08 ret 4
+   10008e0b mov edx, dword ptr [eax + 4]
+   10008e0e mov eax, 0x10624dd3
+   10008e13 imul edx, dword ptr [ecx]
+   10008e16 mul edx
+   10008e18 mov eax, edx
+   10008e1a shr eax, 6
+   10008e1d ret 4
+== 0x10008e30 CTimer::set_rate 50 imp:  calls: 
+   10008e30 test byte ptr [ecx + 0x3c], 4
+   10008e34 je 0x10008e3e
+   10008e36 mov eax, 0xd
+   10008e3b ret 4
+   10008e3e mov eax, dword ptr [esp + 4]
+   10008e42 test eax, eax
+   10008e44 ja 0x10008e4e
+   10008e46 mov eax, 0xa
+   10008e4b ret 4
+   10008e4e cmp eax, dword ptr [ecx + 0x44]
+   10008e51 jae 0x10008e5b
+   10008e53 mov eax, 0xb
+   10008e58 ret 4
+   10008e5b mov dword ptr [ecx], eax
+   10008e5d xor eax, eax
+   10008e5f ret 4
+== 0x10008e80 CTimer::set_wave_format 54 imp:  calls: 
+   10008e80 mov eax, dword ptr [esp + 4]
+   10008e84 test eax, eax
+   10008e86 jne 0x10008e90
+   10008e88 mov eax, 0xa
+   10008e8d ret 4
+   10008e90 mov edx, dword ptr [eax]
+   10008e92 add ecx, 0x28
+   10008e95 mov dword ptr [ecx], edx
+   10008e97 mov edx, dword ptr [eax + 4]
+   10008e9a mov dword ptr [ecx + 4], edx
+   10008e9d mov edx, dword ptr [eax + 8]
+   10008ea0 mov dword ptr [ecx + 8], edx
+   10008ea3 mov edx, dword ptr [eax + 0xc]
+   10008ea6 mov dword ptr [ecx + 0xc], edx
+   10008ea9 mov ax, word ptr [eax + 0x10]
+   10008ead mov word ptr [ecx + 0x10], ax
+   10008eb1 xor eax, eax
+   10008eb3 ret 4
+== 0x10009240 init_sound 121 imp:  calls: call 0x100424d7 operator_new;call 0x100089f0 SoundTimer::init;call 0x100286f0 SoundWindowObj_subclass
+   10009240 mov eax, dword ptr fs:[0]
+   10009246 push -1
+   10009248 push 0x1005861b
+   1000924d push eax
+   1000924e mov eax, dword ptr [esp + 0x14]
+   10009252 mov dword ptr fs:[0], esp
+   10009259 test al, 1
+   1000925b mov dword ptr [0x100b49d8], eax
+   10009260 jne 0x1000929b
+   10009262 push 0x5c
+   10009264 call 0x100424d7
+   10009269 add esp, 4
+   1000926c mov dword ptr [esp + 0x14], eax
+   10009270 test eax, eax
+   10009272 mov dword ptr [esp + 8], 0
+   1000927a je 0x10009285
+   1000927c mov ecx, eax
+   1000927e call 0x100022b1
+   10009283 jmp 0x10009287
+   10009285 xor eax, eax
+   10009287 mov dword ptr [0x100b49ec], eax
+   1000928c mov dword ptr [esp + 8], 0xffffffff
+   10009294 mov dword ptr [eax + 0x24], 0x10002671
+   1000929b mov eax, dword ptr [esp + 0x10]
+   1000929f mov ecx, 0x100b49b8
+   100092a4 push eax
+   100092a5 call 0x10001177
+   100092aa mov ecx, dword ptr [esp]
+   100092ae mov dword ptr fs:[0], ecx
+   100092b5 add esp, 0xc
+   100092b8 ret
+== 0x100099d0 get_sound_type 114 imp:  calls: call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function;call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function;call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function;call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function
+   100099d0 push esi
+   100099d1 mov esi, dword ptr [esp + 8]
+   100099d5 test esi, esi
+   100099d7 jne 0x100099e0
+   100099d9 mov eax, 1
+   100099de pop esi
+   100099df ret
+   100099e0 push 0x10063dc0
+   100099e5 push esi
+   100099e6 call 0x10042690
+   100099eb add esp, 8
+   100099ee test eax, eax
+   100099f0 je 0x100099f9
+   100099f2 mov eax, 1
+   100099f7 pop esi
+   100099f8 ret
+   100099f9 push 0x10063dbc
+   100099fe push esi
+   100099ff call 0x10042690
+   10009a04 add esp, 8
+   10009a07 test eax, eax
+   10009a09 je 0x10009a12
+   10009a0b mov eax, 2
+   10009a10 pop esi
+   10009a11 ret
+   10009a12 push 0x10063db8
+   10009a17 push esi
+   10009a18 call 0x10042690
+   10009a1d add esp, 8
+   10009a20 test eax, eax
+   10009a22 je 0x10009a2b
+   10009a24 mov eax, 3
+   10009a29 pop esi
+   10009a2a ret
+   10009a2b push 0x10063db4
+   10009a30 push esi
+   10009a31 call 0x10042690
+   10009a36 add esp, 8
+   10009a39 neg eax
+   10009a3b sbb eax, eax
+   10009a3d pop esi
+   10009a3e and eax, 2
+   10009a41 ret
+== 0x10009a70 update_sound 1 imp:  calls: 
+   10009a70 ret
+== 0x10009e10 Dll_Midi_Device::init_win_device 26 imp: WINMM.dll!midiOutOpen calls: 
+   10009e10 push 0
+   10009e12 push 0
+   10009e14 push 0
+   10009e16 add ecx, 0x3c
+   10009e19 push -1
+   10009e1b push ecx
+   10009e1c call dword ptr [0x100b85f8]
+   10009e22 neg eax
+   10009e24 sbb eax, eax
+   10009e26 and eax, 7
+   10009e29 ret
+== 0x1000aa60 Dll_Midi_Device::post_GT_request 110 imp: USER32.dll!PostMessageA calls: call 0x1002aa90 postSoundThreadMessage
+   1000aa60 mov ecx, dword ptr [esp + 4]
+   1000aa64 mov eax, dword ptr [ecx + 4]
+   1000aa67 test eax, eax
+   1000aa69 jne 0x1000aa73
+   1000aa6b mov eax, 0x13
+   1000aa70 ret 4
+   1000aa73 push esi
+   1000aa74 mov esi, dword ptr [eax + 0x214]
+   1000aa7a or esi, 0x40
+   1000aa7d mov dword ptr [eax + 0x214], esi
+   1000aa83 mov esi, dword ptr [0x100b4a20]
+   1000aa89 test esi, esi
+   1000aa8b je 0x1000aab6
+   1000aa8d mov edx, dword ptr [esi + 0x1a4]
+   1000aa93 shr edx, 5
+   1000aa96 test dl, 1
+   1000aa99 je 0x1000aab6
+   1000aa9b mov eax, dword ptr [eax + 0x210]
+   1000aaa1 push ecx
+   1000aaa2 push 0
+   1000aaa4 push 0x7ef
+   1000aaa9 push eax
+   1000aaaa call dword ptr [0x100b85a0]
+   1000aab0 xor eax, eax
+   1000aab2 pop esi
+   1000aab3 ret 4
+   1000aab6 push ecx
+   1000aab7 push 0
+   1000aab9 push 0x7ef
+   1000aabe mov ecx, 0x100b5038
+   1000aac3 call 0x100011d6
+   1000aac8 xor eax, eax
+   1000aaca pop esi
+   1000aacb ret 4
+== 0x1000e390 Dll_Wave_Device::get_eax 34 imp:  calls: call 0x10012020 deferred CDSMgr::get_eax
+   1000e390 mov ecx, dword ptr [0x100b49f0]
+   1000e396 test ecx, ecx
+   1000e398 je 0x1000e3ad
+   1000e39a test byte ptr [ecx + 0x6c], 0x10
+   1000e39e je 0x1000e3ad
+   1000e3a0 mov eax, dword ptr [esp + 4]
+   1000e3a4 push eax
+   1000e3a5 call 0x10001087
+   1000e3aa ret 4
+   1000e3ad xor eax, eax
+   1000e3af ret 4
+== 0x1000f0a0 CDSB::dsbrestore 16 imp:  calls: 
+   1000f0a0 mov eax, dword ptr [ecx + 0x60]
+   1000f0a3 test eax, eax
+   1000f0a5 je 0x1000f0ad
+   1000f0a7 mov ecx, dword ptr [eax]
+   1000f0a9 push eax
+   1000f0aa call dword ptr [ecx + 0x50]
+   1000f0ad xor eax, eax
+   1000f0af ret
+== 0x1000f0f0 CDSB::setsamplerate 77 imp:  calls: 
+   1000f0f0 mov eax, dword ptr [ecx + 0x60]
+   1000f0f3 test eax, eax
+   1000f0f5 je 0x1000f0ff
+   1000f0f7 mov eax, 0xc
+   1000f0fc ret 4
+   1000f0ff mov eax, dword ptr [esp + 4]
+   1000f103 cmp eax, 0xac44
+   1000f108 je 0x1000f120
+   1000f10a cmp eax, 0x5622
+   1000f10f je 0x1000f120
+   1000f111 cmp eax, 0x2b11
+   1000f116 je 0x1000f120
+   1000f118 mov eax, 0xa
+   1000f11d ret 4
+   1000f120 xor edx, edx
+   1000f122 mov dword ptr [ecx + 0xac], eax
+   1000f128 mov dx, word ptr [ecx + 0xb4]
+   1000f12f imul edx, eax
+   1000f132 mov dword ptr [ecx + 0xb0], edx
+   1000f138 xor eax, eax
+   1000f13a ret 4
+== 0x1000f720 CDSB::reinit 38 imp:  calls: 
+   1000f720 lea edx, [ecx + 0x94]
+   1000f726 xor eax, eax
+   1000f728 mov dword ptr [edx], eax
+   1000f72a mov dword ptr [edx + 4], eax
+   1000f72d mov dword ptr [edx + 8], eax
+   1000f730 mov dword ptr [edx + 0xc], eax
+   1000f733 mov dword ptr [edx + 0x10], eax
+   1000f736 mov dword ptr [ecx + 8], eax
+   1000f739 mov dword ptr [ecx + 0xc], eax
+   1000f73c mov dword ptr [ecx + 0x60], eax
+   1000f73f mov dword ptr [ecx + 0x4c], eax
+   1000f742 mov dword ptr [ecx + 0x48], eax
+   1000f745 ret
+== 0x10010120 CDSB::get_cur_dsbwrite 37 imp:  calls: 
+   10010120 mov eax, dword ptr [ecx + 0x60]
+   10010123 test eax, eax
+   10010125 jne 0x1001012f
+   10010127 mov eax, 0x14
+   1001012c ret 4
+   1001012f mov edx, dword ptr [eax]
+   10010131 push esi
+   10010132 mov esi, dword ptr [esp + 8]
+   10010136 add ecx, 0xc
+   10010139 push esi
+   1001013a push ecx
+   1001013b push eax
+   1001013c call dword ptr [edx + 0x10]
+   1001013f xor eax, eax
+   10010141 pop esi
+   10010142 ret 4
+== 0x10010160 CDSB::get_cur_dsbplay 36 imp:  calls: 
+   10010160 mov eax, dword ptr [ecx + 0x60]
+   10010163 test eax, eax
+   10010165 jne 0x1001016f
+   10010167 mov eax, 0x14
+   1001016c ret 4
+   1001016f mov ecx, dword ptr [eax]
+   10010171 lea edx, [esp + 4]
+   10010175 push edx
+   10010176 mov edx, dword ptr [esp + 8]
+   1001017a push edx
+   1001017b push eax
+   1001017c call dword ptr [ecx + 0x10]
+   1001017f xor eax, eax
+   10010181 ret 4
+== 0x10010d60 CDSB::release_pointer 51 imp:  calls: 
+   10010d60 mov eax, dword ptr [ecx + 0x60]
+   10010d63 test eax, eax
+   10010d65 jne 0x10010d6f
+   10010d67 mov eax, 0x14
+   10010d6c ret 0x10
+   10010d6f mov edx, dword ptr [esp + 0x10]
+   10010d73 mov ecx, dword ptr [eax]
+   10010d75 push edx
+   10010d76 mov edx, dword ptr [esp + 0x10]
+   10010d7a push edx
+   10010d7b mov edx, dword ptr [esp + 0x10]
+   10010d7f push edx
+   10010d80 mov edx, dword ptr [esp + 0x10]
+   10010d84 push edx
+   10010d85 push eax
+   10010d86 call dword ptr [ecx + 0x4c]
+   10010d89 neg eax
+   10010d8b sbb eax, eax
+   10010d8d and eax, 0x1b
+   10010d90 ret 0x10
+== 0x10010e80 CDSB::set_samples_per_tick 27 imp:  calls: 
+   10010e80 mov edx, dword ptr [ecx + 0xac]
+   10010e86 mov eax, 0x10624dd3
+   10010e8b imul edx, dword ptr [esp + 4]
+   10010e90 mul edx
+   10010e92 shr edx, 6
+   10010e95 mov dword ptr [ecx + 0x34], edx
+   10010e98 ret 4
+== 0x10012020 CDSMgr::get_eax 8 imp:  calls: 
+   10012020 mov eax, 0xb
+   10012025 ret 4
+== 0x10013870 filter_stub 3 imp:  calls: 
+   10013870 xor eax, eax
+   10013872 ret
+== 0x1001b830 MidiCtrlSocket::MidiCtrlSocket 37 imp:  calls: 
+   1001b830 mov eax, ecx
+   1001b832 xor ecx, ecx
+   1001b834 mov dword ptr [eax + 0xc], ecx
+   1001b837 mov dword ptr [eax + 0x10], ecx
+   1001b83a mov dword ptr [eax + 0x14], ecx
+   1001b83d mov dword ptr [eax + 0x18], ecx
+   1001b840 mov dword ptr [eax], 0x1005b58c
+   1001b846 mov dword ptr [eax + 4], 0x18
+   1001b84d mov dword ptr [eax + 8], 0x44444444
+   1001b854 ret
+== 0x1001c480 Stepper::Stepper 75 imp:  calls: 
+   1001c480 mov eax, ecx
+   1001c482 or ecx, 0xffffffff
+   1001c485 mov dword ptr [eax + 0x14], ecx
+   1001c488 mov dword ptr [eax + 0x20], ecx
+   1001c48b mov dword ptr [eax + 0x24], ecx
+   1001c48e lea ecx, [eax + 0x18]
+   1001c491 mov dword ptr [eax + 4], 0x6c727463
+   1001c498 mov word ptr [ecx], 0
+   1001c49d mov ecx, 0x44444444
+   1001c4a2 mov dword ptr [eax + 0xc], 0x18
+   1001c4a9 mov dword ptr [eax + 0x10], ecx
+   1001c4ac mov dword ptr [eax], 0x1005b5cc
+   1001c4b2 mov dword ptr [eax + 0x30], 1
+   1001c4b9 mov dword ptr [eax + 0x34], 0
+   1001c4c0 mov dword ptr [eax + 0x1c], 4
+   1001c4c7 mov dword ptr [eax + 0x2c], ecx
+   1001c4ca ret
+== 0x1001e120 CMidiFile::reload 18 imp:  calls: call 0x1001d810 Midi_Device::loadFile
+   1001e120 mov eax, dword ptr [ecx + 0x4c]
+   1001e123 and al, 0xfe
+   1001e125 mov dword ptr [ecx + 0x4c], eax
+   1001e128 lea eax, [ecx + 0x50]
+   1001e12b push eax
+   1001e12c call 0x1000270c
+   1001e131 ret
+== 0x10020270 CMidiMgr::reload 8 imp:  calls: jmp 0x1001e120 deferred CMidiFile::reload
+   10020270 add ecx, 0x60
+   10020273 jmp 0x10001edd
+== 0x10023750 CMidiMgr::TT_play_trackset 230 imp:  calls: call 0x1001d780 Seq_listGetAt;call 0x1001d780 Seq_listGetAt;call 0x1001d780 Seq_listGetAt;call 0x10024b80 Seq_scheduleEvent
+   10023750 push ebx
+   10023751 mov ebx, dword ptr [esp + 0xc]
+   10023755 push esi
+   10023756 push edi
+   10023757 mov edi, dword ptr [esp + 0x10]
+   1002375b mov esi, ecx
+   1002375d cmp ebx, edi
+   1002375f jb 0x1002382b
+   10023765 mov eax, dword ptr [esi]
+   10023767 call dword ptr [eax + 0xb4]
+   1002376d cmp ebx, eax
+   1002376f jae 0x1002382b
+   10023775 push ebp
+   10023776 lea ecx, [esp + 0x18]
+   1002377a lea ebp, [esi + 0x60]
+   1002377d push 0
+   1002377f push ecx
+   10023780 mov ecx, ebp
+   10023782 call 0x100015fa
+   10023787 test eax, eax
+   10023789 je 0x10023793
+   1002378b mov eax, dword ptr [esp + 0x18]
+   1002378f or byte ptr [eax + 0x38], 8
+   10023793 mov edx, dword ptr [esi]
+   10023795 mov ecx, esi
+   10023797 call dword ptr [edx + 0x5c]
+   1002379a test eax, eax
+   1002379c jne 0x100237cb
+   1002379e cmp edi, ebx
+   100237a0 mov esi, edi
+   100237a2 ja 0x10023822
+   100237a4 lea eax, [esp + 0x18]
+   100237a8 push esi
+   100237a9 push eax
+   100237aa mov ecx, ebp
+   100237ac call 0x100015fa
+   100237b1 test eax, eax
+   100237b3 jne 0x100237bd
+   100237b5 mov eax, dword ptr [esp + 0x18]
+   100237b9 or byte ptr [eax + 0x38], 8
+   100237bd inc esi
+   100237be cmp esi, ebx
+   100237c0 jbe 0x100237a4
+   100237c2 pop ebp
+   100237c3 pop edi
+   100237c4 pop esi
+   100237c5 xor eax, eax
+   100237c7 pop ebx
+   100237c8 ret 0xc
+   100237cb cmp edi, ebx
+   100237cd ja 0x10023822
+   100237cf mov ebp, dword ptr [esp + 0x1c]
+   100237d3 lea ecx, [esp + 0x18]
+   100237d7 push edi
+   100237d8 push ecx
+   100237d9 lea ecx, [esi + 0x60]
+   100237dc call 0x100015fa
+   100237e1 test eax, eax
+   100237e3 jne 0x1002381d
+   100237e5 mov eax, dword ptr [esp + 0x18]
+   100237e9 test eax, eax
+   100237eb je 0x1002381d
+   100237ed mov cl, byte ptr [eax + 0x38]
+   100237f0 push 0
+   100237f2 or cl, 8
+   100237f5 push ebp
+   100237f6 mov byte ptr [eax + 0x38], cl
+   100237f9 mov edx, dword ptr [esi + 0x71c]
+   100237ff mov eax, dword ptr [esp + 0x20]
+   10023803 push edx
+   10023804 push eax
+   10023805 mov ecx, esi
+   10023807 call 0x1000240a
+   1002380c mov ecx, dword ptr [esp + 0x18]
+   10023810 mov eax, dword ptr [ecx + 0x458]
+   10023816 test eax, eax
+   10023818 je 0x1002381d
+   1002381a inc dword ptr [eax + 0x34]
+   1002381d inc edi
+   1002381e cmp edi, ebx
+   10023820 jbe 0x100237d3
+   10023822 pop ebp
+   10023823 pop edi
+   10023824 pop esi
+   10023825 xor eax, eax
+   10023827 pop ebx
+   10023828 ret 0xc
+   1002382b pop edi
+   1002382c pop esi
+   1002382d mov eax, 0xa
+   10023832 pop ebx
+   10023833 ret 0xc
+== 0x10023b80 CMidiMgr::TT_xpose_trackset 119 imp:  calls: call 0x1001d780 Seq_listGetAt;call 0x1001d780 Seq_listGetAt
+   10023b80 push ebx
+   10023b81 mov ebx, dword ptr [esp + 0xc]
+   10023b85 push esi
+   10023b86 mov esi, dword ptr [esp + 0xc]
+   10023b8a push edi
+   10023b8b cmp ebx, esi
+   10023b8d mov edi, ecx
+   10023b8f jb 0x10023bec
+   10023b91 mov eax, dword ptr [edi]
+   10023b93 call dword ptr [eax + 0xb4]
+   10023b99 cmp ebx, eax
+   10023b9b jae 0x10023bec
+   10023b9d lea ecx, [esp + 0x14]
+   10023ba1 add edi, 0x60
+   10023ba4 push 0
+   10023ba6 push ecx
+   10023ba7 mov ecx, edi
+   10023ba9 call 0x100015fa
+   10023bae test eax, eax
+   10023bb0 je 0x10023bba
+   10023bb2 mov eax, dword ptr [esp + 0x14]
+   10023bb6 or byte ptr [eax + 0x38], 8
+   10023bba cmp esi, ebx
+   10023bbc ja 0x10023be4
+   10023bbe push ebp
+   10023bbf mov ebp, dword ptr [esp + 0x1c]
+   10023bc3 lea edx, [esp + 0x18]
+   10023bc7 push esi
+   10023bc8 push edx
+   10023bc9 mov ecx, edi
+   10023bcb call 0x100015fa
+   10023bd0 test eax, eax
+   10023bd2 jne 0x10023bde
+   10023bd4 mov eax, dword ptr [esp + 0x18]
+   10023bd8 mov dword ptr [eax + 0x45c], ebp
+   10023bde inc esi
+   10023bdf cmp esi, ebx
+   10023be1 jbe 0x10023bc3
+   10023be3 pop ebp
+   10023be4 pop edi
+   10023be5 pop esi
+   10023be6 xor eax, eax
+   10023be8 pop ebx
+   10023be9 ret 0xc
+   10023bec pop edi
+   10023bed pop esi
+   10023bee mov eax, 0xa
+   10023bf3 pop ebx
+   10023bf4 ret 0xc
+== 0x10025040 CMMError::CMMError 9 imp:  calls: 
+   10025040 mov eax, ecx
+   10025042 mov dword ptr [eax], 0x1005b830
+   10025048 ret
+== 0x10025090 CMMError::~CMMError 7 imp:  calls: 
+   10025090 mov dword ptr [ecx], 0x1005b830
+   10025096 ret
+== 0x10028f70 Sound_Device::Sound_Device 40 imp:  calls: 
+   10028f70 mov eax, ecx
+   10028f72 lea ecx, [eax + 4]
+   10028f75 mov dword ptr [eax], 0x1005b8b0
+   10028f7b mov edx, ecx
+   10028f7d xor ecx, ecx
+   10028f7f mov dword ptr [edx], ecx
+   10028f81 mov dword ptr [eax + 8], 0x7f
+   10028f88 mov dword ptr [eax + 0xc], ecx
+   10028f8b mov dword ptr [eax + 0x18], ecx
+   10028f8e mov dword ptr [eax + 0x1c], ecx
+   10028f91 mov dword ptr [eax + 0x10], ecx
+   10028f94 mov dword ptr [eax + 0x14], ecx
+   10028f97 ret
+== 0x10029730 Wave_Device::add_to_group 93 imp:  calls: call 0x1000e680 appendNodeC;call 0x1002cd30 deferred SoundList::scaleVolumeToGroup
+   10029730 push esi
+   10029731 push edi
+   10029732 mov edi, dword ptr [esp + 0xc]
+   10029736 cmp edi, 0xf
+   10029739 ja 0x10029783
+   1002973b mov esi, dword ptr [esp + 0x10]
+   1002973f test esi, esi
+   10029741 je 0x10029783
+   10029743 lea eax, [edi + edi*2]
+   10029746 push esi
+   10029747 lea ecx, [ecx + eax*8 + 0x2c]
+   1002974b call 0x10002351
+   10029750 mov edx, dword ptr [esi]
+   10029752 mov ecx, esi
+   10029754 mov dword ptr [esi + 0x3c], edi
+   10029757 call dword ptr [edx + 0x78]
+   1002975a cmp eax, 8
+   1002975d jne 0x10029771
+   1002975f mov eax, dword ptr [esi + 4]
+   10029762 mov ecx, esi
+   10029764 push eax
+   10029765 call 0x1000178f
+   1002976a pop edi
+   1002976b xor eax, eax
+   1002976d pop esi
+   1002976e ret 8
+   10029771 mov eax, dword ptr [esi + 4]
+   10029774 mov edx, dword ptr [esi]
+   10029776 push eax
+   10029777 mov ecx, esi
+   10029779 call dword ptr [edx + 0x40]
+   1002977c pop edi
+   1002977d xor eax, eax
+   1002977f pop esi
+   10029780 ret 8
+   10029783 pop edi
+   10029784 mov eax, 0xa
+   10029789 pop esi
+   1002978a ret 8
+== 0x100297b0 Wave_Device::pull_from_group 151 imp:  calls: call 0x1004249a operator_delete
+   100297b0 push edi
+   100297b1 mov edi, dword ptr [esp + 8]
+   100297b5 test edi, edi
+   100297b7 je 0x1002983e
+   100297bd mov eax, dword ptr [edi + 0x3c]
+   100297c0 cmp eax, 0x10
+   100297c3 jae 0x1002983e
+   100297c5 lea eax, [eax + eax*2]
+   100297c8 push esi
+   100297c9 lea esi, [ecx + eax*8 + 0x2c]
+   100297cd mov eax, dword ptr [ecx + eax*8 + 0x2c]
+   100297d1 test eax, eax
+   100297d3 je 0x10029830
+   100297d5 cmp dword ptr [eax + 8], edi
+   100297d8 je 0x100297ed
+   100297da mov eax, dword ptr [eax + 4]
+   100297dd test eax, eax
+   100297df jne 0x100297d5
+   100297e1 mov dword ptr [edi + 0x3c], 0x10
+   100297e8 pop esi
+   100297e9 pop edi
+   100297ea ret 4
+   100297ed test eax, eax
+   100297ef je 0x10029830
+   100297f1 mov ecx, dword ptr [eax]
+   100297f3 test ecx, ecx
+   100297f5 je 0x100297ff
+   100297f7 mov edx, dword ptr [eax + 4]
+   100297fa mov dword ptr [ecx + 4], edx
+   100297fd jmp 0x10029804
+   100297ff mov ecx, dword ptr [eax + 4]
+   10029802 mov dword ptr [esi], ecx
+   10029804 mov ecx, dword ptr [eax + 4]
+   10029807 test ecx, ecx
+   10029809 je 0x10029814
+   1002980b mov edx, dword ptr [eax]
+   1002980d mov dword ptr [ecx], edx
+   1002980f mov dword ptr [esi + 8], ecx
+   10029812 jmp 0x10029820
+   10029814 mov ecx, dword ptr [eax]
+   10029816 mov dword ptr [esi + 8], 0
+   1002981d mov dword ptr [esi + 4], ecx
+   10029820 push eax
+   10029821 call 0x1004249a
+   10029826 mov eax, dword ptr [esi + 0xc]
+   10029829 add esp, 4
+   1002982c dec eax
+   1002982d mov dword ptr [esi + 0xc], eax
+   10029830 mov dword ptr [edi + 0x3c], 0x10
+   10029837 pop esi
+   10029838 xor eax, eax
+   1002983a pop edi
+   1002983b ret 4
+   1002983e mov eax, 0xa
+   10029843 pop edi
+   10029844 ret 4
+== 0x10029880 Wave_Device::set_group_volume 121 imp:  calls: call 0x1002cd30 deferred SoundList::scaleVolumeToGroup
+   10029880 mov eax, dword ptr [esp + 4]
+   10029884 cmp eax, 0xf
+   10029887 ja 0x100298f1
+   10029889 mov edx, dword ptr [esp + 8]
+   1002988d cmp edx, 0x7f
+   10029890 ja 0x100298f1
+   10029892 lea eax, [eax + eax*2]
+   10029895 push esi
+   10029896 push edi
+   10029897 lea edi, [ecx + eax*8]
+   1002989a mov dword ptr [edi + 0x28], edx
+   1002989d mov eax, dword ptr [edi + 0x2c]
+   100298a0 test eax, eax
+   100298a2 mov dword ptr [edi + 0x34], eax
+   100298a5 je 0x100298ea
+   100298a7 mov esi, dword ptr [eax + 8]
+   100298aa test esi, esi
+   100298ac je 0x100298ea
+   100298ae mov edx, dword ptr [esi]
+   100298b0 mov ecx, esi
+   100298b2 call dword ptr [edx + 0x78]
+   100298b5 cmp eax, 8
+   100298b8 jne 0x100298c7
+   100298ba mov eax, dword ptr [esi + 4]
+   100298bd mov ecx, esi
+   100298bf push eax
+   100298c0 call 0x1000178f
+   100298c5 jmp 0x100298d2
+   100298c7 mov eax, dword ptr [esi + 4]
+   100298ca mov edx, dword ptr [esi]
+   100298cc push eax
+   100298cd mov ecx, esi
+   100298cf call dword ptr [edx + 0x40]
+   100298d2 mov eax, dword ptr [edi + 0x34]
+   100298d5 test eax, eax
+   100298d7 je 0x100298ea
+   100298d9 mov eax, dword ptr [eax + 4]
+   100298dc test eax, eax
+   100298de mov dword ptr [edi + 0x34], eax
+   100298e1 je 0x100298ea
+   100298e3 mov esi, dword ptr [eax + 8]
+   100298e6 test esi, esi
+   100298e8 jne 0x100298ae
+   100298ea pop edi
+   100298eb xor eax, eax
+   100298ed pop esi
+   100298ee ret 8
+   100298f1 mov eax, 0xa
+   100298f6 ret 8
+== 0x10029920 Wave_Device::get_group_volume 24 imp:  calls: 
+   10029920 mov eax, dword ptr [esp + 4]
+   10029924 cmp eax, 0xf
+   10029927 jbe 0x1002992e
+   10029929 xor eax, eax
+   1002992b ret 4
+   1002992e lea eax, [eax + eax*2]
+   10029931 mov eax, dword ptr [ecx + eax*8 + 0x28]
+   10029935 ret 4
+== 0x10029950 Wave_Device::enable_group 93 imp:  calls: 
+   10029950 mov eax, dword ptr [esp + 4]
+   10029954 push esi
+   10029955 cmp eax, 0xf
+   10029958 jbe 0x10029963
+   1002995a mov eax, 0xa
+   1002995f pop esi
+   10029960 ret 4
+   10029963 lea eax, [eax + eax*2]
+   10029966 lea esi, [ecx + eax*8]
+   10029969 mov al, byte ptr [ecx + eax*8 + 0x24]
+   1002996d test al, al
+   1002996f jne 0x100299a7
+   10029971 mov eax, dword ptr [esi + 0x2c]
+   10029974 test eax, eax
+   10029976 mov dword ptr [esi + 0x34], eax
+   10029979 je 0x100299a3
+   1002997b mov ecx, dword ptr [eax + 8]
+   1002997e test ecx, ecx
+   10029980 je 0x100299a3
+   10029982 mov eax, dword ptr [ecx + 0x50]
+   10029985 mov edx, dword ptr [ecx]
+   10029987 push eax
+   10029988 call dword ptr [edx + 0x10]
+   1002998b mov eax, dword ptr [esi + 0x34]
+   1002998e test eax, eax
+   10029990 je 0x100299a3
+   10029992 mov eax, dword ptr [eax + 4]
+   10029995 test eax, eax
+   10029997 mov dword ptr [esi + 0x34], eax
+   1002999a je 0x100299a3
+   1002999c mov ecx, dword ptr [eax + 8]
+   1002999f test ecx, ecx
+   100299a1 jne 0x10029982
+   100299a3 mov byte ptr [esi + 0x24], 1
+   100299a7 xor eax, eax
+   100299a9 pop esi
+   100299aa ret 4
+== 0x100299d0 Wave_Device::muteGroup 81 imp:  calls: 
+   100299d0 mov eax, dword ptr [esp + 4]
+   100299d4 cmp eax, 0xf
+   100299d7 jbe 0x100299e1
+   100299d9 mov eax, 0xa
+   100299de ret 4
+   100299e1 lea eax, [eax + eax*2]
+   100299e4 push esi
+   100299e5 lea esi, [ecx + eax*8]
+   100299e8 mov eax, dword ptr [ecx + eax*8 + 0x2c]
+   100299ec test eax, eax
+   100299ee mov dword ptr [esi + 0x34], eax
+   100299f1 je 0x10029a17
+   100299f3 mov ecx, dword ptr [eax + 8]
+   100299f6 test ecx, ecx
+   100299f8 je 0x10029a17
+   100299fa mov edx, dword ptr [ecx]
+   100299fc call dword ptr [edx + 0x20]
+   100299ff mov eax, dword ptr [esi + 0x34]
+   10029a02 test eax, eax
+   10029a04 je 0x10029a17
+   10029a06 mov eax, dword ptr [eax + 4]
+   10029a09 test eax, eax
+   10029a0b mov dword ptr [esi + 0x34], eax
+   10029a0e je 0x10029a17
+   10029a10 mov ecx, dword ptr [eax + 8]
+   10029a13 test ecx, ecx
+   10029a15 jne 0x100299fa
+   10029a17 mov byte ptr [esi + 0x25], 1
+   10029a1b xor eax, eax
+   10029a1d pop esi
+   10029a1e ret 4
+== 0x10029a50 Wave_Device::unMuteGroup 30 imp:  calls: 
+   10029a50 mov eax, dword ptr [esp + 4]
+   10029a54 cmp eax, 0xf
+   10029a57 jbe 0x10029a61
+   10029a59 mov eax, 0xa
+   10029a5e ret 4
+   10029a61 lea eax, [eax + eax*2]
+   10029a64 mov byte ptr [ecx + eax*8 + 0x25], 0
+   10029a69 xor eax, eax
+   10029a6b ret 4
+== 0x10029a80 Wave_Device::disable_group 120 imp:  calls: 
+   10029a80 mov eax, dword ptr [esp + 4]
+   10029a84 push edi
+   10029a85 cmp eax, 0xf
+   10029a88 jbe 0x10029a93
+   10029a8a mov eax, 0xa
+   10029a8f pop edi
+   10029a90 ret 4
+   10029a93 lea eax, [eax + eax*2]
+   10029a96 lea edi, [ecx + eax*8]
+   10029a99 mov al, byte ptr [ecx + eax*8 + 0x24]
+   10029a9d test al, al
+   10029a9f jne 0x10029aa7
+   10029aa1 xor eax, eax
+   10029aa3 pop edi
+   10029aa4 ret 4
+   10029aa7 mov eax, dword ptr [edi + 0x2c]
+   10029aaa push esi
+   10029aab test eax, eax
+   10029aad mov dword ptr [edi + 0x34], eax
+   10029ab0 je 0x10029aed
+   10029ab2 mov esi, dword ptr [eax + 8]
+   10029ab5 test esi, esi
+   10029ab7 je 0x10029aed
+   10029ab9 mov edx, dword ptr [esi]
+   10029abb mov ecx, esi
+   10029abd call dword ptr [edx + 0x78]
+   10029ac0 cmp eax, 8
+   10029ac3 jne 0x10029ace
+   10029ac5 mov eax, dword ptr [esi]
+   10029ac7 mov ecx, esi
+   10029ac9 call dword ptr [eax + 0x20]
+   10029acc jmp 0x10029ad5
+   10029ace mov edx, dword ptr [esi]
+   10029ad0 mov ecx, esi
+   10029ad2 call dword ptr [edx + 0x14]
+   10029ad5 mov eax, dword ptr [edi + 0x34]
+   10029ad8 test eax, eax
+   10029ada je 0x10029aed
+   10029adc mov eax, dword ptr [eax + 4]
+   10029adf test eax, eax
+   10029ae1 mov dword ptr [edi + 0x34], eax
+   10029ae4 je 0x10029aed
+   10029ae6 mov esi, dword ptr [eax + 8]
+   10029ae9 test esi, esi
+   10029aeb jne 0x10029ab9
+   10029aed mov byte ptr [edi + 0x24], 0
+   10029af1 pop esi
+   10029af2 xor eax, eax
+   10029af4 pop edi
+   10029af5 ret 4
+== 0x10029b20 Wave_Device::is_group_disabled 29 imp:  calls: 
+   10029b20 mov eax, dword ptr [esp + 4]
+   10029b24 cmp eax, 0xf
+   10029b27 jbe 0x10029b2e
+   10029b29 mov al, 1
+   10029b2b ret 4
+   10029b2e lea eax, [eax + eax*2]
+   10029b31 mov dl, byte ptr [ecx + eax*8 + 0x24]
+   10029b35 test dl, dl
+   10029b37 sete al
+   10029b3a ret 4
+== 0x10029b50 Wave_Device::isGroupMute 29 imp:  calls: 
+   10029b50 mov eax, dword ptr [esp + 4]
+   10029b54 cmp eax, 0xf
+   10029b57 jbe 0x10029b5e
+   10029b59 mov al, 1
+   10029b5b ret 4
+   10029b5e lea eax, [eax + eax*2]
+   10029b61 mov dl, byte ptr [ecx + eax*8 + 0x25]
+   10029b65 test dl, dl
+   10029b67 setne al
+   10029b6a ret 4
+== 0x1002cd30 SoundList::scaleVolumeToGroup 3 imp:  calls: 
+   1002cd30 ret 4
+== 0x1002d010 KeyMap::~KeyMap 118 imp:  calls: call 0x1004249a operator_delete;call 0x1004249a operator_delete
+   1002d010 push ecx
+   1002d011 push ebx
+   1002d012 push ebp
+   1002d013 mov ebp, ecx
+   1002d015 push esi
+   1002d016 push edi
+   1002d017 xor ebx, ebx
+   1002d019 mov dword ptr [ebp], 0x1005be84
+   1002d020 mov eax, dword ptr [ebp + ebx*4 + 4]
+   1002d024 inc ebx
+   1002d025 test eax, eax
+   1002d027 je 0x1002d05b
+   1002d029 mov eax, dword ptr [eax]
+   1002d02b lea ebx, [eax + 1]
+   1002d02e mov eax, dword ptr [ebp + eax*4 + 4]
+   1002d032 mov edi, dword ptr [eax + 4]
+   1002d035 mov esi, dword ptr [eax]
+   1002d037 inc esi
+   1002d038 lea eax, [ebp + edi*4 + 4]
+   1002d03c mov dword ptr [esp + 0x10], eax
+   1002d040 mov eax, dword ptr [eax]
+   1002d042 push eax
+   1002d043 call 0x1004249a
+   1002d048 add esp, 4
+   1002d04b cmp edi, esi
+   1002d04d jae 0x1002d05b
+   1002d04f mov ecx, esi
+   1002d051 sub ecx, edi
+   1002d053 mov edi, dword ptr [esp + 0x10]
+   1002d057 xor eax, eax
+   1002d059 rep stosd dword ptr es:[edi], eax
+   1002d05b cmp ebx, 0x80
+   1002d061 jl 0x1002d020
+   1002d063 mov eax, dword ptr [ebp + 0x204]
+   1002d069 test eax, eax
+   1002d06b je 0x1002d080
+   1002d06d push eax
+   1002d06e call 0x1004249a
+   1002d073 add esp, 4
+   1002d076 mov dword ptr [ebp + 0x204], 0
+   1002d080 pop edi
+   1002d081 pop esi
+   1002d082 pop ebp
+   1002d083 pop ebx
+   1002d084 pop ecx
+   1002d085 ret
+== 0x1002d710 Midi::set_frame_delay 30 imp:  calls: 
+   1002d710 mov eax, dword ptr [ecx + 0x40]
+   1002d713 test eax, eax
+   1002d715 je 0x1002d724
+   1002d717 mov edx, dword ptr [esp + 4]
+   1002d71b mov dword ptr [eax + 0x5c], edx
+   1002d71e mov dword ptr [ecx + 0x5c], edx
+   1002d721 ret 4
+   1002d724 mov eax, dword ptr [esp + 4]
+   1002d728 mov dword ptr [ecx + 0x5c], eax
+   1002d72b ret 4
+== 0x1002e4c0 Patch::Patch 42 imp:  calls: 
+   1002e4c0 mov edx, ecx
+   1002e4c2 push edi
+   1002e4c3 mov ecx, 9
+   1002e4c8 xor eax, eax
+   1002e4ca lea edi, [edx + 0xc]
+   1002e4cd mov dword ptr [edx], 0x1005bb80
+   1002e4d3 mov dword ptr [edx + 4], 0x7f
+   1002e4da mov dword ptr [edx + 8], 0
+   1002e4e1 rep stosd dword ptr es:[edi], eax
+   1002e4e3 mov dword ptr [edx + 0x30], eax
+   1002e4e6 mov eax, edx
+   1002e4e8 pop edi
+   1002e4e9 ret
+== 0x1002f710 do_message 21 imp: USER32.dll!MessageBoxA calls: 
+   1002f710 mov eax, dword ptr [esp + 8]
+   1002f714 mov ecx, dword ptr [esp + 4]
+   1002f718 push 0
+   1002f71a push eax
+   1002f71b push ecx
+   1002f71c push 0
+   1002f71e call dword ptr [0x100b85ac]
+   1002f724 ret
+== 0x1002fe20 CTrace::CTrace 79 imp:  calls: 
+   1002fe20 push esi
+   1002fe21 mov edx, ecx
+   1002fe23 push edi
+   1002fe24 xor eax, eax
+   1002fe26 mov edi, 0x10063e98
+   1002fe2b or ecx, 0xffffffff
+   1002fe2e mov dword ptr [edx + 0x100], eax
+   1002fe34 mov dword ptr [edx + 0x104], eax
+   1002fe3a mov dword ptr [edx + 0x108], eax
+   1002fe40 mov dword ptr [edx + 0x10c], eax
+   1002fe46 mov dword ptr [edx + 0x110], eax
+   1002fe4c mov dword ptr [edx + 0x114], eax
+   1002fe52 repne scasb al, byte ptr es:[edi]
+   1002fe54 not ecx
+   1002fe56 sub edi, ecx
+   1002fe58 mov eax, ecx
+   1002fe5a mov esi, edi
+   1002fe5c mov edi, edx
+   1002fe5e shr ecx, 2
+   1002fe61 rep movsd dword ptr es:[edi], dword ptr [esi]
+   1002fe63 mov ecx, eax
+   1002fe65 mov eax, edx
+   1002fe67 and ecx, 3
+   1002fe6a rep movsb byte ptr es:[edi], byte ptr [esi]
+   1002fe6c pop edi
+   1002fe6d pop esi
+   1002fe6e ret
+== 0x10031120 CVoiceRxMgr::discard_buffer 29 imp: WINMM.dll!mmioClose calls: 
+   10031120 mov eax, dword ptr [esp + 4]
+   10031124 push 0
+   10031126 push eax
+   10031127 call dword ptr [0x100b8670]
+   1003112d mov eax, dword ptr [0x100b4a08]
+   10031132 dec eax
+   10031133 mov dword ptr [0x100b4a08], eax
+   10031138 xor eax, eax
+   1003113a ret 4
+== 0x10031150 CVoiceRxMgr::enable 3 imp:  calls: 
+   10031150 xor eax, eax
+   10031152 ret
+== 0x10031170 CVoiceRxMgr::disable 3 imp:  calls: 
+   10031170 xor eax, eax
+   10031172 ret
+== 0x10033f70 CWaveFile::mpeg_unload 6 imp:  calls: 
+   10033f70 mov eax, 0xb
+   10033f75 ret
+== 0x10038ed0 WaveInDeviceMgr::add_buffer 46 imp: WINMM.dll!waveInAddBuffer calls: 
+   10038ed0 mov edx, dword ptr [esp + 4]
+   10038ed4 test edx, edx
+   10038ed6 jne 0x10038ee0
+   10038ed8 mov eax, 0xa
+   10038edd ret 4
+   10038ee0 mov eax, dword ptr [ecx + 0x44]
+   10038ee3 test eax, eax
+   10038ee5 jne 0x10038eef
+   10038ee7 mov eax, 0x13
+   10038eec ret 4
+   10038eef push 0x20
+   10038ef1 push edx
+   10038ef2 push eax
+   10038ef3 call dword ptr [0x100b8604]
+   10038ef9 xor eax, eax
+   10038efb ret 4
+== 0x10038f40 WaveInDeviceMgr::get_num_devices 6 imp: WINMM.dll!waveInGetNumDevs calls: 
+   10038f40 jmp dword ptr [0x100b861c]
+== 0x100392c0 WaveInDeviceMgr::handle_error 83 imp:  calls: 
+   100392c0 mov eax, dword ptr [esp + 4]
+   100392c4 add eax, -2
+   100392c7 cmp eax, 0x1f
+   100392ca ja 0x1003930b
+   100392cc xor ecx, ecx
+   100392ce mov cl, byte ptr [eax + 0x10039330]
+   100392d4 jmp dword ptr [ecx*4 + 0x10039314]
+   100392db mov eax, 0xa
+   100392e0 ret 4
+   100392e3 mov eax, 1
+   100392e8 ret 4
+   100392eb mov eax, 0xe
+   100392f0 ret 4
+   100392f3 mov eax, 0xc
+   100392f8 ret 4
+   100392fb mov eax, 0x11
+   10039300 ret 4
+   10039303 mov eax, 0x12
+   10039308 ret 4
+   1003930b mov eax, 0xb
+   10039310 ret 4
+== 0x10039380 WaveInDeviceMgr::set_format 50 imp:  calls: 
+   10039380 mov eax, 1
+   10039385 mov dword ptr [ecx + 0x4c], 0x1f40
+   1003938c mov word ptr [ecx + 0x48], ax
+   10039390 mov word ptr [ecx + 0x4a], ax
+   10039394 mov dword ptr [ecx + 0x50], 0x3e80
+   1003939b mov word ptr [ecx + 0x54], 2
+   100393a1 mov word ptr [ecx + 0x56], 0x10
+   100393a7 mov word ptr [ecx + 0x58], 0
+   100393ad xor eax, eax
+   100393af ret 4
+== 0x10039490 WIBuffer::WIBuffer 28 imp:  calls: 
+   10039490 mov eax, ecx
+   10039492 xor ecx, ecx
+   10039494 mov dword ptr [eax], ecx
+   10039496 mov dword ptr [eax + 4], ecx
+   10039499 mov dword ptr [eax + 8], ecx
+   1003949c mov dword ptr [eax + 0xc], eax
+   1003949f mov dword ptr [eax + 0x10], ecx
+   100394a2 mov dword ptr [eax + 0x14], ecx
+   100394a5 mov dword ptr [eax + 0x18], ecx
+   100394a8 mov dword ptr [eax + 0x1c], ecx
+   100394ab ret
+== 0x10039ca0 CWaveMgr::free_all 37 imp:  calls: 
+   10039ca0 push esi
+   10039ca1 mov esi, dword ptr [0x100b5070]
+   10039ca7 test esi, esi
+   10039ca9 je 0x10039cc3
+   10039cab mov eax, dword ptr [esi]
+   10039cad mov ecx, esi
+   10039caf call dword ptr [eax + 0x20]
+   10039cb2 mov edx, dword ptr [esi]
+   10039cb4 mov ecx, esi
+   10039cb6 call dword ptr [edx + 0x14]
+   10039cb9 mov esi, dword ptr [0x100b5070]
+   10039cbf test esi, esi
+   10039cc1 jne 0x10039cab
+   10039cc3 pop esi
+   10039cc4 ret

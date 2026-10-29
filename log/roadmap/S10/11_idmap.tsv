@@ -1,0 +1,2147 @@
+demo_rva	size	ins	verdict	retail_va	module	name
+0x1000	150	43	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::CAmbienceMgr
+0x10a0	54	24	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::`scalar deleting destructor'
+0x10e0	113	33	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::~CAmbienceMgr
+0x1160	3986	912	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::load
+0x2100	491	148	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::read_control
+0x22f0	45	21	NONE		.\soundO\ambiencemgr.obj	Patch::set_fade_in
+0x2320	31	17	NONE		.\soundO\ambiencemgr.obj	Sound::is_loaded
+0x2340	25	15	NONE		.\soundO\ambiencemgr.obj	Sound::get_next
+0x2360	39	18	NONE		.\soundO\ambiencemgr.obj	MidiCtrlDiskRead::MidiCtrlDiskRead
+0x2390	25	15	NONE		.\soundO\ambiencemgr.obj	Sound::get_prev
+0x23b0	27	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrlDiskRead::~MidiCtrlDiskRead
+0x23d0	25	15	NONE		.\soundO\ambiencemgr.obj	Sound::get_type
+0x23f0	54	24	NONE		.\soundO\ambiencemgr.obj	MidiCtrlDiskRead::`scalar deleting destructor'
+0x2430	249	80	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::create_control_trees
+0x2530	116	44	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::strip_path
+0x25b0	154	51	NONE		.\soundO\ambiencemgr.obj	CAmbienceMgr::make_path_local
+0x2650	51	24	NONE		.\soundO\ambiencemgr.obj	KeyMapWave::set_keyhi
+0x2690	61	22	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::DList<MidiCtrl>
+0x26d0	50	24	NONE		.\soundO\ambiencemgr.obj	KeyMapWave::set_keylo
+0x2710	27	15	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::~DList<MidiCtrl>
+0x2730	56	23	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::delete_all
+0x2770	203	67	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::add_to_end
+0x2840	42	21	NONE		.\soundO\ambiencemgr.obj	KeyMapWave::set_fname
+0x2870	54	25	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::get_first
+0x28b0	69	29	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::get_next
+0x2900	21	14	NONE		.\soundO\ambiencemgr.obj	Midi::get_game_hwnd
+0x2920	26	14	NONE		.\soundO\ambiencemgr.obj	Midi::set_attrib
+0x2940	69	29	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::get_prev
+0x2990	21	14	NONE		.\soundO\ambiencemgr.obj	Midi::get_attrib
+0x29b0	27	16	NONE		.\soundO\ambiencemgr.obj	Midi::is_local_load
+0x29d0	54	25	NONE		.\soundO\ambiencemgr.obj	DList<DllTrackSet>::get_first
+0x2a10	69	29	NONE		.\soundO\ambiencemgr.obj	DList<DllTrackSet>::get_next
+0x2a60	61	22	NONE		.\soundO\ambiencemgr.obj	DList<TrackCtrl>::DList<TrackCtrl>
+0x2aa0	27	15	NONE		.\soundO\ambiencemgr.obj	DList<TrackCtrl>::~DList<TrackCtrl>
+0x2ac0	203	67	NONE		.\soundO\ambiencemgr.obj	DList<TrackCtrl>::add_to_end
+0x2b90	142	52	NONE		.\soundO\ambiencemgr.obj	DList<TrackCtrl>::remove_head
+0x2c20	142	52	NONE		.\soundO\ambiencemgr.obj	DList<MidiCtrl>::remove_head
+0x2cb0	56	23	NONE		.\soundO\ambiencemgr.obj	DList<TrackCtrl>::delete_all
+0x2cf0	52	21	NONE		.\soundO\ambiencemgr.obj	Node<MidiCtrl>::Node<MidiCtrl>
+0x2d30	24	15	NONE		.\soundO\ambiencemgr.obj	Node<MidiCtrl>::get_prev
+0x2d50	29	16	NONE		.\soundO\ambiencemgr.obj	Node<MidiCtrl>::set_prev
+0x2d70	25	15	NONE		.\soundO\ambiencemgr.obj	Node<MidiCtrl>::get_next
+0x2d90	30	16	NONE		.\soundO\ambiencemgr.obj	Node<MidiCtrl>::set_next
+0x2db0	25	15	NONE		.\soundO\ambiencemgr.obj	Node<MidiCtrl>::get_obj
+0x2dd0	25	15	NONE		.\soundO\ambiencemgr.obj	Node<DllTrackSet>::get_next
+0x2df0	25	15	NONE		.\soundO\ambiencemgr.obj	Node<DllTrackSet>::get_obj
+0x2e10	52	21	NONE		.\soundO\ambiencemgr.obj	Node<TrackCtrl>::Node<TrackCtrl>
+0x2e50	29	16	NONE		.\soundO\ambiencemgr.obj	Node<TrackCtrl>::set_prev
+0x2e70	25	15	NONE		.\soundO\ambiencemgr.obj	Node<TrackCtrl>::get_next
+0x2e90	30	16	NONE		.\soundO\ambiencemgr.obj	Node<TrackCtrl>::set_next
+0x2eb0	25	15	NONE		.\soundO\ambiencemgr.obj	Node<TrackCtrl>::get_obj
+0x2ed0	25	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrlSocket::disk_read
+0x2ef0	28	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::~MidiCtrl
+0x2f10	26	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::refresh
+0x2f30	24	14	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::do_control
+0x2f50	19	13	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::reset
+0x2f70	19	13	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::update
+0x2f90	25	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::disk_read
+0x2fb0	25	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::type
+0x2fd0	25	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::can_be_target
+0x2ff0	54	24	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::`scalar deleting destructor'
+0x3030	28	14	NONE		.\soundO\ambiencemgr.obj	MidiCtrlDiskRead::set_type
+0x3050	29	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrlDiskRead::set_total_class_size
+0x3070	25	15	NONE		.\soundO\ambiencemgr.obj	MidiCtrlTarget::disk_read
+0x3090	25	15	NONE		.\soundO\ambiencemgr.obj	NoteMap::disk_read
+0x30b0	47	22	NONE		.\soundO\ambiencemgr.obj	ProgramCtrl::set_note_off
+0x30e0	57	26	NONE		.\soundO\ambiencemgr.obj	ProgramCtrl::set_pitch_map_state
+0x3120	31	17	NONE		.\soundO\ambiencemgr.obj	CMidiFile::is_loaded
+0x3140	134	50	NONE		.\soundO\ambiencemgr.obj	MidiCtrl::operator=
+0x31d0	36	18	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::set_loop_state
+0x3200	38	19	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::set_fade
+0x3230	30	16	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::is_looping
+0x3250	31	17	NONE		.\soundO\ambiencemgr.obj	CMidiFile::get_loop_state
+0x3270	62	27	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::is_playing
+0x32b0	70	29	NONE		.\soundO\ambiencemgr.obj	CMidiFile::is_playing
+0x3300	56	23	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::attach
+0x3340	203	67	NONE		.\soundO\ambiencemgr.obj	DList<CMidiMgr>::add_to_end
+0x3410	52	21	NONE		.\soundO\ambiencemgr.obj	Node<CMidiMgr>::Node<CMidiMgr>
+0x3450	29	16	NONE		.\soundO\ambiencemgr.obj	Node<CMidiMgr>::set_prev
+0x3470	30	16	NONE		.\soundO\ambiencemgr.obj	Node<CMidiMgr>::set_next
+0x3490	35	18	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::detach
+0x34c0	240	80	NONE		.\soundO\ambiencemgr.obj	DList<CMidiMgr>::remove
+0x35b0	24	15	NONE		.\soundO\ambiencemgr.obj	Node<CMidiMgr>::get_prev
+0x35d0	25	15	NONE		.\soundO\ambiencemgr.obj	Node<CMidiMgr>::get_next
+0x35f0	25	15	NONE		.\soundO\ambiencemgr.obj	Node<CMidiMgr>::get_obj
+0x3610	30	16	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::get_ntracks
+0x3630	28	15	NONE		.\soundO\ambiencemgr.obj	CMidiFile::get_ntracks
+0x3650	58	23	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::switch_state
+0x3690	28	15	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::get_control_track
+0x36b0	28	15	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::get_key
+0x36d0	50	21	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::set_frame
+0x3710	29	17	NONE		.\soundO\ambiencemgr.obj	Midi::is_sync_to_flic
+0x3730	28	15	NONE		.\soundO\ambiencemgr.obj	CMidiMgr::get_frame
+0x3750	299	75	NONE		.\soundO\avimgr.obj	CAviMgr::CAviMgr
+0x3880	54	24	NONE		.\soundO\avimgr.obj	CAviMgr::`scalar deleting destructor'
+0x38c0	225	68	NONE		.\soundO\avimgr.obj	CAviMgr::~CAviMgr
+0x39b0	54	24	NONE		.\soundO\avimgr.obj	WaveBuffer::`scalar deleting destructor'
+0x39f0	29	16	NONE		.\soundO\avimgr.obj	CAviMgr::detach
+0x3a10	186	64	NONE		.\soundO\avimgr.obj	CAviMgr::release
+0x3ad0	164	56	NONE		.\soundO\avimgr.obj	CAviMgr::get_frame
+0x3b80	738	222	NONE		.\soundO\avimgr.obj	CAviMgr::get_nsamples
+0x3e70	391	116	NONE		.\soundO\avimgr.obj	CAviMgr::return_frame
+0x4000	154	53	NONE		.\soundO\avimgr.obj	CAviMgr::init
+0x40a0	124	46	NONE		.\soundO\avimgr.obj	CAviMgr::start
+0x4120	86	37	NONE		.\soundO\avimgr.obj	CAviMgr::start
+0x4180	51	24	NONE		.\soundO\avimgr.obj	CAviMgr::stop
+0x41c0	50	21	NONE		.\soundO\avimgr.obj	CAviMgr::discard_frame
+0x4200	174	51	NONE		.\soundO\avimgr.obj	CAviMgr::update_cur_frame
+0x42b0	61	22	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::DList<WaveBuffer>
+0x42f0	27	15	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::~DList<WaveBuffer>
+0x4310	203	67	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::add_to_end
+0x43e0	142	52	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::remove_head
+0x4470	54	25	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::get_first
+0x44b0	69	29	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::get_next
+0x4500	31	17	NONE		.\soundO\avimgr.obj	Sound::is_attached
+0x4520	55	25	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::get_last
+0x4560	56	23	NONE		.\soundO\avimgr.obj	DList<WaveBuffer>::delete_all
+0x45a0	52	21	NONE		.\soundO\avimgr.obj	Node<WaveBuffer>::Node<WaveBuffer>
+0x45e0	29	16	NONE		.\soundO\avimgr.obj	Node<WaveBuffer>::set_prev
+0x4600	25	15	NONE		.\soundO\avimgr.obj	Node<WaveBuffer>::get_next
+0x4620	30	16	NONE		.\soundO\avimgr.obj	Node<WaveBuffer>::set_next
+0x4640	25	15	NONE		.\soundO\avimgr.obj	Node<WaveBuffer>::get_obj
+0x4660	21	14	NONE		.\soundO\avimgr.obj	AviSound::unload
+0x4680	21	14	NONE		.\soundO\avimgr.obj	AviSound::get_game_hwnd
+0x46a0	26	14	NONE		.\soundO\avimgr.obj	AviSound::set_attrib
+0x46c0	21	14	NONE		.\soundO\avimgr.obj	AviSound::get_attrib
+0x46e0	33	16	NONE		.\soundO\avimgr.obj	WaveBuffer::set_plinked_wb
+0x4710	33	16	NONE		.\soundO\avimgr.obj	WaveBuffer::set_end_position
+0x4740	30	16	NONE		.\soundO\avimgr.obj	WaveBuffer::set_pnext
+0x4760	25	15	NONE		.\soundO\avimgr.obj	WaveBuffer::get_pnext
+0x4780	25	15	NONE		.\soundO\avimgr.obj	WaveBuffer::get_pstart
+0x47a0	25	15	NONE		.\soundO\avimgr.obj	WaveBuffer::get_pend
+0x47c0	50	21	NONE		.\soundO\avimgr.obj	WaveBuffer::set_loop_state
+0x4800	35	17	NONE		.\soundO\avimgr.obj	WaveBuffer::is_linked
+0x4830	49	21	NONE		.\soundO\avimgr.obj	WaveBuffer::set_link_state
+0x4870	33	16	NONE		.\soundO\avimgr.obj	WaveBuffer::set_loop_count
+0x48a0	33	16	NONE		.\soundO\avimgr.obj	WaveBuffer::set_ploop_start
+0x48d0	33	16	NONE		.\soundO\avimgr.obj	WaveBuffer::set_ploop_end
+0x4900	28	15	NONE		.\soundO\avimgr.obj	WaveBuffer::get_loop_count
+0x4920	40	19	NONE		.\soundO\avimgr.obj	WaveBuffer::btos
+0x4950	22	14	NONE		.\soundO\avimgr.obj	WaveBuffer::get_mmioinfo
+0x4970	40	19	NONE		.\soundO\avimgr.obj	CAviMgr::btos
+0x49a0	37	17	NONE		.\soundO\avimgr.obj	CAviMgr::get_cur_frame
+0x49d0	28	15	NONE		.\soundO\avimgr.obj	CAviMgr::get_frame_size
+0x49f0	34	18	NONE		.\soundO\avimgr.obj	CAviMgr::set_mixer_unload
+0x4a20	70	29	NONE		.\soundO\avimgr.obj	CAviMgr::is_playing
+0x4a70	31	17	NONE		.\soundO\avimgr.obj	CAviMgr::is_idle
+0x4a90	47	22	NONE		.\soundO\avimgr.obj	CAviMgr::set_idle
+0x4ac0	34	18	NONE		.\soundO\avimgr.obj	CAviMgr::invalidate_positions
+0x4af0	230	63	NONE		.\soundO\Cmix.obj	CWaveMixer::CWaveMixer
+0x4be0	77	30	NONE		.\soundO\Cmix.obj	CWaveMixer::~CWaveMixer
+0x4c30	170	61	NONE		.\soundO\Cmix.obj	CWaveMixer::set_mixbuff_size
+0x4ce0	80	31	NONE		.\soundO\Cmix.obj	CWaveMixer::fill_mixbuff
+0x4d30	1251	403	NONE		.\soundO\Cmix.obj	CWaveMixer::mix_2_mb
+0x5220	1287	421	NONE		.\soundO\Cmix.obj	CWaveMixer::mix_2_3d_mb
+0x5730	57	32	NONE		.\soundO\Cmix.obj	CWaveMixer::mix_2_fpbuffer
+0x5770	23	14	NONE		.\soundO\Cmix.obj	CWaveMixer::mb_2_dsb
+0x5790	122	52	NONE		.\soundO\Cmix.obj	CWaveMixer::left_fp2word
+0x5810	125	53	NONE		.\soundO\Cmix.obj	CWaveMixer::right_fp2word
+0x5890	122	52	NONE		.\soundO\Cmix.obj	CWaveMixer::fp2word
+0x5910	433	152	NONE		.\soundO\Cmix.obj	CWaveMixer::fpmb_2_dsb
+0x5ad0	402	155	NONE		.\soundO\Cmix.obj	CWaveMixer::fpmb_2_3ddsb
+0x5c70	596	190	NONE		.\soundO\Cmix.obj	CWaveMixer::clean_play_list
+0x5ed0	30	17	NONE		.\soundO\Cmix.obj	Wave::is_dynamic_buffer
+0x5ef0	31	17	NONE		.\soundO\Cmix.obj	Wave::is_discard
+0x5f10	110	38	NONE		.\soundO\Cmix.obj	CWaveMixer::open_dump_file
+0x5f80	58	25	NONE		.\soundO\Cmix.obj	CWaveMixer::close_dump_file
+0x5fc0	126	47	NONE		.\soundO\Cmix.obj	CWaveMixer::get_filter_index
+0x6040	240	80	NONE		.\soundO\Cmix.obj	DList<Sound>::remove
+0x6130	54	25	NONE		.\soundO\Cmix.obj	DList<Sound>::get_first
+0x6170	69	29	NONE		.\soundO\Cmix.obj	DList<Sound>::get_next
+0x61c0	24	15	NONE		.\soundO\Cmix.obj	Node<Sound>::get_prev
+0x61e0	29	16	NONE		.\soundO\Cmix.obj	Node<Sound>::set_prev
+0x6200	25	15	NONE		.\soundO\Cmix.obj	Node<Sound>::get_next
+0x6220	30	16	NONE		.\soundO\Cmix.obj	Node<Sound>::set_next
+0x6240	25	15	NONE		.\soundO\Cmix.obj	Node<Sound>::get_obj
+0x6260	73	29	NONE		.\soundO\Cmix.obj	CDSB::bytes_to_samples
+0x62b0	25	15	NONE		.\soundO\Cmix.obj	CDSB::get_play_interval
+0x62d0	25	15	NONE		.\soundO\Cmix.obj	CDSB::get_cur_play_write_interval
+0x62f0	36	19	NONE		.\soundO\Cmix.obj	CWaveFile::is_shared_dsb
+0x6320	27	15	NONE		.\soundO\Cmix.obj	CWaveFile::get_format
+0x6340	47	22	NONE		.\soundO\Cmix.obj	CWaveFile::set_active
+0x6370	72	30	NONE		.\soundO\Cmix.obj	CWaveFile::set_done
+0x63c0	31	17	NONE		.\soundO\Cmix.obj	CWaveFile::is_static
+0x63e0	31	17	NONE		.\soundO\Cmix.obj	CWaveFile::is_hwstreaming
+0x6400	31	17	NONE		.\soundO\Cmix.obj	CWaveFile::is_mpeg
+0x6420	33	16	NONE		.\soundO\Cmix.obj	CWaveFile::set_time_past
+0x6450	25	15	NONE		.\soundO\Cmix.obj	CWaveFile::phwdsb
+0x6470	21	13	NONE		.\soundO\Cmix.obj	CWaveMgr::get_list_head
+0x6490	34	17	NONE		.\soundO\Cmix.obj	CWaveMgr::is_amb_sound
+0x64c0	27	15	NONE		.\soundO\Cmix.obj	CAviMgr::get_format
+0x64e0	33	16	NONE		.\soundO\Cmix.obj	CAviMgr::set_start_position
+0x6510	33	16	NONE		.\soundO\Cmix.obj	CAviMgr::set_prev_play_position
+0x6540	28	15	NONE		.\soundO\Cmix.obj	CAviMgr::get_prev_play_position
+0x6560	31	17	NONE		.\soundO\Cmix.obj	CAviMgr::are_positions_valid
+0x6580	34	18	NONE		.\soundO\Cmix.obj	CAviMgr::validate_positions
+0x65b0	31	17	NONE		.\soundO\Cmix.obj	CAviMgr::need_mixer_unload
+0x65d0	25	15	NONE		.\soundO\Cmix.obj	CWaveMixer::get_format
+0x65f0	44	21	NONE		.\soundO\Cmix.obj	CWaveMixer::set_active
+0x6620	27	15	NONE		.\soundO\Cmix.obj	CVoiceRxMgr::get_format
+0x6640	51	20	NONE		.\soundO\CritReq.obj	CCriticalRequest::CCriticalRequest
+0x6680	41	20	NONE		.\soundO\CritReq.obj	CCriticalRequest::CCriticalRequest
+0x66b0	38	17	NONE		.\soundO\CritReq.obj	CCriticalRequest::~CCriticalRequest
+0x66e0	90	29	NONE		.\soundO\CritReq.obj	CCriticalRequestQueue::CCriticalRequestQueue
+0x6740	87	28	NONE		.\soundO\CritReq.obj	CCriticalRequestQueue::~CCriticalRequestQueue
+0x67a0	35	17	NONE		.\soundO\CritReq.obj	CCriticalRequestQueue::operator[]
+0x67d0	58	22	NONE		.\soundO\CTimer.obj	CTimer::register_device
+0x6810	84	32	NONE		.\soundO\CTimer.obj	CTimer::unregister_device
+0x6870	291	82	NONE		.\soundO\CTimer.obj	CTimer::CTimer
+0x69a0	156	49	NONE		.\soundO\CTimer.obj	CTimer::~CTimer
+0x6a40	95	33	NONE		.\soundO\CTimer.obj	CTimer::release
+0x6aa0	184	66	NONE		.\soundO\CTimer.obj	CTimer::start
+0x6b60	236	71	NONE		.\soundO\CTimer.obj	CTimer::stop
+0x6c50	52	24	NONE		.\soundO\CTimer.obj	CTimer::get_samples_per_tick
+0x6c90	85	35	NONE		.\soundO\CTimer.obj	CTimer::set_rate
+0x6cf0	75	31	NONE		.\soundO\CTimer.obj	CTimer::set_wave_format
+0x6d40	357	110	NONE		.\soundO\CTimer.obj	CTimer::timer_proc
+0x6eb0	61	22	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::DList<Sound_Device>
+0x6ef0	27	15	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::~DList<Sound_Device>
+0x6f10	199	67	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::add_to_head
+0x6fe0	142	52	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::remove_head
+0x7070	240	80	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::remove
+0x7160	54	25	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::get_first
+0x71a0	69	29	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::get_next
+0x71f0	56	23	NONE		.\soundO\CTimer.obj	DList<Sound_Device>::delete_all
+0x7230	52	21	NONE		.\soundO\CTimer.obj	Node<Sound_Device>::Node<Sound_Device>
+0x7270	24	15	NONE		.\soundO\CTimer.obj	Node<Sound_Device>::get_prev
+0x7290	29	16	NONE		.\soundO\CTimer.obj	Node<Sound_Device>::set_prev
+0x72b0	25	15	NONE		.\soundO\CTimer.obj	Node<Sound_Device>::get_next
+0x72d0	30	16	NONE		.\soundO\CTimer.obj	Node<Sound_Device>::set_next
+0x72f0	25	15	NONE		.\soundO\CTimer.obj	Node<Sound_Device>::get_obj
+0x7310	26	14	NONE		.\soundO\dll main.obj	$E45
+0x7330	26	14	NONE		.\soundO\dll main.obj	$E42
+0x7350	29	15	NONE		.\soundO\dll main.obj	$E44
+0x7370	26	14	NONE		.\soundO\dll main.obj	$E43
+0x7390	26	14	NONE		.\soundO\dll main.obj	$E50
+0x73b0	26	14	NONE		.\soundO\dll main.obj	$E47
+0x73d0	29	15	NONE		.\soundO\dll main.obj	$E49
+0x73f0	26	14	NONE		.\soundO\dll main.obj	$E48
+0x7410	49	22	NONE		.\soundO\dll main.obj	DllMain
+0x7450	178	55	NONE		.\soundO\dll main.obj	init_sound
+0x7510	150	46	NONE		.\soundO\dll main.obj	init_sound_timer
+0x75b0	35	17	NONE		.\soundO\dll main.obj	get_sound_version
+0x75e0	90	30	NONE		.\soundO\dll main.obj	release_sound
+0x7640	54	24	NONE		.\soundO\dll main.obj	CTimer::`scalar deleting destructor'
+0x7680	743	0	UNDECODED		.\soundO\dll main.obj	Sound::create_sound
+0x7970	705	208	NONE		.\soundO\dll main.obj	Sound::delete_sound
+0x7c40	28	15	NONE		.\soundO\dll main.obj	dllSoundList::getCurSound
+0x7c60	143	53	NONE		.\soundO\dll main.obj	get_sound_type
+0x7cf0	16	12	NONE		.\soundO\dll main.obj	update_sound
+0x7d00	61	22	NONE		.\soundO\dll main.obj	DList<_MMIOINFO>::DList<_MMIOINFO>
+0x7d40	27	15	NONE		.\soundO\dll main.obj	DList<_MMIOINFO>::~DList<_MMIOINFO>
+0x7d60	56	23	NONE		.\soundO\dll main.obj	DList<_MMIOINFO>::delete_all
+0x7da0	142	52	NONE		.\soundO\dll main.obj	DList<_MMIOINFO>::remove_head
+0x7e30	29	16	NONE		.\soundO\dll main.obj	Node<_MMIOINFO>::set_prev
+0x7e50	25	15	NONE		.\soundO\dll main.obj	Node<_MMIOINFO>::get_next
+0x7e70	25	15	NONE		.\soundO\dll main.obj	Node<_MMIOINFO>::get_obj
+0x7e90	31	17	NONE		.\soundO\dll main.obj	Sound::is_wave
+0x7eb0	31	17	NONE		.\soundO\dll main.obj	Sound::is_ambience
+0x7ed0	33	16	NONE		.\soundO\dll main.obj	CSndWin::set_snd_hinst
+0x7f00	25	15	NONE		.\soundO\dll main.obj	CSndWin::get_hwnd
+0x7f20	31	17	NONE		.\soundO\dll main.obj	CWaveFile::is_active
+0x7f40	30	16	NONE		.\soundO\dll main.obj	CTimer::set_callback
+0x7f60	31	17	NONE		.\soundO\dll main.obj	CTimer::is_active
+0x7f80	49	20	NONE		.\soundO\dll main.obj	Dll_KeyMap::dec_ref
+0x7fc0	25	15	NONE		.\soundO\dll main.obj	CProgramMgr::get_keymap
+0x7fe0	146	44	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::create_device
+0x8080	81	30	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::delete_device
+0x80e0	189	53	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::Dll_Midi_Device
+0x81a0	54	24	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::`scalar deleting destructor'
+0x81e0	107	33	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::~Dll_Midi_Device
+0x8250	98	35	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::init
+0x82c0	58	27	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::init_win_device
+0x8300	276	88	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::release
+0x8420	54	24	NONE		.\soundO\dll midi device.obj	Dll_KeyMap::`scalar deleting destructor'
+0x8460	110	39	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::update_sound
+0x84d0	24	14	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::get_ndevices
+0x84f0	26	14	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::get_description
+0x8510	26	14	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::select
+0x8530	21	13	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::set_volume
+0x8550	43	20	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::suspend
+0x8580	66	24	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::restart
+0x85d0	89	36	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::disable
+0x8630	79	34	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::enable
+0x8680	246	74	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::queue_request
+0x8780	1041	0	UNDECODED		.\soundO\dll midi device.obj	Dll_Midi_Device::clean_request_queue
+0x8ba0	54	24	NONE		.\soundO\dll midi device.obj	CCriticalRequest::`scalar deleting destructor'
+0x8be0	1030	0	UNDECODED		.\soundO\dll midi device.obj	Dll_Midi_Device::do_requests
+0x8ff0	143	48	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::post_GT_request
+0x9080	1039	315	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::weed_out_conflicting_requests
+0x9490	61	22	NONE		.\soundO\dll midi device.obj	DList<CMidiMgr>::DList<CMidiMgr>
+0x94d0	27	15	NONE		.\soundO\dll midi device.obj	DList<CMidiMgr>::~DList<CMidiMgr>
+0x94f0	54	25	NONE		.\soundO\dll midi device.obj	DList<CMidiMgr>::get_first
+0x9530	69	29	NONE		.\soundO\dll midi device.obj	DList<CMidiMgr>::get_next
+0x9580	142	52	NONE		.\soundO\dll midi device.obj	DList<Dll_KeyMap>::remove_head
+0x9610	56	23	NONE		.\soundO\dll midi device.obj	DList<CMidiMgr>::delete_all
+0x9650	29	16	NONE		.\soundO\dll midi device.obj	Node<Dll_KeyMap>::set_prev
+0x9670	25	15	NONE		.\soundO\dll midi device.obj	Node<Dll_KeyMap>::get_next
+0x9690	25	15	NONE		.\soundO\dll midi device.obj	Node<Dll_KeyMap>::get_obj
+0x96b0	142	52	NONE		.\soundO\dll midi device.obj	DList<CMidiMgr>::remove_head
+0x9740	55	26	NONE		.\soundO\dll midi device.obj	CSndWin::set_mo_processing
+0x9780	36	18	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::add_to_time_past
+0x97b0	25	15	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::get_time_past
+0x97d0	29	15	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::reset_time_past
+0x97f0	29	15	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::timer_unhook
+0x9810	30	16	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::set_rate
+0x9830	25	15	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::get_rate
+0x9850	31	17	NONE		.\soundO\dll midi device.obj	Dll_Midi_Device::is_disabled
+0x9870	34	17	NONE		.\soundO\dll midi device.obj	Dll_Wave_Device::is_debug
+0x98a0	47	22	NONE		.\soundO\dll midi device.obj	CMidiFile::set_active
+0x98d0	31	17	NONE		.\soundO\dll midi device.obj	CMidiFile::is_active
+0x98f0	28	15	NONE		.\soundO\dll midi device.obj	CMidiMgr::get_hwnd
+0x9910	80	26	NONE		.\soundO\dll track set.obj	DllTrackSet::DllTrackSet
+0x9960	34	18	NONE		.\soundO\dll track set.obj	DllTrackSet::get_ntracks
+0x9990	146	44	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::create_device
+0x9a30	52	21	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::start_raw_dump
+0x9a70	52	21	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_hwnd
+0x9ab0	46	19	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::stop_raw_dump
+0x9ae0	81	30	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::delete_device
+0x9b40	253	57	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::Dll_Wave_Device
+0x9c40	54	24	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::`scalar deleting destructor'
+0x9c80	134	38	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::~Dll_Wave_Device
+0x9d10	1349	343	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::init
+0xa260	54	24	NONE		.\soundO\dll wave device.obj	CDSMgr::`scalar deleting destructor'
+0xa2a0	368	97	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::release
+0xa410	54	24	NONE		.\soundO\dll wave device.obj	CWaveMixer::`scalar deleting destructor'
+0xa450	857	231	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::enable
+0xa7b0	281	70	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::disable
+0xa8d0	185	47	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::suspend
+0xa990	153	43	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::restart
+0xaa30	446	115	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::select
+0xabf0	121	37	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::update_sound
+0xac70	220	64	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::queue_request
+0xad50	93	32	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::queue_request
+0xadb0	1323	385	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::clean_request_queue
+0xb2e0	31	17	NONE		.\soundO\dll wave device.obj	Sound::is_vrx
+0xb300	540	0	UNDECODED		.\soundO\dll wave device.obj	Dll_Wave_Device::kill_request_queue
+0xb520	2526	0	UNDECODED		.\soundO\dll wave device.obj	Dll_Wave_Device::do_requests
+0xbf00	28	15	NONE		.\soundO\dll wave device.obj	dllSoundList::getQueuedSound
+0xbf20	131	46	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::post_GT_request
+0xbfb0	239	73	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::post_GT_request
+0xc0a0	1033	287	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::weed_out_conflicting_requests
+0xc4b0	65	27	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::pull_from_play_list
+0xc500	52	22	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::add_to_play_list
+0xc540	143	48	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::update_hwbuffers
+0xc5d0	54	21	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::add_to_time_past
+0xc610	43	19	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_ndevices
+0xc640	43	19	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_hw_mem_size
+0xc670	66	27	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_description
+0xc6c0	45	19	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_volume
+0xc6f0	43	19	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_ds
+0xc720	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_eax
+0xc740	69	26	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_eax
+0xc790	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_eax_mix
+0xc7b0	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_eax
+0xc7d0	69	26	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_eax
+0xc820	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_eax_volume
+0xc840	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_eax_volume
+0xc860	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_eax_decay
+0xc880	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_eax_decay
+0xc8a0	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_eax_damping
+0xc8c0	23	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_eax_damping
+0xc8e0	60	25	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_listener_position
+0xc920	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_listener_position
+0xc940	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_listener_xpos
+0xc960	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_listener_xpos
+0xc980	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_listener_ypos
+0xc9a0	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_listener_ypos
+0xc9c0	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_listener_zpos
+0xc9e0	26	14	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_listener_zpos
+0xca00	43	19	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::is_3d
+0xca30	61	22	NONE		.\soundO\dll wave device.obj	DList<Sound>::DList<Sound>
+0xca70	27	15	NONE		.\soundO\dll wave device.obj	DList<Sound>::~DList<Sound>
+0xca90	203	67	NONE		.\soundO\dll wave device.obj	DList<Sound>::add_to_end
+0xcb60	53	25	NONE		.\soundO\dll wave device.obj	CSndWin::set_wo_processing
+0xcba0	30	17	NONE		.\soundO\dll wave device.obj	CSndWin::initialized
+0xcbc0	25	15	NONE		.\soundO\dll wave device.obj	Node<CDSB>::get_next
+0xcbe0	25	15	NONE		.\soundO\dll wave device.obj	Node<CDSB>::get_obj
+0xcc00	56	23	NONE		.\soundO\dll wave device.obj	DList<Sound>::delete_all
+0xcc40	52	21	NONE		.\soundO\dll wave device.obj	Node<Sound>::Node<Sound>
+0xcc80	142	52	NONE		.\soundO\dll wave device.obj	DList<Sound>::remove_head
+0xcd10	25	15	NONE		.\soundO\dll wave device.obj	CDSB::get_delay
+0xcd30	32	17	NONE		.\soundO\dll wave device.obj	CDSB::set_delay
+0xcd50	36	18	NONE		.\soundO\dll wave device.obj	CDSB::adjust_delay
+0xcd80	25	15	NONE		.\soundO\dll wave device.obj	CDSB::get_3d_buffer
+0xcda0	74	30	NONE		.\soundO\dll wave device.obj	CDSB::get_nwrite_margin_samples
+0xcdf0	33	16	NONE		.\soundO\dll wave device.obj	CDSMgr::get_first_duphwdsb
+0xce20	24	15	NONE		.\soundO\dll wave device.obj	DList<CDSB>::get_head
+0xce40	28	15	NONE		.\soundO\dll wave device.obj	CDSMgr::get_ndevices
+0xce60	28	16	NONE		.\soundO\dll wave device.obj	CDSMgr::is_emulated
+0xce80	30	17	NONE		.\soundO\dll wave device.obj	CDSMgr::is_3d
+0xcea0	30	17	NONE		.\soundO\dll wave device.obj	CDSMgr::is_eax
+0xcec0	21	13	NONE		.\soundO\dll wave device.obj	CDSMgr::get_game_hwnd
+0xcee0	24	15	NONE		.\soundO\dll wave device.obj	CDSMgr::pds
+0xcf00	57	24	NONE		.\soundO\dll wave device.obj	CDSMgr::set_listener_position
+0xcf40	33	16	NONE		.\soundO\dll wave device.obj	CWaveFile::mpeg_stop
+0xcf70	30	16	NONE		.\soundO\dll wave device.obj	CWaveMgr::is_GT_request_pending
+0xcf90	28	15	NONE		.\soundO\dll wave device.obj	CWaveMgr::get_hwnd
+0xcfb0	30	16	NONE		.\soundO\dll wave device.obj	CWaveMixer::set_hwnd
+0xcfd0	46	22	NONE		.\soundO\dll wave device.obj	CWaveMixer::use_mmx
+0xd000	32	15	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::reset_time_past
+0xd020	28	15	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_time_past
+0xd040	33	17	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::is_disabled
+0xd070	32	15	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::timer_unhook
+0xd090	33	16	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::set_rate
+0xd0c0	28	15	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::get_rate
+0xd0e0	34	17	NONE		.\soundO\dll wave device.obj	Dll_Wave_Device::is_eax
+0xd110	31	17	NONE		.\soundO\dll wave device.obj	CVoiceRxMgr::is_active
+0xd130	51	23	NONE		.\soundO\dll wave device.obj	CVoiceRxMgr::set_active
+0xd170	49	23	NONE		.\soundO\dll wave device.obj	CVoiceRxMgr::set_done
+0xd1b0	108	35	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::Dll_Wave_In_Device
+0xd220	54	24	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::`scalar deleting destructor'
+0xd260	36	17	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::~Dll_Wave_In_Device
+0xd290	143	44	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::create_device
+0xd320	81	30	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::delete_device
+0xd380	134	43	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::start_record
+0xd410	57	21	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::end_record
+0xd450	282	80	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::init
+0xd570	23	14	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::set_vxw_key
+0xd590	119	41	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::release
+0xd610	43	20	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::suspend
+0xd640	66	24	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::restart
+0xd690	23	14	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::select
+0xd6b0	29	15	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::update_sound
+0xd6d0	45	21	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::add_to_time_past
+0xd700	21	14	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::get_ndevices
+0xd720	23	14	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::get_description
+0xd740	52	21	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::hook_vtx
+0xd780	46	19	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::unhook_vtx
+0xd7b0	25	15	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::get_time_past
+0xd7d0	29	15	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::reset_time_past
+0xd7f0	29	15	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::timer_unhook
+0xd810	30	16	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::set_rate
+0xd830	25	15	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::get_rate
+0xd850	21	13	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::set_volume
+0xd870	21	14	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::get_volume
+0xd890	21	13	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::set_pan
+0xd8b0	23	14	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::fade
+0xd8d0	30	16	NONE		.\soundO\dll wavein device.obj	Dll_Wave_In_Device::set_game_hwnd
+0xd8f0	187	50	NONE		.\soundO\dsb.obj	CDSB::CDSB
+0xd9b0	36	18	NONE		.\soundO\dsb.obj	CDSB::~CDSB
+0xd9e0	57	22	NONE		.\soundO\dsb.obj	CDSB::resync
+0xda20	48	24	NONE		.\soundO\dsb.obj	CDSB::dsbrestore
+0xda50	48	22	NONE		.\soundO\dsb.obj	CDSB::set_buffer_size
+0xda80	118	38	NONE		.\soundO\dsb.obj	CDSB::setsamplerate
+0xdb00	52	25	NONE		.\soundO\dsb.obj	CDSB::set_frequency
+0xdb40	64	28	NONE		.\soundO\dsb.obj	CDSB::set_volume
+0xdb80	266	77	NONE		.\soundO\dsb.obj	CDSB::set_volume
+0xdc90	238	72	NONE		.\soundO\dsb.obj	CDSB::set_volume
+0xdd80	140	44	NONE		.\soundO\dsb.obj	CDSB::setsamplesize
+0xde10	140	44	NONE		.\soundO\dsb.obj	CDSB::setnumchannels
+0xdea0	412	115	NONE		.\soundO\dsb.obj	CDSB::dserrhandler
+0xe040	471	112	NONE		.\soundO\dsb.obj	CDSB::init
+0xe220	90	30	NONE		.\soundO\dsb.obj	CDSB::reinit
+0xe280	55	26	NONE		.\soundO\dsb.obj	CDSB::stop
+0xe2c0	201	63	NONE		.\soundO\dsb.obj	CDSB::reset
+0xe390	173	74	NONE		.\soundO\dsb.obj	CDSB::quiet
+0xe440	116	45	NONE		.\soundO\dsb.obj	CDSB::release
+0xe4c0	253	92	NONE		.\soundO\dsb.obj	CDSB::set_format
+0xe5c0	461	157	NONE		.\soundO\dsb.obj	CDSB::create
+0xe790	43	22	NONE		.\soundO\dsb.obj	CDSB::is_3d
+0xe7c0	153	59	NONE		.\soundO\dsb.obj	CDSB::init_3d
+0xe860	135	52	NONE		.\soundO\dsb.obj	CDSB::init_reverb
+0xe8f0	82	33	NONE		.\soundO\dsb.obj	CDSB::release_3d
+0xe950	65	28	NONE		.\soundO\dsb.obj	CDSB::release_reverb
+0xe9a0	76	30	NONE		.\soundO\dsb.obj	CDSB::destroy
+0xe9f0	68	31	NONE		.\soundO\dsb.obj	CDSB::get_cur_dsbwrite
+0xea40	65	30	NONE		.\soundO\dsb.obj	CDSB::get_cur_dsbplay
+0xea90	199	81	NONE		.\soundO\dsb.obj	CDSB::lock
+0xeb60	47	24	NONE		.\soundO\dsb.obj	CDSB::unlock
+0xeb90	548	196	NONE		.\soundO\dsb.obj	CDSB::get_pointer
+0xedc0	90	38	NONE		.\soundO\dsb.obj	CDSB::get_write_info
+0xee20	537	181	NONE		.\soundO\dsb.obj	CDSB::get_real_write_info
+0xf040	264	91	NONE		.\soundO\dsb.obj	CDSB::get_write_info
+0xf150	552	179	NONE		.\soundO\dsb.obj	CDSB::get_emulated_write_info
+0xf380	174	63	NONE		.\soundO\dsb.obj	CDSB::sync_emulated
+0xf430	346	112	NONE		.\soundO\dsb.obj	CDSB::get_emulated_write_info
+0xf590	101	43	NONE		.\soundO\dsb.obj	CDSB::release_pointer
+0xf600	137	54	NONE		.\soundO\dsb.obj	CDSB::play
+0xf690	76	34	NONE		.\soundO\dsb.obj	CDSB::is_playing
+0xf6e0	49	21	NONE		.\soundO\dsb.obj	CDSB::set_samples_per_tick
+0xf720	158	54	NONE		.\soundO\dsb.obj	CDSB::set_write_margin
+0xf7c0	192	62	NONE		.\soundO\dsb.obj	CDSB::set_type
+0xf880	123	47	NONE		.\soundO\dsb.obj	CDSB::set_position3d
+0xf900	95	38	NONE		.\soundO\dsb.obj	CDSB::set_xpos
+0xf960	95	38	NONE		.\soundO\dsb.obj	CDSB::set_ypos
+0xf9c0	95	38	NONE		.\soundO\dsb.obj	CDSB::set_zpos
+0xfa20	26	14	NONE		.\soundO\dsb.obj	CDSB::set_reverb_mix
+0xfa40	58	26	NONE		.\soundO\dsb.obj	CDSB::diff
+0xfa80	39	18	NONE		.\soundO\dsb.obj	CDSB::samples_to_bytes
+0xfab0	28	15	NONE		.\soundO\dsb.obj	CDSMgr::get_volume
+0xfad0	381	88	NONE		.\soundO\dsmgr.obj	CDSMgr::CDSMgr
+0xfc50	326	94	NONE		.\soundO\dsmgr.obj	CDSMgr::~CDSMgr
+0xfda0	225	76	NONE		.\soundO\dsmgr.obj	CDSMgr::init
+0xfe90	103	38	NONE		.\soundO\dsmgr.obj	CDSMgr::init
+0xff00	150	53	NONE		.\soundO\dsmgr.obj	CDSMgr::set_pcur
+0xffa0	19	13	NONE		.\soundO\dsmgr.obj	CDSMgr::suspend
+0xffc0	19	13	NONE		.\soundO\dsmgr.obj	CDSMgr::restart
+0xffe0	60	30	NONE		.\soundO\dsmgr.obj	CDSMgr::get_hw_mem_size
+0x10020	144	54	NONE		.\soundO\dsmgr.obj	CDSMgr::get_description
+0x100b0	331	112	NONE		.\soundO\dsmgr.obj	CDSMgr::ds_enum_callback
+0x10200	291	90	NONE		.\soundO\dsmgr.obj	CDSMgr::destroy
+0x10330	54	24	NONE		.\soundO\dsmgr.obj	CDSB::`scalar deleting destructor'
+0x10370	375	113	NONE		.\soundO\dsmgr.obj	CDSMgr::disable
+0x104f0	972	284	NONE		.\soundO\dsmgr.obj	CDSMgr::create
+0x108c0	62	24	NONE		.\soundO\dsmgr.obj	CDSMgr::get_eax
+0x10900	23	14	NONE		.\soundO\dsmgr.obj	CDSMgr::set_eax
+0x10920	56	23	NONE		.\soundO\dsmgr.obj	CDSMgr::init_A3D
+0x10960	21	14	NONE		.\soundO\dsmgr.obj	CDSMgr::uninit_A3D
+0x10980	113	44	NONE		.\soundO\dsmgr.obj	CDSMgr::set_hwnd
+0x10a00	272	83	NONE		.\soundO\dsmgr.obj	CDSMgr::create_dsb
+0x10b10	459	140	NONE		.\soundO\dsmgr.obj	CDSMgr::duplicate_dsb
+0x10ce0	187	64	NONE		.\soundO\dsmgr.obj	CDSMgr::free_a_duphwdsb
+0x10da0	271	87	NONE		.\soundO\dsmgr.obj	CDSMgr::steal_duplicate_hwdsb
+0x10eb0	546	154	NONE		.\soundO\dsmgr.obj	CDSMgr::create_dsb
+0x110e0	300	93	NONE		.\soundO\dsmgr.obj	CDSMgr::create_dsb
+0x11210	554	157	NONE		.\soundO\dsmgr.obj	CDSMgr::create_dsb
+0x11440	577	165	NONE		.\soundO\dsmgr.obj	CDSMgr::create_dsb
+0x11690	211	70	NONE		.\soundO\dsmgr.obj	CDSMgr::destroy_dsb
+0x11770	134	48	NONE		.\soundO\dsmgr.obj	CDSMgr::destroy_all_dsbs
+0x11800	131	41	NONE		.\soundO\dsmgr.obj	CDSMgr::attach_dsb
+0x11890	135	48	NONE		.\soundO\dsmgr.obj	CDSMgr::detach_dsb
+0x11920	72	28	NONE		.\soundO\dsmgr.obj	CDSMgr::set_volume
+0x11970	137	52	NONE		.\soundO\dsmgr.obj	CDSMgr::set_listener_position
+0x11a00	61	22	NONE		.\soundO\dsmgr.obj	DList<CDSB>::DList<CDSB>
+0x11a40	27	15	NONE		.\soundO\dsmgr.obj	DList<CDSB>::~DList<CDSB>
+0x11a60	203	67	NONE		.\soundO\dsmgr.obj	DList<CDSB>::add_to_end
+0x11b30	142	52	NONE		.\soundO\dsmgr.obj	DList<CDSB>::remove_head
+0x11bc0	240	80	NONE		.\soundO\dsmgr.obj	DList<CDSB>::remove
+0x11cb0	61	22	NONE		.\soundO\dsmgr.obj	DList<CWaveFile>::DList<CWaveFile>
+0x11cf0	27	15	NONE		.\soundO\dsmgr.obj	DList<CWaveFile>::~DList<CWaveFile>
+0x11d10	203	67	NONE		.\soundO\dsmgr.obj	DList<CWaveFile>::add_to_end
+0x11de0	142	52	NONE		.\soundO\dsmgr.obj	DList<CWaveFile>::remove_head
+0x11e70	56	23	NONE		.\soundO\dsmgr.obj	DList<CDSB>::delete_all
+0x11eb0	56	23	NONE		.\soundO\dsmgr.obj	DList<CWaveFile>::delete_all
+0x11ef0	52	21	NONE		.\soundO\dsmgr.obj	Node<CDSB>::Node<CDSB>
+0x11f30	24	15	NONE		.\soundO\dsmgr.obj	Node<CDSB>::get_prev
+0x11f50	29	16	NONE		.\soundO\dsmgr.obj	Node<CDSB>::set_prev
+0x11f70	30	16	NONE		.\soundO\dsmgr.obj	Node<CDSB>::set_next
+0x11f90	52	21	NONE		.\soundO\dsmgr.obj	Node<CWaveFile>::Node<CWaveFile>
+0x11fd0	29	16	NONE		.\soundO\dsmgr.obj	Node<CWaveFile>::set_prev
+0x11ff0	25	15	NONE		.\soundO\dsmgr.obj	Node<CWaveFile>::get_next
+0x12010	30	16	NONE		.\soundO\dsmgr.obj	Node<CWaveFile>::set_next
+0x12030	25	15	NONE		.\soundO\dsmgr.obj	Node<CWaveFile>::get_obj
+0x12050	33	16	NONE		.\soundO\dsmgr.obj	CDSB::isdsbtype
+0x12080	30	16	NONE		.\soundO\dsmgr.obj	CDSB::set_owner
+0x120a0	30	16	NONE		.\soundO\dsmgr.obj	CDSB::set_dsmgr
+0x120c0	33	16	NONE		.\soundO\dsmgr.obj	CDSB::set_next
+0x120f0	33	16	NONE		.\soundO\dsmgr.obj	CDSB::set_prev
+0x12120	28	15	NONE		.\soundO\dsmgr.obj	CDSB::get_next
+0x12140	28	15	NONE		.\soundO\dsmgr.obj	CDSB::get_prev
+0x12160	25	15	NONE		.\soundO\dsmgr.obj	CDSB::get_3d_listener
+0x12180	37	18	NONE		.\soundO\dsmgr.obj	CDSB::set_dsb_desc
+0x121b0	30	16	NONE		.\soundO\dsmgr.obj	CDSB::set_dsb_flags
+0x121d0	25	15	NONE		.\soundO\dsmgr.obj	CWaveFile::get_fname
+0x121f0	18	13	NONE		.\soundO\filters.obj	filter_stub
+0x12210	654	200	NONE		.\soundO\filters.obj	a16216s2s_straight
+0x124a0	706	214	NONE		.\soundO\filters.obj	a16216s2s_no_pitch
+0x12770	1087	326	NONE		.\soundO\filters.obj	add_16216s2smb
+0x12bb0	21	13	NONE		.\soundO\filters.obj	add_16216s2mmb
+0x12bd0	733	218	NONE		.\soundO\filters.obj	a16216m2s_straight
+0x12eb0	790	241	NONE		.\soundO\filters.obj	a16216m2s_no_pitch
+0x131d0	1240	371	NONE		.\soundO\filters.obj	add_16216m2smb
+0x136b0	1220	369	NONE		.\soundO\filters.obj	old_add_16216m2smb
+0x13b80	18	13	NONE		.\soundO\filters.obj	add_16216m2mmb
+0x13ba0	18	13	NONE		.\soundO\filters.obj	add_828s2smb
+0x13bc0	18	13	NONE		.\soundO\filters.obj	add_828s2mmb
+0x13be0	18	13	NONE		.\soundO\filters.obj	add_828m2smb
+0x13c00	18	13	NONE		.\soundO\filters.obj	add_828m2mmb
+0x13c20	938	281	NONE		.\soundO\filters.obj	add_8216s2smb
+0x13fd0	18	13	NONE		.\soundO\filters.obj	add_8216s2mmb
+0x13ff0	930	277	NONE		.\soundO\filters.obj	add_8216m2smb
+0x143a0	18	13	NONE		.\soundO\filters.obj	add_8216m2mmb
+0x143c0	595	180	NONE		.\soundO\filters.obj	m16216s2s_straight
+0x14620	643	194	NONE		.\soundO\filters.obj	m16216s2s_no_pitch
+0x148b0	930	274	NONE		.\soundO\filters.obj	mov_16216s2smb
+0x14c60	21	13	NONE		.\soundO\filters.obj	mov_16216s2mmb
+0x14c80	655	198	NONE		.\soundO\filters.obj	m16216m2s_straight
+0x14f10	701	215	NONE		.\soundO\filters.obj	m16216m2s_no_pitch
+0x151d0	28	15	NONE		.\soundO\filters.obj	WaveBuffer::get_plinked_wb
+0x151f0	33	16	NONE		.\soundO\filters.obj	WaveBuffer::set_current_position
+0x15220	1162	349	NONE		.\soundO\filters.obj	mov_16216m2smb
+0x156b0	28	15	NONE		.\soundO\filters.obj	WaveBuffer::get_current_position
+0x156d0	28	15	NONE		.\soundO\filters.obj	WaveBuffer::get_ploop_start
+0x156f0	28	15	NONE		.\soundO\filters.obj	WaveBuffer::get_ploop_end
+0x15710	25	15	NONE		.\soundO\filters.obj	WaveBuffer::get_left_volume
+0x15730	25	15	NONE		.\soundO\filters.obj	WaveBuffer::get_right_volume
+0x15750	25	15	NONE		.\soundO\filters.obj	WaveBuffer::get_pitch
+0x15770	34	17	NONE		.\soundO\filters.obj	WaveBuffer::is_looping
+0x157a0	38	18	NONE		.\soundO\filters.obj	WaveBuffer::is_fading
+0x157d0	28	15	NONE		.\soundO\filters.obj	WaveBuffer::get_fade_amount
+0x157f0	37	18	NONE		.\soundO\filters.obj	WaveBuffer::is_released
+0x15820	18	13	NONE		.\soundO\filters.obj	mov_16216m2mmb
+0x15840	18	13	NONE		.\soundO\filters.obj	mov_828s2smb
+0x15860	27	15	NONE		.\soundO\filters.obj	WaveBuffer::get_shifter
+0x15880	18	13	NONE		.\soundO\filters.obj	mov_828s2mmb
+0x158a0	18	13	NONE		.\soundO\filters.obj	mov_828m2smb
+0x158c0	18	13	NONE		.\soundO\filters.obj	mov_828m2mmb
+0x158e0	888	263	NONE		.\soundO\filters.obj	mov_8216s2smb
+0x15c60	28	15	NONE		.\soundO\filters.obj	CWaveFile::get_current_position
+0x15c80	33	16	NONE		.\soundO\filters.obj	CWaveFile::set_current_position
+0x15cb0	31	17	NONE		.\soundO\filters.obj	CWaveFile::is_eod
+0x15cd0	18	13	NONE		.\soundO\filters.obj	mov_8216s2mmb
+0x15cf0	883	258	NONE		.\soundO\filters.obj	mov_8216m2smb
+0x16070	28	15	NONE		.\soundO\filters.obj	CWaveFile::get_pitch
+0x16090	28	15	NONE		.\soundO\filters.obj	CWaveFile::get_left_volume
+0x160b0	28	15	NONE		.\soundO\filters.obj	CWaveFile::get_right_volume
+0x160d0	33	16	NONE		.\soundO\filters.obj	CWaveFile::set_loop_count
+0x16100	28	15	NONE		.\soundO\filters.obj	CWaveFile::get_loop_count
+0x16120	27	15	NONE		.\soundO\filters.obj	CWaveFile::get_shifter
+0x16140	28	16	NONE		.\soundO\filters.obj	CWaveFile::get_pstart
+0x16160	59	27	NONE		.\soundO\filters.obj	CWaveFile::get_pend
+0x161a0	28	16	NONE		.\soundO\filters.obj	CWaveFile::get_pend_write
+0x161c0	18	13	NONE		.\soundO\filters.obj	mov_8216m2mmb
+0x161e0	858	257	NONE		.\soundO\filters.obj	add_11k222k8216m2smb
+0x16540	801	238	NONE		.\soundO\filters.obj	mov_11k222k8216m2smb
+0x16870	677	207	NONE		.\soundO\filters.obj	a11k16216m2s_straight
+0x16b20	623	189	NONE		.\soundO\filters.obj	m11k16216m2s_straight
+0x16d90	844	254	NONE		.\soundO\filters.obj	add_8k222k16216m2smb
+0x170e0	1070	310	NONE		.\soundO\filters.obj	fp_mov_8k16216m2smb
+0x17510	31	17	NONE		.\soundO\filters.obj	CWaveFile::is_fading
+0x17530	27	15	NONE		.\soundO\filters.obj	CWaveFile::get_fp_shifter
+0x17550	1087	314	NONE		.\soundO\filters.obj	fp_add_8k16216m2smb
+0x17990	784	234	NONE		.\soundO\filters.obj	mov_8k222k16216m2smb
+0x17ca0	854	255	NONE		.\soundO\filters.obj	a8k222k8216m2smb
+0x18000	853	252	NONE		.\soundO\filters.obj	m8k222k8216m2smb
+0x18360	920	280	NONE		.\soundO\filters.obj	fp_add_16216m2smb
+0x18700	28	15	NONE		.\soundO\filters.obj	WaveBuffer::get_fp_fade_amount
+0x18720	27	15	NONE		.\soundO\filters.obj	CWaveFile::get_fp_pitch
+0x18740	922	278	NONE		.\soundO\filters.obj	fp_mov_16216m2smb
+0x18ae0	1012	293	NONE		.\soundO\filters.obj	fp_mov_8216m2smb
+0x18ee0	1024	297	NONE		.\soundO\filters.obj	fp_add_8216m2smb
+0x192e0	704	207	NONE		.\soundO\filters.obj	fp_mov_16216s2smb
+0x195a0	713	211	NONE		.\soundO\filters.obj	fp_add_16216s2smb
+0x19870	161	44	NONE		.\soundO\keymap.obj	Dll_KeyMap::Dll_KeyMap
+0x19920	205	69	NONE		.\soundO\keymap.obj	Dll_KeyMap::~Dll_KeyMap
+0x199f0	373	108	NONE		.\soundO\keymap.obj	Dll_KeyMap::stop_all
+0x19b70	246	78	NONE		.\soundO\keymap.obj	Dll_KeyMap::activeWaves
+0x19c70	93	31	NONE		.\soundO\keymap.obj	Dll_KeyMap::get_next_key
+0x19cd0	104	36	NONE		.\soundO\keymap.obj	Dll_KeyMap::set_cycle
+0x19d40	247	75	NONE		.\soundO\keymap.obj	Dll_KeyMap::set_release_time
+0x19e40	599	176	NONE		.\soundO\keymap.obj	Dll_KeyMap::map_range
+0x1a0a0	232	74	NONE		.\soundO\keymap.obj	Dll_KeyMap::unmap_range
+0x1a190	117	47	NONE		.\soundO\keymap.obj	Dll_KeyMap::set_desc
+0x1a210	523	129	NONE		.\soundO\keymap.obj	Dll_KeyMap::set_base_path
+0x1a420	24	15	NONE		.\soundO\keymap.obj	KeyMapWave::get_keyhi
+0x1a440	25	15	NONE		.\soundO\keymap.obj	KeyMapWave::get_keylo
+0x1a460	25	15	NONE		.\soundO\keymap.obj	KeyMapWave::get_nvoices
+0x1a480	25	15	NONE		.\soundO\keymap.obj	KeyMapWave::get_fname
+0x1a4a0	40	18	NONE		.\soundO\keymap.obj	CWaveMgr::set_amb_sound
+0x1a4d0	26	14	NONE		.\soundO\mem track.obj	$E45
+0x1a4f0	26	14	NONE		.\soundO\mem track.obj	$E42
+0x1a510	29	15	NONE		.\soundO\mem track.obj	$E44
+0x1a530	26	14	NONE		.\soundO\mem track.obj	$E43
+0x1a550	61	22	NONE		.\soundO\mem track.obj	DList<unsigned int>::DList<unsigned int>
+0x1a590	27	15	NONE		.\soundO\mem track.obj	DList<unsigned int>::~DList<unsigned int>
+0x1a5b0	56	23	NONE		.\soundO\mem track.obj	DList<unsigned int>::delete_all
+0x1a5f0	142	52	NONE		.\soundO\mem track.obj	DList<unsigned int>::remove_head
+0x1a680	29	16	NONE		.\soundO\mem track.obj	Node<unsigned int>::set_prev
+0x1a6a0	25	15	NONE		.\soundO\mem track.obj	Node<unsigned int>::get_next
+0x1a6c0	25	15	NONE		.\soundO\mem track.obj	Node<unsigned int>::get_obj
+0x1a6e0	26	14	NONE		.\soundO\midi tools.obj	$E45
+0x1a700	52	27	NONE		.\soundO\midi tools.obj	$E42
+0x1a740	29	15	NONE		.\soundO\midi tools.obj	$E44
+0x1a760	26	14	NONE		.\soundO\midi tools.obj	$E43
+0x1a780	108	35	NONE		.\soundO\midi tools.obj	NoteMap::~NoteMap
+0x1a7f0	27	15	NONE		.\soundO\midi tools.obj	MidiCtrlTarget::~MidiCtrlTarget
+0x1a810	26	14	NONE		.\soundO\midi tools.obj	$E50
+0x1a830	52	27	NONE		.\soundO\midi tools.obj	$E47
+0x1a870	29	15	NONE		.\soundO\midi tools.obj	$E49
+0x1a890	26	14	NONE		.\soundO\midi tools.obj	$E48
+0x1a8b0	26	14	NONE		.\soundO\midi tools.obj	$E55
+0x1a8d0	52	27	NONE		.\soundO\midi tools.obj	$E52
+0x1a910	29	15	NONE		.\soundO\midi tools.obj	$E54
+0x1a930	26	14	NONE		.\soundO\midi tools.obj	$E53
+0x1a950	26	14	NONE		.\soundO\midi tools.obj	$E60
+0x1a970	52	27	NONE		.\soundO\midi tools.obj	$E57
+0x1a9b0	29	15	NONE		.\soundO\midi tools.obj	$E59
+0x1a9d0	26	14	NONE		.\soundO\midi tools.obj	$E58
+0x1a9f0	26	14	NONE		.\soundO\midi tools.obj	$E65
+0x1aa10	52	27	NONE		.\soundO\midi tools.obj	$E62
+0x1aa50	29	15	NONE		.\soundO\midi tools.obj	$E64
+0x1aa70	26	14	NONE		.\soundO\midi tools.obj	$E63
+0x1aa90	105	32	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::MidiCtrlSocket
+0x1ab00	92	29	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::~MidiCtrlSocket
+0x1ab60	68	30	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::attach_ctrl
+0x1abb0	92	37	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::insert_after
+0x1ac10	23	14	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::is_ctrl_ok
+0x1ac30	49	23	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::remove
+0x1ac70	83	34	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::delete_all_children
+0x1acd0	30	16	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::get_ctrl
+0x1acf0	74	30	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::reset_all_controls
+0x1ad40	66	28	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::update_all_controls
+0x1ad90	108	35	NONE		.\soundO\midi tools.obj	MidiCtrl::MidiCtrl
+0x1ae00	112	33	NONE		.\soundO\midi tools.obj	MidiCtrlTarget::MidiCtrlTarget
+0x1ae70	182	68	NONE		.\soundO\midi tools.obj	MidiCtrlTarget::start_control
+0x1af30	212	60	NONE		.\soundO\midi tools.obj	NoteMap::NoteMap
+0x1b010	60	26	NONE		.\soundO\midi tools.obj	NoteMap::`scalar deleting destructor'
+0x1b050	296	89	NONE		.\soundO\midi tools.obj	NoteMap::NoteMap
+0x1b180	51	23	NONE		.\soundO\midi tools.obj	NoteMap::operator=
+0x1b1c0	209	70	NONE		.\soundO\midi tools.obj	NoteMap::dup_octave
+0x1b2a0	60	24	NONE		.\soundO\midi tools.obj	NoteMap::map_note
+0x1b2e0	30	16	NONE		.\soundO\midi tools.obj	NoteMap::reset
+0x1b300	30	16	NONE		.\soundO\midi tools.obj	NoteMap::update
+0x1b320	40	20	NONE		.\soundO\midi tools.obj	NoteMap::do_control
+0x1b350	180	68	NONE		.\soundO\midi tools.obj	NoteMap::start_control
+0x1b410	137	48	NONE		.\soundO\midi tools.obj	NoteMap::construct
+0x1b4a0	124	36	NONE		.\soundO\midi tools.obj	Stepper::Stepper
+0x1b520	54	24	NONE		.\soundO\midi tools.obj	Stepper::`scalar deleting destructor'
+0x1b560	27	15	NONE		.\soundO\midi tools.obj	Stepper::~Stepper
+0x1b580	32	17	NONE		.\soundO\midi tools.obj	Stepper::do_control
+0x1b5a0	37	19	NONE		.\soundO\midi tools.obj	Stepper::update
+0x1b5d0	151	44	NONE		.\soundO\midi tools.obj	Randomizer::Randomizer
+0x1b670	54	24	NONE		.\soundO\midi tools.obj	Randomizer::`scalar deleting destructor'
+0x1b6b0	36	17	NONE		.\soundO\midi tools.obj	Randomizer::~Randomizer
+0x1b6e0	115	42	NONE		.\soundO\midi tools.obj	Randomizer::set_range
+0x1b760	90	37	NONE		.\soundO\midi tools.obj	Randomizer::do_control
+0x1b7c0	80	34	NONE		.\soundO\midi tools.obj	Randomizer::update
+0x1b810	93	36	NONE		.\soundO\midi tools.obj	Randomizer::reset
+0x1b870	162	47	NONE		.\soundO\midi tools.obj	Chooser::Chooser
+0x1b920	60	26	NONE		.\soundO\midi tools.obj	Chooser::`scalar deleting destructor'
+0x1b960	108	35	NONE		.\soundO\midi tools.obj	Chooser::~Chooser
+0x1b9d0	21	14	NONE		.\soundO\midi tools.obj	Chooser::do_control
+0x1b9f0	151	45	NONE		.\soundO\midi tools.obj	ChannelCtrl::ChannelCtrl
+0x1ba90	54	24	NONE		.\soundO\midi tools.obj	ChannelCtrl::`scalar deleting destructor'
+0x1bad0	36	17	NONE		.\soundO\midi tools.obj	ChannelCtrl::~ChannelCtrl
+0x1bb00	122	36	NONE		.\soundO\midi tools.obj	TrackCtrl::TrackCtrl
+0x1bb80	54	24	NONE		.\soundO\midi tools.obj	TrackCtrl::`scalar deleting destructor'
+0x1bbc0	27	15	NONE		.\soundO\midi tools.obj	TrackCtrl::~TrackCtrl
+0x1bbe0	130	39	NONE		.\soundO\midi tools.obj	ProgramCtrl::ProgramCtrl
+0x1bc70	79	33	NONE		.\soundO\midi tools.obj	ProgramCtrl::~ProgramCtrl
+0x1bcc0	379	103	NONE		.\soundO\midi tools.obj	ProgramCtrl::set_base_filepath
+0x1be40	297	87	NONE		.\soundO\midi tools.obj	ProgramCtrl::set_fname
+0x1bf70	126	50	NONE		.\soundO\midi tools.obj	ProgramCtrl::get_new_pitch
+0x1bff0	124	47	NONE		.\soundO\midi tools.obj	ProgramCtrl::set_keymap
+0x1c070	199	67	NONE		.\soundO\midi tools.obj	DList<MidiCtrl>::add_to_head
+0x1c140	240	80	NONE		.\soundO\midi tools.obj	DList<MidiCtrl>::remove
+0x1c230	83	34	NONE		.\soundO\midi tools.obj	DList<MidiCtrl>::seek
+0x1c290	278	89	NONE		.\soundO\midi tools.obj	DList<MidiCtrl>::insert
+0x1c3b0	31	16	NONE		.\soundO\midi tools.obj	Random::Random
+0x1c3d0	25	15	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::get_list
+0x1c3f0	29	15	NONE		.\soundO\midi tools.obj	MidiCtrlSocket::set_size
+0x1c410	39	20	NONE		.\soundO\midi tools.obj	MidiCtrl::set_size
+0x1c440	39	20	NONE		.\soundO\midi tools.obj	MidiCtrlTarget::set_size
+0x1c470	30	16	NONE		.\soundO\midi tools.obj	NoteMap::set_type
+0x1c490	33	16	NONE		.\soundO\midi tools.obj	NoteMap::set_sub_type
+0x1c4c0	29	15	NONE		.\soundO\midi tools.obj	NoteMap::set_total_class_size
+0x1c4e0	41	20	NONE		.\soundO\midi tools.obj	NoteMap::set_size
+0x1c510	30	16	NONE		.\soundO\midi tools.obj	Stepper::set_type
+0x1c530	29	15	NONE		.\soundO\midi tools.obj	Stepper::set_total_class_size
+0x1c550	30	16	NONE		.\soundO\midi tools.obj	Randomizer::set_type
+0x1c570	29	15	NONE		.\soundO\midi tools.obj	Randomizer::set_total_class_size
+0x1c590	39	20	NONE		.\soundO\midi tools.obj	Randomizer::set_size
+0x1c5c0	30	16	NONE		.\soundO\midi tools.obj	Chooser::set_type
+0x1c5e0	39	20	NONE		.\soundO\midi tools.obj	Chooser::set_size
+0x1c610	29	15	NONE		.\soundO\midi tools.obj	Chooser::set_total_class_size
+0x1c630	30	16	NONE		.\soundO\midi tools.obj	ChannelCtrl::set_type
+0x1c650	29	15	NONE		.\soundO\midi tools.obj	ChannelCtrl::set_total_class_size
+0x1c670	30	16	NONE		.\soundO\midi tools.obj	TrackCtrl::set_type
+0x1c690	29	15	NONE		.\soundO\midi tools.obj	TrackCtrl::set_total_class_size
+0x1c6b0	344	80	NONE		.\soundO\midifile.obj	CMidiFile::CMidiFile
+0x1c810	283	69	NONE		.\soundO\midifile.obj	CMidiFile::undo_load
+0x1c930	117	41	NONE		.\soundO\midifile.obj	CMidiFile::get_pcur_event
+0x1c9b0	125	43	NONE		.\soundO\midifile.obj	CMidiFile::get_pfirst_event
+0x1ca30	81	34	NONE		.\soundO\midifile.obj	CMidiFile::advance_track
+0x1ca90	112	41	NONE		.\soundO\midifile.obj	CMidiFile::get_track
+0x1cb00	953	277	NONE		.\soundO\midifile.obj	CMidiFile::load
+0x1cec0	841	244	NONE		.\soundO\midifile.obj	CMidiFile::load
+0x1d210	49	23	NONE		.\soundO\midifile.obj	CMidiFile::reload
+0x1d250	133	49	NONE		.\soundO\midifile.obj	CMidiFile::post_reset
+0x1d2e0	131	47	NONE		.\soundO\midifile.obj	CMidiFile::reset
+0x1d370	114	43	NONE		.\soundO\midifile.obj	CMidiFile::reset_flags
+0x1d3f0	102	33	NONE		.\soundO\midifile.obj	CMidiFile::~CMidiFile
+0x1d460	272	85	NONE		.\soundO\midifile.obj	CMidiFile::unload
+0x1d570	54	24	NONE		.\soundO\midifile.obj	CMidiTrack::`scalar deleting destructor'
+0x1d5b0	21	13	NONE		.\soundO\midifile.obj	CMidiFile::mmioerr
+0x1d5d0	36	19	NONE		.\soundO\midifile.obj	CMidiFile::play
+0x1d600	36	19	NONE		.\soundO\midifile.obj	CMidiFile::fade
+0x1d630	50	23	NONE		.\soundO\midifile.obj	CMidiFile::fade
+0x1d670	59	22	NONE		.\soundO\midifile.obj	CMidiFile::set_pan
+0x1d6b0	110	38	NONE		.\soundO\midifile.obj	CMidiFile::set_fade
+0x1d720	46	22	NONE		.\soundO\midifile.obj	CMidiFile::set_loop_state
+0x1d750	77	30	NONE		.\soundO\midifile.obj	CMidiFile::be2le
+0x1d7a0	73	29	NONE		.\soundO\midifile.obj	CMidiFile::be2le
+0x1d7f0	137	47	NONE		.\soundO\midifile.obj	CMidiFile::varlen2dw
+0x1d880	201	57	NONE		.\soundO\midifile.obj	CMidiTrack::CMidiTrack
+0x1d950	137	44	NONE		.\soundO\midifile.obj	CMidiTrack::~CMidiTrack
+0x1d9e0	152	58	NONE		.\soundO\midifile.obj	CMidiTrack::start_control
+0x1da80	203	68	NONE		.\soundO\midifile.obj	CMidiTrack::reset
+0x1db50	119	43	NONE		.\soundO\midifile.obj	CMidiTrack::set_pdata
+0x1dbd0	109	43	NONE		.\soundO\midifile.obj	CMidiTrack::advance
+0x1dc40	120	45	NONE		.\soundO\midifile.obj	CMidiTrack::set_tick_offset
+0x1dcc0	602	0	UNDECODED		.\soundO\midifile.obj	CMidiTrack::seek
+0x1df20	676	0	UNDECODED		.\soundO\midifile.obj	CMidiTrack::seek_to_prior
+0x1e1d0	171	51	NONE		.\soundO\midifile.obj	CMidiTrack::hw_notes_off
+0x1e280	516	0	UNDECODED		.\soundO\midifile.obj	CMidiTrack::calc_total_ticks
+0x1e490	76	29	NONE		.\soundO\midifile.obj	CMidiFile::set_all_tracks_inactive
+0x1e4e0	61	22	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::DList<CMidiTrack>
+0x1e520	27	15	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::~DList<CMidiTrack>
+0x1e540	203	67	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::add_to_end
+0x1e610	142	52	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::remove_head
+0x1e6a0	54	25	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::get_first
+0x1e6e0	69	29	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::get_next
+0x1e730	56	23	NONE		.\soundO\midifile.obj	DList<CMidiTrack>::delete_all
+0x1e770	52	21	NONE		.\soundO\midifile.obj	Node<CMidiTrack>::Node<CMidiTrack>
+0x1e7b0	29	16	NONE		.\soundO\midifile.obj	Node<CMidiTrack>::set_prev
+0x1e7d0	25	15	NONE		.\soundO\midifile.obj	Node<CMidiTrack>::get_next
+0x1e7f0	30	16	NONE		.\soundO\midifile.obj	Node<CMidiTrack>::set_next
+0x1e810	25	15	NONE		.\soundO\midifile.obj	Node<CMidiTrack>::get_obj
+0x1e830	24	15	NONE		.\soundO\midifile.obj	CTimer::get_rate
+0x1e850	25	15	NONE		.\soundO\midifile.obj	Dll_Midi_Device::hmidi_out
+0x1e870	24	15	NONE		.\soundO\midifile.obj	CMidiEvent::get_status
+0x1e890	29	16	NONE		.\soundO\midifile.obj	CMidiEvent::set_packed
+0x1e8b0	24	15	NONE		.\soundO\midifile.obj	CMidiEvent::get_packed
+0x1e8d0	30	16	NONE		.\soundO\midifile.obj	CMidiEvent::set_d2
+0x1e8f0	25	15	NONE		.\soundO\midifile.obj	CMidiTrack::get_pdata
+0x1e910	25	15	NONE		.\soundO\midifile.obj	CMidiTrack::get_pcur_event
+0x1e930	30	16	NONE		.\soundO\midifile.obj	CMidiTrack::set_length
+0x1e950	31	17	NONE		.\soundO\midifile.obj	CMidiTrack::at_end
+0x1e970	47	22	NONE		.\soundO\midifile.obj	CMidiTrack::set_own_data
+0x1e9a0	31	17	NONE		.\soundO\midifile.obj	CMidiTrack::is_own_data
+0x1e9c0	34	18	NONE		.\soundO\midifile.obj	CMidiTrack::mute
+0x1e9f0	34	18	NONE		.\soundO\midifile.obj	CMidiTrack::unmute
+0x1ea20	25	15	NONE		.\soundO\midifile.obj	CMidiTrack::get_total_ticks
+0x1ea40	28	15	NONE		.\soundO\midifile.obj	CMidiFile::get_hwnd
+0x1ea60	26	14	NONE		.\soundO\midimgr.obj	$E46
+0x1ea80	26	14	NONE		.\soundO\midimgr.obj	$E42
+0x1eaa0	29	15	NONE		.\soundO\midimgr.obj	$E45
+0x1eac0	55	22	NONE		.\soundO\midimgr.obj	$E43
+0x1eb00	26	14	NONE		.\soundO\midimgr.obj	$E51
+0x1eb20	26	14	NONE		.\soundO\midimgr.obj	$E48
+0x1eb40	29	15	NONE		.\soundO\midimgr.obj	$E50
+0x1eb60	55	22	NONE		.\soundO\midimgr.obj	$E49
+0x1eba0	470	105	NONE		.\soundO\midimgr.obj	CMidiMgr::CMidiMgr
+0x1ed80	54	24	NONE		.\soundO\midimgr.obj	CMidiMgr::`scalar deleting destructor'
+0x1edc0	326	82	NONE		.\soundO\midimgr.obj	CMidiMgr::CMidiMgr
+0x1ef10	1409	389	NONE		.\soundO\midimgr.obj	CMidiMgr::update_tracks
+0x1f4a0	375	106	NONE		.\soundO\midimgr.obj	CMidiMgr::~CMidiMgr
+0x1f620	54	24	NONE		.\soundO\midimgr.obj	CProgramMgr::`scalar deleting destructor'
+0x1f660	30	16	NONE		.\soundO\midimgr.obj	CMidiMgr::reload
+0x1f680	109	39	NONE		.\soundO\midimgr.obj	CMidiMgr::load
+0x1f6f0	167	61	NONE		.\soundO\midimgr.obj	CMidiMgr::load
+0x1f7a0	64	26	NONE		.\soundO\midimgr.obj	CMidiMgr::unload
+0x1f7e0	135	45	NONE		.\soundO\midimgr.obj	CMidiMgr::direct_unload
+0x1f870	151	49	NONE		.\soundO\midimgr.obj	CMidiMgr::cleanOutKeymapList
+0x1f910	332	106	NONE		.\soundO\midimgr.obj	CMidiMgr::prepare_track
+0x1fa60	261	83	NONE		.\soundO\midimgr.obj	CMidiMgr::prepare_track
+0x1fb70	180	53	NONE		.\soundO\midimgr.obj	CMidiMgr::prepare_channels
+0x1fc30	631	0	UNDECODED		.\soundO\midimgr.obj	CMidiMgr::process_event
+0x1feb0	25	15	NONE		.\soundO\midimgr.obj	Midi::get_frame_delay
+0x1fed0	54	25	NONE		.\soundO\midimgr.obj	CMidiMgr::free_all
+0x1ff10	21	13	NONE		.\soundO\midimgr.obj	Sound::get_list
+0x1ff30	129	46	NONE		.\soundO\midimgr.obj	CMidiMgr::post_unload
+0x1ffc0	140	48	NONE		.\soundO\midimgr.obj	CMidiMgr::post_reset
+0x20050	306	97	NONE		.\soundO\midimgr.obj	CMidiMgr::play
+0x20190	46	19	NONE		.\soundO\midimgr.obj	CMidiMgr::play
+0x201c0	255	76	NONE		.\soundO\midimgr.obj	CMidiMgr::direct_stop
+0x202c0	73	30	NONE		.\soundO\midimgr.obj	CMidiMgr::stop
+0x20310	111	44	NONE		.\soundO\midimgr.obj	CMidiMgr::fade
+0x20380	85	28	NONE		.\soundO\midimgr.obj	CMidiMgr::set_volume
+0x203e0	26	14	NONE		.\soundO\midimgr.obj	CMidiMgr::map_patch
+0x20400	26	14	NONE		.\soundO\midimgr.obj	CMidiMgr::map_patch
+0x20420	600	168	NONE		.\soundO\midimgr.obj	CMidiMgr::map_patch
+0x20680	86	34	NONE		.\soundO\midimgr.obj	CMidiMgr::isKeyMapLoaded
+0x206e0	128	43	NONE		.\soundO\midimgr.obj	CMidiMgr::clear_patch
+0x20760	33	17	NONE		.\soundO\midimgr.obj	CMidiMgr::set_pan
+0x20790	28	15	NONE		.\soundO\midimgr.obj	CMidiMgr::get_time
+0x207b0	67	28	NONE		.\soundO\midimgr.obj	CMidiMgr::get_total_track_ticks
+0x20800	476	143	NONE		.\soundO\midimgr.obj	CMidiMgr::control_change
+0x209e0	105	37	NONE		.\soundO\midimgr.obj	CMidiMgr::program_change
+0x20a50	21	13	NONE		.\soundO\midimgr.obj	$E54
+0x20a70	26	14	NONE		.\soundO\midimgr.obj	$E53
+0x20a90	1424	433	NONE		.\soundO\midimgr.obj	CMidiMgr::note_on
+0x21020	398	124	NONE		.\soundO\midimgr.obj	CMidiMgr::note_off
+0x211b0	726	228	NONE		.\soundO\midimgr.obj	CMidiMgr::meta_event
+0x21490	26	14	NONE		.\soundO\midimgr.obj	CMidiMgr::pitch_wheel
+0x214b0	203	58	NONE		.\soundO\midimgr.obj	CMidiMgr::set_tempo
+0x21580	385	119	NONE		.\soundO\midimgr.obj	CMidiMgr::set_program_ctrl
+0x21710	64	26	NONE		.\soundO\midimgr.obj	CMidiMgr::set_control_track
+0x21750	87	29	NONE		.\soundO\midimgr.obj	CMidiMgr::reset
+0x217b0	80	30	NONE		.\soundO\midimgr.obj	CMidiMgr::set_channel_ctrl
+0x21800	748	217	NONE		.\soundO\midimgr.obj	CMidiMgr::add_keymap
+0x21af0	31	16	NONE		.\soundO\midimgr.obj	KeyMap::get_key_wave
+0x21b10	89	32	NONE		.\soundO\midimgr.obj	CMidiMgr::set_switch_type
+0x21b70	35	17	NONE		.\soundO\midimgr.obj	CMidiMgr::set_nswitch_threads
+0x21ba0	285	92	NONE		.\soundO\midimgr.obj	CMidiMgr::add_switch_range
+0x21cc0	107	38	NONE		.\soundO\midimgr.obj	CMidiMgr::remove_active_trackset
+0x21d30	489	142	NONE		.\soundO\midimgr.obj	CMidiMgr::add_active_trackset
+0x21f20	385	110	NONE		.\soundO\midimgr.obj	CMidiMgr::add_active_trackset
+0x220b0	99	36	NONE		.\soundO\midimgr.obj	CMidiMgr::get_trackset
+0x22120	126	44	NONE		.\soundO\midimgr.obj	CMidiMgr::set_active_range_lo
+0x221a0	126	44	NONE		.\soundO\midimgr.obj	CMidiMgr::set_active_range_hi
+0x22220	83	32	NONE		.\soundO\midimgr.obj	CMidiMgr::set_active_tracks
+0x22280	177	60	NONE		.\soundO\midimgr.obj	CMidiMgr::set_active_tracks
+0x22340	375	134	NONE		.\soundO\midimgr.obj	CMidiMgr::set_active_tracks
+0x224c0	73	30	NONE		.\soundO\midimgr.obj	CMidiMgr::play_trackset
+0x22510	57	25	NONE		.\soundO\midimgr.obj	CMidiMgr::xpose_trackset
+0x22550	121	45	NONE		.\soundO\midimgr.obj	CMidiMgr::is_trackset_playing
+0x225d0	172	59	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_play_trackset
+0x22680	345	124	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_play_trackset
+0x227e0	25	15	NONE		.\soundO\midimgr.obj	ChannelCtrl::get_channel_num
+0x22800	321	115	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_play_trackset
+0x22950	24	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_patch_num
+0x22970	55	24	NONE		.\soundO\midimgr.obj	CMidiMgr::stop_trackset
+0x229b0	25	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_pitch_hi
+0x229d0	144	49	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_stop_trackset
+0x22a60	25	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_pitch_lo
+0x22a80	25	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_vol_hi
+0x22aa0	284	106	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_stop_trackset
+0x22bc0	25	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_vol_lo
+0x22be0	25	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_fname
+0x22c00	31	17	NONE		.\soundO\midimgr.obj	ProgramCtrl::is_randomize_pitch
+0x22c20	31	17	NONE		.\soundO\midimgr.obj	ProgramCtrl::is_randomize_vol
+0x22c40	31	17	NONE		.\soundO\midimgr.obj	ProgramCtrl::note_off
+0x22c60	138	49	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_xpose_trackset
+0x22cf0	25	15	NONE		.\soundO\midimgr.obj	ProgramCtrl::get_keymap
+0x22d10	36	20	NONE		.\soundO\midimgr.obj	ProgramCtrl::is_pitch_mapped
+0x22d40	155	60	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_xpose_trackset
+0x22de0	71	29	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_set_track_loop_state
+0x22e30	123	43	NONE		.\soundO\midimgr.obj	CMidiMgr::TT_set_trackset_done_callback
+0x22eb0	258	78	NONE		.\soundO\midimgr.obj	CMidiMgr::reset_switch_table
+0x22fc0	29	16	NONE		.\soundO\midimgr.obj	Random::reseed
+0x22fe0	114	44	NONE		.\soundO\midimgr.obj	CMidiMgr::set_track_ctrl
+0x23060	108	38	NONE		.\soundO\midimgr.obj	CMidiMgr::set_track_loop_state
+0x230d0	74	32	NONE		.\soundO\midimgr.obj	CMidiMgr::get_track_loop_state
+0x23120	82	33	NONE		.\soundO\midimgr.obj	CMidiMgr::get_track_velocity_offset
+0x23180	80	32	NONE		.\soundO\midimgr.obj	CMidiMgr::set_track_velocity_offset
+0x231d0	224	0	UNDECODED		.\soundO\midimgr.obj	CMidiMgr::set_control
+0x232b0	78	33	NONE		.\soundO\midimgr.obj	CMidiMgr::get_control_target
+0x23300	60	22	NONE		.\soundO\midimgr.obj	CProgramMgr::CProgramMgr
+0x23340	82	27	NONE		.\soundO\midimgr.obj	CProgramMgr::~CProgramMgr
+0x233a0	185	59	NONE		.\soundO\midimgr.obj	CProgramMgr::load
+0x23460	29	16	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_patch_num
+0x23480	44	21	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_randomize_pitch
+0x234b0	30	16	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_pitch_hi
+0x234d0	30	16	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_pitch_lo
+0x234f0	46	22	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_randomize_vol
+0x23520	30	16	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_vol_hi
+0x23540	30	16	NONE		.\soundO\midimgr.obj	ProgramCtrl::set_vol_lo
+0x23560	21	14	NONE		.\soundO\midimgr.obj	CProgramMgr::unload
+0x23580	57	24	NONE		.\soundO\midimgr.obj	CProgramMgr::stop
+0x235c0	262	86	NONE		.\soundO\midimgr.obj	CProgramMgr::set_ctrl
+0x236d0	24	14	NONE		.\soundO\midimgr.obj	CProgramMgr::xlat_pitch
+0x236f0	24	14	NONE		.\soundO\midimgr.obj	CProgramMgr::xlat_volume
+0x23710	82	27	NONE		.\soundO\midimgr.obj	CMidiChannel::CMidiChannel
+0x23770	30	16	NONE		.\soundO\midimgr.obj	CMidiChannel::~CMidiChannel
+0x23790	19	13	NONE		.\soundO\midimgr.obj	CMidiChannel::reset_rnd_prgm_table
+0x237b0	31	15	NONE		.\soundO\midimgr.obj	CMidiChannel::xlat_program
+0x237d0	193	66	NONE		.\soundO\midimgr.obj	CMidiMgr::set_track
+0x238a0	33	16	NONE		.\soundO\midimgr.obj	WaveBuffer::set_midi_note
+0x238d0	28	15	NONE		.\soundO\midimgr.obj	WaveBuffer::get_velocity
+0x238f0	33	16	NONE		.\soundO\midimgr.obj	WaveBuffer::set_velocity
+0x23920	133	50	NONE		.\soundO\midimgr.obj	CMidiMgr::unmute_track
+0x239b0	133	50	NONE		.\soundO\midimgr.obj	CMidiMgr::mute_track
+0x23a40	385	110	NONE		.\soundO\midimgr.obj	CMidiMgr::fade_track
+0x23bd0	320	93	NONE		.\soundO\midimgr.obj	CMidiMgr::switch_track
+0x23d10	112	38	NONE		.\soundO\midimgr.obj	CMidiMgr::set_base_path
+0x23d80	34	18	NONE		.\soundO\midimgr.obj	CWaveFile::stop_fade
+0x23db0	805	0	UNDECODED		.\soundO\midimgr.obj	CMidiMgr::seek_to_prior
+0x240e0	260	93	NONE		.\soundO\midimgr.obj	CMidiMgr::set_tick_offset
+0x241f0	36	18	NONE		.\soundO\midimgr.obj	CWaveFile::is_asr
+0x24220	247	72	NONE		.\soundO\midimgr.obj	CMidiMgr::set_play_type
+0x24320	26	14	NONE		.\soundO\midimgr.obj	CMidiMgr::load_patch
+0x24340	26	14	NONE		.\soundO\midimgr.obj	CMidiMgr::unload_patch
+0x24360	67	27	NONE		.\soundO\midimgr.obj	CMidiMgr::set_patch
+0x243b0	28	15	NONE		.\soundO\midimgr.obj	CWaveFile::midi_unity_note
+0x243d0	41	19	NONE		.\soundO\midimgr.obj	CWaveFile::is_instance_playing
+0x24400	50	21	NONE		.\soundO\midimgr.obj	CWaveFile::get_instance
+0x24440	61	22	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::DList<DllTrackSet>
+0x24480	27	15	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::~DList<DllTrackSet>
+0x244a0	25	15	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::get_nnodes
+0x244c0	203	67	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::add_to_end
+0x24590	142	52	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::remove_head
+0x24620	240	80	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::remove
+0x24710	69	29	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::get_prev
+0x24760	278	89	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::insert
+0x24880	61	22	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::DList<Dll_KeyMap>
+0x248c0	27	15	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::~DList<Dll_KeyMap>
+0x248e0	43	21	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::get_pcur
+0x24910	203	67	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::add_to_end
+0x249e0	240	80	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::remove
+0x24ad0	207	70	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::remove_cur
+0x24ba0	54	25	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::get_first
+0x24be0	69	29	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::get_next
+0x24c30	56	23	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::delete_all
+0x24c70	199	67	NONE		.\soundO\midimgr.obj	DList<DllTrackSet>::add_to_head
+0x24d40	56	23	NONE		.\soundO\midimgr.obj	DList<Dll_KeyMap>::delete_all
+0x24d80	52	21	NONE		.\soundO\midimgr.obj	Node<DllTrackSet>::Node<DllTrackSet>
+0x24dc0	24	15	NONE		.\soundO\midimgr.obj	Node<DllTrackSet>::get_prev
+0x24de0	29	16	NONE		.\soundO\midimgr.obj	Node<DllTrackSet>::set_prev
+0x24e00	30	16	NONE		.\soundO\midimgr.obj	Node<DllTrackSet>::set_next
+0x24e20	52	21	NONE		.\soundO\midimgr.obj	Node<Dll_KeyMap>::Node<Dll_KeyMap>
+0x24e60	24	15	NONE		.\soundO\midimgr.obj	Node<Dll_KeyMap>::get_prev
+0x24e80	30	16	NONE		.\soundO\midimgr.obj	Node<Dll_KeyMap>::set_next
+0x24ea0	24	15	NONE		.\soundO\midimgr.obj	Dll_KeyMap::get_desc
+0x24ec0	34	17	NONE		.\soundO\midimgr.obj	Dll_KeyMap::get_key_wave
+0x24ef0	34	17	NONE		.\soundO\midimgr.obj	Dll_KeyMap::is_cycling
+0x24f20	49	20	NONE		.\soundO\midimgr.obj	Dll_KeyMap::inc_ref
+0x24f60	28	15	NONE		.\soundO\midimgr.obj	Dll_KeyMap::get_ref
+0x24f80	30	16	NONE		.\soundO\midimgr.obj	CMidiTrack::set_cur_channel
+0x24fa0	25	15	NONE		.\soundO\midimgr.obj	CMidiTrack::get_cur_channel
+0x24fc0	30	16	NONE		.\soundO\midimgr.obj	CMidiTrack::set_cur_status
+0x24fe0	25	15	NONE		.\soundO\midimgr.obj	CMidiTrack::get_cur_status
+0x25000	34	18	NONE		.\soundO\midimgr.obj	CMidiTrack::set_done
+0x25030	36	18	NONE		.\soundO\midimgr.obj	CMidiTrack::add_ticks
+0x25060	31	17	NONE		.\soundO\midimgr.obj	CMidiTrack::get_ticks
+0x25080	27	16	NONE		.\soundO\midimgr.obj	CMidiTrack::is_mute
+0x250a0	29	17	NONE		.\soundO\midimgr.obj	CMidiTrack::is_switcher
+0x250c0	34	18	NONE		.\soundO\midimgr.obj	CMidiTrack::set_switcher
+0x250f0	30	17	NONE		.\soundO\midimgr.obj	CMidiTrack::is_active_switcher
+0x25110	46	22	NONE		.\soundO\midimgr.obj	CMidiTrack::set_active_switcher
+0x25140	46	22	NONE		.\soundO\midimgr.obj	CMidiTrack::set_loop_state
+0x25170	30	17	NONE		.\soundO\midimgr.obj	CMidiTrack::is_looping
+0x25190	31	17	NONE		.\soundO\midimgr.obj	CMidiFile::need_timer_unload
+0x251b0	47	22	NONE		.\soundO\midimgr.obj	CMidiFile::set_fade_flag
+0x251e0	31	17	NONE		.\soundO\midimgr.obj	CMidiFile::is_fading
+0x25200	34	18	NONE		.\soundO\midimgr.obj	CMidiFile::set_unload_pending
+0x25230	31	17	NONE		.\soundO\midimgr.obj	CMidiFile::is_unload_pending
+0x25250	33	16	NONE		.\soundO\midimgr.obj	CMidiFile::set_hwnd
+0x25280	47	22	NONE		.\soundO\midimgr.obj	CMidiFile::set_done
+0x252b0	47	22	NONE		.\soundO\midimgr.obj	CMidiFile::set_prepared
+0x252e0	31	17	NONE		.\soundO\midimgr.obj	CMidiFile::is_done
+0x25300	28	15	NONE		.\soundO\midimgr.obj	CMidiFile::get_division
+0x25320	30	16	NONE		.\soundO\midimgr.obj	CMidiChannel::set_cur_volume
+0x25340	25	15	NONE		.\soundO\midimgr.obj	CMidiChannel::get_cur_volume
+0x25360	30	16	NONE		.\soundO\midimgr.obj	CMidiChannel::set_cur_patch
+0x25380	25	15	NONE		.\soundO\midimgr.obj	CMidiChannel::get_cur_patch
+0x253a0	36	18	NONE		.\soundO\midimgr.obj	CMidiChannel::set_ctrl
+0x253d0	30	16	NONE		.\soundO\midimgr.obj	CMidiChannel::is_randomize_patches
+0x253f0	31	17	NONE		.\soundO\midimgr.obj	ChannelCtrl::is_randomize_patches
+0x25410	30	16	NONE		.\soundO\midimgr.obj	CMidiChannel::set_cur_pan
+0x25430	25	15	NONE		.\soundO\midimgr.obj	CMidiChannel::get_cur_pan
+0x25450	84	34	NONE		.\soundO\midimgr.obj	ChannelCtrl::operator=
+0x254b0	30	16	NONE		.\soundO\midimgr.obj	CProgramMgr::set_keymap
+0x254d0	43	21	NONE		.\soundO\midimgr.obj	CMidiMgr::pack_midi_msg
+0x25500	31	16	NONE		.\soundO\MMError.obj	CMMError::CMMError
+0x25520	54	24	NONE		.\soundO\MMError.obj	CMMError::`scalar deleting destructor'
+0x25560	28	15	NONE		.\soundO\MMError.obj	CMMError::~CMMError
+0x25580	261	101	NONE		.\soundO\MMError.obj	CMMError::handle_error
+0x25690	1308	373	NONE		.\soundO\mmx filters.obj	mmx_add_16216s2smb
+0x25bb0	1403	400	NONE		.\soundO\mmx filters.obj	mmx_add_16216m2smb
+0x26130	1442	409	NONE		.\soundO\mmx filters.obj	mmx_add_8216m2smb
+0x266e0	1397	398	NONE		.\soundO\mmx filters.obj	mmx_mov_16216m2smb
+0x26c60	1305	372	NONE		.\soundO\mmx filters.obj	mmx_mov_16216s2smb
+0x27180	1439	408	NONE		.\soundO\mmx filters.obj	mmx_mov_8216m2smb
+0x27720	678	208	NONE		.\soundO\mmx filters.obj	test3_mmx_mov_16216s2smb
+0x279d0	778	237	NONE		.\soundO\mmx filters.obj	test4_mmx_mov_16216s2smb
+0x27ce0	854	256	NONE		.\soundO\mmx filters.obj	mmx_add_8k222k16216m2smb
+0x28040	784	234	NONE		.\soundO\mmx filters.obj	mmx_mov_8k222k16216m2smb
+0x28350	866	257	NONE		.\soundO\mmx filters.obj	mmx_a8k222k8216m2smb
+0x286c0	809	238	NONE		.\soundO\mmx filters.obj	mmx_m8k222k8216m2smb
+0x289f0	130	51	NONE		.\soundO\mpeg.obj	MilesMpeg::Stream_CB
+0x28a80	101	34	NONE		.\soundO\mpeg.obj	MilesMpeg::MilesMpeg
+0x28af0	62	23	NONE		.\soundO\mpeg.obj	MilesMpeg::~MilesMpeg
+0x28b30	340	105	NONE		.\soundO\mpeg.obj	MilesMpeg::init
+0x28c90	102	36	NONE		.\soundO\mpeg.obj	MilesMpeg::release
+0x28d00	344	105	NONE		.\soundO\mpeg.obj	MilesMpeg::getNewBuffer
+0x28e60	111	39	NONE		.\soundO\mpeg.obj	MilesMpeg::get_frames
+0x28ed0	216	68	NONE		.\soundO\mpeg.obj	MilesMpeg::clear_frames
+0x28fb0	339	108	NONE		.\soundO\mpeg.obj	MilesMpeg::decode_frames
+0x29110	59	22	NONE		.\soundO\mpeg.obj	MilesMpeg::reset
+0x29150	29	16	NONE		.\soundO\mpeg.obj	MilesMpeg::stop
+0x29170	70	28	NONE		.\soundO\mpeg.obj	MilesMpeg::play
+0x291c0	21	13	NONE		.\soundO\random.obj	$E2
+0x291e0	26	14	NONE		.\soundO\random.obj	$E1
+0x29200	90	34	NONE		.\soundO\random.obj	Random::get
+0x29260	81	30	NONE		.\soundO\random.obj	Random::get
+0x292c0	21	13	NONE		.\soundO\SndWin.obj	$E43
+0x292e0	26	14	NONE		.\soundO\SndWin.obj	$E42
+0x29300	70	27	NONE		.\soundO\SndWin.obj	CSndWin::CSndWin
+0x29350	54	24	NONE		.\soundO\SndWin.obj	CSndWin::`scalar deleting destructor'
+0x29390	36	17	NONE		.\soundO\SndWin.obj	CSndWin::~CSndWin
+0x293c0	99	39	NONE		.\soundO\SndWin.obj	CSndWin::init
+0x29430	110	44	NONE		.\soundO\SndWin.obj	CSndWin::create
+0x294a0	116	45	NONE		.\soundO\SndWin.obj	CSndWin::destroy
+0x29520	77	35	NONE		.\soundO\SndWin.obj	CSndWin::clean_message_queue
+0x29570	1354	372	NONE		.\soundO\SndWin.obj	thread_proc
+0x29ac0	1315	365	NONE		.\soundO\SndWin.obj	snd_wnd_proc
+0x29ff0	31	17	NONE		.\soundO\SndWin.obj	WaveInDeviceMgr::is_enabled
+0x2a010	21	13	NONE		.\soundO\SndWin.obj	CSndWin::get_wnd_class_name
+0x2a030	21	13	NONE		.\soundO\SndWin.obj	CSndWin::get_wnd_name
+0x2a050	27	16	NONE		.\soundO\SndWin.obj	CSndWin::is_wo_ignored
+0x2a070	29	17	NONE		.\soundO\SndWin.obj	CSndWin::is_mo_ignored
+0x2a090	31	17	NONE		.\soundO\SndWin.obj	CWaveFile::is_loaded
+0x2a0b0	40	18	NONE		.\soundO\SndWin.obj	CWaveFile::dec_msgs_pending
+0x2a0e0	47	22	NONE		.\soundO\SndWin.obj	CWaveFile::set_advance_pending
+0x2a110	49	21	NONE		.\soundO\SndWin.obj	CWaveMgr::set_GT_request_pending
+0x2a150	58	23	NONE		.\soundO\SndWin.obj	CMidiMgr::set_GT_request_pending
+0x2a190	160	50	NONE		.\soundO\sound device.obj	Sound_Device::attach
+0x2a230	151	55	NONE		.\soundO\sound device.obj	Sound_Device::detach
+0x2a2d0	110	35	NONE		.\soundO\sound device.obj	Sound_Device::Sound_Device
+0x2a340	54	24	NONE		.\soundO\sound device.obj	Sound_Device::`scalar deleting destructor'
+0x2a380	54	24	NONE		.\soundO\sound device.obj	Sound_Device::~Sound_Device
+0x2a3c0	129	42	NONE		.\soundO\sound device.obj	Wave_Device::Wave_Device
+0x2a450	54	24	NONE		.\soundO\sound device.obj	Wave_Device::`scalar deleting destructor'
+0x2a490	30	16	NONE		.\soundO\sound device.obj	WaveControlGroup::~WaveControlGroup
+0x2a4b0	102	33	NONE		.\soundO\sound device.obj	Wave_Device::~Wave_Device
+0x2a520	23	14	NONE		.\soundO\sound device.obj	Wave_Device::create_device
+0x2a540	21	14	NONE		.\soundO\sound device.obj	Wave_Device::delete_device
+0x2a560	102	44	NONE		.\soundO\sound device.obj	Wave_Device::init
+0x2a5d0	65	27	NONE		.\soundO\sound device.obj	Wave_Device::release
+0x2a620	45	22	NONE		.\soundO\sound device.obj	Wave_Device::suspend
+0x2a650	45	22	NONE		.\soundO\sound device.obj	Wave_Device::restart
+0x2a680	45	22	NONE		.\soundO\sound device.obj	Wave_Device::update_sound
+0x2a6b0	49	24	NONE		.\soundO\sound device.obj	Wave_Device::get_ndevices
+0x2a6f0	58	26	NONE		.\soundO\sound device.obj	Wave_Device::set_hwnd
+0x2a730	49	24	NONE		.\soundO\sound device.obj	Wave_Device::get_hw_mem_size
+0x2a770	315	109	NONE		.\soundO\sound device.obj	Wave_Device::select
+0x2a8b0	61	29	NONE		.\soundO\sound device.obj	Wave_Device::get_description
+0x2a8f0	51	24	NONE		.\soundO\sound device.obj	Wave_Device::set_rate
+0x2a930	49	24	NONE		.\soundO\sound device.obj	Wave_Device::get_rate
+0x2a970	51	24	NONE		.\soundO\sound device.obj	Wave_Device::set_volume
+0x2a9b0	21	14	NONE		.\soundO\sound device.obj	Wave_Device::get_volume
+0x2a9d0	21	13	NONE		.\soundO\sound device.obj	Wave_Device::set_pan
+0x2a9f0	49	24	NONE		.\soundO\sound device.obj	Wave_Device::get_ds
+0x2aa30	23	14	NONE		.\soundO\sound device.obj	Wave_Device::fade
+0x2aa50	21	14	NONE		.\soundO\sound device.obj	Wave_Device::stop
+0x2aa70	47	23	NONE		.\soundO\sound device.obj	Wave_Device::enable
+0x2aaa0	47	23	NONE		.\soundO\sound device.obj	Wave_Device::disable
+0x2aad0	52	24	NONE		.\soundO\sound device.obj	Wave_Device::is_disabled
+0x2ab10	19	13	NONE		.\soundO\sound device.obj	Wave_Device::timer_unhook
+0x2ab30	21	14	NONE		.\soundO\sound device.obj	Wave_Device::get_time_past
+0x2ab50	58	26	NONE		.\soundO\sound device.obj	Wave_Device::start_raw_dump
+0x2ab90	21	13	NONE		.\soundO\sound device.obj	Wave_Device::add_to_time_past
+0x2abb0	19	13	NONE		.\soundO\sound device.obj	Wave_Device::reset_time_past
+0x2abd0	52	24	NONE		.\soundO\sound device.obj	Wave_Device::stop_raw_dump
+0x2ac10	128	49	NONE		.\soundO\sound device.obj	Wave_Device::add_to_group
+0x2ac90	80	31	NONE		.\soundO\sound device.obj	Wave_Device::pull_from_group
+0x2ace0	163	59	NONE		.\soundO\sound device.obj	Wave_Device::set_group_volume
+0x2ad90	25	15	NONE		.\soundO\sound device.obj	Patch::get_volume
+0x2adb0	44	21	NONE		.\soundO\sound device.obj	Wave_Device::get_group_volume
+0x2ade0	143	53	NONE		.\soundO\sound device.obj	Wave_Device::enable_group
+0x2ae70	115	42	NONE		.\soundO\sound device.obj	Wave_Device::muteGroup
+0x2aef0	26	15	NONE		.\soundO\sound device.obj	WaveControlGroup::mute
+0x2af10	54	23	NONE		.\soundO\sound device.obj	Wave_Device::unMuteGroup
+0x2af50	166	61	NONE		.\soundO\sound device.obj	Wave_Device::disable_group
+0x2b000	25	15	NONE		.\soundO\sound device.obj	Sound::get_fname
+0x2b020	56	27	NONE		.\soundO\sound device.obj	Wave_Device::is_group_disabled
+0x2b060	30	16	NONE		.\soundO\sound device.obj	Sound::set_prev
+0x2b080	30	16	NONE		.\soundO\sound device.obj	Sound::set_next
+0x2b0a0	56	27	NONE		.\soundO\sound device.obj	Wave_Device::isGroupMute
+0x2b0e0	49	21	NONE		.\soundO\sound device.obj	WaveControlGroup::WaveControlGroup
+0x2b120	49	24	NONE		.\soundO\sound device.obj	Wave_Device::is_eax
+0x2b160	61	26	NONE		.\soundO\sound device.obj	Wave_Device::set_eax
+0x2b1a0	58	26	NONE		.\soundO\sound device.obj	Wave_Device::set_eax
+0x2b1e0	61	26	NONE		.\soundO\sound device.obj	Wave_Device::set_eax_mix
+0x2b220	52	24	NONE		.\soundO\sound device.obj	Wave_Device::is_3d
+0x2b260	69	30	NONE		.\soundO\sound device.obj	Wave_Device::set_listener_position
+0x2b2b0	69	30	NONE		.\soundO\sound device.obj	Wave_Device::get_listener_position
+0x2b300	61	26	NONE		.\soundO\sound device.obj	Wave_Device::set_listener_xpos
+0x2b340	61	26	NONE		.\soundO\sound device.obj	Wave_Device::get_listener_xpos
+0x2b380	61	26	NONE		.\soundO\sound device.obj	Wave_Device::set_listener_ypos
+0x2b3c0	61	26	NONE		.\soundO\sound device.obj	Wave_Device::get_listener_ypos
+0x2b400	61	26	NONE		.\soundO\sound device.obj	Wave_Device::set_listener_zpos
+0x2b440	61	26	NONE		.\soundO\sound device.obj	Wave_Device::get_listener_zpos
+0x2b480	23	14	NONE		.\soundO\sound device.obj	Midi_Device::create_device
+0x2b4a0	21	14	NONE		.\soundO\sound device.obj	Midi_Device::delete_device
+0x2b4c0	39	18	NONE		.\soundO\sound device.obj	Midi_Device::Midi_Device
+0x2b4f0	19	13	NONE		.\soundO\sound device.obj	Midi_Device::timer_unhook
+0x2b510	21	14	NONE		.\soundO\sound device.obj	Midi_Device::get_time_past
+0x2b530	21	13	NONE		.\soundO\sound device.obj	Midi_Device::add_to_time_past
+0x2b550	19	13	NONE		.\soundO\sound device.obj	Midi_Device::reset_time_past
+0x2b570	54	24	NONE		.\soundO\sound device.obj	Midi_Device::`scalar deleting destructor'
+0x2b5b0	36	17	NONE		.\soundO\sound device.obj	Midi_Device::~Midi_Device
+0x2b5e0	112	46	NONE		.\soundO\sound device.obj	Midi_Device::init
+0x2b650	65	27	NONE		.\soundO\sound device.obj	Midi_Device::release
+0x2b6a0	21	14	NONE		.\soundO\sound device.obj	Midi_Device::get_ndevices
+0x2b6c0	23	14	NONE		.\soundO\sound device.obj	Midi_Device::select
+0x2b6e0	23	14	NONE		.\soundO\sound device.obj	Midi_Device::get_description
+0x2b700	21	13	NONE		.\soundO\sound device.obj	Midi_Device::set_volume
+0x2b720	21	14	NONE		.\soundO\sound device.obj	Midi_Device::get_volume
+0x2b740	21	13	NONE		.\soundO\sound device.obj	Midi_Device::set_pan
+0x2b760	23	14	NONE		.\soundO\sound device.obj	Midi_Device::fade
+0x2b780	21	14	NONE		.\soundO\sound device.obj	Midi_Device::stop
+0x2b7a0	19	13	NONE		.\soundO\sound device.obj	Midi_Device::update_sound
+0x2b7c0	21	13	NONE		.\soundO\sound device.obj	Midi_Device::set_rate
+0x2b7e0	21	14	NONE		.\soundO\sound device.obj	Midi_Device::get_rate
+0x2b800	19	13	NONE		.\soundO\sound device.obj	Midi_Device::suspend
+0x2b820	19	13	NONE		.\soundO\sound device.obj	Midi_Device::restart
+0x2b840	47	23	NONE		.\soundO\sound device.obj	Midi_Device::enable
+0x2b870	47	23	NONE		.\soundO\sound device.obj	Midi_Device::disable
+0x2b8a0	52	24	NONE		.\soundO\sound device.obj	Midi_Device::is_disabled
+0x2b8e0	39	18	NONE		.\soundO\sound device.obj	Wave_In_Device::Wave_In_Device
+0x2b910	19	13	NONE		.\soundO\sound device.obj	Wave_In_Device::timer_unhook
+0x2b930	21	14	NONE		.\soundO\sound device.obj	Wave_In_Device::get_time_past
+0x2b950	21	13	NONE		.\soundO\sound device.obj	Wave_In_Device::add_to_time_past
+0x2b970	19	13	NONE		.\soundO\sound device.obj	Wave_In_Device::reset_time_past
+0x2b990	21	13	NONE		.\soundO\sound device.obj	Wave_In_Device::set_volume
+0x2b9b0	21	14	NONE		.\soundO\sound device.obj	Wave_In_Device::get_volume
+0x2b9d0	21	13	NONE		.\soundO\sound device.obj	Wave_In_Device::set_pan
+0x2b9f0	23	14	NONE		.\soundO\sound device.obj	Wave_In_Device::fade
+0x2ba10	54	24	NONE		.\soundO\sound device.obj	Wave_In_Device::`scalar deleting destructor'
+0x2ba50	36	17	NONE		.\soundO\sound device.obj	Wave_In_Device::~Wave_In_Device
+0x2ba80	23	14	NONE		.\soundO\sound device.obj	Wave_In_Device::create_device
+0x2baa0	21	14	NONE		.\soundO\sound device.obj	Wave_In_Device::delete_device
+0x2bac0	102	44	NONE		.\soundO\sound device.obj	Wave_In_Device::init
+0x2bb30	68	29	NONE		.\soundO\sound device.obj	Wave_In_Device::release
+0x2bb80	58	26	NONE		.\soundO\sound device.obj	Wave_In_Device::set_codec
+0x2bbc0	58	26	NONE		.\soundO\sound device.obj	Wave_In_Device::set_vxw_key
+0x2bc00	21	14	NONE		.\soundO\sound device.obj	Wave_In_Device::get_ndevices
+0x2bc20	23	14	NONE		.\soundO\sound device.obj	Wave_In_Device::select
+0x2bc40	23	14	NONE		.\soundO\sound device.obj	Wave_In_Device::get_description
+0x2bc60	23	14	NONE		.\soundO\sound device.obj	Wave_In_Device::get_caps
+0x2bc80	21	14	NONE		.\soundO\sound device.obj	Wave_In_Device::stop
+0x2bca0	19	13	NONE		.\soundO\sound device.obj	Wave_In_Device::update_sound
+0x2bcc0	21	13	NONE		.\soundO\sound device.obj	Wave_In_Device::set_rate
+0x2bce0	21	14	NONE		.\soundO\sound device.obj	Wave_In_Device::get_rate
+0x2bd00	19	13	NONE		.\soundO\sound device.obj	Wave_In_Device::suspend
+0x2bd20	19	13	NONE		.\soundO\sound device.obj	Wave_In_Device::restart
+0x2bd40	47	23	NONE		.\soundO\sound device.obj	Wave_In_Device::start_record
+0x2bd70	47	23	NONE		.\soundO\sound device.obj	Wave_In_Device::end_record
+0x2bda0	26	14	NONE		.\soundO\sound thread.obj	$E45
+0x2bdc0	26	14	NONE		.\soundO\sound thread.obj	$E42
+0x2bde0	29	15	NONE		.\soundO\sound thread.obj	$E44
+0x2be00	26	14	NONE		.\soundO\sound thread.obj	$E43
+0x2be20	91	35	NONE		.\soundO\sound thread.obj	SoundThread::SoundThread
+0x2be80	91	33	NONE		.\soundO\sound thread.obj	SoundThread::~SoundThread
+0x2bee0	157	56	NONE		.\soundO\sound thread.obj	SoundThread::stop
+0x2bf80	101	41	NONE		.\soundO\sound thread.obj	SoundThread::start
+0x2bff0	165	57	NONE		.\soundO\sound thread.obj	SoundThread::fn_sound_thread
+0x2c0a0	73	32	NONE		.\soundO\sound thread.obj	SoundThread::post_message
+0x2c0f0	181	52	NONE		.\soundO\sound.obj	Sound::Sound
+0x2c1b0	54	24	NONE		.\soundO\sound.obj	Sound::`scalar deleting destructor'
+0x2c1f0	163	50	NONE		.\soundO\sound.obj	Sound::~Sound
+0x2c2a0	269	99	NONE		.\soundO\sound.obj	Sound::set_type
+0x2c3b0	343	121	NONE		.\soundO\sound.obj	Sound::load
+0x2c510	188	58	NONE		.\soundO\sound.obj	Sound::attach
+0x2c5d0	190	64	NONE		.\soundO\sound.obj	Sound::detach
+0x2c690	160	50	NONE		.\soundO\sound.obj	Sound::attach
+0x2c730	159	56	NONE		.\soundO\sound.obj	Sound::detach
+0x2c7d0	31	15	NONE		.\soundO\sound.obj	Sound::load
+0x2c7f0	97	36	NONE		.\soundO\sound.obj	Sound::unload
+0x2c860	58	25	NONE		.\soundO\sound.obj	Sound::play
+0x2c8a0	64	27	NONE		.\soundO\sound.obj	Sound::play
+0x2c8e0	49	24	NONE		.\soundO\sound.obj	Sound::is_playing
+0x2c920	58	25	NONE		.\soundO\sound.obj	Sound::stop
+0x2c960	58	25	NONE		.\soundO\sound.obj	Sound::release
+0x2c9a0	84	35	NONE		.\soundO\sound.obj	Sound::set_volume
+0x2ca00	63	28	NONE		.\soundO\sound.obj	Sound::set_loop_state
+0x2ca40	63	28	NONE		.\soundO\sound.obj	Sound::set_delay
+0x2ca80	78	33	NONE		.\soundO\sound.obj	Sound::set_fade
+0x2cad0	78	33	NONE		.\soundO\sound.obj	Sound::set_fade_in
+0x2cb20	64	28	NONE		.\soundO\sound.obj	Sound::fade
+0x2cb60	61	28	NONE		.\soundO\sound.obj	Sound::fade
+0x2cba0	33	17	NONE		.\soundO\sound.obj	Patch::set_volume
+0x2cbd0	64	28	NONE		.\soundO\sound.obj	Sound::fade_in
+0x2cc10	30	16	NONE		.\soundO\sound.obj	Patch::set_delay
+0x2cc30	59	28	NONE		.\soundO\sound.obj	Sound::ramp
+0x2cc70	61	28	NONE		.\soundO\sound.obj	Sound::fade_in
+0x2ccb0	30	16	NONE		.\soundO\sound.obj	Patch::set_loop_state
+0x2ccd0	45	21	NONE		.\soundO\sound.obj	Patch::set_fade
+0x2cd00	49	24	NONE		.\soundO\sound.obj	Sound::is_looping
+0x2cd40	49	24	NONE		.\soundO\sound.obj	Sound::get_time
+0x2cd80	25	15	NONE		.\soundO\sound.obj	Patch::get_fade_amount
+0x2cda0	89	34	NONE		.\soundO\sound.obj	Sound::set_pan
+0x2ce00	30	16	NONE		.\soundO\sound.obj	Patch::set_pan
+0x2ce20	25	15	NONE		.\soundO\sound.obj	Patch::get_loop_state
+0x2ce40	177	52	NONE		.\soundO\sound.obj	Wave::Wave
+0x2cf00	54	24	NONE		.\soundO\sound.obj	Wave::`scalar deleting destructor'
+0x2cf40	129	40	NONE		.\soundO\sound.obj	Wave::~Wave
+0x2cfd0	61	26	NONE		.\soundO\sound.obj	Wave::play
+0x2d010	183	64	NONE		.\soundO\sound.obj	Wave::play
+0x2d0d0	49	24	NONE		.\soundO\sound.obj	Wave::is_loaded
+0x2d110	61	26	NONE		.\soundO\sound.obj	Wave::play
+0x2d150	54	24	NONE		.\soundO\sound.obj	Wave::stop_instance
+0x2d190	54	24	NONE		.\soundO\sound.obj	Wave::fade_instance
+0x2d1d0	348	129	NONE		.\soundO\sound.obj	Wave::init
+0x2d330	52	24	NONE		.\soundO\sound.obj	Wave::is_hwbuffer
+0x2d370	25	15	NONE		.\soundO\sound.obj	Wave::get_ms_length
+0x2d390	93	36	NONE		.\soundO\sound.obj	Wave::is_playing
+0x2d3f0	123	48	NONE		.\soundO\sound.obj	Wave::set_fname
+0x2d470	67	29	NONE		.\soundO\sound.obj	Wave::set_link
+0x2d4c0	112	45	NONE		.\soundO\sound.obj	Wave::dyna_load
+0x2d530	356	126	NONE		.\soundO\sound.obj	Wave::load
+0x2d6a0	25	15	NONE		.\soundO\sound.obj	Patch::get_pan
+0x2d6c0	25	15	NONE		.\soundO\sound.obj	Wave::get_pitch
+0x2d6e0	389	136	NONE		.\soundO\sound.obj	Wave::load
+0x2d870	79	32	NONE		.\soundO\sound.obj	Wave::load
+0x2d8c0	280	99	NONE		.\soundO\sound.obj	Wave::reload
+0x2d9e0	109	40	NONE		.\soundO\sound.obj	Wave::unload
+0x2da50	97	34	NONE		.\soundO\sound.obj	Wave::set_pitch
+0x2dac0	247	94	NONE		.\soundO\sound.obj	Wave::set_attrib
+0x2dbc0	219	85	NONE		.\soundO\sound.obj	Wave::get_attrib
+0x2dca0	58	26	NONE		.\soundO\sound.obj	Wave::get_time
+0x2dce0	53	24	NONE		.\soundO\sound.obj	Wave::get_current_marker
+0x2dd20	49	24	NONE		.\soundO\sound.obj	Wave::get_game_hwnd
+0x2dd60	52	24	NONE		.\soundO\sound.obj	Wave::get_ndevices
+0x2dda0	81	34	NONE		.\soundO\sound.obj	Wave::get_device_description
+0x2de00	52	23	NONE		.\soundO\sound.obj	Wave::select_device
+0x2de40	70	29	NONE		.\soundO\sound.obj	Wave::set_reverb_mix
+0x2de90	31	15	NONE		.\soundO\sound.obj	Wave::set_bufflimit
+0x2deb0	29	15	NONE		.\soundO\sound.obj	Wave::set_asdr
+0x2ded0	31	15	NONE		.\soundO\sound.obj	Wave::set_attack
+0x2def0	31	15	NONE		.\soundO\sound.obj	Wave::set_sustain
+0x2df10	31	15	NONE		.\soundO\sound.obj	Wave::set_decay
+0x2df30	31	15	NONE		.\soundO\sound.obj	Wave::set_release
+0x2df50	42	20	NONE		.\soundO\sound.obj	Wave::set_volume
+0x2df80	69	30	NONE		.\soundO\sound.obj	Wave::set_position3d
+0x2dfd0	61	26	NONE		.\soundO\sound.obj	Wave::set_xpos
+0x2e010	61	26	NONE		.\soundO\sound.obj	Wave::set_ypos
+0x2e050	61	26	NONE		.\soundO\sound.obj	Wave::set_zpos
+0x2e090	52	24	NONE		.\soundO\sound.obj	Wave::is_3d
+0x2e0d0	92	31	NONE		.\soundO\sound.obj	MpegStream::MpegStream
+0x2e130	54	24	NONE		.\soundO\sound.obj	MpegStream::`scalar deleting destructor'
+0x2e170	159	49	NONE		.\soundO\sound.obj	MpegStream::~MpegStream
+0x2e210	65	25	NONE		.\soundO\sound.obj	MpegStream::set_next
+0x2e260	151	52	NONE		.\soundO\sound.obj	MpegStream::start
+0x2e300	132	49	NONE		.\soundO\sound.obj	MpegStream::add_to_playlist
+0x2e390	99	37	NONE		.\soundO\sound.obj	MpegStream::clear_playlist
+0x2e400	134	41	NONE		.\soundO\sound.obj	SoundList::SoundList
+0x2e490	54	24	NONE		.\soundO\sound.obj	SoundList::`scalar deleting destructor'
+0x2e4d0	159	49	NONE		.\soundO\sound.obj	SoundList::~SoundList
+0x2e570	27	15	NONE		.\soundO\sound.obj	SoundList::attach
+0x2e590	27	15	NONE		.\soundO\sound.obj	SoundList::detach
+0x2e5b0	24	14	NONE		.\soundO\sound.obj	SoundList::stop
+0x2e5d0	21	13	NONE		.\soundO\sound.obj	SoundList::scaleVolumeToGroup
+0x2e5f0	132	49	NONE		.\soundO\sound.obj	SoundList::add
+0x2e680	91	37	NONE		.\soundO\sound.obj	SoundList::setListName
+0x2e6e0	110	41	NONE		.\soundO\sound.obj	SoundList::clear
+0x2e750	73	27	NONE		.\soundO\sound.obj	KeyMapWave::KeyMapWave
+0x2e7a0	162	46	NONE		.\soundO\sound.obj	KeyMap::KeyMap
+0x2e850	54	24	NONE		.\soundO\sound.obj	KeyMap::`scalar deleting destructor'
+0x2e890	156	50	NONE		.\soundO\sound.obj	KeyMap::~KeyMap
+0x2e930	116	41	NONE		.\soundO\sound.obj	KeyMap::unmap_range
+0x2e9b0	302	96	NONE		.\soundO\sound.obj	KeyMap::map_range
+0x2eae0	30	16	NONE		.\soundO\sound.obj	KeyMapWave::set_nvoices
+0x2eb00	118	42	NONE		.\soundO\sound.obj	KeyMap::set_name
+0x2eb80	340	81	NONE		.\soundO\sound.obj	KeyMap::set_base_path
+0x2ece0	28	15	NONE		.\soundO\sound.obj	KeyMap::get_name
+0x2ed00	96	37	NONE		.\soundO\sound.obj	Midi::Midi
+0x2ed60	54	24	NONE		.\soundO\sound.obj	Midi::`scalar deleting destructor'
+0x2eda0	165	50	NONE		.\soundO\sound.obj	Midi::~Midi
+0x2ee50	52	24	NONE		.\soundO\sound.obj	Midi::play
+0x2ee90	42	20	NONE		.\soundO\sound.obj	Midi::set_volume
+0x2eec0	54	24	NONE		.\soundO\sound.obj	Midi::set_frame
+0x2ef00	51	23	NONE		.\soundO\sound.obj	Midi::set_frame_delay
+0x2ef40	52	24	NONE		.\soundO\sound.obj	Midi::get_frame
+0x2ef80	54	24	NONE		.\soundO\sound.obj	Midi::switch_state
+0x2efc0	61	26	NONE		.\soundO\sound.obj	Midi::set_switch_type
+0x2f000	65	28	NONE		.\soundO\sound.obj	Midi::add_switch_range
+0x2f050	61	26	NONE		.\soundO\sound.obj	Midi::set_nswitch_threads
+0x2f090	69	30	NONE		.\soundO\sound.obj	Midi::map_patch
+0x2f0e0	65	28	NONE		.\soundO\sound.obj	Midi::map_patch
+0x2f130	54	24	NONE		.\soundO\sound.obj	Midi::set_base_path
+0x2f170	61	26	NONE		.\soundO\sound.obj	Midi::clear_patch
+0x2f1b0	55	24	NONE		.\soundO\sound.obj	Midi::reset
+0x2f1f0	65	28	NONE		.\soundO\sound.obj	Midi::set_track
+0x2f240	61	26	NONE		.\soundO\sound.obj	Midi::mute_track
+0x2f280	61	26	NONE		.\soundO\sound.obj	Midi::unmute_track
+0x2f2c0	65	28	NONE		.\soundO\sound.obj	Midi::set_active_tracks
+0x2f310	61	26	NONE		.\soundO\sound.obj	Midi::set_active_tracks
+0x2f350	61	26	NONE		.\soundO\sound.obj	Midi::play_trackset
+0x2f390	65	28	NONE		.\soundO\sound.obj	Midi::xpose_trackset
+0x2f3e0	61	26	NONE		.\soundO\sound.obj	Midi::stop_trackset
+0x2f420	58	26	NONE		.\soundO\sound.obj	Midi::is_trackset_playing
+0x2f460	61	26	NONE		.\soundO\sound.obj	Midi::add_active_trackset
+0x2f4a0	65	28	NONE		.\soundO\sound.obj	Midi::set_active_range_lo
+0x2f4f0	65	28	NONE		.\soundO\sound.obj	Midi::set_active_range_hi
+0x2f540	61	26	NONE		.\soundO\sound.obj	Midi::remove_active_trackset
+0x2f580	58	26	NONE		.\soundO\sound.obj	Midi::get_trackset
+0x2f5c0	52	24	NONE		.\soundO\sound.obj	Midi::get_ntracks
+0x2f600	61	26	NONE		.\soundO\sound.obj	Midi::load_patch
+0x2f640	61	26	NONE		.\soundO\sound.obj	Midi::unload_patch
+0x2f680	65	28	NONE		.\soundO\sound.obj	Midi::set_patch
+0x2f6d0	77	33	NONE		.\soundO\sound.obj	Midi::init
+0x2f720	69	30	NONE		.\soundO\sound.obj	Midi::set_load_type
+0x2f770	133	50	NONE		.\soundO\sound.obj	Midi::set_fname
+0x2f800	61	26	NONE		.\soundO\sound.obj	Midi::set_tempo
+0x2f840	166	62	NONE		.\soundO\sound.obj	Midi::load
+0x2f8f0	57	25	NONE		.\soundO\sound.obj	Midi::load
+0x2f930	202	70	NONE		.\soundO\sound.obj	Midi::load
+0x2fa00	146	54	NONE		.\soundO\sound.obj	Midi::unload
+0x2faa0	58	26	NONE		.\soundO\sound.obj	Midi::get_time
+0x2fae0	52	24	NONE		.\soundO\sound.obj	Midi::get_control_track
+0x2fb20	58	26	NONE		.\soundO\sound.obj	Midi::get_total_track_ticks
+0x2fb60	69	30	NONE		.\soundO\sound.obj	Midi::set_control
+0x2fbb0	62	28	NONE		.\soundO\sound.obj	Midi::get_control_target
+0x2fbf0	65	28	NONE		.\soundO\sound.obj	Midi::set_track_loop_state
+0x2fc40	58	26	NONE		.\soundO\sound.obj	Midi::get_track_loop_state
+0x2fc80	65	28	NONE		.\soundO\sound.obj	Midi::get_track_velocity_offset
+0x2fcd0	65	28	NONE		.\soundO\sound.obj	Midi::set_track_velocity_offset
+0x2fd20	61	26	NONE		.\soundO\sound.obj	Midi::add_keymap
+0x2fd60	54	24	NONE		.\soundO\sound.obj	Midi::set_play_type
+0x2fda0	52	24	NONE		.\soundO\sound.obj	Midi::get_key
+0x2fde0	241	87	NONE		.\soundO\sound.obj	Midi::get_tonal_center
+0x2fee0	55	23	NONE		.\soundO\sound.obj	GlblMidiSet::GlblMidiSet
+0x2ff20	111	32	NONE		.\soundO\sound.obj	TrackSet::TrackSet
+0x2ff90	50	23	NONE		.\soundO\sound.obj	TrackSet::set_lo
+0x2ffd0	50	23	NONE		.\soundO\sound.obj	TrackSet::set_hi
+0x30010	53	21	NONE		.\soundO\sound.obj	Sound::unloadall
+0x30050	80	29	NONE		.\soundO\sound.obj	Patch::Patch
+0x300a0	54	24	NONE		.\soundO\sound.obj	Patch::`scalar deleting destructor'
+0x300e0	28	15	NONE		.\soundO\sound.obj	Patch::~Patch
+0x30100	94	30	NONE		.\soundO\sound.obj	Ambience::Ambience
+0x30160	54	24	NONE		.\soundO\sound.obj	Ambience::`scalar deleting destructor'
+0x301a0	27	15	NONE		.\soundO\sound.obj	Ambience::~Ambience
+0x301c0	61	26	NONE		.\soundO\sound.obj	Ambience::load
+0x30200	34	18	NONE		.\soundO\sound.obj	Midi::set_sync_to_flic
+0x30230	315	102	NONE		.\soundO\sound.obj	Ambience::load
+0x30370	29	16	NONE		.\soundO\sound.obj	Ambience::unload
+0x30390	94	30	NONE		.\soundO\sound.obj	AviSound::AviSound
+0x303f0	54	24	NONE		.\soundO\sound.obj	AviSound::`scalar deleting destructor'
+0x30430	145	46	NONE		.\soundO\sound.obj	AviSound::~AviSound
+0x304d0	158	59	NONE		.\soundO\sound.obj	AviSound::init
+0x30570	119	45	NONE		.\soundO\sound.obj	AviSound::release
+0x305f0	56	25	NONE		.\soundO\sound.obj	AviSound::start
+0x30630	47	23	NONE		.\soundO\sound.obj	AviSound::stop
+0x30660	58	26	NONE		.\soundO\sound.obj	AviSound::get_frame
+0x306a0	61	26	NONE		.\soundO\sound.obj	AviSound::return_frame
+0x306e0	53	24	NONE		.\soundO\sound.obj	AviSound::get_cur_frame
+0x30720	52	24	NONE		.\soundO\sound.obj	AviSound::get_frame_size
+0x30760	21	14	NONE		.\soundO\sound.obj	AviSound::get_time
+0x30780	161	50	NONE		.\soundO\sound.obj	VoiceRx::VoiceRx
+0x30830	21	14	NONE		.\soundO\sound.obj	VoiceRx::get_game_hwnd
+0x30850	26	14	NONE		.\soundO\sound.obj	VoiceRx::set_attrib
+0x30870	21	14	NONE		.\soundO\sound.obj	VoiceRx::get_attrib
+0x30890	52	24	NONE		.\soundO\sound.obj	VoiceRx::get_nbuffers
+0x308d0	54	24	NONE		.\soundO\sound.obj	VoiceRx::`scalar deleting destructor'
+0x30910	185	58	NONE		.\soundO\sound.obj	VoiceRx::~VoiceRx
+0x309d0	154	57	NONE		.\soundO\sound.obj	VoiceRx::init
+0x30a70	119	45	NONE		.\soundO\sound.obj	VoiceRx::release
+0x30af0	50	23	NONE		.\soundO\sound.obj	VoiceRx::start
+0x30b30	47	23	NONE		.\soundO\sound.obj	VoiceRx::stop
+0x30b60	52	24	NONE		.\soundO\sound.obj	VoiceRx::unload
+0x30ba0	61	26	NONE		.\soundO\sound.obj	VoiceRx::add_buffer
+0x30be0	52	24	NONE		.\soundO\sound.obj	VoiceRx::get_buffer_size
+0x30c20	180	57	NONE		.\soundO\sound.obj	VoiceTx::VoiceTx
+0x30ce0	21	14	NONE		.\soundO\sound.obj	VoiceTx::get_game_hwnd
+0x30d00	26	14	NONE		.\soundO\sound.obj	VoiceTx::set_attrib
+0x30d20	21	14	NONE		.\soundO\sound.obj	VoiceTx::get_attrib
+0x30d40	54	24	NONE		.\soundO\sound.obj	VoiceTx::`scalar deleting destructor'
+0x30d80	155	48	NONE		.\soundO\sound.obj	VoiceTx::~VoiceTx
+0x30e20	47	23	NONE		.\soundO\sound.obj	VoiceTx::release
+0x30e50	106	42	NONE		.\soundO\sound.obj	VoiceTx::start
+0x30ec0	76	33	NONE		.\soundO\sound.obj	VoiceTx::stop
+0x30f10	68	29	NONE		.\soundO\sound.obj	VoiceTx::unload
+0x30f60	180	66	NONE		.\soundO\sound.obj	VoiceTx::init
+0x31020	52	24	NONE		.\soundO\sound.obj	VoiceTx::get_nbuffers
+0x31060	52	24	NONE		.\soundO\sound.obj	VoiceTx::get_next_buffer
+0x310a0	61	26	NONE		.\soundO\sound.obj	VoiceTx::return_buffer
+0x310e0	34	19	NONE		.\soundO\sound.obj	do_message
+0x31110	159	40	NONE		.\soundO\SoundList.obj	dllSoundList::dllSoundList
+0x311b0	24	14	NONE		.\soundO\SoundList.obj	dllSoundList::get_game_hwnd
+0x311d0	26	14	NONE		.\soundO\SoundList.obj	dllSoundList::set_attrib
+0x311f0	21	14	NONE		.\soundO\SoundList.obj	dllSoundList::get_attrib
+0x31210	32	16	NONE		.\soundO\SoundList.obj	dllSoundList::isAlreadyQueued
+0x31230	69	26	NONE		.\soundO\SoundList.obj	dllSoundList::is_playing
+0x31280	54	24	NONE		.\soundO\SoundList.obj	dllSoundList::`scalar deleting destructor'
+0x312c0	27	15	NONE		.\soundO\SoundList.obj	dllSoundList::~dllSoundList
+0x312e0	408	121	NONE		.\soundO\SoundList.obj	dllSoundList::queueSound
+0x31480	309	91	NONE		.\soundO\SoundList.obj	dllSoundList::play
+0x315c0	59	23	NONE		.\soundO\SoundList.obj	dllSoundList::stop
+0x31600	167	53	NONE		.\soundO\SoundList.obj	dllSoundList::ramp
+0x316b0	193	59	NONE		.\soundO\SoundList.obj	dllSoundList::fade
+0x31780	170	54	NONE		.\soundO\SoundList.obj	dllSoundList::set_volume
+0x31830	170	53	NONE		.\soundO\SoundList.obj	dllSoundList::set_scaled_volume
+0x318e0	52	22	NONE		.\soundO\SoundList.obj	SoundList::getSoundName
+0x31920	33	16	NONE		.\soundO\SoundList.obj	CWaveFile::setppCurSound
+0x31950	117	31	NONE		.\soundO\trace.obj	CTrace::CTrace
+0x319d0	19	13	NONE		.\soundO\trace.obj	CTrace::~CTrace
+0x319f0	210	71	NONE		.\soundO\trace.obj	CTrace::dump_to_file
+0x31ad0	34	16	NONE		.\soundO\trace.obj	CTrace::set_t1
+0x31b00	34	16	NONE		.\soundO\trace.obj	CTrace::set_t2
+0x31b30	69	25	NONE		.\soundO\trace.obj	CTrace::in_data
+0x31b80	40	20	NONE		.\soundO\trace.obj	CTrace::operator=
+0x31bb0	33	17	NONE		.\soundO\trace.obj	ostream::operator<<
+0x31be0	246	64	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::CVoiceRxMgr
+0x31ce0	54	24	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::`scalar deleting destructor'
+0x31d20	251	73	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::~CVoiceRxMgr
+0x31e20	29	16	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::detach
+0x31e40	212	69	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::release
+0x31f20	174	57	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::direct_unload
+0x31fd0	47	21	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::unload
+0x32000	33	17	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::add_buffer
+0x32030	148	51	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::lpc10_write_16bit_samples
+0x320d0	150	54	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::lpc10_read_bits
+0x32170	661	168	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::add_lpc10buffer
+0x32410	910	282	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::get_nsamples
+0x327a0	168	52	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::init
+0x32850	143	52	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::start
+0x328e0	47	21	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::stop
+0x32910	50	21	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::discard_buffer
+0x32950	28	15	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::enable
+0x32970	28	15	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::disable
+0x32990	240	80	NONE		.\soundO\VoiceRxMgr.obj	DList<_MMIOINFO>::remove
+0x32a80	24	15	NONE		.\soundO\VoiceRxMgr.obj	Node<_MMIOINFO>::get_prev
+0x32aa0	30	16	NONE		.\soundO\VoiceRxMgr.obj	Node<_MMIOINFO>::set_next
+0x32ac0	31	17	NONE		.\soundO\VoiceRxMgr.obj	CWaveMixer::uses_mmx
+0x32ae0	24	14	NONE		.\soundO\VoiceRxMgr.obj	Dll_Wave_Device::get_mixer
+0x32b00	30	16	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::get_nbuffers
+0x32b20	25	15	NONE		.\soundO\VoiceRxMgr.obj	DList<WaveBuffer>::get_nnodes
+0x32b40	28	15	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::get_buffer_size
+0x32b60	34	18	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::set_mixer_unload
+0x32b90	70	29	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::is_playing
+0x32be0	47	22	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::set_idle
+0x32c10	34	18	NONE		.\soundO\VoiceRxMgr.obj	CVoiceRxMgr::invalidate_positions
+0x32c40	199	51	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::CVoiceTxMgr
+0x32d10	54	24	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::`scalar deleting destructor'
+0x32d50	197	59	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::~CVoiceTxMgr
+0x32e20	74	27	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::init
+0x32e70	114	41	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::release
+0x32ef0	159	55	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::unload
+0x32f90	80	31	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::s2f_and_scale
+0x32fe0	397	120	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::add_buffer
+0x33170	30	16	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::get_nbuffers
+0x33190	173	62	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::get_next_buffer
+0x33240	123	42	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::return_buffer
+0x332c0	118	33	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::start
+0x33340	30	17	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::stop
+0x33360	144	52	NONE		.\soundO\VoiceTxMgr.obj	CVoiceTxMgr::lpc_write_bits
+0x333f0	61	22	NONE		.\soundO\VoiceTxMgr.obj	DList<HMMIO__ *>::DList<HMMIO__ *>
+0x33430	27	15	NONE		.\soundO\VoiceTxMgr.obj	DList<HMMIO__ *>::~DList<HMMIO__ *>
+0x33450	25	15	NONE		.\soundO\VoiceTxMgr.obj	DList<HMMIO__ *>::get_nnodes
+0x33470	203	67	NONE		.\soundO\VoiceTxMgr.obj	DList<HMMIO__ *>::add_to_end
+0x33540	142	52	NONE		.\soundO\VoiceTxMgr.obj	DList<HMMIO__ *>::remove_head
+0x335d0	56	23	NONE		.\soundO\VoiceTxMgr.obj	DList<HMMIO__ *>::delete_all
+0x33610	52	21	NONE		.\soundO\VoiceTxMgr.obj	Node<HMMIO__ *>::Node<HMMIO__ *>
+0x33650	29	16	NONE		.\soundO\VoiceTxMgr.obj	Node<HMMIO__ *>::set_prev
+0x33670	25	15	NONE		.\soundO\VoiceTxMgr.obj	Node<HMMIO__ *>::get_next
+0x33690	30	16	NONE		.\soundO\VoiceTxMgr.obj	Node<HMMIO__ *>::set_next
+0x336b0	25	15	NONE		.\soundO\VoiceTxMgr.obj	Node<HMMIO__ *>::get_obj
+0x336d0	843	168	NONE		.\soundO\wavefile.obj	CWaveFile::CWaveFile
+0x33a20	602	126	NONE		.\soundO\wavefile.obj	CWaveFile::CWaveFile
+0x33c80	208	73	NONE		.\soundO\wavefile.obj	CWaveFile::undo_load
+0x33d50	305	106	NONE		.\soundO\wavefile.obj	CWaveFile::hw_load
+0x33e90	339	115	NONE		.\soundO\wavefile.obj	CWaveFile::load_3d
+0x33ff0	59	25	NONE		.\soundO\wavefile.obj	CWaveFile::add_dup_hwdsb
+0x34030	57	24	NONE		.\soundO\wavefile.obj	CWaveFile::remove_dup_hwdsb
+0x34070	71	26	NONE		.\soundO\wavefile.obj	CWaveFile::mpeg_fade
+0x340c0	41	20	NONE		.\soundO\wavefile.obj	CWaveFile::hwdsb_stop
+0x340f0	443	113	NONE		.\soundO\wavefile.obj	CWaveFile::mpeg_play
+0x342b0	434	139	NONE		.\soundO\wavefile.obj	CWaveFile::mpeg_load
+0x34470	3193	913	NONE		.\soundO\wavefile.obj	CWaveFile::load
+0x350f0	134	52	NONE		.\soundO\wavefile.obj	CWaveFile::read_from_file
+0x35180	1271	414	NONE		.\soundO\wavefile.obj	CWaveFile::advance_stream
+0x35680	150	53	NONE		.\soundO\wavefile.obj	CWaveFile::get_write_pointers
+0x35720	49	23	NONE		.\soundO\wavefile.obj	CWaveFile::reload
+0x35760	676	210	NONE		.\soundO\wavefile.obj	CWaveFile::reset
+0x35a10	226	76	NONE		.\soundO\wavefile.obj	CWaveFile::reset_flags
+0x35b00	561	162	NONE		.\soundO\wavefile.obj	CWaveFile::~CWaveFile
+0x35d40	361	103	NONE		.\soundO\wavefile.obj	CWaveFile::mpeg_unload
+0x35eb0	206	63	NONE		.\soundO\wavefile.obj	CWaveFile::clear_mpeg_frames
+0x35f80	661	192	NONE		.\soundO\wavefile.obj	CWaveFile::unload
+0x36220	27	15	NONE		.\soundO\wavefile.obj	CWaveFile::mmioerr
+0x36240	994	285	NONE		.\soundO\wavefile.obj	CWaveFile::play
+0x36630	567	156	NONE		.\soundO\wavefile.obj	CWaveFile::play
+0x36870	401	109	NONE		.\soundO\wavefile.obj	CWaveFile::play
+0x36a10	185	66	NONE		.\soundO\wavefile.obj	CWaveFile::fade
+0x36ad0	254	80	NONE		.\soundO\wavefile.obj	CWaveFile::fade_in
+0x36bd0	305	92	NONE		.\soundO\wavefile.obj	CWaveFile::ramp
+0x36d10	50	23	NONE		.\soundO\wavefile.obj	CWaveFile::fade
+0x36d50	118	37	NONE		.\soundO\wavefile.obj	CWaveFile::fade_in
+0x36dd0	267	87	NONE		.\soundO\wavefile.obj	CWaveFile::operator++
+0x36ee0	162	58	NONE		.\soundO\wavefile.obj	CWaveFile::get_nsamples_left_in_buffer
+0x36f90	88	38	NONE		.\soundO\wavefile.obj	CWaveFile::advance
+0x36ff0	29	16	NONE		.\soundO\wavefile.obj	CWaveFile::advance_file
+0x37010	125	51	NONE		.\soundO\wavefile.obj	CWaveFile::read_data
+0x37090	180	68	NONE		.\soundO\wavefile.obj	CWaveFile::need_to_advance
+0x37150	126	49	NONE		.\soundO\wavefile.obj	CWaveFile::seek_to_curstartpos
+0x371d0	133	45	NONE		.\soundO\wavefile.obj	CWaveFile::set_hwvolume
+0x37260	443	116	NONE		.\soundO\wavefile.obj	CWaveFile::set_volume
+0x37420	371	93	NONE		.\soundO\wavefile.obj	CWaveFile::set_pan
+0x375a0	259	76	NONE		.\soundO\wavefile.obj	CWaveFile::set_fade
+0x376b0	238	75	NONE		.\soundO\wavefile.obj	CWaveFile::set_fade_in
+0x377a0	33	16	NONE		.\soundO\wavefile.obj	CWaveFile::set_pitch
+0x377d0	98	35	NONE		.\soundO\wavefile.obj	CWaveFile::get_current_marker
+0x37840	190	68	NONE		.\soundO\wavefile.obj	CWaveFile::get_cursample
+0x37900	165	59	NONE		.\soundO\wavefile.obj	CWaveFile::get_cursample_channel
+0x379b0	811	245	NONE		.\soundO\wavefile.obj	CWaveFile::get_nsamples
+0x37ce0	144	54	NONE		.\soundO\wavefile.obj	CWaveFile::get_mpeg_samples
+0x37d70	646	168	NONE		.\soundO\wavefile.obj	CWaveFile::setNextMpegFrame
+0x38000	28	15	NONE		.\soundO\wavefile.obj	CDSB::get_volume
+0x38020	28	15	NONE		.\soundO\wavefile.obj	CDSB::xpos
+0x38040	28	15	NONE		.\soundO\wavefile.obj	CDSB::ypos
+0x38060	28	15	NONE		.\soundO\wavefile.obj	CDSB::zpos
+0x38080	2930	822	NONE		.\soundO\wavefile.obj	CWaveFile::get_mpeg_samples_to_dsb
+0x38c00	25	15	NONE		.\soundO\wavefile.obj	MilesMpeg::isEndOfStream
+0x38c20	30	16	NONE		.\soundO\wavefile.obj	MilesMpeg::setLoopState
+0x38c40	33	16	NONE		.\soundO\wavefile.obj	WaveBuffer::set_start_position
+0x38c70	33	16	NONE		.\soundO\wavefile.obj	WaveBuffer::set_time
+0x38ca0	33	16	NONE		.\soundO\wavefile.obj	WaveBuffer::set_time_past
+0x38cd0	42	18	NONE		.\soundO\wavefile.obj	WaveBuffer::set_pitch
+0x38d00	36	18	NONE		.\soundO\wavefile.obj	WaveBuffer::set_volume
+0x38d30	42	18	NONE		.\soundO\wavefile.obj	WaveBuffer::set_left_volume
+0x38d60	36	18	NONE		.\soundO\wavefile.obj	WaveBuffer::set_right_volume
+0x38d90	33	16	NONE		.\soundO\wavefile.obj	WaveBuffer::set_delay
+0x38dc0	51	22	NONE		.\soundO\wavefile.obj	WaveBuffer::set_release
+0x38e00	33	16	NONE		.\soundO\wavefile.obj	WaveBuffer::set_loop_size
+0x38e30	52	22	NONE		.\soundO\wavefile.obj	WaveBuffer::set_done
+0x38e70	38	18	NONE		.\soundO\wavefile.obj	WaveBuffer::is_done
+0x38ea0	1187	381	NONE		.\soundO\wavefile.obj	CWaveFile::get_stream_samples
+0x39350	31	17	NONE		.\soundO\wavefile.obj	CWaveFile::is_hwbuffer
+0x39370	39	18	NONE		.\soundO\wavefile.obj	CWaveFile::stob
+0x393a0	40	19	NONE		.\soundO\wavefile.obj	CWaveFile::btos
+0x393d0	42	18	NONE		.\soundO\wavefile.obj	CWaveFile::set_volume
+0x39400	3373	932	NONE		.\soundO\wavefile.obj	CWaveFile::stream_to_hwbuffer
+0x3a130	34	18	NONE		.\soundO\wavefile.obj	CWaveFile::set_shared_dsb
+0x3a160	28	15	NONE		.\soundO\wavefile.obj	CWaveFile::get_delay
+0x3a180	28	16	NONE		.\soundO\wavefile.obj	CWaveFile::get_pnext
+0x3a1a0	1156	353	NONE		.\soundO\wavefile.obj	CWaveFile::get_buffer_samples
+0x3a630	28	15	NONE		.\soundO\wavefile.obj	WaveBuffer::get_time
+0x3a650	28	15	NONE		.\soundO\wavefile.obj	WaveBuffer::get_delay
+0x3a670	135	45	NONE		.\soundO\wavefile.obj	CWaveFile::queueSound
+0x3a700	73	25	NONE		.\soundO\wavefile.obj	CWaveFile::set_buffer_done
+0x3a750	89	33	NONE		.\soundO\wavefile.obj	CWaveFile::set_buffer_inactive
+0x3a7b0	124	45	NONE		.\soundO\wavefile.obj	CWaveFile::set_release
+0x3a830	24	14	NONE		.\soundO\wavefile.obj	Dll_Wave_Device::get_pdsmgr
+0x3a850	65	26	NONE		.\soundO\wavefile.obj	CWaveFile::get_time
+0x3a8a0	56	23	NONE		.\soundO\wavefile.obj	CWaveFile::get_buffer_state
+0x3a8e0	91	35	NONE		.\soundO\wavefile.obj	CWaveFile::set_loop_state
+0x3a940	555	176	NONE		.\soundO\wavefile.obj	CWaveFile::set_static
+0x3ab70	70	29	NONE		.\soundO\wavefile.obj	CWaveFile::is_playing
+0x3abc0	76	33	NONE		.\soundO\wavefile.obj	CWaveFile::set_position3d
+0x3ac10	68	29	NONE		.\soundO\wavefile.obj	CWaveFile::set_xpos
+0x3ac60	68	29	NONE		.\soundO\wavefile.obj	CWaveFile::set_ypos
+0x3acb0	68	29	NONE		.\soundO\wavefile.obj	CWaveFile::set_zpos
+0x3ad00	68	29	NONE		.\soundO\wavefile.obj	CWaveFile::set_reverb_mix
+0x3ad50	444	85	NONE		.\soundO\wavefile.obj	WaveBuffer::WaveBuffer
+0x3af10	19	13	NONE		.\soundO\wavefile.obj	WaveBuffer::~WaveBuffer
+0x3af30	121	38	NONE		.\soundO\wavefile.obj	WaveBuffer::init
+0x3afb0	213	56	NONE		.\soundO\wavefile.obj	WaveBuffer::reset
+0x3b090	40	20	NONE		.\soundO\wavefile.obj	WaveBuffer::get_nsamples_left_in_buffer
+0x3b0c0	395	115	NONE		.\soundO\wavefile.obj	WaveBuffer::set_pan
+0x3b250	269	75	NONE		.\soundO\wavefile.obj	WaveBuffer::set_fade
+0x3b360	25	15	NONE		.\soundO\wavefile.obj	WaveBuffer::get_volume
+0x3b380	304	89	NONE		.\soundO\wavefile.obj	WaveBuffer::set_fade_in
+0x3b4b0	136	43	NONE		.\soundO\wavefile.obj	WaveBuffer::fade
+0x3b540	168	53	NONE		.\soundO\wavefile.obj	WaveBuffer::fade_in
+0x3b5f0	114	43	NONE		.\soundO\wavefile.obj	CWaveFile::get_free_instance
+0x3b670	163	53	NONE		.\soundO\wavefile.obj	CWaveFile::find_midi_instance
+0x3b720	28	15	NONE		.\soundO\wavefile.obj	WaveBuffer::get_midi_note
+0x3b740	99	36	NONE		.\soundO\wavefile.obj	WaveBuffer::set_volume
+0x3b7b0	25	15	NONE		.\soundO\wavefile.obj	WaveBuffer::get_pan
+0x3b7d0	61	22	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::DList<CuePoint_tag>
+0x3b810	27	15	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::~DList<CuePoint_tag>
+0x3b830	203	67	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::add_to_end
+0x3b900	142	52	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::remove_head
+0x3b990	54	25	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::get_first
+0x3b9d0	69	29	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::get_next
+0x3ba20	203	67	NONE		.\soundO\wavefile.obj	DList<_MMIOINFO>::add_to_end
+0x3baf0	56	23	NONE		.\soundO\wavefile.obj	DList<CuePoint_tag>::delete_all
+0x3bb30	52	21	NONE		.\soundO\wavefile.obj	Node<CuePoint_tag>::Node<CuePoint_tag>
+0x3bb70	29	16	NONE		.\soundO\wavefile.obj	Node<CuePoint_tag>::set_prev
+0x3bb90	25	15	NONE		.\soundO\wavefile.obj	Node<CuePoint_tag>::get_next
+0x3bbb0	30	16	NONE		.\soundO\wavefile.obj	Node<CuePoint_tag>::set_next
+0x3bbd0	25	15	NONE		.\soundO\wavefile.obj	Node<CuePoint_tag>::get_obj
+0x3bbf0	52	21	NONE		.\soundO\wavefile.obj	Node<_MMIOINFO>::Node<_MMIOINFO>
+0x3bc30	167	52	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::WaveInDeviceMgr
+0x3bce0	54	24	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::`scalar deleting destructor'
+0x3bd20	124	39	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::~WaveInDeviceMgr
+0x3bda0	323	94	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::init
+0x3bef0	188	66	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::free_buffers
+0x3bfb0	54	24	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::`scalar deleting destructor'
+0x3bff0	34	18	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::start_record
+0x3c020	133	50	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::prepare_headers
+0x3c0b0	133	50	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::unprepare_headers
+0x3c140	133	50	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::add_buffers
+0x3c1d0	76	31	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::add_buffer
+0x3c220	89	36	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::stop_record
+0x3c280	25	14	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::get_num_devices
+0x3c2a0	92	38	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::select
+0x3c300	117	40	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::call_back
+0x3c380	117	45	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::enable
+0x3c400	213	68	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::disable
+0x3c4e0	178	0	UNDECODED		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::handle_error
+0x3c5a0	88	28	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::set_format
+0x3c600	145	53	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::process_buffer
+0x3c6a0	32	17	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::hook_vtx
+0x3c6c0	31	16	NONE		.\soundO\WaveInDeviceMgr.obj	WaveInDeviceMgr::unhook_vtx
+0x3c6e0	100	31	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::WIBuffer
+0x3c750	56	25	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::~WIBuffer
+0x3c790	83	34	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::set_buffer
+0x3c7f0	30	16	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::set_next
+0x3c810	22	14	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::get_whdr
+0x3c830	61	22	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::DList<WIBuffer>
+0x3c870	27	15	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::~DList<WIBuffer>
+0x3c890	203	67	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::add_to_end
+0x3c960	142	52	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::remove_head
+0x3c9f0	54	25	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::get_first
+0x3ca30	69	29	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::get_next
+0x3ca80	55	25	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::get_last
+0x3cac0	56	23	NONE		.\soundO\WaveInDeviceMgr.obj	DList<WIBuffer>::delete_all
+0x3cb00	52	21	NONE		.\soundO\WaveInDeviceMgr.obj	Node<WIBuffer>::Node<WIBuffer>
+0x3cb40	29	16	NONE		.\soundO\WaveInDeviceMgr.obj	Node<WIBuffer>::set_prev
+0x3cb60	25	15	NONE		.\soundO\WaveInDeviceMgr.obj	Node<WIBuffer>::get_next
+0x3cb80	30	16	NONE		.\soundO\WaveInDeviceMgr.obj	Node<WIBuffer>::set_next
+0x3cba0	25	15	NONE		.\soundO\WaveInDeviceMgr.obj	Node<WIBuffer>::get_obj
+0x3cbc0	29	15	NONE		.\soundO\WaveInDeviceMgr.obj	WIBuffer::clear_flags
+0x3cbe0	230	60	NONE		.\soundO\wavemgr.obj	CWaveMgr::CWaveMgr
+0x3ccd0	54	24	NONE		.\soundO\wavemgr.obj	CWaveMgr::`scalar deleting destructor'
+0x3cd10	221	62	NONE		.\soundO\wavemgr.obj	CWaveMgr::CWaveMgr
+0x3cdf0	395	107	NONE		.\soundO\wavemgr.obj	CWaveMgr::~CWaveMgr
+0x3cf80	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::reload
+0x3cfa0	276	78	NONE		.\soundO\wavemgr.obj	CWaveMgr::load
+0x3d0c0	304	87	NONE		.\soundO\wavemgr.obj	CWaveMgr::direct_unload
+0x3d1f0	86	33	NONE		.\soundO\wavemgr.obj	CWaveMgr::unload
+0x3d250	52	24	NONE		.\soundO\wavemgr.obj	CWaveMgr::reset
+0x3d290	68	28	NONE		.\soundO\wavemgr.obj	CWaveMgr::fade
+0x3d2e0	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::fade_in
+0x3d310	54	25	NONE		.\soundO\wavemgr.obj	CWaveMgr::free_all
+0x3d350	392	123	NONE		.\soundO\wavemgr.obj	CWaveMgr::play
+0x3d4e0	200	69	NONE		.\soundO\wavemgr.obj	CWaveMgr::play
+0x3d5b0	300	99	NONE		.\soundO\wavemgr.obj	CWaveMgr::play
+0x3d6e0	69	28	NONE		.\soundO\wavemgr.obj	CWaveMgr::stop
+0x3d730	56	25	NONE		.\soundO\wavemgr.obj	CWaveMgr::release
+0x3d770	29	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::detach
+0x3d790	145	49	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_volume
+0x3d830	156	54	NONE		.\soundO\wavemgr.obj	CWaveMgr::ramp
+0x3d8d0	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_delay
+0x3d900	48	22	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_pan
+0x3d930	354	113	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_pitch
+0x3daa0	189	69	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_attrib
+0x3db60	254	78	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_link
+0x3dc60	63	26	NONE		.\soundO\wavemgr.obj	CWaveMgr::get_attrib
+0x3dca0	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::get_time
+0x3dcd0	44	22	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_position3d
+0x3dd00	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_xpos
+0x3dd30	48	22	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_reverb_mix
+0x3dd60	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_ypos
+0x3dd90	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_zpos
+0x3ddc0	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::get_ms_length
+0x3dde0	37	18	NONE		.\soundO\wavemgr.obj	CWaveFile::set_try_hwbuffer
+0x3de10	34	18	NONE		.\soundO\wavemgr.obj	CWaveFile::set_try_hwstreaming
+0x3de40	43	19	NONE		.\soundO\wavemgr.obj	CWaveFile::set_big_buffer
+0x3de70	33	16	NONE		.\soundO\wavemgr.obj	CWaveFile::set_hwnd
+0x3dea0	42	18	NONE		.\soundO\wavemgr.obj	CWaveFile::set_pitch
+0x3ded0	33	16	NONE		.\soundO\wavemgr.obj	CWaveFile::set_delay
+0x3df00	34	18	NONE		.\soundO\wavemgr.obj	CWaveFile::set_3d
+0x3df30	28	15	NONE		.\soundO\wavemgr.obj	CWaveFile::get_ms_length
+0x3df50	36	18	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_loop_state
+0x3df80	38	19	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_fade
+0x3dfb0	38	19	NONE		.\soundO\wavemgr.obj	CWaveMgr::set_fade_in
+0x3dfe0	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::get_time
+0x3e000	28	15	NONE		.\soundO\wavemgr.obj	CWaveFile::get_time
+0x3e020	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::get_current_marker
+0x3e040	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::is_looping
+0x3e060	31	17	NONE		.\soundO\wavemgr.obj	CWaveFile::get_loop_state
+0x3e080	24	14	NONE		.\soundO\wavemgr.obj	CWaveMgr::get_game_hwnd
+0x3e0a0	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::is_playing
+0x3e0c0	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::is_hwbuffer
+0x3e0e0	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::is_loaded
+0x3e100	30	16	NONE		.\soundO\wavemgr.obj	CWaveMgr::is_3d
+0x3e120	70	29	NONE		.\soundO\wavemgr.obj	CWaveFile::is_3d
+0x3e2c0	193	77	EXACT	0x1003a980	.\Debug\lpcdec.obj	lpc10_decode
+0x3e390	63	20	EXACT	0x1003aa50	.\Debug\lpcini.obj	lpcini_
+0x3e3d0	78	30	EXACT	0x1003aa90	.\Debug\lpcini.obj	create_lpc10_encoder_state
+0x3e420	956	214	EXACT	0x1003aae0	.\Debug\lpcini.obj	init_lpc10_encoder_state
+0x3e7e0	78	30	EXACT	0x1003aea0	.\Debug\lpcini.obj	create_lpc10_decoder_state
+0x3e830	608	128	EXACT	0x1003aef0	.\Debug\lpcini.obj	init_lpc10_decoder_state
+0x3ea90	213	83	EXACT	0x1003b150	.\Debug\lpcenc.obj	lpc10_encode
+0x3eb70	879	234	EXACT	0x1003b230	.\Debug\synths.obj	synths_
+0x3eee0	2435	768	EXACT	0x1003b5a0	.\Debug\decode.obj	decode_
+0x3f870	578	179	EXACT	0x1003bf30	.\Debug\chanwr.obj	chanwr_0_
+0x3fac0	75	34	EXACT	0x1003c180	.\Debug\chanwr.obj	chanwr_
+0x3fb10	73	33	EXACT	0x1003c1d0	.\Debug\chanwr.obj	chanrd_
+0x3fb60	1043	323	EXACT	0x1003c220	.\Debug\encode.obj	encode_
+0x3ff80	2551	582	EXACT	0x1003c640	.\Debug\analys.obj	analys_
+0x40980	86	35	EXACT	0x1003d040	.\Debug\prepro.obj	prepro_
+0x409e0	291	97	EXACT	0x1003d0a0	.\Debug\deemp.obj	deemp_
+0x40b10	1779	491	EXACT	0x1003d1d0	.\Debug\bsynz.obj	bsynz_
+0x41210	381	126	EXACT	0x1003d8d0	.\Debug\irc2pc.obj	irc2pc_
+0x41390	2150	658	EXACT	0x1003da50	.\Debug\pitsyn.obj	pitsyn_
+0x41c00	184	67	EXACT	0x1003e2c0	.\Debug\f2clib.obj	pow_ii
+0x41cc0	118	47	EXACT	0x1003e380	.\Debug\f2clib.obj	r_sign
+0x41d40	127	45	EXACT	0x1003e400	.\Debug\f2clib.obj	i_nint
+0x41dc0	148	63	EXACT	0x1003e480	.\Debug\median.obj	median_
+0x41e60	218	83	EXACT	0x1003e520	.\Debug\ham84.obj	ham84_
+0x41f40	207	76	EXACT	0x1003e600	.\Debug\rcchk.obj	rcchk_
+0x42010	800	245	EXACT	0x1003e6d0	.\Debug\invert.obj	invert_
+0x42330	617	212	EXACT	0x1003e9f0	.\Debug\mload.obj	mload_
+0x425a0	154	57	EXACT	0x1003ec60	.\Debug\energy.obj	energy_
+0x42640	177	64	EXACT	0x1003ed00	.\Debug\dcbias.obj	dcbias_
+0x42700	1350	462	EXACT	0x1003edc0	.\Debug\placea.obj	placea_
+0x42c50	1036	335	EXACT	0x1003f310	.\Debug\dyptrk.obj	dyptrk_
+0x43060	2263	646	EXACT_CODE	0x1003f720	.\Debug\voicin.obj	voicin_
+0x43940	810	292	EXACT	0x10040000	.\Debug\tbdm.obj	tbdm_
+0x43c70	408	136	EXACT	0x10040330	.\Debug\ivfilt.obj	ivfilt_
+0x43e10	613	184	EXACT	0x100404d0	.\Debug\lpfilt.obj	lpfilt_
+0x44080	867	303	EXACT	0x10040740	.\Debug\placev.obj	placev_
+0x443f0	749	255	EXACT	0x10040ab0	.\Debug\onset.obj	onset_
+0x446e0	135	52	EXACT	0x10040da0	.\Debug\preemp.obj	preemp_
+0x44770	296	101	EXACT	0x10040e30	.\Debug\hp100.obj	hp100_
+0x448a0	184	63	EXACT	0x10040f60	.\Debug\random.obj	random_
+0x44960	1220	389	EXACT	0x10041020	.\Debug\vparms.obj	vparms_
+0x44e30	351	123	EXACT	0x100414f0	.\Debug\difmag.obj	difmag_
+0x44ff0	293	94	NONE		build\intel\xmt_obj\ostrint.obj	ostream::operator<<
+0x45120	270	88	NONE		build\intel\xmt_obj\ostrulng.obj	ostream::operator<<
+0x45230	169	60	NONE		build\intel\xmt_obj\ostream.obj	ostream::opfx
+0x452e0	31	12	NONE		build\intel\xmt_obj\ostream.obj	ios::lock
+0x45300	31	12	NONE		build\intel\xmt_obj\ostream.obj	ios::unlock
+0x45320	17	9	NONE		build\intel\xmt_obj\ostream.obj	ios::lockptr
+0x45340	16	7	NONE		build\intel\xmt_obj\ostream.obj	ios::lockbuf
+0x45350	37	15	NONE		build\intel\xmt_obj\ostream.obj	streambuf::lock
+0x45380	17	9	NONE		build\intel\xmt_obj\ostream.obj	streambuf::lockptr
+0x453a0	279	93	NONE		build\intel\xmt_obj\ostream.obj	ostream::osfx
+0x454c0	16	7	NONE		build\intel\xmt_obj\ostream.obj	ios::unlockbuf
+0x454d0	37	15	NONE		build\intel\xmt_obj\ostream.obj	streambuf::unlock
+0x45500	53	19	NONE		build\intel\xmt_obj\ostream.obj	ostream::operator<<
+0x45540	167	61	NONE		build\intel\xmt_obj\ostream.obj	ostream::flush
+0x455f0	88	26	NONE		build\intel\xmt_obj\ostream.obj	ostream::ostream
+0x45650	55	21	NONE		build\intel\xmt_obj\ostream.obj	ostream::`scalar deleting destructor'
+0x45690	33	13	NONE		build\intel\xmt_obj\ostream.obj	ostream::`vbase destructor'
+0x456c0	153	42	NONE		build\intel\xmt_obj\ostream.obj	ostream::ostream
+0x45760	170	48	NONE		build\intel\xmt_obj\ostream.obj	ostream::ostream
+0x45810	17	9	NONE		build\intel\xmt_obj\ostream.obj	ios::rdbuf
+0x45830	31	12	NONE		build\intel\xmt_obj\ostream.obj	ostream::~ostream
+0x45850	270	86	NONE		build\intel\xmt_obj\ostream.obj	ostream::operator=
+0x45960	17	9	NONE		build\intel\xmt_obj\ostream.obj	ios::delbuf
+0x45980	22	10	NONE		build\intel\xmt_obj\ostream.obj	ios::delbuf
+0x459a0	133	36	NONE		build\intel\xmt_obj\ostream.obj	ostream_withassign::ostream_withassign
+0x45a30	55	21	NONE		build\intel\xmt_obj\ostream.obj	ostream_withassign::`scalar deleting destructor'
+0x45a70	33	13	NONE		build\intel\xmt_obj\ostream.obj	ostream_withassign::`vbase destructor'
+0x45aa0	137	38	NONE		build\intel\xmt_obj\ostream.obj	ostream_withassign::ostream_withassign
+0x45b30	39	14	NONE		build\intel\xmt_obj\ostream.obj	ostream_withassign::~ostream_withassign
+0x45b60	598	210	NONE		build\intel\xmt_obj\ostream.obj	ostream::writepad
+0x45dc0	89	33	NONE		build\intel\xmt_obj\ostream.obj	streambuf::sputc
+0x45e20	32	15	NONE		build\intel\xmt_obj\ostream.obj	streambuf::sputn
+0x45e40	206	68	NONE		build\intel\xmt_obj\ostrchar.obj	ostream::operator<<
+0x45f10	15	7	NONE		build\intel\xmt_obj\mtlock.obj	_mtlockinit
+0x45f20	15	7	NONE		build\intel\xmt_obj\mtlock.obj	_mtlockterm
+0x45f30	15	7	NONE		build\intel\xmt_obj\mtlock.obj	_mtlock
+0x45f40	15	7	NONE		build\intel\xmt_obj\mtlock.obj	_mtunlock
+0x45f50	184	46	NONE		build\intel\xmt_obj\_ios.obj	ios::ios
+0x46010	46	18	NONE		build\intel\xmt_obj\_ios.obj	ios::`scalar deleting destructor'
+0x46040	197	53	NONE		build\intel\xmt_obj\_ios.obj	ios::ios
+0x46110	120	34	NONE		build\intel\xmt_obj\_ios.obj	ios::ios
+0x46190	169	49	NONE		build\intel\xmt_obj\_ios.obj	ios::~ios
+0x46240	131	46	NONE		build\intel\xmt_obj\_ios.obj	ios::init
+0x462d0	130	42	NONE		build\intel\xmt_obj\_ios.obj	ios::operator=
+0x46360	17	9	NONE		build\intel\xmt_obj\_ios.obj	ios::flags
+0x46380	17	9	NONE		build\intel\xmt_obj\_ios.obj	ios::width
+0x463a0	17	9	NONE		build\intel\xmt_obj\_ios.obj	ios::tie
+0x463c0	17	9	NONE		build\intel\xmt_obj\_ios.obj	ios::fill
+0x463e0	17	9	NONE		build\intel\xmt_obj\_ios.obj	ios::precision
+0x46400	17	9	NONE		build\intel\xmt_obj\_ios.obj	ios::rdstate
+0x46420	61	18	NONE		build\intel\xmt_obj\_ios.obj	ios::xalloc
+0x46460	18	7	NONE		build\intel\xmt_obj\_ios.obj	ios::lockc
+0x46480	18	7	NONE		build\intel\xmt_obj\_ios.obj	ios::unlockc
+0x464a0	42	14	NONE		build\intel\xmt_obj\_ios.obj	ios::bitalloc
+0x464d0	88	40	EXACT	0x1004a100	build\intel\xmt_obj\memset.obj	memset
+0x46a00	161	60	NONE		build\intel\xmt_obj\dbgdel.obj	operator delete
+0x46ab0	28	13	NONE		build\intel\xmt_obj\new.obj	operator new
+0x46ad0	7	3	EXACT	0x1004a010	build\intel\xmt_obj\strcat.obj	strcpy
+0x46ae0	224	84	EXACT	0x1004a020	build\intel\xmt_obj\strcat.obj	strcat
+0x46bc0	39	23	EXACT	0x100424b0	build\intel\xmt_obj\strrchr.obj	strrchr
+0x46bf0	132	56	NONE		build\intel\xmt_obj\strcmp.obj	strcmp
+0x46c80	15	7	NONE		build\intel\xmt_obj\purevirt.obj	_purecall
+0x46d70	894	253	NONE		build\intel\xmt_obj\assert.obj	_assert
+0x470f0	179	53	NONE		build\intel\xmt_obj\onexit.obj	_onexit
+0x471b0	24	12	NONE		build\intel\xmt_obj\onexit.obj	atexit
+0x471d0	77	20	NONE		build\intel\xmt_obj\onexit.obj	__onexitinit
+0x47220	128	66	EXACT	0x10042690	build\intel\xmt_obj\strstr.obj	strstr
+0x47370	254	109	EXACT	0x10042710	build\intel\xmt_obj\strncpy.obj	strncpy
+0x47470	123	44	EXACT	0x10043800	build\intel\xmt_obj\strlen.obj	strlen
+0x474f0	821	0	UNDECODED		build\intel\xmt_obj\memcpy.obj	memcpy
+0x47a30	38	17	NONE		build\intel\xmt_obj\dbgheap.obj	malloc
+0x47a60	44	20	NONE		build\intel\xmt_obj\dbgheap.obj	_malloc_dbg
+0x47a90	27	13	NONE		build\intel\xmt_obj\dbgheap.obj	_nh_malloc
+0x47ab0	160	57	NONE		build\intel\xmt_obj\dbgheap.obj	_nh_malloc_dbg
+0x47b50	23	11	NONE		build\intel\xmt_obj\dbgheap.obj	_heap_alloc
+0x47b70	787	254	NONE		build\intel\xmt_obj\dbgheap.obj	_heap_alloc_dbg
+0x47e90	36	17	NONE		build\intel\xmt_obj\dbgheap.obj	calloc
+0x47ec0	96	37	NONE		build\intel\xmt_obj\dbgheap.obj	_calloc_dbg
+0x47f20	36	17	NONE		build\intel\xmt_obj\dbgheap.obj	realloc
+0x47f50	130	46	NONE		build\intel\xmt_obj\dbgheap.obj	_realloc_dbg
+0x47fe0	1297	431	NONE		build\intel\xmt_obj\dbgheap.obj	realloc_help
+0x48500	36	17	NONE		build\intel\xmt_obj\dbgheap.obj	_expand
+0x48530	130	46	NONE		build\intel\xmt_obj\dbgheap.obj	_expand_dbg
+0x485c0	19	9	NONE		build\intel\xmt_obj\dbgheap.obj	free
+0x485e0	19	9	NONE		build\intel\xmt_obj\dbgheap.obj	_free_lk
+0x48600	110	37	NONE		build\intel\xmt_obj\dbgheap.obj	_free_dbg
+0x48670	1004	342	NONE		build\intel\xmt_obj\dbgheap.obj	_free_dbg_lk
+0x48a60	19	9	NONE		build\intel\xmt_obj\dbgheap.obj	_msize
+0x48a80	400	132	NONE		build\intel\xmt_obj\dbgheap.obj	_msize_dbg
+0x48c10	28	11	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtSetBreakAlloc
+0x48c30	217	72	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtSetDbgBlockType
+0x48d10	28	11	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtSetAllocHook
+0x48d30	136	55	NONE		build\intel\xmt_obj\dbgheap.obj	CheckBytes
+0x48dc0	932	315	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtCheckMemory
+0x49170	34	13	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtSetDbgFlag
+0x491a0	169	57	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtDoForAllClientObjects
+0x49250	75	28	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtIsValidPointer
+0x492a0	292	97	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtIsValidHeapPointer
+0x493d0	293	97	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtIsMemoryBlock
+0x49500	28	11	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtSetDumpClient
+0x49520	420	129	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtMemCheckpoint
+0x496d0	291	95	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtMemDifference
+0x49800	755	266	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtMemDumpAllObjectsSince
+0x49b00	276	89	NONE		build\intel\xmt_obj\dbgheap.obj	_printMemBlockData
+0x49c20	116	46	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtDumpMemoryLeaks
+0x49ca0	197	79	NONE		build\intel\xmt_obj\dbgheap.obj	_CrtMemDumpStatistics
+0x49d70	201	69	NONE		build\intel\xmt_obj\thread.obj	_beginthread
+0x49e40	181	60	NONE		build\intel\xmt_obj\thread.obj	_threadstart
+0x49f00	89	29	NONE		build\intel\xmt_obj\thread.obj	_endthread
+0x49f60	821	0	UNDECODED		build\intel\xmt_obj\memmove.obj	memmove
+0x4a3a0	313	78	NONE		build\intel\xmt_obj\dllcrt0.obj	_CRT_INIT
+0x4a4e0	243	86	NONE		build\intel\xmt_obj\dllcrt0.obj	_DllMainCRTStartup
+0x4a5e0	63	18	NONE		build\intel\xmt_obj\dllcrt0.obj	_amsg_exit
+0x4a880	250	92	NONE		build\intel\xmt_obj\sprintf.obj	sprintf
+0x4a980	68	26	NONE		build\intel\xmt_obj\fflush.obj	fflush
+0x4a9d0	65	26	NONE		build\intel\xmt_obj\fflush.obj	_fflush_lk
+0x4aa20	183	62	NONE		build\intel\xmt_obj\fflush.obj	_flush
+0x4aae0	15	7	NONE		build\intel\xmt_obj\fflush.obj	_flushall
+0x4aaf0	319	94	NONE		build\intel\xmt_obj\fflush.obj	flsall
+0x4ac30	300	80	NONE		build\intel\xmt_obj\_file.obj	__initstdio
+0x4ad60	26	9	NONE		build\intel\xmt_obj\_file.obj	__endstdio
+0x4ad80	61	20	NONE		build\intel\xmt_obj\_file.obj	_lock_file
+0x4adc0	41	16	NONE		build\intel\xmt_obj\_file.obj	_lock_file2
+0x4adf0	61	20	NONE		build\intel\xmt_obj\_file.obj	_unlock_file
+0x4ae30	41	16	NONE		build\intel\xmt_obj\_file.obj	_unlock_file2
+0x4bc60	130	42	NONE		build\intel\xmt_obj\tidtable.obj	_mtinit
+0x4bcf0	41	11	NONE		build\intel\xmt_obj\tidtable.obj	_mtterm
+0x4bd20	25	8	NONE		build\intel\xmt_obj\tidtable.obj	_initptd
+0x4bd40	152	48	NONE		build\intel\xmt_obj\tidtable.obj	_getptd
+0x4bde0	263	86	NONE		build\intel\xmt_obj\tidtable.obj	_freeptd
+0x4bef0	11	5	NONE		build\intel\xmt_obj\tidtable.obj	__threadid
+0x4bf00	11	5	NONE		build\intel\xmt_obj\tidtable.obj	__threadhandle
+0x4c050	55	16	NONE		build\intel\xmt_obj\mlock.obj	_mtinitlocks
+0x4c090	159	47	NONE		build\intel\xmt_obj\mlock.obj	_mtdeletelocks
+0x4c130	151	46	NONE		build\intel\xmt_obj\mlock.obj	_lock
+0x4c1d0	22	8	NONE		build\intel\xmt_obj\mlock.obj	_unlock
+0x4c1f0	28	10	NONE		build\intel\xmt_obj\mlock.obj	_lockerr_exit
+0x4c210	11	5	NONE		build\intel\xmt_obj\dbgrpt.obj	_CrtDbgBreak
+0x4c220	87	30	NONE		build\intel\xmt_obj\dbgrpt.obj	_CrtSetReportMode
+0x4c280	126	38	NONE		build\intel\xmt_obj\dbgrpt.obj	_CrtSetReportFile
+0x4c300	28	11	NONE		build\intel\xmt_obj\dbgrpt.obj	_CrtSetReportHook
+0x4c320	912	248	NONE		build\intel\xmt_obj\dbgrpt.obj	_CrtDbgReport
+0x4c6b0	780	197	NONE		build\intel\xmt_obj\dbgrpt.obj	CrtMessageWindow
+0x4c9c0	23	8	NONE		build\intel\xmt_obj\fp8.obj	_setdefaultprecision
+0x4d1c0	32	12	NONE		build\intel\xmt_obj\abort.obj	abort
+0x4d1e0	56	15	NONE		build\intel\xmt_obj\crt0dat.obj	_cinit
+0x4d220	21	10	NONE		build\intel\xmt_obj\crt0dat.obj	exit
+0x4d240	21	10	NONE		build\intel\xmt_obj\crt0dat.obj	_exit
+0x4d260	19	9	NONE		build\intel\xmt_obj\crt0dat.obj	_cexit
+0x4d280	19	9	NONE		build\intel\xmt_obj\crt0dat.obj	_c_exit
+0x4d2a0	227	61	NONE		build\intel\xmt_obj\crt0dat.obj	doexit
+0x4d390	15	7	NONE		build\intel\xmt_obj\crt0dat.obj	_lockexit
+0x4d3a0	15	7	NONE		build\intel\xmt_obj\crt0dat.obj	_unlockexit
+0x4d3b0	37	16	NONE		build\intel\xmt_obj\crt0dat.obj	_initterm
+0x4d3e0	548	0	UNDECODED		build\intel\xmt_obj\winsig.obj	signal
+0x4d610	146	45	NONE		build\intel\xmt_obj\winsig.obj	ctrlevent_capture
+0x4d6b0	567	0	UNDECODED		build\intel\xmt_obj\winsig.obj	raise
+0x4d8f0	91	35	NONE		build\intel\xmt_obj\winsig.obj	siglookup
+0x4d950	13	6	NONE		build\intel\xmt_obj\winsig.obj	__fpecode
+0x4d960	13	6	NONE		build\intel\xmt_obj\winsig.obj	__pxcptinfoptrs
+0x4d970	187	54	NONE		build\intel\xmt_obj\crtmbox.obj	__crtMessageBoxA
+0x4da30	66	28	NONE		build\intel\xmt_obj\xtoa.obj	_itoa
+0x4da80	194	71	NONE		build\intel\xmt_obj\xtoa.obj	xtoa
+0x4db50	63	24	NONE		build\intel\xmt_obj\xtoa.obj	_ltoa
+0x4db90	30	14	NONE		build\intel\xmt_obj\xtoa.obj	_ultoa
+0x4dbb0	72	28	NONE		build\intel\xmt_obj\xtoa.obj	_i64toa
+0x4dc00	242	91	NONE		build\intel\xmt_obj\xtoa.obj	x64toa
+0x4dd00	31	15	NONE		build\intel\xmt_obj\xtoa.obj	_ui64toa
+0x4dd20	291	123	NONE		build\intel\xmt_obj\strncat.obj	strncat
+0x4de50	193	75	NONE		build\intel\xmt_obj\fprintf.obj	fprintf
+0x4df20	365	120	NONE		build\intel\xmt_obj\setvbuf.obj	setvbuf
+0x4e090	16	5	NONE		build\intel\xmt_obj\strchr.obj	$$$00001
+0x4e0a0	188	86	EXACT	0x10045680	build\intel\xmt_obj\strchr.obj	strchr
+0x4e810	48	17	NONE		build\intel\xmt_obj\handler.obj	_set_new_handler
+0x4e840	10	5	NONE		build\intel\xmt_obj\handler.obj	_query_new_handler
+0x4e850	45	19	NONE		build\intel\xmt_obj\handler.obj	_callnewh
+0x4e880	32	14	NONE		build\intel\xmt_obj\malloc.obj	_malloc_base
+0x4e8a0	87	34	NONE		build\intel\xmt_obj\malloc.obj	_nh_malloc_base
+0x4e900	333	100	NONE		build\intel\xmt_obj\malloc.obj	_heap_alloc_base
+0x4ea50	10	5	NONE		build\intel\xmt_obj\dbghook.obj	_CrtDefaultAllocHook
+0x4ea60	525	167	NONE		build\intel\xmt_obj\expand.obj	_expand_base
+0x4ec70	1171	383	NONE		build\intel\xmt_obj\realloc.obj	_realloc_base
+0x4f110	326	105	NONE		build\intel\xmt_obj\free.obj	_free_base
+0x4f260	260	73	NONE		build\intel\xmt_obj\heapchk.obj	_heapchk
+0x4f370	10	5	NONE		build\intel\xmt_obj\heapchk.obj	_heapset
+0x4f380	39	13	NONE		build\intel\xmt_obj\sbheap.obj	_get_sbh_threshold
+0x4f3b0	266	71	NONE		build\intel\xmt_obj\sbheap.obj	_set_sbh_threshold
+0x4f4c0	98	22	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_heap_init
+0x4f530	85	29	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_find_block
+0x4f590	95	33	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_verify_block
+0x4f5f0	1500	458	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_free_block
+0x4fbd0	1334	427	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_alloc_block
+0x50110	271	78	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_alloc_new_region
+0x50220	494	149	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_alloc_new_group
+0x50410	1515	489	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_resize_block
+0x50a00	304	79	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_heapmin
+0x50b30	1565	343	NONE		build\intel\xmt_obj\sbheap.obj	__sbh_heap_check
+0x51150	10	5	NONE		build\intel\xmt_obj\sbheap.obj	_get_old_sbh_threshold
+0x51160	43	15	NONE		build\intel\xmt_obj\sbheap.obj	_set_old_sbh_threshold
+0x51190	478	130	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_new_region
+0x51370	115	36	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_release_region
+0x513f0	343	103	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_decommit_pages
+0x51550	144	50	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_find_block
+0x515e0	108	36	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_free_block
+0x51650	952	302	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_alloc_block
+0x51a10	681	231	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_alloc_block_from_page
+0x51cc0	356	121	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_resize_block
+0x51e30	567	164	NONE		build\intel\xmt_obj\sbheap.obj	__old_sbh_heap_check
+0x52070	92	32	NONE		build\intel\xmt_obj\heapinit.obj	_GetLinkerVersion
+0x520d0	548	154	NONE		build\intel\xmt_obj\heapinit.obj	__heap_select
+0x52300	141	42	NONE		build\intel\xmt_obj\heapinit.obj	_heap_init
+0x52390	232	68	NONE		build\intel\xmt_obj\heapinit.obj	_heap_term
+0x52480	183	58	NONE		build\intel\xmt_obj\isctype.obj	_isctype
+0x52540	145	42	NONE		build\intel\xmt_obj\dosmap.obj	_dosmaperr
+0x525e0	13	6	NONE		build\intel\xmt_obj\dosmap.obj	_errno
+0x525f0	13	6	NONE		build\intel\xmt_obj\dosmap.obj	__doserrno
+0x52600	446	130	NONE		build\intel\xmt_obj\winxfltr.obj	_XcptFilter
+0x527c0	89	35	NONE		build\intel\xmt_obj\winxfltr.obj	xcptlookup
+0x53820	804	236	NONE		build\intel\xmt_obj\ioinit.obj	_ioinit
+0x53b50	155	45	NONE		build\intel\xmt_obj\ioinit.obj	_ioterm
+0x53bf0	329	102	NONE		build\intel\xmt_obj\stdenvp.obj	_setenvp
+0x53d40	216	69	NONE		build\intel\xmt_obj\stdargv.obj	_setargv
+0x53e20	1060	360	NONE		build\intel\xmt_obj\stdargv.obj	parse_cmdline
+0x54250	537	173	NONE		build\intel\xmt_obj\a_env.obj	__crtGetEnvironmentStringsA
+0x54470	73	19	NONE		build\intel\xmt_obj\crt0msg.obj	_FF_MSGBANNER
+0x544c0	447	131	NONE		build\intel\xmt_obj\crt0msg.obj	_NMSG_WRITE
+0x54680	80	27	NONE		build\intel\xmt_obj\crt0msg.obj	_GET_RTERRMSG
+0x54960	628	214	NONE		build\intel\xmt_obj\_flsbuf.obj	_flsbuf
+0x54be0	3362	0	UNDECODED		build\intel\xmt_obj\output.obj	_output
+0x55910	119	44	NONE		build\intel\xmt_obj\output.obj	write_char
+0x55990	53	23	NONE		build\intel\xmt_obj\output.obj	write_multi_char
+0x559d0	74	31	NONE		build\intel\xmt_obj\output.obj	write_string
+0x55a20	26	12	NONE		build\intel\xmt_obj\output.obj	get_int_arg
+0x55a40	31	14	NONE		build\intel\xmt_obj\output.obj	get_int64_arg
+0x55a60	27	12	NONE		build\intel\xmt_obj\output.obj	get_short_arg
+0x55a80	210	63	NONE		build\intel\xmt_obj\commit.obj	_commit
+0x55b60	130	43	NONE		build\intel\xmt_obj\write.obj	_write
+0x55bf0	627	182	NONE		build\intel\xmt_obj\write.obj	_write_lk
+0x55e70	218	63	NONE		build\intel\xmt_obj\closeall.obj	_fcloseall
+0x56080	249	93	NONE		build\intel\xmt_obj\snprintf.obj	_snprintf
+0x56180	243	91	NONE		build\intel\xmt_obj\vsnprint.obj	_vsnprintf
+0x56280	47	17	EXACT	0x1004aa10	build\intel\xmt_obj\chkstk.obj	$$$00001
+0x56750	11	6	NONE		build\intel\xmt_obj\tolower.obj	_tolower
+0x56760	147	43	NONE		build\intel\xmt_obj\tolower.obj	tolower
+0x56800	299	91	NONE		build\intel\xmt_obj\tolower.obj	_tolower_lk
+0x57110	250	90	NONE		build\intel\xmt_obj\_fptostr.obj	_fptostr
+0x57400	15	7	NONE		build\intel\xmt_obj\crt0fp.obj	_fptrap
+0x57410	104	43	EXACT	0x1004a370	build\intel\xmt_obj\ulldiv.obj	_aulldiv
+0x57480	117	44	EXACT	0x1004a3e0	build\intel\xmt_obj\ullrem.obj	_aullrem
+0x57500	343	103	NONE		build\intel\xmt_obj\_sftbuf.obj	_stbuf
+0x57660	148	53	NONE		build\intel\xmt_obj\_sftbuf.obj	_ftbuf
+0x57700	146	52	NONE		build\intel\xmt_obj\_freebuf.obj	_freebuf
+0x589a0	27	13	NONE		build\intel\xmt_obj\strtol.obj	strtol
+0x589c0	817	264	NONE		build\intel\xmt_obj\strtol.obj	strtoxl
+0x58d00	27	13	NONE		build\intel\xmt_obj\strtol.obj	strtoul
+0x58d20	56	31	EXACT	0x1004a9d0	build\intel\xmt_obj\strncmp.obj	strncmp
+0x58d60	444	148	NONE		build\intel\xmt_obj\a_str.obj	__crtGetStringTypeA
+0x58f30	836	238	NONE		build\intel\xmt_obj\mbctype.obj	_setmbcp
+0x59280	89	21	NONE		build\intel\xmt_obj\mbctype.obj	getSystemCP
+0x592e0	119	42	NONE		build\intel\xmt_obj\mbctype.obj	CPtoLCID
+0x59360	116	29	NONE		build\intel\xmt_obj\mbctype.obj	setSBCS
+0x593e0	770	175	NONE		build\intel\xmt_obj\mbctype.obj	setSBUpLow
+0x596f0	23	9	NONE		build\intel\xmt_obj\mbctype.obj	_getmbcp
+0x59710	34	10	NONE		build\intel\xmt_obj\mbctype.obj	__initmbctable
+0x59740	130	43	NONE		build\intel\xmt_obj\lseek.obj	_lseek
+0x597d0	178	56	NONE		build\intel\xmt_obj\lseek.obj	_lseek_lk
+0x59890	199	68	NONE		build\intel\xmt_obj\_getbuf.obj	_getbuf
+0x59960	50	17	NONE		build\intel\xmt_obj\isatty.obj	_isatty
+0x599a0	119	34	NONE		build\intel\xmt_obj\wctomb.obj	wctomb
+0x59a20	160	50	NONE		build\intel\xmt_obj\wctomb.obj	_wctomb_lk
+0x59ac0	482	138	NONE		build\intel\xmt_obj\osfinfo.obj	_alloc_osfhnd
+0x59cb0	183	57	NONE		build\intel\xmt_obj\osfinfo.obj	_set_osfhnd
+0x59d70	216	63	NONE		build\intel\xmt_obj\osfinfo.obj	_free_osfhnd
+0x59e50	102	30	NONE		build\intel\xmt_obj\osfinfo.obj	_get_osfhandle
+0x59ec0	260	83	NONE		build\intel\xmt_obj\osfinfo.obj	_open_osfhandle
+0x59fd0	134	44	NONE		build\intel\xmt_obj\osfinfo.obj	_lock_fhandle
+0x5a060	38	13	NONE		build\intel\xmt_obj\osfinfo.obj	_unlock_fhandle
+0x5a090	130	50	NONE		build\intel\xmt_obj\fclose.obj	fclose
+0x5a120	190	67	NONE		build\intel\xmt_obj\fclose.obj	_fclose_lk
+0x5a1e0	1007	269	NONE		build\intel\xmt_obj\setlocal.obj	setlocale
+0x5a5d0	403	117	NONE		build\intel\xmt_obj\setlocal.obj	_setlocale_set_cat
+0x5a770	256	72	NONE		build\intel\xmt_obj\setlocal.obj	_setlocale_get_all
+0x5a870	388	115	NONE		build\intel\xmt_obj\setlocal.obj	_expandlocale
+0x5aa00	7	5	NONE		build\intel\xmt_obj\setlocal.obj	__init_dummy
+0x5aa10	79	28	NONE		build\intel\xmt_obj\setlocal.obj	_strcats
+0x5aa60	349	122	NONE		build\intel\xmt_obj\setlocal.obj	__lc_strtolc
+0x5abc0	101	36	NONE		build\intel\xmt_obj\setlocal.obj	__lc_lctostr
+0x5ac30	773	263	NONE		build\intel\xmt_obj\a_map.obj	__crtLCMapStringA
+0x5af40	80	32	NONE		build\intel\xmt_obj\a_map.obj	strncnt
+0x5c980	11	6	NONE		build\intel\xmt_obj\toupper.obj	_toupper
+0x5c990	147	43	NONE		build\intel\xmt_obj\toupper.obj	toupper
+0x5ca30	299	91	NONE		build\intel\xmt_obj\toupper.obj	_toupper_lk
+0x5cb60	122	39	NONE		build\intel\xmt_obj\close.obj	_close
+0x5cbe0	170	59	NONE		build\intel\xmt_obj\close.obj	_close_lk
+0x5cc90	219	64	NONE		build\intel\xmt_obj\inittime.obj	__init_time
+0x5cd70	1423	533	NONE		build\intel\xmt_obj\inittime.obj	_get_lc_time
+0x5d300	779	265	NONE		build\intel\xmt_obj\inittime.obj	_free_lc_time
+0x5d610	678	180	NONE		build\intel\xmt_obj\initnum.obj	__init_numeric
+0x5d8c0	125	49	NONE		build\intel\xmt_obj\initnum.obj	fix_grouping
+0x5d940	304	85	NONE		build\intel\xmt_obj\initmon.obj	__init_monetary
+0x5da70	525	200	NONE		build\intel\xmt_obj\initmon.obj	_get_lc_lconv
+0x5dc80	125	49	NONE		build\intel\xmt_obj\initmon.obj	fix_grouping
+0x5dd00	147	52	NONE		build\intel\xmt_obj\initmon.obj	_free_lc_lconv
+0x5dda0	928	284	NONE		build\intel\xmt_obj\initctyp.obj	__init_ctype
+0x5e140	7	5	NONE		build\intel\xmt_obj\initcoll.obj	__init_collate
+0x5e150	62	35	EXACT	0x1004ed10	build\intel\xmt_obj\strcspn.obj	strcspn
+0x5e190	58	32	EXACT	0x1004ed50	build\intel\xmt_obj\strpbrk.obj	strpbrk
+0x5e1d0	512	147	NONE		build\intel\xmt_obj\getqloc.obj	__get_qualified_locale
+0x5e3d0	130	47	NONE		build\intel\xmt_obj\getqloc.obj	TranslateName
+0x5e460	186	50	NONE		build\intel\xmt_obj\getqloc.obj	GetLcidFromLangCountry
+0x5e520	804	220	NONE		build\intel\xmt_obj\getqloc.obj	LangCountryEnumProc
+0x5e850	116	33	NONE		build\intel\xmt_obj\getqloc.obj	GetLcidFromLanguage
+0x5e8d0	287	86	NONE		build\intel\xmt_obj\getqloc.obj	LanguageEnumProc
+0x5e9f0	69	20	NONE		build\intel\xmt_obj\getqloc.obj	GetLcidFromCountry
+0x5ea40	172	54	NONE		build\intel\xmt_obj\getqloc.obj	CountryEnumProc
+0x5eaf0	43	11	NONE		build\intel\xmt_obj\getqloc.obj	GetLcidFromDefault
+0x5eb20	155	57	NONE		build\intel\xmt_obj\getqloc.obj	ProcessCodePage
+0x5ebc0	79	26	NONE		build\intel\xmt_obj\getqloc.obj	TestDefaultCountry
+0x5ec10	135	48	NONE		build\intel\xmt_obj\getqloc.obj	TestDefaultLanguage
+0x5eca0	77	18	NONE		build\intel\xmt_obj\getqloc.obj	IsThisWindowsNT
+0x5ecf0	388	118	NONE		build\intel\xmt_obj\getqloc.obj	crtGetLocaleInfoA
+0x5ee80	118	42	NONE		build\intel\xmt_obj\getqloc.obj	LcidFromHexString
+0x5ef00	101	36	NONE		build\intel\xmt_obj\getqloc.obj	GetPrimaryLen
+0x5f740	289	97	NONE		build\intel\xmt_obj\strftime.obj	_Getdays
+0x5f870	291	97	NONE		build\intel\xmt_obj\strftime.obj	_Getmonths
+0x5f9a0	878	273	NONE		build\intel\xmt_obj\strftime.obj	_Gettnames
+0x5fd10	31	15	NONE		build\intel\xmt_obj\strftime.obj	strftime
+0x5fd30	394	123	NONE		build\intel\xmt_obj\strftime.obj	_Strftime
+0x5fec0	1567	0	UNDECODED		build\intel\xmt_obj\strftime.obj	_expandtime
+0x604e0	72	30	NONE		build\intel\xmt_obj\strftime.obj	_store_str
+0x60530	173	64	NONE		build\intel\xmt_obj\strftime.obj	_store_num
+0x605e0	172	65	NONE		build\intel\xmt_obj\strftime.obj	_store_number
+0x60690	1311	0	UNDECODED		build\intel\xmt_obj\strftime.obj	_store_winword
+0x60bb0	650	178	NONE		build\intel\xmt_obj\inithelp.obj	__getlocaleinfo
+0x60e40	10	5	NONE		build\intel\xmt_obj\lconv.obj	localeconv
+0x60e50	621	196	NONE		build\intel\xmt_obj\w_str.obj	__crtGetStringTypeW
+0x610c0	0	0	UNDECODED		build\intel\xmt_obj\stricmp.obj	_strcmpi
+0x610c0	208	85	EXACT	0x10050b60	build\intel\xmt_obj\stricmp.obj	_stricmp
+0x61190	257	103	EXACT	0x10050c30	build\intel\xmt_obj\strnicmp.obj	_strnicmp
+0x612a0	255	88	NONE		build\intel\xmt_obj\atox.obj	atol
+0x613a0	17	8	NONE		build\intel\xmt_obj\atox.obj	atoi
+0x613c0	297	106	NONE		build\intel\xmt_obj\atox.obj	_atoi64
+0x614f0	61	18	NONE		build\intel\xmt_obj\tzset.obj	__tzset
+0x61530	30	11	NONE		build\intel\xmt_obj\tzset.obj	_tzset
+0x61550	939	266	NONE		build\intel\xmt_obj\tzset.obj	_tzset_lk
+0x61900	46	18	NONE		build\intel\xmt_obj\tzset.obj	_isindst
+0x61930	762	246	NONE		build\intel\xmt_obj\tzset.obj	_isindst_lk
+0x61c30	504	145	NONE		build\intel\xmt_obj\tzset.obj	cvtdate
+0x61e30	405	135	NONE		build\intel\xmt_obj\w_loc.obj	__crtGetLocaleInfoW
+0x61fd0	421	140	NONE		build\intel\xmt_obj\a_loc.obj	__crtGetLocaleInfoA
+0x62180	52	19	NONE		build\intel\xmt_obj\llmul.obj	_allmul
+0x621c0	46	18	NONE		build\intel\xmt_obj\getenv.obj	getenv
+0x621f0	198	69	NONE		build\intel\xmt_obj\getenv.obj	_getenv_lk
+0x622c0	79	32	NONE		build\intel\xmt_obj\mbsnbico.obj	_mbsnbicoll
+0x62310	174	66	NONE		build\intel\xmt_obj\wtombenv.obj	__wtomb_environ
+0x623c0	1016	340	NONE		build\intel\xmt_obj\a_cmp.obj	__crtCompareStringA
+0x627c0	80	32	NONE		build\intel\xmt_obj\a_cmp.obj	strncnt
+0x62810	736	224	NONE		build\intel\xmt_obj\setenv.obj	__crtsetenv
+0x62af0	124	47	NONE		build\intel\xmt_obj\setenv.obj	findenv
+0x62b70	238	80	NONE		build\intel\xmt_obj\setenv.obj	copy_environ
+0x62c60	237	81	NONE		build\intel\xmt_obj\mbschr.obj	_mbschr

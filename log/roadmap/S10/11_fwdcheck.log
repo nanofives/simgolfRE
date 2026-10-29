@@ -1,0 +1,36 @@
+== 0x1002e060 Midi::get_time  calls [(268623982, 'dword ptr [eax + 0xc8]'), (268624025, 'dword ptr [eax + 0x11c]'), (268624078, 'dword ptr [eax + 0x120]')]
+   slot 0xc8 = Ambience::get_time  retail body 0x1002e060 (- -, agree-table 0x1005c000)
+   slot 0xc8 = CAmbienceMgr::get_time  retail body 0x1002e060 (- -, agree-table 0x1005b000)
+   slot 0xc8 = CMidiMgr::get_time  retail body 0x1002e060 (- -, agree-table 0x1005b6a8)
+   slot 0xc8 = Midi::get_time  retail body 0x1002e060 (- -, agree-table 0x1005be88)
+== 0x1002a4b0 Wave_In_Device::set_codec  calls [(268608702, 'dword ptr [eax + 0x64]'), (268608750, 'dword ptr [eax + 0x68]')]
+   slot 0x64 = Dll_Wave_In_Device::set_codec  retail body 0x1002a4b0 (- -, agree-table 0x1005b3d4)
+   slot 0x64 = Wave_In_Device::set_codec  retail body 0x1002a4b0 (- -, agree-table 0x1005ba5c)
+== 0x1002a4e0 Wave_In_Device::set_vxw_key  calls [(268608750, 'dword ptr [eax + 0x68]')]
+   slot 0x68 = Dll_Wave_In_Device::set_vxw_key  retail body 0x1000ebe0 (- -, agree-table 0x1005b3d4)
+   slot 0x68 = Wave_In_Device::set_vxw_key  retail body 0x1002a4e0 (- -, agree-table 0x1005ba5c)
+== 0x1002c1c0 Wave::get_ndevices  calls [(268616137, 'dword ptr [eax + 0xc0]'), (268616200, 'dword ptr [eax + 0xc4]'), (268616321, 'dword ptr [edx + 0xec]')]
+   slot 0xc0 = CWaveMgr::get_ndevices  retail body 0x1002c1c0 (- -, agree-table 0x1005c7e8)
+   slot 0xc0 = MpegStream::get_ndevices  retail body 0x1002c1c0 (- -, agree-table 0x1005bcb4)
+   slot 0xc0 = Wave::get_ndevices  retail body 0x1002c1c0 (- -, agree-table 0x1005bb90)
+== 0x1002c1f0 Wave::get_device_description  calls [(268616200, 'dword ptr [eax + 0xc4]'), (268616321, 'dword ptr [edx + 0xec]')]
+   slot 0xc4 = CWaveMgr::get_device_description  retail body 0x1002c1f0 (- -, agree-table 0x1005c7e8)
+   slot 0xc4 = MpegStream::get_device_description  retail body 0x1002c1f0 (- -, agree-table 0x1005bcb4)
+   slot 0xc4 = Wave::get_device_description  retail body 0x1002c1f0 (- -, agree-table 0x1005bb90)
+== 0x1002b870 Wave::stop_instance  calls [(268613758, 'dword ptr [eax + 0xd0]'), (268613806, 'dword ptr [eax + 0xd4]')]
+   slot 0xd0 = CWaveMgr::stop_instance  retail body 0x1002b870 (- -, agree-table 0x1005c7e8)
+   slot 0xd0 = MpegStream::stop_instance  retail body 0x1002b870 (- -, agree-table 0x1005bcb4)
+   slot 0xd0 = Wave::stop_instance  retail body 0x1002b870 (- -, agree-table 0x1005bb90)
+== 0x1002b8a0 Wave::fade_instance  calls [(268613806, 'dword ptr [eax + 0xd4]')]
+   slot 0xd4 = CWaveMgr::fade_instance  retail body 0x1002b8a0 (- -, agree-table 0x1005c7e8)
+   slot 0xd4 = MpegStream::fade_instance  retail body 0x1002b8a0 (- -, agree-table 0x1005bcb4)
+   slot 0xd4 = Wave::fade_instance  retail body 0x1002b8a0 (- -, agree-table 0x1005bb90)
+== 0x10029420 Wave_Device::select  calls [(268604493, 'dword ptr [eax + 0x70]'), (268604504, 'dword ptr [edx + 0x70]'), (268604515, 'dword ptr [eax + 0x64]')]
+== 0x1001c340 NoteMap::do_control  calls [(268550987, 'dword ptr [eax + 4]'), (268551081, 'dword ptr [edx + 0x10]')]
+   slot 0x10 = ChannelCtrl::do_control  retail body 0x10005c90 (- -, agree-table 0x1005b644)
+   slot 0x10 = MidiCtrl::do_control  retail body 0x10005c90 (- -, agree-table 0x1005b19c)
+   slot 0x10 = MidiCtrlDiskRead::do_control  retail body 0x10005c90 (- -, agree-table 0x1005b178)
+   slot 0x10 = Randomizer::do_control  retail body 0x1001c7a0 (sound_6.tsv streamReadByte, agree-table 0x1005b5f0)
+   slot 0x10 = Stepper::do_control  retail body 0x1001c580 (smsg_sound_1.tsv Stepper::do_control, agree-table 0x1005b5cc)
+   slot 0x10 = TrackCtrl::do_control  retail body 0x10005c90 (- -, agree-table 0x1005b668)
+== 0x10031a30 CVoiceTxMgr::stop  calls [(268638770, 'dword ptr [eax + 0x14]')]

@@ -1,0 +1,28 @@
+.....................................s.................................. [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 27%]
+........................................................................ [ 36%]
+........................................................................ [ 46%]
+........................................................................ [ 55%]
+........................................................................ [ 64%]
+........................................................................ [ 73%]
+..........s............................................................. [ 83%]
+..............F......................................................... [ 92%]
+............................................................             [100%]
+================================== FAILURES ===================================
+_________________ test_canonical_smsg_files_name_their_source _________________
+
+    def test_canonical_smsg_files_name_their_source():
+        for f in sorted((ROOT / "re" / "match").glob("smsg_*.cpp")):
+            text = f.read_text()
+            comp = re.search(r"(?m)^// COMPILE (\S+)$", text)
+>           assert comp and (ROOT / comp.group(1)).is_file(), f.name
+E           AssertionError: smsg_hand_ehvec.cpp
+E           assert (None)
+
+tests\test_smsg_import.py:94: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_failure_tools.py:55: run re/tools/invariants.py TerrainDll_tileAt
+SKIPPED [1] tests\test_patches.py:33: got empty parameter set for (path)
+FAILED tests/test_smsg_import.py::test_canonical_smsg_files_name_their_source
+1 failed, 777 passed, 2 skipped, 46 deselected in 686.05s (0:11:26)

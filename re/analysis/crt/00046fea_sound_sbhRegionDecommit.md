@@ -48,7 +48,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `KERNEL32.dll!VirtualFree` at 0x10047028
 
 ## Callers
-0x10047103 `sbhPageFree`
+0x10047103 `___old_sbh_free_block`
 
 ## Constants
 - `0x0` at 0x10047001, 0x1004705e, 0x1004709d

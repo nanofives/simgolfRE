@@ -1,0 +1,147 @@
+retail_va	size	kind	agree	demo_names	verdict	name	reason
+0x10005b00	3	CONST	EMPTY_BOTH	Midi::get_game_hwnd	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10005b00): no instruction supports the verb (S10.9 stub rule)
+0x10005b20	8	CONST	EMPTY_BOTH	Midi::set_attrib	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x10005b20): no instruction supports the verb (S10.9 stub rule)
+0x10005b40	3	CONST	EMPTY_BOTH	Midi::get_attrib	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10005b40): no instruction supports the verb (S10.9 stub rule)
+0x10005c70	5	OTHER	EQUAL	MidiCtrl::refresh	REJECT_HAND	-	stores 1 into byte this+0x19 (m_flags.state in the demo layout) at 0x10005c70: nothing ties the value to a refresh
+0x10005c90	7	GETTER	EMPTY_BOTH	MidiCtrl::do_control	REJECT_STUB	-	GETTER body (reads dword ptr [esp + 4] (from 0x10005c90), no store, no call): no instruction supports the verb (S10.9 stub rule)
+0x10005cb0	1	EMPTY	EMPTY_BOTH	MidiCtrl::reset	REJECT_STUB	-	EMPTY body (`ret` at 0x10005cb0): no instruction supports the verb (S10.9 stub rule)
+0x10005cd0	1	EMPTY	EMPTY_BOTH	MidiCtrl::update	REJECT_STUB	-	EMPTY body (`ret` at 0x10005cd0): no instruction supports the verb (S10.9 stub rule)
+0x10005d20	3	EMPTY	EMPTY_BOTH	MidiCtrlDiskRead::set_type	REJECT_STUB	-	EMPTY body (`ret` at 0x10005d20): no instruction supports the verb (S10.9 stub rule)
+0x10005d40	8	OTHER	EQUAL	MidiCtrlDiskRead::set_total_class_size	ACCEPT	MidiCtrlDiskRead::set_total_class_size	see re/names/demo_sound_1.tsv
+0x10006a60	123	OTHER	OVERLAP	CAviMgr::init	ACCEPT	CAviMgr::init	see re/names/demo_sound_1.tsv
+0x10006d10	3	CONST	EMPTY_BOTH	AviSound::unload	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10006d10): no instruction supports the verb (S10.9 stub rule)
+0x10006d30	3	CONST	EMPTY_BOTH	AviSound::get_game_hwnd	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10006d30): no instruction supports the verb (S10.9 stub rule)
+0x10006d50	8	CONST	EMPTY_BOTH	AviSound::set_attrib	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x10006d50): no instruction supports the verb (S10.9 stub rule)
+0x10006d70	3	CONST	EMPTY_BOTH	AviSound::get_attrib	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10006d70): no instruction supports the verb (S10.9 stub rule)
+0x1000a0e0	8	CONST	EMPTY_BOTH	Dll_Midi_Device::get_description	REJECT_STUB	-	CONST body (`mov eax, 0x2f`; `ret 0xc` at 0x1000a0e0): no instruction supports the verb (S10.9 stub rule)
+0x1000a120	3	EMPTY	EMPTY_BOTH	Dll_Midi_Device::set_volume	REJECT_STUB	-	EMPTY body (`ret` at 0x1000a120): no instruction supports the verb (S10.9 stub rule)
+0x1000e2f0	8	CONST	EMPTY_BOTH	Dll_Wave_Device::set_eax	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1000e2f0): no instruction supports the verb (S10.9 stub rule)
+0x1000e4d0	8	CONST	EMPTY_BOTH	Dll_Wave_Device::get_listener_position	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 0xc` at 0x1000e4d0): no instruction supports the verb (S10.9 stub rule)
+0x1000e4f0	8	CONST	EMPTY_BOTH	Dll_Wave_Device::set_listener_xpos	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1000e4f0): no instruction supports the verb (S10.9 stub rule)
+0x1000e510	8	CONST	EMPTY_BOTH	Dll_Wave_Device::get_listener_xpos	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1000e510): no instruction supports the verb (S10.9 stub rule)
+0x1000e530	8	CONST	EMPTY_BOTH	Dll_Wave_Device::set_listener_ypos	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1000e530): no instruction supports the verb (S10.9 stub rule)
+0x1000e550	8	CONST	EMPTY_BOTH	Dll_Wave_Device::get_listener_ypos	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1000e550): no instruction supports the verb (S10.9 stub rule)
+0x1000e590	8	CONST	EMPTY_BOTH	Dll_Wave_Device::get_listener_zpos	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1000e590): no instruction supports the verb (S10.9 stub rule)
+0x1000e7f0	11	OTHER	EQUAL	Dll_Wave_Device::timer_unhook	ACCEPT	Wave_Device::timer_unhook	see re/names/demo_sound_1.tsv
+0x1000ebe0	5	CONST	EMPTY_BOTH	Dll_Wave_In_Device::set_vxw_key	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1000ebe0): no instruction supports the verb (S10.9 stub rule)
+0x1000ecc0	5	CONST	EMPTY_BOTH	Dll_Wave_In_Device::select	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1000ecc0): no instruction supports the verb (S10.9 stub rule)
+0x1000ece0	8	OTHER	EQUAL	Dll_Wave_In_Device::update_sound	REJECT_HAND	-	stores 0 into this+0x38 (m_time_past) at 0x1000ece0: the verb update_sound has no support
+0x1000ed30	3	CONST	EMPTY_BOTH	Dll_Wave_In_Device::get_ndevices	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1000ed30): no instruction supports the verb (S10.9 stub rule)
+0x1000ed50	5	CONST	EMPTY_BOTH	Dll_Wave_In_Device::get_description	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 0xc` at 0x1000ed50): no instruction supports the verb (S10.9 stub rule)
+0x1000ee70	3	EMPTY	EMPTY_BOTH	Dll_Wave_In_Device::set_volume	REJECT_STUB	-	EMPTY body (`ret` at 0x1000ee70): no instruction supports the verb (S10.9 stub rule)
+0x1000ee90	3	CONST	EMPTY_BOTH	Dll_Wave_In_Device::get_volume	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1000ee90): no instruction supports the verb (S10.9 stub rule)
+0x1000eeb0	3	EMPTY	EMPTY_BOTH	Dll_Wave_In_Device::set_pan	REJECT_STUB	-	EMPTY body (`ret` at 0x1000eeb0): no instruction supports the verb (S10.9 stub rule)
+0x1000eed0	5	CONST	EMPTY_BOTH	Dll_Wave_In_Device::fade	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1000eed0): no instruction supports the verb (S10.9 stub rule)
+0x10014230	6	CONST	EMPTY_BOTH	add_16216s2mmb	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret` at 0x10014230): no instruction supports the verb (S10.9 stub rule)
+0x10015210	3	CONST	EMPTY_BOTH	add_16216m2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10015210): no instruction supports the verb (S10.9 stub rule)
+0x10015230	3	CONST	EMPTY_BOTH	add_828s2smb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10015230): no instruction supports the verb (S10.9 stub rule)
+0x10015250	3	CONST	EMPTY_BOTH	add_828s2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10015250): no instruction supports the verb (S10.9 stub rule)
+0x10015270	3	CONST	EMPTY_BOTH	add_828m2smb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10015270): no instruction supports the verb (S10.9 stub rule)
+0x10015290	3	CONST	EMPTY_BOTH	add_828m2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10015290): no instruction supports the verb (S10.9 stub rule)
+0x100156a0	3	CONST	EMPTY_BOTH	add_8216s2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x100156a0): no instruction supports the verb (S10.9 stub rule)
+0x10015a80	3	CONST	EMPTY_BOTH	add_8216m2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10015a80): no instruction supports the verb (S10.9 stub rule)
+0x10016320	6	CONST	EMPTY_BOTH	mov_16216s2mmb	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret` at 0x10016320): no instruction supports the verb (S10.9 stub rule)
+0x10016cf0	3	CONST	EMPTY_BOTH	mov_16216m2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10016cf0): no instruction supports the verb (S10.9 stub rule)
+0x10016d10	3	CONST	EMPTY_BOTH	mov_828s2smb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10016d10): no instruction supports the verb (S10.9 stub rule)
+0x10016d30	3	CONST	EMPTY_BOTH	mov_828s2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10016d30): no instruction supports the verb (S10.9 stub rule)
+0x10016d50	3	CONST	EMPTY_BOTH	mov_828m2smb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10016d50): no instruction supports the verb (S10.9 stub rule)
+0x10016d70	3	CONST	EMPTY_BOTH	mov_828m2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10016d70): no instruction supports the verb (S10.9 stub rule)
+0x10017140	3	CONST	EMPTY_BOTH	mov_8216s2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10017140): no instruction supports the verb (S10.9 stub rule)
+0x10017500	3	CONST	EMPTY_BOTH	mov_8216m2mmb	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10017500): no instruction supports the verb (S10.9 stub rule)
+0x1001ba50	5	OTHER	EMPTY_BOTH	MidiCtrlSocket::is_ctrl_ok	REJECT_STUB	-	OTHER body (no field, no import): no instruction supports the verb (S10.9 stub rule)
+0x1001bcf0	114	OTHER	OVERLAP	MidiCtrlTarget::start_control	REJECT_HAND	-	calls slot +0x10 (do_control) of every list control of type 3..5 (0x1001bd1e): the verb start is not tied
+0x1001c340	17	OTHER	EQUAL	NoteMap::do_control	REJECT_HAND	-	this-adjusting (-0x2c) forwarder to slot +4 of the primary table (0x1001c34b), i.e. to 0x1001bcf0, itself unnamed
+0x1001c510	8	OTHER	EQUAL	Stepper::set_total_class_size	ACCEPT	Stepper::set_total_class_size	see re/names/demo_sound_1.tsv
+0x1001c6c0	8	OTHER	EQUAL	Randomizer::set_total_class_size	ACCEPT	Randomizer::set_total_class_size	see re/names/demo_sound_1.tsv
+0x1001c930	8	OTHER	EQUAL	Chooser::set_total_class_size	ACCEPT	Chooser::set_total_class_size	see re/names/demo_sound_1.tsv
+0x1001cb80	8	OTHER	EQUAL	ChannelCtrl::set_total_class_size	ACCEPT	ChannelCtrl::set_total_class_size	see re/names/demo_sound_1.tsv
+0x1001e860	86	FORWARD	OVERLAP	CMidiTrack::start_control	REJECT_HAND	-	calls slot +0x10 (do_control) of every list control of type 3..5 (0x1001e88f): the verb start is not tied
+0x10020d50	21	GETTER	EMPTY_BOTH	CMidiMgr::play	REJECT_STUB	-	GETTER body (reads dword ptr [esp + 4] (from 0x10020d50), no store, no call): no instruction supports the verb (S10.9 stub rule)
+0x10020fa0	8	CONST	EMPTY_BOTH	CMidiMgr::map_patch	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 0xc` at 0x10020fa0): no instruction supports the verb (S10.9 stub rule)
+0x10020fc0	8	CONST	EMPTY_BOTH	CMidiMgr::map_patch	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 8` at 0x10020fc0): no instruction supports the verb (S10.9 stub rule)
+0x100227c0	197	OTHER	OVERLAP	CMidiMgr::add_switch_range	ACCEPT	Seq::add_switch_range	see re/names/demo_sound_1.tsv
+0x10023110	111	OTHER	OVERLAP	CMidiMgr::set_active_range_hi	ACCEPT	Seq::set_active_range_hi	see re/names/demo_sound_1.tsv
+0x100234b0	99	SETTER	OVERLAP	CMidiMgr::is_trackset_playing	ACCEPT	Seq::is_trackset_playing	see re/names/demo_sound_1.tsv
+0x10023f60	67	OTHER	OVERLAP	CMidiMgr::get_track_velocity_offset	ACCEPT	Seq::get_track_velocity_offset	see re/names/demo_sound_1.tsv
+0x10023fd0	65	OTHER	OVERLAP	CMidiMgr::set_track_velocity_offset	ACCEPT	Seq::set_track_velocity_offset	see re/names/demo_sound_1.tsv
+0x10024cc0	8	CONST	EMPTY_BOTH	CMidiMgr::load_patch	REJECT_STUB	-	CONST body (`mov eax, 0x2f`; `ret 4` at 0x10024cc0): no instruction supports the verb (S10.9 stub rule)
+0x10024ce0	8	CONST	EMPTY_BOTH	CMidiMgr::unload_patch	REJECT_STUB	-	CONST body (`mov eax, 0x2f`; `ret 4` at 0x10024ce0): no instruction supports the verb (S10.9 stub rule)
+0x100290c0	1	EMPTY	EMPTY_BOTH	Wave_Device::timer_unhook	REJECT_STUB	-	EMPTY body (`ret` at 0x100290c0): no instruction supports the verb (S10.9 stub rule)
+0x100290e0	3	CONST	EMPTY_BOTH	Wave_Device::get_time_past	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x100290e0): no instruction supports the verb (S10.9 stub rule)
+0x10029100	3	EMPTY	EMPTY_BOTH	Wave_Device::add_to_time_past	REJECT_STUB	-	EMPTY body (`ret` at 0x10029100): no instruction supports the verb (S10.9 stub rule)
+0x10029120	1	EMPTY	EMPTY_BOTH	Wave_Device::reset_time_past	REJECT_STUB	-	EMPTY body (`ret` at 0x10029120): no instruction supports the verb (S10.9 stub rule)
+0x10029290	5	CONST	EMPTY_BOTH	Wave_Device::create_device	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x10029290): no instruction supports the verb (S10.9 stub rule)
+0x100292b0	3	CONST	EMPTY_BOTH	Wave_Device::delete_device	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x100292b0): no instruction supports the verb (S10.9 stub rule)
+0x10029420	183	FORWARD	OVERLAP	Wave_Device::select	REJECT_HAND	-	183-byte body not reviewed in depth (walks the global list at 0x100b5070)
+0x100295c0	3	CONST	EMPTY_BOTH	Wave_Device::get_volume	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x100295c0): no instruction supports the verb (S10.9 stub rule)
+0x100295e0	3	EMPTY	EMPTY_BOTH	Wave_Device::set_pan	REJECT_STUB	-	EMPTY body (`ret` at 0x100295e0): no instruction supports the verb (S10.9 stub rule)
+0x10029620	5	CONST	EMPTY_BOTH	Wave_Device::fade	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x10029620): no instruction supports the verb (S10.9 stub rule)
+0x10029640	3	CONST	EMPTY_BOTH	Wave_Device::stop	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10029640): no instruction supports the verb (S10.9 stub rule)
+0x10029e30	5	CONST	EMPTY_BOTH	Midi_Device::create_device	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x10029e30): no instruction supports the verb (S10.9 stub rule)
+0x10029e50	3	CONST	EMPTY_BOTH	Midi_Device::delete_device	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10029e50): no instruction supports the verb (S10.9 stub rule)
+0x10029eb0	1	EMPTY	EMPTY_BOTH	Midi_Device::timer_unhook	REJECT_STUB	-	EMPTY body (`ret` at 0x10029eb0): no instruction supports the verb (S10.9 stub rule)
+0x10029ed0	3	CONST	EMPTY_BOTH	Midi_Device::get_time_past	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x10029ed0): no instruction supports the verb (S10.9 stub rule)
+0x10029ef0	3	EMPTY	EMPTY_BOTH	Midi_Device::add_to_time_past	REJECT_STUB	-	EMPTY body (`ret` at 0x10029ef0): no instruction supports the verb (S10.9 stub rule)
+0x10029f10	1	EMPTY	EMPTY_BOTH	Midi_Device::reset_time_past	REJECT_STUB	-	EMPTY body (`ret` at 0x10029f10): no instruction supports the verb (S10.9 stub rule)
+0x1002a030	3	CONST	EMPTY_BOTH	Midi_Device::get_ndevices	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a030): no instruction supports the verb (S10.9 stub rule)
+0x1002a050	5	CONST	EMPTY_BOTH	Midi_Device::select	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1002a050): no instruction supports the verb (S10.9 stub rule)
+0x1002a070	5	CONST	EMPTY_BOTH	Midi_Device::get_description	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 0xc` at 0x1002a070): no instruction supports the verb (S10.9 stub rule)
+0x1002a090	3	EMPTY	EMPTY_BOTH	Midi_Device::set_volume	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a090): no instruction supports the verb (S10.9 stub rule)
+0x1002a0b0	3	CONST	EMPTY_BOTH	Midi_Device::get_volume	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a0b0): no instruction supports the verb (S10.9 stub rule)
+0x1002a0d0	3	EMPTY	EMPTY_BOTH	Midi_Device::set_pan	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a0d0): no instruction supports the verb (S10.9 stub rule)
+0x1002a0f0	5	CONST	EMPTY_BOTH	Midi_Device::fade	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1002a0f0): no instruction supports the verb (S10.9 stub rule)
+0x1002a110	3	CONST	EMPTY_BOTH	Midi_Device::stop	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a110): no instruction supports the verb (S10.9 stub rule)
+0x1002a130	1	EMPTY	EMPTY_BOTH	Midi_Device::update_sound	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a130): no instruction supports the verb (S10.9 stub rule)
+0x1002a150	3	EMPTY	EMPTY_BOTH	Midi_Device::set_rate	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a150): no instruction supports the verb (S10.9 stub rule)
+0x1002a170	3	CONST	EMPTY_BOTH	Midi_Device::get_rate	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a170): no instruction supports the verb (S10.9 stub rule)
+0x1002a190	1	EMPTY	EMPTY_BOTH	Midi_Device::suspend	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a190): no instruction supports the verb (S10.9 stub rule)
+0x1002a1b0	1	EMPTY	EMPTY_BOTH	Midi_Device::restart	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a1b0): no instruction supports the verb (S10.9 stub rule)
+0x1002a280	1	EMPTY	EMPTY_BOTH	Wave_In_Device::timer_unhook	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a280): no instruction supports the verb (S10.9 stub rule)
+0x1002a2a0	3	CONST	EMPTY_BOTH	Wave_In_Device::get_time_past	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a2a0): no instruction supports the verb (S10.9 stub rule)
+0x1002a2c0	3	EMPTY	EMPTY_BOTH	Wave_In_Device::add_to_time_past	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a2c0): no instruction supports the verb (S10.9 stub rule)
+0x1002a2e0	1	EMPTY	EMPTY_BOTH	Wave_In_Device::reset_time_past	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a2e0): no instruction supports the verb (S10.9 stub rule)
+0x1002a300	3	EMPTY	EMPTY_BOTH	Wave_In_Device::set_volume	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a300): no instruction supports the verb (S10.9 stub rule)
+0x1002a320	3	CONST	EMPTY_BOTH	Wave_In_Device::get_volume	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a320): no instruction supports the verb (S10.9 stub rule)
+0x1002a340	3	EMPTY	EMPTY_BOTH	Wave_In_Device::set_pan	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a340): no instruction supports the verb (S10.9 stub rule)
+0x1002a360	5	CONST	EMPTY_BOTH	Wave_In_Device::fade	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1002a360): no instruction supports the verb (S10.9 stub rule)
+0x1002a3e0	5	CONST	EMPTY_BOTH	Wave_In_Device::create_device	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1002a3e0): no instruction supports the verb (S10.9 stub rule)
+0x1002a400	3	CONST	EMPTY_BOTH	Wave_In_Device::delete_device	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a400): no instruction supports the verb (S10.9 stub rule)
+0x1002a4b0	28	FORWARD	EQUAL	Wave_In_Device::set_codec	REJECT_HAND	-	forwards to slot +0x64 of this+0x14; the Dll_Wave_In_Device table holds this same forwarder there
+0x1002a4e0	28	FORWARD	EQUAL	Wave_In_Device::set_vxw_key	REJECT_HAND	-	forwards to slot +0x68 of this+0x14; the target 0x1000ebe0 is an unnamed stub
+0x1002a510	3	CONST	EMPTY_BOTH	Wave_In_Device::get_ndevices	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a510): no instruction supports the verb (S10.9 stub rule)
+0x1002a530	5	CONST	EMPTY_BOTH	Wave_In_Device::select	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1002a530): no instruction supports the verb (S10.9 stub rule)
+0x1002a550	5	CONST	EMPTY_BOTH	Wave_In_Device::get_description	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 0xc` at 0x1002a550): no instruction supports the verb (S10.9 stub rule)
+0x1002a570	5	CONST	EMPTY_BOTH	Wave_In_Device::get_caps	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret 4` at 0x1002a570): no instruction supports the verb (S10.9 stub rule)
+0x1002a590	3	CONST	EMPTY_BOTH	Wave_In_Device::stop	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a590): no instruction supports the verb (S10.9 stub rule)
+0x1002a5b0	1	EMPTY	EMPTY_BOTH	Wave_In_Device::update_sound	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a5b0): no instruction supports the verb (S10.9 stub rule)
+0x1002a5d0	3	EMPTY	EMPTY_BOTH	Wave_In_Device::set_rate	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a5d0): no instruction supports the verb (S10.9 stub rule)
+0x1002a5f0	3	CONST	EMPTY_BOTH	Wave_In_Device::get_rate	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002a5f0): no instruction supports the verb (S10.9 stub rule)
+0x1002a610	1	EMPTY	EMPTY_BOTH	Wave_In_Device::suspend	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a610): no instruction supports the verb (S10.9 stub rule)
+0x1002a630	1	EMPTY	EMPTY_BOTH	Wave_In_Device::restart	REJECT_STUB	-	EMPTY body (`ret` at 0x1002a630): no instruction supports the verb (S10.9 stub rule)
+0x1002b110	8	CONST	EMPTY_BOTH	Sound::load	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1002b110): no instruction supports the verb (S10.9 stub rule)
+0x1002b870	23	FORWARD	EQUAL	Wave::stop_instance	REJECT_HAND	-	forwards to slot +0xd0 of this+0x40; every paired table holds this same forwarder in that slot
+0x1002b8a0	23	FORWARD	EQUAL	Wave::fade_instance	REJECT_HAND	-	forwards to slot +0xd4 of this+0x40; every paired table holds this same forwarder in that slot
+0x1002c1c0	18	FORWARD	EQUAL	Wave::get_ndevices	REJECT_HAND	-	forwards to slot +0xc0 of this+0x40; every paired table holds this same forwarder in that slot
+0x1002c1f0	56	FORWARD	EQUAL	Wave::get_device_description	REJECT_HAND	-	forwards to slot +0xc4 of this+0x40; every paired table holds this same forwarder in that slot
+0x1002c2b0	8	CONST	EMPTY_BOTH	Wave::set_bufflimit	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1002c2b0): no instruction supports the verb (S10.9 stub rule)
+0x1002c2d0	6	CONST	EMPTY_BOTH	Wave::set_asdr	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret` at 0x1002c2d0): no instruction supports the verb (S10.9 stub rule)
+0x1002c2f0	8	CONST	EMPTY_BOTH	Wave::set_attack	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 0xc` at 0x1002c2f0): no instruction supports the verb (S10.9 stub rule)
+0x1002c310	8	CONST	EMPTY_BOTH	Wave::set_sustain	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 0xc` at 0x1002c310): no instruction supports the verb (S10.9 stub rule)
+0x1002c330	8	CONST	EMPTY_BOTH	Wave::set_decay	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 0xc` at 0x1002c330): no instruction supports the verb (S10.9 stub rule)
+0x1002c350	8	CONST	EMPTY_BOTH	Wave::set_release	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 0xc` at 0x1002c350): no instruction supports the verb (S10.9 stub rule)
+0x1002cd10	6	CONST	EMPTY_BOTH	SoundList::stop	REJECT_STUB	-	CONST body (`mov eax, 0x13`; `ret` at 0x1002cd10): no instruction supports the verb (S10.9 stub rule)
+0x1002e060	28	FORWARD	EQUAL	Midi::get_time	REJECT_HAND	-	forwards to slot +0xc8 of this+0x40 (0x1002e06e); every paired table holds this same forwarder in that slot
+0x1002ed30	3	CONST	EMPTY_BOTH	AviSound::get_time	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002ed30): no instruction supports the verb (S10.9 stub rule)
+0x1002ee80	3	CONST	EMPTY_BOTH	VoiceRx::get_game_hwnd	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002ee80): no instruction supports the verb (S10.9 stub rule)
+0x1002eea0	8	CONST	EMPTY_BOTH	VoiceRx::set_attrib	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1002eea0): no instruction supports the verb (S10.9 stub rule)
+0x1002eec0	3	CONST	EMPTY_BOTH	VoiceRx::get_attrib	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002eec0): no instruction supports the verb (S10.9 stub rule)
+0x1002f360	3	CONST	EMPTY_BOTH	VoiceTx::get_game_hwnd	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002f360): no instruction supports the verb (S10.9 stub rule)
+0x1002f380	8	CONST	EMPTY_BOTH	VoiceTx::set_attrib	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1002f380): no instruction supports the verb (S10.9 stub rule)
+0x1002f3a0	3	CONST	EMPTY_BOTH	VoiceTx::get_attrib	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002f3a0): no instruction supports the verb (S10.9 stub rule)
+0x1002f7f0	8	CONST	EMPTY_BOTH	dllSoundList::set_attrib	REJECT_STUB	-	CONST body (`mov eax, 0xb`; `ret 4` at 0x1002f7f0): no instruction supports the verb (S10.9 stub rule)
+0x1002f810	3	CONST	EMPTY_BOTH	dllSoundList::get_attrib	REJECT_STUB	-	CONST body (`xor eax, eax`; `ret` at 0x1002f810): no instruction supports the verb (S10.9 stub rule)
+0x1002fa60	170	OTHER	EQUAL	dllSoundList::play	ACCEPT	dllSoundList::play	see re/names/demo_sound_1.tsv
+0x100306e0	23	OTHER	EMPTY_BOTH	CVoiceRxMgr::unload	REJECT_STUB	-	OTHER body (no field, no import): no instruction supports the verb (S10.9 stub rule)
+0x10031a30	5	OTHER	EQUAL	CVoiceTxMgr::stop	REJECT_HAND	-	tail-jumps its own slot +0x14 (0x10031a32), which the demo record names unload: verb stop not supported
+0x1003a440	213	OTHER	EQUAL	CWaveMgr::set_link	REJECT_HAND	-	213-byte body not reviewed in depth
+0x1003a6b0	18	OTHER	EMPTY_BOTH	CWaveMgr::set_fade	REJECT_STUB	-	OTHER body (no field, no import): no instruction supports the verb (S10.9 stub rule)

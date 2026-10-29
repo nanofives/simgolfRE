@@ -1,0 +1,12 @@
+file	addr	old	new	source
+exe_5.tsv	0x004a4fc4	initFpControl	__cfltcvt_init	13_merge.md 2
+exe_5.tsv	0x004abe6b	amsgExitThunk	__fptrap	13_merge.md 2
+sound_8.tsv	0x10041aad	iosResetVtable	ostream::dtor	13_merge.md 2
+undisc_sound.tsv	0x10041b9d	ostream::scalarDtorAdj8	ostream_withassign::scalar_deleting_destructor	13_merge.md 2
+sound_8.tsv	0x10041c26	ostreamResetVtable	ostream_withassign::dtor	13_merge.md 2
+sound_5.tsv	0x100432b0	CItranscendental1	_exp	13_merge.md 2
+sound_8.tsv	0x10047103	sbhPageFree	___old_sbh_free_block	13_merge.md 2
+sound_1.tsv	0x10047148	crtCommitPages	___old_sbh_alloc_block	13_merge.md 2
+sound_8.tsv	0x10047350	sbhFindFreeRun	___old_sbh_alloc_block_from_page	13_merge.md 2
+sound_8.tsv	0x1004820c	fpStatusExceptionType	__convertTOStoQNaN	13_merge.md 2
+sound_1.tsv	0x10049604	crtValidatePointer	_ValidateWrite	13_merge.md 2

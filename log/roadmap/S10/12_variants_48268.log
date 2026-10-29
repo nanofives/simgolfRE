@@ -1,0 +1,5 @@
+base 42.9% (regs-renamed 42.9%, in place 42.9%)
+ternary: 25.0% (regs-renamed 26.7%, in place 0.0%)
+two_ifs: 42.9% (regs-renamed 42.9%, in place 42.9%)
+signed: 42.9% (regs-renamed 42.9%, in place 42.9%)
+xor_form: 37.5% (regs-renamed 40.0%, in place 14.3%)

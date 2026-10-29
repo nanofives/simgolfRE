@@ -36,7 +36,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x1004aecc `__87except` at 0x100481bb
 
 ## Callers
-0x100481f5 `fpuSetControlWord`, 0x1004820c `fpStatusExceptionType`, 0x10048225 `__fload_withFB`, 0x10048268 `doubleExponentField`, 0x1004828b `__math_exit`
+0x100481f5 `fpuSetControlWord`, 0x1004820c `__convertTOStoQNaN`, 0x10048225 `__fload_withFB`, 0x10048268 `doubleExponentField`, 0x1004828b `__math_exit`
 
 ## Constants
 - `0x8` at 0x100481b2

@@ -29,7 +29,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10044642 `__cftof2`, 0x100458a1 `calloc`, 0x10046e50 `sbhRegionCreate`, 0x10047148 `crtCommitPages`, 0x1004c688 `___crtGetStringTypeA`, 0x1004cd2b `___lc_strtolc`, 0x100507f9 `___crtGetStringTypeW`
+0x10044642 `__cftof2`, 0x100458a1 `calloc`, 0x10046e50 `sbhRegionCreate`, 0x10047148 `___old_sbh_alloc_block`, 0x1004c688 `___crtGetStringTypeA`, 0x1004cd2b `___lc_strtolc`, 0x100507f9 `___crtGetStringTypeW`
 
 ## Constants
 - `0x2` at 0x1004a13c

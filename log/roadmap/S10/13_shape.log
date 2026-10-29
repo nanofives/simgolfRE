@@ -1,0 +1,144 @@
+0x10005880 CAmbienceMgr::strip_path 91 OTHER |  |  | call 0x100424b0 _strrchr
+0x10005900 CAmbienceMgr::make_path_local 259 OTHER |  |  | call 0x100424b0 _strrchr;call 0x100424b0 _strrchr
+0x10006b50 CAviMgr::start 23 OTHER |  |  | 
+0x10006ba0 CAviMgr::discard_frame 29 OTHER |  | WINMM.dll!mmioClose | 
+0x10006fc0 CWaveMixer::fill_mixbuff 49 OTHER |  |  | 
+0x10007c10 CWaveMixer::mb_2_dsb 5 CONST | `xor eax, eax`; `ret 0xc` at 0x10007c10 |  | 
+0x100087a0 CWaveMixer::get_filter_index 56 GETTER | reads dword ptr [esp + 4], dword ptr [esp + 8], word ptr [edx + 0xe] (from 0x100 |  | 
+0x10008e00 CTimer::get_samples_per_tick 32 GETTER | reads dword ptr [eax + 4], dword ptr [esp + 4] (from 0x10008e00), no store, no c |  | 
+0x10008e30 CTimer::set_rate 50 SETTER | stores dword ptr [ecx] from its arguments (0x10008e5b) |  | 
+0x10008e80 CTimer::set_wave_format 54 SETTER | stores dword ptr [ecx], dword ptr [ecx + 4], dword ptr [ecx + 8], dword ptr [ecx |  | 
+0x10009240 init_sound 121 OTHER |  |  | call 0x100424d7 operator_new;call 0x100089f0 SoundTimer::init;call 0x100286f0 SoundWindowObj_subclass
+0x100099d0 get_sound_type 114 OTHER |  |  | call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function;call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function;call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function;call 0x10042690 name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function
+0x10009a70 update_sound 1 EMPTY | `ret` at 0x10009a70 |  | 
+0x10009e10 Dll_Midi_Device::init_win_device 26 OTHER |  | WINMM.dll!midiOutOpen | 
+0x1000aa60 Dll_Midi_Device::post_GT_request 110 OTHER |  | USER32.dll!PostMessageA | call 0x1002aa90 postSoundThreadMessage
+0x1000db60 Dll_Wave_Device::post_GT_request 95 OTHER |  | USER32.dll!PostMessageA | call 0x1002aa90 postSoundThreadMessage
+0x1000e160 Dll_Wave_Device::update_hwbuffers 72 OTHER |  |  | call 0x10010db0 DsBuffer::play
+0x1000e370 Dll_Wave_Device::get_eax 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e370 |  | 
+0x1000e390 Dll_Wave_Device::get_eax 34 OTHER |  |  | call 0x10012020 deferred CDSMgr::get_eax
+0x1000e3d0 Dll_Wave_Device::set_eax_volume 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e3d0 |  | 
+0x1000e3f0 Dll_Wave_Device::get_eax_volume 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e3f0 |  | 
+0x1000e410 Dll_Wave_Device::set_eax_decay 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e410 |  | 
+0x1000e430 Dll_Wave_Device::get_eax_decay 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e430 |  | 
+0x1000e450 Dll_Wave_Device::set_eax_damping 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e450 |  | 
+0x1000e470 Dll_Wave_Device::get_eax_damping 5 CONST | `xor eax, eax`; `ret 4` at 0x1000e470 |  | 
+0x1000f0a0 CDSB::dsbrestore 16 OTHER |  |  | 
+0x1000f0f0 CDSB::setsamplerate 77 SETTER | stores dword ptr [ecx + 0xac], dword ptr [ecx + 0xb0] from its arguments (0x1000 |  | 
+0x1000f380 CDSB::setsamplesize 87 SETTER | stores word ptr [ecx + 0xb6], word ptr [ecx + 0xb4], dword ptr [ecx + 0xb0] from |  | 
+0x1000f400 CDSB::setnumchannels 86 SETTER | stores word ptr [ecx + 0xaa], word ptr [ecx + 0xb4], dword ptr [ecx + 0xb0] from |  | 
+0x1000f720 CDSB::reinit 38 OTHER |  |  | 
+0x10010120 CDSB::get_cur_dsbwrite 37 OTHER |  |  | 
+0x10010160 CDSB::get_cur_dsbplay 36 OTHER |  |  | 
+0x10010d60 CDSB::release_pointer 51 OTHER |  |  | 
+0x10010e80 CDSB::set_samples_per_tick 27 SETTER | stores dword ptr [ecx + 0x34] from its arguments (0x10010e95) |  | 
+0x10011600 CDSMgr::init 122 OTHER |  |  | call 0x100114e0 DirectSoundDevice::enumerate
+0x10011720 CDSMgr::suspend 1 EMPTY | `ret` at 0x10011720 |  | 
+0x10011740 CDSMgr::restart 1 EMPTY | `ret` at 0x10011740 |  | 
+0x10012020 CDSMgr::get_eax 8 CONST | `mov eax, 0xb`; `ret 4` at 0x10012020 |  | 
+0x10012060 CDSMgr::init_A3D 3 CONST | `xor eax, eax`; `ret` at 0x10012060 |  | 
+0x10012080 CDSMgr::uninit_A3D 3 CONST | `xor eax, eax`; `ret` at 0x10012080 |  | 
+0x10013470 CDSMgr::attach_dsb 77 OTHER |  |  | 
+0x10013870 filter_stub 3 CONST | `xor eax, eax`; `ret` at 0x10013870 |  | 
+0x1001b830 MidiCtrlSocket::MidiCtrlSocket 37 CTOR | stores 0x1005b58c into [eax] at 0x1001b840 |  | 
+0x1001b9e0 MidiCtrlSocket::insert_after 78 OTHER |  |  | call 0x1001d1d0 PtrList_pushFront;call 0x1001d250 PtrList_insert
+0x1001c1b0 NoteMap::operator= 24 GETTER | reads [eax + 0x5c], [ecx + 0x5c], dword ptr [esp + 4] (from 0x1001c1b0), no stor |  | 
+0x1001c260 NoteMap::map_note 40 OTHER |  |  | 
+0x1001c480 Stepper::Stepper 75 CTOR | stores 0x1005b5cc into [eax] at 0x1001c4ac |  | 
+0x1001cad0 Chooser::do_control 3 CONST | `xor eax, eax`; `ret` at 0x1001cad0 |  | 
+0x1001cd70 ProgramCtrl::set_base_filepath 268 OTHER |  |  | call 0x1004249a operator_delete;call 0x100424d7 operator_new;call 0x1001ced0 Sound_setName
+0x1001d030 ProgramCtrl::get_new_pitch 70 OTHER |  | WINMM.dll!timeGetTime | 
+0x1001d590 CMidiFile::get_pcur_event 97 SETTER | stores dword ptr [ecx + 0x1a4], dword ptr [ecx + 0x1a4], dword ptr [ecx] from it |  | 
+0x1001d620 CMidiFile::get_pfirst_event 107 OTHER |  |  | call 0x1001e8e0 Seq_rewindTracks
+0x1001d6b0 CMidiFile::advance_track 152 OTHER |  |  | 
+0x1001e120 CMidiFile::reload 18 OTHER |  |  | call 0x1001d810 Midi_Device::loadFile
+0x1001e150 CMidiFile::post_reset 79 OTHER |  | USER32.dll!PostMessageA | call 0x1002aa90 postSoundThreadMessage
+0x1001e510 CMidiFile::mmioerr 3 EMPTY | `ret` at 0x1001e510 |  | 
+0x1001e550 CMidiFile::fade 11 OTHER |  |  | 
+0x1001e570 CMidiFile::fade 82 SETTER | stores dword ptr [ecx + 0x174], dword ptr [ecx + 0x4c], dword ptr [ecx + 0x174], |  | 
+0x1001e5f0 CMidiFile::set_pan 42 SETTER | stores dword ptr [ecx + 0x180], dword ptr [ecx + 0x180] from its arguments (0x10 |  | 
+0x1001e6b0 CMidiFile::be2le 28 OTHER |  |  | 
+0x1001ea40 CMidiTrack::set_tick_offset 67 OTHER |  |  | call 0x1001ecc0 FUN_1001ecc0 [match ?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z];call 0x1001ecc0 FUN_1001ecc0 [match ?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z]
+0x10020270 CMidiMgr::reload 8 OTHER |  |  | jmp 0x1001e120 deferred CMidiFile::reload
+0x10020aa0 CMidiMgr::free_all 37 OTHER |  |  | 
+0x10020ae0 CMidiMgr::post_unload 90 OTHER |  | USER32.dll!PostMessageA | call 0x1002aa90 postSoundThreadMessage
+0x10021560 CMidiMgr::program_change 35 SETTER | stores dword ptr [ecx + eax*4 + 0x25c] from its arguments (0x10021574) |  | 
+0x10021ec0 CMidiMgr::pitch_wheel 8 CONST | `mov eax, 1`; `ret 8` at 0x10021ec0 |  | 
+0x10023750 CMidiMgr::TT_play_trackset 230 OTHER |  |  | call 0x1001d780 Seq_listGetAt;call 0x1001d780 Seq_listGetAt;call 0x1001d780 Seq_listGetAt;call 0x10024b80 Seq_scheduleEvent
+0x10023b80 CMidiMgr::TT_xpose_trackset 119 OTHER |  |  | call 0x1001d780 Seq_listGetAt;call 0x1001d780 Seq_listGetAt
+0x10024310 CProgramMgr::unload 3 CONST | `xor eax, eax`; `ret` at 0x10024310 |  | 
+0x10024330 CProgramMgr::stop 30 OTHER |  |  | call 0x1001ac40 Voice_notifyChannelNotes
+0x10024420 CProgramMgr::xlat_pitch 7 GETTER | reads dword ptr [esp + 4] (from 0x10024420), no store, no call |  | 
+0x10024440 CProgramMgr::xlat_volume 7 GETTER | reads dword ptr [esp + 4] (from 0x10024440), no store, no call |  | 
+0x100244c0 CMidiChannel::reset_rnd_prgm_table 1 EMPTY | `ret` at 0x100244c0 |  | 
+0x100244e0 CMidiChannel::xlat_program 7 GETTER | reads dword ptr [esp + 4] (from 0x100244e0), no store, no call |  | 
+0x10025040 CMMError::CMMError 9 CTOR | stores 0x1005b830 into [eax] at 0x10025042 |  | 
+0x10025090 CMMError::~CMMError 7 CTOR | stores 0x1005b830 into [ecx] at 0x10025090 |  | 
+0x100250b0 CMMError::handle_error 86 OTHER |  |  | 
+0x10028e70 Sound_Device::attach 81 OTHER |  |  | 
+0x10028ef0 Sound_Device::detach 92 OTHER |  |  | 
+0x10028f70 Sound_Device::Sound_Device 40 CTOR | stores 0x1005b8b0 into [eax] at 0x10028f75 |  | 
+0x10029730 Wave_Device::add_to_group 93 OTHER |  |  | call 0x1000e680 appendNodeC;call 0x1002cd30 deferred SoundList::scaleVolumeToGroup
+0x100297b0 Wave_Device::pull_from_group 151 OTHER |  |  | call 0x1004249a operator_delete
+0x10029880 Wave_Device::set_group_volume 121 OTHER |  |  | call 0x1002cd30 deferred SoundList::scaleVolumeToGroup
+0x10029920 Wave_Device::get_group_volume 24 GETTER | reads [eax + eax*2], dword ptr [ecx + eax*8 + 0x28], dword ptr [esp + 4] (from 0 |  | 
+0x10029950 Wave_Device::enable_group 93 OTHER |  |  | 
+0x100299d0 Wave_Device::muteGroup 81 OTHER |  |  | 
+0x10029a50 Wave_Device::unMuteGroup 30 SETTER | stores byte ptr [ecx + eax*8 + 0x25] from its arguments (0x10029a64) |  | 
+0x10029a80 Wave_Device::disable_group 120 OTHER |  |  | 
+0x10029b20 Wave_Device::is_group_disabled 29 GETTER | reads [eax + eax*2], byte ptr [ecx + eax*8 + 0x24], dword ptr [esp + 4] (from 0x |  | 
+0x10029b50 Wave_Device::isGroupMute 29 GETTER | reads [eax + eax*2], byte ptr [ecx + eax*8 + 0x25], dword ptr [esp + 4] (from 0x |  | 
+0x1002af00 Sound::attach 99 OTHER |  |  | 
+0x1002af90 Sound::detach 96 OTHER |  |  | 
+0x1002c240 Wave::select_device 22 GETTER | reads dword ptr [eax + 0x40], dword ptr [ecx + 0x40] (from 0x1002c240), no store |  | 
+0x1002c790 MpegStream::set_next 51 OTHER |  |  | 
+0x1002c7e0 MpegStream::start 242 OTHER |  | WINMM.dll!timeGetTime | call 0x1002bd80 Device_lazyCreateSound
+0x1002c920 MpegStream::add_to_playlist 105 OTHER |  |  | call 0x100424d7 operator_new
+0x1002c9b0 MpegStream::clear_playlist 42 OTHER |  |  | call 0x1004249a operator_delete
+0x1002cd30 SoundList::scaleVolumeToGroup 3 EMPTY | `ret` at 0x1002cd30 |  | 
+0x1002cd50 SoundList::add 105 OTHER |  |  | call 0x100424d7 operator_new
+0x1002cde0 SoundList::setListName 87 OTHER |  |  | call 0x100424d7 operator_new
+0x1002d010 KeyMap::~KeyMap 118 OTHER |  |  | call 0x1004249a operator_delete;call 0x1004249a operator_delete
+0x1002d0b0 KeyMap::unmap_range 50 OTHER |  |  | call 0x1004249a operator_delete
+0x1002d2c0 KeyMap::set_base_path 287 OTHER |  |  | call 0x100424b0 _strrchr
+0x1002d710 Midi::set_frame_delay 30 OTHER |  |  | 
+0x1002e2f0 Midi::get_tonal_center 98 OTHER |  |  | 
+0x1002e490 Sound::unloadall 31 OTHER |  |  | 
+0x1002e4c0 Patch::Patch 42 OTHER |  |  | 
+0x1002f710 do_message 21 OTHER |  | USER32.dll!MessageBoxA | 
+0x1002fe20 CTrace::CTrace 79 OTHER |  |  | 
+0x1002fe90 CTrace::~CTrace 1 EMPTY | `ret` at 0x1002fe90 |  | 
+0x1002feb0 CTrace::dump_to_file 177 OTHER |  |  | call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x100418c8 ostream::operator_lshift_100418c8;call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x10041700 ostream::operator_lshift_10041700;call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x10041700 ostream::operator_lshift_10041700;call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x1004164f ostream::operator_lshift;call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x1004164f ostream::operator_lshift;call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x1004164f ostream::operator_lshift;call 0x10041dc7 ostream::operator_lshift_10041dc7;call 0x1004164f ostream::operator_lshift;call 0x10041dc7 ostream::operator_lshift_10041dc7
+0x10030000 CTrace::in_data 43 SETTER | stores dword ptr [ecx + 0x108], dword ptr [ecx + 0x10c], dword ptr [ecx + 0x110] |  | 
+0x10030040 CTrace::operator= 44 GETTER | reads dword ptr [esp + 0xc] (from 0x10030040), no store, no call |  | 
+0x10030730 CVoiceRxMgr::lpc10_write_16bit_samples 110 OTHER |  |  | call 0x10042550 __ftol
+0x100307c0 CVoiceRxMgr::lpc10_read_bits 85 SETTER | stores dword ptr [esi - 4] from its arguments (0x10030806) |  | 
+0x10031120 CVoiceRxMgr::discard_buffer 29 OTHER |  | WINMM.dll!mmioClose | 
+0x10031150 CVoiceRxMgr::enable 3 CONST | `xor eax, eax`; `ret` at 0x10031150 |  | 
+0x10031170 CVoiceRxMgr::disable 3 CONST | `xor eax, eax`; `ret` at 0x10031170 |  | 
+0x10031670 CVoiceTxMgr::s2f_and_scale 50 OTHER |  |  | 
+0x10031a50 CVoiceTxMgr::lpc_write_bits 66 SETTER | stores byte ptr [esi] from its arguments (0x10031a7c) |  | 
+0x10032680 CWaveFile::mpeg_load 8 CONST | `mov eax, 0xb`; `ret 4` at 0x10032680 |  | 
+0x10033280 CWaveFile::read_from_file 90 OTHER |  | WINMM.dll!mmioSetInfo | 
+0x100338f0 CWaveFile::get_write_pointers 113 OTHER |  |  | 
+0x10033f70 CWaveFile::mpeg_unload 6 CONST | `mov eax, 0xb`; `ret` at 0x10033f70 |  | 
+0x10034410 CWaveFile::mmioerr 3 EMPTY | `ret` at 0x10034410 |  | 
+0x10034de0 CWaveFile::fade_in 78 OTHER |  |  | call 0x100355d0 Channel_setReverseRate
+0x10034e50 CWaveFile::operator++ 130 OTHER |  |  | 
+0x10034f10 CWaveFile::get_nsamples_left_in_buffer 72 GETTER | reads byte ptr [ecx + 0x58], dword ptr [ecx + 0x168], dword ptr [ecx + 0x16c], d |  | 
+0x10034f80 CWaveFile::advance 29 OTHER |  |  | call 0x10033300 fillDecodeRing
+0x10035070 CWaveFile::need_to_advance 71 OTHER |  |  | 
+0x10035c30 CWaveFile::get_mpeg_samples 74 GETTER | reads dword ptr [ecx + 0x5c], dword ptr [esp + 0xc], dword ptr [esp + 8] (from 0 |  | 
+0x100377b0 CWaveFile::set_buffer_inactive 35 OTHER |  |  | 
+0x10037e90 WaveBuffer::reset 65 OTHER |  |  | 
+0x10037f00 WaveBuffer::get_nsamples_left_in_buffer 24 GETTER | reads dword ptr [ecx + 0x1c], dword ptr [ecx + 0x20], word ptr [ecx + 0xac] (fro |  | 
+0x10038270 WaveBuffer::fade_in 58 OTHER |  |  | 
+0x10038ed0 WaveInDeviceMgr::add_buffer 46 OTHER |  | WINMM.dll!waveInAddBuffer | 
+0x10038f40 WaveInDeviceMgr::get_num_devices 6 OTHER |  | WINMM.dll!waveInGetNumDevs | 
+0x100392c0 WaveInDeviceMgr::handle_error 83 OTHER |  |  | 
+0x10039380 WaveInDeviceMgr::set_format 50 OTHER |  |  | 
+0x10039490 WIBuffer::WIBuffer 28 OTHER |  |  | 
+0x10039540 WIBuffer::set_next 10 SETTER | stores dword ptr [ecx + 0x18] from its arguments (0x10039544) |  | 
+0x10039560 WIBuffer::get_whdr 3 CONST | `mov eax, ecx`; `ret` at 0x10039560 |  | 
+0x10039ca0 CWaveMgr::free_all 37 OTHER |  |  | 
+Counter({'OTHER': 81, 'CONST': 20, 'SETTER': 15, 'GETTER': 14, 'EMPTY': 8, 'CTOR': 5})

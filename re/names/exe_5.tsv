@@ -184,8 +184,8 @@ golf_clean.exe	0x004a4d30	listClearThunk	util	match re/match/golf_raw_05.cpp; ca
 golf_clean.exe	0x004a4d50	listClear4a4d	util	match re/match/golf_hand_02.cpp; callee _free	clears a singly-linked list, freeing every node.
 golf_clean.exe	0x004a4db0	listPush	util	match re/match/golf_hand_07_4a4db0.cpp; caller movieReadFrame 0x0049cb90; callee removeHead 0x004a4ed0, _malloc	pushes a node onto the (bounded) FIFO, dropping the head if the capacity is exceeded.
 golf_clean.exe	0x004a4ed0	listRemoveHead	util	match re/match/golf_classes.cpp; callers moviePlayFrame 0x0049ccc0, listPush; callee _free	removes and frees the head node of the list.
-golf_clean.exe	0x004a4fc4	initFpControl	crt	match re/match/golf_hand_01.cpp; caller __fpmath 0x004a4fac; writes FP control globals 0x004e4b00..0x004e4b14	initializes the floating-point control/precision globals at startup.
+golf_clean.exe	0x004a4fc4	__cfltcvt_init	crt	match re/match/golf_hand_01.cpp; caller __fpmath 0x004a4fac; writes FP control globals 0x004e4b00..0x004e4b14	initializes the floating-point control/precision globals at startup.
 golf_clean.exe	0x004a512a	doexit	crt	callers _exit 0x004a5108, __exit 0x004a5119; callee __initterm 0x004a51e1, __lockexit	CRT exit routine that runs the registered atexit/term functions.
 golf_clean.exe	0x004a910c	errnoPtr	crt	match re/match/golf_raw_05.cpp; callee __getptd; returns getptd()+2	returns the address of the per-thread errno value.
 golf_clean.exe	0x004a9115	doserrnoPtr	crt	match re/match/golf_raw_05.cpp; callee __getptd; returns getptd()+3	returns the address of the per-thread _doserrno value.
-golf_clean.exe	0x004abe6b	amsgExitThunk	crt	match re/match/golf_raw_05.cpp; callee __amsg_exit 0x004a6937	thunk that calls the CRT fatal-message exit routine.
+golf_clean.exe	0x004abe6b	__fptrap	crt	match re/match/golf_raw_05.cpp; callee __amsg_exit 0x004a6937	thunk that calls the CRT fatal-message exit routine.

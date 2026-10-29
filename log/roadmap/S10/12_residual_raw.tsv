@@ -1,0 +1,6 @@
+module	addr	canonical_best	wip_files
+golf_clean.exe	0x00427380	none	smsg_golf_GolferShot.cpp
+golf_clean.exe	0x00434cf0	none	smsg_golf_Toolbar.cpp
+golf_clean.exe	0x00436e50	none	smsg_golf_Toolbar.cpp
+golf_clean.exe	0x004a55d2	none	m36d_wip_ehvec.cpp
+sound.dll	0x10048268	none	m36c_48268.cpp

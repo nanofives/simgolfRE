@@ -1,0 +1,457 @@
+== golf_clean.exe 0x004a4fc4 __cfltcvt_init initFpControl exe_5 size 56
+  004a4fc4 mov eax, 0x4a78d7
+  004a4fc9 mov dword ptr [0x4e4b04], 0x4a7581
+  004a4fd3 mov dword ptr [0x4e4b00], eax
+  004a4fd8 mov dword ptr [0x4e4b08], 0x4a75e7
+  004a4fe2 mov dword ptr [0x4e4b0c], 0x4a7527
+  004a4fec mov dword ptr [0x4e4b10], 0x4a75cf
+  004a4ff6 mov dword ptr [0x4e4b14], eax
+  004a4ffb ret 
+== golf_clean.exe 0x004a4ffc ??3@YAXPAX@Z operatorDelete_4a4ffc exe_7 size 11
+  004a4ffc push dword ptr [esp + 4]
+  004a5000 call 0x4a5007 ; _free
+  004a5005 pop ecx
+  004a5006 ret 
+== golf_clean.exe 0x004a55d2 ??_L@YGXPAXIHP6EX0@Z1@Z ehVectorConstructorIterator exe_15 size 106
+  004a55d2 push ebp
+  004a55d3 mov ebp, esp
+  004a55d5 push -1
+  004a55d7 push 0x4bc438
+  004a55dc push 0x4a8f7c
+  004a55e1 mov eax, dword ptr fs:[0]
+  004a55e7 push eax
+  004a55e8 mov dword ptr fs:[0], esp
+  004a55ef sub esp, 0x10
+  004a55f2 push ebx
+  004a55f3 push esi
+  004a55f4 push edi
+  004a55f5 xor eax, eax
+  004a55f7 mov dword ptr [ebp - 0x20], eax
+  004a55fa mov dword ptr [ebp - 4], eax
+  004a55fd mov dword ptr [ebp - 0x1c], eax
+  004a5600 mov eax, dword ptr [ebp - 0x1c]
+  004a5603 cmp eax, dword ptr [ebp + 0x10]
+  004a5606 jge 0x4a561b
+  004a5608 mov esi, dword ptr [ebp + 8]
+  004a560b mov ecx, esi
+  004a560d call dword ptr [ebp + 0x14]
+== golf_clean.exe 0x004a57f1 ??2@YAPAXI@Z operator_new exe_15 size 14
+  004a57f1 push 1
+  004a57f3 push dword ptr [esp + 8]
+  004a57f7 call 0x4a5061 ; __nh_malloc
+  004a57fc pop ecx
+  004a57fd pop ecx
+  004a57fe ret 
+== golf_clean.exe 0x004abe6b __fptrap amsgExitThunk exe_5 size 9
+  004abe6b push 2
+  004abe6d call 0x4a6937 ; __amsg_exit
+  004abe72 pop ecx
+  004abe73 ret 
+== jgld.dll 0x1007f0f0 ??2@YAPAXI@Z operator_new jgld_9 size 28
+  1007f0f0 push ebp
+  1007f0f1 mov ebp, esp
+  1007f0f3 push ecx
+  1007f0f4 push 1
+  1007f0f6 mov eax, dword ptr [ebp + 8]
+  1007f0f9 push eax
+  1007f0fa call 0x1007fba0 ; __nh_malloc
+  1007f0ff add esp, 8
+  1007f102 mov dword ptr [ebp - 4], eax
+  1007f105 mov eax, dword ptr [ebp - 4]
+  1007f108 mov esp, ebp
+  1007f10a pop ebp
+  1007f10b ret 
+== jgld.dll 0x1007f110 ??_U@YAPAXI@Z operator_new_array smsg_jgld_crt size 26
+  1007f110 push ebp
+  1007f111 mov ebp, esp
+  1007f113 push ecx
+  1007f114 mov eax, dword ptr [ebp + 8]
+  1007f117 push eax
+  1007f118 call 0x1007f0f0 ; operator_new
+  1007f11d add esp, 4
+  1007f120 mov dword ptr [ebp - 4], eax
+  1007f123 mov eax, dword ptr [ebp - 4]
+  1007f126 mov esp, ebp
+  1007f128 pop ebp
+  1007f129 ret 
+== sound.dll 0x10041aad ??1ostream@@UAE@XZ iosResetVtable sound_8 size 15
+  10041aad mov eax, dword ptr [ecx - 8]
+  10041ab0 mov eax, dword ptr [eax + 4]
+  10041ab3 mov dword ptr [eax + ecx - 8], 0x1005ecd4
+  10041abb ret 
+== sound.dll 0x10041b9d ??_Gostream_withassign@@UAEPAXI@Z ostream::scalarDtorAdj8 undisc_sound size 43
+  10041b9d push esi
+  10041b9e lea esi, [ecx - 8]
+  10041ba1 push edi
+  10041ba2 lea edi, [esi + 8]
+  10041ba5 mov ecx, edi
+  10041ba7 call 0x10041c26 ; ostreamResetVtable
+  10041bac mov ecx, edi
+  10041bae call 0x10041f9a ; ios::dtor
+  10041bb3 test byte ptr [esp + 0xc], 1
+  10041bb8 je 0x10041bc1
+  10041bba push esi
+  10041bbb call 0x1004249a ; operator_delete
+  10041bc0 pop ecx
+  10041bc1 mov eax, esi
+  10041bc3 pop edi
+  10041bc4 pop esi
+  10041bc5 ret 4
+== sound.dll 0x10041c26 ??1ostream_withassign@@UAE@XZ ostreamResetVtable sound_8 size 19
+  10041c26 mov eax, dword ptr [ecx - 8]
+  10041c29 mov eax, dword ptr [eax + 4]
+  10041c2c mov dword ptr [eax + ecx - 8], 0x1005ece4
+  10041c34 jmp 0x10041aad ; iosResetVtable
+== sound.dll 0x10041e43 __mtlockinit initCriticalSection sound_8 size 11
+  10041e43 push dword ptr [esp + 4]
+  10041e47 call dword ptr [0x100b83f0]
+  10041e4d ret 
+== sound.dll 0x10041e4e __mtlockterm deleteCriticalSection sound_8 size 11
+  10041e4e push dword ptr [esp + 4]
+  10041e52 call dword ptr [0x100b83e4]
+  10041e58 ret 
+== sound.dll 0x10041e59 __mtlock enterCriticalSection sound_8 size 11
+  10041e59 push dword ptr [esp + 4]
+  10041e5d call dword ptr [0x100b83f4]
+  10041e63 ret 
+== sound.dll 0x10041e64 __mtunlock leaveCriticalSection sound_8 size 11
+  10041e64 push dword ptr [esp + 4]
+  10041e68 call dword ptr [0x100b84e0]
+  10041e6e ret 
+== sound.dll 0x1004249a ??3@YAXPAX@Z operator_delete sound_5 size 11
+  1004249a push dword ptr [esp + 4]
+  1004249e call 0x10042c07 ; free
+  100424a3 pop ecx
+  100424a4 ret 
+== sound.dll 0x100424d7 ??2@YAPAXI@Z operator_new sound_19 size 14
+  100424d7 push 1
+  100424d9 push dword ptr [esp + 8]
+  100424dd call 0x10042adf ; __nh_malloc
+  100424e2 pop ecx
+  100424e3 pop ecx
+  100424e4 ret 
+== sound.dll 0x1004280e ??_M@YGXPAXIHP6EX0@Z@Z ehVectorDestructorIterator sound_19 size 104
+  1004280e push ebp
+  1004280f mov ebp, esp
+  10042811 push -1
+  10042813 push 0x1005ed08
+  10042818 push 0x10045744
+  1004281d mov eax, dword ptr fs:[0]
+  10042823 push eax
+  10042824 mov dword ptr fs:[0], esp
+  1004282b sub esp, 0xc
+  1004282e push ebx
+  1004282f push esi
+  10042830 push edi
+  10042831 and dword ptr [ebp - 0x1c], 0
+  10042835 mov esi, dword ptr [ebp + 0xc]
+  10042838 mov eax, esi
+  1004283a imul eax, dword ptr [ebp + 0x10]
+  1004283e add dword ptr [ebp + 8], eax
+  10042841 and dword ptr [ebp - 4], 0
+  10042845 dec dword ptr [ebp + 0x10]
+  10042848 js 0x10042855
+  1004284a sub dword ptr [ebp + 8], esi
+  1004284d mov ecx, dword ptr [ebp + 8]
+== sound.dll 0x10042902 ??_L@YGXPAXIHP6EX0@Z1@Z ehVectorConstructorIterator sound_16 size 106
+  10042902 push ebp
+  10042903 mov ebp, esp
+  10042905 push -1
+  10042907 push 0x1005ed28
+  1004290c push 0x10045744
+  10042911 mov eax, dword ptr fs:[0]
+  10042917 push eax
+  10042918 mov dword ptr fs:[0], esp
+  1004291f sub esp, 0x10
+  10042922 push ebx
+  10042923 push esi
+  10042924 push edi
+  10042925 xor eax, eax
+  10042927 mov dword ptr [ebp - 0x20], eax
+  1004292a mov dword ptr [ebp - 4], eax
+  1004292d mov dword ptr [ebp - 0x1c], eax
+  10042930 mov eax, dword ptr [ebp - 0x1c]
+  10042933 cmp eax, dword ptr [ebp + 0x10]
+  10042936 jge 0x1004294b
+  10042938 mov esi, dword ptr [ebp + 8]
+  1004293b mov ecx, esi
+  1004293d call dword ptr [ebp + 0x14]
+== sound.dll 0x100432b0 _exp CItranscendental1 sound_5 size 10
+  100432b0 mov edx, 0x100675ea
+  100432b5 jmp 0x1004877b ; __ctrandisp1
+== sound.dll 0x10045b9b __GetLinkerVersion getModuleLinkerVersion sound_8 size 45
+  10045b9b push esi
+  10045b9c mov esi, dword ptr [esp + 8]
+  10045ba0 push 0
+  10045ba2 and dword ptr [esi], 0
+  10045ba5 call dword ptr [0x100b8510]
+  10045bab cmp word ptr [eax], 0x5a4d
+  10045bb0 jne 0x10045bc6
+  10045bb2 mov ecx, dword ptr [eax + 0x3c]
+  10045bb5 test ecx, ecx
+  10045bb7 je 0x10045bc6
+  10045bb9 add eax, ecx
+  10045bbb mov cl, byte ptr [eax + 0x1a]
+  10045bbe mov byte ptr [esi], cl
+  10045bc0 mov al, byte ptr [eax + 0x1b]
+  10045bc3 mov byte ptr [esi + 1], al
+  10045bc6 pop esi
+  10045bc7 ret 
+== sound.dll 0x10045ee7 ___sbh_heap_init sbhGroupHeapInit sound_8 size 72
+  10045ee7 push 0x140
+  10045eec push 0
+  10045eee push dword ptr [0x100b5d10]
+  10045ef4 call dword ptr [0x100b84e8]
+  10045efa test eax, eax
+  10045efc mov dword ptr [0x100b5d08], eax
+  10045f01 jne 0x10045f04
+  10045f03 ret 
+  10045f04 mov ecx, dword ptr [esp + 4]
+  10045f08 and dword ptr [0x100b5d00], 0
+  10045f0f and dword ptr [0x100b5d04], 0
+  10045f16 push 1
+  10045f18 mov dword ptr [0x100b5cf8], eax
+  10045f1d mov dword ptr [0x100b5d0c], ecx
+  10045f23 mov dword ptr [0x100b5ce0], 0x10
+  10045f2d pop eax
+  10045f2e ret 
+== sound.dll 0x10046e50 ___old_sbh_new_region sbhRegionCreate sound_8 size 324
+  10046e50 cmp dword ptr [0x100653e8], -1
+  10046e57 push ebx
+  10046e58 push ebp
+  10046e59 push esi
+  10046e5a push edi
+  10046e5b jne 0x10046e64
+  10046e5d mov esi, 0x100653d8
+  10046e62 jmp 0x10046e81 ; []
+  10046e64 push 0x2020
+  10046e69 push 0
+  10046e6b push dword ptr [0x100b5d10]
+  10046e71 call dword ptr [0x100b84e8]
+  10046e77 mov esi, eax
+  10046e79 test esi, esi
+  10046e7b je 0x10046f8d
+  10046e81 mov ebp, dword ptr [0x100b8430]
+  10046e87 push 4
+  10046e89 push 0x2000
+  10046e8e push 0x400000
+  10046e93 push 0
+  10046e95 call ebp
+  10046e97 mov edi, eax
+== sound.dll 0x10046f94 ___old_sbh_release_region sbhRegionFree sound_8 size 86
+  10046f94 push esi
+  10046f95 mov esi, dword ptr [esp + 8]
+  10046f99 push 0x8000
+  10046f9e push 0
+  10046fa0 push dword ptr [esi + 0x10]
+  10046fa3 call dword ptr [0x100b8434]
+  10046fa9 cmp dword ptr [0x100673f8], esi
+  10046faf jne 0x10046fb9
+  10046fb1 mov eax, dword ptr [esi + 4]
+  10046fb4 mov dword ptr [0x100673f8], eax
+  10046fb9 cmp esi, 0x100653d8
+  10046fbf je 0x10046fe1
+  10046fc1 mov eax, dword ptr [esi + 4]
+  10046fc4 mov ecx, dword ptr [esi]
+  10046fc6 push esi
+  10046fc7 push 0
+  10046fc9 mov dword ptr [eax], ecx
+  10046fcb mov eax, dword ptr [esi]
+  10046fcd mov ecx, dword ptr [esi + 4]
+  10046fd0 mov dword ptr [eax + 4], ecx
+  10046fd3 push dword ptr [0x100b5d10]
+  10046fd9 call dword ptr [0x100b84ec]
+== sound.dll 0x10046fea ___old_sbh_decommit_pages sbhRegionDecommit sound_8 size 194
+  10046fea push ebp
+  10046feb mov ebp, esp
+  10046fed push ecx
+  10046fee push ebx
+  10046fef push esi
+  10046ff0 mov esi, dword ptr [0x100653dc]
+  10046ff6 push edi
+  10046ff7 cmp dword ptr [esi + 0x10], -1
+  10046ffb je 0x10047095
+  10047001 and dword ptr [ebp - 4], 0
+  10047005 lea edi, [esi + 0x2010]
+  1004700b mov ebx, 0x3ff000
+  10047010 cmp dword ptr [edi], 0xf0
+  10047016 jne 0x10047051
+  10047018 mov eax, ebx
+  1004701a push 0x4000
+  1004701f add eax, dword ptr [esi + 0x10]
+  10047022 push 0x1000
+  10047027 push eax
+  10047028 call dword ptr [0x100b8434]
+  1004702e test eax, eax
+  10047030 je 0x10047051
+== sound.dll 0x100470ac ___old_sbh_find_block sbhRegionLocate sound_8 size 87
+  100470ac mov eax, dword ptr [esp + 4]
+  100470b0 mov edx, 0x100653d8
+  100470b5 push esi
+  100470b6 mov ecx, edx
+  100470b8 cmp eax, dword ptr [ecx + 0x10]
+  100470bb jbe 0x100470c2
+  100470bd cmp eax, dword ptr [ecx + 0x14]
+  100470c0 jb 0x100470ca
+  100470c2 mov ecx, dword ptr [ecx]
+  100470c4 cmp ecx, edx
+  100470c6 je 0x100470ff
+  100470c8 jmp 0x100470b8 ; []
+  100470ca test al, 0xf
+  100470cc jne 0x100470ff
+  100470ce mov esi, eax
+  100470d0 mov edx, 0x100
+  100470d5 and esi, 0xfff
+  100470db cmp esi, edx
+  100470dd jb 0x100470ff
+  100470df mov esi, dword ptr [esp + 0xc]
+  100470e3 mov dword ptr [esi], ecx
+  100470e5 mov esi, dword ptr [esp + 0x10]
+== sound.dll 0x10047103 ___old_sbh_free_block sbhPageFree sound_8 size 69
+  10047103 mov eax, dword ptr [esp + 4]
+  10047107 mov ecx, dword ptr [esp + 8]
+  1004710b sub ecx, dword ptr [eax + 0x10]
+  1004710e sar ecx, 0xc
+  10047111 lea eax, [eax + ecx*8 + 0x18]
+  10047115 mov ecx, dword ptr [esp + 0xc]
+  10047119 movzx edx, byte ptr [ecx]
+  1004711c add dword ptr [eax], edx
+  1004711e and byte ptr [ecx], 0
+  10047121 cmp dword ptr [eax], 0xf0
+  10047127 mov dword ptr [eax + 4], 0xf1
+  1004712e jne 0x10047147
+  10047130 inc dword ptr [0x100b5590]
+  10047136 cmp dword ptr [0x100b5590], 0x20
+  1004713d jne 0x10047147
+  1004713f push 0x10
+  10047141 call 0x10046fea ; sbhRegionDecommit
+  10047146 pop ecx
+  10047147 ret 
+== sound.dll 0x10047148 ___old_sbh_alloc_block crtCommitPages sound_1 size 520
+  10047148 push ebp
+  10047149 mov ebp, esp
+  1004714b push ecx
+  1004714c push ecx
+  1004714d push ebx
+  1004714e push esi
+  1004714f mov esi, dword ptr [0x100673f8]
+  10047155 push edi
+  10047156 mov edx, dword ptr [esi + 0x10]
+  10047159 cmp edx, -1
+  1004715c je 0x10047201
+  10047162 mov edi, dword ptr [esi + 8]
+  10047165 lea ecx, [esi + 0x2018]
+  1004716b mov eax, edi
+  1004716d sub eax, esi
+  1004716f sub eax, 0x18
+  10047172 sar eax, 3
+  10047175 shl eax, 0xc
+  10047178 add eax, edx
+  1004717a cmp edi, ecx
+  1004717c mov dword ptr [ebp - 4], eax
+  1004717f jae 0x100471bb
+== sound.dll 0x10047350 ___old_sbh_alloc_block_from_page sbhFindFreeRun sound_8 size 292
+  10047350 push ebp
+  10047351 mov ebp, esp
+  10047353 push ecx
+  10047354 mov ecx, dword ptr [ebp + 8]
+  10047357 mov edx, dword ptr [ebp + 0x10]
+  1004735a push ebx
+  1004735b push esi
+  1004735c mov esi, dword ptr [ecx + 4]
+  1004735f push edi
+  10047360 mov edi, dword ptr [ecx]
+  10047362 lea ebx, [ecx + 0xf8]
+  10047368 cmp esi, edx
+  1004736a mov dword ptr [ebp - 4], edi
+  1004736d mov eax, edi
+  1004736f mov dword ptr [ebp + 8], ebx
+  10047372 jb 0x10047395
+  10047374 lea eax, [edi + edx]
+  10047377 mov byte ptr [edi], dl
+  10047379 cmp eax, ebx
+  1004737b jae 0x10047384
+  1004737d add dword ptr [ecx], edx
+  1004737f sub dword ptr [ecx + 4], edx
+== sound.dll 0x1004751d ___old_sbh_heap_check sbhRegionHeapCheck sound_8 size 350
+  1004751d push ebp
+  1004751e mov ebp, esp
+  10047520 sub esp, 0x20
+  10047523 and dword ptr [ebp - 0x1c], 0
+  10047527 push ebx
+  10047528 mov edx, 0x100653d8
+  1004752d push esi
+  1004752e push edi
+  1004752f mov dword ptr [ebp - 0x20], edx
+  10047532 cmp dword ptr [0x100673f8], edx
+  10047538 jne 0x1004753d
+  1004753a inc dword ptr [ebp - 0x1c]
+  1004753d mov ecx, dword ptr [edx + 0x10]
+  10047540 cmp ecx, -1
+  10047543 je 0x10047635
+  10047549 and dword ptr [ebp - 0x18], 0
+  1004754d and dword ptr [ebp - 0xc], 0
+  10047551 mov ebx, ecx
+  10047553 lea eax, [edx + 0x18]
+  10047556 mov dword ptr [ebp - 0x14], eax
+  10047559 lea edi, [ebx + 8]
+  1004755c cmp dword ptr [eax], -1
+== sound.dll 0x10048180 __startTwoArgErrorHandling fp2ArgResultDispatch sound_8 size 23
+  10048180 push ebp
+  10048181 mov ebp, esp
+  10048183 add esp, -0x20
+  10048186 mov dword ptr [ebp - 0x20], eax
+  10048189 mov eax, dword ptr [ebp + 0x18]
+  1004818c mov dword ptr [ebp - 0x10], eax
+  1004818f mov eax, dword ptr [ebp + 0x1c]
+  10048192 mov dword ptr [ebp - 0xc], eax
+  10048195 jmp 0x100481a0 ; []
+== sound.dll 0x100481f5 __load_CW fpuSetControlWord sound_8 size 23
+  100481f5 mov edx, dword ptr [esp + 4]
+  100481f9 and edx, 0x300
+  100481ff or edx, 0x7f
+  10048202 mov word ptr [esp + 6], dx
+  10048207 fldcw word ptr [esp + 6]
+  1004820b ret 
+== sound.dll 0x1004820c __convertTOStoQNaN fpStatusExceptionType sound_8 size 25
+  1004820c test eax, 0x80000
+  10048211 je 0x10048219
+  10048213 mov eax, 7
+  10048218 ret 
+  10048219 fadd qword ptr [0x1005f220]
+  1004821f mov eax, 1
+  10048224 ret 
+== sound.dll 0x10048268 __checkTOS_withFB doubleExponentField sound_8 size 22
+  10048268 mov eax, dword ptr [esp + 8]
+  1004826c and eax, 0x7ff00000
+  10048271 cmp eax, 0x7ff00000
+  10048276 je 0x10048279
+  10048278 ret 
+  10048279 mov eax, dword ptr [esp + 8]
+  1004827d ret 
+== sound.dll 0x10049604 ?_ValidateWrite@@YAHPAXI@Z crtValidatePointer sound_1 size 28
+  10049604 push esi
+  10049605 push 1
+  10049607 pop esi
+  10049608 push dword ptr [esp + 0xc]
+  1004960c push dword ptr [esp + 0xc]
+  10049610 call dword ptr [0x100b84bc]
+  10049616 test eax, eax
+  10049618 je 0x1004961c
+  1004961a xor esi, esi
+  1004961c mov eax, esi
+  1004961e pop esi
+  1004961f ret 
+== Terrain.dll 0x10018cb0 ??_U@YAPAXI@Z operator_new_array smsg_terrain_crt size 26
+  10018cb0 push ebp
+  10018cb1 mov ebp, esp
+  10018cb3 push ecx
+  10018cb4 mov eax, dword ptr [ebp + 8]
+  10018cb7 push eax
+  10018cb8 call 0x10018c90 ; operator_new
+  10018cbd add esp, 4
+  10018cc0 mov dword ptr [ebp - 4], eax
+  10018cc3 mov eax, dword ptr [ebp - 4]
+  10018cc6 mov esp, ebp
+  10018cc8 pop ebp
+  10018cc9 ret 

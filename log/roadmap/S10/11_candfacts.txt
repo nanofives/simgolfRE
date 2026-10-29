@@ -1,0 +1,701 @@
+== 0x10023110 111 bytes  slot 41 of ??_7CAmbienceMgr@@6B@ (0x10065294, retail table 0x1005b000 installer 0x10003f81)  demo 0x100221a0 CMidiMgr::set_active_range_hi  agree OVERLAP
+   0x10023110 r this+0x224 -> m_trackset_list.m_nnodes uint (in DList<DllTrackSet>)
+      10023110 mov eax, dword ptr [ecx + 0x224]
+      10023116 test eax, eax
+      10023118 jne 0x10023122
+      1002311a mov eax, 0x24
+      1002311f ret 8
+      10023122 mov eax, dword ptr [ecx + 0x218]
+      10023128 test eax, eax
+      1002312a mov dword ptr [ecx + 0x220], eax
+      10023130 je 0x10023166
+      10023132 mov eax, dword ptr [eax + 8]
+      10023135 test eax, eax
+      10023137 je 0x10023166
+      10023139 mov edx, dword ptr [esp + 4]
+      1002313d cmp dword ptr [eax + 4], edx
+      10023140 je 0x10023162
+      10023142 mov eax, dword ptr [ecx + 0x220]
+      10023148 test eax, eax
+      1002314a je 0x10023166
+      1002314c mov eax, dword ptr [eax + 4]
+      1002314f test eax, eax
+      10023151 mov dword ptr [ecx + 0x220], eax
+      10023157 je 0x10023166
+      10023159 mov eax, dword ptr [eax + 8]
+      1002315c test eax, eax
+      1002315e je 0x10023166
+      10023160 jmp 0x1002313d
+      10023162 test eax, eax
+      10023164 jne 0x1002316e
+      10023166 mov eax, 0x24
+      1002316b ret 8
+      1002316e mov ecx, dword ptr [esp + 8]
+      10023172 push ecx
+      10023173 mov ecx, eax
+      10023175 call 0x1000107d
+      1002317a xor eax, eax
+      1002317c ret 8
+== 0x1002e060 28 bytes  slot 50 of ??_7CAmbienceMgr@@6B@ (0x10065294, retail table 0x1005b000 installer 0x10003f81)  demo 0x1002faa0 Midi::get_time  agree EQUAL
+   0x1002e060 r this+0x40 -> m_pdllsnd Sound* (in Sound)
+      Sound vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type
+      1002e060 mov ecx, dword ptr [ecx + 0x40]
+      1002e063 test ecx, ecx
+      1002e065 je 0x1002e077
+      1002e067 mov edx, dword ptr [esp + 4]
+      1002e06b mov eax, dword ptr [ecx]
+      1002e06d push edx
+      1002e06e call dword ptr [eax + 0xc8]
+      1002e074 ret 4
+      1002e077 xor eax, eax
+      1002e079 ret 4
+== 0x100227c0 197 bytes  slot 58 of ??_7CAmbienceMgr@@6B@ (0x10065294, retail table 0x1005b000 installer 0x10003f81)  demo 0x10021ba0 CMidiMgr::add_switch_range  agree OVERLAP
+      100227c0 push ecx
+      100227c1 push ebp
+      100227c2 push esi
+      100227c3 mov esi, ecx
+      100227c5 push edi
+      100227c6 mov eax, dword ptr [esi]
+      100227c8 call dword ptr [eax + 0x5c]
+      100227cb test eax, eax
+      100227cd je 0x100227db
+      100227cf pop edi
+      100227d0 pop esi
+      100227d1 mov eax, 0x28
+      100227d6 pop ebp
+      100227d7 pop ecx
+      100227d8 ret 8
+      100227db mov ebp, dword ptr [esp + 0x18]
+      100227df mov edi, dword ptr [esp + 0x14]
+      100227e3 cmp ebp, edi
+      100227e5 jae 0x100227f3
+      100227e7 pop edi
+      100227e8 pop esi
+      100227e9 mov eax, 0xa
+      100227ee pop ebp
+      100227ef pop ecx
+      100227f0 ret 8
+      100227f3 mov edx, dword ptr [esi]
+      100227f5 mov ecx, esi
+      100227f7 call dword ptr [edx + 0xb4]
+      100227fd cmp ebp, eax
+      100227ff jb 0x1002280d
+      10022801 pop edi
+      10022802 pop esi
+      10022803 mov eax, 0xa
+      10022808 pop ebp
+      10022809 pop ecx
+      1002280a ret 8
+      1002280d mov eax, ebp
+      1002280f mov dword ptr [esi + 0x248], edi
+      10022815 sub eax, edi
+      10022817 mov dword ptr [esi + 0x24c], ebp
+      1002281d inc eax
+      1002281e mov dword ptr [esi + 0x23c], eax
+      10022824 mov eax, dword ptr [esi + 0x238]
+      1002282a test eax, eax
+      1002282c je 0x10022837
+      1002282e push eax
+      1002282f call 0x1004249a
+      10022834 add esp, 4
+      10022837 mov ecx, dword ptr [esi + 0x23c]
+      1002283d shl ecx, 2
+      10022840 push ecx
+      10022841 call 0x100424d7
+      10022846 add esp, 4
+      10022849 mov ecx, esi
+      1002284b mov dword ptr [esi + 0x238], eax
+      10022851 push eax
+      10022852 call 0x10001bcc
+      10022857 cmp edi, ebp
+      10022859 ja 0x1002287c
+      1002285b add esi, 0x60
+      1002285e lea edx, [esp + 0xc]
+      10022862 push edi
+      10022863 push edx
+      10022864 mov ecx, esi
+      10022866 call 0x100015fa
+      1002286b test eax, eax
+      1002286d jne 0x10022877
+      1002286f mov eax, dword ptr [esp + 0xc]
+      10022873 or byte ptr [eax + 0x38], 2
+      10022877 inc edi
+      10022878 cmp edi, ebp
+      1002287a jbe 0x1002285e
+      1002287c pop edi
+      1002287d pop esi
+      1002287e xor eax, eax
+      10022880 pop ebp
+      10022881 pop ecx
+      10022882 ret 8
+== 0x100234b0 99 bytes  slot 62 of ??_7CAmbienceMgr@@6B@ (0x10065294, retail table 0x1005b000 installer 0x10003f81)  demo 0x10022550 CMidiMgr::is_trackset_playing  agree OVERLAP
+   0x100234b0 r this+0x234 -> m_GT_trackset_list.m_nnodes uint (in DList<DllTrackSet>)
+      100234b0 mov eax, dword ptr [ecx + 0x234]
+      100234b6 test eax, eax
+      100234b8 jne 0x100234bf
+      100234ba xor al, al
+      100234bc ret 4
+      100234bf mov eax, dword ptr [ecx + 0x228]
+      100234c5 test eax, eax
+      100234c7 mov dword ptr [ecx + 0x230], eax
+      100234cd je 0x10023503
+      100234cf mov eax, dword ptr [eax + 8]
+      100234d2 test eax, eax
+      100234d4 je 0x10023503
+      100234d6 mov edx, dword ptr [esp + 4]
+      100234da cmp dword ptr [eax + 4], edx
+      100234dd je 0x100234ff
+      100234df mov eax, dword ptr [ecx + 0x230]
+      100234e5 test eax, eax
+      100234e7 je 0x10023503
+      100234e9 mov eax, dword ptr [eax + 4]
+      100234ec test eax, eax
+      100234ee mov dword ptr [ecx + 0x230], eax
+      100234f4 je 0x10023503
+      100234f6 mov eax, dword ptr [eax + 8]
+      100234f9 test eax, eax
+      100234fb je 0x10023503
+      100234fd jmp 0x100234da
+      100234ff test eax, eax
+      10023501 jne 0x10023508
+      10023503 xor al, al
+      10023505 ret 4
+      10023508 mov ecx, dword ptr [eax + 0x34]
+      1002350b test ecx, ecx
+      1002350d setne al
+      10023510 ret 4
+== 0x10023fd0 65 bytes  slot 73 of ??_7CAmbienceMgr@@6B@ (0x10065294, retail table 0x1005b000 installer 0x10003f81)  demo 0x10023180 CMidiMgr::set_track_velocity_offset  agree OVERLAP
+      10023fd0 push ecx
+      10023fd1 push esi
+      10023fd2 mov esi, ecx
+      10023fd4 mov eax, dword ptr [esi]
+      10023fd6 call dword ptr [eax + 0xb4]
+      10023fdc mov ecx, dword ptr [esp + 0xc]
+      10023fe0 cmp ecx, eax
+      10023fe2 jbe 0x10023fee
+      10023fe4 mov eax, 0xa
+      10023fe9 pop esi
+      10023fea pop ecx
+      10023feb ret 8
+      10023fee push ecx
+      10023fef lea ecx, [esp + 8]
+      10023ff3 push ecx
+      10023ff4 lea ecx, [esi + 0x60]
+      10023ff7 call 0x100015fa
+      10023ffc mov eax, dword ptr [esp + 4]
+      10024000 mov edx, dword ptr [esp + 0x10]
+      10024004 pop esi
+      10024005 mov dword ptr [eax + 0x460], edx
+      1002400b xor eax, eax
+      1002400d pop ecx
+      1002400e ret 8
+== 0x10023f60 67 bytes  slot 74 of ??_7CAmbienceMgr@@6B@ (0x10065294, retail table 0x1005b000 installer 0x10003f81)  demo 0x10023120 CMidiMgr::get_track_velocity_offset  agree OVERLAP
+      10023f60 push ecx
+      10023f61 push esi
+      10023f62 mov esi, ecx
+      10023f64 mov eax, dword ptr [esi]
+      10023f66 call dword ptr [eax + 0xb4]
+      10023f6c mov ecx, dword ptr [esp + 0xc]
+      10023f70 cmp ecx, eax
+      10023f72 jbe 0x10023f7e
+      10023f74 mov eax, 0xa
+      10023f79 pop esi
+      10023f7a pop ecx
+      10023f7b ret 8
+      10023f7e push ecx
+      10023f7f lea ecx, [esp + 8]
+      10023f83 push ecx
+      10023f84 lea ecx, [esi + 0x60]
+      10023f87 call 0x100015fa
+      10023f8c mov edx, dword ptr [esp + 4]
+      10023f90 mov ecx, dword ptr [esp + 0x10]
+      10023f94 pop esi
+      10023f95 mov eax, dword ptr [edx + 0x460]
+      10023f9b mov dword ptr [ecx], eax
+      10023f9d xor eax, eax
+      10023f9f pop ecx
+      10023fa0 ret 8
+== 0x10005d40 8 bytes  slot 2 of ??_7MidiCtrlDiskRead@@6B@ (0x100653d4, retail table 0x1005b178 installer 0x1000546a)  demo 0x10003050 MidiCtrlDiskRead::set_total_class_size  agree EQUAL
+   0x10005d40 w this+0x8 -> m_total_class_size int (in MidiCtrl)
+      10005d40 mov dword ptr [ecx + 8], 0x28
+      10005d47 ret 
+== 0x10005c70 5 bytes  slot 3 of ??_7MidiCtrlDiskRead@@6B@ (0x100653d4, retail table 0x1005b178 installer 0x1000546a)  demo 0x10002f10 MidiCtrl::refresh  agree EQUAL
+   0x10005c70 w this+0x19 -> m_flags.state uchar (in MidiCtrlFlags)
+      10005c70 mov byte ptr [ecx + 0x19], 1
+      10005c74 ret 
+== 0x10006a60 123 bytes  slot 33 of ??_7CAviMgr@@6B@ (0x10065410, retail table 0x1005b1c0 installer 0x1000605b)  demo 0x10004000 CAviMgr::init  agree OVERLAP
+   0x10006a83 w this+0xd8 -> m_wfx.wFormatTag ushort (in tWAVEFORMATEX)
+   0x10006ab0 w this+0xbc -> m_frame_rate ulong (in CAviMgr)
+   0x10006abb w this+0xb4 -> m_frame_size ulong (in CAviMgr)
+   0x10006ac5 w this+0xb8 -> m_frame_buffer_size ulong (in CAviMgr)
+      10006a60 push esi
+      10006a61 push edi
+      10006a62 mov edi, dword ptr [esp + 0xc]
+      10006a66 test edi, edi
+      10006a68 je 0x10006ad1
+      10006a6a mov eax, dword ptr [esp + 0x14]
+      10006a6e test eax, eax
+      10006a70 je 0x10006ad1
+      10006a72 mov esi, dword ptr [esp + 0x10]
+      10006a76 test esi, esi
+      10006a78 je 0x10006ad1
+      10006a7a push ebx
+      10006a7b mov ebx, dword ptr [eax]
+      10006a7d lea edx, [ecx + 0xd8]
+      10006a83 mov dword ptr [ecx + 0xd8], ebx
+      10006a89 mov ebx, dword ptr [eax + 4]
+      10006a8c mov dword ptr [edx + 4], ebx
+      10006a8f mov ebx, dword ptr [eax + 8]
+      10006a92 mov dword ptr [edx + 8], ebx
+      10006a95 mov ebx, dword ptr [eax + 0xc]
+      10006a98 mov dword ptr [edx + 0xc], ebx
+      10006a9b mov ax, word ptr [eax + 0x10]
+      10006a9f pop ebx
+      10006aa0 mov word ptr [edx + 0x10], ax
+      10006aa4 mov eax, dword ptr [esi + 0x18]
+      10006aa7 xor edx, edx
+      10006aa9 div dword ptr [esi + 0x14]
+      10006aac xor edx, edx
+      10006aae mov esi, eax
+      10006ab0 mov dword ptr [ecx + 0xbc], esi
+      10006ab6 mov eax, dword ptr [edi + 0x18]
+      10006ab9 div esi
+      10006abb mov dword ptr [ecx + 0xb4], eax
+      10006ac1 mov edx, dword ptr [edi + 0x24]
+      10006ac4 pop edi
+      10006ac5 mov dword ptr [ecx + 0xb8], edx
+      10006acb xor eax, eax
+      10006acd pop esi
+      10006ace ret 0x10
+      10006ad1 pop edi
+      10006ad2 mov eax, 0xa
+      10006ad7 pop esi
+      10006ad8 ret 0x10
+== 0x1000e7f0 11 bytes  slot 3 of ??_7Dll_Wave_Device@@6B@ (0x10065560, retail table 0x1005b304 installer 0x1000b227)  demo 0x1000d070 Dll_Wave_Device::timer_unhook  agree EQUAL
+   0x1000e7f0 w this+0x1a8 -> m_ptimer CTimer* (in Dll_Wave_Device)
+      CTimer vtable: 
+      1000e7f0 mov dword ptr [ecx + 0x1a8], 0
+      1000e7fa ret 
+== 0x1000ece0 8 bytes  slot 14 of ??_7Dll_Wave_In_Device@@6B@ (0x1006561c, retail table 0x1005b3d4 installer 0x1000e881)  demo 0x1000d6b0 Dll_Wave_In_Device::update_sound  agree EQUAL
+   0x1000ece0 w this+0x38 -> m_time_past ulong (in Dll_Wave_In_Device)
+      1000ece0 mov dword ptr [ecx + 0x38], 0
+      1000ece7 ret 
+== 0x1002a4b0 28 bytes  slot 25 of ??_7Dll_Wave_In_Device@@6B@ (0x1006561c, retail table 0x1005b3d4 installer 0x1000e881)  demo 0x1002bb80 Wave_In_Device::set_codec  agree EQUAL
+   0x1002a4b0 r this+0x14 -> m_pdll_device Sound_Device* (in Sound_Device)
+      Sound_Device vtable: +0x0=__vecDelDtor +0x4=create_device +0x8=delete_device +0xc=timer_unhook +0x10=init +0x14=release +0x18=get_ndevices +0x1c=select +0x20=get_description +0x24=set_volume +0x28=get_volume +0x2c=set_pan +0x30=fade +0x34=stop +0x38=update_sound +0x3c=set_rate +0x40=get_rate +0x44=add_to_time_past +0x48=get_time_past +0x4c=suspend +0x50=restart
+      1002a4b0 mov ecx, dword ptr [ecx + 0x14]
+      1002a4b3 test ecx, ecx
+      1002a4b5 je 0x1002a4c4
+      1002a4b7 mov edx, dword ptr [esp + 4]
+      1002a4bb mov eax, dword ptr [ecx]
+      1002a4bd push edx
+      1002a4be call dword ptr [eax + 0x64]
+      1002a4c1 ret 4
+      1002a4c4 mov eax, 0x13
+      1002a4c9 ret 4
+== 0x1001bcf0 114 bytes  slot 1 of ??_7MidiCtrlTarget@@6B@ (0x10065770, retail table 0x1005b590 installer 0x1001bcc1)  demo 0x1001ae70 MidiCtrlTarget::start_control  agree OVERLAP
+      1001bcf0 push esi
+      1001bcf1 push edi
+      1001bcf2 lea edi, [ecx + 0xc]
+      1001bcf5 test edi, edi
+      1001bcf7 je 0x1001bd57
+      1001bcf9 mov eax, dword ptr [edi]
+      1001bcfb test eax, eax
+      1001bcfd mov dword ptr [edi + 8], eax
+      1001bd00 je 0x1001bd57
+      1001bd02 mov ecx, dword ptr [eax + 8]
+      1001bd05 test ecx, ecx
+      1001bd07 je 0x1001bd57
+      1001bd09 mov esi, dword ptr [esp + 0xc]
+      1001bd0d mov eax, dword ptr [ecx + 0x1c]
+      1001bd10 sub eax, 3
+      1001bd13 je 0x1001bd30
+      1001bd15 dec eax
+      1001bd16 je 0x1001bd28
+      1001bd18 dec eax
+      1001bd19 jne 0x1001bd38
+      1001bd1b mov eax, dword ptr [ecx]
+      1001bd1d push esi
+      1001bd1e call dword ptr [eax + 0x10]
+      1001bd21 cmp eax, 1
+      1001bd24 je 0x1001bd5b
+      1001bd26 jmp 0x1001bd38
+      1001bd28 mov edx, dword ptr [ecx]
+      1001bd2a push esi
+      1001bd2b call dword ptr [edx + 0x10]
+      1001bd2e jmp 0x1001bd36
+      1001bd30 mov eax, dword ptr [ecx]
+      1001bd32 push esi
+      1001bd33 call dword ptr [eax + 0x10]
+      1001bd36 mov esi, eax
+      1001bd38 mov eax, dword ptr [edi + 8]
+      1001bd3b test eax, eax
+      1001bd3d je 0x1001bd5b
+      1001bd3f mov eax, dword ptr [eax + 4]
+      1001bd42 test eax, eax
+      1001bd44 mov dword ptr [edi + 8], eax
+      1001bd47 je 0x1001bd5b
+      1001bd49 mov ecx, dword ptr [eax + 8]
+      1001bd4c test ecx, ecx
+      1001bd4e jne 0x1001bd0d
+      1001bd50 mov eax, esi
+      1001bd52 pop edi
+      1001bd53 pop esi
+      1001bd54 ret 4
+      1001bd57 mov esi, dword ptr [esp + 0xc]
+      1001bd5b mov eax, esi
+      1001bd5d pop edi
+      1001bd5e pop esi
+      1001bd5f ret 4
+== 0x1001c340 17 bytes  slot 4 of ??_7NoteMap@@6BMidiCtrl@@@ (0x10065778, retail table 0x1005b59c installer 0x1001bdf0)  demo 0x1001b320 NoteMap::do_control  agree EQUAL
+      1001c340 mov edx, dword ptr [esp + 4]
+      1001c344 mov eax, dword ptr [ecx - 0x2c]
+      1001c347 add ecx, -0x2c
+      1001c34a push edx
+      1001c34b call dword ptr [eax + 4]
+      1001c34e ret 4
+== 0x1001c510 8 bytes  slot 2 of ??_7Stepper@@6B@ (0x1006579c, retail table 0x1005b5cc installer 0x1001c4ae)  demo 0x1001c530 Stepper::set_total_class_size  agree EQUAL
+   0x1001c510 w this+0x8 -> m_total_class_size int (in MidiCtrl)
+      1001c510 mov dword ptr [ecx + 8], 0x38
+      1001c517 ret 
+== 0x1001c6c0 8 bytes  slot 2 of ??_7Randomizer@@6B@ (0x100657b8, retail table 0x1005b5f0 installer 0x1001c612)  demo 0x1001c570 Randomizer::set_total_class_size  agree EQUAL
+   0x1001c6c0 w this+0x8 -> m_total_class_size int (in MidiCtrl)
+      1001c6c0 mov dword ptr [ecx + 8], 0x40
+      1001c6c7 ret 
+== 0x1001c930 8 bytes  slot 2 of ??_7Chooser@@6BMidiCtrl@@@ (0x100657d4, retail table 0x1005b614 installer 0x1001c8cd)  demo 0x1001c610 Chooser::set_total_class_size  agree EQUAL
+   0x1001c930 w this+0x8 -> m_total_class_size int (in MidiCtrl)
+      1001c930 mov dword ptr [ecx + 8], 0x60
+      1001c937 ret 
+== 0x1001cb80 8 bytes  slot 2 of ??_7ChannelCtrl@@6B@ (0x100657f8, retail table 0x1005b644 installer 0x1001cb22)  demo 0x1001c650 ChannelCtrl::set_total_class_size  agree EQUAL
+   0x1001cb80 w this+0x8 -> m_total_class_size int (in MidiCtrl)
+      1001cb80 mov dword ptr [ecx + 8], 0x38
+      1001cb87 ret 
+== 0x1001e860 86 bytes  slot 1 of ??_7CMidiTrack@@6B@ (0x10065838, retail table 0x1005b68c installer 0x1001da32)  demo 0x1001d9e0 CMidiTrack::start_control  agree OVERLAP
+      1001e860 push esi
+      1001e861 lea esi, [ecx + 0xc]
+      1001e864 test esi, esi
+      1001e866 je 0x1001e8ae
+      1001e868 mov eax, dword ptr [esi]
+      1001e86a test eax, eax
+      1001e86c mov dword ptr [esi + 8], eax
+      1001e86f je 0x1001e8ae
+      1001e871 mov ecx, dword ptr [eax + 8]
+      1001e874 test ecx, ecx
+      1001e876 je 0x1001e8ae
+      1001e878 mov eax, dword ptr [esp + 8]
+      1001e87c mov edx, dword ptr [ecx + 0x1c]
+      1001e87f sub edx, 3
+      1001e882 je 0x1001e88c
+      1001e884 dec edx
+      1001e885 je 0x1001e88c
+      1001e887 dec edx
+      1001e888 je 0x1001e8b2
+      1001e88a jmp 0x1001e892
+      1001e88c mov edx, dword ptr [ecx]
+      1001e88e push eax
+      1001e88f call dword ptr [edx + 0x10]
+      1001e892 mov ecx, dword ptr [esi + 8]
+      1001e895 test ecx, ecx
+      1001e897 je 0x1001e8b2
+      1001e899 mov ecx, dword ptr [ecx + 4]
+      1001e89c test ecx, ecx
+      1001e89e mov dword ptr [esi + 8], ecx
+      1001e8a1 je 0x1001e8b2
+      1001e8a3 mov ecx, dword ptr [ecx + 8]
+      1001e8a6 test ecx, ecx
+      1001e8a8 jne 0x1001e87c
+      1001e8aa pop esi
+      1001e8ab ret 4
+      1001e8ae mov eax, dword ptr [esp + 8]
+      1001e8b2 pop esi
+      1001e8b3 ret 4
+== 0x10029420 183 bytes  slot 7 of ??_7Wave_Device@@6B@ (0x10065cb8, retail table 0x1005b914 installer 0x10029085)  demo 0x1002a770 Wave_Device::select  agree OVERLAP
+   0x10029421 r this+0x14 -> m_pdll_device Sound_Device* (in Sound_Device)
+      Sound_Device vtable: +0x0=__vecDelDtor +0x4=create_device +0x8=delete_device +0xc=timer_unhook +0x10=init +0x14=release +0x18=get_ndevices +0x1c=select +0x20=get_description +0x24=set_volume +0x28=get_volume +0x2c=set_pan +0x30=fade +0x34=stop +0x38=update_sound +0x3c=set_rate +0x40=get_rate +0x44=add_to_time_past +0x48=get_time_past +0x4c=suspend +0x50=restart
+      10029420 push ecx
+      10029421 mov eax, dword ptr [ecx + 0x14]
+      10029424 push ebp
+      10029425 push edi
+      10029426 xor ebp, ebp
+      10029428 xor edi, edi
+      1002942a cmp eax, ebp
+      1002942c mov dword ptr [esp + 8], ecx
+      10029430 jne 0x1002943d
+      10029432 pop edi
+      10029433 mov eax, 2
+      10029438 pop ebp
+      10029439 pop ecx
+      1002943a ret 4
+      1002943d push esi
+      1002943e mov esi, dword ptr [0x100b5070]
+      10029444 cmp esi, ebp
+      10029446 je 0x1002949d
+      10029448 push ebx
+      10029449 mov eax, dword ptr [esi]
+      1002944b mov ecx, esi
+      1002944d call dword ptr [eax + 0x70]
+      10029450 test al, 1
+      10029452 je 0x1002948b
+      10029454 mov edx, dword ptr [esi]
+      10029456 mov ecx, esi
+      10029458 call dword ptr [edx + 0x70]
+      1002945b test al, 4
+      1002945d jne 0x1002948b
+      1002945f mov eax, dword ptr [esi]
+      10029461 mov ecx, esi
+      10029463 call dword ptr [eax + 0x64]
+      10029466 mov edx, dword ptr [esi]
+      10029468 mov ecx, esi
+      1002946a mov ebx, eax
+      1002946c call dword ptr [edx + 0x14]
+      1002946f cmp edi, ebp
+      10029471 jne 0x1002947f
+      10029473 mov dword ptr [esi + 0x48], ebp
+      10029476 mov dword ptr [esi + 0x4c], ebp
+      10029479 mov edi, esi
+      1002947b mov esi, ebx
+      1002947d jmp 0x10029494
+      1002947f mov dword ptr [edi + 0x4c], esi
+      10029482 mov dword ptr [esi + 0x48], edi
+      10029485 mov edi, esi
+      10029487 mov esi, ebx
+      10029489 jmp 0x10029494
+      1002948b mov eax, dword ptr [esi]
+      1002948d mov ecx, esi
+      1002948f call dword ptr [eax + 0x64]
+      10029492 mov esi, eax
+      10029494 cmp esi, ebp
+      10029496 jne 0x10029449
+      10029498 mov ecx, dword ptr [esp + 0x10]
+      1002949c pop ebx
+      1002949d mov ecx, dword ptr [ecx + 0x14]
+      100294a0 mov eax, dword ptr [esp + 0x14]
+      100294a4 push eax
+      100294a5 mov edx, dword ptr [ecx]
+      100294a7 call dword ptr [edx + 0x1c]
+      100294aa cmp edi, ebp
+      100294ac je 0x100294ce
+      100294ae mov edx, dword ptr [edi]
+      100294b0 mov ecx, edi
+      100294b2 mov esi, edi
+      100294b4 call dword ptr [edx + 0x68]
+      100294b7 mov ecx, dword ptr [esi + 0x50]
+      100294ba mov edi, eax
+      100294bc mov eax, dword ptr [esi]
+      100294be push ecx
+      100294bf mov ecx, esi
+      100294c1 mov dword ptr [esi + 0x4c], ebp
+      100294c4 mov dword ptr [esi + 0x48], ebp
+      100294c7 call dword ptr [eax + 0x10]
+      100294ca cmp edi, ebp
+      100294cc jne 0x100294ae
+      100294ce pop esi
+      100294cf pop edi
+      100294d0 xor eax, eax
+      100294d2 pop ebp
+      100294d3 pop ecx
+      100294d4 ret 4
+== 0x1002a4e0 28 bytes  slot 26 of ??_7Wave_In_Device@@6B@ (0x10065dc8, retail table 0x1005ba5c installer 0x1002a263)  demo 0x1002bbc0 Wave_In_Device::set_vxw_key  agree EQUAL
+   0x1002a4e0 r this+0x14 -> m_pdll_device Sound_Device* (in Sound_Device)
+      Sound_Device vtable: +0x0=__vecDelDtor +0x4=create_device +0x8=delete_device +0xc=timer_unhook +0x10=init +0x14=release +0x18=get_ndevices +0x1c=select +0x20=get_description +0x24=set_volume +0x28=get_volume +0x2c=set_pan +0x30=fade +0x34=stop +0x38=update_sound +0x3c=set_rate +0x40=get_rate +0x44=add_to_time_past +0x48=get_time_past +0x4c=suspend +0x50=restart
+      1002a4e0 mov ecx, dword ptr [ecx + 0x14]
+      1002a4e3 test ecx, ecx
+      1002a4e5 je 0x1002a4f4
+      1002a4e7 mov edx, dword ptr [esp + 4]
+      1002a4eb mov eax, dword ptr [ecx]
+      1002a4ed push edx
+      1002a4ee call dword ptr [eax + 0x68]
+      1002a4f1 ret 4
+      1002a4f4 mov eax, 0x13
+      1002a4f9 ret 4
+== 0x1002c1c0 18 bytes  slot 48 of ??_7Wave@@6B@ (0x10065eb8, retail table 0x1005bb90 installer 0x1002b55b)  demo 0x1002dd60 Wave::get_ndevices  agree EQUAL
+   0x1002c1c0 r this+0x40 -> m_pdllsnd Sound* (in Sound)
+      Sound vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type
+      1002c1c0 mov ecx, dword ptr [ecx + 0x40]
+      1002c1c3 test ecx, ecx
+      1002c1c5 je 0x1002c1cf
+      1002c1c7 mov eax, dword ptr [ecx]
+      1002c1c9 jmp dword ptr [eax + 0xc0]
+      1002c1cf xor eax, eax
+      1002c1d1 ret 
+== 0x1002c1f0 56 bytes  slot 49 of ??_7Wave@@6B@ (0x10065eb8, retail table 0x1005bb90 installer 0x1002b55b)  demo 0x1002dda0 Wave::get_device_description  agree EQUAL
+   0x1002c1f0 r this+0x40 -> m_pdllsnd Sound* (in Sound)
+      Sound vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type
+      1002c1f0 mov ecx, dword ptr [ecx + 0x40]
+      1002c1f3 test ecx, ecx
+      1002c1f5 je 0x1002c211
+      1002c1f7 mov edx, dword ptr [esp + 0xc]
+      1002c1fb mov eax, dword ptr [ecx]
+      1002c1fd push edx
+      1002c1fe mov edx, dword ptr [esp + 0xc]
+      1002c202 push edx
+      1002c203 mov edx, dword ptr [esp + 0xc]
+      1002c207 push edx
+      1002c208 call dword ptr [eax + 0xc4]
+      1002c20e ret 0xc
+      1002c211 mov eax, dword ptr [esp + 0xc]
+      1002c215 test eax, eax
+      1002c217 je 0x1002c220
+      1002c219 mov eax, dword ptr [esp + 4]
+      1002c21d mov byte ptr [eax], 0
+      1002c220 mov eax, 1
+      1002c225 ret 0xc
+== 0x1002b870 23 bytes  slot 52 of ??_7Wave@@6B@ (0x10065eb8, retail table 0x1005bb90 installer 0x1002b55b)  demo 0x1002d150 Wave::stop_instance  agree EQUAL
+   0x1002b870 r this+0x40 -> m_pdllsnd Sound* (in Sound)
+      Sound vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type
+      1002b870 mov ecx, dword ptr [ecx + 0x40]
+      1002b873 test ecx, ecx
+      1002b875 je 0x1002b884
+      1002b877 mov edx, dword ptr [esp + 4]
+      1002b87b mov eax, dword ptr [ecx]
+      1002b87d push edx
+      1002b87e call dword ptr [eax + 0xd0]
+      1002b884 ret 4
+== 0x1002b8a0 23 bytes  slot 53 of ??_7Wave@@6B@ (0x10065eb8, retail table 0x1005bb90 installer 0x1002b55b)  demo 0x1002d190 Wave::fade_instance  agree EQUAL
+   0x1002b8a0 r this+0x40 -> m_pdllsnd Sound* (in Sound)
+      Sound vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type
+      1002b8a0 mov ecx, dword ptr [ecx + 0x40]
+      1002b8a3 test ecx, ecx
+      1002b8a5 je 0x1002b8b4
+      1002b8a7 mov edx, dword ptr [esp + 4]
+      1002b8ab mov eax, dword ptr [ecx]
+      1002b8ad push edx
+      1002b8ae call dword ptr [eax + 0xd4]
+      1002b8b4 ret 4
+== 0x1002fa60 170 bytes  slot 7 of ??_7dllSoundList@@6B@ (0x10066594, retail table 0x1005c3a4 installer 0x1002f76e)  demo 0x10031480 dllSoundList::play  agree EQUAL
+   0x1002fa63 r this+0xfc -> m_pQueuedSound CWaveMgr* (in dllSoundList)
+      CWaveMgr vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type +0x84=reload +0x88=init +0x9c=set_pitch +0xa0=set_bufflimit +0xa4=set_asdr +0xa8=set_attack +0xac=set_sustain +0xb0=set_decay +0xb4=set_release +0xb8=get_time +0xbc=get_current_marker +0xc0=get_ndevices +0xc4=get_device_description +0xc8=get_ms_length +0xcc=is_hwbuffer +0xd0=stop_instance +0xd4=fade_instance +0xd8=set_position3d +0xdc=set_xpos +0xe0=set_ypos +0xe4=set_zpos +0xe8=is_3d +0xec=set_reverb_mix +0xf0=set_link
+   0x1002fa6d r this+0xf8 -> m_pCurSound CWaveMgr* (in dllSoundList)
+      CWaveMgr vtable: +0x0=__vecDelDtor +0x4=set_fade +0x8=set_fade_in +0x10=load +0x14=unload +0x1c=play +0x20=stop +0x28=fade +0x30=fade_in +0x34=ramp +0x38=release +0x3c=get_game_hwnd +0x40=set_volume +0x44=set_pan +0x48=set_loop_state +0x4c=set_delay +0x50=set_type +0x54=set_fade_in +0x58=is_looping +0x5c=is_playing +0x60=is_loaded +0x64=get_next +0x68=get_prev +0x6c=set_attrib +0x70=get_attrib +0x74=get_time +0x78=get_type +0x84=reload +0x88=init +0x9c=set_pitch +0xa0=set_bufflimit +0xa4=set_asdr +0xa8=set_attack +0xac=set_sustain +0xb0=set_decay +0xb4=set_release +0xb8=get_time +0xbc=get_current_marker +0xc0=get_ndevices +0xc4=get_device_description +0xc8=get_ms_length +0xcc=is_hwbuffer +0xd0=stop_instance +0xd4=fade_instance +0xd8=set_position3d +0xdc=set_xpos +0xe0=set_ypos +0xe4=set_zpos +0xe8=is_3d +0xec=set_reverb_mix +0xf0=set_link
+      1002fa60 push esi
+      1002fa61 mov esi, ecx
+      1002fa63 mov eax, dword ptr [esi + 0xfc]
+      1002fa69 test eax, eax
+      1002fa6b jne 0x1002fa7e
+      1002fa6d mov eax, dword ptr [esi + 0xf8]
+      1002fa73 test eax, eax
+      1002fa75 jne 0x1002fa7e
+      1002fa77 mov eax, 0x14
+      1002fa7c pop esi
+      1002fa7d ret 
+      1002fa7e mov eax, dword ptr [esi]
+      1002fa80 mov ecx, esi
+      1002fa82 call dword ptr [eax + 0x5c]
+      1002fa85 test eax, eax
+      1002fa87 je 0x1002fa8d
+      1002fa89 xor eax, eax
+      1002fa8b pop esi
+      1002fa8c ret 
+      1002fa8d mov ecx, dword ptr [esi + 0xf8]
+      1002fa93 test ecx, ecx
+      1002fa95 je 0x1002facc
+      1002fa97 mov edx, dword ptr [ecx]
+      1002fa99 call dword ptr [edx + 0x5c]
+      1002fa9c test eax, eax
+      1002fa9e jne 0x1002facc
+      1002faa0 mov ecx, dword ptr [esi + 0xf8]
+      1002faa6 push 1
+      1002faa8 mov eax, dword ptr [ecx]
+      1002faaa call dword ptr [eax + 0x48]
+      1002faad mov ecx, dword ptr [esi + 0xf8]
+      1002fab3 mov eax, dword ptr [esi + 0x108]
+      1002fab9 push eax
+      1002faba mov edx, dword ptr [ecx]
+      1002fabc call dword ptr [edx + 0x40]
+      1002fabf mov ecx, dword ptr [esi + 0xf8]
+      1002fac5 mov edx, dword ptr [ecx]
+      1002fac7 call dword ptr [edx + 0x1c]
+      1002faca pop esi
+      1002facb ret 
+      1002facc mov eax, dword ptr [esi + 0xfc]
+      1002fad2 mov dword ptr [esi + 0xfc], 0
+      1002fadc mov ecx, eax
+      1002fade mov dword ptr [esi + 0xf8], eax
+      1002fae4 push 1
+      1002fae6 mov edx, dword ptr [ecx]
+      1002fae8 call dword ptr [edx + 0x48]
+      1002faeb mov ecx, dword ptr [esi + 0xf8]
+      1002faf1 mov edx, dword ptr [esi + 0x108]
+      1002faf7 push edx
+      1002faf8 mov eax, dword ptr [ecx]
+      1002fafa call dword ptr [eax + 0x40]
+      1002fafd mov ecx, dword ptr [esi + 0xf8]
+      1002fb03 mov eax, dword ptr [ecx]
+      1002fb05 call dword ptr [eax + 0x1c]
+      1002fb08 pop esi
+      1002fb09 ret 
+== 0x10031a30 5 bytes  slot 8 of ??_7CVoiceTxMgr@@6B@ (0x100666dc, retail table 0x1005c528 installer 0x1003121b)  demo 0x10033340 CVoiceTxMgr::stop  agree EQUAL
+      10031a30 mov eax, dword ptr [ecx]
+      10031a32 jmp dword ptr [eax + 0x14]
+== 0x1003a440 213 bytes  slot 60 of ??_7CWaveMgr@@6B@ (0x10066b08, retail table 0x1005c7e8 installer 0x100396cb)  demo 0x1003db60 CWaveMgr::set_link  agree EQUAL
+      1003a440 mov eax, dword ptr fs:[0]
+      1003a446 push -1
+      1003a448 push 0x100593db
+      1003a44d push eax
+      1003a44e mov eax, dword ptr [0x100b4a20]
+      1003a453 mov dword ptr fs:[0], esp
+      1003a45a push ebx
+      1003a45b push ebp
+      1003a45c push esi
+      1003a45d push edi
+      1003a45e test eax, eax
+      1003a460 mov ebp, ecx
+      1003a462 jne 0x1003a46e
+      1003a464 mov eax, 1
+      1003a469 jmp 0x1003a500
+      1003a46e mov esi, dword ptr [esp + 0x20]
+      1003a472 test esi, esi
+      1003a474 jne 0x1003a480
+      1003a476 mov eax, 0xa
+      1003a47b jmp 0x1003a500
+      1003a480 mov edi, esi
+      1003a482 or ecx, 0xffffffff
+      1003a485 xor eax, eax
+      1003a487 repne scasb al, byte ptr es:[edi]
+      1003a489 not ecx
+      1003a48b push ecx
+      1003a48c call 0x100424d7
+      1003a491 mov ebx, eax
+      1003a493 mov edi, esi
+      1003a495 or ecx, 0xffffffff
+      1003a498 xor eax, eax
+      1003a49a repne scasb al, byte ptr es:[edi]
+      1003a49c not ecx
+      1003a49e sub edi, ecx
+      1003a4a0 push 0x10
+      1003a4a2 mov eax, ecx
+      1003a4a4 mov esi, edi
+      1003a4a6 mov edi, ebx
+      1003a4a8 shr ecx, 2
+      1003a4ab rep movsd dword ptr es:[edi], dword ptr [esi]
+      1003a4ad mov ecx, eax
+      1003a4af and ecx, 3
+      1003a4b2 rep movsb byte ptr es:[edi], byte ptr [esi]
+      1003a4b4 call 0x100424d7
+      1003a4b9 add esp, 8
+      1003a4bc mov dword ptr [esp + 0x20], eax
+      1003a4c0 test eax, eax
+      1003a4c2 mov dword ptr [esp + 0x18], 0
+      1003a4ca je 0x1003a4d5
+      1003a4cc mov ecx, eax
+      1003a4ce call 0x10002031
+      1003a4d3 jmp 0x1003a4d7
+      1003a4d5 xor eax, eax
+      1003a4d7 mov ecx, dword ptr [esp + 0x24]
+      1003a4db mov dword ptr [eax + 8], ebx
+      1003a4de mov dword ptr [eax + 0xc], ecx
+      1003a4e1 mov dword ptr [eax], 0xd
+      1003a4e7 mov dword ptr [eax + 4], ebp
+      1003a4ea mov ecx, dword ptr [0x100b4a20]
+      1003a4f0 push eax
+      1003a4f1 mov dword ptr [esp + 0x1c], 0xffffffff
+      1003a4f9 call 0x100011c7
+      1003a4fe xor eax, eax
+      1003a500 mov ecx, dword ptr [esp + 0x10]
+      1003a504 pop edi
+      1003a505 pop esi
+      1003a506 pop ebp
+      1003a507 mov dword ptr fs:[0], ecx
+      1003a50e pop ebx
+      1003a50f add esp, 0xc
+      1003a512 ret 8

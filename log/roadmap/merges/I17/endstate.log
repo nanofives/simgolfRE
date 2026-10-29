@@ -1,0 +1,55 @@
+### 0x10009240
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x100099d0
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x1001b830
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x1001c480
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x1001e120
+dead: FAIL
+  [FAIL] no direct call/jmp/jcc lands on the body or a thunk (0x10001edd)
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x10025040
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x10025090
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x10028f70
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x1002d010
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x1002e4c0
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported
+### 0x1002f710
+dead: PASS
+  [PASS] no direct call/jmp/jcc lands on the body or a thunk
+  [PASS] no stored pointer to the body or a thunk
+  [PASS] not exported

@@ -28,7 +28,7 @@ None.
 ## Callees
 - 0x10048197 `__startOneArgErrorHandling` at 0x100432a3
 - 0x100481f5 `fpuSetControlWord` at 0x10043220
-- 0x1004820c `fpStatusExceptionType` at 0x10043262
+- 0x1004820c `__convertTOStoQNaN` at 0x10043262
 - 0x10048225 `__fload_withFB` at 0x10043208
 - 0x1004828b `__math_exit` at 0x10043246
 

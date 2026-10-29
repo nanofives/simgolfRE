@@ -1,0 +1,6 @@
+# S10.12 promote commands. HELD: run only after the lead accepts an SP5 line as exe match evidence (U-1910, 12_merge.md section 2).
+# 0x00436e50 (drawEmployeeDetailPanel) is already C4 by scenario; 0x004a55d2 is already C4: no promote for them.
+# step 1 (writes the evidence CSV of the canonical file):
+#   ~/bin/py -3.12 re/tools/match.py re/match/smsg_hand_toolbar_sp5.cpp
+# step 2 (drawAmenitiesPanel, C3 -> C4):
+# ~/bin/py -3.12 scripts/re_classify.py promote 0x00434cf0 --to C4 --evidence log/diff/00434cf0__RenderBuildingToolbar__YAXHH_Z.match.csv   # drawAmenitiesPanel

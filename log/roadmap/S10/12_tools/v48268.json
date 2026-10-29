@@ -1,0 +1,6 @@
+[
+ {"name": "ternary", "old": "unsigned int x = hi & 0x7ff00000;\n    if (x == 0x7ff00000)\n        return hi;\n    return x;", "new": "return (hi & 0x7ff00000) == 0x7ff00000 ? hi : (hi & 0x7ff00000);"},
+ {"name": "two_ifs", "old": "unsigned int x = hi & 0x7ff00000;\n    if (x == 0x7ff00000)\n        return hi;\n    return x;", "new": "if ((hi & 0x7ff00000) == 0x7ff00000)\n        return hi;\n    return hi & 0x7ff00000;"},
+ {"name": "signed", "old": "unsigned int x = hi & 0x7ff00000;\n    if (x == 0x7ff00000)\n        return hi;\n    return x;", "new": "int x = (int)hi & 0x7ff00000;\n    if (x == 0x7ff00000)\n        return hi;\n    return x;"},
+ {"name": "xor_form", "old": "unsigned int x = hi & 0x7ff00000;\n    if (x == 0x7ff00000)\n        return hi;\n    return x;", "new": "unsigned int x = hi & 0x7ff00000;\n    if (!(x ^ 0x7ff00000))\n        return hi;\n    return x;"}
+]

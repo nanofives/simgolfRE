@@ -1,0 +1,10 @@
+[
+ {"name": "count_first", "old": "g_employeeListScroll + g_employeeListCount < 0x14", "new": "g_employeeListCount + g_employeeListScroll < 0x14"},
+ {"name": "lit_left", "old": "g_employeeListScroll + g_employeeListCount < 0x14", "new": "0x14 > g_employeeListCount + g_employeeListScroll"},
+ {"name": "le13", "old": "g_employeeListScroll + g_employeeListCount < 0x14", "new": "g_employeeListCount + g_employeeListScroll <= 0x13"},
+ {"name": "minus", "old": "g_employeeListScroll + g_employeeListCount < 0x14", "new": "g_employeeListCount - 0x14 + g_employeeListScroll < 0"},
+ {"name": "sub_neg", "old": "g_employeeListScroll + g_employeeListCount < 0x14", "new": "g_employeeListCount < 0x14 - g_employeeListScroll"},
+ {"name": "scroll_lt", "old": "g_employeeListScroll + g_employeeListCount < 0x14", "new": "g_employeeListScroll < 0x14 - g_employeeListCount"},
+ {"name": "both_swapped", "old": "g_employeeListCount + g_employeeListScroll >= 0x14", "new": "g_employeeListScroll + g_employeeListCount >= 0x14"},
+ {"name": "local", "old": "if (g_staffHireButtonIdle == 0) {", "new": "int n = g_employeeListScroll + g_employeeListCount;\n    if (g_staffHireButtonIdle == 0) {"}
+]

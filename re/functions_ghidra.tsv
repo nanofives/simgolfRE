@@ -1840,7 +1840,7 @@ entry	name	size	callers	callees	ranges
 004a4fa6	TERRAIN.DLL::Terrain::stripRender	6	1	0	004a4fa6-004a4fac
 004a4fac	__fpmath	23	1	3	004a4fac-004a4fc3
 004a4fc3	__fpclear	1	0	0	004a4fc3-004a4fc4
-004a4fc4	initFpControl	56	1	0	004a4fc4-004a4ffc
+004a4fc4	__cfltcvt_init	56	1	0	004a4fc4-004a4ffc
 004a4ffc	operatorDelete_4a4ffc	11	83	1	004a4ffc-004a5007
 004a5007	_free	72	72	5	004a5007-004a504f
 004a504f	_malloc	18	55	1	004a504f-004a5061
@@ -2071,7 +2071,7 @@ entry	name	size	callers	callees	ranges
 004abcb0	_strcat	224	1	0	004abcb0-004abd90
 004abd90	_memset	88	5	0	004abd90-004abde8
 004abdf0	_strlen	123	9	0	004abdf0-004abe6b
-004abe6b	amsgExitThunk	9	2	1	004abe6b-004abe74
+004abe6b	__fptrap	9	2	1	004abe6b-004abe74
 004abe74	__CxxUnhandledExceptionFilter	70	0	2	004abe74-004abeba
 004abeba	__CxxSetUnhandledExceptionFilter	17	0	1	004abeba-004abecb
 004abecb	__CxxRestoreUnhandledExceptionFilter	13	0	0	004abecb-004abed8

@@ -1,0 +1,11 @@
+.....                                                                    [100%]
+5 passed in 0.35s
+0 quoted strings replaced
+re/names/smsg_sound_lib_globals.tsv: missing
+bad 0
+cross-file duplicates 0
+0 citations checked, 0 bad, 0 weak (callee only)
+34 in-body citations checked, 0 bad
+   14 re/names/demo_sound_1.tsv
+   12 re/names/smsg_sound_2.tsv
+   26 total

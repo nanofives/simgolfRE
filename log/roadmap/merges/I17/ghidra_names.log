@@ -1,0 +1,93 @@
+== 2026-10-29T19:19:10-03:00 sound.dll ApplyNames.java C:\Users\maria\Desktop\Proyectos\SimGolf\re\names 
+INFO  Class search complete (2023 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ApplyNames.java (HeadlessAnalyzer)  
+INFO  ApplyNames.java> RENAME 10005d40 MidiCtrlDiskRead::set_total_class_size (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001c510 Stepper::set_total_class_size (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001c6c0 Randomizer::set_total_class_size (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001c930 Chooser::set_total_class_size (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001cb80 ChannelCtrl::set_total_class_size (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1000e7f0 Wave_Device::timer_unhook (GhidraScript)  
+INFO  ApplyNames.java> RENAME 100234b0 Seq::is_trackset_playing (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10023110 Seq::set_active_range_hi (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10023f60 Seq::get_track_velocity_offset (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10023fd0 Seq::set_track_velocity_offset (GhidraScript)  
+INFO  ApplyNames.java> RENAME 100227c0 Seq::add_switch_range (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10006a60 CAviMgr::init (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002fa60 dllSoundList::play (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10009240 init_sound (GhidraScript)  
+INFO  ApplyNames.java> RENAME 100099d0 get_sound_type (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001b830 MidiCtrlSocket::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001c480 Stepper::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001e120 Midi_Device::reload (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10025040 CMMError::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10025090 CMMError::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10028f70 DeviceBase::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002d010 MixBuffer::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002e4c0 Patch::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002f710 do_message (GhidraScript)  
+INFO  ApplyNames.java> KEEP 100430fe entry (IMPORTED) over __DllMainCRTStartup (GhidraScript)  
+INFO  ApplyNames.java> APPLYNAMES sound.dll renamed=24 labeled=0 kept=1409 missing=0 reset=0 (GhidraScript)  
+rc=0
+== 2026-10-29T19:19:29-03:00 sound.dll ListFunctions.java C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_sound.dll.tsv -readOnly
+INFO  Class search complete (1859 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ListFunctions.java (HeadlessAnalyzer)  
+INFO  ListFunctions.java> LISTFUNCTIONS sound.dll 2358 -> C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_sound.dll.tsv (GhidraScript)  
+rc=0

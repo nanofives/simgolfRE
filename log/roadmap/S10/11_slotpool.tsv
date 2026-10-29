@@ -1,0 +1,147 @@
+retail_va	size	kind	detail	demo_names	slots
+0x10005b00	3	CONST	`xor eax, eax`; `ret` at 0x10005b00	Midi::get_game_hwnd	0x1005b000/15;0x1005b6a8/15;0x1005be88/15;0x1005c000/15
+0x10005b20	8	CONST	`mov eax, 0xb`; `ret 4` at 0x10005b20	Midi::set_attrib	0x1005b000/27;0x1005b6a8/27;0x1005be88/27;0x1005c000/27
+0x10005b40	3	CONST	`xor eax, eax`; `ret` at 0x10005b40	Midi::get_attrib	0x1005b000/28;0x1005b6a8/28;0x1005be88/28;0x1005c000/28
+0x10005c70	5	OTHER		MidiCtrl::refresh	0x1005b178/3;0x1005b19c/3;0x1005b59c/3;0x1005b5cc/3;0x1005b5f0/3;0x1005b614/3;0x1005b644/3;0x1005b668/3
+0x10005c90	7	GETTER	reads dword ptr [esp + 4] (from 0x10005c90), no store, no call	MidiCtrl::do_control	0x1005b178/4;0x1005b19c/4;0x1005b614/4;0x1005b644/4;0x1005b668/4
+0x10005cb0	1	EMPTY	`ret` at 0x10005cb0	MidiCtrl::reset	0x1005b178/5;0x1005b19c/5;0x1005b5cc/5;0x1005b614/5;0x1005b644/5;0x1005b668/5
+0x10005cd0	1	EMPTY	`ret` at 0x10005cd0	MidiCtrl::update	0x1005b178/6;0x1005b19c/6;0x1005b614/6;0x1005b644/6;0x1005b668/6
+0x10005d20	3	EMPTY	`ret` at 0x10005d20	MidiCtrlDiskRead::set_type	0x1005b178/1
+0x10005d40	8	OTHER		MidiCtrlDiskRead::set_total_class_size	0x1005b178/2
+0x10006a60	123	OTHER		CAviMgr::init	0x1005b1c0/33
+0x10006d10	3	CONST	`xor eax, eax`; `ret` at 0x10006d10	AviSound::unload	0x1005b1c0/5;0x1005c178/5
+0x10006d30	3	CONST	`xor eax, eax`; `ret` at 0x10006d30	AviSound::get_game_hwnd	0x1005b1c0/15;0x1005c178/15
+0x10006d50	8	CONST	`mov eax, 0xb`; `ret 4` at 0x10006d50	AviSound::set_attrib	0x1005b1c0/27;0x1005c178/27
+0x10006d70	3	CONST	`xor eax, eax`; `ret` at 0x10006d70	AviSound::get_attrib	0x1005b1c0/28;0x1005c178/28
+0x1000a0e0	8	CONST	`mov eax, 0x2f`; `ret 0xc` at 0x1000a0e0	Dll_Midi_Device::get_description	0x1005b28c/8
+0x1000a120	3	EMPTY	`ret` at 0x1000a120	Dll_Midi_Device::set_volume	0x1005b28c/9
+0x1000e2f0	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e2f0	Dll_Wave_Device::set_eax	0x1005b304/31
+0x1000e4d0	8	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1000e4d0	Dll_Wave_Device::get_listener_position	0x1005b304/36
+0x1000e4f0	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e4f0	Dll_Wave_Device::set_listener_xpos	0x1005b304/37
+0x1000e510	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e510	Dll_Wave_Device::get_listener_xpos	0x1005b304/38
+0x1000e530	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e530	Dll_Wave_Device::set_listener_ypos	0x1005b304/39
+0x1000e550	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e550	Dll_Wave_Device::get_listener_ypos	0x1005b304/40
+0x1000e590	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e590	Dll_Wave_Device::get_listener_zpos	0x1005b304/42
+0x1000e7f0	11	OTHER		Dll_Wave_Device::timer_unhook	0x1005b304/3
+0x1000ebe0	5	CONST	`xor eax, eax`; `ret 4` at 0x1000ebe0	Dll_Wave_In_Device::set_vxw_key	0x1005b3d4/26
+0x1000ecc0	5	CONST	`xor eax, eax`; `ret 4` at 0x1000ecc0	Dll_Wave_In_Device::select	0x1005b3d4/7
+0x1000ece0	8	OTHER		Dll_Wave_In_Device::update_sound	0x1005b3d4/14
+0x1000ed30	3	CONST	`xor eax, eax`; `ret` at 0x1000ed30	Dll_Wave_In_Device::get_ndevices	0x1005b3d4/6
+0x1000ed50	5	CONST	`xor eax, eax`; `ret 0xc` at 0x1000ed50	Dll_Wave_In_Device::get_description	0x1005b3d4/8
+0x1000ee70	3	EMPTY	`ret` at 0x1000ee70	Dll_Wave_In_Device::set_volume	0x1005b3d4/9
+0x1000ee90	3	CONST	`xor eax, eax`; `ret` at 0x1000ee90	Dll_Wave_In_Device::get_volume	0x1005b3d4/10
+0x1000eeb0	3	EMPTY	`ret` at 0x1000eeb0	Dll_Wave_In_Device::set_pan	0x1005b3d4/11
+0x1000eed0	5	CONST	`xor eax, eax`; `ret 4` at 0x1000eed0	Dll_Wave_In_Device::fade	0x1005b3d4/12
+0x10014230	6	CONST	`mov eax, 0xb`; `ret` at 0x10014230	add_16216s2mmb	0x1005b4a4/1
+0x10015210	3	CONST	`xor eax, eax`; `ret` at 0x10015210	add_16216m2mmb	0x1005b4a4/3
+0x10015230	3	CONST	`xor eax, eax`; `ret` at 0x10015230	add_828s2smb	0x1005b4a4/4
+0x10015250	3	CONST	`xor eax, eax`; `ret` at 0x10015250	add_828s2mmb	0x1005b4a4/5
+0x10015270	3	CONST	`xor eax, eax`; `ret` at 0x10015270	add_828m2smb	0x1005b4a4/6
+0x10015290	3	CONST	`xor eax, eax`; `ret` at 0x10015290	add_828m2mmb	0x1005b4a4/7
+0x100156a0	3	CONST	`xor eax, eax`; `ret` at 0x100156a0	add_8216s2mmb	0x1005b4a4/9
+0x10015a80	3	CONST	`xor eax, eax`; `ret` at 0x10015a80	add_8216m2mmb	0x1005b4a4/11
+0x10016320	6	CONST	`mov eax, 0xb`; `ret` at 0x10016320	mov_16216s2mmb	0x1005b4a4/13
+0x10016cf0	3	CONST	`xor eax, eax`; `ret` at 0x10016cf0	mov_16216m2mmb	0x1005b4a4/15
+0x10016d10	3	CONST	`xor eax, eax`; `ret` at 0x10016d10	mov_828s2smb	0x1005b4a4/16
+0x10016d30	3	CONST	`xor eax, eax`; `ret` at 0x10016d30	mov_828s2mmb	0x1005b4a4/17
+0x10016d50	3	CONST	`xor eax, eax`; `ret` at 0x10016d50	mov_828m2smb	0x1005b4a4/18
+0x10016d70	3	CONST	`xor eax, eax`; `ret` at 0x10016d70	mov_828m2mmb	0x1005b4a4/19
+0x10017140	3	CONST	`xor eax, eax`; `ret` at 0x10017140	mov_8216s2mmb	0x1005b4a4/21
+0x10017500	3	CONST	`xor eax, eax`; `ret` at 0x10017500	mov_8216m2mmb	0x1005b4a4/23
+0x1001ba50	5	OTHER		MidiCtrlSocket::is_ctrl_ok	0x1005b58c/0;0x1005b590/0;0x1005b5c0/0;0x1005b638/0;0x1005b68c/0
+0x1001bcf0	114	OTHER		MidiCtrlTarget::start_control	0x1005b590/1;0x1005b638/1
+0x1001c340	17	OTHER		NoteMap::do_control	0x1005b59c/4
+0x1001c510	8	OTHER		Stepper::set_total_class_size	0x1005b5cc/2
+0x1001c6c0	8	OTHER		Randomizer::set_total_class_size	0x1005b5f0/2
+0x1001c930	8	OTHER		Chooser::set_total_class_size	0x1005b614/2
+0x1001cb80	8	OTHER		ChannelCtrl::set_total_class_size	0x1005b644/2
+0x1001e860	86	FORWARD	calls slot 0x10 of the object at dword ptr [ecx + 4]	CMidiTrack::start_control	0x1005b68c/1
+0x10020d50	21	GETTER	reads dword ptr [esp + 4] (from 0x10020d50), no store, no call	CMidiMgr::play	0x1005b000/6;0x1005b6a8/6
+0x10020fa0	8	CONST	`mov eax, 0xb`; `ret 0xc` at 0x10020fa0	CMidiMgr::map_patch	0x1005b000/52;0x1005b6a8/52
+0x10020fc0	8	CONST	`mov eax, 0xb`; `ret 8` at 0x10020fc0	CMidiMgr::map_patch	0x1005b000/51;0x1005b6a8/51
+0x100227c0	197	OTHER		CMidiMgr::add_switch_range	0x1005b000/58;0x1005b6a8/58
+0x10023110	111	OTHER		CMidiMgr::set_active_range_hi	0x1005b000/41;0x1005b6a8/41
+0x100234b0	99	SETTER	stores dword ptr [ecx + 0x230], dword ptr [ecx + 0x230] from its arguments (0x100234c7)	CMidiMgr::is_trackset_playing	0x1005b000/62;0x1005b6a8/62
+0x10023f60	67	OTHER		CMidiMgr::get_track_velocity_offset	0x1005b000/74;0x1005b6a8/74
+0x10023fd0	65	OTHER		CMidiMgr::set_track_velocity_offset	0x1005b000/73;0x1005b6a8/73
+0x10024cc0	8	CONST	`mov eax, 0x2f`; `ret 4` at 0x10024cc0	CMidiMgr::load_patch	0x1005b000/64;0x1005b6a8/64
+0x10024ce0	8	CONST	`mov eax, 0x2f`; `ret 4` at 0x10024ce0	CMidiMgr::unload_patch	0x1005b000/65;0x1005b6a8/65
+0x100290c0	1	EMPTY	`ret` at 0x100290c0	Wave_Device::timer_unhook	0x1005b914/3
+0x100290e0	3	CONST	`xor eax, eax`; `ret` at 0x100290e0	Wave_Device::get_time_past	0x1005b914/18
+0x10029100	3	EMPTY	`ret` at 0x10029100	Wave_Device::add_to_time_past	0x1005b914/17
+0x10029120	1	EMPTY	`ret` at 0x10029120	Wave_Device::reset_time_past	0x1005b914/24
+0x10029290	5	CONST	`xor eax, eax`; `ret 4` at 0x10029290	Wave_Device::create_device	0x1005b304/1;0x1005b914/1
+0x100292b0	3	CONST	`xor eax, eax`; `ret` at 0x100292b0	Wave_Device::delete_device	0x1005b304/2;0x1005b914/2
+0x10029420	183	FORWARD	calls slot 0x10 of the object at dword ptr [ecx + 0x14]	Wave_Device::select	0x1005b914/7
+0x100295c0	3	CONST	`xor eax, eax`; `ret` at 0x100295c0	Wave_Device::get_volume	0x1005b304/10;0x1005b914/10
+0x100295e0	3	EMPTY	`ret` at 0x100295e0	Wave_Device::set_pan	0x1005b304/11;0x1005b914/11
+0x10029620	5	CONST	`xor eax, eax`; `ret 4` at 0x10029620	Wave_Device::fade	0x1005b304/12;0x1005b914/12
+0x10029640	3	CONST	`xor eax, eax`; `ret` at 0x10029640	Wave_Device::stop	0x1005b304/13;0x1005b914/13
+0x10029e30	5	CONST	`xor eax, eax`; `ret 4` at 0x10029e30	Midi_Device::create_device	0x1005b28c/1;0x1005b9e4/1
+0x10029e50	3	CONST	`xor eax, eax`; `ret` at 0x10029e50	Midi_Device::delete_device	0x1005b28c/2;0x1005b9e4/2
+0x10029eb0	1	EMPTY	`ret` at 0x10029eb0	Midi_Device::timer_unhook	0x1005b9e4/3
+0x10029ed0	3	CONST	`xor eax, eax`; `ret` at 0x10029ed0	Midi_Device::get_time_past	0x1005b9e4/18
+0x10029ef0	3	EMPTY	`ret` at 0x10029ef0	Midi_Device::add_to_time_past	0x1005b9e4/17
+0x10029f10	1	EMPTY	`ret` at 0x10029f10	Midi_Device::reset_time_past	0x1005b9e4/21
+0x1002a030	3	CONST	`xor eax, eax`; `ret` at 0x1002a030	Midi_Device::get_ndevices	0x1005b9e4/6
+0x1002a050	5	CONST	`xor eax, eax`; `ret 4` at 0x1002a050	Midi_Device::select	0x1005b9e4/7
+0x1002a070	5	CONST	`xor eax, eax`; `ret 0xc` at 0x1002a070	Midi_Device::get_description	0x1005b9e4/8
+0x1002a090	3	EMPTY	`ret` at 0x1002a090	Midi_Device::set_volume	0x1005b9e4/9
+0x1002a0b0	3	CONST	`xor eax, eax`; `ret` at 0x1002a0b0	Midi_Device::get_volume	0x1005b28c/10;0x1005b9e4/10
+0x1002a0d0	3	EMPTY	`ret` at 0x1002a0d0	Midi_Device::set_pan	0x1005b28c/11;0x1005b9e4/11
+0x1002a0f0	5	CONST	`xor eax, eax`; `ret 4` at 0x1002a0f0	Midi_Device::fade	0x1005b28c/12;0x1005b9e4/12
+0x1002a110	3	CONST	`xor eax, eax`; `ret` at 0x1002a110	Midi_Device::stop	0x1005b28c/13;0x1005b9e4/13
+0x1002a130	1	EMPTY	`ret` at 0x1002a130	Midi_Device::update_sound	0x1005b9e4/14
+0x1002a150	3	EMPTY	`ret` at 0x1002a150	Midi_Device::set_rate	0x1005b9e4/15
+0x1002a170	3	CONST	`xor eax, eax`; `ret` at 0x1002a170	Midi_Device::get_rate	0x1005b9e4/16
+0x1002a190	1	EMPTY	`ret` at 0x1002a190	Midi_Device::suspend	0x1005b9e4/19
+0x1002a1b0	1	EMPTY	`ret` at 0x1002a1b0	Midi_Device::restart	0x1005b9e4/20
+0x1002a280	1	EMPTY	`ret` at 0x1002a280	Wave_In_Device::timer_unhook	0x1005ba5c/3
+0x1002a2a0	3	CONST	`xor eax, eax`; `ret` at 0x1002a2a0	Wave_In_Device::get_time_past	0x1005ba5c/18
+0x1002a2c0	3	EMPTY	`ret` at 0x1002a2c0	Wave_In_Device::add_to_time_past	0x1005ba5c/17
+0x1002a2e0	1	EMPTY	`ret` at 0x1002a2e0	Wave_In_Device::reset_time_past	0x1005ba5c/22
+0x1002a300	3	EMPTY	`ret` at 0x1002a300	Wave_In_Device::set_volume	0x1005ba5c/9
+0x1002a320	3	CONST	`xor eax, eax`; `ret` at 0x1002a320	Wave_In_Device::get_volume	0x1005ba5c/10
+0x1002a340	3	EMPTY	`ret` at 0x1002a340	Wave_In_Device::set_pan	0x1005ba5c/11
+0x1002a360	5	CONST	`xor eax, eax`; `ret 4` at 0x1002a360	Wave_In_Device::fade	0x1005ba5c/12
+0x1002a3e0	5	CONST	`xor eax, eax`; `ret 4` at 0x1002a3e0	Wave_In_Device::create_device	0x1005b3d4/1;0x1005ba5c/1
+0x1002a400	3	CONST	`xor eax, eax`; `ret` at 0x1002a400	Wave_In_Device::delete_device	0x1005b3d4/2;0x1005ba5c/2
+0x1002a4b0	28	FORWARD	calls slot 0x64 of the object at dword ptr [ecx + 0x14]	Wave_In_Device::set_codec	0x1005b3d4/25;0x1005ba5c/25
+0x1002a4e0	28	FORWARD	calls slot 0x68 of the object at dword ptr [ecx + 0x14]	Wave_In_Device::set_vxw_key	0x1005ba5c/26
+0x1002a510	3	CONST	`xor eax, eax`; `ret` at 0x1002a510	Wave_In_Device::get_ndevices	0x1005ba5c/6
+0x1002a530	5	CONST	`xor eax, eax`; `ret 4` at 0x1002a530	Wave_In_Device::select	0x1005ba5c/7
+0x1002a550	5	CONST	`xor eax, eax`; `ret 0xc` at 0x1002a550	Wave_In_Device::get_description	0x1005ba5c/8
+0x1002a570	5	CONST	`xor eax, eax`; `ret 4` at 0x1002a570	Wave_In_Device::get_caps	0x1005b3d4/21;0x1005ba5c/21
+0x1002a590	3	CONST	`xor eax, eax`; `ret` at 0x1002a590	Wave_In_Device::stop	0x1005b3d4/13;0x1005ba5c/13
+0x1002a5b0	1	EMPTY	`ret` at 0x1002a5b0	Wave_In_Device::update_sound	0x1005ba5c/14
+0x1002a5d0	3	EMPTY	`ret` at 0x1002a5d0	Wave_In_Device::set_rate	0x1005ba5c/15
+0x1002a5f0	3	CONST	`xor eax, eax`; `ret` at 0x1002a5f0	Wave_In_Device::get_rate	0x1005ba5c/16
+0x1002a610	1	EMPTY	`ret` at 0x1002a610	Wave_In_Device::suspend	0x1005ba5c/19
+0x1002a630	1	EMPTY	`ret` at 0x1002a630	Wave_In_Device::restart	0x1005ba5c/20
+0x1002b110	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1002b110	Sound::load	0x1005b000/3;0x1005b1c0/3;0x1005b6a8/3;0x1005bae0/3;0x1005bb90/3;0x1005bcb4/3;0x1005bdd8/3;0x1005be88/3;0x1005c000/3;0x1005c178/3;0x1005c234/3;0x1005c2ec/3;0x1005c3a4/3;0x1005c450/3;0x1005c528/3;0x1005c7e8/3
+0x1002b870	23	FORWARD	calls slot 0xd0 of the object at dword ptr [ecx + 0x40]	Wave::stop_instance	0x1005bb90/52;0x1005bcb4/52;0x1005c7e8/52
+0x1002b8a0	23	FORWARD	calls slot 0xd4 of the object at dword ptr [ecx + 0x40]	Wave::fade_instance	0x1005bb90/53;0x1005bcb4/53;0x1005c7e8/53
+0x1002c1c0	18	FORWARD	calls slot 0xc0 of the object at dword ptr [ecx + 0x40]	Wave::get_ndevices	0x1005bb90/48;0x1005bcb4/48;0x1005c7e8/48
+0x1002c1f0	56	FORWARD	calls slot 0xc4 of the object at dword ptr [ecx + 0x40]	Wave::get_device_description	0x1005bb90/49;0x1005bcb4/49;0x1005c7e8/49
+0x1002c2b0	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1002c2b0	Wave::set_bufflimit	0x1005bb90/40;0x1005bcb4/40;0x1005c7e8/40
+0x1002c2d0	6	CONST	`mov eax, 0xb`; `ret` at 0x1002c2d0	Wave::set_asdr	0x1005bb90/41;0x1005bcb4/41;0x1005c7e8/41
+0x1002c2f0	8	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c2f0	Wave::set_attack	0x1005bb90/42;0x1005bcb4/42;0x1005c7e8/42
+0x1002c310	8	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c310	Wave::set_sustain	0x1005bb90/43;0x1005bcb4/43;0x1005c7e8/43
+0x1002c330	8	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c330	Wave::set_decay	0x1005bb90/44;0x1005bcb4/44;0x1005c7e8/44
+0x1002c350	8	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c350	Wave::set_release	0x1005bb90/45;0x1005bcb4/45;0x1005c7e8/45
+0x1002cd10	6	CONST	`mov eax, 0x13`; `ret` at 0x1002cd10	SoundList::stop	0x1005bdd8/8
+0x1002e060	28	FORWARD	calls slot 0xc8 of the object at dword ptr [ecx + 0x40]	Midi::get_time	0x1005b000/50;0x1005b6a8/50;0x1005be88/50;0x1005c000/50
+0x1002ed30	3	CONST	`xor eax, eax`; `ret` at 0x1002ed30	AviSound::get_time	0x1005b1c0/29;0x1005c178/29
+0x1002ee80	3	CONST	`xor eax, eax`; `ret` at 0x1002ee80	VoiceRx::get_game_hwnd	0x1005c234/15;0x1005c450/15
+0x1002eea0	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1002eea0	VoiceRx::set_attrib	0x1005c234/27;0x1005c450/27
+0x1002eec0	3	CONST	`xor eax, eax`; `ret` at 0x1002eec0	VoiceRx::get_attrib	0x1005c234/28;0x1005c450/28
+0x1002f360	3	CONST	`xor eax, eax`; `ret` at 0x1002f360	VoiceTx::get_game_hwnd	0x1005c2ec/15;0x1005c528/15
+0x1002f380	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1002f380	VoiceTx::set_attrib	0x1005c2ec/27;0x1005c528/27
+0x1002f3a0	3	CONST	`xor eax, eax`; `ret` at 0x1002f3a0	VoiceTx::get_attrib	0x1005c2ec/28;0x1005c528/28
+0x1002f7f0	8	CONST	`mov eax, 0xb`; `ret 4` at 0x1002f7f0	dllSoundList::set_attrib	0x1005c3a4/27
+0x1002f810	3	CONST	`xor eax, eax`; `ret` at 0x1002f810	dllSoundList::get_attrib	0x1005c3a4/28
+0x1002fa60	170	OTHER		dllSoundList::play	0x1005c3a4/7
+0x100306e0	23	OTHER		CVoiceRxMgr::unload	0x1005c450/5
+0x10031a30	5	OTHER		CVoiceTxMgr::stop	0x1005c528/8
+0x1003a440	213	OTHER		CWaveMgr::set_link	0x1005c7e8/60
+0x1003a6b0	18	OTHER		CWaveMgr::set_fade	0x1005c7e8/1

@@ -41,7 +41,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10045f2f `___sbh_find_block` at 0x10042c4c
 - 0x10045f5a `__sbh_free_block` at 0x10042c5b
 - 0x100470ac `sbhRegionLocate` at 0x10042c97
-- 0x10047103 `sbhPageFree` at 0x10042cad
+- 0x10047103 `___old_sbh_free_block` at 0x10042cad
 - 0x10047710 `__lock` at 0x10042c41, 0x10042c81
 - import `KERNEL32.dll!HeapFree` at 0x10042cdb
 

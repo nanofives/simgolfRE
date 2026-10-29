@@ -5,6 +5,9 @@
 // re/names directory; optional second arg `overwrite` also replaces USER_DEFINED names that differ (to correct
 // names this script applied earlier; IMPORTED names always stay). Rows of re/names/withdrawn.tsv (module addr
 // reason) reset a function to its default FUN_ name. Prints one line per change and a summary.
+// A non-function LABEL with the new name already at the entry (FID / analysis labels such as __lockexit 0x004a51cf)
+// made setNameAndNamespace throw DuplicateNameException after the earlier renames were saved (merge I16); that label is
+// now removed and the rename retried (DUPLABEL line); any other duplicate is reported (DUPFAIL) and the row skipped.
 //@category Symbol
 import ghidra.app.script.GhidraScript;
 import ghidra.app.util.NamespaceUtils;
@@ -109,7 +112,18 @@ public class ApplyNames extends GhidraScript {
 							null, currentProgram, SourceType.USER_DEFINED);
 				}
 				name = SymbolUtilities.replaceInvalidChars(name, true);
-				fn.getSymbol().setNameAndNamespace(name, ns, SourceType.USER_DEFINED);
+				try {
+					fn.getSymbol().setNameAndNamespace(name, ns, SourceType.USER_DEFINED);
+				} catch (ghidra.util.exception.DuplicateNameException e) {
+					Symbol dup = st.getSymbol(name, addr, ns);
+					if (dup == null || dup.getSymbolType() != SymbolType.LABEL) {
+						println("DUPFAIL " + addr + " " + full);
+						continue;
+					}
+					println("DUPLABEL " + addr + " " + dup.getName(true) + " (" + dup.getSource() + ") removed");
+					dup.delete();
+					fn.getSymbol().setNameAndNamespace(name, ns, SourceType.USER_DEFINED);
+				}
 				println("RENAME " + addr + " " + full);
 				renamed++;
 			}
