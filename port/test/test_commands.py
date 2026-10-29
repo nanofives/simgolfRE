@@ -45,6 +45,8 @@ def base_image(lib) -> bytes:
     if "img" not in _BASE:
         assert lib.exe_load() == ""
         with lib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+                st.call("audio_exe.stubRequests", [1])
             st.fill_from_exe(whole_image=True)
             _BASE["img"] = st.image()
     return _BASE["img"]
@@ -75,6 +77,8 @@ def port_call(lib, name, args, image, inputs=()):
     served to the function's modal waits through the context's InputSource"""
     import ctypes as C
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)   # the original's data address: pointer-holding constants (string tables) stay valid
         st.load_image(image)
         words = [w for c in inputs for w in c.args()]
@@ -130,6 +134,8 @@ def _rh_cases(lib, n=400, seed=5):
 
 def _rh_port(lib, img, c):
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         eax = st.call("commands.rootHandler", c.args()).eax
@@ -571,6 +577,8 @@ def test_draw_window_effect_composes_the_selected_golfer(portlib):
         a, aimg, _, _ = port_call(portlib, "tickMessage", [], bytes(img))
         _, cimg, _, _ = port_call(portlib, "composeGolferSprite", [g], bytes(img))
         with portlib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+                st.call("audio_exe.stubRequests", [1])
             st.load_image(cimg)
             put_back = bytearray(cimg)
         put32(portlib, put_back, "f_w_4c2e00", -2, 8)
@@ -682,6 +690,8 @@ def emu_screen(name, img, inputs, cur):
 def port_screen(lib, name, img, inputs, cur):
     import ctypes as C
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         words = [w for c in inputs for w in c.args()]
@@ -922,6 +932,8 @@ def emu_widget(name, img, args, inputs, cur, rule, cover=None):
 def port_widget(lib, name, img, args, inputs, cur, rule):
     import ctypes as C
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         words = [w for c in inputs for w in c.args()]

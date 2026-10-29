@@ -1,0 +1,55 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.DirectSoundDevice::close	1	RED	5	0	12	DirectSoundDevice::close
+snd.DirectSoundDevice::create	1	RED	4	0	12	DirectSoundDevice::create
+snd.DirectSoundDevice::createBuffer	1	RED	8	0	24	DirectSoundDevice::createBuffer DirectSoundDevice::createBuffer_empty
+snd.DirectSoundDevice::createBufferFmt	1	RED	6	0	24	DirectSoundDevice::createBufferFmt DirectSoundDevice::createBufferFmt_empty
+snd.DirectSoundDevice::duplicateBuffer	1	RED	17	0	35	DirectSoundDevice::duplicateBuffer DirectSoundDevice::duplicateBuffer_empty DirectSoundDevice::duplicateBuffer_oom
+snd.DirectSoundDevice::enumerate	1	RED	3	0	36	DirectSoundDevice::enumerate_i0 DirectSoundDevice::enumerate_i2 DirectSoundDevice::enumerate_i9
+snd.DirectSoundDevice::freeBufferById	1	RED	12	0	24	DirectSoundDevice::freeBufferById DirectSoundDevice::freeBufferById_nolist
+snd.DirectSoundDevice::releaseAll	1	RED	24	0	24	DirectSoundDevice::releaseAll_0 DirectSoundDevice::releaseAll_3
+snd.DirectSoundDevice::releaseAllBuffers	1	RED	18	0	36	DirectSoundDevice::releaseAllBuffers_0 DirectSoundDevice::releaseAllBuffers_1 DirectSoundDevice::releaseAllBuffers_4
+snd.DirectSoundDevice::removeBuffer	1	RED	14	0	24	DirectSoundDevice::removeBuffer_1 DirectSoundDevice::removeBuffer_4
+snd.DirectSoundDevice::setCooperativeLevel	1	RED	3	0	12	DirectSoundDevice::setCooperativeLevel
+snd.DirectSoundDevice::setMasterVolume	1	RED	20	0	20	DirectSoundDevice::setMasterVolume@ DirectSoundDevice::setMasterVolume@empty
+snd.DirectSoundDevice::stopAll	1	RED	12	0	36	DirectSoundDevice::stopAll_l0 DirectSoundDevice::stopAll_l2c DirectSoundDevice::stopAll_l3
+snd.Ds3DBuffer::setPosition	1	RED	21	0	24	Ds3DBuffer::setPosition
+snd.Ds3DBuffer::setPositionX	1	RED	35	0	40	Ds3DBuffer::setPositionX
+snd.Ds3DBuffer::setPositionY	1	RED	35	0	40	Ds3DBuffer::setPositionY
+snd.Ds3DBuffer::setPositionZ	1	RED	35	0	40	Ds3DBuffer::setPositionZ
+snd.Ds3DListener::setPosition	1	RED	20	0	24	Ds3DListener::setPosition
+snd.DsBuffer::configureDesc	1	RED	3	0	16	DsBuffer::configureDesc
+snd.DsBuffer::create	1	RED	12	0	26	DsBuffer::create_hr DsBuffer::create_ok
+snd.DsBuffer::ctor	1	RED	6	0	12	DsBuffer::ctor
+snd.DsBuffer::destroy	1	RED	2	0	12	DsBuffer::destroy
+snd.DsBuffer::getPlayPosition	1	RED	7	0	15	DsBuffer::getPlayPosition
+snd.DsBuffer::getPosition	1	RED	7	0	12	DsBuffer::getPosition
+snd.DsBuffer::getTimedPosition	1	RED	8	0	42	DsBuffer::getTimedPosition
+snd.DsBuffer::hasAuxInterfaces	1	RED	3	0	12	DsBuffer::hasAuxInterfaces
+snd.DsBuffer::initDesc	1	RED	12	0	12	DsBuffer::initDesc
+snd.DsBuffer::isBusy	1	RED	3	0	14	DsBuffer::isBusy
+snd.DsBuffer::lockCaptureRegion	1	RED	39	0	60	DsBuffer::lockCaptureRegion
+snd.DsBuffer::lockEntire	1	RED	5	0	13	DsBuffer::lockEntire
+snd.DsBuffer::play	1	RED	20	0	36	DsBuffer::play
+snd.DsBuffer::query3D	1	RED	5	0	13	DsBuffer::query3D
+snd.DsBuffer::queryNotify	1	RED	3	0	12	DsBuffer::queryNotify
+snd.DsBuffer::release	1	RED	10	0	12	DsBuffer::release
+snd.DsBuffer::releaseIfOwned	1	RED	8	0	12	DsBuffer::releaseIfOwned
+snd.DsBuffer::restartPlayback	1	RED	10	0	12	DsBuffer::restartPlayback
+snd.DsBuffer::restore	1	RED	1	0	14	DsBuffer::restore
+snd.DsBuffer::scalarDeletingDtor	1	RED	24	0	48	DsBuffer::scalarDeletingDtor
+snd.DsBuffer::setBufferSize	1	RED	10	0	15	DsBuffer::setBufferSize
+snd.DsBuffer::setFrequency	1	RED	8	0	16	DsBuffer::setFrequency
+snd.DsBuffer::setPosition	1	RED	12	0	12	DsBuffer::setPosition
+snd.DsBuffer::setPrimaryFormat	1	RED	3	0	26	DsBuffer::setPrimaryFormat
+snd.DsBuffer::setRegionMs	1	RED	18	0	24	DsBuffer::setRegionMs
+snd.DsBuffer::setVolume	1	RED	9	0	30	DsBuffer::setVolume_w27f DsBuffer::setVolume_wf7f
+snd.DsBuffer::setVolumeRaw	1	RED	16	0	16	DsBuffer::setVolumeRaw
+snd.DsBuffer::stop	1	RED	11	0	12	DsBuffer::stop
+snd.DsBuffer::unlock	1	RED	22	0	36	DsBuffer::unlock
+snd.DsDevice_registerBuffer	1	RED	24	0	30	DsDevice_registerBuffer
+snd.dsEnumCallbackAppend	1	RED	36	0	36	appendNamedNode
+snd.getDeviceCaps	1	RED	6	0	12	getDeviceCaps
+snd.getDsCoopLevel	1	RED	11	0	12	getDsCoopLevel
+snd.mapDsError	1	RED	1	0	23	mapDsError
+snd.return0Pop4	1	RED	12	0	12	return0Pop4@
+snd.unlinkDsBuffer	1	RED	3	0	11	unlinkDsBuffer

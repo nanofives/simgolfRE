@@ -1,0 +1,26 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	x87diff	tier	quirk	pending	first
+loadSoundFile@basic	snd.loadSoundFile	GREEN_PENDING	11	11	22	0	282	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@busy7	snd.loadSoundFile	GREEN_PENDING	2	2	4	0	6	0	EMU_ONLY	{}	-:0x2e3c0	pending -:0x2e3c0
+loadSoundFile@busy0	snd.loadSoundFile	GREEN_PENDING	2	2	4	0	192	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@seekfail	snd.loadSoundFile	GREEN_PENDING	4	4	8	0	147	0	EMU_ONLY	{}	-:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@seeknomove	snd.loadSoundFile	GREEN_PENDING	3	3	6	0	15	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@nopre	snd.loadSoundFile	GREEN_PENDING	2	2	4	0	117	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@list	snd.loadSoundFile	GREEN_PENDING	2	2	4	0	165	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0
+loadSoundFile@pre_g0	snd.loadSoundFile	GREEN_PENDING	5	5	10	0	465	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@pre_g1	snd.loadSoundFile	GREEN_PENDING	5	5	10	0	465	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@pre_g2	snd.loadSoundFile	GREEN_PENDING	5	5	10	0	465	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@pre_g3	snd.loadSoundFile	GREEN_PENDING	5	5	10	0	465	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@pre_g4	snd.loadSoundFile	GREEN_PENDING	5	5	10	0	465	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@pre_g5	snd.loadSoundFile	GREEN_PENDING	5	5	10	0	465	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator	pending -:0x5f40 -:0x2cf50 -:0x2e3c0 -:0x424b0 -:strstr -:0x4280e -:ehVectorConstructorIterator
+loadSoundFile@oom0	snd.loadSoundFile	GREEN_PENDING	2	2	4	0	36	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@oom1	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	18	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@oom2	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	21	0	EMU_ONLY	{}	-:0x5f40 -:0x2cf50 -:0x2e3c0	pending -:0x5f40 -:0x2cf50 -:0x2e3c0
+loadSoundFile@nullA	snd.loadSoundFile	GREEN_PENDING	4	4	8	0	57	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@nullB	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	18	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@nullC	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	18	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@nullU	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	3	0	EMU_ONLY	{}	-:0x2e3c0	pending -:0x2e3c0
+loadSoundFile@sfnull	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	3	0	EMU_ONLY	{}	-:0x2e3c0	pending -:0x2e3c0
+loadSoundFile@sfnullU	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	3	0	EMU_ONLY	{}	-:0x2e3c0	pending -:0x2e3c0
+loadSoundFile@snmnull	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	6	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@snmnullU	snd.loadSoundFile	GREEN_PENDING	1	1	2	0	6	0	EMU_ONLY	{}	-:0x5f40 -:0x2e3c0	pending -:0x5f40 -:0x2e3c0
+loadSoundFile@user	snd.loadSoundFile	GREEN_PENDING	3	3	6	0	9	0	EMU_ONLY	{}	-:0x2e3c0	pending -:0x2e3c0

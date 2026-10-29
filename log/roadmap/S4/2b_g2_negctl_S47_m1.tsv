@@ -1,0 +1,67 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.Engine_playSound	1	RED	24	0	24	Engine_playSound Engine_playSound_off
+snd.MultiSound::applyFlags	1	RED	60	0	60	MultiSound::applyFlags
+snd.MultiSound::set3DBuffer	1	RED	35	0	35	MultiSound::set3DBuffer
+snd.MultiSound::set3DPositionX	1	RED	42	0	42	MultiSound::set3DPositionX
+snd.MultiSound::set3DPositionY	1	RED	42	0	42	MultiSound::set3DPositionY
+snd.MultiSound::set3DPositionZ	1	RED	42	0	42	MultiSound::set3DPositionZ
+snd.MultiSound::setRateGlide	1	RED	480	0	480	MultiSound::setRateGlide MultiSound::setRateGlide_null MultiSound::setRateGlide_p1 MultiSound::setRateGlide_p4096
+snd.MultiSound::setReverseRate	1	RED	112	0	112	MultiSound::setReverseRate MultiSound::setReverseRate_null MultiSound::setReverseRate_p1 MultiSound::setReverseRate_p4096
+snd.MultiSound::setVolume	1	RED	54	0	54	MultiSound::setVolume
+snd.MultiSound::startVoice	1	RED	12	0	12	MultiSound::startVoice
+snd.MultiSound_ctor	1	RED	12	0	12	MultiSound_ctor
+snd.MultiSound_ctorWithType	1	RED	12	0	12	MultiSound_ctorWithType
+snd.MultiSound_deleteDtor	1	RED	24	0	24	MultiSound_deleteDtor
+snd.MultiSound_dtor	1	RED	12	0	12	MultiSound_dtor
+snd.MultiSound_enqueueCmd3	1	RED	24	0	24	MultiSound_enqueueCmd3_eng MultiSound_enqueueCmd3_null
+snd.MultiSound_findStreamNode	1	RED	7	0	7	MultiSound_findStreamNode
+snd.MultiSound_getStatus	1	RED	12	0	12	MultiSound_getStatus
+snd.MultiSound_is3DEnabled	1	RED	12	0	12	MultiSound_is3DEnabled
+snd.MultiSound_release	1	RED	12	0	12	MultiSound_release
+snd.MultiSound_set3DPosition	1	RED	28	0	28	MultiSound_set3DPosition
+snd.MultiSound_setPitchCents	1	RED	76	0	76	MultiSound_setPitchCents
+snd.MultiSound_setSlotSource	1	RED	12	0	12	MultiSound_setSlotSource
+snd.MultiSound_setVoiceBit1On	1	RED	8	0	8	MultiSound_setVoiceBit1On
+snd.MultiSound_start	1	RED	36	0	36	MultiSound_start_busy MultiSound_start_null MultiSound_start_ok
+snd.MultiSound_stop	1	RED	7	0	7	MultiSound_stop
+snd.Sound5b6a8_ctor	1	RED	9	0	9	Sound5b6a8_ctor_N_w27f Sound5b6a8_ctor_w27f Sound5b6a8_ctor_wf7f
+snd.Sound5b6a8_dtor	1	RED	12	0	12	Sound5b6a8_dtor
+snd.Sound5b6a8_scalarDtor	1	RED	24	0	24	Sound5b6a8_scalarDtor
+snd.Sound5c450_ctor	1	RED	12	0	12	Sound5c450_ctor
+snd.Sound5c450_dtor	1	RED	12	0	12	Sound5c450_dtor
+snd.Sound5c450_scalarDtor	1	RED	24	0	24	Sound5c450_scalarDtor
+snd.Sound::ctor	1	RED	12	0	12	Sound::ctor
+snd.Sound::dtor	1	RED	12	0	12	Sound::dtor
+snd.Sound::scalarDeletingDtor	1	RED	24	0	24	Sound::scalarDeletingDtor
+snd.Sound::scaleTickRate	1	RED	120	0	120	Sound::scaleTickRate Sound::scaleTickRate_null Sound::scaleTickRate_p1 Sound::scaleTickRate_p4096
+snd.SoundGroup_rewind	1	RED	12	0	12	SoundGroup_rewind
+snd.SoundGroup_stop	1	RED	12	0	12	SoundGroup_stop
+snd.SoundTimer::init	1	RED	12	0	12	SoundTimer::init
+snd.SoundTimer::killEvent	1	RED	12	0	12	SoundTimer::killEvent
+snd.SoundTimer::linkClient	1	RED	40	0	40	SoundTimer::linkClient SoundTimer::linkClient_oom
+snd.SoundTimer::onTick	1	RED	27	0	27	SoundTimer::onTick_flip SoundTimer::onTick_w0 SoundTimer::onTick_w3
+snd.SoundTimer::registerClient	1	RED	40	0	40	SoundTimer::registerClient SoundTimer::registerClient_z
+snd.SoundTimer::start	1	RED	36	0	36	SoundTimer::start_bp61 SoundTimer::start_ok SoundTimer::start_se61
+snd.SoundTimer::stop	1	RED	12	0	12	SoundTimer::stop
+snd.SoundTimer::stopKeepLock	1	RED	12	0	12	SoundTimer::stopKeepLock
+snd.SoundTimer::unregisterClient	1	RED	12	0	12	SoundTimer::unregisterClient
+snd.SoundWindowObj_ctor	1	RED	12	0	12	SoundWindowObj_ctor
+snd.SoundWindowObj_dtor	1	RED	12	0	12	SoundWindowObj_dtor
+snd.SoundWindowObj_subclass	1	RED	12	0	12	SoundWindowObj_subclass
+snd.SoundWindowObj_unsubclass	1	RED	12	0	12	SoundWindowObj_unsubclass
+snd.Sound_anyChannelActive	1	RED	11	0	11	Sound_anyChannelActive
+snd.Sound_assignName	1	RED	40	0	40	Sound_assignName
+snd.Sound_findByName	1	RED	50	0	50	Sound_findByName_l0 Sound_findByName_l1 Sound_findByName_l3 Sound_findByName_lhead Sound_findByName_lnull
+snd.Sound_freeBufferList	1	RED	26	0	26	Sound_freeBufferList_empty Sound_freeBufferList_live
+snd.Sound_initEntry	1	RED	12	0	12	Sound_initEntry
+snd.Sound_lookupOrCreate	1	RED	36	0	36	Sound_lookupOrCreate Sound_lookupOrCreate_hole Sound_lookupOrCreate_nolist
+snd.Sound_reapIdle	1	RED	14	0	14	Sound_reapIdle_s0 Sound_reapIdle_s1 Sound_reapIdle_s10 Sound_reapIdle_s11 Sound_reapIdle_s12 Sound_reapIdle_s13 Sound_reapIdle_s2 Sound_reapIdle_s3 Sound_reapIdle_s4 Sound_reapIdle_s5 Sound_reapIdle_s6 Sound_reapIdle_s7 Sound_reapIdle_s8 Sound_reapIdle_s9
+snd.Sound_resetBuffers	1	RED	36	0	36	Sound_resetBuffers Sound_resetBuffers_empty Sound_resetBuffers_single
+snd.Sound_setAltName	1	RED	36	0	40	Sound_setAltName Sound_setAltName_null
+snd.Sound_setName	1	RED	28	0	28	Sound_setName
+snd.Sound_setSourceType	1	RED	20	0	20	Sound_setSourceType
+snd.Sound_stop	1	RED	26	0	26	Sound_stop_empty Sound_stop_live
+snd.create_sound	1	RED	30	0	30	create_sound create_sound_gate0
+snd.getPlaybackTime	1	RED	12	0	12	getPlaybackTime
+snd.registerSound	1	RED	12	0	12	registerSound_s0 registerSound_s1 registerSound_s2
+snd.unregisterSound	1	RED	20	0	20	unregisterSound_s0 unregisterSound_s1 unregisterSound_s3 unregisterSound_sn

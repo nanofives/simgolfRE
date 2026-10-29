@@ -1,0 +1,126 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	exe_fallbacks	fallback_names	tier	first
+playHabitatSound	playHabitatSound	RED	13	5	10	0	0	0		EXACT	v0 A: ret emu 15128 port 0 (regions differ)
+playSoundAt	playSoundAt	RED	27	0	0	0	0	0		EXACT	v0 A: ret emu 0 port 0 (regions differ)
+playAudioFile	playAudioFile	RED	12	0	0	0	0	0		EQUAL_PI	v0 A: ret emu 0 port 0 (regions differ)
+playSound	playSound	GREEN	13	13	26	0	0	0		EQUAL_PI	
+startSoundSlot	startSoundSlot	GREEN	12	12	24	0	0	0		EXACT	
+loadSoundTable	loadSoundTable	RED	12	0	0	12	0	0		EMU_ERR	v0 A: port: sg_call loadSoundTable: wrong arity
+shutdownSoundSystem	shutdownSoundSystem	RED	6	0	0	6	0	0		EMU_ERR	v0 A: port: sg_call shutdownSoundSystem: wrong arity
+initSound	initSound	GREEN	12	12	24	0	0	0		EXACT	
+initSound_ver3	initSound	GREEN	4	4	8	0	0	0		EXACT	
+initSound_verneg	initSound	GREEN	4	4	8	0	0	0		EXACT	
+shutdownSound_empty	shutdownSound	GREEN	1	1	2	0	0	0		EXACT	
+shutdownSound_n1	shutdownSound	GREEN	1	1	2	0	0	0		EQUAL_PI	
+shutdownSound_n4	shutdownSound	GREEN	1	1	2	0	0	0		EQUAL_PI	
+shutdownSound_n8	shutdownSound	GREEN	1	1	2	0	0	0		EQUAL_PI	
+shutdownSound_off	shutdownSound	GREEN	1	1	2	0	0	0		EQUAL_PI	
+shutdownSound_v6	shutdownSound	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_f1	soundVersionCheck	GREEN	1	1	2	0	0	0		EXACT	
+soundVersionCheck_f11	soundVersionCheck	GREEN	1	1	2	0	0	0		EXACT	
+soundVersionCheck_f5	soundVersionCheck	GREEN	1	1	2	0	0	0		EXACT	
+soundVersionCheck_loaded	soundVersionCheck	GREEN	1	1	2	0	0	0		EXACT	
+soundVersionCheck_loadfail	soundVersionCheck	GREEN	1	1	2	0	0	0		EXACT	
+soundVersionCheck_newer	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_ok	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_okc07	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_okhi	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_oklo	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_old	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+soundVersionCheck_zero	soundVersionCheck	GREEN	1	1	2	0	0	0		EQUAL_PI	
+freeSoundLib_v0	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v1	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v2	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v3	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v4	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v5	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v6	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v7	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v8	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+freeSoundLib_v9	freeSoundLib	GREEN	1	1	2	0	0	0		EXACT	
+callSoundHook74	callSoundHook74	GREEN	12	12	24	0	0	0		EQUAL_PI	
+callSoundHook74_off	callSoundHook74	GREEN	3	3	6	0	0	0		EQUAL_PI	
+callSoundHook94_v0	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v1	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v10	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v11	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v2	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v3	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v4	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v5	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v6	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v7	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v8	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+callSoundHook94_v9	callSoundHook94	GREEN	1	1	2	0	0	0		EQUAL_PI	
+createSound4840e0	createSound4840e0	GREEN	8	8	16	0	0	0		EQUAL_PI	
+createSound4840e0_nolib	createSound4840e0	GREEN	4	4	8	0	0	0		EQUAL_PI	
+releaseSoundObj	releaseSoundObj	GREEN	8	8	16	0	0	0		EQUAL_PI	
+releaseSoundObj_nolib	releaseSoundObj	GREEN	4	4	8	0	0	0		EQUAL_PI	
+clearSoundPtrs_p0	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p1	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p2	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p3	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p4	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p5	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p6	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p7	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p8	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+clearSoundPtrs_p9	clearSoundPtrs	GREEN	1	1	2	0	0	0		EXACT	
+Snd::ctorBase	Snd::ctorBase	GREEN	6	6	12	0	0	0		EXACT	
+Snd::scalarDtor4841c0	Snd::scalarDtor4841c0	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::dtor	Snd::dtor	GREEN	10	10	20	0	0	0		EQUAL_PI	
+Snd::setMode	Snd::setMode	GREEN	11	11	22	0	0	0		EXACT	
+SndMusic::setFile	SndMusic::setFile	GREEN_PENDING	26	26	52	0	0	27	?	EQUAL_PI	
+SndMusic::setFile_fail	SndMusic::setFile	GREEN_PENDING	26	26	52	0	0	18	?	EQUAL_PI	
+unlinkSound	unlinkSound	GREEN	13	13	26	0	0	0		EQUAL_PI	
+Snd::unlinkFromList	Snd::unlinkFromList	GREEN	7	7	14	0	0	0		EQUAL_PI	
+Snd::unlinkFromList_one	Snd::unlinkFromList	GREEN	2	2	4	0	0	0		EQUAL_PI	
+Snd::unlinkFromList_two	Snd::unlinkFromList	GREEN	2	2	4	0	0	0		EQUAL_PI	
+Snd::stop484550	Snd::stop484550	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::queryDevice4845d0	Snd::queryDevice4845d0	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::status	Snd::status	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::setField34	Snd::setField34	GREEN	10	10	20	0	0	0		EXACT	
+Snd::setField34_dev	Snd::setField34	GREEN	14	14	28	0	0	0		EQUAL_PI	
+Snd::setField38	Snd::setField38	GREEN	11	11	22	0	0	0		EXACT	
+Snd::applyField484750	Snd::applyField484750	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::applyField4847b0	Snd::applyField4847b0	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::setPan	Snd::setPan	GREEN	11	11	22	0	0	0		EXACT	
+Snd::setPan_dev	Snd::setPan	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::ctorDerived	Snd::ctorDerived	GREEN	6	6	12	0	0	0		EXACT	
+SndMusic::scalarDtor	SndMusic::scalarDtor	GREEN	12	12	24	0	0	0		EQUAL_PI	
+SndMusic::dtor_lib0	SndMusic::dtor	GREEN	12	12	24	0	0	0		EQUAL_PI	
+SndMusic::dtor_lib1	SndMusic::dtor	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd_play	Snd::play	GREEN	15	15	30	0	0	0		EQUAL_PI	
+Snd::configure	Snd::configure	GREEN_PENDING	174	174	348	0	0	366	?	EQUAL_PI	
+Snd::configure_fail	Snd::configure	GREEN_PENDING	174	174	348	0	0	366	?	EQUAL_PI	
+Snd::busy_t100k	Snd::busy	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::busy_t5	Snd::busy	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::setName	Snd::setName	GREEN_PENDING	30	30	60	0	0	24	?	EQUAL_PI	
+SndStream::open484c20	SndStream::open484c20	GREEN	30	30	60	0	0	0		EQUAL_PI	
+SndStream::open484c20_fail	SndStream::open484c20	GREEN	30	30	60	0	0	0		EQUAL_PI	
+SndStream::open484c20_nolib	SndStream::open484c20	GREEN	30	30	60	0	0	0		EQUAL_PI	
+Snd::open	Snd::open	GREEN_PENDING	24	24	48	0	0	42	?	EQUAL_PI	
+Snd::open_fail	Snd::open	GREEN_PENDING	24	24	48	0	0	30	?	EQUAL_PI	
+Snd::reopen	Snd::reopen	GREEN_PENDING	12	12	24	0	0	27	?	EQUAL_PI	
+Snd::reopen_fail	Snd::reopen	GREEN_PENDING	12	12	24	0	0	18	?	EQUAL_PI	
+Snd::applyMode484e30	Snd::applyMode484e30	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::start	Snd::start	GREEN	10	10	20	0	0	0		EQUAL_PI	
+Snd::start_fail	Snd::start	GREEN	10	10	20	0	0	0		EQUAL_PI	
+Snd::start_nolib	Snd::start	GREEN	10	10	20	0	0	0		EQUAL_PI	
+Snd::stop484f00	Snd::stop484f00	GREEN	10	10	20	0	0	0		EQUAL_PI	
+Snd::setPitch	Snd::setPitch	GREEN	11	11	22	0	0	0		EXACT	
+Snd::flags	Snd::flags	GREEN	16	16	32	0	0	0		EXACT	
+Snd_flags_device	Snd::flags	GREEN	15	15	30	0	0	0		EXACT	
+Snd::setVolume	Snd::setVolume	GREEN	10	10	20	0	0	0		EXACT	
+Snd::setVolume_dev	Snd::setVolume	GREEN	16	16	32	0	0	0		EQUAL_PI	
+Snd::ctor485260	Snd::ctor485260	GREEN	10	10	20	0	0	0		EXACT	
+Snd::scalarDtor4852b0	Snd::scalarDtor4852b0	GREEN	12	12	24	0	0	0		EQUAL_PI	
+Snd::setVtbl4852d0	Snd::setVtbl4852d0	GREEN	12	12	24	0	0	0		EXACT	
+VoiceRx::ctor	VoiceRx::ctor	GREEN	6	6	12	0	0	0		EQUAL_PI	
+openHookA	openHookA	GREEN	10	10	20	0	0	0		EQUAL_PI	
+openHookA_null	openHookA	GREEN	6	6	12	0	0	0		EXACT	
+openHookB	openHookB	GREEN	10	10	20	0	0	0		EQUAL_PI	
+openHookB_null	openHookB	GREEN	6	6	12	0	0	0		EXACT	
+openHookC	openHookC	GREEN	10	10	20	0	0	0		EQUAL_PI	
+openHookC_null	openHookC	GREEN	6	6	12	0	0	0		EXACT	
+closeHookC_null	closeHookC	GREEN	5	5	10	0	0	0		EXACT	
+closeHookC_set	closeHookC	GREEN	6	6	12	0	0	0		EQUAL_PI	

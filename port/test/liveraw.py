@@ -102,6 +102,8 @@ class LiveRunner:
             it = self.gs.by_sym[name]
             excluded[it[0]:it[0] + it[1]] = True
         with self.lib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+                st.call("audio_exe.stubRequests", [1])
             st.set_data_base(VL.DATA_VA)
             if (ROOT / "original").is_dir():
                 st.files_root(ROOT / "original")

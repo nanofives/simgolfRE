@@ -1,0 +1,114 @@
+key	name	vectors	match	match_bc	errors	fallback_calls_A_by_owner	tier	status	words	first
+MidiDeviceBase_closeInner	MidiDeviceBase_closeInner	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+MidiDeviceBase_ctor	MidiDeviceBase_ctor	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+MidiDeviceBase_openInner	MidiDeviceBase_openInner	24	24	48	0	{}	EQUAL_PI	GREEN	0x27f	
+MidiDeviceBase_scalarDtor	MidiDeviceBase_scalarDtor	50	50	100	0	"{""S4.8"": 50}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::closeFile	Midi_Device::closeFile	10	10	20	0	"{""S4.9"": 11}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::disableOutput_00	Midi_Device::disableOutput	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::disableOutput_02	Midi_Device::disableOutput	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::disableOutput_04	Midi_Device::disableOutput	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::disableOutput_ff	Midi_Device::disableOutput	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::dispatchCommand_null	Midi_Device::dispatchCommand	6	6	12	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::dispatchCommand_post	Midi_Device::dispatchCommand	6	6	12	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::dispatchCommand_thread	Midi_Device::dispatchCommand	6	6	12	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::drainCommandQueue	Midi_Device::drainCommandQueue	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::dtor	Midi_Device::dtor	8	8	16	0	"{""S4.8"": 16}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::emitEvent_h	Midi_Device::emitEvent	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::emitEvent_n	Midi_Device::emitEvent	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::enableOutput	Midi_Device::enableOutput	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::flushMessages_h	Midi_Device::flushMessages	10	10	20	0	{}	EXACT	GREEN	0x27f	
+Midi_Device::flushMessages_h0	Midi_Device::flushMessages	10	10	20	0	{}	EXACT	GREEN	0x27f	
+Midi_Device::handleMetaEvent	Midi_Device::handleMetaEvent	25	25	50	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::loadFile	Midi_Device::loadFile	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::loadFile_nodeoom	Midi_Device::loadFile	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::loadFile_nulldata	Midi_Device::loadFile	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::loadFromMemory	Midi_Device::loadFromMemory	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::loadFromMemory_nodeoom	Midi_Device::loadFromMemory	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::loadFromMemory_nulldata	Midi_Device::loadFromMemory	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::noteOn_hw	Midi_Device::noteOn	8	8	16	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::noteOn_sw	Midi_Device::noteOn	16	16	32	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::noteOn_swbig	Midi_Device::noteOn	16	16	32	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::openOutput_fail	Midi_Device::openOutput	6	6	12	0	"{""S4.7"": 2}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::openOutput_null	Midi_Device::openOutput	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_Device::openOutput_ok	Midi_Device::openOutput	6	6	12	0	"{""S4.7"": 6}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::playEvent	Midi_Device::playEvent	18	18	36	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::scalarDeletingDtor	Midi_Device::scalarDeletingDtor	24	24	48	0	"{""S4.8"": 48}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::scanCommandRing	Midi_Device::scanCommandRing	12	12	24	0	"{""S4.8"": 322}"	EQUAL_PI	GREEN	0x27f	
+Midi_Device::sendShortMsg_h	Midi_Device::sendShortMsg	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::sendShortMsg_n	Midi_Device::sendShortMsg	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::setChannelVolume	Midi_Device::setChannelVolume	14	14	28	0	{}	EXACT	GREEN	0x27f	
+Midi_Device::shutdown_a	Midi_Device::shutdown	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::shutdown_b	Midi_Device::shutdown	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::shutdown_c	Midi_Device::shutdown	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_Device::shutdown_d	Midi_Device::shutdown	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_advanceMsgRing	Midi_advanceMsgRing	12	12	24	0	{}	EXACT	GREEN	0x27f	
+Midi_loadMemoryAndPreRoll	Midi_loadMemoryAndPreRoll	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_readVarLen	Midi_readVarLen	15	15	30	0	{}	EXACT	GREEN	0x27f	
+Midi_resetFileState_null	Midi_resetFileState	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_resetFileState_p1	Midi_resetFileState	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_resetFileState_p1000	Midi_resetFileState	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_resetFileState_p5000	Midi_resetFileState	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_resetFileState_p7	Midi_resetFileState	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_resetFileState_p999	Midi_resetFileState	6	6	12	0	{}	EXACT	GREEN	0x27f	
+Midi_scanTrack	Midi_scanTrack	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Midi_seekTrackToTick	Midi_seekTrackToTick	16	16	32	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq::loadFile	Seq::loadFile	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_allocTrackSlot	Seq_allocTrackSlot	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_applyChannelLevel	Seq_applyChannelLevel	15	15	30	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_applyTrackFlag	Seq_applyTrackFlag	13	13	26	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_buildPlayOrder	Seq_buildPlayOrder	12	12	24	0	{}	EXACT	GREEN	0x27f	
+Seq_buildTrack14	Seq_buildTrack14	13	13	26	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_buildTrack9	Seq_buildTrack9	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_clearTrackFlag8All	Seq_clearTrackFlag8All	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_closeFile	Seq_closeFile	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_cmdHandler10	Seq_cmdHandler10	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_cmdHandler11	Seq_cmdHandler11	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_cmdHandler12	Seq_cmdHandler12	36	36	72	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_cmdHandler7	Seq_cmdHandler7	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_cmdHandler8	Seq_cmdHandler8	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_cmdHandler9	Seq_cmdHandler9	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_copyChannelParams	Seq_copyChannelParams	11	11	22	0	{}	EXACT	GREEN	0x27f	
+Seq_dispatchChannelCmd	Seq_dispatchChannelCmd	15	15	30	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_dtor	Seq_dtor	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_findTrackById	Seq_findTrackById	58	58	116	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_findTrackOrZero	Seq_findTrackOrZero	44	44	88	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_firstTrackData	Seq_firstTrackData	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_freeChannelObjects	Seq_freeChannelObjects	10	10	20	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_getListElementAt	Seq_getListElementAt	35	35	70	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_getTrackFlagHigh	Seq_getTrackFlagHigh	24	24	48	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_listGetAt	Seq_listGetAt	18	18	36	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_loadChannelDesc	Seq_loadChannelDesc	16	16	32	0	"{""S4.7"": 15}"	EXACT	GREEN	0x27f	
+Seq_mergeChannelDesc	Seq_mergeChannelDesc	25	25	50	0	"{""S4.7"": 2}"	EXACT	GREEN	0x27f	
+Seq_preRollTrack	Seq_preRollTrack	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_remarkEventRange	Seq_remarkEventRange	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_removeTrackById	Seq_removeTrackById	45	45	90	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_replayEventRange	Seq_replayEventRange	16	16	32	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_reset	Seq_reset	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_resetTrackControllers	Seq_resetTrackControllers	10	10	20	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_rewind	Seq_rewind	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_rewindTracks	Seq_rewindTracks	10	10	20	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_scaleTickRate	Seq_scaleTickRate	60	60	120	0	{}	EXACT	GREEN	0x27f	
+Seq_scaleTickRate_null	Seq_scaleTickRate	60	60	120	0	{}	EXACT	GREEN	0x27f	
+Seq_scaleTickRate_p1	Seq_scaleTickRate	60	60	120	0	{}	EXACT	GREEN	0x27f	
+Seq_scaleTickRate_p4096	Seq_scaleTickRate	60	60	120	0	{}	EXACT	GREEN	0x27f	
+Seq_scheduleEvent	Seq_scheduleEvent	14	14	28	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_selectTrack	Seq_selectTrack	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_setField240	Seq_setField240	24	24	48	0	{}	EXACT	GREEN	0x27f	
+Seq_setField730Clamped	Seq_setField730Clamped	36	36	72	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_setPlayOrderMode	Seq_setPlayOrderMode	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_setPlayRange	Seq_setPlayRange	16	16	32	0	{}	EXACT	GREEN	0x27f	
+Seq_setTempo_w27f	Seq_setTempo	12	12	24	0	{}	EXACT	GREEN	0x27f	
+Seq_setTempo_wf7f	Seq_setTempo	12	3	6	0	{}	EXACT	X87_WIN32	0xf7f	v0 A: ret emu 0 port 0 (regions differ)
+Seq_setupChannel	Seq_setupChannel	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_setupChannel_empty	Seq_setupChannel	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_setupChannel_oom	Seq_setupChannel	8	8	16	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_setupChannel_tail	Seq_setupChannel	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_stepTrackMeta	Seq_stepTrackMeta	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_updateChannel	Seq_updateChannel	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_updateChannel_hole	Seq_updateChannel	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Seq_updateChannel_nolist	Seq_updateChannel	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Track_advancePos	Track_advancePos	18	18	36	0	{}	EXACT	GREEN	0x27f	
+Track_clearFlag8	Track_clearFlag8	12	12	24	0	{}	EXACT	GREEN	0x27f	
+Track_resetReadState	Track_resetReadState	12	12	24	0	{}	EXACT	GREEN	0x27f	
+Track_setData	Track_setData	12	12	24	0	{}	EQUAL_PI	GREEN	0x27f	
+Track_setField8RaisingMax	Track_setField8RaisingMax	36	36	72	0	{}	EXACT	GREEN	0x27f	

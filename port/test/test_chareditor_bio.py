@@ -225,6 +225,8 @@ def eb_port(lib, name, img, args, heap_blocks):
     """the port, then its arena block (when the text pointer moved there) copied to where the original's malloc put it"""
     eo = objs(lib)["g_characterEditorEditBox"][0]
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         try:
@@ -272,6 +274,8 @@ def test_editbox_up_down_need_the_line_wrap(portlib):
     """Up / Down (0x26 / 0x28) place the caret through the font's line wrap: MissingResource (U-1190)"""
     img, _src = _eb_image(portlib, random.Random(2))
     with portlib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(bytes(img))
         for k in (0x26, 0x28):
@@ -635,6 +639,8 @@ def _port_digest(lib, name, case) -> str:
         return digest(pe, pimg) + ":" + hashlib.sha256(tail.encode()).hexdigest()[:12]
     img, args = case
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         try:

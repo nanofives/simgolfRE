@@ -1,0 +1,2 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.Seq_setTempo	2	RED	9	0	24	Seq_setTempo_w27f Seq_setTempo_wf7f

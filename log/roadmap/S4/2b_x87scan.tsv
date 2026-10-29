@@ -1,0 +1,37 @@
+step	name	rva	x87_instructions	compares	cw_loads	compare_sites
+S4.2	nextRandomFloat	0x285a0	2	0	0	
+S4.4	streamRenderBlock	0x184a0	45	0	2	
+S4.4	streamRenderTail	0x188d0	48	0	2	
+S4.4	Voice_mixAddMono16	0x19770	46	0	2	
+S4.4	Voice_mixSetMono16	0x19b20	42	0	2	
+S4.4	Voice_mixSet8bit	0x19ec0	42	0	2	
+S4.4	Voice_mixAdd8bit	0x1a2c0	46	0	2	
+S4.4	Voice_mixSetStereo16	0x1a6c0	22	0	2	
+S4.4	Voice_mixAddStereo16	0x1a910	26	0	2	
+S4.4	mixRenderRatedC	0x25190	1	0	0	
+S4.4	Voice_renderStream16b	0x256c0	1	0	0	
+S4.4	Voice_renderStream8c	0x25c80	1	0	0	
+S4.4	Voice_renderStream16c	0x26260	1	0	0	
+S4.4	Voice_renderStream32	0x26800	1	0	0	
+S4.4	Voice_renderStream8d	0x26d30	1	0	0	
+S4.4	renderChannelSingle	0x36280	16	5	0	0x36400:fcomp 0x36426:fcomp 0x3642e:fcomp 0x36455:fcom 0x36468:fcom
+S4.4	renderChannelStreamed	0x36660	43	8	0	0x36ac6:fcomp 0x36af7:fcom 0x36b0c:fcomp 0x36b23:fcomp 0x36b76:fcomp 0x36b93:fcompp 0x36bec:fcomp 0x36c15:fcomp
+S4.4	renderChannelVoice	0x371d0	42	5	0	0x373ea:fcom 0x37454:fcomp 0x37470:fcom 0x374fd:fcom 0x37551:fcom
+S4.6	Voice::update	0x1f8c0	24	3	0	0x1f914:fcom 0x1f940:fcomp 0x1fa46:fcomp
+S4.6	updateVoiceRate	0x32500	19	3	0	0x3254b:fcom 0x32591:fcomp 0x325a4:fcomp
+S4.6	serviceChannelPlayback	0x34430	14	0	0	
+S4.6	Channel_allocAndInitVoice	0x34770	8	0	0	
+S4.6	Channel_startVoice	0x348f0	15	1	0	0x349ea:fcom
+S4.6	Channel_releaseVoices	0x34ac0	6	2	0	0x34afc:fcomp 0x34b0c:fcomp
+S4.6	Channel_stopVoices	0x34b90	3	1	0	0x34bcc:fcomp
+S4.6	Channel_setRateGlide	0x34c80	18	0	0	
+S4.6	Channel_setRate	0x351c0	24	1	0	0x35299:fcom
+S4.6	Channel_setPanGains	0x35340	6	0	0	
+S4.6	Channel_recomputeVoiceGains	0x35460	16	1	0	0x354ab:fcom
+S4.6	Channel_setReverseRate	0x355d0	19	1	0	0x35622:fcom
+S4.6	Channel_stepVolumeFade	0x35fc0	46	8	0	0x36013:fcomp 0x36043:fcom 0x36058:fcomp 0x3606f:fcomp 0x360c2:fcomp 0x360df:fcompp 0x3615c:fcomp 0x36196:fcomp
+S4.6	Voice_resetDefaults	0x37c40	12	1	0	0x37cdf:fcomp
+S4.6	Voice_setPanGains	0x37f30	15	2	0	0x37fcb:fcomp 0x37ff5:fcom
+S4.6	Voice_noteOff	0x381f0	6	2	0	0x381f3:fcomp 0x38206:fcomp
+S4.6	Voice_setLevel	0x383b0	3	0	0	
+S4.8	DsBuffer::setVolume	0x0f1c0	13	0	0	

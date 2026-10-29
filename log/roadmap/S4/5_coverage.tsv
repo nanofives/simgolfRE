@@ -1,0 +1,81 @@
+function	rva	instructions	executed	jcc	jcc_both_sides	jcc_one_side	jcc_never	unexecuted_spans	jcc_one_sided_or_never
+Midi_Device::scalarDeletingDtor	0x9c80	11	11	1	1	0	0		
+Midi_Device::dtor	0x9cb0	67	44	6	1	2	3	0x9cf9-0x9cfe 0x9d1d-0x9d4d	0x9cf7(T) 0x9d1b(T) 0x9d22(-) 0x9d29(-) 0x9d4d(-)
+Midi_Device::openOutput	0x9da0	27	27	3	3	0	0		
+Midi_Device::shutdown	0x9e40	137	136	20	15	5	0	0x9eaa-0x9eaa	0x9e9c(F) 0x9ea8(T) 0x9eae(F) 0x9f0f(F) 0x9f1a(F)
+Midi_Device::enableOutput	0xa1b0	17	17	1	1	0	0		
+Midi_Device::disableOutput	0xa200	16	16	1	1	0	0		
+Midi_Device::drainCommandQueue	0xa330	211	210	25	20	5	0	0xa3ee-0xa3ee	0xa3e0(F) 0xa3ec(T) 0xa3f2(F) 0xa46c(F) 0xa47e(F)
+Midi_Device::dispatchCommand	0xa670	248	240	33	22	10	1	0xa736-0xa736 0xa7ca-0xa7e3	0xa728(F) 0xa734(T) 0xa73a(F) 0xa7a3(F) 0xa7af(F) 0xa7c3(F) 0xa7c8(T) 0xa7cf(-) 0xa7d5(F) 0xa7db(T) 0xa82f(F)
+Midi_Device::scanCommandRing	0xaaf0	228	228	26	18	8	0		0xabd3(F) 0xac3c(F) 0xac6b(F) 0xac97(F) 0xacf4(F) 0xad24(F) 0xad50(F) 0xada4(T)
+Seq_freeChannelObjects	0x1abd0	31	31	4	4	0	0		
+Midi_advanceMsgRing	0x1adc0	11	11	1	1	0	0		
+Seq_setPlayRange	0x1ae00	16	16	1	1	0	0		
+Seq_firstTrackData	0x1bb80	8	8	1	1	0	0		
+Midi_resetFileState	0x1d4a0	53	53	3	3	0	0		
+Seq_listGetAt	0x1d780	39	39	6	6	0	0		
+Midi_Device::loadFile	0x1d810	311	304	19	16	2	1	0x1da82-0x1da82 0x1dace-0x1dadd	0x1da22(F) 0x1dacc(T) 0x1dad2(-)
+Midi_Device::loadFromMemory	0x1dce0	276	269	18	15	2	1	0x1df05-0x1df05 0x1df71-0x1df80	0x1dea5(F) 0x1df6f(T) 0x1df75(-)
+Seq_rewind	0x1e1c0	27	27	5	5	0	0		
+Track_resetReadState	0x1e230	23	23	2	2	0	0		
+Seq_dtor	0x1e2b0	65	65	7	7	0	0		
+Midi_Device::closeFile	0x1e3d0	79	79	11	10	1	0		0x1e44f(F)
+Track_clearFlag8	0x1e530	5	5	0	0	0	0		
+Seq_scaleTickRate	0x1e630	21	21	2	2	0	0		
+Midi_readVarLen	0x1e710	19	19	1	1	0	0		
+Seq_rewindTracks	0x1e8e0	54	54	7	6	1	0		0x1e94e(F)
+Track_setData	0x1e9a0	21	21	3	3	0	0		
+Track_advancePos	0x1e9f0	19	19	2	2	0	0		
+Midi_Device::flushMessages	0x1ef10	27	27	3	3	0	0		
+Midi_scanTrack	0x1ef80	85	85	7	7	0	0		
+Seq_clearTrackFlag8All	0x1f150	24	24	5	4	1	0		0x1f17a(F)
+Seq::loadFile	0x20290	58	58	4	4	0	0		
+Midi_loadMemoryAndPreRoll	0x20360	81	81	7	7	0	0		
+Seq_closeFile	0x204b0	10	10	1	1	0	0		
+Seq_preRollTrack	0x205f0	89	89	8	8	0	0		
+Seq_stepTrackMeta	0x20720	62	62	7	7	0	0		
+Midi_Device::playEvent	0x20870	119	119	6	6	0	0		
+Seq_setField730Clamped	0x20f50	23	23	2	2	0	0		
+Seq_setupChannel	0x20fe0	151	151	17	15	2	0		0x210b6(F) 0x210d5(F)
+Midi_Device::setChannelVolume	0x213d0	102	100	12	11	1	0	0x214cf-0x214d1	0x2147f(F)
+Midi_Device::noteOn	0x215c0	301	301	32	29	3	0		0x21722(F) 0x21751(F) 0x21821(F)
+Midi_Device::sendShortMsg	0x21a90	100	100	7	7	0	0		
+Midi_Device::handleMetaEvent	0x21bf0	157	157	19	17	2	0		0x21d61(F) 0x21d7b(F)
+Seq_setTempo	0x21ee0	35	35	0	0	0	0		
+Seq_updateChannel	0x21fa0	167	167	27	20	7	0		0x21ffe(F) 0x22008(F) 0x2203f(F) 0x2205f(F) 0x220c5(F) 0x220d7(F) 0x2212e(F)
+Seq_reset	0x22240	11	11	0	0	0	0		
+Seq_copyChannelParams	0x22280	39	39	1	1	0	0		
+Seq_setPlayOrderMode	0x22750	16	16	1	1	0	0		
+Seq_setField240	0x227a0	4	4	0	0	0	0		
+Seq_removeTrackById	0x228d0	67	65	13	8	5	0	0x2293d-0x2293e	0x22903(F) 0x22925(F) 0x2292f(F) 0x2293b(T) 0x22943(F)
+Seq_buildTrack9	0x229f0	208	201	24	15	9	0	0x22ab8-0x22ab8 0x22b02-0x22b02 0x22bd2-0x22bda 0x22c22-0x22c22	0x22a34(F) 0x22aac(F) 0x22af6(F) 0x22b72(F) 0x22b8a(F) 0x22bbf(F) 0x22bc6(F) 0x22bd0(T) 0x22c16(F)
+Seq_buildTrack14	0x22d00	202	189	20	11	9	0	0x22d43-0x22d47 0x22d86-0x22d86 0x22dd4-0x22dd4 0x22eb3-0x22ec7 0x22f2e-0x22f2e	0x22d32(F) 0x22d76(F) 0x22dc4(F) 0x22e44(F) 0x22e5c(F) 0x22e95(F) 0x22e9c(F) 0x22eb1(T) 0x22f1e(F)
+Seq_findTrackOrZero	0x23000	28	28	7	6	1	0		0x23037(F)
+Seq_findTrackById	0x23080	36	36	8	6	2	0		0x230ba(F) 0x230d4(T)
+Seq_cmdHandler7	0x231e0	55	55	9	7	2	0		0x23222(F) 0x2323c(T)
+Seq_cmdHandler8	0x23540	57	57	10	8	2	0		0x23591(F) 0x235ab(T)
+Seq_remarkEventRange	0x23610	99	97	12	8	4	0	0x23650-0x23654	0x2364e(T) 0x23667(F) 0x23699(F) 0x236b4(F)
+Seq_cmdHandler9	0x238b0	37	37	8	6	2	0		0x238ea(F) 0x23904(T)
+Seq_replayEventRange	0x23950	82	82	11	9	2	0		0x239a0(F) 0x239cb(F)
+Seq_cmdHandler10	0x23a60	83	81	14	10	4	0	0x23af3-0x23af7	0x23a9e(F) 0x23ab8(T) 0x23af1(T) 0x23aff(F)
+Seq_cmdHandler12	0x23c20	19	19	1	1	0	0		
+Seq_cmdHandler11	0x23c70	34	34	8	6	2	0		0x23caa(F) 0x23cc4(T)
+Seq_buildPlayOrder	0x23d00	66	66	6	6	0	0		
+Seq_applyTrackFlag	0x23e10	38	38	2	2	0	0		
+Seq_getTrackFlagHigh	0x23f10	24	24	1	1	0	0		
+Seq_dispatchChannelCmd	0x24040	114	114	7	7	0	0		
+Seq_getListElementAt	0x241f0	17	17	3	3	0	0		
+Seq_loadChannelDesc	0x24280	37	37	1	1	0	0		
+Seq_mergeChannelDesc	0x24360	49	49	6	6	0	0		
+Seq_selectTrack	0x24500	48	48	4	4	0	0		
+Seq_resetTrackControllers	0x24630	27	27	3	3	0	0		
+Midi_Device::emitEvent	0x246a0	75	75	9	8	1	0		0x24746(F)
+Seq_allocTrackSlot	0x247c0	70	70	8	6	2	0		0x2481a(F) 0x2485a(F)
+Midi_seekTrackToTick	0x24920	115	115	7	7	0	0		
+Seq_scheduleEvent	0x24b80	59	59	7	7	0	0		
+MidiDeviceBase_ctor	0x29e70	13	13	0	0	0	0		
+MidiDeviceBase_scalarDtor	0x29f30	11	11	1	1	0	0		
+MidiDeviceBase_openInner	0x29f90	30	30	2	2	0	0		
+MidiDeviceBase_closeInner	0x2a000	11	11	1	1	0	0		
+Seq_applyChannelLevel	0x2b260	12	12	1	1	0	0		
+Track_setField8RaisingMax	0x2e430	7	7	1	1	0	0		

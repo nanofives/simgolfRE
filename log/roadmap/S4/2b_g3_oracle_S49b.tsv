@@ -1,0 +1,26 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	x87diff	tier	quirk	pending	first
+loadSoundFile@basic	snd.loadSoundFile	GREEN	11	11	22	0	0	0	EMU_ONLY	{}		
+loadSoundFile@busy7	snd.loadSoundFile	GREEN	2	2	4	0	0	0	EMU_ONLY	{}		
+loadSoundFile@busy0	snd.loadSoundFile	GREEN	2	2	4	0	0	0	EMU_ONLY	{}		
+loadSoundFile@seekfail	snd.loadSoundFile	GREEN	4	4	8	0	0	0	EMU_ONLY	{}		
+loadSoundFile@seeknomove	snd.loadSoundFile	GREEN	3	3	6	0	0	0	EMU_ONLY	{}		
+loadSoundFile@nopre	snd.loadSoundFile	GREEN	2	2	4	0	0	0	EMU_ONLY	{}		
+loadSoundFile@list	snd.loadSoundFile	GREEN	2	2	4	0	0	0	EMU_ONLY	{}		
+loadSoundFile@pre_g0	snd.loadSoundFile	GREEN	5	5	10	0	0	0	EMU_ONLY	{}		
+loadSoundFile@pre_g1	snd.loadSoundFile	GREEN	5	5	10	0	0	0	EMU_ONLY	{}		
+loadSoundFile@pre_g2	snd.loadSoundFile	GREEN	5	5	10	0	0	0	EMU_ONLY	{}		
+loadSoundFile@pre_g3	snd.loadSoundFile	GREEN	5	5	10	0	0	0	EMU_ONLY	{}		
+loadSoundFile@pre_g4	snd.loadSoundFile	GREEN	5	5	10	0	0	0	EMU_ONLY	{}		
+loadSoundFile@pre_g5	snd.loadSoundFile	GREEN	5	5	10	0	0	0	EMU_ONLY	{}		
+loadSoundFile@oom0	snd.loadSoundFile	GREEN	2	2	4	0	0	0	EMU_ONLY	{}		
+loadSoundFile@oom1	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@oom2	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@nullA	snd.loadSoundFile	GREEN	4	4	8	0	0	0	EMU_ONLY	{}		
+loadSoundFile@nullB	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@nullC	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@nullU	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@sfnull	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@sfnullU	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@snmnull	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@snmnullU	snd.loadSoundFile	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+loadSoundFile@user	snd.loadSoundFile	GREEN	3	3	6	0	0	0	EMU_ONLY	{}		

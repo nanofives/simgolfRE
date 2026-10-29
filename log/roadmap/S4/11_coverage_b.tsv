@@ -1,0 +1,4 @@
+function	rva	instructions	executed	jcc	both_sides	one_side	none	one_side_taken	never
+heap_alloc	0x42b0b	80	78	8	6	2	0	0x42b7eF 0x42bdfT	
+free	0x42c07	75	74	6	5	1	0	0x42c7dF	
+__lock	0x47710	37	34	3	2	1	0	0x47735T	

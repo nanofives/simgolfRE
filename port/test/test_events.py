@@ -104,6 +104,8 @@ def _off(lib, name):
 
 def _new_state(lib, exe=True):
     st = lib.state()
+    if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+        st.call("audio_exe.stubRequests", [1])
     st.set_data_base(VL.DATA_VA)
     if exe:
         assert lib.exe_load() == "", "the user's exe does not verify"
@@ -284,6 +286,8 @@ def test_run_bulletin_board_with_sound(portlib):
     for mode in (0, 1):
         lib.negctl("runBulletinBoardWithSound", mode)
         with lib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+                st.call("audio_exe.stubRequests", [1])
             st.set_data_base(VL.DATA_VA)
             tick, words = _off(lib, "g_bulletinAnimTick"), _off(lib, "f_w_4e3db8")
             st.write(tick, struct.pack("<i", 7))

@@ -161,3 +161,10 @@ executes `fldcw`, the call runs under that word, and the runner restores `0x027f
   word only Win32 is authoritative; check the C++ path against `mul_div_ref`-style exact reasoning (test_win32.py) and keep the
   vectors at that word as the judge. A wrong-rounding body must read RED on Win32 (`x87Probe::mulDiv` mode 1 does at every
   non-default word and is an equivalent mutant at `0x027f`: vectors at `0x027f` cannot see a rounding mistake).
+
+## 8. sound.dll (step S4.2)
+
+sound.dll's functions are ported against portsim/sim/audio.h (header comment: how to write one), registered under their
+hooks.csv names; every call they make to code that is not inline goes through the dispatcher (snd_call / snd_vcall /
+snd_call_va / snd_import) so a fixture's stand-in or the host serves it. Judge them with port/test/sound_replay.py
+(SG_EMU_ORACLE=1 for the live oracle, default for bundles + goldens); start from re/tools/snd_hook2port.py's conversion.

@@ -1,0 +1,43 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.bitPack	1	RED	6	0	6	bitPack
+snd.bitPermute	1	RED	14	0	14	bitPermute
+snd.bitUnpack	1	RED	6	0	6	bitUnpack
+snd.codecAlignAnalysisWindow	1	RED	26	0	26	codecAlignAnalysisWindow
+snd.codecAllocDecoderContext	1	RED	3	0	3	codecAllocContextB codecAllocContextB_5a codecAllocContextB_oom
+snd.codecAllocEncoderContext	1	RED	3	0	3	codecAllocContextA codecAllocContextA_5a codecAllocContextA_oom
+snd.codecAmdfPitch	1	RED	14	0	14	codecAmdfPitch
+snd.codecAnalyzeFrame	1	RED	14	0	14	codecStageDispatch
+snd.codecCorrectNibble	1	RED	20	0	20	decodeTableSymbol
+snd.codecCovarianceMatrix	1	RED	14	0	14	codecAutocorrelation
+snd.codecDecodeFrame	1	RED	14	0	14	codecProcessBlock
+snd.codecDecodeParams	1	RED	28	0	28	codecTransformStage_mode0 codecTransformStage_mode1
+snd.codecEncodeFrame	1	RED	14	0	14	codecProcessResource
+snd.codecHighPassFilter	1	RED	14	0	14	codecBiquadFilter
+snd.codecHighPassFrame	1	RED	9	0	9	codecApplyFixedCoeffs
+snd.codecInitDecoderContext	1	RED	14	0	14	codecInitContextB
+snd.codecInitEncoderContext	1	RED	14	0	14	codecInitContextA
+snd.codecInverseFilter2	1	RED	15	0	15	codecCorrelationLags
+snd.codecLdlSolveClamped	1	RED	14	0	14	gaussSolveClamped
+snd.codecLowPassFir31	1	RED	14	0	14	codecSymmetricFir
+snd.codecMarkCorrelationJumps	1	RED	14	0	14	codecMarkCorrelationJumps
+snd.codecPitchTrackDp	1	RED	14	0	14	codecGainSmoother
+snd.codecPreEmphasis	1	RED	14	0	14	codecFirstOrderFilter
+snd.codecRefinePitchLag	1	RED	14	0	14	codecPitchAnalysis
+snd.codecRemoveMean	1	RED	14	0	14	codecRemoveMean
+snd.codecRevertUnstableCoeffs	1	RED	15	0	15	substituteIfBelowThreshold
+snd.codecRing5Add	1	RED	12	0	12	codecCombFilter
+snd.codecRmsEnergy	1	RED	13	0	13	codecRmsEnergy
+snd.codecSelectWindowFromJumps	1	RED	20	0	20	codecSelectWindowFromJumps
+snd.codecSetParams	1	RED	10	0	10	codecSetParams_v0 codecSetParams_v1 codecSetParams_v2 codecSetParams_v3 codecSetParams_v4 codecSetParams_v5 codecSetParams_v6 codecSetParams_v7 codecSetParams_v8 codecSetParams_v9
+snd.codecSynthPostFilter	1	RED	15	0	15	applyIir2
+snd.codecSynthesizeFrame	1	RED	14	0	14	codecSynthStage
+snd.codecVoicingDecision	1	RED	37	0	37	codecFeatureDecision
+snd.codecWindowFeatures	1	RED	13	0	13	codecWindowFeatures
+snd.floatCopySign	1	RED	13	0	18	floatCopySign
+snd.floatRoundHalfAway	1	RED	16	0	16	floatFloorToInt
+snd.intPow	1	RED	19	0	19	intPow
+snd.interpSubframeParams	1	RED	14	0	14	interpSubframeParams
+snd.lpcSynthesize	1	RED	14	0	14	lpcSynthesize
+snd.medianOfThree	1	RED	16	0	16	medianOfThree
+snd.quantizeParams	1	RED	28	0	28	quantizeParams_mode0 quantizeParams_mode1
+snd.reflectionToLpc	1	RED	14	0	14	reflectionToLpc

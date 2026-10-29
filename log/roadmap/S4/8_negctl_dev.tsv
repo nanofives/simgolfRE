@@ -1,0 +1,63 @@
+function	mode	verdict	vectors_differ	vectors	keys
+CommandQueue::at	1	RED	7	16	CommandQueue::at
+CommandQueue::clear	1	RED	9	10	CommandQueue::clear
+CommandQueue::init	1	RED	12	12	CommandQueue::init
+CommandQueue::push	1	RED	12	27	CommandQueue::push
+Ctrl5b19c_ctor	1	RED	10	10	Ctrl5b19c_ctor
+Ctrl5b58c_dtor	1	RED	9	10	Ctrl5b58c_dtor
+Ctrl5b58c_dtorEmbedded	1	RED	10	10	Ctrl5b58c_dtorEmbedded
+Ctrl5b58c_scalarDtor	1	RED	40	40	Ctrl5b58c_scalarDtor
+Ctrl5b5c0_ctor	1	RED	12	12	Ctrl5b5c0_ctor
+Ctrl5b5c0_mapValue	1	RED	8	52	Ctrl5b5c0_mapValue
+Ctrl5b5c0_transposeTable	1	RED	48	66	Ctrl5b5c0_transposeTable
+Ctrl5b668_ctor	1	RED	12	12	Ctrl5b668_ctor
+CtrlBase_flushElements	1	RED	11	14	CtrlBase_flushElements
+CtrlBase_resetElements	1	RED	14	14	CtrlBase_resetElements
+CtrlObject2_ctor	1	RED	12	12	CtrlObject2_ctor
+CtrlObject3_ctor	1	RED	12	12	CtrlObject3_ctor
+CtrlObject::ctor	1	RED	11	12	CtrlObject::ctor
+CtrlObject_dtorA	1	RED	12	12	CtrlObject_dtorA
+CtrlObject_dtorB	1	RED	12	12	CtrlObject_dtorB
+CtrlObject_dtorC	1	RED	12	12	CtrlObject_dtorC
+CtrlObject_dtorD	1	RED	12	12	CtrlObject_dtorD
+CtrlObject_scalarDtorA	1	RED	10	24	CtrlObject_scalarDtorA
+CtrlObject_scalarDtorB	1	RED	25	50	CtrlObject_scalarDtorB
+CtrlObject_scalarDtorC	1	RED	25	50	CtrlObject_scalarDtorC
+CtrlObject_scalarDtorD	1	RED	25	50	CtrlObject_scalarDtorD
+Ctrl_appendIfAccepted	1	RED	18	30	Ctrl_appendIfAccepted
+Device::serviceVoices	1	RED	12	12	Device::serviceVoices
+DeviceBase_dtorA	1	RED	10	10	DeviceBase_dtorA
+DeviceBase_dtorB	1	RED	10	10	DeviceBase_dtorB
+DeviceBase_dtorC	1	RED	10	10	DeviceBase_dtorC
+DeviceBase_scalarDtor	1	RED	50	50	DeviceBase_scalarDtor
+Device_createStartQueue	1	RED	5	12	Device_createStartQueue
+Device_lazyCreateSound	1	RED	4	12	Device_lazyCreateSound
+Device_prepareSoundFlags	1	RED	4	12	Device_prepareSoundFlags
+Dll_Midi_Device::create_device	1	RED	12	36	Dll_Midi_Device::create_device_busy Dll_Midi_Device::create_device_fail Dll_Midi_Device::create_device_null
+Dll_Midi_Device::delete_device	1	RED	9	10	Dll_Midi_Device::delete_device_v0 Dll_Midi_Device::delete_device_v1 Dll_Midi_Device::delete_device_v2 Dll_Midi_Device::delete_device_v3 Dll_Midi_Device::delete_device_v4 Dll_Midi_Device::delete_device_v5 Dll_Midi_Device::delete_device_v6 Dll_Midi_Device::delete_device_v7 Dll_Midi_Device::delete_device_v8 Dll_Midi_Device::delete_device_v9
+atexitDtor_100b49b8	1	RED	12	12	atexitDtor_100b49b8
+ctrlScalarDeletingDtor	1	RED	25	50	ctrlScalarDeletingDtor
+delete_sound	1	RED	1	30	delete_sound@ready delete_sound@notimer delete_sound@none
+destroySoundWindowObj	1	RED	14	24	destroySoundWindowObj
+dynInit_ctrl100b4a68	1	RED	2	2	dynInit_ctrl100b4a68_fail dynInit_ctrl100b4a68_ok
+dynInit_ctrl100b4b50	1	RED	2	2	dynInit_ctrl100b4b50_fail dynInit_ctrl100b4b50_ok
+dynInit_ctrl100b4c38	1	RED	2	2	dynInit_ctrl100b4c38_fail dynInit_ctrl100b4c38_ok
+dynInit_ctrl100b4d20	1	RED	2	2	dynInit_ctrl100b4d20_fail dynInit_ctrl100b4d20_ok
+dynInit_ctrl100b4e08	1	RED	2	2	dynInit_ctrl100b4e08_fail dynInit_ctrl100b4e08_ok
+dynInit_soundWindowObj100b49b8	1	RED	2	2	dynInit_soundWindowObj100b49b8_fail dynInit_soundWindowObj100b49b8_ok
+get_sound_version	1	RED	1	1	get_sound_version@
+initCtrlVtable	1	RED	12	12	initCtrlVtable
+init_sound_timer	1	RED	24	24	init_sound_timer init_sound_timer_alt
+postMidiNotification	1	RED	20	32	postMidiNotification@eng postMidiNotification@eng0 postMidiNotification@noeng postMidiNotification@noeng1
+postNotification	1	RED	6	16	postNotification
+postSoundThreadMessage	1	RED	12	36	postSoundThreadMessage_ok postSoundThreadMessage_r1 postSoundThreadMessage_r3
+pumpWaveMessages	1	RED	12	12	pumpWaveMessages
+registerTimerClient	1	RED	24	30	registerTimerClient_bp61 registerTimerClient_busy registerTimerClient_null registerTimerClient_ok registerTimerClient_se61
+release_sound	1	RED	2	4	release_sound_clr release_sound_null release_sound_swap release_sound_tmr
+soundThreadPump	1	RED	5	5	soundThreadPump_drop soundThreadPump_event soundThreadPump_flag0 soundThreadPump_one soundThreadPump_two
+soundWindowProc	1	RED	4	104	soundWindowProc_f0 soundWindowProc_f1 soundWindowProc_f2 soundWindowProc_f3
+soundWindowSubclassProc	1	RED	4	108	soundWindowSubclassProc_f0 soundWindowSubclassProc_f1 soundWindowSubclassProc_f2 soundWindowSubclassProc_f3
+startSignalThread	1	RED	6	12	startSignalThread
+stopSoundThreadFull	1	RED	8	12	stopSoundThreadFull
+stubReturn2fA	1	RED	1	1	stubReturn2fA@
+stubReturn2fB	1	RED	12	12	stubReturn2fB@

@@ -122,6 +122,8 @@ def port_run(lib, name, img, args, inputs, cursors, rule, salt=None, peek=None):
     EditBox buffer when the run stops inside the bio, roadmap S1.5)"""
     import ctypes as C
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         words = [w for c in inputs for w in c.args()] or [0]
@@ -516,6 +518,8 @@ def test_editor_waits_without_an_input_source(portlib):
     rng = random.Random(3)
     img = _editor_image(portlib, rng, 5, 7, True)
     with portlib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(bytes(img))
         with pytest.raises(L.SgError) as e:

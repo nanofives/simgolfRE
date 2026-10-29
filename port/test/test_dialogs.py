@@ -124,6 +124,8 @@ def emu_run(name, img, args, inputs, cursors, rule, salt=None, block=None):
 def port_run(lib, name, img, args, inputs, cursors, rule, salt=None, block=None):
     import ctypes as C
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(DATA_VA)
         st.load_image(img)
         if block:
@@ -556,6 +558,8 @@ def test_scroll_text_needs_text_metrics(portlib):
     img = _scroll_image(portlib, rng)
     for text, code in ((b" Yes\n No\n", L.SG_E_NO_RESOURCE), (b"", 0)):
         with portlib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+                st.call("audio_exe.stubRequests", [1])
             st.set_data_base(DATA_VA)
             st.load_image(img)
             data = (bytes(0x10) + text).ljust(0x1000, b"\0")
@@ -584,6 +588,8 @@ def test_info_panel_reads_the_cursor_from_the_input_source(portlib):
         b[goff + 0x100 * g + 0x18] = 0
         b[goff + 0x100 * g + 0xB0:goff + 0x100 * g + 0xB2] = struct.pack("<h", -1)   # the thoughts page: no story file read
         with portlib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):  # S4.2b: the audio requests stubbed, as this file's oracle stubs them
+                st.call("audio_exe.stubRequests", [1])
             st.set_data_base(DATA_VA)
             st.load_image(bytes(b))
             with pytest.raises(L.SgError) as e:

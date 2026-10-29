@@ -1,0 +1,67 @@
+function	rva	instructions	executed	jcc	jcc_both_sides	jcc_one_side	jcc_never	unexecuted_spans	jcc_one_sided_or_never
+Sound::ctor	0x3f30	36	36	0	0	0	0		
+Sound::scalarDeletingDtor	0x3fd0	11	11	1	1	0	0		
+Sound::dtor	0x4000	105	105	12	12	0	0		
+Sound::scaleTickRate	0x5d80	6	6	0	0	0	0		
+registerSound	0x5e00	11	11	0	0	0	0		
+unregisterSound	0x5eb0	37	37	6	5	1	0		0x5ec8(F)
+SoundTimer::registerClient	0x88e0	12	12	0	0	0	0		
+SoundTimer::unregisterClient	0x8920	57	57	6	5	1	0		0x896c(F)
+SoundTimer::init	0x89f0	46	46	0	0	0	0		
+SoundTimer::stop	0x8ac0	84	84	8	8	0	0		
+SoundTimer::stopKeepLock	0x8bf0	68	68	4	4	0	0		
+SoundTimer::start	0x8ce0	37	37	3	3	0	0		
+SoundTimer::killEvent	0x8d70	32	32	1	1	0	0		
+SoundTimer::onTick	0x8ed0	90	90	14	11	3	0		0x8eee(F) 0x8f11(F) 0x8fc1(T)
+SoundTimer::linkClient	0x9040	32	32	2	2	0	0		
+create_sound	0x93e0	222	204	15	8	7	0	0x94ab-0x94ab 0x9519-0x9519 0x965d-0x9674 0x96b1-0x96c8	0x9499(F) 0x950e(F) 0x955e(F) 0x95bc(F) 0x95fc(F) 0x963c(F) 0x9690(F)
+Sound_initEntry	0x1ab60	20	20	0	0	0	0		
+Sound_anyChannelActive	0x1ad30	52	52	8	8	0	0		
+Sound_setName	0x1ced0	111	111	4	4	0	0		
+Sound_setAltName	0x1d0a0	45	45	2	2	0	0		
+Sound5b6a8_ctor	0x1f4a0	93	93	0	0	0	0		
+Sound5b6a8_scalarDtor	0x1f6c0	11	11	1	1	0	0		
+Sound5b6a8_dtor	0x1ff50	189	188	22	20	2	0	0x201a7-0x201a7	0x20198(T) 0x201a0(F)
+Sound_reapIdle	0x204e0	62	62	11	11	0	0		
+Sound_findByName	0x21240	56	56	9	9	0	0		
+Sound_lookupOrCreate	0x22320	272	270	42	29	13	0	0x22402-0x22402 0x224a2-0x224a2	0x22372(F) 0x22396(F) 0x223b6(F) 0x223cf(F) 0x223f5(F) 0x2248e(F) 0x2251f(F) 0x22557(F) 0x22561(F) 0x2259f(F) 0x225b1(F) 0x22604(F) 0x22621(T)
+SoundWindowObj_ctor	0x28600	8	8	0	0	0	0		
+SoundWindowObj_dtor	0x286a0	20	20	2	2	0	0		
+SoundWindowObj_subclass	0x286f0	26	26	2	2	0	0		
+SoundWindowObj_unsubclass	0x287c0	20	20	2	2	0	0		
+Sound_setSourceType	0x2ad10	35	35	1	1	0	0		
+Engine_playSound	0x2add0	106	106	8	8	0	0		
+getPlaybackTime	0x2baa0	30	22	5	3	1	1	0x2bac1-0x2bad3	0x2bacb(-) 0x2bad6(T)
+Sound_assignName	0x2ddf0	47	47	2	2	0	0		
+MultiSound_setSlotSource	0x2f8d0	102	102	9	7	2	0		0x2f98c(F) 0x2f9bf(F)
+Sound5c450_ctor	0x30080	43	43	0	0	0	0		
+Sound5c450_scalarDtor	0x30150	11	11	1	1	0	0		
+Sound5c450_dtor	0x30180	159	159	20	17	3	0		0x30202(F) 0x30214(F) 0x30271(F)
+Sound_stop	0x303f0	114	111	15	11	4	0	0x3046f-0x3046f 0x30483-0x30486	0x3046d(T) 0x30473(F) 0x30479(F) 0x304d0(F)
+Sound_freeBufferList	0x30570	104	103	14	11	3	0	0x305d8-0x305d8	0x305d6(T) 0x305dc(F) 0x30639(F)
+Sound_resetBuffers	0x32020	71	71	8	7	1	0		0x32084(F)
+MultiSound_ctor	0x39690	42	42	0	0	0	0		
+MultiSound_deleteDtor	0x39760	11	11	1	1	0	0		
+MultiSound_ctorWithType	0x39790	40	40	0	0	0	0		
+MultiSound_dtor	0x39870	58	57	6	5	1	0	0x3990d-0x3990d	0x39906(F)
+SoundGroup_stop	0x39b30	42	42	5	5	0	0		
+MultiSound_enqueueCmd3	0x39bd0	19	19	2	2	0	0		
+SoundGroup_rewind	0x39c10	12	12	0	0	0	0		
+MultiSound_release	0x39c40	17	17	1	1	0	0		
+MultiSound_stop	0x39c80	2	2	0	0	0	0		
+MultiSound_start	0x39ce0	106	106	19	17	2	0		0x39dc6(F) 0x39dfb(T)
+MultiSound::startVoice	0x39f30	76	76	10	10	0	0		
+MultiSound_setVoiceBit1On	0x3a080	9	9	1	1	0	0		
+MultiSound::setVolume	0x3a0d0	32	32	4	4	0	0		
+MultiSound::setRateGlide	0x3a140	37	37	8	8	0	0		
+MultiSound_setPitchCents	0x3a210	85	85	5	5	0	0		
+MultiSound::applyFlags	0x3a370	46	46	8	8	0	0		
+MultiSound_getStatus	0x3a560	9	9	1	1	0	0		
+MultiSound_set3DPosition	0x3a5b0	9	9	0	0	0	0		
+MultiSound::set3DPositionX	0x3a5e0	5	5	0	0	0	0		
+MultiSound::set3DBuffer	0x3a600	12	12	0	0	0	0		
+MultiSound::set3DPositionY	0x3a630	5	5	0	0	0	0		
+MultiSound::set3DPositionZ	0x3a650	5	5	0	0	0	0		
+MultiSound::setReverseRate	0x3a6e0	6	6	0	0	0	0		
+MultiSound_findStreamNode	0x3a730	2	2	0	0	0	0		
+MultiSound_is3DEnabled	0x3a800	8	8	2	2	0	0		

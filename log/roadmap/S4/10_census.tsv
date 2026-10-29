@@ -1,0 +1,126 @@
+key	batch	rva	fixture	styles	vectors	csv_vectors	csv_verdict	fixture_status	missing_api	emu_errors	ret_cmp	ret_eq	ret_runaddr	state_cmp	state_eq	state_runaddr	changed_cmp	changed_eq	distinct_csv	distinct_emu	tier	first_diff	note
+playHabitatSound	c3eu	0x405a00	c3eu_habitat	alloc,callback,freeze,replace	13	13	GREEN	OK		0	13	13	0	13	13	0	13	13	13	13	EXACT		
+playSoundAt	c3dy	0x40c500	c3dy_at	alloc,callback,freeze,replace	27	27	GREEN	OK		0	27	27	0	27	27	0	27	27	27	27	EXACT		
+playAudioFile	c3eq	0x43cce0	c3eq_audio	alloc,callback,freeze,globals,heap,import,replace,uitree	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	9	9	EQUAL_PI		
+playSound	c3dy	0x4481b0	c3dy_ps	alloc,callback,freeze,import,replace	13	13	GREEN	OK		0	13	13	0	0	0	13	13	13	13	13	EQUAL_PI		
+startSoundSlot	c3dm	0x448200	c3dm_snd_slots	alloc,callback,freeze,globals	12	12	GREEN	OK		0	12	12	0	12	12	0	12	12	12	12	EXACT		
+loadSoundTable	c3fc	0x448220	c3fc_sound	alloc,callback,freeze,replace	12	12	GREEN	OK		0	12	12	0	12	12	0	12	12	12	12	EXACT		
+shutdownSoundSystem	c3fu	0x4490b0	c3fu_sss	alloc,callback,freeze,replace	6	6	GREEN	OK		0	6	6	0	0	0	6	6	6	6	6	EQUAL_PI		
+initSound	c3eu	0x483e90	c3eu_isnd_ok	alloc,callback,freeze,globals,replace	12	12	GREEN	OK		0	12	12	0	12	12	0	12	12	12	12	EXACT		
+initSound_ver3	c3eu	0x483e90	c3eu_isnd_ver3	alloc,callback,freeze,globals,replace	4	4	GREEN	OK		0	4	4	0	4	4	0	4	4	1	1	EXACT		
+initSound_verneg	c3eu	0x483e90	c3eu_isnd_verneg	alloc,callback,freeze,globals,replace	4	4	GREEN	OK		0	4	4	0	4	4	0	4	4	1	1	EXACT		
+shutdownSound_empty	c3eu	0x483f10	c3eu_shut_empty	alloc,callback,freeze,globals,heap,replace	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+shutdownSound_n1	c3eu	0x483f10	c3eu_shut_n1	alloc,callback,freeze,globals,heap,replace	1	1	GREEN	OK		0	1	1	0	0	0	1	1	1	1	1	EQUAL_PI		
+shutdownSound_n4	c3eu	0x483f10	c3eu_shut_n4	alloc,callback,freeze,globals,heap,replace	1	1	GREEN	OK		0	1	1	0	0	0	1	1	1	1	1	EQUAL_PI		
+shutdownSound_n8	c3eu	0x483f10	c3eu_shut_n8	alloc,callback,freeze,globals,heap,replace	1	1	GREEN	OK		0	1	1	0	0	0	1	1	1	1	1	EQUAL_PI		
+shutdownSound_off	c3eu	0x483f10	c3eu_shut_off	alloc,callback,freeze,globals,heap,replace	1	1	GREEN	OK		0	1	1	0	0	0	1	1	1	1	1	EQUAL_PI		
+shutdownSound_v6	c3eu	0x483f10	c3eu_shut_v6	alloc,callback,freeze,globals,heap,replace	1	1	GREEN	OK		0	1	1	0	0	0	1	1	1	1	1	EQUAL_PI		
+soundVersionCheck_f1	c3dl	0x483fc0	c3dl_snd_f1	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+soundVersionCheck_f11	c3dl	0x483fc0	c3dl_snd_f11	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+soundVersionCheck_f5	c3dl	0x483fc0	c3dl_snd_f5	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+soundVersionCheck_loaded	c3dl	0x483fc0	c3dl_snd_loaded	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+soundVersionCheck_loadfail	c3dl	0x483fc0	c3dl_snd_loadfail	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+soundVersionCheck_newer	c3dl	0x483fc0	c3dl_snd_newer	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 20a62ad7 csv b6ec37a1	
+soundVersionCheck_ok	c3dl	0x483fc0	c3dl_snd_ok	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 005cb6c9 csv 8d47406c	
+soundVersionCheck_okc07	c3dl	0x483fc0	c3dl_snd_okc07	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 005cb6c9 csv 3cda6ae8	
+soundVersionCheck_okhi	c3dl	0x483fc0	c3dl_snd_okhi	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 005cb6c9 csv 0b27276c	
+soundVersionCheck_oklo	c3dl	0x483fc0	c3dl_snd_oklo	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 005cb6c9 csv 2373b37b	
+soundVersionCheck_old	c3dl	0x483fc0	c3dl_snd_old	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 20a62ad7 csv 2dde6e79	
+soundVersionCheck_zero	c3dl	0x483fc0	c3dl_snd_zero	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 20a62ad7 csv b907a5e4	
+freeSoundLib_v0	c3dl	0x484060	c3dl_sndfree_0	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v1	c3dl	0x484060	c3dl_sndfree_1	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v2	c3dl	0x484060	c3dl_sndfree_2	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v3	c3dl	0x484060	c3dl_sndfree_3	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v4	c3dl	0x484060	c3dl_sndfree_4	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v5	c3dl	0x484060	c3dl_sndfree_5	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v6	c3dl	0x484060	c3dl_sndfree_6	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v7	c3dl	0x484060	c3dl_sndfree_7	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v8	c3dl	0x484060	c3dl_sndfree_8	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+freeSoundLib_v9	c3dl	0x484060	c3dl_sndfree_9	alloc,callback,freeze,globals,import	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+callSoundHook74	c3dl	0x484090	c3dl_hook74_on	alloc,callback,freeze,globals	12	12	GREEN	OK		0	12	12	0	12	0	0	12	12	12	12	DIFF	v0 state emu 8b21290f csv ade41db7	
+callSoundHook74_off	c3dl	0x484090	c3dl_hook74_off	alloc,callback,freeze,globals	3	3	GREEN	OK		0	3	3	0	3	0	0	3	3	1	1	DIFF	v0 state emu 8d890c6c csv 0b5c7426	
+callSoundHook94_v0	c3dl	0x4840c0	c3dl_hook_0	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 8d890c6c csv b22489e8	
+callSoundHook94_v1	c3dl	0x4840c0	c3dl_hook_1	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 42b71526 csv c25f5ec4	
+callSoundHook94_v10	c3dl	0x4840c0	c3dl_hook_10	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 5bd930cf csv 51ff16bc	
+callSoundHook94_v11	c3dl	0x4840c0	c3dl_hook_11	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 42b71526 csv cb236395	
+callSoundHook94_v2	c3dl	0x4840c0	c3dl_hook_2	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 7cb55990 csv 64efdb50	
+callSoundHook94_v3	c3dl	0x4840c0	c3dl_hook_3	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 42b71526 csv 9c3f9720	
+callSoundHook94_v4	c3dl	0x4840c0	c3dl_hook_4	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 279727b7 csv a2d56124	
+callSoundHook94_v5	c3dl	0x4840c0	c3dl_hook_5	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 23f40009 csv 68c8b9fa	
+callSoundHook94_v6	c3dl	0x4840c0	c3dl_hook_6	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 8d890c6c csv 23b6f872	
+callSoundHook94_v7	c3dl	0x4840c0	c3dl_hook_7	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 7b78346c csv f2124430	
+callSoundHook94_v8	c3dl	0x4840c0	c3dl_hook_8	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu 8237e974 csv 500f389f	
+callSoundHook94_v9	c3dl	0x4840c0	c3dl_hook_9	alloc,callback,freeze,globals	1	1	GREEN	OK		0	1	1	0	1	0	0	1	1	1	1	DIFF	v0 state emu b1c1ac28 csv 07ca55d0	
+createSound4840e0	c3dm	0x4840e0	c3dm_snd_lib	alloc,callback,freeze,globals	8	8	GREEN	OK		0	8	8	0	8	0	0	8	8	8	8	DIFF	v0 state emu 0ddc523c csv 2c69274f	
+createSound4840e0_nolib	c3dm	0x4840e0	c3dm_snd_nolib	alloc,callback,freeze,globals	4	4	GREEN	OK		0	4	4	0	4	0	0	4	4	1	1	DIFF	v0 state emu c35cbaba csv 5a018c84	
+releaseSoundObj	c3dm	0x484110	c3dm_snd_lib	alloc,callback,freeze,globals	8	8	GREEN	OK		0	8	8	0	8	0	0	8	8	8	8	DIFF	v0 state emu 914042cf csv f40ffbfe	
+releaseSoundObj_nolib	c3dm	0x484110	c3dm_snd_nolib	alloc,callback,freeze,globals	4	4	GREEN	OK		0	4	4	0	4	0	0	4	4	1	1	DIFF	v0 state emu c35cbaba csv 6909cc67	
+clearSoundPtrs_p0	c3dm	0x484130	c3dm_snd_clear_0	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p1	c3dm	0x484130	c3dm_snd_clear_1	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p2	c3dm	0x484130	c3dm_snd_clear_2	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p3	c3dm	0x484130	c3dm_snd_clear_3	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p4	c3dm	0x484130	c3dm_snd_clear_4	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p5	c3dm	0x484130	c3dm_snd_clear_5	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p6	c3dm	0x484130	c3dm_snd_clear_6	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p7	c3dm	0x484130	c3dm_snd_clear_7	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p8	c3dm	0x484130	c3dm_snd_clear_8	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+clearSoundPtrs_p9	c3dm	0x484130	c3dm_snd_clear_9	freeze,globals	1	1	GREEN	OK		0	1	1	0	1	1	0	1	1	1	1	EXACT		
+Snd::ctorBase	c3c	0x484150	c3c_snd_base_objs	alloc	6	6	GREEN	OK		0	6	6	0	6	6	0	6	6	6	6	EXACT		
+Snd::scalarDtor4841c0	c3ev	0x4841c0	c3ev_sdtor	alloc,callback,freeze,globals,heap,import,replace,uitree	12	12	GREEN	OK		0	0	0	12	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::dtor	c3ev	0x4841e0	c3ev_snddtor	alloc,callback,freeze,globals,heap,import,replace,uitree	10	10	GREEN	OK		0	0	0	10	0	0	10	10	10	10	10	EQUAL_PI		
+Snd::setMode	c3f	0x484260	c3f_snd	alloc	11	11	GREEN	OK		0	11	11	0	11	11	0	11	11	11	11	EXACT		
+SndMusic::setFile	c3dx	0x4842f0	c3dx_music_ok	alloc,callback,freeze,globals,heap,replace	26	26	GREEN	OK		0	26	26	0	0	0	26	26	26	23	23	EQUAL_PI		
+SndMusic::setFile_fail	c3dx	0x4842f0	c3dx_music_fail	alloc,callback,freeze,globals,heap,replace	26	26	GREEN	OK		0	26	26	0	0	0	26	26	26	23	23	EQUAL_PI		
+unlinkSound	c3fi	0x4843e0	c3fi_us	pure	13	13	GREEN	FIXTURE_ERR											13		FIXTURE_ERR	framemask: no stack range (0x0, 0x7f100000)	
+Snd::unlinkFromList	c3dm	0x4844e0	c3dm_snd_list5	alloc,callback,freeze,globals	7	7	GREEN	OK		0	7	7	0	0	0	7	7	7	6	6	EQUAL_PI		
+Snd::unlinkFromList_one	c3dm	0x4844e0	c3dm_snd_list1	alloc,callback,freeze,globals	2	2	GREEN	OK		0	2	2	0	0	0	2	2	2	2	2	EQUAL_PI		
+Snd::unlinkFromList_two	c3dm	0x4844e0	c3dm_snd_list2	alloc,callback,freeze,globals	2	2	GREEN	OK		0	2	2	0	0	0	2	2	2	2	2	EQUAL_PI		
+Snd::stop484550	c3dm	0x484550	c3dm_snd_objs	alloc,callback	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::queryDevice4845d0	c3dm	0x4845d0	c3dm_dev	alloc,callback	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	10	10	EQUAL_PI		
+Snd::status	c3dm	0x4845e0	c3dm_dev	alloc,callback	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	10	10	EQUAL_PI		
+Snd::setField34	c3j	0x4846b0	c3j_snd_f34	alloc	10	10	GREEN	OK		0	10	10	0	10	10	0	10	10	10	10	EXACT		
+Snd::setField34_dev	c3j	0x4846b0	c3j_snd_dev	alloc,freeze,globals	14	14	GREEN	OK		0	14	14	0	0	0	14	14	14	14	14	EQUAL_PI		
+Snd::setField38	c3f	0x4846d0	c3f_snd	alloc	11	11	GREEN	OK		0	11	11	0	11	11	0	11	11	11	11	EXACT		
+Snd::applyField484750	c3dm	0x484750	c3dm_snd_objs	alloc,callback	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::applyField4847b0	c3dm	0x4847b0	c3dm_snd_objs	alloc,callback	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::setPan	c3f	0x4847f0	c3f_snd	alloc	11	11	GREEN	OK		0	11	11	0	11	11	0	11	11	7	7	EXACT		
+Snd::setPan_dev	c3f	0x4847f0	c3j_snd_dev	alloc,freeze,globals	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::ctorDerived	c3c	0x484820	c3c_snd_derived_objs	alloc	6	6	GREEN	OK		0	6	6	0	6	6	0	6	6	6	6	EXACT		
+SndMusic::scalarDtor	c3ev	0x484880	c3ev_sdtor	alloc,callback,freeze,globals,heap,import,replace,uitree	12	12	GREEN	OK		0	0	0	12	0	0	12	12	12	12	12	EQUAL_PI		
+SndMusic::dtor_lib0	c3eu	0x4848a0	c3eu_sndmusic_lib0	alloc,callback,freeze,globals,heap,replace	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+SndMusic::dtor_lib1	c3eu	0x4848a0	c3eu_sndmusic_lib1	alloc,callback,freeze,globals,heap,replace	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+Snd_play	c3dy	0x484940	c3dy_sp	alloc,callback,freeze,import,replace	15	15	GREEN	OK		0	15	15	0	0	0	15	15	15	15	15	EQUAL_PI		
+Snd::configure	c3dx	0x484a40	c3dx_sndfam_ok	alloc,callback,freeze,globals,heap,replace	174	174	GREEN	OK		0	174	174	0	0	0	174	174	174	148	148	EQUAL_PI		
+Snd::configure_fail	c3dx	0x484a40	c3dx_sndfam_fail	alloc,callback,freeze,globals,heap,replace	174	174	GREEN	OK		0	174	174	0	0	0	174	174	174	144	144	EQUAL_PI		
+Snd::busy_t100k	c3cy	0x484b30	c3cy_snd_t100k	alloc,callback,import	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	4	4	EQUAL_PI		
+Snd::busy_t5	c3cy	0x484b30	c3cy_snd_t5	alloc,callback,import	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	4	4	EQUAL_PI		
+Snd::setName	c3dx	0x484b80	c3dx_names	alloc,callback,freeze,globals,heap,replace	30	30	GREEN	OK		0	30	30	0	0	0	30	30	30	25	25	EQUAL_PI		
+SndStream::open484c20	c3dx	0x484c20	c3dx_snd_ok	alloc,freeze,globals	30	30	GREEN	OK		0	30	30	0	0	0	30	30	30	13	13	EQUAL_PI		
+SndStream::open484c20_fail	c3dx	0x484c20	c3dx_snd_fail	alloc,freeze,globals	30	30	GREEN	OK		0	30	30	0	0	0	30	30	30	13	13	EQUAL_PI		
+SndStream::open484c20_nolib	c3dx	0x484c20	c3dx_snd_nolib	alloc,freeze,globals	30	30	GREEN	OK		0	30	30	0	0	0	30	30	30	2	2	EQUAL_PI		
+Snd::open	c3dx	0x484c80	c3dx_sndfam_ok	alloc,callback,freeze,globals,heap,replace	24	24	GREEN	OK		0	24	24	0	0	0	24	24	24	22	22	EQUAL_PI		
+Snd::open_fail	c3dx	0x484c80	c3dx_sndfam_fail	alloc,callback,freeze,globals,heap,replace	24	24	GREEN	OK		0	24	24	0	0	0	24	24	24	22	22	EQUAL_PI		
+Snd::reopen	c3dx	0x484d60	c3dx_sndfam_ok	alloc,callback,freeze,globals,heap,replace	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	11	11	EQUAL_PI		
+Snd::reopen_fail	c3dx	0x484d60	c3dx_sndfam_fail	alloc,callback,freeze,globals,heap,replace	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	11	11	EQUAL_PI		
+Snd::applyMode484e30	c3dm	0x484e30	c3dm_snd_objs	alloc,callback	12	12	GREEN	OK		0	12	12	0	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::start	c3dx	0x484e70	c3dx_snd_ok	alloc,freeze,globals	10	10	GREEN	OK		0	10	10	0	0	0	10	10	10	9	9	EQUAL_PI		
+Snd::start_fail	c3dx	0x484e70	c3dx_snd_fail	alloc,freeze,globals	10	10	GREEN	OK		0	10	10	0	0	0	10	10	10	9	9	EQUAL_PI		
+Snd::start_nolib	c3dx	0x484e70	c3dx_snd_nolib	alloc,freeze,globals	10	10	GREEN	OK		0	10	10	0	0	0	10	10	10	7	7	EQUAL_PI		
+Snd::stop484f00	c3ev	0x484f00	c3ev_sndstop	alloc,callback,freeze,globals,heap,import,replace,uitree	10	10	GREEN	OK		0	5	5	5	0	0	10	10	10	8	8	EQUAL_PI		
+Snd::setPitch	c3f	0x484f40	c3f_snd	alloc	11	11	GREEN	OK		0	11	11	0	11	11	0	11	11	7	7	EXACT		
+Snd::flags	c3f	0x484ff0	c3f_snd_flags	alloc	16	16	GREEN	OK		0	16	16	0	-	-	-	-	-	16	16	EXACT		
+Snd_flags_device	c3cg	0x484ff0	c3cg_snd	alloc,callback	15	15	GREEN	OK		0	15	15	0	15	15	0	15	15	14	14	EXACT		
+Snd::setVolume	c3j	0x485140	c3j_snd_vol	alloc	10	10	GREEN	OK		0	10	10	0	10	10	0	10	10	10	10	EXACT		
+Snd::setVolume_dev	c3j	0x485140	c3j_snd_dev	alloc,freeze,globals	16	16	GREEN	OK		0	16	16	0	0	0	16	16	16	15	15	EQUAL_PI		
+Snd::ctor485260	c3j	0x485260	c3j_snd_ctor	alloc	10	10	GREEN	OK		0	10	10	0	10	10	0	10	10	10	10	EXACT		
+Snd::scalarDtor4852b0	c3ev	0x4852b0	c3ev_sdtor	alloc,callback,freeze,globals,heap,import,replace,uitree	12	12	GREEN	OK		0	0	0	12	0	0	12	12	12	12	12	EQUAL_PI		
+Snd::setVtbl4852d0	c3eu	0x4852d0	c3eu_junk40	alloc,freeze	12	12	GREEN	OK		0	12	12	0	12	12	0	12	12	12	12	EXACT		
+VoiceRx::ctor	c3dd	0x4852e0	c3dd_voice	alloc,callback,heap,replace	6	6	GREEN	OK		0	6	6	0	0	0	6	6	6	6	6	EQUAL_PI		
+openHookA	c3fm	0x4873f0	c3fm_open_a	alloc,callback,freeze,globals	10	10	GREEN	OK		0	10	10	0	3	3	7	10	10	8	8	EQUAL_PI		
+openHookA_null	c3fm	0x4873f0	c3fm_open_a_null	alloc,callback,freeze,globals	6	6	GREEN	OK		0	6	6	0	6	6	0	6	6	2	2	EXACT		
+openHookB	c3fm	0x4879b0	c3fm_open_b	alloc,callback,freeze,globals	10	10	GREEN	OK		0	10	10	0	3	3	7	10	10	8	8	EQUAL_PI		
+openHookB_null	c3fm	0x4879b0	c3fm_open_b_null	alloc,callback,freeze,globals	6	6	GREEN	OK		0	6	6	0	6	6	0	6	6	2	2	EXACT		
+openHookC	c3fm	0x487b90	c3fm_open_c	alloc,callback,freeze,globals	10	10	GREEN	OK		0	10	10	0	3	3	7	10	10	8	8	EQUAL_PI		
+openHookC_null	c3fm	0x487b90	c3fm_open_c_null	alloc,callback,freeze,globals	6	6	GREEN	OK		0	6	6	0	6	6	0	6	6	2	2	EXACT		
+closeHookC_null	c3cc	0x487bd0	c3cc_closeC_null	pure	5	5	GREEN	FIXTURE_ERR											1		FIXTURE_ERR	this._c3ccCloseC is not a function	
+closeHookC_set	c3cc	0x487bd0	c3cc_closeC_set	pure	6	6	GREEN	FIXTURE_ERR											5		FIXTURE_ERR	this._c3ccCloseC is not a function	

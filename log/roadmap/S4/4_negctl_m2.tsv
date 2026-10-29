@@ -1,0 +1,9 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+Voice_mixAdd8bit	2	RED	44	27	46	Voice_mixAdd8bit Voice_mixAdd8bit_st0
+Voice_mixAddMono16	2	RED	42	25	46	Voice_mixAddMono16 Voice_mixAddMono16_st0
+Voice_mixAddStereo16	2	RED	32	7	32	Voice_mixAddStereo16 Voice_mixAddStereo16_st0
+Voice_mixSet8bit	2	RED	40	27	46	Voice_mixSet8bit Voice_mixSet8bit_st0
+Voice_mixSetMono16	2	RED	38	25	46	Voice_mixSetMono16 Voice_mixSetMono16_st0
+Voice_mixSetStereo16	2	RED	28	7	32	Voice_mixSetStereo16 Voice_mixSetStereo16_st0
+streamRenderBlock	2	RED	42	29	42	streamRenderBlock streamRenderBlock_st0
+streamRenderTail	2	RED	42	28	42	streamRenderTail streamRenderTail_st0

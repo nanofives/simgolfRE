@@ -1,0 +1,11 @@
+mode	what	verdict	vectors_differ	vectors	keys
+1	return ^ 1	RED	74	74	basic:11 busy7:2 busy0:2 seekfail:4 seeknomove:3 nopre:2 list:2 pre_g0:5 pre_g1:5 pre_g2:5 pre_g3:5 pre_g4:5 pre_g5:5 oom0:2 oom1:1 oom2:1 nullA:4 nullB:1 nullC:1 nullU:1 sfnull:1 sfnullU:1 snmnull:1 snmnullU:1 user:3
+2	ctrl: readFmtChunk skipped	RED	7	74	basic:3 busy0:1 seekfail:1 nopre:1 list:1
+3	trak: node value NULL	RED	23	74	basic:6 busy0:1 seekfail:3 seeknomove:2 nopre:2 list:2 nullA:3 nullC:1 nullU:1 sfnullU:1 snmnullU:1
+4	glbl: Voice_setPlayModeBits skipped	RED	5	74	basic:1 busy0:1 seekfail:1 nopre:1 list:1
+5	chnl: Seq_copyChannelParams skipped	RED	5	74	basic:1 busy0:1 seekfail:1 nopre:1 list:1
+6	kmap: trailing dword not stored	RED	5	74	basic:1 busy0:1 seekfail:1 nopre:1 list:1
+7	prgm: 0x1c flag stays 0	RED	35	74	basic:1 busy0:1 seekfail:1 nopre:1 list:1 pre_g0:5 pre_g1:5 pre_g2:5 pre_g3:5 pre_g4:5 pre_g5:5
+8	MThd: Seq_applyTrackFlag skipped	RED	8	74	basic:3 busy0:1 nopre:2 list:2
+9	prefix: own-name cut skipped	RED	24	74	pre_g0:4 pre_g1:4 pre_g2:4 pre_g3:4 pre_g4:4 pre_g5:4
+10	unknown tag: g_openMmioCount kept	RED	10	74	basic:5 nullA:1 nullU:1 user:3

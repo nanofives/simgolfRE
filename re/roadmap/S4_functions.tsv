@@ -1,0 +1,764 @@
+step	family	rva	name	level	status	path1_csvs	oracle	hook_source
+-	mixer	0x07bd0	mixAddSamples	C2	dead	0	dead	
+-	mixer~	0x07c30	writeWaveHeaderA	C2	dead	0	dead	
+-	mixer~	0x07cc0	writeWaveHeaderB	C2	dead	0	dead	
+-	wave~	0x07d60	writeWaveHeaderC	C2	dead	0	dead	
+-	seq	0x09be0	Midi_Device::ctor	C2	dead	1	dead	
+-	wave	0x0c420	Wave_Device::processCommandQueue	C2	dead	0	dead	
+-	wave	0x0e870	Wave_In_Device::ctor	C2	dead	0	dead	
+-	ds	0x0f2b0	DsBuffer::applyOwnerVolume	C2	dead	0	dead	
+-	ds	0x0ffd0	DsBuffer::releaseAux	C2	dead	0	dead	
+-	ds	0x10020	DsBuffer::releaseNotify	C2	dead	0	dead	
+-	ds	0x103b0	DsBuffer::getWriteRegion	C2	dead	0	dead	
+-	ds	0x10920	DsBuffer::calibratePosition	C2	dead	0	dead	
+-	ds	0x10b40	DsBuffer::spinPosition	C2	dead	0	dead	
+-	ds	0x12120	DirectSoundDevice::createPoolBuffer	C2	dead	0	dead	
+-	ds	0x124c0	DirectSoundDevice::freeIdleBuffer	C2	dead	0	dead	
+-	ds	0x128b0	DirectSoundDevice::acquireBuffer	C2	dead	0	dead	
+-	ds	0x12bb0	DirectSoundDevice::createPoolBufferEx	C2	dead	0	dead	
+-	mixer	0x14d20	mixRenderOuterB2	C2	dead	0	dead	
+-	mixer	0x15aa0	mixCopyD	C2	dead	0	dead	
+-	mixer	0x15cf0	mixResampleF	C2	dead	0	dead	
+-	mixer	0x17520	mixResampleJ	C2	dead	0	dead	
+-	mixer	0x178c0	mixResampleK	C2	dead	0	dead	
+-	mixer	0x17c10	mixCopyE	C2	dead	0	dead	
+-	mixer	0x17eb0	mixMonoDup2xSet	C2	dead	1	dead	
+-	mixer	0x18110	mixResampleL	C2	dead	0	dead	
+-	mixer	0x18d10	Voice_renderStream16a	C2	dead	0	dead	
+-	mixer	0x19060	Voice_renderStream8a	C2	dead	0	dead	
+-	mixer	0x19400	Voice_renderStream8b	C2	dead	0	dead	
+-	list	0x1bb10	PtrList_deleteAll	C2	dead	0	dead	
+-	dev	0x1bbb0	Ctrl5b5c0_resetElements	C2	dead	0	dead	
+-	dev	0x1c400	Ctrl5b5c0_buildTable	C2	dead	0	dead	
+-	dev	0x1c5c0	Ctrl5b5f0_ctor	C2	dead	0	dead	
+-	dev	0x1c870	Ctrl5b638_ctor	C2	dead	0	dead	
+-	wave	0x1e750	MidiReader_ctor	C2	dead	0	dead	
+-	seq	0x1f6f0	Seq_ctor	C2	dead	0	dead	
+-	seq	0x207f0	Seq_preRollAllTracks	C2	dead	0	dead	
+-	seq	0x22200	Seq_setCurrentIndex	C2	dead	0	dead	
+-	mixer	0x27310	Voice_renderUnityA	C2	dead	0	dead	
+-	mixer	0x274e0	Voice_renderUnityB	C2	dead	0	dead	
+-	mixer	0x27730	Voice_renderStream16d	C2	dead	0	dead	
+-	mixer	0x27ad0	Voice_renderStream16e	C2	dead	0	dead	
+-	mixer	0x27e20	mixAdd8bitStereo	C2	dead	0	dead	
+-	mixer	0x281d0	mixCopy8bitStereo	C2	dead	0	dead	
+-	sound~	0x28740	createSoundWindow	C2	dead	0	dead	
+-	dev~	0x2a7c0	initSignalQueue	C2	dead	0	dead	
+-	dev~	0x2a810	stopSignalThread	C2	dead	0	dead	
+-	dev	0x2bbe0	Device_createAndStart	C2	dead	0	dead	
+-	chan	0x2c490	Ch5bb90_ctor	C2	dead	1	dead	
+-	sound	0x2ce60	MultiSound_freeSlots	C2	dead	0	dead	
+-	chan	0x2e550	Ch5c000_ctor	C2	dead	0	dead	
+-	sound~	0x2ffa0	markSoundTime	C2	dead	0	dead	
+-	sound~	0x2ffd0	updateSoundTimer	C2	dead	0	dead	
+-	chan	0x31e50	Channel_ctor	C2	dead	0	dead	
+-	chan	0x33f90	Channel_closeStreamList	C2	dead	0	dead	
+-	wave	0x34fe0	mmioReadBuffered	C2	dead	0	dead	
+-	wave	0x350e0	mmioSeekToSample	C2	dead	0	dead	
+-	chan	0x357e0	Channel_checkOpen	C2	dead	0	dead	
+-	chan	0x358c0	Channel_readCurrentSample	C2	dead	0	dead	
+-	chan	0x38070	Voice_setRateForward	C2	dead	0	dead	
+-	chan	0x38130	Voice_setRateReverse	C2	dead	0	dead	
+-	wave	0x38a00	WaveInDevice_stop	C2	dead	0	dead	
+-	wave	0x38c70	WaveInDevice_unprepareHeaders	C2	dead	0	dead	
+-	wave	0x38f60	WaveInDevice_queryCaps	C2	dead	0	dead	
+-	list~	0x394c0	freePointerAndClear	C2	dead	0	dead	
+-	list~	0x394f0	MemBlock_alloc	C2	dead	0	dead	
+-	crt	0x41aad	iosResetVtable	C4	verified	1	path1+emu	c3cm.cpp
+-	crt	0x41b9d	ostream::scalarDtorAdj8	C2	transcribed	0	emu-only	
+-	crt	0x41c26	ostreamResetVtable	C4	verified	1	path1+emu	c3cx.cpp
+-	crt	0x41e43	initCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x41e4e	deleteCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x41e59	enterCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x41e64	leaveCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x42482	NLG_Notify	C2	transcribed	0	emu-only	
+S4.11	crt	0x4249a	operator_delete	C2	transcribed	0	emu-only	
+-	crt	0x42506	cfltcvtInit	C4	verified	1	path1+emu	c3fu.cpp
+-	crt	0x42550	__ftol	C3	verified	5	path1+emu	c3fo.cpp
+S4.11	crt	0x42690	strstr	C3	verified	1	path1+emu	c3cm.cpp
+S4.11	crt	0x4288e	__ArrayUnwind	C3	impl	3	path1+emu	c3fza.cpp
+S4.11	crt	0x42902	ehVectorConstructorIterator	C4	verified	3	path1+emu	c3fo.cpp
+-	crt	0x4296c	ehVectorCtor_finally	C2	transcribed	0	emu-only	
+-	crt	0x42a8e	crtEndThread	C2	transcribed	0	emu-only	
+S4.11	crt	0x42b0b	heap_alloc	C2	transcribed	0	emu-only	
+-	crt	0x42b72	heapAllocUnlockFunclet	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x42bd1	heapAllocUnlockFunclet2	C4	verified	1	path1+emu	c3dt.cpp
+S4.11	crt	0x42c07	free	C2	transcribed	0	emu-only	
+-	crt	0x42c71	freeUnlockFunclet	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x42cc9	freeUnlockFunclet2	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x4319b	_amsg_exit	C2	transcribed	0	emu-only	
+-	crt	0x431f0	CIsqrt	C2	dead	0	dead	
+-	crt	0x43204	sqrt	C2	transcribed	0	emu-only	
+-	crt	0x4320d	sqrt_classify	C2	transcribed	0	emu-only	
+-	crt	0x432b0	CItranscendental1	C2	transcribed	0	emu-only	
+-	crt	0x432d0	CIlog	C2	dead	0	dead	
+-	crt	0x432e4	log	C2	transcribed	0	emu-only	
+-	crt	0x432ed	log_classify	C2	transcribed	0	emu-only	
+-	crt	0x437e0	EH_prolog	C2	transcribed	0	emu-only	
+-	crt	0x45181	crtExitProcess	C2	transcribed	0	emu-only	
+S4.11	crt	0x45252	crtRealloc	C2	transcribed	0	emu-only	
+-	crt	0x453dd	reallocUnlockFunclet	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x4552b	reallocUnlockFunclet2	C2	transcribed	0	emu-only	
+S4.11	crt	0x45581	msize	C2	transcribed	0	emu-only	
+-	crt	0x455eb	msizeUnlockFunclet	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x45666	msizeUnlockFunclet2	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x45680	strchr	C3	impl	1	path1+emu	c3cm.cpp
+-	crt	0x4588f	_errno	C4	verified	3	path1+emu	c3dh.cpp
+-	crt	0x45898	__doserrno	C4	verified	3	path1+emu	c3dh.cpp
+-	crt	0x458a1	calloc	C2	transcribed	0	emu-only	
+-	crt	0x4593a	callocUnlockFunclet	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x459c3	callocUnlockFunclet2	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x45b9b	getModuleLinkerVersion	C4	verified	5	path1+emu	c3dh.cpp
+-	crt	0x45bc8	crtHeapSelect	C4	verified	11	path1+emu	c3dh.cpp
+-	crt	0x45d10	crtHeapInit	C2	transcribed	0	emu-only	
+-	crt	0x45d6d	sbhHeapTerm	C2	transcribed	0	emu-only	
+-	crt	0x45e34	setSbhThreshold	C2	dead	0	dead	
+-	crt	0x45ee7	sbhGroupHeapInit	C2	transcribed	0	emu-only	
+-	crt	0x45f5a	__sbh_free_block	C2	transcribed	0	emu-only	
+-	crt	0x46e50	sbhRegionCreate	C2	transcribed	0	emu-only	
+-	crt	0x46f94	sbhRegionFree	C2	transcribed	0	emu-only	
+-	crt	0x46fea	sbhRegionDecommit	C2	transcribed	0	emu-only	
+-	crt	0x470ac	sbhRegionLocate	C4	verified	1	path1+emu	c3dh.cpp
+-	crt	0x47103	sbhPageFree	C4	verified	2	path1+emu	c3cx.cpp
+-	crt	0x47148	crtCommitPages	C2	transcribed	0	emu-only	
+-	crt	0x47350	sbhFindFreeRun	C2	transcribed	0	emu-only	
+-	crt	0x47474	sbhResizeBlock	C4	verified	1	path1+emu	c3cx.cpp
+-	crt	0x4751d	sbhRegionHeapCheck	C2	dead	0	dead	
+S4.11	crt	0x47771	_unlock	C4	verified	1	path1+emu	c3dt.cpp
+-	crt	0x48180	fp2ArgResultDispatch	C2	transcribed	0	emu-only	
+-	crt	0x481f5	fpuSetControlWord	C2	transcribed	0	emu-only	
+-	crt	0x4820c	fpStatusExceptionType	C2	transcribed	0	emu-only	
+-	crt	0x48268	doubleExponentField	C3	impl	1	path1+emu	c3cm.cpp
+-	crt	0x48643	fpTranscendentalDispatch	C2	transcribed	0	emu-only	
+-	crt	0x4864a	fpIntrinsicDispatch	C2	transcribed	0	emu-only	
+-	crt	0x49604	crtValidatePointer	C4	verified	2	path1+emu	c3cm.cpp
+-	crt	0x4a010	strcpy	C3	verified	1	path1+emu	c3cm.cpp
+-	crt	0x4a158	__fptrap	C2	transcribed	0	emu-only	
+-	crt	0x4aa10	_alloca_probe	C2	transcribed	0	emu-only	
+-	crt	0x4e0d4	__init_time	C2	transcribed	0	emu-only	
+-	crt	0x4e4b3	__free_lc_time	C4	verified	1	path1+emu	c3cx.cpp
+-	crt	0x4fe24	Strftime	C2	transcribed	0	emu-only	
+-	crt	0x51319	cvtdate	C4	verified	1	path1+emu	c3cm.cpp
+S4.2	list	0x05a60	clearNodeListD	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x05b60	clearNodeListE	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x05c00	listPopFront	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x05e30	appendNodeB	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x06c70	clearNodeListF	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x06ec0	freeDynArray	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x06f00	resizeDynArray	C3	impl	1	path1+emu	c3do.cpp
+S4.2	list	0x08470	flushSoundList	C4	verified	7	path1+emu	c3fl.cpp
+S4.2	list	0x087f0	listNode3Init	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x08810	pairStore	C4	verified	1	path1+emu	c3ar.cpp
+S4.2	list	0x08840	pairClear	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x0ae80	clearNodeListG	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x0b000	NodeB000_ctor	C4	verified	1	path1+emu	c3fk.cpp
+S4.2	list	0x0b030	getSpanLength	C4	verified	1	path1+emu	c3an.cpp
+S4.2	list	0x0cc40	cmdNode::scalarDeletingDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x0e050	removeSoundNode	C4	verified	1	path1+emu	c3do.cpp
+S4.2	list	0x0e120	addToSoundList	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list~	0x0e570	stubReturnBB	C2	trivial	0	emu-only	
+S4.2	list	0x0e5e0	clearNodeListC	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x0e680	appendNodeC	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x0e700	findAndUnlinkNodeB	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x116a0	seekListToIndex	C4	verified	1	path1+emu	c3au.cpp
+S4.2	list	0x11790	getNodeByIndex	C4	verified	1	path1+emu	c3cx.cpp
+S4.2	list	0x13620	clearNodeListA	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x136c0	findAndUnlinkNode	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x13750	clearNodeListB	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x137f0	appendNode	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x1b160	StrPtr_assign	C4	verified	1	path1+emu	c3fk.cpp
+S4.2	list	0x1b570	ChainObject_dtor	C4	verified	1	path1+emu	c3do.cpp
+S4.2	list	0x1bc00	ListValues_callSlot18	C4	verified	1	path1+emu	c3dt.cpp
+S4.2	list	0x1bea0	ChainObject_scalarDtor	C4	verified	1	path1+emu	c3do.cpp
+S4.2	list	0x1d130	PtrList_init	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x1d150	PtrList_pushBack	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x1d1d0	PtrList_pushFront	C2	transcribed	0	emu-only	
+S4.2	list	0x1d250	PtrList_insert	C2	transcribed	0	emu-only	
+S4.2	list	0x1e6e0	byteSwap16	C4	verified	1	path1+emu	c3ar.cpp
+S4.2	list	0x1f1c0	PtrList_freeNodesA	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x24d40	NodeList_clear	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x24de0	NodeList_pushBack	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x24e60	NodeList_insert	C4	verified	2	path1+emu	c3dh.cpp
+S4.2	list	0x24f90	NodeList_pushFront	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x25010	NodeList_initNode	C4	verified	1	path1+emu	c3ar.cpp
+S4.2	list	0x28560	randRange	C4	verified	1	path1+emu	c3an.cpp
+S4.2	list	0x285a0	nextRandomFloat	C4	verified	1	path1+emu	c3ar.cpp
+S4.2	list	0x2b090	unlinkFromActiveList	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x2bb10	Object_setName	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x2d430	getField204	C4	verified	1	path1+emu	c3fk.cpp
+S4.2	list	0x2e3f0	NodeB000_initBase	C4	verified	1	path1+emu	c3fk.cpp
+S4.2	list	0x31ac0	PtrList_freeNodesB	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x31b60	ResourceList_pushBack	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x32440	voiceListRemove	C4	verified	1	path1+emu	c3do.cpp
+S4.2	list	0x38430	nodeListAppendValue	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x384b0	nodeListClear2	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x38550	listAppendNodeA	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x385d0	listAppendNodeB	C4	verified	1	path1+emu	c3cn.cpp
+S4.2	list	0x38ae0	MemBlock_deleteDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x39450	setField6cReturn0	C4	verified	1	path1+emu	c3ex.cpp
+S4.2	list	0x39470	clearField6cReturn0	C4	verified	1	path1+emu	c3ex.cpp
+S4.2	list	0x39580	nodeListClear	C4	verified	1	path1+emu	c3dj.cpp
+S4.2	list	0x39620	nodeListPopFront	C4	verified	1	path1+emu	c3cn.cpp
+S4.3	codec	0x3a980	codecDecodeFrame	C4	verified	1	path1+emu	c3bv.cpp
+S4.3	codec	0x3aa50	codecSetParams	C4	verified	10	path1+emu	c3dh.cpp
+S4.3	codec	0x3aa90	codecAllocEncoderContext	C4	verified	3	path1+emu	c3dh.cpp
+S4.3	codec	0x3aae0	codecInitEncoderContext	C4	verified	1	path1+emu	c3ca.cpp
+S4.3	codec	0x3aea0	codecAllocDecoderContext	C4	verified	3	path1+emu	c3dh.cpp
+S4.3	codec	0x3aef0	codecInitDecoderContext	C4	verified	1	path1+emu	c3ca.cpp
+S4.3	codec	0x3b150	codecEncodeFrame	C4	verified	1	path1+emu	c3bv.cpp
+S4.3	codec	0x3b230	codecSynthesizeFrame	C4	verified	1	path1+emu	c3br.cpp
+S4.3	codec	0x3b5a0	codecDecodeParams	C4	verified	2	path1+emu	c3br.cpp
+S4.3	codec	0x3bf30	bitPermute	C4	verified	1	path1+emu	c3bi.cpp
+S4.3	codec	0x3c180	bitPack	C4	verified	1	path1+emu	c3au.cpp
+S4.3	codec	0x3c1d0	bitUnpack	C4	verified	1	path1+emu	c3au.cpp
+S4.3	codec	0x3c220	quantizeParams	C4	verified	2	path1+emu	c3br.cpp
+S4.3	codec	0x3c640	codecAnalyzeFrame	C4	verified	1	path1+emu	c3bv.cpp
+S4.3	codec	0x3d040	codecHighPassFrame	C4	verified	1	path1+emu	c3au.cpp
+S4.3	codec	0x3d0a0	codecSynthPostFilter	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x3d1d0	lpcSynthesize	C4	verified	1	path1+emu	c3bn.cpp
+S4.3	codec	0x3d8d0	reflectionToLpc	C4	verified	1	path1+emu	c3bn.cpp
+S4.3	codec	0x3da50	interpSubframeParams	C4	verified	1	path1+emu	c3br.cpp
+S4.3	codec	0x3e2c0	intPow	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x3e380	floatCopySign	C4	verified	1	path1+emu	c3au.cpp
+S4.3	codec	0x3e400	floatRoundHalfAway	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x3e480	medianOfThree	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x3e520	codecCorrectNibble	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x3e600	codecRevertUnstableCoeffs	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x3e6d0	codecLdlSolveClamped	C4	verified	1	path1+emu	c3bi.cpp
+S4.3	codec	0x3e9f0	codecCovarianceMatrix	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x3ec60	codecRmsEnergy	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x3ed00	codecRemoveMean	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x3edc0	codecAlignAnalysisWindow	C4	verified	1	path1+emu	c3ca.cpp
+S4.3	codec	0x3f310	codecPitchTrackDp	C4	verified	1	path1+emu	c3bi.cpp
+S4.3	codec	0x3f720	codecVoicingDecision	C4	verified	1	path1+emu	c3bv.cpp
+S4.3	codec	0x40000	codecRefinePitchLag	C4	verified	1	path1+emu	c3bn.cpp
+S4.3	codec	0x40330	codecInverseFilter2	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x404d0	codecLowPassFir31	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x40740	codecSelectWindowFromJumps	C4	verified	1	path1+emu	c3ca.cpp
+S4.3	codec	0x40ab0	codecMarkCorrelationJumps	C4	verified	1	path1+emu	c3bi.cpp
+S4.3	codec	0x40da0	codecPreEmphasis	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x40e30	codecHighPassFilter	C4	verified	1	path1+emu	c3bd.cpp
+S4.3	codec	0x40f60	codecRing5Add	C4	verified	1	path1+emu	c3az.cpp
+S4.3	codec	0x41020	codecWindowFeatures	C4	verified	1	path1+emu	c3bi.cpp
+S4.3	codec	0x414f0	codecAmdfPitch	C4	verified	1	path1+emu	c3bi.cpp
+S4.4	mixer	0x13890	mixStereoAdd	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x13b10	mixStereoGainAdd	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x13dd0	mixRatedStereo16Add	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x14250	mixMonoDupAdd	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x14510	mixMonoGainFadeAdd	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x14820	mixRatedMono16AddFade	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x152b0	mixRatedStereo8Add	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x156c0	mixRatedMono8Add	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x15f70	mixRatedStereo16Set	C2	transcribed	1	emu-only	
+S4.4	mixer	0x16340	mixMonoDupSet	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x165a0	mixMonoGainFadeSet	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x16850	mixRatedMono16SetFade	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x16d90	mixRatedStereo8Set	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x17160	mixRatedMono8Set	C4	verified	1	path1+emu	c3do.cpp
+S4.4	mixer	0x184a0	streamRenderBlock	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x188d0	streamRenderTail	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x19770	Voice_mixAddMono16	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x19b20	Voice_mixSetMono16	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x19ec0	Voice_mixSet8bit	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x1a2c0	Voice_mixAdd8bit	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x1a6c0	Voice_mixSetStereo16	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x1a910	Voice_mixAddStereo16	C4	verified	2	path1+emu	c3fh.cpp
+S4.4	mixer	0x25190	mixRenderRatedC	C2	transcribed	0	emu-only	
+S4.4	mixer	0x256c0	Voice_renderStream16b	C2	transcribed	0	emu-only	
+S4.4	mixer	0x25c80	Voice_renderStream8c	C2	transcribed	0	emu-only	
+S4.4	mixer	0x26260	Voice_renderStream16c	C2	transcribed	0	emu-only	
+S4.4	mixer	0x26800	Voice_renderStream32	C2	transcribed	0	emu-only	
+S4.4	mixer	0x26d30	Voice_renderStream8d	C2	transcribed	0	emu-only	
+S4.4	mixer	0x2c5b0	MixerVoiceArray_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.4	mixer	0x2c5e0	destroyMixerVoices	C4	verified	1	path1+emu	c3dj.cpp
+S4.4	mixer	0x2c9f0	Mixer_ctor	C3	impl	1	path1+emu	c3dj.cpp
+S4.4	mixer	0x2cad0	Mixer_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.4	mixer	0x2cb00	Mixer_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.4	mixer	0x2cee0	MixBuffer_ctor	C4	verified	1	path1+emu	c3ew.cpp
+S4.4	mixer	0x35990	renderChannel	C3	impl	1	path1+emu	c3fe.cpp
+S4.4	mixer	0x36280	renderChannelSingle	C3	impl	3	path1+emu	c3fe.cpp
+S4.4	mixer	0x36660	renderChannelStreamed	C3	impl	4	path1+emu	c3fp.cpp
+S4.4	mixer	0x371d0	renderChannelVoice	C3	impl	3	path1+emu	c3fl.cpp
+S4.5	seq	0x09c80	Midi_Device::scalarDeletingDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.5	seq	0x09cb0	Midi_Device::dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.5	seq	0x09da0	Midi_Device::openOutput	C4	verified	3	path1+emu	c3dh.cpp
+S4.5	seq	0x09e40	Midi_Device::shutdown	C4	verified	4	path1+emu	c3fd.cpp
+S4.5	seq	0x0a1b0	Midi_Device::enableOutput	C4	verified	1	path1+emu	c3dt.cpp
+S4.5	seq	0x0a200	Midi_Device::disableOutput	C4	verified	4	path1+emu	c3dh.cpp
+S4.5	seq	0x0a330	Midi_Device::drainCommandQueue	C4	verified	1	path1+emu	c3fd.cpp
+S4.5	seq	0x0a670	Midi_Device::dispatchCommand	C4	verified	3	path1+emu	c3fl.cpp
+S4.5	seq	0x0aaf0	Midi_Device::scanCommandRing	C4	verified	1	path1+emu	c3fd.cpp
+S4.5	seq	0x1abd0	Seq_freeChannelObjects	C4	verified	1	path1+emu	c3dj.cpp
+S4.5	seq	0x1adc0	Midi_advanceMsgRing	C4	verified	1	path1+emu	c3ar.cpp
+S4.5	seq	0x1ae00	Seq_setPlayRange	C4	verified	1	path1+emu	c3ar.cpp
+S4.5	seq	0x1bb80	Seq_firstTrackData	C4	verified	1	path1+emu	c3an.cpp
+S4.5	seq	0x1d4a0	Midi_resetFileState	C4	verified	6	path1+emu	c3dh.cpp
+S4.5	seq	0x1d780	Seq_listGetAt	C4	verified	1	path1+emu	c3au.cpp
+S4.5	seq	0x1d810	Midi_Device::loadFile	C3	impl	3	path1+emu	c3fn.cpp
+S4.5	seq	0x1dce0	Midi_Device::loadFromMemory	C3	impl	3	path1+emu	c3fn.cpp
+S4.5	seq	0x1e1c0	Seq_rewind	C4	verified	1	path1+emu	c3ar.cpp
+S4.5	seq	0x1e230	Track_resetReadState	C4	verified	1	path1+emu	c3au.cpp
+S4.5	seq	0x1e2b0	Seq_dtor	C4	verified	1	path1+emu	c3fd.cpp
+S4.5	seq	0x1e3d0	Midi_Device::closeFile	C4	verified	1	path1+emu	c3dh.cpp
+S4.5	seq	0x1e530	Track_clearFlag8	C4	verified	1	path1+emu	c3ca.cpp
+S4.5	seq	0x1e630	Seq_scaleTickRate	C4	verified	4	path1+emu	c3cx.cpp
+S4.5	seq	0x1e710	Midi_readVarLen	C4	verified	1	path1+emu	c3ar.cpp
+S4.5	seq	0x1e8e0	Seq_rewindTracks	C4	verified	1	path1+emu	c3do.cpp
+S4.5	seq	0x1e9a0	Track_setData	C4	verified	1	path1+emu	c3ex.cpp
+S4.5	seq	0x1e9f0	Track_advancePos	C4	verified	1	path1+emu	c3ar.cpp
+S4.5	seq	0x1ef10	Midi_Device::flushMessages	C4	verified	2	path1+emu	c3dh.cpp
+S4.5	seq	0x1ef80	Midi_scanTrack	C3	impl	1	path1+emu	c3bd.cpp
+S4.5	seq	0x1f150	Seq_clearTrackFlag8All	C4	verified	1	path1+emu	c3an.cpp
+S4.5	seq	0x20290	Seq::loadFile	C4	verified	1	path1+emu	c3ex.cpp
+S4.5	seq	0x20360	Midi_loadMemoryAndPreRoll	C3	impl	1	path1+emu	c3ex.cpp
+S4.5	seq	0x204b0	Seq_closeFile	C4	verified	1	path1+emu	c3dt.cpp
+S4.5	seq	0x205f0	Seq_preRollTrack	C4	verified	1	path1+emu	c3ex.cpp
+S4.5	seq	0x20720	Seq_stepTrackMeta	C4	verified	1	path1+emu	c3ex.cpp
+S4.5	seq	0x20870	Midi_Device::playEvent	C3	impl	1	path1+emu	c3fd.cpp
+S4.5	seq	0x20f50	Seq_setField730Clamped	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x20fe0	Seq_setupChannel	C3	impl	4	path1+emu	c3fk.cpp
+S4.5	seq	0x213d0	Midi_Device::setChannelVolume	C3	impl	1	path1+emu	c3bi.cpp
+S4.5	seq	0x215c0	Midi_Device::noteOn	C3	impl	3	path1+emu	c3fl.cpp
+S4.5	seq	0x21a90	Midi_Device::sendShortMsg	C3	impl	2	path1+emu	c3fd.cpp
+S4.5	seq	0x21bf0	Midi_Device::handleMetaEvent	C3	impl	1	path1+emu	c3fk.cpp
+S4.5	seq	0x21ee0	Seq_setTempo	C3	impl	2	path1+emu	c3fh.cpp
+S4.5	seq	0x21fa0	Seq_updateChannel	C3	impl	3	path1+emu	c3fk.cpp
+S4.5	seq	0x22240	Seq_reset	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x22280	Seq_copyChannelParams	C4	verified	1	path1+emu	c3au.cpp
+S4.5	seq	0x22750	Seq_setPlayOrderMode	C4	verified	1	path1+emu	c3dt.cpp
+S4.5	seq	0x227a0	Seq_setField240	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x228d0	Seq_removeTrackById	C4	verified	1	path1+emu	c3do.cpp
+S4.5	seq	0x229f0	Seq_buildTrack9	C3	impl	1	path1+emu	c3fk.cpp
+S4.5	seq	0x22d00	Seq_buildTrack14	C3	impl	1	path1+emu	c3fk.cpp
+S4.5	seq	0x23000	Seq_findTrackOrZero	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x23080	Seq_findTrackById	C4	verified	1	path1+emu	c3cl.cpp
+S4.5	seq	0x231e0	Seq_cmdHandler7	C4	verified	1	path1+emu	c3do.cpp
+S4.5	seq	0x23540	Seq_cmdHandler8	C4	verified	1	path1+emu	c3ew.cpp
+S4.5	seq	0x23610	Seq_remarkEventRange	C4	verified	1	path1+emu	c3bn.cpp
+S4.5	seq	0x238b0	Seq_cmdHandler9	C4	verified	1	path1+emu	c3ew.cpp
+S4.5	seq	0x23950	Seq_replayEventRange	C4	verified	1	path1+emu	c3fd.cpp
+S4.5	seq	0x23a60	Seq_cmdHandler10	C4	verified	1	path1+emu	c3bi.cpp
+S4.5	seq	0x23c20	Seq_cmdHandler12	C4	verified	1	path1+emu	c3dh.cpp
+S4.5	seq	0x23c70	Seq_cmdHandler11	C4	verified	1	path1+emu	c3au.cpp
+S4.5	seq	0x23d00	Seq_buildPlayOrder	C3	impl	1	path1+emu	c3fk.cpp
+S4.5	seq	0x23e10	Seq_applyTrackFlag	C4	verified	1	path1+emu	c3az.cpp
+S4.5	seq	0x23f10	Seq_getTrackFlagHigh	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x24040	Seq_dispatchChannelCmd	C4	verified	1	path1+emu	c3fd.cpp
+S4.5	seq	0x241f0	Seq_getListElementAt	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x24280	Seq_loadChannelDesc	C4	verified	1	path1+emu	c3az.cpp
+S4.5	seq	0x24360	Seq_mergeChannelDesc	C3	impl	1	path1+emu	c3az.cpp
+S4.5	seq	0x24500	Seq_selectTrack	C4	verified	1	path1+emu	c3ex.cpp
+S4.5	seq	0x24630	Seq_resetTrackControllers	C4	verified	1	path1+emu	c3cf.cpp
+S4.5	seq	0x246a0	Midi_Device::emitEvent	C4	verified	2	path1+emu	c3fd.cpp
+S4.5	seq	0x247c0	Seq_allocTrackSlot	C3	impl	1	path1+emu	c3ew.cpp
+S4.5	seq	0x24920	Midi_seekTrackToTick	C3	impl	1	path1+emu	c3bd.cpp
+S4.5	seq	0x24b80	Seq_scheduleEvent	C4	verified	1	path1+emu	c3bi.cpp
+S4.5	seq	0x29e70	MidiDeviceBase_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.5	seq	0x29f30	MidiDeviceBase_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.5	seq	0x29f90	MidiDeviceBase_openInner	C4	verified	1	path1+emu	c3cl.cpp
+S4.5	seq	0x2a000	MidiDeviceBase_closeInner	C4	verified	1	path1+emu	c3cl.cpp
+S4.5	seq	0x2b260	Seq_applyChannelLevel	C4	verified	1	path1+emu	c3ca.cpp
+S4.5	seq	0x2e430	Track_setField8RaisingMax	C4	verified	1	path1+emu	c3cl.cpp
+S4.6	chan~	0x11160	stubReturnBC	C2	trivial	0	emu-only	
+S4.6	chan	0x11180	initSoundVoice	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x1ac40	Voice_notifyChannelNotes	C4	verified	1	path1+emu	c3fd.cpp
+S4.6	chan	0x1ae50	ChannelTable_callSlot4	C4	verified	1	path1+emu	c3fk.cpp
+S4.6	chan	0x1aef0	ChannelTable_loadRange	C3	impl	1	path1+emu	c3fq.cpp
+S4.6	chan	0x1b0d0	ChannelTable_releaseObject	C4	verified	1	path1+emu	c3fq.cpp
+S4.6	chan	0x1ccf0	ChanRecord_init	C4	verified	1	path1+emu	c3fk.cpp
+S4.6	chan	0x1cd30	ChanRecord_freeBuffers	C4	verified	1	path1+emu	c3fk.cpp
+S4.6	chan	0x1f8c0	Voice::update	C2	transcribed	0	emu-only	
+S4.6	chan	0x20be0	Voice_startPlayback	C4	verified	1	path1+emu	c3fd.cpp
+S4.6	chan	0x20d80	Voice_allNotesOff	C3	impl	3	path1+emu	c3fd.cpp
+S4.6	chan	0x20ea0	Voice_requestStop	C4	verified	3	path1+emu	c3dj.cpp
+S4.6	chan	0x20ee0	Voice_requestStopDrain	C3	impl	3	path1+emu	c3dj.cpp
+S4.6	chan	0x23ea0	Voice_requestCmd12	C4	verified	3	path1+emu	c3dh.cpp
+S4.6	chan	0x24460	ChannelDesc_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x24c50	Voice_setPlayModeBits	C4	verified	1	path1+emu	c3an.cpp
+S4.6	chan	0x29020	VoiceBase_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x29140	VoiceBase_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x29170	VoiceBase_clearList	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x29200	VoiceBase_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x292d0	VoiceBase_openInner	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x29320	VoiceBase_closeInner	C4	verified	1	path1+emu	c3cl.cpp
+S4.6	chan	0x2abd0	SubChannel_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ac00	SubChannel_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2b4e0	SubChannel_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2b5f0	Ch5bb90_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2b620	Ch5bb90_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2b7c0	startDevicePlayback	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x2bff0	Channel_setField5cClamped1200	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x2c040	Channel_applyFlags	C4	verified	1	path1+emu	c3cl.cpp
+S4.6	chan	0x2c0d0	Channel_collectFlagBits	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x2c370	Channel_setField4Masked7f	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x2ceb0	VoiceSlot_init	C4	verified	1	path1+emu	c3an.cpp
+S4.6	chan	0x2d100	allocVoiceSlot	C3	impl	1	path1+emu	c3dh.cpp
+S4.6	chan	0x2d240	Voice_setName	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2d450	Ch5be88_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2d530	Ch5be88_scalarDtorA	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2d560	Ch5be88_dtorA	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ddb0	Channel_propagateFlag0	C2	transcribed	1	emu-only	
+S4.6	chan	0x2deb0	SubChannel_openSourceType2	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x2dff0	Channel_releaseSound	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2e630	Ch5be88_scalarDtorB	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2e660	Ch5be88_dtorB	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2e930	Ch5c178_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ea00	Ch5c178_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ea30	Ch5c178_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2eb40	openSourceType4	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x2ed50	buildVoiceRxName	C4	verified	1	path1+emu	c3dh.cpp
+S4.6	chan	0x2ef10	Ch5c234_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ef40	Ch5c234_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2f060	openSourceType6	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x2f220	buildVoiceTxName	C3	impl	1	path1+emu	c3fd.cpp
+S4.6	chan	0x2f3c0	Ch5c2ec_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2f3f0	Ch5c2ec_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2f5e0	openSourceType7	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x2f680	Ch5c2ec_forwardSlot37	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x2f740	Ch5c3a4_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x30fb0	Channel_setFormat	C4	verified	2	path1+emu	c3dh.cpp
+S4.6	chan	0x31080	Channel_start	C4	verified	3	path1+emu	c3ex.cpp
+S4.6	chan	0x31be0	Channel_ctorB	C3	impl	1	path1+emu	c3fk.cpp
+S4.6	chan	0x32500	updateVoiceRate	C4	verified	5	path1+emu	c3fe.cpp
+S4.6	chan	0x33990	Channel_parseWaveHeader	C4	verified	1	path1+emu	c3dt.cpp
+S4.6	chan	0x339c0	rewindChannel	C3	impl	1	path1+emu	c3fq.cpp
+S4.6	chan	0x33ba0	Channel_resetPanState	C4	verified	1	path1+emu	c3az.cpp
+S4.6	chan	0x33c70	Channel_closeAndFree	C4	verified	2	path1+emu	c3fd.cpp
+S4.6	chan	0x340b0	Channel_releaseBuffers	C3	impl	2	path1+emu	c3fd.cpp
+S4.6	chan	0x34430	serviceChannelPlayback	C4	verified	2	path1+emu	c3fl.cpp
+S4.6	chan	0x34770	Channel_allocAndInitVoice	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x348f0	Channel_startVoice	C4	verified	3	path1+emu	c3fe.cpp
+S4.6	chan	0x34ac0	Channel_releaseVoices	C4	verified	1	path1+emu	c3az.cpp
+S4.6	chan	0x34b90	Channel_stopVoices	C4	verified	1	path1+emu	c3az.cpp
+S4.6	chan	0x34c80	Channel_setRateGlide	C3	impl	4	path1+emu	c3cx.cpp
+S4.6	chan	0x34db0	Channel_recomputeGainsSetBit3	C4	verified	1	path1+emu	c3dt.cpp
+S4.6	chan	0x35150	Channel_setVolume	C4	verified	1	path1+emu	c3ex.cpp
+S4.6	chan	0x351c0	Channel_setRate	C4	verified	8	path1+emu	c3fh.cpp
+S4.6	chan	0x35340	Channel_setPanGains	C3	impl	1	path1+emu	c3az.cpp
+S4.6	chan	0x35460	Channel_recomputeVoiceGains	C3	impl	8	path1+emu	c3fh.cpp
+S4.6	chan	0x355d0	Channel_setReverseRate	C3	impl	8	path1+emu	c3fh.cpp
+S4.6	chan	0x35750	Channel_setPitchRate	C4	verified	1	path1+emu	c3ca.cpp
+S4.6	chan	0x35770	Channel_findStreamNode	C4	verified	1	path1+emu	c3au.cpp
+S4.6	chan	0x35f60	Channel_stubReturnB	C2	trivial	0	emu-only	
+S4.6	chan	0x35f80	Channel_serviceBuffer	C4	verified	1	path1+emu	c3dt.cpp
+S4.6	chan	0x35fc0	Channel_stepVolumeFade	C4	verified	2	path1+emu	c3fh.cpp
+S4.6	chan	0x37720	Channel_setStreamSource	C4	verified	1	path1+emu	c3an.cpp
+S4.6	chan	0x37760	Voice_setLoopFlag	C4	verified	1	path1+emu	c3ar.cpp
+S4.6	chan	0x377f0	Channel_broadcastVoiceBit1	C4	verified	1	path1+emu	c3ar.cpp
+S4.6	chan	0x37b00	Channel_set3DPosition	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x37b40	Channel_set3DPositionX	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x37b80	Channel_set3DPositionY	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x37bc0	Channel_set3DPositionZ	C4	verified	1	path1+emu	c3cx.cpp
+S4.6	chan	0x37c00	Channel_set3DBufferStub	C2	transcribed	1	emu-only	
+S4.6	chan	0x37c40	Voice_resetDefaults	C4	verified	14	path1+emu	c3fh.cpp
+S4.6	chan	0x37df0	VoiceSlot_dtorEmpty	C2	trivial	0	emu-only	
+S4.6	chan	0x37f30	Voice_setPanGains	C4	verified	1	path1+emu	c3ca.cpp
+S4.6	chan	0x381f0	Voice_noteOff	C4	verified	1	path1+emu	c3ar.cpp
+S4.6	chan	0x382c0	Channel_allocVoiceSlot	C4	verified	1	path1+emu	c3ar.cpp
+S4.6	chan	0x38330	Channel_findVoiceByTag	C4	verified	1	path1+emu	c3au.cpp
+S4.6	chan	0x383b0	Voice_setLevel	C4	verified	1	path1+emu	c3au.cpp
+S4.6	chan	0x38400	Channel_clearBackref	C4	verified	1	path1+emu	c3an.cpp
+S4.6	chan	0x39980	Channel_parseWaveHeader_adjPlus70	C4	verified	1	path1+emu	c3dt.cpp
+S4.6	chan	0x39e70	Channel_startVoiceTimed	C4	verified	2	path1+emu	c3ew.cpp
+S4.7	sound	0x03f30	Sound::ctor	C4	verified	1	path1+emu	c3ex.cpp
+S4.7	sound	0x03fd0	Sound::scalarDeletingDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x04000	Sound::dtor	C4	verified	1	path1+emu	c3fd.cpp
+S4.7	sound	0x05d80	Sound::scaleTickRate	C4	verified	4	path1+emu	c3cx.cpp
+S4.7	sound	0x05e00	registerSound	C4	verified	3	path1+emu	c3do.cpp
+S4.7	sound	0x05eb0	unregisterSound	C4	verified	4	path1+emu	c3do.cpp
+S4.7	sound	0x088e0	SoundTimer::registerClient	C4	verified	2	path1+emu	c3dh.cpp
+S4.7	sound	0x08920	SoundTimer::unregisterClient	C4	verified	1	path1+emu	c3dh.cpp
+S4.7	sound	0x089f0	SoundTimer::init	C4	verified	1	path1+emu	c3ew.cpp
+S4.7	sound	0x08ac0	SoundTimer::stop	C4	verified	1	path1+emu	c3ew.cpp
+S4.7	sound	0x08bf0	SoundTimer::stopKeepLock	C4	verified	1	path1+emu	c3dh.cpp
+S4.7	sound	0x08ce0	SoundTimer::start	C4	verified	3	path1+emu	c3dh.cpp
+S4.7	sound	0x08d70	SoundTimer::killEvent	C4	verified	1	path1+emu	c3dh.cpp
+S4.7	sound	0x08ed0	SoundTimer::onTick	C4	verified	3	path1+emu	c3fl.cpp
+S4.7	sound	0x09040	SoundTimer::linkClient	C4	verified	2	path1+emu	c3dh.cpp
+S4.7	sound	0x093e0	create_sound	C3	impl	2	path1+emu	c3fq.cpp
+S4.7	sound	0x1ab60	Sound_initEntry	C4	verified	1	path1+emu	c3ar.cpp
+S4.7	sound	0x1ad30	Sound_anyChannelActive	C4	verified	1	path1+emu	c3dj.cpp
+S4.7	sound	0x1ced0	Sound_setName	C4	verified	1	path1+emu	c3dh.cpp
+S4.7	sound	0x1d0a0	Sound_setAltName	C4	verified	2	path1+emu	c3dj.cpp
+S4.7	sound	0x1f4a0	Sound5b6a8_ctor	C3	impl	3	path1+emu	c3fh.cpp
+S4.7	sound	0x1f6c0	Sound5b6a8_scalarDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x1ff50	Sound5b6a8_dtor	C4	verified	1	path1+emu	c3fk.cpp
+S4.7	sound	0x204e0	Sound_reapIdle	C4	verified	14	path1+emu	c3dt.cpp
+S4.7	sound	0x21240	Sound_findByName	C4	verified	5	path1+emu	c3dh.cpp
+S4.7	sound	0x22320	Sound_lookupOrCreate	C3	impl	3	path1+emu	c3fk.cpp
+S4.7	sound	0x28600	SoundWindowObj_ctor	C3	impl	1	path1+emu	c3fza.cpp
+S4.7	sound	0x286a0	SoundWindowObj_dtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x286f0	SoundWindowObj_subclass	C4	verified	1	path1+emu	c3ex.cpp
+S4.7	sound	0x287c0	SoundWindowObj_unsubclass	C4	verified	1	path1+emu	c3dh.cpp
+S4.7	sound	0x2ad10	Sound_setSourceType	C3	impl	1	path1+emu	c3au.cpp
+S4.7	sound	0x2add0	Engine_playSound	C4	verified	2	path1+emu	c3fd.cpp
+S4.7	sound	0x2baa0	getPlaybackTime	C4	verified	1	path1+emu	c3cl.cpp
+S4.7	sound	0x2ddf0	Sound_assignName	C4	verified	1	path1+emu	c3dj.cpp
+S4.7	sound	0x2f8d0	MultiSound_setSlotSource	C3	impl	1	path1+emu	c3fd.cpp
+S4.7	sound	0x30080	Sound5c450_ctor	C4	verified	1	path1+emu	c3do.cpp
+S4.7	sound	0x30150	Sound5c450_scalarDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x30180	Sound5c450_dtor	C4	verified	1	path1+emu	c3fk.cpp
+S4.7	sound	0x303f0	Sound_stop	C4	verified	2	path1+emu	c3dh.cpp
+S4.7	sound	0x30570	Sound_freeBufferList	C4	verified	2	path1+emu	c3dh.cpp
+S4.7	sound	0x32020	Sound_resetBuffers	C4	verified	3	path1+emu	c3fg.cpp
+S4.7	sound	0x39690	MultiSound_ctor	C4	verified	1	path1+emu	c3fd.cpp
+S4.7	sound	0x39760	MultiSound_deleteDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x39790	MultiSound_ctorWithType	C4	verified	1	path1+emu	c3fd.cpp
+S4.7	sound	0x39870	MultiSound_dtor	C4	verified	1	path1+emu	c3fd.cpp
+S4.7	sound	0x39b30	SoundGroup_stop	C4	verified	1	path1+emu	c3ex.cpp
+S4.7	sound	0x39bd0	MultiSound_enqueueCmd3	C4	verified	2	path1+emu	c3dt.cpp
+S4.7	sound	0x39c10	SoundGroup_rewind	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x39c40	MultiSound_release	C4	verified	1	path1+emu	c3dt.cpp
+S4.7	sound	0x39c80	MultiSound_stop	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x39ce0	MultiSound_start	C4	verified	3	path1+emu	c3ex.cpp
+S4.7	sound	0x39f30	MultiSound::startVoice	C4	verified	1	path1+emu	c3ex.cpp
+S4.7	sound	0x3a080	MultiSound_setVoiceBit1On	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a0d0	MultiSound::setVolume	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a140	MultiSound::setRateGlide	C4	verified	4	path1+emu	c3cx.cpp
+S4.7	sound	0x3a210	MultiSound_setPitchCents	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a370	MultiSound::applyFlags	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a560	MultiSound_getStatus	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a5b0	MultiSound_set3DPosition	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a5e0	MultiSound::set3DPositionX	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a600	MultiSound::set3DBuffer	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a630	MultiSound::set3DPositionY	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a650	MultiSound::set3DPositionZ	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a6e0	MultiSound::setReverseRate	C4	verified	4	path1+emu	c3cx.cpp
+S4.7	sound	0x3a730	MultiSound_findStreamNode	C4	verified	1	path1+emu	c3cx.cpp
+S4.7	sound	0x3a800	MultiSound_is3DEnabled	C4	verified	1	path1+emu	c3cx.cpp
+S4.8	dev	0x05720	initCtrlVtable	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x05740	ctrlScalarDeletingDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x08860	CommandQueue::init	C4	verified	1	path1+emu	c3an.cpp
+S4.8	dev	0x08890	CommandQueue::clear	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x088c0	CommandQueue::at	C4	verified	1	path1+emu	c3an.cpp
+S4.8	dev	0x091c0	dynInit_soundWindowObj100b49b8	C3	impl	2	path1+emu	c3fza.cpp
+S4.8	dev	0x091f0	atexitDtor_100b49b8	C4	verified	1	path1+emu	c3fu.cpp
+S4.8	dev	0x092e0	init_sound_timer	C4	verified	2	path1+emu	c3fd.cpp
+S4.8	dev~	0x09370	get_sound_version	C2	trivial	0	emu-only	
+S4.8	dev	0x09390	release_sound	C4	verified	4	path1+emu	c3fe.cpp
+S4.8	dev~	0x097d0	delete_sound	C2	transcribed	0	emu-only	
+S4.8	dev	0x09a90	Dll_Midi_Device::create_device	C4	verified	3	path1+emu	c3fl.cpp
+S4.8	dev	0x09bb0	Dll_Midi_Device::delete_device	C4	verified	10	path1+emu	c3fd.cpp
+S4.8	dev	0x0a050	Device::serviceVoices	C4	verified	1	path1+emu	c3ex.cpp
+S4.8	dev~	0x0a0c0	stubReturn2fA	C2	trivial	0	emu-only	
+S4.8	dev~	0x0a100	stubReturn2fB	C2	trivial	0	emu-only	
+S4.8	dev	0x0a170	registerTimerClient	C4	verified	5	path1+emu	c3dh.cpp
+S4.8	dev	0x0a240	CommandQueue::push	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	dev	0x0dbe0	postNotification	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	ds	0x0eef0	DsBuffer::ctor	C4	verified	1	path1+emu	c3do.cpp
+S4.8	ds	0x0ef60	DsBuffer::destroy	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x0f020	DsBuffer::restartPlayback	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	ds	0x0f0c0	DsBuffer::setBufferSize	C4	verified	1	path1+emu	c3an.cpp
+S4.8	ds	0x0f160	DsBuffer::setFrequency	C4	verified	1	path1+emu	c3ca.cpp
+S4.8	ds	0x0f190	DsBuffer::setVolumeRaw	C4	verified	1	path1+emu	c3ca.cpp
+S4.8	ds	0x0f1c0	DsBuffer::setVolume	C4	verified	2	path1+emu	c3fh.cpp
+S4.8	ds	0x0f480	mapDsError	C4	verified	1	path1+emu	c3au.cpp
+S4.8	ds	0x0f590	DsBuffer::initDesc	C4	verified	1	path1+emu	c3do.cpp
+S4.8	ds	0x0f760	DsBuffer::stop	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x0f790	DsBuffer::setPosition	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x0f810	DsBuffer::lockEntire	C4	verified	1	path1+emu	c3do.cpp
+S4.8	ds	0x0f8f0	DsBuffer::release	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x0f990	DsBuffer::setPrimaryFormat	C4	verified	1	path1+emu	c3do.cpp
+S4.8	ds	0x0fbb0	DsBuffer::create	C4	verified	2	path1+emu	c3fd.cpp
+S4.8	ds	0x0fec0	DsBuffer::hasAuxInterfaces	C4	verified	1	path1+emu	c3ar.cpp
+S4.8	ds	0x0fef0	DsBuffer::query3D	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x0ff60	DsBuffer::queryNotify	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x10060	DsBuffer::releaseIfOwned	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x101a0	DsBuffer::restore	C3	impl	1	path1+emu	c3fl.cpp
+S4.8	ds	0x10370	DsBuffer::unlock	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x10660	DsBuffer::getPosition	C4	verified	1	path1+emu	c3ex.cpp
+S4.8	ds	0x106b0	DsBuffer::getPlayPosition	C3	impl	1	path1+emu	c3fl.cpp
+S4.8	ds	0x10860	DsBuffer::lockCaptureRegion	C4	verified	1	path1+emu	c3do.cpp
+S4.8	ds	0x10be0	DsBuffer::getTimedPosition	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	ds	0x10db0	DsBuffer::play	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	ds	0x10e30	DsBuffer::isBusy	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x10eb0	DsBuffer::setRegionMs	C4	verified	1	path1+emu	c3au.cpp
+S4.8	ds	0x10f30	DsBuffer::configureDesc	C4	verified	1	path1+emu	c3az.cpp
+S4.8	ds	0x11000	Ds3DBuffer::setPosition	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x11070	Ds3DBuffer::setPositionX	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x110c0	Ds3DBuffer::setPositionY	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x11110	Ds3DBuffer::setPositionZ	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x11290	DirectSoundDevice::close	C4	verified	1	path1+emu	c3fk.cpp
+S4.8	ds	0x114e0	DirectSoundDevice::enumerate	C4	verified	3	path1+emu	c3fk.cpp
+S4.8	ds	0x11760	getDeviceCaps	C4	verified	1	path1+emu	c3cx.cpp
+S4.8	ds	0x11810	dsEnumCallbackAppend	C4	verified	1	path1+emu	c3do.cpp
+S4.8	ds	0x11970	DirectSoundDevice::releaseAll	C4	verified	2	path1+emu	c3ex.cpp
+S4.8	ds	0x11a80	DirectSoundDevice::stopAll	C4	verified	3	path1+emu	c3fk.cpp
+S4.8	ds	0x11c60	DirectSoundDevice::create	C4	verified	1	path1+emu	c3fk.cpp
+S4.8	ds~	0x12040	return0Pop4	C2	trivial	0	emu-only	
+S4.8	ds	0x120a0	DirectSoundDevice::setCooperativeLevel	C4	verified	1	path1+emu	c3dt.cpp
+S4.8	ds	0x12260	DirectSoundDevice::duplicateBuffer	C4	verified	3	path1+emu	c3fk.cpp
+S4.8	ds	0x12690	DirectSoundDevice::freeBufferById	C4	verified	2	path1+emu	c3fk.cpp
+S4.8	ds	0x12b80	DsBuffer::scalarDeletingDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x12d10	DirectSoundDevice::createBuffer	C4	verified	2	path1+emu	c3fk.cpp
+S4.8	ds	0x12fe0	DirectSoundDevice::createBufferFmt	C4	verified	2	path1+emu	c3fk.cpp
+S4.8	ds	0x132e0	DirectSoundDevice::removeBuffer	C4	verified	2	path1+emu	c3ex.cpp
+S4.8	ds	0x133d0	DirectSoundDevice::releaseAllBuffers	C4	verified	3	path1+emu	c3ex.cpp
+S4.8	ds	0x134e0	unlinkDsBuffer	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x13560	DirectSoundDevice::setMasterVolume	C2	transcribed	0	emu-only	
+S4.8	ds	0x135a0	Ds3DListener::setPosition	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	dev	0x1b510	dynInit_ctrl100b4b50	C4	verified	2	path1+emu	c3do.cpp
+S4.8	dev	0x1b6b0	dynInit_ctrl100b4c38	C4	verified	2	path1+emu	c3do.cpp
+S4.8	dev	0x1b710	dynInit_ctrl100b4d20	C4	verified	2	path1+emu	c3do.cpp
+S4.8	dev	0x1b770	dynInit_ctrl100b4a68	C4	verified	2	path1+emu	c3do.cpp
+S4.8	dev	0x1b7d0	dynInit_ctrl100b4e08	C4	verified	2	path1+emu	c3do.cpp
+S4.8	dev	0x1b9a0	Ctrl_appendIfAccepted	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1bc50	CtrlObject::ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1bca0	CtrlObject2_ctor	C3	impl	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1bd90	Ctrl5b5c0_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1bee0	Ctrl5b19c_ctor	C3	impl	1	path1+emu	c3cx.cpp
+S4.8	dev	0x1c080	Ctrl5b58c_dtor	C4	verified	1	path1+emu	c3do.cpp
+S4.8	dev	0x1c1e0	Ctrl5b5c0_transposeTable	C3	impl	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1c2a0	CtrlBase_resetElements	C4	verified	1	path1+emu	c3cf.cpp
+S4.8	dev	0x1c2f0	CtrlBase_flushElements	C4	verified	1	path1+emu	c3cf.cpp
+S4.8	dev	0x1c370	Ctrl5b5c0_mapValue	C3	impl	1	path1+emu	c3cf.cpp
+S4.8	dev	0x1c530	CtrlObject_scalarDtorA	C4	verified	1	path1+emu	c3dt.cpp
+S4.8	dev	0x1c560	CtrlObject_dtorA	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1c6e0	CtrlObject_scalarDtorB	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1c710	CtrlObject_dtorB	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1c950	Ctrl5b58c_scalarDtor	C4	verified	1	path1+emu	c3do.cpp
+S4.8	dev	0x1c990	Ctrl5b58c_dtorEmbedded	C4	verified	1	path1+emu	c3do.cpp
+S4.8	dev	0x1caf0	CtrlObject3_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1cba0	CtrlObject_scalarDtorC	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1cbd0	CtrlObject_dtorC	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1cbf0	Ctrl5b668_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1cca0	CtrlObject_scalarDtorD	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1ccd0	CtrlObject_dtorD	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x20b60	postMidiNotification	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	dev	0x28630	destroySoundWindowObj	C4	verified	1	path1+emu	c3dt.cpp
+S4.8	dev	0x28810	pumpWaveMessages	C4	verified	1	path1+emu	c3fe.cpp
+S4.8	dev	0x288a0	soundWindowProc	C3	impl	4	path1+emu	c3fe.cpp
+S4.8	dev	0x28b70	soundWindowSubclassProc	C3	impl	4	path1+emu	c3fl.cpp
+S4.8	dev	0x28fb0	DeviceBase_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x28ff0	DeviceBase_dtorA	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x29f60	DeviceBase_dtorB	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x2a3b0	DeviceBase_dtorC	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x2a8a0	stopSoundThreadFull	C4	verified	1	path1+emu	c3dh.cpp
+S4.8	dev	0x2a920	startSignalThread	C4	verified	1	path1+emu	c3ex.cpp
+S4.8	dev	0x2a970	soundThreadPump	C4	verified	5	path1+emu	c3fe.cpp
+S4.8	dev	0x2aa90	postSoundThreadMessage	C4	verified	3	path1+emu	c3dh.cpp
+S4.8	dev	0x2bc60	Device_prepareSoundFlags	C4	verified	1	path1+emu	c3ex.cpp
+S4.8	dev	0x2bd80	Device_lazyCreateSound	C4	verified	1	path1+emu	c3ex.cpp
+S4.8	dev	0x2bee0	Device_createStartQueue	C4	verified	1	path1+emu	c3ex.cpp
+S4.8	ds	0x32410	DsDevice_registerBuffer	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	ds	0x3a770	getDsCoopLevel	C4	verified	1	path1+emu	c3fu.cpp
+S4.9	wave	0x041d0	loadSoundFile	C2	transcribed	0	emu-only	
+S4.9	wave	0x05440	Wave_Device::readFmtChunk	C4	verified	2	path1+emu	c3fg.cpp
+S4.9	wave	0x05770	processWaveChunks	C4	verified	1	path1+emu	c3fg.cpp
+S4.9	wave	0x06020	WaveStream::ctor	C4	verified	1	path1+emu	c3do.cpp
+S4.9	wave	0x06130	WaveStream::scalarDeletingDtor	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x06160	WaveStream::destroy	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x06330	closeMmioNodeList	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x06420	Wave_Device::openMemoryMmio	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x064e0	Wave_Device::freeBufferList	C4	verified	1	path1+emu	c3fq.cpp
+S4.9	wave	0x06850	Wave_Device::appendBuffer	C4	verified	1	path1+emu	c3fq.cpp
+S4.9	wave	0x06b00	startStream	C4	verified	1	path1+emu	c3cf.cpp
+S4.9	wave	0x06bd0	computeCaptureDuration	C4	verified	1	path1+emu	c3au.cpp
+S4.9	wave	0x06e00	initStreamBuffer	C4	verified	1	path1+emu	c3cx.cpp
+S4.9	wave	0x07010	writeWaveFile	C4	verified	8	path1+emu	c3fl.cpp
+S4.9	wave~	0x075e0	writeWaveFileB	C2	transcribed	0	emu-only	
+S4.9	wave	0x07df0	writeWaveChunk	C2	transcribed	1	emu-only	
+S4.9	wave	0x08070	writeWaveChunkB	C2	transcribed	0	emu-only	
+S4.9	wave	0x086f0	openMmioFile	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x08770	closeMmioHandle	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x0b050	Dll_Wave_Device::create_device	C4	verified	4	path1+emu	c3fd.cpp
+S4.9	wave	0x0b110	openWaveStreamFile	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave	0x0b140	Wave_Device::setCooperativeLevel	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave	0x0b170	Wave_Device::closeStream	C4	verified	4	path1+emu	c3dt.cpp
+S4.9	wave	0x0b1a0	Dll_Wave_Device::delete_device	C4	verified	10	path1+emu	c3fd.cpp
+S4.9	wave	0x0b1d0	Wave_Device::ctor	C4	verified	1	path1+emu	c3ew.cpp
+S4.9	wave	0x0b2b0	Wave_Device::scalarDeletingDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x0b2e0	Wave_Device::dtor	C4	verified	2	path1+emu	c3ew.cpp
+S4.9	wave	0x0b420	Wave_Device::open	C2	transcribed	0	emu-only	
+S4.9	wave	0x0b960	Wave_Device::stop	C4	verified	3	path1+emu	c3ew.cpp
+S4.9	wave	0x0baa0	Wave_Device::start	C2	transcribed	0	emu-only	
+S4.9	wave	0x0be00	Wave_Device::closeOutput	C4	verified	3	path1+emu	c3ew.cpp
+S4.9	wave	0x0bef0	Wave_Device::stopOutput	C4	verified	4	path1+emu	c3ew.cpp
+S4.9	wave	0x0bf90	Wave_Device::startOutput	C4	verified	4	path1+emu	c3ew.cpp
+S4.9	wave	0x0c020	Wave_Device::restart	C4	verified	6	path1+emu	c3ew.cpp
+S4.9	wave	0x0c230	Wave_Device::serviceTick	C4	verified	5	path1+emu	c3fl.cpp
+S4.9	wave	0x0c2f0	WaveCmdQueue::pushNode	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x0c3d0	WaveCmdQueue::pushValue	C4	verified	1	path1+emu	c3an.cpp
+S4.9	wave	0x0cc70	Wave_Device::flushCommandQueue	C4	verified	1	path1+emu	c3fd.cpp
+S4.9	wave	0x0cd80	Wave_Device::dispatchCommand	C4	verified	2	path1+emu	c3fl.cpp
+S4.9	wave	0x0dcf0	Wave_Device::scanCommandRing	C4	verified	1	path1+emu	c3fd.cpp
+S4.9	wave	0x0e230	Wave_Device::caps	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave	0x0e260	Wave_Device::deviceName	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave~	0x0e2a0	setOutputMasterVolume	C2	transcribed	0	emu-only	
+S4.9	wave	0x0e2d0	getWaveDeviceInterface	C4	verified	1	path1+emu	c3fu.cpp
+S4.9	wave	0x0e310	serviceWaveDevice	C4	verified	4	path1+emu	c3dt.cpp
+S4.9	wave~	0x0e350	stubReturnBA	C2	trivial	0	emu-only	
+S4.9	wave	0x0e8c0	Wave_In_Device::scalarDeletingDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.9	wave	0x0e8f0	Wave_In_Device::dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.9	wave	0x0e910	Dll_Wave_In_Device::create_device	C4	verified	4	path1+emu	c3fd.cpp
+S4.9	wave	0x0ea00	Dll_Wave_In_Device::delete_device	C4	verified	10	path1+emu	c3fd.cpp
+S4.9	wave	0x0ea30	Wave_In_Device::start	C4	verified	6	path1+emu	c3ew.cpp
+S4.9	wave	0x0eaa0	Wave_In_Device::stop	C4	verified	6	path1+emu	c3dt.cpp
+S4.9	wave	0x0ead0	Wave_In_Device::openCapture	C4	verified	5	path1+emu	c3ew.cpp
+S4.9	wave	0x0ec00	Wave_In_Device::closeCapture	C4	verified	2	path1+emu	c3ew.cpp
+S4.9	wave	0x0ed70	Wave_In_Device::setStream	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave	0x0eda0	Wave_In_Device::clearStream	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave	0x1b870	MidiReader_freeContent	C4	verified	1	path1+emu	c3do.cpp
+S4.9	wave	0x1c7a0	streamReadByte	C4	verified	1	path1+emu	c3cf.cpp
+S4.9	wave	0x1c7e0	streamConsumeByte	C4	verified	1	path1+emu	c3cf.cpp
+S4.9	wave	0x1d380	MidiReader_init	C4	verified	9	path1+emu	c3fg.cpp
+S4.9	wave	0x1e7d0	MidiReader_dtor	C4	verified	1	path1+emu	c3do.cpp
+S4.9	wave	0x2a240	WaveInDeviceBase_ctor	C4	verified	1	path1+emu	c3ew.cpp
+S4.9	wave	0x2a380	WaveInDeviceBase_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.9	wave	0x2a420	WaveInDeviceBase_openInner	C4	verified	1	path1+emu	c3cl.cpp
+S4.9	wave	0x2a470	WaveInDeviceBase_closeInner	C4	verified	1	path1+emu	c3cl.cpp
+S4.9	wave	0x2fb70	enqueueWaveCmdE	C4	verified	2	path1+emu	c3ex.cpp
+S4.9	wave	0x2fc10	enqueueWaveCmd10	C4	verified	3	path1+emu	c3ew.cpp
+S4.9	wave	0x30710	Sound5c450::openMmio	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x30840	openMmioSound	C3	impl	3	path1+emu	c3fn.cpp
+S4.9	wave	0x30ba0	streamWaveSamples	C3	impl	2	path1+emu	c3fn.cpp
+S4.9	wave	0x31200	StreamReader_ctor	C4	verified	1	path1+emu	c3do.cpp
+S4.9	wave	0x31270	StreamReader_scalarDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x312a0	streamReaderDtor	C4	verified	2	path1+emu	c3fd.cpp
+S4.9	wave	0x31450	WaveInStream_start	C4	verified	2	path1+emu	c3dt.cpp
+S4.9	wave	0x31490	freeMmioHandleList	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x31560	freeMmioHandleListGetInfo	C4	verified	2	path1+emu	c3ew.cpp
+S4.9	wave	0x316c0	loadWaveResource	C4	verified	2	path1+emu	c3fn.cpp
+S4.9	wave	0x319e0	WaveInStream_resetCodec	C4	verified	2	path1+emu	c3ew.cpp
+S4.9	wave	0x32130	beginDecodeStreamA	C4	verified	1	path1+emu	c3fg.cpp
+S4.9	wave	0x32290	beginDecodeStreamB	C4	verified	1	path1+emu	c3fg.cpp
+S4.9	wave	0x32640	closeDecoder	C4	verified	1	path1+emu	c3dj.cpp
+S4.9	wave~	0x32660	return0xb_32660	C2	trivial	0	emu-only	
+S4.9	wave	0x326a0	parseRiffWave	C3	impl	6	path1+emu	c3fg.cpp
+S4.9	wave	0x33300	fillDecodeRing	C3	impl	2	path1+emu	c3fn.cpp
+S4.9	wave	0x34fb0	serviceDecodeRing	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x35ca0	closeMmioSound	C3	impl	1	path1+emu	c3fn.cpp
+S4.9	wave	0x37920	flushMmioBuffer	C4	verified	1	path1+emu	c3fn.cpp
+S4.9	wave	0x37e10	MmioBuffer_init	C4	verified	1	path1+emu	c3au.cpp
+S4.9	wave	0x38650	WaveInDevice_ctor	C4	verified	3	path1+emu	c3dh.cpp
+S4.9	wave	0x386e0	WaveInDevice_deleteDtor	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x38710	WaveInDevice_dtor	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x38890	WaveInDevice_allocCaptureBuffers	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x38b20	WaveInDevice_start	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x38b40	WaveInDevice_prepareHeaders	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x38da0	WaveInDevice_addBuffer	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x38f10	WaveInDevice_reset	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x38fd0	onWaveInCallbackMessage	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x39050	WaveInDevice_open	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x39140	WaveInDevice_close	C4	verified	1	path1+emu	c3dh.cpp
+S4.9	wave	0x393d0	WaveInDevice_requeueBuffer	C4	verified	1	path1+emu	c3dt.cpp
+S4.9	wave	0x399a0	loadMultiChannel	C4	verified	1	path1+emu	c3fg.cpp
+S4.11	crt	0x2e3c0	GlblHeader::init	C2	transcribed	0	emu-only	
+S4.11	crt	0x05f40	Sound::getField1b8	C2	transcribed	0	emu-only	
+S4.11	crt	0x2cf50	MixBuffer::deletingDtor	C2	transcribed	0	emu-only	
+S4.11	crt	0x20480	Sound::queueMidiCommand3	C2	transcribed	0	emu-only	
+S4.11	crt	0x244a0	ChannelDesc_dtor	C2	transcribed	0	emu-only	
+S4.11	crt	0x29b80	VoiceBase_initListSlot	C2	transcribed	0	emu-only	
+S4.11	crt	0x2c270	Ch5bb90_set3DBuffer	C2	transcribed	0	emu-only	
+S4.11	crt	0x424b0	_strrchr	C2	transcribed	0	emu-only	
+S4.11	crt	0x424d7	operator_new	C2	transcribed	0	emu-only	
+S4.11	crt	0x42577	_sprintf	C2	transcribed	0	emu-only	
+S4.11	crt	0x425c9	__onexit	C2	transcribed	0	emu-only	
+S4.11	crt	0x42647	_atexit	C2	transcribed	0	emu-only	
+S4.11	crt	0x4280e	ehVectorDestructorIterator	C2	transcribed	0	emu-only	
+S4.11	crt	0x42acd	_malloc	C2	transcribed	0	emu-only	
+S4.11	crt	0x42adf	__nh_malloc	C2	transcribed	0	emu-only	
+S4.11	crt	0x45226	_lockexit	C2	transcribed	0	emu-only	
+S4.11	crt	0x4522f	_unlockexit	C2	transcribed	0	emu-only	
+S4.11	crt	0x45b80	__callnewh	C2	transcribed	0	emu-only	
+S4.11	crt	0x47710	__lock	C2	transcribed	0	emu-only	

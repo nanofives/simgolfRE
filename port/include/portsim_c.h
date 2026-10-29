@@ -317,6 +317,28 @@ SG_API size_t sg_raster_get_rho(sg_raster *r, float *out, size_t cap);          
 SG_API size_t sg_raster_get_source(sg_raster *r, float *out, size_t cap);       /* w * h * 8 floats: src rgb, alpha, dst rgb, blended */
 SG_API int sg_raster_stats(sg_raster *r, int64_t out[5]);   /* triangles, culled, drawn px, blended px, skipped */
 
+/* ---- audio core (step S4.2, portsim/sim/audio.h): the sound.dll port's calls outside itself ----
+ * A port function calls a callback, a system DLL export, a COM method, a sound.dll address the host claims, or (development
+ * only) a sound.dll function no port function is registered for: each goes to the context's host. sg_snd_set_host installs
+ * a C callback as that host (fn NULL removes it); the callback fills eax / edx / st0 / has_st0 and returns 0, anything else
+ * stops the port call (sg_call returns SG_E_EXCEPTION). The same struct is portsim::SndCallC. Configuration (image base,
+ * claims, the recorded-script host) goes through sg_call entries "audio_core.*" and the files "$audio/..." (audio_core.cpp). */
+typedef struct sg_snd_call {
+  uint32_t va;        /* target virtual address (thunks followed) */
+  uint32_t rva;       /* va - image base inside sound.dll, else 0 */
+  int32_t kind;       /* 0 external, 1 claimed by the host, 2 fallback (no port function yet) */
+  int32_t abi;        /* 0 cdecl, 1 stdcall, 2 thiscall (args[0] = ecx), 3 fastcall (args[0..1] = ecx, edx) */
+  int32_t nargs;
+  int32_t want_st0;   /* the caller reads st(0) */
+  uint32_t args[16];
+  uint32_t eax, edx;  /* results */
+  double st0;
+  int32_t has_st0;
+  int32_t status;     /* 0 = served */
+} sg_snd_call;
+typedef int (*sg_snd_host_fn)(void *user, sg_snd_call *call);
+SG_API int sg_snd_set_host(sg_ctx *ctx, sg_snd_host_fn fn, void *user);
+
 SG_API const char *sg_build_info(void);                   /* "portsim <arch> <config>" */
 
 #ifdef __cplusplus

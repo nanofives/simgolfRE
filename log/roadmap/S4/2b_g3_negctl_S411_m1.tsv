@@ -1,0 +1,29 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.Ch5bb90_set3DBuffer	1	RED	8	0	12	Ch5bb90_set3DBuffer@
+snd.ChannelDesc_dtor	1	RED	10	0	10	ChannelDesc_dtor@
+snd.GlblHeader::init	1	RED	10	0	10	GlblHeader::init@
+snd.MixBuffer::deletingDtor	1	RED	8	0	16	MixBuffer::deletingDtor@
+snd.Sound::getField1b8	1	RED	10	0	10	Sound::getField1b8@
+snd.Sound::queueMidiCommand3	1	RED	6	0	18	Sound::queueMidiCommand3@dev Sound::queueMidiCommand3@full Sound::queueMidiCommand3@nodev
+snd.VoiceBase_initListSlot	1	RED	10	0	10	VoiceBase_initListSlot@
+snd.__ArrayUnwind	1	RED	11	0	19	sound___ArrayUnwind __ArrayUnwind@
+snd.__callnewh	1	RED	5	0	20	__callnewh@none __callnewh@stub
+snd.__lock	1	RED	40	0	40	__lock@create __lock@race __lock@enter __lock@pair
+snd.__nh_malloc	1	RED	12	0	70	__nh_malloc@m0 __nh_malloc@m1 __nh_malloc@fyes __nh_malloc@fno __nh_malloc@fmode0
+snd.__onexit	1	RED	18	0	30	__onexit@room __onexit@full __onexit@fail
+snd._atexit	1	RED	30	0	30	_atexit@room _atexit@full _atexit@fail
+snd._lockexit	1	RED	1	0	1	_lockexit@
+snd._malloc	1	RED	8	0	50	_malloc@m0 _malloc@m1 _malloc@fyes _malloc@fno _malloc@fmode0
+snd._sprintf	1	RED	11	0	35	_sprintf@
+snd._strrchr	1	RED	20	0	34	_strrchr@
+snd._unlock	1	RED	22	0	22	_unlock _unlock@pair
+snd._unlockexit	1	RED	1	0	1	_unlockexit@
+snd.crtRealloc	1	RED	13	0	21	crtRealloc@ crtRealloc@hyes crtRealloc@hno
+snd.ehVectorConstructorIterator	1	RED	12	0	18	ehVectorConstructorIterator_snd_none ehVectorConstructorIterator@
+snd.ehVectorDestructorIterator	1	RED	2	0	6	ehVectorDestructorIterator@
+snd.free	1	RED	8	0	15	free@ free@sbh3 free@sbh2
+snd.heap_alloc	1	RED	9	0	28	heap_alloc@m0 heap_alloc@m1 heap_alloc@sbh3 heap_alloc@sbh2
+snd.msize	1	RED	2	0	2	msize@
+snd.operator_delete	1	RED	4	0	5	operator_delete@
+snd.operator_new	1	RED	15	0	50	operator_new@m0 operator_new@m1 operator_new@fyes operator_new@fno operator_new@fmode0
+snd.strstr	1	RED	13	0	89	strstr strstr@

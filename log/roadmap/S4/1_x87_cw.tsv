@@ -1,0 +1,48 @@
+key	word	vectors	matched_own	lost_swapped	lost_fields	errors_swapped	emu_rows_changed	verdict
+Channel_recomputeVoiceGains_A_w27f	0x027f	10	20	0		0	5	BLIND
+Channel_recomputeVoiceGains_A_wf7f	0x0f7f	10	20	0		0	5	BLIND
+Channel_recomputeVoiceGains_B_w27f	0x027f	10	20	0		0	5	BLIND
+Channel_recomputeVoiceGains_B_wf7f	0x0f7f	10	20	0		0	5	BLIND
+Channel_recomputeVoiceGains_C_wf7f	0x0f7f	10	20	0		0	5	BLIND
+Channel_recomputeVoiceGains_D_w27f	0x027f	10	20	0		0	2	BLIND
+Channel_recomputeVoiceGains_N_w27f	0x027f	10	20	0		0	2	BLIND
+Channel_recomputeVoiceGains_T0_w27f	0x027f	10	20	0		0	4	BLIND
+Channel_setRate_A_w27f	0x027f	10	20	0		0	1	BLIND
+Channel_setRate_A_wf7f	0x0f7f	10	20	0		0	1	BLIND
+Channel_setRate_B_w27f	0x027f	10	20	0		0	1	BLIND
+Channel_setRate_B_wf7f	0x0f7f	10	20	0		0	1	BLIND
+Channel_setRate_C_wf7f	0x0f7f	10	20	0		0	1	BLIND
+Channel_setRate_D_w27f	0x027f	10	20	0		0	0	BLIND
+Channel_setRate_N_w27f	0x027f	10	20	0		0	0	BLIND
+Channel_setRate_T0_w27f	0x027f	10	20	0		0	1	BLIND
+Channel_setReverseRate_A_w27f	0x027f	10	20	0		0	5	BLIND
+Channel_setReverseRate_A_wf7f	0x0f7f	10	20	0		0	5	BLIND
+Channel_setReverseRate_B_w27f	0x027f	10	20	0		0	5	BLIND
+Channel_setReverseRate_B_wf7f	0x0f7f	10	20	0		0	5	BLIND
+Channel_setReverseRate_C_wf7f	0x0f7f	10	20	0		0	5	BLIND
+Channel_setReverseRate_D_w27f	0x027f	10	20	0		0	2	BLIND
+Channel_setReverseRate_N_w27f	0x027f	10	20	0		0	2	BLIND
+Channel_setReverseRate_T0_w27f	0x027f	10	20	0		0	4	BLIND
+Channel_stepVolumeFade_w27f	0x027f	22	44	0		0	11	BLIND
+Channel_stepVolumeFade_wf7f	0x0f7f	22	44	0		0	11	BLIND
+DsBuffer::setVolume_w27f	0x027f	15	30	1	ret	0	6	SENSITIVE
+DsBuffer::setVolume_wf7f	0x0f7f	15	30	1	ret	0	6	SENSITIVE
+Seq_setTempo_w27f	0x027f	12	36	9	state	0	9	SENSITIVE
+Seq_setTempo_wf7f	0x0f7f	12	36	9	state	0	9	SENSITIVE
+Sound5b6a8_ctor_N_w27f	0x027f	3	3	0		0	0	BLIND
+Sound5b6a8_ctor_w27f	0x027f	3	3	0		0	0	BLIND
+Sound5b6a8_ctor_wf7f	0x0f7f	3	3	0		0	0	BLIND
+Voice_resetDefaults_N_w27f	0x027f	3	3	0		0	0	BLIND
+Voice_resetDefaults_N_wf7f	0x0f7f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r0_w27f	0x027f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r0_wf7f	0x0f7f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r1000_w27f	0x027f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r1000_wf7f	0x0f7f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r1001_w27f	0x027f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r1001_wf7f	0x0f7f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r22050_w27f	0x027f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r22050_wf7f	0x0f7f	3	3	0		0	0	BLIND
+Voice_resetDefaults_r3_w27f	0x027f	3	3	0		0	3	BLIND
+Voice_resetDefaults_r3_wf7f	0x0f7f	3	3	0		0	3	BLIND
+Voice_resetDefaults_r999_w27f	0x027f	3	3	0		0	3	BLIND
+Voice_resetDefaults_r999_wf7f	0x0f7f	3	3	0		0	3	BLIND

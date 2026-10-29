@@ -1,0 +1,7 @@
+ds fallback calls (layout A bundles): 0
+dev fallback calls (layout A bundles): 74
+  0x088e0 SoundTimer::registerClient (S4.7) 24 calls, keys: registerTimerClient_bp61 registerTimerClient_busy registerTimerClient_ok registerTimerClient_se61
+  0x08ce0 SoundTimer::start (S4.7) 24 calls, keys: registerTimerClient_bp61 registerTimerClient_busy registerTimerClient_ok registerTimerClient_se61
+  0x286a0 SoundWindowObj_dtor (S4.7) 12 calls, keys: atexitDtor_100b49b8
+  0x42647 ? (?) 12 calls, keys: dynInit_ctrl100b4a68_fail dynInit_ctrl100b4a68_ok dynInit_ctrl100b4b50_fail dynInit_ctrl100b4b50_ok dynInit_ctrl100b4c38_fail dynInit_ctrl100b4c38_ok 
+  0x28600 SoundWindowObj_ctor (S4.7) 2 calls, keys: dynInit_soundWindowObj100b49b8_fail dynInit_soundWindowObj100b49b8_ok

@@ -103,12 +103,16 @@ def test_gfx_log_parser_and_order():
 def test_not_drawing_names_are_kdrops_with_those_reasons():
     src = (FG.ROOT / "port" / "src" / "sim" / "tick.cpp").read_text()
     drops = dict(re.findall(r'\{"([^"]+)", "([^"]+)"\}', src))
-    want = {"playSound": "audio", "startSoundSlot": "audio", "Snd::status": "audio", "capsLockOff": "keybd_event",
-            "emptyFunc_4a0890": "empty function", "waitTicks": "wait loop", "saveCourseJpg": "screenshot file",
-            "Widget_readPixel": "pixel read", "enterModal483d30": "modal stack"}
-    assert set(want) == FG.NOT_DRAWING
+    want = {"capsLockOff": "keybd_event", "emptyFunc_4a0890": "empty function", "waitTicks": "wait loop",
+            "saveCourseJpg": "screenshot file", "Widget_readPixel": "pixel read", "enterModal483d30": "modal stack"}
+    # the three audio requests left kDrops with S4.10: audio_exe registers them (log/roadmap/S4/10_merge.md section 2)
+    audio = {"playSound", "startSoundSlot", "Snd::status"}
+    assert set(want) | audio == FG.NOT_DRAWING
     for n, w in want.items():
         assert n in drops and w in drops[n], (n, drops.get(n))
+    exe = (FG.ROOT / "port" / "src" / "sim" / "audio_exe.cpp").read_text()
+    for n in audio:
+        assert n not in drops and f'{{"{n}", ' in exe, n
 
 
 @pytest.mark.static

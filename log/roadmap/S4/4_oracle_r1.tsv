@@ -1,0 +1,48 @@
+key	name	vectors	match	match_bc	errors	fallbacks	x87diff	tier	first
+MixBuffer_ctor	MixBuffer_ctor	12	12	24	0	0	0	EQUAL_PI	
+MixerVoiceArray_scalarDtor	MixerVoiceArray_scalarDtor	40	40	80	0	0	0	EQUAL_PI	
+Mixer_ctor	Mixer_ctor	12	12	24	0	36	0	EQUAL_PI	
+Mixer_dtor	Mixer_dtor	12	12	24	0	0	0	EQUAL_PI	
+Mixer_scalarDtor	Mixer_scalarDtor	40	40	80	0	0	0	EQUAL_PI	
+Voice_mixAdd8bit	Voice_mixAdd8bit	23	23	46	0	0	0	EQUAL_PI	
+Voice_mixAdd8bit_st0	Voice_mixAdd8bit	23	23	46	0	0	69	EQUAL_PI	x87 A v0: top port 0x4 emu 0x5; in use port [4, 5, 6, 7] emu [5, 6, 7]
+Voice_mixAddMono16	Voice_mixAddMono16	23	23	46	0	0	0	EQUAL_PI	
+Voice_mixAddMono16_st0	Voice_mixAddMono16	23	23	46	0	0	69	EQUAL_PI	x87 A v0: top port 0x4 emu 0x5; in use port [4, 5, 6, 7] emu [5, 6, 7]
+Voice_mixAddStereo16	Voice_mixAddStereo16	16	16	32	0	0	0	EQUAL_PI	
+Voice_mixAddStereo16_st0	Voice_mixAddStereo16	16	16	32	0	0	48	EQUAL_PI	x87 A v0: top port 0x6 emu 0x7; in use port [6, 7] emu [7]
+Voice_mixSet8bit	Voice_mixSet8bit	23	23	46	0	0	0	EQUAL_PI	
+Voice_mixSet8bit_st0	Voice_mixSet8bit	23	23	46	0	0	69	EQUAL_PI	x87 A v0: top port 0x4 emu 0x5; in use port [4, 5, 6, 7] emu [5, 6, 7]
+Voice_mixSetMono16	Voice_mixSetMono16	23	23	46	0	0	0	EQUAL_PI	
+Voice_mixSetMono16_st0	Voice_mixSetMono16	23	23	46	0	0	69	EQUAL_PI	x87 A v0: top port 0x4 emu 0x5; in use port [4, 5, 6, 7] emu [5, 6, 7]
+Voice_mixSetStereo16	Voice_mixSetStereo16	16	16	32	0	0	0	EQUAL_PI	
+Voice_mixSetStereo16_st0	Voice_mixSetStereo16	16	16	32	0	0	48	EQUAL_PI	x87 A v0: top port 0x6 emu 0x7; in use port [6, 7] emu [7]
+destroyMixerVoices	destroyMixerVoices	12	12	24	0	0	0	EQUAL_PI	
+mixCopyInnerB	mixMonoDupAdd	47	47	94	0	0	0	EQUAL_PI	
+mixCopyInnerC	mixMonoDupSet	47	47	94	0	0	0	EQUAL_PI	
+mixRenderA	mixStereoAdd	48	48	96	0	0	0	EQUAL_PI	
+mixRenderOuterA2	mixRatedStereo16Add	64	64	128	0	0	0	EQUAL_PI	
+mixRenderOuterC	mixRatedMono16SetFade	65	65	130	0	0	0	EQUAL_PI	
+mixRenderRatedB	mixRatedMono16AddFade	65	65	130	0	0	0	EQUAL_PI	
+mixResampleD	mixRatedStereo8Add	64	64	128	0	0	0	EQUAL_PI	
+mixResampleE	mixRatedMono8Add	64	64	128	0	0	0	EQUAL_PI	
+mixResampleG	mixRatedStereo16Set	51	51	102	0	0	0	EQUAL_PI	
+mixResampleH	mixRatedStereo8Set	64	64	128	0	0	0	EQUAL_PI	
+mixResampleI	mixRatedMono8Set	65	65	130	0	0	0	EQUAL_PI	
+mixResampleInnerA	mixStereoGainAdd	38	38	76	0	0	0	EQUAL_PI	
+mixResampleInnerB	mixMonoGainFadeAdd	46	46	92	0	0	0	EQUAL_PI	
+mixResampleInnerC	mixMonoGainFadeSet	46	46	92	0	0	0	EQUAL_PI	
+renderChannel	renderChannel	16	16	32	0	0	0	EQUAL_PI	
+renderChannelSingle_bit0	renderChannelSingle	21	19	38	2	0	0	PARTIAL_ERR	v7 A: port: sg_call renderChannelSingle: exception
+renderChannelSingle_null	renderChannelSingle	21	19	38	2	0	0	PARTIAL_ERR	v7 A: port: sg_call renderChannelSingle: exception
+renderChannelSingle_post	renderChannelSingle	21	19	38	2	0	0	PARTIAL_ERR	v7 A: port: sg_call renderChannelSingle: exception
+renderChannelStreamed_chain_w27f	renderChannelStreamed	13	0	0	0	0	0	EQUAL_PI	v0 A: ret emu 11 port 11 (regions differ)
+renderChannelStreamed_copy_w27f	renderChannelStreamed	19	1	2	0	0	0	EQUAL_PI	v1 A: ret emu 7 port 11 (regions differ)
+renderChannelStreamed_fade_w27f	renderChannelStreamed	33	0	0	0	0	0	EQUAL_PI	v0 A: ret emu 11 port 11 (regions differ)
+renderChannelStreamed_fade_wf7f	renderChannelStreamed	33	0	0	0	0	0	EQUAL_PI	v0 A: ret emu 11 port 11 (regions differ)
+renderChannelVoice_eng	renderChannelVoice	20	19	38	1	0	0	PARTIAL_ERR	v6 A: port: sg_call renderChannelVoice: exception
+renderChannelVoice_eng0	renderChannelVoice	20	19	38	1	0	0	PARTIAL_ERR	v6 A: port: sg_call renderChannelVoice: exception
+renderChannelVoice_noeng	renderChannelVoice	20	19	38	1	0	0	PARTIAL_ERR	v6 A: port: sg_call renderChannelVoice: exception
+streamRenderBlock	streamRenderBlock	21	21	42	0	0	0	EQUAL_PI	
+streamRenderBlock_st0	streamRenderBlock	21	21	42	0	0	63	EQUAL_PI	x87 A v0: top port 0x4 emu 0x5; in use port [4, 5, 6, 7] emu [5, 6, 7]
+streamRenderTail	streamRenderTail	21	21	42	0	0	0	EQUAL_PI	
+streamRenderTail_st0	streamRenderTail	21	21	42	0	0	63	EQUAL_PI	x87 A v0: top port 0x4 emu 0x5; in use port [4, 5, 6, 7] emu [5, 6, 7]

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cstddef>
 
 #include <memory>
 #include <string>
@@ -21,6 +22,7 @@
 #include "portsim/sim/terrain_state.h"
 #include "portsim/sim/live.h"
 #include "portsim/sim/tick.h"
+#include "portsim/sim/audio.h"
 
 #if defined(_MSC_VER)
 #ifndef WIN32_LEAN_AND_MEAN
@@ -115,7 +117,10 @@ sg_ctx *sg_state_new(void) {
   }
 }
 
-void sg_state_free(sg_ctx *ctx) { delete ctx; }
+void sg_state_free(sg_ctx *ctx) {
+  if (ctx) portsim::audio_release(ctx->ctx);  // S4.2: the audio core's per-context state
+  delete ctx;
+}
 
 uint8_t *sg_state_ptr(sg_ctx *ctx) { return ctx ? ctx->ctx.bytes() : nullptr; }
 
@@ -1014,4 +1019,16 @@ const char *sg_build_info(void) {
 #endif
 }
 
+
+// ---- audio core (step S4.2): the host callback (portsim/sim/audio.h; sg_snd_call is portsim::SndCallC)
+static_assert(sizeof(sg_snd_call) == sizeof(portsim::SndCallC), "sg_snd_call layout");
+static_assert(offsetof(sg_snd_call, args) == offsetof(portsim::SndCallC, args), "sg_snd_call layout");
+static_assert(offsetof(sg_snd_call, st0) == offsetof(portsim::SndCallC, st0), "sg_snd_call layout");
+static_assert(offsetof(sg_snd_call, status) == offsetof(portsim::SndCallC, status), "sg_snd_call layout");
+
+int sg_snd_set_host(sg_ctx *ctx, sg_snd_host_fn fn, void *user) {
+  if (!ctx) return SG_E_ARG;
+  portsim::audio_set_callback(ctx->ctx, reinterpret_cast<portsim::SndHostFn>(fn), user);
+  return SG_OK;
+}
 }  // extern "C"

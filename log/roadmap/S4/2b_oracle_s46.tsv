@@ -1,0 +1,169 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	x87diff	tier	quirk	pending	first
+Ch5bb90_dtor	Ch5bb90_dtor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5bb90_scalarDtor	Ch5bb90_scalarDtor	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ch5be88_ctor	Ch5be88_ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5be88_dtorA	Ch5be88_dtorA	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5be88_dtorB	Ch5be88_dtorB	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5be88_scalarDtorA	Ch5be88_scalarDtorA	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ch5be88_scalarDtorB	Ch5be88_scalarDtorB	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ch5c178_ctor	Ch5c178_ctor	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	S4.7:Sound_setSourceType	pending S4.7:Sound_setSourceType
+Ch5c178_dtor	Ch5c178_dtor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5c178_scalarDtor	Ch5c178_scalarDtor	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ch5c234_dtor	Ch5c234_dtor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5c234_scalarDtor	Ch5c234_scalarDtor	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ch5c2ec_dtor	Ch5c2ec_dtor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5c2ec_forwardSlot37	Ch5c2ec_forwardSlot37	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ch5c2ec_scalarDtor	Ch5c2ec_scalarDtor	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ch5c3a4_ctor	Ch5c3a4_ctor	GREEN_PENDING	12	12	24	0	72	0	EQUAL_PI	{}	S4.7:Sound_setSourceType	pending S4.7:Sound_setSourceType
+ChanRecord_freeBuffers	ChanRecord_freeBuffers	GREEN	12	12	24	0	0	0	EXACT	{}		
+ChanRecord_init	ChanRecord_init	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+ChannelDesc_ctor	ChannelDesc_ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+ChannelTable_callSlot4	ChannelTable_callSlot4	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+ChannelTable_loadRange	ChannelTable_loadRange	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+ChannelTable_releaseObject	ChannelTable_releaseObject	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_allocAndInitVoice	Channel_allocAndInitVoice	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_allocVoiceSlot	Channel_allocVoiceSlot	GREEN	14	14	28	0	0	0	EQUAL_PI	{}		
+Channel_applyFlags	Channel_applyFlags	GREEN	84	84	168	0	0	0	EQUAL_PI	{}		
+Channel_broadcastVoiceBit1	Channel_broadcastVoiceBit1	GREEN	16	16	32	0	0	0	EXACT	{}		
+Channel_clearBackref	Channel_clearBackref	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_closeAndFree_l1	Channel_closeAndFree	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	-:0x4280e	pending -:0x4280e
+Channel_closeAndFree_l2	Channel_closeAndFree	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	-:0x4280e	pending -:0x4280e
+Channel_collectFlagBits	Channel_collectFlagBits	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_ctorB	Channel_ctorB	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	-:ehVectorConstructorIterator	pending -:ehVectorConstructorIterator
+Channel_findStreamNode	Channel_findStreamNode	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_findVoiceByTag	Channel_findVoiceByTag	GREEN	20	20	40	0	0	0	EQUAL_PI	{}		
+Channel_parseWaveHeader	Channel_parseWaveHeader	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_parseWaveHeader_adjPlus70	Channel_parseWaveHeader_adjPlus70	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_propagateFlag0	Channel_propagateFlag0	GREEN	84	84	168	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_A_w27f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_A_wf7f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_B_w27f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_B_wf7f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_C_wf7f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_D_w27f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_N_w27f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_recomputeVoiceGains_T0_w27f	Channel_recomputeVoiceGains	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_releaseBuffers_l1	Channel_releaseBuffers	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_releaseBuffers_l2	Channel_releaseBuffers	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_releaseSound	Channel_releaseSound	GREEN	8	8	16	0	0	0	EQUAL_PI	{}		
+Channel_releaseVoices	Channel_releaseVoices	GREEN	12	12	24	0	0	0	EXACT	{}		
+Channel_resetPanState	Channel_resetPanState	GREEN	12	12	24	0	0	0	EXACT	{}		
+Channel_serviceBuffer	Channel_serviceBuffer	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_set3DBufferStub	Channel_set3DBufferStub	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_set3DPosition	Channel_set3DPosition	GREEN	30	30	60	0	0	0	EQUAL_PI	{}		
+Channel_set3DPositionX	Channel_set3DPositionX	GREEN	42	42	84	0	0	0	EQUAL_PI	{}		
+Channel_set3DPositionY	Channel_set3DPositionY	GREEN	42	42	84	0	0	0	EQUAL_PI	{}		
+Channel_set3DPositionZ	Channel_set3DPositionZ	GREEN	42	42	84	0	0	0	EQUAL_PI	{}		
+Channel_setField4Masked7f	Channel_setField4Masked7f	GREEN	20	20	40	0	0	0	EQUAL_PI	{}		
+Channel_setField5cClamped1200	Channel_setField5cClamped1200	GREEN	22	22	44	0	0	0	EQUAL_PI	{}		
+Channel_setFormat_ok	Channel_setFormat	GREEN_PENDING	12	12	24	0	27	0	EQUAL_PI	{}	S4.3:codecAllocDecoderContext	pending S4.3:codecAllocDecoderContext
+Channel_setFormat_oom	Channel_setFormat	GREEN_PENDING	12	12	24	0	27	0	EXACT	{}	S4.3:codecAllocDecoderContext	pending S4.3:codecAllocDecoderContext
+Channel_setPanGains	Channel_setPanGains	GREEN	60	60	120	0	0	0	EXACT	{}		
+Channel_setPitchRate	Channel_setPitchRate	GREEN	16	16	32	0	0	0	EXACT	{}		
+Channel_setRateGlide	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRateGlide_null	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRateGlide_p1	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRateGlide_p4096	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRate_A_w27f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_A_wf7f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_B_w27f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_B_wf7f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_C_wf7f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_D_w27f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_N_w27f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setRate_T0_w27f	Channel_setRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_A_w27f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_A_wf7f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_B_w27f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_B_wf7f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_C_wf7f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_D_w27f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_N_w27f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setReverseRate_T0_w27f	Channel_setReverseRate	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Channel_setStreamSource	Channel_setStreamSource	GREEN	12	12	24	0	0	0	EXACT	{}		
+Channel_setVolume	Channel_setVolume	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_startVoiceTimed_null	Channel_startVoiceTimed	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_startVoiceTimed_tmr	Channel_startVoiceTimed	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_startVoice_22050	Channel_startVoice	GREEN	16	16	32	0	0	0	EQUAL_PI	"{""1"": 1, ""4"": 1, ""9"": 2}"		
+Channel_startVoice_44100	Channel_startVoice	GREEN	16	16	32	0	0	0	EQUAL_PI	"{""1"": 1, ""4"": 1, ""9"": 2}"		
+Channel_startVoice_null	Channel_startVoice	GREEN	16	16	32	0	0	0	EQUAL_PI	"{""1"": 1, ""4"": 1}"		
+Channel_start_busy	Channel_start	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_start_null	Channel_start	GREEN	12	12	24	0	0	0	EXACT	{}		
+Channel_start_ok	Channel_start	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_stepVolumeFade_w27f	Channel_stepVolumeFade	GREEN	22	22	44	0	0	0	EQUAL_PI	{}		
+Channel_stepVolumeFade_wf7f	Channel_stepVolumeFade	GREEN	22	22	44	0	0	0	EQUAL_PI	{}		
+Channel_stopVoices	Channel_stopVoices	GREEN	12	12	24	0	0	0	EXACT	{}		
+SubChannel_ctor	SubChannel_ctor	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	S4.7:Sound_setSourceType	pending S4.7:Sound_setSourceType
+SubChannel_dtor	SubChannel_dtor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+SubChannel_openSourceType2	SubChannel_openSourceType2	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+SubChannel_scalarDtor	SubChannel_scalarDtor	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+VoiceBase_clearList	VoiceBase_clearList	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+VoiceBase_closeInner	VoiceBase_closeInner	GREEN	14	14	28	0	0	0	EQUAL_PI	{}		
+VoiceBase_ctor	VoiceBase_ctor	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	-:ehVectorConstructorIterator	pending -:ehVectorConstructorIterator
+VoiceBase_dtor	VoiceBase_dtor	GREEN_PENDING	8	8	16	0	24	0	EQUAL_PI	{}	-:0x4280e	pending -:0x4280e
+VoiceBase_openInner	VoiceBase_openInner	GREEN	30	30	60	0	0	0	EQUAL_PI	{}		
+VoiceBase_scalarDtor	VoiceBase_scalarDtor	GREEN_PENDING	24	24	48	0	72	0	EQUAL_PI	{}	-:0x4280e	pending -:0x4280e
+VoiceSlot_init	VoiceSlot_init	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_allNotesOff_h	Voice_allNotesOff	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_allNotesOff_n	Voice_allNotesOff	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_allNotesOff_nodev	Voice_allNotesOff	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_noteOff	Voice_noteOff	GREEN	12	12	24	0	0	0	EXACT	{}		
+Voice_notifyChannelNotes	Voice_notifyChannelNotes	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_requestCmd12_full	Voice_requestCmd12	GREEN	24	24	48	0	0	0	EQUAL_PI	{}		
+Voice_requestCmd12_null	Voice_requestCmd12	GREEN	24	24	48	0	0	0	EQUAL_PI	{}		
+Voice_requestCmd12_q	Voice_requestCmd12	GREEN	24	24	48	0	0	0	EQUAL_PI	{}		
+Voice_requestStopDrain_full	Voice_requestStopDrain	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_requestStopDrain_null	Voice_requestStopDrain	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_requestStopDrain_q	Voice_requestStopDrain	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_requestStop_full	Voice_requestStop	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_requestStop_null	Voice_requestStop	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_requestStop_q	Voice_requestStop	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_N_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_N_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r0_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r0_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r1000_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r1000_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r1001_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r1001_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r22050_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r22050_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r3_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r3_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r999_w27f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_resetDefaults_r999_wf7f	Voice_resetDefaults	GREEN	3	3	6	0	0	0	EQUAL_PI	{}		
+Voice_setLevel	Voice_setLevel	GREEN	20	20	40	0	0	0	EXACT	{}		
+Voice_setLoopFlag	Voice_setLoopFlag	GREEN	16	16	32	0	0	0	EXACT	{}		
+Voice_setName	Voice_setName	GREEN	36	36	72	0	0	0	EQUAL_PI	{}		
+Voice_setPanGains	Voice_setPanGains	GREEN	34	34	68	0	0	0	EXACT	{}		
+Voice_setPlayModeBits	Voice_setPlayModeBits	GREEN	24	24	48	0	0	0	EXACT	{}		
+Voice_startPlayback	Voice_startPlayback	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Voice_stopAndFlag	Channel_recomputeGainsSetBit3	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+allocVoiceSlot	allocVoiceSlot	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+buildVoiceRxName	buildVoiceRxName	GREEN_PENDING	10	10	20	0	30	0	EQUAL_PI	{}	S4.7:Sound_setSourceType	pending S4.7:Sound_setSourceType
+buildVoiceTxName	buildVoiceTxName	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+initSoundVoice	initSoundVoice	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+openSourceType4	openSourceType4	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+openSourceType6	openSourceType6	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+openSourceType7	openSourceType7	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+rewindChannel	rewindChannel	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+serviceChannelPlayback_dev	serviceChannelPlayback	GREEN	14	14	28	0	0	0	EQUAL_PI	"{""3"": 1, ""5"": 1, ""9"": 1, ""10"": 1, ""12"": 1, ""13"": 1}"		
+serviceChannelPlayback_nodev	serviceChannelPlayback	GREEN	14	14	28	0	0	0	EQUAL_PI	{}		
+startDevicePlayback	startDevicePlayback	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+updateVoiceRate_0	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+updateVoiceRate_22050	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	"{""6"": 2}"		
+updateVoiceRate_44100	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	"{""6"": 2}"		
+updateVoiceRate_max	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	"{""6"": 2}"		
+updateVoiceRate_null	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+stubReturnBC@	stubReturnBC	GREEN	12	12	24	0	0	0	EMU_ONLY	{}		
+Channel_stubReturnB@	Channel_stubReturnB	GREEN	30	30	60	0	0	0	EMU_ONLY	{}		
+VoiceSlot_dtorEmpty@	VoiceSlot_dtorEmpty	GREEN	12	12	24	0	0	0	EMU_ONLY	{}		
+Voice_update_a	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_b	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_c	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_d	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_e	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_f	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_g	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_h	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		
+Voice_update_z	Voice::update	GREEN	34	34	68	0	0	0	EMU_ONLY	{}		

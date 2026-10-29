@@ -1,0 +1,13 @@
+control	key	expect	verdict	lost	of	errors	detail
+flip	bitUnpack	RED	RED	1	18	0	v0 state
+flip	Channel_setFormat_oom	RED	RED	3	36	0	v1 state
+flip	randRange	RED	RED	27	72	0	v0 state
+reloc	getDsCoopLevel	RED	RED	36	36	12	v0 ret
+reloc	Seq_setTempo_w27f	RED	RED	12	36	0	v0 state
+reloc	Midi_resetFileState_p1	RED	RED	18	18	6	v0 ret
+stub	Channel_setFormat_oom	RED	RED	27	36	9	v1 ret
+stub	Seq_buildPlayOrder	RED	RED	6	36	0	v3 state
+stub	Midi_Device::openOutput_null	RED	RED	4	18	0	v0 ret
+stub	crtValidatePointer_stand	RED	RED	7	36	0	v0 ret
+stub	Midi_resetFileState_p1	BLIND	GREEN (blind)	0	18	0	
+stub	ChanRecord_freeBuffers	BLIND	GREEN (blind)	0	36	0	

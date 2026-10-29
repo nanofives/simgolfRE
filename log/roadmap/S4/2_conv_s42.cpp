@@ -1,0 +1,1459 @@
+// ---- clearNodeListD (rva 0x5a60): converted from c3cn.cpp ClearNodeListD_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListD_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListD = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListD(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListD_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListD", "thiscall", "void", 1, 0, a_clearNodeListD, &g_negctl_clearNodeListD},   // registry key clearNodeListD
+
+// ---- clearNodeListE (rva 0x5b60): converted from c3cn.cpp ClearNodeListE_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListE_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListE = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListE(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListE_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListE", "thiscall", "void", 1, 0, a_clearNodeListE, &g_negctl_clearNodeListE},   // registry key clearNodeListE
+
+// ---- listPopFront (rva 0x5c00): converted from c3cn.cpp ListPopFront_re
+u32 SoundPopFront(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    if (node == 0)
+        return 0;
+    u32 prev = ld<u32>(ctx, node + 4);
+    if (prev != 0) {
+        st<int32_t>(ctx, prev, 0);
+        st<u32>(ctx, self, prev);
+    } else {
+        st<int32_t>(ctx, self + 4, 0);
+        st<int32_t>(ctx, self, 0);
+    }
+    u32 value = ld<u32>(ctx, node + 8);
+    snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+    return value;
+}
+u32 listPopFront_body(Ctx &ctx, u32 self) { return SoundPopFront(ctx, self);
+}
+int g_negctl_listPopFront = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_listPopFront(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(listPopFront_body(ctx, a[0])); }
+// FuncDef: {"listPopFront", "thiscall", "pointer", 1, 0, a_listPopFront, &g_negctl_listPopFront},   // registry key listPopFront
+
+// ---- appendNodeB (rva 0x5e30): converted from c3cn.cpp AppendNodeB_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t appendNodeB_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_appendNodeB = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_appendNodeB(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(appendNodeB_body(ctx, a[0], a[1])); }
+// FuncDef: {"appendNodeB", "thiscall", "int", 2, 0, a_appendNodeB, &g_negctl_appendNodeB},   // registry key appendNodeB
+
+// ---- clearNodeListF (rva 0x6c70): converted from c3cn.cpp ClearNodeListF_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListF_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListF = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListF(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListF_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListF", "thiscall", "void", 1, 0, a_clearNodeListF, &g_negctl_clearNodeListF},   // registry key clearNodeListF
+
+// ---- freeDynArray (rva 0x6ec0): converted from c3cn.cpp FreeDynArray_re
+// 0x00006ec0  freeDynArray
+// void __thiscall freeDynArray(): clears bit 0 of the flags at +8 (`and edx, 0xfffffffe` at
+// 0x6ec9, stored at 0x6ece BEFORE the branch), releases the buffer at +4 through operator
+// delete when it is not null (`je 0x6edc` at 0x6ed1, call at 0x6ed4) and clears that
+// field unconditionally (0x6edc).
+void SoundFreeDynArray(Ctx &ctx, u32 self) {
+    int flags = ld<int32_t>(ctx, self + 8) & ~1;
+    u32 buf = ld<u32>(ctx, self + 4);
+    st<int32_t>(ctx, self + 8, flags);
+    if (buf != 0)
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {buf});
+    st<u32>(ctx, self + 4, 0);
+}
+void freeDynArray_body(Ctx &ctx, u32 self) { SoundFreeDynArray(ctx, self); }
+int g_negctl_freeDynArray = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_freeDynArray(Ctx &ctx, const uint32_t *a, Ret &r) { freeDynArray_body(ctx, a[0]); }
+// FuncDef: {"freeDynArray", "thiscall", "void", 1, 0, a_freeDynArray, &g_negctl_freeDynArray},   // registry key freeDynArray
+
+// ---- resizeDynArray (rva 0x6f00): converted from c3do.cpp ResizeDynArray_re
+uint32_t resizeDynArray_body(Ctx &ctx, u32 self, uint32_t n) {
+    if (n == ld<uint32_t>(ctx, self + 0xc)) return 0;  // 0x6f08 / 0x6f0b
+    unsigned eax = ld<uint32_t>(ctx, self + 8);  // 0x6f14
+    int edi = static_cast<int32_t>(eax << 31) >> 31;  // 0x6f18-0x6f1d
+    if (edi == 1) st<uint32_t>(ctx, self + 8, eax & 0xfffffffeu);  // 0x6f23 (dead)
+    u32 old = ld<u32>(ctx, self + 4);  // 0x6f2a
+    if (old) snd_delete(ctx, old);  // 0x6f2d-0x6f32
+    st<uint32_t>(ctx, self + 4, 0);  // 0x6f41
+    u32 data = (snd_call(ctx, 0x000424d7, SndAbi::Cdecl, {n * 8}).eax);  // 0x6f49
+    st<u32>(ctx, self + 4, data);  // 0x6f4e
+    st<uint32_t>(ctx, self + 0xc, n);  // 0x6f5a
+    if (n > 0) {  // 0x6f58 / 0x6f5d
+        unsigned i = 0;
+        do {
+            u32 d = ld<u32>(ctx, self + 4);  // 0x6f5f
+            i++;  // 0x6f62
+            st<uint32_t>(ctx, d + i * 8 - 8, 0);  // 0x6f63
+            st<uint32_t>(ctx, d + i * 8 - 4, 0);  // 0x6f67
+        } while (i < ld<uint32_t>(ctx, self + 0xc));  // 0x6f6b-0x6f70
+    }
+    unsigned cur = ld<uint32_t>(ctx, self + 8);  // 0x6f72
+    st<uint32_t>(ctx, self + 8, (((cur ^ static_cast<uint32_t>(edi)) & 1) ^ cur));  // 0x6f75-0x6f81
+    return 0;  // 0x6f7f
+}
+int g_negctl_resizeDynArray = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_resizeDynArray(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(resizeDynArray_body(ctx, a[0], a[1])); }
+// FuncDef: {"resizeDynArray", "thiscall", "uint32", 2, 0, a_resizeDynArray, &g_negctl_resizeDynArray},   // registry key resizeDynArray
+
+// ---- flushSoundList (rva 0x8470): converted from c3fl.cpp FlushList_re
+// The doubly linked node list {+0 head, +4 tail, +8 cursor, +0xc count} of nodes {+0 prev, +4 next, +8 object} that flushSoundList
+// (0x8559-0x85af) and Midi_Device::dispatchCommand (0xa720-0xa775, 0xa7a5-0xa810) unlink an object from:
+// the first node whose object is `obj` (searched from the head); prev->next = next or head = next; next->prev = prev with the
+// cursor = next, or (no next) cursor = 0 and tail = prev; the node goes to operator delete and the count drops by one.
+void c3fl_unlinkObject(Ctx &ctx, u32 list, u32 obj) {
+    u32 n = ld<u32>(ctx, list);
+    while (n &(n + 8) != obj) n = ld<u32>(ctx, n + 4);
+    if (!n) return;
+    u32 prev = ld<u32>(ctx, n);
+    if (prev) st<u32>(ctx, prev + 4, ld<u32>(ctx, n + 4));
+    else st<u32>(ctx, list, ld<u32>(ctx, n + 4));
+    u32 next = ld<u32>(ctx, n + 4);
+    if (next) {
+        st<u32>(ctx, next, ld<u32>(ctx, n));
+        st<u32>(ctx, list + 8, next);
+    } else {
+        st<u32>(ctx, list + 8, 0);
+        st<u32>(ctx, list + 4, ld<u32>(ctx, n));
+    }
+    snd_delete(ctx, n);
+    st<int32_t>(ctx, list + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, list + 0xc) - 1));
+}
+uint32_t c3fl_u(Ctx &ctx, u32 p) { return p; }
+uint32_t flushSoundList_body(Ctx &ctx) {
+    c3fl_imp<Imp0_t>(kIatTimeGetTime)();  // 0x8473
+    u32 eng = ld<u32>(ctx, kGSoundEngine);  // 0x8479
+    u32 list = eng + 0x1c8;  // 0x847e
+    u32 cur = ld<u32>(ctx, list);  // 0x8484
+    st<u32>(ctx, list + 8, cur);  // 0x848c
+    if (!cur) return 0;  // 0x848a / 0x848f
+    u32 o = ld<u32>(ctx, cur + 8);  // 0x8495
+    while (o) {  // 0x8498 / 0x865d-0x865f
+        unsigned kind = snd_vcall(ctx, o, 0x78, SndAbi::Thiscall, {}).eax;  // 0x84a0-0x84a4
+        u32 obj = o;
+        if (kind == 1) {  // 0x84a7 / 0x84a8
+            unsigned busy = snd_vcall(ctx, obj, 0x5c, SndAbi::Thiscall, {}).eax;  // 0x8530-0x8536
+            cur = ld<u32>(ctx, list + 8);  // 0x853b
+            if (busy) {  // 0x8539 / 0x853e
+                if (!cur) return 0;  // 0x864c / 0x864e
+                cur = ld<u32>(ctx, cur + 4);  // 0x8650
+                st<u32>(ctx, list + 8, cur);  // 0x8655
+                if (!cur) return 0;  // 0x8653 / 0x8658
+                o = ld<u32>(ctx, cur + 8);  // 0x865a
+                continue;
+            }
+            o = 0;  // 0x8557
+            if (cur) {  // 0x8544 / 0x8546
+                cur = ld<u32>(ctx, cur + 4);  // 0x8548
+                st<u32>(ctx, list + 8, cur);  // 0x854d
+                if (cur) o = ld<u32>(ctx, cur + 8);  // 0x8550 / 0x8552
+            }
+            c3fl_unlinkObject(ctx, list, obj);  // 0x8559-0x85af
+            if (ld<uint32_t>(ctx, obj + 0xcc) & 0x400) snd_call(ctx, 0x00001398, SndAbi::Thiscall, {obj + 0x70}).eax;  // 0x85b2-0x85c0
+            st<uint32_t>(ctx, obj + 0xc8, static_cast<uint32_t>(ld<uint32_t>(ctx, obj + 0xc8) & 0xffffffbfu));  // 0x85c5-0x85ce
+            unsigned f58 = ld<uint32_t>(ctx, obj + 0x58);  // 0x85d4
+            if ((f58 & 2) || (((f58 >> 4) & 1) && !(ld<uint8_t>(ctx, obj + 0x1424) & 1))) {  // 0x85d7-0x85e9
+                snd_call(ctx, 0x00001b3b, SndAbi::Thiscall, {ld<u32>(ctx, kGSoundEngine), c3fl_u(ctx, obj), 3}).eax;  // 0x863c-0x8645 (0xb4a20 re-read)
+                continue;
+            }
+            unsigned b0 = ld<uint32_t>(ctx, obj + 0xc8) & 1;  // 0x85eb / 0x85f1
+            if (!b0 && !((ld<uint32_t>(ctx, obj + 0xcc) >> 7) & 1)) {  // 0x85f4-0x8602
+                snd_call(ctx, 0x00001b3b, SndAbi::Thiscall, {ld<u32>(ctx, kGSoundEngine), c3fl_u(ctx, obj), 5}).eax;  // 0x8604-0x860d
+                continue;
+            }
+            if (!b0 && ((ld<uint32_t>(ctx, obj + 0xcc) >> 7) & 1)) {  // 0x8614-0x8623
+                if (obj) snd_vcall(ctx, obj, 0, SndAbi::Thiscall, {1}).eax;  // 0x8625-0x862f
+                continue;
+            }
+            snd_call(ctx, 0x00002568, SndAbi::Thiscall, {obj}).eax;  // 0x8633 / 0x8635
+            continue;
+        }
+        if (kind == 4) {  // 0x84ae / 0x84b1
+            unsigned busy = snd_vcall(ctx, obj, 0x5c, SndAbi::Thiscall, {}).eax;  // 0x84eb-0x84f1
+            o = (snd_vcall(ctx, obj, 0x64, SndAbi::Thiscall, {}).eax);  // 0x84f8-0x84ff / 0x8522-0x8529
+            if (!busy && (ld<uint8_t>(ctx, obj + 0x58) & 8)) {  // 0x8501-0x8506
+                snd_vcall(ctx, obj, 0x80, SndAbi::Thiscall, {}).eax;  // 0x850c-0x8510
+                snd_vcall(ctx, obj, 0x38, SndAbi::Thiscall, {}).eax;  // 0x8516-0x851a
+            }
+            continue;
+        }
+        if (kind == 6) {  // 0x84b3 / 0x84b6
+            unsigned busy = snd_vcall(ctx, obj, 0x5c, SndAbi::Thiscall, {}).eax;  // 0x84c6-0x84cc
+            o = (snd_vcall(ctx, obj, 0x64, SndAbi::Thiscall, {}).eax);  // 0x84d7 / 0x84bc
+            if (!busy) snd_vcall(ctx, obj, 0x80, SndAbi::Thiscall, {}).eax;  // 0x84da-0x84e0
+            continue;
+        }
+        o = (snd_vcall(ctx, obj, 0x64, SndAbi::Thiscall, {}).eax);  // 0x84b8-0x84bf
+    }
+    return 0;  // 0x8667
+}
+int g_negctl_flushSoundList = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_flushSoundList(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(flushSoundList_body(ctx)); }
+// FuncDef: {"flushSoundList", "default", "uint32", 0, 0, a_flushSoundList, &g_negctl_flushSoundList},   // registry key flushSoundList_cut
+
+// ---- listNode3Init (rva 0x87f0): converted from c3dj.cpp listNode3Init_re
+u32 listNode3Init_body(Ctx &ctx, u32 self) {
+    st<uint32_t>(ctx, self, 0);  // 0x87f4
+    st<uint32_t>(ctx, self + 4, 0);  // 0x87f6
+    st<uint32_t>(ctx, self + 8, 0);  // 0x87f9
+    return self;  // 0x87f0 / 0x87fc
+}
+int g_negctl_listNode3Init = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_listNode3Init(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(listNode3Init_body(ctx, a[0])); }
+// FuncDef: {"listNode3Init", "thiscall", "pointer", 1, 0, a_listNode3Init, &g_negctl_listNode3Init},   // registry key listNode3Init
+
+// ---- pairStore (rva 0x8810): converted from c3ar.cpp PairStore_re
+u32 pairStore_body(Ctx &ctx, u32 self, uint32_t a, uint32_t b) {
+    st<uint32_t>(ctx, self, a);
+    st<uint32_t>(ctx, self + 4, b);
+    return self;
+}
+int g_negctl_pairStore = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_pairStore(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(pairStore_body(ctx, a[0], a[1], a[2])); }
+// FuncDef: {"pairStore", "thiscall", "pointer", 3, 0, a_pairStore, &g_negctl_pairStore},   // registry key pairStore
+
+// ---- pairClear (rva 0x8840): converted from c3dj.cpp pairClear_re
+void pairClear_body(Ctx &ctx, u32 self) {
+    st<uint32_t>(ctx, self + 4, 0);  // 0x8840
+    st<uint32_t>(ctx, self, 0);  // 0x8847
+}
+int g_negctl_pairClear = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_pairClear(Ctx &ctx, const uint32_t *a, Ret &r) { pairClear_body(ctx, a[0]); }
+// FuncDef: {"pairClear", "thiscall", "void", 1, 0, a_pairClear, &g_negctl_pairClear},   // registry key pairClear
+
+// ---- clearNodeListG (rva 0xae80): converted from c3cn.cpp ClearNodeListG_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListG_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListG = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListG(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListG_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListG", "thiscall", "void", 1, 0, a_clearNodeListG, &g_negctl_clearNodeListG},   // registry key clearNodeListG
+
+// ---- NodeB000_ctor (rva 0xb000): converted from c3fk.cpp NodeB_re
+u32 NodeB000_ctor_body(Ctx &ctx, u32 self) {
+    snd_call(ctx, 0x000012a3, SndAbi::Thiscall, {self}).eax;  // 0xb003
+    st<uint32_t>(ctx, self + 0x24, 0);  // 0xb00a
+    st<uint32_t>(ctx, self + 0x28, 0);  // 0xb00d
+    st<uint32_t>(ctx, self + 0x2c, 0);  // 0xb010
+    st<uint32_t>(ctx, self + 0x30, 0);  // 0xb013
+    st<uint32_t>(ctx, self + 0x34, 0);  // 0xb016
+    return self;  // 0xb019
+}
+int g_negctl_NodeB000_ctor = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeB000_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(NodeB000_ctor_body(ctx, a[0])); }
+// FuncDef: {"NodeB000_ctor", "thiscall", "pointer", 1, 0, a_NodeB000_ctor, &g_negctl_NodeB000_ctor},   // registry key NodeB000_ctor
+
+// ---- getSpanLength (rva 0xb030): converted from c3an.cpp SpanLength_re
+int32_t getSpanLength_body(Ctx &ctx, u32 self) {
+    unsigned end = ld<uint32_t>(ctx, self + 0xc);
+    unsigned start = ld<uint32_t>(ctx, self + 8);
+    return static_cast<int32_t>(end - start + 1u);
+}
+int g_negctl_getSpanLength = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_getSpanLength(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(getSpanLength_body(ctx, a[0])); }
+// FuncDef: {"getSpanLength", "thiscall", "int", 1, 0, a_getSpanLength, &g_negctl_getSpanLength},   // registry key getSpanLength
+
+// ---- cmdNode::scalarDeletingDtor (rva 0xcc40): converted from c3dj.cpp cmdNodeScalarDeletingDtor_re
+u32 cmdNode__scalarDeletingDtor_body(Ctx &ctx, u32 self, uint32_t flags) {                                               snd_call(ctx, 0x00001816, SndAbi::Thiscall, {self});
+if (flags & 1) snd_delete(ctx, self);
+return self;
+}
+int g_negctl_cmdNode__scalarDeletingDtor = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_cmdNode__scalarDeletingDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(cmdNode__scalarDeletingDtor_body(ctx, a[0], a[1])); }
+// FuncDef: {"cmdNode::scalarDeletingDtor", "thiscall", "pointer", 2, 0, a_cmdNode__scalarDeletingDtor, &g_negctl_cmdNode__scalarDeletingDtor},   // registry key cmdNode::scalarDeletingDtor
+
+// ---- removeSoundNode (rva 0xe050): converted from c3do.cpp RemoveSoundNode_re
+// =====================================================================================================================
+// L. Removal from the doubly linked value lists (voice list, sound list, module registry) and the registry append
+// =====================================================================================================================
+// A list header is {head +0, back +4, cursor +8, count +0xc} (at voice+0x1338 / sound owner +0x1c8 / module 0xb5000) and a node {prev +0, next +4, value +8}. Unlinking
+// a node (voiceListRemove 0x32470-0x324b7, removeSoundNode 0xe07c-0xe0cb, unregisterSound 0x5eca-0x5f15): when there is a previous node its next
+// takes the node's next, otherwise the head takes it; when there is a next node its prev takes the node's prev and the cursor takes the next node, otherwise the cursor is
+// cleared and the back pointer takes the node's prev; the node goes to operator delete and the count drops by one.
+void listUnlink(Ctx &ctx, u32 hdr, u32 node) {
+    u32 prev = ld<u32>(ctx, node);
+    if (prev) st<u32>(ctx, prev + 4, ld<u32>(ctx, node + 4));
+    else st<u32>(ctx, hdr, ld<u32>(ctx, node + 4));
+    u32 next = ld<u32>(ctx, node + 4);
+    if (next) {
+        st<u32>(ctx, next, ld<u32>(ctx, node));
+        st<u32>(ctx, hdr + 8, next);
+    } else {
+        st<uint32_t>(ctx, hdr + 8, 0);
+        st<u32>(ctx, hdr + 4, ld<u32>(ctx, node));
+    }
+    snd_delete(ctx, node);
+    st<int32_t>(ctx, hdr + 0xc, ld<int32_t>(ctx, hdr + 0xc) - 1);
+}
+uint32_t removeSoundNode_body(Ctx &ctx, u32 self, uint32_t arg) {
+    u32 node = ld<u32>(ctx, self + 0x1c8);  // 0xe054
+    if (!node) return 0x24;  // 0xe05a / 0xe05c
+    while (ld<uint32_t>(ctx, node + 8) != arg) {  // 0xe062 / 0xe065
+        node = ld<u32>(ctx, node + 4);  // 0xe067
+        if (!node) return 0x24;  // 0xe06a / 0xe06c
+    }
+    unsigned value = ld<uint32_t>(ctx, node + 8);  // 0xe0b9
+    listUnlink(ctx, self + 0x1c8, node);  // 0xe07c-0xe0c8
+    if (value == 0) return 0x24;  // 0xe0cc / 0xe0d5
+    st<uint32_t>(ctx, arg + 0xc8, ld<uint32_t>(ctx, arg + 0xc8) & 0xffffffbfu);  // 0xe0d7-0xe0e0
+    return 0;  // 0xe0e6
+}
+int g_negctl_removeSoundNode = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_removeSoundNode(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(removeSoundNode_body(ctx, a[0], a[1])); }
+// FuncDef: {"removeSoundNode", "thiscall", "uint32", 2, 0, a_removeSoundNode, &g_negctl_removeSoundNode},   // registry key removeSoundNode
+
+// ---- addToSoundList (rva 0xe120): converted from c3dj.cpp AddToSoundList_re
+uint32_t addToSoundList_body(Ctx &ctx, u32 self, uint32_t obj) {
+    snd_call(ctx, 0x00002351, SndAbi::Thiscall, {self + 0x1c8, obj}).eax;  // 0xe12c
+    unsigned f = ld<uint32_t>(ctx, obj + 0xc8);  // 0xe131
+    f = (f & ~0xffu) | static_cast<uint8_t>((f & 0xff) | 0x40);  // 0xe137
+    st<uint32_t>(ctx, obj + 0xc8, f);  // 0xe139
+    return f;  // 0xe13f
+}
+int g_negctl_addToSoundList = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_addToSoundList(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(addToSoundList_body(ctx, a[0], a[1])); }
+// FuncDef: {"addToSoundList", "thiscall", "uint32", 2, 0, a_addToSoundList, &g_negctl_addToSoundList},   // registry key addToSoundList
+
+// ---- clearNodeListC (rva 0xe5e0): converted from c3cn.cpp ClearNodeListC_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListC_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListC = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListC(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListC_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListC", "thiscall", "void", 1, 0, a_clearNodeListC, &g_negctl_clearNodeListC},   // registry key clearNodeListC
+
+// ---- appendNodeC (rva 0xe680): converted from c3cn.cpp AppendNodeC_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t appendNodeC_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_appendNodeC = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_appendNodeC(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(appendNodeC_body(ctx, a[0], a[1])); }
+// FuncDef: {"appendNodeC", "thiscall", "int", 2, 0, a_appendNodeC, &g_negctl_appendNodeC},   // registry key appendNodeC
+
+// ---- findAndUnlinkNodeB (rva 0xe700): converted from c3dj.cpp FindUnlinkB_re
+// 0x000136c0  findAndUnlinkNode (VA 0x136c0) and 0x0000e700 findAndUnlinkNodeB (VA 0xe700): the same body. One stack argument, a value
+// (`ret 4`). `this` is a list header {+0 front, +4 back, +8 cursor, +0xc count} of nodes {previous, next, value}. The front node is
+// loaded (0x136c3; NULL returns 0, `je` 0x136c7 -> `xor eax, eax` 0x136d9) and the chain is followed through the next links
+// (0x136d2-0x136d7) to the first node whose value (+8) equals the argument (0x136cd / 0x136d0); none returns 0. The found
+// node is unlinked: with a previous node its next takes the node's next (0x136e9-0x136ec), otherwise the front takes it
+// (0x136f1-0x136f4); with a next node its previous takes the node's previous and the CURSOR (+8) becomes that next node
+// (0x136fd-0x13701), otherwise the cursor is cleared and the back takes the node's previous (0x13706-0x1370f). The
+// node's value is kept (0x13713), the node released with operator delete (0x13717), the count decremented (0x1371c-0x13723)
+// and the value returned (0x13726).
+uint32_t c3dj_findUnlink(Ctx &ctx, u32 hdr, uint32_t value) {
+    u32 node = ld<u32>(ctx, hdr);  // 0x136c3
+    if (node == 0) return 0;  // 0x136c5 / 0x136c7
+    while (ld<uint32_t>(ctx, node + 8) != value) {  // 0x136cd / 0x136d0
+        node = ld<u32>(ctx, node + 4);  // 0x136d2
+        if (node == 0) return 0;  // 0x136d5 / 0x136d7
+    }
+    u32 prev = ld<u32>(ctx, node);  // 0x136e3
+    if (prev != 0) st<uint32_t>(ctx, prev + 4, ld<uint32_t>(ctx, node + 4));  // 0x136e5 / 0x136e7 / 0x136ec
+    else st<uint32_t>(ctx, hdr, ld<uint32_t>(ctx, node + 4));  // 0x136f4
+    u32 next = ld<u32>(ctx, node + 4);  // 0x136f6
+    if (next != 0) {  // 0x136f9 / 0x136fb
+        st<uint32_t>(ctx, next, ld<uint32_t>(ctx, node));  // 0x136ff
+        st<u32>(ctx, hdr + 8, next);  // 0x13701
+    } else {
+        unsigned back = ld<uint32_t>(ctx, node);  // 0x13706
+        st<uint32_t>(ctx, hdr + 8, 0);  // 0x13708
+        st<uint32_t>(ctx, hdr + 4, back);  // 0x1370f
+    }
+    unsigned v = ld<uint32_t>(ctx, node + 8);  // 0x13713
+    snd_delete(ctx, node);  // 0x13717
+    st<uint32_t>(ctx, hdr + 0xc, ld<uint32_t>(ctx, hdr + 0xc) - 1);  // 0x1371c / 0x13722 / 0x13723
+    return v;  // 0x13726
+}
+uint32_t findAndUnlinkNodeB_body(Ctx &ctx, u32 self, uint32_t value) { return c3dj_findUnlink(ctx, self, value); }
+int g_negctl_findAndUnlinkNodeB = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_findAndUnlinkNodeB(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(findAndUnlinkNodeB_body(ctx, a[0], a[1])); }
+// FuncDef: {"findAndUnlinkNodeB", "thiscall", "uint32", 2, 0, a_findAndUnlinkNodeB, &g_negctl_findAndUnlinkNodeB},   // registry key findAndUnlinkNodeB
+
+// ---- seekListToIndex (rva 0x116a0): converted from c3au.cpp SeekList_re
+int32_t seekListToIndex_body(Ctx &ctx, u32 self, uint32_t index) {
+    unsigned count = ld<uint32_t>(ctx, self + 0x148);
+    if (count == 0) return 3;
+    if (index >= count) return 0xa;
+    if (ld<u32>(ctx, self + 8) != 0) return 6;
+    u32 node = ld<u32>(ctx, self + 4);
+    for (unsigned i = 0;;) {
+        bool last = (i == index);
+        st<u32>(ctx, self + 8, node);
+        if (last) break;
+        node = ld<u32>(ctx, node + 0x10);
+        if (++i >= count) break;
+    }
+    return 0;
+}
+int g_negctl_seekListToIndex = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_seekListToIndex(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(seekListToIndex_body(ctx, a[0], a[1])); }
+// FuncDef: {"seekListToIndex", "thiscall", "int", 2, 0, a_seekListToIndex, &g_negctl_seekListToIndex},   // registry key seekListToIndex
+
+// ---- getNodeByIndex (rva 0x11790): converted from c3cx.cpp NodeByIndex_re
+int32_t getNodeByIndex_body(Ctx &ctx, u32 self, uint32_t index, u32 dst, uint32_t count) {
+    if (index >= ld<uint32_t>(ctx, self + 0x148)) return 0xa;  // 0x1179c
+    u32 node = ld<u32>(ctx, self + 4);
+    if (!node) return 3;  // 0x117ab
+    for (unsigned i = 0; i < index; ++i) {  // 0x117b5..0x117c5
+        if (!node) return 3;  // 0x117bd
+        node = ld<u32>(ctx, node + 0x10);  // 0x117bf
+    }
+    if (!node) return 3;  // 0x117c9
+    snd_call(ctx, 0x00042710, SndAbi::Cdecl, {dst, ld<u32>(ctx, node), count}).eax;  // 0x117e0
+    return 0;
+}
+int g_negctl_getNodeByIndex = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_getNodeByIndex(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(getNodeByIndex_body(ctx, a[0], a[1], a[2], a[3])); }
+// FuncDef: {"getNodeByIndex", "thiscall", "int", 4, 0, a_getNodeByIndex, &g_negctl_getNodeByIndex},   // registry key getNodeByIndex
+
+// ---- clearNodeListA (rva 0x13620): converted from c3cn.cpp ClearNodeListA_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListA_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListA = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListA(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListA_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListA", "thiscall", "void", 1, 0, a_clearNodeListA, &g_negctl_clearNodeListA},   // registry key clearNodeListA
+
+// ---- findAndUnlinkNode (rva 0x136c0): converted from c3dj.cpp FindUnlink_re
+// 0x000136c0  findAndUnlinkNode (VA 0x136c0) and 0x0000e700 findAndUnlinkNodeB (VA 0xe700): the same body. One stack argument, a value
+// (`ret 4`). `this` is a list header {+0 front, +4 back, +8 cursor, +0xc count} of nodes {previous, next, value}. The front node is
+// loaded (0x136c3; NULL returns 0, `je` 0x136c7 -> `xor eax, eax` 0x136d9) and the chain is followed through the next links
+// (0x136d2-0x136d7) to the first node whose value (+8) equals the argument (0x136cd / 0x136d0); none returns 0. The found
+// node is unlinked: with a previous node its next takes the node's next (0x136e9-0x136ec), otherwise the front takes it
+// (0x136f1-0x136f4); with a next node its previous takes the node's previous and the CURSOR (+8) becomes that next node
+// (0x136fd-0x13701), otherwise the cursor is cleared and the back takes the node's previous (0x13706-0x1370f). The
+// node's value is kept (0x13713), the node released with operator delete (0x13717), the count decremented (0x1371c-0x13723)
+// and the value returned (0x13726).
+uint32_t c3dj_findUnlink(Ctx &ctx, u32 hdr, uint32_t value) {
+    u32 node = ld<u32>(ctx, hdr);  // 0x136c3
+    if (node == 0) return 0;  // 0x136c5 / 0x136c7
+    while (ld<uint32_t>(ctx, node + 8) != value) {  // 0x136cd / 0x136d0
+        node = ld<u32>(ctx, node + 4);  // 0x136d2
+        if (node == 0) return 0;  // 0x136d5 / 0x136d7
+    }
+    u32 prev = ld<u32>(ctx, node);  // 0x136e3
+    if (prev != 0) st<uint32_t>(ctx, prev + 4, ld<uint32_t>(ctx, node + 4));  // 0x136e5 / 0x136e7 / 0x136ec
+    else st<uint32_t>(ctx, hdr, ld<uint32_t>(ctx, node + 4));  // 0x136f4
+    u32 next = ld<u32>(ctx, node + 4);  // 0x136f6
+    if (next != 0) {  // 0x136f9 / 0x136fb
+        st<uint32_t>(ctx, next, ld<uint32_t>(ctx, node));  // 0x136ff
+        st<u32>(ctx, hdr + 8, next);  // 0x13701
+    } else {
+        unsigned back = ld<uint32_t>(ctx, node);  // 0x13706
+        st<uint32_t>(ctx, hdr + 8, 0);  // 0x13708
+        st<uint32_t>(ctx, hdr + 4, back);  // 0x1370f
+    }
+    unsigned v = ld<uint32_t>(ctx, node + 8);  // 0x13713
+    snd_delete(ctx, node);  // 0x13717
+    st<uint32_t>(ctx, hdr + 0xc, ld<uint32_t>(ctx, hdr + 0xc) - 1);  // 0x1371c / 0x13722 / 0x13723
+    return v;  // 0x13726
+}
+uint32_t findAndUnlinkNode_body(Ctx &ctx, u32 self, uint32_t value) { return c3dj_findUnlink(ctx, self, value); }
+int g_negctl_findAndUnlinkNode = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_findAndUnlinkNode(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(findAndUnlinkNode_body(ctx, a[0], a[1])); }
+// FuncDef: {"findAndUnlinkNode", "thiscall", "uint32", 2, 0, a_findAndUnlinkNode, &g_negctl_findAndUnlinkNode},   // registry key findAndUnlinkNode
+
+// ---- clearNodeListB (rva 0x13750): converted from c3cn.cpp ClearNodeListB_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void clearNodeListB_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_clearNodeListB = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearNodeListB(Ctx &ctx, const uint32_t *a, Ret &r) { clearNodeListB_body(ctx, a[0]); }
+// FuncDef: {"clearNodeListB", "thiscall", "void", 1, 0, a_clearNodeListB, &g_negctl_clearNodeListB},   // registry key clearNodeListB
+
+// ---- appendNode (rva 0x137f0): converted from c3cn.cpp AppendNode_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t appendNode_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_appendNode = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_appendNode(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(appendNode_body(ctx, a[0], a[1])); }
+// FuncDef: {"appendNode", "thiscall", "int", 2, 0, a_appendNode, &g_negctl_appendNode},   // registry key appendNode
+
+// ---- StrPtr_assign (rva 0x1b160): converted from c3fk.cpp StrAssign_re
+uint32_t StrPtr_assign_body(Ctx &ctx, u32 self, u32 s) {
+    if (!s) return 0xa;  // 0x1b168-0x1b173
+    if (u32 old = ld<u32>(ctx, self)) snd_delete(ctx, old);  // 0x1b176-0x1b17d
+    unsigned n = static_cast<uint32_t>(vstrlen(ctx.mem, s)) + 1;  // 0x1b186-0x1b18f
+    u32 p = (snd_new(ctx, n));  // 0x1b192
+    st<u32>(ctx, self, p);  // 0x1b1a3
+    rep_movs(ctx.mem, p, s, n);  // 0x1b1a5-0x1b1bd
+    return 0;  // 0x1b1b8
+}
+int g_negctl_StrPtr_assign = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_StrPtr_assign(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(StrPtr_assign_body(ctx, a[0], a[1])); }
+// FuncDef: {"StrPtr_assign", "thiscall", "uint32", 2, 0, a_StrPtr_assign, &g_negctl_StrPtr_assign},   // registry key StrPtr_assign
+
+// ---- ChainObject_dtor (rva 0x1b570): converted from c3do.cpp ChainObject_dtor_re
+// The four bodies 0x0001b570 ChainObject_dtor, 0x0001c990 Ctrl5b58c_dtorEmbedded, 0x0001c080 Ctrl5b58c_dtor and 0x0001b870
+// MidiReader_freeContent (VAs 0x1b570 / 0x1c990 / 0x1c080 / 0x1b870) end in the same two loops over a list whose header
+// sits in the object: head +0xc, tail +0x10, count +0x18; a node is { prev +0, next +4, value +8 }. Popping the head
+// (0x1b5ab-0x1b5c6): next = node->next (0x1b5b2); when next != NULL, next->prev = 0 and head = next (0x1b5b9 / 0x1b5bb);
+// otherwise tail = head = 0 (0x1b5c0 / 0x1b5c3); value = node->value (0x1b5c6); operator delete(node) (0x1b5ca); count -= 1
+// (0x1b5cf-0x1b5d8).
+//   Loop 1 (0x1b5ab-0x1b5e5): pops while the head is non-NULL; a popped NULL value ends the loop (0x1b5d6 / 0x1b5db), a
+//     non-NULL value gets its virtual slot 0 called with ecx = value and the argument 1 (`push 1; call [eax]` 0x1b5df / 0x1b5e3).
+//   Loop 2 (0x1b5e7-0x1b651, the compiler's copy for the unwind path): pops while the head is non-NULL WITHOUT calling the
+//     value; a popped NULL value ends it (0x1b61a / 0x1b61f, 0x1b64c / 0x1b651).
+// The count is decremented once per popped node, also when the list ends on a NULL value.
+void c3do_drainList(Ctx &ctx, u32 self) {
+  // loop 1
+    for (;;) {
+        u32 node = ld<u32>(ctx, self + 0xc);
+        if (!node) break;  // 0x1b5ae / 0x1b5b0
+        u32 next = ld<u32>(ctx, node + 4);  // 0x1b5b2
+        if (next) {  // 0x1b5b5 / 0x1b5b7
+            st<uint32_t>(ctx, next, 0);  // 0x1b5b9
+            st<u32>(ctx, self + 0xc, next);  // 0x1b5bb
+        } else {
+            st<uint32_t>(ctx, self + 0x10, 0);  // 0x1b5c0
+            st<uint32_t>(ctx, self + 0xc, 0);  // 0x1b5c3
+        }
+        u32 value = ld<u32>(ctx, node + 8);  // 0x1b5c6
+        snd_delete(ctx, node);  // 0x1b5ca
+        st<int32_t>(ctx, self + 0x18, ld<int32_t>(ctx, self + 0x18) - 1);  // 0x1b5cf-0x1b5d8
+        if (!value) break;  // 0x1b5d6 / 0x1b5db
+        snd_vcall(ctx, value, 0, SndAbi::Thiscall, {1}).eax;  // 0x1b5dd-0x1b5e3
+    }
+  // loop 2
+    for (;;) {
+        u32 node = ld<u32>(ctx, self + 0xc);
+        if (!node) break;  // 0x1b5f2 / 0x1b5f4, 0x1b624 / 0x1b626
+        u32 next = ld<u32>(ctx, node + 4);  // 0x1b5f6
+        if (next) {  // 0x1b5f9 / 0x1b5fb
+            st<uint32_t>(ctx, next, 0);  // 0x1b5fd
+            st<u32>(ctx, self + 0xc, next);  // 0x1b5ff
+        } else {
+            st<uint32_t>(ctx, self + 0x10, 0);  // 0x1b604
+            st<uint32_t>(ctx, self + 0xc, 0);  // 0x1b607
+        }
+        u32 value = ld<u32>(ctx, node + 8);  // 0x1b60a
+        snd_delete(ctx, node);  // 0x1b60e
+        st<int32_t>(ctx, self + 0x18, ld<int32_t>(ctx, self + 0x18) - 1);  // 0x1b613-0x1b61c
+        if (!value) break;  // 0x1b61a / 0x1b61f
+    }
+}
+// <<< HOOKS mix_rated
+void ChainObject_dtor_body(Ctx &ctx, u32 sub) {                                                                 u32 self = sub - 0x2c;
+st<u32>(ctx, sub, snd_va(ctx, snd_rva::vt_CtrlObject));
+st<u32>(ctx, self, snd_va(ctx, snd_rva::vt_Ctrl5b58c));
+c3do_drainList(ctx, self);
+}
+int g_negctl_ChainObject_dtor = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_ChainObject_dtor(Ctx &ctx, const uint32_t *a, Ret &r) { ChainObject_dtor_body(ctx, a[0]); }
+// FuncDef: {"ChainObject_dtor", "thiscall", "void", 1, 0, a_ChainObject_dtor, &g_negctl_ChainObject_dtor},   // registry key ChainObject_dtor
+
+// ---- ListValues_callSlot18 (rva 0x1bc00): converted from c3dt.cpp ListCall_re
+uint32_t ListValues_callSlot18_body(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self + 0xc);  // 0x1bc03
+    st<u32>(ctx, self + 0x14, node);  // 0x1bc08
+    if (!node) return 0;  // 0x1bc06 / 0x1bc0b
+    u32 obj = ld<u32>(ctx, node + 8);  // 0x1bc0d
+    if (!obj) return node;  // 0x1bc10 / 0x1bc12
+    for (;;) {
+        u32 vt = ld<u32>(ctx, obj);  // 0x1bc14
+        (ld<Th0_t>(ctx, vt + 0x18))(obj, 0);  // 0x1bc16
+        u32 cur = ld<u32>(ctx, self + 0x14);  // 0x1bc19
+        if (!cur) return 0;  // 0x1bc1c / 0x1bc1e
+        cur = ld<u32>(ctx, cur + 4);  // 0x1bc20
+        st<u32>(ctx, self + 0x14, cur);  // 0x1bc25
+        if (!cur) return 0;  // 0x1bc23 / 0x1bc28
+        obj = ld<u32>(ctx, cur + 8);  // 0x1bc2a
+        if (!obj) return cur;  // 0x1bc2d / 0x1bc2f
+    }
+}
+int g_negctl_ListValues_callSlot18 = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_ListValues_callSlot18(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(ListValues_callSlot18_body(ctx, a[0])); }
+// FuncDef: {"ListValues_callSlot18", "thiscall", "uint32", 1, 0, a_ListValues_callSlot18, &g_negctl_ListValues_callSlot18},   // registry key ListValues_callSlot18
+
+// ---- ChainObject_scalarDtor (rva 0x1bea0): converted from c3do.cpp ChainObject_scalarDtor_re
+// <<< HOOKS mix_rated
+uint32_t ChainObject_scalarDtor_body(Ctx &ctx, u32 sub, uint32_t flags) {                                             snd_call(ctx, 0x0001b570, SndAbi::Thiscall, {sub});
+u32 self = sub - 0x2c;
+if (flags & 1) snd_delete(ctx, self);
+return self;
+}
+int g_negctl_ChainObject_scalarDtor = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_ChainObject_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(ChainObject_scalarDtor_body(ctx, a[0], a[1])); }
+// FuncDef: {"ChainObject_scalarDtor", "thiscall", "pointer", 2, 0, a_ChainObject_scalarDtor, &g_negctl_ChainObject_scalarDtor},   // registry key ChainObject_scalarDtor
+
+// ---- PtrList_init (rva 0x1d130): converted from c3dj.cpp PtrList_init_re
+u32 PtrList_init_body(Ctx &ctx, u32 self) {
+    st<uint32_t>(ctx, self, 0);  // 0x1d134
+    st<uint32_t>(ctx, self + 4, 0);  // 0x1d136
+    st<uint32_t>(ctx, self + 8, 0);  // 0x1d139
+    st<uint32_t>(ctx, self + 0xc, 0);  // 0x1d13c
+    return self;  // 0x1d130 / 0x1d13f
+}
+int g_negctl_PtrList_init = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_PtrList_init(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(PtrList_init_body(ctx, a[0])); }
+// FuncDef: {"PtrList_init", "thiscall", "pointer", 1, 0, a_PtrList_init, &g_negctl_PtrList_init},   // registry key PtrList_init
+
+// ---- PtrList_pushBack (rva 0x1d150): converted from c3cn.cpp PtrListPushBack_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t PtrList_pushBack_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_PtrList_pushBack = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_PtrList_pushBack(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(PtrList_pushBack_body(ctx, a[0], a[1])); }
+// FuncDef: {"PtrList_pushBack", "thiscall", "int", 2, 0, a_PtrList_pushBack, &g_negctl_PtrList_pushBack},   // registry key PtrList_pushBack
+
+// ---- byteSwap16 (rva 0x1e6e0): converted from c3ar.cpp ByteSwap16_re
+uint16_t byteSwap16_body(Ctx &ctx, uint32_t v) {
+    unsigned char b0 = static_cast<uint8_t>(v);
+    unsigned char b1 = static_cast<uint8_t>(v >> 8);
+    return static_cast<uint16_t>(b1 | (static_cast<uint32_t>(b0) << 8));
+}
+int g_negctl_byteSwap16 = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_byteSwap16(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(byteSwap16_body(ctx, a[0])); }
+// FuncDef: {"byteSwap16", "default", "uint16", 1, 0, a_byteSwap16, &g_negctl_byteSwap16},   // registry key byteSwap16
+
+// ---- PtrList_freeNodesA (rva 0x1f1c0): converted from c3cn.cpp PtrListFreeNodesA_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void PtrList_freeNodesA_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_PtrList_freeNodesA = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_PtrList_freeNodesA(Ctx &ctx, const uint32_t *a, Ret &r) { PtrList_freeNodesA_body(ctx, a[0]); }
+// FuncDef: {"PtrList_freeNodesA", "thiscall", "void", 1, 0, a_PtrList_freeNodesA, &g_negctl_PtrList_freeNodesA},   // registry key PtrList_freeNodesA
+
+// ---- NodeList_clear (rva 0x24d40): converted from c3cn.cpp NodeListClear_sound_re
+// clearNodeList, reference body 0x5a60: releases every node through operator delete and keeps the
+// count at +0xc in step. The head is read at 0x5a64 and an empty list returns at once
+// (`je 0x5ada`). Each node: its +4 becomes the new head and that node's +0 is cleared
+// (0x5a71-0x5a77), or, when +4 is null, both the list's +4 and +0 are cleared (0x5a7b).
+// The node's +8 is kept as the continue flag (0x5a88), the node goes to operator delete
+// (0x5a8c) and the count is decremented (0x5a97). The loop stops when that flag is null
+// (0x5a9d) or when the new head is null (0x5aa3). The first iteration is peeled, so the same
+// block appears twice (0x5a6a and 0x5aa5).
+void SoundClearNodeList(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    while (node != 0) {
+        u32 prev = ld<u32>(ctx, node + 4);
+        if (prev != 0) {
+            st<int32_t>(ctx, prev, 0);
+            st<u32>(ctx, self, prev);
+        } else {
+            st<int32_t>(ctx, self + 4, 0);
+            st<int32_t>(ctx, self, 0);
+        }
+        u32 next = ld<u32>(ctx, node + 8);
+        snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+        st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+        if (next == 0)
+            return;
+        node = ld<u32>(ctx, self);
+    }
+}
+void NodeList_clear_body(Ctx &ctx, u32 self) { SoundClearNodeList(ctx, self);
+}
+int g_negctl_NodeList_clear = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeList_clear(Ctx &ctx, const uint32_t *a, Ret &r) { NodeList_clear_body(ctx, a[0]); }
+// FuncDef: {"NodeList_clear", "thiscall", "void", 1, 0, a_NodeList_clear, &g_negctl_NodeList_clear},   // registry key NodeList_clear
+
+// ---- NodeList_pushBack (rva 0x24de0): converted from c3cn.cpp NodeListPushBack_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t NodeList_pushBack_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_NodeList_pushBack = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeList_pushBack(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(NodeList_pushBack_body(ctx, a[0], a[1])); }
+// FuncDef: {"NodeList_pushBack", "thiscall", "int", 2, 0, a_NodeList_pushBack, &g_negctl_NodeList_pushBack},   // registry key NodeList_pushBack
+
+// ---- NodeList_insert (rva 0x24e60): converted from c3dh.cpp NodeIns_re
+u32 nl_newnode(Ctx &ctx, uint32_t value) {
+    u32 n = (snd_new(ctx, 0xc));
+    if (n) {
+        st<uint32_t>(ctx, n, 0);
+        st<uint32_t>(ctx, n + 4, 0);
+        st<uint32_t>(ctx, n + 8, value);
+    }
+    return n;
+}
+uint32_t nl_append(Ctx &ctx, u32 self, uint32_t value) {
+    u32 n = nl_newnode(ctx, value);  // 0x24e6d
+    u32 back = ld<u32>(ctx, self + 4);  // 0x24e89
+    if (back) {  // 0x24e8e
+        st<u32>(ctx, back + 4, n);  // 0x24e90
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));  // 0x24e93 / 0x24e96
+        st<u32>(ctx, self + 4, n);  // 0x24e98
+    } else {
+        st<u32>(ctx, self, n);  // 0x24ea8
+        st<u32>(ctx, self + 4, n);  // 0x24eaa
+    }
+    unsigned c = ld<uint32_t>(ctx, self + 0xc) + 1;
+    st<uint32_t>(ctx, self + 0xc, c);  // 0x24ea0 / 0x24eb2
+    return c;
+}
+uint32_t NodeList_insert_body(Ctx &ctx, u32 self, uint32_t value) {
+    if (ld<u32>(ctx, self) == 0) return nl_append(ctx, self, value);  // 0x24e67 / 0x24e69
+    u32 cursor = ld<u32>(ctx, self + 8);  // 0x24eba
+    if (cursor == 0) {  // 0x24ebf
+        u32 n = nl_newnode(ctx, value);  // 0x24ec3
+        u32 front = ld<u32>(ctx, self);  // 0x24edf
+        if (front == 0) {  // 0x24ee3 (never taken: front tested non-zero above)
+            st<u32>(ctx, self, n);  // 0x24ea8
+            st<u32>(ctx, self + 4, n);  // 0x24eaa
+        } else {
+            st<u32>(ctx, front, n);  // 0x24ee5
+            st<u32>(ctx, n + 4, ld<u32>(ctx, self));  // 0x24ee7 / 0x24ee9
+            st<u32>(ctx, self, n);  // 0x24eec
+        }
+        unsigned c = ld<uint32_t>(ctx, self + 0xc) + 1;
+        st<uint32_t>(ctx, self + 0xc, c);  // 0x24ef3 / 0x24eb2
+        return c;
+    }
+    u32 next = ld<u32>(ctx, cursor + 4);  // 0x24efb
+    if (next == 0) return nl_append(ctx, self, value);  // 0x24f00 / 0x24f02 -> 0x24e6d
+    u32 n = nl_newnode(ctx, value);  // 0x24f08
+    st<u32>(ctx, MEM<u32>(self + 8) + 4, n);  // 0x24f24 / 0x24f27
+    st<u32>(ctx, next, n);  // 0x24f2a
+    st<u32>(ctx, n + 4, next);  // 0x24f2f
+    st<u32>(ctx, n, ld<u32>(ctx, self + 8));  // 0x24f2c / 0x24f32
+    unsigned c = ld<uint32_t>(ctx, self + 0xc) + 1;
+    st<uint32_t>(ctx, self + 0xc, c);  // 0x24f39
+    return c;
+}
+int g_negctl_NodeList_insert = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeList_insert(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(NodeList_insert_body(ctx, a[0], a[1])); }
+// FuncDef: {"NodeList_insert", "thiscall", "uint32", 2, 0, a_NodeList_insert, &g_negctl_NodeList_insert},   // registry key NodeList_insert
+
+// ---- NodeList_pushFront (rva 0x24f90): converted from c3cn.cpp NodeListPushFront_re
+// pushFront 0x24f90: the same body anchored on the HEAD at +0 (`mov ecx,[esi]` at 0x24fb9):
+// head->+0 = node (0x24fbf), node->+4 = the head re-read (0x24fc1-0x24fc3), list->+0 = node
+// (0x24fc6). Its empty arm is the same as push_back's (0x24fd3).
+int32_t SoundPushFront(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self) != 0) {
+        st<u32>(ctx, MEM<u32>(self), n);
+        st<u32>(ctx, n + 4, ld<u32>(ctx, self));
+        st<u32>(ctx, self, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t NodeList_pushFront_body(Ctx &ctx, u32 self, u32 v) { return SoundPushFront(ctx, self, v); }
+int g_negctl_NodeList_pushFront = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeList_pushFront(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(NodeList_pushFront_body(ctx, a[0], a[1])); }
+// FuncDef: {"NodeList_pushFront", "thiscall", "int", 2, 0, a_NodeList_pushFront, &g_negctl_NodeList_pushFront},   // registry key NodeList_pushFront
+
+// ---- NodeList_initNode (rva 0x25010): converted from c3ar.cpp NodeListInitNode_re
+u32 NodeList_initNode_body(Ctx &ctx, u32 self, uint32_t payload) {
+    st<uint32_t>(ctx, self, 0);
+    st<uint32_t>(ctx, self + 4, 0);
+    st<uint32_t>(ctx, self + 8, payload);
+    return self;
+}
+int g_negctl_NodeList_initNode = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeList_initNode(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(NodeList_initNode_body(ctx, a[0], a[1])); }
+// FuncDef: {"NodeList_initNode", "thiscall", "pointer", 2, 0, a_NodeList_initNode, &g_negctl_NodeList_initNode},   // registry key NodeList_initNode
+
+// ---- randRange (rva 0x28560): converted from c3an.cpp RandRange_re
+uint32_t randRange_body(Ctx &ctx, u32 self, uint32_t n) {
+    unsigned state = ld<uint32_t>(ctx, self) * 0x19660du + 0x3c6ef35fu;
+    st<uint32_t>(ctx, self, state);
+    return ((state >> 16) * (n & 0xffffu)) >> 16;
+}
+int g_negctl_randRange = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_randRange(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(randRange_body(ctx, a[0], a[1])); }
+// FuncDef: {"randRange", "thiscall", "uint32", 2, 0, a_randRange, &g_negctl_randRange},   // registry key randRange
+
+// ---- nextRandomFloat (rva 0x285a0): converted from c3ar.cpp NextRandomFloat_re
+float nextRandomFloat_body(Ctx &ctx, u32 self) {
+    unsigned state = ld<uint32_t>(ctx, self) * 0x19660du + 0x3c6ef35fu;
+    st<uint32_t>(ctx, self, state);
+    unsigned bits = (state & 0x7fffffu) | 0x3f800000u;
+    float f;
+    st<uint32_t>(ctx, &f, bits);
+    return f - 1.0f;
+}
+int g_negctl_nextRandomFloat = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_nextRandomFloat(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_double(nextRandomFloat_body(ctx, a[0])); }
+// FuncDef: {"nextRandomFloat", "thiscall", "float", 1, 0, a_nextRandomFloat, &g_negctl_nextRandomFloat},   // registry key nextRandomFloat
+
+// ---- unlinkFromActiveList (rva 0x2b090): converted from c3dj.cpp UnlinkActive_re
+unsigned& c3dj_listHead(Ctx &ctx) { return ld<uint32_t>(ctx, snd_obj(ctx, &SoundState::g_activeListHead).va()); }
+unsigned& c3dj_listTail(Ctx &ctx) { return ld<uint32_t>(ctx, snd_va(ctx, 0xb506c)); }
+// The unlink block, e.g. 0x2ac56-0x2ac91 in SubChannel_dtor: eax = the previous object (+0x48). With a previous object its
+// +0x4c takes this->+0x4c (0x2ac5d / 0x2ac60); without one the global head 0xb5070 takes this->+0x4c (0x2ac65 /
+// 0x2ac68). eax = the next object (+0x4c, 0x2ac6e): with one its +0x48 takes this->+0x48 (0x2ac75 / 0x2ac78); without
+// one the global tail 0xb506c takes this->+0x48 (0x2ac7d / 0x2ac80). The flag dword is read (0x2ac86) after those writes,
+// bit 1 of its low byte is cleared (`and al, 0xfd` 0x2ac8c), and +0x4c = 0 (0x2ac89), +0x48 = 0 (0x2ac8e), +0x44 = the
+// flag dword (0x2ac91) are stored.
+void c3dj_unlinkActive(Ctx &ctx, u32 self) {
+    u32 prev = ld<u32>(ctx, self + 0x48);
+    if (prev != 0) st<uint32_t>(ctx, prev + 0x4c, ld<uint32_t>(ctx, self + 0x4c));
+    else c3dj_listHead(ctx) = ld<uint32_t>(ctx, self + 0x4c);
+    u32 next = ld<u32>(ctx, self + 0x4c);
+    if (next != 0) st<uint32_t>(ctx, next + 0x48, ld<uint32_t>(ctx, self + 0x48));
+    else c3dj_listTail(ctx) = ld<uint32_t>(ctx, self + 0x48);
+    unsigned flags = ld<uint32_t>(ctx, self + 0x44);
+    flags = (flags & ~0xffu) | static_cast<uint8_t>(flags & 0xfd);
+    st<uint32_t>(ctx, self + 0x4c, 0);
+    st<uint32_t>(ctx, self + 0x48, 0);
+    st<uint32_t>(ctx, self + 0x44, flags);
+}
+uint32_t unlinkFromActiveList_body(Ctx &ctx, u32 self) {
+    if ((ld<uint8_t>(ctx, self + 0x44) & 2) == 0) return 0;  // 0x2b090 / 0x2b094 / 0x2b096
+    c3dj_unlinkActive(ctx, self);  // 0x2b099-0x2b0eb
+    return 0;
+}
+int g_negctl_unlinkFromActiveList = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_unlinkFromActiveList(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(unlinkFromActiveList_body(ctx, a[0])); }
+// FuncDef: {"unlinkFromActiveList", "thiscall", "uint32", 1, 0, a_unlinkFromActiveList, &g_negctl_unlinkFromActiveList},   // registry key unlinkFromActiveList
+
+// ---- Object_setName (rva 0x2bb10): converted from c3dj.cpp ObjectSetName_re
+// The name setters: a string argument is copied into a fresh operator-new block (strlen + 1 bytes, `repne scasb` / `not ecx` e.g.
+// 0x2bb2d-0x2bb36, copied with `rep movsd` + `rep movsb`) whose pointer replaces a field after the old block was released.
+uint32_t c3dj_dupInto(Ctx &ctx, u32 field, u32 name) {
+    unsigned len = 0;
+    while (name[len] != 0) len++;
+    len += 1;  // strlen + 1 (ecx after `not ecx`)
+    u32 p = (snd_new(ctx, len));  // operator new 0x424d7
+    st<u32>(ctx, field, p);
+    for (unsigned i = 0; i < len; i++) p[i] = name[i];  // rep movsd + rep movsb
+    return len;
+}
+uint32_t Object_setName_body(Ctx &ctx, u32 self, u32 name) {
+    if (name == 0) return 0xa;  // 0x2bb18 / 0x2bb1a / 0x2bb6e
+    u32 old = ld<u32>(ctx, self + 0x50);  // 0x2bb1c
+    if (old != 0) snd_delete(ctx, old);  // 0x2bb21 / 0x2bb24
+    c3dj_dupInto(ctx, self + 0x50, name);  // 0x2bb39-0x2bb65
+    return 0;  // 0x2bb63
+}
+int g_negctl_Object_setName = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_Object_setName(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(Object_setName_body(ctx, a[0], a[1])); }
+// FuncDef: {"Object_setName", "thiscall", "uint32", 2, 0, a_Object_setName, &g_negctl_Object_setName},   // registry key Object_setName
+
+// ---- getField204 (rva 0x2d430): converted from c3fk.cpp GetF204_re
+uint32_t getField204_body(Ctx &ctx, u32 self) {
+    return ld<uint32_t>(ctx, self + 0x204);  // 0x2d430
+}
+int g_negctl_getField204 = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_getField204(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(getField204_body(ctx, a[0])); }
+// FuncDef: {"getField204", "thiscall", "uint32", 1, 0, a_getField204, &g_negctl_getField204},   // registry key getField204
+
+// ---- NodeB000_initBase (rva 0x2e3f0): converted from c3fk.cpp NodeBase_re
+u32 NodeB000_initBase_body(Ctx &ctx, u32 self) {
+    st<uint32_t>(ctx, self + 0x04, 0);  // 0x2e3f4
+    st<uint32_t>(ctx, self + 0x08, 0);  // 0x2e3f7
+    st<uint32_t>(ctx, self + 0x0c, 0);  // 0x2e3fa
+    st<uint32_t>(ctx, self + 0x10, 0);  // 0x2e3fd
+    st<uint32_t>(ctx, self, 0);  // 0x2e400
+    st<uint32_t>(ctx, self + 0x14, 0);  // 0x2e402
+    st<uint32_t>(ctx, self + 0x18, 0);  // 0x2e405
+    st<uint32_t>(ctx, self + 0x1c, 0);  // 0x2e408
+    st<uint32_t>(ctx, self + 0x20, 0xffffffffu);  // 0x2e40b
+    return self;  // 0x2e3f0
+}
+int g_negctl_NodeB000_initBase = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_NodeB000_initBase(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(NodeB000_initBase_body(ctx, a[0])); }
+// FuncDef: {"NodeB000_initBase", "thiscall", "pointer", 1, 0, a_NodeB000_initBase, &g_negctl_NodeB000_initBase},   // registry key NodeB000_initBase
+
+// ---- PtrList_freeNodesB (rva 0x31ac0): converted from c3dj.cpp PtrListFreeB_re
+// =====================================================================================================================
+// H. Node lists cleared from the front (operator delete per node)
+// =====================================================================================================================
+// PtrList_freeNodesB 0x00031ac0 (VA 0x31ac0), nodeListClear2 0x000384b0 (0x384b0) and nodeListClear 0x00039580 (0x39580) are the
+// same body, and VoiceBase_clearList 0x00029170 (0x29170) is that body over a header that starts 8 bytes later. `this` is a list
+// header {front, back, (cursor), count}; the nodes are {previous, next, value}. The first node (`mov eax, [esi]` 0x31ac4; the
+// function returns when it is NULL, `je` 0x31ac8) is popped: with a next node that node's previous becomes 0 and the front
+// moves to it (0x31aca-0x31ad7); without one back and front become 0 (0x31adb-0x31ae2). The popped node's value
+// is read (0x31ae8) and the node released with operator delete 0x4249a (0x31aec), the count is decremented (0x31af1,
+// 0x31af7, 0x31afa); a NULL value ends the function (`test edi, edi` / `je` 0x31af8 / 0x31afd). Otherwise the same
+// pop repeats (0x31aff-0x31b38) until the list is empty (`je` 0x31b03) or a popped node's value is NULL (`jne` 0x31b38).
+void c3dj_popFrontAll(Ctx &ctx, u32 hdr, int32_t fo, int32_t bo, int32_t co) {
+    u32 node = ld<u32>(ctx, hdr + fo);  // 0x31ac4
+    if (node == 0) return;  // 0x31ac6 / 0x31ac8
+    for (;;) {
+        u32 next = ld<u32>(ctx, node + 4);  // 0x31aca
+        if (next != 0) {  // 0x31acd / 0x31acf
+            st<uint32_t>(ctx, next, 0);  // 0x31ad1
+            st<u32>(ctx, hdr + fo, next);  // 0x31ad7
+        } else {
+            st<uint32_t>(ctx, hdr + bo, 0);  // 0x31adb
+            st<uint32_t>(ctx, hdr + fo, 0);  // 0x31ae2
+        }
+        u32 value = ld<u32>(ctx, node + 8);  // 0x31ae8
+        snd_delete(ctx, node);  // 0x31aec
+        st<uint32_t>(ctx, hdr + co, ld<uint32_t>(ctx, hdr + co) - 1);  // 0x31af1 / 0x31af7 / 0x31afa
+        if (value == 0) return;  // 0x31af8 / 0x31afd
+        node = ld<u32>(ctx, hdr + fo);  // 0x31aff
+        if (node == 0) return;  // 0x31b01 / 0x31b03
+    }
+}
+void PtrList_freeNodesB_body(Ctx &ctx, u32 self) { c3dj_popFrontAll(ctx, self, 0, 4, 0xc); }
+int g_negctl_PtrList_freeNodesB = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_PtrList_freeNodesB(Ctx &ctx, const uint32_t *a, Ret &r) { PtrList_freeNodesB_body(ctx, a[0]); }
+// FuncDef: {"PtrList_freeNodesB", "thiscall", "void", 1, 0, a_PtrList_freeNodesB, &g_negctl_PtrList_freeNodesB},   // registry key PtrList_freeNodesB
+
+// ---- ResourceList_pushBack (rva 0x31b60): converted from c3cn.cpp ResourceListPushBack_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t ResourceList_pushBack_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_ResourceList_pushBack = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_ResourceList_pushBack(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(ResourceList_pushBack_body(ctx, a[0], a[1])); }
+// FuncDef: {"ResourceList_pushBack", "thiscall", "int", 2, 0, a_ResourceList_pushBack, &g_negctl_ResourceList_pushBack},   // registry key ResourceList_pushBack
+
+// ---- voiceListRemove (rva 0x32440): converted from c3do.cpp VoiceListRemove_re
+// =====================================================================================================================
+// L. Removal from the doubly linked value lists (voice list, sound list, module registry) and the registry append
+// =====================================================================================================================
+// A list header is {head +0, back +4, cursor +8, count +0xc} (at voice+0x1338 / sound owner +0x1c8 / module 0xb5000) and a node {prev +0, next +4, value +8}. Unlinking
+// a node (voiceListRemove 0x32470-0x324b7, removeSoundNode 0xe07c-0xe0cb, unregisterSound 0x5eca-0x5f15): when there is a previous node its next
+// takes the node's next, otherwise the head takes it; when there is a next node its prev takes the node's prev and the cursor takes the next node, otherwise the cursor is
+// cleared and the back pointer takes the node's prev; the node goes to operator delete and the count drops by one.
+void listUnlink(Ctx &ctx, u32 hdr, u32 node) {
+    u32 prev = ld<u32>(ctx, node);
+    if (prev) st<u32>(ctx, prev + 4, ld<u32>(ctx, node + 4));
+    else st<u32>(ctx, hdr, ld<u32>(ctx, node + 4));
+    u32 next = ld<u32>(ctx, node + 4);
+    if (next) {
+        st<u32>(ctx, next, ld<u32>(ctx, node));
+        st<u32>(ctx, hdr + 8, next);
+    } else {
+        st<uint32_t>(ctx, hdr + 8, 0);
+        st<u32>(ctx, hdr + 4, ld<u32>(ctx, node));
+    }
+    snd_delete(ctx, node);
+    st<int32_t>(ctx, hdr + 0xc, ld<int32_t>(ctx, hdr + 0xc) - 1);
+}
+void voiceListRemove_body(Ctx &ctx, u32 self, uint32_t arg) {
+    if (!arg) return;  // 0x32449 / 0x3244c
+    st<uint32_t>(ctx, arg + 0x20, 0);  // 0x3244e
+    u32 node = ld<u32>(ctx, self + 0x1338);  // 0x32451
+    if (!node) return;  // 0x32457 / 0x32459
+    while (ld<uint32_t>(ctx, node + 8) != arg) {  // 0x3245b / 0x3245e
+        node = ld<u32>(ctx, node + 4);  // 0x32460
+        if (!node) return;  // 0x32463 / 0x32465
+    }
+    listUnlink(ctx, self + 0x1338, node);  // 0x3246c-0x324b7
+}
+int g_negctl_voiceListRemove = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_voiceListRemove(Ctx &ctx, const uint32_t *a, Ret &r) { voiceListRemove_body(ctx, a[0], a[1]); }
+// FuncDef: {"voiceListRemove", "thiscall", "void", 2, 0, a_voiceListRemove, &g_negctl_voiceListRemove},   // registry key voiceListRemove
+
+// ---- nodeListAppendValue (rva 0x38430): converted from c3cn.cpp NodeListAppendValue_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t nodeListAppendValue_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_nodeListAppendValue = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_nodeListAppendValue(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(nodeListAppendValue_body(ctx, a[0], a[1])); }
+// FuncDef: {"nodeListAppendValue", "thiscall", "int", 2, 0, a_nodeListAppendValue, &g_negctl_nodeListAppendValue},   // registry key nodeListAppendValue
+
+// ---- nodeListClear2 (rva 0x384b0): converted from c3dj.cpp NodeListClear2_re
+// =====================================================================================================================
+// H. Node lists cleared from the front (operator delete per node)
+// =====================================================================================================================
+// PtrList_freeNodesB 0x00031ac0 (VA 0x31ac0), nodeListClear2 0x000384b0 (0x384b0) and nodeListClear 0x00039580 (0x39580) are the
+// same body, and VoiceBase_clearList 0x00029170 (0x29170) is that body over a header that starts 8 bytes later. `this` is a list
+// header {front, back, (cursor), count}; the nodes are {previous, next, value}. The first node (`mov eax, [esi]` 0x31ac4; the
+// function returns when it is NULL, `je` 0x31ac8) is popped: with a next node that node's previous becomes 0 and the front
+// moves to it (0x31aca-0x31ad7); without one back and front become 0 (0x31adb-0x31ae2). The popped node's value
+// is read (0x31ae8) and the node released with operator delete 0x4249a (0x31aec), the count is decremented (0x31af1,
+// 0x31af7, 0x31afa); a NULL value ends the function (`test edi, edi` / `je` 0x31af8 / 0x31afd). Otherwise the same
+// pop repeats (0x31aff-0x31b38) until the list is empty (`je` 0x31b03) or a popped node's value is NULL (`jne` 0x31b38).
+void c3dj_popFrontAll(Ctx &ctx, u32 hdr, int32_t fo, int32_t bo, int32_t co) {
+    u32 node = ld<u32>(ctx, hdr + fo);  // 0x31ac4
+    if (node == 0) return;  // 0x31ac6 / 0x31ac8
+    for (;;) {
+        u32 next = ld<u32>(ctx, node + 4);  // 0x31aca
+        if (next != 0) {  // 0x31acd / 0x31acf
+            st<uint32_t>(ctx, next, 0);  // 0x31ad1
+            st<u32>(ctx, hdr + fo, next);  // 0x31ad7
+        } else {
+            st<uint32_t>(ctx, hdr + bo, 0);  // 0x31adb
+            st<uint32_t>(ctx, hdr + fo, 0);  // 0x31ae2
+        }
+        u32 value = ld<u32>(ctx, node + 8);  // 0x31ae8
+        snd_delete(ctx, node);  // 0x31aec
+        st<uint32_t>(ctx, hdr + co, ld<uint32_t>(ctx, hdr + co) - 1);  // 0x31af1 / 0x31af7 / 0x31afa
+        if (value == 0) return;  // 0x31af8 / 0x31afd
+        node = ld<u32>(ctx, hdr + fo);  // 0x31aff
+        if (node == 0) return;  // 0x31b01 / 0x31b03
+    }
+}
+void nodeListClear2_body(Ctx &ctx, u32 self) { c3dj_popFrontAll(ctx, self, 0, 4, 0xc); }
+int g_negctl_nodeListClear2 = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_nodeListClear2(Ctx &ctx, const uint32_t *a, Ret &r) { nodeListClear2_body(ctx, a[0]); }
+// FuncDef: {"nodeListClear2", "thiscall", "void", 1, 0, a_nodeListClear2, &g_negctl_nodeListClear2},   // registry key nodeListClear2
+
+// ---- listAppendNodeA (rva 0x38550): converted from c3cn.cpp ListAppendNodeA_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t listAppendNodeA_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_listAppendNodeA = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_listAppendNodeA(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(listAppendNodeA_body(ctx, a[0], a[1])); }
+// FuncDef: {"listAppendNodeA", "thiscall", "int", 2, 0, a_listAppendNodeA, &g_negctl_listAppendNodeA},   // registry key listAppendNodeA
+
+// ---- listAppendNodeB (rva 0x385d0): converted from c3cn.cpp ListAppendNodeB_re
+int32_t SoundPushBack(Ctx &ctx, u32 self, u32 value) {
+    u32 n = snd_call(ctx, 0x424d7, SndAbi::Cdecl, {0xc}).eax;
+    if (n != 0) {
+        st<u32>(ctx, n, 0);
+        st<u32>(ctx, n + 4, 0);
+        st<u32>(ctx, n + 8, value);
+    }
+    if (ld<u32>(ctx, self + 4) != 0) {
+        st<u32>(ctx, MEM<u32>(self + 4) + 4, n);
+        st<u32>(ctx, n, ld<u32>(ctx, self + 4));
+        st<u32>(ctx, self + 4, n);
+    } else {
+        st<u32>(ctx, self, n);
+        st<u32>(ctx, self + 4, n);
+    }
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) + 1));
+    return ld<int32_t>(ctx, self + 0xc);
+}
+int32_t listAppendNodeB_body(Ctx &ctx, u32 self, u32 v) { return SoundPushBack(ctx, self, v);
+}
+int g_negctl_listAppendNodeB = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_listAppendNodeB(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_i32(listAppendNodeB_body(ctx, a[0], a[1])); }
+// FuncDef: {"listAppendNodeB", "thiscall", "int", 2, 0, a_listAppendNodeB, &g_negctl_listAppendNodeB},   // registry key listAppendNodeB
+
+// ---- MemBlock_deleteDtor (rva 0x38ae0): converted from c3dj.cpp MemBlockDtor_re
+u32 MemBlock_deleteDtor_body(Ctx &ctx, u32 self, uint32_t flags) {
+    u32 data = ld<u32>(ctx, self);  // 0x38ae3
+    if (data != 0) snd_delete(ctx, data);  // 0x38ae7 / 0x38aea
+    st<uint32_t>(ctx, self, 0);  // 0x38af6
+    if (flags & 1) snd_delete(ctx, self);  // 0x38afc / 0x38afe / 0x38b01
+    return self;  // 0x38b09 / 0x38b0c
+}
+int g_negctl_MemBlock_deleteDtor = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_MemBlock_deleteDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(MemBlock_deleteDtor_body(ctx, a[0], a[1])); }
+// FuncDef: {"MemBlock_deleteDtor", "thiscall", "pointer", 2, 0, a_MemBlock_deleteDtor, &g_negctl_MemBlock_deleteDtor},   // registry key MemBlock_deleteDtor
+
+// ---- setField6cReturn0 (rva 0x39450): converted from c3ex.cpp SetF6c_re
+uint32_t setField6cReturn0_body(Ctx &ctx, u32 self, uint32_t v) {
+    st<uint32_t>(ctx, self + 0x6c, v);  // 0x39454
+    return 0;  // 0x39457
+}
+int g_negctl_setField6cReturn0 = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_setField6cReturn0(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(setField6cReturn0_body(ctx, a[0], a[1])); }
+// FuncDef: {"setField6cReturn0", "thiscall", "uint32", 2, 0, a_setField6cReturn0, &g_negctl_setField6cReturn0},   // registry key setField6cReturn0
+
+// ---- clearField6cReturn0 (rva 0x39470): converted from c3ex.cpp ClrF6c_re
+uint32_t clearField6cReturn0_body(Ctx &ctx, u32 self) {
+    st<uint32_t>(ctx, self + 0x6c, 0);  // 0x39470
+    return 0;  // 0x39477
+}
+int g_negctl_clearField6cReturn0 = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_clearField6cReturn0(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(clearField6cReturn0_body(ctx, a[0])); }
+// FuncDef: {"clearField6cReturn0", "thiscall", "uint32", 1, 0, a_clearField6cReturn0, &g_negctl_clearField6cReturn0},   // registry key clearField6cReturn0
+
+// ---- nodeListClear (rva 0x39580): converted from c3dj.cpp NodeListClear_re
+// =====================================================================================================================
+// H. Node lists cleared from the front (operator delete per node)
+// =====================================================================================================================
+// PtrList_freeNodesB 0x00031ac0 (VA 0x31ac0), nodeListClear2 0x000384b0 (0x384b0) and nodeListClear 0x00039580 (0x39580) are the
+// same body, and VoiceBase_clearList 0x00029170 (0x29170) is that body over a header that starts 8 bytes later. `this` is a list
+// header {front, back, (cursor), count}; the nodes are {previous, next, value}. The first node (`mov eax, [esi]` 0x31ac4; the
+// function returns when it is NULL, `je` 0x31ac8) is popped: with a next node that node's previous becomes 0 and the front
+// moves to it (0x31aca-0x31ad7); without one back and front become 0 (0x31adb-0x31ae2). The popped node's value
+// is read (0x31ae8) and the node released with operator delete 0x4249a (0x31aec), the count is decremented (0x31af1,
+// 0x31af7, 0x31afa); a NULL value ends the function (`test edi, edi` / `je` 0x31af8 / 0x31afd). Otherwise the same
+// pop repeats (0x31aff-0x31b38) until the list is empty (`je` 0x31b03) or a popped node's value is NULL (`jne` 0x31b38).
+void c3dj_popFrontAll(Ctx &ctx, u32 hdr, int32_t fo, int32_t bo, int32_t co) {
+    u32 node = ld<u32>(ctx, hdr + fo);  // 0x31ac4
+    if (node == 0) return;  // 0x31ac6 / 0x31ac8
+    for (;;) {
+        u32 next = ld<u32>(ctx, node + 4);  // 0x31aca
+        if (next != 0) {  // 0x31acd / 0x31acf
+            st<uint32_t>(ctx, next, 0);  // 0x31ad1
+            st<u32>(ctx, hdr + fo, next);  // 0x31ad7
+        } else {
+            st<uint32_t>(ctx, hdr + bo, 0);  // 0x31adb
+            st<uint32_t>(ctx, hdr + fo, 0);  // 0x31ae2
+        }
+        u32 value = ld<u32>(ctx, node + 8);  // 0x31ae8
+        snd_delete(ctx, node);  // 0x31aec
+        st<uint32_t>(ctx, hdr + co, ld<uint32_t>(ctx, hdr + co) - 1);  // 0x31af1 / 0x31af7 / 0x31afa
+        if (value == 0) return;  // 0x31af8 / 0x31afd
+        node = ld<u32>(ctx, hdr + fo);  // 0x31aff
+        if (node == 0) return;  // 0x31b01 / 0x31b03
+    }
+}
+void nodeListClear_body(Ctx &ctx, u32 self) { c3dj_popFrontAll(ctx, self, 0, 4, 0xc); }
+int g_negctl_nodeListClear = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_nodeListClear(Ctx &ctx, const uint32_t *a, Ret &r) { nodeListClear_body(ctx, a[0]); }
+// FuncDef: {"nodeListClear", "thiscall", "void", 1, 0, a_nodeListClear, &g_negctl_nodeListClear},   // registry key nodeListClear
+
+// ---- nodeListPopFront (rva 0x39620): converted from c3cn.cpp NodeListPopFront_re
+u32 SoundPopFront(Ctx &ctx, u32 self) {
+    u32 node = ld<u32>(ctx, self);
+    if (node == 0)
+        return 0;
+    u32 prev = ld<u32>(ctx, node + 4);
+    if (prev != 0) {
+        st<int32_t>(ctx, prev, 0);
+        st<u32>(ctx, self, prev);
+    } else {
+        st<int32_t>(ctx, self + 4, 0);
+        st<int32_t>(ctx, self, 0);
+    }
+    u32 value = ld<u32>(ctx, node + 8);
+    snd_call(ctx, 0x4249a, SndAbi::Cdecl, {node});
+    st<int32_t>(ctx, self + 0xc, static_cast<int32_t>(ld<int32_t>(ctx, self + 0xc) - 1));
+    return value;
+}
+u32 nodeListPopFront_body(Ctx &ctx, u32 self) { return SoundPopFront(ctx, self);
+}
+int g_negctl_nodeListPopFront = 0;   // TODO(convert): give the body a wrong-result mode read through SG_NEGCTL
+void a_nodeListPopFront(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(nodeListPopFront_body(ctx, a[0])); }
+// FuncDef: {"nodeListPopFront", "thiscall", "pointer", 1, 0, a_nodeListPopFront, &g_negctl_nodeListPopFront},   // registry key nodeListPopFront
+
+// TODO list

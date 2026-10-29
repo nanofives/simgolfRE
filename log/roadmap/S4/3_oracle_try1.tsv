@@ -1,0 +1,13 @@
+key	name	vectors	match	match_bc	errors	fallback_calls_A_by_owner	tier	status	words	first
+bitPack	bitPack	6	6	12	0	{}	EXACT	GREEN	0x27f	
+bitPermute	bitPermute	14	14	28	0	{}	EXACT	GREEN	0x27f	
+bitUnpack	bitUnpack	6	6	12	0	{}	EXACT	GREEN	0x27f	
+codecCombFilter	codecRing5Add	12	12	24	0	{}	EXACT	GREEN	0x27f	
+codecFirstOrderFilter	codecPreEmphasis	14	14	28	0	{}	EXACT	GREEN	0x27f	
+codecRemoveMean	codecRemoveMean	14	14	28	0	{}	EXACT	GREEN	0x27f	
+codecRmsEnergy	codecRmsEnergy	13	13	26	0	{}	EXACT	GREEN	0x27f	
+codecSetParams_v0	codecSetParams	1	1	2	0	{}	EXACT	GREEN	0x27f	
+floatCopySign	floatCopySign	18	18	36	0	{}	EXACT	GREEN	0x27f	
+floatFloorToInt	floatRoundHalfAway	16	16	32	0	{}	EXACT	GREEN	0x27f	
+intPow	intPow	19	19	38	0	{}	EXACT	GREEN	0x27f	
+medianOfThree	medianOfThree	16	16	32	0	{}	EXACT	GREEN	0x27f	

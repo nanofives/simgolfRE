@@ -1,0 +1,5 @@
+function	key	mode	vectors	pass
+Seq_setTempo	Seq_setTempo_w27f	0	12	12
+Seq_setTempo	Seq_setTempo_wf7f	0	12	12
+Seq_setTempo	Seq_setTempo_w27f	2	12	12
+Seq_setTempo	Seq_setTempo_wf7f	2	12	3

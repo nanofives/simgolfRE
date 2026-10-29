@@ -1,0 +1,4 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.codecHighPassFilter	2	RED	11	0	14	codecBiquadFilter
+snd.codecRemoveMean	2	RED	1	0	14	codecRemoveMean
+snd.lpcSynthesize	2	RED	3	0	14	lpcSynthesize

@@ -1,0 +1,39 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+MixBuffer_ctor	1	RED	12	0	12	MixBuffer_ctor
+MixerVoiceArray_scalarDtor	1	RED	20	0	40	MixerVoiceArray_scalarDtor
+Mixer_ctor	1	RED	12	0	12	Mixer_ctor
+Mixer_dtor	1	RED	6	0	12	Mixer_dtor
+Mixer_scalarDtor	1	RED	20	0	40	Mixer_scalarDtor
+Voice_mixAdd8bit	1	RED	23	0	46	Voice_mixAdd8bit Voice_mixAdd8bit_st0
+Voice_mixAddMono16	1	RED	23	0	46	Voice_mixAddMono16 Voice_mixAddMono16_st0
+Voice_mixAddStereo16	1	RED	16	0	32	Voice_mixAddStereo16 Voice_mixAddStereo16_st0
+Voice_mixSet8bit	1	RED	23	0	46	Voice_mixSet8bit Voice_mixSet8bit_st0
+Voice_mixSetMono16	1	RED	23	0	46	Voice_mixSetMono16 Voice_mixSetMono16_st0
+Voice_mixSetStereo16	1	RED	16	0	32	Voice_mixSetStereo16 Voice_mixSetStereo16_st0
+Voice_renderStream16b	1	RED	65	0	65	Voice_renderStream16b@
+Voice_renderStream16c	1	RED	65	0	65	Voice_renderStream16c@
+Voice_renderStream32	1	RED	115	0	115	Voice_renderStream32@ Voice_renderStream32@a
+Voice_renderStream8c	1	RED	64	0	64	Voice_renderStream8c@
+Voice_renderStream8d	1	RED	65	0	65	Voice_renderStream8d@
+destroyMixerVoices	1	RED	8	0	12	destroyMixerVoices
+mixMonoDupAdd	1	RED	38	0	47	mixCopyInnerB
+mixMonoDupSet	1	RED	47	0	47	mixCopyInnerC
+mixMonoGainFadeAdd	1	RED	20	0	46	mixResampleInnerB
+mixMonoGainFadeSet	1	RED	33	0	46	mixResampleInnerC
+mixRatedMono16AddFade	1	RED	41	0	65	mixRenderRatedB
+mixRatedMono16SetFade	1	RED	41	0	65	mixRenderOuterC
+mixRatedMono8Add	1	RED	42	0	64	mixResampleE
+mixRatedMono8Set	1	RED	42	0	65	mixResampleI
+mixRatedStereo16Add	1	RED	40	0	64	mixRenderOuterA2
+mixRatedStereo16Set	1	RED	33	0	51	mixResampleG
+mixRatedStereo8Add	1	RED	42	0	64	mixResampleD
+mixRatedStereo8Set	1	RED	42	0	64	mixResampleH
+mixRenderRatedC	1	RED	115	0	115	mixRenderRatedC@ mixRenderRatedC@g
+mixStereoAdd	1	RED	48	0	48	mixRenderA
+mixStereoGainAdd	1	RED	21	0	38	mixResampleInnerA
+renderChannel	1	RED	4	0	16	renderChannel
+renderChannelSingle	1	RED	8	0	84	renderChannelSingle_bit0 renderChannelSingle_null renderChannelSingle_post renderChannelSingle@mix
+renderChannelStreamed	1	RED	42	0	98	renderChannelStreamed_chain_w27f renderChannelStreamed_copy_w27f renderChannelStreamed_fade_w27f renderChannelStreamed_fade_wf7f
+renderChannelVoice	1	RED	12	0	80	renderChannelVoice_eng renderChannelVoice_eng0 renderChannelVoice_noeng renderChannelVoice@mix
+streamRenderBlock	1	RED	21	0	42	streamRenderBlock streamRenderBlock_st0
+streamRenderTail	1	RED	21	0	42	streamRenderTail streamRenderTail_st0

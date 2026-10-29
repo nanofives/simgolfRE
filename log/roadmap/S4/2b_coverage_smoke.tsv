@@ -1,0 +1,3 @@
+function	rva	instructions	executed	jcc	both_sides	one_side	none	one_side_taken	never
+Channel_releaseVoices	0x34ac0	51	51	9	8	1	0	0x34aeeF	
+Voice_noteOff	0x381f0	20	20	2	2	0	0		

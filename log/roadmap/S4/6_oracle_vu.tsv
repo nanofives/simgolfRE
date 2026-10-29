@@ -1,0 +1,10 @@
+key	name	vectors	match	match_bc	errors	fallback_calls_A_by_owner	tier	status	words	first
+Voice_update_a	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_b	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_c	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_d	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_e	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_f	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_g	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_h	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	
+Voice_update_z	Voice::update	31	31	62	0	{}	EMU_ONLY	GREEN	0x27f	

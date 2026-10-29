@@ -1,0 +1,43 @@
+function	rva	instructions	executed	jcc	jcc_both_sides	jcc_one_side	jcc_never	unexecuted_spans	jcc_one_sided_or_never
+codecDecodeFrame	0x3a980	77	77	2	0	2	0		0x3a9a2(F) 0x3a9b1(F)
+codecSetParams	0x3aa50	20	20	0	0	0	0		
+codecAllocEncoderContext	0x3aa90	30	30	1	1	0	0		
+codecInitEncoderContext	0x3aae0	214	214	11	11	0	0		
+codecAllocDecoderContext	0x3aea0	30	30	1	1	0	0		
+codecInitDecoderContext	0x3aef0	128	128	4	4	0	0		
+codecEncodeFrame	0x3b150	83	83	2	0	2	0		0x3b172(F) 0x3b181(F)
+codecSynthesizeFrame	0x3b230	234	234	12	10	2	0		0x3b252(F) 0x3b261(F)
+codecDecodeParams	0x3b5a0	768	768	52	49	3	0		0x3b5c2(F) 0x3b5d1(F) 0x3b5e0(F)
+bitPermute	0x3bf30	179	179	8	8	0	0		
+bitPack	0x3c180	34	34	0	0	0	0		
+bitUnpack	0x3c1d0	33	33	0	0	0	0		
+quantizeParams	0x3c220	323	323	22	22	0	0		
+codecAnalyzeFrame	0x3c640	582	582	15	12	3	0		0x3c662(F) 0x3c671(F) 0x3c680(F)
+codecHighPassFrame	0x3d040	35	35	1	1	0	0		
+codecSynthPostFilter	0x3d0a0	97	97	2	2	0	0		
+lpcSynthesize	0x3d1d0	491	491	17	17	0	0		
+reflectionToLpc	0x3d8d0	126	126	4	4	0	0		
+interpSubframeParams	0x3da50	658	658	31	29	2	0		0x3daa6(F) 0x3df2a(F)
+intPow	0x3e2c0	67	62	7	6	1	0	0x3e30d-0x3e319	0x3e30b(T)
+floatCopySign	0x3e380	47	47	2	2	0	0		
+floatRoundHalfAway	0x3e400	45	45	1	1	0	0		
+medianOfThree	0x3e480	63	63	6	6	0	0		
+codecCorrectNibble	0x3e520	83	83	3	3	0	0		
+codecRevertUnstableCoeffs	0x3e600	76	76	4	4	0	0		
+codecLdlSolveClamped	0x3e6d0	245	245	10	10	0	0		
+codecCovarianceMatrix	0x3e9f0	212	212	6	6	0	0		
+codecRmsEnergy	0x3ec60	57	57	1	1	0	0		
+codecRemoveMean	0x3ed00	64	64	2	2	0	0		
+codecAlignAnalysisWindow	0x3edc0	462	462	24	24	0	0		
+codecPitchTrackDp	0x3f310	335	329	18	15	3	0	0x3f6c5-0x3f6c9 0x3f709-0x3f70d	0x3f35a(F) 0x3f6c3(T) 0x3f707(T)
+codecVoicingDecision	0x3f720	626	626	41	34	7	0		0x3f7d4(F) 0x3f7e3(F) 0x3f7f2(F) 0x3f80f(F) 0x3f82c(F) 0x3f83b(F) 0x3f84a(F)
+codecRefinePitchLag	0x40000	292	292	14	14	0	0		
+codecInverseFilter2	0x40330	136	136	4	4	0	0		
+codecLowPassFir31	0x404d0	184	184	1	1	0	0		
+codecSelectWindowFromJumps	0x40740	303	303	18	18	0	0		
+codecMarkCorrelationJumps	0x40ab0	255	249	15	13	2	0	0x40cc1-0x40cc5 0x40cda-0x40cde	0x40cbf(T) 0x40cd8(T)
+codecPreEmphasis	0x40da0	52	52	1	1	0	0		
+codecHighPassFilter	0x40e30	101	101	2	2	0	0		
+codecRing5Add	0x40f60	63	63	2	2	0	0		
+codecWindowFeatures	0x41020	389	389	13	13	0	0		
+codecAmdfPitch	0x414f0	123	120	5	4	1	0	0x41616-0x4161c	0x41614(T)

@@ -1,0 +1,38 @@
+step	name	rva	x87_instructions	compares	cw_loads	compare_sites
+S4.3	codecInitEncoderContext	0x3aae0	2	0	0	
+S4.3	codecSynthesizeFrame	0x3b230	9	2	0	0x3b323:fcomp 0x3b351:fcomp
+S4.3	codecDecodeParams	0x3b5a0	29	6	0	0x3ba96:fcomp 0x3bacf:fcomp 0x3bb58:fcomp 0x3bbaa:fcomp 0x3bc33:fcomp 0x3bc6c:fcomp
+S4.3	quantizeParams	0x3c220	5	0	0	
+S4.3	codecAnalyzeFrame	0x3c640	19	2	0	0x3cbd1:fcomp 0x3cc08:fcomp
+S4.3	codecSynthPostFilter	0x3d0a0	15	0	0	
+S4.3	lpcSynthesize	0x3d1d0	100	2	0	0x3d294:fcomp 0x3d3d2:fcomp
+S4.3	reflectionToLpc	0x3d8d0	15	0	0	
+S4.3	interpSubframeParams	0x3da50	81	5	0	0x3db2f:fcomp 0x3db4a:fcomp 0x3dd04:fcomp 0x3df77:fcomp 0x3e1c1:fcomp
+S4.3	floatCopySign	0x3e380	15	2	0	0x3e39d:fcomp 0x3e3c9:fcomp
+S4.3	floatRoundHalfAway	0x3e400	13	1	0	0x3e41d:fcomp
+S4.3	codecRevertUnstableCoeffs	0x3e600	9	2	0	0x3e65b:fcomp 0x3e67b:fcomp
+S4.3	codecLdlSolveClamped	0x3e6d0	32	4	0	0x3e853:fcomp 0x3e87c:fcomp 0x3e94f:fcomp 0x3e97d:fcomp
+S4.3	codecCovarianceMatrix	0x3e9f0	22	0	0	
+S4.3	codecRmsEnergy	0x3ec60	8	0	0	
+S4.3	codecRemoveMean	0x3ed00	9	0	0	
+S4.3	codecAlignAnalysisWindow	0x3edc0	3	0	0	
+S4.3	codecPitchTrackDp	0x3f310	51	6	0	0x3f3bd:fcomp 0x3f43a:fcomp 0x3f4c9:fcomp 0x3f5ad:fcomp 0x3f5ce:fcomp 0x3f670:fcomp
+S4.3	codecVoicingDecision	0x3f720	74	10	0	0x3f891:fcomp 0x3f9f2:fcomp 0x3fad7:fcomp 0x3fc36:fcomp 0x3fc75:fcomp 0x3fcb5:fcomp 0x3fd0e:fcomp 0x3fd50:fcomp 0x3ff46:fcomp 0x3ff74:fcomp
+S4.3	codecRefinePitchLag	0x40000	14	3	0	0x40193:fcomp 0x4023d:fcomp 0x40300:fcomp
+S4.3	codecInverseFilter2	0x40330	29	1	0	0x4040d:fcomp
+S4.3	codecLowPassFir31	0x404d0	78	0	0	
+S4.3	codecMarkCorrelationJumps	0x40ab0	45	5	0	0x40c00:fcomp 0x40c12:fcomp 0x40c39:fcomp 0x40cf2:fcomp 0x40d12:fcomp
+S4.3	codecPreEmphasis	0x40da0	4	0	0	
+S4.3	codecHighPassFilter	0x40e30	27	0	0	
+S4.3	codecWindowFeatures	0x41020	129	10	0	0x41169:fcomp 0x4119e:fcomp 0x411da:fcomp 0x412e6:fcompp 0x41318:fcomp 0x41349:fcomp 0x41373:fcomp 0x41392:fcomp 0x413c4:fcomp 0x413e3:fcomp
+S4.3	codecAmdfPitch	0x414f0	17	3	0	0x415c7:fcomp 0x4160c:fcomp 0x4162f:fcomp
+S4.5	Midi_Device::handleMetaEvent	0x21bf0	2	0	0	
+S4.5	Seq_setTempo	0x21ee0	12	0	0	
+S4.7	Sound5b6a8_ctor	0x1f4a0	12	0	0	
+S4.7	MultiSound_setPitchCents	0x3a210	12	0	0	
+S4.9	computeCaptureDuration	0x06bd0	4	0	0	
+S4.9	writeWaveChunk	0x07df0	6	0	2	
+S4.9	writeWaveChunkB	0x08070	12	0	4	
+S4.9	openMmioSound	0x30840	9	2	0	0x3096a:fcomp 0x30982:fcomp
+S4.9	loadWaveResource	0x316c0	3	0	0	
+S4.9	closeMmioSound	0x35ca0	12	2	0	0x35db3:fcomp 0x35dc6:fcomp

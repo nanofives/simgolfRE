@@ -1,0 +1,55 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+DirectSoundDevice::close	1	RED	5	0	12	DirectSoundDevice::close
+DirectSoundDevice::create	1	RED	4	0	12	DirectSoundDevice::create
+DirectSoundDevice::createBuffer	1	RED	8	0	24	DirectSoundDevice::createBuffer DirectSoundDevice::createBuffer_empty
+DirectSoundDevice::createBufferFmt	1	RED	6	0	24	DirectSoundDevice::createBufferFmt DirectSoundDevice::createBufferFmt_empty
+DirectSoundDevice::duplicateBuffer	1	RED	17	0	35	DirectSoundDevice::duplicateBuffer DirectSoundDevice::duplicateBuffer_empty DirectSoundDevice::duplicateBuffer_oom
+DirectSoundDevice::enumerate	1	RED	3	0	36	DirectSoundDevice::enumerate_i0 DirectSoundDevice::enumerate_i2 DirectSoundDevice::enumerate_i9
+DirectSoundDevice::freeBufferById	1	RED	12	0	24	DirectSoundDevice::freeBufferById DirectSoundDevice::freeBufferById_nolist
+DirectSoundDevice::releaseAll	1	RED	24	0	24	DirectSoundDevice::releaseAll_0 DirectSoundDevice::releaseAll_3
+DirectSoundDevice::releaseAllBuffers	1	RED	18	0	36	DirectSoundDevice::releaseAllBuffers_0 DirectSoundDevice::releaseAllBuffers_1 DirectSoundDevice::releaseAllBuffers_4
+DirectSoundDevice::removeBuffer	1	RED	14	0	24	DirectSoundDevice::removeBuffer_1 DirectSoundDevice::removeBuffer_4
+DirectSoundDevice::setCooperativeLevel	1	RED	3	0	12	DirectSoundDevice::setCooperativeLevel
+DirectSoundDevice::setMasterVolume	1	RED	20	0	20	DirectSoundDevice::setMasterVolume@ DirectSoundDevice::setMasterVolume@empty
+DirectSoundDevice::stopAll	1	RED	12	0	36	DirectSoundDevice::stopAll_l0 DirectSoundDevice::stopAll_l2c DirectSoundDevice::stopAll_l3
+Ds3DBuffer::setPosition	1	RED	21	0	24	Ds3DBuffer::setPosition
+Ds3DBuffer::setPositionX	1	RED	35	0	40	Ds3DBuffer::setPositionX
+Ds3DBuffer::setPositionY	1	RED	35	0	40	Ds3DBuffer::setPositionY
+Ds3DBuffer::setPositionZ	1	RED	35	0	40	Ds3DBuffer::setPositionZ
+Ds3DListener::setPosition	1	RED	20	0	24	Ds3DListener::setPosition
+DsBuffer::configureDesc	1	RED	3	0	16	DsBuffer::configureDesc
+DsBuffer::create	1	RED	12	0	26	DsBuffer::create_hr DsBuffer::create_ok
+DsBuffer::ctor	1	RED	6	0	12	DsBuffer::ctor
+DsBuffer::destroy	1	RED	2	0	12	DsBuffer::destroy
+DsBuffer::getPlayPosition	1	RED	7	0	15	DsBuffer::getPlayPosition
+DsBuffer::getPosition	1	RED	7	0	12	DsBuffer::getPosition
+DsBuffer::getTimedPosition	1	RED	8	0	42	DsBuffer::getTimedPosition
+DsBuffer::hasAuxInterfaces	1	RED	3	0	12	DsBuffer::hasAuxInterfaces
+DsBuffer::initDesc	1	RED	12	0	12	DsBuffer::initDesc
+DsBuffer::isBusy	1	RED	3	0	14	DsBuffer::isBusy
+DsBuffer::lockCaptureRegion	1	RED	39	0	60	DsBuffer::lockCaptureRegion
+DsBuffer::lockEntire	1	RED	5	0	13	DsBuffer::lockEntire
+DsBuffer::play	1	RED	20	0	36	DsBuffer::play
+DsBuffer::query3D	1	RED	5	0	13	DsBuffer::query3D
+DsBuffer::queryNotify	1	RED	3	0	12	DsBuffer::queryNotify
+DsBuffer::release	1	RED	10	0	12	DsBuffer::release
+DsBuffer::releaseIfOwned	1	RED	8	0	12	DsBuffer::releaseIfOwned
+DsBuffer::restartPlayback	1	RED	10	0	12	DsBuffer::restartPlayback
+DsBuffer::restore	1	RED	1	0	14	DsBuffer::restore
+DsBuffer::scalarDeletingDtor	1	RED	24	0	48	DsBuffer::scalarDeletingDtor
+DsBuffer::setBufferSize	1	RED	10	0	15	DsBuffer::setBufferSize
+DsBuffer::setFrequency	1	RED	8	0	16	DsBuffer::setFrequency
+DsBuffer::setPosition	1	RED	12	0	12	DsBuffer::setPosition
+DsBuffer::setPrimaryFormat	1	RED	3	0	26	DsBuffer::setPrimaryFormat
+DsBuffer::setRegionMs	1	RED	18	0	24	DsBuffer::setRegionMs
+DsBuffer::setVolume	1	RED	9	0	30	DsBuffer::setVolume_w27f DsBuffer::setVolume_wf7f
+DsBuffer::setVolumeRaw	1	RED	16	0	16	DsBuffer::setVolumeRaw
+DsBuffer::stop	1	RED	11	0	12	DsBuffer::stop
+DsBuffer::unlock	1	RED	22	0	36	DsBuffer::unlock
+DsDevice_registerBuffer	1	RED	24	0	30	DsDevice_registerBuffer
+dsEnumCallbackAppend	1	RED	36	0	36	appendNamedNode
+getDeviceCaps	1	RED	6	0	12	getDeviceCaps
+getDsCoopLevel	1	RED	11	0	12	getDsCoopLevel
+mapDsError	1	RED	1	0	23	mapDsError
+return0Pop4	1	RED	12	0	12	return0Pop4@
+unlinkDsBuffer	1	RED	3	0	11	unlinkDsBuffer

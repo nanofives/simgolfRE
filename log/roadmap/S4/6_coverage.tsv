@@ -1,0 +1,102 @@
+function	rva	instructions	executed	jcc	jcc_both_sides	jcc_one_side	jcc_never	unexecuted_spans	jcc_one_sided_or_never
+stubReturnBC	0x11160	2	2	0	0	0	0		
+initSoundVoice	0x11180	47	47	0	0	0	0		
+Voice_notifyChannelNotes	0x1ac40	64	64	9	8	1	0		0x1ac7b(F)
+ChannelTable_callSlot4	0x1ae50	51	51	5	5	0	0		
+ChannelTable_loadRange	0x1aef0	126	125	10	6	4	0	0x1afd6-0x1afd6	0x1af3c(F) 0x1af78(F) 0x1afc4(F) 0x1b03c(F)
+ChannelTable_releaseObject	0x1b0d0	42	42	7	5	2	0		0x1b10a(F) 0x1b127(F)
+ChanRecord_init	0x1ccf0	15	15	0	0	0	0		
+ChanRecord_freeBuffers	0x1cd30	16	16	2	2	0	0		
+Voice::update	0x1f8c0	416	416	54	51	3	0		0x1fbc2(F) 0x1fcbd(F) 0x1fd4a(F)
+Voice_startPlayback	0x20be0	95	95	10	10	0	0		
+Voice_allNotesOff	0x20d80	66	66	12	11	1	0		0x20db6(F)
+Voice_requestStop	0x20ea0	15	15	2	2	0	0		
+Voice_requestStopDrain	0x20ee0	25	25	3	3	0	0		
+Voice_requestCmd12	0x23ea0	25	25	2	2	0	0		
+ChannelDesc_ctor	0x24460	13	13	0	0	0	0		
+Voice_setPlayModeBits	0x24c50	22	22	3	3	0	0		
+VoiceBase_ctor	0x29020	38	38	0	0	0	0		
+VoiceBase_scalarDtor	0x29140	11	11	1	1	0	0		
+VoiceBase_clearList	0x29170	49	49	6	6	0	0		
+VoiceBase_dtor	0x29200	29	29	1	1	0	0		
+VoiceBase_openInner	0x292d0	29	29	2	2	0	0		
+VoiceBase_closeInner	0x29320	11	11	1	1	0	0		
+SubChannel_scalarDtor	0x2abd0	11	11	1	1	0	0		
+SubChannel_dtor	0x2ac00	57	57	5	5	0	0		
+SubChannel_ctor	0x2b4e0	59	56	1	0	1	0	0x2b549-0x2b550	0x2b547(T)
+Ch5bb90_scalarDtor	0x2b5f0	11	11	1	1	0	0		
+Ch5bb90_dtor	0x2b620	90	65	9	5	2	2	0x2b6b7-0x2b6c0 0x2b6dc-0x2b717	0x2b6b5(T) 0x2b6da(T) 0x2b6e1(-) 0x2b6f9(-)
+startDevicePlayback	0x2b7c0	35	35	4	4	0	0		
+Channel_setField5cClamped1200	0x2bff0	17	17	3	3	0	0		
+Channel_applyFlags	0x2c040	39	39	11	11	0	0		
+Channel_collectFlagBits	0x2c0d0	33	33	8	8	0	0		
+Channel_setField4Masked7f	0x2c370	4	4	0	0	0	0		
+VoiceSlot_init	0x2ceb0	12	12	0	0	0	0		
+allocVoiceSlot	0x2d100	96	94	8	6	2	0	0x2d149-0x2d151	0x2d129(F) 0x2d1e0(F)
+Voice_setName	0x2d240	39	39	1	1	0	0		
+Ch5be88_ctor	0x2d450	54	51	1	0	1	0	0x2d4b9-0x2d4c0	0x2d4b7(T)
+Ch5be88_scalarDtorA	0x2d530	11	11	1	1	0	0		
+Ch5be88_dtorA	0x2d560	74	66	7	5	2	0	0x2d5c8-0x2d5e4	0x2d5c6(T) 0x2d5d9(T)
+Channel_propagateFlag0	0x2ddb0	16	16	1	1	0	0		
+SubChannel_openSourceType2	0x2deb0	39	39	5	5	0	0		
+Channel_releaseSound	0x2dff0	32	32	2	2	0	0		
+Ch5be88_scalarDtorB	0x2e630	11	11	1	1	0	0		
+Ch5be88_dtorB	0x2e660	74	66	7	5	2	0	0x2e6c8-0x2e6e4	0x2e6c6(T) 0x2e6d9(T)
+Ch5c178_ctor	0x2e930	49	46	1	0	1	0	0x2e999-0x2e9a0	0x2e997(T)
+Ch5c178_scalarDtor	0x2ea00	11	11	1	1	0	0		
+Ch5c178_dtor	0x2ea30	66	62	6	5	1	0	0x2ea92-0x2ea9b	0x2ea90(T)
+openSourceType4	0x2eb40	45	45	4	4	0	0		
+buildVoiceRxName	0x2ed50	75	72	1	0	1	0	0x2edbb-0x2edc2	0x2edb9(T)
+Ch5c234_scalarDtor	0x2ef10	11	11	1	1	0	0		
+Ch5c234_dtor	0x2ef40	73	65	7	5	2	0	0x2efa2-0x2efbe	0x2efa0(T) 0x2efb3(T)
+openSourceType6	0x2f060	43	43	4	4	0	0		
+buildVoiceTxName	0x2f220	77	74	1	0	1	0	0x2f28b-0x2f292	0x2f289(T)
+Ch5c2ec_scalarDtor	0x2f3c0	11	11	1	1	0	0		
+Ch5c2ec_dtor	0x2f3f0	73	65	7	5	2	0	0x2f455-0x2f471	0x2f453(T) 0x2f466(T)
+openSourceType7	0x2f5e0	50	50	6	6	0	0		
+Ch5c2ec_forwardSlot37	0x2f680	7	7	1	1	0	0		
+Ch5c3a4_ctor	0x2f740	27	27	0	0	0	0		
+Channel_setFormat	0x30fb0	42	42	2	2	0	0		
+Channel_start	0x31080	28	28	3	3	0	0		
+Channel_ctorB	0x31be0	112	112	1	1	0	0		
+updateVoiceRate	0x32500	70	70	5	5	0	0		
+Channel_parseWaveHeader	0x33990	7	7	0	0	0	0		
+rewindChannel	0x339c0	118	118	6	6	0	0		
+Channel_resetPanState	0x33ba0	51	51	0	0	0	0		
+Channel_closeAndFree	0x33c70	186	186	23	20	3	0		0x33cd1(F) 0x33ce6(F) 0x33dbe(F)
+Channel_releaseBuffers	0x340b0	227	227	26	21	5	0		0x34159(F) 0x3416e(F) 0x341f9(F) 0x3420b(F) 0x342da(F)
+serviceChannelPlayback	0x34430	219	219	22	21	1	0		0x344d5(T)
+Channel_allocAndInitVoice	0x34770	78	78	5	5	0	0		
+Channel_startVoice	0x348f0	97	97	4	4	0	0		
+Channel_releaseVoices	0x34ac0	51	51	9	8	1	0		0x34aee(F)
+Channel_stopVoices	0x34b90	61	61	8	7	1	0		0x34bbe(F)
+Channel_setRateGlide	0x34c80	75	75	5	5	0	0		
+Channel_recomputeGainsSetBit3	0x34db0	11	11	0	0	0	0		
+Channel_setVolume	0x35150	26	26	4	4	0	0		
+Channel_setRate	0x351c0	85	85	9	9	0	0		
+Channel_setPanGains	0x35340	59	59	5	5	0	0		
+Channel_recomputeVoiceGains	0x35460	82	82	6	6	0	0		
+Channel_setReverseRate	0x355d0	88	88	6	6	0	0		
+Channel_setPitchRate	0x35750	3	3	0	0	0	0		
+Channel_findStreamNode	0x35770	28	28	6	5	1	0		0x357a3(F)
+Channel_stubReturnB	0x35f60	2	2	0	0	0	0		
+Channel_serviceBuffer	0x35f80	20	20	3	3	0	0		
+Channel_stepVolumeFade	0x35fc0	144	144	15	14	1	0		0x3617f(F)
+Channel_setStreamSource	0x37720	9	9	0	0	0	0		
+Voice_setLoopFlag	0x37760	13	13	0	0	0	0		
+Channel_broadcastVoiceBit1	0x377f0	25	25	2	2	0	0		
+Channel_set3DPosition	0x37b00	15	15	2	2	0	0		
+Channel_set3DPositionX	0x37b40	11	11	2	2	0	0		
+Channel_set3DPositionY	0x37b80	11	11	2	2	0	0		
+Channel_set3DPositionZ	0x37bc0	11	11	2	2	0	0		
+Channel_set3DBufferStub	0x37c00	11	11	2	2	0	0		
+Voice_resetDefaults	0x37c40	83	83	2	2	0	0		
+VoiceSlot_dtorEmpty	0x37df0	1	1	0	0	0	0		
+Voice_setPanGains	0x37f30	82	82	7	7	0	0		
+Voice_noteOff	0x381f0	20	20	2	2	0	0		
+Channel_allocVoiceSlot	0x382c0	26	26	3	3	0	0		
+Channel_findVoiceByTag	0x38330	31	31	4	4	0	0		
+Voice_setLevel	0x383b0	17	17	1	1	0	0		
+Channel_clearBackref	0x38400	6	6	1	1	0	0		
+Channel_parseWaveHeader_adjPlus70	0x39980	3	3	0	0	0	0		
+Channel_startVoiceTimed	0x39e70	51	51	6	6	0	0		

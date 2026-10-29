@@ -1,0 +1,14130 @@
+{
+ "CommandQueue::at": {
+  "digests": [
+   "7f02b4997ad4fc08a32c",
+   "da59e3c8e3544239741e",
+   "9a6ea444a58e9d21e2db",
+   "502adee5a908ba3460b0",
+   "5c474b00fdbc5e06e897",
+   "201f28b410f2890975df",
+   "270964948d2b65721d34",
+   "87cfc261a786407dbc6b",
+   "159240063f4ff294ee4f",
+   "7f02b4997ad4fc08a32c",
+   "da59e3c8e3544239741e",
+   "159240063f4ff294ee4f",
+   "0fad4e9f9827309f500a",
+   "da59e3c8e3544239741e",
+   "159240063f4ff294ee4f",
+   "159240063f4ff294ee4f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CommandQueue::at",
+  "regions": [],
+  "tier": "EXACT",
+  "vectors": 16,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CommandQueue::clear": {
+  "digests": [
+   "62df3df5cd5b09ab8303",
+   "4b721eae10912909827a",
+   "03c42b542829c04bff94",
+   "7acca79441a12e8d079c",
+   "b5efda5a985c861cb440",
+   "bfa75b976e581e7e3362",
+   "9734eff161e68bad0960",
+   "1b214cb796192dd6a10b",
+   "54dedfcf3c74a31f6b4e",
+   "c8831b459981e37c16bf"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CommandQueue::clear",
+  "regions": [
+   [
+    872599552,
+    16400
+   ],
+   [
+    872624128,
+    16400
+   ],
+   [
+    872648704,
+    16400
+   ],
+   [
+    872673280,
+    16400
+   ],
+   [
+    872697856,
+    16400
+   ],
+   [
+    872722432,
+    16400
+   ],
+   [
+    872747008,
+    16400
+   ],
+   [
+    872771584,
+    16400
+   ],
+   [
+    872796160,
+    16400
+   ],
+   [
+    872820736,
+    16400
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CommandQueue::init": {
+  "digests": [
+   "7c3369cc835c0517c99c",
+   "b6a512fec2263f626f03",
+   "bbc76b1edefce5cf4050",
+   "c0e555b7cae7ce7b35a0",
+   "5dd6f9b96e33b70ac253",
+   "bf119cae6463ee903773",
+   "369af0a3a1667884d7b8",
+   "21d1f21159730929570b",
+   "2b6bedeeb4cf6c26b0dc",
+   "216d4753f241d3e37bde",
+   "d162f2dc9e478d48964f",
+   "d79857ff005197ca6d15"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CommandQueue::init",
+  "regions": [
+   [
+    872599552,
+    64
+   ],
+   [
+    872607744,
+    64
+   ],
+   [
+    872615872,
+    96
+   ],
+   [
+    872624128,
+    64
+   ],
+   [
+    872632320,
+    64
+   ],
+   [
+    872640448,
+    96
+   ],
+   [
+    872648704,
+    64
+   ],
+   [
+    872656896,
+    64
+   ],
+   [
+    872665024,
+    96
+   ],
+   [
+    872673280,
+    64
+   ],
+   [
+    872681472,
+    64
+   ],
+   [
+    872689600,
+    96
+   ],
+   [
+    872697856,
+    64
+   ],
+   [
+    872706048,
+    64
+   ],
+   [
+    872714176,
+    96
+   ],
+   [
+    872722432,
+    64
+   ],
+   [
+    872730624,
+    64
+   ],
+   [
+    872738752,
+    96
+   ],
+   [
+    872747008,
+    64
+   ],
+   [
+    872755200,
+    64
+   ],
+   [
+    872763328,
+    96
+   ],
+   [
+    872771584,
+    64
+   ],
+   [
+    872779776,
+    64
+   ],
+   [
+    872787904,
+    96
+   ],
+   [
+    872796160,
+    64
+   ],
+   [
+    872804352,
+    64
+   ],
+   [
+    872812480,
+    96
+   ],
+   [
+    872820736,
+    64
+   ],
+   [
+    872828928,
+    64
+   ],
+   [
+    872837056,
+    96
+   ],
+   [
+    872845312,
+    64
+   ],
+   [
+    872853504,
+    64
+   ],
+   [
+    872861632,
+    96
+   ],
+   [
+    872869888,
+    64
+   ],
+   [
+    872878080,
+    64
+   ],
+   [
+    872886208,
+    96
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CommandQueue::push": {
+  "digests": [
+   "219a80b2e5e65be408f4",
+   "d62a0ca2f3dee1c9fe3c",
+   "af4b8f58e20712f790ad",
+   "da9536583ca11c1de05f",
+   "62bec57d355b60cc7fe2",
+   "2d1a57c126fe3d5f9419",
+   "2bfc62fe36baaafa182c",
+   "ab0ae065c82dcebcb28f",
+   "28024dafa96b4e769921",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "a2466030f157c476fb66",
+   "71baf3d0a174bc4cb582",
+   "ad7fac933de5faba7be8",
+   "ddc1d1a42d1c24eff204",
+   "cb1274bb11608c500c3a",
+   "23330a56733bac7a7dca",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "2eb7c336ee2cca5d62bb",
+   "b9518b0d26cea8a92a86",
+   "4cac3577ef1bedef47e9",
+   "43e7b82a6f48682afc19"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CommandQueue::push",
+  "regions": [
+   [
+    872599552,
+    16480
+   ],
+   [
+    872624128,
+    16480
+   ],
+   [
+    872648704,
+    16480
+   ],
+   [
+    872673280,
+    16480
+   ],
+   [
+    872697856,
+    16480
+   ],
+   [
+    872722432,
+    16480
+   ],
+   [
+    872747008,
+    16480
+   ],
+   [
+    872771584,
+    16480
+   ],
+   [
+    872796160,
+    16480
+   ],
+   [
+    805335376,
+    272
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 27,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b19c_ctor": {
+  "digests": [
+   "a8403930561af8a1a0cf",
+   "6467fbaf25ae45d1e509",
+   "18f30f110fa9094885f6",
+   "3494395b8c03e88a4e35",
+   "a0632ee0fb97818bbafe",
+   "bad21b754d9dbc6e4f54",
+   "217b27ba11002c7cf414",
+   "ef81a7dca17cd0cbe087",
+   "0c49efa7a8b197772876",
+   "f9cc74485bdddcaa3937"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b19c_ctor",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b58c_dtor": {
+  "digests": [
+   "fdcc8635b578755f3c5a",
+   "4db62d8650656d5d0846",
+   "50d2d678fffd878e043b",
+   "b421042ba03ee79e8807",
+   "071ddcdd35af3743730f",
+   "08c8bdf035ea37f3b0b5",
+   "6da7c9fe768410c7e5cd",
+   "57511dfeea0c31e7d8be",
+   "9757eeb647a18f79bf64",
+   "47cf173ab556e4019386"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b58c_dtor",
+  "regions": [
+   [
+    805335408,
+    128
+   ],
+   [
+    805335920,
+    128
+   ],
+   [
+    805336432,
+    128
+   ],
+   [
+    805336944,
+    128
+   ],
+   [
+    805337456,
+    128
+   ],
+   [
+    805337968,
+    128
+   ],
+   [
+    805338480,
+    128
+   ],
+   [
+    805338992,
+    128
+   ],
+   [
+    805339504,
+    128
+   ],
+   [
+    805340016,
+    128
+   ],
+   [
+    805335536,
+    128
+   ],
+   [
+    805336048,
+    128
+   ],
+   [
+    805336560,
+    128
+   ],
+   [
+    805337072,
+    128
+   ],
+   [
+    805337584,
+    128
+   ],
+   [
+    805338096,
+    128
+   ],
+   [
+    805338608,
+    128
+   ],
+   [
+    805339120,
+    128
+   ],
+   [
+    805339632,
+    128
+   ],
+   [
+    805340144,
+    128
+   ],
+   [
+    805335664,
+    256
+   ],
+   [
+    805336176,
+    256
+   ],
+   [
+    805336688,
+    256
+   ],
+   [
+    805337200,
+    256
+   ],
+   [
+    805337712,
+    256
+   ],
+   [
+    805338224,
+    256
+   ],
+   [
+    805338736,
+    256
+   ],
+   [
+    805339248,
+    256
+   ],
+   [
+    805339760,
+    256
+   ],
+   [
+    805340272,
+    256
+   ],
+   [
+    805340528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b58c_dtorEmbedded": {
+  "digests": [
+   "22c55bfdac7373d1e4fd",
+   "83b764c0d957647d4fe6",
+   "a60969fa2e2bbca0b06b",
+   "185277694292618409fe",
+   "c551f7fde23dbcd667c1",
+   "e0f7a5aa91d9519ca1ae",
+   "1f8786099abbf66c4d6b",
+   "5ec9272fefad401b88ab",
+   "e056d3106b0daeaa34f7",
+   "00f771bcaa7745d934ff"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b58c_dtorEmbedded",
+  "regions": [
+   [
+    805335408,
+    128
+   ],
+   [
+    805335920,
+    128
+   ],
+   [
+    805336432,
+    128
+   ],
+   [
+    805336944,
+    128
+   ],
+   [
+    805337456,
+    128
+   ],
+   [
+    805337968,
+    128
+   ],
+   [
+    805338480,
+    128
+   ],
+   [
+    805338992,
+    128
+   ],
+   [
+    805339504,
+    128
+   ],
+   [
+    805340016,
+    128
+   ],
+   [
+    805335536,
+    128
+   ],
+   [
+    805336048,
+    128
+   ],
+   [
+    805336560,
+    128
+   ],
+   [
+    805337072,
+    128
+   ],
+   [
+    805337584,
+    128
+   ],
+   [
+    805338096,
+    128
+   ],
+   [
+    805338608,
+    128
+   ],
+   [
+    805339120,
+    128
+   ],
+   [
+    805339632,
+    128
+   ],
+   [
+    805340144,
+    128
+   ],
+   [
+    805335664,
+    256
+   ],
+   [
+    805336176,
+    256
+   ],
+   [
+    805336688,
+    256
+   ],
+   [
+    805337200,
+    256
+   ],
+   [
+    805337712,
+    256
+   ],
+   [
+    805338224,
+    256
+   ],
+   [
+    805338736,
+    256
+   ],
+   [
+    805339248,
+    256
+   ],
+   [
+    805339760,
+    256
+   ],
+   [
+    805340272,
+    256
+   ],
+   [
+    805340528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b58c_scalarDtor": {
+  "digests": [
+   "438cdfaf3120b33e2361",
+   "a54a56c8b037a6059928",
+   "438cdfaf3120b33e2361",
+   "a54a56c8b037a6059928",
+   "f3ad671e6c2ab6028bfa",
+   "83e3d4456fcf74e6d786",
+   "f3ad671e6c2ab6028bfa",
+   "83e3d4456fcf74e6d786",
+   "00a3f956c350f1db20d9",
+   "6c1f4376d90e97ac5bbe",
+   "00a3f956c350f1db20d9",
+   "6c1f4376d90e97ac5bbe",
+   "b9e89ce8e1dc7302809f",
+   "1cb21b5defae5d070276",
+   "b9e89ce8e1dc7302809f",
+   "1cb21b5defae5d070276",
+   "582713148adf1d368a93",
+   "aa35c34c06c58506883b",
+   "582713148adf1d368a93",
+   "aa35c34c06c58506883b",
+   "199a51abb02223f4afa9",
+   "26a03ff515e280992c85",
+   "199a51abb02223f4afa9",
+   "26a03ff515e280992c85",
+   "91cc6d7d504dc0640b3f",
+   "f2f683b0af3014a0d821",
+   "91cc6d7d504dc0640b3f",
+   "f2f683b0af3014a0d821",
+   "d37c9f29f64ec7406bfe",
+   "ee186872948a0a06b41e",
+   "d37c9f29f64ec7406bfe",
+   "ee186872948a0a06b41e",
+   "427b0995cfe03175d97c",
+   "f1d7e8c728629530b6ba",
+   "427b0995cfe03175d97c",
+   "f1d7e8c728629530b6ba",
+   "7858a12157e43cd6e7da",
+   "5cd720c44057ffdd904b",
+   "7858a12157e43cd6e7da",
+   "5cd720c44057ffdd904b"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b58c_scalarDtor",
+  "regions": [
+   [
+    805335408,
+    128
+   ],
+   [
+    805335920,
+    128
+   ],
+   [
+    805336432,
+    128
+   ],
+   [
+    805336944,
+    128
+   ],
+   [
+    805337456,
+    128
+   ],
+   [
+    805337968,
+    128
+   ],
+   [
+    805338480,
+    128
+   ],
+   [
+    805338992,
+    128
+   ],
+   [
+    805339504,
+    128
+   ],
+   [
+    805340016,
+    128
+   ],
+   [
+    805335536,
+    128
+   ],
+   [
+    805336048,
+    128
+   ],
+   [
+    805336560,
+    128
+   ],
+   [
+    805337072,
+    128
+   ],
+   [
+    805337584,
+    128
+   ],
+   [
+    805338096,
+    128
+   ],
+   [
+    805338608,
+    128
+   ],
+   [
+    805339120,
+    128
+   ],
+   [
+    805339632,
+    128
+   ],
+   [
+    805340144,
+    128
+   ],
+   [
+    805335664,
+    256
+   ],
+   [
+    805336176,
+    256
+   ],
+   [
+    805336688,
+    256
+   ],
+   [
+    805337200,
+    256
+   ],
+   [
+    805337712,
+    256
+   ],
+   [
+    805338224,
+    256
+   ],
+   [
+    805338736,
+    256
+   ],
+   [
+    805339248,
+    256
+   ],
+   [
+    805339760,
+    256
+   ],
+   [
+    805340272,
+    256
+   ],
+   [
+    805340528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 40,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b5c0_ctor": {
+  "digests": [
+   "b43f1815d9374e5e10e4",
+   "69c46b024ddf5e21ebc1",
+   "3abe3fd0121ae97aae5c",
+   "c86825badc2a29eac8c0",
+   "02accc461a6abd833606",
+   "90ddc7282b1e87b4203c",
+   "c9d290704efad51cc175",
+   "7639486c15cf8f63e820",
+   "d065ded5380ec1937dc6",
+   "3abdf53285267559fc4e",
+   "f0a4cefb075ffe079560",
+   "1a9d17cbf649bab758a4"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b5c0_ctor",
+  "regions": [
+   [
+    805335376,
+    288
+   ],
+   [
+    805335664,
+    288
+   ],
+   [
+    805335952,
+    288
+   ],
+   [
+    805336240,
+    288
+   ],
+   [
+    805336528,
+    288
+   ],
+   [
+    805336816,
+    288
+   ],
+   [
+    805337104,
+    288
+   ],
+   [
+    805337392,
+    288
+   ],
+   [
+    805337680,
+    288
+   ],
+   [
+    805337968,
+    288
+   ],
+   [
+    805338256,
+    288
+   ],
+   [
+    805338544,
+    288
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b5c0_mapValue": {
+  "digests": [
+   "d3ca5a7884c93c8dad9f",
+   "4f0982ff615994d25a3b",
+   "a7c3966aa8fbcd494557",
+   "d662edf3fc4edcd6612d",
+   "b66158e622ab81cf0dfb",
+   "b858c5077d782b190185",
+   "55e557da3a0605209f3c",
+   "ba28ad71eb5e7a2a9584",
+   "bbdfb32eded05c274c35",
+   "010d3ba00b8d7c3e264f",
+   "9cedc8a50cb30a7dfb36",
+   "9c8bdbb299155ede37b5",
+   "1dd5741e953836c3ec68",
+   "059c33e4a7e6efbdd2c1",
+   "c5ed5fce7a391241d97d",
+   "3f64fae85d2e93ca111f",
+   "ddf4ad41f42c56db0609",
+   "660f23601e8a5570e0bb",
+   "28086ac33a504055fb50",
+   "346c3c668d571ff015f2",
+   "429b9a837e5439223806",
+   "373cdbb7f5f2f33cad05",
+   "084c80a1c980bb855aea",
+   "a530e6f25fcac3fbfbbc",
+   "09eccb25940e3e430c32",
+   "2787886868e05cd4f53d",
+   "7209755cef28e07d3ce7",
+   "fbee4d2bfa6b83d7422d",
+   "b3ddd4c9cd7b3ee47fd7",
+   "478a61c58b3c630e27e1",
+   "e8f0ad125c3585e31a19",
+   "fdf52721956e923d2b9f",
+   "49c4d408626b1dffb27c",
+   "f67fbc159816ef5528dd",
+   "3e58f5be815516422bdd",
+   "fcb5a78ff23346367821",
+   "83606986bf8e247f6380",
+   "2a05dc6c659d4c88e62e",
+   "3cdfdb583051d145355a",
+   "80f81c8852d101df3e2b",
+   "120c233e4ebeb5a46292",
+   "c1fffc18b30fa6b91b6f",
+   "5709c1ae9e438a4e23e8",
+   "e855420510e5368baf6d",
+   "6b0a6fb9e7f6271f7a5e",
+   "e7a516844cf6d6a9607d",
+   "d3a9f056be91a4768275",
+   "30d362f32477fc5e30e5",
+   "6fdb1015f3923f893ac7",
+   "18293a07ed93a64b2c41",
+   "1498c689e1f597cdf63f",
+   "d9da8f2aeaa41d8aab36"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b5c0_mapValue",
+  "regions": [
+   [
+    805335632,
+    512
+   ],
+   [
+    805336144,
+    512
+   ],
+   [
+    805336656,
+    512
+   ],
+   [
+    805337168,
+    512
+   ],
+   [
+    805337680,
+    512
+   ],
+   [
+    805338192,
+    512
+   ],
+   [
+    805338704,
+    512
+   ],
+   [
+    805339216,
+    512
+   ],
+   [
+    805339728,
+    512
+   ],
+   [
+    805340240,
+    512
+   ],
+   [
+    805340752,
+    512
+   ],
+   [
+    805341264,
+    512
+   ],
+   [
+    805341776,
+    512
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 52,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b5c0_transposeTable": {
+  "digests": [
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "9aa1142fffb8d10a69a3",
+   "ab5f1a9dd405e6cd458b",
+   "b67dbbcd14b05d2785b0",
+   "f76197298b97bfa89b7f",
+   "a2c3d7daf287a4d9179d",
+   "d2267e62f4f9d7ba33df",
+   "0001c518f394e91b527c",
+   "dff7784787e756264c74",
+   "41934133c23a01db7ed8",
+   "9bf1b239aaa92f57c12a",
+   "b67dbbcd14b05d2785b0",
+   "54f9d768cb766b2a4edb",
+   "201c9fde16b762ad8f9d",
+   "8d61697df3882068d661",
+   "21f70d84e79fd99201ce",
+   "e95d1efc153fbf3f1615",
+   "06a475e771a6fae4c210",
+   "b9e43e1cb234eccb0550",
+   "4b357bba5af782004b83",
+   "afacdc36ae52945ff5c4",
+   "5403374d4efdf3c01afd",
+   "4694de73cbf2ba82e262",
+   "c92b5424b163bdb3b675",
+   "b34b4a80df1fc926357a",
+   "ff92f5c99f7fc2fbbcba",
+   "81acecf4caa07413c746",
+   "cde137e0be73fbbcf944",
+   "7656345c9c1f66bf7388",
+   "46c983b722fb7ae7eeb1",
+   "4462bd78a161c464c959",
+   "d88dbb39059558702adc",
+   "38589e0b5092c583f127",
+   "47b5161671e4e61d22dc",
+   "28e5e6f64145411515f8",
+   "6df035208ea0f0b2c73a",
+   "d259af6c26535863f71a",
+   "a7b1a702a650f319ac3f",
+   "045b7162ae14f432c9cc",
+   "82ac5abdba1c376a9e83",
+   "274ff91f8b5e02781126",
+   "2ebfa84ba0bfc65f95f2",
+   "455658669f36be63fd24",
+   "7d1292fc31d2e9849135",
+   "78b7d305ec43d77244c7",
+   "4836ac53f3e087853170",
+   "10a7ef1b338f58f3a86e",
+   "79bd63ff346b79bdfa82",
+   "484a7f1135b5619bd45c",
+   "44face526e5422e5c9d8",
+   "a7b6cfaebc6fa25a2548",
+   "beb695e5035045b9f14e",
+   "66fd93c00075455f0da7",
+   "66fd93c00075455f0da7",
+   "66fd93c00075455f0da7",
+   "66fd93c00075455f0da7",
+   "66fd93c00075455f0da7",
+   "66fd93c00075455f0da7"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b5c0_transposeTable",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 66,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl5b668_ctor": {
+  "digests": [
+   "6fe6040948e9e1a7b314",
+   "b6c4380209e518576329",
+   "11b71b8c5d7bc41b3ff2",
+   "79e95ca6d2546a26d0f3",
+   "5ba89da4590dada1df6b",
+   "c3ca478d3ece8af42122",
+   "4da9e2cfd9b831be8f65",
+   "d8aaf4356bddb42afd1f",
+   "deebacdab629bf072f7e",
+   "073c9fdf524e44ba2247",
+   "c553d659493d0ec10575",
+   "884f6f532e1f6524d1b9"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl5b668_ctor",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlBase_flushElements": {
+  "digests": [
+   "dda7b36419a3b20487ba",
+   "1e8c51eaa74d4e2ba13a",
+   "f2c913b9f48145bb3e4c",
+   "a5357efb1df9ab1bb668",
+   "7f7d297fe7b9a336f9af",
+   "4f01ea20b1b829e2d5bb",
+   "de135ae1dd1dc082ca58",
+   "2cca31544e961c7ef4d0",
+   "ad23582292415e9ab0ad",
+   "2cc20ccb310d91275ba4",
+   "8d0b643453cb3b4f900b",
+   "ef64754be880a117a615",
+   "23c578e5600dd267bd74",
+   "45034e48f569bb9735ea"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlBase_flushElements",
+  "regions": [
+   [
+    805335632,
+    1024
+   ],
+   [
+    805336656,
+    1024
+   ],
+   [
+    805337680,
+    1024
+   ],
+   [
+    805338704,
+    1024
+   ],
+   [
+    805339728,
+    1024
+   ],
+   [
+    805340752,
+    1024
+   ],
+   [
+    805341776,
+    1024
+   ],
+   [
+    805342800,
+    1024
+   ],
+   [
+    805343824,
+    1024
+   ],
+   [
+    805344848,
+    1024
+   ],
+   [
+    805345872,
+    1024
+   ],
+   [
+    805346896,
+    1024
+   ],
+   [
+    805347920,
+    1024
+   ],
+   [
+    805348944,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 14,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlBase_resetElements": {
+  "digests": [
+   "114b16051d1cb77e05d5",
+   "385206aa15d92e1ba97c",
+   "7ed6fcb2f49be8bc3cb3",
+   "d42a24e36e93e6666eb2",
+   "516a7abf807f4133b498",
+   "d79cc27de358ccaf8d8a",
+   "025f210c4cb42fefb3fd",
+   "5f84cffd0347e734392c",
+   "384f312efa7c9c132fa9",
+   "9658a60ff769e3b83fca",
+   "c910e8cd2ddec2f7f5d2",
+   "171e8cbea8effe70d304",
+   "b521a48a66c7a1e7fc1f",
+   "1741ce223a5f7c53e8aa"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlBase_resetElements",
+  "regions": [
+   [
+    805335632,
+    1024
+   ],
+   [
+    805336656,
+    1024
+   ],
+   [
+    805337680,
+    1024
+   ],
+   [
+    805338704,
+    1024
+   ],
+   [
+    805339728,
+    1024
+   ],
+   [
+    805340752,
+    1024
+   ],
+   [
+    805341776,
+    1024
+   ],
+   [
+    805342800,
+    1024
+   ],
+   [
+    805343824,
+    1024
+   ],
+   [
+    805344848,
+    1024
+   ],
+   [
+    805345872,
+    1024
+   ],
+   [
+    805346896,
+    1024
+   ],
+   [
+    805347920,
+    1024
+   ],
+   [
+    805348944,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 14,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject2_ctor": {
+  "digests": [
+   "10edf6680c803ae6ba5b",
+   "10705aff51efcbc085dd",
+   "102abe5ab5f7175bcb93",
+   "8e4427f3590f92f069b8",
+   "537172bd2b0b29a0a212",
+   "b91bf15e184cbcc3d55d",
+   "26c8c85700a6083921c5",
+   "053fc645863cea118619",
+   "4b408d4f2fdae0494e68",
+   "94255dd7326700e2c08d",
+   "e0474ffa691f2fcc442c",
+   "4be0099b260a27c2bc79"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject2_ctor",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject3_ctor": {
+  "digests": [
+   "02aeba5f40fbc9294283",
+   "1bae6fb1c41e8f92746b",
+   "9959eae2f7fe4fef24cc",
+   "bcf1bbbe15379cea1218",
+   "669f003c0a4f37bb6a34",
+   "467db4ff7e6d0d4c0d18",
+   "98dc5d2152275de4f204",
+   "0c5b30a32c66221e039b",
+   "806570dcaa5090be1d35",
+   "6ffb33895375cd0db6ad",
+   "774377a6f1697c8b2846",
+   "b15021ac49ab6435da83"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject3_ctor",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject::ctor": {
+  "digests": [
+   "3ecf7f32a89025a07fdf",
+   "51ee89e5dabc4d91da87",
+   "1c9e46dd856fda5211a5",
+   "910d605de5c01d365f5d",
+   "12fc39ff02a8fd340791",
+   "bff627d36475a7ef409e",
+   "b90d93d92996d806276e",
+   "d8dd02123ef04afe0ea1",
+   "d19a1cae95cc9da6f554",
+   "7e4d12b7dfb39cfc9c46",
+   "4b9632ffe2f68fcd39ca",
+   "a86dcb7e2d2dfd7c6d58"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject::ctor",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_dtorA": {
+  "digests": [
+   "795fed158d02e79e6c85",
+   "f96989db4c2208cfb891",
+   "a6a2cda57f564c6585a8",
+   "caf90fecd23e898e04ca",
+   "d6c5a843d49dcac385be",
+   "76cbbca6a133eb5527fa",
+   "51496a9834cf179102e6",
+   "30a342720d847e6fe8bb",
+   "656fcdcf265116cd53e0",
+   "f615dab9319ed896119b",
+   "8f661bcec29bc522920e",
+   "405ffd67316bc2e98bd5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_dtorA",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_dtorB": {
+  "digests": [
+   "795fed158d02e79e6c85",
+   "f96989db4c2208cfb891",
+   "a6a2cda57f564c6585a8",
+   "caf90fecd23e898e04ca",
+   "d6c5a843d49dcac385be",
+   "76cbbca6a133eb5527fa",
+   "51496a9834cf179102e6",
+   "30a342720d847e6fe8bb",
+   "656fcdcf265116cd53e0",
+   "f615dab9319ed896119b",
+   "8f661bcec29bc522920e",
+   "405ffd67316bc2e98bd5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_dtorB",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_dtorC": {
+  "digests": [
+   "795fed158d02e79e6c85",
+   "f96989db4c2208cfb891",
+   "a6a2cda57f564c6585a8",
+   "caf90fecd23e898e04ca",
+   "d6c5a843d49dcac385be",
+   "76cbbca6a133eb5527fa",
+   "51496a9834cf179102e6",
+   "30a342720d847e6fe8bb",
+   "656fcdcf265116cd53e0",
+   "f615dab9319ed896119b",
+   "8f661bcec29bc522920e",
+   "405ffd67316bc2e98bd5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_dtorC",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_dtorD": {
+  "digests": [
+   "795fed158d02e79e6c85",
+   "f96989db4c2208cfb891",
+   "a6a2cda57f564c6585a8",
+   "caf90fecd23e898e04ca",
+   "d6c5a843d49dcac385be",
+   "76cbbca6a133eb5527fa",
+   "51496a9834cf179102e6",
+   "30a342720d847e6fe8bb",
+   "656fcdcf265116cd53e0",
+   "f615dab9319ed896119b",
+   "8f661bcec29bc522920e",
+   "405ffd67316bc2e98bd5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_dtorD",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_scalarDtorA": {
+  "digests": [
+   "b852a6f6717fac06baae",
+   "09286c103511880e128e",
+   "666385abf0f78417df65",
+   "b4b4368c592d4f6f179a",
+   "94061e82866f0cefe7aa",
+   "a641286504b191ef48c0",
+   "f2dc79a8b874ad324105",
+   "f70dfc78d7a2f24e9458",
+   "22aeabaf45c092090245",
+   "e2ee74f4c61f010abe22",
+   "76325697f15a6b225fe7",
+   "7830fc00773e46f5a684",
+   "3829a4e159d51736751d",
+   "1edb70a1f980617d5e0a",
+   "6b56e145211bf1724a1d",
+   "49a41b723dee070cb5f7",
+   "71df7908ec04c6ca5542",
+   "6793446356446d445cfa",
+   "f2dc79a8b874ad324105",
+   "bee146bc91a27f8828cb",
+   "d6df81f9c0daa2d3b8eb",
+   "84dba6e7111730730dc3",
+   "b0a332babbe8ffbe3af4",
+   "7830fc00773e46f5a684"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_scalarDtorA",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336016,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    512
+   ],
+   [
+    805336656,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 24,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_scalarDtorB": {
+  "digests": [
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_scalarDtorB",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805336528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 50,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_scalarDtorC": {
+  "digests": [
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_scalarDtorC",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805336528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 50,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "CtrlObject_scalarDtorD": {
+  "digests": [
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.CtrlObject_scalarDtorD",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805336528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 50,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Ctrl_appendIfAccepted": {
+  "digests": [
+   "0f1bbbd52b727d3daaa4",
+   "3ff0df714cf9d4038e33",
+   "248d5b3db30eb4115bb5",
+   "59633f81cea82ccf27fb",
+   "38b623029b9f4ba13ee7",
+   "8508993568c0b28cfd63",
+   "8d9a02fe233894897f4c",
+   "781092cad47987bc7486",
+   "10656f79f95803674ef4",
+   "a6f3c12a162f3ebedfe1",
+   "49502373a38a9cc1a419",
+   "b362a03251639f57babc",
+   "508aadc31528cc29403b",
+   "5b7ad68c20e6d551fb79",
+   "ae15d09d1642c49aaee3",
+   "ed790981315919069783",
+   "2a197df6822557898f5a",
+   "1baa27af9715ced94c9b",
+   "3f62369d51ecaa77ce4d",
+   "181699d434780b6a37f1",
+   "4a524387bb9123a7accd",
+   "21ed784b27b5e816c96a",
+   "a6b44275708740dc74b5",
+   "45f0338d45b130b480bf",
+   "c11c12ffcbd7cdbb7d23",
+   "374cb6db8f94ebf36253",
+   "9ca87990aa58be663cc1",
+   "9027b6992fc9a6b9ca3c",
+   "2a92226c7c6ffb92835d",
+   "bb0d25bde44348b5ca87"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Ctrl_appendIfAccepted",
+  "regions": [
+   [
+    805335408,
+    256
+   ],
+   [
+    805335664,
+    256
+   ],
+   [
+    805335920,
+    256
+   ],
+   [
+    805336176,
+    256
+   ],
+   [
+    805336432,
+    256
+   ],
+   [
+    805336688,
+    256
+   ],
+   [
+    805336944,
+    256
+   ],
+   [
+    805337200,
+    256
+   ],
+   [
+    805337456,
+    256
+   ],
+   [
+    805337712,
+    256
+   ],
+   [
+    805337968,
+    272
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 30,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Device::serviceVoices": {
+  "digests": [
+   "ef5f86f2835ed4f261a6",
+   "f59d156f7dfa91d99111",
+   "1886447e27d699311c7d",
+   "0c19c5692a01b666ab45",
+   "ceb9fa45d4a4c6654940",
+   "cab25cae39a1d5be474c",
+   "9a460ab0d496b3cd93cd",
+   "156702265001b5709dde",
+   "c4964033a2ccb760670d",
+   "f527c2ee7444df62786f",
+   "afd321ad7b2949d645d8",
+   "c7c0e757ef92b7c79d14"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Device::serviceVoices",
+  "regions": [
+   [
+    805336432,
+    256
+   ],
+   [
+    805336688,
+    256
+   ],
+   [
+    805337008,
+    256
+   ],
+   [
+    805337840,
+    256
+   ],
+   [
+    805339824,
+    256
+   ],
+   [
+    805341232,
+    256
+   ],
+   [
+    805342704,
+    256
+   ],
+   [
+    805344688,
+    256
+   ],
+   [
+    805345520,
+    256
+   ],
+   [
+    805345904,
+    256
+   ],
+   [
+    805348464,
+    256
+   ],
+   [
+    805350448,
+    256
+   ],
+   [
+    805335376,
+    1056
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "DeviceBase_dtorA": {
+  "digests": [
+   "432df1ccfe141a18fd47",
+   "681a698d856b3e42b8b6",
+   "3ea3d8c99c8a708ae50d",
+   "a52616b8f85c81114319",
+   "41b1ae1a9623d0707d60",
+   "d12c2f4968d6c1a86dc5",
+   "34cf1cedd84dfe16ed70",
+   "4cfa5717326a1edc8e62",
+   "52d7b4c4dc0ae3e69bb1",
+   "be44688c4fdbfb53ce93"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.DeviceBase_dtorA",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "DeviceBase_dtorB": {
+  "digests": [
+   "432df1ccfe141a18fd47",
+   "681a698d856b3e42b8b6",
+   "3ea3d8c99c8a708ae50d",
+   "a52616b8f85c81114319",
+   "41b1ae1a9623d0707d60",
+   "d12c2f4968d6c1a86dc5",
+   "34cf1cedd84dfe16ed70",
+   "4cfa5717326a1edc8e62",
+   "52d7b4c4dc0ae3e69bb1",
+   "be44688c4fdbfb53ce93"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.DeviceBase_dtorB",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "DeviceBase_dtorC": {
+  "digests": [
+   "432df1ccfe141a18fd47",
+   "681a698d856b3e42b8b6",
+   "3ea3d8c99c8a708ae50d",
+   "a52616b8f85c81114319",
+   "41b1ae1a9623d0707d60",
+   "d12c2f4968d6c1a86dc5",
+   "34cf1cedd84dfe16ed70",
+   "4cfa5717326a1edc8e62",
+   "52d7b4c4dc0ae3e69bb1",
+   "be44688c4fdbfb53ce93"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.DeviceBase_dtorC",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "DeviceBase_scalarDtor": {
+  "digests": [
+   "b7134cac92f0e83f7768",
+   "44cb143a2bbfc6edb5e6",
+   "b7134cac92f0e83f7768",
+   "44cb143a2bbfc6edb5e6",
+   "b7134cac92f0e83f7768",
+   "44cb143a2bbfc6edb5e6",
+   "b7134cac92f0e83f7768",
+   "44cb143a2bbfc6edb5e6",
+   "b7134cac92f0e83f7768",
+   "44cb143a2bbfc6edb5e6",
+   "c9f071e996e677f9d247",
+   "09f0b18bcad59e6a0a12",
+   "c9f071e996e677f9d247",
+   "09f0b18bcad59e6a0a12",
+   "c9f071e996e677f9d247",
+   "09f0b18bcad59e6a0a12",
+   "c9f071e996e677f9d247",
+   "09f0b18bcad59e6a0a12",
+   "c9f071e996e677f9d247",
+   "09f0b18bcad59e6a0a12",
+   "c5faf9993e7236d7223c",
+   "1a1a8d00ed94b863ba62",
+   "c5faf9993e7236d7223c",
+   "1a1a8d00ed94b863ba62",
+   "c5faf9993e7236d7223c",
+   "1a1a8d00ed94b863ba62",
+   "c5faf9993e7236d7223c",
+   "1a1a8d00ed94b863ba62",
+   "c5faf9993e7236d7223c",
+   "1a1a8d00ed94b863ba62",
+   "67c942f1dfd2a5f33865",
+   "333429f4ae024d77ac95",
+   "67c942f1dfd2a5f33865",
+   "333429f4ae024d77ac95",
+   "67c942f1dfd2a5f33865",
+   "333429f4ae024d77ac95",
+   "67c942f1dfd2a5f33865",
+   "333429f4ae024d77ac95",
+   "67c942f1dfd2a5f33865",
+   "333429f4ae024d77ac95",
+   "240efc6ef313bd96344a",
+   "948d5c677db01289f4ec",
+   "240efc6ef313bd96344a",
+   "948d5c677db01289f4ec",
+   "240efc6ef313bd96344a",
+   "948d5c677db01289f4ec",
+   "240efc6ef313bd96344a",
+   "948d5c677db01289f4ec",
+   "240efc6ef313bd96344a",
+   "948d5c677db01289f4ec"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.DeviceBase_scalarDtor",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805336528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 50,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Device_createStartQueue": {
+  "digests": [
+   "722e5e97236db3f368ab",
+   "82da05a1fbdcef316da1",
+   "c14ec504383e06e029fa",
+   "ee777100e5b2672ada46",
+   "bbb9ac3aa2ca41cec98a",
+   "8884c49608d3b7040ef9",
+   "f7186d75b095501f731d",
+   "c0a6012ec269ce1126ac",
+   "0ea7d0c7a21a1cbdd237",
+   "58960dfa0744d43c7171",
+   "c32243cf3c7486ad3f65",
+   "de0112df7f53179f7a13"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Device_createStartQueue",
+  "regions": [
+   [
+    805337456,
+    512
+   ],
+   [
+    805338480,
+    512
+   ],
+   [
+    805339504,
+    512
+   ],
+   [
+    805340528,
+    512
+   ],
+   [
+    805341552,
+    512
+   ],
+   [
+    805342576,
+    512
+   ],
+   [
+    805343600,
+    512
+   ],
+   [
+    805344624,
+    512
+   ],
+   [
+    805345648,
+    512
+   ],
+   [
+    805346672,
+    512
+   ],
+   [
+    805347696,
+    512
+   ],
+   [
+    805348720,
+    512
+   ],
+   [
+    805336944,
+    512
+   ],
+   [
+    805337968,
+    512
+   ],
+   [
+    805338992,
+    512
+   ],
+   [
+    805340016,
+    512
+   ],
+   [
+    805341040,
+    512
+   ],
+   [
+    805342064,
+    512
+   ],
+   [
+    805343088,
+    512
+   ],
+   [
+    805344112,
+    512
+   ],
+   [
+    805345136,
+    512
+   ],
+   [
+    805346160,
+    512
+   ],
+   [
+    805347184,
+    512
+   ],
+   [
+    805348208,
+    512
+   ],
+   [
+    805335376,
+    1056
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Device_lazyCreateSound": {
+  "digests": [
+   "604dfb5dcb57d508d05e",
+   "e3accf541e886a39354a",
+   "70c111c504492beb903f",
+   "afd4afc9d9db23aebe59",
+   "f2107cb06d2cc665a0a7",
+   "3a07d1c99c29eb484b2c",
+   "44a11b10af4e725cb1a1",
+   "7e830dc4d0cd12a59d26",
+   "ee2f457a7f3aeddd3b28",
+   "84a063d149831f8e10c6",
+   "97ee2f5c64d12ec199f8",
+   "446bf325c47d446b33d3"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Device_lazyCreateSound",
+  "regions": [
+   [
+    805337456,
+    512
+   ],
+   [
+    805338480,
+    512
+   ],
+   [
+    805339504,
+    512
+   ],
+   [
+    805340528,
+    512
+   ],
+   [
+    805341552,
+    512
+   ],
+   [
+    805342576,
+    512
+   ],
+   [
+    805343600,
+    512
+   ],
+   [
+    805344624,
+    512
+   ],
+   [
+    805345648,
+    512
+   ],
+   [
+    805346672,
+    512
+   ],
+   [
+    805347696,
+    512
+   ],
+   [
+    805348720,
+    512
+   ],
+   [
+    805336944,
+    512
+   ],
+   [
+    805337968,
+    512
+   ],
+   [
+    805338992,
+    512
+   ],
+   [
+    805340016,
+    512
+   ],
+   [
+    805341040,
+    512
+   ],
+   [
+    805342064,
+    512
+   ],
+   [
+    805343088,
+    512
+   ],
+   [
+    805344112,
+    512
+   ],
+   [
+    805345136,
+    512
+   ],
+   [
+    805346160,
+    512
+   ],
+   [
+    805347184,
+    512
+   ],
+   [
+    805348208,
+    512
+   ],
+   [
+    805335376,
+    1056
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Device_prepareSoundFlags": {
+  "digests": [
+   "5b609c09d534a7604b08",
+   "f0c3887cabd8a993e82f",
+   "4f5be22fe99815ff455a",
+   "0735ced08a55be09ed89",
+   "38f80b9ea690c1fa1d6d",
+   "8f286449b613367cefbf",
+   "b02bfbfdce362278df09",
+   "393868a341ab38e8d6a5",
+   "73245f8313b03548b7a9",
+   "34228002234ffb430d1a",
+   "d78aeba68ac3c8bd1bdd",
+   "1e6160f1eaee93f617a5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Device_prepareSoundFlags",
+  "regions": [
+   [
+    805337456,
+    512
+   ],
+   [
+    805338480,
+    512
+   ],
+   [
+    805339504,
+    512
+   ],
+   [
+    805340528,
+    512
+   ],
+   [
+    805341552,
+    512
+   ],
+   [
+    805342576,
+    512
+   ],
+   [
+    805343600,
+    512
+   ],
+   [
+    805344624,
+    512
+   ],
+   [
+    805345648,
+    512
+   ],
+   [
+    805346672,
+    512
+   ],
+   [
+    805347696,
+    512
+   ],
+   [
+    805348720,
+    512
+   ],
+   [
+    805336944,
+    512
+   ],
+   [
+    805337968,
+    512
+   ],
+   [
+    805338992,
+    512
+   ],
+   [
+    805340016,
+    512
+   ],
+   [
+    805341040,
+    512
+   ],
+   [
+    805342064,
+    512
+   ],
+   [
+    805343088,
+    512
+   ],
+   [
+    805344112,
+    512
+   ],
+   [
+    805345136,
+    512
+   ],
+   [
+    805346160,
+    512
+   ],
+   [
+    805347184,
+    512
+   ],
+   [
+    805348208,
+    512
+   ],
+   [
+    805335376,
+    1056
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::create_device_busy": {
+  "digests": [
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df",
+   "e09518421ad753b8b0df"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::create_device",
+  "regions": [
+   [
+    805336672,
+    8
+   ],
+   [
+    805336688,
+    8
+   ],
+   [
+    805336704,
+    8
+   ],
+   [
+    805336720,
+    8
+   ],
+   [
+    805336736,
+    8
+   ],
+   [
+    805336752,
+    8
+   ],
+   [
+    805336768,
+    8
+   ],
+   [
+    805336784,
+    8
+   ],
+   [
+    805336800,
+    8
+   ],
+   [
+    805336816,
+    8
+   ],
+   [
+    805336832,
+    8
+   ],
+   [
+    805336848,
+    8
+   ],
+   [
+    872599552,
+    16528
+   ],
+   [
+    80431644,
+    4
+   ],
+   [
+    805335376,
+    256
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::create_device_fail": {
+  "digests": [
+   "d3de5390c0a75ace9531",
+   "c791afecf79633504a07",
+   "dd6184d11d5f88d09244",
+   "d8d45908ffaee457cdf5",
+   "3013dd2b891f87745e02",
+   "8d292fe24fad0548a522",
+   "70da2a0d885240bf32ae",
+   "9c335c343ec219502c03",
+   "a877e96073d71de215e1",
+   "51d76ba8c7ef32df5998",
+   "84031806875f7d470e6b",
+   "47d0ce5bed8e0be04d59"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::create_device",
+  "regions": [
+   [
+    805336672,
+    8
+   ],
+   [
+    805336688,
+    8
+   ],
+   [
+    805336704,
+    8
+   ],
+   [
+    805336720,
+    8
+   ],
+   [
+    805336736,
+    8
+   ],
+   [
+    805336752,
+    8
+   ],
+   [
+    805336768,
+    8
+   ],
+   [
+    805336784,
+    8
+   ],
+   [
+    805336800,
+    8
+   ],
+   [
+    805336816,
+    8
+   ],
+   [
+    805336832,
+    8
+   ],
+   [
+    805336848,
+    8
+   ],
+   [
+    872599552,
+    16528
+   ],
+   [
+    80431644,
+    4
+   ],
+   [
+    805335376,
+    256
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::create_device_null": {
+  "digests": [
+   "2fa8e34b7fc39564d02e",
+   "846f00febcbae73cfd0f",
+   "e8a394a214688603ebd0",
+   "9c962eae0b11d250da31",
+   "49b128a89fc7281215aa",
+   "6fd411e27a1800e048f2",
+   "2d256e59ecbaab8a8e63",
+   "455312a165e1c306cb69",
+   "9d9b8c7445fbc1f68a7c",
+   "a5cc04e12a890e9b8e82",
+   "aacc4da6cd2ac2a125a2",
+   "5ebbec629d34d3277792"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::create_device",
+  "regions": [
+   [
+    805336672,
+    8
+   ],
+   [
+    805336688,
+    8
+   ],
+   [
+    805336704,
+    8
+   ],
+   [
+    805336720,
+    8
+   ],
+   [
+    805336736,
+    8
+   ],
+   [
+    805336752,
+    8
+   ],
+   [
+    805336768,
+    8
+   ],
+   [
+    805336784,
+    8
+   ],
+   [
+    805336800,
+    8
+   ],
+   [
+    805336816,
+    8
+   ],
+   [
+    805336832,
+    8
+   ],
+   [
+    805336848,
+    8
+   ],
+   [
+    872599552,
+    16528
+   ],
+   [
+    80431644,
+    4
+   ],
+   [
+    805335376,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v0": {
+  "digests": [
+   "5d0007f8b8f3eea77048"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v1": {
+  "digests": [
+   "7e8ca57959d07c25d702"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v2": {
+  "digests": [
+   "0c1f6b1d5ac022a507e1"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v3": {
+  "digests": [
+   "b00189087c5b80d7a7b7"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v4": {
+  "digests": [
+   "d880754b6c06c2e42290"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v5": {
+  "digests": [
+   "68b6ee8b53ecff4517aa"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v6": {
+  "digests": [
+   "1c070108647a300f3bf5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v7": {
+  "digests": [
+   "0ad2c0d9de0e3a798768"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v8": {
+  "digests": [
+   "9a56f8ea9f4557df8afb"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "Dll_Midi_Device::delete_device_v9": {
+  "digests": [
+   "471ee7c7994b566ca846"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.Dll_Midi_Device::delete_device",
+  "regions": [
+   [
+    80431644,
+    4
+   ],
+   [
+    805337712,
+    512
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "atexitDtor_100b49b8": {
+  "digests": [
+   "dc8b9499e4fb0765f8a5",
+   "0aa48e3c23f49ac332d1",
+   "44aaf89c7d8fbb332286",
+   "1fb7ccba9251642de7fc",
+   "4ada92f35408048bda1e",
+   "049ca19eedd6369c88bd",
+   "a50ccd691832137d2361",
+   "47cfde3c385bfa7097fa",
+   "802a53d33e106a6966ed",
+   "e5a4ec8c3cb989981eb9",
+   "9550ef65bba1a7d5a8ee",
+   "665b39e2667ab2d0e726"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       65552,
+       4294967292,
+       4198400
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       131104,
+       4294967292,
+       4206592
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       2147418112,
+       4294967292,
+       4294967295
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       4294967292,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       262208,
+       4294967292,
+       305419896
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       327760,
+       4294967292,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       393312,
+       4294967292,
+       4214784
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   }
+  ],
+  "name": "snd.atexitDtor_100b49b8",
+  "regions": [
+   [
+    80431544,
+    16
+   ],
+   [
+    805335376,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "ctrlScalarDeletingDtor": {
+  "digests": [
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "d8f9b72c27783805cb41",
+   "cbfea227da8296e2a45b",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "310c2fa92e3d9ffb6b48",
+   "01208c06d639b930578a",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "a284141a83f5a3f13dc1",
+   "c3dce8a31db00510c970",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "0ee0e2febd50889cdda0",
+   "6e9fda8214b1c4b1a14d",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f",
+   "ea8bbe11f79f7bccc7c0",
+   "a976d599b60b2642385f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.ctrlScalarDeletingDtor",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    64
+   ],
+   [
+    805336208,
+    64
+   ],
+   [
+    805336272,
+    64
+   ],
+   [
+    805336336,
+    64
+   ],
+   [
+    805336400,
+    64
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805336528,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 50,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "delete_sound@none": {
+  "digests": [
+   "f2f70e4900442f23c486",
+   "c60bfb720f472a07f68f",
+   "5ec159b38979772cf84c",
+   "7ecd48203ae289be3113",
+   "00a72141412479827b8e",
+   "05a305063ea033e0c253",
+   "d543517b7dbf193dcbac",
+   "36cee8a0257da1c4d746",
+   "e853bdf75148ab561581",
+   "7db364874e4f0f46b7dd"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.delete_sound",
+  "regions": [
+   [
+    805335376,
+    2048
+   ],
+   [
+    805337424,
+    528
+   ],
+   [
+    805338992,
+    96
+   ],
+   [
+    805339088,
+    512
+   ],
+   [
+    872599552,
+    16480
+   ],
+   [
+    805339600,
+    2400
+   ],
+   [
+    805342256,
+    2400
+   ],
+   [
+    805350832,
+    2400
+   ],
+   [
+    805353488,
+    2400
+   ],
+   [
+    805356144,
+    2400
+   ],
+   [
+    805359568,
+    2400
+   ],
+   [
+    805362992,
+    2400
+   ],
+   [
+    805365648,
+    2400
+   ],
+   [
+    805368304,
+    2400
+   ],
+   [
+    805358800,
+    512
+   ],
+   [
+    805362224,
+    512
+   ],
+   [
+    805350288,
+    544
+   ],
+   [
+    805344976,
+    544
+   ],
+   [
+    805345648,
+    544
+   ],
+   [
+    805346320,
+    544
+   ],
+   [
+    805346992,
+    544
+   ],
+   [
+    805347664,
+    544
+   ],
+   [
+    805348336,
+    544
+   ],
+   [
+    805349008,
+    544
+   ],
+   [
+    805349680,
+    544
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "delete_sound@notimer": {
+  "digests": [
+   "f2f70e4900442f23c486",
+   "c60bfb720f472a07f68f",
+   "5ec159b38979772cf84c",
+   "7ecd48203ae289be3113",
+   "00a72141412479827b8e",
+   "ec4fe5397c4ebd1b54af",
+   "d543517b7dbf193dcbac",
+   "36cee8a0257da1c4d746",
+   "e853bdf75148ab561581",
+   "7db364874e4f0f46b7dd"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.delete_sound",
+  "regions": [
+   [
+    805335376,
+    2048
+   ],
+   [
+    805337424,
+    528
+   ],
+   [
+    805338992,
+    96
+   ],
+   [
+    805339088,
+    512
+   ],
+   [
+    872599552,
+    16480
+   ],
+   [
+    805339600,
+    2400
+   ],
+   [
+    805342256,
+    2400
+   ],
+   [
+    805350832,
+    2400
+   ],
+   [
+    805353488,
+    2400
+   ],
+   [
+    805356144,
+    2400
+   ],
+   [
+    805359568,
+    2400
+   ],
+   [
+    805362992,
+    2400
+   ],
+   [
+    805365648,
+    2400
+   ],
+   [
+    805368304,
+    2400
+   ],
+   [
+    805358800,
+    512
+   ],
+   [
+    805362224,
+    512
+   ],
+   [
+    805350288,
+    544
+   ],
+   [
+    805344976,
+    544
+   ],
+   [
+    805345648,
+    544
+   ],
+   [
+    805346320,
+    544
+   ],
+   [
+    805346992,
+    544
+   ],
+   [
+    805347664,
+    544
+   ],
+   [
+    805348336,
+    544
+   ],
+   [
+    805349008,
+    544
+   ],
+   [
+    805349680,
+    544
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "delete_sound@ready": {
+  "digests": [
+   "520530ca261a66e4a252",
+   "c1351c69ff52feb315d1",
+   "f94a819bf07cb75363da",
+   "f0021a590f76e63d313b",
+   "a6c567c8d6f2685a18de",
+   "e597610b1941e77eac0b",
+   "42616adabe92ec11df89",
+   "41e82cc76c9aaf3a84c9",
+   "239c805b30dd8e5a1bcc",
+   "a5c1c7633c5558baf1b5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.delete_sound",
+  "regions": [
+   [
+    805335376,
+    2048
+   ],
+   [
+    805337424,
+    528
+   ],
+   [
+    805338992,
+    96
+   ],
+   [
+    805339088,
+    512
+   ],
+   [
+    872599552,
+    16480
+   ],
+   [
+    805339600,
+    2400
+   ],
+   [
+    805342256,
+    2400
+   ],
+   [
+    805350832,
+    2400
+   ],
+   [
+    805353488,
+    2400
+   ],
+   [
+    805356144,
+    2400
+   ],
+   [
+    805359568,
+    2400
+   ],
+   [
+    805362992,
+    2400
+   ],
+   [
+    805365648,
+    2400
+   ],
+   [
+    805368304,
+    2400
+   ],
+   [
+    805358800,
+    512
+   ],
+   [
+    805362224,
+    512
+   ],
+   [
+    805350288,
+    544
+   ],
+   [
+    805344976,
+    544
+   ],
+   [
+    805345648,
+    544
+   ],
+   [
+    805346320,
+    544
+   ],
+   [
+    805346992,
+    544
+   ],
+   [
+    805347664,
+    544
+   ],
+   [
+    805348336,
+    544
+   ],
+   [
+    805349008,
+    544
+   ],
+   [
+    805349680,
+    544
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 10,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "destroySoundWindowObj": {
+  "digests": [
+   "20804f20d463f7bcec84",
+   "966e5e748cd3bbcf5c81",
+   "985358117a309c58874f",
+   "cac19b4677c7e3cdb158",
+   "61e0776dc7e4f3a2aaeb",
+   "0debb7a098d9eb594236",
+   "9c11521419bd0af16043",
+   "44506c263992edbce26a",
+   "5258839cc731d34fa02e",
+   "003f572a54fbf6b71bd0",
+   "d8bf882f386e0fb83a1b",
+   "0f2100dc36f87666873d",
+   "bec7f9134257db5ef85b",
+   "06566a39dff50f3cd869",
+   "4bc3e5e730eb3858027d",
+   "42710aa8c1fa76ee6edd",
+   "c7b3980d56f2bc899f23",
+   "4900179268645403ca60",
+   "9c11521419bd0af16043",
+   "e68d9c73dd3018655a9d",
+   "3df267bb9589cf6913be",
+   "24ca9f6447cbb68cec07",
+   "85c4a3022736b9d86c4c",
+   "0f2100dc36f87666873d"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       4294967292,
+       181421124
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       8738,
+       4294967292,
+       181425493
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       17476,
+       4294967292,
+       181434231
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       4294967292,
+       181438600
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       21845,
+       4294967292,
+       181442969
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       26214,
+       4294967292,
+       181403648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1,
+       4294967292,
+       181451707
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       4294967292,
+       181421124
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       8738,
+       4294967292,
+       181425493
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       17476,
+       4294967292,
+       181434231
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       4294967292,
+       181438600
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       21845,
+       4294967292,
+       181442969
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       26214,
+       4294967292,
+       181403648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1,
+       4294967292,
+       181451707
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.destroySoundWindowObj",
+  "regions": [
+   [
+    805335376,
+    32
+   ],
+   [
+    805335408,
+    32
+   ],
+   [
+    805335440,
+    32
+   ],
+   [
+    805335472,
+    32
+   ],
+   [
+    805335504,
+    32
+   ],
+   [
+    805335536,
+    32
+   ],
+   [
+    805335568,
+    32
+   ],
+   [
+    805335600,
+    32
+   ],
+   [
+    805335632,
+    32
+   ],
+   [
+    805335664,
+    32
+   ],
+   [
+    805335696,
+    32
+   ],
+   [
+    805335728,
+    32
+   ],
+   [
+    805335760,
+    1024
+   ],
+   [
+    805336912,
+    1028
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 24,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4a68_fail": {
+  "digests": [
+   "0898f240b4824f038c0c"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4a68",
+  "regions": [
+   [
+    80431720,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4a68_ok": {
+  "digests": [
+   "1a4f49e3e73fcf22c005"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4a68",
+  "regions": [
+   [
+    80431720,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4b50_fail": {
+  "digests": [
+   "3d18d9f35b449c9121c8"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4b50",
+  "regions": [
+   [
+    80431952,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4b50_ok": {
+  "digests": [
+   "316dbd11debf07e9449d"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4b50",
+  "regions": [
+   [
+    80431952,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4c38_fail": {
+  "digests": [
+   "6f175ca80a1348d4f56f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4c38",
+  "regions": [
+   [
+    80432184,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4c38_ok": {
+  "digests": [
+   "e150b7efa3bad01bd948"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4c38",
+  "regions": [
+   [
+    80432184,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4d20_fail": {
+  "digests": [
+   "278a0f01e89bd5eb2839"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4d20",
+  "regions": [
+   [
+    80432416,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4d20_ok": {
+  "digests": [
+   "48c2972619f862657604"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4d20",
+  "regions": [
+   [
+    80432416,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4e08_fail": {
+  "digests": [
+   "8ac9be40663cc4ccd265"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4e08",
+  "regions": [
+   [
+    80432648,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_ctrl100b4e08_ok": {
+  "digests": [
+   "36caa5c07995846889e9"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_ctrl100b4e08",
+  "regions": [
+   [
+    80432648,
+    232
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_soundWindowObj100b49b8_fail": {
+  "digests": [
+   "8494e619c47d4f03fa53"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_soundWindowObj100b49b8",
+  "regions": [
+   [
+    80431544,
+    16
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "dynInit_soundWindowObj100b49b8_ok": {
+  "digests": [
+   "59f8b3dc1196d5c595df"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.dynInit_soundWindowObj100b49b8",
+  "regions": [
+   [
+    80431544,
+    16
+   ],
+   [
+    805335376,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "get_sound_version@": {
+  "digests": [
+   "11fe1040fc4117f2acb4"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.get_sound_version",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805336144,
+    1028
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "initCtrlVtable": {
+  "digests": [
+   "795fed158d02e79e6c85",
+   "f96989db4c2208cfb891",
+   "a6a2cda57f564c6585a8",
+   "caf90fecd23e898e04ca",
+   "d6c5a843d49dcac385be",
+   "76cbbca6a133eb5527fa",
+   "51496a9834cf179102e6",
+   "30a342720d847e6fe8bb",
+   "656fcdcf265116cd53e0",
+   "f615dab9319ed896119b",
+   "8f661bcec29bc522920e",
+   "405ffd67316bc2e98bd5"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.initCtrlVtable",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "init_sound_timer": {
+  "digests": [
+   "e4ac041ef198ba3c4da0",
+   "0d2b7256f116b1deca23",
+   "81358cc1d92ac0a4aa54",
+   "e38dddc0e4da7f08392b",
+   "1846d1a8626e68fbab92",
+   "5dcfd222d0fc48cd3f41",
+   "2da7fbcf1e309ba5e2c9",
+   "474e0fde49f9ff58397e",
+   "267f50b80c1072f38ce5",
+   "8735169d55d525cfa7cd",
+   "49f959eb92cefdbc04bf",
+   "72886e2942a1ee9cd67d"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.init_sound_timer",
+  "regions": [
+   [
+    80431576,
+    4
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805337456,
+    64
+   ],
+   [
+    805337520,
+    528
+   ],
+   [
+    805338048,
+    1028
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "init_sound_timer_alt": {
+  "digests": [
+   "8345f8c660369dceaf50",
+   "0d2b7256f116b1deca23",
+   "5951925f0fa686240d9c",
+   "e38dddc0e4da7f08392b",
+   "85a487ae0cc90f286d0a",
+   "5dcfd222d0fc48cd3f41",
+   "61004833ba9ee9b0f5f8",
+   "474e0fde49f9ff58397e",
+   "d26990e304f7b0e1aa91",
+   "8735169d55d525cfa7cd",
+   "a51af94427c95db7630d",
+   "72886e2942a1ee9cd67d"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.init_sound_timer",
+  "regions": [
+   [
+    80431576,
+    4
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805337456,
+    64
+   ],
+   [
+    805337520,
+    528
+   ],
+   [
+    805338048,
+    1028
+   ],
+   [
+    805335376,
+    2080
+   ],
+   [
+    80431528,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postMidiNotification@eng": {
+  "digests": [
+   "5d80e15039e970987302",
+   "e80ef82dc9b65a98dcb7",
+   "9d92cccb3e86198282f4",
+   "e80ef82dc9b65a98dcb7",
+   "8f13e0810ea703cfcff3",
+   "e80ef82dc9b65a98dcb7",
+   "613295f8e2ada1c7f1f5",
+   "5f6b2df6797a9f0c870b"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       24576,
+       2028,
+       0,
+       805335376
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       24578,
+       2028,
+       0,
+       805336464
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       24580,
+       2028,
+       0,
+       805337552
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       24582,
+       2028,
+       0,
+       805338640
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       24583,
+       2028,
+       0,
+       805339184
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.postMidiNotification",
+  "regions": [
+   [
+    805335376,
+    544
+   ],
+   [
+    805335920,
+    544
+   ],
+   [
+    805336464,
+    544
+   ],
+   [
+    805337008,
+    544
+   ],
+   [
+    805337552,
+    544
+   ],
+   [
+    805338096,
+    544
+   ],
+   [
+    805338640,
+    544
+   ],
+   [
+    805339184,
+    544
+   ],
+   [
+    805340240,
+    1024
+   ],
+   [
+    80433208,
+    48
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 8,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postMidiNotification@eng0": {
+  "digests": [
+   "6bbbcec60b4865e0127d",
+   "e80ef82dc9b65a98dcb7",
+   "e80ef82dc9b65a98dcb7",
+   "e80ef82dc9b65a98dcb7",
+   "64a5fe59b92fa7a4de15",
+   "e80ef82dc9b65a98dcb7",
+   "490ec9d3be380317cff4",
+   "ffda34082a5f72e49d54"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   }
+  ],
+  "name": "snd.postMidiNotification",
+  "regions": [
+   [
+    805335376,
+    544
+   ],
+   [
+    805335920,
+    544
+   ],
+   [
+    805336464,
+    544
+   ],
+   [
+    805337008,
+    544
+   ],
+   [
+    805337552,
+    544
+   ],
+   [
+    805338096,
+    544
+   ],
+   [
+    805338640,
+    544
+   ],
+   [
+    805339184,
+    544
+   ],
+   [
+    805340240,
+    1024
+   ],
+   [
+    80433208,
+    48
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 8,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postMidiNotification@noeng": {
+  "digests": [
+   "6bbbcec60b4865e0127d",
+   "e80ef82dc9b65a98dcb7",
+   "e80ef82dc9b65a98dcb7",
+   "e80ef82dc9b65a98dcb7",
+   "64a5fe59b92fa7a4de15",
+   "e80ef82dc9b65a98dcb7",
+   "490ec9d3be380317cff4",
+   "ffda34082a5f72e49d54"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   }
+  ],
+  "name": "snd.postMidiNotification",
+  "regions": [
+   [
+    805335376,
+    544
+   ],
+   [
+    805335920,
+    544
+   ],
+   [
+    805336464,
+    544
+   ],
+   [
+    805337008,
+    544
+   ],
+   [
+    805337552,
+    544
+   ],
+   [
+    805338096,
+    544
+   ],
+   [
+    805338640,
+    544
+   ],
+   [
+    805339184,
+    544
+   ],
+   [
+    805339728,
+    1024
+   ],
+   [
+    80433208,
+    48
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 8,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postMidiNotification@noeng1": {
+  "digests": [
+   "b17ea24d48d74979d194",
+   "70a97ebbb98e2bcee833",
+   "c6a6a183fe127b90ea59",
+   "70a97ebbb98e2bcee833",
+   "28d91787b3366eed6511",
+   "70a97ebbb98e2bcee833",
+   "f3267b98cf1f6627d769",
+   "e2af7a95b29a981b644f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      1,
+      [
+       31324,
+       2028,
+       0,
+       805335376
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      1,
+      [
+       31324,
+       2028,
+       0,
+       805336464
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      1,
+      [
+       31324,
+       2028,
+       0,
+       805337552
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      1,
+      [
+       31324,
+       2028,
+       0,
+       805338640
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      1,
+      [
+       31324,
+       2028,
+       0,
+       805339184
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.postMidiNotification",
+  "regions": [
+   [
+    805335376,
+    544
+   ],
+   [
+    805335920,
+    544
+   ],
+   [
+    805336464,
+    544
+   ],
+   [
+    805337008,
+    544
+   ],
+   [
+    805337552,
+    544
+   ],
+   [
+    805338096,
+    544
+   ],
+   [
+    805338640,
+    544
+   ],
+   [
+    805339184,
+    544
+   ],
+   [
+    805339728,
+    1024
+   ],
+   [
+    80433208,
+    48
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 8,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postNotification": {
+  "digests": [
+   "75f7fd411a4c9b912e87",
+   "3054f9001979b09a6bb8",
+   "fc907a4dfcfddf47eb65",
+   "1d1110edd43f9a8ee2e6",
+   "2313d00179cd4d4073ea",
+   "ec2cb3d3b04e0c259224",
+   "d5dc634612634a6cbde0",
+   "1d1110edd43f9a8ee2e6",
+   "2313d00179cd4d4073ea",
+   "ec2cb3d3b04e0c259224",
+   "d5dc634612634a6cbde0",
+   "1d1110edd43f9a8ee2e6",
+   "75f7fd411a4c9b912e87",
+   "3054f9001979b09a6bb8",
+   "fc907a4dfcfddf47eb65",
+   "1d1110edd43f9a8ee2e6"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20481,
+       2030,
+       0,
+       805338336
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20482,
+       2030,
+       0,
+       805338336
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       2030,
+       0,
+       805338336
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20481,
+       2030,
+       0,
+       805338336
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20482,
+       2030,
+       0,
+       805338336
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       2030,
+       0,
+       805338336
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   }
+  ],
+  "name": "snd.postNotification",
+  "regions": [
+   [
+    805335376,
+    448
+   ],
+   [
+    805335824,
+    448
+   ],
+   [
+    805336272,
+    448
+   ],
+   [
+    805336720,
+    448
+   ],
+   [
+    872599552,
+    5184
+   ],
+   [
+    872611840,
+    5184
+   ],
+   [
+    872624128,
+    5184
+   ],
+   [
+    805338320,
+    272
+   ],
+   [
+    805337168,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 16,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postSoundThreadMessage_ok": {
+  "digests": [
+   "f970868b405fecf8cb4a",
+   "9e517fd1d3ac54b0a203",
+   "65e328b6da677db5969b",
+   "65e328b6da677db5969b",
+   "ab1cefc4f973d4bcda4a",
+   "066b0b2781d04f460de0",
+   "65e328b6da677db5969b",
+   "65e328b6da677db5969b",
+   "6160fd49cc42477a0bb0",
+   "0bce9c16fcf47c2efe80",
+   "962d3d48d5735b5dea97",
+   "b12ba3e3fdc6f1265dc3"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.postSoundThreadMessage",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postSoundThreadMessage_r1": {
+  "digests": [
+   "d1924fb7740fa04bd5f3",
+   "b8ef127a68fa60748110",
+   "65e328b6da677db5969b",
+   "65e328b6da677db5969b",
+   "88ed5e9fe8fe5b421368",
+   "9123d04b6260f32c2a11",
+   "65e328b6da677db5969b",
+   "65e328b6da677db5969b",
+   "78cea7809b177c0b205d",
+   "7a6849822f9055a4f23a",
+   "8755386872d246e7439a",
+   "5ef33f3c2e536acf801f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.postSoundThreadMessage",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "postSoundThreadMessage_r3": {
+  "digests": [
+   "b01dd32ec2164192e7f8",
+   "569db5fdada3d06ac545",
+   "65e328b6da677db5969b",
+   "65e328b6da677db5969b",
+   "788cda4e1136edbd3009",
+   "d4506a0ba80a4d1376a2",
+   "65e328b6da677db5969b",
+   "65e328b6da677db5969b",
+   "a68733f4b8c4717066e0",
+   "342c11470904415f05b8",
+   "522b9d3733b2f323161c",
+   "f1f7f7e469f544419018"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4369,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       13107,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       0,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       1024,
+       4660,
+       22136
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ],
+     [
+      1,
+      [
+       80100968
+      ]
+     ],
+     [
+      2,
+      [
+       100
+      ]
+     ],
+     [
+      0,
+      [
+       4294967295,
+       4294967295,
+       0,
+       2147483648
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.postSoundThreadMessage",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "pumpWaveMessages": {
+  "digests": [
+   "cfedf6e3ebc23c7f0599",
+   "8cf5d5a54201259967b0",
+   "1460d906e4bb2c29d78c",
+   "ca5aa34d08befeb8f46f",
+   "42d8a64e6f194bf02842",
+   "bdf330e68c524527a86a",
+   "7ae092bd0bc2ad3c58bc",
+   "66b9e5d402bd4b3d603c",
+   "4a13598d11d7573572fa",
+   "0f06f65c651d842aa6f2",
+   "35cacfe1befe355f6827",
+   "69ecf929eb53fac1cdba"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20480,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20497,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20497,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20514,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20514,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20514,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20531,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20531,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20531,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20531,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20544,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20561,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20561,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20578,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20578,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20594,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20595,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20611,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20611,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20611,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20608,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20625,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20625,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20642,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20642,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20642,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       20659,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20659,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20659,
+       2024,
+       2031,
+       1
+      ]
+     ],
+     [
+      0,
+      [
+       20659,
+       2024,
+       2031,
+       1
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.pumpWaveMessages",
+  "regions": [
+   [
+    805335888,
+    32
+   ],
+   [
+    805335920,
+    32
+   ],
+   [
+    805335952,
+    32
+   ],
+   [
+    805335984,
+    32
+   ],
+   [
+    805336016,
+    32
+   ],
+   [
+    805336048,
+    32
+   ],
+   [
+    805336080,
+    32
+   ],
+   [
+    805336112,
+    32
+   ],
+   [
+    805336144,
+    32
+   ],
+   [
+    805336176,
+    32
+   ],
+   [
+    805336208,
+    32
+   ],
+   [
+    805336240,
+    32
+   ],
+   [
+    805335376,
+    512
+   ],
+   [
+    805336272,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "registerTimerClient_bp61": {
+  "digests": [
+   "91efa8ed9fd1faece04a",
+   "8d17478a864f02f382e0",
+   "6db516f6e20bf57698a9",
+   "f6b6b5c5e5486080c31b",
+   "51aaa725e8f6d37b5234",
+   "47d423c537ec2fde989d"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.registerTimerClient",
+  "regions": [
+   [
+    805335376,
+    128
+   ],
+   [
+    805335504,
+    128
+   ],
+   [
+    805335632,
+    128
+   ],
+   [
+    805335760,
+    128
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    272
+   ],
+   [
+    80431528,
+    4
+   ],
+   [
+    805337712,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "registerTimerClient_busy": {
+  "digests": [
+   "4d97f43a2572bdba46db",
+   "cd73e48d821187ee8f18",
+   "8d563b89c7ad908a315e",
+   "db78198b15d22f2ba4d8",
+   "a1ae8e2b5a322f3ad843",
+   "01bcfb94c15b9ab69d46"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.registerTimerClient",
+  "regions": [
+   [
+    805335376,
+    128
+   ],
+   [
+    805335504,
+    128
+   ],
+   [
+    805335632,
+    128
+   ],
+   [
+    805335760,
+    128
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    272
+   ],
+   [
+    80431528,
+    4
+   ],
+   [
+    805337712,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "registerTimerClient_null": {
+  "digests": [
+   "c441c8d5010faa590db3",
+   "c441c8d5010faa590db3",
+   "c441c8d5010faa590db3",
+   "c441c8d5010faa590db3",
+   "c441c8d5010faa590db3",
+   "c441c8d5010faa590db3"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   }
+  ],
+  "name": "snd.registerTimerClient",
+  "regions": [
+   [
+    805335376,
+    128
+   ],
+   [
+    805335504,
+    128
+   ],
+   [
+    805335632,
+    128
+   ],
+   [
+    805335760,
+    128
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    272
+   ],
+   [
+    80431528,
+    4
+   ],
+   [
+    805337712,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 6,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "registerTimerClient_ok": {
+  "digests": [
+   "26327b004463a0a7cb3d",
+   "8cb4a51fa45b29f8eecd",
+   "75f4add08b491b086219",
+   "539c328b1135cf24f1d8",
+   "5f273233c575656c9280",
+   "ef6b0d52020ecd2cc050"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.registerTimerClient",
+  "regions": [
+   [
+    805335376,
+    128
+   ],
+   [
+    805335504,
+    128
+   ],
+   [
+    805335632,
+    128
+   ],
+   [
+    805335760,
+    128
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    272
+   ],
+   [
+    80431528,
+    4
+   ],
+   [
+    805337712,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "registerTimerClient_se61": {
+  "digests": [
+   "f56c25e86099316d1d8f",
+   "e7288663c25b6c767d4f",
+   "f4b422e443a27a27823a",
+   "0a882014e794fc62eddc",
+   "55824ad5f0e499508a1d",
+   "5f8a1837480357d9af5e"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       80431504
+      ]
+     ],
+     [
+      1,
+      [
+       80431504
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       10,
+       1,
+       79696522,
+       805336144,
+       1
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.registerTimerClient",
+  "regions": [
+   [
+    805335376,
+    128
+   ],
+   [
+    805335504,
+    128
+   ],
+   [
+    805335632,
+    128
+   ],
+   [
+    805335760,
+    128
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    272
+   ],
+   [
+    80431528,
+    4
+   ],
+   [
+    805337712,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "release_sound_clr": {
+  "digests": [
+   "9359a1d5aad7c83664fe"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.release_sound",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805336144,
+    1028
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "release_sound_null": {
+  "digests": [
+   "0907dd21b4a307585f95"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.release_sound",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805336144,
+    1028
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "release_sound_swap": {
+  "digests": [
+   "f2675cf44b667348d7b3"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.release_sound",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805336144,
+    1028
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "release_sound_tmr": {
+  "digests": [
+   "4158da891475bc1f197f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.release_sound",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805336144,
+    1028
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundThreadPump_drop": {
+  "digests": [
+   "8a60c0eca06be0952627"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      []
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ],
+     [
+      2,
+      [
+       80433212
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       80433212
+      ]
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ],
+     [
+      2,
+      [
+       80433212
+      ]
+     ],
+     [
+      3,
+      [
+       80433212
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundThreadPump",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1024
+   ],
+   [
+    80433208,
+    44
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundThreadPump_event": {
+  "digests": [
+   "afa8fe609ee32f5b527f"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      []
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundThreadPump",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1024
+   ],
+   [
+    80433208,
+    44
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundThreadPump_flag0": {
+  "digests": [
+   "dcd8e0a73b2d01657ecc"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      []
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ],
+     [
+      2,
+      [
+       80433212
+      ]
+     ],
+     [
+      3,
+      [
+       80433212
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundThreadPump",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1024
+   ],
+   [
+    80433208,
+    44
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundThreadPump_one": {
+  "digests": [
+   "fa1dd13f2c06b12774e8"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      []
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ],
+     [
+      2,
+      [
+       80433212
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       80433212
+      ]
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundThreadPump",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1024
+   ],
+   [
+    80433208,
+    44
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundThreadPump_two": {
+  "digests": [
+   "eef223113c5b1b2fe396"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      []
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ],
+     [
+      2,
+      [
+       80433212
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       80433212
+      ]
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ],
+     [
+      2,
+      [
+       80433212
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      4,
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ],
+     [
+      3,
+      [
+       80433212
+      ]
+     ],
+     [
+      1,
+      [
+       1,
+       80433244,
+       0,
+       4294967295,
+       72
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundThreadPump",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1024
+   ],
+   [
+    80433208,
+    44
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowProc_f0": {
+  "digests": [
+   "5d134cc41ad827d96df0",
+   "109bf81a1ee1f839b8e2",
+   "0eb5b2e8a615d5bb56b9",
+   "7a712009938ad6a3ca5f",
+   "feadacf35e9293ef227e",
+   "ab130c66b219faaebe6c",
+   "e1e7d95a8d5f58d05afd",
+   "eb6a1d4ea7400027c393",
+   "adf846b9a29baf02ccf3",
+   "ef57c5d0ef900bd98012",
+   "f7e750d25b39c2c63a26",
+   "f248f47a480f4400edab",
+   "c70d791ce28c7910deae",
+   "cc9abf0a03b70814d295",
+   "c2bf91801f81aae421c3",
+   "cbeb21cd7db21c669ea0",
+   "f248f47a480f4400edab",
+   "c70d791ce28c7910deae",
+   "a48a39284f59ed9b2fe9",
+   "c2bf91801f81aae421c3",
+   "add66ebda52a5a99ca89",
+   "c2bf91801f81aae421c3",
+   "1f7543dd13eeecf8bee8",
+   "9b93970517808e93fcb9",
+   "94cebc2f529b0917783a",
+   "df97606d5b4df99736d0"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       961,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4370,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4371,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4372,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowProc",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1028
+   ],
+   [
+    805336928,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338336,
+    32
+   ],
+   [
+    805338368,
+    32
+   ],
+   [
+    805338400,
+    32
+   ],
+   [
+    805338432,
+    32
+   ],
+   [
+    805338464,
+    32
+   ],
+   [
+    805338496,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805338528,
+    64
+   ],
+   [
+    805338592,
+    64
+   ],
+   [
+    805338656,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 26,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowProc_f1": {
+  "digests": [
+   "feb55f056d7cdbe568fd",
+   "a344cbe35e412451648a",
+   "646b783a77c269fd7366",
+   "7c2ad7de22636692102c",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "faa665a7b7513a7ec7d8",
+   "35e0749e9d42befc1af8",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "c73c3e04d73fcad49619",
+   "062aabedf5a1781d655a",
+   "821772639c7d8b7bf000",
+   "9cb27a1c1e341b0d716d",
+   "3087d93918e19ae29c17",
+   "c73c3e04d73fcad49619",
+   "1a3e5fbd447e272667ee",
+   "c73c3e04d73fcad49619",
+   "70082d712514640078c3",
+   "bd815780fbf9fec40ce5",
+   "dc169f94dc9559960671",
+   "50275b45d26cd1874828"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       961,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4370,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4371,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4372,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowProc",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1028
+   ],
+   [
+    805336928,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338336,
+    32
+   ],
+   [
+    805338368,
+    32
+   ],
+   [
+    805338400,
+    32
+   ],
+   [
+    805338432,
+    32
+   ],
+   [
+    805338464,
+    32
+   ],
+   [
+    805338496,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805338528,
+    64
+   ],
+   [
+    805338592,
+    64
+   ],
+   [
+    805338656,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 26,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowProc_f2": {
+  "digests": [
+   "67100b633db70c430314",
+   "f2095713eeadd49a22d3",
+   "12dddf1d2e372062dfb5",
+   "96ac806d6c1cb77fedb1",
+   "6426cd6a79275dd24953",
+   "b74b77524e3eeb2b68fb",
+   "ae6fc114779e05a662ae",
+   "61842179972513d04022",
+   "efcd1c50242244080afa",
+   "fa54f51e095bbfd319b3",
+   "fc9b8aab07c4ac102d40",
+   "a06f25c9e32e579f65bb",
+   "749e046ef7482a8508e1",
+   "4427c35ecc2ccb0e977b",
+   "2adaee4c18611927cadc",
+   "2adaee4c18611927cadc",
+   "2adaee4c18611927cadc",
+   "2adaee4c18611927cadc",
+   "2adaee4c18611927cadc",
+   "2adaee4c18611927cadc",
+   "81d367208427bd223e93",
+   "2adaee4c18611927cadc",
+   "279574d62921a1beba1d",
+   "fbc2976287dc43d0f1f2",
+   "e9a078476bebef276a39",
+   "d0ce89356bf5ba6be3a7"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       961,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4370,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4371,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4372,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowProc",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1028
+   ],
+   [
+    805336928,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338336,
+    32
+   ],
+   [
+    805338368,
+    32
+   ],
+   [
+    805338400,
+    32
+   ],
+   [
+    805338432,
+    32
+   ],
+   [
+    805338464,
+    32
+   ],
+   [
+    805338496,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805338528,
+    64
+   ],
+   [
+    805338592,
+    64
+   ],
+   [
+    805338656,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 26,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowProc_f3": {
+  "digests": [
+   "af7c455d41310c4f57ab",
+   "abbc65763fc192e3cc2b",
+   "318e08551204a3a0239d",
+   "cbde2f976b8cc2789472",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "c245e051ab024f0aa5d5",
+   "a06b73e3fa8ec408a0ee",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "65a257e5fcfc89894c91",
+   "80ec719981287ced0d60",
+   "65a257e5fcfc89894c91",
+   "deed2fd8a89d0c99746a",
+   "0070d2ca68d4b3ea64c5",
+   "da86cacb8e2937738465",
+   "817d0962513511db8b31"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       961,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4370,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4371,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4372,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       4369,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowProc",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805335888,
+    1028
+   ],
+   [
+    805336928,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338336,
+    32
+   ],
+   [
+    805338368,
+    32
+   ],
+   [
+    805338400,
+    32
+   ],
+   [
+    805338432,
+    32
+   ],
+   [
+    805338464,
+    32
+   ],
+   [
+    805338496,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805338528,
+    64
+   ],
+   [
+    805338592,
+    64
+   ],
+   [
+    805338656,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 26,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowSubclassProc_f0": {
+  "digests": [
+   "661fac2f52b564d91662",
+   "423c098059765bbba35b",
+   "419d35141d03c57d6e5c",
+   "d0d42725c06c6223fd49",
+   "a355cdd62b0fb617ac75",
+   "d47c8002d9fa5db49108",
+   "03cb01edd833a06b4327",
+   "e04c74d62a1ee5c1ad22",
+   "c666feff82338105510b",
+   "9af63a6900dea0e7bf09",
+   "ad35f073815c46f8d377",
+   "e38f56065e05b483477c",
+   "58e4d851aca2b4a2ac87",
+   "70229f02959b3919f4a6",
+   "5b7fd80578d618460e7f",
+   "6b1e9761f2342272ef62",
+   "279ac1270af2b7bca6a5",
+   "58e4d851aca2b4a2ac87",
+   "70229f02959b3919f4a6",
+   "a74e3188b420d82260a3",
+   "6b1e9761f2342272ef62",
+   "43b4594071968010afb2",
+   "6b1e9761f2342272ef62",
+   "df5cb7d8287adb2510c6",
+   "e4794a5caf961de02553",
+   "615bd993c89e2a3615e5",
+   "f43b1366c5bfe7e5c270"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       959,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       961,
+       3,
+       4
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8739,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8740,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8741,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowSubclassProc",
+  "regions": [
+   [
+    805335376,
+    1024
+   ],
+   [
+    805336400,
+    1028
+   ],
+   [
+    805337440,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    80431556,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338848,
+    32
+   ],
+   [
+    805338880,
+    32
+   ],
+   [
+    805338912,
+    32
+   ],
+   [
+    805338944,
+    32
+   ],
+   [
+    805338976,
+    32
+   ],
+   [
+    805339008,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805339040,
+    64
+   ],
+   [
+    805339104,
+    64
+   ],
+   [
+    805339168,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 27,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowSubclassProc_f1": {
+  "digests": [
+   "9c17315bb205423ca224",
+   "372c168196da39a74d18",
+   "bd5563c25e7131ef8a73",
+   "5b07215f2f8686127bfd",
+   "aef437ade105350e148b",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "85fbcceb92d1cfa34339",
+   "7a7033a3182660d4fc4e",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "e1f7649551ec0798a983",
+   "447a796d55d741d1831a",
+   "ae9bb7c287b08bb98a39",
+   "6d7e978dc8a319b87a24",
+   "57ad7fa8c58607b860d7",
+   "e1f7649551ec0798a983",
+   "9b84e51b4c066c54a4df",
+   "e1f7649551ec0798a983",
+   "7d6d5ebec37809945dba",
+   "614941ebf722dc407e34",
+   "13c063e9f3f73fc575cc",
+   "476af605cc57a1b1555c"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       959,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       961,
+       3,
+       4
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8739,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8740,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8741,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowSubclassProc",
+  "regions": [
+   [
+    805335376,
+    1024
+   ],
+   [
+    805336400,
+    1028
+   ],
+   [
+    805337440,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    80431556,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338848,
+    32
+   ],
+   [
+    805338880,
+    32
+   ],
+   [
+    805338912,
+    32
+   ],
+   [
+    805338944,
+    32
+   ],
+   [
+    805338976,
+    32
+   ],
+   [
+    805339008,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805339040,
+    64
+   ],
+   [
+    805339104,
+    64
+   ],
+   [
+    805339168,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 27,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowSubclassProc_f2": {
+  "digests": [
+   "a7ac3c4ffb7a43b0a51b",
+   "81894b8263aa7b6ee8de",
+   "3ca1f66e5bd41a2c1dea",
+   "f94554695e6bde00b4bd",
+   "f0c828ac7244bd865584",
+   "1105f8d218adabc23dc3",
+   "ca53d95d4edb0c7eae46",
+   "1e8e9f719c6526796571",
+   "a501ff46f048243ed6c7",
+   "36dde611312c665f27ad",
+   "56351bd7eb87788a8b8f",
+   "f8f69ad2e44c624f2e35",
+   "144a95ef2838428b8323",
+   "bf991ab11bffee91da3c",
+   "a2f3f9c15b7fcf179877",
+   "9d047826cb7c6891a337",
+   "9d047826cb7c6891a337",
+   "9d047826cb7c6891a337",
+   "9d047826cb7c6891a337",
+   "9d047826cb7c6891a337",
+   "9d047826cb7c6891a337",
+   "30cd2556b7cdfd3073c4",
+   "9d047826cb7c6891a337",
+   "3c569c495c7bd33588c0",
+   "d7235550327f09a3df26",
+   "ec77c35835fe9d0bb272",
+   "865c3a5b6a138b693a71"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       959,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       961,
+       3,
+       4
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8739,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8740,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8741,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowSubclassProc",
+  "regions": [
+   [
+    805335376,
+    1024
+   ],
+   [
+    805336400,
+    1028
+   ],
+   [
+    805337440,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    80431556,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338848,
+    32
+   ],
+   [
+    805338880,
+    32
+   ],
+   [
+    805338912,
+    32
+   ],
+   [
+    805338944,
+    32
+   ],
+   [
+    805338976,
+    32
+   ],
+   [
+    805339008,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805339040,
+    64
+   ],
+   [
+    805339104,
+    64
+   ],
+   [
+    805339168,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 27,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "soundWindowSubclassProc_f3": {
+  "digests": [
+   "c69a89f2474fe462b9d2",
+   "7d353d4514b24fbb0c6b",
+   "2fa60f2e38671ca78272",
+   "6bc36d1d529653353cba",
+   "89eb1856eaa151b3acb8",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "5d7b45607b0dd373f0aa",
+   "5d6e66c53b5b49c9f4f9",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "8dd16a290a6b0745a53f",
+   "9fd26e292da4e102ca0d",
+   "8dd16a290a6b0745a53f",
+   "7e57128f1d0e58b928c1",
+   "618f6855e80df53e92f6",
+   "77c87d575d0c2ca74540",
+   "d39a58a1d84c1e140dac"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       16,
+       5,
+       6
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       960,
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       959,
+       9,
+       10
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2025,
+       1,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       961,
+       3,
+       4
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8739,
+       2029,
+       4,
+       5
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8740,
+       2032,
+       121,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2033,
+       1,
+       1
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8741,
+       4294967295,
+       2,
+       2
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       1237584813,
+       8738,
+       2024,
+       2024,
+       2024
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.soundWindowSubclassProc",
+  "regions": [
+   [
+    805335376,
+    1024
+   ],
+   [
+    805336400,
+    1028
+   ],
+   [
+    805337440,
+    1024
+   ],
+   [
+    80431548,
+    4
+   ],
+   [
+    80431556,
+    4
+   ],
+   [
+    872681472,
+    5168
+   ],
+   [
+    872693760,
+    5168
+   ],
+   [
+    872706048,
+    5168
+   ],
+   [
+    872718336,
+    5168
+   ],
+   [
+    805338848,
+    32
+   ],
+   [
+    805338880,
+    32
+   ],
+   [
+    805338912,
+    32
+   ],
+   [
+    805338944,
+    32
+   ],
+   [
+    805338976,
+    32
+   ],
+   [
+    805339008,
+    32
+   ],
+   [
+    872730624,
+    5120
+   ],
+   [
+    872742912,
+    5120
+   ],
+   [
+    805339040,
+    64
+   ],
+   [
+    805339104,
+    64
+   ],
+   [
+    805339168,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 27,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "startSignalThread": {
+  "digests": [
+   "7e81226396f61e58a37d",
+   "addee5990587daa8e0c0",
+   "8b79a0bdc03c2af81ff7",
+   "6462f59eaac1e0d0f4e5",
+   "846f0d68b4f463e2fa0a",
+   "ba9f9030adb729b7d70e",
+   "3bed68e7070900fa5a7b",
+   "c27c5c18982589c9aea7",
+   "dd74d40e6e82ebea7cc8",
+   "a2b4e622de4c0959bc90",
+   "b22af29ba7adab0737c8",
+   "5b152029603e0fd16a71"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603979776
+      ]
+     ],
+     [
+      1,
+      [
+       2113978095,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603980049
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603980322
+      ]
+     ],
+     [
+      1,
+      [
+       2113978095,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603980595
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603980868
+      ]
+     ],
+     [
+      1,
+      [
+       2113978095,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603981141
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603981414
+      ]
+     ],
+     [
+      1,
+      [
+       2113978095,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603981687
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603981960
+      ]
+     ],
+     [
+      1,
+      [
+       2113978095,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603982233
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603982506
+      ]
+     ],
+     [
+      1,
+      [
+       2113978095,
+       0
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       603982779
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.startSignalThread",
+  "regions": [
+   [
+    805336432,
+    64
+   ],
+   [
+    805336496,
+    64
+   ],
+   [
+    805336560,
+    64
+   ],
+   [
+    805336624,
+    64
+   ],
+   [
+    805336688,
+    64
+   ],
+   [
+    805336752,
+    64
+   ],
+   [
+    805336816,
+    64
+   ],
+   [
+    805336880,
+    64
+   ],
+   [
+    805336944,
+    64
+   ],
+   [
+    805337008,
+    64
+   ],
+   [
+    805337072,
+    64
+   ],
+   [
+    805337136,
+    64
+   ],
+   [
+    805337200,
+    1024
+   ],
+   [
+    805335376,
+    1056
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "stopSoundThreadFull": {
+  "digests": [
+   "2bccc5e2b129f6a9257e",
+   "e7fd0365c4b94eda8384",
+   "d563f3eff021b27cb89e",
+   "18c245cfd589af0ef6d0",
+   "e7fd0365c4b94eda8384",
+   "e7fd0365c4b94eda8384",
+   "11bba839ae7b081fbaf3",
+   "381926dc1a9b31922630",
+   "e7fd0365c4b94eda8384",
+   "7609a28e83d7c486c114",
+   "32e2c13d13913f1cd75a",
+   "812c6a8ff4727d34aeee"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "implog": [
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805335380
+      ]
+     ],
+     [
+      2,
+      [
+       4369
+      ]
+     ],
+     [
+      1,
+      [
+       805335380
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805335380
+      ]
+     ],
+     [
+      1,
+      [
+       805335380
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805335508
+      ]
+     ],
+     [
+      2,
+      [
+       13107
+      ]
+     ],
+     [
+      1,
+      [
+       805335508
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805335508
+      ]
+     ],
+     [
+      1,
+      [
+       805335508
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805335572
+      ]
+     ],
+     [
+      2,
+      [
+       17476
+      ]
+     ],
+     [
+      1,
+      [
+       805335572
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805335572
+      ]
+     ],
+     [
+      1,
+      [
+       805335572
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805335764
+      ]
+     ],
+     [
+      2,
+      [
+       0
+      ]
+     ],
+     [
+      1,
+      [
+       805335764
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805335764
+      ]
+     ],
+     [
+      1,
+      [
+       805335764
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805335828
+      ]
+     ],
+     [
+      2,
+      [
+       4294967295
+      ]
+     ],
+     [
+      1,
+      [
+       805335828
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805335828
+      ]
+     ],
+     [
+      1,
+      [
+       805335828
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": []
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805335956
+      ]
+     ],
+     [
+      2,
+      [
+       34952
+      ]
+     ],
+     [
+      1,
+      [
+       805335956
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805335956
+      ]
+     ],
+     [
+      1,
+      [
+       805335956
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805336020
+      ]
+     ],
+     [
+      2,
+      [
+       39321
+      ]
+     ],
+     [
+      1,
+      [
+       805336020
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805336020
+      ]
+     ],
+     [
+      1,
+      [
+       805336020
+      ]
+     ]
+    ]
+   },
+   {
+    "lost": 0,
+    "records": [
+     [
+      0,
+      [
+       805336084
+      ]
+     ],
+     [
+      2,
+      [
+       1
+      ]
+     ],
+     [
+      1,
+      [
+       805336084
+      ]
+     ],
+     [
+      3,
+      [
+       0
+      ]
+     ],
+     [
+      0,
+      [
+       805336084
+      ]
+     ],
+     [
+      1,
+      [
+       805336084
+      ]
+     ]
+    ]
+   }
+  ],
+  "name": "snd.stopSoundThreadFull",
+  "regions": [
+   [
+    805335376,
+    64
+   ],
+   [
+    805335440,
+    64
+   ],
+   [
+    805335504,
+    64
+   ],
+   [
+    805335568,
+    64
+   ],
+   [
+    805335632,
+    64
+   ],
+   [
+    805335696,
+    64
+   ],
+   [
+    805335760,
+    64
+   ],
+   [
+    805335824,
+    64
+   ],
+   [
+    805335888,
+    64
+   ],
+   [
+    805335952,
+    64
+   ],
+   [
+    805336016,
+    64
+   ],
+   [
+    805336080,
+    64
+   ],
+   [
+    805336144,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "stubReturn2fA@": {
+  "digests": [
+   "917ab27e3a7bc3a76860"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.stubReturn2fA",
+  "regions": [
+   [
+    805335376,
+    512
+   ],
+   [
+    805336144,
+    1028
+   ],
+   [
+    80431596,
+    4
+   ],
+   [
+    805335888,
+    128
+   ],
+   [
+    805336016,
+    128
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "ca48ea179bc336e9acae"
+  ]
+ },
+ "stubReturn2fB@": {
+  "digests": [
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e",
+   "8c38b697275cd8b0918e"
+  ],
+  "fallbacks": 0,
+  "fpcw": [
+   639
+  ],
+  "name": "snd.stubReturn2fB",
+  "regions": [
+   [
+    805335376,
+    256
+   ],
+   [
+    805335632,
+    256
+   ],
+   [
+    805335888,
+    256
+   ],
+   [
+    805336144,
+    256
+   ],
+   [
+    805336400,
+    256
+   ],
+   [
+    805336656,
+    256
+   ],
+   [
+    805336912,
+    256
+   ],
+   [
+    805337168,
+    256
+   ],
+   [
+    805337424,
+    256
+   ],
+   [
+    805337680,
+    256
+   ],
+   [
+    805337936,
+    256
+   ],
+   [
+    805338192,
+    256
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae",
+   "ca48ea179bc336e9acae"
+  ]
+ }
+}

@@ -1,0 +1,9436 @@
+{
+ "$device": {
+  "lines": 13020,
+  "steps": [
+   0,
+   0,
+   0,
+   40,
+   0
+  ],
+  "stream_sha256": "4b6ed61a9306793c298044d20fb3c91e32c2fa9a4e75b11220220c43b8f0eddb"
+ },
+ "Snd::applyField484750": {
+  "digests": [
+   "5d39c3760edec9d4000b",
+   "31c97860deb60d294421",
+   "96bdec74a5c24f99b6dd",
+   "5a9eba0eb36ef2c221f0",
+   "9dc4c9fb37d725fa18d3",
+   "69207d514f79844cc248",
+   "1957aca79a9aa7bcf040",
+   "445514305abf4f9cc6fe",
+   "27be668a727d71a88176",
+   "57ce2411543e3196a3cc",
+   "19a695735bb0725cc00d",
+   "dbc5904bd4dfa3a9b016"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::applyField484750",
+  "regions": [
+   [
+    805337104,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::applyField4847b0": {
+  "digests": [
+   "de42746c0621002396b8",
+   "28c85ddf3d92157d5402",
+   "43cacad1af6407ecf5c3",
+   "ea257088df81b22437b9",
+   "ef8712106989d3c8abd3",
+   "1d2001b174726efc70ca",
+   "819a1018aeea62f5fb00",
+   "9464a1c36bdfa6f26df7",
+   "fc3fc8046b6cf4372467",
+   "726d428185800199ae20",
+   "a6ab0697aa35dd6bdf3b",
+   "10d2e51316b4e7a090ee"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::applyField4847b0",
+  "regions": [
+   [
+    805337104,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::applyMode484e30": {
+  "digests": [
+   "82bba900b31c9be5736c",
+   "1ad4fbc1be6d737b28ac",
+   "f2e7d7b24b7d4e52eb91",
+   "d83886fdd5b4a5f228a8",
+   "62e8c6064a87050c320b",
+   "6679f768353ae29972d7",
+   "4c5fa6a9fa0e7f937450",
+   "b718e9f5c1c5c34d16ef",
+   "cf5cde85f08427c02a65",
+   "74aee51d7ba6c990b609",
+   "b70bc5cc864d3dd097ac",
+   "bed14f47aed7e5a6cf1e"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::applyMode484e30",
+  "regions": [
+   [
+    805337104,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::busy_t100k": {
+  "digests": [
+   "729e11c3819976c5aa11",
+   "729e11c3819976c5aa11",
+   "af4848d5922944bd3fcc",
+   "af4848d5922944bd3fcc",
+   "a5dd2cfe6cd5f7935412",
+   "8c6fe6ed1e5ffbcbf7de",
+   "8c6fe6ed1e5ffbcbf7de",
+   "8c6fe6ed1e5ffbcbf7de",
+   "a5dd2cfe6cd5f7935412",
+   "af4848d5922944bd3fcc",
+   "a5dd2cfe6cd5f7935412",
+   "8c6fe6ed1e5ffbcbf7de"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::busy",
+  "regions": [
+   [
+    805336624,
+    1536
+   ],
+   [
+    805338160,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::busy_t5": {
+  "digests": [
+   "b1d050d0797a8dc1642d",
+   "b1d050d0797a8dc1642d",
+   "eb213566eebc087ad6a3",
+   "eb213566eebc087ad6a3",
+   "be6cd0fded6dde13aa64",
+   "1d68896b8a8869264def",
+   "1d68896b8a8869264def",
+   "1d68896b8a8869264def",
+   "be6cd0fded6dde13aa64",
+   "eb213566eebc087ad6a3",
+   "be6cd0fded6dde13aa64",
+   "1d68896b8a8869264def"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::busy",
+  "regions": [
+   [
+    805336624,
+    1536
+   ],
+   [
+    805338160,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::configure": {
+  "digests": [
+   "aef63d2b8712761dae1e",
+   "6d1e42f64d2b5e8a36ae",
+   "3cb696549e372274e202",
+   "430935af9e42419b72e1",
+   "26350af95554aeb06273",
+   "892207defc59ebd87af0",
+   "08cefe117d1eda1ff01e",
+   "0451edf379fa77063e65",
+   "81fb0f7a030a3688b29c",
+   "08cefe117d1eda1ff01e",
+   "a53e8b6526306c183541",
+   "9142e6e0c3110dbb0f81",
+   "ac396cfcb36d81186081",
+   "3c5ae76c53c626ebc58a",
+   "01f8fd95b8b7c009bdef",
+   "04567c2b69c6d8cd2e56",
+   "244209887cf588d306f0",
+   "c8d0e2c965f608c64c7c",
+   "35eb9552f98fec899684",
+   "9509b04440ff34913809",
+   "08cefe117d1eda1ff01e",
+   "74c6cffe9d57b8c97512",
+   "8e12ecd26effa043d358",
+   "08cefe117d1eda1ff01e",
+   "e771b7b1682efab1a24a",
+   "0a7a03c5535a1cb29498",
+   "d68731da862e4af5ba13",
+   "39b67f14f1d0f9d50ff7",
+   "7e6fc38a573eb801dac3",
+   "6139a2f920ca26b74997",
+   "2a743f7246083f15dc70",
+   "f279e5c3927b5f72560a",
+   "5ab1734a4ac373cd9df2",
+   "75191923bfcfdd677897",
+   "08cefe117d1eda1ff01e",
+   "a794ad0e0549c0e8a0c5",
+   "f757107f4865396ca865",
+   "08cefe117d1eda1ff01e",
+   "d7f1051326508ebaf1e3",
+   "a7c7a0ec2d8b754f56e1",
+   "016d686a6b4bf6a7c963",
+   "1aa0b5f7a50874ca9307",
+   "d11b75ac90ec833c9f5c",
+   "cc50d2e769dc067f9cd7",
+   "fdc75b3c16f19367356d",
+   "a2cd5c8e550dfaf1c495",
+   "dd9773138391f65769c4",
+   "14ee0ab30d646a8fa063",
+   "08cefe117d1eda1ff01e",
+   "956bcd95c2d44af66376",
+   "85c96e5e5a764563d6e9",
+   "08cefe117d1eda1ff01e",
+   "c05b3a99ac9990190d9c",
+   "e5aa8e688abbc4e53d42",
+   "026465c3b272573ad53a",
+   "06af5867ee2f92c3f2a2",
+   "5bdf95f896ea0fb1010e",
+   "5bc7e94ed2eecd49bfe2",
+   "3458e821da856d70e7db",
+   "61dc6ac6259a944a2c59",
+   "7e8ee97d48983cd768c7",
+   "bf23692bc8311cf5f010",
+   "08cefe117d1eda1ff01e",
+   "3815767b977af4c6d30a",
+   "b092bf77d2d6ec0663eb",
+   "08cefe117d1eda1ff01e",
+   "566f7fd19994415b4b9f",
+   "be50eda0c2839612e89e",
+   "a1585099bde946ac74f4",
+   "1964f663f47bc83bc37f",
+   "aa9be29a73a84d263239",
+   "80cd84beddf94a352c8a",
+   "8b18e316c4c4c8efba79",
+   "590eee6f1e4803af6c52",
+   "d361e2f2297f6bec65a9",
+   "4de16ca482fcadee3265",
+   "08cefe117d1eda1ff01e",
+   "5c1c68ecc7e2bf8da2d2",
+   "046c53037e8a80b11185",
+   "08cefe117d1eda1ff01e",
+   "c509eff2539c1b36b77b",
+   "596a8d5ca8de5787a0b1",
+   "1baa1de5a3e835b65907",
+   "a75ad2444d87819869e8",
+   "92afe862c74c48212b41",
+   "a5d8e97e89e64a110da9",
+   "b39b06ae8862de52c246",
+   "f72b880169068a56b218",
+   "a3c0c6016ba2c99bc27d",
+   "59b8557594c84edd3bd6",
+   "08cefe117d1eda1ff01e",
+   "3a6829119f8b46908a78",
+   "ad652d0ec23b4d87391e",
+   "08cefe117d1eda1ff01e",
+   "ebc3a7ec37ba0d582543",
+   "2c99f44fbb191b3ee99b",
+   "2162c151078db061e200",
+   "2e2f0d71622b2be01149",
+   "d34e18238bee33ab9328",
+   "278f423f26fe5707f7c9",
+   "e7d7c4317ae749697faf",
+   "fe3c40537b777efab67f",
+   "690ac9430a218a2d064b",
+   "d90cd32e1b68b54ceac3",
+   "08cefe117d1eda1ff01e",
+   "f142fd1c8db2569f9be7",
+   "a2e304be19c417f0f0eb",
+   "08cefe117d1eda1ff01e",
+   "e9d2a4cff5836aba6214",
+   "758678ac45b2f369043e",
+   "da148b35179ac7c7d640",
+   "cc1e61e4dbef84540415",
+   "d2a778d3f4dc075bcaf2",
+   "2ff07269901692e2e7dd",
+   "84f05a4fbf8ba6810d67",
+   "a25b2d61769e58d54d04",
+   "59a875dd5854adc50e56",
+   "f8934cb4e6a2e8dda7b1",
+   "08cefe117d1eda1ff01e",
+   "7bf00e8efaba482fd3c2",
+   "8bc5a4031d7e52313f62",
+   "08cefe117d1eda1ff01e",
+   "607949795128a5483ffd",
+   "7b9482843381c8cf4fca",
+   "4c8ef02b9c71a2c8a963",
+   "84c2cdfe5ceb9fd94a08",
+   "a62129fa9248365a142b",
+   "dbf23d348c3b9e9df769",
+   "ca0f7e98718f42c80613",
+   "1fd06072924c66285dbc",
+   "735af201d2771b6c6ad1",
+   "137430bf5a4fc89c34a9",
+   "08cefe117d1eda1ff01e",
+   "4a17e0734aef8f4e8260",
+   "2d7b3256cb74a59fc887",
+   "08cefe117d1eda1ff01e",
+   "ace23c4938c14a0065e2",
+   "2fbaf78c430316967bf1",
+   "e926c69efafd1a206dc1",
+   "31593cafdc92fac5b2e6",
+   "c6999203cd8406276fb1",
+   "96e47807d75aaa2ce6f0",
+   "c2f59fb06969c4012a0c",
+   "ae9c133fbe6490802e6c",
+   "27b0091642d047434de2",
+   "36f470d3d6279e8f2d01",
+   "08cefe117d1eda1ff01e",
+   "8899537d6485a0e0c530",
+   "98c49bb3c76e1fe3f9db",
+   "08cefe117d1eda1ff01e",
+   "6ba3a70a8b08464a8acd",
+   "1849c4532d41f7551cb1",
+   "aa45242ab9e2c5a085a7",
+   "1b68a19d1a24e647018d",
+   "e0b9ae4469c0c955605e",
+   "f9e2337d6a158648de3d",
+   "d26dc969fcc1dd8f2679",
+   "301ed46585e51aa62ad6",
+   "59acef5debc769cc063f",
+   "f99e9c1e27543d713052",
+   "08cefe117d1eda1ff01e",
+   "43cb65dba86e3fbd7e8d",
+   "b447236d631db68fe6f8",
+   "08cefe117d1eda1ff01e",
+   "f7ccc30b476a990f06a8",
+   "62984f7c873b53e1bff9",
+   "7b5c49a1b270a88713c6",
+   "468220520bf7fd282b70",
+   "817e12da7a1259e7dcfa",
+   "08cefe117d1eda1ff01e",
+   "cc2e727223f2065bc507",
+   "08cefe117d1eda1ff01e",
+   "b925fa396dc6122d8bc9",
+   "08cefe117d1eda1ff01e"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::configure",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 174,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::configure_fail": {
+  "digests": [
+   "aef63d2b8712761dae1e",
+   "6d1e42f64d2b5e8a36ae",
+   "3cb696549e372274e202",
+   "b4b7030eb6b4586afefb",
+   "b4b7030eb6b4586afefb",
+   "892207defc59ebd87af0",
+   "08cefe117d1eda1ff01e",
+   "0451edf379fa77063e65",
+   "81fb0f7a030a3688b29c",
+   "08cefe117d1eda1ff01e",
+   "08894a00f6dcea2c9218",
+   "9142e6e0c3110dbb0f81",
+   "ac396cfcb36d81186081",
+   "3c5ae76c53c626ebc58a",
+   "01f8fd95b8b7c009bdef",
+   "04567c2b69c6d8cd2e56",
+   "244209887cf588d306f0",
+   "0a9484fa9168c5c72df4",
+   "0a9484fa9168c5c72df4",
+   "9509b04440ff34913809",
+   "08cefe117d1eda1ff01e",
+   "74c6cffe9d57b8c97512",
+   "8e12ecd26effa043d358",
+   "08cefe117d1eda1ff01e",
+   "362739aab9f8628668ef",
+   "0a7a03c5535a1cb29498",
+   "d68731da862e4af5ba13",
+   "39b67f14f1d0f9d50ff7",
+   "7e6fc38a573eb801dac3",
+   "6139a2f920ca26b74997",
+   "2a743f7246083f15dc70",
+   "f279e5c3927b5f72560a",
+   "5ab1734a4ac373cd9df2",
+   "75191923bfcfdd677897",
+   "08cefe117d1eda1ff01e",
+   "a794ad0e0549c0e8a0c5",
+   "f757107f4865396ca865",
+   "08cefe117d1eda1ff01e",
+   "d7f1051326508ebaf1e3",
+   "a7c7a0ec2d8b754f56e1",
+   "016d686a6b4bf6a7c963",
+   "1aa0b5f7a50874ca9307",
+   "d11b75ac90ec833c9f5c",
+   "cc50d2e769dc067f9cd7",
+   "fdc75b3c16f19367356d",
+   "a2cd5c8e550dfaf1c495",
+   "dd9773138391f65769c4",
+   "14ee0ab30d646a8fa063",
+   "08cefe117d1eda1ff01e",
+   "956bcd95c2d44af66376",
+   "85c96e5e5a764563d6e9",
+   "08cefe117d1eda1ff01e",
+   "c05b3a99ac9990190d9c",
+   "e5aa8e688abbc4e53d42",
+   "026465c3b272573ad53a",
+   "06af5867ee2f92c3f2a2",
+   "5bdf95f896ea0fb1010e",
+   "5bc7e94ed2eecd49bfe2",
+   "3458e821da856d70e7db",
+   "61dc6ac6259a944a2c59",
+   "7e8ee97d48983cd768c7",
+   "bf23692bc8311cf5f010",
+   "08cefe117d1eda1ff01e",
+   "3815767b977af4c6d30a",
+   "b092bf77d2d6ec0663eb",
+   "08cefe117d1eda1ff01e",
+   "566f7fd19994415b4b9f",
+   "be50eda0c2839612e89e",
+   "a1585099bde946ac74f4",
+   "1964f663f47bc83bc37f",
+   "aa9be29a73a84d263239",
+   "80cd84beddf94a352c8a",
+   "8b18e316c4c4c8efba79",
+   "590eee6f1e4803af6c52",
+   "d361e2f2297f6bec65a9",
+   "4de16ca482fcadee3265",
+   "08cefe117d1eda1ff01e",
+   "5c1c68ecc7e2bf8da2d2",
+   "046c53037e8a80b11185",
+   "08cefe117d1eda1ff01e",
+   "c509eff2539c1b36b77b",
+   "596a8d5ca8de5787a0b1",
+   "1baa1de5a3e835b65907",
+   "a75ad2444d87819869e8",
+   "92afe862c74c48212b41",
+   "a5d8e97e89e64a110da9",
+   "b39b06ae8862de52c246",
+   "13ad55313ae6ae9e1457",
+   "13ad55313ae6ae9e1457",
+   "59b8557594c84edd3bd6",
+   "08cefe117d1eda1ff01e",
+   "3a6829119f8b46908a78",
+   "ad652d0ec23b4d87391e",
+   "08cefe117d1eda1ff01e",
+   "6b3bd9b610ed6baedd5d",
+   "2c99f44fbb191b3ee99b",
+   "2162c151078db061e200",
+   "2e2f0d71622b2be01149",
+   "d34e18238bee33ab9328",
+   "278f423f26fe5707f7c9",
+   "e7d7c4317ae749697faf",
+   "fe3c40537b777efab67f",
+   "690ac9430a218a2d064b",
+   "d90cd32e1b68b54ceac3",
+   "08cefe117d1eda1ff01e",
+   "f142fd1c8db2569f9be7",
+   "a2e304be19c417f0f0eb",
+   "08cefe117d1eda1ff01e",
+   "e9d2a4cff5836aba6214",
+   "758678ac45b2f369043e",
+   "da148b35179ac7c7d640",
+   "cc1e61e4dbef84540415",
+   "d2a778d3f4dc075bcaf2",
+   "2ff07269901692e2e7dd",
+   "84f05a4fbf8ba6810d67",
+   "a25b2d61769e58d54d04",
+   "59a875dd5854adc50e56",
+   "f8934cb4e6a2e8dda7b1",
+   "08cefe117d1eda1ff01e",
+   "7bf00e8efaba482fd3c2",
+   "8bc5a4031d7e52313f62",
+   "08cefe117d1eda1ff01e",
+   "607949795128a5483ffd",
+   "7b9482843381c8cf4fca",
+   "4c8ef02b9c71a2c8a963",
+   "84c2cdfe5ceb9fd94a08",
+   "a62129fa9248365a142b",
+   "dbf23d348c3b9e9df769",
+   "ca0f7e98718f42c80613",
+   "ef1ab99ff9f991250e23",
+   "ef1ab99ff9f991250e23",
+   "137430bf5a4fc89c34a9",
+   "08cefe117d1eda1ff01e",
+   "4a17e0734aef8f4e8260",
+   "2d7b3256cb74a59fc887",
+   "08cefe117d1eda1ff01e",
+   "df4faa51b8d3bf348c8f",
+   "2fbaf78c430316967bf1",
+   "e926c69efafd1a206dc1",
+   "31593cafdc92fac5b2e6",
+   "c6999203cd8406276fb1",
+   "96e47807d75aaa2ce6f0",
+   "c2f59fb06969c4012a0c",
+   "ae9c133fbe6490802e6c",
+   "27b0091642d047434de2",
+   "36f470d3d6279e8f2d01",
+   "08cefe117d1eda1ff01e",
+   "8899537d6485a0e0c530",
+   "98c49bb3c76e1fe3f9db",
+   "08cefe117d1eda1ff01e",
+   "6ba3a70a8b08464a8acd",
+   "1849c4532d41f7551cb1",
+   "aa45242ab9e2c5a085a7",
+   "1b68a19d1a24e647018d",
+   "e0b9ae4469c0c955605e",
+   "f9e2337d6a158648de3d",
+   "d26dc969fcc1dd8f2679",
+   "301ed46585e51aa62ad6",
+   "59acef5debc769cc063f",
+   "f99e9c1e27543d713052",
+   "08cefe117d1eda1ff01e",
+   "43cb65dba86e3fbd7e8d",
+   "b447236d631db68fe6f8",
+   "08cefe117d1eda1ff01e",
+   "f7ccc30b476a990f06a8",
+   "62984f7c873b53e1bff9",
+   "7b5c49a1b270a88713c6",
+   "468220520bf7fd282b70",
+   "404ebd69b4c85ef7bd71",
+   "08cefe117d1eda1ff01e",
+   "cc2e727223f2065bc507",
+   "08cefe117d1eda1ff01e",
+   "dd922b74e320819f9e61",
+   "08cefe117d1eda1ff01e"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::configure",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 174,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::ctor485260": {
+  "digests": [
+   "6b9bdb5761a896d2af33",
+   "acc560686c41abceeb1c",
+   "4b6f7248eee8745162f4",
+   "e49f73a507fb923ea269",
+   "bce762b02a17e561508c",
+   "ba14ad90e3d24ef881a4",
+   "f9841d1197141e14bfab",
+   "d1e6615dcb4d963f39ee",
+   "e3ea19dddfc5b0b124d8",
+   "8d3a58a77b8b3dfa8e5d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::ctor485260",
+  "regions": [
+   [
+    805336464,
+    1280
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::ctorBase": {
+  "digests": [
+   "9f9cd601d78ec7a8b697",
+   "820fbd0826ddaa6eb860",
+   "66df952bca490640b67b",
+   "0f5bacb455f01264b2d4",
+   "b4fa65c36650331910a4",
+   "24e0344b6e069e276ea0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::ctorBase",
+  "regions": [
+   [
+    805336464,
+    768
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::ctorDerived": {
+  "digests": [
+   "4b416d171995076c8058",
+   "69186f459337c2ded22f",
+   "2d4872ca3dd81ba21b30",
+   "ab942559e7e4f8f0357b",
+   "1b1f1534d3d812583ba2",
+   "869f7a0dac7c75661be4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::ctorDerived",
+  "regions": [
+   [
+    805336464,
+    768
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::dtor": {
+  "digests": [
+   "6f7d1019190009426f77",
+   "f2e2caef58465ca70ed8",
+   "d2b1ab26fbaead00659c",
+   "0413def0da6fb7ce8130",
+   "997d17ff22319555f7af",
+   "6c2f76103eced7c6d395",
+   "e887aa7fee80db8762e8",
+   "920d95dac3f92ac5c066",
+   "f926bfd1f98743fee3a4",
+   "aae17caf88586b5123da"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::dtor",
+  "regions": [
+   [
+    872615936,
+    8208
+   ],
+   [
+    805336464,
+    1028
+   ],
+   [
+    805337504,
+    1024
+   ],
+   [
+    872673280,
+    4096
+   ],
+   [
+    872607744,
+    4096
+   ],
+   [
+    8629140,
+    4
+   ],
+   [
+    8629136,
+    4
+   ],
+   [
+    8628960,
+    4
+   ],
+   [
+    8628972,
+    4
+   ],
+   [
+    8628896,
+    4
+   ],
+   [
+    8628924,
+    4
+   ],
+   [
+    8628928,
+    4
+   ],
+   [
+    8628932,
+    4
+   ],
+   [
+    8628888,
+    4
+   ],
+   [
+    8628976,
+    4
+   ],
+   [
+    8629040,
+    4
+   ],
+   [
+    8629044,
+    4
+   ],
+   [
+    8629056,
+    4
+   ],
+   [
+    8629060,
+    4
+   ],
+   [
+    8629076,
+    4
+   ],
+   [
+    8629272,
+    4
+   ],
+   [
+    8623696,
+    4
+   ],
+   [
+    8629036,
+    4
+   ],
+   [
+    8628892,
+    4
+   ],
+   [
+    8626888,
+    4
+   ],
+   [
+    8626892,
+    4
+   ],
+   [
+    8626896,
+    4
+   ],
+   [
+    8626900,
+    4
+   ],
+   [
+    8629584,
+    4
+   ],
+   [
+    8629580,
+    4
+   ],
+   [
+    8626904,
+    512
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::flags": {
+  "digests": [
+   "551e0bcf1bca49c50e79",
+   "59a73d1ec4fef930748b",
+   "15982301e09ac933aff0",
+   "7616f30e98b1b8d62017",
+   "d5ca03113457398c6633",
+   "099cb2bf796a286f2a19",
+   "a6a505c203937ee4f6aa",
+   "bdce61b50c28360c067d",
+   "525c773f1fba55ab9081",
+   "628a1f3711c22d831763",
+   "31f4a6f20d4d7f23fbb2",
+   "d3f4b6eb4b225d661394",
+   "dc1d5b3e73d31663d352",
+   "791bd10374b0011a81f2",
+   "be0217a48d9ef7f42deb",
+   "a82579c4b9ba8fae1588"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::flags",
+  "regions": [],
+  "tier": "EXACT",
+  "vectors": 16,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::open": {
+  "digests": [
+   "147bc4906dcb4e172a90",
+   "577c1e448a005d4d1300",
+   "1a83cdef64df66926290",
+   "1223fcae2a27de285ad3",
+   "a507021eb31bdddbcb23",
+   "63809bbd21a911bea141",
+   "10cd46cb136ac9af6b67",
+   "10cd46cb136ac9af6b67",
+   "c6cb05cd11770c98e062",
+   "c6cb05cd11770c98e062",
+   "2162f406f1836d969738",
+   "9ac251cb855dcc795f34",
+   "e8adc3d9f6fb2329a4f1",
+   "d21e94c0dc1d78f52c9e",
+   "4b5df8453e6f191c2276",
+   "bd49646e4a5f2f66d3a6",
+   "7770df306cd956800e56",
+   "75e758bf70f887769692",
+   "e2924374e9ad5657490e",
+   "f9bf29dc14235f199039",
+   "e7239407f4736f557ded",
+   "0301e47f8dc751727b08",
+   "cef4e23307bfb0f848ac",
+   "53f426758c57039bfa41"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::open",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 24,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::open_fail": {
+  "digests": [
+   "5a51ee5290ec10fbcfbc",
+   "4f3e22598a54608b2163",
+   "29554f08cd19c0c062ab",
+   "d6d883fc9e18328b5b34",
+   "a507021eb31bdddbcb23",
+   "63809bbd21a911bea141",
+   "10cd46cb136ac9af6b67",
+   "10cd46cb136ac9af6b67",
+   "c6cb05cd11770c98e062",
+   "c6cb05cd11770c98e062",
+   "2162f406f1836d969738",
+   "9ac251cb855dcc795f34",
+   "c23a4399d32e42da489c",
+   "965bfa4c0ea0191f94ed",
+   "4b5df8453e6f191c2276",
+   "bd49646e4a5f2f66d3a6",
+   "7770df306cd956800e56",
+   "75e758bf70f887769692",
+   "6693050899d02c0b350c",
+   "bcdc6adad33cf0dca660",
+   "e7239407f4736f557ded",
+   "0301e47f8dc751727b08",
+   "cef4e23307bfb0f848ac",
+   "53f426758c57039bfa41"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::open",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 24,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::queryDevice4845d0": {
+  "digests": [
+   "4513e7d70cdb60597692",
+   "1843804a91d041f7ff20",
+   "1bcb994f03fefe08850a",
+   "d520ddbd187dc1b78500",
+   "b7e179b79103b0217d3a",
+   "0b0f6481b07997ed810b",
+   "e804cef2a149db59caf6",
+   "d520ddbd187dc1b78500",
+   "364e1980ade8d96d16f4",
+   "bbb075b227f054ccfc3a",
+   "965cadeb4dad58c2267f",
+   "d520ddbd187dc1b78500"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::queryDevice4845d0",
+  "regions": [
+   [
+    805336464,
+    64
+   ],
+   [
+    805337040,
+    384
+   ],
+   [
+    805337424,
+    1536
+   ],
+   [
+    805339504,
+    192
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::reopen": {
+  "digests": [
+   "0ce79b81dba838686894",
+   "aedbc528100093166fdd",
+   "6bc77f6a04b472de2604",
+   "7a8ce6a03aa1b7e188ee",
+   "0a8e9c736d77ec3d053e",
+   "6a65e7b2fc9e2a1d6c92",
+   "87776901110e1b246c3d",
+   "0ce79b81dba838686894",
+   "7d814e5011a21264d669",
+   "805a16dc186faf490a17",
+   "260e8ce1863f78994057",
+   "625dc477747fab3ceb78"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::reopen",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::reopen_fail": {
+  "digests": [
+   "0ce79b81dba838686894",
+   "29554f08cd19c0c062ab",
+   "6bc77f6a04b472de2604",
+   "7a8ce6a03aa1b7e188ee",
+   "0a8e9c736d77ec3d053e",
+   "6a65e7b2fc9e2a1d6c92",
+   "c23a4399d32e42da489c",
+   "0ce79b81dba838686894",
+   "7d814e5011a21264d669",
+   "6693050899d02c0b350c",
+   "260e8ce1863f78994057",
+   "625dc477747fab3ceb78"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::reopen",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::scalarDtor4841c0": {
+  "digests": [
+   "c59d9d2f930f39f9ec55",
+   "7f30b1fd188cc6fd8998",
+   "1625e4344a4d6708365c",
+   "7626646e990fa6669d22",
+   "0acf460ca88b7b85b1b1",
+   "09370b41b9c900f23490",
+   "7e77b7a7e9af2dff90e4",
+   "aa7917d252339915786b",
+   "b7b9684349df59deb23a",
+   "971b5d5df8ca0ea13cf7",
+   "dfd1eb128c4693866b9d",
+   "739a5d29330d2b3eece0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::scalarDtor4841c0",
+  "regions": [
+   [
+    872615936,
+    8208
+   ],
+   [
+    805336464,
+    1028
+   ],
+   [
+    805337504,
+    1024
+   ],
+   [
+    872673280,
+    4096
+   ],
+   [
+    872607744,
+    4096
+   ],
+   [
+    8629140,
+    4
+   ],
+   [
+    8629136,
+    4
+   ],
+   [
+    8628960,
+    4
+   ],
+   [
+    8628972,
+    4
+   ],
+   [
+    8628896,
+    4
+   ],
+   [
+    8628924,
+    4
+   ],
+   [
+    8628928,
+    4
+   ],
+   [
+    8628932,
+    4
+   ],
+   [
+    8628888,
+    4
+   ],
+   [
+    8628976,
+    4
+   ],
+   [
+    8629040,
+    4
+   ],
+   [
+    8629044,
+    4
+   ],
+   [
+    8629056,
+    4
+   ],
+   [
+    8629060,
+    4
+   ],
+   [
+    8629076,
+    4
+   ],
+   [
+    8629272,
+    4
+   ],
+   [
+    8623696,
+    4
+   ],
+   [
+    8629036,
+    4
+   ],
+   [
+    8628892,
+    4
+   ],
+   [
+    8626888,
+    4
+   ],
+   [
+    8626892,
+    4
+   ],
+   [
+    8626896,
+    4
+   ],
+   [
+    8626900,
+    4
+   ],
+   [
+    8629584,
+    4
+   ],
+   [
+    8629580,
+    4
+   ],
+   [
+    8626904,
+    512
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::scalarDtor4852b0": {
+  "digests": [
+   "f4b20deb116b047b4e38",
+   "063905ded7502e2a47e3",
+   "77fc25ee3063066ca70a",
+   "fd1baea79fd7cbfe12c7",
+   "9552abd9b1ed6b91c473",
+   "636925032735468c5acc",
+   "6aaaba28d840c72218b0",
+   "a2adf285946476af26a4",
+   "502b5c7e2989cb1c94db",
+   "e9596531ffec1562b6b4",
+   "8bf3a5b7e2f956bee11a",
+   "f31bae83292c966dc8bf"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::scalarDtor4852b0",
+  "regions": [
+   [
+    872615936,
+    8208
+   ],
+   [
+    805336464,
+    1028
+   ],
+   [
+    805337504,
+    1024
+   ],
+   [
+    872673280,
+    4096
+   ],
+   [
+    872607744,
+    4096
+   ],
+   [
+    8629140,
+    4
+   ],
+   [
+    8629136,
+    4
+   ],
+   [
+    8628960,
+    4
+   ],
+   [
+    8628972,
+    4
+   ],
+   [
+    8628896,
+    4
+   ],
+   [
+    8628924,
+    4
+   ],
+   [
+    8628928,
+    4
+   ],
+   [
+    8628932,
+    4
+   ],
+   [
+    8628888,
+    4
+   ],
+   [
+    8628976,
+    4
+   ],
+   [
+    8629040,
+    4
+   ],
+   [
+    8629044,
+    4
+   ],
+   [
+    8629056,
+    4
+   ],
+   [
+    8629060,
+    4
+   ],
+   [
+    8629076,
+    4
+   ],
+   [
+    8629272,
+    4
+   ],
+   [
+    8623696,
+    4
+   ],
+   [
+    8629036,
+    4
+   ],
+   [
+    8628892,
+    4
+   ],
+   [
+    8626888,
+    4
+   ],
+   [
+    8626892,
+    4
+   ],
+   [
+    8626896,
+    4
+   ],
+   [
+    8626900,
+    4
+   ],
+   [
+    8629584,
+    4
+   ],
+   [
+    8629580,
+    4
+   ],
+   [
+    8626904,
+    512
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setField34": {
+  "digests": [
+   "3ade535fd76e349dfc53",
+   "433b6826aae4e15d5bab",
+   "59c6c0c9f84de9dbe9a9",
+   "11ddbbde16f7ed0a6da8",
+   "311a3ab8768d1710c3a8",
+   "eb8b98ca41240a16cc69",
+   "75ddbf81630e18ecccf0",
+   "4ea5f81166789d4d3819",
+   "5f0e6326b90a6f4c5fff",
+   "a4b40315925f7c34e9c8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setField34",
+  "regions": [
+   [
+    805336464,
+    1280
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setField34_dev": {
+  "digests": [
+   "f7ca2d7ed368a769f9b9",
+   "1b666aade9bf437e6cd4",
+   "54ec6cbdc0f4a683a639",
+   "0530f784f0b275e05c64",
+   "641df7e39dfb29891db3",
+   "0f7a9caca4f5b2897212",
+   "855790effd9a36d84b93",
+   "23e0a269f6daf750a67b",
+   "e1715e26966d3320f6e8",
+   "586896243ca05f0e468b",
+   "6bceabbeae908930c2d5",
+   "895bdd6cb97bec115bc3",
+   "e0153510281100571f62",
+   "ce983aa3539645c10b49"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setField34",
+  "regions": [
+   [
+    805337616,
+    1280
+   ],
+   [
+    805336464,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 14,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setField38": {
+  "digests": [
+   "16240952c75c67fa9296",
+   "4cbd313fe4a4bb489f80",
+   "3d180d267334da146fed",
+   "189d9163a9f714866d6a",
+   "588d4d4ba435e6885839",
+   "4744bc85ac9fc2c6e270",
+   "d8bb00703954c08e9130",
+   "30809443ec559e9707fb",
+   "39ff382dfb2e0d7fd19d",
+   "b29e47a04bbedd1643ab",
+   "e1473c83797a49150c9c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setField38",
+  "regions": [
+   [
+    805336520,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 11,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setMode": {
+  "digests": [
+   "cba1dcef4eaa2c20d2a6",
+   "d077218ad8d4ca19ee1e",
+   "d33972652313ac60fbf0",
+   "ff7d1d4965d30fcdd228",
+   "b07cf72da5b9baa03996",
+   "a2c80b93573e92ba856f",
+   "62b67df2675f9b701842",
+   "70f69e8875c83ddf362b",
+   "0d8827df241656aedfe0",
+   "d84e3979e79c98e8a95b",
+   "d77e38ae8a47ec1a0128"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setMode",
+  "regions": [
+   [
+    805336532,
+    4
+   ],
+   [
+    805336548,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 11,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setName": {
+  "digests": [
+   "59be1fbb4b54a24dfa2e",
+   "e71f4d4e1714192921c2",
+   "88c4870061ec0b2e1aeb",
+   "9715e25d18f23e3d06bd",
+   "bde2a0ccf9a4672c1047",
+   "59be1fbb4b54a24dfa2e",
+   "2fd97a43333a7818ecd0",
+   "a6d363d542f1c7390764",
+   "2a75d9ac77ae5f355d06",
+   "99473b363301739f9523",
+   "59be1fbb4b54a24dfa2e",
+   "2703268430b8cdc94cb9",
+   "a9b3df1e4f856b21a0e0",
+   "5bc862a563d518b2a8d8",
+   "0dae57e9096d31b4092d",
+   "59be1fbb4b54a24dfa2e",
+   "7f26e463f5e4c2aaa301",
+   "4f52e08b280d6135ed1a",
+   "45fd2fbc768fce1d83e8",
+   "39bc9deebd267cc969eb",
+   "59be1fbb4b54a24dfa2e",
+   "064132a3c1f10fbc9e7c",
+   "9ae87b53e21d8f13f591",
+   "ce40c9d9acfb08b83460",
+   "5800b7c56d43327eb896",
+   "59be1fbb4b54a24dfa2e",
+   "4e424d33d7e48b737ada",
+   "1b4e95cf6018a8354762",
+   "80ef518c494c52d79891",
+   "f10e507ba2ff41eaf810"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "Snd::setName",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 30,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setPan": {
+  "digests": [
+   "e90d36d1f7a870e54447",
+   "e90d36d1f7a870e54447",
+   "e90d36d1f7a870e54447",
+   "b6236b0eb863f04407af",
+   "3d5328c827f1b0ee51b2",
+   "3d9bb0fc34360177707c",
+   "e732d6449f0a17dc006e",
+   "8ac8bc0f194c4840eb90",
+   "20d6832e3dccd812862b",
+   "20d6832e3dccd812862b",
+   "20d6832e3dccd812862b"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setPan",
+  "regions": [
+   [
+    805336472,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 11,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setPan_dev": {
+  "digests": [
+   "b94ef54ab3479f0407d9",
+   "7649446c17eeef394f77",
+   "d478b39b864c6232dced",
+   "6fc7692ca32c73a9a296",
+   "e693858ce0108516bf59",
+   "a8f8f80d1f7c9637aedc",
+   "398efbecf753aa2abca1",
+   "a7ca35df27dd602543d8",
+   "3ac7bfee7a8bbfc42944",
+   "bb3d2968db0da1d440a9",
+   "b31550526b9bea03fe01",
+   "d41298caaa2fa6663ecc"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setPan",
+  "regions": [
+   [
+    805337616,
+    1280
+   ],
+   [
+    805336464,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setPitch": {
+  "digests": [
+   "0d5ffd3937ef45304984",
+   "0d5ffd3937ef45304984",
+   "0d5ffd3937ef45304984",
+   "b59d09ff43821b26e91a",
+   "6a31b5b61978600bbc37",
+   "3d9bb0fc34360177707c",
+   "588d4d4ba435e6885839",
+   "4cddaa2330c0d236baa9",
+   "571826b35e975d921f63",
+   "571826b35e975d921f63",
+   "571826b35e975d921f63"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setPitch",
+  "regions": [
+   [
+    805336556,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 11,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setVolume": {
+  "digests": [
+   "fadc91a8db756a76aa75",
+   "ad44be54ab0217331742",
+   "a143beea72213c696209",
+   "ce1ebecb097f63f007b1",
+   "341ca764a90774443643",
+   "0f670294008921a2929e",
+   "1cf191fa7f29016b09b8",
+   "957d2349c7ceaf629c33",
+   "414ad0d9c1f564b5d023",
+   "b909e45f78ade2642030"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setVolume",
+  "regions": [
+   [
+    805336464,
+    1280
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setVolume_dev": {
+  "digests": [
+   "9d046dc2a2bd77bad563",
+   "2204a668bfff927f1248",
+   "654c0ec033deca88e9dd",
+   "db786087203a44b5c6d9",
+   "7cab9d413fba7505f328",
+   "994b7fd17eede618034c",
+   "97d6d6b039fe75a93a32",
+   "98f48d72ccea2e883917",
+   "d8b1395be29c79880af9",
+   "3dae44fc0c4225b79a76",
+   "6f36f7517f6f259c094d",
+   "ae4c36bf6c3b97e4ae03",
+   "49f4b7b1dd94becd33d3",
+   "499b3cc8d14d9e2b1f17",
+   "7cab9d413fba7505f328",
+   "a8673f7bbf09f05443e8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setVolume",
+  "regions": [
+   [
+    805337616,
+    1280
+   ],
+   [
+    805336464,
+    256
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 16,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::setVtbl4852d0": {
+  "digests": [
+   "0c9ee536ac22eced8e1b",
+   "cafde015e16db7c93121",
+   "94e141355df25064737f",
+   "797ea66e516e661cd5d1",
+   "414c2a0a3620b64e9edf",
+   "53a7434956d5fcda7469",
+   "521e09531f70f939bb05",
+   "e7019e55a3fda8281709",
+   "f91e4905a883c7908697",
+   "10608c5dbc0569b1fb2c",
+   "8254f6b7658f77f3dc40",
+   "789c4a847f208c0123e9"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setVtbl4852d0",
+  "regions": [
+   [
+    805336464,
+    768
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::start": {
+  "digests": [
+   "7cd0f3254fd4423ec78c",
+   "0a6c00990606165ca706",
+   "c4d34c4078385a09d658",
+   "2ab5eaf96b22c64d9ea2",
+   "623192fc4c8f6b3c5f21",
+   "503f85cb3cf7806c11b7",
+   "e5a7bb2977bbb03b9713",
+   "7cd0f3254fd4423ec78c",
+   "4690f46f0877eaa62454",
+   "b5ea23a9cd166a6aae3c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::start",
+  "regions": [
+   [
+    805339600,
+    256
+   ],
+   [
+    805339920,
+    256
+   ],
+   [
+    805340240,
+    256
+   ],
+   [
+    805340560,
+    256
+   ],
+   [
+    805340880,
+    256
+   ],
+   [
+    805341200,
+    256
+   ],
+   [
+    805341456,
+    256
+   ],
+   [
+    805341712,
+    256
+   ],
+   [
+    805341968,
+    256
+   ],
+   [
+    805342224,
+    256
+   ],
+   [
+    805336464,
+    2048
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::start_fail": {
+  "digests": [
+   "7cd0f3254fd4423ec78c",
+   "0a6c00990606165ca706",
+   "c4d34c4078385a09d658",
+   "2ab5eaf96b22c64d9ea2",
+   "623192fc4c8f6b3c5f21",
+   "7d2bc9e1c22114e16a2d",
+   "4b182ca2ae73988bf2b6",
+   "7cd0f3254fd4423ec78c",
+   "43198cd447d68d827ca1",
+   "b5ea23a9cd166a6aae3c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::start",
+  "regions": [
+   [
+    805339600,
+    256
+   ],
+   [
+    805339920,
+    256
+   ],
+   [
+    805340240,
+    256
+   ],
+   [
+    805340560,
+    256
+   ],
+   [
+    805340880,
+    256
+   ],
+   [
+    805341200,
+    256
+   ],
+   [
+    805341456,
+    256
+   ],
+   [
+    805341712,
+    256
+   ],
+   [
+    805341968,
+    256
+   ],
+   [
+    805342224,
+    256
+   ],
+   [
+    805336464,
+    2048
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::start_nolib": {
+  "digests": [
+   "7cd0f3254fd4423ec78c",
+   "0a6c00990606165ca706",
+   "c4d34c4078385a09d658",
+   "2ab5eaf96b22c64d9ea2",
+   "623192fc4c8f6b3c5f21",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "7cd0f3254fd4423ec78c",
+   "6fe2c32925a2a01d29be",
+   "b5ea23a9cd166a6aae3c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::start",
+  "regions": [
+   [
+    805339600,
+    256
+   ],
+   [
+    805339920,
+    256
+   ],
+   [
+    805340240,
+    256
+   ],
+   [
+    805340560,
+    256
+   ],
+   [
+    805340880,
+    256
+   ],
+   [
+    805341200,
+    256
+   ],
+   [
+    805341456,
+    256
+   ],
+   [
+    805341712,
+    256
+   ],
+   [
+    805341968,
+    256
+   ],
+   [
+    805342224,
+    256
+   ],
+   [
+    805336464,
+    2048
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::status": {
+  "digests": [
+   "da50d643aa258b981995",
+   "d4ed42233a6289c16bb2",
+   "4031705c3c59927e07a7",
+   "544b2a184224fb1bfcc4",
+   "242ca942fd3da92cd132",
+   "c2cc5a9c9cf125ae87a1",
+   "245be0c97ab20336e7cd",
+   "544b2a184224fb1bfcc4",
+   "1057d660a7578b9491fa",
+   "eb08d43630e786315218",
+   "8d939fc73967a5dc328b",
+   "544b2a184224fb1bfcc4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::status",
+  "regions": [
+   [
+    805336464,
+    64
+   ],
+   [
+    805337040,
+    384
+   ],
+   [
+    805337424,
+    1536
+   ],
+   [
+    805339504,
+    192
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::stop484550": {
+  "digests": [
+   "40ccc28c6266c4b1ffeb",
+   "cda2708dfb91883f0021",
+   "30eed5e6dbc383cd8568",
+   "f5d0d24f45badcacd46e",
+   "b2069338d6066c409d25",
+   "be34a7178c330130ed06",
+   "07529c594754d35fa6de",
+   "32a6b4f684be601175cf",
+   "d7a073427092bac10271",
+   "d97a21636420d94da4ad",
+   "1f847b607bfa2b6797f8",
+   "1b98279da11fac7ead7a"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::stop484550",
+  "regions": [
+   [
+    805337104,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::stop484f00": {
+  "digests": [
+   "b935062ce7f57c80043e",
+   "efe13b8817855803c074",
+   "29e4ac0afea00fc77078",
+   "be53c057e375e7aa12ae",
+   "96b8a0aa1b3fc3033814",
+   "be53c057e375e7aa12ae",
+   "6d6910aa53b9e9c5e0b2",
+   "be53c057e375e7aa12ae",
+   "ea6c65a811ae0a011972",
+   "b83b9d994a5612768155"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::stop484f00",
+  "regions": [
+   [
+    872615936,
+    8208
+   ],
+   [
+    805336464,
+    1028
+   ],
+   [
+    805337504,
+    1024
+   ],
+   [
+    872673280,
+    4096
+   ],
+   [
+    872607744,
+    4096
+   ],
+   [
+    8629140,
+    4
+   ],
+   [
+    8629136,
+    4
+   ],
+   [
+    8628960,
+    4
+   ],
+   [
+    8628972,
+    4
+   ],
+   [
+    8628896,
+    4
+   ],
+   [
+    8628924,
+    4
+   ],
+   [
+    8628928,
+    4
+   ],
+   [
+    8628932,
+    4
+   ],
+   [
+    8628888,
+    4
+   ],
+   [
+    8628976,
+    4
+   ],
+   [
+    8629040,
+    4
+   ],
+   [
+    8629044,
+    4
+   ],
+   [
+    8629056,
+    4
+   ],
+   [
+    8629060,
+    4
+   ],
+   [
+    8629076,
+    4
+   ],
+   [
+    8629272,
+    4
+   ],
+   [
+    8623696,
+    4
+   ],
+   [
+    8629036,
+    4
+   ],
+   [
+    8628892,
+    4
+   ],
+   [
+    8626888,
+    4
+   ],
+   [
+    8626892,
+    4
+   ],
+   [
+    8626896,
+    4
+   ],
+   [
+    8626900,
+    4
+   ],
+   [
+    8629584,
+    4
+   ],
+   [
+    8629580,
+    4
+   ],
+   [
+    8626904,
+    512
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::unlinkFromList": {
+  "digests": [
+   "3fcedbbd31963c4acda5",
+   "1405117b49f0d53c81e0",
+   "1b8efd6d6ba758f03abb",
+   "b6d71ef60d7c98443b53",
+   "773aa0d67ba3a669dcb7",
+   "3f8e26eed65ee5b24067",
+   "3f8e26eed65ee5b24067"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::unlinkFromList",
+  "regions": [
+   [
+    805337104,
+    1024
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 7,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::unlinkFromList_one": {
+  "digests": [
+   "f0922e43e612cf8d6976",
+   "762801e965d1302e7925"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::unlinkFromList",
+  "regions": [
+   [
+    805337104,
+    1024
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 2,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd::unlinkFromList_two": {
+  "digests": [
+   "33230ee70b27415f0ace",
+   "40962c8aa4b8bd717bd9"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::unlinkFromList",
+  "regions": [
+   [
+    805337104,
+    1024
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 2,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndMusic::dtor_lib0": {
+  "digests": [
+   "0298fef1a8bd68b1e462",
+   "b41835d1b9e8910d2830",
+   "46438a5ba1f23e930855",
+   "b3108ceea810d362d4d6",
+   "1ba9bcf5a2c770a6f846",
+   "1f777700e80d156b45ee",
+   "09e809f2df96ae0bca36",
+   "e7e3c459e9bf021d099e",
+   "5bbae776c1b9eec306ce",
+   "c75dfd00245577e6a183",
+   "42df32462397c7e8a60c",
+   "860d7e49a4ef3e3c098c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndMusic::dtor",
+  "regions": [
+   [
+    872620032,
+    4480
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    805337552,
+    16
+   ],
+   [
+    805337568,
+    272
+   ],
+   [
+    805337840,
+    1028
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    8630128,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndMusic::dtor_lib1": {
+  "digests": [
+   "b3e974d5d258cdb5ff8a",
+   "db4d3f6bb47ecc0c617d",
+   "0f2c06f47fa043430051",
+   "94e24515a6effacffc65",
+   "0a26ca27e0f9aa85dc88",
+   "da09785511c15d340c6b",
+   "3b805bdcdbf7115c8f65",
+   "4158bef48023f38b50d9",
+   "14b50e25283d2094764d",
+   "866d686138d730b5c3e4",
+   "f8fdbdb67ddd0be5037b",
+   "fd57c48b39b2a5565de2"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndMusic::dtor",
+  "regions": [
+   [
+    872620032,
+    4480
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    805337552,
+    16
+   ],
+   [
+    805337568,
+    272
+   ],
+   [
+    805337840,
+    1028
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    8630128,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndMusic::scalarDtor": {
+  "digests": [
+   "be0409a104c788c3b085",
+   "1b556dbf8439decc8e4d",
+   "9eb4b6d34a7e8a936419",
+   "0b1619aabb24b66eac4a",
+   "e6e0ff3bca8e74dc2a0c",
+   "c9654d5054ffd2d3fb65",
+   "b430a3a4e5de58e9b449",
+   "9912fe0a4d66272d5d1c",
+   "a426694a14fc63fe2b3d",
+   "e302237efa29452438b2",
+   "2b330a2b798b1e9ae993",
+   "9bc5a591e0d3a761509d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndMusic::scalarDtor",
+  "regions": [
+   [
+    872615936,
+    8208
+   ],
+   [
+    805336464,
+    1028
+   ],
+   [
+    805337504,
+    1024
+   ],
+   [
+    872673280,
+    4096
+   ],
+   [
+    872607744,
+    4096
+   ],
+   [
+    8629140,
+    4
+   ],
+   [
+    8629136,
+    4
+   ],
+   [
+    8628960,
+    4
+   ],
+   [
+    8628972,
+    4
+   ],
+   [
+    8628896,
+    4
+   ],
+   [
+    8628924,
+    4
+   ],
+   [
+    8628928,
+    4
+   ],
+   [
+    8628932,
+    4
+   ],
+   [
+    8628888,
+    4
+   ],
+   [
+    8628976,
+    4
+   ],
+   [
+    8629040,
+    4
+   ],
+   [
+    8629044,
+    4
+   ],
+   [
+    8629056,
+    4
+   ],
+   [
+    8629060,
+    4
+   ],
+   [
+    8629076,
+    4
+   ],
+   [
+    8629272,
+    4
+   ],
+   [
+    8623696,
+    4
+   ],
+   [
+    8629036,
+    4
+   ],
+   [
+    8628892,
+    4
+   ],
+   [
+    8626888,
+    4
+   ],
+   [
+    8626892,
+    4
+   ],
+   [
+    8626896,
+    4
+   ],
+   [
+    8626900,
+    4
+   ],
+   [
+    8629584,
+    4
+   ],
+   [
+    8629580,
+    4
+   ],
+   [
+    8626904,
+    512
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndMusic::setFile": {
+  "digests": [
+   "cf8ae544c323e0be5369",
+   "b056ef50fd1dc5f341f3",
+   "f11f41ba7f658c28a46a",
+   "6490ae617565b4c233c2",
+   "6490ae617565b4c233c2",
+   "6490ae617565b4c233c2",
+   "4fe872f2063663f889cc",
+   "6ec9d5071bd22084b154",
+   "06489f08660a1b1e32b6",
+   "ef3471bc30aa6bd20468",
+   "585d7c11572775264f48",
+   "6b148644af0ddfe13cc3",
+   "8a69cf9d83de174f579f",
+   "b40d5e0e12fa29aea4c1",
+   "69e6b242bfb5f8cd84b7",
+   "f690c9af969666be686b",
+   "2c657b3d2289ccf30819",
+   "85bb4b4a42349fa03c1e",
+   "187d4934ede7394bcd89",
+   "98e17013df250ffe113c",
+   "014a38a7d01f57afe4f5",
+   "31c7c6ca3321697c994a",
+   "e470165dcb349773f935",
+   "b8fed32f1c67a6b9b608",
+   "febc88bf07b9b7fb98de",
+   "febc88bf07b9b7fb98de"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "SndMusic::setFile",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 26,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndMusic::setFile_fail": {
+  "digests": [
+   "7298025941d76340492d",
+   "1dddcf2b05af51a7c624",
+   "7e0750d9b5b711e201e6",
+   "6490ae617565b4c233c2",
+   "6490ae617565b4c233c2",
+   "6490ae617565b4c233c2",
+   "4fe872f2063663f889cc",
+   "6ec9d5071bd22084b154",
+   "06489f08660a1b1e32b6",
+   "ef3471bc30aa6bd20468",
+   "585d7c11572775264f48",
+   "6b148644af0ddfe13cc3",
+   "8a69cf9d83de174f579f",
+   "b40d5e0e12fa29aea4c1",
+   "69e6b242bfb5f8cd84b7",
+   "f690c9af969666be686b",
+   "2c657b3d2289ccf30819",
+   "85bb4b4a42349fa03c1e",
+   "6f6aa1a2326a699342e4",
+   "56ee29b2db8a56cfa015",
+   "dbc2c135e4560c1f8edc",
+   "b860e0b1f81c72938d3a",
+   "1c0acbddd3072466ff86",
+   "4a9b860cdd711fd4fb31",
+   "febc88bf07b9b7fb98de",
+   "febc88bf07b9b7fb98de"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "operatorDelete_4a4ffc",
+  "name": "SndMusic::setFile",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8623696,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 26,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndStream::open484c20": {
+  "digests": [
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "ed4d620fcce13c1d93ca",
+   "8dc62d91442d0914ac72",
+   "1d81609bde4b7fb033a7",
+   "041cc55ffe09d1cbb104",
+   "9b1f9dd70a92da1ab8c1",
+   "1b6dd697c0c94530c983",
+   "a4cdfd20d68a4f9f001f",
+   "e67c81abc7927cea3d13",
+   "a3f043b4c3b850216500",
+   "d4a0aec4cc8d69850d5e",
+   "23d9a0492d1b66c35357",
+   "801ce22410260815d4f3",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndStream::open484c20",
+  "regions": [
+   [
+    805339600,
+    256
+   ],
+   [
+    805339920,
+    256
+   ],
+   [
+    805340240,
+    256
+   ],
+   [
+    805340560,
+    256
+   ],
+   [
+    805340880,
+    256
+   ],
+   [
+    805341200,
+    256
+   ],
+   [
+    805341456,
+    256
+   ],
+   [
+    805341712,
+    256
+   ],
+   [
+    805341968,
+    256
+   ],
+   [
+    805342224,
+    256
+   ],
+   [
+    805336464,
+    2048
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 30,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndStream::open484c20_fail": {
+  "digests": [
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "650fb4fc27608810ffcb",
+   "016ccae23d219b134b29",
+   "89b15af990fc627d61d9",
+   "510827bf8ef31b10e0df",
+   "69118538a9a829977eba",
+   "807845abf33ba1a9ff04",
+   "419a1c2e1abccbee6e0a",
+   "b2ed503484bc3ac790ad",
+   "54d5392a1c78e19abbfa",
+   "5404d63dd84187418fc6",
+   "b23d965ccaae344826b9",
+   "f8969a708d17d459b146",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndStream::open484c20",
+  "regions": [
+   [
+    805339600,
+    256
+   ],
+   [
+    805339920,
+    256
+   ],
+   [
+    805340240,
+    256
+   ],
+   [
+    805340560,
+    256
+   ],
+   [
+    805340880,
+    256
+   ],
+   [
+    805341200,
+    256
+   ],
+   [
+    805341456,
+    256
+   ],
+   [
+    805341712,
+    256
+   ],
+   [
+    805341968,
+    256
+   ],
+   [
+    805342224,
+    256
+   ],
+   [
+    805336464,
+    2048
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 30,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "SndStream::open484c20_nolib": {
+  "digests": [
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "6fe2c32925a2a01d29be",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4",
+   "419407ef75ff8e55f0f4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndStream::open484c20",
+  "regions": [
+   [
+    805339600,
+    256
+   ],
+   [
+    805339920,
+    256
+   ],
+   [
+    805340240,
+    256
+   ],
+   [
+    805340560,
+    256
+   ],
+   [
+    805340880,
+    256
+   ],
+   [
+    805341200,
+    256
+   ],
+   [
+    805341456,
+    256
+   ],
+   [
+    805341712,
+    256
+   ],
+   [
+    805341968,
+    256
+   ],
+   [
+    805342224,
+    256
+   ],
+   [
+    805336464,
+    2048
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 30,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd_flags_device": {
+  "digests": [
+   "3bcde51e4cbe9c3c573f",
+   "710e4bb0be6cfb4ce7b0",
+   "08e7f61995c677a795b1",
+   "df4c510f473b672395b0",
+   "0d29f638267762cf2e33",
+   "68f5f6172bf333cf2ed2",
+   "17f08a79793dfcacb056",
+   "2c545a9e328404d3fe68",
+   "a7bda3f4da92f0d7bf00",
+   "30a4868ea97d9279e01c",
+   "c808234d38d28b27655d",
+   "3bcde51e4cbe9c3c573f",
+   "1c7c2d24b83c5c6b58e9",
+   "9ea33f2bb543677ef5d7",
+   "73b6959867ba365650e4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::flags",
+  "regions": [
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 15,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "Snd_play": {
+  "digests": [
+   "feaf24ba8d6105a62832",
+   "efd1cfe0378070f02f41",
+   "7423681fe0514ed9af8b",
+   "bd036a2b075b96f1bb6a",
+   "8e6e24d9264a793e4f0d",
+   "630cfe1200d2bb3bcceb",
+   "fe981a2477363d4f9843",
+   "d9c0ac5a89f077a267ac",
+   "d527ae57209e2f8cb7bc",
+   "14fe0d2b1a21da533330",
+   "6b287bbdded348267dfd",
+   "e5850551fff1cc5b6436",
+   "af93c434bc8054e453ab",
+   "d725e4f615bdb0256900",
+   "bf70757314b695909a21"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::play",
+  "regions": [
+   [
+    805340240,
+    128
+   ],
+   [
+    805337488,
+    2048
+   ],
+   [
+    805339536,
+    64
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    805340368,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 15,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "VoiceRx::ctor": {
+  "digests": [
+   "86fd66879f3466527d42",
+   "4847a3b7aae58a50937d",
+   "a6142ff64902d7b5e29b",
+   "c34487a3fe24b34e9333",
+   "28adbf301e9120eea9f2",
+   "98aef8159e54a9cbb13a"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::ctor",
+  "regions": [
+   [
+    872677376,
+    131072
+   ],
+   [
+    872812544,
+    32784
+   ],
+   [
+    805337488,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "arrayStaticInit_448160_live": {
+  "digests": [
+   "3e5edd278f21f7736809"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "arrayStaticInit_448160",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    805336864,
+    68
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "arrayStaticInit_448160_pat": {
+  "digests": [
+   "d584bd2016c2bf2248ed"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "arrayStaticInit_448160",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    805336864,
+    68
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "arrayStaticInit_448160_zero": {
+  "digests": [
+   "3e5edd278f21f7736809"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "arrayStaticInit_448160",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    805336864,
+    68
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook74": {
+  "digests": [
+   "76b0db5255ff3d156b01",
+   "959a08531caceb53c423",
+   "3ce6e284f79cfca842f9",
+   "41c2384c5d4e128be352",
+   "ee4de234a6323b6a43ac",
+   "f054d2e300f9b9abc3e8",
+   "4449b88b91ad73f0268a",
+   "83b58d60765845317318",
+   "5dbce77833c4411433e8",
+   "a4f9a7679d5e710cc392",
+   "7f8ff1606d829397f07f",
+   "1bcd1c89122c01d393b8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook74",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630132,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook74_off": {
+  "digests": [
+   "a9d81cb743bf9aa2f03c",
+   "a9d81cb743bf9aa2f03c",
+   "a9d81cb743bf9aa2f03c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook74",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630132,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 3,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v0": {
+  "digests": [
+   "98b499c61c6198eedefb"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v1": {
+  "digests": [
+   "cfb946f32a80fe5c0f8c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v10": {
+  "digests": [
+   "6279faf6d3dee235f2f3"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v11": {
+  "digests": [
+   "cfb946f32a80fe5c0f8c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v2": {
+  "digests": [
+   "44c04d5955b67e00a1cb"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v3": {
+  "digests": [
+   "f98a6085652402af2f56"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v4": {
+  "digests": [
+   "c71b6ea4e1e994595a68"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v5": {
+  "digests": [
+   "849d73c56eb60023d48b"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v6": {
+  "digests": [
+   "98b499c61c6198eedefb"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v7": {
+  "digests": [
+   "1cb7d6487c979ef71b95"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v8": {
+  "digests": [
+   "95903f6ee81e9627473c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "callSoundHook94_v9": {
+  "digests": [
+   "46622d46934ff3daf638"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "callSoundHook94",
+  "regions": [
+   [
+    805336464,
+    16
+   ],
+   [
+    8630208,
+    4
+   ],
+   [
+    8630164,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p0": {
+  "digests": [
+   "f6f1248a6fe269b1b252"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p1": {
+  "digests": [
+   "f37669692fedb41b3112"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p2": {
+  "digests": [
+   "26d37de7910f09d8fd42"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p3": {
+  "digests": [
+   "cef91063a9ce93d45ec8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p4": {
+  "digests": [
+   "ddbd84604b83fb4cb431"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p5": {
+  "digests": [
+   "7eb1b51f75c64e718ae3"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p6": {
+  "digests": [
+   "84d0fb4fa1bf0aa4f10c"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p7": {
+  "digests": [
+   "6036c629bf44b4f3f919"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p8": {
+  "digests": [
+   "47d737142f0843e0cf23"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "clearSoundPtrs_p9": {
+  "digests": [
+   "0a1e29de61bcd5831eb8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "clearSoundPtrs",
+  "regions": [
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "closeHookC_null": {
+  "digests": [
+   "d86112854942779a84b7",
+   "d86112854942779a84b7",
+   "d86112854942779a84b7",
+   "d86112854942779a84b7",
+   "d86112854942779a84b7"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "closeHookC",
+  "regions": [
+   [
+    805336528,
+    32
+   ],
+   [
+    805336560,
+    32
+   ],
+   [
+    805336592,
+    32
+   ],
+   [
+    805336624,
+    32
+   ],
+   [
+    805336656,
+    32
+   ],
+   [
+    805336464,
+    16
+   ],
+   [
+    8630160,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 5,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "closeHookC_set": {
+  "digests": [
+   "5846c67e745f558f087a",
+   "60a95cd9a9fd19d71191",
+   "e8c55032c2dc30a18676",
+   "aeffa1b8954dfefb972b",
+   "4edeb915c0bed916bc01",
+   "60a95cd9a9fd19d71191"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "closeHookC",
+  "regions": [
+   [
+    805336528,
+    32
+   ],
+   [
+    805336560,
+    32
+   ],
+   [
+    805336592,
+    32
+   ],
+   [
+    805336624,
+    32
+   ],
+   [
+    805336656,
+    32
+   ],
+   [
+    805336688,
+    32
+   ],
+   [
+    805336464,
+    16
+   ],
+   [
+    8630160,
+    4
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "createSound4840e0": {
+  "digests": [
+   "6d13a00e9a5be498a765",
+   "1ed06dd0c5c8563dc003",
+   "6d08e024d24869c68948",
+   "d6acade46d35ebf9366e",
+   "4ddbfbbc3f30fa3ae1a0",
+   "bbd683380dd8f04d6fc2",
+   "d5a2353eca125ca6b794",
+   "f70d3d442e1e53ad14a2"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "createSound4840e0",
+  "regions": [
+   [
+    805336464,
+    64
+   ],
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 8,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "createSound4840e0_nolib": {
+  "digests": [
+   "5350465f4f2b3914e21d",
+   "5350465f4f2b3914e21d",
+   "5350465f4f2b3914e21d",
+   "5350465f4f2b3914e21d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "createSound4840e0",
+  "regions": [
+   [
+    805336464,
+    64
+   ],
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 4,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v0": {
+  "digests": [
+   "d3ecc4b87722defef130"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v1": {
+  "digests": [
+   "15921a296d9112df8f53"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v2": {
+  "digests": [
+   "337c888bf9f1e0349cd1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v3": {
+  "digests": [
+   "c367ad9219536b3e872f"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v4": {
+  "digests": [
+   "b8ebb7bdf75896307c70"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v5": {
+  "digests": [
+   "679c9af1f33b21af1718"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v6": {
+  "digests": [
+   "efaeb6bfd99e3d30bef9"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v7": {
+  "digests": [
+   "f5774c9dda711f988a4b"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v8": {
+  "digests": [
+   "b7b7e9eb24abe6ece956"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "freeSoundLib_v9": {
+  "digests": [
+   "c23b397bc05bd2e917e8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "freeSoundLib",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630212,
+    4
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "initSound": {
+  "digests": [
+   "1cfd3966f6e47658268b",
+   "ea99c64af5612917de7c",
+   "1fe573500d47c1115504",
+   "21f87e3072cc25173dad",
+   "fcf007a38cc2351fb0d7",
+   "e004f76153414af0e9b8",
+   "91fd02a09562eabf4000",
+   "be12f072949eb3bdbc5d",
+   "698888a91f3b9b106d35",
+   "c34a1743d1f065570faf",
+   "3f1d1f1456507c80bc4a",
+   "c32fa236fd2278399e3a"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "initSound",
+  "regions": [
+   [
+    8630212,
+    4
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "initSound_ver3": {
+  "digests": [
+   "ebd5e24738e21db748e8",
+   "ebd5e24738e21db748e8",
+   "ebd5e24738e21db748e8",
+   "ebd5e24738e21db748e8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "initSound",
+  "regions": [
+   [
+    8630212,
+    4
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 4,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "initSound_verneg": {
+  "digests": [
+   "ffddf68c7faf3b7aff9e",
+   "ffddf68c7faf3b7aff9e",
+   "ffddf68c7faf3b7aff9e",
+   "ffddf68c7faf3b7aff9e"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "initSound",
+  "regions": [
+   [
+    8630212,
+    4
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 4,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "loadSoundTable": {
+  "digests": [
+   "19e80edf2413947f8418",
+   "6951a70a90230cd3d4ec",
+   "e10d6923029e0101f141",
+   "e9be1e9783ca251aa291",
+   "38f46c024288483af26a",
+   "c2e0d326f70d5a0aeecb",
+   "a9551b9e20585f04b186",
+   "2b1071b7545d3c154e85",
+   "db6aac63989020594b23",
+   "bdfac14968ab3fca6583",
+   "3b4f97575ce5f870022a",
+   "8f86d61668215e08f35b"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "loadSoundTable",
+  "regions": [
+   [
+    872607744,
+    24576
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "openHookA": {
+  "digests": [
+   "82318bbb73bb8f7cb4e7",
+   "70afbc037a558bb60b49",
+   "c263fc09ae11f11b3a9e",
+   "da334a2ce577b90da4ea",
+   "c1c8a9f4413ead3b0511",
+   "230320e93e962eba10aa",
+   "e7733fd3ae0eb9ce92e8",
+   "230320e93e962eba10aa",
+   "fd01ad7c27f81c2b84e6",
+   "230320e93e962eba10aa"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "openHookA",
+  "regions": [
+   [
+    805336464,
+    512
+   ],
+   [
+    872607744,
+    4096
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "openHookA_null": {
+  "digests": [
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "230320e93e962eba10aa"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "openHookA",
+  "regions": [
+   [
+    805336464,
+    512
+   ],
+   [
+    872607744,
+    4096
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "openHookB": {
+  "digests": [
+   "82318bbb73bb8f7cb4e7",
+   "70afbc037a558bb60b49",
+   "c263fc09ae11f11b3a9e",
+   "da334a2ce577b90da4ea",
+   "c1c8a9f4413ead3b0511",
+   "230320e93e962eba10aa",
+   "e7733fd3ae0eb9ce92e8",
+   "230320e93e962eba10aa",
+   "fd01ad7c27f81c2b84e6",
+   "230320e93e962eba10aa"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "openHookB",
+  "regions": [
+   [
+    805336464,
+    512
+   ],
+   [
+    872607744,
+    4096
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "openHookB_null": {
+  "digests": [
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "230320e93e962eba10aa"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "openHookB",
+  "regions": [
+   [
+    805336464,
+    512
+   ],
+   [
+    872607744,
+    4096
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "openHookC": {
+  "digests": [
+   "82318bbb73bb8f7cb4e7",
+   "70afbc037a558bb60b49",
+   "c263fc09ae11f11b3a9e",
+   "da334a2ce577b90da4ea",
+   "c1c8a9f4413ead3b0511",
+   "230320e93e962eba10aa",
+   "e7733fd3ae0eb9ce92e8",
+   "230320e93e962eba10aa",
+   "fd01ad7c27f81c2b84e6",
+   "230320e93e962eba10aa"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "openHookC",
+  "regions": [
+   [
+    805336464,
+    512
+   ],
+   [
+    872607744,
+    4096
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 10,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "openHookC_null": {
+  "digests": [
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "ade6844c7785d6677f90",
+   "230320e93e962eba10aa"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "openHookC",
+  "regions": [
+   [
+    805336464,
+    512
+   ],
+   [
+    872607744,
+    4096
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "playSound": {
+  "digests": [
+   "b99bc3643889228c3bc6",
+   "120cf244decce2a2799a",
+   "4ab680d2d7791c9e8225",
+   "b672f815646994dbc477",
+   "67e2ebb9b99f084c977c",
+   "6262e8d2c64b246c53a9",
+   "20c89cbbcb97e5eff777",
+   "9814704485eca7b23955",
+   "94245841341f9437cf36",
+   "e38dfb4b122c42329fdd",
+   "535b60507ef77f310408",
+   "02429fdeed612d77107f",
+   "5b8a9fda22f428ed1d97"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "playSound",
+  "regions": [
+   [
+    805340240,
+    128
+   ],
+   [
+    805337488,
+    2048
+   ],
+   [
+    805339536,
+    64
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    805340368,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 13,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "releaseSoundObj": {
+  "digests": [
+   "405e8501ae1a14b9c327",
+   "89d18f5b79fb4c4b5269",
+   "19f2439fc8a8144c3b4f",
+   "b0af0a024c2ef0aa7f59",
+   "550e95cf000a1d2a89da",
+   "53ff5d8e8a4c6173bf25",
+   "7f3425a2544d46aa2513",
+   "3b05acc4f9fb8dd02165"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "releaseSoundObj",
+  "regions": [
+   [
+    805336464,
+    64
+   ],
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 8,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "releaseSoundObj_nolib": {
+  "digests": [
+   "5350465f4f2b3914e21d",
+   "5350465f4f2b3914e21d",
+   "5350465f4f2b3914e21d",
+   "5350465f4f2b3914e21d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "releaseSoundObj",
+  "regions": [
+   [
+    805336464,
+    64
+   ],
+   [
+    8630116,
+    104
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 4,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:NodeList::playChildSuspendingSounds": {
+  "digests": [
+   "6345a32b026d98fdd4f0",
+   "b7bd24a4aac9773b5ec0",
+   "2cbbd6f6d32e3bcb3a69",
+   "6a7cee15dadad24deeab",
+   "916cd80642f457245344",
+   "c92b5a3c233a879616e7",
+   "39ac1a58fee53e001f12",
+   "84efb77823e836205178",
+   "05f1f7906c5a84bef5cd",
+   "dd933ddc598b8a087869",
+   "6d0fee7ab86b6ffa9b26",
+   "6d0fee7ab86b6ffa9b26"
+  ],
+  "exe_fallbacks": 180,
+  "fallback_names": "return0_479820",
+  "name": "NodeList::playChildSuspendingSounds",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ],
+   [
+    805339280,
+    32
+   ],
+   [
+    805339312,
+    32
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::applyField38Voice28": {
+  "digests": [
+   "f5f6ec5ad03ec8d814c0",
+   "2673801eb54d7a20a835",
+   "5ea91a1678d7d638c3f0",
+   "5ea91a1678d7d638c3f0",
+   "27a4426c40a7aa0d8c0e",
+   "ba1036f799ebf3dedcce",
+   "5ea91a1678d7d638c3f0",
+   "5ea91a1678d7d638c3f0",
+   "2806544270bc694acdf3",
+   "ba38ca1ed13a8ee05caf",
+   "5ea91a1678d7d638c3f0",
+   "5ea91a1678d7d638c3f0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::applyField38Voice28",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::applyField38Voice30": {
+  "digests": [
+   "f478d215cfd88f369432",
+   "a2a07c7d5ea4637ece28",
+   "5ea91a1678d7d638c3f0",
+   "5ea91a1678d7d638c3f0",
+   "718a8adbfa564bbe9c6b",
+   "bbf89e691832ac58c9a1",
+   "5ea91a1678d7d638c3f0",
+   "5ea91a1678d7d638c3f0",
+   "132d1da39f206452b577",
+   "5da5c0984bc3bbe21321",
+   "5ea91a1678d7d638c3f0",
+   "5ea91a1678d7d638c3f0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::applyField38Voice30",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev48": {
+  "digests": [
+   "dde12542e46462a24f6a",
+   "609ec1a00f8481956362",
+   "ac9e41345edb5a53791d",
+   "89016ae6d56c0f562820",
+   "a49878270f277eafd97b",
+   "f34ff9ca448f61f1a7fe",
+   "52d5981b02636d631a0d",
+   "89016ae6d56c0f562820",
+   "b9e1220b64f395304013",
+   "9e5376cd2f18309f4e67",
+   "b8216ccbec941c47ce77",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev48",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev49": {
+  "digests": [
+   "7f0ffe031d0672b354b6",
+   "b6dbde358e4cccefd459",
+   "5d130fcadffbed41fdaa",
+   "66a45bf6e331378df66d",
+   "7d34693907abc13cbbbd",
+   "45957f55f00d2ee831f6",
+   "41fcc1c05ea0afbbcbb1",
+   "66a45bf6e331378df66d",
+   "e1583a7deb5e4cbefec8",
+   "fb9af3d6478f3e900892",
+   "a1440ac1f506114b797c",
+   "66a45bf6e331378df66d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev49",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev54": {
+  "digests": [
+   "b5817d23f64f3c00da48",
+   "a42c2130e4e860804830",
+   "db1e02f5429100ceb491",
+   "1078aff80b12ddd401f1",
+   "88743463ba813b5aa6a1",
+   "33623f7574d10399f9f8",
+   "7e3010f979c5ce3be58d",
+   "1078aff80b12ddd401f1",
+   "c41d29974965cdb56b45",
+   "636d3e2a3e83b2e1ec65",
+   "cba0d2745b3882b4c5e6",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev54",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev55": {
+  "digests": [
+   "b4f375cf877934d754dc",
+   "4f9a27af885ddd067bf8",
+   "8e5959293e3ac3c82776",
+   "1078aff80b12ddd401f1",
+   "f36f44fdd3a79883d643",
+   "c52645749457e01884e4",
+   "977620564978ff7c1200",
+   "1078aff80b12ddd401f1",
+   "c95e36f14ceb6d78e0f1",
+   "73d82f98a642fc967f31",
+   "86038a8e9dd8e104c3ca",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev55",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev56": {
+  "digests": [
+   "59386a754a72a1eff383",
+   "3ad78d2313ba5526f17a",
+   "3580d132903456afe40e",
+   "1078aff80b12ddd401f1",
+   "3037291994fcc1950db9",
+   "9b0800ab14c8e76f23e7",
+   "8c3339f71fee1afce746",
+   "1078aff80b12ddd401f1",
+   "051916f96f992bc55c82",
+   "13ee1513a14b00907c30",
+   "6e9635cba5302341c9e3",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev56",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev57": {
+  "digests": [
+   "9a4f5e3695c85b0da714",
+   "79b37a852fb70425377b",
+   "4a847afe46531cf01169",
+   "1078aff80b12ddd401f1",
+   "42dcc4da377c0647b4da",
+   "ab2fc8f31ea1ea085cb2",
+   "b4c0cd69b9362de1bcaa",
+   "1078aff80b12ddd401f1",
+   "8fb53406d16bf3e7485f",
+   "fbd4c094a2ad8ee52c0b",
+   "1c209cc3e73432d4535f",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev57",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdDev58": {
+  "digests": [
+   "0d7ac17f51a2ac4ea705",
+   "319b38d24ebbb28198a9",
+   "e16b102222102719c6e5",
+   "868c575a5ef1bdcbd117",
+   "c88a4e378c6edc9519c5",
+   "36cb6aef5efec8de10f7",
+   "734cb94a183ff8de9ec1",
+   "47edc9c79f8d2afe5894",
+   "c8d2d8ea9ea5acc3f35f"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdDev58",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 9,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice18": {
+  "digests": [
+   "34abae29edbd3132b329",
+   "aaaefd27fdf4cbf445ef",
+   "62942c47cfd60554ca05",
+   "1078aff80b12ddd401f1",
+   "1f84ea8a5d1bd789632c",
+   "40f138c899abdfbc88a3",
+   "3adbec1b4e547a6279b3",
+   "1078aff80b12ddd401f1",
+   "49339df7f18ded79bca5",
+   "f38429e230a19bb850e1",
+   "c71ec02d24de9f5a02af",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice18",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice1c": {
+  "digests": [
+   "b6048692eb857eb96544",
+   "1fc164f1b82d63db3e68",
+   "219e72aa7644185f72f4",
+   "1078aff80b12ddd401f1",
+   "5d4dac9cbff95d89aca0",
+   "70e1a875f7f76257430e",
+   "bf7d9b392ee45158962a",
+   "1078aff80b12ddd401f1",
+   "680c4b847d66e6f8e5df",
+   "c36f081670be548b680d",
+   "99e25c1b06e81f80b275",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice1c",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice34": {
+  "digests": [
+   "d66fec57f59a6c77442e",
+   "399170cd537b0ca45e74",
+   "45ceae4132eb2eb19745",
+   "8ea3193742c4f89e5ca8",
+   "d0a3e09d4bd88626c6dd",
+   "4aa3c58733bdc2b6d707",
+   "b45f2d127a9d8fdd62e9",
+   "3bae7e4f4595b1a203cb",
+   "c6d0522a3e1062f12018"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice34",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 9,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice38": {
+  "digests": [
+   "8051c661496e925628d7",
+   "ef1846e21c5f1a300ae0",
+   "6158a972264c90ef1742",
+   "1078aff80b12ddd401f1",
+   "3407f0a6b42d474c4d60",
+   "e71784b117afce926a70",
+   "62440229694c7ff5dfcd",
+   "1078aff80b12ddd401f1",
+   "67a4565d69de0f9f8fd5",
+   "846defab67ebf3c610bb",
+   "c7865062fcbf2a1a3783",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice38",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice3c": {
+  "digests": [
+   "e4867242b9ab9a64bb3a",
+   "64e154a8178c39637a76",
+   "ff4491827bfe22225330",
+   "89016ae6d56c0f562820",
+   "2ee00e737cc0f3a6c971",
+   "643389da71f3a019d81a",
+   "0a33ef05eafd728f0977",
+   "89016ae6d56c0f562820",
+   "bd60649eef5f7e8246c0",
+   "3769e31815b85c3688bb",
+   "31e962b6d0dcea6536f6",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice3c",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice58": {
+  "digests": [
+   "eb12b4d462aecdbf2892",
+   "82fecce06aa335474f10",
+   "8a9c819808658402389d",
+   "89016ae6d56c0f562820",
+   "91d3d62ad1b43faafdaa",
+   "55ad31219dec58a016c7",
+   "279b2794f8c13cea0ce3",
+   "89016ae6d56c0f562820",
+   "f104a0576373c892903b",
+   "528bcbe88aba23be17ba",
+   "0d89c4e32c60bf315256",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice58",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice60": {
+  "digests": [
+   "4a21195e4170a2f7d281",
+   "e07f97ee45f122abf41e",
+   "dd5b756a30d832e1579e",
+   "89016ae6d56c0f562820",
+   "dba847dc6853cf421c49",
+   "17575da77efa920db1eb",
+   "951ff88d6a09660b793c",
+   "89016ae6d56c0f562820",
+   "b129446b6084611bf4f4",
+   "dad23e87b51996ba3bf4",
+   "96acb8fbfc7b75d14197",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice60",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice74": {
+  "digests": [
+   "54e8690d0eef19b62749",
+   "8b594306343cbb4dad85",
+   "4aeda3b082b6c86c7649",
+   "89016ae6d56c0f562820",
+   "04b03ae7605ca2b86c1e",
+   "4d2a340158053ddd1ed6",
+   "53a194d4e1b1eaab5476",
+   "89016ae6d56c0f562820",
+   "c820036931aee9044ac0",
+   "8d15a439ff71f075b97e",
+   "b56def772557e7230a60",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice74",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice94": {
+  "digests": [
+   "e06eb0d8764cbbc5583e",
+   "39ff2927491dab5fdf0f",
+   "1203589dda6efbc613c8",
+   "1078aff80b12ddd401f1",
+   "865165b1f4fdb6b20188",
+   "31670062d13850bd4847",
+   "48e04b1e91aa65e0e845",
+   "1078aff80b12ddd401f1",
+   "c5398ed36a0710084479",
+   "baa7935a3646b7a68d54",
+   "f9356e549e96cc409668",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice94",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoice98": {
+  "digests": [
+   "3fbec1109bcf3c6eb4d5",
+   "2c7fedb8ba8d903f3149",
+   "c92fc68b436f280b03fc",
+   "1078aff80b12ddd401f1",
+   "396ab74d42058eecadcb",
+   "f0006cf02e7c914dde65",
+   "26935c6d013993e34982",
+   "1078aff80b12ddd401f1",
+   "89344733a3244af41592",
+   "a781df16b929529c3971",
+   "68126f091013561ceec7",
+   "1078aff80b12ddd401f1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoice98",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoiceB8": {
+  "digests": [
+   "641a6dd9739141ced261",
+   "de85677fec6778dc5def",
+   "365d0c2205e530880e47",
+   "89016ae6d56c0f562820",
+   "8ca4fe94ae218f51d4d8",
+   "63defc954b8cd3f0a3f5",
+   "1003db5f5f2120706dae",
+   "89016ae6d56c0f562820",
+   "d64701e379e3da7a340b",
+   "b680f604ae0595c2a890",
+   "f47ab9543317d0137acd",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoiceB8",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoiceBC": {
+  "digests": [
+   "50776f2d390a273a9e1c",
+   "20ae8780ddb946732987",
+   "2e9a8bd3089568bd1a84",
+   "29f0703c8a0173e5d8dd",
+   "b1b58f55dff18c0fa80a",
+   "a986715cbe89ed4ce525",
+   "5ba865e126f7d9094ea9",
+   "29f0703c8a0173e5d8dd",
+   "4ddf214502b65d03f93b",
+   "fc67f47d73e1bbb0dce2",
+   "f4d4c440defffb59f0ca",
+   "29f0703c8a0173e5d8dd"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoiceBC",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoiceCC": {
+  "digests": [
+   "79d6aff9a743bd2e2308",
+   "2ef7127a857c96dd0ce3",
+   "8a06793c386f4f479e52",
+   "89016ae6d56c0f562820",
+   "f420c5fe19faa9440e88",
+   "e7234016a35bef1ae02b",
+   "7e471a6f22506b819784",
+   "89016ae6d56c0f562820",
+   "a2f414d5f1eda2d00dc8",
+   "e05c1c34a3a7c1962f29",
+   "ecaac0f06ddd6df64037",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoiceCC",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoiceD0": {
+  "digests": [
+   "4edf40e1d9f78a61eff6",
+   "10f51429002e8efb379c",
+   "920fcf73cb07e6192161",
+   "5547b43ff1943d4c1477",
+   "93d14d8f71dee9a5d4a6",
+   "696c3720c1802f273cba",
+   "b7e75277ba43fcd9b477",
+   "7ea5d2a1d9f0694417d8",
+   "2936ee5f007080d24619"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoiceD0",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 9,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoiceD4": {
+  "digests": [
+   "9ccc1f200b3298817f4f",
+   "81924418405634f50472",
+   "dcf049c8c9e8f14d72c7",
+   "3922109a1e945a71a6f5",
+   "7d6762f09b45d17ef6e9",
+   "d4d33a8fa348a9074ee8",
+   "d4601ac0dcb2bd310a3c",
+   "e7ca263f4be1ca4ae1ed",
+   "6150c8d4be0870c64200"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoiceD4",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 9,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::fwdVoiceF0": {
+  "digests": [
+   "b1e63917954be8147018",
+   "3f56c7022f2d216a281b",
+   "88eb4c2bf997646e392f",
+   "5ea91a1678d7d638c3f0",
+   "6f53666605d6959901b4",
+   "e6ff1901f5c4c16c59c4",
+   "9a2425c3322b73167536",
+   "5ea91a1678d7d638c3f0",
+   "7b66d8ff6eff007c2bdc",
+   "50dca3d18b6babab8d61",
+   "784d298c205a5753f3be",
+   "5ea91a1678d7d638c3f0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::fwdVoiceF0",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::getLengthMs": {
+  "digests": [
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::getLengthMs",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::getMode": {
+  "digests": [
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4",
+   "d005adbcf4818eca79c4"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::getMode",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::getNext": {
+  "digests": [
+   "1830f42d847067d10157",
+   "1e939725701caa2b7929",
+   "1740624d47c50a9f9932",
+   "edf306a6094f55689688",
+   "8ce93d82735e84f942af",
+   "20649110176683d16a5b",
+   "f98700072f0936eec390",
+   "b7570a3e6a9eebe7a8d9",
+   "c99a6ab5c5ec70e0e48d",
+   "e2f2eb709ad366a0b60d",
+   "d50aefb34231d3d53fed",
+   "ec0ab4cc77656944b554"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::getNext",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::getPrev": {
+  "digests": [
+   "ec0ab4cc77656944b554",
+   "479a1a4cff13890e4e14",
+   "1830f42d847067d10157",
+   "1e939725701caa2b7929",
+   "1740624d47c50a9f9932",
+   "edf306a6094f55689688",
+   "8ce93d82735e84f942af",
+   "20649110176683d16a5b",
+   "f98700072f0936eec390",
+   "b7570a3e6a9eebe7a8d9",
+   "c99a6ab5c5ec70e0e48d",
+   "e2f2eb709ad366a0b60d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::getPrev",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::isPlaying": {
+  "digests": [
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::isPlaying",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::linkIntoList": {
+  "digests": [
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554",
+   "ec0ab4cc77656944b554"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::linkIntoList",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::setField38Voice54": {
+  "digests": [
+   "a83529d7c0e391de3625",
+   "e46dfb9d58be179e8a72",
+   "66f2760712d6f2ed7801",
+   "61045b0a8ed0f5b23057",
+   "59e293e9d7f93d30ba6a",
+   "9fbdd903733917193c57",
+   "7df3c3d04bb13249bab1",
+   "b075da22ebc70d2d9fa4",
+   "0c890d7c6be4757d9779",
+   "b93774049a30ee03ce9c",
+   "517a87938c5eafabeee6",
+   "2f2ef17fec78ea655107"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setField38Voice54",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::setField60": {
+  "digests": [
+   "6ad52fcc494bb583c6bf",
+   "b812fb14ce921c1aaa4d",
+   "fa3950bea63e84bda52d",
+   "927622eb8669803e8a32",
+   "c2c5a1174ef93ca433db",
+   "2334303c6cf6bcb634c5",
+   "12582ba248dc34400010",
+   "2bd5fde45e82a93e2c7c",
+   "f369f59aea9346065a93",
+   "df7b929f796187047b13",
+   "89c3c3890960885683d7",
+   "56ab99d1cbf7c4029394"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setField60",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::setFlags": {
+  "digests": [
+   "3402ae637219d8b5d714",
+   "bc202decf5e12905dd02",
+   "62d6c007a6bd892cfa07",
+   "3a0b624209e6f5284cb6",
+   "96779cabbb6f2ba325e4",
+   "026984e5cedcfb92fe12",
+   "1680322e995087ab012c",
+   "40fae36b0405181caa22",
+   "5377b54045c399c50193",
+   "68f6ae89771f8b36d20f",
+   "0f47b59ac318707fe1f0",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setFlags",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::setLoop": {
+  "digests": [
+   "f1eaa6ffcba84d8a9264",
+   "116a536f8972eda2cfe5",
+   "23d22155f75644c51ad1",
+   "889060324c56c0f4bd47",
+   "c0645464fe77081a1970",
+   "674654f0cc247a599f2e",
+   "2826aaccbb48baec696b",
+   "d20bc08c14a692f79db5",
+   "53eccd6992821f42065b",
+   "8a6ed258045951a0c7c6",
+   "2dbb4a503e8926b90226",
+   "85072d908bf0f634b43d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setLoop",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:Snd::setVolumeBase": {
+  "digests": [
+   "e38d447d10768b14e7de",
+   "83ba7de9b487f458c7f3",
+   "2b91992ab2b94555ce5d",
+   "099865d91023dd27dc30",
+   "fbc1eb6ae38423d41f6d",
+   "4984a9a6f0617c472407",
+   "ad83cb1a09aefd71304f",
+   "86c646f760d7d174baa1",
+   "091ce2483b613934f76e",
+   "081e434fdb92af33d9c1",
+   "7ab907aa7a9b7a8c6d93",
+   "94aee7c77850ce99cdc3"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "Snd::setVolumeBase",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:SndBase::setField38": {
+  "digests": [
+   "a83529d7c0e391de3625",
+   "8cce684668f415940640",
+   "e5a7ff8474155f860e9f",
+   "61045b0a8ed0f5b23057",
+   "19b507765d9dd6f676ee",
+   "6825561d5ef0570f7276",
+   "f1f31c0b902d4edf1a67",
+   "b075da22ebc70d2d9fa4",
+   "f4f4ea4602fa86f3aef4",
+   "ad3e275fa55cfff806f9",
+   "2b643c80cd4ef35301b3",
+   "2f2ef17fec78ea655107"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndBase::setField38",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:SndGroup_isDisabled": {
+  "digests": [
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "69e8c2b4502f9ea88a1a",
+   "69e8c2b4502f9ea88a1a",
+   "cd7881e1bec0731369cf",
+   "64f0194c6515a9ba919b"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndGroup_isDisabled",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 20,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:SndGroup_isMuted": {
+  "digests": [
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "89016ae6d56c0f562820",
+   "69e8c2b4502f9ea88a1a",
+   "69e8c2b4502f9ea88a1a",
+   "69e8c2b4502f9ea88a1a",
+   "cd7881e1bec0731369cf",
+   "64f0194c6515a9ba919b"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "SndGroup_isMuted",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 20,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::callDev34": {
+  "digests": [
+   "22044151f6e6562bd144",
+   "d38fd01e42e770288d98",
+   "afff271131db078e9e26",
+   "89016ae6d56c0f562820",
+   "1ef3b644d9abe2567cf1",
+   "277e2473f2e6f2fc7a3a",
+   "e5c09de97d9b4a6f3575",
+   "89016ae6d56c0f562820",
+   "b9bbbed4e161c9ce818f",
+   "8d519b47cd2d6587a9e9",
+   "e237d716efe7201ee9c8",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::callDev34",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::callDev8": {
+  "digests": [
+   "c09e155ebb82395d2e39",
+   "81c1336dfdc3d7700d96",
+   "7fa62d14b25ac8dcc556",
+   "89016ae6d56c0f562820",
+   "b5742cee9bd5f25e1670",
+   "77f127359bb87390cec1",
+   "9e1a243c0d26000f62a1",
+   "89016ae6d56c0f562820",
+   "4cc0361883444257887b",
+   "4ed896b9100de34f10b7",
+   "903cd651c511fe726723",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::callDev8",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::fwdDev35": {
+  "digests": [
+   "362a21aa09752fad7bec",
+   "a37b0ab679e783b41a14",
+   "99980adbc63ad5781554",
+   "5ea91a1678d7d638c3f0",
+   "eccd971ccc935d231df7",
+   "a014c4f13d3e5a6ab5b2",
+   "3dbec1699fb6bc6d456d",
+   "5ea91a1678d7d638c3f0",
+   "198151c9254604337960",
+   "7c8a62d66f05d8ab6775",
+   "bdd44889e5559962915e",
+   "5ea91a1678d7d638c3f0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::fwdDev35",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::fwdDev36": {
+  "digests": [
+   "2e984385f1c528b19251",
+   "c05240a8029f0877c61c",
+   "30fc6889574d53c2a8e4",
+   "89016ae6d56c0f562820",
+   "759e0db7f32a4af7b489",
+   "691643e6d1b562d4052f",
+   "51e9bf330aaa7f2319d1",
+   "89016ae6d56c0f562820",
+   "5941fc1390ee95942e73",
+   "4164c3bcdfdd6139d560",
+   "3ca4df703deb420a2328",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::fwdDev36",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::fwdDev37": {
+  "digests": [
+   "e06eb0d8764cbbc5583e",
+   "9a9c5353f875be7eddf7",
+   "fd31ac0994c1d5460a05",
+   "89016ae6d56c0f562820",
+   "4f43ec9f52c51005d2cd",
+   "6d6497766bc9b8f2f5ff",
+   "e08f50b16a85ea22aca6",
+   "89016ae6d56c0f562820",
+   "9f1ea313881928f8b844",
+   "3e4a5d3e60699c9f8628",
+   "f9f252ec26c6aeddc9ca",
+   "89016ae6d56c0f562820"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::fwdDev37",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::fwdDev5": {
+  "digests": [
+   "569ab5af65de56184b38",
+   "30d02e53981a3b852b34",
+   "ea4a7b4b90ab8d599cb3",
+   "5ea91a1678d7d638c3f0",
+   "9dce32297f9727c0ed47",
+   "3f1b436092f4e3c9a9da",
+   "ae3fc4cbe509c0498fae",
+   "5ea91a1678d7d638c3f0",
+   "11c54fa7a4a1a8556eb4",
+   "d3e901ead289ed845f0b",
+   "e294d12fb592c4b00777",
+   "5ea91a1678d7d638c3f0"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::fwdDev5",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::start": {
+  "digests": [
+   "9428a7f0f2d6eb408928",
+   "940698f22156d3af2cb9",
+   "f997f2bd7a6e81d8fd9f",
+   "2edecbabaaa8d9b65a18",
+   "346d36ac7b49f616bab0",
+   "5b4750bf7f23fd4b8c8a",
+   "d911c0ac37eb26aeecd4",
+   "963703df212cd6933a35",
+   "72f3e91bfe77dc93def5",
+   "9ed7a786e947cb93c887",
+   "e55fa3b639543d51b5f1",
+   "2b4e39f60533219ae856"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::start",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:VoiceRx::start@noready": {
+  "digests": [
+   "3e305fdbf393377c04dc",
+   "2eeed75f0e9c3283fd37",
+   "e76d699eff4fb3d092ae",
+   "33045d36cfe37357fa46",
+   "a15b42be2ccbdb045e03",
+   "c9b5183ab8c2ec1f2d69",
+   "0ed5a34c3f77edf03233",
+   "33045d36cfe37357fa46",
+   "bd773072f9f98c519569",
+   "4b01f326c76266dbd935",
+   "873ed527d3aa84a74284",
+   "33045d36cfe37357fa46"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "VoiceRx::start",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:gMusicDeviceDtor_483e00": {
+  "digests": [
+   "2e0d6aaf31d8dbd4453f"
+  ],
+  "exe_fallbacks": 3,
+  "fallback_names": "NodeList::dtor",
+  "name": "gMusicDeviceDtor_483e00",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    8629592,
+    32
+   ],
+   [
+    8629632,
+    484
+   ],
+   [
+    8630168,
+    32
+   ],
+   [
+    8630116,
+    100
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:gSfxDeviceDtor_483e40": {
+  "digests": [
+   "16fbaeb2eabb35ffc78b"
+  ],
+  "exe_fallbacks": 3,
+  "fallback_names": "NodeListB::dtor",
+  "name": "gSfxDeviceDtor_483e40",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    8629592,
+    32
+   ],
+   [
+    8629632,
+    484
+   ],
+   [
+    8630168,
+    32
+   ],
+   [
+    8630116,
+    100
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:gSoundsDtor_448190": {
+  "digests": [
+   "14d9769af16b8ce42a68"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "gSoundsDtor_448190",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    8629592,
+    32
+   ],
+   [
+    8629632,
+    484
+   ],
+   [
+    8630168,
+    32
+   ],
+   [
+    8630116,
+    100
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:gSoundsDtor_448190@live": {
+  "digests": [
+   "80edbbd0fa03b0389809"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "gSoundsDtor_448190",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    8629592,
+    32
+   ],
+   [
+    8629632,
+    484
+   ],
+   [
+    8630168,
+    32
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:gVoiceDeviceDtor_483e80": {
+  "digests": [
+   "290b4ee7b4713f5a2852"
+  ],
+  "exe_fallbacks": 3,
+  "fallback_names": "NodeListC::dtor",
+  "name": "gVoiceDeviceDtor_483e80",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    8629592,
+    32
+   ],
+   [
+    8629632,
+    484
+   ],
+   [
+    8630168,
+    32
+   ],
+   [
+    8630116,
+    100
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:returnBPop12_485130": {
+  "digests": [
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "returnBPop12_485130",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:returnBPop4_485380": {
+  "digests": [
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "returnBPop4_485380",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:returnB_484540": {
+  "digests": [
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "returnB_484540",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "s410:returnB_485120": {
+  "digests": [
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1",
+   "d745e512670f37c386d1"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "returnB_485120",
+  "regions": [
+   [
+    805337296,
+    1536
+   ],
+   [
+    805336464,
+    64
+   ],
+   [
+    805339120,
+    64
+   ],
+   [
+    8630116,
+    100
+   ],
+   [
+    8629632,
+    484
+   ]
+  ],
+  "tier": "EMU_ONLY",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSoundSystem": {
+  "digests": [
+   "91563fc11c8c8af4c4b9",
+   "43ac23238c4d2dcce209",
+   "9288920260f73ac540c8",
+   "1d93951be8ac9c744d14",
+   "e35adf2921bd38de6710",
+   "1d91d0c3cc9f72e49ee8"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSoundSystem",
+  "regions": [
+   [
+    8443968,
+    32400
+   ],
+   [
+    872620032,
+    9216
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 6,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSound_empty": {
+  "digests": [
+   "bc35860986474a1f5cd2"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSound",
+  "regions": [
+   [
+    805339568,
+    128
+   ],
+   [
+    805338800,
+    512
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    805337488,
+    272
+   ],
+   [
+    805337760,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSound_n1": {
+  "digests": [
+   "9b731b8a381f7259d15a"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSound",
+  "regions": [
+   [
+    805339568,
+    128
+   ],
+   [
+    805338800,
+    512
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    805337488,
+    272
+   ],
+   [
+    805337760,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSound_n4": {
+  "digests": [
+   "17ac93772304a852f63a"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSound",
+  "regions": [
+   [
+    805339568,
+    512
+   ],
+   [
+    805338800,
+    512
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    805337488,
+    272
+   ],
+   [
+    805337760,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSound_n8": {
+  "digests": [
+   "f13b38bfd345500c8a6d"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSound",
+  "regions": [
+   [
+    805339568,
+    1024
+   ],
+   [
+    805338800,
+    512
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    805337488,
+    272
+   ],
+   [
+    805337760,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSound_off": {
+  "digests": [
+   "7712a206cfb5cf27a9ef"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSound",
+  "regions": [
+   [
+    805339568,
+    128
+   ],
+   [
+    805338800,
+    512
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    805337488,
+    272
+   ],
+   [
+    805337760,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "shutdownSound_v6": {
+  "digests": [
+   "39c5383ea77531d3ccdc"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "shutdownSound",
+  "regions": [
+   [
+    805339568,
+    768
+   ],
+   [
+    805338800,
+    512
+   ],
+   [
+    8630116,
+    8
+   ],
+   [
+    8630212,
+    4
+   ],
+   [
+    805337488,
+    272
+   ],
+   [
+    805337760,
+    1028
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_f1": {
+  "digests": [
+   "c9d735cccdf96f61d397"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_f11": {
+  "digests": [
+   "de9b6f95df41dc2448c9"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_f5": {
+  "digests": [
+   "d9385d091056573cc728"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_loaded": {
+  "digests": [
+   "b229a0b94562c7ff4d6e"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_loadfail": {
+  "digests": [
+   "865636959f5ec5d72edd"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_newer": {
+  "digests": [
+   "17cea998767c0c00da00"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_ok": {
+  "digests": [
+   "45d066c9054b8f9e22ca"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_okc07": {
+  "digests": [
+   "45d066c9054b8f9e22ca"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_okhi": {
+  "digests": [
+   "45d066c9054b8f9e22ca"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_oklo": {
+  "digests": [
+   "45d066c9054b8f9e22ca"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_old": {
+  "digests": [
+   "17cea998767c0c00da00"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "soundVersionCheck_zero": {
+  "digests": [
+   "17cea998767c0c00da00"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "soundVersionCheck",
+  "regions": [
+   [
+    8630124,
+    92
+   ],
+   [
+    805336464,
+    1024
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 1,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "startSoundSlot": {
+  "digests": [
+   "770167d66b03a1a7b32e",
+   "f2884ba8b78e23f0537e",
+   "23530dac5bb70fdc3d03",
+   "29e1dae6c393bee60faa",
+   "9ff3e9cf4192d0afe895",
+   "4a19d552e752e9074166",
+   "2d5c9dde5829f56281b7",
+   "9a388d6db7e54db0f600",
+   "5d8bebaef919cb10efb5",
+   "8433ab179a5cea0537a9",
+   "cd25c15fc854752e312a",
+   "e91b4aa978defecd2352"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "startSoundSlot",
+  "regions": [
+   [
+    805336464,
+    64
+   ]
+  ],
+  "tier": "EXACT",
+  "vectors": 12,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ },
+ "unlinkSound": {
+  "digests": [
+   "ef41172c750ebb8090fb",
+   "d1c8616e275ec8749f35",
+   "353aa14b184d48ceb64b",
+   "3a9c710825372d464c5e",
+   "22370328596276844361",
+   "ad7c8afecdaf884c0fc6",
+   "1ed832734cfdb519c74d",
+   "08ea1e9f4a1bb76dbb85",
+   "a4c033241f65eafd9087",
+   "94dd12504c68bf0ca076",
+   "faa5204f040221ca90ac",
+   "4420c30cda8f2d67380f",
+   "746c22e3be28a1afe930"
+  ],
+  "exe_fallbacks": 0,
+  "fallback_names": "",
+  "name": "unlinkSound",
+  "regions": [
+   [
+    872607744,
+    16384
+   ],
+   [
+    805336464,
+    1024
+   ],
+   [
+    8630116,
+    8
+   ]
+  ],
+  "tier": "EQUAL_PI",
+  "vectors": 13,
+  "x87_exit": [
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa",
+   "007f5eb5c8d29b6522aa"
+  ]
+ }
+}

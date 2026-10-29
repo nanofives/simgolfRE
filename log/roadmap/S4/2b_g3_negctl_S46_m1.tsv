@@ -1,0 +1,102 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.Ch5bb90_dtor	1	RED	12	0	12	Ch5bb90_dtor
+snd.Ch5bb90_scalarDtor	1	RED	40	0	40	Ch5bb90_scalarDtor
+snd.Ch5be88_ctor	1	RED	12	0	12	Ch5be88_ctor
+snd.Ch5be88_dtorA	1	RED	12	0	12	Ch5be88_dtorA
+snd.Ch5be88_dtorB	1	RED	12	0	12	Ch5be88_dtorB
+snd.Ch5be88_scalarDtorA	1	RED	40	0	40	Ch5be88_scalarDtorA
+snd.Ch5be88_scalarDtorB	1	RED	40	0	40	Ch5be88_scalarDtorB
+snd.Ch5c178_ctor	1	RED	12	0	12	Ch5c178_ctor
+snd.Ch5c178_dtor	1	RED	12	0	12	Ch5c178_dtor
+snd.Ch5c178_scalarDtor	1	RED	40	0	40	Ch5c178_scalarDtor
+snd.Ch5c234_dtor	1	RED	12	0	12	Ch5c234_dtor
+snd.Ch5c234_scalarDtor	1	RED	40	0	40	Ch5c234_scalarDtor
+snd.Ch5c2ec_dtor	1	RED	12	0	12	Ch5c2ec_dtor
+snd.Ch5c2ec_forwardSlot37	1	RED	12	0	12	Ch5c2ec_forwardSlot37
+snd.Ch5c2ec_scalarDtor	1	RED	40	0	40	Ch5c2ec_scalarDtor
+snd.Ch5c3a4_ctor	1	RED	12	0	12	Ch5c3a4_ctor
+snd.ChanRecord_freeBuffers	1	RED	12	0	12	ChanRecord_freeBuffers
+snd.ChanRecord_init	1	RED	12	0	12	ChanRecord_init
+snd.ChannelDesc_ctor	1	RED	12	0	12	ChannelDesc_ctor
+snd.ChannelTable_callSlot4	1	RED	12	0	12	ChannelTable_callSlot4
+snd.ChannelTable_loadRange	1	RED	12	0	12	ChannelTable_loadRange
+snd.ChannelTable_releaseObject	1	RED	12	0	12	ChannelTable_releaseObject
+snd.Channel_allocAndInitVoice	1	RED	12	0	12	Channel_allocAndInitVoice
+snd.Channel_allocVoiceSlot	1	RED	14	0	14	Channel_allocVoiceSlot
+snd.Channel_applyFlags	1	RED	84	0	84	Channel_applyFlags
+snd.Channel_broadcastVoiceBit1	1	RED	16	0	16	Channel_broadcastVoiceBit1
+snd.Channel_clearBackref	1	RED	12	0	12	Channel_clearBackref
+snd.Channel_closeAndFree	1	RED	24	0	24	Channel_closeAndFree_l1 Channel_closeAndFree_l2
+snd.Channel_collectFlagBits	1	RED	12	0	12	Channel_collectFlagBits
+snd.Channel_ctorB	1	RED	12	0	12	Channel_ctorB
+snd.Channel_findStreamNode	1	RED	12	0	12	Channel_findStreamNode
+snd.Channel_findVoiceByTag	1	RED	20	0	20	Channel_findVoiceByTag
+snd.Channel_parseWaveHeader	1	RED	12	0	12	Channel_parseWaveHeader
+snd.Channel_parseWaveHeader_adjPlus70	1	RED	12	0	12	Channel_parseWaveHeader_adjPlus70
+snd.Channel_propagateFlag0	1	RED	84	0	84	Channel_propagateFlag0
+snd.Channel_recomputeGainsSetBit3	1	RED	12	0	12	Voice_stopAndFlag
+snd.Channel_recomputeVoiceGains	1	RED	80	0	80	Channel_recomputeVoiceGains_A_w27f Channel_recomputeVoiceGains_A_wf7f Channel_recomputeVoiceGains_B_w27f Channel_recomputeVoiceGains_B_wf7f Channel_recomputeVoiceGains_C_wf7f Channel_recomputeVoiceGains_D_w27f Channel_recomputeVoiceGains_N_w27f Channel_recomputeVoiceGains_T0_w27f
+snd.Channel_releaseBuffers	1	RED	24	0	24	Channel_releaseBuffers_l1 Channel_releaseBuffers_l2
+snd.Channel_releaseSound	1	RED	8	0	8	Channel_releaseSound
+snd.Channel_releaseVoices	1	RED	12	0	12	Channel_releaseVoices
+snd.Channel_resetPanState	1	RED	12	0	12	Channel_resetPanState
+snd.Channel_serviceBuffer	1	RED	12	0	12	Channel_serviceBuffer
+snd.Channel_set3DBufferStub	1	RED	12	0	12	Channel_set3DBufferStub
+snd.Channel_set3DPosition	1	RED	30	0	30	Channel_set3DPosition
+snd.Channel_set3DPositionX	1	RED	42	0	42	Channel_set3DPositionX
+snd.Channel_set3DPositionY	1	RED	42	0	42	Channel_set3DPositionY
+snd.Channel_set3DPositionZ	1	RED	42	0	42	Channel_set3DPositionZ
+snd.Channel_setField4Masked7f	1	RED	20	0	20	Channel_setField4Masked7f
+snd.Channel_setField5cClamped1200	1	RED	22	0	22	Channel_setField5cClamped1200
+snd.Channel_setFormat	1	RED	24	0	24	Channel_setFormat_ok Channel_setFormat_oom
+snd.Channel_setPanGains	1	RED	60	0	60	Channel_setPanGains
+snd.Channel_setPitchRate	1	RED	16	0	16	Channel_setPitchRate
+snd.Channel_setRate	1	RED	80	0	80	Channel_setRate_A_w27f Channel_setRate_A_wf7f Channel_setRate_B_w27f Channel_setRate_B_wf7f Channel_setRate_C_wf7f Channel_setRate_D_w27f Channel_setRate_N_w27f Channel_setRate_T0_w27f
+snd.Channel_setRateGlide	1	RED	640	0	640	Channel_setRateGlide Channel_setRateGlide_null Channel_setRateGlide_p1 Channel_setRateGlide_p4096
+snd.Channel_setReverseRate	1	RED	80	0	80	Channel_setReverseRate_A_w27f Channel_setReverseRate_A_wf7f Channel_setReverseRate_B_w27f Channel_setReverseRate_B_wf7f Channel_setReverseRate_C_wf7f Channel_setReverseRate_D_w27f Channel_setReverseRate_N_w27f Channel_setReverseRate_T0_w27f
+snd.Channel_setStreamSource	1	RED	12	0	12	Channel_setStreamSource
+snd.Channel_setVolume	1	RED	12	0	12	Channel_setVolume
+snd.Channel_start	1	RED	36	0	36	Channel_start_busy Channel_start_null Channel_start_ok
+snd.Channel_startVoice	1	RED	48	0	48	Channel_startVoice_22050 Channel_startVoice_44100 Channel_startVoice_null
+snd.Channel_startVoiceTimed	1	RED	24	0	24	Channel_startVoiceTimed_null Channel_startVoiceTimed_tmr
+snd.Channel_stepVolumeFade	1	RED	44	0	44	Channel_stepVolumeFade_w27f Channel_stepVolumeFade_wf7f
+snd.Channel_stopVoices	1	RED	12	0	12	Channel_stopVoices
+snd.Channel_stubReturnB	1	RED	30	0	30	Channel_stubReturnB@
+snd.SubChannel_ctor	1	RED	12	0	12	SubChannel_ctor
+snd.SubChannel_dtor	1	RED	12	0	12	SubChannel_dtor
+snd.SubChannel_openSourceType2	1	RED	12	0	12	SubChannel_openSourceType2
+snd.SubChannel_scalarDtor	1	RED	40	0	40	SubChannel_scalarDtor
+snd.Voice::update	1	RED	306	0	306	Voice_update_a Voice_update_b Voice_update_c Voice_update_d Voice_update_e Voice_update_f Voice_update_g Voice_update_h Voice_update_z
+snd.VoiceBase_clearList	1	RED	12	0	12	VoiceBase_clearList
+snd.VoiceBase_closeInner	1	RED	14	0	14	VoiceBase_closeInner
+snd.VoiceBase_ctor	1	RED	12	0	12	VoiceBase_ctor
+snd.VoiceBase_dtor	1	RED	8	0	8	VoiceBase_dtor
+snd.VoiceBase_openInner	1	RED	30	0	30	VoiceBase_openInner
+snd.VoiceBase_scalarDtor	1	RED	24	0	24	VoiceBase_scalarDtor
+snd.VoiceSlot_dtorEmpty	1	RED	12	0	12	VoiceSlot_dtorEmpty@
+snd.VoiceSlot_init	1	RED	12	0	12	VoiceSlot_init
+snd.Voice_allNotesOff	1	RED	36	0	36	Voice_allNotesOff_h Voice_allNotesOff_n Voice_allNotesOff_nodev
+snd.Voice_noteOff	1	RED	12	0	12	Voice_noteOff
+snd.Voice_notifyChannelNotes	1	RED	12	0	12	Voice_notifyChannelNotes
+snd.Voice_requestCmd12	1	RED	72	0	72	Voice_requestCmd12_full Voice_requestCmd12_null Voice_requestCmd12_q
+snd.Voice_requestStop	1	RED	36	0	36	Voice_requestStop_full Voice_requestStop_null Voice_requestStop_q
+snd.Voice_requestStopDrain	1	RED	36	0	36	Voice_requestStopDrain_full Voice_requestStopDrain_null Voice_requestStopDrain_q
+snd.Voice_resetDefaults	1	RED	42	0	42	Voice_resetDefaults_N_w27f Voice_resetDefaults_N_wf7f Voice_resetDefaults_r0_w27f Voice_resetDefaults_r0_wf7f Voice_resetDefaults_r1000_w27f Voice_resetDefaults_r1000_wf7f Voice_resetDefaults_r1001_w27f Voice_resetDefaults_r1001_wf7f Voice_resetDefaults_r22050_w27f Voice_resetDefaults_r22050_wf7f Voice_resetDefaults_r3_w27f Voice_resetDefaults_r3_wf7f Voice_resetDefaults_r999_w27f Voice_resetDefaults_r999_wf7f
+snd.Voice_setLevel	1	RED	20	0	20	Voice_setLevel
+snd.Voice_setLoopFlag	1	RED	16	0	16	Voice_setLoopFlag
+snd.Voice_setName	1	RED	36	0	36	Voice_setName
+snd.Voice_setPanGains	1	RED	34	0	34	Voice_setPanGains
+snd.Voice_setPlayModeBits	1	RED	24	0	24	Voice_setPlayModeBits
+snd.Voice_startPlayback	1	RED	12	0	12	Voice_startPlayback
+snd.allocVoiceSlot	1	RED	12	0	12	allocVoiceSlot
+snd.buildVoiceRxName	1	RED	10	0	10	buildVoiceRxName
+snd.buildVoiceTxName	1	RED	12	0	12	buildVoiceTxName
+snd.initSoundVoice	1	RED	10	0	10	initSoundVoice
+snd.openSourceType4	1	RED	12	0	12	openSourceType4
+snd.openSourceType6	1	RED	12	0	12	openSourceType6
+snd.openSourceType7	1	RED	12	0	12	openSourceType7
+snd.rewindChannel	1	RED	12	0	12	rewindChannel
+snd.serviceChannelPlayback	1	RED	28	0	28	serviceChannelPlayback_dev serviceChannelPlayback_nodev
+snd.startDevicePlayback	1	RED	12	0	12	startDevicePlayback
+snd.stubReturnBC	1	RED	12	0	12	stubReturnBC@
+snd.updateVoiceRate	1	RED	60	0	60	updateVoiceRate_0 updateVoiceRate_22050 updateVoiceRate_44100 updateVoiceRate_max updateVoiceRate_null

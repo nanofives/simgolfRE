@@ -1,0 +1,15 @@
+key	name	vectors	match	match_bc	errors	fallbacks	tier	cw	first
+loadSoundFile@basic	snd.loadSoundFile	9	9	18	0	276	EMU_ONLY	0x27f	
+loadSoundFile@busy7	snd.loadSoundFile	2	2	4	0	6	EMU_ONLY	0x27f	
+loadSoundFile@busy0	snd.loadSoundFile	2	2	4	0	192	EMU_ONLY	0x27f	
+loadSoundFile@seekfail	snd.loadSoundFile	3	3	6	0	144	EMU_ONLY	0x27f	
+loadSoundFile@seeknomove	snd.loadSoundFile	3	3	6	0	15	EMU_ONLY	0x27f	
+loadSoundFile@list	snd.loadSoundFile	2	2	4	0	165	EMU_ONLY	0x27f	
+loadSoundFile@pre_g0	snd.loadSoundFile	4	4	8	0	372	EMU_ONLY	0x27f	
+loadSoundFile@pre_g1	snd.loadSoundFile	4	4	8	0	372	EMU_ONLY	0x27f	
+loadSoundFile@pre_g2	snd.loadSoundFile	4	4	8	0	372	EMU_ONLY	0x27f	
+loadSoundFile@pre_g3	snd.loadSoundFile	4	4	8	0	372	EMU_ONLY	0x27f	
+loadSoundFile@oom0	snd.loadSoundFile	2	2	4	0	36	EMU_ONLY	0x27f	
+loadSoundFile@oom1	snd.loadSoundFile	1	1	2	0	18	EMU_ONLY	0x27f	
+loadSoundFile@oom2	snd.loadSoundFile	1	1	2	0	21	EMU_ONLY	0x27f	
+loadSoundFile@user	snd.loadSoundFile	3	3	6	0	9	EMU_ONLY	0x27f	

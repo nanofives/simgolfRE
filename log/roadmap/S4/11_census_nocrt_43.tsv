@@ -1,0 +1,58 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	x87diff	tier	quirk	pending	first
+applyIir2	snd.codecSynthPostFilter	GREEN	15	15	30	0	0	0	EXACT	{}		
+bitPack	snd.bitPack	GREEN	6	6	12	0	0	0	EXACT	{}		
+bitPermute	snd.bitPermute	GREEN	14	14	28	0	0	0	EXACT	{}		
+bitUnpack	snd.bitUnpack	GREEN	6	6	12	0	0	0	EXACT	{}		
+codecAlignAnalysisWindow	snd.codecAlignAnalysisWindow	RED	26	21	42	0	0	15	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+codecAllocContextA	snd.codecAllocEncoderContext	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+codecAllocContextA_5a	snd.codecAllocEncoderContext	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+codecAllocContextA_oom	snd.codecAllocEncoderContext	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecAllocContextB	snd.codecAllocDecoderContext	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+codecAllocContextB_5a	snd.codecAllocDecoderContext	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+codecAllocContextB_oom	snd.codecAllocDecoderContext	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecAmdfPitch	snd.codecAmdfPitch	RED	14	8	16	0	0	18	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+codecApplyFixedCoeffs	snd.codecHighPassFrame	GREEN	9	9	18	0	0	0	EXACT	{}		
+codecAutocorrelation	snd.codecCovarianceMatrix	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecBiquadFilter	snd.codecHighPassFilter	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecCombFilter	snd.codecRing5Add	GREEN	12	12	24	0	0	0	EXACT	{}		
+codecCorrelationLags	snd.codecInverseFilter2	RED	15	9	18	0	0	18	EXACT	{}		v3 A: x87 cc port 0x0 emu 0x100
+codecFeatureDecision	snd.codecVoicingDecision	RED	37	34	68	0	0	9	EXACT	{}		v1 A: x87 cc port 0x0 emu 0x100
+codecFirstOrderFilter	snd.codecPreEmphasis	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecGainSmoother	snd.codecPitchTrackDp	RED	14	8	16	0	0	18	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x4000
+codecInitContextA	snd.codecInitEncoderContext	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecInitContextB	snd.codecInitDecoderContext	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecMarkCorrelationJumps	snd.codecMarkCorrelationJumps	RED	14	11	22	0	0	9	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+codecPitchAnalysis	snd.codecRefinePitchLag	RED	14	4	8	0	0	30	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+codecProcessBlock	snd.codecDecodeFrame	RED	14	11	22	0	0	9	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+codecProcessResource	snd.codecEncodeFrame	RED	14	7	14	0	0	21	EXACT	{}		v2 A: x87 cc port 0x0 emu 0x100
+codecRemoveMean	snd.codecRemoveMean	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecRmsEnergy	snd.codecRmsEnergy	GREEN	13	13	26	0	0	0	EXACT	{}		
+codecSelectWindowFromJumps	snd.codecSelectWindowFromJumps	GREEN	20	20	40	0	0	0	EXACT	{}		
+codecSetParams_v0	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v1	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v2	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v3	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v4	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v5	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v6	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v7	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v8	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecSetParams_v9	snd.codecSetParams	GREEN	1	1	2	0	0	0	EXACT	{}		
+codecStageDispatch	snd.codecAnalyzeFrame	RED	14	7	14	0	0	21	EXACT	{}		v2 A: x87 cc port 0x0 emu 0x100
+codecSymmetricFir	snd.codecLowPassFir31	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecSynthStage	snd.codecSynthesizeFrame	RED	14	9	18	0	0	15	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+codecTransformStage_mode0	snd.codecDecodeParams	GREEN	14	14	28	0	0	0	EXACT	{}		
+codecTransformStage_mode1	snd.codecDecodeParams	RED	14	11	22	0	0	9	EXACT	{}		v9 A: x87 cc port 0x0 emu 0x100
+codecWindowFeatures	snd.codecWindowFeatures	RED	13	12	24	0	0	3	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+decodeTableSymbol	snd.codecCorrectNibble	GREEN	20	20	40	0	0	0	EXACT	{}		
+floatCopySign	snd.floatCopySign	RED	18	0	0	0	0	54	EXACT	{}		v0 A: x87 top port 0x1 emu 0x0
+floatFloorToInt	snd.floatRoundHalfAway	RED	16	7	14	0	0	27	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x100
+gaussSolveClamped	snd.codecLdlSolveClamped	RED	14	8	16	0	0	18	EXACT	{}		v2 A: x87 cc port 0x0 emu 0x100
+intPow	snd.intPow	GREEN	19	19	38	0	0	0	EXACT	{}		
+interpSubframeParams	snd.interpSubframeParams	RED	14	6	12	0	0	24	EXACT	{}		v0 A: x87 cc port 0x0 emu 0x4000
+lpcSynthesize	snd.lpcSynthesize	RED	14	9	18	0	0	15	EXACT	{}		v4 A: x87 cc port 0x0 emu 0x100
+medianOfThree	snd.medianOfThree	GREEN	16	16	32	0	0	0	EXACT	{}		
+quantizeParams_mode0	snd.quantizeParams	GREEN	14	14	28	0	0	0	EXACT	{}		
+quantizeParams_mode1	snd.quantizeParams	GREEN	14	14	28	0	0	0	EXACT	{}		
+reflectionToLpc	snd.reflectionToLpc	GREEN	14	14	28	0	0	0	EXACT	{}		
+substituteIfBelowThreshold	snd.codecRevertUnstableCoeffs	RED	15	7	14	0	0	24	EXACT	{}		v2 A: x87 cc port 0x0 emu 0x100

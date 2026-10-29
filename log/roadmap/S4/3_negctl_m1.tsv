@@ -1,0 +1,43 @@
+function	mode	verdict	vectors_differ	vectors	keys
+bitPack	1	RED	6	6	bitPack
+bitPermute	1	RED	14	14	bitPermute
+bitUnpack	1	RED	6	6	bitUnpack
+codecAlignAnalysisWindow	1	RED	26	26	codecAlignAnalysisWindow
+codecAllocDecoderContext	1	RED	3	3	codecAllocContextB codecAllocContextB_5a codecAllocContextB_oom
+codecAllocEncoderContext	1	RED	3	3	codecAllocContextA codecAllocContextA_5a codecAllocContextA_oom
+codecAmdfPitch	1	RED	14	14	codecAmdfPitch
+codecAnalyzeFrame	1	RED	14	14	codecStageDispatch
+codecCorrectNibble	1	RED	20	20	decodeTableSymbol
+codecCovarianceMatrix	1	RED	14	14	codecAutocorrelation
+codecDecodeFrame	1	RED	14	14	codecProcessBlock
+codecDecodeParams	1	RED	28	28	codecTransformStage_mode0 codecTransformStage_mode1
+codecEncodeFrame	1	RED	14	14	codecProcessResource
+codecHighPassFilter	1	RED	14	14	codecBiquadFilter
+codecHighPassFrame	1	RED	9	9	codecApplyFixedCoeffs
+codecInitDecoderContext	1	RED	14	14	codecInitContextB
+codecInitEncoderContext	1	RED	14	14	codecInitContextA
+codecInverseFilter2	1	RED	15	15	codecCorrelationLags
+codecLdlSolveClamped	1	RED	14	14	gaussSolveClamped
+codecLowPassFir31	1	RED	14	14	codecSymmetricFir
+codecMarkCorrelationJumps	1	RED	14	14	codecMarkCorrelationJumps
+codecPitchTrackDp	1	RED	14	14	codecGainSmoother
+codecPreEmphasis	1	RED	14	14	codecFirstOrderFilter
+codecRefinePitchLag	1	RED	14	14	codecPitchAnalysis
+codecRemoveMean	1	RED	14	14	codecRemoveMean
+codecRevertUnstableCoeffs	1	RED	15	15	substituteIfBelowThreshold
+codecRing5Add	1	RED	12	12	codecCombFilter
+codecRmsEnergy	1	RED	13	13	codecRmsEnergy
+codecSelectWindowFromJumps	1	RED	20	20	codecSelectWindowFromJumps
+codecSetParams	1	RED	10	10	codecSetParams_v0 codecSetParams_v1 codecSetParams_v2 codecSetParams_v3 codecSetParams_v4 codecSetParams_v5 codecSetParams_v6 codecSetParams_v7 codecSetParams_v8 codecSetParams_v9
+codecSynthPostFilter	1	RED	15	15	applyIir2
+codecSynthesizeFrame	1	RED	14	14	codecSynthStage
+codecVoicingDecision	1	RED	37	37	codecFeatureDecision
+codecWindowFeatures	1	RED	13	13	codecWindowFeatures
+floatCopySign	1	RED	13	18	floatCopySign
+floatRoundHalfAway	1	RED	16	16	floatFloorToInt
+intPow	1	RED	19	19	intPow
+interpSubframeParams	1	RED	14	14	interpSubframeParams
+lpcSynthesize	1	RED	14	14	lpcSynthesize
+medianOfThree	1	RED	16	16	medianOfThree
+quantizeParams	1	RED	28	28	quantizeParams_mode0 quantizeParams_mode1
+reflectionToLpc	1	RED	14	14	reflectionToLpc

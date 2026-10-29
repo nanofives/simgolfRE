@@ -1,4 +1,27 @@
-# Regression baseline at HEAD d66aa755 + S3 (I13, 2026-10-28)
+# Regression baseline at HEAD 10e9d507 + S4 (I14, 2026-10-29)
+
+This file now describes **HEAD + S4**: the S4 audio engine (sound.dll's engine ported behind an AudioSink, `log/roadmap/S4/MERGE.md`,
+files `log/roadmap/S4/files.txt`, shared edits `2b_apply_shared.py`) on 6e6df6e7, whose port/ equals e179bd24's (= I13's state below).
+Measured by I14 in the mirror `port/build/I14` (`log/roadmap/merges/I14.md`, raw logs in `log/roadmap/merges/I14/`). Suites by decision
+G11: the mirror equals the S4 lead's gated tree port/build/S4r2 byte for byte, so the suite numbers are the lead's.
+
+| Gate | HEAD + S4 (I14) |
+|---|---|
+| repo static | 630 passed, 2 skipped (I13 614 / 2; +16 S4 static tests) |
+| port suite x64 | 95 files (I13's 82 + 13 audio): 94 PASS, test_fttext 1 or 2 of its U-1393 host GDI tests fail (lead 1, I14's partial re-run 2) |
+| port suite Win32 | I13's 66-file list: 20 failed ids, all among I10's 22 known |
+| test_app_* x64 | 6 / 6 PASS |
+| segments x64 / Win32 / freetype | 205 / 205 each |
+| boot x64 / Win32 / freetype | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each |
+| chains / ledger | 342 / 342; ledger 29 rows, 1 without a cause |
+| frame census / terrain | 698 rows PASS 100, FAIL 537, UNSUPPORTED 51, NOT_RUN 10 / 527 PASS, 75 NOT_MEASURED |
+| S7 live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266 |
+| S4 own gate | oracle 104 / 104 GREEN 0 fallbacks, exe 3 / 3, streams 205 / 205 (4,964 requests), device 0 fallbacks, goldens 183 / 183 equal, replay 0 fails both backends, controls all RED |
+
+Reference TSVs for later runs: `log/roadmap/merges/I14/{segs,boot,equiv}_{x64,win32}.tsv`, `census.tsv`, `terrain_verdicts.tsv`, `chain_x64.tsv`.
+
+## Before S4 (I13, HEAD d66aa755 + S3, 2026-10-28)
+
 
 This file now describes **HEAD d66aa755 + S3**: commit `d66aa755` (= 919dbdd5 + S7 waves 1-3, the I10 state below) plus S3's
 resubmission c, merged as one request (`log/roadmap/S3/14_merge.md` + `14_files.txt`: MERGE_w5b, i.e. S3 waves 2 / 4 / 5 with S3.5,

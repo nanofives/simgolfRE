@@ -137,8 +137,6 @@ const Drop kDrops[] = {
     {"setLinePoint", "line drawing"},
     {"setDrawTarget", "draw target / font selection (renderer)"},
     {"loadImage", "image file into a surface (renderer)"},
-    {"playSound", "audio request"},
-    {"startSoundSlot", "audio request"},
     {"saveCourseJpg", "screenshot file"},
     {"capsLockOff", "keybd_event (time_model.md section 8)"},
     {"emptyFunc_4a0890", "empty function"},
@@ -150,7 +148,6 @@ const Drop kDrops[] = {
     // phase 3.7a, the COMMAND segments: census 0 sim writes and no sim address in the closure (log/p3/p37a_simwrites.py)
     {"drawTerrainToolbar", "toolbar drawing (3.7b write audit: its hover words are read only by drawing; result unused)"},
     {"enterModal483d30", "modal stack push and focus clear of the window tree (UI)"},
-    {"Snd::status", "audio device status query; the frame discards it (ML+0xf3c)"},
     {"Widget_readPixel", "a pixel read of the root surface; its only use gates a dropped sprite draw (P5's zoom, ML+0x95d3)"},
 };
 

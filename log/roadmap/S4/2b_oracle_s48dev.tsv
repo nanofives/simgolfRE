@@ -1,0 +1,105 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	x87diff	tier	quirk	pending	first
+CommandQueue::at	CommandQueue::at	GREEN	16	16	32	0	0	0	EXACT	{}		
+CommandQueue::clear	CommandQueue::clear	GREEN	10	10	20	0	0	0	EXACT	{}		
+CommandQueue::init	CommandQueue::init	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CommandQueue::push	CommandQueue::push	GREEN	27	27	54	0	0	0	EQUAL_PI	{}		
+Ctrl5b19c_ctor	Ctrl5b19c_ctor	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Ctrl5b58c_dtor	Ctrl5b58c_dtor	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Ctrl5b58c_dtorEmbedded	Ctrl5b58c_dtorEmbedded	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+Ctrl5b58c_scalarDtor	Ctrl5b58c_scalarDtor	GREEN	40	40	80	0	0	0	EQUAL_PI	{}		
+Ctrl5b5c0_ctor	Ctrl5b5c0_ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Ctrl5b5c0_mapValue	Ctrl5b5c0_mapValue	GREEN	52	52	104	0	0	0	EQUAL_PI	{}		
+Ctrl5b5c0_transposeTable	Ctrl5b5c0_transposeTable	GREEN	66	66	132	0	0	0	EXACT	{}		
+Ctrl5b668_ctor	Ctrl5b668_ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlBase_flushElements	CtrlBase_flushElements	GREEN	14	14	28	0	0	0	EQUAL_PI	{}		
+CtrlBase_resetElements	CtrlBase_resetElements	GREEN	14	14	28	0	0	0	EQUAL_PI	{}		
+CtrlObject2_ctor	CtrlObject2_ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject3_ctor	CtrlObject3_ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject::ctor	CtrlObject::ctor	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject_dtorA	CtrlObject_dtorA	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject_dtorB	CtrlObject_dtorB	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject_dtorC	CtrlObject_dtorC	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject_dtorD	CtrlObject_dtorD	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+CtrlObject_scalarDtorA	CtrlObject_scalarDtorA	GREEN	24	24	48	0	0	0	EQUAL_PI	{}		
+CtrlObject_scalarDtorB	CtrlObject_scalarDtorB	GREEN	50	50	100	0	0	0	EQUAL_PI	{}		
+CtrlObject_scalarDtorC	CtrlObject_scalarDtorC	GREEN	50	50	100	0	0	0	EQUAL_PI	{}		
+CtrlObject_scalarDtorD	CtrlObject_scalarDtorD	GREEN	50	50	100	0	0	0	EQUAL_PI	{}		
+Ctrl_appendIfAccepted	Ctrl_appendIfAccepted	GREEN	30	30	60	0	0	0	EQUAL_PI	{}		
+Device::serviceVoices	Device::serviceVoices	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+DeviceBase_dtorA	DeviceBase_dtorA	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+DeviceBase_dtorB	DeviceBase_dtorB	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+DeviceBase_dtorC	DeviceBase_dtorC	GREEN	10	10	20	0	0	0	EQUAL_PI	{}		
+DeviceBase_scalarDtor	DeviceBase_scalarDtor	GREEN	50	50	100	0	0	0	EQUAL_PI	{}		
+Device_createStartQueue	Device_createStartQueue	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Device_lazyCreateSound	Device_lazyCreateSound	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Device_prepareSoundFlags	Device_prepareSoundFlags	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::create_device_busy	Dll_Midi_Device::create_device	GREEN	12	12	24	0	0	0	EXACT	{}		
+Dll_Midi_Device::create_device_fail	Dll_Midi_Device::create_device	GREEN	12	12	24	0	0	0	EXACT	{}		
+Dll_Midi_Device::create_device_null	Dll_Midi_Device::create_device	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v0	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v1	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v2	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v3	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v4	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v5	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v6	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v7	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v8	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+Dll_Midi_Device::delete_device_v9	Dll_Midi_Device::delete_device	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+atexitDtor_100b49b8	atexitDtor_100b49b8	GREEN_PENDING	12	12	24	0	36	0	EQUAL_PI	{}	S4.7:SoundWindowObj_dtor	pending S4.7:SoundWindowObj_dtor
+ctrlScalarDeletingDtor	ctrlScalarDeletingDtor	GREEN	50	50	100	0	0	0	EQUAL_PI	{}		
+destroySoundWindowObj	destroySoundWindowObj	GREEN	24	24	48	0	0	0	EQUAL_PI	{}		
+dynInit_ctrl100b4a68_fail	dynInit_ctrl100b4a68	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4a68_ok	dynInit_ctrl100b4a68	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4b50_fail	dynInit_ctrl100b4b50	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4b50_ok	dynInit_ctrl100b4b50	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4c38_fail	dynInit_ctrl100b4c38	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4c38_ok	dynInit_ctrl100b4c38	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4d20_fail	dynInit_ctrl100b4d20	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4d20_ok	dynInit_ctrl100b4d20	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4e08_fail	dynInit_ctrl100b4e08	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_ctrl100b4e08_ok	dynInit_ctrl100b4e08	GREEN_PENDING	1	1	2	0	3	0	EQUAL_PI	{}	-:0x42647	pending -:0x42647
+dynInit_soundWindowObj100b49b8_fail	dynInit_soundWindowObj100b49b8	GREEN_PENDING	1	1	2	0	6	0	EQUAL_PI	{}	S4.7:SoundWindowObj_ctor -:0x42647	pending S4.7:SoundWindowObj_ctor -:0x42647
+dynInit_soundWindowObj100b49b8_ok	dynInit_soundWindowObj100b49b8	GREEN_PENDING	1	1	2	0	6	0	EQUAL_PI	{}	S4.7:SoundWindowObj_ctor -:0x42647	pending S4.7:SoundWindowObj_ctor -:0x42647
+initCtrlVtable	initCtrlVtable	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+init_sound_timer	init_sound_timer	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+init_sound_timer_alt	init_sound_timer	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+postNotification	postNotification	GREEN	16	16	32	0	0	0	EQUAL_PI	{}		
+postSoundThreadMessage_ok	postSoundThreadMessage	GREEN	12	12	24	0	0	0	EXACT	{}		
+postSoundThreadMessage_r1	postSoundThreadMessage	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+postSoundThreadMessage_r3	postSoundThreadMessage	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+pumpWaveMessages	pumpWaveMessages	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+registerTimerClient_bp61	registerTimerClient	GREEN_PENDING	6	6	12	0	36	0	EQUAL_PI	{}	S4.7:SoundTimer::registerClient S4.7:SoundTimer::start	pending S4.7:SoundTimer::registerClient S4.7:SoundTimer::start
+registerTimerClient_busy	registerTimerClient	GREEN_PENDING	6	6	12	0	36	0	EQUAL_PI	{}	S4.7:SoundTimer::registerClient S4.7:SoundTimer::start	pending S4.7:SoundTimer::registerClient S4.7:SoundTimer::start
+registerTimerClient_null	registerTimerClient	GREEN	6	6	12	0	0	0	EXACT	{}		
+registerTimerClient_ok	registerTimerClient	GREEN_PENDING	6	6	12	0	36	0	EQUAL_PI	{}	S4.7:SoundTimer::registerClient S4.7:SoundTimer::start	pending S4.7:SoundTimer::registerClient S4.7:SoundTimer::start
+registerTimerClient_se61	registerTimerClient	GREEN_PENDING	6	6	12	0	36	0	EQUAL_PI	{}	S4.7:SoundTimer::registerClient S4.7:SoundTimer::start	pending S4.7:SoundTimer::registerClient S4.7:SoundTimer::start
+release_sound_clr	release_sound	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+release_sound_null	release_sound	GREEN	1	1	2	0	0	0	EXACT	{}		
+release_sound_swap	release_sound	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+release_sound_tmr	release_sound	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+soundThreadPump_drop	soundThreadPump	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+soundThreadPump_event	soundThreadPump	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+soundThreadPump_flag0	soundThreadPump	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+soundThreadPump_one	soundThreadPump	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+soundThreadPump_two	soundThreadPump	GREEN	1	1	2	0	0	0	EQUAL_PI	{}		
+soundWindowProc_f0	soundWindowProc	GREEN	26	26	52	0	0	0	EQUAL_PI	{}		
+soundWindowProc_f1	soundWindowProc	GREEN	26	26	52	0	0	0	EQUAL_PI	{}		
+soundWindowProc_f2	soundWindowProc	GREEN	26	26	52	0	0	0	EQUAL_PI	{}		
+soundWindowProc_f3	soundWindowProc	GREEN	26	26	52	0	0	0	EQUAL_PI	{}		
+soundWindowSubclassProc_f0	soundWindowSubclassProc	GREEN	27	27	54	0	0	0	EQUAL_PI	{}		
+soundWindowSubclassProc_f1	soundWindowSubclassProc	GREEN	27	27	54	0	0	0	EQUAL_PI	{}		
+soundWindowSubclassProc_f2	soundWindowSubclassProc	GREEN	27	27	54	0	0	0	EQUAL_PI	{}		
+soundWindowSubclassProc_f3	soundWindowSubclassProc	GREEN	27	27	54	0	0	0	EQUAL_PI	{}		
+startSignalThread	startSignalThread	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+stopSoundThreadFull	stopSoundThreadFull	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+stubReturn2fB@	stubReturn2fB	GREEN	12	12	24	0	0	0	EMU_ONLY	{}		
+stubReturn2fA@	stubReturn2fA	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+get_sound_version@	get_sound_version	GREEN	1	1	2	0	0	0	EMU_ONLY	{}		
+postMidiNotification@eng	postMidiNotification	GREEN	8	8	16	0	0	0	EMU_ONLY	{}		
+postMidiNotification@eng0	postMidiNotification	GREEN	8	8	16	0	0	0	EMU_ONLY	{}		
+postMidiNotification@noeng	postMidiNotification	GREEN	8	8	16	0	0	0	EMU_ONLY	{}		
+postMidiNotification@noeng1	postMidiNotification	GREEN	8	8	16	0	0	0	EMU_ONLY	{}		
+delete_sound@ready	delete_sound	GREEN	10	10	20	0	0	0	EMU_ONLY	{}		
+delete_sound@notimer	delete_sound	GREEN	10	10	20	0	0	0	EMU_ONLY	{}		
+delete_sound@none	delete_sound	GREEN	10	10	20	0	0	0	EMU_ONLY	{}		

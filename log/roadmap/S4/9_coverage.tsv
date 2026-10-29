@@ -1,0 +1,102 @@
+function	rva	instructions	executed	jcc	jcc_both_sides	jcc_one_side	jcc_never	unexecuted_spans	jcc_one_sided_or_never
+loadSoundFile	0x41d0	0	0	0	0	0	0	no key	
+Wave_Device::readFmtChunk	0x5440	141	139	5	2	3	0	0x54de-0x54de 0x55b4-0x55b4	0x54d1(F) 0x54e7(F) 0x55a0(F)
+processWaveChunks	0x5770	71	68	14	9	5	0	0x57c0-0x57c0 0x57ef-0x57f1	0x57ad(F) 0x57b9(F) 0x57ca(F) 0x57e4(F) 0x5815(F)
+WaveStream::ctor	0x6020	54	54	0	0	0	0		
+WaveStream::scalarDeletingDtor	0x6130	11	11	1	1	0	0		
+WaveStream::destroy	0x6160	122	120	14	10	4	0	0x626e-0x6271	0x61df(F) 0x6257(F) 0x6265(F) 0x6289(F)
+closeMmioNodeList	0x6330	77	77	9	8	1	0		0x639e(F)
+Wave_Device::openMemoryMmio	0x6420	45	45	3	3	0	0		
+Wave_Device::freeBufferList	0x64e0	244	237	27	13	14	0	0x652d-0x6530 0x6588-0x658b 0x6720-0x6725	0x6524(F) 0x6548(F) 0x654f(F) 0x6561(F) 0x6578(F) 0x657f(F) 0x65a3(F) 0x65be(T) 0x6640(F) 0x664d(F) 0x668d(F) 0x6717(F) 0x671e(T) 0x676b(F)
+Wave_Device::appendBuffer	0x6850	132	122	9	6	3	0	0x6876-0x688c 0x68fe-0x68fe 0x6940-0x6940	0x6874(T) 0x68f1(F) 0x6934(F)
+startStream	0x6b00	15	15	1	1	0	0		
+computeCaptureDuration	0x6bd0	36	36	2	2	0	0		
+initStreamBuffer	0x6e00	39	39	0	0	0	0		
+writeWaveFile	0x7010	394	394	50	45	5	0		0x72d3(F) 0x7314(T) 0x7341(F) 0x7386(F) 0x739a(T)
+writeWaveFileB	0x75e0	413	406	44	40	4	0	0x788f-0x789d	0x788d(T) 0x78c1(F) 0x78f1(F) 0x7905(T)
+writeWaveChunk	0x7df0	194	192	19	15	4	0	0x7f0a-0x7f11	0x7e3f(F) 0x7ec6(F) 0x7ef7(F) 0x7f93(F)
+writeWaveChunkB	0x8070	314	310	25	21	4	0	0x8113-0x8113 0x819a-0x819a 0x8232-0x8232 0x82cd-0x82cd	0x8100(F) 0x8186(F) 0x821f(F) 0x82ba(F)
+openMmioFile	0x86f0	30	30	1	1	0	0		
+closeMmioHandle	0x8770	11	11	1	1	0	0		
+Dll_Wave_Device::create_device	0xb050	39	39	2	2	0	0		
+openWaveStreamFile	0xb110	9	9	1	1	0	0		
+Wave_Device::setCooperativeLevel	0xb140	9	9	1	1	0	0		
+Wave_Device::closeStream	0xb170	6	6	1	1	0	0		
+Dll_Wave_Device::delete_device	0xb1a0	9	9	1	1	0	0		
+Wave_Device::ctor	0xb1d0	39	39	0	0	0	0		
+Wave_Device::scalarDeletingDtor	0xb2b0	11	11	1	1	0	0		
+Wave_Device::dtor	0xb2e0	72	72	7	7	0	0		
+Wave_Device::open	0xb420	286	269	23	16	7	0	0xb4a3-0xb4a3 0xb541-0xb541 0xb563-0xb568 0xb5fc-0xb5fc 0xb742-0xb770	0xb498(F) 0xb4da(F) 0xb536(F) 0xb561(T) 0xb5a0(F) 0xb5eb(F) 0xb731(F)
+Wave_Device::stop	0xb960	67	67	8	7	1	0		0xb9ff(F)
+Wave_Device::start	0xbaa0	198	190	18	13	5	0	0xbc85-0xbc9e	0xbb08(F) 0xbb35(F) 0xbb53(F) 0xbb81(F) 0xbc74(F)
+Wave_Device::closeOutput	0xbe00	55	55	6	5	1	0		0xbe77(F)
+Wave_Device::stopOutput	0xbef0	36	36	6	5	1	0		0xbf39(F)
+Wave_Device::startOutput	0xbf90	30	30	5	4	1	0		0xbfc6(F)
+Wave_Device::restart	0xc020	112	112	9	9	0	0		
+Wave_Device::serviceTick	0xc230	44	44	7	7	0	0		
+WaveCmdQueue::pushNode	0xc2f0	47	46	2	1	1	0	0xc35c-0xc35c	0xc351(F)
+WaveCmdQueue::pushValue	0xc3d0	13	13	1	1	0	0		
+Wave_Device::flushCommandQueue	0xcc70	63	63	6	6	0	0		
+Wave_Device::dispatchCommand	0xcd80	785	766	111	73	38	0	0xce56-0xce56 0xcf04-0xcf04 0xcf1d-0xcf1d 0xd182-0xd18e 0xd4e6-0xd4ec 0xd4fe-0xd508 0xd65d-0xd65d 0xd68d-0xd699 0xd702-0xd702 0xd78c-0xd78c	0xcdad(F) 0xcdda(F) 0xce42(F) 0xceae(F) 0xcebe(F) 0xcef0(F) 0xcf0e(F) 0xcf6a(F) 0xcffb(F) 0xd071(F) 0xd0ae(F) 0xd0ca(F) 0xd144(F) 0xd156(F) 0xd174(F) 0xd208(F) 0xd21a(F) 0xd2bb(F) 0xd328(F) 0xd34c(F) 0xd3c4(F) 0xd3df(F) 0xd3f1(F) 0xd474(F) 0xd4cc(F) 0xd4de(F) 0xd4e4(T) 0xd4fc(T) 0xd537(F) 0xd54b(F) 0xd592(F) 0xd5f7(F) 0xd64f(F) 0xd65b(T) 0xd661(F) 0xd67f(F) 0xd6f7(F) 0xd781(F)
+Wave_Device::scanCommandRing	0xdcf0	206	206	24	16	8	0		0xdd9e(F) 0xde0a(F) 0xde3c(F) 0xde6b(F) 0xdec8(F) 0xdefb(F) 0xdf2a(F) 0xdf81(T)
+Wave_Device::caps	0xe230	6	6	1	1	0	0		
+Wave_Device::deviceName	0xe260	15	15	1	1	0	0		
+setOutputMasterVolume	0xe2a0	7	7	1	1	0	0		
+getWaveDeviceInterface	0xe2d0	7	7	1	1	0	0		
+serviceWaveDevice	0xe310	11	11	2	2	0	0		
+stubReturnBA	0xe350	2	2	0	0	0	0		
+Wave_In_Device::scalarDeletingDtor	0xe8c0	11	11	1	1	0	0		
+Wave_In_Device::dtor	0xe8f0	2	2	0	0	0	0		
+Dll_Wave_In_Device::create_device	0xe910	59	59	2	2	0	0		
+Dll_Wave_In_Device::delete_device	0xea00	9	9	1	1	0	0		
+Wave_In_Device::start	0xea30	18	18	4	4	0	0		
+Wave_In_Device::stop	0xeaa0	8	8	1	1	0	0		
+Wave_In_Device::openCapture	0xead0	59	59	5	5	0	0		
+Wave_In_Device::closeCapture	0xec00	19	19	2	2	0	0		
+Wave_In_Device::setStream	0xed70	9	9	1	1	0	0		
+Wave_In_Device::clearStream	0xeda0	6	6	1	1	0	0		
+MidiReader_freeContent	0x1b870	87	87	9	9	0	0		
+streamReadByte	0x1c7a0	19	19	1	1	0	0		
+streamConsumeByte	0x1c7e0	17	17	1	1	0	0		
+MidiReader_init	0x1d380	58	58	2	2	0	0		
+MidiReader_dtor	0x1e7d0	28	28	2	2	0	0		
+WaveInDeviceBase_ctor	0x2a240	13	13	0	0	0	0		
+WaveInDeviceBase_scalarDtor	0x2a380	11	11	1	1	0	0		
+WaveInDeviceBase_openInner	0x2a420	29	29	2	2	0	0		
+WaveInDeviceBase_closeInner	0x2a470	14	14	1	1	0	0		
+enqueueWaveCmdE	0x2fb70	37	36	2	1	1	0	0x2fbb8-0x2fbb8	0x2fbaa(F)
+enqueueWaveCmd10	0x2fc10	45	45	3	3	0	0		
+Sound5c450::openMmio	0x30710	4	4	0	0	0	0		
+openMmioSound	0x30840	202	198	14	12	2	0	0x30907-0x3090b 0x309f7-0x309f7	0x30905(T) 0x309ea(F)
+streamWaveSamples	0x30ba0	296	296	37	32	5	0		0x30c30(F) 0x30c42(F) 0x30c9f(F) 0x30d00(T) 0x30e41(F)
+StreamReader_ctor	0x31200	21	21	0	0	0	0		
+StreamReader_scalarDtor	0x31270	11	11	1	1	0	0		
+streamReaderDtor	0x312a0	122	122	13	13	0	0		
+WaveInStream_start	0x31450	11	11	1	1	0	0		
+freeMmioHandleList	0x31490	64	64	6	6	0	0		
+freeMmioHandleListGetInfo	0x31560	78	78	7	7	0	0		
+loadWaveResource	0x316c0	113	113	8	8	0	0		
+WaveInStream_resetCodec	0x319e0	17	17	0	0	0	0		
+beginDecodeStreamA	0x32130	93	93	5	5	0	0		
+beginDecodeStreamB	0x32290	107	107	6	6	0	0		
+closeDecoder	0x32640	6	6	1	1	0	0		
+return0xb_32660	0x32660	2	2	0	0	0	0		
+parseRiffWave	0x326a0	802	782	51	42	9	0	0x3299e-0x329b1 0x32a87-0x32a9a 0x32b8b-0x32b8b 0x32c5f-0x32c5f	0x3299c(T) 0x32a85(T) 0x32b78(F) 0x32b89(T) 0x32b8f(F) 0x32c4c(F) 0x32c5d(T) 0x32c63(F) 0x32d93(F)
+fillDecodeRing	0x33300	417	417	34	30	4	0		0x33448(F) 0x3357e(F) 0x33607(F) 0x3365a(F)
+serviceDecodeRing	0x34fb0	8	8	2	2	0	0		
+closeMmioSound	0x35ca0	142	142	12	8	4	0		0x35ce3(F) 0x35cf5(F) 0x35e05(T) 0x35ea3(F)
+flushMmioBuffer	0x37920	144	134	13	10	2	1	0x3797b-0x37997	0x37979(T) 0x3797c(-) 0x3798d(T)
+MmioBuffer_init	0x37e10	28	28	1	1	0	0		
+WaveInDevice_ctor	0x38650	32	32	0	0	0	0		
+WaveInDevice_deleteDtor	0x386e0	11	11	1	1	0	0		
+WaveInDevice_dtor	0x38710	116	114	13	9	4	0	0x3880b-0x3880e	0x387ab(F) 0x387f6(F) 0x38803(F) 0x38825(F)
+WaveInDevice_allocCaptureBuffers	0x38890	120	109	12	6	6	0	0x388f0-0x388f0 0x38931-0x38931 0x38983-0x38983 0x3899f-0x389a9	0x388c1(F) 0x388d3(F) 0x388f4(F) 0x38925(F) 0x3897c(F) 0x3898d(F)
+WaveInDevice_start	0x38b20	5	5	0	0	0	0		
+WaveInDevice_prepareHeaders	0x38b40	77	77	8	7	1	0		0x38b84(F)
+WaveInDevice_addBuffer	0x38da0	77	77	8	7	1	0		0x38de4(F)
+WaveInDevice_reset	0x38f10	11	11	0	0	0	0		
+onWaveInCallbackMessage	0x38fd0	26	26	3	3	0	0		
+WaveInDevice_open	0x39050	49	49	3	3	0	0		
+WaveInDevice_close	0x39140	87	87	10	8	2	0		0x3918f(F) 0x391a9(F)
+WaveInDevice_requeueBuffer	0x393d0	35	35	2	2	0	0		
+loadMultiChannel	0x399a0	85	84	7	5	2	0	0x39a8e-0x39a8e	0x399f8(F) 0x39a1d(F)

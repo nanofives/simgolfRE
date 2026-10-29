@@ -1,0 +1,4 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	exe_fallbacks	fallback_names	tier	first
+arrayStaticInit_448160_live	arrayStaticInit_448160	GREEN	1	1	2	0	0	0		EXACT	
+arrayStaticInit_448160_pat	arrayStaticInit_448160	GREEN	1	1	2	0	0	0		EXACT	
+arrayStaticInit_448160_zero	arrayStaticInit_448160	GREEN	1	1	2	0	0	0		EXACT	

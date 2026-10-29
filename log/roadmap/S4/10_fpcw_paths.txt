@@ -1,0 +1,37 @@
+0x3a980 codecDecodeFrame  fldcw []  direct callers ['openMmioSound']
+  0x30840 openMmioSound  fldcw []  direct callers ['Sound5c450::openMmio']
+    0x30710 Sound5c450::openMmio  fldcw []  direct callers []
+
+0x3b150 codecEncodeFrame  fldcw []  direct callers ['loadWaveResource']
+  0x316c0 loadWaveResource  fldcw []  direct callers ['WaveInDevice_requeueBuffer']
+    0x393d0 WaveInDevice_requeueBuffer  fldcw []  direct callers ['soundWindowProc', 'soundWindowSubclassProc']
+      0x288a0 soundWindowProc  fldcw []  direct callers ['soundThreadPump']
+        0x2a970 soundThreadPump  fldcw []  direct callers []
+      0x28b70 soundWindowSubclassProc  fldcw []  direct callers ['pumpWaveMessages']
+        0x28810 pumpWaveMessages  fldcw []  direct callers ['loadSoundFile', 'Midi_Device::enableOutput', 'Seq::loadFile']
+          0x41d0 loadSoundFile  fldcw []  direct callers []
+          0xa1b0 Midi_Device::enableOutput  fldcw []  direct callers []
+          0x20290 Seq::loadFile  fldcw []  direct callers []
+
+fldcw sites by function:
+  0x184a0 streamRenderBlock: 0x1862a
+  0x188d0 streamRenderTail: 0x18a67
+  0x19770 Voice_mixAddMono16: 0x19911
+  0x19b20 Voice_mixSetMono16: 0x19cc1
+  0x19ec0 Voice_mixSet8bit: 0x1a064
+  0x1a2c0 Voice_mixAdd8bit: 0x1a464
+  0x1a6c0 Voice_mixSetStereo16: 0x1a7f1
+  0x1a910 Voice_mixAddStereo16: 0x1aa41
+  0x42550 __ftol: 0x42566, 0x4256c
+  0x432ed log_classify: 0x43300, 0x48286
+  0x47fb0 __trandisp1: 0x47fd2
+  0x48017 __trandisp2: 0x48039
+  0x48197 __startOneArgErrorHandling: 0x481ce
+  0x481f5 fpuSetControlWord: 0x48207
+  0x4828b __math_exit: 0x482b0
+  0x4864a fpIntrinsicDispatch: 0x4869f
+  0x4917e __ctrlfp: 0x49198
+  0x49676 __control87: 0x496a3
+
+class-table slots holding openMmioSound's caller Sound5c450::openMmio: ['0x5c4dc']
+call sites [reg + 0x8c]: ['FUN_10029c90', 'FUN_1002be90', 'FUN_1002d9c0', 'FUN_1002ec70', 'FUN_1002f1c0', 'FUN_1002f6e0']

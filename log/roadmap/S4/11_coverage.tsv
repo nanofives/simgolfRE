@@ -1,0 +1,29 @@
+function	rva	instructions	executed	jcc	both_sides	one_side	none	one_side_taken	never
+Sound::getField1b8	0x5f40	2	2	0	0	0	0		
+Sound::queueMidiCommand3	0x20480	12	12	1	1	0	0		
+ChannelDesc_dtor	0x244a0	2	2	0	0	0	0		
+VoiceBase_initListSlot	0x29b80	9	9	0	0	0	0		
+Ch5bb90_set3DBuffer	0x2c270	11	11	1	1	0	0		
+MixBuffer::deletingDtor	0x2cf50	52	52	5	5	0	0		
+GlblHeader::init	0x2e3c0	7	7	0	0	0	0		
+operator_delete	0x4249a	4	4	0	0	0	0		
+_strrchr	0x424b0	23	23	1	1	0	0		
+operator_new	0x424d7	6	6	0	0	0	0		
+_sprintf	0x42577	32	26	1	0	1	0	0x425adF	
+__onexit	0x425c9	37	37	2	2	0	0		
+_atexit	0x42647	8	8	0	0	0	0		
+strstr	0x42690	69	66	11	11	0	0		
+ehVectorDestructorIterator	0x4280e	34	34	1	1	0	0		
+__ArrayUnwind	0x4288e	30	30	1	1	0	0		
+ehVectorConstructorIterator	0x42902	36	36	1	1	0	0		
+_malloc	0x42acd	6	6	0	0	0	0		
+__nh_malloc	0x42adf	16	16	4	4	0	0		
+heap_alloc	0x42b0b	80	80	8	8	0	0		
+free	0x42c07	75	75	6	6	0	0		
+_lockexit	0x45226	4	4	0	0	0	0		
+_unlockexit	0x4522f	4	4	0	0	0	0		
+crtRealloc	0x45252	278	61	38	6	3	29	0x452a7T 0x453e9T 0x4553fT	0x452b3 0x452d0 0x452dc 0x452eb 0x452fe 0x45309 0x4532d 0x45331 0x45355 0x45360 0x45386 0x4538a 0x453af 0x453bb 0x453ca 0x453f2 0x453f6 0x4540c 0x45439 0x45445 0x4545e 0x45474 0x45481 0x454a7 0x454bd 0x454ca 0x4550a 0x45512 0x4551d
+msize	0x45581	73	30	5	0	2	3	0x455acT 0x455f7T	0x455c9 0x45620 0x4563d
+__callnewh	0x45b80	13	13	2	2	0	0		
+__lock	0x47710	37	34	3	2	1	0	0x47735T	
+_unlock	0x47771	7	7	0	0	0	0		

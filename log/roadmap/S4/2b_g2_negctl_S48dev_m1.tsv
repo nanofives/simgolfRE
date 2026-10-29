@@ -1,0 +1,63 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.CommandQueue::at	1	RED	7	0	16	CommandQueue::at
+snd.CommandQueue::clear	1	RED	9	0	10	CommandQueue::clear
+snd.CommandQueue::init	1	RED	12	0	12	CommandQueue::init
+snd.CommandQueue::push	1	RED	12	0	27	CommandQueue::push
+snd.Ctrl5b19c_ctor	1	RED	10	0	10	Ctrl5b19c_ctor
+snd.Ctrl5b58c_dtor	1	RED	9	0	10	Ctrl5b58c_dtor
+snd.Ctrl5b58c_dtorEmbedded	1	RED	10	0	10	Ctrl5b58c_dtorEmbedded
+snd.Ctrl5b58c_scalarDtor	1	RED	40	0	40	Ctrl5b58c_scalarDtor
+snd.Ctrl5b5c0_ctor	1	RED	12	0	12	Ctrl5b5c0_ctor
+snd.Ctrl5b5c0_mapValue	1	RED	8	0	52	Ctrl5b5c0_mapValue
+snd.Ctrl5b5c0_transposeTable	1	RED	48	0	66	Ctrl5b5c0_transposeTable
+snd.Ctrl5b668_ctor	1	RED	12	0	12	Ctrl5b668_ctor
+snd.CtrlBase_flushElements	1	RED	11	0	14	CtrlBase_flushElements
+snd.CtrlBase_resetElements	1	RED	14	0	14	CtrlBase_resetElements
+snd.CtrlObject2_ctor	1	RED	12	0	12	CtrlObject2_ctor
+snd.CtrlObject3_ctor	1	RED	12	0	12	CtrlObject3_ctor
+snd.CtrlObject::ctor	1	RED	11	0	12	CtrlObject::ctor
+snd.CtrlObject_dtorA	1	RED	12	0	12	CtrlObject_dtorA
+snd.CtrlObject_dtorB	1	RED	12	0	12	CtrlObject_dtorB
+snd.CtrlObject_dtorC	1	RED	12	0	12	CtrlObject_dtorC
+snd.CtrlObject_dtorD	1	RED	12	0	12	CtrlObject_dtorD
+snd.CtrlObject_scalarDtorA	1	RED	10	0	24	CtrlObject_scalarDtorA
+snd.CtrlObject_scalarDtorB	1	RED	25	0	50	CtrlObject_scalarDtorB
+snd.CtrlObject_scalarDtorC	1	RED	25	0	50	CtrlObject_scalarDtorC
+snd.CtrlObject_scalarDtorD	1	RED	25	0	50	CtrlObject_scalarDtorD
+snd.Ctrl_appendIfAccepted	1	RED	18	0	30	Ctrl_appendIfAccepted
+snd.Device::serviceVoices	1	RED	12	0	12	Device::serviceVoices
+snd.DeviceBase_dtorA	1	RED	10	0	10	DeviceBase_dtorA
+snd.DeviceBase_dtorB	1	RED	10	0	10	DeviceBase_dtorB
+snd.DeviceBase_dtorC	1	RED	10	0	10	DeviceBase_dtorC
+snd.DeviceBase_scalarDtor	1	RED	50	0	50	DeviceBase_scalarDtor
+snd.Device_createStartQueue	1	RED	5	0	12	Device_createStartQueue
+snd.Device_lazyCreateSound	1	RED	4	0	12	Device_lazyCreateSound
+snd.Device_prepareSoundFlags	1	RED	4	0	12	Device_prepareSoundFlags
+snd.Dll_Midi_Device::create_device	1	RED	12	0	36	Dll_Midi_Device::create_device_busy Dll_Midi_Device::create_device_fail Dll_Midi_Device::create_device_null
+snd.Dll_Midi_Device::delete_device	1	RED	9	0	10	Dll_Midi_Device::delete_device_v0 Dll_Midi_Device::delete_device_v1 Dll_Midi_Device::delete_device_v2 Dll_Midi_Device::delete_device_v3 Dll_Midi_Device::delete_device_v4 Dll_Midi_Device::delete_device_v5 Dll_Midi_Device::delete_device_v6 Dll_Midi_Device::delete_device_v7 Dll_Midi_Device::delete_device_v8 Dll_Midi_Device::delete_device_v9
+snd.atexitDtor_100b49b8	1	RED	12	0	12	atexitDtor_100b49b8
+snd.ctrlScalarDeletingDtor	1	RED	25	0	50	ctrlScalarDeletingDtor
+snd.delete_sound	1	RED	1	0	30	delete_sound@ready delete_sound@notimer delete_sound@none
+snd.destroySoundWindowObj	1	RED	14	0	24	destroySoundWindowObj
+snd.dynInit_ctrl100b4a68	1	RED	2	0	2	dynInit_ctrl100b4a68_fail dynInit_ctrl100b4a68_ok
+snd.dynInit_ctrl100b4b50	1	RED	2	0	2	dynInit_ctrl100b4b50_fail dynInit_ctrl100b4b50_ok
+snd.dynInit_ctrl100b4c38	1	RED	2	0	2	dynInit_ctrl100b4c38_fail dynInit_ctrl100b4c38_ok
+snd.dynInit_ctrl100b4d20	1	RED	2	0	2	dynInit_ctrl100b4d20_fail dynInit_ctrl100b4d20_ok
+snd.dynInit_ctrl100b4e08	1	RED	2	0	2	dynInit_ctrl100b4e08_fail dynInit_ctrl100b4e08_ok
+snd.dynInit_soundWindowObj100b49b8	1	RED	2	0	2	dynInit_soundWindowObj100b49b8_fail dynInit_soundWindowObj100b49b8_ok
+snd.get_sound_version	1	RED	1	0	1	get_sound_version@
+snd.initCtrlVtable	1	RED	12	0	12	initCtrlVtable
+snd.init_sound_timer	1	RED	24	0	24	init_sound_timer init_sound_timer_alt
+snd.postMidiNotification	1	RED	20	0	32	postMidiNotification@eng postMidiNotification@eng0 postMidiNotification@noeng postMidiNotification@noeng1
+snd.postNotification	1	RED	6	0	16	postNotification
+snd.postSoundThreadMessage	1	RED	12	0	36	postSoundThreadMessage_ok postSoundThreadMessage_r1 postSoundThreadMessage_r3
+snd.pumpWaveMessages	1	RED	12	0	12	pumpWaveMessages
+snd.registerTimerClient	1	RED	24	0	30	registerTimerClient_bp61 registerTimerClient_busy registerTimerClient_null registerTimerClient_ok registerTimerClient_se61
+snd.release_sound	1	RED	2	0	4	release_sound_clr release_sound_null release_sound_swap release_sound_tmr
+snd.soundThreadPump	1	RED	5	0	5	soundThreadPump_drop soundThreadPump_event soundThreadPump_flag0 soundThreadPump_one soundThreadPump_two
+snd.soundWindowProc	1	RED	4	0	104	soundWindowProc_f0 soundWindowProc_f1 soundWindowProc_f2 soundWindowProc_f3
+snd.soundWindowSubclassProc	1	RED	4	0	108	soundWindowSubclassProc_f0 soundWindowSubclassProc_f1 soundWindowSubclassProc_f2 soundWindowSubclassProc_f3
+snd.startSignalThread	1	RED	6	0	12	startSignalThread
+snd.stopSoundThreadFull	1	RED	8	0	12	stopSoundThreadFull
+snd.stubReturn2fA	1	RED	1	0	1	stubReturn2fA@
+snd.stubReturn2fB	1	RED	12	0	12	stubReturn2fB@

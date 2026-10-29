@@ -128,6 +128,7 @@ fixes pre-approved, D6 network later). The items below are its starting material
   and the theme screen's Cancel (U-1066).
 - **Phase 5, backends.** Steps 1-2 done (the title menu, the location screen; re/PHASE5_GFX_PLAN.md). Next: the other
   title-menu screens, then the in-game frame with Terrain.dll's renderer behind TerrainApi, then audio.
+  Roadmap S3 (the in-game frame) merged 2026-10-28, S4 (the audio engine, sound.dll behind an AudioSink) merged 2026-10-29 (I14).
   Decide whether text widths stay GDI or come from the font files (TrueType advances + GDI rounding, U-0960 / U-0961).
 - **Open items from phase 3:** the character editor's bio entry
   (U-1032), the scroll-text layout reached only by the oracle, chooseShotTarget.strictFlagSticky with no evidence (U-1012),

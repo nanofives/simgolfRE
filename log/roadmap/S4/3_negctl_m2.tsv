@@ -1,0 +1,9 @@
+function	mode	verdict	vectors_differ	vectors	keys
+codecAnalyzeFrame	2	BLIND	0	14	codecStageDispatch
+codecDecodeFrame	2	BLIND	0	14	codecProcessBlock
+codecEncodeFrame	2	BLIND	0	14	codecProcessResource
+codecHighPassFilter	2	RED	11	14	codecBiquadFilter
+codecHighPassFrame	2	BLIND	0	9	codecApplyFixedCoeffs
+codecRemoveMean	2	RED	1	14	codecRemoveMean
+codecSynthesizeFrame	2	BLIND	0	14	codecSynthStage
+lpcSynthesize	2	RED	3	14	lpcSynthesize

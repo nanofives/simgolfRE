@@ -1,0 +1,67 @@
+function	mode	verdict	vectors_differ	vectors	keys
+Engine_playSound	1	RED	24	24	Engine_playSound Engine_playSound_off
+MultiSound::applyFlags	1	RED	60	60	MultiSound::applyFlags
+MultiSound::set3DBuffer	1	RED	35	35	MultiSound::set3DBuffer
+MultiSound::set3DPositionX	1	RED	42	42	MultiSound::set3DPositionX
+MultiSound::set3DPositionY	1	RED	42	42	MultiSound::set3DPositionY
+MultiSound::set3DPositionZ	1	RED	42	42	MultiSound::set3DPositionZ
+MultiSound::setRateGlide	1	RED	480	480	MultiSound::setRateGlide MultiSound::setRateGlide_null MultiSound::setRateGlide_p1 MultiSound::setRateGlide_p4096
+MultiSound::setReverseRate	1	RED	112	112	MultiSound::setReverseRate MultiSound::setReverseRate_null MultiSound::setReverseRate_p1 MultiSound::setReverseRate_p4096
+MultiSound::setVolume	1	RED	54	54	MultiSound::setVolume
+MultiSound::startVoice	1	RED	12	12	MultiSound::startVoice
+MultiSound_ctor	1	RED	12	12	MultiSound_ctor
+MultiSound_ctorWithType	1	RED	12	12	MultiSound_ctorWithType
+MultiSound_deleteDtor	1	RED	24	24	MultiSound_deleteDtor
+MultiSound_dtor	1	RED	12	12	MultiSound_dtor
+MultiSound_enqueueCmd3	1	RED	24	24	MultiSound_enqueueCmd3_eng MultiSound_enqueueCmd3_null
+MultiSound_findStreamNode	1	RED	7	7	MultiSound_findStreamNode
+MultiSound_getStatus	1	RED	12	12	MultiSound_getStatus
+MultiSound_is3DEnabled	1	RED	12	12	MultiSound_is3DEnabled
+MultiSound_release	1	RED	12	12	MultiSound_release
+MultiSound_set3DPosition	1	RED	28	28	MultiSound_set3DPosition
+MultiSound_setPitchCents	1	RED	76	76	MultiSound_setPitchCents
+MultiSound_setSlotSource	1	RED	12	12	MultiSound_setSlotSource
+MultiSound_setVoiceBit1On	1	RED	8	8	MultiSound_setVoiceBit1On
+MultiSound_start	1	RED	36	36	MultiSound_start_busy MultiSound_start_null MultiSound_start_ok
+MultiSound_stop	1	RED	7	7	MultiSound_stop
+Sound5b6a8_ctor	1	RED	9	9	Sound5b6a8_ctor_N_w27f Sound5b6a8_ctor_w27f Sound5b6a8_ctor_wf7f
+Sound5b6a8_dtor	1	RED	12	12	Sound5b6a8_dtor
+Sound5b6a8_scalarDtor	1	RED	24	24	Sound5b6a8_scalarDtor
+Sound5c450_ctor	1	RED	12	12	Sound5c450_ctor
+Sound5c450_dtor	1	RED	12	12	Sound5c450_dtor
+Sound5c450_scalarDtor	1	RED	24	24	Sound5c450_scalarDtor
+Sound::ctor	1	RED	12	12	Sound::ctor
+Sound::dtor	1	RED	12	12	Sound::dtor
+Sound::scalarDeletingDtor	1	RED	24	24	Sound::scalarDeletingDtor
+Sound::scaleTickRate	1	RED	120	120	Sound::scaleTickRate Sound::scaleTickRate_null Sound::scaleTickRate_p1 Sound::scaleTickRate_p4096
+SoundGroup_rewind	1	RED	12	12	SoundGroup_rewind
+SoundGroup_stop	1	RED	12	12	SoundGroup_stop
+SoundTimer::init	1	RED	12	12	SoundTimer::init
+SoundTimer::killEvent	1	RED	12	12	SoundTimer::killEvent
+SoundTimer::linkClient	1	RED	40	40	SoundTimer::linkClient SoundTimer::linkClient_oom
+SoundTimer::onTick	1	RED	27	27	SoundTimer::onTick_flip SoundTimer::onTick_w0 SoundTimer::onTick_w3
+SoundTimer::registerClient	1	RED	40	40	SoundTimer::registerClient SoundTimer::registerClient_z
+SoundTimer::start	1	RED	36	36	SoundTimer::start_bp61 SoundTimer::start_ok SoundTimer::start_se61
+SoundTimer::stop	1	RED	12	12	SoundTimer::stop
+SoundTimer::stopKeepLock	1	RED	12	12	SoundTimer::stopKeepLock
+SoundTimer::unregisterClient	1	RED	12	12	SoundTimer::unregisterClient
+SoundWindowObj_ctor	1	RED	12	12	SoundWindowObj_ctor
+SoundWindowObj_dtor	1	RED	12	12	SoundWindowObj_dtor
+SoundWindowObj_subclass	1	RED	12	12	SoundWindowObj_subclass
+SoundWindowObj_unsubclass	1	RED	12	12	SoundWindowObj_unsubclass
+Sound_anyChannelActive	1	RED	11	11	Sound_anyChannelActive
+Sound_assignName	1	RED	40	40	Sound_assignName
+Sound_findByName	1	RED	50	50	Sound_findByName_l0 Sound_findByName_l1 Sound_findByName_l3 Sound_findByName_lhead Sound_findByName_lnull
+Sound_freeBufferList	1	RED	26	26	Sound_freeBufferList_empty Sound_freeBufferList_live
+Sound_initEntry	1	RED	12	12	Sound_initEntry
+Sound_lookupOrCreate	1	RED	36	36	Sound_lookupOrCreate Sound_lookupOrCreate_hole Sound_lookupOrCreate_nolist
+Sound_reapIdle	1	RED	14	14	Sound_reapIdle_s0 Sound_reapIdle_s1 Sound_reapIdle_s10 Sound_reapIdle_s11 Sound_reapIdle_s12 Sound_reapIdle_s13 Sound_reapIdle_s2 Sound_reapIdle_s3 Sound_reapIdle_s4 Sound_reapIdle_s5 Sound_reapIdle_s6 Sound_reapIdle_s7 Sound_reapIdle_s8 Sound_reapIdle_s9
+Sound_resetBuffers	1	RED	36	36	Sound_resetBuffers Sound_resetBuffers_empty Sound_resetBuffers_single
+Sound_setAltName	1	RED	36	40	Sound_setAltName Sound_setAltName_null
+Sound_setName	1	RED	28	28	Sound_setName
+Sound_setSourceType	1	RED	20	20	Sound_setSourceType
+Sound_stop	1	RED	26	26	Sound_stop_empty Sound_stop_live
+create_sound	1	RED	30	30	create_sound create_sound_gate0
+getPlaybackTime	1	RED	12	12	getPlaybackTime
+registerSound	1	RED	12	12	registerSound_s0 registerSound_s1 registerSound_s2
+unregisterSound	1	RED	20	20	unregisterSound_s0 unregisterSound_s1 unregisterSound_s3 unregisterSound_sn

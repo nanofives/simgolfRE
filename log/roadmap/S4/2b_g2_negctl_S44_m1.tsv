@@ -1,0 +1,39 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.MixBuffer_ctor	1	RED	12	0	12	MixBuffer_ctor
+snd.MixerVoiceArray_scalarDtor	1	RED	20	0	40	MixerVoiceArray_scalarDtor
+snd.Mixer_ctor	1	RED	12	0	12	Mixer_ctor
+snd.Mixer_dtor	1	RED	6	0	12	Mixer_dtor
+snd.Mixer_scalarDtor	1	RED	20	0	40	Mixer_scalarDtor
+snd.Voice_mixAdd8bit	1	RED	23	0	46	Voice_mixAdd8bit Voice_mixAdd8bit_st0
+snd.Voice_mixAddMono16	1	RED	23	0	46	Voice_mixAddMono16 Voice_mixAddMono16_st0
+snd.Voice_mixAddStereo16	1	RED	16	0	32	Voice_mixAddStereo16 Voice_mixAddStereo16_st0
+snd.Voice_mixSet8bit	1	RED	23	0	46	Voice_mixSet8bit Voice_mixSet8bit_st0
+snd.Voice_mixSetMono16	1	RED	23	0	46	Voice_mixSetMono16 Voice_mixSetMono16_st0
+snd.Voice_mixSetStereo16	1	RED	16	0	32	Voice_mixSetStereo16 Voice_mixSetStereo16_st0
+snd.Voice_renderStream16b	1	RED	65	0	65	Voice_renderStream16b@
+snd.Voice_renderStream16c	1	RED	65	0	65	Voice_renderStream16c@
+snd.Voice_renderStream32	1	RED	115	0	115	Voice_renderStream32@ Voice_renderStream32@a
+snd.Voice_renderStream8c	1	RED	64	0	64	Voice_renderStream8c@
+snd.Voice_renderStream8d	1	RED	65	0	65	Voice_renderStream8d@
+snd.destroyMixerVoices	1	RED	8	0	12	destroyMixerVoices
+snd.mixMonoDupAdd	1	RED	38	0	47	mixCopyInnerB
+snd.mixMonoDupSet	1	RED	47	0	47	mixCopyInnerC
+snd.mixMonoGainFadeAdd	1	RED	20	0	46	mixResampleInnerB
+snd.mixMonoGainFadeSet	1	RED	33	0	46	mixResampleInnerC
+snd.mixRatedMono16AddFade	1	RED	41	0	65	mixRenderRatedB
+snd.mixRatedMono16SetFade	1	RED	41	0	65	mixRenderOuterC
+snd.mixRatedMono8Add	1	RED	42	0	64	mixResampleE
+snd.mixRatedMono8Set	1	RED	42	0	65	mixResampleI
+snd.mixRatedStereo16Add	1	RED	40	0	64	mixRenderOuterA2
+snd.mixRatedStereo16Set	1	RED	33	0	51	mixResampleG
+snd.mixRatedStereo8Add	1	RED	42	0	64	mixResampleD
+snd.mixRatedStereo8Set	1	RED	42	0	64	mixResampleH
+snd.mixRenderRatedC	1	RED	115	0	115	mixRenderRatedC@ mixRenderRatedC@g
+snd.mixStereoAdd	1	RED	48	0	48	mixRenderA
+snd.mixStereoGainAdd	1	RED	21	0	38	mixResampleInnerA
+snd.renderChannel	1	RED	4	0	16	renderChannel
+snd.renderChannelSingle	1	RED	8	0	84	renderChannelSingle_bit0 renderChannelSingle_null renderChannelSingle_post renderChannelSingle@mix
+snd.renderChannelStreamed	1	RED	42	0	98	renderChannelStreamed_chain_w27f renderChannelStreamed_copy_w27f renderChannelStreamed_fade_w27f renderChannelStreamed_fade_wf7f
+snd.renderChannelVoice	1	RED	12	0	80	renderChannelVoice_eng renderChannelVoice_eng0 renderChannelVoice_noeng renderChannelVoice@mix
+snd.streamRenderBlock	1	RED	21	0	42	streamRenderBlock streamRenderBlock_st0
+snd.streamRenderTail	1	RED	21	0	42	streamRenderTail streamRenderTail_st0

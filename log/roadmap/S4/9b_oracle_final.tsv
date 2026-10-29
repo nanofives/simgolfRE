@@ -1,0 +1,26 @@
+key	name	vectors	match	match_bc	errors	fallbacks	tier	cw	first
+loadSoundFile@basic	snd.loadSoundFile	11	11	22	0	282	EMU_ONLY	0x27f	
+loadSoundFile@busy7	snd.loadSoundFile	2	2	4	0	6	EMU_ONLY	0x27f	
+loadSoundFile@busy0	snd.loadSoundFile	2	2	4	0	192	EMU_ONLY	0x27f	
+loadSoundFile@seekfail	snd.loadSoundFile	4	4	8	0	147	EMU_ONLY	0x27f	
+loadSoundFile@seeknomove	snd.loadSoundFile	3	3	6	0	15	EMU_ONLY	0x27f	
+loadSoundFile@nopre	snd.loadSoundFile	2	2	4	0	117	EMU_ONLY	0x27f	
+loadSoundFile@list	snd.loadSoundFile	2	2	4	0	165	EMU_ONLY	0x27f	
+loadSoundFile@pre_g0	snd.loadSoundFile	5	5	10	0	465	EMU_ONLY	0x27f	
+loadSoundFile@pre_g1	snd.loadSoundFile	5	5	10	0	465	EMU_ONLY	0x27f	
+loadSoundFile@pre_g2	snd.loadSoundFile	5	5	10	0	465	EMU_ONLY	0x27f	
+loadSoundFile@pre_g3	snd.loadSoundFile	5	5	10	0	465	EMU_ONLY	0x27f	
+loadSoundFile@pre_g4	snd.loadSoundFile	5	5	10	0	465	EMU_ONLY	0x27f	
+loadSoundFile@pre_g5	snd.loadSoundFile	5	5	10	0	465	EMU_ONLY	0x27f	
+loadSoundFile@oom0	snd.loadSoundFile	2	2	4	0	36	EMU_ONLY	0x27f	
+loadSoundFile@oom1	snd.loadSoundFile	1	1	2	0	18	EMU_ONLY	0x27f	
+loadSoundFile@oom2	snd.loadSoundFile	1	1	2	0	21	EMU_ONLY	0x27f	
+loadSoundFile@nullA	snd.loadSoundFile	4	4	8	0	57	EMU_ONLY	0x27f	
+loadSoundFile@nullB	snd.loadSoundFile	1	1	2	0	18	EMU_ONLY	0x27f	
+loadSoundFile@nullC	snd.loadSoundFile	1	1	2	0	18	EMU_ONLY	0x27f	
+loadSoundFile@nullU	snd.loadSoundFile	1	1	2	0	3	EMU_ONLY	0x27f	
+loadSoundFile@sfnull	snd.loadSoundFile	1	1	2	0	3	EMU_ONLY	0x27f	
+loadSoundFile@sfnullU	snd.loadSoundFile	1	1	2	0	3	EMU_ONLY	0x27f	
+loadSoundFile@snmnull	snd.loadSoundFile	1	1	2	0	6	EMU_ONLY	0x27f	
+loadSoundFile@snmnullU	snd.loadSoundFile	1	1	2	0	6	EMU_ONLY	0x27f	
+loadSoundFile@user	snd.loadSoundFile	3	3	6	0	9	EMU_ONLY	0x27f	

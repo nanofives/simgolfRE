@@ -51,17 +51,18 @@ void BootGameMain() {
     G32(GS(g_primarySurface)) = GS(g_font519928);                      // gameMain+0x36d
     G32(GS(g_ui83abdc)) = 0;                                           // gameMain+0x377
     // gameMain+0x41f showTitleScreen: the intro movie and the title button / window-frame sprites (a drop; the phase 5 graphics
-    // backend draws its sprite part when one is attached). loadSoundTable (gameMain+0x42e) and the colour cycle are not the boot's.
+    // backend draws its sprite part when one is attached). the colour cycle is not the boot's.
     // gameMain+0x41f showTitleScreen plays the intro first (its call at showTitleScreen+0x27, immediate 0): the video
     // module (S8.3), whose default host takes the original's own skip path (BinkOpen NULL)
     cc("playAudioFile", (GS(f_strpool_4c89ac) + 96), 0);           // ./flics/SMSG_introfinal.bik
     cc("showTitleScreen");
+    cc("loadSoundTable");                                             // gameMain+0x42e
     G32(GS(g_ui83abdc)) = 0;                                           // gameMain+0x452
 }
 
 // mainLoop's Setup ML+0x22 .. ML+0x437 (one time, then the title menu ML+0x11875).
 void BootSetup(u32 F) {
-    // ML+0x2f playSound(0x80, 0x64, 0, 0, 0): the audio backend's
+    cc("playSound", 0x80, 0x64, 0, 0, 0);                             // ML+0x2f
     for (int i = 0; i < 0x114; i++) G32(GS(g_tileTypeAttrs) + 4 * i) = G32(GS(f_tab_tileTypeAttrInit_4c1a40) + 4 * i);  // ML+0x4e
     // ML+0x5f / ML+0x7b / ML+0x97 Surface_createFull of the three title Surfaces, ML+0xa3 PaletteCache::ctor: the renderer's
     FD(0x124C) = 0;                                                    // ML+0xb2 SEH scope state
@@ -135,6 +136,7 @@ void BootSetup(u32 F) {
 // render / UI / audio objects (the boot gate's measure: with these three no simulation object differs at frame 1).
 void BootCrt() {
     cc("staticInit_820f04");
+    cc("arrayStaticInit_448160");   // the CRT initializer dynInit_arrayStaticInit_448160: the 300 g_sounds records
     G32(GS(gTerrain)) = terrain_api(ctx).get_instance();
     // allocTileBuffer (c3cz.cpp, the CRT initializer dynInit_initList820f18): the render tile list gTileBuffer: a 0xc-byte head
     // node from operator new linked to itself, the size 0. Its allocator byte +0 takes the high byte of ecx at the call (0

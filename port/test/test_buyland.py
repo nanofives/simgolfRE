@@ -185,6 +185,8 @@ def emu(img, args, inputs, cur, cover=None):
 def port(lib, img, args, inputs, cur):
     import ctypes as C
     with lib.state() as st:
+        if st.lib.has("audio_exe.stubRequests"):  # S4: the audio requests stubbed, as this file's oracle stubs playSound
+            st.call("audio_exe.stubRequests", [1])
         st.set_data_base(TC.DATA_VA)
         st.load_image(img)
         words = [w for c in inputs for w in c.args()]

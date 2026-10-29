@@ -1,0 +1,21 @@
+key	name	verdict	vectors	match	match_bc	errors	fallbacks	x87diff	tier	quirk	pending	first
+Channel_releaseVoices	Channel_releaseVoices	GREEN	12	12	24	0	0	0	EXACT	{}		
+Channel_setPanGains	Channel_setPanGains	GREEN	60	60	120	0	0	0	EXACT	{}		
+Channel_setRateGlide	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRateGlide_null	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRateGlide_p1	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_setRateGlide_p4096	Channel_setRateGlide	GREEN	160	160	320	0	0	0	EXACT	{}		
+Channel_startVoiceTimed_null	Channel_startVoiceTimed	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_startVoiceTimed_tmr	Channel_startVoiceTimed	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+Channel_startVoice_22050	Channel_startVoice	GREEN	16	16	32	0	0	0	EQUAL_PI	"{""1"": 1, ""4"": 1, ""9"": 2}"		
+Channel_startVoice_44100	Channel_startVoice	GREEN	16	16	32	0	0	0	EQUAL_PI	"{""1"": 1, ""4"": 1, ""9"": 2}"		
+Channel_startVoice_null	Channel_startVoice	GREEN	16	16	32	0	0	0	EQUAL_PI	"{""1"": 1, ""4"": 1}"		
+Channel_stopVoices	Channel_stopVoices	GREEN	12	12	24	0	0	0	EXACT	{}		
+Voice_noteOff	Voice_noteOff	GREEN	12	12	24	0	0	0	EXACT	{}		
+Voice_setLevel	Voice_setLevel	GREEN	20	20	40	0	0	0	EXACT	{}		
+Voice_setPanGains	Voice_setPanGains	GREEN	34	34	68	0	0	0	EXACT	{}		
+updateVoiceRate_0	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		
+updateVoiceRate_22050	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	"{""6"": 2}"		
+updateVoiceRate_44100	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	"{""6"": 2}"		
+updateVoiceRate_max	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	"{""6"": 2}"		
+updateVoiceRate_null	updateVoiceRate	GREEN	12	12	24	0	0	0	EQUAL_PI	{}		

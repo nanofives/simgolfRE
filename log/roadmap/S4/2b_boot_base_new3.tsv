@@ -1,0 +1,4 @@
+scenario	status	records	expected	detail	run_detail
+cov_a_quit	PASS	301	301		input: 41 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 1 served, 0 none left, 0 dispatches late
+cov_a_quit_title	NO_FRAMES	0	0	the capture has no frame record	
+cov_r_s2_screens	FAIL	1156	1268	{"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]}	missing: showBuyLandScreen; stopped in showBuyLandScreen; input: 153 dispatches delivered, 2 left (first: record 1157 modal dispatch after 457 cursor reads, handlers 5), 9 at another cursor count (first: record 319); cursor reads over/under 1/2162 (first: record 319); async-key reads over/under 0/0; clock queries 4409 served, 0 none left, 0 dispatches late

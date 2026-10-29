@@ -1,0 +1,2 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.DsBuffer::setVolume	3	BLIND	0	0	30	DsBuffer::setVolume_w27f DsBuffer::setVolume_wf7f

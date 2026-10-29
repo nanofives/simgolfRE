@@ -1,0 +1,101 @@
+function	mode	verdict	vectors_differ	vectors	keys
+Dll_Wave_Device::create_device	1	RED	48	48	Dll_Wave_Device::create_device_alt Dll_Wave_Device::create_device_busy Dll_Wave_Device::create_device_ok Dll_Wave_Device::create_device_oom
+Dll_Wave_Device::delete_device	1	RED	10	10	Dll_Wave_Device::delete_device_v0 Dll_Wave_Device::delete_device_v1 Dll_Wave_Device::delete_device_v2 Dll_Wave_Device::delete_device_v3 Dll_Wave_Device::delete_device_v4 Dll_Wave_Device::delete_device_v5 Dll_Wave_Device::delete_device_v6 Dll_Wave_Device::delete_device_v7 Dll_Wave_Device::delete_device_v8 Dll_Wave_Device::delete_device_v9
+Dll_Wave_In_Device::create_device	1	RED	48	48	Dll_Wave_In_Device::create_device_alt Dll_Wave_In_Device::create_device_busy Dll_Wave_In_Device::create_device_ok Dll_Wave_In_Device::create_device_oom
+Dll_Wave_In_Device::delete_device	1	RED	10	10	Dll_Wave_In_Device::delete_device_v0 Dll_Wave_In_Device::delete_device_v1 Dll_Wave_In_Device::delete_device_v2 Dll_Wave_In_Device::delete_device_v3 Dll_Wave_In_Device::delete_device_v4 Dll_Wave_In_Device::delete_device_v5 Dll_Wave_In_Device::delete_device_v6 Dll_Wave_In_Device::delete_device_v7 Dll_Wave_In_Device::delete_device_v8 Dll_Wave_In_Device::delete_device_v9
+MidiReader_dtor	1	RED	10	10	MidiReader_dtor
+MidiReader_freeContent	1	RED	10	10	MidiReader_freeContent
+MidiReader_init	1	RED	108	108	MidiReader_init_null MidiReader_init_p1 MidiReader_init_p1000 MidiReader_init_p16 MidiReader_init_p3 MidiReader_init_p33 MidiReader_init_p5000 MidiReader_init_p7 MidiReader_init_p999
+MmioBuffer_init	1	RED	12	12	MmioBuffer_init
+Sound5c450::openMmio	1	RED	12	12	Sound5c450::openMmio
+StreamReader_ctor	1	RED	12	12	StreamReader_ctor
+StreamReader_scalarDtor	1	RED	24	24	StreamReader_scalarDtor
+WaveCmdQueue::pushNode	1	RED	27	27	WaveCmdQueue::pushNode
+WaveCmdQueue::pushValue	1	RED	16	16	WaveCmdQueue::pushValue
+WaveInDeviceBase_closeInner	1	RED	14	14	WaveInDeviceBase_closeInner
+WaveInDeviceBase_ctor	1	RED	12	12	WaveInDeviceBase_ctor
+WaveInDeviceBase_openInner	1	RED	24	24	WaveInDeviceBase_openInner
+WaveInDeviceBase_scalarDtor	1	RED	50	50	WaveInDeviceBase_scalarDtor
+WaveInDevice_addBuffer	1	RED	21	21	WaveInDevice_addBuffer
+WaveInDevice_allocCaptureBuffers	1	RED	13	13	WaveInDevice_allocCaptureBuffers
+WaveInDevice_close	1	RED	21	21	WaveInDevice_close
+WaveInDevice_ctor	1	RED	36	36	WaveInDevice_ctor_n0 WaveInDevice_ctor_n3 WaveInDevice_ctor_nbig
+WaveInDevice_deleteDtor	1	RED	24	24	WaveInDevice_deleteDtor
+WaveInDevice_dtor	1	RED	13	13	WaveInDevice_dtor
+WaveInDevice_open	1	RED	14	14	WaveInDevice_open
+WaveInDevice_prepareHeaders	1	RED	21	21	WaveInDevice_prepareHeaders
+WaveInDevice_requeueBuffer	1	RED	12	12	WaveInDevice_requeueBuffer
+WaveInDevice_reset	1	RED	12	12	WaveInDevice_reset
+WaveInDevice_start	1	RED	12	12	WaveInDevice_start
+WaveInStream_resetCodec	1	RED	24	24	WaveInStream_resetCodec_ok WaveInStream_resetCodec_oom
+WaveInStream_start	1	RED	24	24	WaveInStream_start_dev WaveInStream_start_null
+WaveStream::ctor	1	RED	12	12	WaveStream::ctor
+WaveStream::destroy	1	RED	13	13	WaveStream::destroy
+WaveStream::scalarDeletingDtor	1	RED	39	39	WaveStream::scalarDeletingDtor
+Wave_Device::appendBuffer	1	RED	12	12	Wave_Device::appendBuffer
+Wave_Device::caps	1	RED	2	2	Wave_Device::caps_dev Wave_Device::caps_null
+Wave_Device::closeOutput	1	RED	36	36	Wave_Device::closeOutput_all Wave_Device::closeOutput_none Wave_Device::closeOutput_part
+Wave_Device::closeStream	1	RED	4	4	Wave_Device::closeStream_h0 Wave_Device::closeStream_h1 Wave_Device::closeStream_h2 Wave_Device::closeStream_null
+Wave_Device::ctor	1	RED	12	12	Wave_Device::ctor
+Wave_Device::deviceName	1	RED	24	24	Wave_Device::deviceName_dev Wave_Device::deviceName_null
+Wave_Device::dispatchCommand	1	RED	16	16	Wave_Device::dispatchCommand_post Wave_Device::dispatchCommand_thread
+Wave_Device::dtor	1	RED	24	24	Wave_Device::dtor_dev Wave_Device::dtor_null
+Wave_Device::flushCommandQueue	1	RED	13	13	Wave_Device::flushCommandQueue
+Wave_Device::freeBufferList	1	RED	12	12	Wave_Device::freeBufferList
+Wave_Device::open	1	RED	48	48	Wave_Device::open@nodev_ok Wave_Device::open@nodev_enumfail Wave_Device::open@nodev_createfail Wave_Device::open@nodev_notimer Wave_Device::open@dev_cbfail Wave_Device::open@dev_nofmt Wave_Device::open@dev_fmt1fail Wave_Device::open@dev_fmt2fail Wave_Device::open@dev_fmt_nocom Wave_Device::open@dev_prim Wave_Device::open@dev_secbufs Wave_Device::open@dev_nox60
+Wave_Device::openMemoryMmio	1	RED	32	32	Wave_Device::openMemoryMmio
+Wave_Device::readFmtChunk	1	RED	24	24	Wave_Device::readFmtChunk Wave_Device::readFmtChunk_t3
+Wave_Device::restart	1	RED	72	72	Wave_Device::restart_cbuf Wave_Device::restart_create Wave_Device::restart_null Wave_Device::restart_ok Wave_Device::restart_ok0 Wave_Device::restart_seek
+Wave_Device::scalarDeletingDtor	1	RED	24	24	Wave_Device::scalarDeletingDtor
+Wave_Device::scanCommandRing	1	RED	12	12	Wave_Device::scanCommandRing
+Wave_Device::serviceTick	1	RED	40	40	Wave_Device::serviceTick_empty Wave_Device::serviceTick_nodev Wave_Device::serviceTick_wa Wave_Device::serviceTick_wb Wave_Device::serviceTick_wr0
+Wave_Device::setCooperativeLevel	1	RED	24	24	Wave_Device::setCooperativeLevel_dev Wave_Device::setCooperativeLevel_null
+Wave_Device::start	1	RED	15	15	Wave_Device::start@noflag Wave_Device::start@nodev Wave_Device::start@nostream Wave_Device::start@primexists Wave_Device::start@createfail Wave_Device::start@cbfail Wave_Device::start@ok Wave_Device::start@nofmt Wave_Device::start@fmt1fail Wave_Device::start@fmt2fail Wave_Device::start@nocom Wave_Device::start@nox60 Wave_Device::start@x60zero Wave_Device::start@prim_ok Wave_Device::start@plain
+Wave_Device::startOutput	1	RED	48	48	Wave_Device::startOutput_all Wave_Device::startOutput_mix Wave_Device::startOutput_mix2 Wave_Device::startOutput_none
+Wave_Device::stop	1	RED	36	36	Wave_Device::stop_all Wave_Device::stop_dev0 Wave_Device::stop_none
+Wave_Device::stopOutput	1	RED	48	48	Wave_Device::stopOutput_all Wave_Device::stopOutput_mix Wave_Device::stopOutput_mix2 Wave_Device::stopOutput_none
+Wave_In_Device::clearStream	1	RED	2	2	Wave_In_Device::op2_dev Wave_In_Device::op2_null
+Wave_In_Device::closeCapture	1	RED	24	24	Wave_In_Device::closeCapture_dev Wave_In_Device::closeCapture_null
+Wave_In_Device::dtor	1	RED	10	10	Wave_In_Device::dtor
+Wave_In_Device::openCapture	1	RED	60	60	Wave_In_Device::openCapture_busy Wave_In_Device::openCapture_err Wave_In_Device::openCapture_ok Wave_In_Device::openCapture_oom Wave_In_Device::openCapture_oom0
+Wave_In_Device::scalarDeletingDtor	1	RED	50	50	Wave_In_Device::scalarDeletingDtor
+Wave_In_Device::setStream	1	RED	24	24	Wave_In_Device::op1_dev Wave_In_Device::op1_null
+Wave_In_Device::start	1	RED	6	6	Wave_In_Device::start_add Wave_In_Device::start_last Wave_In_Device::start_null Wave_In_Device::start_ok Wave_In_Device::start_open Wave_In_Device::start_prep
+Wave_In_Device::stop	1	RED	6	6	Wave_In_Device::stop_err Wave_In_Device::stop_hdr Wave_In_Device::stop_hdrbad Wave_In_Device::stop_noh Wave_In_Device::stop_null Wave_In_Device::stop_ok
+beginDecodeStreamA	1	RED	12	12	beginDecodeStreamA
+beginDecodeStreamB	1	RED	12	12	beginDecodeStreamB
+closeDecoder	1	RED	12	12	closeDecoder
+closeMmioHandle	1	RED	12	12	closeMmioHandle
+closeMmioNodeList	1	RED	13	13	closeMmioNodeList
+closeMmioSound	1	RED	12	12	closeMmioSound
+computeCaptureDuration	1	RED	12	12	computeCaptureDuration
+enqueueWaveCmd10	1	RED	36	36	enqueueWaveCmd10_eng enqueueWaveCmd10_null enqueueWaveCmd10_oom
+enqueueWaveCmdE	1	RED	24	24	enqueueWaveCmdE_eng enqueueWaveCmdE_null
+fillDecodeRing	1	RED	12	12	fillDecodeRing_a fillDecodeRing_b
+flushMmioBuffer	1	RED	12	12	flushMmioBuffer
+freeMmioHandleList	1	RED	13	13	freeMmioHandleList
+freeMmioHandleListGetInfo	1	RED	24	24	freeMmioHandleListGetInfo_null freeMmioHandleListGetInfo_strm
+getWaveDeviceInterface	1	RED	12	12	getWaveDeviceInterface
+initStreamBuffer	1	RED	10	10	initStreamBuffer
+loadMultiChannel	1	RED	10	12	loadMultiChannel
+loadWaveResource	1	RED	24	24	loadWaveResource loadWaveResource_nobuf
+onWaveInCallbackMessage	1	RED	64	64	onWaveInCallbackMessage@eng onWaveInCallbackMessage@eng0 onWaveInCallbackMessage@noeng onWaveInCallbackMessage@noeng1
+openMmioFile	1	RED	12	12	openMmioFile
+openMmioSound	1	RED	36	36	openMmioSound openMmioSound_nobuf openMmioSound_nodeoom
+openWaveStreamFile	1	RED	24	24	openWaveStreamFile_dev openWaveStreamFile_null
+parseRiffWave	1	RED	48	48	parseRiffWave parseRiffWave_big parseRiffWave_bignodev parseRiffWave_bigoom parseRiffWave_dec parseRiffWave_slot
+processWaveChunks	1	RED	12	12	processWaveChunks
+return0xb_32660	1	RED	1	1	return0xb_32660@
+serviceDecodeRing	1	RED	12	12	serviceDecodeRing
+serviceWaveDevice	1	RED	48	48	serviceWaveDevice_clear serviceWaveDevice_null serviceWaveDevice_set serviceWaveDevice_setall
+setOutputMasterVolume	1	RED	10	20	setOutputMasterVolume@dev setOutputMasterVolume@null
+startStream	1	RED	18	18	startStream
+streamConsumeByte	1	RED	12	12	streamConsumeByte
+streamReadByte	1	RED	24	24	streamReadByte
+streamReaderDtor	1	RED	24	24	streamReaderDtor_nowi streamReaderDtor_wi
+streamWaveSamples	1	RED	19	19	streamWaveSamples streamWaveSamples_nodev
+stubReturnBA	1	RED	12	12	stubReturnBA@
+writeWaveChunk	1	RED	8	8	writeWaveChunk@wwc
+writeWaveChunkB	1	RED	8	8	writeWaveChunkB@wcb
+writeWaveFile	1	RED	72	72	writeWaveFile_empty writeWaveFile_k1 writeWaveFile_k1b writeWaveFile_k4 writeWaveFile_k6 writeWaveFile_mix writeWaveFile_noeng writeWaveFile_nullobj
+writeWaveFileB	1	RED	80	80	writeWaveFileB@noeng writeWaveFileB@empty writeWaveFileB@nullobj writeWaveFileB@k6 writeWaveFileB@k4 writeWaveFileB@k1 writeWaveFileB@k1b writeWaveFileB@mix

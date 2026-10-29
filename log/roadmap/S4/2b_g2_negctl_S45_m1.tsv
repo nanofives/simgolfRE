@@ -1,0 +1,81 @@
+function	mode	verdict	vectors_differ	x87_differ	vectors	keys
+snd.MidiDeviceBase_closeInner	1	RED	14	0	14	MidiDeviceBase_closeInner
+snd.MidiDeviceBase_ctor	1	RED	12	0	12	MidiDeviceBase_ctor
+snd.MidiDeviceBase_openInner	1	RED	24	0	24	MidiDeviceBase_openInner
+snd.MidiDeviceBase_scalarDtor	1	RED	50	0	50	MidiDeviceBase_scalarDtor
+snd.Midi_Device::closeFile	1	RED	10	0	10	Midi_Device::closeFile
+snd.Midi_Device::disableOutput	1	RED	48	0	48	Midi_Device::disableOutput_00 Midi_Device::disableOutput_02 Midi_Device::disableOutput_04 Midi_Device::disableOutput_ff
+snd.Midi_Device::dispatchCommand	1	RED	18	0	18	Midi_Device::dispatchCommand_null Midi_Device::dispatchCommand_post Midi_Device::dispatchCommand_thread
+snd.Midi_Device::drainCommandQueue	1	RED	12	0	12	Midi_Device::drainCommandQueue
+snd.Midi_Device::dtor	1	RED	8	0	8	Midi_Device::dtor
+snd.Midi_Device::emitEvent	1	RED	28	0	28	Midi_Device::emitEvent_h Midi_Device::emitEvent_n
+snd.Midi_Device::enableOutput	1	RED	12	0	12	Midi_Device::enableOutput
+snd.Midi_Device::flushMessages	1	RED	20	0	20	Midi_Device::flushMessages_h Midi_Device::flushMessages_h0
+snd.Midi_Device::handleMetaEvent	1	RED	25	0	25	Midi_Device::handleMetaEvent
+snd.Midi_Device::loadFile	1	RED	36	0	36	Midi_Device::loadFile Midi_Device::loadFile_nodeoom Midi_Device::loadFile_nulldata
+snd.Midi_Device::loadFromMemory	1	RED	36	0	36	Midi_Device::loadFromMemory Midi_Device::loadFromMemory_nodeoom Midi_Device::loadFromMemory_nulldata
+snd.Midi_Device::noteOn	1	RED	40	0	40	Midi_Device::noteOn_hw Midi_Device::noteOn_sw Midi_Device::noteOn_swbig
+snd.Midi_Device::openOutput	1	RED	18	0	18	Midi_Device::openOutput_fail Midi_Device::openOutput_null Midi_Device::openOutput_ok
+snd.Midi_Device::playEvent	1	RED	18	0	18	Midi_Device::playEvent
+snd.Midi_Device::scalarDeletingDtor	1	RED	24	0	24	Midi_Device::scalarDeletingDtor
+snd.Midi_Device::scanCommandRing	1	RED	12	0	12	Midi_Device::scanCommandRing
+snd.Midi_Device::sendShortMsg	1	RED	24	0	24	Midi_Device::sendShortMsg_h Midi_Device::sendShortMsg_n
+snd.Midi_Device::setChannelVolume	1	RED	14	0	14	Midi_Device::setChannelVolume
+snd.Midi_Device::shutdown	1	RED	48	0	48	Midi_Device::shutdown_a Midi_Device::shutdown_b Midi_Device::shutdown_c Midi_Device::shutdown_d
+snd.Midi_advanceMsgRing	1	RED	12	0	12	Midi_advanceMsgRing
+snd.Midi_loadMemoryAndPreRoll	1	RED	12	0	12	Midi_loadMemoryAndPreRoll
+snd.Midi_readVarLen	1	RED	15	0	15	Midi_readVarLen
+snd.Midi_resetFileState	1	RED	36	0	36	Midi_resetFileState_null Midi_resetFileState_p1 Midi_resetFileState_p1000 Midi_resetFileState_p5000 Midi_resetFileState_p7 Midi_resetFileState_p999
+snd.Midi_scanTrack	1	RED	14	0	14	Midi_scanTrack
+snd.Midi_seekTrackToTick	1	RED	16	0	16	Midi_seekTrackToTick
+snd.Seq::loadFile	1	RED	12	0	12	Seq::loadFile
+snd.Seq_allocTrackSlot	1	RED	12	0	12	Seq_allocTrackSlot
+snd.Seq_applyChannelLevel	1	RED	15	0	15	Seq_applyChannelLevel
+snd.Seq_applyTrackFlag	1	RED	13	0	13	Seq_applyTrackFlag
+snd.Seq_buildPlayOrder	1	RED	12	0	12	Seq_buildPlayOrder
+snd.Seq_buildTrack14	1	RED	13	0	13	Seq_buildTrack14
+snd.Seq_buildTrack9	1	RED	14	0	14	Seq_buildTrack9
+snd.Seq_clearTrackFlag8All	1	RED	12	0	12	Seq_clearTrackFlag8All
+snd.Seq_closeFile	1	RED	12	0	12	Seq_closeFile
+snd.Seq_cmdHandler10	1	RED	14	0	14	Seq_cmdHandler10
+snd.Seq_cmdHandler11	1	RED	12	0	12	Seq_cmdHandler11
+snd.Seq_cmdHandler12	1	RED	36	0	36	Seq_cmdHandler12
+snd.Seq_cmdHandler7	1	RED	12	0	12	Seq_cmdHandler7
+snd.Seq_cmdHandler8	1	RED	12	0	12	Seq_cmdHandler8
+snd.Seq_cmdHandler9	1	RED	12	0	12	Seq_cmdHandler9
+snd.Seq_copyChannelParams	1	RED	11	0	11	Seq_copyChannelParams
+snd.Seq_dispatchChannelCmd	1	RED	15	0	15	Seq_dispatchChannelCmd
+snd.Seq_dtor	1	RED	12	0	12	Seq_dtor
+snd.Seq_findTrackById	1	RED	58	0	58	Seq_findTrackById
+snd.Seq_findTrackOrZero	1	RED	44	0	44	Seq_findTrackOrZero
+snd.Seq_firstTrackData	1	RED	12	0	12	Seq_firstTrackData
+snd.Seq_freeChannelObjects	1	RED	10	0	10	Seq_freeChannelObjects
+snd.Seq_getListElementAt	1	RED	35	0	35	Seq_getListElementAt
+snd.Seq_getTrackFlagHigh	1	RED	24	0	24	Seq_getTrackFlagHigh
+snd.Seq_listGetAt	1	RED	18	0	18	Seq_listGetAt
+snd.Seq_loadChannelDesc	1	RED	16	0	16	Seq_loadChannelDesc
+snd.Seq_mergeChannelDesc	1	RED	25	0	25	Seq_mergeChannelDesc
+snd.Seq_preRollTrack	1	RED	12	0	12	Seq_preRollTrack
+snd.Seq_remarkEventRange	1	RED	14	0	14	Seq_remarkEventRange
+snd.Seq_removeTrackById	1	RED	45	0	45	Seq_removeTrackById
+snd.Seq_replayEventRange	1	RED	16	0	16	Seq_replayEventRange
+snd.Seq_reset	1	RED	12	0	12	Seq_reset
+snd.Seq_resetTrackControllers	1	RED	10	0	10	Seq_resetTrackControllers
+snd.Seq_rewind	1	RED	12	0	12	Seq_rewind
+snd.Seq_rewindTracks	1	RED	10	0	10	Seq_rewindTracks
+snd.Seq_scaleTickRate	1	RED	240	0	240	Seq_scaleTickRate Seq_scaleTickRate_null Seq_scaleTickRate_p1 Seq_scaleTickRate_p4096
+snd.Seq_scheduleEvent	1	RED	14	0	14	Seq_scheduleEvent
+snd.Seq_selectTrack	1	RED	12	0	12	Seq_selectTrack
+snd.Seq_setField240	1	RED	24	0	24	Seq_setField240
+snd.Seq_setField730Clamped	1	RED	36	0	36	Seq_setField730Clamped
+snd.Seq_setPlayOrderMode	1	RED	12	0	12	Seq_setPlayOrderMode
+snd.Seq_setPlayRange	1	RED	16	0	16	Seq_setPlayRange
+snd.Seq_setTempo	1	RED	24	0	24	Seq_setTempo_w27f Seq_setTempo_wf7f
+snd.Seq_setupChannel	1	RED	44	0	44	Seq_setupChannel Seq_setupChannel_empty Seq_setupChannel_oom Seq_setupChannel_tail
+snd.Seq_stepTrackMeta	1	RED	12	0	12	Seq_stepTrackMeta
+snd.Seq_updateChannel	1	RED	36	0	36	Seq_updateChannel Seq_updateChannel_hole Seq_updateChannel_nolist
+snd.Track_advancePos	1	RED	18	0	18	Track_advancePos
+snd.Track_clearFlag8	1	RED	12	0	12	Track_clearFlag8
+snd.Track_resetReadState	1	RED	12	0	12	Track_resetReadState
+snd.Track_setData	1	RED	12	0	12	Track_setData
+snd.Track_setField8RaisingMax	1	RED	36	0	36	Track_setField8RaisingMax

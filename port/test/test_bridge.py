@@ -340,5 +340,8 @@ def test_play_sound_at_draws_the_rng_only_on_screen(portlib):
             st.write(off["g_tileTypeAttrs"] + 0x2c, struct.pack("<I", 8))
             st.write(off["gCameraTileX"], struct.pack("<ii", cam, cam))
             st.write(off["g_rng"], struct.pack("<I", 0x1234))
+            # playSound is a registered port function since S4.10 (audio_exe): it maps the user's golf_clean.exe from the
+            # context's game files, as a segment run attaches them
+            st.files_root(ROOT / "original")
             st.call("playSoundAt", [0x8f, 0x600, 0x600, 0])
             assert (struct.unpack("<I", st.read(off["g_rng"], 4))[0] != 0x1234) == drawn
