@@ -1,0 +1,10 @@
+rule link: seven imports and the element after them are 8, within the short sort's cutoff, whose selection of each maximum rotates a tied run by one: pulled GetTickCount first, it comes last
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+imports=
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetTickCount

@@ -1,0 +1,44 @@
+rule c1xx: ids and IL records per expression construct, and the order C1XX writes their operands.
+cl
+il
+  *; ret.i32(cond(load.i32(a), load.i32(b), load.i32(a)))*
+  *; ret.i32(asg.add.i32(a, load.i32(b)))*
+  *; ret.i32(asg.add.i32(a, 1))*
+  *; ret.i32(postinc.i32(a, 1))*
+  *; ret.i32(call.i32(?g2@@YAHHH@Z, arg.i32(load.i32(b)), arg.i32(load.i32(a))))*
+  *; ret.i32(load.i32(index(?arr@@3PAHA, mul(load.i32(a), 4))))*
+  *; ret.i32(cvt.i32(cvt.i16(load.i32(a))))*
+  *; ret.i32(cvt.i32(cvt.i16(load.i32(a))))*
+  *; ret.i32(cvt.i32(cvt.i16(load.i32(a))))*
+  *; ret.i32(call.i32(?m@S@@QAEHH@Z, this=load.p32_const(addoff.p32_const(addoff.p32_const(?gs@@3US@@A, 0), 0)), arg.i32(load.i32(a))))*
+  *; ret.i32(add(5, load.i32(a)))*
+  *; ret.i32(add(add(load.i32(a), 2), 3))*
+  *; ret.i32(add(load.i32(b), load.i32(a)))*
+  *; ret.i32(load.i32(a))*
+  *5   0x11   17  ?e00@@YAHHH@Z*
+  *4   0x17   23  ?e01@@YAHHH@Z*
+  *4   0x15   21  ?e02@@YAHHH@Z*
+  *4   0x15   21  ?e03@@YAHHH@Z*
+  *4   0x13   19  ?e04@@YAHHH@Z*
+  *4   0x15   21  ?e05@@YAHHH@Z*
+  *4   0x13   19  ?e06@@YAHHH@Z*
+  *4   0x12   18  ?e07@@YAHHH@Z*
+  *4   0x12   18  ?e08@@YAHHH@Z*
+  *4   0x15   21  ?e09@@YAHHH@Z*
+  *4   0x18   24  ?e10@@YAHHH@Z*
+  *4   0x18   24  ?e11@@YAHHH@Z*
+  *4   0x14   20  ?e12@@YAHHH@Z*
+  *4   0x17   23  ?e13@@YAHHH@Z*
+  *4   0x16   22  ?e14@@YAHHH@Z*
+  *4   0x14   20  ?e15@@YAHHH@Z*
+  *5   0x13   19  ?e16@@YAHHH@Z*
+  *4   0x13   19  ?e17@@YAHHH@Z*
+  *5   0x13   19  ?e18@@YAHHH@Z*
+  *5   0x10   16  ?e19@@YAHHH@Z*
+  *4   0x10   16  ?e20@@YAHHH@Z*
+  *4   0x1c   28  ?e21@@YAHHH@Z*
+  *4   0x13   19  ?e22@@YAHHH@Z*
+  *4   0x15   21  ?e23@@YAHHH@Z*
+  *4   0x14   20  ?e24@@YAHHH@Z*
+  *4   0x11   17  ?e25@@YAHHH@Z*
+  *4   0x12   18  ?e26@@YAHHH@Z*

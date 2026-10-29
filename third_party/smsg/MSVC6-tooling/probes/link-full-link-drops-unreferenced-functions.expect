@@ -1,0 +1,6 @@
+rule link: a full link with no /OPT, /DEBUG or /INCREMENTAL eliminates references as /OPT:REF does
+link /entry:main /subsystem:console /nodefaultlib
+map
+  0001:00000000 ?used@@YAHH@Z *
+  !*?unused@@YAHH@Z*
+  0001:00000010 _main *

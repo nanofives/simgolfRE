@@ -1,0 +1,8 @@
+rule c1xx: the guard of a function-local static takes a number of the same counter, so every object defined after it moves up one (contrast)
+cl /O2 /GX
+data
+  _$S5 DD FLAT:_$E4
+  _$S11 DD FLAT:_$E10
+asm= _$E10
+  call _$E7
+  jmp _$E9

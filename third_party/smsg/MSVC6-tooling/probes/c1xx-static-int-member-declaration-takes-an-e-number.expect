@@ -1,0 +1,5 @@
+rule c1xx: a static data member of any type takes a number where its class is declared: one `static int` moves every object after the class up one
+cl /O2 /GX
+data
+  _$S6 DD FLAT:_$E5
+  _$S11 DD FLAT:_$E10

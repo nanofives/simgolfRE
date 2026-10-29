@@ -1,0 +1,26 @@
+rule c1xx: the ids a declaration costs.
+cl
+il
+  *13   0x10   16  ?m00@@YAHH@Z*
+  *13   0x10   16  ?m01@@YAHH@Z*
+  *14   0x10   16  ?m02@@YAHH@Z*
+  *13   0x10   16  ?m03@@YAHH@Z*
+  *15   0x10   16  ?m04@@YAHH@Z*
+  *12   0x10   16  ?m05@@YAHH@Z*
+  *13   0x10   16  ?m06@@YAHH@Z*
+  *16   0x10   16  ?m07@@YAHH@Z*
+  *16   0x10   16  ?m08@@YAHH@Z*
+  *20   0x10   16  ?m09@@YAHH@Z*
+  *15   0x10   16  ?m10@@YAHH@Z*
+  *12   0x10   16  ?m11@@YAHH@Z*
+  *14   0x10   16  ?m12@@YAHH@Z*
+  *16   0x10   16  ?m13@@YAHH@Z*
+  *4   0x10   16  ?m14@@YAHH@Z*
+  *7   0x10   16  ?m15@@YAHH@Z*
+  *4   0x10   16  ?m16@@YAHH@Z*
+  *6   0x10   16  ?m17@@YAHH@Z*
+  *4   0x10   16  ?m18@@YAHH@Z*
+  *4   0x10   16  ?m19@@YAHH@Z                                 fdef 1, formal 1, label 1, var 1*
+  *10   0x10   16  ?m20@@YAHH@Z*
+  *12   0x10   16  ?m21@@YAHH@Z*
+  *13   0x10   16  ?m22@@YAHH@Z*

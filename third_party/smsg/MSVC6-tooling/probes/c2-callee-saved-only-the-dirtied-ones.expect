@@ -1,0 +1,11 @@
+rule c2: a function that dirties only esi saves only esi (contrast)
+cl /O2
+asm= _one
+  push esi
+  mov esi, DWORD PTR _a$[esp]
+  push esi
+  call _ext
+  add esp, 4
+  add eax, esi
+  pop esi
+  ret 0

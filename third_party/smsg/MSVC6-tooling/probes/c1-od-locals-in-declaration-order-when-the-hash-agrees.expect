@@ -1,0 +1,9 @@
+rule c1: one-letter names hash to their own byte, so a b c d e h take buckets 1 2 3 4 5 8 and the same body keeps declaration order (contrast)
+cl /Od
+frame= _f
+  _a$ = -4
+  _b$ = -8
+  _c$ = -12
+  _d$ = -16
+  _e$ = -20
+  _h$ = -24

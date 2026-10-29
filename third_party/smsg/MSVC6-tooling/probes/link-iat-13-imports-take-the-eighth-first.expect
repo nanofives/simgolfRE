@@ -1,0 +1,16 @@
+rule link: thirteen imports and the element after them are 14, so element 7, GetCurrentProcess, comes first; thirteen alone would give element 6
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+imports=
+  KERNEL32.dll GetCurrentProcess
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetTickCount
+  KERNEL32.dll GetCurrentThread
+  KERNEL32.dll GetACP
+  KERNEL32.dll GetOEMCP
+  KERNEL32.dll GetThreadLocale
+  KERNEL32.dll GetUserDefaultLCID

@@ -2043,6 +2043,15 @@ new manifest no longer lists (refused above half of them unless PRUNE_FORCE=1), 
 Player PCs prune too (since 2026-10-29): update.bat deletes files under game\ the manifest no longer lists (`-NoPrune` keeps them;
 above half of game\ it stops unless `-Prune` is given), never anything outside game\.
 
+### SMSG-decomp snapshot (third_party/smsg)
+`third_party/smsg/` (2026-10-29, copied on Mariano's instruction; PROVENANCE.md has the commits) holds github.com/SMSG-decomp: an
+independent matching decompilation of the same v1.03 (claims all 5,982 functions at 100%, no rebuilt binary byte-exact), its
+MSVC6-tooling (Rust compiler models, no permuter), Firaxis-decomp-notes and four PDBs on the original addresses (release/). Locally
+only (gitignored): VC6 SP5 in tools/vc6sp5 (sound.dll's C++ objects were built by SP5's C2 12.00.8966, so our 8168 near-misses there
+used the wrong back end), the SP2 debug CRT in tools/vc6sp2 (jgld / Terrain link it), the DirectX 8 SDK in tools/dxsdk8. Not copied:
+MSVC6-decomp (decompiled Microsoft compiler; nothing here uses it). Their claims are hypotheses: a source counts when our match.py
+gives 100% against our anchors (C4 match evidence), a name or field meaning when our disassembly supports it.
+
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default
 `enabled=0` unless it is a compat fix. Cite the analysis note in `desc`. The static test validates

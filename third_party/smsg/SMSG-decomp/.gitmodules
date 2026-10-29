@@ -1,0 +1,25 @@
+[submodule "golf/jpeg.lib/jpeg-6a"]
+	path = golf/jpeg.lib/jpeg-6a
+	url = https://github.com/libjpeg-turbo/ijg.git
+[submodule "jgl/libpng.lib/libpng"]
+	path = jgl/libpng.lib/libpng
+	url = https://github.com/pnggroup/libpng.git
+[submodule "jgl/zlib.lib/zlib"]
+	path = jgl/zlib.lib/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "sound/lpc10.lib/lpc10"]
+	path = sound/lpc10.lib/lpc10
+	url = https://github.com/jafingerhut/lpc10.git
+[submodule "sound/DXSDK"]
+	path = sound/DXSDK
+	url = https://github.com/edgeforce/directx8.git
+[submodule "toolchain/vc6"]
+	path = toolchain/vc6
+	url = https://github.com/isledecomp/MSVC600-8168.git
+	branch = old-master
+[submodule "toolchain/vc6sp5"]
+	path = toolchain/vc6sp5
+	url = https://github.com/archaic-msvc/msvc600_sp5.git
+[submodule "toolchain/vc6sp2"]
+	path = toolchain/vc6sp2
+	url = https://github.com/archaic-toolchains/msvc600_sp2.git

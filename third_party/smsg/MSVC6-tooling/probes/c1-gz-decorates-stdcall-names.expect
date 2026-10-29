@@ -1,0 +1,9 @@
+rule c1: under /Gz an undecorated C function is __stdcall: its name carries @ and its argument bytes, and it pops them itself
+cl /O2 /Gz
+data
+  PUBLIC _f@8
+asm= _f@8
+  mov eax, DWORD PTR _b$[esp-4]
+  mov ecx, DWORD PTR _a$[esp-4]
+  add eax, ecx
+  ret 8

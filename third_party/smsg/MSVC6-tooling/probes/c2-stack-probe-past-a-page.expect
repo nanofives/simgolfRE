@@ -1,0 +1,6 @@
+rule c2: a frame larger than the /Gs threshold, a page (4096) by default, is allocated through __chkstk
+cl /O2
+asm ?f@@YAXXZ
+  mov eax, 6000
+  call __chkstk
+  call ?use@@YAXPAD@Z

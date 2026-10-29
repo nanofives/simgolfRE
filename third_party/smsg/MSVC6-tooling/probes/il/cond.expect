@@ -1,0 +1,9 @@
+rule c1xx: a ?: expression.
+cl
+il
+  *26    sym #d5:c*
+  *26    sym #d6:x*
+  *26    sym #d7:y*
+  *43    colon*
+  *42    cond*
+  *; ret.i32(cond(load.i32(c), load.i32(x), load.i32(y)))*

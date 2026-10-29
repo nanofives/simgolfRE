@@ -1,0 +1,5 @@
+rule c2: declared the other way round the same two names swap slots: a -4, value -8 (contrast)
+cl /Od
+frame= ?f@@YAHXZ
+  _value$ = -8
+  _a$ = -4

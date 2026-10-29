@@ -1,0 +1,11 @@
+rule c1xx: a user label and goto, inline asm, __assume, and an intrinsic call under /Oi.
+cl /Oi
+il
+  *03 label    #1e5 "out" level 2 role=0 refs=2*
+  *4f.19 op19*
+  *4f.16 inasm*
+  *4f.1a op1a*
+  *a0    assume void*
+  *; discard(icall.p32(172, arg.u32(4), arg.p32(cvt.p32(load.p32(s))), arg.p32(cvt.p32(load.p32(d)))))*
+  *; discard(asg.i32(a, cvt.i32(icall.u32(167, arg.p32(load.p32(s))))))*
+  *; label out*

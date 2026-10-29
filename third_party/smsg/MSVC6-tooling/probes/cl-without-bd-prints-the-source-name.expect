@@ -1,0 +1,4 @@
+rule cl: without /Bd CL prints only the source name (contrast)
+cl /O2
+clout=
+  cl-without-bd-prints-the-source-name.cpp

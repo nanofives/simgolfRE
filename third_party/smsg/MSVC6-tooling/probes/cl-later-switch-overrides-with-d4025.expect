@@ -1,0 +1,13 @@
+rule cl: a typed switch that overrides an earlier one is warned with D4025, and the earlier one reaches no pass
+cl /Od /O2 /Bd
+clout
+  `*\c1xx.dll -il * -f cl-later-switch-overrides-with-d4025.cpp -W 1 -Ze -D_MSC_EXTENSIONS -Zp8 -ZB64 -D_INTEGRAL_MAX_BITS=64 -D_M_IX86=500 -G5 -Gs -pc \:/ -Fdvc60.pdb -D_MSC_VER=1200 *-D_WIN32 -nologo -Gf -Og -Oi -Ot -Oy -Ob1 -Bd -Focl-later-switch-overrides-with-d4025.obj -I *
+  `*\c2.dll -il * -f cl-later-switch-overrides-with-d4025.cpp -W 1 -G5 -Gs4096 -dos -ML -Fdvc60.idb -Gy -Bd -Focl-later-switch-overrides-with-d4025.obj -FAas -Fa cl-later-switch-overrides-with-d4025.asm'
+  Command line warning D4025 : overriding '/Od' with '/O2'
+clout
+  !*\c1xx.dll *-Od*
+  !*\c2.dll *-Od*
+asm= ?f@@YAHH@Z
+  mov eax, DWORD PTR _a$[esp-4]
+  add eax, 2
+  ret 0

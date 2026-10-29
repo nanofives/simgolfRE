@@ -1,0 +1,637 @@
+rva	name	kind	size	scope
+0x6720	??0?$Matrix4@M@@QAE@ABU0@@Z	label
+0x3230	??0?$Matrix4@M@@QAE@ABU?$Quaternion@M@@@Z	label
+0x31d0	??0?$Matrix4@M@@QAE@PBU?$Quaternion@M@@PBU?$Vector3@M@@@Z	label
+0x3290	??0?$Matrix4@M@@QAE@PBU?$Vector3@M@@@Z	label
+0x4590	??0?$Matrix4@M@@QAE@XZ	label
+0x3110	??0?$Quaternion@M@@QAE@MABU?$Vector3@M@@@Z	label
+0x3050	??0?$Quaternion@M@@QAE@XZ	label
+0x68d0	??0?$Transform@M@@QAE@ABU0@@Z	label
+0x3400	??0?$Transform@M@@QAE@PBU?$Quaternion@M@@@Z	label
+0x3390	??0?$Transform@M@@QAE@PBU?$Quaternion@M@@PBU?$Vector3@M@@@Z	label
+0x3470	??0?$Transform@M@@QAE@PBU?$Vector3@M@@@Z	label
+0x5450	??0?$Transform@M@@QAE@XZ	label
+0x68300	??0DevModeArray@@QAE@XZ	label
+0x67fa0	??0DisplayDeviceArray@@QAE@XZ	label
+0x680a0	??0DisplayModeArray@@QAE@XZ	label
+0x27b0	??0Filemap@@QAE@PBD@Z	label
+0x2730	??0Filemap@@QAE@PBDH@Z	label
+0x2650	??0Filemap@@QAE@XZ	label
+0x9690	??0GSBuffer@@QAE@XZ	label
+0x69220	??0GSFont@@QAE@XZ	label
+0x6ab0	??0GSObject@@QAE@XZ	label
+0x6a260	??0GSPalette@@QAE@XZ	label
+0x14c70	??0GSSprite@@QAE@XZ	label
+0x65630	??0GraphSys@@QAE@XZ	label
+0x7970	??0JGLBuffer@@QAE@PAUBufferBase@@@Z	label
+0x7660	??0JGLBuffer@@QAE@XZ	label
+0x68660	??0JGLFont@@QAE@PAUFontBase@@@Z	label
+0x6a150	??0JGLPalette@@QAE@PAUPaletteBase@@@Z	label
+0x14cd0	??0JGLSprite@@QAE@PAPAV0@@Z	label
+0x14af0	??0JGLSprite@@QAE@XZ	label
+0x654b0	??0JGLSys@@QAE@XZ	label
+0x6c80	??0LinkedList@@QAE@XZ	label
+0x69270	??0MessageHandler@@QAE@XZ	label
+0x7370	??0Node@@QAE@PAXE@Z	label
+0x7620	??0PRNG@@QAE@XZ	label
+0x92e0	??0PixelFormat@@QAE@XZ	label
+0x32f0	??1?$Matrix4@M@@UAE@XZ	label
+0x34e0	??1?$Transform@M@@UAE@XZ	label
+0x66b00	??1DevModeArray@@UAE@XZ	label
+0x669e0	??1DisplayDeviceArray@@UAE@XZ	label
+0x66a30	??1DisplayModeArray@@UAE@XZ	label
+0x2820	??1Filemap@@UAE@XZ	label
+0x96f0	??1GSBuffer@@UAE@XZ	label
+0x69010	??1GSFont@@UAE@XZ	label
+0x6b80	??1GSObject@@UAE@XZ	label
+0x6af00	??1GSPalette@@UAE@XZ	label
+0x168e0	??1GSSprite@@UAE@XZ	label
+0x66d20	??1GraphSys@@UAE@XZ	label
+0x7bf0	??1JGLBuffer@@UAE@XZ	label
+0x68760	??1JGLFont@@UAE@XZ	label
+0x6a2c0	??1JGLPalette@@UAE@XZ	label
+0x14de0	??1JGLSprite@@UAE@XZ	label
+0x65670	??1JGLSys@@UAE@XZ	label
+0x6cf0	??1LinkedList@@UAE@XZ	label
+0x6790	??4?$Matrix4@M@@QAEAAU0@ABU0@@Z	label
+0x6840	??4?$Transform@M@@QAEAAU0@ABU0@@Z	label
+0x3ab0	??8?$Vector3@M@@QBE_NABU0@@Z	label
+0x4410	??D?$Quaternion@M@@QBE?AU0@ABU0@@Z	label
+0x5dd0	??D?$Transform@M@@QBE?AU0@ABU0@@Z	label
+0x39b0	??D?$Vector3@M@@QBE?AU0@M@Z	label
+0x5a30	??G?$Transform@M@@QBE?AU0@ABU?$Vector3@M@@@Z	label
+0x3820	??G?$Vector3@M@@QBE?AU0@ABU0@@Z	label
+0x5890	??H?$Transform@M@@QBE?AU0@ABU?$Vector3@M@@@Z	label
+0x3790	??H?$Vector3@M@@QBE?AU0@ABU0@@Z	label
+0x42f0	??X?$Quaternion@M@@QAEAAU0@ABU0@@Z	label
+0x60d0	??X?$Transform@M@@QAEAAU0@ABU0@@Z	label
+0x3a40	??X?$Vector3@M@@QAEAAU0@M@Z	label
+0x5990	??Y?$Transform@M@@QAEAAU0@ABU?$Vector3@M@@@Z	label
+0x38b0	??Y?$Vector3@M@@QAEAAU0@ABU0@@Z	label
+0x5b30	??Z?$Transform@M@@QAEAAU0@ABU?$Vector3@M@@@Z	label
+0x3930	??Z?$Vector3@M@@QAEAAU0@ABU0@@Z	label
+0x69260	??_EJGLFont@@W7AEPAXI@Z	label
+0x3600	??_G?$Matrix4@M@@UAEPAXI@Z	label
+0x3670	??_G?$Transform@M@@UAEPAXI@Z	label
+0x66cb0	??_GDevModeArray@@UAEPAXI@Z	label
+0x66bd0	??_GDisplayDeviceArray@@UAEPAXI@Z	label
+0x66c40	??_GDisplayModeArray@@UAEPAXI@Z	label
+0x26c0	??_GFilemap@@UAEPAXI@Z	label
+0xa4e0	??_GGSBuffer@@UAEPAXI@Z	label
+0x69140	??_GGSFont@@UAEPAXI@Z	label
+0x6b10	??_GGSObject@@UAEPAXI@Z	label
+0x6af50	??_GGSPalette@@UAEPAXI@Z	label
+0x16930	??_GGSSprite@@UAEPAXI@Z	label
+0x674f0	??_GGraphSys@@UAEPAXI@Z	label
+0x7900	??_GJGLBuffer@@UAEPAXI@Z	label
+0x691b0	??_GJGLFont@@UAEPAXI@Z	label
+0x6a1f0	??_GJGLPalette@@UAEPAXI@Z	label
+0x14c00	??_GJGLSprite@@UAEPAXI@Z	label
+0x655c0	??_GJGLSys@@UAEPAXI@Z	label
+0x6d80	??_GLinkedList@@UAEPAXI@Z	label
+0x73e0	??_GNode@@UAEPAXI@Z	label
+0x48e0	?Add@?$Matrix4@M@@QAE?AU1@PBU1@@Z	label
+0x4090	?Add@?$Vector3@M@@QAEXABU1@@Z	label
+0x4020	?Add@?$Vector3@M@@QAEXMMM@Z	label
+0x4cc0	?AddInto@?$Matrix4@M@@QAEPAU1@PBU1@@Z	label
+0x16cb0	?AlphaBlit8to16@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x30b0	?Assign@?$Quaternion@M@@QAEPAU1@PBU1@@Z	label
+0x175d0	?Blit24@JGLSprite@@UAEHPAVJGLBuffer@@HHHHPAVJGLPalette@@@Z	label
+0x5690	?BuildMatrix@?$Transform@M@@QBEXAAU?$Matrix4@M@@@Z	label
+0x66b90	?Clear@DevModeArray@@QAEXXZ	label
+0x66ac0	?Clear@DisplayModeArray@@QAEXXZ	label
+0x21720	?Complex@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG1@Z	label
+0x4530	?Conjugate@?$Quaternion@M@@QAEXXZ	label
+0x1a0e0	?CopyFrom@JGLSprite@@UAEPAV1@PAV1@@Z	label
+0x6d40	?Count@LinkedList@@QAEHXZ	label
+0x3e50	?Cross@?$Vector3@M@@QBE?AU1@ABU1@@Z	label
+0x6bf0	?DestroyAllSprites@@YAXXZ	label
+0x3b30	?Distance@?$Vector3@M@@QBEMABU1@@Z	label
+0x3bf0	?DistanceSquared@?$Vector3@M@@QBEMABU1@@Z	label
+0x3c90	?Dot@?$Vector3@M@@QBEMABU1@@Z	label
+0x114e0	?DrawDashedHLine8@JGLBuffer@@QAEXHHHHHHHH@Z	label
+0xcf90	?DrawDashedHLine@JGLBuffer@@QAEXHHHHHHHH@Z	label
+0x10870	?DrawDashedLine8@JGLBuffer@@QAEXHHHHHHHHH@Z	label
+0xc140	?DrawDashedLine@JGLBuffer@@QAEXHHHHHHHHH@Z	label
+0x11880	?DrawDashedVLine8@JGLBuffer@@QAEXHHHHHHHH@Z	label
+0xd4f0	?DrawDashedVLine@JGLBuffer@@QAEXHHHHHHHH@Z	label
+0x18490	?DrawWithPaletteAndShadowLut@JGLSprite@@UAEHPAVJGLBuffer@@0HHPAGPAVJGLPalette@@@Z	label
+0x18510	?DrawWithPaletteAndShadowLutScaled@JGLSprite@@UAEHPAVJGLBuffer@@0HHHHHPAGPAVJGLPalette@@@Z	label
+0x4dc0	?Equals@?$Matrix4@M@@QBE_NPBU1@@Z	label
+0x4750	?FromQuaternion@?$Matrix4@M@@QAEXABU?$Quaternion@M@@@Z	label
+0x4690	?FromQuaternionTranslation@?$Matrix4@M@@QAEXPBU?$Quaternion@M@@PBU?$Vector3@M@@@Z	label
+0x66b50	?GetCount@DevModeArray@@QAEHXZ	label
+0x66a80	?GetCount@DisplayModeArray@@QAEHXZ	label
+0xaef0	?GetPaletteVersion@JGLPalette@@QAEHXZ	label
+0x45f0	?Identity@?$Matrix4@M@@QAEXXZ	label
+0x3170	?Identity@?$Quaternion@M@@QAEXXZ	label
+0x35b0	?Identity@?$Transform@M@@QAEXXZ	label
+0x68610	?Init@DevModeArray@@QAEHXZ	label
+0x68570	?Init@DisplayDeviceArray@@QAEHXZ	label
+0x685c0	?Init@DisplayModeArray@@QAEHXZ	label
+0x5330	?Invert@?$Matrix4@M@@QAEPAU1@XZ	label
+0x62e0	?Invert@?$Transform@M@@QAEXXZ	label
+0x180e0	?IsCompressed@JGLSprite@@QAEHXZ	label
+0x69090	?LoadTTF@GSFont@@UAEHPBD0HH@Z	label
+0x68ae0	?LoadTTF@JGLFont@@UAEHPBD0HH@Z	label
+0x52b0	?MakeIdentity@?$Matrix4@M@@QAEPAU1@XZ	label
+0x25dd0	?MaskedBlit8to16@JGLSprite@@QAEHPAV1@PAVJGLBuffer@@HH@Z	label
+0x19b90	?MaskedBlitToTarget@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@1HHPAVJGLPalette@@@Z	label
+0x3f80	?Midpoint@?$Vector3@M@@QAE?AU1@ABU1@@Z	label
+0x5030	?Multiply@?$Matrix4@M@@QAE?AU1@PBU1@@Z	label
+0x4a50	?MultiplyInto@?$Matrix4@M@@QAEPAU1@PBU1@@Z	label
+0x3df0	?Negate@?$Vector3@M@@QAEXXZ	label
+0x3cf0	?Normalize@?$Vector3@M@@QAEXXZ	label
+0x5c70	?Offset@?$Transform@M@@QAEAAU1@ABU?$Vector3@M@@@Z	label
+0x172b0	?RecoloredBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAEPAGPAVJGLPalette@@@Z	label
+0x169a0	?RemappedBlit16@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x3340	?Reset@?$Matrix4@M@@QAEXXZ	label
+0x5650	?Reset@?$Transform@M@@QAEXXZ	label
+0x68360	?Reset@DevModeArray@@QAEXXZ	label
+0x68000	?Reset@DisplayDeviceArray@@QAEXXZ	label
+0x68100	?Reset@DisplayModeArray@@QAEXXZ	label
+0x6340	?Rotate@?$Transform@M@@QAEXMABU?$Vector3@M@@@Z	label
+0x4100	?Rotate@?$Vector3@M@@QAEXPBU?$Quaternion@M@@@Z	label
+0x6420	?RotateX@?$Transform@M@@QAEXM@Z	label
+0x6520	?RotateY@?$Transform@M@@QAEXM@Z	label
+0x6620	?RotateZ@?$Transform@M@@QAEXM@Z	label
+0x28630	?SPR_DrawSprite_WithShadow@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x9870	?SURF_Blit@GSBuffer@@UAEHPAVJGLBuffer@@HHHHHH@Z	label
+0x91a0	?SURF_Blit@JGLBuffer@@UAEHPAV1@HHHHHH@Z	label
+0xa9d0	?SURF_CopyBoundsRect@JGLBuffer@@UAEXPAURect@@@Z	label
+0xa930	?SURF_CopyClipRect@JGLBuffer@@UAEXPAURect@@@Z	label
+0x9a40	?SURF_DrawDashedLine@GSBuffer@@UAEHHHHHHHHHH@Z	label
+0x95a0	?SURF_DrawDashedLine@JGLBuffer@@UAEHHHHHHHHHH@Z	label
+0xa870	?SURF_GetPixelPtr16@JGLBuffer@@UAEPAGHH@Z	label
+0xa810	?SURF_GetPixelPtr8@JGLBuffer@@UAEPAEHH@Z	label
+0x8830	?SURF_GetPixelPtr@JGLBuffer@@UAEPAEHH@Z	label
+0xa2b0	?SURF_SetTextColor16@GSBuffer@@UAEHH@Z	label
+0x8d00	?SURF_SetTextColor16@JGLBuffer@@UAEHH@Z	label
+0x9e00	?SURF_ShadowBlit@GSBuffer@@UAEHPAVJGLBuffer@@HHPAG@Z	label
+0xa330	?SURF_ShadowBlit@JGLBuffer@@UAEHPAV1@HHPAG@Z	label
+0x9f50	?SURF_Stub_NotImplemented_18@GSBuffer@@UAEHPAV1@HHPAE@Z	label
+0xadb0	?SURF_Stub_NotImplemented_18@JGLBuffer@@UAEHPAVGSBuffer@@HHPAE@Z	label
+0xa1b0	?SURF_Stub_NotImplemented_21@GSBuffer@@UAEHPAVJGLBuffer@@HHH@Z	label
+0xae70	?SURF_Stub_NotImplemented_21@JGLBuffer@@UAEHPAV1@HHH@Z	label
+0x5ff0	?Scale@?$Transform@M@@QBE?AU1@M@Z	label
+0x3f10	?ScaleBy@?$Vector3@M@@QAEXM@Z	label
+0x4f40	?ScaleDiagonal@?$Matrix4@M@@QAE?AU1@M@Z	label
+0x49e0	?ScaleInto@?$Matrix4@M@@QAEPAU1@M@Z	label
+0x6270	?ScaleTranslation@?$Transform@M@@QAEAAU1@M@Z	label
+0x6afc0	?Seed@PRNG@@QAEXI@Z	label
+0x72b0	?Select@LinkedList@@QAEHH@Z	label
+0x3530	?Set@?$Transform@M@@QAEXPBU?$Quaternion@M@@PBU?$Vector3@M@@@Z	label
+0x36e0	?Set@?$Vector3@M@@QAEXMMM@Z	label
+0x4230	?SetAxisAngle@?$Quaternion@M@@QAEXMABU?$Vector3@M@@@Z	label
+0x65ea0	?SetDisplayMode@JGLSys@@UAEHHHH@Z	label
+0x66200	?SetDisplayModeToDesktop@JGLSys@@UAEHH@Z	label
+0x66040	?SetDisplayModeWithRefresh@JGLSys@@UAEHHHH_NH@Z	label
+0x67f60	?SetGlobalDevmodeSink@MessageHandler@@QAEXP6AHIJ@Z@Z	label
+0x5530	?SetRotation@?$Transform@M@@QAEXPBU?$Quaternion@M@@@Z	label
+0x55c0	?SetRotationTranslation@?$Transform@M@@QAEXPBU?$Quaternion@M@@PBU?$Vector3@M@@@Z	label
+0x46f0	?SetTranslation@?$Matrix4@M@@QAEXPBU?$Vector3@M@@@Z	label
+0x54b0	?SetTranslation@?$Transform@M@@QAEXPBU?$Vector3@M@@@Z	label
+0x165a0	?ShadowBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x2d390	?ShadowLutBlitScaledToTarget@JGLSprite@@QAEHPAVJGLBuffer@@HHHHPAG0@Z	label
+0x17b40	?ShadowMaskBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x26240	?SourceLutBlit8to16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x61db0	?SourceLutBlit@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE@Z	label
+0x62dd0	?SourceLutBlitWithDestRecolorKey@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE1@Z	label
+0x16fc0	?SourceLutRecolorKeyBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAE1PAVJGLPalette@@@Z	label
+0x4d40	?SubInto@?$Matrix4@M@@QAEPAU1@PBU1@@Z	label
+0x4e40	?TransformPoint@?$Matrix4@M@@QBE?AU?$Vector3@M@@ABU2@@Z	label
+0x5d10	?TransformPoint@?$Transform@M@@QBE?AU?$Vector3@M@@ABU2@@Z	label
+0x5360	?Translate@?$Matrix4@M@@QAEPAU1@ABU?$Vector3@M@@@Z	label
+0x53e0	?Translate@?$Matrix4@M@@QAEPAU1@MMM@Z	label
+0x5bd0	?Translate@?$Transform@M@@QAEAAU1@MMM@Z	label
+0x5300	?Transpose@?$Matrix4@M@@QAEPAU1@XZ	label
+0x2ef0	?Truncate@Filemap@@QAEXPAE@Z	label
+0x66e30	?Unimplemented16@GraphSys@@UAEHPAD@Z	label
+0x3730	?Zero@?$Vector3@M@@QAEXXZ	label
+0x68400	?add@DevModeArray@@QAEHUDevModeA@@@Z	label
+0x681a0	?add@DisplayModeArray@@QAEHUDisplayMode@@@Z	label
+0x6f40	?add@LinkedList@@QAEXPAXE@Z	label
+0x66f80	?begin_scene@GraphSys@@UAEHXZ	label
+0x594d0	?blit8to16_compressed@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x27430	?blitAlpha8to16_uncompressed@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x5c600	?blitRecolored8to16_compressed@JGLSprite@@QAEHPAVJGLBuffer@@HHPAEPAG@Z	label
+0x5d1f0	?blitRecoloredAfterPalette8to16_compressed@JGLSprite@@QAEHPAVJGLBuffer@@HHPAEPAG@Z	label
+0x98b0	?change_color@GSBuffer@@UAEHPAURect@@HH@Z	label
+0x9320	?change_color@JGLBuffer@@UAEHPAURect@@HH@Z	label
+0x150d0	?change_color@JGLSprite@@UAEHHH@Z	label
+0xafe0	?change_color_16@JGLBuffer@@QAEHHHHHHH@Z	label
+0xf880	?change_color_8@JGLBuffer@@QAEHHHHHHH@Z	label
+0x1bae0	?change_color_8@JGLSprite@@QAEHHH@Z	label
+0x65420	?cleanup_system@JGLSys@@UAEXXZ	label
+0x66f40	?clear_buffer@GraphSys@@UAEHXZ	label
+0x2e10	?close@Filemap@@QAEXXZ	label
+0x690d0	?close@GSFont@@UAEXXZ	label
+0x7cc0	?close@JGLBuffer@@UAEXXZ	label
+0x68da0	?close@JGLFont@@UAEXXZ	label
+0x6a380	?close@JGLPalette@@UAEXXZ	label
+0x14eb0	?close@JGLSprite@@UAEXXZ	label
+0x6df0	?close@LinkedList@@QAEXXZ	label
+0x656c0	?close_app@JGLSys@@UAEXXZ	label
+0x68fa0	?close_class@JGLFont@@SAXXZ	label
+0x6ad60	?close_class@JGLPalette@@SAXXZ	label
+0x66ea0	?close_device@GraphSys@@UAEXXZ	label
+0x67e40	?close_font_system@JGLSys@@UAEXXZ	label
+0x67ed0	?close_palette_system@JGLSys@@UAEXXZ	label
+0x6a4a0	?compute_tables@JGLPalette@@QAEXXZ	label
+0x8f70	?copy@JGLBuffer@@UAEHPAV1@PAURect@@1@Z	label
+0xed70	?copy_16_16@JGLBuffer@@QAEHPAV1@HHHHHH@Z	label
+0x12db0	?copy_8_16@JGLBuffer@@QAEHPAV1@HHHHHH@Z	label
+0x13c50	?copy_8_8@JGLBuffer@@QAEHPAV1@HHHHHH@Z	label
+0x8e50	?copy_mask@JGLBuffer@@UAEHPAV1@HHHHHHH@Z	label
+0x12900	?copy_mask_8_16@JGLBuffer@@QAEHPAV1@HHHHHHH@Z	label
+0x13800	?copy_mask_8_8@JGLBuffer@@QAEHPAV1@HHHHHHH@Z	label
+0x67300	?copy_verts@GraphSys@@UAEHPAXHHH@Z	label
+0x2bd0	?create@Filemap@@QAEPAXPBDKH@Z	label
+0x67000	?create_verts@GraphSys@@UAEHPAPAXK@Z	label
+0x67bd0	?delete_buffer_data@JGLSys@@UAEXPAVJGLBuffer@@@Z	label
+0x67b50	?delete_font_data@JGLSys@@UAEXPAVGSFont@@@Z	label
+0x66f10	?delete_light_data@GraphSys@@UAEXH@Z	label
+0x67c50	?delete_palette_data@JGLSys@@UAEXPAVJGLPalette@@@Z	label
+0x67cd0	?delete_sprite_data@JGLSys@@UAEXPAVGSSprite@@@Z	label
+0xa230	?deselect_font@GSBuffer@@UAEHXZ	label
+0x8b90	?deselect_font@JGLBuffer@@UAEHXZ	label
+0x9c50	?dither@JGLBuffer@@UAEHPAURect@@H@Z	label
+0xe580	?dither_16@JGLBuffer@@QAEHPAURect@@H@Z	label
+0x11f80	?dither_8@JGLBuffer@@QAEHPAURect@@H@Z	label
+0x9e40	?dither_translucent@JGLBuffer@@UAEHPAUtagRECT@@HH@Z	label
+0xe8b0	?dither_translucent_16@JGLBuffer@@QAEHPAURect@@HH@Z	label
+0x6b730	?do_char@JGLSys@@UAEHXZ	label
+0x6b3a0	?do_draw@JGLSys@@UAEHXZ	label
+0x6b440	?do_key@JGLSys@@UAEHXZ	label
+0x6b7e0	?do_mouse@JGLSys@@UAEHXZ	label
+0x6b4f0	?do_mouse_move@JGLSys@@UAEHXZ	label
+0x6b5a0	?do_mouse_stroke@JGLSys@@UAEHXZ	label
+0x6b1d0	?do_non_input@JGLSys@@UAEHXZ	label
+0x6b0f0	?do_task@JGLSys@@UAEHXZ	label
+0x6b970	?do_timer@JGLSys@@UAEHXZ	label
+0x9d40	?draw@GSBuffer@@UAEHPAVJGLBuffer@@HH@Z	label
+0x9fd0	?draw@JGLBuffer@@UAEHPAV1@HH@Z	label
+0x15480	?draw@JGLSprite@@UAEHPAVJGLBuffer@@HHPAVJGLPalette@@@Z	label
+0x1a6b0	?draw_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x18120	?draw_16_shadows@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x1b590	?draw_16_shadows_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x2bcf0	?draw_16_shadows_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x15180	?draw_254@JGLSprite@@UAEHPAVJGLBuffer@@HHPAVJGLPalette@@@Z	label
+0x1cde0	?draw_254_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x5dde0	?draw_254_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x1bc40	?draw_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x58970	?draw_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x5ed80	?draw_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x19aa0	?draw_antialiased@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@HHPAVJGLPalette@@@Z	label
+0x25900	?draw_antialiased_8_16@JGLSprite@@QAEHPAV1@PAVJGLBuffer@@1HH@Z	label
+0x185b0	?draw_civ3_units@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x1b5d0	?draw_civ3_units_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x2cec0	?draw_civ3_units_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG0@Z	label
+0x199d0	?draw_color_scaled@JGLSprite@@UAEHPAVJGLBuffer@@HHFPAVJGLPalette@@D@Z	label
+0x24140	?draw_color_scaled_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHGE@Z	label
+0x9dc0	?draw_dest@GSBuffer@@UAEHPAVJGLBuffer@@HHPAE@Z	label
+0xacf0	?draw_dest@JGLBuffer@@UAEHPAV1@HHPAE@Z	label
+0x16270	?draw_dest@JGLSprite@@UAEHPAVJGLBuffer@@HHPAEPAVJGLPalette@@@Z	label
+0x1ab40	?draw_dest_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x20430	?draw_dest_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAEPAG@Z	label
+0x5af00	?draw_dest_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x60cf0	?draw_dest_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE@Z	label
+0x9ed0	?draw_dest_no_source@GSBuffer@@UAEHPAV1@HHPAE@Z	label
+0xad30	?draw_dest_no_source@JGLBuffer@@UAEHPAVGSBuffer@@HHPAE@Z	label
+0x9f10	?draw_dest_source@GSBuffer@@UAEHPAV1@HHPAE@Z	label
+0xad70	?draw_dest_source@JGLBuffer@@UAEHPAVGSBuffer@@HHPAE@Z	label
+0x9d80	?draw_mono@GSBuffer@@UAEHPAV1@HHH@Z	label
+0xacb0	?draw_mono@JGLBuffer@@UAEHPAVGSBuffer@@HHH@Z	label
+0x15f80	?draw_mono@JGLSprite@@UAEHPAVJGLBuffer@@HHHPAVJGLPalette@@@Z	label
+0x1f2d0	?draw_mono_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHH@Z	label
+0x5bac0	?draw_mono_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HHH@Z	label
+0x5fd20	?draw_mono_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HHH@Z	label
+0x19830	?draw_multi_table@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	label
+0x298b0	?draw_multi_table_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0xa170	?draw_multi_table_dest@GSBuffer@@UAEHPAVJGLBuffer@@HHPAE@Z	label
+0xae30	?draw_multi_table_dest@JGLBuffer@@UAEHPAV1@HHPAE@Z	label
+0x178a0	?draw_multi_table_dest@JGLSprite@@UAEHPAVJGLBuffer@@HHPAEPAVJGLPalette@@@Z	label
+0x1b060	?draw_multi_table_dest_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x2ab90	?draw_multi_table_dest_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	label
+0x63f60	?draw_multi_table_dest_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE@Z	label
+0x193d0	?draw_sudo_trans@JGLSprite@@UAEHPAVJGLBuffer@@HHHPAVJGLPalette@@@Z	label
+0x1b650	?draw_sudo_trans_16_16_25@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x1b610	?draw_sudo_trans_16_16_50@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x576a0	?draw_sudo_trans_8_16_25@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x56450	?draw_sudo_trans_8_16_50@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	label
+0x9f90	?draw_table@GSBuffer@@UAEHPAV1@HHPAE@Z	label
+0xadf0	?draw_table@JGLBuffer@@UAEHPAVGSBuffer@@HHPAE@Z	label
+0x19900	?draw_tinted@JGLSprite@@UAEHPAVJGLBuffer@@HHFPAVJGLPalette@@D@Z	label
+0x22a10	?draw_tinted_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HHGE@Z	label
+0x18920	?draw_translucent@JGLSprite@@UAEHPAVJGLBuffer@@HHMPAVJGLPalette@@D@Z	label
+0x40930	?draw_translucent_555_8_16_11_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x3dca0	?draw_translucent_555_8_16_13_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x358b0	?draw_translucent_555_8_16_15_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x34300	?draw_translucent_555_8_16_1_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x2d890	?draw_translucent_555_8_16_1_2@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x2ed60	?draw_translucent_555_8_16_1_4@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x317c0	?draw_translucent_555_8_16_1_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x3c660	?draw_translucent_555_8_16_3_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x30290	?draw_translucent_555_8_16_3_4@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x36e60	?draw_translucent_555_8_16_3_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x3f2e0	?draw_translucent_555_8_16_5_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x38460	?draw_translucent_555_8_16_5_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x39a60	?draw_translucent_555_8_16_7_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x32d60	?draw_translucent_555_8_16_7_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x3b060	?draw_translucent_555_8_16_9_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x54e20	?draw_translucent_565_8_16_11_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x521d0	?draw_translucent_565_8_16_13_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x49ea0	?draw_translucent_565_8_16_15_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x48910	?draw_translucent_565_8_16_1_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x41f80	?draw_translucent_565_8_16_1_2@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x43430	?draw_translucent_565_8_16_1_4@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x45e50	?draw_translucent_565_8_16_1_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x50bb0	?draw_translucent_565_8_16_3_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x44940	?draw_translucent_565_8_16_3_4@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x4b430	?draw_translucent_565_8_16_3_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x537f0	?draw_translucent_565_8_16_5_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x4ca10	?draw_translucent_565_8_16_5_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x4dff0	?draw_translucent_565_8_16_7_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x473b0	?draw_translucent_565_8_16_7_8@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x4f5d0	?draw_translucent_565_8_16_9_16@JGLSprite@@QAEHPAVJGLBuffer@@HHD@Z	label
+0x19c80	?draw_with_alpha@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@HHPAVJGLPalette@@@Z	label
+0x15bb0	?draw_z@JGLSprite@@UAEHPAVJGLBuffer@@HH0EPAVJGLPalette@@@Z	label
+0x1e970	?draw_z_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HH0E@Z	label
+0x5a790	?draw_z_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HH0E@Z	label
+0x157e0	?draw_z_outline@JGLSprite@@UAEHPAVJGLBuffer@@HH0EHPAVJGLPalette@@@Z	label
+0x1df80	?draw_z_outline_8_16@JGLSprite@@QAEHPAVJGLBuffer@@HH0EH@Z	label
+0x5a000	?draw_z_outline_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HH0EH@Z	label
+0x66fc0	?end_scene@GraphSys@@UAEHXZ	label
+0xdcf0	?fill16@JGLBuffer@@QAEHPAURect@@H@Z	label
+0x11dd0	?fill8@JGLBuffer@@QAEHPAURect@@H@Z	label
+0x9770	?fill@JGLBuffer@@UAEHPAURect@@H@Z	label
+0xda70	?fill_16@JGLBuffer@@QAEXH@Z	label
+0x11c40	?fill_8@JGLBuffer@@QAEXH@Z	label
+0x6ae50	?fill_rgb@JGLPalette@@QAEXPAURgbQuad@@@Z	label
+0x98f0	?fill_shadow_over_underlay@JGLBuffer@@UAEHPAURect@@PAV1@HPAG@Z	label
+0xf6a0	?fill_shadow_over_underlay_16_16@JGLBuffer@@QAEHPAURect@@PAV1@HPAG@Z	label
+0x9ac0	?fill_translucent@JGLBuffer@@UAEHPAUtagRECT@@HH@Z	label
+0xdfc0	?fill_translucent_16@JGLBuffer@@QAEHPAURect@@HH@Z	label
+0x66470	?flip@JGLSys@@UAEHPAURect@@@Z	label
+0x6b890	?flush_keyboard@JGLSys@@UAEXXZ	label
+0x6b900	?flush_mouse@JGLSys@@UAEXXZ	label
+0x6ba20	?flush_timer@JGLSys@@UAEXXZ	label
+0x75b0	?get@PRNG@@QAEGH@Z	label
+0x7530	?get@PRNG@@QAENXZ	label
+0x6b000	?get_555_table@JGLPalette@@UAEPAGXZ	label
+0x6b040	?get_565_table@JGLPalette@@UAEPAGXZ	label
+0x66d90	?get_app_instance@GraphSys@@UAEPAXXZ	label
+0x675a0	?get_app_instance@JGLSys@@UAEPAXXZ	label
+0x679d0	?get_buffer_data@JGLSys@@UAEPAVJGLBuffer@@PAUBufferBase@@H@Z	label
+0xa990	?get_clip@JGLBuffer@@UAEPAURect@@XZ	label
+0x17fe0	?get_color_depth@JGLSprite@@UAEHXZ	label
+0xab70	?get_current_palette@JGLBuffer@@UAEPAVJGLPalette@@XZ	label
+0x66780	?get_cursor_pos@JGLSys@@UAEXPAH0@Z	label
+0x8730	?get_data@JGLBuffer@@UAEPAEXZ	label
+0x17f70	?get_data@JGLSprite@@UAEPAEXZ	label
+0xa7b0	?get_data_16@JGLBuffer@@UAEPAGXZ	label
+0xa750	?get_data_8@JGLBuffer@@UAEPAEXZ	label
+0x66e70	?get_devices@GraphSys@@UAEHXZ	label
+0x65a90	?get_display_modes@JGLSys@@UAEPAVDisplayModeArray@@XZ	label
+0x6a8e0	?get_entries@JGLPalette@@UAEHPAEHH@Z	label
+0x6add0	?get_entry@JGLPalette@@UAEPAUtagPALETTEENTRY@@H@Z	label
+0x67850	?get_font_data@JGLSys@@UAEPAVJGLFont@@PAUFontBase@@@Z	label
+0x9740	?get_hdc@GSBuffer@@UAEPAUHDC__@@XZ	label
+0x8640	?get_hdc@JGLBuffer@@UAEPAUHDC__@@XZ	label
+0x65bf0	?get_hdc@JGLSys@@UAEPAXXZ	label
+0xaab0	?get_height@JGLBuffer@@UAEHXZ	label
+0x180a0	?get_height@JGLSprite@@UAEHXZ	label
+0x66ed0	?get_light_data@GraphSys@@UAEHH@Z	label
+0x17ef0	?get_palette@JGLSprite@@UAEPAVJGLPalette@@XZ	label
+0x67910	?get_palette_data@JGLSys@@UAEPAVJGLPalette@@PAUPaletteBase@@@Z	label
+0xaaf0	?get_pitch@JGLBuffer@@UAEHXZ	label
+0x18020	?get_pitch@JGLSprite@@UAEHXZ	label
+0xab30	?get_pixformat@JGLBuffer@@UAEPAUPixelFormat@@XZ	label
+0xaa30	?get_rect@JGLBuffer@@UAEPAURect@@XZ	label
+0x666b0	?get_screen_dimensions@JGLSys@@UAEXPAH0@Z	label
+0xa620	?get_seethru@JGLBuffer@@UAEKXZ	label
+0x17f30	?get_seethru@JGLSprite@@UAEHXZ	label
+0x67a90	?get_sprite_data@JGLSys@@UAEPAVJGLSprite@@PAPAV2@H@Z	label
+0x67da0	?get_sprite_scale@JGLSys@@UAEXPAH00@Z	label
+0xaa70	?get_width@JGLBuffer@@UAEHXZ	label
+0x18060	?get_width@JGLSprite@@UAEHXZ	label
+0x66d60	?get_window_handle@GraphSys@@UAEPAXXZ	label
+0x67560	?get_window_handle@JGLSys@@UAEPAXXZ	label
+0x66650	?get_window_rect@JGLSys@@UAEXPAURect@@@Z	label
+0x67640	?hide_app@JGLSys@@UAEXXZ	label
+0xba90	?hline_16@JGLBuffer@@QAEXHHHH@Z	label
+0x103f0	?hline_8@JGLBuffer@@QAEXHHHH@Z	label
+0x69050	?init@GSFont@@UAEHPBDHH@Z	label
+0x7e40	?init@JGLBuffer@@UAEHHHHH@Z	label
+0x68850	?init@JGLFont@@UAEHPBDHH@Z	label
+0x6a600	?init@JGLPalette@@UAEHXZ	label
+0x14ff0	?init@JGLSprite@@UAEHPAXHHHHPAVJGLPalette@@@Z	label
+0x1a250	?init_16@JGLSprite@@QAEHPAGHHHH@Z	label
+0x1b690	?init_8@JGLSprite@@QAEHPBEHHHH@Z	label
+0x657e0	?init_app@JGLSys@@UAEHPAXPBDPAUBufferBase@@@Z	label
+0x68f30	?init_class@JGLFont@@SAHXZ	label
+0x6aa70	?init_class@JGLPalette@@SAHPAUPaletteBase@@0@Z	label
+0x66df0	?init_device@GraphSys@@UAEHH@Z	label
+0x662a0	?init_display@JGLSys@@UAEHH@Z	label
+0x65da0	?init_display_quick@JGLSys@@UAEHHHH_N@Z	label
+0x65c30	?init_display_quick_GL@JGLSys@@UAEHHHH@Z	label
+0x67e00	?init_font_system@JGLSys@@UAEHXZ	label
+0x67e80	?init_palette_system@JGLSys@@UAEXPAUPaletteBase@@0@Z	label
+0x66710	?invalidate_rect@JGLSys@@UAEXPBURect@@@Z	label
+0x9a00	?line@GSBuffer@@UAEHHHHHHH@Z	label
+0x94e0	?line@JGLBuffer@@UAEHHHHHHH@Z	label
+0xb140	?line_16@JGLBuffer@@QAEXHHHHH@Z	label
+0xfb70	?line_8@JGLBuffer@@QAEXHHHHH@Z	label
+0x9b50	?load_bmp@GSBuffer@@UAEHPADHHH@Z	label
+0xabf0	?load_bmp@JGLBuffer@@UAEHPADHHH@Z	label
+0x9a80	?load_pcx@GSBuffer@@UAEHPADHHH@Z	label
+0xabb0	?load_pcx@JGLBuffer@@UAEHPADHHH@Z	label
+0x9bd0	?load_png@GSBuffer@@UAEHPBDPAVJGLPalette@@HH@Z	label
+0x145a0	?load_png@JGLBuffer@@UAEHPBDPAVJGLPalette@@HH@Z	label
+0x9b90	?load_targa@GSBuffer@@UAEHPAD@Z	label
+0xac30	?load_targa@JGLBuffer@@UAEHPAD@Z	label
+0x67140	?load_texture@GraphSys@@UAEHPAD@Z	label
+0x99c0	?map_colors@GSBuffer@@UAEHPAURect@@PBE@Z	label
+0x9440	?map_colors@JGLBuffer@@UAEHPAURect@@PBE@Z	label
+0xf9e0	?map_colors_8@JGLBuffer@@QAEHHHHHPBE@Z	label
+0x67700	?maximize_app@JGLSys@@UAEXXZ	label
+0x676a0	?minimize_app@JGLSys@@UAEXXZ	label
+0x2a20	?open@Filemap@@QAEPAXPBDH@Z	label
+0x2870	?open_read@Filemap@@QAEPAXPBDH@Z	label
+0x672c0	?read_x_file@GraphSys@@UAEHPADHHHHH@Z	label
+0x87b0	?release_data@JGLBuffer@@UAEXH@Z	label
+0x17fb0	?release_data@JGLSprite@@UAEXH@Z	label
+0x9810	?release_hdc@GSBuffer@@UAEXH@Z	label
+0x86b0	?release_hdc@JGLBuffer@@UAEXH@Z	label
+0x7100	?remove_current@LinkedList@@QAEXXZ	label
+0x67340	?render_verts@GraphSys@@UAEHPAXH@Z	label
+0x6a3d0	?reseed@JGLPalette@@QAEXXZ	label
+0x66970	?resetTemporaryResolution@JGLSys@@UAEHXZ	label
+0xa8d0	?reset_clip@JGLBuffer@@UAEHXZ	label
+0x677e0	?screen_bpp@JGLSys@@UAEHXZ	label
+0x677a0	?screen_height@JGLSys@@UAEHXZ	label
+0x67820	?screen_mask@JGLSys@@UAEHXZ	label
+0x67760	?screen_width@JGLSys@@UAEHXZ	label
+0xa1f0	?select_font@GSBuffer@@UAEHPAUFontBase@@@Z	label
+0x8ae0	?select_font@JGLBuffer@@UAEHPAUFontBase@@@Z	label
+0x6a860	?set@JGLPalette@@UAEXXZ	label
+0x674c0	?setCopyDataCallBack@GraphSys@@UAEXP6AHIJ@Z@Z	label
+0x67f10	?setCopyDataCallBack@JGLSys@@UAEXP6AHIJ@Z@Z	label
+0x66890	?setTemporaryResolution@JGLSys@@UAEHHH@Z	label
+0x670c0	?set_camera_transform@GraphSys@@UAEHH@Z	label
+0x83c0	?set_clip@JGLBuffer@@UAEHPAURect@@@Z	label
+0x67400	?set_cull_mode@GraphSys@@UAEHH@Z	label
+0x89d0	?set_current_palette@JGLBuffer@@UAEXPAVJGLPalette@@@Z	label
+0x673c0	?set_dst_blend@GraphSys@@UAEHH@Z	label
+0x6a9a0	?set_entries@JGLPalette@@UAEHPBEHH@Z	label
+0x67440	?set_fill_mode@GraphSys@@UAEHH@Z	label
+0x67040	?set_material@GraphSys@@UAEHH@Z	label
+0x17eb0	?set_palette@JGLSprite@@UAEXPAVJGLPalette@@@Z	label
+0x67100	?set_projection@GraphSys@@UAEHMMM@Z	label
+0xa5d0	?set_seethru@JGLBuffer@@UAEHH@Z	label
+0xaeb0	?set_seethru@JGLSprite@@UAEXH@Z	label
+0x67480	?set_shade_mode@GraphSys@@UAEHH@Z	label
+0x67d50	?set_sprite_scale@JGLSys@@UAEXHHH@Z	label
+0x67380	?set_src_blend@GraphSys@@UAEHH@Z	label
+0xa270	?set_text_color@GSBuffer@@UAEHHHH@Z	label
+0x8c40	?set_text_color@JGLBuffer@@UAEHHHH@Z	label
+0x67180	?set_texture@GraphSys@@UAEHHPAD@Z	label
+0x66dc0	?set_window_pos@GraphSys@@UAEXHHHH@Z	label
+0x66810	?set_window_pos@JGLSys@@UAEXHHHH@Z	label
+0x67080	?set_world_transform@GraphSys@@UAEHH@Z	label
+0x675e0	?show_app@JGLSys@@UAEXXZ	label
+0x67280	?specular_enable@GraphSys@@UAEHH@Z	label
+0x67240	?src_blend_enable@GraphSys@@UAEHH@Z	label
+0x9840	?sync_to_palette@GSBuffer@@UAEXPAVGSPalette@@@Z	label
+0xbde0	?vline_16@JGLBuffer@@QAEXHHHH@Z	label
+0x10620	?vline_8@JGLBuffer@@QAEXHHHH@Z	label
+0x6b080	?wait_task@JGLSys@@UAEXXZ	label
+0x69100	?width@GSFont@@UAEHPBDH@Z	label
+0x68e60	?width@JGLFont@@UAEHPBDH@Z	label
+0x9d00	?write_bmp@GSBuffer@@UAEHPAD@Z	label
+0xac70	?write_bmp@JGLBuffer@@UAEHPAD@Z	label
+0x9c10	?write_pcx@GSBuffer@@UAEHPBD@Z	label
+0xa550	?write_pcx@JGLBuffer@@UAEHPBD@Z	label
+0x12140	?write_pcx_8@JGLBuffer@@QAEHPBD@Z	label
+0xa2f0	?write_text@GSBuffer@@UAEHHHPBDH@Z	label
+0x8da0	?write_text@JGLBuffer@@UAEHHHPBDH@Z	label
+0x671c0	?zbuffer_enable@GraphSys@@UAEHH@Z	label
+0x67200	?zwrite_enable@GraphSys@@UAEHH@Z	label
+0x65300	_DllMain@12	label
+0xe540	_ExtractBlue16	label
+0xe4c0	_ExtractGreen16	label
+0xe440	_ExtractRed16	label
+0x9160	_GetRectHeight	label
+0x9120	_GetRectWidth	label
+0x69b90	_OnActivate	label
+0x69d50	_OnChar	label
+0x6a0e0	_OnCopyData	label
+0x69c70	_OnKey	label
+0x69f40	_OnLButtonDown	label
+0x69fb0	_OnLButtonUp	label
+0x69ee0	_OnMouseMove	label
+0x69e70	_OnMouseWheel	label
+0x69e10	_OnNcHitTest	label
+0x69ac0	_OnPaint	label
+0x69a70	_OnPaletteChanged	label
+0x699c0	_OnQueryNewPalette	label
+0x6a010	_OnRButtonDown	label
+0x6a080	_OnRButtonUp	label
+0x69db0	_OnSize	label
+0xa660	_PackRGB16	label
+0x85f0	_RectEqual	label
+0x8360	_SetRect	label
+0x10390	_SetRectLTRB	label
+0x692b0	_WndProc@16	label
+0x122000	___xc_a	label
+0x12221c	___xc_z	label
+0x122320	___xi_a	label
+0x122638	___xi_z	label
+0x12273c	___xp_a	label
+0x122944	___xp_z	label
+0x122a48	___xt_a	label
+0x122c50	___xt_z	label
+0x65390	_get_graphsy_object_ptr	label
+0x8590	_jgl_IntersectRect	label
+0x14a90	_jgl_free	label
+0x14a40	_jgl_malloc	label
+0xaf30	_memsetword	label
+0x14550	_user_error_fn	label
+0x69b0	_$E2	label		gsobject
+0x6a40	_$E3	label		gsobject
+0x69f0	_$E5	label		gsobject
+0x6970	_$E6	label		gsobject
+0x65010	_$E12	label		jgl
+0x650a0	_$E13	label		jgl
+0x65050	_$E14	label		jgl
+0x64fd0	_$E15	label		jgl
+0x65120	_$E17	label		jgl
+0x651b0	_$E18	label		jgl
+0x65160	_$E19	label		jgl
+0x650e0	_$E20	label		jgl
+0x65230	_$E22	label		jgl
+0x652c0	_$E23	label		jgl
+0x65270	_$E24	label		jgl
+0x651f0	_$E25	label		jgl
+0x128600	__table	label		jglsprite_8_16c
+0x1285e0	_buffer_advance	label		jglsprite_8_16c
+0x1285f0	_buffer_draw_height	label		jglsprite_8_16c
+0x1285e4	_buffer_draw_width	label		jglsprite_8_16c
+0x1285dc	_buffer_pitch	label		jglsprite_8_16c
+0x1285a8	_global_mono_color	label		jglsprite_8_16c
+0x1285ec	_global_shadow_table	label		jglsprite_8_16c
+0x1285c8	_global_trans_table	label		jglsprite_8_16c
+0x1285b8	_scale_factor_x	label		jglsprite_8_16c
+0x1285b4	_scale_factor_y	label		jglsprite_8_16c
+0x1285d4	_scale_x	label		jglsprite_8_16c
+0x1285fc	_scale_x_inc	label		jglsprite_8_16c
+0x1285d8	_scale_y	label		jglsprite_8_16c
+0x1285c0	_scale_y_inc	label		jglsprite_8_16c
+0x1285bc	_sprite_advance	label		jglsprite_8_16c
+0x1285f4	_sprite_pitch	label		jglsprite_8_16c
+0x1285ac	_z_buffer_advance	label		jglsprite_8_16c
+0x1285b0	_z_buffer_pitch	label		jglsprite_8_16c
+0x128658	__table	label		jglsprite_8_8
+0x128648	_buffer_advance	label		jglsprite_8_8
+0x128670	_buffer_draw_height	label		jglsprite_8_8
+0x128650	_buffer_draw_width	label		jglsprite_8_8
+0x128644	_buffer_pitch	label		jglsprite_8_8
+0x128628	_frac_scale_y_inc	label		jglsprite_8_8
+0x128664	_global_color	label		jglsprite_8_8
+0x12866c	_global_shadow_table	label		jglsprite_8_8
+0x12862c	_global_table	label		jglsprite_8_8
+0x12868c	_scale_factor_x	label		jglsprite_8_8
+0x128690	_scale_factor_y	label		jglsprite_8_8
+0x12863c	_scale_x	label		jglsprite_8_8
+0x128688	_scale_x_inc	label		jglsprite_8_8
+0x128640	_scale_y	label		jglsprite_8_8
+0x128624	_scale_y_inc	label		jglsprite_8_8
+0x12861c	_sprite_advance	label		jglsprite_8_8
+0x128680	_sprite_draw_height	label		jglsprite_8_8
+0x128660	_sprite_draw_width	label		jglsprite_8_8
+0x128678	_sprite_pitch	label		jglsprite_8_8
+0x12856c	__table	label		jglspriteall
+0x128560	_buffer_advance	label		jglspriteall
+0x128578	_buffer_draw_height	label		jglspriteall
+0x128564	_buffer_draw_width	label		jglspriteall
+0x12855c	_buffer_pitch	label		jglspriteall
+0x128544	_frac_scale_y_inc	label		jglspriteall
+0x128568	_global_depth	label		jglspriteall
+0x128530	_global_mono_color	label		jglspriteall
+0x1284f8	_global_seethru	label		jglspriteall
+0x128574	_global_shadow_table	label		jglspriteall
+0x128548	_global_table	label		jglspriteall
+0x12858c	_scale_factor_x	label		jglspriteall
+0x128590	_scale_factor_y	label		jglspriteall
+0x128554	_scale_x	label		jglspriteall
+0x128588	_scale_x_inc	label		jglspriteall
+0x128558	_scale_y	label		jglspriteall
+0x128540	_scale_y_inc	label		jglspriteall
+0x12853c	_sprite_advance	label		jglspriteall
+0x128584	_sprite_draw_height	label		jglspriteall
+0x128570	_sprite_draw_width	label		jglspriteall
+0x12857c	_sprite_pitch	label		jglspriteall
+0x128534	_z_buffer_advance	label		jglspriteall
+0x128538	_z_buffer_pitch	label		jglspriteall
+0x74f0	_$E1	label		random
+0x74b0	_$E2	label		random

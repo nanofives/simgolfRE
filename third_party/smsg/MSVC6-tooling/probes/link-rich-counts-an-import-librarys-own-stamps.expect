@@ -1,0 +1,6 @@
+rule link: an import library brings the stamps of the tools that built it, here kernel32.lib's Import and Linker512 8034 records, beside the compiler's own
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+rich=
+  Import 0 *
+  Linker512 8034 *
+  Utc12_CPP {build:c2} 1

@@ -1,0 +1,48 @@
+rule c1xx: a simple assignment or an initialiser converts its right side to the destination's type (cvt.<dst>) whenever the type differs -- narrowing, widening, signedness at one size (`gu = guc` is cvt.u32), int <-> float, float <-> double, __int64 -- and a bool destination is cvt.u8 of `!= 0`.
+cl /O2
+il
+  *; discard(asg.i8(?gc@@3DA, cvt.i8(load.i32(?gi@@3HA))))*
+  *; discard(asg.i8(?gc@@3DA, cvt.i8(load.i16(?gs@@3FA))))*
+  *; discard(asg.i32(?gi@@3HA, cvt.i32(load.i8(?gc@@3DA))))*
+  *; discard(asg.u32(?gu@@3IA, cvt.u32(load.u8(?guc@@3EA))))*
+  *; discard(asg.i32(?gi@@3HA, cvt.i32(load.u16(?gus@@3GA))))*
+  *; discard(asg.f64(?gd@@3NA, cvt.f64(load.f32(?gf@@3MA))))*
+  *; discard(asg.f32(?gf@@3MA, cvt.f32(load.f64(?gd@@3NA))))*
+  *; discard(asg.i8(?gc@@3DA, cvt.i8(load.f32(?gf@@3MA))))*
+  *; discard(asg.f32(?gf@@3MA, cvt.f32(load.i32(?gi@@3HA))))*
+  *; discard(asg.u8(?gb@@3_NA, cvt.u8(cmp.ne(load.i8(?gc@@3DA), 0))))*
+  *; discard(asg.u8(?gb@@3_NA, cvt.u8(cmp.ne(load.f32(?gf@@3MA), 0))))*
+  *; discard(asg.i64(?gq@@3_JA, cvt.i64(load.i32(?gi@@3HA))))*
+  *; discard(asg.i64(?gq@@3_JA, cvt.i64(load.u32(?gu@@3IA))))*
+  *; discard(asg.i32(?gi@@3HA, cvt.i32(load.i64(?gq@@3_JA))))*
+  *; discard(asg.add.i8(?gc@@3DA, cvt.i32(load.i8(?gc@@3DA))))*
+  *; discard(asg.mul.i8(?gc@@3DA, cvt.i32(load.i16(?gs@@3FA))))*
+  *; discard(asg.add.i8(?gc@@3DA, 3))*
+  *; discard(asg.add.i16(?gs@@3FA, load.i32(?gi@@3HA)))*
+  *; discard(asg.add.i16(?gs@@3FA, load.f32(?gf@@3MA)))*
+  *; discard(asg.add.i32(?gi@@3HA, load.f32(?gf@@3MA)))*
+  *; discard(asg.mul.i32(?gi@@3HA, 1.5))*
+  *; discard(asg.add.f64(?gd@@3NA, cvt.f64(load.f32(?gf@@3MA))))*
+  *; discard(asg.add.f32(?gf@@3MA, load.f64(?gd@@3NA)))*
+  *; discard(asg.add.f32(?gf@@3MA, cvt.f32(load.i32(?gi@@3HA))))*
+  *; discard(asg.mul.f32(?gf@@3MA, 2.0))*
+  *; discard(asg.shl.i16(?gs@@3FA, cvt.i32(load.i8(?gc@@3DA))))*
+  *; discard(asg.add.i64(?gq@@3_JA, cvt.i64(load.i32(?gi@@3HA))))*
+  *; discard(asg.add.u32(?gu@@3IA, load.i32(?gi@@3HA)))*
+  *; discard(postinc.i8(?gc@@3DA, 1))*
+  *; discard(asg.add.i8(?gc@@3DA, 1))*
+  *; discard(postdec.i8(?gc@@3DA, 1))*
+  *; discard(asg.add.i16(?gs@@3FA, 1))*
+  *; discard(postinc.f32(?gf@@3MA, 1.0))*
+  *; discard(asg.add.i32(bits(addoff.i32(?gbf@@3UBF@@A, 0), at 0, width 3), 1))*
+  *; discard(asg.u32(bits(addoff.u32(?gbf@@3UBF@@A, 0), at 3, width 5), cvt.u32(load.i32(?gi@@3HA))))*
+listing
+  *movsx	 eax, WORD PTR ?gs@@3FA*
+  *mov	 DWORD PTR -4+[esp+4], eax*
+  *fild	 DWORD PTR -4+[esp+4]*
+  *fadd	 DWORD PTR ?gf@@3MA*
+  *call	 __ftol*
+  *mov	 WORD PTR ?gs@@3FA, ax*
+  *fild	 DWORD PTR ?gi@@3HA*
+  *fadd	 DWORD PTR ?gf@@3MA*
+  *call	 __ftol*

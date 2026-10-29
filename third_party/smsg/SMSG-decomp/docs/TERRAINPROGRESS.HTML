@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAKABAMAAAD+49QQAAAAGFBMVEUAAAAAAACl1qcbXiBmu2pDoEcufTJ5VUhW31XhAAAAAXRSTlMAQObYZgAACy9JREFUeAFjGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSMglEwCoYeEKQAUG77MACjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaACSBRCBoEQBGMFBORqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIAkA4U3qBBs2gM0Oyl0+SMBoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoBkAdoFFrFgiAflaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAZAFswWY8QGBIBuVoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUApdBDij3IY0B5V6kLaDchzQGlHuRtoByH9IYUO5F2gLKfUhjQLkXaQso9yGNAeVepC2g3Ic0BpR7kbaAch/SGFDuRdoCyn1IY0C5F2kLKPchjQHlXqQtoNyHNAaUe5G2gHIf0hhQ7kXaAsp9SGNAuRdpCyj3IY0B5V6kLaDchzQGlHuRtoByH9IYUO5F2gLKfUhjQLkXaQso9yGNAeVepC2g3Ic0BpR7kbaAch/SGFDuRdoCyn1IE4CYtKHci7QFg3R6aTQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQLLA0Ak2bGAQBOVoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUAso9MTgA5SFBJqDc6YMDUB4SZALKnT44AOUhQSag3OmDA1AeEmQCyp0+OADlIUEmoNzpgwNQHhJkAsqdPjgA5SFBJqDc6YMDUB4SZALKnT44AOUhQSag3OmDA1AeEmQCyp0+OADlIUEmoNzpgwNQHhJkAsqdPjgA5SFBJqDc6YMDUB4SZALKnT44AOUhQSag3OmDA1AeEmQCyp0+OADlIUEmoNzpgwNQHhJkAsqdPjgA5SFBJqDc6YMDUB4SJAHEZAzlV6YMDkDn6aXRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNADJAghLQocxoGFQjgYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCGg3HFDC1AeYmiAcicNLUB5iKEByp00tADlIYYGKHfS0AKUhxgaoNxJQwtQHmJogHInDS1AeYihAcqdNLQA5SGGBih30tAClIcYGqDcSUMLUB5iaIByJw0tQHmIoQHKnTS0AOUhhgYod9LQApSHGBqg3ElDC1AeYmiAcicNLUB5iKEByp00tADlIYYGKHfS0AKUhxgaoNxJQwtQHmJogHInDS1AeYihAcqdNLQA5SGGBih30tAClIcYGIyMqSRsgErTS6MBOBqAZILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEFApACl3yNAHowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUgjICDbEhArll50MfUDG9NJoACKD0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFgIwATBsFWMFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIISAQbIgNJZRbNTwBgS03owFICIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQQEApByC0YOGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEKAFGyjU0nkAKTppdEAJAeMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkESAFYPgooAqMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUghGA5BCMBqAFILRAKQQjAYghWA0ACkEowFIIRgNQArBaABSCEYDkEIwGoAUgtEApBCMBiCFYDQAKQSjAUghGA1ACsFoAFIIRgOQQjAagBSC0QCkEIwGIIVgNAApBKMBSCEYDUAKwWgAUggAgAv8hvZD4h4AAAAASUVORK5CYII=">
+    <title>Decompilation Status</title>
+    <style>
+      body {
+        background: #202020;
+        color: #f0f0f0;
+        font-family: sans-serif;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      .main {
+        width: 800px;
+        max-width: 100%;
+        margin: auto;
+      }
+
+      #query {
+        width: 100%;
+        box-sizing: border-box;
+        background: #303030;
+        color: #f0f0f0;
+        border: 1px #f0f0f0 solid;
+        border-radius: 0.5em;
+        padding: 0.5em;
+      }
+
+      #query::placeholder {
+        color: #b0b0b0;
+      }
+
+      .filters {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10pt;
+        margin: 0.5em 0 1em 0;
+      }
+
+      fieldset {
+        display: flex;
+        align-items: center;
+      }
+
+      fieldset.choices {
+        gap: 10px;
+        padding-right: 20px;
+      }
+
+      .radios {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      button, input[type=checkbox], input[type=radio] {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .pager button {
+        padding: 0.25em 0.5em;
+      }
+
+      .pager select {
+        cursor: pointer;
+        padding: 0.25em;
+        margin: 0 0.5em;
+      }
+
+      p.rowcount {
+        align-self: flex-end;
+        font-size: 1.2em;
+        margin-bottom: 0;
+      }
+
+      #listing {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        border: 1px #f0f0f0 solid;
+        font-family: monospace;
+      }
+
+      #listing > thead th {
+        background: #282828;
+        padding: 0.5em;
+        text-align: left;
+        user-select: none;
+      }
+
+      #listing > thead th.addr {
+        width: 10ch;
+      }
+
+      #listing > thead th.narrow {
+        width: 8ch;
+      }
+
+      #listing > thead th > div {
+        display: flex;
+        column-gap: 0.5em;
+      }
+
+      #listing > thead th:last-child > div {
+        flex-direction: row-reverse;
+        justify-content: right;
+      }
+
+      #listing > thead th > div > span {
+        cursor: pointer;
+      }
+
+      #listing > thead th > div > span:hover {
+        text-decoration: underline dotted;
+      }
+
+      #listing > tbody > tr.fn.odd {
+        background: #282828;
+      }
+
+      #listing > tbody > tr.fn.even {
+        background: #383838;
+      }
+
+      #listing > tbody > tr.fn:hover {
+        background: #404040;
+      }
+
+      #listing > tbody > tr.fn > td {
+        border-top: 1px #f0f0f0 solid;
+        padding: 0.5em;
+        vertical-align: top;
+        white-space: nowrap;
+      }
+
+      #listing > tbody > tr.fn > td.name {
+        white-space: normal;
+        word-break: break-all;
+      }
+
+      #listing > tbody > tr.fn > td.name:hover {
+        cursor: pointer;
+        text-decoration: underline dotted;
+      }
+
+      #listing > tbody > tr.fn > td:last-child {
+        text-align: right;
+      }
+
+      #listing > tbody > tr.detail {
+        contain: paint;
+      }
+
+      #listing > tbody > tr.detail > td {
+        border: 1px #f0f0f0 solid;
+        border-bottom: 0 none;
+        padding: 0.5em;
+        word-break: break-all;
+      }
+
+      .no-diff {
+        font-style: italic;
+        text-align: center;
+      }
+
+      fieldset.addrs {
+        margin-bottom: 20px;
+      }
+
+      fieldset.addrs label {
+        display: inline;
+        margin-right: 10px;
+      }
+
+      table.hunk {
+        border-collapse: collapse;
+      }
+
+      table.hunk:not(:last-child) {
+        margin-bottom: 40px;
+      }
+
+      table.hunk th, table.hunk td {
+        border: 0 none;
+        padding: 0 10px 0 0;
+      }
+
+      table.hunk th {
+        word-break: keep-all;
+      }
+
+      .diff[data-show="0"] table.hunk th,
+      .diff[data-show="1"] table.hunk th + th {
+        display: none;
+      }
+
+      .minus {
+        color: #ff8080;
+      }
+
+      .plus {
+        color: #80ff80;
+      }
+
+      .at {
+        color: #8080ff;
+      }
+
+      .copy {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .copy:hover {
+        text-decoration: underline dotted;
+      }
+
+      .copy::after {
+        content: 'Copy to clipboard';
+        display: none;
+        position: absolute;
+        left: 0;
+        bottom: 120%;
+        width: fit-content;
+        padding: 1px 2px;
+        border-radius: 1px;
+        background-color: #fff;
+        color: #222;
+        font-size: 12px;
+        text-align: center;
+        white-space: nowrap;
+        box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+      }
+
+      .copy:hover::after {
+        display: block;
+      }
+
+      .copy.copied:hover::after {
+        content: 'Copied!';
+      }
+
+    </style>
+    <script type="application/json" id="report">{"file":"Terrain.dll","format":1,"timestamp":1792103664.0,"data":[{"address":"0x100016a0","name":"LoadBmpFile","matching":1.0,"recomp":"0x100016a0","type":1},{"address":"0x10001880","name":"degreesToRadians","matching":1.0,"recomp":"0x10002be0","type":1},{"address":"0x100018b0","name":"ios::lock","matching":1.0,"recomp":"0x100042d0","type":1},{"address":"0x10001900","name":"WriteDibToBmpFile","matching":1.0,"recomp":"0x10001900","type":1},{"address":"0x10001af0","name":"Terrain::loadNewCourseType","matching":1.0,"recomp":"0x10002b60","type":1},{"address":"0x10001b60","name":"SwapBgrToRgb","matching":1.0,"recomp":"0x10001b60","type":1},{"address":"0x10001c00","name":"FlipImageRows24bpp","matching":1.0,"recomp":"0x10001c00","type":1},{"address":"0x10001d50","name":"Terrain::tileAt","matching":1.0,"recomp":"0x10001d50","type":1},{"address":"0x10001de0","name":"Terrain::getElevation","matching":1.0,"recomp":"0x10001de0","type":1},{"address":"0x10001e40","name":"Tile::getCornerElevation","matching":1.0,"recomp":"0x10001e40","type":1},{"address":"0x10001e80","name":"Terrain::getWall","matching":1.0,"recomp":"0x10001e80","type":1},{"address":"0x10001ed0","name":"Tile::getWallEnabled","matching":1.0,"recomp":"0x10001ed0","type":1},{"address":"0x10001f10","name":"Terrain::getType","matching":1.0,"recomp":"0x10001f10","type":1},{"address":"0x10001f60","name":"Tile::getType","matching":1.0,"recomp":"0x10001f60","type":1},{"address":"0x10001fa0","name":"FaceBlock::FaceBlock","matching":1.0,"recomp":"0x10001fa0","type":1},{"address":"0x10001fe0","name":"FaceBlock::~FaceBlock","matching":1.0,"recomp":"0x10001fe0","type":1},{"address":"0x10002010","name":"FloatToTexCoordCode","matching":1.0,"recomp":"0x10002010","type":1},{"address":"0x10002060","name":"FaceBlock::InitTriangleMesh","matching":1.0,"recomp":"0x10002060","type":1},{"address":"0x10002510","name":"ios::fail","matching":1.0,"recomp":"0x100041e0","type":1},{"address":"0x10002640","name":"FaceBlock::SetNineVertexHeights","matching":1.0,"recomp":"0x10002640","type":1},{"address":"0x10002750","name":"FaceBlock::setCornerVertexNormals","matching":1.0,"recomp":"0x10002750","type":1},{"address":"0x10002900","name":"FaceBlock::getMaxCornerVertexHeight","matching":1.0,"recomp":"0x10002900","type":1},{"address":"0x10002ae0","name":"Terrain::Terrain","matching":1.0,"recomp":"0x10002c20","type":1},{"address":"0x10002f80","name":"Tile::setRandomVariation","matching":1.0,"recomp":"0x10003160","type":1},{"address":"0x10003090","name":"Terrain::~Terrain","matching":1.0,"recomp":"0x100031a0","type":1},{"address":"0x100031a0","name":"Terrain::getInstance","matching":1.0,"recomp":"0x100032c0","type":1},{"address":"0x10003270","name":"Terrain::getNormalArray","matching":1.0,"recomp":"0x10003390","type":1},{"address":"0x100032b0","name":"Terrain::getVertexArray","matching":1.0,"recomp":"0x100033d0","type":1},{"address":"0x100032f0","name":"Terrain::setType","matching":1.0,"recomp":"0x10003410","type":1},{"address":"0x10003390","name":"Terrain::getVariation","matching":1.0,"recomp":"0x100034b0","type":1},{"address":"0x100033e0","name":"Terrain::initGLRenderState","matching":1.0,"recomp":"0x10003500","type":1},{"address":"0x10003540","name":"Terrain::changeLighting","matching":1.0,"recomp":"0x10003660","type":1},{"address":"0x100037e0","name":"Terrain::initLighting","matching":1.0,"recomp":"0x10003900","type":1},{"address":"0x10003830","name":"Terrain::EnableBlackFillLight","matching":1.0,"recomp":"0x10003950","type":1},{"address":"0x10003980","name":"Terrain::LoadLightingForCourseType","matching":1.0,"recomp":"0x10003aa0","type":1},{"address":"0x10003a50","name":"rotateVectorAboutAxis","matching":1.0,"recomp":"0x10004430","type":1},{"address":"0x10003f80","name":"ios::lockptr","matching":1.0,"recomp":"0x10004390","type":1},{"address":"0x100042a0","name":"Terrain::drawCircle","matching":1.0,"recomp":"0x100048c0","type":1},{"address":"0x100046a0","name":"ifstream::`vbase destructor'","matching":1.0,"recomp":"0x100043d0","type":1},{"address":"0x100048a0","name":"Terrain::drawLine","matching":1.0,"recomp":"0x100048f0","type":1},{"address":"0x10004c70","name":"Terrain::drawCardinalSpline","matching":1.0,"recomp":"0x10004c90","type":1},{"address":"0x10005090","name":"Terrain::evalCardinalSplinePoint2D","matching":1.0,"recomp":"0x100050b0","type":1},{"address":"0x10005230","name":"Terrain::drawBezierSpline","matching":1.0,"recomp":"0x10005250","type":1},{"address":"0x10005750","name":"Terrain::bernsteinBasisTerm","matching":1.0,"recomp":"0x10005770","type":1},{"address":"0x10005840","name":"powf","matching":1.0,"recomp":"0x10005860","type":1},{"address":"0x100058a0","name":"factorial","matching":1.0,"recomp":"0x100058c0","type":1},{"address":"0x10005960","name":"Tile::getGridX","matching":1.0,"recomp":"0x10005940","type":1},{"address":"0x10005990","name":"Terrain::render","matching":1.0,"recomp":"0x10005980","type":1},{"address":"0x10006410","name":"Terrain::pathUpdateRender","matching":1.0,"recomp":"0x10005fc0","type":1},{"address":"0x10006810","name":"Tile::getGridY","matching":1.0,"recomp":"0x10006380","type":1},{"address":"0x10006850","name":"Terrain::IsTileCulled","matching":1.0,"recomp":"0x100063c0","type":1},{"address":"0x10006dd0","name":"Terrain::LoadLightingFromFile","matching":1.0,"recomp":"0x10003b70","type":1},{"address":"0x10007380","name":"Terrain::InsertWallAdjacentTilesInDrawOrder","matching":1.0,"recomp":"0x100068b0","type":1},{"address":"0x100076e0","name":"Terrain::LoadCourseTextures","matching":1.0,"recomp":"0x10006ce0","type":1},{"address":"0x100080e0","name":"Terrain::renderTile","matching":1.0,"recomp":"0x10007830","type":1},{"address":"0x100089e0","name":"Terrain::localRender","matching":1.0,"recomp":"0x100083f0","type":1},{"address":"0x10008fc0","name":"Terrain::setZoomLevel","matching":1.0,"recomp":"0x100089d0","type":1},{"address":"0x10009270","name":"Terrain::stripRender","matching":1.0,"recomp":"0x10008c80","type":1},{"address":"0x10009ba0","name":"Terrain::closeSystem","matching":1.0,"recomp":"0x100095b0","type":1},{"address":"0x10009c80","name":"Terrain::initSystem","matching":1.0,"recomp":"0x10009690","type":1},{"address":"0x10009ed0","name":"Terrain::resize","matching":1.0,"recomp":"0x100098f0","type":1},{"address":"0x1000a130","name":"Terrain::initTileGrid","matching":1.0,"recomp":"0x10009b50","type":1},{"address":"0x1000a3e0","name":"Terrain::layPath","matching":1.0,"recomp":"0x10009e00","type":1},{"address":"0x1000a450","name":"Terrain::hasConnectedPath","matching":1.0,"recomp":"0x10009e70","type":1},{"address":"0x1000a4b0","name":"Terrain::updatePath","matching":1.0,"recomp":"0x10009ed0","type":1},{"address":"0x1000a510","name":"Terrain::hasPath","matching":1.0,"recomp":"0x10009f30","type":1},{"address":"0x1000a560","name":"Terrain::setWall","matching":1.0,"recomp":"0x10009f80","type":1},{"address":"0x1000a5c0","name":"Terrain::elevateCorner","matching":1.0,"recomp":"0x10009fe0","type":1},{"address":"0x1000a620","name":"Terrain::lowerCorner","matching":1.0,"recomp":"0x1000a040","type":1},{"address":"0x1000a680","name":"Terrain::lowerEdgeCorner","matching":1.0,"recomp":"0x1000a0a0","type":1},{"address":"0x1000a6f0","name":"Terrain::calcNormals","matching":1.0,"recomp":"0x1000a110","type":1},{"address":"0x1000a740","name":"Terrain::calcAllNormals","matching":1.0,"recomp":"0x1000a160","type":1},{"address":"0x1000a840","name":"Terrain::setSplineHeight","matching":1.0,"recomp":"0x1000a260","type":1},{"address":"0x1000a880","name":"Terrain::passCollarInfo","matching":1.0,"recomp":"0x1000a2a0","type":1},{"address":"0x1000a970","name":"Terrain::initTerrain","matching":1.0,"recomp":"0x1000a390","type":1},{"address":"0x1000aa10","name":"Terrain::resetTerrain","matching":1.0,"recomp":"0x1000a430","type":1},{"address":"0x1000ab30","name":"Terrain::tileHit","matching":1.0,"recomp":"0x1000a550","type":1},{"address":"0x1000adc0","name":"Terrain::SetRotationQuadrantFromDegrees","matching":1.0,"recomp":"0x1000a7e0","type":1},{"address":"0x1000ae60","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >","matching":1.0,"recomp":"0x1000b1b0","type":1},{"address":"0x1000aed0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::~list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >","matching":1.0,"recomp":"0x1000b220","type":1},{"address":"0x1000af70","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::begin","matching":1.0,"recomp":"0x1000b2c0","type":1},{"address":"0x1000afe0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::end","matching":1.0,"recomp":"0x1000b330","type":1},{"address":"0x1000b040","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::empty","matching":1.0,"recomp":"0x1000b390","type":1},{"address":"0x1000b090","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::push_back","matching":1.0,"recomp":"0x1000b3e0","type":1},{"address":"0x1000b100","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::insert","matching":1.0,"recomp":"0x1000b450","type":1},{"address":"0x1000b210","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::clear","matching":1.0,"recomp":"0x1000b560","type":1},{"address":"0x1000b280","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::iterator","matching":1.0,"recomp":"0x1000b5d0","type":1},{"address":"0x1000b2d0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::operator*","matching":1.0,"recomp":"0x1000b620","type":1},{"address":"0x1000b320","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::operator++","matching":1.0,"recomp":"0x1000b670","type":1},{"address":"0x1000b380","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::operator==","matching":1.0,"recomp":"0x1000b6d0","type":1},{"address":"0x1000b3d0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::operator!=","matching":1.0,"recomp":"0x1000b720","type":1},{"address":"0x1000b430","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::size","matching":1.0,"recomp":"0x1000b780","type":1},{"address":"0x1000b470","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::erase","matching":1.0,"recomp":"0x1000b7c0","type":1},{"address":"0x1000b500","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::_Buynode","matching":1.0,"recomp":"0x1000b850","type":1},{"address":"0x1000b5b0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::_Freenode","matching":1.0,"recomp":"0x1000b900","type":1},{"address":"0x1000b600","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::_Acc::_Next","matching":1.0,"recomp":"0x1000b950","type":1},{"address":"0x1000b630","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::_Acc::_Prev","matching":1.0,"recomp":"0x1000b980","type":1},{"address":"0x1000b660","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::_Acc::_Value","matching":1.0,"recomp":"0x1000b9b0","type":1},{"address":"0x1000b690","name":"std::allocator\u003cclass Tile *>::construct","matching":1.0,"recomp":"0x1000b9e0","type":1},{"address":"0x1000b6e0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::const_iterator::const_iterator","matching":1.0,"recomp":"0x1000ba30","type":1},{"address":"0x1000b710","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::const_iterator::_Mynode","matching":1.0,"recomp":"0x1000ba60","type":1},{"address":"0x1000b750","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::iterator","matching":1.0,"recomp":"0x1000baa0","type":1},{"address":"0x1000b7a0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::iterator::operator++","matching":1.0,"recomp":"0x1000baf0","type":1},{"address":"0x1000b800","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::erase","matching":1.0,"recomp":"0x1000bb50","type":1},{"address":"0x1000b910","name":"std::allocator\u003cclass Tile *>::_Charalloc","matching":1.0,"recomp":"0x1000bc60","type":1},{"address":"0x1000b960","name":"std::allocator\u003cclass Tile *>::deallocate","matching":1.0,"recomp":"0x1000bcb0","type":1},{"address":"0x1000b9b0","name":"std::list\u003cclass Tile *,class std::allocator\u003cclass Tile *> >::const_iterator::const_iterator","matching":1.0,"recomp":"0x1000bd00","type":1},{"address":"0x1000b9f0","name":"std::allocator\u003cclass Tile *>::destroy","matching":1.0,"recomp":"0x1000bd40","type":1},{"address":"0x1000ba40","name":"std::_Construct","matching":1.0,"recomp":"0x1000bd90","type":1},{"address":"0x1000bab0","name":"operator new","matching":1.0,"recomp":"0x1000be00","type":1},{"address":"0x1000bae0","name":"std::_Allocate","matching":1.0,"recomp":"0x1000be30","type":1},{"address":"0x1000bb40","name":"std::_Destroy","matching":1.0,"recomp":"0x1000be90","type":1},{"address":"0x1000bb70","name":"UnknownBB70::UnknownBB70","matching":1.0,"recomp":"0x1000bec0","type":1},{"address":"0x1000bba0","name":"UnknownBB70::~UnknownBB70","matching":1.0,"recomp":"0x1000bef0","type":1},{"address":"0x1000bbd0","name":"UploadBmpTexture","matching":1.0,"recomp":"0x1000bf20","type":1},{"address":"0x1000be30","name":"LoadTgaTexture","matching":1.0,"recomp":"0x1000c180","type":1},{"address":"0x1000c210","name":"Tile::Tile","matching":1.0,"recomp":"0x1000c560","type":1},{"address":"0x1000c2c0","name":"Tile::reset","matching":1.0,"recomp":"0x1000c610","type":1},{"address":"0x1000c3d0","name":"Tile::~Tile","matching":1.0,"recomp":"0x1000c720","type":1},{"address":"0x1000c520","name":"Tile::setNeighbour","matching":1.0,"recomp":"0x1000c870","type":1},{"address":"0x1000c560","name":"InitVertexGrid","matching":1.0,"recomp":"0x1000c8b0","type":1},{"address":"0x1000c7b0","name":"Tile::ElevateCorner","matching":1.0,"recomp":"0x1000cb00","type":1},{"address":"0x1000ccc0","name":"Tile::LowerCornerElevation","matching":1.0,"recomp":"0x1000d010","type":1},{"address":"0x1000d480","name":"Tile::updateHasPathForType","matching":1.0,"recomp":"0x1000d7d0","type":1},{"address":"0x1000d540","name":"Tile::LowerTileType7Heights","matching":1.0,"recomp":"0x1000d890","type":1},{"address":"0x1000de60","name":"Tile::RaiseTileType6Heights","matching":1.0,"recomp":"0x1000e1b0","type":1},{"address":"0x1000e6c0","name":"Tile::RenderTile","matching":1.0,"recomp":"0x1000ea10","type":1},{"address":"0x1000ea30","name":"Tile::RenderStrataFace","matching":1.0,"recomp":"0x1000ed80","type":1},{"address":"0x1000f690","name":"TilePathFlags::TilePathFlags","matching":1.0,"recomp":"0x1000f9e0","type":1},{"address":"0x1000f6e0","name":"TilePathFlags::clear","matching":1.0,"recomp":"0x1000fa30","type":1},{"address":"0x1000f750","name":"TileWallState::TileWallState","matching":1.0,"recomp":"0x1000faa0","type":1},{"address":"0x1000f7a0","name":"TileWallState::resetEnabledFlags","matching":1.0,"recomp":"0x1000faf0","type":1},{"address":"0x1000f7f0","name":"Tile::RenderTileWalls","matching":1.0,"recomp":"0x1000fb40","type":1},{"address":"0x10010590","name":"istream::getline","matching":1.0,"recomp":"0x10004220","type":1},{"address":"0x100108f0","name":"Tile::RenderTilePath","matching":1.0,"recomp":"0x10010c40","type":1},{"address":"0x100116d0","name":"Tile::RenderTileQuadrantsByTransitionMask","matching":1.0,"recomp":"0x10011a20","type":1},{"address":"0x10011d60","name":"Tile::CalcFaceNormal","matching":1.0,"recomp":"0x100120b0","type":1},{"address":"0x10011ef0","name":"Tile::CalcCornerVertexNormals","matching":1.0,"recomp":"0x10012240","type":1},{"address":"0x10012cf0","name":"Tile::calcVertexNormals","matching":1.0,"recomp":"0x10013040","type":1},{"address":"0x10012e70","name":"SetCourseTextureId","matching":1.0,"recomp":"0x100131c0","type":1},{"address":"0x10012ec0","name":"Tile::SetFaceTexture","matching":1.0,"recomp":"0x10013210","type":1},{"address":"0x10013320","name":"Tile::hasPath","matching":1.0,"recomp":"0x10013670","type":1},{"address":"0x10013360","name":"Tile::hasConnectedPath","matching":1.0,"recomp":"0x100136b0","type":1},{"address":"0x100133a0","name":"Tile::setConnectedPath","matching":1.0,"recomp":"0x100136f0","type":1},{"address":"0x10013400","name":"Tile::setPath","matching":1.0,"recomp":"0x10013750","type":1},{"address":"0x10013500","name":"Tile::drawEdgeTransitionsWithNeighbours","matching":1.0,"recomp":"0x10013850","type":1},{"address":"0x10013670","name":"Tile::DrawTileEdgeTransitionsForType","matching":1.0,"recomp":"0x100139c0","type":1},{"address":"0x10013dd0","name":"Tile::MapTypeCodeToIndex","matching":1.0,"recomp":"0x10014120","type":1},{"address":"0x10013f00","name":"Tile::PackEdgeTransitionCode","matching":1.0,"recomp":"0x10014250","type":1},{"address":"0x10013fc0","name":"GetVertexArrayBase","matching":1.0,"recomp":"0x10014310","type":1},{"address":"0x10013ff0","name":"GetNormalArrayBase","matching":1.0,"recomp":"0x10014340","type":1},{"address":"0x10014020","name":"Tile::setType","matching":1.0,"recomp":"0x10014370","type":1},{"address":"0x10014190","name":"Tile::UndoType6ElevationRaise","matching":1.0,"recomp":"0x100144e0","type":1},{"address":"0x100149e0","name":"Tile::UndoType7ElevationDrop","matching":1.0,"recomp":"0x10014d30","type":1},{"address":"0x10015230","name":"Tile::assignFaceTextures","matching":1.0,"recomp":"0x10015580","type":1},{"address":"0x10015340","name":"Tile::getVariation","matching":1.0,"recomp":"0x100156a0","type":1},{"address":"0x10015380","name":"Tile::setVariation","matching":1.0,"recomp":"0x100156e0","type":1},{"address":"0x100153c0","name":"Tile::GetFaceBlock","matching":1.0,"recomp":"0x10015720","type":1},{"address":"0x10015400","name":"Tile::setWall","matching":1.0,"recomp":"0x10015760","type":1},{"address":"0x10015460","name":"Tile::isTypeSkipStrataFace","matching":1.0,"recomp":"0x100157c0","type":1},{"address":"0x100154a0","name":"Tile::typeDrawsEdgeTransitions","matching":1.0,"recomp":"0x10015800","type":1},{"address":"0x10015500","name":"Tile::maxCornerHeight","matching":1.0,"recomp":"0x10015860","type":1},{"address":"0x100155b0","name":"Tile::typeAllowsEdgeTransition","matching":1.0,"recomp":"0x10015910","type":1},{"address":"0x10015650","name":"Tile::getNeighborTransitionCode","matching":1.0,"recomp":"0x100159b0","type":1},{"address":"0x100158b0","name":"abs","matching":1.0,"recomp":"0x10015c10","library":true,"type":1},{"address":"0x100158e0","name":"malloc","matching":1.0,"recomp":"0x10015c40","library":true,"type":1},{"address":"0x10015910","name":"_malloc_dbg","matching":1.0,"recomp":"0x10015c70","library":true,"type":1},{"address":"0x10015940","name":"_nh_malloc","matching":1.0,"recomp":"0x10015ca0","library":true,"type":1},{"address":"0x10015960","name":"_nh_malloc_dbg","matching":1.0,"recomp":"0x10015cc0","library":true,"type":1},{"address":"0x100159bd","name":"_nh_malloc_dbg+0x5d","matching":1.0,"recomp":"0x10015d1d","library":true,"type":1},{"address":"0x100159c8","name":"_nh_malloc_dbg+0x68","matching":1.0,"recomp":"0x10015d28","library":true,"type":1},{"address":"0x10015a00","name":"_heap_alloc","matching":1.0,"recomp":"0x10015d60","library":true,"type":1},{"address":"0x10015a20","name":"_heap_alloc_dbg","matching":1.0,"recomp":"0x10015d80","library":true,"type":1},{"address":"0x10015d40","name":"calloc","matching":1.0,"recomp":"0x100160a0","library":true,"type":1},{"address":"0x10015d70","name":"_calloc_dbg","matching":1.0,"recomp":"0x100160d0","library":true,"type":1},{"address":"0x10015dd0","name":"realloc","matching":1.0,"recomp":"0x10016130","library":true,"type":1},{"address":"0x10015e00","name":"_realloc_dbg","matching":1.0,"recomp":"0x10016160","library":true,"type":1},{"address":"0x10015e63","name":"_realloc_dbg+0x63","matching":1.0,"recomp":"0x100161c3","library":true,"type":1},{"address":"0x10015e6e","name":"_realloc_dbg+0x6e","matching":1.0,"recomp":"0x100161ce","library":true,"type":1},{"address":"0x10015e90","name":"realloc_help","matching":1.0,"recomp":"0x100161f0","library":true,"type":1},{"address":"0x100163b0","name":"_expand","matching":1.0,"recomp":"0x10016710","library":true,"type":1},{"address":"0x100163e0","name":"_expand_dbg","matching":1.0,"recomp":"0x10016740","library":true,"type":1},{"address":"0x10016443","name":"_expand_dbg+0x63","matching":1.0,"recomp":"0x100167a3","library":true,"type":1},{"address":"0x1001644e","name":"_expand_dbg+0x6e","matching":1.0,"recomp":"0x100167ae","library":true,"type":1},{"address":"0x10016470","name":"free","matching":1.0,"recomp":"0x100167d0","library":true,"type":1},{"address":"0x10016490","name":"_free_lk","matching":1.0,"recomp":"0x100167f0","library":true,"type":1},{"address":"0x100164b0","name":"_free_dbg","matching":1.0,"recomp":"0x10016810","library":true,"type":1},{"address":"0x10016502","name":"_free_dbg+0x52","matching":1.0,"recomp":"0x10016862","library":true,"type":1},{"address":"0x1001650d","name":"_free_dbg+0x5d","matching":1.0,"recomp":"0x1001686d","library":true,"type":1},{"address":"0x10016520","name":"_free_dbg_lk","matching":1.0,"recomp":"0x10016880","library":true,"type":1},{"address":"0x10016910","name":"_msize","matching":1.0,"recomp":"0x10016c70","library":true,"type":1},{"address":"0x10016930","name":"_msize_dbg","matching":1.0,"recomp":"0x10016c90","library":true,"type":1},{"address":"0x10016aa1","name":"_msize_dbg+0x171","matching":1.0,"recomp":"0x10016e01","library":true,"type":1},{"address":"0x10016aac","name":"_msize_dbg+0x17c","matching":1.0,"recomp":"0x10016e0c","library":true,"type":1},{"address":"0x10016ac0","name":"_CrtSetBreakAlloc","matching":1.0,"recomp":"0x10016e20","library":true,"type":1},{"address":"0x10016ae0","name":"_CrtSetDbgBlockType","matching":1.0,"recomp":"0x10016e40","library":true,"type":1},{"address":"0x10016b9d","name":"_CrtSetDbgBlockType+0xbd","matching":1.0,"recomp":"0x10016efd","library":true,"type":1},{"address":"0x10016ba8","name":"_CrtSetDbgBlockType+0xc8","matching":1.0,"recomp":"0x10016f08","library":true,"type":1},{"address":"0x10016bc0","name":"_CrtSetAllocHook","matching":1.0,"recomp":"0x10016f20","library":true,"type":1},{"address":"0x10016be0","name":"CheckBytes","matching":1.0,"recomp":"0x10016f40","library":true,"type":1},{"address":"0x10016c70","name":"_CrtCheckMemory","matching":1.0,"recomp":"0x10016fd0","library":true,"type":1},{"address":"0x10016fe5","name":"_CrtCheckMemory+0x375","matching":1.0,"recomp":"0x10017345","library":true,"type":1},{"address":"0x10016ff0","name":"_CrtCheckMemory+0x380","matching":1.0,"recomp":"0x10017350","library":true,"type":1},{"address":"0x10017020","name":"_CrtSetDbgFlag","matching":1.0,"recomp":"0x10017380","library":true,"type":1},{"address":"0x10017050","name":"_CrtDoForAllClientObjects","matching":1.0,"recomp":"0x100173b0","library":true,"type":1},{"address":"0x100170dd","name":"_CrtDoForAllClientObjects+0x8d","matching":1.0,"recomp":"0x1001743d","library":true,"type":1},{"address":"0x100170e8","name":"_CrtDoForAllClientObjects+0x98","matching":1.0,"recomp":"0x10017448","library":true,"type":1},{"address":"0x10017100","name":"_CrtIsValidPointer","matching":1.0,"recomp":"0x10017460","library":true,"type":1},{"address":"0x10017150","name":"_CrtIsValidHeapPointer","matching":1.0,"recomp":"0x100174b0","library":true,"type":1},{"address":"0x10017280","name":"_CrtIsMemoryBlock","matching":1.0,"recomp":"0x100175e0","library":true,"type":1},{"address":"0x10017386","name":"_CrtIsMemoryBlock+0x106","matching":1.0,"recomp":"0x100176e6","library":true,"type":1},{"address":"0x10017391","name":"_CrtIsMemoryBlock+0x111","matching":1.0,"recomp":"0x100176f1","library":true,"type":1},{"address":"0x100173b0","name":"_CrtSetDumpClient","matching":1.0,"recomp":"0x10017710","library":true,"type":1},{"address":"0x100173d0","name":"_CrtMemCheckpoint","matching":1.0,"recomp":"0x10017730","library":true,"type":1},{"address":"0x10017558","name":"_CrtMemCheckpoint+0x188","matching":1.0,"recomp":"0x100178b8","library":true,"type":1},{"address":"0x10017563","name":"_CrtMemCheckpoint+0x193","matching":1.0,"recomp":"0x100178c3","library":true,"type":1},{"address":"0x10017580","name":"_CrtMemDifference","matching":1.0,"recomp":"0x100178e0","library":true,"type":1},{"address":"0x100176b0","name":"_CrtMemDumpAllObjectsSince","matching":1.0,"recomp":"0x10017a10","library":true,"type":1},{"address":"0x10017961","name":"_CrtMemDumpAllObjectsSince+0x2b1","matching":1.0,"recomp":"0x10017cc1","library":true,"type":1},{"address":"0x1001796c","name":"_CrtMemDumpAllObjectsSince+0x2bc","matching":1.0,"recomp":"0x10017ccc","library":true,"type":1},{"address":"0x100179b0","name":"_printMemBlockData","matching":1.0,"recomp":"0x10017d10","library":true,"type":1},{"address":"0x10017ad0","name":"_CrtDumpMemoryLeaks","matching":1.0,"recomp":"0x10017e30","library":true,"type":1},{"address":"0x10017b50","name":"_CrtMemDumpStatistics","matching":1.0,"recomp":"0x10017eb0","library":true,"type":1},{"address":"0x10017c20","name":"fclose","matching":1.0,"recomp":"0x10017f80","library":true,"type":1},{"address":"0x10017cb0","name":"_fclose_lk","matching":1.0,"recomp":"0x10018010","library":true,"type":1},{"address":"0x10017d70","name":"fread","matching":1.0,"recomp":"0x100180d0","library":true,"type":1},{"address":"0x10017db0","name":"_fread_lk","matching":1.0,"recomp":"0x10018110","library":true,"type":1},{"address":"0x10017f80","name":"_fsopen","matching":1.0,"recomp":"0x100182e0","library":true,"type":1},{"address":"0x10018080","name":"fopen","matching":1.0,"recomp":"0x100183e0","library":true,"type":1},{"address":"0x100180a0","name":"_chkesp","matching":1.0,"recomp":"0x10018400","library":true,"type":1},{"address":"0x100180e0","name":"fwrite","matching":1.0,"recomp":"0x10018440","library":true,"type":1},{"address":"0x10018120","name":"_fwrite_lk","matching":1.0,"recomp":"0x10018480","library":true,"type":1},{"address":"0x10018340","name":"_fpmath","matching":1.0,"recomp":"0x100186d0","library":true,"type":1},{"address":"0x10018370","name":"_fpclear","matching":1.0,"recomp":"0x10018700","library":true,"type":1},{"address":"0x10018380","name":"_cfltcvt_init","matching":1.0,"recomp":"0x10018710","library":true,"type":1},{"address":"0x100183d0","name":"__setfflag","matching":1.0,"recomp":"0x10018760","library":true,"type":1},{"address":"0x100183ec","name":"_ftol","matching":1.0,"recomp":"0x1001869c","library":true,"type":1},{"address":"0x10018420","name":"`eh vector destructor iterator'","matching":1.0,"recomp":"0x10018780","library":true,"type":1},{"address":"0x10018495","name":"`eh vector destructor iterator'+0x75","matching":1.0,"recomp":"0x100187f5","library":true,"type":1},{"address":"0x100184b1","name":"`eh vector destructor iterator'+0x91","matching":1.0,"recomp":"0x10018811","library":true,"type":1},{"address":"0x100184d0","name":"__ArrayUnwind","matching":1.0,"recomp":"0x10018830","library":true,"type":1},{"address":"0x10018550","name":"ArrayUnwindFilter","matching":1.0,"recomp":"0x100188b0","library":true,"type":1},{"address":"0x10018580","name":"strcpy","matching":1.0,"recomp":"0x100188e0","library":true,"type":1},{"address":"0x10018590","name":"strcat","matching":1.0,"recomp":"0x100188f0","library":true,"type":1},{"address":"0x10018670","name":"`eh vector constructor iterator'","matching":1.0,"recomp":"0x100189d0","library":true,"type":1},{"address":"0x100186e1","name":"`eh vector constructor iterator'+0x71","matching":1.0,"recomp":"0x10018a41","library":true,"type":1},{"address":"0x100186fd","name":"`eh vector constructor iterator'+0x8d","matching":1.0,"recomp":"0x10018a5d","library":true,"type":1},{"address":"0x10018710","name":"_JumpToContinuation","matching":1.0,"recomp":"0x10018a70","library":true,"type":1},{"address":"0x10018750","name":"_CallMemberFunction0","matching":1.0,"recomp":"0x10018ab0","library":true,"type":1},{"address":"0x10018760","name":"_CallMemberFunction1","matching":1.0,"recomp":"0x10018ac0","library":true,"type":1},{"address":"0x10018770","name":"_CallMemberFunction2","matching":1.0,"recomp":"0x10018ad0","library":true,"type":1},{"address":"0x10018780","name":"_UnwindNestedFrames","matching":1.0,"recomp":"0x10018ae0","library":true,"type":1},{"address":"0x100187e0","name":"__CxxFrameHandler","matching":1.0,"recomp":"0x10018b40","library":true,"type":1},{"address":"0x10018820","name":"__CxxLongjmpUnwind","matching":1.0,"recomp":"0x10018b80","library":true,"type":1},{"address":"0x10018850","name":"_CallCatchBlock2","matching":1.0,"recomp":"0x10018bb0","library":true,"type":1},{"address":"0x100188c0","name":"CatchGuardHandler","matching":1.0,"recomp":"0x10018c20","library":true,"type":1},{"address":"0x10018900","name":"_CallSETranslator","matching":1.0,"recomp":"0x10018c60","library":true,"type":1},{"address":"0x100189d0","name":"TranslatorGuardHandler","matching":1.0,"recomp":"0x10018d30","library":true,"type":1},{"address":"0x10018a60","name":"_GetRangeOfTrysToCheck","matching":1.0,"recomp":"0x10018dc0","library":true,"type":1},{"address":"0x10018af0","name":"_global_unwind2","matching":1.0,"recomp":"0x10018e50","library":true,"type":1},{"address":"0x10018b32","name":"_local_unwind2","matching":1.0,"recomp":"0x10018e92","library":true,"type":1},{"address":"0x10018b9a","name":"_abnormal_termination","matching":1.0,"recomp":"0x10018efa","library":true,"type":1},{"address":"0x10018bbd","name":"_NLG_Notify1","matching":1.0,"recomp":"0x10018f1d","library":true,"type":1},{"address":"0x10018bc6","name":"_NLG_Notify","matching":1.0,"recomp":"0x10018f26","library":true,"type":1},{"address":"0x10018be0","name":"operator delete","matching":1.0,"recomp":"0x10018f40","library":true,"type":1},{"address":"0x10018c90","name":"operator new","matching":1.0,"recomp":"0x10018ff0","library":true,"type":1},{"address":"0x10018cb0","name":"operator new[]","matching":1.0,"recomp":"0x10019010","library":true,"type":1},{"address":"0x10018cd0","name":"srand","matching":1.0,"recomp":"0x10019030","library":true,"type":1},{"address":"0x10018ce0","name":"rand","matching":1.0,"recomp":"0x10019040","library":true,"type":1},{"address":"0x10018d20","name":"atol","matching":1.0,"recomp":"0x10019080","library":true,"type":1},{"address":"0x10018e20","name":"atoi","matching":1.0,"recomp":"0x10019180","library":true,"type":1},{"address":"0x10018e40","name":"_atoi64","matching":1.0,"recomp":"0x100191a0","library":true,"type":1},{"address":"0x10018f70","name":"strcmp","matching":1.0,"recomp":"0x100192d0","library":true,"type":1},{"address":"0x10019000","name":"strtok","matching":1.0,"recomp":"0x10019360","library":true,"type":1},{"address":"0x10019150","name":"_CIsin","matching":1.0,"recomp":"0x100194b0","library":true,"type":1},{"address":"0x10019164","name":"sin","matching":1.0,"recomp":"0x100194c4","library":true,"type":1},{"address":"0x1001916d","name":"sin+0x9","matching":1.0,"recomp":"0x100194cd","library":true,"type":1},{"address":"0x10019200","name":"_CIcos","matching":1.0,"recomp":"0x10019560","library":true,"type":1},{"address":"0x10019214","name":"cos","matching":1.0,"recomp":"0x10019574","library":true,"type":1},{"address":"0x1001921d","name":"cos+0x9","matching":1.0,"recomp":"0x1001957d","library":true,"type":1},{"address":"0x100192b0","name":"_CIsqrt","matching":1.0,"recomp":"0x10019610","library":true,"type":1},{"address":"0x100192c4","name":"sqrt","matching":1.0,"recomp":"0x10019624","library":true,"type":1},{"address":"0x100192cd","name":"sqrt+0x9","matching":1.0,"recomp":"0x1001962d","library":true,"type":1},{"address":"0x10019370","name":"_CIpow","matching":1.0,"recomp":"0x100196d0","library":true,"type":1},{"address":"0x10019389","name":"pow","matching":1.0,"recomp":"0x100196e9","library":true,"type":1},{"address":"0x10019392","name":"pow+0x9","matching":1.0,"recomp":"0x100196f2","library":true,"type":1},{"address":"0x10019565","name":"pow+0x1dc","matching":1.0,"recomp":"0x100198c5","library":true,"type":1},{"address":"0x10019590","name":"strlen","matching":1.0,"recomp":"0x100198f0","library":true,"type":1},{"address":"0x10019610","name":"_assert","matching":1.0,"recomp":"0x10019970","library":true,"type":1},{"address":"0x10019990","name":"memcmp","matching":1.0,"recomp":"0x10019cf0","library":true,"type":1},{"address":"0x10019a40","name":"_CRT_INIT","matching":1.0,"recomp":"0x10019da0","library":true,"type":1},{"address":"0x10019b80","name":"_DllMainCRTStartup","matching":1.0,"recomp":"0x10019ee0","library":true,"type":1},{"address":"0x10019c80","name":"_amsg_exit","matching":1.0,"recomp":"0x10019fe0","library":true,"type":1},{"address":"0x10019cc0","name":"_set_new_handler","matching":1.0,"recomp":"0x1001a020","library":true,"type":1},{"address":"0x10019cf0","name":"_query_new_handler","matching":1.0,"recomp":"0x1001a050","library":true,"type":1},{"address":"0x10019d00","name":"_callnewh","matching":1.0,"recomp":"0x1001a060","library":true,"type":1},{"address":"0x10019d30","name":"_mtinitlocks","matching":1.0,"recomp":"0x1001a090","library":true,"type":1},{"address":"0x10019d70","name":"_mtdeletelocks","matching":1.0,"recomp":"0x1001a0d0","library":true,"type":1},{"address":"0x10019e10","name":"_lock","matching":1.0,"recomp":"0x1001a170","library":true,"type":1},{"address":"0x10019eb0","name":"_unlock","matching":1.0,"recomp":"0x1001a210","library":true,"type":1},{"address":"0x10019ed0","name":"_lockerr_exit","matching":1.0,"recomp":"0x1001a230","library":true,"type":1},{"address":"0x10019fb1","name":"_seh_longjmp_unwind","matching":1.0,"recomp":"0x1001a311","library":true,"type":1},{"address":"0x10019fd0","name":"memset","matching":1.0,"recomp":"0x1001a330","library":true,"type":1},{"address":"0x1001a030","name":"_malloc_base","matching":1.0,"recomp":"0x1001a390","library":true,"type":1},{"address":"0x1001a050","name":"_nh_malloc_base","matching":1.0,"recomp":"0x1001a3b0","library":true,"type":1},{"address":"0x1001a0b0","name":"_heap_alloc_base","matching":1.0,"recomp":"0x1001a410","library":true,"type":1},{"address":"0x1001a115","name":"_heap_alloc_base+0x65","matching":1.0,"recomp":"0x1001a475","library":true,"type":1},{"address":"0x1001a120","name":"_heap_alloc_base+0x70","matching":1.0,"recomp":"0x1001a480","library":true,"type":1},{"address":"0x1001a197","name":"_heap_alloc_base+0xe7","matching":1.0,"recomp":"0x1001a4f7","library":true,"type":1},{"address":"0x1001a1a2","name":"_heap_alloc_base+0xf2","matching":1.0,"recomp":"0x1001a502","library":true,"type":1},{"address":"0x1001a1c1","name":"_heap_alloc_base+0x111","matching":1.0,"recomp":"0x1001a521","library":true,"type":1},{"address":"0x1001a200","name":"_CrtDefaultAllocHook","matching":1.0,"recomp":"0x1001a560","library":true,"type":1},{"address":"0x1001a210","name":"_CrtDbgBreak","matching":1.0,"recomp":"0x1001a570","library":true,"type":1},{"address":"0x1001a220","name":"_CrtSetReportMode","matching":1.0,"recomp":"0x1001a580","library":true,"type":1},{"address":"0x1001a280","name":"_CrtSetReportFile","matching":1.0,"recomp":"0x1001a5e0","library":true,"type":1},{"address":"0x1001a300","name":"_CrtSetReportHook","matching":1.0,"recomp":"0x1001a660","library":true,"type":1},{"address":"0x1001a320","name":"_CrtDbgReport","matching":1.0,"recomp":"0x1001a680","library":true,"type":1},{"address":"0x1001a6b0","name":"CrtMessageWindow","matching":1.0,"recomp":"0x1001aa10","library":true,"type":1},{"address":"0x1001a9c0","name":"_expand_base","matching":1.0,"recomp":"0x1001ad20","library":true,"type":1},{"address":"0x1001aa61","name":"_expand_base+0xa1","matching":1.0,"recomp":"0x1001adc1","library":true,"type":1},{"address":"0x1001aa6c","name":"_expand_base+0xac","matching":1.0,"recomp":"0x1001adcc","library":true,"type":1},{"address":"0x1001ab5a","name":"_expand_base+0x19a","matching":1.0,"recomp":"0x1001aeba","library":true,"type":1},{"address":"0x1001ab65","name":"_expand_base+0x1a5","matching":1.0,"recomp":"0x1001aec5","library":true,"type":1},{"address":"0x1001abd0","name":"_realloc_base","matching":1.0,"recomp":"0x1001af30","library":true,"type":1},{"address":"0x1001ad86","name":"_realloc_base+0x1b6","matching":1.0,"recomp":"0x1001b0e6","library":true,"type":1},{"address":"0x1001ad91","name":"_realloc_base+0x1c1","matching":1.0,"recomp":"0x1001b0f1","library":true,"type":1},{"address":"0x1001af9b","name":"_realloc_base+0x3cb","matching":1.0,"recomp":"0x1001b2fb","library":true,"type":1},{"address":"0x1001afa6","name":"_realloc_base+0x3d6","matching":1.0,"recomp":"0x1001b306","library":true,"type":1},{"address":"0x1001b040","name":"_realloc_base+0x470","matching":1.0,"recomp":"0x1001b3a0","library":true,"type":1},{"address":"0x1001b060","name":"_free_base","matching":1.0,"recomp":"0x1001b3c0","library":true,"type":1},{"address":"0x1001b0db","name":"_free_base+0x7b","matching":1.0,"recomp":"0x1001b43b","library":true,"type":1},{"address":"0x1001b0e6","name":"_free_base+0x86","matching":1.0,"recomp":"0x1001b446","library":true,"type":1},{"address":"0x1001b15d","name":"_free_base+0xfd","matching":1.0,"recomp":"0x1001b4bd","library":true,"type":1},{"address":"0x1001b168","name":"_free_base+0x108","matching":1.0,"recomp":"0x1001b4c8","library":true,"type":1},{"address":"0x1001b1b0","name":"_heapchk","matching":1.0,"recomp":"0x1001b510","library":true,"type":1},{"address":"0x1001b212","name":"_heapchk+0x62","matching":1.0,"recomp":"0x1001b572","library":true,"type":1},{"address":"0x1001b257","name":"_heapchk+0xa7","matching":1.0,"recomp":"0x1001b5b7","library":true,"type":1},{"address":"0x1001b262","name":"_heapchk+0xb2","matching":1.0,"recomp":"0x1001b5c2","library":true,"type":1},{"address":"0x1001b2c0","name":"_heapset","matching":1.0,"recomp":"0x1001b620","library":true,"type":1},{"address":"0x1001b2d0","name":"_get_sbh_threshold","matching":1.0,"recomp":"0x1001b630","library":true,"type":1},{"address":"0x1001b300","name":"_set_sbh_threshold","matching":1.0,"recomp":"0x1001b660","library":true,"type":1},{"address":"0x1001b410","name":"__sbh_heap_init","matching":1.0,"recomp":"0x1001b770","library":true,"type":1},{"address":"0x1001b480","name":"__sbh_find_block","matching":1.0,"recomp":"0x1001b7e0","library":true,"type":1},{"address":"0x1001b4e0","name":"__sbh_verify_block","matching":1.0,"recomp":"0x1001b840","library":true,"type":1},{"address":"0x1001b540","name":"__sbh_free_block","matching":1.0,"recomp":"0x1001b8a0","library":true,"type":1},{"address":"0x1001bb20","name":"__sbh_alloc_block","matching":1.0,"recomp":"0x1001be80","library":true,"type":1},{"address":"0x1001c060","name":"__sbh_alloc_new_region","matching":1.0,"recomp":"0x1001c3c0","library":true,"type":1},{"address":"0x1001c170","name":"__sbh_alloc_new_group","matching":1.0,"recomp":"0x1001c4d0","library":true,"type":1},{"address":"0x1001c360","name":"__sbh_resize_block","matching":1.0,"recomp":"0x1001c6c0","library":true,"type":1},{"address":"0x1001c950","name":"__sbh_heapmin","matching":1.0,"recomp":"0x1001ccb0","library":true,"type":1},{"address":"0x1001ca80","name":"__sbh_heap_check","matching":1.0,"recomp":"0x1001cde0","library":true,"type":1},{"address":"0x1001d0a0","name":"_get_old_sbh_threshold","matching":1.0,"recomp":"0x1001d400","library":true,"type":1},{"address":"0x1001d0b0","name":"_set_old_sbh_threshold","matching":1.0,"recomp":"0x1001d410","library":true,"type":1},{"address":"0x1001d0e0","name":"__old_sbh_new_region","matching":1.0,"recomp":"0x1001d440","library":true,"type":1},{"address":"0x1001d2c0","name":"__old_sbh_release_region","matching":1.0,"recomp":"0x1001d620","library":true,"type":1},{"address":"0x1001d340","name":"__old_sbh_decommit_pages","matching":1.0,"recomp":"0x1001d6a0","library":true,"type":1},{"address":"0x1001d4a0","name":"__old_sbh_find_block","matching":1.0,"recomp":"0x1001d800","library":true,"type":1},{"address":"0x1001d530","name":"__old_sbh_free_block","matching":1.0,"recomp":"0x1001d890","library":true,"type":1},{"address":"0x1001d5a0","name":"__old_sbh_alloc_block","matching":1.0,"recomp":"0x1001d900","library":true,"type":1},{"address":"0x1001d960","name":"__old_sbh_alloc_block_from_page","matching":1.0,"recomp":"0x1001dcc0","library":true,"type":1},{"address":"0x1001dc10","name":"__old_sbh_resize_block","matching":1.0,"recomp":"0x1001df70","library":true,"type":1},{"address":"0x1001dd80","name":"__old_sbh_heap_check","matching":1.0,"recomp":"0x1001e0e0","library":true,"type":1},{"address":"0x1001dfc0","name":"_GetLinkerVersion","matching":1.0,"recomp":"0x1001e320","library":true,"type":1},{"address":"0x1001e020","name":"__heap_select","matching":1.0,"recomp":"0x1001e380","library":true,"type":1},{"address":"0x1001e250","name":"_heap_init","matching":1.0,"recomp":"0x1001e5b0","library":true,"type":1},{"address":"0x1001e2e0","name":"_heap_term","matching":1.0,"recomp":"0x1001e640","library":true,"type":1},{"address":"0x1001e3d0","name":"_cinit","matching":1.0,"recomp":"0x1001e730","library":true,"type":1},{"address":"0x1001e410","name":"exit","matching":1.0,"recomp":"0x1001e770","library":true,"type":1},{"address":"0x1001e430","name":"_exit","matching":1.0,"recomp":"0x1001e790","library":true,"type":1},{"address":"0x1001e450","name":"_cexit","matching":1.0,"recomp":"0x1001e7b0","library":true,"type":1},{"address":"0x1001e470","name":"_c_exit","matching":1.0,"recomp":"0x1001e7d0","library":true,"type":1},{"address":"0x1001e490","name":"doexit","matching":1.0,"recomp":"0x1001e7f0","library":true,"type":1},{"address":"0x1001e580","name":"_lockexit","matching":1.0,"recomp":"0x1001e8e0","library":true,"type":1},{"address":"0x1001e590","name":"_unlockexit","matching":1.0,"recomp":"0x1001e8f0","library":true,"type":1},{"address":"0x1001e5a0","name":"_initterm","matching":1.0,"recomp":"0x1001e900","library":true,"type":1},{"address":"0x1001e5d0","name":"sprintf","matching":1.0,"recomp":"0x1001e930","library":true,"type":1},{"address":"0x1001e6d0","name":"_isctype","matching":1.0,"recomp":"0x1001ea30","library":true,"type":1},{"address":"0x1001e790","name":"__initstdio","matching":1.0,"recomp":"0x1001eaf0","library":true,"type":1},{"address":"0x1001e8c0","name":"__endstdio","matching":1.0,"recomp":"0x1001ec20","library":true,"type":1},{"address":"0x1001e8e0","name":"_lock_file","matching":1.0,"recomp":"0x1001ec40","library":true,"type":1},{"address":"0x1001e920","name":"_lock_file2","matching":1.0,"recomp":"0x1001ec80","library":true,"type":1},{"address":"0x1001e950","name":"_unlock_file","matching":1.0,"recomp":"0x1001ecb0","library":true,"type":1},{"address":"0x1001e990","name":"_unlock_file2","matching":1.0,"recomp":"0x1001ecf0","library":true,"type":1},{"address":"0x1001e9c0","name":"_close","matching":1.0,"recomp":"0x1001ed20","library":true,"type":1},{"address":"0x1001ea40","name":"_close_lk","matching":1.0,"recomp":"0x1001eda0","library":true,"type":1},{"address":"0x1001eaf0","name":"_freebuf","matching":1.0,"recomp":"0x1001ee50","library":true,"type":1},{"address":"0x1001eb90","name":"fflush","matching":1.0,"recomp":"0x1001eef0","library":true,"type":1},{"address":"0x1001ebe0","name":"_fflush_lk","matching":1.0,"recomp":"0x1001ef40","library":true,"type":1},{"address":"0x1001ec30","name":"_flush","matching":1.0,"recomp":"0x1001ef90","library":true,"type":1},{"address":"0x1001ecf0","name":"_flushall","matching":1.0,"recomp":"0x1001f050","library":true,"type":1},{"address":"0x1001ed00","name":"flsall","matching":1.0,"recomp":"0x1001f060","library":true,"type":1},{"address":"0x1001ee40","name":"_filbuf","matching":1.0,"recomp":"0x1001f1a0","library":true,"type":1},{"address":"0x1001f030","name":"_read","matching":1.0,"recomp":"0x1001f390","library":true,"type":1},{"address":"0x1001f0c0","name":"_read_lk","matching":1.0,"recomp":"0x1001f420","library":true,"type":1},{"address":"0x1001f510","name":"memcpy","matching":1.0,"recomp":"0x1001f870","library":true,"type":1},{"address":"0x1001f850","name":"_openfile","matching":1.0,"recomp":"0x1001fbb0","library":true,"type":1},{"address":"0x1001fbe0","name":"_getstream","matching":1.0,"recomp":"0x1001ff40","library":true,"type":1},{"address":"0x1001fd60","name":"_flsbuf","matching":1.0,"recomp":"0x100200c0","library":true,"type":1},{"address":"0x1001ffe0","name":"_write","matching":1.0,"recomp":"0x10020340","library":true,"type":1},{"address":"0x10020070","name":"_write_lk","matching":1.0,"recomp":"0x100203d0","library":true,"type":1},{"address":"0x100202f0","name":"_setdefaultprecision","matching":1.0,"recomp":"0x10020650","library":true,"type":1},{"address":"0x10020310","name":"_ms_p5_test_fdiv","matching":1.0,"recomp":"0x10020670","library":true,"type":1},{"address":"0x10020370","name":"_ms_p5_mp_test_fdiv","matching":1.0,"recomp":"0x100206d0","library":true,"type":1},{"address":"0x100203c0","name":"_forcdecpt","matching":1.0,"recomp":"0x10020720","library":true,"type":1},{"address":"0x10020470","name":"_cropzeros","matching":1.0,"recomp":"0x100207d0","library":true,"type":1},{"address":"0x10020550","name":"_positive","matching":1.0,"recomp":"0x100208b0","library":true,"type":1},{"address":"0x10020580","name":"_fassign","matching":1.0,"recomp":"0x100208e0","library":true,"type":1},{"address":"0x100205d0","name":"_cftoe","matching":1.0,"recomp":"0x10020930","library":true,"type":1},{"address":"0x10020650","name":"_cftoe2","matching":1.0,"recomp":"0x100209b0","library":true,"type":1},{"address":"0x100207c0","name":"_cftof","matching":1.0,"recomp":"0x10020b20","library":true,"type":1},{"address":"0x10020830","name":"_cftof2","matching":1.0,"recomp":"0x10020b90","library":true,"type":1},{"address":"0x10020970","name":"_cftog","matching":1.0,"recomp":"0x10020cd0","library":true,"type":1},{"address":"0x10020a60","name":"_cfltcvt","matching":1.0,"recomp":"0x10020dc0","library":true,"type":1},{"address":"0x10020ac0","name":"_shift","matching":1.0,"recomp":"0x10020e20","library":true,"type":1},{"address":"0x10020af0","name":"terminate","matching":1.0,"recomp":"0x10020e50","library":true,"type":1},{"address":"0x10020b80","name":"unexpected","matching":1.0,"recomp":"0x10020ee0","library":true,"type":1},{"address":"0x10020ba0","name":"_inconsistency","matching":1.0,"recomp":"0x10020f00","library":true,"type":1},{"address":"0x10020c0a","name":"_inconsistency+0x6a","matching":1.0,"recomp":"0x10020f6a","library":true,"type":1},{"address":"0x10020c10","name":"_inconsistency+0x70","matching":1.0,"recomp":"0x10020f70","library":true,"type":1},{"address":"0x10020c30","name":"__InternalCxxFrameHandler","matching":1.0,"recomp":"0x10020f90","library":true,"type":1},{"address":"0x10020d20","name":"FindHandler","matching":1.0,"recomp":"0x10021080","library":true,"type":1},{"address":"0x10020fc0","name":"FindHandlerForForeignException","matching":1.0,"recomp":"0x10021320","library":true,"type":1},{"address":"0x100210e0","name":"TypeMatch","matching":1.0,"recomp":"0x10021440","library":true,"type":1},{"address":"0x100211a0","name":"__FrameUnwindToState","matching":1.0,"recomp":"0x10021500","library":true,"type":1},{"address":"0x100212a0","name":"FrameUnwindFilter","matching":1.0,"recomp":"0x10021600","library":true,"type":1},{"address":"0x100212d0","name":"CatchIt","matching":1.0,"recomp":"0x10021630","library":true,"type":1},{"address":"0x10021390","name":"CallCatchBlock","matching":1.0,"recomp":"0x100216f0","library":true,"type":1},{"address":"0x1002146d","name":"CallCatchBlock+0xdd","matching":1.0,"recomp":"0x100217cd","library":true,"type":1},{"address":"0x100214cb","name":"CallCatchBlock+0x13b","matching":1.0,"recomp":"0x1002182b","library":true,"type":1},{"address":"0x100214e0","name":"ExFilterRethrow","matching":1.0,"recomp":"0x10021840","library":true,"type":1},{"address":"0x10021530","name":"BuildCatchObject","matching":1.0,"recomp":"0x10021890","library":true,"type":1},{"address":"0x100217b0","name":"_DestructExceptionObject","matching":1.0,"recomp":"0x10021b10","library":true,"type":1},{"address":"0x10021840","name":"AdjustPointer","matching":1.0,"recomp":"0x10021ba0","library":true,"type":1},{"address":"0x10021890","name":"_CallSettingFrame","matching":1.0,"recomp":"0x10021bf0","library":true,"type":1},{"address":"0x100218e0","name":"_mtinit","matching":1.0,"recomp":"0x10021c40","library":true,"type":1},{"address":"0x10021970","name":"_mtterm","matching":1.0,"recomp":"0x10021cd0","library":true,"type":1},{"address":"0x100219a0","name":"_initptd","matching":1.0,"recomp":"0x10021d00","library":true,"type":1},{"address":"0x100219c0","name":"_getptd","matching":1.0,"recomp":"0x10021d20","library":true,"type":1},{"address":"0x10021a60","name":"_freeptd","matching":1.0,"recomp":"0x10021dc0","library":true,"type":1},{"address":"0x10021b70","name":"__threadid","matching":1.0,"recomp":"0x10021ed0","library":true,"type":1},{"address":"0x10021b80","name":"__threadhandle","matching":1.0,"recomp":"0x10021ee0","library":true,"type":1},{"address":"0x10021b90","name":"_allmul","matching":1.0,"recomp":"0x10021ef0","library":true,"type":1},{"address":"0x10021da0","name":"_twoToTOS","matching":1.0,"recomp":"0x10022100","library":true,"type":1},{"address":"0x10021db5","name":"_load_CW","matching":1.0,"recomp":"0x10022115","library":true,"type":1},{"address":"0x10021dcc","name":"_convertTOStoQNaN","matching":1.0,"recomp":"0x1002212c","library":true,"type":1},{"address":"0x10021de5","name":"_fload_withFB","matching":1.0,"recomp":"0x10022145","library":true,"type":1},{"address":"0x10021e28","name":"_checkTOS_withFB","matching":1.0,"recomp":"0x10022188","library":true,"type":1},{"address":"0x10021e3e","name":"_fast_exit","matching":1.0,"recomp":"0x1002219e","library":true,"type":1},{"address":"0x10021e4b","name":"_math_exit","matching":1.0,"recomp":"0x100221ab","library":true,"type":1},{"address":"0x10021e89","name":"_check_range_exit","matching":1.0,"recomp":"0x100221e9","library":true,"type":1},{"address":"0x10021f30","name":"_startTwoArgErrorHandling","matching":1.0,"recomp":"0x10022290","library":true,"type":1},{"address":"0x10021f47","name":"_startOneArgErrorHandling","matching":1.0,"recomp":"0x100222a7","library":true,"type":1},{"address":"0x100221a0","name":"_powhlp","matching":1.0,"recomp":"0x10022500","library":true,"type":1},{"address":"0x10022410","name":"_d_inttype","matching":1.0,"recomp":"0x10022770","library":true,"type":1},{"address":"0x10022490","name":"abort","matching":1.0,"recomp":"0x100227f0","library":true,"type":1},{"address":"0x100224b0","name":"signal","matching":1.0,"recomp":"0x10022810","library":true,"type":1},{"address":"0x100226e0","name":"ctrlevent_capture","matching":1.0,"recomp":"0x10022a40","library":true,"type":1},{"address":"0x10022780","name":"raise","matching":1.0,"recomp":"0x10022ae0","library":true,"type":1},{"address":"0x100229c0","name":"siglookup","matching":1.0,"recomp":"0x10022d20","library":true,"type":1},{"address":"0x10022a20","name":"__fpecode","matching":1.0,"recomp":"0x10022d80","library":true,"type":1},{"address":"0x10022a30","name":"__pxcptinfoptrs","matching":1.0,"recomp":"0x10022d90","library":true,"type":1},{"address":"0x10022a40","name":"__crtMessageBoxA","matching":1.0,"recomp":"0x10022da0","library":true,"type":1},{"address":"0x10022b00","name":"_itoa","matching":1.0,"recomp":"0x10022e60","library":true,"type":1},{"address":"0x10022b50","name":"xtoa","matching":1.0,"recomp":"0x10022eb0","library":true,"type":1},{"address":"0x10022c20","name":"_ltoa","matching":1.0,"recomp":"0x10022f80","library":true,"type":1},{"address":"0x10022c60","name":"_ultoa","matching":1.0,"recomp":"0x10022fc0","library":true,"type":1},{"address":"0x10022c80","name":"_i64toa","matching":1.0,"recomp":"0x10022fe0","library":true,"type":1},{"address":"0x10022cd0","name":"x64toa","matching":1.0,"recomp":"0x10023030","library":true,"type":1},{"address":"0x10022dd0","name":"_ui64toa","matching":1.0,"recomp":"0x10023130","library":true,"type":1},{"address":"0x10022df0","name":"strncat","matching":1.0,"recomp":"0x10023150","library":true,"type":1},{"address":"0x10022f20","name":"strncpy","matching":1.0,"recomp":"0x10023280","library":true,"type":1},{"address":"0x10023020","name":"fprintf","matching":1.0,"recomp":"0x10023380","library":true,"type":1},{"address":"0x100230f0","name":"setvbuf","matching":1.0,"recomp":"0x10023450","library":true,"type":1},{"address":"0x10023260","name":"_ioinit","matching":1.0,"recomp":"0x100235c0","library":true,"type":1},{"address":"0x10023590","name":"_ioterm","matching":1.0,"recomp":"0x100238f0","library":true,"type":1},{"address":"0x10023630","name":"_setenvp","matching":1.0,"recomp":"0x10023990","library":true,"type":1},{"address":"0x10023780","name":"_setargv","matching":1.0,"recomp":"0x10023ae0","library":true,"type":1},{"address":"0x10023860","name":"parse_cmdline","matching":1.0,"recomp":"0x10023bc0","library":true,"type":1},{"address":"0x10023c90","name":"__crtGetEnvironmentStringsA","matching":1.0,"recomp":"0x10023ff0","library":true,"type":1},{"address":"0x10023eb0","name":"DllMain","matching":1.0,"recomp":"0x10024210","library":true,"type":1},{"address":"0x10023ec0","name":"_FF_MSGBANNER","matching":1.0,"recomp":"0x10024220","library":true,"type":1},{"address":"0x10023f10","name":"_NMSG_WRITE","matching":1.0,"recomp":"0x10024270","library":true,"type":1},{"address":"0x100240d0","name":"_GET_RTERRMSG","matching":1.0,"recomp":"0x10024430","library":true,"type":1},{"address":"0x10024120","name":"_snprintf","matching":1.0,"recomp":"0x10024480","library":true,"type":1},{"address":"0x10024220","name":"_vsnprintf","matching":1.0,"recomp":"0x10024580","library":true,"type":1},{"address":"0x10024320","name":"_alloca_probe","matching":1.0,"recomp":"0x10024680","library":true,"type":1},{"address":"0x10024350","name":"_dosmaperr","matching":1.0,"recomp":"0x100246b0","library":true,"type":1},{"address":"0x100243f0","name":"_errno","matching":1.0,"recomp":"0x10024750","library":true,"type":1},{"address":"0x10024400","name":"__doserrno","matching":1.0,"recomp":"0x10024760","library":true,"type":1},{"address":"0x10024410","name":"memmove","matching":1.0,"recomp":"0x10024770","library":true,"type":1},{"address":"0x10024750","name":"strtol","matching":1.0,"recomp":"0x10024ab0","library":true,"type":1},{"address":"0x10024770","name":"strtoxl","matching":1.0,"recomp":"0x10024ad0","library":true,"type":1},{"address":"0x10024ab0","name":"strtoul","matching":1.0,"recomp":"0x10024e10","library":true,"type":1},{"address":"0x10024ae0","name":"strchr","matching":1.0,"recomp":"0x10024e40","library":true,"type":1},{"address":"0x10024ba0","name":"strstr","matching":1.0,"recomp":"0x10024f00","library":true,"type":1},{"address":"0x10024c20","name":"strncmp","matching":1.0,"recomp":"0x10024f80","library":true,"type":1},{"address":"0x10024c60","name":"_output","matching":1.0,"recomp":"0x10024fc0","library":true,"type":1},{"address":"0x10025990","name":"write_char","matching":1.0,"recomp":"0x10025cf0","library":true,"type":1},{"address":"0x10025a10","name":"write_multi_char","matching":1.0,"recomp":"0x10025d70","library":true,"type":1},{"address":"0x10025a50","name":"write_string","matching":1.0,"recomp":"0x10025db0","library":true,"type":1},{"address":"0x10025aa0","name":"get_int_arg","matching":1.0,"recomp":"0x10025e00","library":true,"type":1},{"address":"0x10025ac0","name":"get_int64_arg","matching":1.0,"recomp":"0x10025e20","library":true,"type":1},{"address":"0x10025ae0","name":"get_short_arg","matching":1.0,"recomp":"0x10025e40","library":true,"type":1},{"address":"0x10025b00","name":"__crtGetStringTypeA","matching":1.0,"recomp":"0x10025e60","library":true,"type":1},{"address":"0x10025cc0","name":"_fcloseall","matching":1.0,"recomp":"0x10026020","library":true,"type":1},{"address":"0x10025da0","name":"_alloc_osfhnd","matching":1.0,"recomp":"0x10026100","library":true,"type":1},{"address":"0x10025f90","name":"_set_osfhnd","matching":1.0,"recomp":"0x100262f0","library":true,"type":1},{"address":"0x10026050","name":"_free_osfhnd","matching":1.0,"recomp":"0x100263b0","library":true,"type":1},{"address":"0x10026130","name":"_get_osfhandle","matching":1.0,"recomp":"0x10026490","library":true,"type":1},{"address":"0x100261a0","name":"_open_osfhandle","matching":1.0,"recomp":"0x10026500","library":true,"type":1},{"address":"0x100262b0","name":"_lock_fhandle","matching":1.0,"recomp":"0x10026610","library":true,"type":1},{"address":"0x10026340","name":"_unlock_fhandle","matching":1.0,"recomp":"0x100266a0","library":true,"type":1},{"address":"0x10026370","name":"_commit","matching":1.0,"recomp":"0x100266d0","library":true,"type":1},{"address":"0x10026450","name":"_getbuf","matching":1.0,"recomp":"0x100267b0","library":true,"type":1},{"address":"0x10026520","name":"_lseek","matching":1.0,"recomp":"0x10026880","library":true,"type":1},{"address":"0x100265b0","name":"_lseek_lk","matching":1.0,"recomp":"0x10026910","library":true,"type":1},{"address":"0x10026670","name":"_open","matching":1.0,"recomp":"0x100269d0","library":true,"type":1},{"address":"0x100266b0","name":"_sopen","matching":1.0,"recomp":"0x10026a10","library":true,"type":1},{"address":"0x10026c10","name":"_isatty","matching":1.0,"recomp":"0x10026f70","library":true,"type":1},{"address":"0x10026c50","name":"_statusfp","matching":1.0,"recomp":"0x10026fb0","library":true,"type":1},{"address":"0x10026c70","name":"_clearfp","matching":1.0,"recomp":"0x10026fd0","library":true,"type":1},{"address":"0x10026c90","name":"_control87","matching":1.0,"recomp":"0x10026ff0","library":true,"type":1},{"address":"0x10026ce0","name":"_controlfp","matching":1.0,"recomp":"0x10027040","library":true,"type":1},{"address":"0x10026d00","name":"_fpreset","matching":1.0,"recomp":"0x10027060","library":true,"type":1},{"address":"0x10026d60","name":"_abstract_cw","matching":1.0,"recomp":"0x100270c0","library":true,"type":1},{"address":"0x10026ee0","name":"_hw_cw","matching":1.0,"recomp":"0x10027240","library":true,"type":1},{"address":"0x10027040","name":"_abstract_sw","matching":1.0,"recomp":"0x100273a0","library":true,"type":1},{"address":"0x100270f0","name":"_tolower","matching":1.0,"recomp":"0x10027450","library":true,"type":1},{"address":"0x10027100","name":"tolower","matching":1.0,"recomp":"0x10027460","library":true,"type":1},{"address":"0x100271a0","name":"_tolower_lk","matching":1.0,"recomp":"0x10027500","library":true,"type":1},{"address":"0x100272d0","name":"_ZeroTail","matching":1.0,"recomp":"0x10027630","library":true,"type":1},{"address":"0x10027360","name":"_IncMan","matching":1.0,"recomp":"0x100276c0","library":true,"type":1},{"address":"0x10027410","name":"_RoundMan","matching":1.0,"recomp":"0x10027770","library":true,"type":1},{"address":"0x100274f0","name":"_CopyMan","matching":1.0,"recomp":"0x10027850","library":true,"type":1},{"address":"0x10027540","name":"_FillZeroMan","matching":1.0,"recomp":"0x100278a0","library":true,"type":1},{"address":"0x10027570","name":"_IsZeroMan","matching":1.0,"recomp":"0x100278d0","library":true,"type":1},{"address":"0x100275b0","name":"_ShrMan","matching":1.0,"recomp":"0x10027910","library":true,"type":1},{"address":"0x100276a0","name":"_ld12cvt","matching":1.0,"recomp":"0x10027a00","library":true,"type":1},{"address":"0x100278f0","name":"_ld12tod","matching":1.0,"recomp":"0x10027c50","library":true,"type":1},{"address":"0x10027910","name":"_ld12tof","matching":1.0,"recomp":"0x10027c70","library":true,"type":1},{"address":"0x10027930","name":"_ld12told","matching":1.0,"recomp":"0x10027c90","library":true,"type":1},{"address":"0x100279f0","name":"_atodbl","matching":1.0,"recomp":"0x10027d50","library":true,"type":1},{"address":"0x10027a30","name":"_atoldbl","matching":1.0,"recomp":"0x10027d90","library":true,"type":1},{"address":"0x10027a70","name":"_atoflt","matching":1.0,"recomp":"0x10027dd0","library":true,"type":1},{"address":"0x10027ab0","name":"_fptostr","matching":1.0,"recomp":"0x10027e10","library":true,"type":1},{"address":"0x10027bb0","name":"_fltout2","matching":1.0,"recomp":"0x10027f10","library":true,"type":1},{"address":"0x10027c30","name":"__dtold","matching":1.0,"recomp":"0x10027f90","library":true,"type":1},{"address":"0x10027da0","name":"_fptrap","matching":1.0,"recomp":"0x10028100","library":true,"type":1},{"address":"0x10027db0","name":"__CxxUnhandledExceptionFilter","matching":1.0,"recomp":"0x10028110","library":true,"type":1},{"address":"0x10027e10","name":"__CxxSetUnhandledExceptionFilter","matching":1.0,"recomp":"0x10028170","library":true,"type":1},{"address":"0x10027e30","name":"__CxxRestoreUnhandledExceptionFilter","matching":1.0,"recomp":"0x10028190","library":true,"type":1},{"address":"0x10027e50","name":"_ValidateRead","matching":1.0,"recomp":"0x100281b0","library":true,"type":1},{"address":"0x10027e80","name":"_ValidateWrite","matching":1.0,"recomp":"0x100281e0","library":true,"type":1},{"address":"0x10027eb0","name":"_ValidateExecute","matching":1.0,"recomp":"0x10028210","library":true,"type":1},{"address":"0x10027ee0","name":"_XcptFilter","matching":1.0,"recomp":"0x10028240","library":true,"type":1},{"address":"0x100280a0","name":"xcptlookup","matching":1.0,"recomp":"0x10028400","library":true,"type":1},{"address":"0x10028100","name":"_87except","matching":1.0,"recomp":"0x10028460","library":true,"type":1},{"address":"0x10029010","name":"_set_exp","matching":1.0,"recomp":"0x10029370","library":true,"type":1},{"address":"0x10029050","name":"_get_exp","matching":1.0,"recomp":"0x100293b0","library":true,"type":1},{"address":"0x10029080","name":"_add_exp","matching":1.0,"recomp":"0x100293e0","library":true,"type":1},{"address":"0x100290c0","name":"_set_bexp","matching":1.0,"recomp":"0x10029420","library":true,"type":1},{"address":"0x10029100","name":"_sptype","matching":1.0,"recomp":"0x10029460","library":true,"type":1},{"address":"0x10029180","name":"_decomp","matching":1.0,"recomp":"0x100294e0","library":true,"type":1},{"address":"0x100292c0","name":"_frnd","matching":1.0,"recomp":"0x10029620","library":true,"type":1},{"address":"0x100292e0","name":"_copysign","matching":1.0,"recomp":"0x10029640","library":true,"type":1},{"address":"0x10029310","name":"_chgsign","matching":1.0,"recomp":"0x10029670","library":true,"type":1},{"address":"0x10029340","name":"_scalb","matching":1.0,"recomp":"0x100296a0","library":true,"type":1},{"address":"0x10029360","name":"_logb","matching":1.0,"recomp":"0x100296c0","library":true,"type":1},{"address":"0x10029490","name":"_nextafter","matching":1.0,"recomp":"0x100297f0","library":true,"type":1},{"address":"0x100297d0","name":"_finite","matching":1.0,"recomp":"0x10029b30","library":true,"type":1},{"address":"0x10029800","name":"_isnan","matching":1.0,"recomp":"0x10029b60","library":true,"type":1},{"address":"0x10029850","name":"_fpclass","matching":1.0,"recomp":"0x10029bb0","library":true,"type":1},{"address":"0x10029930","name":"_aulldiv","matching":1.0,"recomp":"0x10029c90","library":true,"type":1},{"address":"0x100299a0","name":"_aullrem","matching":1.0,"recomp":"0x10029d00","library":true,"type":1},{"address":"0x10029a20","name":"_stbuf","matching":1.0,"recomp":"0x10029d80","library":true,"type":1},{"address":"0x10029b80","name":"_ftbuf","matching":1.0,"recomp":"0x10029ee0","library":true,"type":1},{"address":"0x10029c20","name":"_setmbcp","matching":1.0,"recomp":"0x10029f80","library":true,"type":1},{"address":"0x10029f70","name":"getSystemCP","matching":1.0,"recomp":"0x1002a2d0","library":true,"type":1},{"address":"0x10029fd0","name":"CPtoLCID","matching":1.0,"recomp":"0x1002a330","library":true,"type":1},{"address":"0x1002a050","name":"setSBCS","matching":1.0,"recomp":"0x1002a3b0","library":true,"type":1},{"address":"0x1002a0d0","name":"setSBUpLow","matching":1.0,"recomp":"0x1002a430","library":true,"type":1},{"address":"0x1002a3e0","name":"_getmbcp","matching":1.0,"recomp":"0x1002a740","library":true,"type":1},{"address":"0x1002a400","name":"__initmbctable","matching":1.0,"recomp":"0x1002a760","library":true,"type":1},{"address":"0x1002a430","name":"_toupper","matching":1.0,"recomp":"0x1002a790","library":true,"type":1},{"address":"0x1002a440","name":"toupper","matching":1.0,"recomp":"0x1002a7a0","library":true,"type":1},{"address":"0x1002a4e0","name":"_toupper_lk","matching":1.0,"recomp":"0x1002a840","library":true,"type":1},{"address":"0x1002a610","name":"wctomb","matching":1.0,"recomp":"0x1002a970","library":true,"type":1},{"address":"0x1002a690","name":"_wctomb_lk","matching":1.0,"recomp":"0x1002a9f0","library":true,"type":1},{"address":"0x1002a730","name":"_chsize","matching":1.0,"recomp":"0x1002aa90","library":true,"type":1},{"address":"0x1002a7b0","name":"_chsize_lk","matching":1.0,"recomp":"0x1002ab10","library":true,"type":1},{"address":"0x1002a9e0","name":"setlocale","matching":1.0,"recomp":"0x1002ad40","library":true,"type":1},{"address":"0x1002add0","name":"_setlocale_set_cat","matching":1.0,"recomp":"0x1002b130","library":true,"type":1},{"address":"0x1002af70","name":"_setlocale_get_all","matching":1.0,"recomp":"0x1002b2d0","library":true,"type":1},{"address":"0x1002b070","name":"_expandlocale","matching":1.0,"recomp":"0x1002b3d0","library":true,"type":1},{"address":"0x1002b200","name":"__init_dummy","matching":1.0,"recomp":"0x1002b560","library":true,"type":1},{"address":"0x1002b210","name":"_strcats","matching":1.0,"recomp":"0x1002b570","library":true,"type":1},{"address":"0x1002b260","name":"__lc_strtolc","matching":1.0,"recomp":"0x1002b5c0","library":true,"type":1},{"address":"0x1002b3c0","name":"__lc_lctostr","matching":1.0,"recomp":"0x1002b720","library":true,"type":1},{"address":"0x1002b430","name":"__crtLCMapStringA","matching":1.0,"recomp":"0x1002b790","library":true,"type":1},{"address":"0x1002b740","name":"strncnt","matching":1.0,"recomp":"0x1002baa0","library":true,"type":1},{"address":"0x1002b790","name":"__addl","matching":1.0,"recomp":"0x1002baf0","library":true,"type":1},{"address":"0x1002b7d0","name":"__add_12","matching":1.0,"recomp":"0x1002bb30","library":true,"type":1},{"address":"0x1002b880","name":"__shl_12","matching":1.0,"recomp":"0x1002bbe0","library":true,"type":1},{"address":"0x1002b8e0","name":"__shr_12","matching":1.0,"recomp":"0x1002bc40","library":true,"type":1},{"address":"0x1002b950","name":"__mtold12","matching":1.0,"recomp":"0x1002bcb0","library":true,"type":1},{"address":"0x1002ba90","name":"__strgtold12","matching":1.0,"recomp":"0x1002bdf0","library":true,"type":1},{"address":"0x1002c5c0","name":"__STRINGTOLD","matching":1.0,"recomp":"0x1002c920","library":true,"type":1},{"address":"0x1002c610","name":"$I10_OUTPUT","matching":1.0,"recomp":"0x1002c970","library":true,"type":1},{"address":"0x1002cb30","name":"_handle_qnan1","matching":1.0,"recomp":"0x1002ce90","library":true,"type":1},{"address":"0x1002cb90","name":"_handle_qnan2","matching":1.0,"recomp":"0x1002cef0","library":true,"type":1},{"address":"0x1002cc00","name":"_except1","matching":1.0,"recomp":"0x1002cf60","library":true,"type":1},{"address":"0x1002ccc0","name":"_except2","matching":1.0,"recomp":"0x1002d020","library":true,"type":1},{"address":"0x1002cd90","name":"_raise_exc","matching":1.0,"recomp":"0x1002d0f0","library":true,"type":1},{"address":"0x1002d260","name":"_handle_exc","matching":1.0,"recomp":"0x1002d5c0","library":true,"type":1},{"address":"0x1002d5e0","name":"_umatherr","matching":1.0,"recomp":"0x1002d940","library":true,"type":1},{"address":"0x1002d680","name":"_set_errno","matching":1.0,"recomp":"0x1002d9e0","library":true,"type":1},{"address":"0x1002d6c0","name":"_get_fname","matching":1.0,"recomp":"0x1002da20","library":true,"type":1},{"address":"0x1002d700","name":"_errcode","matching":1.0,"recomp":"0x1002da60","library":true,"type":1},{"address":"0x1002d780","name":"_matherr","matching":1.0,"recomp":"0x1002dae0","library":true,"type":1},{"address":"0x1002d790","name":"_statfp","matching":1.0,"recomp":"0x1002daf0","library":true,"type":1},{"address":"0x1002d7b0","name":"_clrfp","matching":1.0,"recomp":"0x1002db10","library":true,"type":1},{"address":"0x1002d7d0","name":"_ctrlfp","matching":1.0,"recomp":"0x1002db30","library":true,"type":1},{"address":"0x1002d810","name":"_set_statfp","matching":1.0,"recomp":"0x1002db70","library":true,"type":1},{"address":"0x1002d890","name":"ldexp","matching":1.0,"recomp":"0x1002dbf0","library":true,"type":1},{"address":"0x1002db50","name":"_setmode","matching":1.0,"recomp":"0x1002deb0","library":true,"type":1},{"address":"0x1002dbd0","name":"_setmode_lk","matching":1.0,"recomp":"0x1002df30","library":true,"type":1},{"address":"0x1002dca0","name":"__init_time","matching":1.0,"recomp":"0x1002e000","library":true,"type":1},{"address":"0x1002dd80","name":"_get_lc_time","matching":1.0,"recomp":"0x1002e0e0","library":true,"type":1},{"address":"0x1002e310","name":"_free_lc_time","matching":1.0,"recomp":"0x1002e670","library":true,"type":1},{"address":"0x1002e620","name":"__init_numeric","matching":1.0,"recomp":"0x1002e980","library":true,"type":1},{"address":"0x1002e8d0","name":"fix_grouping","matching":1.0,"recomp":"0x1002ec30","library":true,"type":1},{"address":"0x1002e950","name":"__init_monetary","matching":1.0,"recomp":"0x1002ecb0","library":true,"type":1},{"address":"0x1002ea80","name":"_get_lc_lconv","matching":1.0,"recomp":"0x1002ede0","library":true,"type":1},{"address":"0x1002ec90","name":"fix_grouping","matching":1.0,"recomp":"0x1002eff0","library":true,"type":1},{"address":"0x1002ed10","name":"_free_lc_lconv","matching":1.0,"recomp":"0x1002f070","library":true,"type":1},{"address":"0x1002edb0","name":"__init_ctype","matching":1.0,"recomp":"0x1002f110","library":true,"type":1},{"address":"0x1002f150","name":"__init_collate","matching":1.0,"recomp":"0x1002f4b0","library":true,"type":1},{"address":"0x1002f160","name":"strcspn","matching":1.0,"recomp":"0x1002f4c0","library":true,"type":1},{"address":"0x1002f1a0","name":"strpbrk","matching":1.0,"recomp":"0x1002f500","library":true,"type":1},{"address":"0x1002f1e0","name":"__get_qualified_locale","matching":1.0,"recomp":"0x1002f540","library":true,"type":1},{"address":"0x1002f3e0","name":"TranslateName","matching":1.0,"recomp":"0x1002f740","library":true,"type":1},{"address":"0x1002f470","name":"GetLcidFromLangCountry","matching":1.0,"recomp":"0x1002f7d0","library":true,"type":1},{"address":"0x1002f530","name":"LangCountryEnumProc","matching":1.0,"recomp":"0x1002f890","library":true,"type":1},{"address":"0x1002f860","name":"GetLcidFromLanguage","matching":1.0,"recomp":"0x1002fbc0","library":true,"type":1},{"address":"0x1002f8e0","name":"LanguageEnumProc","matching":1.0,"recomp":"0x1002fc40","library":true,"type":1},{"address":"0x1002fa00","name":"GetLcidFromCountry","matching":1.0,"recomp":"0x1002fd60","library":true,"type":1},{"address":"0x1002fa50","name":"CountryEnumProc","matching":1.0,"recomp":"0x1002fdb0","library":true,"type":1},{"address":"0x1002fb00","name":"GetLcidFromDefault","matching":1.0,"recomp":"0x1002fe60","library":true,"type":1},{"address":"0x1002fb30","name":"ProcessCodePage","matching":1.0,"recomp":"0x1002fe90","library":true,"type":1},{"address":"0x1002fbd0","name":"TestDefaultCountry","matching":1.0,"recomp":"0x1002ff30","library":true,"type":1},{"address":"0x1002fc20","name":"TestDefaultLanguage","matching":1.0,"recomp":"0x1002ff80","library":true,"type":1},{"address":"0x1002fcb0","name":"IsThisWindowsNT","matching":1.0,"recomp":"0x10030010","library":true,"type":1},{"address":"0x1002fd00","name":"crtGetLocaleInfoA","matching":1.0,"recomp":"0x10030060","library":true,"type":1},{"address":"0x1002fe90","name":"LcidFromHexString","matching":1.0,"recomp":"0x100301f0","library":true,"type":1},{"address":"0x1002ff10","name":"GetPrimaryLen","matching":1.0,"recomp":"0x10030270","library":true,"type":1},{"address":"0x1002ff80","name":"__ld12mul","matching":1.0,"recomp":"0x100302e0","library":true,"type":1},{"address":"0x100303c0","name":"__multtenpow12","matching":1.0,"recomp":"0x10030720","library":true,"type":1},{"address":"0x10030490","name":"_Getdays","matching":1.0,"recomp":"0x100307f0","library":true,"type":1},{"address":"0x100305c0","name":"_Getmonths","matching":1.0,"recomp":"0x10030920","library":true,"type":1},{"address":"0x100306f0","name":"_Gettnames","matching":1.0,"recomp":"0x10030a50","library":true,"type":1},{"address":"0x10030a60","name":"strftime","matching":1.0,"recomp":"0x10030dc0","library":true,"type":1},{"address":"0x10030a80","name":"_Strftime","matching":1.0,"recomp":"0x10030de0","library":true,"type":1},{"address":"0x10030c10","name":"_expandtime","matching":1.0,"recomp":"0x10030f70","library":true,"type":1},{"address":"0x10031230","name":"_store_str","matching":1.0,"recomp":"0x10031590","library":true,"type":1},{"address":"0x10031280","name":"_store_num","matching":1.0,"recomp":"0x100315e0","library":true,"type":1},{"address":"0x10031330","name":"_store_number","matching":1.0,"recomp":"0x10031690","library":true,"type":1},{"address":"0x100313e0","name":"_store_winword","matching":1.0,"recomp":"0x10031740","library":true,"type":1},{"address":"0x10031900","name":"__getlocaleinfo","matching":1.0,"recomp":"0x10031c60","library":true,"type":1},{"address":"0x10031b90","name":"localeconv","matching":1.0,"recomp":"0x10031ef0","library":true,"type":1},{"address":"0x10031ba0","name":"__crtGetStringTypeW","matching":1.0,"recomp":"0x10031f00","library":true,"type":1},{"address":"0x10031e10","name":"_stricmp","matching":1.0,"recomp":"0x10032170","library":true,"type":1},{"address":"0x10031ee0","name":"_strnicmp","matching":1.0,"recomp":"0x10032240","library":true,"type":1},{"address":"0x10031ff0","name":"__tzset","matching":1.0,"recomp":"0x10032350","library":true,"type":1},{"address":"0x10032030","name":"_tzset","matching":1.0,"recomp":"0x10032390","library":true,"type":1},{"address":"0x10032050","name":"_tzset_lk","matching":1.0,"recomp":"0x100323b0","library":true,"type":1},{"address":"0x10032400","name":"_isindst","matching":1.0,"recomp":"0x10032760","library":true,"type":1},{"address":"0x10032430","name":"_isindst_lk","matching":1.0,"recomp":"0x10032790","library":true,"type":1},{"address":"0x10032730","name":"cvtdate","matching":1.0,"recomp":"0x10032a90","library":true,"type":1},{"address":"0x10032930","name":"__crtGetLocaleInfoW","matching":1.0,"recomp":"0x10032c90","library":true,"type":1},{"address":"0x10032ad0","name":"__crtGetLocaleInfoA","matching":1.0,"recomp":"0x10032e30","library":true,"type":1},{"address":"0x10032c80","name":"getenv","matching":1.0,"recomp":"0x10032fe0","library":true,"type":1},{"address":"0x10032cb0","name":"_getenv_lk","matching":1.0,"recomp":"0x10033010","library":true,"type":1},{"address":"0x10032d80","name":"_mbsnbicoll","matching":1.0,"recomp":"0x100330e0","library":true,"type":1},{"address":"0x10032dd0","name":"__wtomb_environ","matching":1.0,"recomp":"0x10033130","library":true,"type":1},{"address":"0x10032e80","name":"__crtCompareStringA","matching":1.0,"recomp":"0x100331e0","library":true,"type":1},{"address":"0x10033280","name":"strncnt","matching":1.0,"recomp":"0x100335e0","library":true,"type":1},{"address":"0x100332d0","name":"__crtsetenv","matching":1.0,"recomp":"0x10033630","library":true,"type":1},{"address":"0x100335b0","name":"findenv","matching":1.0,"recomp":"0x10033910","library":true,"type":1},{"address":"0x10033630","name":"copy_environ","matching":1.0,"recomp":"0x10033990","library":true,"type":1},{"address":"0x10033720","name":"_mbschr","matching":1.0,"recomp":"0x10033a80","library":true,"type":1},{"address":"0x10033810","name":"ifstream::ifstream","matching":1.0,"recomp":"0x10033b70","library":true,"type":1},{"address":"0x10033900","name":"ios::delbuf","matching":1.0,"recomp":"0x10033c60","library":true,"type":1},{"address":"0x10033920","name":"operator delete","matching":1.0,"recomp":"0x10033c80","library":true,"type":1},{"address":"0x10033940","name":"ifstream::`scalar deleting destructor'","matching":1.0,"recomp":"0x10033ca0","library":true,"type":1},{"address":"0x10033980","name":"ifstream::ifstream","matching":1.0,"recomp":"0x10033ce0","library":true,"type":1},{"address":"0x10033ab0","name":"ifstream::rdbuf","matching":1.0,"recomp":"0x10033e10","library":true,"type":1},{"address":"0x10033ad0","name":"ios::rdbuf","matching":1.0,"recomp":"0x10033e30","library":true,"type":1},{"address":"0x10033af0","name":"ifstream::ifstream","matching":1.0,"recomp":"0x10033e50","library":true,"type":1},{"address":"0x10033be0","name":"ifstream::ifstream","matching":1.0,"recomp":"0x10033f40","library":true,"type":1},{"address":"0x10033cd0","name":"ifstream::~ifstream","matching":1.0,"recomp":"0x10034030","library":true,"type":1},{"address":"0x10033d00","name":"ifstream::setbuf","matching":1.0,"recomp":"0x10034060","library":true,"type":1},{"address":"0x10033d70","name":"ios::clear","matching":1.0,"recomp":"0x100340d0","library":true,"type":1},{"address":"0x10033da0","name":"ifstream::is_open","matching":1.0,"recomp":"0x10034100","library":true,"type":1},{"address":"0x10033dc0","name":"filebuf::is_open","matching":1.0,"recomp":"0x10034120","library":true,"type":1},{"address":"0x10033de0","name":"ifstream::attach","matching":1.0,"recomp":"0x10034140","library":true,"type":1},{"address":"0x10033e30","name":"ifstream::open","matching":1.0,"recomp":"0x10034190","library":true,"type":1},{"address":"0x10033e90","name":"ifstream::close","matching":1.0,"recomp":"0x100341f0","library":true,"type":1},{"address":"0x10033ef0","name":"filebuf::filebuf","matching":1.0,"recomp":"0x10034250","library":true,"type":1},{"address":"0x10033f30","name":"filebuf::`scalar deleting destructor'","matching":1.0,"recomp":"0x10034290","library":true,"type":1},{"address":"0x10033f60","name":"filebuf::filebuf","matching":1.0,"recomp":"0x100342c0","library":true,"type":1},{"address":"0x10033fa0","name":"filebuf::filebuf","matching":1.0,"recomp":"0x10034300","library":true,"type":1},{"address":"0x10034020","name":"filebuf::~filebuf","matching":1.0,"recomp":"0x10034380","library":true,"type":1},{"address":"0x10034090","name":"streambuf::lock","matching":1.0,"recomp":"0x100343f0","library":true,"type":1},{"address":"0x100340c0","name":"streambuf::lockptr","matching":1.0,"recomp":"0x10034420","library":true,"type":1},{"address":"0x100340e0","name":"filebuf::close","matching":1.0,"recomp":"0x10034440","library":true,"type":1},{"address":"0x10034150","name":"streambuf::unlock","matching":1.0,"recomp":"0x100344b0","library":true,"type":1},{"address":"0x10034180","name":"filebuf::overflow","matching":1.0,"recomp":"0x100344e0","library":true,"type":1},{"address":"0x10034240","name":"streambuf::sputc","matching":1.0,"recomp":"0x100345a0","library":true,"type":1},{"address":"0x100342a0","name":"streambuf::base","matching":1.0,"recomp":"0x10034600","library":true,"type":1},{"address":"0x100342c0","name":"streambuf::ebuf","matching":1.0,"recomp":"0x10034620","library":true,"type":1},{"address":"0x100342e0","name":"ios::delbuf","matching":1.0,"recomp":"0x10035170","library":true,"type":1},{"address":"0x10034300","name":"streambuf::epptr","matching":1.0,"recomp":"0x10034660","library":true,"type":1},{"address":"0x10034320","name":"streambuf::setp","matching":1.0,"recomp":"0x10034680","library":true,"type":1},{"address":"0x10034350","name":"streambuf::unbuffered","matching":1.0,"recomp":"0x100346b0","library":true,"type":1},{"address":"0x10034370","name":"filebuf::underflow","matching":1.0,"recomp":"0x100346d0","library":true,"type":1},{"address":"0x10034460","name":"streambuf::in_avail","matching":1.0,"recomp":"0x100347c0","library":true,"type":1},{"address":"0x100344a0","name":"streambuf::blen","matching":1.0,"recomp":"0x10034800","library":true,"type":1},{"address":"0x100344e0","name":"streambuf::gptr","matching":1.0,"recomp":"0x10034840","library":true,"type":1},{"address":"0x10034500","name":"streambuf::setg","matching":1.0,"recomp":"0x10034860","library":true,"type":1},{"address":"0x10034540","name":"filebuf::seekoff","matching":1.0,"recomp":"0x100348a0","library":true,"type":1},{"address":"0x100345d0","name":"filebuf::sync","matching":1.0,"recomp":"0x10034930","library":true,"type":1},{"address":"0x10034760","name":"streambuf::out_waiting","matching":1.0,"recomp":"0x10034ac0","library":true,"type":1},{"address":"0x100347a0","name":"streambuf::pbase","matching":1.0,"recomp":"0x10034b00","library":true,"type":1},{"address":"0x100347c0","name":"streambuf::egptr","matching":1.0,"recomp":"0x10034b20","library":true,"type":1},{"address":"0x100347e0","name":"streambuf::pbump","matching":1.0,"recomp":"0x10034b40","library":true,"type":1},{"address":"0x10034810","name":"filebuf::setbuf","matching":1.0,"recomp":"0x10034b70","library":true,"type":1},{"address":"0x10034880","name":"streambuf::unbuffered","matching":1.0,"recomp":"0x10034be0","library":true,"type":1},{"address":"0x100348a0","name":"istream::get","matching":1.0,"recomp":"0x10034c00","library":true,"type":1},{"address":"0x10034a00","name":"istream::isfx","matching":1.0,"recomp":"0x10034d60","library":true,"type":1},{"address":"0x10034a40","name":"ios::lockbuf","matching":1.0,"recomp":"0x10035900","library":true,"type":1},{"address":"0x10034a50","name":"_mtlockinit","matching":1.0,"recomp":"0x10034db0","library":true,"type":1},{"address":"0x10034a60","name":"_mtlockterm","matching":1.0,"recomp":"0x10034dc0","library":true,"type":1},{"address":"0x10034a70","name":"_mtlock","matching":1.0,"recomp":"0x10034dd0","library":true,"type":1},{"address":"0x10034a80","name":"_mtunlock","matching":1.0,"recomp":"0x10034de0","library":true,"type":1},{"address":"0x10034a90","name":"ios::ios","matching":1.0,"recomp":"0x10034df0","library":true,"type":1},{"address":"0x10034b50","name":"ios::`scalar deleting destructor'","matching":1.0,"recomp":"0x10034eb0","library":true,"type":1},{"address":"0x10034b80","name":"ios::ios","matching":1.0,"recomp":"0x10034ee0","library":true,"type":1},{"address":"0x10034c50","name":"ios::ios","matching":1.0,"recomp":"0x10034fb0","library":true,"type":1},{"address":"0x10034cd0","name":"ios::~ios","matching":1.0,"recomp":"0x10035030","library":true,"type":1},{"address":"0x10034d80","name":"ios::init","matching":1.0,"recomp":"0x100350e0","library":true,"type":1},{"address":"0x10034e30","name":"ios::operator=","matching":1.0,"recomp":"0x10035190","library":true,"type":1},{"address":"0x10034ec0","name":"ios::flags","matching":1.0,"recomp":"0x10035220","library":true,"type":1},{"address":"0x10034ee0","name":"ios::width","matching":1.0,"recomp":"0x10035240","library":true,"type":1},{"address":"0x10034f00","name":"ios::tie","matching":1.0,"recomp":"0x10035260","library":true,"type":1},{"address":"0x10034f20","name":"ios::fill","matching":1.0,"recomp":"0x10035280","library":true,"type":1},{"address":"0x10034f40","name":"ios::precision","matching":1.0,"recomp":"0x100352a0","library":true,"type":1},{"address":"0x10034f60","name":"ios::rdstate","matching":1.0,"recomp":"0x100352c0","library":true,"type":1},{"address":"0x10034f80","name":"ios::xalloc","matching":1.0,"recomp":"0x100352e0","library":true,"type":1},{"address":"0x10034fc0","name":"ios::lockc","matching":1.0,"recomp":"0x10035320","library":true,"type":1},{"address":"0x10034fe0","name":"ios::unlockc","matching":1.0,"recomp":"0x10035340","library":true,"type":1},{"address":"0x10035000","name":"ios::bitalloc","matching":1.0,"recomp":"0x10035360","library":true,"type":1},{"address":"0x10035030","name":"istream::istream","matching":1.0,"recomp":"0x10035390","library":true,"type":1},{"address":"0x100350c0","name":"istream_withassign::`scalar deleting destructor'","matching":1.0,"recomp":"0x10035db0","library":true,"type":1},{"address":"0x10035100","name":"istream_withassign::`vbase destructor'","matching":1.0,"recomp":"0x10035df0","library":true,"type":1},{"address":"0x10035130","name":"istream::istream","matching":1.0,"recomp":"0x10035490","library":true,"type":1},{"address":"0x10035200","name":"istream::istream","matching":1.0,"recomp":"0x10035560","library":true,"type":1},{"address":"0x100352e0","name":"istream::~istream","matching":1.0,"recomp":"0x10035640","library":true,"type":1},{"address":"0x10035300","name":"istream::operator=","matching":1.0,"recomp":"0x10035660","library":true,"type":1},{"address":"0x10035440","name":"istream::ipfx","matching":1.0,"recomp":"0x100357a0","library":true,"type":1},{"address":"0x100355a0","name":"ios::unlockbuf","matching":1.0,"recomp":"0x10034da0","library":true,"type":1},{"address":"0x100355b0","name":"istream::operator>>","matching":1.0,"recomp":"0x10035910","library":true,"type":1},{"address":"0x10035720","name":"istream::peek","matching":1.0,"recomp":"0x10035a80","library":true,"type":1},{"address":"0x10035770","name":"istream::putback","matching":1.0,"recomp":"0x10035ad0","library":true,"type":1},{"address":"0x10035800","name":"streambuf::sputbackc","matching":1.0,"recomp":"0x10035b60","library":true,"type":1},{"address":"0x10035860","name":"ios::good","matching":1.0,"recomp":"0x10035bc0","library":true,"type":1},{"address":"0x10035880","name":"istream::sync","matching":1.0,"recomp":"0x10035be0","library":true,"type":1},{"address":"0x10035910","name":"istream::eatwhite","matching":1.0,"recomp":"0x10035c70","library":true,"type":1},{"address":"0x100359c0","name":"istream_withassign::istream_withassign","matching":1.0,"recomp":"0x10035d20","library":true,"type":1},{"address":"0x10035a50","name":"istream::`vector deleting destructor'","matching":1.0,"recomp":"0x10035420","library":true,"type":1},{"address":"0x10035a90","name":"istream::`vbase destructor'","matching":1.0,"recomp":"0x10035460","library":true,"type":1},{"address":"0x10035ac0","name":"istream_withassign::istream_withassign","matching":1.0,"recomp":"0x10035e20","library":true,"type":1},{"address":"0x10035b50","name":"istream_withassign::~istream_withassign","matching":1.0,"recomp":"0x10035eb0","library":true,"type":1},{"address":"0x10035b80","name":"filebuf::attach","matching":1.0,"recomp":"0x10035ee0","library":true,"type":1},{"address":"0x10035c30","name":"filebuf::open","matching":1.0,"recomp":"0x10035f90","library":true,"type":1},{"address":"0x10035e90","name":"filebuf::setmode","matching":1.0,"recomp":"0x100361f0","library":true,"type":1},{"address":"0x10035f10","name":"streambuf::streambuf","matching":1.0,"recomp":"0x10036270","library":true,"type":1},{"address":"0x10035fb0","name":"streambuf::`scalar deleting destructor'","matching":1.0,"recomp":"0x10036310","library":true,"type":1},{"address":"0x10035fe0","name":"streambuf::streambuf","matching":1.0,"recomp":"0x10036340","library":true,"type":1},{"address":"0x100360b0","name":"streambuf::~streambuf","matching":1.0,"recomp":"0x10036410","library":true,"type":1},{"address":"0x10036110","name":"streambuf::setbuf","matching":1.0,"recomp":"0x10036470","library":true,"type":1},{"address":"0x10036170","name":"streambuf::xsputn","matching":1.0,"recomp":"0x100364d0","library":true,"type":1},{"address":"0x10036200","name":"streambuf::xsgetn","matching":1.0,"recomp":"0x10036560","library":true,"type":1},{"address":"0x10036340","name":"streambuf::sync","matching":1.0,"recomp":"0x100366a0","library":true,"type":1},{"address":"0x10036370","name":"streambuf::allocate","matching":1.0,"recomp":"0x100366d0","library":true,"type":1},{"address":"0x100363b0","name":"streambuf::doallocate","matching":1.0,"recomp":"0x10036710","library":true,"type":1},{"address":"0x10036410","name":"streambuf::setb","matching":1.0,"recomp":"0x10036770","library":true,"type":1},{"address":"0x10036470","name":"streambuf::seekoff","matching":1.0,"recomp":"0x100367d0","library":true,"type":1},{"address":"0x10036480","name":"streambuf::seekpos","matching":1.0,"recomp":"0x100367e0","library":true,"type":1},{"address":"0x100364b0","name":"streambuf::pbackfail","matching":1.0,"recomp":"0x10036810","library":true,"type":1},{"address":"0x10036580","name":"streambuf::snextc","matching":1.0,"recomp":"0x100368e0","library":true,"type":1},{"address":"0x10036630","name":"streambuf::sbumpc","matching":1.0,"recomp":"0x10036990","library":true,"type":1},{"address":"0x100366c0","name":"streambuf::stossc","matching":1.0,"recomp":"0x10036a20","library":true,"type":1},{"address":"0x10036740","name":"streambuf::sgetc","matching":1.0,"recomp":"0x10036aa0","library":true,"type":1},{"address":"0x10036790","name":"ostream::opfx","matching":1.0,"recomp":"0x10036af0","library":true,"type":1},{"address":"0x10036840","name":"ostream::osfx","matching":1.0,"recomp":"0x10036ba0","library":true,"type":1},{"address":"0x10036960","name":"ostream::operator\u003c\u003c","matching":1.0,"recomp":"0x10036cc0","library":true,"type":1},{"address":"0x100369a0","name":"ostream::flush","matching":1.0,"recomp":"0x10036d00","library":true,"type":1},{"address":"0x10036a50","name":"ostream::ostream","matching":1.0,"recomp":"0x10036db0","library":true,"type":1},{"address":"0x10036ab0","name":"ostream_withassign::`scalar deleting destructor'","matching":1.0,"recomp":"0x10037190","library":true,"type":1},{"address":"0x10036af0","name":"ostream_withassign::`vbase destructor'","matching":1.0,"recomp":"0x100371d0","library":true,"type":1},{"address":"0x10036b20","name":"ostream::ostream","matching":1.0,"recomp":"0x10036e80","library":true,"type":1},{"address":"0x10036bc0","name":"ostream::ostream","matching":1.0,"recomp":"0x10036f20","library":true,"type":1},{"address":"0x10036c70","name":"ostream::~ostream","matching":1.0,"recomp":"0x10036fd0","library":true,"type":1},{"address":"0x10036c90","name":"ostream::operator=","matching":1.0,"recomp":"0x10036ff0","library":true,"type":1},{"address":"0x10036da0","name":"ostream_withassign::ostream_withassign","matching":1.0,"recomp":"0x10037100","library":true,"type":1},{"address":"0x10036e30","name":"ostream::`scalar deleting destructor'","matching":1.0,"recomp":"0x10036e10","library":true,"type":1},{"address":"0x10036e70","name":"ostream::`vbase destructor'","matching":1.0,"recomp":"0x10036e50","library":true,"type":1},{"address":"0x10036ea0","name":"ostream_withassign::ostream_withassign","matching":1.0,"recomp":"0x10037200","library":true,"type":1},{"address":"0x10036f30","name":"ostream_withassign::~ostream_withassign","matching":1.0,"recomp":"0x10037290","library":true,"type":1},{"address":"0x10036f60","name":"ostream::writepad","matching":1.0,"recomp":"0x100372c0","library":true,"type":1},{"address":"0x100371c0","name":"streambuf::sputn","matching":1.0,"recomp":"0x10037520","library":true,"type":1},{"address":"0x100373c0","name":"type_info::~type_info","matching":1.0,"recomp":"0x10037720","library":true,"type":1},{"address":"0x10037400","name":"type_info::`scalar deleting destructor'","matching":1.0,"recomp":"0x10037760","library":true,"type":1},{"address":"0x10037430","name":"type_info::operator==","matching":1.0,"recomp":"0x10037790","library":true,"type":1},{"address":"0x10037460","name":"type_info::operator!=","matching":1.0,"recomp":"0x100377c0","library":true,"type":1},{"address":"0x10037490","name":"type_info::before","matching":1.0,"recomp":"0x100377f0","library":true,"type":1},{"address":"0x100374c0","name":"type_info::raw_name","matching":1.0,"recomp":"0x10037820","library":true,"type":1},{"address":"0x100374e0","name":"type_info::type_info","matching":1.0,"recomp":"0x10037840","library":true,"type":1},{"address":"0x10037500","name":"type_info::operator=","matching":1.0,"recomp":"0x10037860","library":true,"type":1},{"address":"0x10037510","name":"operator new","matching":1.0,"recomp":"0x10037870","library":true,"type":1},{"address":"0x10037530","name":"isalpha","matching":1.0,"recomp":"0x10037890","library":true,"type":1},{"address":"0x10037580","name":"isupper","matching":1.0,"recomp":"0x100378e0","library":true,"type":1},{"address":"0x100375c0","name":"islower","matching":1.0,"recomp":"0x10037920","library":true,"type":1},{"address":"0x10037600","name":"isdigit","matching":1.0,"recomp":"0x10037960","library":true,"type":1},{"address":"0x10037640","name":"isxdigit","matching":1.0,"recomp":"0x100379a0","library":true,"type":1},{"address":"0x10037690","name":"isspace","matching":1.0,"recomp":"0x100379f0","library":true,"type":1},{"address":"0x100376d0","name":"ispunct","matching":1.0,"recomp":"0x10037a30","library":true,"type":1},{"address":"0x10037710","name":"isalnum","matching":1.0,"recomp":"0x10037a70","library":true,"type":1},{"address":"0x10037760","name":"isprint","matching":1.0,"recomp":"0x10037ac0","library":true,"type":1},{"address":"0x100377b0","name":"isgraph","matching":1.0,"recomp":"0x10037b10","library":true,"type":1},{"address":"0x10037800","name":"iscntrl","matching":1.0,"recomp":"0x10037b60","library":true,"type":1},{"address":"0x10037840","name":"__isascii","matching":1.0,"recomp":"0x10037ba0","library":true,"type":1},{"address":"0x10037850","name":"__toascii","matching":1.0,"recomp":"0x10037bb0","library":true,"type":1},{"address":"0x10037860","name":"__iscsymf","matching":1.0,"recomp":"0x10037bc0","library":true,"type":1},{"address":"0x100378c0","name":"__iscsym","matching":1.0,"recomp":"0x10037c20","library":true,"type":1},{"address":"0x10037920","name":"_purecall","matching":1.0,"recomp":"0x10037c80","library":true,"type":1},{"address":"0x10037930","name":"ios::unlock","matching":1.0,"recomp":"0x10004330","type":1},{"address":"0x10037c80","name":"Vec3_Normalize","matching":1.0,"recomp":"0x100046d0","type":1},{"address":"0x100380a0","name":"Terrain::freeCourseTextures","matching":1.0,"recomp":"0x10004780","type":1},{"address":"0x100381a0","name":"Terrain::InsertTileInDrawOrder","matching":1.0,"recomp":"0x1000a880","type":1},{"address":"0x10038900","name":"Terrain::RenderTileEdgeSkirt","matching":1.0,"recomp":"0x10007bf0","type":1}],"function_count":852}</script>
+    <script>
+'use strict';
+
+(() => {
+  const PAGE_SIZE = 200;
+
+  // The report rows, and the view's state.
+  const report = JSON.parse(document.getElementById('report').textContent);
+  const rows = report.data;
+  const view = {
+    query: '',
+    searchIn: 1, // 1 name or address, 2 any instruction, 3 differing instructions only
+    hidePerfect: false,
+    hideStub: false,
+    showRecomp: false,
+    sortCol: 'address',
+    sortDesc: false,
+    page: 0,
+    open: new Set(),
+    results: [],
+    pages: [],
+  };
+
+  const isStub = (r) => r.stub === true;
+  const isEffective = (r) => r.effective === true;
+
+  function percent(r) {
+    if (isStub(r)) return 'stub';
+    if (isEffective(r)) return '100.00%*';
+    return `${(r.matching * 100).toFixed(2)}%`;
+  }
+
+  // Matching sorts exact first, then effective matches, then by similarity, stubs last.
+  function rank(r) {
+    if (isStub(r)) return -1;
+    if (isEffective(r)) return 1.0;
+    if (r.matching === 1.0) return 1000;
+    return r.matching;
+  }
+
+  function diffCount(r) {
+    if (!Array.isArray(r.diff)) return '';
+    let n = 0;
+    for (const [, blocks] of r.diff) {
+      for (const b of blocks) {
+        if (!('both' in b)) n += 1;
+      }
+    }
+    if (n === 0) return '';
+    return n === 1 ? '1 diff' : `${n} diffs`;
+  }
+
+  function hunkLines(r, withContext) {
+    const out = [];
+    if (!Array.isArray(r.diff)) return out;
+    for (const [, blocks] of r.diff) {
+      for (const b of blocks) {
+        if (withContext && b.both) out.push(...b.both);
+        if (b.orig) out.push(...b.orig);
+        if (b.recomp) out.push(...b.recomp);
+      }
+    }
+    return out;
+  }
+
+  function keep(r) {
+    if (view.hidePerfect && (isEffective(r) || r.matching >= 1)) return false;
+    if (view.hideStub && isStub(r)) return false;
+    const q = view.query.toLowerCase().trim();
+    if (q === '') return true;
+    if (view.searchIn === 1) {
+      return r.address.includes(q) || r.name.toLowerCase().includes(q);
+    }
+    return hunkLines(r, view.searchIn === 2).some((l) => l[1].toLowerCase().trim().includes(q));
+  }
+
+  function compare(a, b) {
+    const x = view.sortCol === 'matching' ? rank(a) : a[view.sortCol];
+    const y = view.sortCol === 'matching' ? rank(b) : b[view.sortCol];
+    if (x > y) return view.sortDesc ? -1 : 1;
+    if (x < y) return view.sortDesc ? 1 : -1;
+    return 0;
+  }
+
+  function refresh() {
+    view.results = rows.filter(keep).sort(compare);
+    view.pages = [];
+    for (let i = 0; i < view.results.length; i += PAGE_SIZE) {
+      view.pages.push(view.results.slice(i, i + PAGE_SIZE));
+    }
+    view.page = Math.max(0, Math.min(view.page, view.pages.length - 1));
+  }
+
+  function el(tag, props = {}, ...children) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+      if (k === 'className') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else e.setAttribute(k, v);
+    }
+    e.append(...children);
+    return e;
+  }
+
+  function copyable(text) {
+    const s = el('span', { className: 'copy', text });
+    s.addEventListener('click', () => {
+      navigator.clipboard.writeText(text);
+      s.classList.add('copied');
+    });
+    s.addEventListener('mouseout', () => s.classList.remove('copied'));
+    return s;
+  }
+
+  function columns() {
+    const c = [['address', 'Address', 'addr']];
+    if (view.showRecomp) c.push(['recomp', 'Recomp', 'addr']);
+    c.push(['name', 'Name', ''], ['diffs', '', 'narrow'], ['matching', 'Matching', 'narrow']);
+    return c;
+  }
+
+  function header() {
+    const tr = el('tr');
+    for (const [key, title, cls] of columns()) {
+      const th = el('th', cls ? { className: cls } : {});
+      if (key !== 'diffs') {
+        const name = el('span', { text: title });
+        name.addEventListener('click', () => {
+          if (view.sortCol === key) view.sortDesc = !view.sortDesc;
+          else view.sortCol = key;
+          refresh();
+          draw();
+        });
+        const arrow = el('div');
+        if (key === view.sortCol) arrow.textContent = view.sortDesc ? '▼' : '▲';
+        th.append(el('div', {}, name, arrow));
+      }
+      tr.append(th);
+    }
+    return tr;
+  }
+
+  function addressDisplay(box) {
+    const field = el('fieldset', { className: 'addrs' }, el('legend', { text: 'Address display:' }));
+    const group = `show${Math.random().toString(36).slice(2)}`;
+    ['None', 'Original', 'Both'].forEach((label, v) => {
+      const id = `${group}-${v}`;
+      const radio = el('input', { type: 'radio', name: group, id, value: String(v) });
+      radio.checked = box.dataset.show === String(v);
+      radio.addEventListener('change', () => {
+        box.dataset.show = String(v);
+      });
+      field.append(radio, el('label', { for: id, text: label }));
+    });
+    return field;
+  }
+
+  function diffView(r) {
+    const box = el('div', { className: 'diff' });
+    box.dataset.show = '1';
+    box.append(addressDisplay(box));
+    const hunks = el('div');
+    for (const [slug, blocks] of r.diff) {
+      hunks.append(
+        el('div', {}, el('div', { className: 'minus', text: '---' }), el('div', { className: 'plus', text: '+++' }),
+          el('div', { className: 'at', text: slug })),
+      );
+      const body = el('tbody');
+      for (const b of blocks) {
+        for (const [a, text, ours] of b.both || []) {
+          body.append(el('tr', {}, el('th', { text: a }), el('th', { text: ours }), el('td', { text })));
+        }
+        for (const [a, text] of b.orig || []) {
+          body.append(el('tr', {}, el('th', { text: a }), el('th'), el('td', { className: 'minus', text: `-${text}` })));
+        }
+        for (const [a, text] of b.recomp || []) {
+          body.append(el('tr', {}, el('th'), el('th', { text: a }), el('td', { className: 'plus', text: `+${text}` })));
+        }
+      }
+      hunks.append(el('table', { className: 'hunk' }, body));
+    }
+    box.append(hunks);
+    return box;
+  }
+
+  function detailRow(r) {
+    const td = el('td', { colspan: String(columns().length) });
+    if (Array.isArray(r.diff) && r.diff.length > 0) {
+      td.append(diffView(r));
+    } else {
+      td.append(el('div', {
+        className: 'no-diff',
+        text: r.matching === 1.0 ? 'Identical function - no diff' : 'No diff available',
+      }));
+    }
+    const tr = el('tr', { className: 'detail' }, td);
+    tr.dataset.of = r.address;
+    return tr;
+  }
+
+  function functionRow(r) {
+    const tr = el('tr', { className: 'fn' });
+    tr.dataset.address = r.address;
+    tr.append(el('td', {}, copyable(r.address)));
+    if (view.showRecomp) tr.append(el('td', {}, copyable(r.recomp || '')));
+    const name = el('td', { className: 'name', text: r.name });
+    name.addEventListener('click', () => toggle(r, tr));
+    tr.append(name, el('td', { text: diffCount(r) }), el('td', { text: percent(r) }));
+    return tr;
+  }
+
+  // Alternate row shades over every row shown, an unfolded diff included.
+  function stripe() {
+    let n = 0;
+    for (const tr of document.querySelectorAll('#listing > tbody > tr')) {
+      n += 1;
+      tr.classList.toggle('odd', n % 2 === 1);
+      tr.classList.toggle('even', n % 2 === 0);
+    }
+  }
+
+  function toggle(r, tr) {
+    if (view.open.has(r.address)) {
+      view.open.delete(r.address);
+      const d = tr.nextElementSibling;
+      if (d && d.classList.contains('detail')) d.remove();
+    } else {
+      view.open.add(r.address);
+      tr.after(detailRow(r));
+    }
+    stripe();
+  }
+
+  function truncate(s) {
+    const cut = s.indexOf('::');
+    const head = cut === -1 ? s : s.slice(0, cut);
+    return head.length > 20 ? `${head.slice(0, 20)}...` : head;
+  }
+
+  function pageLabel(rowsOfPage) {
+    const first = rowsOfPage[0];
+    const last = rowsOfPage[rowsOfPage.length - 1];
+    const show = (r) => (view.sortCol === 'matching' ? percent(r) : String(r[view.sortCol]));
+    return `${view.sortCol}: ${truncate(show(first))} to ${truncate(show(last))}`;
+  }
+
+  function drawPager() {
+    const select = document.getElementById('page');
+    const count = Math.max(1, view.pages.length);
+    document.getElementById('pageOf').textContent = `Page ${view.page + 1} of ${count}`;
+    document.getElementById('count').textContent = String(view.results.length);
+    document.getElementById('prev').disabled = view.page === 0;
+    document.getElementById('next').disabled = view.page >= count - 1;
+    select.replaceChildren();
+    if (view.results.length === 0) {
+      select.disabled = true;
+      select.append(el('option', { text: '- no results -' }));
+      return;
+    }
+    select.disabled = false;
+    view.pages.forEach((p, i) => {
+      const o = el('option', { value: String(i), text: pageLabel(p) });
+      o.selected = i === view.page;
+      select.append(o);
+    });
+  }
+
+  function draw() {
+    const table = document.getElementById('listing');
+    table.tHead.replaceChildren(header());
+    const body = table.tBodies[0];
+    const shown = [];
+    for (const r of view.pages[view.page] || []) {
+      const tr = functionRow(r);
+      shown.push(tr);
+      if (view.open.has(r.address)) shown.push(detailRow(r));
+    }
+    body.replaceChildren(...shown);
+    stripe();
+    drawPager();
+    const q = document.getElementById('query');
+    q.placeholder = view.searchIn === 1 ? q.dataset.nameHint : q.dataset.asmHint;
+  }
+
+  function wire() {
+    document.title = `smsg: ${report.file}`;
+    document.getElementById('query').addEventListener('input', (e) => {
+      view.query = e.target.value;
+      refresh();
+      draw();
+    });
+    for (const radio of document.querySelectorAll('input[name=searchIn]')) {
+      radio.addEventListener('change', () => {
+        view.searchIn = parseInt(radio.value, 10);
+        refresh();
+        draw();
+      });
+    }
+    document.getElementById('hidePerfect').addEventListener('change', (e) => {
+      view.hidePerfect = e.target.checked;
+      refresh();
+      draw();
+    });
+    document.getElementById('hideStub').addEventListener('change', (e) => {
+      view.hideStub = e.target.checked;
+      refresh();
+      draw();
+    });
+    document.getElementById('showRecomp').addEventListener('change', (e) => {
+      view.showRecomp = e.target.checked;
+      if (!view.showRecomp && view.sortCol === 'recomp') {
+        view.sortCol = 'address';
+        refresh();
+      }
+      draw();
+    });
+    document.getElementById('prev').addEventListener('click', () => {
+      view.page = Math.max(0, view.page - 1);
+      draw();
+    });
+    document.getElementById('next').addEventListener('click', () => {
+      view.page = Math.min(view.pages.length - 1, view.page + 1);
+      draw();
+    });
+    document.getElementById('page').addEventListener('change', (e) => {
+      view.page = parseInt(e.target.value, 10);
+      draw();
+    });
+    refresh();
+    draw();
+  }
+
+  window.addEventListener('DOMContentLoaded', wire);
+})();
+
+    </script>
+  </head>
+  <body>
+    <div class="main">
+      <h1>Decompilation Status</h1>
+      <input id="query" type="search" placeholder="Search for offset or function name..." data-name-hint="Search for offset or function name..." data-asm-hint="Search for instruction...">
+      <div class="filters">
+        <fieldset class="choices">
+          <legend>Options:</legend>
+          <label><input type="checkbox" id="hidePerfect">Hide 100% match</label>
+          <label><input type="checkbox" id="hideStub">Hide stubs</label>
+          <label><input type="checkbox" id="showRecomp">Show recomp address</label>
+        </fieldset>
+        <fieldset class="choices">
+          <legend>Search filters on:</legend>
+          <span class="radios">
+            <label><input type="radio" name="searchIn" value="1" checked>Name/address</label>
+            <label><input type="radio" name="searchIn" value="2">Asm output</label>
+            <label><input type="radio" name="searchIn" value="3">Asm diffs only</label>
+          </span>
+        </fieldset>
+      </div>
+      <div class="filters">
+        <p class="rowcount">Results: <span id="count"></span></p>
+        <fieldset class="pager">
+          <legend id="pageOf"></legend>
+          <button id="prev">prev</button>
+          <select id="page"></select>
+          <button id="next">next</button>
+        </fieldset>
+      </div>
+      <table id="listing">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </body>
+</html>

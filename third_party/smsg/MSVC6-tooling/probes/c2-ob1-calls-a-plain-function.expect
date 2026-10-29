@@ -1,0 +1,4 @@
+rule c2: /O2 implies /Ob1, which expands only functions marked inline: a plain function is called
+cl /O2
+asm ?f@@YAHH@Z
+  call ?g@@YAHH@Z

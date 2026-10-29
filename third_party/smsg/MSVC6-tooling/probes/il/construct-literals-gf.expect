@@ -1,0 +1,7 @@
+rule c1xx: under /GF (also /Gf, and /O1 /O2, which imply /Gf) a literal is a gl record named for its bytes (`??_C@_03...@`, flags 0x400) and a literal equal to an earlier one reuses its symbol and costs no id.
+cl /GF
+il
+  *#db  gl literal    "??_C@_03MPFC@abc?$AA@" level 0 [?l00@@YAHH@Z]*
+  *#dc     formal     "a" level 1 [?l01@@YAHH@Z]*
+  *#de     label      "" level 1 [?l01@@YAHH@Z]*
+  *#e2  gl literal    "??_C@_03JPMG@xyz?$AA@" level 0 [?l02@@YAHH@Z]*

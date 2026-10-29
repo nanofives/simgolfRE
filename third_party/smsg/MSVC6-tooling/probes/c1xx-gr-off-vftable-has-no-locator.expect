@@ -1,0 +1,5 @@
+rule c1xx: without /GR the vftable starts at its first virtual and no RTTI record is written (contrast)
+cl /O2
+data
+  ??_7B@@6B@ DD FLAT:?v@B@@UAEHXZ
+  !*??_R*

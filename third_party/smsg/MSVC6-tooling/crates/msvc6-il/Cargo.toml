@@ -1,0 +1,31 @@
+[package]
+name = "msvc6-il"
+description = "The intermediate files Visual C++ 6.0's front ends hand C2 (gl, sy, ex, in, and a pch's streams), read record by record with the operand grammar taken from the user's own C2.DLL at run time; C1XX's entity ids and each definition's span, and the inline plan: which call sites C2's inliner expands under its static budget"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+msvc-demangler.workspace = true
+msvc6-base.workspace = true
+msvc6-image.workspace = true
+serde.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-diff.workspace = true
+msvc6-fixture.workspace = true
+msvc6-project.workspace = true
+msvc6-toolchain.workspace = true
+
+[lints]
+workspace = true
+
+[[test]]
+name = "vc6"
+path = "tests/vc6.rs"
+harness = false

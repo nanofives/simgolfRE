@@ -1,0 +1,16 @@
+rule link: the same link on wine's builtin msvcrt keeps the pull order, another IAT: a link scored under the builtin CRT measures the host (contrast)
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+link-crt builtin
+imports=
+  KERNEL32.dll GetTickCount
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetCurrentProcess
+  KERNEL32.dll GetCurrentThread
+  KERNEL32.dll GetACP
+  KERNEL32.dll GetOEMCP
+  KERNEL32.dll GetThreadLocale

@@ -1,0 +1,11 @@
+rule c1xx: if / else on a comparison.
+cl
+il
+  *03 label    #dc "" level 3 role=0x1e refs=1*
+  *03 label    #db "" level 3 role=0x1e refs=1*
+  *; brfalse Ldb (cmp.lt(load.i32(a), load.i32(b)))*
+  *; discard(asg.i32(r, 1))*
+  *; goto Ldc*
+  *; label Ldb*
+  *; discard(asg.i32(r, 2))*
+  *; label Ldc*

@@ -1,0 +1,29 @@
+rule c1xx: a function with two locals.
+cl
+il
+  *next-id #dc*
+  *0e fdef     #d7 "?two_locals@@YAHHH@Z"*
+  *03 label    #d9 "" level 1 role=0x1f refs=1*
+  *0d block    level 1*
+  *01 var      #d6 "b" level 1 b30=0 type=int (0x1) skip=0 storage=3*
+  *01 var      #d5 "a" level 1 b30=0 type=int (0x1) skip=0 storage=3*
+  *0d block    level 2*
+  *01 var      #da "x" level 2 bucket 8 b30=0 type=int (0x1) skip=0 storage=1*
+  *01 var      #db "y" level 2 bucket 9 b30=0 type=int (0x1) skip=0 storage=1*
+  *06 end*
+  *; entry ?two_locals@@YAHHH@Z(b, a)*
+  *26    sym #da:x*
+  *26    sym #d5:a*
+  *30    load i32*
+  *33    const i32 const 1*
+  *02    add*
+  *32    asg i32*
+  *; discard(asg.i32(x, add(load.i32(a), 1)))*
+  *; discard(asg.i32(y, mul(load.i32(b), 2)))*
+  *; ret.i32(add(load.i32(x), load.i32(y)))*
+  *; goto Ld9*
+  *; label Ld9*
+  *; exit*
+  *54    endscope 0*
+  *first refs: ?two_locals@@YAHHH@Z b a x y*
+  *4d    eof*

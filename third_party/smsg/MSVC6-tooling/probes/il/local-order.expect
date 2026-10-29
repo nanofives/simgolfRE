@@ -1,0 +1,28 @@
+rule c1xx: the order of a block's locals in the sy list, which is the order C2 reads (and frames) them.
+cl
+il
+  *01 var      #d9 "a" level 2*
+  *01 var      #da "b" level 2*
+  *01 var      #e0 "h" level 2*
+  *01 var      #eb "a" level 2*
+  *01 var      #ea "b" level 2*
+  *01 var      #e4 "h" level 2*
+  *01 var      #f2 "value" level 2*
+  *01 var      #f3 "width" level 2*
+  *01 var      #ef "count" level 2*
+  *01 var      #f0 "total" level 2*
+  *01 var      #f1 "index" level 2*
+  *01 var      #f4 "height" level 2*
+listing
+  *_a$ = -4*
+  *_h$ = -32*
+  *?fwd@@YAHXZ PROC NEAR*
+  *_h$ = -32*
+  *_a$ = -4*
+  *?rev@@YAHXZ PROC NEAR*
+  *_count$ = -12*
+  *_total$ = -16*
+  *_index$ = -20*
+  *_value$ = -4*
+  *_width$ = -8*
+  *_height$ = -24*

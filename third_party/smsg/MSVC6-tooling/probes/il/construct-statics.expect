@@ -1,0 +1,15 @@
+rule c1xx: a local static is two ids, made where it is declared in the body: its declarator (a gap) and then the gl record that is the object (`?s@?1??f@@...@4HA`, b30 0x24).
+cl
+il
+  *4   0x10   16  ?s00@@YAHH@Z                                 fdef 1, formal 1, label 1, srcfile 1*
+  *5   0x10   16  ?s01@@YAHH@Z                                 fdef 1, formal 1, label 1, var static 1, gap 1*
+  *5   0x10   16  ?s02@@YAHH@Z                                 fdef 1, formal 1, label 1, var static 1, gap 1*
+  *8   0x24   36  ?s03@@YAHH@Z                                 fdef 1, formal 1, label 2, var static 2, gap 2*
+  *12   0x3b   59  ?s04@@YAHH@Z                                 fdef 1, formal 1, label 3, var static 4, gap 3*
+  *3   0x10   16  ?s05@@YAHH@Z                                 fdef 1, formal 1, label 1*
+  *#e7     label      "" level 1 [?s03@@YAHH@Z]*
+  *#e8  -*
+  *#e9  gl var static "?s@?1??s03@@YAHH@Z@4HA" level 0 [?s03@@YAHH@Z]*
+  *#ea  -*
+  *#eb  gl var static "?$S1@?1??s03@@YAHH@Z@4EA" level 0 [?s03@@YAHH@Z]*
+  *#ec     label      "" level 2 [?s03@@YAHH@Z]*

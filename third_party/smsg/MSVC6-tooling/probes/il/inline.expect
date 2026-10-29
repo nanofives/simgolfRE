@@ -1,0 +1,9 @@
+rule c1xx: an inline function and two definitions: which order the bodies are written in.
+cl /O2
+il
+  *0e fdef     #d6 "?twice@@YAHH@Z" b30=0 type=int (0x1) fclass=5 (+0x36 0x50) size=4 flags=0x20 cvtype=0 ex=0x3f4 sy=0x0 s6d=0x12 fflags=0xc8*
+  *0e fdef     #dc "?first@@YAHH@Z"*
+  *0e fdef     #da "?second@@YAHH@Z"*
+  *-- function #d6:?twice@@YAHH@Z at 0x3f4*
+  *-- function #dc:?first@@YAHH@Z at 0x439*
+  *-- function #da:?second@@YAHH@Z at 0x491*

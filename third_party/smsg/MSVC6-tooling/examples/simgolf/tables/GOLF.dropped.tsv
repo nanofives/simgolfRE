@@ -1,0 +1,281 @@
+name	why
+??0?$ClassList@UPalStruct@@@@QAE@XZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+??0?$ClassList@USpriteStruct@@@@QAE@XZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+??0?$ClassList@UStringStruct@@@@QAE@XZ	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+??0Ambience@@QAE@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??0CBTopBar@@QAE@XZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??0ComboBox@@QAE@XZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??0Filemap@@QAE@PBD@Z	filemap.cpp (jackal.lib, jgld.dll's text): the one-argument opening constructor (jgld 0x100027b0) is called by no image body, so /OPT:REF removed it
+??0Filemap@@QAE@PBDH@Z	filemap.cpp (jackal.lib, jgld.dll's text): the opening constructor (jgld 0x10002730) is called by no image body, so /OPT:REF removed it
+??0Midi@@QAE@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??0MpegStream@@QAE@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??0Text@@QAE@XZ	Text.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??1?$ClassList@USpriteStruct@@@@UAE@XZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+??1Ambience@@UAE@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??1CBListBox@@UAE@XZ	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox's inline destructor in its dead vftable's deleting destructor, so /OPT:REF removed it
+??1CBListPop@@UAE@XZ	ComboBox.cpp (jackal.lib): compiler-generated for CBListPop's inline destructor in its dead vftable's deleting destructor, so /OPT:REF removed it
+??1CBTopBar@@UAE@XZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??1ComboBox@@QAE@XZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??1Midi@@UAE@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??1MpegStream@@UAE@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??_D?$ClassList@UPalStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+??_D?$ClassList@USpriteStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+??_D?$ClassList@UStringStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+??_DCBListBox@@QAEXXZ	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (its virtual-base destructor), called by no image body, so /OPT:REF removed it
+??_ECBListBox@@$4PPPPPNII@CHE@AEPAXI@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+??_ECBListBox@@$4PPPPPPPM@A@AEPAXI@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+??_ECBListBox@@$4PPPPPPPM@FHI@AEPAXI@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+??_ECBListPop@@WCHE@AEPAXI@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListPop (an adjustor thunk), in its dead vftable only, so /OPT:REF removed it
+??_ECBTopBar@@WCHE@AEPAXI@Z	ComboBox.cpp (jackal.lib): CBTopBar's compiler-generated adjustor thunk, in its dead vftable only, so /OPT:REF removed it
+??_GAmbience@@UAEPAXI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??_GBuildingOrder@@UAEPAXI@Z	Plot.cpp: BuildingOrder's deleting destructor, named only by its vftable, which only the dropped ClassList<BuildingOrder>::add stores, so /OPT:REF removed it
+??_GCBListBox@@UAEPAXI@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (its deleting destructor), wanted only by its dead vftable, so /OPT:REF removed it
+??_GCBListPop@@UAEPAXI@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListPop (its deleting destructor), wanted only by its dead vftable, so /OPT:REF removed it
+??_GCBTopBar@@UAEPAXI@Z	ComboBox.cpp (jackal.lib): CBTopBar's compiler-generated deleting destructor, wanted only by CBTopBar's vftable, which only its dead constructor stores, so /OPT:REF removed it
+??_GFont@@UAEPAXI@Z	every TU that emits Font's vftable without a `new Font[n]' names `??_EFont' WEAK, defaulting to its own `??_G'; the link binds `??_E' to font.cpp's strong definition (0x83b30, `NewFonts'), so no `??_GFontSlot' is referenced and /OPT:REF removed it
+??_GMidi@@UAEPAXI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+??_GMpegStream@@UAEPAXI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?Advance@?$ClassList@UPalStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?Advance@?$ClassList@USpriteStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?Advance@?$ClassList@UStringStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+?Append@SndNodeList@@QAEHPAX@Z	SoundDevice.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?BeginTimerPeriod@@YAII@Z	Time.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?BlitRectToRect@AssetSurface@@QAEHPAU1@PAURect@@@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?BlitSurfaceRegion@AssetSurface@@QAEHPAU1@PAURect@@1@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?CaptureListDrag@@YAXPAUHWND__@@@Z	ListBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?Clear@?$ClassList@UPalStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?Clear@?$ClassList@USpriteStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?Clear@?$ClassList@UStringStruct@@@@QAEXXZ	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+?CloseDrawDib@@YAHPAX@Z	Video.cpp: called by no image body, so /OPT:REF removed it
+?ConnectionProvider@@YAPBU_GUID@@H@Z	Network.cpp: called by no image body, so /OPT:REF removed it
+?CopyEditBoxToClipboard@@YAHPAUEditBox@@@Z	EditBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?CopyLog@@YAXXZ	log.cpp: called by no image body, so /OPT:REF removed it
+?CopyText@@YAPADPBD@Z	ScreenText.cpp: called by no image body, so /OPT:REF removed it
+?CreateDirectPlay@@YAJPAU_GUID@@PAPAUIDirectPlay2@@@Z	Network.cpp: called by no image body, so /OPT:REF removed it
+?DrawMultilineTextCenteredWithFont@AssetSurface@@QAEXPAUFont@@PADHHH@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?DrawMultilineTextInRectWithFont@AssetSurface@@QAEXPAUFont@@PADPAURect@@@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?DrawTerrainSpline@@YAXHHHHHHHHH@Z	TerrainView.cpp: called by no image body, so /OPT:REF removed it
+?DrawTextCenteredInBoundsWithFont@AssetSurface@@QAEXPAUFont@@PBDHHHHH@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?DrawTextCenteredInRectWithFont@AssetSurface@@QAEXPAUFont@@PBDPAURect@@I@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?DrawTextRightAlignedInRectVCenteredWithFont@AssetSurface@@QAEXPAUFont@@PBDPAURect@@H@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?DrawTextRightAlignedInWidthWithFont@AssetSurface@@QAEXPAUFont@@PBDHHHH@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?DrawTextVerticallyCenteredWithFont@AssetSurface@@QAEXPAUFont@@PBDPAURect@@H@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?EchoString@@YAXPBD@Z	StringUtil.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?EndTimerPeriod@@YAXI@Z	Time.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?FixedFromDouble@@YAHN@Z	FixedMath.cpp: called by no image body, so /OPT:REF removed it
+?FreeWindowIcons@@YAXXZ	GameMain.cpp: called by no image body, so /OPT:REF removed it
+?GetCount@?$ClassList@UPalStruct@@@@QBEHXZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?GetCount@?$ClassList@USpriteStruct@@@@QBEHXZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?GetCount@?$ClassList@UStringStruct@@@@QBEHXZ	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+?GetDataFileSize@@YAJPBD@Z	DataPath.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?GetDirty@AssetSurface@@QAEDXZ	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?GetDisplayBitDepth@@YAHPAUHDC__@@@Z	display.cpp: called by no image body, so /OPT:REF removed it
+?GetEngineDialogFile@@YAPBDXZ	BasePop.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?GetLobbyHostAddress@@YAHPAD@Z	Network.cpp: called by no image body, so /OPT:REF removed it
+?GetMousePosition@@YAXPAUHWND__@@PAH1@Z	MouseCursor.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?GetPlotCrowding@@YAHHPAM@Z	Plot.cpp: called by no image body, so /OPT:REF removed it
+?GridFrameStyle@@YAPBHH@Z	EditGroup.cpp: called by no image body, so /OPT:REF removed it
+?InitOwnArenaAt@Dialog@@QAEHHHHHH@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?InitOwnArenaAt@Dialog@@QAEHPAURect@@H@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?IsFocused@EditBox@@QAEHXZ	EditBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?MatchProvider@@YGHPAU_GUID@@PADKKPAX@Z	Network.cpp: the DirectPlayEnumerate callback only ProviderInstalled (itself discarded) names, so /OPT:REF removed it
+?NetworkOpenSession@@YAHXZ	Network.cpp: called by no image body, so /OPT:REF removed it
+?NetworkReceiveThread@@YAXPAX@Z	Network.cpp: the _beginthread routine only NetworkOpenSession (itself discarded) names, so /OPT:REF removed it
+?OnMouseMoveInternal@CBTopBar@@UAEXHHH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?OpenDrawDib@@YAPAXXZ	Video.cpp: called by no image body, so /OPT:REF removed it
+?OrderBuilding@@YAHPAUBuildingOrderList@@HHHH@Z	Plot.cpp: called by no image body, so /OPT:REF removed it
+?PasteClipboardIntoEditBox@@YAHPAUEditBox@@@Z	EditBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?PresentEmployeeScreen@@YAXXZ	EmployeeRender.cpp: called by no image body, so /OPT:REF removed it
+?ProviderInstalled@@YAHH@Z	Network.cpp: called by no image body, so /OPT:REF removed it
+?ReadINetAddress@@YGHABU_GUID@@KPBXPAX@Z	Network.cpp: called by no image body, so /OPT:REF removed it
+?RenderBoundsRect@GraphicWin@@QAEHPAURect@@H@Z	GraphicWin.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?RenderMultilineTextCenteredInRect@AssetSurface@@QAEHPADPAURect@@@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?ReplaceColorInRect@AssetSurface@@QAEHHHHHKK@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?ResetStaffSprite@@YAXXZ	Employee.cpp: called by no image body, so /OPT:REF removed it
+?ResizeTerrainView@@YAXHH@Z	TerrainView.cpp: called by no image body, so /OPT:REF removed it
+?RestorePlot@@YAXHPAUHomePlot@@@Z	Plot.cpp: called by no image body, so /OPT:REF removed it
+?SetCursorImage@WidgetBase@@QAEHPAUSpriteObject@@HH@Z	window.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?SetDataDirs@@YAXPBD@Z	DataPath.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?SetDirty@AssetSurface@@QAEXD@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?SetFrameSprites@@YAXPAPAUSpriteObject@@@Z	GraphicWin.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?SetMousePosition@@YAXPAUHWND__@@HH@Z	MouseCursor.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?SetPos@?$ClassList@UPalStruct@@@@QAEHH@Z	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?SetPos@?$ClassList@USpriteStruct@@@@QAEHH@Z	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?SetPos@?$ClassList@UStringStruct@@@@QAEHH@Z	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+?SetRootWidget@@YAXPAUWidgetBase@@@Z	window.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?SetTargetAndStart@Time@@QAEXP6AXH@ZHHH@Z	Time.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?TerrainTileHit@@YAPAVTile@@HH@Z	TerrainView.cpp: called by no image body, so /OPT:REF removed it
+?ThemeFileExists@@YAHPBD0@Z	WorldMap.cpp: called by no image body, so /OPT:REF removed it
+?TransferCourseScript@@YAHPBDH@Z	SpriteAssets.cpp: called by no image body, so /OPT:REF removed it
+?TrimTextToWidth@@YAHPAUFont@@PADH@Z	font.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?Truncate@Filemap@@QAEXPAE@Z	filemap.cpp (jackal.lib, jgld.dll's text): called by no image body, so /OPT:REF removed it
+?WaitForAnyInput@@YAXXZ	InputWait.cpp: called by no image body, so /OPT:REF removed it
+?add@?$ClassList@UBuildingOrder@@@@QAEHH@Z	Plot.cpp: called only by the dropped OrderBuilding, so /OPT:REF removed it
+?add@?$ClassList@USpriteStruct@@@@QAEHH@Z	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?add@SoundList@@QAE?AW4SNDERR@@PAD@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?addItem@ComboBox@@QAEHPADH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?add_active_trackset@Midi@@UAE?AW4SNDERR@@PAVTrackSet@@@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?add_keymap@Midi@@UAE?AW4SNDERR@@PAVKeyMap@@@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?add_separator@PullDown@@QAEHH@Z	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?add_switch_range@Midi@@UAE?AW4SNDERR@@KK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?add_to_group@Wave_Device@@QAE?AW4SNDERR@@IPAVSound@@@Z	SoundDevice.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?attach@ListBox@@$4PPPPPPPM@3AEHPAUWidgetBase@@HHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?btoi@@YAHPBD@Z	MiscUtil.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?change_color@AssetSurface@@QAEHKK@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?clear@SoundList@@QAE?AW4SNDERR@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?clear_patch@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?clear_strings@Dialog@@QAEHXZ	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?close@ComboBox@@QAEXXZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?create@Filemap@@QAEPAXPBDKH@Z	filemap.cpp (jackal.lib, jgld.dll's text): called by no image body, so /OPT:REF removed it
+?current_entry@?$ClassList@UPalStruct@@@@QAEPAUPalStruct@@XZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?current_entry@?$ClassList@USpriteStruct@@@@QAEPAUSpriteStruct@@XZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?deleteDefaultButtonSprites@ComboBox@@SAXXZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?deleteDefaultTopBarSprites@ComboBox@@SAXXZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?delete_all@PullDown@@QAEXXZ	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?draw_16_shadows@SpriteObject@@QAEHPAUAssetSurface@@HHPAGHHHPAUPaletteBase@@@Z	sprite.cpp: called by no image body, so /OPT:REF removed it
+?draw_16_shadows@SpriteObject@@QAEHPAUAssetSurface@@HHPAGPAUPaletteBase@@@Z	sprite.cpp: called by no image body, so /OPT:REF removed it
+?draw_civ3_units@SpriteObject@@QAEHPAUAssetSurface@@0HHHHHPAGPAUPaletteBase@@@Z	sprite.cpp: called by no image body, so /OPT:REF removed it
+?draw_civ3_units@SpriteObject@@QAEHPAUAssetSurface@@0HHPAGPAUPaletteBase@@@Z	sprite.cpp: called by no image body, so /OPT:REF removed it
+?draw_multi_table_dest@SpriteObject@@QAEHPAUAssetSurface@@HHPAGHHHPAUPaletteBase@@@Z	sprite.cpp: called by no image body, so /OPT:REF removed it
+?draw_multi_table_dest@SpriteObject@@QAEHPAUAssetSurface@@HHPAGPAUPaletteBase@@@Z	sprite.cpp: called by no image body, so /OPT:REF removed it
+?filebox_draw@FileWin@@SAXPAUGraphicWin@@HHHHH@Z	filewin.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?filefind_set_alternate@@YAXPBD@Z	DataPath.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?fill_entry@?$ClassList@UPalStruct@@@@QAEHPAULinkListEntry@@@Z	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?fill_entry@?$ClassList@USpriteStruct@@@@QAEHPAULinkListEntry@@@Z	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?fill_entry@?$ClassList@UStringStruct@@@@QAEHPAULinkListEntry@@@Z	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member, and this one is called out of line by no image body, so /OPT:REF removed it
+?fill_entry@BuildingOrderList@@UAEHPAUBuildingOrder@@@Z	Plot.cpp: the order queue's Fill override; BuildingOrderList is never constructed (no vftable names it), so /OPT:REF removed it
+?fill_shadow_over_underlay@AssetSurface@@QAEHPAURect@@PAU1@HPAG@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?find_entry@ListBox@@QAEHPBD@Z	ListBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get@Strings@@QAEPADPAD@Z	strings.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_attrib@Midi@@UAEKXZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_control_target@Midi@@UAEPAXHH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_control_track@Midi@@UAEKXZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_frame@Midi@@UAEIXZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_game_hwnd@Midi@@UAEPAUHWND__@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_key@Midi@@UAEHXZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_ntracks@Midi@@UAEKXZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_selected@PullDown@@QAEHXZ	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_time@Midi@@UAEKK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_total_track_ticks@Midi@@UAEKK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_track_loop_state@Midi@@UAE_NI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_track_velocity_offset@Midi@@UAE?AW4SNDERR@@IPAH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?get_trackset@Midi@@UAEPAVTrackSet@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?hide@ComboBox@@QAEXXZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?hide@PullDown@@UAEXXZ	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?hideListBox@ComboBox@@QAEXXZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?hide_pos@PullDown@@QAEHH@Z	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?in_box@@YAHHHHHHH@Z	spot.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?init@Midi@@UAEXPBDK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?init@Scroll@@QAEHPAURect@@PAUWidgetBase@@HH@Z	scroll.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?is_trackset_playing@Midi@@UAE_NI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?item@CheckBoxCtl@@QAEHPBDHH@Z	checkbox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?item@Text@@QAEPADXZ	Text.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?item_binary@Text@@QAEHXZ	Text.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?item_number@Text@@QAEHXZ	Text.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?item_string@Text@@QAEPADXZ	Text.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?load@Ambience@@UAE?AW4SNDERR@@PBD@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?load@Ambience@@UAE?AW4SNDERR@@PBDI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?load@Midi@@UAE?AW4SNDERR@@PBD@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?load@Midi@@UAE?AW4SNDERR@@PBDI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?load@Midi@@UAE?AW4SNDERR@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?load_patch@Midi@@UAE?AW4SNDERR@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?log_set_state@@YAXH@Z	log.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?map_patch@Midi@@UAE?AW4SNDERR@@PADK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?map_patch@Midi@@UAE?AW4SNDERR@@PADKK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?muteGroup@Wave_Device@@QAE?AW4SNDERR@@I@Z	SoundDevice.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?mute_track@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?next_entry@?$ClassList@UPalStruct@@@@QAEPAUPalStruct@@XZ	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (its ICF twin, where it has one, is called only on Item lists), so no image body references it and /OPT:REF removed it
+?next_entry@?$ClassList@USpriteStruct@@@@QAEPAUSpriteStruct@@XZ	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; this one is not in Plot.obj's block 0x1c30..0x2930 under any address (no SpriteBox body calls 0x1d10/0x2130/0x2160 out of line, and ~ClassList<SpriteStruct> has no copy there), so /OPT:REF removed it
+?onLinkClicked@ComboBox@@UAEXH@Z	ComboBox.cpp (jackal.lib): ComboBox's empty virtual, slot 1 of its dead vftable, so /OPT:REF removed it
+?onSelect@ComboBox@@UAEXXZ	ComboBox.cpp (jackal.lib): ComboBox's empty virtual, slot 2 of its dead vftable, so /OPT:REF removed it
+?on_button_clicked@CBTopBar@@UAEXH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_dialog_focus@ListBox@@$4PPPPPPPM@3AEXH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_key_down@ListBox@@$4PPPPPPPM@3AEHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_left_click@CBListBox@@$4PPPPPPPM@A@AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_left_click@CBListBox@@UAEXHH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_left_click@CBListPop@@UAEXHH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_left_double_click@CBListBox@@$4PPPPPPPM@A@AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_left_double_click@CBListBox@@UAEXHH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_left_down@ListBox@@$4PPPPPPPM@3AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_mouse_leave@CBListPop@@UAEXHH@Z	ComboBox.cpp (jackal.lib): CBListPop's empty override, in its dead vftable only, so /OPT:REF removed it
+?on_mouse_leave@ListBox@@$4PPPPPPPM@3AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_mouse_move@CBListBox@@$4PPPPPPPM@A@AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_mouse_move@CBListBox@@UAEXHH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_mouse_move@CBListPop@@UAEXHH@Z	ComboBox.cpp (jackal.lib): CBListPop's empty override, in its dead vftable only, so /OPT:REF removed it
+?on_mouse_wheel@ListBox@@$4PPPPPPPM@3AEXHHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_redraw@ListBox@@$4PPPPPPPM@3AEXXZ	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_redraw@ListBox@@$4PPPPPPPM@FHM@AEXXZ	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_right_double_click@ListBox@@$4PPPPPPPM@3AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_right_down@ListBox@@$4PPPPPPPM@3AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_right_down@PullDown@@UAEXHH@Z	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_right_up@PullDown@@UAEXHH@Z	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?on_scroll_create@ListBox@@$4PPPPPPPM@3AEHXZ	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_scroll_delete@ListBox@@$4PPPPPPPM@3AEHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_scrolled@ListBox@@$4PPPPPPPM@3AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?on_scrolling@ListBox@@$4PPPPPPPM@3AEXHH@Z	ComboBox.cpp (jackal.lib): compiler-generated for CBListBox (a vtordisp thunk), in its dead vftable only, so /OPT:REF removed it
+?open@Filemap@@QAEPAXPBDH@Z	filemap.cpp (jackal.lib, jgld.dll's text): called by no image body (only the two discarded constructors call it), so /OPT:REF removed it
+?open@Video@@QAEHPAD@Z	Video.cpp: called by no image body (nothing sets m_mmio or counts a player), so /OPT:REF removed it
+?play@Midi@@UAE?AW4SNDERR@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?play_trackset@Midi@@UAE?AW4SNDERR@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?prepare_sprites@FileWin@@SAHXZ	filewin.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?quick_root@@YAHH@Z	MiscUtil.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?read_check@BasePop@@QAEHXZ	BasePop.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?redraw_nc_buffer@WidgetBase@@QAEPAUAssetSurface@@H@Z	window.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?remove@?$ClassList@UPalStruct@@@@QAEXH@Z	Plot.cpp: `template struct ClassList<PalStruct>;' emits every member; only the peer list removes by key, so no image body calls this one and /OPT:REF removed it
+?remove@?$ClassList@USpriteStruct@@@@QAEXH@Z	Plot.cpp: `template struct ClassList<SpriteStruct>;' emits every member; only the peer list removes by key, so no image body calls this one and /OPT:REF removed it
+?remove@?$ClassList@UStringStruct@@@@QAEXH@Z	Plot.cpp: `template struct ClassList<StringStruct>;' emits every member; only the peer list removes by key, so no image body calls this one and /OPT:REF removed it
+?remove_active_trackset@Midi@@UAE?AW4SNDERR@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?reset@Midi@@UAE?AW4SNDERR@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?scaleVolumeToGroup@SoundList@@QAEXH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?setDefaultButtonSprites@ComboBox@@SAXPAPAUSpriteObject@@@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?setDefaultTopBarSprites@ComboBox@@SAXPAPAUSpriteObject@@@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?setListOverlap@ComboBox@@QAEXPAUWidgetBase@@@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?setSelectedID@ComboBox@@QAEXH@Z	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_active_range_hi@Midi@@UAE?AW4SNDERR@@II@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_active_range_lo@Midi@@UAE?AW4SNDERR@@II@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_active_tracks@Midi@@UAE?AW4SNDERR@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_active_tracks@Midi@@UAE?AW4SNDERR@@KK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_attrib@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_base_path@Midi@@UAEXPBD@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_bottom_border_thickness@WidgetBase@@QAEXH@Z	window.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_control@Midi@@UAE?AW4SNDERR@@PAXHH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_def_dialog_font@Dialog@@SAHPAUFont@@00@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_def_dialog_text_color@Dialog@@SAXHHHHH@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_def_external_window@BasePop@@SAXPAUWidgetBase@@HHHH@Z	BasePop.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_def_file@BasePop@@SAHPBD@Z	BasePop.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_dialog_text_color2@Dialog@@QAEXHHHH@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_dialog_text_color3@Dialog@@QAEXHHHH@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_dialog_text_color@Dialog@@QAEXHHHH@Z	Dialog.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_fname@Midi@@QAE?AW4SNDERR@@PBD@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_frame@Midi@@UAEXI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_frame_delay@Midi@@QAEXI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_load_type@Midi@@QAE?AW4SNDERR@@_N@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_name@BaseButton@@QAEHPBD@Z	BaseButton.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_nswitch_threads@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_patch@Midi@@UAE?AW4SNDERR@@II@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_play_type@Midi@@UAEXI@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_state_flag@CheckBoxCtl@@QAEXH@Z	checkbox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_switch_type@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_tempo@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_track@Midi@@UAE?AW4SNDERR@@PAEK@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_track_loop_state@Midi@@UAE?AW4SNDERR@@I_N@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_track_velocity_offset@Midi@@UAE?AW4SNDERR@@IH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?set_volume@Midi@@UAEXH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?showListBox@ComboBox@@UAEXXZ	ComboBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?show_pos@PullDown@@QAEHH@Z	PullDown.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?soft_update@GraphicWin@@QAEXPAURect@@@Z	GraphicWin.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?sprite@SpriteBox@@QAEHPAUSpriteObject@@PBDH@Z	SpriteBox.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?stoi@@YAHPBD@Z	MiscUtil.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?stop_trackset@Midi@@UAE?AW4SNDERR@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?string@Text@@QAEPADXZ	Text.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?switch_state@Midi@@UAEX_N@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?unMuteGroup@Wave_Device@@QAE?AW4SNDERR@@I@Z	SoundDevice.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?unload@Ambience@@UAE?AW4SNDERR@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?unload@Midi@@UAE?AW4SNDERR@@XZ	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?unload_patch@Midi@@UAE?AW4SNDERR@@I@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?unmute_track@Midi@@UAE?AW4SNDERR@@K@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?update_bubble_text@WidgetBase@@SAXXZ	window.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?wrap_right@AssetSurface@@QAEHPADHHH@Z	buffer.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?write_check@BasePop@@QAEXH@Z	BasePop.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?xpose_trackset@Midi@@UAE?AW4SNDERR@@IH@Z	sound.cpp (jackal.lib): called by no image body, so /OPT:REF removed it
+?xtoi@@YAHPBD@Z	MiscUtil.cpp (jackal.lib): called by no image body, so /OPT:REF removed it

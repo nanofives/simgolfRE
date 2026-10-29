@@ -1,0 +1,23 @@
+rule c1xx: a string literal is a gvar record (b30=0x25, elem 1) in the sy list of the function, at the level of its block (not gl), with an id of its own, and the id is made when the statement is WRITTEN to the IL, not when it is parsed: il_emit_expression_tree (c1xx!0x10428ea5) meets the literal node and expr_string_literal makes its symbol (the counter store c1xx!0x1044115f in func_new_compiler_generated, under expr_string_literal c1xx!0x10440d7d, return 0x10440e07).
+cl
+il
+  *02 gvar     #df "" level 2 bucket 0 b30=0x25*
+  *02 gvar     #e0 "" level 2 bucket 0 b30=0x25*
+  *03 label    #de "" level 1 role=0x1f*
+  *02 gvar     #e5 "" level 3 bucket 0 b30=0x25*
+  *03 label    #e4 "" level 3 role=0x1e*
+  *03 label    #e3 "" level 1 role=0x1f*
+  *#d8  gl fdef       "?l00@@YAHH@Z"*
+  *#da     label      "" level 1 [?l00@@YAHH@Z]*
+  *#db     literal    "" level 2 [?l00@@YAHH@Z]*
+  *#df     literal    "" level 2 [?l01@@YAHH@Z]*
+  *#e0     literal    "" level 2 [?l01@@YAHH@Z]*
+  *#e4     label      "" level 3 [?l02@@YAHH@Z]*
+  *#e5     literal    "" level 3 [?l02@@YAHH@Z]*
+  *#e9     local      "x" level 2 [?l03@@YAHH@Z]*
+  *#ea     literal    "" level 2 [?l03@@YAHH@Z]*
+  *#eb     local      "y" level 2 [?l03@@YAHH@Z]*
+  *#ef  -*
+  *#f0     label      "" level 3 [?l04@@YAHH@Z]*
+  *#f1     label      "" level 3 [?l04@@YAHH@Z]*
+  *#f2     literal    "" level 3 [?l04@@YAHH@Z]*

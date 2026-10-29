@@ -1,0 +1,6 @@
+rule c2: a conditional branch whose target lies within a signed byte is emitted SHORT (2 bytes)
+cl /O2
+asm ?s@@YAXH@Z
+  je SHORT {L}
+  {L}:
+  ret 0

@@ -1,0 +1,11 @@
+rule link: eight imports and the element after them are 9, past the cutoff: the partition swaps element 9/2 = 4, GetVersion, to the front and the tied run is done, so pull element 0 sits at 4
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+imports=
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetTickCount
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetCurrentProcess

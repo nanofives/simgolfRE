@@ -1,0 +1,7 @@
+rule c2: a switch takes a byte index table in front of its jump table when it has under 256 cases and 11 + 4 * cases (+1 under /Ot) is below 3 * (span + 1): 7 cases over 0..13 give 40 < 42
+cl /O2
+asm ?seven14@@YAHH@Z
+  cmp eax, 13
+  xor ecx, ecx
+  mov cl, BYTE PTR {b}[eax]
+  jmp DWORD PTR {t}[ecx*4]

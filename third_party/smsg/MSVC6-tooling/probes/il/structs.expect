@@ -1,0 +1,8 @@
+rule c1xx: struct copy, struct return, a struct temporary.
+cl
+il
+  *04 func     #e1 "?make@@YA?AUP@@H@Z" b30=0 type=block (0x6) fclass=4 (+0x36 0x40) size=0xc*
+  *; discard(asg.b12(b, load.b12_const(a)))*
+  *9b    ctemp b12 #e8*
+  *; discard(asg.b12(b, load.b12_const(comma(asg.b12(ctemp.b12(#e8), call.b12(?make@@YA?AUP@@H@Z, arg.i32(load.i32(v)))), ctemp.b12(#e8)))))*
+  *9b    ctemp p32 #e9*

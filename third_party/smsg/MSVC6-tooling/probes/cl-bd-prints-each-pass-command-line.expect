@@ -1,0 +1,6 @@
+rule cl: /Bd prints the command line CL gives C1XX and C2, so every switch a pass sees can be read off it
+cl /O2 /Bd
+clout
+  cl-bd-prints-each-pass-command-line.cpp
+  `*c1xx.dll -il * -f cl-bd-prints-each-pass-command-line.cpp * -Gf -Og -Oi -Ot -Oy -Ob1 -Bd -Fo*
+  `*c2.dll -il * -f cl-bd-prints-each-pass-command-line.cpp * -ML * -Gy -Bd -Fo* -FAas -Fa cl-bd-prints-each-pass-command-line.asm*

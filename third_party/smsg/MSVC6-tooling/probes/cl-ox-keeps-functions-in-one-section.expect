@@ -1,0 +1,7 @@
+rule cl: /Ox implies no /Gy, so the functions share one .text section that LINK places whole (contrast)
+cl /Ox
+obj
+  section {t} .text code r-x *
+  !*comdat=*
+  symbol ?f@@YAHH@Z s{t}+0x0 external function
+  symbol ?g@@YAHH@Z s{t}+0x10 external function

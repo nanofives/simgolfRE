@@ -1,0 +1,8 @@
+rule c2: the same branch over more than 127 bytes is near (6 bytes): a branch-size difference follows from the code between, not from the branch (contrast)
+cl /O2
+asm ?f@@YAXH@Z
+  !je SHORT *
+  je {L}
+  mov DWORD PTR ?g@@3PAHA+68, 18
+  {L}:
+  ret 0

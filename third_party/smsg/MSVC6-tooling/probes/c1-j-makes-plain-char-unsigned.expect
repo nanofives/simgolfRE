@@ -1,0 +1,6 @@
+rule c1: under /J plain char is unsigned, so the same widening zero-extends: xor and a byte move (contrast)
+cl /O2 /J
+asm= _f
+  xor eax, eax
+  mov al, BYTE PTR _g_c
+  ret 0

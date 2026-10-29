@@ -1,0 +1,29 @@
+[package]
+name = "msvc6-match"
+description = "Matching an image against what it was built from: static-library members placed by their code bytes, the copy of a library an image links chosen by those placements, import libraries joined to the import directory, the archive census joined to the Rich header, data sections seated by their relocations, data runs and owners, a link's placement against its map, the TU partition, bodies located under the relocation mask, and another build of shared code paired function by function: PC siblings, Mac ports across compilers and instruction sets, the name map they give"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+cpp_demangle.workspace = true
+iced-x86 = { workspace = true, features = ["instr_info"] }
+memchr.workspace = true
+msvc6-base.workspace = true
+msvc6-diff.workspace = true
+msvc6-image.workspace = true
+msvc6-project.workspace = true
+msvc-demangler.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-fixture.workspace = true
+
+[lints]
+workspace = true

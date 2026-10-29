@@ -1,0 +1,12 @@
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+allow-indexing-slicing-in-tests = true
+disallowed-methods = [
+    { path = "std::fs::read_to_string", reason = "a project source is cp1252: msvc6_base::srcio::read; our own UTF-8 file: srcio::own_read" },
+    { path = "std::fs::write", reason = "a project source is cp1252: msvc6_base::srcio::write or write_bytes; our own file: srcio::own_write" },
+    { path = "std::string::String::from_utf8_lossy", reason = "a lossy source written back compiles U+FFFD: msvc6_base::srcio::decode; a tool's output: srcio::tool_text" },
+    { path = "std::string::String::from_utf8", reason = "a project source is cp1252: msvc6_base::srcio::decode" },
+    { path = "std::str::from_utf8", reason = "a project source is cp1252: msvc6_base::srcio::decode" },
+    { path = "std::io::Read::read_to_string", reason = "a project source is cp1252: msvc6_base::srcio::read; our own file: srcio::own_read" },
+]

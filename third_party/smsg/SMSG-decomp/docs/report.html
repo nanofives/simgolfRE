@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>simgolf — smsg verification report</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<style>:root {
+  color-scheme: light;
+  --bg: #f3f6f8;
+  --panel: #ffffff;
+  --ink: #17232d;
+  --muted: #586975;
+  --line: #d7e0e5;
+  --accent: #245f73;
+  --ok: #176b45;
+  --ok-soft: #e8f5ee;
+  --warn: #8a4b08;
+  --warn-soft: #fff5df;
+  --bad: #a12b2b;
+  --bad-soft: #fff0ef;
+  --shadow: 0 1px 2px rgb(22 35 45 / 8%);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+a { color: var(--accent); text-underline-offset: .16em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
+.skip-link { position: fixed; z-index: 20; top: .5rem; left: .5rem; padding: .6rem .8rem; background: var(--ink);
+  color: white; border-radius: .4rem; transform: translateY(-150%); }
+.skip-link:focus { transform: none; }
+.topbar { background: #163440; color: white; border-bottom: 1px solid #0f2933; }
+.topbar-inner, main, .footer-inner { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
+.topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 0; }
+.brand { display: flex; align-items: center; gap: .6rem; font-weight: 650; }
+.brand-mark { width: 2rem; height: 2rem; }
+.run-label { color: #c9dbe2; font-size: .9rem; }
+.run-label code { color: white; }
+.section-nav { background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+.section-nav ul { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; padding: 0; list-style: none; display: flex;
+  flex-wrap: wrap; gap: .2rem 1.2rem; }
+.section-nav a { display: inline-block; padding: .55rem 0; text-decoration: none; color: var(--muted); font-weight: 550; }
+.section-nav a:hover { color: var(--accent); }
+main { padding: 1.5rem 0 3rem; }
+.hero { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--bad);
+  border-radius: .6rem; padding: 1.4rem 1.6rem; box-shadow: var(--shadow); }
+.hero.ok { border-left-color: var(--ok); }
+.hero h1 { margin: .1rem 0 .4rem; font-size: 1.9rem; line-height: 1.2; }
+.eyebrow { margin: 0; color: var(--muted); font-size: .78rem; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+.lede { margin: 0 0 1rem; max-width: 70ch; color: var(--muted); }
+.claim-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.claim { display: inline-block; padding: .3rem .7rem; border-radius: 999px; font-size: .88rem; font-weight: 600;
+  border: 1px solid var(--line); }
+.claim.ok { background: var(--ok-soft); color: var(--ok); border-color: #b9dcc9; }
+.claim.bad { background: var(--bad-soft); color: var(--bad); border-color: #efc4c1; }
+.section { margin-top: 2rem; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; gap: 1rem; flex-wrap: wrap; }
+.section-heading p { margin: 0; color: var(--muted); }
+h2 { margin: .1rem 0 .8rem; font-size: 1.35rem; }
+h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: .6rem; padding: 1rem 1.1rem;
+  box-shadow: var(--shadow); }
+.card .status { font-weight: 650; margin: .25rem 0; }
+.card .status.ok { color: var(--ok); }
+.card .status.bad { color: var(--bad); }
+.pairs { display: grid; grid-template-columns: max-content 1fr; gap: .2rem .8rem; margin: .4rem 0 0; }
+.pairs dt { color: var(--muted); }
+.pairs dd { margin: 0; overflow-wrap: anywhere; }
+.explorer { margin-top: 1rem; }
+.ex-map { display: flex; height: 3.2rem; border: 1px solid var(--line); border-radius: .4rem; overflow: hidden; margin: .5rem 0 .8rem; }
+.ex-sec { position: relative; min-width: 2px; border-right: 1px solid var(--line); background: var(--ok-soft); }
+.ex-diff { position: absolute; left: 0; right: 0; bottom: 0; background: var(--bad); opacity: .55; }
+.ex-name { position: absolute; left: .25rem; top: .15rem; font-size: .75rem; color: var(--ink); white-space: nowrap; }
+.card .value { font-size: 1.5rem; font-weight: 650; }
+.card .token { margin: .3rem 0; overflow-wrap: anywhere; }
+.card .classes { margin: .3rem 0; color: var(--muted); font-size: .9rem; }
+.digest { color: var(--muted); }
+.explain { color: var(--muted); max-width: 90ch; }
+.explain strong { color: var(--ink); }
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.chart { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: .6rem; padding: 1rem 1.1rem;
+  box-shadow: var(--shadow); }
+.chart figcaption { margin-bottom: .7rem; }
+.chart figcaption span { display: block; color: var(--muted); font-size: .9rem; }
+.bar-row { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr auto; align-items: center; gap: .7rem;
+  margin: .45rem 0; }
+.bar-label { overflow: hidden; }
+.bar-label span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-label small { color: var(--muted); }
+.bar-track { height: .7rem; background: #e7edf0; border-radius: 999px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; width: var(--bar); background: var(--accent); border-radius: 999px; }
+.bar-value { font-variant-numeric: tabular-nums; }
+.steps { padding-left: 1.4rem; }
+.next-step { margin: .5rem 0; }
+.next-step strong { display: block; }
+.next-step span { color: var(--muted); }
+.advanced-intro { background: var(--panel); border: 1px solid var(--line); border-radius: .6rem; padding: 1rem 1.1rem; }
+.machine-link { font-weight: 650; }
+details.advanced { background: var(--panel); border: 1px solid var(--line); border-radius: .6rem; margin-top: .8rem; }
+details.advanced summary { cursor: pointer; padding: .8rem 1.1rem; display: flex; justify-content: space-between;
+  align-items: center; gap: 1rem; }
+details.advanced summary h3 { margin: 0; }
+.summary-meta { color: var(--muted); font-size: .9rem; }
+.detail-body { padding: 0 1.1rem 1rem; }
+.table-scroll { overflow-x: auto; margin: .6rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+caption { text-align: left; font-weight: 650; padding: .3rem 0; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+td { overflow-wrap: anywhere; }
+th { background: #eef3f5; }
+.footer { border-top: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: .88rem; }
+.footer-inner { padding: 1rem 0; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#overview">Skip to report</a>
+<header class="topbar"><div class="topbar-inner">
+  <div class="brand"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#0b1f17"/>
+  <ellipse cx="32" cy="50" rx="20" ry="6" fill="#2f8f5b"/>
+  <rect x="30" y="12" width="3" height="38" fill="#f0f4f2"/>
+  <path d="M33 12 L50 18 L33 24 Z" fill="#e8b23a"/>
+  <circle cx="40" cy="50" r="2.5" fill="#ffffff"/>
+</svg><span class="brand-label">
+    smsg · <code>simgolf</code>
+  </span></div>
+  <div class="run-label">Run <code>20261015T223114Z-da2700a3ec07</code></div>
+</div></header>
+<nav class="section-nav" aria-label="Report sections"><ul><li><a href="#overview">Overview</a></li><li><a href="#targets">Targets</a></li><li><a href="#debug-companions">Comparison files</a></li><li><a href="#binary-explorer">Inside the binary</a></li><li><a href="#costs">Costs</a></li><li><a href="#timing">Timing</a></li><li><a href="#next-steps">Next steps</a></li><li><a href="#advanced">Advanced</a></li></ul></nav>
+<main>
+<div id="report-summary">
+<section class="hero" id="overview" aria-labelledby="report-title">
+  <p class="eyebrow">Reproduction outcome</p>
+  <h1 id="report-title">0 of 4 exact</h1>
+  <p class="lede">0 of 4 targets match the original byte for byte under the declared policy. Each differing byte is counted per section and, where the tooling&#x27;s build of the same source produced the same file, classified by its cause.</p>
+  <div class="claim-row" aria-label="Result checks"><span class="claim bad" title="0 of 4 exact; each difference is listed under Target results">Byte identity: failed</span><span class="claim ok" title="vacuous: the build runs no source or binary transform, so there is nothing to check">Logic checks: passed</span><span class="claim ok" title="source tree da2700a3ec07, 36 files and 7 trees (6217 entries) as locked, every original as its record names">Built from declared inputs: passed</span><span class="claim ok" title="a fresh clone in a fresh prefix, every project rebuilt; build.bat exited 0">Built from scratch: passed</span></div>
+</section>
+
+<section class="section" id="targets" aria-labelledby="targets-title">
+  <div class="section-heading"><div><p class="eyebrow">What was rebuilt</p>
+    <h2 id="targets-title">Target results</h2></div>
+    <p>0 of 4 exact</p></div>
+  <div class="card-grid"><article class="card">
+  <p class="eyebrow"><code>golf</code></p>
+  <div class="status bad">654,916 bytes differ</div>
+  <p class="classes">Section by section: 2 linker-generated (exempt), 649,877 owed, 5,037 in quarantined ranges under compiled code</p>
+  <div class="value">932.0 KiB</div>
+  <p class="token"><code>golf/golf.exe/Release/golf.exe</code></p>
+  <code class="digest" title="025b01ac0554c5f4cd0c71211e5ccc955b6af48804e6c1f34ecc6dc4f290dcba">SHA-256 025b01ac0554…f290dcba</code>
+</article><article class="card">
+  <p class="eyebrow"><code>jgld</code></p>
+  <div class="status bad">234,502 bytes differ</div>
+  <p class="classes">Section by section: 181,330 ILINK layout or linker-generated (exempt), 0 owed; 1,155,114 B built against the original&#x27;s 1,273,898 B</p>
+  <div class="value">1.1 MiB</div>
+  <p class="token"><code>jgl/jgld.dll/Debug/jgld.dll</code></p>
+  <code class="digest" title="4c4d945e34e73ba7d9c161d1c0e9615ffdd3e4576f2e8c646dda113ff864b5b4">SHA-256 4c4d945e34e7…f864b5b4</code>
+</article><article class="card">
+  <p class="eyebrow"><code>sound</code></p>
+  <div class="status bad">5,502 bytes differ</div>
+  <p class="classes">Section by section: 5,502 ILINK layout or linker-generated (exempt), 0 owed</p>
+  <div class="value">448.0 KiB</div>
+  <p class="token"><code>sound/sound.dll/Release/sound.dll</code></p>
+  <code class="digest" title="19e5e846aa84c3adca776a6752cba24636e5b78ad4757e184cfcf4e3bfc713c0">SHA-256 19e5e846aa84…bfc713c0</code>
+</article><article class="card">
+  <p class="eyebrow"><code>terrain</code></p>
+  <div class="status bad">224,128 bytes differ</div>
+  <p class="classes">Section by section: 224,128 ILINK layout or linker-generated (exempt), 0 owed</p>
+  <div class="value">444.1 KiB</div>
+  <p class="token"><code>terrain/Terrain.dll/Debug/Terrain.dll</code></p>
+  <code class="digest" title="5084bb2407fb93026c722f764594c0c67e3cd9546f527f366f1ff71effa0b6e5">SHA-256 5084bb2407fb…ffa0b6e5</code>
+</article></div>
+</section>
+
+<section class="section" id="debug-companions" aria-labelledby="debug-companions-title">
+  <div class="section-heading"><div><p class="eyebrow">Files for comparison tools</p>
+    <h2 id="debug-companions-title">Comparison files</h2></div>
+    <p>2 matched pairs</p></div>
+  <p class="explain"><strong>The build's own symbols, beside the binary they describe.</strong>
+    For comparison and analysis only; not used to decide byte identity.</p>
+  <div class="card-grid">
+    <article class="card"><p class="eyebrow"><code>golf</code></p><h3>Executable only</h3><dl class="pairs"><dt>Executable</dt><dd><code>golf/golf.exe/Release/golf.exe</code></dd><dt>Debug symbols</dt><dd>none: the Release build writes no program database</dd></dl></article>
+    <article class="card"><p class="eyebrow"><code>jgld</code></p><h3>Matched executable + symbols</h3><dl class="pairs"><dt>Executable</dt><dd><code>jgl/jgld.dll/Debug/jgld.dll</code></dd><dt>Debug symbols</dt><dd><code>jgl/jgld.dll/Debug/jgld.pdb</code></dd></dl></article>
+    <article class="card"><p class="eyebrow"><code>sound</code></p><h3>Executable only</h3><dl class="pairs"><dt>Executable</dt><dd><code>sound/sound.dll/Release/sound.dll</code></dd><dt>Debug symbols</dt><dd>none: the Release build writes no program database</dd></dl></article>
+    <article class="card"><p class="eyebrow"><code>terrain</code></p><h3>Matched executable + symbols</h3><dl class="pairs"><dt>Executable</dt><dd><code>terrain/Terrain.dll/Debug/Terrain.dll</code></dd><dt>Debug symbols</dt><dd><code>terrain/Terrain.dll/Debug/Terrain.pdb</code></dd></dl></article></div>
+</section>
+
+<section class="section" id="binary-explorer" aria-labelledby="explorer-title">
+  <div class="section-heading"><div><p class="eyebrow">The build, made visible</p>
+    <h2 id="explorer-title">Inside the binary</h2></div>
+    <p>Find a change. See where it lands.</p></div>
+  <article class="card explorer"><p class="eyebrow"><code>golf</code> <code>golf.exe</code></p>
+    <div class="ex-map" role="img" aria-label="golf.exe sections"><span class="ex-sec" style="flex-basis: 80.33%" title=".text: 652,321 of 754,731 bytes differ"><span class="ex-diff" style="height: 86.4%"></span><span class="ex-name">.text</span></span><span class="ex-sec" style="flex-basis: 2.63%" title=".rdata: 2,499 of 24,728 bytes differ"><span class="ex-diff" style="height: 10.1%"></span><span class="ex-name">.rdata</span></span><span class="ex-sec" style="flex-basis: 16.57%" title=".data: 94 of 155,648 bytes differ"><span class="ex-diff" style="height: 0.1%"></span><span class="ex-name">.data</span></span><span class="ex-sec" style="flex-basis: 0.47%" title=".rsrc: 0 of 4,430 bytes differ"><span class="ex-diff" style="height: 0.0%"></span><span class="ex-name">.rsrc</span></span></div>
+<div class="table-scroll" role="region" aria-label="Changes made before the comparison" tabindex="0"><table><caption>Changes made before the comparison</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Bytes changed</th><th scope="col">What</th></tr></thead><tbody><tr><td>golf.image_metadata</td><td>Image metadata</td><td>8</td><td>coff_timestamp 0x73655965, export_timestamp 0x3ca4cfce</td></tr><tr><td>golf.reference_quarantine</td><td>Reference-byte quarantine</td><td>1,047</td><td>734 ranges, 1047 bytes copied from the original (declared 1047), 567 ranges blocked</td></tr></tbody></table></div>  </article>
+  <article class="card explorer"><p class="eyebrow"><code>jgld</code> <code>jgld.dll</code></p>
+    <div class="ex-map" role="img" aria-label="jgld.dll sections"><span class="ex-sec" style="flex-basis: 91.96%" title=".text: 170,946 of 1,160,368 bytes differ"><span class="ex-diff" style="height: 14.7%"></span><span class="ex-name">.text</span></span><span class="ex-sec" style="flex-basis: 1.55%" title=".rdata: 8,249 of 19,602 bytes differ"><span class="ex-diff" style="height: 42.1%"></span><span class="ex-name">.rdata</span></span><span class="ex-sec" style="flex-basis: 2.27%" title=".data: 613 of 28,672 bytes differ"><span class="ex-diff" style="height: 2.1%"></span><span class="ex-name">.data</span></span><span class="ex-sec" style="flex-basis: 0.37%" title=".idata: 574 of 4,691 bytes differ"><span class="ex-diff" style="height: 12.2%"></span><span class="ex-name">.idata</span></span><span class="ex-sec" style="flex-basis: 3.84%" title=".reloc: 733 of 48,475 bytes differ"><span class="ex-diff" style="height: 1.5%"></span><span class="ex-name">.reloc</span></span></div>
+<div class="table-scroll" role="region" aria-label="Changes made before the comparison" tabindex="0"><table><caption>Changes made before the comparison</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Bytes changed</th><th scope="col">What</th></tr></thead><tbody><tr><td>jgld.image_metadata</td><td>Image metadata</td><td>17</td><td>coff_timestamp 0x3c20f72a, debugdir_timestamp 0x3c20f5ab, codeview_timestamp 0x3c20f5ab, codeview_age 0x00000003, export_timestamp 0x3c20f5ab</td></tr></tbody></table></div>  </article>
+  <article class="card explorer"><p class="eyebrow"><code>sound</code> <code>sound.dll</code></p>
+    <div class="ex-map" role="img" aria-label="sound.dll sections"><span class="ex-sec" style="flex-basis: 82.27%" title=".text: 4,470 of 365,941 bytes differ"><span class="ex-diff" style="height: 1.2%"></span><span class="ex-name">.text</span></span><span class="ex-sec" style="flex-basis: 6.75%" title=".rdata: 1,017 of 30,036 bytes differ"><span class="ex-diff" style="height: 3.4%"></span><span class="ex-name">.rdata</span></span><span class="ex-sec" style="flex-basis: 6.45%" title=".data: 15 of 28,672 bytes differ"><span class="ex-diff" style="height: 0.1%"></span><span class="ex-name">.data</span></span><span class="ex-sec" style="flex-basis: 1.02%" title=".idata: 0 of 4,540 bytes differ"><span class="ex-diff" style="height: 0.0%"></span><span class="ex-name">.idata</span></span><span class="ex-sec" style="flex-basis: 3.51%" title=".reloc: 0 of 15,634 bytes differ"><span class="ex-diff" style="height: 0.0%"></span><span class="ex-name">.reloc</span></span></div>
+<div class="table-scroll" role="region" aria-label="Changes made before the comparison" tabindex="0"><table><caption>Changes made before the comparison</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Bytes changed</th><th scope="col">What</th></tr></thead><tbody><tr><td>sound.image_metadata</td><td>Image metadata</td><td>8</td><td>coff_timestamp 0x3c1f9e5e, export_timestamp 0x3c1f9e5e</td></tr></tbody></table></div>  </article>
+  <article class="card explorer"><p class="eyebrow"><code>terrain</code> <code>Terrain.dll</code></p>
+    <div class="ex-map" role="img" aria-label="Terrain.dll sections"><span class="ex-sec" style="flex-basis: 86.56%" title=".text: 213,894 of 381,408 bytes differ"><span class="ex-diff" style="height: 56.1%"></span><span class="ex-name">.text</span></span><span class="ex-sec" style="flex-basis: 3.63%" title=".rdata: 1,021 of 16,012 bytes differ"><span class="ex-diff" style="height: 6.4%"></span><span class="ex-name">.rdata</span></span><span class="ex-sec" style="flex-basis: 5.58%" title=".data: 185 of 24,576 bytes differ"><span class="ex-diff" style="height: 0.8%"></span><span class="ex-name">.data</span></span><span class="ex-sec" style="flex-basis: 1.03%" title=".idata: 0 of 4,544 bytes differ"><span class="ex-diff" style="height: 0.0%"></span><span class="ex-name">.idata</span></span><span class="ex-sec" style="flex-basis: 3.19%" title=".reloc: 9,137 of 14,067 bytes differ"><span class="ex-diff" style="height: 65.0%"></span><span class="ex-name">.reloc</span></span></div>
+<div class="table-scroll" role="region" aria-label="Changes made before the comparison" tabindex="0"><table><caption>Changes made before the comparison</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Bytes changed</th><th scope="col">What</th></tr></thead><tbody><tr><td>terrain.image_metadata</td><td>Image metadata</td><td>17</td><td>coff_timestamp 0x3c1a5d2d, debugdir_timestamp 0x3c18dc31, codeview_timestamp 0x3c18cb6a, codeview_age 0x00000017, export_timestamp 0x3c18dc31</td></tr></tbody></table></div>  </article>
+</section>
+
+<section class="section" id="costs" aria-labelledby="costs-title">
+  <div class="section-heading"><div><p class="eyebrow">Where intervention effort lives</p>
+    <h2 id="costs-title">Cost overview</h2></div>
+    <p><strong>10,020 relative points</strong></p></div>
+  <p class="explain"><strong>Cost ranks interventions; it is not elapsed time.</strong>
+    Higher scores mean a larger departure from an ordinary build. The build itself runs no intervention: every binary is plain source compiled and linked by Visual C++ 6.0. <code>Image metadata</code> is the link clock, set to its declared value before the comparison; <code>Reference-byte quarantine</code> identifies bytes of the original admitted into the comparison and is deliberately weighted heavily; its points do not represent a byte count.</p>
+  <div class="card-grid">
+    <div class="card"><h3>Project total</h3>
+      <div class="value">10,020</div>
+      <p>All intervention cost in this project</p></div>
+    <div class="card"><h3>Reference-byte quarantine</h3>
+      <div class="value">10,000</div>
+      <p>1 intervention</p></div>
+    <div class="card"><h3>Image metadata</h3>
+      <div class="value">20</div>
+      <p>4 interventions</p></div>
+  </div>
+  <div class="chart-grid">
+<figure class="chart" aria-labelledby="cost-class-chart-title">
+  <figcaption id="cost-class-chart-title"><strong>Cost by intervention class</strong>
+    <span>Where the relative intervention effort is concentrated.</span></figcaption>
+  <div class="bar-list"><div class="bar-row">
+  <div class="bar-label" title="Reference-byte quarantine">
+    <span>Reference-byte quarantine</span><small>1 intervention</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:100.00%"></span>
+  </div>
+  <strong class="bar-value">10,000</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="Image metadata">
+    <span>Image metadata</span><small>4 interventions</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:1.50%"></span>
+  </div>
+  <strong class="bar-value">20</strong>
+</div></div>
+</figure>
+<figure class="chart" aria-labelledby="cost-target-chart-title">
+  <figcaption id="cost-target-chart-title"><strong>Cost by target</strong>
+    <span>Which rebuilt output carries the intervention cost.</span></figcaption>
+  <div class="bar-list"><div class="bar-row">
+  <div class="bar-label" title="golf">
+    <span>golf</span><small>2 interventions</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:100.00%"></span>
+  </div>
+  <strong class="bar-value">10,005</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="jgld">
+    <span>jgld</span><small>1 intervention</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:1.50%"></span>
+  </div>
+  <strong class="bar-value">5</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="sound">
+    <span>sound</span><small>1 intervention</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:1.50%"></span>
+  </div>
+  <strong class="bar-value">5</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="terrain">
+    <span>terrain</span><small>1 intervention</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:1.50%"></span>
+  </div>
+  <strong class="bar-value">5</strong>
+</div></div>
+</figure></div>
+</section>
+<section class="section" id="timing" aria-labelledby="timing-title">
+  <div class="section-heading"><div><p class="eyebrow">How long the run took</p>
+    <h2 id="timing-title">Build and verification timing</h2></div>
+    <p>3m 57.0s recorded</p></div>
+<figure class="chart" aria-labelledby="timing-chart-title">
+  <figcaption id="timing-chart-title"><strong>Stage timing</strong>
+    <span>Time spent in each top-level verification stage.</span></figcaption>
+  <div class="bar-list"><div class="bar-row">
+  <div class="bar-label" title="Clone">
+    <span>Clone</span><small>Recorded wall time</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:6.73%"></span>
+  </div>
+  <strong class="bar-value">6.55 s</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="Toolchain lock">
+    <span>Toolchain lock</span><small>Recorded wall time</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:1.50%"></span>
+  </div>
+  <strong class="bar-value">0.66 s</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="Build">
+    <span>Build</span><small>Recorded wall time</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:92.40%"></span>
+  </div>
+  <strong class="bar-value">1m 29.9s</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="Cross-check">
+    <span>Cross-check</span><small>Recorded wall time</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:100.00%"></span>
+  </div>
+  <strong class="bar-value">1m 37.3s</strong>
+</div><div class="bar-row">
+  <div class="bar-label" title="Verify">
+    <span>Verify</span><small>Recorded wall time</small>
+  </div>
+  <div class="bar-track" aria-hidden="true">
+    <span class="bar-fill" style="--bar:43.75%"></span>
+  </div>
+  <strong class="bar-value">42.57 s</strong>
+</div></div>
+</figure>
+</section>
+<section class="section" id="next-steps" aria-labelledby="next-title">
+  <p class="eyebrow">What to do next</p><h2 id="next-title">Recommended next steps</h2>
+  <ol class="steps"><li class="next-step"><strong>Close golf.exe&#x27;s owed bytes</strong><span>649,877 of its 654,916 differing bytes are owed, all to its link order: every function matches; the rest are 2 linker-generated and 5,037 in quarantined ranges under compiled code</span></li><li class="next-step"><strong>Keep the incremental layouts classified</strong><span>jgld.dll, sound.dll, Terrain.dll differ only by incremental-link layout and linker-generated bytes, which no source reproduces; every one of their differing bytes is classified</span></li><li class="next-step"><strong>Keep this result reproducible</strong><span>Retain the source tree, smsg.toml, the toolchain lock, the records and this report together.</span></li></ol>
+</section>
+</div>
+<section class="section" id="advanced" aria-labelledby="advanced-title">
+  <p class="eyebrow">For debugging and audit</p><h2 id="advanced-title">Advanced evidence</h2>
+  <div class="advanced-intro">
+    <p>The sections below expose the most useful technical records without crowding the summary.
+      The complete machine-readable record can be kept alongside this page.</p>
+    <a class="machine-link" href="report.json">Open full
+      <code>report.json</code></a>
+    <p><small>Keep this HTML report and <code>report.json</code> together
+      when sharing a run.</small></p>
+  </div>
+<details class="advanced" id="outcome-details">
+  <summary><h3>Verdict and target comparison records</h3><span class="summary-meta">4 targets · full hashes</span></summary>
+  <div class="detail-body"><div class="table-scroll" role="region" aria-label="Complete verdict claims" tabindex="0"><table><caption>Complete verdict claims</caption><thead><tr><th scope="col">Claim</th><th scope="col">Result</th></tr></thead><tbody><tr><td>Byte identity</td><td>failed — 0 of 4 exact; each difference is listed under Target results</td></tr><tr><td>Logic checks</td><td>passed — vacuous: the build runs no source or binary transform, so there is nothing to check</td></tr><tr><td>Built from declared inputs</td><td>passed — source tree da2700a3ec07, 36 files and 7 trees (6217 entries) as locked, every original as its record names</td></tr><tr><td>Built from scratch</td><td>passed — a fresh clone in a fresh prefix, every project rebuilt; build.bat exited 0</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="Target comparison" tabindex="0"><table><caption>Target comparison</caption><thead><tr><th scope="col">Target</th><th scope="col">Policy</th><th scope="col">Exact</th><th scope="col">Differing bytes</th><th scope="col">Size / original</th><th scope="col">SHA-256 (compared)</th><th scope="col">SHA-256 (as built)</th></tr></thead><tbody><tr><td><code>golf</code></td><td>allow-quarantine</td><td>no</td><td>654,916</td><td>954,368 / 954,368</td><td><code>025b01ac0554c5f4cd0c71211e5ccc955b6af48804e6c1f34ecc6dc4f290dcba</code></td><td><code>27fabeb2de748485dea06070b027acfec6004938bec7cede1fab16de3676c484</code></td></tr><tr><td><code>jgld</code></td><td>clean</td><td>no</td><td>234,502</td><td>1,155,114 / 1,273,898</td><td><code>4c4d945e34e73ba7d9c161d1c0e9615ffdd3e4576f2e8c646dda113ff864b5b4</code></td><td><code>0ccd04d6200a9c93cdd09702d705ee7989292c1d927966108d8a8d3efd3a1c12</code></td></tr><tr><td><code>sound</code></td><td>clean</td><td>no</td><td>5,502</td><td>458,752 / 458,752</td><td><code>19e5e846aa84c3adca776a6752cba24636e5b78ad4757e184cfcf4e3bfc713c0</code></td><td><code>e8b70ec701ad0ee811758bf9f11db51628352e6c80ebe4017d613d91c8c4bd75</code></td></tr><tr><td><code>terrain</code></td><td>clean</td><td>no</td><td>224,128</td><td>454,719 / 454,719</td><td><code>5084bb2407fb93026c722f764594c0c67e3cd9546f527f366f1ff71effa0b6e5</code></td><td><code>0fd7cc27952ae352d77ab556d5320185d8a3493578ce79a8be1f6fefee90f0e4</code></td></tr></tbody></table></div></div>
+</details>
+<details class="advanced" id="difference-details">
+  <summary><h3>Differing bytes by section and cause</h3><span class="summary-meta">1,119,048 differing bytes</span></summary>
+  <div class="detail-body"><div class="table-scroll" role="region" aria-label="golf.exe by section" tabindex="0"><table><caption>golf.exe by section</caption><thead><tr><th scope="col">Section</th><th scope="col">Original</th><th scope="col">Built</th><th scope="col">Differing</th></tr></thead><tbody><tr><td><code>.text</code></td><td>754,731</td><td>754,707</td><td>652,321</td></tr><tr><td><code>.rdata</code></td><td>24,728</td><td>24,728</td><td>2,499</td></tr><tr><td><code>.data</code></td><td>155,648</td><td>155,648</td><td>94</td></tr><tr><td><code>.rsrc</code></td><td>4,430</td><td>4,430</td><td>0</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="golf.exe by cause: 2 exempt (linker-generated), 649,877 owed" tabindex="0"><table><caption>golf.exe by cause: 2 exempt (linker-generated), 649,877 owed</caption><thead><tr><th scope="col">Class</th><th scope="col">Bytes</th></tr></thead><tbody><tr><td><code>LINKER-GENERATED</code></td><td>2</td></tr><tr><td><code>PADDING</code></td><td>3,681</td></tr><tr><td><code>PLACEMENT</code></td><td>643,780</td></tr><tr><td><code>POST-LINK</code></td><td>5,037</td></tr><tr><td><code>PTR-SAME-TARGET</code></td><td>2,416</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="golf.exe normalisations" tabindex="0"><table><caption>golf.exe normalisations</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Points</th><th scope="col">Bytes changed</th><th scope="col">Detail</th></tr></thead><tbody><tr><td><code>golf.image_metadata</code></td><td>Image metadata</td><td>5</td><td>8</td><td>coff_timestamp 0x73655965, export_timestamp 0x3ca4cfce</td></tr><tr><td><code>golf.reference_quarantine</code></td><td>Reference-byte quarantine</td><td>10,000</td><td>1,047</td><td>734 ranges, 1047 bytes copied from the original (declared 1047), 567 ranges blocked</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="jgld.dll by section" tabindex="0"><table><caption>jgld.dll by section</caption><thead><tr><th scope="col">Section</th><th scope="col">Original</th><th scope="col">Built</th><th scope="col">Differing</th></tr></thead><tbody><tr><td><code>.text</code></td><td>1,160,368</td><td>1,042,096</td><td>170,946</td></tr><tr><td><code>.rdata</code></td><td>19,602</td><td>19,586</td><td>8,249</td></tr><tr><td><code>.data</code></td><td>28,672</td><td>28,672</td><td>613</td></tr><tr><td><code>.idata</code></td><td>4,691</td><td>4,691</td><td>574</td></tr><tr><td><code>.reloc</code></td><td>48,475</td><td>48,156</td><td>733</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="jgld.dll by cause: 181,330 exempt (ILINK layout or linker-generated), 0 owed" tabindex="0"><table><caption>jgld.dll by cause: 181,330 exempt (ILINK layout or linker-generated), 0 owed</caption><thead><tr><th scope="col">Class</th><th scope="col">Bytes</th></tr></thead><tbody><tr><td><code>DISPLACED</code></td><td>7,723</td></tr><tr><td><code>FILL-DATA</code></td><td>30</td></tr><tr><td><code>ILT-ORDER</code></td><td>1,502</td></tr><tr><td><code>LINKER-GENERATED</code></td><td>3,942</td></tr><tr><td><code>PADDING</code></td><td>117,527</td></tr><tr><td><code>PLACEMENT</code></td><td>21,856</td></tr><tr><td><code>PTR-CONSISTENT</code></td><td>27,691</td></tr><tr><td><code>PTR-SAME-TARGET</code></td><td>1,059</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="jgld.dll normalisations" tabindex="0"><table><caption>jgld.dll normalisations</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Points</th><th scope="col">Bytes changed</th><th scope="col">Detail</th></tr></thead><tbody><tr><td><code>jgld.image_metadata</code></td><td>Image metadata</td><td>5</td><td>17</td><td>coff_timestamp 0x3c20f72a, debugdir_timestamp 0x3c20f5ab, codeview_timestamp 0x3c20f5ab, codeview_age 0x00000003, export_timestamp 0x3c20f5ab</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="sound.dll by section" tabindex="0"><table><caption>sound.dll by section</caption><thead><tr><th scope="col">Section</th><th scope="col">Original</th><th scope="col">Built</th><th scope="col">Differing</th></tr></thead><tbody><tr><td><code>.text</code></td><td>365,941</td><td>365,941</td><td>4,470</td></tr><tr><td><code>.rdata</code></td><td>30,036</td><td>30,036</td><td>1,017</td></tr><tr><td><code>.data</code></td><td>28,672</td><td>28,672</td><td>15</td></tr><tr><td><code>.idata</code></td><td>4,540</td><td>4,540</td><td>0</td></tr><tr><td><code>.reloc</code></td><td>15,634</td><td>15,634</td><td>0</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="sound.dll by cause: 5,502 exempt (ILINK layout or linker-generated), 0 owed" tabindex="0"><table><caption>sound.dll by cause: 5,502 exempt (ILINK layout or linker-generated), 0 owed</caption><thead><tr><th scope="col">Class</th><th scope="col">Bytes</th></tr></thead><tbody><tr><td><code>ILT-ORDER</code></td><td>2,722</td></tr><tr><td><code>PLACEMENT</code></td><td>1,737</td></tr><tr><td><code>PTR-CONSISTENT</code></td><td>11</td></tr><tr><td><code>PTR-SAME-TARGET</code></td><td>1,032</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="sound.dll normalisations" tabindex="0"><table><caption>sound.dll normalisations</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Points</th><th scope="col">Bytes changed</th><th scope="col">Detail</th></tr></thead><tbody><tr><td><code>sound.image_metadata</code></td><td>Image metadata</td><td>5</td><td>8</td><td>coff_timestamp 0x3c1f9e5e, export_timestamp 0x3c1f9e5e</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="Terrain.dll by section" tabindex="0"><table><caption>Terrain.dll by section</caption><thead><tr><th scope="col">Section</th><th scope="col">Original</th><th scope="col">Built</th><th scope="col">Differing</th></tr></thead><tbody><tr><td><code>.text</code></td><td>381,408</td><td>381,504</td><td>213,894</td></tr><tr><td><code>.rdata</code></td><td>16,012</td><td>16,012</td><td>1,021</td></tr><tr><td><code>.data</code></td><td>24,576</td><td>24,576</td><td>185</td></tr><tr><td><code>.idata</code></td><td>4,544</td><td>4,544</td><td>0</td></tr><tr><td><code>.reloc</code></td><td>14,067</td><td>14,087</td><td>9,137</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="Terrain.dll by cause: 224,128 exempt (ILINK layout or linker-generated), 0 owed" tabindex="0"><table><caption>Terrain.dll by cause: 224,128 exempt (ILINK layout or linker-generated), 0 owed</caption><thead><tr><th scope="col">Class</th><th scope="col">Bytes</th></tr></thead><tbody><tr><td><code>DISPLACED</code></td><td>672</td></tr><tr><td><code>FILL-DATA</code></td><td>72</td></tr><tr><td><code>ILT-ORDER</code></td><td>377</td></tr><tr><td><code>LINKER-GENERATED</code></td><td>9,124</td></tr><tr><td><code>PADDING</code></td><td>22,280</td></tr><tr><td><code>PLACEMENT</code></td><td>190,964</td></tr><tr><td><code>PTR-CONSISTENT</code></td><td>177</td></tr><tr><td><code>PTR-SAME-TARGET</code></td><td>462</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="Terrain.dll normalisations" tabindex="0"><table><caption>Terrain.dll normalisations</caption><thead><tr><th scope="col">Intervention</th><th scope="col">Class</th><th scope="col">Points</th><th scope="col">Bytes changed</th><th scope="col">Detail</th></tr></thead><tbody><tr><td><code>terrain.image_metadata</code></td><td>Image metadata</td><td>5</td><td>17</td><td>coff_timestamp 0x3c1a5d2d, debugdir_timestamp 0x3c18dc31, codeview_timestamp 0x3c18cb6a, codeview_age 0x00000017, export_timestamp 0x3c18dc31</td></tr></tbody></table></div></div>
+</details>
+<details class="advanced" id="cross-check-details">
+  <summary><h3>Cross-check with the tooling's build</h3><span class="summary-meta">4 of 4 equal</span></summary>
+  <div class="detail-body"><p>The same source built by <code>make ide</code>, the tooling's headless MSDEV build, whose map the byte causes are read through.</p><div class="table-scroll" role="region" aria-label="build.bat against make ide (md5 after the declared normalisations)" tabindex="0"><table><caption>build.bat against make ide (md5 after the declared normalisations)</caption><thead><tr><th scope="col">Binary</th><th scope="col">build.bat</th><th scope="col">make ide</th><th scope="col">Result</th></tr></thead><tbody><tr><td><code>golf.exe</code></td><td><code>88c22f70a7e70066ac7885e6a23836d6</code></td><td><code>88c22f70a7e70066ac7885e6a23836d6</code></td><td>build.bat&#x27;s image is make ide&#x27;s, byte for byte</td></tr><tr><td><code>jgld.dll</code></td><td><code>35273ecc55780bcb27783b5c6cf85e04</code></td><td><code>35273ecc55780bcb27783b5c6cf85e04</code></td><td>build.bat&#x27;s image is make ide&#x27;s, byte for byte</td></tr><tr><td><code>sound.dll</code></td><td><code>108be2612916413205da8240864e2cb2</code></td><td><code>108be2612916413205da8240864e2cb2</code></td><td>build.bat&#x27;s image is make ide&#x27;s, byte for byte</td></tr><tr><td><code>Terrain.dll</code></td><td><code>c5e637d3320cf1a940832215c933ef64</code></td><td><code>c5e637d3320cf1a940832215c933ef64</code></td><td>build.bat&#x27;s image is make ide&#x27;s, byte for byte</td></tr></tbody></table></div></div>
+</details>
+<details class="advanced" id="identity-details">
+  <summary><h3>Run identity and build records</h3><span class="summary-meta">8 MSDEV runs</span></summary>
+  <div class="detail-body">
+<dl class="identity-list"><dt>Project</dt><dd><code>simgolf</code></dd><dt>Run</dt><dd><code>20261015T223114Z-da2700a3ec07</code></dd><dt>Source tree</dt><dd><code>da2700a3ec07b937502951f5a4ea53bc51b0aa7a</code>: git's tree of the commit built, without <code>docs/</code>, where this report is published: what <code>git mktree</code> prints for <code>git ls-tree HEAD</code> with its <code>docs</code> line removed</dd><dt>Started</dt><dd>2026-10-15T22:31:14Z</dd><dt>Finished</dt><dd>2026-10-15T22:35:11Z</dd><dt>Verifier</dt><dd><code>smsg</code> sha256 <code>814e6844eae94078915562a0cead2c27224e1b196bfc23c241ceebe35ba2e41e</code>, 76,226,456 bytes</dd></dl><div class="table-scroll" role="region" aria-label="MSDEV runs (build.bat exited 0)" tabindex="0"><table><caption>MSDEV runs (build.bat exited 0)</caption><thead><tr><th scope="col">Result</th></tr></thead><tbody><tr><td>golf/binkw32.lib/build.log: binkw32.dll - 0 error(s), 0 warning(s)</td></tr><tr><td>golf/build.log: golf.exe - 0 error(s), 94 warning(s)</td></tr><tr><td>jgl/jgld.dll/build.log: jgld.dll - 0 error(s), 36 warning(s)</td></tr><tr><td>jgl/libpng.lib/build.log: libpng.lib - 0 error(s), 0 warning(s)</td></tr><tr><td>jgl/zlib.lib/build.log: zlib.lib - 0 error(s), 0 warning(s)</td></tr><tr><td>sound/lpc10.lib/build.log: lpc10.lib - 0 error(s), 40 warning(s)</td></tr><tr><td>sound/sound.dll/build.log: sound.dll - 0 error(s), 15 warning(s)</td></tr><tr><td>terrain/Terrain.dll/build.log: Terrain.dll - 0 error(s), 0 warning(s)</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="Logical directories of the private prefix" tabindex="0"><table><caption>Logical directories of the private prefix</caption><thead><tr><th scope="col">Directory</th></tr></thead><tbody><tr><td><code>C:\DXSDK</code></td></tr><tr><td><code>C:\Program Files\Microsoft Visual Studio</code></td></tr><tr><td><code>C:\VS6SP2\VC98\LIB</code></td></tr><tr><td><code>C:\VS6SP5</code></td></tr><tr><td><code>C:\SimGolf\decompilation</code></td></tr><tr><td><code>C:\JackDev</code></td></tr><tr><td><code>C:\Projects\3DTerrainLowPoly</code></td></tr><tr><td><code>C:\SimGolf\external\bink</code></td></tr><tr><td><code>C:\SimGolf\external\jpeg-6a</code></td></tr><tr><td><code>C:\SimGolf\external\lpc10-1.5</code></td></tr><tr><td><code>C:\libpng.lib</code></td></tr><tr><td><code>C:\lk</code></td></tr><tr><td><code>C:\zlib.lib</code></td></tr></tbody></table></div>
+</div>
+</details>
+<details class="advanced" id="toolchain-details">
+  <summary><h3>Locked toolchain</h3><span class="summary-meta">36 files · 7 trees</span></summary>
+  <div class="detail-body"><p>Every locked file and tree matched: 36 files, 7 trees, 6217 entries.</p><div class="table-scroll" role="region" aria-label="Profiles (simgolf-paths-v1)" tabindex="0"><table><caption>Profiles (simgolf-paths-v1)</caption><thead><tr><th scope="col">Profile</th><th scope="col">Installation</th><th scope="col">Directory</th><th scope="col">Builds</th></tr></thead><tbody><tr><td><code>vc6-rtm</code></td><td>Visual C++ 6.0 without a service pack (CL 12.00.8168, LINK 6.00.8168)</td><td><code>VC6</code> = <code>C:\Program Files\Microsoft Visual Studio</code></td><td>golf.exe, Terrain.dll, jgld.dll, lpc10.lib</td></tr><tr><td><code>vc6-sp5</code></td><td>Visual C++ 6.0 with Service Pack 5 (C2 12.00.8966, LINK 6.00.8447)</td><td><code>VC6SP5</code> = <code>C:\VS6SP5</code></td><td>sound.dll, binkw32.lib</td></tr><tr><td><code>vc6-sp2-lib</code></td><td>Visual C++ 6.0 Service Pack 2&#x27;s VC98\LIB, whose LIBCMTD.LIB Terrain.dll and jgld.dll link</td><td><code>VC6SP2LIB</code> = <code>C:\VS6SP2\VC98\LIB</code></td><td>Terrain.dll, jgld.dll</td></tr><tr><td><code>dx8-sdk</code></td><td>The DirectX 8.0 SDK&#x27;s headers and import libraries</td><td><code>DXSDK</code> = <code>C:\DXSDK</code></td><td>golf.exe, sound.dll</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="Inputs the repository does not hold" tabindex="0"><table><caption>Inputs the repository does not hold</caption><thead><tr><th scope="col">File</th><th scope="col">What it is</th></tr></thead><tbody></tbody></table></div></div>
+</details>
+<details class="advanced" id="cost-details">
+  <summary><h3>Exact cost totals</h3><span class="summary-meta">10,020 points</span></summary>
+  <div class="detail-body"><div class="table-scroll" role="region" aria-label="Cost by intervention class" tabindex="0"><table><caption>Cost by intervention class</caption><thead><tr><th scope="col">Class</th><th scope="col">Points</th><th scope="col">Interventions</th></tr></thead><tbody><tr><td>Reference-byte quarantine</td><td>10,000</td><td>1</td></tr><tr><td>Image metadata</td><td>20</td><td>4</td></tr><tr><td><strong>Total</strong></td><td><strong>10,020</strong></td><td></td></tr></tbody></table></div></div>
+</details>
+</section>
+</main>
+<footer class="footer"><div class="footer-inner">
+  smsg verification report schema <code>v1</code> · deterministic local HTML ·
+  no external assets
+</div></footer>
+</body>
+</html>

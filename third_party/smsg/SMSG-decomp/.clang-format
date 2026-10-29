@@ -1,0 +1,33 @@
+BasedOnStyle: Microsoft
+Standard: c++03
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+PointerAlignment: Right
+AllowShortFunctionsOnASingleLine: InlineOnly
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeWhile: false
+BreakBeforeBinaryOperators: NonAssignment
+IndentGotoLabels: NoIndent
+MaxEmptyLinesToKeep: 3
+AlignTrailingComments:
+  Kind: Leave
+SortIncludes: Never
+BreakStringLiterals: false
+ReflowComments: Never
+FixNamespaceComments: false
+SkipMacroDefinitionBody: true

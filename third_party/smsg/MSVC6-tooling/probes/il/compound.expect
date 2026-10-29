@@ -1,0 +1,17 @@
+rule c1xx: compound assignments and the four increments.
+cl
+il
+  *; discard(asg.add.i32(a, load.i32(b)))*
+  *; discard(asg.sub.i32(a, 2))*
+  *; discard(asg.mul.i32(a, load.i32(b)))*
+  *; discard(asg.div.i32(a, 3))*
+  *; discard(asg.mod.i32(a, load.i32(b)))*
+  *; discard(asg.shl.i32(a, 1))*
+  *; discard(asg.shr.i32(a, load.i32(b)))*
+  *; discard(asg.and.i32(a, 255))*
+  *; discard(asg.xor.i32(a, load.i32(b)))*
+  *; discard(asg.or.i32(a, 4))*
+  *; discard(asg.i32(x, postinc.i32(a, 1)))*
+  *; discard(asg.i32(y, asg.add.i32(a, 1)))*
+  *; discard(asg.i32(z, postdec.i32(b, 1)))*
+  *; discard(asg.i32(w, asg.sub.i32(b, 1)))*

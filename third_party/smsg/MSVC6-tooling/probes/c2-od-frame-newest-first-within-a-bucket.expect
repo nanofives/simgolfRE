@@ -1,0 +1,5 @@
+rule c2: a and value share bucket 1, and within a bucket the newest declaration is listed first: value -4, a -8
+cl /Od
+frame= ?f@@YAHXZ
+  _a$ = -8
+  _value$ = -4

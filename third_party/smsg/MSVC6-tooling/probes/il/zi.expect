@@ -1,0 +1,9 @@
+rule c1xx: two_locals.cpp under /Zi: the db stream and the debug-only ex records.
+cl /Zi
+il
+  *(a db stream*
+  *0e fdef     #d7 "?two_locals@@YAHHH@Z" b30=0 type=int (0x1) fclass=5 (+0x36 0x50) size=4 flags=0x0 cvtype=0x1001*
+  *0b typedef  #c2 "size_t" level 0 skip=0 cvtype=0x75*
+  *01 var      #d6 "b" level 1 b30=0 type=int (0x1) skip=0 storage=3 (+0x36 0x30) rclass=4 (+0x36 0x200) size=4 flags=0x100 cvtype=0x74*
+  *4f.11 dbg1b6*
+  *4f.12 dbg1b7*

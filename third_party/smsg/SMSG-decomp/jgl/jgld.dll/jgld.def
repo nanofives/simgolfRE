@@ -1,0 +1,4 @@
+LIBRARY     jgld
+
+EXPORTS
+    get_graphsy_object_ptr

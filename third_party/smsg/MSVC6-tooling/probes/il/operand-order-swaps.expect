@@ -1,0 +1,29 @@
+rule c1xx: the three places C1XX's tree does NOT keep the source order of two operands, each moving the operands' FIRST REFERENCES (C2 numbers a symbol at its first reference in reader order): - `i + p` (integer first) is built as `p + i`: add(load p, mul(load i, size)) -- the same IL as `p + i` (expr_build_builtin_binary c1xx!0x10414137); - `i[p]` is built as `p[i]`: index(load p, mul(load i, size)); - a non-member `operator+(a, b)` is a call, and a call's arguments are written LAST first: vb, then va.
+cl
+il
+  *-- function #e7:?o_ip@@YAHXZ*
+  *26    sym #d7:?gq@@3PAHA [1st]*
+  *26    sym #d5:?gp@@3PAHA [1st]*
+  *26    sym #d6:?gi@@3HA [1st]*
+  *; discard(asg.p32(?gq@@3PAHA, add(load.p32(?gp@@3PAHA), mul(load.i32(?gi@@3HA), 4))))*
+  *; ret.i32(0)*
+  *-- function #ea:?o_pi@@YAHXZ*
+  *26    sym #d7:?gq@@3PAHA [1st]*
+  *26    sym #d5:?gp@@3PAHA [1st]*
+  *26    sym #d6:?gi@@3HA [1st]*
+  *; discard(asg.p32(?gq@@3PAHA, add(load.p32(?gp@@3PAHA), mul(load.i32(?gi@@3HA), 4))))*
+  *; ret.i32(0)*
+  *-- function #ec:?o_isub@@YAHXZ*
+  *26    sym #d5:?gp@@3PAHA [1st]*
+  *26    sym #d6:?gi@@3HA [1st]*
+  *; ret.i32(load.i32(index(load.p32(?gp@@3PAHA), mul(load.i32(?gi@@3HA), 4))))*
+  *-- function #ee:?o_psub@@YAHXZ*
+  *26    sym #d5:?gp@@3PAHA [1st]*
+  *26    sym #d6:?gi@@3HA [1st]*
+  *; ret.i32(load.i32(index(load.p32(?gp@@3PAHA), mul(load.i32(?gi@@3HA), 4))))*
+  *-- function #f0:?o_user@@YAXXZ*
+  *26    sym #e6:?vc@@3UV@@A [1st]*
+  *26    sym #e3:??H@YA?AUV@@U0@0@Z [1st]*
+  *26    sym #e5:?vb@@3UV@@A [1st]*
+  *26    sym #e4:?va@@3UV@@A [1st]*
+  *; discard(asg.b4(?vc@@3UV@@A, load.b4_const(comma(asg.b4(ctemp.b4(#f2), call.b4(??H@YA?AUV@@U0@0@Z, arg.b4(load.b4(?vb@@3UV@@A)), arg.b4(load.b4(?va@@3UV@@A)))), ctemp.b4(#f2)))))*

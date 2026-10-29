@@ -1,0 +1,6 @@
+rule link: LINK merges .text, .text$a and .text$b into one .text sorted by the name after the $, so code_seg names order functions whatever their order in the file: main, fa, fb
+link /entry:main /subsystem:console /nodefaultlib
+map
+  0001:00000000 _main 00401000 f link-section-groups-sorted-by-suffix.obj
+  0001:{x} ?fa@@YAHH@Z *
+  0001:{y} ?fb@@YAHH@Z *

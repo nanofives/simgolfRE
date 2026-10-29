@@ -1,0 +1,8 @@
+rule c1xx: a plain inline function is compiled right after its first user: f t2 g h t1 (contrast)
+cl /O2 /Ob0
+obj
+  section * .text code * ?f@@YAHH@Z
+  section * .text code * comdat=any ?t2@@YAHH@Z
+  section * .text code * ?g@@YAHH@Z
+  section * .text code * ?h@@YAHH@Z
+  section * .text code * comdat=any ?t1@@YAHH@Z

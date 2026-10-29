@@ -1,0 +1,6 @@
+rule c2: 7 cases over 0..12 give 40, not below 39, so the switch indexes its jump table directly (contrast)
+cl /O2
+asm ?seven13@@YAHH@Z
+  cmp eax, 12
+  !mov cl, BYTE PTR *
+  jmp DWORD PTR {t}[eax*4]

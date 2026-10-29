@@ -1,0 +1,21 @@
+rule c1xx: a file-scope object with a constructor and a destructor takes five numbers of one counter: _$E1 constructs, _$E2 destroys, _$E3 registers _$E2 with atexit, _$E4 calls _$E1 and jumps to _$E3, and _$S5 in .CRT$XCU points at _$E4; the next object starts at 6
+cl /O2 /GX
+data
+  CRT$XCU SEGMENT
+  _$S5 DD FLAT:_$E4
+  _$S10 DD FLAT:_$E9
+asm= _$E4
+  call _$E1
+  jmp _$E3
+asm= _$E1
+  mov ecx, OFFSET FLAT:?a@@3UD@@A
+  jmp ??0D@@QAE@XZ
+asm _$E3
+  push OFFSET FLAT:_$E2
+  call _atexit
+asm= _$E2
+  mov ecx, OFFSET FLAT:?a@@3UD@@A
+  jmp ??1D@@QAE@XZ
+asm= _$E9
+  call _$E6
+  jmp _$E8

@@ -1,0 +1,6 @@
+rule c2: two names in one bucket (g_ae and g_ba both hash to 769) come out in reverse declaration order, since each new symbol goes in at its bucket's head
+cl /O2
+obj
+  symbol ?g_ba@@3HA s*+0x0 external
+obj
+  symbol ?g_ae@@3HA s*+0x4 external

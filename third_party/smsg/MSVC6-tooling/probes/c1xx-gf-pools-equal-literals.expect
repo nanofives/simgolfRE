@@ -1,0 +1,9 @@
+rule c1xx: under /O1 and /O2 (/Gf) equal string literals share one COMDAT named by their content, ??_C@_03..., which LINK folds across files
+cl /O2
+data
+  ??_C@_03MPFC@abc?$AA@ DB 'abc', 00H
+  !$SG*
+asm ?a@@YAPBDXZ
+  mov eax, OFFSET FLAT:??_C@_03MPFC@abc?$AA@
+asm ?b@@YAPBDXZ
+  mov eax, OFFSET FLAT:??_C@_03MPFC@abc?$AA@

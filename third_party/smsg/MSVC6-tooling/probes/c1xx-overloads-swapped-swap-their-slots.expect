@@ -1,0 +1,8 @@
+rule c1xx: declared f(char *) then f(int) the group is f(int), f(char *): reverse declaration order, not the order of the decorated names (contrast)
+cl /O2
+data
+  ??_7V@@6B@ DD FLAT:?a@V@@UAEHXZ
+  DD FLAT:?f@V@@UAEHH@Z
+  DD FLAT:?f@V@@UAEHPAD@Z
+  DD FLAT:?b@V@@UAEHXZ
+  CONST ENDS

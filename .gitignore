@@ -29,6 +29,9 @@ __pycache__/
 .happy-share/
 re/replay/
 tools/vc6/
+tools/vc6sp5/
+tools/vc6sp2/
+tools/dxsdk8/
 Visual Studio 6.iso
 # One-time unwrap work dirs hold game binaries and the third-party Cleaner; only the driver is ours
 tools/unwrap/*

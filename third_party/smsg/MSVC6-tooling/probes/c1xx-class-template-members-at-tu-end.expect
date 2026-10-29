@@ -1,0 +1,8 @@
+rule c1xx: a class template's used members are compiled after every function of the file, in declaration order whatever the order of use: f g h, then a b
+cl /O2 /Ob0
+obj
+  section * .text code * ?f@@YAHH@Z
+  section * .text code * ?g@@YAHH@Z
+  section * .text code * ?h@@YAHH@Z
+  section * .text code * comdat=any ?a@?$C@H@@QAEHH@Z
+  section * .text code * comdat=any ?b@?$C@H@@QAEHH@Z

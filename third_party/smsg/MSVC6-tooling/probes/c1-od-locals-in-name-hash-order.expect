@@ -1,0 +1,9 @@
+rule c1: C1 lists a block's locals by the name hash C1XX uses, so at /Od their frame slots follow the hash buckets, not the declaration (value 1, width 2, count 5, total 7, index 12, height 13)
+cl /Od
+frame= _f
+  _count$ = -12
+  _total$ = -16
+  _index$ = -20
+  _value$ = -4
+  _width$ = -8
+  _height$ = -24

@@ -1,0 +1,6 @@
+rule link: /OPT:REF drops every COMDAT nothing references, so a function absent from the image may still have been in the source
+link /entry:main /subsystem:console /nodefaultlib /opt:ref
+map
+  0001:00000000 ?used@@YAHH@Z *
+  !*?unused@@YAHH@Z*
+  0001:00000010 _main *

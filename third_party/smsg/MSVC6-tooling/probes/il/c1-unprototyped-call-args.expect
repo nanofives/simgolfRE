@@ -1,0 +1,5 @@
+rule c1: C1's expr_check_call_arguments c1!0x1061dd75 converts an argument to its prototype's formal type (arg.i8 / arg.f32: k2), but an argument of a call with no prototype (f2, declared `int f2();`) is written as it is, its arg tuple typed NONE: the default argument promotions (char -> int, float -> double) are not in the IL; C2 makes them when it lowers an untyped arg (c1-unprototyped-call-arguments-promoted-by-c2: movsx and an 8-byte fstp for f2, a 4-byte float for h2).
+cl /O2 /W4
+il
+  *ret.i32(call.i32(f2, arg.none(load.i8(c)), arg.none(load.f32(v))))*
+  *ret.i32(call.i32(h2, arg.i8(load.i8(c)), arg.f32(load.f32(v))))*

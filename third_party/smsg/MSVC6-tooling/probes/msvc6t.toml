@@ -1,0 +1,48 @@
+schema = 1
+
+[toolchain.vc6]
+root = "${MSVC6T_VC6}"
+layout = "vs6"
+expect = { cl = "12.00.8168", c1 = "12.00.8168", c1xx = "12.00.8168", c2 = "12.00.8168", link = "6.00.8168" }
+
+[toolchain.vc6-c1xx8472]
+root = "${MSVC6T_VC6_C1XX8472}"
+layout = "vs6"
+expect = { c1xx = "12.00.8472", c2 = "12.00.8168" }
+
+[toolchain.vc6-c2-8447]
+root = "${MSVC6T_VC6_C2_8447}"
+layout = "vs6"
+expect = { c1xx = "12.00.8168", c2 = "12.00.8447" }
+
+[toolchain.vc6-c2-8799]
+root = "${MSVC6T_VC6_C2_8799}"
+layout = "vs6"
+expect = { c1xx = "12.00.8168", c2 = "12.00.8799" }
+
+[toolchain.vc6sp5]
+root = "${MSVC6T_VC6SP5}"
+layout = "vs6"
+expect = { c2 = "12.00.8966", link = "6.00.8447" }
+
+[toolchain.vc6sp5pp]
+root = "${MSVC6T_VC6SP5PP}"
+layout = "vs6"
+expect = { c2 = "13.00.9044", link = "6.00.8447" }
+
+[toolchain.vc6sp6]
+root = "${MSVC6T_VC6SP6}"
+layout = "vs6"
+expect = { c2 = "12.00.9782", link = "6.00.8447" }
+
+[runner]
+kind = "wine"
+command = ["wine"]
+prefixes = "${MSVC6T_PREFIXES:-~/.cache/msvc6t/prefixes}"
+template = "${MSVC6T_WINE_TEMPLATE:-~/.wine}"
+tokens = "${MSVC6T_TOKENS:-/tmp/msvc6t-jobs}"
+native_msvcrt = "${MSVC6T_MSVCRT}"
+jobs = 4
+
+[cache]
+dir = "${MSVC6T_CACHE_DIR:-~/.cache/msvc6t/cl}"

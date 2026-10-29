@@ -1,0 +1,7 @@
+#include "jgldefs.h"
+#include "jglwin.h"
+#include "jglpalettetypes.h"
+#include "random.h"
+#include "gspalette.h"
+#include "jglpalettemgr.h"
+#include "jglpalette.h"

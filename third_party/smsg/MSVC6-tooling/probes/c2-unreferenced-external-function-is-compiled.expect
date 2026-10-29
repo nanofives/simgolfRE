@@ -1,0 +1,6 @@
+rule c2: a function with external linkage is compiled whether or not this file references it (contrast)
+cl /Od
+asm ?u@@YAHH@Z
+  ret 0
+asm ?s2@@YAHH@Z
+  ret 0

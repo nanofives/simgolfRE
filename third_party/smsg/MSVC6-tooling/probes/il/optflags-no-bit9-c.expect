@@ -1,0 +1,5 @@
+rule c2: C1.DLL's option word (c1!0x10617c08, the same 21-byte table, bits 31..11, and bit 8) has no bit 9 or 10 either.
+cl /Ox /Oa /Ow /Op /Ge
+il
+  *4f.1f optflags 0x83a40800*
+  *4f.1f optflags 0x80800000*

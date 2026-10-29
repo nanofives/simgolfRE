@@ -1,0 +1,9 @@
+rule c1: by default (/Gd) a C function is __cdecl: a plain underscore name, and the caller pops (contrast)
+cl /O2
+data
+  PUBLIC _f
+asm= _f
+  mov eax, DWORD PTR _b$[esp-4]
+  mov ecx, DWORD PTR _a$[esp-4]
+  add eax, ecx
+  ret 0

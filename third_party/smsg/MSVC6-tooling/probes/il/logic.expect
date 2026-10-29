@@ -1,0 +1,11 @@
+rule c1xx: && || ! and every relation.
+cl
+il
+  *; brfalse Ldc (cmp.eq(load.i32(a), load.i32(b)))*
+  *; brfalse Ldc (cmp.ne(load.i32(b), load.i32(c)))*
+  *; discard(asg.or.i32(r, 1))*
+  *; brtrue Lde (cmp.lt(load.i32(a), load.i32(b)))*
+  *; brfalse Ldd (cmp.gt(load.i32(b), load.i32(c)))*
+  *; label Lde*
+  *; brtrue Ldf (cmp.le(load.i32(a), load.i32(c)))*
+  *; brfalse Le0 (cmp.ge(load.i32(a), load.i32(c)))*

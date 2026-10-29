@@ -1,0 +1,5 @@
+rule c1xx: C1XX writes the default argument promotions of a '...' argument into the IL -- cvt.f64 of the float, cvt.i32 of the char, inside the arg.none -- where C1 writes the bare loads (c1_variadic_args_unpromoted.c) and leaves them to C2; the code is the same, the body one record larger per promoted argument (s6d 0x1a against C1's 0x18).
+cl /O2 /W4
+il
+  *s6d=0x1a fflags*
+  *ret.i32(call.i32(?v@@YAHHZZ, arg.none(cvt.f64(load.f32(?f@@3MA))), arg.none(cvt.i32(load.i8(?c@@3DA))), arg.i32(1)))*

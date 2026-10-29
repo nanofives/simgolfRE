@@ -1,0 +1,19 @@
+rule c1xx: a switch.
+cl
+il
+  *03 label    #e1 "" level 4 role=0x14 refs=2*
+  *03 label    #e0 "" level 4 role=0x13 refs=1*
+  *03 label    #db "" level 3 role=0x12 refs=3*
+  *03 label    #da "" level 3 role=0x11 refs=3*
+  *; switch(load.i32(v)) {*
+  *; label Lde*
+  *; discard(asg.i32(r, 10))*
+  *; goto Ldb*
+  *; label Le1*
+  *26    sym #da:L*
+  *; caselist.i32 Le1 (Lda)*
+  *; case Lde (1)*
+  *; case Ldf (2)*
+  *; case Le0 (7)*
+  *; } end switch(load.i32(v))*
+  *; label Ldb*

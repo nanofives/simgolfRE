@@ -1,0 +1,1 @@
+{"expected_observations":[{"expected_values":{"coff_timestamp":1008705118,"export_timestamp":1008705118},"family":"image_metadata","id":"proof.sound.image_metadata","intervention_id":"sound.image_metadata","kind":"expected_observations","redactions":[]}],"schema_version":1,"target_id":"sound"}

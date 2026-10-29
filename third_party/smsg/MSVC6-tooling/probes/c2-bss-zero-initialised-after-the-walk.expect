@@ -1,0 +1,6 @@
+rule c2: a variable initialised to zero goes after every walked one: value (bucket 17) is defined first and hashes first, yet width (674) takes +0 and value +4
+cl /O2
+obj
+  symbol ?width@@3HA s*+0x0 external
+obj
+  symbol ?value@@3HA s*+0x4 external

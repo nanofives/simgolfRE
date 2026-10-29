@@ -1,0 +1,9 @@
+rule c2: at /Od C2 gives a block's locals their frame slots in the order the front end lists them, which is the name hash's 16 buckets upwards: value 1, width 2, count 5, total 7, index 12, height 13
+cl /Od
+frame= ?f@@YAHXZ
+  _count$ = -12
+  _total$ = -16
+  _index$ = -20
+  _value$ = -4
+  _width$ = -8
+  _height$ = -24

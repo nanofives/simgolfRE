@@ -1,0 +1,21 @@
+*       text=auto eol=lf
+
+*.md    diff=markdown
+*.c     diff=cpp
+*.cpp   diff=cpp
+*.h     diff=cpp
+*.inl   diff=cpp
+*.html  diff=html
+
+*.dsp                                 text eol=crlf
+*.dsw                                 text eol=crlf
+*.rc                                  -text
+*.bat                                 -text
+resource.h                            -text
+
+*.bmp   binary
+*.dll   binary
+*.exe   binary
+*.ico   binary
+*.lib   binary
+*.png   binary

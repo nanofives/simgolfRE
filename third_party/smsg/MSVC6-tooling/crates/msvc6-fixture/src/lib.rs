@@ -1,0 +1,13 @@
+pub mod archive;
+pub mod backstop;
+pub mod buf;
+pub mod classes;
+pub mod codeview;
+pub mod coff;
+pub mod il;
+pub mod mac;
+pub mod pdb;
+pub mod pe;
+pub mod placement;
+pub mod sample;
+pub mod tables;

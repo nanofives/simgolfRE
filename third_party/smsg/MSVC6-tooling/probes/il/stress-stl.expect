@@ -1,0 +1,6 @@
+rule c1xx: a stress test of the decoder: the STL headers (templates, inline members, EH, statics) under /GX /O2.
+cl /GX /O2
+il
+  *0a glend    l=0 pch="" comments=[4:"libcp"]*
+  *08 zeros 4*
+  *4d    eof*

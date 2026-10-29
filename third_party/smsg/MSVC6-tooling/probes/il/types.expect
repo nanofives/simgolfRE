@@ -1,0 +1,17 @@
+rule c1xx: the type word of each basic type, in symbol records and in ex records.
+cl
+il
+  *; discard(asg.i8(c, 1))*
+  *; discard(asg.u8(uc, 2))*
+  *; discard(asg.i16(s, 3))*
+  *; discard(asg.u16(us, 4))*
+  *; discard(asg.i32(l, 5))*
+  *; discard(asg.u32(u, 6))*
+  *; discard(asg.f32(f, 7.0))*
+  *; discard(asg.f64(d, 8.0))*
+  *; discard(asg.f64(ld, 9.0))*
+  *; discard(asg.i32(e, 1))*
+  *; discard(asg.i32_volatile(v, 10))*
+  *; discard(asg.i32_const(k, 11))*
+  *; discard(asg.p32(p, 0))*
+  *; discard(asg.u8(b, 1))*

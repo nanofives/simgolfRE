@@ -1,0 +1,8 @@
+rule c1xx: floating constants and conversions.
+cl
+il
+  *01 var      #d5 "f" level 1 b30=0 type=float (0x5) skip=0 storage=3 (+0x36 0x30) rclass=4 (+0x36 0x200) size=4*
+  *01 var      #da "d" level 2 bucket 4 b30=0 type=float (0x5) skip=0 storage=1 (+0x36 0x10) rclass=4 (+0x36 0x200) size=8*
+  *; discard(asg.f64(d, cvt.f64(mul(load.f32(f), 2.5))))*
+  *; discard(asg.add.f64(d, cvt.f64(load.i32(i))))*
+  *; ret.f64(add(load.f64(d), 0.1))*

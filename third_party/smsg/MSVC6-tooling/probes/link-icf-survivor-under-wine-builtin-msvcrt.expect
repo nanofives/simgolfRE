@@ -1,0 +1,17 @@
+rule link: the same link on wine's builtin msvcrt keeps the body where f0 was, at the start: two or three copies fold to the same place under either CRT, five do not (contrast)
+link /entry:main /subsystem:console /nodefaultlib
+link-crt builtin
+map
+  0001:00000000 ?f*
+  0001:00000010 ?d0@@YAHH@Z *
+  0001:00000020 ?d1@@YAHH@Z *
+map
+  0001:00000000 ?f0@@YAHH@Z *
+map
+  0001:00000000 ?f1@@YAHH@Z *
+map
+  0001:00000000 ?f2@@YAHH@Z *
+map
+  0001:00000000 ?f3@@YAHH@Z *
+map
+  0001:00000000 ?f4@@YAHH@Z *

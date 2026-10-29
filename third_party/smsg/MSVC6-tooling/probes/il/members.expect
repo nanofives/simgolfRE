@@ -1,0 +1,17 @@
+rule c1xx: a class with a constructor, a destructor and a member function; a member call on a local object.
+cl /GX
+il
+  *0e fdef     #d7 "??0Counter@@QAE@XZ" b30=0 type=ptr (0x3) fclass=5 (+0x36 0x50) size=4 flags=0x34*
+  *0e fdef     #ef "?members@@YAHH@Z" b30=0 type=int (0x1) fclass=5 (+0x36 0x50) size=4 flags=0x0 cvtype=0 ex=0x561 sy=0x8b s6d=0x45 fflags=0x528*
+  *01 var      #e5 "this" level 1*
+  *; entry ??0Counter@@QAE@XZ[this=loadv.p32_const(this)]()*
+  *2a    rec2a #e5:this p32 const b:0x0 b:0x1*
+  *; ret.p32_const(loadv.p32_const(this))*
+  *2b    rec2b #e5:this b:0x1*
+  *99    thisarg p32*
+  *3e    call p32 const b:0x14*
+  *5c    eh.live p32 1*
+  *; discard(eh.live.p32(call.p32_const(??0Counter@@QAE@XZ, this=load.p32_const(addoff.p32_const(addoff.p32_const(c, 0), 0))), call.void(??1Counter@@QAE@XZ, this=load.p32_const(addoff.p32_const(addoff.p32_const(c, 0), 0)))))*
+  *5e    eh.leave 1 1*
+  *; ret.i32(comma(comma(asg.i32(ctemp.i32(#f2), call.i32(?get@Counter@@QBEHXZ, this=load.p32_const(addoff.p32_const(addoff.p32_const(c, 0), 0)))), eh.leave), load.i32(ctemp.i32(#f2))))*
+  *5d    eh.unwind 1 161*

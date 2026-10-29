@@ -1,0 +1,8 @@
+rule c1xx: declaring a static data member, here one of class type, takes a number in every file that sees the class, though the member is defined elsewhere, so every object after the class moves up one
+cl /O2 /GX
+data
+  _$S6 DD FLAT:_$E5
+  _$S11 DD FLAT:_$E10
+asm= _$E5
+  call _$E2
+  jmp _$E4

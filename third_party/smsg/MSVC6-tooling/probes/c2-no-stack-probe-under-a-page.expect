@@ -1,0 +1,6 @@
+rule c2: a frame under a page is a plain sub esp (contrast)
+cl /O2
+asm ?f@@YAXXZ
+  sub esp, 4000
+  !call __chkstk
+  call ?use@@YAXPAD@Z

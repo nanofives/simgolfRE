@@ -1,0 +1,27 @@
+rule c1xx: the C1XX entity ids, labels and IL records each statement costs.
+cl
+il
+  *03 label    #f2 "" level 3 role=0xb*
+  *03 label    #f1 "" level 3 role=0xc*
+  *03 label    #f9 "" level 2 role=0xb*
+  *03 label    #f8 "" level 2 role=0xc*
+  *03 label    #f7 "" level 2 role=8*
+  *03 label    #100 "" level 2 role=6*
+  *03 label    #ff "" level 2 role=7*
+  *03 label    #fe "" level 2 role=5*
+  *#d7   #d9      5   0x11   17  ?s00@@YAHHH@Z                                fdef 1, formal 2, label 1, srcfile 1*
+  *#dc   #de      5   0x16   22  ?s01@@YAHHH@Z                                fdef 1, formal 2, label 1, local 1*
+  *#e1   #e3      5   0x1d   29  ?s02@@YAHHH@Z                                fdef 1, formal 2, label 2*
+  *#e6   #e8      6   0x25   37  ?s03@@YAHHH@Z                                fdef 1, formal 2, label 3*
+  *#ec   #ee      7   0x1d   29  ?s04@@YAHHH@Z                                fdef 1, formal 2, label 3, gap 1*
+  *#f3   #f5      7   0x2d   45  ?s05@@YAHHH@Z                                fdef 1, formal 2, label 4*
+  *#fa   #fc      7   0x1d   29  ?s06@@YAHHH@Z                                fdef 1, formal 2, label 4*
+  *#101  #103    10   0x28   40  ?s07@@YAHHH@Z                                fdef 1, formal 2, label 5, gap 2*
+  *#10b  #10d    10   0x26   38  ?s08@@YAHHH@Z                                fdef 1, formal 2, label 5, gap 2*
+  *#115  #117     6   0x16   22  ?s09@@YAHHH@Z                                fdef 1, formal 2, label 3*
+  *#11b  #11d     5   0x1e   30  ?s10@@YAHHH@Z                                fdef 1, formal 2, label 2*
+  *#120  #122     6   0x1f   31  ?s11@@YAHHH@Z                                fdef 1, formal 2, label 3*
+  *#126  #128     8   0x25   37  ?s12@@YAHHH@Z                                fdef 1, formal 2, label 4, gap 1*
+  *#12e  #130     8   0x28   40  ?s13@@YAHHH@Z                                fdef 1, formal 2, label 4, gap 1*
+  *#136  #138     5   0x1d   29  ?s14@@YAHHH@Z                                fdef 1, formal 2, label 1, local 1*
+  *#13b  #13d     4   0x10   16  ?s15@@YAHHH@Z                                fdef 1, formal 2, label 1*

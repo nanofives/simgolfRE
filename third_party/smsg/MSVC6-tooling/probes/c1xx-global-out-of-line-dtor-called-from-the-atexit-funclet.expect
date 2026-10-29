@@ -1,0 +1,7 @@
+rule c1xx: with the destructor defined out of line the funclet jumps to ??1, which is compiled as its own function (contrast)
+cl /O2 /GX
+asm= _$E2
+  mov ecx, OFFSET FLAT:?g_m@@3UM@@A
+  jmp ??1M@@QAE@XZ
+data
+  PUBLIC ??1M@@QAE@XZ

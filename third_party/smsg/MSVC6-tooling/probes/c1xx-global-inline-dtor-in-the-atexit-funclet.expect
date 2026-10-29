@@ -1,0 +1,10 @@
+rule c1xx: the atexit funclet of a file-scope object whose class has an inline destructor holds that destructor's body, and no ??1 is compiled
+cl /O2 /GX
+asm= _$E2
+  mov eax, DWORD PTR ?g_m@@3UM@@A
+  push eax
+  call ?close@@YAHH@Z
+  pop ecx
+  ret 0
+data
+  !*??1M@@QAE@XZ*

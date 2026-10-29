@@ -1,0 +1,14 @@
+rule c1xx: an object with a destructor in a scope, and try / catch, under /GX.
+cl /GX
+il
+  *0e fdef     #e4 "?eh@@YAHH@Z" b30=0 type=int (0x1) fclass=5 (+0x36 0x50) size=4 flags=0x0 cvtype=0 ex=0x3f4 sy=0x0 s6d=0x48 fflags=0x728*
+  *01 var      #ea "??_R0H@8" level 0*
+  *00 data #ea:??_R0H@8 at +0*
+  *02 address #ec:??_7type_info@@6B@ + 0 size 4*
+  *03 bytes [3] ".H\x00"*
+  *03 label    #e7 "" level 2 role=0x48*
+  *60    eh.try*
+  *5c    eh.live p32 1*
+  *5e    eh.leave 1 33*
+  *61    eh.catch #e9:e #ea:??_R0H@8 0*
+  *62    eh.trymap*

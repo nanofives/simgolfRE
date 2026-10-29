@@ -1,0 +1,33 @@
+rule c1xx: an argument is converted to its PARAMETER's type (arg.<param>(cvt.<param>(..)): a char to a short parameter directly, an int to unsigned at one size, a bool parameter is cvt.u8 of `!= 0`); a variadic argument gets the default promotions instead (char / short / bool -> cvt.i32, float -> cvt.f64, arg.none); a return value is converted to the return type.
+cl /O2
+il
+  *; discard(call.void(?tf@@YAXM@Z, arg.f32(cvt.f32(load.i32(?gi@@3HA)))))*
+  *; discard(call.void(?td@@YAXN@Z, arg.f64(cvt.f64(load.f32(?gf@@3MA)))))*
+  *; discard(call.void(?tc@@YAXD@Z, arg.i8(cvt.i8(load.i32(?gi@@3HA)))))*
+  *; discard(call.void(?ts@@YAXF@Z, arg.i16(cvt.i16(load.i8(?gc@@3DA)))))*
+  *; discard(call.void(?ti@@YAXH@Z, arg.i32(cvt.i32(load.i8(?gc@@3DA)))))*
+  *; discard(call.void(?tu@@YAXI@Z, arg.u32(cvt.u32(load.i32(?gi@@3HA)))))*
+  *; discard(call.void(?tb@@YAX_N@Z, arg.u8(cvt.u8(cmp.ne(load.i32(?gi@@3HA), 0)))))*
+  *; discard(call.void(?tv@@YAXHZZ, arg.none(load.i64(?gq@@3_JA)), arg.none(cvt.i32(load.u8(?gb@@3_NA))), arg.none(cvt.f64(load.f32(?gf@@3MA))), arg.none(cvt.i32(load.i16(?gs@@3FA))), arg.none(cvt.i32(load.i8(?gc@@3DA))), arg.i32(1)))*
+  *; discard(call.void(?tf@@YAXM@Z, arg.f32(cvt.f32(load.f64(?gd@@3NA)))))*
+  *; discard(call.void(?ti@@YAXH@Z, arg.i32(cvt.i32(load.f32(?gf@@3MA)))))*
+  *; ret.i8(cvt.i8(load.i32(?gi@@3HA)))*
+  *; ret.f32(cvt.f32(load.i8(?gc@@3DA)))*
+  *; ret.i32(cvt.i32(cvt.i16(load.i32(?gi@@3HA))))*
+  *; ret.i32(cvt.i32(cvt.u8(load.i32(?gi@@3HA))))*
+  *; ret.i32(cvt.i32(cvt.i8(load.f32(?gf@@3MA))))*
+  *; ret.i32(cvt.i32(cvt.u8(cmp.ne(load.i32(?gi@@3HA), 0))))*
+  *; ret.i32(cvt.i32(load.p32(?gp@@3PADA)))*
+  *; ret.p32(cvt.p32(load.i32(?gi@@3HA)))*
+  *; ret.i32(cvt.i32(sub(load.p32(?gp@@3PADA), cvt.p32(load.p32(?gpi@@3PAHA)))))*
+  *; ret.i32(shr(sub(load.p32(?gpi@@3PAHA), cvt.p32(load.p32(?gp@@3PADA))), 2))*
+  *; ret.p32(cvt.p32(load.p32(?gpi@@3PAHA)))*
+  *; ret.i32(cvt.i32(cvt.i32(load.i32(?gi@@3HA))))*
+  *; ret.i32(cvt.i32(load.i64(?gq@@3_JA)))*
+  *; ret.i32(cvt.i32(cvt.i16(add(load.i32(?gi@@3HA), 1))))*
+  *; ret.i32(cvt.i32(cvt.i8(load.i8(?gc@@3DA))))*
+  *; ret.i32(cvt.i32(load.i32(?gi@@3HA)))*
+  *; ret.i32(load.i32(?gi@@3HA))*
+  *; ret.f32(cvt.f32(load.f32(?gf@@3MA)))*
+  *3   0x10   16  ?x14@@YAHXZ*
+  *2    0xf   15  ?x15@@YAHXZ*

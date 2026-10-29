@@ -1,0 +1,11 @@
+rule cl: a typed switch beats one a group implies whatever their order, silently: /Oy- /O2 gives the front end -Og -Oi -Ot -Ob1 and no -Oy, and the function keeps its ebp frame (contrast)
+cl /Oy- /O2 /Bd
+clout
+  `*\c1xx.dll -il * -f cl-typed-switch-beats-an-implied-one.cpp -W 1 -Ze -D_MSC_EXTENSIONS -Zp8 -ZB64 -D_INTEGRAL_MAX_BITS=64 -D_M_IX86=500 -G5 -Gs -pc \:/ -Fdvc60.pdb -D_MSC_VER=1200 *-D_WIN32 -nologo -Gf -Og -Oi -Ot -Ob1 -Bd -Focl-typed-switch-beats-an-implied-one.obj -I *
+  `*\c2.dll -il * -f cl-typed-switch-beats-an-implied-one.cpp -W 1 -G5 -Gs4096 -dos -ML -Fdvc60.idb -Gy -Bd -Focl-typed-switch-beats-an-implied-one.obj -FAas -Fa cl-typed-switch-beats-an-implied-one.asm'
+clout
+  !*-Oy *
+  !*D4025*
+asm ?f@@YAHHH@Z
+  push ebp
+  mov ebp, esp

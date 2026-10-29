@@ -1,0 +1,7 @@
+rule c1xx: a call through a function pointer, a member pointer, setjmp, alloca, a cast to a smaller type.
+cl
+il
+  *; discard(asg.p32(buf, cvt.p32(icall.p32(216, arg.u32(16)))))*
+  *; discard(asg.i8(index(load.p32(buf), 0), cvt.i8(call.i32(load.p32(fp), arg.i32(1)))))*
+  *; brfalse L13a (icall.i32(219, arg.p32(cvt.p32(cvt.p32(?jb@@3PAHA)))))*
+  *; ret.i32(add(add(load.i32(add(load.p32(m), load.i32(mp))), call.i32(load.p32(mf), this=load.p32_const(load.p32(m)), arg.i32(2))), cvt.i32(load.i8(index(load.p32(buf), 0)))))*

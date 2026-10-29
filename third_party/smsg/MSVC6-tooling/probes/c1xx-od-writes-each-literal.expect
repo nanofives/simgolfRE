@@ -1,0 +1,10 @@
+rule c1xx: without /Gf each literal is its own $SG label in _DATA, numbered as the statement is written (contrast)
+cl /Od
+data
+  $SG{x} DB 'abc', 00H
+  $SG{y} DB 'abc', 00H
+  !*??_C@*
+asm ?a@@YAPBDXZ
+  mov eax, OFFSET FLAT:$SG*
+asm ?b@@YAPBDXZ
+  mov eax, OFFSET FLAT:$SG*

@@ -1,0 +1,6 @@
+rule c2: the same tie declared g_ba, g_ae puts g_ae first, so the tie order is reverse declaration and not the names' order (contrast)
+cl /O2
+obj
+  symbol ?g_ae@@3HA s*+0x0 external
+obj
+  symbol ?g_ba@@3HA s*+0x4 external

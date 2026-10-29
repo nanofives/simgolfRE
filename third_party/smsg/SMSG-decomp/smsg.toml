@@ -1,0 +1,88 @@
+schema_version = 1
+project_id = "simgolf"
+
+[build]
+kind = "build.bat"
+command = "build.bat"
+
+[build.env]
+EXACT = "1"
+
+[toolchain]
+lock_file = "smsg/toolchain.lock.json"
+
+[[toolchain.profiles]]
+id = "vc6-rtm"
+description = "Visual C++ 6.0 without a service pack (CL 12.00.8168, LINK 6.00.8168)"
+variable = "VC6"
+builds = ["golf.exe", "Terrain.dll", "jgld.dll", "lpc10.lib"]
+
+[[toolchain.profiles]]
+id = "vc6-sp5"
+description = "Visual C++ 6.0 with Service Pack 5 (C2 12.00.8966, LINK 6.00.8447)"
+variable = "VC6SP5"
+builds = ["sound.dll", "binkw32.lib"]
+
+[[toolchain.profiles]]
+id = "vc6-sp2-lib"
+description = "Visual C++ 6.0 Service Pack 2's VC98\\LIB, whose LIBCMTD.LIB Terrain.dll and jgld.dll link"
+variable = "VC6SP2LIB"
+builds = ["Terrain.dll", "jgld.dll"]
+
+[[toolchain.profiles]]
+id = "dx8-sdk"
+description = "The DirectX 8.0 SDK's headers and import libraries"
+variable = "DXSDK"
+builds = ["golf.exe", "sound.dll"]
+
+[paths]
+id = "simgolf-paths-v1"
+source = 'C:\SimGolf\decompilation'
+
+[paths.toolchains]
+vc6-rtm = 'C:\Program Files\Microsoft Visual Studio'
+vc6-sp5 = 'C:\VS6SP5'
+vc6-sp2-lib = 'C:\VS6SP2\VC98\LIB'
+dx8-sdk = 'C:\DXSDK'
+
+[paths.exact]
+'C:\SimGolf\golf' = "golf"
+'C:\Projects\3DTerrainLowPoly' = "terrain/Terrain.dll"
+'C:\JackDev' = "jgl/jgld.dll"
+'C:\libpng.lib' = "jgl/libpng.lib"
+'C:\zlib.lib' = "jgl/zlib.lib"
+'C:\SimGolf\external\jpeg-6a' = "golf/jpeg.lib/jpeg-6a"
+'C:\SimGolf\external\lpc10-1.5' = "sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C"
+'C:\SimGolf\external\bink' = "golf/binkw32.lib"
+
+[verifier]
+kind = "literal"
+
+[authenticity]
+policy = "clean"
+
+[layout]
+interventions = "smsg/interventions"
+oracles = "smsg/oracles"
+proofs = "smsg/proofs"
+
+[[targets]]
+id = "golf"
+artifact = "golf/golf.exe/Release/golf.exe"
+oracle = "golfbin/golf.exe"
+authenticity = "allow-quarantine"
+
+[[targets]]
+id = "jgld"
+artifact = "jgl/jgld.dll/Debug/jgld.dll"
+oracle = "golfbin/jgld.dll"
+
+[[targets]]
+id = "sound"
+artifact = "sound/sound.dll/Release/sound.dll"
+oracle = "golfbin/sound.dll"
+
+[[targets]]
+id = "terrain"
+artifact = "terrain/Terrain.dll/Debug/Terrain.dll"
+oracle = "golfbin/Terrain.dll"

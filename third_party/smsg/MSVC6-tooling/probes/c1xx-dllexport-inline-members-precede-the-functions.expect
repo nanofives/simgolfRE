@@ -1,0 +1,9 @@
+rule c1xx: a dllexport class's inline members, and the operator= it declares implicitly, are compiled where the class stands, used or not, and not after a first user (here the class stands above every function); the plain inline h still follows its first user: f g ??4 use1 h use2 (contrast)
+cl /O2 /Ob0
+obj
+  section * .text code * comdat=any ?f@T@@QAEHH@Z
+  section * .text code * comdat=any ?g@T@@QAEHH@Z
+  section * .text code * comdat=any ??4T@@QAEAAU0@ABU0@@Z
+  section * .text code * ?use1@@YAHPAUT@@H@Z
+  section * .text code * comdat=any ?h@@YAHH@Z
+  section * .text code * ?use2@@YAHPAUT@@H@Z

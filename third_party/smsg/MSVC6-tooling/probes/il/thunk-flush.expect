@@ -1,0 +1,13 @@
+rule c1xx: WHERE C1XX writes a class's adjustor / vtordisp thunks, and so where C2 emits them.
+cl /O2 /GR- /MT /Zl /YX /GX
+include thunk_flush.h
+il
+  *"??1P@@UAE@XZ" b30=0*
+  *"??_EP@@$4PPPPPPPM@A@AEPAXI@Z" b30=0*
+  *s6d=0x11 fflags=0x89*
+  *"??_EQ@@$4PPPPPPPM@A@AEPAXI@Z" b30=0*
+  *s6d=0x11 fflags=0x88*
+listing
+  *?f3@@YAXXZ PROC NEAR*
+  *??_EQ@@$4PPPPPPPM@A@AEPAXI@Z PROC NEAR*
+  *?f@Q@@$4PPPPPPPM@A@AEXXZ PROC NEAR*

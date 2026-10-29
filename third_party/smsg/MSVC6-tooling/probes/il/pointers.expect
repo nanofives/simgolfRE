@@ -1,0 +1,9 @@
+rule c1xx: pointers: store through, index, address-of, arithmetic, difference.
+cl
+il
+  *01 var      #db "x" level 2 bucket 8 b30=0 type=int (0x1) skip=0 storage=1 (+0x36 0x10) rclass=4 (+0x36 0x200) size=4 flags=0x2100*
+  *; discard(asg.p32(r, x))*
+  *; discard(asg.i32(load.p32(p), 3))*
+  *; discard(asg.i32(index(load.p32(p), mul(load.i32(i), 4)), 4))*
+  *; discard(asg.i32(add(load.p32(p), 8), 5))*
+  *; ret.i32(add(add(load.i32(load.p32(r)), load.i32(index(load.p32(p), 4))), cvt.i32(shr(sub(load.p32(q), load.p32(p)), 2))))*

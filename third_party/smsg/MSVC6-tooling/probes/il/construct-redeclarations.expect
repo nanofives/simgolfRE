@@ -1,0 +1,18 @@
+rule c1xx: what a redeclaration and a pre-symbol diagnostic cost in C1XX entity ids.
+cl
+il
+  *6   0x10   16  ?g0@@YAHH@Z                                  fdef 2, formal 1, label 1, srcfile 1, gap 1*
+  *3   0x10   16  ?p1@@YAHH@Z                                  formal 1, label 1, gap 1*
+  *3   0x10   16  ?g1@@YAHH@Z                                  fdef 1, formal 1, label 1*
+  *3   0x10   16  ?d1@@YAHH@Z                                  fdef 1, formal 1, label 1*
+  *7   0x10   16  ?g2@@YAHH@Z                                  fdef 2, formal 1, label 1, gap 3*
+  *3   0x10   16  ?p2@@YAHH@Z                                  formal 1, label 1, gap 1*
+  *4   0x10   16  ?g3@@YAHH@Z                                  fdef 1, formal 1, label 1, var 1*
+  *4   0x10   16  ?g4@@YAHH@Z                                  fdef 1, formal 1, label 1, var 1*
+  *4   0x10   16  ?g5@@YAHH@Z                                  fdef 1, formal 1, label 1, var static 1*
+  *4   0x10   16  ?g6@@YAHH@Z                                  fdef 1, formal 1, label 1, var static 1*
+  *3   0x10   16  ?g7@@YAHH@Z                                  fdef 1, formal 1, label 1*
+  *6   0x13   19  ?WinMainX@@YAHHHHH@Z                         fdef 1, formal 4, label 1*
+  *3   0x10   16  ?g8@@YAHH@Z                                  fdef 1, formal 1, label 1*
+  *7   0x13   19  WinMain@16                                   fdef 1, formal 4, label 1, gap 1*
+  *3   0x10   16  ?g9@@YAHH@Z                                  fdef 1, formal 1, label 1*

@@ -1,0 +1,9 @@
+rule c1xx: #pragma optimize and #pragma warning per function: the 0x4f sub-ops 0x1f and 0x23.
+cl /O2
+il
+  *03f4  4f.1f optflags 0xa00800*
+  *4f.23 warnings [C4701:0xd C4716:0xe]*
+  *4f.1f optflags 0x800000*
+  *4f.23 warnings [C4701:0xd C4716:0xe]*
+  *4f.1f optflags 0xa00800*
+  *4f.23 warnings [C4716:0xe]*

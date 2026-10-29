@@ -1,0 +1,34 @@
+rule c1xx: where C1XX writes a `cvt` record (IL 0x2c, tree op 0x64 built by tree_new_expression_record(100, ..) / tree_new_cast c1xx!0x1041bd1d) for the integral promotion of an operand.
+cl /O2
+il
+  *; ret.i32(cvt.i32(load.i8(?gc@@3DA)))*
+  *; ret.i32(sub(cvt.i32(load.i8(?gc@@3DA)), cvt.i32(load.i16(?gs@@3FA))))*
+  *; ret.i32(mul(cvt.i32(load.i8(?gc@@3DA)), cvt.i32(load.i8(?gc@@3DA))))*
+  *; ret.i32(mul(cvt.i32(load.u16(?gus@@3GA)), cvt.i32(load.u16(?gus@@3GA))))*
+  *; ret.i32(div(cvt.i32(load.u8(?guc@@3EA)), cvt.i32(load.u8(?guc@@3EA))))*
+  *; ret.i32(mod(cvt.i32(load.i8(?gc@@3DA)), 3))*
+  *; ret.i32(and(cvt.i32(load.i8(?gc@@3DA)), cvt.i32(load.i16(?gs@@3FA))))*
+  *; ret.i32(shl(load.i32(?gi@@3HA), cvt.i32(load.i8(?gc@@3DA))))*
+  *; ret.i32(shr(cvt.i32(load.i8(?gc@@3DA)), 1))*
+  *; ret.i32(cvt.i32(load.i8(?gc@@3DA)))*
+  *; ret.i32(neg(load.i8(?gc@@3DA)))*
+  *; ret.i32(bnot(load.i8(?gc@@3DA)))*
+  *; ret.i32(cvt.i32(lnot(load.i8(?gc@@3DA))))*
+  *; ret.i32(cvt.i32(cmp.eq(cvt.i32(load.i8(?gc@@3DA)), cvt.i32(load.i16(?gs@@3FA)))))*
+  *; ret.i32(cvt.i32(andand(load.i8(?gc@@3DA), load.i16(?gs@@3FA))))*
+  *; ret.i32(add(cvt.i32(load.u8(?gb@@3_NA)), cvt.i32(load.u8(?gb@@3_NA))))*
+  *; ret.i32(add(cvt.i32(load.i32(?ge@@3W4E@@A)), 1))*
+  *; ret.i32(cvt.i32(add(load.i32(bits(addoff.i32(?gbf@@3UBF@@A, 0), at 0, width 3)), load.u32(bits(addoff.u32(?gbf@@3UBF@@A, 0), at 3, width 5)))))*
+  *; ret.i32(add(cvt.i32(load.i16(addoff.i16(?gbf@@3UBF@@A, 4))), cvt.i32(load.i8(addoff.i8(?gbf@@3UBF@@A, 6)))))*
+  *; ret.i32(load.i32(index(?garr@@3PAHA, mul(cvt.i32(load.i8(?gc@@3DA)), 4))))*
+  *; ret.i32(cvt.i32(load.i8(add(load.p32(?gp@@3PADA), mul(cvt.i32(load.i16(?gs@@3FA)), 1)))))*
+  *; switch(cvt.i32(load.i8(?gc@@3DA)))*
+  *(load.i8(?gc@@3DA))*
+  *; ret.i32(cvt.i32(cond(load.i32(a), cvt.i16(load.i8(?gc@@3DA)), load.i16(?gs@@3FA))))*
+listing
+  *movsx	 eax, BYTE PTR ?gc@@3DA*
+  *neg	 eax*
+  *movsx	 ax, BYTE PTR ?gc@@3DA*
+  *cmp	 ax, WORD PTR ?gs@@3FA*
+  *movsx	 ax, BYTE PTR ?gc@@3DA*
+  *movsx	 eax, ax*

@@ -1,0 +1,8 @@
+rule link: a link with no /OPT, /DEBUG or /INCREMENTAL folds identical functions, so a and b share one body, which sits where b was, after c
+link /entry:main /subsystem:console /nodefaultlib
+map
+  0001:00000000 ?c@@YAHH@Z *
+  0001:{at} ?b@@YAHH@Z *
+  0001:{at} ?a@@YAHH@Z *
+  0001:00000020 _main *
+  16 bytes saved through ICF

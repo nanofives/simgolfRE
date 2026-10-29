@@ -1,0 +1,10 @@
+rule c1xx: a call with a sum argument.
+cl
+il
+  *04 func     #d6 "?callee@@YAHH@Z" b30=0 type=int (0x1) fclass=4*
+  *26    sym #d6:?callee@@YAHH@Z*
+  *3e    call i32 b:0x0*
+  *02    add*
+  *55    arg i32*
+  *4c    endlist*
+  *; ret.i32(call.i32(?callee@@YAHH@Z, arg.i32(add(load.i32(a), load.i32(b)))))*

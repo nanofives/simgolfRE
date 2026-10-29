@@ -1,0 +1,6 @@
+rule c1xx: who makes a local static's guard `$S<n>`.
+cl
+il
+  *#dd "?$S1@?1??st@@YAHH@Z@4EA" level 0*
+  *brtrue Lde (and(cvt.i32(load.u8(?$S1@?1??st@@YAHH@Z@4EA)), 1))*
+  *brtrue Le1 (and(cvt.i32(load.u8(?$S1@?1??st@@YAHH@Z@4EA)), 2))*

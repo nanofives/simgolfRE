@@ -1,0 +1,16 @@
+rule c2: a variable initialised to zero is laid out after the hash walk, in definition order, so the same names keep their declaration order (contrast)
+cl /O2
+obj
+  section * .bss bss rw- size=0x18 align=4
+obj
+  symbol ?count@@3HA s*+0x0 external
+obj
+  symbol ?total@@3HA s*+0x4 external
+obj
+  symbol ?index@@3HA s*+0x8 external
+obj
+  symbol ?value@@3HA s*+0xc external
+obj
+  symbol ?width@@3HA s*+0x10 external
+obj
+  symbol ?height@@3HA s*+0x14 external

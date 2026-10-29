@@ -1,0 +1,10 @@
+rule c1xx: what a local object with a destructor, a try / catch and a throw cost in ids and records.
+cl /GX
+il
+  *5   0x32   50  ?x01@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, local 1*
+  *6   0x4f   79  ?x02@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, local 2*
+  *5   0x2f   47  ?x03@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 2*
+  *8   0x2f   47  ?x04@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, gvar 1, label 2, var 1, gap 1*
+  *6   0x33   51  ?x05@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 2, local 1*
+  *10   0x25   37  ?x06@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 2, segment 1, var 3*
+  *9   0x23   35  ?x07@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 2, var 4*

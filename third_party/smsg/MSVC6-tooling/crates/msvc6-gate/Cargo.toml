@@ -1,0 +1,34 @@
+[package]
+name = "msvc6-gate"
+description = "The identity gates and the account: every relocation, call, branch, literal and global of a byte-identical body held to what the reference names, and every differing byte of a linked image given an owner"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+iced-x86 = { workspace = true, features = ["masm", "instr_info"] }
+md-5.workspace = true
+memchr.workspace = true
+msvc6-base.workspace = true
+msvc6-diff.workspace = true
+msvc6-image.workspace = true
+msvc6-project.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-fixture.workspace = true
+msvc6-toolchain.workspace = true
+
+[lints]
+workspace = true
+
+[[test]]
+name = "vc6"
+path = "tests/vc6.rs"
+harness = false

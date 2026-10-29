@@ -1,0 +1,8 @@
+rule link: /OPT:NOICF keeps every copy, in object order: a, c, b (contrast)
+link /entry:main /subsystem:console /nodefaultlib /opt:noicf
+map
+  0001:00000000 ?a@@YAHH@Z *
+  0001:00000010 ?c@@YAHH@Z *
+  0001:00000020 ?b@@YAHH@Z *
+  0001:00000030 _main *
+  !*saved through ICF*

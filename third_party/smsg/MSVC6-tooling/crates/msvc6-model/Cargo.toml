@@ -1,0 +1,36 @@
+[package]
+name = "msvc6-model"
+description = "Settled front-end models that predict what CL emits without a shim: C1's entity and label counter priced from the text, the order C2 schedules a TU's COMDATs from C1XX's IL offsets, the bucket order of a TU's .bss, and the name order of a frame-homed body's locals"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+iced-x86 = { workspace = true, features = ["instr_info"] }
+msvc6-base.workspace = true
+msvc6-diff.workspace = true
+msvc6-gate.workspace = true
+msvc6-il.workspace = true
+msvc6-image.workspace = true
+msvc6-match.workspace = true
+msvc6-project.workspace = true
+msvc6-toolchain.workspace = true
+serde.workspace = true
+similar.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-project.workspace = true
+msvc6-fixture.workspace = true
+
+[lints]
+workspace = true
+
+[[test]]
+name = "vc6"
+path = "tests/vc6.rs"
+harness = false

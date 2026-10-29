@@ -1,0 +1,5 @@
+rule c1: plain char is signed, so widening it is a sign extension
+cl /O2
+asm= _f
+  movsx eax, BYTE PTR _g_c
+  ret 0

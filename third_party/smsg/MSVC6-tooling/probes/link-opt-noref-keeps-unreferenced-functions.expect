@@ -1,0 +1,6 @@
+rule link: under /OPT:NOREF every function stays, in object order (contrast)
+link /entry:main /subsystem:console /nodefaultlib /opt:noref
+map
+  0001:00000000 ?used@@YAHH@Z *
+  0001:00000010 ?unused@@YAHH@Z *
+  0001:00000020 _main *

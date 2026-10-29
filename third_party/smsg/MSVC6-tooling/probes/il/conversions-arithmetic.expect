@@ -1,0 +1,21 @@
+rule c1xx: after promotion, the narrower operand of a binary operator is converted to the other's type (conv_usual_arithmetic c1xx!0x10414dd5), and only when the representation changes: int with unsigned or long (same size) writes NO cvt (the operator node has no type of its own; C2's usual_arithmetic_type c2!0x1072741b makes it unsigned), unsigned short + unsigned promotes the short to INT only; int with __int64 writes cvt.i64; an integer with a float type converts the integer to THAT float type (float arithmetic stays float: `gi + gf` is f32, never double); a narrow integer goes through int first (cvt.f32(cvt.i32(..))); float with double converts the float.
+cl /O2
+il
+  *; ret.u32(div(load.u32(?gu@@3IA), load.i32(?gi@@3HA)))*
+  *; ret.i32(cvt.i32(div(load.i32(?gi@@3HA), load.u32(?gu@@3IA))))*
+  *; ret.i32(add(load.i32(?gi@@3HA), load.i32(?gl@@3JA)))*
+  *; ret.u32(add(cvt.i32(load.u16(?gus@@3GA)), load.u32(?gu@@3IA)))*
+  *; ret.i64(add(load.i64(?gq@@3_JA), cvt.i64(load.i32(?gi@@3HA))))*
+  *; ret.i64(mul(load.i64(?gq@@3_JA), cvt.i64(load.u32(?gu@@3IA))))*
+  *; ret.f32(add(cvt.f32(load.i32(?gi@@3HA)), load.f32(?gf@@3MA)))*
+  *; ret.f64(mul(cvt.f64_const(load.f32(?gf@@3MA)), 2.0))*
+  *; ret.f32(mul(load.f32(?gf@@3MA), 2.0))*
+  *; ret.f64(mul(cvt.f64_const(load.i32(?gi@@3HA)), 1.5))*
+  *; ret.f32(add(cvt.f32(cvt.i32(load.i8(?gc@@3DA))), load.f32(?gf@@3MA)))*
+  *; ret.f64(mul(cvt.f64(cvt.i32(load.i16(?gs@@3FA))), load.f64(?gd@@3NA)))*
+  *; ret.f32(add(cvt.f32(load.i64(?gq@@3_JA)), load.f32(?gf@@3MA)))*
+  *; ret.f64(add(cvt.f64(load.f32(?gf@@3MA)), load.f64(?gd@@3NA)))*
+  *; ret.f64(cvt.f64(add(load.f64(?gld@@3OA), cvt.f64(load.f32(?gf@@3MA)))))*
+  *; ret.i32(cvt.i32(cmp.lt(cvt.f64(load.f32(?gf@@3MA)), load.f64(?gd@@3NA))))*
+  *; ret.i32(cvt.i32(cmp.lt(cvt.f32(cvt.i32(load.i8(?gc@@3DA))), load.f32(?gf@@3MA))))*
+  *; ret.i32(cvt.i32(cmp.lt(load.f32(?gf@@3MA), cvt.f32(load.i32(?gi@@3HA)))))*

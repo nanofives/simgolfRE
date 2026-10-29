@@ -1,0 +1,17 @@
+rule link: the survivor of a fold comes from LINK's qsort: five copies f0 to f4 between d0 to d4 keep the body where f2 was, after d1
+link /entry:main /subsystem:console /nodefaultlib
+map
+  0001:00000000 ?d0@@YAHH@Z *
+  0001:00000010 ?d1@@YAHH@Z *
+  0001:00000020 ?f*
+  0001:00000030 ?d2@@YAHH@Z *
+map
+  0001:00000020 ?f0@@YAHH@Z *
+map
+  0001:00000020 ?f1@@YAHH@Z *
+map
+  0001:00000020 ?f2@@YAHH@Z *
+map
+  0001:00000020 ?f3@@YAHH@Z *
+map
+  0001:00000020 ?f4@@YAHH@Z *

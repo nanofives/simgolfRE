@@ -1,0 +1,9 @@
+rule c2: the same body with names whose buckets rise as they are declared (a 1, b 2, c 3, d 4, e 5, h 8) keeps declaration order, so the order comes from the names (contrast)
+cl /Od
+frame= ?f@@YAHXZ
+  _a$ = -4
+  _b$ = -8
+  _c$ = -12
+  _d$ = -16
+  _e$ = -20
+  _h$ = -24

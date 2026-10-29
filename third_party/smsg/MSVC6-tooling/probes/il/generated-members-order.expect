@@ -1,0 +1,11 @@
+rule c1xx: a compiler-generated special member (here the implicit default constructors) is written right AFTER the definition that first needs it, before the next definition, breadth first: the ones that definition needs in the order it needs them, then the ones those need.
+cl
+il
+  *?g@D@@UAEHXZ at*
+  *?mk@@YAHXZ at*
+  *??0D@@QAE@XZ at*
+  *??0E@@QAE@XZ at*
+  *??0B1@@QAE@XZ at*
+  *??0B2@@QAE@XZ at*
+  *??0VB@@QAE@XZ at*
+  *?last@@YAHH@Z at*

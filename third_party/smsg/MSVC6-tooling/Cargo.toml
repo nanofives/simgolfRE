@@ -1,0 +1,57 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+publish = false
+
+[workspace.dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+cpp_demangle = "0.5.1"
+md-5 = "0.10"
+memchr = "2"
+msvc-demangler = "0.11.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+toml = "0.9"
+similar = "3.2.0"
+iced-x86 = { version = "1.21", default-features = false, features = ["std", "decoder"] }
+rustix = { version = "1", features = ["event", "fs", "process"] }
+msvc6-base = { path = "crates/msvc6-base" }
+msvc6-class = { path = "crates/msvc6-class" }
+msvc6-codeview = { path = "crates/msvc6-codeview" }
+msvc6-diff = { path = "crates/msvc6-diff" }
+msvc6-fixture = { path = "crates/msvc6-fixture" }
+msvc6-gate = { path = "crates/msvc6-gate" }
+msvc6-il = { path = "crates/msvc6-il" }
+msvc6-image = { path = "crates/msvc6-image" }
+msvc6-link = { path = "crates/msvc6-link" }
+msvc6-lint = { path = "crates/msvc6-lint" }
+msvc6-match = { path = "crates/msvc6-match" }
+msvc6-model = { path = "crates/msvc6-model" }
+msvc6-pdb = { path = "crates/msvc6-pdb" }
+msvc6-project = { path = "crates/msvc6-project" }
+msvc6-source = { path = "crates/msvc6-source" }
+msvc6-toolchain = { path = "crates/msvc6-toolchain" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_debug_implementations = "warn"
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+cast_possible_truncation = "deny"
+cast_possible_wrap = "deny"
+cast_sign_loss = "deny"
+indexing_slicing = "deny"
+unwrap_used = "deny"
+expect_used = "warn"
+panic = "warn"
+
+[profile.release]
+opt-level = 2

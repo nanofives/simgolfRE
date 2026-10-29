@@ -1,0 +1,5 @@
+rule cl: under /O2 each function is its own COMDAT section, so LINK can order and drop functions one by one
+cl /O2
+obj
+  section * .text code r-x * comdat=nodup ?f@@YAHH@Z
+  section * .text code r-x * comdat=nodup ?g@@YAHH@Z

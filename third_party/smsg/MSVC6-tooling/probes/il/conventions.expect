@@ -1,0 +1,12 @@
+rule c1xx: calling conventions: the call record's byte operand, and the function records' flags.
+cl
+il
+  *0e fdef     #df "?f_static@@YAHH@Z" b30=0 type=int (0x1) fclass=3 (+0x36 0x30) size=4 flags=0x0 cvtype=0 ex=0x3f4 sy=0x0 s6d=0x12 fflags=0x8*
+  *04 func     #e3 "f_c" b30=0 type=int (0x1) fclass=4*
+  *04 func     #db "?f_fast@@YIHHH@Z" b30=0 type=int (0x1) fclass=4 (+0x36 0x40) size=4 flags=0x4*
+  *04 func     #e5 "?f_noreturn@@YAXXZ" b30=0 type=void (0x7) fclass=4 (+0x36 0x40) size=0 flags=0x80*
+  *04 func     #d8 "?f_std@@YGHH@Z" b30=0 type=int (0x1) fclass=4 (+0x36 0x40) size=4 flags=0x10*
+  *3e    call i32 b:0x0*
+  *3e    call i32 b:0x10*
+  *3e    call i32 b:0x4*
+  *; discard(asg.i32(r, add(add(add(add(add(call.i32(?f_cdecl@@YAHH@Z, arg.i32(load.i32(a))), call.i32(?f_std@@YGHH@Z, arg.i32(load.i32(a)))), call.i32(?f_fast@@YIHHH@Z, arg.i32(2), arg.i32(load.i32(a)))), call.i32(?f_var@@YAHHZZ, arg.none(2), arg.none(1), arg.i32(load.i32(a)))), call.i32(?f_static@@YAHH@Z, arg.i32(load.i32(a)))), call.i32(f_c, arg.i32(load.i32(a))))))*

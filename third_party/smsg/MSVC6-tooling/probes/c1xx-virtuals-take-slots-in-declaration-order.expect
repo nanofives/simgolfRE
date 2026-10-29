@@ -1,0 +1,8 @@
+rule c1xx: with no name shared the slots follow the declarations: a, f, b, g (contrast)
+cl /O2
+data
+  ??_7V@@6B@ DD FLAT:?a@V@@UAEHXZ
+  DD FLAT:?f@V@@UAEHH@Z
+  DD FLAT:?b@V@@UAEHXZ
+  DD FLAT:?g@V@@UAEHPAD@Z
+  CONST ENDS

@@ -1,0 +1,20 @@
+rule c1xx: a loop.
+cl
+il
+  *03 label    #dd "" level 2 role=0xb refs=1*
+  *03 label    #dc "" level 2 role=0xc refs=1*
+  *03 label    #db "" level 2 role=8 refs=1*
+  *; discard(asg.i32(s, 0))*
+  *; discard(asg.i32(i, 0))*
+  *; discard(load.i32(i))*
+  *; goto Ldb*
+  *; label Ldc*
+  *; discard(postinc.i32(i, 1))*
+  *; label Ldb*
+  *; brfalse Ldd (cmp.lt(load.i32(i), load.i32(n)))*
+  *53    scope*
+  *; discard(asg.add.i32(s, load.i32(i)))*
+  *54    endscope 3*
+  *; goto Ldc*
+  *; label Ldd*
+  *; ret.i32(load.i32(s))*

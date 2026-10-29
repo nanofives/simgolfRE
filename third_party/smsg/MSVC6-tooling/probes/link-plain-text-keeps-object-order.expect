@@ -1,0 +1,6 @@
+rule link: with every function in .text the image keeps the object's order: fb, fa, main (contrast)
+link /entry:main /subsystem:console /nodefaultlib
+map
+  0001:00000000 ?fb@@YAHH@Z 00401000 f link-plain-text-keeps-object-order.obj
+  0001:00000010 ?fa@@YAHH@Z *
+  0001:00000020 _main *

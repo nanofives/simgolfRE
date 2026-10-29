@@ -1,0 +1,6 @@
+rule link: a C object is stamped Utc12_C with the same C2 build, so the Rich header splits an image's objects by front end (contrast)
+link /entry:main /subsystem:console /nodefaultlib
+obj
+  comp.id Utc12_C {build:c2}
+rich=
+  Utc12_C {build:c2} 1

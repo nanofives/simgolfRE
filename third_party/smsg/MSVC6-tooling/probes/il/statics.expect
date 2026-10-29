@@ -1,0 +1,11 @@
+rule c1xx: a static local with a constant initialiser and one with a dynamic initialiser.
+cl
+il
+  *01 var      #dc "?s_const@?1??statics@@YAHXZ@4HA" level 0 b30=0x24*
+  *01 var      #e0 "?$S1@?1??statics@@YAHXZ@4EA" level 0 b30=0x24 type=uint (0x2) skip=0 storage=2 (+0x36 0x20) rclass=4 (+0x36 0x200) size=1*
+  *00 data #dc:?s_const@?1??statics@@YAHXZ@4HA at +0*
+  *03 label    #e1 "" level 2 role=0x1e*
+  *; brtrue Le1 (and(cvt.i32(load.u8(?$S1@?1??statics@@YAHXZ@4EA)), 1))*
+  *; discard(asg.or.u8(?$S1@?1??statics@@YAHXZ@4EA, 1))*
+  *; discard(asg.i32(?s_dyn@?1??statics@@YAHXZ@4HA, call.i32(?f@@YAHXZ)))*
+  *; label Le1*

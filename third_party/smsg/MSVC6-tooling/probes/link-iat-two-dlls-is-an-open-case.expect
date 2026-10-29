@@ -1,0 +1,18 @@
+rule link: linked kernel32.lib then user32.lib, the KERNEL32 run starts at pull element 8, GetCurrentThread, where the one-DLL rule gives element 5, while USER32 rotates as five imports do: one sort over both DLLs' elements, keyed by DLL, writes this IAT
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib user32.lib
+imports=
+  KERNEL32.dll GetCurrentThread
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetCurrentProcess
+  KERNEL32.dll GetTickCount
+  KERNEL32.dll GetACP
+  USER32.dll GetActiveWindow
+  USER32.dll GetFocus
+  USER32.dll GetCapture
+  USER32.dll GetMessagePos
+  USER32.dll GetDesktopWindow

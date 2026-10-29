@@ -1,0 +1,15 @@
+LIBRARY Sound
+
+EXPORTS
+	create_sound                                                                @1
+	delete_sound                                                                @2
+	init_sound_timer                                                            @3
+	release_sound                                                               @4
+	?create_device@Dll_Wave_Device@@KA?AW4SNDERR@@PAPAVWave_Device@@K@Z          @5
+	?delete_device@Dll_Wave_Device@@KA?AW4SNDERR@@XZ                             @6
+	?create_device@Dll_Midi_Device@@KA?AW4SNDERR@@PAPAVMidi_Device@@K@Z          @7
+	?delete_device@Dll_Midi_Device@@KA?AW4SNDERR@@XZ                             @8
+	?create_device@Dll_Wave_In_Device@@KA?AW4SNDERR@@PAPAVWave_In_Device@@K@Z    @9
+	?delete_device@Dll_Wave_In_Device@@KA?AW4SNDERR@@XZ                          @10
+	get_sound_version                                                           @11
+	?call_back@WaveInDeviceMgr@@SGXPAUHWAVEIN__@@GKKK@Z                          @12

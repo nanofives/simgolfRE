@@ -1,0 +1,10 @@
+rule c1xx: under /GR a vftable's slot -1 is its complete object locator ??_R4, and the type descriptor, base class descriptor and hierarchy records follow the vftables
+cl /O2 /GR
+data
+  ??_7B@@6B@ DD FLAT:??_R4B@@6B@
+  DD FLAT:?v@B@@UAEHXZ
+  ??_R0?AUB@@@8 DD FLAT:??_7type_info@@6B@
+  ??_R1A@?0A@A@B@@8 DD FLAT:??_R0?AUB@@@8
+  ??_R2B@@8 DD FLAT:??_R1A@?0A@A@B@@8
+  ??_R3B@@8 DD 00H
+  ??_R4B@@6B@ DD 00H

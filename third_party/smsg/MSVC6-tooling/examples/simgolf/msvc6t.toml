@@ -1,0 +1,1356 @@
+schema = 1
+optional = ["SIMGOLF_GHIDRA", "SIMGOLF_DEMO", "SIMGOLF_UNWRAPPED", "SIMGOLF_PDBS", "MSVC6DECOMP"]
+
+[toolchain.vc6]
+root = "${MSVC6T_VC6}"
+layout = "vs6"
+expect = { cl = "12.00.8168", c1 = "12.00.8168", c1xx = "12.00.8168", c2 = "12.00.8168", link = "6.00.8168" }
+
+[toolchain.vc6sp5]
+root = "${MSVC6T_VC6SP5}"
+layout = "vs6"
+expect = { c2 = "12.00.8966", link = "6.00.8447" }
+
+[runner]
+kind = "wine"
+command = ["wine"]
+prefixes = "${MSVC6T_PREFIXES:-~/.cache/msvc6t/prefixes}"
+template = "${MSVC6T_WINE_TEMPLATE:-~/.wine}"
+tokens = "${MSVC6T_TOKENS:-/tmp/msvc6t-jobs}"
+native_msvcrt = "${MSVC6T_MSVCRT}"
+msvcrt_md5 = "63da4613383ec70e047b4cd5c48f0b05"
+display = { name = ":99", start = ["Xvfb", ":99", "-screen", "0", "1024x768x24", "-nolisten", "tcp"] }
+
+[cache]
+dir = "${MSVC6T_CACHE_DIR:-~/.cache/msvc6t/cl}"
+max = "20 GiB"
+
+[[image]]
+id = "GOLF"
+reference = "${SIMGOLF_ORIG}/golf.exe"
+sha256 = "a78b196737f86600ab95693334a7015e5638cde581c6c78eb2c6227c7b9834ab"
+compiler = "vc6"
+linker = "vc6"
+clock = ["coff.timestamp", "export.timestamp"]
+project = { dsw = "${SIMGOLF}/golf/golf.dsw", config = "golf - Win32 Release" }
+functions = ["reccmp-csv:tables/GOLF.extents.csv", "ghidra-json:${SIMGOLF_GHIDRA}/golf.exe.functions.json", "discover"]
+names = ["exports", "reccmp-csv:${SIMGOLF}/golf/golf.exe/smsg-globals.csv", "tsv:tables/GOLF.symbols.tsv", "tsv:tables/GOLF.addresses.tsv", "imports"]
+dropped = ["tsv:tables/GOLF.dropped.tsv"]
+libraries = ["$vc6/VC98/Lib/LIBCMT.LIB", "${MSVC6T_VC6SP2}/VC98/lib/lib/libcmt.lib", "$vc6sp5/VC98/Lib/LIBCMT.LIB", "$vc6/VC98/Lib/LIBCIMT.LIB", "$vc6sp5/VC98/Lib/LIBCIMT.LIB"]
+
+residue = [
+    { kind = "text-pad", off = 0x001036, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in ClearPlot@0x401000's align pad" },
+    { kind = "text-pad", off = 0x0017c5, len = 11, note = "`call dword ptr ds:[4BA1DCh]; nop; nop; nop; nop; nop' in InitPlots@0x401750's align pad" },
+    { kind = "text-pad", off = 0x001bf5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in UpdateHomeVIP@0x4017d0's align pad" },
+    { kind = "text-pad", off = 0x001c27, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in UpdateAllHomeVIPs@0x401c00's align pad" },
+    { kind = "text-pad", off = 0x001c6b, len = 5, note = "`call 00405099h' in HeapNew::`scalar deleting destructor'@0x401c30's align pad" },
+    { kind = "text-pad", off = 0x001d03, len = 13, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop; nop; nop' in ClassList<struct StringStruct>::~ClassList<struct StringStruct>@0x401c70's align pad" },
+    { kind = "text-pad", off = 0x00212a, len = 6, note = "`call 00405098h; nop' in ClassList<struct StringStruct>::add@0x401d10's align pad" },
+    { kind = "text-pad", off = 0x002185, len = 11, note = "`call dword ptr ds:[4BA03Ch]; nop; nop; nop; nop; nop' in Wave_In_Device::fade@0x402180's align pad" },
+    { kind = "text-pad", off = 0x002193, len = 13, note = "`call dword ptr ds:[4BA150h]; nop; nop; nop; nop; nop; nop; nop' in Midi_Device::add_to_time_past@0x402190's align pad" },
+    { kind = "text-pad", off = 0x0021d6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in HeapNew::operator delete@0x4021b0's align pad" },
+    { kind = "text-pad", off = 0x002273, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in ClassList<struct PalStruct>::~ClassList<struct PalStruct>@0x4021e0's align pad" },
+    { kind = "text-pad", off = 0x00269a, len = 6, note = "`call 00405098h; nop' in ClassList<struct PalStruct>::add@0x402280's align pad" },
+    { kind = "text-pad", off = 0x002713, len = 13, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop; nop; nop' in ClassList<struct PalStruct>::remove_all@0x4026a0's align pad" },
+    { kind = "text-pad", off = 0x002783, len = 13, note = "`call dword ptr ds:[4BA150h]; nop; nop; nop; nop; nop; nop; nop' in ClassList<struct StringStruct>::`scalar deleting destructor'@0x402720's align pad" },
+    { kind = "text-pad", off = 0x0027f3, len = 13, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop; nop; nop' in ClassList<struct PalStruct>::`scalar deleting destructor'@0x402790's align pad" },
+    { kind = "text-pad", off = 0x002863, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in ClassList<struct SpriteStruct>::`scalar deleting destructor'@0x402800's align pad" },
+    { kind = "text-pad", off = 0x003f6a, len = 6, note = "`call 00405098h; nop' in $E7@0x403f40's align pad" },
+    { kind = "text-pad", off = 0x003f9c, len = 4, note = "`nop; and eax,0B0680122h' in $E10@0x403f80's align pad" },
+    { kind = "text-pad", off = 0x003fc7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in $E12@0x403fa0's align pad" },
+    { kind = "text-pad", off = 0x004027, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in $E17@0x404000's align pad" },
+    { kind = "text-pad", off = 0x004087, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in $E22@0x404060's align pad" },
+    { kind = "text-pad", off = 0x00411a, len = 6, note = "`call 00405098h; nop' in FLC_GetNextFrameSurface@0x404090's align pad" },
+    { kind = "text-pad", off = 0x004256, len = 10, note = "`call dword ptr ds:[4BA0A4h]; nop; nop; nop; nop' in FlicSprite::~FlicSprite@0x404200's align pad" },
+    { kind = "text-pad", off = 0x0042eb, len = 5, note = "`call 00405099h' in FlicAnim::~FlicAnim@0x404280's align pad" },
+    { kind = "text-pad", off = 0x004355, len = 11, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop' in Screen::~Screen@0x404350's align pad" },
+    { kind = "text-pad", off = 0x004885, len = 11, note = "`call dword ptr ds:[4BA160h]; nop; nop; nop; nop; nop' in WidgetBase::on_button_text_draw@0x404880's align pad" },
+    { kind = "text-pad", off = 0x004897, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WidgetBase::on_listbox_scroll_delete@0x404890's align pad" },
+    { kind = "text-pad", off = 0x0048a5, len = 11, note = "`call dword ptr ds:[4BA1BCh]; nop; nop; nop; nop; nop' in WidgetBase::on_dialog_item_back_draw@0x4048a0's align pad" },
+    { kind = "text-pad", off = 0x0048b3, len = 13, note = "`call dword ptr ds:[4BA010h]; nop; nop; nop; nop; nop; nop; nop' in BasePop::on_adjust_button_placement@0x4048b0's align pad" },
+    { kind = "text-pad", off = 0x0048c6, len = 10, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop' in BasePop::on_exec@0x4048c0's align pad" },
+    { kind = "text-pad", off = 0x004907, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in AssetSurface::resize_buffer@0x4048f0's align pad" },
+    { kind = "text-pad", off = 0x004928, len = 8, note = "`call 00405096h; nop; nop; nop' in GraphicWin::update@0x404920's align pad" },
+    { kind = "text-pad", off = 0x004938, len = 8, note = "`call 00405096h; nop; nop; nop' in GraphicWin::OnHotspotDefault@0x404930's align pad" },
+    { kind = "text-pad", off = 0x004943, len = 13, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop; nop; nop' in GraphicWin::is_graphicwin@0x404940's align pad" },
+    { kind = "text-pad", off = 0x004995, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in ScaleXCoordinate@0x404970's align pad" },
+    { kind = "text-pad", off = 0x0049c8, len = 8, note = "`call 00405096h; nop; nop; nop' in DrawSurfaceLine@0x4049a0's align pad" },
+    { kind = "text-pad", off = 0x004a14, len = 12, note = "`mov eax,0FFFFEEFCh; pop ecx; add eax,ecx; mov eax,[eax]; jmp eax' in DrawTextWithColor@0x4049d0's align pad" },
+    { kind = "text-pad", off = 0x004b6a, len = 6, note = "`call 00405098h; nop' in DrawTextClampedToScreen@0x404ad0's align pad" },
+    { kind = "text-pad", off = 0x004bb5, len = 11, note = "`call dword ptr ds:[4BA130h]; nop; nop; nop; nop; nop' in DrawTextCenteredAtY@0x404b70's align pad" },
+    { kind = "text-pad", off = 0x004c05, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in DrawTextCenteredWithShadow@0x404bc0's align pad" },
+    { kind = "text-pad", off = 0x004de7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in $E7@0x404cf0's align pad" },
+    { kind = "text-pad", off = 0x004f34, len = 12, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop; nop' in $E12@0x404e90's align pad" },
+    { kind = "text-pad", off = 0x005099, len = 7, note = "`push ecx; push eax; call 00404A14h' in $E17@0x405000's align pad" },
+    { kind = "text-pad", off = 0x005144, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in $E20@0x4050b0's align pad" },
+    { kind = "text-pad", off = 0x0051d6, len = 10, note = "`call dword ptr ds:[4BA184h]; nop; nop; nop; nop' in $E22@0x405150's align pad" },
+    { kind = "text-pad", off = 0x0052c9, len = 7, note = "`call 00405097h; nop; nop' in $E25@0x4051f0's align pad" },
+    { kind = "text-pad", off = 0x0054c3, len = 13, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop; nop; nop; nop; nop' in $E32@0x405440's align pad" },
+    { kind = "text-pad", off = 0x005603, len = 13, note = "`call dword ptr ds:[4BA1D4h]; nop; nop; nop; nop; nop; nop; nop' in $E37@0x405580's align pad" },
+    { kind = "text-pad", off = 0x005743, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in $E42@0x4056c0's align pad" },
+    { kind = "text-pad", off = 0x0058d9, len = 7, note = "`call 00405097h; nop; nop' in $E47@0x405830's align pad" },
+    { kind = "text-pad", off = 0x0059f6, len = 10, note = "`call dword ptr ds:[4BA200h]; nop; nop; nop; nop' in SpawnCritter@0x405970's align pad" },
+    { kind = "text-pad", off = 0x005ab6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in PlayCritterCall@0x405a00's align pad" },
+    { kind = "text-pad", off = 0x005b05, len = 11, note = "`call dword ptr ds:[4BA150h]; nop; nop; nop; nop; nop' in ValidateAndTrimString@0x405ac0's align pad" },
+    { kind = "text-pad", off = 0x006098, len = 8, note = "`call 00405096h; nop; nop; nop' in TrySpawnWildlifeHabitat@0x405e30's align pad" },
+    { kind = "text-pad", off = 0x006c2b, len = 5, note = "`call 00405099h' in ProcessMembershipUpgrade@0x406670's align pad" },
+    { kind = "text-pad", off = 0x006d43, len = 13, note = "`call dword ptr ds:[4BA070h]; nop; nop; nop; nop; nop; nop; nop' in CheckCanAfford@0x406c30's align pad" },
+    { kind = "text-pad", off = 0x006f19, len = 7, note = "`call 00405097h; nop; nop' in FormatGolferMessage@0x406d50's align pad" },
+    { kind = "text-pad", off = 0x006f86, len = 10, note = "`call dword ptr ds:[4BA174h]; nop; nop; nop; nop' in FormatGolferMessage@0x406d50's align pad" },
+    { kind = "text-pad", off = 0x006ff4, len = 12, note = "`call dword ptr ds:[4BA0ECh]; nop; nop; nop; nop; nop; nop' in FormatGolferMessage@0x406d50's align pad" },
+    { kind = "text-pad", off = 0x007498, len = 8, note = "`call 00405096h; nop; nop; nop' in IsNeighborWalkable@0x407400's align pad" },
+    { kind = "text-pad", off = 0x007dfb, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after DrawCircleOnTerrain@0x407c60)" },
+    { kind = "text-pad", off = 0x009943, len = 13, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop; nop; nop' in CheckGolferShotDeviation@0x409620's align pad" },
+    { kind = "text-pad", off = 0x0099e4, len = 12, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop; nop; nop' in AddGolferTrailPoint@0x409950's align pad" },
+    { kind = "text-pad", off = 0x009a87, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in StartShotTrail@0x4099f0's align pad" },
+    { kind = "text-pad", off = 0x009be9, len = 7, note = "`call 00405097h; nop; nop' in SpawnGolferDivot@0x409a90's align pad" },
+    { kind = "text-pad", off = 0x009cab, len = 5, note = "`call 00405099h' in UpdateDivots@0x409bf0's align pad" },
+    { kind = "text-pad", off = 0x009ce4, len = 12, note = "`call dword ptr ds:[4BA144h]; nop; nop; nop; nop; nop; nop' in AppendScriptCommand@0x409cb0's align pad" },
+    { kind = "text-pad", off = 0x00a156, len = 10, note = "`call dword ptr ds:[4BA200h]; nop; nop; nop; nop' in SetTileDataAt@0x40a130's align pad" },
+    { kind = "text-pad", off = 0x00a4d7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in BuildDemolishTooltipText@0x40a160's align pad" },
+    { kind = "text-pad", off = 0x00acca, len = 6, note = "`call 00405098h; nop' in ProcessHireEmployeeSelection@0x40aa80's align pad" },
+    { kind = "text-pad", off = 0x00b493, len = 13, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop; nop; nop; nop; nop' in TransferGameState@0x40afa0's align pad" },
+    { kind = "text-pad", off = 0x00b9a6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in LoadCourseFromFile@0x40b840's align pad" },
+    { kind = "text-pad", off = 0x00befa, len = 6, note = "`call 00405098h; nop' in TransferCourseState@0x40bbf0's align pad" },
+    { kind = "text-pad", off = 0x00bf14, len = 12, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop; nop' in TerrainMoveTo@0x40bf00's align pad" },
+    { kind = "text-pad", off = 0x00bf93, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in IsPositionInvalid@0x40bf60's align pad" },
+    { kind = "text-pad", off = 0x00bfd7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in GetTileAtPosition@0x40bfa0's align pad" },
+    { kind = "text-pad", off = 0x00c2e6, len = 10, note = "`call dword ptr ds:[4BA068h]; nop; nop; nop; nop' in GetTileElevation@0x40c170's align pad" },
+    { kind = "text-pad", off = 0x00c39b, len = 5, note = "`call 00405099h' in GetTerrainRowSlope@0x40c2f0's align pad" },
+    { kind = "text-pad", off = 0x00c6e7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in PlayPositionedSound@0x40c500's align pad" },
+    { kind = "text-pad", off = 0x00c79a, len = 6, note = "`call 00405098h; nop' in AddFloatingMessage@0x40c720's align pad" },
+    { kind = "text-pad", off = 0x00c859, len = 7, note = "`call 00405097h; nop; nop' in RenderFloatingMessages@0x40c7a0's align pad" },
+    { kind = "text-pad", off = 0x00c906, len = 10, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop' in AddMoneyPopup@0x40c890's align pad" },
+    { kind = "text-pad", off = 0x00ca0b, len = 5, note = "`call 00405099h' in RenderMoneyPopups@0x40c910's align pad" },
+    { kind = "text-pad", off = 0x00cbf7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in ShowStoryMessage@0x40cb00's align pad" },
+    { kind = "text-pad", off = 0x00cdc7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in DrawDialogFrameWithBorder@0x40cc00's align pad" },
+    { kind = "text-pad", off = 0x00d31a, len = 6, note = "`call 00405098h; nop' in RenderUIFrameWithCorners@0x40d0b0's align pad" },
+    { kind = "text-pad", off = 0x00d757, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in RenderDialogueBubble@0x40d6a0's align pad" },
+    { kind = "text-pad", off = 0x00d886, len = 10, note = "`call dword ptr ds:[4BA154h]; nop; nop; nop; nop' in FormatDateString@0x40d7b0's align pad" },
+    { kind = "text-pad", off = 0x00dda8, len = 8, note = "`call 00405096h; nop; nop; nop' in ValidateBuildingPlacement@0x40db90's align pad" },
+    { kind = "text-pad", off = 0x00de67, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in FindNearestBuildingOfType@0x40ddb0's align pad" },
+    { kind = "text-pad", off = 0x00df7a, len = 6, note = "`call 00405098h; nop' in FindNearestBench@0x40de70's align pad" },
+    { kind = "text-pad", off = 0x00dff7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in FindBuildingAtTile@0x40df80's align pad" },
+    { kind = "text-pad", off = 0x00e3f3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in PlaceBuildingOnTerrain@0x40e000's align pad" },
+    { kind = "text-pad", off = 0x00e5a8, len = 8, note = "`call 00405096h; nop; nop; nop' in DemolishBuilding@0x40e400's align pad" },
+    { kind = "text-pad", off = 0x00e715, len = 11, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop' in BuildCourseUpgradeMessage@0x40e5f0's align pad" },
+    { kind = "text-pad", off = 0x021b53, len = 13, note = "`call dword ptr ds:[4BA168h]; nop; nop; nop; nop; nop; nop; nop' in MainLoop@0x40f5c0's align pad" },
+    { kind = "text-pad", off = 0x021b87, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in SpriteObject::Draw@0x421b60's align pad" },
+    { kind = "text-pad", off = 0x021f96, len = 10, note = "`call dword ptr ds:[4BA1C8h]; nop; nop; nop; nop' in SpawnGolfer@0x421bc0's align pad" },
+    { kind = "text-pad", off = 0x022527, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in CalculateShotPower@0x422430's align pad" },
+    { kind = "text-pad", off = 0x022698, len = 8, note = "`call 00405096h; nop; nop; nop' in CalculateGolferMaxDistance@0x422530's align pad" },
+    { kind = "text-pad", off = 0x0289db, len = 5, note = "`call 00405099h' in ProcessHoleCompletion@0x427380's align pad" },
+    { kind = "text-pad", off = 0x02dbf8, len = 8, note = "`call 00405096h; nop; nop; nop' in CalculateTerrainHeight@0x42dba0's align pad" },
+    { kind = "text-pad", off = 0x02dd44, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in FormatNumberWithCommas@0x42dc00's align pad" },
+    { kind = "text-pad", off = 0x02ef37, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in GetTileValue@0x42ee80's align pad" },
+    { kind = "text-pad", off = 0x02f1b3, len = 13, note = "`call dword ptr ds:[4BA1C8h]; nop; nop; nop; nop; nop; nop; nop' in FloodFillWalkableArea@0x42f120's align pad" },
+    { kind = "text-pad", off = 0x02f2b8, len = 8, note = "`call 00405096h; nop; nop; nop' in UpdateWaterShoreDepth@0x42f1c0's align pad" },
+    { kind = "text-pad", off = 0x02f336, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in RecalculateAllWaterShoreDepths@0x42f2c0's align pad" },
+    { kind = "text-pad", off = 0x02f4aa, len = 6, note = "`call 00405098h; nop' in UpdateBuildingAccessibility@0x42f340's align pad" },
+    { kind = "text-pad", off = 0x02f62b, len = 5, note = "`call 00405099h' in CalculateTileSlopeFlags@0x42f530's align pad" },
+    { kind = "text-pad", off = 0x02f795, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in PropagateMaxElevation@0x42f6e0's align pad" },
+    { kind = "text-pad", off = 0x02fa28, len = 8, note = "`call 00405096h; nop; nop; nop' in TileToScreenCached@0x42f940's align pad" },
+    { kind = "text-pad", off = 0x02fb86, len = 10, note = "`call dword ptr ds:[4BA0BCh]; nop; nop; nop; nop' in GetTerrainHeightAtWorld@0x42fa30's align pad" },
+    { kind = "text-pad", off = 0x030015, len = 11, note = "`call dword ptr ds:[4BA0F4h]; nop; nop; nop; nop; nop' in WorldToScreen@0x42fb90's align pad" },
+    { kind = "text-pad", off = 0x031ed8, len = 8, note = "`call 00405096h; nop; nop; nop' in SaveSurfaceToJPEG@0x431d20's align pad" },
+    { kind = "text-pad", off = 0x031f98, len = 8, note = "`call 00405096h; nop; nop; nop' in SaveScreenshotToJPEG@0x431ee0's align pad" },
+    { kind = "text-pad", off = 0x032198, len = 8, note = "`call 00405096h; nop; nop; nop' in ProcessPendingScreenshot@0x432170's align pad" },
+    { kind = "text-pad", off = 0x0321c9, len = 7, note = "`call 00405097h; nop; nop' in ProcessPendingScreenshot@0x432170's align pad" },
+    { kind = "text-pad", off = 0x032698, len = 8, note = "`call 00405096h; nop; nop; nop' in RenderToolbarTooltip@0x432620's align pad" },
+    { kind = "text-pad", off = 0x033037, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in HitTestTerrainToolbar@0x432f90's align pad" },
+    { kind = "text-pad", off = 0x033e45, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in HandleElevationToolbarClick@0x433d30's align pad" },
+    { kind = "text-pad", off = 0x034137, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in HitTestFacilityUpgradeButtons@0x4340a0's align pad" },
+    { kind = "text-pad", off = 0x034abb, len = 5, note = "`call 00405099h' in HitTestBuildingToolbar@0x434980's align pad" },
+    { kind = "text-pad", off = 0x035678, len = 8, note = "`call 00405096h; nop; nop; nop' in HitTestGolferPairingGrid@0x435570's align pad" },
+    { kind = "text-pad", off = 0x036bfa, len = 6, note = "`call 00405098h; nop' in HitTestEmployeePanel@0x436b00's align pad" },
+    { kind = "text-pad", off = 0x0378c7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in FileExists@0x4378a0's align pad" },
+    { kind = "text-pad", off = 0x038384, len = 12, note = "`call dword ptr ds:[4BA018h]; nop; nop; nop; nop; nop; nop' in HitTestCircularButtonGrid@0x4382f0's align pad" },
+    { kind = "text-pad", off = 0x038586, len = 10, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop' in ShowPaginatedCircularListDialog@0x438390's align pad" },
+    { kind = "text-pad", off = 0x03cbb9, len = 7, note = "`call 00405097h; nop; nop' in EditBox::~EditBox@0x43cb50's align pad" },
+    { kind = "text-pad", off = 0x03cbc3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in WidgetBase::OnGroupSelSwitched@0x43cbc0's align pad" },
+    { kind = "text-pad", off = 0x03cc57, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in $E13@0x43cc30's align pad" },
+    { kind = "text-pad", off = 0x03d4cb, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after $E28@0x43d490)" },
+    { kind = "text-pad", off = 0x03d5cb, len = 5, note = "`call 00405099h' in MemPool_Free@0x43d520's align pad" },
+    { kind = "text-pad", off = 0x03d6e6, len = 10, note = "`call dword ptr ds:[4BA18Ch]; nop; nop; nop; nop' in FreeSpritePoolByIndex@0x43d670's align pad" },
+    { kind = "text-pad", off = 0x0481a7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in $E43@0x448180's align pad" },
+    { kind = "text-pad", off = 0x049127, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in Terrain::getElevation@0x449110's align pad" },
+    { kind = "text-pad", off = 0x04915a, len = 6, note = "`call 00405098h; nop' in @0x449150's align pad" },
+    { kind = "text-pad", off = 0x04917b, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after @0x449150)" },
+    { kind = "text-pad", off = 0x0491a3, len = 13, note = "`call dword ptr ds:[4BA088h]; nop; nop; nop; nop; nop; nop; nop' in @0x449150's align pad" },
+    { kind = "text-pad", off = 0x049239, len = 7, note = "`call 00405097h; nop; nop' in $E18@0x449210's align pad" },
+    { kind = "text-pad", off = 0x0492a8, len = 8, note = "`call 00405096h; nop; nop; nop' in $E20@0x449240's align pad" },
+    { kind = "text-pad", off = 0x0492e7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in GetTerrainTypeAt@0x4492d0's align pad" },
+    { kind = "text-pad", off = 0x04930a, len = 6, note = "`call 00405098h; nop' in GetTerrainVariationAt@0x4492f0's align pad" },
+    { kind = "text-pad", off = 0x04932a, len = 6, note = "`call 00405098h; nop' in GetCornerElevationAt@0x449310's align pad" },
+    { kind = "text-pad", off = 0x04946b, len = 5, note = "`call 00405099h' in LoadCourseType@0x449400's align pad" },
+    { kind = "text-pad", off = 0x049538, len = 8, note = "`call 00405096h; nop; nop; nop' in ResetAndRebuildTerrain@0x449520's align pad" },
+    { kind = "text-pad", off = 0x04a404, len = 12, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop; nop; nop' in UpdateTileWalls@0x44a380's align pad" },
+    { kind = "text-pad", off = 0x04ac44, len = 12, note = "`call dword ptr ds:[4BA18Ch]; nop; nop; nop; nop; nop; nop' in TileList::erase@0x44ac00's align pad" },
+    { kind = "text-pad", off = 0x04ad08, len = 8, note = "`call 00405096h; nop; nop; nop' in $E27@0x44aca0's align pad" },
+    { kind = "text-pad", off = 0x04ad39, len = 7, note = "`call 00405097h; nop; nop' in $E30@0x44ad20's align pad" },
+    { kind = "text-pad", off = 0x04ad64, len = 12, note = "`call dword ptr ds:[4BA118h]; nop; nop; nop; nop; nop; nop' in $E32@0x44ad40's align pad" },
+    { kind = "text-pad", off = 0x04ae58, len = 8, note = "`call 00405096h; nop; nop; nop' in SpritePair::~SpritePair@0x44ae00's align pad" },
+    { kind = "text-pad", off = 0x04aea4, len = 12, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop; nop; nop' in SpritePair::SpritePair@0x44ae60's align pad" },
+    { kind = "text-pad", off = 0x04b596, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in RouteScreens::~RouteScreens@0x44b4f0's align pad" },
+    { kind = "text-pad", off = 0x04b743, len = 13, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop; nop; nop' in PairScreen::PairScreen@0x44b6f0's align pad" },
+    { kind = "text-pad", off = 0x04bdd4, len = 12, note = "`call dword ptr ds:[4BA184h]; nop; nop; nop; nop; nop; nop' in ShowCreditsScreen@0x44b9c0's align pad" },
+    { kind = "text-pad", off = 0x04ccd9, len = 7, note = "`call 00405097h; nop; nop' in LoadInfoScreenAssets@0x44bde0's align pad" },
+    { kind = "text-pad", off = 0x04f6aa, len = 6, note = "`call 00405098h; nop' in RenderKeyboardShortcutsScreen@0x44e770's align pad" },
+    { kind = "text-pad", off = 0x04fae3, len = 13, note = "`call dword ptr ds:[4BA160h]; nop; nop; nop; nop; nop; nop; nop' in RenderFinancialReportScreen@0x44f6b0's align pad" },
+    { kind = "text-pad", off = 0x05329a, len = 6, note = "`call 00405098h; nop' in GolferAge@0x453260's align pad" },
+    { kind = "text-pad", off = 0x054c49, len = 7, note = "`call 00405097h; nop; nop' in RenderPlayerCommentsReport@0x4546b0's align pad" },
+    { kind = "text-pad", off = 0x056bab, len = 5, note = "`call 00405099h' in TileToScreenCoords@0x456b70's align pad" },
+    { kind = "text-pad", off = 0x0593f6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in RenderTractPurchaseScreen@0x4587a0's align pad" },
+    { kind = "text-pad", off = 0x05ae45, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in TakePendingKey@0x45ae30's align pad" },
+    { kind = "text-pad", off = 0x05ae65, len = 11, note = "`call dword ptr ds:[4BA124h]; nop; nop; nop; nop; nop' in TakePendingChar@0x45ae50's align pad" },
+    { kind = "text-pad", off = 0x05aec8, len = 8, note = "`call 00405096h; nop; nop; nop' in PollInputState@0x45ae70's align pad" },
+    { kind = "text-pad", off = 0x05af25, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in ProcessInputAndCheckIdle@0x45af00's align pad" },
+    { kind = "text-pad", off = 0x05b2b7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in DrawTextWordWrapped@0x45b0d0's align pad" },
+    { kind = "text-pad", off = 0x05b7b7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in ParseFileForSection@0x45b660's align pad" },
+    { kind = "text-pad", off = 0x05b9e6, len = 10, note = "`call dword ptr ds:[4BA120h]; nop; nop; nop; nop' in StoreStringInPool@0x45b8b0's align pad" },
+    { kind = "text-pad", off = 0x05ba45, len = 11, note = "`call dword ptr ds:[4BA180h]; nop; nop; nop; nop; nop' in AppendPooledString@0x45b9f0's align pad" },
+    { kind = "text-pad", off = 0x05c024, len = 12, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop; nop' in MouseCursor::`scalar deleting destructor'@0x45c000's align pad" },
+    { kind = "text-pad", off = 0x05c177, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WaitForInputRelease@0x45c150's align pad" },
+    { kind = "text-pad", off = 0x05c19b, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after WaitForInputRelease@0x45c150)" },
+    { kind = "text-pad", off = 0x05c1d4, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in RandomSource::get@0x45c1a0's align pad" },
+    { kind = "text-pad", off = 0x05c414, len = 12, note = "`call dword ptr ds:[4BA0C0h]; nop; nop; nop; nop; nop; nop' in RenderGolferPortrait@0x45c200's align pad" },
+    { kind = "text-pad", off = 0x05c455, len = 11, note = "`call dword ptr ds:[4BA1C8h]; nop; nop; nop; nop; nop' in GetGolferMoodBalance@0x45c420's align pad" },
+    { kind = "text-pad", off = 0x05c558, len = 8, note = "`call 00405096h; nop; nop; nop' in ReplaceGolferNameTokens@0x45c460's align pad" },
+    { kind = "text-pad", off = 0x05de76, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in SwapGolferSlots@0x45de30's align pad" },
+    { kind = "text-pad", off = 0x05f864, len = 12, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop; nop; nop' in RenderSkillPointsScreen@0x45f0f0's align pad" },
+    { kind = "text-pad", off = 0x0615ea, len = 6, note = "`call 00405098h; nop' in RenderScorecard@0x461110's align pad" },
+    { kind = "text-pad", off = 0x061803, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in RecalculateMoodMaps@0x4616f0's align pad" },
+    { kind = "text-pad", off = 0x061825, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in ClampBrightnessAdd32@0x461810's align pad" },
+    { kind = "text-pad", off = 0x062014, len = 12, note = "`call dword ptr ds:[4BA184h]; nop; nop; nop; nop; nop; nop' in Render_InitColorTable@0x461830's align pad" },
+    { kind = "text-pad", off = 0x0627cb, len = 5, note = "`call 00405099h' in SetupGolferAppearance@0x462020's align pad (its 1.03 body ends 5 bytes later than 1.02's)" },
+    { kind = "text-pad", off = 0x0627f9, len = 7, note = "`call 00405097h; nop; nop' in ResetRenderState@0x4627d0's align pad" },
+    { kind = "text-pad", off = 0x0628c5, len = 11, note = "`call dword ptr ds:[4BA114h]; nop; nop; nop; nop; nop' in SaveRenderQueue@0x462800's align pad" },
+    { kind = "text-pad", off = 0x062a29, len = 7, note = "`call 00405097h; nop; nop' in DrawSpriteImmediate@0x4628d0's align pad" },
+    { kind = "text-pad", off = 0x0630f6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in RenderQueuedSprite@0x462be0's align pad" },
+    { kind = "text-pad", off = 0x06316b, len = 5, note = "`call 00405099h' in ProcessRenderQueue@0x463100's align pad" },
+    { kind = "text-pad", off = 0x065577, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in ClearPendingInput@0x465560's align pad" },
+    { kind = "text-pad", off = 0x065644, len = 12, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop; nop' in Screen::on_left_down@0x465610's align pad" },
+    { kind = "text-pad", off = 0x06567b, len = 5, note = "`call 00405099h' in Screen::on_left_up@0x465650's align pad" },
+    { kind = "text-pad", off = 0x065736, len = 10, note = "`call dword ptr ds:[4BA0F0h]; nop; nop; nop; nop' in Screen::on_right_down@0x465720's align pad" },
+    { kind = "text-pad", off = 0x0657c3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in Screen::on_key_down@0x4657b0's align pad" },
+    { kind = "text-pad", off = 0x06583a, len = 6, note = "`call 00405098h; nop' in Screen::on_left_double_click@0x4657e0's align pad" },
+    { kind = "text-pad", off = 0x067128, len = 8, note = "`call 00405096h; nop; nop; nop' in InitTimer@0x467110's align pad" },
+    { kind = "text-pad", off = 0x067169, len = 7, note = "`call 00405097h; nop; nop' in Sign@0x467150's align pad" },
+    { kind = "text-pad", off = 0x0672c9, len = 7, note = "`call 00405097h; nop; nop' in FixedPointCos@0x4672b0's align pad" },
+    { kind = "text-pad", off = 0x0674b4, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in GenerateRandomTerrainNoise@0x4673e0's align pad" },
+    { kind = "text-pad", off = 0x0676d4, len = 12, note = "`call dword ptr ds:[4BA00Ch]; nop; nop; nop; nop; nop; nop' in BuildEmployeeName@0x467600's align pad" },
+    { kind = "text-pad", off = 0x06d1f6, len = 10, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop' in EndTournament@0x46d0c0's align pad" },
+    { kind = "text-pad", off = 0x06e7a6, len = 10, note = "`call dword ptr ds:[4BA174h]; nop; nop; nop; nop' in DrawRectOutline@0x46e710's align pad" },
+    { kind = "text-pad", off = 0x06f179, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after RenderAccomplishmentsScreen@0x46e810)" },
+    { kind = "text-pad", off = 0x06f1c7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in the align pad of a function the reference's function list does not record (after RenderAccomplishmentsScreen@0x46e810)" },
+    { kind = "text-pad", off = 0x0725ab, len = 5, note = "`call 00405099h' in BuildThemeList@0x4724c0's align pad" },
+    { kind = "text-pad", off = 0x0732cb, len = 5, note = "`call 00405099h' in ShowThemeSelect@0x4725b0's align pad" },
+    { kind = "text-pad", off = 0x073469, len = 7, note = "`call 00405097h; nop; nop' in HighScore_InsertEntry@0x4732d0's align pad" },
+    { kind = "text-pad", off = 0x073a55, len = 11, note = "`call [IAT 0x4ba210]' + 5-byte tail copy after ret in RenderHighScoreScreen@0x473470's align pad (both versions)" },
+    { kind = "text-pad", off = 0x073ad6, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in SpriteObject::SpriteObject@0x473ab0's align pad" },
+    { kind = "text-pad", off = 0x073b44, len = 12, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop; nop; nop' in SpriteObject::close@0x473ae0's align pad" },
+    { kind = "text-pad", off = 0x073c56, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in SpriteObject::extract@0x473bf0's align pad" },
+    { kind = "text-pad", off = 0x073ca6, len = 10, note = "`call dword ptr ds:[4BA090h]; nop; nop; nop; nop' in SpriteObject::extractPriv@0x473c60's align pad" },
+    { kind = "text-pad", off = 0x073de6, len = 10, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop' in SpriteObject::Draw@0x473cb0's align pad" },
+    { kind = "text-pad", off = 0x073f58, len = 8, note = "`call 00405096h; nop; nop; nop' in SpriteObject::BlitScaled@0x473e60's align pad" },
+    { kind = "text-pad", off = 0x0740e4, len = 12, note = "`call dword ptr ds:[4BA174h]; nop; nop; nop; nop; nop; nop' in SpriteObject::BlitScaled@0x474030's align pad" },
+    { kind = "text-pad", off = 0x074259, len = 7, note = "`call 00405097h; nop; nop' in SpriteObject::BlitWithScaleOffset@0x4741b0's align pad" },
+    { kind = "text-pad", off = 0x074378, len = 8, note = "`call 00405096h; nop; nop; nop' in SpriteObject::BlitWithScaleState@0x474260's align pad" },
+    { kind = "text-pad", off = 0x07443b, len = 5, note = "`call 00405099h' in SpriteObject::BlitSpriteWithScaleState@0x474380's align pad" },
+    { kind = "text-pad", off = 0x0744ba, len = 6, note = "`call 00405098h; nop' in SpriteObject::draw_translucent@0x474440's align pad" },
+    { kind = "text-pad", off = 0x074645, len = 11, note = "`call dword ptr ds:[4BA160h]; nop; nop; nop; nop; nop' in SpriteObject::create_blank@0x4745c0's align pad" },
+    { kind = "text-pad", off = 0x07477a, len = 6, note = "`call 00405098h; nop' in SpriteObject::`vector deleting destructor'@0x474720's align pad" },
+    { kind = "text-pad", off = 0x074803, len = 13, note = "`call dword ptr ds:[4BA06Ch]; nop; nop; nop; nop; nop; nop; nop' in Heap::shutdown@0x4747e0's align pad" },
+    { kind = "text-pad", off = 0x074ad9, len = 7, note = "`call 00405097h; nop; nop' in @0x474ad3's align pad" },
+    { kind = "text-pad", off = 0x074ca3, len = 13, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::~AssetSurface@0x474c40's align pad" },
+    { kind = "text-pad", off = 0x074e63, len = 13, note = "`call dword ptr ds:[4BA148h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::Create@0x474dd0's align pad" },
+    { kind = "text-pad", off = 0x075049, len = 7, note = "`call 00405097h; nop; nop' in AssetSurface::LoadBMPFile@0x474ee0's align pad" },
+    { kind = "text-pad", off = 0x075574, len = 12, note = "`call dword ptr ds:[4BA050h]; nop; nop; nop; nop; nop; nop' in AssetSurface::FlipImageVertically@0x475410's align pad" },
+    { kind = "text-pad", off = 0x075835, len = 11, note = "`call dword ptr ds:[4BA1DCh]; nop; nop; nop; nop; nop' in AssetSurface::SaveSnapshot@0x475580's align pad" },
+    { kind = "text-pad", off = 0x075b59, len = 7, note = "`call 00405097h; nop; nop' in AssetSurface::SetClipRect@0x475b20's align pad" },
+    { kind = "text-pad", off = 0x075b9a, len = 6, note = "`call 00405098h; nop' in AssetSurface::draw@0x475b60's align pad" },
+    { kind = "text-pad", off = 0x075d93, len = 13, note = "`call dword ptr ds:[4BA1D4h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::BlitSurfaceRegion@0x475d00's align pad" },
+    { kind = "text-pad", off = 0x075de6, len = 10, note = "`call dword ptr ds:[4BA19Ch]; nop; nop; nop; nop' in AssetSurface::map_colors@0x475da0's align pad" },
+    { kind = "text-pad", off = 0x075e0b, len = 5, note = "`call 00405099h' in AssetSurface::poly@0x475df0's align pad" },
+    { kind = "text-pad", off = 0x075fab, len = 5, note = "`call 00405099h' in AssetSurface::tile_mask@0x475e10's align pad" },
+    { kind = "text-pad", off = 0x076304, len = 12, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop; nop; nop' in AssetSurface::SetFontsForStyles@0x4762d0's align pad" },
+    { kind = "text-pad", off = 0x076335, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in AssetSurface::set_text_color@0x476310's align pad" },
+    { kind = "text-pad", off = 0x076368, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::set_text_color2@0x476340's align pad" },
+    { kind = "text-pad", off = 0x076398, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::set_text_color3@0x476370's align pad" },
+    { kind = "text-pad", off = 0x0763c8, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::set_text_color_hyper@0x4763a0's align pad" },
+    { kind = "text-pad", off = 0x076644, len = 12, note = "`call dword ptr ds:[4BA18Ch]; nop; nop; nop; nop; nop; nop' in AssetSurface::write_strings@0x4763d0's align pad" },
+    { kind = "text-pad", off = 0x0766f5, len = 11, note = "`call dword ptr ds:[4BA068h]; nop; nop; nop; nop; nop' in AssetSurface::DrawTextCenteredInWidthWithFont@0x4766a0's align pad" },
+    { kind = "text-pad", off = 0x076e16, len = 10, note = "`call dword ptr ds:[4BA200h]; nop; nop; nop; nop' in get_special_dropdown@0x476dd0's align pad" },
+    { kind = "text-pad", off = 0x076ee8, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::wrap_height@0x476e20's align pad" },
+    { kind = "text-pad", off = 0x0775a3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::text_line_height@0x477580's align pad" },
+    { kind = "text-pad", off = 0x077cc9, len = 7, note = "`call 00405097h; nop; nop' in AssetSurface::write_l@0x477c30's align pad" },
+    { kind = "text-pad", off = 0x077ea3, len = 13, note = "`call dword ptr ds:[4BA140h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::write_cent_l@0x477e60's align pad" },
+    { kind = "text-pad", off = 0x078133, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::RenderTextRightAlignedInWidth@0x478080's align pad" },
+    { kind = "text-pad", off = 0x0781e9, len = 7, note = "`call 00405097h; nop; nop' in AssetSurface::write_right_l@0x478140's align pad" },
+    { kind = "text-pad", off = 0x078428, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::RenderMultilineTextInRect@0x4782d0's align pad" },
+    { kind = "text-pad", off = 0x0786f3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::wrap_height_flying@0x478610's align pad" },
+    { kind = "text-pad", off = 0x078743, len = 13, note = "`call dword ptr ds:[4BA010h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::wrap_height_flying_flush@0x478700's align pad" },
+    { kind = "text-pad", off = 0x078793, len = 13, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::wrap_flying@0x478750's align pad" },
+    { kind = "text-pad", off = 0x078a63, len = 13, note = "`call dword ptr ds:[4BA168h]; nop; nop; nop; nop; nop; nop; nop' in AssetSurface::clear_links@0x478a20's align pad" },
+    { kind = "text-pad", off = 0x078ae7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in AssetSurface::addDropDownSpot@0x478a90's align pad" },
+    { kind = "text-pad", off = 0x078b46, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in AssetSurface::ClearToColor@0x478b30's align pad" },
+    { kind = "text-pad", off = 0x078baa, len = 6, note = "`call 00405098h; nop' in AssetSurface::line@0x478b80's align pad" },
+    { kind = "text-pad", off = 0x078bd8, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::hline@0x478bb0's align pad" },
+    { kind = "text-pad", off = 0x078c08, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::vline@0x478be0's align pad" },
+    { kind = "text-pad", off = 0x078deb, len = 5, note = "`call 00405099h' in AssetSurface::LoadImageFile@0x478cd0's align pad" },
+    { kind = "text-pad", off = 0x078e98, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::get_pixel@0x478df0's align pad" },
+    { kind = "text-pad", off = 0x079559, len = 7, note = "`call 00405097h; nop; nop' in AssetSurface::box_sprite@0x4791b0's align pad" },
+    { kind = "text-pad", off = 0x0795c9, len = 7, note = "`call 00405097h; nop; nop' in AssetSurface::box@0x479560's align pad" },
+    { kind = "text-pad", off = 0x079605, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in AssetSurface::DrawBevelFrameInRect@0x4795d0's align pad" },
+    { kind = "text-pad", off = 0x079823, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in VoiceRx::get_attrib@0x479820's align pad" },
+    { kind = "text-pad", off = 0x0799db, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after AssetSurface::GetPixelBlue@0x479950)" },
+    { kind = "text-pad", off = 0x079b3b, len = 5, note = "`call 00405099h' in WidgetBase::ReleaseCursorClip@0x479b20's align pad" },
+    { kind = "text-pad", off = 0x079f04, len = 12, note = "`call dword ptr ds:[4BA1F8h]; nop; nop; nop; nop; nop; nop' in WidgetBase::WidgetBase@0x479c40's align pad" },
+    { kind = "text-pad", off = 0x07a3b4, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in WidgetBase::close@0x479f30's align pad" },
+    { kind = "text-pad", off = 0x07aaf5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in WidgetBase::init@0x47a4c0's align pad" },
+    { kind = "text-pad", off = 0x07abb7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WidgetBase::get_mouse_pos@0x47ab50's align pad" },
+    { kind = "text-pad", off = 0x07abdb, len = 5, note = "`call 00405099h' in WidgetBase::get_lbutton_state@0x47abc0's align pad" },
+    { kind = "text-pad", off = 0x07ad98, len = 8, note = "`call 00405096h; nop; nop; nop' in WidgetBase::set_parent_dialog@0x47abe0's align pad" },
+    { kind = "text-pad", off = 0x07ae75, len = 11, note = "`call dword ptr ds:[4BA098h]; nop; nop; nop; nop; nop' in WidgetBase::remove_parent_dialog@0x47ada0's align pad" },
+    { kind = "text-pad", off = 0x07af5b, len = 5, note = "`call 00405099h' in WidgetBase::set_dialog_focus@0x47ae80's align pad" },
+    { kind = "text-pad", off = 0x07b075, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in WidgetBase::pass_dialog_focus@0x47af60's align pad" },
+    { kind = "text-pad", off = 0x07b1f5, len = 11, note = "`call dword ptr ds:[4BA160h]; nop; nop; nop; nop; nop' in WidgetBase::client_to_screen@0x47b170's align pad" },
+    { kind = "text-pad", off = 0x07b285, len = 11, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop' in WidgetBase::screen_to_client@0x47b200's align pad" },
+    { kind = "text-pad", off = 0x07b415, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in WidgetBase::center@0x47b310's align pad" },
+    { kind = "text-pad", off = 0x07b4d3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in WidgetBase::move@0x47b420's align pad" },
+    { kind = "text-pad", off = 0x07b669, len = 7, note = "`call 00405097h; nop; nop' in WidgetBase::resize@0x47b4e0's align pad" },
+    { kind = "text-pad", off = 0x07b814, len = 12, note = "`call dword ptr ds:[4BA054h]; nop; nop; nop; nop; nop; nop' in WidgetBase::show@0x47b670's align pad" },
+    { kind = "text-pad", off = 0x07b8eb, len = 5, note = "`call 00405099h' in WidgetBase::hide@0x47b820's align pad" },
+    { kind = "text-pad", off = 0x07b9ea, len = 6, note = "`call 00405098h; nop' in WidgetBase::reset_window_clip@0x47b9a0's align pad" },
+    { kind = "text-pad", off = 0x07ba07, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WidgetBase::set_vert_pos@0x47b9f0's align pad" },
+    { kind = "text-pad", off = 0x07ba27, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WidgetBase::set_horz_pos@0x47ba10's align pad" },
+    { kind = "text-pad", off = 0x07ba87, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WidgetBase::set_vert_paging@0x47ba70's align pad" },
+    { kind = "text-pad", off = 0x07baa7, len = 9, note = "`call 00405095h; nop; nop; nop; nop' in WidgetBase::set_horz_paging@0x47ba90's align pad" },
+    { kind = "text-pad", off = 0x07bba8, len = 8, note = "`call 00405096h; nop; nop; nop' in WidgetBase::set_modal@0x47bab0's align pad" },
+    { kind = "text-pad", off = 0x07bc57, len = 9, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop' in WidgetBase::release_modal@0x47bbb0's align pad" },
+    { kind = "text-pad", off = 0x07be38, len = 8, note = "`call 00405096h; nop; nop; nop' in WidgetBase::resize_event@0x47bc60's align pad" },
+    { kind = "text-pad", off = 0x07bf36, len = 10, note = "`call dword ptr ds:[4BA0FCh]; nop; nop; nop; nop' in WidgetBase::mouse_move_event@0x47be40's align pad" },
+    { kind = "text-pad", off = 0x07c1ab, len = 5, note = "`call 00405099h' in WidgetBase::left_click_event@0x47c0e0's align pad" },
+    { kind = "text-pad", off = 0x07c28b, len = 5, note = "`call 00405099h' in WidgetBase::left_down_event@0x47c1b0's align pad" },
+    { kind = "text-pad", off = 0x07c35b, len = 5, note = "`call 00405099h' in WidgetBase::left_up_event@0x47c290's align pad" },
+    { kind = "text-pad", off = 0x07c6b7, len = 9, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop' in WidgetBase::key_click_event@0x47c5d0's align pad" },
+    { kind = "text-pad", off = 0x07ca09, len = 7, note = "`call 00405097h; nop; nop' in WidgetBase::key_up_event@0x47c970's align pad" },
+    { kind = "text-pad", off = 0x07cb04, len = 12, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop; nop; nop' in WidgetBase::client_to_nonclient@0x47ca10's align pad" },
+    { kind = "text-pad", off = 0x07d563, len = 13, note = "`call dword ptr ds:[4BA034h]; nop; nop; nop; nop; nop; nop; nop' in WidgetBase::do_caption_buttons@0x47d510's align pad" },
+    { kind = "text-pad", off = 0x07d7bb, len = 5, note = "`call 00405099h' in WidgetBase::set_rects@0x47d610's align pad" },
+    { kind = "text-pad", off = 0x07d834, len = 12, note = "`call dword ptr ds:[4BA19Ch]; nop; nop; nop; nop; nop; nop' in AutoSound::`scalar deleting destructor'@0x47d810's align pad" },
+    { kind = "text-pad", off = 0x07d84a, len = 6, note = "`call 00405098h; nop' in WidgetBase::set_def_focus@0x47d840's align pad" },
+    { kind = "text-pad", off = 0x07e115, len = 11, note = "`call dword ptr ds:[4BA08Ch]; nop; nop; nop; nop; nop' in WidgetBase::on_key_click@0x47e110's align pad" },
+    { kind = "text-pad", off = 0x07e13a, len = 6, note = "`call 00405098h; nop' in WidgetBase::bring_to_top@0x47e120's align pad" },
+    { kind = "text-pad", off = 0x07e2c8, len = 8, note = "`call 00405096h; nop; nop; nop' in WidgetBase::recurse_clips@0x47e140's align pad" },
+    { kind = "text-pad", off = 0x07e328, len = 8, note = "`call 00405096h; nop; nop; nop' in WidgetBase::update_screen_clips@0x47e2d0's align pad" },
+    { kind = "text-pad", off = 0x07e4b5, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in UpdateAllWidgetRenderOrder@0x47e450's align pad" },
+    { kind = "text-pad", off = 0x07e515, len = 11, note = "`call dword ptr ds:[4BA158h]; nop; nop; nop; nop; nop' in WidgetBase::add_parent@0x47e4c0's align pad" },
+    { kind = "text-pad", off = 0x07e576, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in WidgetBase::remove_parent@0x47e520's align pad" },
+    { kind = "text-pad", off = 0x07e679, len = 7, note = "`call 00405097h; nop; nop' in WidgetBase::add_child@0x47e5f0's align pad" },
+    { kind = "text-pad", off = 0x07e6f9, len = 7, note = "`call 00405097h; nop; nop' in WidgetBase::remove_child@0x47e680's align pad" },
+    { kind = "text-pad", off = 0x07ea24, len = 12, note = "`call dword ptr ds:[4BA1F8h]; nop; nop; nop; nop; nop; nop' in WidgetBase::on_paint@0x47e770's align pad" },
+    { kind = "text-pad", off = 0x07ed28, len = 8, note = "`call 00405096h; nop; nop; nop' in WidgetBase::on_nc_paint@0x47ea30's align pad" },
+    { kind = "text-pad", off = 0x07ee67, len = 9, note = "`call dword ptr ds:[4BA138h]; nop; nop; nop' in WidgetBase::on_nc_hittest@0x47ed30's align pad" },
+    { kind = "text-pad", off = 0x07efeb, len = 5, note = "`call 00405099h' in WidgetBase::on_char@0x47ef30's align pad" },
+    { kind = "text-pad", off = 0x07f007, len = 9, note = "`call dword ptr ds:[4BA1C8h]; nop; nop; nop' in WidgetBase::OnMouseMoveInternal@0x47eff0's align pad" },
+    { kind = "text-pad", off = 0x07f6f8, len = 8, note = "`call 00405096h; nop; nop; nop' in get_mouse_window_recurse@0x47f340's align pad" },
+    { kind = "text-pad", off = 0x07fa26, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in RenderWidgetTree@0x47f8e0's align pad" },
+    { kind = "text-pad", off = 0x080216, len = 10, note = "`call dword ptr ds:[4BA044h]; nop; nop; nop; nop' in WidgetBase::is_visible@0x4801f0's align pad" },
+    { kind = "text-pad", off = 0x080407, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in ChildList::~ChildList@0x480390's align pad" },
+    { kind = "text-pad", off = 0x080496, len = 10, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop' in ChildList::`scalar deleting destructor'@0x480410's align pad" },
+    { kind = "text-pad", off = 0x080574, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in GraphicWin::GraphicWin@0x4804a0's align pad" },
+    { kind = "text-pad", off = 0x080607, len = 9, note = "`call dword ptr ds:[4BA000h]; nop; nop; nop' in GraphicWin::~GraphicWin@0x4805a0's align pad" },
+    { kind = "text-pad", off = 0x0806b7, len = 9, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop' in GraphicWin::close@0x480610's align pad" },
+    { kind = "text-pad", off = 0x080869, len = 7, note = "`call 00405097h; nop; nop' in GraphicWin::init@0x4806c0's align pad" },
+    { kind = "text-pad", off = 0x0808b8, len = 8, note = "`call 00405096h; nop; nop; nop' in GraphicWin::init@0x480870's align pad" },
+    { kind = "text-pad", off = 0x080a04, len = 12, note = "`call dword ptr ds:[4BA088h]; nop; nop; nop; nop; nop; nop' in GraphicWin::EraseWholeBackground@0x4808c0's align pad" },
+    { kind = "text-pad", off = 0x080b27, len = 9, note = "`call dword ptr ds:[4BA198h]; nop; nop; nop' in GraphicWin::fill@0x480b00's align pad" },
+    { kind = "text-pad", off = 0x080cd5, len = 11, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop' in GraphicWin::RenderFullSurface@0x480c80's align pad" },
+    { kind = "text-pad", off = 0x080db5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in GraphicWin::redraw@0x480d70's align pad" },
+    { kind = "text-pad", off = 0x081754, len = 12, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop; nop; nop' in GraphicWin::on_redraw_nc@0x4810d0's align pad" },
+    { kind = "text-pad", off = 0x081c93, len = 13, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop; nop; nop' in FlicAnim::close@0x481ba0's align pad" },
+    { kind = "text-pad", off = 0x0823b5, len = 11, note = "`call dword ptr ds:[4BA0ECh]; nop; nop; nop; nop; nop' in FlicAnim::load@0x481f40's align pad" },
+    { kind = "text-pad", off = 0x08241b, len = 5, note = "`call 00405099h' in operator new@0x4823c0's align pad" },
+    { kind = "text-pad", off = 0x082486, len = 10, note = "`call dword ptr ds:[4BA15Ch]; nop; nop; nop; nop' in FlicAnim::next_sprite@0x482420's align pad" },
+    { kind = "text-pad", off = 0x082567, len = 9, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop' in FlicAnim::seek_anim@0x482490's align pad" },
+    { kind = "text-pad", off = 0x082a73, len = 13, note = "`call dword ptr ds:[4BA188h]; nop; nop; nop; nop; nop; nop; nop' in FlicAnim::decode_brun@0x482990's align pad" },
+    { kind = "text-pad", off = 0x082b8a, len = 6, note = "`call 00405098h; nop' in FlicSprite::FlicSprite@0x482b60's align pad" },
+    { kind = "text-pad", off = 0x082e35, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in FlicSprite::NextFrame@0x482e20's align pad" },
+    { kind = "text-pad", off = 0x082e66, len = 10, note = "`call [IAT 0x4ba1c0]' + 4-byte tail copy after ret imm16 in FlicSprite::seek_anim@0x482e40's align pad (both versions)" },
+    { kind = "text-pad", off = 0x082f53, len = 13, note = "`call [IAT 0x4ba1b4]' + 7-byte tail copy after ret in $E21@0x482f10's align pad (both versions)" },
+    { kind = "text-pad", off = 0x082fc9, len = 7, note = "`call 00405097h; nop; nop' in PaletteList::PaletteList@0x482f60's align pad" },
+    { kind = "text-pad", off = 0x083003, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in FLCPalette::FLCPalette@0x482fd0's align pad" },
+    { kind = "text-pad", off = 0x083025, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in FLCPalette::operator=@0x483020's align pad" },
+    { kind = "text-pad", off = 0x0830d4, len = 12, note = "`call dword ptr ds:[4BA184h]; nop; nop; nop; nop; nop; nop' in FLCPalette::close@0x483070's align pad" },
+    { kind = "text-pad", off = 0x08318a, len = 6, note = "`call 00405098h; nop' in FLCPalette::set_from_dib@0x4830e0's align pad" },
+    { kind = "text-pad", off = 0x0833e7, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in ReleaseAllPalettes@0x483340's align pad" },
+    { kind = "text-pad", off = 0x083798, len = 8, note = "`call 00405096h; nop; nop; nop' in the align pad of a function the reference's function list does not record (after PaletteList::`scalar deleting destructor'@0x483750)" },
+    { kind = "text-pad", off = 0x0838a8, len = 8, note = "`call 00405096h; nop; nop; nop' in Font::init@0x483850's align pad" },
+    { kind = "text-pad", off = 0x083923, len = 13, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop; nop; nop; nop; nop' in Font::MeasureTextWidth@0x4838f0's align pad" },
+    { kind = "text-pad", off = 0x083977, len = 9, note = "`call dword ptr ds:[4BA058h]; nop; nop; nop' in Font::MeasureTextWidth@0x483930's align pad" },
+    { kind = "text-pad", off = 0x083b8a, len = 6, note = "`call 00405098h; nop' in Font::`vector deleting destructor'@0x483b30's align pad" },
+    { kind = "text-pad", off = 0x083f09, len = 7, note = "`call 00405097h; nop; nop' in init_sound@0x483e90's align pad" },
+    { kind = "text-pad", off = 0x083fb3, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in release_sound@0x483f10's align pad" },
+    { kind = "text-pad", off = 0x0840b3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in init_sound_timer@0x484090's align pad" },
+    { kind = "text-pad", off = 0x084108, len = 8, note = "`call 00405096h; nop; nop; nop' in Sound::create_sound@0x4840e0's align pad" },
+    { kind = "text-pad", off = 0x0841b8, len = 8, note = "`call 00405096h; nop; nop; nop' in Sound::Sound@0x484150's align pad" },
+    { kind = "text-pad", off = 0x08444a, len = 6, note = "`call 00405098h; nop' in Sound::is_loaded@0x484440's align pad" },
+    { kind = "text-pad", off = 0x0844b4, len = 12, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop; nop' in Sound::get_next@0x4844b0's align pad" },
+    { kind = "text-pad", off = 0x0844c4, len = 12, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop; nop; nop' in Sound::get_prev@0x4844c0's align pad" },
+    { kind = "text-pad", off = 0x0844d4, len = 12, note = "`call dword ptr ds:[4BA194h]; nop; nop; nop; nop; nop; nop' in Sound::get_type@0x4844d0's align pad" },
+    { kind = "text-pad", off = 0x084548, len = 8, note = "`call 00405096h; nop; nop; nop' in Sound::load@0x484540's align pad" },
+    { kind = "text-pad", off = 0x0845c9, len = 7, note = "`call 00405097h; nop; nop' in Sound::play@0x4845b0's align pad" },
+    { kind = "text-pad", off = 0x0846a7, len = 9, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop' in Sound::set_loop_state@0x484690's align pad" },
+    { kind = "text-pad", off = 0x0846c7, len = 9, note = "`call dword ptr ds:[4BA180h]; nop; nop; nop' in Sound::set_delay@0x4846b0's align pad" },
+    { kind = "text-pad", off = 0x0846f5, len = 11, note = "`call dword ptr ds:[4BA0B4h]; nop; nop; nop; nop; nop' in Sound::set_fade@0x4846d0's align pad" },
+    { kind = "text-pad", off = 0x084725, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in Sound::set_fade_in@0x484700's align pad" },
+    { kind = "text-pad", off = 0x084749, len = 7, note = "`call 00405097h; nop; nop' in Sound::fade@0x484730's align pad" },
+    { kind = "text-pad", off = 0x084789, len = 7, note = "`call 00405097h; nop; nop' in Sound::fade_in@0x484770's align pad" },
+    { kind = "text-pad", off = 0x08491b, len = 5, note = "`call 00405099h' in Wave::~Wave@0x4848a0's align pad" },
+    { kind = "text-pad", off = 0x084a17, len = 9, note = "`call dword ptr ds:[4BA1C4h]; nop; nop; nop' in Wave::stop_instance@0x484a00's align pad" },
+    { kind = "text-pad", off = 0x084a37, len = 9, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop' in Wave::fade_instance@0x484a20's align pad" },
+    { kind = "text-pad", off = 0x084af5, len = 11, note = "`call dword ptr ds:[4BA198h]; nop; nop; nop; nop; nop' in Wave::init@0x484a40's align pad" },
+    { kind = "text-pad", off = 0x084b24, len = 12, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop; nop' in Wave::get_ms_length@0x484b20's align pad" },
+    { kind = "text-pad", off = 0x084be7, len = 9, note = "`call dword ptr ds:[4BA150h]; nop; nop; nop' in Wave::set_fname@0x484b80's align pad" },
+    { kind = "text-pad", off = 0x084c16, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in Wave::set_link@0x484bf0's align pad" },
+    { kind = "text-pad", off = 0x084c7a, len = 6, note = "`call 00405098h; nop' in Wave::dyna_load@0x484c20's align pad" },
+    { kind = "text-pad", off = 0x084e63, len = 13, note = "`call dword ptr ds:[4BA0E4h]; nop; nop; nop; nop; nop; nop; nop' in Wave::load@0x484e30's align pad" },
+    { kind = "text-pad", off = 0x084f39, len = 7, note = "`call 00405097h; nop; nop' in Wave::unload@0x484f00's align pad" },
+    { kind = "text-pad", off = 0x084f76, len = 10, note = "`call dword ptr ds:[4BA018h]; nop; nop; nop; nop' in Wave::set_pitch@0x484f40's align pad" },
+    { kind = "text-pad", off = 0x084fe6, len = 10, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop' in Wave::set_attrib@0x484f80's align pad" },
+    { kind = "text-pad", off = 0x08503a, len = 6, note = "`call 00405098h; nop' in Wave::get_attrib@0x484ff0's align pad" },
+    { kind = "text-pad", off = 0x085073, len = 13, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop; nop; nop' in Wave::get_current_marker@0x485060's align pad" },
+    { kind = "text-pad", off = 0x0850e8, len = 8, note = "`call 00405096h; nop; nop; nop' in Wave::get_device_description@0x4850b0's align pad" },
+    { kind = "text-pad", off = 0x085126, len = 10, note = "`call dword ptr ds:[4BA13Ch]; nop; nop; nop; nop' in Wave::set_asdr@0x485120's align pad" },
+    { kind = "text-pad", off = 0x085138, len = 8, note = "`call 00405096h; nop; nop; nop' in Wave::set_attack@0x485130's align pad" },
+    { kind = "text-pad", off = 0x0851a6, len = 10, note = "`call dword ptr ds:[4BA1C8h]; nop; nop; nop; nop' in Wave::set_volume@0x485140's align pad" },
+    { kind = "text-pad", off = 0x0851d9, len = 7, note = "`call 00405097h; nop; nop' in Wave::set_position3d@0x4851b0's align pad" },
+    { kind = "text-pad", off = 0x08528a, len = 6, note = "`call 00405098h; nop' in Patch::Patch@0x485260's align pad" },
+    { kind = "text-pad", off = 0x0852a8, len = 8, note = "`call 00405096h; nop; nop; nop' in Patch::set_fade@0x485290's align pad" },
+    { kind = "text-pad", off = 0x0852d7, len = 9, note = "`call dword ptr ds:[4BA1C4h]; nop; nop; nop' in Patch::~Patch@0x4852d0's align pad" },
+    { kind = "text-pad", off = 0x085388, len = 8, note = "`call 00405096h; nop; nop; nop' in VoiceRx::set_attrib@0x485380's align pad" },
+    { kind = "text-pad", off = 0x085445, len = 11, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop' in VoiceRx::~VoiceRx@0x4853d0's align pad" },
+    { kind = "text-pad", off = 0x0854b4, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in VoiceRx::init@0x485450's align pad" },
+    { kind = "text-pad", off = 0x0854fb, len = 5, note = "`call 00405099h' in VoiceRx::release@0x4854c0's align pad" },
+    { kind = "text-pad", off = 0x0855a5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in ShowMessageBox@0x485590's align pad" },
+    { kind = "text-pad", off = 0x085d38, len = 8, note = "`call 00405096h; nop; nop; nop' in AssetSurface::SaveToPCX@0x485aa0's align pad" },
+    { kind = "text-pad", off = 0x086067, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in EditBox::ClearBuffer@0x485ff0's align pad" },
+    { kind = "text-pad", off = 0x0863da, len = 6, note = "`call 00405098h; nop' in EditBox::pos_to_pixel@0x486360's align pad" },
+    { kind = "text-pad", off = 0x0864e3, len = 13, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop; nop; nop; nop; nop' in EditBox::pixel_to_pos@0x4863e0's align pad" },
+    { kind = "text-pad", off = 0x0866e5, len = 11, note = "`call dword ptr ds:[4BA078h]; nop; nop; nop; nop; nop' in EditBox::on_redraw@0x4864f0's align pad" },
+    { kind = "text-pad", off = 0x0867a9, len = 7, note = "`call 00405097h; nop; nop' in EditBox::on_key_click@0x4866f0's align pad" },
+    { kind = "text-pad", off = 0x086afb, len = 5, note = "`call 00405099h' in EditBox::on_scrolled@0x486af0's align pad" },
+    { kind = "text-pad", off = 0x086b15, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in EditBox::on_scrolling@0x486b00's align pad" },
+    { kind = "text-pad", off = 0x086b63, len = 13, note = "`call [IAT 0x4ba1f4]' + 7-byte tail copy after ret imm16 in EditBox::on_dialog_focus@0x486b30's align pad (both versions)" },
+    { kind = "text-pad", off = 0x086bd5, len = 11, note = "`call dword ptr ds:[4BA140h]; nop; nop; nop; nop; nop' in EditBox::on_left_down@0x486b90's align pad" },
+    { kind = "text-pad", off = 0x086c36, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in EditBox::on_left_up@0x486be0's align pad" },
+    { kind = "text-pad", off = 0x086c87, len = 9, note = "`call dword ptr ds:[4BA070h]; nop; nop; nop' in EditBox::on_mouse_move@0x486c40's align pad" },
+    { kind = "text-pad", off = 0x086d56, len = 10, note = "`call dword ptr ds:[4BA07Ch]; nop; nop; nop; nop' in Time::SetCallback@0x486d20's align pad" },
+    { kind = "text-pad", off = 0x086eb4, len = 12, note = "`call dword ptr ds:[4BA050h]; nop; nop; nop; nop; nop; nop' in Time::pulse@0x486e40's align pad" },
+    { kind = "text-pad", off = 0x086f3b, len = 5, note = "`call 00405099h' in Time::close@0x486f10's align pad" },
+    { kind = "text-pad", off = 0x086ff7, len = 9, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop' in Time::close_class@0x486ff0's align pad" },
+    { kind = "text-pad", off = 0x08705a, len = 6, note = "`call 00405098h; nop' in BinkPlayer::SetWindow@0x487050's align pad" },
+    { kind = "text-pad", off = 0x08708b, len = 5, note = "`call 00405099h' in BinkPlayer::Close@0x487060's align pad" },
+    { kind = "text-pad", off = 0x087174, len = 12, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop; nop; nop' in BinkPlayer::Play@0x487090's align pad" },
+    { kind = "text-pad", off = 0x087205, len = 11, note = "`call dword ptr ds:[4BA1BCh]; nop; nop; nop; nop; nop' in BinkPlayer::ShowNextFrame@0x487180's align pad" },
+    { kind = "text-pad", off = 0x087238, len = 8, note = "`call 00405096h; nop; nop; nop' in Sound_Device::Sound_Device@0x487210's align pad" },
+    { kind = "text-pad", off = 0x087273, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in Sound_Device::~Sound_Device@0x487260's align pad" },
+    { kind = "text-pad", off = 0x087386, len = 10, note = "`call dword ptr ds:[4BA1E0h]; nop; nop; nop; nop' in WaveControlGroup::~WaveControlGroup@0x487310's align pad" },
+    { kind = "text-pad", off = 0x087457, len = 9, note = "`call dword ptr ds:[4BA158h]; nop; nop; nop' in Wave_Device::delete_device@0x487430's align pad" },
+    { kind = "text-pad", off = 0x0875b7, len = 9, note = "`call dword ptr ds:[4BA1C4h]; nop; nop; nop' in Wave_Device::select@0x487500's align pad" },
+    { kind = "text-pad", off = 0x0875f4, len = 12, note = "`call dword ptr ds:[4BA16Ch]; nop; nop; nop; nop; nop; nop' in Wave_Device::set_rate@0x4875e0's align pad" },
+    { kind = "text-pad", off = 0x087624, len = 12, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop; nop' in Wave_Device::set_volume@0x487610's align pad" },
+    { kind = "text-pad", off = 0x087793, len = 13, note = "`call dword ptr ds:[4BA110h]; nop; nop; nop; nop; nop; nop; nop' in Wave_Device::is_group_disabled@0x487770's align pad" },
+    { kind = "text-pad", off = 0x0877c3, len = 13, note = "`call [IAT 0x4ba208]' + 7-byte tail copy after ret imm16 in Wave_Device::isGroupMute@0x4877a0's align pad (both versions)" },
+    { kind = "text-pad", off = 0x0878b9, len = 7, note = "`call 00405097h; nop; nop' in Wave_Device::set_listener_position@0x487890's align pad" },
+    { kind = "text-pad", off = 0x0878e9, len = 7, note = "`call 00405097h; nop; nop' in Wave_Device::get_listener_position@0x4878c0's align pad" },
+    { kind = "text-pad", off = 0x087a17, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in Midi_Device::delete_device@0x4879f0's align pad" },
+    { kind = "text-pad", off = 0x087af3, len = 13, note = "`call dword ptr ds:[4BA160h]; nop; nop; nop; nop; nop; nop; nop' in ListBox::on_dialog_focus@0x487af0's align pad" },
+    { kind = "text-pad", off = 0x087b05, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in Midi_Device::fade@0x487b00's align pad" },
+    { kind = "text-pad", off = 0x087bf7, len = 9, note = "`call dword ptr ds:[4BA054h]; nop; nop; nop' in Wave_In_Device::delete_device@0x487bd0's align pad" },
+    { kind = "text-pad", off = 0x087c3b, len = 5, note = "`call 00405099h' in Wave_Device::init@0x487c00's align pad" },
+    { kind = "text-pad", off = 0x087cb5, len = 11, note = "`call dword ptr ds:[4BA054h]; nop; nop; nop; nop; nop' in FlicAnim::decode_lc@0x487cb0's align pad" },
+    { kind = "text-pad", off = 0x087d69, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after SndNodeList::`scalar deleting destructor'@0x487ce0)" },
+    { kind = "text-pad", off = 0x087ddb, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after @0x487daf)" },
+    { kind = "text-pad", off = 0x087dfb, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after @0x487daf)" },
+    { kind = "text-pad", off = 0x087e57, len = 9, note = "`call [IAT 0x4ba218]' + 3-byte tail copy after ret in $E14@0x487e30's align pad (both versions)" },
+    { kind = "text-pad", off = 0x087e85, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in text_open@0x487e70's align pad" },
+    { kind = "text-pad", off = 0x087ed6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in Text::Text@0x487ea0's align pad" },
+    { kind = "text-pad", off = 0x087f27, len = 9, note = "`call dword ptr ds:[4BA188h]; nop; nop; nop' in Text::init@0x487ee0's align pad" },
+    { kind = "text-pad", off = 0x087f74, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in Text::shutdown@0x487f30's align pad" },
+    { kind = "text-pad", off = 0x08822a, len = 6, note = "`call 00405098h; nop' in Text::open@0x487fb0's align pad" },
+    { kind = "text-pad", off = 0x0882c3, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in TextIndex::TextIndex@0x4882a0's align pad" },
+    { kind = "text-pad", off = 0x088414, len = 12, note = "`call dword ptr ds:[4BA120h]; nop; nop; nop; nop; nop; nop' in TextIndex::search_index@0x488310's align pad" },
+    { kind = "text-pad", off = 0x088484, len = 12, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop; nop; nop' in Text::`scalar deleting destructor'@0x488460's align pad" },
+    { kind = "text-pad", off = 0x0884a7, len = 9, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop' in MouseCursor::MouseCursor@0x488490's align pad" },
+    { kind = "text-pad", off = 0x0886c9, len = 7, note = "`call 00405097h; nop; nop' in BaseButton::~BaseButton@0x488650's align pad" },
+    { kind = "text-pad", off = 0x088923, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in BaseButton::init@0x4887c0's align pad" },
+    { kind = "text-pad", off = 0x088aa9, len = 7, note = "`call 00405097h; nop; nop' in BaseButton::set_bubble_text@0x488a20's align pad" },
+    { kind = "text-pad", off = 0x088ca3, len = 13, note = "`call dword ptr ds:[4BA188h]; nop; nop; nop; nop; nop; nop; nop' in BaseButton::on_left_up@0x488bf0's align pad" },
+    { kind = "text-pad", off = 0x088cb5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in BaseButton::on_key_click@0x488cb0's align pad" },
+    { kind = "text-pad", off = 0x088e88, len = 8, note = "`call 00405096h; nop; nop; nop' in BaseButton::on_mouse_move@0x488cf0's align pad" },
+    { kind = "text-pad", off = 0x088ea4, len = 12, note = "`call dword ptr ds:[4BA164h]; nop; nop; nop; nop; nop; nop' in BaseButton::on_right_click@0x488e90's align pad" },
+    { kind = "text-pad", off = 0x088f94, len = 12, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop; nop' in BaseButton::on_left_click@0x488eb0's align pad" },
+    { kind = "text-pad", off = 0x088fab, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after BaseButton::on_dialog_focus@0x488fa0)" },
+    { kind = "text-pad", off = 0x088fc3, len = 13, note = "`call [IAT 0x4ba1b4]' + 7-byte tail copy after ret in BaseButton::on_mouse_move@0x488cf0's align pad (both versions)" },
+    { kind = "text-pad", off = 0x0890d8, len = 8, note = "`call 00405096h; nop; nop; nop' in BaseButton::timer_callback@0x488fd0's align pad" },
+    { kind = "text-pad", off = 0x0896a6, len = 10, note = "`call dword ptr ds:[4BA090h]; nop; nop; nop; nop' in Dialog::close@0x4894b0's align pad" },
+    { kind = "text-pad", off = 0x0898c4, len = 12, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop; nop; nop' in Dialog::item@0x489890's align pad" },
+    { kind = "text-pad", off = 0x089943, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in Dialog::set_selected_id@0x4898d0's align pad" },
+    { kind = "text-pad", off = 0x089a2b, len = 5, note = "`call 00405099h' in Dialog::id_to_pos@0x4899d0's align pad" },
+    { kind = "text-pad", off = 0x089b28, len = 8, note = "`call 00405096h; nop; nop; nop' in StringList::`scalar deleting destructor'@0x489ae0's align pad" },
+    { kind = "text-pad", off = 0x089cab, len = 5, note = "`call 00405099h' in StringList::`vbase destructor'@0x489c90's align pad" },
+    { kind = "text-pad", off = 0x089dd5, len = 11, note = "`call dword ptr ds:[4BA064h]; nop; nop; nop; nop; nop' in ListBox::ListBox@0x489cb0's align pad" },
+    { kind = "text-pad", off = 0x089f45, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in ListBox::set_selected_id@0x489ed0's align pad" },
+    { kind = "text-pad", off = 0x08a11a, len = 6, note = "`call 00405098h; nop' in ListBox::set_selected_pos@0x489f50's align pad" },
+    { kind = "text-pad", off = 0x08a9b6, len = 10, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop' in ListBox::attach@0x48a5d0's align pad" },
+    { kind = "text-pad", off = 0x08c128, len = 8, note = "`call 00405096h; nop; nop; nop' in ListBox::draw_item@0x48b3f0's align pad" },
+    { kind = "text-pad", off = 0x08c416, len = 10, note = "`call dword ptr ds:[4BA16Ch]; nop; nop; nop; nop' in ListBox::on_redraw@0x48c130's align pad" },
+    { kind = "text-pad", off = 0x08c4e6, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in ListBox::on_scrolling@0x48c420's align pad" },
+    { kind = "text-pad", off = 0x08c555, len = 11, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop; nop; nop' in ListBox::on_right_double_click@0x48c520's align pad" },
+    { kind = "text-pad", off = 0x08c60a, len = 6, note = "`call 00405098h; nop' in ListBox::on_left_double_click@0x48c560's align pad" },
+    { kind = "text-pad", off = 0x08c633, len = 13, note = "`call dword ptr ds:[4BA01Ch]; nop; nop; nop; nop; nop; nop; nop' in ListBox::on_left_click@0x48c610's align pad" },
+    { kind = "text-pad", off = 0x08c895, len = 11, note = "`call dword ptr ds:[4BA1FCh]; nop; nop; nop; nop; nop' in ListBox::update_changes@0x48c6e0's align pad" },
+    { kind = "text-pad", off = 0x08cab9, len = 7, note = "`call 00405097h; nop; nop' in ListBox::on_mouse_move@0x48c8a0's align pad" },
+    { kind = "text-pad", off = 0x08cae8, len = 8, note = "`call 00405096h; nop; nop; nop' in ListBox::on_mouse_leave@0x48cac0's align pad" },
+    { kind = "text-pad", off = 0x08cbd8, len = 8, note = "`call 00405096h; nop; nop; nop' in ListBox::`scalar deleting destructor'@0x48cba0's align pad" },
+    { kind = "text-pad", off = 0x08cc14, len = 12, note = "`call dword ptr ds:[4BA18Ch]; nop; nop; nop; nop; nop; nop' in ListBox::on_scroll_create@0x48cbf0's align pad" },
+    { kind = "text-pad", off = 0x08cdfa, len = 6, note = "`call 00405098h; nop' in decipherControlLine@0x48cd80's align pad" },
+    { kind = "text-pad", off = 0x08d47a, len = 6, note = "`call 00405098h; nop' in BasePop::BasePop@0x48ce00's align pad" },
+    { kind = "text-pad", off = 0x08de84, len = 12, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop; nop; nop; nop' in SetDefaultOkCaption@0x48de00's align pad" },
+    { kind = "text-pad", off = 0x08df14, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in SetDefaultCancelCaption@0x48de90's align pad" },
+    { kind = "text-pad", off = 0x08e00b, len = 5, note = "`call 00405099h' in BasePop::button@0x48dfc0's align pad" },
+    { kind = "text-pad", off = 0x08e119, len = 7, note = "`call 00405097h; nop; nop' in BasePop::set_height@0x48e0b0's align pad" },
+    { kind = "text-pad", off = 0x08e189, len = 7, note = "`call 00405097h; nop; nop' in BasePop::set_width@0x48e120's align pad" },
+    { kind = "text-pad", off = 0x08e1b5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in BasePop::set_loc@0x48e190's align pad" },
+    { kind = "text-pad", off = 0x090a37, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in BasePop::on_button_clicked@0x490960's align pad" },
+    { kind = "text-pad", off = 0x090b03, len = 13, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop; nop; nop' in BasePop::on_nc_hittest@0x490ae0's align pad" },
+    { kind = "text-pad", off = 0x090beb, len = 5, note = "`call 00405099h' in OnListItemActivated@0x490b30's align pad" },
+    { kind = "text-pad", off = 0x090c23, len = 13, note = "`call dword ptr ds:[4BA140h]; nop; nop; nop; nop; nop; nop; nop' in BasePop::init_class@0x490bf0's align pad" },
+    { kind = "text-pad", off = 0x090cba, len = 6, note = "`call 00405098h; nop' in Dialog_SetGlobalTextFonts@0x490c80's align pad" },
+    { kind = "text-pad", off = 0x090ce7, len = 9, note = "`call dword ptr ds:[4BA140h]; nop; nop; nop' in Dialog_SetGlobalTextColors@0x490cc0's align pad" },
+    { kind = "text-pad", off = 0x090d47, len = 9, note = "`call dword ptr ds:[4BA1E4h]; nop; nop; nop' in Dialog_SetGlobalButtonColors@0x490d20's align pad" },
+    { kind = "text-pad", off = 0x091263, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in BasePop::on_redraw@0x490d60's align pad" },
+    { kind = "text-pad", off = 0x09136a, len = 6, note = "`call 00405098h; nop' in BasePop::basepop_alloc@0x491310's align pad" },
+    { kind = "text-pad", off = 0x091469, len = 7, note = "`call 00405097h; nop; nop' in ImageButton::~ImageButton@0x491410's align pad" },
+    { kind = "text-pad", off = 0x0914ab, len = 5, note = "`call 00405099h' in Dialog::SetPinHeight@0x491490's align pad" },
+    { kind = "text-pad", off = 0x0914cb, len = 5, note = "`call 00405099h' in Dialog::SetPinWidth@0x4914b0's align pad" },
+    { kind = "text-pad", off = 0x0914f6, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in Dialogs::`vbase destructor'@0x4914d0's align pad" },
+    { kind = "text-pad", off = 0x0916d3, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in ListBoxCtl::~ListBoxCtl@0x491680's align pad" },
+    { kind = "text-pad", off = 0x0916e5, len = 11, note = "`call dword ptr ds:[4BA0D8h]; nop; nop; nop; nop; nop' in BasePop::handleGameSpecificControlLines@0x4916e0's align pad" },
+    { kind = "text-pad", off = 0x091c6a, len = 6, note = "`call 00405098h; nop' in trig_init@0x491c10's align pad" },
+    { kind = "text-pad", off = 0x091d99, len = 7, note = "`call 00405097h; nop; nop' in cos_table@0x491d80's align pad" },
+    { kind = "text-pad", off = 0x092424, len = 12, note = "`call [IAT 0x4ba084]' + 6-byte tail copy after ret imm16 in SpriteObject::extract_8@0x492000's align pad (both versions)" },
+    { kind = "text-pad", off = 0x09244b, len = 5, note = "`call 00405099h' in the align pad of a function the reference's function list does not record (after SpriteObject::extract_8@0x492000)" },
+    { kind = "text-pad", off = 0x092456, len = 10, note = "`call dword ptr ds:[4BA0D0h]; nop; nop; nop; nop' in display_format@0x492450's align pad" },
+    { kind = "text-pad", off = 0x0924d8, len = 8, note = "`call 00405096h; nop; nop; nop' in display_unlock@0x4924b0's align pad" },
+    { kind = "text-pad", off = 0x0925c6, len = 10, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop' in purge_spaces@0x4925b0's align pad" },
+    { kind = "text-pad", off = 0x0925e7, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in kill_lf@0x4925d0's align pad" },
+    { kind = "text-pad", off = 0x09260b, len = 5, note = "`call 00405099h' in add_lf@0x4925f0's align pad" },
+    { kind = "text-pad", off = 0x092644, len = 12, note = "`call [IAT 0x4ba214]' + 6-byte tail copy after ret in in_box@0x492610's align pad (both versions)" },
+    { kind = "text-pad", off = 0x092685, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in HotSpot::close@0x492660's align pad" },
+    { kind = "text-pad", off = 0x092799, len = 7, note = "`call 00405097h; nop; nop' in Spot::increase_spots@0x492690's align pad" },
+    { kind = "text-pad", off = 0x0927fa, len = 6, note = "`call 00405098h; nop' in HotSpot::`vector deleting destructor'@0x4927a0's align pad" },
+    { kind = "text-pad", off = 0x0928a3, len = 13, note = "`call dword ptr ds:[4BA128h]; nop; nop; nop; nop; nop; nop; nop' in Spot::Spot@0x492850's align pad" },
+    { kind = "text-pad", off = 0x0929a7, len = 9, note = "`call dword ptr ds:[4BA0CCh]; nop; nop; nop' in Spot::init@0x492920's align pad" },
+    { kind = "text-pad", off = 0x092b06, len = 10, note = "`call dword ptr ds:[4BA16Ch]; nop; nop; nop; nop' in Spot::check@0x492a90's align pad" },
+    { kind = "text-pad", off = 0x092bc3, len = 13, note = "`call [IAT 0x4ba210]' + 7-byte tail copy after ret in Spot::check@0x492b10's align pad (both versions)" },
+    { kind = "text-pad", off = 0x092cb5, len = 11, note = "`call dword ptr ds:[4BA168h]; nop; nop; nop; nop; nop' in Spot::timer_callback@0x492bd0's align pad" },
+    { kind = "text-pad", off = 0x092d34, len = 12, note = "`call dword ptr ds:[4BA154h]; nop; nop; nop; nop; nop; nop' in Spot::on_move@0x492cc0's align pad" },
+    { kind = "text-pad", off = 0x092d67, len = 9, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop' in Spot::on_leave@0x492d40's align pad" },
+    { kind = "text-pad", off = 0x092d98, len = 8, note = "`call 00405096h; nop; nop; nop' in Filemap::Filemap@0x492d80's align pad" },
+    { kind = "text-pad", off = 0x092ec5, len = 11, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop' in Filemap::close@0x492e80's align pad" },
+    { kind = "text-pad", off = 0x092ff7, len = 9, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop' in step_edge_poly@0x492fa0's align pad" },
+    { kind = "text-pad", off = 0x093079, len = 7, note = "`call 00405097h; nop; nop' in scan_out_line_poly_16@0x493000's align pad" },
+    { kind = "text-pad", off = 0x0930f3, len = 13, note = "`call dword ptr ds:[4BA198h]; nop; nop; nop; nop; nop; nop; nop' in scan_out_line_poly_8@0x493080's align pad" },
+    { kind = "text-pad", off = 0x0935a7, len = 9, note = "`call dword ptr ds:[4BA1C4h]; nop; nop; nop' in swap@0x493580's align pad" },
+    { kind = "text-pad", off = 0x0935e3, len = 13, note = "`call dword ptr ds:[4BA1B4h]; nop; nop; nop; nop; nop; nop; nop' in memrchr@0x4935b0's align pad" },
+    { kind = "text-pad", off = 0x093629, len = 7, note = "`call 00405097h; nop; nop' in findnum@0x4935f0's align pad" },
+    { kind = "text-pad", off = 0x093693, len = 13, note = "`call dword ptr ds:[4BA234h]; nop; nop; nop; nop; nop; nop; nop' in BasePop::start@0x493670's align pad" },
+    { kind = "text-pad", off = 0x093ee5, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in ComboBox::width@0x493ed0's align pad" },
+    { kind = "text-pad", off = 0x094019, len = 7, note = "`call 00405097h; nop; nop' in ComboBox::drawTopBarSprites@0x493f50's align pad" },
+    { kind = "text-pad", off = 0x0940d4, len = 12, note = "`call dword ptr ds:[4BA1C8h]; nop; nop; nop; nop; nop; nop' in ComboBox::setButtonSprites@0x494020's align pad" },
+    { kind = "text-pad", off = 0x0941da, len = 6, note = "`call 00405098h; nop' in ComboBox::getItemString@0x4940e0's align pad" },
+    { kind = "text-pad", off = 0x094297, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in ComboBox::getCurrentString@0x4941e0's align pad" },
+    { kind = "text-pad", off = 0x0942e9, len = 7, note = "`call 00405097h; nop; nop' in ComboBox::getCurrentID@0x4942a0's align pad" },
+    { kind = "text-pad", off = 0x094d2a, len = 6, note = "`call 00405098h; nop' in parse_says@0x494cb0's align pad" },
+    { kind = "text-pad", off = 0x09541b, len = 5, note = "`call 00405099h' in AssetSurface::load_pcx_8_8@0x495100's align pad" },
+    { kind = "text-pad", off = 0x09578a, len = 6, note = "`call 00405098h; nop' in SysMessageHandler::OnPaint@0x495770's align pad" },
+    { kind = "text-pad", off = 0x09590a, len = 6, note = "`call 00405098h; nop' in SysMessageHandler::OnNCHitTest@0x495790's align pad" },
+    { kind = "text-pad", off = 0x095985, len = 11, note = "`call dword ptr ds:[4BA0E8h]; nop; nop; nop; nop; nop' in SysMessageHandler::OnKey@0x495910's align pad" },
+    { kind = "text-pad", off = 0x0959ab, len = 5, note = "`call 00405099h' in SysMessageHandler::OnChar@0x495990's align pad" },
+    { kind = "text-pad", off = 0x095a98, len = 8, note = "`call 00405096h; nop; nop; nop' in SysMessageHandler::OnMouseWheel@0x495a50's align pad" },
+    { kind = "text-pad", off = 0x095b89, len = 7, note = "`call 00405097h; nop; nop' in SysMessageHandler::OnLButtonDown@0x495aa0's align pad" },
+    { kind = "text-pad", off = 0x095d15, len = 11, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop; nop; nop' in SysMessageHandler::OnJackalTimer@0x495cb0's align pad" },
+    { kind = "text-pad", off = 0x095ea4, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in AutoSound::AutoSound@0x495d30's align pad" },
+    { kind = "text-pad", off = 0x096009, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after AutoSound::ResetToDefaults@0x495eb0)" },
+    { kind = "text-pad", off = 0x0961c7, len = 9, note = "`call dword ptr ds:[4BA0DCh]; nop; nop; nop' in Scroll::Scroll@0x496030's align pad" },
+    { kind = "text-pad", off = 0x09668b, len = 5, note = "`call 00405099h' in Scroll::init@0x496330's align pad" },
+    { kind = "text-pad", off = 0x0966cb, len = 5, note = "`call 00405099h' in Scroll::init_vert@0x496690's align pad" },
+    { kind = "text-pad", off = 0x09673b, len = 5, note = "`call 00405099h' in Scroll::init_vert_nc@0x496710's align pad" },
+    { kind = "text-pad", off = 0x09676b, len = 5, note = "`call 00405099h' in Scroll::init_horz_nc@0x496740's align pad" },
+    { kind = "text-pad", off = 0x096856, len = 10, note = "`call dword ptr ds:[4BA1E0h]; nop; nop; nop; nop' in Scroll::set_pos@0x4967f0's align pad" },
+    { kind = "text-pad", off = 0x096d5b, len = 5, note = "`call 00405099h' in Scroll::on_left_up@0x496d20's align pad" },
+    { kind = "text-pad", off = 0x09716b, len = 5, note = "`call 00405099h' in Scroll::on_redraw@0x496fc0's align pad" },
+    { kind = "text-pad", off = 0x0973b9, len = 7, note = "`call 00405097h; nop; nop' in Scroll::on_button_pressed@0x497260's align pad" },
+    { kind = "text-pad", off = 0x0979f8, len = 8, note = "`call 00405096h; nop; nop; nop' in Scroll::set_thumb_rect@0x4979a0's align pad" },
+    { kind = "text-pad", off = 0x097b19, len = 7, note = "`call 00405097h; nop; nop' in do_net@0x497b00's align pad" },
+    { kind = "text-pad", off = 0x097b39, len = 7, note = "`call 00405097h; nop; nop' in check_net@0x497b20's align pad" },
+    { kind = "text-pad", off = 0x097d05, len = 11, note = "`call dword ptr ds:[4BA150h]; nop; nop; nop; nop; nop' in Net::stop_voice@0x497cc0's align pad" },
+    { kind = "text-pad", off = 0x097f5a, len = 6, note = "`call 00405098h; nop' in the align pad of a function the reference's function list does not record (after Net::close@0x497d10)" },
+    { kind = "text-pad", off = 0x09aa65, len = 11, note = "`call dword ptr ds:[4BA014h]; nop; nop; nop; nop; nop' in Net::get_player_name@0x49aa30's align pad" },
+    { kind = "text-pad", off = 0x09ab37, len = 9, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop' in Net::process_voice@0x49aa70's align pad" },
+    { kind = "text-pad", off = 0x09b7aa, len = 6, note = "`call 00405098h; nop' in Net::add_player@0x49b690's align pad" },
+    { kind = "text-pad", off = 0x09bf66, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in ClassList<struct JackalVoiceRx>::remove@0x49bec0's align pad" },
+    { kind = "text-pad", off = 0x09c0ab, len = 5, note = "`call 00405099h' in MultiDebug::close@0x49c0a0's align pad" },
+    { kind = "text-pad", off = 0x09c77a, len = 6, note = "`call 00405098h; nop' in MultiDebug::on_redraw@0x49c0b0's align pad" },
+    { kind = "text-pad", off = 0x09c7fa, len = 6, note = "`call 00405098h; nop' in MultiDebug::~MultiDebug@0x49c780's align pad" },
+    { kind = "text-pad", off = 0x09c8a7, len = 9, note = "`call dword ptr ds:[4BA188h]; nop; nop; nop' in PaletteList::fill_entry@0x49c830's align pad" },
+    { kind = "text-pad", off = 0x09c8d9, len = 7, note = "`call 00405097h; nop; nop' in PaletteList::kill_entry@0x49c8b0's align pad" },
+    { kind = "text-pad", off = 0x09c909, len = 7, note = "`call 00405097h; nop; nop' in do_video@0x49c8e0's align pad" },
+    { kind = "text-pad", off = 0x09cad8, len = 8, note = "`call 00405096h; nop; nop; nop' in Video::advance_frame@0x49c940's align pad" },
+    { kind = "text-pad", off = 0x09cb76, len = 10, note = "`call dword ptr ds:[4BA06Ch]; nop; nop; nop; nop' in Video::read_frame_process@0x49cb20's align pad" },
+    { kind = "text-pad", off = 0x09cb88, len = 8, note = "`call 00405096h; nop; nop; nop' in Video::decode_frame@0x49cb80's align pad" },
+    { kind = "text-pad", off = 0x09cf45, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in Video::play_frame@0x49ccc0's align pad" },
+    { kind = "text-pad", off = 0x09d069, len = 7, note = "`call 00405097h; nop; nop' in Strings::Strings@0x49d050's align pad" },
+    { kind = "text-pad", off = 0x09d1a9, len = 7, note = "`call 00405097h; nop; nop' in @0x49d1a3's align pad" },
+    { kind = "text-pad", off = 0x09d277, len = 9, note = "`call dword ptr ds:[4BA1C4h]; nop; nop; nop' in LoadSmallSprites@0x49d1b0's align pad" },
+    { kind = "text-pad", off = 0x09d2e9, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after @0x49d2e3)" },
+    { kind = "text-pad", off = 0x09d349, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after @0x49d343)" },
+    { kind = "text-pad", off = 0x09d3a9, len = 7, note = "`call 00405097h; nop; nop' in @0x49d3a3's align pad" },
+    { kind = "text-pad", off = 0x09d45a, len = 6, note = "`call 00405098h; nop' in FileWin::init_class@0x49d3b0's align pad" },
+    { kind = "text-pad", off = 0x09d4d9, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after @0x49d4d3)" },
+    { kind = "text-pad", off = 0x09d539, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after @0x49d533)" },
+    { kind = "text-pad", off = 0x09d599, len = 7, note = "`call 00405097h; nop; nop' in @0x49d593's align pad" },
+    { kind = "text-pad", off = 0x09d687, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in ListBoxCtl::ListBoxCtl@0x49d5a0's align pad" },
+    { kind = "text-pad", off = 0x09daaa, len = 6, note = "`call 00405098h; nop' in ListBoxCtl::calculate_dimensions@0x49d770's align pad" },
+    { kind = "text-pad", off = 0x09e677, len = 9, note = "`call dword ptr ds:[4BA140h]; nop; nop; nop' in ListBoxCtl::on_left_double_click@0x49e640's align pad" },
+    { kind = "text-pad", off = 0x09e7c7, len = 9, note = "`call dword ptr ds:[4BA1E4h]; nop; nop; nop' in ListBoxCtl::on_dialog_focus@0x49e7b0's align pad" },
+    { kind = "text-pad", off = 0x09e988, len = 8, note = "`call 00405096h; nop; nop; nop' in ListBoxCtl::on_mouse_move@0x49e7d0's align pad" },
+    { kind = "text-pad", off = 0x09e9c4, len = 12, note = "`call dword ptr ds:[4BA078h]; nop; nop; nop; nop; nop; nop' in ListBoxCtl::on_mouse_leave@0x49e990's align pad" },
+    { kind = "text-pad", off = 0x09eac8, len = 8, note = "`call 00405096h; nop; nop; nop' in ListBoxCtl::init_class@0x49e9d0's align pad" },
+    { kind = "text-pad", off = 0x09eb49, len = 7, note = "`call 00405097h; nop; nop' in the align pad of a function the reference's function list does not record (after @0x49eb43)" },
+    { kind = "text-pad", off = 0x09eba9, len = 7, note = "`call 00405097h; nop; nop' in @0x49eba3's align pad" },
+    { kind = "text-pad", off = 0x09ec75, len = 11, note = "`call dword ptr ds:[4BA198h]; nop; nop; nop; nop; nop' in CheckBoxCtl::CheckBoxCtl@0x49ebb0's align pad" },
+    { kind = "text-pad", off = 0x09ed19, len = 7, note = "`call 00405097h; nop; nop' in CheckBoxCtl::close@0x49ece0's align pad" },
+    { kind = "text-pad", off = 0x09ee8b, len = 5, note = "`call 00405099h' in CheckBoxCtl::attach@0x49ed20's align pad" },
+    { kind = "text-pad", off = 0x09ef7b, len = 5, note = "`call 00405099h' in CheckBoxCtl::set_state_id@0x49eef0's align pad" },
+    { kind = "text-pad", off = 0x09efe9, len = 7, note = "`call 00405097h; nop; nop' in CheckBoxCtl::get_state_id@0x49ef80's align pad" },
+    { kind = "text-pad", off = 0x09f999, len = 7, note = "`call 00405097h; nop; nop' in CheckBoxCtl::draw_item@0x49f370's align pad" },
+    { kind = "text-pad", off = 0x09fd75, len = 11, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop' in CheckBoxCtl::on_redraw@0x49fc60's align pad" },
+    { kind = "text-pad", off = 0x09fd97, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in CheckBoxCtl::on_dialog_focus@0x49fd80's align pad" },
+    { kind = "text-pad", off = 0x09fe1b, len = 5, note = "`call 00405099h' in CheckBoxCtl::on_mouse_move@0x49fda0's align pad" },
+    { kind = "text-pad", off = 0x09fe48, len = 8, note = "`call 00405096h; nop; nop; nop' in CheckBoxCtl::on_mouse_leave@0x49fe20's align pad" },
+    { kind = "text-pad", off = 0x09ff98, len = 8, note = "`call 00405096h; nop; nop; nop' in CheckBoxCtl::`scalar deleting destructor'@0x49ff60's align pad" },
+    { kind = "text-pad", off = 0x0a0094, len = 12, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop; nop; nop' in FreeGraphsyDll@0x4a0060's align pad" },
+    { kind = "text-pad", off = 0x0a00ea, len = 6, note = "`call 00405098h; nop' in LoadGraphsyDll@0x4a00a0's align pad" },
+    { kind = "text-pad", off = 0x0a0114, len = 12, note = "`call [IAT 0x4ba16c]' + 6-byte tail copy after ret in env_open@0x4a00f0's align pad (both versions)" },
+    { kind = "text-pad", off = 0x0a0344, len = 12, note = "`call dword ptr ds:[4BA1B8h]; nop; nop; nop; nop; nop; nop' in log_say@0x4a0320's align pad" },
+    { kind = "text-pad", off = 0x0a05fb, len = 5, note = "`call 00405099h' in StringList::kill_entry@0x4a05d0's align pad" },
+    { kind = "text-pad", off = 0x0a0e85, len = 11, note = "`call dword ptr ds:[4BA23Ch]; nop; nop; nop; nop; nop' in Dialogs::on_left_up@0x4a0e60's align pad" },
+    { kind = "text-pad", off = 0x0a1167, len = 9, note = "`call dword ptr ds:[4BA10Ch]; nop; nop; nop' in Dialogs::on_scroll_create@0x4a1130's align pad" },
+    { kind = "text-pad", off = 0x0a12da, len = 6, note = "`call 00405098h; nop' in Dialogs::init@0x4a1250's align pad" },
+    { kind = "text-pad", off = 0x0a136a, len = 6, note = "`call 00405098h; nop' in Dialogs::init@0x4a12e0's align pad" },
+    { kind = "text-pad", off = 0x0a13e5, len = 11, note = "`call dword ptr ds:[4BA0CCh]; nop; nop; nop; nop; nop' in Dialogs::on_mouse_wheel@0x4a13c0's align pad" },
+    { kind = "text-pad", off = 0x0a14b8, len = 8, note = "`call 00405096h; nop; nop; nop' in ImageButton::ImageButton@0x4a13f0's align pad" },
+    { kind = "text-pad", off = 0x0a1577, len = 9, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop' in ImageButton::close@0x4a14c0's align pad" },
+    { kind = "text-pad", off = 0x0a21ba, len = 6, note = "`call 00405098h; nop' in ImageButton::on_mouse_move@0x4a2010's align pad" },
+    { kind = "text-pad", off = 0x0a2325, len = 11, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop; nop; nop' in EditGroup::EditGroup@0x4a2250's align pad" },
+    { kind = "text-pad", off = 0x0a2398, len = 8, note = "`call 00405096h; nop; nop; nop' in EditGroup::~EditGroup@0x4a2330's align pad" },
+    { kind = "text-pad", off = 0x0a289b, len = 5, note = "`call 00405099h' in EditGroup::attach@0x4a2400's align pad" },
+    { kind = "text-pad", off = 0x0a299a, len = 6, note = "`call 00405098h; nop' in EditGroup::get_text@0x4a2980's align pad" },
+    { kind = "text-pad", off = 0x0a2a58, len = 8, note = "`call 00405096h; nop; nop; nop' in EditGroup::set_default@0x4a29c0's align pad" },
+    { kind = "text-pad", off = 0x0a2fe6, len = 10, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop' in EditGroup::on_dialog_focus@0x4a2fa0's align pad" },
+    { kind = "text-pad", off = 0x0a338b, len = 5, note = "`call 00405099h' in SpriteList::`vbase destructor'@0x4a3370's align pad" },
+    { kind = "text-pad", off = 0x0a33d8, len = 8, note = "`call 00405096h; nop; nop; nop' in SpriteList::`scalar deleting destructor'@0x4a3390's align pad" },
+    { kind = "text-pad", off = 0x0a35d7, len = 9, note = "`call dword ptr ds:[4BA198h]; nop; nop; nop' in SpriteBox::~SpriteBox@0x4a3480's align pad" },
+    { kind = "text-pad", off = 0x0a3786, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in SpriteBox::close@0x4a35e0's align pad" },
+    { kind = "text-pad", off = 0x0a3855, len = 11, note = "`call dword ptr ds:[4BA148h]; nop; nop; nop; nop; nop' in SpriteBox::init@0x4a3790's align pad" },
+    { kind = "text-pad", off = 0x0a3bd4, len = 12, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop; nop; nop' in SpriteBox::attach@0x4a3880's align pad" },
+    { kind = "text-pad", off = 0x0a3f08, len = 8, note = "`call 00405096h; nop; nop; nop' in SpriteBox::calculate_dimensions@0x4a3be0's align pad" },
+    { kind = "text-pad", off = 0x0a4339, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::draw_item@0x4a3f10's align pad" },
+    { kind = "text-pad", off = 0x0a43e7, len = 9, note = "`call dword ptr ds:[4BA1E4h]; nop; nop; nop' in SpriteBox::on_left_click@0x4a4350's align pad" },
+    { kind = "text-pad", off = 0x0a4429, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_left_down@0x4a43f0's align pad" },
+    { kind = "text-pad", off = 0x0a4469, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_left_up@0x4a4430's align pad" },
+    { kind = "text-pad", off = 0x0a44a9, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_right_click@0x4a4470's align pad" },
+    { kind = "text-pad", off = 0x0a44e9, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_right_down@0x4a44b0's align pad" },
+    { kind = "text-pad", off = 0x0a4529, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_right_up@0x4a44f0's align pad" },
+    { kind = "text-pad", off = 0x0a4569, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_left_double_click@0x4a4530's align pad" },
+    { kind = "text-pad", off = 0x0a45a9, len = 7, note = "`call 00405097h; nop; nop' in SpriteBox::on_right_double_click@0x4a4570's align pad" },
+    { kind = "text-pad", off = 0x0a4676, len = 10, note = "`call dword ptr ds:[4BA03Ch]; nop; nop; nop; nop' in SpriteBox::on_redraw@0x4a45b0's align pad" },
+    { kind = "text-pad", off = 0x0a48eb, len = 5, note = "`call 00405099h' in SpriteBox::id_to_pos@0x4a4890's align pad" },
+    { kind = "text-pad", off = 0x0a4afa, len = 6, note = "`call 00405098h; nop' in PullDown::id_to_index@0x4a4ad0's align pad" },
+    { kind = "text-pad", off = 0x0a4c65, len = 11, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop' in NetFifo::add@0x4a4b60's align pad" },
+    { kind = "text-pad", off = 0x0a4da4, len = 12, note = "`call dword ptr ds:[4BA174h]; nop; nop; nop; nop; nop; nop' in fifo::close@0x4a4d50's align pad" },
+    { kind = "text-pad", off = 0x0a6068, len = 8, note = "`call 00405096h; int 3; int 3; int 3' in @0x4a6057's align pad" },
+    { kind = "text-pad", off = 0x0a6c45, len = 11, note = "`call dword ptr ds:[4BA23Ch]; int 3; int 3; int 3; int 3; int 3' in memchr@0x4a6ba0's align pad" },
+    { kind = "text-pad", off = 0x0a6c77, len = 9, note = "`call dword ptr ds:[4BA244h]; int 3; int 3; int 3' in @0x4a6c50's align pad" },
+    { kind = "text-pad", off = 0x0a8d99, len = 7, note = "`call 00405097h; int 3; int 3' in @0x4a8d76's align pad" },
+    { kind = "text-pad", off = 0x0aa6ba, len = 6, note = "`call 00405098h; int 3' in @0x4aa5a2's align pad" },
+    { kind = "text-pad", off = 0x0abde8, len = 8, note = "`call 00405096h; int 3; int 3; int 3' in @0x4abd90's align pad" },
+    { kind = "text-pad", off = 0x0abf28, len = 8, note = "`call 00405096h; int 3; int 3; int 3' in @0x4abf10's align pad" },
+    { kind = "text-pad", off = 0x0ac22b, len = 5, note = "`call 00405099h' in @0x4ac1c2's align pad" },
+    { kind = "text-pad", off = 0x0ac298, len = 8, note = "`call 00405096h; int 3; int 3; int 3' in @0x4ac230's align pad" },
+    { kind = "text-pad", off = 0x0ae018, len = 8, note = "`call 00405096h; int 3; int 3; int 3' in @0x4adfed's align pad" },
+    { kind = "text-pad", off = 0x0ae145, len = 11, note = "`call dword ptr ds:[4BA104h]; nop; nop; nop; nop; nop' in CreateJPG@0x4ae020's align pad" },
+    { kind = "text-pad", off = 0x0ae208, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4ae150's align pad" },
+    { kind = "text-pad", off = 0x0ae3f5, len = 11, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop' in @0x4ae380's align pad" },
+    { kind = "text-pad", off = 0x0ae4c4, len = 12, note = "`call dword ptr ds:[4BA1A8h]; nop; nop; nop; nop; nop; nop' in @0x4ae400's align pad" },
+    { kind = "text-pad", off = 0x0ae536, len = 10, note = "`call dword ptr ds:[4BA20Ch]; nop; nop; nop; nop' in @0x4ae510's align pad" },
+    { kind = "text-pad", off = 0x0ae5f6, len = 10, note = "`call dword ptr ds:[4BA17Ch]; nop; nop; nop; nop' in @0x4ae590's align pad" },
+    { kind = "text-pad", off = 0x0ae6ba, len = 6, note = "`call 00405098h; nop' in @0x4ae600's align pad" },
+    { kind = "text-pad", off = 0x0ae6f4, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in @0x4ae6c0's align pad" },
+    { kind = "text-pad", off = 0x0ae738, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4ae700's align pad" },
+    { kind = "text-pad", off = 0x0ae8aa, len = 6, note = "`call 00405098h; nop' in @0x4ae850's align pad" },
+    { kind = "text-pad", off = 0x0aed5a, len = 6, note = "`call 00405098h; nop' in @0x4aed20's align pad" },
+    { kind = "text-pad", off = 0x0aee05, len = 11, note = "`call dword ptr ds:[4BA150h]; nop; nop; nop; nop; nop' in @0x4aed60's align pad" },
+    { kind = "text-pad", off = 0x0aef64, len = 12, note = "`call dword ptr ds:[4BA008h]; nop; nop; nop; nop; nop; nop' in @0x4aee30's align pad" },
+    { kind = "text-pad", off = 0x0af218, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4af170's align pad" },
+    { kind = "text-pad", off = 0x0af72a, len = 6, note = "`call 00405098h; nop' in @0x4af690's align pad" },
+    { kind = "text-pad", off = 0x0af87a, len = 6, note = "`call 00405098h; nop' in @0x4af730's align pad" },
+    { kind = "text-pad", off = 0x0afa57, len = 9, note = "`call dword ptr ds:[4BA03Ch]; nop; nop; nop' in @0x4afa20's align pad" },
+    { kind = "text-pad", off = 0x0afc38, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4afc10's align pad" },
+    { kind = "text-pad", off = 0x0afc7b, len = 5, note = "`call 00405099h' in @0x4afc40's align pad" },
+    { kind = "text-pad", off = 0x0afd17, len = 9, note = "`call dword ptr ds:[4BA210h]; nop; nop; nop' in @0x4afc80's align pad" },
+    { kind = "text-pad", off = 0x0afeb6, len = 10, note = "`call dword ptr ds:[4BA1E0h]; nop; nop; nop; nop' in @0x4afdc0's align pad" },
+    { kind = "text-pad", off = 0x0aff96, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in @0x4afec0's align pad" },
+    { kind = "text-pad", off = 0x0b0058, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4affa0's align pad" },
+    { kind = "text-pad", off = 0x0b021a, len = 6, note = "`call 00405098h; nop' in @0x4b01f0's align pad" },
+    { kind = "text-pad", off = 0x0b0457, len = 9, note = "`call dword ptr ds:[4BA170h]; nop; nop; nop' in @0x4b03a0's align pad" },
+    { kind = "text-pad", off = 0x0b0485, len = 11, note = "`call dword ptr ds:[4BA010h]; nop; nop; nop; nop; nop' in @0x4b0480's align pad" },
+    { kind = "text-pad", off = 0x0b04a4, len = 12, note = "`call dword ptr ds:[4BA21Ch]; nop; nop; nop; nop; nop; nop' in @0x4b0490's align pad" },
+    { kind = "text-pad", off = 0x0b04e8, len = 8, note = "`nop; call 00405097h; nop; nop' in @0x4b04d0's align pad" },
+    { kind = "text-pad", off = 0x0b0536, len = 10, note = "`call dword ptr ds:[4BA084h]; nop; nop; nop; nop' in @0x4b04f0's align pad" },
+    { kind = "text-pad", off = 0x0b055b, len = 5, note = "`call 00405099h' in @0x4b0540's align pad" },
+    { kind = "text-pad", off = 0x0b05e7, len = 9, note = "`call dword ptr ds:[4BA1E8h]; nop; nop; nop' in @0x4b0560's align pad" },
+    { kind = "text-pad", off = 0x0b07ab, len = 5, note = "`call 00405099h' in @0x4b06f0's align pad" },
+    { kind = "text-pad", off = 0x0b0857, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in @0x4b07b0's align pad" },
+    { kind = "text-pad", off = 0x0b0b1a, len = 6, note = "`call 00405098h; nop' in @0x4b08b0's align pad" },
+    { kind = "text-pad", off = 0x0b0d64, len = 12, note = "`call dword ptr ds:[4BA13Ch]; nop; nop; nop; nop; nop; nop' in @0x4b0b20's align pad" },
+    { kind = "text-pad", off = 0x0b0f56, len = 10, note = "`call dword ptr ds:[4BA214h]; nop; nop; nop; nop' in @0x4b0d70's align pad" },
+    { kind = "text-pad", off = 0x0b107a, len = 6, note = "`call 00405098h; nop' in @0x4b0f60's align pad" },
+    { kind = "text-pad", off = 0x0b12eb, len = 5, note = "`call 00405099h' in @0x4b12b0's align pad" },
+    { kind = "text-pad", off = 0x0b19db, len = 5, note = "`call 00405099h' in @0x4b15c0's align pad" },
+    { kind = "text-pad", off = 0x0b1ad6, len = 10, note = "`call dword ptr ds:[4BA19Ch]; nop; nop; nop; nop' in @0x4b1a10's align pad" },
+    { kind = "text-pad", off = 0x0b1c15, len = 11, note = "`call dword ptr ds:[4BA218h]; nop; nop; nop; nop; nop' in @0x4b1b70's align pad" },
+    { kind = "text-pad", off = 0x0b1f28, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4b1e20's align pad" },
+    { kind = "text-pad", off = 0x0b1f68, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4b1f30's align pad" },
+    { kind = "text-pad", off = 0x0b2136, len = 10, note = "`call dword ptr ds:[4BA1C0h]; nop; nop; nop; nop' in @0x4b1f70's align pad" },
+    { kind = "text-pad", off = 0x0b2505, len = 11, note = "`call dword ptr ds:[4BA178h]; nop; nop; nop; nop; nop' in @0x4b2460's align pad" },
+    { kind = "text-pad", off = 0x0b28b4, len = 12, note = "`call dword ptr ds:[4BA1F8h]; nop; nop; nop; nop; nop; nop' in @0x4b27d0's align pad" },
+    { kind = "text-pad", off = 0x0b2d28, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4b28c0's align pad" },
+    { kind = "text-pad", off = 0x0b2ea7, len = 9, note = "`call dword ptr ds:[4BA168h]; nop; nop; nop' in @0x4b2d30's align pad" },
+    { kind = "text-pad", off = 0x0b34ab, len = 5, note = "`call 00405099h' in @0x4b33c0's align pad" },
+    { kind = "text-pad", off = 0x0b38b9, len = 7, note = "`call 00405097h; nop; nop' in @0x4b3720's align pad" },
+    { kind = "text-pad", off = 0x0b3a79, len = 7, note = "`call 00405097h; nop; nop' in @0x4b38c0's align pad" },
+    { kind = "text-pad", off = 0x0b3b77, len = 9, note = "`call dword ptr ds:[4BA1A4h]; nop; nop; nop' in @0x4b3b30's align pad" },
+    { kind = "text-pad", off = 0x0b3d34, len = 12, note = "`call dword ptr ds:[4BA238h]; nop; nop; nop; nop; nop; nop' in @0x4b3d00's align pad" },
+    { kind = "text-pad", off = 0x0b4034, len = 12, note = "`call dword ptr ds:[4BA074h]; nop; nop; nop; nop; nop; nop' in @0x4b3f10's align pad" },
+    { kind = "text-pad", off = 0x0b4256, len = 10, note = "`call dword ptr ds:[4BA240h]; nop; nop; nop; nop' in @0x4b41d0's align pad" },
+    { kind = "text-pad", off = 0x0b4436, len = 10, note = "`call dword ptr ds:[4BA100h]; nop; nop; nop; nop' in @0x4b43f0's align pad" },
+    { kind = "text-pad", off = 0x0b44e7, len = 9, note = "`call dword ptr ds:[4BA244h]; nop; nop; nop' in @0x4b4440's align pad" },
+    { kind = "text-pad", off = 0x0b45ca, len = 6, note = "`call 00405098h; nop' in @0x4b44f0's align pad" },
+    { kind = "text-pad", off = 0x0b48b9, len = 7, note = "`call 00405097h; nop; nop' in @0x4b45d0's align pad" },
+    { kind = "text-pad", off = 0x0b4ea7, len = 9, note = "`call dword ptr ds:[4BA068h]; nop; nop; nop' in @0x4b4d80's align pad" },
+    { kind = "text-pad", off = 0x0b50c7, len = 9, note = "`call dword ptr ds:[4BA208h]; nop; nop; nop' in @0x4b4f60's align pad" },
+    { kind = "text-pad", off = 0x0b5137, len = 9, note = "`call dword ptr ds:[4BA198h]; nop; nop; nop' in @0x4b50d0's align pad" },
+    { kind = "text-pad", off = 0x0b5c9a, len = 6, note = "`call 00405098h; nop' in @0x4b5ad0's align pad" },
+    { kind = "text-pad", off = 0x0b5ccb, len = 5, note = "`call 00405099h' in @0x4b5ca0's align pad" },
+    { kind = "text-pad", off = 0x0b5d48, len = 8, note = "`call 00405096h; nop; nop; nop' in @0x4b5cd0's align pad" },
+]
+
+[image.classes]
+placeholders = ["?", "Inner", "Outer"]
+sources = ["${SIMGOLF}/golf/golf.exe/src", "${SIMGOLF}/golf/jackal.lib/src", "${SIMGOLF}/golf/golf.exe/include", "${SIMGOLF}/golf/jackal.lib/include"]
+headers = ["${SIMGOLF}/jgl/jgld.dll/include"]
+
+[image.eh]
+textx_ceiling = 5279
+ceiling_evidence = "derived through the .textbss curve: the reference's code exceeds 262,976 bytes, and code plus .text$x is 268,255"
+
+[image.build]
+toolchain = "vc6"
+mount = [
+    { at = 'C:\Program Files\Microsoft Visual Studio', from = "$vc6" },
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6sp5', from = "$vc6sp5" },
+    { at = 'C:\DXSDK', from = "${SIMGOLF}/sound/DXSDK" },
+    { at = 'C:\SimGolf\decompilation\golf', from = "${SIMGOLF}/golf" },
+    { at = 'C:\SimGolf\decompilation\jgl', from = "${SIMGOLF}/jgl" },
+    { at = 'C:\SimGolf\decompilation\sound', from = "${SIMGOLF}/sound" },
+    { at = 'C:\SimGolf\decompilation\terrain', from = "${SIMGOLF}/terrain" },
+    { at = 'C:\SimGolf\external\jpeg-6a', from = "${SIMGOLF}/golf/jpeg.lib/jpeg-6a" },
+    { at = 'C:\SimGolf\external\lpc10-1.5', from = "${SIMGOLF}/sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C" },
+    { at = 'C:\SimGolf\external\bink', from = "${SIMGOLF}/golf/binkw32.lib" },
+]
+stage = [
+    { at = 'C:\lk\golf.exe', from = "${SIMGOLF}/golf/golf.exe", files = ["src/*.cpp", "include/**", "res/**", "golf.def", "golf.dsp"] },
+    { at = 'C:\lk\golf.exe\golf.dsw', from = "${SIMGOLF}/golf/golf.dsw", edit = [
+        { find = '=.\golf.exe\', replace = '=.\' },
+        { find = '=.\jackal.lib\', replace = '=..\jackal.lib\' },
+        { find = '=.\jpeg.lib\', replace = '=..\jpeg.lib\' },
+        { find = '=.\binkw32.lib\', replace = '=..\binkw32.lib\' },
+    ] },
+    { at = 'C:\lk\jackal.lib', from = "${SIMGOLF}/golf/jackal.lib", files = ["src/*.cpp", "include/**", "jackal.dsp"] },
+    { at = 'C:\lk\jpeg.lib', from = "${SIMGOLF}/golf/jpeg.lib" },
+    { at = 'C:\lk\binkw32.lib', from = "${SIMGOLF}/golf/binkw32.lib" },
+]
+implib = [
+    { def = "${SIMGOLF}/terrain/Terrain.dll/Terrain.def", out = 'C:\lk\golf.exe\terrain.lib', toolchain = "vc6" },
+]
+include = [
+    'C:\DXSDK\\include',
+    'C:\Program Files\\Microsoft Visual Studio\\VC98\\INCLUDE',
+    'C:\Program Files\\Microsoft Visual Studio\\VC98\\MFC\\INCLUDE',
+    'C:\DXSDK\\include',
+    'C:\SimGolf\\external\\jpeg-6a',
+    'C:\SimGolf\\decompilation\\terrain\\Terrain.dll\\include',
+    'C:\SimGolf\\decompilation\\sound\\sound.dll\\include',
+    'C:\SimGolf\\external\\lpc10-1.5',
+    'C:\SimGolf\\decompilation\\jgl\\jgld.dll\\include',
+    'C:\SimGolf\\external\\bink',
+]
+lib = ['C:\Program Files\\Microsoft Visual Studio\\VC98\\LIB', 'C:\lk\binkw32.lib\\Release', 'C:\DXSDK\\lib']
+path = ['C:\Program Files\\Microsoft Visual Studio\\VC98\\Bin', 'C:\Program Files\\Microsoft Visual Studio\\Common\\MSDev98\\Bin', "${MSVC6T_MFC42_DIR}"]
+msdev = [
+    { dir = 'C:\lk\binkw32.lib', open = "binkw32.dsp", config = "binkw32 - Win32 Release", toolchain = "vc6sp5", log = "build.log", path = ['C:\SimGolf\decompilation\toolchain\vc6sp5\Common\MSDev98\Bin', 'C:\SimGolf\decompilation\toolchain\vc6sp5\VC98\Bin'], include = ['C:\SimGolf\decompilation\toolchain\vc6sp5\VC98\INCLUDE'], lib = ['C:\SimGolf\decompilation\toolchain\vc6sp5\VC98\LIB'], requires = ['Release\binkw32.lib'] },
+    { dir = 'C:\lk\golf.exe', open = "golf.dsw", config = "golf - Win32 Release", log = "build.log", requires = ['..\jpeg.lib\Release\jpeg.lib', '..\jackal.lib\Release\jackal.lib'] },
+]
+output = 'C:\lk\golf.exe\Release\golf.exe'
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/golf.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/golf.pdb"
+shipped = [
+    { md5 = "c6c7da79f2b88d609b357c7998f1a860", what = "SimGolf 1.03 golf.exe, SafeDisc removed (2,286,953 bytes)", file = "${SIMGOLF_UNWRAPPED}" },
+    { md5 = "b68e7ebc61e59a333a0467e0fe129a81", what = "SimGolf 1.03 golf.exe, its PE part (the first 954,368 bytes)", file = "${SIMGOLF_ORIG}/golf.exe" },
+]
+
+[image.pdb.relocate]
+report_key = "smsg"
+
+[image.pdb.paths]
+product = "${SIMGOLF}"
+product_win = 'C:\SimGolf\decompilation'
+lanes = [
+    { at = 'C:\lk\golf.exe', product = "golf/golf.exe" },
+    { at = 'C:\lk\jackal.lib', product = "golf/jackal.lib" },
+    { at = 'C:\lk\jpeg.lib', product = "golf/jpeg.lib" },
+    { at = 'C:\lk\binkw32.lib', product = "golf/binkw32.lib" },
+]
+
+[[image.pdb.paths.attested]]
+product = "golf/jpeg.lib/jpeg-6a"
+dir = 'C:\Code\JPEG-6A\Code'
+evidence = "the retail install's JPEG.lib (2001-12-07, md5 04e3c9fa), each member's COFF `.file` record: `C:\\Code\\JPEG-6A\\Code\\JUTILS.C`, `C:\\Code\\JPEG-6A\\Code\\JCAPIMIN.C` ..."
+
+[[image.pdb.paths.attested]]
+product = "golf/jpeg.lib"
+dir = 'C:\Code\JPEG-6A\Code'
+evidence = "the same library's CreateJPG.obj: `C:\\Code\\JPEG-6A\\Code\\CreateJPG.c`"
+
+[[image.pdb.paths.files]]
+product = "golf/jpeg.lib/jpeg-6a"
+dir = 'C:\Code\JPEG-6A\Code'
+names = [
+    "JCAPIMIN.C", "JCAPISTD.C", "JCCOEFCT.C", "JCCOLOR.C", "JCDCTMGR.C", "JCHUFF.C", "JCINIT.C",
+    "JCMAINCT.C", "JCMARKER.C", "JCMASTER.C", "JCOMAPI.C", "JCPARAM.C", "JCPHUFF.C", "JCPREPCT.C",
+    "JCSAMPLE.C", "JCTRANS.C", "JDAPIMIN.C", "JDAPISTD.C", "JDATADST.C", "JDATASRC.C", "JDCOEFCT.C",
+    "JDCOLOR.C", "JDDCTMGR.C", "JDHUFF.C", "JDINPUT.C", "JDMAINCT.C", "JDMARKER.C", "JDMASTER.C",
+    "JDMERGE.C", "JDPHUFF.C", "JDPOSTCT.C", "JDSAMPLE.C", "JDTRANS.C", "JERROR.C", "JFDCTFLT.C",
+    "JFDCTFST.C", "JFDCTINT.C", "JIDCTFLT.C", "JIDCTFST.C", "JIDCTINT.C", "JIDCTRED.C", "JMEMMGR.C",
+    "JMEMNOBS.C", "JQUANT1.C", "JQUANT2.C", "JUTILS.C",
+]
+evidence = "the retail JPEG.lib (md5 04e3c9fa): each of its 46 IJG members' COFF `.file` record, `C:\\Code\\JPEG-6A\\Code\\JUTILS.C` ... (the product's jpeg-6a spells them in lower case)"
+
+[[image.pdb.paths.files]]
+product = "golf/jpeg.lib"
+dir = 'C:\Code\JPEG-6A\Code'
+names = ["CreateJPG.c"]
+evidence = "the retail JPEG.lib's CreateJPG.obj, its COFF `.file` record"
+
+[[image]]
+id = "JGLD"
+reference = "${SIMGOLF_ORIG}/jgld.dll"
+sha256 = "07d6b89c9cae741222df7741c9116ace5f64ec7b7b44124092ab7bc1c86629d4"
+compiler = "vc6"
+linker = "vc6"
+clock = ["coff.timestamp", "debug.timestamp", "pdb.signature", "pdb.age", "export.timestamp"]
+project = { dsw = "${SIMGOLF}/jgl/jgl.dsw", config = "jgld - Win32 Debug" }
+functions = ["reccmp-csv:tables/JGLD.extents.csv", "ghidra-json:${SIMGOLF_GHIDRA}/jgld.dll.functions.json", "discover"]
+names = ["exports", "reccmp-csv:${SIMGOLF}/jgl/jgld.dll/smsg-globals.csv", "tsv:tables/JGLD.symbols.tsv", "tsv:tables/JGLD.addresses.tsv", "imports"]
+libraries = ["$vc6/VC98/Lib/LIBCMTD.LIB", "${MSVC6T_VC6SP2}/VC98/lib/lib/libcmtd.lib", "$vc6sp5/VC98/Lib/LIBCMTD.LIB", "$vc6/VC98/Lib/LIBCIMTD.LIB", "$vc6sp5/VC98/Lib/LIBCIMTD.LIB"]
+
+[image.classes]
+placeholders = ["?", "Inner", "Outer"]
+sources = ["${SIMGOLF}/jgl/jgld.dll/src", "${SIMGOLF}/jgl/jgld.dll/include"]
+tables = [
+    { rva = 0x11db10, slots = 9, what = "JGLPalette, its members in jglpalettemgr.cpp" },
+    { rva = 0x11d380, slots = 41, what = "JGLSprite, spans jglsprite*.cpp" },
+]
+counts = [
+    { class = "GraphSys", slots = 86, what = "table 0x11d7dc, 86 slots" },
+    { class = "JGLSys", slots = 86, what = "table 0x11d640, 86 slots" },
+    { class = "JGLSprite", slots = 41, what = "table 0x11d380, 41 slots" },
+]
+
+[image.build]
+toolchain = "vc6"
+mount = [
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6', from = "$vc6" },
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6sp2', from = "${MSVC6T_VC6SP2}" },
+    { at = 'C:\SimGolf\decompilation\jgl', from = "${SIMGOLF}/jgl" },
+]
+stage = [
+    { at = 'C:\JackDev', from = "${SIMGOLF}/jgl/jgld.dll", files = ["src/*.cpp", "include/**", "jgld.def", "jgld.dsp"] },
+    { at = 'C:\JackDev\jgld.dsw', from = "${SIMGOLF}/jgl/jgl.dsw", edit = [
+        { find = '=.\jgld.dll\', replace = '=.\' },
+        { find = '=.\libpng.lib\', replace = '=..\libpng.lib\' },
+        { find = '=.\zlib.lib\', replace = '=..\zlib.lib\' },
+    ] },
+    { at = 'C:\libpng.lib', from = "${SIMGOLF}/jgl/libpng.lib" },
+    { at = 'C:\zlib.lib', from = "${SIMGOLF}/jgl/zlib.lib" },
+]
+include = [
+    'C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\INCLUDE',
+    'C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\MFC\\INCLUDE',
+    'C:\\SimGolf\\decompilation\\jgl\\libpng.lib\\libpng',
+    'C:\\SimGolf\\decompilation\\jgl\\zlib.lib\\zlib',
+]
+lib = ['C:\\SimGolf\\decompilation\\toolchain\\vc6sp2\\VC98\\lib\\lib', 'C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\LIB']
+path = ['C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\BIN', 'C:\\SimGolf\\decompilation\\toolchain\\vc6\\COMMON\\MSDEV98\\BIN', "${MSVC6T_MFC42_DIR}"]
+msdev = [
+    { dir = 'C:\JackDev', open = "jgld.dsw", config = "jgld - Win32 Debug", log = "build.log", requires = ['..\libpng.lib\Debug\libpng.lib', '..\zlib.lib\Debug\zlib.lib'] },
+]
+output = 'C:\JackDev\Debug\jgld.dll'
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/jgld.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/jgld.pdb"
+shipped = [
+    { md5 = "9fbecb5baa3586947af082483ec25b55", what = "SimGolf jgld.dll", file = "${SIMGOLF_ORIG}/jgld.dll" },
+]
+
+[image.pdb.relocate]
+report_key = "smsg"
+
+[image.pdb.paths]
+product = "${SIMGOLF}"
+product_win = 'C:\SimGolf\decompilation'
+lanes = [
+    { at = 'C:\JackDev', product = "jgl/jgld.dll" },
+    { at = 'C:\libpng.lib', product = "jgl/libpng.lib" },
+    { at = 'C:\zlib.lib', product = "jgl/zlib.lib" },
+]
+
+[[image.pdb.paths.attested]]
+product = "jgl/jgld.dll/src"
+dir = 'C:\JackDev'
+evidence = "jgld.dll itself: the sprite code's message file names `C:\\JackDev\\jglsprite_8_16c.cpp` (0x11d610) and `c:\\jackdev\\jglsprite.cpp` (0x11d508), one each, and its NB10 record `C:\\JackDev\\Debug\\jgld.pdb`, which settles the tie"
+
+[[image.pdb.paths.attested]]
+product = "jgl/jgld.dll"
+dir = 'C:\JackDev'
+evidence = "jgld.dll's NB10 record `C:\\JackDev\\Debug\\jgld.pdb`: the Debug configuration's output, `Debug` under the project directory (jgld.dsp `Output_Dir \"Debug\"`), so the project directory CL and LINK ran in is `C:\\JackDev`"
+
+[[image.pdb.paths.attested]]
+product = "jgl/jgld.dll/Debug"
+dir = 'C:\JackDev\Debug'
+output = true
+evidence = "jgld.dll's NB10 record `C:\\JackDev\\Debug\\jgld.pdb`, the directory LINK wrote it to"
+
+[[image.pdb.paths.files]]
+product = "jgl/jgld.dll/src"
+dir = 'c:\jackdev'
+names = ["jglsprite.cpp"]
+evidence = "jgld.dll at 0x11d508: the sprite code's message file name `c:\\jackdev\\jglsprite.cpp`"
+
+[[image.pdb.paths.files]]
+product = "jgl/jgld.dll/src"
+dir = 'C:\JackDev'
+names = ["jglsprite_8_16c.cpp"]
+evidence = "jgld.dll at 0x11d610: `C:\\JackDev\\jglsprite_8_16c.cpp` (product `g_fileJglSprite8_16c`)"
+
+[[image]]
+id = "SOUND"
+reference = "${SIMGOLF_ORIG}/sound.dll"
+sha256 = "e5089a819d7c320363d2cf96637ee66d9ef59d29549f7c118d2ac4e42accb108"
+compiler = "vc6sp5"
+linker = "vc6sp5"
+clock = ["coff.timestamp", "export.timestamp"]
+project = { dsw = "${SIMGOLF}/sound/sound.dsw", config = "sound - Win32 Release" }
+functions = ["reccmp-csv:tables/SOUND.extents.csv", "ghidra-json:${SIMGOLF_GHIDRA}/sound.dll.functions.json", "discover"]
+names = ["exports", "reccmp-csv:${SIMGOLF}/sound/sound.dll/smsg-globals.csv", "tsv:tables/SOUND.symbols.tsv", "tsv:tables/SOUND.addresses.tsv", "imports"]
+libraries = ["$vc6/VC98/Lib/LIBCMT.LIB", "${MSVC6T_VC6SP2}/VC98/lib/lib/libcmt.lib", "$vc6sp5/VC98/Lib/LIBCMT.LIB", "$vc6/VC98/Lib/LIBCIMT.LIB", "$vc6sp5/VC98/Lib/LIBCIMT.LIB"]
+
+[image.classes]
+placeholders = ["?", "Inner", "Outer"]
+sources = ["${SIMGOLF}/sound/sound.dll/src", "${SIMGOLF}/sound/sound.dll/include"]
+
+[image.build]
+toolchain = "vc6sp5"
+mount = [
+    { at = 'C:\Program Files\Microsoft Visual Studio', from = "$vc6" },
+    { at = 'C:\DXSDK', from = "${SIMGOLF}/sound/DXSDK" },
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6', from = "$vc6" },
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6sp5', from = "$vc6sp5" },
+    { at = 'C:\SimGolf\external\jpeg-6a', from = "${SIMGOLF}/golf/jpeg.lib/jpeg-6a" },
+    { at = 'C:\SimGolf\external\lpc10-1.5', from = "${SIMGOLF}/sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C" },
+    { at = 'C:\SimGolf\external\bink', from = "${SIMGOLF}/golf/binkw32.lib" },
+]
+stage = [
+    { at = 'C:\lk\ide', from = "${SIMGOLF}/sound/sound.dll", files = ["src/*.cpp", "include/**", "Sound.def", "sound.dsp"] },
+    { at = 'C:\lk\lpc10.lib', from = "${SIMGOLF}/sound/lpc10.lib" },
+]
+include = [
+    'C:\DXSDK\\include',
+    'C:\Program Files\\Microsoft Visual Studio\\VC98\\INCLUDE',
+    'C:\Program Files\\Microsoft Visual Studio\\VC98\\MFC\\INCLUDE',
+    'C:\DXSDK\\include',
+    'C:\SimGolf\\external\\lpc10-1.5',
+]
+lib = ['C:\DXSDK\\lib', 'C:\SimGolf\\decompilation\\toolchain\\vc6sp5\\VC98\\Lib', 'C:\DXSDK\\lib']
+path = ['C:\SimGolf\\decompilation\\toolchain\\vc6sp5\\VC98\\Bin', 'C:\SimGolf\\decompilation\\toolchain\\vc6sp5\\Common\\MSDev98\\Bin', "${MSVC6T_MFC42_DIR}"]
+msdev = [
+    { dir = 'C:\lk\ide', open = '..\lpc10.lib\lpc10.dsp', config = "lpc10 - Win32 Release", toolchain = "vc6", log = "lpc10.log", path = ['C:\SimGolf\decompilation\toolchain\vc6\COMMON\MSDEV98\BIN', 'C:\SimGolf\decompilation\toolchain\vc6\VC98\BIN'], include = ['C:\SimGolf\decompilation\toolchain\vc6\VC98\INCLUDE'], requires = ['..\lpc10.lib\Release\lpc10.lib'] },
+    { dir = 'C:\lk\ide', open = "sound.dsp", config = "sound - Win32 Release", log = "build.log" },
+]
+output = 'C:\lk\ide\Release\sound.dll'
+
+[image.codeview]
+record = "${SIMGOLF_DEMO}/sound.dll"
+sha256 = "0f6a680e206bff4944a2eb8e0e471a6649bfbeacd60ebda572c2d52ff79ef291"
+root = "${SIMGOLF}"
+headers = "sound/sound.dll/include"
+search = ["sound/*/include", "golf/*/include", "jgl/*/include", "terrain/*/include"]
+modules = 'C:\soundapi\'
+
+[[image.codeview.view]]
+name = "sound.dll"
+projects = ["sound/sound.dll"]
+owner = true
+
+[[image.codeview.view]]
+name = "golf.exe"
+projects = ["golf/golf.exe", "golf/jackal.lib"]
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/sound.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/sound.pdb"
+shipped = [
+    { md5 = "93f8b776945a0c07907136a1984e66fd", what = "SimGolf sound.dll", file = "${SIMGOLF_ORIG}/sound.dll" },
+]
+
+[image.pdb.relocate]
+report_key = "smsg"
+
+[image.pdb.paths]
+product = "${SIMGOLF}"
+product_win = 'C:\SimGolf\decompilation'
+lanes = [
+    { at = 'C:\lk\ide', product = "sound/sound.dll" },
+    { at = 'C:\lk\lpc10.lib', product = "sound/lpc10.lib" },
+    { at = 'C:\DXSDK', product = "sound/DXSDK" },
+]
+
+[[image.pdb.paths.attested]]
+product = "sound/sound.dll/src"
+dir = 'C:\soundapi'
+evidence = "the SimGolf demo's sound.dll (2001-09-07), its CodeView NB11 at 0x751a0: 34 modules `.\\soundO\\*.obj` compiled in cwd `C:\\soundapi` from `C:\\soundapi\\wavemgr.cpp`, `C:\\soundapi\\dsmgr.cpp`, `C:\\soundapi\\CTimer.cpp` ..."
+
+[[image.pdb.paths.attested]]
+product = "sound/sound.dll/include"
+dir = 'c:\soundapi'
+evidence = "the same record's header file records: `c:\\soundapi\\sound.h`, `c:\\soundapi\\wavefile.h`, `c:\\soundapi\\dsmgr.h` ... (CL spells a header's path in lower case)"
+
+[[image.pdb.paths.attested]]
+product = "sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10"
+dir = 'C:\lpc10-15\lpc55-C\lpc10'
+evidence = "the same record's LPC-10 modules: `C:\\lpc10-15\\lpc55-C\\lpc10\\bsynz.c`, `...\\encode.c` ... (31 of the 34 line records so spelled, and all 34 build records' `src`)"
+
+[[image.pdb.paths.attested]]
+product = "sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C"
+dir = 'C:\lpc10-15\lpc55-C'
+evidence = "the same record's 34 LPC-10 build records: `cmd -IC:\\lpc10-15\\lpc55-C`, the include directory above the sources"
+
+[[image.pdb.paths.files]]
+product = "sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10"
+dir = 'c:\lpc10-15\lpc55-c\lpc10'
+names = ["analys.c", "f2clib.c", "ham84.c"]
+record = "line"
+evidence = "the demo sound.dll's NB11: these three modules' line records, at 0x1093a0, 0x106a44 and 0x106090 (their build records' `src` is the directory's `C:\\lpc10-15\\lpc55-C\\lpc10\\`)"
+
+[[image]]
+id = "TERRAIN"
+reference = "${SIMGOLF_ORIG}/Terrain.dll"
+sha256 = "378e61d2f2061f85e517eade8b64e92ecde00d30ab866c091d55cb737adce0a4"
+compiler = "vc6"
+linker = "vc6"
+clock = ["coff.timestamp", "debug.timestamp", "pdb.signature", "pdb.age", "export.timestamp"]
+project = { dsw = "${SIMGOLF}/terrain/terrain.dsw", config = "Terrain - Win32 Debug" }
+functions = ["reccmp-csv:tables/TERRAIN.extents.csv", "ghidra-json:${SIMGOLF_GHIDRA}/Terrain.dll.functions.json", "discover"]
+names = ["exports", "reccmp-csv:${SIMGOLF}/terrain/Terrain.dll/smsg-globals.csv", "tsv:tables/TERRAIN.symbols.tsv", "tsv:tables/TERRAIN.addresses.tsv", "imports"]
+libraries = ["$vc6/VC98/Lib/LIBCMTD.LIB", "${MSVC6T_VC6SP2}/VC98/lib/lib/libcmtd.lib", "$vc6sp5/VC98/Lib/LIBCMTD.LIB", "$vc6/VC98/Lib/LIBCIMTD.LIB", "$vc6sp5/VC98/Lib/LIBCIMTD.LIB"]
+
+[image.classes]
+placeholders = ["?", "Inner", "Outer"]
+sources = ["${SIMGOLF}/terrain/Terrain.dll/src", "${SIMGOLF}/terrain/Terrain.dll/include"]
+
+[image.build]
+toolchain = "vc6"
+mount = [
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6', from = "$vc6" },
+    { at = 'C:\SimGolf\decompilation\toolchain\vc6sp2', from = "${MSVC6T_VC6SP2}" },
+]
+stage = [
+    { at = 'C:\Projects\3DTerrainLowPoly', from = "${SIMGOLF}/terrain/Terrain.dll", files = ["src/*.cpp", "include/**", "Terrain.def", "Terrain.dsp"] },
+]
+include = ['C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\INCLUDE', 'C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\MFC\\INCLUDE']
+lib = ['C:\\SimGolf\\decompilation\\toolchain\\vc6sp2\\VC98\\lib\\lib', 'C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\LIB']
+path = ['C:\\SimGolf\\decompilation\\toolchain\\vc6\\VC98\\BIN', 'C:\\SimGolf\\decompilation\\toolchain\\vc6\\COMMON\\MSDEV98\\BIN', "${MSVC6T_MFC42_DIR}"]
+msdev = [
+    { dir = 'C:\Projects\3DTerrainLowPoly', open = "Terrain.dsp", config = "Terrain - Win32 Debug", log = "build.log" },
+]
+output = 'C:\Projects\3DTerrainLowPoly\Debug\Terrain.dll'
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/Terrain.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/Terrain.pdb"
+shipped = [
+    { md5 = "31bfda31e8214f6f00e73e5dc52851b8", what = "SimGolf Terrain.dll", file = "${SIMGOLF_ORIG}/Terrain.dll" },
+]
+
+[image.pdb.relocate]
+report_key = "smsg"
+
+[image.pdb.paths]
+product = "${SIMGOLF}"
+product_win = 'C:\SimGolf\decompilation'
+lanes = [
+    { at = 'C:\Projects\3DTerrainLowPoly', product = "terrain/Terrain.dll" },
+]
+
+[[image.pdb.paths.attested]]
+product = "terrain/Terrain.dll/src"
+dir = 'C:\Projects\3DTerrainLowPoly'
+evidence = "Terrain.dll itself: its three asserts' `C:\\Projects\\3DTerrainLowPoly\\Terrain.cpp`, and its NB10 record `C:\\Projects\\3DTerrainLowPoly\\Debug\\Terrain.pdb`"
+
+[[image.pdb.paths.attested]]
+product = "terrain/Terrain.dll"
+dir = 'C:\Projects\3DTerrainLowPoly'
+evidence = "Terrain.dll's NB10 record `C:\\Projects\\3DTerrainLowPoly\\Debug\\Terrain.pdb`: the Debug configuration's output, `Debug` under the project directory (Terrain.dsp `Output_Dir \"Debug\"`), so the project directory is `C:\\Projects\\3DTerrainLowPoly`"
+
+[[image.pdb.paths.attested]]
+product = "terrain/Terrain.dll/Debug"
+dir = 'C:\Projects\3DTerrainLowPoly\Debug'
+output = true
+evidence = "Terrain.dll's NB10 record `C:\\Projects\\3DTerrainLowPoly\\Debug\\Terrain.pdb`, the directory LINK wrote it to"
+
+[[image.pdb.paths.files]]
+product = "terrain/Terrain.dll/src"
+dir = 'C:\Projects\3DTerrainLowPoly'
+names = ["Terrain.cpp"]
+evidence = "Terrain.dll at 0x5f39c: its asserts' `C:\\Projects\\3DTerrainLowPoly\\Terrain.cpp`"
+
+[[image]]
+id = "CL"
+reference = "$vc6/VC98/Bin/CL.EXE"
+sha256 = "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c"
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/cl.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/cl.pdb"
+shipped = [
+    { md5 = "9422f1f8fbbdb50215bbaaf4188777ef", what = "Visual C++ 6.0 CL.EXE 12.00.8168", file = "$vc6/VC98/Bin/CL.EXE" },
+]
+
+[image.pdb.author]
+root = "${MSVC6DECOMP}"
+functions = "ghidra/knowledge/cl/functions.tsv"
+data = { file = "ghidra/knowledge/cl/data.tsv", va = "va8168" }
+globals = "ghidra/knowledge/cl/globals.tsv"
+library = "ghidra/knowledge/cl/library.tsv"
+locals = "ghidra/knowledge/cl/locals.tsv"
+index = "src/cl/index.tsv"
+types = "ghidra/types"
+headers = ["common.h", "cl.h"]
+optional_headers = ["cl.harvest.h"]
+modules = "src/cl"
+
+[[image]]
+id = "C1"
+reference = "$vc6/VC98/Bin/C1.DLL"
+sha256 = "ee14a2603a1339f95db2e396751f7e51b50e421731229fb2416a01f974689d80"
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/c1.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/c1.pdb"
+shipped = [
+    { md5 = "5ce8216709217161df2a122c9d5a4a1f", what = "Visual C++ 6.0 C1.DLL 12.00.8168", file = "$vc6/VC98/Bin/C1.DLL" },
+]
+
+[image.pdb.author]
+root = "${MSVC6DECOMP}"
+functions = "ghidra/knowledge/c1/functions.tsv"
+data = { file = "ghidra/knowledge/c1/data.tsv", va = "va8168" }
+globals = "ghidra/knowledge/c1/globals.tsv"
+library = "ghidra/knowledge/c1/library.tsv"
+locals = "ghidra/knowledge/c1/locals.tsv"
+index = "src/c1/index.tsv"
+types = "ghidra/types"
+headers = ["common.h", "c1.h"]
+optional_headers = ["c1.harvest.h"]
+modules = "src/c1"
+
+[[image]]
+id = "C1XX"
+reference = "$vc6/VC98/Bin/C1XX.DLL"
+sha256 = "4095e9e8de5ac4b13dbfe310abb8de711475b1a92c5f94375919947937f3237e"
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/c1xx.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/c1xx.pdb"
+shipped = [
+    { md5 = "3762ac207e212add684e560c61b8f699", what = "Visual C++ 6.0 C1XX.DLL 12.00.8168", file = "$vc6/VC98/Bin/C1XX.DLL" },
+]
+
+[image.pdb.author]
+root = "${MSVC6DECOMP}"
+functions = "ghidra/knowledge/c1xx/functions.tsv"
+data = { file = "ghidra/knowledge/c1xx/data.tsv", va = "va8168" }
+globals = "ghidra/knowledge/c1xx/globals.tsv"
+library = "ghidra/knowledge/c1xx/library.tsv"
+locals = "ghidra/knowledge/c1xx/locals.tsv"
+index = "src/c1xx/index.tsv"
+types = "ghidra/types"
+headers = ["common.h", "c1xx.h"]
+optional_headers = ["c1xx.harvest.h"]
+modules = "src/c1xx"
+
+[[image]]
+id = "C2"
+reference = "$vc6/VC98/Bin/C2.DLL"
+sha256 = "45187b0b6288240f73272a7c61e6329c50048a76e57db3bb87b6f0229e09e27d"
+
+[image.pdb]
+file = "${SIMGOLF_PDBS}/c2.pdb"
+twin = "${SIMGOLF_PDBS}/7.0/c2.pdb"
+shipped = [
+    { md5 = "4aaf40294ca129dad892fc06a4ecfd50", what = "Visual C++ 6.0 C2.DLL 12.00.8168", file = "$vc6/VC98/Bin/C2.DLL" },
+]
+
+[image.pdb.author]
+root = "${MSVC6DECOMP}"
+functions = "ghidra/knowledge/c2/functions.tsv"
+data = { file = "ghidra/knowledge/c2/data.tsv", va = "va8168" }
+globals = "ghidra/knowledge/c2/globals.tsv"
+library = "ghidra/knowledge/c2/library.tsv"
+locals = "ghidra/knowledge/c2/locals.tsv"
+index = "src/c2/index.tsv"
+types = "ghidra/types"
+headers = ["common.h", "c2.h"]
+optional_headers = ["c2.harvest.h"]
+modules = "src/c2"
+
+[source]
+root = "${SIMGOLF}"
+exclude = ["toolchain"]
+syntax = { "*.ksy" = "hash-inline", "*.txt" = "hash-line" }
+
+[source.format]
+command = ["${MSVC6T_CLANG_FORMAT}", "--assume-filename={path}"]
+files = ["*.c", "*.cc", "*.cpp", "*.cxx", "*.h", "*.hh", "*.hpp", "*.hxx", "*.inl", "*.inc"]
+
+[source.layout]
+"golf/jackal.lib/include/AssetSurface.h" = "line-keep"
+"golf/jackal.lib/include/BasePop.h" = "line-keep"
+"golf/jackal.lib/include/BasePopDtors.h" = "line-keep"
+"golf/jackal.lib/include/ImageButton.h" = "line-keep"
+"golf/jackal.lib/include/ListBoxCtl.h" = "line-keep"
+"golf/jackal.lib/include/ListBox.h" = "line-keep"
+"golf/jackal.lib/include/WidgetBase.h" = "line-keep"
+"golf/jackal.lib/src/BasePop.cpp" = "line-keep"
+"jgl/jgld.dll/src/jglsprite.cpp" = "anchored"
+"jgl/jgld.dll/src/jglsprite_8_16c.cpp" = "anchored"
+"jgl/jgld.dll/src/jglbuffer.cpp" = "line-keep"
+"terrain/Terrain.dll/src/Terrain.cpp" = "anchored"
+
+[source.prove]
+compile = ["wine", "{win:${MSVC6T_VC6}/VC98/Bin/CL.EXE}", "{cflags}", "/Fp{scratch_win}\\tu.pch", "/Fd{scratch_win}\\tu.pdb", "/Fo{out_win}", "{source_win}"]
+jobs = 1
+
+[source.prove.env]
+WINEPREFIX = "${MSVC6T_WINEPREFIX}"
+WINEDEBUG = "-all"
+WINEPATH = "{win:${MSVC6T_VC6}/Common/MSDev98/Bin}"
+INCLUDE = "{win:${SIMGOLF}/sound/DXSDK/include};{win:${MSVC6T_VC6}/VC98/Include};{win:${MSVC6T_VC6}/VC98/MFC/Include};{win:${SIMGOLF}/golf/jpeg.lib/jpeg-6a};{win:${SIMGOLF}/sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C};{root_win}\\terrain\\Terrain.dll\\include;{root_win}\\sound\\sound.dll\\include;{root_win}\\jgl\\jgld.dll\\include;{root_win}\\golf\\binkw32.lib"
+
+[[source.prove.tu]]
+sources = [
+    "golf/jackal.lib/src/sprite.cpp",
+    "golf/jackal.lib/src/ScratchSprite.cpp",
+    "golf/jackal.lib/src/buffer.cpp",
+    "golf/jackal.lib/src/window.cpp",
+    "golf/jackal.lib/src/GraphicWin.cpp",
+    "golf/jackal.lib/src/FlicAnim.cpp",
+    "golf/jackal.lib/src/FlicSprite.cpp",
+    "golf/jackal.lib/src/palette.cpp",
+    "golf/jackal.lib/src/font.cpp",
+    "golf/jackal.lib/src/sound.cpp",
+    "golf/jackal.lib/src/PCXFile.cpp",
+    "golf/jackal.lib/src/EditBox.cpp",
+    "golf/jackal.lib/src/SoundDevice.cpp",
+    "golf/jackal.lib/src/Text.cpp",
+    "golf/jackal.lib/src/BaseButton.cpp",
+    "golf/jackal.lib/src/Dialog.cpp",
+    "golf/jackal.lib/src/ListBox.cpp",
+    "golf/jackal.lib/src/BasePop.cpp",
+    "golf/jackal.lib/src/spot.cpp",
+    "golf/jackal.lib/src/ComboBox.cpp",
+    "golf/jackal.lib/src/PCXLoad16.cpp",
+    "golf/jackal.lib/src/scroll.cpp",
+    "golf/jackal.lib/src/Network.cpp",
+    "golf/jackal.lib/src/multidebug.cpp",
+    "golf/jackal.lib/src/PaletteList.cpp",
+    "golf/jackal.lib/src/Video.cpp",
+    "golf/jackal.lib/src/strings.cpp",
+    "golf/jackal.lib/src/SmallSprite.cpp",
+    "golf/jackal.lib/src/filewin.cpp",
+    "golf/jackal.lib/src/radiobut.cpp",
+    "golf/jackal.lib/src/CheckBoxSprites.cpp",
+    "golf/jackal.lib/src/checkbox.cpp",
+    "golf/jackal.lib/src/StringList.cpp",
+    "golf/jackal.lib/src/Dialogs.cpp",
+    "golf/jackal.lib/src/ImageButton.cpp",
+    "golf/jackal.lib/src/EditGroup.cpp",
+    "golf/jackal.lib/src/SpriteBox.cpp",
+]
+cwd = "golf/jackal.lib"
+cflags = ["/nologo", "/W3", "/MT", "/O2", "/DWIN32", "/DNDEBUG", "/D_WINDOWS", "/GR-", "/Zl", "/Iinclude", "/I..\\golf.exe\\include", "/YX", "/FD", "/c", "/GX"]
+
+[[source.prove.tu]]
+source = "golf/jackal.lib/src/*.cpp"
+cwd = "golf/jackal.lib"
+cflags = ["/nologo", "/W3", "/MT", "/O2", "/DWIN32", "/DNDEBUG", "/D_WINDOWS", "/GR-", "/Zl", "/Iinclude", "/I..\\golf.exe\\include", "/YX", "/FD", "/c"]
+
+[source.placeholders]
+pad_suffixes = ["Unrecovered", "Pad"]
+pad_prefixes = ["zz_", "zz"]
+stems = ["Complex_", "Helper_", "Unimplemented", "NoOp", "ReturnZero", "MsgPump", "Method_Complex", "ctor_"]
+
+[[source.guard.image]]
+name = "golf.exe"
+dirs = ["golf/golf.exe", "golf/jackal.lib"]
+exe = true
+
+[[source.guard.image]]
+name = "jgld.dll"
+dirs = ["jgl/jgld.dll"]
+
+[[source.guard.image]]
+name = "sound.dll"
+dirs = ["sound/sound.dll"]
+
+[[source.guard.image]]
+name = "Terrain.dll"
+dirs = ["terrain/Terrain.dll"]

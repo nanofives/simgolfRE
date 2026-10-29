@@ -1,0 +1,8 @@
+rule c1xx: parentheses around a NON-CONSTANT FLOATING expression survive as IL op 0x59 (the paren node, tree op 0x76, is kept only then); around the same integer expression, or without them, nothing is written: the IL is the bare product.
+cl
+il
+  *-- function #d8:?pf@@YANNNN@Z*
+  *59    op59*
+  *; ret.f64(mul(op59(mul(load.f64(a), load.f64(b))), load.f64(c)))*
+  *; ret.f64(mul(mul(load.f64(a), load.f64(b)), load.f64(c)))*
+  *; ret.i32(mul(mul(load.i32(a), load.i32(b)), load.i32(c)))*

@@ -1,0 +1,5 @@
+BasedOnStyle: InheritParentConfig
+AlignConsecutiveDeclarations: Consecutive
+AllowShortFunctionsOnASingleLine: Empty
+BreakTemplateDeclarations: Leave
+MaxEmptyLinesToKeep: 100

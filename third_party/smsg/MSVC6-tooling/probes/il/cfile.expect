@@ -1,0 +1,7 @@
+rule c1: the C front end (C1.DLL) writes the same files.
+cl
+il
+  *next-id #25 lang 0*
+  *0e fdef     #21 "cfile"*
+  *exhead body at 0x3ec*
+  *; discard(asg.i32(x, add(load.i32(a), 1)))*

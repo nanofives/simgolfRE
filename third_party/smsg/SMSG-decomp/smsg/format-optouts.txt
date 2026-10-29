@@ -1,0 +1,9 @@
+census 386
+
+ignore golf/jpeg.lib/jpeg-6a/** upstream's code, a submodule (the IJG's libjpeg 6a): kept as its authors wrote it
+ignore jgl/libpng.lib/libpng/** upstream's code, a submodule (libpng 1.0.5): kept as its authors wrote it
+ignore jgl/zlib.lib/zlib/** upstream's code, a submodule (zlib 1.0.2): kept as its authors wrote it
+ignore sound/lpc10.lib/lpc10/** upstream's code, a submodule (the LPC-10 codec): kept as its authors wrote it
+ignore sound/DXSDK/** upstream's code, a submodule (the DirectX 8 SDK's headers and libraries)
+ignore toolchain/** upstream's code, submodules (the three Visual C++ 6.0 toolchains)
+ignore tools/** the tooling, a repository of its own (rustfmt formats its Rust; its carve sources are not product)

@@ -1,0 +1,8 @@
+rule c1xx: the virtuals that share a name form one group at the first one's place, in reverse declaration order, and the slots between move down past the group: a, f(char *), f(int), b
+cl /O2
+data
+  ??_7V@@6B@ DD FLAT:?a@V@@UAEHXZ
+  DD FLAT:?f@V@@UAEHPAD@Z
+  DD FLAT:?f@V@@UAEHH@Z
+  DD FLAT:?b@V@@UAEHXZ
+  CONST ENDS

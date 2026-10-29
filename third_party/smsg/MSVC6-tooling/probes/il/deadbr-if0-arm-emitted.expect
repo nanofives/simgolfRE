@@ -1,0 +1,11 @@
+rule c1xx: C1XX never drops a constant-false arm.
+cl
+il
+  *33    const i32 const 0*
+  *38    brfalse #dc:L*
+  *; discard(call.void(?Use@@YAXH@Z, arg.i32(load.i32(x))))*
+  *; discard(asg.i32_const(k, 0))*
+  *38    brfalse #de:L*
+  *; discard(asg.i32(?h@@3HA, load.i32(x)))*
+  *3a    goto #df:skip*
+  *; discard(call.void(?Use@@YAXH@Z, arg.i32(add(load.i32(x), 1))))*

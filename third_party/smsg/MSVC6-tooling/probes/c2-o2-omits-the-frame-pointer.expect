@@ -1,0 +1,5 @@
+rule c2: under /O2 (/Oy) a function addresses its frame off esp and has no ebp frame
+cl /O2
+asm= ?f@@YAHH@Z
+  mov eax, DWORD PTR _a$[esp-4]
+  ret 0

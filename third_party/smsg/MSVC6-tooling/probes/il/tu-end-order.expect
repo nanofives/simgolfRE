@@ -1,0 +1,27 @@
+rule c1xx: the order of the function bodies in ex, which is the order C2 schedules them in.
+cl
+il
+  *-- function #d7:?f@A@@QAEHXZ at 0x3f4*
+  *-- function #d8:?g@A@@QAEHXZ at*
+  *; entry #d9[this=loadv.p32_const(this)]()*
+  *??1W@@UAE@XZ at*
+  *?get@W@@QAEHXZ at*
+  *??_GW@@UAEPAXI@Z at*
+  *?freeinl@@YAHH@Z at*
+  *?use1@@YAHPAUA@@PAUW@@@Z at*
+  *?use2@@YAHPAU?$V@F@@@Z at*
+  *?use3@@YAHPAUA@@@Z at*
+  *??0?$V@H@@QAE@XZ at*
+  *??1?$V@H@@UAE@XZ at*
+  *?size@?$V@H@@QAEHXZ at*
+  *??1?$V@F@@UAE@XZ at*
+  *?size@?$V@F@@QAEHXZ at*
+  *??0?$V@D@@QAE@XZ at*
+  *??1?$V@D@@UAE@XZ at*
+  *?size@?$V@D@@QAEHXZ at*
+  *??_G?$V@H@@UAEPAXI@Z at*
+  *??_G?$V@F@@UAEPAXI@Z at*
+  *??_G?$V@D@@UAEPAXI@Z at*
+  *?push@?$V@H@@QAEXH@Z at*
+  *?helper@?$V@H@@QAEHXZ at*
+  *4d    eof*

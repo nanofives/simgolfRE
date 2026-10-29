@@ -1,0 +1,10 @@
+rule c1xx: declspecs on data and functions: thread, dllimport, dllexport, naked, a code segment.
+cl
+il
+  *09 segment  #e0 ".mytext" kind=0 class=""*
+  *0e fdef     #da "?e_func@@YAHH@Z" b30=0 type=int (0x1) fclass=9*
+  *0e fdef     #de "?naked_fn@@YAXXZ" b30=0 type=void (0x7) fclass=5 (+0x36 0x50) size=0 flags=0x8400*
+  *0e fdef     #e2 "?in_seg@@YAHH@Z" b30=0 type=int (0x1) fclass=5 (+0x36 0x50) size=4 flags=0x200 segment=#e0*
+  *01 var      #d6 "?i_data@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=8*
+  *01 var      #d5 "?t_count@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=1 (+0x36 0x80) size=4 flags=0x1180*
+  *04 func     #d8 "?i_func@@YAHH@Z" b30=0 type=int (0x1) fclass=10*

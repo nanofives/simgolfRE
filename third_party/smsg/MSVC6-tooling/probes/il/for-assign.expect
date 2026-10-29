@@ -1,0 +1,13 @@
+rule c1xx: the for-init as an assignment (no declaration), and a while loop.
+cl
+il
+  *03 label    #e3 "" level 2 role=6 refs=0*
+  *03 label    #e2 "" level 2 role=7 refs=0*
+  *03 label    #e1 "" level 2 role=5 refs=1*
+  *; discard(asg.i32(i, 0))*
+  *; goto Ldb*
+  *; label Ldf*
+  *; brfalse Le0 (cmp.gt(load.i32(s), 100))*
+  *; goto Ldf*
+  *; label Le1*
+  *; brtrue Le1 (cmp.lt(load.i32(s), 10))*

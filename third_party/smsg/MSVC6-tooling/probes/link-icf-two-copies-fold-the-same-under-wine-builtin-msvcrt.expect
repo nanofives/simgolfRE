@@ -1,0 +1,8 @@
+rule link: two copies fold to the same place under wine's builtin msvcrt as under the native one: a and b share b's address, after c (contrast)
+link /entry:main /subsystem:console /nodefaultlib
+link-crt builtin
+map
+  0001:00000000 ?c@@YAHH@Z *
+  0001:{at} ?b@@YAHH@Z *
+  0001:{at} ?a@@YAHH@Z *
+  0001:00000020 _main *

@@ -1,0 +1,9 @@
+rule c1xx: && || ! and a ?: in a value context (not a condition), and a comma expression.
+cl
+il
+  *1c    andand*
+  *; discard(asg.i32(x, cvt.i32(andand(load.i32(a), load.i32(b)))))*
+  *1b    oror*
+  *; discard(asg.i32(y, cvt.i32(oror(load.i32(a), load.i32(b)))))*
+  *; discard(asg.i32(z, cvt.i32(lnot(load.i32(a)))))*
+  *; discard(asg.i32(w, comma(load.i32(a), load.i32(b))))*

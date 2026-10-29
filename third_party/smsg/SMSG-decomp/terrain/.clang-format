@@ -1,0 +1,5 @@
+BasedOnStyle: InheritParentConfig
+BreakBeforeBinaryOperators: None
+AllowShortCaseLabelsOnASingleLine: true
+Cpp11BracedListStyle: false
+MaxEmptyLinesToKeep: 14

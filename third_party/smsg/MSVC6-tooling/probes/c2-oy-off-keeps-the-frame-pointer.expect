@@ -1,0 +1,8 @@
+rule c2: under /O2 /Oy- the same function that reads its frame builds push ebp; mov ebp, esp (contrast)
+cl /O2 /Oy-
+asm= ?f@@YAHH@Z
+  push ebp
+  mov ebp, esp
+  mov eax, DWORD PTR _a$[ebp]
+  pop ebp
+  ret 0

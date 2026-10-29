@@ -1,0 +1,9 @@
+rule c1xx: storage classes and linkage of data: register, a named data segment, selectany, a static member.
+cl
+il
+  *09 segment  #d5 ".mydata" kind=1 class=""*
+  *01 var      #d7 "?g_any@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=1 (+0x36 0x80) size=4 flags=0x1e0*
+  *01 var      #e3 "?g_konst_ref@@3HB" level 0 b30=0 type=int (0x1) skip=0 storage=4 (+0x36 0x40) rclass=1 (+0x36 0x80) size=4 flags=0x80*
+  *01 var      #d6 "?g_seg@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=1 (+0x36 0x80) size=4 flags=0x380 segment=#d5*
+  *00 data #e2 at +0*
+  *01 var      #e8 "r" level 2 bucket 2 b30=0 type=int (0x1) skip=0 storage=1 (+0x36 0x10) rclass=4 (+0x36 0x200) size=4 flags=0x100*

@@ -1,0 +1,5 @@
+rule c2: /Ob2 also expands a small function nobody marked inline (contrast)
+cl /O2 /Ob2
+asm ?f@@YAHH@Z
+  !call *
+  ret 0

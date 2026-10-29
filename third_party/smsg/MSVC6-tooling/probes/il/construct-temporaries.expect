@@ -1,0 +1,15 @@
+rule c1xx: which construct makes a compiler temporary, and which of sym_new_local_key's (c1xx!0x1041c823) callers makes it.
+cl /GX
+il
+  *5   0x1b   27  ?t01@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, srcfile 1*
+  *5   0x2f   47  ?t02@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 1*
+  *5   0x3c   60  ?t03@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, gap 1*
+  *4   0x30   48  ?t04@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *4   0x20   32  ?t05@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *4   0x1d   29  ?t06@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *6   0x39   57  ?t07@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 2*
+  *5   0x1e   30  ?t08@@YAHH@Z                                 fdef 1, formal 1, label 1, local 2*
+  *7   0x2a   42  ?t09@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 1, local 1, gap 1*
+  *6   0x23   35  ?t10@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, gap 2*
+  *5   0x20   32  ?t11@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, local 1*
+  *7   0x4b   75  ?t12@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, local 2, gap 1*

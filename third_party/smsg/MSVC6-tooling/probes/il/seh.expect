@@ -1,0 +1,14 @@
+rule c1xx: structured exception handling: __try / __except and __try / __finally, and __leave.
+cl
+il
+  *8f    seh.try*
+  *; discard(asg.i32(r, call.i32(?risky@@YAHH@Z, arg.i32(load.i32(a)))))*
+  *8d    seh.except i32 const*
+  *; discard(asg.i32(r, -1))*
+  *90    seh.end*
+  *8f    seh.try*
+  *; goto Lf1*
+  *; label Lf1*
+  *8e    seh.finally*
+  *; discard(asg.add.i32(r, 2))*
+  *90    seh.end*

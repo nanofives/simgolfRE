@@ -1,0 +1,5 @@
+rule cl: /Zl leaves the .drectve out, so the object names no library (contrast)
+cl /O2 /MT /Zl
+obj
+  !section * .drectve *
+  section * .text code *

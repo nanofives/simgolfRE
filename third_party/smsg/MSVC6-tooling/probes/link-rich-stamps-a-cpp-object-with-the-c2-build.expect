@@ -1,0 +1,6 @@
+rule link: each object's @comp.id is the front end's product and C2's build, and LINK counts them in the Rich header: one C++ object is Utc12_CPP, C2's build, 1
+link /entry:main /subsystem:console /nodefaultlib
+obj
+  comp.id Utc12_CPP {build:c2}
+rich=
+  Utc12_CPP {build:c2} 1

@@ -1,0 +1,5 @@
+rule c1: C1 writes a '...' argument as it is -- arg.none of the float and of the char, no cvt -- and C2 applies the default argument promotions when it lowers the arg (the listing is the same as C1XX's: fld / fstp QWORD, movsx).
+cl /O2 /W4
+il
+  *s6d=0x18 fflags*
+  *ret.i32(call.i32(v, arg.none(load.f32(f)), arg.none(load.i8(c)), arg.i32(1)))*

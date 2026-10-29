@@ -1,0 +1,14 @@
+rule c1xx: the same header and functions compiled with no /YX, so there is no pch write.
+cl /O2 /GR- /MT /Zl /GX
+include thunk_flush.h
+il
+  *"??1P@@UAE@XZ" b30=0*
+  *"?f3@@YAXXZ" b30=0*
+  *"??_EP@@$4PPPPPPPM@A@AEPAXI@Z" b30=0*
+  *s6d=0x11 fflags=0x88*
+  *"??_EQ@@$4PPPPPPPM@A@AEPAXI@Z" b30=0*
+  *s6d=0x11 fflags=0x88*
+listing
+  *?f3@@YAXXZ PROC NEAR*
+  *??_EP@@$4PPPPPPPM@A@AEPAXI@Z PROC NEAR*
+  *?f@P@@$4PPPPPPPM@A@AEXXZ PROC NEAR*

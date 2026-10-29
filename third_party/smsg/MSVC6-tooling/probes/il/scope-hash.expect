@@ -1,0 +1,70 @@
+rule c1xx: the sy order of a block's locals is C1XX's scope hash table: 16 buckets of the name's 16-bit hash (c1xx!0x1040682d: h = c + (h >> 4) + 4h over the bytes, hash16 = (h >> 16) ^ (h & 0xffff), bucket = hash16 % 16), buckets upwards, each bucket newest declaration first; 32 names (more than 16: the table does not grow).
+cl
+il
+  *"white" level 2 bucket 0*
+  *"chi" level 2 bucket 0*
+  *"pi" level 2 bucket 0*
+  *"xi" level 2 bucket 0*
+  *"alpha" level 2 bucket 1*
+  *"theta" level 2 bucket 2*
+  *"beta" level 2 bucket 2*
+  *"nu" level 2 bucket 3*
+  *"zeta" level 2 bucket 3*
+  *"psi" level 2 bucket 4*
+  *"iota" level 2 bucket 4*
+  *"upsilon" level 2 bucket 6*
+  *"black" level 2 bucket 7*
+  *"yellow" level 2 bucket 7*
+  *"red" level 2 bucket 7*
+  *"phi" level 2 bucket 7*
+  *"lambda" level 2 bucket 7*
+  *"tau" level 2 bucket 8*
+  *"magenta" level 2 bucket 9*
+  *"eta" level 2 bucket 9*
+  *"green" level 2 bucket 10*
+  *"delta" level 2 bucket 10*
+  *"cyan" level 2 bucket 12*
+  *"blue" level 2 bucket 12*
+  *"kappa" level 2 bucket 12*
+  *"epsilon" level 2 bucket 12*
+  *"omega" level 2 bucket 13*
+  *"omicron" level 2 bucket 13*
+  *"rho" level 2 bucket 14*
+  *"gamma" level 2 bucket 14*
+  *"sigma" level 2 bucket 15*
+  *"mu" level 2 bucket 15*
+  *"inner_b" level 3 bucket 10*
+  *"inner_a" level 3 bucket 11*
+listing
+  *_alpha$ = -20*
+  *_beta$ = -28*
+  *_gamma$ = -120*
+  *_delta$ = -88*
+  *_epsilon$ = -104*
+  *_zeta$ = -36*
+  *_eta$ = -80*
+  *_theta$ = -24*
+  *_iota$ = -44*
+  *_kappa$ = -100*
+  *_lambda$ = -68*
+  *_mu$ = -128*
+  *_nu$ = -32*
+  *_xi$ = -16*
+  *_omicron$ = -112*
+  *_pi$ = -12*
+  *_rho$ = -116*
+  *_sigma$ = -124*
+  *_tau$ = -72*
+  *_upsilon$ = -48*
+  *_phi$ = -64*
+  *_chi$ = -8*
+  *_psi$ = -40*
+  *_omega$ = -108*
+  *_red$ = -60*
+  *_green$ = -84*
+  *_blue$ = -96*
+  *_cyan$ = -92*
+  *_magenta$ = -76*
+  *_yellow$ = -56*
+  *_black$ = -52*
+  *_white$ = -4*

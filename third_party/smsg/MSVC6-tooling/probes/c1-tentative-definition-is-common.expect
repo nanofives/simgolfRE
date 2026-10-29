@@ -1,0 +1,6 @@
+rule c1: through C1 an uninitialised file-scope `int g_v;` is a tentative definition that C2 writes as COMM, so LINK places it; the initialised one is a PUBLIC in _DATA
+cl /O2
+data
+  !_BSS SEGMENT
+  COMM _g_v:DWORD
+  _g_w DD 02H

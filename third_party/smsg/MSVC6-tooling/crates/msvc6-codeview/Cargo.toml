@@ -1,0 +1,26 @@
+[package]
+name = "msvc6-codeview"
+description = "CodeView records: the type and symbol record codec, the NB09 and NB11 reader, declarations, the source comparison, the debug-info inventory"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+msvc-demangler.workspace = true
+msvc6-base.workspace = true
+msvc6-image.workspace = true
+msvc6-source.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-fixture.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

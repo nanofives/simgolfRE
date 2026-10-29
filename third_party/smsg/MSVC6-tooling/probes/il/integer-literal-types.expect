@@ -1,0 +1,12 @@
+rule c1xx: the type C1XX gives an integer literal that does not fit int (CL passes -ZB64, no -ZBe): a decimal 2^31..2^32-1 is unsigned long (4 bytes, unsigned: `2147483648 > -1` is 0), a decimal 2^32 or more __int64 (8 bytes, signed: `4294967296 > -1` is 1), a hex / octal that does not fit int unsigned int (4, unsigned), one past 2^32 __int64 (8).
+cl
+il
+  *; discard(asg.i32(?gi@@3HA, 4))*
+  *; discard(asg.i32(?gi@@3HA, 4))*
+  *; discard(asg.i32(?gi@@3HA, 8))*
+  *; discard(asg.i32(?gi@@3HA, 4))*
+  *; discard(asg.i32(?gi@@3HA, 8))*
+  *; discard(asg.i32(?gi@@3HA, 1))*
+  *; discard(asg.i32(?gi@@3HA, 0))*
+  *; discard(asg.i32(?gi@@3HA, 1))*
+  *; discard(asg.i32(?gi@@3HA, 0))*

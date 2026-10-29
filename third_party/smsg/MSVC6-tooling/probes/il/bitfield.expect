@@ -1,0 +1,4 @@
+rule c1xx: bit-field read and write.
+cl
+il
+  *; discard(asg.u32(bits(addoff.u32(load.p32(p), 0), at 3, width 5), cvt.u32(load.i32(v))))*

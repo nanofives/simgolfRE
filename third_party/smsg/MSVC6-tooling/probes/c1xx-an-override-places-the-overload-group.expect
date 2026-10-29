@@ -1,0 +1,8 @@
+rule c1xx: an override of a base's overload counts as the first declaration of its name, so the new overload f(char *) takes its slot at the override, between g and h
+cl /O2
+data
+  ??_7V@@6B@ DD FLAT:?f@V@@UAEHH@Z
+  DD FLAT:?g@V@@UAEHXZ
+  DD FLAT:?f@V@@UAEHPAD@Z
+  DD FLAT:?h@V@@UAEHXZ
+  CONST ENDS

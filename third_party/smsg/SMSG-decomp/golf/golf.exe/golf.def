@@ -1,0 +1,7 @@
+NAME        golf.exe
+
+EXPORTS
+    ?getElevation@Terrain@@QAEHPAVTile@@H@Z
+    ?getType@Terrain@@QAEHPAVTile@@@Z
+    ?getWall@Terrain@@QAE_NPAVTile@@H@Z
+    ?tileAt@Terrain@@QAEPAVTile@@HH@Z

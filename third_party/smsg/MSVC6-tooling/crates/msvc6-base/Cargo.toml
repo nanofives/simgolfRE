@@ -1,0 +1,25 @@
+[package]
+name = "msvc6-base"
+description = "Address-space newtypes, lossless cp1252 source IO, the row envelope, tallies, digests, LE readers"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+md-5.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+rustix.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-lint.workspace = true
+
+[lints]
+workspace = true

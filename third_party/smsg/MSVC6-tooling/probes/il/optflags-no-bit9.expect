@@ -1,0 +1,6 @@
+rule c2: the option word of a function (4f.1f, which apply_function_optimize_flags c2!0x10731e8e decodes) under every optimisation letter there is -- /Ox plus /Oa /Ow /Op /Ge, `#pragma optimize("agpstwy", on)`, and optimize off -- never has bit 9 (0x200: 0x107ac118, the override that would schedule a __try / C++-try function) or bit 10 (0x400).
+cl /Ox /Oa /Ow /Op /Ge /GX
+il
+  *03f4  4f.1f optflags 0x83a40800*
+  *0439  4f.1f optflags 0x83a40800*
+  *04d0  4f.1f optflags 0x80800000*

@@ -1,0 +1,5 @@
+BasedOnStyle: InheritParentConfig
+AlignAfterOpenBracket: false
+AllowAllArgumentsOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: true
+MaxEmptyLinesToKeep: 300

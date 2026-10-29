@@ -1,0 +1,8 @@
+rule c1xx: a virtual call through a pointer.
+cl
+il
+  *33    const i32 0*
+  *26    sym #e2:b*
+  *9a    thisarg2 p32*
+  *3e    call i32 b:0x14*
+  *; ret.i32(call.i32(vslot 0, this=load.p32(load.p32_const(load.p32(b))), arg.i32(3)))*

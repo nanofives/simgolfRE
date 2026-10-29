@@ -1,0 +1,7 @@
+rule c1xx: the same function with C linkage gets no EH frame, since a C function does not pass a C++ exception on (contrast)
+cl /O2 /GX
+asm _f
+  !*fs:__except_list*
+  call ?g@@YAHXZ
+  call ??1D@@QAE@XZ
+  ret 0

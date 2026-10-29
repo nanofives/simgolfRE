@@ -1,0 +1,20 @@
+rule c1xx: the order of the global symbol list in gl.
+cl
+il
+  *0e fdef     #e4 "?f@@YAHXZ"*
+  *"?zeta@@3HA"*
+  *"?alpha@@3HA"*
+  *"?eta@@3HA"*
+  *"?gzze@@3HA"*
+  *"?gyzu@@3HA"*
+  *"?gzvu@@3HA"*
+  *"s_x"*
+  *"s_y"*
+  *"?delta@@3HA"*
+  *"?beta@@3HA"*
+  *"?epsilon@@3HA"*
+  *"?init_a@@3HA"*
+  *"?init_b@@3HA"*
+  *"?theta@@3HA"*
+  *"?gamma@@3HA"*
+  *0a glend*

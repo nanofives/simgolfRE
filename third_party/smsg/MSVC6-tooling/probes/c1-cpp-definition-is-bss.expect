@@ -1,0 +1,9 @@
+rule c1: through C1XX the same `int g_v;` is a definition that C2 places in the object's own _BSS (contrast)
+cl /O2
+data
+  !COMM *
+  _BSS SEGMENT
+  ?g_v@@3HA DD 01H DUP (?)
+  _BSS ENDS
+  _DATA SEGMENT
+  ?g_w@@3HA DD 02H

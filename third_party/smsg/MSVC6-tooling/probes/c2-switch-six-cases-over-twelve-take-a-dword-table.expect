@@ -1,0 +1,6 @@
+rule c2: 6 cases over 0..11 give 11 + 24 = 35 against 36, and /O2's +1 makes it 36, not below: a dword table, where the formula without the +1 gives a byte table
+cl /O2
+asm ?six11@@YAHH@Z
+  cmp eax, 11
+  !mov cl, BYTE PTR *
+  jmp DWORD PTR {t}[eax*4]

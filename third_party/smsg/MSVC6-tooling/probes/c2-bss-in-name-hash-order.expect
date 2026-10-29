@@ -1,0 +1,20 @@
+rule c2: C2 lays the object's .bss out by walking a 1024-bucket table of the names' hashes: value 17, count 21, height 125, index 220, total 471, width 674; the listing still prints declaration order, so the object is the witness
+cl /O2
+obj
+  section * .bss bss rw- size=0x18 align=4
+obj
+  symbol ?value@@3HA s*+0x0 external
+obj
+  symbol ?count@@3HA s*+0x4 external
+obj
+  symbol ?height@@3HA s*+0x8 external
+obj
+  symbol ?index@@3HA s*+0xc external
+obj
+  symbol ?total@@3HA s*+0x10 external
+obj
+  symbol ?width@@3HA s*+0x14 external
+data
+  _BSS SEGMENT
+  ?count@@3HA DD 01H DUP (?)
+  ?total@@3HA DD 01H DUP (?)

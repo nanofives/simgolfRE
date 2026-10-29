@@ -1,0 +1,5 @@
+rule c1xx: `typedef struct tagR {..} R;` names the type tagR in a decorated name, whatever the typedef is called
+cl /O2
+data
+  PUBLIC ?f@@YAHPAUtagR@@@Z
+  !*?f@@YAHPAUR@@@Z*

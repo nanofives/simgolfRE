@@ -1,0 +1,5 @@
+rule c1xx: __int64 constants and arithmetic.
+cl
+il
+  *; discard(asg.i64(big, 4886718345))*
+  *; ret.i64(add(mul(load.i64(a), cvt.i64(load.i32(b))), load.i64(big)))*

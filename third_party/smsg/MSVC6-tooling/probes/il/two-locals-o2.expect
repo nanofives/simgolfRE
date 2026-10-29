@@ -1,0 +1,6 @@
+rule c1xx: two_locals.cpp under /O2: what the IL records of the optimisation flags.
+cl /O2
+il
+  *4f.1f optflags 0xa00800*
+  *4f.20 mark1b8 8*
+  *; discard(asg.i32(x, add(load.i32(a), 1)))*

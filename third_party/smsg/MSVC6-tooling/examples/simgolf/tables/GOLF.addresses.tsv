@@ -1,0 +1,2633 @@
+rva	name	kind	size	scope
+0x74ae0	??0AssetSurface@@QAE@XZ	label
+0x95d30	??0AutoSound@@QAE@XZ	label
+0x88500	??0BaseButton@@QAE@XZ	label
+0x8ce00	??0BasePop@@QAE@XZ	label
+0x87000	??0BinkPlayer@@QAE@XZ	label
+0x9ebb0	??0CheckBoxCtl@@QAE@XZ	label
+0x4b2c0	??0CourseReport@@QAE@XZ	label
+0x89150	??0Dialog@@QAE@XZ	label
+0xa0740	??0Dialogs@@QAE@XZ	label
+0x86070	??0EditBox@@QAE@XZ	label
+0xa2250	??0EditGroup@@QAE@XZ	label
+0x82fd0	??0FLCPalette@@QAE@XZ	label
+0x92d80	??0Filemap@@QAE@XZ	label
+0x81b50	??0FlicAnim@@QAE@XZ	label
+0x82b60	??0FlicSprite@@QAE@XZ	label
+0x837f0	??0Font@@QAE@XZ	label
+0x804a0	??0GraphicWin@@QAE@XZ	label
+0x747a0	??0Heap@@QAE@XZ	label
+0x92650	??0HotSpot@@QAE@XZ	label
+0xa13f0	??0ImageButton@@QAE@XZ	label
+0x82ae0	??0LinkListEntry@@QAE@XZ	label
+0x89cb0	??0ListBox@@QAE@XZ	label
+0x9d5a0	??0ListBoxCtl@@QAE@XZ	label
+0xa0180	??0Log@@QAE@PBD@Z	label
+0x4b450	??0MemberRoster@@QAE@XZ	label
+0x87a20	??0Midi_Device@@QAE@XZ	label
+0x88490	??0MouseCursor@@QAE@XZ	label
+0x9c020	??0MultiDebug@@QAE@XZ	label
+0x4b6f0	??0PairScreen@@QAE@XZ	label
+0x82b20	??0PalStruct@@QAE@XZ	label
+0x85260	??0Patch@@QAE@XZ	label
+0x4b060	??0ReportPanels@@QAE@XZ	label
+0x4b5a0	??0RouteScreens@@QAE@XZ	label
+0x96030	??0Scroll@@QAE@XZ	label
+0x84150	??0Sound@@QAE@XZ	label
+0x87210	??0Sound_Device@@IAE@XZ	label
+0x92850	??0Spot@@QAE@XZ	label
+0xa3110	??0SpriteBox@@QAE@XZ	label
+0x73ab0	??0SpriteObject@@QAE@XZ	label
+0x4ae60	??0SpritePair@@QAE@XZ	label
+0x9d050	??0Strings@@QAE@XZ	label
+0x87ea0	??0Text@@QAE@H@Z	label
+0x882a0	??0TextIndex@@QAE@XZ	label
+0x86c90	??0Time@@QAE@XZ	label
+0x4b8d0	??0TournamentResult@@QAE@XZ	label
+0x852e0	??0VoiceRx@@QAE@XZ	label
+0x84820	??0Wave@@QAE@XZ	label
+0x877d0	??0WaveControlGroup@@QAE@XZ	label
+0x87280	??0Wave_Device@@QAE@XZ	label
+0x87b40	??0Wave_In_Device@@QAE@XZ	label
+0x79c40	??0WidgetBase@@QAE@XZ	label
+0x21e0	??1?$ClassList@UPalStruct@@@@UAE@XZ	label
+0x1c70	??1?$ClassList@UStringStruct@@@@UAE@XZ	label
+0x74c40	??1AssetSurface@@UAE@XZ	label
+0x7d7c0	??1AutoSound@@UAE@XZ	label
+0x88650	??1BaseButton@@UAE@XZ	label
+0x91710	??1BasePop@@UAE@XZ	label
+0x87040	??1BinkPlayer@@UAE@XZ	label
+0x9ec80	??1CheckBoxCtl@@UAE@XZ	label
+0x80390	??1ChildList@@UAE@XZ	label
+0x4b1b0	??1CourseReport@@QAE@XZ	label
+0x89370	??1Dialog@@UAE@XZ	label
+0x91500	??1Dialogs@@UAE@XZ	label
+0x3cb50	??1EditBox@@UAE@XZ	label
+0xa2330	??1EditGroup@@UAE@XZ	label
+0x83010	??1FLCPalette@@QAE@XZ	label
+0x92dc0	??1Filemap@@UAE@XZ	label
+0x4280	??1FlicAnim@@UAE@XZ	label
+0x4200	??1FlicSprite@@UAE@XZ	label
+0x83b90	??1Font@@UAE@XZ	label
+0x805a0	??1GraphicWin@@UAE@XZ	label
+0x74810	??1Heap@@UAE@XZ	label
+0x21a0	??1HeapNew@@UAE@XZ	label
+0x92d70	??1HotSpot@@UAE@XZ	label
+0x91410	??1ImageButton@@UAE@XZ	label
+0x9bfc0	??1JackalVoiceRx@@UAE@XZ	label
+0x89de0	??1ListBox@@UAE@XZ	label
+0x91680	??1ListBoxCtl@@UAE@XZ	label
+0xa01a0	??1Log@@UAE@XZ	label
+0x4b3e0	??1MemberRoster@@QAE@XZ	label
+0x87a60	??1Midi_Device@@UAE@XZ	label
+0x9c780	??1MultiDebug@@UAE@XZ	label
+0x4b690	??1PairScreen@@QAE@XZ	label
+0x852d0	??1Patch@@UAE@XZ	label
+0x4afb0	??1ReportPanels@@QAE@XZ	label
+0x4b4f0	??1RouteScreens@@QAE@XZ	label
+0x97a20	??1Scroll@@UAE@XZ	label
+0x841e0	??1Sound@@UAE@XZ	label
+0x87260	??1Sound_Device@@MAE@XZ	label
+0x928d0	??1Spot@@UAE@XZ	label
+0xa3480	??1SpriteBox@@UAE@XZ	label
+0xa33e0	??1SpriteList@@UAE@XZ	label
+0x41f0	??1SpriteObject@@UAE@XZ	label
+0x4ae00	??1SpritePair@@QAE@XZ	label
+0x89b30	??1StringList@@UAE@XZ	label
+0x9d040	??1Strings@@UAE@XZ	label
+0x882f0	??1TextIndex@@UAE@XZ	label
+0x86ce0	??1Time@@UAE@XZ	label
+0x4b790	??1TournamentResult@@QAE@XZ	label
+0x853d0	??1VoiceRx@@UAE@XZ	label
+0x848a0	??1Wave@@UAE@XZ	label
+0x87310	??1WaveControlGroup@@QAE@XZ	label
+0x87390	??1Wave_Device@@UAE@XZ	label
+0x87b80	??1Wave_In_Device@@UAE@XZ	label
+0x7a3c0	??1WidgetBase@@UAE@XZ	label
+0x823c0	??2@YAPAXIPAUHeap@@@Z	label
+0x21b0	??3HeapNew@@SAXPAXPAUHeap@@@Z	label
+0x83020	??4FLCPalette@@QAEAAV0@ABV0@@Z	label
+0x914d0	??_DDialogs@@QAEXXZ	label
+0xa3370	??_DSpriteList@@QAEXXZ	label
+0x89c90	??_DStringList@@QAEXXZ	label
+0x89140	??_EBaseButton@@WCHE@AEPAXI@Z	label
+0x918d0	??_EBasePop@@WCHE@AEPAXI@Z	label
+0xa0010	??_ECheckBoxCtl@@$4PPPPPNII@CHE@AEPAXI@Z	label
+0x9ff50	??_ECheckBoxCtl@@$4PPPPPPPM@A@AEPAXI@Z	label
+0xa0030	??_ECheckBoxCtl@@$4PPPPPPPM@FHI@AEPAXI@Z	label
+0x91a70	??_EDialogs@@$4PPPPPNII@CHE@AEPAXI@Z	label
+0x918f0	??_EDialogs@@$4PPPPPPPM@A@AEPAXI@Z	label
+0x91a90	??_EDialogs@@$4PPPPPPPM@FHI@AEPAXI@Z	label
+0x3cbf0	??_EEditBox@@WCHE@AEPAXI@Z	label
+0xa30c0	??_EEditGroup@@$4PPPPPNII@CHE@AEPAXI@Z	label
+0xa3040	??_EEditGroup@@$4PPPPPPPM@A@AEPAXI@Z	label
+0xa30e0	??_EEditGroup@@$4PPPPPPPM@FHI@AEPAXI@Z	label
+0x83b30	??_EFont@@UAEPAXI@Z	label
+0x81b40	??_EGraphicWin@@WCHE@AEPAXI@Z	label
+0x927a0	??_EHotSpot@@UAEPAXI@Z	label
+0x918e0	??_EImageButton@@WCHE@AEPAXI@Z	label
+0x9bfd0	??_EJackalVoiceRx@@WFM@AEPAXI@Z	label
+0x8cd30	??_EListBox@@$4PPPPPNII@CHE@AEPAXI@Z	label
+0x8cb90	??_EListBox@@$4PPPPPPPM@A@AEPAXI@Z	label
+0x8cd50	??_EListBox@@$4PPPPPPPM@FHI@AEPAXI@Z	label
+0x91bc0	??_EListBoxCtl@@$4PPPPPNII@CHE@AEPAXI@Z	label
+0x91ac0	??_EListBoxCtl@@$4PPPPPPPM@A@AEPAXI@Z	label
+0x91be0	??_EListBoxCtl@@$4PPPPPPPM@FHI@AEPAXI@Z	label
+0x9c820	??_EMultiDebug@@WCHE@AEPAXI@Z	label
+0x97af0	??_EScroll@@WCHE@AEPAXI@Z	label
+0xa4a80	??_ESpriteBox@@$4PPPPPNII@CHE@AEPAXI@Z	label
+0xa4970	??_ESpriteBox@@$4PPPPPPPM@A@AEPAXI@Z	label
+0xa4aa0	??_ESpriteBox@@$4PPPPPPPM@FHI@AEPAXI@Z	label
+0x74720	??_ESpriteObject@@UAEPAXI@Z	label
+0x2790	??_G?$ClassList@UPalStruct@@@@UAEPAXI@Z	label
+0x2800	??_G?$ClassList@USpriteStruct@@@@UAEPAXI@Z	label
+0x2720	??_G?$ClassList@UStringStruct@@@@UAEPAXI@Z	label
+0x74c20	??_GAssetSurface@@UAEPAXI@Z	label
+0x7d810	??_GAutoSound@@UAEPAXI@Z	label
+0x88630	??_GBaseButton@@UAEPAXI@Z	label
+0x916f0	??_GBasePop@@UAEPAXI@Z	label
+0x87020	??_GBinkPlayer@@UAEPAXI@Z	label
+0x9ff60	??_GCheckBoxCtl@@UAEPAXI@Z	label
+0x80410	??_GChildList@@UAEPAXI@Z	label
+0x89350	??_GDialog@@UAEPAXI@Z	label
+0x91900	??_GDialogs@@UAEPAXI@Z	label
+0x3cbd0	??_GEditBox@@UAEPAXI@Z	label
+0xa3050	??_GEditGroup@@UAEPAXI@Z	label
+0x92da0	??_GFilemap@@UAEPAXI@Z	label
+0x42f0	??_GFlicAnim@@UAEPAXI@Z	label
+0x4260	??_GFlicSprite@@UAEPAXI@Z	label
+0x80580	??_GGraphicWin@@UAEPAXI@Z	label
+0x747c0	??_GHeap@@UAEPAXI@Z	label
+0x1c30	??_GHeapNew@@UAEPAXI@Z	label
+0x91470	??_GImageButton@@UAEPAXI@Z	label
+0x9bf70	??_GJackalVoiceRx@@UAEPAXI@Z	label
+0x2870	??_GLinkListEntry@@UAEPAXI@Z	label
+0x8cba0	??_GListBox@@UAEPAXI@Z	label
+0x91ad0	??_GListBoxCtl@@UAEPAXI@Z	label
+0xa0160	??_GLog@@UAEPAXI@Z	label
+0x87a40	??_GMidi_Device@@UAEPAXI@Z	label
+0x5c000	??_GMouseCursor@@UAEPAXI@Z	label
+0x9c800	??_GMultiDebug@@UAEPAXI@Z	label
+0x28f0	??_GPalStruct@@UAEPAXI@Z	label
+0x852b0	??_GPatch@@UAEPAXI@Z	label
+0x97a00	??_GScroll@@UAEPAXI@Z	label
+0x87ce0	??_GSndNodeList@@UAEPAXI@Z	label
+0x841c0	??_GSound@@UAEPAXI@Z	label
+0x87240	??_GSound_Device@@MAEPAXI@Z	label
+0x928b0	??_GSpot@@UAEPAXI@Z	label
+0xa4980	??_GSpriteBox@@UAEPAXI@Z	label
+0xa3390	??_GSpriteList@@UAEPAXI@Z	label
+0x74720	??_GSpriteObject@@UAEPAXI@Z	label
+0x28b0	??_GSpriteStruct@@UAEPAXI@Z	label
+0x89ae0	??_GStringList@@UAEPAXI@Z	label
+0x28b0	??_GStringStruct@@UAEPAXI@Z	label
+0x9d070	??_GStrings@@UAEPAXI@Z	label
+0x88460	??_GText@@UAEPAXI@Z	label
+0x882d0	??_GTextIndex@@UAEPAXI@Z	label
+0x86cc0	??_GTime@@UAEPAXI@Z	label
+0x853b0	??_GVoiceRx@@UAEPAXI@Z	label
+0x84880	??_GWave@@UAEPAXI@Z	label
+0x872f0	??_GWave_Device@@UAEPAXI@Z	label
+0x87b60	??_GWave_In_Device@@UAEPAXI@Z	label
+0x79f10	??_GWidgetBase@@UAEPAXI@Z	label
+0xc720	?AddFloatingMessage@@YAXHHI@Z	label
+0x9950	?AddGolferTrailPoint@@YAXH@Z	label
+0xc890	?AddMoneyPopup@@YAXHHHH@Z	label
+0x62a30	?AddSpriteToRenderQueue@@YAXHHHHHPAUSpriteObject@@HH@Z	label
+0x615f0	?AdjustMoodInRadius@@YAXHHH@Z	label
+0x66370	?AdvanceStoryChapter@@YAHHH@Z	label
+0x74860	?Alloc@Heap@@QAEPAXI@Z	label
+0xdaa0	?AppendCourseName@@YAXH@Z	label
+0x676e0	?AppendGolferName@@YAXHH@Z	label
+0x7280	?AppendHoleName@@YAXH@Z	label
+0x74a0	?AppendLandmarkName@@YAXHH@Z	label
+0x2dd50	?AppendMoney@@YAXH@Z	label
+0x69a20	?AppendPartnerNote@@YAXHH@Z	label
+0x5b9f0	?AppendPooledString@@YAHH@Z	label
+0x9cb0	?AppendScriptCommand@@YAXHHH@Z	label
+0x532a0	?AppendSkillWord@@YAXH@Z	label
+0x66b70	?AppendThemeText@@YAXHHHH@Z	label
+0x67170	?ApproxDistance@@YAHHH@Z	label
+0x674c0	?BilinearSample@@YAHHH@Z	label
+0x75c90	?BlitRectToRect@AssetSurface@@QAEHPAU1@HHHH@Z	label
+0x74030	?BlitScaled@SpriteObject@@QAEHPAUAssetSurface@@HHPAGHHHPAUPaletteBase@@@Z	label
+0x21b90	?BlitScaled@SpriteObject@@QAEHPAUAssetSurface@@HHPAGHHPAUPaletteBase@@@Z	label
+0x740f0	?BlitScaled@SpriteObject@@QAEHPAUAssetSurface@@HHPAGPAUPaletteBase@@@Z	label
+0x73e60	?BlitScaled@SpriteObject@@QAEHPAUAssetSurface@@HHPAUPaletteBase@@@Z	label
+0x73df0	?BlitSpriteWithOffset@SpriteObject@@QAEHPAUAssetSurface@@HHPAUPaletteBase@@@Z	label
+0x74380	?BlitSpriteWithScaleState@SpriteObject@@QAEHPAUAssetSurface@@HHMHHHPAUPaletteBase@@D@Z	label
+0x75d00	?BlitSurfaceRegion@AssetSurface@@QAEHPAU1@HHHHHHHH@Z	label
+0x75c20	?BlitVtable40@AssetSurface@@QAEHPAU1@HHH@Z	label
+0x741b0	?BlitWithScaleOffset@SpriteObject@@QAEHPAUAssetSurface@@HHPAGPAUPaletteBase@@@Z	label
+0x74260	?BlitWithScaleState@SpriteObject@@QAEHPAUAssetSurface@@HHIHHHPAUPaletteBase@@E@Z	label
+0x67600	?BuildEmployeeName@@YAXH@Z	label
+0x49540	?BuildFromGameData@@YAXXZ	label
+0x69b00	?BuildGolferDialogue@@YAXHHHH@Z	label
+0x60df0	?BuildHoleTypeMessage@@YAXHH@Z	label
+0x724c0	?BuildThemeList@@YAHXZ	label
+0xe4584	?CONTROL_LINES@@3PAPADA	label
+0x2dea0	?CalculateAllHoleStatistics@@YAXXZ	label
+0x672d0	?CalculateAngle@@YAHHH@Z	label
+0x223f0	?CalculateBallCarryDistance@@YAHHH@Z	label
+0x223c0	?CalculateBallRollDistance@@YAHH@Z	label
+0x22fb0	?CalculateBestShot@@YAHH@Z	label
+0xc450	?CalculateDirectionalOffset@@YAHHHH@Z	label
+0xc4b0	?CalculateDistanceInYards@@YAHHHHH@Z	label
+0x77280	?CalculateFormattedTextWidth@AssetSurface@@QAEHPBDI@Z	label
+0x22530	?CalculateGolferMaxDistance@@YAHH@Z	label
+0x60a0	?CalculateHoleTalentStrokeGap@@YAHHH@Z	label
+0x2ef40	?CalculateLotScore@@YAHHH@Z	label
+0x5920	?CalculateRandomShotVariance@@YAHXZ	label
+0x21fa0	?CalculateShotDifficulty@@YAHHHHHHHH@Z	label
+0x22430	?CalculateShotPower@@YAHHHH@Z	label
+0x2dba0	?CalculateTerrainHeight@@YAHHH@Z	label
+0x2f530	?CalculateTileSlopeFlags@@YAXHH@Z	label
+0x9620	?CheckGolferShotDeviation@@YAXH@Z	label
+0x70a00	?ChooseWorldMapCourse@@YAHH@Z	label
+0x67130	?Clamp@@YAHHHH@Z	label
+0x61810	?ClampBrightnessAdd32@@YAHH@Z	label
+0x884b0	?Cleanup@MouseCursor@@QAEXXZ	label
+0x490b0	?CleanupAllSoundObjects@@YAXXZ	label
+0x85ff0	?ClearBuffer@EditBox@@QAEXXZ	label
+0xc860	?ClearFloatingMessageAtPosition@@YAXHH@Z	label
+0x26670	?ClearGolferSlotAndNamedScenery@@YAXH@Z	label
+0x65560	?ClearPendingInput@@YAXXZ	label
+0x1000	?ClearPlot@@YAXH@Z	label
+0x5b880	?ClearStringPool@@YAXXZ	label
+0x78b30	?ClearToColor@AssetSurface@@QAEXI@Z	label
+0x87060	?Close@BinkPlayer@@QAEXXZ	label
+0x481b0	?ConfigureAndPlaySound@@YAXHHHHH@Z	label
+0x75050	?ConvertBMP8ToSurface16@AssetSurface@@QAEHPAUtagBITMAPINFOHEADER@@PAE@Z	label
+0x21b30	?Create@AssetSurface@@QAEHHHHHH@Z	label
+0x74dd0	?Create@AssetSurface@@QAEHHHHHHH@Z	label
+0x83800	?CreateFace@Font@@QAEHPBDHH@Z	label
+0xe400	?DemolishBuilding@@YAXH@Z	label
+0x90d20	?Dialog_SetGlobalButtonColors@@YAXHHHH@Z	label
+0x90cf0	?Dialog_SetGlobalButtonFonts@@YAHPAUFont@@00@Z	label
+0x90cc0	?Dialog_SetGlobalTextColors@@YAXHHHH@Z	label
+0x90c80	?Dialog_SetGlobalTextFonts@@YAHPAUFont@@000@Z	label
+0x31be0	?DownsampleRGB555ToRGB888@@YAPAEH@Z	label
+0x5aed0	?DrainPendingInput@@YAXXZ	label
+0x73cb0	?Draw@SpriteObject@@QAEHPAUAssetSurface@@HHHHHPAUPaletteBase@@@Z	label
+0x21b60	?Draw@SpriteObject@@QAEHPAUAssetSurface@@HHHHPAUPaletteBase@@@Z	label
+0x795d0	?DrawBevelFrameInRect@AssetSurface@@QAEHPAURect@@HH@Z	label
+0xcc00	?DrawDialogFrameWithBorder@@YAXHHHHH@Z	label
+0xcdd0	?DrawDialogShadow@@YAXHHHHH@Z	label
+0x79610	?DrawDottedRect@AssetSurface@@QAEXHHHHH@Z	label
+0xcef0	?DrawPanelFrame@@YAXHHHHH@Z	label
+0x628d0	?DrawSpriteImmediate@@YAXHHHHHPAUSpriteObject@@HH@Z	label
+0x49a0	?DrawSurfaceLine@@YAXPAUAssetSurface@@HHHHH@Z	label
+0x493d0	?DrawTerrainLine@@YAXHHHHIHH@Z	label
+0x4b70	?DrawTextCenteredAtY@@YAXPBDHHH@Z	label
+0x766a0	?DrawTextCenteredInWidthWithFont@AssetSurface@@QAEXPAUFont@@PBDHHHH@Z	label
+0x76700	?DrawTextCenteredWithFont@AssetSurface@@QAEXPAUFont@@PBDHHH@Z	label
+0x4bc0	?DrawTextCenteredWithShadow@@YAXPBDHHH@Z	label
+0x4ad0	?DrawTextClampedToScreen@@YAXPBDHHH@Z	label
+0x76650	?DrawTextLeftAlignedWithFont@AssetSurface@@QAEXPAUFont@@PBDHHH@Z	label
+0x76750	?DrawTextRightAlignedWithFont@AssetSurface@@QAEXPAUFont@@PBDHHH@Z	label
+0x4a20	?DrawTextScaledAtPosition@@YAXPBDHHH@Z	label
+0x49d0	?DrawTextWithColor@@YAXPBDHHH@Z	label
+0x5b0d0	?DrawTextWordWrapped@@YAHHHHI@Z	label
+0x6d0c0	?EndTournament@@YAXXZ	label
+0x80a10	?EraseBackground@GraphicWin@@QAEHPAURect@@H@Z	label
+0x808c0	?EraseWholeBackground@GraphicWin@@QAEXH@Z	label
+0x7cc10	?ExpandRectForBorders@WidgetBase@@QAEXPAURect@@@Z	label
+0x48200	?FadeOutSound@@YAXH@Z	label
+0x932d0	?FillPolygon16@@YAHPAUAssetSurface@@PAUVert@@HH@Z	label
+0x93100	?FillPolygon8@@YAHPAUAssetSurface@@PAUVert@@HH@Z	label
+0x93520	?FillPolygon@@YAHPAUAssetSurface@@PAUVert@@HH@Z	label
+0xdf80	?FindBuildingAtTile@@YAHHH@Z	label
+0xde70	?FindNearestBench@@YAXHHH@Z	label
+0xddb0	?FindNearestBuildingOfType@@YAHHHH@Z	label
+0x7340	?FindNearestHole@@YAHHH@Z	label
+0x2e7e0	?FindPathDirection@@YAHHHHHH@Z	label
+0x7f700	?FindWidgetAtPoint@@YAPAUWidgetBase@@PAH0@Z	label
+0x672b0	?FixedPointCos@@YAHHH@Z	label
+0x67270	?FixedPointSin@@YAHHH@Z	label
+0x75410	?FlipImageVertically@AssetSurface@@QAEXPAEPAUtagBITMAPINFOHEADER@@@Z	label
+0x2f120	?FloodFillWalkableArea@@YAXHH@Z	label
+0x2dc00	?FormatNumberWithCommas@@YAXH@Z	label
+0x81b20	?FreeFadeTable@@YAXXZ	label
+0xa0060	?FreeGraphsyDll@@YAXXZ	label
+0x70a60	?GenerateCourseMap@@YAXH@Z	label
+0x673e0	?GenerateRandomTerrainNoise@@YAXXZ	label
+0x7f2f0	?GetActiveWidget@@YAPAUWidgetBase@@XZ	label
+0x2e7a0	?GetCardinalDirection@@YAHHH@Z	label
+0xbfe0	?GetCornerElevation@@YAHHHHH@Z	label
+0x49310	?GetCornerElevationAt@@YAHHHH@Z	label
+0x6f1d0	?GetCoursePurchasePrice@@YAHH@Z	label
+0x671a0	?GetDirection8@@YAHHH@Z	label
+0x5c420	?GetGolferMoodBalance@@YAHH@Z	label
+0x675d0	?GetGolferMoodIndex@@YAHH@Z	label
+0x7b60	?GetMemberNameAtPosition@@YAHHHH@Z	label
+0x67560	?GetPetNameSuffix@@YAXH@Z	label
+0x79950	?GetPixelBlue@AssetSurface@@QAEEHHE@Z	label
+0x798c0	?GetPixelGreen@AssetSurface@@QAEEHHE@Z	label
+0x79830	?GetPixelRed@AssetSurface@@QAEEHHE@Z	label
+0x7700	?GetSceneryName@@YAHHHH@Z	label
+0x668f0	?GetStoryChapterLine@@YAHHHH@Z	label
+0xc3a0	?GetTerrainColSlope@@YAHHH@Z	label
+0x2fa30	?GetTerrainHeightAtWorld@@YAHHH@Z	label
+0x56bb0	?GetTerrainPropertyAt@@YAHHH@Z	label
+0xc2f0	?GetTerrainRowSlope@@YAHHH@Z	label
+0x492d0	?GetTerrainTypeAt@@YAHHH@Z	label
+0x492f0	?GetTerrainVariationAt@@YAHHH@Z	label
+0x49330	?GetTerrainWallHeight@@YAHHHH@Z	label
+0xbfa0	?GetTileAtPosition@@YAHHH@Z	label
+0xc170	?GetTileElevation@@YAHHHH@Z	label
+0x2f4b0	?GetTileElevationMinMax@@YAXHHPAH0@Z	label
+0x2ee80	?GetTileValue@@YAHHH@Z	label
+0x53260	?GolferAge@@YAHH@Z	label
+0x732d0	?HighScore_InsertEntry@@YAHXZ	label
+0x63170	?IndexBelowOrNone@@YAHHH@Z	label
+0x81870	?InitFadeTable@@YAHH@Z	label
+0x315e0	?InitNewGameData@@YAXXZ	label
+0x896b0	?InitOwnArena@Dialog@@QAEHH@Z	label
+0x1750	?InitPlots@@YAXXZ	label
+0x897f0	?InitSharedArena@Dialog@@QAEHPAUHeap@@@Z	label
+0x49790	?InitTerrainSystem@@YAXHH@Z	label
+0x67110	?InitTimer@@YAXXZ	label
+0x86fe0	?InitTimers@@YAHXZ	label
+0x6f2b0	?InitWorldMapCourseList@@YAXXZ	label
+0x6c940	?IsGolferMale@@YAHH@Z	label
+0x7400	?IsNeighborWalkable@@YAHHHH@Z	label
+0xbf60	?IsPositionInvalid@@YAHHH@Z	label
+0x493b0	?IsTilePath@@YAHHH@Z	label
+0x74ee0	?LoadBMPFile@AssetSurface@@QAEPAEPADPAPAUtagBITMAPINFOHEADER@@@Z	label
+0x75210	?LoadBMPToSurface16@AssetSurface@@QAEHPAD@Z	label
+0xb840	?LoadCourseFromFile@@YAXH@Z	label
+0x49400	?LoadCourseType@@YAXH@Z	label
+0x37fa0	?LoadGolferFromTheme@@YAHPBDHH@Z	label
+0xa00a0	?LoadGraphsyDll@@YAPAVGraphSys@@PBD@Z	label
+0x78cd0	?LoadImageFile@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z	label
+0x85790	?LoadPCXFromFile@AssetSurface@@QAEHPAU_iobuf@@@Z	label
+0xb9b0	?LoadSavedGame@@YAXPBDHHH@Z	label
+0x9d1b0	?LoadSmallSprites@@YAHXZ	label
+0x48220	?LoadSoundEffects@@YAXXZ	label
+0x659a0	?LoadThemeData@@YAXXZ	label
+0x658b0	?LoadThemeFiles@@YAXH@Z	label
+0xf5c0	?MainLoop@@YAXXZ	label
+0x838f0	?MeasureTextWidth@Font@@QAEHPBD@Z	label
+0x83930	?MeasureTextWidth@Font@@QAEHPBDH@Z	label
+0x82e20	?NextFrame@FlicSprite@@QAEPAUSpriteObject@@XZ	label
+0x5c1e0	?NextInt@RandomSource@@QAEGH@Z	label
+0x7b120	?NonclientRectToScreen@WidgetBase@@QAEXPAURect@@@Z	label
+0xc6f0	?NotifyEvent@@YAXHH@Z	label
+0x95c70	?OnActivate@SysMessageHandler@@UAEXHH@Z	label
+0x95990	?OnChar@SysMessageHandler@@UAEXD@Z	label
+0xa0890	?OnDisplayShutdown@@YAXXZ	label
+0xa0890	?OnFrameIdle@@YAXXZ	label
+0x3cbc0	?OnGroupSelSwitched@WidgetBase@@UAEXHH@Z	label
+0x4930	?OnHotspotDefault@GraphicWin@@UAEHHPAD@Z	label
+0x3cbc0	?OnItemActivatedEx@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnItemSelectedEx@WidgetBase@@UAEXHH@Z	label
+0x95cb0	?OnJackalTimer@SysMessageHandler@@UAEXI@Z	label
+0x95910	?OnKey@SysMessageHandler@@UAEXIH@Z	label
+0x95aa0	?OnLButtonDown@SysMessageHandler@@UAEXHHH@Z	label
+0x95b90	?OnLButtonUp@SysMessageHandler@@UAEXHH@Z	label
+0x3cbc0	?OnLeftClickAlt@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnLeftDoubleClickAlt@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnLeftDownAlt@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnLeftUpAlt@WidgetBase@@UAEXHH@Z	label
+0x90b30	?OnListItemActivated@@YAXH@Z	label
+0x959b0	?OnMouseMove@SysMessageHandler@@UAEXHH@Z	label
+0x3cbc0	?OnMouseMoveAlt@WidgetBase@@UAEXHH@Z	label
+0x7eff0	?OnMouseMoveInternal@WidgetBase@@UAEXHHH@Z	label
+0x95a50	?OnMouseWheel@SysMessageHandler@@UAEXHHH@Z	label
+0x95790	?OnNCHitTest@SysMessageHandler@@UAEJHH@Z	label
+0x95d20	?OnNetMessage@SysMessageHandler@@UAEXXZ	label
+0x95770	?OnPaint@SysMessageHandler@@UAEXPAUtagRECT@@@Z	label
+0x95bd0	?OnRButtonDown@SysMessageHandler@@UAEXHHH@Z	label
+0x95c30	?OnRButtonUp@SysMessageHandler@@UAEXHH@Z	label
+0x3cbc0	?OnRightClickAlt@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnRightDoubleClickAlt@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnRightDownAlt@WidgetBase@@UAEXHH@Z	label
+0x3cbc0	?OnRightUpAlt@WidgetBase@@UAEXHH@Z	label
+0x95750	?OnSize@SysMessageHandler@@UAEXHH@Z	label
+0xa0890	?OnTraitMatched@@YAXH@Z	label
+0xa0890	?OnWorldMapClosed@@YAXXZ	label
+0x5b660	?ParseFileForSection@@YAHPBD0@Z	label
+0x1040	?PlaceBuilding@@YAHHHHH@Z	label
+0xe000	?PlaceBuildingOnTerrain@@YAHHHHH@Z	label
+0x24120	?PlanGolferShot@@YAXHHHHH@Z	label
+0x87090	?Play@BinkPlayer@@QAEHPBDHHK@Z	label
+0x5a00	?PlayCritterCall@@YAXHHH@Z	label
+0xc500	?PlayPositionedSound@@YAXHHHH@Z	label
+0x9cf0	?PlayScriptStep@@YAXXZ	label
+0x5ae70	?PollInputState@@YAHXZ	label
+0x27380	?ProcessHoleCompletion@@YAXH@Z	label
+0x5af00	?ProcessInputAndCheckIdle@@YAHXZ	label
+0x32170	?ProcessPendingScreenshot@@YAXXZ	label
+0x63100	?ProcessRenderQueue@@YAXXZ	label
+0x266b0	?ProcessVIPGolferEvent@@YAXH@Z	label
+0x2f6e0	?PropagateMaxElevation@@YAHHHH@Z	label
+0x2f630	?PropagateMinElevation@@YAHHH@Z	label
+0x83d80	?PumpUserTick@@YAHXZ	label
+0x2f7a0	?RebuildTerrainElevation@@YAXXZ	label
+0x2f2c0	?RecalculateAllWaterShoreDepths@@YAXXZ	label
+0x616f0	?RecalculateMoodMaps@@YAXXZ	label
+0x7b0d0	?RectToScreen@WidgetBase@@QAEXPAURect@@@Z	label
+0x79b20	?ReleaseCursorClip@WidgetBase@@QAEXXZ	label
+0x83b10	?ReleaseDefaultFont@@YAXXZ	label
+0x9d280	?ReleaseSmallSprites@@YAXXZ	label
+0x11b0	?RemoveHomeVIPAtPosition@@YAXHH@Z	label
+0x6e810	?RenderAccomplishmentsScreen@@YAXXZ	label
+0x55a30	?RenderBestHoleScoresScreen@@YAXXZ	label
+0xc7a0	?RenderFloatingMessages@@YAXXZ	label
+0x80c80	?RenderFullSurface@GraphicWin@@QAEXH@Z	label
+0x5c560	?RenderGolferInfoPanel@@YAXHH@Z	label
+0x59850	?RenderGolferPairingScreen@@YAXXZ	label
+0x5c200	?RenderGolferPortrait@@YAHHHHH@Z	label
+0x73470	?RenderHighScoreScreen@@YAXXZ	label
+0x59400	?RenderHireEmployeeScreen@@YAHXZ	label
+0x55ed0	?RenderHistographScreen@@YAXXZ	label
+0x53330	?RenderHoleStatsScreen@@YAXH@Z	label
+0x54c50	?RenderMembershipRosterScreen@@YAXXZ	label
+0xc910	?RenderMoneyPopups@@YAXXZ	label
+0x782d0	?RenderMultilineTextInRect@AssetSurface@@QAEHPADPAURect@@PAPADPAH@Z	label
+0x546b0	?RenderPlayerCommentsReport@@YAXXZ	label
+0x12d0	?RenderPlot@@YAXHHH@Z	label
+0x62be0	?RenderQueuedSprite@@YAXH@Z	label
+0x80c20	?RenderRect@WidgetBase@@QAEXHHHHH@Z	label
+0x61110	?RenderScorecard@@YAXH@Z	label
+0x5f0f0	?RenderSkillPointsScreen@@YAHPADHHHH@Z	label
+0xd320	?RenderSpeechBubbleWithPortrait@@YAXHHHH@Z	label
+0x63180	?RenderSpriteByType@@YAXHHHHHHH@Z	label
+0x77eb0	?RenderTextCenteredInRect@AssetSurface@@QAEHPBDPAURect@@I@Z	label
+0x77da0	?RenderTextCenteredInWidth@AssetSurface@@QAEHPBDHHHH@Z	label
+0x77fc0	?RenderTextHorizontallyCentered@AssetSurface@@QAEHPBDHHH@Z	label
+0x781f0	?RenderTextRightAlignedInRectVCentered@AssetSurface@@QAEHPBDPAURect@@H@Z	label
+0x78080	?RenderTextRightAlignedInWidth@AssetSurface@@QAEHPBDHHHH@Z	label
+0x77cd0	?RenderTextVerticallyCentered@AssetSurface@@QAEHPBDPAURect@@H@Z	label
+0x5f870	?RenderTop10CoursesScreen@@YAXXZ	label
+0x5a090	?RenderTournamentLeaderboard@@YAXXZ	label
+0x587a0	?RenderTractPurchaseScreen@@YAHXZ	label
+0xd0b0	?RenderUIFrameWithCorners@@YAXHHHHH@Z	label
+0x7f8e0	?RenderWidgetTree@@YAXPAURect@@PAUWidgetBase@@@Z	label
+0x61830	?Render_InitColorTable@@YAHXZ	label
+0x5c460	?ReplaceGolferNameTokens@@YAXH@Z	label
+0xa3860	?ResetAndInitAlt@SpriteBox@@QAEHPAUHeap@@@Z	label
+0x49520	?ResetAndRebuildTerrain@@YAXXZ	label
+0x627d0	?ResetRenderState@@YAXXZ	label
+0x95eb0	?ResetToDefaults@AutoSound@@QAEXXZ	label
+0x669f0	?ResolveStoryResponse@@YAXHHHH@Z	label
+0x31fa0	?SaveCourseInfoToText@@YAHPAD@Z	label
+0xb680	?SaveCourseToFile@@YAXXZ	label
+0xb4a0	?SaveGame@@YAXPBD@Z	label
+0x62800	?SaveRenderQueue@@YAXXZ	label
+0x31ee0	?SaveScreenshotToJPEG@@YAXPAD@Z	label
+0x75580	?SaveSnapshot@AssetSurface@@QAEHPADPAURect@@@Z	label
+0x31d20	?SaveSurfaceToJPEG@@YAXPBDPAUAssetSurface@@HHHHH@Z	label
+0x85aa0	?SaveToPCX@AssetSurface@@QAEHPAU_iobuf@@@Z	label
+0x4970	?ScaleXCoordinate@@YAHH@Z	label
+0x30020	?ScreenToTileCoords@@YAXHHPAH0H@Z	label
+0x4a6e0	?ScrollTerrainView@@YAXPAUAssetSurface@@HHHHHH@Z	label
+0x97fc0	?SendMessageWithRetry@Net@@QAEHPAXHHHH@Z	label
+0x889f0	?SetButtonDefaults@@YAHPAUFont@@00@Z	label
+0x86d20	?SetCallback@Time@@QAEXP6AXHPAX@ZH0HH@Z	label
+0x86d90	?SetCallbackAndPulse@Time@@QAEXPAXH0HH@Z	label
+0x86d60	?SetCallbackAndStart@Time@@QAEXPAXH0HH@Z	label
+0x75b20	?SetClipRect@AssetSurface@@QAEXHHHH@Z	label
+0x321a0	?SetCourseFileName@@YAXPBD@Z	label
+0x8de90	?SetDefaultCancelCaption@@YAHPBD@Z	label
+0x83ac0	?SetDefaultFont@@YAHPAUFont@@@Z	label
+0x8de00	?SetDefaultOkCaption@@YAHPBD@Z	label
+0x762d0	?SetFontsForStyles@AssetSurface@@QAEHPAUFont@@000@Z	label
+0x67a00	?SetGolferAction@@YAXHHH@Z	label
+0x91490	?SetPinHeight@Dialog@@QAEXH@Z	label
+0x914b0	?SetPinWidth@Dialog@@QAEXH@Z	label
+0x70a10	?SetTerrainTileType@@YAXHH@Z	label
+0x87050	?SetWindow@BinkPlayer@@QAEXPAX@Z	label
+0x62020	?SetupGolferAppearance@@YAXH@Z	label
+0x604f0	?SetupTutorialMessage@@YAXXZ	label
+0x86110	?Show@EditBox@@QAEHHHHHPAUWidgetBase@@H@Z	label
+0x6f180	?ShowAccomplishmentsScreen@@YAXXZ	label
+0x85590	?ShowMessageBox@@YAXPBD0@Z	label
+0x87180	?ShowNextFrame@BinkPlayer@@QAE_NXZ	label
+0x5b10	?ShowSaveGameDialog@@YAXXZ	label
+0xcb00	?ShowStoryMessage@@YAHIHH@Z	label
+0x5b2c0	?ShowTextInputDialog@@YAXPBDHHH@Z	label
+0x725b0	?ShowThemeSelect@@YAXXZ	label
+0x5fd80	?ShowWelcomeMessage@@YAXXZ	label
+0x6f550	?ShowWorldMapScreen@@YAHXZ	label
+0x49860	?ShutdownTerrain@@YAXXZ	label
+0x67150	?Sign@@YAHH@Z	label
+0x226a0	?SimulateBallPhysics@@YAXHHHH@Z	label
+0x6f90	?SmoothTerrainLower@@YAXHH@Z	label
+0x6f20	?SmoothTerrainRaise@@YAXHH@Z	label
+0x5970	?SpawnCritter@@YAHHHE@Z	label
+0x21bc0	?SpawnGolfer@@YAHH@Z	label
+0x9a90	?SpawnGolferDivot@@YAXH@Z	label
+0x11e0	?SpawnHomeVIP@@YAXHHHH@Z	label
+0x97c20	?StartPacketVoice@Net@@QAEHH@Z	label
+0x99f0	?StartShotTrail@@YAXH@Z	label
+0x5b8b0	?StoreStringInPool@@YAHH@Z	label
+0x5b7c0	?StringReplace@@YAXPBD0@Z	label
+0x78b50	?Surface_FillRect@AssetSurface@@QAEHPAURect@@H@Z	label
+0x49470	?SyncTerrainTypes@@YAXXZ	label
+0x5ae50	?TakePendingChar@@YAHXZ	label
+0x5ae30	?TakePendingKey@@YAHXZ	label
+0xbf20	?TerrainLineTo@@YAXHHIHH@Z	label
+0xbf00	?TerrainMoveTo@@YAXHH@Z	label
+0x787a0	?TextLayout_AppendAndWrap@AssetSurface@@QAEHPAD@Z	label
+0x785e0	?TextLayout_BeginWithWidth@AssetSurface@@QAEHPADH@Z	label
+0xca10	?TilePatternToArea@@YAXHHHHH@Z	label
+0x76140	?TileSprite@AssetSurface@@QAEHPAUSpriteObject@@HHHHHH@Z	label
+0x2f940	?TileToScreenCached@@YAHHHPAH0@Z	label
+0x56b70	?TileToScreenCoords@@YAXHHPAH0@Z	label
+0x86f90	?TimeProc@@YGXIIKKK@Z	label
+0x86f40	?TimerProc@@YGXPAXIII@Z	label
+0xbbf0	?TransferCourseState@@YAXH@Z	label
+0xafa0	?TransferGameState@@YAXH@Z	label
+0xaf70	?TransferSaveBlock@@YAHPAXI@Z	label
+0x6e7b0	?TriggerAccomplishment@@YAXHHH@Z	label
+0x5e30	?TrySpawnWildlifeHabitat@@YAXHHH@Z	label
+0x722c0	?UnlockLandmarkByGolfer@@YAXHH@Z	label
+0x289e0	?UpdateAllGolfers@@YAXXZ	label
+0x1c00	?UpdateAllHomeVIPs@@YAXXZ	label
+0x30360	?UpdateAndRenderWildlife@@YAXXZ	label
+0x2f340	?UpdateBuildingAccessibility@@YAXXZ	label
+0x7d130	?UpdateCursor@@YAXPAUWidgetBase@@HHH@Z	label
+0x9bf0	?UpdateDivots@@YAXXZ	label
+0x17d0	?UpdateHomeVIP@@YAXH@Z	label
+0x4a5b0	?UpdateTerrainTilesInView@@YAXHH@Z	label
+0x498a0	?UpdateTerrainView@@YAXHHHH@Z	label
+0x49f00	?UpdateTileTerrainType@@YA_NPAVTile@@HH@Z	label
+0x2f1c0	?UpdateWaterShoreDepth@@YAXHH@Z	label
+0xdb90	?ValidateBuildingPlacement@@YAHHHHH@Z	label
+0x5c0c0	?WaitForInputWithTimeout@@YAHH@Z	label
+0x2fb90	?WorldToScreen@@YAHHHPAH0H@Z	label
+0x5af30	?WrapText@@YAHH@Z	label
+0x9b970	?add@?$ClassList@UJackalVoiceRx@@@@QAEHH@Z	label
+0x2280	?add@?$ClassList@UPalStruct@@@@QAEHH@Z	label
+0x1d10	?add@?$ClassList@UStringStruct@@@@QAEHH@Z	label
+0xa4b60	?add@NetFifo@@QAEHPBXHHHH@Z	label
+0x929b0	?add@Spot@@QAEHHHHHHHPAD@Z	label
+0xa4db0	?add@fifo@@QAEHPAPAXHHH@Z	label
+0x78a90	?addDropDownSpot@AssetSurface@@QAEXHHHHHH@Z	label
+0x85550	?add_buffer@VoiceRx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	label
+0x7e5f0	?add_child@WidgetBase@@QAEXPAU1@@Z	label
+0xa0600	?add_first@StringList@@QAEHPBDHHH@Z	label
+0x925f0	?add_lf@@YAXPAD@Z	label
+0x7e4c0	?add_parent@WidgetBase@@SAXPAU1@@Z	label
+0x9b690	?add_player@Net@@QAEXPBDHH@Z	label
+0x2190	?add_to_time_past@Midi_Device@@UAEXK@Z	label
+0x2190	?add_to_time_past@Wave_Device@@UAEXK@Z	label
+0x2190	?add_to_time_past@Wave_In_Device@@UAEXK@Z	label
+0x9c940	?advance_frame@Video@@QAEHXZ	label
+0xa0040	?attach@CheckBoxCtl@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	label
+0x9ed20	?attach@CheckBoxCtl@@UAEHPAUWidgetBase@@HHH@Z	label
+0x91aa0	?attach@Dialogs@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	label
+0xa08a0	?attach@Dialogs@@QAEHHPAUWidgetBase@@HHH@Z	label
+0xa0ef0	?attach@Dialogs@@UAEHPAUWidgetBase@@HHH@Z	label
+0xa30f0	?attach@EditGroup@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	label
+0xa2400	?attach@EditGroup@@UAEHPAUWidgetBase@@HHH@Z	label
+0x8cd60	?attach@ListBox@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	label
+0x8a5d0	?attach@ListBox@@UAEHPAUWidgetBase@@HHH@Z	label
+0x91bf0	?attach@ListBoxCtl@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	label
+0x9d6d0	?attach@ListBoxCtl@@UAEHPAUWidgetBase@@HHH@Z	label
+0x84450	?attach@Sound@@MAE?AW4SNDERR@@XZ	label
+0xa4ab0	?attach@SpriteBox@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	label
+0xa3880	?attach@SpriteBox@@UAEHPAUWidgetBase@@HHH@Z	label
+0x91310	?basepop_alloc@BasePop@@SAPAU1@XZ	label
+0x79560	?box@AssetSurface@@QAEXHHHHHH@Z	label
+0x791b0	?box_sprite@AssetSurface@@QAEXPAURect@@PAUBoxSpriteParams@@@Z	label
+0x7e700	?bring_child_to_top@WidgetBase@@QAEXPAU1@@Z	label
+0x7e580	?bring_parent_to_top@WidgetBase@@SAXPAU1@@Z	label
+0x7e120	?bring_to_top@WidgetBase@@QAEXXZ	label
+0x439ab0	?buffer_resizing@@3HA	label
+0x8dfc0	?button@BasePop@@QAEHPBD@Z	label
+0xa0350	?button_click@ButtonGroup@@QAEHH@Z	label
+0x862b0	?calc_line_breaks@EditBox@@QAEXPAPADPAH@Z	label
+0x8fe60	?calculate_dimensions@BasePop@@UAEHXZ	label
+0x9f050	?calculate_dimensions@CheckBoxCtl@@QAEHXZ	label
+0xa11c0	?calculate_dimensions@Dialogs@@QAEHXZ	label
+0xa2a60	?calculate_dimensions@EditGroup@@QAEHXZ	label
+0x8a120	?calculate_dimensions@ListBox@@QAEHXZ	label
+0x9d770	?calculate_dimensions@ListBoxCtl@@QAEHXZ	label
+0xa3be0	?calculate_dimensions@SpriteBox@@QAEHXZ	label
+0x86b70	?caret_callback@EditBox@@SAXH@Z	label
+0x7b310	?center@WidgetBase@@QAEXXZ	label
+0x92a90	?check@Spot@@QAEHHHPAH0@Z	label
+0x92b10	?check@Spot@@QAEHHHPAH0PAURect@@@Z	label
+0x97b20	?check_net@@YAXXZ	label
+0x9ab40	?check_polling@Net@@QAEXXZ	label
+0x74780	?clear@Heap@@QAEXXZ	label
+0x92800	?clear@Spot@@QAEXXZ	label
+0x80360	?clear_bubble_text@WidgetBase@@SAXXZ	label
+0x84130	?clear_fntable@@YAXXZ	label
+0x78a20	?clear_links@AssetSurface@@QAEXXZ	label
+0x7ca10	?client_to_nonclient@WidgetBase@@QAEXPAH0@Z	label
+0x7b170	?client_to_screen@WidgetBase@@QAEXPAH0@Z	label
+0x74cb0	?close@AssetSurface@@QAEXXZ	label
+0x886d0	?close@BaseButton@@UAEXXZ	label
+0x8d480	?close@BasePop@@QAEXXZ	label
+0x9ece0	?close@CheckBoxCtl@@QAEXXZ	label
+0x894b0	?close@Dialog@@QAEXXZ	label
+0xa0890	?close@Dialogs@@QAEXXZ	label
+0x860d0	?close@EditBox@@QAEXXZ	label
+0xa23a0	?close@EditGroup@@QAEXXZ	label
+0x83070	?close@FLCPalette@@QAEXXZ	label
+0x92e80	?close@Filemap@@QAEXXZ	label
+0x81ba0	?close@FlicAnim@@QAEXXZ	label
+0x82dd0	?close@FlicSprite@@QAEXXZ	label
+0x838b0	?close@Font@@QAEXXZ	label
+0x80610	?close@GraphicWin@@QAEXXZ	label
+0x92660	?close@HotSpot@@QAEXXZ	label
+0xa14c0	?close@ImageButton@@UAEXXZ	label
+0x89e40	?close@ListBox@@QAEXXZ	label
+0x9d690	?close@ListBoxCtl@@QAEXXZ	label
+0x9c0a0	?close@MultiDebug@@QAEXXZ	label
+0x97d10	?close@Net@@QAEXXZ	label
+0xa4b00	?close@NetFifo@@QAEXXZ	label
+0x961d0	?close@Scroll@@QAEXXZ	label
+0xa35e0	?close@SpriteBox@@QAEXXZ	label
+0x73ae0	?close@SpriteObject@@QAEXXZ	label
+0x87f80	?close@Text@@QAEXXZ	label
+0x86f10	?close@Time@@QAEXXZ	label
+0x79f30	?close@WidgetBase@@QAEXXZ	label
+0xa4d50	?close@fifo@@QAEXXZ	label
+0x4910	?close_buffer@AssetSurface@@UAEXXZ	label
+0x90c30	?close_class@BasePop@@SAXXZ	label
+0x9ff30	?close_class@CheckBoxCtl@@SAXXZ	label
+0x9d460	?close_class@FileWin@@SAXXZ	label
+0x9ead0	?close_class@ListBoxCtl@@SAXXZ	label
+0x86ff0	?close_class@Time@@SAXXZ	label
+0x7d010	?close_class@WidgetBase@@SAXXZ	label
+0x43aba4	?code_buffer@@3PADA	label
+0xe42ec	?code_mark@@3PADA	label
+0x81760	?compute_min_size@GraphicWin@@QAEXXZ	label
+0x974d0	?compute_thumb_rect@Scroll@@QAEXPAURect@@@Z	label
+0x81ca0	?confirm_data@FlicAnim@@QAEHH@Z	label
+0x75c60	?copy@AssetSurface@@QAEXPAU1@HHHHHH@Z	label
+0x744c0	?copy@SpriteObject@@QAEPAU1@PAU1@@Z	label
+0x91d80	?cos_table@@YAHHH@Z	label
+0x745c0	?create_blank@SpriteObject@@QAEHHH@Z	label
+0x74550	?create_blank_8@SpriteObject@@QAEHHH@Z	label
+0x879b0	?create_device@Midi_Device@@MAE?AW4SNDERR@@K@Z	label
+0x873f0	?create_device@Wave_Device@@MAE?AW4SNDERR@@K@Z	label
+0x87b90	?create_device@Wave_In_Device@@MAE?AW4SNDERR@@K@Z	label
+0x840e0	?create_sound@Sound@@SA?AW4SNDERR@@PAPAV1@PBDW4SOUNDTYPE@@@Z	label
+0x2160	?current_entry@?$ClassList@UStringStruct@@@@QAEPAUStringStruct@@XZ	label
+0x43b64c	?current_listbox@@3PAUListBox@@A	label
+0x82e10	?current_sprite@FlicSprite@@QAEPAUSpriteObject@@XZ	label
+0x43b8e4	?current_sprite_draw_popup@@3PAUBasePop@@A	label
+0x8cd80	?decipherControlLine@@YAHPAPAD@Z	label
+0x82940	?decode_black@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	label
+0x82990	?decode_brun@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	label
+0x82570	?decode_chunk@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	label
+0x826f0	?decode_color256@FlicAnim@@QAEHPAUFlicAnimData@@@Z	label
+0x82a80	?decode_copy@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	label
+0x9cb80	?decode_frame@Video@@QAEHH@Z	label
+0x9cae0	?decode_frame_process@Video@@QAEHXZ	label
+0x87cb0	?decode_lc@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	label
+0x827d0	?decode_ss2@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	label
+0x79bb0	?decrease_children@WidgetBase@@QAEXXZ	label
+0x43b9dc	?def_back_tile@BasePop@@2PAUSpriteObject@@A	label
+0x43b9d8	?def_back_tile_b@BasePop@@2PAUAssetSurface@@A	label
+0x43b9ac	?def_bottom_padding@BasePop@@2HA	label
+0xe4544	?def_button_color@BasePop@@2PAHA	label
+0x43b9d4	?def_button_focus_box_color@BasePop@@2HA	label
+0x43b9c4	?def_button_font@BasePop@@2PAPAUFont@@A	label
+0xe4550	?def_button_shadow@BasePop@@2PAHA	label
+0xe455c	?def_button_shadow_off_x@BasePop@@2PAHA	label
+0xe4568	?def_button_shadow_off_y@BasePop@@2PAHA	label
+0x43b9e0	?def_center_sprite@BasePop@@2PAUSpriteObject@@A	label
+0x43b8f4	?def_external_parent@BasePop@@2PAUWidgetBase@@A	label
+0x43b8f8	?def_external_x@BasePop@@2HA	label
+0xe44e4	?def_external_xs@BasePop@@2HA	label
+0x43b8fc	?def_external_y@BasePop@@2HA	label
+0xe44e8	?def_external_ys@BasePop@@2HA	label
+0x43b9a4	?def_left_padding@BasePop@@2HA	label
+0xe44f0	?def_margin_padding@BasePop@@2HA	label
+0xe44f4	?def_object_padding@BasePop@@2HA	label
+0x43b900	?def_pb_boxsprite@BasePop@@2PAPAUBoxSpriteParams@@A	label
+0x43b984	?def_pb_cancel_lone@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b978	?def_pb_ok_lone@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b930	?def_pb_spr_bottom@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b954	?def_pb_spr_bottom_left@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b960	?def_pb_spr_bottom_right@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b96c	?def_pb_spr_center@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b90c	?def_pb_spr_left@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b918	?def_pb_spr_right@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b924	?def_pb_spr_top@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b93c	?def_pb_spr_top_left@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b948	?def_pb_spr_top_right@BasePop@@2PAPAUSpriteObject@@A	label
+0x43b8e8	?def_popwave_func@BasePop@@2P6AXPAUDialogSound@@H@ZA	label
+0x43b9a8	?def_right_padding@BasePop@@2HA	label
+0xe4504	?def_string_color@BasePop@@2PAHA	label
+0x43b9b4	?def_string_font@BasePop@@2PAPAUFont@@A	label
+0xe4514	?def_string_shadow@BasePop@@2PAHA	label
+0xe4524	?def_string_shadow_off_x@BasePop@@2PAHA	label
+0xe4534	?def_string_shadow_off_y@BasePop@@2PAHA	label
+0x43b9b0	?def_top_padding@BasePop@@2HA	label
+0x43b9ec	?def_window_style@BasePop@@2HA	label
+0x43ad20	?default_font@@3UFont@@A	label
+0x879f0	?delete_device@Midi_Device@@MAE?AW4SNDERR@@XZ	label
+0x87430	?delete_device@Wave_Device@@MAE?AW4SNDERR@@XZ	label
+0x87bd0	?delete_device@Wave_In_Device@@MAE?AW4SNDERR@@XZ	label
+0x84110	?delete_sound@Sound@@SA?AW4SNDERR@@PAV1@@Z	label
+0x843e0	?detach@Sound@@SA?AW4SNDERR@@PAV1@@Z	label
+0x844e0	?detach@Sound@@UAE?AW4SNDERR@@XZ	label
+0x87cc0	?disable@Midi_Device@@UAE?AW4SNDERR@@XZ	label
+0x87650	?disable@Wave_Device@@UAE?AW4SNDERR@@XZ	label
+0x92470	?display_close@@YAXXZ	label
+0x92460	?display_depth@@YAHXZ	label
+0x92450	?display_format@@YAPAUDisplayFormat@@XZ	label
+0x924b0	?display_unlock@@YAXXZ	label
+0x83c90	?do_all_keys@@YAXXZ	label
+0x83cf0	?do_all_mouse@@YAXXZ	label
+0x83c30	?do_all_non_input@@YAXXZ	label
+0x83bd0	?do_all_tasks@@YAXXZ	label
+0x7d510	?do_caption_buttons@WidgetBase@@QAEXXZ	label
+0x83c70	?do_key@@YAHXZ	label
+0x83cd0	?do_mouse@@YAHXZ	label
+0x97b00	?do_net@@YAXXZ	label
+0x83c10	?do_non_input@@YAHXZ	label
+0x83bb0	?do_task@@YAHXZ	label
+0x7fab0	?do_tracking@WidgetBase@@QAEXHH@Z	label
+0x9c8e0	?do_video@@YAXXZ	label
+0x79670	?dotted_box@AssetSurface@@QAEHPAURect@@H@Z	label
+0x78c10	?dotted_hline@AssetSurface@@QAEXHHHH@Z	label
+0x94d30	?dotted_hline_16@AssetSurface@@QAEXHHHH@Z	label
+0x85d40	?dotted_hline_8@AssetSurface@@QAEXHHHE@Z	label
+0x78c70	?dotted_vline@AssetSurface@@QAEXHHHH@Z	label
+0x94f00	?dotted_vline_16@AssetSurface@@QAEXHHHH@Z	label
+0x85e80	?dotted_vline_8@AssetSurface@@QAEXHHHE@Z	label
+0x75b60	?draw@AssetSurface@@QAEHPAU1@HH@Z	label
+0x93f50	?drawTopBarSprites@ComboBox@@QAEXXZ	label
+0x73fc0	?draw_antialiased@SpriteObject@@QAEHPAU1@PAUAssetSurface@@1HHPAUPaletteBase@@@Z	label
+0x73f60	?draw_antialiased@SpriteObject@@QAEHPAU1@PAUAssetSurface@@HHPAUPaletteBase@@@Z	label
+0x75ba0	?draw_dest@AssetSurface@@QAEHPAU1@HHPAE@Z	label
+0x9f370	?draw_item@CheckBoxCtl@@QAEXHHH@Z	label
+0x8b3f0	?draw_item@ListBox@@UAEXH@Z	label
+0x9dab0	?draw_item@ListBoxCtl@@QAEXHH@Z	label
+0xa3f10	?draw_item@SpriteBox@@QAEXH@Z	label
+0x75be0	?draw_multi_table_dest@AssetSurface@@QAEHPAU1@HHPAE@Z	label
+0x74440	?draw_translucent@SpriteObject@@QAEHPAUAssetSurface@@HHMPAUPaletteBase@@D@Z	label
+0x9acf0	?drop_player@Net@@QAEHHH@Z	label
+0x84c20	?dyna_load@Wave@@AAE?AW4SNDERR@@PAD@Z	label
+0xa28a0	?edit@EditGroup@@QAEHPBD0H@Z	label
+0x87b10	?enable@Midi_Device@@UAE?AW4SNDERR@@XZ	label
+0x87640	?enable@Wave_Device@@UAE?AW4SNDERR@@XZ	label
+0x87cd0	?end_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ	label
+0xa00f0	?env_open@@YAPAU_iobuf@@PBD0@Z	label
+0x8e900	?exec@BasePop@@QAEHHP6AHXZ@Z	label
+0x73bf0	?extract@SpriteObject@@QAEHPAUAssetSurface@@HHHHHH@Z	label
+0x73c60	?extractPriv@SpriteObject@@QAEHPAUAssetSurface@@HHHHHH@Z	label
+0x87b00	?fade@Midi_Device@@UAE?AW4SNDERR@@K@Z	label
+0x84750	?fade@Sound@@UAE?AW4SNDERR@@K@Z	label
+0x84730	?fade@Sound@@UAE?AW4SNDERR@@XZ	label
+0x87b00	?fade@Wave_Device@@UAE?AW4SNDERR@@K@Z	label
+0x2180	?fade@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	label
+0x847b0	?fade_in@Sound@@UAE?AW4SNDERR@@I@Z	label
+0x84770	?fade_in@Sound@@UAE?AW4SNDERR@@XZ	label
+0x84a20	?fade_instance@Wave@@UAEXH@Z	label
+0x43b8ec	?fallout_flag@BasePop@@2HA	label
+0xe44e0	?fallout_result@BasePop@@2HA	label
+0x91da0	?filefind_get@@YAPADPBD@Z	label
+0x440820	?filename_text@FileWin@@2PADA	label
+0x78af0	?fill@AssetSurface@@QAEXHHHHH@Z	label
+0x80b00	?fill@GraphicWin@@QAEXHHHHH@Z	label
+0x2180	?fill_entry@?$ClassList@UPalStruct@@@@UAEHPAUPalStruct@@@Z	label
+0x2180	?fill_entry@?$ClassList@USpriteStruct@@@@UAEHPAUSpriteStruct@@@Z	label
+0x2180	?fill_entry@?$ClassList@UStringStruct@@@@UAEHPAUStringStruct@@@Z	label
+0x9c830	?fill_entry@PaletteList@@UAEHPAUPalStruct@@@Z	label
+0x74650	?fill_entry@SpriteList@@UAEHPAUSpriteStruct@@@Z	label
+0xa0540	?fill_entry@StringList@@UAEHPAUStringStruct@@@Z	label
+0x7eee0	?find_circular_match@@YAHPBDH@Z	label
+0x76ef0	?find_line_break_l@AssetSurface@@QAEPADPADPAHH@Z	label
+0x83980	?find_line_break_l@Font@@QAEPADPADPAHH@Z	label
+0x9cf50	?find_next_key@Video@@QAEHH@Z	label
+0x86330	?find_y_position@EditBox@@QAEHHPAPADH@Z	label
+0x935f0	?findnum@@YAPADPAD@Z	label
+0x7cdb0	?flip@WidgetBase@@SAXPAURect@@@Z	label
+0x9ee90	?flip_state_id@CheckBoxCtl@@QAEXH@Z	label
+0x9eec0	?flip_state_pos@CheckBoxCtl@@QAEXH@Z	label
+0x83d30	?flush_input@@YAXXZ	label
+0x83d40	?flush_keyboard@@YAXXZ	label
+0x83d60	?flush_mouse@@YAXXZ	label
+0x83da0	?flush_timer@@YAXXZ	label
+0x438da8	?g_actionArgs@@3PAHA	label
+0x43ad0c	?g_activePalettePtr@@3PAVFLCPalette@@A	label
+0x167328	?g_activeThemeDir@@3PADA	label
+0x43ab3c	?g_activeWidget@@3PAUWidgetBase@@A	label
+0x19e7c0	?g_allExpressionHeads@@3PAUSpriteObject@@A	label
+0x175ab0	?g_allHolesArray@@3PAUHole@@A	label
+0x167a1c	?g_allowedExpansionRequestFlag@@3HA	label
+0x19ba68	?g_amenitiesIcons@@3PAUSpriteObject@@A	label
+0x142e50	?g_amenitiesMaskSprites@@3PAUSpriteObject@@A	label
+0x15e930	?g_amenityPanelParts@@3PAUSpriteObject@@A	label
+0xc1998	?g_animalKinds@@3PAUAnimalKind@@A	label
+0x184210	?g_annualStatsRecords@@3PAUYearLedger@@A	label
+0x1419d0	?g_backgroundActors@@3PAUBackgroundActor@@A	label
+0x422da0	?g_badMoodMap@@3PAY0DC@EA	label
+0x19fc60	?g_ballPathSlots@@3PAUTrail@@A	label
+0x13ea24	?g_ballStopCountMap@@3PAEA	label
+0x16a524	?g_bestTenScoresTable@@3PAHA	label
+0x167b08	?g_bigGolfBallDot@@3USpriteObject@@A	label
+0x438c1c	?g_bilerpGrid@@3PAY0BD@CA	label
+0x438204	?g_bldgSprite@@3PAUSpriteObject@@A	label
+0x13df58	?g_bldgSprites@@3PAY03USpriteObject@@A	label
+0x16c7b8	?g_bmpReserved@@3USpriteObject@@A	label
+0x119fd8	?g_boldArialFont@@3UFont@@A	label
+0x19b050	?g_bubblePieces@@3PAUSpriteObject@@A	label
+0xc11c0	?g_buildingDefs@@3PAUBuildingDef@@A	label
+0x1a8c38	?g_buildingLevelPerKind@@3PAHA	label
+0x1a7c08	?g_buildingPnlFrames@@3PAUSpriteObject@@A	label
+0x18bcb8	?g_buildingTable@@3PAUBuilding@@A	label
+0x18b358	?g_bulldozeDimCursor@@3USpriteObject@@A	label
+0x16a760	?g_bulldozeLitCursor@@3USpriteObject@@A	label
+0x43b60c	?g_buttonFonts@@3PAPAUFont@@A	label
+0x18dd34	?g_buttonSlotOfType@@3PACA	label
+0x1685f4	?g_camDirIdx@@3HA	label
+0x1a6d3c	?g_careerPlayYear@@3FA	label
+0x15eb40	?g_cellScreenPosX@@3PAY0DC@FA	label
+0x15fec8	?g_cellScreenPosY@@3PAY0DC@FA	label
+0x172cac	?g_ceoLadderRung@@3HA	label
+0x19df20	?g_cgScreenSprites@@3PAUSpriteObject@@A	label
+0x161260	?g_checkBoxFrames@@3PAUSpriteObject@@A	label
+0x434170	?g_clock@@3HA	label
+0x168d0c	?g_closestDistanceFound@@3HA	label
+0xc2960	?g_clubLetters@@3PAPADA	label
+0x18b388	?g_clubMemberSum@@3HA	label
+0x141cd8	?g_clubSkillsScore@@3HA	label
+0x422c74	?g_colorLut@@3PAGA	label
+0x4223c0	?g_commentsSheet@@3UReportPanels@@A	label
+0x1a5a00	?g_configBitMask@@3IA	label
+0x420f04	?g_constTwo@@3HA	label
+0x11b770	?g_cornerElevation@@3PAY1DC@7CA	label
+0x16a550	?g_courseBigSprs@@3PAUSpriteObject@@A	label
+0x187ea8	?g_courseCliffArt@@3PAUSpriteObject@@A	label
+0x19ab00	?g_courseInfoBoxPicsAlphaMask@@3PAUSpriteObject@@A	label
+0x421308	?g_courseOverview@@3UCourseReport@@A	label
+0x15e920	?g_courseScriptPlayIndex@@3HA	label
+0x19ae78	?g_courseTotalFunRate@@3HA	label
+0x16c790	?g_curAnalysisHoleIndex@@3HA	label
+0x1a34f0	?g_curBuildingTurns@@3HA	label
+0x19aaf8	?g_curLandmarkTotal@@3HA	label
+0x19ae7c	?g_curNextSpawnPos@@3HA	label
+0x167b00	?g_curPreviousCamScale@@3HA	label
+0x19b048	?g_curPreviousConvoClock@@3HA	label
+0x1a47e0	?g_curTournPrepBits@@3HA	label
+0x1a34e0	?g_currentThemeId@@3CA	label
+0x43aa98	?g_cursorClipWidget@@3PAUWidgetBase@@A	label
+0x43aa78	?g_cursorConfineRect@@3URect@@A	label
+0x43b5fc	?g_cursorHeight@@3HA	label
+0x43aaac	?g_cursorHotX@@3HA	label
+0x43aab0	?g_cursorHotY@@3HA	label
+0x43b5f8	?g_cursorWidth@@3HA	label
+0xc2fc8	?g_debugBestShotGolfer@@3HA	label
+0xc2fcc	?g_debugShotGolfer@@3HA	label
+0xe42e4	?g_defBevelColorA@@3HA	label
+0xe42dc	?g_defBorderThickness@@3HA	label
+0xe42e0	?g_defBottomBorder@@3HA	label
+0xe42cc	?g_defCaptionHeight@@3HA	label
+0xe42e8	?g_defCaptionMargin@@3HA	label
+0xe42c8	?g_defFrameColor@@3HA	label
+0x43ab64	?g_defFrameTexture@@3PAUAssetSurface@@A	label
+0xe42d0	?g_defTitleShadowColor@@3HA	label
+0xe42d4	?g_defTitleShadowDx@@3HA	label
+0xe42d8	?g_defTitleShadowDy@@3HA	label
+0x43ac18	?g_defaultCaptionHook@@3P6AXPAUGraphicWin@@PADPAUAssetSurface@@@ZA	label
+0x16a518	?g_deferEventStamp@@3HA	label
+0x1830b8	?g_demolishPreviousRecs@@3PACA	label
+0x16a91c	?g_destRestX@@3HA	label
+0x16a920	?g_destRestY@@3HA	label
+0x16d1a8	?g_dialogBubbleRandomNumberA@@3HA	label
+0x16d1ac	?g_dialogBubbleRandomNumberB@@3HA	label
+0x43b990	?g_dialogOverride@@3PAUWidgetBase@@A	label
+0x43b9f0	?g_dialogRoot@@3PAUWidgetBase@@A	label
+0x1a6d40	?g_dialogString@@3PADA	label
+0x438d9c	?g_dialogueNum@@3PADA	label
+0xbba88	?g_digitRange@@3QBDB	label
+0x13df54	?g_displayFocus@@3HA	label
+0xe4578	?g_dlgButtonBevel@@3PAHA	label
+0xe4574	?g_dlgButtonColor@@3EA	label
+0x43b9d0	?g_dlgButtonFrameColor@@3HA	label
+0x43b9a0	?g_dlgCancelTooltip@@3PBDB	label
+0x43b7c0	?g_dlgCloseSound@@3UDialogSound@@A	label
+0xe44f8	?g_dlgDrawParams@@3PAHA	label
+0x43b99c	?g_dlgOkTooltip@@3PBDB	label
+0x43b6a8	?g_dlgOpenSound@@3UDialogSound@@A	label
+0x43ab34	?g_dragTargetWidget@@3PAUWidgetBase@@A	label
+0x43ab30	?g_dragWidget@@3PAUWidgetBase@@A	label
+0x43afd8	?g_editBoxColors@@3PAHA	label
+0xe43f0	?g_editBoxStyle@@3PAHA	label
+0x4409c4	?g_editGroupInitValue@@3HA	label
+0x1a47e4	?g_editedTileColIdx@@3HA	label
+0xc26b0	?g_facilityTypes@@3PAUFacilityType@@A	label
+0x421040	?g_fadeScreen@@3USpriteObject@@A	label
+0x43ac14	?g_fadeSteps@@3HA	label
+0x43ac10	?g_fadeTable@@3PAGA	label
+0x43abb0	?g_fadeTableWidth@@3HA	label
+0x43ab60	?g_fallbackRoot@@3PAUWidgetBase@@A	label
+0x19b04c	?g_fastRun@@3HA	label
+0x4210c8	?g_financialReport@@3USpritePair@@A	label
+0x143018	?g_flatSquareAltMap@@3PACA	label
+0x13f3e8	?g_flicBankFrameLens@@3PAHA	label
+0x16a794	?g_floatingMessageTextColors@@3PAIA	label
+0x43ab38	?g_focusWidget@@3PAUWidgetBase@@A	label
+0x16c7b4	?g_forceBits@@3HA	label
+0x43abf8	?g_frameBottomEdge@@3PAUSpriteObject@@A	label
+0x43abe8	?g_frameBottomLeft@@3PAUSpriteObject@@A	label
+0x43abf0	?g_frameBottomRight@@3PAUSpriteObject@@A	label
+0x43abf4	?g_frameCapTopEdge@@3PAUSpriteObject@@A	label
+0x43abe4	?g_frameCapTopLeft@@3PAUSpriteObject@@A	label
+0x43abec	?g_frameCapTopRight@@3PAUSpriteObject@@A	label
+0x43abfc	?g_frameLeftEdge@@3PAUSpriteObject@@A	label
+0x43ac00	?g_frameRightEdge@@3PAUSpriteObject@@A	label
+0x43abe0	?g_frameShadeTable@@3PBEB	label
+0x43ac0c	?g_frameTopEdge@@3PAUSpriteObject@@A	label
+0x43ac08	?g_frameTopLeft@@3PAUSpriteObject@@A	label
+0x43ac04	?g_frameTopRight@@3PAUSpriteObject@@A	label
+0x13e63c	?g_funRatingHistPoints@@3PAFA	label
+0x16a520	?g_fundsLabelFlag@@3HA	label
+0x171fd4	?g_gameCashHundreds@@3HA	label
+0x142dd8	?g_gameCashPopupDelta@@3PAHA	label
+0x16949c	?g_gameCourseAccurPointsTotal@@3HA	label
+0x187da0	?g_gameCoursePath@@3PADA	label
+0x142df8	?g_gameCourseRefreshReq@@3HA	label
+0x19aafc	?g_gameCourseTotalPar@@3HA	label
+0x168d08	?g_gameCurrentHandle@@3HA	label
+0x19c090	?g_gameDemolitionRefunds@@3PACA	label
+0x16c7e4	?g_gameDispleasedTally@@3PAEA	label
+0x16a250	?g_gameDummyFrameArray@@3PAUSpriteObject@@A	label
+0x19ae80	?g_gameFairwayTargetPoints@@3PAY02UHoleLandingPoint@@A	label
+0x16c570	?g_gameFloatStrBufs@@3PAY0EA@DA	label
+0x16a924	?g_gameFloaterFrames@@3PAHA	label
+0x142414	?g_gameForSaleLandGrid@@3PACA	label
+0x18b1a0	?g_gameGlowingPanelDiscs@@3PAUSpriteObject@@A	label
+0x1439e0	?g_gameGolferBodyGfx@@3PAUSpriteObject@@A	label
+0x16a948	?g_gameGolferStatsBtnSprs@@3PAUSpriteObject@@A	label
+0x18f338	?g_gameGolferTypesBak@@3PAUGolferType@@A	label
+0x120640	?g_gameMembershipTrendLine@@3PAFA	label
+0x1a47b8	?g_gameMemoDists@@3PAHA	label
+0x19abb8	?g_gameReservedSpriteObjs@@3PAUSpriteObject@@A	label
+0x1409a8	?g_gameSpeakerIsPartner@@3HA	label
+0x13a454	?g_gameStoryNameTable@@3PAY0DC@DA	label
+0x16962c	?g_gameStruckClock@@3PAHA	label
+0x1722e8	?g_gameTileTerrainKind@@3PACA	label
+0x18dd50	?g_golfProList@@3PAURosterEntry@@A	label
+0x1a7148	?g_golferHeadPage@@3UAssetSurface@@A	label
+0x1849e0	?g_golferHistoryPerCharacter@@3PAUGolferTypeStats@@A	label
+0x434164	?g_golferIdText@@3PADA	label
+0xc2fd4	?g_golferLikes@@3PAPADA	label
+0x19b73c	?g_golferPassScratchWord@@3HA	label
+0x1794b8	?g_golferPool@@3PAUGolfer@@A	label
+0x1a5a04	?g_golferSkillGrades@@3PACA	label
+0x167390	?g_golferStatsBarCellsMask@@3PAUSpriteObject@@A	label
+0x42376c	?g_goodMoodMap@@3PAY0DC@EA	label
+0x421bf8	?g_graphReport@@3USpritePair@@A	label
+0x44092c	?g_graphsyModule@@3PAUHINSTANCE__@@A	label
+0xc2a60	?g_greatCourseNames@@3PAPADA	label
+0x1791c8	?g_groundShadowPixel@@3USpriteObject@@A	label
+0x1a9ce4	?g_hazardCommentary@@3HA	label
+0x19bf98	?g_headBodyBgPic@@3USpriteObject@@A	label
+0xd55e8	?g_headPresets@@3PAUHeadPreset@@A	label
+0x421070	?g_hireScreen@@3USpritePair@@A	label
+0x421200	?g_holeByHolePanels@@3UReportPanels@@A	label
+0x13ba48	?g_homePlotGroundPics@@3PAUSpriteObject@@A	label
+0x16d1b8	?g_homeVIPsTbl@@3PAUHomeVIP@@A	label
+0x43aaf0	?g_hoverWidget@@3PAUWidgetBase@@A	label
+0x422b80	?g_inSaleView@@3HA	label
+0x1612e8	?g_infoBtnImages@@3PAUSpriteObject@@A	label
+0x18ccb8	?g_infoButtonBitmapMask@@3PAUSpriteObject@@A	label
+0x423768	?g_infoPanelHover@@3HA	label
+0x420f28	?g_isWin2kOrLater@@3_NA	label
+0xc2e2c	?g_jobWages@@3PACA	label
+0x186f50	?g_joeCoolToolbarBmpsAlpha@@3PAUSpriteObject@@A	label
+0x16a510	?g_jpegOutRowPtr@@3PAEA	label
+0x16125c	?g_jpegSurfacePitch@@3HA	label
+0x1787a0	?g_juniorsBarrelArt@@3USpriteObject@@A	label
+0x171d38	?g_knownEventsHighMask@@3IA	label
+0x19c08c	?g_knownEventsLowMask@@3IA	label
+0x13a450	?g_landPurchaseNum@@3HA	label
+0x169628	?g_lastHundredthsShown@@3HA	label
+0x43ab88	?g_lastKeyDown@@3HA	label
+0x439a98	?g_lastPalette@@3PAVFLCPalette@@A	label
+0x15e5ac	?g_lastShownStoryMsgTick@@3HA	label
+0x438a94	?g_lastStoryResponse@@3HA	label
+0xd2050	?g_lastZoom@@3HA	label
+0x439658	?g_layoutLine@@3PADA	label
+0x439a5c	?g_layoutLineEnd@@3HA	label
+0x439aa4	?g_layoutWidth@@3HA	label
+0x439a9c	?g_layoutX@@3HA	label
+0x439aa0	?g_layoutY@@3HA	label
+0x1a882c	?g_lengthAbilitySum@@3HA	label
+0x1a412c	?g_linePenX@@3HA	label
+0x1a4130	?g_linePenY@@3HA	label
+0x439aa8	?g_lineWidthUsed@@3HA	label
+0x168fc8	?g_lowerLeftBarAlphaSprites@@3PAUSpriteObject@@A	label
+0x1873a8	?g_lowerLeftBarParts@@3PAUSpriteObject@@A	label
+0x171fd8	?g_mapCourseList@@3PAUCourse@@A	label
+0x1a4138	?g_mapMarkerButtonAlphas@@3PAUSpriteObject@@A	label
+0x13c570	?g_mapSiteMarkerPics@@3PAUSpriteObject@@A	label
+0x421f48	?g_memberRoster@@3UMemberRoster@@A	label
+0x19b778	?g_memberWindowSprite@@3PAUSpriteObject@@A	label
+0x1a7144	?g_messageCountdown@@3HA	label
+0x167a20	?g_messageIconPics@@3PAUSpriteObject@@A	label
+0xc2e08	?g_messageSpeaker@@3HA	label
+0x43ab50	?g_modalFocus@@3PAUWidgetBase@@A	label
+0x43ab54	?g_modalWidget@@3PAUWidgetBase@@A	label
+0x11b388	?g_moneyLine@@3PAFA	label
+0x142fd8	?g_moneyPopCoordXs@@3PAHA	label
+0x142ff8	?g_moneyPopCoordYs@@3PAHA	label
+0x1a6374	?g_moneyWarnCnt@@3HA	label
+0x168600	?g_monthEventKindHistory@@3PAFA	label
+0x1409ac	?g_monthlySkillScore@@3PAFA	label
+0x1a34e4	?g_mouseClickDelay@@3HA	label
+0x43ab40	?g_mouseDownWidget@@3PAUWidgetBase@@A	label
+0x43ab44	?g_mouseDownWidgetAlt@@3PAUWidgetBase@@A	label
+0x43a4d8	?g_mouseRedrawRect@@3URect@@A	label
+0x1694a4	?g_msgDelay@@3HA	label
+0x19bf90	?g_myWorldCourseIdx@@3HA	label
+0x1689e8	?g_namedSceneryArray@@3PAUPlaced@@A	label
+0x16a51c	?g_nextGolferOrder@@3HA	label
+0x1685f0	?g_nextOpenHoleIndex@@3HA	label
+0x438220	?g_nextThemeSlot@@3FA	label
+0x167a18	?g_nextTutStepIdx@@3HA	label
+0x438aa0	?g_noiseGrid@@3PAY0BD@DA	label
+0x19b740	?g_notReadPic@@3USpriteObject@@A	label
+0xe9a70	?g_numBuffer@@3PADA	label
+0x18a528	?g_numberBuf@@3PADA	label
+0x422b84	?g_objectSprite@@3PAUSpriteObject@@A	label
+0x420f40	?g_okButtonStates@@3PAUSpriteObject@@A	label
+0x13bba8	?g_oldestFloatingTxtSlot@@3HA	label
+0xc28b8	?g_ordinals@@3PAPADA	label
+0x4400b8	?g_pNetwork@@3PAUNet@@A	label
+0x43aadc	?g_paintTarget@@3PAUAssetSurface@@A	label
+0x43aae4	?g_paintTargetX@@3HA	label
+0x43aae8	?g_paintTargetY@@3HA	label
+0x143d04	?g_paintedCameraTileX@@3HA	label
+0x143d00	?g_paintedCameraTileY@@3HA	label
+0x421120	?g_pairingScreen@@3UPairScreen@@A	label
+0x43b628	?g_panelFonts@@3PAPAUFont@@A	label
+0x43b634	?g_panelItemStyle@@3PAHA	label
+0xe4488	?g_panelLayout@@3PAHA	label
+0xe44a8	?g_panelShadowColor@@3PAHA	label
+0xe44b4	?g_panelShadowDx@@3PAHA	label
+0xe44c0	?g_panelShadowDy@@3PAHA	label
+0xe44cc	?g_panelSizeFlags@@3HA	label
+0x43b61c	?g_panelSizing@@3PAHA	label
+0xe449c	?g_panelTextColor@@3PAHA	label
+0xc2e88	?g_par3HoleNames@@3PAPADA	label
+0xc2e38	?g_par4HoleNames@@3PAPADA	label
+0xc2ed8	?g_par5HoleNames@@3PAPADA	label
+0x43fe08	?g_parse_cb_dropdowns@@3PAUDropDownSlot@@A	label
+0x43fdb8	?g_parse_dropdowns@@3PAUChoiceSlot@@A	label
+0x43f368	?g_parse_links@@3PAUTemplateLink@@A	label
+0x18d370	?g_pathFindDist@@3PAEA	label
+0x183a80	?g_peopleButtonBmps@@3PAUSpriteObject@@A	label
+0x143d10	?g_phrasesPerGolferType@@3PADA	label
+0x120a28	?g_phrasesPerGolferTypeSave@@3PADA	label
+0x1a8828	?g_plannedEndX@@3HA	label
+0x1a8830	?g_plannedEndY@@3HA	label
+0x1628e8	?g_playerHeadBmpArray@@3PAUSpriteObject@@A	label
+0x1a4998	?g_pointElevationMap@@3PAY0DD@EA	label
+0x43ab18	?g_pointInFrame@@3HA	label
+0x143d08	?g_pointerPosX@@3HA	label
+0x143d0c	?g_pointerPosY@@3HA	label
+0x19abb0	?g_popUpRingCursor@@3HA	label
+0x1a53c8	?g_popupEdgeBmps@@3PAUSpriteObject@@A	label
+0x1a6378	?g_posReactionTileCount@@3PAEA	label
+0x43ab4c	?g_presentingRegion@@3HA	label
+0x1a59fc	?g_previousCamOrientation@@3HA	label
+0x161250	?g_previousSGAMark@@3HA	label
+0x11a068	?g_printBuffer@@3PADA	label
+0x19b730	?g_proMatchStakeLvl@@3HA	label
+0x19b734	?g_quitToMenuFlag@@3HA	label
+0x1a9cb8	?g_ratingUnawarded@@3HA	label
+0x1a9cb4	?g_ratingWealth@@3HA	label
+0x1791f8	?g_regionAlphaFrames@@3PAUSpriteObject@@A	label
+0x1694a0	?g_relaxingBuildingId@@3HA	label
+0x18b198	?g_remarkColourValue@@3HA	label
+0x18bcb0	?g_renderedBallCount@@3HA	label
+0x169498	?g_reportScreenId@@3DA	label
+0x16c770	?g_risingMsgLocXs@@3PAHA	label
+0x16c794	?g_risingMsgLocYs@@3PAHA	label
+0x43aa9c	?g_rootWidget@@3PAUWidgetBase@@A	label
+0x167ff4	?g_rosterBarButtonGolfer@@3PAHA	label
+0x4224c8	?g_routeReport@@3URouteScreens@@A	label
+0x142dfc	?g_routeTargetX@@3PAHA	label
+0x142e24	?g_routeTargetY@@3PAHA	label
+0x42b160	?g_rqAnchorX@@3PAHA	label
+0x42c164	?g_rqAnchorY@@3PAHA	label
+0x430164	?g_rqBlitX@@3PAHA	label
+0x431164	?g_rqBlitY@@3PAHA	label
+0x438200	?g_rqCount@@3HA	label
+0x42815c	?g_rqFlags@@3PAHA	label
+0x42c160	?g_rqHead@@3HA	label
+0x4361f4	?g_rqNext@@3PAHA	label
+0x42615c	?g_rqSavedAnchorX@@3PAHA	label
+0x42715c	?g_rqSavedAnchorY@@3PAHA	label
+0x432164	?g_rqSavedBlitX@@3PAHA	label
+0x433164	?g_rqSavedBlitY@@3PAHA	label
+0x42b15c	?g_rqSavedCount@@3HA	label
+0x42e164	?g_rqSavedFlags@@3PAHA	label
+0x4371f4	?g_rqSavedHead@@3HA	label
+0x42515c	?g_rqSavedNext@@3PAHA	label
+0x42f164	?g_rqSavedScale@@3PAHA	label
+0x4371fc	?g_rqSavedSlotMark@@3PAHA	label
+0x42d164	?g_rqSavedSortKey@@3PAHA	label
+0x4351f4	?g_rqSavedSprite@@3PAPAUSpriteObject@@A	label
+0x42915c	?g_rqScale@@3PAHA	label
+0x434174	?g_rqSlotMark@@3PAHA	label
+0x42415c	?g_rqSortKey@@3PAHA	label
+0x42a15c	?g_rqSprite@@3PAPAUSpriteObject@@A	label
+0x19e7b8	?g_runModeFlags@@3HA	label
+0x120590	?g_s_courseInfo@@3PAUSpriteObject@@A	label
+0x141580	?g_s_transPopUpSprites@@3PAUSpriteObject@@A	label
+0x143cf0	?g_sampleSrcPtr@@3PAGA	label
+0x1a7404	?g_scanOpenListX@@3PAFA	label
+0x1a8028	?g_scanOpenListY@@3PAFA	label
+0x143cf8	?g_scheduledTriggerBits@@3HA	label
+0x4222b8	?g_scoreRecords@@3UReportPanels@@A	label
+0x1a8834	?g_scriptCmd@@3PAHA	label
+0x186fa8	?g_scriptCommandCellCols@@3PAHA	label
+0x186b50	?g_scriptCommandCellRows@@3PAHA	label
+0x1a9cd4	?g_scriptCount@@3HA	label
+0x1423e8	?g_selectHaloSprite@@3USpriteObject@@A	label
+0x421c60	?g_sgaReport@@3USpritePair@@A	label
+0x424148	?g_shadeTable@@3PAGA	label
+0x1a9ce0	?g_shotCacheNext@@3HA	label
+0x1a7140	?g_shotDoubts@@3HA	label
+0x1685c8	?g_shotMemoHgt@@3PAHA	label
+0x13fd20	?g_shotPowerMemoSpeed@@3PAHA	label
+0x19b738	?g_shotSearchLocked@@3HA	label
+0x1a9ce8	?g_shotTargetExact@@3HA	label
+0x141a10	?g_shotsForTrace@@3HA	label
+0x143cfc	?g_shownLandmarkBitmask@@3HA	label
+0x16a78c	?g_simBallStopPosX@@3HA	label
+0x16a790	?g_simBallStopPosY@@3HA	label
+0x1a34e8	?g_simCameraZoomStored@@3HA	label
+0x171d40	?g_simElevationPanelButtonFrames@@3PAUSpriteObject@@A	label
+0x168258	?g_simFlowerNeighborGfx@@3PAUSpriteObject@@A	label
+0x18b384	?g_simFrameZoomSnapshot@@3HA	label
+0xc2e1c	?g_simGolferFlags@@3HA	label
+0x13bbac	?g_simGolferWalkCostMap@@3PAY0DC@CA	label
+0x18a538	?g_simHoleMarkArt@@3PAUSpriteObject@@A	label
+0x1a5a24	?g_simLatestGolferNum@@3HA	label
+0x142f00	?g_simMoneyPopupTime@@3PAHA	label
+0x143ca0	?g_simOpenFacilityLvl@@3PAHA	label
+0x1a48e8	?g_simReservedGfx@@3PAUSpriteObject@@A	label
+0x13b7e0	?g_simTitlePageGraphics@@3PAUSpriteObject@@A	label
+0x142f28	?g_simTopBoxes@@3PAUSpriteObject@@A	label
+0x18d36c	?g_simTotalLengthYards@@3HA	label
+0x15e5b0	?g_simUnreferencedBitmaps@@3PAUSpriteObject@@A	label
+0x140d98	?g_simUnreferencedImages@@3PAUSpriteObject@@A	label
+0x140950	?g_simUnusedSpritePair@@3PAUSpriteObject@@A	label
+0x141710	?g_siteMapSprs@@3PAUSpriteObject@@A	label
+0x16ae70	?g_skillClassStatRows@@3PAUStatisticsRow@@A	label
+0x11b360	?g_smallManualFont@@3UFont@@A	label
+0x40d840	?g_sounds@@3PAVWave@@A	label
+0x13de78	?g_speakerIconsAlpha@@3PAUSpriteObject@@A	label
+0x1787d0	?g_speechStripTile@@3USpriteObject@@A	label
+0x187ea0	?g_speechWindowBottom@@3HA	label
+0x178350	?g_squareTypeTable@@3PAUTerrainTypeDef@@A	label
+0x1a8c90	?g_staffPanelSpr@@3PAUSpriteObject@@A	label
+0x185850	?g_staffSlots@@3PAUEmployee@@A	label
+0x11b380	?g_startTime@@3KA	label
+0x161258	?g_storiesNum@@3HA	label
+0x1a34ec	?g_storyMessageFontColor@@3IA	label
+0x19d81c	?g_strOffsetTbl@@3PAFA	label
+0x1a46b8	?g_stringPoolLens@@3PAFA	label
+0x13e638	?g_sveFileLoadFlag@@3HA	label
+0x19dea0	?g_talentKindCount@@3PAHA	label
+0x1a4100	?g_talkBubblePointSpr@@3USpriteObject@@A	label
+0x420ed0	?g_terrain@@3PAVTerrain@@A	label
+0xc2fa0	?g_terrainHeightDivisor@@3HA	label
+0x420f2a	?g_terrainRebuildPending@@3_NA	label
+0x420ed8	?g_terrainSprite@@3USpriteObject@@A	label
+0xc1574	?g_terrainSurface@@3PAUAssetSurface@@A	label
+0x420f2c	?g_terrainViewDirty@@3_NA	label
+0x43ad18	?g_textPalette@@3PAVFLCPalette@@A	label
+0x19d920	?g_themeAlphaFrames@@3PAY07USpriteObject@@A	label
+0x15d738	?g_themeCelebsEntries@@3PAUCelebRec@@A	label
+0x162368	?g_themeFrame@@3PAY07USpriteObject@@A	label
+0x16e928	?g_themeList@@3PAY0DC@DA	label
+0x19ca58	?g_themePaintImgs@@3PAUSpriteObject@@A	label
+0x170cb8	?g_themeTerrainButtonBmps@@3PAUSpriteObject@@A	label
+0x1694a8	?g_tickerMessageBuf_1@@3PADA	label
+0x169528	?g_tickerMessageBuf_2@@3PADA	label
+0x178804	?g_tileAnimFrame@@3PAEA	label
+0x420f14	?g_tileDrawIter@@3VTileIter@@A	label
+0x420f18	?g_tileDrawQueue@@3VTileList@@A	label
+0x13caf0	?g_tileExtra@@3PAFA	label
+0x420f2b	?g_tilePathDirty@@3_NA	label
+0x1619a0	?g_tileUphillMap@@3PAY0DC@CA	label
+0x16988c	?g_tileVariationIdx@@3PAEA	label
+0x43afec	?g_timerInitCount@@3HA	label
+0x18b650	?g_tinyBallPicture@@3USpriteObject@@A	label
+0x141a18	?g_toolPanelBgImages@@3PAUSpriteObject@@A	label
+0x18b390	?g_toolbarPanelBackings_A@@3PAUSpriteObject@@A	label
+0x167afc	?g_toolbarView@@3HA	label
+0x43aac0	?g_tooltipOwner@@3PAXA	label
+0x1a6368	?g_tooltipTileColumn@@3HA	label
+0x1422f8	?g_top10CoursePoints@@3PAY05HA	label
+0x141ce0	?g_topTenScoresArray@@3PAUHighScore@@A	label
+0x1736b0	?g_tornDivots@@3PAUDivot@@A	label
+0x1a636c	?g_totalImagination@@3HA	label
+0x421cb8	?g_tournamentResult@@3UTournamentResult@@A	label
+0x167b34	?g_trailSavedPlotPosX@@3PAHA	label
+0x167d94	?g_trailSavedPlotPosY@@3PAHA	label
+0x1678b8	?g_transPopUpButtonBmps@@3PAUSpriteObject@@A	label
+0x16a7b8	?g_transPopUpMaskSprites@@3PAUSpriteObject@@A	label
+0x18b680	?g_transPopupCellsAlpha@@3PAUSpriteObject@@A	label
+0x1a34f8	?g_trophiesMasksBmps@@3PAUSpriteObject@@A	label
+0x13fd48	?g_trophyPartCells@@3PAUSpriteObject@@A	label
+0x16fcb0	?g_txtHeapBuffer@@3PADA	label
+0xc2d10	?g_typeLineIds@@3PACA	label
+0x1a6364	?g_unlockedBldgTypeLimit@@3HA	label
+0x1a8c88	?g_updateTimeMs@@3HA	label
+0x1a47e8	?g_visibleBallX@@3PAHA	label
+0x1a4868	?g_visibleBallY@@3PAHA	label
+0x16d1b0	?g_waitListLength@@3HA	label
+0xc2f9c	?g_wantedCamTileX@@3HA	label
+0x1685fc	?g_wantedCamTileY@@3HA	label
+0x1a59f8	?g_watchedPlayerIdx@@3HA	label
+0x1787fc	?g_waterSprayFxPositionX@@3HA	label
+0x178800	?g_waterSprayFxPositionY@@3HA	label
+0x43fe78	?g_widgetObserverDefaults@@3PAPAUWidgetObserver@@A	label
+0x43ad10	?g_widgetPalette@@3PAUPaletteBase@@A	label
+0x167b04	?g_winnersPurseK@@3HA	label
+0x1787cc	?g_winningPtsTotal@@3HA	label
+0x4371f8	?g_zoomFromCamera@@3HA	label
+0xa4c70	?get@NetFifo@@QAEHPAXPAH11@Z	label
+0x5c1a0	?get@RandomSource@@QAENXZ	label
+0x88230	?get@Text@@QAEPADXZ	label
+0xa4ea0	?get@fifo@@QAEPAXPAH0@Z	label
+0x942a0	?getCurrentID@ComboBox@@QAEHXZ	label
+0x941e0	?getCurrentString@ComboBox@@QAEPBDXZ	label
+0x940e0	?getItemString@ComboBox@@QAEPBDH@Z	label
+0x79820	?get_attrib@VoiceRx@@UAEKXZ	label
+0x84ff0	?get_attrib@Wave@@UAEKXZ	label
+0x85570	?get_buffer_size@VoiceRx@@UAEKXZ	label
+0x87b00	?get_caps@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	label
+0x85060	?get_current_marker@Wave@@UAEKXZ	label
+0x796a0	?get_data@AssetSurface@@QAEPAEHH@Z	label
+0x87cb0	?get_description@Midi_Device@@UAE?AW4SNDERR@@KPADK@Z	label
+0x875c0	?get_description@Wave_Device@@UAE?AW4SNDERR@@KPADK@Z	label
+0x87cb0	?get_description@Wave_In_Device@@UAE?AW4SNDERR@@KPADK@Z	label
+0x850b0	?get_device_description@Wave@@UAE?AW4SNDERR@@PADHH@Z	label
+0x87630	?get_ds@Wave_Device@@UAEPAXXZ	label
+0x79820	?get_game_hwnd@VoiceRx@@UAEPAUHWND__@@XZ	label
+0x85080	?get_game_hwnd@Wave@@UAEPAUHWND__@@XZ	label
+0x874f0	?get_hw_mem_size@Wave_Device@@UAEKXZ	label
+0x7abc0	?get_lbutton_state@WidgetBase@@QAEHXZ	label
+0x878c0	?get_listener_position@Wave_Device@@UAE?AW4SNDERR@@PAM00@Z	label
+0x87910	?get_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	label
+0x87950	?get_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	label
+0x87990	?get_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	label
+0x7ab50	?get_mouse_pos@WidgetBase@@QAEXPAH0@Z	label
+0x7f340	?get_mouse_window_recurse@@YAPAUWidgetBase@@PAU1@PAH1@Z	label
+0x84b20	?get_ms_length@Wave@@UAEIXZ	label
+0x85390	?get_nbuffers@VoiceRx@@UAEKXZ	label
+0xb04b0	?get_ndevices@Midi_Device@@UAEKXZ	label
+0x85090	?get_ndevices@Wave@@UAEHXZ	label
+0x874c0	?get_ndevices@Wave_Device@@UAEKXZ	label
+0xb04b0	?get_ndevices@Wave_In_Device@@UAEKXZ	label
+0x83420	?get_nearest_palette_index@FLCPalette@@QAEHEEEH@Z	label
+0x844b0	?get_next@Sound@@UAEPAV1@XZ	label
+0xa1370	?get_num_items@Dialogs@@QAEHXZ	label
+0x78f50	?get_pcx_dimensions@AssetSurface@@SAHPBDPAH1@Z	label
+0x78df0	?get_pixel@AssetSurface@@QAEHHH@Z	label
+0x9aa30	?get_player_name@Net@@QAEPADH@Z	label
+0x833f0	?get_pos@FLCPalette@@QAEHH@Z	label
+0x844c0	?get_prev@Sound@@UAEPAV1@XZ	label
+0xb04b0	?get_rate@Midi_Device@@UAEKXZ	label
+0x87600	?get_rate@Wave_Device@@UAEKXZ	label
+0xb04b0	?get_rate@Wave_In_Device@@UAEKXZ	label
+0x89950	?get_selected_id@Dialog@@QAEHXZ	label
+0x840c0	?get_sound_version@@YAHXZ	label
+0x76d40	?get_special@@YAPADPADPAH@Z	label
+0x76dd0	?get_special_dropdown@@YAPADPADPAH@Z	label
+0x76d80	?get_special_link@@YAPADPADPAH@Z	label
+0x9ef80	?get_state_id@CheckBoxCtl@@QAEHH@Z	label
+0x9f030	?get_state_pos@CheckBoxCtl@@QAEHH@Z	label
+0xa2980	?get_text@EditGroup@@QAEPBDH@Z	label
+0x847e0	?get_time@Sound@@UAEKXZ	label
+0x85040	?get_time@Wave@@UAEKK@Z	label
+0x79820	?get_time_past@Midi_Device@@UAEKXZ	label
+0x79820	?get_time_past@Wave_Device@@UAEKXZ	label
+0x79820	?get_time_past@Wave_In_Device@@UAEKXZ	label
+0x844d0	?get_type@Sound@@UAE?AW4SOUNDTYPE@@XZ	label
+0xb04b0	?get_volume@Midi_Device@@UAEKXZ	label
+0xb04b0	?get_volume@Wave_Device@@UAEKXZ	label
+0x79820	?get_volume@Wave_In_Device@@UAEKXZ	label
+0x916e0	?handleGameSpecificControlLines@BasePop@@UAEDPAD@Z	label
+0x9b7b0	?handle_sys_msg@Net@@QAEXXZ	label
+0x89120	?hide@BaseButton@@UAEXXZ	label
+0x7b820	?hide@WidgetBase@@UAEXXZ	label
+0x78bb0	?hline@AssetSurface@@QAEXHHHH@Z	label
+0xa4ad0	?id_to_index@PullDown@@QAEHH@Z	label
+0x899d0	?id_to_pos@Dialog@@QAEHH@Z	label
+0xa4890	?id_to_pos@SpriteBox@@QAEHH@Z	label
+0x92610	?in_box@@YAHHHPAURect@@@Z	label
+0x79b40	?increase_children@WidgetBase@@QAEXXZ	label
+0x92690	?increase_spots@Spot@@QAEXXZ	label
+0x887c0	?init@BaseButton@@QAEHPADHHHHHPAUWidgetBase@@H@Z	label
+0x8db60	?init@BasePop@@QAEHII@Z	label
+0x936a0	?init@ComboBox@@QAEHHHHHPAUWidgetBase@@I@Z	label
+0xa1250	?init@Dialogs@@QAEHH@Z	label
+0xa12e0	?init@Dialogs@@QAEHPAUHeap@@@Z	label
+0x83030	?init@FLCPalette@@UAEHXZ	label
+0x82b90	?init@FlicSprite@@QAEHPAUFlicAnim@@H@Z	label
+0x83850	?init@Font@@QAEHPBD0HH@Z	label
+0x806c0	?init@GraphicWin@@QAEHHHHHPBDHPAUWidgetBase@@PAUMenu@@PAH@Z	label
+0x80870	?init@GraphicWin@@QAEHPAURect@@PBDHPAUWidgetBase@@PAUMenu@@PAH@Z	label
+0x74820	?init@Heap@@QAEHI@Z	label
+0xa01d0	?init@Log@@QAEHPBD@Z	label
+0x87a70	?init@Midi_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	label
+0x96330	?init@Scroll@@QAEHHHHHPAUWidgetBase@@HH@Z	label
+0x92920	?init@Spot@@QAEXH@Z	label
+0xa3790	?init@SpriteBox@@QAEHH@Z	label
+0x73b50	?init@SpriteObject@@QAEHPADHH@Z	label
+0x9d090	?init@Strings@@QAEHI@Z	label
+0x87ee0	?init@Text@@QAEHH@Z	label
+0x86cf0	?init@Time@@QAEXP6AXH@ZHHH@Z	label
+0x85450	?init@VoiceRx@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z	label
+0x84a40	?init@Wave@@UAEXPADK@Z	label
+0x87c00	?init@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	label
+0x87c00	?init@Wave_In_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	label
+0x7a4c0	?init@WidgetBase@@QAEHHHHHPBDIPAUGraphicWin@@PAUMenu@@PAH@Z	label
+0xa4d30	?init@fifo@@QAEXH@Z	label
+0x48d0	?init_buffer@AssetSurface@@UAEHHHHH@Z	label
+0x90bf0	?init_class@BasePop@@SAHXZ	label
+0x9fe50	?init_class@CheckBoxCtl@@SAHXZ	label
+0x9d3b0	?init_class@FileWin@@SAHXZ	label
+0x9e9d0	?init_class@ListBoxCtl@@SAHXZ	label
+0x7cfd0	?init_class@WidgetBase@@SAHPBDH@Z	label
+0x884e0	?init_cursor_class@@YAHXZ	label
+0x83190	?init_cycle@FLCPalette@@QAEHHHHH@Z	label
+0x966d0	?init_horz@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	label
+0x96740	?init_horz_nc@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	label
+0x83e90	?init_sound@@YAHPAUHWND__@@H@Z	label
+0x84090	?init_sound_timer@@YAHHH@Z	label
+0x96690	?init_vert@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	label
+0x96710	?init_vert_nc@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	label
+0x877a0	?isGroupMute@Wave_Device@@QAE_NI@Z	label
+0x85240	?is_3d@Wave@@UAE_NXZ	label
+0x87870	?is_3d@Wave_Device@@UAE_NXZ	label
+0x7b080	?is_descendant@WidgetBase@@QAEHPAU1@@Z	label
+0x7d7d0	?is_dialog_focus@WidgetBase@@QAEHXZ	label
+0x87b20	?is_disabled@Midi_Device@@UAEHXZ	label
+0x87660	?is_disabled@Wave_Device@@UAEHXZ	label
+0x87800	?is_eax@Wave_Device@@UAE_NXZ	label
+0x79820	?is_graphicwin@AssetSurface@@UAEPAUGraphicWin@@XZ	label
+0x4940	?is_graphicwin@GraphicWin@@UAEPAU1@XZ	label
+0x4960	?is_graphicwin@GraphicWin@@WCHE@AEPAU1@XZ	label
+0x79820	?is_graphicwin@WidgetBase@@UAEPAUGraphicWin@@XZ	label
+0x87770	?is_group_disabled@Wave_Device@@QAE_NI@Z	label
+0x84b00	?is_hwbuffer@Wave@@UAEHXZ	label
+0x84440	?is_loaded@Sound@@UAEHXZ	label
+0x84870	?is_loaded@Wave@@UAEHXZ	label
+0x847d0	?is_looping@Sound@@UAEHXZ	label
+0x845d0	?is_playing@Sound@@UAEHXZ	label
+0x84b30	?is_playing@Wave@@UAEHXZ	label
+0x801f0	?is_visible@WidgetBase@@QAEHXZ	label
+0x89890	?item@Dialog@@QAEHPBDH@Z	label
+0xa09a0	?item@Dialogs@@QAEHPADH@Z	label
+0x8c640	?item@ListBox@@QAEHPADHD@Z	label
+0x7c5d0	?key_click_event@WidgetBase@@QAEHHH@Z	label
+0x7c6c0	?key_down_event@WidgetBase@@QAEHH@Z	label
+0x7c970	?key_up_event@WidgetBase@@QAEHH@Z	label
+0x2190	?kill_entry@?$ClassList@UPalStruct@@@@UAEXPAUPalStruct@@@Z	label
+0x2190	?kill_entry@?$ClassList@USpriteStruct@@@@UAEXPAUSpriteStruct@@@Z	label
+0x2190	?kill_entry@?$ClassList@UStringStruct@@@@UAEXPAUStringStruct@@@Z	label
+0x9c8b0	?kill_entry@PaletteList@@UAEXPAUPalStruct@@@Z	label
+0x74700	?kill_entry@SpriteList@@UAEXPAUSpriteStruct@@@Z	label
+0xa05d0	?kill_entry@StringList@@UAEXPAUStringStruct@@@Z	label
+0x925d0	?kill_lf@@YAXPAD@Z	label
+0x43fe5c	?language@@3HA	label
+0x43b9e4	?last_x@BasePop@@2HA	label
+0x43b9e8	?last_y@BasePop@@2HA	label
+0x43aba0	?leave@@3HA	label
+0x7c0e0	?left_click_event@WidgetBase@@QAEXHHH@Z	label
+0x7bf40	?left_double_click_event@WidgetBase@@QAEXHHH@Z	label
+0x7c1b0	?left_down_event@WidgetBase@@QAEXHHH@Z	label
+0x7c290	?left_up_event@WidgetBase@@QAEXHHH@Z	label
+0x78b80	?line@AssetSurface@@QAEXHHHHH@Z	label
+0x43b650	?listbox_count@@3HA	label
+0x43b654	?listbox_right_click@@3HA	label
+0x81f40	?load@FlicAnim@@QAEHPBDHPAVFLCPalette@@H@Z	label
+0x84540	?load@Sound@@UAE?AW4SNDERR@@PAUIAVIStream@@@Z	label
+0x842f0	?load@Sound@@UAE?AW4SNDERR@@PBD@Z	label
+0x84e30	?load@Wave@@UAE?AW4SNDERR@@PADK@Z	label
+0x84c80	?load@Wave@@UAE?AW4SNDERR@@PBD@Z	label
+0x84d60	?load@Wave@@UAE?AW4SNDERR@@XZ	label
+0x75840	?load_pcx@AssetSurface@@QAEHPBDPAVFLCPalette@@HHH@Z	label
+0x95420	?load_pcx_8_16@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z	label
+0x95100	?load_pcx_8_8@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z	label
+0x83fc0	?load_sound_dll@@YAHXZ	label
+0xa0320	?log_say@@YAXPBD0HHH@Z	label
+0x43d3a0	?m_defaultSprButton@ComboBox@@2PAPAUSpriteObject@@A	label
+0x43d3ac	?m_defaultSprTopBar@ComboBox@@2PAPAUSpriteObject@@A	label
+0x43b000	?main_text@@3UText@@A	label
+0x75da0	?map_colors@AssetSurface@@QAEHHHHHPBE@Z	label
+0x935b0	?memrchr@@YAPADPAD0D@Z	label
+0x43b8f0	?modal_count@BasePop@@2HA	label
+0x7be40	?mouse_move_event@WidgetBase@@QAEXHHH@Z	label
+0x7b420	?move@WidgetBase@@QAEHHH@Z	label
+0x4400c8	?multi_debug@@3UMultiDebug@@A	label
+0x2130	?next_entry@?$ClassList@UStringStruct@@@@QAEPAUStringStruct@@XZ	label
+0x82420	?next_sprite@FlicAnim@@QAEPAUSpriteObject@@PAUFlicSprite@@PAU2@@Z	label
+0x7cb10	?nonclient_to_client@WidgetBase@@QAEXPAH0@Z	label
+0x7b290	?nonclient_to_screen@WidgetBase@@QAEXPAH0@Z	label
+0x4406e4	?num_videos@Video@@2HA	label
+0x48b0	?on_adjust_button_placement@BasePop@@UAEXPAH00@Z	label
+0x7e5e0	?on_adjust_button_width@BasePop@@UAEXXZ	label
+0x90960	?on_button_clicked@BasePop@@UAEXH@Z	label
+0x973c0	?on_button_clicked@Scroll@@UAEXH@Z	label
+0x2190	?on_button_clicked@WidgetBase@@UAEXH@Z	label
+0x2190	?on_button_down@WidgetBase@@UAEXH@Z	label
+0x3cbc0	?on_button_passover@WidgetBase@@UAEXHH@Z	label
+0x97260	?on_button_pressed@Scroll@@UAEHH@Z	label
+0x2180	?on_button_pressed@WidgetBase@@UAEHH@Z	label
+0x4880	?on_button_text_draw@WidgetBase@@UAEHPAU1@PADH@Z	label
+0x3cbc0	?on_button_toggled@WidgetBase@@UAEXHH@Z	label
+0x2190	?on_button_up@WidgetBase@@UAEXH@Z	label
+0x3cbc0	?on_caption_draw@GraphicWin@@UAEXPADPAUAssetSurface@@@Z	label
+0x7ef30	?on_char@WidgetBase@@UAEXD@Z	label
+0x48b0	?on_check_size@WidgetBase@@UAEXPAH00@Z	label
+0x7e5e0	?on_close@BasePop@@UAEXXZ	label
+0x7e5e0	?on_closebox@WidgetBase@@UAEXXZ	label
+0x2180	?on_dialog_back_draw@WidgetBase@@UAEHPAU1@@Z	label
+0x88fa0	?on_dialog_focus@BaseButton@@UAEXH@Z	label
+0xa0000	?on_dialog_focus@CheckBoxCtl@@$4PPPPPPPM@A@AEXH@Z	label
+0x9fd80	?on_dialog_focus@CheckBoxCtl@@UAEXH@Z	label
+0x91a50	?on_dialog_focus@Dialogs@@$4PPPPPPPM@A@AEXH@Z	label
+0xa0ff0	?on_dialog_focus@Dialogs@@UAEXH@Z	label
+0x86b30	?on_dialog_focus@EditBox@@UAEXH@Z	label
+0xa30a0	?on_dialog_focus@EditGroup@@$4PPPPPPPM@A@AEXH@Z	label
+0xa2fa0	?on_dialog_focus@EditGroup@@UAEXH@Z	label
+0x8cd20	?on_dialog_focus@ListBox@@$4PPPPPPPM@A@AEXH@Z	label
+0x87af0	?on_dialog_focus@ListBox@@UAEXH@Z	label
+0x91bb0	?on_dialog_focus@ListBoxCtl@@$4PPPPPPPM@A@AEXH@Z	label
+0x9e7b0	?on_dialog_focus@ListBoxCtl@@UAEXH@Z	label
+0xa4a70	?on_dialog_focus@SpriteBox@@$4PPPPPPPM@A@AEXH@Z	label
+0xa4870	?on_dialog_focus@SpriteBox@@UAEXH@Z	label
+0x2190	?on_dialog_focus@WidgetBase@@UAEXH@Z	label
+0x48a0	?on_dialog_item_back_draw@WidgetBase@@UAEHPAU1@HHPAURect@@@Z	label
+0x2190	?on_double_clicked@WidgetBase@@UAEXH@Z	label
+0x79820	?on_draw_background@BasePop@@UAEHXZ	label
+0x48c0	?on_exec@BasePop@@UAEHXZ	label
+0x48b0	?on_group_clicked@WidgetBase@@UAEXHHH@Z	label
+0x7e5e0	?on_hide@WidgetBase@@UAEXXZ	label
+0x7e5e0	?on_init@BasePop@@UAEXXZ	label
+0x7ee70	?on_key@WidgetBase@@UAEXHH@Z	label
+0x88cb0	?on_key_click@BaseButton@@UAEHHH@Z	label
+0x90ac0	?on_key_click@BasePop@@UAEHHH@Z	label
+0x866f0	?on_key_click@EditBox@@UAEHHH@Z	label
+0x65750	?on_key_click@Screen@@UAEHHH@Z	label
+0x96e30	?on_key_click@Scroll@@UAEHHH@Z	label
+0x7e110	?on_key_click@WidgetBase@@UAEHHH@Z	label
+0x90a40	?on_key_down@BasePop@@UAEHH@Z	label
+0x9ffe0	?on_key_down@CheckBoxCtl@@$4PPPPPPPM@A@AEHH@Z	label
+0x9fa90	?on_key_down@CheckBoxCtl@@UAEHH@Z	label
+0x91a00	?on_key_down@Dialogs@@$4PPPPPPPM@A@AEHH@Z	label
+0xa0bf0	?on_key_down@Dialogs@@UAEHH@Z	label
+0x867b0	?on_key_down@EditBox@@UAEHH@Z	label
+0x8ccd0	?on_key_down@ListBox@@$4PPPPPPPM@A@AEHH@Z	label
+0x8aea0	?on_key_down@ListBox@@UAEHH@Z	label
+0x91b90	?on_key_down@ListBoxCtl@@$4PPPPPPPM@A@AEHH@Z	label
+0x9e450	?on_key_down@ListBoxCtl@@UAEHH@Z	label
+0x657b0	?on_key_down@Screen@@UAEHH@Z	label
+0xa4a40	?on_key_down@SpriteBox@@$4PPPPPPPM@A@AEHH@Z	label
+0xa4680	?on_key_down@SpriteBox@@UAEHH@Z	label
+0x2180	?on_key_down@WidgetBase@@UAEHH@Z	label
+0x90b10	?on_key_up@BasePop@@UAEHH@Z	label
+0x657d0	?on_key_up@Screen@@UAEHH@Z	label
+0x2180	?on_key_up@WidgetBase@@UAEHH@Z	label
+0x7f010	?on_l_button_down@WidgetBase@@UAEXHHHH@Z	label
+0x7f0f0	?on_l_button_up@WidgetBase@@UAEXHHH@Z	label
+0x92d40	?on_leave@Spot@@QAEXXZ	label
+0x88eb0	?on_left_click@BaseButton@@UAEXHH@Z	label
+0xa4340	?on_left_click@BasePop@@UAEXHH@Z	label
+0x919a0	?on_left_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0db0	?on_left_click@Dialogs@@UAEXHH@Z	label
+0x8cca0	?on_left_click@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8c610	?on_left_click@ListBox@@UAEXHH@Z	label
+0x65580	?on_left_click@Screen@@UAEXHH@Z	label
+0x96d60	?on_left_click@Scroll@@UAEXHH@Z	label
+0xa49e0	?on_left_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4350	?on_left_click@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_left_click@WidgetBase@@UAEXHH@Z	label
+0x9fff0	?on_left_double_click@CheckBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9fc30	?on_left_double_click@CheckBoxCtl@@UAEXHH@Z	label
+0x91a10	?on_left_double_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0c90	?on_left_double_click@Dialogs@@UAEXHH@Z	label
+0x8cce0	?on_left_double_click@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8c560	?on_left_double_click@ListBox@@UAEXHH@Z	label
+0x91ba0	?on_left_double_click@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9e640	?on_left_double_click@ListBoxCtl@@UAEXHH@Z	label
+0x657e0	?on_left_double_click@Screen@@UAEXHH@Z	label
+0xa4a50	?on_left_double_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4530	?on_left_double_click@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_left_double_click@WidgetBase@@UAEXHH@Z	label
+0x88ab0	?on_left_down@BaseButton@@UAEXHH@Z	label
+0x91370	?on_left_down@BasePop@@UAEXHH@Z	label
+0x9ffd0	?on_left_down@CheckBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9f9a0	?on_left_down@CheckBoxCtl@@UAEXHH@Z	label
+0x919b0	?on_left_down@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0b50	?on_left_down@Dialogs@@UAEXHH@Z	label
+0x86b90	?on_left_down@EditBox@@UAEXHH@Z	label
+0x8ccb0	?on_left_down@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8aa00	?on_left_down@ListBox@@UAEXHH@Z	label
+0x91b80	?on_left_down@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9e230	?on_left_down@ListBoxCtl@@UAEXHH@Z	label
+0x65610	?on_left_down@Screen@@UAEXHH@Z	label
+0x96c30	?on_left_down@Scroll@@UAEXHH@Z	label
+0xa49f0	?on_left_down@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa43f0	?on_left_down@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_left_down@WidgetBase@@UAEXHH@Z	label
+0x88bf0	?on_left_up@BaseButton@@UAEXHH@Z	label
+0x919c0	?on_left_up@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0e60	?on_left_up@Dialogs@@UAEXHH@Z	label
+0x86be0	?on_left_up@EditBox@@UAEXHH@Z	label
+0x65650	?on_left_up@Screen@@UAEXHH@Z	label
+0x96d20	?on_left_up@Scroll@@UAEXHH@Z	label
+0xa4a00	?on_left_up@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4430	?on_left_up@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_left_up@WidgetBase@@UAEXHH@Z	label
+0x4930	?on_link_clicked@GraphicWin@@UAEHHH@Z	label
+0x79820	?on_listbox_scroll_create@WidgetBase@@UAEHXZ	label
+0x4890	?on_listbox_scroll_delete@WidgetBase@@UAEHH@Z	label
+0x7e5e0	?on_lose_mouse_capture@WidgetBase@@UAEXXZ	label
+0x2190	?on_menu@WidgetBase@@UAEXH@Z	label
+0x90d50	?on_modal@BasePop@@UAEHXZ	label
+0x48c0	?on_modal@WidgetBase@@UAEHXZ	label
+0x88cc0	?on_mouse_leave@BaseButton@@UAEXHH@Z	label
+0x9ffc0	?on_mouse_leave@CheckBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9fe20	?on_mouse_leave@CheckBoxCtl@@UAEXHH@Z	label
+0x91990	?on_mouse_leave@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0a10	?on_mouse_leave@Dialogs@@UAEXHH@Z	label
+0xa21c0	?on_mouse_leave@ImageButton@@UAEXHH@Z	label
+0x8cc90	?on_mouse_leave@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8cac0	?on_mouse_leave@ListBox@@UAEXHH@Z	label
+0x91b70	?on_mouse_leave@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9e990	?on_mouse_leave@ListBoxCtl@@UAEXHH@Z	label
+0xa49d0	?on_mouse_leave@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4340	?on_mouse_leave@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_mouse_leave@WidgetBase@@UAEXHH@Z	label
+0x88cf0	?on_mouse_move@BaseButton@@UAEXHH@Z	label
+0x9ffb0	?on_mouse_move@CheckBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9fda0	?on_mouse_move@CheckBoxCtl@@UAEXHH@Z	label
+0x91980	?on_mouse_move@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0ab0	?on_mouse_move@Dialogs@@UAEXHH@Z	label
+0x86c40	?on_mouse_move@EditBox@@UAEXHH@Z	label
+0xa2010	?on_mouse_move@ImageButton@@UAEXHH@Z	label
+0x8cc80	?on_mouse_move@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8c8a0	?on_mouse_move@ListBox@@UAEXHH@Z	label
+0x91b60	?on_mouse_move@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	label
+0x9e7d0	?on_mouse_move@ListBoxCtl@@UAEXHH@Z	label
+0x96860	?on_mouse_move@Scroll@@UAEXHH@Z	label
+0xa49d0	?on_mouse_move@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4340	?on_mouse_move@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_mouse_move@WidgetBase@@UAEXHH@Z	label
+0x91970	?on_mouse_wheel@Dialogs@@$4PPPPPPPM@A@AEXHHH@Z	label
+0xa13c0	?on_mouse_wheel@Dialogs@@UAEXHHH@Z	label
+0x8cc70	?on_mouse_wheel@ListBox@@$4PPPPPPPM@A@AEXHHH@Z	label
+0x8caf0	?on_mouse_wheel@ListBox@@UAEXHHH@Z	label
+0x48b0	?on_mouse_wheel@WidgetBase@@UAEXHHH@Z	label
+0x92cc0	?on_move@Spot@@QAEXHHPAUWidgetBase@@@Z	label
+0x90ae0	?on_nc_hittest@BasePop@@UAEHHH@Z	label
+0x7ed30	?on_nc_hittest@WidgetBase@@UAEHHH@Z	label
+0x7ea30	?on_nc_paint@WidgetBase@@UAEXPAURect@@H@Z	label
+0x80dc0	?on_paint@GraphicWin@@UAEXPAURect@@@Z	label
+0x7e770	?on_paint@WidgetBase@@UAEXPAURect@@@Z	label
+0x7e5e0	?on_post_calculate_dimensions@BasePop@@UAEXXZ	label
+0x3cbc0	?on_post_redraw_nc_buffer@WidgetBase@@UAEXPAUAssetSurface@@H@Z	label
+0x7e5e0	?on_post_window_init@BasePop@@UAEXXZ	label
+0x7e5e0	?on_pre_window_init@BasePop@@UAEXXZ	label
+0x7f1b0	?on_r_button_down@WidgetBase@@UAEXHHHH@Z	label
+0x7f230	?on_r_button_up@WidgetBase@@UAEXHHH@Z	label
+0x90d60	?on_redraw@BasePop@@UAEXXZ	label
+0x9ffa0	?on_redraw@CheckBoxCtl@@$4PPPPPPPM@A@AEXXZ	label
+0xa0050	?on_redraw@CheckBoxCtl@@$4PPPPPPPM@FHI@AEXXZ	label
+0x9fc60	?on_redraw@CheckBoxCtl@@UAEXXZ	label
+0x91960	?on_redraw@Dialogs@@$4PPPPPPPM@A@AEXXZ	label
+0x91ab0	?on_redraw@Dialogs@@$4PPPPPPPM@FHI@AEXXZ	label
+0xa0d30	?on_redraw@Dialogs@@UAEXXZ	label
+0x864f0	?on_redraw@EditBox@@UAEXXZ	label
+0xa3090	?on_redraw@EditGroup@@$4PPPPPPPM@A@AEXXZ	label
+0xa3100	?on_redraw@EditGroup@@$4PPPPPPPM@FHI@AEXXZ	label
+0xa2d50	?on_redraw@EditGroup@@UAEXXZ	label
+0xa1580	?on_redraw@ImageButton@@UAEXXZ	label
+0x8cc60	?on_redraw@ListBox@@$4PPPPPPPM@A@AEXXZ	label
+0x8cd70	?on_redraw@ListBox@@$4PPPPPPPM@FHI@AEXXZ	label
+0x8c130	?on_redraw@ListBox@@UAEXXZ	label
+0x91b50	?on_redraw@ListBoxCtl@@$4PPPPPPPM@A@AEXXZ	label
+0x91c00	?on_redraw@ListBoxCtl@@$4PPPPPPPM@FHI@AEXXZ	label
+0x9e680	?on_redraw@ListBoxCtl@@UAEXXZ	label
+0x9c0b0	?on_redraw@MultiDebug@@UAEXXZ	label
+0x96fc0	?on_redraw@Scroll@@UAEXXZ	label
+0xa49c0	?on_redraw@SpriteBox@@$4PPPPPPPM@A@AEXXZ	label
+0xa4ac0	?on_redraw@SpriteBox@@$4PPPPPPPM@FHI@AEXXZ	label
+0xa45b0	?on_redraw@SpriteBox@@UAEXXZ	label
+0x7e5e0	?on_redraw@WidgetBase@@UAEXXZ	label
+0x91270	?on_redraw_nc@BasePop@@UAEXH@Z	label
+0x810d0	?on_redraw_nc@GraphicWin@@UAEXH@Z	label
+0x7d850	?on_redraw_nc@WidgetBase@@UAEXH@Z	label
+0x7e5e0	?on_release_modal@BasePop@@UAEXXZ	label
+0x97170	?on_resize@Scroll@@UAEXHH@Z	label
+0x3cbc0	?on_resize@WidgetBase@@UAEXHH@Z	label
+0x88e90	?on_right_click@BaseButton@@UAEXHH@Z	label
+0x919d0	?on_right_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0eb0	?on_right_click@Dialogs@@UAEXHH@Z	label
+0x65680	?on_right_click@Screen@@UAEXHH@Z	label
+0xa4a10	?on_right_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4470	?on_right_click@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_right_click@WidgetBase@@UAEXHH@Z	label
+0x91a20	?on_right_double_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0e40	?on_right_double_click@Dialogs@@UAEXHH@Z	label
+0x8ccf0	?on_right_double_click@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8c520	?on_right_double_click@ListBox@@UAEXHH@Z	label
+0x65840	?on_right_double_click@Screen@@UAEXHH@Z	label
+0xa4a60	?on_right_double_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa4570	?on_right_double_click@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_right_double_click@WidgetBase@@UAEXHH@Z	label
+0x919e0	?on_right_down@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0e20	?on_right_down@Dialogs@@UAEXHH@Z	label
+0x8ccc0	?on_right_down@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8a9c0	?on_right_down@ListBox@@UAEXHH@Z	label
+0x65720	?on_right_down@Screen@@UAEXHH@Z	label
+0xa4a20	?on_right_down@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa44b0	?on_right_down@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_right_down@WidgetBase@@UAEXHH@Z	label
+0x919f0	?on_right_up@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0e90	?on_right_up@Dialogs@@UAEXHH@Z	label
+0x65740	?on_right_up@Screen@@UAEXHH@Z	label
+0xa4a30	?on_right_up@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa44f0	?on_right_up@SpriteBox@@UAEXHH@Z	label
+0x3cbc0	?on_right_up@WidgetBase@@UAEXHH@Z	label
+0x91940	?on_scroll_create@Dialogs@@$4PPPPPPPM@A@AEHXZ	label
+0xa1130	?on_scroll_create@Dialogs@@UAEHXZ	label
+0x8cbe0	?on_scroll_create@ListBox@@$4PPPPPPPM@A@AEHXZ	label
+0x8cbf0	?on_scroll_create@ListBox@@UAEHXZ	label
+0x79820	?on_scroll_create@WidgetBase@@UAEHXZ	label
+0x91950	?on_scroll_delete@Dialogs@@$4PPPPPPPM@A@AEHH@Z	label
+0xa1170	?on_scroll_delete@Dialogs@@UAEHH@Z	label
+0x8cc20	?on_scroll_delete@ListBox@@$4PPPPPPPM@A@AEHH@Z	label
+0x8cc30	?on_scroll_delete@ListBox@@UAEHH@Z	label
+0x4890	?on_scroll_delete@WidgetBase@@UAEHH@Z	label
+0x91a30	?on_scrolled@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0ed0	?on_scrolled@Dialogs@@UAEXHH@Z	label
+0x86af0	?on_scrolled@EditBox@@UAEXHH@Z	label
+0x8cd00	?on_scrolled@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8c4f0	?on_scrolled@ListBox@@UAEXHH@Z	label
+0x3cbc0	?on_scrolled@WidgetBase@@UAEXHH@Z	label
+0x91a40	?on_scrolling@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	label
+0xa0ed0	?on_scrolling@Dialogs@@UAEXHH@Z	label
+0x86b00	?on_scrolling@EditBox@@UAEXHH@Z	label
+0x8cd10	?on_scrolling@ListBox@@$4PPPPPPPM@A@AEXHH@Z	label
+0x8c420	?on_scrolling@ListBox@@UAEXHH@Z	label
+0x3cbc0	?on_scrolling@WidgetBase@@UAEXHH@Z	label
+0x2190	?on_selected@WidgetBase@@UAEXH@Z	label
+0x80f80	?on_size@GraphicWin@@UAEXHHH@Z	label
+0x4880	?on_spot_left_click@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_left_double_click@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_left_down@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_left_up@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_move@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_right_click@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_right_double_click@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_right_down@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x4880	?on_spot_right_up@WidgetBase@@UAEHHHPAURect@@@Z	label
+0x658a0	?on_sys_close@Screen@@UAEXXZ	label
+0x7e5e0	?on_sys_close@WidgetBase@@UAEXXZ	label
+0x87fb0	?open@Text@@QAEHPBD0@Z	label
+0x92dd0	?open_read@Filemap@@QAEPAXPBDH@Z	label
+0x439ab8	?orig_x@@3HA	label
+0x439abc	?orig_y@@3HA	label
+0x43e8b8	?parse_gender@@3PAHA	label
+0x43de68	?parse_numbers@@3PAHA	label
+0x43d3c8	?parse_plural@@3PAHA	label
+0x94cb0	?parse_says@@YAHHPBDHH@Z	label
+0x942f0	?parse_string@@YAHPAD0@Z	label
+0x43e8e0	?parse_strings@@3PAY0BAA@DA	label
+0x43f35c	?parsing_gender@@3HA	label
+0x43f360	?parsing_plural@@3HA	label
+0x91a60	?pass_dialog_focus@Dialogs@@$4PPPPPPPM@A@AEXXZ	label
+0xa1090	?pass_dialog_focus@Dialogs@@UAEXXZ	label
+0x86b20	?pass_dialog_focus@EditBox@@UAEXXZ	label
+0xa30b0	?pass_dialog_focus@EditGroup@@$4PPPPPPPM@A@AEXXZ	label
+0xa2ff0	?pass_dialog_focus@EditGroup@@UAEXXZ	label
+0x7af60	?pass_dialog_focus@WidgetBase@@UAEXXZ	label
+0x863e0	?pixel_to_pos@EditBox@@QAEHHHPAPADH@Z	label
+0x845b0	?play@Sound@@UAE?AW4SNDERR@@K@Z	label
+0x84590	?play@Sound@@UAE?AW4SNDERR@@XZ	label
+0x84920	?play@Wave@@UAE?AW4SNDERR@@H@Z	label
+0x849e0	?play@Wave@@UAE?AW4SNDERR@@PAH@Z	label
+0x84940	?play@Wave@@UAE?AW4SNDERR@@XZ	label
+0x9ccc0	?play_frame@Video@@QAEHXZ	label
+0x97f60	?players_in_group_callback@@YGHKKPBUDPNAME@@KPAX@Z	label
+0x75df0	?poly@AssetSurface@@QAEHPAUVert@@HH@Z	label
+0x89a30	?pos_to_id@Dialog@@QAEHH@Z	label
+0xa48f0	?pos_to_id@SpriteBox@@QAEHH@Z	label
+0x86360	?pos_to_pixel@EditBox@@QAEXPAPADHHPAH1@Z	label
+0x43ab98	?prev_dialog_focus@@3PAUWidgetBase@@A	label
+0x4400ac	?prev_server_id@@3HA	label
+0x9c910	?process@Video@@QAEXXZ	label
+0x9aa70	?process_voice@Net@@QAEXXZ	label
+0x876c0	?pull_from_group@Wave_Device@@QAE?AW4SNDERR@@PAVSound@@@Z	label
+0x86e40	?pulse@Time@@QAEHXZ	label
+0x924e0	?purge_leading@@YAXPAD@Z	label
+0x925b0	?purge_spaces@@YAXPAD@Z	label
+0x92570	?purge_trailing@@YAXPAD@Z	label
+0x9d100	?put@Strings@@QAEPADPBD@Z	label
+0x78ea0	?put_pixel@AssetSurface@@QAEHHHH@Z	label
+0x43afcc	?quit@@3HA	label
+0x84790	?ramp@Sound@@UAEXHHI@Z	label
+0x9cb90	?read_frame@Video@@QAEHXZ	label
+0x9cb20	?read_frame_process@Video@@QAEHXZ	label
+0x7e140	?recurse_clips@WidgetBase@@SAXPAU1@PAURect@@@Z	label
+0x7d570	?redo_caption_buttons@WidgetBase@@QAEXXZ	label
+0x80d70	?redraw@GraphicWin@@UAEXXZ	label
+0x7e5e0	?redraw@WidgetBase@@UAEXXZ	label
+0x43b8dc	?redraw_x@@3HA	label
+0x43b8d8	?redraw_y@@3HA	label
+0x87ac0	?release@Midi_Device@@UAE?AW4SNDERR@@XZ	label
+0x84600	?release@Sound@@UAE?AW4SNDERR@@XZ	label
+0x854c0	?release@VoiceRx@@UAE?AW4SNDERR@@XZ	label
+0x87460	?release@Wave_Device@@UAE?AW4SNDERR@@XZ	label
+0x87c40	?release@Wave_In_Device@@UAE?AW4SNDERR@@XZ	label
+0x7bbb0	?release_modal@WidgetBase@@UAEXXZ	label
+0x83f10	?release_sound@@YAHXZ	label
+0x84e70	?reload@Wave@@EAE?AW4SNDERR@@XZ	label
+0x9bec0	?remove@?$ClassList@UJackalVoiceRx@@@@QAEXH@Z	label
+0xa4ed0	?remove@fifo@@QAEXXZ	label
+0x26a0	?remove_all@?$ClassList@UPalStruct@@@@QAEXXZ	label
+0x26a0	?remove_all@?$ClassList@USpriteStruct@@@@QAEXXZ	label
+0x26a0	?remove_all@?$ClassList@UStringStruct@@@@QAEXXZ	label
+0x7e680	?remove_child@WidgetBase@@QAEXPAU1@@Z	label
+0x7e520	?remove_parent@WidgetBase@@SAXPAU1@@Z	label
+0x7ada0	?remove_parent_dialog@WidgetBase@@QAEXXZ	label
+0x78a70	?resetDropDownSpots@AssetSurface@@QAEXXZ	label
+0x7e5e0	?reset_time_past@Midi_Device@@UAEXXZ	label
+0x7e5e0	?reset_time_past@Wave_Device@@UAEXXZ	label
+0x7e5e0	?reset_time_past@Wave_In_Device@@UAEXXZ	label
+0x7b9a0	?reset_window_clip@WidgetBase@@QAEXXZ	label
+0x74e70	?resize@AssetSurface@@QAEHHHH@Z	label
+0x80b30	?resize@GraphicWin@@UAEHHHHH@Z	label
+0x7b4e0	?resize@WidgetBase@@UAEHHHHH@Z	label
+0x48f0	?resize_buffer@AssetSurface@@UAEHHHH@Z	label
+0x7bc60	?resize_event@WidgetBase@@QAEXHH@Z	label
+0xa0890	?restart@Midi_Device@@UAEXXZ	label
+0x874a0	?restart@Wave_Device@@UAEXXZ	label
+0xa0890	?restart@Wave_In_Device@@UAEXXZ	label
+0x7d060	?restore_cursor_back@WidgetBase@@SAXH@Z	label
+0x7c360	?right_click_event@WidgetBase@@QAEXHHH@Z	label
+0x7c010	?right_double_click_event@WidgetBase@@QAEXHHH@Z	label
+0x7c430	?right_down_event@WidgetBase@@QAEXHHH@Z	label
+0x7c500	?right_up_event@WidgetBase@@QAEXHHH@Z	label
+0x4408c8	?s_checkBoxEmpty@CheckBoxCtl@@2USpriteObject@@A	label
+0x4408f8	?s_checkBoxTicked@CheckBoxCtl@@2USpriteObject@@A	label
+0xe4a24	?s_defaultSprites@CheckBoxCtl@@2PAPAUSpriteObject@@A	label
+0xe4a10	?s_defaultSprites@ListBoxCtl@@2PAPAUSpriteObject@@A	label
+0x440790	?s_fileSymbol@FileWin@@2USpriteObject@@A	label
+0x440890	?s_glowCell@ListBoxCtl@@2USpriteObject@@A	label
+0x440860	?s_highlightCell@ListBoxCtl@@2USpriteObject@@A	label
+0x43d348	?s_keepText@HotSpot@@2HA	label
+0x43a500	?s_mouseSaveSurface@WidgetBase@@2UAssetSurface@@A	label
+0x440830	?s_normalCell@ListBoxCtl@@2USpriteObject@@A	label
+0x43a7b8	?s_primaryBuffer@WidgetBase@@2UAssetSurface@@A	label
+0x4407c0	?s_subDirSymbol@FileWin@@2USpriteObject@@A	label
+0x440710	?s_tile@SmallSprite@@2USpriteObject@@A	label
+0x4407f0	?s_upDirSymbol@FileWin@@2USpriteObject@@A	label
+0xa0280	?say@Log@@QAEXPBD0HHH@Z	label
+0x93000	?scan_out_line_poly_16@@YAXHH@Z	label
+0x93080	?scan_out_line_poly_8@@YAXHH@Z	label
+0x7b200	?screen_to_client@WidgetBase@@QAEXPAH0@Z	label
+0x7b2d0	?screen_to_nonclient@WidgetBase@@QAEXPAH0@Z	label
+0x88310	?search_index@TextIndex@@QAEHPBD0@Z	label
+0x82490	?seek_anim@FlicAnim@@QAEPAUSpriteObject@@HHPAUFlicSprite@@PAU2@@Z	label
+0x82e40	?seek_anim@FlicSprite@@QAEPAUSpriteObject@@HHPAU2@@Z	label
+0x87b00	?select@Midi_Device@@UAE?AW4SNDERR@@K@Z	label
+0x87500	?select@Wave_Device@@UAE?AW4SNDERR@@K@Z	label
+0x87b00	?select@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	label
+0x99140	?send_packet_type@Net@@QAEHPAXHHHH@Z	label
+0x97b40	?send_player_order@Net@@QAEXXZ	label
+0x890e0	?set@BaseButton@@QAEXH@Z	label
+0x83060	?set@FLCPalette@@QAEHXZ	label
+0x94020	?setButtonSprites@ComboBox@@QAEXPAPAUSpriteObject@@@Z	label
+0x93ef0	?setTopBarSprites@ComboBox@@QAEXPAPAUSpriteObject@@@Z	label
+0x85120	?set_asdr@Wave@@UAE?AW4SNDERR@@XZ	label
+0x85130	?set_attack@Wave@@UAE?AW4SNDERR@@KKK@Z	label
+0x85380	?set_attrib@VoiceRx@@UAE?AW4SNDERR@@K@Z	label
+0x84f80	?set_attrib@Wave@@UAE?AW4SNDERR@@K@Z	label
+0x967d0	?set_bar_thickness@Scroll@@QAEXH@Z	label
+0x7d020	?set_border_thickness@WidgetBase@@QAEXH@Z	label
+0x88a20	?set_bubble_text@BaseButton@@QAEHPBD@Z	label
+0x80220	?set_bubble_text@WidgetBase@@QAEXPADPAURect@@@Z	label
+0x84540	?set_bufflimit@Wave@@UAE?AW4SNDERR@@K@Z	label
+0x7b8f0	?set_caption@WidgetBase@@QAEXPBD@Z	label
+0x75b00	?set_clip@AssetSurface@@QAEHPAURect@@@Z	label
+0x87c70	?set_codec@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	label
+0x7ab00	?set_cursor@WidgetBase@@QAEHH@Z	label
+0x85130	?set_decay@Wave@@UAE?AW4SNDERR@@KKK@Z	label
+0x7d840	?set_def_focus@WidgetBase@@SAXPAU1@@Z	label
+0xa29c0	?set_default@EditGroup@@QAEHPBDH@Z	label
+0x846b0	?set_delay@Sound@@UAEXK@Z	label
+0x7ae80	?set_dialog_focus@WidgetBase@@UAEXPAU1@@Z	label
+0x89ab0	?set_dialog_font@Dialog@@QAEHPAUFont@@00@Z	label
+0x87830	?set_eax@Wave_Device@@UAE?AW4SNDERR@@K@Z	label
+0x87810	?set_eax@Wave_Device@@UAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	label
+0x87850	?set_eax_mix@Wave_Device@@UAE?AW4SNDERR@@M@Z	label
+0x85290	?set_fade@Patch@@UAE?AW4SNDERR@@K@Z	label
+0x846d0	?set_fade@Sound@@UAE?AW4SNDERR@@K@Z	label
+0x85290	?set_fade_in@Patch@@UAE?AW4SNDERR@@H@Z	label
+0x84700	?set_fade_in@Sound@@UAE?AW4SNDERR@@I@Z	label
+0x84b80	?set_fname@Wave@@QAE?AW4SNDERR@@PBD@Z	label
+0x830e0	?set_from_dib@FLCPalette@@QAEHPBUDib@@HH@Z	label
+0x8e0b0	?set_height@BasePop@@QAEXH@Z	label
+0x913f0	?set_highlight_color@BasePop@@UAEXH@Z	label
+0x7ba90	?set_horz_paging@WidgetBase@@QAEXH@Z	label
+0x7ba10	?set_horz_pos@WidgetBase@@QAEXH@Z	label
+0x7ba50	?set_horz_range@WidgetBase@@QAEXHH@Z	label
+0x874d0	?set_hwnd@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@@Z	label
+0x84bf0	?set_link@Wave@@UAE?AW4SNDERR@@PADPAK@Z	label
+0x87890	?set_listener_position@Wave_Device@@UAE?AW4SNDERR@@MMM@Z	label
+0x878f0	?set_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@M@Z	label
+0x87930	?set_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@M@Z	label
+0x87970	?set_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@M@Z	label
+0x8e190	?set_loc@BasePop@@QAEXHH@Z	label
+0x84690	?set_loop_state@Sound@@UAEXH@Z	label
+0x7bab0	?set_modal@WidgetBase@@UAEHHP6AHXZPAU1@@Z	label
+0x79a80	?set_mouse_confines@WidgetBase@@QAEXPAURect@@@Z	label
+0x87af0	?set_pan@Midi_Device@@UAEXH@Z	label
+0x847f0	?set_pan@Sound@@UAEXH@Z	label
+0x87af0	?set_pan@Wave_Device@@UAEXH@Z	label
+0x2190	?set_pan@Wave_In_Device@@UAEXH@Z	label
+0x7abe0	?set_parent_dialog@WidgetBase@@QAEXPAUGraphicWin@@@Z	label
+0x84f40	?set_pitch@Wave@@UAE?AW4SNDERR@@H@Z	label
+0x967f0	?set_pos@Scroll@@QAEXH@Z	label
+0x851b0	?set_position3d@Wave@@UAE?AW4SNDERR@@MMM@Z	label
+0x96770	?set_range@Scroll@@QAEXHH@Z	label
+0x87af0	?set_rate@Midi_Device@@UAEXK@Z	label
+0x875e0	?set_rate@Wave_Device@@UAEXK@Z	label
+0x87af0	?set_rate@Wave_In_Device@@UAEXK@Z	label
+0x810c0	?set_rects@GraphicWin@@UAEXXZ	label
+0x7d610	?set_rects@WidgetBase@@UAEXXZ	label
+0x85130	?set_release@Wave@@UAE?AW4SNDERR@@KKK@Z	label
+0x850f0	?set_reverb_mix@Wave@@UAE?AW4SNDERR@@M@Z	label
+0x91400	?set_selected_color@BasePop@@UAEXH@Z	label
+0x898d0	?set_selected_id@Dialog@@QAEXH@Z	label
+0x89ed0	?set_selected_id@ListBox@@QAEXH@Z	label
+0x89f50	?set_selected_pos@ListBox@@QAEXHH@Z	label
+0x913c0	?set_sprites@BasePop@@UAEXPAUSpriteObject@@00@Z	label
+0x9eef0	?set_state_id@CheckBoxCtl@@QAEXHH@Z	label
+0x9eff0	?set_state_pos@CheckBoxCtl@@QAEXHH@Z	label
+0x85130	?set_sustain@Wave@@UAE?AW4SNDERR@@KKK@Z	label
+0x86200	?set_text@EditBox@@QAEXPBD@Z	label
+0x76340	?set_text_color2@AssetSurface@@QAEXHHHH@Z	label
+0x88970	?set_text_color2@BaseButton@@QAEXHHHH@Z	label
+0x76370	?set_text_color3@AssetSurface@@QAEXHHHH@Z	label
+0x889b0	?set_text_color3@BaseButton@@QAEXHHHH@Z	label
+0x76310	?set_text_color@AssetSurface@@QAEXHHHH@Z	label
+0x88930	?set_text_color@BaseButton@@QAEXHHHH@Z	label
+0x763a0	?set_text_color_hyper@AssetSurface@@QAEXHHHH@Z	label
+0x86250	?set_text_limit@EditBox@@QAEXH@Z	label
+0xa29a0	?set_text_limits@EditGroup@@QAEXH@Z	label
+0x979a0	?set_thumb_rect@Scroll@@QAEXXZ	label
+0x84260	?set_type@Sound@@UAEXW4SOUNDTYPE@@@Z	label
+0x7ba70	?set_vert_paging@WidgetBase@@QAEXH@Z	label
+0x7b9f0	?set_vert_pos@WidgetBase@@QAEXH@Z	label
+0x7ba30	?set_vert_range@WidgetBase@@QAEXHH@Z	label
+0x87af0	?set_volume@Midi_Device@@UAEXK@Z	label
+0x84620	?set_volume@Sound@@UAEXH@Z	label
+0x85140	?set_volume@Wave@@UAEXH@Z	label
+0x87610	?set_volume@Wave_Device@@UAEXK@Z	label
+0x2190	?set_volume@Wave_In_Device@@UAEXK@Z	label
+0x87c90	?set_vxw_key@Wave_In_Device@@UAE?AW4SNDERR@@PAC@Z	label
+0x8e120	?set_width@BasePop@@QAEXH@Z	label
+0x87b00	?set_window_clip@WidgetBase@@QAEHPAURect@@@Z	label
+0x851e0	?set_xpos@Wave@@UAE?AW4SNDERR@@M@Z	label
+0x85200	?set_ypos@Wave@@UAE?AW4SNDERR@@M@Z	label
+0x85220	?set_zpos@Wave@@UAE?AW4SNDERR@@M@Z	label
+0x81e40	?setup_anim_positions@FlicAnim@@QAEHGG@Z	label
+0x92ed0	?setup_edge_poly@@YAHPAUEdgeScanPoly@@H@Z	label
+0x93a30	?show@ComboBox@@QAEXXZ	label
+0x7b670	?show@WidgetBase@@UAEXH@Z	label
+0x747e0	?shutdown@Heap@@QAEXXZ	label
+0x92830	?shutdown@Spot@@QAEXXZ	label
+0x9d0e0	?shutdown@Strings@@QAEHXZ	label
+0x87f30	?shutdown@Text@@QAEXXZ	label
+0x91c70	?sin_table@@YAHHH@Z	label
+0x80ce0	?soft_update@GraphicWin@@QAEXXZ	label
+0x93670	?start@BasePop@@QAEHPBD0H0I@Z	label
+0x8e1c0	?start@BasePop@@QAEHPBD0H0IPAUGraphicWin@@@Z	label
+0x86dc0	?start@Time@@QAEHXZ	label
+0x85500	?start@VoiceRx@@UAE?AW4SNDERR@@XZ	label
+0x832e0	?start_cycle@FLCPalette@@QAEHH@Z	label
+0x87680	?start_raw_dump@Wave_Device@@UAE?AW4SNDERR@@PAD@Z	label
+0x87cc0	?start_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ	label
+0x97c70	?start_voice@Net@@QAEHH@Z	label
+0x92fa0	?step_edge_poly@@YAHPAUEdgeScanPoly@@@Z	label
+0xb04b0	?stop@Midi_Device@@UAE?AW4SNDERR@@XZ	label
+0x845e0	?stop@Sound@@UAE?AW4SNDERR@@XZ	label
+0x86ec0	?stop@Time@@QAEXXZ	label
+0x85520	?stop@VoiceRx@@UAE?AW4SNDERR@@XZ	label
+0xb04b0	?stop@Wave_Device@@UAE?AW4SNDERR@@XZ	label
+0xb04b0	?stop@Wave_In_Device@@UAE?AW4SNDERR@@XZ	label
+0x84a00	?stop_instance@Wave@@UAEXH@Z	label
+0x876a0	?stop_raw_dump@Wave_Device@@UAE?AW4SNDERR@@XZ	label
+0x97cc0	?stop_voice@Net@@QAEXXZ	label
+0x8df20	?string@BasePop@@QAEHPBDD@Z	label
+0x4406e8	?strings@@3UStrings@@A	label
+0xa0890	?suspend@Midi_Device@@UAEXXZ	label
+0x87490	?suspend@Wave_Device@@UAEXXZ	label
+0xa0890	?suspend@Wave_In_Device@@UAEXXZ	label
+0x93580	?swap@@YAXPAH0@Z	label
+0x789f0	?sync_to_palette@AssetSurface@@QAEHPAUPaletteBase@@@Z	label
+0x43b164	?text_buffer@@3PADA	label
+0x87e60	?text_close@@YAXXZ	label
+0x87e90	?text_get@@YAPADXZ	label
+0x77560	?text_height@AssetSurface@@QAEHXZ	label
+0x43b170	?text_index@@3PAUTextIndex@@A	label
+0x43b168	?text_item_buffer@@3PADA	label
+0x77580	?text_line_height@AssetSurface@@QAEHXZ	label
+0x87e70	?text_open@@YAHPBD0@Z	label
+0x88420	?text_search_index@@YAHPBD0@Z	label
+0x77250	?text_width@AssetSurface@@QAEHPBD@Z	label
+0x75fb0	?tile@AssetSurface@@QAEHPAU1@HHHHHH@Z	label
+0x75e10	?tile_mask@AssetSurface@@QAEHPAU1@HHHHHHH@Z	label
+0x88fd0	?timer_callback@BaseButton@@QAEXH@Z	label
+0xa0890	?timer_callback@FLCPalette@@SAXHPAX@Z	label
+0x92bd0	?timer_callback@Spot@@QAEXH@Z	label
+0x88fb0	?timer_callback_daemon@BaseButton@@SAXHPAX@Z	label
+0x92bb0	?timer_callback_daemon@Spot@@SAXHPAX@Z	label
+0x7e5e0	?timer_unhook@Midi_Device@@UAEXXZ	label
+0x7e5e0	?timer_unhook@Wave_Device@@UAEXXZ	label
+0x7e5e0	?timer_unhook@Wave_In_Device@@UAEXXZ	label
+0x8e010	?title@BasePop@@QAEHPBD@Z	label
+0xe4688	?tokens@@3PAY0BE@DA	label
+0x91c10	?trig_init@@YAXXZ	label
+0x84550	?unload@Sound@@UAE?AW4SNDERR@@XZ	label
+0x85530	?unload@VoiceRx@@UAE?AW4SNDERR@@XZ	label
+0x84f00	?unload@Wave@@UAE?AW4SNDERR@@XZ	label
+0x84060	?unload_sound_dll@@YAHXZ	label
+0x4920	?update@GraphicWin@@UAEXXZ	label
+0x7e5e0	?update@WidgetBase@@UAEXXZ	label
+0x93b90	?updateListBoxPositionAndSize@ComboBox@@QAEHHH@Z	label
+0x93a60	?updateTopBarText@ComboBox@@QAEXXZ	label
+0x8c6e0	?update_changes@ListBox@@QAEHXZ	label
+0x7e2d0	?update_screen_clips@WidgetBase@@SAXXZ	label
+0xa0890	?update_sound@Midi_Device@@UAEXXZ	label
+0x874b0	?update_sound@Wave_Device@@UAEXXZ	label
+0xa0890	?update_sound@Wave_In_Device@@UAEXXZ	label
+0x7fa30	?update_window@WidgetBase@@QAEXPAURect@@@Z	label
+0x440698	?videos@Video@@2PAPAU1@A	label
+0x78be0	?vline@AssetSurface@@QAEXHHHH@Z	label
+0x83ba0	?wait_task@@YAXXZ	label
+0x93ed0	?width@ComboBox@@QAEHXZ	label
+0x78430	?wrap@AssetSurface@@QAEHPADHHH@Z	label
+0x78530	?wrap_cent@AssetSurface@@QAEHPADHHH@Z	label
+0x78750	?wrap_flying@AssetSurface@@QAEHPADHHH@Z	label
+0x78970	?wrap_flying_flush@AssetSurface@@QAEHXZ	label
+0x76e20	?wrap_height@AssetSurface@@QAEHPADHPAPADPAH@Z	label
+0x78610	?wrap_height_flying@AssetSurface@@QAEHPAD@Z	label
+0x78700	?wrap_height_flying_flush@AssetSurface@@QAEHXZ	label
+0x77e60	?write_cent_l@AssetSurface@@QAEHPBDHHHHH@Z	label
+0x77c30	?write_l@AssetSurface@@QAEHPBDHHH@Z	label
+0x767a0	?write_raw_l@AssetSurface@@QAEHPBDHHH@Z	label
+0x78140	?write_right_l@AssetSurface@@QAEHPBDHHH@Z	label
+0x763d0	?write_strings@AssetSurface@@QAEHPAUStringList@@HHHH@Z	label
+0xae020	_CreateJPG	label
+0xa0890	_ResetManagerModule	label
+0x7e450	_UpdateAllWidgetRenderOrder	label
+0x43aabc	_g_beforeTooltipHook	label
+0x43aab8	_g_cursorH	label
+0x43aaa0	_g_cursorSprite	label
+0x43aab4	_g_cursorW	label
+0x43aaa4	_g_cursorX	label
+0x43aaa8	_g_cursorY	label
+0x43aae0	_g_redrawRoot	label
+0x43ab90	_g_renderOrderCount	label
+0x43aaec	_g_renderOrderResetFlag	label
+0x43ff10	_g_scrollbarThickness	label
+0x43a2c8	_g_tooltipBbox	label
+0x43aad8	_g_tooltipFillColor	label
+0x43aac4	_g_tooltipText	label
+0x43ab94	_g_topLevelCount	label
+0x43aac8	_g_uiFont	label
+0x93630	_memsetword	label
+0x7e330	_recurse_zorder	label
+0xb04b0	?init_class@CheckButton@@SAHXZ	label		CheckBoxSprites
+0x9eb00	_$E14	label		CheckBoxSprites
+0x9eb20	_$E15	label		CheckBoxSprites
+0x9eb10	_$E17	label		CheckBoxSprites
+0x9eaf0	_$E18	label		CheckBoxSprites
+0x9eb60	_$E20	label		CheckBoxSprites
+0x9eb80	_$E21	label		CheckBoxSprites
+0x9eb70	_$E22	label		CheckBoxSprites
+0x9eb50	_$E23	label		CheckBoxSprites
+0xa0890	?close_cursor_class@@YAXXZ	label		DataFile
+0x2930	?ClearDivotsAtPosition@@YAXHH@Z	label		Employee
+0x2970	?SpawnEmployee@@YAHH@Z	label		Employee
+0x2a40	?UpdateAllEmployees@@YAXXZ	label		Employee
+0x38f0	?RenderEmployees@@YAXXZ	label		EmployeeRender
+0xe9a94	?g_carryAnimTick@@3HA	label		EmployeeRender
+0xe9a9c	?g_lastStaffSprite@@3PAUSpriteObject@@A	label		EmployeeRender
+0xe9a88	?g_staffNumBuffer@@3PADA	label		EmployeeRender
+0xb04b0	?InitUnusedModule@@YAHXZ	label		EngineInit
+0xa0890	?ShutdownUnusedModule@@YAXXZ	label		EngineInit
+0x85740	?jackal_close@@YAXXZ	label		EngineInit
+0x43afd0	?jackal_flags@@3HA	label		EngineInit
+0x855b0	?jackal_init@@YAHPBD0H@Z	label		EngineInit
+0x3d2a0	?FindFilesWithFilter@@YAHPBD00@Z	label		FlicBanks
+0x3d670	?FreeSpritePoolByIndex@@YAXH@Z	label		FlicBanks
+0x3d6f0	?GetFlicBankSprite@@YAPAUSpriteObject@@HHH@Z	label		FlicBanks
+0x3d740	?LoadFLCAnimation@@YAXHPBDHHH@Z	label		FlicBanks
+0x3dbe0	?LoadThemeAssets@@YAXXZ	label		FlicBanks
+0x3d5d0	?MemPool_Alloc@@YAHH@Z	label		FlicBanks
+0x3d520	?MemPool_Free@@YAXHH@Z	label		FlicBanks
+0x3cce0	?PlayBinkVideoWithTimeout@@YAXPBDH@Z	label		FlicBanks
+0x3cd70	?PlayIntroVideo@@YAXXZ	label		FlicBanks
+0x42180	?ResetAllGameState@@YAXH@Z	label		FlicBanks
+0x420e90	?g_backupSprite@@3USpriteObject@@A	label		FlicBanks
+0x420b6c	?g_bankSlotOffset@@3HA	label		FlicBanks
+0x1aa6d0	?g_binkPlayer@@3VBinkPlayer@@A	label		FlicBanks
+0x4156d0	?g_flcFileNames@@3PAY0DC@DA	label		FlicBanks
+0x1aa748	?g_flicReserve@@3USpriteObject@@A	label		FlicBanks
+0x1aaa30	?g_flicSprites@@3PAUSpriteObject@@A	label		FlicBanks
+0x1aa778	?g_flicSurface@@3UAssetSurface@@A	label		FlicBanks
+0x1aa6f0	?g_introPalette@@3VFLCPalette@@A	label		FlicBanks
+0x420b70	?g_memBases@@3PAHA	label		FlicBanks
+0x420d00	?g_memSizes@@3PAHA	label		FlicBanks
+0x41ca10	?g_palettes@@3PAVFLCPalette@@A	label		FlicBanks
+0x3cc10	_$E11	label		FlicBanks
+0x3cc40	_$E12	label		FlicBanks
+0x3cc30	_$E13	label		FlicBanks
+0x3cc00	_$E14	label		FlicBanks
+0x3cc70	_$E16	label		FlicBanks
+0x3cc90	_$E17	label		FlicBanks
+0x3cc80	_$E18	label		FlicBanks
+0x3cc60	_$E19	label		FlicBanks
+0x3ccb0	_$E21	label		FlicBanks
+0x3ccd0	_$E22	label		FlicBanks
+0x3ccc0	_$E23	label		FlicBanks
+0x3cca0	_$E24	label		FlicBanks
+0x3d460	_$E26	label		FlicBanks
+0x3d4a0	_$E27	label		FlicBanks
+0x3d490	_$E28	label		FlicBanks
+0x3d450	_$E29	label		FlicBanks
+0x3d4e0	_$E31	label		FlicBanks
+0x3d500	_$E32	label		FlicBanks
+0x3d4f0	_$E33	label		FlicBanks
+0x3d4d0	_$E34	label		FlicBanks
+0x3d640	_$E36	label		FlicBanks
+0x3d660	_$E37	label		FlicBanks
+0x3d650	_$E38	label		FlicBanks
+0x3d630	_$E39	label		FlicBanks
+0x48160	_$E41	label		FlicBanks
+0x48190	_$E42	label		FlicBanks
+0x48180	_$E43	label		FlicBanks
+0x48150	_$E44	label		FlicBanks
+0x4090	?FLC_GetNextFrameSurface@@YAPAUSpriteObject@@H@Z	label		FlicChannels
+0x4120	?FLC_LoadAndGetSurface@@YAPAUSpriteObject@@PBDHPAH@Z	label		FlicChannels
+0x41c0	?FLC_ResetAndCleanup@@YAXH@Z	label		FlicChannels
+0xf65c8	?g_channelBanks@@3PAUFlicAnim@@A	label		FlicChannels
+0x109688	?g_channelFrameSprites@@3PAUSpriteObject@@A	label		FlicChannels
+0xe9aa0	?g_channelPalettes@@3PAVFLCPalette@@A	label		FlicChannels
+0x10fc20	?g_channelPlayback@@3PAUFlicSprite@@A	label		FlicChannels
+0x3f80	_$E10	label		FlicChannels
+0x3fb0	_$E11	label		FlicChannels
+0x3fa0	_$E12	label		FlicChannels
+0x3f70	_$E13	label		FlicChannels
+0x3fe0	_$E15	label		FlicChannels
+0x4010	_$E16	label		FlicChannels
+0x4000	_$E17	label		FlicChannels
+0x3fd0	_$E18	label		FlicChannels
+0x4040	_$E20	label		FlicChannels
+0x4070	_$E21	label		FlicChannels
+0x4060	_$E22	label		FlicChannels
+0x4030	_$E23	label		FlicChannels
+0x3f20	_$E5	label		FlicChannels
+0x3f50	_$E6	label		FlicChannels
+0x3f40	_$E7	label		FlicChannels
+0x3f10	_$E8	label		FlicChannels
+0x5bf80	?WaitWithTimeout@@YAHHH@Z	label		GameMain
+0x5ba60	_$E25	label		GameMain
+0x5ba80	_$E26	label		GameMain
+0x5ba70	_$E27	label		GameMain
+0x5ba50	_$E28	label		GameMain
+0x5bab0	_$E30	label		GameMain
+0x5bad0	_$E31	label		GameMain
+0x5bac0	_$E32	label		GameMain
+0x5baa0	_$E33	label		GameMain
+0x5baf0	_WinMain@16	label		GameMain
+0x438a9c	?g_openingDayStoryId@@3HA	label		Geometry
+0x4360	??0Screen@@QAE@XZ	label		Globals
+0x4350	??1Screen@@UAE@XZ	label		Globals
+0x4950	??_EScreen@@WCHE@AEPAXI@Z	label		Globals
+0x4380	??_GScreen@@UAEPAXI@Z	label		Globals
+0x119a40	?g_kleptoBigFont@@3UFont@@A	label		Globals
+0x47f0	_$E100	label		Globals
+0x4810	_$E101	label		Globals
+0x4800	_$E102	label		Globals
+0x47e0	_$E103	label		Globals
+0x4840	_$E105	label		Globals
+0x4860	_$E106	label		Globals
+0x4850	_$E107	label		Globals
+0x4830	_$E108	label		Globals
+0x4320	_$E25	label		Globals
+0x4340	_$E26	label		Globals
+0x4330	_$E27	label		Globals
+0x4310	_$E28	label		Globals
+0x43b0	_$E30	label		Globals
+0x43d0	_$E31	label		Globals
+0x43c0	_$E32	label		Globals
+0x43a0	_$E33	label		Globals
+0x43f0	_$E35	label		Globals
+0x4410	_$E36	label		Globals
+0x4400	_$E37	label		Globals
+0x43e0	_$E38	label		Globals
+0x4440	_$E40	label		Globals
+0x4460	_$E41	label		Globals
+0x4450	_$E42	label		Globals
+0x4430	_$E43	label		Globals
+0x4490	_$E45	label		Globals
+0x44b0	_$E46	label		Globals
+0x44a0	_$E47	label		Globals
+0x4480	_$E48	label		Globals
+0x44e0	_$E50	label		Globals
+0x4500	_$E51	label		Globals
+0x44f0	_$E52	label		Globals
+0x44d0	_$E53	label		Globals
+0x4530	_$E55	label		Globals
+0x4550	_$E56	label		Globals
+0x4540	_$E57	label		Globals
+0x4520	_$E58	label		Globals
+0x4580	_$E60	label		Globals
+0x45a0	_$E61	label		Globals
+0x4590	_$E62	label		Globals
+0x4570	_$E63	label		Globals
+0x45d0	_$E65	label		Globals
+0x45f0	_$E66	label		Globals
+0x45e0	_$E67	label		Globals
+0x45c0	_$E68	label		Globals
+0x4620	_$E70	label		Globals
+0x4640	_$E71	label		Globals
+0x4630	_$E72	label		Globals
+0x4610	_$E73	label		Globals
+0x4670	_$E75	label		Globals
+0x4690	_$E76	label		Globals
+0x4680	_$E77	label		Globals
+0x4660	_$E78	label		Globals
+0x46c0	_$E80	label		Globals
+0x46e0	_$E81	label		Globals
+0x46d0	_$E82	label		Globals
+0x46b0	_$E83	label		Globals
+0x4700	_$E85	label		Globals
+0x4720	_$E86	label		Globals
+0x4710	_$E87	label		Globals
+0x46f0	_$E88	label		Globals
+0x4750	_$E90	label		Globals
+0x4770	_$E91	label		Globals
+0x4760	_$E92	label		Globals
+0x4740	_$E93	label		Globals
+0x47a0	_$E95	label		Globals
+0x47c0	_$E96	label		Globals
+0x47b0	_$E97	label		Globals
+0x4790	_$E98	label		Globals
+0x5de80	?PairGolfers@@YAXHH@Z	label		GolferPairing
+0x5de30	?SwapGolferSlots@@YAXHH@Z	label		GolferPairing
+0xe1618	?g_golferTypeBackup@@3UGolferType@@A	label		GolferPanel
+0x5c190	_$E11	label		GolferPanel
+0x5c180	_$E12	label		GolferPanel
+0x43abdc	?g_startupCleared@@3HA	label		GraphicWin
+0x4cce0	?CleanupAllFontsAndSprites@@YAXXZ	label		InfoScreens
+0x4faf0	?GetHoleCountTier@@YAHH@Z	label		InfoScreens
+0x4bde0	?LoadInfoScreenAssets@@YAXXZ	label		InfoScreens
+0x4cff0	?RenderEndOfYearReport@@YAXXZ	label		InfoScreens
+0x4f6b0	?RenderFinancialReportScreen@@YAXXZ	label		InfoScreens
+0x4fb30	?RenderHoleInfoOverlay@@YAXH@Z	label		InfoScreens
+0x4e770	?RenderKeyboardShortcutsScreen@@YAXXZ	label		InfoScreens
+0x4b9c0	?ShowCreditsScreen@@YAXXZ	label		InfoScreens
+0xba62c	?g_courseColumnMarkX@@3QBHB	label		InfoScreens
+0xd2078	?g_courseColumnNames@@3PAPADA	label		InfoScreens
+0xd20ac	?g_courseColumnX@@3PAHA	label		InfoScreens
+0x421ee8	?g_font14@@3UFont@@A	label		InfoScreens
+0x421f28	?g_font16@@3UFont@@A	label		InfoScreens
+0x421ec8	?g_font18@@3UFont@@A	label		InfoScreens
+0x421f08	?g_font20@@3UFont@@A	label		InfoScreens
+0x421020	?g_infoTitleFont@@3UFont@@A	label		InfoScreens
+0x4ac60	_$E25	label		InfoScreens
+0x4acb0	_$E26	label		InfoScreens
+0x4aca0	_$E27	label		InfoScreens
+0x4ac50	_$E28	label		InfoScreens
+0x4ad20	_$E30	label		InfoScreens
+0x4ad50	_$E31	label		InfoScreens
+0x4ad40	_$E32	label		InfoScreens
+0x4ad10	_$E33	label		InfoScreens
+0x4ad80	_$E35	label		InfoScreens
+0x4ada0	_$E36	label		InfoScreens
+0x4ad90	_$E37	label		InfoScreens
+0x4ad70	_$E38	label		InfoScreens
+0x4add0	_$E40	label		InfoScreens
+0x4adf0	_$E41	label		InfoScreens
+0x4ade0	_$E42	label		InfoScreens
+0x4adc0	_$E43	label		InfoScreens
+0x4aec0	_$E45	label		InfoScreens
+0x4aee0	_$E46	label		InfoScreens
+0x4aed0	_$E47	label		InfoScreens
+0x4aeb0	_$E48	label		InfoScreens
+0x4af00	_$E50	label		InfoScreens
+0x4af20	_$E51	label		InfoScreens
+0x4af10	_$E52	label		InfoScreens
+0x4aef0	_$E53	label		InfoScreens
+0x4af40	_$E55	label		InfoScreens
+0x4af60	_$E56	label		InfoScreens
+0x4af50	_$E57	label		InfoScreens
+0x4af30	_$E58	label		InfoScreens
+0x4af80	_$E60	label		InfoScreens
+0x4afa0	_$E61	label		InfoScreens
+0x4af90	_$E62	label		InfoScreens
+0x4af70	_$E63	label		InfoScreens
+0x4b100	_$E65	label		InfoScreens
+0x4b120	_$E66	label		InfoScreens
+0x4b110	_$E67	label		InfoScreens
+0x4b0f0	_$E68	label		InfoScreens
+0x4b140	_$E70	label		InfoScreens
+0x4b160	_$E71	label		InfoScreens
+0x4b150	_$E72	label		InfoScreens
+0x4b130	_$E73	label		InfoScreens
+0x4b180	_$E75	label		InfoScreens
+0x4b1a0	_$E76	label		InfoScreens
+0x4b190	_$E77	label		InfoScreens
+0x4b170	_$E78	label		InfoScreens
+0x4b3b0	_$E80	label		InfoScreens
+0x4b3d0	_$E81	label		InfoScreens
+0x4b3c0	_$E82	label		InfoScreens
+0x4b3a0	_$E83	label		InfoScreens
+0x4b4c0	_$E85	label		InfoScreens
+0x4b4e0	_$E86	label		InfoScreens
+0x4b4d0	_$E87	label		InfoScreens
+0x4b4b0	_$E88	label		InfoScreens
+0x4b660	_$E90	label		InfoScreens
+0x4b680	_$E91	label		InfoScreens
+0x4b670	_$E92	label		InfoScreens
+0x4b650	_$E93	label		InfoScreens
+0x4b760	_$E95	label		InfoScreens
+0x4b780	_$E96	label		InfoScreens
+0x4b770	_$E97	label		InfoScreens
+0x4b750	_$E98	label		InfoScreens
+0x5c030	?ProcessMouseMessages@@YAXXZ	label		InputWait
+0x5c150	?WaitForInputRelease@@YAXXZ	label		InputWait
+0x422d94	?g_waitChar@@3HA	label		InputWait
+0x6e710	?DrawRectOutline@@YAXHHHHH@Z	label		ListDialog
+0x6e260	?RenderMenuWithSelection@@YAHPADH@Z	label		ListDialog
+0x6de70	?ShowListDialogWithParams@@YAHPBDHH@Z	label		ListDialog
+0x6dea0	?ShowListSelectionDialog@@YAHPBDH@Z	label		ListDialog
+0x439280	?g_disabledItemMask@@3IA	label		ListDialog
+0x43927c	?g_firstItemLine@@3HA	label		ListDialog
+0x438eec	?g_firstMenuDraw@@3HA	label		ListDialog
+0x438f74	?g_headingColor@@3IA	label		ListDialog
+0x438ee8	?g_hideSelection@@3HA	label		ListDialog
+0x438ee4	?g_highlightItems@@3IA	label		ListDialog
+0x439250	?g_itemColor@@3IA	label		ListDialog
+0x438ec4	?g_itemHotkeys@@3PADA	label		ListDialog
+0x438ef0	?g_lineOffsets@@3PAHA	label		ListDialog
+0x438ec0	?g_menuAccentColor@@3IA	label		ListDialog
+0x438f80	?g_menuFrameDrawn@@3HA	label		ListDialog
+0xe3da4	?g_menuInitialSel@@3HA	label		ListDialog
+0x438f70	?g_menuJustDraw@@3HA	label		ListDialog
+0xe3da8	?g_menuLastSel@@3HA	label		ListDialog
+0x439260	?g_menuLeft@@3HA	label		ListDialog
+0x438f84	?g_menuMaxX@@3HA	label		ListDialog
+0x438f88	?g_menuMaxY@@3HA	label		ListDialog
+0x439294	?g_menuMouseDown@@3HA	label		ListDialog
+0x438f98	?g_menuOffscreen@@3UAssetSurface@@A	label		ListDialog
+0x43928c	?g_menuRightClick@@3HA	label		ListDialog
+0xe3dac	?g_menuRowHeight@@3HA	label		ListDialog
+0x439274	?g_menuShowOK@@3HA	label		ListDialog
+0x439290	?g_menuTallFrame@@3HA	label		ListDialog
+0x439264	?g_menuTop@@3HA	label		ListDialog
+0x439278	?g_menuTrackHover@@3HA	label		ListDialog
+0x438f7c	?g_nMenuItems@@3HA	label		ListDialog
+0x438f78	?g_nMenuLines@@3HA	label		ListDialog
+0x43925c	?g_selectedColor@@3IA	label		ListDialog
+0x438f94	?g_widestLine@@3HA	label		ListDialog
+0x6de30	_$E10	label		ListDialog
+0x6de40	_$E7	label		ListDialog
+0x6de60	_$E8	label		ListDialog
+0x6de50	_$E9	label		ListDialog
+0x74a90	_$E5	label		ScratchSprite
+0x74ab0	_$E6	label		ScratchSprite
+0x74aa0	_$E8	label		ScratchSprite
+0x74a80	_$E9	label		ScratchSprite
+0x422d7c	?g_waitKey@@3HA	label		Screen
+0x378a0	?FileExists@@YAHPBD@Z	label		SetupScreens
+0x382f0	?HitTestCircularButtonGrid@@YAHHH@Z	label		SetupScreens
+0x38260	?HitTestGolferCustomizationButton@@YAHHH@Z	label		SetupScreens
+0x385d0	?RenderGolferCustomizationScreen@@YAXHH@Z	label		SetupScreens
+0x37910	?SaveGolferToTheme@@YAHHHH@Z	label		SetupScreens
+0x3a400	?ShowDifficultySelectScreen@@YAHXZ	label		SetupScreens
+0x3b610	?ShowLoadGameScreen@@YAHHH@Z	label		SetupScreens
+0x38390	?ShowPaginatedCircularListDialog@@YAHH@Z	label		SetupScreens
+0x3a8c0	?ShowPickAProScreen@@YAHXZ	label		SetupScreens
+0x1a9f78	?g_golferEditBox@@3UEditBox@@A	label		SetupScreens
+0x1aa55c	?g_headPageTopIndex@@3HA	label		SetupScreens
+0xc7be0	?g_headSlots@@3PAY01HA	label		SetupScreens
+0x1aa560	?g_themeWritePalette@@3VFLCPalette@@A	label		SetupScreens
+0xc7b34	?g_themeWritePaletteFresh@@3HA	label		SetupScreens
+0x378e0	_$E25	label		SetupScreens
+0x37900	_$E26	label		SetupScreens
+0x378f0	_$E27	label		SetupScreens
+0x378d0	_$E28	label		SetupScreens
+0x385a0	_$E30	label		SetupScreens
+0x385c0	_$E31	label		SetupScreens
+0x385b0	_$E32	label		SetupScreens
+0x38590	_$E33	label		SetupScreens
+0x617f0	_$E7	label		ShadeTable
+0x617e0	_$E8	label		ShadeTable
+0x9d150	_$E10	label		SmallSprite
+0x9d160	_$E6	label		SmallSprite
+0x9d180	_$E7	label		SmallSprite
+0x9d170	_$E9	label		SmallSprite
+0xa9a0	?AppendClubName@@YAXH@Z	label		SpriteAssets
+0x70b0	?BallHitsObstacle@@YAHHHHH@Z	label		SpriteAssets
+0xe5f0	?BuildCourseUpgradeMessage@@YAXH@Z	label		SpriteAssets
+0xa160	?BuildDemolishTooltipText@@YAHHH@Z	label		SpriteAssets
+0x6c30	?CheckCanAfford@@YAHH@Z	label		SpriteAssets
+0xa4e0	?DemolishTileAtPosition@@YAXHH@Z	label		SpriteAssets
+0x7e00	?DisplayShotCommentary@@YAXHHHH@Z	label		SpriteAssets
+0x7c60	?DrawCircleOnTerrain@@YAXHHHI@Z	label		SpriteAssets
+0x6220	?DrawTerrainLineWrapper@@YAXHHHHHHH@Z	label		SpriteAssets
+0xd7b0	?FormatDateString@@YAXH@Z	label		SpriteAssets
+0x6d50	?FormatGolferMessage@@YAXHH@Z	label		SpriteAssets
+0xd760	?GetColorForSkillSet@@YAIH@Z	label		SpriteAssets
+0xe5b0	?GetLotScoreTier@@YAHH@Z	label		SpriteAssets
+0x7000	?InLandmarkInfluence@@YAHHHH@Z	label		SpriteAssets
+0xad60	?LoadOrGenerateHighScores@@YAHXZ	label		SpriteAssets
+0xacd0	?Math_Distance2D@@YAHHH@Z	label		SpriteAssets
+0xe720	?OpenHoleForPlay@@YAXXZ	label		SpriteAssets
+0xaa80	?ProcessHireEmployeeSelection@@YAXXZ	label		SpriteAssets
+0x6670	?ProcessMembershipUpgrade@@YAXH@Z	label		SpriteAssets
+0xd6a0	?RenderDialogueBubble@@YAXXZ	label		SpriteAssets
+0xd890	?SelectScreenItem@@YAXHH@Z	label		SpriteAssets
+0xa130	?SetTileDataAt@@YAXHHHE@Z	label		SpriteAssets
+0x6250	?ShowLoadingScreen@@YAXH@Z	label		SpriteAssets
+0x65c0	?ShowSkillPointsIntro@@YAXXZ	label		SpriteAssets
+0x7d30	?StartNewGameOnCourse@@YAXH@Z	label		SpriteAssets
+0xf190	?StartProMatch@@YAXH@Z	label		SpriteAssets
+0xc1578	?g_accomp@@3PAUAccomplishment@@A	label		SpriteAssets
+0x19bfc4	?g_brushPicks@@3PAHA	label		SpriteAssets
+0x1a9ccc	?g_bubbleStep@@3HA	label		SpriteAssets
+0xc2a18	?g_courseTierNames@@3PAPADA	label		SpriteAssets
+0x15e928	?g_elevToolbarShown@@3HA	label		SpriteAssets
+0x161254	?g_employeeListActive@@3HA	label		SpriteAssets
+0x1aa6c0	?g_employeeListCount@@3HA	label		SpriteAssets
+0x1aa5b8	?g_employeeListIds@@3PAHA	label		SpriteAssets
+0x1aa558	?g_employeeListScroll@@3HA	label		SpriteAssets
+0x1a9370	?g_flicStartFrame@@3PAHA	label		SpriteAssets
+0x1a5a2c	?g_gameAnimNumAngles@@3PAHA	label		SpriteAssets
+0x142f20	?g_gameElevPanelChoice@@3HA	label		SpriteAssets
+0x141318	?g_gameNearbyLandmarkGroups@@3HA	label		SpriteAssets
+0xc2a28	?g_holeTypeNames@@3PAPADA	label		SpriteAssets
+0x168d10	?g_introBackdrop@@3UAssetSurface@@A	label		SpriteAssets
+0x19b76c	?g_numHeads@@3PAHA	label		SpriteAssets
+0x1a9f6c	?g_numText@@3PADA	label		SpriteAssets
+0xc2848	?g_paintTerrain@@3HA	label		SpriteAssets
+0x1a9f54	?g_panelHoverButton@@3HA	label		SpriteAssets
+0x1aa554	?g_panelHoverTicks@@3HA	label		SpriteAssets
+0x1a9f5c	?g_pauseBlinkTicks@@3HA	label		SpriteAssets
+0x1a9cf0	?g_peopleListGolfer@@3PAHA	label		SpriteAssets
+0x1aa6c8	?g_peopleListScroll@@3HA	label		SpriteAssets
+0xc2e20	?g_pickState@@3HA	label		SpriteAssets
+0xc2ca8	?g_preferenceNames@@3PAPADA	label		SpriteAssets
+0xc2cc0	?g_quoteSituationNames@@3PAPADA	label		SpriteAssets
+0x1a6370	?g_reachableAmenityFlags@@3IA	label		SpriteAssets
+0x1a9f50	?g_rowHoverButton@@3HA	label		SpriteAssets
+0x1aa6c4	?g_rowIconSprite@@3PAUSpriteObject@@A	label		SpriteAssets
+0x187ae8	?g_saveGameSnapArt@@3UAssetSurface@@A	label		SpriteAssets
+0xc2e10	?g_selectedItemIndex@@3HA	label		SpriteAssets
+0x1a9f60	?g_selectedRowButton@@3HA	label		SpriteAssets
+0x16a514	?g_selectedVariant@@3HA	label		SpriteAssets
+0x18f330	?g_shotSelectedKind@@3HA	label		SpriteAssets
+0x1695a8	?g_simGolferStatusTxt@@3PADA	label		SpriteAssets
+0x14131c	?g_simListItemRefs@@3PAHA	label		SpriteAssets
+0xc2c9c	?g_skillMasks@@3PAFA	label		SpriteAssets
+0x19ca54	?g_staffHireButtonIdle@@3HA	label		SpriteAssets
+0x1a9cd0	?g_statusPriority@@3DA	label		SpriteAssets
+0xc2858	?g_talentNames@@3PAPADA	label		SpriteAssets
+0x1a9f64	?g_toolbarClickResult@@3HA	label		SpriteAssets
+0x1aa6b8	?g_toolbarHoverButton@@3HA	label		SpriteAssets
+0x1a9f68	?g_toolbarHoverTicks@@3HA	label		SpriteAssets
+0x16199c	?g_toolbarItemIDCnt@@3HA	label		SpriteAssets
+0xc1e90	?g_tourSites@@3PAUTourSite@@A	label		SpriteAssets
+0xc2864	?g_traitNames@@3PAPADA	label		SpriteAssets
+0xc2d38	?g_trophyPartPos@@3PAY01FA	label		SpriteAssets
+0xc2d9c	?g_trophyPartSize@@3PAY01FA	label		SpriteAssets
+0x1a9cbc	?g_zoomView@@3HA	label		SpriteAssets
+0x4e00	_$E10	label		SpriteAssets
+0x4ea0	_$E11	label		SpriteAssets
+0x4e90	_$E12	label		SpriteAssets
+0x4df0	_$E13	label		SpriteAssets
+0x4f50	_$E15	label		SpriteAssets
+0x5010	_$E16	label		SpriteAssets
+0x5000	_$E17	label		SpriteAssets
+0x4f40	_$E18	label		SpriteAssets
+0x50b0	_$E20	label		SpriteAssets
+0x5160	_$E21	label		SpriteAssets
+0x5150	_$E22	label		SpriteAssets
+0x50a0	_$E23	label		SpriteAssets
+0x51f0	_$E25	label		SpriteAssets
+0x52e0	_$E26	label		SpriteAssets
+0x52d0	_$E27	label		SpriteAssets
+0x51e0	_$E28	label		SpriteAssets
+0x53a0	_$E30	label		SpriteAssets
+0x5450	_$E31	label		SpriteAssets
+0x5440	_$E32	label		SpriteAssets
+0x5390	_$E33	label		SpriteAssets
+0x54e0	_$E35	label		SpriteAssets
+0x5590	_$E36	label		SpriteAssets
+0x5580	_$E37	label		SpriteAssets
+0x54d0	_$E38	label		SpriteAssets
+0x5620	_$E40	label		SpriteAssets
+0x56d0	_$E41	label		SpriteAssets
+0x56c0	_$E42	label		SpriteAssets
+0x5610	_$E43	label		SpriteAssets
+0x5760	_$E45	label		SpriteAssets
+0x5840	_$E46	label		SpriteAssets
+0x5830	_$E47	label		SpriteAssets
+0x5750	_$E48	label		SpriteAssets
+0x4c20	_$E5	label		SpriteAssets
+0x58f0	_$E50	label		SpriteAssets
+0x5910	_$E51	label		SpriteAssets
+0x5900	_$E52	label		SpriteAssets
+0x58e0	_$E53	label		SpriteAssets
+0x4d00	_$E6	label		SpriteAssets
+0x4cf0	_$E7	label		SpriteAssets
+0x61b0	_$E75	label		SpriteAssets
+0x61d0	_$E76	label		SpriteAssets
+0x61c0	_$E77	label		SpriteAssets
+0x61a0	_$E78	label		SpriteAssets
+0x4c10	_$E8	label		SpriteAssets
+0x61f0	_$E80	label		SpriteAssets
+0x6210	_$E81	label		SpriteAssets
+0x6200	_$E82	label		SpriteAssets
+0x61e0	_$E83	label		SpriteAssets
+0x92000	?extract_8@SpriteObject@@QAEHPAUAssetSurface@@HHHHHE@Z	label		SpriteExtract
+0x4ac00	?erase@TileList@@QAE?AVTileIter@@V2@0@Z	label		TerrainView
+0x49190	_$E10	label		TerrainView
+0x49180	_$E11	label		TerrainView
+0x491c0	_$E13	label		TerrainView
+0x491e0	_$E14	label		TerrainView
+0x491d0	_$E15	label		TerrainView
+0x491b0	_$E16	label		TerrainView
+0x49210	_$E18	label		TerrainView
+0x49250	_$E19	label		TerrainView
+0x49240	_$E20	label		TerrainView
+0x49200	_$E21	label		TerrainView
+0x492c0	_$E23	label		TerrainView
+0x492b0	_$E24	label		TerrainView
+0x49170	_$E7	label		TerrainView
+0x49160	_$E8	label		TerrainView
+0x87d80	_$E1	label		Text
+0x87de0	_$E10	label		Text
+0x87e10	_$E12	label		Text
+0x87e40	_$E13	label		Text
+0x87e30	_$E14	label		Text
+0x87e00	_$E15	label		Text
+0x87da0	_$E2	label		Text
+0x87d90	_$E3	label		Text
+0x87d70	_$E4	label		Text
+0x87dd0	_$E6	label		Text
+0x87dc0	_$E7	label		Text
+0x87df0	_$E9	label		Text
+0x321d0	?DisableCapsLock@@YAXXZ	label		Toolbar
+0x34ac0	?HandleBuildingToolbarClick@@YAHHH@Z	label		Toolbar
+0x33040	?HandleCourseToolbarClick@@YAHHH@Z	label		Toolbar
+0x33d30	?HandleElevationToolbarClick@@YAHHH@Z	label		Toolbar
+0x36c00	?HandleEmployeeListClick@@YAHHH@Z	label		Toolbar
+0x34140	?HandleFacilityUpgradeClick@@YAHHH@Z	label		Toolbar
+0x35680	?HandleGolferPairingClick@@YAHHH@Z	label		Toolbar
+0x36060	?HandlePeopleToolbarClick@@YAHHH@Z	label		Toolbar
+0x34980	?HitTestBuildingToolbar@@YAHHH@Z	label		Toolbar
+0x33c60	?HitTestElevationToolbarButtons@@YAHHH@Z	label		Toolbar
+0x36b00	?HitTestEmployeePanel@@YAHHH@Z	label		Toolbar
+0x340a0	?HitTestFacilityUpgradeButtons@@YAHHH@Z	label		Toolbar
+0x35570	?HitTestGolferPairingGrid@@YAHHH@Z	label		Toolbar
+0x35f00	?HitTestPeopleToolbarButtons@@YAHHH@Z	label		Toolbar
+0x32720	?MainBarClick@@YAHHH@Z	label		Toolbar
+0x34cf0	?RenderBuildingToolbar@@YAXHH@Z	label		Toolbar
+0x33e50	?RenderElevationToolbarWithTooltip@@YAXHH@Z	label		Toolbar
+0x36e50	?RenderEmployeePanel@@YAXHH@Z	label		Toolbar
+0x34350	?RenderFacilityUpgradeToolbar@@YAXHH@Z	label		Toolbar
+0x35760	?RenderGolferPairingPanel@@YAXHH@Z	label		Toolbar
+0x32ba0	?RenderMainBar@@YAXHH@Z	label		Toolbar
+0x362f0	?RenderPeopleToolbarWithTooltip@@YAXHH@Z	label		Toolbar
+0x33190	?RenderTerrainToolbar@@YAXHH@Z	label		Toolbar
+0xc7a98	?g_buildingToolbarPos@@3PAY01FA	label		Toolbar
+0xc7a88	?g_elevationToolbarPos@@3PAY01FA	label		Toolbar
+0xc7aec	?g_employeeListPick@@3HA	label		Toolbar
+0xc7af0	?g_employeePanelPos@@3PAY01FA	label		Toolbar
+0xc7960	?g_lowerLeftTabPos@@3PAY01FA	label		Toolbar
+0xc7930	?g_mainBarButtonPos@@3PAY01FA	label		Toolbar
+0xc7994	?g_mainBarTabImage@@3PACA	label		Toolbar
+0xc7984	?g_pauseIconPos@@3PAFA	label		Toolbar
+0xc7ac0	?g_peopleToolbarPos@@3PAY01FA	label		Toolbar
+0xc79b4	?g_terrainToolbarPos@@3PAY01FA	label		Toolbar
+0xc79a0	?g_terrainToolbarTerrain@@3PACA	label		Toolbar
+0xc7a28	?g_themeToolbarPos@@3PAY121HA	label		Toolbar
+0xc7974	?g_unzoomMapIconPos@@3PAFA	label		Toolbar
+0xc7970	?g_zoomMapIconPos@@3PAFA	label		Toolbar
+0x6d200	?PrepareTournamentCourse@@YAXXZ	label		Tournament
+0x6d040	?RespawnGolferPairsPerHole@@YAXXZ	label		Tournament
+0x6ddd0	?StartTournament@@YAHXZ	label		Tournament
+0x438eac	?g_tournamentNumBuf@@3PADA	label		Tournament
+0x775b0	?write_multi_font_raw_l@AssetSurface@@QAEHPBDHHH@Z	label		buffer
+0x92440	_$E1	label		display
+0x92430	_$E2	label		display
+0x9d2a0	_$E15	label		filewin
+0x9d2c0	_$E16	label		filewin
+0x9d2b0	_$E18	label		filewin
+0x9d290	_$E19	label		filewin
+0x9d300	_$E21	label		filewin
+0x9d320	_$E22	label		filewin
+0x9d310	_$E23	label		filewin
+0x9d2f0	_$E24	label		filewin
+0x9d360	_$E26	label		filewin
+0x9d380	_$E27	label		filewin
+0x9d370	_$E28	label		filewin
+0x9d350	_$E29	label		filewin
+0x837b0	_$E2	label		font
+0x837d0	_$E3	label		font
+0x837c0	_$E4	label		font
+0x837a0	_$E5	label		font
+0xa0130	_$E1	label		log
+0xa0150	_$E2	label		log
+0xa0140	_$E3	label		log
+0xa0120	_$E4	label		log
+0x9bff0	_$E11	label		multidebug
+0x9c010	_$E12	label		multidebug
+0x9c000	_$E13	label		multidebug
+0x9bfe0	_$E14	label		multidebug
+0x82f60	??0PaletteList@@QAE@XZ	label		palette
+0x835f0	??1PaletteList@@UAE@XZ	label		palette
+0x83750	??_GPaletteList@@UAEPAXI@Z	label		palette
+0x83320	?InitIdentityPalette@@YAXH@Z	label		palette
+0x83340	?ReleaseAllPalettes@@YAXXZ	label		palette
+0x43ac30	?g_identityAltPalette@@3VFLCPalette@@A	label		palette
+0x43acb0	?g_startupPalette@@3VFLCPalette@@A	label		palette
+0x43ac88	?s_ourPalettes@PaletteList@@2U1@A	label		palette
+0x82e90	_$E10	label		palette
+0x82e70	_$E11	label		palette
+0x82ec0	_$E13	label		palette
+0x82ee0	_$E14	label		palette
+0x82ed0	_$E15	label		palette
+0x82eb0	_$E16	label		palette
+0x82f00	_$E18	label		palette
+0x82f20	_$E19	label		palette
+0x82f10	_$E21	label		palette
+0x82ef0	_$E22	label		palette
+0x82e80	_$E8	label		palette
+0x82ea0	_$E9	label		palette
+0x9d490	_$E11	label		radiobut
+0x9d4b0	_$E12	label		radiobut
+0x9d4a0	_$E14	label		radiobut
+0x9d480	_$E15	label		radiobut
+0x9d4f0	_$E17	label		radiobut
+0x9d510	_$E18	label		radiobut
+0x9d500	_$E19	label		radiobut
+0x9d4e0	_$E20	label		radiobut
+0x9d550	_$E22	label		radiobut
+0x9d570	_$E23	label		radiobut
+0x9d560	_$E24	label		radiobut
+0x9d540	_$E25	label		radiobut
+0x96020	_$E17	label		scroll
+0x96010	_$E18	label		scroll
+0x83e20	_$E10	label		sound
+0x83e40	_$E11	label		sound
+0x83e30	_$E12	label		sound
+0x83e10	_$E13	label		sound
+0x83e60	_$E15	label		sound
+0x83e80	_$E16	label		sound
+0x83e70	_$E17	label		sound
+0x83e50	_$E18	label		sound
+0x83de0	_$E5	label		sound
+0x83e00	_$E6	label		sound
+0x83df0	_$E7	label		sound
+0x83dd0	_$E8	label		sound
+0x73a70	_$E12	label		sprite
+0x73a90	_$E13	label		sprite
+0x73a80	_$E15	label		sprite
+0x73a60	_$E16	label		sprite
+0x9d010	_$E1	label		strings
+0x9d030	_$E2	label		strings
+0x9d020	_$E3	label		strings
+0x9d000	_$E4	label		strings
+0x43ab68	?g_widgetTitleFont@@3PAUFont@@A	label		window
+0x43a4f8	?g_windowCallbacks@@3VSysMessageHandler@@A	label		window
+0x799d0	_$E31	label		window
+0x799c0	_$E32	label		window
+0x799f0	_$E34	label		window
+0x79a10	_$E35	label		window
+0x79a00	_$E37	label		window
+0x799e0	_$E38	label		window
+0x79a40	_$E40	label		window
+0x79a60	_$E41	label		window
+0x79a50	_$E42	label		window
+0x79a30	_$E43	label		window

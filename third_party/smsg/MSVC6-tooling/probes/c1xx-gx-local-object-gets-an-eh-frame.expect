@@ -1,0 +1,10 @@
+rule c1xx: under /GX a function holding a local with a destructor across a call registers an EH frame: state -1, its handler, and the fs:0 chain
+cl /O2 /GX
+asm ?f@@YAHXZ
+  push -1
+  push $L*
+  mov eax, DWORD PTR fs:__except_list
+  push eax
+  mov DWORD PTR fs:__except_list, esp
+  call ?g@@YAHXZ
+  call ??1D@@QAE@XZ

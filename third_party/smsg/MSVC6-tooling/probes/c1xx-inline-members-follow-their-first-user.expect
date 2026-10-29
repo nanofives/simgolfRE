@@ -1,0 +1,8 @@
+rule c1xx: a plain class's inline member is compiled right after the first function that uses it: f b g h a (contrast)
+cl /O2 /Ob0
+obj
+  section * .text code * ?f@@YAHH@Z
+  section * .text code * comdat=any ?b@C@@QAEHH@Z
+  section * .text code * ?g@@YAHH@Z
+  section * .text code * ?h@@YAHH@Z
+  section * .text code * comdat=any ?a@C@@QAEHH@Z

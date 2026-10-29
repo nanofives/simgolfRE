@@ -1,0 +1,15 @@
+rule c1xx: a struct member read, through an object and through a pointer.
+cl
+il
+  *01 var      #e0 "s" level 1 b30=0 type=block (0x6) skip=0 storage=3 (+0x36 0x30) rclass=4 (+0x36 0x200) size=8*
+  *26    sym #e0:s*
+  *33    const i32 4*
+  *27    addoff i16*
+  *30    load i16*
+  *2c    cvt i32*
+  *26    sym #e1:p*
+  *30    load p32*
+  *33    const i32 6*
+  *27    addoff i8*
+  *30    load i8*
+  *; ret.i32(add(cvt.i32(load.i16(addoff.i16(s, 4))), cvt.i32(load.i8(addoff.i8(load.p32(p), 6)))))*

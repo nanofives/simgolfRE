@@ -1,0 +1,13 @@
+rule c2: the callee-saved registers a function dirties are pushed in the order ebx, ebp, esi, edi and popped in reverse
+cl /O2
+asm _four
+  push ebx
+  push ebp
+  push esi
+  push edi
+  call _ext
+  pop edi
+  pop esi
+  pop ebp
+  pop ebx
+  ret 0

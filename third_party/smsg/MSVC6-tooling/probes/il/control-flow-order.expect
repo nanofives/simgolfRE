@@ -1,0 +1,338 @@
+rule c1xx: the order C1XX writes conditional branches, gotos and label definitions for each statement kind.
+cl
+il
+  *-- function #da:?cf_if@@YAHH@Z*
+  *; brfalse Ldd (load.i32(a))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label Ldd*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto Ldc*
+  *; label Ldc*
+  *-- function #df:?cf_ifelse@@YAHH@Z*
+  *; brfalse Le1 (load.i32(a))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; goto Le2*
+  *; label Le1*
+  *; discard(asg.i32(?g@@3HA, 2))*
+  *; label Le2*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto Le0*
+  *; label Le0*
+  *-- function #e5:?cf_elseif@@YAHHH@Z*
+  *; brfalse Le7 (load.i32(a))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; goto Le8*
+  *; label Le7*
+  *; brfalse Le9 (load.i32(b))*
+  *; discard(asg.i32(?g@@3HA, 2))*
+  *; goto Lea*
+  *; label Le9*
+  *; discard(asg.i32(?g@@3HA, 3))*
+  *; label Lea*
+  *; label Le8*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto Le6*
+  *; label Le6*
+  *-- function #ee:?cf_and@@YAHHHH@Z*
+  *; brfalse Lf0 (load.i32(a))*
+  *; brfalse Lf0 (load.i32(b))*
+  *; brfalse Lf0 (load.i32(c))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label Lf0*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto Lef*
+  *; label Lef*
+  *-- function #f4:?cf_or@@YAHHHH@Z*
+  *; brtrue Lf7 (load.i32(a))*
+  *; brtrue Lf7 (load.i32(b))*
+  *; brfalse Lf6 (load.i32(c))*
+  *; label Lf7*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label Lf6*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto Lf5*
+  *; label Lf5*
+  *-- function #fb:?cf_andor@@YAHHHH@Z*
+  *; brtrue Lfe (load.i32(a))*
+  *; brfalse Lfd (load.i32(b))*
+  *; label Lfe*
+  *; brfalse Lfd (load.i32(c))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; goto Lff*
+  *; label Lfd*
+  *; discard(asg.i32(?g@@3HA, 2))*
+  *; label Lff*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto Lfc*
+  *; label Lfc*
+  *-- function #102:?cf_not@@YAHHH@Z*
+  *; brfalse L105 (load.i32(a))*
+  *; brtrue L104 (load.i32(b))*
+  *; label L105*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label L104*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L103*
+  *; label L103*
+  *-- function #107:?cf_while@@YAHH@Z*
+  *; label L10a*
+  *; brfalse L10b (load.i32(a))*
+  *; brfalse L10c (call.i32(?G@@YAHH@Z, arg.i32(load.i32(a))))*
+  *; goto L10b*
+  *; label L10c*
+  *; brfalse L10d (call.i32(?G@@YAHH@Z, arg.i32(add(load.i32(a), 1))))*
+  *; goto L10a*
+  *; label L10d*
+  *; discard(postdec.i32(a, 1))*
+  *; goto L10a*
+  *; label L10b*
+  *; ret.i32(load.i32(a))*
+  *; goto L108*
+  *; label L108*
+  *-- function #10f:?cf_do@@YAHH@Z*
+  *; label L111*
+  *; brfalse L114 (call.i32(?G@@YAHH@Z, arg.i32(load.i32(a))))*
+  *; goto L113*
+  *; label L114*
+  *; brfalse L115 (call.i32(?G@@YAHH@Z, arg.i32(add(load.i32(a), 1))))*
+  *; goto L112*
+  *; label L115*
+  *; discard(postdec.i32(a, 1))*
+  *; label L112*
+  *; brtrue L111 (load.i32(a))*
+  *; label L113*
+  *; ret.i32(load.i32(a))*
+  *; goto L110*
+  *; label L110*
+  *-- function #117:?cf_for@@YAHH@Z*
+  *; discard(asg.i32(s, 0))*
+  *; discard(asg.i32(i, 0))*
+  *; discard(load.i32(i))*
+  *; goto L11b*
+  *; label L11c*
+  *; discard(postinc.i32(i, 1))*
+  *; label L11b*
+  *; brfalse L11d (cmp.lt(load.i32(i), load.i32(n)))*
+  *; brfalse L11e (call.i32(?G@@YAHH@Z, arg.i32(load.i32(i))))*
+  *; goto L11c*
+  *; label L11e*
+  *; brfalse L11f (call.i32(?G@@YAHH@Z, arg.i32(add(load.i32(i), 1))))*
+  *; goto L11d*
+  *; label L11f*
+  *; discard(asg.add.i32(s, load.i32(i)))*
+  *; goto L11c*
+  *; label L11d*
+  *; ret.i32(load.i32(s))*
+  *; goto L118*
+  *; label L118*
+  *-- function #121:?cf_forever@@YAHH@Z*
+  *; label L124*
+  *; brfalse L126 (call.i32(?G@@YAHH@Z, arg.i32(load.i32(a))))*
+  *; goto L125*
+  *; label L126*
+  *; discard(postinc.i32(a, 1))*
+  *; goto L124*
+  *; label L125*
+  *; ret.i32(load.i32(a))*
+  *; goto L122*
+  *; label L122*
+  *-- function #128:?cf_switch@@YAHH@Z*
+  *; discard(asg.i32(r, 0))*
+  *; switch(load.i32(v)) {  (body to endlist)*
+  *; label L12f*
+  *; discard(asg.i32(r, 10))*
+  *; goto L12c*
+  *; label L130*
+  *; discard(asg.i32(r, 20))*
+  *; label L131*
+  *; discard(asg.add.i32(r, 3))*
+  *; goto L12c*
+  *; label L132*
+  *; discard(asg.i32(r, 5))*
+  *; goto L12c*
+  *; caselist.i32 L132 (L12b)*
+  *; case L12f (1)*
+  *; case L130 (2)*
+  *; case L130 (3)*
+  *; case L131 (4)*
+  *; } end switch(load.i32(v))*
+  *; label L12c*
+  *; ret.i32(load.i32(r))*
+  *; goto L129*
+  *; label L129*
+  *-- function #134:?cf_return@@YAHH@Z*
+  *; brfalse L136 (load.i32(a))*
+  *; ret.i32(1)*
+  *; goto L135*
+  *; label L136*
+  *; brfalse L137 (cmp.gt(load.i32(a), 5))*
+  *; ret.i32(2)*
+  *; goto L135*
+  *; label L137*
+  *; ret.i32(3)*
+  *; goto L135*
+  *; label L135*
+  *-- function #139:?cf_goto@@YAHH@Z*
+  *; label top*
+  *; brfalse L13c (cmp.gt(load.i32(a), 3))*
+  *; goto L13e*
+  *; goto done*
+  *; label L13c*
+  *; discard(asg.i32(a, call.i32(?G@@YAHH@Z, arg.i32(load.i32(a)))))*
+  *; goto top*
+  *; label done*
+  *; ret.i32(load.i32(a))*
+  *; goto L13a*
+  *; label L13e*
+  *; goto done*
+  *; label L13a*
+  *-- function #141:?cf_cond@@YAHHH@Z*
+  *; discard(asg.i32(?g@@3HA, cond(load.i32(a), load.i32(b), load.i32(?h@@3HA))))*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L142*
+  *; label L142*
+  *-- function #145:?cf_condbr@@YAHHH@Z*
+  *; brfalse L147 (cond(load.i32(a), load.i32(b), load.i32(?h@@3HA)))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label L147*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L146*
+  *; label L146*
+  *-- function #14a:?cf_while_and@@YAHHH@Z*
+  *; label L14d*
+  *; brfalse L14e (load.i32(a))*
+  *; brfalse L14e (load.i32(b))*
+  *; discard(asg.i32(a, call.i32(?G@@YAHH@Z, arg.i32(load.i32(a)))))*
+  *; goto L14d*
+  *; label L14e*
+  *; ret.i32(load.i32(a))*
+  *; goto L14b*
+  *; label L14b*
+  *-- function #150:?cg_fwd_same@@YAHH@Z*
+  *; brfalse L152 (load.i32(a))*
+  *; goto L154*
+  *; goto done*
+  *; label L152*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label done*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L151*
+  *; label L154*
+  *; goto done*
+  *; label L151*
+  *-- function #156:?cg_fwd_nested@@YAHH@Z*
+  *; brfalse L158 (load.i32(a))*
+  *; goto L15a*
+  *; goto done*
+  *; label L158*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; discard(asg.i32(?h@@3HA, 2))*
+  *; label done*
+  *; discard(asg.i32(?g@@3HA, 3))*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L157*
+  *; label L15a*
+  *; goto done*
+  *; label L157*
+  *-- function #15c:?cg_two_fwd@@YAHH@Z*
+  *; brfalse L15e (cmp.gt(load.i32(a), 1))*
+  *; goto L160*
+  *; goto done*
+  *; label L15e*
+  *; brfalse L161 (cmp.gt(load.i32(a), 2))*
+  *; goto L162*
+  *; goto done*
+  *; label L161*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label done*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L15d*
+  *; label L162*
+  *; goto done*
+  *; label L160*
+  *; goto done*
+  *; label L15d*
+  *-- function #164:?cg_back@@YAHH@Z*
+  *; label top*
+  *; discard(asg.i32(a, call.i32(?G@@YAHH@Z, arg.i32(load.i32(a)))))*
+  *; brfalse L167 (load.i32(a))*
+  *; goto top*
+  *; label L167*
+  *; ret.i32(load.i32(a))*
+  *; goto L165*
+  *; label L165*
+  *-- function #169:?cr_loop@@YAHH@Z*
+  *; discard(asg.i32(i, 0))*
+  *; discard(load.i32(i))*
+  *; goto L16c*
+  *; label L16d*
+  *; discard(postinc.i32(i, 1))*
+  *; label L16c*
+  *; brfalse L16e (cmp.lt(load.i32(i), load.i32(n)))*
+  *; brfalse L16f (call.i32(?G@@YAHH@Z, arg.i32(load.i32(i))))*
+  *; ret.i32(load.i32(i))*
+  *; goto L16a*
+  *; label L16f*
+  *; goto L16d*
+  *; label L16e*
+  *; ret.i32(-1)*
+  *; goto L16a*
+  *; label L16a*
+  *-- function #171:?cb_nested@@YAHH@Z*
+  *; discard(asg.i32(s, 0))*
+  *; discard(asg.i32(i, 0))*
+  *; discard(load.i32(i))*
+  *; goto L175*
+  *; label L176*
+  *; discard(postinc.i32(i, 1))*
+  *; label L175*
+  *; brfalse L177 (cmp.lt(load.i32(i), load.i32(n)))*
+  *; discard(asg.i32(j, 0))*
+  *; discard(load.i32(j))*
+  *; goto L179*
+  *; label L17a*
+  *; discard(postinc.i32(j, 1))*
+  *; label L179*
+  *; brfalse L17b (cmp.lt(load.i32(j), load.i32(n)))*
+  *; brfalse L17c (call.i32(?G@@YAHH@Z, arg.i32(load.i32(j))))*
+  *; goto L17b*
+  *; label L17c*
+  *; discard(asg.add.i32(s, load.i32(j)))*
+  *; goto L17a*
+  *; label L17b*
+  *; goto L176*
+  *; label L177*
+  *; ret.i32(load.i32(s))*
+  *; goto L172*
+  *; label L172*
+  *-- function #17e:?ci_empty_then@@YAHH@Z*
+  *; brtrue L180 (load.i32(a))*
+  *; goto L181*
+  *; label L180*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label L181*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L17f*
+  *; label L17f*
+  *-- function #183:?ci_swap@@YAHH@Z*
+  *; brtrue L185 (load.i32(a))*
+  *; discard(asg.i32(?g@@3HA, 2))*
+  *; goto L186*
+  *; label L185*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label L186*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L184*
+  *; label L184*
+  *-- function #189:?ci_nested_if@@YAHHH@Z*
+  *; brfalse L18b (load.i32(a))*
+  *; brfalse L18c (load.i32(b))*
+  *; discard(asg.i32(?g@@3HA, 1))*
+  *; label L18c*
+  *; goto L18d*
+  *; label L18b*
+  *; discard(asg.i32(?g@@3HA, 2))*
+  *; label L18d*
+  *; ret.i32(load.i32(?g@@3HA))*
+  *; goto L18a*
+  *; label L18a*

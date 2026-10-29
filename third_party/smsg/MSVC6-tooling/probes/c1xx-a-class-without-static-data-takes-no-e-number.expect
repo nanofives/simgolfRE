@@ -1,0 +1,5 @@
+rule c1xx: a class with no static data member takes no number, a static member function included, so the objects after it keep 1 and 6 (contrast)
+cl /O2 /GX
+data
+  _$S5 DD FLAT:_$E4
+  _$S10 DD FLAT:_$E9

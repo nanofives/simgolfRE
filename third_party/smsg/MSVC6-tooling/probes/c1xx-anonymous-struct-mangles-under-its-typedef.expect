@@ -1,0 +1,4 @@
+rule c1xx: a struct with no tag takes the typedef name for linkage, so the same function decorates with R (contrast)
+cl /O2
+data
+  PUBLIC ?f@@YAHPAUR@@@Z

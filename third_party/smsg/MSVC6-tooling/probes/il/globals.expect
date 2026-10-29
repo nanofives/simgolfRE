@@ -1,0 +1,21 @@
+rule c1xx: file-scope data.
+cl
+il
+  *02 gvar     #db "" level 0 b30=0x25 type=block (0x6) skip=0 storage=2 (+0x36 0x20) rclass=4 (+0x36 0x200) size=6 flags=0x580 cvtype=0 elem=1*
+  *01 var      #da "?g_str@@3PBDB" level 0*
+  *01 var      #d7 "s_file" level 0 b30=0x24 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=4*
+  *01 var      #d6 "?g_zero@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=1 (+0x36 0x80) size=4 flags=0x100*
+  *01 var      #d5 "?g_init@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=1 (+0x36 0x80) size=4 flags=0x180*
+  *02 gvar     #d9 "?g_arr@@3PAHA" level 0 b30=0 type=block (0x6) skip=0 storage=2 (+0x36 0x20) rclass=1 (+0x36 0x80) size=0xc flags=0x180 cvtype=0 elem=4*
+  *01 var      #d8 "?g_ext@@3HA" level 0 b30=0 type=int (0x1) skip=0 storage=2 (+0x36 0x20) rclass=2 (+0x36 0x100) size=4 flags=0x100*
+  *00 data #d5:?g_init@@3HA at +0*
+  *01 scalar kind 1 size 4 = 5*
+  *00 data #d9:?g_arr@@3PAHA at +0*
+  *01 scalar kind 1 size 4 = 1*
+  *01 scalar kind 1 size 4 = 2*
+  *01 scalar kind 1 size 4 = 3*
+  *00 data #da:?g_str@@3PBDB at +0*
+  *02 address #db + 0 size 4*
+  *09 function #dd:?globals@@YAHXZ*
+  *00 data #db at +0*
+  *03 bytes [6] "hello\x00"*

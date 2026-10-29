@@ -1,0 +1,15 @@
+rule link: LINK sorts a DLL's imports, all tied, and one element that sorts after them with msvcrt's qsort: twelve imports and that element are 13, so the partition swaps element 13/2 = 6, GetProcessHeap, to the front and pull element 0 takes its place
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+imports=
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetTickCount
+  KERNEL32.dll GetCurrentProcess
+  KERNEL32.dll GetCurrentThread
+  KERNEL32.dll GetACP
+  KERNEL32.dll GetOEMCP
+  KERNEL32.dll GetThreadLocale

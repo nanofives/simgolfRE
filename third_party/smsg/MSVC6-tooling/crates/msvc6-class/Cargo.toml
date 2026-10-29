@@ -1,0 +1,37 @@
+[package]
+name = "msvc6-class"
+description = "The class and exception-handling screens: candidate vftables in an image and the bodies their slots reach, declared C++ classes joined to them slot by slot under MSVC6's slot rules, slot decoding, declaration and layout agreement across sources, a body's receiver, and the /GX unwind funclets"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+iced-x86 = { workspace = true, features = ["instr_info"] }
+msvc6-base.workspace = true
+msvc6-diff.workspace = true
+msvc6-image.workspace = true
+msvc6-source.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+rustix.workspace = true
+
+[build-dependencies]
+msvc6-lint.workspace = true
+
+[dev-dependencies]
+msvc6-fixture.workspace = true
+msvc6-project.workspace = true
+msvc6-toolchain.workspace = true
+rustix.workspace = true
+
+[[test]]
+name = "vc6"
+path = "tests/vc6.rs"
+harness = false
+
+[lints]
+workspace = true

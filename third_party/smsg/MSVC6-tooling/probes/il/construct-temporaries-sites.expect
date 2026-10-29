@@ -1,0 +1,20 @@
+rule c1xx: the constructs that fire the sym_new_local_key (c1xx!0x1041c823) call sites construct_temporaries does not reach.
+cl /GX /GR
+il
+  *5   0x27   39  ?u01@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, srcfile 1*
+  *4   0x1b   27  ?u02@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *5   0x2a   42  ?u03@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 1*
+  *4   0x24   36  ?u04@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *6   0x26   38  ?u05@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, local 1, gap 1*
+  *12   0x78  120  ?u06@@YAHH@Z                                 ctemp 4, fdef 1, formal 1, label 1, local 1, gap 4*
+  *8   0x5a   90  ?u07@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, gvar 1, label 1, var 2, gap 1*
+  *5   0x55   85  ?u08@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 1*
+  *6   0x41   65  ?u09@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 1, local 1*
+  *4   0x2a   42  ?u10@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *4   0x36   54  ?u11@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *5   0x25   37  ?u12@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1, local 1*
+  *5   0x45   69  ?u13@@YAHH@Z                                 ctemp 2, fdef 1, formal 1, label 1*
+  *10   0x4c   76  ?u14@@YAHH@Z                                 ctemp 3, fdef 1, formal 1, label 1, local 1, gap 3*
+  *4   0x1f   31  ?n01@@YAHHPAUVD@@@Z                          fdef 1, formal 2, label 1*
+  *4   0x25   37  ?n02@@YAHH@Z                                 ctemp 1, fdef 1, formal 1, label 1*
+  *3   0x22   34  ?n03@@YAHH@Z                                 fdef 1, formal 1, label 1*

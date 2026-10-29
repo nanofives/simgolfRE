@@ -1,0 +1,12 @@
+rule c2: an inline or static function is compiled only when something references it, so u and s2 leave nothing in the object
+cl /Od
+asm ?f@@YAHH@Z
+  call ?k@@YAHH@Z
+  call ?s1@@YAHH@Z
+asm ?k@@YAHH@Z
+  ret 0
+asm ?s1@@YAHH@Z
+  ret 0
+data
+  !*?u@@YAHH@Z*
+  !*?s2@@YAHH@Z*

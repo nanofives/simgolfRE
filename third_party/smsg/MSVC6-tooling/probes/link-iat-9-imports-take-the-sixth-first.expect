@@ -1,0 +1,12 @@
+rule link: nine imports and the element after them are 10, so element 5, GetCommandLineA, comes first; nine alone would give element 4
+link /entry:main /subsystem:console /nodefaultlib kernel32.lib
+imports=
+  KERNEL32.dll GetCommandLineA
+  KERNEL32.dll GetCurrentProcessId
+  KERNEL32.dll GetCurrentThreadId
+  KERNEL32.dll GetLastError
+  KERNEL32.dll GetVersion
+  KERNEL32.dll GetTickCount
+  KERNEL32.dll GetProcessHeap
+  KERNEL32.dll GetCurrentProcess
+  KERNEL32.dll GetCurrentThread

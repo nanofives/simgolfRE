@@ -1,0 +1,6 @@
+rule cl: the object names the CRT it was compiled for in .drectve: /MT names LIBCMT and OLDNAMES
+cl /O2 /MT
+obj
+  section 1 .drectve info *
+  drectve -defaultlib:LIBCMT
+  drectve -defaultlib:OLDNAMES
