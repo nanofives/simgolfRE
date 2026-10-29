@@ -9,6 +9,8 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G12, network play, 2026-10-29: start S9 now** (Mariano: "Start S9 network play too"). Supersedes D6's `later`. Plan
+  re/roadmap/S9_PLAN.md; it needs two game slots for original host + client recordings.
 - **G11, suite reuse, 2026-10-29: reuse the lead's suite results when the trees are byte-identical.** An integrator whose mirror equals
   the lead's gated tree in port/src, include, test, app and CMakeLists.txt skips the x64 / Win32 port suite re-run and cites the lead's
   results; every other gate still runs (re/ROADMAP_ORCHESTRATOR.md, amendment G11). Applied first to I14 (S4), whose suite re-run was
