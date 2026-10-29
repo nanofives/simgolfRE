@@ -100,6 +100,13 @@ section's files.txt paths copied in, the MERGE.md edits applied), runs every gat
 plus the section's own, U-1102; heavy runs one at a time after checking the free commit charge), then applies the same shared-file edits in
 the shared tree and checks the staged paths are byte-identical to the mirror. Template: log/roadmap/INTEGRATOR_PROMPT.md.
 
+Amendment G11 (Mariano, 2026-10-29): SUITE REUSE. When the lead's gated tree (named in its MERGE.md) and the integrator's mirror are
+byte-identical in port/src, port/include, port/test, port/app and port/CMakeLists.txt (`diff -rq --strip-trailing-cr`, __pycache__
+excluded; the diff output goes into the merge report), the integrator does NOT re-run the x64 and Win32 port suites: it cites the lead's
+suite logs and numbers instead. Every other gate (static, segments, boot, chains, census, terrain, live equivalence, app replay, the
+section's own gate) still runs in the mirror. If one byte differs (a rebase onto a commit that changed port/, a merge of two sections),
+the suites run as before. First used by I14 (S4: the mirror equal to S4r2 in all five paths).
+
 ## Committing (you, after MERGED)
 
 - Stage exactly the paths of the merge report's `files:` list plus BASELINE.md, sections.tsv, ORCH_LOG.md (never `git add -A`, never

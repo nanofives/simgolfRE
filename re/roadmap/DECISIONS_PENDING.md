@@ -9,6 +9,10 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G11, suite reuse, 2026-10-29: reuse the lead's suite results when the trees are byte-identical.** An integrator whose mirror equals
+  the lead's gated tree in port/src, include, test, app and CMakeLists.txt skips the x64 / Win32 port suite re-run and cites the lead's
+  results; every other gate still runs (re/ROADMAP_ORCHESTRATOR.md, amendment G11). Applied first to I14 (S4), whose suite re-run was
+  stopped at 15 of 95 x64 files, all PASS.
 - **G10, app priority in test runs, 2026-10-28: Normal for the app only.** The simgolf_port.exe process that the app tests
   launch (app_drive.launch) runs at NORMAL_PRIORITY_CLASS, as an Explorer launch gives it, switchable (SG_APP_PRIORITY=inherit restores
   the test slot's class); pytest and every other test stay at BelowNormal under the workspace test-slot rule.
