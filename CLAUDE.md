@@ -1957,6 +1957,16 @@ fixed address 0x7A110000 were quarantined there as Trojan:Win32/Bearfoos.B!ml. A
 instead (`<Batch>NegCtl[4]`, word 1 magic 0x5147454e; fixtures call `__freeze.negOn()` in re/frida/js/freeze.js after the
 freeze); never reintroduce a fixed-address page. `original\` is still scanned: never deploy a negctl build there.
 
+### LAN release of the port (mini-server)
+`scripts/lan_release/` (2026-10-29, copied from SimCity's re/scripts/lan_release, itself TD5RE's): `publish_simgolf.bat`
+(`publish.sh`) builds a clean `git archive HEAD` of port/ + re/model/include into port/build/lan_build, stages
+port/build/lan_release with `stage_lan_release.py` (simgolf_port.exe, freetype.dll, the app-local VC143 runtime, game\ =
+original\ minus the SafeDisc files, shim, dev logs, JPEG.lib and saved games; manifest.json of sha256 per file) and
+`deploy_lan_release.sh` pushes only changed files over SSH to the td5re-files nginx: http://mariano-server.local:8088/simgolf/
+(/home/mariano/td5re-release/simgolf). Player PCs: `update.bat` in an empty folder fetches `simgolf_update.ps1` and the build,
+makes a "SimGolf (port)" shortcut; saves live in %LOCALAPPDATA%\SimGolfPort. The updater only updates the folder holding
+it and refuses a git checkout (an early version fell back to the current directory and wrote into the repo).
+
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default
 `enabled=0` unless it is a compat fix. Cite the analysis note in `desc`. The static test validates
