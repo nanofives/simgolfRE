@@ -8,17 +8,19 @@
     game locks its exe and DLLs.
 
     Saves and recordings are not in this folder (they live in %LOCALAPPDATA%\SimGolfPort) and are never touched.
-    -Prune also deletes files under game\ that the server no longer ships.
+    Files under game\ that the server no longer ships (an older build's) are deleted; -NoPrune keeps them.
+    Nothing outside game\ is ever deleted.
 
 .USAGE
     Double-click update.bat, or:
-        powershell -ExecutionPolicy Bypass -File simgolf_update.ps1 [-BaseUrl http://192.168.68.112:8088/simgolf] [-Prune]
+        powershell -ExecutionPolicy Bypass -File simgolf_update.ps1 [-BaseUrl http://192.168.68.112:8088/simgolf] [-NoPrune]
 #>
 [CmdletBinding()]
 param(
     [string[]]$BaseUrl,
     [string]$InstallRoot,
-    [switch]$Prune
+    [switch]$NoPrune,
+    [switch]$Prune   # accepted for old shortcuts; pruning is the default since 2026-10-29
 )
 
 $ErrorActionPreference = 'Stop'
@@ -137,19 +139,28 @@ foreach ($f in $toGet) {
     }
 }
 
-# --- 4. optional prune: only under game\, never anything else ----------------------------------------------------
+# --- 4. prune (default): files under game\ the server no longer ships; nothing else is ever touched --------------
 $pruned = 0
-if ($Prune) {
+if (-not $NoPrune) {
     $keep = New-Object System.Collections.Generic.HashSet[string]
     foreach ($f in $files) { [void]$keep.Add((Join-Path $InstallRoot ($f.path -replace '/', '\')).ToLower()) }
     $gameDir = Join-Path $InstallRoot 'game'
     if (Test-Path -LiteralPath $gameDir) {
-        Get-ChildItem -LiteralPath $gameDir -Recurse -File | ForEach-Object {
-            if (-not $keep.Contains($_.FullName.ToLower())) {
-                Remove-Item -LiteralPath $_.FullName -Force
-                Write-Host ("  - pruned {0}" -f $_.FullName.Substring($InstallRoot.Length + 1)) -ForegroundColor DarkYellow
+        $all = @(Get-ChildItem -LiteralPath $gameDir -Recurse -File)
+        $stale = @($all | Where-Object { -not $keep.Contains($_.FullName.ToLower()) })
+        # a broken manifest must not empty the folder: above half of game\ needs an explicit -Prune
+        if ($stale.Count * 2 -gt $all.Count -and -not $Prune) {
+            Write-Host ("  ! prune skipped: {0} of {1} files under game\ are not in the manifest (run with -Prune to delete them)" -f $stale.Count, $all.Count) -ForegroundColor Red
+        } else {
+            foreach ($f in $stale) {
+                Remove-Item -LiteralPath $f.FullName -Force
+                Write-Host ("  - pruned {0}" -f $f.FullName.Substring($InstallRoot.Length + 1)) -ForegroundColor DarkYellow
                 $pruned++
             }
+            # folders the old files leave empty, deepest first
+            Get-ChildItem -LiteralPath $gameDir -Recurse -Directory | Sort-Object { $_.FullName.Length } -Descending |
+                Where-Object { -not (Get-ChildItem -LiteralPath $_.FullName -Force) } |
+                ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
         }
     }
 }

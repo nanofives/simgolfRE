@@ -1970,6 +1970,8 @@ Release rule (2026-10-29): the roadmap orchestrator publishes on its own after m
 says DUE (2 commits changing port/ or re/model/include since the commit named in the server manifest's label, or 1 once that
 build is 24 h old); publish.sh appends each release to log/roadmap/lan_releases.tsv. Every deploy also deletes the server files the
 new manifest no longer lists (refused above half of them unless PRUNE_FORCE=1), so the server holds one copy of the game.
+Player PCs prune too (since 2026-10-29): update.bat deletes files under game\ the manifest no longer lists (`-NoPrune` keeps them;
+above half of game\ it stops unless `-Prune` is given), never anything outside game\.
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default
