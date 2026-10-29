@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/trace.cpp	0x2fe20	0x1002fe20	79	G	CTrace::CTrace	??0CTrace@@QAE@XZ	public	100	100.0	27/27 ins	
+sound	sound/sound.dll/src/trace.cpp	0x2fe90	0x1002fe90	1	G	CTrace::~CTrace	??1CTrace@@QAE@XZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/trace.cpp	0x2feb0	0x1002feb0	177	G	CTrace::dump_to_file	?dump_to_file@CTrace@@QAEXPAVofstream@@@Z	public	100	100.0	58/58 ins	
+sound	sound/sound.dll/src/trace.cpp	0x2ffa0	0x1002ffa0	17	G	CTrace::set_t1	?set_t1@CTrace@@QAEXXZ	public	100	100.0	6/6 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/trace.cpp	0x2ffd0	0x1002ffd0	17	G	CTrace::set_t2	?set_t2@CTrace@@QAEXXZ	public	100	100.0	6/6 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/trace.cpp	0x30000	0x10030000	43	G	CTrace::in_data	?in_data@CTrace@@QAEXHHHH@Z	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/trace.cpp	0x30040	0x10030040	44	G	CTrace::operator=	??4CTrace@@QAEAAV0@PAD@Z	public	100	100.0	21/21 ins	

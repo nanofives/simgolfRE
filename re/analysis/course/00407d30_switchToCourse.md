@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 203 bytes, 52 instructions, subsystem `course`. Mechani
 after the course menu returns a course, files the old course state, resets the game state, generates the chosen course and rebuilds the terrain (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_SpriteAssets.cpp` as `?StartNewGameOnCourse@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00407dfa): callee pops 0 bytes of stack arguments.
 
 ## Reads

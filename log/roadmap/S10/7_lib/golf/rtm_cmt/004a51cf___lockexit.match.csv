@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,push 0xd,push 0xd,True
+1,call 7,call 0x4a79b2,True
+2,pop ecx,pop ecx,True
+3,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\crt0dat.obj (library object, no compilation)",symbol=__lockexit,module=golf_clean.exe
+VERDICT,GREEN,4,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 72 bytes, 29 instructions, subsystem `ui`. Mechanical t
 scroll event entry: finds the window under the pointer, refreshes the cursor and passes the scroll arguments to the window's scroll-by slot (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnMouseWheel@SysMessageHandler@@UAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00495a95): callee pops 12 bytes of stack arguments.
 
 ## Reads

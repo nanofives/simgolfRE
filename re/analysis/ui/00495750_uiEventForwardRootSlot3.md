@@ -7,6 +7,7 @@ event-table entry 0: forwards its two arguments (and two zeros) to slot 3 of the
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnSize@SysMessageHandler@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0049576d): callee pops 8 bytes of stack arguments.
 
 ## Reads

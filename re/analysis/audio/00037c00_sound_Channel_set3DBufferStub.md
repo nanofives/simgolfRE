@@ -7,6 +7,7 @@ Under the +0x5c bit5 / non-null +0x54 guard forwards to the DirectSound 3D-buffe
 System writeup: `re/analysis/systems/sound_7.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `?set_reverb_mix@CWaveFile@@QAE?AW4SNDERR@@M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10037c17, 0x10037c1f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10037c00 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -7,6 +7,7 @@ Pre-rolls every track (loop over track count calling Seq_preRollTrack), then set
 System writeup: `re/analysis/systems/sound_3.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_midimgr.cpp` as `?prepare_channels@CMidiMgr@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10020848): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100207f1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

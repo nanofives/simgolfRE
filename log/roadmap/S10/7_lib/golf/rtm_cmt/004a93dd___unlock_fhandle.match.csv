@@ -1,0 +1,13 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"mov ecx, eax","mov ecx, eax",True
+2,"and eax, 0x1f","and eax, 0x1f",True
+3,"sar ecx, 5","sar ecx, 5",True
+4,"lea eax, [eax + eax*8]","lea eax, [eax + eax*8]",True
+5,"mov ecx, dword ptr [ecx*4]","mov ecx, dword ptr [ecx*4 + 0x842040]",True
+6,"lea eax, [ecx + eax*4 + 0xc]","lea eax, [ecx + eax*4 + 0xc]",True
+7,push eax,push eax,True
+8,call dword ptr [0],call dword ptr [0x4ba0e0],True
+9,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\osfinfo.obj (library object, no compilation)",symbol=__unlock_fhandle,module=golf_clean.exe
+VERDICT,GREEN,10,100.0%

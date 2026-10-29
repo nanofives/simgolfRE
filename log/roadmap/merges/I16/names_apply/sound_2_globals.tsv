@@ -1,0 +1,8 @@
+module	addr	name	type	evidence
+sound.dll	0x1005d52c	IID_IDirectSoundNotify	GUID	bytes {31EFAC30-515C-11D0-A9AA-00AA0061BE93}; QueryInterface riid in 0x1000ff60 (DsBuffer::queryNotify) -> +0x6c
+sound.dll	0x1005d57c	IID_IDirectSound3DBuffer	GUID	bytes {279AFA86-4981-11CE-A521-0020AF0BE560}; QueryInterface riid in 0x1000fef0 (DsBuffer::query3D) -> +0x64
+sound.dll	0x1005d58c	IID_IDirectSound3DListener	GUID	bytes {279AFA84-4981-11CE-A521-0020AF0BE560}; QueryInterface riid in 0x1000fef0 (DsBuffer::query3D) -> +0x68
+sound.dll	0x100b5000	g_soundRegistry	void*	list head written by 0x10005e00 (registerSound) via appendNodeB and unlinked by 0x10005eb0 (unregisterSound)
+sound.dll	0x100b5008	g_soundRegistryTail	void*	tail pointer paired with g_100b5000, updated in 0x10005eb0 (unregisterSound)
+sound.dll	0x100b49bc	g_midiOutputFlags	DWORD	bit1 set in 0x1000a1b0 (Midi_Device::enableOutput), cleared in 0x1000a200 (Midi_Device::disableOutput)
+sound.dll	0x10063dfc	g_dsPollTuning	DWORD	alternated between 0x370 and 0x374 by 0x10010920 (DsBuffer::calibratePosition)

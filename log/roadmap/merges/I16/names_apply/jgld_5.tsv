@@ -1,0 +1,2 @@
+module	addr	name	subsystem	evidence	purpose
+jgld.dll	0x100069f0	registerTrackedListTeardown	crt	match re/match/jgld_list.cpp (100%, compiler-generated _$E3); push 0x10006a40 (atexitDestroyGlobalList) at 0x10006a08; callee 0x1007f080 (_atexit, re/fid/jgld.dll.fid_applied.tsv) at 0x10006a0d; caller 0x10006970	Static initializer that registers atexitDestroyGlobalList 0x10006a40 with _atexit 0x1007f080 (push at 0x10006a08, call at 0x10006a0d), so the tracked-object list 0x10128428 is torn down at module exit; no argument, no return value.

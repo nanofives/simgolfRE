@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 destructor of a hot-list entry: restores its vtable and frees the tooltip string at +0x1c (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_spot.cpp` as `??1HotSpot@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00492d70 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

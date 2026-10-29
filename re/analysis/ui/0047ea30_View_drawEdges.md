@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 760 bytes, 241 instructions, subsystem `ui`. Mechanical
 Draws the four edge child pieces of the view (all when the selector is -1, else the one matching) inside the computed clip rect. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_window.cpp` as `?on_nc_paint@WidgetBase@@UAEXPAURect@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047ed25): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0047ea34 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

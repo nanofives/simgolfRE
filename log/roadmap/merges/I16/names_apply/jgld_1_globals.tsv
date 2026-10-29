@@ -1,0 +1,9 @@
+module	addr	name	type	evidence
+jgld.dll	0x1012870c	g_display	Display*	written by createDisplay 0x10065390; the single Display object pointer
+jgld.dll	0x10128420	g_displayLib	Display*	written by createDisplay 0x10065390 (same object as g_display); read through its vtable by onKey 0x10069c70 (+0x138) and setModeIndex 0x100662a0 (+0x20)
+jgld.dll	0x1012872c	g_listener	Listener*	referenced by createWindow 0x100657e0 (data ref); read through its vtable by onPaint 0x10069ac0 (+4), onActivate 0x10069b90 (+0x2c), onKey 0x10069c70 (+0xc), onChar 0x10069d50 (+0x10)
+jgld.dll	0x10128728	g_commandHandler	ptr to fn(int,int)	written by Lib::setCommandHandler 0x10067f10; read and called by onCommand 0x1006a0e0
+jgld.dll	0x10128724	g_fontDC	HDC	written by initFonts 0x10068f30 (CreateCompatibleDC); deleted by initFontTable 0x10068fa0 (DeleteDC); read by Font::create 0x10068850 and Font::textWidth 0x10068e60 (SelectObject/GetTextMetrics)
+jgld.dll	0x10128738	g_logPalette	HPALETTE	read by Palette::animate 0x1006a860 (AnimatePalette) and realizePalette 0x100699c0; the GDI palette handle
+jgld.dll	0x1011dab0	g_defaultPaletteLo	BYTE[] (RGB triples, stride 4)	read by Palette::setDefault 0x1006a600 and createPalette 0x1006aa70 as the first 10 reserved system colours
+jgld.dll	0x1011dad8	g_defaultPaletteHi	BYTE[] (RGB triples, stride 4)	read by Palette::setDefault 0x1006a600 and createPalette 0x1006aa70 as the last 10 reserved system colours

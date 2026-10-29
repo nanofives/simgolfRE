@@ -1,0 +1,15 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Geometry.cpp	0x67110	0x00467110	24	G	InitTimer	?InitTimer@@YAXXZ	public	100	100.0	6/6 ins	golf_small.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x67130	0x00467130	29	G	Clamp	?Clamp@@YAHHHH@Z	public	100	100.0	12/12 ins	golf_util.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x67150	0x00467150	25	G	Sign	?Sign@@YAHH@Z	public	100	100.0	11/11 ins	golf_util.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x67170	0x00467170	42	G	ApproxDistance	?ApproxDistance@@YAHHH@Z	public	100	100.0	20/20 ins	golf_small3.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x671a0	0x004671a0	205	G	GetDirection8	?GetDirection8@@YAHHH@Z	public	100	100.0	94/94 ins	
+golf	golf/golf.exe/src/Geometry.cpp	0x67270	0x00467270	49	G	FixedPointSin	?FixedPointSin@@YAHHH@Z	public	100	100.0	16/16 ins	golf_small4.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x672b0	0x004672b0	25	G	FixedPointCos	?FixedPointCos@@YAHHH@Z	public	100	100.0	8/8 ins	golf_small.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x672d0	0x004672d0	270	G	CalculateAngle	?CalculateAngle@@YAHHH@Z	public	100	100.0	126/126 ins	
+golf	golf/golf.exe/src/Geometry.cpp	0x673e0	0x004673e0	212	G	GenerateRandomTerrainNoise	?GenerateRandomTerrainNoise@@YAXXZ	public	100	100.0	72/72 ins	golf_hand_06_p.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x674c0	0x004674c0	146	G	BilinearSample	?BilinearSample@@YAHHH@Z	public	100	100.0	49/49 ins	
+golf	golf/golf.exe/src/Geometry.cpp	0x67560	0x00467560	108	G	GetPetNameSuffix	?GetPetNameSuffix@@YAXH@Z	public	100	100.0	34/34 ins	golf_hand_02.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x675d0	0x004675d0	34	G	GetGolferMoodIndex	?GetGolferMoodIndex@@YAHH@Z	public	100	100.0	11/11 ins	golf_small2.cpp
+golf	golf/golf.exe/src/Geometry.cpp	0x67600	0x00467600	212	G	BuildEmployeeName	?BuildEmployeeName@@YAXH@Z	public	100	100.0	80/80 ins	
+golf	golf/golf.exe/src/Geometry.cpp	0x676e0	0x004676e0	792	G	AppendGolferName	?AppendGolferName@@YAXHH@Z	public	100	100.0	145/145 ins	

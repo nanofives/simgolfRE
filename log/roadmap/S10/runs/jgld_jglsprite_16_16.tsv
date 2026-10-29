@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1a250	0x1001a250	893	G	JGLSprite::init_16	?init_16@JGLSprite@@QAEHPAGHHHH@Z	public	100	100.0	290/290 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1a6b0	0x1001a6b0	923	G	JGLSprite::draw_16_16	?draw_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	public	100	100.0	285/285 ins	
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1ab40	0x1001ab40	1046	G	JGLSprite::draw_dest_16_16	?draw_dest_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	public	100	100.0	322/322 ins	jgld_blitY16.cpp
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1b060	0x1001b060	1055	G	JGLSprite::draw_multi_table_dest_16_16	?draw_multi_table_dest_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	public	100	100.0	327/327 ins	jgld_blitY15.cpp
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1b590	0x1001b590	40	G	JGLSprite::draw_16_shadows_16_16	?draw_16_shadows_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	public	100	100.0	20/20 ins	jgld_raw_08.cpp
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1b5d0	0x1001b5d0	40	G	JGLSprite::draw_civ3_units_16_16	?draw_civ3_units_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	public	100	100.0	20/20 ins	jgld_raw_08.cpp
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1b610	0x1001b610	40	G	JGLSprite::draw_sudo_trans_16_16_50	?draw_sudo_trans_16_16_50@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	public	100	100.0	20/20 ins	jgld_raw_08.cpp
+jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	0x1b650	0x1001b650	40	G	JGLSprite::draw_sudo_trans_16_16_25	?draw_sudo_trans_16_16_25@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	public	100	100.0	20/20 ins	jgld_raw_08.cpp

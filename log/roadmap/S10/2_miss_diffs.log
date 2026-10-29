@@ -1,0 +1,25 @@
+== Golfer 0x00466370
+golf_clean.exe 0x00466370 ?AdvanceStoryChapter@@YAHHH@Z: 99.5% (367/369 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   ! or ebp, 0x800000                           | or ebp, 0x800000
+   ! or ecx, 0x800000                           | or ecx, 0x800000
+== GolferShot 0x00422fb0
+golf_clean.exe 0x00422fb0 ?CalculateBestShot@@YAHH@Z: 99.9% (1190/1191 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   ! or ebx, 0x800000                           | or ebx, 0x800000
+== GolferShot 0x00424120
+golf_clean.exe 0x00424120 ?PlanGolferShot@@YAXHHHHH@Z: 100.0% (2649/2650 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   ! test dword ptr [0], 0x800000               | test dword ptr [0x59e7b8], 0x800000
+== GolferShot 0x00427380
+golf_clean.exe 0x00427380 ?ProcessHoleCompletion@@YAXH@Z: 99.9% (1815/1816 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   !                                            | mov esi, dword ptr [esp + 0x38]
+   ! mov esi, dword ptr [esp + 0x38]            | 
+== InfoScreens 0x0044fb30
+golf_clean.exe 0x0044fb30 ?RenderHoleInfoOverlay@@YAXH@Z: 100.0% (4714/4715 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+   ! or eax, 0x402000                           | or eax, 0x402000
+== Toolbar 0x00434cf0
+golf_clean.exe 0x00434cf0 ?RenderBuildingToolbar@@YAXHH@Z: 99.9% (681/682 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   !                                            | mov esi, dword ptr [esp + 0x28]
+   ! mov esi, dword ptr [esp + 0x28]            | 
+== Toolbar 0x00436e50
+golf_clean.exe 0x00436e50 ?RenderEmployeePanel@@YAXHH@Z: 99.7% (757/759 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   ! add ecx, eax                               | add eax, ecx
+   ! cmp ecx, 0x14                              | cmp eax, 0x14

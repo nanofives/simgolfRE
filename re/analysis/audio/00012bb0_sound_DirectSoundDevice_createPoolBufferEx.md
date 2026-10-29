@@ -7,6 +7,7 @@ Allocates a DsBuffer, stores param at +0x74 and this at the buffer +0x5c owner s
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsmgr.cpp` as `?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10012be3, 0x10012cb3): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10012bc5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

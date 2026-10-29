@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 71 bytes, 15 instructions, subsystem `frontend`. Mechan
 Plays sound slot 0x7e, runs the bulletin board screen with its animation tick preset, then clears the tick and calls startSoundSlot for the same slot. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_WorldMap.cpp` as `?ShowAccomplishmentsScreen@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046f1c6): callee pops 0 bytes of stack arguments.
 
 ## Reads

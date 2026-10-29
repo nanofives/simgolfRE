@@ -1,0 +1,24 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov dword ptr [0], 0","mov dword ptr [0x10128974], 0",True
+3,"cmp dword ptr [ebp + 8], -2","cmp dword ptr [ebp + 8], -2",True
+4,jne 0x25,jne 0x100919b5,True
+5,"mov dword ptr [0], 1","mov dword ptr [0x10128974], 1",True
+6,call dword ptr [0],call dword ptr [0x1012c488],True
+7,jmp 0x57,jmp 0x100919e7,True
+8,"cmp dword ptr [ebp + 8], -3","cmp dword ptr [ebp + 8], -3",True
+9,jne 0x3d,jne 0x100919cd,True
+10,"mov dword ptr [0], 1","mov dword ptr [0x10128974], 1",True
+11,call dword ptr [0],call dword ptr [0x1012c48c],True
+12,jmp 0x57,jmp 0x100919e7,True
+13,"cmp dword ptr [ebp + 8], -4","cmp dword ptr [ebp + 8], -4",True
+14,jne 0x54,jne 0x100919e4,True
+15,"mov dword ptr [0], 1","mov dword ptr [0x10128974], 1",True
+16,"mov eax, dword ptr [0]","mov eax, dword ptr [0x1012899c]",True
+17,jmp 0x57,jmp 0x100919e7,True
+18,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+19,pop ebp,pop ebp,True
+20,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\mbctype.obj (library object, no compilation)",symbol=_getSystemCP,module=jgld.dll
+VERDICT,GREEN,21,100.0%

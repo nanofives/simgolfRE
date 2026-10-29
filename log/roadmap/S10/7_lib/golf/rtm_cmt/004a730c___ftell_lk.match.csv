@@ -1,0 +1,130 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"mov edi, dword ptr [ebp + 8]","mov edi, dword ptr [ebp + 8]",True
+7,"xor ebx, ebx","xor ebx, ebx",True
+8,"mov esi, dword ptr [edi + 0x10]","mov esi, dword ptr [edi + 0x10]",True
+9,"cmp dword ptr [edi + 4], ebx","cmp dword ptr [edi + 4], ebx",True
+10,"mov dword ptr [ebp - 0xc], esi","mov dword ptr [ebp - 0xc], esi",True
+11,jge 0x1c,jge 0x4a7328,True
+12,"mov dword ptr [edi + 4], ebx","mov dword ptr [edi + 4], ebx",True
+13,push 1,push 1,True
+14,push ebx,push ebx,True
+15,push esi,push esi,True
+16,call 0x25,call 0x4a95bb,True
+17,"add esp, 0xc","add esp, 0xc",True
+18,"cmp eax, ebx","cmp eax, ebx",True
+19,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+20,jl 0x8e,jl 0x4a739a,True
+21,"mov ecx, dword ptr [edi + 0xc]","mov ecx, dword ptr [edi + 0xc]",True
+22,"test cx, 0x108","test cx, 0x108",True
+23,jne 0x41,jne 0x4a734d,True
+24,"sub eax, dword ptr [edi + 4]","sub eax, dword ptr [edi + 4]",True
+25,jmp 0x15c,jmp 0x4a7468,True
+26,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+27,"mov edx, dword ptr [edi + 8]","mov edx, dword ptr [edi + 8]",True
+28,"mov ebx, eax","mov ebx, eax",True
+29,"sub ebx, edx","sub ebx, edx",True
+30,"test cl, 3","test cl, 3",True
+31,"mov dword ptr [ebp - 8], ebx","mov dword ptr [ebp - 8], ebx",True
+32,je 0x7e,je 0x4a738a,True
+33,"mov ebx, esi","mov ebx, esi",True
+34,"mov ecx, esi","mov ecx, esi",True
+35,"sar ebx, 5","sar ebx, 5",True
+36,"and ecx, 0x1f","and ecx, 0x1f",True
+37,"mov ebx, dword ptr [ebx*4]","mov ebx, dword ptr [ebx*4 + 0x842040]",True
+38,"lea ecx, [ecx + ecx*8]","lea ecx, [ecx + ecx*8]",True
+39,"test byte ptr [ebx + ecx*4 + 4], 0x80","test byte ptr [ebx + ecx*4 + 4], 0x80",True
+40,je 0x96,je 0x4a73a2,True
+41,"mov ecx, edx","mov ecx, edx",True
+42,"cmp ecx, eax","cmp ecx, eax",True
+43,jae 0x96,jae 0x4a73a2,True
+44,"cmp byte ptr [ecx], 0xa","cmp byte ptr [ecx], 0xa",True
+45,jne 0x7b,jne 0x4a7387,True
+46,inc dword ptr [ebp - 8],inc dword ptr [ebp - 8],True
+47,inc ecx,inc ecx,True
+48,jmp 0x6f,jmp 0x4a737b,True
+49,"test cl, 0x80","test cl, 0x80",True
+50,jne 0x96,jne 0x4a73a2,True
+51,call 0x88,call 0x4a910c,True
+52,"mov dword ptr [eax], 0x16","mov dword ptr [eax], 0x16",True
+53,"or eax, 0xffffffff","or eax, 0xffffffff",True
+54,jmp 0x15c,jmp 0x4a7468,True
+55,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+56,jne 0xa4,jne 0x4a73b0,True
+57,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+58,jmp 0x15c,jmp 0x4a7468,True
+59,"test byte ptr [edi + 0xc], 1","test byte ptr [edi + 0xc], 1",True
+60,je 0x154,je 0x4a7460,True
+61,"mov ecx, dword ptr [edi + 4]","mov ecx, dword ptr [edi + 4]",True
+62,"test ecx, ecx","test ecx, ecx",True
+63,jne 0xbd,jne 0x4a73c9,True
+64,"and dword ptr [ebp - 8], ecx","and dword ptr [ebp - 8], ecx",True
+65,jmp 0x154,jmp 0x4a7460,True
+66,"sub eax, edx","sub eax, edx",True
+67,"add eax, ecx","add eax, ecx",True
+68,"mov dword ptr [ebp + 8], eax","mov dword ptr [ebp + 8], eax",True
+69,"mov eax, esi","mov eax, esi",True
+70,"sar eax, 5","sar eax, 5",True
+71,"lea ebx, [eax*4]","lea ebx, [eax*4 + 0x842040]",True
+72,"mov eax, esi","mov eax, esi",True
+73,"and eax, 0x1f","and eax, 0x1f",True
+74,"lea esi, [eax + eax*8]","lea esi, [eax + eax*8]",True
+75,"mov eax, dword ptr [ebx]","mov eax, dword ptr [ebx]",True
+76,"shl esi, 2","shl esi, 2",True
+77,"test byte ptr [esi + eax + 4], 0x80","test byte ptr [esi + eax + 4], 0x80",True
+78,je 0x14e,je 0x4a745a,True
+79,push 2,push 2,True
+80,push 0,push 0,True
+81,push dword ptr [ebp - 0xc],push dword ptr [ebp - 0xc],True
+82,call 0xf0,call 0x4a95bb,True
+83,"add esp, 0xc","add esp, 0xc",True
+84,"cmp eax, dword ptr [ebp - 4]","cmp eax, dword ptr [ebp - 4]",True
+85,jne 0x115,jne 0x4a7421,True
+86,"mov eax, dword ptr [edi + 8]","mov eax, dword ptr [edi + 8]",True
+87,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+88,"add ecx, eax","add ecx, eax",True
+89,"cmp eax, ecx","cmp eax, ecx",True
+90,jae 0x10f,jae 0x4a741b,True
+91,"cmp byte ptr [eax], 0xa","cmp byte ptr [eax], 0xa",True
+92,jne 0x10c,jne 0x4a7418,True
+93,inc dword ptr [ebp + 8],inc dword ptr [ebp + 8],True
+94,inc eax,inc eax,True
+95,jmp 0x100,jmp 0x4a740c,True
+96,"test byte ptr [edi + 0xd], 0x20","test byte ptr [edi + 0xd], 0x20",True
+97,jmp 0x149,jmp 0x4a7455,True
+98,push 0,push 0,True
+99,push dword ptr [ebp - 4],push dword ptr [ebp - 4],True
+100,push dword ptr [ebp - 0xc],push dword ptr [ebp - 0xc],True
+101,call 0x122,call 0x4a95bb,True
+102,"mov eax, 0x200","mov eax, 0x200",True
+103,"add esp, 0xc","add esp, 0xc",True
+104,"cmp dword ptr [ebp + 8], eax","cmp dword ptr [ebp + 8], eax",True
+105,ja 0x13c,ja 0x4a7448,True
+106,"mov ecx, dword ptr [edi + 0xc]","mov ecx, dword ptr [edi + 0xc]",True
+107,"test cl, 8","test cl, 8",True
+108,je 0x13c,je 0x4a7448,True
+109,"test ch, 4","test ch, 4",True
+110,je 0x13f,je 0x4a744b,True
+111,"mov eax, dword ptr [edi + 0x18]","mov eax, dword ptr [edi + 0x18]",True
+112,"mov dword ptr [ebp + 8], eax","mov dword ptr [ebp + 8], eax",True
+113,"mov eax, dword ptr [ebx]","mov eax, dword ptr [ebx]",True
+114,"test byte ptr [esi + eax + 4], 4","test byte ptr [esi + eax + 4], 4",True
+115,je 0x14e,je 0x4a745a,True
+116,inc dword ptr [ebp + 8],inc dword ptr [ebp + 8],True
+117,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+118,"sub dword ptr [ebp - 4], eax","sub dword ptr [ebp - 4], eax",True
+119,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+120,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+121,"add eax, ecx","add eax, ecx",True
+122,pop edi,pop edi,True
+123,pop esi,pop esi,True
+124,pop ebx,pop ebx,True
+125,leave ,leave ,True
+126,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\ftell.obj (library object, no compilation)",symbol=__ftell_lk,module=golf_clean.exe
+VERDICT,GREEN,127,100.0%

@@ -44,7 +44,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 
 ## Callees
 - 0x100180a0 `__chkesp` at 0x1000814b, 0x1000815a, 0x10008173, 0x1000819d, 0x100081ba, 0x100081d5, 0x1000820c, 0x10008230 (+19 more)
-- 0x10019610 `__assert` at 0x100081f5
+- 0x10019610 `_assert` at 0x100081f5
 - import `OPENGL32.dll!glBegin` at 0x10008239
 - import `OPENGL32.dll!glBindTexture` at 0x10008228
 - import `OPENGL32.dll!glDisable` at 0x10008204

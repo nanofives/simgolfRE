@@ -1,0 +1,112 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/midimgr.cpp	0x1f260	0x1001f260	34	L	$E30	_$E30	name	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1f2a0	0x1001f2a0	167	L	$E27	_$E27	name	100	100.0	53/53 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1f380	0x1001f380	34	L	$E35	_$E35	name	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1f3c0	0x1001f3c0	167	L	$E33	_$E33	name	100	100.0	53/53 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1f4a0	0x1001f4a0	426	G	CMidiMgr::CMidiMgr	??0CMidiMgr@@QAE@XZ	public	100	100.0	93/93 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1f6c0	0x1001f6c0	30	G	CMidiMgr::`scalar deleting destructor'	??_GCMidiMgr@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x1f6f0	0x1001f6f0	358	G	CMidiMgr::CMidiMgr	??0CMidiMgr@@QAE@PAUHWND__@@@Z	public	100	100.0	77/77 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1f8c0	0x1001f8c0	1338	G	CMidiMgr::update_tracks	?update_tracks@CMidiMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	416/416 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x1ff50	0x1001ff50	640	G	CMidiMgr::~CMidiMgr	??1CMidiMgr@@UAE@XZ	public	100	100.0	189/189 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20270	0x10020270	8	G	CMidiMgr::reload	?reload@CMidiMgr@@AAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20290	0x10020290	148	G	CMidiMgr::load	?load@CMidiMgr@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	58/58 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20360	0x10020360	211	G	CMidiMgr::load	?load@CMidiMgr@@QAE?AW4SNDERR@@PAUHMMIO__@@PBD@Z	public	100	100.0	81/81 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20480	0x10020480	31	G	CMidiMgr::unload	?unload@CMidiMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x204b0	0x100204b0	28	G	CMidiMgr::direct_unload	?direct_unload@CMidiMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x204e0	0x100204e0	196	G	CMidiMgr::cleanOutKeymapList	?cleanOutKeymapList@CMidiMgr@@SAXXZ	public	100	100.0	62/62 ins	m36b_hand_08.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x205f0	0x100205f0	232	G	CMidiMgr::prepare_track	?prepare_track@CMidiMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	89/89 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20720	0x10020720	154	G	CMidiMgr::prepare_track	?prepare_track@CMidiMgr@@QAE?AW4SNDERR@@PAVCMidiTrack@@@Z	public	100	100.0	62/62 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x207f0	0x100207f0	89	G	CMidiMgr::prepare_channels	?prepare_channels@CMidiMgr@@QAEXXZ	public	100	100.0	26/26 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20870	0x10020870	436	G	CMidiMgr::process_event	?process_event@CMidiMgr@@QAE?AW4SNDERR@@PAVCMidiTrack@@PAK@Z	public	100	100.0	119/119 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20aa0	0x10020aa0	37	G	CMidiMgr::free_all	?free_all@CMidiMgr@@SAXXZ	public	100	100.0	15/15 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20ae0	0x10020ae0	90	G	CMidiMgr::post_unload	?post_unload@CMidiMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20b60	0x10020b60	92	G	CMidiMgr::post_reset	?post_reset@CMidiMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20be0	0x10020be0	281	G	CMidiMgr::play	?play@CMidiMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	95/95 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20d50	0x10020d50	21	G	CMidiMgr::play	?play@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20d80	0x10020d80	209	G	CMidiMgr::direct_stop	?direct_stop@CMidiMgr@@QAEX_N@Z	public	100	100.0	66/66 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20ea0	0x10020ea0	41	G	CMidiMgr::stop	?stop@CMidiMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	15/15 ins	sound_raw_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20ee0	0x10020ee0	73	G	CMidiMgr::fade	?fade@CMidiMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	25/25 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20f50	0x10020f50	60	G	CMidiMgr::set_volume	?set_volume@CMidiMgr@@UAEXH@Z	public	100	100.0	23/23 ins	m36b_hand_06.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x20fa0	0x10020fa0	8	G	CMidiMgr::map_patch	?map_patch@CMidiMgr@@UAE?AW4SNDERR@@PADKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20fc0	0x10020fc0	8	G	CMidiMgr::map_patch	?map_patch@CMidiMgr@@UAE?AW4SNDERR@@PADK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x20fe0	0x10020fe0	466	G	CMidiMgr::map_patch	?map_patch@CMidiMgr@@QAE?AW4SNDERR@@PAVProgramCtrl@@_N@Z	public	100	100.0	151/151 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21240	0x10021240	123	G	CMidiMgr::isKeyMapLoaded	?isKeyMapLoaded@CMidiMgr@@QAE_NPBD@Z	public	100	100.0	56/56 ins	m36b_hand_08.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x212e0	0x100212e0	73	G	CMidiMgr::clear_patch	?clear_patch@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	26/26 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21350	0x10021350	13	G	CMidiMgr::set_pan	?set_pan@CMidiMgr@@UAEXH@Z	public	100	100.0	4/4 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21370	0x10021370	7	G	CMidiMgr::get_time	?get_time@CMidiMgr@@UAEKXZ	public	100	100.0	2/2 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x21390	0x10021390	37	G	CMidiMgr::get_total_track_ticks	?get_total_track_ticks@CMidiMgr@@UAEKK@Z	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x213d0	0x100213d0	315	G	CMidiMgr::control_change	?control_change@CMidiMgr@@QAEKPAEKPAVCMidiTrack@@@Z	public	100	100.0	102/102 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21560	0x10021560	35	G	CMidiMgr::program_change	?program_change@CMidiMgr@@QAEKPAEK@Z	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x215a0	0x100215a0	11	L	$E38	_$E38	name	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x215c0	0x100215c0	970	G	CMidiMgr::note_on	?note_on@CMidiMgr@@QAEKPAEKPAVCMidiTrack@@@Z	public	100	100.0	301/301 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21a90	0x10021a90	272	G	CMidiMgr::note_off	?note_off@CMidiMgr@@QAEKPAEKPAVCMidiTrack@@@Z	public	100	100.0	100/100 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21bf0	0x10021bf0	567	G	CMidiMgr::meta_event	?meta_event@CMidiMgr@@QAEKPAEPAVCMidiTrack@@@Z	public	100	100.0	157/157 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21ec0	0x10021ec0	8	G	CMidiMgr::pitch_wheel	?pitch_wheel@CMidiMgr@@QAEKPAEK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21ee0	0x10021ee0	130	G	CMidiMgr::set_tempo	?set_tempo@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	35/35 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x21fa0	0x10021fa0	465	G	CMidiMgr::set_program_ctrl	?set_program_ctrl@CMidiMgr@@QAE?AW4SNDERR@@PAVProgramCtrl@@@Z	public	100	100.0	167/167 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x22200	0x10022200	43	G	CMidiMgr::set_control_track	?set_control_track@CMidiMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	16/16 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x22240	0x10022240	39	G	CMidiMgr::reset	?reset@CMidiMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x22280	0x10022280	119	G	CMidiMgr::set_channel_ctrl	?set_channel_ctrl@CMidiMgr@@QAE?AW4SNDERR@@PAVChannelCtrl@@@Z	public	100	100.0	39/39 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x22320	0x10022320	833	G	CMidiMgr::add_keymap	?add_keymap@CMidiMgr@@UAE?AW4SNDERR@@PAVKeyMap@@@Z	public	100	100.0	272/272 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x22750	0x10022750	60	G	CMidiMgr::set_switch_type	?set_switch_type@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	16/16 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x227a0	0x100227a0	15	G	CMidiMgr::set_nswitch_threads	?set_nswitch_threads@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	4/4 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x227c0	0x100227c0	197	G	CMidiMgr::add_switch_range	?add_switch_range@CMidiMgr@@UAE?AW4SNDERR@@KK@Z	public	100	100.0	78/78 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x228d0	0x100228d0	214	G	CMidiMgr::remove_active_trackset	?remove_active_trackset@CMidiMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	67/67 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x229f0	0x100229f0	620	G	CMidiMgr::add_active_trackset	?add_active_trackset@CMidiMgr@@UAE?AW4SNDERR@@PAVTrackSet@@@Z	public	100	100.0	208/208 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x22d00	0x10022d00	608	G	CMidiMgr::add_active_trackset	?add_active_trackset@CMidiMgr@@QAE?AW4SNDERR@@PAVDllTrackSet@@@Z	public	100	100.0	202/202 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23000	0x10023000	84	G	CMidiMgr::get_trackset	?get_trackset@CMidiMgr@@UAEPAVTrackSet@@I@Z	public	100	100.0	28/28 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23080	0x10023080	111	G	CMidiMgr::set_active_range_lo	?set_active_range_lo@CMidiMgr@@UAE?AW4SNDERR@@II@Z	public	100	100.0	36/36 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23110	0x10023110	111	G	CMidiMgr::set_active_range_hi	?set_active_range_hi@CMidiMgr@@UAE?AW4SNDERR@@II@Z	public	100	100.0	36/36 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x231a0	0x100231a0	47	G	CMidiMgr::set_active_tracks	?set_active_tracks@CMidiMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	15/15 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x231e0	0x100231e0	141	G	CMidiMgr::set_active_tracks	?set_active_tracks@CMidiMgr@@AAE?AW4SNDERR@@XZ	public	100	100.0	55/55 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x232a0	0x100232a0	313	G	CMidiMgr::set_active_tracks	?set_active_tracks@CMidiMgr@@UAE?AW4SNDERR@@KK@Z	public	100	100.0	116/116 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23430	0x10023430	40	G	CMidiMgr::play_trackset	?play_trackset@CMidiMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23470	0x10023470	35	G	CMidiMgr::xpose_trackset	?xpose_trackset@CMidiMgr@@UAE?AW4SNDERR@@IH@Z	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x234b0	0x100234b0	99	G	CMidiMgr::is_trackset_playing	?is_trackset_playing@CMidiMgr@@UAE_NI@Z	public	100	100.0	34/34 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23540	0x10023540	150	G	CMidiMgr::TT_play_trackset	?TT_play_trackset@CMidiMgr@@AAE?AW4SNDERR@@I@Z	public	100	100.0	57/57 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23610	0x10023610	246	G	CMidiMgr::TT_play_trackset	?TT_play_trackset@CMidiMgr@@AAE?AW4SNDERR@@PAVTrackSet@@@Z	public	100	100.0	99/99 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23750	0x10023750	230	G	CMidiMgr::TT_play_trackset	?TT_play_trackset@CMidiMgr@@AAE?AW4SNDERR@@III@Z	public	100	100.0	92/92 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23880	0x10023880	32	G	CMidiMgr::stop_trackset	?stop_trackset@CMidiMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x238b0	0x100238b0	117	G	CMidiMgr::TT_stop_trackset	?TT_stop_trackset@CMidiMgr@@AAE?AW4SNDERR@@I@Z	public	100	100.0	37/37 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23950	0x10023950	200	G	CMidiMgr::TT_stop_trackset	?TT_stop_trackset@CMidiMgr@@AAE?AW4SNDERR@@II@Z	public	100	100.0	82/82 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23a60	0x10023a60	217	G	CMidiMgr::TT_xpose_trackset	?TT_xpose_trackset@CMidiMgr@@AAE?AW4SNDERR@@IH@Z	public	100	100.0	83/83 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23b80	0x10023b80	119	G	CMidiMgr::TT_xpose_trackset	?TT_xpose_trackset@CMidiMgr@@AAE?AW4SNDERR@@IIH@Z	public	100	100.0	49/49 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23c20	0x10023c20	52	G	CMidiMgr::TT_set_track_loop_state	?TT_set_track_loop_state@CMidiMgr@@AAE?AW4SNDERR@@I_N@Z	public	100	100.0	19/19 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23c70	0x10023c70	106	G	CMidiMgr::TT_set_trackset_done_callback	?TT_set_trackset_done_callback@CMidiMgr@@AAE?AW4SNDERR@@IP6AXPAX@Z@Z	public	100	100.0	34/34 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23d00	0x10023d00	206	G	CMidiMgr::reset_switch_table	?reset_switch_table@CMidiMgr@@QAEXPAH@Z	public	100	100.0	66/66 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23e10	0x10023e10	98	G	CMidiMgr::set_track_ctrl	?set_track_ctrl@CMidiMgr@@QAE?AW4SNDERR@@PAVTrackCtrl@@@Z	public	100	100.0	38/38 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23ea0	0x10023ea0	70	G	CMidiMgr::set_track_loop_state	?set_track_loop_state@CMidiMgr@@UAE?AW4SNDERR@@I_N@Z	public	100	100.0	25/25 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23f10	0x10023f10	58	G	CMidiMgr::get_track_loop_state	?get_track_loop_state@CMidiMgr@@UAE_NI@Z	public	100	100.0	24/24 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x23f60	0x10023f60	67	G	CMidiMgr::get_track_velocity_offset	?get_track_velocity_offset@CMidiMgr@@UAE?AW4SNDERR@@IPAH@Z	public	100	100.0	25/25 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x23fd0	0x10023fd0	65	G	CMidiMgr::set_track_velocity_offset	?set_track_velocity_offset@CMidiMgr@@UAE?AW4SNDERR@@IH@Z	public	100	100.0	24/24 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24040	0x10024040	336	G	CMidiMgr::set_control	?set_control@CMidiMgr@@UAE?AW4SNDERR@@PAXHH@Z	public	100	100.0	114/114 ins	m36b_hand_09.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x241f0	0x100241f0	46	G	CMidiMgr::get_control_target	?get_control_target@CMidiMgr@@UAEPAXHH@Z	public	100	100.0	17/17 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24230	0x10024230	23	G	CProgramMgr::CProgramMgr	??0CProgramMgr@@QAE@XZ	public	100	100.0	10/10 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24260	0x10024260	12	G	CProgramMgr::~CProgramMgr	??1CProgramMgr@@QAE@XZ	public	100	100.0	2/2 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24280	0x10024280	104	G	CProgramMgr::load	?load@CProgramMgr@@QAE?AW4SNDERR@@PAVProgramCtrl@@@Z	public	100	100.0	37/37 ins	m36b_hand_07.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24310	0x10024310	3	G	CProgramMgr::unload	?unload@CProgramMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24330	0x10024330	30	G	CProgramMgr::stop	?stop@CProgramMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24360	0x10024360	135	G	CProgramMgr::set_ctrl	?set_ctrl@CProgramMgr@@QAEXPAVProgramCtrl@@@Z	public	100	100.0	49/49 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24420	0x10024420	7	G	CProgramMgr::xlat_pitch	?xlat_pitch@CProgramMgr@@QAEHH@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24440	0x10024440	7	G	CProgramMgr::xlat_volume	?xlat_volume@CProgramMgr@@QAEKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24460	0x10024460	39	G	CMidiChannel::CMidiChannel	??0CMidiChannel@@QAE@XZ	public	100	100.0	13/13 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x244a0	0x100244a0	8	G	CMidiChannel::~CMidiChannel	??1CMidiChannel@@QAE@XZ	public	100	100.0	2/2 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x244c0	0x100244c0	1	G	CMidiChannel::reset_rnd_prgm_table	?reset_rnd_prgm_table@CMidiChannel@@QAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x244e0	0x100244e0	7	G	CMidiChannel::xlat_program	?xlat_program@CMidiChannel@@QAEKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24500	0x10024500	135	G	CMidiMgr::set_track	?set_track@CMidiMgr@@UAE?AW4SNDERR@@PAEK@Z	public	100	100.0	48/48 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x245c0	0x100245c0	72	G	CMidiMgr::unmute_track	?unmute_track@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	27/27 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24630	0x10024630	72	G	CMidiMgr::mute_track	?mute_track@CMidiMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	27/27 ins	sound_raw_09.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x246a0	0x100246a0	221	G	CMidiMgr::fade_track	?fade_track@CMidiMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	75/75 ins	m36b_hand_09.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x247c0	0x100247c0	203	G	CMidiMgr::switch_track	?switch_track@CMidiMgr@@QAEXXZ	public	100	100.0	70/70 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x248d0	0x100248d0	64	G	CMidiMgr::set_base_path	?set_base_path@CMidiMgr@@UAEXPBD@Z	public	100	100.0	23/23 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24920	0x10024920	472	G	CMidiMgr::seek_to_prior	?seek_to_prior@CMidiMgr@@QAE?AW4SNDERR@@PAVCMidiTrack@@K@Z	public	100	100.0	115/115 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24b80	0x10024b80	149	G	CMidiMgr::set_tick_offset	?set_tick_offset@CMidiMgr@@QAEXPAVCMidiTrack@@KKH@Z	public	100	100.0	59/59 ins	m36b_hand_09.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24c50	0x10024c50	79	G	CMidiMgr::set_play_type	?set_play_type@CMidiMgr@@UAEXI@Z	public	100	100.0	22/22 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24cc0	0x10024cc0	8	G	CMidiMgr::load_patch	?load_patch@CMidiMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24ce0	0x10024ce0	8	G	CMidiMgr::unload_patch	?unload_patch@CMidiMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24d00	0x10024d00	46	G	CMidiMgr::set_patch	?set_patch@CMidiMgr@@UAE?AW4SNDERR@@II@Z	public	100	100.0	15/15 ins	
+sound	sound/sound.dll/src/midimgr.cpp	0x24d40	0x10024d40	125	G	DList<DllTrackSet>::~DList<DllTrackSet>	??1?$DList@VDllTrackSet@@@@QAE@XZ	public	100	100.0	46/46 ins	m36b_hand_09.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24de0	0x10024de0	86	G	DList<DllTrackSet>::add_to_end	?add_to_end@?$DList@VDllTrackSet@@@@QAEXPAVDllTrackSet@@@Z	public	100	100.0	32/32 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24e60	0x10024e60	225	G	DList<DllTrackSet>::insert	?insert@?$DList@VDllTrackSet@@@@QAEXPAVDllTrackSet@@@Z	public	100	100.0	96/96 ins	m36b_hand_09.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x24f90	0x10024f90	83	G	DList<DllTrackSet>::add_to_head	?add_to_head@?$DList@VDllTrackSet@@@@QAEXPAVDllTrackSet@@@Z	public	100	100.0	32/32 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midimgr.cpp	0x25010	0x10025010	25	G	Node<DllTrackSet>::Node<DllTrackSet>	??0?$Node@VDllTrackSet@@@@QAE@PAVDllTrackSet@@@Z	public	100	100.0	6/6 ins	m36b_hand_01.cpp

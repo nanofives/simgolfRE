@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/ivfilt.c	0x40330	0x10040330	408	G	ivfilt_	_ivfilt_	public	100	100.0	136/136 ins	m36c_D2_01.cpp

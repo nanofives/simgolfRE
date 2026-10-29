@@ -1,0 +1,6 @@
+pdb=Terrain	source=terrain/Terrain.dll/src/Bmp.cpp	procs=11	mapped=11	new_100=0	already_100=11	miss=0	nosym=0	folded=0	error=0	verified=	canonical=	wip=	seconds=1.2
+pdb=Terrain	source=terrain/Terrain.dll/src/FaceBlock.cpp	procs=7	mapped=7	new_100=0	already_100=7	miss=0	nosym=0	folded=0	error=0	verified=	canonical=	wip=	seconds=0.7
+pdb=Terrain	source=terrain/Terrain.dll/src/VertexArrays.cpp	procs=0	mapped=0	new_100=0	already_100=0	miss=0	nosym=0	folded=0	error=0	verified=	canonical=	wip=	seconds=0.6
+pdb=Terrain	source=terrain/Terrain.dll/src/Course.cpp	procs=1	mapped=1	new_100=0	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=	canonical=	wip=	seconds=0.5
+pdb=Terrain	source=terrain/Terrain.dll/src/Terrain.cpp	procs=99	mapped=99	new_100=0	already_100=99	miss=0	nosym=0	folded=0	error=0	verified=	canonical=	wip=	seconds=1.8
+pdb=Terrain	source=terrain/Terrain.dll/src/Tile.cpp	procs=51	mapped=51	new_100=0	already_100=51	miss=0	nosym=0	folded=0	error=0	verified=	canonical=	wip=	seconds=1.6

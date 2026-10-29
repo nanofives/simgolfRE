@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/invert.c	0x3e6d0	0x1003e6d0	800	G	invert_	_invert_	public	100	100.0	245/245 ins	m36c_D2_01.cpp

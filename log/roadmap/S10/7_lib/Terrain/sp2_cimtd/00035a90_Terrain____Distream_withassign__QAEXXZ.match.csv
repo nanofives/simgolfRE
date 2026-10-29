@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,"add ecx, 0xc","add ecx, 0xc",True
+6,call 0x12,call 0x10035b50,True
+7,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+8,"add ecx, 0xc","add ecx, 0xc",True
+9,call 0x1d,call 0x10034cd0,True
+10,"mov esp, ebp","mov esp, ebp",True
+11,pop ebp,pop ebp,True
+12,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\cininit.obj (library object, no compilation)",symbol=??_Distream_withassign@@QAEXXZ,module=Terrain.dll
+VERDICT,GREEN,13,100.0%

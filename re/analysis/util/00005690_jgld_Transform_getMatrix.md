@@ -67,7 +67,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x100056c0, 0x100057e8
 
 ## Callees
-- 0x100018c0 -> 0x100052b0 `FUN_100052b0` (incremental-linking thunk) at 0x100056b0
+- 0x100018c0 -> 0x100052b0 `Matrix::MakeIdentity` (incremental-linking thunk) at 0x100056b0
 - 0x1007e780 `__chkesp` at 0x10005816
 
 ## Callers

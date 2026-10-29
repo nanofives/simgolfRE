@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x840ab4]",True
+1,"cmp eax, 1","cmp eax, 1",True
+2,je 0x17,je 0x4ab389,True
+3,"test eax, eax","test eax, eax",True
+4,jne 0x38,jne 0x4ab3aa,True
+5,"cmp dword ptr [0], 1","cmp dword ptr [0x4e4ae4], 1",True
+6,jne 0x38,jne 0x4ab3aa,True
+7,push 0xfc,push 0xfc,True
+8,call 0x21,call 0x4ab3ab,True
+9,"mov eax, dword ptr [0]","mov eax, dword ptr [0x840c68]",True
+10,pop ecx,pop ecx,True
+11,"test eax, eax","test eax, eax",True
+12,je 0x2d,je 0x4ab39f,True
+13,call eax,call eax,True
+14,push 0xff,push 0xff,True
+15,call 0x37,call 0x4ab3ab,True
+16,pop ecx,pop ecx,True
+17,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\crt0msg.obj (library object, no compilation)",symbol=__FF_MSGBANNER,module=golf_clean.exe
+VERDICT,GREEN,18,100.0%

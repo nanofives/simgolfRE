@@ -1,0 +1,35 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,call 6,call 0x4a7989,True
+2,call dword ptr [0],call dword ptr [0x4ba10c],True
+3,"cmp eax, -1","cmp eax, -1",True
+4,"mov dword ptr [0], eax","mov dword ptr [0x4e4bf0], eax",True
+5,je 0x50,je 0x4a8e3c,True
+6,push 0x74,push 0x74,True
+7,push 1,push 1,True
+8,call 0x1f,call 0x4ab534,True
+9,"mov esi, eax","mov esi, eax",True
+10,pop ecx,pop ecx,True
+11,"test esi, esi","test esi, esi",True
+12,pop ecx,pop ecx,True
+13,je 0x50,je 0x4a8e3c,True
+14,push esi,push esi,True
+15,push dword ptr [0],push dword ptr [0x4e4bf0],True
+16,call dword ptr [0],call dword ptr [0x4ba124],True
+17,"test eax, eax","test eax, eax",True
+18,je 0x50,je 0x4a8e3c,True
+19,push esi,push esi,True
+20,call 0x3e,call 0x4a8e40,True
+21,pop ecx,pop ecx,True
+22,call dword ptr [0],call dword ptr [0x4ba0d8],True
+23,"or dword ptr [esi + 4], 0xffffffff","or dword ptr [esi + 4], 0xffffffff",True
+24,push 1,push 1,True
+25,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+26,pop eax,pop eax,True
+27,pop esi,pop esi,True
+28,ret ,ret ,True
+29,"xor eax, eax","xor eax, eax",True
+30,pop esi,pop esi,True
+31,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\tidtable.obj (library object, no compilation)",symbol=__mtinit,module=golf_clean.exe
+VERDICT,GREEN,32,100.0%

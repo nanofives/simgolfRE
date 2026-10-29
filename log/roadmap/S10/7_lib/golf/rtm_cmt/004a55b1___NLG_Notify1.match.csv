@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,bytes +0x0: 5351bb????????eb0a5351bb????????,bytes +0x0: 5351bb????????eb0a5351bb????????,True
+1,bytes +0x10: 8b4d08894b08894304896b0c595bc204,bytes +0x10: 8b4d08894b08894304896b0c595bc204,True
+2,bytes +0x20: 00,bytes +0x20: 00,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\exsup.obj (library object, no compilation)",symbol=__NLG_Notify1,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

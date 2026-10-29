@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcapimin.c	0xae150	0x004ae150	184	G	jpeg_CreateCompress	_jpeg_CreateCompress	public	100	100.0	64/64 ins	golf_jpeg_capimin.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcapimin.c	0xae210	0x004ae210	12	G	jpeg_destroy_compress	_jpeg_destroy_compress	public	100	100.0	5/5 ins	golf_jpeg_capimin.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcapimin.c	0xae220	0x004ae220	78	G	jpeg_suppress_tables	_jpeg_suppress_tables	public	100	100.0	29/29 ins	golf_jpeg_capimin.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcapimin.c	0xae270	0x004ae270	258	G	jpeg_finish_compress	_jpeg_finish_compress	public	100	100.0	95/95 ins	golf_jpeg_capimin.cpp

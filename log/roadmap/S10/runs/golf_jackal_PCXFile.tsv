@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/PCXFile.cpp	0x85790	0x00485790	781	G	AssetSurface::LoadPCXFromFile	?LoadPCXFromFile@AssetSurface@@QAEHPAU_iobuf@@@Z	public	100	100.0	239/239 ins	
+golf	golf/jackal.lib/src/PCXFile.cpp	0x85aa0	0x00485aa0	664	G	AssetSurface::SaveToPCX	?SaveToPCX@AssetSurface@@QAEHPAU_iobuf@@@Z	public	100	100.0	222/222 ins	
+golf	golf/jackal.lib/src/PCXFile.cpp	0x85d40	0x00485d40	318	G	AssetSurface::dotted_hline_8	?dotted_hline_8@AssetSurface@@QAEXHHHE@Z	public	100	100.0	122/122 ins	golf_hand_09_j.cpp
+golf	golf/jackal.lib/src/PCXFile.cpp	0x85e80	0x00485e80	354	G	AssetSurface::dotted_vline_8	?dotted_vline_8@AssetSurface@@QAEXHHHE@Z	public	100	100.0	134/134 ins	golf_hand_r0.cpp

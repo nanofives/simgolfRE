@@ -1,0 +1,18 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68660	0x10068660	193	G	JGLFont::JGLFont	??0JGLFont@@QAE@PAUFontBase@@@Z	public	100	100.0	54/54 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68760	0x10068760	183	G	JGLFont::~JGLFont	??1JGLFont@@UAE@XZ	public	100	100.0	55/55 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68850	0x10068850	524	G	JGLFont::init	?init@JGLFont@@UAEHPBDHH@Z	public	100	100.0	164/164 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68ae0	0x10068ae0	563	G	JGLFont::LoadTTF	?LoadTTF@JGLFont@@UAEHPBD0HH@Z	public	100	100.0	174/174 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68da0	0x10068da0	143	G	JGLFont::close	?close@JGLFont@@UAEXXZ	public	100	100.0	51/51 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68e60	0x10068e60	163	G	JGLFont::width	?width@JGLFont@@UAEHPBDH@Z	public	100	100.0	60/60 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68f30	0x10068f30	86	G	JGLFont::init_class	?init_class@JGLFont@@SAHXZ	public	100	100.0	31/31 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x68fa0	0x10068fa0	81	G	JGLFont::close_class	?close_class@JGLFont@@SAXXZ	public	100	100.0	28/28 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69010	0x10069010	45	G	GSFont::~GSFont	??1GSFont@@UAE@XZ	public	100	100.0	21/21 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69050	0x10069050	43	G	GSFont::init	?init@GSFont@@UAEHPBDHH@Z	public	100	100.0	20/20 ins	jgld_raw_09.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69090	0x10069090	43	G	GSFont::LoadTTF	?LoadTTF@GSFont@@UAEHPBD0HH@Z	public	100	100.0	20/20 ins	jgld_raw_09.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x690d0	0x100690d0	36	G	GSFont::close	?close@GSFont@@UAEXXZ	public	100	100.0	19/19 ins	jgld_raw_09.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69100	0x10069100	40	G	GSFont::width	?width@GSFont@@UAEHPBDH@Z	public	100	100.0	20/20 ins	jgld_raw_09.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69140	0x10069140	81	G	GSFont::`scalar deleting destructor'	??_GGSFont@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x691b0	0x100691b0	81	G	JGLFont::`scalar deleting destructor'	??_GJGLFont@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69220	0x10069220	48	G	GSFont::GSFont	??0GSFont@@QAE@XZ	public	100	100.0	22/22 ins	jgld_font.cpp
+jgld	jgl/jgld.dll/src/jglfont.cpp	0x69260	0x10069260	8	G	JGLFont::`vector deleting destructor'	??_EJGLFont@@W7AEPAXI@Z	public	100	100.0	2/2 ins	m36e_jgld_font.cpp

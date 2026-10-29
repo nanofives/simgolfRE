@@ -1,0 +1,15 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95750	0x00495750	32	G	SysMessageHandler::OnSize	?OnSize@SysMessageHandler@@UAEXHH@Z	public	100	100.0	12/12 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95770	0x00495770	26	G	SysMessageHandler::OnPaint	?OnPaint@SysMessageHandler@@UAEXPAUtagRECT@@@Z	public	100	100.0	10/10 ins	golf_small17.cpp
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95790	0x00495790	378	G	SysMessageHandler::OnNCHitTest	?OnNCHitTest@SysMessageHandler@@UAEJHH@Z	public	100	100.0	148/148 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95910	0x00495910	117	G	SysMessageHandler::OnKey	?OnKey@SysMessageHandler@@UAEXIH@Z	public	100	100.0	43/43 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95990	0x00495990	27	G	SysMessageHandler::OnChar	?OnChar@SysMessageHandler@@UAEXD@Z	public	100	100.0	9/9 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x959b0	0x004959b0	158	G	SysMessageHandler::OnMouseMove	?OnMouseMove@SysMessageHandler@@UAEXHH@Z	public	100	100.0	56/56 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95a50	0x00495a50	72	G	SysMessageHandler::OnMouseWheel	?OnMouseWheel@SysMessageHandler@@UAEXHHH@Z	public	100	100.0	29/29 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95aa0	0x00495aa0	233	G	SysMessageHandler::OnLButtonDown	?OnLButtonDown@SysMessageHandler@@UAEXHHH@Z	public	100	100.0	80/80 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95b90	0x00495b90	62	G	SysMessageHandler::OnLButtonUp	?OnLButtonUp@SysMessageHandler@@UAEXHH@Z	public	100	100.0	19/19 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95bd0	0x00495bd0	92	G	SysMessageHandler::OnRButtonDown	?OnRButtonDown@SysMessageHandler@@UAEXHHH@Z	public	100	100.0	33/33 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95c30	0x00495c30	62	G	SysMessageHandler::OnRButtonUp	?OnRButtonUp@SysMessageHandler@@UAEXHH@Z	public	100	100.0	19/19 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95c70	0x00495c70	63	G	SysMessageHandler::OnActivate	?OnActivate@SysMessageHandler@@UAEXHH@Z	public	100	100.0	18/18 ins	
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95cb0	0x00495cb0	101	G	SysMessageHandler::OnJackalTimer	?OnJackalTimer@SysMessageHandler@@UAEXI@Z	public	100	100.0	40/40 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/SysMessageHandler.cpp	0x95d20	0x00495d20	16	G	SysMessageHandler::OnNetMessage	?OnNetMessage@SysMessageHandler@@UAEXXZ	public	100	100.0	5/5 ins	

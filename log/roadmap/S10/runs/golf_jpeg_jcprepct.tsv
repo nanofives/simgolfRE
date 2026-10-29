@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	0xb3a80	0x004b3a80	172	G	jinit_c_prep_controller	_jinit_c_prep_controller	public	100	100.0	66/66 ins	golf_jpeg_cprepct.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	0xb3b30	0x004b3b30	71	L	start_pass_prep	_start_pass_prep	name	100	100.0	23/23 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	0xb3b80	0x004b3b80	381	L	pre_process_data	_pre_process_data	name	100	100.0	144/144 ins	golf_jpeg_cprepct.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	0xb3d00	0x004b3d00	52	L	expand_bottom_edge	_expand_bottom_edge	name	100	100.0	27/27 ins	golf_jpeg_cprepct.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	0xb3d40	0x004b3d40	464	L	pre_process_context	_pre_process_context	name	100	100.0	167/167 ins	golf_jpeg_cprepct.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	0xb3f10	0x004b3f10	292	L	create_context_buffer	_create_context_buffer	name	100	100.0	102/102 ins	golf_jpeg_cprepct.cpp

@@ -7,6 +7,7 @@ Returns 0 if the channel is open (+0x58 bit1 set) else SNDERR 0x14. (`re/names/s
 System writeup: `re/analysis/systems/sound_7.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `?get_cursample@CWaveFile@@QAE?AW4SNDERR@@PAK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100357f7, 0x10035884): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100357e6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

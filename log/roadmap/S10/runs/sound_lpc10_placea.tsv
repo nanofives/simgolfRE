@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/placea.c	0x3edc0	0x1003edc0	1350	G	placea_	_placea_	public	100	100.0	462/462 ins	m36c_D2_01.cpp

@@ -7,6 +7,7 @@ this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then
 System writeup: `re/analysis/systems/model_h4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SpriteBox.cpp` as `?on_redraw@SpriteBox@@$4PPPPPPPM@FHI@AEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004a4ac0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

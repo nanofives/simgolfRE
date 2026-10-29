@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"add ecx, 9","add ecx, 9",True
+2,"add eax, 9","add eax, 9",True
+3,push ecx,push ecx,True
+4,push eax,push eax,True
+5,call 0x11,call 0x10049500,True
+6,neg eax,neg eax,True
+7,pop ecx,pop ecx,True
+8,"sbb eax, eax","sbb eax, eax",True
+9,pop ecx,pop ecx,True
+10,neg eax,neg eax,True
+11,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\typinfo.obj (library object, no compilation)",symbol=??9type_info@@QBEHABV0@@Z,module=sound.dll
+VERDICT,GREEN,12,100.0%

@@ -1,0 +1,1 @@
+see 2_files.txt (S10.2 and S10.3 share the smsg_golf_ file set, tools and logs)

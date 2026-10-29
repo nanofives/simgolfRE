@@ -7,6 +7,7 @@ draws a dashed vertical line on a 16-bit surface. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_jgld_jglbuffer.cpp` as `?DrawDashedVLine@JGLBuffer@@QAEXHHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x20` (at 0x1000d94e): callee pops 32 bytes of stack arguments.
 - `ecx` is read at 0x1000d4f9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

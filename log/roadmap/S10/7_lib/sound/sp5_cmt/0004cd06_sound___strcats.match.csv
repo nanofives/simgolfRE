@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,push edi,push edi,True
+1,"mov edi, dword ptr [esp + 0xc]","mov edi, dword ptr [esp + 0xc]",True
+2,"test edi, edi","test edi, edi",True
+3,jle 0x23,jle 0x1004cd29,True
+4,push esi,push esi,True
+5,"lea esi, [esp + 0x10]","lea esi, [esp + 0x10]",True
+6,push dword ptr [esi + 4],push dword ptr [esi + 4],True
+7,"add esi, 4","add esi, 4",True
+8,push dword ptr [esp + 0x10],push dword ptr [esp + 0x10],True
+9,call 0x1d,call 0x1004a020,True
+10,pop ecx,pop ecx,True
+11,dec edi,dec edi,True
+12,pop ecx,pop ecx,True
+13,jne 0xe,jne 0x1004cd14,True
+14,pop esi,pop esi,True
+15,pop edi,pop edi,True
+16,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\setlocal.obj (library object, no compilation)",symbol=__strcats,module=sound.dll
+VERDICT,GREEN,17,100.0%

@@ -1,0 +1,22 @@
+0 quoted strings replaced
+re/names/smsg_exe_1.tsv: 42 rows
+re/names/smsg_exe_1_globals.tsv: missing
+re/names/smsg_sound_1.tsv: 268 rows
+re/names/smsg_sound_1_globals.tsv: missing
+re/names/smsg_jgld_1.tsv: 22 rows
+re/names/smsg_jgld_1_globals.tsv: missing
+re/names/smsg_jgld_crt.tsv: 54 rows
+re/names/smsg_jgld_crt_globals.tsv: missing
+re/names/smsg_terrain_crt.tsv: 60 rows
+re/names/smsg_terrain_crt_globals.tsv: missing
+re/names/smsg_exe_lib.tsv: 188 rows
+re/names/smsg_exe_lib_globals.tsv: missing
+re/names/smsg_jgld_lib.tsv: 261 rows
+re/names/smsg_jgld_lib_globals.tsv: missing
+re/names/smsg_sound_lib.tsv: 260 rows
+re/names/smsg_sound_lib_globals.tsv: missing
+re/names/smsg_terrain_lib.tsv: 423 rows
+re/names/smsg_terrain_lib_globals.tsv: missing
+bad 0
+cross-file duplicates 0
+461 citations checked, 0 bad, 0 weak (callee only)

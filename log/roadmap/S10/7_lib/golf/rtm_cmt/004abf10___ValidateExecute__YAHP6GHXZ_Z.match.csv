@@ -1,0 +1,14 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,push 1,push 1,True
+2,pop esi,pop esi,True
+3,push dword ptr [esp + 8],push dword ptr [esp + 8],True
+4,call dword ptr [0],call dword ptr [0x4ba054],True
+5,"test eax, eax","test eax, eax",True
+6,je 0x14,je 0x4abf24,True
+7,"xor esi, esi","xor esi, esi",True
+8,"mov eax, esi","mov eax, esi",True
+9,pop esi,pop esi,True
+10,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\validate.obj (library object, no compilation)",symbol=?_ValidateExecute@@YAHP6GHXZ@Z,module=golf_clean.exe
+VERDICT,GREEN,11,100.0%

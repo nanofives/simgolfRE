@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/Heap.cpp	0x74780	0x00474780	18	G	Heap::clear	?clear@Heap@@QAEXXZ	public	100	100.0	7/7 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/Heap.cpp	0x747a0	0x004747a0	18	G	Heap::Heap	??0Heap@@QAE@XZ	public	100	100.0	7/7 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/Heap.cpp	0x747c0	0x004747c0	30	G	Heap::`scalar deleting destructor'	??_GHeap@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/Heap.cpp	0x747e0	0x004747e0	35	G	Heap::shutdown	?shutdown@Heap@@QAEXXZ	public	100	100.0	13/13 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/Heap.cpp	0x74810	0x00474810	11	G	Heap::~Heap	??1Heap@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/Heap.cpp	0x74820	0x00474820	62	G	Heap::init	?init@Heap@@QAEHI@Z	public	100	100.0	25/25 ins	golf_small6.cpp
+golf	golf/jackal.lib/src/Heap.cpp	0x74860	0x00474860	536	G	Heap::Alloc	?Alloc@Heap@@QAEPAXI@Z	public	100	100.0	207/207 ins	golf_hand_s0_k.cpp

@@ -7,6 +7,7 @@ Destroys the file-scope Surface g_surface839a68 once, guarded by bit 0 of g_guar
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_ScratchSprite.cpp` as `_$E6` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00474ad8): callee pops 0 bytes of stack arguments.
 
 ## Reads

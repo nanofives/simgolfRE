@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 167 bytes, 50 instructions, subsystem `ui`. Mechanical 
 Removes this window from the modal stack, closing the gap and restoring the previous top entry. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_window.cpp` as `?release_modal@WidgetBase@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047bbfb, 0x0047bc20, 0x0047bc4a, 0x0047bc56): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0047bbd4 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

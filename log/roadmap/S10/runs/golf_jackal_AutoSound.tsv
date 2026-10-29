@@ -1,0 +1,3 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/AutoSound.cpp	0x95d30	0x00495d30	372	G	AutoSound::AutoSound	??0AutoSound@@QAE@XZ	public	100	100.0	79/79 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/AutoSound.cpp	0x95eb0	0x00495eb0	345	G	AutoSound::ResetToDefaults	?ResetToDefaults@AutoSound@@QAEXXZ	public	100	100.0	77/77 ins	golf_raw_06.cpp

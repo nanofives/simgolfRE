@@ -7,6 +7,7 @@ installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005bb90, references
 System writeup: `re/analysis/systems/sound_11.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_sound.cpp` as `??0MpegStream@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002c565): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002c4a5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/filemap.cpp	0x92d80	0x00492d80	24	G	Filemap::Filemap	??0Filemap@@QAE@XZ	public	100	100.0	7/7 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/filemap.cpp	0x92da0	0x00492da0	30	G	Filemap::`scalar deleting destructor'	??_GFilemap@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_small18.cpp
+golf	golf/jackal.lib/src/filemap.cpp	0x92dc0	0x00492dc0	11	G	Filemap::~Filemap	??1Filemap@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/filemap.cpp	0x92dd0	0x00492dd0	172	G	Filemap::open_read	?open_read@Filemap@@QAEPAXPBDH@Z	public	100	100.0	66/66 ins	golf_small19.cpp
+golf	golf/jackal.lib/src/filemap.cpp	0x92e80	0x00492e80	69	G	Filemap::close	?close@Filemap@@QAEXXZ	public	100	100.0	25/25 ins	golf_small7.cpp

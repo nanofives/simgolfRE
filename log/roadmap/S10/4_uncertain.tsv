@@ -1,0 +1,6 @@
+ID	addr	type	description	path to resolution	status
+U-1865	jgld.dll 0x19c80, 0x1a6b0	names	Two of the six new 100 percent lines have no hooks.csv row; their names are from their source only	S10.9 names with our citations	open
+U-1866	jgld.dll 0xd4f0	evidence	Surface::dashedVLine16 (C2 held: the original faults) matches 100 percent from their source; a match is not a C2 to C3 step	orchestrator decision with U-1853	open
+U-1867	jgld.dll (319 procedures)	coverage	libcmtd.lib members of jgld.pdb have no source in SMSG-decomp; not matched here	S10.7 FidDb with the SP2 debug CRT	open
+U-1868	jgld.dll libpng zlib	evidence	our vendored libpng 1.0.5 / zlib 1.0.2 and theirs both give 100 percent on 204 procedures; identical output does not say which source text is nearer the original	none needed for matching	open
+U-1869	-	reserved	unused	-	closed

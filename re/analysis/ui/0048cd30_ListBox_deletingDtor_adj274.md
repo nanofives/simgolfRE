@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 17 bytes, 3 instructions, subsystem `ui`. Mechanical tr
 this-adjustor thunk: subtracts the dword at this-0x278 and then 0x274 from this and tail-jumps to ListBox::deletingDtor 0x0048cba0 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_ListBox.cpp` as `??_EListBox@@$4PPPPPNII@CHE@AEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0048cd30 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 8 bytes, 3 instructions, subsystem `ui`. Mechanical tra
 calls Window::refreshFull with its argument set to 0 (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_Globals.cpp` as `?update@GraphicWin@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00404927): callee pops 0 bytes of stack arguments.
 
 ## Reads

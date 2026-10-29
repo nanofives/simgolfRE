@@ -1,0 +1,282 @@
+0x4021b0 unwindFree_4021b0 => HeapNew::operator delete | exe_0.tsv
+    exception-unwind cleanup helper that frees a buffer
+0x4048a0 return0Pop16_4048a0 => WidgetBase::on_dialog_item_back_draw | model_h1.tsv
+    virtual slot default that returns 0 and pops four stack arguments
+0x4048d0 Surface_createFull_fwd0 => AssetSurface::init_buffer | model_h1.tsv
+    forwards four arguments to Surface_createFull with the last two set to 0
+0x4048f0 Image_recreateSurface_fwd => AssetSurface::resize_buffer | model_h1.tsv
+    forwards its three arguments to Image_recreateSurface
+0x404910 Image_releaseAll_fwd => AssetSurface::close_buffer | model_h1.tsv
+    tail jump to Image_releaseAll
+0x404920 Window::refreshFull_fwd0 => GraphicWin::update | model_h1.tsv
+    calls Window::refreshFull with its argument set to 0
+0x404940 thisIdentity_404940 => GraphicWin::is_graphicwin | model_h1.tsv
+    virtual slot that returns its own this pointer
+0x404960 thisIdentity_404940_adj274 => GraphicWin::is_graphicwin | model_h1.tsv
+    this-adjustor thunk (this - 0x274) to thisIdentity_404940, so the Surface sub-object returns its owning window
+0x4049d0 drawText4049d0 => DrawTextWithColor | exe_0.tsv
+    draws a left-aligned text string into a widget quad
+0x421b30 Surface_createFull_fwd1 => AssetSurface::Create | model_h1.tsv
+    forwards five arguments to Surface_createFull with 0 inserted as the third
+0x421b60 drawScaledSprite421b60 => SpriteObject::Draw | exe_0.tsv
+    thin wrapper that draws a scaled sprite
+0x421b90 drawScaledSprite421b90 => SpriteObject::BlitScaled | exe_0.tsv
+    thin wrapper that draws a scaled sprite (variant)
+0x42f530 relaxEdges42f530 => CalculateTileSlopeFlags | exe_1.tsv
+    Relaxes heightfield edges around a tile, skipping blocked tiles.
+0x42f630 relaxTile42f630 => PropagateMinElevation | exe_1.tsv
+    Smooths one tile's corner heights toward its neighbours.
+0x42fa30 heightAt42fa30 => GetTerrainHeightAtWorld | exe_1.tsv
+    Returns the interpolated terrain height at a sub-tile position.
+0x432f90 hitTestSlot432f90 => HitTestTerrainToolbar | exe_1.tsv
+    Returns the slot/cell index under a point using approxDistance.
+0x433c60 hitBuildTool433c60 => HitTestElevationToolbarButtons | exe_1.tsv
+    Hit-tests the build-tool toolbar, returning the tool index under a point.
+0x433d30 clickBuildTool433d30 => HandleElevationToolbarClick | exe_1.tsv
+    Handles a click on the terrain build toolbar with the confirm/undo flow.
+0x434980 pickAmenity434980 => HitTestBuildingToolbar | exe_1.tsv
+    Hit-tests the amenities/landmarks panel, returning the entry under a point.
+0x435570 hitEmployeeSlot435570 => HitTestGolferPairingGrid | exe_1.tsv
+    Hit-tests the employee view panel, returning the slot under a point.
+0x435f00 hitGolferPanel435f00 => HitTestPeopleToolbarButtons | exe_1.tsv
+    Hit-tests the golfer/action panel, returning the entry under a point.
+0x436b00 hitEmployee436b00 => HitTestEmployeePanel | exe_1.tsv
+    Hit-tests the employee detail panel, returning the control under a point.
+0x449310 tileQuery449310 => GetCornerElevationAt | exe_1.tsv
+    Returns a per-tile value used by terrain elevation/wall sync.
+0x456b70 mapToScreen456b70 => TileToScreenCoords | exe_1.tsv
+    Converts a map cell to screen pixels for the routing/value overlay maps.
+0x45b8b0 appendToBuffer45b8b0 => StoreStringInPool | exe_1.tsv
+    Appends an entry to the secondary text buffer.
+0x474700 recordFreeStr_474700 => SpriteList::kill_entry | model_h2.tsv
+    Frees the heap string held at +8 of the argument record unless this+0x18 is set.
+0x475b60 DC_call84 => AssetSurface::draw | exe_2.tsv
+    forwards to the device-context method at vtable +0x84
+0x475ba0 DC_call90 => AssetSurface::draw_dest | exe_2.tsv
+    forwards to the device-context method at vtable +0x90
+0x475be0 DC_calla4 => AssetSurface::draw_multi_table_dest | exe_2.tsv
+    forwards to the device-context method at vtable +0xa4
+0x475c20 DC_calla0 => AssetSurface::BlitVtable40 | exe_2.tsv
+    forwards to the device-context method at vtable +0xa0
+0x47b9f0 Window::fwdScroll26c => WidgetBase::set_vert_pos | exe_3.tsv
+    forwards a scroll value to the child object at +0x26c (FUN_004967f0)
+0x47ba10 Window::fwdScroll270 => WidgetBase::set_horz_pos | exe_3.tsv
+    forwards a scroll value to the child object at +0x270 (FUN_004967f0)
+0x47ba30 Window::fwdRange26c => WidgetBase::set_vert_range | exe_3.tsv
+    forwards a (pos,range) pair to the child at +0x26c (FUN_00496770)
+0x47ba50 Window::fwdRange270 => WidgetBase::set_horz_range | exe_3.tsv
+    forwards a (pos,range) pair to the child at +0x270 (FUN_00496770)
+0x47ba70 Window::setField26c5a0 => WidgetBase::set_vert_paging | exe_3.tsv
+    stores a value at offset 0x5a0 of the child object at +0x26c
+0x47ba90 Window::setField2705a0 => WidgetBase::set_horz_paging | exe_3.tsv
+    stores a value at offset 0x5a0 of the child object at +0x270
+0x47cfd0 resetViewState47cfd0 => WidgetBase::init_class | exe_3.tsv
+    constructs a temporary C474ae0 view, zeros globals g_83a4e8..g_83a4f4, calls FUN_004a0890 and destroys it
+0x47d010 screenTick47d010 => WidgetBase::close_class | exe_3.tsv
+    calls screen manager g_83ad50 vtable slot f2 when the screen object exists
+0x47e110 return0Pop8_47e110 => WidgetBase::on_key_click | model_h2.tsv
+    Window virtual stub with two arguments that returns 0.
+0x47eff0 Window::fwdMouseEvent238 => WidgetBase::OnMouseMoveInternal | undisc_exe.tsv
+    forwards its three stack arguments and this to Window::mouseEvent238 0x0047be40 and returns
+0x4810d0 drawPanel4810d0 => GraphicWin::on_redraw_nc | exe_3.tsv
+    large composite info-panel builder/renderer: draws framed images and text through drawPanelContents
+0x483020 returnThis_483020 => FLCPalette::operator= | model_h2.tsv
+    Returns this and ignores its one argument.
+0x483bd0 pumpInput483bd0 => do_all_tasks | exe_3.tsv
+    sets input phase g_83ad4c=0x3f and pumps events (f483bb0) until drained, then phase 0 and f497b00
+0x483c30 pumpInput483c30 => do_all_non_input | exe_3.tsv
+    input-pump variant setting phase g_83ad4c and draining the event queue
+0x483c90 pumpInput483c90 => do_all_keys | exe_3.tsv
+    sets phase g_83ad4c=2, pumps poll483c70 until drained, returns finish497b00
+0x483cd0 frameTick483cd0 => do_mouse | exe_3.tsv
+    runs one display tick: pre49c8e0, pre497b20 and screen manager g_83ad50 vtable f79
+0x483cf0 pumpInput483cf0 => do_all_mouse | exe_3.tsv
+    sets phase g_83ad4c=8, pumps poll483cd0 until drained, returns finish497b00
+0x483d30 enterModal483d30 => flush_input | exe_3.tsv
+    enters a modal input state: modalPush (f483d40) and modalFocusClear (f483d60) then finish497b20
+0x483d40 modalPush483d40 => flush_keyboard | exe_3.tsv
+    pushes a modal input layer on the screen manager g_83ad50 (vtable f82) and finish497b20
+0x483d60 modalFocusClear483d60 => flush_mouse | exe_3.tsv
+    clears focus (g_83ab40/44=0) via screen manager g_83ad50 vtable f83 and finish497b20
+0x483d80 leaveModal483d80 => PumpUserTick | exe_3.tsv
+    leaves the modal input state: finish497b20 then screen manager g_83ad50 vtable f72
+0x483da0 pumpInputDisplay483da0 => flush_timer | exe_3.tsv
+    sets the low six bits of the input phase 0x0083ad4c, calls display slot +0x150 when the display 0x0083ad50 exists, then sets the phase to 0 (sibling of pumpInput483bd0/483c90/483cf0)
+0x4840e0 createSound4840e0 => Sound::create_sound | exe_3.tsv
+    creates a sound object via the sound.dll factory hook g_83af6c(a,b,c); returns 1 when sound is not initialized (g_83afc4)
+0x484550 Snd::stop484550 => Sound::unload | exe_3.tsv
+    stops a sound: m_40 stop (v5), v32, clears the device m_40 and state bit0
+0x4846b0 Snd::setField34 => Sound::set_delay | exe_3.tsv
+    stores a value in m_34 and forwards it to the device object m_40 (vtable f19)
+0x4846d0 Snd::setField38 => Sound::set_fade | exe_3.tsv
+    stores a nonzero value in m_38 and forwards it to the device m_40 (vtable f1), returning 10 on zero
+0x484700 Snd::setField38Voice54 => Sound::set_fade_in | model_h2.tsv
+    Stores a nonzero value in field_38 and forwards it to voice slot +0x54; returns 10 for zero.
+0x484730 Snd::applyField38Voice28 => Sound::fade | model_h2.tsv
+    Forwards to voice slot +0x28 when field_38 is set and a voice exists, else returns 0x13.
+0x484750 Snd::applyField484750 => Sound::fade | exe_3.tsv
+    sets a field on the device (vtable f1) and, if it returned 0, calls vtable f10
+0x484770 Snd::applyField38Voice30 => Sound::fade_in | model_h2.tsv
+    Forwards to voice slot +0x30 when field_38 is set and a voice exists, else returns 0x13.
+0x4847b0 Snd::applyField4847b0 => Sound::fade_in | exe_3.tsv
+    sets a field on the device (vtable f21) and, if it returned 0, calls vtable f10
+0x484c20 SndStream::open484c20 => Wave::dyna_load | exe_3.tsv
+    opens a streaming sound from an id: creates the device (createSound), sets its source (get) and refreshes
+0x484e30 Snd::applyMode484e30 => Wave::load | exe_3.tsv
+    applies a mode to the device (vtable f34) and queries status (vtable f35) unless flag bit2 is set
+0x484f00 Snd::stop484f00 => Wave::unload | exe_3.tsv
+    stops a streaming sound: m_40 stop (v5), clears m_40, calls v32 unless m_58 bit1 and clears state bit0
+0x4850f0 Snd::setField60 => Wave::set_reverb_mix | model_h3.tsv
+    Stores a value in m_60 and forwards it to the sound device object at this+0x40 (vtable +0xec), returning 0x14 when there is no device.
+0x485120 returnB_485120 => Wave::set_asdr | model_h3.tsv
+    Returns the constant 0xb.
+0x485380 returnBPop4_485380 => VoiceRx::set_attrib | model_h3.tsv
+    Returns the constant 0xb and pops one argument.
+0x486af0 EditBox::relayoutSlot57 => EditBox::on_scrolled | model_h3.tsv
+    Calls the window layout routine (own slot 72) and returns, popping two arguments it ignores.
+0x486b00 EditBox::fwdSlot57From58 => EditBox::on_scrolling | model_h3.tsv
+    Passes its two arguments to the object own slot 57.
+0x488cb0 returnZeroPop8_488cb0 => BaseButton::on_key_click | model_h3.tsv
+    Returns 0 and pops two arguments.
+0x488fa0 Button::relayoutSlot60 => BaseButton::on_dialog_focus | model_h3.tsv
+    Calls the window layout routine (own slot 72) and returns, popping one argument it ignores.
+0x489c90 modelListDtor489c90 => StringList::`vbase destructor' | exe_4.tsv
+    Complete destructor of a ListModel-class node list (vtable 0x004bb22c): destroys its nodes and restores the list-heap global from its base. Replaces ListBox::subDtor: the body touches only the node list and its base, no ListBox field.
+0x48c4f0 ListBox::fwdOnScroll => ListBox::on_scrolled | undisc2_exe.tsv
+    tail-forwards both arguments through the vptr at this + [[this-0x58]+4] - 0x58 to the virtual +0xe8 (slot 58, ListBox::onScroll 0x0048c420), with no flag of its own
+0x48cbe0 ListBox::fwdInnerVfn20_vtordisp => ListBox::on_scroll_create | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::fwdInnerVfn20 0x0048cbf0
+0x48cbf0 ListBox::fwdInnerVfn20 => ListBox::on_scroll_create | undisc2_exe.tsv
+    adds the displacement at [[this-0x58]+4] to this (0x58 through the virtual-base table 0x004bb3d0 that ListBox::ctor stores at 0x00489ce4) and works on that base; when bit 0x40 of the byte at +0x44 is set (0x0048cbfd) and the child window pointer at +0xd8 is non-NULL it returns that child's virtual +0x20, otherwise 0
+0x48cc20 ListBox::fwdInnerVfn24_vtordisp => ListBox::on_scroll_delete | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::fwdInnerVfn24 0x0048cc30
+0x48cc30 ListBox::fwdInnerVfn24 => ListBox::on_scroll_delete | undisc2_exe.tsv
+    same guard as ListBox::fwdInnerVfn20 0x0048cbf0 (bit 0x40 of +0x44 at 0x0048cc3d, child at +0xd8): forwards its single argument to the child's virtual +0x24 and returns that result, otherwise returns the argument unchanged
+0x48cd00 ListBox::fwdOnScroll_vtordisp => ListBox::on_scrolled | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::fwdOnScroll 0x0048c4f0
+0x48cd20 ListBox::Slot60_vtordisp => ListBox::on_dialog_focus | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x00487af0
+0x48cd70 ListBox::drawContents_vtordisp_adj578 => ListBox::on_redraw | model_h4.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then 0x578 from this and tail-jumps to ListBox::drawContents 0x0048c130
+0x4913c0 TextView::setField14bcTriple => BasePop::set_sprites | model_h4.tsv
+    stores three arguments into the consecutive fields at this+0x14bc, this+0x14c0 and this+0x14c4 (first, second, third)
+0x4913f0 TextView::setField14d0 => BasePop::set_highlight_color | model_h4.tsv
+    stores its argument at this+0x14d0
+0x491400 TextView::setField14d4 => BasePop::set_selected_color | model_h4.tsv
+    stores its argument at this+0x14d4
+0x491940 viewDispatchSlot6_vtordisp => Dialogs::on_scroll_create | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot6 0x004a1130
+0x491950 viewDispatchSlot7_vtordisp => Dialogs::on_scroll_delete | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot7 0x004a1170
+0x491980 viewDispatchSlot27_vtordisp => Dialogs::on_mouse_move | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot27 0x004a0ab0
+0x491990 viewDispatchSlot28_vtordisp => Dialogs::on_mouse_leave | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot28 0x004a0a10
+0x4919a0 viewDispatchSlot29_vtordisp => Dialogs::on_left_click | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot29 0x004a0db0
+0x4919b0 viewDispatchSlot30_vtordisp => Dialogs::on_left_down | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot30 0x004a0b50
+0x4919c0 viewDispatchSlot31_vtordisp => Dialogs::on_left_up | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot31 0x004a0e60
+0x4919d0 viewDispatchSlot32_vtordisp => Dialogs::on_right_click | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot32 0x004a0eb0
+0x4919e0 viewDispatchSlot33_vtordisp => Dialogs::on_right_down | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot33 0x004a0e20
+0x4919f0 viewDispatchSlot34_vtordisp => Dialogs::on_right_up | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot34 0x004a0e90
+0x491a00 viewDispatchSlot36_vtordisp => Dialogs::on_key_down | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot36 0x004a0bf0
+0x491a20 viewDispatchSlot39_vtordisp => Dialogs::on_right_double_click | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot39 0x004a0e40
+0x491a50 viewDispatchSlot60_vtordisp => Dialogs::on_dialog_focus | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot60 0x004a0ff0
+0x491ab0 viewDispatchDraw_vtordisp_adj578 => Dialogs::on_redraw | model_h4.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then 0x578 from this and tail-jumps to viewDispatchDraw 0x004a0d30
+0x491b70 listPanelSlot28_vtordisp => ListBoxCtl::on_mouse_leave | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x0049e990
+0x491bb0 listPanelSlot60_vtordisp => ListBoxCtl::on_dialog_focus | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x0049e7b0
+0x491c00 listPanelDrawContents_vtordisp_adj578 => ListBoxCtl::on_redraw | model_h4.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then 0x578 from this and tail-jumps to listPanelDrawContents 0x0049e680
+0x495750 uiEventForwardRootSlot3 => SysMessageHandler::OnSize | model_h4.tsv
+    event-table entry 0: forwards its two arguments (and two zeros) to slot 3 of the root object at 0x0083aa9c when one exists
+0x49c0a0 DebugWindow::clearField594 => MultiDebug::close | model_h4.tsv
+    clears the stats record pointer at this+0x594 of the debug window
+0x49d280 freeGfxGlobal_840710 => ReleaseSmallSprites | exe_5.tsv
+    releases the graphics surface global at 0x00840710.
+0x49d690 viewFieldCleanup49d690 => ListBoxCtl::close | exe_5.tsv
+    cleans up a view sub-field, resetting its embedded S1D489150 object.
+0x49e7b0 listPanelSlot60 => ListBoxCtl::on_dialog_focus | exe_8.tsv
+    listPanel's slot-60 body, thiscall(int unused): the vbtable at this-0x24 and its entry +4 (0x0049e7b0 / 0x0049e7b3), then slot +0x120 of the base at this-0x24+entry with no argument (0x0049e7b6..0x0049e7be); the stack argument is never read (ret 4 at 0x0049e7c4).
+0x49e990 listPanelSlot28 => ListBoxCtl::on_mouse_leave | exe_13.tsv
+    clears the selected-row and pressed-row words of the listPanel part's ListModel to -1 and returns the result of the Window base's slot +0x120
+0x49ece0 viewFieldCleanup49ece0 => CheckBoxCtl::close | exe_5.tsv
+    cleans up a view sub-field, resetting its embedded S1D489150 object.
+0x49ee90 flagToggle49ee90 => CheckBoxCtl::flip_state_id | exe_5.tsv
+    toggles flag id (flagIsSet 0x0049ef80, then flagSet 0x0049eef0 with the opposite value)
+0x49eec0 flagToggle49eec0 => CheckBoxCtl::flip_state_pos | exe_5.tsv
+    toggles a bit in the bit array (set/clear based on current state).
+0x49fc30 optionDialogSlot38 => CheckBoxCtl::on_left_double_click | exe_9.tsv
+    thiscall(a, b), both unused: stores the dword at this + vbtable[1] + 0x114 to 0x0083ab2c (0x0049fc30..0x0049fc3d), the vbtable pointer being at this-0x1c; when the cdecl callback at this-0x10 is not null (0x0049fc42..0x0049fc47) passes it the dword at this + vbtable[2] + 0xd4 (the mask optionDialogOnMouse 0x0049fda0 tests at 0x0
+0x49fd80 optionDialogSlot60 => CheckBoxCtl::on_dialog_focus | exe_8.tsv
+    optionDialog's slot-60 body, thiscall(int unused): the vbtable at this-0x1c and its entry +4 (0x0049fd80 / 0x0049fd83), then slot +0x120 of the base at this-0x1c+entry with no argument (0x0049fd86..0x0049fd8e); the stack argument is never read (ret 4 at 0x0049fd94).
+0x49fe20 optionDialogSlot28 => CheckBoxCtl::on_mouse_leave | exe_9.tsv
+    thiscall(a, b), both unused: writes -1 to the dword at this + vbtable[2] + 0xd8 (the hover index optionDialogOnMouse 0x0049fda0 sets, 0x0049fdf2 / 0x0049fdfa), the vbtable pointer being at this-0x1c (0x0049fe20..0x0049fe26), then calls slot +0x120 of this - 0x1c + vbtable[1] (0x0049fe31..0x0049fe3f) and returns its eax
+0x49ffc0 optionDialogSlot28_vtordisp => CheckBoxCtl::on_mouse_leave | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x0049fe20
+0x49fff0 optionDialogSlot38_vtordisp => CheckBoxCtl::on_left_double_click | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x0049fc30
+0x4a0000 optionDialogSlot60_vtordisp => CheckBoxCtl::on_dialog_focus | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x0049fd80
+0x4a0050 optionDialogDrawContents_vtordisp_adj578 => CheckBoxCtl::on_redraw | model_h4.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then 0x578 from this and tail-jumps to optionDialogDrawContents 0x0049fc60
+0x4a0a10 viewDispatchSlot28 => Dialogs::on_mouse_leave | undisc2_exe.tsv
+    selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-28 method: 1 -> the unnamed 0x0049fe20 (this-0x168), 2 -> ListBox::clearSelection 0x0048cac0 (this-0x1a0), 8 -> the unnamed 0x004a4340, 0x10 -> the unnamed 0x0049e990 (this-0x180); every other tag returns
+0x4a0ab0 viewDispatchSlot27 => Dialogs::on_mouse_move | undisc2_exe.tsv
+    selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-27 method with both arguments: 1 -> optionDialogOnMouse 0x0049fda0 (this-0x168), 2 -> ListBox::onDrag 0x0048c8a0 (this-0x1a0), 8 -> the unnamed 0x004a4340 (this-0x8c), 0x10 -> listPanelReadValue 0x0049e7d0 (this-0x180); every other tag returns
+0x4a0b50 viewDispatchSlot30 => Dialogs::on_left_down | undisc2_exe.tsv
+    selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-30 method with both arguments: 1 -> optionDialogUpdate 0x0049f9a0 (this-0x168), 2 -> ListBox::onPress 0x0048aa00 (this-0x1a0), 8 -> hotHitCb0 0x004a43f0 (this-0x8c), 0x10 -> listPanelOnScroll 0x0049e230 (this-0x180); every other tag returns
+0x4a0bf0 viewDispatchSlot36 => Dialogs::on_key_down | undisc2_exe.tsv
+    selects on the 32-bit tag at this-8 and returns the matching sub-view's slot-36 result for its single argument: 1 -> optionDialogOnKey 0x0049fa90 (this-0x168), 2 -> ListBox::typeAhead 0x0048aea0 (this-0x1a0), 8 -> panelOnKey 0x004a4680 (this-0x8c), 0x10 -> listPanelRefresh 0x0049e450 (this-0x180); every other tag returns 0 (0x00
+0x4a0db0 viewDispatchSlot29 => Dialogs::on_left_click | undisc2_exe.tsv
+    selects on the 32-bit tag at this-8: 2 -> ListBox::forwardClick 0x0048c610 (this-0x1a0), 8 -> panelOnPick 0x004a4350 (this-0x8c), both with the two arguments; every other tag returns
+0x4a0e20 viewDispatchSlot33 => Dialogs::on_right_down | undisc2_exe.tsv
+    calls hotHitCb3 0x004a44b0 with this-0x8c and the two arguments when the tag at this-8 is 8 (0x004a0e20); every other tag returns
+0x4a0e40 viewDispatchSlot39 => Dialogs::on_right_double_click | undisc2_exe.tsv
+    calls hotHitCb6 0x004a4570 with this-0x8c and the two arguments when the tag at this-8 is 8 (0x004a0e40); every other tag returns
+0x4a0e60 viewDispatchSlot31 => Dialogs::on_left_up | undisc2_exe.tsv
+    tests the tag at this-8 against 4 and then 8 (0x004a0e63, 0x004a0e68) and calls hotHitCb1 0x004a4430 with this-0x8c and the two arguments for tag 8 only; every other tag returns
+0x4a0e90 viewDispatchSlot34 => Dialogs::on_right_up | undisc2_exe.tsv
+    calls hotHitCb4 0x004a44f0 with this-0x8c and the two arguments when the tag at this-8 is 8 (0x004a0e90); every other tag returns
+0x4a0eb0 viewDispatchSlot32 => Dialogs::on_right_click | undisc2_exe.tsv
+    calls hotHitCb2 0x004a4470 with this-0x8c and the two arguments when the tag at this-8 is 8 (0x004a0eb0); every other tag returns
+0x4a0ff0 viewDispatchSlot60 => Dialogs::on_dialog_focus | undisc2_exe.tsv
+    selects on the 32-bit tag at this-8 and calls the matching sub-view's slot-60 method: 1 -> the unnamed 0x0049fd80 (this-0x168), 2 -> the unnamed 0x00487af0 (this-0x1a0), 4 -> widgetShow 0x004a2fa0 (this-0x4) with the single argument, 8 -> the unnamed 0x004a4870 (this-0x8c), 0x10 -> the unnamed 0x0049e7b0 (this-0x180); every othe
+0x4a1130 viewDispatchSlot6 => Dialogs::on_scroll_create | undisc2_exe.tsv
+    runs only for tag 2: an inline copy of ListBox::fwdInnerVfn20 0x0048cbf0 with every offset shifted by -0x1a0 (vbtable pointer at this-0x1f8, flag byte at this-0x15c tested for 0x40 at 0x004a114f, child at this-0xc8), returning the child's virtual +0x20; every other tag returns 0
+0x4a1170 viewDispatchSlot7 => Dialogs::on_scroll_delete | undisc2_exe.tsv
+    runs only for tag 2: an inline copy of ListBox::fwdInnerVfn24 0x0048cc30 with every offset shifted by -0x1a0, forwarding its single argument to the child's virtual +0x24; every other tag returns the argument unchanged
+0x4a23a0 viewFieldReset4a23a0 => EditGroup::close | exe_5.tsv
+    resets the C4a23a0 view sub-field, freeing its contents.
+0x4a2400 panelCreate4a2400 => EditGroup::attach | exe_5.tsv
+    creates a panel sub-view with its child widgets and text labels (exception-guarded).
+0x4a3100 panelDrawRow_vtordisp_adj578 => EditGroup::on_redraw | undisc_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) then subtracts 0x578 from this and tail-jumps to panelDrawRow 0x004a2d50
+0x4a3370 panelSubDtor4a3370 => SpriteList::`vbase destructor' | exe_5.tsv
+    destructor wrapper for the panel sub-view object.
+0x4a35e0 panelSubReset4a35e0 => SpriteBox::close | exe_5.tsv
+    resets the panel sub-view, rebuilding its child widgets from the label table.
+0x4a3790 panelOpenReset4a3790 => SpriteBox::init | exe_5.tsv
+    opens the resource and resets the panel sub-view.
+0x4a3860 panelReset4a3860 => SpriteBox::ResetAndInitAlt | exe_5.tsv
+    resets the panel sub-view (reset-only variant).
+0x4a3880 panelBuild4a3880 => SpriteBox::attach | exe_5.tsv
+    builds a panel sub-view, allocating and adding its row entries.
+0x4a4870 panelSubSlot60 => SpriteBox::on_dialog_focus | exe_8.tsv
+    panelSub's slot-60 body, thiscall(int unused): reads the vbtable at this-0xe0 and its entry +4 (0x004a4870 / 0x004a4876), then calls slot +0x120 of the base at this-0xe0+entry with no argument (0x004a4879..0x004a4887) and returns its eax; the stack argument is never read (ret 4 at 0x004a488d). What slot +0x120 does is not determ
+0x4a4a70 panelSubSlot60_vtordisp => SpriteBox::on_dialog_focus | undisc2_exe.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x004a4870
+0x4a4ac0 panelSubDrawContents_vtordisp_adj578 => SpriteBox::on_redraw | model_h4.tsv
+    this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then 0x578 from this and tail-jumps to panelSubDrawContents 0x004a45b0
+0x4a4b60 listAppend4a4b60 => NetFifo::add | exe_5.tsv
+    appends a new node (copying the payload) to the end of a list.

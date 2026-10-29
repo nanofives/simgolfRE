@@ -7,6 +7,7 @@ An empty destructor: returns without reading or writing anything. (`re/names/sou
 System writeup: `re/analysis/systems/sound_15.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `??1WaveBuffer@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10037df0): callee pops 0 bytes of stack arguments.
 
 ## Reads

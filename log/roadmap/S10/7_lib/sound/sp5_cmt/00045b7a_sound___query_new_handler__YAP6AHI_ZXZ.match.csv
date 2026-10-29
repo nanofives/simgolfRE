@@ -1,0 +1,5 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b558c]",True
+1,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\handler.obj (library object, no compilation)",symbol=?_query_new_handler@@YAP6AHI@ZXZ,module=sound.dll
+VERDICT,GREEN,2,100.0%

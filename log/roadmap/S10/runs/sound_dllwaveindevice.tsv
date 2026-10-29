@@ -1,0 +1,29 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xe870	0x1000e870	52	G	Dll_Wave_In_Device::Dll_Wave_In_Device	??0Dll_Wave_In_Device@@QAE@XZ	public	100	100.0	18/18 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xe8c0	0x1000e8c0	30	G	Dll_Wave_In_Device::`scalar deleting destructor'	??_GDll_Wave_In_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xe8f0	0x1000e8f0	11	G	Dll_Wave_In_Device::~Dll_Wave_In_Device	??1Dll_Wave_In_Device@@UAE@XZ	public	100	100.0	2/2 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xe910	0x1000e910	191	G	Dll_Wave_In_Device::create_device	?create_device@Dll_Wave_In_Device@@KA?AW4SNDERR@@PAPAVWave_In_Device@@K@Z	public	100	100.0	59/59 ins	m36a_g3_gx.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xea00	0x1000ea00	29	G	Dll_Wave_In_Device::delete_device	?delete_device@Dll_Wave_In_Device@@KA?AW4SNDERR@@XZ	public	100	100.0	9/9 ins	sound_raw_07.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xea30	0x1000ea30	66	G	Dll_Wave_In_Device::start_record	?start_record@Dll_Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	18/18 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xeaa0	0x1000eaa0	32	G	Dll_Wave_In_Device::end_record	?end_record@Dll_Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	8/8 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xead0	0x1000ead0	198	G	Dll_Wave_In_Device::init	?init@Dll_Wave_In_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	59/59 ins	m36a_g3_gx.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xebe0	0x1000ebe0	5	G	Dll_Wave_In_Device::set_vxw_key	?set_vxw_key@Dll_Wave_In_Device@@UAE?AW4SNDERR@@PAC@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xec00	0x1000ec00	57	G	Dll_Wave_In_Device::release	?release@Dll_Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	19/19 ins	sound_raw_07.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xec50	0x1000ec50	20	G	Dll_Wave_In_Device::suspend	?suspend@Dll_Wave_In_Device@@UAEXXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xec80	0x1000ec80	36	G	Dll_Wave_In_Device::restart	?restart@Dll_Wave_In_Device@@UAEXXZ	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xecc0	0x1000ecc0	5	G	Dll_Wave_In_Device::select	?select@Dll_Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xece0	0x1000ece0	8	G	Dll_Wave_In_Device::update_sound	?update_sound@Dll_Wave_In_Device@@UAEXXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xed00	0x1000ed00	18	G	Dll_Wave_In_Device::add_to_time_past	?add_to_time_past@Dll_Wave_In_Device@@MAEXK@Z	public	100	100.0	6/6 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xed30	0x1000ed30	3	G	Dll_Wave_In_Device::get_ndevices	?get_ndevices@Dll_Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xed50	0x1000ed50	5	G	Dll_Wave_In_Device::get_description	?get_description@Dll_Wave_In_Device@@UAE?AW4SNDERR@@KPADK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xed70	0x1000ed70	31	G	Dll_Wave_In_Device::hook_vtx	?hook_vtx@Dll_Wave_In_Device@@QAE?AW4SNDERR@@PAVCVoiceTxMgr@@@Z	public	100	100.0	9/9 ins	sound_raw_08.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xeda0	0x1000eda0	21	G	Dll_Wave_In_Device::unhook_vtx	?unhook_vtx@Dll_Wave_In_Device@@QAE?AW4SNDERR@@XZ	public	100	100.0	6/6 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xedd0	0x1000edd0	4	G	Dll_Wave_In_Device::get_time_past	?get_time_past@Dll_Wave_In_Device@@MAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xedf0	0x1000edf0	8	G	Dll_Wave_In_Device::reset_time_past	?reset_time_past@Dll_Wave_In_Device@@MAEXXZ	public	100	100.0	2/2 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xee10	0x1000ee10	8	G	Dll_Wave_In_Device::timer_unhook	?timer_unhook@Dll_Wave_In_Device@@UAEXXZ	public	100	100.0	2/2 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xee30	0x1000ee30	10	G	Dll_Wave_In_Device::set_rate	?set_rate@Dll_Wave_In_Device@@UAEXK@Z	public	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xee50	0x1000ee50	4	G	Dll_Wave_In_Device::get_rate	?get_rate@Dll_Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xee70	0x1000ee70	3	G	Dll_Wave_In_Device::set_volume	?set_volume@Dll_Wave_In_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xee90	0x1000ee90	3	G	Dll_Wave_In_Device::get_volume	?get_volume@Dll_Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xeeb0	0x1000eeb0	3	G	Dll_Wave_In_Device::set_pan	?set_pan@Dll_Wave_In_Device@@UAEXH@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/dllwaveindevice.cpp	0xeed0	0x1000eed0	5	G	Dll_Wave_In_Device::fade	?fade@Dll_Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	

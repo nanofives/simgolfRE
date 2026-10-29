@@ -1,0 +1,55 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ebx,push ebx,True
+3,push esi,push esi,True
+4,push edi,push edi,True
+5,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+6,jne 0x2a,jne 0x1008528a,True
+7,push 0,push 0x1011eca0,True
+8,push 0,push 0,True
+9,push 0x30,push 0x30,True
+10,push 0,push 0x1011f828,True
+11,push 2,push 2,True
+12,call 0x21,call 0x10081f90,True
+13,"add esp, 0x14","add esp, 0x14",True
+14,"cmp eax, 1","cmp eax, 1",True
+15,jne 0x2a,jne 0x1008528a,True
+16,int3 ,int3 ,True
+17,"xor eax, eax","xor eax, eax",True
+18,"test eax, eax","test eax, eax",True
+19,jne 6,jne 0x10085266,True
+20,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+21,"mov edx, dword ptr [ecx + 0xc]","mov edx, dword ptr [ecx + 0xc]",True
+22,"and edx, 0x83","and edx, 0x83",True
+23,"test edx, edx","test edx, edx",True
+24,je 0x8d,je 0x100852ed,True
+25,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+26,"mov ecx, dword ptr [eax + 0xc]","mov ecx, dword ptr [eax + 0xc]",True
+27,"and ecx, 8","and ecx, 8",True
+28,"test ecx, ecx","test ecx, ecx",True
+29,je 0x8d,je 0x100852ed,True
+30,push 2,push 2,True
+31,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+32,"mov eax, dword ptr [edx + 8]","mov eax, dword ptr [edx + 8]",True
+33,push eax,push eax,True
+34,call 0x5b,call 0x10080710,True
+35,"add esp, 8","add esp, 8",True
+36,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+37,"mov edx, dword ptr [ecx + 0xc]","mov edx, dword ptr [ecx + 0xc]",True
+38,"and edx, 0xfffffbf7","and edx, 0xfffffbf7",True
+39,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+40,"mov dword ptr [eax + 0xc], edx","mov dword ptr [eax + 0xc], edx",True
+41,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+42,"mov dword ptr [ecx], 0","mov dword ptr [ecx], 0",True
+43,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+44,"mov dword ptr [edx + 8], 0","mov dword ptr [edx + 8], 0",True
+45,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+46,"mov dword ptr [eax + 4], 0","mov dword ptr [eax + 4], 0",True
+47,pop edi,pop edi,True
+48,pop esi,pop esi,True
+49,pop ebx,pop ebx,True
+50,pop ebp,pop ebp,True
+51,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\_freebuf.obj (library object, no compilation)",symbol=__freebuf,module=jgld.dll
+VERDICT,GREEN,52,100.0%

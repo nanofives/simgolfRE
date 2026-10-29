@@ -1,0 +1,17 @@
+instruction,library_object,original,match
+0,bytes +0x0: 558bec83ec0853565755fc8b5d0c8b45,bytes +0x0: 558bec83ec0853565755fc8b5d0c8b45,True
+1,bytes +0x10: 08f74004060000000f85820000008945,bytes +0x10: 08f74004060000000f85820000008945,True
+2,bytes +0x20: f88b45108945fc8d45f88943fc8b730c,bytes +0x20: f88b45108945fc8d45f88943fc8b730c,True
+3,bytes +0x30: 8b7b0883feff74618d0c76837c8f0400,bytes +0x30: 8b7b0883feff74618d0c76837c8f0400,True
+4,bytes +0x40: 744556558d6b10ff548f045d5e8b5d0c,bytes +0x40: 744556558d6b10ff548f045d5e8b5d0c,True
+5,bytes +0x50: 0bc07433783c8b7b0853e8????????83,bytes +0x50: 0bc07433783c8b7b0853e8????????83,True
+6,bytes +0x60: c4048d6b105653e8????????83c4088d,bytes +0x60: c4048d6b105653e8????????83c4088d,True
+7,bytes +0x70: 0c766a018b448f08e8????????8b048f,bytes +0x70: 0c766a018b448f08e8????????8b048f,True
+8,bytes +0x80: 89430cff548f088b7b088d0c768b348f,bytes +0x80: 89430cff548f088b7b088d0c768b348f,True
+9,bytes +0x90: eba1b800000000eb1cb801000000eb15,bytes +0x90: eba1b800000000eb1cb801000000eb15,True
+10,bytes +0xa0: 558d6b106aff53e8????????83c4085d,bytes +0xa0: 558d6b106aff53e8????????83c4085d,True
+11,bytes +0xb0: b8010000005d5f5e5b8be55dc3558b4c,bytes +0xb0: b8010000005d5f5e5b8be55dc3558b4c,True
+12,bytes +0xc0: 24088b298b411c508b411850e8??????,bytes +0xc0: 24088b298b411c508b411850e8??????,True
+13,bytes +0xd0: ??83c4085dc20400,bytes +0xd0: ??83c4085dc20400,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\exsup3.obj (library object, no compilation)",symbol=__except_handler3,module=sound.dll
+VERDICT,GREEN,14,100.0%

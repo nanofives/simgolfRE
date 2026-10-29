@@ -1,0 +1,102 @@
+........................................................................ [ 14%]
+........................................................................ [ 29%]
+........................................................................ [ 44%]
+........................................................................ [ 59%]
+................F.F....F...............................................F [ 73%]
+........................................................................ [ 88%]
+...................................F..................F                  [100%]
+================================== FAILURES ===================================
+_____ test_every_matched_source_is_100_percent[smsg_golf_jackal_DataFile] _____
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/re/match/smsg_golf_jackal_DataFile.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        res = match.compare(src, "", False)
+>       assert res, f"{src.name} has no MATCH annotations"
+E       AssertionError: smsg_golf_jackal_DataFile.cpp has no MATCH annotations
+E       assert []
+
+tests\test_match.py:34: AssertionError
+_____ test_every_matched_source_is_100_percent[smsg_golf_jackal_Dialogs] ______
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/re/match/smsg_golf_jackal_Dialogs.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        res = match.compare(src, "", False)
+>       assert res, f"{src.name} has no MATCH annotations"
+E       AssertionError: smsg_golf_jackal_Dialogs.cpp has no MATCH annotations
+E       assert []
+
+tests\test_match.py:34: AssertionError
+____ test_every_matched_source_is_100_percent[smsg_golf_jackal_EngineInit] ____
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/re/match/smsg_golf_jackal_EngineInit.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        res = match.compare(src, "", False)
+>       assert res, f"{src.name} has no MATCH annotations"
+E       AssertionError: smsg_golf_jackal_EngineInit.cpp has no MATCH annotations
+E       assert []
+
+tests\test_match.py:34: AssertionError
+______ test_every_matched_source_is_100_percent[smsg_golf_jpeg_jmemnobs] ______
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/re/match/smsg_golf_jpeg_jmemnobs.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        res = match.compare(src, "", False)
+>       assert res, f"{src.name} has no MATCH annotations"
+E       AssertionError: smsg_golf_jpeg_jmemnobs.cpp has no MATCH annotations
+E       assert []
+
+tests\test_match.py:34: AssertionError
+_______________ test_every_match_annotation_is_a_function_entry _______________
+
+    def test_every_match_annotation_is_a_function_entry():
+        """A typo in a // MATCH: address would compare the wrong bytes; every address must be a function entry in
+        its module's list (re/functions_ghidra*.tsv)."""
+        entries = {m: {int(l.split("\t")[0], 16) for l in (ROOT / "re" / t).read_text().splitlines()[1:]}
+                   for m, t in match.TSV.items()}
+        for m in entries:
+            entries[m] |= set(match.boundary_overrides(m))     # entries Ghidra merged into a neighbour
+        bad = []
+        for f in sorted((ROOT / "re" / "match").rglob("*.cpp")):
+            for mod, a in re.findall(r"// MATCH: (\S+) 0x([0-9a-fA-F]+)", f.read_text()):
+                if match.tracker_key(mod, int(a, 16)) not in entries[mod]:
+                    bad.append(f"{f.name}: {mod} 0x{a}")
+>       assert not bad, bad
+E       AssertionError: ['smsg_sound_ambiencemgr.cpp: sound.dll 0x10005880', 'smsg_sound_ambiencemgr.cpp: sound.dll 0x10005900', 'smsg_sound_a...: sound.dll 0x10006ba0', 'smsg_sound_Cmix.cpp: sound.dll 0x10006fc0', 'smsg_sound_Cmix.cpp: sound.dll 0x10007c10', ...]
+E       assert not ['smsg_sound_ambiencemgr.cpp: sound.dll 0x10005880', 'smsg_sound_ambiencemgr.cpp: sound.dll 0x10005900', 'smsg_sound_a...: sound.dll 0x10006ba0', 'smsg_sound_Cmix.cpp: sound.dll 0x10006fc0', 'smsg_sound_Cmix.cpp: sound.dll 0x10007c10', ...]
+
+tests\test_match_tools.py:43: AssertionError
+_________________ test_canonical_smsg_files_name_their_source _________________
+
+    def test_canonical_smsg_files_name_their_source():
+        for f in sorted((ROOT / "re" / "match").glob("smsg_*.cpp")):
+            text = f.read_text()
+            comp = re.search(r"(?m)^// COMPILE (\S+)$", text)
+            assert comp and (ROOT / comp.group(1)).is_file(), f.name
+            assert re.search(r"(?m)^// FLAGS \S+: ", text) and "#include" not in text, f.name
+>           assert re.findall(r"//\s*MATCH:", text), f.name
+E           AssertionError: smsg_golf_jackal_DataFile.cpp
+E           assert []
+E            +  where [] = <function findall at 0x000001ABE0B58040>('//\\s*MATCH:', '// SMSG-decomp source third_party/smsg/SMSG-decomp/golf/jackal.lib/src/DataFile.cpp (project golf/jackal.lib/jackal.d...sor_class@@YAXXZ\n// ALSO 100%, already in golf_raw_10.cpp: golf_clean.exe 0x004a00f0 ?env_open@@YAPAU_iobuf@@PBD0@Z\n')
+E            +    where <function findall at 0x000001ABE0B58040> = re.findall
+
+tests\test_smsg_import.py:96: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_jackal_DataFile]
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_jackal_Dialogs]
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_jackal_EngineInit]
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_jpeg_jmemnobs]
+FAILED tests/test_match_tools.py::test_every_match_annotation_is_a_function_entry
+FAILED tests/test_smsg_import.py::test_canonical_smsg_files_name_their_source
+6 failed, 481 passed in 230.84s (0:03:50)

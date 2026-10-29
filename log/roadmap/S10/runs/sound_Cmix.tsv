@@ -1,0 +1,18 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/Cmix.cpp	0x6e00	0x10006e00	132	G	CWaveMixer::CWaveMixer	??0CWaveMixer@@QAE@XZ	public	100	100.0	39/39 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/Cmix.cpp	0x6ec0	0x10006ec0	37	G	CWaveMixer::~CWaveMixer	??1CWaveMixer@@QAE@XZ	public	100	100.0	14/14 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/Cmix.cpp	0x6f00	0x10006f00	137	G	CWaveMixer::set_mixbuff_size	?set_mixbuff_size@CWaveMixer@@QAE?AW4SNDERR@@K@Z	public	100	100.0	54/54 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x6fc0	0x10006fc0	49	G	CWaveMixer::fill_mixbuff	?fill_mixbuff@CWaveMixer@@AAEXK@Z	public	100	100.0	17/17 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7010	0x10007010	1170	G	CWaveMixer::mix_2_mb	?mix_2_mb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@@Z	public	100	100.0	394/394 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/Cmix.cpp	0x75e0	0x100075e0	1210	G	CWaveMixer::mix_2_3d_mb	?mix_2_3d_mb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0@Z	public	100	100.0	413/413 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7bd0	0x10007bd0	47	G	CWaveMixer::mix_2_fpbuffer	?mix_2_fpbuffer@CWaveMixer@@QAE?AW4SNDERR@@PAN0K@Z	public	100	100.0	27/27 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7c10	0x10007c10	5	G	CWaveMixer::mb_2_dsb	?mb_2_dsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@KK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7c30	0x10007c30	110	G	CWaveMixer::left_fp2word	?left_fp2word@CWaveMixer@@QAEXPAFPANK@Z	public	100	100.0	48/48 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7cc0	0x10007cc0	113	G	CWaveMixer::right_fp2word	?right_fp2word@CWaveMixer@@QAEXPAFPANK@Z	public	100	100.0	49/49 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7d60	0x10007d60	110	G	CWaveMixer::fp2word	?fp2word@CWaveMixer@@QAEXPAFPANK@Z	public	100	100.0	48/48 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x7df0	0x10007df0	500	G	CWaveMixer::fpmb_2_dsb	?fpmb_2_dsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@PANKK@Z	public	100	100.0	194/194 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x8070	0x10008070	808	G	CWaveMixer::fpmb_2_3ddsb	?fpmb_2_3ddsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0PANKKK@Z	public	100	100.0	314/314 ins	
+sound	sound/sound.dll/src/Cmix.cpp	0x8470	0x10008470	507	G	CWaveMixer::clean_play_list	?clean_play_list@CWaveMixer@@QAE?AW4SNDERR@@XZ	public	100	100.0	180/180 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/Cmix.cpp	0x86f0	0x100086f0	96	G	CWaveMixer::open_dump_file	?open_dump_file@CWaveMixer@@QAE?AW4SNDERR@@PAD@Z	public	100	100.0	30/30 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/Cmix.cpp	0x8770	0x10008770	30	G	CWaveMixer::close_dump_file	?close_dump_file@CWaveMixer@@QAE?AW4SNDERR@@XZ	public	100	100.0	11/11 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/Cmix.cpp	0x87a0	0x100087a0	56	G	CWaveMixer::get_filter_index	?get_filter_index@CWaveMixer@@SAHPAUtWAVEFORMATEX@@0@Z	public	100	100.0	19/19 ins	

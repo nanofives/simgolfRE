@@ -1,0 +1,29 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+5,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+6,"sub ecx, 0x3a4","sub ecx, 0x3a4",True
+7,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+8,"cmp dword ptr [ebp - 4], 0x12","cmp dword ptr [ebp - 4], 0x12",True
+9,ja 0x4a,ja 0x10091a3a,True
+10,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+11,"xor edx, edx","xor edx, edx",True
+12,"mov dl, byte ptr [eax]","mov dl, byte ptr [eax + 0x10091a54]",True
+13,jmp dword ptr [edx*4],jmp dword ptr [edx*4 + 0x10091a40],True
+14,"mov eax, 0x411","mov eax, 0x411",True
+15,jmp 0x4c,jmp 0x10091a3c,True
+16,"mov eax, 0x804","mov eax, 0x804",True
+17,jmp 0x4c,jmp 0x10091a3c,True
+18,"mov eax, 0x412","mov eax, 0x412",True
+19,jmp 0x4c,jmp 0x10091a3c,True
+20,"mov eax, 0x404","mov eax, 0x404",True
+21,jmp 0x4c,jmp 0x10091a3c,True
+22,"xor eax, eax","xor eax, eax",True
+23,"mov esp, ebp","mov esp, ebp",True
+24,pop ebp,pop ebp,True
+25,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\mbctype.obj (library object, no compilation)",symbol=_CPtoLCID,module=jgld.dll
+VERDICT,GREEN,26,100.0%

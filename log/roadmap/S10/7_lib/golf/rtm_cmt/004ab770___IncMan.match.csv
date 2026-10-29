@@ -1,0 +1,46 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,push ebx,push ebx,True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,push 0x20,push 0x20,True
+5,"mov ebx, dword ptr [esp + 0x14]","mov ebx, dword ptr [esp + 0x14]",True
+6,cdq ,cdq ,True
+7,pop ecx,pop ecx,True
+8,idiv ecx,idiv ecx,True
+9,"mov esi, eax","mov esi, eax",True
+10,"mov eax, dword ptr [esp + 0x14]","mov eax, dword ptr [esp + 0x14]",True
+11,cdq ,cdq ,True
+12,idiv ecx,idiv ecx,True
+13,"lea edi, [ebx + esi*4]","lea edi, [ebx + esi*4]",True
+14,push edi,push edi,True
+15,push 0x1f,push 0x1f,True
+16,pop ecx,pop ecx,True
+17,push 1,push 1,True
+18,pop eax,pop eax,True
+19,"sub ecx, edx","sub ecx, edx",True
+20,"shl eax, cl","shl eax, cl",True
+21,push eax,push eax,True
+22,push dword ptr [edi],push dword ptr [edi],True
+23,call 0x30,call 0x4acb20,True
+24,"add esp, 0xc","add esp, 0xc",True
+25,dec esi,dec esi,True
+26,js 0x52,js 0x4ab7c2,True
+27,"lea edi, [ebx + esi*4]","lea edi, [ebx + esi*4]",True
+28,"test eax, eax","test eax, eax",True
+29,je 0x52,je 0x4ab7c2,True
+30,push edi,push edi,True
+31,push 1,push 1,True
+32,push dword ptr [edi],push dword ptr [edi],True
+33,call 0x47,call 0x4acb20,True
+34,"add esp, 0xc","add esp, 0xc",True
+35,dec esi,dec esi,True
+36,"sub edi, 4","sub edi, 4",True
+37,"test esi, esi","test esi, esi",True
+38,jge 0x39,jge 0x4ab7a9,True
+39,pop edi,pop edi,True
+40,pop esi,pop esi,True
+41,pop ebx,pop ebx,True
+42,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\intrncvt.obj (library object, no compilation)",symbol=__IncMan,module=golf_clean.exe
+VERDICT,GREEN,43,100.0%

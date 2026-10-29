@@ -1,0 +1,19 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 0xa]","mov eax, dword ptr [esp + 0xa]",True
+1,"mov ecx, 0x7ff8","mov ecx, 0x7ff8",True
+2,"and eax, ecx","and eax, ecx",True
+3,"cmp ax, 0x7ff0","cmp ax, 0x7ff0",True
+4,jne 0x22,jne 0x1004df2b,True
+5,"test dword ptr [esp + 8], 0x7ffff","test dword ptr [esp + 8], 0x7ffff",True
+6,jne 0x27,jne 0x1004df30,True
+7,"cmp dword ptr [esp + 4], 0","cmp dword ptr [esp + 4], 0",True
+8,jne 0x27,jne 0x1004df30,True
+9,"cmp ax, cx","cmp ax, cx",True
+10,jne 0x2b,jne 0x1004df34,True
+11,push 1,push 1,True
+12,pop eax,pop eax,True
+13,ret ,ret ,True
+14,"xor eax, eax","xor eax, eax",True
+15,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\ieeemisc.obj (library object, no compilation)",symbol=__isnan,module=sound.dll
+VERDICT,GREEN,16,100.0%

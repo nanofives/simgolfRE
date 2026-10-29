@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Tournament.cpp	0x6c970	0x0046c970	1729	G	InitTournamentGolfers	?InitTournamentGolfers@@YAXXZ	public	100	100.0	447/447 ins	
+golf	golf/golf.exe/src/Tournament.cpp	0x6d040	0x0046d040	128	G	RespawnGolferPairsPerHole	?RespawnGolferPairsPerHole@@YAXXZ	public	100	100.0	38/38 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/Tournament.cpp	0x6d0c0	0x0046d0c0	310	G	EndTournament	?EndTournament@@YAXXZ	public	100	100.0	84/84 ins	golf_hand_09_d.cpp
+golf	golf/golf.exe/src/Tournament.cpp	0x6d200	0x0046d200	1246	G	PrepareTournamentCourse	?PrepareTournamentCourse@@YAXXZ	public	100	100.0	417/417 ins	
+golf	golf/golf.exe/src/Tournament.cpp	0x6d6e0	0x0046d6e0	1764	G	ShowActionDialog	?ShowActionDialog@@YAHHHHHH@Z	public	100	100.0	560/560 ins	
+golf	golf/golf.exe/src/Tournament.cpp	0x6ddd0	0x0046ddd0	96	G	StartTournament	?StartTournament@@YAHXZ	public	100	100.0	26/26 ins	m36d_hand_01.cpp

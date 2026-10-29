@@ -1,0 +1,276 @@
+jgld.dll	0x1007fbc0	160	_nh_malloc_dbg: VC6 SP2 libcmtd.lib member identical over 160 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x1007fc1d 0x1007fc28 
+jgld.dll	0x10080b90	400	_msize_dbg: VC6 SP2 libcmtd.lib member identical over 400 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10080d01 0x10080d0c 
+jgld.dll	0x10080d40	217	_CrtSetDbgBlockType: VC6 SP2 libcmtd.lib member identical over 217 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10080dfd 0x10080e08 
+jgld.dll	0x100812b0	169	_CrtDoForAllClientObjects: VC6 SP2 libcmtd.lib member identical over 169 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x1008133d 0x10081348 
+jgld.dll	0x10081630	420	_CrtMemCheckpoint: VC6 SP2 libcmtd.lib member identical over 420 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x100817b8 0x100817c3 
+jgld.dll	0x10081910	755	_CrtMemDumpAllObjectsSince: VC6 SP2 libcmtd.lib member identical over 755 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10081bc1 0x10081bcc 
+jgld.dll	0x100834b0	28	_lockerr_exit: VC6 SP2 libcmtd.lib member identical over 28 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early
+jgld.dll	0x10085df0	525	_expand_base: VC6 SP2 libcmtd.lib member identical over 525 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10085e91 0x10085f8a 
+jgld.dll	0x10086000	1153	_realloc_base: VC6 SP2 libcmtd.lib member identical over 1153 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x100861b6 0x100863cb 0x10086470 
+jgld.dll	0x10086490	326	_free_base: VC6 SP2 libcmtd.lib member identical over 326 bytes (S10.9, log/roadmap/S10/9_lib/jgld/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x1008650b 0x1008658d 
+Terrain.dll	0x10015960	160	_nh_malloc_dbg: VC6 SP2 libcmtd.lib member identical over 160 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x100159bd 0x100159c8 
+Terrain.dll	0x10016930	400	_msize_dbg: VC6 SP2 libcmtd.lib member identical over 400 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10016aa1 0x10016aac 
+Terrain.dll	0x10016ae0	217	_CrtSetDbgBlockType: VC6 SP2 libcmtd.lib member identical over 217 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10016b9d 0x10016ba8 
+Terrain.dll	0x10017050	169	_CrtDoForAllClientObjects: VC6 SP2 libcmtd.lib member identical over 169 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x100170dd 0x100170e8 
+Terrain.dll	0x100173d0	420	_CrtMemCheckpoint: VC6 SP2 libcmtd.lib member identical over 420 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10017558 0x10017563 
+Terrain.dll	0x100176b0	755	_CrtMemDumpAllObjectsSince: VC6 SP2 libcmtd.lib member identical over 755 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x10017961 0x1001796c 
+Terrain.dll	0x10019ed0	28	_lockerr_exit: VC6 SP2 libcmtd.lib member identical over 28 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early
+Terrain.dll	0x1001a9c0	525	_expand_base: VC6 SP2 libcmtd.lib member identical over 525 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x1001aa61 0x1001ab5a 
+Terrain.dll	0x1001abd0	1153	_realloc_base: VC6 SP2 libcmtd.lib member identical over 1153 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x1001ad86 0x1001af9b 0x1001b040 
+Terrain.dll	0x1001b060	326	_free_base: VC6 SP2 libcmtd.lib member identical over 326 bytes (S10.9, log/roadmap/S10/9_lib/Terrain/ext_sp2/); our function list ends it early and holds false function starts inside it: 0x1001b0db 0x1001b15d 
+sound.dll	0x10005880	91	S10.6: SMSG sound.pdb procedure CAmbienceMgr::strip_path
+sound.dll	0x10005900	259	S10.6: SMSG sound.pdb procedure CAmbienceMgr::make_path_local
+sound.dll	0x10006b50	23	S10.6: SMSG sound.pdb procedure CAviMgr::start
+sound.dll	0x10006ba0	29	S10.6: SMSG sound.pdb procedure CAviMgr::discard_frame
+sound.dll	0x10006fc0	49	S10.6: SMSG sound.pdb procedure CWaveMixer::fill_mixbuff
+sound.dll	0x10007c10	5	S10.6: SMSG sound.pdb procedure CWaveMixer::mb_2_dsb
+sound.dll	0x100087a0	56	S10.6: SMSG sound.pdb procedure CWaveMixer::get_filter_index
+sound.dll	0x10008e00	32	S10.6: SMSG sound.pdb procedure CTimer::get_samples_per_tick
+sound.dll	0x10008e30	50	S10.6: SMSG sound.pdb procedure CTimer::set_rate
+sound.dll	0x10008e80	54	S10.6: SMSG sound.pdb procedure CTimer::set_wave_format
+sound.dll	0x10009240	121	S10.6: SMSG sound.pdb procedure init_sound
+sound.dll	0x100099d0	114	S10.6: SMSG sound.pdb procedure get_sound_type
+sound.dll	0x10009a70	1	S10.6: SMSG sound.pdb procedure update_sound
+sound.dll	0x10009e10	26	S10.6: SMSG sound.pdb procedure Dll_Midi_Device::init_win_device
+sound.dll	0x1000aa60	110	S10.6: SMSG sound.pdb procedure Dll_Midi_Device::post_GT_request
+sound.dll	0x1000db60	95	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::post_GT_request
+sound.dll	0x1000e160	72	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::update_hwbuffers
+sound.dll	0x1000e370	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::get_eax
+sound.dll	0x1000e390	34	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::get_eax
+sound.dll	0x1000e3d0	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::set_eax_volume
+sound.dll	0x1000e3f0	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::get_eax_volume
+sound.dll	0x1000e410	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::set_eax_decay
+sound.dll	0x1000e430	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::get_eax_decay
+sound.dll	0x1000e450	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::set_eax_damping
+sound.dll	0x1000e470	5	S10.6: SMSG sound.pdb procedure Dll_Wave_Device::get_eax_damping
+sound.dll	0x1000f0a0	16	S10.6: SMSG sound.pdb procedure CDSB::dsbrestore
+sound.dll	0x1000f0f0	77	S10.6: SMSG sound.pdb procedure CDSB::setsamplerate
+sound.dll	0x1000f380	87	S10.6: SMSG sound.pdb procedure CDSB::setsamplesize
+sound.dll	0x1000f400	86	S10.6: SMSG sound.pdb procedure CDSB::setnumchannels
+sound.dll	0x1000f720	38	S10.6: SMSG sound.pdb procedure CDSB::reinit
+sound.dll	0x10010120	37	S10.6: SMSG sound.pdb procedure CDSB::get_cur_dsbwrite
+sound.dll	0x10010160	36	S10.6: SMSG sound.pdb procedure CDSB::get_cur_dsbplay
+sound.dll	0x10010d60	51	S10.6: SMSG sound.pdb procedure CDSB::release_pointer
+sound.dll	0x10010e80	27	S10.6: SMSG sound.pdb procedure CDSB::set_samples_per_tick
+sound.dll	0x10011600	122	S10.6: SMSG sound.pdb procedure CDSMgr::init
+sound.dll	0x10011720	1	S10.6: SMSG sound.pdb procedure CDSMgr::suspend
+sound.dll	0x10011740	1	S10.6: SMSG sound.pdb procedure CDSMgr::restart
+sound.dll	0x10012020	8	S10.6: SMSG sound.pdb procedure CDSMgr::get_eax
+sound.dll	0x10012060	3	S10.6: SMSG sound.pdb procedure CDSMgr::init_A3D
+sound.dll	0x10012080	3	S10.6: SMSG sound.pdb procedure CDSMgr::uninit_A3D
+sound.dll	0x10013470	77	S10.6: SMSG sound.pdb procedure CDSMgr::attach_dsb
+sound.dll	0x10013870	3	S10.6: SMSG sound.pdb procedure filter_stub
+sound.dll	0x1001b830	37	S10.6: SMSG sound.pdb procedure MidiCtrlSocket::MidiCtrlSocket
+sound.dll	0x1001b9e0	78	S10.6: SMSG sound.pdb procedure MidiCtrlSocket::insert_after
+sound.dll	0x1001c1b0	24	S10.6: SMSG sound.pdb procedure NoteMap::operator=
+sound.dll	0x1001c260	40	S10.6: SMSG sound.pdb procedure NoteMap::map_note
+sound.dll	0x1001c480	75	S10.6: SMSG sound.pdb procedure Stepper::Stepper
+sound.dll	0x1001cad0	3	S10.6: SMSG sound.pdb procedure Chooser::do_control
+sound.dll	0x1001cd70	268	S10.6: SMSG sound.pdb procedure ProgramCtrl::set_base_filepath
+sound.dll	0x1001d030	70	S10.6: SMSG sound.pdb procedure ProgramCtrl::get_new_pitch
+sound.dll	0x1001d590	97	S10.6: SMSG sound.pdb procedure CMidiFile::get_pcur_event
+sound.dll	0x1001d620	107	S10.6: SMSG sound.pdb procedure CMidiFile::get_pfirst_event
+sound.dll	0x1001d6b0	152	S10.6: SMSG sound.pdb procedure CMidiFile::advance_track
+sound.dll	0x1001e120	18	S10.6: SMSG sound.pdb procedure CMidiFile::reload
+sound.dll	0x1001e150	79	S10.6: SMSG sound.pdb procedure CMidiFile::post_reset
+sound.dll	0x1001e510	3	S10.6: SMSG sound.pdb procedure CMidiFile::mmioerr
+sound.dll	0x1001e550	11	S10.6: SMSG sound.pdb procedure CMidiFile::fade
+sound.dll	0x1001e570	82	S10.6: SMSG sound.pdb procedure CMidiFile::fade
+sound.dll	0x1001e5f0	42	S10.6: SMSG sound.pdb procedure CMidiFile::set_pan
+sound.dll	0x1001e6b0	28	S10.6: SMSG sound.pdb procedure CMidiFile::be2le
+sound.dll	0x1001ea40	67	S10.6: SMSG sound.pdb procedure CMidiTrack::set_tick_offset
+sound.dll	0x10020270	8	S10.6: SMSG sound.pdb procedure CMidiMgr::reload
+sound.dll	0x10020aa0	37	S10.6: SMSG sound.pdb procedure CMidiMgr::free_all
+sound.dll	0x10020ae0	90	S10.6: SMSG sound.pdb procedure CMidiMgr::post_unload
+sound.dll	0x10021560	35	S10.6: SMSG sound.pdb procedure CMidiMgr::program_change
+sound.dll	0x10021ec0	8	S10.6: SMSG sound.pdb procedure CMidiMgr::pitch_wheel
+sound.dll	0x10023750	230	S10.6: SMSG sound.pdb procedure CMidiMgr::TT_play_trackset
+sound.dll	0x10023b80	119	S10.6: SMSG sound.pdb procedure CMidiMgr::TT_xpose_trackset
+sound.dll	0x10024310	3	S10.6: SMSG sound.pdb procedure CProgramMgr::unload
+sound.dll	0x10024330	30	S10.6: SMSG sound.pdb procedure CProgramMgr::stop
+sound.dll	0x10024420	7	S10.6: SMSG sound.pdb procedure CProgramMgr::xlat_pitch
+sound.dll	0x10024440	7	S10.6: SMSG sound.pdb procedure CProgramMgr::xlat_volume
+sound.dll	0x100244c0	1	S10.6: SMSG sound.pdb procedure CMidiChannel::reset_rnd_prgm_table
+sound.dll	0x100244e0	7	S10.6: SMSG sound.pdb procedure CMidiChannel::xlat_program
+sound.dll	0x10025040	9	S10.6: SMSG sound.pdb procedure CMMError::CMMError
+sound.dll	0x10025090	7	S10.6: SMSG sound.pdb procedure CMMError::~CMMError
+sound.dll	0x100250b0	86	S10.6: SMSG sound.pdb procedure CMMError::handle_error (extent ends at the last ret; the PDB size adds the switch tables)
+sound.dll	0x10028e70	81	S10.6: SMSG sound.pdb procedure Sound_Device::attach
+sound.dll	0x10028ef0	92	S10.6: SMSG sound.pdb procedure Sound_Device::detach
+sound.dll	0x10028f70	40	S10.6: SMSG sound.pdb procedure Sound_Device::Sound_Device
+sound.dll	0x10029730	93	S10.6: SMSG sound.pdb procedure Wave_Device::add_to_group
+sound.dll	0x100297b0	151	S10.6: SMSG sound.pdb procedure Wave_Device::pull_from_group
+sound.dll	0x10029880	121	S10.6: SMSG sound.pdb procedure Wave_Device::set_group_volume
+sound.dll	0x10029920	24	S10.6: SMSG sound.pdb procedure Wave_Device::get_group_volume
+sound.dll	0x10029950	93	S10.6: SMSG sound.pdb procedure Wave_Device::enable_group
+sound.dll	0x100299d0	81	S10.6: SMSG sound.pdb procedure Wave_Device::muteGroup
+sound.dll	0x10029a50	30	S10.6: SMSG sound.pdb procedure Wave_Device::unMuteGroup
+sound.dll	0x10029a80	120	S10.6: SMSG sound.pdb procedure Wave_Device::disable_group
+sound.dll	0x10029b20	29	S10.6: SMSG sound.pdb procedure Wave_Device::is_group_disabled
+sound.dll	0x10029b50	29	S10.6: SMSG sound.pdb procedure Wave_Device::isGroupMute
+sound.dll	0x1002af00	99	S10.6: SMSG sound.pdb procedure Sound::attach
+sound.dll	0x1002af90	96	S10.6: SMSG sound.pdb procedure Sound::detach
+sound.dll	0x1002c240	22	S10.6: SMSG sound.pdb procedure Wave::select_device
+sound.dll	0x1002c790	51	S10.6: SMSG sound.pdb procedure MpegStream::set_next
+sound.dll	0x1002c7e0	242	S10.6: SMSG sound.pdb procedure MpegStream::start
+sound.dll	0x1002c920	105	S10.6: SMSG sound.pdb procedure MpegStream::add_to_playlist
+sound.dll	0x1002c9b0	42	S10.6: SMSG sound.pdb procedure MpegStream::clear_playlist
+sound.dll	0x1002cd30	3	S10.6: SMSG sound.pdb procedure SoundList::scaleVolumeToGroup
+sound.dll	0x1002cd50	105	S10.6: SMSG sound.pdb procedure SoundList::add
+sound.dll	0x1002cde0	87	S10.6: SMSG sound.pdb procedure SoundList::setListName
+sound.dll	0x1002d010	118	S10.6: SMSG sound.pdb procedure KeyMap::~KeyMap
+sound.dll	0x1002d0b0	50	S10.6: SMSG sound.pdb procedure KeyMap::unmap_range
+sound.dll	0x1002d2c0	287	S10.6: SMSG sound.pdb procedure KeyMap::set_base_path
+sound.dll	0x1002d710	30	S10.6: SMSG sound.pdb procedure Midi::set_frame_delay
+sound.dll	0x1002e2f0	98	S10.6: SMSG sound.pdb procedure Midi::get_tonal_center (extent ends at the last ret; the PDB size adds the switch tables)
+sound.dll	0x1002e490	31	S10.6: SMSG sound.pdb procedure Sound::unloadall
+sound.dll	0x1002e4c0	42	S10.6: SMSG sound.pdb procedure Patch::Patch
+sound.dll	0x1002f710	21	S10.6: SMSG sound.pdb procedure do_message
+sound.dll	0x1002fe20	79	S10.6: SMSG sound.pdb procedure CTrace::CTrace
+sound.dll	0x1002fe90	1	S10.6: SMSG sound.pdb procedure CTrace::~CTrace
+sound.dll	0x1002feb0	177	S10.6: SMSG sound.pdb procedure CTrace::dump_to_file
+sound.dll	0x10030000	43	S10.6: SMSG sound.pdb procedure CTrace::in_data
+sound.dll	0x10030040	44	S10.6: SMSG sound.pdb procedure CTrace::operator=
+sound.dll	0x10030730	110	S10.6: SMSG sound.pdb procedure CVoiceRxMgr::lpc10_write_16bit_samples
+sound.dll	0x100307c0	85	S10.6: SMSG sound.pdb procedure CVoiceRxMgr::lpc10_read_bits
+sound.dll	0x10031120	29	S10.6: SMSG sound.pdb procedure CVoiceRxMgr::discard_buffer
+sound.dll	0x10031150	3	S10.6: SMSG sound.pdb procedure CVoiceRxMgr::enable
+sound.dll	0x10031170	3	S10.6: SMSG sound.pdb procedure CVoiceRxMgr::disable
+sound.dll	0x10031670	50	S10.6: SMSG sound.pdb procedure CVoiceTxMgr::s2f_and_scale
+sound.dll	0x10031a50	66	S10.6: SMSG sound.pdb procedure CVoiceTxMgr::lpc_write_bits
+sound.dll	0x10032680	8	S10.6: SMSG sound.pdb procedure CWaveFile::mpeg_load
+sound.dll	0x10033280	90	S10.6: SMSG sound.pdb procedure CWaveFile::read_from_file
+sound.dll	0x100338f0	113	S10.6: SMSG sound.pdb procedure CWaveFile::get_write_pointers
+sound.dll	0x10033f70	6	S10.6: SMSG sound.pdb procedure CWaveFile::mpeg_unload
+sound.dll	0x10034410	3	S10.6: SMSG sound.pdb procedure CWaveFile::mmioerr
+sound.dll	0x10034de0	78	S10.6: SMSG sound.pdb procedure CWaveFile::fade_in
+sound.dll	0x10034e50	130	S10.6: SMSG sound.pdb procedure CWaveFile::operator++
+sound.dll	0x10034f10	72	S10.6: SMSG sound.pdb procedure CWaveFile::get_nsamples_left_in_buffer
+sound.dll	0x10034f80	29	S10.6: SMSG sound.pdb procedure CWaveFile::advance
+sound.dll	0x10035070	71	S10.6: SMSG sound.pdb procedure CWaveFile::need_to_advance
+sound.dll	0x10035c30	74	S10.6: SMSG sound.pdb procedure CWaveFile::get_mpeg_samples
+sound.dll	0x100377b0	35	S10.6: SMSG sound.pdb procedure CWaveFile::set_buffer_inactive
+sound.dll	0x10037e90	65	S10.6: SMSG sound.pdb procedure WaveBuffer::reset
+sound.dll	0x10037f00	24	S10.6: SMSG sound.pdb procedure WaveBuffer::get_nsamples_left_in_buffer
+sound.dll	0x10038270	58	S10.6: SMSG sound.pdb procedure WaveBuffer::fade_in
+sound.dll	0x10038ed0	46	S10.6: SMSG sound.pdb procedure WaveInDeviceMgr::add_buffer
+sound.dll	0x10038f40	6	S10.6: SMSG sound.pdb procedure WaveInDeviceMgr::get_num_devices
+sound.dll	0x100392c0	83	S10.6: SMSG sound.pdb procedure WaveInDeviceMgr::handle_error (extent ends at the last ret; the PDB size adds the switch tables)
+sound.dll	0x10039380	50	S10.6: SMSG sound.pdb procedure WaveInDeviceMgr::set_format
+sound.dll	0x10039490	28	S10.6: SMSG sound.pdb procedure WIBuffer::WIBuffer
+sound.dll	0x10039540	10	S10.6: SMSG sound.pdb procedure WIBuffer::set_next
+sound.dll	0x10039560	3	S10.6: SMSG sound.pdb procedure WIBuffer::get_whdr
+sound.dll	0x10039ca0	37	S10.6: SMSG sound.pdb procedure CWaveMgr::free_all
+golf_clean.exe	0x004a51fb	52	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z: RTM trnsctrl.obj identical over 52 bytes (pdb-size; S10.7); our function list gives 45
+golf_clean.exe	0x004a54e4	238	__global_unwind2: RTM exsup.obj identical over 238 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 32
+golf_clean.exe	0x004a5526	172	__local_unwind2: RTM exsup.obj identical over 172 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 104
+golf_clean.exe	0x004a558e	68	__abnormal_termination: RTM exsup.obj identical over 68 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 35
+golf_clean.exe	0x004a55b1	33	__NLG_Notify1: RTM exsup.obj identical over 33 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 9
+golf_clean.exe	0x004a55d2	130	??_L@YGXPAXIHP6EX0@Z1@Z: RTM ehvecctr.obj identical over 130 bytes (pdb-size; S10.7); our function list gives 106
+golf_clean.exe	0x004a56e4	47	___onexitinit: RTM onexit.obj identical over 47 bytes (pdb-size; S10.7); our function list gives 41
+golf_clean.exe	0x004a5713	128	??_M@YGXPAXIHP6EX0@Z@Z: RTM ehvecdtr.obj identical over 128 bytes (pdb-size; S10.7); our function list gives 104
+golf_clean.exe	0x004a5793	94	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z: RTM ehvecdtr.obj identical over 94 bytes (pdb-size; S10.7); our function list gives 60
+golf_clean.exe	0x004a682f	264	_WinMainCRTStartup: RTM wincrt0.obj identical over 264 bytes (pdb-size; S10.7); our function list gives 253
+golf_clean.exe	0x004a6ab8	9	__purecall: RTM purevirt.obj identical over 9 bytes (pdb-size trim-pad; S10.7); our function list gives 7
+golf_clean.exe	0x004a6d80	821	_memmove: RTM memmove.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+golf_clean.exe	0x004a88d7	158	___FrameUnwindToState: RTM frame.obj identical over 158 bytes (lib-code-size; S10.7); our function list gives 103
+golf_clean.exe	0x004a8d0f	103	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z: RTM frame.obj identical over 103 bytes (lib-code-size; S10.7); our function list gives 86
+golf_clean.exe	0x004a8eba	97	?terminate@@YAXXZ: RTM hooks.obj identical over 97 bytes (pdb-size; S10.7); our function list gives 72
+golf_clean.exe	0x004a8f1b	86	?_inconsistency@@YAXXZ: RTM hooks.obj identical over 86 bytes (lib-code-size; S10.7); our function list gives 61
+golf_clean.exe	0x004a8f7c	216	__except_handler3: RTM exsup3.obj identical over 216 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 189
+golf_clean.exe	0x004a97b8	168	___initstdio: RTM _file.obj identical over 168 bytes (pdb-size; S10.7); our function list gives 167
+golf_clean.exe	0x004aa6c0	821	_memcpy: RTM memcpy.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+golf_clean.exe	0x004aab46	548	___crtLCMapStringA: RTM a_map.obj identical over 548 bytes (pdb-size; S10.7); our function list gives 272
+golf_clean.exe	0x004abca0	240	_strcpy: RTM strcat.obj identical over 240 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 7
+golf_clean.exe	0x004abf30	132	_strcmp: RTM strcmp.obj identical over 132 bytes (pdb-size; S10.7); our function list gives 129
+golf_clean.exe	0x004ac359	329	___crtGetStringTypeA: RTM a_str.obj identical over 329 bytes (pdb-size; S10.7); our function list gives 249
+golf_clean.exe	0x004ada68	637	___crtCompareStringA: RTM a_cmp.obj identical over 637 bytes (lib-code-size; S10.7); our function list gives 439
+jgld.dll	0x1007f3a0	821	_memcpy: SP2 memcpy.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+jgld.dll	0x1007f760	240	_strcpy: SP2 strcat.obj identical over 240 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 7
+jgld.dll	0x10080060	130	__realloc_dbg: SP2 dbgheap.obj identical over 130 bytes (pdb-size; S10.7); our function list gives 99
+jgld.dll	0x10080640	130	__expand_dbg: SP2 dbgheap.obj identical over 130 bytes (pdb-size; S10.7); our function list gives 99
+jgld.dll	0x10080710	110	__free_dbg: SP2 dbgheap.obj identical over 110 bytes (pdb-size; S10.7); our function list gives 82
+jgld.dll	0x10080ed0	932	__CrtCheckMemory: SP2 dbgheap.obj identical over 932 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 885
+jgld.dll	0x100814e0	293	__CrtIsMemoryBlock: SP2 dbgheap.obj identical over 293 bytes (pdb-size; S10.7); our function list gives 262
+jgld.dll	0x10085c90	333	__heap_alloc_base: SP2 malloc.obj identical over 333 bytes (pdb-size; S10.7); our function list gives 101
+jgld.dll	0x100865e0	260	__heapchk: SP2 heapchk.obj identical over 260 bytes (pdb-size; S10.7); our function list gives 98
+jgld.dll	0x1008e0d0	133	__rt_probe_read4@4: SP2 sehsupp.obj identical over 133 bytes (pdb-size; S10.7); our function list gives 69
+jgld.dll	0x1008f590	821	_memmove: SP2 memmove.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+jgld.dll	0x1008fb90	132	_strcmp: SP2 strcmp.obj identical over 132 bytes (pdb-size; S10.7); our function list gives 129
+jgld.dll	0x1008fe40	32	_abort: SP2 abort.obj identical over 32 bytes (pdb-size; S10.7); our function list gives 30
+jgld.dll	0x10091210	188	_strchr: SP2 strchr.obj identical over 188 bytes (trim-pad lib-to-section-end; S10.7); our function list gives 192
+jgld.dll	0x10091390	444	___crtGetStringTypeA: SP2 a_str.obj identical over 444 bytes (pdb-size; S10.7); our function list gives 324
+jgld.dll	0x10094030	773	___crtLCMapStringA: SP2 a_map.obj identical over 773 bytes (pdb-size; S10.7); our function list gives 326
+jgld.dll	0x10099ed0	621	___crtGetStringTypeW: SP2 w_str.obj identical over 621 bytes (pdb-size; S10.7); our function list gives 295
+jgld.dll	0x1009aeb0	405	___crtGetLocaleInfoW: SP2 w_loc.obj identical over 405 bytes (pdb-size; S10.7); our function list gives 253
+jgld.dll	0x1009b050	421	___crtGetLocaleInfoA: SP2 a_loc.obj identical over 421 bytes (pdb-size; S10.7); our function list gives 255
+jgld.dll	0x1009b440	1016	___crtCompareStringA: SP2 a_cmp.obj identical over 1016 bytes (pdb-size; S10.7); our function list gives 735
+sound.dll	0x100420a5	52	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z: SP5 trnsctrl.obj identical over 52 bytes (pdb-size; S10.7); our function list gives 45
+sound.dll	0x100423ac	238	__global_unwind2: SP5 exsup.obj identical over 238 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 32
+sound.dll	0x100423ee	172	__local_unwind2: SP5 exsup.obj identical over 172 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 104
+sound.dll	0x10042456	68	__abnormal_termination: SP5 exsup.obj identical over 68 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 35
+sound.dll	0x10042479	33	__NLG_Notify1: SP5 exsup.obj identical over 33 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 9
+sound.dll	0x100424e5	9	__purecall: SP5 purevirt.obj identical over 9 bytes (pdb-size; S10.7); our function list gives 7
+sound.dll	0x10042659	47	___onexitinit: SP5 onexit.obj identical over 47 bytes (pdb-size trim-pad; S10.7); our function list gives 41
+sound.dll	0x1004280e	128	??_M@YGXPAXIHP6EX0@Z@Z: SP5 ehvecdtr.obj identical over 128 bytes (pdb-size; S10.7); our function list gives 104
+sound.dll	0x1004288e	94	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z: SP5 ehvecdtr.obj identical over 94 bytes (lib-code-size; S10.7); our function list gives 60
+sound.dll	0x10042a8e	63	__endthread: SP5 thread.obj identical over 63 bytes (pdb-size; S10.7); our function list gives 61
+sound.dll	0x10042b0b	252	__heap_alloc: SP5 malloc.obj identical over 252 bytes (pdb-size; S10.7); our function list gives 103
+sound.dll	0x10042c07	233	_free: SP5 free.obj identical over 233 bytes (pdb-size; S10.7); our function list gives 106
+sound.dll	0x10042cf0	821	_memmove: SP5 memmove.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+sound.dll	0x100431ce	24	__chkesp: SP5 chkesp.obj identical over 24 bytes (pdb-size trim-pad; S10.7); our function list gives 14
+sound.dll	0x100431f0	186	__CIsqrt: SP5 sqrt.obj identical over 186 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 20
+sound.dll	0x10043204	166	_sqrt: SP5 sqrt.obj identical over 166 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 9
+sound.dll	0x100432b0	20	_exp: SP5 87ctran.obj identical over 20 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 10
+sound.dll	0x100432d0	204	__CIlog: SP5 log.obj identical over 204 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 20
+sound.dll	0x100432e4	184	_log: SP5 log.obj identical over 184 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 9
+sound.dll	0x100435d1	168	___initstdio: SP5 _file.obj identical over 168 bytes (pdb-size; S10.7); our function list gives 167
+sound.dll	0x10043bd0	158	___FrameUnwindToState: SP5 frame.obj identical over 158 bytes (lib-code-size; S10.7); our function list gives 103
+sound.dll	0x10044008	103	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z: SP5 frame.obj identical over 103 bytes (lib-code-size; S10.7); our function list gives 86
+sound.dll	0x10044284	97	?terminate@@YAXXZ: SP5 hooks.obj identical over 97 bytes (pdb-size; S10.7); our function list gives 72
+sound.dll	0x100442fd	86	?_inconsistency@@YAXXZ: SP5 hooks.obj identical over 86 bytes (pdb-size; S10.7); our function list gives 61
+sound.dll	0x10045252	815	_realloc: SP5 realloc.obj identical over 815 bytes (pdb-size; S10.7); our function list gives 387
+sound.dll	0x10045581	238	__msize: SP5 msize.obj identical over 238 bytes (lib-code-size; S10.7); our function list gives 103
+sound.dll	0x10045744	216	__except_handler3: SP5 exsup3.obj identical over 216 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 189
+sound.dll	0x100458a1	317	_calloc: SP5 calloc.obj identical over 317 bytes (pdb-size; S10.7); our function list gives 148
+sound.dll	0x10047fb0	458	__trandisp1: SP5 87disp.obj identical over 458 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 103
+sound.dll	0x10048017	355	__trandisp2: SP5 87disp.obj identical over 355 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 140
+sound.dll	0x10048180	83	__startTwoArgErrorHandling: SP5 genexcep.obj identical over 83 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 23
+sound.dll	0x100481f5	375	__load_CW: SP5 common.obj identical over 375 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 23
+sound.dll	0x1004820c	352	__convertTOStoQNaN: SP5 common.obj identical over 352 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 25
+sound.dll	0x10048225	327	__fload_withFB: SP5 common.obj identical over 327 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 67
+sound.dll	0x10048268	260	__checkTOS_withFB: SP5 common.obj identical over 260 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 22
+sound.dll	0x1004828b	225	__math_exit: SP5 common.obj identical over 225 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 42
+sound.dll	0x10048580	618	__cintrindisp2: SP5 87cdisp.obj identical over 618 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 62
+sound.dll	0x100485be	556	__cintrindisp1: SP5 87cdisp.obj identical over 556 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 61
+sound.dll	0x100485fb	495	__ctrandisp2: SP5 87cdisp.obj identical over 495 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 72
+sound.dll	0x1004877b	111	__ctrandisp1: SP5 87cdisp.obj identical over 111 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 51
+sound.dll	0x10049500	132	_strcmp: SP5 strcmp.obj identical over 132 bytes (pdb-size; S10.7); our function list gives 129
+sound.dll	0x1004a460	821	_memcpy: SP5 memcpy.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+sound.dll	0x1004c688	329	___crtGetStringTypeA: SP5 a_str.obj identical over 329 bytes (pdb-size; S10.7); our function list gives 249
+sound.dll	0x1004ce4a	548	___crtLCMapStringA: SP5 a_map.obj identical over 548 bytes (lib-code-size; S10.7); our function list gives 272
+sound.dll	0x100507f9	453	___crtGetStringTypeW: SP5 w_str.obj identical over 453 bytes (pdb-size; S10.7); our function list gives 236
+sound.dll	0x10051459	275	___crtGetLocaleInfoW: SP5 w_loc.obj identical over 275 bytes (pdb-size; S10.7); our function list gives 185
+sound.dll	0x1005156c	286	___crtGetLocaleInfoA: SP5 a_loc.obj identical over 286 bytes (pdb-size trim-pad; S10.7); our function list gives 191
+sound.dll	0x1005180f	637	___crtCompareStringA: SP5 a_cmp.obj identical over 637 bytes (lib-code-size; S10.7); our function list gives 439
+Terrain.dll	0x10015e00	130	__realloc_dbg: SP2 dbgheap.obj identical over 130 bytes (pdb-size; S10.7); our function list gives 99
+Terrain.dll	0x100163e0	130	__expand_dbg: SP2 dbgheap.obj identical over 130 bytes (pdb-size; S10.7); our function list gives 99
+Terrain.dll	0x100164b0	110	__free_dbg: SP2 dbgheap.obj identical over 110 bytes (pdb-size; S10.7); our function list gives 82
+Terrain.dll	0x10016c70	932	__CrtCheckMemory: SP2 dbgheap.obj identical over 932 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 885
+Terrain.dll	0x10017280	293	__CrtIsMemoryBlock: SP2 dbgheap.obj identical over 293 bytes (pdb-size; S10.7); our function list gives 262
+Terrain.dll	0x10018580	240	_strcpy: SP2 strcat.obj identical over 240 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 7
+Terrain.dll	0x10018f70	132	_strcmp: SP2 strcmp.obj identical over 132 bytes (pdb-size; S10.7); our function list gives 129
+Terrain.dll	0x10019610	894	__assert: SP2 assert.obj identical over 894 bytes (pdb-size; S10.7); our function list gives 892
+Terrain.dll	0x1001a0b0	333	__heap_alloc_base: SP2 malloc.obj identical over 333 bytes (pdb-size; S10.7); our function list gives 101
+Terrain.dll	0x1001b1b0	260	__heapchk: SP2 heapchk.obj identical over 260 bytes (pdb-size; S10.7); our function list gives 98
+Terrain.dll	0x1001f510	821	_memcpy: SP2 memcpy.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+Terrain.dll	0x10022490	32	_abort: SP2 abort.obj identical over 32 bytes (pdb-size; S10.7); our function list gives 30
+Terrain.dll	0x10024410	821	_memmove: SP2 memmove.obj identical over 821 bytes (byte-identity (relocation sites masked); S10.7); our function list gives 664
+Terrain.dll	0x10024ae0	188	_strchr: SP2 strchr.obj identical over 188 bytes (trim-pad lib-to-section-end; S10.7); our function list gives 192
+Terrain.dll	0x10025b00	444	___crtGetStringTypeA: SP2 a_str.obj identical over 444 bytes (pdb-size; S10.7); our function list gives 324
+Terrain.dll	0x10029fd0	119	_CPtoLCID: SP2 mbctype.obj identical over 119 bytes (pdb-size; S10.7); our function list gives 80
+Terrain.dll	0x1002b430	773	___crtLCMapStringA: SP2 a_map.obj identical over 773 bytes (pdb-size; S10.7); our function list gives 326
+Terrain.dll	0x10031ba0	621	___crtGetStringTypeW: SP2 w_str.obj identical over 621 bytes (pdb-size; S10.7); our function list gives 295
+Terrain.dll	0x10032930	405	___crtGetLocaleInfoW: SP2 w_loc.obj identical over 405 bytes (pdb-size; S10.7); our function list gives 253
+Terrain.dll	0x10032ad0	421	___crtGetLocaleInfoA: SP2 a_loc.obj identical over 421 bytes (pdb-size; S10.7); our function list gives 255
+Terrain.dll	0x10032e80	1016	___crtCompareStringA: SP2 a_cmp.obj identical over 1016 bytes (pdb-size; S10.7); our function list gives 735

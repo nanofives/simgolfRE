@@ -1,0 +1,63 @@
+va	verdict	smsg	name	kind	detail
+0x10015960	MANUAL	_nh_malloc_dbg	_nh_malloc_dbg	OTHER	
+0x10016470	MANUAL	free	free	OTHER	
+0x10016910	MANUAL	_msize	_msize	OTHER	
+0x10016930	MANUAL	_msize_dbg	_msize_dbg	OTHER	
+0x10016ac0	MANUAL	_CrtSetBreakAlloc	_CrtSetBreakAlloc	OTHER	
+0x10016ae0	MANUAL	_CrtSetDbgBlockType	_CrtSetDbgBlockType	OTHER	
+0x10016bc0	MANUAL	_CrtSetAllocHook	_CrtSetAllocHook	OTHER	
+0x10016c70	MANUAL	_CrtCheckMemory	_CrtCheckMemory	OTHER	
+0x10017050	MANUAL	_CrtDoForAllClientObjects	_CrtDoForAllClientObjects	OTHER	
+0x10017150	MANUAL	_CrtIsValidHeapPointer	_CrtIsValidHeapPointer	OTHER	
+0x100173b0	MANUAL	_CrtSetDumpClient	_CrtSetDumpClient	OTHER	
+0x100173d0	MANUAL	_CrtMemCheckpoint	_CrtMemCheckpoint	OTHER	
+0x100176b0	MANUAL	_CrtMemDumpAllObjectsSince	_CrtMemDumpAllObjectsSince	OTHER	
+0x10018580	MANUAL	strcpy	strcpy	OTHER	
+0x10018cb0	MANUAL	operator new[]	operator new[]	OTHER	
+0x10018cd0	MANUAL	srand	srand	OTHER	
+0x10019cf0	MANUAL	_query_new_handler	_query_new_handler	GETTER	reads dword ptr [0x101107a0] (from 0x10019cf0), no store, no call
+0x10019eb0	MANUAL	_unlock	_unlock	OTHER	
+0x10019ed0	MANUAL	_lockerr_exit	_lockerr_exit	OTHER	
+0x1001a200	MANUAL	_CrtDefaultAllocHook	_CrtDefaultAllocHook	OTHER	
+0x1001a300	MANUAL	_CrtSetReportHook	_CrtSetReportHook	OTHER	
+0x1001a9c0	MANUAL	_expand_base	_expand_base	OTHER	
+0x1001abd0	MANUAL	_realloc_base	_realloc_base	OTHER	
+0x1001b060	MANUAL	_free_base	_free_base	OTHER	
+0x1001b2d0	MANUAL	_get_sbh_threshold	_get_sbh_threshold	GETTER	reads dword ptr [0x10066054], dword ptr [0x10112300] (from 0x1001b2d0), no store, no call
+0x1001b300	MANUAL	_set_sbh_threshold	_set_sbh_threshold	OTHER	
+0x1001b540	MANUAL	__sbh_free_block	__sbh_free_block	OTHER	
+0x1001d0a0	MANUAL	_get_old_sbh_threshold	_get_old_sbh_threshold	GETTER	reads dword ptr [0x10066054] (from 0x1001d0a0), no store, no call
+0x1001d0b0	MANUAL	_set_old_sbh_threshold	_set_old_sbh_threshold	OTHER	
+0x1001d0e0	MANUAL	__old_sbh_new_region	__old_sbh_new_region	OTHER	
+0x1001d2c0	MANUAL	__old_sbh_release_region	__old_sbh_release_region	OTHER	
+0x1001d340	MANUAL	__old_sbh_decommit_pages	__old_sbh_decommit_pages	OTHER	
+0x1001d4a0	MANUAL	__old_sbh_find_block	__old_sbh_find_block	OTHER	
+0x1001d530	MANUAL	__old_sbh_free_block	__old_sbh_free_block	OTHER	
+0x1001d5a0	MANUAL	__old_sbh_alloc_block	__old_sbh_alloc_block	OTHER	
+0x1001d960	MANUAL	__old_sbh_alloc_block_from_page	__old_sbh_alloc_block_from_page	OTHER	
+0x1001dc10	MANUAL	__old_sbh_resize_block	__old_sbh_resize_block	OTHER	
+0x1001dd80	MANUAL	__old_sbh_heap_check	__old_sbh_heap_check	OTHER	
+0x1001dfc0	MANUAL	_GetLinkerVersion	_GetLinkerVersion	OTHER	
+0x1001e020	MANUAL	__heap_select	__heap_select	OTHER	
+0x1001e250	MANUAL	_heap_init	_heap_init	OTHER	
+0x1001e2e0	MANUAL	_heap_term	_heap_term	OTHER	
+0x10021b70	MANUAL	__threadid	__threadid	OTHER	
+0x10021b80	MANUAL	__threadhandle	__threadhandle	OTHER	
+0x10022a20	MANUAL	__fpecode	__fpecode	OTHER	
+0x10024320	MANUAL	$$$00001	$$$00001	GETTER	reads [esp + 8], dword ptr [eax + 4], dword ptr [eax] (from 0x10024320), no store, no call
+0x100243f0	MANUAL	_errno	_errno	OTHER	
+0x10024400	MANUAL	__doserrno	__doserrno	OTHER	
+0x10024ad0	DEFER_NOT_A_FUNCTION	$$$00001	$$$00001	OTHER	
+0x100270f0	MANUAL	_tolower	_tolower	GETTER	reads dword ptr [ebp + 8] (from 0x100270f0), no store, no call
+0x1002a3e0	MANUAL	_getmbcp	_getmbcp	GETTER	reads dword ptr [0x10110b74] (from 0x1002a3e0), no store, no call
+0x1002a430	MANUAL	_toupper	_toupper	GETTER	reads dword ptr [ebp + 8] (from 0x1002a430), no store, no call
+0x1002b200	MANUAL	__init_dummy	__init_dummy	OTHER	
+0x1002f150	MANUAL	__init_collate	__init_collate	OTHER	
+0x10030a60	MANUAL	strftime	strftime	OTHER	
+0x10030a80	MANUAL	_Strftime	_Strftime	OTHER	
+0x10031b90	MANUAL	localeconv	localeconv	GETTER	reads dword ptr [0x100675f8] (from 0x10031b90), no store, no call
+0x10033920	MANUAL	operator delete	operator delete	OTHER	
+0x10036470	MANUAL	streambuf::seekoff	streambuf::seekoff	OTHER	
+0x10037840	MANUAL	__isascii	__isascii	OTHER	
+0x10037850	MANUAL	__toascii	__toascii	GETTER	reads dword ptr [ebp + 8] (from 0x10037850), no store, no call
+0x10037920	MANUAL	_purecall	_purecall	OTHER	

@@ -1,0 +1,642 @@
+0x16a0	480	G	LoadBmpFile	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1880	40	G	degreesToRadians	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x18b0	67	G	ios::lock	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x1900	486	G	WriteDibToBmpFile	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1af0	91	G	Terrain::loadNewCourseType	.\Debug\Course.obj	.\Debug\Course.obj
+0x1b60	116	G	SwapBgrToRgb	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1c00	258	G	FlipImageRows24bpp	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1d50	107	G	Terrain::tileAt	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1de0	70	G	Terrain::getElevation	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1e40	47	G	Tile::getCornerElevation	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1e80	60	G	Terrain::getWall	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1ed0	50	G	Tile::getWallEnabled	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1f10	56	G	Terrain::getType	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1f60	42	G	Tile::getType	.\Debug\Bmp.obj	.\Debug\Bmp.obj
+0x1fa0	48	G	FaceBlock::FaceBlock	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x1fe0	36	G	FaceBlock::~FaceBlock	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x2010	55	G	FloatToTexCoordCode	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x2060	1196	G	FaceBlock::InitTriangleMesh	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x2510	45	G	ios::fail	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x2640	212	G	FaceBlock::SetNineVertexHeights	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x2750	335	G	FaceBlock::setCornerVertexNormals	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x2900	480	G	FaceBlock::getMaxCornerVertexHeight	.\Debug\FaceBlock.obj	.\Debug\FaceBlock.obj
+0x2ae0	1064	G	Terrain::Terrain	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x2f80	50	G	Tile::setRandomVariation	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3090	226	G	Terrain::~Terrain	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x31a0	161	G	Terrain::getInstance	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3270	51	G	Terrain::getNormalArray	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x32b0	51	G	Terrain::getVertexArray	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x32f0	128	G	Terrain::setType	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3390	59	G	Terrain::getVariation	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x33e0	272	G	Terrain::initGLRenderState	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3540	526	G	Terrain::changeLighting	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x37e0	56	G	Terrain::initLighting	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3830	257	G	Terrain::EnableBlackFillLight	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3980	159	G	Terrain::LoadLightingForCourseType	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3a50	535	G	rotateVectorAboutAxis	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x3f80	42	G	ios::lockptr	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x42a0	38	G	Terrain::drawCircle	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x46a0	68	G	ifstream::`vbase destructor'	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x48a0	734	G	Terrain::drawLine	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x4c70	834	G	Terrain::drawCardinalSpline	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x5090	322	G	Terrain::evalCardinalSplinePoint2D	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x5230	1042	G	Terrain::drawBezierSpline	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x5750	180	G	Terrain::bernsteinBasisTerm	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x5840	70	G	powf	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x58a0	93	G	factorial	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x5960	42	G	Tile::getGridX	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x5990	1279	G	Terrain::render	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x6410	757	G	Terrain::pathUpdateRender	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x6810	42	G	Tile::getGridY	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x6850	1005	G	Terrain::IsTileCulled	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x6dd0	1313	G	Terrain::LoadLightingFromFile	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x7380	853	G	Terrain::InsertWallAdjacentTilesInDrawOrder	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x76e0	2313	G	Terrain::LoadCourseTextures	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x80e0	760	G	Terrain::renderTile	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x89e0	1200	G	Terrain::localRender	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x8fc0	543	G	Terrain::setZoomLevel	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x9270	1872	G	Terrain::stripRender	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x9ba0	179	G	Terrain::closeSystem	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x9c80	486	G	Terrain::initSystem	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x9ed0	487	G	Terrain::resize	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa130	549	G	Terrain::initTileGrid	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa3e0	84	G	Terrain::layPath	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa450	71	G	Terrain::hasConnectedPath	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa4b0	75	G	Terrain::updatePath	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa510	56	G	Terrain::hasPath	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa560	68	G	Terrain::setWall	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa5c0	66	G	Terrain::elevateCorner	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa620	66	G	Terrain::lowerCorner	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa680	86	G	Terrain::lowerEdgeCorner	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa6f0	62	G	Terrain::calcNormals	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa740	201	G	Terrain::calcAllNormals	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa840	46	G	Terrain::setSplineHeight	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa880	182	G	Terrain::passCollarInfo	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xa970	118	G	Terrain::initTerrain	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xaa10	224	G	Terrain::resetTerrain	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xab30	524	G	Terrain::tileHit	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xadc0	118	G	Terrain::SetRotationQuadrantFromDegrees	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xae60	89	G	std::list<Tile *,std::allocator<Tile *> >::list<Tile *,std::allocator<Tile *> >	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xaed0	123	G	std::list<Tile *,std::allocator<Tile *> >::~list<Tile *,std::allocator<Tile *> >	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xaf70	84	G	std::list<Tile *,std::allocator<Tile *> >::begin	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xafe0	73	G	std::list<Tile *,std::allocator<Tile *> >::end	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb040	59	G	std::list<Tile *,std::allocator<Tile *> >::empty	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb090	79	G	std::list<Tile *,std::allocator<Tile *> >::push_back	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb100	209	G	std::list<Tile *,std::allocator<Tile *> >::insert	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb210	88	G	std::list<Tile *,std::allocator<Tile *> >::clear	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb280	57	G	std::list<Tile *,std::allocator<Tile *> >::iterator::iterator	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb2d0	60	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator*	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb320	75	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator++	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb380	53	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator==	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb3d0	70	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator!=	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb430	42	G	std::list<Tile *,std::allocator<Tile *> >::size	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb470	111	G	std::list<Tile *,std::allocator<Tile *> >::erase	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb500	138	G	std::list<Tile *,std::allocator<Tile *> >::_Buynode	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb5b0	62	G	std::list<Tile *,std::allocator<Tile *> >::_Freenode	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb600	34	G	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Next	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb630	37	G	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Prev	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb660	37	G	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Value	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb690	64	G	std::allocator<Tile *>::construct	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb6e0	39	G	std::list<Tile *,std::allocator<Tile *> >::const_iterator::const_iterator	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb710	41	G	std::list<Tile *,std::allocator<Tile *> >::const_iterator::_Mynode	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb750	63	G	std::list<Tile *,std::allocator<Tile *> >::iterator::iterator	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb7a0	70	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator++	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb800	213	G	std::list<Tile *,std::allocator<Tile *> >::erase	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb910	62	G	std::allocator<Tile *>::_Charalloc	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb960	60	G	std::allocator<Tile *>::deallocate	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb9b0	49	G	std::list<Tile *,std::allocator<Tile *> >::const_iterator::const_iterator	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xb9f0	60	G	std::allocator<Tile *>::destroy	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xba40	89	G	std::_Construct	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xbab0	34	G	operator new	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xbae0	66	G	std::_Allocate	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xbb40	31	G	std::_Destroy	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0xbb70	39	G	UnknownBB70::UnknownBB70	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xbba0	36	G	UnknownBB70::~UnknownBB70	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xbbd0	483	G	UploadBmpTexture	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xbe30	786	G	LoadTgaTexture	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xc210	133	G	Tile::Tile	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xc2c0	211	G	Tile::reset	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xc3d0	267	G	Tile::~Tile	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xc520	51	G	Tile::setNeighbour	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xc560	465	G	InitVertexGrid	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xc7b0	1031	G	Tile::ElevateCorner	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xccc0	1583	G	Tile::LowerCornerElevation	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xd480	147	G	Tile::updateHasPathForType	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xd540	1858	G	Tile::LowerTileType7Heights	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xde60	1707	G	Tile::RaiseTileType6Heights	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xe6c0	703	G	Tile::RenderTile	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xea30	2528	G	Tile::RenderStrataFace	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xf690	57	G	TilePathFlags::TilePathFlags	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xf6e0	84	G	TilePathFlags::clear	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xf750	57	G	TileWallState::TileWallState	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xf7a0	64	G	TileWallState::resetEnabledFlags	.\Debug\Tile.obj	.\Debug\Tile.obj
+0xf7f0	3476	G	Tile::RenderTileWalls	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x10590	131	G	istream::getline	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x108f0	2836	G	Tile::RenderTilePath	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x116d0	1334	G	Tile::RenderTileQuadrantsByTransitionMask	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x11d60	318	G	Tile::CalcFaceNormal	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x11ef0	2859	G	Tile::CalcCornerVertexNormals	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x12cf0	297	G	Tile::calcVertexNormals	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x12e70	62	G	SetCourseTextureId	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x12ec0	888	G	Tile::SetFaceTexture	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13320	45	G	Tile::hasPath	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13360	45	G	Tile::hasConnectedPath	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x133a0	66	G	Tile::setConnectedPath	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13400	193	G	Tile::setPath	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13500	285	G	Tile::drawEdgeTransitionsWithNeighbours	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13670	1507	G	Tile::DrawTileEdgeTransitionsForType	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13dd0	241	G	Tile::MapTypeCodeToIndex	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13f00	144	G	Tile::PackEdgeTransitionCode	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13fc0	36	G	GetVertexArrayBase	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x13ff0	36	G	GetNormalArrayBase	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x14020	294	G	Tile::setType	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x14190	1699	G	Tile::UndoType6ElevationRaise	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x149e0	1699	G	Tile::UndoType7ElevationDrop	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15230	224	G	Tile::assignFaceTextures	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15340	42	G	Tile::getVariation	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15380	47	G	Tile::setVariation	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x153c0	42	G	Tile::GetFaceBlock	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15400	69	G	Tile::setWall	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15460	50	G	Tile::isTypeSkipStrataFace	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x154a0	69	G	Tile::typeDrawsEdgeTransitions	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15500	141	G	Tile::maxCornerHeight	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x155b0	118	G	Tile::typeAllowsEdgeTransition	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x15650	242	G	Tile::getNeighborTransitionCode	.\Debug\Tile.obj	.\Debug\Tile.obj
+0x158b0	33	G	abs	build\intel\xmt_obj\abs.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x158e0	38	G	malloc	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15910	44	G	_malloc_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15940	27	G	_nh_malloc	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15960	160	G	_nh_malloc_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15a00	23	G	_heap_alloc	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15a20	787	G	_heap_alloc_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15d40	36	G	calloc	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15d70	96	G	_calloc_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15dd0	36	G	realloc	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15e00	130	G	_realloc_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15e90	1297	L	realloc_help	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x163b0	36	G	_expand	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x163e0	130	G	_expand_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16470	19	G	free	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16490	19	G	_free_lk	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x164b0	110	G	_free_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16520	1004	G	_free_dbg_lk	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16910	19	G	_msize	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16930	400	G	_msize_dbg	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16ac0	28	G	_CrtSetBreakAlloc	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16ae0	217	G	_CrtSetDbgBlockType	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16bc0	28	G	_CrtSetAllocHook	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16be0	136	L	CheckBytes	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16c70	932	G	_CrtCheckMemory	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17020	34	G	_CrtSetDbgFlag	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17050	169	G	_CrtDoForAllClientObjects	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17100	75	G	_CrtIsValidPointer	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17150	292	G	_CrtIsValidHeapPointer	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17280	293	G	_CrtIsMemoryBlock	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x173b0	28	G	_CrtSetDumpClient	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x173d0	420	G	_CrtMemCheckpoint	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17580	291	G	_CrtMemDifference	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x176b0	755	G	_CrtMemDumpAllObjectsSince	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x179b0	276	L	_printMemBlockData	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17ad0	116	G	_CrtDumpMemoryLeaks	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17b50	197	G	_CrtMemDumpStatistics	build\intel\xmt_obj\dbgheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17c20	130	G	fclose	build\intel\xmt_obj\fclose.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17cb0	190	G	_fclose_lk	build\intel\xmt_obj\fclose.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17d70	62	G	fread	build\intel\xmt_obj\fread.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17db0	463	G	_fread_lk	build\intel\xmt_obj\fread.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17f80	252	G	_fsopen	build\intel\xmt_obj\fopen.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18080	23	G	fopen	build\intel\xmt_obj\fopen.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x180e0	62	G	fwrite	build\intel\xmt_obj\fwrite.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18120	537	G	_fwrite_lk	build\intel\xmt_obj\fwrite.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18580	7	G	strcpy	build\intel\xmt_obj\strcat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18590	224	G	strcat	build\intel\xmt_obj\strcat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18be0	161	G	operator delete	build\intel\xmt_obj\dbgdel.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18c90	28	G	operator new	build\intel\xmt_obj\new.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18cb0	26	G	operator new[]	build\intel\xmt_obj\new.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18cd0	16	G	srand	build\intel\xmt_obj\rand.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18ce0	54	G	rand	build\intel\xmt_obj\rand.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18d20	255	G	atol	build\intel\xmt_obj\atox.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18e20	17	G	atoi	build\intel\xmt_obj\atox.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18e40	297	G	_atoi64	build\intel\xmt_obj\atox.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18f70	132	G	strcmp	build\intel\xmt_obj\strcmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19000	325	G	strtok	build\intel\xmt_obj\strtok.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19590	123	G	strlen	build\intel\xmt_obj\strlen.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19610	894	G	_assert	build\intel\xmt_obj\assert.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19990	172	G	memcmp	build\intel\xmt_obj\memcmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19a40	313	G	_CRT_INIT	build\intel\xmt_obj\dllcrt0.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19b80	243	G	_DllMainCRTStartup	build\intel\xmt_obj\dllcrt0.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19c80	63	G	_amsg_exit	build\intel\xmt_obj\dllcrt0.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19cc0	48	G	_set_new_handler	build\intel\xmt_obj\handler.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19cf0	10	G	_query_new_handler	build\intel\xmt_obj\handler.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19d00	45	G	_callnewh	build\intel\xmt_obj\handler.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19d30	55	G	_mtinitlocks	build\intel\xmt_obj\mlock.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19d70	159	G	_mtdeletelocks	build\intel\xmt_obj\mlock.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19e10	151	G	_lock	build\intel\xmt_obj\mlock.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19eb0	22	G	_unlock	build\intel\xmt_obj\mlock.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19ed0	28	G	_lockerr_exit	build\intel\xmt_obj\mlock.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19fd0	88	G	memset	build\intel\xmt_obj\memset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a030	32	G	_malloc_base	build\intel\xmt_obj\malloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a050	87	G	_nh_malloc_base	build\intel\xmt_obj\malloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a0b0	333	G	_heap_alloc_base	build\intel\xmt_obj\malloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a200	10	G	_CrtDefaultAllocHook	build\intel\xmt_obj\dbghook.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a210	11	G	_CrtDbgBreak	build\intel\xmt_obj\dbgrpt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a220	87	G	_CrtSetReportMode	build\intel\xmt_obj\dbgrpt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a280	126	G	_CrtSetReportFile	build\intel\xmt_obj\dbgrpt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a300	28	G	_CrtSetReportHook	build\intel\xmt_obj\dbgrpt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a320	912	G	_CrtDbgReport	build\intel\xmt_obj\dbgrpt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a6b0	780	L	CrtMessageWindow	build\intel\xmt_obj\dbgrpt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a9c0	525	G	_expand_base	build\intel\xmt_obj\expand.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1abd0	1153	G	_realloc_base	build\intel\xmt_obj\realloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b060	326	G	_free_base	build\intel\xmt_obj\free.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b1b0	260	G	_heapchk	build\intel\xmt_obj\heapchk.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b2c0	10	G	_heapset	build\intel\xmt_obj\heapchk.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b2d0	39	G	_get_sbh_threshold	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b300	266	G	_set_sbh_threshold	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b410	98	G	__sbh_heap_init	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b480	85	G	__sbh_find_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b4e0	95	G	__sbh_verify_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b540	1500	G	__sbh_free_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1bb20	1334	G	__sbh_alloc_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c060	271	G	__sbh_alloc_new_region	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c170	494	G	__sbh_alloc_new_group	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c360	1515	G	__sbh_resize_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c950	304	G	__sbh_heapmin	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ca80	1565	G	__sbh_heap_check	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d0a0	10	G	_get_old_sbh_threshold	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d0b0	43	G	_set_old_sbh_threshold	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d0e0	478	G	__old_sbh_new_region	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d2c0	115	G	__old_sbh_release_region	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d340	343	G	__old_sbh_decommit_pages	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d4a0	144	G	__old_sbh_find_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d530	108	G	__old_sbh_free_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d5a0	952	G	__old_sbh_alloc_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d960	681	G	__old_sbh_alloc_block_from_page	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1dc10	356	G	__old_sbh_resize_block	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1dd80	567	G	__old_sbh_heap_check	build\intel\xmt_obj\sbheap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1dfc0	92	G	_GetLinkerVersion	build\intel\xmt_obj\heapinit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e020	548	G	__heap_select	build\intel\xmt_obj\heapinit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e250	141	G	_heap_init	build\intel\xmt_obj\heapinit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e2e0	232	G	_heap_term	build\intel\xmt_obj\heapinit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e3d0	56	G	_cinit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e410	21	G	exit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e430	21	G	_exit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e450	19	G	_cexit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e470	19	G	_c_exit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e490	227	L	doexit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e580	15	G	_lockexit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e590	15	G	_unlockexit	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e5a0	37	L	_initterm	build\intel\xmt_obj\crt0dat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e5d0	250	G	sprintf	build\intel\xmt_obj\sprintf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e6d0	183	G	_isctype	build\intel\xmt_obj\isctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e790	300	G	__initstdio	build\intel\xmt_obj\_file.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e8c0	26	G	__endstdio	build\intel\xmt_obj\_file.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e8e0	61	G	_lock_file	build\intel\xmt_obj\_file.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e920	41	G	_lock_file2	build\intel\xmt_obj\_file.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e950	61	G	_unlock_file	build\intel\xmt_obj\_file.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e990	41	G	_unlock_file2	build\intel\xmt_obj\_file.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e9c0	122	G	_close	build\intel\xmt_obj\close.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ea40	170	G	_close_lk	build\intel\xmt_obj\close.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1eaf0	146	G	_freebuf	build\intel\xmt_obj\_freebuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1eb90	68	G	fflush	build\intel\xmt_obj\fflush.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ebe0	65	G	_fflush_lk	build\intel\xmt_obj\fflush.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ec30	183	G	_flush	build\intel\xmt_obj\fflush.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ecf0	15	G	_flushall	build\intel\xmt_obj\fflush.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ed00	319	L	flsall	build\intel\xmt_obj\fflush.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ee40	484	G	_filbuf	build\intel\xmt_obj\_filbuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f030	130	G	_read	build\intel\xmt_obj\read.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f0c0	1093	G	_read_lk	build\intel\xmt_obj\read.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f510	821	G	memcpy	build\intel\xmt_obj\memcpy.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f850	911	G	_openfile	build\intel\xmt_obj\_open.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1fbe0	384	G	_getstream	build\intel\xmt_obj\stream.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1fd60	628	G	_flsbuf	build\intel\xmt_obj\_flsbuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ffe0	130	G	_write	build\intel\xmt_obj\write.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x20070	627	G	_write_lk	build\intel\xmt_obj\write.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x202f0	23	G	_setdefaultprecision	build\intel\xmt_obj\fp8.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x218e0	130	G	_mtinit	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21970	41	G	_mtterm	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x219a0	25	G	_initptd	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x219c0	152	G	_getptd	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21a60	263	G	_freeptd	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21b70	11	G	__threadid	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21b80	11	G	__threadhandle	build\intel\xmt_obj\tidtable.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21b90	52	G	_allmul	build\intel\xmt_obj\llmul.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22490	32	G	abort	build\intel\xmt_obj\abort.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x224b0	548	G	signal	build\intel\xmt_obj\winsig.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x226e0	146	L	ctrlevent_capture	build\intel\xmt_obj\winsig.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22780	567	G	raise	build\intel\xmt_obj\winsig.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x229c0	91	L	siglookup	build\intel\xmt_obj\winsig.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22a20	13	G	__fpecode	build\intel\xmt_obj\winsig.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22a30	13	G	__pxcptinfoptrs	build\intel\xmt_obj\winsig.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22a40	187	G	__crtMessageBoxA	build\intel\xmt_obj\crtmbox.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22b00	66	G	_itoa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22b50	194	L	xtoa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22c20	63	G	_ltoa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22c60	30	G	_ultoa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22c80	72	G	_i64toa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22cd0	242	L	x64toa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22dd0	31	G	_ui64toa	build\intel\xmt_obj\xtoa.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22df0	291	G	strncat	build\intel\xmt_obj\strncat.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22f20	254	G	strncpy	build\intel\xmt_obj\strncpy.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23020	193	G	fprintf	build\intel\xmt_obj\fprintf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x230f0	365	G	setvbuf	build\intel\xmt_obj\setvbuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23260	804	G	_ioinit	build\intel\xmt_obj\ioinit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23590	155	G	_ioterm	build\intel\xmt_obj\ioinit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23630	329	G	_setenvp	build\intel\xmt_obj\stdenvp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23780	216	G	_setargv	build\intel\xmt_obj\stdargv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23860	1060	L	parse_cmdline	build\intel\xmt_obj\stdargv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23c90	537	G	__crtGetEnvironmentStringsA	build\intel\xmt_obj\a_env.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23eb0	12	G	DllMain	build\intel\xmt_obj\dllmain.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23ec0	73	G	_FF_MSGBANNER	build\intel\xmt_obj\crt0msg.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23f10	447	G	_NMSG_WRITE	build\intel\xmt_obj\crt0msg.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x240d0	80	G	_GET_RTERRMSG	build\intel\xmt_obj\crt0msg.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24120	249	G	_snprintf	build\intel\xmt_obj\snprintf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24220	243	G	_vsnprintf	build\intel\xmt_obj\vsnprint.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24320	47	L	$$$00001	build\intel\xmt_obj\chkstk.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24350	145	G	_dosmaperr	build\intel\xmt_obj\dosmap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x243f0	13	G	_errno	build\intel\xmt_obj\dosmap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24400	13	G	__doserrno	build\intel\xmt_obj\dosmap.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24410	821	G	memmove	build\intel\xmt_obj\memmove.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24750	27	G	strtol	build\intel\xmt_obj\strtol.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24770	817	L	strtoxl	build\intel\xmt_obj\strtol.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ab0	27	G	strtoul	build\intel\xmt_obj\strtol.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ad0	16	L	$$$00001	build\intel\xmt_obj\strchr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ae0	188	G	strchr	build\intel\xmt_obj\strchr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ba0	128	G	strstr	build\intel\xmt_obj\strstr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24c20	56	G	strncmp	build\intel\xmt_obj\strncmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24c60	3362	G	_output	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25990	119	L	write_char	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25a10	53	L	write_multi_char	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25a50	74	L	write_string	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25aa0	26	L	get_int_arg	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25ac0	31	L	get_int64_arg	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25ae0	27	L	get_short_arg	build\intel\xmt_obj\output.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25b00	444	G	__crtGetStringTypeA	build\intel\xmt_obj\a_str.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25cc0	218	G	_fcloseall	build\intel\xmt_obj\closeall.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25da0	482	G	_alloc_osfhnd	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25f90	183	G	_set_osfhnd	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26050	216	G	_free_osfhnd	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26130	102	G	_get_osfhandle	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x261a0	260	G	_open_osfhandle	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x262b0	134	G	_lock_fhandle	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26340	38	G	_unlock_fhandle	build\intel\xmt_obj\osfinfo.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26370	210	G	_commit	build\intel\xmt_obj\commit.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26450	199	G	_getbuf	build\intel\xmt_obj\_getbuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26520	130	G	_lseek	build\intel\xmt_obj\lseek.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x265b0	178	G	_lseek_lk	build\intel\xmt_obj\lseek.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26670	63	G	_open	build\intel\xmt_obj\open.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x266b0	1363	G	_sopen	build\intel\xmt_obj\open.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26c10	50	G	_isatty	build\intel\xmt_obj\isatty.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x270f0	11	G	_tolower	build\intel\xmt_obj\tolower.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27100	147	G	tolower	build\intel\xmt_obj\tolower.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x271a0	299	G	_tolower_lk	build\intel\xmt_obj\tolower.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27ab0	250	G	_fptostr	build\intel\xmt_obj\_fptostr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27da0	15	G	_fptrap	build\intel\xmt_obj\crt0fp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27ee0	446	G	_XcptFilter	build\intel\xmt_obj\winxfltr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x280a0	89	L	xcptlookup	build\intel\xmt_obj\winxfltr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29930	104	G	_aulldiv	build\intel\xmt_obj\ulldiv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x299a0	117	G	_aullrem	build\intel\xmt_obj\ullrem.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29a20	343	G	_stbuf	build\intel\xmt_obj\_sftbuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29b80	148	G	_ftbuf	build\intel\xmt_obj\_sftbuf.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29c20	836	G	_setmbcp	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29f70	89	L	getSystemCP	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29fd0	119	L	CPtoLCID	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a050	116	L	setSBCS	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a0d0	770	L	setSBUpLow	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a3e0	23	G	_getmbcp	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a400	34	G	__initmbctable	build\intel\xmt_obj\mbctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a430	11	G	_toupper	build\intel\xmt_obj\toupper.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a440	147	G	toupper	build\intel\xmt_obj\toupper.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a4e0	299	G	_toupper_lk	build\intel\xmt_obj\toupper.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a610	119	G	wctomb	build\intel\xmt_obj\wctomb.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a690	160	G	_wctomb_lk	build\intel\xmt_obj\wctomb.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a730	115	G	_chsize	build\intel\xmt_obj\chsize.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a7b0	560	G	_chsize_lk	build\intel\xmt_obj\chsize.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a9e0	1007	G	setlocale	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2add0	403	L	_setlocale_set_cat	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2af70	256	L	_setlocale_get_all	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b070	388	G	_expandlocale	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b200	7	G	__init_dummy	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b210	79	G	_strcats	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b260	349	G	__lc_strtolc	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b3c0	101	G	__lc_lctostr	build\intel\xmt_obj\setlocal.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b430	773	G	__crtLCMapStringA	build\intel\xmt_obj\a_map.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b740	80	L	strncnt	build\intel\xmt_obj\a_map.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2db50	115	G	_setmode	build\intel\xmt_obj\setmode.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2dbd0	207	G	_setmode_lk	build\intel\xmt_obj\setmode.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2dca0	219	G	__init_time	build\intel\xmt_obj\inittime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2dd80	1423	L	_get_lc_time	build\intel\xmt_obj\inittime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e310	779	L	_free_lc_time	build\intel\xmt_obj\inittime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e620	678	G	__init_numeric	build\intel\xmt_obj\initnum.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e8d0	125	L	fix_grouping	build\intel\xmt_obj\initnum.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e950	304	G	__init_monetary	build\intel\xmt_obj\initmon.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ea80	525	L	_get_lc_lconv	build\intel\xmt_obj\initmon.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ec90	125	L	fix_grouping	build\intel\xmt_obj\initmon.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ed10	147	L	_free_lc_lconv	build\intel\xmt_obj\initmon.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2edb0	928	G	__init_ctype	build\intel\xmt_obj\initctyp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f150	7	G	__init_collate	build\intel\xmt_obj\initcoll.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f160	62	G	strcspn	build\intel\xmt_obj\strcspn.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f1a0	58	G	strpbrk	build\intel\xmt_obj\strpbrk.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f1e0	512	G	__get_qualified_locale	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f3e0	130	L	TranslateName	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f470	186	L	GetLcidFromLangCountry	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f530	804	L	LangCountryEnumProc	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f860	116	L	GetLcidFromLanguage	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f8e0	287	L	LanguageEnumProc	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fa00	69	L	GetLcidFromCountry	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fa50	172	L	CountryEnumProc	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fb00	43	L	GetLcidFromDefault	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fb30	155	L	ProcessCodePage	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fbd0	79	L	TestDefaultCountry	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fc20	135	L	TestDefaultLanguage	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fcb0	77	L	IsThisWindowsNT	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fd00	388	L	crtGetLocaleInfoA	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fe90	118	L	LcidFromHexString	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ff10	101	L	GetPrimaryLen	build\intel\xmt_obj\getqloc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30490	289	G	_Getdays	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x305c0	291	G	_Getmonths	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x306f0	878	G	_Gettnames	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30a60	31	G	strftime	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30a80	394	G	_Strftime	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30c10	1567	L	_expandtime	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31230	72	L	_store_str	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31280	173	L	_store_num	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31330	172	L	_store_number	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x313e0	1311	L	_store_winword	build\intel\xmt_obj\strftime.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31900	650	G	__getlocaleinfo	build\intel\xmt_obj\inithelp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31b90	10	G	localeconv	build\intel\xmt_obj\lconv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31ba0	621	G	__crtGetStringTypeW	build\intel\xmt_obj\w_str.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31e10	0	G	_strcmpi	build\intel\xmt_obj\stricmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31e10	208	G	_stricmp	build\intel\xmt_obj\stricmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31ee0	257	G	_strnicmp	build\intel\xmt_obj\strnicmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31ff0	61	G	__tzset	build\intel\xmt_obj\tzset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32030	30	G	_tzset	build\intel\xmt_obj\tzset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32050	939	L	_tzset_lk	build\intel\xmt_obj\tzset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32400	46	G	_isindst	build\intel\xmt_obj\tzset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32430	762	L	_isindst_lk	build\intel\xmt_obj\tzset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32730	504	L	cvtdate	build\intel\xmt_obj\tzset.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32930	405	G	__crtGetLocaleInfoW	build\intel\xmt_obj\w_loc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32ad0	421	G	__crtGetLocaleInfoA	build\intel\xmt_obj\a_loc.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32c80	46	G	getenv	build\intel\xmt_obj\getenv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32cb0	198	G	_getenv_lk	build\intel\xmt_obj\getenv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32d80	79	G	_mbsnbicoll	build\intel\xmt_obj\mbsnbico.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32dd0	174	G	__wtomb_environ	build\intel\xmt_obj\wtombenv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32e80	1016	G	__crtCompareStringA	build\intel\xmt_obj\a_cmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33280	80	L	strncnt	build\intel\xmt_obj\a_cmp.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x332d0	736	G	__crtsetenv	build\intel\xmt_obj\setenv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x335b0	124	L	findenv	build\intel\xmt_obj\setenv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33630	238	L	copy_environ	build\intel\xmt_obj\setenv.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33720	237	G	_mbschr	build\intel\xmt_obj\mbschr.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33810	227	G	ifstream::ifstream	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33900	22	G	ios::delbuf	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33920	17	G	operator delete	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33940	55	G	ifstream::`scalar deleting destructor'	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33980	294	G	ifstream::ifstream	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33ab0	29	G	ifstream::rdbuf	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33ad0	17	G	ios::rdbuf	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33af0	233	G	ifstream::ifstream	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33be0	239	G	ifstream::ifstream	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33cd0	39	G	ifstream::~ifstream	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33d00	110	G	ifstream::setbuf	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33d70	46	G	ios::clear	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33da0	26	G	ifstream::is_open	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33dc0	25	G	filebuf::is_open	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33de0	73	G	ifstream::attach	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33e30	94	G	ifstream::open	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33e90	84	G	ifstream::close	build\intel\xmt_obj\ifstream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33ef0	51	G	filebuf::filebuf	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33f30	46	G	filebuf::`scalar deleting destructor'	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33f60	52	G	filebuf::filebuf	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33fa0	113	G	filebuf::filebuf	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34020	108	G	filebuf::~filebuf	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34090	37	G	streambuf::lock	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x340c0	17	G	streambuf::lockptr	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x340e0	107	G	filebuf::close	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34150	37	G	streambuf::unlock	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34180	185	G	filebuf::overflow	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34240	89	G	streambuf::sputc	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x342a0	17	G	streambuf::base	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x342c0	17	G	streambuf::ebuf	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x342e0	17	G	streambuf::pptr	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34300	17	G	streambuf::epptr	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34320	40	G	streambuf::setp	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34350	17	G	streambuf::unbuffered	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34370	237	G	filebuf::underflow	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34460	60	G	streambuf::in_avail	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x344a0	54	G	streambuf::blen	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x344e0	17	G	streambuf::gptr	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34500	50	G	streambuf::setg	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34540	131	G	filebuf::seekoff	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x345d0	396	G	filebuf::sync	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34760	54	G	streambuf::out_waiting	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x347a0	17	G	streambuf::pbase	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x347c0	17	G	streambuf::egptr	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x347e0	37	G	streambuf::pbump	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34810	105	G	filebuf::setbuf	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34880	22	G	streambuf::unbuffered	build\intel\xmt_obj\filebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x348a0	345	G	istream::get	build\intel\xmt_obj\istrgetl.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a00	51	G	istream::isfx	build\intel\xmt_obj\istrgetl.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a40	16	G	ios::unlockbuf	build\intel\xmt_obj\istrgetl.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a50	15	G	_mtlockinit	build\intel\xmt_obj\mtlock.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a60	15	G	_mtlockterm	build\intel\xmt_obj\mtlock.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a70	15	G	_mtlock	build\intel\xmt_obj\mtlock.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a80	15	G	_mtunlock	build\intel\xmt_obj\mtlock.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a90	184	G	ios::ios	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34b50	46	G	ios::`scalar deleting destructor'	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34b80	197	G	ios::ios	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34c50	120	G	ios::ios	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34cd0	169	G	ios::~ios	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34d80	131	G	ios::init	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34e10	17	G	ios::delbuf	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34e30	130	G	ios::operator=	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34ec0	17	G	ios::flags	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34ee0	17	G	ios::width	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f00	17	G	ios::tie	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f20	17	G	ios::fill	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f40	17	G	ios::precision	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f60	17	G	ios::rdstate	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f80	61	G	ios::xalloc	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34fc0	18	G	ios::lockc	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34fe0	18	G	ios::unlockc	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35000	42	G	ios::bitalloc	build\intel\xmt_obj\_ios.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35030	131	G	istream::istream	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x350c0	55	G	istream::`scalar deleting destructor'	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35100	33	G	istream::`vbase destructor'	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35130	196	G	istream::istream	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35200	213	G	istream::istream	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x352e0	31	G	istream::~istream	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35300	313	G	istream::operator=	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35440	351	G	istream::ipfx	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x355a0	16	G	ios::lockbuf	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x355b0	364	G	istream::operator>>	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35720	70	G	istream::peek	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35770	141	G	istream::putback	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35800	88	G	streambuf::sputbackc	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35860	25	G	ios::good	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35880	137	G	istream::sync	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35910	166	G	istream::eatwhite	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x359c0	133	G	istream_withassign::istream_withassign	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35a50	55	G	istream_withassign::`scalar deleting destructor'	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35a90	33	G	istream_withassign::`vbase destructor'	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35ac0	137	G	istream_withassign::istream_withassign	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35b50	39	G	istream_withassign::~istream_withassign	build\intel\xmt_obj\istream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35b80	162	G	filebuf::attach	build\intel\xmt_obj\filebuf1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35c30	604	G	filebuf::open	build\intel\xmt_obj\filebuf1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35e90	117	G	filebuf::setmode	build\intel\xmt_obj\filebuf1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35f10	160	G	streambuf::streambuf	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35fb0	46	G	streambuf::`scalar deleting destructor'	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35fe0	205	G	streambuf::streambuf	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x360b0	86	G	streambuf::~streambuf	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36110	84	G	streambuf::setbuf	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36170	142	G	streambuf::xsputn	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36200	313	G	streambuf::xsgetn	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36340	48	G	streambuf::sync	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36370	59	G	streambuf::allocate	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x363b0	87	G	streambuf::doallocate	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36410	81	G	streambuf::setb	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36470	16	G	streambuf::seekoff	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36480	34	G	streambuf::seekpos	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x364b0	171	G	streambuf::pbackfail	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36560	17	G	streambuf::eback	build\intel\xmt_obj\streamb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36580	170	G	streambuf::snextc	build\intel\xmt_obj\streamb1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36630	141	G	streambuf::sbumpc	build\intel\xmt_obj\streamb1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x366c0	126	G	streambuf::stossc	build\intel\xmt_obj\streamb1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36740	65	G	streambuf::sgetc	build\intel\xmt_obj\streamb1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36790	169	G	ostream::opfx	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36840	279	G	ostream::osfx	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36960	53	G	ostream::operator<<	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x369a0	167	G	ostream::flush	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36a50	88	G	ostream::ostream	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36ab0	55	G	ostream::`scalar deleting destructor'	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36af0	33	G	ostream::`vbase destructor'	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36b20	153	G	ostream::ostream	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36bc0	170	G	ostream::ostream	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36c70	31	G	ostream::~ostream	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36c90	270	G	ostream::operator=	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36da0	133	G	ostream_withassign::ostream_withassign	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36e30	55	G	ostream_withassign::`scalar deleting destructor'	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36e70	33	G	ostream_withassign::`vbase destructor'	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36ea0	137	G	ostream_withassign::ostream_withassign	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36f30	39	G	ostream_withassign::~ostream_withassign	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36f60	598	G	ostream::writepad	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x371c0	32	G	streambuf::sputn	build\intel\xmt_obj\ostream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x37510	31	G	operator new	build\intel\xmt_obj\dbgnew.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37530	65	G	isalpha	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37580	60	G	isupper	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x375c0	60	G	islower	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37600	60	G	isdigit	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37640	65	G	isxdigit	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37690	60	G	isspace	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x376d0	60	G	ispunct	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37710	65	G	isalnum	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37760	65	G	isprint	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x377b0	65	G	isgraph	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37800	60	G	iscntrl	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37840	16	G	__isascii	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37850	11	G	__toascii	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37860	95	G	__iscsymf	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x378c0	95	G	__iscsym	build\intel\xmt_obj\_ctype.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37920	15	G	_purecall	build\intel\xmt_obj\purevirt.obj	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37930	67	G	ios::unlock	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x37c80	139	G	Vec3_Normalize	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x380a0	244	G	Terrain::freeCourseTextures	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x381a0	1877	G	Terrain::InsertTileInDrawOrder	.\Debug\Terrain.obj	.\Debug\Terrain.obj
+0x38900	1638	G	Terrain::RenderTileEdgeSkirt	.\Debug\Terrain.obj	.\Debug\Terrain.obj

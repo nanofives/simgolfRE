@@ -1,0 +1,43 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc00	0x0043cc00	10	L	$E14	_$E14	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc10	0x0043cc10	28	L	$E11	_$E11	name	100	100.0	7/7 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc30	0x0043cc30	12	L	$E13	_$E13	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc40	0x0043cc40	23	L	$E12	_$E12	name	100	100.0	6/6 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc60	0x0043cc60	10	L	$E19	_$E19	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc70	0x0043cc70	10	L	$E16	_$E16	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc80	0x0043cc80	12	L	$E18	_$E18	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cc90	0x0043cc90	10	L	$E17	_$E17	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cca0	0x0043cca0	10	L	$E24	_$E24	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3ccb0	0x0043ccb0	10	L	$E21	_$E21	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3ccc0	0x0043ccc0	12	L	$E23	_$E23	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3ccd0	0x0043ccd0	10	L	$E22	_$E22	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cce0	0x0043cce0	144	G	PlayBinkVideoWithTimeout	?PlayBinkVideoWithTimeout@@YAXPBDH@Z	public	100	100.0	38/38 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3cd70	0x0043cd70	1324	G	PlayIntroVideo	?PlayIntroVideo@@YAXXZ	public	100	100.0	408/408 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d2a0	0x0043d2a0	418	G	FindFilesWithFilter	?FindFilesWithFilter@@YAHPBD00@Z	public	100	100.0	147/147 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d450	0x0043d450	10	L	$E29	_$E29	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d460	0x0043d460	37	L	$E26	_$E26	name	100	100.0	8/8 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d490	0x0043d490	12	L	$E28	_$E28	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d4a0	0x0043d4a0	43	L	$E27	_$E27	name	100	100.0	9/9 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d4d0	0x0043d4d0	10	L	$E34	_$E34	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d4e0	0x0043d4e0	10	L	$E31	_$E31	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d4f0	0x0043d4f0	12	L	$E33	_$E33	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d500	0x0043d500	20	L	$E32	_$E32	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d520	0x0043d520	171	G	MemPool_Free	?MemPool_Free@@YAXHH@Z	public	100	100.0	52/52 ins	golf_freeblock.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d5d0	0x0043d5d0	95	G	MemPool_Alloc	?MemPool_Alloc@@YAHH@Z	public	100	100.0	35/35 ins	golf_small9.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d630	0x0043d630	10	L	$E39	_$E39	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d640	0x0043d640	10	L	$E36	_$E36	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d650	0x0043d650	12	L	$E38	_$E38	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d660	0x0043d660	10	L	$E37	_$E37	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d670	0x0043d670	118	G	FreeSpritePoolByIndex	?FreeSpritePoolByIndex@@YAXH@Z	public	100	100.0	40/40 ins	golf_small11.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d6f0	0x0043d6f0	66	G	GetFlicBankSprite	?GetFlicBankSprite@@YAPAUSpriteObject@@HHH@Z	public	100	100.0	19/19 ins	golf_small7.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3d740	0x0043d740	1182	G	LoadFLCAnimation	?LoadFLCAnimation@@YAXHPBDHHH@Z	public	100	100.0	377/377 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x3dbe0	0x0043dbe0	17812	G	LoadThemeAssets	?LoadThemeAssets@@YAXXZ	public	100	100.0	5161/5161 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x42180	0x00442180	24520	G	ResetAllGameState	?ResetAllGameState@@YAXH@Z	public	100	100.0	7452/7452 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x48150	0x00448150	10	L	$E44	_$E44	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x48160	0x00448160	28	L	$E41	_$E41	name	100	100.0	7/7 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x48180	0x00448180	12	L	$E43	_$E43	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x48190	0x00448190	23	L	$E42	_$E42	name	100	100.0	6/6 ins	
+golf	golf/golf.exe/src/FlicBanks.cpp	0x481b0	0x004481b0	80	G	ConfigureAndPlaySound	?ConfigureAndPlaySound@@YAXHHHHH@Z	public	100	100.0	27/27 ins	golf_small8.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x48200	0x00448200	28	G	FadeOutSound	?FadeOutSound@@YAXH@Z	public	100	100.0	7/7 ins	golf_small17.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x48220	0x00448220	3724	G	LoadSoundEffects	?LoadSoundEffects@@YAXXZ	public	100	100.0	877/877 ins	golf_raw_06.cpp
+golf	golf/golf.exe/src/FlicBanks.cpp	0x490b0	0x004490b0	31	G	CleanupAllSoundObjects	?CleanupAllSoundObjects@@YAXXZ	public	100	100.0	10/10 ins	golf_raw_12.cpp

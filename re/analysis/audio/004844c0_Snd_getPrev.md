@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 4 bytes, 2 instructions, subsystem `audio`. Mechanical 
 Returns the previous sound in the active list. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?get_prev@Sound@@UAEPAV1@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004844c3): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004844c0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

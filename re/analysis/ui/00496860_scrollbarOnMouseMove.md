@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 973 bytes, 288 instructions, subsystem `ui`. Mechanical
 mouse-move handler of the scrollbar while its thumb or arrow is pressed: converts the pointer position into the thumb value, clamps it, auto-repeats paging and reports the new value to the owner (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_scroll.cpp` as `?on_mouse_move@Scroll@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00496a25, 0x00496c2a): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00496860 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

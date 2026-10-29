@@ -6,6 +6,7 @@ Module `sound.dll` (RVA `0x00010b40`), 125 bytes, 47 instructions, subsystem `au
 Reads GetCurrentPosition then repeats the read up to 0xffff times (cursor settle loop). (`re/names/sound_2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsb.cpp` as `?sync_emulated@CDSB@@QAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10010bbc): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10010b45 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

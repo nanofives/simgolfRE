@@ -1,0 +1,17 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31200	0x10031200	73	G	CVoiceTxMgr::CVoiceTxMgr	??0CVoiceTxMgr@@QAE@XZ	public	100	100.0	21/21 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31270	0x10031270	30	G	CVoiceTxMgr::`scalar deleting destructor'	??_GCVoiceTxMgr@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x312a0	0x100312a0	335	G	CVoiceTxMgr::~CVoiceTxMgr	??1CVoiceTxMgr@@UAE@XZ	public	100	100.0	122/122 ins	m36c_R1_02.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31450	0x10031450	36	G	CVoiceTxMgr::init	?init@CVoiceTxMgr@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z	public	100	100.0	11/11 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31490	0x10031490	152	G	CVoiceTxMgr::release	?release@CVoiceTxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	64/64 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31560	0x10031560	197	G	CVoiceTxMgr::unload	?unload@CVoiceTxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	78/78 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31670	0x10031670	50	G	CVoiceTxMgr::s2f_and_scale	?s2f_and_scale@CVoiceTxMgr@@AAEXPAMPAFH@Z	public	100	100.0	17/17 ins	
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x316c0	0x100316c0	341	G	CVoiceTxMgr::add_buffer	?add_buffer@CVoiceTxMgr@@QAE?AW4SNDERR@@PAUwavehdr_tag@@@Z	public	100	100.0	113/113 ins	m36c_raw_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31880	0x10031880	4	G	CVoiceTxMgr::get_nbuffers	?get_nbuffers@CVoiceTxMgr@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x318a0	0x100318a0	142	G	CVoiceTxMgr::get_next_buffer	?get_next_buffer@CVoiceTxMgr@@UAEPAU_MMIOINFO@@XZ	public	100	100.0	64/64 ins	
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31960	0x10031960	84	G	CVoiceTxMgr::return_buffer	?return_buffer@CVoiceTxMgr@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	26/26 ins	
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x319e0	0x100319e0	63	G	CVoiceTxMgr::start	?start@CVoiceTxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	17/17 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31a30	0x10031a30	5	G	CVoiceTxMgr::stop	?stop@CVoiceTxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31a50	0x10031a50	66	G	CVoiceTxMgr::lpc_write_bits	?lpc_write_bits@CVoiceTxMgr@@AAEXPADPAHH@Z	public	100	100.0	33/33 ins	
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31ac0	0x10031ac0	125	G	DList<HMMIO__ *>::~DList<HMMIO__ *>	??1?$DList@PAUHMMIO__@@@@QAE@XZ	public	100	100.0	46/46 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceTxMgr.cpp	0x31b60	0x10031b60	86	G	DList<HMMIO__ *>::add_to_end	?add_to_end@?$DList@PAUHMMIO__@@@@QAEXPAPAUHMMIO__@@@Z	public	100	100.0	32/32 ins	sound_raw_05.cpp

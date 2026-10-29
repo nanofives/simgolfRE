@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+3,"add eax, 0x20","add eax, 0x20",True
+4,pop ebp,pop ebp,True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\tolower.obj (library object, no compilation)",symbol=__tolower,module=Terrain.dll
+VERDICT,GREEN,6,100.0%

@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/ListDialog.cpp	0x6de30	0x0046de30	10	L	$E10	_$E10	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/ListDialog.cpp	0x6de40	0x0046de40	10	L	$E7	_$E7	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/ListDialog.cpp	0x6de50	0x0046de50	12	L	$E9	_$E9	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/ListDialog.cpp	0x6de60	0x0046de60	10	L	$E8	_$E8	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/ListDialog.cpp	0x6de70	0x0046de70	45	G	ShowListDialogWithParams	?ShowListDialogWithParams@@YAHPBDHH@Z	public	100	100.0	11/11 ins	golf_raw_13.cpp
+golf	golf/golf.exe/src/ListDialog.cpp	0x6dea0	0x0046dea0	960	G	ShowListSelectionDialog	?ShowListSelectionDialog@@YAHPBDH@Z	public	100	100.0	261/261 ins	
+golf	golf/golf.exe/src/ListDialog.cpp	0x6e260	0x0046e260	1200	G	RenderMenuWithSelection	?RenderMenuWithSelection@@YAHPADH@Z	public	100	100.0	374/374 ins	
+golf	golf/golf.exe/src/ListDialog.cpp	0x6e710	0x0046e710	150	G	DrawRectOutline	?DrawRectOutline@@YAXHHHHH@Z	public	100	100.0	65/65 ins	golf_raw_08.cpp

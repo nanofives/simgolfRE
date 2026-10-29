@@ -1,0 +1,40 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,"movsx eax, byte ptr [esi]","movsx eax, byte ptr [esi]",True
+3,push eax,push eax,True
+4,call 0xe,call 0x100498b9,True
+5,"cmp eax, 0x65","cmp eax, 0x65",True
+6,pop ecx,pop ecx,True
+7,je 0x40,je 0x1004440c,True
+8,inc esi,inc esi,True
+9,"cmp dword ptr [0], 1","cmp dword ptr [0x10067730], 1",True
+10,jle 0x2d,jle 0x100443f9,True
+11,"movsx eax, byte ptr [esi]","movsx eax, byte ptr [esi]",True
+12,push 4,push 4,True
+13,push eax,push eax,True
+14,call 0x29,call 0x1004983c,True
+15,pop ecx,pop ecx,True
+16,pop ecx,pop ecx,True
+17,jmp 0x3c,jmp 0x10044408,True
+18,"movsx eax, byte ptr [esi]","movsx eax, byte ptr [esi]",True
+19,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1006773c]",True
+20,"mov al, byte ptr [ecx + eax*2]","mov al, byte ptr [ecx + eax*2]",True
+21,"and eax, 4","and eax, 4",True
+22,"test eax, eax","test eax, eax",True
+23,jne 0x14,jne 0x100443e0,True
+24,"mov cl, byte ptr [0]","mov cl, byte ptr [0x10067734]",True
+25,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+26,"mov byte ptr [esi], cl","mov byte ptr [esi], cl",True
+27,inc esi,inc esi,True
+28,"mov cl, byte ptr [esi]","mov cl, byte ptr [esi]",True
+29,"mov byte ptr [esi], al","mov byte ptr [esi], al",True
+30,"mov al, cl","mov al, cl",True
+31,"mov cl, byte ptr [esi]","mov cl, byte ptr [esi]",True
+32,inc esi,inc esi,True
+33,"test cl, cl","test cl, cl",True
+34,jne 0x4b,jne 0x10044417,True
+35,pop esi,pop esi,True
+36,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\cvt.obj (library object, no compilation)",symbol=__forcdecpt,module=sound.dll
+VERDICT,GREEN,37,100.0%

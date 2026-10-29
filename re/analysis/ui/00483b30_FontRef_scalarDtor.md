@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 90 bytes, 36 instructions, subsystem `ui`. Mechanical t
 Scalar/vector deleting destructor of FontRef: destroys one object or an array of 0x20-byte objects and frees when bit 0 is set. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_font.cpp` as `??_EFont@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00483b65, 0x00483b87): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00483b36 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 
@@ -25,7 +26,7 @@ Through registers:
 ## Callees
 - 0x004838b0 `FontRef::release` at 0x00483b70
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x00483b58, 0x00483b7b
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x00483b4d
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x00483b4d
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

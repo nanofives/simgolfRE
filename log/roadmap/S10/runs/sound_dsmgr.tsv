@@ -1,0 +1,38 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/dsmgr.cpp	0x11180	0x10011180	203	G	CDSMgr::CDSMgr	??0CDSMgr@@QAE@XZ	public	100	100.0	47/47 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11290	0x10011290	455	G	CDSMgr::~CDSMgr	??1CDSMgr@@QAE@XZ	public	100	100.0	141/141 ins	m36a_g4_gx.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x114e0	0x100114e0	224	G	CDSMgr::init	?init@CDSMgr@@QAE?AW4SNDERR@@IK@Z	public	100	100.0	81/81 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11600	0x10011600	122	G	CDSMgr::init	?init@CDSMgr@@QAE?AW4SNDERR@@KIK@Z	public	100	100.0	51/51 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x116a0	0x100116a0	88	G	CDSMgr::set_pcur	?set_pcur@CDSMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	38/38 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11720	0x10011720	1	G	CDSMgr::suspend	?suspend@CDSMgr@@QAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x11740	0x10011740	1	G	CDSMgr::restart	?restart@CDSMgr@@QAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x11760	0x10011760	28	G	CDSMgr::get_hw_mem_size	?get_hw_mem_size@CDSMgr@@QAEKXZ	public	100	100.0	16/16 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11790	0x10011790	93	G	CDSMgr::get_description	?get_description@CDSMgr@@QAE?AW4SNDERR@@KPADK@Z	public	100	100.0	34/34 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11810	0x10011810	259	G	CDSMgr::ds_enum_callback	?ds_enum_callback@CDSMgr@@SGHPAU_GUID@@PAD1PAX@Z	public	100	100.0	103/103 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11970	0x10011970	208	G	CDSMgr::destroy	?destroy@CDSMgr@@QAEXXZ	public	100	100.0	66/66 ins	m36a_h1.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11a80	0x10011a80	382	G	CDSMgr::disable	?disable@CDSMgr@@QAEXXZ	public	100	100.0	116/116 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x11c60	0x10011c60	756	G	CDSMgr::create	?create@CDSMgr@@QAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	256/256 ins	m36a_h1_create.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x12020	0x10012020	8	G	CDSMgr::get_eax	?get_eax@CDSMgr@@QAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12040	0x10012040	5	G	CDSMgr::set_eax	?set_eax@CDSMgr@@QAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12060	0x10012060	3	G	CDSMgr::init_A3D	?init_A3D@CDSMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12080	0x10012080	3	G	CDSMgr::uninit_A3D	?uninit_A3D@CDSMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x120a0	0x100120a0	81	G	CDSMgr::set_hwnd	?set_hwnd@CDSMgr@@QAE?AW4SNDERR@@PAUHWND__@@@Z	public	100	100.0	33/33 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x12120	0x10012120	250	G	CDSMgr::create_dsb	?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@@Z	public	100	100.0	78/78 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12260	0x10012260	470	G	CDSMgr::duplicate_dsb	?duplicate_dsb@CDSMgr@@QAE?AW4SNDERR@@PAVCWaveFile@@PAVCDSB@@PAPAV4@@Z	public	100	100.0	144/144 ins	m36a_h2_gx.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x124c0	0x100124c0	361	G	CDSMgr::free_a_duphwdsb	?free_a_duphwdsb@CDSMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	120/120 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12690	0x10012690	421	G	CDSMgr::steal_duplicate_hwdsb	?steal_duplicate_hwdsb@CDSMgr@@QAE?AW4SNDERR@@PAVCWaveFile@@PAPAVCDSB@@@Z	public	100	100.0	139/139 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x128b0	0x100128b0	567	G	CDSMgr::create_dsb	?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@PAU_DSBUFFERDESC@@@Z	public	100	100.0	167/167 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12b80	0x10012b80	30	G	CDSB::`scalar deleting destructor'	??_GCDSB@@QAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x12bb0	0x10012bb0	262	G	CDSMgr::create_dsb	?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@K@Z	public	100	100.0	82/82 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x12d10	0x10012d10	571	G	CDSMgr::create_dsb	?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@KK@Z	public	100	100.0	171/171 ins	m36a_g4_gx.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x12fe0	0x10012fe0	600	G	CDSMgr::create_dsb	?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@PAUtWAVEFORMATEX@@KK@Z	public	100	100.0	178/178 ins	m36a_h2_gx.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x132e0	0x100132e0	183	G	CDSMgr::destroy_dsb	?destroy_dsb@CDSMgr@@QAE?AW4SNDERR@@PAVCDSB@@@Z	public	100	100.0	56/56 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x133d0	0x100133d0	127	G	CDSMgr::destroy_all_dsbs	?destroy_all_dsbs@CDSMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	40/40 ins	m36a_h1.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x13470	0x10013470	77	G	CDSMgr::attach_dsb	?attach_dsb@CDSMgr@@QAE?AW4SNDERR@@PAVCDSB@@@Z	public	100	100.0	18/18 ins	
+sound	sound/sound.dll/src/dsmgr.cpp	0x134e0	0x100134e0	88	G	CDSMgr::detach_dsb	?detach_dsb@CDSMgr@@QAE?AW4SNDERR@@PAVCDSB@@@Z	public	100	100.0	21/21 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x13560	0x10013560	45	G	CDSMgr::set_volume	?set_volume@CDSMgr@@QAEXK@Z	public	100	100.0	16/16 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x135a0	0x100135a0	89	G	CDSMgr::set_listener_position	?set_listener_position@CDSMgr@@QAE?AW4SNDERR@@MMM@Z	public	100	100.0	31/31 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x13620	0x10013620	125	G	DList<CDSB>::~DList<CDSB>	??1?$DList@VCDSB@@@@QAE@XZ	public	100	100.0	46/46 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x136c0	0x100136c0	109	G	DList<CDSB>::remove	?remove@?$DList@VCDSB@@@@QAEPAVCDSB@@PAV2@@Z	public	100	100.0	46/46 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x13750	0x10013750	125	G	DList<CWaveFile>::~DList<CWaveFile>	??1?$DList@VCWaveFile@@@@QAE@XZ	public	100	100.0	46/46 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsmgr.cpp	0x137f0	0x100137f0	86	G	DList<CWaveFile>::add_to_end	?add_to_end@?$DList@VCWaveFile@@@@QAEXPAVCWaveFile@@@Z	public	100	100.0	32/32 ins	sound_raw_02.cpp

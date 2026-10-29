@@ -7,6 +7,7 @@ thiscall(now): like Voice_setRateForward but negates the rate (this+0xec = -step
 System writeup: `re/analysis/systems/sound_4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `?set_fade_in@WaveBuffer@@QAEXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100381bb): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10038134 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

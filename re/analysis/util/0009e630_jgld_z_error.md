@@ -19,8 +19,8 @@ Through registers:
 
 ## Callees
 - 0x1007e780 `__chkesp` at 0x1009e66d
-- 0x1007f1a0 `_exit` at 0x1009e660
-- 0x10083010 `_fprintf` at 0x1009e656
+- 0x1007f1a0 `exit` at 0x1009e660
+- 0x10083010 `fprintf` at 0x1009e656
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

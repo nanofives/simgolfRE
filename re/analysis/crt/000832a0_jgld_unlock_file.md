@@ -20,11 +20,11 @@ None.
 - `jb` (unsigned) at 0x100832aa
 
 ## Callees
-- 0x10083490 `FUN_10083490` at 0x100832c4
+- 0x10083490 `_unlock` at 0x100832c4
 - import `KERNEL32.dll!LeaveCriticalSection` at 0x100832d5
 
 ## Callers
-0x1007f850 `fclose`, 0x1007f9a0 `__fsopen`, 0x10082d80 `_fread`, 0x10083010 `_fprintf`, 0x10085300 `_fflush`
+0x1007f850 `fclose`, 0x1007f9a0 `__fsopen`, 0x10082d80 `fread`, 0x10083010 `fprintf`, 0x10085300 `fflush`
 
 ## Constants
 - `0x4` at 0x100832c9

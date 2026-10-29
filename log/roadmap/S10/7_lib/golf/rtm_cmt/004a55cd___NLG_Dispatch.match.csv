@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,pop ecx,pop ecx,True
+1,pop ebx,pop ebx,True
+2,ret 4,ret 4,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\exsup.obj (library object, no compilation)",symbol=__NLG_Dispatch,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

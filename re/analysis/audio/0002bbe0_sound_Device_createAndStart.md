@@ -7,6 +7,7 @@ thiscall(filespec): create_sound at this+0x40 (returns 0xc if one already exists
 System writeup: `re/analysis/systems/sound_4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_sound.cpp` as `?dyna_load@Wave@@AAE?AW4SNDERR@@PAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002bc24, 0x1002bc2f, 0x1002bc37): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002bbe2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

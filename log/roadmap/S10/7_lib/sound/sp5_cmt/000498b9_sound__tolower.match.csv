@@ -1,0 +1,47 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,"xor ebx, ebx","xor ebx, ebx",True
+2,"cmp dword ptr [8], ebx","cmp dword ptr [0x100b5744], ebx",True
+3,jne 0x1e,jne 0x100498d7,True
+4,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+5,"cmp eax, 0x41","cmp eax, 0x41",True
+6,jl 0x6d,jl 0x10049926,True
+7,"cmp eax, 0x5a","cmp eax, 0x5a",True
+8,jg 0x6d,jg 0x10049926,True
+9,"add eax, 0x20","add eax, 0x20",True
+10,pop ebx,pop ebx,True
+11,ret ,ret ,True
+12,push esi,push esi,True
+13,"mov esi, 0","mov esi, 0x100b58dc",True
+14,push edi,push edi,True
+15,push esi,push esi,True
+16,call dword ptr [0],call dword ptr [0x100b8490],True
+17,"cmp dword ptr [0], ebx","cmp dword ptr [0x100b58cc], ebx",True
+18,"mov edi, dword ptr [0]","mov edi, dword ptr [0x100b8494]",True
+19,je 0x48,je 0x10049901,True
+20,push esi,push esi,True
+21,call edi,call edi,True
+22,push 0x13,push 0x13,True
+23,call 0x44,call 0x10047710,True
+24,pop ecx,pop ecx,True
+25,push 1,push 1,True
+26,pop ebx,pop ebx,True
+27,push dword ptr [esp + 0x10],push dword ptr [esp + 0x10],True
+28,call 0x51,call 0x10049928,True
+29,"test ebx, ebx","test ebx, ebx",True
+30,pop ecx,pop ecx,True
+31,"mov dword ptr [esp + 0x10], eax","mov dword ptr [esp + 0x10], eax",True
+32,je 0x64,je 0x1004991d,True
+33,push 0x13,push 0x13,True
+34,call 0x61,call 0x10047771,True
+35,pop ecx,pop ecx,True
+36,jmp 0x67,jmp 0x10049920,True
+37,push esi,push esi,True
+38,call edi,call edi,True
+39,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+40,pop edi,pop edi,True
+41,pop esi,pop esi,True
+42,pop ebx,pop ebx,True
+43,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\tolower.obj (library object, no compilation)",symbol=_tolower,module=sound.dll
+VERDICT,GREEN,44,100.0%

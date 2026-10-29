@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 16 bytes, 4 instructions, subsystem `ui`. Mechanical tr
 constructs a hot-list entry (0x20 bytes): sets its vtable and clears the tooltip pointer at +0x1c (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_spot.cpp` as `??0HotSpot@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049265f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00492650 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

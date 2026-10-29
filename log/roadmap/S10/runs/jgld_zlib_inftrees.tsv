@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/inftrees.c	0x9e710	0x1009e710	138	G	inflate_trees_bits	_inflate_trees_bits	public	100	100.0	52/52 ins	jgld_zlib_inftrees.cpp
+jgld	jgl/zlib.lib/zlib/inftrees.c	0x9e7a0	0x1009e7a0	1886	L	huft_build	_huft_build	name	100	100.0	537/537 ins	jgld_zlib_inftrees.cpp
+jgld	jgl/zlib.lib/zlib/inftrees.c	0x9ef00	0x1009ef00	299	G	inflate_trees_dynamic	_inflate_trees_dynamic	public	100	100.0	103/103 ins	jgld_zlib_inftrees.cpp
+jgld	jgl/zlib.lib/zlib/inftrees.c	0x9f030	0x1009f030	469	G	inflate_trees_fixed	_inflate_trees_fixed	public	100	100.0	113/113 ins	jgld_zlib_inftrees.cpp
+jgld	jgl/zlib.lib/zlib/inftrees.c	0x9f210	0x1009f210	58	L	falloc	_falloc	name	100	100.0	25/25 ins	jgld_zlib_inftrees.cpp
+jgld	jgl/zlib.lib/zlib/inftrees.c	0x9f250	0x1009f250	155	G	inflate_trees_free	_inflate_trees_free	public	100	100.0	58/58 ins	jgld_zlib_inftrees.cpp

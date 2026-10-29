@@ -6,6 +6,7 @@ Module `sound.dll` (RVA `0x0000a0c0`), 6 bytes, 2 instructions, subsystem `audio
 Vtable stub that returns the SNDERR 0x2f (not-implemented) code. (`re/names/sound_2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllmididevice.cpp` as `?get_ndevices@Dll_Midi_Device@@UAEKXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a0c5): callee pops 0 bytes of stack arguments.
 
 ## Reads

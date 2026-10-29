@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,"sub esp, 0x10","sub esp, 0x10",True
+1,fxch st(1),fxch st(1),True
+2,fstp qword ptr [esp],fstp qword ptr [esp],True
+3,fst qword ptr [esp + 8],fst qword ptr [esp + 8],True
+4,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+5,call 0x22,call 0x10019392,True
+6,"add esp, 0x10","add esp, 0x10",True
+7,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\pow.obj (library object, no compilation)",symbol=__CIpow,module=Terrain.dll
+VERDICT,GREEN,8,100.0%

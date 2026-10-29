@@ -1,0 +1,19 @@
+module	entry	size	library symbol	tag	member	pct
+sound.dll	0x100423cc	34	__unwind_handler	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0
+sound.dll	0x100428ec	22	?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z	sp5_cmt	build\intel\mt_obj\frame.obj	100.0
+sound.dll	0x10043c6e	22	?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z	sp5_cmt	build\intel\mt_obj\frame.obj	100.0
+sound.dll	0x10043e1a	42	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	sp5_cmt	build\intel\mt_obj\frame.obj	100.0
+sound.dll	0x10043ffc	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x100442cc	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x1004433a	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x1004c455	98	_ctrlevent_capture@4	sp5_cmt	build\intel\mt_obj\winsig.obj	100.0
+sound.dll	0x1004c639	61	_siglookup	sp5_cmt	build\intel\mt_obj\winsig.obj	100.0
+sound.dll	0x1004c781	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x1004cf5a	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x1004d00e	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x100508e5	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x10050942	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x10051512	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x1005162b	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x100519c6	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0
+sound.dll	0x10051a35	4	?length@charNode@@UBEHXZ	sp5_cmt	build\intel\mt_obj\undname.obj	100.0

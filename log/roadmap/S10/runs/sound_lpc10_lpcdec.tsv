@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcdec.c	0x3a980	0x1003a980	193	G	lpc10_decode	_lpc10_decode	public	100	100.0	77/77 ins	m36c_D1_01.cpp

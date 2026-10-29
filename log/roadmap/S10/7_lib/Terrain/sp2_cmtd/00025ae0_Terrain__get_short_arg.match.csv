@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+3,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+4,"add ecx, 4","add ecx, 4",True
+5,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+6,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+7,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+8,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+9,"mov ax, word ptr [ecx - 4]","mov ax, word ptr [ecx - 4]",True
+10,pop ebp,pop ebp,True
+11,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\cprintf.obj (library object, no compilation)",symbol=_get_short_arg,module=Terrain.dll
+VERDICT,GREEN,12,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 501 bytes, 167 instructions, subsystem `ui`. Mechanical
 Paints the edit box: background, bevelled border, the visible wrapped text lines scrolled to keep the caret line in view, and the caret line when the caret-visible flag at this+0x5a8 is set. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_EditBox.cpp` as `?on_redraw@EditBox@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004866e4): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004864f9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

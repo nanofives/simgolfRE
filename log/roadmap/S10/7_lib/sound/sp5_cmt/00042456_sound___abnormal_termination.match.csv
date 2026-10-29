@@ -1,0 +1,8 @@
+instruction,library_object,original,match
+0,bytes +0x0: 33c0648b0d00000000817904????????,bytes +0x0: 33c0648b0d00000000817904????????,True
+1,bytes +0x10: 75108b510c8b520c3951087505b80100,bytes +0x10: 75108b510c8b520c3951087505b80100,True
+2,bytes +0x20: 0000c35351bb????????eb0a5351bb??,bytes +0x20: 0000c35351bb????????eb0a5351bb??,True
+3,bytes +0x30: ??????8b4d08894b08894304896b0c59,bytes +0x30: ??????8b4d08894b08894304896b0c59,True
+4,bytes +0x40: 5bc20400,bytes +0x40: 5bc20400,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\exsup.obj (library object, no compilation)",symbol=__abnormal_termination,module=sound.dll
+VERDICT,GREEN,5,100.0%

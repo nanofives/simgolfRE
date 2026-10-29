@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/FlicSprite.cpp	0x82b60	0x00482b60	42	G	FlicSprite::FlicSprite	??0FlicSprite@@QAE@XZ	public	100	100.0	14/14 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/FlicSprite.cpp	0x82b90	0x00482b90	573	G	FlicSprite::init	?init@FlicSprite@@QAEHPAUFlicAnim@@H@Z	public	100	100.0	194/194 ins	
+golf	golf/jackal.lib/src/FlicSprite.cpp	0x82dd0	0x00482dd0	49	G	FlicSprite::close	?close@FlicSprite@@QAEXXZ	public	100	100.0	20/20 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/FlicSprite.cpp	0x82e10	0x00482e10	14	G	FlicSprite::current_sprite	?current_sprite@FlicSprite@@QAEPAUSpriteObject@@XZ	public	100	100.0	7/7 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/FlicSprite.cpp	0x82e20	0x00482e20	21	G	FlicSprite::NextFrame	?NextFrame@FlicSprite@@QAEPAUSpriteObject@@XZ	public	100	100.0	10/10 ins	golf_small16.cpp
+golf	golf/jackal.lib/src/FlicSprite.cpp	0x82e40	0x00482e40	38	G	FlicSprite::seek_anim	?seek_anim@FlicSprite@@QAEPAUSpriteObject@@HHPAU2@@Z	public	100	100.0	15/15 ins	golf_small18.cpp

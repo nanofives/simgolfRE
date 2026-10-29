@@ -1,0 +1,57 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x7c","sub esp, 0x7c",True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,push eax,push eax,True
+5,call 0xf,call 0x1002fe90,True
+6,"add esp, 4","add esp, 4",True
+7,"mov dword ptr [ebp - 0x7c], eax","mov dword ptr [ebp - 0x7c], eax",True
+8,push 0x78,push 0x78,True
+9,"lea ecx, [ebp - 0x78]","lea ecx, [ebp - 0x78]",True
+10,push ecx,push ecx,True
+11,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10110a18]",True
+12,neg edx,neg edx,True
+13,"sbb edx, edx","sbb edx, edx",True
+14,"and edx, 0xfffff005","and edx, 0xfffff005",True
+15,"add edx, 0x1002","add edx, 0x1002",True
+16,push edx,push edx,True
+17,"mov eax, dword ptr [ebp - 0x7c]","mov eax, dword ptr [ebp - 0x7c]",True
+18,push eax,push eax,True
+19,call dword ptr [0],call dword ptr [0x10110a34],True
+20,"test eax, eax","test eax, eax",True
+21,jne 0x51,jne 0x1002faa1,True
+22,"mov dword ptr [0], 0","mov dword ptr [0x10110a2c], 0",True
+23,"mov eax, 1","mov eax, 1",True
+24,jmp 0xa6,jmp 0x1002faf6,True
+25,"lea ecx, [ebp - 0x78]","lea ecx, [ebp - 0x78]",True
+26,push ecx,push ecx,True
+27,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10110a28]",True
+28,push edx,push edx,True
+29,call 0x61,call 0x10031e10,True
+30,"add esp, 8","add esp, 8",True
+31,"test eax, eax","test eax, eax",True
+32,jne 0x99,jne 0x1002fae9,True
+33,"mov eax, dword ptr [ebp - 0x7c]","mov eax, dword ptr [ebp - 0x7c]",True
+34,push eax,push eax,True
+35,call 0x71,call 0x1002fbd0,True
+36,"add esp, 4","add esp, 4",True
+37,"test eax, eax","test eax, eax",True
+38,je 0x99,je 0x1002fae9,True
+39,"mov ecx, dword ptr [ebp - 0x7c]","mov ecx, dword ptr [ebp - 0x7c]",True
+40,"mov dword ptr [0], ecx","mov dword ptr [0x10110a30], ecx",True
+41,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10110a30]",True
+42,"mov dword ptr [0], edx","mov dword ptr [0x10110a14], edx",True
+43,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10110a2c]",True
+44,"or al, 4","or al, 4",True
+45,"mov dword ptr [0], eax","mov dword ptr [0x10110a2c], eax",True
+46,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10110a2c]",True
+47,"and eax, 4","and eax, 4",True
+48,neg eax,neg eax,True
+49,"sbb eax, eax","sbb eax, eax",True
+50,inc eax,inc eax,True
+51,"mov esp, ebp","mov esp, ebp",True
+52,pop ebp,pop ebp,True
+53,ret 4,ret 4,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\getqloc.obj (library object, no compilation)",symbol=_CountryEnumProc@4,module=Terrain.dll
+VERDICT,GREEN,54,100.0%

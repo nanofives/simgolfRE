@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,push dword ptr [esp + 0xc],push dword ptr [esp + 0xc],True
+1,push 0x40,push 0x40,True
+2,push dword ptr [esp + 0x10],push dword ptr [esp + 0x10],True
+3,push dword ptr [esp + 0x10],push dword ptr [esp + 0x10],True
+4,call 0x13,call 0x4a5d5f,True
+5,"add esp, 0x10","add esp, 0x10",True
+6,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\open.obj (library object, no compilation)",symbol=__open,module=golf_clean.exe
+VERDICT,GREEN,7,100.0%

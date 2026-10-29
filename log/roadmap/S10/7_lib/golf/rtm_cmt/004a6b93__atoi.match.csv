@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+1,call 9,call 0x4a6b08,True
+2,pop ecx,pop ecx,True
+3,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\atox.obj (library object, no compilation)",symbol=_atoi,module=golf_clean.exe
+VERDICT,GREEN,4,100.0%

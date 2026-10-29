@@ -1,0 +1,33 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,"cmp esi, dword ptr [0]","cmp esi, dword ptr [0x4e4bdc]",True
+3,push edi,push edi,True
+4,ja 0x2f,ja 0x4a50bc,True
+5,push 9,push 9,True
+6,call 0x15,call 0x4a79b2,True
+7,push esi,push esi,True
+8,call 0x1b,call 0x4a7dbc,True
+9,push 9,push 9,True
+10,"mov edi, eax","mov edi, eax",True
+11,call 0x24,call 0x4a7a13,True
+12,"add esp, 0xc","add esp, 0xc",True
+13,"test edi, edi","test edi, edi",True
+14,je 0x2f,je 0x4a50bc,True
+15,"mov eax, edi","mov eax, edi",True
+16,jmp 0x4b,jmp 0x4a50d8,True
+17,"test esi, esi","test esi, esi",True
+18,jne 0x36,jne 0x4a50c3,True
+19,push 1,push 1,True
+20,pop esi,pop esi,True
+21,"add esi, 0xf","add esi, 0xf",True
+22,"and esi, 0xfffffff0","and esi, 0xfffffff0",True
+23,push esi,push esi,True
+24,push 0,push 0,True
+25,push dword ptr [0],push dword ptr [0x84215c],True
+26,call dword ptr [0],call dword ptr [0x4ba05c],True
+27,pop edi,pop edi,True
+28,pop esi,pop esi,True
+29,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\malloc.obj (library object, no compilation)",symbol=__heap_alloc,module=golf_clean.exe
+VERDICT,GREEN,30,100.0%

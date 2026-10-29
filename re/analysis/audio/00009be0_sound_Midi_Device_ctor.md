@@ -7,6 +7,7 @@ Constructs the Midi_Device: base ctor 0x10029e70, initializes the command ring a
 System writeup: `re/analysis/systems/sound_2.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllmididevice.cpp` as `??0Dll_Midi_Device@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10009c59): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10009bf5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c180	0x0045c180	5	L	$E12	_$E12	name	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c190	0x0045c190	11	L	$E11	_$E11	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c1a0	0x0045c1a0	52	G	RandomSource::get	?get@RandomSource@@QAENXZ	public	100	100.0	13/13 ins	golf_util.cpp
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c1e0	0x0045c1e0	32	G	RandomSource::NextInt	?NextInt@RandomSource@@QAEGH@Z	public	100	100.0	8/8 ins	golf_util.cpp
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c200	0x0045c200	532	G	RenderGolferPortrait	?RenderGolferPortrait@@YAHHHHH@Z	public	100	100.0	185/185 ins	
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c420	0x0045c420	53	G	GetGolferMoodBalance	?GetGolferMoodBalance@@YAHH@Z	public	100	100.0	19/19 ins	golf_small5.cpp
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c460	0x0045c460	248	G	ReplaceGolferNameTokens	?ReplaceGolferNameTokens@@YAXH@Z	public	100	100.0	87/87 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/GolferPanel.cpp	0x5c560	0x0045c560	6340	G	RenderGolferInfoPanel	?RenderGolferInfoPanel@@YAXHH@Z	public	100	100.0	1929/1929 ins	

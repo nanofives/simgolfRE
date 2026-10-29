@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,"cmp cl, 0x40","cmp cl, 0x40",True
+1,jae 0x1a,jae 0x4b725a,True
+2,"cmp cl, 0x20","cmp cl, 0x20",True
+3,jae 0x10,jae 0x4b7250,True
+4,"shld edx, eax, cl","shld edx, eax, cl",True
+5,"shl eax, cl","shl eax, cl",True
+6,ret ,ret ,True
+7,"mov edx, eax","mov edx, eax",True
+8,"xor eax, eax","xor eax, eax",True
+9,"and cl, 0x1f","and cl, 0x1f",True
+10,"shl edx, cl","shl edx, cl",True
+11,ret ,ret ,True
+12,"xor eax, eax","xor eax, eax",True
+13,"xor edx, edx","xor edx, edx",True
+14,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\llshl.obj (library object, no compilation)",symbol=__allshl,module=golf_clean.exe
+VERDICT,GREEN,15,100.0%

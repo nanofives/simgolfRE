@@ -7,6 +7,7 @@ Stub vtable slot returning SNDERR 0xb (operation not supported). (`re/names/soun
 System writeup: `re/analysis/systems/sound_7.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `?get_mpeg_samples_to_dsb@CWaveFile@@QAE?AW4SNDERR@@KKPAK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10035f65): callee pops 12 bytes of stack arguments.
 
 ## Reads

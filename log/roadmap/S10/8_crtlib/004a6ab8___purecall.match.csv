@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,push 0x19,push 0x19,True
+1,call 7,call 0x4a6937,True
+2,pop ecx,,False
+3,ret ,,False
+meta,"library=libcmt.lib member=build\intel\mt_obj\purevirt.obj (library object, no compilation)",symbol=__purecall,module=golf_clean.exe
+VERDICT,RED,4,50.0%

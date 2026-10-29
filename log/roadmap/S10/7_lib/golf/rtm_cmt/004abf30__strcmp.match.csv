@@ -1,0 +1,59 @@
+instruction,library_object,original,match
+0,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+1,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+2,"test edx, 3","test edx, 3",True
+3,jne 0x4c,jne 0x4abf7c,True
+4,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+5,"cmp al, byte ptr [ecx]","cmp al, byte ptr [ecx]",True
+6,jne 0x44,jne 0x4abf74,True
+7,"or al, al","or al, al",True
+8,je 0x40,je 0x4abf70,True
+9,"cmp ah, byte ptr [ecx + 1]","cmp ah, byte ptr [ecx + 1]",True
+10,jne 0x44,jne 0x4abf74,True
+11,"or ah, ah","or ah, ah",True
+12,je 0x40,je 0x4abf70,True
+13,"shr eax, 0x10","shr eax, 0x10",True
+14,"cmp al, byte ptr [ecx + 2]","cmp al, byte ptr [ecx + 2]",True
+15,jne 0x44,jne 0x4abf74,True
+16,"or al, al","or al, al",True
+17,je 0x40,je 0x4abf70,True
+18,"cmp ah, byte ptr [ecx + 3]","cmp ah, byte ptr [ecx + 3]",True
+19,jne 0x44,jne 0x4abf74,True
+20,"add ecx, 4","add ecx, 4",True
+21,"add edx, 4","add edx, 4",True
+22,"or ah, ah","or ah, ah",True
+23,jne 0x10,jne 0x4abf40,True
+24,"mov edi, edi","mov edi, edi",True
+25,"xor eax, eax","xor eax, eax",True
+26,ret ,ret ,True
+27,nop ,nop ,True
+28,"sbb eax, eax","sbb eax, eax",True
+29,"shl eax, 1","shl eax, 1",True
+30,inc eax,inc eax,True
+31,ret ,ret ,True
+32,"mov edi, edi","mov edi, edi",True
+33,"test edx, 1","test edx, 1",True
+34,je 0x68,je 0x4abf98,True
+35,"mov al, byte ptr [edx]","mov al, byte ptr [edx]",True
+36,inc edx,inc edx,True
+37,"cmp al, byte ptr [ecx]","cmp al, byte ptr [ecx]",True
+38,jne 0x44,jne 0x4abf74,True
+39,inc ecx,inc ecx,True
+40,"or al, al","or al, al",True
+41,je 0x40,je 0x4abf70,True
+42,"test edx, 2","test edx, 2",True
+43,je 0x10,je 0x4abf40,True
+44,"mov ax, word ptr [edx]","mov ax, word ptr [edx]",True
+45,"add edx, 2","add edx, 2",True
+46,"cmp al, byte ptr [ecx]","cmp al, byte ptr [ecx]",True
+47,jne 0x44,jne 0x4abf74,True
+48,"or al, al","or al, al",True
+49,je 0x40,je 0x4abf70,True
+50,"cmp ah, byte ptr [ecx + 1]","cmp ah, byte ptr [ecx + 1]",True
+51,jne 0x44,jne 0x4abf74,True
+52,"or ah, ah","or ah, ah",True
+53,je 0x40,je 0x4abf70,True
+54,"add ecx, 2","add ecx, 2",True
+55,jmp 0x10,jmp 0x4abf40,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\strcmp.obj (library object, no compilation)",symbol=_strcmp,module=golf_clean.exe
+VERDICT,GREEN,56,100.0%

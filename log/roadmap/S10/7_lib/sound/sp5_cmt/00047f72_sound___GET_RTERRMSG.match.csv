@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"xor edx, edx","xor edx, edx",True
+2,"mov eax, 0","mov eax, 0x100674e8",True
+3,"cmp ecx, dword ptr [eax]","cmp ecx, dword ptr [eax]",True
+4,je 0x1a,je 0x10047f8c,True
+5,"add eax, 8","add eax, 8",True
+6,inc edx,inc edx,True
+7,"cmp eax, 0x90","cmp eax, 0x10067578",True
+8,jl 0xb,jl 0x10047f7d,True
+9,"mov eax, edx","mov eax, edx",True
+10,"shl eax, 3","shl eax, 3",True
+11,"cmp ecx, dword ptr [eax]","cmp ecx, dword ptr [eax + 0x100674e8]",True
+12,jne 0x2e,jne 0x10047fa0,True
+13,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 0x100674ec]",True
+14,ret ,ret ,True
+15,"xor eax, eax","xor eax, eax",True
+16,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\crt0msg.obj (library object, no compilation)",symbol=__GET_RTERRMSG,module=sound.dll
+VERDICT,GREEN,17,100.0%

@@ -1,0 +1,29 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/GolferShot.cpp	0x226a0	0x004226a0	2320	G	SimulateBallPhysics	?SimulateBallPhysics@@YAXHHHH@Z	public	100	100.0	655/655 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x22fb0	0x00422fb0	4455	G	CalculateBestShot	?CalculateBestShot@@YAHH@Z	public	100	100.0	1191/1191 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x24120	0x00424120	9552	G	PlanGolferShot	?PlanGolferShot@@YAXHHHHH@Z	public	100	100.0	2650/2650 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x26670	0x00426670	62	G	ClearGolferSlotAndNamedScenery	?ClearGolferSlotAndNamedScenery@@YAXH@Z	public	100	100.0	15/15 ins	golf_small6.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x266b0	0x004266b0	3280	G	ProcessVIPGolferEvent	?ProcessVIPGolferEvent@@YAXH@Z	public	100	100.0	1140/1140 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x27380	0x00427380	5723	G	ProcessHoleCompletion	?ProcessHoleCompletion@@YAXH@Z	public	miss	99.9	1815/1816 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x289e0	0x004289e0	20919	G	UpdateAllGolfers	?UpdateAllGolfers@@YAXXZ	public	100	100.0	5560/5560 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x2dba0	0x0042dba0	88	G	CalculateTerrainHeight	?CalculateTerrainHeight@@YAHHH@Z	public	100	100.0	36/36 ins	golf_small9.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2dc00	0x0042dc00	324	G	FormatNumberWithCommas	?FormatNumberWithCommas@@YAXH@Z	public	100	100.0	133/133 ins	golf_small32.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2dd50	0x0042dd50	335	G	AppendMoney	?AppendMoney@@YAXH@Z	public	100	100.0	132/132 ins	golf_small33.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2dea0	0x0042dea0	2303	G	CalculateAllHoleStatistics	?CalculateAllHoleStatistics@@YAXXZ	public	100	100.0	696/696 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x2e7a0	0x0042e7a0	60	G	GetCardinalDirection	?GetCardinalDirection@@YAHHH@Z	public	100	100.0	32/32 ins	golf_hand_01.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2e7e0	0x0042e7e0	1696	G	FindPathDirection	?FindPathDirection@@YAHHHHHH@Z	public	100	100.0	516/516 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x2ee80	0x0042ee80	183	G	GetTileValue	?GetTileValue@@YAHHH@Z	public	100	100.0	79/79 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2ef40	0x0042ef40	465	G	CalculateLotScore	?CalculateLotScore@@YAHHH@Z	public	100	100.0	162/162 ins	golf_hand_s1.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f120	0x0042f120	147	G	FloodFillWalkableArea	?FloodFillWalkableArea@@YAXHH@Z	public	100	100.0	48/48 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f1c0	0x0042f1c0	248	G	UpdateWaterShoreDepth	?UpdateWaterShoreDepth@@YAXHH@Z	public	100	100.0	84/84 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f2c0	0x0042f2c0	118	G	RecalculateAllWaterShoreDepths	?RecalculateAllWaterShoreDepths@@YAXXZ	public	100	100.0	43/43 ins	golf_small11.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f340	0x0042f340	362	G	UpdateBuildingAccessibility	?UpdateBuildingAccessibility@@YAXXZ	public	100	100.0	116/116 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f4b0	0x0042f4b0	128	G	GetTileElevationMinMax	?GetTileElevationMinMax@@YAXHHPAH0@Z	public	100	100.0	59/59 ins	golf_small12.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f530	0x0042f530	251	G	CalculateTileSlopeFlags	?CalculateTileSlopeFlags@@YAXHH@Z	public	100	100.0	95/95 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f630	0x0042f630	172	G	PropagateMinElevation	?PropagateMinElevation@@YAHHH@Z	public	100	100.0	53/53 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f6e0	0x0042f6e0	181	G	PropagateMaxElevation	?PropagateMaxElevation@@YAHHHH@Z	public	100	100.0	57/57 ins	golf_small28.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f7a0	0x0042f7a0	416	G	RebuildTerrainElevation	?RebuildTerrainElevation@@YAXXZ	public	100	100.0	141/141 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2f940	0x0042f940	232	G	TileToScreenCached	?TileToScreenCached@@YAHHHPAH0@Z	public	100	100.0	75/75 ins	golf_small27.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2fa30	0x0042fa30	342	G	GetTerrainHeightAtWorld	?GetTerrainHeightAtWorld@@YAHHH@Z	public	100	100.0	141/141 ins	golf_hand_r3.cpp
+golf	golf/golf.exe/src/GolferShot.cpp	0x2fb90	0x0042fb90	1157	G	WorldToScreen	?WorldToScreen@@YAHHHPAH0H@Z	public	100	100.0	406/406 ins	
+golf	golf/golf.exe/src/GolferShot.cpp	0x30020	0x00430020	817	G	ScreenToTileCoords	?ScreenToTileCoords@@YAXHHPAH0H@Z	public	100	100.0	293/293 ins	

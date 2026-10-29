@@ -1,0 +1,306 @@
+Release/golf.exp	Release/golf.exp	76	0
+.\Release\golf.res	.\Release\golf.res	60	0
+.\Release\jgldefs.obj	.\Release\jgldefs.obj	168	0
+.\Release\WorldMap.obj	.\Release\WorldMap.obj	7552	8720
+.\Release\ListDialog.obj	.\Release\ListDialog.obj	3840	1360
+.\Release\Tournament.obj	.\Release\Tournament.obj	4388	2608
+.\Release\GolferDialogue.obj	.\Release\GolferDialogue.obj	8264	7232
+.\Release\Geometry.obj	.\Release\Geometry.obj	4888	1856
+.\Release\Golfer.obj	.\Release\Golfer.obj	3960	1600
+.\Release\ThemeLoader.obj	.\Release\ThemeLoader.obj	3436	928
+.\Release\Screen.obj	.\Release\Screen.obj	4808	928
+.\Release\RenderQueue.obj	.\Release\RenderQueue.obj	5348	5384
+.\Release\ShadeTable.obj	.\Release\ShadeTable.obj	3116	424
+.\Release\TerrainInfluence.obj	.\Release\TerrainInfluence.obj	508	304
+.\Release\GolferPairing.obj	.\Release\GolferPairing.obj	6416	5336
+.\Release\GolferPanel.obj	.\Release\GolferPanel.obj	4660	2808
+.\Release\InputWait.obj	.\Release\InputWait.obj	3064	328
+.\Release\GameMain.obj	.\Release\GameMain.obj	4204	824
+.\Release\StringPool.obj	.\Release\StringPool.obj	3408	696
+.\Release\InputPoll.obj	.\Release\InputPoll.obj	3932	1552
+.\Release\InfoScreens.obj	.\Release\InfoScreens.obj	17020	21472
+.\Release\TerrainView.obj	.\Release\TerrainView.obj	8052	3768
+.\Release\FlicBanks.obj	.\Release\FlicBanks.obj	7536	18192
+.\Release\SetupScreens.obj	.\Release\SetupScreens.obj	8264	8032
+.\Release\Toolbar.obj	.\Release\Toolbar.obj	9920	10736
+.\Release\WildlifeUpdate.obj	.\Release\WildlifeUpdate.obj	4804	3600
+.\Release\GolferShot.obj	.\Release\GolferShot.obj	10956	23264
+.\Release\GolferSpawn.obj	.\Release\GolferSpawn.obj	4172	1664
+.\Release\MainLoop.obj	.\Release\MainLoop.obj	14288	28440
+.\Release\SpriteAssets.obj	.\Release\SpriteAssets.obj	19036	20968
+.\Release\ScreenText.obj	.\Release\ScreenText.obj	3720	408
+.\Release\Globals.obj	.\Release\Globals.obj	13080	1192
+.\Release\FlicChannels.obj	.\Release\FlicChannels.obj	4580	624
+.\Release\EmployeeRender.obj	.\Release\EmployeeRender.obj	3672	784
+.\Release\Employee.obj	.\Release\Employee.obj	3904	2104
+.\Release\Plot.obj	.\Release\Plot.obj	6960	2976
+.\Release\FlatFrame.obj	..\jackal.lib\Release\jackal.lib	172	0
+.\Release\FrameStyle.obj	..\jackal.lib\Release\jackal.lib	172	0
+.\Release\fifo.obj	..\jackal.lib\Release\jackal.lib	3212	680
+.\Release\NetFifo.obj	..\jackal.lib\Release\jackal.lib	3108	600
+.\Release\PullDown.obj	..\jackal.lib\Release\jackal.lib	2936	88
+.\Release\SpriteBox.obj	..\jackal.lib\Release\jackal.lib	7416	2744
+.\Release\EditGroup.obj	..\jackal.lib\Release\jackal.lib	4996	1824
+.\Release\ImageButton.obj	..\jackal.lib\Release\jackal.lib	3708	1944
+.\Release\Dialogs.obj	..\jackal.lib\Release\jackal.lib	7680	2312
+.\Release\StringList.obj	..\jackal.lib\Release\jackal.lib	3220	392
+.\Release\ButtonGroup.obj	..\jackal.lib\Release\jackal.lib	3028	328
+.\Release\log.obj	..\jackal.lib\Release\jackal.lib	3648	536
+.\Release\DataFile.obj	..\jackal.lib\Release\jackal.lib	392	88
+.\Release\GraphsyLoader.obj	..\jackal.lib\Release\jackal.lib	2928	264
+.\Release\checkbox.obj	..\jackal.lib\Release\jackal.lib	6408	2648
+.\Release\CheckBoxSprites.obj	..\jackal.lib\Release\jackal.lib	3352	144
+.\Release\radiobut.obj	..\jackal.lib\Release\jackal.lib	5284	2568
+.\Release\filewin.obj	..\jackal.lib\Release\jackal.lib	3616	376
+.\Release\SmallSprite.obj	..\jackal.lib\Release\jackal.lib	3252	208
+.\Release\strings.obj	..\jackal.lib\Release\jackal.lib	1040	360
+.\Release\Video.obj	..\jackal.lib\Release\jackal.lib	3664	1624
+.\Release\PaletteList.obj	..\jackal.lib\Release\jackal.lib	3052	168
+.\Release\multidebug.obj	..\jackal.lib\Release\jackal.lib	3932	560
+.\Release\Network.obj	..\jackal.lib\Release\jackal.lib	12696	5464
+.\Release\scroll.obj	..\jackal.lib\Release\jackal.lib	6152	4464
+.\Release\AutoSound.obj	..\jackal.lib\Release\jackal.lib	3004	712
+.\Release\SysMessageHandler.obj	..\jackal.lib\Release\jackal.lib	4744	1520
+.\Release\PCXLoad16.obj	..\jackal.lib\Release\jackal.lib	3228	416
+.\Release\PCXLoad8.obj	..\jackal.lib\Release\jackal.lib	3224	456
+.\Release\DottedLine16.obj	..\jackal.lib\Release\jackal.lib	3284	728
+.\Release\TextTemplate.obj	..\jackal.lib\Release\jackal.lib	3460	1768
+.\Release\ComboBox.obj	..\jackal.lib\Release\jackal.lib	4260	1776
+.\Release\MiscUtil.obj	..\jackal.lib\Release\jackal.lib	760	584
+.\Release\PolyFill.obj	..\jackal.lib\Release\jackal.lib	4312	1848
+.\Release\filemap.obj	..\jackal.lib\Release\jackal.lib	3212	448
+.\Release\spot.obj	..\jackal.lib\Release\jackal.lib	4988	1616
+.\Release\StringUtil.obj	..\jackal.lib\Release\jackal.lib	3148	376
+.\Release\display.obj	..\jackal.lib\Release\jackal.lib	3240	320
+.\Release\SpriteExtract.obj	..\jackal.lib\Release\jackal.lib	3160	816
+.\Release\DataPath.obj	..\jackal.lib\Release\jackal.lib	2828	344
+.\Release\FixedMath.obj	..\jackal.lib\Release\jackal.lib	444	376
+.\Release\BasePop.obj	..\jackal.lib\Release\jackal.lib	13436	10608
+.\Release\ListBox.obj	..\jackal.lib\Release\jackal.lib	7440	5984
+.\Release\Dialog.obj	..\jackal.lib\Release\jackal.lib	4432	1624
+.\Release\BaseButton.obj	..\jackal.lib\Release\jackal.lib	5812	2592
+.\Release\MouseCursor.obj	..\jackal.lib\Release\jackal.lib	3012	272
+.\Release\Text.obj	..\jackal.lib\Release\jackal.lib	4808	1568
+.\Release\SoundDevice.obj	..\jackal.lib\Release\jackal.lib	13716	4472
+.\Release\BinkPlayer.obj	..\jackal.lib\Release\jackal.lib	3548	688
+.\Release\Time.obj	..\jackal.lib\Release\jackal.lib	4432	1264
+.\Release\EditBox.obj	..\jackal.lib\Release\jackal.lib	5592	2576
+.\Release\PCXFile.obj	..\jackal.lib\Release\jackal.lib	3712	1280
+.\Release\EngineInit.obj	..\jackal.lib\Release\jackal.lib	3304	744
+.\Release\sound.obj	..\jackal.lib\Release\jackal.lib	13380	8832
+.\Release\MessagePump.obj	..\jackal.lib\Release\jackal.lib	3848	880
+.\Release\font.obj	..\jackal.lib\Release\jackal.lib	4216	1144
+.\Release\palette.obj	..\jackal.lib\Release\jackal.lib	5484	1560
+.\Release\FlicSprite.obj	..\jackal.lib\Release\jackal.lib	3504	768
+.\Release\FlicAnim.obj	..\jackal.lib\Release\jackal.lib	5440	3240
+.\Release\GraphicWin.obj	..\jackal.lib\Release\jackal.lib	5964	3128
+.\Release\window.obj	..\jackal.lib\Release\jackal.lib	19472	19520
+.\Release\buffer.obj	..\jackal.lib\Release\jackal.lib	18960	16952
+.\Release\ScratchSprite.obj	..\jackal.lib\Release\jackal.lib	3072	56
+.\Release\Heap.obj	..\jackal.lib\Release\jackal.lib	3400	632
+.\Release\sprite.obj	..\jackal.lib\Release\jackal.lib	7032	2824
+binkw32.dll	golf\binkw32.lib\Release\binkw32.lib	4	0
+Terrain.dll	C:\Projects\3DTerrainLowPoly\Debug\terrain.lib	3336	0
+DPLAYX.dll	C:\Program Files\Microsoft Visual Studio\VC98\LIB\dplayx.lib	308	0
+guid161.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\dxguid.lib	4	0
+guid162.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\dxguid.lib	4	0
+guid160.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\dxguid.lib	4	0
+guid180.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\dxguid.lib	4	0
+guid155.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\dxguid.lib	4	0
+KERNEL32.dll	C:\Program Files\Microsoft Visual Studio\VC98\LIB\kernel32.lib	6760	0
+USER32.dll	C:\Program Files\Microsoft Visual Studio\VC98\LIB\user32.lib	2548	0
+GDI32.dll	C:\Program Files\Microsoft Visual Studio\VC98\LIB\gdi32.lib	180	0
+WINMM.dll	C:\Program Files\Microsoft Visual Studio\VC98\LIB\winmm.lib	820	0
+MSVFW32.dll	C:\Program Files\Microsoft Visual Studio\VC98\LIB\vfw32.lib	244	0
+build\intel\mt_obj\ungetc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\llshl.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\mbtowc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\input.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fputc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\sscanf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\sprintf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fputchar.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strdup.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\mbschr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\setenv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\a_cmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\wtombenv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\mbsnbico.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\days.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\getenv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\constpow.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\a_loc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\w_loc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\tzset.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\timeset.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\tenpow.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strnicmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\stricmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\xtoa.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\w_str.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\lconv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\inithelp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strftime.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\x10fout.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\strgtold.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\mantold.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\winsig.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\matherr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\crtmbox.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\mbctype.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ismbbyte.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\getqloc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\nlsdata3.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\initcoll.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\initctyp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\initmon.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\initnum.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\inittime.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\a_str.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_getbuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ullrem.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ulldiv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\wctomb.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\isatty.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ncommode.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\commit.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\closeall.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\setmode.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\abort.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strcmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\validate.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\unhandld.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\crt0fp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strlen.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\memset.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strcat.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\cfout.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_fptostr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\intrncvt.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\ieee87.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\calloc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\fpctrl.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\util.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\frnd.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\fpexcept.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\llmul.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\crt0msg.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\a_env.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\stdargv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\stdenvp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\wincmdln.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\winxfltr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\a_map.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\nlsdata2.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\setlocal.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\nlsdata1.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\isctype.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ctype.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_filbuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\memcpy.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_flsbuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\output.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_sftbuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\stream.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_open.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fflush.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_freebuf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_file.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\txtmode.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\chsize.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\lseek.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ioinit.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\osfinfo.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\dosmap.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\msize.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\exsup3.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\hooks.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\tidtable.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\lowhelpr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\frame.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\crt0init.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\handler.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_newmode.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\sbheap.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\mlock.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\heapinit.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\cmiscdat.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\cvt.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\testfdiv.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fp8.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\thread.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strcspn.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ftell.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\floor.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\tolower.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fseek.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\rewind.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\memmove.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strncpy.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strrchr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\memchr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\atox.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strncmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\purevirt.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\realloc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\wincrt0.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strtok.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\toupper.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fgets.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\_ctype.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strstr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\unlink.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fread.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fwrite.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fprintf.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strchr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fopen.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\fclose.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\chkstk.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\tell.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\ftol.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\open.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\write.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\close.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\read.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\strpbrk.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\new.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ehvecdtr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\onexit.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\ehvecctr.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\exsup.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\trnsctrl.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\crt0dat.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\malloc.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\free.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\mt_obj\delete.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+..\build\intel\mt_obj\fpinit.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcmt.lib	4	0
+build\intel\st_obj\oldnames\fputchar.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\oldnames.lib	4	0
+build\intel\st_obj\oldnames\strnicmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\oldnames.lib	4	0
+build\intel\st_obj\oldnames\stricmp.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\oldnames.lib	4	0
+build\intel\st_obj\oldnames\itoa.obj	C:\Program Files\Microsoft Visual Studio\VC98\LIB\oldnames.lib	4	0
+.\Release\JFDCTFLT.OBJ	..\jpeg.lib\Release\jpeg.lib	756	520
+.\Release\JFDCTFST.OBJ	..\jpeg.lib\Release\jpeg.lib	644	528
+.\Release\JFDCTINT.OBJ	..\jpeg.lib\Release\jpeg.lib	660	400
+.\Release\JCMASTER.OBJ	..\jpeg.lib\Release\jpeg.lib	1348	2024
+.\Release\JCCOLOR.OBJ	..\jpeg.lib\Release\jpeg.lib	2016	1384
+.\Release\JCSAMPLE.OBJ	..\jpeg.lib\Release\jpeg.lib	2392	1224
+.\Release\JCPREPCT.OBJ	..\jpeg.lib\Release\jpeg.lib	1524	920
+.\Release\JCDCTMGR.OBJ	..\jpeg.lib\Release\jpeg.lib	1336	912
+.\Release\JCPHUFF.OBJ	..\jpeg.lib\Release\jpeg.lib	2236	2528
+.\Release\JCHUFF.OBJ	..\jpeg.lib\Release\jpeg.lib	2400	2680
+.\Release\JCCOEFCT.OBJ	..\jpeg.lib\Release\jpeg.lib	1604	1352
+.\Release\JCMAINCT.OBJ	..\jpeg.lib\Release\jpeg.lib	840	360
+.\Release\JUTILS.OBJ	..\jpeg.lib\Release\jpeg.lib	944	240
+.\Release\JMEMNOBS.OBJ	..\jpeg.lib\Release\jpeg.lib	1404	208
+.\Release\JCINIT.OBJ	..\jpeg.lib\Release\jpeg.lib	540	200
+.\Release\JCMARKER.OBJ	..\jpeg.lib\Release\jpeg.lib	2092	2096
+.\Release\JCOMAPI.OBJ	..\jpeg.lib\Release\jpeg.lib	780	256
+.\Release\JMEMMGR.OBJ	..\jpeg.lib\Release\jpeg.lib	2604	3112
+.\Release\JERROR.OBJ	..\jpeg.lib\Release\jpeg.lib	984	568
+.\Release\JCPARAM.OBJ	..\jpeg.lib\Release\jpeg.lib	2096	1112
+.\Release\JDATADST.OBJ	..\jpeg.lib\Release\jpeg.lib	756	352
+.\Release\JCAPISTD.OBJ	..\jpeg.lib\Release\jpeg.lib	720	280
+.\Release\JCAPIMIN.OBJ	..\jpeg.lib\Release\jpeg.lib	860	512
+.\Release\CreateJPG.obj	..\jpeg.lib\Release\jpeg.lib	604	192
+* Linker *		4	0

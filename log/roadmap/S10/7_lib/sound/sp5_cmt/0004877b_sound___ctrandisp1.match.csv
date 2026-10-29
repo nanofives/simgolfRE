@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,bytes +0x0: 558bec81c430fdffff53ff750cff7508,bytes +0x0: 558bec81c430fdffff53ff750cff7508,True
+1,bytes +0x10: e81e00000083c4089bd9bd5cffffff80,bytes +0x10: e81e00000083c4089bd9bd5cffffff80,True
+2,bytes +0x20: a538fdfffffde8????????e898feffff,bytes +0x20: a538fdfffffde8????????e898feffff,True
+3,bytes +0x30: 5bc9c3558bec83c4f453668b450e668b,bytes +0x30: 5bc9c3558bec83c4f453668b450e668b,True
+4,bytes +0x40: d86625f07f663df07f751e6681cbff7f,bytes +0x40: d86625f07f663df07f751e6681cbff7f,True
+5,bytes +0x50: 66895dfe8b450c8b5d080fa4d80b8945,bytes +0x50: 66895dfe8b450c8b5d080fa4d80b8945,True
+6,bytes +0x60: fa895df6db6df6eb03dd45085bc9c3,bytes +0x60: fa895df6db6df6eb03dd45085bc9c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87cdisp.obj (library object, no compilation)",symbol=__ctrandisp1,module=sound.dll
+VERDICT,GREEN,7,100.0%

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/dcbias.c	0x3ed00	0x1003ed00	177	G	dcbias_	_dcbias_	public	100	100.0	64/64 ins	m36c_D2_01.cpp

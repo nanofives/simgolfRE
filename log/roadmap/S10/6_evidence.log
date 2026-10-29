@@ -1,0 +1,82 @@
+== re/match/smsg_sound_Cmix.cpp
+sound.dll      0x10007df0 ?fpmb_2_dsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@PANKK@Z: 100.0% (194/194 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10008070 ?fpmb_2_3ddsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0PANKKK@Z: 100.0% (314/314 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_MMError.cpp
+sound.dll      0x10025060 ??_GCMMError@@UAEPAXI@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_SndWin.cpp
+sound.dll      0x100288a0 _thread_proc: 100.0% (208/208 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10028b70 _snd_wnd_proc@16: 100.0% (210/210 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_SoundList.cpp
+sound.dll      0x1002fce0 ?set_volume@dllSoundList@@UAEXH@Z: 100.0% (39/39 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002fd80 ?set_scaled_volume@dllSoundList@@UAEXH@Z: 100.0% (37/37 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+== re/match/smsg_sound_VoiceRxMgr.cpp
+sound.dll      0x10031190 ?get_nbuffers@CVoiceRxMgr@@EAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100311d0 ?is_playing@CVoiceRxMgr@@UAEHXZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_VoiceTxMgr.cpp
+sound.dll      0x10031960 ?return_buffer@CVoiceTxMgr@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (26/26 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10031a30 ?stop@CVoiceTxMgr@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_WaveInDeviceMgr.cpp
+sound.dll      0x10038f60 ?select@WaveInDeviceMgr@@QAE?AW4SNDERR@@K@Z: 100.0% (28/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100394f0 ?set_buffer@WIBuffer@@QAE?AW4SNDERR@@K@Z: 100.0% (25/25 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_ambiencemgr.cpp
+sound.dll      0x10005fd0 ?set_frame@CMidiMgr@@UAEXI@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10006000 ?get_frame@CMidiMgr@@UAEIXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_avimgr.cpp
+sound.dll      0x10006d90 ?get_cur_frame@CAviMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006dd0 ?is_playing@CAviMgr@@UAEHXZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+== re/match/smsg_sound_dllmain.cpp
+sound.dll      0x100093e0 ?create_sound@Sound@@SA?AW4SNDERR@@PAPAV1@PBDW4SOUNDTYPE@@@Z: 100.0% (222/222 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100097d0 ?delete_sound@Sound@@SA?AW4SNDERR@@PAV1@@Z: 100.0% (132/132 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_dllmididevice.cpp
+sound.dll      0x1000af80 ?timer_unhook@Dll_Midi_Device@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000afc0 ?get_rate@Dll_Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_dllwavedevice.cpp
+sound.dll      0x1000e830 ?get_rate@Dll_Wave_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e850 ?is_eax@Dll_Wave_Device@@UAE_NXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_dllwaveindevice.cpp
+sound.dll      0x1000eeb0 ?set_pan@Dll_Wave_In_Device@@UAEXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000eed0 ?fade@Dll_Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_dsb.cpp
+sound.dll      0x10010b40 ?sync_emulated@CDSB@@QAE?AW4SNDERR@@XZ: 100.0% (47/47 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10011160 ?set_reverb_mix@CDSB@@QAE?AW4SNDERR@@M@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_dsmgr.cpp
+sound.dll      0x100128b0 ?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@PAU_DSBUFFERDESC@@@Z: 100.0% (167/167 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10012bb0 ?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@K@Z: 100.0% (82/82 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_filters.cpp
+sound.dll      0x10019060 ?a8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (238/238 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10019400 ?m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (226/226 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+== re/match/smsg_sound_keymap.cpp
+sound.dll      0x1001aef0 ?map_range@Dll_KeyMap@@QAE?AW4SNDERR@@PAVKeyMapWave@@@Z: 100.0% (126/126 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b1f0 ?set_base_path@Dll_KeyMap@@QAEXPBD@Z: 100.0% (148/148 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_memtrack.cpp
+sound.dll      0x1001b410 _$E29: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b450 _$E27: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_midifile.cpp
+sound.dll      0x1001ecc0 ?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z: 100.0% (118/118 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001ef80 ?calc_total_ticks@CMidiTrack@@QAEKXZ: 100.0% (85/85 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_midimgr.cpp
+sound.dll      0x10024ce0 ?unload_patch@CMidiMgr@@UAE?AW4SNDERR@@I@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10024d00 ?set_patch@CMidiMgr@@UAE?AW4SNDERR@@II@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_miditools.cpp
+sound.dll      0x1001c930 ?set_total_class_size@Chooser@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001d250 ?insert@?$DList@VMidiCtrl@@@@QAEXPAVMidiCtrl@@@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_mmxfilters.cpp
+sound.dll      0x10027e20 ?mmx_a8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (240/240 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100281d0 ?mmx_m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (221/221 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_random.cpp
+sound.dll      0x10028540 _$E2: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_sound.cpp
+sound.dll      0x1002f6b0 ?get_next_buffer@VoiceTx@@UAEPAU_MMIOINFO@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f6e0 ?return_buffer@VoiceTx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_sounddevice.cpp
+sound.dll      0x1002a610 ?suspend@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a630 ?restart@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_soundthread.cpp
+sound.dll      0x1002a7c0 ??0SoundThread@@QAE@XZ: 100.0% (17/17 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x1002a810 ??1SoundThread@@QAE@XZ: 100.0% (47/47 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+== re/match/smsg_sound_wavefile.cpp
+sound.dll      0x10038070 ?set_fade@WaveBuffer@@QAEXK@Z: 100.0% (40/40 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10038130 ?set_fade_in@WaveBuffer@@QAEXK@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+== re/match/smsg_sound_wavemgr.cpp
+sound.dll      0x1003a7c0 ?is_hwbuffer@CWaveMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a7e0 ?is_loaded@CWaveMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5

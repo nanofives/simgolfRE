@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push 0x30000,push 0x30000,True
+3,push 0x10000,push 0x10000,True
+4,call 0x12,call 0x1008e4d0,True
+5,"add esp, 8","add esp, 8",True
+6,pop ebp,pop ebp,True
+7,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\fp8.obj (library object, no compilation)",symbol=__setdefaultprecision,module=jgld.dll
+VERDICT,GREEN,8,100.0%

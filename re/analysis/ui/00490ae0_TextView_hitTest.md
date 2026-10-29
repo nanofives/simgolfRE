@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 35 bytes, 10 instructions, subsystem `ui`. Mechanical t
 classifies a point against the view: 0 when the no-hit flag 0x2000000 of this+0x1f68 is set, else the border region code of Window::hitTestBorder (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?on_nc_hittest@BasePop@@UAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00490aee, 0x00490b00): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00490ae0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

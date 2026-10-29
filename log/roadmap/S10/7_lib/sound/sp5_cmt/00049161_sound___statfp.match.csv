@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,wait ,wait ,True
+4,fnstsw word ptr [ebp - 2],fnstsw word ptr [ebp - 2],True
+5,"movsx eax, word ptr [ebp - 2]","movsx eax, word ptr [ebp - 2]",True
+6,leave ,leave ,True
+7,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpctrl.obj (library object, no compilation)",symbol=__statfp,module=sound.dll
+VERDICT,GREEN,8,100.0%

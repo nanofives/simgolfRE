@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 41 bytes, 19 instructions, subsystem `course`. Mechanic
 copies a course info string into g_pendingCourseInfo, which flushCourseInfo reads later (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_WildlifeUpdate.cpp` as `?SetCourseFileName@@YAXPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004321c8): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004321a6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

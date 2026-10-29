@@ -1,0 +1,50 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,push esi,push esi,True
+2,"cmp ecx, dword ptr [0]","cmp ecx, dword ptr [0x100b5cdc]",True
+3,push edi,push edi,True
+4,jae 0x63,jae 0x1004c054,True
+5,"mov eax, ecx","mov eax, ecx",True
+6,"sar eax, 5","sar eax, 5",True
+7,"lea edi, [eax*4]","lea edi, [eax*4 + 0x100b5ba0]",True
+8,"mov eax, ecx","mov eax, ecx",True
+9,"and eax, 0x1f","and eax, 0x1f",True
+10,"lea esi, [eax + eax*8]","lea esi, [eax + eax*8]",True
+11,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+12,"shl esi, 2","shl esi, 2",True
+13,"cmp dword ptr [eax + esi], -1","cmp dword ptr [eax + esi], -1",True
+14,jne 0x63,jne 0x1004c054,True
+15,"cmp dword ptr [0], 1","cmp dword ptr [0x100b553c], 1",True
+16,push ebx,push ebx,True
+17,"mov ebx, dword ptr [esp + 0x14]","mov ebx, dword ptr [esp + 0x14]",True
+18,jne 0x59,jne 0x1004c04a,True
+19,"sub ecx, 0","sub ecx, 0",True
+20,je 0x50,je 0x1004c041,True
+21,dec ecx,dec ecx,True
+22,je 0x4b,je 0x1004c03c,True
+23,dec ecx,dec ecx,True
+24,jne 0x59,jne 0x1004c04a,True
+25,push ebx,push ebx,True
+26,push -0xc,push -0xc,True
+27,jmp 0x53,jmp 0x1004c044,True
+28,push ebx,push ebx,True
+29,push -0xb,push -0xb,True
+30,jmp 0x53,jmp 0x1004c044,True
+31,push ebx,push ebx,True
+32,push -0xa,push -0xa,True
+33,call dword ptr [0],call dword ptr [0x100b8478],True
+34,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+35,"mov dword ptr [eax + esi], ebx","mov dword ptr [eax + esi], ebx",True
+36,"xor eax, eax","xor eax, eax",True
+37,pop ebx,pop ebx,True
+38,jmp 0x79,jmp 0x1004c06a,True
+39,call 0x68,call 0x1004588f,True
+40,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+41,call 0x73,call 0x10045898,True
+42,"and dword ptr [eax], 0","and dword ptr [eax], 0",True
+43,"or eax, 0xffffffff","or eax, 0xffffffff",True
+44,pop edi,pop edi,True
+45,pop esi,pop esi,True
+46,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\osfinfo.obj (library object, no compilation)",symbol=__set_osfhnd,module=sound.dll
+VERDICT,GREEN,47,100.0%

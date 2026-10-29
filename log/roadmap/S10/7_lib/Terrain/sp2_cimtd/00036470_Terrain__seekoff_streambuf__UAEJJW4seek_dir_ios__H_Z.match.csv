@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"or eax, 0xffffffff","or eax, 0xffffffff",True
+5,"mov esp, ebp","mov esp, ebp",True
+6,pop ebp,pop ebp,True
+7,ret 0xc,ret 0xc,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\streamb.obj (library object, no compilation)",symbol=?seekoff@streambuf@@UAEJJW4seek_dir@ios@@H@Z,module=Terrain.dll
+VERDICT,GREEN,8,100.0%

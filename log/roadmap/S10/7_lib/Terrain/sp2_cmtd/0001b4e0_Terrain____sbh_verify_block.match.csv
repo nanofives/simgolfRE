@@ -1,0 +1,36 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+5,"sub ecx, dword ptr [eax + 0xc]","sub ecx, dword ptr [eax + 0xc]",True
+6,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+7,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+8,"shr edx, 0xf","shr edx, 0xf",True
+9,"mov dword ptr [ebp - 4], edx","mov dword ptr [ebp - 4], edx",True
+10,"mov eax, 0x80000000","mov eax, 0x80000000",True
+11,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+12,"shr eax, cl","shr eax, cl",True
+13,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+14,"mov edx, dword ptr [ecx + 8]","mov edx, dword ptr [ecx + 8]",True
+15,"and edx, eax","and edx, eax",True
+16,"test edx, edx","test edx, edx",True
+17,jne 0x51,jne 0x1001b531,True
+18,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+19,"and eax, 0xf","and eax, 0xf",True
+20,"test eax, eax","test eax, eax",True
+21,jne 0x51,jne 0x1001b531,True
+22,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+23,"and ecx, 0xfff","and ecx, 0xfff",True
+24,"test ecx, ecx","test ecx, ecx",True
+25,je 0x51,je 0x1001b531,True
+26,"mov dword ptr [ebp - 0xc], 1","mov dword ptr [ebp - 0xc], 1",True
+27,jmp 0x58,jmp 0x1001b538,True
+28,"mov dword ptr [ebp - 0xc], 0","mov dword ptr [ebp - 0xc], 0",True
+29,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+30,"mov esp, ebp","mov esp, ebp",True
+31,pop ebp,pop ebp,True
+32,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\sbheap.obj (library object, no compilation)",symbol=___sbh_verify_block,module=Terrain.dll
+VERDICT,GREEN,33,100.0%

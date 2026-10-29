@@ -1,0 +1,20 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6970	0x10006970	51	L	$E6	_$E6	name	100	100.0	21/21 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x69b0	0x100069b0	51	L	$E2	_$E2	name	100	100.0	21/21 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x69f0	0x100069f0	54	L	$E5	_$E5	name	100	100.0	22/22 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6a40	0x10006a40	80	L	$E3	_$E3	name	100	100.0	29/29 ins	m36e_jgld_atexit.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6ab0	0x10006ab0	74	G	GSObject::GSObject	??0GSObject@@QAE@XZ	public	100	100.0	30/30 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6b10	0x10006b10	81	G	GSObject::`scalar deleting destructor'	??_GGSObject@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6b80	0x10006b80	79	G	GSObject::~GSObject	??1GSObject@@UAE@XZ	public	100	100.0	30/30 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6bf0	0x10006bf0	110	G	DestroyAllSprites	?DestroyAllSprites@@YAXXZ	public	100	100.0	41/41 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6c80	0x10006c80	78	G	LinkedList::LinkedList	??0LinkedList@@QAE@XZ	public	100	100.0	28/28 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6cf0	0x10006cf0	63	G	LinkedList::~LinkedList	??1LinkedList@@UAE@XZ	public	100	100.0	26/26 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6d40	0x10006d40	42	G	LinkedList::Count	?Count@LinkedList@@QAEHXZ	public	100	100.0	21/21 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6d80	0x10006d80	81	G	LinkedList::`scalar deleting destructor'	??_GLinkedList@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6df0	0x10006df0	262	G	LinkedList::close	?close@LinkedList@@QAEXXZ	public	100	100.0	89/89 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x6f40	0x10006f40	349	G	LinkedList::add	?add@LinkedList@@QAEXPAXE@Z	public	100	100.0	113/113 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x7100	0x10007100	345	G	LinkedList::remove_current	?remove_current@LinkedList@@QAEXXZ	public	100	100.0	117/117 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x72b0	0x100072b0	151	G	LinkedList::Select	?Select@LinkedList@@QAEHH@Z	public	100	100.0	58/58 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x7370	0x10007370	88	G	Node::Node	??0Node@@QAE@PAXE@Z	public	100	100.0	32/32 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x73e0	0x100073e0	81	G	Node::`scalar deleting destructor'	??_GNode@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_list.cpp
+jgld	jgl/jgld.dll/src/gsobject.cpp	0x7450	0x10007450	65	G	Node::~Node	??1Node@@UAE@XZ	public	100	100.0	25/25 ins	jgld_list.cpp

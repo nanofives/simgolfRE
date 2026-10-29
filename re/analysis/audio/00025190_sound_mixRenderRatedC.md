@@ -7,6 +7,7 @@ Rate-converting PCM render/mix loop reading from the voice ring at +0x1358. (`re
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`, `re/analysis/systems/sound_3.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_mmxfilters.cpp` as `?mmx_add_16216s2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10025581, 0x100255af): callee pops 0 bytes of stack arguments.
 
 ## Reads

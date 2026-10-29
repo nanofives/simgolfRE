@@ -1,0 +1,8 @@
+instruction,library_object,original,match
+0,"cmp word ptr [esp], 0x27f","cmp word ptr [esp], 0x27f",True
+1,je 0xb,je 0x10021e49,True
+2,fldcw word ptr [esp],fldcw word ptr [esp],True
+3,pop edx,pop edx,True
+4,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\common.obj (library object, no compilation)",symbol=__fast_exit,module=Terrain.dll
+VERDICT,GREEN,5,100.0%

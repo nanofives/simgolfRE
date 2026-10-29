@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 atexit destructor of the global debug window at 0x008400c8: runs globalObjDtor49c780 on it (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_multidebug.cpp` as `_$E12` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

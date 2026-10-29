@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/zutil.c	0x9e600	0x1009e600	36	G	zlibVersion	_zlibVersion	public	100	100.0	17/17 ins	jgld_raw_06.cpp
+jgld	jgl/zlib.lib/zlib/zutil.c	0x9e630	0x1009e630	70	G	z_error	_z_error	public	100	100.0	27/27 ins	jgld_zlib_zutil.cpp
+jgld	jgl/zlib.lib/zlib/zutil.c	0x9e680	0x1009e680	77	G	zcalloc	_zcalloc	public	100	100.0	32/32 ins	jgld_zlib_zutil.cpp
+jgld	jgl/zlib.lib/zlib/zutil.c	0x9e6d0	0x1009e6d0	53	G	zcfree	_zcfree	public	100	100.0	23/23 ins	jgld_zlib_zutil.cpp

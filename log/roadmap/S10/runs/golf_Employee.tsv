@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Employee.cpp	0x2930	0x00402930	57	G	ClearDivotsAtPosition	?ClearDivotsAtPosition@@YAXHH@Z	public	100	100.0	20/20 ins	golf_small5.cpp
+golf	golf/golf.exe/src/Employee.cpp	0x2970	0x00402970	194	G	SpawnEmployee	?SpawnEmployee@@YAHH@Z	public	100	100.0	54/54 ins	golf_small25.cpp
+golf	golf/golf.exe/src/Employee.cpp	0x2a40	0x00402a40	3748	G	UpdateAllEmployees	?UpdateAllEmployees@@YAXXZ	public	100	100.0	953/953 ins	

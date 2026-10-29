@@ -1,0 +1,33 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+4,jl 0x10,jl 0x10081ea0,True
+5,"cmp dword ptr [ebp + 8], 3","cmp dword ptr [ebp + 8], 3",True
+6,jl 0x15,jl 0x10081ea5,True
+7,"or eax, 0xffffffff","or eax, 0xffffffff",True
+8,jmp 0x53,jmp 0x10081ee3,True
+9,"cmp dword ptr [ebp + 0xc], -1","cmp dword ptr [ebp + 0xc], -1",True
+10,jne 0x27,jne 0x10081eb7,True
+11,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+12,"mov eax, dword ptr [eax*4]","mov eax, dword ptr [eax*4 + 0x10123378]",True
+13,jmp 0x53,jmp 0x10081ee3,True
+14,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+15,"and ecx, 0xfffffff8","and ecx, 0xfffffff8",True
+16,"test ecx, ecx","test ecx, ecx",True
+17,je 0x36,je 0x10081ec6,True
+18,"or eax, 0xffffffff","or eax, 0xffffffff",True
+19,jmp 0x53,jmp 0x10081ee3,True
+20,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+21,"mov eax, dword ptr [edx*4]","mov eax, dword ptr [edx*4 + 0x10123378]",True
+22,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+23,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+24,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+25,"mov dword ptr [ecx*4], edx","mov dword ptr [ecx*4 + 0x10123378], edx",True
+26,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+27,"mov esp, ebp","mov esp, ebp",True
+28,pop ebp,pop ebp,True
+29,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dbgrpt.obj (library object, no compilation)",symbol=__CrtSetReportMode,module=jgld.dll
+VERDICT,GREEN,30,100.0%

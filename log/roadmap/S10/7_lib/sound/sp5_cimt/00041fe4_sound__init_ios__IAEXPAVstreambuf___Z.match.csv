@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"cmp dword ptr [esi + 0x1c], 0","cmp dword ptr [esi + 0x1c], 0",True
+3,je 0x16,je 0x10041ffa,True
+4,"mov ecx, dword ptr [esi + 4]","mov ecx, dword ptr [esi + 4]",True
+5,"test ecx, ecx","test ecx, ecx",True
+6,je 0x16,je 0x10041ffa,True
+7,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+8,push 1,push 1,True
+9,call dword ptr [eax],call dword ptr [eax],True
+10,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+11,"test eax, eax","test eax, eax",True
+12,"mov dword ptr [esi + 4], eax","mov dword ptr [esi + 4], eax",True
+13,je 0x27,je 0x1004200b,True
+14,"and dword ptr [esi + 8], 0xfffffffb","and dword ptr [esi + 8], 0xfffffffb",True
+15,jmp 0x2b,jmp 0x1004200f,True
+16,"or dword ptr [esi + 8], 4","or dword ptr [esi + 8], 4",True
+17,pop esi,pop esi,True
+18,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\_ios.obj (library object, no compilation)",symbol=?init@ios@@IAEXPAVstreambuf@@@Z,module=sound.dll
+VERDICT,GREEN,19,100.0%

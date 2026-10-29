@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,call 5,call 0x10044171,True
+1,"cmp dword ptr [eax + 0x64], 0","cmp dword ptr [eax + 0x64], 0",True
+2,je 0x13,je 0x100442f8,True
+3,call 0x10,call 0x10044171,True
+4,call dword ptr [eax + 0x64],call dword ptr [eax + 0x64],True
+5,jmp 0x18,jmp 0x10044284,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\hooks.obj (library object, no compilation)",symbol=?unexpected@@YAXXZ,module=sound.dll
+VERDICT,GREEN,6,100.0%

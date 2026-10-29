@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/synths.c	0x3b230	0x1003b230	879	G	synths_	_synths_	public	100	100.0	234/234 ins	m36c_D1_01.cpp

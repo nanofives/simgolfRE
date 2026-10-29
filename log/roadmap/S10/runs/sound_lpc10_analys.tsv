@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/analys.c	0x3c640	0x1003c640	2551	G	analys_	_analys_	public	100	100.0	582/582 ins	m36c_D1_01.cpp

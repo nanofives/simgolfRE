@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [0]","mov esi, dword ptr [0x4ba0d4]",True
+2,push dword ptr [0x44],push dword ptr [0x4e4b60],True
+3,call esi,call esi,True
+4,push dword ptr [0x34],push dword ptr [0x4e4b50],True
+5,call esi,call esi,True
+6,push dword ptr [0x24],push dword ptr [0x4e4b40],True
+7,call esi,call esi,True
+8,push dword ptr [4],push dword ptr [0x4e4b20],True
+9,call esi,call esi,True
+10,pop esi,pop esi,True
+11,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\mlock.obj (library object, no compilation)",symbol=__mtinitlocks,module=golf_clean.exe
+VERDICT,GREEN,12,100.0%

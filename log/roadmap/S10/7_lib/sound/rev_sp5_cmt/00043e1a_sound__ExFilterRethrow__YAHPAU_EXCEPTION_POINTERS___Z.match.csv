@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"mov eax, dword ptr [eax]","mov eax, dword ptr [eax]",True
+2,"cmp dword ptr [eax], 0xe06d7363","cmp dword ptr [eax], 0xe06d7363",True
+3,jne 0x27,jne 0x10043e41,True
+4,"cmp dword ptr [eax + 0x10], 3","cmp dword ptr [eax + 0x10], 3",True
+5,jne 0x27,jne 0x10043e41,True
+6,"cmp dword ptr [eax + 0x14], 0x19930520","cmp dword ptr [eax + 0x14], 0x19930520",True
+7,jne 0x27,jne 0x10043e41,True
+8,"cmp dword ptr [eax + 0x1c], 0","cmp dword ptr [eax + 0x1c], 0",True
+9,jne 0x27,jne 0x10043e41,True
+10,push 1,push 1,True
+11,pop eax,pop eax,True
+12,ret ,ret ,True
+13,"xor eax, eax","xor eax, eax",True
+14,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\frame.obj (library object, no compilation)",symbol=?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z,module=sound.dll
+VERDICT,GREEN,15,100.0%

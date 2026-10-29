@@ -1,0 +1,41 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push -1,False
+3,"cmp dword ptr [ebp + 8], 0",push 0x1011f8a8,False
+4,jne 0xc,push 0x10085b38,False
+5,jmp 0x64,"mov eax, dword ptr fs:[0]",False
+6,push 9,push eax,False
+7,call 0x13,"mov dword ptr fs:[0], esp",False
+8,"add esp, 4","add esp, -0x18",False
+9,"mov eax, dword ptr [ebp + 8]",push ebx,False
+10,push eax,push esi,False
+11,call 0x1f,push edi,False
+12,"add esp, 4","cmp dword ptr [ebp + 8], 0",False
+13,"mov dword ptr [ebp - 4], eax",jne 0x100864be,False
+14,"cmp dword ptr [ebp - 4], 0",jmp 0x100865c5,False
+15,je 0x47,"cmp dword ptr [0x10129fb0], 3",False
+16,"mov ecx, dword ptr [ebp + 8]",jne 0x10086534,False
+17,push ecx,push 9,False
+18,"mov edx, dword ptr [ebp - 4]",call 0x100833f0,False
+19,push edx,"add esp, 4",False
+20,call 0x38,"mov dword ptr [ebp - 4], 0",False
+21,"add esp, 8","mov eax, dword ptr [ebp + 8]",False
+22,push 9,push eax,False
+23,call 0x42,call 0x100868b0,True
+24,"add esp, 4","add esp, 4",True
+25,jmp 0x64,"mov dword ptr [ebp - 0x1c], eax",False
+26,push 9,"cmp dword ptr [ebp - 0x1c], 0",False
+27,call 0x4e,je 0x100864fd,False
+28,"add esp, 4","mov ecx, dword ptr [ebp + 8]",False
+29,"mov eax, dword ptr [ebp + 8]",push ecx,False
+30,push eax,"mov edx, dword ptr [ebp - 0x1c]",False
+31,push 0,push edx,False
+32,"mov ecx, dword ptr [0]",call 0x10086970,False
+33,push ecx,"add esp, 8",False
+34,call dword ptr [0],"mov dword ptr [ebp - 4], 0xffffffff",False
+35,"mov esp, ebp",call 0x1008650b,False
+36,pop ebp,jmp 0x10086516,False
+37,ret ,,False
+meta,"library=LIBCMTD.LIB member=build\intel\xmt_obj\free.obj (library object, no compilation)",symbol=__free_base,module=jgld.dll
+VERDICT,RED,38,42.1%

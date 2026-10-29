@@ -7,6 +7,7 @@ opens the DirectSound output under an SEH frame (handler 0x10058846): with bit 2
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllwavedevice.cpp` as `?init@Dll_Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000b50c, 0x1000b76d, 0x1000b7d8, 0x1000b81a, 0x1000b848): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1000b445 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

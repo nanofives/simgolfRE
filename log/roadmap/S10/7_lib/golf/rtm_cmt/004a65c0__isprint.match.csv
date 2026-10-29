@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [0], 1","cmp dword ptr [0x4e521c], 1",True
+1,jle 0x1a,jle 0x4a65da,True
+2,push 0x157,push 0x157,True
+3,push dword ptr [esp + 8],push dword ptr [esp + 8],True
+4,call 0x17,call 0x4aaad1,True
+5,pop ecx,pop ecx,True
+6,pop ecx,pop ecx,True
+7,ret ,ret ,True
+8,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+9,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x4e5010]",True
+10,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+11,"and eax, 0x157","and eax, 0x157",True
+12,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\_ctype.obj (library object, no compilation)",symbol=_isprint,module=golf_clean.exe
+VERDICT,GREEN,13,100.0%

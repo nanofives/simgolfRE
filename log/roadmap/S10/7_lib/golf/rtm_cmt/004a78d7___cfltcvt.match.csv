@@ -1,0 +1,32 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [ebp + 0x10], 0x65","cmp dword ptr [ebp + 0x10], 0x65",True
+3,je 0x3b,je 0x4a7912,True
+4,"cmp dword ptr [ebp + 0x10], 0x45","cmp dword ptr [ebp + 0x10], 0x45",True
+5,je 0x3b,je 0x4a7912,True
+6,"cmp dword ptr [ebp + 0x10], 0x66","cmp dword ptr [ebp + 0x10], 0x66",True
+7,jne 0x28,jne 0x4a78ff,True
+8,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+9,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+10,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+11,call 0x23,call 0x4a7748,True
+12,"add esp, 0xc","add esp, 0xc",True
+13,pop ebp,pop ebp,True
+14,ret ,ret ,True
+15,push dword ptr [ebp + 0x18],push dword ptr [ebp + 0x18],True
+16,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+17,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+18,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+19,call 0x39,call 0x4a7844,True
+20,jmp 0x4c,jmp 0x4a7923,True
+21,push dword ptr [ebp + 0x18],push dword ptr [ebp + 0x18],True
+22,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+23,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+24,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+25,call 0x4c,call 0x4a7625,True
+26,"add esp, 0x10","add esp, 0x10",True
+27,pop ebp,pop ebp,True
+28,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\cvt.obj (library object, no compilation)",symbol=__cfltcvt,module=golf_clean.exe
+VERDICT,GREEN,29,100.0%

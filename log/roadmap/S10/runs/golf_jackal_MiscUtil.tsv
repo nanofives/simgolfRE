@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/MiscUtil.cpp	0x93580	0x00493580	39	G	swap	?swap@@YAXPAH0@Z	public	100	100.0	19/19 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/MiscUtil.cpp	0x935b0	0x004935b0	51	G	memrchr	?memrchr@@YAPADPAD0D@Z	public	100	100.0	27/27 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/MiscUtil.cpp	0x935f0	0x004935f0	57	G	findnum	?findnum@@YAPADPAD@Z	public	100	100.0	27/27 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/MiscUtil.cpp	0x93630	0x00493630	62	G	memsetword	_memsetword	public	100	100.0	27/27 ins	golf_hand_01.cpp

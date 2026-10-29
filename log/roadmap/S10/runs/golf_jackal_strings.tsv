@@ -1,0 +1,11 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/strings.cpp	0x9d000	0x0049d000	10	L	$E4	_$E4	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d010	0x0049d010	10	L	$E1	_$E1	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d020	0x0049d020	12	L	$E3	_$E3	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d030	0x0049d030	10	L	$E2	_$E2	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/strings.cpp	0x9d040	0x0049d040	5	G	Strings::~Strings	??1Strings@@UAE@XZ	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/strings.cpp	0x9d050	0x0049d050	25	G	Strings::Strings	??0Strings@@QAE@XZ	public	100	100.0	8/8 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d070	0x0049d070	30	G	Strings::`scalar deleting destructor'	??_GStrings@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d090	0x0049d090	65	G	Strings::init	?init@Strings@@QAEHI@Z	public	100	100.0	22/22 ins	golf_small7.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d0e0	0x0049d0e0	19	G	Strings::shutdown	?shutdown@Strings@@QAEHXZ	public	100	100.0	7/7 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/strings.cpp	0x9d100	0x0049d100	67	G	Strings::put	?put@Strings@@QAEPADPBD@Z	public	100	100.0	31/31 ins	golf_small7.cpp

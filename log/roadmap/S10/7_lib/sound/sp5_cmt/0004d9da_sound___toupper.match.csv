@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"add eax, -0x20","add eax, -0x20",True
+2,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\toupper.obj (library object, no compilation)",symbol=__toupper,module=sound.dll
+VERDICT,GREEN,3,100.0%

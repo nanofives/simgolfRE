@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,push 1,push 1,True
+1,push 0,push 0,True
+2,push 0,push 0,True
+3,call 0xb,call 0x10045181,True
+4,"add esp, 0xc","add esp, 0xc",True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\crt0dat.obj (library object, no compilation)",symbol=__cexit,module=sound.dll
+VERDICT,GREEN,6,100.0%

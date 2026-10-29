@@ -1,0 +1,63 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"sar eax, 5","sar eax, 5",True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,"and ecx, 0x1f","and ecx, 0x1f",True
+7,"imul ecx, ecx, 0x24","imul ecx, ecx, 0x24",True
+8,"mov edx, dword ptr [eax*4]","mov edx, dword ptr [eax*4 + 0x10110e20]",True
+9,"movsx eax, byte ptr [edx + ecx + 4]","movsx eax, byte ptr [edx + ecx + 4]",True
+10,"and eax, 0x80","and eax, 0x80",True
+11,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+12,"cmp dword ptr [ebp + 0xc], 0x8000","cmp dword ptr [ebp + 0xc], 0x8000",True
+13,jne 0x69,jne 0x1002dc39,True
+14,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+15,"sar ecx, 5","sar ecx, 5",True
+16,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+17,"and edx, 0x1f","and edx, 0x1f",True
+18,"imul edx, edx, 0x24","imul edx, edx, 0x24",True
+19,"mov eax, dword ptr [ecx*4]","mov eax, dword ptr [ecx*4 + 0x10110e20]",True
+20,"mov cl, byte ptr [eax + edx + 4]","mov cl, byte ptr [eax + edx + 4]",True
+21,"and cl, 0x7f","and cl, 0x7f",True
+22,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+23,"sar edx, 5","sar edx, 5",True
+24,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+25,"and eax, 0x1f","and eax, 0x1f",True
+26,"imul eax, eax, 0x24","imul eax, eax, 0x24",True
+27,"mov edx, dword ptr [edx*4]","mov edx, dword ptr [edx*4 + 0x10110e20]",True
+28,"mov byte ptr [edx + eax + 4], cl","mov byte ptr [edx + eax + 4], cl",True
+29,jmp 0xba,jmp 0x1002dc8a,True
+30,"cmp dword ptr [ebp + 0xc], 0x4000","cmp dword ptr [ebp + 0xc], 0x4000",True
+31,jne 0xaa,jne 0x1002dc7a,True
+32,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+33,"sar eax, 5","sar eax, 5",True
+34,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+35,"and ecx, 0x1f","and ecx, 0x1f",True
+36,"imul ecx, ecx, 0x24","imul ecx, ecx, 0x24",True
+37,"mov edx, dword ptr [eax*4]","mov edx, dword ptr [eax*4 + 0x10110e20]",True
+38,"mov al, byte ptr [edx + ecx + 4]","mov al, byte ptr [edx + ecx + 4]",True
+39,"or al, 0x80","or al, 0x80",True
+40,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+41,"sar ecx, 5","sar ecx, 5",True
+42,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+43,"and edx, 0x1f","and edx, 0x1f",True
+44,"imul edx, edx, 0x24","imul edx, edx, 0x24",True
+45,"mov ecx, dword ptr [ecx*4]","mov ecx, dword ptr [ecx*4 + 0x10110e20]",True
+46,"mov byte ptr [ecx + edx + 4], al","mov byte ptr [ecx + edx + 4], al",True
+47,jmp 0xba,jmp 0x1002dc8a,True
+48,call 0xaf,call 0x100243f0,True
+49,"mov dword ptr [eax], 0x16","mov dword ptr [eax], 0x16",True
+50,"or eax, 0xffffffff","or eax, 0xffffffff",True
+51,jmp 0xcb,jmp 0x1002dc9b,True
+52,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+53,neg eax,neg eax,True
+54,"sbb eax, eax","sbb eax, eax",True
+55,"and eax, 0xffffc000","and eax, 0xffffc000",True
+56,"add eax, 0x8000","add eax, 0x8000",True
+57,"mov esp, ebp","mov esp, ebp",True
+58,pop ebp,pop ebp,True
+59,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\setmode.obj (library object, no compilation)",symbol=__setmode_lk,module=Terrain.dll
+VERDICT,GREEN,60,100.0%

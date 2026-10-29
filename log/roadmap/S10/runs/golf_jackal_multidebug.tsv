@@ -1,0 +1,11 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/multidebug.cpp	0x9bfe0	0x0049bfe0	10	L	$E14	_$E14	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9bff0	0x0049bff0	10	L	$E11	_$E11	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c000	0x0049c000	12	L	$E13	_$E13	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c010	0x0049c010	10	L	$E12	_$E12	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c020	0x0049c020	113	G	MultiDebug::MultiDebug	??0MultiDebug@@QAE@XZ	public	100	100.0	25/25 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c0a0	0x0049c0a0	11	G	MultiDebug::close	?close@MultiDebug@@QAEXXZ	public	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c0b0	0x0049c0b0	1738	G	MultiDebug::on_redraw	?on_redraw@MultiDebug@@UAEXXZ	public	100	100.0	633/633 ins	
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c780	0x0049c780	122	G	MultiDebug::~MultiDebug	??1MultiDebug@@UAE@XZ	public	miss	92.9	26/28 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c800	0x0049c800	30	G	MultiDebug::`scalar deleting destructor'	??_GMultiDebug@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/multidebug.cpp	0x9c820	0x0049c820	11	G	MultiDebug::`vector deleting destructor'	??_EMultiDebug@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp

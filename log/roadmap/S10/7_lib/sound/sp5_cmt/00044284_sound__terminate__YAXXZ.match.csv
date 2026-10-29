@@ -1,0 +1,35 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push -1,push -1,True
+3,push 0,push 0x1005edc8,True
+4,push 0,push 0x10045744,True
+5,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+6,push eax,push eax,True
+7,"mov dword ptr fs:[0], esp","mov dword ptr fs:[0], esp",True
+8,push ecx,push ecx,True
+9,push ecx,push ecx,True
+10,push ebx,push ebx,True
+11,push esi,push esi,True
+12,push edi,push edi,True
+13,"mov dword ptr [ebp - 0x18], esp","mov dword ptr [ebp - 0x18], esp",True
+14,"xor esi, esi","xor esi, esi",True
+15,"mov dword ptr [ebp - 4], esi","mov dword ptr [ebp - 4], esi",True
+16,call 0x2f,call 0x10044171,True
+17,"cmp dword ptr [eax + 0x60], esi","cmp dword ptr [eax + 0x60], esi",True
+18,je 0x53,je 0x100442d7,True
+19,"mov dword ptr [ebp - 4], 1","mov dword ptr [ebp - 4], 1",True
+20,call 0x40,call 0x10044171,True
+21,call dword ptr [eax + 0x60],call dword ptr [eax + 0x60],True
+22,"mov dword ptr [ebp - 4], esi","mov dword ptr [ebp - 4], esi",True
+23,jmp 0x53,jmp 0x100442d7,True
+24,push 1,push 1,True
+25,pop eax,pop eax,True
+26,ret ,ret ,True
+27,"mov esp, dword ptr [ebp - 0x18]","mov esp, dword ptr [ebp - 0x18]",True
+28,"and dword ptr [ebp - 4], 0","and dword ptr [ebp - 4], 0",True
+29,"or dword ptr [ebp - 4], 0xffffffff","or dword ptr [ebp - 4], 0xffffffff",True
+30,call 0x5c,call 0x100442e0,True
+31,jmp 0x61,jmp 0x10049638,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\hooks.obj (library object, no compilation)",symbol=?terminate@@YAXXZ,module=sound.dll
+VERDICT,GREEN,32,100.0%

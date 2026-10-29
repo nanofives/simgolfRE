@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 88 bytes, 19 instructions, subsystem `ui`. Mechanical t
 Releases the five file-scope FontRef objects built by initPanelState at exit. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_InfoScreens.cpp` as `_$E26` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0044ad07): callee pops 0 bytes of stack arguments.
 
 ## Reads

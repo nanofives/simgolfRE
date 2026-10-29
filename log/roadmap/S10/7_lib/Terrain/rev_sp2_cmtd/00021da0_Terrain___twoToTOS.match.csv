@@ -1,0 +1,14 @@
+instruction,library_object,original,match
+0,fld st(0),fld st(0),True
+1,frndint ,frndint ,True
+2,"fsubr st(1), st(0)","fsubr st(1), st(0)",True
+3,fxch st(1),fxch st(1),True
+4,fchs ,fchs ,True
+5,f2xm1 ,f2xm1 ,True
+6,fld1 ,fld1 ,True
+7,faddp st(1),faddp st(1),True
+8,fscale ,fscale ,True
+9,fstp st(1),fstp st(1),True
+10,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\common.obj (library object, no compilation)",symbol=__twoToTOS,module=Terrain.dll
+VERDICT,GREEN,11,100.0%

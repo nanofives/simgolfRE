@@ -1,0 +1,22 @@
+golf_clean.exe 0x004671a0 ?GetDirection8@@YAHHH@Z: 100.0% (94/94 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOW
+golf_clean.exe 0x004672d0 ?CalculateAngle@@YAHHH@Z: 100.0% (126/126 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WIN
+golf_clean.exe 0x004674c0 ?BilinearSample@@YAHHH@Z: 100.0% (49/49 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDO
+golf_clean.exe 0x00467600 ?BuildEmployeeName@@YAXH@Z: 100.0% (80/80 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WIN
+golf_clean.exe 0x004676e0 ?AppendGolferName@@YAXHH@Z: 100.0% (145/145 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_W
+golf_clean.exe 0x0045ae30 ?TakePendingKey@@YAHXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /
+golf_clean.exe 0x0045ae50 ?TakePendingChar@@YAHXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS 
+golf_clean.exe 0x0045ae70 ?PollInputState@@YAHXZ: 100.0% (21/21 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS
+golf_clean.exe 0x0045af30 ?WrapText@@YAHH@Z: 100.0% (139/139 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /G
+golf_clean.exe 0x0045b0d0 ?DrawTextWordWrapped@@YAHHHHI@Z: 100.0% (156/156 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG
+golf_clean.exe 0x0045b2c0 ?ShowTextInputDialog@@YAXPBDHHH@Z: 100.0% (291/291 instructions)  flags=/MT /O2 /DWIN32 /DNDEB
+golf_clean.exe 0x00401000 ?ClearPlot@@YAXH@Z: 100.0% (16/16 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR
+golf_clean.exe 0x00401040 ?PlaceBuilding@@YAHHHHH@Z: 100.0% (118/118 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WI
+golf_clean.exe 0x004012d0 ?RenderPlot@@YAXHHH@Z: 100.0% (360/360 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOW
+golf_clean.exe 0x00402180 ?fill_entry@?$ClassList@USpriteStruct@@@@UAEHPAUSpriteStruct@@@Z: 100.0% (2/2 instructions)  f
+golf_clean.exe 0x00402190 ?kill_entry@?$ClassList@USpriteStruct@@@@UAEXPAUSpriteStruct@@@Z: 100.0% (1/1 instructions)  f
+golf_clean.exe 0x00402720 ??_G?$ClassList@UStringStruct@@@@UAEPAXI@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32
+golf_clean.exe 0x00402790 ??_G?$ClassList@UPalStruct@@@@UAEPAXI@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /D
+golf_clean.exe 0x00402800 ??_G?$ClassList@USpriteStruct@@@@UAEPAXI@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32
+golf_clean.exe 0x00402870 ??_GLinkListEntry@@UAEPAXI@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_W
+golf_clean.exe 0x004028b0 ??_GStringStruct@@UAEPAXI@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WI
+golf_clean.exe 0x004028f0 ??_GPalStruct@@UAEPAXI@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDO

@@ -1,0 +1,29 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x14","sub esp, 0x14",True
+3,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+4,"and dword ptr [ebp - 0x14], 0","and dword ptr [ebp - 0x14], 0",True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,"mov dword ptr [ebp - 0xc], eax","mov dword ptr [ebp - 0xc], eax",True
+7,"mov eax, dword ptr [ebp + 0x14]","mov eax, dword ptr [ebp + 0x14]",True
+8,"mov dword ptr [ebp - 0x10], 0","mov dword ptr [ebp - 0x10], 0x100421e1",True
+9,inc eax,inc eax,True
+10,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+11,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+12,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+13,"mov dword ptr [ebp - 0x14], eax","mov dword ptr [ebp - 0x14], eax",True
+14,"lea eax, [ebp - 0x14]","lea eax, [ebp - 0x14]",True
+15,"mov dword ptr fs:[0], eax","mov dword ptr fs:[0], eax",True
+16,push dword ptr [ebp + 0x18],push dword ptr [ebp + 0x18],True
+17,push ecx,push ecx,True
+18,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+19,call 0x45,call 0x100440a0,True
+20,"mov ecx, eax","mov ecx, eax",True
+21,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+22,"mov dword ptr fs:[0], eax","mov dword ptr fs:[0], eax",True
+23,"mov eax, ecx","mov eax, ecx",True
+24,leave ,leave ,True
+25,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\trnsctrl.obj (library object, no compilation)",symbol=?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z,module=sound.dll
+VERDICT,GREEN,26,100.0%

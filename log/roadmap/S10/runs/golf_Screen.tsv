@@ -1,0 +1,14 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Screen.cpp	0x65560	0x00465560	23	G	ClearPendingInput	?ClearPendingInput@@YAXXZ	public	100	100.0	6/6 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/Screen.cpp	0x65580	0x00465580	141	G	Screen::on_left_click	?on_left_click@Screen@@UAEXHH@Z	public	100	100.0	41/41 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x65610	0x00465610	52	G	Screen::on_left_down	?on_left_down@Screen@@UAEXHH@Z	public	100	100.0	12/12 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x65650	0x00465650	43	G	Screen::on_left_up	?on_left_up@Screen@@UAEXHH@Z	public	100	100.0	9/9 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x65680	0x00465680	146	G	Screen::on_right_click	?on_right_click@Screen@@UAEXHH@Z	public	100	100.0	40/40 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x65720	0x00465720	22	G	Screen::on_right_down	?on_right_down@Screen@@UAEXHH@Z	public	100	100.0	5/5 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x65740	0x00465740	13	G	Screen::on_right_up	?on_right_up@Screen@@UAEXHH@Z	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x65750	0x00465750	95	G	Screen::on_key_click	?on_key_click@Screen@@UAEHHH@Z	public	100	100.0	23/23 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x657b0	0x004657b0	19	G	Screen::on_key_down	?on_key_down@Screen@@UAEHH@Z	public	100	100.0	5/5 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x657d0	0x004657d0	15	G	Screen::on_key_up	?on_key_up@Screen@@UAEHH@Z	public	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Screen.cpp	0x657e0	0x004657e0	90	G	Screen::on_left_double_click	?on_left_double_click@Screen@@UAEXHH@Z	public	100	100.0	28/28 ins	m36d_hand_01.cpp
+golf	golf/golf.exe/src/Screen.cpp	0x65840	0x00465840	95	G	Screen::on_right_double_click	?on_right_double_click@Screen@@UAEXHH@Z	public	100	100.0	28/28 ins	m36d_hand_01.cpp
+golf	golf/golf.exe/src/Screen.cpp	0x658a0	0x004658a0	7	G	Screen::on_sys_close	?on_sys_close@Screen@@UAEXXZ	public	100	100.0	2/2 ins	

@@ -1,0 +1,87 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, eax","mov ebx, eax",True
+2,"shl eax, 8","shl eax, 8",True
+3,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+4,"test edx, 3","test edx, 3",True
+5,je 0x25,je 0x100456ab,True
+6,"mov cl, byte ptr [edx]","mov cl, byte ptr [edx]",True
+7,inc edx,inc edx,True
+8,"cmp cl, bl","cmp cl, bl",True
+9,je 0xffffffea,je 0x10045670,True
+10,"test cl, cl","test cl, cl",True
+11,je 0x6e,je 0x100456f4,True
+12,"test edx, 3","test edx, 3",True
+13,jne 0x12,jne 0x10045698,True
+14,"or ebx, eax","or ebx, eax",True
+15,push edi,push edi,True
+16,"mov eax, ebx","mov eax, ebx",True
+17,"shl ebx, 0x10","shl ebx, 0x10",True
+18,push esi,push esi,True
+19,"or ebx, eax","or ebx, eax",True
+20,"mov ecx, dword ptr [edx]","mov ecx, dword ptr [edx]",True
+21,"mov edi, 0x7efefeff","mov edi, 0x7efefeff",True
+22,"mov eax, ecx","mov eax, ecx",True
+23,"mov esi, edi","mov esi, edi",True
+24,"xor ecx, ebx","xor ecx, ebx",True
+25,"add esi, eax","add esi, eax",True
+26,"add edi, ecx","add edi, ecx",True
+27,"xor ecx, 0xffffffff","xor ecx, 0xffffffff",True
+28,"xor eax, 0xffffffff","xor eax, 0xffffffff",True
+29,"xor ecx, edi","xor ecx, edi",True
+30,"xor eax, esi","xor eax, esi",True
+31,"add edx, 4","add edx, 4",True
+32,"and ecx, 0x81010100","and ecx, 0x81010100",True
+33,jne 0x72,jne 0x100456f8,True
+34,"and eax, 0x81010100","and eax, 0x81010100",True
+35,je 0x30,je 0x100456b6,True
+36,"and eax, 0x1010100","and eax, 0x1010100",True
+37,jne 0x6c,jne 0x100456f2,True
+38,"and esi, 0x80000000","and esi, 0x80000000",True
+39,jne 0x30,jne 0x100456b6,True
+40,pop esi,pop esi,True
+41,pop edi,pop edi,True
+42,pop ebx,pop ebx,True
+43,"xor eax, eax","xor eax, eax",True
+44,ret ,ret ,True
+45,"mov eax, dword ptr [edx - 4]","mov eax, dword ptr [edx - 4]",True
+46,"cmp al, bl","cmp al, bl",True
+47,je 0xaf,je 0x10045735,True
+48,"test al, al","test al, al",True
+49,je 0x6c,je 0x100456f2,True
+50,"cmp ah, bl","cmp ah, bl",True
+51,je 0xa8,je 0x1004572e,True
+52,"test ah, ah","test ah, ah",True
+53,je 0x6c,je 0x100456f2,True
+54,"shr eax, 0x10","shr eax, 0x10",True
+55,"cmp al, bl","cmp al, bl",True
+56,je 0xa1,je 0x10045727,True
+57,"test al, al","test al, al",True
+58,je 0x6c,je 0x100456f2,True
+59,"cmp ah, bl","cmp ah, bl",True
+60,je 0x9a,je 0x10045720,True
+61,"test ah, ah","test ah, ah",True
+62,je 0x6c,je 0x100456f2,True
+63,jmp 0x30,jmp 0x100456b6,True
+64,pop esi,pop esi,True
+65,pop edi,pop edi,True
+66,"lea eax, [edx - 1]","lea eax, [edx - 1]",True
+67,pop ebx,pop ebx,True
+68,ret ,ret ,True
+69,"lea eax, [edx - 2]","lea eax, [edx - 2]",True
+70,pop esi,pop esi,True
+71,pop edi,pop edi,True
+72,pop ebx,pop ebx,True
+73,ret ,ret ,True
+74,"lea eax, [edx - 3]","lea eax, [edx - 3]",True
+75,pop esi,pop esi,True
+76,pop edi,pop edi,True
+77,pop ebx,pop ebx,True
+78,ret ,ret ,True
+79,"lea eax, [edx - 4]","lea eax, [edx - 4]",True
+80,pop esi,pop esi,True
+81,pop edi,pop edi,True
+82,pop ebx,pop ebx,True
+83,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\strchr.obj (library object, no compilation)",symbol=___from_strstr_to_strchr,module=sound.dll
+VERDICT,GREEN,84,100.0%

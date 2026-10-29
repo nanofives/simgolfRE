@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/GolferSpawn.cpp	0x21bc0	0x00421bc0	982	G	SpawnGolfer	?SpawnGolfer@@YAHH@Z	public	100	100.0	276/276 ins	
+golf	golf/golf.exe/src/GolferSpawn.cpp	0x21fa0	0x00421fa0	1056	G	CalculateShotDifficulty	?CalculateShotDifficulty@@YAHHHHHHHH@Z	public	100	100.0	337/337 ins	
+golf	golf/golf.exe/src/GolferSpawn.cpp	0x223c0	0x004223c0	44	G	CalculateBallRollDistance	?CalculateBallRollDistance@@YAHH@Z	public	100	100.0	20/20 ins	golf_small4.cpp
+golf	golf/golf.exe/src/GolferSpawn.cpp	0x223f0	0x004223f0	64	G	CalculateBallCarryDistance	?CalculateBallCarryDistance@@YAHHH@Z	public	100	100.0	30/30 ins	golf_small6.cpp
+golf	golf/golf.exe/src/GolferSpawn.cpp	0x22430	0x00422430	247	G	CalculateShotPower	?CalculateShotPower@@YAHHHH@Z	public	100	100.0	91/91 ins	golf_small27.cpp
+golf	golf/golf.exe/src/GolferSpawn.cpp	0x22530	0x00422530	360	G	CalculateGolferMaxDistance	?CalculateGolferMaxDistance@@YAHH@Z	public	100	100.0	125/125 ins	golf_hand_r1.cpp

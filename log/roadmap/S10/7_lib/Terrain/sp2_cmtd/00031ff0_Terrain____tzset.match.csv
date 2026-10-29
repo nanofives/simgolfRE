@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 0","cmp dword ptr [0x10110b00], 0",True
+3,jne 0x3b,jne 0x1003202b,True
+4,push 0xb,push 0xb,True
+5,call 0x13,call 0x10019e10,True
+6,"add esp, 4","add esp, 4",True
+7,"cmp dword ptr [0], 0","cmp dword ptr [0x10110b00], 0",True
+8,jne 0x31,jne 0x10032021,True
+9,call 0x24,call 0x10032050,True
+10,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10110b00]",True
+11,"add eax, 1","add eax, 1",True
+12,"mov dword ptr [0], eax","mov dword ptr [0x10110b00], eax",True
+13,push 0xb,push 0xb,True
+14,call 0x38,call 0x10019eb0,True
+15,"add esp, 4","add esp, 4",True
+16,pop ebp,pop ebp,True
+17,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\tzset.obj (library object, no compilation)",symbol=___tzset,module=Terrain.dll
+VERDICT,GREEN,18,100.0%

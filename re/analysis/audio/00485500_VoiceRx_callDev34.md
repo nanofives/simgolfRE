@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 18 bytes, 7 instructions, subsystem `audio`. Mechanical
 Forwards slot 34 to the sound device object at this+0x40 (its vtable +0x88), doing nothing; the function returns 0 in both cases. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?start@VoiceRx@@UAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00485511): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00485500 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

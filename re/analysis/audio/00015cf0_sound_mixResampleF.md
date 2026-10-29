@@ -7,6 +7,7 @@ Rate-converting PCM render/mix routine for a 2-ratio (no sample-rate-ratio) vari
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?m16216s2s_no_pitch@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10015eba, 0x10015ee0): callee pops 0 bytes of stack arguments.
 
 ## Reads

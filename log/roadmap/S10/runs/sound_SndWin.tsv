@@ -1,0 +1,11 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/SndWin.cpp	0x285e0	0x100285e0	11	L	$E27	_$E27	name	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/SndWin.cpp	0x28600	0x10028600	22	G	CSndWin::CSndWin	??0CSndWin@@QAE@XZ	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/SndWin.cpp	0x28630	0x10028630	79	G	CSndWin::`scalar deleting destructor'	??_GCSndWin@@UAEPAXI@Z	public	100	100.0	26/26 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/SndWin.cpp	0x286a0	0x100286a0	59	G	CSndWin::~CSndWin	??1CSndWin@@UAE@XZ	public	100	100.0	20/20 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/SndWin.cpp	0x286f0	0x100286f0	64	G	CSndWin::init	?init@CSndWin@@QAE?AW4SNDERR@@PAUHWND__@@@Z	public	100	100.0	26/26 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/SndWin.cpp	0x28740	0x10028740	83	G	CSndWin::create	?create@CSndWin@@QAE?AW4SNDERR@@XZ	public	100	100.0	33/33 ins	
+sound	sound/sound.dll/src/SndWin.cpp	0x287c0	0x100287c0	55	G	CSndWin::destroy	?destroy@CSndWin@@QAE?AW4SNDERR@@XZ	public	100	100.0	20/20 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/SndWin.cpp	0x28810	0x10028810	100	G	CSndWin::clean_message_queue	?clean_message_queue@CSndWin@@QAE?AW4SNDERR@@XZ	public	100	100.0	39/39 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/SndWin.cpp	0x288a0	0x100288a0	564	G	thread_proc	_thread_proc	public	100	100.0	208/208 ins	
+sound	sound/sound.dll/src/SndWin.cpp	0x28b70	0x10028b70	596	G	snd_wnd_proc	_snd_wnd_proc@16	public	100	100.0	210/210 ins	

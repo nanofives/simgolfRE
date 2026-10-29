@@ -1,0 +1,40 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+4,"imul eax, dword ptr [ebp + 8]","imul eax, dword ptr [ebp + 8]",True
+5,"mov dword ptr [ebp + 0xc], eax","mov dword ptr [ebp + 0xc], eax",True
+6,"mov ecx, dword ptr [ebp + 0x18]","mov ecx, dword ptr [ebp + 0x18]",True
+7,push ecx,push ecx,True
+8,"mov edx, dword ptr [ebp + 0x14]","mov edx, dword ptr [ebp + 0x14]",True
+9,push edx,push edx,True
+10,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+11,push eax,push eax,True
+12,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+13,push ecx,push ecx,True
+14,call 0x25,call 0x1007fb70,True
+15,"add esp, 0x10","add esp, 0x10",True
+16,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+17,"cmp dword ptr [ebp - 8], 0","cmp dword ptr [ebp - 8], 0",True
+18,je 0x59,je 0x10080029,True
+19,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+20,"mov dword ptr [ebp - 0xc], edx","mov dword ptr [ebp - 0xc], edx",True
+21,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+22,"add eax, dword ptr [ebp + 0xc]","add eax, dword ptr [ebp + 0xc]",True
+23,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+24,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+25,"cmp ecx, dword ptr [ebp - 4]","cmp ecx, dword ptr [ebp - 4]",True
+26,jae 0x59,jae 0x10080029,True
+27,"mov edx, dword ptr [ebp - 0xc]","mov edx, dword ptr [ebp - 0xc]",True
+28,"mov byte ptr [edx], 0","mov byte ptr [edx], 0",True
+29,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+30,"add eax, 1","add eax, 1",True
+31,"mov dword ptr [ebp - 0xc], eax","mov dword ptr [ebp - 0xc], eax",True
+32,jmp 0x40,jmp 0x10080010,True
+33,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+34,"mov esp, ebp","mov esp, ebp",True
+35,pop ebp,pop ebp,True
+36,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dbgheap.obj (library object, no compilation)",symbol=__calloc_dbg,module=jgld.dll
+VERDICT,GREEN,37,100.0%

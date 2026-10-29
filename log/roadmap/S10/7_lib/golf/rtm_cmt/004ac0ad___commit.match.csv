@@ -1,0 +1,55 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,"cmp ebx, dword ptr [0]","cmp ebx, dword ptr [0x842140]",True
+3,push esi,push esi,True
+4,push edi,push edi,True
+5,jae 0x81,jae 0x4ac12e,True
+6,"mov eax, ebx","mov eax, ebx",True
+7,"sar eax, 5","sar eax, 5",True
+8,"lea edi, [eax*4]","lea edi, [eax*4 + 0x842040]",True
+9,"mov eax, ebx","mov eax, ebx",True
+10,"and eax, 0x1f","and eax, 0x1f",True
+11,"lea esi, [eax + eax*8]","lea esi, [eax + eax*8]",True
+12,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+13,"shl esi, 2","shl esi, 2",True
+14,"test byte ptr [eax + esi + 4], 1","test byte ptr [eax + esi + 4], 1",True
+15,je 0x81,je 0x4ac12e,True
+16,push ebx,push ebx,True
+17,call 0x35,call 0x4a937e,True
+18,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+19,pop ecx,pop ecx,True
+20,"test byte ptr [eax + esi + 4], 1","test byte ptr [eax + esi + 4], 1",True
+21,je 0x68,je 0x4ac115,True
+22,push ebx,push ebx,True
+23,call 0x45,call 0x4a933c,True
+24,pop ecx,pop ecx,True
+25,push eax,push eax,True
+26,call dword ptr [0],call dword ptr [0x4ba128],True
+27,"test eax, eax","test eax, eax",True
+28,jne 0x5b,jne 0x4ac108,True
+29,call dword ptr [0],call dword ptr [0x4ba02c],True
+30,"mov esi, eax","mov esi, eax",True
+31,jmp 0x5d,jmp 0x4ac10a,True
+32,"xor esi, esi","xor esi, esi",True
+33,"test esi, esi","test esi, esi",True
+34,je 0x76,je 0x4ac123,True
+35,call 0x66,call 0x4a9115,True
+36,"mov dword ptr [eax], esi","mov dword ptr [eax], esi",True
+37,call 0x6d,call 0x4a910c,True
+38,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+39,"or esi, 0xffffffff","or esi, 0xffffffff",True
+40,push ebx,push ebx,True
+41,call 0x7c,call 0x4a93dd,True
+42,pop ecx,pop ecx,True
+43,"mov eax, esi","mov eax, esi",True
+44,jmp 0x8f,jmp 0x4ac13c,True
+45,call 0x86,call 0x4a910c,True
+46,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+47,"or eax, 0xffffffff","or eax, 0xffffffff",True
+48,pop edi,pop edi,True
+49,pop esi,pop esi,True
+50,pop ebx,pop ebx,True
+51,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\commit.obj (library object, no compilation)",symbol=__commit,module=golf_clean.exe
+VERDICT,GREEN,52,100.0%

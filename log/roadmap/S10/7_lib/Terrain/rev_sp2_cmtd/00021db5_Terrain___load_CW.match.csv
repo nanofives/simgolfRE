@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+1,"and edx, 0x300","and edx, 0x300",True
+2,"or edx, 0x7f","or edx, 0x7f",True
+3,"mov word ptr [esp + 6], dx","mov word ptr [esp + 6], dx",True
+4,fldcw word ptr [esp + 6],fldcw word ptr [esp + 6],True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\common.obj (library object, no compilation)",symbol=__load_CW,module=Terrain.dll
+VERDICT,GREEN,6,100.0%

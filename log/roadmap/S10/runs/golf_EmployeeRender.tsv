@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/EmployeeRender.cpp	0x38f0	0x004038f0	1568	G	RenderEmployees	?RenderEmployees@@YAXXZ	public	100	100.0	473/473 ins	

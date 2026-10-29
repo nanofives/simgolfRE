@@ -7,6 +7,7 @@ if this+8 already holds a window returns 0; RegisterClassA(&WNDCLASSA at 0x10063
 System writeup: `re/analysis/systems/sound_1.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_SndWin.cpp` as `?create@CSndWin@@QAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002874d, 0x10028792): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10028741 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,call 0xf,call 0x10034020,True
+6,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+7,"and eax, 1","and eax, 1",True
+8,"test eax, eax","test eax, eax",True
+9,je 0x25,je 0x10033f55,True
+10,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+11,push ecx,push ecx,True
+12,call 0x22,call 0x10018be0,True
+13,"add esp, 4","add esp, 4",True
+14,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+15,"mov esp, ebp","mov esp, ebp",True
+16,pop ebp,pop ebp,True
+17,ret 4,ret 4,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\filebuf.obj (library object, no compilation)",symbol=??_Gfilebuf@@UAEPAXI@Z,module=Terrain.dll
+VERDICT,GREEN,18,100.0%

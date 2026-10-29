@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,jne 3,jne 0x100431d1,True
+1,ret ,ret ,True
+2,push ebp,push ebp,True
+3,"mov ebp, esp","mov ebp, esp",True
+4,"sub esp, 0","sub esp, 0",True
+5,push eax,push eax,True
+6,push edx,push edx,True
+7,push ebx,push ebx,True
+8,push esi,push esi,True
+9,push edi,push edi,True
+10,int3 ,int3 ,True
+11,pop edi,pop edi,True
+12,pop esi,pop esi,True
+13,pop ebx,pop ebx,True
+14,pop edx,pop edx,True
+15,pop eax,pop eax,True
+16,"mov esp, ebp","mov esp, ebp",True
+17,pop ebp,pop ebp,True
+18,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\chkesp.obj (library object, no compilation)",symbol=__chkesp,module=sound.dll
+VERDICT,GREEN,19,100.0%

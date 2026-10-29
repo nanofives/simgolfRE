@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/infblock.c	0x9cc70	0x1009cc70	278	G	inflate_blocks_reset	_inflate_blocks_reset	public	100	100.0	100/100 ins	jgld_zlib_infblock.cpp
+jgld	jgl/zlib.lib/zlib/infblock.c	0x9cd90	0x1009cd90	225	G	inflate_blocks_new	_inflate_blocks_new	public	100	100.0	85/85 ins	jgld_zlib_infblock.cpp
+jgld	jgl/zlib.lib/zlib/infblock.c	0x9ce80	0x1009ce80	5136	G	inflate_blocks	_inflate_blocks	public	100	100.0	1678/1678 ins	jgld_zlib_infblock.cpp
+jgld	jgl/zlib.lib/zlib/infblock.c	0x9e290	0x1009e290	124	G	inflate_blocks_free	_inflate_blocks_free	public	100	100.0	51/51 ins	jgld_zlib_infblock.cpp
+jgld	jgl/zlib.lib/zlib/infblock.c	0x9e310	0x1009e310	91	G	inflate_set_dictionary	_inflate_set_dictionary	public	100	100.0	37/37 ins	jgld_zlib_infblock.cpp

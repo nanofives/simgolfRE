@@ -1,0 +1,18 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/png.c	0x78550	0x10078550	49	G	png_get_header_version	_png_get_header_version	public	100	100.0	21/21 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78590	0x10078590	86	G	png_set_sig_bytes	_png_set_sig_bytes	public	100	100.0	33/33 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x785f0	0x100785f0	126	G	png_sig_cmp	_png_sig_cmp	public	100	100.0	48/48 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78670	0x10078670	64	G	png_check_sig	_png_check_sig	public	100	100.0	29/29 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x786b0	0x100786b0	151	G	png_zalloc	_png_zalloc	public	100	100.0	55/55 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78750	0x10078750	57	G	png_zfree	_png_zfree	public	100	100.0	25/25 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78790	0x10078790	64	G	png_reset_crc	_png_reset_crc	public	100	100.0	26/26 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x787d0	0x100787d0	157	G	png_calculate_crc	_png_calculate_crc	public	100	100.0	52/52 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78870	0x10078870	85	G	png_create_info_struct	_png_create_info_struct	public	100	100.0	34/34 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x788d0	0x100788d0	105	G	png_destroy_info_struct	_png_destroy_info_struct	public	100	100.0	39/39 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78940	0x10078940	60	G	png_info_init	_png_info_init	public	100	100.0	25/25 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78980	0x10078980	283	G	png_info_destroy	_png_info_destroy	public	100	100.0	97/97 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78aa0	0x10078aa0	37	G	png_get_io_ptr	_png_get_io_ptr	public	100	100.0	18/18 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78ad0	0x10078ad0	40	G	png_init_io	_png_init_io	public	100	100.0	19/19 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78b00	0x10078b00	221	G	png_convert_to_rfc1123	_png_convert_to_rfc1123	public	100	100.0	82/82 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78be0	0x10078be0	55	G	png_get_copyright	_png_get_copyright	public	100	100.0	23/23 ins	jgld_png_png.cpp
+jgld	jgl/libpng.lib/libpng/png.c	0x78c20	0x10078c20	31	G	png_check_version	_png_check_version	public	100	100.0	16/16 ins	jgld_png_png.cpp

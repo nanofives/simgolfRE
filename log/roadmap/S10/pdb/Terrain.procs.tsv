@@ -1,0 +1,642 @@
+0x16a0	480	LoadBmpFile	.\Debug\Bmp.obj
+0x1880	40	degreesToRadians	.\Debug\Terrain.obj
+0x18b0	67	ios::lock	.\Debug\Terrain.obj
+0x1900	486	WriteDibToBmpFile	.\Debug\Bmp.obj
+0x1af0	91	Terrain::loadNewCourseType	.\Debug\Course.obj
+0x1b60	116	SwapBgrToRgb	.\Debug\Bmp.obj
+0x1c00	258	FlipImageRows24bpp	.\Debug\Bmp.obj
+0x1d50	107	Terrain::tileAt	.\Debug\Bmp.obj
+0x1de0	70	Terrain::getElevation	.\Debug\Bmp.obj
+0x1e40	47	Tile::getCornerElevation	.\Debug\Bmp.obj
+0x1e80	60	Terrain::getWall	.\Debug\Bmp.obj
+0x1ed0	50	Tile::getWallEnabled	.\Debug\Bmp.obj
+0x1f10	56	Terrain::getType	.\Debug\Bmp.obj
+0x1f60	42	Tile::getType	.\Debug\Bmp.obj
+0x1fa0	48	FaceBlock::FaceBlock	.\Debug\FaceBlock.obj
+0x1fe0	36	FaceBlock::~FaceBlock	.\Debug\FaceBlock.obj
+0x2010	55	FloatToTexCoordCode	.\Debug\FaceBlock.obj
+0x2060	1196	FaceBlock::InitTriangleMesh	.\Debug\FaceBlock.obj
+0x2510	45	ios::fail	.\Debug\Terrain.obj
+0x2640	212	FaceBlock::SetNineVertexHeights	.\Debug\FaceBlock.obj
+0x2750	335	FaceBlock::setCornerVertexNormals	.\Debug\FaceBlock.obj
+0x2900	480	FaceBlock::getMaxCornerVertexHeight	.\Debug\FaceBlock.obj
+0x2ae0	1064	Terrain::Terrain	.\Debug\Terrain.obj
+0x2f80	50	Tile::setRandomVariation	.\Debug\Terrain.obj
+0x3090	226	Terrain::~Terrain	.\Debug\Terrain.obj
+0x31a0	161	Terrain::getInstance	.\Debug\Terrain.obj
+0x3270	51	Terrain::getNormalArray	.\Debug\Terrain.obj
+0x32b0	51	Terrain::getVertexArray	.\Debug\Terrain.obj
+0x32f0	128	Terrain::setType	.\Debug\Terrain.obj
+0x3390	59	Terrain::getVariation	.\Debug\Terrain.obj
+0x33e0	272	Terrain::initGLRenderState	.\Debug\Terrain.obj
+0x3540	526	Terrain::changeLighting	.\Debug\Terrain.obj
+0x37e0	56	Terrain::initLighting	.\Debug\Terrain.obj
+0x3830	257	Terrain::EnableBlackFillLight	.\Debug\Terrain.obj
+0x3980	159	Terrain::LoadLightingForCourseType	.\Debug\Terrain.obj
+0x3a50	535	rotateVectorAboutAxis	.\Debug\Terrain.obj
+0x3f80	42	ios::lockptr	.\Debug\Terrain.obj
+0x42a0	38	Terrain::drawCircle	.\Debug\Terrain.obj
+0x46a0	68	ifstream::`vbase destructor'	.\Debug\Terrain.obj
+0x48a0	734	Terrain::drawLine	.\Debug\Terrain.obj
+0x4c70	834	Terrain::drawCardinalSpline	.\Debug\Terrain.obj
+0x5090	322	Terrain::evalCardinalSplinePoint2D	.\Debug\Terrain.obj
+0x5230	1042	Terrain::drawBezierSpline	.\Debug\Terrain.obj
+0x5750	180	Terrain::bernsteinBasisTerm	.\Debug\Terrain.obj
+0x5840	70	powf	.\Debug\Terrain.obj
+0x58a0	93	factorial	.\Debug\Terrain.obj
+0x5960	42	Tile::getGridX	.\Debug\Terrain.obj
+0x5990	1279	Terrain::render	.\Debug\Terrain.obj
+0x6410	757	Terrain::pathUpdateRender	.\Debug\Terrain.obj
+0x6810	42	Tile::getGridY	.\Debug\Terrain.obj
+0x6850	1005	Terrain::IsTileCulled	.\Debug\Terrain.obj
+0x6dd0	1313	Terrain::LoadLightingFromFile	.\Debug\Terrain.obj
+0x7380	853	Terrain::InsertWallAdjacentTilesInDrawOrder	.\Debug\Terrain.obj
+0x76e0	2313	Terrain::LoadCourseTextures	.\Debug\Terrain.obj
+0x80e0	760	Terrain::renderTile	.\Debug\Terrain.obj
+0x89e0	1200	Terrain::localRender	.\Debug\Terrain.obj
+0x8fc0	543	Terrain::setZoomLevel	.\Debug\Terrain.obj
+0x9270	1872	Terrain::stripRender	.\Debug\Terrain.obj
+0x9ba0	179	Terrain::closeSystem	.\Debug\Terrain.obj
+0x9c80	486	Terrain::initSystem	.\Debug\Terrain.obj
+0x9ed0	487	Terrain::resize	.\Debug\Terrain.obj
+0xa130	549	Terrain::initTileGrid	.\Debug\Terrain.obj
+0xa3e0	84	Terrain::layPath	.\Debug\Terrain.obj
+0xa450	71	Terrain::hasConnectedPath	.\Debug\Terrain.obj
+0xa4b0	75	Terrain::updatePath	.\Debug\Terrain.obj
+0xa510	56	Terrain::hasPath	.\Debug\Terrain.obj
+0xa560	68	Terrain::setWall	.\Debug\Terrain.obj
+0xa5c0	66	Terrain::elevateCorner	.\Debug\Terrain.obj
+0xa620	66	Terrain::lowerCorner	.\Debug\Terrain.obj
+0xa680	86	Terrain::lowerEdgeCorner	.\Debug\Terrain.obj
+0xa6f0	62	Terrain::calcNormals	.\Debug\Terrain.obj
+0xa740	201	Terrain::calcAllNormals	.\Debug\Terrain.obj
+0xa840	46	Terrain::setSplineHeight	.\Debug\Terrain.obj
+0xa880	182	Terrain::passCollarInfo	.\Debug\Terrain.obj
+0xa970	118	Terrain::initTerrain	.\Debug\Terrain.obj
+0xaa10	224	Terrain::resetTerrain	.\Debug\Terrain.obj
+0xab30	524	Terrain::tileHit	.\Debug\Terrain.obj
+0xadc0	118	Terrain::SetRotationQuadrantFromDegrees	.\Debug\Terrain.obj
+0xae60	89	std::list<Tile *,std::allocator<Tile *> >::list<Tile *,std::allocator<Tile *> >	.\Debug\Terrain.obj
+0xaed0	123	std::list<Tile *,std::allocator<Tile *> >::~list<Tile *,std::allocator<Tile *> >	.\Debug\Terrain.obj
+0xaf70	84	std::list<Tile *,std::allocator<Tile *> >::begin	.\Debug\Terrain.obj
+0xafe0	73	std::list<Tile *,std::allocator<Tile *> >::end	.\Debug\Terrain.obj
+0xb040	59	std::list<Tile *,std::allocator<Tile *> >::empty	.\Debug\Terrain.obj
+0xb090	79	std::list<Tile *,std::allocator<Tile *> >::push_back	.\Debug\Terrain.obj
+0xb100	209	std::list<Tile *,std::allocator<Tile *> >::insert	.\Debug\Terrain.obj
+0xb210	88	std::list<Tile *,std::allocator<Tile *> >::clear	.\Debug\Terrain.obj
+0xb280	57	std::list<Tile *,std::allocator<Tile *> >::iterator::iterator	.\Debug\Terrain.obj
+0xb2d0	60	std::list<Tile *,std::allocator<Tile *> >::iterator::operator*	.\Debug\Terrain.obj
+0xb320	75	std::list<Tile *,std::allocator<Tile *> >::iterator::operator++	.\Debug\Terrain.obj
+0xb380	53	std::list<Tile *,std::allocator<Tile *> >::iterator::operator==	.\Debug\Terrain.obj
+0xb3d0	70	std::list<Tile *,std::allocator<Tile *> >::iterator::operator!=	.\Debug\Terrain.obj
+0xb430	42	std::list<Tile *,std::allocator<Tile *> >::size	.\Debug\Terrain.obj
+0xb470	111	std::list<Tile *,std::allocator<Tile *> >::erase	.\Debug\Terrain.obj
+0xb500	138	std::list<Tile *,std::allocator<Tile *> >::_Buynode	.\Debug\Terrain.obj
+0xb5b0	62	std::list<Tile *,std::allocator<Tile *> >::_Freenode	.\Debug\Terrain.obj
+0xb600	34	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Next	.\Debug\Terrain.obj
+0xb630	37	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Prev	.\Debug\Terrain.obj
+0xb660	37	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Value	.\Debug\Terrain.obj
+0xb690	64	std::allocator<Tile *>::construct	.\Debug\Terrain.obj
+0xb6e0	39	std::list<Tile *,std::allocator<Tile *> >::const_iterator::const_iterator	.\Debug\Terrain.obj
+0xb710	41	std::list<Tile *,std::allocator<Tile *> >::const_iterator::_Mynode	.\Debug\Terrain.obj
+0xb750	63	std::list<Tile *,std::allocator<Tile *> >::iterator::iterator	.\Debug\Terrain.obj
+0xb7a0	70	std::list<Tile *,std::allocator<Tile *> >::iterator::operator++	.\Debug\Terrain.obj
+0xb800	213	std::list<Tile *,std::allocator<Tile *> >::erase	.\Debug\Terrain.obj
+0xb910	62	std::allocator<Tile *>::_Charalloc	.\Debug\Terrain.obj
+0xb960	60	std::allocator<Tile *>::deallocate	.\Debug\Terrain.obj
+0xb9b0	49	std::list<Tile *,std::allocator<Tile *> >::const_iterator::const_iterator	.\Debug\Terrain.obj
+0xb9f0	60	std::allocator<Tile *>::destroy	.\Debug\Terrain.obj
+0xba40	89	std::_Construct	.\Debug\Terrain.obj
+0xbab0	34	operator new	.\Debug\Terrain.obj
+0xbae0	66	std::_Allocate	.\Debug\Terrain.obj
+0xbb40	31	std::_Destroy	.\Debug\Terrain.obj
+0xbb70	39	UnknownBB70::UnknownBB70	.\Debug\Tile.obj
+0xbba0	36	UnknownBB70::~UnknownBB70	.\Debug\Tile.obj
+0xbbd0	483	UploadBmpTexture	.\Debug\Tile.obj
+0xbe30	786	LoadTgaTexture	.\Debug\Tile.obj
+0xc210	133	Tile::Tile	.\Debug\Tile.obj
+0xc2c0	211	Tile::reset	.\Debug\Tile.obj
+0xc3d0	267	Tile::~Tile	.\Debug\Tile.obj
+0xc520	51	Tile::setNeighbour	.\Debug\Tile.obj
+0xc560	465	InitVertexGrid	.\Debug\Tile.obj
+0xc7b0	1031	Tile::ElevateCorner	.\Debug\Tile.obj
+0xccc0	1583	Tile::LowerCornerElevation	.\Debug\Tile.obj
+0xd480	147	Tile::updateHasPathForType	.\Debug\Tile.obj
+0xd540	1858	Tile::LowerTileType7Heights	.\Debug\Tile.obj
+0xde60	1707	Tile::RaiseTileType6Heights	.\Debug\Tile.obj
+0xe6c0	703	Tile::RenderTile	.\Debug\Tile.obj
+0xea30	2528	Tile::RenderStrataFace	.\Debug\Tile.obj
+0xf690	57	TilePathFlags::TilePathFlags	.\Debug\Tile.obj
+0xf6e0	84	TilePathFlags::clear	.\Debug\Tile.obj
+0xf750	57	TileWallState::TileWallState	.\Debug\Tile.obj
+0xf7a0	64	TileWallState::resetEnabledFlags	.\Debug\Tile.obj
+0xf7f0	3476	Tile::RenderTileWalls	.\Debug\Tile.obj
+0x10590	131	istream::getline	.\Debug\Terrain.obj
+0x108f0	2836	Tile::RenderTilePath	.\Debug\Tile.obj
+0x116d0	1334	Tile::RenderTileQuadrantsByTransitionMask	.\Debug\Tile.obj
+0x11d60	318	Tile::CalcFaceNormal	.\Debug\Tile.obj
+0x11ef0	2859	Tile::CalcCornerVertexNormals	.\Debug\Tile.obj
+0x12cf0	297	Tile::calcVertexNormals	.\Debug\Tile.obj
+0x12e70	62	SetCourseTextureId	.\Debug\Tile.obj
+0x12ec0	888	Tile::SetFaceTexture	.\Debug\Tile.obj
+0x13320	45	Tile::hasPath	.\Debug\Tile.obj
+0x13360	45	Tile::hasConnectedPath	.\Debug\Tile.obj
+0x133a0	66	Tile::setConnectedPath	.\Debug\Tile.obj
+0x13400	193	Tile::setPath	.\Debug\Tile.obj
+0x13500	285	Tile::drawEdgeTransitionsWithNeighbours	.\Debug\Tile.obj
+0x13670	1507	Tile::DrawTileEdgeTransitionsForType	.\Debug\Tile.obj
+0x13dd0	241	Tile::MapTypeCodeToIndex	.\Debug\Tile.obj
+0x13f00	144	Tile::PackEdgeTransitionCode	.\Debug\Tile.obj
+0x13fc0	36	GetVertexArrayBase	.\Debug\Tile.obj
+0x13ff0	36	GetNormalArrayBase	.\Debug\Tile.obj
+0x14020	294	Tile::setType	.\Debug\Tile.obj
+0x14190	1699	Tile::UndoType6ElevationRaise	.\Debug\Tile.obj
+0x149e0	1699	Tile::UndoType7ElevationDrop	.\Debug\Tile.obj
+0x15230	224	Tile::assignFaceTextures	.\Debug\Tile.obj
+0x15340	42	Tile::getVariation	.\Debug\Tile.obj
+0x15380	47	Tile::setVariation	.\Debug\Tile.obj
+0x153c0	42	Tile::GetFaceBlock	.\Debug\Tile.obj
+0x15400	69	Tile::setWall	.\Debug\Tile.obj
+0x15460	50	Tile::isTypeSkipStrataFace	.\Debug\Tile.obj
+0x154a0	69	Tile::typeDrawsEdgeTransitions	.\Debug\Tile.obj
+0x15500	141	Tile::maxCornerHeight	.\Debug\Tile.obj
+0x155b0	118	Tile::typeAllowsEdgeTransition	.\Debug\Tile.obj
+0x15650	242	Tile::getNeighborTransitionCode	.\Debug\Tile.obj
+0x158b0	33	abs	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x158e0	38	malloc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15910	44	_malloc_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15940	27	_nh_malloc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15960	160	_nh_malloc_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15a00	23	_heap_alloc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15a20	787	_heap_alloc_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15d40	36	calloc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15d70	96	_calloc_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15dd0	36	realloc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15e00	130	_realloc_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x15e90	1297	realloc_help	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x163b0	36	_expand	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x163e0	130	_expand_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16470	19	free	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16490	19	_free_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x164b0	110	_free_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16520	1004	_free_dbg_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16910	19	_msize	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16930	400	_msize_dbg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16ac0	28	_CrtSetBreakAlloc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16ae0	217	_CrtSetDbgBlockType	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16bc0	28	_CrtSetAllocHook	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16be0	136	CheckBytes	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x16c70	932	_CrtCheckMemory	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17020	34	_CrtSetDbgFlag	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17050	169	_CrtDoForAllClientObjects	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17100	75	_CrtIsValidPointer	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17150	292	_CrtIsValidHeapPointer	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17280	293	_CrtIsMemoryBlock	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x173b0	28	_CrtSetDumpClient	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x173d0	420	_CrtMemCheckpoint	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17580	291	_CrtMemDifference	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x176b0	755	_CrtMemDumpAllObjectsSince	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x179b0	276	_printMemBlockData	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17ad0	116	_CrtDumpMemoryLeaks	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17b50	197	_CrtMemDumpStatistics	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17c20	130	fclose	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17cb0	190	_fclose_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17d70	62	fread	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17db0	463	_fread_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x17f80	252	_fsopen	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18080	23	fopen	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x180e0	62	fwrite	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18120	537	_fwrite_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18580	7	strcpy	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18590	224	strcat	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18be0	161	operator delete	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18c90	28	operator new	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18cb0	26	operator new[]	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18cd0	16	srand	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18ce0	54	rand	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18d20	255	atol	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18e20	17	atoi	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18e40	297	_atoi64	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x18f70	132	strcmp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19000	325	strtok	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19590	123	strlen	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19610	894	_assert	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19990	172	memcmp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19a40	313	_CRT_INIT	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19b80	243	_DllMainCRTStartup	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19c80	63	_amsg_exit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19cc0	48	_set_new_handler	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19cf0	10	_query_new_handler	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19d00	45	_callnewh	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19d30	55	_mtinitlocks	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19d70	159	_mtdeletelocks	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19e10	151	_lock	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19eb0	22	_unlock	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19ed0	28	_lockerr_exit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x19fd0	88	memset	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a030	32	_malloc_base	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a050	87	_nh_malloc_base	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a0b0	333	_heap_alloc_base	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a200	10	_CrtDefaultAllocHook	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a210	11	_CrtDbgBreak	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a220	87	_CrtSetReportMode	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a280	126	_CrtSetReportFile	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a300	28	_CrtSetReportHook	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a320	912	_CrtDbgReport	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a6b0	780	CrtMessageWindow	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1a9c0	525	_expand_base	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1abd0	1153	_realloc_base	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b060	326	_free_base	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b1b0	260	_heapchk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b2c0	10	_heapset	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b2d0	39	_get_sbh_threshold	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b300	266	_set_sbh_threshold	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b410	98	__sbh_heap_init	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b480	85	__sbh_find_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b4e0	95	__sbh_verify_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1b540	1500	__sbh_free_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1bb20	1334	__sbh_alloc_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c060	271	__sbh_alloc_new_region	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c170	494	__sbh_alloc_new_group	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c360	1515	__sbh_resize_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1c950	304	__sbh_heapmin	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ca80	1565	__sbh_heap_check	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d0a0	10	_get_old_sbh_threshold	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d0b0	43	_set_old_sbh_threshold	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d0e0	478	__old_sbh_new_region	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d2c0	115	__old_sbh_release_region	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d340	343	__old_sbh_decommit_pages	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d4a0	144	__old_sbh_find_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d530	108	__old_sbh_free_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d5a0	952	__old_sbh_alloc_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1d960	681	__old_sbh_alloc_block_from_page	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1dc10	356	__old_sbh_resize_block	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1dd80	567	__old_sbh_heap_check	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1dfc0	92	_GetLinkerVersion	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e020	548	__heap_select	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e250	141	_heap_init	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e2e0	232	_heap_term	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e3d0	56	_cinit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e410	21	exit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e430	21	_exit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e450	19	_cexit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e470	19	_c_exit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e490	227	doexit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e580	15	_lockexit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e590	15	_unlockexit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e5a0	37	_initterm	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e5d0	250	sprintf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e6d0	183	_isctype	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e790	300	__initstdio	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e8c0	26	__endstdio	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e8e0	61	_lock_file	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e920	41	_lock_file2	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e950	61	_unlock_file	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e990	41	_unlock_file2	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1e9c0	122	_close	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ea40	170	_close_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1eaf0	146	_freebuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1eb90	68	fflush	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ebe0	65	_fflush_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ec30	183	_flush	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ecf0	15	_flushall	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ed00	319	flsall	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ee40	484	_filbuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f030	130	_read	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f0c0	1093	_read_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f510	821	memcpy	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1f850	911	_openfile	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1fbe0	384	_getstream	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1fd60	628	_flsbuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1ffe0	130	_write	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x20070	627	_write_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x202f0	23	_setdefaultprecision	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x218e0	130	_mtinit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21970	41	_mtterm	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x219a0	25	_initptd	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x219c0	152	_getptd	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21a60	263	_freeptd	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21b70	11	__threadid	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21b80	11	__threadhandle	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x21b90	52	_allmul	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22490	32	abort	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x224b0	548	signal	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x226e0	146	ctrlevent_capture	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22780	567	raise	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x229c0	91	siglookup	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22a20	13	__fpecode	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22a30	13	__pxcptinfoptrs	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22a40	187	__crtMessageBoxA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22b00	66	_itoa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22b50	194	xtoa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22c20	63	_ltoa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22c60	30	_ultoa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22c80	72	_i64toa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22cd0	242	x64toa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22dd0	31	_ui64toa	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22df0	291	strncat	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x22f20	254	strncpy	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23020	193	fprintf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x230f0	365	setvbuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23260	804	_ioinit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23590	155	_ioterm	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23630	329	_setenvp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23780	216	_setargv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23860	1060	parse_cmdline	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23c90	537	__crtGetEnvironmentStringsA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23eb0	12	DllMain	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23ec0	73	_FF_MSGBANNER	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x23f10	447	_NMSG_WRITE	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x240d0	80	_GET_RTERRMSG	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24120	249	_snprintf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24220	243	_vsnprintf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24320	47	$$$00001	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24350	145	_dosmaperr	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x243f0	13	_errno	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24400	13	__doserrno	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24410	821	memmove	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24750	27	strtol	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24770	817	strtoxl	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ab0	27	strtoul	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ad0	16	$$$00001	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ae0	188	strchr	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24ba0	128	strstr	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24c20	56	strncmp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x24c60	3362	_output	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25990	119	write_char	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25a10	53	write_multi_char	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25a50	74	write_string	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25aa0	26	get_int_arg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25ac0	31	get_int64_arg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25ae0	27	get_short_arg	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25b00	444	__crtGetStringTypeA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25cc0	218	_fcloseall	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25da0	482	_alloc_osfhnd	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x25f90	183	_set_osfhnd	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26050	216	_free_osfhnd	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26130	102	_get_osfhandle	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x261a0	260	_open_osfhandle	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x262b0	134	_lock_fhandle	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26340	38	_unlock_fhandle	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26370	210	_commit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26450	199	_getbuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26520	130	_lseek	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x265b0	178	_lseek_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26670	63	_open	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x266b0	1363	_sopen	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x26c10	50	_isatty	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x270f0	11	_tolower	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27100	147	tolower	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x271a0	299	_tolower_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27ab0	250	_fptostr	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27da0	15	_fptrap	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x27ee0	446	_XcptFilter	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x280a0	89	xcptlookup	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29930	104	_aulldiv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x299a0	117	_aullrem	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29a20	343	_stbuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29b80	148	_ftbuf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29c20	836	_setmbcp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29f70	89	getSystemCP	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x29fd0	119	CPtoLCID	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a050	116	setSBCS	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a0d0	770	setSBUpLow	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a3e0	23	_getmbcp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a400	34	__initmbctable	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a430	11	_toupper	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a440	147	toupper	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a4e0	299	_toupper_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a610	119	wctomb	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a690	160	_wctomb_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a730	115	_chsize	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a7b0	560	_chsize_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2a9e0	1007	setlocale	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2add0	403	_setlocale_set_cat	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2af70	256	_setlocale_get_all	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b070	388	_expandlocale	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b200	7	__init_dummy	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b210	79	_strcats	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b260	349	__lc_strtolc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b3c0	101	__lc_lctostr	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b430	773	__crtLCMapStringA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2b740	80	strncnt	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2db50	115	_setmode	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2dbd0	207	_setmode_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2dca0	219	__init_time	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2dd80	1423	_get_lc_time	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e310	779	_free_lc_time	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e620	678	__init_numeric	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e8d0	125	fix_grouping	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2e950	304	__init_monetary	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ea80	525	_get_lc_lconv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ec90	125	fix_grouping	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ed10	147	_free_lc_lconv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2edb0	928	__init_ctype	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f150	7	__init_collate	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f160	62	strcspn	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f1a0	58	strpbrk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f1e0	512	__get_qualified_locale	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f3e0	130	TranslateName	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f470	186	GetLcidFromLangCountry	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f530	804	LangCountryEnumProc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f860	116	GetLcidFromLanguage	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2f8e0	287	LanguageEnumProc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fa00	69	GetLcidFromCountry	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fa50	172	CountryEnumProc	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fb00	43	GetLcidFromDefault	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fb30	155	ProcessCodePage	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fbd0	79	TestDefaultCountry	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fc20	135	TestDefaultLanguage	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fcb0	77	IsThisWindowsNT	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fd00	388	crtGetLocaleInfoA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2fe90	118	LcidFromHexString	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x2ff10	101	GetPrimaryLen	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30490	289	_Getdays	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x305c0	291	_Getmonths	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x306f0	878	_Gettnames	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30a60	31	strftime	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30a80	394	_Strftime	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x30c10	1567	_expandtime	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31230	72	_store_str	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31280	173	_store_num	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31330	172	_store_number	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x313e0	1311	_store_winword	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31900	650	__getlocaleinfo	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31b90	10	localeconv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31ba0	621	__crtGetStringTypeW	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31e10	0	_strcmpi	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31e10	208	_stricmp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31ee0	257	_strnicmp	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x31ff0	61	__tzset	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32030	30	_tzset	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32050	939	_tzset_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32400	46	_isindst	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32430	762	_isindst_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32730	504	cvtdate	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32930	405	__crtGetLocaleInfoW	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32ad0	421	__crtGetLocaleInfoA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32c80	46	getenv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32cb0	198	_getenv_lk	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32d80	79	_mbsnbicoll	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32dd0	174	__wtomb_environ	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x32e80	1016	__crtCompareStringA	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33280	80	strncnt	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x332d0	736	__crtsetenv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x335b0	124	findenv	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33630	238	copy_environ	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33720	237	_mbschr	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x33810	227	ifstream::ifstream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33900	22	ios::delbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33920	17	operator delete	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33940	55	ifstream::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33980	294	ifstream::ifstream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33ab0	29	ifstream::rdbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33ad0	17	ios::rdbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33af0	233	ifstream::ifstream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33be0	239	ifstream::ifstream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33cd0	39	ifstream::~ifstream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33d00	110	ifstream::setbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33d70	46	ios::clear	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33da0	26	ifstream::is_open	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33dc0	25	filebuf::is_open	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33de0	73	ifstream::attach	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33e30	94	ifstream::open	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33e90	84	ifstream::close	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33ef0	51	filebuf::filebuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33f30	46	filebuf::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33f60	52	filebuf::filebuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x33fa0	113	filebuf::filebuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34020	108	filebuf::~filebuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34090	37	streambuf::lock	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x340c0	17	streambuf::lockptr	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x340e0	107	filebuf::close	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34150	37	streambuf::unlock	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34180	185	filebuf::overflow	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34240	89	streambuf::sputc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x342a0	17	streambuf::base	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x342c0	17	streambuf::ebuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x342e0	17	streambuf::pptr	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34300	17	streambuf::epptr	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34320	40	streambuf::setp	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34350	17	streambuf::unbuffered	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34370	237	filebuf::underflow	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34460	60	streambuf::in_avail	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x344a0	54	streambuf::blen	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x344e0	17	streambuf::gptr	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34500	50	streambuf::setg	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34540	131	filebuf::seekoff	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x345d0	396	filebuf::sync	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34760	54	streambuf::out_waiting	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x347a0	17	streambuf::pbase	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x347c0	17	streambuf::egptr	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x347e0	37	streambuf::pbump	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34810	105	filebuf::setbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34880	22	streambuf::unbuffered	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x348a0	345	istream::get	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a00	51	istream::isfx	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a40	16	ios::unlockbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a50	15	_mtlockinit	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a60	15	_mtlockterm	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a70	15	_mtlock	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a80	15	_mtunlock	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34a90	184	ios::ios	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34b50	46	ios::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34b80	197	ios::ios	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34c50	120	ios::ios	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34cd0	169	ios::~ios	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34d80	131	ios::init	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34e10	17	ios::delbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34e30	130	ios::operator=	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34ec0	17	ios::flags	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34ee0	17	ios::width	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f00	17	ios::tie	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f20	17	ios::fill	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f40	17	ios::precision	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f60	17	ios::rdstate	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34f80	61	ios::xalloc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34fc0	18	ios::lockc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x34fe0	18	ios::unlockc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35000	42	ios::bitalloc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35030	131	istream::istream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x350c0	55	istream::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35100	33	istream::`vbase destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35130	196	istream::istream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35200	213	istream::istream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x352e0	31	istream::~istream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35300	313	istream::operator=	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35440	351	istream::ipfx	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x355a0	16	ios::lockbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x355b0	364	istream::operator>>	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35720	70	istream::peek	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35770	141	istream::putback	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35800	88	streambuf::sputbackc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35860	25	ios::good	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35880	137	istream::sync	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35910	166	istream::eatwhite	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x359c0	133	istream_withassign::istream_withassign	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35a50	55	istream_withassign::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35a90	33	istream_withassign::`vbase destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35ac0	137	istream_withassign::istream_withassign	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35b50	39	istream_withassign::~istream_withassign	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35b80	162	filebuf::attach	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35c30	604	filebuf::open	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35e90	117	filebuf::setmode	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35f10	160	streambuf::streambuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35fb0	46	streambuf::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x35fe0	205	streambuf::streambuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x360b0	86	streambuf::~streambuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36110	84	streambuf::setbuf	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36170	142	streambuf::xsputn	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36200	313	streambuf::xsgetn	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36340	48	streambuf::sync	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36370	59	streambuf::allocate	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x363b0	87	streambuf::doallocate	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36410	81	streambuf::setb	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36470	16	streambuf::seekoff	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36480	34	streambuf::seekpos	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x364b0	171	streambuf::pbackfail	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36560	17	streambuf::eback	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36580	170	streambuf::snextc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36630	141	streambuf::sbumpc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x366c0	126	streambuf::stossc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36740	65	streambuf::sgetc	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36790	169	ostream::opfx	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36840	279	ostream::osfx	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36960	53	ostream::operator<<	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x369a0	167	ostream::flush	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36a50	88	ostream::ostream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36ab0	55	ostream::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36af0	33	ostream::`vbase destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36b20	153	ostream::ostream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36bc0	170	ostream::ostream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36c70	31	ostream::~ostream	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36c90	270	ostream::operator=	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36da0	133	ostream_withassign::ostream_withassign	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36e30	55	ostream_withassign::`scalar deleting destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36e70	33	ostream_withassign::`vbase destructor'	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36ea0	137	ostream_withassign::ostream_withassign	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36f30	39	ostream_withassign::~ostream_withassign	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x36f60	598	ostream::writepad	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x371c0	32	streambuf::sputn	C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x37510	31	operator new	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37530	65	isalpha	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37580	60	isupper	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x375c0	60	islower	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37600	60	isdigit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37640	65	isxdigit	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37690	60	isspace	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x376d0	60	ispunct	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37710	65	isalnum	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37760	65	isprint	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x377b0	65	isgraph	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37800	60	iscntrl	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37840	16	__isascii	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37850	11	__toascii	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37860	95	__iscsymf	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x378c0	95	__iscsym	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37920	15	_purecall	C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x37930	67	ios::unlock	.\Debug\Terrain.obj
+0x37c80	139	Vec3_Normalize	.\Debug\Terrain.obj
+0x380a0	244	Terrain::freeCourseTextures	.\Debug\Terrain.obj
+0x381a0	1877	Terrain::InsertTileInDrawOrder	.\Debug\Terrain.obj
+0x38900	1638	Terrain::RenderTileEdgeSkirt	.\Debug\Terrain.obj

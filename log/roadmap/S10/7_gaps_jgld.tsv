@@ -1,0 +1,319 @@
+va	symbol	lib	member	pct	names_file	our_name	hooks_level	note
+0x1007e6d0	??3@YAXPAX@Z	sp2_cmtd	build\intel\xmt_obj\dbgdel.obj	100.0	-	operator_delete	-	
+0x1007e7c0	_memset	sp2_cmtd	build\intel\xmt_obj\memset.obj	100.0	-	_memset	-	
+0x1007efc0	__onexit	sp2_cmtd	build\intel\xmt_obj\onexit.obj	100.0	-	__onexit	-	
+0x1007f080	_atexit	sp2_cmtd	build\intel\xmt_obj\onexit.obj	100.0	-	_atexit	-	
+0x1007f0a0	___onexitinit	sp2_cmtd	build\intel\xmt_obj\onexit.obj	100.0	-	___onexitinit	-	
+0x1007f0f0	??2@YAPAXI@Z	sp2_cmtd	build\intel\xmt_obj\new.obj	100.0	jgld_9	operator_new	C4	
+0x1007f110	??_U@YAPAXI@Z	sp2_cmtd	build\intel\xmt_obj\new.obj	100.0	smsg_jgld_crt	FUN_1007f110	-	
+0x1007f160	__cinit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	__cinit	-	
+0x1007f1a0	_exit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	_exit	-	
+0x1007f1c0	__exit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	__exit	-	
+0x1007f1e0	__cexit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	__cexit	-	
+0x1007f200	__c_exit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	__c_exit	-	
+0x1007f220	_doexit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	doexit	-	
+0x1007f310	__lockexit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	FID_conflict:__lockexit	-	
+0x1007f320	__unlockexit	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	FID_conflict:__lockexit	-	
+0x1007f330	__initterm	sp2_cmtd	build\intel\xmt_obj\crt0dat.obj	100.0	-	__initterm	-	
+0x1007f360	__purecall	sp2_cmtd	build\intel\xmt_obj\purevirt.obj	100.0	smsg_jgld_crt	FUN_1007f360	-	
+0x1007f370	_abs	sp2_cmtd	build\intel\xmt_obj\abs.obj	100.0	jgld_10	abs	C4	
+0x1007f3a0	_memcpy	sp2_cmtd	build\intel\xmt_obj\memcpy.obj	100.0	jgld_9	memcpy	C4	byte-identity (relocation sites masked)
+0x1007f6e0	_strlen	sp2_cmtd	build\intel\xmt_obj\strlen.obj	100.0	jgld_9	strlen	C4	
+0x1007f760	_strcpy	sp2_cmtd	build\intel\xmt_obj\strcat.obj	100.0	jgld_6	strcpy	C4	byte-identity (relocation sites masked)
+0x1007f770	_strcat	sp2_cmtd	build\intel\xmt_obj\strcat.obj	100.0	jgld_9	strcat	C4	
+0x1007f850	_fclose	sp2_cmtd	build\intel\xmt_obj\fclose.obj	100.0	jgld_9	fclose	C4	
+0x1007f8e0	__fclose_lk	sp2_cmtd	build\intel\xmt_obj\fclose.obj	100.0	jgld_10	__fclose_lk	C2	
+0x1007f9a0	__fsopen	sp2_cmtd	build\intel\xmt_obj\fopen.obj	100.0	jgld_10	__fsopen	C2	
+0x1007faa0	_fopen	sp2_cmtd	build\intel\xmt_obj\fopen.obj	100.0	jgld_9	fopen	C4	
+0x1007fb40	_malloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	_malloc	-	
+0x1007fb70	__malloc_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__malloc_dbg	-	
+0x1007fba0	__nh_malloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	jgld_10	__nh_malloc	C2	
+0x1007fbc0	__nh_malloc_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_1007fbc0	-	pdb-size
+0x1007fc60	__heap_alloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__heap_alloc	-	
+0x1007fc80	__heap_alloc_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__heap_alloc_dbg	-	
+0x1007ffa0	_calloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	_calloc	-	
+0x1007ffd0	__calloc_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__calloc_dbg	-	
+0x10080030	_realloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	FID_conflict:__expand	-	
+0x10080060	__realloc_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	FID_conflict:__realloc_dbg	-	pdb-size
+0x100800f0	_realloc_help	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	realloc_help	-	
+0x10080610	__expand	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	FID_conflict:__expand	-	
+0x10080640	__expand_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	FID_conflict:__realloc_dbg	-	pdb-size
+0x100806d0	_free	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_100806d0	-	
+0x100806f0	__free_lk	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__free_lk	-	
+0x10080710	__free_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__free_dbg	-	pdb-size
+0x10080780	__free_dbg_lk	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__free_dbg_lk	-	
+0x10080b70	__msize	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10080b70	-	
+0x10080b90	__msize_dbg	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10080b90	-	pdb-size
+0x10080d20	__CrtSetBreakAlloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10080d20	-	
+0x10080d40	__CrtSetDbgBlockType	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10080d40	-	pdb-size
+0x10080e20	__CrtSetAllocHook	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10080e20	-	
+0x10080e40	_CheckBytes	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	_CheckBytes	-	
+0x10080ed0	__CrtCheckMemory	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	FUN_10080ed0	-	byte-identity (relocation sites masked)
+0x10081280	__CrtSetDbgFlag	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__CrtSetDbgFlag	-	
+0x100812b0	__CrtDoForAllClientObjects	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_100812b0	-	pdb-size
+0x10081360	__CrtIsValidPointer	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__CrtIsValidPointer	-	
+0x100813b0	__CrtIsValidHeapPointer	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_100813b0	-	
+0x100814e0	__CrtIsMemoryBlock	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__CrtIsMemoryBlock	-	pdb-size
+0x10081610	__CrtSetDumpClient	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10081610	-	
+0x10081630	__CrtMemCheckpoint	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10081630	-	pdb-size
+0x100817e0	__CrtMemDifference	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__CrtMemDifference	-	
+0x10081910	__CrtMemDumpAllObjectsSince	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	smsg_jgld_crt	FUN_10081910	-	pdb-size
+0x10081c10	__printMemBlockData	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__printMemBlockData	-	
+0x10081d30	__CrtDumpMemoryLeaks	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__CrtDumpMemoryLeaks	-	
+0x10081db0	__CrtMemDumpStatistics	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	-	__CrtMemDumpStatistics	-	
+0x10081e80	__CrtDbgBreak	sp2_cmtd	build\intel\xmt_obj\dbgrpt.obj	100.0	-	__CrtDbgBreak	-	
+0x10081e90	__CrtSetReportMode	sp2_cmtd	build\intel\xmt_obj\dbgrpt.obj	100.0	-	__CrtSetReportMode	-	
+0x10081ef0	__CrtSetReportFile	sp2_cmtd	build\intel\xmt_obj\dbgrpt.obj	100.0	-	__CrtSetReportFile	-	
+0x10081f70	__CrtSetReportHook	sp2_cmtd	build\intel\xmt_obj\dbgrpt.obj	100.0	smsg_jgld_crt	FUN_10081f70	-	
+0x10081f90	__CrtDbgReport	sp2_cmtd	build\intel\xmt_obj\dbgrpt.obj	100.0	jgld_10	_CrtDbgReport	C2	
+0x10082320	_CrtMessageWindow	sp2_cmtd	build\intel\xmt_obj\dbgrpt.obj	100.0	-	_CrtMessageWindow	-	
+0x10082630	__CRT_INIT@12	sp2_cmtd	build\intel\xmt_obj\dllcrt0.obj	100.0	-	__CRT_INIT@12	-	
+0x10082770	__DllMainCRTStartup@12	sp2_cmtd	build\intel\xmt_obj\dllcrt0.obj	100.0	-	entry	-	
+0x100828b0	_memcmp	sp2_cmtd	build\intel\xmt_obj\memcmp.obj	100.0	-	_memcmp	-	
+0x10082c80	_sprintf	sp2_cmtd	build\intel\xmt_obj\sprintf.obj	100.0	-	_sprintf	-	
+0x10082d80	_fread	sp2_cmtd	build\intel\xmt_obj\fread.obj	100.0	-	_fread	-	
+0x10082dc0	__fread_lk	sp2_cmtd	build\intel\xmt_obj\fread.obj	100.0	-	__fread_lk	-	
+0x10083010	_fprintf	sp2_cmtd	build\intel\xmt_obj\fprintf.obj	100.0	-	_fprintf	-	
+0x100830e0	___initstdio	sp2_cmtd	build\intel\xmt_obj\_file.obj	100.0	-	___initstdio	-	
+0x10083210	___endstdio	sp2_cmtd	build\intel\xmt_obj\_file.obj	100.0	-	___endstdio	-	
+0x10083230	__lock_file	sp2_cmtd	build\intel\xmt_obj\_file.obj	100.0	jgld_10	__lock_file	C2	
+0x10083270	__lock_file2	sp2_cmtd	build\intel\xmt_obj\_file.obj	100.0	-	FID_conflict:__lock_file2	-	
+0x100832a0	__unlock_file	sp2_cmtd	build\intel\xmt_obj\_file.obj	100.0	jgld_10	__unlock_file	C2	
+0x100832e0	__unlock_file2	sp2_cmtd	build\intel\xmt_obj\_file.obj	100.0	-	FID_conflict:__lock_file2	-	
+0x10083310	__mtinitlocks	sp2_cmtd	build\intel\xmt_obj\mlock.obj	100.0	-	__mtinitlocks	-	
+0x10083350	__mtdeletelocks	sp2_cmtd	build\intel\xmt_obj\mlock.obj	100.0	-	__mtdeletelocks	-	
+0x100833f0	__lock	sp2_cmtd	build\intel\xmt_obj\mlock.obj	100.0	-	__lock	-	
+0x10083490	__unlock	sp2_cmtd	build\intel\xmt_obj\mlock.obj	100.0	smsg_jgld_crt	FUN_10083490	-	
+0x100834b0	__lockerr_exit	sp2_cmtd	build\intel\xmt_obj\mlock.obj	100.0	smsg_jgld_crt	FUN_100834b0	-	pdb-size
+0x100834d0	__setdefaultprecision	sp2_cmtd	build\intel\xmt_obj\fp8.obj	100.0	-	__setdefaultprecision	-	
+0x10084d40	__mtinit	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	-	__mtinit	-	
+0x10084dd0	__mtterm	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	-	__mtterm	-	
+0x10084e00	__initptd	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	-	__initptd	-	
+0x10084e20	__getptd	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	-	__getptd	-	
+0x10084ec0	__freeptd	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	-	__freeptd	-	
+0x10084fd0	___threadid	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	smsg_jgld_crt	FUN_10084fd0	-	
+0x10084fe0	___threadhandle	sp2_cmtd	build\intel\xmt_obj\tidtable.obj	100.0	smsg_jgld_crt	FUN_10084fe0	-	
+0x10085130	__close	sp2_cmtd	build\intel\xmt_obj\close.obj	100.0	-	__close	-	
+0x100851b0	__close_lk	sp2_cmtd	build\intel\xmt_obj\close.obj	100.0	-	__close_lk	-	
+0x10085260	__freebuf	sp2_cmtd	build\intel\xmt_obj\_freebuf.obj	100.0	-	__freebuf	-	
+0x10085300	_fflush	sp2_cmtd	build\intel\xmt_obj\fflush.obj	100.0	-	_fflush	-	
+0x10085350	__fflush_lk	sp2_cmtd	build\intel\xmt_obj\fflush.obj	100.0	-	__fflush_lk	-	
+0x100853a0	__flush	sp2_cmtd	build\intel\xmt_obj\fflush.obj	100.0	-	__flush	-	
+0x10085460	__flushall	sp2_cmtd	build\intel\xmt_obj\fflush.obj	100.0	-	__flushall	-	
+0x10085470	_flsall	sp2_cmtd	build\intel\xmt_obj\fflush.obj	100.0	-	flsall	-	
+0x100855b0	__openfile	sp2_cmtd	build\intel\xmt_obj\_open.obj	100.0	-	__openfile	-	lib-to-section-end
+0x10085940	__getstream	sp2_cmtd	build\intel\xmt_obj\stream.obj	100.0	-	__getstream	-	
+0x10085ac0	?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z	sp2_cmtd	build\intel\xmt_obj\handler.obj	100.0	-	_set_new_handler	-	
+0x10085af0	?_query_new_handler@@YAP6AHI@ZXZ	sp2_cmtd	build\intel\xmt_obj\handler.obj	100.0	smsg_jgld_crt	FUN_10085af0	-	
+0x10085b00	__callnewh	sp2_cmtd	build\intel\xmt_obj\handler.obj	100.0	-	__callnewh	-	
+0x10085c10	__malloc_base	sp2_cmtd	build\intel\xmt_obj\malloc.obj	100.0	-	__malloc_base	-	
+0x10085c30	__nh_malloc_base	sp2_cmtd	build\intel\xmt_obj\malloc.obj	100.0	-	__nh_malloc_base	-	
+0x10085c90	__heap_alloc_base	sp2_cmtd	build\intel\xmt_obj\malloc.obj	100.0	-	__heap_alloc_base	-	pdb-size
+0x10085de0	__CrtDefaultAllocHook	sp2_cmtd	build\intel\xmt_obj\dbghook.obj	100.0	smsg_jgld_crt	FUN_10085de0	-	
+0x10085df0	__expand_base	sp2_cmtd	build\intel\xmt_obj\expand.obj	100.0	smsg_jgld_crt	FUN_10085df0	-	pdb-size
+0x10086000	__realloc_base	sp2_cmtd	build\intel\xmt_obj\realloc.obj	100.0	smsg_jgld_crt	FUN_10086000	-	pdb-size
+0x10086490	__free_base	sp2_cmtd	build\intel\xmt_obj\free.obj	100.0	smsg_jgld_crt	FUN_10086490	-	pdb-size
+0x100865e0	__heapchk	sp2_cmtd	build\intel\xmt_obj\heapchk.obj	100.0	-	__heapchk	-	pdb-size
+0x100866f0	__heapset	sp2_cmtd	build\intel\xmt_obj\heapchk.obj	100.0	-	__heapset	-	
+0x10086700	__get_sbh_threshold	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10086700	-	
+0x10086730	__set_sbh_threshold	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10086730	-	
+0x10086840	___sbh_heap_init	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_heap_init	-	
+0x100868b0	___sbh_find_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_find_block	-	
+0x10086910	___sbh_verify_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_verify_block	-	
+0x10086970	___sbh_free_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10086970	-	
+0x10086f50	___sbh_alloc_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_alloc_block	-	
+0x10087490	___sbh_alloc_new_region	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_alloc_new_region	-	
+0x100875a0	___sbh_alloc_new_group	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_alloc_new_group	-	
+0x10087790	___sbh_resize_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_resize_block	-	
+0x10087d80	___sbh_heapmin	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_heapmin	-	
+0x10087eb0	___sbh_heap_check	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	-	___sbh_heap_check	-	
+0x100884d0	__get_old_sbh_threshold	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_100884d0	-	
+0x100884e0	__set_old_sbh_threshold	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_100884e0	-	
+0x10088510	___old_sbh_new_region	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10088510	-	
+0x100886f0	___old_sbh_release_region	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_100886f0	-	
+0x10088770	___old_sbh_decommit_pages	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10088770	-	
+0x100888d0	___old_sbh_find_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_100888d0	-	
+0x10088960	___old_sbh_free_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10088960	-	
+0x100889d0	___old_sbh_alloc_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_100889d0	-	
+0x10088d90	___old_sbh_alloc_block_from_page	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10088d90	-	
+0x10089040	___old_sbh_resize_block	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_10089040	-	
+0x100891b0	___old_sbh_heap_check	sp2_cmtd	build\intel\xmt_obj\sbheap.obj	100.0	smsg_jgld_crt	FUN_100891b0	-	
+0x100893f0	__GetLinkerVersion	sp2_cmtd	build\intel\xmt_obj\heapinit.obj	100.0	smsg_jgld_crt	FUN_100893f0	-	
+0x10089450	___heap_select	sp2_cmtd	build\intel\xmt_obj\heapinit.obj	100.0	smsg_jgld_crt	FUN_10089450	-	
+0x10089680	__heap_init	sp2_cmtd	build\intel\xmt_obj\heapinit.obj	100.0	smsg_jgld_crt	FUN_10089680	-	
+0x10089710	__heap_term	sp2_cmtd	build\intel\xmt_obj\heapinit.obj	100.0	smsg_jgld_crt	FUN_10089710	-	
+0x10089800	__isctype	sp2_cmtd	build\intel\xmt_obj\isctype.obj	100.0	-	__isctype	-	
+0x100898c0	__itoa	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	__itoa	-	
+0x10089910	_xtoa	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	xtoa	-	
+0x100899e0	__ltoa	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	__ltoa	-	
+0x10089a20	__ultoa	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	__ultoa	-	
+0x10089a40	__i64toa	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	__i64toa	-	
+0x10089a90	_x64toa@20	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	x64toa	-	
+0x10089b90	__ui64toa	sp2_cmtd	build\intel\xmt_obj\xtoa.obj	100.0	-	__ui64toa	-	
+0x10089bb0	__snprintf	sp2_cmtd	build\intel\xmt_obj\snprintf.obj	100.0	-	__snprintf	-	
+0x10089cb0	__vsnprintf	sp2_cmtd	build\intel\xmt_obj\vsnprint.obj	100.0	-	__vsnprintf	-	
+0x10089db0	__alloca_probe	sp2_cmtd	build\intel\xmt_obj\chkstk.obj	100.0	smsg_jgld_crt	FUN_10089db0	-	
+0x10089de0	_signal	sp2_cmtd	build\intel\xmt_obj\winsig.obj	100.0	-	_signal	-	lib-to-section-end
+0x1008a010	_ctrlevent_capture@4	sp2_cmtd	build\intel\xmt_obj\winsig.obj	100.0	-	ctrlevent_capture	-	
+0x1008a0b0	_raise	sp2_cmtd	build\intel\xmt_obj\winsig.obj	100.0	-	_raise	-	lib-to-section-end
+0x1008a2f0	_siglookup	sp2_cmtd	build\intel\xmt_obj\winsig.obj	100.0	-	siglookup	-	
+0x1008a350	___fpecode	sp2_cmtd	build\intel\xmt_obj\winsig.obj	100.0	smsg_jgld_crt	FUN_1008a350	-	
+0x1008a360	___pxcptinfoptrs	sp2_cmtd	build\intel\xmt_obj\winsig.obj	100.0	-	___pxcptinfoptrs	-	
+0x1008a370	___crtMessageBoxA	sp2_cmtd	build\intel\xmt_obj\crtmbox.obj	100.0	-	___crtMessageBoxA	-	
+0x1008a430	_strncpy	sp2_cmtd	build\intel\xmt_obj\strncpy.obj	100.0	-	_strncpy	-	
+0x1008a530	__ioinit	sp2_cmtd	build\intel\xmt_obj\ioinit.obj	100.0	-	__ioinit	-	
+0x1008a860	__ioterm	sp2_cmtd	build\intel\xmt_obj\ioinit.obj	100.0	-	__ioterm	-	
+0x1008a900	__setenvp	sp2_cmtd	build\intel\xmt_obj\stdenvp.obj	100.0	-	__setenvp	-	
+0x1008aa50	__setargv	sp2_cmtd	build\intel\xmt_obj\stdargv.obj	100.0	-	__setargv	-	
+0x1008ab30	_parse_cmdline	sp2_cmtd	build\intel\xmt_obj\stdargv.obj	100.0	-	parse_cmdline	-	
+0x1008af60	___crtGetEnvironmentStringsA	sp2_cmtd	build\intel\xmt_obj\a_env.obj	100.0	-	___crtGetEnvironmentStringsA	-	
+0x1008b180	__FF_MSGBANNER	sp2_cmtd	build\intel\xmt_obj\crt0msg.obj	100.0	-	__FF_MSGBANNER	-	
+0x1008b1d0	__NMSG_WRITE	sp2_cmtd	build\intel\xmt_obj\crt0msg.obj	100.0	-	__NMSG_WRITE	-	
+0x1008b390	__GET_RTERRMSG	sp2_cmtd	build\intel\xmt_obj\crt0msg.obj	100.0	-	__GET_RTERRMSG	-	
+0x1008c8e0	__flsbuf	sp2_cmtd	build\intel\xmt_obj\_flsbuf.obj	100.0	-	__flsbuf	-	
+0x1008cb60	__output	sp2_cmtd	build\intel\xmt_obj\output.obj	100.0	-	__output	-	lib-to-section-end
+0x1008d890	_write_char	sp2_cmtd	build\intel\xmt_obj\output.obj	100.0	-	write_char	-	
+0x1008d910	_write_multi_char	sp2_cmtd	build\intel\xmt_obj\output.obj	100.0	-	write_multi_char	-	
+0x1008d950	_write_string	sp2_cmtd	build\intel\xmt_obj\output.obj	100.0	-	write_string	-	
+0x1008d9a0	_get_int_arg	sp2_cmtd	build\intel\xmt_obj\cprintf.obj	100.0	-	get_int_arg	-	
+0x1008d9c0	_get_int64_arg	sp2_cmtd	build\intel\xmt_obj\cprintf.obj	100.0	-	get_int64_arg	-	
+0x1008d9e0	_get_short_arg	sp2_cmtd	build\intel\xmt_obj\cprintf.obj	100.0	-	get_short_arg	-	
+0x1008da00	__filbuf	sp2_cmtd	build\intel\xmt_obj\_filbuf.obj	100.0	-	__filbuf	-	
+0x1008dbf0	__read	sp2_cmtd	build\intel\xmt_obj\read.obj	100.0	-	__read	-	
+0x1008dc80	__read_lk	sp2_cmtd	build\intel\xmt_obj\read.obj	100.0	-	__read_lk	-	
+0x1008e0d0	__rt_probe_read4@4	sp2_cmtd	build\intel\xmt_obj\sehsupp.obj	100.0	-	__rt_probe_read4@4	-	pdb-size
+0x1008e160	__stbuf	sp2_cmtd	build\intel\xmt_obj\_sftbuf.obj	100.0	-	__stbuf	-	
+0x1008e2c0	__ftbuf	sp2_cmtd	build\intel\xmt_obj\_sftbuf.obj	100.0	-	__ftbuf	-	
+0x1008e360	__fcloseall	sp2_cmtd	build\intel\xmt_obj\closeall.obj	100.0	-	__fcloseall	-	
+0x1008e8e0	__tolower	sp2_cmtd	build\intel\xmt_obj\tolower.obj	100.0	smsg_jgld_crt	FUN_1008e8e0	-	
+0x1008e8f0	_tolower	sp2_cmtd	build\intel\xmt_obj\tolower.obj	100.0	-	_tolower	-	
+0x1008e990	__tolower_lk	sp2_cmtd	build\intel\xmt_obj\tolower.obj	100.0	-	__tolower_lk	-	
+0x1008f2a0	__fptostr	sp2_cmtd	build\intel\xmt_obj\_fptostr.obj	100.0	-	__fptostr	-	
+0x1008f590	_memmove	sp2_cmtd	build\intel\xmt_obj\memmove.obj	100.0	-	FID_conflict:_memcpy	-	byte-identity (relocation sites masked)
+0x1008f8d0	__fptrap	sp2_cmtd	build\intel\xmt_obj\crt0fp.obj	100.0	-	__fptrap	-	
+0x1008fb90	_strcmp	sp2_cmtd	build\intel\xmt_obj\strcmp.obj	100.0	-	_strcmp	-	pdb-size
+0x1008fc20	__XcptFilter	sp2_cmtd	build\intel\xmt_obj\winxfltr.obj	100.0	-	__XcptFilter	-	
+0x1008fde0	_xcptlookup	sp2_cmtd	build\intel\xmt_obj\winxfltr.obj	100.0	-	xcptlookup	-	
+0x1008fe40	_abort	sp2_cmtd	build\intel\xmt_obj\abort.obj	100.0	-	_abort	-	pdb-size
+0x1008fe60	__alloc_osfhnd	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__alloc_osfhnd	-	
+0x10090050	__set_osfhnd	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__set_osfhnd	-	
+0x10090110	__free_osfhnd	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__free_osfhnd	-	
+0x100901f0	__get_osfhandle	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__get_osfhandle	-	
+0x10090260	__open_osfhandle	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__open_osfhandle	-	
+0x10090370	__lock_fhandle	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__lock_fhandle	-	
+0x10090400	__unlock_fhandle	sp2_cmtd	build\intel\xmt_obj\osfinfo.obj	100.0	-	__unlock_fhandle	-	
+0x10090430	__dosmaperr	sp2_cmtd	build\intel\xmt_obj\dosmap.obj	100.0	-	__dosmaperr	-	
+0x100904d0	__errno	sp2_cmtd	build\intel\xmt_obj\dosmap.obj	100.0	smsg_jgld_crt	FUN_100904d0	-	
+0x100904e0	___doserrno	sp2_cmtd	build\intel\xmt_obj\dosmap.obj	100.0	smsg_jgld_crt	FUN_100904e0	-	
+0x100904f0	__commit	sp2_cmtd	build\intel\xmt_obj\commit.obj	100.0	-	__commit	-	
+0x100905d0	__write	sp2_cmtd	build\intel\xmt_obj\write.obj	100.0	-	__write	-	
+0x10090660	__write_lk	sp2_cmtd	build\intel\xmt_obj\write.obj	100.0	-	__write_lk	-	
+0x100908e0	__open	sp2_cmtd	build\intel\xmt_obj\open.obj	100.0	-	FID_conflict:__open	-	
+0x10090920	__sopen	sp2_cmtd	build\intel\xmt_obj\open.obj	100.0	-	__sopen	-	lib-to-section-end
+0x10090e80	_strtol	sp2_cmtd	build\intel\xmt_obj\strtol.obj	100.0	-	_strtol	-	
+0x10090ea0	_strtoxl	sp2_cmtd	build\intel\xmt_obj\strtol.obj	100.0	-	strtoxl	-	
+0x100911e0	_strtoul	sp2_cmtd	build\intel\xmt_obj\strtol.obj	100.0	-	_strtoul	-	
+0x10091200	_$$$00001	sp2_cmtd	build\intel\xmt_obj\strchr.obj	100.0	-	(not in function list)	-	byte-identity (relocation sites masked)
+0x10091210	_strchr	sp2_cmtd	build\intel\xmt_obj\strchr.obj	100.0	-	_strchr	-	trim-pad lib-to-section-end
+0x100912d0	_strstr	sp2_cmtd	build\intel\xmt_obj\strstr.obj	100.0	-	_strstr	-	
+0x10091350	_strncmp	sp2_cmtd	build\intel\xmt_obj\strncmp.obj	100.0	-	_strncmp	-	
+0x10091390	___crtGetStringTypeA	sp2_cmtd	build\intel\xmt_obj\a_str.obj	100.0	-	___crtGetStringTypeA	-	pdb-size
+0x10091550	__aulldiv	sp2_cmtd	build\intel\xmt_obj\ulldiv.obj	100.0	-	__aulldiv	-	
+0x100915c0	__aullrem	sp2_cmtd	build\intel\xmt_obj\ullrem.obj	100.0	-	__aullrem	-	
+0x10091640	__setmbcp	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	-	__setmbcp	-	
+0x10091990	_getSystemCP	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	-	getSystemCP	-	
+0x100919f0	_CPtoLCID	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	-	_CPtoLCID	-	lib-to-section-end
+0x10091a70	_setSBCS	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	-	setSBCS	-	
+0x10091af0	_setSBUpLow	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	-	setSBUpLow	-	
+0x10091e00	__getmbcp	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	smsg_jgld_crt	FUN_10091e00	-	
+0x10091e20	___initmbctable	sp2_cmtd	build\intel\xmt_obj\mbctype.obj	100.0	-	___initmbctable	-	
+0x10093260	__lseek	sp2_cmtd	build\intel\xmt_obj\lseek.obj	100.0	-	__lseek	-	
+0x100932f0	__lseek_lk	sp2_cmtd	build\intel\xmt_obj\lseek.obj	100.0	-	__lseek_lk	-	
+0x100933b0	__getbuf	sp2_cmtd	build\intel\xmt_obj\_getbuf.obj	100.0	-	__getbuf	-	
+0x10093480	__isatty	sp2_cmtd	build\intel\xmt_obj\isatty.obj	100.0	-	__isatty	-	
+0x100934c0	_wctomb	sp2_cmtd	build\intel\xmt_obj\wctomb.obj	100.0	-	_wctomb	-	
+0x10093540	__wctomb_lk	sp2_cmtd	build\intel\xmt_obj\wctomb.obj	100.0	-	__wctomb_lk	-	
+0x100935e0	_setlocale	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	_setlocale	-	
+0x100939d0	__setlocale_set_cat	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	__setlocale_set_cat	-	
+0x10093b70	__setlocale_get_all	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	__setlocale_get_all	-	
+0x10093c70	__expandlocale	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	__expandlocale	-	
+0x10093e00	___init_dummy	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	smsg_jgld_crt	FUN_10093e00	-	
+0x10093e10	__strcats	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	__strcats	-	
+0x10093e60	___lc_strtolc	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	___lc_strtolc	-	
+0x10093fc0	___lc_lctostr	sp2_cmtd	build\intel\xmt_obj\setlocal.obj	100.0	-	___lc_lctostr	-	
+0x10094030	___crtLCMapStringA	sp2_cmtd	build\intel\xmt_obj\a_map.obj	100.0	-	___crtLCMapStringA	-	pdb-size
+0x10094340	_strncnt	sp2_cmtd	build\intel\xmt_obj\a_cmp.obj	100.0	-	strncnt	-	
+0x10095730	__chsize	sp2_cmtd	build\intel\xmt_obj\chsize.obj	100.0	-	__chsize	-	
+0x100957b0	__chsize_lk	sp2_cmtd	build\intel\xmt_obj\chsize.obj	100.0	-	__chsize_lk	-	
+0x100959e0	__toupper	sp2_cmtd	build\intel\xmt_obj\toupper.obj	100.0	smsg_jgld_crt	FUN_100959e0	-	
+0x100959f0	_toupper	sp2_cmtd	build\intel\xmt_obj\toupper.obj	100.0	-	_toupper	-	
+0x10095a90	__toupper_lk	sp2_cmtd	build\intel\xmt_obj\toupper.obj	100.0	-	__toupper_lk	-	
+0x10095e80	___init_time	sp2_cmtd	build\intel\xmt_obj\inittime.obj	100.0	-	___init_time	-	
+0x10095f60	__get_lc_time	sp2_cmtd	build\intel\xmt_obj\inittime.obj	100.0	-	__get_lc_time	-	
+0x100964f0	__free_lc_time	sp2_cmtd	build\intel\xmt_obj\inittime.obj	100.0	-	___free_lc_time	-	
+0x10096800	___init_numeric	sp2_cmtd	build\intel\xmt_obj\initnum.obj	100.0	-	___init_numeric	-	
+0x10096ab0	_fix_grouping	sp2_cmtd	build\intel\xmt_obj\initmon.obj	100.0	-	fix_grouping	-	
+0x10096b30	___init_monetary	sp2_cmtd	build\intel\xmt_obj\initmon.obj	100.0	-	___init_monetary	-	
+0x10096c60	__get_lc_lconv	sp2_cmtd	build\intel\xmt_obj\initmon.obj	100.0	-	__get_lc_lconv	-	
+0x10096e70	_fix_grouping	sp2_cmtd	build\intel\xmt_obj\initmon.obj	100.0	-	fix_grouping	-	
+0x10096ef0	__free_lc_lconv	sp2_cmtd	build\intel\xmt_obj\initmon.obj	100.0	-	__free_lc_lconv	-	
+0x10096f90	___init_ctype	sp2_cmtd	build\intel\xmt_obj\initctyp.obj	100.0	-	___init_ctype	-	
+0x10097330	___init_collate	sp2_cmtd	build\intel\xmt_obj\initcoll.obj	100.0	smsg_jgld_crt	FUN_10097330	-	
+0x10097340	_strcspn	sp2_cmtd	build\intel\xmt_obj\strcspn.obj	100.0	-	_strcspn	-	
+0x10097380	_strpbrk	sp2_cmtd	build\intel\xmt_obj\strpbrk.obj	100.0	-	_strpbrk	-	
+0x100973c0	___get_qualified_locale	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	___get_qualified_locale	-	
+0x100975c0	_TranslateName	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_TranslateName	-	
+0x10097650	_GetLcidFromLangCountry	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_GetLcidFromLangCountry	-	
+0x10097710	_LangCountryEnumProc@4	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_LangCountryEnumProc@4	-	
+0x10097a40	_GetLcidFromLanguage	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_GetLcidFromLanguage	-	
+0x10097ac0	_LanguageEnumProc@4	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_LanguageEnumProc@4	-	
+0x10097be0	_GetLcidFromCountry	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_GetLcidFromCountry	-	
+0x10097c30	_CountryEnumProc@4	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_CountryEnumProc@4	-	
+0x10097ce0	_GetLcidFromDefault	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_GetLcidFromDefault	-	
+0x10097d10	_ProcessCodePage	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_ProcessCodePage	-	
+0x10097db0	_TestDefaultCountry	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_TestDefaultCountry	-	
+0x10097e00	_TestDefaultLanguage	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_TestDefaultLanguage	-	
+0x10097e90	_IsThisWindowsNT	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_IsThisWindowsNT	-	
+0x10097ee0	_crtGetLocaleInfoA@16	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	crtGetLocaleInfoA	-	
+0x10098070	_LcidFromHexString	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_LcidFromHexString	-	
+0x100980f0	_GetPrimaryLen	sp2_cmtd	build\intel\xmt_obj\getqloc.obj	100.0	-	_GetPrimaryLen	-	
+0x10098670	__setmode	sp2_cmtd	build\intel\xmt_obj\setmode.obj	100.0	-	__setmode	-	
+0x100986f0	__setmode_lk	sp2_cmtd	build\intel\xmt_obj\setmode.obj	100.0	-	__setmode_lk	-	
+0x100987c0	__Getdays	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	__Getdays	-	
+0x100988f0	__Getmonths	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	__Getmonths	-	
+0x10098a20	__Gettnames	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	__Gettnames	-	
+0x10098d90	_strftime	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	smsg_jgld_crt	FUN_10098d90	-	
+0x10098db0	__Strftime	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	smsg_jgld_crt	FUN_10098db0	-	
+0x10098f40	__expandtime	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	__expandtime	-	lib-to-section-end
+0x10099560	__store_str	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	FID_conflict:_store_str	-	
+0x100995b0	__store_num	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	__store_num	-	
+0x10099660	__store_number	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	FID_conflict:_store_number	-	
+0x10099710	__store_winword	sp2_cmtd	build\intel\xmt_obj\strftime.obj	100.0	-	__store_winword	-	lib-to-section-end
+0x10099c30	___getlocaleinfo	sp2_cmtd	build\intel\xmt_obj\inithelp.obj	100.0	-	___getlocaleinfo	-	
+0x10099ec0	_localeconv	sp2_cmtd	build\intel\xmt_obj\lconv.obj	100.0	smsg_jgld_crt	FUN_10099ec0	-	
+0x10099ed0	___crtGetStringTypeW	sp2_cmtd	build\intel\xmt_obj\w_str.obj	100.0	-	___crtGetStringTypeW	-	pdb-size
+0x1009a140	__strcmpi	sp2_cmtd	build\intel\xmt_obj\stricmp.obj	100.0	-	__strcmpi	-	
+0x1009a140	__strcmpi	sp2_cmtd	build\intel\xmt_obj\stricmp.obj	100.0	-	__strcmpi	-	
+0x1009a210	__strnicmp	sp2_cmtd	build\intel\xmt_obj\strnicmp.obj	100.0	-	__strnicmp	-	
+0x1009a320	_atol	sp2_cmtd	build\intel\xmt_obj\atox.obj	100.0	-	_atol	-	
+0x1009a420	_atoi	sp2_cmtd	build\intel\xmt_obj\atox.obj	100.0	-	_atoi	-	
+0x1009a440	__atoi64	sp2_cmtd	build\intel\xmt_obj\atox.obj	100.0	-	__atoi64	-	
+0x1009a570	___tzset	sp2_cmtd	build\intel\xmt_obj\tzset.obj	100.0	-	___tzset	-	
+0x1009a5b0	__tzset	sp2_cmtd	build\intel\xmt_obj\tzset.obj	100.0	-	__tzset	-	
+0x1009a5d0	__tzset_lk	sp2_cmtd	build\intel\xmt_obj\tzset.obj	100.0	-	__tzset_lk	-	
+0x1009a980	__isindst	sp2_cmtd	build\intel\xmt_obj\tzset.obj	100.0	-	__isindst	-	
+0x1009a9b0	__isindst_lk	sp2_cmtd	build\intel\xmt_obj\tzset.obj	100.0	-	__isindst_lk	-	
+0x1009acb0	_cvtdate	sp2_cmtd	build\intel\xmt_obj\tzset.obj	100.0	-	cvtdate	-	
+0x1009aeb0	___crtGetLocaleInfoW	sp2_cmtd	build\intel\xmt_obj\w_loc.obj	100.0	-	___crtGetLocaleInfoW	-	pdb-size
+0x1009b050	___crtGetLocaleInfoA	sp2_cmtd	build\intel\xmt_obj\a_loc.obj	100.0	-	___crtGetLocaleInfoA	-	pdb-size
+0x1009b200	__allmul	sp2_cmtd	build\intel\xmt_obj\llmul.obj	100.0	-	__allmul	-	
+0x1009b240	_getenv	sp2_cmtd	build\intel\xmt_obj\getenv.obj	100.0	-	_getenv	-	
+0x1009b270	__getenv_lk	sp2_cmtd	build\intel\xmt_obj\getenv.obj	100.0	-	FID_conflict:__getenv_lk	-	
+0x1009b340	__mbsnbicoll	sp2_cmtd	build\intel\xmt_obj\mbsnbico.obj	100.0	-	__mbsnbicoll	-	
+0x1009b390	___wtomb_environ	sp2_cmtd	build\intel\xmt_obj\wtombenv.obj	100.0	-	___wtomb_environ	-	
+0x1009b440	___crtCompareStringA	sp2_cmtd	build\intel\xmt_obj\a_cmp.obj	100.0	-	___crtCompareStringA	-	pdb-size
+0x1009b840	_strncnt	sp2_cmtd	build\intel\xmt_obj\a_cmp.obj	100.0	-	strncnt	-	
+0x1009b890	___crtsetenv	sp2_cmtd	build\intel\xmt_obj\setenv.obj	100.0	-	___crtsetenv	-	
+0x1009bb70	_findenv	sp2_cmtd	build\intel\xmt_obj\setenv.obj	100.0	-	findenv	-	
+0x1009bbf0	_copy_environ	sp2_cmtd	build\intel\xmt_obj\setenv.obj	100.0	-	copy_environ	-	
+0x1009bce0	__mbschr	sp2_cmtd	build\intel\xmt_obj\mbschr.obj	100.0	-	__mbschr	-	

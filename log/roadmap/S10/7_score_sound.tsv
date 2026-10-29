@@ -1,0 +1,555 @@
+va	symbol	source	lib	member	pct	same	n	note
+0x1003a828	_LeaveCriticalSection@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a82e	_EnterCriticalSection@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a834	_InitializeCriticalSection@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a83a	_DeleteCriticalSection@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a840	_OutputDebugStringA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a846	_CreateEventA@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a84c	_CloseHandle@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a852	_Sleep@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a858	_SetEvent@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a85e	_SetThreadPriority@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a864	_ResetEvent@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a86a	_GetCurrentThreadId@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a870	_PostMessageA@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a876	_SetWindowLongA@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a87c	_CreateWindowExA@48	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a882	_RegisterClassA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a888	_PeekMessageA@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a88e	_DefWindowProcA@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a894	_CallWindowProcA@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a89a	_MsgWaitForMultipleObjects@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8a0	_PostThreadMessageA@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8a6	_MessageBoxA@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8ac	_CoUninitialize@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8b2	_CoCreateInstance@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8b8	_CoInitialize@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8be	_mmioClose@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8c4	_mmioSeek@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8ca	_mmioGetInfo@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8d0	_mmioRead@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8d6	_mmioOpenA@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8dc	_mmioStringToFOURCCA@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8e2	_mmioWrite@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8e8	_timeGetTime@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8ee	_timeGetDevCaps@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8f4	_timeEndPeriod@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a8fa	_timeKillEvent@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a900	_timeSetEvent@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a906	_timeBeginPeriod@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a90c	_midiOutOpen@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a912	_midiOutClose@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a918	_midiOutShortMsg@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a91e	_mmioSetInfo@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a924	_mmioAdvance@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a92a	_mmioSetBuffer@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a930	_mmioAscend@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a936	_mmioDescend@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a93c	_waveInGetDevCapsA@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a942	_waveInGetNumDevs@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a948	_waveInReset@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a94e	_waveInStop@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a954	_waveInStart@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a95a	_waveInPrepareHeader@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a960	_waveInUnprepareHeader@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a966	_waveInAddBuffer@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a96c	_waveInOpen@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a972	_waveInClose@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1003a978	_DirectSoundEnumerateA@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x1004164f	??6ostream@@QAEAAV0@H@Z	public	sp5_cimt	build\intel\mt_obj\ostrint.obj	100.0	71	71	
+0x10041700	??6ostream@@QAEAAV0@K@Z	public	sp5_cimt	build\intel\mt_obj\ostrulng.obj	100.0	65	65	
+0x100417a4	?opfx@ostream@@QAEHXZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	48	48	
+0x10041818	?osfx@ostream@@QAEXXZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	61	61	
+0x100418c8	??6ostream@@QAEAAV0@PBD@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	14	14	
+0x100418f1	?flush@ostream@@QAEAAV1@XZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	52	52	
+0x10041979	??0ostream@@IAE@XZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	19	19	
+0x100419af	??_Gostream@@UAEPAXI@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	17	17	
+0x100419da	??0ostream@@QAE@PAVstreambuf@@@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	30	30	
+0x10041a3f	??0ostream@@IAE@ABV0@@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	33	33	
+0x10041aad	??1ostream@@UAE@XZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	4	4	
+0x10041abc	??4ostream@@IAEAAV0@PAVstreambuf@@@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	46	46	
+0x10041b42	??0ostream_withassign@@QAE@XZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	27	27	
+0x10041b9d	??_Gostream_withassign@@UAEPAXI@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	17	17	
+0x10041bc8	??0ostream_withassign@@QAE@PAVstreambuf@@@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	28	28	
+0x10041c26	??1ostream_withassign@@UAE@XZ	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	4	4	
+0x10041c39	?writepad@ostream@@AAEAAV1@PBD0@Z	public	sp5_cimt	build\intel\mt_obj\ostream.obj	100.0	142	142	
+0x10041da5	?sputc@streambuf@@QAEHH@Z	public	sp5_cimt	build\intel\mt_obj\filebuf.obj	100.0	12	12	
+0x10041dc7	??6ostream@@QAEAAV0@E@Z	public	sp5_cimt	build\intel\mt_obj\ostrchar.obj	100.0	47	47	
+0x10041e43	__mtlockinit	public	sp5_cimt	build\intel\mt_obj\mtlock.obj	100.0	3	3	
+0x10041e4e	__mtlockterm	public	sp5_cimt	build\intel\mt_obj\mtlock.obj	100.0	3	3	
+0x10041e59	__mtlock	public	sp5_cimt	build\intel\mt_obj\mtlock.obj	100.0	3	3	
+0x10041e64	__mtunlock	public	sp5_cimt	build\intel\mt_obj\mtlock.obj	100.0	3	3	
+0x10041e6f	??0ios@@IAE@XZ	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	29	29	
+0x10041ecd	??_Gios@@UAEPAXI@Z	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	11	11	
+0x10041ee9	??0ios@@QAE@PAVstreambuf@@@Z	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	34	34	pdb-size
+0x10041f52	??0ios@@IAE@ABV0@@Z	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	22	22	
+0x10041f9a	??1ios@@UAE@XZ	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	25	25	
+0x10041fe4	?init@ios@@IAEXPAVstreambuf@@@Z	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	19	19	
+0x10042013	??4ios@@IAEAAV0@ABV0@@Z	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	19	19	
+0x1004204e	?xalloc@ios@@SAHXZ	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	20	20	pdb-size
+0x1004207f	?bitalloc@ios@@SAJXZ	public	sp5_cimt	build\intel\mt_obj\_ios.obj	100.0	15	15	pdb-size
+0x100420a5	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	22	22	pdb-size
+0x100420d9	?_CallMemberFunction0@@YGXPAX0@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	4	4	
+0x100420e0	?_CallMemberFunction1@@YGXPAX00@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	4	4	
+0x100420e7	?_CallMemberFunction2@@YGXPAX00H@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	4	4	
+0x100420ee	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	29	29	
+0x1004213d	___CxxFrameHandler	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	27	27	
+0x10042173	___CxxLongjmpUnwind@4	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	8	8	pdb-size
+0x1004218d	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	26	26	
+0x10042206	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	57	57	
+0x10042331	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	public	sp5_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	51	51	
+0x100423ac	__global_unwind2	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	15	15	byte-identity (relocation sites masked)
+0x100423ee	__local_unwind2	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	11	11	byte-identity (relocation sites masked)
+0x10042446	__NLG_Return2	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	6	6	byte-identity (relocation sites masked)
+0x10042456	__abnormal_termination	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	5	5	byte-identity (relocation sites masked)
+0x10042479	__NLG_Notify1	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	3	3	byte-identity (relocation sites masked)
+0x10042482	__NLG_Notify	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	10	10	lib-to-section-end
+0x10042495	__NLG_Dispatch	public	sp5_cmt	build\intel\mt_obj\exsup.obj	100.0	3	3	pdb-size
+0x1004249a	??3@YAXPAX@Z	public	sp5_cmt	build\intel\mt_obj\delete.obj	100.0	4	4	
+0x100424b0	_strrchr	public	sp5_cmt	build\intel\mt_obj\strrchr.obj	100.0	23	23	
+0x100424d7	??2@YAPAXI@Z	public	sp5_cmt	build\intel\mt_obj\new.obj	100.0	6	6	
+0x100424e5	__purecall	public	sp5_cmt	build\intel\mt_obj\purevirt.obj	100.0	4	4	pdb-size
+0x100424ee	__fpmath	public	sp5_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	6	6	
+0x10042505	__fpclear	public	sp5_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	1	1	
+0x10042506	__cfltcvt_init	public	sp5_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	8	8	
+0x1004253e	___setfflag	public	sp5_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	4	4	pdb-size trim-pad
+0x10042550	__ftol	public	sp5_cmt	..\build\intel\mt_obj\ftol.obj	100.0	16	16	
+0x10042577	_sprintf	public	sp5_cmt	build\intel\mt_obj\sprintf.obj	100.0	32	32	
+0x100425c9	__onexit	public	sp5_cmt	build\intel\mt_obj\onexit.obj	100.0	37	37	
+0x10042647	_atexit	public	sp5_cmt	build\intel\mt_obj\onexit.obj	100.0	8	8	
+0x10042659	___onexitinit	public	sp5_cmt	build\intel\mt_obj\onexit.obj	100.0	14	14	pdb-size trim-pad
+0x10042690	_strstr	public	sp5_cmt	build\intel\mt_obj\strstr.obj	100.0	66	66	
+0x10042710	_strncpy	public	sp5_cmt	build\intel\mt_obj\strncpy.obj	100.0	109	109	
+0x1004280e	??_M@YGXPAXIHP6EX0@Z@Z	public	sp5_cmt	build\intel\mt_obj\ehvecdtr.obj	100.0	42	42	pdb-size
+0x1004288e	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	public	sp5_cmt	build\intel\mt_obj\ehvecdtr.obj	100.0	35	35	lib-code-size
+0x10042902	??_L@YGXPAXIHP6EX0@Z1@Z	public	sp5_cmt	build\intel\mt_obj\ehvecctr.obj	100.0	44	44	
+0x10042984	__beginthread	public	sp5_cmt	build\intel\mt_obj\thread.obj	100.0	49	49	
+0x10042a8e	__endthread	public	sp5_cmt	build\intel\mt_obj\thread.obj	100.0	24	24	pdb-size
+0x10042acd	_malloc	public	sp5_cmt	build\intel\mt_obj\malloc.obj	100.0	6	6	
+0x10042adf	__nh_malloc	public	sp5_cmt	build\intel\mt_obj\malloc.obj	100.0	16	16	
+0x10042b0b	__heap_alloc	public	sp5_cmt	build\intel\mt_obj\malloc.obj	100.0	89	89	pdb-size
+0x10042c07	_free	public	sp5_cmt	build\intel\mt_obj\free.obj	100.0	83	83	pdb-size
+0x10042cf0	_memmove	public	sp5_cmt	build\intel\mt_obj\memmove.obj	100.0	52	52	byte-identity (relocation sites masked)
+0x10043025	__CRT_INIT@12	public	sp5_cmt	build\intel\mt_obj\dllcrt0.obj	100.0	57	57	
+0x100430fe	__DllMainCRTStartup@12	public	sp5_cmt	build\intel\mt_obj\dllcrt0.obj	100.0	73	73	
+0x1004319b	__amsg_exit	public	sp5_cmt	build\intel\mt_obj\crt0.obj	53.3	8	15	
+0x100431ce	__chkesp	public	sp5_cmt	build\intel\mt_obj\chkesp.obj	100.0	19	19	pdb-size trim-pad
+0x100431f0	__CIsqrt	public	sp5_cmt	..\build\intel\mt_obj\sqrt.obj	100.0	12	12	byte-identity (relocation sites masked)
+0x10043204	_sqrt	public	sp5_cmt	..\build\intel\mt_obj\sqrt.obj	100.0	11	11	byte-identity (relocation sites masked)
+0x100432b0	_exp	public	sp5_cmt	..\build\intel\mt_obj\87ctran.obj	100.0	2	2	byte-identity (relocation sites masked)
+0x100432ba	__CIexp	public	sp5_cmt	..\build\intel\mt_obj\87ctran.obj	100.0	2	2	pdb-size trim-pad
+0x100432d0	__CIlog	public	sp5_cmt	..\build\intel\mt_obj\log.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100432e4	_log	public	sp5_cmt	..\build\intel\mt_obj\log.obj	100.0	12	12	byte-identity (relocation sites masked)
+0x1004339c	_floor	public	sp5_cmt	..\build\intel\mt_obj\floor.obj	100.0	94	94	
+0x1004346b	_fflush	public	sp5_cmt	build\intel\mt_obj\fflush.obj	100.0	22	22	
+0x1004349a	__fflush_lk	public	sp5_cmt	build\intel\mt_obj\fflush.obj	100.0	22	22	
+0x100434c8	__flush	public	sp5_cmt	build\intel\mt_obj\fflush.obj	100.0	40	40	
+0x10043524	__flushall	public	sp5_cmt	build\intel\mt_obj\fflush.obj	100.0	4	4	
+0x100435d1	___initstdio	public	sp5_cmt	build\intel\mt_obj\_file.obj	100.0	60	60	pdb-size
+0x10043679	___endstdio	public	sp5_cmt	build\intel\mt_obj\_file.obj	100.0	5	5	
+0x1004368d	__lock_file	public	sp5_cmt	build\intel\mt_obj\_file.obj	100.0	17	17	
+0x100436bc	__lock_file2	public	sp5_cmt	build\intel\mt_obj\_file.obj	100.0	13	13	
+0x100436df	__unlock_file	public	sp5_cmt	build\intel\mt_obj\_file.obj	100.0	17	17	
+0x1004370e	__unlock_file2	public	sp5_cmt	build\intel\mt_obj\_file.obj	100.0	13	13	
+0x10043731	??1type_info@@UAE@XZ	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	17	17	
+0x1004375a	??_Gtype_info@@UAEPAXI@Z	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	11	11	
+0x10043776	??8type_info@@QBEHABV0@@Z	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	12	12	pdb-size
+0x10043791	??9type_info@@QBEHABV0@@Z	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	12	12	pdb-size
+0x100437ad	?before@type_info@@QBEHABV1@@Z	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	13	13	pdb-size
+0x100437cc	?raw_name@type_info@@QBEPBDXZ	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	2	2	pdb-size
+0x100437d0	??0type_info@@AAE@ABV0@@Z	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	3	3	pdb-size
+0x100437db	??4type_info@@AAEAAV0@ABV0@@Z	public	sp5_cmt	build\intel\mt_obj\typinfo.obj	100.0	2	2	pdb-size
+0x100437e0	__EH_prolog	public	sp5_cmt	build\intel\mt_obj\ehprolog.obj	100.0	10	10	
+0x10043800	_strlen	public	sp5_cmt	build\intel\mt_obj\strlen.obj	100.0	44	44	
+0x1004387b	___InternalCxxFrameHandler	public	sp5_cmt	build\intel\mt_obj\frame.obj	100.0	61	61	
+0x10043bd0	___FrameUnwindToState	public	sp5_cmt	build\intel\mt_obj\frame.obj	100.0	56	56	lib-code-size
+0x10044008	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	public	sp5_cmt	build\intel\mt_obj\frame.obj	100.0	39	39	lib-code-size
+0x100440a0	__CallSettingFrame@12	public	sp5_cmt	build\intel\mt_obj\lowhelpr.obj	100.0	34	34	lib-to-section-end
+0x100440c7	__NLG_Return	public	sp5_cmt	build\intel\mt_obj\lowhelpr.obj	100.0	17	17	pdb-size
+0x100440ec	__mtinit	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	32	32	
+0x10044140	__mtterm	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	8	8	
+0x1004415e	__initptd	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	4	4	
+0x10044171	__getptd	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	38	38	
+0x100441d8	__freeptd	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	62	62	
+0x10044278	___threadid	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	1	1	pdb-size
+0x1004427e	___threadhandle	public	sp5_cmt	build\intel\mt_obj\tidtable.obj	100.0	1	1	pdb-size
+0x10044284	?terminate@@YAXXZ	public	sp5_cmt	build\intel\mt_obj\hooks.obj	100.0	32	32	pdb-size
+0x100442e5	?unexpected@@YAXXZ	public	sp5_cmt	build\intel\mt_obj\hooks.obj	100.0	6	6	pdb-size
+0x100442fd	?_inconsistency@@YAXXZ	public	sp5_cmt	build\intel\mt_obj\hooks.obj	100.0	29	29	pdb-size
+0x10044353	__setdefaultprecision	public	sp5_cmt	build\intel\mt_obj\fp8.obj	100.0	6	6	
+0x10044365	__ms_p5_test_fdiv	public	sp5_cmt	..\build\intel\mt_obj\testfdiv.obj	100.0	24	24	
+0x100443a3	__ms_p5_mp_test_fdiv	public	sp5_cmt	..\build\intel\mt_obj\testfdiv.obj	100.0	13	13	
+0x100443cc	__forcdecpt	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	37	37	
+0x10044426	__cropzeros	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	38	38	
+0x10044474	__positive	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	11	11	
+0x1004448c	__fassign	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	29	29	
+0x100444ca	__cftoe	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	42	42	
+0x100445ed	__cftof	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	37	37	
+0x100446e9	__cftog	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	66	66	
+0x1004477c	__cfltcvt	public	sp5_cmt	..\build\intel\mt_obj\cvt.obj	100.0	29	29	
+0x100447f2	__flsbuf	public	sp5_cmt	build\intel\mt_obj\_flsbuf.obj	100.0	106	106	
+0x1004490a	__output	public	sp5_cmt	build\intel\mt_obj\output.obj	100.0	595	595	lib-to-section-end
+0x10045114	__cinit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	12	12	
+0x10045141	_exit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	6	6	pdb-size
+0x10045152	__exit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	6	6	
+0x10045163	__cexit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	6	6	
+0x10045172	__c_exit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	6	6	lib-code-size
+0x10045226	__lockexit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	4	4	
+0x1004522f	__unlockexit	public	sp5_cmt	build\intel\mt_obj\crt0dat.obj	100.0	4	4	
+0x10045252	_realloc	public	sp5_cmt	build\intel\mt_obj\realloc.obj	100.0	292	292	pdb-size
+0x10045581	__msize	public	sp5_cmt	build\intel\mt_obj\msize.obj	100.0	83	83	lib-code-size
+0x10045680	_strchr	public	sp5_cmt	build\intel\mt_obj\strchr.obj	100.0	86	86	lib-to-section-end
+0x10045686	___from_strstr_to_strchr	public	sp5_cmt	build\intel\mt_obj\strchr.obj	100.0	84	84	lib-code-size
+0x10045744	__except_handler3	public	sp5_cmt	build\intel\mt_obj\exsup3.obj	100.0	14	14	byte-identity (relocation sites masked)
+0x10045801	__seh_longjmp_unwind@4	public	sp5_cmt	build\intel\mt_obj\exsup3.obj	100.0	11	11	
+0x1004581c	__dosmaperr	public	sp5_cmt	build\intel\mt_obj\dosmap.obj	100.0	37	37	
+0x1004588f	__errno	public	sp5_cmt	build\intel\mt_obj\dosmap.obj	100.0	3	3	
+0x10045898	___doserrno	public	sp5_cmt	build\intel\mt_obj\dosmap.obj	100.0	3	3	
+0x100458a1	_calloc	public	sp5_cmt	build\intel\mt_obj\calloc.obj	100.0	111	111	pdb-size
+0x100459de	__XcptFilter	public	sp5_cmt	build\intel\mt_obj\winxfltr.obj	100.0	102	102	
+0x10045b56	?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z	public	sp5_cmt	build\intel\mt_obj\handler.obj	100.0	13	13	pdb-size
+0x10045b7a	?_query_new_handler@@YAP6AHI@ZXZ	public	sp5_cmt	build\intel\mt_obj\handler.obj	100.0	2	2	pdb-size
+0x10045b80	__callnewh	public	sp5_cmt	build\intel\mt_obj\handler.obj	100.0	13	13	
+0x10045b9b	__GetLinkerVersion	public	sp5_cmt	build\intel\mt_obj\heapinit.obj	100.0	17	17	
+0x10045bc8	___heap_select	public	sp5_cmt	build\intel\mt_obj\heapinit.obj	100.0	115	115	
+0x10045d10	__heap_init	public	sp5_cmt	build\intel\mt_obj\heapinit.obj	100.0	30	30	
+0x10045d6d	__heap_term	public	sp5_cmt	build\intel\mt_obj\heapinit.obj	100.0	56	56	
+0x10045e15	__get_sbh_threshold	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	12	12	pdb-size
+0x10045e34	__set_sbh_threshold	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	57	57	
+0x10045ee7	___sbh_heap_init	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	17	17	
+0x10045f2f	___sbh_find_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	14	14	
+0x10045f5a	___sbh_free_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	265	265	
+0x10046283	___sbh_alloc_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	275	275	
+0x1004658c	___sbh_alloc_new_region	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	53	53	
+0x1004663d	___sbh_alloc_new_group	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	85	85	
+0x10046738	___sbh_resize_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	259	259	
+0x10046a2e	___sbh_heapmin	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	53	53	pdb-size
+0x10046aff	___sbh_heap_check	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	251	251	
+0x10046e2e	__get_old_sbh_threshold	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	2	2	pdb-size
+0x10046e34	__set_old_sbh_threshold	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	11	11	pdb-size
+0x10046e50	___old_sbh_new_region	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	102	102	
+0x10046f94	___old_sbh_release_region	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	27	27	
+0x10046fea	___old_sbh_decommit_pages	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	66	66	
+0x100470ac	___old_sbh_find_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	34	34	
+0x10047103	___old_sbh_free_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	19	19	
+0x10047148	___old_sbh_alloc_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	180	180	
+0x10047350	___old_sbh_alloc_block_from_page	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	125	125	
+0x10047474	___old_sbh_resize_block	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	69	69	
+0x1004751d	___old_sbh_heap_check	public	sp5_cmt	build\intel\mt_obj\sbheap.obj	100.0	120	120	
+0x1004767b	__mtinitlocks	public	sp5_cmt	build\intel\mt_obj\mlock.obj	100.0	12	12	
+0x100476a4	__mtdeletelocks	public	sp5_cmt	build\intel\mt_obj\mlock.obj	100.0	34	34	
+0x10047710	__lock	public	sp5_cmt	build\intel\mt_obj\mlock.obj	100.0	37	37	
+0x10047771	__unlock	public	sp5_cmt	build\intel\mt_obj\mlock.obj	100.0	7	7	
+0x10047786	__lockerr_exit	public	sp5_cmt	build\intel\mt_obj\mlock.obj	100.0	6	6	pdb-size
+0x1004779e	__ioinit	public	sp5_cmt	build\intel\mt_obj\ioinit.obj	100.0	150	150	
+0x1004795a	__ioterm	public	sp5_cmt	build\intel\mt_obj\ioinit.obj	100.0	33	33	
+0x100479ae	__setenvp	public	sp5_cmt	build\intel\mt_obj\stdenvp.obj	100.0	71	71	
+0x10047a67	__setargv	public	sp5_cmt	build\intel\mt_obj\stdargv.obj	100.0	62	62	
+0x10047cb4	___crtGetEnvironmentStringsA	public	sp5_cmt	build\intel\mt_obj\a_env.obj	100.0	132	132	
+0x10047de6	__FF_MSGBANNER	public	sp5_cmt	build\intel\mt_obj\crt0msg.obj	100.0	18	18	
+0x10047e1f	__NMSG_WRITE	public	sp5_cmt	build\intel\mt_obj\crt0msg.obj	100.0	100	100	
+0x10047f72	__GET_RTERRMSG	public	sp5_cmt	build\intel\mt_obj\crt0msg.obj	100.0	17	17	pdb-size trim-pad
+0x10047fb0	__trandisp1	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	29	29	byte-identity (relocation sites masked)
+0x10048017	__trandisp2	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	23	23	byte-identity (relocation sites masked)
+0x100480a3	__rttospopde	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	14	14	byte-identity (relocation sites masked)
+0x100480a8	__rttospop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	14	14	byte-identity (relocation sites masked)
+0x100480aa	__rtnospop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100480ac	__rttosnpop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100480ad	__rtnospopde	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100480b4	__rtzeropop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100480b6	__rtzeronpop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100480bb	__rtonepop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	12	12	byte-identity (relocation sites masked)
+0x100480bd	__rtonenpop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	12	12	byte-identity (relocation sites masked)
+0x100480c2	__tosnan1	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	12	12	byte-identity (relocation sites masked)
+0x100480ed	__nosnan2	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	9	9	byte-identity (relocation sites masked)
+0x100480ef	__tosnan2	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	9	9	byte-identity (relocation sites masked)
+0x10048117	__nan2	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	7	7	byte-identity (relocation sites masked)
+0x10048156	__rtindfpop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	3	3	byte-identity (relocation sites masked)
+0x10048158	__rtindfnpop	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	3	3	byte-identity (relocation sites masked)
+0x10048169	__rttosnpopde	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	2	2	byte-identity (relocation sites masked)
+0x10048173	__rtchsifneg	public	sp5_cmt	..\build\intel\mt_obj\87disp.obj	100.0	4	4	pdb-size trim-pad
+0x10048180	__startTwoArgErrorHandling	public	sp5_cmt	..\build\intel\mt_obj\genexcep.obj	100.0	6	6	byte-identity (relocation sites masked)
+0x10048197	__startOneArgErrorHandling	public	sp5_cmt	..\build\intel\mt_obj\genexcep.obj	100.0	23	23	
+0x100481e0	__twoToTOS	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	25	25	byte-identity (relocation sites masked)
+0x100481f5	__load_CW	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	24	24	byte-identity (relocation sites masked)
+0x1004820c	__convertTOStoQNaN	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	22	22	byte-identity (relocation sites masked)
+0x10048225	__fload_withFB	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	21	21	byte-identity (relocation sites masked)
+0x10048268	__checkTOS_withFB	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	17	17	byte-identity (relocation sites masked)
+0x1004827e	__fast_exit	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	15	15	byte-identity (relocation sites masked)
+0x1004828b	__math_exit	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	15	15	byte-identity (relocation sites masked)
+0x100482b5	__check_overflow_exit	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	12	12	byte-identity (relocation sites masked)
+0x100482c9	__check_range_exit	public	sp5_cmt	..\build\intel\mt_obj\common.obj	100.0	57	57	lib-code-size
+0x10048381	__fFEXP	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	32	32	byte-identity (relocation sites masked)
+0x100483e8	__rtinfpopse	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	25	25	byte-identity (relocation sites masked)
+0x100483ea	__rtinfnpopse	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	25	25	byte-identity (relocation sites masked)
+0x100483fa	__fFLN	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	24	24	byte-identity (relocation sites masked)
+0x100484af	__rtinfpop	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100484b1	__rtinfnpop	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x100484ce	__ffexpm1	public	sp5_cmt	..\build\intel\mt_obj\87tran.obj	100.0	66	66	pdb-size trim-pad
+0x10048580	__cintrindisp2	public	sp5_cmt	..\build\intel\mt_obj\87cdisp.obj	100.0	39	39	byte-identity (relocation sites masked)
+0x100485be	__cintrindisp1	public	sp5_cmt	..\build\intel\mt_obj\87cdisp.obj	100.0	35	35	byte-identity (relocation sites masked)
+0x100485fb	__ctrandisp2	public	sp5_cmt	..\build\intel\mt_obj\87cdisp.obj	100.0	31	31	byte-identity (relocation sites masked)
+0x1004877b	__ctrandisp1	public	sp5_cmt	..\build\intel\mt_obj\87cdisp.obj	100.0	7	7	byte-identity (relocation sites masked)
+0x100487ae	__fload	public	sp5_cmt	..\build\intel\mt_obj\87cdisp.obj	100.0	22	22	
+0x100487ea	__handle_qnan1	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	33	33	
+0x1004883e	__handle_qnan2	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	38	38	
+0x1004889e	__except1	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	60	60	
+0x10048936	__except2	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	65	65	
+0x100489db	__raise_exc	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	258	258	
+0x10048c8e	__handle_exc	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	189	189	
+0x10048ea5	__umatherr	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	49	49	
+0x10048f2d	__set_errno	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	12	12	
+0x10048f7a	__errcode	public	sp5_cmt	..\build\intel\mt_obj\fpexcept.obj	100.0	22	22	
+0x10048fa7	__frnd	public	sp5_cmt	..\build\intel\mt_obj\frnd.obj	100.0	10	10	
+0x10048fb9	__set_exp	public	sp5_cmt	..\build\intel\mt_obj\util.obj	100.0	16	16	
+0x10048fe2	__get_exp	public	sp5_cmt	..\build\intel\mt_obj\util.obj	100.0	6	6	pdb-size
+0x10048ff6	__add_exp	public	sp5_cmt	..\build\intel\mt_obj\util.obj	100.0	14	14	pdb-size
+0x10049022	__set_bexp	public	sp5_cmt	..\build\intel\mt_obj\util.obj	100.0	15	15	
+0x10049046	__sptype	public	sp5_cmt	..\build\intel\mt_obj\util.obj	100.0	35	35	
+0x100490a0	__decomp	public	sp5_cmt	..\build\intel\mt_obj\util.obj	100.0	72	72	
+0x10049161	__statfp	public	sp5_cmt	..\build\intel\mt_obj\fpctrl.obj	100.0	8	8	
+0x1004916f	__clrfp	public	sp5_cmt	..\build\intel\mt_obj\fpctrl.obj	100.0	8	8	
+0x1004917e	__ctrlfp	public	sp5_cmt	..\build\intel\mt_obj\fpctrl.obj	100.0	16	16	
+0x100491a1	__set_statfp	public	sp5_cmt	..\build\intel\mt_obj\fpctrl.obj	100.0	38	38	
+0x100491f7	__commit	public	sp5_cmt	build\intel\mt_obj\commit.obj	100.0	52	52	
+0x1004928a	__write	public	sp5_cmt	build\intel\mt_obj\write.obj	100.0	34	34	
+0x100492ef	__write_lk	public	sp5_cmt	build\intel\mt_obj\write.obj	100.0	135	135	
+0x1004947a	__fcloseall	public	sp5_cmt	build\intel\mt_obj\closeall.obj	100.0	49	49	
+0x10049500	_strcmp	public	sp5_cmt	build\intel\mt_obj\strcmp.obj	100.0	56	56	pdb-size
+0x10049584	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	public	sp5_cmt	build\intel\mt_obj\unhandld.obj	100.0	24	24	
+0x100495ca	?__CxxSetUnhandledExceptionFilter@@YAXXZ	public	sp5_cmt	build\intel\mt_obj\unhandld.obj	100.0	4	4	
+0x100495db	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	public	sp5_cmt	build\intel\mt_obj\unhandld.obj	100.0	3	3	
+0x100495e8	?_ValidateRead@@YAHPBXI@Z	public	sp5_cmt	build\intel\mt_obj\validate.obj	100.0	12	12	
+0x10049604	?_ValidateWrite@@YAHPAXI@Z	public	sp5_cmt	build\intel\mt_obj\validate.obj	100.0	12	12	
+0x10049620	?_ValidateExecute@@YAHP6GHXZ@Z	public	sp5_cmt	build\intel\mt_obj\validate.obj	100.0	11	11	
+0x10049638	_abort	public	sp5_cmt	build\intel\mt_obj\abort.obj	100.0	8	8	
+0x1004964f	__statusfp	public	sp5_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	10	10	pdb-size
+0x10049662	__clearfp	public	sp5_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	10	10	
+0x10049676	__control87	public	sp5_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	25	25	
+0x100496ab	__controlfp	public	sp5_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	8	8	
+0x100496c1	__fpreset	public	sp5_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	14	14	lib-code-size
+0x1004983c	__isctype	public	sp5_cmt	build\intel\mt_obj\isctype.obj	100.0	46	46	
+0x100498b1	__tolower	public	sp5_cmt	build\intel\mt_obj\tolower.obj	100.0	3	3	pdb-size
+0x100498b9	_tolower	public	sp5_cmt	build\intel\mt_obj\tolower.obj	100.0	44	44	
+0x10049928	__tolower_lk	public	sp5_cmt	build\intel\mt_obj\tolower.obj	100.0	78	78	
+0x100499f3	__ZeroTail	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	36	36	
+0x10049a3c	__IncMan	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	43	43	
+0x10049a92	__RoundMan	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	71	71	
+0x10049b1e	__CopyMan	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	13	13	
+0x10049b39	__FillZeroMan	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	8	8	
+0x10049b45	__IsZeroMan	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	13	13	
+0x10049b60	__ShrMan	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	64	64	
+0x10049bed	__ld12cvt	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	138	138	
+0x10049d59	__ld12tod	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	6	6	
+0x10049d6f	__ld12tof	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	6	6	
+0x10049d85	__ld12told	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	45	45	
+0x10049dff	__atodbl	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	21	21	
+0x10049e2c	__atoldbl	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	21	21	
+0x10049e5a	__atoflt	public	sp5_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	21	21	
+0x10049e87	__fptostr	public	sp5_cmt	build\intel\mt_obj\_fptostr.obj	100.0	57	57	
+0x10049efe	__fltout2	public	sp5_cmt	..\build\intel\mt_obj\cfout.obj	100.0	41	41	
+0x10049f5a	___dtold	public	sp5_cmt	..\build\intel\mt_obj\cfout.obj	100.0	70	70	
+0x1004a010	_strcpy	public	sp5_cmt	build\intel\mt_obj\strcat.obj	100.0	15	15	byte-identity (relocation sites masked)
+0x1004a020	_strcat	public	sp5_cmt	build\intel\mt_obj\strcat.obj	100.0	84	84	
+0x1004a100	_memset	public	sp5_cmt	build\intel\mt_obj\memset.obj	100.0	40	40	
+0x1004a158	__fptrap	public	sp5_cmt	build\intel\mt_obj\crt0fp.obj	100.0	4	4	
+0x1004a161	__lseek	public	sp5_cmt	build\intel\mt_obj\lseek.obj	100.0	34	34	
+0x1004a1c6	__lseek_lk	public	sp5_cmt	build\intel\mt_obj\lseek.obj	100.0	41	41	
+0x1004a239	__getbuf	public	sp5_cmt	build\intel\mt_obj\_getbuf.obj	100.0	19	19	
+0x1004a27d	__isatty	public	sp5_cmt	build\intel\mt_obj\isatty.obj	100.0	13	13	
+0x1004a2a6	_wctomb	public	sp5_cmt	build\intel\mt_obj\wctomb.obj	100.0	39	39	
+0x1004a2ff	__wctomb_lk	public	sp5_cmt	build\intel\mt_obj\wctomb.obj	100.0	38	38	
+0x1004a370	__aulldiv	public	sp5_cmt	build\intel\mt_obj\ulldiv.obj	100.0	43	43	
+0x1004a3e0	__aullrem	public	sp5_cmt	build\intel\mt_obj\ullrem.obj	100.0	44	44	
+0x1004a460	_memcpy	public	sp5_cmt	build\intel\mt_obj\memcpy.obj	100.0	52	52	byte-identity (relocation sites masked)
+0x1004a795	_strtol	public	sp5_cmt	build\intel\mt_obj\strtol.obj	100.0	7	7	
+0x1004a9b1	_strtoul	public	sp5_cmt	build\intel\mt_obj\strtol.obj	100.0	7	7	pdb-size trim-pad
+0x1004a9d0	_strncmp	public	sp5_cmt	build\intel\mt_obj\strncmp.obj	100.0	31	31	
+0x1004aa10	__alloca_probe	public	sp5_cmt	build\intel\mt_obj\chkstk.obj	100.0	17	17	
+0x1004aa3f	__setmbcp	public	sp5_cmt	build\intel\mt_obj\mbctype.obj	100.0	143	143	
+0x1004ae17	__getmbcp	public	sp5_cmt	build\intel\mt_obj\mbctype.obj	100.0	5	5	pdb-size
+0x1004ae27	___initmbctable	public	sp5_cmt	build\intel\mt_obj\mbctype.obj	100.0	7	7	
+0x1004ae43	___crtMessageBoxA	public	sp5_cmt	build\intel\mt_obj\crtmbox.obj	100.0	50	50	
+0x1004aecc	__87except	public	sp5_cmt	..\build\intel\mt_obj\87except.obj	100.0	94	94	
+0x1004af9c	__powhlp	public	sp5_cmt	..\build\intel\mt_obj\powhlp.obj	100.0	114	114	
+0x1004b0cc	__d_inttype	public	sp5_cmt	..\build\intel\mt_obj\powhlp.obj	100.0	49	49	
+0x1004b140	_fdiv_main_routine	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	217	217	byte-identity (relocation sites masked)
+0x1004b257	__adj_fdiv_r	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	200	200	byte-identity (relocation sites masked)
+0x1004b6f6	__fdivp_sti_st	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	126	126	byte-identity (relocation sites masked)
+0x1004b709	__fdivrp_sti_st	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	125	125	byte-identity (relocation sites masked)
+0x1004b71c	__adj_fdiv_m32	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	123	123	byte-identity (relocation sites masked)
+0x1004b768	__adj_fdiv_m64	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	119	119	byte-identity (relocation sites masked)
+0x1004b7b4	__adj_fdiv_m16i	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	114	114	byte-identity (relocation sites masked)
+0x1004b7e8	__adj_fdiv_m32i	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	111	111	byte-identity (relocation sites masked)
+0x1004b81c	__adj_fdivr_m32	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	107	107	byte-identity (relocation sites masked)
+0x1004b868	__adj_fdivr_m64	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	103	103	byte-identity (relocation sites masked)
+0x1004b8b4	__adj_fdivr_m16i	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	98	98	byte-identity (relocation sites masked)
+0x1004b8e8	__adj_fdivr_m32i	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	95	95	byte-identity (relocation sites masked)
+0x1004b91c	__safe_fdiv	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	91	91	byte-identity (relocation sites masked)
+0x1004b931	__safe_fdivr	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	90	90	byte-identity (relocation sites masked)
+0x1004b946	__fprem_common	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	89	89	byte-identity (relocation sites masked)
+0x1004bb4c	__adj_fprem	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	56	56	byte-identity (relocation sites masked)
+0x1004bbfe	__fprem1_common	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	45	45	byte-identity (relocation sites masked)
+0x1004be04	__adj_fprem1	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	13	13	byte-identity (relocation sites masked)
+0x1004beb9	__safe_fprem	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	2	2	byte-identity (relocation sites masked)
+0x1004bebf	__safe_fprem1	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	1	1	byte-identity (relocation sites masked)
+0x1004bec5	__adj_fpatan	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	1	1	byte-identity (relocation sites masked)
+0x1004bec8	__adj_fptan	public	sp5_cmt	..\build\intel\mt_obj\adj_fdiv.obj	100.0	2	2	pdb-size
+0x1004becb	__matherr	public	sp5_cmt	..\build\intel\mt_obj\matherr.obj	100.0	2	2	
+0x1004bece	__alloc_osfhnd	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	103	103	
+0x1004bff1	__set_osfhnd	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	47	47	
+0x1004c06d	__free_osfhnd	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	48	48	
+0x1004c0ec	__get_osfhandle	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	19	19	
+0x1004c12e	__open_osfhandle	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	59	59	
+0x1004c1d5	__lock_fhandle	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	34	34	
+0x1004c234	__unlock_fhandle	public	sp5_cmt	build\intel\mt_obj\osfinfo.obj	100.0	10	10	
+0x1004c256	_fclose	public	sp5_cmt	build\intel\mt_obj\fclose.obj	100.0	20	20	
+0x1004c287	__fclose_lk	public	sp5_cmt	build\intel\mt_obj\fclose.obj	100.0	30	30	
+0x1004c2d3	_signal	public	sp5_cmt	build\intel\mt_obj\winsig.obj	100.0	120	120	
+0x1004c4b7	_raise	public	sp5_cmt	build\intel\mt_obj\winsig.obj	100.0	138	138	
+0x1004c676	___fpecode	public	sp5_cmt	build\intel\mt_obj\winsig.obj	100.0	3	3	pdb-size
+0x1004c67f	___pxcptinfoptrs	public	sp5_cmt	build\intel\mt_obj\winsig.obj	100.0	3	3	pdb-size
+0x1004c688	___crtGetStringTypeA	public	sp5_cmt	build\intel\mt_obj\a_str.obj	100.0	123	123	pdb-size
+0x1004c7d1	_setlocale	public	sp5_cmt	build\intel\mt_obj\setlocal.obj	100.0	196	196	
+0x1004cbeb	__expandlocale	public	sp5_cmt	build\intel\mt_obj\setlocal.obj	100.0	105	105	
+0x1004cd03	___init_dummy	public	sp5_cmt	build\intel\mt_obj\setlocal.obj	100.0	2	2	
+0x1004cd06	__strcats	public	sp5_cmt	build\intel\mt_obj\setlocal.obj	100.0	17	17	
+0x1004cd2b	___lc_strtolc	public	sp5_cmt	build\intel\mt_obj\setlocal.obj	100.0	85	85	
+0x1004cdf7	___lc_lctostr	public	sp5_cmt	build\intel\mt_obj\setlocal.obj	100.0	27	27	
+0x1004ce4a	___crtLCMapStringA	public	sp5_cmt	build\intel\mt_obj\a_map.obj	100.0	193	193	lib-code-size
+0x1004d099	___addl	public	sp5_cmt	..\build\intel\mt_obj\mantold.obj	100.0	15	15	
+0x1004d0ba	___add_12	public	sp5_cmt	..\build\intel\mt_obj\mantold.obj	100.0	38	38	
+0x1004d118	___shl_12	public	sp5_cmt	..\build\intel\mt_obj\mantold.obj	100.0	21	21	
+0x1004d146	___shr_12	public	sp5_cmt	..\build\intel\mt_obj\mantold.obj	100.0	21	21	
+0x1004d173	___mtold12	public	sp5_cmt	..\build\intel\mt_obj\mantold.obj	100.0	76	76	
+0x1004d23a	___strgtold12	public	sp5_cmt	..\build\intel\mt_obj\strgtold.obj	100.0	417	417	lib-to-section-end
+0x1004d70b	___STRINGTOLD	public	sp5_cmt	..\build\intel\mt_obj\strgtold.obj	100.0	27	27	
+0x1004d747	_$I10_OUTPUT	public	sp5_cmt	..\build\intel\mt_obj\x10fout.obj	100.0	232	232	
+0x1004d9da	__toupper	public	sp5_cmt	build\intel\mt_obj\toupper.obj	100.0	3	3	pdb-size
+0x1004d9e2	_toupper	public	sp5_cmt	build\intel\mt_obj\toupper.obj	100.0	44	44	
+0x1004da51	__toupper_lk	public	sp5_cmt	build\intel\mt_obj\toupper.obj	100.0	71	71	
+0x1004db1d	__copysign	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	14	14	
+0x1004db3e	__chgsign	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	16	16	
+0x1004db63	__scalb	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	8	8	pdb-size
+0x1004db79	__logb	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	99	99	
+0x1004dc60	__nextafter	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	257	257	
+0x1004def5	__finite	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	7	7	pdb-size
+0x1004df09	__isnan	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	16	16	pdb-size
+0x1004df37	__fpclass	public	sp5_cmt	..\build\intel\mt_obj\ieeemisc.obj	100.0	65	65	
+0x1004dfc9	__close	public	sp5_cmt	build\intel\mt_obj\close.obj	100.0	32	32	
+0x1004e026	__close_lk	public	sp5_cmt	build\intel\mt_obj\close.obj	100.0	52	52	
+0x1004e0a9	__freebuf	public	sp5_cmt	build\intel\mt_obj\_freebuf.obj	100.0	17	17	
+0x1004e0d4	___init_time	public	sp5_cmt	build\intel\mt_obj\inittime.obj	100.0	47	47	
+0x1004e643	___init_numeric	public	sp5_cmt	build\intel\mt_obj\initnum.obj	100.0	125	125	
+0x1004e84f	___init_monetary	public	sp5_cmt	build\intel\mt_obj\initmon.obj	100.0	63	63	
+0x1004eac1	___init_ctype	public	sp5_cmt	build\intel\mt_obj\initctyp.obj	100.0	197	197	
+0x1004ed06	___init_collate	public	sp5_cmt	build\intel\mt_obj\initcoll.obj	100.0	2	2	
+0x1004ed10	_strcspn	public	sp5_cmt	build\intel\mt_obj\strcspn.obj	100.0	35	35	
+0x1004ed50	_strpbrk	public	sp5_cmt	build\intel\mt_obj\strpbrk.obj	100.0	32	32	
+0x1004ed8a	___get_qualified_locale	public	sp5_cmt	build\intel\mt_obj\getqloc.obj	100.0	116	116	
+0x1004f631	___ld12mul	public	sp5_cmt	..\build\intel\mt_obj\tenpow.obj	100.0	177	177	
+0x1004f851	___multtenpow12	public	sp5_cmt	..\build\intel\mt_obj\tenpow.obj	100.0	52	52	
+0x1004f8cd	_ldexp	public	sp5_cmt	..\build\intel\mt_obj\ldexp.obj	100.0	198	198	
+0x1004fab3	__Getdays	public	sp5_cmt	build\intel\mt_obj\strftime.obj	100.0	61	61	
+0x1004fb42	__Getmonths	public	sp5_cmt	build\intel\mt_obj\strftime.obj	100.0	62	62	
+0x1004fbd7	__Gettnames	public	sp5_cmt	build\intel\mt_obj\strftime.obj	100.0	166	166	
+0x1004fe09	_strftime	public	sp5_cmt	build\intel\mt_obj\strftime.obj	100.0	8	8	pdb-size
+0x1004fe24	__Strftime	public	sp5_cmt	build\intel\mt_obj\strftime.obj	100.0	96	96	
+0x100506bb	___getlocaleinfo	public	sp5_cmt	build\intel\mt_obj\inithelp.obj	100.0	123	123	
+0x100507f3	_localeconv	public	sp5_cmt	build\intel\mt_obj\lconv.obj	100.0	2	2	pdb-size
+0x100507f9	___crtGetStringTypeW	public	sp5_cmt	build\intel\mt_obj\w_str.obj	100.0	157	157	pdb-size
+0x100509be	__itoa	public	sp5_cmt	build\intel\mt_obj\xtoa.obj	100.0	18	18	
+0x10050a47	__ltoa	public	sp5_cmt	build\intel\mt_obj\xtoa.obj	100.0	18	18	
+0x10050a71	__ultoa	public	sp5_cmt	build\intel\mt_obj\xtoa.obj	100.0	8	8	pdb-size
+0x10050a8c	__i64toa	public	sp5_cmt	build\intel\mt_obj\xtoa.obj	100.0	21	21	
+0x10050b43	__ui64toa	public	sp5_cmt	build\intel\mt_obj\xtoa.obj	100.0	11	11	
+0x10050b60	__strcmpi	public	sp5_cmt	build\intel\mt_obj\stricmp.obj	100.0	85	85	
+0x10050c30	__strnicmp	public	sp5_cmt	build\intel\mt_obj\strnicmp.obj	100.0	103	103	
+0x10050d31	_atol	public	sp5_cmt	build\intel\mt_obj\atox.obj	100.0	59	59	
+0x10050dbc	_atoi	public	sp5_cmt	build\intel\mt_obj\atox.obj	100.0	4	4	pdb-size
+0x10050dc7	__atoi64	public	sp5_cmt	build\intel\mt_obj\atox.obj	100.0	80	80	pdb-size
+0x10050e81	___tzset	public	sp5_cmt	build\intel\mt_obj\tzset.obj	100.0	13	13	
+0x10050eaf	__tzset	public	sp5_cmt	build\intel\mt_obj\tzset.obj	100.0	8	8	lib-code-size
+0x1005114c	__isindst	public	sp5_cmt	build\intel\mt_obj\tzset.obj	100.0	12	12	lib-code-size
+0x10051459	___crtGetLocaleInfoW	public	sp5_cmt	build\intel\mt_obj\w_loc.obj	100.0	104	104	pdb-size
+0x1005156c	___crtGetLocaleInfoA	public	sp5_cmt	build\intel\mt_obj\a_loc.obj	100.0	107	107	pdb-size trim-pad
+0x10051690	__allmul	public	sp5_cmt	build\intel\mt_obj\llmul.obj	100.0	19	19	pdb-size
+0x100516c4	_getenv	public	sp5_cmt	build\intel\mt_obj\getenv.obj	100.0	12	12	pdb-size
+0x100516e5	__getenv_lk	public	sp5_cmt	build\intel\mt_obj\getenv.obj	100.0	51	51	
+0x10051762	__mbsnbicoll	public	sp5_cmt	build\intel\mt_obj\mbsnbico.obj	100.0	24	24	
+0x100517a1	___wtomb_environ	public	sp5_cmt	build\intel\mt_obj\wtombenv.obj	100.0	58	58	
+0x1005180f	___crtCompareStringA	public	sp5_cmt	build\intel\mt_obj\a_cmp.obj	100.0	239	239	lib-code-size
+0x10051ab7	___crtsetenv	public	sp5_cmt	build\intel\mt_obj\setenv.obj	100.0	155	155	
+0x10051cfd	__mbschr	public	sp5_cmt	build\intel\mt_obj\mbschr.obj	100.0	62	62	
+0x10051d94	__strdup	public	sp5_cmt	build\intel\mt_obj\strdup.obj	100.0	23	23	
+0x10051dc0	_RtlUnwind@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dc6	_GetLastError@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dcc	_ResumeThread@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dd2	_CreateThread@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dd8	_TlsSetValue@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dde	_ExitThread@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051de4	_HeapAlloc@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dea	_HeapFree@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051df0	_GetCommandLineA@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051df6	_GetVersion@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051dfc	_TlsAlloc@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e02	_TlsFree@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e08	_SetLastError@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e0e	_TlsGetValue@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e14	_GetCurrentThread@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e1a	_GetProcAddress@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e20	_GetModuleHandleA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e26	_ExitProcess@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e2c	_TerminateProcess@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e32	_GetCurrentProcess@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e38	_HeapReAlloc@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e3e	_HeapSize@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e44	_UnhandledExceptionFilter@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e4a	_GetModuleFileNameA@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e50	_GetEnvironmentVariableA@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e56	_GetVersionExA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e5c	_HeapDestroy@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e62	_HeapCreate@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e68	_VirtualFree@12	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e6e	_VirtualAlloc@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e74	_IsBadWritePtr@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e7a	_FatalAppExitA@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e80	_SetHandleCount@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e86	_GetStdHandle@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e8c	_GetFileType@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e92	_GetStartupInfoA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e98	_FreeEnvironmentStringsA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051e9e	_FreeEnvironmentStringsW@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ea4	_WideCharToMultiByte@32	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051eaa	_GetEnvironmentStrings@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051eb0	_GetEnvironmentStringsW@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051eb6	_WriteFile@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ebc	_RaiseException@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ec2	_FlushFileBuffers@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ec8	_SetUnhandledExceptionFilter@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ece	_IsBadReadPtr@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ed4	_IsBadCodePtr@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051eda	_InterlockedDecrement@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ee0	_InterlockedIncrement@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ee6	_SetFilePointer@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051eec	_GetCPInfo@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ef2	_GetACP@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051ef8	_GetOEMCP@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051efe	_LoadLibraryA@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f04	_SetStdHandle@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f0a	_SetConsoleCtrlHandler@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f10	_MultiByteToWideChar@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f16	_GetStringTypeA@20	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f1c	_GetStringTypeW@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f22	_LCMapStringA@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f28	_LCMapStringW@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f2e	_IsValidLocale@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f34	_IsValidCodePage@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f3a	_GetLocaleInfoA@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f40	_EnumSystemLocalesA@8	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f46	_GetUserDefaultLCID@0	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f4c	_GetTimeZoneInformation@4	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f52	_GetLocaleInfoW@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f58	_CompareStringA@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f5e	_CompareStringW@24	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x10051f64	_SetEnvironmentVariableA@8	public	-	-	0.0	0	0	no member defines it or no body in our list

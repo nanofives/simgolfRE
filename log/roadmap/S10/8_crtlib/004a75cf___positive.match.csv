@@ -1,0 +1,14 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,fld qword ptr [eax],fld qword ptr [eax],True
+2,fcomp qword ptr [0],fcomp qword ptr [0x4ba298],True
+3,fnstsw ax,fnstsw ax,True
+4,sahf ,sahf ,True
+5,jb 0x15,jb 0x4a75e4,True
+6,push 1,push 1,True
+7,pop eax,pop eax,True
+8,ret ,ret ,True
+9,"xor eax, eax","xor eax, eax",True
+10,ret ,ret ,True
+meta,"library=libcmt.lib member=..\build\intel\mt_obj\cvt.obj (library object, no compilation)",symbol=__positive,module=golf_clean.exe
+VERDICT,GREEN,11,100.0%

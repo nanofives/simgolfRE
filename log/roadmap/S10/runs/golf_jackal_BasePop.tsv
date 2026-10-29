@@ -1,0 +1,97 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/BasePop.cpp	0x48b0	0x004048b0	3	G	BasePop::on_adjust_button_placement	?on_check_size@WidgetBase@@UAEXPAH00@Z	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x48c0	0x004048c0	6	G	BasePop::on_exec	?on_modal@WidgetBase@@UAEHXZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x79820	0x00479820	3	G	BasePop::on_draw_background	?on_draw_background@BasePop@@UAEHXZ	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_release_modal	?on_release_modal@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_post_calculate_dimensions	?on_post_calculate_dimensions@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_pre_window_init	?on_pre_window_init@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_post_window_init	?on_post_window_init@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_adjust_button_width	?on_adjust_button_width@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_close	?on_close@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/BasePop.cpp	0x7e5e0	0x0047e5e0	1	G	BasePop::on_init	?on_init@BasePop@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/BasePop.cpp	0x8cd80	0x0048cd80	122	G	decipherControlLine	?decipherControlLine@@YAHPAPAD@Z	public	100	100.0	52/52 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8ce00	0x0048ce00	1658	G	BasePop::BasePop	??0BasePop@@QAE@XZ	public	100	100.0	318/318 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x8d480	0x0048d480	1760	G	BasePop::close	?close@BasePop@@QAEXXZ	public	100	100.0	408/408 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x8db60	0x0048db60	668	G	BasePop::init	?init@BasePop@@QAEHII@Z	public	100	100.0	209/209 ins	golf_hand_s1.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8de00	0x0048de00	132	G	SetDefaultOkCaption	?SetDefaultOkCaption@@YAHPBD@Z	public	100	100.0	53/53 ins	golf_small13.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8de90	0x0048de90	132	G	SetDefaultCancelCaption	?SetDefaultCancelCaption@@YAHPBD@Z	public	100	100.0	53/53 ins	golf_small13.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8df20	0x0048df20	158	G	BasePop::string	?string@BasePop@@QAEHPBDD@Z	public	100	100.0	58/58 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8dfc0	0x0048dfc0	75	G	BasePop::button	?button@BasePop@@QAEHPBD@Z	public	100	100.0	26/26 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8e010	0x0048e010	146	G	BasePop::title	?title@BasePop@@QAEHPBD@Z	public	100	100.0	58/58 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8e0b0	0x0048e0b0	105	G	BasePop::set_height	?set_height@BasePop@@QAEXH@Z	public	100	100.0	31/31 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8e120	0x0048e120	105	G	BasePop::set_width	?set_width@BasePop@@QAEXH@Z	public	100	100.0	31/31 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8e190	0x0048e190	37	G	BasePop::set_loc	?set_loc@BasePop@@QAEXHH@Z	public	100	100.0	9/9 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x8e1c0	0x0048e1c0	1848	G	BasePop::start	?start@BasePop@@QAEHPBD0H0IPAUGraphicWin@@@Z	public	100	100.0	480/480 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x8e900	0x0048e900	5472	G	BasePop::exec	?exec@BasePop@@QAEHHP6AHXZ@Z	public	100	100.0	1419/1419 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x8fe60	0x0048fe60	2808	G	BasePop::calculate_dimensions	?calculate_dimensions@BasePop@@UAEHXZ	public	100	100.0	714/714 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x90960	0x00490960	215	G	BasePop::on_button_clicked	?on_button_clicked@BasePop@@UAEXH@Z	public	100	100.0	57/57 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90a40	0x00490a40	126	G	BasePop::on_key_down	?on_key_down@BasePop@@UAEHH@Z	public	100	100.0	33/33 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90ac0	0x00490ac0	17	G	BasePop::on_key_click	?on_key_click@BasePop@@UAEHHH@Z	public	100	100.0	5/5 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x90ae0	0x00490ae0	35	G	BasePop::on_nc_hittest	?on_nc_hittest@BasePop@@UAEHHH@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x90b10	0x00490b10	17	G	BasePop::on_key_up	?on_key_up@BasePop@@UAEHH@Z	public	100	100.0	5/5 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x90b30	0x00490b30	187	G	OnListItemActivated	?OnListItemActivated@@YAXH@Z	public	100	100.0	50/50 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x90bf0	0x00490bf0	51	G	BasePop::init_class	?init_class@BasePop@@SAHXZ	public	100	100.0	12/12 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90c30	0x00490c30	65	G	BasePop::close_class	?close_class@BasePop@@SAXXZ	public	100	100.0	20/20 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90c80	0x00490c80	58	G	Dialog_SetGlobalTextFonts	?Dialog_SetGlobalTextFonts@@YAHPAUFont@@000@Z	public	100	100.0	17/17 ins	golf_small19.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90cc0	0x00490cc0	39	G	Dialog_SetGlobalTextColors	?Dialog_SetGlobalTextColors@@YAXHHHH@Z	public	100	100.0	9/9 ins	golf_small3.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90cf0	0x00490cf0	48	G	Dialog_SetGlobalButtonFonts	?Dialog_SetGlobalButtonFonts@@YAHPAUFont@@00@Z	public	100	100.0	15/15 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90d20	0x00490d20	39	G	Dialog_SetGlobalButtonColors	?Dialog_SetGlobalButtonColors@@YAXHHHH@Z	public	100	100.0	9/9 ins	golf_small3.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x90d50	0x00490d50	14	G	BasePop::on_modal	?on_modal@BasePop@@UAEHXZ	public	100	100.0	5/5 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x90d60	0x00490d60	1283	G	BasePop::on_redraw	?on_redraw@BasePop@@UAEXXZ	public	100	100.0	382/382 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91270	0x00491270	146	G	BasePop::on_redraw_nc	?on_redraw_nc@BasePop@@UAEXH@Z	public	100	100.0	50/50 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91310	0x00491310	90	G	BasePop::basepop_alloc	?basepop_alloc@BasePop@@SAPAU1@XZ	public	100	100.0	24/24 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91370	0x00491370	66	G	BasePop::on_left_down	?on_left_down@BasePop@@UAEXHH@Z	public	100	100.0	24/24 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x913c0	0x004913c0	33	G	BasePop::set_sprites	?set_sprites@BasePop@@UAEXPAUSpriteObject@@00@Z	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x913f0	0x004913f0	13	G	BasePop::set_highlight_color	?set_highlight_color@BasePop@@UAEXH@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91400	0x00491400	13	G	BasePop::set_selected_color	?set_selected_color@BasePop@@UAEXH@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91410	0x00491410	89	G	ImageButton::~ImageButton	??1ImageButton@@UAE@XZ	public	100	100.0	21/21 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91470	0x00491470	30	G	ImageButton::`scalar deleting destructor'	??_GImageButton@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91490	0x00491490	27	G	Dialog::SetPinHeight	?SetPinHeight@Dialog@@QAEXH@Z	public	100	100.0	10/10 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x914b0	0x004914b0	27	G	Dialog::SetPinWidth	?SetPinWidth@Dialog@@QAEXH@Z	public	100	100.0	10/10 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x914d0	0x004914d0	38	G	Dialogs::`vbase destructor'	??_DDialogs@@QAEXXZ	public	100	100.0	13/13 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91500	0x00491500	380	G	Dialogs::~Dialogs	??1Dialogs@@UAE@XZ	public	100	100.0	90/90 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91680	0x00491680	83	G	ListBoxCtl::~ListBoxCtl	??1ListBoxCtl@@UAE@XZ	public	100	100.0	23/23 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x916e0	0x004916e0	5	G	BasePop::handleGameSpecificControlLines	?handleGameSpecificControlLines@BasePop@@UAEDPAD@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x916f0	0x004916f0	30	G	BasePop::`scalar deleting destructor'	??_GBasePop@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91710	0x00491710	444	G	BasePop::~BasePop	??1BasePop@@UAE@XZ	public	100	100.0	98/98 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x918d0	0x004918d0	11	G	BasePop::`vector deleting destructor'	??_EBasePop@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x918e0	0x004918e0	11	G	ImageButton::`vector deleting destructor'	??_EImageButton@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x918f0	0x004918f0	8	G	Dialogs::`vector deleting destructor'	??_EDialogs@@$4PPPPPPPM@A@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91900	0x00491900	62	G	Dialogs::`scalar deleting destructor'	??_GDialogs@@UAEPAXI@Z	public	100	100.0	19/19 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91940	0x00491940	8	G	Dialogs::on_scroll_create	?on_scroll_create@Dialogs@@$4PPPPPPPM@A@AEHXZ	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91950	0x00491950	8	G	Dialogs::on_scroll_delete	?on_scroll_delete@Dialogs@@$4PPPPPPPM@A@AEHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91960	0x00491960	8	G	Dialogs::on_redraw	?on_redraw@Dialogs@@$4PPPPPPPM@A@AEXXZ	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91970	0x00491970	8	G	Dialogs::on_mouse_wheel	?on_mouse_wheel@Dialogs@@$4PPPPPPPM@A@AEXHHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91980	0x00491980	8	G	Dialogs::on_mouse_move	?on_mouse_move@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91990	0x00491990	8	G	Dialogs::on_mouse_leave	?on_mouse_leave@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x919a0	0x004919a0	8	G	Dialogs::on_left_click	?on_left_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x919b0	0x004919b0	8	G	Dialogs::on_left_down	?on_left_down@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x919c0	0x004919c0	8	G	Dialogs::on_left_up	?on_left_up@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x919d0	0x004919d0	8	G	Dialogs::on_right_click	?on_right_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x919e0	0x004919e0	8	G	Dialogs::on_right_down	?on_right_down@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x919f0	0x004919f0	8	G	Dialogs::on_right_up	?on_right_up@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a00	0x00491a00	8	G	Dialogs::on_key_down	?on_key_down@Dialogs@@$4PPPPPPPM@A@AEHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a10	0x00491a10	8	G	Dialogs::on_left_double_click	?on_left_double_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a20	0x00491a20	8	G	Dialogs::on_right_double_click	?on_right_double_click@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a30	0x00491a30	8	G	Dialogs::on_scrolled	?on_scrolled@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a30	0x00491a30	8	G	Dialogs::on_scrolling	?on_scrolling@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	name	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a50	0x00491a50	8	G	Dialogs::on_dialog_focus	?on_dialog_focus@Dialogs@@$4PPPPPPPM@A@AEXH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a60	0x00491a60	8	G	Dialogs::pass_dialog_focus	?pass_dialog_focus@Dialogs@@$4PPPPPPPM@A@AEXXZ	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a70	0x00491a70	17	G	Dialogs::`vector deleting destructor'	??_EDialogs@@$4PPPPPNII@CHE@AEPAXI@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91a90	0x00491a90	14	G	Dialogs::`vector deleting destructor'	??_EDialogs@@$4PPPPPPPM@FHI@AEPAXI@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91aa0	0x00491aa0	8	G	Dialogs::attach	?attach@Dialogs@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91ab0	0x00491ab0	14	G	Dialogs::on_redraw	?on_redraw@Dialogs@@$4PPPPPPPM@FHI@AEXXZ	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91ac0	0x00491ac0	8	G	ListBoxCtl::`vector deleting destructor'	??_EListBoxCtl@@$4PPPPPPPM@A@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91ad0	0x00491ad0	127	G	ListBoxCtl::`scalar deleting destructor'	??_GListBoxCtl@@UAEPAXI@Z	public	100	100.0	36/36 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91b50	0x00491b50	8	G	ListBoxCtl::on_redraw	?on_redraw@ListBoxCtl@@$4PPPPPPPM@A@AEXXZ	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91b60	0x00491b60	8	G	ListBoxCtl::on_mouse_move	?on_mouse_move@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91b70	0x00491b70	8	G	ListBoxCtl::on_mouse_leave	?on_mouse_leave@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91b80	0x00491b80	8	G	ListBoxCtl::on_left_down	?on_left_down@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91b90	0x00491b90	8	G	ListBoxCtl::on_key_down	?on_key_down@ListBoxCtl@@$4PPPPPPPM@A@AEHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91ba0	0x00491ba0	8	G	ListBoxCtl::on_left_double_click	?on_left_double_click@ListBoxCtl@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91bb0	0x00491bb0	8	G	ListBoxCtl::on_dialog_focus	?on_dialog_focus@ListBoxCtl@@$4PPPPPPPM@A@AEXH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91bc0	0x00491bc0	17	G	ListBoxCtl::`vector deleting destructor'	??_EListBoxCtl@@$4PPPPPNII@CHE@AEPAXI@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91be0	0x00491be0	14	G	ListBoxCtl::`vector deleting destructor'	??_EListBoxCtl@@$4PPPPPPPM@FHI@AEPAXI@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0x91bf0	0x00491bf0	8	G	ListBoxCtl::attach	?attach@ListBoxCtl@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/BasePop.cpp	0x91c00	0x00491c00	14	G	ListBoxCtl::on_redraw	?on_redraw@ListBoxCtl@@$4PPPPPPPM@FHI@AEXXZ	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BasePop.cpp	0xa4340	0x004a4340	3	G	BasePop::on_left_click	?on_left_click@BasePop@@UAEXHH@Z	name	100	100.0	1/1 ins	

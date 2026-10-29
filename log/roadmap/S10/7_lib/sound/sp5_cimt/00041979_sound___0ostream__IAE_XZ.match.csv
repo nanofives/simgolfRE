@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"and dword ptr [ebp - 4], 0","and dword ptr [ebp - 4], 0",True
+4,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+5,push esi,push esi,True
+6,"mov esi, ecx","mov esi, ecx",True
+7,je 0x1f,je 0x10041998,True
+8,"lea ecx, [esi + 8]","lea ecx, [esi + 8]",True
+9,"mov dword ptr [esi], 0","mov dword ptr [esi], 0x1005ecd8",True
+10,call 0x1f,call 0x10041e6f,True
+11,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+12,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+13,"mov dword ptr [eax + esi], 0","mov dword ptr [eax + esi], 0x1005ecd4",True
+14,"and dword ptr [esi + 4], 0","and dword ptr [esi + 4], 0",True
+15,"mov eax, esi","mov eax, esi",True
+16,pop esi,pop esi,True
+17,leave ,leave ,True
+18,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\ostream.obj (library object, no compilation)",symbol=??0ostream@@IAE@XZ,module=sound.dll
+VERDICT,GREEN,19,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 66 bytes, 24 instructions, subsystem `ui`. Mechanical t
 mouse-down handler of the text view: hit-tests the hot regions at this+0x1f04 and, for a region with payload flag 0, calls slot 53 with the region's second payload id (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?on_left_down@BasePop@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004913af): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00491375 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

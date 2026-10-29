@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/InputPoll.cpp	0x5ae30	0x0045ae30	21	G	TakePendingKey	?TakePendingKey@@YAHXZ	public	100	100.0	6/6 ins	
+golf	golf/golf.exe/src/InputPoll.cpp	0x5ae50	0x0045ae50	21	G	TakePendingChar	?TakePendingChar@@YAHXZ	public	100	100.0	6/6 ins	
+golf	golf/golf.exe/src/InputPoll.cpp	0x5ae70	0x0045ae70	88	G	PollInputState	?PollInputState@@YAHXZ	public	100	100.0	21/21 ins	
+golf	golf/golf.exe/src/InputPoll.cpp	0x5aed0	0x0045aed0	46	G	DrainPendingInput	?DrainPendingInput@@YAXXZ	public	100	100.0	14/14 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/InputPoll.cpp	0x5af00	0x0045af00	37	G	ProcessInputAndCheckIdle	?ProcessInputAndCheckIdle@@YAHXZ	public	100	100.0	12/12 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/InputPoll.cpp	0x5af30	0x0045af30	412	G	WrapText	?WrapText@@YAHH@Z	public	100	100.0	139/139 ins	
+golf	golf/golf.exe/src/InputPoll.cpp	0x5b0d0	0x0045b0d0	487	G	DrawTextWordWrapped	?DrawTextWordWrapped@@YAHHHHI@Z	public	100	100.0	156/156 ins	
+golf	golf/golf.exe/src/InputPoll.cpp	0x5b2c0	0x0045b2c0	925	G	ShowTextInputDialog	?ShowTextInputDialog@@YAXPBDHHH@Z	public	100	100.0	291/291 ins	

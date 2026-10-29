@@ -1,0 +1,14 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,call 8,call 0x10083350,True
+3,"cmp dword ptr [0], -1","cmp dword ptr [0x10123750], -1",True
+4,je 0x27,je 0x10084df7,True
+5,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10123750]",True
+6,push eax,push eax,True
+7,call dword ptr [0],call dword ptr [0x1012c51c],True
+8,"mov dword ptr [0], 0xffffffff","mov dword ptr [0x10123750], 0xffffffff",True
+9,pop ebp,pop ebp,True
+10,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\tidtable.obj (library object, no compilation)",symbol=__mtterm,module=jgld.dll
+VERDICT,GREEN,11,100.0%

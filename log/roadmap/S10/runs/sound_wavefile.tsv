@@ -1,0 +1,87 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/wavefile.cpp	0x31be0	0x10031be0	492	G	CWaveFile::CWaveFile	??0CWaveFile@@QAE@XZ	public	100	100.0	112/112 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x31e50	0x10031e50	366	G	CWaveFile::CWaveFile	??0CWaveFile@@QAE@PAD@Z	public	100	100.0	83/83 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x32020	0x10032020	198	G	CWaveFile::undo_load	?undo_load@CWaveFile@@AAEXXZ	public	100	100.0	71/71 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32130	0x10032130	257	G	CWaveFile::hw_load	?hw_load@CWaveFile@@QAE?AW4SNDERR@@PAVCDSMgr@@@Z	public	100	100.0	93/93 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32290	0x10032290	291	G	CWaveFile::load_3d	?load_3d@CWaveFile@@AAE?AW4SNDERR@@PAVCDSMgr@@@Z	public	100	100.0	107/107 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32410	0x10032410	26	G	CWaveFile::add_dup_hwdsb	?add_dup_hwdsb@CWaveFile@@QAEXPAVCDSB@@@Z	public	100	100.0	8/8 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32440	0x10032440	131	G	CWaveFile::remove_dup_hwdsb	?remove_dup_hwdsb@CWaveFile@@QAEXPAVCDSB@@@Z	public	100	100.0	48/48 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32500	0x10032500	246	G	CWaveFile::mpeg_fade	?mpeg_fade@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	70/70 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32640	0x10032640	15	G	CWaveFile::hwdsb_stop	?hwdsb_stop@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	6/6 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x32660	0x10032660	6	G	CWaveFile::mpeg_play	?mpeg_play@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x32680	0x10032680	8	G	CWaveFile::mpeg_load	?mpeg_load@CWaveFile@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x326a0	0x100326a0	2429	G	CWaveFile::load	?load@CWaveFile@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	802/802 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x33280	0x10033280	90	G	CWaveFile::read_from_file	?read_from_file@CWaveFile@@AAE?AW4SNDERR@@PADPAK@Z	public	100	100.0	40/40 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x33300	0x10033300	1203	G	CWaveFile::advance_stream	?advance_stream@CWaveFile@@AAE?AW4SNDERR@@XZ	public	100	100.0	417/417 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x338f0	0x100338f0	113	G	CWaveFile::get_write_pointers	?get_write_pointers@CWaveFile@@AAEXPAPADPAK01K@Z	public	100	100.0	37/37 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x33990	0x10033990	18	G	CWaveFile::reload	?reload@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x339c0	0x100339c0	369	G	CWaveFile::reset	?reset@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	118/118 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x33ba0	0x10033ba0	146	G	CWaveFile::reset_flags	?reset_flags@CWaveFile@@QAEXXZ	public	100	100.0	51/51 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x33c70	0x10033c70	594	G	CWaveFile::~CWaveFile	??1CWaveFile@@QAE@XZ	public	100	100.0	186/186 ins	m36c_R2_02.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x33f70	0x10033f70	6	G	CWaveFile::mpeg_unload	?mpeg_unload@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x33f90	0x10033f90	224	G	CWaveFile::clear_mpeg_frames	?clear_mpeg_frames@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	75/75 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x340b0	0x100340b0	688	G	CWaveFile::unload	?unload@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	227/227 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34410	0x10034410	3	G	CWaveFile::mmioerr	?mmioerr@CWaveFile@@AAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34430	0x10034430	646	G	CWaveFile::play	?play@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	219/219 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x34770	0x10034770	290	G	CWaveFile::play	?play@CWaveFile@@QAE?AW4SNDERR@@PAH@Z	public	100	100.0	78/78 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x348f0	0x100348f0	368	G	CWaveFile::play	?play@CWaveFile@@QAE?AW4SNDERR@@H@Z	public	100	100.0	97/97 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x34ac0	0x10034ac0	145	G	CWaveFile::fade	?fade@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	51/51 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x34b90	0x10034b90	180	G	CWaveFile::fade_in	?fade_in@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	61/61 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x34c80	0x10034c80	227	G	CWaveFile::ramp	?ramp@CWaveFile@@QAEXHHI@Z	public	100	100.0	75/75 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34db0	0x10034db0	27	G	CWaveFile::fade	?fade@CWaveFile@@QAE?AW4SNDERR@@K@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x34de0	0x10034de0	78	G	CWaveFile::fade_in	?fade_in@CWaveFile@@QAE?AW4SNDERR@@K@Z	public	100	100.0	22/22 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34e50	0x10034e50	130	G	CWaveFile::operator++	??ECWaveFile@@QAEKH@Z	public	100	100.0	43/43 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34f10	0x10034f10	72	G	CWaveFile::get_nsamples_left_in_buffer	?get_nsamples_left_in_buffer@CWaveFile@@QAEKXZ	public	100	100.0	27/27 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34f80	0x10034f80	29	G	CWaveFile::advance	?advance@CWaveFile@@AAE?AW4SNDERR@@XZ	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x34fb0	0x10034fb0	19	G	CWaveFile::advance_file	?advance_file@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	8/8 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x34fe0	0x10034fe0	105	G	CWaveFile::read_data	?read_data@CWaveFile@@AAEKPADK@Z	public	100	100.0	42/42 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x35070	0x10035070	71	G	CWaveFile::need_to_advance	?need_to_advance@CWaveFile@@AAEHXZ	public	100	100.0	29/29 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x350e0	0x100350e0	67	G	CWaveFile::seek_to_curstartpos	?seek_to_curstartpos@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	24/24 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x35150	0x10035150	69	G	CWaveFile::set_hwvolume	?set_hwvolume@CWaveFile@@QAEXH@Z	public	100	100.0	26/26 ins	sound_raw_09.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x351c0	0x100351c0	298	G	CWaveFile::set_volume	?set_volume@CWaveFile@@QAEXH@Z	public	100	100.0	85/85 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x35340	0x10035340	215	G	CWaveFile::set_pan	?set_pan@CWaveFile@@QAEXH@Z	public	100	100.0	59/59 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35460	0x10035460	281	G	CWaveFile::set_fade	?set_fade@CWaveFile@@QAEXK@Z	public	100	100.0	82/82 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x355d0	0x100355d0	296	G	CWaveFile::set_fade_in	?set_fade_in@CWaveFile@@QAEXK@Z	public	100	100.0	88/88 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35750	0x10035750	13	G	CWaveFile::set_pitch	?set_pitch@CWaveFile@@QAEXK@Z	public	100	100.0	3/3 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x35770	0x10035770	76	G	CWaveFile::get_current_marker	?get_current_marker@CWaveFile@@QAEKXZ	public	100	100.0	28/28 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x357e0	0x100357e0	167	G	CWaveFile::get_cursample	?get_cursample@CWaveFile@@QAE?AW4SNDERR@@PAK@Z	public	100	100.0	60/60 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x358c0	0x100358c0	145	G	CWaveFile::get_cursample_channel	?get_cursample_channel@CWaveFile@@QAEKK@Z	public	100	100.0	51/51 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35990	0x10035990	521	G	CWaveFile::get_nsamples	?get_nsamples@CWaveFile@@QAE?AW4SNDERR@@PAXKKPAK@Z	public	100	100.0	181/181 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35c30	0x10035c30	74	G	CWaveFile::get_mpeg_samples	?get_mpeg_samples@CWaveFile@@QAE?AW4SNDERR@@PAXKKPAK@Z	public	100	100.0	27/27 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35ca0	0x10035ca0	551	G	CWaveFile::setNextMpegFrame	?setNextMpegFrame@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	142/142 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35f60	0x10035f60	8	G	CWaveFile::get_mpeg_samples_to_dsb	?get_mpeg_samples_to_dsb@CWaveFile@@QAE?AW4SNDERR@@KKPAK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x35f80	0x10035f80	46	G	CWaveFile::UpdateCompletionState	?UpdateCompletionState@CWaveFile@@QAEHXZ	public	100	100.0	20/20 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x35fc0	0x10035fc0	555	G	CWaveFile::UpdateFade	?UpdateFade@CWaveFile@@QAEHXZ	public	100	100.0	144/144 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x36280	0x10036280	782	G	CWaveFile::get_stream_samples	?get_stream_samples@CWaveFile@@QAE?AW4SNDERR@@PAXKKPAK@Z	public	100	100.0	276/276 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x36660	0x10036660	2322	G	CWaveFile::stream_to_hwbuffer	?stream_to_hwbuffer@CWaveFile@@QAE?AW4SNDERR@@KKPAK@Z	public	100	100.0	695/695 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x371d0	0x100371d0	1083	G	CWaveFile::get_buffer_samples	?get_buffer_samples@CWaveFile@@QAE?AW4SNDERR@@PAVWaveBuffer@@PAXKKPAK@Z	public	100	100.0	324/324 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x37720	0x10037720	33	G	CWaveFile::queueSound	?queueSound@CWaveFile@@QAE?AW4SNDERR@@PAPAVCWaveMgr@@0@Z	public	100	100.0	9/9 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37760	0x10037760	51	G	CWaveFile::set_buffer_done	?set_buffer_done@CWaveFile@@QAEXH@Z	public	100	100.0	13/13 ins	m36c_R2_01.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x377b0	0x100377b0	35	G	CWaveFile::set_buffer_inactive	?set_buffer_inactive@CWaveFile@@QAEXH@Z	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x377f0	0x100377f0	73	G	CWaveFile::set_release	?set_release@CWaveFile@@QAEX_N@Z	public	100	100.0	25/25 ins	m36c_R3_04.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37860	0x10037860	56	G	CWaveFile::get_time	?get_time@CWaveFile@@QAEKK@Z	public	100	100.0	19/19 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x378b0	0x100378b0	65	G	CWaveFile::set_loop_state	?set_loop_state@CWaveFile@@QAEXH@Z	public	100	100.0	26/26 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x37920	0x10037920	377	G	CWaveFile::set_static	?set_static@CWaveFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	144/144 ins	m36c_R3_04.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37b00	0x10037b00	44	G	CWaveFile::set_position3d	?set_position3d@CWaveFile@@QAE?AW4SNDERR@@MMM@Z	public	100	100.0	15/15 ins	m36c_hand_00.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37b40	0x10037b40	34	G	CWaveFile::set_xpos	?set_xpos@CWaveFile@@QAE?AW4SNDERR@@M@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37b80	0x10037b80	34	G	CWaveFile::set_ypos	?set_ypos@CWaveFile@@QAE?AW4SNDERR@@M@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37bc0	0x10037bc0	34	G	CWaveFile::set_zpos	?set_zpos@CWaveFile@@QAE?AW4SNDERR@@M@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37c00	0x10037c00	34	G	CWaveFile::set_reverb_mix	?set_reverb_mix@CWaveFile@@QAE?AW4SNDERR@@M@Z	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x37c40	0x10037c40	321	G	WaveBuffer::WaveBuffer	??0WaveBuffer@@QAE@XZ	public	100	100.0	83/83 ins	m36c_R3_07.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37df0	0x10037df0	1	G	WaveBuffer::~WaveBuffer	??1WaveBuffer@@QAE@XZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x37e10	0x10037e10	85	G	WaveBuffer::init	?init@WaveBuffer@@QAEXPAU_MMIOINFO@@PAUtWAVEFORMATEX@@@Z	public	100	100.0	28/28 ins	m36c_R3_04.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x37e90	0x10037e90	65	G	WaveBuffer::reset	?reset@WaveBuffer@@QAEXXZ	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x37f00	0x10037f00	24	G	WaveBuffer::get_nsamples_left_in_buffer	?get_nsamples_left_in_buffer@WaveBuffer@@QAEKXZ	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x37f30	0x10037f30	252	G	WaveBuffer::set_pan	?set_pan@WaveBuffer@@QAEXH@Z	public	100	100.0	82/82 ins	m36c_R3_07.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x38070	0x10038070	141	G	WaveBuffer::set_fade	?set_fade@WaveBuffer@@QAEXK@Z	public	100	100.0	40/40 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x38130	0x10038130	142	G	WaveBuffer::set_fade_in	?set_fade_in@WaveBuffer@@QAEXK@Z	public	100	100.0	43/43 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x381f0	0x100381f0	82	G	WaveBuffer::fade	?fade@WaveBuffer@@QAEXXZ	public	100	100.0	20/20 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x38270	0x10038270	58	G	WaveBuffer::fade_in	?fade_in@WaveBuffer@@QAEXXZ	public	100	100.0	18/18 ins	
+sound	sound/sound.dll/src/wavefile.cpp	0x382c0	0x100382c0	70	G	CWaveFile::get_free_instance	?get_free_instance@CWaveFile@@QAEPAVWaveBuffer@@PAK@Z	public	100	100.0	26/26 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x38330	0x10038330	82	G	CWaveFile::find_midi_instance	?find_midi_instance@CWaveFile@@QAEPAVWaveBuffer@@K@Z	public	100	100.0	31/31 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x383b0	0x100383b0	58	G	WaveBuffer::set_volume	?set_volume@WaveBuffer@@QAEXK@Z	public	100	100.0	17/17 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x38400	0x10038400	27	G	CWaveFile::ClearAndReleaseStopNotifyFlag	?ClearAndReleaseStopNotifyFlag@CWaveFile@@QAEXXZ	public	100	100.0	6/6 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x38430	0x10038430	86	G	DList<CDSB>::add_to_end	?add_to_end@?$DList@VCDSB@@@@QAEXPAVCDSB@@@Z	public	100	100.0	32/32 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x384b0	0x100384b0	125	G	DList<CuePoint_tag>::~DList<CuePoint_tag>	??1?$DList@UCuePoint_tag@@@@QAE@XZ	public	100	100.0	46/46 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x38550	0x10038550	86	G	DList<CuePoint_tag>::add_to_end	?add_to_end@?$DList@UCuePoint_tag@@@@QAEXPAUCuePoint_tag@@@Z	public	100	100.0	32/32 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/wavefile.cpp	0x385d0	0x100385d0	86	G	DList<_MMIOINFO>::add_to_end	?add_to_end@?$DList@U_MMIOINFO@@@@QAEXPAU_MMIOINFO@@@Z	public	100	100.0	32/32 ins	sound_raw_06.cpp

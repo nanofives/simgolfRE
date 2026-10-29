@@ -17,7 +17,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None.
 
 ## Callees
-- 0x1007fbc0 `FUN_1007fbc0` at 0x1007fbb1
+- 0x1007fbc0 `_nh_malloc_dbg` at 0x1007fbb1
 
 ## Callers
 0x1007f0f0 `operator_new`

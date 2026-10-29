@@ -1,0 +1,17 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x842154]",True
+1,"lea ecx, [eax + eax*4]","lea ecx, [eax + eax*4]",True
+2,"mov eax, dword ptr [0]","mov eax, dword ptr [0x842158]",True
+3,"lea ecx, [eax + ecx*4]","lea ecx, [eax + ecx*4]",True
+4,"cmp eax, ecx","cmp eax, ecx",True
+5,jae 0x28,jae 0x4a7a8e,True
+6,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+7,"sub edx, dword ptr [eax + 0xc]","sub edx, dword ptr [eax + 0xc]",True
+8,"cmp edx, 0x100000","cmp edx, 0x100000",True
+9,jb 0x2a,jb 0x4a7a90,True
+10,"add eax, 0x14","add eax, 0x14",True
+11,jmp 0x10,jmp 0x4a7a76,True
+12,"xor eax, eax","xor eax, eax",True
+13,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\sbheap.obj (library object, no compilation)",symbol=___sbh_find_block,module=golf_clean.exe
+VERDICT,GREEN,14,100.0%

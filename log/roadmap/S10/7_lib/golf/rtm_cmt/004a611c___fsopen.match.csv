@@ -1,0 +1,24 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,call 6,call 0x4a9c19,True
+2,"mov esi, eax","mov esi, eax",True
+3,"test esi, esi","test esi, esi",True
+4,jne 0xe,jne 0x4a612a,True
+5,pop esi,pop esi,True
+6,ret ,ret ,True
+7,push edi,push edi,True
+8,push esi,push esi,True
+9,push dword ptr [esp + 0x18],push dword ptr [esp + 0x18],True
+10,push dword ptr [esp + 0x18],push dword ptr [esp + 0x18],True
+11,push dword ptr [esp + 0x18],push dword ptr [esp + 0x18],True
+12,call 0x21,call 0x4a9aa9,True
+13,push esi,push esi,True
+14,"mov edi, eax","mov edi, eax",True
+15,call 0x29,call 0x4a98c6,True
+16,"add esp, 0x14","add esp, 0x14",True
+17,"mov eax, edi","mov eax, edi",True
+18,pop edi,pop edi,True
+19,pop esi,pop esi,True
+20,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\fopen.obj (library object, no compilation)",symbol=__fsopen,module=golf_clean.exe
+VERDICT,GREEN,21,100.0%

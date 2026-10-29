@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jutils.c	0xb04c0	0x004b04c0	16	G	jdiv_round_up	_jdiv_round_up	public	100	100.0	6/6 ins	golf_jpeg_utils.cpp
+golf	golf/jpeg.lib/jpeg-6a/jutils.c	0xb04d0	0x004b04d0	24	G	jround_up	_jround_up	public	100	100.0	11/11 ins	golf_jpeg_utils.cpp
+golf	golf/jpeg.lib/jpeg-6a/jutils.c	0xb04f0	0x004b04f0	70	G	jcopy_sample_rows	_jcopy_sample_rows	public	100	100.0	31/31 ins	golf_jpeg_utils.cpp
+golf	golf/jpeg.lib/jpeg-6a/jutils.c	0xb0540	0x004b0540	27	G	jzero_far	_jzero_far	public	100	100.0	12/12 ins	golf_jpeg_utils.cpp

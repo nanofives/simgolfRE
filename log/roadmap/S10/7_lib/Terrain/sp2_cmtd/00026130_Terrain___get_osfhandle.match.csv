@@ -1,0 +1,33 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+3,"cmp eax, dword ptr [0]","cmp eax, dword ptr [0x10110f5c]",True
+4,jae 0x4b,jae 0x1002617b,True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,"sar ecx, 5","sar ecx, 5",True
+7,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+8,"and edx, 0x1f","and edx, 0x1f",True
+9,"imul edx, edx, 0x24","imul edx, edx, 0x24",True
+10,"mov eax, dword ptr [ecx*4]","mov eax, dword ptr [ecx*4 + 0x10110e20]",True
+11,"movsx ecx, byte ptr [eax + edx + 4]","movsx ecx, byte ptr [eax + edx + 4]",True
+12,"and ecx, 1","and ecx, 1",True
+13,"test ecx, ecx","test ecx, ecx",True
+14,je 0x4b,je 0x1002617b,True
+15,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+16,"sar edx, 5","sar edx, 5",True
+17,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+18,"and eax, 0x1f","and eax, 0x1f",True
+19,"imul eax, eax, 0x24","imul eax, eax, 0x24",True
+20,"mov ecx, dword ptr [edx*4]","mov ecx, dword ptr [edx*4 + 0x10110e20]",True
+21,"mov eax, dword ptr [ecx + eax]","mov eax, dword ptr [ecx + eax]",True
+22,jmp 0x64,jmp 0x10026194,True
+23,call 0x50,call 0x100243f0,True
+24,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+25,call 0x5b,call 0x10024400,True
+26,"mov dword ptr [eax], 0","mov dword ptr [eax], 0",True
+27,"or eax, 0xffffffff","or eax, 0xffffffff",True
+28,pop ebp,pop ebp,True
+29,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\osfinfo.obj (library object, no compilation)",symbol=__get_osfhandle,module=Terrain.dll
+VERDICT,GREEN,30,100.0%

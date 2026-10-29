@@ -1,0 +1,50 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128770]",True
+4,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+5,jmp 0x17,jmp 0x1009bb87,True
+6,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+7,"add ecx, 4","add ecx, 4",True
+8,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+9,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+10,"cmp dword ptr [edx], 0","cmp dword ptr [edx], 0",True
+11,je 0x6a,je 0x1009bbda,True
+12,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+13,push eax,push eax,True
+14,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+15,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+16,push edx,push edx,True
+17,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+18,push eax,push eax,True
+19,call 0x32,call 0x1009b340,True
+20,"add esp, 0xc","add esp, 0xc",True
+21,"test eax, eax","test eax, eax",True
+22,jne 0x68,jne 0x1009bbd8,True
+23,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+24,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+25,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+26,"movsx ecx, byte ptr [edx + eax]","movsx ecx, byte ptr [edx + eax]",True
+27,"cmp ecx, 0x3d","cmp ecx, 0x3d",True
+28,je 0x5a,je 0x1009bbca,True
+29,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+30,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+31,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+32,"movsx edx, byte ptr [eax + ecx]","movsx edx, byte ptr [eax + ecx]",True
+33,"test edx, edx","test edx, edx",True
+34,jne 0x68,jne 0x1009bbd8,True
+35,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+36,"sub eax, dword ptr [0]","sub eax, dword ptr [0x10128770]",True
+37,"sar eax, 2","sar eax, 2",True
+38,jmp 0x78,jmp 0x1009bbe8,True
+39,jmp 0xe,jmp 0x1009bb7e,True
+40,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+41,"sub eax, dword ptr [0]","sub eax, dword ptr [0x10128770]",True
+42,"sar eax, 2","sar eax, 2",True
+43,neg eax,neg eax,True
+44,"mov esp, ebp","mov esp, ebp",True
+45,pop ebp,pop ebp,True
+46,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\setenv.obj (library object, no compilation)",symbol=_findenv,module=jgld.dll
+VERDICT,GREEN,47,100.0%

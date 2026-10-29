@@ -1,0 +1,97 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push ecx,push ecx,True
+4,push ebx,push ebx,True
+5,push esi,push esi,True
+6,"mov esi, 0xffff","mov esi, 0xffff",True
+7,push esi,push esi,True
+8,push dword ptr [0],push dword ptr [0x10064f04],True
+9,call 0x18,call 0x1004917e,True
+10,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+11,pop ecx,pop ecx,True
+12,"mov ebx, eax","mov ebx, eax",True
+13,"mov eax, dword ptr [ebp + 0xe]","mov eax, dword ptr [ebp + 0xe]",True
+14,pop ecx,pop ecx,True
+15,push ecx,push ecx,True
+16,"and ax, 0x7ff0","and ax, 0x7ff0",True
+17,push ecx,push ecx,True
+18,"cmp ax, 0x7ff0","cmp ax, 0x7ff0",True
+19,fstp qword ptr [esp],fstp qword ptr [esp],True
+20,jne 0x86,jne 0x10043422,True
+21,call 0x36,call 0x10049046,True
+22,pop ecx,pop ecx,True
+23,"test eax, eax","test eax, eax",True
+24,pop ecx,pop ecx,True
+25,jle 0x69,jle 0x10043405,True
+26,"cmp eax, 2","cmp eax, 2",True
+27,jle 0x5b,jle 0x100433f7,True
+28,"cmp eax, 3","cmp eax, 3",True
+29,jne 0x69,jne 0x10043405,True
+30,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+31,push ebx,push ebx,True
+32,push ecx,push ecx,True
+33,push ecx,push ecx,True
+34,fstp qword ptr [esp],fstp qword ptr [esp],True
+35,push 0xb,push 0xb,True
+36,call 0x56,call 0x100487ea,True
+37,"add esp, 0x10","add esp, 0x10",True
+38,jmp 0xcb,jmp 0x10043467,True
+39,push esi,push esi,True
+40,push ebx,push ebx,True
+41,call 0x62,call 0x1004917e,True
+42,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+43,pop ecx,pop ecx,True
+44,pop ecx,pop ecx,True
+45,jmp 0xcb,jmp 0x10043467,True
+46,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+47,fadd qword ptr [0],fadd qword ptr [0x1005c5f8],True
+48,push ebx,push ebx,True
+49,push ecx,push ecx,True
+50,push ecx,push ecx,True
+51,fstp qword ptr [esp],fstp qword ptr [esp],True
+52,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+53,push ecx,push ecx,True
+54,push ecx,push ecx,True
+55,fstp qword ptr [esp],fstp qword ptr [esp],True
+56,push 0xb,push 0xb,True
+57,push 8,push 8,True
+58,jmp 0xc3,jmp 0x1004345f,True
+59,call 0x8b,call 0x10048fa7,True
+60,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+61,fld qword ptr [ebp - 8],fld qword ptr [ebp - 8],True
+62,fcomp qword ptr [ebp + 8],fcomp qword ptr [ebp + 8],True
+63,pop ecx,pop ecx,True
+64,pop ecx,pop ecx,True
+65,fnstsw ax,fnstsw ax,True
+66,sahf ,sahf ,True
+67,jne 0xa9,jne 0x10043445,True
+68,push esi,push esi,True
+69,push ebx,push ebx,True
+70,call 0xa2,call 0x1004917e,True
+71,fld qword ptr [ebp - 8],fld qword ptr [ebp - 8],True
+72,pop ecx,pop ecx,True
+73,pop ecx,pop ecx,True
+74,jmp 0xcb,jmp 0x10043467,True
+75,"test bl, 0x20","test bl, 0x20",True
+76,jne 0x9b,jne 0x10043437,True
+77,fld qword ptr [ebp - 8],fld qword ptr [ebp - 8],True
+78,push ebx,push ebx,True
+79,push ecx,push ecx,True
+80,push ecx,push ecx,True
+81,fstp qword ptr [esp],fstp qword ptr [esp],True
+82,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+83,push ecx,push ecx,True
+84,push ecx,push ecx,True
+85,fstp qword ptr [esp],fstp qword ptr [esp],True
+86,push 0xb,push 0xb,True
+87,push 0x10,push 0x10,True
+88,call 0xc8,call 0x1004889e,True
+89,"add esp, 0x1c","add esp, 0x1c",True
+90,pop esi,pop esi,True
+91,pop ebx,pop ebx,True
+92,leave ,leave ,True
+93,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\floor.obj (library object, no compilation)",symbol=_floor,module=sound.dll
+VERDICT,GREEN,94,100.0%

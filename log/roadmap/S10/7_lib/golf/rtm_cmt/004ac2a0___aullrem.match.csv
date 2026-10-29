@@ -1,0 +1,47 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,"mov eax, dword ptr [esp + 0x14]","mov eax, dword ptr [esp + 0x14]",True
+2,"or eax, eax","or eax, eax",True
+3,jne 0x21,jne 0x4ac2c1,True
+4,"mov ecx, dword ptr [esp + 0x10]","mov ecx, dword ptr [esp + 0x10]",True
+5,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+6,"xor edx, edx","xor edx, edx",True
+7,div ecx,div ecx,True
+8,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+9,div ecx,div ecx,True
+10,"mov eax, edx","mov eax, edx",True
+11,"xor edx, edx","xor edx, edx",True
+12,jmp 0x71,jmp 0x4ac311,True
+13,"mov ecx, eax","mov ecx, eax",True
+14,"mov ebx, dword ptr [esp + 0x10]","mov ebx, dword ptr [esp + 0x10]",True
+15,"mov edx, dword ptr [esp + 0xc]","mov edx, dword ptr [esp + 0xc]",True
+16,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+17,"shr ecx, 1","shr ecx, 1",True
+18,"rcr ebx, 1","rcr ebx, 1",True
+19,"shr edx, 1","shr edx, 1",True
+20,"rcr eax, 1","rcr eax, 1",True
+21,"or ecx, ecx","or ecx, ecx",True
+22,jne 0x2f,jne 0x4ac2cf,True
+23,div ebx,div ebx,True
+24,"mov ecx, eax","mov ecx, eax",True
+25,mul dword ptr [esp + 0x14],mul dword ptr [esp + 0x14],True
+26,"xchg ecx, eax","xchg ecx, eax",True
+27,mul dword ptr [esp + 0x10],mul dword ptr [esp + 0x10],True
+28,"add edx, ecx","add edx, ecx",True
+29,jb 0x5a,jb 0x4ac2fa,True
+30,"cmp edx, dword ptr [esp + 0xc]","cmp edx, dword ptr [esp + 0xc]",True
+31,ja 0x5a,ja 0x4ac2fa,True
+32,jb 0x62,jb 0x4ac302,True
+33,"cmp eax, dword ptr [esp + 8]","cmp eax, dword ptr [esp + 8]",True
+34,jbe 0x62,jbe 0x4ac302,True
+35,"sub eax, dword ptr [esp + 0x10]","sub eax, dword ptr [esp + 0x10]",True
+36,"sbb edx, dword ptr [esp + 0x14]","sbb edx, dword ptr [esp + 0x14]",True
+37,"sub eax, dword ptr [esp + 8]","sub eax, dword ptr [esp + 8]",True
+38,"sbb edx, dword ptr [esp + 0xc]","sbb edx, dword ptr [esp + 0xc]",True
+39,neg edx,neg edx,True
+40,neg eax,neg eax,True
+41,"sbb edx, 0","sbb edx, 0",True
+42,pop ebx,pop ebx,True
+43,ret 0x10,ret 0x10,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\ullrem.obj (library object, no compilation)",symbol=__aullrem,module=golf_clean.exe
+VERDICT,GREEN,44,100.0%

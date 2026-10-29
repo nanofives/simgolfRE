@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,push dword ptr [0],push dword ptr [0x100b5588],True
+1,push dword ptr [esp + 8],push dword ptr [esp + 8],True
+2,call 0xf,call 0x10042adf,True
+3,pop ecx,pop ecx,True
+4,pop ecx,pop ecx,True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\malloc.obj (library object, no compilation)",symbol=_malloc,module=sound.dll
+VERDICT,GREEN,6,100.0%

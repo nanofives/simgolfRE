@@ -1,0 +1,11 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/log.cpp	0xa0120	0x004a0120	10	L	$E4	_$E4	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa0130	0x004a0130	16	L	$E1	_$E1	name	100	100.0	4/4 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa0140	0x004a0140	12	L	$E3	_$E3	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa0150	0x004a0150	10	L	$E2	_$E2	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/log.cpp	0xa0160	0x004a0160	30	G	Log::`scalar deleting destructor'	??_GLog@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa0180	0x004a0180	32	G	Log::Log	??0Log@@QAE@PBD@Z	public	100	100.0	10/10 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa01a0	0x004a01a0	34	G	Log::~Log	??1Log@@UAE@XZ	public	100	100.0	12/12 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa01d0	0x004a01d0	176	G	Log::init	?init@Log@@QAEHPBD@Z	public	100	100.0	75/75 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa0280	0x004a0280	156	G	Log::say	?say@Log@@QAEXPBD0HHH@Z	public	100	100.0	55/55 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/log.cpp	0xa0320	0x004a0320	36	G	log_say	?log_say@@YAXPBD0HHH@Z	public	100	100.0	13/13 ins	golf_raw_05.cpp

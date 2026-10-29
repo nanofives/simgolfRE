@@ -1,0 +1,97 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ac50	0x0044ac50	10	L	$E28	_$E28	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ac60	0x0044ac60	50	L	$E25	_$E25	name	100	100.0	10/10 ins	golf_small4.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4aca0	0x0044aca0	12	L	$E27	_$E27	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4acb0	0x0044acb0	88	L	$E26	_$E26	name	100	100.0	19/19 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad10	0x0044ad10	10	L	$E33	_$E33	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad20	0x0044ad20	25	L	$E30	_$E30	name	100	100.0	7/7 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad40	0x0044ad40	12	L	$E32	_$E32	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad50	0x0044ad50	20	L	$E31	_$E31	name	100	100.0	6/6 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad70	0x0044ad70	10	L	$E38	_$E38	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad80	0x0044ad80	10	L	$E35	_$E35	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ad90	0x0044ad90	12	L	$E37	_$E37	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ada0	0x0044ada0	20	L	$E36	_$E36	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4adc0	0x0044adc0	10	L	$E43	_$E43	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4add0	0x0044add0	10	L	$E40	_$E40	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ade0	0x0044ade0	12	L	$E42	_$E42	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4adf0	0x0044adf0	10	L	$E41	_$E41	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ae00	0x0044ae00	88	G	SpritePair::~SpritePair	??1SpritePair@@QAE@XZ	public	100	100.0	22/22 ins	golf_hand_02.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4ae60	0x0044ae60	68	G	SpritePair::SpritePair	??0SpritePair@@QAE@XZ	public	100	100.0	19/19 ins	m36d_hand_gx.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4aeb0	0x0044aeb0	10	L	$E48	_$E48	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4aec0	0x0044aec0	10	L	$E45	_$E45	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4aed0	0x0044aed0	12	L	$E47	_$E47	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4aee0	0x0044aee0	10	L	$E46	_$E46	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4aef0	0x0044aef0	10	L	$E53	_$E53	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af00	0x0044af00	10	L	$E50	_$E50	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af10	0x0044af10	12	L	$E52	_$E52	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af20	0x0044af20	10	L	$E51	_$E51	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af30	0x0044af30	10	L	$E58	_$E58	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af40	0x0044af40	10	L	$E55	_$E55	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af50	0x0044af50	12	L	$E57	_$E57	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af60	0x0044af60	10	L	$E56	_$E56	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af70	0x0044af70	10	L	$E63	_$E63	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af80	0x0044af80	10	L	$E60	_$E60	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4af90	0x0044af90	12	L	$E62	_$E62	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4afa0	0x0044afa0	10	L	$E61	_$E61	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4afb0	0x0044afb0	173	G	ReportPanels::~ReportPanels	??1ReportPanels@@QAE@XZ	public	100	100.0	38/38 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b060	0x0044b060	129	G	ReportPanels::ReportPanels	??0ReportPanels@@QAE@XZ	public	100	100.0	31/31 ins	m36d_hand_gx.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b0f0	0x0044b0f0	10	L	$E68	_$E68	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b100	0x0044b100	10	L	$E65	_$E65	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b110	0x0044b110	12	L	$E67	_$E67	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b120	0x0044b120	10	L	$E66	_$E66	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b130	0x0044b130	10	L	$E73	_$E73	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b140	0x0044b140	10	L	$E70	_$E70	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b150	0x0044b150	12	L	$E72	_$E72	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b160	0x0044b160	10	L	$E71	_$E71	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b170	0x0044b170	10	L	$E78	_$E78	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b180	0x0044b180	10	L	$E75	_$E75	name	100	100.0	2/2 ins	golf_raw_06.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b190	0x0044b190	12	L	$E77	_$E77	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b1a0	0x0044b1a0	10	L	$E76	_$E76	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b1b0	0x0044b1b0	269	G	CourseReport::~CourseReport	??1CourseReport@@QAE@XZ	public	100	100.0	60/60 ins	golf_hand_08_e.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b2c0	0x0044b2c0	223	G	CourseReport::CourseReport	??0CourseReport@@QAE@XZ	public	100	100.0	53/53 ins	golf_hand_07_44b2c0.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b3a0	0x0044b3a0	10	L	$E83	_$E83	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b3b0	0x0044b3b0	10	L	$E80	_$E80	name	100	100.0	2/2 ins	golf_raw_06.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b3c0	0x0044b3c0	12	L	$E82	_$E82	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b3d0	0x0044b3d0	10	L	$E81	_$E81	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b3e0	0x0044b3e0	111	G	MemberRoster::~MemberRoster	??1MemberRoster@@QAE@XZ	public	100	100.0	29/29 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b450	0x0044b450	96	G	MemberRoster::MemberRoster	??0MemberRoster@@QAE@XZ	public	100	100.0	27/27 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b4b0	0x0044b4b0	10	L	$E88	_$E88	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b4c0	0x0044b4c0	10	L	$E85	_$E85	name	100	100.0	2/2 ins	golf_raw_06.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b4d0	0x0044b4d0	12	L	$E87	_$E87	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b4e0	0x0044b4e0	10	L	$E86	_$E86	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b4f0	0x0044b4f0	166	G	RouteScreens::~RouteScreens	??1RouteScreens@@QAE@XZ	public	100	100.0	43/43 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b5a0	0x0044b5a0	161	G	RouteScreens::RouteScreens	??0RouteScreens@@QAE@XZ	public	100	100.0	43/43 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b650	0x0044b650	10	L	$E93	_$E93	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b660	0x0044b660	10	L	$E90	_$E90	name	100	100.0	2/2 ins	golf_raw_06.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b670	0x0044b670	12	L	$E92	_$E92	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b680	0x0044b680	10	L	$E91	_$E91	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b690	0x0044b690	92	G	PairScreen::~PairScreen	??1PairScreen@@QAE@XZ	public	100	100.0	25/25 ins	golf_hand_02.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b6f0	0x0044b6f0	83	G	PairScreen::PairScreen	??0PairScreen@@QAE@XZ	public	100	100.0	24/24 ins	golf_hand_02.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b750	0x0044b750	10	L	$E98	_$E98	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b760	0x0044b760	10	L	$E95	_$E95	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b770	0x0044b770	12	L	$E97	_$E97	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b780	0x0044b780	10	L	$E96	_$E96	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b790	0x0044b790	305	G	TournamentResult::~TournamentResult	??1TournamentResult@@QAE@XZ	public	100	100.0	62/62 ins	golf_hand_r3.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b8d0	0x0044b8d0	225	G	TournamentResult::TournamentResult	??0TournamentResult@@QAE@XZ	public	100	100.0	49/49 ins	golf_hand_07_44b8d0.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4b9c0	0x0044b9c0	1044	G	ShowCreditsScreen	?ShowCreditsScreen@@YAXXZ	public	100	100.0	305/305 ins	golf_hand_s3.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4bde0	0x0044bde0	3833	G	LoadInfoScreenAssets	?LoadInfoScreenAssets@@YAXXZ	public	100	100.0	1166/1166 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4cce0	0x0044cce0	783	G	CleanupAllFontsAndSprites	?CleanupAllFontsAndSprites@@YAXXZ	public	100	100.0	170/170 ins	golf_hand_s2.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4cff0	0x0044cff0	6005	G	RenderEndOfYearReport	?RenderEndOfYearReport@@YAXXZ	public	100	100.0	1776/1776 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4e770	0x0044e770	3898	G	RenderKeyboardShortcutsScreen	?RenderKeyboardShortcutsScreen@@YAXXZ	public	100	100.0	1228/1228 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4f6b0	0x0044f6b0	1075	G	RenderFinancialReportScreen	?RenderFinancialReportScreen@@YAXXZ	public	100	100.0	344/344 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4faf0	0x0044faf0	50	G	GetHoleCountTier	?GetHoleCountTier@@YAHH@Z	public	100	100.0	21/21 ins	golf_small4.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x4fb30	0x0044fb30	14120	G	RenderHoleInfoOverlay	?RenderHoleInfoOverlay@@YAXH@Z	public	100	100.0	4715/4715 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x53260	0x00453260	58	G	GolferAge	?GolferAge@@YAHH@Z	public	100	100.0	20/20 ins	golf_small6.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x532a0	0x004532a0	132	G	AppendSkillWord	?AppendSkillWord@@YAXH@Z	public	100	100.0	43/43 ins	golf_hand_03.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x53330	0x00453330	4984	G	RenderHoleStatsScreen	?RenderHoleStatsScreen@@YAXH@Z	public	100	100.0	1633/1633 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x546b0	0x004546b0	1433	G	RenderPlayerCommentsReport	?RenderPlayerCommentsReport@@YAXXZ	public	100	100.0	461/461 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x54c50	0x00454c50	3544	G	RenderMembershipRosterScreen	?RenderMembershipRosterScreen@@YAXXZ	public	100	100.0	1149/1149 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x55a30	0x00455a30	1182	G	RenderBestHoleScoresScreen	?RenderBestHoleScoresScreen@@YAXXZ	public	100	100.0	396/396 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x55ed0	0x00455ed0	3221	G	RenderHistographScreen	?RenderHistographScreen@@YAXXZ	public	100	100.0	948/948 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x56b70	0x00456b70	59	G	TileToScreenCoords	?TileToScreenCoords@@YAXHHPAH0@Z	public	100	100.0	21/21 ins	golf_hand_01.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x56bb0	0x00456bb0	45	G	GetTerrainPropertyAt	?GetTerrainPropertyAt@@YAHHH@Z	public	100	100.0	13/13 ins	golf_raw_11.cpp
+golf	golf/golf.exe/src/InfoScreens.cpp	0x56be0	0x00456be0	7104	G	RenderRoutingMapScreen	?RenderRoutingMapScreen@@YAXXZ	public	100	100.0	2098/2098 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x587a0	0x004587a0	3158	G	RenderTractPurchaseScreen	?RenderTractPurchaseScreen@@YAHXZ	public	100	100.0	1001/1001 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x59400	0x00459400	1104	G	RenderHireEmployeeScreen	?RenderHireEmployeeScreen@@YAHXZ	public	100	100.0	338/338 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x59850	0x00459850	2112	G	RenderGolferPairingScreen	?RenderGolferPairingScreen@@YAXXZ	public	100	100.0	677/677 ins	
+golf	golf/golf.exe/src/InfoScreens.cpp	0x5a090	0x0045a090	3484	G	RenderTournamentLeaderboard	?RenderTournamentLeaderboard@@YAXXZ	public	100	100.0	1093/1093 ins	

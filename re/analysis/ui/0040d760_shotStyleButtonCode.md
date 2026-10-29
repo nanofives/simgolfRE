@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 46 bytes, 15 instructions, subsystem `ui`. Mechanical t
 maps a shot-style button number 3..7 to a 0x8000xxxx code (what the code selects is not determined) (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_SpriteAssets.cpp` as `?GetColorForSkillSet@@YAIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040d778, 0x0040d77e, 0x0040d784, 0x0040d78a, 0x0040d78d): callee pops 0 bytes of stack arguments.
 
 ## Reads

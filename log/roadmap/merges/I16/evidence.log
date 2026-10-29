@@ -1,0 +1,1227 @@
+golf_clean.exe 0x00402a40 ?UpdateAllEmployees@@YAXXZ: 100.0% (953/953 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_Employee.cpp
+golf_clean.exe 0x004038f0 ?RenderEmployees@@YAXXZ: 100.0% (473/473 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_EmployeeRender.cpp
+golf_clean.exe 0x0043cc40 _$E12: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043cc90 _$E17: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043ccd0 _$E22: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043cd70 ?PlayIntroVideo@@YAXXZ: 100.0% (408/408 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043d4a0 _$E27: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043d500 _$E32: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043d660 _$E37: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043d740 ?LoadFLCAnimation@@YAXHPBDHHH@Z: 100.0% (377/377 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x0043dbe0 ?LoadThemeAssets@@YAXXZ: 100.0% (5161/5161 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x00442180 ?ResetAllGameState@@YAXH@Z: 100.0% (7452/7452 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+golf_clean.exe 0x00448190 _$E42: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX /Oa /Og /Oi /Ot /Oy /Ob1 /Gs /Gf /Gy
+rc=0 re/match/smsg_golf_FlicBanks.cpp
+golf_clean.exe 0x00403f50 _$E6: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00403fb0 _$E11: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404010 _$E16: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404070 _$E21: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404090 ?FLC_GetNextFrameSurface@@YAPAUSpriteObject@@H@Z: 100.0% (51/51 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404120 ?FLC_LoadAndGetSurface@@YAPAUSpriteObject@@PBDHPAH@Z: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_FlicChannels.cpp
+golf_clean.exe 0x0045ba80 _$E26: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045bad0 _$E31: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045baf0 _WinMain@16: 100.0% (320/320 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_GameMain.cpp
+golf_clean.exe 0x004671a0 ?GetDirection8@@YAHHH@Z: 100.0% (94/94 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004672d0 ?CalculateAngle@@YAHHH@Z: 100.0% (126/126 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004674c0 ?BilinearSample@@YAHHH@Z: 100.0% (49/49 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00467600 ?BuildEmployeeName@@YAXH@Z: 100.0% (80/80 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004676e0 ?AppendGolferName@@YAXHH@Z: 100.0% (145/145 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_Geometry.cpp
+golf_clean.exe 0x00404340 _$E26: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404350 ??1Screen@@UAE@XZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004043d0 _$E31: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404410 _$E36: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404460 _$E41: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004044b0 _$E46: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404500 _$E51: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404550 _$E56: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004045a0 _$E61: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004045f0 _$E66: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404640 _$E71: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404690 _$E76: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004046e0 _$E81: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404720 _$E86: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404770 _$E91: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004047c0 _$E96: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404810 _$E101: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404860 _$E106: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404880 ?on_spot_move@WidgetBase@@UAEHHHPAURect@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404890 ?on_listbox_scroll_delete@WidgetBase@@UAEHH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004048a0 ?on_dialog_item_back_draw@WidgetBase@@UAEHPAU1@HHPAURect@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004048b0 ?on_check_size@WidgetBase@@UAEXPAH00@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004048c0 ?on_modal@WidgetBase@@UAEHXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004048d0 ?init_buffer@AssetSurface@@UAEHHHHH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004048f0 ?resize_buffer@AssetSurface@@UAEHHHH@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404910 ?close_buffer@AssetSurface@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404920 ?update@GraphicWin@@UAEXXZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404930 ?OnHotspotDefault@GraphicWin@@UAEHHPAD@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404940 ?is_graphicwin@GraphicWin@@UAEPAU1@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404960 ?is_graphicwin@GraphicWin@@WCHE@AEPAU1@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0043cbc0 ?on_mouse_leave@WidgetBase@@UAEXHH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_Globals.cpp
+golf_clean.exe 0x00466370 ?AdvanceStoryChapter@@YAHHH@Z: 100.0% (369/369 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004669f0 ?ResolveStoryResponse@@YAXHHHH@Z: 100.0% (129/129 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00466b70 ?AppendThemeText@@YAXHHHH@Z: 100.0% (496/496 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004a0890 ?OnTraitMatched@@YAXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_Golfer.cpp
+golf_clean.exe 0x00467a00 ?SetGolferAction@@YAXHHH@Z: 100.0% (2509/2509 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00469b00 ?BuildGolferDialogue@@YAXHHHH@Z: 100.0% (3879/3879 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_GolferDialogue.cpp
+golf_clean.exe 0x0045de80 ?PairGolfers@@YAXHH@Z: 100.0% (1162/1162 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0045f0f0 ?RenderSkillPointsScreen@@YAHPADHHHH@Z: 100.0% (568/568 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0045f870 ?RenderTop10CoursesScreen@@YAXXZ: 100.0% (410/410 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004604f0 ?SetupTutorialMessage@@YAXXZ: 100.0% (695/695 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00460df0 ?BuildHoleTypeMessage@@YAXHH@Z: 100.0% (286/286 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00461110 ?RenderScorecard@@YAXH@Z: 100.0% (368/368 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_GolferPairing.cpp
+golf_clean.exe 0x0045c180 _$E12: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045c190 _$E11: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045c200 ?RenderGolferPortrait@@YAHHHHH@Z: 100.0% (185/185 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045c560 ?RenderGolferInfoPanel@@YAXHH@Z: 100.0% (1929/1929 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_GolferPanel.cpp
+golf_clean.exe 0x004226a0 ?SimulateBallPhysics@@YAXHHHH@Z: 100.0% (655/655 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00422fb0 ?CalculateBestShot@@YAHH@Z: 100.0% (1191/1191 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00424120 ?PlanGolferShot@@YAXHHHHH@Z: 100.0% (2650/2650 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004266b0 ?ProcessVIPGolferEvent@@YAXH@Z: 100.0% (1140/1140 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004289e0 ?UpdateAllGolfers@@YAXXZ: 100.0% (5560/5560 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0042dea0 ?CalculateAllHoleStatistics@@YAXXZ: 100.0% (696/696 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0042e7e0 ?FindPathDirection@@YAHHHHHH@Z: 100.0% (516/516 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0042f120 ?FloodFillWalkableArea@@YAXHH@Z: 100.0% (48/48 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0042f1c0 ?UpdateWaterShoreDepth@@YAXHH@Z: 100.0% (84/84 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0042f340 ?UpdateBuildingAccessibility@@YAXXZ: 100.0% (116/116 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0042fb90 ?WorldToScreen@@YAHHHPAH0H@Z: 100.0% (406/406 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00430020 ?ScreenToTileCoords@@YAXHHPAH0H@Z: 100.0% (293/293 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_GolferShot.cpp
+golf_clean.exe 0x00421bc0 ?SpawnGolfer@@YAHH@Z: 100.0% (276/276 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00421fa0 ?CalculateShotDifficulty@@YAHHHHHHHH@Z: 100.0% (337/337 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_GolferSpawn.cpp
+golf_clean.exe 0x0044acb0 _$E26: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044ad50 _$E31: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044ada0 _$E36: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044bde0 ?LoadInfoScreenAssets@@YAXXZ: 100.0% (1166/1166 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044cff0 ?RenderEndOfYearReport@@YAXXZ: 100.0% (1776/1776 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044e770 ?RenderKeyboardShortcutsScreen@@YAXXZ: 100.0% (1228/1228 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044f6b0 ?RenderFinancialReportScreen@@YAXXZ: 100.0% (344/344 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044fb30 ?RenderHoleInfoOverlay@@YAXH@Z: 100.0% (4715/4715 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00453330 ?RenderHoleStatsScreen@@YAXH@Z: 100.0% (1633/1633 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004546b0 ?RenderPlayerCommentsReport@@YAXXZ: 100.0% (461/461 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00454c50 ?RenderMembershipRosterScreen@@YAXXZ: 100.0% (1149/1149 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00455a30 ?RenderBestHoleScoresScreen@@YAXXZ: 100.0% (396/396 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00455ed0 ?RenderHistographScreen@@YAXXZ: 100.0% (948/948 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00456be0 ?RenderRoutingMapScreen@@YAXXZ: 100.0% (2098/2098 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004587a0 ?RenderTractPurchaseScreen@@YAHXZ: 100.0% (1001/1001 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00459400 ?RenderHireEmployeeScreen@@YAHXZ: 100.0% (338/338 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00459850 ?RenderGolferPairingScreen@@YAXXZ: 100.0% (677/677 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0045a090 ?RenderTournamentLeaderboard@@YAXXZ: 100.0% (1093/1093 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_InfoScreens.cpp
+golf_clean.exe 0x0045ae30 ?TakePendingKey@@YAHXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045ae50 ?TakePendingChar@@YAHXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045ae70 ?PollInputState@@YAHXZ: 100.0% (21/21 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045af30 ?WrapText@@YAHH@Z: 100.0% (139/139 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045b0d0 ?DrawTextWordWrapped@@YAHHHHI@Z: 100.0% (156/156 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045b2c0 ?ShowTextInputDialog@@YAXPBDHHH@Z: 100.0% (291/291 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_InputPoll.cpp
+golf_clean.exe 0x0045c0c0 ?WaitForInputWithTimeout@@YAHH@Z: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_InputWait.cpp
+golf_clean.exe 0x0046de60 _$E8: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0046dea0 ?ShowListSelectionDialog@@YAHPBDH@Z: 100.0% (261/261 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0046e260 ?RenderMenuWithSelection@@YAHPADH@Z: 100.0% (374/374 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_ListDialog.cpp
+golf_clean.exe 0x0040f5c0 ?MainLoop@@YAXXZ: 100.0% (21541/21541 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00421b30 ?Create@AssetSurface@@QAEHHHHHH@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00421b90 ?BlitScaled@SpriteObject@@QAEHPAUAssetSurface@@HHPAGHHPAUPaletteBase@@@Z: 100.0% (17/17 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_MainLoop.cpp
+golf_clean.exe 0x00401000 ?ClearPlot@@YAXH@Z: 100.0% (16/16 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00401040 ?PlaceBuilding@@YAHHHHH@Z: 100.0% (118/118 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004012d0 ?RenderPlot@@YAXHHH@Z: 100.0% (360/360 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00402180 ?fill_entry@?$ClassList@USpriteStruct@@@@UAEHPAUSpriteStruct@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00402190 ?kill_entry@?$ClassList@USpriteStruct@@@@UAEXPAUSpriteStruct@@@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00402720 ??_G?$ClassList@UStringStruct@@@@UAEPAXI@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00402790 ??_G?$ClassList@UPalStruct@@@@UAEPAXI@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00402800 ??_G?$ClassList@USpriteStruct@@@@UAEPAXI@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00402870 ??_GLinkListEntry@@UAEPAXI@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004028b0 ??_GStringStruct@@UAEPAXI@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004028f0 ??_GPalStruct@@UAEPAXI@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_Plot.cpp
+golf_clean.exe 0x00462020 ?SetupGolferAppearance@@YAXH@Z: 100.0% (567/567 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004627d0 ?ResetRenderState@@YAXXZ: 100.0% (11/11 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00462a30 ?AddSpriteToRenderQueue@@YAXHHHHHPAUSpriteObject@@HH@Z: 100.0% (120/120 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00462be0 ?RenderQueuedSprite@@YAXH@Z: 100.0% (369/369 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00463100 ?ProcessRenderQueue@@YAXXZ: 100.0% (27/27 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00463180 ?RenderSpriteByType@@YAXHHHHHHH@Z: 100.0% (2911/2911 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_RenderQueue.cpp
+golf_clean.exe 0x00465580 ?on_left_click@Screen@@UAEXHH@Z: 100.0% (41/41 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00465610 ?on_left_down@Screen@@UAEXHH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00465650 ?on_left_up@Screen@@UAEXHH@Z: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00465680 ?on_right_click@Screen@@UAEXHH@Z: 100.0% (40/40 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00465720 ?on_right_down@Screen@@UAEXHH@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00465740 ?on_right_up@Screen@@UAEXHH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00465750 ?on_key_click@Screen@@UAEHHH@Z: 100.0% (23/23 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004657b0 ?on_key_down@Screen@@UAEHH@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004657d0 ?on_key_up@Screen@@UAEHH@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004658a0 ?on_sys_close@Screen@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_Screen.cpp
+golf_clean.exe 0x00437900 _$E26: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00437910 ?SaveGolferToTheme@@YAHHHH@Z: 100.0% (535/535 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00437fa0 ?LoadGolferFromTheme@@YAHPBDHH@Z: 100.0% (231/231 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004385c0 _$E31: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004385d0 ?RenderGolferCustomizationScreen@@YAXHH@Z: 100.0% (2239/2239 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0043a400 ?ShowDifficultySelectScreen@@YAHXZ: 100.0% (347/347 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0043a8c0 ?ShowPickAProScreen@@YAHXZ: 100.0% (1000/1000 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0043b610 ?ShowLoadGameScreen@@YAHHH@Z: 100.0% (1631/1631 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_SetupScreens.cpp
+golf_clean.exe 0x004617e0 _$E8: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004617f0 _$E7: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00461830 ?Render_InitColorTable@@YAHXZ: 100.0% (551/551 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_ShadeTable.cpp
+golf_clean.exe 0x00404d00 _$E6: 100.0% (53/53 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404ea0 _$E11: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405010 _$E16: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405160 _$E21: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004052e0 _$E26: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405450 _$E31: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405590 _$E36: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004056d0 _$E41: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405840 _$E46: 100.0% (41/41 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405910 _$E51: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405b10 ?ShowSaveGameDialog@@YAXXZ: 100.0% (283/283 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405e30 ?TrySpawnWildlifeHabitat@@YAXHHH@Z: 100.0% (187/187 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004060a0 ?CalculateHoleTalentStrokeGap@@YAHHH@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004061d0 _$E76: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406210 _$E81: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406250 ?ShowLoadingScreen@@YAXH@Z: 100.0% (212/212 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406670 ?ProcessMembershipUpgrade@@YAXH@Z: 100.0% (534/534 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406f20 ?SmoothTerrainRaise@@YAXHH@Z: 100.0% (39/39 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406f90 ?SmoothTerrainLower@@YAXHH@Z: 100.0% (38/38 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407000 ?InLandmarkInfluence@@YAHHHH@Z: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407700 ?GetSceneryName@@YAHHHH@Z: 100.0% (270/270 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407d30 ?StartNewGameOnCourse@@YAXH@Z: 100.0% (52/52 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407e00 ?DisplayShotCommentary@@YAXHHHH@Z: 100.0% (1985/1985 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409620 ?CheckGolferShotDeviation@@YAXH@Z: 100.0% (253/253 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409950 ?AddGolferTrailPoint@@YAXH@Z: 100.0% (44/44 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004099f0 ?StartShotTrail@@YAXH@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409a90 ?SpawnGolferDivot@@YAXH@Z: 100.0% (104/104 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409bf0 ?UpdateDivots@@YAXXZ: 100.0% (71/71 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409cf0 ?PlayScriptStep@@YAXXZ: 100.0% (295/295 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040a160 ?BuildDemolishTooltipText@@YAHHH@Z: 100.0% (340/340 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040a4e0 ?DemolishTileAtPosition@@YAXHH@Z: 100.0% (380/380 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040aa80 ?ProcessHireEmployeeSelection@@YAXXZ: 100.0% (168/168 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040ad60 ?LoadOrGenerateHighScores@@YAHXZ: 100.0% (154/154 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040af70 ?TransferSaveBlock@@YAHPAXI@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040b680 ?SaveCourseToFile@@YAXXZ: 100.0% (153/153 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040b9b0 ?LoadSavedGame@@YAXPBDHHH@Z: 100.0% (188/188 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040bfe0 ?GetCornerElevation@@YAHHHHH@Z: 100.0% (143/143 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040c500 ?PlayPositionedSound@@YAXHHHH@Z: 100.0% (157/157 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040ca10 ?TilePatternToArea@@YAXHHHHH@Z: 100.0% (78/78 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040d320 ?RenderSpeechBubbleWithPortrait@@YAXHHHH@Z: 100.0% (298/298 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040d760 ?GetColorForSkillSet@@YAIH@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040d890 ?SelectScreenItem@@YAXHH@Z: 100.0% (150/150 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040db90 ?ValidateBuildingPlacement@@YAHHHHH@Z: 100.0% (156/156 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040de70 ?FindNearestBench@@YAXHHH@Z: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040df80 ?FindBuildingAtTile@@YAHHH@Z: 100.0% (44/44 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040e000 ?PlaceBuildingOnTerrain@@YAHHHHH@Z: 100.0% (295/295 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040e400 ?DemolishBuilding@@YAXH@Z: 100.0% (127/127 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040e720 ?OpenHoleForPlay@@YAXXZ: 100.0% (852/852 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040f190 ?StartProMatch@@YAXH@Z: 100.0% (282/282 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_SpriteAssets.cpp
+golf_clean.exe 0x0045b660 ?ParseFileForSection@@YAHPBD0@Z: 100.0% (130/130 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_StringPool.cpp
+golf_clean.exe 0x004615f0 ?AdjustMoodInRadius@@YAXHHH@Z: 100.0% (84/84 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_TerrainInfluence.cpp
+golf_clean.exe 0x00449160 _$E8: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449170 _$E7: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449180 _$E11: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449190 _$E10: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x004491e0 _$E14: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449250 _$E19: 100.0% (32/32 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x004492b0 _$E24: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x004492c0 _$E23: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x004493d0 ?DrawTerrainLine@@YAXHHHHIHH@Z: 100.0% (17/17 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449400 ?LoadCourseType@@YAXH@Z: 100.0% (32/32 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x004498a0 ?UpdateTerrainView@@YAXHHHH@Z: 100.0% (429/429 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449f00 ?UpdateTileTerrainType@@YA_NPAVTile@@HH@Z: 100.0% (66/66 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x00449fa0 ?AdjustTileCornerElevations@@YA_NPAVTile@@HHHH@Z: 100.0% (313/313 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x0044a380 ?UpdateTileWalls@@YA_NPAVTile@@HH@Z: 100.0% (55/55 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x0044a6e0 ?ScrollTerrainView@@YAXPAUAssetSurface@@HHHHHH@Z: 100.0% (384/384 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+golf_clean.exe 0x0044ac00 ?erase@TileList@@QAE?AVTileIter@@V2@0@Z: 100.0% (30/30 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /DTERRAIN_EXPORTS
+rc=0 re/match/smsg_golf_TerrainView.cpp
+golf_clean.exe 0x004659a0 ?LoadThemeData@@YAXXZ: 100.0% (854/854 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_ThemeLoader.cpp
+golf_clean.exe 0x00432200 ?RenderToolbarRow@@YAHHHHHHHHHHHH@Z: 100.0% (290/290 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00432620 ?RenderToolbarTooltip@@YAXHH@Z: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00432ba0 ?RenderMainBar@@YAXHH@Z: 100.0% (278/278 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00432f90 ?HitTestTerrainToolbar@@YAHHH@Z: 100.0% (62/62 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00433190 ?RenderTerrainToolbar@@YAXHH@Z: 100.0% (885/885 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00434350 ?RenderFacilityUpgradeToolbar@@YAXHH@Z: 100.0% (500/500 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00435760 ?RenderGolferPairingPanel@@YAXHH@Z: 100.0% (587/587 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004362f0 ?RenderPeopleToolbarWithTooltip@@YAXHH@Z: 100.0% (612/612 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00436c00 ?HandleEmployeeListClick@@YAHHH@Z: 100.0% (158/158 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_Toolbar.cpp
+golf_clean.exe 0x0046c970 ?InitTournamentGolfers@@YAXXZ: 100.0% (447/447 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0046d200 ?PrepareTournamentCourse@@YAXXZ: 100.0% (417/417 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0046d6e0 ?ShowActionDialog@@YAHHHHHH@Z: 100.0% (560/560 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_Tournament.cpp
+golf_clean.exe 0x00430360 ?UpdateAndRenderWildlife@@YAXXZ: 100.0% (1329/1329 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004315e0 ?InitNewGameData@@YAXXZ: 100.0% (462/462 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00431be0 ?DownsampleRGB555ToRGB888@@YAPAEH@Z: 100.0% (101/101 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004321a0 ?SetCourseFileName@@YAXPBD@Z: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_WildlifeUpdate.cpp
+golf_clean.exe 0x0046e810 ?RenderAccomplishmentsScreen@@YAXXZ: 100.0% (716/716 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0046f180 ?ShowAccomplishmentsScreen@@YAXXZ: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0046f2b0 ?InitWorldMapCourseList@@YAXXZ: 100.0% (205/205 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0046f550 ?ShowWorldMapScreen@@YAHXZ: 100.0% (1570/1570 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00470a00 ?ChooseWorldMapCourse@@YAHH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00470a60 ?GenerateCourseMap@@YAXH@Z: 100.0% (1729/1729 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004725b0 ?ShowThemeSelect@@YAXXZ: 100.0% (1041/1041 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00473470 ?RenderHighScoreScreen@@YAXXZ: 100.0% (491/491 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_WorldMap.cpp
+golf_clean.exe 0x00488ab0 ?on_left_down@BaseButton@@UAEXHH@Z: 100.0% (89/89 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00488bf0 ?on_left_up@BaseButton@@UAEXHH@Z: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00488cb0 ?on_key_click@BaseButton@@UAEHHH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00488cc0 ?on_mouse_leave@BaseButton@@UAEXHH@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00488fa0 ?on_dialog_focus@BaseButton@@UAEXH@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_BaseButton.cpp
+golf_clean.exe 0x00479820 ?on_draw_background@BasePop@@UAEHXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047e5e0 ?on_release_modal@BasePop@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048ce00 ??0BasePop@@QAE@XZ: 100.0% (318/318 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048d480 ?close@BasePop@@QAEXXZ: 100.0% (408/408 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048e1c0 ?start@BasePop@@QAEHPBD0H0IPAUGraphicWin@@@Z: 100.0% (480/480 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048e900 ?exec@BasePop@@QAEHHP6AHXZ@Z: 100.0% (1419/1419 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048fe60 ?calculate_dimensions@BasePop@@UAEHXZ: 100.0% (714/714 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00490ac0 ?on_key_click@BasePop@@UAEHHH@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00490ae0 ?on_nc_hittest@BasePop@@UAEHHH@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00490b10 ?on_key_up@BasePop@@UAEHH@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00490b30 ?OnListItemActivated@@YAXH@Z: 100.0% (50/50 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00490d50 ?on_modal@BasePop@@UAEHXZ: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00490d60 ?on_redraw@BasePop@@UAEXXZ: 100.0% (382/382 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491270 ?on_redraw_nc@BasePop@@UAEXH@Z: 100.0% (50/50 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491370 ?on_left_down@BasePop@@UAEXHH@Z: 100.0% (24/24 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004913c0 ?set_sprites@BasePop@@UAEXPAUSpriteObject@@00@Z: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004913f0 ?set_highlight_color@BasePop@@UAEXH@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491400 ?set_selected_color@BasePop@@UAEXH@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004916e0 ?handleGameSpecificControlLines@BasePop@@UAEDPAD@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491a70 ??_EDialogs@@$4PPPPPNII@CHE@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491a90 ??_EDialogs@@$4PPPPPPPM@FHI@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491ab0 ?on_redraw@Dialogs@@$4PPPPPPPM@FHI@AEXXZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491bc0 ??_EListBoxCtl@@$4PPPPPNII@CHE@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491be0 ??_EListBoxCtl@@$4PPPPPPPM@FHI@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00491c00 ?on_redraw@ListBoxCtl@@$4PPPPPPPM@FHI@AEXXZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a4340 ?on_left_click@BasePop@@UAEXHH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_BasePop.cpp
+golf_clean.exe 0x0049eb20 _$E15: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049eb80 _$E21: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_CheckBoxSprites.cpp
+golf_clean.exe 0x004936a0 ?init@ComboBox@@QAEHHHHHPAUWidgetBase@@I@Z: 100.0% (267/267 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00493b90 ?updateListBoxPositionAndSize@ComboBox@@QAEHHH@Z: 100.0% (215/215 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004940e0 ?getItemString@ComboBox@@QAEPBDH@Z: 100.0% (92/92 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_ComboBox.cpp
+golf_clean.exe 0x00489ae0 ??_GStringList@@UAEPAXI@Z: 100.0% (24/24 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_Dialog.cpp
+golf_clean.exe 0x00494d30 ?dotted_hline_16@AssetSurface@@QAEXHHHH@Z: 100.0% (172/172 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00494f00 ?dotted_vline_16@AssetSurface@@QAEXHHHH@Z: 100.0% (184/184 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_DottedLine16.cpp
+golf_clean.exe 0x004863e0 ?pixel_to_pos@EditBox@@QAEHHHPAPADH@Z: 100.0% (86/86 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004864f0 ?on_redraw@EditBox@@UAEXXZ: 100.0% (167/167 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004867b0 ?on_key_down@EditBox@@UAEHH@Z: 100.0% (240/240 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00486af0 ?on_scrolled@EditBox@@UAEXHH@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00486b00 ?on_scrolling@EditBox@@UAEXHH@Z: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00486b70 ?caret_callback@EditBox@@SAXH@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_EditBox.cpp
+golf_clean.exe 0x004a2400 ?attach@EditGroup@@UAEHPAUWidgetBase@@HHH@Z: 100.0% (331/331 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a2a60 ?calculate_dimensions@EditGroup@@QAEHXZ: 100.0% (253/253 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a2d50 ?on_redraw@EditGroup@@UAEXXZ: 100.0% (190/190 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a30c0 ??_EEditGroup@@$4PPPPPNII@CHE@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a30e0 ??_EEditGroup@@$4PPPPPPPM@FHI@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_EditGroup.cpp
+golf_clean.exe 0x00491c70 ?sin_table@@YAHHH@Z: 100.0% (84/84 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_FixedMath.cpp
+golf_clean.exe 0x00481ca0 ?confirm_data@FlicAnim@@QAEHH@Z: 100.0% (162/162 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00481f40 ?load@FlicAnim@@QAEHPBDHPAVFLCPalette@@H@Z: 100.0% (345/345 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00482420 ?next_sprite@FlicAnim@@QAEPAUSpriteObject@@PAUFlicSprite@@PAU2@@Z: 100.0% (41/41 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00482570 ?decode_chunk@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z: 100.0% (148/148 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004827d0 ?decode_ss2@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z: 100.0% (129/129 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487cb0 ?decode_lc@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_FlicAnim.cpp
+golf_clean.exe 0x00482b90 ?init@FlicSprite@@QAEHPAUFlicAnim@@H@Z: 100.0% (194/194 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_FlicSprite.cpp
+golf_clean.exe 0x00480a10 ?EraseBackground@GraphicWin@@QAEHPAURect@@H@Z: 100.0% (78/78 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00480b00 ?fill@GraphicWin@@QAEXHHHHH@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00480b30 ?resize@GraphicWin@@UAEHHHHH@Z: 100.0% (81/81 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00480c20 ?RenderRect@WidgetBase@@QAEXHHHHH@Z: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00480dc0 ?on_paint@GraphicWin@@UAEXPAURect@@@Z: 100.0% (140/140 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00480f80 ?on_size@GraphicWin@@UAEXHHH@Z: 100.0% (111/111 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004810c0 ?set_rects@GraphicWin@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004810d0 ?on_redraw_nc@GraphicWin@@UAEXH@Z: 100.0% (517/517 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00481870 ?InitFadeTable@@YAHH@Z: 100.0% (216/216 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_GraphicWin.cpp
+golf_clean.exe 0x004a1580 ?on_redraw@ImageButton@@UAEXXZ: 100.0% (846/846 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a2010 ?on_mouse_move@ImageButton@@UAEXHH@Z: 100.0% (135/135 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a21c0 ?on_mouse_leave@ImageButton@@UAEXHH@Z: 100.0% (42/42 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_ImageButton.cpp
+golf_clean.exe 0x00487af0 ?on_dialog_focus@ListBox@@UAEXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048a120 ?calculate_dimensions@ListBox@@QAEHXZ: 100.0% (400/400 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048a5d0 ?attach@ListBox@@UAEHPAUWidgetBase@@HHH@Z: 100.0% (257/257 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048aa00 ?on_left_down@ListBox@@UAEXHH@Z: 100.0% (426/426 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048aea0 ?on_key_down@ListBox@@UAEHH@Z: 100.0% (429/429 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048b3f0 ?draw_item@ListBox@@UAEXH@Z: 100.0% (1087/1087 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048c130 ?on_redraw@ListBox@@UAEXXZ: 100.0% (258/258 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048c6e0 ?update_changes@ListBox@@QAEHXZ: 100.0% (147/147 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048c8a0 ?on_mouse_move@ListBox@@UAEXHH@Z: 100.0% (193/193 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048cd20 ?on_dialog_focus@ListBox@@$4PPPPPPPM@A@AEXH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048cd30 ??_EListBox@@$4PPPPPNII@CHE@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048cd50 ??_EListBox@@$4PPPPPPPM@FHI@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0048cd70 ?on_redraw@ListBox@@$4PPPPPPPM@FHI@AEXXZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_ListBox.cpp
+golf_clean.exe 0x00483da0 ?flush_timer@@YAXXZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_MessagePump.cpp
+golf_clean.exe 0x00497f60 ?players_in_group_callback@@YGHKKPBUDPNAME@@KPAX@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00497fc0 ?SendMessageWithRetry@Net@@QAEHPAXHHHH@Z: 100.0% (869/869 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00499140 ?send_packet_type@Net@@QAEHPAXHHHH@Z: 100.0% (1285/1285 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049ab40 ?check_polling@Net@@QAEXXZ: 100.0% (135/135 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049acf0 ?drop_player@Net@@QAEHHH@Z: 100.0% (464/464 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049b970 ?add@?$ClassList@UJackalVoiceRx@@@@QAEHH@Z: 100.0% (375/375 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049bfc0 ??1JackalVoiceRx@@UAE@XZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_Network.cpp
+golf_clean.exe 0x00485790 ?LoadPCXFromFile@AssetSurface@@QAEHPAU_iobuf@@@Z: 100.0% (239/239 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485aa0 ?SaveToPCX@AssetSurface@@QAEHPAU_iobuf@@@Z: 100.0% (222/222 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_PCXFile.cpp
+golf_clean.exe 0x00495420 ?load_pcx_8_16@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z: 100.0% (228/228 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_PCXLoad16.cpp
+golf_clean.exe 0x00495100 ?load_pcx_8_8@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z: 100.0% (247/247 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_PCXLoad8.cpp
+golf_clean.exe 0x0049c830 ?fill_entry@PaletteList@@UAEHPAUPalStruct@@@Z: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_PaletteList.cpp
+golf_clean.exe 0x00492ed0 ?setup_edge_poly@@YAHPAUEdgeScanPoly@@H@Z: 100.0% (82/82 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_PolyFill.cpp
+golf_clean.exe 0x00474ab0 _$E6: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_ScratchSprite.cpp
+golf_clean.exe 0x0049d180 _$E7: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_SmallSprite.cpp
+golf_clean.exe 0x00487210 ??0Sound_Device@@IAE@XZ: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487490 ?suspend@Wave_Device@@UAEXXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004874a0 ?restart@Wave_Device@@UAEXXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004874b0 ?update_sound@Wave_Device@@UAEXXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004874c0 ?get_ndevices@Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004874d0 ?set_hwnd@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004874f0 ?get_hw_mem_size@Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487500 ?select@Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004875c0 ?get_description@Wave_Device@@UAE?AW4SNDERR@@KPADK@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004875e0 ?set_rate@Wave_Device@@UAEXK@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487600 ?get_rate@Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487610 ?set_volume@Wave_Device@@UAEXK@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487640 ?enable@Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487650 ?disable@Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487660 ?is_disabled@Wave_Device@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487680 ?start_raw_dump@Wave_Device@@UAE?AW4SNDERR@@PAD@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004876a0 ?stop_raw_dump@Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004877d0 ??0WaveControlGroup@@QAE@XZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487800 ?is_eax@Wave_Device@@UAE_NXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487810 ?set_eax@Wave_Device@@UAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487830 ?set_eax@Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487850 ?set_eax_mix@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487870 ?is_3d@Wave_Device@@UAE_NXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487890 ?set_listener_position@Wave_Device@@UAE?AW4SNDERR@@MMM@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004878c0 ?get_listener_position@Wave_Device@@UAE?AW4SNDERR@@PAM00@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004878f0 ?set_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487910 ?get_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487930 ?set_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487950 ?get_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487970 ?set_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487990 ?get_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487b00 ?fade@Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487b10 ?enable@Midi_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487b20 ?is_disabled@Midi_Device@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487c70 ?set_codec@Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487c90 ?set_vxw_key@Wave_In_Device@@UAE?AW4SNDERR@@PAC@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487cc0 ?disable@Midi_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487cd0 ?end_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_SoundDevice.cpp
+golf_clean.exe 0x004a3390 ??_GSpriteList@@UAEPAXI@Z: 100.0% (24/24 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a3880 ?attach@SpriteBox@@UAEHPAUWidgetBase@@HHH@Z: 100.0% (250/250 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a3be0 ?calculate_dimensions@SpriteBox@@QAEHXZ: 100.0% (270/270 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a3f10 ?draw_item@SpriteBox@@QAEXH@Z: 100.0% (366/366 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a49d0 ?on_mouse_leave@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a4a80 ??_ESpriteBox@@$4PPPPPNII@CHE@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a4aa0 ??_ESpriteBox@@$4PPPPPPPM@FHI@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a4ac0 ?on_redraw@SpriteBox@@$4PPPPPPPM@FHI@AEXXZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_SpriteBox.cpp
+golf_clean.exe 0x00492000 ?extract_8@SpriteObject@@QAEHPAUAssetSurface@@HHHHHE@Z: 100.0% (423/423 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_SpriteExtract.cpp
+golf_clean.exe 0x00495750 ?OnSize@SysMessageHandler@@UAEXHH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495790 ?OnNCHitTest@SysMessageHandler@@UAEJHH@Z: 100.0% (148/148 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495910 ?OnKey@SysMessageHandler@@UAEXIH@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495990 ?OnChar@SysMessageHandler@@UAEXD@Z: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x004959b0 ?OnMouseMove@SysMessageHandler@@UAEXHH@Z: 100.0% (56/56 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495a50 ?OnMouseWheel@SysMessageHandler@@UAEXHHH@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495aa0 ?OnLButtonDown@SysMessageHandler@@UAEXHHH@Z: 100.0% (80/80 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495b90 ?OnLButtonUp@SysMessageHandler@@UAEXHH@Z: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495bd0 ?OnRButtonDown@SysMessageHandler@@UAEXHHH@Z: 100.0% (33/33 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495c30 ?OnRButtonUp@SysMessageHandler@@UAEXHH@Z: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495c70 ?OnActivate@SysMessageHandler@@UAEXHH@Z: 100.0% (18/18 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00495d20 ?OnNetMessage@SysMessageHandler@@UAEXXZ: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_SysMessageHandler.cpp
+golf_clean.exe 0x00487da0 _$E2: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487dc0 _$E7: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487dd0 _$E6: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487de0 _$E10: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487df0 _$E9: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00487e40 _$E13: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_Text.cpp
+golf_clean.exe 0x004942f0 ?parse_string@@YAHPAD0@Z: 100.0% (872/872 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_TextTemplate.cpp
+golf_clean.exe 0x00486f10 ?close@Time@@QAEXXZ: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00486f40 ?TimerProc@@YGXPAXIII@Z: 100.0% (23/23 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_Time.cpp
+golf_clean.exe 0x0049c8e0 ?do_video@@YAXXZ: 100.0% (17/17 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049c940 ?advance_frame@Video@@QAEHXZ: 100.0% (133/133 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049ccc0 ?play_frame@Video@@QAEHXZ: 100.0% (203/203 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_Video.cpp
+golf_clean.exe 0x00475050 ?ConvertBMP8ToSurface16@AssetSurface@@QAEHPAUtagBITMAPINFOHEADER@@PAE@Z: 100.0% (152/152 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00475210 ?LoadBMPToSurface16@AssetSurface@@QAEHPAD@Z: 100.0% (182/182 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00475580 ?SaveSnapshot@AssetSurface@@QAEHPADPAURect@@@Z: 100.0% (235/235 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00475840 ?load_pcx@AssetSurface@@QAEHPBDPAVFLCPalette@@HHH@Z: 100.0% (206/206 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00475c60 ?copy@AssetSurface@@QAEXPAU1@HHHHHH@Z: 100.0% (20/20 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00475e10 ?tile_mask@AssetSurface@@QAEHPAU1@HHHHHHH@Z: 100.0% (154/154 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00475fb0 ?tile@AssetSurface@@QAEHPAU1@HHHHHH@Z: 100.0% (149/149 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00476140 ?TileSprite@AssetSurface@@QAEHPAUSpriteObject@@HHHHHH@Z: 100.0% (144/144 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004762d0 ?SetFontsForStyles@AssetSurface@@QAEHPAUFont@@000@Z: 100.0% (17/17 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004763d0 ?write_strings@AssetSurface@@QAEHPAUStringList@@HHHH@Z: 100.0% (248/248 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004767a0 ?write_raw_l@AssetSurface@@QAEHPBDHHH@Z: 100.0% (477/477 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00476d40 ?get_special@@YAPADPADPAH@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00476ef0 ?find_line_break_l@AssetSurface@@QAEPADPADPAHH@Z: 100.0% (258/258 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00477280 ?CalculateFormattedTextWidth@AssetSurface@@QAEHPBDI@Z: 100.0% (211/211 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004775b0 ?write_multi_font_raw_l@AssetSurface@@QAEHPBDHHH@Z: 100.0% (518/518 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00477c30 ?write_l@AssetSurface@@QAEHPBDHHH@Z: 100.0% (74/74 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004782d0 ?RenderMultilineTextInRect@AssetSurface@@QAEHPADPAURect@@PAPADPAH@Z: 100.0% (127/127 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00478430 ?wrap@AssetSurface@@QAEHPADHHH@Z: 100.0% (98/98 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00478530 ?wrap_cent@AssetSurface@@QAEHPADHHH@Z: 100.0% (74/74 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00478610 ?wrap_height_flying@AssetSurface@@QAEHPAD@Z: 100.0% (82/82 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004787a0 ?TextLayout_AppendAndWrap@AssetSurface@@QAEHPAD@Z: 100.0% (168/168 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00478df0 ?get_pixel@AssetSurface@@QAEHHH@Z: 100.0% (73/73 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00478ea0 ?put_pixel@AssetSurface@@QAEHHHH@Z: 100.0% (71/71 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00478f50 ?get_pcx_dimensions@AssetSurface@@SAHPBDPAH1@Z: 100.0% (174/174 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004791b0 ?box_sprite@AssetSurface@@QAEXPAURect@@PAUBoxSpriteParams@@@Z: 100.0% (396/396 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00479950 ?GetPixelBlue@AssetSurface@@QAEEHHE@Z: 100.0% (48/48 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_buffer.cpp
+golf_clean.exe 0x0049ed20 ?attach@CheckBoxCtl@@UAEHPAUWidgetBase@@HHH@Z: 100.0% (111/111 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049f050 ?calculate_dimensions@CheckBoxCtl@@QAEHXZ: 100.0% (265/265 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049f370 ?draw_item@CheckBoxCtl@@QAEXHHH@Z: 100.0% (532/532 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049f9a0 ?on_left_down@CheckBoxCtl@@UAEXHH@Z: 100.0% (90/90 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049fc60 ?on_redraw@CheckBoxCtl@@UAEXXZ: 100.0% (100/100 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a0010 ??_ECheckBoxCtl@@$4PPPPPNII@CHE@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a0030 ??_ECheckBoxCtl@@$4PPPPPPPM@FHI@AEPAXI@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004a0050 ?on_redraw@CheckBoxCtl@@$4PPPPPPPM@FHI@AEXXZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_checkbox.cpp
+golf_clean.exe 0x00492430 _$E2: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00492440 _$E1: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_display.cpp
+golf_clean.exe 0x0049d2c0 _$E16: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d320 _$E22: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d380 _$E27: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_filewin.cpp
+golf_clean.exe 0x004837d0 _$E3: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483930 ?MeasureTextWidth@Font@@QAEHPBDH@Z: 100.0% (35/35 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483980 ?find_line_break_l@Font@@QAEPADPADPAHH@Z: 100.0% (132/132 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483b30 ??_EFont@@UAEPAXI@Z: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_font.cpp
+golf_clean.exe 0x004a0150 _$E2: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+rc=0 re/match/smsg_golf_jackal_log.cpp
+golf_clean.exe 0x0049c010 _$E12: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049c0b0 ?on_redraw@MultiDebug@@UAEXXZ: 100.0% (633/633 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_multidebug.cpp
+golf_clean.exe 0x00482ea0 _$E9: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00482ee0 _$E14: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00482f20 _$E19: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483020 ??4FLCPalette@@QAEAAV0@ABV0@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483190 ?init_cycle@FLCPalette@@QAEHHHHH@Z: 100.0% (103/103 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_palette.cpp
+golf_clean.exe 0x0049d4b0 _$E12: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d510 _$E18: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d570 _$E23: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d6d0 ?attach@ListBoxCtl@@UAEHPAUWidgetBase@@HHH@Z: 100.0% (55/55 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d770 ?calculate_dimensions@ListBoxCtl@@QAEHXZ: 100.0% (304/304 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049dab0 ?draw_item@ListBoxCtl@@QAEXHH@Z: 100.0% (625/625 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049e450 ?on_key_down@ListBoxCtl@@UAEHH@Z: 100.0% (126/126 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049e680 ?on_redraw@ListBoxCtl@@UAEXXZ: 100.0% (102/102 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049e7d0 ?on_mouse_move@ListBoxCtl@@UAEXHH@Z: 100.0% (143/143 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_radiobut.cpp
+golf_clean.exe 0x00496010 _$E18: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00496020 _$E17: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00496330 ?init@Scroll@@QAEHHHHHPAUWidgetBase@@HH@Z: 100.0% (242/242 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00496860 ?on_mouse_move@Scroll@@UAEXHH@Z: 100.0% (288/288 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00496d60 ?on_left_click@Scroll@@UAEXHH@Z: 100.0% (56/56 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00497170 ?on_resize@Scroll@@UAEXHH@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00497260 ?on_button_pressed@Scroll@@UAEHH@Z: 100.0% (103/103 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004974d0 ?compute_thumb_rect@Scroll@@QAEXPAURect@@@Z: 100.0% (408/408 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_scroll.cpp
+golf_clean.exe 0x00483e00 _$E6: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483e40 _$E11: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00483e80 _$E16: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484440 ?is_loaded@Sound@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484450 ?attach@Sound@@MAE?AW4SNDERR@@XZ: 100.0% (28/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004844b0 ?get_next@Sound@@UAEPAV1@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004844c0 ?get_prev@Sound@@UAEPAV1@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004844d0 ?get_type@Sound@@UAE?AW4SOUNDTYPE@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484540 ?load@Sound@@UAE?AW4SNDERR@@PAUIAVIStream@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484590 ?play@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004845b0 ?play@Sound@@UAE?AW4SNDERR@@K@Z: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484600 ?release@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484620 ?set_volume@Sound@@UAEXH@Z: 100.0% (34/34 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484690 ?set_loop_state@Sound@@UAEXH@Z: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484700 ?set_fade_in@Sound@@UAE?AW4SNDERR@@I@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484730 ?fade@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484770 ?fade_in@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484790 ?ramp@Sound@@UAEXHHI@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004847d0 ?is_looping@Sound@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004847e0 ?get_time@Sound@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484870 ?is_loaded@Wave@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484920 ?play@Wave@@UAE?AW4SNDERR@@H@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004849e0 ?play@Wave@@UAE?AW4SNDERR@@PAH@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484a00 ?stop_instance@Wave@@UAEXH@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484a20 ?fade_instance@Wave@@UAEXH@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484b00 ?is_hwbuffer@Wave@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484b20 ?get_ms_length@Wave@@UAEIXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484bf0 ?set_link@Wave@@UAE?AW4SNDERR@@PADPAK@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00484f80 ?set_attrib@Wave@@UAE?AW4SNDERR@@K@Z: 100.0% (39/39 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485040 ?get_time@Wave@@UAEKK@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485060 ?get_current_marker@Wave@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485080 ?get_game_hwnd@Wave@@UAEPAUHWND__@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485090 ?get_ndevices@Wave@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004850b0 ?get_device_description@Wave@@UAE?AW4SNDERR@@PADHH@Z: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004850f0 ?set_reverb_mix@Wave@@UAE?AW4SNDERR@@M@Z: 100.0% (11/11 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485120 ?set_asdr@Wave@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485130 ?set_attack@Wave@@UAE?AW4SNDERR@@KKK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485140 ?set_volume@Wave@@UAEXH@Z: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004851b0 ?set_position3d@Wave@@UAE?AW4SNDERR@@MMM@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004851e0 ?set_xpos@Wave@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485200 ?set_ypos@Wave@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485220 ?set_zpos@Wave@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485240 ?is_3d@Wave@@UAE_NXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485290 ?set_fade_in@Patch@@UAE?AW4SNDERR@@H@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485380 ?set_attrib@VoiceRx@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485390 ?get_nbuffers@VoiceRx@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485450 ?init@VoiceRx@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485500 ?start@VoiceRx@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485520 ?stop@VoiceRx@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485530 ?unload@VoiceRx@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485550 ?add_buffer@VoiceRx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00485570 ?get_buffer_size@VoiceRx@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_sound.cpp
+golf_clean.exe 0x00492650 ??0HotSpot@@QAE@XZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004927a0 ??_EHotSpot@@UAEPAXI@Z: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00492800 ?clear@Spot@@QAEXXZ: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00492d40 ?on_leave@Spot@@QAEXXZ: 100.0% (16/16 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00492d70 ??1HotSpot@@UAE@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_spot.cpp
+golf_clean.exe 0x00473a90 _$E13: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00473f60 ?draw_antialiased@SpriteObject@@QAEHPAU1@PAUAssetSurface@@HHPAUPaletteBase@@@Z: 100.0% (41/41 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00474440 ?draw_translucent@SpriteObject@@QAEHPAUAssetSurface@@HHMPAUPaletteBase@@D@Z: 100.0% (51/51 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00474700 ?kill_entry@SpriteList@@UAEXPAUSpriteStruct@@@Z: 100.0% (11/11 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00474720 ??_ESpriteObject@@UAEPAXI@Z: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_sprite.cpp
+golf_clean.exe 0x0049d030 _$E2: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0049d040 ??1Strings@@UAE@XZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_strings.cpp
+golf_clean.exe 0x004799c0 _$E32: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00479a10 _$E35: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00479a60 _$E41: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00479c40 ??0WidgetBase@@QAE@XZ: 100.0% (127/127 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00479f30 ?close@WidgetBase@@QAEXXZ: 100.0% (284/284 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047a4c0 ?init@WidgetBase@@QAEHHHHHPBDIPAUGraphicWin@@PAUMenu@@PAH@Z: 100.0% (469/469 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047ae80 ?set_dialog_focus@WidgetBase@@UAEXPAU1@@Z: 100.0% (68/68 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047bab0 ?set_modal@WidgetBase@@UAEHHP6AHXZPAU1@@Z: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047bbb0 ?release_modal@WidgetBase@@UAEXXZ: 100.0% (50/50 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047be40 ?mouse_move_event@WidgetBase@@QAEXHHH@Z: 100.0% (90/90 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047c6c0 ?key_down_event@WidgetBase@@QAEHH@Z: 100.0% (239/239 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047cce0 ?ShrinkRectForBorders@WidgetBase@@QAEXPAURect@@@Z: 100.0% (63/63 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047cdb0 ?flip@WidgetBase@@SAXPAURect@@@Z: 100.0% (170/170 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047d130 ?UpdateCursor@@YAXPAUWidgetBase@@HHH@Z: 100.0% (245/245 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047d570 ?redo_caption_buttons@WidgetBase@@QAEXXZ: 100.0% (50/50 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047d610 ?set_rects@WidgetBase@@UAEXXZ: 100.0% (120/120 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047d850 ?on_redraw_nc@WidgetBase@@UAEXH@Z: 100.0% (678/678 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047e110 ?on_key_click@WidgetBase@@UAEHHH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047e450 _UpdateAllWidgetRenderOrder: 100.0% (34/34 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047e770 ?on_paint@WidgetBase@@UAEXPAURect@@@Z: 100.0% (256/256 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047ea30 ?on_nc_paint@WidgetBase@@UAEXPAURect@@H@Z: 100.0% (241/241 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047ee70 ?on_key@WidgetBase@@UAEXHH@Z: 100.0% (37/37 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047eee0 ?find_circular_match@@YAHPBDH@Z: 100.0% (29/29 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047ef30 ?on_char@WidgetBase@@UAEXD@Z: 100.0% (59/59 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047eff0 ?OnMouseMoveInternal@WidgetBase@@UAEXHHH@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047f010 ?on_l_button_down@WidgetBase@@UAEXHHHH@Z: 100.0% (78/78 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047f0f0 ?on_l_button_up@WidgetBase@@UAEXHHH@Z: 100.0% (69/69 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047f230 ?on_r_button_up@WidgetBase@@UAEXHHH@Z: 100.0% (65/65 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047f2f0 ?GetActiveWidget@@YAPAUWidgetBase@@XZ: 100.0% (28/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047f340 ?get_mouse_window_recurse@@YAPAUWidgetBase@@PAU1@PAH1@Z: 100.0% (309/309 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047f8e0 ?RenderWidgetTree@@YAXPAURect@@PAUWidgetBase@@@Z: 100.0% (112/112 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047fa30 ?update_window@WidgetBase@@QAEXPAURect@@@Z: 100.0% (49/49 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0047fab0 ?do_tracking@WidgetBase@@QAEXHH@Z: 100.0% (513/513 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+rc=0 re/match/smsg_golf_jackal_window.cpp
+golf_clean.exe 0x004ae020 _CreateJPG: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_CreateJPG.cpp
+golf_clean.exe 0x004b4ca0 _rgb_ycc_start: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b4d80 _rgb_ycc_convert: 100.0% (89/89 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b4f60 _cmyk_ycck_convert: 100.0% (108/108 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b5140 _null_convert: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jccolor.cpp
+golf_clean.exe 0x004b3550 _start_pass_fdctmgr: 100.0% (147/147 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b3720 _forward_DCT: 100.0% (131/131 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b38c0 _forward_DCT_float: 100.0% (125/125 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jcdctmgr.cpp
+golf_clean.exe 0x004b1c20 _finish_pass_huff: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jchuff.cpp
+golf_clean.exe 0x004b0300 _write_file_trailer: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jcmarker.cpp
+golf_clean.exe 0x004b3b30 _start_pass_prep: 100.0% (23/23 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jcprepct.cpp
+golf_clean.exe 0x004b41d0 _sep_downsample: 100.0% (50/50 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b4260 _int_downsample: 100.0% (106/106 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b4440 _h2v1_downsample: 100.0% (66/66 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b44f0 _h2v2_downsample: 100.0% (79/79 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b45d0 _h2v2_smooth_downsample: 100.0% (261/261 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004b48c0 _fullsize_smooth_downsample: 100.0% (145/145 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jcsample.cpp
+golf_clean.exe 0x004ae510 _init_destination: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004ae540 _empty_output_buffer: 100.0% (27/27 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jdatadst.cpp
+golf_clean.exe 0x004aed20 _emit_message: 100.0% (26/26 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004aed60 _format_message: 100.0% (74/74 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+golf_clean.exe 0x004aee10 _reset_error_mgr: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jerror.cpp
+golf_clean.exe 0x004b6360 _jpeg_fdct_float: 100.0% (180/180 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jfdctflt.cpp
+golf_clean.exe 0x004b6110 _jpeg_fdct_ifast: 100.0% (203/203 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jfdctfst.cpp
+golf_clean.exe 0x004b5d50 _jpeg_fdct_islow: 100.0% (308/308 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_LIB /GR- /Zl
+rc=0 re/match/smsg_golf_jpeg_jfdctint.cpp
+jgld.dll       0x10007e40 ?init@JGLBuffer@@UAEHHHHH@Z: 100.0% (292/292 instructions)  flags=/MTd /Od /ZI /GZ /DWIN32 /D_DEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX
+jgld.dll       0x1000b140 ?line_16@JGLBuffer@@QAEXHHHHH@Z: 100.0% (647/647 instructions)  flags=/MTd /Od /ZI /GZ /DWIN32 /D_DEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX
+jgld.dll       0x1000d4f0 ?DrawDashedVLine@JGLBuffer@@QAEXHHHHHHHH@Z: 100.0% (389/389 instructions)  flags=/MTd /Od /ZI /GZ /DWIN32 /D_DEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX
+rc=0 re/match/smsg_jgld_jglbuffer.cpp
+jgld.dll       0x1001a6b0 ?draw_16_16@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z: 100.0% (285/285 instructions)  flags=/MTd /Od /ZI /GZ /DWIN32 /D_DEBUG /D_WINDOWS /D_USRDLL /GR- /Zl
+rc=0 re/match/smsg_jgld_jglsprite_16_16.cpp
+jgld.dll       0x10019c80 ?draw_with_alpha@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@HHPAVJGLPalette@@@Z: 100.0% (288/288 instructions)  flags=/MTd /Od /ZI /GZ /DWIN32 /D_DEBUG /D_WINDOWS /D_USRDLL /GR- /Zl
+rc=0 re/match/smsg_jgld_jglspriteblend.cpp
+jgld.dll       0x100692b0 _WndProc@16: 100.0% (384/384 instructions)  flags=/MTd /Od /ZI /GZ /DWIN32 /D_DEBUG /D_WINDOWS /D_USRDLL /GR- /Zl
+rc=0 re/match/smsg_jgld_messagehandler.cpp
+sound.dll      0x10006f00 ?set_mixbuff_size@CWaveMixer@@QAE?AW4SNDERR@@K@Z: 100.0% (54/54 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100075e0 ?mix_2_3d_mb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0@Z: 100.0% (413/413 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10007bd0 ?mix_2_fpbuffer@CWaveMixer@@QAE?AW4SNDERR@@PAN0K@Z: 100.0% (27/27 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10007c30 ?left_fp2word@CWaveMixer@@QAEXPAFPANK@Z: 100.0% (48/48 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10007cc0 ?right_fp2word@CWaveMixer@@QAEXPAFPANK@Z: 100.0% (49/49 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10007d60 ?fp2word@CWaveMixer@@QAEXPAFPANK@Z: 100.0% (48/48 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10007df0 ?fpmb_2_dsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@PANKK@Z: 100.0% (194/194 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10008070 ?fpmb_2_3ddsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0PANKKK@Z: 100.0% (314/314 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_Cmix.cpp
+sound.dll      0x10025060 ??_GCMMError@@UAEPAXI@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_MMError.cpp
+sound.dll      0x100285e0 _$E27: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10028600 ??0CSndWin@@QAE@XZ: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10028740 ?create@CSndWin@@QAE?AW4SNDERR@@XZ: 100.0% (33/33 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100288a0 _thread_proc: 100.0% (208/208 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10028b70 _snd_wnd_proc@16: 100.0% (210/210 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_SndWin.cpp
+sound.dll      0x1002f7d0 ?get_game_hwnd@dllSoundList@@UAEPAUHWND__@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002f7f0 ?set_attrib@dllSoundList@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002f810 ?get_attrib@dllSoundList@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002f830 ?isAlreadyQueued@dllSoundList@@UAE_NXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002f850 ?is_playing@dllSoundList@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002f8b0 ??1dllSoundList@@UAE@XZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002f8d0 ?queueSound@dllSoundList@@UAE?AW4SNDERR@@I@Z: 100.0% (102/102 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002fa60 ?play@dllSoundList@@UAE?AW4SNDERR@@XZ: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002fce0 ?set_volume@dllSoundList@@UAEXH@Z: 100.0% (39/39 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x1002fd80 ?set_scaled_volume@dllSoundList@@UAEXH@Z: 100.0% (37/37 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+rc=0 re/match/smsg_sound_SoundList.cpp
+sound.dll      0x100303d0 ?detach@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100306e0 ?unload@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10030840 ?add_lpc10buffer@CVoiceRxMgr@@AAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (202/202 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10030ba0 ?get_nsamples@CVoiceRxMgr@@QAE?AW4SNDERR@@PAXKKPAK@Z: 100.0% (296/296 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100310f0 ?stop@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10031190 ?get_nbuffers@CVoiceRxMgr@@EAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100311d0 ?is_playing@CVoiceRxMgr@@UAEHXZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_VoiceRxMgr.cpp
+sound.dll      0x10031880 ?get_nbuffers@CVoiceTxMgr@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100318a0 ?get_next_buffer@CVoiceTxMgr@@UAEPAU_MMIOINFO@@XZ: 100.0% (64/64 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10031960 ?return_buffer@CVoiceTxMgr@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (26/26 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10031a30 ?stop@CVoiceTxMgr@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_VoiceTxMgr.cpp
+sound.dll      0x10038c70 ?unprepare_headers@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ: 100.0% (77/77 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10038f60 ?select@WaveInDeviceMgr@@QAE?AW4SNDERR@@K@Z: 100.0% (28/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100394f0 ?set_buffer@WIBuffer@@QAE?AW4SNDERR@@K@Z: 100.0% (25/25 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_WaveInDeviceMgr.cpp
+sound.dll      0x100041d0 ?load@CAmbienceMgr@@UAE?AW4SNDERR@@PBD@Z: 100.0% (1157/1157 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100056a0 ?is_loaded@Sound@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100056c0 ?get_next@Sound@@UAEPAV1@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100056e0 ?get_prev@Sound@@UAEPAV1@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005700 ?get_type@Sound@@UAE?AW4SOUNDTYPE@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005b00 ?get_game_hwnd@Midi@@UAEPAUHWND__@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005b20 ?set_attrib@Midi@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005b40 ?get_attrib@Midi@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005c70 ?refresh@MidiCtrl@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005c90 ?do_control@MidiCtrl@@UAEHH@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005cb0 ?reset@MidiCtrl@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005cd0 ?update@MidiCtrl@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005cf0 ??_GMidiCtrl@@UAEPAXI@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005d20 ?set_type@MidiCtrlDiskRead@@EAEXW4MIDI_CONTROL@@@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005d40 ?set_total_class_size@MidiCtrlDiskRead@@EAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005d60 ?set_loop_state@CMidiMgr@@UAEXH@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005db0 ?is_looping@CMidiMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005f40 ?get_ntracks@CMidiMgr@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005f90 ?get_control_track@CMidiMgr@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10005fd0 ?set_frame@CMidiMgr@@UAEXI@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10006000 ?get_frame@CMidiMgr@@UAEIXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_ambiencemgr.cpp
+sound.dll      0x10006a60 ?init@CAviMgr@@UAE?AW4SNDERR@@PAUAVIStreamHeader@@0PAUtWAVEFORMATEX@@K@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006b80 ?stop@CAviMgr@@UAE?AW4SNDERR@@XZ: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006d10 ?unload@AviSound@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006d30 ?get_game_hwnd@AviSound@@UAEPAUHWND__@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006d50 ?set_attrib@AviSound@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006d70 ?get_attrib@AviSound@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006d90 ?get_cur_frame@CAviMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+sound.dll      0x10006dd0 ?is_playing@CAviMgr@@UAEHXZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX  toolchain=sp5
+rc=0 re/match/smsg_sound_avimgr.cpp
+sound.dll      0x100090c0 _$E29: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10009100 _$E27: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100091c0 _$E34: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10009210 _DllMain@12: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10009370 ?get_sound_version@@YAKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100093e0 ?create_sound@Sound@@SA?AW4SNDERR@@PAPAV1@PBDW4SOUNDTYPE@@@Z: 100.0% (222/222 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100097d0 ?delete_sound@Sound@@SA?AW4SNDERR@@PAV1@@Z: 100.0% (132/132 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_dllmain.cpp
+sound.dll      0x10009be0 ??0Dll_Midi_Device@@QAE@XZ: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000a0c0 ?get_ndevices@Dll_Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000a0e0 ?get_description@Dll_Midi_Device@@UAE?AW4SNDERR@@KPADK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000a100 ?select@Dll_Midi_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000a120 ?set_volume@Dll_Midi_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000a140 ?suspend@Dll_Midi_Device@@UAEXXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000af40 ?get_time_past@Dll_Midi_Device@@MAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000af60 ?reset_time_past@Dll_Midi_Device@@MAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000af80 ?timer_unhook@Dll_Midi_Device@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000afc0 ?get_rate@Dll_Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_dllmididevice.cpp
+sound.dll      0x1000b420 ?init@Dll_Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z: 100.0% (286/286 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000baa0 ?enable@Dll_Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (198/198 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000c420 ?clean_request_queue@Dll_Wave_Device@@AAE?AW4SNDERR@@XZ: 100.0% (522/522 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e200 ?get_ndevices@Dll_Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e2f0 ?set_eax@Dll_Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e350 ?set_eax_mix@Dll_Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e490 ?set_listener_position@Dll_Wave_Device@@UAE?AW4SNDERR@@MMM@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e4d0 ?get_listener_position@Dll_Wave_Device@@UAE?AW4SNDERR@@PAM00@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e4f0 ?set_listener_xpos@Dll_Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e510 ?get_listener_xpos@Dll_Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e530 ?set_listener_ypos@Dll_Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e550 ?get_listener_ypos@Dll_Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e570 ?set_listener_zpos@Dll_Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e590 ?get_listener_zpos@Dll_Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e5b0 ?is_3d@Dll_Wave_Device@@UAE_NXZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e790 ?reset_time_past@Dll_Wave_Device@@MAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e7b0 ?get_time_past@Dll_Wave_Device@@MAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e7f0 ?timer_unhook@Dll_Wave_Device@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e810 ?set_rate@Dll_Wave_Device@@UAEXK@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e830 ?get_rate@Dll_Wave_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000e850 ?is_eax@Dll_Wave_Device@@UAE_NXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_dllwavedevice.cpp
+sound.dll      0x1000e870 ??0Dll_Wave_In_Device@@QAE@XZ: 100.0% (18/18 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ebe0 ?set_vxw_key@Dll_Wave_In_Device@@UAE?AW4SNDERR@@PAC@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ec50 ?suspend@Dll_Wave_In_Device@@UAEXXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ec80 ?restart@Dll_Wave_In_Device@@UAEXXZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ecc0 ?select@Dll_Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ece0 ?update_sound@Dll_Wave_In_Device@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ed30 ?get_ndevices@Dll_Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ed50 ?get_description@Dll_Wave_In_Device@@UAE?AW4SNDERR@@KPADK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000edd0 ?get_time_past@Dll_Wave_In_Device@@MAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ee30 ?set_rate@Dll_Wave_In_Device@@UAEXK@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ee50 ?get_rate@Dll_Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ee70 ?set_volume@Dll_Wave_In_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000ee90 ?get_volume@Dll_Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000eeb0 ?set_pan@Dll_Wave_In_Device@@UAEXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1000eed0 ?fade@Dll_Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_dllwaveindevice.cpp
+sound.dll      0x1000f2b0 ?set_volume@CDSB@@QAEXN@Z: 100.0% (44/44 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x1000ffd0 ?release_3d@CDSB@@AAE?AW4SNDERR@@XZ: 100.0% (23/23 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10010020 ?release_reverb@CDSB@@AAE?AW4SNDERR@@XZ: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100101a0 ?lock@CDSB@@QAE?AW4SNDERR@@KKPAPAXPAK01@Z: 100.0% (80/80 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100103b0 ?get_pointer@CDSB@@QAE?AW4SNDERR@@PAPAXPAK01@Z: 100.0% (152/152 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100106b0 ?get_real_write_info@CDSB@@QAE?AW4SNDERR@@PAK0@Z: 100.0% (141/141 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10010920 ?get_emulated_write_info@CDSB@@QAE?AW4SNDERR@@PAK0@Z: 100.0% (158/158 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10010b40 ?sync_emulated@CDSB@@QAE?AW4SNDERR@@XZ: 100.0% (47/47 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10011160 ?set_reverb_mix@CDSB@@QAE?AW4SNDERR@@M@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_dsb.cpp
+sound.dll      0x10012040 ?set_eax@CDSMgr@@QAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10012120 ?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@@Z: 100.0% (78/78 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100124c0 ?free_a_duphwdsb@CDSMgr@@QAE?AW4SNDERR@@XZ: 100.0% (120/120 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100128b0 ?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@PAU_DSBUFFERDESC@@@Z: 100.0% (167/167 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10012bb0 ?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@K@Z: 100.0% (82/82 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_dsmgr.cpp
+sound.dll      0x10014230 ?add_16216s2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10014d20 ?old_add_16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (350/350 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015210 ?add_16216m2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015230 ?add_828s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015250 ?add_828s2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015270 ?add_828m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015290 ?add_828m2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x100156a0 ?add_8216s2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015a80 ?add_8216m2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015aa0 ?m16216s2s_straight@@YAKPAPAX0HPAXK@Z: 100.0% (154/154 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015cf0 ?m16216s2s_no_pitch@@YAKPAPAX0HPAXK@Z: 100.0% (168/168 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10015f70 ?mov_16216s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (242/242 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10016320 ?mov_16216s2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10016cf0 ?mov_16216m2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10016d10 ?mov_828s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10016d30 ?mov_828s2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10016d50 ?mov_828m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10016d70 ?mov_828m2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10017140 ?mov_8216s2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10017500 ?mov_8216m2mmb@@YAKPAPAX0HPAXK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10017520 ?add_11k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (235/235 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x100178c0 ?mov_11k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (216/216 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10017c10 ?a11k16216m2s_straight@@YAKPAPAX0HPAXK@Z: 100.0% (178/178 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10017eb0 ?m11k16216m2s_straight@@YAKPAPAX0HPAXK@Z: 100.0% (160/160 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10018110 ?add_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (234/234 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10018d10 ?mov_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (217/217 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10019060 ?a8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (238/238 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+sound.dll      0x10019400 ?m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (226/226 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl  toolchain=sp5
+rc=0 re/match/smsg_sound_filters.cpp
+sound.dll      0x1001aef0 ?map_range@Dll_KeyMap@@QAE?AW4SNDERR@@PAVKeyMapWave@@@Z: 100.0% (126/126 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b1f0 ?set_base_path@Dll_KeyMap@@QAEXPBD@Z: 100.0% (148/148 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_keymap.cpp
+sound.dll      0x1001b410 _$E29: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b450 _$E27: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_memtrack.cpp
+sound.dll      0x1001d810 ?load@CMidiFile@@QAE?AW4SNDERR@@PBD@Z: 100.0% (311/311 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001dce0 ?load@CMidiFile@@QAE?AW4SNDERR@@PAUHMMIO__@@@Z: 100.0% (276/276 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001e750 ??0CMidiTrack@@QAE@XZ: 100.0% (30/30 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001e860 ?start_control@CMidiTrack@@UAEHH@Z: 100.0% (38/38 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001eab0 ?seek@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z: 100.0% (104/104 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001ecc0 ?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z: 100.0% (118/118 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001ef80 ?calc_total_ticks@CMidiTrack@@QAEKXZ: 100.0% (85/85 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_midifile.cpp
+sound.dll      0x1001f260 _$E30: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001f2a0 _$E27: 100.0% (53/53 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001f380 _$E35: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001f3c0 _$E33: 100.0% (53/53 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001f4a0 ??0CMidiMgr@@QAE@XZ: 100.0% (93/93 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001f6f0 ??0CMidiMgr@@QAE@PAUHWND__@@@Z: 100.0% (77/77 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001f8c0 ?update_tracks@CMidiMgr@@QAE?AW4SNDERR@@K@Z: 100.0% (416/416 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020360 ?load@CMidiMgr@@QAE?AW4SNDERR@@PAUHMMIO__@@PBD@Z: 100.0% (81/81 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020480 ?unload@CMidiMgr@@UAE?AW4SNDERR@@XZ: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100207f0 ?prepare_channels@CMidiMgr@@QAEXXZ: 100.0% (26/26 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020870 ?process_event@CMidiMgr@@QAE?AW4SNDERR@@PAVCMidiTrack@@PAK@Z: 100.0% (119/119 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020d50 ?play@CMidiMgr@@UAE?AW4SNDERR@@K@Z: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020d80 ?direct_stop@CMidiMgr@@QAEX_N@Z: 100.0% (66/66 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020ee0 ?fade@CMidiMgr@@UAE?AW4SNDERR@@XZ: 100.0% (25/25 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020fa0 ?map_patch@CMidiMgr@@UAE?AW4SNDERR@@PADKK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020fc0 ?map_patch@CMidiMgr@@UAE?AW4SNDERR@@PADK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10020fe0 ?map_patch@CMidiMgr@@QAE?AW4SNDERR@@PAVProgramCtrl@@_N@Z: 100.0% (151/151 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100212e0 ?clear_patch@CMidiMgr@@UAE?AW4SNDERR@@K@Z: 100.0% (26/26 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10021350 ?set_pan@CMidiMgr@@UAEXH@Z: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10021390 ?get_total_track_ticks@CMidiMgr@@UAEKK@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100213d0 ?control_change@CMidiMgr@@QAEKPAEKPAVCMidiTrack@@@Z: 100.0% (102/102 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100215a0 _$E38: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100215c0 ?note_on@CMidiMgr@@QAEKPAEKPAVCMidiTrack@@@Z: 100.0% (301/301 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10021a90 ?note_off@CMidiMgr@@QAEKPAEKPAVCMidiTrack@@@Z: 100.0% (100/100 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10021bf0 ?meta_event@CMidiMgr@@QAEKPAEPAVCMidiTrack@@@Z: 100.0% (157/157 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10021ee0 ?set_tempo@CMidiMgr@@UAE?AW4SNDERR@@K@Z: 100.0% (35/35 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10021fa0 ?set_program_ctrl@CMidiMgr@@QAE?AW4SNDERR@@PAVProgramCtrl@@@Z: 100.0% (167/167 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10022200 ?set_control_track@CMidiMgr@@QAE?AW4SNDERR@@K@Z: 100.0% (16/16 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10022320 ?add_keymap@CMidiMgr@@UAE?AW4SNDERR@@PAVKeyMap@@@Z: 100.0% (272/272 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100227c0 ?add_switch_range@CMidiMgr@@UAE?AW4SNDERR@@KK@Z: 100.0% (78/78 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100229f0 ?add_active_trackset@CMidiMgr@@UAE?AW4SNDERR@@PAVTrackSet@@@Z: 100.0% (208/208 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10022d00 ?add_active_trackset@CMidiMgr@@QAE?AW4SNDERR@@PAVDllTrackSet@@@Z: 100.0% (202/202 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023110 ?set_active_range_hi@CMidiMgr@@UAE?AW4SNDERR@@II@Z: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100231a0 ?set_active_tracks@CMidiMgr@@UAE?AW4SNDERR@@I@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100232a0 ?set_active_tracks@CMidiMgr@@UAE?AW4SNDERR@@KK@Z: 100.0% (116/116 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023430 ?play_trackset@CMidiMgr@@UAE?AW4SNDERR@@I@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023470 ?xpose_trackset@CMidiMgr@@UAE?AW4SNDERR@@IH@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100234b0 ?is_trackset_playing@CMidiMgr@@UAE_NI@Z: 100.0% (34/34 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023880 ?stop_trackset@CMidiMgr@@UAE?AW4SNDERR@@I@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023d00 ?reset_switch_table@CMidiMgr@@QAEXPAH@Z: 100.0% (66/66 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023f60 ?get_track_velocity_offset@CMidiMgr@@UAE?AW4SNDERR@@IPAH@Z: 100.0% (25/25 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10023fd0 ?set_track_velocity_offset@CMidiMgr@@UAE?AW4SNDERR@@IH@Z: 100.0% (24/24 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10024360 ?set_ctrl@CProgramMgr@@QAEXPAVProgramCtrl@@@Z: 100.0% (49/49 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100245c0 ?unmute_track@CMidiMgr@@UAE?AW4SNDERR@@K@Z: 100.0% (27/27 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100247c0 ?switch_track@CMidiMgr@@QAEXXZ: 100.0% (70/70 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100248d0 ?set_base_path@CMidiMgr@@UAEXPBD@Z: 100.0% (23/23 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10024920 ?seek_to_prior@CMidiMgr@@QAE?AW4SNDERR@@PAVCMidiTrack@@K@Z: 100.0% (115/115 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10024cc0 ?load_patch@CMidiMgr@@UAE?AW4SNDERR@@I@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10024ce0 ?unload_patch@CMidiMgr@@UAE?AW4SNDERR@@I@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10024d00 ?set_patch@CMidiMgr@@UAE?AW4SNDERR@@II@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_midimgr.cpp
+sound.dll      0x1001b550 _$E27: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b6f0 _$E32: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b750 _$E37: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b7b0 _$E42: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001b810 _$E47: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001ba50 ?is_ctrl_ok@MidiCtrlSocket@@EAE_NPAVMidiCtrl@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001ba70 ?remove@MidiCtrlSocket@@QAE?AW4SNDERR@@PAVMidiCtrl@@@Z: 100.0% (51/51 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001bca0 ??0MidiCtrlTarget@@QAE@XZ: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001bcf0 ?start_control@MidiCtrlTarget@@UAEHH@Z: 100.0% (53/53 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001be60 ?set_type@NoteMap@@UAEXW4MIDI_CONTROL@@@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001be80 ?set_total_class_size@NoteMap@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001bee0 ??0NoteMap@@QAE@W4MIDI_NOTE@@00000000000W4NOTEMAP_TYPE@@@Z: 100.0% (74/74 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c1e0 ?dup_octave@NoteMap@@QAE?AW4SNDERR@@I@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c370 ?start_control@NoteMap@@UAEHH@Z: 100.0% (50/50 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c400 ?construct@NoteMap@@QAEXQAH@Z: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c4f0 ?set_type@Stepper@@UAEXW4MIDI_CONTROL@@@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c510 ?set_total_class_size@Stepper@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c580 ?do_control@Stepper@@UAEHH@Z: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c5a0 ?update@Stepper@@UAEXXZ: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c5c0 ??0Randomizer@@QAE@XZ: 100.0% (44/44 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c6a0 ?set_type@Randomizer@@UAEXW4MIDI_CONTROL@@@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c6c0 ?set_total_class_size@Randomizer@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c820 ?reset@Randomizer@@UAEXXZ: 100.0% (23/23 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c870 ??0Chooser@@QAE@XZ: 100.0% (30/30 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c910 ?set_type@Chooser@@UAEXW4MIDI_CONTROL@@@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001c930 ?set_total_class_size@Chooser@@UAEXXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1001d250 ?insert@?$DList@VMidiCtrl@@@@QAEXPAVMidiCtrl@@@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_miditools.cpp
+sound.dll      0x10025190 ?mmx_add_16216s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (319/319 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100256c0 ?mmx_add_16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (346/346 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10025c80 ?mmx_add_8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (355/355 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10026260 ?mmx_mov_16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (344/344 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10026800 ?mmx_mov_16216s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (318/318 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10026d30 ?mmx_mov_8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (354/354 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10027310 ?test3_mmx_mov_16216s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (131/131 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100274e0 ?test4_mmx_mov_16216s2smb@@YAKPAPAX0HPAXK@Z: 100.0% (161/161 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10027730 ?mmx_add_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (236/236 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10027ad0 ?mmx_mov_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (217/217 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x10027e20 ?mmx_a8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (240/240 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x100281d0 ?mmx_m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z: 100.0% (221/221 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_mmxfilters.cpp
+sound.dll      0x10028540 _$E2: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_random.cpp
+sound.dll      0x1002ab10 ??0Sound@@QAE@XZ: 100.0% (45/45 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ad10 ?set_type@Sound@@UAEXW4SOUNDTYPE@@@Z: 100.0% (35/35 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b010 ?attach@Sound@@MAE?AW4SNDERR@@XZ: 100.0% (28/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b110 ?load@Sound@@UAE?AW4SNDERR@@PAUIAVIStream@@@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b130 ?unload@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (21/21 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b180 ?play@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b1b0 ?play@Sound@@UAE?AW4SNDERR@@K@Z: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b1e0 ?is_playing@Sound@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b200 ?stop@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b230 ?release@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b290 ?set_loop_state@Sound@@UAEXH@Z: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b2f0 ?set_fade@Sound@@UAE?AW4SNDERR@@K@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b370 ?fade@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b3d0 ?fade_in@Sound@@UAE?AW4SNDERR@@XZ: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b400 ?ramp@Sound@@UAEXHHI@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b460 ?is_looping@Sound@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b480 ?get_time@Sound@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b5d0 ?is_loaded@Wave@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b790 ?play@Wave@@UAE?AW4SNDERR@@H@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b840 ?play@Wave@@UAE?AW4SNDERR@@PAH@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b8a0 ?fade_instance@Wave@@UAEXH@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002b8d0 ?init@Wave@@UAEXPADK@Z: 100.0% (122/122 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ba50 ?is_hwbuffer@Wave@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ba80 ?get_ms_length@Wave@@UAEIXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002bba0 ?set_link@Wave@@UAE?AW4SNDERR@@PADPAK@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002bbe0 ?dyna_load@Wave@@AAE?AW4SNDERR@@PAD@Z: 100.0% (45/45 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002be90 ?load@Wave@@UAE?AW4SNDERR@@PADK@Z: 100.0% (22/22 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002bfa0 ?unload@Wave@@UAE?AW4SNDERR@@XZ: 100.0% (24/24 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c140 ?get_time@Wave@@UAEKK@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c170 ?get_current_marker@Wave@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c1c0 ?get_ndevices@Wave@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c2b0 ?set_bufflimit@Wave@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c2d0 ?set_asdr@Wave@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c2f0 ?set_attack@Wave@@UAE?AW4SNDERR@@KKK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c310 ?set_sustain@Wave@@UAE?AW4SNDERR@@KKK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c330 ?set_decay@Wave@@UAE?AW4SNDERR@@KKK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c350 ?set_release@Wave@@UAE?AW4SNDERR@@KKK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c390 ?set_position3d@Wave@@UAE?AW4SNDERR@@MMM@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c460 ?is_3d@Wave@@UAE_NXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c490 ??0MpegStream@@QAE@XZ: 100.0% (65/65 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002c9f0 ??0SoundList@@QAE@XZ: 100.0% (53/53 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002cc20 ?attach@SoundList@@UAE?AW4SNDERR@@XZ: 100.0% (28/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002cca0 ?detach@SoundList@@UAE?AW4SNDERR@@XZ: 100.0% (30/30 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002cd10 ?stop@SoundList@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002cf50 ??_GKeyMap@@UAEPAXI@Z: 100.0% (52/52 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d100 ?map_range@KeyMap@@QAEXPAVKeyMapWave@@@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d690 ?play@Midi@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d6c0 ?set_volume@Midi@@UAEXH@Z: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d6e0 ?set_frame@Midi@@UAEXI@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d740 ?get_frame@Midi@@UAEIXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d770 ?switch_state@Midi@@UAEX_N@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d7d0 ?add_switch_range@Midi@@UAE?AW4SNDERR@@KK@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d810 ?set_nswitch_threads@Midi@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d840 ?map_patch@Midi@@UAE?AW4SNDERR@@PADKK@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d880 ?map_patch@Midi@@UAE?AW4SNDERR@@PADK@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d950 ?set_track@Midi@@UAE?AW4SNDERR@@PAEK@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d990 ?mute_track@Midi@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d9c0 ?unmute_track@Midi@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002d9f0 ?set_active_tracks@Midi@@UAE?AW4SNDERR@@KK@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002da60 ?play_trackset@Midi@@UAE?AW4SNDERR@@I@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002da90 ?xpose_trackset@Midi@@UAE?AW4SNDERR@@IH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002dad0 ?stop_trackset@Midi@@UAE?AW4SNDERR@@I@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002db00 ?is_trackset_playing@Midi@@UAE_NI@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002db30 ?add_active_trackset@Midi@@UAE?AW4SNDERR@@PAVTrackSet@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002db60 ?set_active_range_lo@Midi@@UAE?AW4SNDERR@@II@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002dc10 ?get_trackset@Midi@@UAEPAVTrackSet@@I@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002dc70 ?load_patch@Midi@@UAE?AW4SNDERR@@I@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002dca0 ?unload_patch@Midi@@UAE?AW4SNDERR@@I@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002dcd0 ?set_patch@Midi@@UAE?AW4SNDERR@@II@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002dd10 ?init@Midi@@UAEXPBDK@Z: 100.0% (48/48 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002de80 ?set_tempo@Midi@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002df30 ?load@Midi@@UAE?AW4SNDERR@@PBDI@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002df70 ?load@Midi@@UAE?AW4SNDERR@@XZ: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e060 ?get_time@Midi@@UAEKK@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e090 ?get_control_track@Midi@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e0c0 ?get_total_track_ticks@Midi@@UAEKK@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e0f0 ?set_control@Midi@@UAE?AW4SNDERR@@PAXHH@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e170 ?set_track_loop_state@Midi@@UAE?AW4SNDERR@@I_N@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e1b0 ?get_track_loop_state@Midi@@UAE_NI@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e1e0 ?get_track_velocity_offset@Midi@@UAE?AW4SNDERR@@IPAH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e220 ?set_track_velocity_offset@Midi@@UAE?AW4SNDERR@@IH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e260 ?add_keymap@Midi@@UAE?AW4SNDERR@@PAVKeyMap@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e2c0 ?get_key@Midi@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e3c0 ??0GlblMidiSet@@QAE@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e460 ?set_hi@TrackSet@@QAEXI@Z: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e500 ??_GPatch@@UAEPAXI@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e550 ??0Ambience@@QAE@XZ: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002e7c0 ?load@Ambience@@UAE?AW4SNDERR@@PBD@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ec70 ?get_frame@AviSound@@UAEPAU_MMIOINFO@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002eca0 ?return_frame@AviSound@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ecd0 ?get_cur_frame@AviSound@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ed00 ?get_frame_size@AviSound@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ed30 ?get_time@AviSound@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002ee80 ?get_game_hwnd@VoiceRx@@UAEPAUHWND__@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002eea0 ?set_attrib@VoiceRx@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002eec0 ?get_attrib@VoiceRx@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f140 ?start@VoiceRx@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f170 ?stop@VoiceRx@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f1c0 ?add_buffer@VoiceRx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f1f0 ?get_buffer_size@VoiceRx@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f220 ??0VoiceTx@@QAE@XZ: 100.0% (77/77 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f360 ?get_game_hwnd@VoiceTx@@UAEPAUHWND__@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f380 ?set_attrib@VoiceTx@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f3a0 ?get_attrib@VoiceTx@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f510 ?release@VoiceTx@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f6b0 ?get_next_buffer@VoiceTx@@UAEPAU_MMIOINFO@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002f6e0 ?return_buffer@VoiceTx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_sound.cpp
+sound.dll      0x100290c0 ?timer_unhook@Wave_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100290e0 ?get_time_past@Wave_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029100 ?add_to_time_past@Wave_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029120 ?reset_time_past@Wave_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029290 ?create_device@Wave_Device@@MAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100292b0 ?delete_device@Wave_Device@@MAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029350 ?suspend@Wave_Device@@UAEXXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029370 ?restart@Wave_Device@@UAEXXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029390 ?update_sound@Wave_Device@@UAEXXZ: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100293b0 ?get_ndevices@Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100293d0 ?set_hwnd@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029400 ?get_hw_mem_size@Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029420 ?select@Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029510 ?get_description@Wave_Device@@UAE?AW4SNDERR@@KPADK@Z: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029540 ?set_rate@Wave_Device@@UAEXK@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029570 ?get_rate@Wave_Device@@UAEKXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029590 ?set_volume@Wave_Device@@UAEXK@Z: 100.0% (8/8 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100295c0 ?get_volume@Wave_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100295e0 ?set_pan@Wave_Device@@UAEXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029620 ?fade@Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029640 ?stop@Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029660 ?enable@Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029680 ?disable@Wave_Device@@UAE?AW4SNDERR@@XZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100296a0 ?is_disabled@Wave_Device@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029b80 ??0WaveControlGroup@@QAE@XZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029bb0 ?is_eax@Wave_Device@@UAE_NXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029bd0 ?set_eax@Wave_Device@@UAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029c00 ?set_eax@Wave_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029c60 ?is_3d@Wave_Device@@UAE_NXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029c90 ?set_listener_position@Wave_Device@@UAE?AW4SNDERR@@MMM@Z: 100.0% (14/14 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029d10 ?set_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029d70 ?set_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029da0 ?get_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029dd0 ?set_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@M@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029e00 ?get_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029e30 ?create_device@Midi_Device@@MAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029e50 ?delete_device@Midi_Device@@MAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029eb0 ?timer_unhook@Midi_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029ed0 ?get_time_past@Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029ef0 ?add_to_time_past@Midi_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10029f10 ?reset_time_past@Midi_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a030 ?get_ndevices@Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a050 ?select@Midi_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a070 ?get_description@Midi_Device@@UAE?AW4SNDERR@@KPADK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a090 ?set_volume@Midi_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a0b0 ?get_volume@Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a0d0 ?set_pan@Midi_Device@@UAEXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a0f0 ?fade@Midi_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a110 ?stop@Midi_Device@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a130 ?update_sound@Midi_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a150 ?set_rate@Midi_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a170 ?get_rate@Midi_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a190 ?suspend@Midi_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a1b0 ?restart@Midi_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a210 ?is_disabled@Midi_Device@@UAEHXZ: 100.0% (7/7 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a280 ?timer_unhook@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a2a0 ?get_time_past@Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a2c0 ?add_to_time_past@Wave_In_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a2e0 ?reset_time_past@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a300 ?set_volume@Wave_In_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a320 ?get_volume@Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a340 ?set_pan@Wave_In_Device@@UAEXH@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a360 ?fade@Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a3e0 ?create_device@Wave_In_Device@@MAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a400 ?delete_device@Wave_In_Device@@MAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a4b0 ?set_codec@Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (10/10 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a510 ?get_ndevices@Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a530 ?select@Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a550 ?get_description@Wave_In_Device@@UAE?AW4SNDERR@@KPADK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a570 ?get_caps@Wave_In_Device@@UAE?AW4SNDERR@@K@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a590 ?stop@Wave_In_Device@@UAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a5b0 ?update_sound@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a5d0 ?set_rate@Wave_In_Device@@UAEXK@Z: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a5f0 ?get_rate@Wave_In_Device@@UAEKXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a610 ?suspend@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1002a630 ?restart@Wave_In_Device@@UAEXXZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_sounddevice.cpp
+sound.dll      0x1002a690 _$E25: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x1002a700 _$E23: 100.0% (35/35 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x1002a7c0 ??0SoundThread@@QAE@XZ: 100.0% (17/17 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+sound.dll      0x1002a810 ??1SoundThread@@QAE@XZ: 100.0% (47/47 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_soundthread.cpp
+sound.dll      0x10031be0 ??0CWaveFile@@QAE@XZ: 100.0% (112/112 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10031e50 ??0CWaveFile@@QAE@PAD@Z: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10032660 ?mpeg_play@CWaveFile@@QAE?AW4SNDERR@@XZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100326a0 ?load@CWaveFile@@QAE?AW4SNDERR@@PBD@Z: 100.0% (802/802 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10033300 ?advance_stream@CWaveFile@@AAE?AW4SNDERR@@XZ: 100.0% (417/417 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100339c0 ?reset@CWaveFile@@QAE?AW4SNDERR@@XZ: 100.0% (118/118 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10033f90 ?clear_mpeg_frames@CWaveFile@@QAE?AW4SNDERR@@XZ: 100.0% (75/75 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100340b0 ?unload@CWaveFile@@QAE?AW4SNDERR@@XZ: 100.0% (227/227 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10034c80 ?ramp@CWaveFile@@QAEXHHI@Z: 100.0% (75/75 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10035340 ?set_pan@CWaveFile@@QAEXH@Z: 100.0% (59/59 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10035460 ?set_fade@CWaveFile@@QAEXK@Z: 100.0% (82/82 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100355d0 ?set_fade_in@CWaveFile@@QAEXK@Z: 100.0% (88/88 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100357e0 ?get_cursample@CWaveFile@@QAE?AW4SNDERR@@PAK@Z: 100.0% (60/60 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100358c0 ?get_cursample_channel@CWaveFile@@QAEKK@Z: 100.0% (51/51 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10035990 ?get_nsamples@CWaveFile@@QAE?AW4SNDERR@@PAXKKPAK@Z: 100.0% (181/181 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10035ca0 ?setNextMpegFrame@CWaveFile@@QAE?AW4SNDERR@@XZ: 100.0% (142/142 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10035f60 ?get_mpeg_samples_to_dsb@CWaveFile@@QAE?AW4SNDERR@@KKPAK@Z: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10036280 ?get_stream_samples@CWaveFile@@QAE?AW4SNDERR@@PAXKKPAK@Z: 100.0% (276/276 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10036660 ?stream_to_hwbuffer@CWaveFile@@QAE?AW4SNDERR@@KKPAK@Z: 100.0% (695/695 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100371d0 ?get_buffer_samples@CWaveFile@@QAE?AW4SNDERR@@PAVWaveBuffer@@PAXKKPAK@Z: 100.0% (324/324 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10037860 ?get_time@CWaveFile@@QAEKK@Z: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x100378b0 ?set_loop_state@CWaveFile@@QAEXH@Z: 100.0% (26/26 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10037c00 ?set_reverb_mix@CWaveFile@@QAE?AW4SNDERR@@M@Z: 100.0% (11/11 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10037df0 ??1WaveBuffer@@QAE@XZ: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10038070 ?set_fade@WaveBuffer@@QAEXK@Z: 100.0% (40/40 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x10038130 ?set_fade_in@WaveBuffer@@QAEXK@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_wavefile.cpp
+sound.dll      0x1003a040 ?stop@CWaveMgr@@UAE?AW4SNDERR@@XZ: 100.0% (13/13 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a0b0 ?detach@CWaveMgr@@UAE?AW4SNDERR@@XZ: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a1c0 ?set_delay@CWaveMgr@@UAEXK@Z: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a1e0 ?set_pan@CWaveMgr@@UAEXH@Z: 100.0% (12/12 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a440 ?set_link@CWaveMgr@@UAE?AW4SNDERR@@PADPAK@Z: 100.0% (71/71 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a590 ?get_time@CWaveMgr@@UAEKK@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a670 ?get_ms_length@CWaveMgr@@UAEIXZ: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a690 ?set_loop_state@CWaveMgr@@UAEXH@Z: 100.0% (5/5 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a6b0 ?set_fade@CWaveMgr@@UAE?AW4SNDERR@@K@Z: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a750 ?is_looping@CWaveMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a790 ?is_playing@CWaveMgr@@UAEHXZ: 100.0% (9/9 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a7c0 ?is_hwbuffer@CWaveMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+sound.dll      0x1003a7e0 ?is_loaded@CWaveMgr@@UAEHXZ: 100.0% (4/4 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /GR- /Zl /GX /Ob2  toolchain=sp5
+rc=0 re/match/smsg_sound_wavemgr.cpp
+evidence done

@@ -1,0 +1,51 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x7c","sub esp, 0x7c",True
+3,push esi,push esi,True
+4,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+5,"and eax, 0xffff","and eax, 0xffff",True
+6,"and eax, 0x3ff","and eax, 0x3ff",True
+7,"and eax, 0xffff","and eax, 0xffff",True
+8,"or ah, 4","or ah, 4",True
+9,"and eax, 0xffff","and eax, 0xffff",True
+10,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+11,push 0x78,push 0x78,True
+12,"lea ecx, [ebp - 0x7c]","lea ecx, [ebp - 0x7c]",True
+13,push ecx,push ecx,True
+14,push 1,push 1,True
+15,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+16,push edx,push edx,True
+17,call dword ptr [0],call dword ptr [0x10128a0c],True
+18,"test eax, eax","test eax, eax",True
+19,jne 0x3e,jne 0x10097e3e,True
+20,"xor eax, eax","xor eax, eax",True
+21,jmp 0x82,jmp 0x10097e82,True
+22,"lea eax, [ebp - 0x7c]","lea eax, [ebp - 0x7c]",True
+23,push eax,push eax,True
+24,call 0x47,call 0x10098070,True
+25,"add esp, 4","add esp, 4",True
+26,"cmp dword ptr [ebp + 8], eax","cmp dword ptr [ebp + 8], eax",True
+27,je 0x7d,je 0x10097e7d,True
+28,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+29,je 0x7d,je 0x10097e7d,True
+30,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x101289fc]",True
+31,push ecx,push ecx,True
+32,call 0x61,call 0x100980f0,True
+33,"add esp, 4","add esp, 4",True
+34,"mov esi, eax","mov esi, eax",True
+35,"mov edx, dword ptr [0]","mov edx, dword ptr [0x101289fc]",True
+36,push edx,push edx,True
+37,call 0x72,call 0x1007f6e0,True
+38,"add esp, 4","add esp, 4",True
+39,"cmp esi, eax","cmp esi, eax",True
+40,jne 0x7d,jne 0x10097e7d,True
+41,"xor eax, eax","xor eax, eax",True
+42,jmp 0x82,jmp 0x10097e82,True
+43,"mov eax, 1","mov eax, 1",True
+44,pop esi,pop esi,True
+45,"mov esp, ebp","mov esp, ebp",True
+46,pop ebp,pop ebp,True
+47,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\getqloc.obj (library object, no compilation)",symbol=_TestDefaultLanguage,module=jgld.dll
+VERDICT,GREEN,48,100.0%

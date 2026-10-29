@@ -1,0 +1,2 @@
+golf/jackal.lib/src/sprite.cpp
+golf/jackal.lib/src/ScratchSprite.cpp

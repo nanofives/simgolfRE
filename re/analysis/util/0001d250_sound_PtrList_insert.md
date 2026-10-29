@@ -7,6 +7,7 @@ operator_new(0xc) node value=param, links after this+8 cursor node (or at head),
 System writeup: `re/analysis/systems/sound_6.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_miditools.cpp` as `?insert@?$DList@VMidiCtrl@@@@QAEXPAVMidiCtrl@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001d295, 0x1001d2a7, 0x1001d2e8, 0x1001d32e): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001d252 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,37 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 8], -0x20","cmp dword ptr [ebp + 8], -0x20",True
+4,jbe 0xe,jbe 0x10085c3e,True
+5,"xor eax, eax","xor eax, eax",True
+6,jmp 0x53,jmp 0x10085c83,True
+7,"cmp dword ptr [ebp + 8], -0x20","cmp dword ptr [ebp + 8], -0x20",True
+8,ja 0x25,ja 0x10085c55,True
+9,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+10,push eax,push eax,True
+11,call 0x1d,call 0x10085c90,True
+12,"add esp, 4","add esp, 4",True
+13,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+14,jmp 0x2c,jmp 0x10085c5c,True
+15,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+16,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+17,jne 0x38,jne 0x10085c68,True
+18,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+19,jne 0x3d,jne 0x10085c6d,True
+20,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+21,jmp 0x53,jmp 0x10085c83,True
+22,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+23,push ecx,push ecx,True
+24,call 0x46,call 0x10085b00,True
+25,"add esp, 4","add esp, 4",True
+26,"test eax, eax","test eax, eax",True
+27,jne 0x51,jne 0x10085c81,True
+28,"xor eax, eax","xor eax, eax",True
+29,jmp 0x53,jmp 0x10085c83,True
+30,jmp 0xe,jmp 0x10085c3e,True
+31,"mov esp, ebp","mov esp, ebp",True
+32,pop ebp,pop ebp,True
+33,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\malloc.obj (library object, no compilation)",symbol=__nh_malloc_base,module=jgld.dll
+VERDICT,GREEN,34,100.0%

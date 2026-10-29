@@ -1,0 +1,42 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [0], 0","cmp dword ptr [0x842168], 0",True
+1,jne 0xe,jne 0x4aaef0,True
+2,call 0xe,call 0x4ac8bc,True
+3,push esi,push esi,True
+4,"mov esi, dword ptr [0]","mov esi, dword ptr [0x842160]",True
+5,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+6,"cmp al, 0x22","cmp al, 0x22",True
+7,jne 0x40,jne 0x4aaf22,True
+8,"mov al, byte ptr [esi + 1]","mov al, byte ptr [esi + 1]",True
+9,inc esi,inc esi,True
+10,"cmp al, 0x22","cmp al, 0x22",True
+11,je 0x38,je 0x4aaf1a,True
+12,"test al, al","test al, al",True
+13,je 0x38,je 0x4aaf1a,True
+14,"movzx eax, al","movzx eax, al",True
+15,push eax,push eax,True
+16,call 0x30,call 0x4ac4a2,True
+17,"test eax, eax","test eax, eax",True
+18,pop ecx,pop ecx,True
+19,je 0x1b,je 0x4aaefd,True
+20,inc esi,inc esi,True
+21,jmp 0x1b,jmp 0x4aaefd,True
+22,"cmp byte ptr [esi], 0x22","cmp byte ptr [esi], 0x22",True
+23,jne 0x4a,jne 0x4aaf2c,True
+24,inc esi,inc esi,True
+25,jmp 0x4a,jmp 0x4aaf2c,True
+26,"cmp al, 0x20","cmp al, 0x20",True
+27,jbe 0x4a,jbe 0x4aaf2c,True
+28,inc esi,inc esi,True
+29,"cmp byte ptr [esi], 0x20","cmp byte ptr [esi], 0x20",True
+30,ja 0x44,ja 0x4aaf26,True
+31,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+32,"test al, al","test al, al",True
+33,je 0x54,je 0x4aaf36,True
+34,"cmp al, 0x20","cmp al, 0x20",True
+35,jbe 0x3d,jbe 0x4aaf1f,True
+36,"mov eax, esi","mov eax, esi",True
+37,pop esi,pop esi,True
+38,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\wincmdln.obj (library object, no compilation)",symbol=__wincmdln,module=golf_clean.exe
+VERDICT,GREEN,39,100.0%

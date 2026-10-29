@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 1 bytes, 1 instructions, subsystem `boot`. Mechanical t
 Empty static-initializer body. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_TerrainView.cpp` as `_$E23` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004492c0): callee pops 0 bytes of stack arguments.
 
 ## Reads

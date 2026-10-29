@@ -1,0 +1,58 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,"mov eax, dword ptr [esi + 0xc]","mov eax, dword ptr [esi + 0xc]",True
+4,"test al, 0x83","test al, 0x83",True
+5,je 0x7c,je 0x4a71c1,True
+6,"mov edi, dword ptr [esp + 0x14]","mov edi, dword ptr [esp + 0x14]",True
+7,"test edi, edi","test edi, edi",True
+8,je 0x1f,je 0x4a7164,True
+9,"cmp edi, 1","cmp edi, 1",True
+10,je 0x1f,je 0x4a7164,True
+11,"cmp edi, 2","cmp edi, 2",True
+12,jne 0x7c,jne 0x4a71c1,True
+13,"and al, 0xef","and al, 0xef",True
+14,"cmp edi, 1","cmp edi, 1",True
+15,"mov dword ptr [esi + 0xc], eax","mov dword ptr [esi + 0xc], eax",True
+16,jne 0x36,jne 0x4a717b,True
+17,push esi,push esi,True
+18,call 0x2f,call 0x4a730c,True
+19,"add dword ptr [esp + 0x14], eax","add dword ptr [esp + 0x14], eax",True
+20,pop ecx,pop ecx,True
+21,"xor edi, edi","xor edi, edi",True
+22,push esi,push esi,True
+23,call 0x3c,call 0x4a99a0,True
+24,"mov eax, dword ptr [esi + 0xc]","mov eax, dword ptr [esi + 0xc]",True
+25,pop ecx,pop ecx,True
+26,"test al, 0x80","test al, 0x80",True
+27,je 0x4b,je 0x4a7190,True
+28,"and al, 0xfc","and al, 0xfc",True
+29,"mov dword ptr [esi + 0xc], eax","mov dword ptr [esi + 0xc], eax",True
+30,jmp 0x5f,jmp 0x4a71a4,True
+31,"test al, 1","test al, 1",True
+32,je 0x5f,je 0x4a71a4,True
+33,"test al, 8","test al, 8",True
+34,je 0x5f,je 0x4a71a4,True
+35,"test ah, 4","test ah, 4",True
+36,jne 0x5f,jne 0x4a71a4,True
+37,"mov dword ptr [esi + 0x18], 0x200","mov dword ptr [esi + 0x18], 0x200",True
+38,push edi,push edi,True
+39,push dword ptr [esp + 0x14],push dword ptr [esp + 0x14],True
+40,push dword ptr [esi + 0x10],push dword ptr [esi + 0x10],True
+41,call 0x6c,call 0x4a95bb,True
+42,"add esp, 0xc","add esp, 0xc",True
+43,"xor ecx, ecx","xor ecx, ecx",True
+44,"cmp eax, -1","cmp eax, -1",True
+45,setne cl,setne cl,True
+46,dec ecx,dec ecx,True
+47,"mov eax, ecx","mov eax, ecx",True
+48,jmp 0x8a,jmp 0x4a71cf,True
+49,call 0x81,call 0x4a910c,True
+50,"mov dword ptr [eax], 0x16","mov dword ptr [eax], 0x16",True
+51,"or eax, 0xffffffff","or eax, 0xffffffff",True
+52,pop edi,pop edi,True
+53,pop esi,pop esi,True
+54,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\fseek.obj (library object, no compilation)",symbol=__fseek_lk,module=golf_clean.exe
+VERDICT,GREEN,55,100.0%

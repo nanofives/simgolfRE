@@ -7,6 +7,7 @@ Empty virtual method shared by the Window, TextView and NodeList vtables. (`re/n
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?on_release_modal@BasePop@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047e5e0): callee pops 0 bytes of stack arguments.
 
 ## Reads

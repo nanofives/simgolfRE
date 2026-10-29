@@ -7,6 +7,7 @@ scalar deleting destructor of a ListModel embedded 0x28 bytes into its owner: de
 System writeup: `re/analysis/systems/model_h4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Dialog.cpp` as `??_GStringList@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00489b25): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00489ae2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

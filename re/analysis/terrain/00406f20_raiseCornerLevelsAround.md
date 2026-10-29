@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 102 bytes, 39 instructions, subsystem `terrain`. Mechan
 raises by one step every corner level in the 5x5 neighbourhood of (x, y) that lies more than its falloff-kernel entry below the centre level (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_SpriteAssets.cpp` as `?SmoothTerrainRaise@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00406f85): callee pops 0 bytes of stack arguments.
 
 ## Reads

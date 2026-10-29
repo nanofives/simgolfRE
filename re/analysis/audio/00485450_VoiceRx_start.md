@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 100 bytes, 43 instructions, subsystem `audio`. Mechanic
 Starts the voice: creates the sound device in mode 6 when none exists, forwards the start request with three arguments, releases the device again when the request returns nonzero, then calls its own slot 31 and returns the device result. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?init@VoiceRx@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004854b1): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x00485451 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

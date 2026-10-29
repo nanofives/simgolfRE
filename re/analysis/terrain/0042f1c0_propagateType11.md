@@ -7,6 +7,7 @@ propagates the type-0x11 (connected-path) condition across neighbouring tiles (`
 System writeup: `re/analysis/systems/exe_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_GolferShot.cpp` as `?UpdateWaterShoreDepth@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042f2b7): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0042f1c0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

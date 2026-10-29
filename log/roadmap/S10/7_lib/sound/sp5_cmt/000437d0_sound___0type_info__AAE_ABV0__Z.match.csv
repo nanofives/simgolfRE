@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,"mov eax, ecx","mov eax, ecx",True
+1,"mov dword ptr [eax], 0","mov dword ptr [eax], 0x1005ed7c",True
+2,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\typinfo.obj (library object, no compilation)",symbol=??0type_info@@AAE@ABV0@@Z,module=sound.dll
+VERDICT,GREEN,3,100.0%

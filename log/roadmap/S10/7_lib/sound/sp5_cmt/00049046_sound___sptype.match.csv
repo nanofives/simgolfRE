@@ -1,0 +1,38 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"xor edx, edx","xor edx, edx",True
+3,"cmp dword ptr [ebp + 0xc], 0x7ff00000","cmp dword ptr [ebp + 0xc], 0x7ff00000",True
+4,jne 0x17,jne 0x1004905d,True
+5,"cmp dword ptr [ebp + 8], edx","cmp dword ptr [ebp + 8], edx",True
+6,jne 0x29,jne 0x1004906f,True
+7,push 1,push 1,True
+8,jmp 0x53,jmp 0x10049099,True
+9,"cmp dword ptr [ebp + 0xc], 0xfff00000","cmp dword ptr [ebp + 0xc], 0xfff00000",True
+10,jne 0x29,jne 0x1004906f,True
+11,"cmp dword ptr [ebp + 8], edx","cmp dword ptr [ebp + 8], edx",True
+12,jne 0x29,jne 0x1004906f,True
+13,push 2,push 2,True
+14,jmp 0x53,jmp 0x10049099,True
+15,"mov ecx, dword ptr [ebp + 0xe]","mov ecx, dword ptr [ebp + 0xe]",True
+16,"mov eax, 0x7ff8","mov eax, 0x7ff8",True
+17,"and ecx, eax","and ecx, eax",True
+18,"cmp cx, ax","cmp cx, ax",True
+19,jne 0x3c,jne 0x10049082,True
+20,push 3,push 3,True
+21,jmp 0x53,jmp 0x10049099,True
+22,"cmp cx, 0x7ff0","cmp cx, 0x7ff0",True
+23,jne 0x56,jne 0x1004909c,True
+24,"test dword ptr [ebp + 0xc], 0x7ffff","test dword ptr [ebp + 0xc], 0x7ffff",True
+25,jne 0x51,jne 0x10049097,True
+26,"cmp dword ptr [ebp + 8], edx","cmp dword ptr [ebp + 8], edx",True
+27,je 0x56,je 0x1004909c,True
+28,push 4,push 4,True
+29,pop eax,pop eax,True
+30,pop ebp,pop ebp,True
+31,ret ,ret ,True
+32,"xor eax, eax","xor eax, eax",True
+33,pop ebp,pop ebp,True
+34,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\util.obj (library object, no compilation)",symbol=__sptype,module=sound.dll
+VERDICT,GREEN,35,100.0%

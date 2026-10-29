@@ -7,6 +7,7 @@ __thiscall initializer of the 12-byte header {+0 record size = 0x24, +4 record c
 System writeup: `re/analysis/systems/sound_19.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_sound.cpp` as `??0GlblMidiSet@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002e3d8): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002e3c0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

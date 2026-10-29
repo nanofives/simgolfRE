@@ -7,6 +7,7 @@ Forwards to voice slot +0x3c, returning 0 when there is no voice. (`re/names/mod
 System writeup: `re/analysis/systems/model_h2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?get_game_hwnd@Wave@@UAEPAUHWND__@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048508e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00485080 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

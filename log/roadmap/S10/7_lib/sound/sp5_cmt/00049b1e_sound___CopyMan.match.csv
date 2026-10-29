@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+2,push esi,push esi,True
+3,push 3,push 3,True
+4,"sub ecx, eax","sub ecx, eax",True
+5,pop edx,pop edx,True
+6,"mov esi, dword ptr [eax]","mov esi, dword ptr [eax]",True
+7,"mov dword ptr [ecx + eax], esi","mov dword ptr [ecx + eax], esi",True
+8,"add eax, 4","add eax, 4",True
+9,dec edx,dec edx,True
+10,jne 0xe,jne 0x10049b2c,True
+11,pop esi,pop esi,True
+12,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\intrncvt.obj (library object, no compilation)",symbol=__CopyMan,module=sound.dll
+VERDICT,GREEN,13,100.0%

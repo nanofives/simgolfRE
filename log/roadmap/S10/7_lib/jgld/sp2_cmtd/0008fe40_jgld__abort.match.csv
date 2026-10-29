@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push 0xa,push 0xa,True
+3,call 0xa,call 0x1008b1d0,True
+4,"add esp, 4","add esp, 4",True
+5,push 0x16,push 0x16,True
+6,call 0x14,call 0x1008a0b0,True
+7,"add esp, 4","add esp, 4",True
+8,push 3,push 3,True
+9,call 0x1e,call 0x1007f1c0,True
+10,pop ebp,pop ebp,True
+11,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\abort.obj (library object, no compilation)",symbol=_abort,module=jgld.dll
+VERDICT,GREEN,12,100.0%

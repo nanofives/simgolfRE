@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 34 bytes, 11 instructions, subsystem `audio`. Mechanica
 Stores a value in m_60 and forwards it to the sound device object at this+0x40 (vtable +0xec), returning 0x14 when there is no device. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?set_reverb_mix@Wave@@UAE?AW4SNDERR@@M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00485107, 0x0048510f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004850f4 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

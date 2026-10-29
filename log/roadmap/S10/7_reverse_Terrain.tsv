@@ -1,0 +1,22 @@
+module	entry	size	library symbol	tag	member	pct
+Terrain.dll	0x10018370	5	__fpclear	sp2_cmtd	..\build\intel\xmt_obj\fpinit.obj	100.0
+Terrain.dll	0x100183d0	28	__CrtSetBreakAlloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0
+Terrain.dll	0x10018b10	34	__unwind_handler	sp2_cmtd	build\intel\xmt_obj\exsup.obj	100.0
+Terrain.dll	0x10018bc6	24	__NLG_Notify	sp2_cmtd	build\intel\xmt_obj\exsup.obj	100.0
+Terrain.dll	0x10019150	20	__CIasin	sp2_cmtd	..\build\intel\xmt_obj\asin.obj	100.0
+Terrain.dll	0x10019200	20	__CIasin	sp2_cmtd	..\build\intel\xmt_obj\asin.obj	100.0
+Terrain.dll	0x100192b0	20	__CIasin	sp2_cmtd	..\build\intel\xmt_obj\asin.obj	100.0
+Terrain.dll	0x10019370	25	__CIpow	sp2_cmtd	..\build\intel\xmt_obj\pow.obj	100.0
+Terrain.dll	0x10019ef4	189	__except_handler3	sp2_cmtd	build\intel\xmt_obj\exsup3.obj	100.0
+Terrain.dll	0x10020b80	29	?unexpected@@YAXXZ	sp2_cmtd	build\intel\xmt_obj\hooks.obj	100.0
+Terrain.dll	0x10020c0a	6	__rttospopde	sp2_cmtd	..\build\intel\xmt_obj\87disp.obj	100.0
+Terrain.dll	0x10021da0	21	__twoToTOS	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0
+Terrain.dll	0x10021db5	23	__load_CW	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0
+Terrain.dll	0x10021dcc	25	__convertTOStoQNaN	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0
+Terrain.dll	0x10021e28	22	__checkTOS_withFB	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0
+Terrain.dll	0x10021e3e	13	__fast_exit	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0
+Terrain.dll	0x10027e10	21	?__CxxSetUnhandledExceptionFilter@@YAXXZ	sp2_cmtd	build\intel\xmt_obj\unhandld.obj	100.0
+Terrain.dll	0x10027e30	17	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	sp2_cmtd	build\intel\xmt_obj\unhandld.obj	100.0
+Terrain.dll	0x100374c0	17	?raw_name@type_info@@QBEPBDXZ	sp2_cmtd	build\intel\xmt_obj\typinfo.obj	100.0
+Terrain.dll	0x100374e0	25	??0type_info@@AAE@ABV0@@Z	sp2_cmtd	build\intel\xmt_obj\typinfo.obj	100.0
+Terrain.dll	0x10037500	16	??4type_info@@AAEAAV0@ABV0@@Z	sp2_cmtd	build\intel\xmt_obj\typinfo.obj	100.0

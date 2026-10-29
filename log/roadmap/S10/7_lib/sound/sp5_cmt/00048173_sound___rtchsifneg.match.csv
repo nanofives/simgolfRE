@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,"or cl, cl","or cl, cl",True
+1,je 6,je 0x10048179,True
+2,fchs ,fchs ,True
+3,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87disp.obj (library object, no compilation)",symbol=__rtchsifneg,module=sound.dll
+VERDICT,GREEN,4,100.0%

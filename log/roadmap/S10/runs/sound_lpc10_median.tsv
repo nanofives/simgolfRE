@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/median.c	0x3e480	0x1003e480	148	G	median_	_median_	public	100	100.0	63/63 ins	m36c_D1_01.cpp

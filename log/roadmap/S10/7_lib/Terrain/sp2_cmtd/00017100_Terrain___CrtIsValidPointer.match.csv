@@ -1,0 +1,31 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+4,je 0x3d,je 0x1001713d,True
+5,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+6,push eax,push eax,True
+7,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+8,push ecx,push ecx,True
+9,call dword ptr [0],call dword ptr [0x101134f0],True
+10,"test eax, eax","test eax, eax",True
+11,jne 0x3d,jne 0x1001713d,True
+12,"cmp dword ptr [ebp + 0x10], 0","cmp dword ptr [ebp + 0x10], 0",True
+13,je 0x34,je 0x10017134,True
+14,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+15,push edx,push edx,True
+16,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+17,push eax,push eax,True
+18,call dword ptr [0],call dword ptr [0x101134ec],True
+19,"test eax, eax","test eax, eax",True
+20,jne 0x3d,jne 0x1001713d,True
+21,"mov dword ptr [ebp - 4], 1","mov dword ptr [ebp - 4], 1",True
+22,jmp 0x44,jmp 0x10017144,True
+23,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+24,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+25,"mov esp, ebp","mov esp, ebp",True
+26,pop ebp,pop ebp,True
+27,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dbgheap.obj (library object, no compilation)",symbol=__CrtIsValidPointer,module=Terrain.dll
+VERDICT,GREEN,28,100.0%

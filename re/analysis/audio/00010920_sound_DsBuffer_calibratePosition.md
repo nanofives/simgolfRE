@@ -6,6 +6,7 @@ Module `sound.dll` (RVA `0x00010920`), 424 bytes, 158 instructions, subsystem `a
 Spins reading GetCurrentPosition up to 0x10000 times to calibrate the play cursor, updating the tuning value g_10063dfc. (`re/names/sound_2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsb.cpp` as `?get_emulated_write_info@CDSB@@QAE?AW4SNDERR@@PAK0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10010944, 0x100109df, 0x10010ab7, 0x10010ac5): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10010925 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

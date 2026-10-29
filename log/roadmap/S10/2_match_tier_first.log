@@ -1,0 +1,52 @@
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+........................................................................ [ 56%]
+........................................................................ [ 75%]
+........................................................................ [ 93%]
+.................FF....                                                  [100%]
+================================== FAILURES ===================================
+_______________ test_every_match_annotation_is_a_function_entry _______________
+
+    def test_every_match_annotation_is_a_function_entry():
+        """A typo in a // MATCH: address would compare the wrong bytes; every address must be a function entry in
+        its module's list (re/functions_ghidra*.tsv)."""
+        entries = {m: {int(l.split("\t")[0], 16) for l in (ROOT / "re" / t).read_text().splitlines()[1:]}
+                   for m, t in match.TSV.items()}
+        for m in entries:
+            entries[m] |= set(match.boundary_overrides(m))     # entries Ghidra merged into a neighbour
+        bad = []
+        for f in sorted((ROOT / "re" / "match").rglob("*.cpp")):
+            for mod, a in re.findall(r"// MATCH: (\S+) 0x([0-9a-fA-F]+)", f.read_text()):
+                if match.tracker_key(mod, int(a, 16)) not in entries[mod]:
+                    bad.append(f"{f.name}: {mod} 0x{a}")
+>       assert not bad, bad
+E       AssertionError: ['smsg_sound_ambiencemgr.cpp: sound.dll 0x10005880', 'smsg_sound_ambiencemgr.cpp: sound.dll 0x10005900', 'smsg_sound_a...: sound.dll 0x10006ba0', 'smsg_sound_Cmix.cpp: sound.dll 0x10006fc0', 'smsg_sound_Cmix.cpp: sound.dll 0x10007c10', ...]
+E       assert not ['smsg_sound_ambiencemgr.cpp: sound.dll 0x10005880', 'smsg_sound_ambiencemgr.cpp: sound.dll 0x10005900', 'smsg_sound_a...: sound.dll 0x10006ba0', 'smsg_sound_Cmix.cpp: sound.dll 0x10006fc0', 'smsg_sound_Cmix.cpp: sound.dll 0x10007c10', ...]
+
+tests\test_match_tools.py:43: AssertionError
+_______________ test_queue_skips_matched_and_non_game_functions _______________
+
+    def test_queue_skips_matched_and_non_game_functions():
+        q = match_queue.queue("golf_clean.exe")
+        keys = {c[2] for c in q}
+>       done = match_queue.annotated("golf_clean.exe")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_match_tools.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+module = 'golf_clean.exe'
+
+    def annotated(module):
+        """Tracker keys of every // MATCH: in re/match and re/match/wip for `module`."""
+        out = set()
+        for f in glob.glob(str(ROOT / "re" / "match" / "*.cpp")) + glob.glob(str(ROOT / "re" / "match" / "wip" / "*.cpp")):
+>           for m, a in re.findall(r"// MATCH: (\S+) 0x([0-9a-fA-F]+)", open(f).read()):
+                                                                        ^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\re\\match\\wip\\smsg_golf_jackal_Text.cpp'
+
+re\tools\match_queue.py:33: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/test_match_tools.py::test_every_match_annotation_is_a_function_entry
+FAILED tests/test_match_tools.py::test_queue_skips_matched_and_non_game_functions
+2 failed, 381 passed in 146.68s (0:02:26)

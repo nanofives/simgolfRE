@@ -1,0 +1,17 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7dad0	0x1007dad0	90	G	png_set_bKGD	_png_set_bKGD	public	100	100.0	37/37 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7db30	0x1007db30	155	G	png_set_cHRM	_png_set_cHRM	public	100	100.0	50/50 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7dbd0	0x1007dbd0	69	G	png_set_gAMA	_png_set_gAMA	public	100	100.0	29/29 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7dc20	0x1007dc20	68	G	png_set_hIST	_png_set_hIST	public	100	100.0	29/29 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7dc70	0x1007dc70	316	G	png_set_IHDR	_png_set_IHDR	public	100	100.0	113/113 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7ddb0	0x1007ddb0	87	G	png_set_oFFs	_png_set_oFFs	public	100	100.0	35/35 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7de10	0x1007de10	431	G	png_set_pCAL	_png_set_pCAL	public	100	100.0	140/140 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7dfc0	0x1007dfc0	87	G	png_set_pHYs	_png_set_pHYs	public	100	100.0	35/35 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e020	0x1007e020	80	G	png_set_PLTE	_png_set_PLTE	public	100	100.0	32/32 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e070	0x1007e070	90	G	png_set_sBIT	_png_set_sBIT	public	100	100.0	37/37 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e0d0	0x1007e0d0	69	G	png_set_sRGB	_png_set_sRGB	public	100	100.0	29/29 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e120	0x1007e120	254	G	png_set_sRGB_gAMA_and_cHRM	_png_set_sRGB_gAMA_and_cHRM	public	100	100.0	80/80 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e220	0x1007e220	480	G	png_set_text	_png_set_text	public	100	100.0	159/159 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e400	0x1007e400	107	G	png_set_tIME	_png_set_tIME	public	100	100.0	42/42 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e470	0x1007e470	136	G	png_set_tRNS	_png_set_tRNS	public	100	100.0	50/50 ins	jgld_png_set.cpp
+jgld	jgl/libpng.lib/libpng/pngset.c	0x7e500	0x1007e500	51	G	png_permit_empty_plte	_png_permit_empty_plte	public	100	100.0	22/22 ins	jgld_png_set.cpp

@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,pop edi,pop edi,True
+1,pop esi,pop esi,True
+2,"mov ebx, ebp","mov ebx, ebp",True
+3,pop ebp,pop ebp,True
+4,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+5,push ebp,push ebp,True
+6,"mov ebp, ebx","mov ebp, ebx",True
+7,"cmp ecx, 0x100","cmp ecx, 0x100",True
+8,jne 0x18,jne 0x4a8ddf,True
+9,"mov ecx, 2","mov ecx, 2",True
+10,push ecx,push ecx,True
+11,call 0x1e,call 0x4a55b1,True
+12,pop ebp,pop ebp,True
+13,pop ecx,pop ecx,True
+14,pop ebx,pop ebx,True
+15,leave ,leave ,True
+16,ret 0xc,ret 0xc,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\lowhelpr.obj (library object, no compilation)",symbol=__NLG_Return,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

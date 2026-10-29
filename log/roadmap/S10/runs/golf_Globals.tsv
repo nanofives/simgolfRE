@@ -1,0 +1,119 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Globals.cpp	0x4310	0x00404310	10	L	$E28	_$E28	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4320	0x00404320	10	L	$E25	_$E25	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4330	0x00404330	12	L	$E27	_$E27	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4340	0x00404340	10	L	$E26	_$E26	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4350	0x00404350	5	G	Screen::~Screen	??1Screen@@UAE@XZ	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4360	0x00404360	28	G	Screen::Screen	??0Screen@@QAE@XZ	public	100	100.0	8/8 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4380	0x00404380	30	G	Screen::`scalar deleting destructor'	??_GScreen@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x43a0	0x004043a0	10	L	$E33	_$E33	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x43b0	0x004043b0	10	L	$E30	_$E30	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x43c0	0x004043c0	12	L	$E32	_$E32	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x43d0	0x004043d0	10	L	$E31	_$E31	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x43e0	0x004043e0	10	L	$E38	_$E38	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x43f0	0x004043f0	10	L	$E35	_$E35	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4400	0x00404400	12	L	$E37	_$E37	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4410	0x00404410	20	L	$E36	_$E36	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4430	0x00404430	10	L	$E43	_$E43	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4440	0x00404440	10	L	$E40	_$E40	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4450	0x00404450	12	L	$E42	_$E42	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4460	0x00404460	20	L	$E41	_$E41	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4480	0x00404480	10	L	$E48	_$E48	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4490	0x00404490	10	L	$E45	_$E45	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x44a0	0x004044a0	12	L	$E47	_$E47	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x44b0	0x004044b0	20	L	$E46	_$E46	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x44d0	0x004044d0	10	L	$E53	_$E53	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x44e0	0x004044e0	10	L	$E50	_$E50	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x44f0	0x004044f0	12	L	$E52	_$E52	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4500	0x00404500	20	L	$E51	_$E51	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4520	0x00404520	10	L	$E58	_$E58	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4530	0x00404530	10	L	$E55	_$E55	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4540	0x00404540	12	L	$E57	_$E57	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4550	0x00404550	20	L	$E56	_$E56	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4570	0x00404570	10	L	$E63	_$E63	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4580	0x00404580	10	L	$E60	_$E60	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4590	0x00404590	12	L	$E62	_$E62	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x45a0	0x004045a0	20	L	$E61	_$E61	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x45c0	0x004045c0	10	L	$E68	_$E68	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x45d0	0x004045d0	10	L	$E65	_$E65	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x45e0	0x004045e0	12	L	$E67	_$E67	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x45f0	0x004045f0	20	L	$E66	_$E66	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4610	0x00404610	10	L	$E73	_$E73	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4620	0x00404620	10	L	$E70	_$E70	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4630	0x00404630	12	L	$E72	_$E72	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4640	0x00404640	20	L	$E71	_$E71	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4660	0x00404660	10	L	$E78	_$E78	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4670	0x00404670	10	L	$E75	_$E75	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4680	0x00404680	12	L	$E77	_$E77	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4690	0x00404690	20	L	$E76	_$E76	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x46b0	0x004046b0	10	L	$E83	_$E83	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x46c0	0x004046c0	10	L	$E80	_$E80	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x46d0	0x004046d0	12	L	$E82	_$E82	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x46e0	0x004046e0	10	L	$E81	_$E81	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x46f0	0x004046f0	10	L	$E88	_$E88	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4700	0x00404700	10	L	$E85	_$E85	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4710	0x00404710	12	L	$E87	_$E87	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4720	0x00404720	20	L	$E86	_$E86	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4740	0x00404740	10	L	$E93	_$E93	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4750	0x00404750	10	L	$E90	_$E90	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4760	0x00404760	12	L	$E92	_$E92	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4770	0x00404770	20	L	$E91	_$E91	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4790	0x00404790	10	L	$E98	_$E98	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x47a0	0x004047a0	10	L	$E95	_$E95	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x47b0	0x004047b0	12	L	$E97	_$E97	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x47c0	0x004047c0	20	L	$E96	_$E96	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x47e0	0x004047e0	10	L	$E103	_$E103	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x47f0	0x004047f0	10	L	$E100	_$E100	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4800	0x00404800	12	L	$E102	_$E102	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4810	0x00404810	20	L	$E101	_$E101	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4830	0x00404830	10	L	$E108	_$E108	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4840	0x00404840	10	L	$E105	_$E105	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4850	0x00404850	12	L	$E107	_$E107	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4860	0x00404860	20	L	$E106	_$E106	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_button_text_draw	?on_spot_move@WidgetBase@@UAEHHHPAURect@@@Z	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_right_double_click	?on_spot_right_double_click@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_left_double_click	?on_spot_left_double_click@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_right_click	?on_spot_right_click@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_left_click	?on_spot_left_click@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_left_down	?on_spot_left_down@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_right_down	?on_spot_right_down@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_left_up	?on_spot_left_up@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_right_up	?on_spot_right_up@WidgetBase@@UAEHHHPAURect@@@Z	name	100	100.0	2/2 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x4880	0x00404880	5	G	WidgetBase::on_spot_move		nosym	folded		nosym	
+golf	golf/golf.exe/src/Globals.cpp	0x4890	0x00404890	7	G	WidgetBase::on_scroll_delete	?on_listbox_scroll_delete@WidgetBase@@UAEHH@Z	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4890	0x00404890	7	G	WidgetBase::on_listbox_scroll_delete		nosym	folded		nosym	
+golf	golf/golf.exe/src/Globals.cpp	0x48a0	0x004048a0	5	G	WidgetBase::on_dialog_item_back_draw	?on_dialog_item_back_draw@WidgetBase@@UAEHPAU1@HHPAURect@@@Z	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x48b0	0x004048b0	3	G	WidgetBase::on_check_size	?on_check_size@WidgetBase@@UAEXPAH00@Z	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x48b0	0x004048b0	3	G	WidgetBase::on_mouse_wheel	?on_mouse_wheel@WidgetBase@@UAEXHHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x48b0	0x004048b0	3	G	WidgetBase::on_group_clicked	?on_group_clicked@WidgetBase@@UAEXHHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x48c0	0x004048c0	6	G	WidgetBase::on_modal	?on_modal@WidgetBase@@UAEHXZ	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x48d0	0x004048d0	32	G	AssetSurface::init_buffer	?init_buffer@AssetSurface@@UAEHHHHH@Z	public	100	100.0	12/12 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x48f0	0x004048f0	23	G	AssetSurface::resize_buffer	?resize_buffer@AssetSurface@@UAEHHHH@Z	public	100	100.0	8/8 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4910	0x00404910	5	G	AssetSurface::close_buffer	?close_buffer@AssetSurface@@UAEXXZ	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4920	0x00404920	8	G	GraphicWin::update	?update@GraphicWin@@UAEXXZ	public	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4930	0x00404930	8	G	GraphicWin::on_link_clicked	?OnHotspotDefault@GraphicWin@@UAEHHPAD@Z	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4930	0x00404930	8	G	GraphicWin::OnHotspotDefault		nosym	folded		nosym	
+golf	golf/golf.exe/src/Globals.cpp	0x4940	0x00404940	3	G	GraphicWin::is_graphicwin	?is_graphicwin@GraphicWin@@UAEPAU1@XZ	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x4950	0x00404950	11	G	Screen::`vector deleting destructor'	??_EScreen@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/golf.exe/src/Globals.cpp	0x4960	0x00404960	11	G	GraphicWin::is_graphicwin	?is_graphicwin@GraphicWin@@WCHE@AEPAU1@XZ	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_resize	?on_mouse_leave@WidgetBase@@UAEXHH@Z	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_mouse_move	?on_mouse_move@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_mouse_leave		nosym	folded		nosym	
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnMouseMoveAlt	?OnMouseMoveAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnLeftClickAlt	?OnLeftClickAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnLeftDownAlt	?OnLeftDownAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnLeftUpAlt	?OnLeftUpAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnRightClickAlt	?OnRightClickAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnRightDownAlt	?OnRightDownAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnRightUpAlt	?OnRightUpAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnLeftDoubleClickAlt	?OnLeftDoubleClickAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnRightDoubleClickAlt	?OnRightDoubleClickAlt@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_button_passover	?on_button_passover@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_button_toggled	?on_button_toggled@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnGroupSelSwitched	?OnGroupSelSwitched@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_scrolled	?on_scrolled@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_scrolling	?on_scrolling@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnItemSelectedEx	?OnItemSelectedEx@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::OnItemActivatedEx	?OnItemActivatedEx@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_post_redraw_nc_buffer	?on_post_redraw_nc_buffer@WidgetBase@@UAEXPAUAssetSurface@@H@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Globals.cpp	0x3cbc0	0x0043cbc0	3	G	GraphicWin::on_caption_draw	?on_caption_draw@GraphicWin@@UAEXPADPAUAssetSurface@@@Z	name	100	100.0	1/1 ins	folded

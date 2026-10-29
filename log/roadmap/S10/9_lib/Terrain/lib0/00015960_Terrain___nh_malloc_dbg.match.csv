@@ -1,0 +1,60 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push -1,push -1,True
+3,push 0,push 0x1005f548,True
+4,push 0,push 0x10019ef4,True
+5,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+6,push eax,push eax,True
+7,"mov dword ptr fs:[0], esp","mov dword ptr fs:[0], esp",True
+8,"add esp, -0xc","add esp, -0xc",True
+9,push ebx,push ebx,True
+10,push esi,push esi,True
+11,push edi,push edi,True
+12,push 9,push 9,True
+13,call 0x2a,call 0x10019e10,True
+14,"add esp, 4","add esp, 4",True
+15,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+16,"mov eax, dword ptr [ebp + 0x18]","mov eax, dword ptr [ebp + 0x18]",True
+17,push eax,push eax,True
+18,"mov ecx, dword ptr [ebp + 0x14]","mov ecx, dword ptr [ebp + 0x14]",True
+19,push ecx,push ecx,True
+20,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+21,push edx,push edx,True
+22,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+23,push eax,push eax,True
+24,call 0x49,call 0x10015a20,True
+25,"add esp, 0x10","add esp, 0x10",True
+26,"mov dword ptr [ebp - 0x1c], eax","mov dword ptr [ebp - 0x1c], eax",True
+27,"mov dword ptr [ebp - 4], 0xffffffff","mov dword ptr [ebp - 4], 0xffffffff",True
+28,call 0x5d,call 0x100159bd,True
+29,jmp 0x68,jmp 0x100159c8,True
+30,push 9,,False
+31,call 0x64,,False
+32,"add esp, 4",,False
+33,ret ,,False
+34,"cmp dword ptr [ebp - 0x1c], 0",,False
+35,jne 0x74,,False
+36,"cmp dword ptr [ebp + 0xc], 0",,False
+37,jne 0x79,,False
+38,"mov eax, dword ptr [ebp - 0x1c]",,False
+39,jmp 0x8f,,False
+40,"mov ecx, dword ptr [ebp + 8]",,False
+41,push ecx,,False
+42,call 0x82,,False
+43,"add esp, 4",,False
+44,"test eax, eax",,False
+45,jne 0x8d,,False
+46,"xor eax, eax",,False
+47,jmp 0x8f,,False
+48,jmp 0x23,,False
+49,"mov ecx, dword ptr [ebp - 0x10]",,False
+50,"mov dword ptr fs:[0], ecx",,False
+51,pop edi,,False
+52,pop esi,,False
+53,pop ebx,,False
+54,"mov esp, ebp",,False
+55,pop ebp,,False
+56,ret ,,False
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\dbgheap.obj (library object, no compilation)",symbol=__nh_malloc_dbg,module=Terrain.dll
+VERDICT,RED,57,52.6%

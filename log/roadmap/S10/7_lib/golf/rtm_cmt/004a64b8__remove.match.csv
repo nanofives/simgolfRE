@@ -1,0 +1,19 @@
+instruction,library_object,original,match
+0,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+1,call dword ptr [0],call dword ptr [0x4ba07c],True
+2,"test eax, eax","test eax, eax",True
+3,jne 0x16,jne 0x4a64ce,True
+4,call dword ptr [0],call dword ptr [0x4ba02c],True
+5,jmp 0x18,jmp 0x4a64d0,True
+6,"xor eax, eax","xor eax, eax",True
+7,"test eax, eax","test eax, eax",True
+8,je 0x27,je 0x4a64df,True
+9,push eax,push eax,True
+10,call 0x22,call 0x4a9099,True
+11,pop ecx,pop ecx,True
+12,"or eax, 0xffffffff","or eax, 0xffffffff",True
+13,ret ,ret ,True
+14,"xor eax, eax","xor eax, eax",True
+15,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\unlink.obj (library object, no compilation)",symbol=_remove,module=golf_clean.exe
+VERDICT,GREEN,16,100.0%

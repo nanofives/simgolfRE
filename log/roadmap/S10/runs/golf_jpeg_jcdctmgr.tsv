@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcdctmgr.c	0xb34b0	0x004b34b0	145	G	jinit_forward_dct	_jinit_forward_dct	public	100	100.0	44/44 ins	golf_jpeg_cdctmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcdctmgr.c	0xb3550	0x004b3550	451	L	start_pass_fdctmgr	_start_pass_fdctmgr	name	100	100.0	147/147 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcdctmgr.c	0xb3720	0x004b3720	409	L	forward_DCT	_forward_DCT	name	100	100.0	131/131 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcdctmgr.c	0xb38c0	0x004b38c0	441	L	forward_DCT_float	_forward_DCT_float	name	100	100.0	125/125 ins	

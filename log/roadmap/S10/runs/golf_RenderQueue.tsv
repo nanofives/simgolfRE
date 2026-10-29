@@ -1,0 +1,10 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/RenderQueue.cpp	0x62020	0x00462020	1963	G	SetupGolferAppearance	?SetupGolferAppearance@@YAXH@Z	public	100	100.0	567/567 ins	
+golf	golf/golf.exe/src/RenderQueue.cpp	0x627d0	0x004627d0	41	G	ResetRenderState	?ResetRenderState@@YAXXZ	public	100	100.0	11/11 ins	
+golf	golf/golf.exe/src/RenderQueue.cpp	0x62800	0x00462800	197	G	SaveRenderQueue	?SaveRenderQueue@@YAXXZ	public	100	100.0	49/49 ins	golf_small22.cpp
+golf	golf/golf.exe/src/RenderQueue.cpp	0x628d0	0x004628d0	345	G	DrawSpriteImmediate	?DrawSpriteImmediate@@YAXHHHHHPAUSpriteObject@@HH@Z	public	100	100.0	100/100 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/RenderQueue.cpp	0x62a30	0x00462a30	432	G	AddSpriteToRenderQueue	?AddSpriteToRenderQueue@@YAXHHHHHPAUSpriteObject@@HH@Z	public	100	100.0	120/120 ins	
+golf	golf/golf.exe/src/RenderQueue.cpp	0x62be0	0x00462be0	1302	G	RenderQueuedSprite	?RenderQueuedSprite@@YAXH@Z	public	100	100.0	369/369 ins	
+golf	golf/golf.exe/src/RenderQueue.cpp	0x63100	0x00463100	107	G	ProcessRenderQueue	?ProcessRenderQueue@@YAXXZ	public	100	100.0	27/27 ins	
+golf	golf/golf.exe/src/RenderQueue.cpp	0x63170	0x00463170	16	G	IndexBelowOrNone	?IndexBelowOrNone@@YAHHH@Z	public	100	100.0	6/6 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/RenderQueue.cpp	0x63180	0x00463180	9184	G	RenderSpriteByType	?RenderSpriteByType@@YAXHHHHHHH@Z	public	100	100.0	2911/2911 ins	

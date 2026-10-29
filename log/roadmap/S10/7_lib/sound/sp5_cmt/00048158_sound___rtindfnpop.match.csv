@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,bytes +0x0: ddd8db2d????????80bd70ffffff007f,bytes +0x0: ddd8db2d????????80bd70ffffff007f,True
+1,bytes +0x10: 07c68570ffffff010ac9c30ac97402d9,bytes +0x10: 07c68570ffffff010ac9c30ac97402d9,True
+2,bytes +0x20: e0c3,bytes +0x20: e0c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87disp.obj (library object, no compilation)",symbol=__rtindfnpop,module=sound.dll
+VERDICT,GREEN,3,100.0%

@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/MMError.cpp	0x25040	0x10025040	9	G	CMMError::CMMError	??0CMMError@@QAE@XZ	public	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/MMError.cpp	0x25060	0x10025060	32	G	CMMError::`scalar deleting destructor'	??_GCMMError@@UAEPAXI@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/MMError.cpp	0x25090	0x10025090	7	G	CMMError::~CMMError	??1CMMError@@UAE@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/MMError.cpp	0x250b0	0x100250b0	172	G	CMMError::handle_error	?handle_error@CMMError@@QAE?AW4SNDERR@@I@Z	public	100	100.0	23/23 ins	

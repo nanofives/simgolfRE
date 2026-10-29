@@ -34,7 +34,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x1004490a `__output` at 0x100425a0
 
 ## Callers
-0x10008ed0 `SoundTimer::onTick`, 0x1004164f `operator<<`, 0x10041700 `operator<<`
+0x10008ed0 `SoundTimer::onTick`, 0x1004164f `ostream::operator_lshift`, 0x10041700 `ostream::operator_lshift_10041700`
 
 ## Constants
 - `0x0` at 0x100425b2, 0x100425bb

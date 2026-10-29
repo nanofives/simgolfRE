@@ -1,0 +1,2 @@
+module	addr	name	subsystem	evidence	purpose
+Terrain.dll	0x10013500	Tile::reblendNeighbourhood	terrain	match re/match/terrain_tile4.cpp (100%); callee 0x10013670 (Tile::blendFaceTextures) x9; callers 0x10014020 (Tile::setTypeId), 0x1000d480, 0x1000d540, 0x1000de60, 0x10015230	Calls Tile::blendFaceTextures on this tile with its own type (+m_type) and with -1 on each existing neighbour (+0x34 array: n0, n2, n1, n3) and on the four diagonals reached through two neighbour links (n0->n2, n1->n2, n1->n3, n0->n3), skipping any NULL link

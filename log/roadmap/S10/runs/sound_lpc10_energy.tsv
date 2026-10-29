@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/energy.c	0x3ec60	0x1003ec60	154	G	energy_	_energy_	public	100	100.0	57/57 ins	m36c_D2_01.cpp

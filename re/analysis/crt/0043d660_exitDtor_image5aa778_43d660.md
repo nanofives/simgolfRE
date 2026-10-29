@@ -7,6 +7,7 @@ atexit destructor of the file-scope global g_image5aa778 0x005aa778 (`re/names/m
 System writeup: `re/analysis/systems/model_h1.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_FlicBanks.cpp` as `_$E37` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

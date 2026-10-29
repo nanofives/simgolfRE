@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,"sub esp, 8","sub esp, 8",True
+1,fst qword ptr [esp],fst qword ptr [esp],True
+2,call 0xb,call 0x10083f88,True
+3,call 0x1d,call 0x1007e8ed,True
+4,"add esp, 8","add esp, 8",True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\asin.obj (library object, no compilation)",symbol=__CIasin,module=jgld.dll
+VERDICT,GREEN,6,100.0%

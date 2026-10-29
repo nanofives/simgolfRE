@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 31 bytes, 9 instructions, subsystem `render`. Mechanica
 Destroys g_loadImage once, guarded by bit 0 of g_staticGuard839340. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sprite.cpp` as `_$E13` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00473aae): callee pops 0 bytes of stack arguments.
 
 ## Reads

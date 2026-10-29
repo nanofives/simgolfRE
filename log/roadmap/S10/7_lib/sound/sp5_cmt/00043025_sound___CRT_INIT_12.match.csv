@@ -1,0 +1,60 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"cmp eax, 1","cmp eax, 1",True
+2,jne 0x95,jne 0x100430ba,True
+3,call dword ptr [0],call dword ptr [0x100b84f4],True
+4,push 1,push 1,True
+5,"mov dword ptr [0], eax","mov dword ptr [0x100b5548], eax",True
+6,call 0x1f,call 0x10045d10,True
+7,"test eax, eax","test eax, eax",True
+8,pop ecx,pop ecx,True
+9,je 0x60,je 0x10043085,True
+10,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b5548]",True
+11,"xor ecx, ecx","xor ecx, ecx",True
+12,"mov cl, byte ptr [1]","mov cl, byte ptr [0x100b5549]",True
+13,"and eax, 0xff","and eax, 0xff",True
+14,"shr dword ptr [0], 0x10","shr dword ptr [0x100b5548], 0x10",True
+15,"mov dword ptr [0], eax","mov dword ptr [0x100b5550], eax",True
+16,"mov dword ptr [0], ecx","mov dword ptr [0x100b5554], ecx",True
+17,"shl eax, 8","shl eax, 8",True
+18,"add eax, ecx","add eax, ecx",True
+19,"mov dword ptr [0], eax","mov dword ptr [0x100b554c], eax",True
+20,call 0x57,call 0x100440ec,True
+21,"test eax, eax","test eax, eax",True
+22,jne 0x64,jne 0x10043089,True
+23,call 0x60,call 0x10045d6d,True
+24,"xor eax, eax","xor eax, eax",True
+25,jmp 0xd6,jmp 0x100430fb,True
+26,call dword ptr [0],call dword ptr [0x100b84f0],True
+27,"mov dword ptr [0], eax","mov dword ptr [0x100b7084], eax",True
+28,call 0x74,call 0x10047cb4,True
+29,"mov dword ptr [0], eax","mov dword ptr [0x100b5530], eax",True
+30,call 0x7e,call 0x1004779e,True
+31,call 0x83,call 0x10047a67,True
+32,call 0x88,call 0x100479ae,True
+33,call 0x8d,call 0x10045114,True
+34,inc dword ptr [0],inc dword ptr [0x100b552c],True
+35,jmp 0xd3,jmp 0x100430f8,True
+36,"xor ecx, ecx","xor ecx, ecx",True
+37,"cmp eax, ecx","cmp eax, ecx",True
+38,jne 0xc7,jne 0x100430ec,True
+39,"cmp dword ptr [0], ecx","cmp dword ptr [0x100b552c], ecx",True
+40,jle 0x60,jle 0x10043085,True
+41,dec dword ptr [0],dec dword ptr [0x100b552c],True
+42,"cmp dword ptr [0], ecx","cmp dword ptr [0x100b5580], ecx",True
+43,jne 0xb6,jne 0x100430db,True
+44,call 0xb6,call 0x10045163,True
+45,call 0xbb,call 0x1004795a,True
+46,call 0xc0,call 0x10044140,True
+47,call 0xc5,call 0x10045d6d,True
+48,jmp 0xd3,jmp 0x100430f8,True
+49,"cmp eax, 3","cmp eax, 3",True
+50,jne 0xd3,jne 0x100430f8,True
+51,push ecx,push ecx,True
+52,call 0xd2,call 0x100441d8,True
+53,pop ecx,pop ecx,True
+54,push 1,push 1,True
+55,pop eax,pop eax,True
+56,ret 0xc,ret 0xc,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\dllcrt0.obj (library object, no compilation)",symbol=__CRT_INIT@12,module=sound.dll
+VERDICT,GREEN,57,100.0%

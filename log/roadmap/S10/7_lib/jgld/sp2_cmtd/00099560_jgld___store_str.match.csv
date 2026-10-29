@@ -1,0 +1,33 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+3,"cmp dword ptr [eax], 0","cmp dword ptr [eax], 0",True
+4,je 0x46,je 0x100995a6,True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,"movsx edx, byte ptr [ecx]","movsx edx, byte ptr [ecx]",True
+7,"test edx, edx","test edx, edx",True
+8,je 0x46,je 0x100995a6,True
+9,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+10,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+11,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+12,"mov al, byte ptr [edx]","mov al, byte ptr [edx]",True
+13,"mov byte ptr [ecx], al","mov byte ptr [ecx], al",True
+14,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+15,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+16,"add edx, 1","add edx, 1",True
+17,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+18,"mov dword ptr [eax], edx","mov dword ptr [eax], edx",True
+19,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+20,"add ecx, 1","add ecx, 1",True
+21,"mov dword ptr [ebp + 8], ecx","mov dword ptr [ebp + 8], ecx",True
+22,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+23,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+24,"sub eax, 1","sub eax, 1",True
+25,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+26,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+27,jmp 3,jmp 0x10099563,True
+28,pop ebp,pop ebp,True
+29,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\strftime.obj (library object, no compilation)",symbol=__store_str,module=jgld.dll
+VERDICT,GREEN,30,100.0%

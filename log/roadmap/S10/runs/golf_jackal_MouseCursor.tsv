@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/MouseCursor.cpp	0x88490	0x00488490	23	G	MouseCursor::MouseCursor	??0MouseCursor@@QAE@XZ	public	100	100.0	8/8 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/MouseCursor.cpp	0x884b0	0x004884b0	48	G	MouseCursor::Cleanup	?Cleanup@MouseCursor@@QAEXXZ	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/MouseCursor.cpp	0x884e0	0x004884e0	29	G	init_cursor_class	?init_cursor_class@@YAHXZ	public	100	100.0	11/11 ins	golf_small17.cpp

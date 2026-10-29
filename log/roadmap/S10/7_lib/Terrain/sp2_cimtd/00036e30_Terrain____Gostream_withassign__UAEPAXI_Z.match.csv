@@ -1,0 +1,24 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,"sub ecx, 8","sub ecx, 8",True
+6,call 0x12,call 0x10036e70,True
+7,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+8,"and eax, 1","and eax, 1",True
+9,"test eax, eax","test eax, eax",True
+10,je 0x2b,je 0x10036e5b,True
+11,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+12,"sub ecx, 8","sub ecx, 8",True
+13,push ecx,push ecx,True
+14,call 0x28,call 0x10018be0,True
+15,"add esp, 4","add esp, 4",True
+16,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+17,"sub eax, 8","sub eax, 8",True
+18,"mov esp, ebp","mov esp, ebp",True
+19,pop ebp,pop ebp,True
+20,ret 4,ret 4,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\ostream.obj (library object, no compilation)",symbol=??_Gostream_withassign@@UAEPAXI@Z,module=Terrain.dll
+VERDICT,GREEN,21,100.0%

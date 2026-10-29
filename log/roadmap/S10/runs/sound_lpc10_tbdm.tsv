@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/tbdm.c	0x40000	0x10040000	810	G	tbdm_	_tbdm_	public	100	100.0	292/292 ins	m36c_D2_01.cpp

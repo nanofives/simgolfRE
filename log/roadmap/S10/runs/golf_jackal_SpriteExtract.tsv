@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/SpriteExtract.cpp	0x92000	0x00492000	1060	G	SpriteObject::extract_8	?extract_8@SpriteObject@@QAEHPAUAssetSurface@@HHHHHE@Z	public	100	100.0	423/423 ins	

@@ -1,0 +1,13 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6bac0	0x1006bac0	475	G	png_create_read_struct	_png_create_read_struct	public	100	100.0	140/140 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6bca0	0x1006bca0	374	G	png_read_init	_png_read_init	public	100	100.0	104/104 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6be20	0x1006be20	1304	G	png_read_info	_png_read_info	public	100	100.0	444/444 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6c340	0x1006c340	82	G	png_read_update_info	_png_read_update_info	public	100	100.0	34/34 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6c3a0	0x1006c3a0	66	G	png_start_read_image	_png_start_read_image	public	100	100.0	28/28 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6c3f0	0x1006c3f0	1832	G	png_read_row	_png_read_row	public	100	100.0	543/543 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6cb20	0x1006cb20	292	G	png_read_rows	_png_read_rows	public	100	100.0	106/106 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6cc50	0x1006cc50	171	G	png_read_image	_png_read_image	public	100	100.0	61/61 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6cd00	0x1006cd00	1097	G	png_read_end	_png_read_end	public	100	100.0	377/377 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6d150	0x1006d150	243	G	png_destroy_read_struct	_png_destroy_read_struct	public	100	100.0	83/83 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6d250	0x1006d250	893	G	png_read_destroy	_png_read_destroy	public	100	100.0	286/286 ins	jgld_png_read.cpp
+jgld	jgl/libpng.lib/libpng/pngread.c	0x6d5d0	0x1006d5d0	43	G	png_set_read_status_fn	_png_set_read_status_fn	public	100	100.0	19/19 ins	jgld_png_read.cpp

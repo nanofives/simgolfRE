@@ -1,0 +1,33 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Plot.cpp	0x1000	0x00401000	54	G	ClearPlot	?ClearPlot@@YAXH@Z	public	100	100.0	16/16 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x1040	0x00401040	356	G	PlaceBuilding	?PlaceBuilding@@YAHHHHH@Z	public	100	100.0	118/118 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x11b0	0x004011b0	47	G	RemoveHomeVIPAtPosition	?RemoveHomeVIPAtPosition@@YAXHH@Z	public	100	100.0	16/16 ins	golf_raw_12.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x11e0	0x004011e0	237	G	SpawnHomeVIP	?SpawnHomeVIP@@YAXHHHH@Z	public	100	100.0	64/64 ins	golf_hand_07_4011e0.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x12d0	0x004012d0	1140	G	RenderPlot	?RenderPlot@@YAXHHH@Z	public	100	100.0	360/360 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x1750	0x00401750	117	G	InitPlots	?InitPlots@@YAXXZ	public	100	100.0	42/42 ins	golf_small10.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x17d0	0x004017d0	1061	G	UpdateHomeVIP	?UpdateHomeVIP@@YAXH@Z	public	100	100.0	304/304 ins	golf_hand_s3.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x1c00	0x00401c00	39	G	UpdateAllHomeVIPs	?UpdateAllHomeVIPs@@YAXXZ	public	100	100.0	16/16 ins	golf_small2.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x1c30	0x00401c30	59	G	HeapNew::`scalar deleting destructor'	??_GHeapNew@@UAEPAXI@Z	public	100	100.0	19/19 ins	golf_raw_14.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x1c70	0x00401c70	147	G	ClassList<StringStruct>::~ClassList<StringStruct>	??1?$ClassList@UStringStruct@@@@UAE@XZ	public	100	100.0	63/63 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x1d10	0x00401d10	1050	G	ClassList<StringStruct>::add	?add@?$ClassList@UStringStruct@@@@QAEHH@Z	public	100	100.0	341/341 ins	golf_hand_s3.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x2130	0x00402130	47	G	ClassList<StringStruct>::next_entry	?next_entry@?$ClassList@UStringStruct@@@@QAEPAUStringStruct@@XZ	public	100	100.0	18/18 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x2160	0x00402160	17	G	ClassList<StringStruct>::current_entry	?current_entry@?$ClassList@UStringStruct@@@@QAEPAUStringStruct@@XZ	public	100	100.0	8/8 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x2180	0x00402180	5	G	ClassList<StringStruct>::fill_entry	?fill_entry@?$ClassList@USpriteStruct@@@@UAEHPAUSpriteStruct@@@Z	public	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x2180	0x00402180	5	G	ClassList<PalStruct>::fill_entry	?fill_entry@?$ClassList@UPalStruct@@@@UAEHPAUPalStruct@@@Z	overload	100	100.0	2/2 ins (best of 2 overloads)	folded
+golf	golf/golf.exe/src/Plot.cpp	0x2180	0x00402180	5	G	ClassList<SpriteStruct>::fill_entry	?fill_entry@?$ClassList@USpriteStruct@@@@QAEHPAULinkListEntry@@@Z	name	folded	16.7	miss 16.7 1/6 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x2190	0x00402190	3	G	ClassList<StringStruct>::kill_entry	?kill_entry@?$ClassList@USpriteStruct@@@@UAEXPAUSpriteStruct@@@Z	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x2190	0x00402190	3	G	ClassList<PalStruct>::kill_entry	?kill_entry@?$ClassList@UPalStruct@@@@UAEXPAUPalStruct@@@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/Plot.cpp	0x2190	0x00402190	3	G	ClassList<SpriteStruct>::kill_entry		nosym	folded		nosym	
+golf	golf/golf.exe/src/Plot.cpp	0x21a0	0x004021a0	15	G	HeapNew::~HeapNew	??1HeapNew@@UAE@XZ	public	100	100.0	4/4 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x21b0	0x004021b0	38	G	HeapNew::operator delete	??3HeapNew@@SAXPAXPAUHeap@@@Z	public	100	100.0	11/11 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x21e0	0x004021e0	147	G	ClassList<PalStruct>::~ClassList<PalStruct>	??1?$ClassList@UPalStruct@@@@UAE@XZ	public	100	100.0	63/63 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x2280	0x00402280	1050	G	ClassList<PalStruct>::add	?add@?$ClassList@UPalStruct@@@@QAEHH@Z	public	100	100.0	341/341 ins	golf_hand_s3.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x26a0	0x004026a0	115	G	ClassList<StringStruct>::remove_all	?remove_all@?$ClassList@UPalStruct@@@@QAEXXZ	public	100	100.0	53/53 ins	golf_hand_03.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x26a0	0x004026a0	115	G	ClassList<PalStruct>::remove_all		nosym	folded		nosym	golf_hand_03.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x26a0	0x004026a0	115	G	ClassList<SpriteStruct>::remove_all	?remove_all@?$ClassList@USpriteStruct@@@@QAEXXZ	name	100	100.0	53/53 ins	golf_hand_03.cpp
+golf	golf/golf.exe/src/Plot.cpp	0x2720	0x00402720	99	G	ClassList<StringStruct>::`scalar deleting destructor'	??_G?$ClassList@UStringStruct@@@@UAEPAXI@Z	public	100	100.0	29/29 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x2790	0x00402790	99	G	ClassList<PalStruct>::`scalar deleting destructor'	??_G?$ClassList@UPalStruct@@@@UAEPAXI@Z	public	100	100.0	29/29 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x2800	0x00402800	99	G	ClassList<SpriteStruct>::`scalar deleting destructor'	??_G?$ClassList@USpriteStruct@@@@UAEPAXI@Z	public	100	100.0	29/29 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x2870	0x00402870	63	G	LinkListEntry::`scalar deleting destructor'	??_GLinkListEntry@@UAEPAXI@Z	public	100	100.0	20/20 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x28b0	0x004028b0	63	G	StringStruct::`scalar deleting destructor'	??_GStringStruct@@UAEPAXI@Z	public	100	100.0	20/20 ins	
+golf	golf/golf.exe/src/Plot.cpp	0x28f0	0x004028f0	63	G	PalStruct::`scalar deleting destructor'	??_GPalStruct@@UAEPAXI@Z	public	100	100.0	20/20 ins	

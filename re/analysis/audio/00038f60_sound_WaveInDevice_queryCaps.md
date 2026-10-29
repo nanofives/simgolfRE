@@ -7,6 +7,7 @@ queries device capabilities with waveInGetDevCapsA into a WAVEINCAPSA buffer (`r
 System writeup: `re/analysis/systems/sound_1.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_WaveInDeviceMgr.cpp` as `?select@WaveInDeviceMgr@@QAE?AW4SNDERR@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10038f74, 0x10038f95, 0x10038f9f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10038f61 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

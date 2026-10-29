@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/fifo.cpp	0xa4d30	0x004a4d30	19	G	fifo::init	?init@fifo@@QAEXH@Z	public	100	100.0	7/7 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/fifo.cpp	0xa4d50	0x004a4d50	84	G	fifo::close	?close@fifo@@QAEXXZ	public	100	100.0	38/38 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/fifo.cpp	0xa4db0	0x004a4db0	225	G	fifo::add	?add@fifo@@QAEHPAPAXHHH@Z	public	100	100.0	87/87 ins	golf_hand_07_4a4db0.cpp
+golf	golf/jackal.lib/src/fifo.cpp	0xa4ea0	0x004a4ea0	47	G	fifo::get	?get@fifo@@QAEPAXPAH0@Z	public	100	100.0	18/18 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/fifo.cpp	0xa4ed0	0x004a4ed0	62	G	fifo::remove	?remove@fifo@@QAEXXZ	public	100	100.0	25/25 ins	golf_classes.cpp

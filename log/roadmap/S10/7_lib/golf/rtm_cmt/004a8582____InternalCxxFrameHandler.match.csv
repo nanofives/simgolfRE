@@ -1,0 +1,64 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push esi,push esi,True
+3,"mov esi, dword ptr [ebp + 0x18]","mov esi, dword ptr [ebp + 0x18]",True
+4,push edi,push edi,True
+5,"mov edi, 0x19930520","mov edi, 0x19930520",True
+6,"cmp dword ptr [esi], edi","cmp dword ptr [esi], edi",True
+7,je 0x16,je 0x4a8598,True
+8,call 0x16,call 0x4a8f1b,True
+9,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+10,"test byte ptr [eax + 4], 0x66","test byte ptr [eax + 4], 0x66",True
+11,je 0x3e,je 0x4a85c0,True
+12,"cmp dword ptr [esi + 4], 0","cmp dword ptr [esi + 4], 0",True
+13,je 0x94,je 0x4a8616,True
+14,"cmp dword ptr [ebp + 0x1c], 0","cmp dword ptr [ebp + 0x1c], 0",True
+15,jne 0x94,jne 0x4a8616,True
+16,push -1,push -1,True
+17,push esi,push esi,True
+18,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+19,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+20,call 0x39,call 0x4a88d7,True
+21,"add esp, 0x10","add esp, 0x10",True
+22,jmp 0x94,jmp 0x4a8616,True
+23,"cmp dword ptr [esi + 0xc], 0","cmp dword ptr [esi + 0xc], 0",True
+24,je 0x94,je 0x4a8616,True
+25,"cmp dword ptr [eax], 0xe06d7363","cmp dword ptr [eax], 0xe06d7363",True
+26,jne 0x78,jne 0x4a85fa,True
+27,"cmp dword ptr [eax + 0x14], edi","cmp dword ptr [eax + 0x14], edi",True
+28,jbe 0x78,jbe 0x4a85fa,True
+29,"mov ecx, dword ptr [eax + 0x1c]","mov ecx, dword ptr [eax + 0x1c]",True
+30,"mov ecx, dword ptr [ecx + 8]","mov ecx, dword ptr [ecx + 8]",True
+31,"test ecx, ecx","test ecx, ecx",True
+32,je 0x78,je 0x4a85fa,True
+33,"movzx edx, byte ptr [ebp + 0x24]","movzx edx, byte ptr [ebp + 0x24]",True
+34,push edx,push edx,True
+35,push dword ptr [ebp + 0x20],push dword ptr [ebp + 0x20],True
+36,push dword ptr [ebp + 0x1c],push dword ptr [ebp + 0x1c],True
+37,push esi,push esi,True
+38,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+39,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+40,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+41,push eax,push eax,True
+42,call ecx,call ecx,True
+43,"add esp, 0x20","add esp, 0x20",True
+44,jmp 0x97,jmp 0x4a8619,True
+45,push dword ptr [ebp + 0x20],push dword ptr [ebp + 0x20],True
+46,push dword ptr [ebp + 0x1c],push dword ptr [ebp + 0x1c],True
+47,push dword ptr [ebp + 0x24],push dword ptr [ebp + 0x24],True
+48,push esi,push esi,True
+49,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+50,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+51,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+52,push eax,push eax,True
+53,call 0x91,call 0x4a861d,True
+54,"add esp, 0x20","add esp, 0x20",True
+55,push 1,push 1,True
+56,pop eax,pop eax,True
+57,pop edi,pop edi,True
+58,pop esi,pop esi,True
+59,pop ebp,pop ebp,True
+60,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\frame.obj (library object, no compilation)",symbol=___InternalCxxFrameHandler,module=golf_clean.exe
+VERDICT,GREEN,61,100.0%

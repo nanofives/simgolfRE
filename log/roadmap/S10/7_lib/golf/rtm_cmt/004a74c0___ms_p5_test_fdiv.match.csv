@@ -1,0 +1,27 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x18","sub esp, 0x18",True
+3,fld qword ptr [0],fld qword ptr [0x4bc480],True
+4,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+5,fld qword ptr [0],fld qword ptr [0x4bc478],True
+6,fstp qword ptr [ebp - 0x10],fstp qword ptr [ebp - 0x10],True
+7,fld qword ptr [ebp - 0x10],fld qword ptr [ebp - 0x10],True
+8,fdiv qword ptr [ebp - 8],fdiv qword ptr [ebp - 8],True
+9,fmul qword ptr [ebp - 8],fmul qword ptr [ebp - 8],True
+10,fsubr qword ptr [ebp - 0x10],fsubr qword ptr [ebp - 0x10],True
+11,fstp qword ptr [ebp - 0x18],fstp qword ptr [ebp - 0x18],True
+12,fld qword ptr [ebp - 0x18],fld qword ptr [ebp - 0x18],True
+13,fcomp qword ptr [0],fcomp qword ptr [0x4ba2a0],True
+14,fnstsw ax,fnstsw ax,True
+15,sahf ,sahf ,True
+16,jbe 0x3a,jbe 0x4a74fa,True
+17,push 1,push 1,True
+18,pop eax,pop eax,True
+19,leave ,leave ,True
+20,ret ,ret ,True
+21,"xor eax, eax","xor eax, eax",True
+22,leave ,leave ,True
+23,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\testfdiv.obj (library object, no compilation)",symbol=__ms_p5_test_fdiv,module=golf_clean.exe
+VERDICT,GREEN,24,100.0%

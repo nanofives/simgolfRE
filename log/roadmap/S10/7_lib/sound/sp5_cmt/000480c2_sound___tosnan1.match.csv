@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,bytes +0x0: dbbd62ffffffdbad62fffffff68569ff,bytes +0x0: dbbd62ffffffdbad62fffffff68569ff,True
+1,bytes +0x10: ffff407408c68570ffffff07c3c68570,bytes +0x10: ffff407408c68570ffffff07c3c68570,True
+2,bytes +0x20: ffffff01dc05????????c3d9c9dbbd62,bytes +0x20: ffffff01dc05????????c3d9c9dbbd62,True
+3,bytes +0x30: ffffffdbad62fffffff68569ffffff40,bytes +0x30: ffffffdbad62fffffff68569ffffff40,True
+4,bytes +0x40: 7409c68570ffffff07eb07c68570ffff,bytes +0x40: 7409c68570ffffff07eb07c68570ffff,True
+5,bytes +0x50: ff01dec1c3dbbd62ffffffdbad62ffff,bytes +0x50: ff01dec1c3dbbd62ffffffdbad62ffff,True
+6,bytes +0x60: fff68569ffffff407420d9c9dbbd62ff,bytes +0x60: fff68569ffffff407420d9c9dbbd62ff,True
+7,bytes +0x70: ffffdbad62fffffff68569ffffff4074,bytes +0x70: ffffdbad62fffffff68569ffffff4074,True
+8,bytes +0x80: 09c68570ffffff07eb07c68570ffffff,bytes +0x80: 09c68570ffffff07eb07c68570ffffff,True
+9,bytes +0x90: 01dec1c3ddd8ddd8db2d????????80bd,bytes +0x90: 01dec1c3ddd8ddd8db2d????????80bd,True
+10,bytes +0xa0: 70ffffff007f07c68570ffffff010ac9,bytes +0xa0: 70ffffff007f07c68570ffffff010ac9,True
+11,bytes +0xb0: c30ac97402d9e0c3,bytes +0xb0: c30ac97402d9e0c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87disp.obj (library object, no compilation)",symbol=__tosnan1,module=sound.dll
+VERDICT,GREEN,12,100.0%

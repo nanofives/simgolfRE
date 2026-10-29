@@ -7,6 +7,7 @@ idle event entry: polls the network receive queue through netPoll when a network
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnNetMessage@SysMessageHandler@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00495d2f): callee pops 0 bytes of stack arguments.
 
 ## Reads

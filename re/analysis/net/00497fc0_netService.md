@@ -7,6 +7,7 @@ main network service routine that processes transport state and incoming traffic
 System writeup: `re/analysis/systems/exe_5.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Network.cpp` as `?SendMessageWithRetry@Net@@QAEHPAXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x0049913c): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00497fe1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 
@@ -130,7 +131,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a4b60 `listAppend4a4b60` at 0x00498169, 0x0049818a
 - 0x004a5007 `_free` at 0x00498344, 0x00498471, 0x004988e3, 0x004989d5, 0x00498acb, 0x00498bd3, 0x00498cdc, 0x00498e14 (+1 more)
 - 0x004a504f `_malloc` at 0x004981a4
-- 0x004a6070 `FUN_004a6070` at 0x00497fda
+- 0x004a6070 `__chkstk` at 0x00497fda
 - import `KERNEL32.dll!WaitForMultipleObjects` at 0x00498679
 - import `USER32.dll!MessageBoxA` at 0x00498bc8
 - import `WINMM.dll!timeGetTime` at 0x004986c2, 0x0049870c, 0x00498760

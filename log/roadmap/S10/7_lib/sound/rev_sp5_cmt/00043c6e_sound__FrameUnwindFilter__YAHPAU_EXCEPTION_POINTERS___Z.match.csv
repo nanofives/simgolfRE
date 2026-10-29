@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"mov eax, dword ptr [eax]","mov eax, dword ptr [eax]",True
+2,"cmp dword ptr [eax], 0xe06d7363","cmp dword ptr [eax], 0xe06d7363",True
+3,je 0x11,je 0x10043c7f,True
+4,"xor eax, eax","xor eax, eax",True
+5,ret ,ret ,True
+6,jmp 0x16,jmp 0x10044284,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\frame.obj (library object, no compilation)",symbol=?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z,module=sound.dll
+VERDICT,GREEN,7,100.0%

@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, 0","mov esi, 0x100b54e8",True
+2,push edi,push edi,True
+3,push esi,push esi,True
+4,call 0xd,call 0x10041e59,True
+5,"shl dword ptr [0], 1","shl dword ptr [0x10064e9c], 1",True
+6,"mov edi, dword ptr [0]","mov edi, dword ptr [0x10064e9c]",True
+7,push esi,push esi,True
+8,call 0x1f,call 0x10041e64,True
+9,pop ecx,pop ecx,True
+10,"mov eax, edi","mov eax, edi",True
+11,pop ecx,pop ecx,True
+12,pop edi,pop edi,True
+13,pop esi,pop esi,True
+14,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\_ios.obj (library object, no compilation)",symbol=?bitalloc@ios@@SAJXZ,module=sound.dll
+VERDICT,GREEN,15,100.0%

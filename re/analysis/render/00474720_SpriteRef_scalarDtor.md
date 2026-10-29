@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 90 bytes, 36 instructions, subsystem `render`. Mechanic
 Scalar/vector deleting destructor of SpriteRef: destroys one object or an array of 0x2c-byte objects and frees when bit 0 is set. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sprite.cpp` as `??_ESpriteObject@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00474755, 0x00474777): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00474726 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 
@@ -25,7 +26,7 @@ Through registers:
 ## Callees
 - 0x00473ae0 `Surface_free` at 0x00474760
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x00474748, 0x0047476b
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0047473d
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x0047473d
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/GolferPairing.cpp	0x5de30	0x0045de30	70	G	SwapGolferSlots	?SwapGolferSlots@@YAXHH@Z	public	100	100.0	23/23 ins	golf_hand_01.cpp
+golf	golf/golf.exe/src/GolferPairing.cpp	0x5de80	0x0045de80	4716	G	PairGolfers	?PairGolfers@@YAXHH@Z	public	100	100.0	1162/1162 ins	
+golf	golf/golf.exe/src/GolferPairing.cpp	0x5f0f0	0x0045f0f0	1908	G	RenderSkillPointsScreen	?RenderSkillPointsScreen@@YAHPADHHHH@Z	public	100	100.0	568/568 ins	
+golf	golf/golf.exe/src/GolferPairing.cpp	0x5f870	0x0045f870	1288	G	RenderTop10CoursesScreen	?RenderTop10CoursesScreen@@YAXXZ	public	100	100.0	410/410 ins	
+golf	golf/golf.exe/src/GolferPairing.cpp	0x5fd80	0x0045fd80	1900	G	ShowWelcomeMessage	?ShowWelcomeMessage@@YAXXZ	public	100	100.0	706/706 ins	golf_hand_t2.cpp
+golf	golf/golf.exe/src/GolferPairing.cpp	0x604f0	0x004604f0	2292	G	SetupTutorialMessage	?SetupTutorialMessage@@YAXXZ	public	100	100.0	695/695 ins	
+golf	golf/golf.exe/src/GolferPairing.cpp	0x60df0	0x00460df0	788	G	BuildHoleTypeMessage	?BuildHoleTypeMessage@@YAXHH@Z	public	100	100.0	286/286 ins	
+golf	golf/golf.exe/src/GolferPairing.cpp	0x61110	0x00461110	1242	G	RenderScorecard	?RenderScorecard@@YAXH@Z	public	100	100.0	368/368 ins	

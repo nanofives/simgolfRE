@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 183 bytes, 83 instructions, subsystem `util`. Mechanica
 Plays the child sound after stopping every other listed sound whose flags have bit 0 set and bit 2 clear, then reopens the stopped ones; returns 2 when there is no child. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SoundDevice.cpp` as `?select@Wave_Device@@UAE?AW4SNDERR@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048751a, 0x004875b4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00487500 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

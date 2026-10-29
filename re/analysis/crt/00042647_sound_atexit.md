@@ -20,7 +20,7 @@ None.
 - 0x100425c9 `__onexit` at 0x1004264b
 
 ## Callers
-0x100090c0 `FUN_100090c0`, 0x100091c0 `dynInit_soundWindowObj100b49b8`, 0x1001b410 `FUN_1001b410`, 0x1001b510 `dynInit_ctrl100b4b50`, 0x1001b6b0 `dynInit_ctrl100b4c38`, 0x1001b710 `dynInit_ctrl100b4d20`, 0x1001b770 `dynInit_ctrl100b4a68`, 0x1001b7d0 `dynInit_ctrl100b4e08`, 0x1001f260 `FUN_1001f260`, 0x1001f380 `FUN_1001f380`, 0x1002a690 `FUN_1002a690`
+0x100090c0 `dynInit_list100b49c8`, 0x100091c0 `dynInit_soundWindowObj100b49b8`, 0x1001b410 `dynInit_list100b4a50`, 0x1001b510 `dynInit_ctrl100b4b50`, 0x1001b6b0 `dynInit_ctrl100b4c38`, 0x1001b710 `dynInit_ctrl100b4d20`, 0x1001b770 `dynInit_ctrl100b4a68`, 0x1001b7d0 `dynInit_ctrl100b4e08`, 0x1001f260 `dynInit_list100b5000`, 0x1001f380 `dynInit_list100b4fe8`, 0x1002a690 `dynInit_critSection100b503c`
 
 ## Constants
 None.

@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,"test eax, 0x80000","test eax, 0x80000",True
+1,je 0xd,je 0x10021dd9,True
+2,"mov eax, 7","mov eax, 7",True
+3,ret ,ret ,True
+4,fadd qword ptr [0],fadd qword ptr [0x100603e0],True
+5,"mov eax, 1","mov eax, 1",True
+6,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\common.obj (library object, no compilation)",symbol=__convertTOStoQNaN,module=Terrain.dll
+VERDICT,GREEN,7,100.0%

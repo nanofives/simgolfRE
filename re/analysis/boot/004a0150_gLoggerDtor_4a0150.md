@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 atexit destructor of the global logger at 0x00840930: runs freeLoggerBuf on it (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_log.cpp` as `_$E2` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

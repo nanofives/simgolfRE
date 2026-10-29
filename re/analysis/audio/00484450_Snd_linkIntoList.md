@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 81 bytes, 28 instructions, subsystem `audio`. Mechanica
 Links the sound into the active sound list (tail append) and sets state bit 1. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?attach@Sound@@MAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00484483, 0x004844a0): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00484450 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

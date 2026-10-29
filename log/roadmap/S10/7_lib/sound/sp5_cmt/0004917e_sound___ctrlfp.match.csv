@@ -1,0 +1,19 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,wait ,wait ,True
+4,fnstcw word ptr [ebp - 4],fnstcw word ptr [ebp - 4],True
+5,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+6,"mov ecx, eax","mov ecx, eax",True
+7,"and eax, dword ptr [ebp + 8]","and eax, dword ptr [ebp + 8]",True
+8,not ecx,not ecx,True
+9,"and ecx, dword ptr [ebp - 4]","and ecx, dword ptr [ebp - 4]",True
+10,"or ecx, eax","or ecx, eax",True
+11,"mov dword ptr [ebp + 0xc], ecx","mov dword ptr [ebp + 0xc], ecx",True
+12,fldcw word ptr [ebp + 0xc],fldcw word ptr [ebp + 0xc],True
+13,"movsx eax, word ptr [ebp - 4]","movsx eax, word ptr [ebp - 4]",True
+14,leave ,leave ,True
+15,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpctrl.obj (library object, no compilation)",symbol=__ctrlfp,module=sound.dll
+VERDICT,GREEN,16,100.0%

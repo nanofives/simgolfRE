@@ -1,0 +1,5 @@
+instruction,library_object,original,match
+0,bytes +0x0: e88efcffffc3e840ffffffc3d9f3c3d9,bytes +0x0: e88efcffffc3e840ffffffc3d9f3c3d9,True
+1,bytes +0x10: f2c3,bytes +0x10: f2c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\adj_fdiv.obj (library object, no compilation)",symbol=__safe_fprem,module=sound.dll
+VERDICT,GREEN,2,100.0%

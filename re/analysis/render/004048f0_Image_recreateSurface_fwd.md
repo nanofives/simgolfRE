@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 23 bytes, 8 instructions, subsystem `render`. Mechanica
 forwards its three arguments to Image_recreateSurface (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_Globals.cpp` as `?resize_buffer@AssetSurface@@UAEHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00404904): callee pops 12 bytes of stack arguments.
 
 ## Reads

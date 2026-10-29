@@ -1,0 +1,28 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/Text.cpp	0x87d70	0x00487d70	10	L	$E4	_$E4	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87d80	0x00487d80	16	L	$E1	_$E1	name	100	100.0	4/4 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87d90	0x00487d90	12	L	$E3	_$E3	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87da0	0x00487da0	20	L	$E2	_$E2	name	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/Text.cpp	0x87dc0	0x00487dc0	5	L	$E7	_$E7	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/Text.cpp	0x87dd0	0x00487dd0	11	L	$E6	_$E6	name	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/Text.cpp	0x87de0	0x00487de0	5	L	$E10	_$E10	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/Text.cpp	0x87df0	0x00487df0	11	L	$E9	_$E9	name	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/Text.cpp	0x87e00	0x00487e00	10	L	$E15	_$E15	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87e10	0x00487e10	28	L	$E12	_$E12	name	100	100.0	7/7 ins	golf_arrays.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87e30	0x00487e30	12	L	$E14	_$E14	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87e40	0x00487e40	23	L	$E13	_$E13	name	100	100.0	6/6 ins	
+golf	golf/jackal.lib/src/Text.cpp	0x87e60	0x00487e60	10	G	text_close	?text_close@@YAXXZ	public	100	100.0	2/2 ins	golf_raw_06.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87e70	0x00487e70	21	G	text_open	?text_open@@YAHPBD0@Z	public	100	100.0	7/7 ins	golf_small16.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87e90	0x00487e90	10	G	text_get	?text_get@@YAPADXZ	public	100	100.0	2/2 ins	golf_raw_06.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87ea0	0x00487ea0	54	G	Text::Text	??0Text@@QAE@H@Z	public	100	100.0	15/15 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87ee0	0x00487ee0	71	G	Text::init	?init@Text@@QAEHH@Z	public	100	100.0	26/26 ins	golf_small8.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87f30	0x00487f30	68	G	Text::shutdown	?shutdown@Text@@QAEXXZ	public	100	100.0	19/19 ins	golf_small7.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87f80	0x00487f80	34	G	Text::close	?close@Text@@QAEXXZ	public	100	100.0	11/11 ins	golf_small18.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x87fb0	0x00487fb0	634	G	Text::open	?open@Text@@QAEHPBD0@Z	public	100	100.0	230/230 ins	golf_hand_s1.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x88230	0x00488230	110	G	Text::get	?get@Text@@QAEPADXZ	public	100	100.0	34/34 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x882a0	0x004882a0	35	G	TextIndex::TextIndex	??0TextIndex@@QAE@XZ	public	100	100.0	11/11 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x882d0	0x004882d0	30	G	TextIndex::`scalar deleting destructor'	??_GTextIndex@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x882f0	0x004882f0	28	G	TextIndex::~TextIndex	??1TextIndex@@UAE@XZ	public	100	100.0	6/6 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x88310	0x00488310	260	G	TextIndex::search_index	?search_index@TextIndex@@QAEHPBD0@Z	public	100	100.0	102/102 ins	golf_hand_08_b.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x88420	0x00488420	60	G	text_search_index	?text_search_index@@YAHPBD0@Z	public	100	100.0	23/23 ins	golf_small6.cpp
+golf	golf/jackal.lib/src/Text.cpp	0x88460	0x00488460	36	G	Text::`scalar deleting destructor'	??_GText@@UAEPAXI@Z	public	100	100.0	12/12 ins	golf_raw_09.cpp

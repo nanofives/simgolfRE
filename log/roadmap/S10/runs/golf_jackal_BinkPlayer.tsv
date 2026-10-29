@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87000	0x00487000	29	G	BinkPlayer::BinkPlayer	??0BinkPlayer@@QAE@XZ	public	100	100.0	10/10 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87020	0x00487020	30	G	BinkPlayer::`scalar deleting destructor'	??_GBinkPlayer@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87040	0x00487040	11	G	BinkPlayer::~BinkPlayer	??1BinkPlayer@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87050	0x00487050	10	G	BinkPlayer::SetWindow	?SetWindow@BinkPlayer@@QAEXPAX@Z	public	100	100.0	3/3 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87060	0x00487060	43	G	BinkPlayer::Close	?Close@BinkPlayer@@QAEXXZ	public	100	100.0	19/19 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87090	0x00487090	228	G	BinkPlayer::Play	?Play@BinkPlayer@@QAEHPBDHHK@Z	public	100	100.0	79/79 ins	golf_hand_07_487090.cpp
+golf	golf/jackal.lib/src/BinkPlayer.cpp	0x87180	0x00487180	133	G	BinkPlayer::ShowNextFrame	?ShowNextFrame@BinkPlayer@@QAE_NXZ	public	100	100.0	53/53 ins	golf_hand_04.cpp

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 4 bytes, 2 instructions, subsystem `audio`. Mechanical 
 Returns the stored duration of the sound in milliseconds. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?get_ms_length@Wave@@UAEIXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00484b23): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00484b20 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

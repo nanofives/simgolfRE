@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x5dde0	0x1005dde0	3196	G	JGLSprite::draw_254_8_8	?draw_254_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	public	100	100.0	877/877 ins	jgld_blit8c.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x5ed80	0x1005ed80	3196	G	JGLSprite::draw_8_8	?draw_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	public	100	100.0	877/877 ins	jgld_blit8c.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x5fd20	0x1005fd20	3234	G	JGLSprite::draw_mono_8_8	?draw_mono_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HHH@Z	public	100	100.0	880/880 ins	jgld_blit8b.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x60cf0	0x10060cf0	3428	G	JGLSprite::draw_dest_8_8	?draw_dest_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE@Z	public	100	100.0	955/955 ins	jgld_blit8.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x61db0	0x10061db0	3300	G	JGLSprite::SourceLutBlit	?SourceLutBlit@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE@Z	public	100	100.0	911/911 ins	jgld_blit8.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x62dd0	0x10062dd0	3597	G	JGLSprite::SourceLutBlitWithDestRecolorKey	?SourceLutBlitWithDestRecolorKey@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE1@Z	public	100	100.0	993/993 ins	jgld_blit8d.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	0x63f60	0x10063f60	3356	G	JGLSprite::draw_multi_table_dest_8_8	?draw_multi_table_dest_8_8@JGLSprite@@QAEHPAVJGLBuffer@@HHPAE@Z	public	100	100.0	935/935 ins	jgld_blit8.cpp

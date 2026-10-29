@@ -7,6 +7,7 @@ Constructs the Wave_In_Device: base ctor, installs vtable 0x1005b3d4 and sets th
 System writeup: `re/analysis/systems/sound_2.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllwaveindevice.cpp` as `??0Dll_Wave_In_Device@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000e8a3): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000e871 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

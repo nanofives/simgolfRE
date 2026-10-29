@@ -7,6 +7,7 @@ if running: clears flag bit0, signals the event at this+0x24 under the critical 
 System writeup: `re/analysis/systems/sound_1.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_soundthread.cpp` as `??1SoundThread@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002a87e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002a811 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

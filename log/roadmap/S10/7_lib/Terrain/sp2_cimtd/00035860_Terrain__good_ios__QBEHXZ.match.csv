@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+5,"xor ecx, ecx","xor ecx, ecx",True
+6,"cmp dword ptr [eax + 8], 0","cmp dword ptr [eax + 8], 0",True
+7,sete cl,sete cl,True
+8,"mov eax, ecx","mov eax, ecx",True
+9,"mov esp, ebp","mov esp, ebp",True
+10,pop ebp,pop ebp,True
+11,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\istream.obj (library object, no compilation)",symbol=?good@ios@@QBEHXZ,module=Terrain.dll
+VERDICT,GREEN,12,100.0%

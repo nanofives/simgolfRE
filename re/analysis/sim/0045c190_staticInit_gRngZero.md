@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `sim`. Mechanical t
 Clears the random generator state g_rng at startup. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_GolferPanel.cpp` as `_$E11` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0045c19a): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -1,0 +1,40 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+4,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+5,"cmp dword ptr [eax + 0x4c], -1","cmp dword ptr [eax + 0x4c], -1",True
+6,jne 0x16,jne 0x100340f6,True
+7,"xor eax, eax","xor eax, eax",True
+8,jmp 0x67,jmp 0x10034147,True
+9,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+10,call 0x1e,call 0x10034090,True
+11,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+12,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+13,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+14,call dword ptr [edx + 4],call dword ptr [edx + 4],True
+15,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+16,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+17,"mov ecx, dword ptr [eax + 0x4c]","mov ecx, dword ptr [eax + 0x4c]",True
+18,push ecx,push ecx,True
+19,call 0x38,call 0x1001e9c0,True
+20,"add esp, 4","add esp, 4",True
+21,"cmp eax, -1","cmp eax, -1",True
+22,je 0x46,je 0x10034126,True
+23,"cmp dword ptr [ebp - 4], -1","cmp dword ptr [ebp - 4], -1",True
+24,jne 0x52,jne 0x10034132,True
+25,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+26,call 0x4e,call 0x10034150,True
+27,"xor eax, eax","xor eax, eax",True
+28,jmp 0x67,jmp 0x10034147,True
+29,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+30,"mov dword ptr [edx + 0x4c], 0xffffffff","mov dword ptr [edx + 0x4c], 0xffffffff",True
+31,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+32,call 0x64,call 0x10034150,True
+33,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+34,"mov esp, ebp","mov esp, ebp",True
+35,pop ebp,pop ebp,True
+36,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\filebuf.obj (library object, no compilation)",symbol=?close@filebuf@@QAEPAV1@XZ,module=Terrain.dll
+VERDICT,GREEN,37,100.0%

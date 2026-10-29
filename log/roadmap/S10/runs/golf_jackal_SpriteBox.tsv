@@ -1,0 +1,46 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3110	0x004a3110	593	G	SpriteBox::SpriteBox	??0SpriteBox@@QAE@XZ	public	100	100.0	141/141 ins	golf_hand_s0.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3370	0x004a3370	27	G	SpriteList::`vbase destructor'	??_DSpriteList@@QAEXXZ	public	100	100.0	9/9 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3390	0x004a3390	72	G	SpriteList::`scalar deleting destructor'	??_GSpriteList@@UAEPAXI@Z	public	100	100.0	24/24 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa33e0	0x004a33e0	147	G	SpriteList::~SpriteList	??1SpriteList@@UAE@XZ	public	100	100.0	63/63 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3480	0x004a3480	343	G	SpriteBox::~SpriteBox	??1SpriteBox@@UAE@XZ	public	100	100.0	99/99 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa35e0	0x004a35e0	422	G	SpriteBox::close	?close@SpriteBox@@QAEXXZ	public	100	100.0	133/133 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3790	0x004a3790	197	G	SpriteBox::init	?init@SpriteBox@@QAEHH@Z	public	100	100.0	58/58 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3860	0x004a3860	29	G	SpriteBox::ResetAndInitAlt	?ResetAndInitAlt@SpriteBox@@QAEHPAUHeap@@@Z	public	100	100.0	11/11 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3880	0x004a3880	852	G	SpriteBox::attach	?attach@SpriteBox@@UAEHPAUWidgetBase@@HHH@Z	public	100	100.0	250/250 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3be0	0x004a3be0	808	G	SpriteBox::calculate_dimensions	?calculate_dimensions@SpriteBox@@QAEHXZ	public	100	100.0	270/270 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa3f10	0x004a3f10	1065	G	SpriteBox::draw_item	?draw_item@SpriteBox@@QAEXH@Z	public	100	100.0	366/366 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4340	0x004a4340	3	G	SpriteBox::on_mouse_move	?on_mouse_move@SpriteBox@@UAEXHH@Z	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4340	0x004a4340	3	G	SpriteBox::on_mouse_leave	?on_mouse_leave@SpriteBox@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4350	0x004a4350	151	G	SpriteBox::on_left_click	?on_left_click@SpriteBox@@UAEXHH@Z	public	100	100.0	51/51 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa43f0	0x004a43f0	57	G	SpriteBox::on_left_down	?on_left_down@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4430	0x004a4430	57	G	SpriteBox::on_left_up	?on_left_up@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4470	0x004a4470	57	G	SpriteBox::on_right_click	?on_right_click@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa44b0	0x004a44b0	57	G	SpriteBox::on_right_down	?on_right_down@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa44f0	0x004a44f0	57	G	SpriteBox::on_right_up	?on_right_up@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4530	0x004a4530	57	G	SpriteBox::on_left_double_click	?on_left_double_click@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4570	0x004a4570	57	G	SpriteBox::on_right_double_click	?on_right_double_click@SpriteBox@@UAEXHH@Z	public	100	100.0	22/22 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa45b0	0x004a45b0	198	G	SpriteBox::on_redraw	?on_redraw@SpriteBox@@UAEXXZ	public	100	100.0	70/70 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4680	0x004a4680	488	G	SpriteBox::on_key_down	?on_key_down@SpriteBox@@UAEHH@Z	public	100	100.0	140/140 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4870	0x004a4870	32	G	SpriteBox::on_dialog_focus	?on_dialog_focus@SpriteBox@@UAEXH@Z	public	100	100.0	6/6 ins	golf_raw_12.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4890	0x004a4890	91	G	SpriteBox::id_to_pos	?id_to_pos@SpriteBox@@QAEHH@Z	public	100	100.0	29/29 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa48f0	0x004a48f0	128	G	SpriteBox::pos_to_id	?pos_to_id@SpriteBox@@QAEHH@Z	public	100	100.0	43/43 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4970	0x004a4970	8	G	SpriteBox::`vector deleting destructor'	??_ESpriteBox@@$4PPPPPPPM@A@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4980	0x004a4980	62	G	SpriteBox::`scalar deleting destructor'	??_GSpriteBox@@UAEPAXI@Z	public	100	100.0	19/19 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa49c0	0x004a49c0	8	G	SpriteBox::on_redraw	?on_redraw@SpriteBox@@$4PPPPPPPM@A@AEXXZ	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa49d0	0x004a49d0	8	G	SpriteBox::on_mouse_move	?on_mouse_leave@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa49d0	0x004a49d0	8	G	SpriteBox::on_mouse_leave	?on_mouse_leave@SpriteBox@@UAEXHH@Z	name	folded	0.0	miss 0.0 0/2 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa49e0	0x004a49e0	8	G	SpriteBox::on_left_click	?on_left_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa49f0	0x004a49f0	8	G	SpriteBox::on_left_down	?on_left_down@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a00	0x004a4a00	8	G	SpriteBox::on_left_up	?on_left_up@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a10	0x004a4a10	8	G	SpriteBox::on_right_click	?on_right_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a20	0x004a4a20	8	G	SpriteBox::on_right_down	?on_right_down@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a30	0x004a4a30	8	G	SpriteBox::on_right_up	?on_right_up@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a40	0x004a4a40	8	G	SpriteBox::on_key_down	?on_key_down@SpriteBox@@$4PPPPPPPM@A@AEHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a50	0x004a4a50	8	G	SpriteBox::on_left_double_click	?on_left_double_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a60	0x004a4a60	8	G	SpriteBox::on_right_double_click	?on_right_double_click@SpriteBox@@$4PPPPPPPM@A@AEXHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a70	0x004a4a70	8	G	SpriteBox::on_dialog_focus	?on_dialog_focus@SpriteBox@@$4PPPPPPPM@A@AEXH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4a80	0x004a4a80	17	G	SpriteBox::`vector deleting destructor'	??_ESpriteBox@@$4PPPPPNII@CHE@AEPAXI@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4aa0	0x004a4aa0	14	G	SpriteBox::`vector deleting destructor'	??_ESpriteBox@@$4PPPPPPPM@FHI@AEPAXI@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4ab0	0x004a4ab0	8	G	SpriteBox::attach	?attach@SpriteBox@@$4PPPPPPPM@A@AEHPAUWidgetBase@@HHH@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp
+golf	golf/jackal.lib/src/SpriteBox.cpp	0xa4ac0	0x004a4ac0	14	G	SpriteBox::on_redraw	?on_redraw@SpriteBox@@$4PPPPPPPM@FHI@AEXXZ	public	100	100.0	3/3 ins	

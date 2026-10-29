@@ -1,0 +1,58 @@
+[1/57] m36a_g1_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[2/57] m36a_g1_wip_gx.cpp 8168=ok sp5=ok sp5c2=ok
+[3/57] m36a_g2_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[4/57] m36a_g2_wip_gx.cpp 8168=ok sp5=ok sp5c2=ok
+[5/57] m36a_g3_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[6/57] m36a_g4_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[7/57] m36a_g4_wip_gx.cpp 8168=ok sp5=ok sp5c2=ok
+[8/57] m36a_g5_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[9/57] m36a_h1_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[10/57] m36a_h2_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[11/57] m36a_h2_wip_gx.cpp 8168=ok sp5=ok sp5c2=ok
+[12/57] m36a_seq_wip.cpp 8168=ok sp5=ok sp5c2=ok
+[13/57] m36b_hand_03.cpp 8168=ok sp5=ok sp5c2=ok
+[14/57] m36b_hand_05.cpp 8168=ok sp5=ok sp5c2=ok
+[15/57] m36b_hand_06.cpp 8168=ok sp5=ok sp5c2=ok
+[16/57] m36b_hand_07.cpp 8168=ok sp5=ok sp5c2=ok
+[17/57] m36b_hand_09.cpp 8168=ok sp5=ok sp5c2=ok
+[18/57] m36b_hand_11.cpp 8168=ok sp5=ok sp5c2=ok
+[19/57] m36b_hand_12.cpp 8168=ok sp5=ok sp5c2=ok
+[20/57] m36c_30840.cpp 8168=ok sp5=ok sp5c2=ok
+[21/57] m36c_30ba0.cpp 8168=ok sp5=ok sp5c2=ok
+[22/57] m36c_31be0.cpp 8168=ok sp5=ok sp5c2=ok
+[23/57] m36c_326a0.cpp 8168=ok sp5=ok sp5c2=ok
+[24/57] m36c_33300.cpp 8168=ok sp5=ok sp5c2=ok
+[25/57] m36c_339c0.cpp 8168=ok sp5=ok sp5c2=ok
+[26/57] m36c_340b0.cpp 8168=ok sp5=ok sp5c2=ok
+[27/57] m36c_34c80.cpp 8168=ok sp5=ok sp5c2=ok
+[28/57] m36c_35340.cpp 8168=ok sp5=ok sp5c2=ok
+[29/57] m36c_35460.cpp 8168=ok sp5=ok sp5c2=ok
+[30/57] m36c_355d0.cpp 8168=ok sp5=ok sp5c2=ok
+[31/57] m36c_35990.cpp 8168=ok sp5=ok sp5c2=ok
+[32/57] m36c_35ca0.cpp 8168=ok sp5=ok sp5c2=ok
+[33/57] m36c_36280.cpp 8168=ok sp5=ok sp5c2=ok
+[34/57] m36c_371d0.cpp 8168=ok sp5=ok sp5c2=ok
+[35/57] m36c_48268.cpp 8168=ok sp5=ok sp5c2=ok
+[36/57] smsg_sound_ambiencemgr.cpp 8168=err: no Ghidra size for sound.dll 0x10005880; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10005880; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10005880; refusing to guess the original's length
+[37/57] smsg_sound_avimgr.cpp 8168=err: no Ghidra size for sound.dll 0x10006b50; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10006b50; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10006b50; refusing to guess the original's length
+[38/57] smsg_sound_Cmix.cpp 8168=err: no Ghidra size for sound.dll 0x10006fc0; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10006fc0; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10006fc0; refusing to guess the original's length
+[39/57] smsg_sound_CTimer.cpp 8168=err: no Ghidra size for sound.dll 0x10008e00; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10008e00; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10008e00; refusing to guess the original's length
+[40/57] smsg_sound_dllmain.cpp 8168=err: no Ghidra size for sound.dll 0x10009240; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10009240; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10009240; refusing to guess the original's length
+[41/57] smsg_sound_dllmididevice.cpp 8168=err: no Ghidra size for sound.dll 0x10009e10; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10009e10; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10009e10; refusing to guess the original's length
+[42/57] smsg_sound_dllwavedevice.cpp 8168=err: no Ghidra size for sound.dll 0x1000db60; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x1000db60; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x1000db60; refusing to guess the original's length
+[43/57] smsg_sound_dsb.cpp 8168=err: no Ghidra size for sound.dll 0x1000f0a0; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x1000f0a0; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x1000f0a0; refusing to guess the original's length
+[44/57] smsg_sound_dsmgr.cpp 8168=err: no Ghidra size for sound.dll 0x10011600; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10011600; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10011600; refusing to guess the original's length
+[45/57] smsg_sound_filters.cpp 8168=err: no Ghidra size for sound.dll 0x10013870; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10013870; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10013870; refusing to guess the original's length
+[46/57] smsg_sound_midifile.cpp 8168=err: no Ghidra size for sound.dll 0x1001d590; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x1001d590; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x1001d590; refusing to guess the original's length
+[47/57] smsg_sound_midimgr.cpp 8168=err: no Ghidra size for sound.dll 0x10020270; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10020270; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10020270; refusing to guess the original's length
+[48/57] smsg_sound_miditools.cpp 8168=err: no Ghidra size for sound.dll 0x1001b830; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x1001b830; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x1001b830; refusing to guess the original's length
+[49/57] smsg_sound_MMError.cpp 8168=err: no Ghidra size for sound.dll 0x10025040; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10025040; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10025040; refusing to guess the original's length
+[50/57] smsg_sound_sound.cpp 8168=err: no Ghidra size for sound.dll 0x1002af00; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x1002af00; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x1002af00; refusing to guess the original's length
+[51/57] smsg_sound_sounddevice.cpp 8168=err: no Ghidra size for sound.dll 0x10028e70; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10028e70; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10028e70; refusing to guess the original's length
+[52/57] smsg_sound_trace.cpp 8168=err: no Ghidra size for sound.dll 0x1002fe20; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x1002fe20; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x1002fe20; refusing to guess the original's length
+[53/57] smsg_sound_VoiceRxMgr.cpp 8168=err: no Ghidra size for sound.dll 0x10030730; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10030730; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10030730; refusing to guess the original's length
+[54/57] smsg_sound_VoiceTxMgr.cpp 8168=err: no Ghidra size for sound.dll 0x10031670; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10031670; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10031670; refusing to guess the original's length
+[55/57] smsg_sound_wavefile.cpp 8168=err: no Ghidra size for sound.dll 0x10032680; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10032680; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10032680; refusing to guess the original's length
+[56/57] smsg_sound_WaveInDeviceMgr.cpp 8168=err: no Ghidra size for sound.dll 0x10038ed0; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10038ed0; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10038ed0; refusing to guess the original's length
+[57/57] smsg_sound_wavemgr.cpp 8168=err: no Ghidra size for sound.dll 0x10039ca0; refusing to guess the original's length sp5=err: no Ghidra size for sound.dll 0x10039ca0; refusing to guess the original's length sp5c2=err: no Ghidra size for sound.dll 0x10039ca0; refusing to guess the original's length
+171 rows -> log\roadmap\S10\5_nearmiss.tsv

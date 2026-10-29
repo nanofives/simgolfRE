@@ -1,0 +1,37 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,push ebx,push ebx,True
+2,"mov ecx, eax","mov ecx, eax",True
+3,"and eax, 0x1f","and eax, 0x1f",True
+4,"sar ecx, 5","sar ecx, 5",True
+5,push esi,push esi,True
+6,push edi,push edi,True
+7,"mov esi, dword ptr [ecx*4]","mov esi, dword ptr [ecx*4 + 0x100b5ba0]",True
+8,"lea ebx, [ecx*4]","lea ebx, [ecx*4 + 0x100b5ba0]",True
+9,"lea edi, [eax + eax*8]","lea edi, [eax + eax*8]",True
+10,"shl edi, 2","shl edi, 2",True
+11,"add esi, edi","add esi, edi",True
+12,"cmp dword ptr [esi + 8], 0","cmp dword ptr [esi + 8], 0",True
+13,jne 0x4e,jne 0x1004c223,True
+14,push 0x11,push 0x11,True
+15,call 0x32,call 0x10047710,True
+16,"cmp dword ptr [esi + 8], 0","cmp dword ptr [esi + 8], 0",True
+17,pop ecx,pop ecx,True
+18,jne 0x46,jne 0x1004c21b,True
+19,"lea eax, [esi + 0xc]","lea eax, [esi + 0xc]",True
+20,push eax,push eax,True
+21,call dword ptr [0],call dword ptr [0x100b83f0],True
+22,inc dword ptr [esi + 8],inc dword ptr [esi + 8],True
+23,push 0x11,push 0x11,True
+24,call 0x4d,call 0x10047771,True
+25,pop ecx,pop ecx,True
+26,"mov eax, dword ptr [ebx]","mov eax, dword ptr [ebx]",True
+27,"lea eax, [eax + edi + 0xc]","lea eax, [eax + edi + 0xc]",True
+28,push eax,push eax,True
+29,call dword ptr [0],call dword ptr [0x100b83f4],True
+30,pop edi,pop edi,True
+31,pop esi,pop esi,True
+32,pop ebx,pop ebx,True
+33,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\osfinfo.obj (library object, no compilation)",symbol=__lock_fhandle,module=sound.dll
+VERDICT,GREEN,34,100.0%

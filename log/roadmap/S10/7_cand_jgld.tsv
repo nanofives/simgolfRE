@@ -1,0 +1,320 @@
+va	symbols	source	size	info
+0x1007e6d0	??3@YAXPAX@Z	proc	161	operator delete | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007e7c0	_memset	proc	88	memset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007efc0	__onexit	proc	179	_onexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f080	_atexit	proc	24	atexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f0a0	___onexitinit	proc	77	__onexitinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f0f0	??2@YAPAXI@Z	proc	28	operator new | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f110	??_U@YAPAXI@Z	proc	26	operator new[] | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f160	__cinit	proc	56	_cinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f1a0	_exit	proc	21	exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f1c0	__exit	proc	21	_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f1e0	__cexit	proc	19	_cexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f200	__c_exit	proc	19	_c_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f220		proc	227	doexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f310	__lockexit	proc	15	_lockexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f320	__unlockexit	proc	15	_unlockexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f330		proc	37	_initterm | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f360	__purecall	proc	15	_purecall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f370	_abs	proc	33	abs | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f3a0	_memcpy	proc	821	memcpy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f6e0	_strlen	proc	123	strlen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f760	_strcpy	proc	7	strcpy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f770	_strcat	proc	224	strcat | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f850	_fclose	proc	130	fclose | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f8e0	__fclose_lk	proc	190	_fclose_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007f9a0	__fsopen	proc	252	_fsopen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007faa0	_fopen	proc	23	fopen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007fb40	_malloc	proc	38	malloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007fb70	__malloc_dbg	proc	44	_malloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007fba0	__nh_malloc	proc	27	_nh_malloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007fbc0	__nh_malloc_dbg	proc	160	_nh_malloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007fc60	__heap_alloc	proc	23	_heap_alloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007fc80	__heap_alloc_dbg	proc	787	_heap_alloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007ffa0	_calloc	proc	36	calloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1007ffd0	__calloc_dbg	proc	96	_calloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080030	_realloc	proc	36	realloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080060	__realloc_dbg	proc	130	_realloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100800f0		proc	1297	realloc_help | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080610	__expand	proc	36	_expand | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080640	__expand_dbg	proc	130	_expand_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100806d0	_free	proc	19	free | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100806f0	__free_lk	proc	19	_free_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080710	__free_dbg	proc	110	_free_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080780	__free_dbg_lk	proc	1004	_free_dbg_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080b70	__msize	proc	19	_msize | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080b90	__msize_dbg	proc	400	_msize_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080d20	__CrtSetBreakAlloc	proc	28	_CrtSetBreakAlloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080d40	__CrtSetDbgBlockType	proc	217	_CrtSetDbgBlockType | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080e20	__CrtSetAllocHook	proc	28	_CrtSetAllocHook | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080e40		proc	136	CheckBytes | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10080ed0	__CrtCheckMemory	proc	932	_CrtCheckMemory | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081280	__CrtSetDbgFlag	proc	34	_CrtSetDbgFlag | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100812b0	__CrtDoForAllClientObjects	proc	169	_CrtDoForAllClientObjects | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081360	__CrtIsValidPointer	proc	75	_CrtIsValidPointer | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100813b0	__CrtIsValidHeapPointer	proc	292	_CrtIsValidHeapPointer | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100814e0	__CrtIsMemoryBlock	proc	293	_CrtIsMemoryBlock | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081610	__CrtSetDumpClient	proc	28	_CrtSetDumpClient | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081630	__CrtMemCheckpoint	proc	420	_CrtMemCheckpoint | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100817e0	__CrtMemDifference	proc	291	_CrtMemDifference | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081910	__CrtMemDumpAllObjectsSince	proc	755	_CrtMemDumpAllObjectsSince | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081c10		proc	276	_printMemBlockData | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081d30	__CrtDumpMemoryLeaks	proc	116	_CrtDumpMemoryLeaks | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081db0	__CrtMemDumpStatistics	proc	197	_CrtMemDumpStatistics | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081e80	__CrtDbgBreak	proc	11	_CrtDbgBreak | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081e90	__CrtSetReportMode	proc	87	_CrtSetReportMode | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081ef0	__CrtSetReportFile	proc	126	_CrtSetReportFile | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081f70	__CrtSetReportHook	proc	28	_CrtSetReportHook | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10081f90	__CrtDbgReport	proc	912	_CrtDbgReport | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082320		proc	780	CrtMessageWindow | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082630	__CRT_INIT@12	proc	313	_CRT_INIT | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082770	__DllMainCRTStartup@12	proc	243	_DllMainCRTStartup | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082870	__amsg_exit	proc	63	_amsg_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100828b0	_memcmp	proc	172	memcmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082c80	_sprintf	proc	250	sprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082d80	_fread	proc	62	fread | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10082dc0	__fread_lk	proc	463	_fread_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083010	_fprintf	proc	193	fprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100830e0	___initstdio	proc	300	__initstdio | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083210	___endstdio	proc	26	__endstdio | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083230	__lock_file	proc	61	_lock_file | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083270	__lock_file2	proc	41	_lock_file2 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100832a0	__unlock_file	proc	61	_unlock_file | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100832e0	__unlock_file2	proc	41	_unlock_file2 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083310	__mtinitlocks	proc	55	_mtinitlocks | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083350	__mtdeletelocks	proc	159	_mtdeletelocks | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100833f0	__lock	proc	151	_lock | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10083490	__unlock	proc	22	_unlock | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100834b0	__lockerr_exit	proc	28	_lockerr_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100834d0	__setdefaultprecision	proc	23	_setdefaultprecision | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084d40	__mtinit	proc	130	_mtinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084dd0	__mtterm	proc	41	_mtterm | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084e00	__initptd	proc	25	_initptd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084e20	__getptd	proc	152	_getptd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084ec0	__freeptd	proc	263	_freeptd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084fd0	___threadid	proc	11	__threadid | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10084fe0	___threadhandle	proc	11	__threadhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085130	__close	proc	122	_close | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100851b0	__close_lk	proc	170	_close_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085260	__freebuf	proc	146	_freebuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085300	_fflush	proc	68	fflush | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085350	__fflush_lk	proc	65	_fflush_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100853a0	__flush	proc	183	_flush | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085460	__flushall	proc	15	_flushall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085470		proc	319	flsall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100855b0	__openfile	proc	911	_openfile | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085940	__getstream	proc	384	_getstream | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085ac0	?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z	proc	48	_set_new_handler | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085af0	?_query_new_handler@@YAP6AHI@ZXZ	proc	10	_query_new_handler | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085b00	__callnewh	proc	45	_callnewh | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085c10	__malloc_base	proc	32	_malloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085c30	__nh_malloc_base	proc	87	_nh_malloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085c90	__heap_alloc_base	proc	333	_heap_alloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085de0	__CrtDefaultAllocHook	proc	10	_CrtDefaultAllocHook | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10085df0	__expand_base	proc	525	_expand_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086000	__realloc_base	proc	1153	_realloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086490	__free_base	proc	326	_free_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100865e0	__heapchk	proc	260	_heapchk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100866f0	__heapset	proc	10	_heapset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086700	__get_sbh_threshold	proc	39	_get_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086730	__set_sbh_threshold	proc	266	_set_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086840	___sbh_heap_init	proc	98	__sbh_heap_init | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100868b0	___sbh_find_block	proc	85	__sbh_find_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086910	___sbh_verify_block	proc	95	__sbh_verify_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086970	___sbh_free_block	proc	1500	__sbh_free_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10086f50	___sbh_alloc_block	proc	1334	__sbh_alloc_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10087490	___sbh_alloc_new_region	proc	271	__sbh_alloc_new_region | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100875a0	___sbh_alloc_new_group	proc	494	__sbh_alloc_new_group | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10087790	___sbh_resize_block	proc	1515	__sbh_resize_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10087d80	___sbh_heapmin	proc	304	__sbh_heapmin | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10087eb0	___sbh_heap_check	proc	1565	__sbh_heap_check | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100884d0	__get_old_sbh_threshold	proc	10	_get_old_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100884e0	__set_old_sbh_threshold	proc	43	_set_old_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10088510	___old_sbh_new_region	proc	478	__old_sbh_new_region | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100886f0	___old_sbh_release_region	proc	115	__old_sbh_release_region | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10088770	___old_sbh_decommit_pages	proc	343	__old_sbh_decommit_pages | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100888d0	___old_sbh_find_block	proc	144	__old_sbh_find_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10088960	___old_sbh_free_block	proc	108	__old_sbh_free_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100889d0	___old_sbh_alloc_block	proc	952	__old_sbh_alloc_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10088d90	___old_sbh_alloc_block_from_page	proc	681	__old_sbh_alloc_block_from_page | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089040	___old_sbh_resize_block	proc	356	__old_sbh_resize_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100891b0	___old_sbh_heap_check	proc	567	__old_sbh_heap_check | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100893f0	__GetLinkerVersion	proc	92	_GetLinkerVersion | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089450	___heap_select	proc	548	__heap_select | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089680	__heap_init	proc	141	_heap_init | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089710	__heap_term	proc	232	_heap_term | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089800	__isctype	proc	183	_isctype | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100898c0	__itoa	proc	66	_itoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089910		proc	194	xtoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100899e0	__ltoa	proc	63	_ltoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089a20	__ultoa	proc	30	_ultoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089a40	__i64toa	proc	72	_i64toa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089a90		proc	242	x64toa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089b90	__ui64toa	proc	31	_ui64toa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089bb0	__snprintf	proc	249	_snprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089cb0	__vsnprintf	proc	243	_vsnprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089db0	__alloca_probe,__chkstk	proc	47	$$$00001 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10089de0	_signal	proc	548	signal | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a010		proc	146	ctrlevent_capture | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a0b0	_raise	proc	567	raise | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a2f0		proc	91	siglookup | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a350	___fpecode	proc	13	__fpecode | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a360	___pxcptinfoptrs	proc	13	__pxcptinfoptrs | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a370	___crtMessageBoxA	proc	187	__crtMessageBoxA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a430	_strncpy	proc	254	strncpy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a530	__ioinit	proc	804	_ioinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a860	__ioterm	proc	155	_ioterm | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008a900	__setenvp	proc	329	_setenvp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008aa50	__setargv	proc	216	_setargv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008ab30		proc	1060	parse_cmdline | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008af60	___crtGetEnvironmentStringsA	proc	537	__crtGetEnvironmentStringsA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008b180	__FF_MSGBANNER	proc	73	_FF_MSGBANNER | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008b1d0	__NMSG_WRITE	proc	447	_NMSG_WRITE | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008b390	__GET_RTERRMSG	proc	80	_GET_RTERRMSG | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008c8e0	__flsbuf	proc	628	_flsbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008cb60	__output	proc	3362	_output | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008d890		proc	119	write_char | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008d910		proc	53	write_multi_char | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008d950		proc	74	write_string | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008d9a0		proc	26	get_int_arg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008d9c0		proc	31	get_int64_arg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008d9e0		proc	27	get_short_arg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008da00	__filbuf	proc	484	_filbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008dbf0	__read	proc	130	_read | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008dc80	__read_lk	proc	1093	_read_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e0d0	__rt_probe_read4@4	proc	133	_rt_probe_read4 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e160	__stbuf	proc	343	_stbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e2c0	__ftbuf	proc	148	_ftbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e360	__fcloseall	proc	218	_fcloseall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e8e0	__tolower	proc	11	_tolower | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e8f0	_tolower	proc	147	tolower | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008e990	__tolower_lk	proc	299	_tolower_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008f2a0	__fptostr	proc	250	_fptostr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008f590	_memmove	proc	821	memmove | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008f8d0	__fptrap	proc	15	_fptrap | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008fb90	_strcmp	proc	132	strcmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008fc20	__XcptFilter	proc	446	_XcptFilter | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008fde0		proc	89	xcptlookup | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008fe40	_abort	proc	32	abort | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1008fe60	__alloc_osfhnd	proc	482	_alloc_osfhnd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090050	__set_osfhnd	proc	183	_set_osfhnd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090110	__free_osfhnd	proc	216	_free_osfhnd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100901f0	__get_osfhandle	proc	102	_get_osfhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090260	__open_osfhandle	proc	260	_open_osfhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090370	__lock_fhandle	proc	134	_lock_fhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090400	__unlock_fhandle	proc	38	_unlock_fhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090430	__dosmaperr	proc	145	_dosmaperr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100904d0	__errno	proc	13	_errno | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100904e0	___doserrno	proc	13	__doserrno | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100904f0	__commit	proc	210	_commit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100905d0	__write	proc	130	_write | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090660	__write_lk	proc	627	_write_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100908e0	__open	proc	63	_open | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090920	__sopen	proc	1363	_sopen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090e80	_strtol	proc	27	strtol | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10090ea0		proc	817	strtoxl | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100911e0	_strtoul	proc	27	strtoul | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091200		proc	16	$$$00001 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091210	_strchr	proc	188	strchr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100912d0	_strstr	proc	128	strstr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091350	_strncmp	proc	56	strncmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091390	___crtGetStringTypeA	proc	444	__crtGetStringTypeA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091550	__aulldiv	proc	104	_aulldiv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100915c0	__aullrem	proc	117	_aullrem | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091640	__setmbcp	proc	836	_setmbcp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091990		proc	89	getSystemCP | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100919f0		proc	119	CPtoLCID | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091a70		proc	116	setSBCS | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091af0		proc	770	setSBUpLow | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091e00	__getmbcp	proc	23	_getmbcp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10091e20	___initmbctable	proc	34	__initmbctable | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093260	__lseek	proc	130	_lseek | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100932f0	__lseek_lk	proc	178	_lseek_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100933b0	__getbuf	proc	199	_getbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093480	__isatty	proc	50	_isatty | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100934c0	_wctomb	proc	119	wctomb | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093540	__wctomb_lk	proc	160	_wctomb_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100935e0	_setlocale	proc	1007	setlocale | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100939d0		proc	403	_setlocale_set_cat | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093b70		proc	256	_setlocale_get_all | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093c70	__expandlocale	proc	388	_expandlocale | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093e00	___init_dummy	proc	7	__init_dummy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093e10	__strcats	proc	79	_strcats | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093e60	___lc_strtolc	proc	349	__lc_strtolc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10093fc0	___lc_lctostr	proc	101	__lc_lctostr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10094030	___crtLCMapStringA	proc	773	__crtLCMapStringA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10094340		proc	80	strncnt | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10095730	__chsize	proc	115	_chsize | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100957b0	__chsize_lk	proc	560	_chsize_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100959e0	__toupper	proc	11	_toupper | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100959f0	_toupper	proc	147	toupper | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10095a90	__toupper_lk	proc	299	_toupper_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10095e80	___init_time	proc	219	__init_time | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10095f60		proc	1423	_get_lc_time | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100964f0		proc	779	_free_lc_time | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096800	___init_numeric	proc	678	__init_numeric | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096ab0		proc	125	fix_grouping | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096b30	___init_monetary	proc	304	__init_monetary | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096c60		proc	525	_get_lc_lconv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096e70		proc	125	fix_grouping | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096ef0		proc	147	_free_lc_lconv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10096f90	___init_ctype	proc	928	__init_ctype | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097330	___init_collate	proc	7	__init_collate | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097340	_strcspn	proc	62	strcspn | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097380	_strpbrk	proc	58	strpbrk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100973c0	___get_qualified_locale	proc	512	__get_qualified_locale | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100975c0		proc	130	TranslateName | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097650		proc	186	GetLcidFromLangCountry | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097710		proc	804	LangCountryEnumProc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097a40		proc	116	GetLcidFromLanguage | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097ac0		proc	287	LanguageEnumProc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097be0		proc	69	GetLcidFromCountry | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097c30		proc	172	CountryEnumProc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097ce0		proc	43	GetLcidFromDefault | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097d10		proc	155	ProcessCodePage | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097db0		proc	79	TestDefaultCountry | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097e00		proc	135	TestDefaultLanguage | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097e90		proc	77	IsThisWindowsNT | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10097ee0		proc	388	crtGetLocaleInfoA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10098070		proc	118	LcidFromHexString | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100980f0		proc	101	GetPrimaryLen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10098670	__setmode	proc	115	_setmode | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100986f0	__setmode_lk	proc	207	_setmode_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100987c0	__Getdays	proc	289	_Getdays | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100988f0	__Getmonths	proc	291	_Getmonths | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10098a20	__Gettnames	proc	878	_Gettnames | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10098d90	_strftime	proc	31	strftime | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10098db0	__Strftime	proc	394	_Strftime | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10098f40		proc	1567	_expandtime | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10099560		proc	72	_store_str | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100995b0		proc	173	_store_num | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10099660		proc	172	_store_number | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10099710		proc	1311	_store_winword | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10099c30	___getlocaleinfo	proc	650	__getlocaleinfo | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10099ec0	_localeconv	proc	10	localeconv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10099ed0	___crtGetStringTypeW	proc	621	__crtGetStringTypeW | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a140	__strcmpi,__stricmp	proc	0	_strcmpi | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a140	__strcmpi,__stricmp	proc	208	_stricmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a210	__strnicmp	proc	257	_strnicmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a320	_atol	proc	255	atol | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a420	_atoi	proc	17	atoi | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a440	__atoi64	proc	297	_atoi64 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a570	___tzset	proc	61	__tzset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a5b0	__tzset	proc	30	_tzset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a5d0		proc	939	_tzset_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a980	__isindst	proc	46	_isindst | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009a9b0		proc	762	_isindst_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009acb0		proc	504	cvtdate | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009aeb0	___crtGetLocaleInfoW	proc	405	__crtGetLocaleInfoW | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b050	___crtGetLocaleInfoA	proc	421	__crtGetLocaleInfoA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b200	__allmul	proc	52	_allmul | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b240	_getenv	proc	46	getenv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b270	__getenv_lk	proc	198	_getenv_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b340	__mbsnbicoll	proc	79	_mbsnbicoll | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b390	___wtomb_environ	proc	174	__wtomb_environ | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b440	___crtCompareStringA	proc	1016	__crtCompareStringA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b840		proc	80	strncnt | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009b890	___crtsetenv	proc	736	__crtsetenv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009bb70		proc	124	findenv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009bbf0		proc	238	copy_environ | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1009bce0	__mbschr	proc	237	_mbschr | C:\VS6SP2\VC98\LIB\libcmtd.lib

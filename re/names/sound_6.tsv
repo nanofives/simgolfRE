@@ -11,8 +11,8 @@ sound.dll	0x1001c400	Ctrl5b5c0_buildTable	audio	callee 0x1001c1e0 (Ctrl5b5c0_tra
 sound.dll	0x1001bbb0	Ctrl5b5c0_resetElements	audio	match re/match/sound_raw_02.cpp	walks the element list at this+0xc calling each element's vtbl slot 0x14, then sets this+4=0x18
 sound.dll	0x1001c2a0	CtrlBase_resetElements	audio	match re/match/sound_raw_02.cpp	embedded-base variant of resetElements (this at base+0x2c): walks list at this-0x20 calling element vtbl slot 0x14, sets this-0x28=0x18
 sound.dll	0x1001c2f0	CtrlBase_flushElements	audio	callee via vtbl+0x18 on list elements	walks the list at this-0x20 calling each element's vtbl slot 0x18
-sound.dll	0x1001c870	Ctrl5b638_ctor	audio	match re/match/sound_raw_02.cpp	installs vtable 0x1005b638 (embedded base 0x1005b614 at +0x2c), a 4cc tag at +0x30, inits embedded PtrList at +0xc, type +0x48=6, size +0x34=0x60
-sound.dll	0x1001c5c0	Ctrl5b5f0_ctor	audio	callee 0x100424d7 (operator_new)	installs vtable 0x1005b5f0, a 4cc tag at +4, type +0x1c=5, allocates 4 bytes at +0x2c and calls vtbl+0x14, size +8=0x40
+sound.dll	0x1001c870	Chooser::ctor	audio	match re/match/sound_raw_02.cpp	installs vtable 0x1005b638 (embedded base 0x1005b614 at +0x2c), a 4cc tag at +0x30, inits embedded PtrList at +0xc, type +0x48=6, size +0x34=0x60
+sound.dll	0x1001c5c0	Randomizer::ctor	audio	callee 0x100424d7 (operator_new)	installs vtable 0x1005b5f0, a 4cc tag at +4, type +0x1c=5, allocates 4 bytes at +0x2c and calls vtbl+0x14, size +8=0x40
 sound.dll	0x1001cbf0	Ctrl5b668_ctor	audio	match re/match/sound_raw_02.cpp	installs vtable 0x1005b668, a 4cc tag at +4, type +0x1c=1, size +8=0x34
 sound.dll	0x1001bee0	Ctrl5b19c_ctor	audio	match re/match/sound_raw_02.cpp	installs base vtable 0x1005b19c at +0x2c, a 4cc tag at +0x30, inits embedded PtrList at +0xc, stores 12 bytes of params at +0x5c..+0x67 (SEH frame)
 sound.dll	0x1001c080	Ctrl5b58c_dtor	audio	match re/match/sound_raw_02.cpp	installs vtable 0x1005b58c then clears the element list at this+0xc deleting each element (vtbl slot0(1)) and freeing nodes (SEH frame)
@@ -40,7 +40,7 @@ sound.dll	0x1002c490	Ch5bb90_ctor	audio	vtable 0x1005bb90	installs base vtable 0
 sound.dll	0x1002c9f0	Mixer_ctor	audio	vtable 0x1005bdd8 (vtbl_Mixer)	installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005bdd8 (Mixer); counterpart of Mixer_dtor 0x1002cb00
 sound.dll	0x1002cad0	Mixer_scalarDtor	audio	callee 0x1002cb00 (Mixer_dtor)	scalar deleting destructor: calls Mixer_dtor then operator_delete when param&1
 sound.dll	0x1002c5b0	MixerVoiceArray_scalarDtor	audio	callee 0x1002c5e0 (destroyMixerVoices)	scalar deleting destructor: calls destroyMixerVoices then operator_delete when param&1
-sound.dll	0x1002e550	Ch5c000_ctor	audio	vtable 0x1005c000	installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005c000, sets the Sound source type (SEH frame)
+sound.dll	0x1002e550	Ambience::ctor	audio	vtable 0x1005c000	installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005c000, sets the Sound source type (SEH frame)
 sound.dll	0x1002e930	Ch5c178_ctor	audio	vtable 0x1005c178	installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005c178, sets the Sound source type (SEH frame)
 sound.dll	0x1002ea00	Ch5c178_scalarDtor	audio	callee 0x1002ea30 (Ch5c178_dtor)	scalar deleting destructor: calls Ch5c178_dtor then operator_delete when param&1
 sound.dll	0x1002ea30	Ch5c178_dtor	audio	vtable 0x1005c178	installs vtable 0x1005c178, frees its Sound (delete_sound) and owned blocks (operator_delete)

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/vparms.c	0x41020	0x10041020	1220	G	vparms_	_vparms_	public	100	100.0	389/389 ins	m36c_D2_01.cpp

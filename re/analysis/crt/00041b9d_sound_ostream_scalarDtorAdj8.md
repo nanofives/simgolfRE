@@ -22,7 +22,7 @@ None.
 
 ## Callees
 - 0x10041c26 `ostreamResetVtable` at 0x10041ba7
-- 0x10041f9a `~ios` at 0x10041bae
+- 0x10041f9a `ios::dtor` at 0x10041bae
 - 0x1004249a `operator_delete` at 0x10041bbb
 
 ## Callers

@@ -1,0 +1,2 @@
+module	addr	name	type	evidence
+jgld.dll	0x1012873c	g_backBufferSurface	Surface*	read by Display::present 0x10066470 and by 0x1001a6b0 (which dereferences it and reads +4); no writer located in this range

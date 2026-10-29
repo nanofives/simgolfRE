@@ -1,0 +1,23 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, 0","mov esi, 0x100b54e8",True
+2,push edi,push edi,True
+3,push esi,push esi,True
+4,call 0xd,call 0x10041e59,True
+5,"mov edi, dword ptr [0]","mov edi, dword ptr [0x10064ea0]",True
+6,pop ecx,pop ecx,True
+7,"cmp edi, 7","cmp edi, 7",True
+8,jl 0x1e,jl 0x1004206c,True
+9,"or edi, 0xffffffff","or edi, 0xffffffff",True
+10,jmp 0x25,jmp 0x10042073,True
+11,inc edi,inc edi,True
+12,"mov dword ptr [0], edi","mov dword ptr [0x10064ea0], edi",True
+13,push esi,push esi,True
+14,call 0x2b,call 0x10041e64,True
+15,pop ecx,pop ecx,True
+16,"mov eax, edi","mov eax, edi",True
+17,pop edi,pop edi,True
+18,pop esi,pop esi,True
+19,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\_ios.obj (library object, no compilation)",symbol=?xalloc@ios@@SAHXZ,module=sound.dll
+VERDICT,GREEN,20,100.0%

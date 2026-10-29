@@ -1,0 +1,12 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/GameMain.cpp	0x5ba50	0x0045ba50	10	L	$E28	_$E28	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5ba60	0x0045ba60	10	L	$E25	_$E25	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5ba70	0x0045ba70	12	L	$E27	_$E27	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5ba80	0x0045ba80	20	L	$E26	_$E26	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/GameMain.cpp	0x5baa0	0x0045baa0	10	L	$E33	_$E33	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5bab0	0x0045bab0	10	L	$E30	_$E30	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5bac0	0x0045bac0	12	L	$E32	_$E32	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5bad0	0x0045bad0	20	L	$E31	_$E31	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/GameMain.cpp	0x5baf0	0x0045baf0	1166	G	WinMain	_WinMain@16	public	100	100.0	320/320 ins	
+golf	golf/golf.exe/src/GameMain.cpp	0x5bf80	0x0045bf80	127	G	WaitWithTimeout	?WaitWithTimeout@@YAHHH@Z	public	100	100.0	53/53 ins	golf_small12.cpp
+golf	golf/golf.exe/src/GameMain.cpp	0x5c000	0x0045c000	36	G	MouseCursor::`scalar deleting destructor'	??_GMouseCursor@@UAEPAXI@Z	public	100	100.0	12/12 ins	golf_raw_08.cpp

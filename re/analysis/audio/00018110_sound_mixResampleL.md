@@ -7,6 +7,7 @@ Rate-converting PCM render/mix routine, one format variant of the software mixer
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?add_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100183ac, 0x100183da): callee pops 0 bytes of stack arguments.
 
 ## Reads

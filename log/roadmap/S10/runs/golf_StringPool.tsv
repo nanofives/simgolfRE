@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/StringPool.cpp	0x5b660	0x0045b660	343	G	ParseFileForSection	?ParseFileForSection@@YAHPBD0@Z	public	100	100.0	130/130 ins	
+golf	golf/golf.exe/src/StringPool.cpp	0x5b7c0	0x0045b7c0	189	G	StringReplace	?StringReplace@@YAXPBD0@Z	public	100	100.0	75/75 ins	golf_small25.cpp
+golf	golf/golf.exe/src/StringPool.cpp	0x5b880	0x0045b880	34	G	ClearStringPool	?ClearStringPool@@YAXXZ	public	100	100.0	12/12 ins	golf_small2.cpp
+golf	golf/golf.exe/src/StringPool.cpp	0x5b8b0	0x0045b8b0	310	G	StoreStringInPool	?StoreStringInPool@@YAHH@Z	public	100	100.0	110/110 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/StringPool.cpp	0x5b9f0	0x0045b9f0	85	G	AppendPooledString	?AppendPooledString@@YAHH@Z	public	100	100.0	33/33 ins	golf_small9.cpp

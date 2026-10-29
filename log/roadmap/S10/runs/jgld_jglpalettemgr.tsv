@@ -1,0 +1,21 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a150	0x1006a150	116	G	JGLPalette::JGLPalette	??0JGLPalette@@QAE@PAUPaletteBase@@@Z	public	100	100.0	36/36 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a1f0	0x1006a1f0	81	G	JGLPalette::`scalar deleting destructor'	??_GJGLPalette@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a260	0x1006a260	66	G	GSPalette::GSPalette	??0GSPalette@@QAE@XZ	public	100	100.0	27/27 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a2c0	0x1006a2c0	144	G	JGLPalette::~JGLPalette	??1JGLPalette@@UAE@XZ	public	100	100.0	43/43 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a380	0x1006a380	62	G	JGLPalette::close	?close@JGLPalette@@UAEXXZ	public	100	100.0	23/23 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a3d0	0x1006a3d0	159	G	JGLPalette::reseed	?reseed@JGLPalette@@QAEXXZ	public	100	100.0	50/50 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a4a0	0x1006a4a0	271	G	JGLPalette::compute_tables	?compute_tables@JGLPalette@@QAEXXZ	public	100	100.0	83/83 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a600	0x1006a600	483	G	JGLPalette::init	?init@JGLPalette@@UAEHXZ	public	100	100.0	135/135 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a860	0x1006a860	93	G	JGLPalette::set	?set@JGLPalette@@UAEXXZ	public	100	100.0	36/36 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a8e0	0x1006a8e0	145	G	JGLPalette::get_entries	?get_entries@JGLPalette@@UAEHPAEHH@Z	public	100	100.0	53/53 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6a9a0	0x1006a9a0	163	G	JGLPalette::set_entries	?set_entries@JGLPalette@@UAEHPBEHH@Z	public	100	100.0	58/58 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6aa70	0x1006aa70	599	G	JGLPalette::init_class	?init_class@JGLPalette@@SAHPAUPaletteBase@@0@Z	public	100	100.0	163/163 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6ad60	0x1006ad60	81	G	JGLPalette::close_class	?close_class@JGLPalette@@SAXXZ	public	100	100.0	28/28 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6add0	0x1006add0	91	G	JGLPalette::get_entry	?get_entry@JGLPalette@@UAEPAUtagPALETTEENTRY@@H@Z	public	100	100.0	32/32 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6ae50	0x1006ae50	137	G	JGLPalette::fill_rgb	?fill_rgb@JGLPalette@@QAEXPAURgbQuad@@@Z	public	100	100.0	48/48 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6af00	0x1006af00	63	G	GSPalette::~GSPalette	??1GSPalette@@UAE@XZ	public	100	100.0	26/26 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6af50	0x1006af50	81	G	GSPalette::`scalar deleting destructor'	??_GGSPalette@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6afc0	0x1006afc0	46	G	PRNG::Seed	?Seed@PRNG@@QAEXI@Z	public	100	100.0	22/22 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6b000	0x1006b000	44	G	JGLPalette::get_555_table	?get_555_table@JGLPalette@@UAEPAGXZ	public	100	100.0	21/21 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	0x6b040	0x1006b040	44	G	JGLPalette::get_565_table	?get_565_table@JGLPalette@@UAEPAGXZ	public	100	100.0	21/21 ins	jgld_raw_04.cpp

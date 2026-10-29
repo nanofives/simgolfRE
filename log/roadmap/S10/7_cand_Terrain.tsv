@@ -1,0 +1,474 @@
+va	symbols	source	size	info
+0x100158b0	_abs	proc	33	abs | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100158e0	_malloc	proc	38	malloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015910	__malloc_dbg	proc	44	_malloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015940	__nh_malloc	proc	27	_nh_malloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015960	__nh_malloc_dbg	proc	160	_nh_malloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015a00	__heap_alloc	proc	23	_heap_alloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015a20	__heap_alloc_dbg	proc	787	_heap_alloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015d40	_calloc	proc	36	calloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015d70	__calloc_dbg	proc	96	_calloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015dd0	_realloc	proc	36	realloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015e00	__realloc_dbg	proc	130	_realloc_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10015e90		proc	1297	realloc_help | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100163b0	__expand	proc	36	_expand | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100163e0	__expand_dbg	proc	130	_expand_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016470	_free	proc	19	free | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016490	__free_lk	proc	19	_free_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100164b0	__free_dbg	proc	110	_free_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016520	__free_dbg_lk	proc	1004	_free_dbg_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016910	__msize	proc	19	_msize | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016930	__msize_dbg	proc	400	_msize_dbg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016ac0	__CrtSetBreakAlloc	proc	28	_CrtSetBreakAlloc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016ae0	__CrtSetDbgBlockType	proc	217	_CrtSetDbgBlockType | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016bc0	__CrtSetAllocHook	proc	28	_CrtSetAllocHook | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016be0		proc	136	CheckBytes | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10016c70	__CrtCheckMemory	proc	932	_CrtCheckMemory | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017020	__CrtSetDbgFlag	proc	34	_CrtSetDbgFlag | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017050	__CrtDoForAllClientObjects	proc	169	_CrtDoForAllClientObjects | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017100	__CrtIsValidPointer	proc	75	_CrtIsValidPointer | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017150	__CrtIsValidHeapPointer	proc	292	_CrtIsValidHeapPointer | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017280	__CrtIsMemoryBlock	proc	293	_CrtIsMemoryBlock | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100173b0	__CrtSetDumpClient	proc	28	_CrtSetDumpClient | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100173d0	__CrtMemCheckpoint	proc	420	_CrtMemCheckpoint | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017580	__CrtMemDifference	proc	291	_CrtMemDifference | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100176b0	__CrtMemDumpAllObjectsSince	proc	755	_CrtMemDumpAllObjectsSince | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100179b0		proc	276	_printMemBlockData | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017ad0	__CrtDumpMemoryLeaks	proc	116	_CrtDumpMemoryLeaks | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017b50	__CrtMemDumpStatistics	proc	197	_CrtMemDumpStatistics | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017c20	_fclose	proc	130	fclose | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017cb0	__fclose_lk	proc	190	_fclose_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017d70	_fread	proc	62	fread | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017db0	__fread_lk	proc	463	_fread_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10017f80	__fsopen	proc	252	_fsopen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018080	_fopen	proc	23	fopen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100180e0	_fwrite	proc	62	fwrite | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018120	__fwrite_lk	proc	537	_fwrite_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018580	_strcpy	proc	7	strcpy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018590	_strcat	proc	224	strcat | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018be0	??3@YAXPAX@Z	proc	161	operator delete | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018c90	??2@YAPAXI@Z	proc	28	operator new | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018cb0	??_U@YAPAXI@Z	proc	26	operator new[] | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018cd0	_srand	proc	16	srand | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018ce0	_rand	proc	54	rand | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018d20	_atol	proc	255	atol | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018e20	_atoi	proc	17	atoi | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018e40	__atoi64	proc	297	_atoi64 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10018f70	_strcmp	proc	132	strcmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019000	_strtok	proc	325	strtok | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019590	_strlen	proc	123	strlen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019610	__assert	proc	894	_assert | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019990	_memcmp	proc	172	memcmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019a40	__CRT_INIT@12	proc	313	_CRT_INIT | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019b80	__DllMainCRTStartup@12	proc	243	_DllMainCRTStartup | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019c80	__amsg_exit	proc	63	_amsg_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019cc0	?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z	proc	48	_set_new_handler | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019cf0	?_query_new_handler@@YAP6AHI@ZXZ	proc	10	_query_new_handler | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019d00	__callnewh	proc	45	_callnewh | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019d30	__mtinitlocks	proc	55	_mtinitlocks | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019d70	__mtdeletelocks	proc	159	_mtdeletelocks | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019e10	__lock	proc	151	_lock | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019eb0	__unlock	proc	22	_unlock | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019ed0	__lockerr_exit	proc	28	_lockerr_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10019fd0	_memset	proc	88	memset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a030	__malloc_base	proc	32	_malloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a050	__nh_malloc_base	proc	87	_nh_malloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a0b0	__heap_alloc_base	proc	333	_heap_alloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a200	__CrtDefaultAllocHook	proc	10	_CrtDefaultAllocHook | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a210	__CrtDbgBreak	proc	11	_CrtDbgBreak | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a220	__CrtSetReportMode	proc	87	_CrtSetReportMode | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a280	__CrtSetReportFile	proc	126	_CrtSetReportFile | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a300	__CrtSetReportHook	proc	28	_CrtSetReportHook | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a320	__CrtDbgReport	proc	912	_CrtDbgReport | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a6b0		proc	780	CrtMessageWindow | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001a9c0	__expand_base	proc	525	_expand_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001abd0	__realloc_base	proc	1153	_realloc_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b060	__free_base	proc	326	_free_base | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b1b0	__heapchk	proc	260	_heapchk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b2c0	__heapset	proc	10	_heapset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b2d0	__get_sbh_threshold	proc	39	_get_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b300	__set_sbh_threshold	proc	266	_set_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b410	___sbh_heap_init	proc	98	__sbh_heap_init | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b480	___sbh_find_block	proc	85	__sbh_find_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b4e0	___sbh_verify_block	proc	95	__sbh_verify_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001b540	___sbh_free_block	proc	1500	__sbh_free_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001bb20	___sbh_alloc_block	proc	1334	__sbh_alloc_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001c060	___sbh_alloc_new_region	proc	271	__sbh_alloc_new_region | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001c170	___sbh_alloc_new_group	proc	494	__sbh_alloc_new_group | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001c360	___sbh_resize_block	proc	1515	__sbh_resize_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001c950	___sbh_heapmin	proc	304	__sbh_heapmin | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ca80	___sbh_heap_check	proc	1565	__sbh_heap_check | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d0a0	__get_old_sbh_threshold	proc	10	_get_old_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d0b0	__set_old_sbh_threshold	proc	43	_set_old_sbh_threshold | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d0e0	___old_sbh_new_region	proc	478	__old_sbh_new_region | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d2c0	___old_sbh_release_region	proc	115	__old_sbh_release_region | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d340	___old_sbh_decommit_pages	proc	343	__old_sbh_decommit_pages | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d4a0	___old_sbh_find_block	proc	144	__old_sbh_find_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d530	___old_sbh_free_block	proc	108	__old_sbh_free_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d5a0	___old_sbh_alloc_block	proc	952	__old_sbh_alloc_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001d960	___old_sbh_alloc_block_from_page	proc	681	__old_sbh_alloc_block_from_page | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001dc10	___old_sbh_resize_block	proc	356	__old_sbh_resize_block | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001dd80	___old_sbh_heap_check	proc	567	__old_sbh_heap_check | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001dfc0	__GetLinkerVersion	proc	92	_GetLinkerVersion | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e020	___heap_select	proc	548	__heap_select | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e250	__heap_init	proc	141	_heap_init | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e2e0	__heap_term	proc	232	_heap_term | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e3d0	__cinit	proc	56	_cinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e410	_exit	proc	21	exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e430	__exit	proc	21	_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e450	__cexit	proc	19	_cexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e470	__c_exit	proc	19	_c_exit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e490		proc	227	doexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e580	__lockexit	proc	15	_lockexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e590	__unlockexit	proc	15	_unlockexit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e5a0		proc	37	_initterm | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e5d0	_sprintf	proc	250	sprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e6d0	__isctype	proc	183	_isctype | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e790	___initstdio	proc	300	__initstdio | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e8c0	___endstdio	proc	26	__endstdio | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e8e0	__lock_file	proc	61	_lock_file | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e920	__lock_file2	proc	41	_lock_file2 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e950	__unlock_file	proc	61	_unlock_file | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e990	__unlock_file2	proc	41	_unlock_file2 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001e9c0	__close	proc	122	_close | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ea40	__close_lk	proc	170	_close_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001eaf0	__freebuf	proc	146	_freebuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001eb90	_fflush	proc	68	fflush | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ebe0	__fflush_lk	proc	65	_fflush_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ec30	__flush	proc	183	_flush | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ecf0	__flushall	proc	15	_flushall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ed00		proc	319	flsall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ee40	__filbuf	proc	484	_filbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001f030	__read	proc	130	_read | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001f0c0	__read_lk	proc	1093	_read_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001f510	_memcpy	proc	821	memcpy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001f850	__openfile	proc	911	_openfile | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001fbe0	__getstream	proc	384	_getstream | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001fd60	__flsbuf	proc	628	_flsbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1001ffe0	__write	proc	130	_write | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10020070	__write_lk	proc	627	_write_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100202f0	__setdefaultprecision	proc	23	_setdefaultprecision | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100218e0	__mtinit	proc	130	_mtinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10021970	__mtterm	proc	41	_mtterm | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100219a0	__initptd	proc	25	_initptd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100219c0	__getptd	proc	152	_getptd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10021a60	__freeptd	proc	263	_freeptd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10021b70	___threadid	proc	11	__threadid | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10021b80	___threadhandle	proc	11	__threadhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10021b90	__allmul	proc	52	_allmul | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022490	_abort	proc	32	abort | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100224b0	_signal	proc	548	signal | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100226e0		proc	146	ctrlevent_capture | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022780	_raise	proc	567	raise | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100229c0		proc	91	siglookup | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022a20	___fpecode	proc	13	__fpecode | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022a30	___pxcptinfoptrs	proc	13	__pxcptinfoptrs | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022a40	___crtMessageBoxA	proc	187	__crtMessageBoxA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022b00	_itoa,__itoa	proc	66	_itoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022b50		proc	194	xtoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022c20	__ltoa	proc	63	_ltoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022c60	__ultoa	proc	30	_ultoa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022c80	__i64toa	proc	72	_i64toa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022cd0		proc	242	x64toa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022dd0	__ui64toa	proc	31	_ui64toa | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022df0	_strncat	proc	291	strncat | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10022f20	_strncpy	proc	254	strncpy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023020	_fprintf	proc	193	fprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100230f0	_setvbuf	proc	365	setvbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023260	__ioinit	proc	804	_ioinit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023590	__ioterm	proc	155	_ioterm | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023630	__setenvp	proc	329	_setenvp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023780	__setargv	proc	216	_setargv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023860		proc	1060	parse_cmdline | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023c90	___crtGetEnvironmentStringsA	proc	537	__crtGetEnvironmentStringsA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023eb0	_DllMain@12	proc	12	DllMain | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023ec0	__FF_MSGBANNER	proc	73	_FF_MSGBANNER | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10023f10	__NMSG_WRITE	proc	447	_NMSG_WRITE | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100240d0	__GET_RTERRMSG	proc	80	_GET_RTERRMSG | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024120	__snprintf	proc	249	_snprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024220	__vsnprintf	proc	243	_vsnprintf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024320	__alloca_probe,__chkstk	proc	47	$$$00001 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024350	__dosmaperr	proc	145	_dosmaperr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100243f0	__errno	proc	13	_errno | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024400	___doserrno	proc	13	__doserrno | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024410	_memmove	proc	821	memmove | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024750	_strtol	proc	27	strtol | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024770		proc	817	strtoxl | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024ab0	_strtoul	proc	27	strtoul | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024ad0		proc	16	$$$00001 | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024ae0	_strchr	proc	188	strchr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024ba0	_strstr	proc	128	strstr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024c20	_strncmp	proc	56	strncmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10024c60	__output	proc	3362	_output | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025990		proc	119	write_char | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025a10		proc	53	write_multi_char | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025a50		proc	74	write_string | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025aa0		proc	26	get_int_arg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025ac0		proc	31	get_int64_arg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025ae0		proc	27	get_short_arg | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025b00	___crtGetStringTypeA	proc	444	__crtGetStringTypeA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025cc0	__fcloseall	proc	218	_fcloseall | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025da0	__alloc_osfhnd	proc	482	_alloc_osfhnd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10025f90	__set_osfhnd	proc	183	_set_osfhnd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026050	__free_osfhnd	proc	216	_free_osfhnd | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026130	__get_osfhandle	proc	102	_get_osfhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100261a0	__open_osfhandle	proc	260	_open_osfhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100262b0	__lock_fhandle	proc	134	_lock_fhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026340	__unlock_fhandle	proc	38	_unlock_fhandle | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026370	__commit	proc	210	_commit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026450	__getbuf	proc	199	_getbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026520	__lseek	proc	130	_lseek | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100265b0	__lseek_lk	proc	178	_lseek_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026670	__open	proc	63	_open | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100266b0	__sopen	proc	1363	_sopen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10026c10	__isatty	proc	50	_isatty | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100270f0	__tolower	proc	11	_tolower | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10027100	_tolower	proc	147	tolower | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100271a0	__tolower_lk	proc	299	_tolower_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10027ab0	__fptostr	proc	250	_fptostr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10027da0	__fptrap	proc	15	_fptrap | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10027ee0	__XcptFilter	proc	446	_XcptFilter | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100280a0		proc	89	xcptlookup | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10029930	__aulldiv	proc	104	_aulldiv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100299a0	__aullrem	proc	117	_aullrem | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10029a20	__stbuf	proc	343	_stbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10029b80	__ftbuf	proc	148	_ftbuf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10029c20	__setmbcp	proc	836	_setmbcp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10029f70		proc	89	getSystemCP | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10029fd0		proc	119	CPtoLCID | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a050		proc	116	setSBCS | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a0d0		proc	770	setSBUpLow | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a3e0	__getmbcp	proc	23	_getmbcp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a400	___initmbctable	proc	34	__initmbctable | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a430	__toupper	proc	11	_toupper | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a440	_toupper	proc	147	toupper | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a4e0	__toupper_lk	proc	299	_toupper_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a610	_wctomb	proc	119	wctomb | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a690	__wctomb_lk	proc	160	_wctomb_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a730	__chsize	proc	115	_chsize | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a7b0	__chsize_lk	proc	560	_chsize_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002a9e0	_setlocale	proc	1007	setlocale | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002add0		proc	403	_setlocale_set_cat | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002af70		proc	256	_setlocale_get_all | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b070	__expandlocale	proc	388	_expandlocale | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b200	___init_dummy	proc	7	__init_dummy | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b210	__strcats	proc	79	_strcats | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b260	___lc_strtolc	proc	349	__lc_strtolc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b3c0	___lc_lctostr	proc	101	__lc_lctostr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b430	___crtLCMapStringA	proc	773	__crtLCMapStringA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002b740		proc	80	strncnt | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002db50	__setmode	proc	115	_setmode | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002dbd0	__setmode_lk	proc	207	_setmode_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002dca0	___init_time	proc	219	__init_time | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002dd80		proc	1423	_get_lc_time | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002e310		proc	779	_free_lc_time | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002e620	___init_numeric	proc	678	__init_numeric | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002e8d0		proc	125	fix_grouping | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002e950	___init_monetary	proc	304	__init_monetary | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002ea80		proc	525	_get_lc_lconv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002ec90		proc	125	fix_grouping | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002ed10		proc	147	_free_lc_lconv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002edb0	___init_ctype	proc	928	__init_ctype | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f150	___init_collate	proc	7	__init_collate | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f160	_strcspn	proc	62	strcspn | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f1a0	_strpbrk	proc	58	strpbrk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f1e0	___get_qualified_locale	proc	512	__get_qualified_locale | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f3e0		proc	130	TranslateName | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f470		proc	186	GetLcidFromLangCountry | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f530		proc	804	LangCountryEnumProc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f860		proc	116	GetLcidFromLanguage | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002f8e0		proc	287	LanguageEnumProc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fa00		proc	69	GetLcidFromCountry | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fa50		proc	172	CountryEnumProc | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fb00		proc	43	GetLcidFromDefault | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fb30		proc	155	ProcessCodePage | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fbd0		proc	79	TestDefaultCountry | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fc20		proc	135	TestDefaultLanguage | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fcb0		proc	77	IsThisWindowsNT | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fd00		proc	388	crtGetLocaleInfoA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002fe90		proc	118	LcidFromHexString | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x1002ff10		proc	101	GetPrimaryLen | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10030490	__Getdays	proc	289	_Getdays | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100305c0	__Getmonths	proc	291	_Getmonths | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100306f0	__Gettnames	proc	878	_Gettnames | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10030a60	_strftime	proc	31	strftime | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10030a80	__Strftime	proc	394	_Strftime | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10030c10		proc	1567	_expandtime | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031230		proc	72	_store_str | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031280		proc	173	_store_num | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031330		proc	172	_store_number | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100313e0		proc	1311	_store_winword | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031900	___getlocaleinfo	proc	650	__getlocaleinfo | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031b90	_localeconv	proc	10	localeconv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031ba0	___crtGetStringTypeW	proc	621	__crtGetStringTypeW | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031e10	__strcmpi,__stricmp	proc	0	_strcmpi | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031e10	__strcmpi,__stricmp	proc	208	_stricmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031ee0	__strnicmp	proc	257	_strnicmp | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10031ff0	___tzset	proc	61	__tzset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032030	__tzset	proc	30	_tzset | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032050		proc	939	_tzset_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032400	__isindst	proc	46	_isindst | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032430		proc	762	_isindst_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032730		proc	504	cvtdate | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032930	___crtGetLocaleInfoW	proc	405	__crtGetLocaleInfoW | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032ad0	___crtGetLocaleInfoA	proc	421	__crtGetLocaleInfoA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032c80	_getenv	proc	46	getenv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032cb0	__getenv_lk	proc	198	_getenv_lk | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032d80	__mbsnbicoll	proc	79	_mbsnbicoll | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032dd0	___wtomb_environ	proc	174	__wtomb_environ | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10032e80	___crtCompareStringA	proc	1016	__crtCompareStringA | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10033280		proc	80	strncnt | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100332d0	___crtsetenv	proc	736	__crtsetenv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100335b0		proc	124	findenv | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10033630		proc	238	copy_environ | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10033720	__mbschr	proc	237	_mbschr | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10033810	??0ifstream@@QAE@XZ	proc	227	ifstream::ifstream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033900	?delbuf@ios@@QAEXH@Z	proc	22	ios::delbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033920	??3@YAXPAXHPBDH@Z	proc	17	operator delete | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033940	??_Gifstream@@UAEPAXI@Z,??_Eifstream@@UAEPAXI@Z	proc	55	ifstream::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033980	??0ifstream@@QAE@PBDHH@Z	proc	294	ifstream::ifstream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033ab0	?rdbuf@ifstream@@QBEPAVfilebuf@@XZ	proc	29	ifstream::rdbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033ad0	?rdbuf@ios@@QBEPAVstreambuf@@XZ	proc	17	ios::rdbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033af0	??0ifstream@@QAE@H@Z	proc	233	ifstream::ifstream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033be0	??0ifstream@@QAE@HPADH@Z	proc	239	ifstream::ifstream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033cd0	??1ifstream@@UAE@XZ	proc	39	ifstream::~ifstream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033d00	?setbuf@ifstream@@QAEPAVstreambuf@@PADH@Z	proc	110	ifstream::setbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033d70	?clear@ios@@QAEXH@Z	proc	46	ios::clear | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033da0	?is_open@ifstream@@QBEHXZ	proc	26	ifstream::is_open | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033dc0	?is_open@filebuf@@QBEHXZ	proc	25	filebuf::is_open | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033de0	?attach@ifstream@@QAEXH@Z	proc	73	ifstream::attach | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033e30	?open@ifstream@@QAEXPBDHH@Z	proc	94	ifstream::open | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033e90	?close@ifstream@@QAEXXZ	proc	84	ifstream::close | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033ef0	??0filebuf@@QAE@XZ	proc	51	filebuf::filebuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033f30	??_Gfilebuf@@UAEPAXI@Z,??_Efilebuf@@UAEPAXI@Z	proc	46	filebuf::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033f60	??0filebuf@@QAE@H@Z	proc	52	filebuf::filebuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10033fa0	??0filebuf@@QAE@HPADH@Z	proc	113	filebuf::filebuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034020	??1filebuf@@UAE@XZ	proc	108	filebuf::~filebuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034090	?lock@streambuf@@QAEXXZ	proc	37	streambuf::lock | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100340c0	?lockptr@streambuf@@IAEPAU_CRT_CRITICAL_SECTION@@XZ	proc	17	streambuf::lockptr | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100340e0	?close@filebuf@@QAEPAV1@XZ	proc	107	filebuf::close | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034150	?unlock@streambuf@@QAEXXZ	proc	37	streambuf::unlock | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034180	?overflow@filebuf@@UAEHH@Z	proc	185	filebuf::overflow | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034240	?sputc@streambuf@@QAEHH@Z	proc	89	streambuf::sputc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100342a0	?base@streambuf@@IBEPADXZ	proc	17	streambuf::base | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100342c0	?ebuf@streambuf@@IBEPADXZ	proc	17	streambuf::ebuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100342e0	?pptr@streambuf@@IBEPADXZ	proc	17	streambuf::pptr | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034300	?epptr@streambuf@@IBEPADXZ	proc	17	streambuf::epptr | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034320	?setp@streambuf@@IAEXPAD0@Z	proc	40	streambuf::setp | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034350	?unbuffered@streambuf@@IBEHXZ	proc	17	streambuf::unbuffered | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034370	?underflow@filebuf@@UAEHXZ	proc	237	filebuf::underflow | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034460	?in_avail@streambuf@@QBEHXZ	proc	60	streambuf::in_avail | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100344a0	?blen@streambuf@@IBEHXZ	proc	54	streambuf::blen | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100344e0	?gptr@streambuf@@IBEPADXZ	proc	17	streambuf::gptr | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034500	?setg@streambuf@@IAEXPAD00@Z	proc	50	streambuf::setg | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034540	?seekoff@filebuf@@UAEJJW4seek_dir@ios@@H@Z	proc	131	filebuf::seekoff | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100345d0	?sync@filebuf@@UAEHXZ	proc	396	filebuf::sync | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034760	?out_waiting@streambuf@@QBEHXZ	proc	54	streambuf::out_waiting | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100347a0	?pbase@streambuf@@IBEPADXZ	proc	17	streambuf::pbase | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100347c0	?egptr@streambuf@@IBEPADXZ	proc	17	streambuf::egptr | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100347e0	?pbump@streambuf@@IAEXH@Z	proc	37	streambuf::pbump | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034810	?setbuf@filebuf@@UAEPAVstreambuf@@PADH@Z	proc	105	filebuf::setbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034880	?unbuffered@streambuf@@IAEXH@Z	proc	22	streambuf::unbuffered | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100348a0	?get@istream@@IAEAAV1@PADHH@Z	proc	345	istream::get | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a00	?isfx@istream@@QAEXXZ	proc	51	istream::isfx | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a40	?unlockbuf@ios@@QAAXXZ	proc	16	ios::unlockbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a50	__mtlockinit	proc	15	_mtlockinit | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a60	__mtlockterm	proc	15	_mtlockterm | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a70	__mtlock	proc	15	_mtlock | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a80	__mtunlock	proc	15	_mtunlock | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034a90	??0ios@@IAE@XZ	proc	184	ios::ios | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034b50	??_Gios@@UAEPAXI@Z,??_Eios@@UAEPAXI@Z	proc	46	ios::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034b80	??0ios@@QAE@PAVstreambuf@@@Z	proc	197	ios::ios | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034c50	??0ios@@IAE@ABV0@@Z	proc	120	ios::ios | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034cd0	??1ios@@UAE@XZ	proc	169	ios::~ios | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034d80	?init@ios@@IAEXPAVstreambuf@@@Z	proc	131	ios::init | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034e10	?delbuf@ios@@QBEHXZ	proc	17	ios::delbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034e30	??4ios@@IAEAAV0@ABV0@@Z	proc	130	ios::operator= | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034ec0	?flags@ios@@QBEJXZ	proc	17	ios::flags | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034ee0	?width@ios@@QBEHXZ	proc	17	ios::width | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034f00	?tie@ios@@QBEPAVostream@@XZ	proc	17	ios::tie | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034f20	?fill@ios@@QBEDXZ	proc	17	ios::fill | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034f40	?precision@ios@@QBEHXZ	proc	17	ios::precision | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034f60	?rdstate@ios@@QBEHXZ	proc	17	ios::rdstate | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034f80	?xalloc@ios@@SAHXZ	proc	61	ios::xalloc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034fc0	?lockc@ios@@KAXXZ	proc	18	ios::lockc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10034fe0	?unlockc@ios@@KAXXZ	proc	18	ios::unlockc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035000	?bitalloc@ios@@SAJXZ	proc	42	ios::bitalloc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035030	??0istream@@IAE@XZ	proc	131	istream::istream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100350c0	??_Gistream@@UAEPAXI@Z,??_Eistream@@UAEPAXI@Z	proc	55	istream::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035100	??_Distream@@QAEXXZ	proc	33	istream::`vbase destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035130	??0istream@@QAE@PAVstreambuf@@@Z	proc	196	istream::istream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035200	??0istream@@IAE@ABV0@@Z	proc	213	istream::istream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100352e0	??1istream@@UAE@XZ	proc	31	istream::~istream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035300	??4istream@@IAEAAV0@PAVstreambuf@@@Z	proc	313	istream::operator= | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035440	?ipfx@istream@@QAEHH@Z	proc	351	istream::ipfx | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100355a0	?lockbuf@ios@@QAAXXZ	proc	16	ios::lockbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100355b0	??5istream@@QAEAAV0@PAD@Z	proc	364	istream::operator>> | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035720	?peek@istream@@QAEHXZ	proc	70	istream::peek | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035770	?putback@istream@@QAEAAV1@D@Z	proc	141	istream::putback | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035800	?sputbackc@streambuf@@QAEHD@Z	proc	88	streambuf::sputbackc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035860	?good@ios@@QBEHXZ	proc	25	ios::good | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035880	?sync@istream@@QAEHXZ	proc	137	istream::sync | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035910	?eatwhite@istream@@QAEXXZ	proc	166	istream::eatwhite | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100359c0	??0istream_withassign@@QAE@XZ	proc	133	istream_withassign::istream_withassign | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035a50	??_Gistream_withassign@@UAEPAXI@Z,??_Eistream_withassign@@UAEPAXI@Z	proc	55	istream_withassign::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035a90	??_Distream_withassign@@QAEXXZ	proc	33	istream_withassign::`vbase destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035ac0	??0istream_withassign@@QAE@PAVstreambuf@@@Z	proc	137	istream_withassign::istream_withassign | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035b50	??1istream_withassign@@UAE@XZ	proc	39	istream_withassign::~istream_withassign | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035b80	?attach@filebuf@@QAEPAV1@H@Z	proc	162	filebuf::attach | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035c30	?open@filebuf@@QAEPAV1@PBDHH@Z	proc	604	filebuf::open | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035e90	?setmode@filebuf@@QAEHH@Z	proc	117	filebuf::setmode | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035f10	??0streambuf@@IAE@XZ	proc	160	streambuf::streambuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035fb0	??_Gstreambuf@@UAEPAXI@Z,??_Estreambuf@@UAEPAXI@Z	proc	46	streambuf::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10035fe0	??0streambuf@@IAE@PADH@Z	proc	205	streambuf::streambuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100360b0	??1streambuf@@UAE@XZ	proc	86	streambuf::~streambuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036110	?setbuf@streambuf@@UAEPAV1@PADH@Z	proc	84	streambuf::setbuf | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036170	?xsputn@streambuf@@UAEHPBDH@Z	proc	142	streambuf::xsputn | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036200	?xsgetn@streambuf@@UAEHPADH@Z	proc	313	streambuf::xsgetn | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036340	?sync@streambuf@@UAEHXZ	proc	48	streambuf::sync | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036370	?allocate@streambuf@@IAEHXZ	proc	59	streambuf::allocate | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100363b0	?doallocate@streambuf@@MAEHXZ	proc	87	streambuf::doallocate | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036410	?setb@streambuf@@IAEXPAD0H@Z	proc	81	streambuf::setb | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036470	?seekoff@streambuf@@UAEJJW4seek_dir@ios@@H@Z	proc	16	streambuf::seekoff | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036480	?seekpos@streambuf@@UAEJJH@Z	proc	34	streambuf::seekpos | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100364b0	?pbackfail@streambuf@@UAEHH@Z	proc	171	streambuf::pbackfail | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036560	?eback@streambuf@@IBEPADXZ	proc	17	streambuf::eback | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036580	?snextc@streambuf@@QAEHXZ	proc	170	streambuf::snextc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036630	?sbumpc@streambuf@@QAEHXZ	proc	141	streambuf::sbumpc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100366c0	?stossc@streambuf@@QAEXXZ	proc	126	streambuf::stossc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036740	?sgetc@streambuf@@QAEHXZ	proc	65	streambuf::sgetc | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036790	?opfx@ostream@@QAEHXZ	proc	169	ostream::opfx | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036840	?osfx@ostream@@QAEXXZ	proc	279	ostream::osfx | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036960	??6ostream@@QAEAAV0@PBD@Z	proc	53	ostream::operator<< | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100369a0	?flush@ostream@@QAEAAV1@XZ	proc	167	ostream::flush | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036a50	??0ostream@@IAE@XZ	proc	88	ostream::ostream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036ab0	??_Gostream@@UAEPAXI@Z,??_Eostream@@UAEPAXI@Z	proc	55	ostream::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036af0	??_Dostream@@QAEXXZ	proc	33	ostream::`vbase destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036b20	??0ostream@@QAE@PAVstreambuf@@@Z	proc	153	ostream::ostream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036bc0	??0ostream@@IAE@ABV0@@Z	proc	170	ostream::ostream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036c70	??1ostream@@UAE@XZ	proc	31	ostream::~ostream | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036c90	??4ostream@@IAEAAV0@PAVstreambuf@@@Z	proc	270	ostream::operator= | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036da0	??0ostream_withassign@@QAE@XZ	proc	133	ostream_withassign::ostream_withassign | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036e30	??_Gostream_withassign@@UAEPAXI@Z,??_Eostream_withassign@@UAEPAXI@Z	proc	55	ostream_withassign::`scalar deleting destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036e70	??_Dostream_withassign@@QAEXXZ	proc	33	ostream_withassign::`vbase destructor' | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036ea0	??0ostream_withassign@@QAE@PAVstreambuf@@@Z	proc	137	ostream_withassign::ostream_withassign | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036f30	??1ostream_withassign@@UAE@XZ	proc	39	ostream_withassign::~ostream_withassign | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10036f60	?writepad@ostream@@AAEAAV1@PBD0@Z	proc	598	ostream::writepad | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x100371c0	?sputn@streambuf@@QAEHPBDH@Z	proc	32	streambuf::sputn | C:\Program Files\Microsoft Visual Studio\VC98\LIB\libcimtd.lib
+0x10037510	??2@YAPAXIHPBDH@Z	proc	31	operator new | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037530	_isalpha	proc	65	isalpha | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037580	_isupper	proc	60	isupper | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100375c0	_islower	proc	60	islower | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037600	_isdigit	proc	60	isdigit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037640	_isxdigit	proc	65	isxdigit | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037690	_isspace	proc	60	isspace | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100376d0	_ispunct	proc	60	ispunct | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037710	_isalnum	proc	65	isalnum | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037760	_isprint	proc	65	isprint | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100377b0	_isgraph	proc	65	isgraph | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037800	_iscntrl	proc	60	iscntrl | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037840	___isascii	proc	16	__isascii | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037850	___toascii	proc	11	__toascii | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037860	___iscsymf	proc	95	__iscsymf | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x100378c0	___iscsym	proc	95	__iscsym | C:\VS6SP2\VC98\LIB\libcmtd.lib
+0x10037920	__purecall	proc	15	_purecall | C:\VS6SP2\VC98\LIB\libcmtd.lib

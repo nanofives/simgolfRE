@@ -1,0 +1,37 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,"cmp esi, dword ptr [0]","cmp esi, dword ptr [0x842140]",True
+3,jae 0x4d,jae 0x4a5887,True
+4,"mov ecx, esi","mov ecx, esi",True
+5,"mov eax, esi","mov eax, esi",True
+6,"sar ecx, 5","sar ecx, 5",True
+7,"and eax, 0x1f","and eax, 0x1f",True
+8,"mov ecx, dword ptr [ecx*4]","mov ecx, dword ptr [ecx*4 + 0x842040]",True
+9,"lea eax, [eax + eax*8]","lea eax, [eax + eax*8]",True
+10,"test byte ptr [ecx + eax*4 + 4], 1","test byte ptr [ecx + eax*4 + 4], 1",True
+11,je 0x4d,je 0x4a5887,True
+12,push edi,push edi,True
+13,push esi,push esi,True
+14,call 0x2f,call 0x4a937e,True
+15,push dword ptr [esp + 0x18],push dword ptr [esp + 0x18],True
+16,push dword ptr [esp + 0x18],push dword ptr [esp + 0x18],True
+17,push esi,push esi,True
+18,call 0x3d,call 0x4a589f,True
+19,push esi,push esi,True
+20,"mov edi, eax","mov edi, eax",True
+21,call 0x45,call 0x4a93dd,True
+22,"add esp, 0x14","add esp, 0x14",True
+23,"mov eax, edi","mov eax, edi",True
+24,pop edi,pop edi,True
+25,pop esi,pop esi,True
+26,ret ,ret ,True
+27,call 0x52,call 0x4a910c,True
+28,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+29,call 0x5d,call 0x4a9115,True
+30,"and dword ptr [eax], 0","and dword ptr [eax], 0",True
+31,"or eax, 0xffffffff","or eax, 0xffffffff",True
+32,pop esi,pop esi,True
+33,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\read.obj (library object, no compilation)",symbol=__read,module=golf_clean.exe
+VERDICT,GREEN,34,100.0%

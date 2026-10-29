@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 7 bytes, 2 instructions, subsystem `frontend`. Mechanic
 Root window slot 24: ends the process with exit code 3. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_Screen.cpp` as `?on_sys_close@Screen@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/DataPath.cpp	0x91da0	0x00491da0	593	G	filefind_get	?filefind_get@@YAPADPBD@Z	public	100	100.0	223/223 ins	golf_hand_s2.cpp

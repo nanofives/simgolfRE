@@ -1,0 +1,18 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x81b50	0x00481b50	65	G	FlicAnim::FlicAnim	??0FlicAnim@@QAE@XZ	public	100	100.0	23/23 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x81ba0	0x00481ba0	243	G	FlicAnim::close	?close@FlicAnim@@QAEXXZ	public	100	100.0	97/97 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x81ca0	0x00481ca0	416	G	FlicAnim::confirm_data	?confirm_data@FlicAnim@@QAEHH@Z	public	100	100.0	162/162 ins	
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x81e40	0x00481e40	253	G	FlicAnim::setup_anim_positions	?setup_anim_positions@FlicAnim@@QAEHGG@Z	public	100	100.0	98/98 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x81f40	0x00481f40	1141	G	FlicAnim::load	?load@FlicAnim@@QAEHPBDHPAVFLCPalette@@H@Z	public	100	100.0	345/345 ins	
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x823c0	0x004823c0	91	G	operator new	??2@YAPAXIPAUHeap@@@Z	public	100	100.0	31/31 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82420	0x00482420	102	G	FlicAnim::next_sprite	?next_sprite@FlicAnim@@QAEPAUSpriteObject@@PAUFlicSprite@@PAU2@@Z	public	100	100.0	41/41 ins	
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82490	0x00482490	215	G	FlicAnim::seek_anim	?seek_anim@FlicAnim@@QAEPAUSpriteObject@@HHPAUFlicSprite@@PAU2@@Z	public	100	100.0	94/94 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82570	0x00482570	384	G	FlicAnim::decode_chunk	?decode_chunk@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	public	100	100.0	148/148 ins	
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x826f0	0x004826f0	224	G	FlicAnim::decode_color256	?decode_color256@FlicAnim@@QAEHPAUFlicAnimData@@@Z	public	100	100.0	87/87 ins	golf_hand_07_4826f0.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x827d0	0x004827d0	367	G	FlicAnim::decode_ss2	?decode_ss2@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	public	100	100.0	129/129 ins	
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82940	0x00482940	77	G	FlicAnim::decode_black	?decode_black@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	public	100	100.0	36/36 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82990	0x00482990	227	G	FlicAnim::decode_brun	?decode_brun@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	public	100	100.0	90/90 ins	golf_hand_07_482990.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82a80	0x00482a80	82	G	FlicAnim::decode_copy	?decode_copy@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	public	100	100.0	37/37 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82ae0	0x00482ae0	61	G	LinkListEntry::LinkListEntry	??0LinkListEntry@@QAE@XZ	public	100	100.0	17/17 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x82b20	0x00482b20	61	G	PalStruct::PalStruct	??0PalStruct@@QAE@XZ	public	100	100.0	17/17 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/FlicAnim.cpp	0x87cb0	0x00487cb0	5	G	FlicAnim::decode_lc	?decode_lc@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z	public	100	100.0	2/2 ins	

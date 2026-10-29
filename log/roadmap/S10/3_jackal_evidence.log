@@ -1,0 +1,128 @@
+Traceback (most recent call last):
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 465, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 450, in main
+    run_file(a.arg, a.evidence)
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 331, in run_file
+    rows = score_rows(src, dsp, wip)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 246, in score_rows
+    acc, a, b, _, same, table_bad, _ = match.score_function(mod, r["va"], secs, syms, sym)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\match.py", line 344, in score_function
+    mine_literals = set() if orig_relocs else literal_values(strip_switch_tables(mine, local), mine_abs)
+                                              ^^^^^^^^^^^^^^
+NameError: name 'literal_values' is not defined
+== done golf/jackal.lib/src/sprite.cpp
+Traceback (most recent call last):
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 465, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 450, in main
+    run_file(a.arg, a.evidence)
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 331, in run_file
+    rows = score_rows(src, dsp, wip)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\smsg_import.py", line 246, in score_rows
+    acc, a, b, _, same, table_bad, _ = match.score_function(mod, r["va"], secs, syms, sym)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\re\tools\match.py", line 344, in score_function
+    size = ghidra_size(mod, addr)
+                                  
+NameError: name 'literal_values' is not defined
+== done golf/jackal.lib/src/ScratchSprite.cpp
+pdb=golf	source=golf/jackal.lib/src/buffer.cpp	procs=91	mapped=91	new_100=27	already_100=64	miss=0	nosym=0	folded=0	error=0	verified=27/27	canonical=re/match/smsg_golf_jackal_buffer.cpp	wip=	seconds=3.3
+== done golf/jackal.lib/src/buffer.cpp
+pdb=golf	source=golf/jackal.lib/src/window.cpp	procs=138	mapped=136	new_100=40	already_100=96	miss=0	nosym=0	folded=2	error=0	verified=40/40	canonical=re/match/smsg_golf_jackal_window.cpp	wip=	seconds=3.8
+== done golf/jackal.lib/src/window.cpp
+pdb=golf	source=golf/jackal.lib/src/GraphicWin.cpp	procs=22	mapped=22	new_100=9	already_100=13	miss=0	nosym=0	folded=0	error=0	verified=9/9	canonical=re/match/smsg_golf_jackal_GraphicWin.cpp	wip=	seconds=1.6
+== done golf/jackal.lib/src/GraphicWin.cpp
+pdb=golf	source=golf/jackal.lib/src/FlicAnim.cpp	procs=17	mapped=17	new_100=6	already_100=11	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_jackal_FlicAnim.cpp	wip=	seconds=1.6
+== done golf/jackal.lib/src/FlicAnim.cpp
+pdb=golf	source=golf/jackal.lib/src/FlicSprite.cpp	procs=6	mapped=6	new_100=1	already_100=5	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_FlicSprite.cpp	wip=	seconds=1.0
+== done golf/jackal.lib/src/FlicSprite.cpp
+pdb=golf	source=golf/jackal.lib/src/palette.cpp	procs=29	mapped=29	new_100=6	already_100=23	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_jackal_palette.cpp	wip=	seconds=1.3
+== done golf/jackal.lib/src/palette.cpp
+pdb=golf	source=golf/jackal.lib/src/font.cpp	procs=15	mapped=15	new_100=4	already_100=11	miss=0	nosym=0	folded=0	error=0	verified=4/4	canonical=re/match/smsg_golf_jackal_font.cpp	wip=	seconds=1.2
+== done golf/jackal.lib/src/font.cpp
+pdb=golf	source=golf/jackal.lib/src/MessagePump.cpp	procs=14	mapped=14	new_100=1	already_100=13	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_MessagePump.cpp	wip=	seconds=1.1
+== done golf/jackal.lib/src/MessagePump.cpp
+pdb=golf	source=golf/jackal.lib/src/sound.cpp	procs=115	mapped=115	new_100=53	already_100=62	miss=0	nosym=0	folded=0	error=0	verified=53/53	canonical=re/match/smsg_golf_jackal_sound.cpp	wip=	seconds=2.9
+== done golf/jackal.lib/src/sound.cpp
+pdb=golf	source=golf/jackal.lib/src/EngineInit.cpp	procs=4	mapped=4	new_100=1	already_100=3	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_EngineInit.cpp	wip=	seconds=1.3
+== done golf/jackal.lib/src/EngineInit.cpp
+pdb=golf	source=golf/jackal.lib/src/PCXFile.cpp	procs=4	mapped=4	new_100=2	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_jackal_PCXFile.cpp	wip=	seconds=1.4
+== done golf/jackal.lib/src/PCXFile.cpp
+pdb=golf	source=golf/jackal.lib/src/EditBox.cpp	procs=21	mapped=21	new_100=6	already_100=15	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_jackal_EditBox.cpp	wip=	seconds=1.6
+== done golf/jackal.lib/src/EditBox.cpp
+pdb=golf	source=golf/jackal.lib/src/Time.cpp	procs=15	mapped=15	new_100=2	already_100=13	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_jackal_Time.cpp	wip=	seconds=1.0
+== done golf/jackal.lib/src/Time.cpp
+pdb=golf	source=golf/jackal.lib/src/SoundDevice.cpp	procs=110	mapped=110	new_100=45	already_100=65	miss=0	nosym=0	folded=0	error=0	verified=45/45	canonical=re/match/smsg_golf_jackal_SoundDevice.cpp	wip=	seconds=2.3
+== done golf/jackal.lib/src/SoundDevice.cpp
+pdb=golf	source=golf/jackal.lib/src/Text.cpp	procs=27	mapped=27	new_100=6	already_100=21	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_jackal_Text.cpp	wip=	seconds=1.4
+== done golf/jackal.lib/src/Text.cpp
+pdb=golf	source=golf/jackal.lib/src/BaseButton.cpp	procs=23	mapped=23	new_100=5	already_100=18	miss=0	nosym=0	folded=0	error=0	verified=5/5	canonical=re/match/smsg_golf_jackal_BaseButton.cpp	wip=	seconds=1.4
+== done golf/jackal.lib/src/BaseButton.cpp
+pdb=golf	source=golf/jackal.lib/src/Dialog.cpp	procs=15	mapped=15	new_100=1	already_100=14	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_Dialog.cpp	wip=	seconds=1.2
+== done golf/jackal.lib/src/Dialog.cpp
+pdb=golf	source=golf/jackal.lib/src/ListBox.cpp	procs=46	mapped=46	new_100=13	already_100=33	miss=0	nosym=0	folded=0	error=0	verified=13/13	canonical=re/match/smsg_golf_jackal_ListBox.cpp	wip=	seconds=1.9
+== done golf/jackal.lib/src/ListBox.cpp
+pdb=golf	source=golf/jackal.lib/src/BasePop.cpp	procs=96	mapped=96	new_100=28	already_100=68	miss=0	nosym=0	folded=0	error=0	verified=28/28	canonical=re/match/smsg_golf_jackal_BasePop.cpp	wip=	seconds=2.9
+== done golf/jackal.lib/src/BasePop.cpp
+pdb=golf	source=golf/jackal.lib/src/FixedMath.cpp	procs=3	mapped=3	new_100=1	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_FixedMath.cpp	wip=	seconds=0.5
+== done golf/jackal.lib/src/FixedMath.cpp
+pdb=golf	source=golf/jackal.lib/src/SpriteExtract.cpp	procs=1	mapped=1	new_100=1	already_100=0	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_SpriteExtract.cpp	wip=	seconds=0.9
+== done golf/jackal.lib/src/SpriteExtract.cpp
+pdb=golf	source=golf/jackal.lib/src/display.cpp	procs=7	mapped=7	new_100=3	already_100=4	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_jackal_display.cpp	wip=	seconds=0.8
+== done golf/jackal.lib/src/display.cpp
+pdb=golf	source=golf/jackal.lib/src/spot.cpp	procs=19	mapped=19	new_100=5	already_100=14	miss=0	nosym=0	folded=0	error=0	verified=5/5	canonical=re/match/smsg_golf_jackal_spot.cpp	wip=	seconds=1.0
+== done golf/jackal.lib/src/spot.cpp
+pdb=golf	source=golf/jackal.lib/src/PolyFill.cpp	procs=7	mapped=7	new_100=1	already_100=6	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_PolyFill.cpp	wip=	seconds=1.1
+== done golf/jackal.lib/src/PolyFill.cpp
+pdb=golf	source=golf/jackal.lib/src/ComboBox.cpp	procs=12	mapped=12	new_100=3	already_100=9	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_jackal_ComboBox.cpp	wip=	seconds=1.5
+== done golf/jackal.lib/src/ComboBox.cpp
+pdb=golf	source=golf/jackal.lib/src/TextTemplate.cpp	procs=2	mapped=2	new_100=1	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_TextTemplate.cpp	wip=	seconds=1.1
+== done golf/jackal.lib/src/TextTemplate.cpp
+pdb=golf	source=golf/jackal.lib/src/DottedLine16.cpp	procs=2	mapped=2	new_100=2	already_100=0	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_jackal_DottedLine16.cpp	wip=	seconds=1.0
+== done golf/jackal.lib/src/DottedLine16.cpp
+pdb=golf	source=golf/jackal.lib/src/PCXLoad8.cpp	procs=1	mapped=1	new_100=1	already_100=0	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_PCXLoad8.cpp	wip=	seconds=0.8
+== done golf/jackal.lib/src/PCXLoad8.cpp
+pdb=golf	source=golf/jackal.lib/src/PCXLoad16.cpp	procs=1	mapped=1	new_100=1	already_100=0	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_PCXLoad16.cpp	wip=	seconds=0.8
+== done golf/jackal.lib/src/PCXLoad16.cpp
+pdb=golf	source=golf/jackal.lib/src/SysMessageHandler.cpp	procs=14	mapped=14	new_100=12	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=12/12	canonical=re/match/smsg_golf_jackal_SysMessageHandler.cpp	wip=	seconds=1.1
+== done golf/jackal.lib/src/SysMessageHandler.cpp
+pdb=golf	source=golf/jackal.lib/src/scroll.cpp	procs=26	mapped=26	new_100=8	already_100=18	miss=0	nosym=0	folded=0	error=0	verified=8/8	canonical=re/match/smsg_golf_jackal_scroll.cpp	wip=	seconds=1.5
+== done golf/jackal.lib/src/scroll.cpp
+pdb=golf	source=golf/jackal.lib/src/Network.cpp	procs=21	mapped=21	new_100=7	already_100=14	miss=0	nosym=0	folded=0	error=0	verified=7/7	canonical=re/match/smsg_golf_jackal_Network.cpp	wip=	seconds=1.9
+== done golf/jackal.lib/src/Network.cpp
+pdb=golf	source=golf/jackal.lib/src/multidebug.cpp	procs=10	mapped=10	new_100=2	already_100=7	miss=1	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_jackal_multidebug.cpp	wip=re/match/wip/smsg_golf_jackal_multidebug.cpp	seconds=1.6
+== done golf/jackal.lib/src/multidebug.cpp
+pdb=golf	source=golf/jackal.lib/src/PaletteList.cpp	procs=2	mapped=2	new_100=1	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_PaletteList.cpp	wip=	seconds=0.9
+== done golf/jackal.lib/src/PaletteList.cpp
+pdb=golf	source=golf/jackal.lib/src/Video.cpp	procs=9	mapped=9	new_100=3	already_100=6	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_jackal_Video.cpp	wip=	seconds=0.8
+== done golf/jackal.lib/src/Video.cpp
+pdb=golf	source=golf/jackal.lib/src/strings.cpp	procs=10	mapped=10	new_100=2	already_100=8	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_jackal_strings.cpp	wip=	seconds=0.5
+== done golf/jackal.lib/src/strings.cpp
+pdb=golf	source=golf/jackal.lib/src/SmallSprite.cpp	procs=6	mapped=6	new_100=1	already_100=5	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_SmallSprite.cpp	wip=	seconds=0.9
+== done golf/jackal.lib/src/SmallSprite.cpp
+pdb=golf	source=golf/jackal.lib/src/filewin.cpp	procs=14	mapped=14	new_100=3	already_100=11	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_jackal_filewin.cpp	wip=	seconds=1.2
+== done golf/jackal.lib/src/filewin.cpp
+pdb=golf	source=golf/jackal.lib/src/radiobut.cpp	procs=26	mapped=26	new_100=9	already_100=17	miss=0	nosym=0	folded=0	error=0	verified=9/9	canonical=re/match/smsg_golf_jackal_radiobut.cpp	wip=	seconds=1.5
+== done golf/jackal.lib/src/radiobut.cpp
+pdb=golf	source=golf/jackal.lib/src/CheckBoxSprites.cpp	procs=9	mapped=9	new_100=2	already_100=7	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_jackal_CheckBoxSprites.cpp	wip=	seconds=0.8
+== done golf/jackal.lib/src/CheckBoxSprites.cpp
+pdb=golf	source=golf/jackal.lib/src/checkbox.cpp	procs=34	mapped=34	new_100=8	already_100=26	miss=0	nosym=0	folded=0	error=0	verified=8/8	canonical=re/match/smsg_golf_jackal_checkbox.cpp	wip=	seconds=1.2
+== done golf/jackal.lib/src/checkbox.cpp
+pdb=golf	source=golf/jackal.lib/src/DataFile.cpp	procs=2	mapped=2	new_100=1	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_DataFile.cpp	wip=	seconds=0.4
+== done golf/jackal.lib/src/DataFile.cpp
+pdb=golf	source=golf/jackal.lib/src/log.cpp	procs=10	mapped=10	new_100=1	already_100=9	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_log.cpp	wip=	seconds=0.8
+== done golf/jackal.lib/src/log.cpp
+pdb=golf	source=golf/jackal.lib/src/Dialogs.cpp	procs=28	mapped=28	new_100=1	already_100=26	miss=0	nosym=0	folded=1	error=0	verified=1/1	canonical=re/match/smsg_golf_jackal_Dialogs.cpp	wip=	seconds=0.9
+== done golf/jackal.lib/src/Dialogs.cpp
+pdb=golf	source=golf/jackal.lib/src/ImageButton.cpp	procs=5	mapped=5	new_100=3	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_jackal_ImageButton.cpp	wip=	seconds=1.0
+== done golf/jackal.lib/src/ImageButton.cpp
+pdb=golf	source=golf/jackal.lib/src/EditGroup.cpp	procs=21	mapped=21	new_100=5	already_100=16	miss=0	nosym=0	folded=0	error=0	verified=5/5	canonical=re/match/smsg_golf_jackal_EditGroup.cpp	wip=	seconds=1.0
+== done golf/jackal.lib/src/EditGroup.cpp
+pdb=golf	source=golf/jackal.lib/src/SpriteBox.cpp	procs=45	mapped=45	new_100=9	already_100=35	miss=0	nosym=0	folded=1	error=0	verified=9/9	canonical=re/match/smsg_golf_jackal_SpriteBox.cpp	wip=	seconds=1.6
+== done golf/jackal.lib/src/SpriteBox.cpp

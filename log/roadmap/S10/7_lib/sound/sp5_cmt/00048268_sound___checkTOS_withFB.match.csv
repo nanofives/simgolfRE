@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,bytes +0x0: 8b442408250000f07f3d0000f07f7401,bytes +0x0: 8b442408250000f07f3d0000f07f7401,True
+1,bytes +0x10: c38b442408c366813c247f027403d92c,bytes +0x10: c38b442408c366813c247f027403d92c,True
+2,bytes +0x20: 245ac3668b0424663d7f02741e6683e0,bytes +0x20: 245ac3668b0424663d7f02741e6683e0,True
+3,bytes +0x30: 2074159bdfe06683e020740cb8080000,bytes +0x30: 2074159bdfe06683e020740cb8080000,True
+4,bytes +0x40: 00e8????????5ac3d92c245ac383ec08,bytes +0x40: 00e8????????5ac3d92c245ac383ec08,True
+5,bytes +0x50: dd14248b44240483c408250000f07feb,bytes +0x50: dd14248b44240483c408250000f07feb,True
+6,bytes +0x60: 1483ec08dd14248b44240483c4082500,bytes +0x60: 1483ec08dd14248b44240483c4082500,True
+7,bytes +0x70: 00f07f743d3d0000f07f745f668b0424,bytes +0x70: 00f07f743d3d0000f07f745f668b0424,True
+8,bytes +0x80: 663d7f02742a6683e02075219bdfe066,bytes +0x80: 663d7f02742a6683e02075219bdfe066,True
+9,bytes +0x90: 83e0207418b80800000083fa1d7407e8,bytes +0x90: 83e0207418b80800000083fa1d7407e8,True
+10,bytes +0xa0: ????????5ac3e8????????5ac3d92c24,bytes +0xa0: ????????5ac3e8????????5ac3d92c24,True
+11,bytes +0xb0: 5ac3dd05????????d9c9d9fdddd9d9c0,bytes +0xb0: 5ac3dd05????????d9c9d9fdddd9d9c0,True
+12,bytes +0xc0: d9e1dc1d????????9bdfe09eb8040000,bytes +0xc0: d9e1dc1d????????9bdfe09eb8040000,True
+13,bytes +0xd0: 0073c7dc0d????????ebbfdd05??????,bytes +0xd0: 0073c7dc0d????????ebbfdd05??????,True
+14,bytes +0xe0: ??d9c9d9fdddd9d9c0d9e1dc1d??????,bytes +0xe0: ??d9c9d9fdddd9d9c0d9e1dc1d??????,True
+15,bytes +0xf0: ??9bdfe09eb803000000769edc0d????,bytes +0xf0: ??9bdfe09eb803000000769edc0d????,True
+16,bytes +0x100: ????eb96,bytes +0x100: ????eb96,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\common.obj (library object, no compilation)",symbol=__checkTOS_withFB,module=sound.dll
+VERDICT,GREEN,17,100.0%

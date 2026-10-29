@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpfilt.c	0x404d0	0x100404d0	613	G	lpfilt_	_lpfilt_	public	100	100.0	184/184 ins	m36c_D2_01.cpp

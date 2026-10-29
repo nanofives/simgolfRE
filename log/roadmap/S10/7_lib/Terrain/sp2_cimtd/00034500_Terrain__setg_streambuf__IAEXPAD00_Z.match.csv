@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,"mov dword ptr [eax + 0x24], ecx","mov dword ptr [eax + 0x24], ecx",True
+7,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+8,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+9,"mov dword ptr [edx + 0x28], eax","mov dword ptr [edx + 0x28], eax",True
+10,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+11,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+12,"mov dword ptr [ecx + 0x2c], edx","mov dword ptr [ecx + 0x2c], edx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"mov dword ptr [eax + 0xc], 0xffffffff","mov dword ptr [eax + 0xc], 0xffffffff",True
+15,"mov esp, ebp","mov esp, ebp",True
+16,pop ebp,pop ebp,True
+17,ret 0xc,ret 0xc,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\filebuf.obj (library object, no compilation)",symbol=?setg@streambuf@@IAEXPAD00@Z,module=Terrain.dll
+VERDICT,GREEN,18,100.0%

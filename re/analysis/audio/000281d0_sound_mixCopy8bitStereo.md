@@ -7,6 +7,7 @@ __cdecl(out,in,count,voice,mode) 8-bit to stereo interpolating renderer: same in
 System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_mmxfilters.cpp` as `?mmx_m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10028454, 0x10028482): callee pops 0 bytes of stack arguments.
 
 ## Reads

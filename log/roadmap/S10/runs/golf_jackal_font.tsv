@@ -1,0 +1,16 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/font.cpp	0x837a0	0x004837a0	10	L	$E5	_$E5	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/font.cpp	0x837b0	0x004837b0	10	L	$E2	_$E2	name	100	100.0	2/2 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/font.cpp	0x837c0	0x004837c0	12	L	$E4	_$E4	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/font.cpp	0x837d0	0x004837d0	20	L	$E3	_$E3	name	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/font.cpp	0x837f0	0x004837f0	16	G	Font::Font	??0Font@@QAE@XZ	public	100	100.0	4/4 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/font.cpp	0x83800	0x00483800	78	G	Font::CreateFace	?CreateFace@Font@@QAEHPBDHH@Z	public	100	100.0	33/33 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/font.cpp	0x83850	0x00483850	88	G	Font::init	?init@Font@@QAEHPBD0HH@Z	public	100	100.0	39/39 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/font.cpp	0x838b0	0x004838b0	50	G	Font::close	?close@Font@@QAEXXZ	public	100	100.0	19/19 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/font.cpp	0x838f0	0x004838f0	51	G	Font::MeasureTextWidth	?MeasureTextWidth@Font@@QAEHPBD@Z	public	100	100.0	27/27 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/font.cpp	0x83930	0x00483930	71	G	Font::MeasureTextWidth	?MeasureTextWidth@Font@@QAEHPBDH@Z	public	100	100.0	35/35 ins	
+golf	golf/jackal.lib/src/font.cpp	0x83980	0x00483980	318	G	Font::find_line_break_l	?find_line_break_l@Font@@QAEPADPADPAHH@Z	public	100	100.0	132/132 ins	
+golf	golf/jackal.lib/src/font.cpp	0x83ac0	0x00483ac0	76	G	SetDefaultFont	?SetDefaultFont@@YAHPAUFont@@@Z	public	100	100.0	27/27 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/font.cpp	0x83b10	0x00483b10	29	G	ReleaseDefaultFont	?ReleaseDefaultFont@@YAXXZ	public	100	100.0	7/7 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/font.cpp	0x83b30	0x00483b30	90	G	Font::`vector deleting destructor'	??_EFont@@UAEPAXI@Z	public	100	100.0	36/36 ins	
+golf	golf/jackal.lib/src/font.cpp	0x83b90	0x00483b90	11	G	Font::~Font	??1Font@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_03.cpp

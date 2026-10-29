@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/ScratchSprite.cpp	0x74a80	0x00474a80	10	L	$E9	_$E9	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/ScratchSprite.cpp	0x74a90	0x00474a90	10	L	$E5	_$E5	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/ScratchSprite.cpp	0x74aa0	0x00474aa0	12	L	$E8	_$E8	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/ScratchSprite.cpp	0x74ab0	0x00474ab0	41	L	$E6	_$E6	name	100	100.0	10/10 ins	

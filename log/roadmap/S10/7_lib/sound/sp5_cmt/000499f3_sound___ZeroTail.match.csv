@@ -1,0 +1,39 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,push esi,push esi,True
+2,push 0x20,push 0x20,True
+3,cdq ,cdq ,True
+4,pop ecx,pop ecx,True
+5,idiv ecx,idiv ecx,True
+6,push 0x1f,push 0x1f,True
+7,"mov esi, eax","mov esi, eax",True
+8,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+9,cdq ,cdq ,True
+10,idiv ecx,idiv ecx,True
+11,pop ecx,pop ecx,True
+12,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+13,"sub ecx, edx","sub ecx, edx",True
+14,"or edx, 0xffffffff","or edx, 0xffffffff",True
+15,"shl edx, cl","shl edx, cl",True
+16,not edx,not edx,True
+17,"test dword ptr [eax + esi*4], edx","test dword ptr [eax + esi*4], edx",True
+18,jne 0x45,jne 0x10049a38,True
+19,inc esi,inc esi,True
+20,"cmp esi, 3","cmp esi, 3",True
+21,jge 0x40,jge 0x10049a33,True
+22,"lea eax, [eax + esi*4]","lea eax, [eax + esi*4]",True
+23,"cmp dword ptr [eax], 0","cmp dword ptr [eax], 0",True
+24,jne 0x45,jne 0x10049a38,True
+25,inc esi,inc esi,True
+26,"add eax, 4","add eax, 4",True
+27,"cmp esi, 3","cmp esi, 3",True
+28,jl 0x32,jl 0x10049a25,True
+29,push 1,push 1,True
+30,pop eax,pop eax,True
+31,pop esi,pop esi,True
+32,ret ,ret ,True
+33,"xor eax, eax","xor eax, eax",True
+34,pop esi,pop esi,True
+35,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\intrncvt.obj (library object, no compilation)",symbol=__ZeroTail,module=sound.dll
+VERDICT,GREEN,36,100.0%

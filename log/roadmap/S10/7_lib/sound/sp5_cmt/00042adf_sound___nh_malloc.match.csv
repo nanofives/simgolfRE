@@ -1,0 +1,19 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [esp + 4], -0x20","cmp dword ptr [esp + 4], -0x20",True
+1,ja 0x29,ja 0x10042b08,True
+2,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+3,call 0x10,call 0x10042b0b,True
+4,"test eax, eax","test eax, eax",True
+5,pop ecx,pop ecx,True
+6,jne 0x2b,jne 0x10042b0a,True
+7,"cmp dword ptr [esp + 8], eax","cmp dword ptr [esp + 8], eax",True
+8,je 0x2b,je 0x10042b0a,True
+9,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+10,call 0x24,call 0x10045b80,True
+11,"test eax, eax","test eax, eax",True
+12,pop ecx,pop ecx,True
+13,jne 7,jne 0x10042ae6,True
+14,"xor eax, eax","xor eax, eax",True
+15,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\malloc.obj (library object, no compilation)",symbol=__nh_malloc,module=sound.dll
+VERDICT,GREEN,16,100.0%

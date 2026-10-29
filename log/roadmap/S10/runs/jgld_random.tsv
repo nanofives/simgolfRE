@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/random.cpp	0x74b0	0x100074b0	46	L	$E2	_$E2	name	100	100.0	20/20 ins	jgld_random.cpp
+jgld	jgl/jgld.dll/src/random.cpp	0x74f0	0x100074f0	51	L	$E1	_$E1	name	100	100.0	21/21 ins	jgld_random.cpp
+jgld	jgl/jgld.dll/src/random.cpp	0x7530	0x10007530	91	G	PRNG::get	?get@PRNG@@QAENXZ	public	100	100.0	33/33 ins	jgld_random.cpp
+jgld	jgl/jgld.dll/src/random.cpp	0x75b0	0x100075b0	81	G	PRNG::get	?get@PRNG@@QAEGH@Z	public	100	100.0	31/31 ins	jgld_random.cpp
+jgld	jgl/jgld.dll/src/random.cpp	0x7620	0x10007620	48	G	PRNG::PRNG	??0PRNG@@QAE@XZ	public	100	100.0	22/22 ins	jgld_random.cpp

@@ -1,0 +1,26 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+3,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+4,"sub ecx, 1","sub ecx, 1",True
+5,"mov dword ptr [ebp + 0xc], ecx","mov dword ptr [ebp + 0xc], ecx",True
+6,"test eax, eax","test eax, eax",True
+7,jle 0x33,jle 0x10025a43,True
+8,"mov edx, dword ptr [ebp + 0x14]","mov edx, dword ptr [ebp + 0x14]",True
+9,push edx,push edx,True
+10,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+11,push eax,push eax,True
+12,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+13,push ecx,push ecx,True
+14,call 0x24,call 0x10025990,True
+15,"add esp, 0xc","add esp, 0xc",True
+16,"mov edx, dword ptr [ebp + 0x14]","mov edx, dword ptr [ebp + 0x14]",True
+17,"cmp dword ptr [edx], -1","cmp dword ptr [edx], -1",True
+18,jne 0x31,jne 0x10025a41,True
+19,jmp 0x33,jmp 0x10025a43,True
+20,jmp 3,jmp 0x10025a13,True
+21,pop ebp,pop ebp,True
+22,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\output.obj (library object, no compilation)",symbol=_write_multi_char,module=Terrain.dll
+VERDICT,GREEN,23,100.0%

@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,push edi,push edi,True
+1,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+2,jmp 0x71,jmp 0x4abd11,True
+meta,"library=libcmt.lib member=build\intel\mt_obj\strcat.obj (library object, no compilation)",symbol=_strcpy,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

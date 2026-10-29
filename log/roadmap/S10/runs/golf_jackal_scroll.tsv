@@ -1,0 +1,27 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/scroll.cpp	0x96010	0x00496010	5	L	$E18	_$E18	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x96020	0x00496020	14	L	$E17	_$E17	name	100	100.0	4/4 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x96030	0x00496030	407	G	Scroll::Scroll	??0Scroll@@QAE@XZ	public	100	100.0	83/83 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x961d0	0x004961d0	350	G	Scroll::close	?close@Scroll@@QAEXXZ	public	100	100.0	71/71 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96330	0x00496330	859	G	Scroll::init	?init@Scroll@@QAEHHHHHPAUWidgetBase@@HH@Z	public	100	100.0	242/242 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x96690	0x00496690	59	G	Scroll::init_vert	?init_vert@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	public	100	100.0	23/23 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x966d0	0x004966d0	60	G	Scroll::init_horz	?init_horz@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	public	100	100.0	23/23 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96710	0x00496710	43	G	Scroll::init_vert_nc	?init_vert_nc@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	public	100	100.0	13/13 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96740	0x00496740	43	G	Scroll::init_horz_nc	?init_horz_nc@Scroll@@QAEHHHHPAUWidgetBase@@H@Z	public	100	100.0	13/13 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96770	0x00496770	93	G	Scroll::set_range	?set_range@Scroll@@QAEXHH@Z	public	100	100.0	24/24 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x967d0	0x004967d0	18	G	Scroll::set_bar_thickness	?set_bar_thickness@Scroll@@QAEXH@Z	public	100	100.0	4/4 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x967f0	0x004967f0	102	G	Scroll::set_pos	?set_pos@Scroll@@QAEXH@Z	public	100	100.0	27/27 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96860	0x00496860	973	G	Scroll::on_mouse_move	?on_mouse_move@Scroll@@UAEXHH@Z	public	100	100.0	288/288 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x96c30	0x00496c30	238	G	Scroll::on_left_down	?on_left_down@Scroll@@UAEXHH@Z	public	100	100.0	72/72 ins	golf_hand_07_496c30.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96d20	0x00496d20	59	G	Scroll::on_left_up	?on_left_up@Scroll@@UAEXHH@Z	public	100	100.0	16/16 ins	golf_raw_12.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96d60	0x00496d60	208	G	Scroll::on_left_click	?on_left_click@Scroll@@UAEXHH@Z	public	100	100.0	56/56 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x96e30	0x00496e30	400	G	Scroll::on_key_click	?on_key_click@Scroll@@UAEHHH@Z	public	100	100.0	115/115 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x96fc0	0x00496fc0	427	G	Scroll::on_redraw	?on_redraw@Scroll@@UAEXXZ	public	100	100.0	144/144 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x97170	0x00497170	225	G	Scroll::on_resize	?on_resize@Scroll@@UAEXHH@Z	public	100	100.0	96/96 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x97260	0x00497260	345	G	Scroll::on_button_pressed	?on_button_pressed@Scroll@@UAEHH@Z	public	100	100.0	103/103 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x973c0	0x004973c0	270	G	Scroll::on_button_clicked	?on_button_clicked@Scroll@@UAEXH@Z	public	100	100.0	74/74 ins	golf_hand_08_f.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x974d0	0x004974d0	1218	G	Scroll::compute_thumb_rect	?compute_thumb_rect@Scroll@@QAEXPAURect@@@Z	public	100	100.0	408/408 ins	
+golf	golf/jackal.lib/src/scroll.cpp	0x979a0	0x004979a0	88	G	Scroll::set_thumb_rect	?set_thumb_rect@Scroll@@QAEXXZ	public	100	100.0	20/20 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x97a00	0x00497a00	30	G	Scroll::`scalar deleting destructor'	??_GScroll@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x97a20	0x00497a20	193	G	Scroll::~Scroll	??1Scroll@@UAE@XZ	public	100	100.0	43/43 ins	golf_hand_06_e.cpp
+golf	golf/jackal.lib/src/scroll.cpp	0x97af0	0x00497af0	11	G	Scroll::`vector deleting destructor'	??_EScroll@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp

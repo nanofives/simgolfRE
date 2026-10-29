@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,"mov eax, ecx","mov eax, ecx",True
+1,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+2,"cmp dword ptr [eax + 4], 0","cmp dword ptr [eax + 4], 0",True
+3,"mov edx, dword ptr [ecx + 0x20]","mov edx, dword ptr [ecx + 0x20]",True
+4,"mov dword ptr [eax + 0x20], edx","mov dword ptr [eax + 0x20], edx",True
+5,"mov edx, dword ptr [ecx + 0x24]","mov edx, dword ptr [ecx + 0x24]",True
+6,"mov dword ptr [eax + 0x24], edx","mov dword ptr [eax + 0x24], edx",True
+7,"movsx edx, byte ptr [ecx + 0x28]","movsx edx, byte ptr [ecx + 0x28]",True
+8,"mov dword ptr [eax + 0x28], edx","mov dword ptr [eax + 0x28], edx",True
+9,"mov dl, byte ptr [ecx + 0x2c]","mov dl, byte ptr [ecx + 0x2c]",True
+10,"mov byte ptr [eax + 0x2c], dl","mov byte ptr [eax + 0x2c], dl",True
+11,"movsx edx, byte ptr [ecx + 0x30]","movsx edx, byte ptr [ecx + 0x30]",True
+12,"mov dword ptr [eax + 0x30], edx","mov dword ptr [eax + 0x30], edx",True
+13,"mov ecx, dword ptr [ecx + 8]","mov ecx, dword ptr [ecx + 8]",True
+14,"mov dword ptr [eax + 8], ecx","mov dword ptr [eax + 8], ecx",True
+15,jne 0x38,jne 0x1004204b,True
+16,"or ecx, 4","or ecx, 4",True
+17,"mov dword ptr [eax + 8], ecx","mov dword ptr [eax + 8], ecx",True
+18,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\_ios.obj (library object, no compilation)",symbol=??4ios@@IAEAAV0@ABV0@@Z,module=sound.dll
+VERDICT,GREEN,19,100.0%

@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [esp + 4], 0","cmp dword ptr [esp + 4], 0",True
+1,push esi,push esi,True
+2,je 0x28,je 0x4a9d96,True
+3,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+4,"test byte ptr [esi + 0xd], 0x10","test byte ptr [esi + 0xd], 0x10",True
+5,je 0x28,je 0x4a9d96,True
+6,push esi,push esi,True
+7,call 0x18,call 0x4a99a0,True
+8,"and byte ptr [esi + 0xd], 0xee","and byte ptr [esi + 0xd], 0xee",True
+9,"and dword ptr [esi + 0x18], 0","and dword ptr [esi + 0x18], 0",True
+10,"and dword ptr [esi], 0","and dword ptr [esi], 0",True
+11,"and dword ptr [esi + 8], 0","and dword ptr [esi + 8], 0",True
+12,pop ecx,pop ecx,True
+13,pop esi,pop esi,True
+14,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\_sftbuf.obj (library object, no compilation)",symbol=__ftbuf,module=golf_clean.exe
+VERDICT,GREEN,15,100.0%

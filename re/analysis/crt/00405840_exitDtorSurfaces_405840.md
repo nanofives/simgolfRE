@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 153 bytes, 41 instructions, subsystem `crt`. Mechanical
 atexit destructor of a group of file-scope Surface globals (0 objects, 8 arrays) (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_SpriteAssets.cpp` as `_$E46` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004058d8): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -15,7 +16,7 @@ None.
 None.
 
 ## Callees
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0040584e, 0x00405861, 0x00405874, 0x00405887, 0x0040589a, 0x004058ad, 0x004058c0, 0x004058d3
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x0040584e, 0x00405861, 0x00405874, 0x00405887, 0x0040589a, 0x004058ad, 0x004058c0, 0x004058d3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 20 bytes, 3 instructions, subsystem `render`. Mechanica
 Destroys the file-scope Surface g_surface822c98 at exit. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_GameMain.cpp` as `_$E31` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

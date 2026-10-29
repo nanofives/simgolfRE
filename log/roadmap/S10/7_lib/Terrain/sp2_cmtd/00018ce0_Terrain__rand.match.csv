@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,call 9,call 0x100219c0,True
+4,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+5,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+6,"mov ecx, dword ptr [eax + 0x14]","mov ecx, dword ptr [eax + 0x14]",True
+7,"imul ecx, ecx, 0x343fd","imul ecx, ecx, 0x343fd",True
+8,"add ecx, 0x269ec3","add ecx, 0x269ec3",True
+9,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+10,"mov dword ptr [edx + 0x14], ecx","mov dword ptr [edx + 0x14], ecx",True
+11,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+12,"mov eax, dword ptr [eax + 0x14]","mov eax, dword ptr [eax + 0x14]",True
+13,"shr eax, 0x10","shr eax, 0x10",True
+14,"and eax, 0x7fff","and eax, 0x7fff",True
+15,"mov esp, ebp","mov esp, ebp",True
+16,pop ebp,pop ebp,True
+17,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\rand.obj (library object, no compilation)",symbol=_rand,module=Terrain.dll
+VERDICT,GREEN,18,100.0%

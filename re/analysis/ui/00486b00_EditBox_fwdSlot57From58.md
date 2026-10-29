@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 21 bytes, 7 instructions, subsystem `ui`. Mechanical tr
 Passes its two arguments to the object own slot 57. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_EditBox.cpp` as `?on_scrolling@EditBox@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00486b12): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00486b04 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

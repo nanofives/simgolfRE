@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/StringUtil.cpp	0x924e0	0x004924e0	129	G	purge_leading	?purge_leading@@YAXPAD@Z	public	100	100.0	54/54 ins	golf_small12.cpp
+golf	golf/jackal.lib/src/StringUtil.cpp	0x92570	0x00492570	62	G	purge_trailing	?purge_trailing@@YAXPAD@Z	public	100	100.0	31/31 ins	golf_small6.cpp
+golf	golf/jackal.lib/src/StringUtil.cpp	0x925b0	0x004925b0	22	G	purge_spaces	?purge_spaces@@YAXPAD@Z	public	100	100.0	9/9 ins	golf_small16.cpp
+golf	golf/jackal.lib/src/StringUtil.cpp	0x925d0	0x004925d0	23	G	kill_lf	?kill_lf@@YAXPAD@Z	public	100	100.0	9/9 ins	golf_small16.cpp
+golf	golf/jackal.lib/src/StringUtil.cpp	0x925f0	0x004925f0	27	G	add_lf	?add_lf@@YAXPAD@Z	public	100	100.0	13/13 ins	golf_hand_00.cpp

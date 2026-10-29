@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,bytes +0x0: 8d42ff5bc38da424000000008d642400,bytes +0x0: 8d42ff5bc38da424000000008d642400,True
+1,bytes +0x10: 33c08a442408538bd8c1e0088b542408,bytes +0x10: 33c08a442408538bd8c1e0088b542408,True
+2,bytes +0x20: f7c20300000074138a0a4238d974d184,bytes +0x20: f7c20300000074138a0a4238d974d184,True
+3,bytes +0x30: c97451f7c20300000075ed0bd8578bc3,bytes +0x30: c97451f7c20300000075ed0bd8578bc3,True
+4,bytes +0x40: c1e310560bd88b0abffffefe7e8bc18b,bytes +0x40: c1e310560bd88b0abffffefe7e8bc18b,True
+5,bytes +0x50: f733cb03f003f983f1ff83f0ff33cf33,bytes +0x50: f733cb03f003f983f1ff83f0ff33cf33,True
+6,bytes +0x60: c683c20481e100010181751c25000101,bytes +0x60: c683c20481e100010181751c25000101,True
+7,bytes +0x70: 8174d32500010101750881e600000080,bytes +0x70: 8174d32500010101750881e600000080,True
+8,bytes +0x80: 75c45e5f5b33c0c38b42fc38d8743684,bytes +0x80: 75c45e5f5b33c0c38b42fc38d8743684,True
+9,bytes +0x90: c074ef38dc742784e474e7c1e81038d8,bytes +0x90: c074ef38dc742784e474e7c1e81038d8,True
+10,bytes +0xa0: 741584c074dc38dc740684e474d4eb96,bytes +0xa0: 741584c074dc38dc740684e474d4eb96,True
+11,bytes +0xb0: 5e5f8d42ff5bc38d42fe5e5f5bc38d42,bytes +0xb0: 5e5f8d42ff5bc38d42fe5e5f5bc38d42,True
+12,bytes +0xc0: fd5e5f5bc38d42fc5e5f5bc3,bytes +0xc0: fd5e5f5bc38d42fc5e5f5bc3,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\strchr.obj (library object, no compilation)",symbol=_$$$00001,module=Terrain.dll
+VERDICT,GREEN,13,100.0%

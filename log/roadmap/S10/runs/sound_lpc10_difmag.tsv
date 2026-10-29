@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/difmag.c	0x414f0	0x100414f0	351	G	difmag_	_difmag_	public	100	100.0	123/123 ins	m36c_D2_01.cpp

@@ -1,0 +1,15 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/filewin.cpp	0x9d290	0x0049d290	10	L	$E19	_$E19	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d2a0	0x0049d2a0	10	L	$E15	_$E15	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d2b0	0x0049d2b0	12	L	$E18	_$E18	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d2c0	0x0049d2c0	41	L	$E16	_$E16	name	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/filewin.cpp	0x9d2f0	0x0049d2f0	10	L	$E24	_$E24	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d300	0x0049d300	10	L	$E21	_$E21	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d310	0x0049d310	12	L	$E23	_$E23	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d320	0x0049d320	41	L	$E22	_$E22	name	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/filewin.cpp	0x9d350	0x0049d350	10	L	$E29	_$E29	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d360	0x0049d360	10	L	$E26	_$E26	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d370	0x0049d370	12	L	$E28	_$E28	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d380	0x0049d380	41	L	$E27	_$E27	name	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/filewin.cpp	0x9d3b0	0x0049d3b0	170	G	FileWin::init_class	?init_class@FileWin@@SAHXZ	public	100	100.0	65/65 ins	golf_small21.cpp
+golf	golf/jackal.lib/src/filewin.cpp	0x9d460	0x0049d460	29	G	FileWin::close_class	?close_class@FileWin@@SAXXZ	public	100	100.0	8/8 ins	golf_small18.cpp

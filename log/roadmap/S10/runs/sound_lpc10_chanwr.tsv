@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/chanwr.c	0x3bf30	0x1003bf30	578	G	chanwr_0_	_chanwr_0_	public	100	100.0	179/179 ins	m36c_D1_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/chanwr.c	0x3c180	0x1003c180	75	G	chanwr_	_chanwr_	public	100	100.0	34/34 ins	m36c_dbg_raw_02.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/chanwr.c	0x3c1d0	0x1003c1d0	73	G	chanrd_	_chanrd_	public	100	100.0	33/33 ins	m36c_dbg_raw_02.cpp

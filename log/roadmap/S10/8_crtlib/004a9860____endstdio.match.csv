@@ -1,0 +1,8 @@
+instruction,library_object,original,match
+0,call 5,call 0x4a99fc,True
+1,"cmp byte ptr [0], 0","cmp byte ptr [0x840aa0], 0",True
+2,je 0x13,je 0x4a9873,True
+3,jmp 0x13,jmp 0x4ac02c,True
+4,ret ,ret ,True
+meta,"library=libcmt.lib member=build\intel\mt_obj\_file.obj (library object, no compilation)",symbol=___endstdio,module=golf_clean.exe
+VERDICT,GREEN,5,100.0%

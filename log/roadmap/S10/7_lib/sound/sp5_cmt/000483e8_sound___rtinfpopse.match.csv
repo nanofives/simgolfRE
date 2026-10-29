@@ -1,0 +1,28 @@
+instruction,library_object,original,match
+0,bytes +0x0: ddd8ddd8db2d????????c68570ffffff,bytes +0x0: ddd8ddd8db2d????????c68570ffffff,True
+1,bytes +0x10: 02c3d9edd9c9d9e49bddbd60ffffff9b,bytes +0x10: 02c3d9edd9c9d9e49bddbd60ffffff9b,True
+2,bytes +0x20: f68561ffffff4175d2d9f1c3c68570ff,bytes +0x20: f68561ffffff4175d2d9f1c3c68570ff,True
+3,bytes +0x30: ffff02ddd8db2d????????c30ac97553,bytes +0x30: ffff02ddd8db2d????????c30ac97553,True
+4,bytes +0x40: c3d9eceb02d9edd9c90ac975aed9f1c3,bytes +0x40: c3d9eceb02d9edd9c90ac975aed9f1c3,True
+5,bytes +0x50: e9????????e8cf000000ddd8ddd80ac9,bytes +0x50: e9????????e8cf000000ddd8ddd80ac9,True
+6,bytes +0x60: 750ed9ee83f80175060aed7402d9e0c3,bytes +0x60: 750ed9ee83f80175060aed7402d9e0c3,True
+7,bytes +0x70: c68570ffffff02db2d????????83f801,bytes +0x70: c68570ffffff02db2d????????83f801,True
+8,bytes +0x80: 75ed0aed74e9d9e0ebe5ddd8e9??????,bytes +0x80: 75ed0aed74e9d9e0ebe5ddd8e9??????,True
+9,bytes +0x90: ??ddd8e9????????58d9e49bddbd60ff,bytes +0x90: ??ddd8e9????????58d9e49bddbd60ff,True
+10,bytes +0xa0: ffff9bf68561ffffff01750fddd8db2d,bytes +0xa0: ffff9bf68561ffffff01750fddd8db2d,True
+11,bytes +0xb0: ????????0aed7402d9e0c3c68570ffff,bytes +0xb0: ????????0aed7402d9e0c3c68570ffff,True
+12,bytes +0xc0: ff04e9????????ddd8ddd8db2d??????,bytes +0xc0: ff04e9????????ddd8ddd8db2d??????,True
+13,bytes +0xd0: ??c68570ffffff03c30ac975afddd8db,bytes +0xd0: ??c68570ffffff03c30ac975afddd8db,True
+14,bytes +0xe0: 2d????????c3d9c0d9e1db2d????????,bytes +0xe0: 2d????????c3d9c0d9e1db2d????????,True
+15,bytes +0xf0: ded99bddbd60ffffff9bf68561ffffff,bytes +0xf0: ded99bddbd60ffffff9bf68561ffffff,True
+16,bytes +0x100: 417595d9c0d9fcd9e49bddbd60ffffff,bytes +0x100: 417595d9c0d9fcd9e49bddbd60ffffff,True
+17,bytes +0x110: 9b8a9561ffffffd9c9d8e1d9e49bddbd,bytes +0x110: 9b8a9561ffffffd9c9d8e1d9e49bddbd,True
+18,bytes +0x120: 60ffffffd9e1d9f0c3d9c0d9fcd8d99b,bytes +0x120: 60ffffffd9e1d9f0c3d9c0d9fcd8d99b,True
+19,bytes +0x130: dfe09e751ad9c0dc0d????????d9c0d9,bytes +0x130: dfe09e751ad9c0dc0d????????d9c0d9,True
+20,bytes +0x140: fcded99bdfe09e740db801000000c3b8,bytes +0x140: fcded99bdfe09e740db801000000c3b8,True
+21,bytes +0x150: 00000000ebf8b802000000ebf15683ec,bytes +0x150: 00000000ebf8b802000000ebf15683ec,True
+22,bytes +0x160: 748bf45683ec08dd1c2483ec08dd1c24,bytes +0x160: 748bf45683ec08dd1c2483ec08dd1c24,True
+23,bytes +0x170: 9bdd7608e8????????83c414dd6608dd,bytes +0x170: 9bdd7608e8????????83c414dd6608dd,True
+24,bytes +0x180: 0683c4745e85c07405e9????????c3,bytes +0x180: 0683c4745e85c07405e9????????c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87tran.obj (library object, no compilation)",symbol=__rtinfpopse,module=sound.dll
+VERDICT,GREEN,25,100.0%

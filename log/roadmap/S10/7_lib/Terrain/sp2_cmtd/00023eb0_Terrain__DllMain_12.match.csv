@@ -1,0 +1,8 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, 1","mov eax, 1",True
+3,pop ebp,pop ebp,True
+4,ret 0xc,ret 0xc,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dllmain.obj (library object, no compilation)",symbol=_DllMain@12,module=Terrain.dll
+VERDICT,GREEN,5,100.0%

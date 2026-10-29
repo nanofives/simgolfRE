@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 345 bytes, 103 instructions, subsystem `ui`. Mechanical
 single-step handler of the scrollbar arrows: moves the thumb value by one in the argument's direction, notifies the owner and sleeps to hold the repeat rate at +0x594 steps a second (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_scroll.cpp` as `?on_button_pressed@Scroll@@UAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004973b6): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0049726a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

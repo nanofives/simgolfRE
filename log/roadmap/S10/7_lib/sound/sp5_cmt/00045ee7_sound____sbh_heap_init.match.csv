@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,push 0x140,push 0x140,True
+1,push 0,push 0,True
+2,push dword ptr [0],push dword ptr [0x100b5d10],True
+3,call dword ptr [0],call dword ptr [0x100b84e8],True
+4,"test eax, eax","test eax, eax",True
+5,"mov dword ptr [0], eax","mov dword ptr [0x100b5d08], eax",True
+6,jne 0x1d,jne 0x10045f04,True
+7,ret ,ret ,True
+8,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+9,"and dword ptr [0], 0","and dword ptr [0x100b5d00], 0",True
+10,"and dword ptr [0], 0","and dword ptr [0x100b5d04], 0",True
+11,push 1,push 1,True
+12,"mov dword ptr [0], eax","mov dword ptr [0x100b5cf8], eax",True
+13,"mov dword ptr [0], ecx","mov dword ptr [0x100b5d0c], ecx",True
+14,"mov dword ptr [0], 0x10","mov dword ptr [0x100b5ce0], 0x10",True
+15,pop eax,pop eax,True
+16,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\sbheap.obj (library object, no compilation)",symbol=___sbh_heap_init,module=sound.dll
+VERDICT,GREEN,17,100.0%

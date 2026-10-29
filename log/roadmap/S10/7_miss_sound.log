@@ -1,0 +1,2 @@
+== 0x1004319b __amsg_exit sp5_cmt build\intel\mt_obj\crt0.obj 53.3% [] lib 10 ins, ours 15 ins
+   replace lib[0:2] cmp dword ptr [0], 2; je 0xe  |  ours[0:7] mov eax, dword ptr [0x100b5538]; cmp eax, 1; je 0x100431b2

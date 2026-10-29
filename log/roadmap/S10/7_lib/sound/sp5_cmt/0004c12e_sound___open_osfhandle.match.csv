@@ -1,0 +1,62 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ebx,push ebx,True
+3,"xor bl, bl","xor bl, bl",True
+4,"test byte ptr [ebp + 0xc], 8","test byte ptr [ebp + 0xc], 8",True
+5,push esi,push esi,True
+6,je 0x10,je 0x1004c13e,True
+7,"add bl, 0x20","add bl, 0x20",True
+8,"test byte ptr [ebp + 0xd], 0x40","test byte ptr [ebp + 0xd], 0x40",True
+9,je 0x19,je 0x1004c147,True
+10,"or bl, 0x80","or bl, 0x80",True
+11,"test byte ptr [ebp + 0xc], 0x80","test byte ptr [ebp + 0xc], 0x80",True
+12,je 0x22,je 0x1004c150,True
+13,"or bl, 0x10","or bl, 0x10",True
+14,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+15,call dword ptr [0],call dword ptr [0x100b841c],True
+16,"test eax, eax","test eax, eax",True
+17,jne 0x3e,jne 0x1004c16c,True
+18,call dword ptr [0],call dword ptr [0x100b84d4],True
+19,push eax,push eax,True
+20,call 0x3b,call 0x1004581c,True
+21,pop ecx,pop ecx,True
+22,jmp 0x6f,jmp 0x1004c19d,True
+23,"cmp eax, 2","cmp eax, 2",True
+24,jne 0x48,jne 0x1004c176,True
+25,"or bl, 0x40","or bl, 0x40",True
+26,jmp 0x50,jmp 0x1004c17e,True
+27,"cmp eax, 3","cmp eax, 3",True
+28,jne 0x50,jne 0x1004c17e,True
+29,"or bl, 8","or bl, 8",True
+30,call 0x55,call 0x1004bece,True
+31,"mov esi, eax","mov esi, eax",True
+32,"cmp esi, -1","cmp esi, -1",True
+33,jne 0x74,jne 0x1004c1a2,True
+34,call 0x61,call 0x1004588f,True
+35,"mov dword ptr [eax], 0x18","mov dword ptr [eax], 0x18",True
+36,call 0x6c,call 0x10045898,True
+37,"and dword ptr [eax], 0","and dword ptr [eax], 0",True
+38,"or eax, 0xffffffff","or eax, 0xffffffff",True
+39,jmp 0xa3,jmp 0x1004c1d1,True
+40,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+41,push esi,push esi,True
+42,call 0x7d,call 0x1004bff1,True
+43,"mov ecx, esi","mov ecx, esi",True
+44,"mov eax, esi","mov eax, esi",True
+45,"sar ecx, 5","sar ecx, 5",True
+46,"and eax, 0x1f","and eax, 0x1f",True
+47,"or bl, 1","or bl, 1",True
+48,"mov ecx, dword ptr [ecx*4]","mov ecx, dword ptr [ecx*4 + 0x100b5ba0]",True
+49,push esi,push esi,True
+50,"lea eax, [eax + eax*8]","lea eax, [eax + eax*8]",True
+51,"mov byte ptr [ecx + eax*4 + 4], bl","mov byte ptr [ecx + eax*4 + 4], bl",True
+52,call 0x9e,call 0x1004c234,True
+53,"add esp, 0xc","add esp, 0xc",True
+54,"mov eax, esi","mov eax, esi",True
+55,pop esi,pop esi,True
+56,pop ebx,pop ebx,True
+57,pop ebp,pop ebp,True
+58,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\osfinfo.obj (library object, no compilation)",symbol=__open_osfhandle,module=sound.dll
+VERDICT,GREEN,59,100.0%

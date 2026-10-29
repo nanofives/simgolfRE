@@ -1,0 +1,41 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14af0	0x10014af0	208	G	JGLSprite::JGLSprite	??0JGLSprite@@QAE@XZ	public	100	100.0	58/58 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14c00	0x10014c00	81	G	JGLSprite::`scalar deleting destructor'	??_GJGLSprite@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14c70	0x10014c70	66	G	GSSprite::GSSprite	??0GSSprite@@QAE@XZ	public	100	100.0	27/27 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14cd0	0x10014cd0	209	G	JGLSprite::JGLSprite	??0JGLSprite@@QAE@PAPAV0@@Z	public	100	100.0	59/59 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14de0	0x10014de0	159	G	JGLSprite::~JGLSprite	??1JGLSprite@@UAE@XZ	public	100	100.0	50/50 ins	jgld_sprite_dtor.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14eb0	0x10014eb0	248	G	JGLSprite::close	?close@JGLSprite@@UAEXXZ	public	100	100.0	77/77 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x14ff0	0x10014ff0	169	G	JGLSprite::init	?init@JGLSprite@@UAEHPAXHHHHPAVJGLPalette@@@Z	public	100	100.0	70/70 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x150d0	0x100150d0	138	G	JGLSprite::change_color	?change_color@JGLSprite@@UAEHHH@Z	public	100	100.0	52/52 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x15180	0x10015180	608	G	JGLSprite::draw_254	?draw_254@JGLSprite@@UAEHPAVJGLBuffer@@HHPAVJGLPalette@@@Z	public	100	100.0	201/201 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x15480	0x10015480	681	G	JGLSprite::draw	?draw@JGLSprite@@UAEHPAVJGLBuffer@@HHPAVJGLPalette@@@Z	public	100	100.0	230/230 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x157e0	0x100157e0	780	G	JGLSprite::draw_z_outline	?draw_z_outline@JGLSprite@@UAEHPAVJGLBuffer@@HH0EHPAVJGLPalette@@@Z	public	100	100.0	258/258 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x15bb0	0x10015bb0	772	G	JGLSprite::draw_z	?draw_z@JGLSprite@@UAEHPAVJGLBuffer@@HH0EPAVJGLPalette@@@Z	public	100	100.0	254/254 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x15f80	0x10015f80	590	G	JGLSprite::draw_mono	?draw_mono@JGLSprite@@UAEHPAVJGLBuffer@@HHHPAVJGLPalette@@@Z	public	100	100.0	200/200 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x16270	0x10016270	648	G	JGLSprite::draw_dest	?draw_dest@JGLSprite@@UAEHPAVJGLBuffer@@HHPAEPAVJGLPalette@@@Z	public	100	100.0	213/213 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x165a0	0x100165a0	663	G	JGLSprite::ShadowBlit	?ShadowBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	224/224 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x168e0	0x100168e0	63	G	GSSprite::~GSSprite	??1GSSprite@@UAE@XZ	public	100	100.0	26/26 ins	jgld_sprite_dtor.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x16930	0x10016930	81	G	GSSprite::`scalar deleting destructor'	??_GGSSprite@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x169a0	0x100169a0	626	G	JGLSprite::RemappedBlit16	?RemappedBlit16@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	207/207 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x16cb0	0x10016cb0	623	G	JGLSprite::AlphaBlit8to16	?AlphaBlit8to16@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	207/207 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x16fc0	0x10016fc0	593	G	JGLSprite::SourceLutRecolorKeyBlit	?SourceLutRecolorKeyBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAE1PAVJGLPalette@@@Z	public	100	100.0	194/194 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x172b0	0x100172b0	637	G	JGLSprite::RecoloredBlit	?RecoloredBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAEPAGPAVJGLPalette@@@Z	public	100	100.0	211/211 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x175d0	0x100175d0	566	G	JGLSprite::Blit24	?Blit24@JGLSprite@@UAEHPAVJGLBuffer@@HHHHPAVJGLPalette@@@Z	public	100	100.0	182/182 ins	m36e_jgld_drawq.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x178a0	0x100178a0	528	G	JGLSprite::draw_multi_table_dest	?draw_multi_table_dest@JGLSprite@@UAEHPAVJGLBuffer@@HHPAEPAVJGLPalette@@@Z	public	100	100.0	173/173 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17b40	0x10017b40	693	G	JGLSprite::ShadowMaskBlit	?ShadowMaskBlit@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	228/228 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17eb0	0x10017eb0	47	G	JGLSprite::set_palette	?set_palette@JGLSprite@@UAEXPAVJGLPalette@@@Z	public	100	100.0	22/22 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17ef0	0x10017ef0	42	G	JGLSprite::get_palette	?get_palette@JGLSprite@@UAEPAVJGLPalette@@XZ	public	100	100.0	21/21 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17f30	0x10017f30	42	G	JGLSprite::get_seethru	?get_seethru@JGLSprite@@UAEHXZ	public	100	100.0	21/21 ins	jgld_small1.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17f70	0x10017f70	42	G	JGLSprite::get_data	?get_data@JGLSprite@@UAEPAEXZ	public	100	100.0	21/21 ins	jgld_small1.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17fb0	0x10017fb0	38	G	JGLSprite::release_data	?release_data@JGLSprite@@UAEXH@Z	public	100	100.0	19/19 ins	jgld_raw_08.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x17fe0	0x10017fe0	42	G	JGLSprite::get_color_depth	?get_color_depth@JGLSprite@@UAEHXZ	public	100	100.0	21/21 ins	jgld_small1.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x18020	0x10018020	42	G	JGLSprite::get_pitch	?get_pitch@JGLSprite@@UAEHXZ	public	100	100.0	21/21 ins	jgld_small1.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x18060	0x10018060	42	G	JGLSprite::get_width	?get_width@JGLSprite@@UAEHXZ	public	100	100.0	21/21 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x180a0	0x100180a0	42	G	JGLSprite::get_height	?get_height@JGLSprite@@UAEHXZ	public	100	100.0	21/21 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x180e0	0x100180e0	45	G	JGLSprite::IsCompressed	?IsCompressed@JGLSprite@@QAEHXZ	public	100	100.0	22/22 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x18120	0x10018120	693	G	JGLSprite::draw_16_shadows	?draw_16_shadows@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	228/228 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x18490	0x10018490	100	G	JGLSprite::DrawWithPaletteAndShadowLut	?DrawWithPaletteAndShadowLut@JGLSprite@@UAEHPAVJGLBuffer@@0HHPAGPAVJGLPalette@@@Z	public	100	100.0	42/42 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x18510	0x10018510	123	G	JGLSprite::DrawWithPaletteAndShadowLutScaled	?DrawWithPaletteAndShadowLutScaled@JGLSprite@@UAEHPAVJGLBuffer@@0HHHHHPAGPAVJGLPalette@@@Z	public	100	100.0	51/51 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x185b0	0x100185b0	695	G	JGLSprite::draw_civ3_units	?draw_civ3_units@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	229/229 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x18920	0x10018920	2182	G	JGLSprite::draw_translucent	?draw_translucent@JGLSprite@@UAEHPAVJGLBuffer@@HHMPAVJGLPalette@@D@Z	public	100	100.0	752/752 ins	jgld_blitY17.cpp
+jgld	jgl/jgld.dll/src/jglsprite.cpp	0x193d0	0x100193d0	890	G	JGLSprite::draw_sudo_trans	?draw_sudo_trans@JGLSprite@@UAEHPAVJGLBuffer@@HHHPAVJGLPalette@@@Z	public	100	100.0	300/300 ins	jgld_sprite.cpp

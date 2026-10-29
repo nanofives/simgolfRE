@@ -1,0 +1,40 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,call 6,call 0x4a51cf,True
+2,push dword ptr [0],push dword ptr [0x842170],True
+3,call 0x11,call 0x4a9054,True
+4,"mov edx, dword ptr [0]","mov edx, dword ptr [0x842170]",True
+5,pop ecx,pop ecx,True
+6,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x84216c]",True
+7,"mov esi, ecx","mov esi, ecx",True
+8,"sub esi, edx","sub esi, edx",True
+9,"add esi, 4","add esi, 4",True
+10,"cmp eax, esi","cmp eax, esi",True
+11,jae 0x66,jae 0x4a56ba,True
+12,push edx,push edx,True
+13,call 0x2f,call 0x4a9054,True
+14,"add eax, 0x10","add eax, 0x10",True
+15,push eax,push eax,True
+16,push dword ptr [0],push dword ptr [0x842170],True
+17,call 0x3e,call 0x4a6980,True
+18,"add esp, 0xc","add esp, 0xc",True
+19,"test eax, eax","test eax, eax",True
+20,jne 0x49,jne 0x4a569d,True
+21,"xor esi, esi","xor esi, esi",True
+22,jmp 0x75,jmp 0x4a56c9,True
+23,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x84216c]",True
+24,"sub ecx, dword ptr [0]","sub ecx, dword ptr [0x842170]",True
+25,"mov dword ptr [0], eax","mov dword ptr [0x842170], eax",True
+26,"sar ecx, 2","sar ecx, 2",True
+27,"lea ecx, [eax + ecx*4]","lea ecx, [eax + ecx*4]",True
+28,"mov dword ptr [0], ecx","mov dword ptr [0x84216c], ecx",True
+29,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+30,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+31,"add dword ptr [0], 4","add dword ptr [0x84216c], 4",True
+32,"mov esi, eax","mov esi, eax",True
+33,call 0x7a,call 0x4a51d8,True
+34,"mov eax, esi","mov eax, esi",True
+35,pop esi,pop esi,True
+36,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\onexit.obj (library object, no compilation)",symbol=__onexit,module=golf_clean.exe
+VERDICT,GREEN,37,100.0%

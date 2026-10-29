@@ -1,0 +1,50 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+4,jmp 0x16,jmp 0x10019d86,True
+5,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+6,"add eax, 1","add eax, 1",True
+7,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+8,"cmp dword ptr [ebp - 4], 0x30","cmp dword ptr [ebp - 4], 0x30",True
+9,jge 0x69,jge 0x10019dd9,True
+10,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+11,"cmp dword ptr [ecx*4], 0","cmp dword ptr [ecx*4 + 0x10063f34], 0",True
+12,je 0x67,je 0x10019dd7,True
+13,"cmp dword ptr [ebp - 4], 0x11","cmp dword ptr [ebp - 4], 0x11",True
+14,je 0x67,je 0x10019dd7,True
+15,"cmp dword ptr [ebp - 4], 0xd","cmp dword ptr [ebp - 4], 0xd",True
+16,je 0x67,je 0x10019dd7,True
+17,"cmp dword ptr [ebp - 4], 9","cmp dword ptr [ebp - 4], 9",True
+18,je 0x67,je 0x10019dd7,True
+19,"cmp dword ptr [ebp - 4], 1","cmp dword ptr [ebp - 4], 1",True
+20,je 0x67,je 0x10019dd7,True
+21,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+22,"mov eax, dword ptr [edx*4]","mov eax, dword ptr [edx*4 + 0x10063f34]",True
+23,push eax,push eax,True
+24,call dword ptr [0],call dword ptr [0x1011350c],True
+25,push 2,push 2,True
+26,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+27,"mov edx, dword ptr [ecx*4]","mov edx, dword ptr [ecx*4 + 0x10063f34]",True
+28,push edx,push edx,True
+29,call 0x64,call 0x100164b0,True
+30,"add esp, 8","add esp, 8",True
+31,jmp 0xd,jmp 0x10019d7d,True
+32,"mov eax, dword ptr [0x24]","mov eax, dword ptr [0x10063f58]",True
+33,push eax,push eax,True
+34,call dword ptr [0],call dword ptr [0x1011350c],True
+35,"mov ecx, dword ptr [0x34]","mov ecx, dword ptr [0x10063f68]",True
+36,push ecx,push ecx,True
+37,call dword ptr [0],call dword ptr [0x1011350c],True
+38,"mov edx, dword ptr [0x44]","mov edx, dword ptr [0x10063f78]",True
+39,push edx,push edx,True
+40,call dword ptr [0],call dword ptr [0x1011350c],True
+41,"mov eax, dword ptr [4]","mov eax, dword ptr [0x10063f38]",True
+42,push eax,push eax,True
+43,call dword ptr [0],call dword ptr [0x1011350c],True
+44,"mov esp, ebp","mov esp, ebp",True
+45,pop ebp,pop ebp,True
+46,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\mlock.obj (library object, no compilation)",symbol=__mtdeletelocks,module=Terrain.dll
+VERDICT,GREEN,47,100.0%

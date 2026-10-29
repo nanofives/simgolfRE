@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 1182 bytes, 377 instructions, subsystem `render`. Mecha
 Loads a .flc animation into the flic table. (`re/names/exe_1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_FlicBanks.cpp` as `?LoadFLCAnimation@@YAXHPBDHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043dbdd): callee pops 0 bytes of stack arguments.
 
 ## Reads

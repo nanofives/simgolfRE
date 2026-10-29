@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `audio`. Mechanical
 Destroys the effects device list g_sfxDevice at exit. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `_$E11` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

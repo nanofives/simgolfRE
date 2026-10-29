@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglbufferpng.cpp	0x145a0	0x100145a0	939	G	JGLBuffer::load_png	?load_png@JGLBuffer@@UAEHPBDPAVJGLPalette@@HH@Z	public	100	100.0	304/304 ins	m36e_jgld_loadpng.cpp
+jgld	jgl/jgld.dll/src/jglbufferpng.cpp	0x14a40	0x10014a40	53	G	jgl_malloc	_jgl_malloc	public	100	100.0	23/23 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglbufferpng.cpp	0x14a90	0x10014a90	65	G	jgl_free	_jgl_free	public	100	100.0	28/28 ins	jgld_sprite.cpp

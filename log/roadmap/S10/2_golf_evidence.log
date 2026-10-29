@@ -1,0 +1,58 @@
+pdb=golf	source=golf/golf.exe/src/Employee.cpp	procs=3	mapped=3	new_100=1	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_Employee.cpp	wip=	seconds=1.5
+== done golf/golf.exe/src/Employee.cpp
+pdb=golf	source=golf/golf.exe/src/EmployeeRender.cpp	procs=1	mapped=1	new_100=1	already_100=0	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_EmployeeRender.cpp	wip=	seconds=1.1
+== done golf/golf.exe/src/EmployeeRender.cpp
+pdb=golf	source=golf/golf.exe/src/FlicChannels.cpp	procs=24	mapped=24	new_100=6	already_100=18	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_FlicChannels.cpp	wip=	seconds=1.1
+== done golf/golf.exe/src/FlicChannels.cpp
+pdb=golf	source=golf/golf.exe/src/Globals.cpp	procs=118	mapped=114	new_100=31	already_100=83	miss=0	nosym=0	folded=4	error=0	verified=31/31	canonical=re/match/smsg_golf_Globals.cpp	wip=	seconds=2.2
+== done golf/golf.exe/src/Globals.cpp
+pdb=golf	source=golf/golf.exe/src/SpriteAssets.cpp	procs=134	mapped=134	new_100=49	already_100=85	miss=0	nosym=0	folded=0	error=0	verified=49/49	canonical=re/match/smsg_golf_SpriteAssets.cpp	wip=	seconds=5.0
+== done golf/golf.exe/src/SpriteAssets.cpp
+pdb=golf	source=golf/golf.exe/src/MainLoop.cpp	procs=5	mapped=5	new_100=4	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=4/4	canonical=re/match/smsg_golf_MainLoop.cpp	wip=	seconds=15.2
+== done golf/golf.exe/src/MainLoop.cpp
+pdb=golf	source=golf/golf.exe/src/GolferSpawn.cpp	procs=6	mapped=6	new_100=2	already_100=4	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_GolferSpawn.cpp	wip=	seconds=1.4
+== done golf/golf.exe/src/GolferSpawn.cpp
+pdb=golf	source=golf/golf.exe/src/GolferShot.cpp	procs=28	mapped=28	new_100=10	already_100=15	miss=3	nosym=0	folded=0	error=0	verified=10/10	canonical=re/match/smsg_golf_GolferShot.cpp	wip=re/match/wip/smsg_golf_GolferShot.cpp	seconds=4.7
+== done golf/golf.exe/src/GolferShot.cpp
+pdb=golf	source=golf/golf.exe/src/WildlifeUpdate.cpp	procs=8	mapped=8	new_100=4	already_100=4	miss=0	nosym=0	folded=0	error=0	verified=4/4	canonical=re/match/smsg_golf_WildlifeUpdate.cpp	wip=	seconds=1.6
+== done golf/golf.exe/src/WildlifeUpdate.cpp
+pdb=golf	source=golf/golf.exe/src/Toolbar.cpp	procs=28	mapped=28	new_100=9	already_100=17	miss=2	nosym=0	folded=0	error=0	verified=9/9	canonical=re/match/smsg_golf_Toolbar.cpp	wip=re/match/wip/smsg_golf_Toolbar.cpp	seconds=2.3
+== done golf/golf.exe/src/Toolbar.cpp
+pdb=golf	source=golf/golf.exe/src/SetupScreens.cpp	procs=27	mapped=27	new_100=9	already_100=18	miss=0	nosym=0	folded=0	error=0	verified=9/9	canonical=re/match/smsg_golf_SetupScreens.cpp	wip=	seconds=2.4
+== done golf/golf.exe/src/SetupScreens.cpp
+pdb=golf	source=golf/golf.exe/src/FlicBanks.cpp	procs=42	mapped=42	new_100=11	already_100=31	miss=0	nosym=0	folded=0	error=0	verified=11/11	canonical=re/match/smsg_golf_FlicBanks.cpp	wip=	seconds=6.3
+== done golf/golf.exe/src/FlicBanks.cpp
+pdb=golf	source=golf/golf.exe/src/TerrainView.cpp	procs=38	mapped=38	new_100=16	already_100=22	miss=0	nosym=0	folded=0	error=0	verified=16/16	canonical=re/match/smsg_golf_TerrainView.cpp	wip=	seconds=1.9
+== done golf/golf.exe/src/TerrainView.cpp
+pdb=golf	source=golf/golf.exe/src/InfoScreens.cpp	procs=96	mapped=96	new_100=17	already_100=78	miss=1	nosym=0	folded=0	error=0	verified=17/17	canonical=re/match/smsg_golf_InfoScreens.cpp	wip=re/match/wip/smsg_golf_InfoScreens.cpp	seconds=5.3
+== done golf/golf.exe/src/InfoScreens.cpp
+pdb=golf	source=golf/golf.exe/src/StringPool.cpp	procs=5	mapped=5	new_100=1	already_100=4	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_StringPool.cpp	wip=	seconds=1.1
+== done golf/golf.exe/src/StringPool.cpp
+pdb=golf	source=golf/golf.exe/src/GameMain.cpp	procs=11	mapped=11	new_100=3	already_100=8	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_GameMain.cpp	wip=	seconds=1.5
+== done golf/golf.exe/src/GameMain.cpp
+pdb=golf	source=golf/golf.exe/src/InputWait.cpp	procs=3	mapped=3	new_100=1	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_InputWait.cpp	wip=	seconds=0.9
+== done golf/golf.exe/src/InputWait.cpp
+pdb=golf	source=golf/golf.exe/src/GolferPanel.cpp	procs=8	mapped=8	new_100=4	already_100=4	miss=0	nosym=0	folded=0	error=0	verified=4/4	canonical=re/match/smsg_golf_GolferPanel.cpp	wip=	seconds=1.4
+== done golf/golf.exe/src/GolferPanel.cpp
+pdb=golf	source=golf/golf.exe/src/GolferPairing.cpp	procs=8	mapped=8	new_100=6	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_GolferPairing.cpp	wip=	seconds=2.3
+== done golf/golf.exe/src/GolferPairing.cpp
+pdb=golf	source=golf/golf.exe/src/TerrainInfluence.cpp	procs=2	mapped=2	new_100=1	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_TerrainInfluence.cpp	wip=	seconds=0.6
+== done golf/golf.exe/src/TerrainInfluence.cpp
+pdb=golf	source=golf/golf.exe/src/ShadeTable.cpp	procs=4	mapped=4	new_100=3	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_ShadeTable.cpp	wip=	seconds=1.3
+== done golf/golf.exe/src/ShadeTable.cpp
+pdb=golf	source=golf/golf.exe/src/RenderQueue.cpp	procs=9	mapped=9	new_100=6	already_100=3	miss=0	nosym=0	folded=0	error=0	verified=6/6	canonical=re/match/smsg_golf_RenderQueue.cpp	wip=	seconds=1.8
+== done golf/golf.exe/src/RenderQueue.cpp
+pdb=golf	source=golf/golf.exe/src/Screen.cpp	procs=13	mapped=13	new_100=10	already_100=3	miss=0	nosym=0	folded=0	error=0	verified=10/10	canonical=re/match/smsg_golf_Screen.cpp	wip=	seconds=1.2
+== done golf/golf.exe/src/Screen.cpp
+pdb=golf	source=golf/golf.exe/src/ThemeLoader.cpp	procs=2	mapped=2	new_100=1	already_100=1	miss=0	nosym=0	folded=0	error=0	verified=1/1	canonical=re/match/smsg_golf_ThemeLoader.cpp	wip=	seconds=1.3
+== done golf/golf.exe/src/ThemeLoader.cpp
+pdb=golf	source=golf/golf.exe/src/Golfer.cpp	procs=5	mapped=5	new_100=3	already_100=1	miss=1	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_Golfer.cpp	wip=re/match/wip/smsg_golf_Golfer.cpp	seconds=1.1
+== done golf/golf.exe/src/Golfer.cpp
+pdb=golf	source=golf/golf.exe/src/GolferDialogue.cpp	procs=4	mapped=4	new_100=2	already_100=2	miss=0	nosym=0	folded=0	error=0	verified=2/2	canonical=re/match/smsg_golf_GolferDialogue.cpp	wip=	seconds=2.9
+== done golf/golf.exe/src/GolferDialogue.cpp
+pdb=golf	source=golf/golf.exe/src/Tournament.cpp	procs=6	mapped=6	new_100=3	already_100=3	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_Tournament.cpp	wip=	seconds=1.5
+== done golf/golf.exe/src/Tournament.cpp
+pdb=golf	source=golf/golf.exe/src/ListDialog.cpp	procs=8	mapped=8	new_100=3	already_100=5	miss=0	nosym=0	folded=0	error=0	verified=3/3	canonical=re/match/smsg_golf_ListDialog.cpp	wip=	seconds=1.1
+== done golf/golf.exe/src/ListDialog.cpp
+pdb=golf	source=golf/golf.exe/src/WorldMap.cpp	procs=15	mapped=15	new_100=9	already_100=6	miss=0	nosym=0	folded=0	error=0	verified=9/9	canonical=re/match/smsg_golf_WorldMap.cpp	wip=	seconds=2.2
+== done golf/golf.exe/src/WorldMap.cpp

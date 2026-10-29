@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 0xa]","mov eax, dword ptr [esp + 0xa]",True
+1,"shr eax, 4","shr eax, 4",True
+2,"and ax, 0x7ff","and ax, 0x7ff",True
+3,"sub eax, 0x3fe","sub eax, 0x3fe",True
+4,"movsx eax, ax","movsx eax, ax",True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\util.obj (library object, no compilation)",symbol=__get_exp,module=sound.dll
+VERDICT,GREEN,6,100.0%

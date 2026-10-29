@@ -1,0 +1,35 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push esi,push esi,True
+3,"xor eax, eax","xor eax, eax",True
+4,push eax,push eax,True
+5,push eax,push eax,True
+6,push eax,push eax,True
+7,push eax,push eax,True
+8,push eax,push eax,True
+9,push eax,push eax,True
+10,push eax,push eax,True
+11,push eax,push eax,True
+12,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+13,"lea ecx, [ecx]","lea ecx, [ecx]",True
+14,"mov al, byte ptr [edx]","mov al, byte ptr [edx]",True
+15,"or al, al","or al, al",True
+16,je 0x21,je 0x4a5821,True
+17,inc edx,inc edx,True
+18,"bts dword ptr [esp], eax","bts dword ptr [esp], eax",True
+19,jmp 0x14,jmp 0x4a5814,True
+20,"mov esi, dword ptr [ebp + 8]","mov esi, dword ptr [ebp + 8]",True
+21,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+22,"or al, al","or al, al",True
+23,je 0x34,je 0x4a5834,True
+24,inc esi,inc esi,True
+25,"bt dword ptr [esp], eax","bt dword ptr [esp], eax",True
+26,jae 0x24,jae 0x4a5824,True
+27,"lea eax, [esi - 1]","lea eax, [esi - 1]",True
+28,"add esp, 0x20","add esp, 0x20",True
+29,pop esi,pop esi,True
+30,leave ,leave ,True
+31,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\strpbrk.obj (library object, no compilation)",symbol=_strpbrk,module=golf_clean.exe
+VERDICT,GREEN,32,100.0%

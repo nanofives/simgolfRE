@@ -59,12 +59,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x1007f6e0 `strlen` at 0x1008224a
 - 0x1007f760 `strcpy` at 0x100820e5, 0x1008211d, 0x100821b8, 0x100821d0
 - 0x1007f770 `strcat` at 0x10082133, 0x1008215e, 0x10082172
-- 0x10081e80 `__CrtDbgBreak` at 0x100820a3
-- 0x10082320 `_CrtMessageWindow` at 0x100822e1
-- 0x100898c0 `__itoa` at 0x100822ad
-- 0x10089bb0 `__snprintf` at 0x100821a0
-- 0x10089cb0 `__vsnprintf` at 0x100820cd
-- 0x10089db0 `FUN_10089db0` at 0x10081f98
+- 0x10081e80 `_CrtDbgBreak` at 0x100820a3
+- 0x10082320 `CrtMessageWindow` at 0x100822e1
+- 0x100898c0 `_itoa` at 0x100822ad
+- 0x10089bb0 `_snprintf` at 0x100821a0
+- 0x10089cb0 `_vsnprintf` at 0x100820cd
+- 0x10089db0 `_alloca_probe` at 0x10081f98
 - import `KERNEL32.dll!GetProcAddress` at 0x10082052
 - import `KERNEL32.dll!InterlockedDecrement` at 0x1008209d, 0x1008220b, 0x100822fa, 0x10082313
 - import `KERNEL32.dll!InterlockedIncrement` at 0x10082015
@@ -75,7 +75,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `call [0x1012b364]` at 0x100821f3
 
 ## Callers
-0x100150d0 `Sprite::remap`, 0x10015180 `Sprite::draw`, 0x10015480 `Sprite::drawB`, 0x100157e0 `Sprite::drawC`, 0x10015bb0 `Sprite::drawD`, 0x10015f80 `Sprite::drawE`, 0x10016270 `Sprite::drawF`, 0x100165a0 `Sprite::drawG`, 0x100169a0 `Sprite::drawH`, 0x10016cb0 `Sprite::drawI`, 0x10016fc0 `Sprite::drawJ`, 0x100172b0 `Sprite::drawK`, 0x100175d0 `Sprite::drawQ`, 0x100178a0 `Sprite::drawL`, 0x10017b40 `Sprite::drawM`, 0x10018120 `Sprite::drawN`, 0x100185b0 `Sprite::drawO`, 0x10018920 `Sprite::drawAlpha`, 0x100193d0 `Sprite::drawP`, 0x10058970 `Sprite::drawRle16p` (+42 more)
+0x100150d0 `Sprite::remap`, 0x10015180 `Sprite::draw`, 0x10015480 `Sprite::drawB`, 0x100157e0 `Sprite::drawC`, 0x10015bb0 `Sprite::drawD`, 0x10015f80 `Sprite::drawE`, 0x10016270 `Sprite::drawF`, 0x100165a0 `Sprite::drawG`, 0x100169a0 `Sprite::drawH`, 0x10016cb0 `Sprite::drawI`, 0x10016fc0 `Sprite::drawJ`, 0x100172b0 `Sprite::drawK`, 0x100175d0 `Sprite::drawQ`, 0x100178a0 `Sprite::drawL`, 0x10017b40 `Sprite::drawM`, 0x10018120 `Sprite::drawN`, 0x100185b0 `Sprite::drawO`, 0x10018920 `Sprite::drawAlpha`, 0x100193d0 `Sprite::drawP`, 0x10058970 `Sprite::drawRle16p` (+41 more)
 
 ## Constants
 - `0x0` at 0x10081f9e, 0x10081fb7, 0x10081fd0, 0x10081ff2, 0x10082023, 0x1008203d, 0x1008205d, 0x100820b0 (+6 more)

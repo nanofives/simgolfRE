@@ -1,0 +1,41 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"mov dl, byte ptr [0]","mov dl, byte ptr [0x4e5220]",True
+2,"mov cl, byte ptr [eax]","mov cl, byte ptr [eax]",True
+3,"test cl, cl","test cl, cl",True
+4,je 0x1c,je 0x4a759d,True
+5,"cmp cl, dl","cmp cl, dl",True
+6,je 0x1c,je 0x4a759d,True
+7,"mov cl, byte ptr [eax + 1]","mov cl, byte ptr [eax + 1]",True
+8,inc eax,inc eax,True
+9,"test cl, cl","test cl, cl",True
+10,jne 0x10,jne 0x4a7591,True
+11,"mov cl, byte ptr [eax]","mov cl, byte ptr [eax]",True
+12,inc eax,inc eax,True
+13,"test cl, cl","test cl, cl",True
+14,je 0x4d,je 0x4a75ce,True
+15,"mov cl, byte ptr [eax]","mov cl, byte ptr [eax]",True
+16,"test cl, cl","test cl, cl",True
+17,je 0x36,je 0x4a75b7,True
+18,"cmp cl, 0x65","cmp cl, 0x65",True
+19,je 0x36,je 0x4a75b7,True
+20,"cmp cl, 0x45","cmp cl, 0x45",True
+21,je 0x36,je 0x4a75b7,True
+22,inc eax,inc eax,True
+23,jmp 0x23,jmp 0x4a75a4,True
+24,"mov ecx, eax","mov ecx, eax",True
+25,dec eax,dec eax,True
+26,"cmp byte ptr [eax], 0x30","cmp byte ptr [eax], 0x30",True
+27,je 0x38,je 0x4a75b9,True
+28,"cmp byte ptr [eax], dl","cmp byte ptr [eax], dl",True
+29,jne 0x43,jne 0x4a75c4,True
+30,dec eax,dec eax,True
+31,"mov dl, byte ptr [ecx]","mov dl, byte ptr [ecx]",True
+32,inc eax,inc eax,True
+33,inc ecx,inc ecx,True
+34,"test dl, dl","test dl, dl",True
+35,"mov byte ptr [eax], dl","mov byte ptr [eax], dl",True
+36,jne 0x43,jne 0x4a75c4,True
+37,ret ,ret ,True
+meta,"library=libcmt.lib member=..\build\intel\mt_obj\cvt.obj (library object, no compilation)",symbol=__cropzeros,module=golf_clean.exe
+VERDICT,GREEN,38,100.0%

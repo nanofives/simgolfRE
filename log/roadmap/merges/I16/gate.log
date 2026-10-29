@@ -1,0 +1,11 @@
+== tests 2026-10-29T17:36:24-03:00
+........................................................................ [ 87%]
+...........................................................              [100%]
+491 passed in 269.40s (0:04:29)
+== match 2026-10-29T17:48:32-03:00
+match done
+== static 2026-10-29T17:51:16-03:00
+SKIPPED [1] tests\test_patches.py:33: got empty parameter set for (path)
+FAILED tests/test_classify.py::test_real_tracker_state - ValueError: invalid ...
+1 failed, 803 passed, 2 skipped, 46 deselected in 1285.80s (0:21:25)
+== end 2026-10-29T18:14:00-03:00

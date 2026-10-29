@@ -1,0 +1,61 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"add eax, 1","add eax, 1",True
+5,"cmp eax, 0x100","cmp eax, 0x100",True
+6,ja 0x2a,ja 0x1008982a,True
+7,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+8,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012578c]",True
+9,"xor eax, eax","xor eax, eax",True
+10,"mov ax, word ptr [edx + ecx*2]","mov ax, word ptr [edx + ecx*2]",True
+11,"and eax, dword ptr [ebp + 0xc]","and eax, dword ptr [ebp + 0xc]",True
+12,jmp 0xb3,jmp 0x100898b3,True
+13,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+14,"sar ecx, 8","sar ecx, 8",True
+15,"and ecx, 0xff","and ecx, 0xff",True
+16,"and ecx, 0xff","and ecx, 0xff",True
+17,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012578c]",True
+18,"xor eax, eax","xor eax, eax",True
+19,"mov ax, word ptr [edx + ecx*2]","mov ax, word ptr [edx + ecx*2]",True
+20,"and eax, 0x8000","and eax, 0x8000",True
+21,"test eax, eax","test eax, eax",True
+22,je 0x73,je 0x10089873,True
+23,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+24,"sar ecx, 8","sar ecx, 8",True
+25,"and ecx, 0xff","and ecx, 0xff",True
+26,"mov byte ptr [ebp - 0xc], cl","mov byte ptr [ebp - 0xc], cl",True
+27,"mov dl, byte ptr [ebp + 8]","mov dl, byte ptr [ebp + 8]",True
+28,"mov byte ptr [ebp - 0xb], dl","mov byte ptr [ebp - 0xb], dl",True
+29,"mov byte ptr [ebp - 0xa], 0","mov byte ptr [ebp - 0xa], 0",True
+30,"mov dword ptr [ebp - 8], 2","mov dword ptr [ebp - 8], 2",True
+31,jmp 0x84,jmp 0x10089884,True
+32,"mov al, byte ptr [ebp + 8]","mov al, byte ptr [ebp + 8]",True
+33,"mov byte ptr [ebp - 0xc], al","mov byte ptr [ebp - 0xc], al",True
+34,"mov byte ptr [ebp - 0xb], 0","mov byte ptr [ebp - 0xb], 0",True
+35,"mov dword ptr [ebp - 8], 1","mov dword ptr [ebp - 8], 1",True
+36,push 1,push 1,True
+37,push 0,push 0,True
+38,push 0,push 0,True
+39,"lea ecx, [ebp - 4]","lea ecx, [ebp - 4]",True
+40,push ecx,push ecx,True
+41,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+42,push edx,push edx,True
+43,"lea eax, [ebp - 0xc]","lea eax, [ebp - 0xc]",True
+44,push eax,push eax,True
+45,push 1,push 1,True
+46,call 0x9d,call 0x10091390,True
+47,"add esp, 0x1c","add esp, 0x1c",True
+48,"test eax, eax","test eax, eax",True
+49,jne 0xa8,jne 0x100898a8,True
+50,"xor eax, eax","xor eax, eax",True
+51,jmp 0xb3,jmp 0x100898b3,True
+52,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+53,"and eax, 0xffff","and eax, 0xffff",True
+54,"and eax, dword ptr [ebp + 0xc]","and eax, dword ptr [ebp + 0xc]",True
+55,"mov esp, ebp","mov esp, ebp",True
+56,pop ebp,pop ebp,True
+57,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\isctype.obj (library object, no compilation)",symbol=__isctype,module=jgld.dll
+VERDICT,GREEN,58,100.0%

@@ -1,0 +1,8 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10126a38]",True
+3,pop ebp,pop ebp,True
+4,ret ,ret ,True
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\lconv.obj (library object, no compilation)",symbol=_localeconv,module=jgld.dll
+VERDICT,GREEN,5,100.0%

@@ -1,0 +1,56 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"mov dword ptr [ebp - 0xc], ecx","mov dword ptr [ebp - 0xc], ecx",True
+4,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+5,"cmp dword ptr [eax + 0x4c], -1","cmp dword ptr [eax + 0x4c], -1",True
+6,je 0x19,je 0x10035b99,True
+7,"xor eax, eax","xor eax, eax",True
+8,jmp 0x9c,jmp 0x10035c1c,True
+9,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+10,call 0x21,call 0x10034090,True
+11,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+12,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+13,"mov dword ptr [ecx + 0x4c], edx","mov dword ptr [ecx + 0x4c], edx",True
+14,"cmp dword ptr [ebp + 8], -1","cmp dword ptr [ebp + 8], -1",True
+15,je 0x91,je 0x10035c11,True
+16,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+17,call 0x38,call 0x10034350,True
+18,"test eax, eax","test eax, eax",True
+19,jne 0x91,jne 0x10035c11,True
+20,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+21,call 0x44,call 0x100342c0,True
+22,"test eax, eax","test eax, eax",True
+23,jne 0x91,jne 0x10035c11,True
+24,push 0x34,push 0x34,True
+25,push 0,push 0x10061340,True
+26,push 2,push 2,True
+27,push 0x200,push 0x200,True
+28,call 0x5b,call 0x10037510,True
+29,"add esp, 0x10","add esp, 0x10",True
+30,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+31,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+32,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+33,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+34,jne 0x79,jne 0x10035bf9,True
+35,push 1,push 1,True
+36,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+37,call 0x77,call 0x10034880,True
+38,jmp 0x91,jmp 0x10035c11,True
+39,push 1,push 1,True
+40,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+41,"add ecx, 0x200","add ecx, 0x200",True
+42,push ecx,push ecx,True
+43,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+44,push edx,push edx,True
+45,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+46,call 0x91,call 0x10036410,True
+47,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+48,call 0x99,call 0x10034150,True
+49,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+50,"mov esp, ebp","mov esp, ebp",True
+51,pop ebp,pop ebp,True
+52,ret 4,ret 4,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\filebuf1.obj (library object, no compilation)",symbol=?attach@filebuf@@QAEPAV1@H@Z,module=Terrain.dll
+VERDICT,GREEN,53,100.0%

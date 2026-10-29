@@ -1,0 +1,2 @@
+== 0x10082870 __amsg_exit sp2_cmtd build\intel\xmt_obj\crt0.obj 66.7% [] lib 14 ins, ours 18 ins
+   replace lib[2:4] cmp dword ptr [0], 2; je 0x11  |  ours[2:8] cmp dword ptr [0x101287bc], 1; je 0x1008288e; cmp dword ptr [0x101287bc], 0

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 14 bytes, 4 instructions, subsystem `boot`. Mechanical 
 static initializer: stores GetSystemMetrics(3), the system horizontal scrollbar height, in the global dword 0x0083ff10 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_scroll.cpp` as `_$E17` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0049602d): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -1,0 +1,24 @@
+file	addr	old	new	source
+model_h3.tsv	0x004874c0	NodeList::fwdChild6	NodeList::getNdevices	10_renames.tsv
+model_h3.tsv	0x004875e0	NodeList::fwdChild15	NodeList::setRate	10_renames.tsv
+model_h3.tsv	0x00487600	NodeList::fwdChild16	NodeList::getRate	10_renames.tsv
+model_h3.tsv	0x00487660	NodeList::fwdChild27	NodeList::isDisabled	10_renames.tsv
+model_h3.tsv	0x00487800	NodeList::fwdChild30	NodeList::isEax	10_renames.tsv
+model_h3.tsv	0x00487870	NodeList::fwdChild34	NodeList::is3d	10_renames.tsv
+model_h3.tsv	0x00487b20	NodeListB::fwdChild24	NodeListB::isDisabled	10_renames.tsv
+model_h4.tsv	0x004913c0	TextView::setField14bcTriple	TextView::setSprites	10_renames.tsv
+model_h4.tsv	0x004913f0	TextView::setField14d0	TextView::setHighlightColor	10_renames.tsv
+model_h4.tsv	0x00491400	TextView::setField14d4	TextView::setSelectedColor	10_renames.tsv
+sound_6.tsv	0x1001c870	Ctrl5b638_ctor	Chooser::ctor	9_renames_sound.tsv
+sound_6.tsv	0x1001c5c0	Ctrl5b5f0_ctor	Randomizer::ctor	9_renames_sound.tsv
+sound_6.tsv	0x1002e550	Ch5c000_ctor	Ambience::ctor	9_renames_sound.tsv
+model_h3.tsv	0x00487490	NodeList::fwdChild19	NodeList::stopOutput	8_merge.md 2c
+model_h3.tsv	0x004874a0	NodeList::fwdChild20	NodeList::startOutput	8_merge.md 2c
+model_h3.tsv	0x004874b0	NodeList::fwdChild14	NodeList::serviceTick	8_merge.md 2c
+model_h3.tsv	0x004874d0	NodeList::fwdChild28	NodeList::setCooperativeLevel	8_merge.md 2c
+model_h3.tsv	0x004874f0	NodeList::fwdChild23	NodeList::caps	8_merge.md 2c
+model_h3.tsv	0x00487610	NodeList::fwdChild9	NodeList::setOutputMasterVolume	8_merge.md 2c
+model_h3.tsv	0x00487680	NodeList::fwdChild21	NodeList::openWaveStreamFile	8_merge.md 2c
+model_h3.tsv	0x004876a0	NodeList::fwdChild22	NodeList::closeStream	8_merge.md 2c
+model_h3.tsv	0x00487810	NodeList::fwdChild32	NodeList::serviceWaveDevice	8_merge.md 2c
+model_h3.tsv	0x00487890	NodeList::fwdChild35	NodeList::setListenerPosition	8_merge.md 2c

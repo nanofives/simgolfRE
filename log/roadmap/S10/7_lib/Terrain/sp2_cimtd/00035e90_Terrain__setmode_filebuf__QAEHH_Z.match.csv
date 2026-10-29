@@ -1,0 +1,42 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+4,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+5,"cmp eax, dword ptr [0]","cmp eax, dword ptr [0x100612d4]",True
+6,je 0x24,je 0x10035eb4,True
+7,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+8,"cmp ecx, dword ptr [0]","cmp ecx, dword ptr [0x100612d8]",True
+9,je 0x24,je 0x10035eb4,True
+10,"or eax, 0xffffffff","or eax, 0xffffffff",True
+11,jmp 0x6f,jmp 0x10035eff,True
+12,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+13,call 0x2c,call 0x10034090,True
+14,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+15,"cmp dword ptr [edx + 0x4c], -1","cmp dword ptr [edx + 0x4c], -1",True
+16,je 0x45,je 0x10035ed5,True
+17,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+18,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+19,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+20,call dword ptr [edx + 4],call dword ptr [edx + 4],True
+21,"cmp eax, -1","cmp eax, -1",True
+22,jne 0x4e,jne 0x10035ede,True
+23,"mov dword ptr [ebp - 4], 0xffffffff","mov dword ptr [ebp - 4], 0xffffffff",True
+24,jmp 0x64,jmp 0x10035ef4,True
+25,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+26,push eax,push eax,True
+27,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+28,"mov edx, dword ptr [ecx + 0x4c]","mov edx, dword ptr [ecx + 0x4c]",True
+29,push edx,push edx,True
+30,call 0x5e,call 0x1002db50,True
+31,"add esp, 8","add esp, 8",True
+32,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+33,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+34,call 0x6c,call 0x10034150,True
+35,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+36,"mov esp, ebp","mov esp, ebp",True
+37,pop ebp,pop ebp,True
+38,ret 4,ret 4,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\filebuf1.obj (library object, no compilation)",symbol=?setmode@filebuf@@QAEHH@Z,module=Terrain.dll
+VERDICT,GREEN,39,100.0%

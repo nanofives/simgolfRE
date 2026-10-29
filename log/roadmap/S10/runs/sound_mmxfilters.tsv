@@ -1,0 +1,13 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/mmxfilters.cpp	0x25190	0x10025190	1056	G	mmx_add_16216s2smb	?mmx_add_16216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	319/319 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x256c0	0x100256c0	1155	G	mmx_add_16216m2smb	?mmx_add_16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	346/346 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x25c80	0x10025c80	1194	G	mmx_add_8216m2smb	?mmx_add_8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	355/355 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x26260	0x10026260	1151	G	mmx_mov_16216m2smb	?mmx_mov_16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	344/344 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x26800	0x10026800	1053	G	mmx_mov_16216s2smb	?mmx_mov_16216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	318/318 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x26d30	0x10026d30	1191	G	mmx_mov_8216m2smb	?mmx_mov_8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	354/354 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x27310	0x10027310	363	G	test3_mmx_mov_16216s2smb	?test3_mmx_mov_16216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	131/131 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x274e0	0x100274e0	457	G	test4_mmx_mov_16216s2smb	?test4_mmx_mov_16216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	161/161 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x27730	0x10027730	725	G	mmx_add_8k222k16216m2smb	?mmx_add_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	236/236 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x27ad0	0x10027ad0	666	G	mmx_mov_8k222k16216m2smb	?mmx_mov_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	217/217 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x27e20	0x10027e20	748	G	mmx_a8k222k8216m2smb	?mmx_a8k222k8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	240/240 ins	
+sound	sound/sound.dll/src/mmxfilters.cpp	0x281d0	0x100281d0	691	G	mmx_m8k222k8216m2smb	?mmx_m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	221/221 ins	

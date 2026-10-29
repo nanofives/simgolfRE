@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,call 5,call 0x10044171,True
+1,"add eax, 0x58","add eax, 0x58",True
+2,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\winsig.obj (library object, no compilation)",symbol=___fpecode,module=sound.dll
+VERDICT,GREEN,3,100.0%

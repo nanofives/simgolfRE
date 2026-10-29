@@ -7,6 +7,7 @@ Reads one current sample from the buffer (data ptr at *(this+8)+0x1c): selects 8
 System writeup: `re/analysis/systems/sound_7.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `?get_cursample_channel@CWaveFile@@QAEKK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100358de, 0x1003594e): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100358c6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

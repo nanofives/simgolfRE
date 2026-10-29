@@ -1,0 +1,211 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/sound.cpp	0x2ab10	0x1002ab10	138	G	Sound::Sound	??0Sound@@QAE@XZ	public	100	100.0	45/45 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2abd0	0x1002abd0	30	G	Sound::`scalar deleting destructor'	??_GSound@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ac00	0x1002ac00	171	G	Sound::~Sound	??1Sound@@UAE@XZ	public	100	100.0	57/57 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ace0	0x1002ace0	24	G	Patch::set_fade	?set_fade@Patch@@UAE?AW4SNDERR@@K@Z	public	100	100.0	8/8 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ad10	0x1002ad10	140	G	Sound::set_type	?set_type@Sound@@UAEXW4SOUNDTYPE@@@Z	public	100	100.0	35/35 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2add0	0x1002add0	236	G	Sound::load	?load@Sound@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	106/106 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2af00	0x1002af00	99	G	Sound::attach	?attach@Sound@@SA?AW4SNDERR@@PAV1@@Z	public	100	100.0	32/32 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2af90	0x1002af90	96	G	Sound::detach	?detach@Sound@@SA?AW4SNDERR@@PAV1@@Z	public	100	100.0	35/35 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b010	0x1002b010	81	G	Sound::attach	?attach@Sound@@MAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b090	0x1002b090	92	G	Sound::detach	?detach@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	37/37 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b110	0x1002b110	8	G	Sound::load	?load@Sound@@UAE?AW4SNDERR@@PAUIAVIStream@@@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b130	0x1002b130	50	G	Sound::unload	?unload@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	21/21 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b180	0x1002b180	18	G	Sound::play	?play@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b1b0	0x1002b1b0	25	G	Sound::play	?play@Sound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b1e0	0x1002b1e0	15	G	Sound::is_playing	?is_playing@Sound@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b200	0x1002b200	18	G	Sound::stop	?stop@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b230	0x1002b230	18	G	Sound::release	?release@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b260	0x1002b260	31	G	Sound::set_volume	?set_volume@Sound@@UAEXH@Z	public	100	100.0	12/12 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b290	0x1002b290	23	G	Sound::set_loop_state	?set_loop_state@Sound@@UAEXH@Z	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b2c0	0x1002b2c0	23	G	Sound::set_delay	?set_delay@Sound@@UAEXK@Z	public	100	100.0	9/9 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b2f0	0x1002b2f0	37	G	Sound::set_fade	?set_fade@Sound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b330	0x1002b330	37	G	Sound::set_fade_in	?set_fade_in@Sound@@UAE?AW4SNDERR@@I@Z	public	100	100.0	14/14 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b370	0x1002b370	25	G	Sound::fade	?fade@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b3a0	0x1002b3a0	30	G	Sound::fade	?fade@Sound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	14/14 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b3d0	0x1002b3d0	25	G	Sound::fade_in	?fade_in@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b400	0x1002b400	30	G	Sound::ramp	?ramp@Sound@@UAEXHHI@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b430	0x1002b430	30	G	Sound::fade_in	?fade_in@Sound@@UAE?AW4SNDERR@@I@Z	public	100	100.0	14/14 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b460	0x1002b460	15	G	Sound::is_looping	?is_looping@Sound@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b480	0x1002b480	15	G	Sound::get_time	?get_time@Sound@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b4a0	0x1002b4a0	45	G	Sound::set_pan	?set_pan@Sound@@UAEXH@Z	public	100	100.0	16/16 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b4e0	0x1002b4e0	190	G	Wave::Wave	??0Wave@@QAE@XZ	public	100	100.0	59/59 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b5d0	0x1002b5d0	15	G	Wave::is_loaded	?is_loaded@Wave@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b5f0	0x1002b5f0	30	G	Wave::`scalar deleting destructor'	??_GWave@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b620	0x1002b620	273	G	Wave::~Wave	??1Wave@@UAE@XZ	public	100	100.0	90/90 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b790	0x1002b790	31	G	Wave::play	?play@Wave@@UAE?AW4SNDERR@@H@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b7c0	0x1002b7c0	93	G	Wave::play	?play@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	35/35 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b840	0x1002b840	31	G	Wave::play	?play@Wave@@UAE?AW4SNDERR@@PAH@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b870	0x1002b870	23	G	Wave::stop_instance	?stop_instance@Wave@@UAEXH@Z	public	100	100.0	8/8 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2b8a0	0x1002b8a0	23	G	Wave::fade_instance	?fade_instance@Wave@@UAEXH@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2b8d0	0x1002b8d0	293	G	Wave::init	?init@Wave@@UAEXPADK@Z	public	100	100.0	122/122 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ba50	0x1002ba50	18	G	Wave::is_hwbuffer	?is_hwbuffer@Wave@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ba80	0x1002ba80	4	G	Wave::get_ms_length	?get_ms_length@Wave@@UAEIXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2baa0	0x1002baa0	67	G	Wave::is_playing	?is_playing@Wave@@UAEHXZ	public	100	100.0	30/30 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2bb10	0x1002bb10	103	G	Wave::set_fname	?set_fname@Wave@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	46/46 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2bba0	0x1002bba0	38	G	Wave::set_link	?set_link@Wave@@UAE?AW4SNDERR@@PADPAK@Z	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2bbe0	0x1002bbe0	90	G	Wave::dyna_load	?dyna_load@Wave@@AAE?AW4SNDERR@@PAD@Z	public	100	100.0	45/45 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2bc60	0x1002bc60	210	G	Wave::load	?load@Wave@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	88/88 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2bd80	0x1002bd80	206	G	Wave::load	?load@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	86/86 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2be90	0x1002be90	51	G	Wave::load	?load@Wave@@UAE?AW4SNDERR@@PADK@Z	public	100	100.0	22/22 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2bee0	0x1002bee0	143	G	Wave::reload	?reload@Wave@@EAE?AW4SNDERR@@XZ	public	100	100.0	65/65 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2bfa0	0x1002bfa0	57	G	Wave::unload	?unload@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	24/24 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2bff0	0x1002bff0	54	G	Wave::set_pitch	?set_pitch@Wave@@UAE?AW4SNDERR@@H@Z	public	100	100.0	17/17 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c040	0x1002c040	102	G	Wave::set_attrib	?set_attrib@Wave@@UAE?AW4SNDERR@@K@Z	public	100	100.0	39/39 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c0d0	0x1002c0d0	74	G	Wave::get_attrib	?get_attrib@Wave@@UAEKXZ	public	100	100.0	33/33 ins	m36b_hand_11.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c140	0x1002c140	28	G	Wave::get_time	?get_time@Wave@@UAEKK@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c170	0x1002c170	19	G	Wave::get_current_marker	?get_current_marker@Wave@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c1a0	0x1002c1a0	15	G	Wave::get_game_hwnd	?get_game_hwnd@Wave@@UAEPAUHWND__@@XZ	public	100	100.0	7/7 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c1c0	0x1002c1c0	18	G	Wave::get_ndevices	?get_ndevices@Wave@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c1f0	0x1002c1f0	56	G	Wave::get_device_description	?get_device_description@Wave@@UAE?AW4SNDERR@@PADHH@Z	public	100	100.0	19/19 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c240	0x1002c240	22	G	Wave::select_device	?select_device@Wave@@QAE?AW4SNDERR@@H@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c270	0x1002c270	34	G	Wave::set_reverb_mix	?set_reverb_mix@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c2b0	0x1002c2b0	8	G	Wave::set_bufflimit	?set_bufflimit@Wave@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c2d0	0x1002c2d0	6	G	Wave::set_asdr	?set_asdr@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c2f0	0x1002c2f0	8	G	Wave::set_attack	?set_attack@Wave@@UAE?AW4SNDERR@@KKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c310	0x1002c310	8	G	Wave::set_sustain	?set_sustain@Wave@@UAE?AW4SNDERR@@KKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c330	0x1002c330	8	G	Wave::set_decay	?set_decay@Wave@@UAE?AW4SNDERR@@KKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c350	0x1002c350	8	G	Wave::set_release	?set_release@Wave@@UAE?AW4SNDERR@@KKK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c370	0x1002c370	13	G	Wave::set_volume	?set_volume@Wave@@UAEXH@Z	public	100	100.0	4/4 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c390	0x1002c390	41	G	Wave::set_position3d	?set_position3d@Wave@@UAE?AW4SNDERR@@MMM@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c3d0	0x1002c3d0	31	G	Wave::set_xpos	?set_xpos@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c400	0x1002c400	31	G	Wave::set_ypos	?set_ypos@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c430	0x1002c430	31	G	Wave::set_zpos	?set_zpos@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c460	0x1002c460	18	G	Wave::is_3d	?is_3d@Wave@@UAE_NXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c490	0x1002c490	214	G	MpegStream::MpegStream	??0MpegStream@@QAE@XZ	public	100	100.0	65/65 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c5b0	0x1002c5b0	30	G	MpegStream::`scalar deleting destructor'	??_GMpegStream@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c5e0	0x1002c5e0	327	G	MpegStream::~MpegStream	??1MpegStream@@UAE@XZ	public	100	100.0	110/110 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2c790	0x1002c790	51	G	MpegStream::set_next	?set_next@MpegStream@@QAE?AW4SNDERR@@I@Z	public	100	100.0	18/18 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c7e0	0x1002c7e0	242	G	MpegStream::start	?start@MpegStream@@QAE?AW4SNDERR@@I@Z	public	100	100.0	82/82 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c920	0x1002c920	105	G	MpegStream::add_to_playlist	?add_to_playlist@MpegStream@@QAE?AW4SNDERR@@PAD@Z	public	100	100.0	48/48 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c9b0	0x1002c9b0	42	G	MpegStream::clear_playlist	?clear_playlist@MpegStream@@QAE?AW4SNDERR@@XZ	public	100	100.0	18/18 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2c9f0	0x1002c9f0	165	G	SoundList::SoundList	??0SoundList@@QAE@XZ	public	100	100.0	53/53 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2cad0	0x1002cad0	30	G	SoundList::`scalar deleting destructor'	??_GSoundList@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2cb00	0x1002cb00	220	G	SoundList::~SoundList	??1SoundList@@UAE@XZ	public	100	100.0	75/75 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2cc20	0x1002cc20	81	G	SoundList::attach	?attach@SoundList@@UAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2cca0	0x1002cca0	76	G	SoundList::detach	?detach@SoundList@@UAE?AW4SNDERR@@XZ	public	100	100.0	30/30 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2cd10	0x1002cd10	6	G	SoundList::stop	?stop@SoundList@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2cd30	0x1002cd30	3	G	SoundList::scaleVolumeToGroup	?scaleVolumeToGroup@SoundList@@QAEXH@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2cd50	0x1002cd50	105	G	SoundList::add	?add@SoundList@@QAE?AW4SNDERR@@PAD@Z	public	100	100.0	48/48 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2cde0	0x1002cde0	87	G	SoundList::setListName	?setListName@SoundList@@QAE?AW4SNDERR@@PAD@Z	public	100	100.0	40/40 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ce60	0x1002ce60	49	G	SoundList::clear	?clear@SoundList@@QAE?AW4SNDERR@@XZ	public	100	100.0	21/21 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ceb0	0x1002ceb0	31	G	KeyMapWave::KeyMapWave	??0KeyMapWave@@QAE@XZ	public	100	100.0	12/12 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2cee0	0x1002cee0	79	G	KeyMap::KeyMap	??0KeyMap@@QAE@XZ	public	100	100.0	20/20 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2cf50	0x1002cf50	138	G	KeyMap::`scalar deleting destructor'	??_GKeyMap@@UAEPAXI@Z	public	100	100.0	52/52 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d010	0x1002d010	118	G	KeyMap::~KeyMap	??1KeyMap@@UAE@XZ	public	100	100.0	46/46 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d0b0	0x1002d0b0	50	G	KeyMap::unmap_range	?unmap_range@KeyMap@@QAEKPAVKeyMapWave@@@Z	public	100	100.0	23/23 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d100	0x1002d100	253	G	KeyMap::map_range	?map_range@KeyMap@@QAEXPAVKeyMapWave@@@Z	public	100	100.0	96/96 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d240	0x1002d240	93	G	KeyMap::set_name	?set_name@KeyMap@@QAEXPBD@Z	public	100	100.0	39/39 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d2c0	0x1002d2c0	287	G	KeyMap::set_base_path	?set_base_path@KeyMap@@QAEXPBD@Z	public	100	100.0	106/106 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d430	0x1002d430	7	G	KeyMap::get_name	?get_name@KeyMap@@QAEPBDXZ	public	100	100.0	2/2 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d450	0x1002d450	166	G	Midi::Midi	??0Midi@@QAE@XZ	public	100	100.0	54/54 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d530	0x1002d530	30	G	Midi::`scalar deleting destructor'	??_GMidi@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d560	0x1002d560	226	G	Midi::~Midi	??1Midi@@UAE@XZ	public	100	100.0	74/74 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d690	0x1002d690	18	G	Midi::play	?play@Midi@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d6c0	0x1002d6c0	13	G	Midi::set_volume	?set_volume@Midi@@UAEXH@Z	public	100	100.0	4/4 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d6e0	0x1002d6e0	23	G	Midi::set_frame	?set_frame@Midi@@UAEXI@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d710	0x1002d710	30	G	Midi::set_frame_delay	?set_frame_delay@Midi@@QAEXI@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d740	0x1002d740	18	G	Midi::get_frame	?get_frame@Midi@@UAEIXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d770	0x1002d770	23	G	Midi::switch_state	?switch_state@Midi@@UAEX_N@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d7a0	0x1002d7a0	31	G	Midi::set_switch_type	?set_switch_type@Midi@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d7d0	0x1002d7d0	36	G	Midi::add_switch_range	?add_switch_range@Midi@@UAE?AW4SNDERR@@KK@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d810	0x1002d810	31	G	Midi::set_nswitch_threads	?set_nswitch_threads@Midi@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d840	0x1002d840	41	G	Midi::map_patch	?map_patch@Midi@@UAE?AW4SNDERR@@PADKK@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d880	0x1002d880	36	G	Midi::map_patch	?map_patch@Midi@@UAE?AW4SNDERR@@PADK@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d8c0	0x1002d8c0	23	G	Midi::set_base_path	?set_base_path@Midi@@UAEXPBD@Z	public	100	100.0	8/8 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d8f0	0x1002d8f0	31	G	Midi::clear_patch	?clear_patch@Midi@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d920	0x1002d920	21	G	Midi::reset	?reset@Midi@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2d950	0x1002d950	36	G	Midi::set_track	?set_track@Midi@@UAE?AW4SNDERR@@PAEK@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d990	0x1002d990	31	G	Midi::mute_track	?mute_track@Midi@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d9c0	0x1002d9c0	31	G	Midi::unmute_track	?unmute_track@Midi@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2d9f0	0x1002d9f0	36	G	Midi::set_active_tracks	?set_active_tracks@Midi@@UAE?AW4SNDERR@@KK@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2da30	0x1002da30	31	G	Midi::set_active_tracks	?set_active_tracks@Midi@@UAE?AW4SNDERR@@I@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2da60	0x1002da60	31	G	Midi::play_trackset	?play_trackset@Midi@@UAE?AW4SNDERR@@I@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2da90	0x1002da90	36	G	Midi::xpose_trackset	?xpose_trackset@Midi@@UAE?AW4SNDERR@@IH@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dad0	0x1002dad0	31	G	Midi::stop_trackset	?stop_trackset@Midi@@UAE?AW4SNDERR@@I@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2db00	0x1002db00	28	G	Midi::is_trackset_playing	?is_trackset_playing@Midi@@UAE_NI@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2db30	0x1002db30	31	G	Midi::add_active_trackset	?add_active_trackset@Midi@@UAE?AW4SNDERR@@PAVTrackSet@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2db60	0x1002db60	36	G	Midi::set_active_range_lo	?set_active_range_lo@Midi@@UAE?AW4SNDERR@@II@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dba0	0x1002dba0	36	G	Midi::set_active_range_hi	?set_active_range_hi@Midi@@UAE?AW4SNDERR@@II@Z	public	100	100.0	12/12 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2dbe0	0x1002dbe0	31	G	Midi::remove_active_trackset	?remove_active_trackset@Midi@@UAE?AW4SNDERR@@I@Z	public	100	100.0	10/10 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2dc10	0x1002dc10	28	G	Midi::get_trackset	?get_trackset@Midi@@UAEPAVTrackSet@@I@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dc40	0x1002dc40	18	G	Midi::get_ntracks	?get_ntracks@Midi@@UAEKXZ	public	100	100.0	7/7 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2dc70	0x1002dc70	31	G	Midi::load_patch	?load_patch@Midi@@UAE?AW4SNDERR@@I@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dca0	0x1002dca0	31	G	Midi::unload_patch	?unload_patch@Midi@@UAE?AW4SNDERR@@I@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dcd0	0x1002dcd0	36	G	Midi::set_patch	?set_patch@Midi@@UAE?AW4SNDERR@@II@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dd10	0x1002dd10	116	G	Midi::init	?init@Midi@@UAEXPBDK@Z	public	100	100.0	48/48 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ddb0	0x1002ddb0	39	G	Midi::set_load_type	?set_load_type@Midi@@QAE?AW4SNDERR@@_N@Z	public	100	100.0	16/16 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ddf0	0x1002ddf0	110	G	Midi::set_fname	?set_fname@Midi@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	47/47 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2de80	0x1002de80	31	G	Midi::set_tempo	?set_tempo@Midi@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2deb0	0x1002deb0	90	G	Midi::load	?load@Midi@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	39/39 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2df30	0x1002df30	37	G	Midi::load	?load@Midi@@UAE?AW4SNDERR@@PBDI@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2df70	0x1002df70	92	G	Midi::load	?load@Midi@@UAE?AW4SNDERR@@XZ	public	100	100.0	43/43 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2dff0	0x1002dff0	79	G	Midi::unload	?unload@Midi@@UAE?AW4SNDERR@@XZ	public	100	100.0	32/32 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e060	0x1002e060	28	G	Midi::get_time	?get_time@Midi@@UAEKK@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e090	0x1002e090	18	G	Midi::get_control_track	?get_control_track@Midi@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e0c0	0x1002e0c0	28	G	Midi::get_total_track_ticks	?get_total_track_ticks@Midi@@UAEKK@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e0f0	0x1002e0f0	41	G	Midi::set_control	?set_control@Midi@@UAE?AW4SNDERR@@PAXHH@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e130	0x1002e130	33	G	Midi::get_control_target	?get_control_target@Midi@@UAEPAXHH@Z	public	100	100.0	12/12 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e170	0x1002e170	36	G	Midi::set_track_loop_state	?set_track_loop_state@Midi@@UAE?AW4SNDERR@@I_N@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e1b0	0x1002e1b0	28	G	Midi::get_track_loop_state	?get_track_loop_state@Midi@@UAE_NI@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e1e0	0x1002e1e0	36	G	Midi::get_track_velocity_offset	?get_track_velocity_offset@Midi@@UAE?AW4SNDERR@@IPAH@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e220	0x1002e220	36	G	Midi::set_track_velocity_offset	?set_track_velocity_offset@Midi@@UAE?AW4SNDERR@@IH@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e260	0x1002e260	31	G	Midi::add_keymap	?add_keymap@Midi@@UAE?AW4SNDERR@@PAVKeyMap@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e290	0x1002e290	23	G	Midi::set_play_type	?set_play_type@Midi@@UAEXI@Z	public	100	100.0	8/8 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e2c0	0x1002e2c0	18	G	Midi::get_key	?get_key@Midi@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e2f0	0x1002e2f0	160	G	Midi::get_tonal_center	?get_tonal_center@Midi@@QAEHXZ	public	100	100.0	32/32 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e3c0	0x1002e3c0	25	G	GlblMidiSet::GlblMidiSet	??0GlblMidiSet@@QAE@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e3f0	0x1002e3f0	35	G	TrackSet::TrackSet	??0TrackSet@@QAE@XZ	public	100	100.0	12/12 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e430	0x1002e430	20	G	TrackSet::set_lo	?set_lo@TrackSet@@QAEXI@Z	public	100	100.0	7/7 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e460	0x1002e460	20	G	TrackSet::set_hi	?set_hi@TrackSet@@QAEXI@Z	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e490	0x1002e490	31	G	Sound::unloadall	?unloadall@Sound@@SA?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e4c0	0x1002e4c0	42	G	Patch::Patch	??0Patch@@QAE@XZ	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e500	0x1002e500	32	G	Patch::`scalar deleting destructor'	??_GPatch@@UAEPAXI@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e530	0x1002e530	7	G	Patch::~Patch	??1Patch@@UAE@XZ	public	100	100.0	2/2 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e550	0x1002e550	176	G	Ambience::Ambience	??0Ambience@@QAE@XZ	public	100	100.0	57/57 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e630	0x1002e630	30	G	Ambience::`scalar deleting destructor'	??_GAmbience@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e660	0x1002e660	226	G	Ambience::~Ambience	??1Ambience@@UAE@XZ	public	100	100.0	74/74 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e790	0x1002e790	24	G	Ambience::load	?load@Ambience@@UAE?AW4SNDERR@@PBDI@Z	public	100	100.0	8/8 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e7c0	0x1002e7c0	240	G	Ambience::load	?load@Ambience@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	96/96 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2e8f0	0x1002e8f0	44	G	Ambience::unload	?unload@Ambience@@UAE?AW4SNDERR@@XZ	public	100	100.0	17/17 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2e930	0x1002e930	153	G	AviSound::AviSound	??0AviSound@@QAE@XZ	public	100	100.0	49/49 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ea00	0x1002ea00	30	G	AviSound::`scalar deleting destructor'	??_GAviSound@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ea30	0x1002ea30	201	G	AviSound::~AviSound	??1AviSound@@UAE@XZ	public	100	100.0	66/66 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2eb40	0x1002eb40	105	G	AviSound::init	?init@AviSound@@UAE?AW4SNDERR@@PAUAVIStreamHeader@@0PAUtWAVEFORMATEX@@K@Z	public	100	100.0	45/45 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ebd0	0x1002ebd0	59	G	AviSound::release	?release@AviSound@@UAE?AW4SNDERR@@XZ	public	100	100.0	23/23 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ec20	0x1002ec20	25	G	AviSound::start	?start@AviSound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	9/9 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ec50	0x1002ec50	15	G	AviSound::stop	?stop@AviSound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ec70	0x1002ec70	28	G	AviSound::get_frame	?get_frame@AviSound@@UAEPAU_MMIOINFO@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2eca0	0x1002eca0	31	G	AviSound::return_frame	?return_frame@AviSound@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ecd0	0x1002ecd0	19	G	AviSound::get_cur_frame	?get_cur_frame@AviSound@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ed00	0x1002ed00	18	G	AviSound::get_frame_size	?get_frame_size@AviSound@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ed30	0x1002ed30	3	G	AviSound::get_time	?get_time@AviSound@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2ed50	0x1002ed50	240	G	VoiceRx::VoiceRx	??0VoiceRx@@QAE@XZ	public	100	100.0	75/75 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ee80	0x1002ee80	3	G	VoiceRx::get_game_hwnd	?get_game_hwnd@VoiceRx@@UAEPAUHWND__@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2eea0	0x1002eea0	8	G	VoiceRx::set_attrib	?set_attrib@VoiceRx@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2eec0	0x1002eec0	3	G	VoiceRx::get_attrib	?get_attrib@VoiceRx@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2eee0	0x1002eee0	18	G	VoiceRx::get_nbuffers	?get_nbuffers@VoiceRx@@UAEKXZ	public	100	100.0	7/7 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ef10	0x1002ef10	30	G	VoiceRx::`scalar deleting destructor'	??_GVoiceRx@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2ef40	0x1002ef40	220	G	VoiceRx::~VoiceRx	??1VoiceRx@@UAE@XZ	public	100	100.0	73/73 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f060	0x1002f060	100	G	VoiceRx::init	?init@VoiceRx@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z	public	100	100.0	43/43 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f0f0	0x1002f0f0	59	G	VoiceRx::release	?release@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	23/23 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f140	0x1002f140	18	G	VoiceRx::start	?start@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f170	0x1002f170	15	G	VoiceRx::stop	?stop@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f190	0x1002f190	18	G	VoiceRx::unload	?unload@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f1c0	0x1002f1c0	31	G	VoiceRx::add_buffer	?add_buffer@VoiceRx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f1f0	0x1002f1f0	18	G	VoiceRx::get_buffer_size	?get_buffer_size@VoiceRx@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f220	0x1002f220	245	G	VoiceTx::VoiceTx	??0VoiceTx@@QAE@XZ	public	100	100.0	77/77 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f360	0x1002f360	3	G	VoiceTx::get_game_hwnd	?get_game_hwnd@VoiceTx@@UAEPAUHWND__@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f380	0x1002f380	8	G	VoiceTx::set_attrib	?set_attrib@VoiceTx@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f3a0	0x1002f3a0	3	G	VoiceTx::get_attrib	?get_attrib@VoiceTx@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f3c0	0x1002f3c0	30	G	VoiceTx::`scalar deleting destructor'	??_GVoiceTx@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f3f0	0x1002f3f0	223	G	VoiceTx::~VoiceTx	??1VoiceTx@@UAE@XZ	public	100	100.0	73/73 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f510	0x1002f510	15	G	VoiceTx::release	?release@VoiceTx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f530	0x1002f530	40	G	VoiceTx::start	?start@VoiceTx@@UAE?AW4SNDERR@@XZ	public	100	100.0	17/17 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f570	0x1002f570	21	G	VoiceTx::stop	?stop@VoiceTx@@UAE?AW4SNDERR@@XZ	public	100	100.0	9/9 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f5a0	0x1002f5a0	38	G	VoiceTx::unload	?unload@VoiceTx@@UAE?AW4SNDERR@@XZ	public	100	100.0	15/15 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f5e0	0x1002f5e0	117	G	VoiceTx::init	?init@VoiceTx@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z	public	100	100.0	50/50 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f680	0x1002f680	18	G	VoiceTx::get_nbuffers	?get_nbuffers@VoiceTx@@UAEKXZ	public	100	100.0	7/7 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/sound.cpp	0x2f6b0	0x1002f6b0	18	G	VoiceTx::get_next_buffer	?get_next_buffer@VoiceTx@@UAEPAU_MMIOINFO@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f6e0	0x1002f6e0	31	G	VoiceTx::return_buffer	?return_buffer@VoiceTx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sound.cpp	0x2f710	0x1002f710	21	G	do_message	?do_message@@YAXPBD0@Z	public	100	100.0	8/8 ins	

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 14 bytes, 5 instructions, subsystem `ui`. Mechanical tr
 returns 1 when the global pointer at 0x0083b8ec is NULL, otherwise 0 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?on_modal@BasePop@@UAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00490d5d): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -7,6 +7,7 @@ Advances one playing voice/stream by the elapsed tick using fixed-point/float ti
 System writeup: `re/analysis/systems/sound_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_midimgr.cpp` as `?update_tracks@CMidiMgr@@QAE?AW4SNDERR@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001f95a, 0x1001fb96, 0x1001fc79, 0x1001fd28, 0x1001fdf7): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001f8d1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

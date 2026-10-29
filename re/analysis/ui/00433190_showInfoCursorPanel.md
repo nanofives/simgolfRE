@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 2692 bytes, 885 instructions, subsystem `ui`. Mechanica
 Draws the Info Cursor / shot-lie and improvements panel and loads the theme description text. (`re/names/exe_1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_Toolbar.cpp` as `?RenderTerrainToolbar@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004331bf, 0x00433af2, 0x00433b27, 0x00433b5c, 0x00433b91, 0x00433bc6, 0x00433bfb, 0x00433c13): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -7,6 +7,7 @@ fastcall(channel): walks the voice-stream list at channel+0x1390 (next pointer +
 System writeup: `re/analysis/systems/sound_4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `?clear_mpeg_frames@CWaveFile@@QAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1003406a, 0x1003406f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10033f92 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

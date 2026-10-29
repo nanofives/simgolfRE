@@ -1,0 +1,24 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88500	0x00488500	289	G	BaseButton::BaseButton	??0BaseButton@@QAE@XZ	public	100	100.0	59/59 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88630	0x00488630	30	G	BaseButton::`scalar deleting destructor'	??_GBaseButton@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88650	0x00488650	121	G	BaseButton::~BaseButton	??1BaseButton@@UAE@XZ	public	100	100.0	27/27 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x886d0	0x004886d0	238	G	BaseButton::close	?close@BaseButton@@UAEXXZ	public	100	100.0	52/52 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x887c0	0x004887c0	355	G	BaseButton::init	?init@BaseButton@@QAEHPADHHHHHPAUWidgetBase@@H@Z	public	100	100.0	129/129 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88930	0x00488930	61	G	BaseButton::set_text_color	?set_text_color@BaseButton@@QAEXHHHH@Z	public	100	100.0	21/21 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88970	0x00488970	61	G	BaseButton::set_text_color2	?set_text_color2@BaseButton@@QAEXHHHH@Z	public	100	100.0	21/21 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x889b0	0x004889b0	61	G	BaseButton::set_text_color3	?set_text_color3@BaseButton@@QAEXHHHH@Z	public	100	100.0	21/21 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x889f0	0x004889f0	48	G	SetButtonDefaults	?SetButtonDefaults@@YAHPAUFont@@00@Z	public	100	100.0	15/15 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88a20	0x00488a20	137	G	BaseButton::set_bubble_text	?set_bubble_text@BaseButton@@QAEHPBD@Z	public	100	100.0	54/54 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88ab0	0x00488ab0	320	G	BaseButton::on_left_down	?on_left_down@BaseButton@@UAEXHH@Z	public	100	100.0	89/89 ins	
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88bf0	0x00488bf0	179	G	BaseButton::on_left_up	?on_left_up@BaseButton@@UAEXHH@Z	public	100	100.0	46/46 ins	
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88cb0	0x00488cb0	5	G	BaseButton::on_key_click	?on_key_click@BaseButton@@UAEHHH@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88cc0	0x00488cc0	45	G	BaseButton::on_mouse_leave	?on_mouse_leave@BaseButton@@UAEXHH@Z	public	100	100.0	15/15 ins	
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88cf0	0x00488cf0	408	G	BaseButton::on_mouse_move	?on_mouse_move@BaseButton@@UAEXHH@Z	public	100	100.0	130/130 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88e90	0x00488e90	20	G	BaseButton::on_right_click	?on_right_click@BaseButton@@UAEXHH@Z	public	100	100.0	6/6 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88eb0	0x00488eb0	228	G	BaseButton::on_left_click	?on_left_click@BaseButton@@UAEXHH@Z	public	100	100.0	63/63 ins	m36d_hand_03.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88fa0	0x00488fa0	11	G	BaseButton::on_dialog_focus	?on_dialog_focus@BaseButton@@UAEXH@Z	public	100	100.0	3/3 ins	
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88fb0	0x00488fb0	19	G	BaseButton::timer_callback_daemon	?timer_callback_daemon@BaseButton@@SAXHPAX@Z	public	100	100.0	7/7 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x88fd0	0x00488fd0	264	G	BaseButton::timer_callback	?timer_callback@BaseButton@@QAEXH@Z	public	100	100.0	85/85 ins	golf_hand_08_d.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x890e0	0x004890e0	61	G	BaseButton::set	?set@BaseButton@@QAEXH@Z	public	100	100.0	20/20 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x89120	0x00489120	25	G	BaseButton::hide	?hide@BaseButton@@UAEXXZ	public	100	100.0	5/5 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/BaseButton.cpp	0x89140	0x00489140	11	G	BaseButton::`vector deleting destructor'	??_EBaseButton@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp

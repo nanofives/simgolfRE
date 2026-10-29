@@ -1,0 +1,4 @@
+instruction,library_object,original,match
+0,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\fpinit.obj (library object, no compilation)",symbol=__fpclear,module=golf_clean.exe
+VERDICT,GREEN,1,100.0%

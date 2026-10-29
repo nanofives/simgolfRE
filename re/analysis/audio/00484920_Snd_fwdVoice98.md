@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 31 bytes, 10 instructions, subsystem `audio`. Mechanica
 Forwards its argument to voice slot +0x98, returning 0x14 when there is no voice. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?play@Wave@@UAE?AW4SNDERR@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00484934, 0x0048493c): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00484920 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

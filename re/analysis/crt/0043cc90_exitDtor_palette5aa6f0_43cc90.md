@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `crt`. Mechanical t
 atexit destructor of the file-scope global g_palette5aa6f0 0x005aa6f0 (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_FlicBanks.cpp` as `_$E17` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

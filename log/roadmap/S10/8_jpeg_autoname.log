@@ -1,0 +1,33 @@
+== golf_jpeg_datadst
+// MATCH: golf_clean.exe 0x004ae510 _init_destination
+// MATCH: golf_clean.exe 0x004ae540 _empty_output_buffer
+== golf_jpeg_error
+// MATCH: golf_clean.exe 0x004aed20 _emit_message
+// MATCH: golf_clean.exe 0x004aed60 _format_message
+// MATCH: golf_clean.exe 0x004aee10 _reset_error_mgr
+== golf_jpeg_cmarker
+// MATCH: golf_clean.exe 0x004b0300 _write_file_trailer
+== golf_jpeg_chuff
+// MATCH: golf_clean.exe 0x004b1c20 _finish_pass_huff
+== golf_jpeg_cdctmgr
+// MATCH: golf_clean.exe 0x004b3550 _start_pass_fdctmgr
+// MATCH: golf_clean.exe 0x004b3720 _forward_DCT
+// MATCH: golf_clean.exe 0x004b38c0 _forward_DCT_float
+== golf_jpeg_cprepct
+// MATCH: golf_clean.exe 0x004b3b30 _start_pass_prep
+== golf_jpeg_csample
+// MATCH: golf_clean.exe 0x004b41d0 _sep_downsample
+// MATCH: golf_clean.exe 0x004b4260 _int_downsample
+// MATCH: golf_clean.exe 0x004b4440 _h2v1_downsample
+// MATCH: golf_clean.exe 0x004b44f0 _h2v2_downsample
+// MATCH: golf_clean.exe 0x004b45d0 _h2v2_smooth_downsample
+// MATCH: golf_clean.exe 0x004b48c0 _fullsize_smooth_downsample
+== golf_jpeg_ccolor
+#  0x004b4ca0 best 98.2% _rgb_ycc_start
+// MATCH: golf_clean.exe 0x004b4d80 _rgb_ycc_convert
+// MATCH: golf_clean.exe 0x004b4f60 _cmyk_ycck_convert
+// MATCH: golf_clean.exe 0x004b5140 _null_convert
+== fdct
+#  0x004b5d50 best 22.6% _jpeg_fdct_islow
+// MATCH: golf_clean.exe 0x004b6110 _jpeg_fdct_ifast
+// MATCH: golf_clean.exe 0x004b6360 _jpeg_fdct_float

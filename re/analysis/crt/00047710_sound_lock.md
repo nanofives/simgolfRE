@@ -33,7 +33,7 @@ Through registers:
 - import `KERNEL32.dll!InitializeCriticalSection` at 0x1004774d
 
 ## Callers
-0x10042b0b `heap_alloc`, 0x10042c07 `free`, 0x1004352d `_flsall`, 0x1004368d `FID_conflict:__lock_file`, 0x100436bc `FID_conflict:__lock_file2`, 0x10043731 `~type_info`, 0x10045226 `FID_conflict:__lockexit`, 0x10045252 `crtRealloc`, 0x10045581 `msize`, 0x100458a1 `calloc`, 0x10047710 `__lock`, 0x1004947a `FUN_1004947a`, 0x100498b9 `_tolower`, 0x1004a2a6 `_wctomb`, 0x1004aa3f `__setmbcp`, 0x1004bece `__alloc_osfhnd`, 0x1004c1d5 `__lock_fhandle`, 0x1004c2d3 `_signal`, 0x1004c455 `FUN_1004c455`, 0x1004c4b7 `_raise` (+8 more)
+0x10042b0b `heap_alloc`, 0x10042c07 `free`, 0x1004352d `_flsall`, 0x1004368d `__lock_file`, 0x100436bc `__lock_file2`, 0x10043731 `type_info::dtor`, 0x10045226 `_lockexit`, 0x10045252 `crtRealloc`, 0x10045581 `msize`, 0x100458a1 `calloc`, 0x10047710 `__lock`, 0x1004947a `__fcloseall`, 0x100498b9 `_tolower`, 0x1004a2a6 `_wctomb`, 0x1004aa3f `__setmbcp`, 0x1004bece `__alloc_osfhnd`, 0x1004c1d5 `__lock_fhandle`, 0x1004c2d3 `_signal`, 0x1004c455 `_ctrlevent_capture`, 0x1004c4b7 `_raise` (+8 more)
 
 ## Constants
 - `0x0` at 0x10047717, 0x10047746

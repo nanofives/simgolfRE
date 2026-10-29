@@ -1,0 +1,11 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb01e0	0x004b01e0	1	L	start_pass_downsample	_start_pass_downsample	name	100	100.0	1/1 ins	golf_jpeg_ccolor.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb4040	0x004b4040	387	G	jinit_downsampler	_jinit_downsampler	public	100	100.0	121/121 ins	golf_jpeg_csample.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb41d0	0x004b41d0	134	L	sep_downsample	_sep_downsample	name	100	100.0	50/50 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb4260	0x004b4260	300	L	int_downsample	_int_downsample	name	100	100.0	106/106 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb4390	0x004b4390	92	L	expand_right_edge	_expand_right_edge	name	100	100.0	40/40 ins	golf_jpeg_csample.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb43f0	0x004b43f0	70	L	fullsize_downsample	_fullsize_downsample	name	100	100.0	28/28 ins	golf_jpeg_csample.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb4440	0x004b4440	167	L	h2v1_downsample	_h2v1_downsample	name	100	100.0	66/66 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb44f0	0x004b44f0	218	L	h2v2_downsample	_h2v2_downsample	name	100	100.0	79/79 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb45d0	0x004b45d0	745	L	h2v2_smooth_downsample	_h2v2_smooth_downsample	name	100	100.0	261/261 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcsample.c	0xb48c0	0x004b48c0	415	L	fullsize_smooth_downsample	_fullsize_smooth_downsample	name	100	100.0	145/145 ins	

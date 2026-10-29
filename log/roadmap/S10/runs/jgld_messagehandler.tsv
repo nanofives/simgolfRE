@@ -1,0 +1,18 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69270	0x10069270	49	G	MessageHandler::MessageHandler	??0MessageHandler@@QAE@XZ	public	100	100.0	21/21 ins	jgld_raw_04.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x692b0	0x100692b0	1442	G	WndProc	_WndProc@16	public	100	100.0	384/384 ins	
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x699c0	0x100699c0	138	G	OnQueryNewPalette	_OnQueryNewPalette	public	100	100.0	50/50 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69a70	0x10069a70	61	G	OnPaletteChanged	_OnPaletteChanged	public	100	100.0	26/26 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69ac0	0x10069ac0	161	G	OnPaint	_OnPaint	public	100	100.0	56/56 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69b90	0x10069b90	171	G	OnActivate	_OnActivate	public	100	100.0	62/62 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69c70	0x10069c70	171	G	OnKey	_OnKey	public	100	100.0	61/61 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69d50	0x10069d50	71	G	OnChar	_OnChar	public	100	100.0	28/28 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69db0	0x10069db0	74	G	OnSize	_OnSize	public	100	100.0	30/30 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69e10	0x10069e10	75	G	OnNcHitTest	_OnNcHitTest	public	100	100.0	30/30 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69e70	0x10069e70	78	G	OnMouseWheel	_OnMouseWheel	public	100	100.0	32/32 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69ee0	0x10069ee0	75	G	OnMouseMove	_OnMouseMove	public	100	100.0	30/30 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69f40	0x10069f40	78	G	OnLButtonDown	_OnLButtonDown	public	100	100.0	32/32 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x69fb0	0x10069fb0	75	G	OnLButtonUp	_OnLButtonUp	public	100	100.0	30/30 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x6a010	0x1006a010	78	G	OnRButtonDown	_OnRButtonDown	public	100	100.0	32/32 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x6a080	0x1006a080	75	G	OnRButtonUp	_OnRButtonUp	public	100	100.0	30/30 ins	jgld_raw_10.cpp
+jgld	jgl/jgld.dll/src/messagehandler.cpp	0x6a0e0	0x1006a0e0	80	G	OnCopyData	_OnCopyData	public	100	100.0	32/32 ins	jgld_app.cpp

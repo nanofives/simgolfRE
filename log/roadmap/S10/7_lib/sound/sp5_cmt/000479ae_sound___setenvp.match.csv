@@ -1,0 +1,74 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,"xor ebx, ebx","xor ebx, ebx",True
+2,"cmp dword ptr [0], ebx","cmp dword ptr [0x100b5d34], ebx",True
+3,push esi,push esi,True
+4,push edi,push edi,True
+5,jne 0x12,jne 0x100479c0,True
+6,call 0x12,call 0x1004ae27,True
+7,"mov esi, dword ptr [0]","mov esi, dword ptr [0x100b5530]",True
+8,"xor edi, edi","xor edi, edi",True
+9,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+10,"cmp al, bl","cmp al, bl",True
+11,je 0x32,je 0x100479e0,True
+12,"cmp al, 0x3d","cmp al, 0x3d",True
+13,je 0x25,je 0x100479d3,True
+14,inc edi,inc edi,True
+15,push esi,push esi,True
+16,call 0x2b,call 0x10043800,True
+17,pop ecx,pop ecx,True
+18,"lea esi, [esi + eax + 1]","lea esi, [esi + eax + 1]",True
+19,jmp 0x1a,jmp 0x100479c8,True
+20,"lea eax, [edi*4 + 4]","lea eax, [edi*4 + 4]",True
+21,push eax,push eax,True
+22,call 0x3f,call 0x10042acd,True
+23,"mov esi, eax","mov esi, eax",True
+24,pop ecx,pop ecx,True
+25,"cmp esi, ebx","cmp esi, ebx",True
+26,"mov dword ptr [0], esi","mov dword ptr [0x100b5564], esi",True
+27,jne 0x54,jne 0x10047a02,True
+28,push 9,push 9,True
+29,call 0x53,call 0x1004319b,True
+30,pop ecx,pop ecx,True
+31,"mov edi, dword ptr [0]","mov edi, dword ptr [0x100b5530]",True
+32,"cmp byte ptr [edi], bl","cmp byte ptr [edi], bl",True
+33,je 0x97,je 0x10047a45,True
+34,push ebp,push ebp,True
+35,push edi,push edi,True
+36,call 0x65,call 0x10043800,True
+37,"mov ebp, eax","mov ebp, eax",True
+38,pop ecx,pop ecx,True
+39,inc ebp,inc ebp,True
+40,"cmp byte ptr [edi], 0x3d","cmp byte ptr [edi], 0x3d",True
+41,je 0x90,je 0x10047a3e,True
+42,push ebp,push ebp,True
+43,call 0x74,call 0x10042acd,True
+44,"cmp eax, ebx","cmp eax, ebx",True
+45,pop ecx,pop ecx,True
+46,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+47,jne 0x83,jne 0x10047a31,True
+48,push 9,push 9,True
+49,call 0x82,call 0x1004319b,True
+50,pop ecx,pop ecx,True
+51,push edi,push edi,True
+52,push dword ptr [esi],push dword ptr [esi],True
+53,call 0x8b,call 0x1004a010,True
+54,pop ecx,pop ecx,True
+55,"add esi, 4","add esi, 4",True
+56,pop ecx,pop ecx,True
+57,"add edi, ebp","add edi, ebp",True
+58,"cmp byte ptr [edi], bl","cmp byte ptr [edi], bl",True
+59,jne 0x5f,jne 0x10047a0d,True
+60,pop ebp,pop ebp,True
+61,push dword ptr [0],push dword ptr [0x100b5530],True
+62,call 0xa2,call 0x10042c07,True
+63,pop ecx,pop ecx,True
+64,"mov dword ptr [0], ebx","mov dword ptr [0x100b5530], ebx",True
+65,"mov dword ptr [esi], ebx","mov dword ptr [esi], ebx",True
+66,pop edi,pop edi,True
+67,pop esi,pop esi,True
+68,"mov dword ptr [0], 1","mov dword ptr [0x100b5d24], 1",True
+69,pop ebx,pop ebx,True
+70,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\stdenvp.obj (library object, no compilation)",symbol=__setenvp,module=sound.dll
+VERDICT,GREEN,71,100.0%

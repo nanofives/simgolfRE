@@ -25,7 +25,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 None (leaf).
 
 ## Callers
-0x100419da `ostream`, 0x10041a3f `ostream`, 0x10041abc `operator=`, 0x10041b42 `ostream_withassign`, 0x10041bc8 `ostream_withassign`
+0x100419da `ostream::ctor_100419da`, 0x10041a3f `ostream::ctor_10041a3f`, 0x10041abc `ostream::operator_assign`, 0x10041b42 `ostream_withassign::ctor`, 0x10041bc8 `ostream_withassign::ctor_10041bc8`
 
 ## Constants
 - `0xc` (12) at 0x100437f9

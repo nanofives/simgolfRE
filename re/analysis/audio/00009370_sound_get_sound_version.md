@@ -7,6 +7,7 @@ Returns the sound library version constant. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllmain.cpp` as `?get_sound_version@@YAKXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10009375): callee pops 0 bytes of stack arguments.
 
 ## Reads

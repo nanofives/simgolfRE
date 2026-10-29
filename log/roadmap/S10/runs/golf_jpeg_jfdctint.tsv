@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jfdctint.c	0xb5d50	0x004b5d50	959	G	jpeg_fdct_islow	_jpeg_fdct_islow	public	100	100.0	308/308 ins	

@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/ScreenText.cpp	0x4970	0x00404970	37	G	ScaleXCoordinate	?ScaleXCoordinate@@YAHH@Z	public	100	100.0	11/11 ins	golf_small2.cpp
+golf	golf/golf.exe/src/ScreenText.cpp	0x49a0	0x004049a0	40	G	DrawSurfaceLine	?DrawSurfaceLine@@YAXPAUAssetSurface@@HHHHH@Z	public	100	100.0	14/14 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/ScreenText.cpp	0x49d0	0x004049d0	68	G	DrawTextWithColor	?DrawTextWithColor@@YAXPBDHHH@Z	public	100	100.0	27/27 ins	golf_small7.cpp
+golf	golf/golf.exe/src/ScreenText.cpp	0x4a20	0x00404a20	175	G	DrawTextScaledAtPosition	?DrawTextScaledAtPosition@@YAXPBDHHH@Z	public	100	100.0	65/65 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/ScreenText.cpp	0x4ad0	0x00404ad0	154	G	DrawTextClampedToScreen	?DrawTextClampedToScreen@@YAXPBDHHH@Z	public	100	100.0	56/56 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/ScreenText.cpp	0x4b70	0x00404b70	69	G	DrawTextCenteredAtY	?DrawTextCenteredAtY@@YAXPBDHHH@Z	public	100	100.0	28/28 ins	golf_small7.cpp
+golf	golf/golf.exe/src/ScreenText.cpp	0x4bc0	0x00404bc0	69	G	DrawTextCenteredWithShadow	?DrawTextCenteredWithShadow@@YAXPBDHHH@Z	public	100	100.0	28/28 ins	golf_small7.cpp

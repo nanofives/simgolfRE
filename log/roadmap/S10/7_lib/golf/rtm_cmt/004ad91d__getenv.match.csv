@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,push 0xc,push 0xc,True
+2,call 8,call 0x4a79b2,True
+3,push dword ptr [esp + 0xc],push dword ptr [esp + 0xc],True
+4,call 0x11,call 0x4ad93e,True
+5,push 0xc,push 0xc,True
+6,"mov esi, eax","mov esi, eax",True
+7,call 0x1a,call 0x4a7a13,True
+8,"add esp, 0xc","add esp, 0xc",True
+9,"mov eax, esi","mov eax, esi",True
+10,pop esi,pop esi,True
+11,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\getenv.obj (library object, no compilation)",symbol=_getenv,module=golf_clean.exe
+VERDICT,GREEN,12,100.0%

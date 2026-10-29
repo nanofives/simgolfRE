@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+3,"add eax, 0xf","add eax, 0xf",True
+4,"and al, 0xf0","and al, 0xf0",True
+5,"mov dword ptr [ebp + 8], eax","mov dword ptr [ebp + 8], eax",True
+6,"cmp dword ptr [ebp + 8], 0x780","cmp dword ptr [ebp + 8], 0x780",True
+7,ja 0x27,ja 0x1001d0d7,True
+8,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+9,"mov dword ptr [0], ecx","mov dword ptr [0x10066054], ecx",True
+10,"mov eax, 1","mov eax, 1",True
+11,jmp 0x29,jmp 0x1001d0d9,True
+12,"xor eax, eax","xor eax, eax",True
+13,pop ebp,pop ebp,True
+14,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\sbheap.obj (library object, no compilation)",symbol=__set_old_sbh_threshold,module=Terrain.dll
+VERDICT,GREEN,15,100.0%

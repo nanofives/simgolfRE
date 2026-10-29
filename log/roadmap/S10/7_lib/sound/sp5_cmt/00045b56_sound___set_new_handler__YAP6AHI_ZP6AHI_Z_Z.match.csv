@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,push 9,push 9,True
+2,call 8,call 0x10047710,True
+3,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+4,"mov esi, dword ptr [0]","mov esi, dword ptr [0x100b558c]",True
+5,push 9,push 9,True
+6,"mov dword ptr [0], eax","mov dword ptr [0x100b558c], eax",True
+7,call 0x1e,call 0x10047771,True
+8,pop ecx,pop ecx,True
+9,"mov eax, esi","mov eax, esi",True
+10,pop ecx,pop ecx,True
+11,pop esi,pop esi,True
+12,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\handler.obj (library object, no compilation)",symbol=?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z,module=sound.dll
+VERDICT,GREEN,13,100.0%

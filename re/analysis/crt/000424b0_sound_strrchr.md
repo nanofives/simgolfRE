@@ -28,7 +28,7 @@ None.
 None (leaf).
 
 ## Callers
-0x100041d0 `loadSoundFile`, 0x1001b1f0 `FUN_1001b1f0`, 0x1001ced0 `Sound_setName`
+0x100041d0 `loadSoundFile`, 0x10005880 `FUN_10005880`, 0x10005900 `FUN_10005900`, 0x1001b1f0 `Dll_KeyMap::set_base_path`, 0x1001ced0 `Sound_setName`, 0x1002d2c0 `FUN_1002d2c0`
 
 ## Constants
 - `0xffffffff` (-1) at 0x100424b9

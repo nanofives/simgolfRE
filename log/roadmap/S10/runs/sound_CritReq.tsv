@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/CritReq.cpp	0x87f0	0x100087f0	13	G	CCriticalRequest::CCriticalRequest	??0CCriticalRequest@@QAE@XZ	public	100	100.0	6/6 ins	m36a_list.cpp
+sound	sound/sound.dll/src/CritReq.cpp	0x8810	0x10008810	18	G	CCriticalRequest::CCriticalRequest	??0CCriticalRequest@@QAE@W4REQUEST_TYPE@@PAVSound@@@Z	public	100	100.0	6/6 ins	m36a_list.cpp
+sound	sound/sound.dll/src/CritReq.cpp	0x8840	0x10008840	14	G	CCriticalRequest::~CCriticalRequest	??1CCriticalRequest@@QAE@XZ	public	100	100.0	3/3 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/CritReq.cpp	0x8860	0x10008860	30	G	CCriticalRequestQueue::CCriticalRequestQueue	??0CCriticalRequestQueue@@QAE@XZ	public	100	100.0	11/11 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/CritReq.cpp	0x8890	0x10008890	28	G	CCriticalRequestQueue::~CCriticalRequestQueue	??1CCriticalRequestQueue@@QAE@XZ	public	100	100.0	10/10 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/CritReq.cpp	0x88c0	0x100088c0	15	G	CCriticalRequestQueue::operator[]	??ACCriticalRequestQueue@@QAEPAVCCriticalRequest@@I@Z	public	100	100.0	4/4 ins	sound_raw_01.cpp

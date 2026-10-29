@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Golfer.cpp	0x66370	0x00466370	1408	G	AdvanceStoryChapter	?AdvanceStoryChapter@@YAHHH@Z	public	100	100.0	369/369 ins	
+golf	golf/golf.exe/src/Golfer.cpp	0x668f0	0x004668f0	254	G	GetStoryChapterLine	?GetStoryChapterLine@@YAHHHH@Z	public	100	100.0	95/95 ins	golf_story.cpp
+golf	golf/golf.exe/src/Golfer.cpp	0x669f0	0x004669f0	381	G	ResolveStoryResponse	?ResolveStoryResponse@@YAXHHHH@Z	public	100	100.0	129/129 ins	
+golf	golf/golf.exe/src/Golfer.cpp	0x66b70	0x00466b70	1426	G	AppendThemeText	?AppendThemeText@@YAXHHHH@Z	public	100	100.0	496/496 ins	
+golf	golf/golf.exe/src/Golfer.cpp	0xa0890	0x004a0890	1	G	OnTraitMatched	?OnTraitMatched@@YAXH@Z	name	100	100.0	1/1 ins	

@@ -1,0 +1,6 @@
+ID	addr	type	description	path to resolution	status
+U-1860	golf_clean.exe 0x0049c780	match	MultiDebug::~MultiDebug: original has unwind states 1 then 0, our compile of their multidebug.cpp 2, 1, 0 (92.9 percent); which member lacks the state is not determined	compare class layout and member dtors in MultiDebug.h with the original frame	open
+U-1861	golf/binkw32.lib	tooling	binkw32.c is a stub DLL; golf.pdb has no code procedure from it; nothing to match	none	closed
+U-1862	re/match/smsg_golf_*.cpp	tooling	smsg_import.py gives an ICF-folded address a MATCH line in every smsg file with a procedure there (28 lines, 12 addresses); smsg_dedupe.py turns the extra ones into comments	fold the rule into smsg_import.py (S10.5 owner)	open
+U-1863	log/diff	tooling	Two evidence runs overlapped S10.5 editing match.py (NameError literal_values) and were repeated; counts of golf.exe misses depend on that uncommitted match.py	lead decides on S10.5; if rejected re-run the 5 wip files	open
+U-1864	golf_clean.exe 0x004a0890	match	Empty function with 11 sources (OnTraitMatched, OnFrameIdle, jpeg_mem_term ...); which one the linker kept is not determined	none; same as U-1850	open

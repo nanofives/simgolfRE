@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,push dword ptr [esp + 0xc],push dword ptr [esp + 0xc],True
+1,fld qword ptr [esp + 8],fld qword ptr [esp + 8],True
+2,push ecx,push ecx,True
+3,push ecx,push ecx,True
+4,fstp qword ptr [esp],fstp qword ptr [esp],True
+5,call 0x12,call 0x1004f8cd,True
+6,"add esp, 0xc","add esp, 0xc",True
+7,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\ieeemisc.obj (library object, no compilation)",symbol=__scalb,module=sound.dll
+VERDICT,GREEN,8,100.0%

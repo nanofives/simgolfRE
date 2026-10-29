@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b5524]",True
+2,"mov dword ptr [0], ecx","mov dword ptr [0x100b5524], ecx",True
+3,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpinit.obj (library object, no compilation)",symbol=___setfflag,module=sound.dll
+VERDICT,GREEN,4,100.0%

@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"and eax, 0x7ff00000","and eax, 0x7ff00000",True
+2,"cmp eax, 0x7ff00000","cmp eax, 0x7ff00000",True
+3,je 0x11,je 0x10021e39,True
+4,ret ,ret ,True
+5,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+6,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\common.obj (library object, no compilation)",symbol=__checkTOS_withFB,module=Terrain.dll
+VERDICT,GREEN,7,100.0%

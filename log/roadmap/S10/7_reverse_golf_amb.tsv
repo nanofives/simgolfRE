@@ -1,0 +1,13 @@
+module	entry	size	library symbol	tag	member	pct	csv	identical symbols
+golf_clean.exe	0x004a5504	34	__unwind_handler	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	log/roadmap/S10/7_lib/golf/rev_rtm_cmt/004a5504___unwind_handler.match.csv	1
+golf_clean.exe	0x004a8975	22	?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	log/roadmap/S10/7_lib/golf/rev_rtm_cmt/004a8975__FrameUnwindFilter__YAHPAU_EXCEPTION_POINTERS___Z.match.csv	2
+golf_clean.exe	0x004a8b21	42	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	log/roadmap/S10/7_lib/golf/rev_rtm_cmt/004a8b21__ExFilterRethrow__YAHPAU_EXCEPTION_POINTERS___Z.match.csv	1
+golf_clean.exe	0x004a8d03	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004a8f02	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004a8f58	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004aac56	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004aad0a	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004ac452	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004acae3	61	_siglookup	rtm_cmt	build\intel\mt_obj\winsig.obj	100.0	log/roadmap/S10/7_lib/golf/rev_rtm_cmt/004acae3__siglookup.match.csv	1
+golf_clean.exe	0x004adc1f	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3
+golf_clean.exe	0x004adc8e	4	?length@charNode@@UBEHXZ	rtm_cmt	build\intel\mt_obj\undname.obj	100.0	-	3

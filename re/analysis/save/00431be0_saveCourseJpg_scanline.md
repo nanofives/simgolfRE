@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 320 bytes, 101 instructions, subsystem `save`. Mechanic
 JPEG scanline callback of saveCourseJpg: box-filters the course screenshot down by the scale factor into 24-bit RGB rows (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_WildlifeUpdate.cpp` as `?DownsampleRGB555ToRGB888@@YAPAEH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00431d1f): callee pops 0 bytes of stack arguments.
 
 ## Reads

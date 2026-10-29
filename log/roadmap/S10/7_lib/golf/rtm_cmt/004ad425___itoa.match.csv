@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [ebp + 0x10], 0xa","cmp dword ptr [ebp + 0x10], 0xa",True
+3,jne 0x15,jne 0x4ad43a,True
+4,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+5,jge 0x15,jge 0x4ad43a,True
+6,push 1,push 1,True
+7,push 0xa,push 0xa,True
+8,jmp 0x1a,jmp 0x4ad43f,True
+9,push 0,push 0,True
+10,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+11,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+12,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+13,call 0x25,call 0x4ad452,True
+14,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+15,"add esp, 0x10","add esp, 0x10",True
+16,pop ebp,pop ebp,True
+17,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\xtoa.obj (library object, no compilation)",symbol=__itoa,module=golf_clean.exe
+VERDICT,GREEN,18,100.0%

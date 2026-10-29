@@ -1,0 +1,52 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,push edi,push edi,True
+2,push 2,push 2,True
+3,"xor ebx, ebx","xor ebx, ebx",True
+4,call 0xb,call 0x4a79b2,True
+5,pop ecx,pop ecx,True
+6,push 3,push 3,True
+7,pop edi,pop edi,True
+8,"cmp dword ptr [0], edi","cmp dword ptr [0x842020], edi",True
+9,jle 0x74,jle 0x4ac0a0,True
+10,push esi,push esi,True
+11,"mov eax, dword ptr [0]","mov eax, dword ptr [0x841010]",True
+12,"mov esi, edi","mov esi, edi",True
+13,"shl esi, 2","shl esi, 2",True
+14,"mov eax, dword ptr [esi + eax]","mov eax, dword ptr [esi + eax]",True
+15,"test eax, eax","test eax, eax",True
+16,je 0x6a,je 0x4ac096,True
+17,"test byte ptr [eax + 0xc], 0x83","test byte ptr [eax + 0xc], 0x83",True
+18,je 0x3c,je 0x4ac068,True
+19,push eax,push eax,True
+20,call 0x35,call 0x4a609f,True
+21,"cmp eax, -1","cmp eax, -1",True
+22,pop ecx,pop ecx,True
+23,je 0x3c,je 0x4ac068,True
+24,inc ebx,inc ebx,True
+25,"cmp edi, 0x14","cmp edi, 0x14",True
+26,jl 0x6a,jl 0x4ac096,True
+27,"mov eax, dword ptr [0]","mov eax, dword ptr [0x841010]",True
+28,"mov eax, dword ptr [esi + eax]","mov eax, dword ptr [esi + eax]",True
+29,"add eax, 0x20","add eax, 0x20",True
+30,push eax,push eax,True
+31,call dword ptr [0],call dword ptr [0x4ba0dc],True
+32,"mov eax, dword ptr [0]","mov eax, dword ptr [0x841010]",True
+33,push dword ptr [esi + eax],push dword ptr [esi + eax],True
+34,call 0x60,call 0x4a5007,True
+35,"mov eax, dword ptr [0]","mov eax, dword ptr [0x841010]",True
+36,pop ecx,pop ecx,True
+37,"and dword ptr [esi + eax], 0","and dword ptr [esi + eax], 0",True
+38,inc edi,inc edi,True
+39,"cmp edi, dword ptr [0]","cmp edi, dword ptr [0x842020]",True
+40,jl 0x18,jl 0x4ac044,True
+41,pop esi,pop esi,True
+42,push 2,push 2,True
+43,call 0x7b,call 0x4a7a13,True
+44,pop ecx,pop ecx,True
+45,"mov eax, ebx","mov eax, ebx",True
+46,pop edi,pop edi,True
+47,pop ebx,pop ebx,True
+48,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\closeall.obj (library object, no compilation)",symbol=__fcloseall,module=golf_clean.exe
+VERDICT,GREEN,49,100.0%

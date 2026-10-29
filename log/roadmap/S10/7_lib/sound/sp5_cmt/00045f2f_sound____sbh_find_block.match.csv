@@ -1,0 +1,17 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b5d04]",True
+1,"lea ecx, [eax + eax*4]","lea ecx, [eax + eax*4]",True
+2,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b5d08]",True
+3,"lea ecx, [eax + ecx*4]","lea ecx, [eax + ecx*4]",True
+4,"cmp eax, ecx","cmp eax, ecx",True
+5,jae 0x28,jae 0x10045f57,True
+6,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+7,"sub edx, dword ptr [eax + 0xc]","sub edx, dword ptr [eax + 0xc]",True
+8,"cmp edx, 0x100000","cmp edx, 0x100000",True
+9,jb 0x2a,jb 0x10045f59,True
+10,"add eax, 0x14","add eax, 0x14",True
+11,jmp 0x10,jmp 0x10045f3f,True
+12,"xor eax, eax","xor eax, eax",True
+13,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\sbheap.obj (library object, no compilation)",symbol=___sbh_find_block,module=sound.dll
+VERDICT,GREEN,14,100.0%

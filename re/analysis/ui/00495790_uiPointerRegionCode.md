@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 378 bytes, 148 instructions, subsystem `ui`. Mechanical
 classifies a screen point as a window edge or corner region code (0xa..0xf), the caption (2) or the interior (1), for the root object's resizable frame (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnNCHitTest@SysMessageHandler@@UAEJHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0049581b, 0x00495832, 0x0049585b, 0x00495883, 0x004958ac, 0x004958bf, 0x004958e3, 0x004958f8 (+1 more)): callee pops 8 bytes of stack arguments.
 
 ## Reads

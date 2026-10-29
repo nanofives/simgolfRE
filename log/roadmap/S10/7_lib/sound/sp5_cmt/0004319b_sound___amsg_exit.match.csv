@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [0], 2","mov eax, dword ptr [0x100b5538]",False
+1,je 0xe,"cmp eax, 1",False
+2,call 0xe,je 0x100431b2,False
+3,push dword ptr [esp + 4],"test eax, eax",False
+4,call 0x17,jne 0x100431b7,False
+5,push 0xff,"cmp dword ptr [0x100b553c], 1",False
+6,call dword ptr [0],jne 0x100431b7,False
+7,pop ecx,call 0x10047de6,False
+8,pop ecx,push dword ptr [esp + 4],False
+9,ret ,call 0x10047e1f,False
+10,,push 0xff,False
+11,,call dword ptr [0x10064ee0],False
+12,,pop ecx,False
+13,,pop ecx,False
+14,,ret ,False
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\crt0.obj (library object, no compilation)",symbol=__amsg_exit,module=sound.dll
+VERDICT,RED,10,53.3%

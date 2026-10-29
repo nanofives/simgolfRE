@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,inc dword ptr [0],inc dword ptr [0x840b24],True
+1,push 0x1000,push 0x1000,True
+2,call 0x10,call 0x4a504f,True
+3,pop ecx,pop ecx,True
+4,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+5,"test eax, eax","test eax, eax",True
+6,"mov dword ptr [ecx + 8], eax","mov dword ptr [ecx + 8], eax",True
+7,je 0x29,je 0x4ac33e,True
+8,"or dword ptr [ecx + 0xc], 8","or dword ptr [ecx + 0xc], 8",True
+9,"mov dword ptr [ecx + 0x18], 0x1000","mov dword ptr [ecx + 0x18], 0x1000",True
+10,jmp 0x3a,jmp 0x4ac34f,True
+11,"or dword ptr [ecx + 0xc], 4","or dword ptr [ecx + 0xc], 4",True
+12,"lea eax, [ecx + 0x14]","lea eax, [ecx + 0x14]",True
+13,"mov dword ptr [ecx + 8], eax","mov dword ptr [ecx + 8], eax",True
+14,"mov dword ptr [ecx + 0x18], 2","mov dword ptr [ecx + 0x18], 2",True
+15,"mov eax, dword ptr [ecx + 8]","mov eax, dword ptr [ecx + 8]",True
+16,"and dword ptr [ecx + 4], 0","and dword ptr [ecx + 4], 0",True
+17,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+18,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\_getbuf.obj (library object, no compilation)",symbol=__getbuf,module=golf_clean.exe
+VERDICT,GREEN,19,100.0%

@@ -1,0 +1,51 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,push esi,push esi,True
+2,"cmp ecx, dword ptr [0]","cmp ecx, dword ptr [0x842140]",True
+3,push edi,push edi,True
+4,jae 0x66,jae 0x4a9323,True
+5,"mov eax, ecx","mov eax, ecx",True
+6,"sar eax, 5","sar eax, 5",True
+7,"lea edi, [eax*4]","lea edi, [eax*4 + 0x842040]",True
+8,"mov eax, ecx","mov eax, ecx",True
+9,"and eax, 0x1f","and eax, 0x1f",True
+10,"lea esi, [eax + eax*8]","lea esi, [eax + eax*8]",True
+11,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+12,"shl esi, 2","shl esi, 2",True
+13,"add eax, esi","add eax, esi",True
+14,"test byte ptr [eax + 4], 1","test byte ptr [eax + 4], 1",True
+15,je 0x66,je 0x4a9323,True
+16,"cmp dword ptr [eax], -1","cmp dword ptr [eax], -1",True
+17,je 0x66,je 0x4a9323,True
+18,"cmp dword ptr [0], 1","cmp dword ptr [0x4e4ae4], 1",True
+19,jne 0x5c,jne 0x4a9319,True
+20,"xor eax, eax","xor eax, eax",True
+21,"sub ecx, eax","sub ecx, eax",True
+22,je 0x53,je 0x4a9310,True
+23,dec ecx,dec ecx,True
+24,je 0x4e,je 0x4a930b,True
+25,dec ecx,dec ecx,True
+26,jne 0x5c,jne 0x4a9319,True
+27,push eax,push eax,True
+28,push -0xc,push -0xc,True
+29,jmp 0x56,jmp 0x4a9313,True
+30,push eax,push eax,True
+31,push -0xb,push -0xb,True
+32,jmp 0x56,jmp 0x4a9313,True
+33,push eax,push eax,True
+34,push -0xa,push -0xa,True
+35,call dword ptr [0],call dword ptr [0x4ba0f8],True
+36,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+37,"or dword ptr [eax + esi], 0xffffffff","or dword ptr [eax + esi], 0xffffffff",True
+38,"xor eax, eax","xor eax, eax",True
+39,jmp 0x7c,jmp 0x4a9339,True
+40,call 0x6b,call 0x4a910c,True
+41,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+42,call 0x76,call 0x4a9115,True
+43,"and dword ptr [eax], 0","and dword ptr [eax], 0",True
+44,"or eax, 0xffffffff","or eax, 0xffffffff",True
+45,pop edi,pop edi,True
+46,pop esi,pop esi,True
+47,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\osfinfo.obj (library object, no compilation)",symbol=__free_osfhnd,module=golf_clean.exe
+VERDICT,GREEN,48,100.0%

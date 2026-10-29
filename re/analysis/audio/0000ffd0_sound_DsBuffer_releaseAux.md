@@ -6,6 +6,7 @@ Module `sound.dll` (RVA `0x0000ffd0`), 57 bytes, 23 instructions, subsystem `aud
 Releases the IDirectSoundNotify (+0x6c) and the 3D-buffer interface (+0x64), clearing both slots. (`re/names/sound_2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsb.cpp` as `?release_3d@CDSB@@AAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ffe0, 0x10010008): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000ffd1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

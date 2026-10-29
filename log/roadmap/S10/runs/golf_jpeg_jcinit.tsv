@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcinit.c	0xb03a0	0x004b03a0	183	G	jinit_compress_master	_jinit_compress_master	public	100	100.0	63/63 ins	golf_jpeg_cinit.cpp

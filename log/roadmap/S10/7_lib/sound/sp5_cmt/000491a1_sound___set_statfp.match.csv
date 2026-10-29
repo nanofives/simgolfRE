@@ -1,0 +1,41 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push ecx,push ecx,True
+4,"mov cl, byte ptr [ebp + 8]","mov cl, byte ptr [ebp + 8]",True
+5,"test cl, 1","test cl, 1",True
+6,je 0x17,je 0x100491b8,True
+7,fld xword ptr [0],fld xword ptr [0x10067710],True
+8,fistp dword ptr [ebp + 8],fistp dword ptr [ebp + 8],True
+9,wait ,wait ,True
+10,"test cl, 8","test cl, 8",True
+11,je 0x2c,je 0x100491cd,True
+12,wait ,wait ,True
+13,fnstsw ax,fnstsw ax,True
+14,fld xword ptr [0],fld xword ptr [0x10067710],True
+15,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+16,wait ,wait ,True
+17,wait ,wait ,True
+18,fnstsw ax,fnstsw ax,True
+19,"test cl, 0x10","test cl, 0x10",True
+20,je 0x3b,je 0x100491dc,True
+21,fld xword ptr [0],fld xword ptr [0x1006771c],True
+22,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+23,wait ,wait ,True
+24,"test cl, 4","test cl, 4",True
+25,je 0x49,je 0x100491ea,True
+26,fldz ,fldz ,True
+27,fld1 ,fld1 ,True
+28,fdivrp st(1),fdivrp st(1),True
+29,fstp st(0),fstp st(0),True
+30,wait ,wait ,True
+31,"test cl, 0x20","test cl, 0x20",True
+32,je 0x54,je 0x100491f5,True
+33,fldpi ,fldpi ,True
+34,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+35,wait ,wait ,True
+36,leave ,leave ,True
+37,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpctrl.obj (library object, no compilation)",symbol=__set_statfp,module=sound.dll
+VERDICT,GREEN,38,100.0%

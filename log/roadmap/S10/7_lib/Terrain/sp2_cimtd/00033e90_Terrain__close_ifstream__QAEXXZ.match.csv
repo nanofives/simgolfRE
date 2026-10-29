@@ -1,0 +1,33 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,call 0x11,call 0x10033ab0,True
+6,"mov ecx, eax","mov ecx, eax",True
+7,call 0x18,call 0x100340e0,True
+8,"test eax, eax","test eax, eax",True
+9,je 0x25,je 0x10033eb5,True
+10,"mov dword ptr [ebp - 8], 0","mov dword ptr [ebp - 8], 0",True
+11,jmp 0x3a,jmp 0x10033eca,True
+12,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+13,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+14,"mov edx, dword ptr [ecx + 4]","mov edx, dword ptr [ecx + 4]",True
+15,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+16,"mov ecx, dword ptr [eax + edx + 8]","mov ecx, dword ptr [eax + edx + 8]",True
+17,"or ecx, 2","or ecx, 2",True
+18,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+19,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+20,push edx,push edx,True
+21,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+22,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+23,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+24,"add edx, dword ptr [ecx + 4]","add edx, dword ptr [ecx + 4]",True
+25,"mov ecx, edx","mov ecx, edx",True
+26,call 0x50,call 0x10033d70,True
+27,"mov esp, ebp","mov esp, ebp",True
+28,pop ebp,pop ebp,True
+29,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\ifstream.obj (library object, no compilation)",symbol=?close@ifstream@@QAEXXZ,module=Terrain.dll
+VERDICT,GREEN,30,100.0%

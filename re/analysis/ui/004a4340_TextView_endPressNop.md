@@ -7,6 +7,7 @@ empty handler for slot 29 (the end-of-press slot): takes two arguments and does 
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?on_left_click@BasePop@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a4340): callee pops 8 bytes of stack arguments.
 
 ## Reads

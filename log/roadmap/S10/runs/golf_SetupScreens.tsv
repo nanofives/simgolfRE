@@ -1,0 +1,28 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/SetupScreens.cpp	0x378a0	0x004378a0	39	G	FileExists	?FileExists@@YAHPBD@Z	public	100	100.0	12/12 ins	golf_small3.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x378d0	0x004378d0	10	L	$E28	_$E28	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x378e0	0x004378e0	10	L	$E25	_$E25	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x378f0	0x004378f0	12	L	$E27	_$E27	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x37900	0x00437900	10	L	$E26	_$E26	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x37910	0x00437910	1679	G	SaveGolferToTheme	?SaveGolferToTheme@@YAHHHH@Z	public	100	100.0	535/535 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x37fa0	0x00437fa0	702	G	LoadGolferFromTheme	?LoadGolferFromTheme@@YAHPBDHH@Z	public	100	100.0	231/231 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x38260	0x00438260	142	G	HitTestGolferCustomizationButton	?HitTestGolferCustomizationButton@@YAHHH@Z	public	100	100.0	53/53 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x382f0	0x004382f0	148	G	HitTestCircularButtonGrid	?HitTestCircularButtonGrid@@YAHHH@Z	public	100	100.0	64/64 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x38390	0x00438390	502	G	ShowPaginatedCircularListDialog	?ShowPaginatedCircularListDialog@@YAHH@Z	public	100	100.0	168/168 ins	golf_hand_s0.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x38590	0x00438590	10	L	$E33	_$E33	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x385a0	0x004385a0	10	L	$E30	_$E30	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x385b0	0x004385b0	12	L	$E32	_$E32	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x385c0	0x004385c0	10	L	$E31	_$E31	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x385d0	0x004385d0	7728	G	RenderGolferCustomizationScreen	?RenderGolferCustomizationScreen@@YAXHH@Z	public	100	100.0	2239/2239 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3a400	0x0043a400	1215	G	ShowDifficultySelectScreen	?ShowDifficultySelectScreen@@YAHXZ	public	100	100.0	347/347 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3a8c0	0x0043a8c0	3396	G	ShowPickAProScreen	?ShowPickAProScreen@@YAHXZ	public	100	100.0	1000/1000 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3b610	0x0043b610	5428	G	ShowLoadGameScreen	?ShowLoadGameScreen@@YAHHH@Z	public	100	100.0	1631/1631 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cb50	0x0043cb50	105	G	EditBox::~EditBox	??1EditBox@@UAE@XZ	public	100	100.0	24/24 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_left_click	?on_mouse_leave@WidgetBase@@UAEXHH@Z	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_right_click	?on_right_click@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_right_down	?on_right_down@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_right_up	?on_right_up@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_left_double_click	?on_left_double_click@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_right_double_click	?on_right_double_click@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbd0	0x0043cbd0	30	G	EditBox::`scalar deleting destructor'	??_GEditBox@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SetupScreens.cpp	0x3cbf0	0x0043cbf0	11	G	EditBox::`vector deleting destructor'	??_EEditBox@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp

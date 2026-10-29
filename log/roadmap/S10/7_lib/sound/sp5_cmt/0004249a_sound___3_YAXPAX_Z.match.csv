@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+1,call 9,call 0x10042c07,True
+2,pop ecx,pop ecx,True
+3,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\delete.obj (library object, no compilation)",symbol=??3@YAXPAX@Z,module=sound.dll
+VERDICT,GREEN,4,100.0%

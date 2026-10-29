@@ -1,0 +1,29 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0740	0x004a0740	321	G	Dialogs::Dialogs	??0Dialogs@@QAE@XZ	public	100	100.0	69/69 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0890	0x004a0890	1	G	Dialogs::close	?close@Dialogs@@QAEXXZ	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa08a0	0x004a08a0	256	G	Dialogs::attach	?attach@Dialogs@@QAEHHPAUWidgetBase@@HHH@Z	public	100	100.0	66/66 ins	golf_hand_06_g.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa09a0	0x004a09a0	108	G	Dialogs::item	?item@Dialogs@@QAEHPADH@Z	public	100	100.0	25/25 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0a10	0x004a0a10	160	G	Dialogs::on_mouse_leave	?on_mouse_leave@Dialogs@@UAEXHH@Z	public	100	100.0	35/35 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0ab0	0x004a0ab0	156	G	Dialogs::on_mouse_move	?on_mouse_move@Dialogs@@UAEXHH@Z	public	100	100.0	35/35 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0b50	0x004a0b50	160	G	Dialogs::on_left_down	?on_left_down@Dialogs@@UAEXHH@Z	public	100	100.0	35/35 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0bf0	0x004a0bf0	148	G	Dialogs::on_key_down	?on_key_down@Dialogs@@UAEHH@Z	public	100	100.0	29/29 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0c90	0x004a0c90	156	G	Dialogs::on_left_double_click	?on_left_double_click@Dialogs@@UAEXHH@Z	public	100	100.0	35/35 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0d30	0x004a0d30	120	G	Dialogs::on_redraw	?on_redraw@Dialogs@@UAEXXZ	public	100	100.0	18/18 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0db0	0x004a0db0	104	G	Dialogs::on_left_click	?on_left_click@Dialogs@@UAEXHH@Z	public	100	100.0	21/21 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0e20	0x004a0e20	30	G	Dialogs::on_right_down	?on_right_down@Dialogs@@UAEXHH@Z	public	100	100.0	9/9 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0e40	0x004a0e40	30	G	Dialogs::on_right_double_click	?on_right_double_click@Dialogs@@UAEXHH@Z	public	100	100.0	9/9 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0e60	0x004a0e60	37	G	Dialogs::on_left_up	?on_left_up@Dialogs@@UAEXHH@Z	public	100	100.0	12/12 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0e90	0x004a0e90	30	G	Dialogs::on_right_up	?on_right_up@Dialogs@@UAEXHH@Z	public	100	100.0	9/9 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0eb0	0x004a0eb0	30	G	Dialogs::on_right_click	?on_right_click@Dialogs@@UAEXHH@Z	public	100	100.0	9/9 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0ed0	0x004a0ed0	32	G	Dialogs::on_scrolled	?on_scrolling@Dialogs@@UAEXHH@Z	public	100	100.0	10/10 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0ed0	0x004a0ed0	32	G	Dialogs::on_scrolling	?on_scrolling@Dialogs@@$4PPPPPPPM@A@AEXHH@Z	name	folded	0.0	miss 0.0 0/10 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0ef0	0x004a0ef0	248	G	Dialogs::attach	?attach@Dialogs@@UAEHPAUWidgetBase@@HHH@Z	public	100	100.0	64/64 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa0ff0	0x004a0ff0	156	G	Dialogs::on_dialog_focus	?on_dialog_focus@Dialogs@@UAEXH@Z	public	100	100.0	32/32 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa1090	0x004a1090	160	G	Dialogs::pass_dialog_focus	?pass_dialog_focus@Dialogs@@UAEXXZ	public	100	100.0	26/26 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa1130	0x004a1130	55	G	Dialogs::on_scroll_create	?on_scroll_create@Dialogs@@UAEHXZ	public	100	100.0	17/17 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa1170	0x004a1170	66	G	Dialogs::on_scroll_delete	?on_scroll_delete@Dialogs@@UAEHH@Z	public	100	100.0	19/19 ins	m36d_view.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa11c0	0x004a11c0	136	G	Dialogs::calculate_dimensions	?calculate_dimensions@Dialogs@@QAEHXZ	public	100	100.0	24/24 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa1250	0x004a1250	138	G	Dialogs::init	?init@Dialogs@@QAEHH@Z	public	100	100.0	51/51 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa12e0	0x004a12e0	138	G	Dialogs::init	?init@Dialogs@@QAEHPAUHeap@@@Z	public	100	100.0	51/51 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa1370	0x004a1370	80	G	Dialogs::get_num_items	?get_num_items@Dialogs@@QAEHXZ	public	100	100.0	15/15 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/Dialogs.cpp	0xa13c0	0x004a13c0	37	G	Dialogs::on_mouse_wheel	?on_mouse_wheel@Dialogs@@UAEXHHH@Z	public	100	100.0	12/12 ins	m36d_view.cpp

@@ -1,0 +1,26 @@
+instruction,library_object,original,match
+0,bytes +0x0: 807a0e057511668b9d5cffffff80cf02,bytes +0x0: 807a0e057511668b9d5cffffff80cf02,True
+1,bytes +0x10: 80e7feb33feb0466bb3f1366899d5eff,bytes +0x10: 80e7feb33feb0466bb3f1366899d5eff,True
+2,bytes +0x20: ffffd9ad5effffffbb????????d9e589,bytes +0x20: ffffd9ad5effffffbb????????d9e589,True
+3,bytes +0x30: 956cffffff9bddbd60ffffffc68570ff,bytes +0x30: 956cffffff9bddbd60ffffffc68570ff,True
+4,bytes +0x40: ffff00d9c98a8d61ffffffd9e59bddbd,bytes +0x40: ffff00d9c98a8d61ffffffd9e59bddbd,True
+5,bytes +0x50: 60ffffffd9c98aad61ffffffd0e5d0fd,bytes +0x50: 60ffffffd9c98aad61ffffffd0e5d0fd,True
+6,bytes +0x60: d0c58ac5240fd78ae0d0e1d0f9d0c18a,bytes +0x60: d0c58ac5240fd78ae0d0e1d0f9d0c18a,True
+7,bytes +0x70: c1240fd7d0e4d0e40ac40fbec081e104,bytes +0x70: c1240fd7d0e4d0e40ac40fbec081e104,True
+8,bytes +0x80: 0400008bda03d883c310ff23e8c10000,bytes +0x80: 0400008bda03d883c310ff23e8c10000,True
+9,bytes +0x90: 00d9c9ddd8c3e8b7000000ebf6ddd8dd,bytes +0x90: 00d9c9ddd8c3e8b7000000ebf6ddd8dd,True
+10,bytes +0xa0: d8d9eec3ddd8ddd8d9e8c3dbbd62ffff,bytes +0xa0: d8d9eec3ddd8ddd8d9e8c3dbbd62ffff,True
+11,bytes +0xb0: ffdbad62fffffff68569ffffff407408,bytes +0xb0: ffdbad62fffffff68569ffffff407408,True
+12,bytes +0xc0: c68570ffffff07c3c68570ffffff01dc,bytes +0xc0: c68570ffffff07c3c68570ffffff01dc,True
+13,bytes +0xd0: 05????????c3d9c9dbbd62ffffffdbad,bytes +0xd0: 05????????c3d9c9dbbd62ffffffdbad,True
+14,bytes +0xe0: 62fffffff68569ffffff407409c68570,bytes +0xe0: 62fffffff68569ffffff407409c68570,True
+15,bytes +0xf0: ffffff07eb07c68570ffffff01dec1c3,bytes +0xf0: ffffff07eb07c68570ffffff01dec1c3,True
+16,bytes +0x100: dbbd62ffffffdbad62fffffff68569ff,bytes +0x100: dbbd62ffffffdbad62fffffff68569ff,True
+17,bytes +0x110: ffff407420d9c9dbbd62ffffffdbad62,bytes +0x110: ffff407420d9c9dbbd62ffffffdbad62,True
+18,bytes +0x120: fffffff68569ffffff407409c68570ff,bytes +0x120: fffffff68569ffffff407409c68570ff,True
+19,bytes +0x130: ffff07eb07c68570ffffff01dec1c3dd,bytes +0x130: ffff07eb07c68570ffffff01dec1c3dd,True
+20,bytes +0x140: d8ddd8db2d????????80bd70ffffff00,bytes +0x140: d8ddd8db2d????????80bd70ffffff00,True
+21,bytes +0x150: 7f07c68570ffffff010ac9c30ac97402,bytes +0x150: 7f07c68570ffffff010ac9c30ac97402,True
+22,bytes +0x160: d9e0c3,bytes +0x160: d9e0c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87disp.obj (library object, no compilation)",symbol=__trandisp2,module=sound.dll
+VERDICT,GREEN,23,100.0%

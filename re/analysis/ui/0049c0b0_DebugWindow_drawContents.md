@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 1738 bytes, 633 instructions, subsystem `ui`. Mechanica
 draws the debug window: paints the background and writes eight integer counters from the record at this+0x594 as text lines (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_multidebug.cpp` as `?on_redraw@MultiDebug@@UAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049c779): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0049c0b9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,139 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/window.cpp	0x2180	0x00402180	5	G	WidgetBase::on_dialog_back_draw	?on_dialog_back_draw@WidgetBase@@UAEHPAU1@@Z	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/window.cpp	0x2180	0x00402180	5	G	WidgetBase::on_key_down	?on_key_down@WidgetBase@@UAEHH@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2180	0x00402180	5	G	WidgetBase::on_key_up	?on_key_up@WidgetBase@@UAEHH@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2180	0x00402180	5	G	WidgetBase::on_button_pressed	?on_button_pressed@WidgetBase@@UAEHH@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_button_up	?on_button_up@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_button_down	?on_button_down@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_button_clicked	?on_button_clicked@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_menu	?on_menu@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_dialog_focus	?on_dialog_focus@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_selected	?on_selected@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x2190	0x00402190	3	G	WidgetBase::on_double_clicked	?on_double_clicked@WidgetBase@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_left_down	?on_mouse_leave@WidgetBase@@UAEXHH@Z	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/window.cpp	0x3cbc0	0x0043cbc0	3	G	WidgetBase::on_left_up	?on_left_up@WidgetBase@@UAEXHH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x79820	0x00479820	3	G	WidgetBase::on_scroll_create	?is_graphicwin@WidgetBase@@UAEPAUGraphicWin@@XZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/window.cpp	0x79820	0x00479820	3	G	WidgetBase::on_listbox_scroll_create	?on_listbox_scroll_create@WidgetBase@@UAEHXZ	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x79820	0x00479820	3	G	WidgetBase::is_graphicwin		nosym	folded		nosym	
+golf	golf/jackal.lib/src/window.cpp	0x799c0	0x004799c0	5	L	$E32	_$E32	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/window.cpp	0x799d0	0x004799d0	11	L	$E31	_$E31	name	100	100.0	2/2 ins	m36d_hand_gx.cpp
+golf	golf/jackal.lib/src/window.cpp	0x799e0	0x004799e0	10	L	$E38	_$E38	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/window.cpp	0x799f0	0x004799f0	10	L	$E34	_$E34	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79a00	0x00479a00	12	L	$E37	_$E37	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79a10	0x00479a10	31	L	$E35	_$E35	name	100	100.0	9/9 ins	
+golf	golf/jackal.lib/src/window.cpp	0x79a30	0x00479a30	10	L	$E43	_$E43	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79a40	0x00479a40	10	L	$E40	_$E40	name	100	100.0	2/2 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79a50	0x00479a50	12	L	$E42	_$E42	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79a60	0x00479a60	31	L	$E41	_$E41	name	100	100.0	9/9 ins	
+golf	golf/jackal.lib/src/window.cpp	0x79a80	0x00479a80	156	G	WidgetBase::set_mouse_confines	?set_mouse_confines@WidgetBase@@QAEXPAURect@@@Z	public	100	100.0	42/42 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79b20	0x00479b20	27	G	WidgetBase::ReleaseCursorClip	?ReleaseCursorClip@WidgetBase@@QAEXXZ	public	100	100.0	6/6 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79b40	0x00479b40	98	G	WidgetBase::increase_children	?increase_children@WidgetBase@@QAEXXZ	public	100	100.0	32/32 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79bb0	0x00479bb0	142	G	WidgetBase::decrease_children	?decrease_children@WidgetBase@@QAEXXZ	public	100	100.0	47/47 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79c40	0x00479c40	708	G	WidgetBase::WidgetBase	??0WidgetBase@@QAE@XZ	public	100	100.0	127/127 ins	
+golf	golf/jackal.lib/src/window.cpp	0x79f10	0x00479f10	30	G	WidgetBase::`scalar deleting destructor'	??_GWidgetBase@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/window.cpp	0x79f30	0x00479f30	1156	G	WidgetBase::close	?close@WidgetBase@@QAEXXZ	public	100	100.0	284/284 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7a3c0	0x0047a3c0	254	G	WidgetBase::~WidgetBase	??1WidgetBase@@UAE@XZ	public	100	100.0	67/67 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7a4c0	0x0047a4c0	1589	G	WidgetBase::init	?init@WidgetBase@@QAEHHHHHPBDIPAUGraphicWin@@PAUMenu@@PAH@Z	public	100	100.0	469/469 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7ab00	0x0047ab00	66	G	WidgetBase::set_cursor	?set_cursor@WidgetBase@@QAEHH@Z	public	100	100.0	19/19 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ab50	0x0047ab50	103	G	WidgetBase::get_mouse_pos	?get_mouse_pos@WidgetBase@@QAEXPAH0@Z	public	100	100.0	42/42 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7abc0	0x0047abc0	27	G	WidgetBase::get_lbutton_state	?get_lbutton_state@WidgetBase@@QAEHXZ	public	100	100.0	10/10 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7abe0	0x0047abe0	440	G	WidgetBase::set_parent_dialog	?set_parent_dialog@WidgetBase@@QAEXPAUGraphicWin@@@Z	public	100	100.0	112/112 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ada0	0x0047ada0	213	G	WidgetBase::remove_parent_dialog	?remove_parent_dialog@WidgetBase@@QAEXXZ	public	100	100.0	61/61 ins	golf_raw_14.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ae80	0x0047ae80	219	G	WidgetBase::set_dialog_focus	?set_dialog_focus@WidgetBase@@UAEXPAU1@@Z	public	100	100.0	68/68 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7af60	0x0047af60	277	G	WidgetBase::pass_dialog_focus	?pass_dialog_focus@WidgetBase@@UAEXXZ	public	100	100.0	80/80 ins	golf_hand_08_t_sw2.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b080	0x0047b080	78	G	WidgetBase::is_descendant	?is_descendant@WidgetBase@@QAEHPAU1@@Z	public	100	100.0	33/33 ins	golf_small8.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b0d0	0x0047b0d0	78	G	WidgetBase::RectToScreen	?RectToScreen@WidgetBase@@QAEXPAURect@@@Z	public	100	100.0	30/30 ins	golf_small8.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b120	0x0047b120	78	G	WidgetBase::NonclientRectToScreen	?NonclientRectToScreen@WidgetBase@@QAEXPAURect@@@Z	public	100	100.0	30/30 ins	golf_small8.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b170	0x0047b170	133	G	WidgetBase::client_to_screen	?client_to_screen@WidgetBase@@QAEXPAH0@Z	public	100	100.0	44/44 ins	golf_small13.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b200	0x0047b200	133	G	WidgetBase::screen_to_client	?screen_to_client@WidgetBase@@QAEXPAH0@Z	public	100	100.0	44/44 ins	golf_small13.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b290	0x0047b290	50	G	WidgetBase::nonclient_to_screen	?nonclient_to_screen@WidgetBase@@QAEXPAH0@Z	public	100	100.0	21/21 ins	golf_small5.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b2d0	0x0047b2d0	50	G	WidgetBase::screen_to_nonclient	?screen_to_nonclient@WidgetBase@@QAEXPAH0@Z	public	100	100.0	21/21 ins	golf_small5.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b310	0x0047b310	261	G	WidgetBase::center	?center@WidgetBase@@QAEXXZ	public	100	100.0	85/85 ins	golf_hand_08_b.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b420	0x0047b420	179	G	WidgetBase::move	?move@WidgetBase@@QAEHHH@Z	public	100	100.0	46/46 ins	golf_small19.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b4e0	0x0047b4e0	393	G	WidgetBase::resize	?resize@WidgetBase@@UAEHHHHH@Z	public	100	100.0	123/123 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b670	0x0047b670	420	G	WidgetBase::show	?show@WidgetBase@@UAEXH@Z	public	100	100.0	133/133 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b820	0x0047b820	203	G	WidgetBase::hide	?hide@WidgetBase@@UAEXXZ	public	100	100.0	66/66 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b8f0	0x0047b8f0	161	G	WidgetBase::set_caption	?set_caption@WidgetBase@@QAEXPBD@Z	public	100	100.0	61/61 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b9a0	0x0047b9a0	74	G	WidgetBase::reset_window_clip	?reset_window_clip@WidgetBase@@QAEXXZ	public	100	100.0	31/31 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7b9f0	0x0047b9f0	23	G	WidgetBase::set_vert_pos	?set_vert_pos@WidgetBase@@QAEXH@Z	public	100	100.0	7/7 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ba10	0x0047ba10	23	G	WidgetBase::set_horz_pos	?set_horz_pos@WidgetBase@@QAEXH@Z	public	100	100.0	7/7 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ba30	0x0047ba30	28	G	WidgetBase::set_vert_range	?set_vert_range@WidgetBase@@QAEXHH@Z	public	100	100.0	9/9 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ba50	0x0047ba50	28	G	WidgetBase::set_horz_range	?set_horz_range@WidgetBase@@QAEXHH@Z	public	100	100.0	9/9 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ba70	0x0047ba70	23	G	WidgetBase::set_vert_paging	?set_vert_paging@WidgetBase@@QAEXH@Z	public	100	100.0	6/6 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ba90	0x0047ba90	23	G	WidgetBase::set_horz_paging	?set_horz_paging@WidgetBase@@QAEXH@Z	public	100	100.0	6/6 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7bab0	0x0047bab0	248	G	WidgetBase::set_modal	?set_modal@WidgetBase@@UAEHHP6AHXZPAU1@@Z	public	100	100.0	83/83 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7bbb0	0x0047bbb0	167	G	WidgetBase::release_modal	?release_modal@WidgetBase@@UAEXXZ	public	100	100.0	50/50 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7bc60	0x0047bc60	472	G	WidgetBase::resize_event	?resize_event@WidgetBase@@QAEXHH@Z	public	100	100.0	153/153 ins	golf_hand_s2.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7be40	0x0047be40	246	G	WidgetBase::mouse_move_event	?mouse_move_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	90/90 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7bf40	0x0047bf40	206	G	WidgetBase::left_double_click_event	?left_double_click_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c010	0x0047c010	206	G	WidgetBase::right_double_click_event	?right_double_click_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c0e0	0x0047c0e0	203	G	WidgetBase::left_click_event	?left_click_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c1b0	0x0047c1b0	219	G	WidgetBase::left_down_event	?left_down_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	86/86 ins	golf_hand_07_47c1b0.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c290	0x0047c290	203	G	WidgetBase::left_up_event	?left_up_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c360	0x0047c360	206	G	WidgetBase::right_click_event	?right_click_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c430	0x0047c430	206	G	WidgetBase::right_down_event	?right_down_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c500	0x0047c500	206	G	WidgetBase::right_up_event	?right_up_event@WidgetBase@@QAEXHHH@Z	public	100	100.0	75/75 ins	golf_hand_06_win.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c5d0	0x0047c5d0	231	G	WidgetBase::key_click_event	?key_click_event@WidgetBase@@QAEHHH@Z	public	100	100.0	86/86 ins	golf_hand_07_47c5d0.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7c6c0	0x0047c6c0	674	G	WidgetBase::key_down_event	?key_down_event@WidgetBase@@QAEHH@Z	public	100	100.0	239/239 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7c970	0x0047c970	153	G	WidgetBase::key_up_event	?key_up_event@WidgetBase@@QAEHH@Z	public	100	100.0	58/58 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ca10	0x0047ca10	244	G	WidgetBase::client_to_nonclient	?client_to_nonclient@WidgetBase@@QAEXPAH0@Z	public	100	100.0	76/76 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7cb10	0x0047cb10	254	G	WidgetBase::nonclient_to_client	?nonclient_to_client@WidgetBase@@QAEXPAH0@Z	public	100	100.0	81/81 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7cc10	0x0047cc10	205	G	WidgetBase::ExpandRectForBorders	?ExpandRectForBorders@WidgetBase@@QAEXPAURect@@@Z	public	100	100.0	61/61 ins	golf_hand_06_b.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7cce0	0x0047cce0	207	G	WidgetBase::ShrinkRectForBorders	?ShrinkRectForBorders@WidgetBase@@QAEXPAURect@@@Z	public	100	100.0	63/63 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7cdb0	0x0047cdb0	530	G	WidgetBase::flip	?flip@WidgetBase@@SAXPAURect@@@Z	public	100	100.0	170/170 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7cfd0	0x0047cfd0	60	G	WidgetBase::init_class	?init_class@WidgetBase@@SAHPBDH@Z	public	100	100.0	14/14 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d010	0x0047d010	16	G	WidgetBase::close_class	?close_class@WidgetBase@@SAXXZ	public	100	100.0	6/6 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d020	0x0047d020	63	G	WidgetBase::set_border_thickness	?set_border_thickness@WidgetBase@@QAEXH@Z	public	100	100.0	19/19 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d060	0x0047d060	194	G	WidgetBase::restore_cursor_back	?restore_cursor_back@WidgetBase@@SAXH@Z	public	100	100.0	47/47 ins	golf_hand_06_b.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d130	0x0047d130	984	G	UpdateCursor	?UpdateCursor@@YAXPAUWidgetBase@@HHH@Z	public	100	100.0	245/245 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7d510	0x0047d510	83	G	WidgetBase::do_caption_buttons	?do_caption_buttons@WidgetBase@@QAEXXZ	public	100	100.0	25/25 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d570	0x0047d570	145	G	WidgetBase::redo_caption_buttons	?redo_caption_buttons@WidgetBase@@QAEXXZ	public	100	100.0	50/50 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7d610	0x0047d610	427	G	WidgetBase::set_rects	?set_rects@WidgetBase@@UAEXXZ	public	100	100.0	120/120 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7d7c0	0x0047d7c0	11	G	AutoSound::~AutoSound	??1AutoSound@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d7d0	0x0047d7d0	63	G	WidgetBase::is_dialog_focus	?is_dialog_focus@WidgetBase@@QAEHXZ	public	100	100.0	21/21 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d810	0x0047d810	36	G	AutoSound::`scalar deleting destructor'	??_GAutoSound@@UAEPAXI@Z	public	100	100.0	12/12 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d840	0x0047d840	10	G	WidgetBase::set_def_focus	?set_def_focus@WidgetBase@@SAXPAU1@@Z	public	100	100.0	3/3 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7d850	0x0047d850	2237	G	WidgetBase::on_redraw_nc	?on_redraw_nc@WidgetBase@@UAEXH@Z	public	100	100.0	678/678 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7e110	0x0047e110	5	G	WidgetBase::on_key_click	?on_key_click@WidgetBase@@UAEHHH@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7e120	0x0047e120	26	G	WidgetBase::bring_to_top	?bring_to_top@WidgetBase@@QAEXXZ	public	100	100.0	10/10 ins	golf_small17.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e140	0x0047e140	392	G	WidgetBase::recurse_clips	?recurse_clips@WidgetBase@@SAXPAU1@PAURect@@@Z	public	100	100.0	137/137 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e2d0	0x0047e2d0	88	G	WidgetBase::update_screen_clips	?update_screen_clips@WidgetBase@@SAXXZ	public	100	100.0	32/32 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e330	0x0047e330	286	G	recurse_zorder	_recurse_zorder	public	100	100.0	92/92 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e450	0x0047e450	101	G	UpdateAllWidgetRenderOrder	_UpdateAllWidgetRenderOrder	public	100	100.0	34/34 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7e4c0	0x0047e4c0	85	G	WidgetBase::add_parent	?add_parent@WidgetBase@@SAXPAU1@@Z	public	100	100.0	29/29 ins	golf_small9.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e520	0x0047e520	86	G	WidgetBase::remove_parent	?remove_parent@WidgetBase@@SAXPAU1@@Z	public	100	100.0	35/35 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e580	0x0047e580	96	G	WidgetBase::bring_parent_to_top	?bring_parent_to_top@WidgetBase@@SAXPAU1@@Z	public	100	100.0	34/34 ins	golf_small9.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::on_lose_mouse_capture	?update@WidgetBase@@UAEXXZ	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::on_redraw	?on_redraw@WidgetBase@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::on_sys_close	?on_sys_close@WidgetBase@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::on_closebox	?on_closebox@WidgetBase@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::on_hide	?on_hide@WidgetBase@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::redraw	?redraw@WidgetBase@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/window.cpp	0x7e5e0	0x0047e5e0	1	G	WidgetBase::update		nosym	folded		nosym	
+golf	golf/jackal.lib/src/window.cpp	0x7e5f0	0x0047e5f0	137	G	WidgetBase::add_child	?add_child@WidgetBase@@QAEXPAU1@@Z	public	100	100.0	42/42 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e680	0x0047e680	121	G	WidgetBase::remove_child	?remove_child@WidgetBase@@QAEXPAU1@@Z	public	100	100.0	42/42 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e700	0x0047e700	98	G	WidgetBase::bring_child_to_top	?bring_child_to_top@WidgetBase@@QAEXPAU1@@Z	public	100	100.0	35/35 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7e770	0x0047e770	692	G	WidgetBase::on_paint	?on_paint@WidgetBase@@UAEXPAURect@@@Z	public	100	100.0	256/256 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7ea30	0x0047ea30	760	G	WidgetBase::on_nc_paint	?on_nc_paint@WidgetBase@@UAEXPAURect@@H@Z	public	100	100.0	241/241 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7ed30	0x0047ed30	311	G	WidgetBase::on_nc_hittest	?on_nc_hittest@WidgetBase@@UAEHHH@Z	public	100	100.0	122/122 ins	golf_hand_09_f.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7ee70	0x0047ee70	109	G	WidgetBase::on_key	?on_key@WidgetBase@@UAEXHH@Z	public	100	100.0	37/37 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7eee0	0x0047eee0	65	G	find_circular_match	?find_circular_match@@YAHPBDH@Z	public	100	100.0	29/29 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7ef30	0x0047ef30	187	G	WidgetBase::on_char	?on_char@WidgetBase@@UAEXD@Z	public	100	100.0	59/59 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7eff0	0x0047eff0	23	G	WidgetBase::OnMouseMoveInternal	?OnMouseMoveInternal@WidgetBase@@UAEXHHH@Z	public	100	100.0	8/8 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7f010	0x0047f010	221	G	WidgetBase::on_l_button_down	?on_l_button_down@WidgetBase@@UAEXHHHH@Z	public	100	100.0	78/78 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7f0f0	0x0047f0f0	188	G	WidgetBase::on_l_button_up	?on_l_button_up@WidgetBase@@UAEXHHH@Z	public	100	100.0	69/69 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7f1b0	0x0047f1b0	126	G	WidgetBase::on_r_button_down	?on_r_button_down@WidgetBase@@UAEXHHHH@Z	public	100	100.0	45/45 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7f230	0x0047f230	177	G	WidgetBase::on_r_button_up	?on_r_button_up@WidgetBase@@UAEXHHH@Z	public	100	100.0	65/65 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7f2f0	0x0047f2f0	77	G	GetActiveWidget	?GetActiveWidget@@YAPAUWidgetBase@@XZ	public	100	100.0	28/28 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7f340	0x0047f340	952	G	get_mouse_window_recurse	?get_mouse_window_recurse@@YAPAUWidgetBase@@PAU1@PAH1@Z	public	100	100.0	309/309 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7f700	0x0047f700	478	G	FindWidgetAtPoint	?FindWidgetAtPoint@@YAPAUWidgetBase@@PAH0@Z	public	100	100.0	145/145 ins	golf_hand_s1.cpp
+golf	golf/jackal.lib/src/window.cpp	0x7f8e0	0x0047f8e0	326	G	RenderWidgetTree	?RenderWidgetTree@@YAXPAURect@@PAUWidgetBase@@@Z	public	100	100.0	112/112 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7fa30	0x0047fa30	127	G	WidgetBase::update_window	?update_window@WidgetBase@@QAEXPAURect@@@Z	public	100	100.0	49/49 ins	
+golf	golf/jackal.lib/src/window.cpp	0x7fab0	0x0047fab0	1856	G	WidgetBase::do_tracking	?do_tracking@WidgetBase@@QAEXHH@Z	public	100	100.0	513/513 ins	
+golf	golf/jackal.lib/src/window.cpp	0x801f0	0x004801f0	38	G	WidgetBase::is_visible	?is_visible@WidgetBase@@QAEHXZ	public	100	100.0	13/13 ins	golf_small18.cpp
+golf	golf/jackal.lib/src/window.cpp	0x80220	0x00480220	305	G	WidgetBase::set_bubble_text	?set_bubble_text@WidgetBase@@QAEXPADPAURect@@@Z	public	100	100.0	106/106 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/window.cpp	0x80360	0x00480360	47	G	WidgetBase::clear_bubble_text	?clear_bubble_text@WidgetBase@@SAXXZ	public	100	100.0	13/13 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/window.cpp	0x80390	0x00480390	119	G	ChildList::~ChildList	??1ChildList@@UAE@XZ	public	100	100.0	51/51 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/window.cpp	0x80410	0x00480410	134	G	ChildList::`scalar deleting destructor'	??_GChildList@@UAEPAXI@Z	public	100	100.0	54/54 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/window.cpp	0x87b00	0x00487b00	5	G	WidgetBase::set_window_clip	?set_window_clip@WidgetBase@@QAEHPAURect@@@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/window.cpp	0xa0890	0x004a0890	1	G	ResetManagerModule	_ResetManagerModule	public	100	100.0	1/1 ins	

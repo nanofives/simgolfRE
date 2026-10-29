@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 187 bytes, 50 instructions, subsystem `ui`. Mechanical 
 callback TextView::render registers at this+0x14b4: re-reads the selected id of the TextView held in 0x0083b990 into this+0x5c0 and refreshes it (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?OnListItemActivated@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00490bea): callee pops 0 bytes of stack arguments.
 
 ## Reads

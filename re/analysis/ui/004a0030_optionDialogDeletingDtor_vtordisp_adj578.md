@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 14 bytes, 3 instructions, subsystem `ui`. Mechanical tr
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) and then 0x578 from this and tail-jumps to optionDialogDeletingDtor 0x0049ff60 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_checkbox.cpp` as `??_ECheckBoxCtl@@$4PPPPPPPM@FHI@AEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004a0030 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

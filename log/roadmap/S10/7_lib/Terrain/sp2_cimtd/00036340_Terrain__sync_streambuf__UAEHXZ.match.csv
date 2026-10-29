@@ -1,0 +1,23 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,call 0xf,call 0x100344e0,True
+6,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+7,"cmp eax, dword ptr [ecx + 0x2c]","cmp eax, dword ptr [ecx + 0x2c]",True
+8,jb 0x25,jb 0x10036365,True
+9,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+10,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+11,"mov ecx, dword ptr [edx + 0x1c]","mov ecx, dword ptr [edx + 0x1c]",True
+12,"cmp ecx, dword ptr [eax + 0x18]","cmp ecx, dword ptr [eax + 0x18]",True
+13,jbe 0x2a,jbe 0x1003636a,True
+14,"or eax, 0xffffffff","or eax, 0xffffffff",True
+15,jmp 0x2c,jmp 0x1003636c,True
+16,"xor eax, eax","xor eax, eax",True
+17,"mov esp, ebp","mov esp, ebp",True
+18,pop ebp,pop ebp,True
+19,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\streamb.obj (library object, no compilation)",symbol=?sync@streambuf@@UAEHXZ,module=Terrain.dll
+VERDICT,GREEN,20,100.0%

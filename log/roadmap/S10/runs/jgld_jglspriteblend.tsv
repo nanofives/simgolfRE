@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x19830	0x10019830	156	G	JGLSprite::draw_multi_table	?draw_multi_table@JGLSprite@@UAEHPAVJGLBuffer@@HHPAGPAVJGLPalette@@@Z	public	100	100.0	60/60 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x19900	0x10019900	161	G	JGLSprite::draw_tinted	?draw_tinted@JGLSprite@@UAEHPAVJGLBuffer@@HHFPAVJGLPalette@@D@Z	public	100	100.0	62/62 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x199d0	0x100199d0	161	G	JGLSprite::draw_color_scaled	?draw_color_scaled@JGLSprite@@UAEHPAVJGLBuffer@@HHFPAVJGLPalette@@D@Z	public	100	100.0	62/62 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x19aa0	0x10019aa0	181	G	JGLSprite::draw_antialiased	?draw_antialiased@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@HHPAVJGLPalette@@@Z	public	100	100.0	69/69 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x19b90	0x10019b90	185	G	JGLSprite::MaskedBlitToTarget	?MaskedBlitToTarget@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@1HHPAVJGLPalette@@@Z	public	100	100.0	71/71 ins	jgld_sprite.cpp
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x19c80	0x10019c80	893	G	JGLSprite::draw_with_alpha	?draw_with_alpha@JGLSprite@@UAEHPAVGSSprite@@PAVJGLBuffer@@HHPAVJGLPalette@@@Z	public	100	100.0	288/288 ins	
+jgld	jgl/jgld.dll/src/jglspriteblend.cpp	0x1a0e0	0x1001a0e0	288	G	JGLSprite::CopyFrom	?CopyFrom@JGLSprite@@UAEPAV1@PAV1@@Z	public	100	100.0	105/105 ins	jgld_sprite.cpp

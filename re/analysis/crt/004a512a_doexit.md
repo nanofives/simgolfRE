@@ -34,8 +34,8 @@ Globals:
 - `jne` (equality) at 0x004a5139, 0x004a5162
 
 ## Callees
-- 0x004a51cf `FID_conflict:__lockexit` at 0x004a512b
-- 0x004a51d8 `FID_conflict:__lockexit` at 0x004a51b6
+- 0x004a51cf `__lockexit` at 0x004a512b
+- 0x004a51d8 `__unlockexit` at 0x004a51b6
 - 0x004a51e1 `__initterm` at 0x004a5199, 0x004a51aa
 - import `KERNEL32.dll!ExitProcess` at 0x004a51c7
 - import `KERNEL32.dll!GetCurrentProcess` at 0x004a513f

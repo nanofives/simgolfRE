@@ -30,7 +30,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x10035000
 
 ## Callees
-- 0x10042cf0 `FID_conflict:_memcpy` at 0x1003501d
+- 0x10042cf0 `_memmove` at 0x1003501d
 - import `WINMM.dll!mmioGetInfo` at 0x10034ff0
 - import `WINMM.dll!mmioSetInfo` at 0x10035039
 

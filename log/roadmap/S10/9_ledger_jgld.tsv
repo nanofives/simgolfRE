@@ -1,0 +1,121 @@
+va	verdict	smsg	name	reason
+0x100035b0	REJECT_HAND	Transform<float>::Identity	Transform<float>::Identity	no caller and no stored pointer: unreferenced
+0x100052b0	ACCEPT_HAND	Matrix4<float>::MakeIdentity	Matrix::MakeIdentity	
+0x10005300	REJECT_HAND	Matrix4<float>::Transpose	Matrix4<float>::Transpose	empty body returning this; no caller, no stored pointer
+0x10005330	REJECT_HAND	Matrix4<float>::Invert	Matrix4<float>::Invert	empty body returning this; no caller, no stored pointer
+0x100074b0	ACCEPT_HAND	$E2	dynInit_random1012844c	
+0x100074f0	ACCEPT_HAND	$E1	constructRandom1012844c	
+0x10009840	REJECT_HAND	GSBuffer::sync_to_palette	GSBuffer::sync_to_palette	empty body (`ret 4` after the frame): no instruction supports the verb
+0x10019c80	ACCEPT_HAND	JGLSprite::draw_with_alpha	Sprite::draw_with_alpha	
+0x1001a6b0	ACCEPT_HAND	JGLSprite::draw_16_16	Sprite::draw_16_16	
+0x1001b590	REJECT_HAND	JGLSprite::draw_16_shadows_16_16	JGLSprite::draw_16_shadows_16_16	constant stub (`xor eax, eax; ret 0x10`)
+0x1001b5d0	REJECT_HAND	JGLSprite::draw_civ3_units_16_16	JGLSprite::draw_civ3_units_16_16	constant stub (`xor eax, eax; ret 0x10`)
+0x1001b610	REJECT_HAND	JGLSprite::draw_sudo_trans_16_16_50	JGLSprite::draw_sudo_trans_16_16_50	constant stub (`xor eax, eax; ret 0xc`)
+0x1001b650	REJECT_HAND	JGLSprite::draw_sudo_trans_16_16_25	JGLSprite::draw_sudo_trans_16_16_25	constant stub (`xor eax, eax; ret 0xc`)
+0x100650a0	ACCEPT_HAND	$E13	atexitDtor_arrayE0	
+0x100651b0	ACCEPT_HAND	$E18	atexitDtor_modes	
+0x100652c0	ACCEPT_HAND	$E23	atexitDtor_devmodes	
+0x100655c0	ACCEPT_HAND	JGLSys::`scalar deleting destructor'	Display::scalarDeletingDtor	
+0x10065670	ACCEPT_HAND	JGLSys::~JGLSys	Display::dtor	
+0x10066df0	REJECT_HAND	GraphSys::init_device	GraphSys::init_device	constant stub (`mov eax, 0x18; ret 4`)
+0x10066e30	REJECT_HAND	GraphSys::Unimplemented16	GraphSys::Unimplemented16	constant stub (`mov eax, 0x18; ret 4`)
+0x10066e70	REJECT_HAND	GraphSys::get_devices	GraphSys::get_devices	constant stub (`xor eax, eax; ret`)
+0x10066ea0	REJECT_HAND	GraphSys::close_device	GraphSys::close_device	empty stub
+0x10066ed0	REJECT_HAND	GraphSys::get_light_data	GraphSys::get_light_data	constant stub
+0x10066f10	REJECT_HAND	GraphSys::delete_light_data	GraphSys::delete_light_data	empty stub
+0x10066f40	REJECT_HAND	GraphSys::clear_buffer	GraphSys::clear_buffer	constant stub (0x18)
+0x10066f80	REJECT_HAND	GraphSys::begin_scene	GraphSys::begin_scene	constant stub (0x18)
+0x10066fc0	REJECT_HAND	GraphSys::end_scene	GraphSys::end_scene	constant stub (0x18)
+0x10067000	REJECT_HAND	GraphSys::create_verts	GraphSys::create_verts	constant stub (0x18)
+0x10067040	REJECT_HAND	GraphSys::set_material	GraphSys::set_material	constant stub (0x18)
+0x10067080	REJECT_HAND	GraphSys::set_world_transform	GraphSys::set_world_transform	constant stub (0x18)
+0x100670c0	REJECT_HAND	GraphSys::set_camera_transform	GraphSys::set_camera_transform	constant stub (0x18)
+0x10067100	REJECT_HAND	GraphSys::set_projection	GraphSys::set_projection	constant stub (0x18)
+0x10067140	REJECT_HAND	GraphSys::load_texture	GraphSys::load_texture	constant stub (0x18)
+0x10067180	REJECT_HAND	GraphSys::set_texture	GraphSys::set_texture	constant stub (0x18)
+0x100671c0	REJECT_HAND	GraphSys::zbuffer_enable	GraphSys::zbuffer_enable	constant stub (0x18)
+0x10067200	REJECT_HAND	GraphSys::zwrite_enable	GraphSys::zwrite_enable	constant stub (0x18)
+0x10067240	REJECT_HAND	GraphSys::src_blend_enable	GraphSys::src_blend_enable	constant stub (0x18)
+0x10067280	REJECT_HAND	GraphSys::specular_enable	GraphSys::specular_enable	constant stub (0x18)
+0x100672c0	REJECT_HAND	GraphSys::read_x_file	GraphSys::read_x_file	constant stub (0x18)
+0x10067300	REJECT_HAND	GraphSys::copy_verts	GraphSys::copy_verts	constant stub (0x18)
+0x10067340	REJECT_HAND	GraphSys::render_verts	GraphSys::render_verts	constant stub (0x18)
+0x10067380	REJECT_HAND	GraphSys::set_src_blend	GraphSys::set_src_blend	constant stub (0x18)
+0x100673c0	REJECT_HAND	GraphSys::set_dst_blend	GraphSys::set_dst_blend	constant stub (0x18)
+0x10067400	REJECT_HAND	GraphSys::set_cull_mode	GraphSys::set_cull_mode	constant stub (0x18)
+0x10067440	REJECT_HAND	GraphSys::set_fill_mode	GraphSys::set_fill_mode	constant stub (0x18)
+0x10067480	REJECT_HAND	GraphSys::set_shade_mode	GraphSys::set_shade_mode	constant stub (0x18)
+0x10067820	REJECT_HAND	JGLSys::screen_mask	JGLSys::screen_mask	constant stub (`xor eax, eax; ret`)
+0x1006afc0	ACCEPT_HAND	PRNG::Seed	Random::seed	
+0x1006b000	ACCEPT_HAND	JGLPalette::get_555_table	Palette::get_555_table	
+0x1006b040	ACCEPT_HAND	JGLPalette::get_565_table	Palette::get_565_table	
+0x1006b080	ACCEPT_HAND	JGLSys::wait_task	Display::wait_task	
+0x1006b0f0	ACCEPT_HAND	JGLSys::do_task	Display::do_task	
+0x1006b1d0	REJECT_HAND	JGLSys::do_non_input	JGLSys::do_non_input	368-byte body not reviewed in depth
+0x1006b3a0	ACCEPT_HAND	JGLSys::do_draw	Display::do_draw	
+0x1006b440	ACCEPT_HAND	JGLSys::do_key	Display::do_key	
+0x1006b4f0	ACCEPT_HAND	JGLSys::do_mouse_move	Display::do_mouse_move	
+0x1006b5a0	REJECT_HAND	JGLSys::do_mouse_stroke	JGLSys::do_mouse_stroke	same mouse range as do_mouse in a 319-byte body; what makes it a stroke is not reviewed
+0x1006b730	ACCEPT_HAND	JGLSys::do_char	Display::do_char	
+0x1006b7e0	ACCEPT_HAND	JGLSys::do_mouse	Display::do_mouse	
+0x1006b890	ACCEPT_HAND	JGLSys::flush_keyboard	Display::flush_keyboard	
+0x1006b900	ACCEPT_HAND	JGLSys::flush_mouse	Display::flush_mouse	
+0x1006b970	REJECT_HAND	JGLSys::do_timer	JGLSys::do_timer	peeks message 0x401 (WM_USER + 1); no code in jgld.dll posts 0x401 (the only `push 0x401` are this function's and flush_timer's), so the timer noun has no support
+0x1006ba20	REJECT_HAND	JGLSys::flush_timer	JGLSys::flush_timer	same message 0x401 as do_timer: the timer noun has no support
+0x1007f110	MANUAL	operator new[]	operator new[]	
+0x1007f360	MANUAL	_purecall	_purecall	
+0x1007fbc0	MANUAL	_nh_malloc_dbg	_nh_malloc_dbg	
+0x100806d0	MANUAL	free	free	
+0x10080b70	MANUAL	_msize	_msize	
+0x10080b90	MANUAL	_msize_dbg	_msize_dbg	
+0x10080d20	MANUAL	_CrtSetBreakAlloc	_CrtSetBreakAlloc	
+0x10080d40	MANUAL	_CrtSetDbgBlockType	_CrtSetDbgBlockType	
+0x10080e20	MANUAL	_CrtSetAllocHook	_CrtSetAllocHook	
+0x10080ed0	MANUAL	_CrtCheckMemory	_CrtCheckMemory	
+0x100812b0	MANUAL	_CrtDoForAllClientObjects	_CrtDoForAllClientObjects	
+0x100813b0	MANUAL	_CrtIsValidHeapPointer	_CrtIsValidHeapPointer	
+0x10081610	MANUAL	_CrtSetDumpClient	_CrtSetDumpClient	
+0x10081630	MANUAL	_CrtMemCheckpoint	_CrtMemCheckpoint	
+0x10081910	MANUAL	_CrtMemDumpAllObjectsSince	_CrtMemDumpAllObjectsSince	
+0x10081f70	MANUAL	_CrtSetReportHook	_CrtSetReportHook	
+0x10083490	MANUAL	_unlock	_unlock	
+0x100834b0	MANUAL	_lockerr_exit	_lockerr_exit	
+0x10084fd0	MANUAL	__threadid	__threadid	
+0x10084fe0	MANUAL	__threadhandle	__threadhandle	
+0x10085af0	MANUAL	_query_new_handler	_query_new_handler	reads dword ptr [0x1012882c] (from 0x10085af0), no store, no call
+0x10085de0	MANUAL	_CrtDefaultAllocHook	_CrtDefaultAllocHook	
+0x10085df0	MANUAL	_expand_base	_expand_base	
+0x10086000	MANUAL	_realloc_base	_realloc_base	
+0x10086490	MANUAL	_free_base	_free_base	
+0x10086700	MANUAL	_get_sbh_threshold	_get_sbh_threshold	reads dword ptr [0x10125784], dword ptr [0x10129fe0] (from 0x10086700), no store, no call
+0x10086730	MANUAL	_set_sbh_threshold	_set_sbh_threshold	
+0x10086970	MANUAL	__sbh_free_block	__sbh_free_block	
+0x100884d0	MANUAL	_get_old_sbh_threshold	_get_old_sbh_threshold	reads dword ptr [0x10125784] (from 0x100884d0), no store, no call
+0x100884e0	MANUAL	_set_old_sbh_threshold	_set_old_sbh_threshold	
+0x10088510	MANUAL	__old_sbh_new_region	__old_sbh_new_region	
+0x100886f0	MANUAL	__old_sbh_release_region	__old_sbh_release_region	
+0x10088770	MANUAL	__old_sbh_decommit_pages	__old_sbh_decommit_pages	
+0x100888d0	MANUAL	__old_sbh_find_block	__old_sbh_find_block	
+0x10088960	MANUAL	__old_sbh_free_block	__old_sbh_free_block	
+0x100889d0	MANUAL	__old_sbh_alloc_block	__old_sbh_alloc_block	
+0x10088d90	MANUAL	__old_sbh_alloc_block_from_page	__old_sbh_alloc_block_from_page	
+0x10089040	MANUAL	__old_sbh_resize_block	__old_sbh_resize_block	
+0x100891b0	MANUAL	__old_sbh_heap_check	__old_sbh_heap_check	
+0x100893f0	MANUAL	_GetLinkerVersion	_GetLinkerVersion	
+0x10089450	MANUAL	__heap_select	__heap_select	
+0x10089680	MANUAL	_heap_init	_heap_init	
+0x10089710	MANUAL	_heap_term	_heap_term	
+0x10089db0	MANUAL	$$$00001	$$$00001	reads [esp + 8], dword ptr [eax + 4], dword ptr [eax] (from 0x10089db0), no store, no call
+0x1008a350	MANUAL	__fpecode	__fpecode	
+0x1008e8e0	MANUAL	_tolower	_tolower	reads dword ptr [ebp + 8] (from 0x1008e8e0), no store, no call
+0x100904d0	MANUAL	_errno	_errno	
+0x100904e0	MANUAL	__doserrno	__doserrno	
+0x10091200	DEFER_NOT_A_FUNCTION	$$$00001	$$$00001	
+0x10091e00	MANUAL	_getmbcp	_getmbcp	reads dword ptr [0x10129bb4] (from 0x10091e00), no store, no call
+0x10093e00	MANUAL	__init_dummy	__init_dummy	
+0x100959e0	MANUAL	_toupper	_toupper	reads dword ptr [ebp + 8] (from 0x100959e0), no store, no call
+0x10097330	MANUAL	__init_collate	__init_collate	
+0x10098d90	MANUAL	strftime	strftime	
+0x10098db0	MANUAL	_Strftime	_Strftime	
+0x10099ec0	MANUAL	localeconv	localeconv	reads dword ptr [0x10126a38] (from 0x10099ec0), no store, no call
+0x1009e600	MANUAL	zlibVersion	zlibVersion	reads [ebp - 0x40] (from 0x1009e600), no store, no call

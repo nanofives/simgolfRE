@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 92 bytes, 33 instructions, subsystem `ui`. Mechanical t
 second-button press event entry: sends the press to the window under the pointer through slot 85, then runs the second-button hook and the common hook (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnRButtonDown@SysMessageHandler@@UAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00495c29): callee pops 12 bytes of stack arguments.
 
 ## Reads

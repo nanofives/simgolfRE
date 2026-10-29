@@ -1,0 +1,51 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+3,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+4,"add eax, esi","add eax, esi",True
+5,"cmp dword ptr [eax + 0x34], 0","cmp dword ptr [eax + 0x34], 0",True
+6,jge 0x1a,jge 0x100417be,True
+7,"add eax, 0x38","add eax, 0x38",True
+8,push eax,push eax,True
+9,call 0x19,call 0x10041e59,True
+10,pop ecx,pop ecx,True
+11,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+12,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+13,"lea ecx, [eax + esi]","lea ecx, [eax + esi]",True
+14,"mov eax, dword ptr [eax + esi + 8]","mov eax, dword ptr [eax + esi + 8]",True
+15,"test eax, eax","test eax, eax",True
+16,je 0x4a,je 0x100417ee,True
+17,"or al, 2","or al, 2",True
+18,"mov dword ptr [ecx + 8], eax","mov dword ptr [ecx + 8], eax",True
+19,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+20,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+21,"add eax, esi","add eax, esi",True
+22,"cmp dword ptr [eax + 0x34], 0","cmp dword ptr [eax + 0x34], 0",True
+23,jge 0x46,jge 0x100417ea,True
+24,"add eax, 0x38","add eax, 0x38",True
+25,push eax,push eax,True
+26,call 0x45,call 0x10041e64,True
+27,pop ecx,pop ecx,True
+28,"xor eax, eax","xor eax, eax",True
+29,pop esi,pop esi,True
+30,ret ,ret ,True
+31,"mov ecx, dword ptr [ecx + 0x20]","mov ecx, dword ptr [ecx + 0x20]",True
+32,"test ecx, ecx","test ecx, ecx",True
+33,je 0x56,je 0x100417fa,True
+34,call 0x56,call 0x100418f1,True
+35,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+36,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+37,"mov esi, dword ptr [eax + esi + 4]","mov esi, dword ptr [eax + esi + 4]",True
+38,"cmp dword ptr [esi + 0x30], 0","cmp dword ptr [esi + 0x30], 0",True
+39,jge 0x6f,jge 0x10041813,True
+40,"add esi, 0x34","add esi, 0x34",True
+41,push esi,push esi,True
+42,call 0x6e,call 0x10041e59,True
+43,pop ecx,pop ecx,True
+44,push 1,push 1,True
+45,pop eax,pop eax,True
+46,pop esi,pop esi,True
+47,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\ostream.obj (library object, no compilation)",symbol=?opfx@ostream@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,48,100.0%

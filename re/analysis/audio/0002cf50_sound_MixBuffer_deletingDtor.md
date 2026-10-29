@@ -7,6 +7,7 @@ __thiscall scalar deleting destructor of MixBuffer (slot 0, flags argument): ins
 System writeup: `re/analysis/systems/sound_19.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_sound.cpp` as `??_GKeyMap@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002cfd7): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002cf50 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

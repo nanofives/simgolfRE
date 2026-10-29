@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x30360	0x00430360	4728	G	UpdateAndRenderWildlife	?UpdateAndRenderWildlife@@YAXXZ	public	100	100.0	1329/1329 ins	
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x315e0	0x004315e0	1536	G	InitNewGameData	?InitNewGameData@@YAXXZ	public	100	100.0	462/462 ins	
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x31be0	0x00431be0	320	G	DownsampleRGB555ToRGB888	?DownsampleRGB555ToRGB888@@YAPAEH@Z	public	100	100.0	101/101 ins	
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x31d20	0x00431d20	440	G	SaveSurfaceToJPEG	?SaveSurfaceToJPEG@@YAXPBDPAUAssetSurface@@HHHHH@Z	public	100	100.0	143/143 ins	golf_hand_r1.cpp
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x31ee0	0x00431ee0	184	G	SaveScreenshotToJPEG	?SaveScreenshotToJPEG@@YAXPAD@Z	public	100	100.0	77/77 ins	golf_hand_06_i.cpp
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x31fa0	0x00431fa0	450	G	SaveCourseInfoToText	?SaveCourseInfoToText@@YAHPAD@Z	public	100	100.0	133/133 ins	golf_hand_s1.cpp
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x32170	0x00432170	40	G	ProcessPendingScreenshot	?ProcessPendingScreenshot@@YAXXZ	public	100	100.0	10/10 ins	golf_small3.cpp
+golf	golf/golf.exe/src/WildlifeUpdate.cpp	0x321a0	0x004321a0	41	G	SetCourseFileName	?SetCourseFileName@@YAXPBD@Z	public	100	100.0	19/19 ins	

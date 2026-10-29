@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"and eax, 0xfff7ffff","and eax, 0xfff7ffff",True
+2,push eax,push eax,True
+3,push dword ptr [esp + 8],push dword ptr [esp + 8],True
+4,call 0x13,call 0x10049676,True
+5,pop ecx,pop ecx,True
+6,pop ecx,pop ecx,True
+7,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\ieee87.obj (library object, no compilation)",symbol=__controlfp,module=sound.dll
+VERDICT,GREEN,8,100.0%

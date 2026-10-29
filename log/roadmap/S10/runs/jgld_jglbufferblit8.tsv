@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglbufferblit8.cpp	0x12900	0x10012900	952	G	JGLBuffer::copy_mask_8_16	?copy_mask_8_16@JGLBuffer@@QAEHPAV1@HHHHHHH@Z	public	100	100.0	317/317 ins	jgld_surface16.cpp
+jgld	jgl/jgld.dll/src/jglbufferblit8.cpp	0x12db0	0x10012db0	2106	G	JGLBuffer::copy_8_16	?copy_8_16@JGLBuffer@@QAEHPAV1@HHHHHH@Z	public	100	100.0	708/708 ins	m36e_jgld_blitt.cpp
+jgld	jgl/jgld.dll/src/jglbufferblit8.cpp	0x13800	0x10013800	877	G	JGLBuffer::copy_mask_8_8	?copy_mask_8_8@JGLBuffer@@QAEHPAV1@HHHHHHH@Z	public	100	100.0	315/315 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferblit8.cpp	0x13c50	0x10013c50	1837	G	JGLBuffer::copy_8_8	?copy_8_8@JGLBuffer@@QAEHPAV1@HHHHHH@Z	public	100	100.0	651/651 ins	m36e_jgld_blitt.cpp

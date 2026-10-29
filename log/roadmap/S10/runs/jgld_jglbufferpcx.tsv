@@ -1,0 +1,14 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0xf880	0x1000f880	276	G	JGLBuffer::change_color_8	?change_color_8@JGLBuffer@@QAEHHHHHHH@Z	public	100	100.0	111/111 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0xf9e0	0x1000f9e0	313	G	JGLBuffer::map_colors_8	?map_colors_8@JGLBuffer@@QAEHHHHHPBE@Z	public	100	100.0	123/123 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0xfb70	0x1000fb70	1658	G	JGLBuffer::line_8	?line_8@JGLBuffer@@QAEXHHHHH@Z	public	100	100.0	582/582 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x10390	0x10010390	66	G	SetRectLTRB	_SetRectLTRB	public	100	100.0	28/28 ins	jgld_raw_03.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x103f0	0x100103f0	437	G	JGLBuffer::hline_8	?hline_8@JGLBuffer@@QAEXHHHH@Z	public	100	100.0	152/152 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x10620	0x10010620	463	G	JGLBuffer::vline_8	?vline_8@JGLBuffer@@QAEXHHHH@Z	public	100	100.0	161/161 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x10870	0x10010870	2541	G	JGLBuffer::DrawDashedLine8	?DrawDashedLine8@JGLBuffer@@QAEXHHHHHHHHH@Z	public	100	100.0	877/877 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x114e0	0x100114e0	736	G	JGLBuffer::DrawDashedHLine8	?DrawDashedHLine8@JGLBuffer@@QAEXHHHHHHHH@Z	public	100	100.0	279/279 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x11880	0x10011880	764	G	JGLBuffer::DrawDashedVLine8	?DrawDashedVLine8@JGLBuffer@@QAEXHHHHHHHH@Z	public	100	100.0	284/284 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x11c40	0x10011c40	317	G	JGLBuffer::fill_8	?fill_8@JGLBuffer@@QAEXH@Z	public	100	100.0	119/119 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x11dd0	0x10011dd0	335	G	JGLBuffer::fill8	?fill8@JGLBuffer@@QAEHPAURect@@H@Z	public	100	100.0	127/127 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x11f80	0x10011f80	358	G	JGLBuffer::dither_8	?dither_8@JGLBuffer@@QAEHPAURect@@H@Z	public	100	100.0	129/129 ins	jgld_surface.cpp
+jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	0x12140	0x10012140	1586	G	JGLBuffer::write_pcx_8	?write_pcx_8@JGLBuffer@@QAEHPBD@Z	public	100	100.0	378/378 ins	m36e_jgld_pcx.cpp

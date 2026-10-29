@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"cmp eax, dword ptr [0]","cmp eax, dword ptr [0x100b5cdc]",True
+2,jb 0xf,jb 0x1004a28c,True
+3,"xor eax, eax","xor eax, eax",True
+4,ret ,ret ,True
+5,"mov ecx, eax","mov ecx, eax",True
+6,"and eax, 0x1f","and eax, 0x1f",True
+7,"sar ecx, 5","sar ecx, 5",True
+8,"lea eax, [eax + eax*8]","lea eax, [eax + eax*8]",True
+9,"mov ecx, dword ptr [ecx*4]","mov ecx, dword ptr [ecx*4 + 0x100b5ba0]",True
+10,"mov al, byte ptr [ecx + eax*4 + 4]","mov al, byte ptr [ecx + eax*4 + 4]",True
+11,"and eax, 0x40","and eax, 0x40",True
+12,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\isatty.obj (library object, no compilation)",symbol=__isatty,module=sound.dll
+VERDICT,GREEN,13,100.0%

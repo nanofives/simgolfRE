@@ -1,0 +1,81 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x20","sub esp, 0x20",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,"mov esi, dword ptr [ebp + 0xc]","mov esi, dword ptr [ebp + 0xc]",True
+6,push edi,push edi,True
+7,call 0x11,call 0x4a8e53,True
+8,push 8,push 8,True
+9,"mov dword ptr [ebp + 0xc], eax","mov dword ptr [ebp + 0xc], eax",True
+10,pop ecx,pop ecx,True
+11,"xor eax, eax","xor eax, eax",True
+12,"lea edi, [ebp - 0x20]","lea edi, [ebp - 0x20]",True
+13,push 7,push 7,True
+14,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+15,pop edi,pop edi,True
+16,"mov dl, byte ptr [esi]","mov dl, byte ptr [esi]",True
+17,"mov bl, 1","mov bl, 1",True
+18,"movzx ecx, dl","movzx ecx, dl",True
+19,"mov eax, ecx","mov eax, ecx",True
+20,"and ecx, edi","and ecx, edi",True
+21,"shr eax, 3","shr eax, 3",True
+22,"shl bl, cl","shl bl, cl",True
+23,"lea eax, [ebp + eax - 0x20]","lea eax, [ebp + eax - 0x20]",True
+24,"or byte ptr [eax], bl","or byte ptr [eax], bl",True
+25,inc esi,inc esi,True
+26,"test dl, dl","test dl, dl",True
+27,jne 0x21,jne 0x4a67ac,True
+28,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+29,"test edx, edx","test edx, edx",True
+30,jne 0x49,jne 0x4a67d4,True
+31,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+32,"mov edx, dword ptr [eax + 0x18]","mov edx, dword ptr [eax + 0x18]",True
+33,"mov al, byte ptr [edx]","mov al, byte ptr [edx]",True
+34,push 1,push 1,True
+35,"movzx esi, al","movzx esi, al",True
+36,"mov ecx, esi","mov ecx, esi",True
+37,pop ebx,pop ebx,True
+38,"and ecx, edi","and ecx, edi",True
+39,"shl ebx, cl","shl ebx, cl",True
+40,"shr esi, 3","shr esi, 3",True
+41,"mov cl, byte ptr [ebp + esi - 0x20]","mov cl, byte ptr [ebp + esi - 0x20]",True
+42,"test cl, bl","test cl, bl",True
+43,je 0x69,je 0x4a67f4,True
+44,"test al, al","test al, al",True
+45,je 0x69,je 0x4a67f4,True
+46,inc edx,inc edx,True
+47,jmp 0x49,jmp 0x4a67d4,True
+48,"mov ebx, edx","mov ebx, edx",True
+49,"mov al, byte ptr [edx]","mov al, byte ptr [edx]",True
+50,"test al, al","test al, al",True
+51,je 0x8f,je 0x4a681a,True
+52,"movzx esi, al","movzx esi, al",True
+53,"mov ecx, esi","mov ecx, esi",True
+54,push 1,push 1,True
+55,"and ecx, edi","and ecx, edi",True
+56,pop eax,pop eax,True
+57,"shl eax, cl","shl eax, cl",True
+58,"shr esi, 3","shr esi, 3",True
+59,"mov cl, byte ptr [ebp + esi - 0x20]","mov cl, byte ptr [ebp + esi - 0x20]",True
+60,"test cl, al","test cl, al",True
+61,jne 0x8b,jne 0x4a6816,True
+62,inc edx,inc edx,True
+63,jmp 0x6b,jmp 0x4a67f6,True
+64,"and byte ptr [edx], 0","and byte ptr [edx], 0",True
+65,inc edx,inc edx,True
+66,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+67,pop edi,pop edi,True
+68,pop esi,pop esi,True
+69,"mov dword ptr [eax + 0x18], edx","mov dword ptr [eax + 0x18], edx",True
+70,"mov eax, ebx","mov eax, ebx",True
+71,"sub eax, edx","sub eax, edx",True
+72,neg eax,neg eax,True
+73,"sbb eax, eax","sbb eax, eax",True
+74,"and eax, ebx","and eax, ebx",True
+75,pop ebx,pop ebx,True
+76,leave ,leave ,True
+77,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\strtok.obj (library object, no compilation)",symbol=_strtok,module=golf_clean.exe
+VERDICT,GREEN,78,100.0%

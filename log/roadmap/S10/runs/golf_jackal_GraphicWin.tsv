@@ -1,0 +1,23 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x804a0	0x004804a0	212	G	GraphicWin::GraphicWin	??0GraphicWin@@QAE@XZ	public	100	100.0	48/48 ins	golf_hand_06_e.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80580	0x00480580	30	G	GraphicWin::`scalar deleting destructor'	??_GGraphicWin@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x805a0	0x004805a0	103	G	GraphicWin::~GraphicWin	??1GraphicWin@@UAE@XZ	public	100	100.0	28/28 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80610	0x00480610	167	G	GraphicWin::close	?close@GraphicWin@@QAEXXZ	public	100	100.0	37/37 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x806c0	0x004806c0	425	G	GraphicWin::init	?init@GraphicWin@@QAEHHHHHPBDHPAUWidgetBase@@PAUMenu@@PAH@Z	public	100	100.0	115/115 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80870	0x00480870	72	G	GraphicWin::init	?init@GraphicWin@@QAEHPAURect@@PBDHPAUWidgetBase@@PAUMenu@@PAH@Z	public	100	100.0	31/31 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x808c0	0x004808c0	324	G	GraphicWin::EraseWholeBackground	?EraseWholeBackground@GraphicWin@@QAEXH@Z	public	100	100.0	109/109 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80a10	0x00480a10	238	G	GraphicWin::EraseBackground	?EraseBackground@GraphicWin@@QAEHPAURect@@H@Z	public	100	100.0	78/78 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80b00	0x00480b00	39	G	GraphicWin::fill	?fill@GraphicWin@@QAEXHHHHH@Z	public	100	100.0	13/13 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80b30	0x00480b30	237	G	GraphicWin::resize	?resize@GraphicWin@@UAEHHHHH@Z	public	100	100.0	81/81 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80c20	0x00480c20	95	G	WidgetBase::RenderRect	?RenderRect@WidgetBase@@QAEXHHHHH@Z	public	100	100.0	31/31 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80c80	0x00480c80	85	G	GraphicWin::RenderFullSurface	?RenderFullSurface@GraphicWin@@QAEXH@Z	public	100	100.0	34/34 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80ce0	0x00480ce0	140	G	GraphicWin::soft_update	?soft_update@GraphicWin@@QAEXXZ	public	100	100.0	43/43 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80d70	0x00480d70	69	G	GraphicWin::redraw	?redraw@GraphicWin@@UAEXXZ	public	100	100.0	22/22 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80dc0	0x00480dc0	447	G	GraphicWin::on_paint	?on_paint@GraphicWin@@UAEXPAURect@@@Z	public	100	100.0	140/140 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x80f80	0x00480f80	316	G	GraphicWin::on_size	?on_size@GraphicWin@@UAEXHHH@Z	public	100	100.0	111/111 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x810c0	0x004810c0	5	G	GraphicWin::set_rects	?set_rects@GraphicWin@@UAEXXZ	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x810d0	0x004810d0	1668	G	GraphicWin::on_redraw_nc	?on_redraw_nc@GraphicWin@@UAEXH@Z	public	100	100.0	517/517 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x81760	0x00481760	272	G	GraphicWin::compute_min_size	?compute_min_size@GraphicWin@@QAEXXZ	public	100	100.0	87/87 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x81870	0x00481870	673	G	InitFadeTable	?InitFadeTable@@YAHH@Z	public	100	100.0	216/216 ins	
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x81b20	0x00481b20	29	G	FreeFadeTable	?FreeFadeTable@@YAXXZ	public	100	100.0	8/8 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/GraphicWin.cpp	0x81b40	0x00481b40	11	G	GraphicWin::`vector deleting destructor'	??_EGraphicWin@@WCHE@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 5 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 returns 0 and ignores its one argument (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?handleGameSpecificControlLines@BasePop@@UAEDPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004916e2): callee pops 4 bytes of stack arguments.
 
 ## Reads

@@ -1,0 +1,144 @@
+source	va	pdb_size	extent	pdb_name	symbol	status	score_sp5	score_8168	note	last_ins	next_entry_gap	inside_listed	decodes_exact
+sound/sound.dll/src/CTimer.cpp	0x10008e00	32	32	CTimer::get_samples_per_tick	?get_samples_per_tick@CTimer@@QAEHPAUtWAVEFORMATEX@@@Z	100	100.0	100.0	11/11 ins	ret 4	208		yes
+sound/sound.dll/src/CTimer.cpp	0x10008e30	50	50	CTimer::set_rate	?set_rate@CTimer@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	16/16 ins	ret 4	160		yes
+sound/sound.dll/src/CTimer.cpp	0x10008e80	54	54	CTimer::set_wave_format	?set_wave_format@CTimer@@QAE?AW4SNDERR@@PAUtWAVEFORMATEX@@@Z	100	100.0	100.0	18/18 ins	ret 4	80		yes
+sound/sound.dll/src/Cmix.cpp	0x10006fc0	49	49	CWaveMixer::fill_mixbuff	?fill_mixbuff@CWaveMixer@@AAEXK@Z	100	100.0	100.0	17/17 ins	ret 4	80		yes
+sound/sound.dll/src/Cmix.cpp	0x10007c10	5	5	CWaveMixer::mb_2_dsb	?mb_2_dsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@KK@Z	100	100.0	100.0	2/2 ins	ret 0xc	32		yes
+sound/sound.dll/src/Cmix.cpp	0x100087a0	56	56	CWaveMixer::get_filter_index	?get_filter_index@CWaveMixer@@SAHPAUtWAVEFORMATEX@@0@Z	100	100.0	100.0	19/19 ins	ret	80		yes
+sound/sound.dll/src/MMError.cpp	0x10025040	9	9	CMMError::CMMError	??0CMMError@@QAE@XZ	100	100.0	100.0	3/3 ins	ret	32		yes
+sound/sound.dll/src/MMError.cpp	0x10025090	7	7	CMMError::~CMMError	??1CMMError@@UAE@XZ	100	100.0	100.0	2/2 ins	ret	256		yes
+sound/sound.dll/src/MMError.cpp	0x100250b0	172	86	CMMError::handle_error	?handle_error@CMMError@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	23/23 ins	ret 4	224		yes
+sound/sound.dll/src/VoiceRxMgr.cpp	0x10030730	110	110	CVoiceRxMgr::lpc10_write_16bit_samples	?lpc10_write_16bit_samples@CVoiceRxMgr@@QAEHPAFQAMH@Z	100	100.0	100.0	40/40 ins	ret 0xc	272		yes
+sound/sound.dll/src/VoiceRxMgr.cpp	0x100307c0	85	85	CVoiceRxMgr::lpc10_read_bits	?lpc10_read_bits@CVoiceRxMgr@@QAEHPADPAHH@Z	100	100.0	100.0	38/38 ins	ret 0xc	128		yes
+sound/sound.dll/src/VoiceRxMgr.cpp	0x10031120	29	29	CVoiceRxMgr::discard_buffer	?discard_buffer@CVoiceRxMgr@@QAE?AW4SNDERR@@PAUHMMIO__@@@Z	100	100.0	100.0	9/9 ins	ret 4	112		yes
+sound/sound.dll/src/VoiceRxMgr.cpp	0x10031150	3	3	CVoiceRxMgr::enable	?enable@CVoiceRxMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	ret	64		yes
+sound/sound.dll/src/VoiceRxMgr.cpp	0x10031170	3	3	CVoiceRxMgr::disable	?disable@CVoiceRxMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	ret	32		yes
+sound/sound.dll/src/VoiceTxMgr.cpp	0x10031670	50	50	CVoiceTxMgr::s2f_and_scale	?s2f_and_scale@CVoiceTxMgr@@AAEXPAMPAFH@Z	100	100.0	100.0	17/17 ins	ret 0xc	80		yes
+sound/sound.dll/src/VoiceTxMgr.cpp	0x10031a50	66	66	CVoiceTxMgr::lpc_write_bits	?lpc_write_bits@CVoiceTxMgr@@AAEXPADPAHH@Z	100	100.0	100.0	33/33 ins	ret 0xc	112		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x10038ed0	46	46	WaveInDeviceMgr::add_buffer	?add_buffer@WaveInDeviceMgr@@QAE?AW4SNDERR@@PAVWIBuffer@@@Z	100	100.0	100.0	16/16 ins	ret 4	64		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x10038f40	6	6	WaveInDeviceMgr::get_num_devices	?get_num_devices@WaveInDeviceMgr@@QAEKXZ	100	100.0	100.0	1/1 ins	jmp dword ptr [0x100b861c]	32		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x100392c0	144	83	WaveInDeviceMgr::handle_error	?handle_error@WaveInDeviceMgr@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	21/21 ins	ret 4	272		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x10039380	50	50	WaveInDeviceMgr::set_format	?set_format@WaveInDeviceMgr@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	10/10 ins	ret 4	80		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x10039490	28	28	WIBuffer::WIBuffer	??0WIBuffer@@QAE@XZ	100	100.0	100.0	11/11 ins	ret	48		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x10039540	10	10	WIBuffer::set_next	?set_next@WIBuffer@@QAEXPAUwavehdr_tag@@@Z	100	100.0	100.0	3/3 ins	ret 4	64		yes
+sound/sound.dll/src/WaveInDeviceMgr.cpp	0x10039560	3	3	WIBuffer::get_whdr	?get_whdr@WIBuffer@@QAEPAUwavehdr_tag@@XZ	100	100.0	100.0	2/2 ins	ret	32		yes
+sound/sound.dll/src/ambiencemgr.cpp	0x10005880	91	91	CAmbienceMgr::strip_path	?strip_path@CAmbienceMgr@@AAEXPAD@Z	100	100.0	100.0	40/40 ins	ret 4	480		yes
+sound/sound.dll/src/ambiencemgr.cpp	0x10005900	259	259	CAmbienceMgr::make_path_local	?make_path_local@CAmbienceMgr@@AAEXPAD0@Z	100	100.0	100.0	103/103 ins	ret 8	352		yes
+sound/sound.dll/src/avimgr.cpp	0x10006b50	23	23	CAviMgr::start	?start@CAviMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	10/10 ins	ret	48		yes
+sound/sound.dll/src/avimgr.cpp	0x10006ba0	29	29	CAviMgr::discard_frame	?discard_frame@CAviMgr@@QAE?AW4SNDERR@@PAUHMMIO__@@@Z	100	100.0	100.0	9/9 ins	ret 4	48		yes
+sound/sound.dll/src/dllmain.cpp	0x10009240	121	121	init_sound	?init_sound@@YA?AW4SNDERR@@PAUHWND__@@K@Z	100	100.0	100.0	31/31 ins	ret	160		yes
+sound/sound.dll/src/dllmain.cpp	0x100099d0	114	114	get_sound_type	?get_sound_type@@YA?AW4SOUNDTYPE@@PBD@Z	100	100.0	100.0	43/43 ins	ret	192		yes
+sound/sound.dll/src/dllmain.cpp	0x10009a70	1	1	update_sound	_update_sound	100	100.0	100.0	1/1 ins	ret	32		yes
+sound/sound.dll/src/dllmididevice.cpp	0x10009e10	26	26	Dll_Midi_Device::init_win_device	?init_win_device@Dll_Midi_Device@@AAE?AW4SNDERR@@XZ	100	100.0	100.0	11/11 ins	ret	48		yes
+sound/sound.dll/src/dllmididevice.cpp	0x1000aa60	110	110	Dll_Midi_Device::post_GT_request	?post_GT_request@Dll_Midi_Device@@QAE?AW4SNDERR@@PAVCCriticalRequest@@@Z	100	100.0	100.0	34/34 ins	ret 4	144		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000db60	95	95	Dll_Wave_Device::post_GT_request	?post_GT_request@Dll_Wave_Device@@QAE?AW4SNDERR@@PAVCCriticalRequest@@@Z	100	100.0	100.0	30/30 ins	ret 4	128		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e160	72	72	Dll_Wave_Device::update_hwbuffers	?update_hwbuffers@Dll_Wave_Device@@QAEXXZ	100	100.0	100.0	27/27 ins	ret	112		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e370	5	5	Dll_Wave_Device::get_eax	?get_eax@Dll_Wave_Device@@QAE?AW4SNDERR@@PAK@Z	100	100.0	100.0	2/2 ins	ret 4	288		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e390	34	34	Dll_Wave_Device::get_eax	?get_eax@Dll_Wave_Device@@QAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	100	100.0	100.0	11/11 ins	ret 4	256		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e3d0	5	5	Dll_Wave_Device::set_eax_volume	?set_eax_volume@Dll_Wave_Device@@QAE?AW4SNDERR@@M@Z	100	100.0	100.0	2/2 ins	ret 4	192		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e3f0	5	5	Dll_Wave_Device::get_eax_volume	?get_eax_volume@Dll_Wave_Device@@QAE?AW4SNDERR@@PAM@Z	100	100.0	100.0	2/2 ins	ret 4	160		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e410	5	5	Dll_Wave_Device::set_eax_decay	?set_eax_decay@Dll_Wave_Device@@QAE?AW4SNDERR@@M@Z	100	100.0	100.0	2/2 ins	ret 4	128		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e430	5	5	Dll_Wave_Device::get_eax_decay	?get_eax_decay@Dll_Wave_Device@@QAE?AW4SNDERR@@PAM@Z	100	100.0	100.0	2/2 ins	ret 4	96		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e450	5	5	Dll_Wave_Device::set_eax_damping	?set_eax_damping@Dll_Wave_Device@@QAE?AW4SNDERR@@M@Z	100	100.0	100.0	2/2 ins	ret 4	64		yes
+sound/sound.dll/src/dllwavedevice.cpp	0x1000e470	5	5	Dll_Wave_Device::get_eax_damping	?get_eax_damping@Dll_Wave_Device@@QAE?AW4SNDERR@@PAM@Z	100	100.0	100.0	2/2 ins	ret 4	32		yes
+sound/sound.dll/src/dsb.cpp	0x1000f0a0	16	16	CDSB::dsbrestore	?dsbrestore@CDSB@@AAE?AW4SNDERR@@XZ	100	100.0	100.0	8/8 ins	ret	32		yes
+sound/sound.dll/src/dsb.cpp	0x1000f0f0	77	77	CDSB::setsamplerate	?setsamplerate@CDSB@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	21/21 ins	ret 4	112		yes
+sound/sound.dll/src/dsb.cpp	0x1000f380	87	87	CDSB::setsamplesize	?setsamplesize@CDSB@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	22/22 ins	ret 4	256		yes
+sound/sound.dll/src/dsb.cpp	0x1000f400	86	86	CDSB::setnumchannels	?setnumchannels@CDSB@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	22/22 ins	ret 4	128		yes
+sound/sound.dll/src/dsb.cpp	0x1000f720	38	38	CDSB::reinit	?reinit@CDSB@@QAEXXZ	100	100.0	100.0	13/13 ins	ret	64		yes
+sound/sound.dll/src/dsb.cpp	0x10010120	37	37	CDSB::get_cur_dsbwrite	?get_cur_dsbwrite@CDSB@@QAE?AW4SNDERR@@PAK@Z	100	100.0	100.0	16/16 ins	ret 4	128		yes
+sound/sound.dll/src/dsb.cpp	0x10010160	36	36	CDSB::get_cur_dsbplay	?get_cur_dsbplay@CDSB@@QAE?AW4SNDERR@@PAK@Z	100	100.0	100.0	14/14 ins	ret 4	64		yes
+sound/sound.dll/src/dsb.cpp	0x10010d60	51	51	CDSB::release_pointer	?release_pointer@CDSB@@QAE?AW4SNDERR@@PAXK0K@Z	100	100.0	100.0	20/20 ins	ret 0x10	80		yes
+sound/sound.dll/src/dsb.cpp	0x10010e80	27	27	CDSB::set_samples_per_tick	?set_samples_per_tick@CDSB@@QAEXK@Z	100	100.0	100.0	7/7 ins	ret 4	48		yes
+sound/sound.dll/src/dsmgr.cpp	0x10011600	122	122	CDSMgr::init	?init@CDSMgr@@QAE?AW4SNDERR@@KIK@Z	100	100.0	100.0	51/51 ins	ret 0xc	160		yes
+sound/sound.dll/src/dsmgr.cpp	0x10011720	1	1	CDSMgr::suspend	?suspend@CDSMgr@@QAEXXZ	100	100.0	100.0	1/1 ins	ret	64		yes
+sound/sound.dll/src/dsmgr.cpp	0x10011740	1	1	CDSMgr::restart	?restart@CDSMgr@@QAEXXZ	100	100.0	100.0	1/1 ins	ret	32		yes
+sound/sound.dll/src/dsmgr.cpp	0x10012020	8	8	CDSMgr::get_eax	?get_eax@CDSMgr@@QAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	100	100.0	100.0	2/2 ins	ret 4	32		yes
+sound/sound.dll/src/dsmgr.cpp	0x10012060	3	3	CDSMgr::init_A3D	?init_A3D@CDSMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	ret	64		yes
+sound/sound.dll/src/dsmgr.cpp	0x10012080	3	3	CDSMgr::uninit_A3D	?uninit_A3D@CDSMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	ret	32		yes
+sound/sound.dll/src/dsmgr.cpp	0x10013470	77	77	CDSMgr::attach_dsb	?attach_dsb@CDSMgr@@QAE?AW4SNDERR@@PAVCDSB@@@Z	100	100.0	100.0	18/18 ins	ret 4	112		yes
+sound/sound.dll/src/filters.cpp	0x10013870	3	3	filter_stub	?filter_stub@@YAKPAPAX0HPAXK@Z	100	100.0	100.0	2/2 ins	ret	32		yes
+sound/sound.dll/src/midifile.cpp	0x1001d590	97	97	CMidiFile::get_pcur_event	?get_pcur_event@CMidiFile@@QAE?AW4SNDERR@@PAPAEK@Z	100	100.0	100.0	36/36 ins	ret 8	496		yes
+sound/sound.dll/src/midifile.cpp	0x1001d620	107	107	CMidiFile::get_pfirst_event	?get_pfirst_event@CMidiFile@@QAE?AW4SNDERR@@PAPAEK@Z	100	100.0	100.0	41/41 ins	ret 8	352		yes
+sound/sound.dll/src/midifile.cpp	0x1001d6b0	152	152	CMidiFile::advance_track	?advance_track@CMidiFile@@QAE?AW4SNDERR@@KK@Z	100	100.0	100.0	60/60 ins	ret 8	208		yes
+sound/sound.dll/src/midifile.cpp	0x1001e120	18	18	CMidiFile::reload	?reload@CMidiFile@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	7/7 ins	ret	160		yes
+sound/sound.dll/src/midifile.cpp	0x1001e150	79	79	CMidiFile::post_reset	?post_reset@CMidiFile@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	27/27 ins	ret	112		yes
+sound/sound.dll/src/midifile.cpp	0x1001e510	3	3	CMidiFile::mmioerr	?mmioerr@CMidiFile@@AAEXK@Z	100	100.0	100.0	1/1 ins	ret 4	32		yes
+sound/sound.dll/src/midifile.cpp	0x1001e550	11	11	CMidiFile::fade	?fade@CMidiFile@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	5/5 ins	ret	224		yes
+sound/sound.dll/src/midifile.cpp	0x1001e570	82	82	CMidiFile::fade	?fade@CMidiFile@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	29/29 ins	ret 4	192		yes
+sound/sound.dll/src/midifile.cpp	0x1001e5f0	42	42	CMidiFile::set_pan	?set_pan@CMidiFile@@QAEXH@Z	100	100.0	100.0	11/11 ins	ret 4	64		yes
+sound/sound.dll/src/midifile.cpp	0x1001e6b0	28	28	CMidiFile::be2le	?be2le@CMidiFile@@QAEKK@Z	100	100.0	100.0	12/12 ins	ret 4	48		yes
+sound/sound.dll/src/midifile.cpp	0x1001ea40	67	67	CMidiTrack::set_tick_offset	?set_tick_offset@CMidiTrack@@QAEXK@Z	100	100.0	100.0	28/28 ins	ret 4	112		yes
+sound/sound.dll/src/midimgr.cpp	0x10020270	8	8	CMidiMgr::reload	?reload@CMidiMgr@@AAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	jmp 0x1edd	32		yes
+sound/sound.dll/src/midimgr.cpp	0x10020aa0	37	37	CMidiMgr::free_all	?free_all@CMidiMgr@@SAXXZ	100	100.0	100.0	15/15 ins	ret	192		yes
+sound/sound.dll/src/midimgr.cpp	0x10020ae0	90	90	CMidiMgr::post_unload	?post_unload@CMidiMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	28/28 ins	ret	128		yes
+sound/sound.dll/src/midimgr.cpp	0x10021560	35	35	CMidiMgr::program_change	?program_change@CMidiMgr@@QAEKPAEK@Z	100	100.0	100.0	11/11 ins	ret 8	64		yes
+sound/sound.dll/src/midimgr.cpp	0x10021ec0	8	8	CMidiMgr::pitch_wheel	?pitch_wheel@CMidiMgr@@QAEKPAEK@Z	100	100.0	100.0	2/2 ins	ret 8	32		yes
+sound/sound.dll/src/midimgr.cpp	0x10023750	230	230	CMidiMgr::TT_play_trackset	?TT_play_trackset@CMidiMgr@@AAE?AW4SNDERR@@III@Z	100	100.0	100.0	92/92 ins	ret 0xc	304		yes
+sound/sound.dll/src/midimgr.cpp	0x10023b80	119	119	CMidiMgr::TT_xpose_trackset	?TT_xpose_trackset@CMidiMgr@@AAE?AW4SNDERR@@IIH@Z	100	100.0	100.0	49/49 ins	ret 0xc	160		yes
+sound/sound.dll/src/midimgr.cpp	0x10024310	3	3	CProgramMgr::unload	?unload@CProgramMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	ret	80		yes
+sound/sound.dll/src/midimgr.cpp	0x10024330	30	30	CProgramMgr::stop	?stop@CProgramMgr@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	11/11 ins	ret	48		yes
+sound/sound.dll/src/midimgr.cpp	0x10024420	7	7	CProgramMgr::xlat_pitch	?xlat_pitch@CProgramMgr@@QAEHH@Z	100	100.0	100.0	2/2 ins	ret 4	64		yes
+sound/sound.dll/src/midimgr.cpp	0x10024440	7	7	CProgramMgr::xlat_volume	?xlat_volume@CProgramMgr@@QAEKK@Z	100	100.0	100.0	2/2 ins	ret 4	32		yes
+sound/sound.dll/src/midimgr.cpp	0x100244c0	1	1	CMidiChannel::reset_rnd_prgm_table	?reset_rnd_prgm_table@CMidiChannel@@QAEXXZ	100	100.0	100.0	1/1 ins	ret	64		yes
+sound/sound.dll/src/midimgr.cpp	0x100244e0	7	7	CMidiChannel::xlat_program	?xlat_program@CMidiChannel@@QAEKK@Z	100	100.0	100.0	2/2 ins	ret 4	32		yes
+sound/sound.dll/src/miditools.cpp	0x1001b830	37	37	MidiCtrlSocket::MidiCtrlSocket	??0MidiCtrlSocket@@QAE@XZ	100	100.0	100.0	10/10 ins	ret	64		yes
+sound/sound.dll/src/miditools.cpp	0x1001b9e0	78	78	MidiCtrlSocket::insert_after	?insert_after@MidiCtrlSocket@@QAE?AW4SNDERR@@PAVMidiCtrl@@0@Z	100	100.0	100.0	28/28 ins	ret 8	112		yes
+sound/sound.dll/src/miditools.cpp	0x1001c1b0	24	24	NoteMap::operator=	??4NoteMap@@QAEAAV0@AAV0@@Z	100	100.0	100.0	10/10 ins	ret 4	48		yes
+sound/sound.dll/src/miditools.cpp	0x1001c260	40	40	NoteMap::map_note	?map_note@NoteMap@@QAE?AW4SNDERR@@W4MIDI_NOTE@@0@Z	100	100.0	100.0	11/11 ins	ret 8	64		yes
+sound/sound.dll/src/miditools.cpp	0x1001c480	75	75	Stepper::Stepper	??0Stepper@@QAE@XZ	100	100.0	100.0	17/17 ins	ret	112		yes
+sound/sound.dll/src/miditools.cpp	0x1001cad0	3	3	Chooser::do_control	?do_control@Chooser@@QAEPAVMidiCtrl@@XZ	100	100.0	100.0	2/2 ins	ret	32		yes
+sound/sound.dll/src/miditools.cpp	0x1001cd70	268	268	ProgramCtrl::set_base_filepath	?set_base_filepath@ProgramCtrl@@QAEXPBD@Z	100	100.0	100.0	112/112 ins	ret 4	352		yes
+sound/sound.dll/src/miditools.cpp	0x1001d030	70	70	ProgramCtrl::get_new_pitch	?get_new_pitch@ProgramCtrl@@QAEHXZ	100	100.0	100.0	34/34 ins	ret	112		yes
+sound/sound.dll/src/sound.cpp	0x1002af00	99	99	Sound::attach	?attach@Sound@@SA?AW4SNDERR@@PAV1@@Z	100	100.0	100.0	32/32 ins	ret	272		yes
+sound/sound.dll/src/sound.cpp	0x1002af90	96	96	Sound::detach	?detach@Sound@@SA?AW4SNDERR@@PAV1@@Z	100	100.0	100.0	35/35 ins	ret	128		yes
+sound/sound.dll/src/sound.cpp	0x1002c240	22	22	Wave::select_device	?select_device@Wave@@QAE?AW4SNDERR@@H@Z	100	100.0	100.0	8/8 ins	ret 4	48		yes
+sound/sound.dll/src/sound.cpp	0x1002c790	51	51	MpegStream::set_next	?set_next@MpegStream@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	18/18 ins	ret 4	608		yes
+sound/sound.dll/src/sound.cpp	0x1002c7e0	242	242	MpegStream::start	?start@MpegStream@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	82/82 ins	ret 4	528		yes
+sound/sound.dll/src/sound.cpp	0x1002c920	105	105	MpegStream::add_to_playlist	?add_to_playlist@MpegStream@@QAE?AW4SNDERR@@PAD@Z	100	100.0	100.0	48/48 ins	ret 4	208		yes
+sound/sound.dll/src/sound.cpp	0x1002c9b0	42	42	MpegStream::clear_playlist	?clear_playlist@MpegStream@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	18/18 ins	ret	64		yes
+sound/sound.dll/src/sound.cpp	0x1002cd30	3	3	SoundList::scaleVolumeToGroup	?scaleVolumeToGroup@SoundList@@QAEXH@Z	100	100.0	100.0	1/1 ins	ret 4	304		yes
+sound/sound.dll/src/sound.cpp	0x1002cd50	105	105	SoundList::add	?add@SoundList@@QAE?AW4SNDERR@@PAD@Z	100	100.0	100.0	48/48 ins	ret 4	272		yes
+sound/sound.dll/src/sound.cpp	0x1002cde0	87	87	SoundList::setListName	?setListName@SoundList@@QAE?AW4SNDERR@@PAD@Z	100	100.0	100.0	40/40 ins	ret 4	128		yes
+sound/sound.dll/src/sound.cpp	0x1002d010	118	118	KeyMap::~KeyMap	??1KeyMap@@UAE@XZ	100	100.0	100.0	46/46 ins	ret	240		yes
+sound/sound.dll/src/sound.cpp	0x1002d0b0	50	50	KeyMap::unmap_range	?unmap_range@KeyMap@@QAEKPAVKeyMapWave@@@Z	100	100.0	100.0	23/23 ins	ret 4	80		yes
+sound/sound.dll/src/sound.cpp	0x1002d2c0	287	287	KeyMap::set_base_path	?set_base_path@KeyMap@@QAEXPBD@Z	100	100.0	100.0	106/106 ins	ret 4	368		yes
+sound/sound.dll/src/sound.cpp	0x1002d710	30	30	Midi::set_frame_delay	?set_frame_delay@Midi@@QAEXI@Z	100	100.0	100.0	10/10 ins	ret 4	48		yes
+sound/sound.dll/src/sound.cpp	0x1002e2f0	160	98	Midi::get_tonal_center	?get_tonal_center@Midi@@QAEHXZ	100	100.0	100.0	32/32 ins	ret	208		yes
+sound/sound.dll/src/sound.cpp	0x1002e490	31	31	Sound::unloadall	?unloadall@Sound@@SA?AW4SNDERR@@XZ	100	100.0	100.0	10/10 ins	ret	112		yes
+sound/sound.dll/src/sound.cpp	0x1002e4c0	42	42	Patch::Patch	??0Patch@@QAE@XZ	100	100.0	100.0	13/13 ins	ret	64		yes
+sound/sound.dll/src/sound.cpp	0x1002f710	21	21	do_message	?do_message@@YAXPBD0@Z	100	100.0	100.0	8/8 ins	ret	48		yes
+sound/sound.dll/src/sounddevice.cpp	0x10028e70	81	81	Sound_Device::attach	?attach@Sound_Device@@IAE?AW4SNDERR@@XZ	100	100.0	100.0	28/28 ins	ret	320		yes
+sound/sound.dll/src/sounddevice.cpp	0x10028ef0	92	92	Sound_Device::detach	?detach@Sound_Device@@IAE?AW4SNDERR@@XZ	100	100.0	100.0	37/37 ins	ret	192		yes
+sound/sound.dll/src/sounddevice.cpp	0x10028f70	40	40	Sound_Device::Sound_Device	??0Sound_Device@@IAE@XZ	100	100.0	100.0	13/13 ins	ret	64		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029730	93	93	Wave_Device::add_to_group	?add_to_group@Wave_Device@@QAE?AW4SNDERR@@IPAVSound@@@Z	100	100.0	100.0	39/39 ins	ret 8	1104		yes
+sound/sound.dll/src/sounddevice.cpp	0x100297b0	151	151	Wave_Device::pull_from_group	?pull_from_group@Wave_Device@@QAE?AW4SNDERR@@PAVSound@@@Z	100	100.0	100.0	56/56 ins	ret 4	976		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029880	121	121	Wave_Device::set_group_volume	?set_group_volume@Wave_Device@@QAE?AW4SNDERR@@II@Z	100	100.0	100.0	49/49 ins	ret 8	768		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029920	24	24	Wave_Device::get_group_volume	?get_group_volume@Wave_Device@@QAEII@Z	100	100.0	100.0	8/8 ins	ret 4	608		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029950	93	93	Wave_Device::enable_group	?enable_group@Wave_Device@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	37/37 ins	ret 4	560		yes
+sound/sound.dll/src/sounddevice.cpp	0x100299d0	81	81	Wave_Device::muteGroup	?muteGroup@Wave_Device@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	31/31 ins	ret 4	432		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029a50	30	30	Wave_Device::unMuteGroup	?unMuteGroup@Wave_Device@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	9/9 ins	ret 4	304		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029a80	120	120	Wave_Device::disable_group	?disable_group@Wave_Device@@QAE?AW4SNDERR@@I@Z	100	100.0	100.0	50/50 ins	ret 4	256		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029b20	29	29	Wave_Device::is_group_disabled	?is_group_disabled@Wave_Device@@QAE_NI@Z	100	100.0	100.0	10/10 ins	ret 4	96		yes
+sound/sound.dll/src/sounddevice.cpp	0x10029b50	29	29	Wave_Device::isGroupMute	?isGroupMute@Wave_Device@@QAE_NI@Z	100	100.0	100.0	10/10 ins	ret 4	48		yes
+sound/sound.dll/src/trace.cpp	0x1002fe20	79	79	CTrace::CTrace	??0CTrace@@QAE@XZ	100	100.0	100.0	27/27 ins	ret	384		yes
+sound/sound.dll/src/trace.cpp	0x1002fe90	1	1	CTrace::~CTrace	??1CTrace@@QAE@XZ	100	100.0	100.0	1/1 ins	ret	272		yes
+sound/sound.dll/src/trace.cpp	0x1002feb0	177	177	CTrace::dump_to_file	?dump_to_file@CTrace@@QAEXPAVofstream@@@Z	100	100.0	100.0	58/58 ins	ret 4	240		yes
+sound/sound.dll/src/trace.cpp	0x10030000	43	43	CTrace::in_data	?in_data@CTrace@@QAEXHHHH@Z	100	100.0	100.0	9/9 ins	ret 0x10	128		yes
+sound/sound.dll/src/trace.cpp	0x10030040	44	44	CTrace::operator=	??4CTrace@@QAEAAV0@PAD@Z	100	100.0	100.0	21/21 ins	ret 4	64		yes
+sound/sound.dll/src/wavefile.cpp	0x10032680	8	8	CWaveFile::mpeg_load	?mpeg_load@CWaveFile@@QAE?AW4SNDERR@@PBD@Z	100	100.0	100.0	2/2 ins	ret 4	32		yes
+sound/sound.dll/src/wavefile.cpp	0x10033280	90	90	CWaveFile::read_from_file	?read_from_file@CWaveFile@@AAE?AW4SNDERR@@PADPAK@Z	100	100.0	100.0	40/40 ins	ret 8	128		yes
+sound/sound.dll/src/wavefile.cpp	0x100338f0	113	113	CWaveFile::get_write_pointers	?get_write_pointers@CWaveFile@@AAEXPAPADPAK01K@Z	100	100.0	100.0	37/37 ins	ret 0x14	160		yes
+sound/sound.dll/src/wavefile.cpp	0x10033f70	6	6	CWaveFile::mpeg_unload	?mpeg_unload@CWaveFile@@QAE?AW4SNDERR@@XZ	100	100.0	100.0	2/2 ins	ret	32		yes
+sound/sound.dll/src/wavefile.cpp	0x10034410	3	3	CWaveFile::mmioerr	?mmioerr@CWaveFile@@AAEXK@Z	100	100.0	100.0	1/1 ins	ret 4	32		yes
+sound/sound.dll/src/wavefile.cpp	0x10034de0	78	78	CWaveFile::fade_in	?fade_in@CWaveFile@@QAE?AW4SNDERR@@K@Z	100	100.0	100.0	22/22 ins	ret 4	464		yes
+sound/sound.dll/src/wavefile.cpp	0x10034e50	130	130	CWaveFile::operator++	??ECWaveFile@@QAEKH@Z	100	100.0	100.0	43/43 ins	ret 4	352		yes
+sound/sound.dll/src/wavefile.cpp	0x10034f10	72	72	CWaveFile::get_nsamples_left_in_buffer	?get_nsamples_left_in_buffer@CWaveFile@@QAEKXZ	100	100.0	100.0	27/27 ins	ret	160		yes
+sound/sound.dll/src/wavefile.cpp	0x10034f80	29	29	CWaveFile::advance	?advance@CWaveFile@@AAE?AW4SNDERR@@XZ	100	100.0	100.0	12/12 ins	ret	48		yes
+sound/sound.dll/src/wavefile.cpp	0x10035070	71	71	CWaveFile::need_to_advance	?need_to_advance@CWaveFile@@AAEHXZ	100	100.0	100.0	29/29 ins	ret	112		yes
+sound/sound.dll/src/wavefile.cpp	0x10035c30	74	74	CWaveFile::get_mpeg_samples	?get_mpeg_samples@CWaveFile@@QAE?AW4SNDERR@@PAXKKPAK@Z	100	100.0	100.0	27/27 ins	ret 0x10	112		yes
+sound/sound.dll/src/wavefile.cpp	0x100377b0	35	35	CWaveFile::set_buffer_inactive	?set_buffer_inactive@CWaveFile@@QAEXH@Z	100	100.0	100.0	11/11 ins	ret 4	64		yes
+sound/sound.dll/src/wavefile.cpp	0x10037e90	65	65	WaveBuffer::reset	?reset@WaveBuffer@@QAEXXZ	100	100.0	100.0	14/14 ins	ret	160		yes
+sound/sound.dll/src/wavefile.cpp	0x10037f00	24	24	WaveBuffer::get_nsamples_left_in_buffer	?get_nsamples_left_in_buffer@WaveBuffer@@QAEKXZ	100	100.0	100.0	10/10 ins	ret	48		yes
+sound/sound.dll/src/wavefile.cpp	0x10038270	58	58	WaveBuffer::fade_in	?fade_in@WaveBuffer@@QAEXXZ	100	100.0	100.0	18/18 ins	ret	80		yes
+sound/sound.dll/src/wavemgr.cpp	0x10039ca0	37	37	CWaveMgr::free_all	?free_all@CWaveMgr@@SAXXZ	100	100.0	100.0	15/15 ins	ret	64		yes

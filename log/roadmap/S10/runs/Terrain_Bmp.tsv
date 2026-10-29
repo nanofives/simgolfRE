@@ -1,0 +1,12 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x16a0	0x100016a0	480	G	LoadBmpFile	?LoadBmpFile@@YAPAEPBDPAPAUtagBITMAPINFOHEADER@@@Z	public	100	100.0	173/173 ins	terrain_bitmap.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1900	0x10001900	486	G	WriteDibToBmpFile	?WriteDibToBmpFile@@YAHPBDPAUtagBITMAPINFOHEADER@@PAE@Z	public	100	100.0	165/165 ins	terrain_bitmap.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1b60	0x10001b60	116	G	SwapBgrToRgb	?SwapBgrToRgb@@YAXPAEPAUtagBITMAPINFOHEADER@@@Z	public	100	100.0	44/44 ins	terrain_small2.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1c00	0x10001c00	258	G	FlipImageRows24bpp	?FlipImageRows24bpp@@YAXPAEPAUtagBITMAPINFOHEADER@@@Z	public	100	100.0	87/87 ins	terrain_small3.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1d50	0x10001d50	107	G	Terrain::tileAt	?tileAt@Terrain@@QAEPAVTile@@HH@Z	public	100	100.0	41/41 ins	terrain.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1de0	0x10001de0	70	G	Terrain::getElevation	?getElevation@Terrain@@QAEHPAVTile@@H@Z	public	100	100.0	30/30 ins	terrain.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1e40	0x10001e40	47	G	Tile::getCornerElevation	?getCornerElevation@Tile@@QAEHH@Z	public	100	100.0	22/22 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1e80	0x10001e80	60	G	Terrain::getWall	?getWall@Terrain@@QAE_NPAVTile@@H@Z	public	100	100.0	26/26 ins	terrain.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1ed0	0x10001ed0	50	G	Tile::getWallEnabled	?getWallEnabled@Tile@@QAE_NH@Z	public	100	100.0	22/22 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1f10	0x10001f10	56	G	Terrain::getType	?getType@Terrain@@QAEHPAVTile@@@Z	public	100	100.0	24/24 ins	terrain.cpp
+Terrain	terrain/Terrain.dll/src/Bmp.cpp	0x1f60	0x10001f60	42	G	Tile::getType	?getType@Tile@@QAEHXZ	public	100	100.0	21/21 ins	terrain_small1.cpp

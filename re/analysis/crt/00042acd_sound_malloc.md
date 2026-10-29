@@ -22,7 +22,7 @@ None.
 - 0x10042adf `__nh_malloc` at 0x10042ad7
 
 ## Callers
-0x100326a0 `parseRiffWave`, 0x1003aa90 `codecAllocEncoderContext`, 0x1003aea0 `codecAllocDecoderContext`, 0x10042659 `FUN_10042659`, 0x10045252 `crtRealloc`, 0x10047710 `__lock`, 0x1004779e `__ioinit`, 0x100479ae `__setenvp`, 0x10047a67 `__setargv`, 0x10047cb4 `___crtGetEnvironmentStringsA`, 0x1004a239 `__getbuf`, 0x1004bece `__alloc_osfhnd`, 0x1004c2d3 `_signal`, 0x1004ca17 `__setlocale_set_cat`, 0x1004cb32 `__setlocale_get_all`, 0x1004e643 `FUN_1004e643`, 0x1004eac1 `___init_ctype`, 0x1004fab3 `__Getdays`, 0x1004fb42 `__Getmonths`, 0x1004fbd7 `__Gettnames` (+6 more)
+0x100326a0 `parseRiffWave`, 0x1003aa90 `codecAllocEncoderContext`, 0x1003aea0 `codecAllocDecoderContext`, 0x10042659 `___onexitinit`, 0x10045252 `crtRealloc`, 0x10047710 `__lock`, 0x1004779e `__ioinit`, 0x100479ae `__setenvp`, 0x10047a67 `__setargv`, 0x10047cb4 `___crtGetEnvironmentStringsA`, 0x1004a239 `__getbuf`, 0x1004bece `__alloc_osfhnd`, 0x1004c2d3 `_signal`, 0x1004ca17 `__setlocale_set_cat`, 0x1004cb32 `__setlocale_get_all`, 0x1004e643 `___init_numeric`, 0x1004eac1 `___init_ctype`, 0x1004fab3 `__Getdays`, 0x1004fb42 `__Getmonths`, 0x1004fbd7 `__Gettnames` (+6 more)
 
 ## Constants
 None.

@@ -1,0 +1,29 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/Toolbar.cpp	0x321d0	0x004321d0	45	G	DisableCapsLock	?DisableCapsLock@@YAXXZ	public	100	100.0	13/13 ins	golf_small4.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x32200	0x00432200	864	G	RenderToolbarRow	?RenderToolbarRow@@YAHHHHHHHHHHHH@Z	public	100	100.0	290/290 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x32560	0x00432560	177	G	BuildAndShowPreferencesDialog	?BuildAndShowPreferencesDialog@@YAXXZ	public	100	100.0	69/69 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x32620	0x00432620	120	G	RenderToolbarTooltip	?RenderToolbarTooltip@@YAXHH@Z	public	100	100.0	46/46 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x326a0	0x004326a0	113	G	FindNearestToolbarButton	?FindNearestToolbarButton@@YAHHH@Z	public	100	100.0	46/46 ins	golf_small10.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x32720	0x00432720	1152	G	MainBarClick	?MainBarClick@@YAHHH@Z	public	100	100.0	382/382 ins	golf_hand_s3.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x32ba0	0x00432ba0	996	G	RenderMainBar	?RenderMainBar@@YAXHH@Z	public	100	100.0	278/278 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x32f90	0x00432f90	167	G	HitTestTerrainToolbar	?HitTestTerrainToolbar@@YAHHH@Z	public	100	100.0	62/62 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x33040	0x00433040	332	G	HandleCourseToolbarClick	?HandleCourseToolbarClick@@YAHHH@Z	public	100	100.0	98/98 ins	golf_small34.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x33190	0x00433190	2756	G	RenderTerrainToolbar	?RenderTerrainToolbar@@YAXHH@Z	public	100	100.0	885/885 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x33c60	0x00433c60	193	G	HitTestElevationToolbarButtons	?HitTestElevationToolbarButtons@@YAHHH@Z	public	100	100.0	64/64 ins	golf_hand_06_h.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x33d30	0x00433d30	277	G	HandleElevationToolbarClick	?HandleElevationToolbarClick@@YAHHH@Z	public	100	100.0	79/79 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x33e50	0x00433e50	580	G	RenderElevationToolbarWithTooltip	?RenderElevationToolbarWithTooltip@@YAXHH@Z	public	100	100.0	165/165 ins	golf_hand_s1.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x340a0	0x004340a0	151	G	HitTestFacilityUpgradeButtons	?HitTestFacilityUpgradeButtons@@YAHHH@Z	public	100	100.0	59/59 ins	m36d_hand_02.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x34140	0x00434140	526	G	HandleFacilityUpgradeClick	?HandleFacilityUpgradeClick@@YAHHH@Z	public	100	100.0	176/176 ins	golf_hand_s1.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x34350	0x00434350	1580	G	RenderFacilityUpgradeToolbar	?RenderFacilityUpgradeToolbar@@YAXHH@Z	public	100	100.0	500/500 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x34980	0x00434980	315	G	HitTestBuildingToolbar	?HitTestBuildingToolbar@@YAHHH@Z	public	100	100.0	99/99 ins	golf_hand_09_g.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x34ac0	0x00434ac0	548	G	HandleBuildingToolbarClick	?HandleBuildingToolbarClick@@YAHHH@Z	public	100	100.0	157/157 ins	golf_hand_s2.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x34cf0	0x00434cf0	2172	G	RenderBuildingToolbar	?RenderBuildingToolbar@@YAXHH@Z	public	miss	99.9	681/682 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x35570	0x00435570	264	G	HitTestGolferPairingGrid	?HitTestGolferPairingGrid@@YAHHH@Z	public	100	100.0	84/84 ins	golf_hand_08_c.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x35680	0x00435680	210	G	HandleGolferPairingClick	?HandleGolferPairingClick@@YAHHH@Z	public	100	100.0	64/64 ins	golf_hand_06_h.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x35760	0x00435760	1951	G	RenderGolferPairingPanel	?RenderGolferPairingPanel@@YAXHH@Z	public	100	100.0	587/587 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x35f00	0x00435f00	348	G	HitTestPeopleToolbarButtons	?HitTestPeopleToolbarButtons@@YAHHH@Z	public	100	100.0	108/108 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x36060	0x00436060	644	G	HandlePeopleToolbarClick	?HandlePeopleToolbarClick@@YAHHH@Z	public	100	100.0	187/187 ins	golf_hand_s1.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x362f0	0x004362f0	2056	G	RenderPeopleToolbarWithTooltip	?RenderPeopleToolbarWithTooltip@@YAXHH@Z	public	100	100.0	612/612 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x36b00	0x00436b00	250	G	HitTestEmployeePanel	?HitTestEmployeePanel@@YAHHH@Z	public	100	100.0	89/89 ins	golf_raw_13.cpp
+golf	golf/golf.exe/src/Toolbar.cpp	0x36c00	0x00436c00	584	G	HandleEmployeeListClick	?HandleEmployeeListClick@@YAHHH@Z	public	100	100.0	158/158 ins	
+golf	golf/golf.exe/src/Toolbar.cpp	0x36e50	0x00436e50	2640	G	RenderEmployeePanel	?RenderEmployeePanel@@YAXHH@Z	public	miss	99.7	757/759 ins	

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/irc2pc.c	0x3d8d0	0x1003d8d0	381	G	irc2pc_	_irc2pc_	public	100	100.0	126/126 ins	m36c_D1_01.cpp

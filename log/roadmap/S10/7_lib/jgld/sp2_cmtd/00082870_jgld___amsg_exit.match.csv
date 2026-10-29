@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 2","cmp dword ptr [0x101287bc], 1",False
+3,je 0x11,je 0x1008288e,False
+4,call 0x11,"cmp dword ptr [0x101287bc], 0",False
+5,"mov eax, dword ptr [ebp + 8]",jne 0x10082893,False
+6,push eax,"cmp dword ptr [0x101287c0], 1",False
+7,call 0x1a,jne 0x10082893,False
+8,"add esp, 4",call 0x1008b180,False
+9,push 0xff,"mov eax, dword ptr [ebp + 8]",False
+10,call dword ptr [0],push eax,False
+11,"add esp, 4",call 0x1008b1d0,False
+12,pop ebp,"add esp, 4",False
+13,ret ,push 0xff,False
+14,,call dword ptr [0x1012339c],False
+15,,"add esp, 4",False
+16,,pop ebp,False
+17,,ret ,False
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\crt0.obj (library object, no compilation)",symbol=__amsg_exit,module=jgld.dll
+VERDICT,RED,14,66.7%

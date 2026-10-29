@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 11 bytes, 3 instructions, subsystem `boot`. Mechanical 
 Copies the dword at 0x0083b15c into the first credits text pointer slot at 0x0083b164. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Text.cpp` as `_$E6` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00487dda): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -1,0 +1,10 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eaf0	0x0049eaf0	10	L	$E18	_$E18	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb00	0x0049eb00	10	L	$E14	_$E14	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb10	0x0049eb10	12	L	$E17	_$E17	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb20	0x0049eb20	41	L	$E15	_$E15	name	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb50	0x0049eb50	10	L	$E23	_$E23	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb60	0x0049eb60	10	L	$E20	_$E20	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb70	0x0049eb70	12	L	$E22	_$E22	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0x9eb80	0x0049eb80	41	L	$E21	_$E21	name	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/CheckBoxSprites.cpp	0xb04b0	0x004b04b0	3	G	CheckButton::init_class	?init_class@CheckButton@@SAHXZ	public	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp

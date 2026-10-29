@@ -1,0 +1,3 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/DataFile.cpp	0xa00f0	0x004a00f0	36	G	env_open	?env_open@@YAPAU_iobuf@@PBD0@Z	public	100	100.0	15/15 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/DataFile.cpp	0xa0890	0x004a0890	1	G	close_cursor_class	?close_cursor_class@@YAXXZ	name	100	100.0	1/1 ins	

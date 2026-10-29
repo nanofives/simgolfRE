@@ -1,0 +1,116 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/sound.cpp	0x79820	0x00479820	3	G	VoiceRx::get_game_hwnd	?get_game_hwnd@VoiceRx@@UAEPAUHWND__@@XZ	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x79820	0x00479820	3	G	VoiceRx::get_attrib	?get_attrib@VoiceRx@@UAEKXZ	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/sound.cpp	0x83dd0	0x00483dd0	10	L	$E8	_$E8	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83de0	0x00483de0	10	L	$E5	_$E5	name	100	100.0	2/2 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83df0	0x00483df0	12	L	$E7	_$E7	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e00	0x00483e00	10	L	$E6	_$E6	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x83e10	0x00483e10	10	L	$E13	_$E13	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e20	0x00483e20	10	L	$E10	_$E10	name	100	100.0	2/2 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e30	0x00483e30	12	L	$E12	_$E12	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e40	0x00483e40	10	L	$E11	_$E11	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x83e50	0x00483e50	10	L	$E18	_$E18	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e60	0x00483e60	10	L	$E15	_$E15	name	100	100.0	2/2 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e70	0x00483e70	12	L	$E17	_$E17	name	100	100.0	4/4 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83e80	0x00483e80	10	L	$E16	_$E16	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x83e90	0x00483e90	121	G	init_sound	?init_sound@@YAHPAUHWND__@@H@Z	public	100	100.0	47/47 ins	m36d_hand_02.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83f10	0x00483f10	163	G	release_sound	?release_sound@@YAHXZ	public	100	100.0	55/55 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x83fc0	0x00483fc0	157	G	load_sound_dll	?load_sound_dll@@YAHXZ	public	100	100.0	53/53 ins	m36d_hand_02.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84060	0x00484060	44	G	unload_sound_dll	?unload_sound_dll@@YAHXZ	public	100	100.0	10/10 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84090	0x00484090	35	G	init_sound_timer	?init_sound_timer@@YAHHH@Z	public	100	100.0	12/12 ins	golf_small18.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x840c0	0x004840c0	18	G	get_sound_version	?get_sound_version@@YAHXZ	public	100	100.0	6/6 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x840e0	0x004840e0	40	G	Sound::create_sound	?create_sound@Sound@@SA?AW4SNDERR@@PAPAV1@PBDW4SOUNDTYPE@@@Z	public	100	100.0	14/14 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84110	0x00484110	30	G	Sound::delete_sound	?delete_sound@Sound@@SA?AW4SNDERR@@PAV1@@Z	public	100	100.0	10/10 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84130	0x00484130	17	G	clear_fntable	?clear_fntable@@YAXXZ	public	100	100.0	7/7 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84150	0x00484150	104	G	Sound::Sound	??0Sound@@QAE@XZ	public	100	100.0	33/33 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x841c0	0x004841c0	30	G	Sound::`scalar deleting destructor'	??_GSound@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x841e0	0x004841e0	127	G	Sound::~Sound	??1Sound@@UAE@XZ	public	100	100.0	35/35 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84260	0x00484260	140	G	Sound::set_type	?set_type@Sound@@UAEXW4SOUNDTYPE@@@Z	public	100	100.0	35/35 ins	golf_small10.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x842f0	0x004842f0	236	G	Sound::load	?load@Sound@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	106/106 ins	golf_hand_07_4842f0.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x843e0	0x004843e0	96	G	Sound::detach	?detach@Sound@@SA?AW4SNDERR@@PAV1@@Z	public	100	100.0	35/35 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84440	0x00484440	10	G	Sound::is_loaded	?is_loaded@Sound@@UAEHXZ	public	100	100.0	4/4 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84450	0x00484450	81	G	Sound::attach	?attach@Sound@@MAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x844b0	0x004844b0	4	G	Sound::get_next	?get_next@Sound@@UAEPAV1@XZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x844c0	0x004844c0	4	G	Sound::get_prev	?get_prev@Sound@@UAEPAV1@XZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x844d0	0x004844d0	4	G	Sound::get_type	?get_type@Sound@@UAE?AW4SOUNDTYPE@@XZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x844e0	0x004844e0	92	G	Sound::detach	?detach@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	37/37 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84540	0x00484540	8	G	Sound::load	?load@Sound@@UAE?AW4SNDERR@@PAUIAVIStream@@@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84540	0x00484540	8	G	Wave::set_bufflimit	?set_bufflimit@Wave@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/sound.cpp	0x84550	0x00484550	50	G	Sound::unload	?unload@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	21/21 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84590	0x00484590	18	G	Sound::play	?play@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x845b0	0x004845b0	25	G	Sound::play	?play@Sound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	9/9 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x845d0	0x004845d0	15	G	Sound::is_playing	?is_playing@Sound@@UAEHXZ	public	100	100.0	7/7 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x845e0	0x004845e0	18	G	Sound::stop	?stop@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84600	0x00484600	18	G	Sound::release	?release@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84620	0x00484620	110	G	Sound::set_volume	?set_volume@Sound@@UAEXH@Z	public	100	100.0	34/34 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84690	0x00484690	23	G	Sound::set_loop_state	?set_loop_state@Sound@@UAEXH@Z	public	100	100.0	9/9 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x846b0	0x004846b0	23	G	Sound::set_delay	?set_delay@Sound@@UAEXK@Z	public	100	100.0	9/9 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x846d0	0x004846d0	37	G	Sound::set_fade	?set_fade@Sound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	14/14 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84700	0x00484700	37	G	Sound::set_fade_in	?set_fade_in@Sound@@UAE?AW4SNDERR@@I@Z	public	100	100.0	14/14 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84730	0x00484730	25	G	Sound::fade	?fade@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84750	0x00484750	30	G	Sound::fade	?fade@Sound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	14/14 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84770	0x00484770	25	G	Sound::fade_in	?fade_in@Sound@@UAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84790	0x00484790	30	G	Sound::ramp	?ramp@Sound@@UAEXHHI@Z	public	100	100.0	12/12 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x847b0	0x004847b0	30	G	Sound::fade_in	?fade_in@Sound@@UAE?AW4SNDERR@@I@Z	public	100	100.0	14/14 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x847d0	0x004847d0	15	G	Sound::is_looping	?is_looping@Sound@@UAEHXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x847e0	0x004847e0	15	G	Sound::get_time	?get_time@Sound@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x847f0	0x004847f0	45	G	Sound::set_pan	?set_pan@Sound@@UAEXH@Z	public	100	100.0	16/16 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84820	0x00484820	80	G	Wave::Wave	??0Wave@@QAE@XZ	public	100	100.0	20/20 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84870	0x00484870	15	G	Wave::is_loaded	?is_loaded@Wave@@UAEHXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84880	0x00484880	30	G	Wave::`scalar deleting destructor'	??_GWave@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x848a0	0x004848a0	123	G	Wave::~Wave	??1Wave@@UAE@XZ	public	100	100.0	34/34 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84920	0x00484920	31	G	Wave::play	?play@Wave@@UAE?AW4SNDERR@@H@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84940	0x00484940	159	G	Wave::play	?play@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	60/60 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x849e0	0x004849e0	31	G	Wave::play	?play@Wave@@UAE?AW4SNDERR@@PAH@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84a00	0x00484a00	23	G	Wave::stop_instance	?stop_instance@Wave@@UAEXH@Z	public	100	100.0	8/8 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84a20	0x00484a20	23	G	Wave::fade_instance	?fade_instance@Wave@@UAEXH@Z	public	100	100.0	8/8 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84a40	0x00484a40	181	G	Wave::init	?init@Wave@@UAEXPADK@Z	public	100	100.0	78/78 ins	m36d_hand_02.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84b00	0x00484b00	18	G	Wave::is_hwbuffer	?is_hwbuffer@Wave@@UAEHXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84b20	0x00484b20	4	G	Wave::get_ms_length	?get_ms_length@Wave@@UAEIXZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84b30	0x00484b30	65	G	Wave::is_playing	?is_playing@Wave@@UAEHXZ	public	100	100.0	28/28 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84b80	0x00484b80	103	G	Wave::set_fname	?set_fname@Wave@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	46/46 ins	golf_small10.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84bf0	0x00484bf0	38	G	Wave::set_link	?set_link@Wave@@UAE?AW4SNDERR@@PADPAK@Z	public	100	100.0	13/13 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84c20	0x00484c20	90	G	Wave::dyna_load	?dyna_load@Wave@@AAE?AW4SNDERR@@PAD@Z	public	100	100.0	45/45 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84c80	0x00484c80	210	G	Wave::load	?load@Wave@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	88/88 ins	golf_hand_06_n.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84d60	0x00484d60	206	G	Wave::load	?load@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	86/86 ins	golf_hand_06_n.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84e30	0x00484e30	51	G	Wave::load	?load@Wave@@UAE?AW4SNDERR@@PADK@Z	public	100	100.0	22/22 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84e70	0x00484e70	143	G	Wave::reload	?reload@Wave@@EAE?AW4SNDERR@@XZ	public	100	100.0	65/65 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84f00	0x00484f00	57	G	Wave::unload	?unload@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	24/24 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84f40	0x00484f40	54	G	Wave::set_pitch	?set_pitch@Wave@@UAE?AW4SNDERR@@H@Z	public	100	100.0	17/17 ins	golf_raw_03.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x84f80	0x00484f80	102	G	Wave::set_attrib	?set_attrib@Wave@@UAE?AW4SNDERR@@K@Z	public	100	100.0	39/39 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x84ff0	0x00484ff0	74	G	Wave::get_attrib	?get_attrib@Wave@@UAEKXZ	public	100	100.0	33/33 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x85040	0x00485040	28	G	Wave::get_time	?get_time@Wave@@UAEKK@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85060	0x00485060	19	G	Wave::get_current_marker	?get_current_marker@Wave@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85080	0x00485080	15	G	Wave::get_game_hwnd	?get_game_hwnd@Wave@@UAEPAUHWND__@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85090	0x00485090	18	G	Wave::get_ndevices	?get_ndevices@Wave@@UAEHXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x850b0	0x004850b0	56	G	Wave::get_device_description	?get_device_description@Wave@@UAE?AW4SNDERR@@PADHH@Z	public	100	100.0	19/19 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x850f0	0x004850f0	34	G	Wave::set_reverb_mix	?set_reverb_mix@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	11/11 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85120	0x00485120	6	G	Wave::set_asdr	?set_asdr@Wave@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85130	0x00485130	8	G	Wave::set_attack	?set_attack@Wave@@UAE?AW4SNDERR@@KKK@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85130	0x00485130	8	G	Wave::set_sustain	?set_sustain@Wave@@UAE?AW4SNDERR@@KKK@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/sound.cpp	0x85130	0x00485130	8	G	Wave::set_decay	?set_decay@Wave@@UAE?AW4SNDERR@@KKK@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/sound.cpp	0x85130	0x00485130	8	G	Wave::set_release	?set_release@Wave@@UAE?AW4SNDERR@@KKK@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/sound.cpp	0x85140	0x00485140	102	G	Wave::set_volume	?set_volume@Wave@@UAEXH@Z	public	100	100.0	31/31 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x851b0	0x004851b0	41	G	Wave::set_position3d	?set_position3d@Wave@@UAE?AW4SNDERR@@MMM@Z	public	100	100.0	14/14 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x851e0	0x004851e0	31	G	Wave::set_xpos	?set_xpos@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85200	0x00485200	31	G	Wave::set_ypos	?set_ypos@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85220	0x00485220	31	G	Wave::set_zpos	?set_zpos@Wave@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85240	0x00485240	18	G	Wave::is_3d	?is_3d@Wave@@UAE_NXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85260	0x00485260	42	G	Patch::Patch	??0Patch@@QAE@XZ	public	100	100.0	13/13 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x85290	0x00485290	24	G	Patch::set_fade_in	?set_fade_in@Patch@@UAE?AW4SNDERR@@H@Z	public	100	100.0	8/8 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85290	0x00485290	24	G	Patch::set_fade	?set_fade@Patch@@UAE?AW4SNDERR@@K@Z	name	100	100.0	8/8 ins	folded
+golf	golf/jackal.lib/src/sound.cpp	0x852b0	0x004852b0	30	G	Patch::`scalar deleting destructor'	??_GPatch@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x852d0	0x004852d0	7	G	Patch::~Patch	??1Patch@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x852e0	0x004852e0	158	G	VoiceRx::VoiceRx	??0VoiceRx@@QAE@XZ	public	100	100.0	50/50 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x85380	0x00485380	8	G	VoiceRx::set_attrib	?set_attrib@VoiceRx@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85390	0x00485390	18	G	VoiceRx::get_nbuffers	?get_nbuffers@VoiceRx@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x853b0	0x004853b0	30	G	VoiceRx::`scalar deleting destructor'	??_GVoiceRx@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x853d0	0x004853d0	117	G	VoiceRx::~VoiceRx	??1VoiceRx@@UAE@XZ	public	100	100.0	33/33 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x85450	0x00485450	100	G	VoiceRx::init	?init@VoiceRx@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z	public	100	100.0	43/43 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x854c0	0x004854c0	59	G	VoiceRx::release	?release@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	23/23 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/sound.cpp	0x85500	0x00485500	18	G	VoiceRx::start	?start@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85520	0x00485520	15	G	VoiceRx::stop	?stop@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85530	0x00485530	18	G	VoiceRx::unload	?unload@VoiceRx@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85550	0x00485550	31	G	VoiceRx::add_buffer	?add_buffer@VoiceRx@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85570	0x00485570	18	G	VoiceRx::get_buffer_size	?get_buffer_size@VoiceRx@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/sound.cpp	0x85590	0x00485590	21	G	ShowMessageBox	?ShowMessageBox@@YAXPBD0@Z	public	100	100.0	8/8 ins	golf_raw_04.cpp

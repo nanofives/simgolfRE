@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb01e0	0x004b01e0	1	L	null_method	_null_method	name	100	100.0	1/1 ins	golf_jpeg_ccolor.cpp
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb4a60	0x004b4a60	568	G	jinit_color_converter	_jinit_color_converter	public	100	100.0	197/197 ins	golf_jpeg_ccolor.cpp
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb4ca0	0x004b4ca0	221	L	rgb_ycc_start	_rgb_ycc_start	name	100	100.0	57/57 ins	
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb4d80	0x004b4d80	295	L	rgb_ycc_convert	_rgb_ycc_convert	name	100	100.0	89/89 ins	
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb4eb0	0x004b4eb0	174	L	rgb_gray_convert	_rgb_gray_convert	name	100	100.0	62/62 ins	golf_jpeg_ccolor.cpp
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb4f60	0x004b4f60	359	L	cmyk_ycck_convert	_cmyk_ycck_convert	name	100	100.0	108/108 ins	
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb50d0	0x004b50d0	103	L	grayscale_convert	_grayscale_convert	name	100	100.0	43/43 ins	golf_jpeg_ccolor.cpp
+golf	golf/jpeg.lib/jpeg-6a/jccolor.c	0xb5140	0x004b5140	147	L	null_convert	_null_convert	name	100	100.0	57/57 ins	

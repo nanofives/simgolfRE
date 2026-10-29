@@ -149,6 +149,13 @@ LoadTGA. Tile::faceNormal (0x10011d60) is called with the Tile in ecx (smoothNor
 method, not a Terrain one; 0x1000bb70/0x1000bba0 are unreferenced empty ctor/dtor bodies (std::_Lockit without _MT). Ternaries written as `x = (a < b) ? a : b;` and stdlib's `__min(a, b)` compile differently in debug.
 `// FLAGS <module>: ...`. `py -3.12 re/tools/match.py re/match/<file>.cpp` compiles with VC6, compares
 normalized instructions against the anchored binary, writes `log/diff/<addr>_<name>.match.csv`.
+match.py also reads // INCLUDE <dir> lines (repo-relative, search order; // INCLUDE $VC places VC6's include
+directory, else it comes last) and // COMPILE <path> (cl compiles that file in place of the annotated one: under /ZI
+an #included file's __LINE__ is a constant, not the per-function line variable). A file's // TOOLCHAIN sp5 line runs
+VC6 SP5's cl 8804 / c1xx 8964 / c2 8966 from tools/vc6sp5 (sound.dll's C++ objects: Rich entry 11/8966 x34 equals the
+obj @comp.id, the back end's build); sp5c2 is RTM's front end with SP5's C2 (/B2), indistinguishable by the Rich
+header; default 8168. In the exe (no relocations) an original operand whose value the obj holds as a plain literal is
+compared as that literal (U-1886: 0x807fff, flag words such as 0x800000 in the image range).
 Flags found so far: `golf_clean.exe` `/O2` (or `/Ox`, indistinguishable so far); `Terrain.dll`
 `/Od /ZI /GZ /GX` (debug, C++ EH on: `getInstance` has an SEH frame; /GX changes nothing else).
 29 functions at 100%: the 4 Terrain accessors in both builds and ALL 22 live exported Terrain.dll methods
@@ -2051,6 +2058,38 @@ only (gitignored): VC6 SP5 in tools/vc6sp5 (sound.dll's C++ objects were built b
 used the wrong back end), the SP2 debug CRT in tools/vc6sp2 (jgld / Terrain link it), the DirectX 8 SDK in tools/dxsdk8. Not copied:
 MSVC6-decomp (decompiled Microsoft compiler; nothing here uses it). Their claims are hypotheses: a source counts when our match.py
 gives 100% against our anchors (C4 match evidence), a name or field meaning when our disassembly supports it.
+Section S10, SMSG import and verification (2026-10-29, steps re/roadmap/S10_steps.tsv, notes log/roadmap/S10/<k>_notes.md,
+merge log/roadmap/S10/MERGE.md, U-1850..U-1897). `re/tools/smsg_pdb.py` reads their MSF 7.0 PDBs (procedure rva / size / name /
+.obj / archive, publics); `re/tools/smsg_import.py file|project|inventory|calibrate` turns an SMSG source into an annotation-only
+re/match wrapper (`// COMPILE` their file, `// INCLUDE` their .dsp / build.bat dirs, `// FLAGS` from the .dsp project line plus
+per-source overrides, `// TOOLCHAIN sp5` for sound.dll, one MATCH line per PDB procedure of that .obj: the public at the rva,
+else the obj symbol by undecorated name, overloads scored, an ICF-folded address held once), scores every line, writes 100%
+lines to re/match/smsg_<pdb>_[<lib>_]<stem>.cpp and misses to re/match/wip/. Never `--evidence` while exploring: match.py
+writes a CSV for every result and a RED CSV breaks the C4 gate of a row already at C4. Calibration: all 169 procedures of
+their Terrain sources compile to 100% at addresses we already matched (after `// COMPILE` replaced `#include`: under /ZI an
+included file's __LINE__ is a constant); every address we matched in golf / jackal / jgld / libpng / zlib / lpc10 also reads
+100% from their source. New 100% addresses: golf_clean.exe 609 (golf.exe/src 249, jackal.lib 335, jpeg.lib 25), sound.dll
+489 (+143 bodies our function lists lack, 100% with the PDB extent, 6_boundaries_sound.tsv), jgld.dll 6, Terrain.dll 0;
+misses 4 (97-99.9%, MultiDebug::~MultiDebug 92.9%). mainLoop 0x0040f5c0 is 100% from their MainLoop.cpp. SP5: `// TOOLCHAIN
+sp5` runs SP5's cl / c1xx / c2 (C2 12.00.8966 = sound.dll's Rich entry, proven by the obj @comp.id); it lifts none of our 54
+sound near misses and only one of their 489 sound functions needs it (0x10010920, 99.4% with 8168): sound.dll's C++ objects
+were built by SP5 but 8168 and SP5 emit the same code for nearly every function. Library-object identity (S10.7): jgld 317 /
+318 and Terrain 471 / 472 library procedures are SP2 libcmtd members, the exe 234 / 262 RTM libcmt, sound 425 / 554 SP5 libcmt
+(the rest are import / Terrain thunks; `__amsg_exit` is below 100% in all four, U-1880); a FidDb rebuild was not needed.
+Names (S10.8 / S10.9 / S10.10 / S10.7): 1,578 new rows in re/names/smsg_*.tsv with our citations, and rename lists
+(8_merge.md, 9_renames_sound.tsv, 10_renames.tsv) of which rows marked P rename port keys (decision D1). Findings: golf.pdb is
+right on four of five contradictions (0x004038f0 drawWalkers, 0x0040e720 openHole, 0x0042dea0 rateCourseHoles, 0x00422530
+golferShotReach); the 0x0056d1b8 records are celebrity vacation-home residents (spawned by mainLoop 0x00417a5a on type-5 lots,
+string 0x004c6444), not animals; golfer fields U-0010 / U-0015 / U-0016 resolved. match.py: an exe operand the obj holds as a
+plain literal is compared as a literal (U-1886).
+Merged by I16 (2026-10-29, log/roadmap/merges/I16.md): C4 2,765 -> 2,928 (exe +102, sound +61; gameMain held by U-1351, sound strcpy
+0x1004a010 kept at its 7-byte extent), 1,578 names C0 -> C2, the 143 sound bodies created (sound.dll list 2,358, 632 smsg sound lines),
+19 false starts removed per debug DLL, 23 renames without port keys; rows marked P (port keys) and the g_animalRecords symbol rename
+wait for a port step (D1); mainLoop stays C2 (D2). ApplyNames.java dies on a DuplicateNameException when an ANALYSIS label of the
+same name sits at the entry (21 FID labels such as __lockexit 0x004a51cf) after saving the renames before it; I16 used a copy that
+drops the label and retries (log/roadmap/merges/I16/ghidra/ApplyNamesI16.java). ApplyNames reads every re/names/*.tsv, other sessions'
+untracked files included: apply from a directory holding only the files being merged. UNCERTAINTIES.md addr cells must be one hex
+number or empty (re_classify parses every row).
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

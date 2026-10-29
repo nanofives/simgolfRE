@@ -1,0 +1,61 @@
+instruction,library_object,original,match
+0,push ecx,push ecx,True
+1,push ebx,push ebx,True
+2,push ebp,push ebp,True
+3,push esi,push esi,True
+4,"mov esi, dword ptr [0]","mov esi, dword ptr [0x840a90]",True
+5,push edi,push edi,True
+6,"xor edi, edi","xor edi, edi",True
+7,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+8,"cmp eax, edi","cmp eax, edi",True
+9,je 0x61,je 0x4ada5b,True
+10,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x4ba104]",True
+11,push edi,push edi,True
+12,push edi,push edi,True
+13,push edi,push edi,True
+14,push edi,push edi,True
+15,push -1,push -1,True
+16,push eax,push eax,True
+17,push edi,push edi,True
+18,push 1,push 1,True
+19,call ebx,call ebx,True
+20,"mov ebp, eax","mov ebp, eax",True
+21,"cmp ebp, edi","cmp ebp, edi",True
+22,je 0x69,je 0x4ada63,True
+23,push ebp,push ebp,True
+24,call 0x31,call 0x4a504f,True
+25,"cmp eax, edi","cmp eax, edi",True
+26,pop ecx,pop ecx,True
+27,"mov dword ptr [esp + 0x10], eax","mov dword ptr [esp + 0x10], eax",True
+28,je 0x69,je 0x4ada63,True
+29,push edi,push edi,True
+30,push edi,push edi,True
+31,push ebp,push ebp,True
+32,push eax,push eax,True
+33,push -1,push -1,True
+34,push dword ptr [esi],push dword ptr [esi],True
+35,push edi,push edi,True
+36,push 1,push 1,True
+37,call ebx,call ebx,True
+38,"test eax, eax","test eax, eax",True
+39,je 0x69,je 0x4ada63,True
+40,push edi,push edi,True
+41,push dword ptr [esp + 0x14],push dword ptr [esp + 0x14],True
+42,call 0x55,call 0x4add10,True
+43,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+44,"add esi, 4","add esi, 4",True
+45,pop ecx,pop ecx,True
+46,"cmp eax, edi","cmp eax, edi",True
+47,pop ecx,pop ecx,True
+48,jne 0x19,jne 0x4ada13,True
+49,"xor eax, eax","xor eax, eax",True
+50,pop edi,pop edi,True
+51,pop esi,pop esi,True
+52,pop ebp,pop ebp,True
+53,pop ebx,pop ebx,True
+54,pop ecx,pop ecx,True
+55,ret ,ret ,True
+56,"or eax, 0xffffffff","or eax, 0xffffffff",True
+57,jmp 0x63,jmp 0x4ada5d,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\wtombenv.obj (library object, no compilation)",symbol=___wtomb_environ,module=golf_clean.exe
+VERDICT,GREEN,58,100.0%

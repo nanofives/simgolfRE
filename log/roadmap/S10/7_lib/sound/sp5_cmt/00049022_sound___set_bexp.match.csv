@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push ecx,push ecx,True
+4,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+5,"mov ecx, dword ptr [ebp + 0xe]","mov ecx, dword ptr [ebp + 0xe]",True
+6,fld qword ptr [ebp + 8],fld qword ptr [ebp + 8],True
+7,"shl eax, 4","shl eax, 4",True
+8,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+9,"and cx, 0x800f","and cx, 0x800f",True
+10,"or eax, ecx","or eax, ecx",True
+11,"mov word ptr [ebp - 2], ax","mov word ptr [ebp - 2], ax",True
+12,fld qword ptr [ebp - 8],fld qword ptr [ebp - 8],True
+13,leave ,leave ,True
+14,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\util.obj (library object, no compilation)",symbol=__set_bexp,module=sound.dll
+VERDICT,GREEN,15,100.0%

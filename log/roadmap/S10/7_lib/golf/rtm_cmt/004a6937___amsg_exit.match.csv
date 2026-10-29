@@ -1,0 +1,13 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [0], 2","cmp dword ptr [0x840ab4], 1",False
+1,je 0xe,jne 0x4a6945,False
+2,call 0xe,call 0x4ab372,True
+3,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+4,call 0x17,call 0x4ab3ab,True
+5,push 0xff,push 0xff,True
+6,call dword ptr [0],call dword ptr [0x4e4ae0],True
+7,pop ecx,pop ecx,True
+8,pop ecx,pop ecx,True
+9,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\crt0.obj (library object, no compilation)",symbol=__amsg_exit,module=golf_clean.exe
+VERDICT,RED,10,80.0%

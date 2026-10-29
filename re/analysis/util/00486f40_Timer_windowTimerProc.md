@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 66 bytes, 23 instructions, subsystem `util`. Mechanical
 Window-timer callback for Timer objects: posts a user message to the game window once per tick and marks the timer pending flag at +0x24. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Time.cpp` as `?TimerProc@@YGXPAXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00486f7f): callee pops 16 bytes of stack arguments.
 
 ## Reads

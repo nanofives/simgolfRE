@@ -1,0 +1,39 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/TerrainView.cpp	0x490d0	0x004490d0	61	G	Terrain::tileAt	?tileAt@Terrain@@QAEPAVTile@@HH@Z	public	100	100.0	25/25 ins	terrain.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49110	0x00449110	23	G	Terrain::getElevation	?getElevation@Terrain@@QAEHPAVTile@@H@Z	public	100	100.0	8/8 ins	terrain.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49130	0x00449130	18	G	Terrain::getWall	?getWall@Terrain@@QAE_NPAVTile@@H@Z	public	100	100.0	4/4 ins	terrain.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49150	0x00449150	10	G	Terrain::getType	?getType@Terrain@@QAEHPAVTile@@@Z	public	100	100.0	3/3 ins	terrain.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49160	0x00449160	5	L	$E8	_$E8	name	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49170	0x00449170	11	L	$E7	_$E7	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49180	0x00449180	5	L	$E11	_$E11	name	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49190	0x00449190	19	L	$E10	_$E10	name	100	100.0	5/5 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x491b0	0x004491b0	10	L	$E16	_$E16	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x491c0	0x004491c0	10	L	$E13	_$E13	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x491d0	0x004491d0	12	L	$E15	_$E15	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x491e0	0x004491e0	20	L	$E14	_$E14	name	100	100.0	3/3 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49200	0x00449200	10	L	$E21	_$E21	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49210	0x00449210	41	L	$E18	_$E18	name	100	100.0	11/11 ins	m36d_hand_gx.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49240	0x00449240	12	L	$E20	_$E20	name	100	100.0	4/4 ins	golf_raw_08.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49250	0x00449250	88	L	$E19	_$E19	name	100	100.0	32/32 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x492b0	0x004492b0	5	L	$E24	_$E24	name	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x492c0	0x004492c0	1	L	$E23	_$E23	name	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x492d0	0x004492d0	23	G	GetTerrainTypeAt	?GetTerrainTypeAt@@YAHHH@Z	public	100	100.0	6/6 ins	golf_small.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x492f0	0x004492f0	26	G	GetTerrainVariationAt	?GetTerrainVariationAt@@YAHHH@Z	public	100	100.0	8/8 ins	golf_small.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49310	0x00449310	26	G	GetCornerElevationAt	?GetCornerElevationAt@@YAHHHH@Z	public	100	100.0	10/10 ins	golf_small.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49330	0x00449330	128	G	GetTerrainWallHeight	?GetTerrainWallHeight@@YAHHHH@Z	public	100	100.0	44/44 ins	golf_small12.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x493b0	0x004493b0	28	G	IsTilePath	?IsTilePath@@YAHHH@Z	public	100	100.0	8/8 ins	golf_small2.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x493d0	0x004493d0	47	G	DrawTerrainLine	?DrawTerrainLine@@YAXHHHHIHH@Z	public	100	100.0	17/17 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49400	0x00449400	107	G	LoadCourseType	?LoadCourseType@@YAXH@Z	public	100	100.0	32/32 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49470	0x00449470	172	G	SyncTerrainTypes	?SyncTerrainTypes@@YAXXZ	public	100	100.0	64/64 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49520	0x00449520	24	G	ResetAndRebuildTerrain	?ResetAndRebuildTerrain@@YAXXZ	public	100	100.0	5/5 ins	golf_small16.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49540	0x00449540	588	G	BuildFromGameData	?BuildFromGameData@@YAXXZ	public	100	100.0	221/221 ins	golf_hand_s0.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49790	0x00449790	208	G	InitTerrainSystem	?InitTerrainSystem@@YAXHH@Z	public	100	100.0	56/56 ins	golf_hand_06_f.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x49860	0x00449860	50	G	ShutdownTerrain	?ShutdownTerrain@@YAXXZ	public	100	100.0	14/14 ins	golf_hand_01.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x498a0	0x004498a0	1624	G	UpdateTerrainView	?UpdateTerrainView@@YAXHHHH@Z	public	100	100.0	429/429 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49f00	0x00449f00	158	G	UpdateTileTerrainType	?UpdateTileTerrainType@@YA_NPAVTile@@HH@Z	public	100	100.0	66/66 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x49fa0	0x00449fa0	992	G	AdjustTileCornerElevations	?AdjustTileCornerElevations@@YA_NPAVTile@@HHHH@Z	public	100	100.0	313/313 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x4a380	0x0044a380	132	G	UpdateTileWalls	?UpdateTileWalls@@YA_NPAVTile@@HH@Z	public	100	100.0	55/55 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x4a410	0x0044a410	402	G	UpdateTilePath	?UpdateTilePath@@YA_NPAVTile@@HH@Z	public	100	100.0	141/141 ins	golf_hand_r1.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x4a5b0	0x0044a5b0	300	G	UpdateTerrainTilesInView	?UpdateTerrainTilesInView@@YAXHH@Z	public	100	100.0	115/115 ins	golf_hand_r1.cpp
+golf	golf/golf.exe/src/TerrainView.cpp	0x4a6e0	0x0044a6e0	1312	G	ScrollTerrainView	?ScrollTerrainView@@YAXPAUAssetSurface@@HHHHHH@Z	public	100	100.0	384/384 ins	
+golf	golf/golf.exe/src/TerrainView.cpp	0x4ac00	0x0044ac00	68	G	TileList::erase	?erase@TileList@@QAE?AVTileIter@@V2@0@Z	public	100	100.0	30/30 ins	

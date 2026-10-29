@@ -1,0 +1,20 @@
+module	entry	size	library symbol	tag	member	pct	csv	identical symbols
+jgld.dll	0x1007e850	5	__fpclear	sp2_cmtd	..\build\intel\xmt_obj\fpinit.obj	100.0	-	4
+jgld.dll	0x1007e8b0	28	__CrtSetBreakAlloc	sp2_cmtd	build\intel\xmt_obj\dbgheap.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0007e8b0_jgld___CrtSetBreakAlloc.match.csv	5
+jgld.dll	0x1007e8d0	20	__CIasin	sp2_cmtd	..\build\intel\xmt_obj\asin.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0007e8d0_jgld___CIasin.match.csv	9
+jgld.dll	0x1007e990	20	__CIasin	sp2_cmtd	..\build\intel\xmt_obj\asin.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0007e990_jgld___CIasin.match.csv	9
+jgld.dll	0x1007ea40	20	__CIasin	sp2_cmtd	..\build\intel\xmt_obj\asin.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0007ea40_jgld___CIasin.match.csv	9
+jgld.dll	0x1007eef0	34	__unwind_handler	sp2_cmtd	build\intel\xmt_obj\exsup.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0007eef0_jgld___unwind_handler.match.csv	1
+jgld.dll	0x1007efa6	24	__NLG_Notify	sp2_cmtd	build\intel\xmt_obj\exsup.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0007efa6_jgld___NLG_Notify.match.csv	1
+jgld.dll	0x10082a60	25	__CIpow	sp2_cmtd	..\build\intel\xmt_obj\pow.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00082a60_jgld___CIpow.match.csv	1
+jgld.dll	0x10083ea0	23	__startTwoArgErrorHandling	sp2_cmtd	..\build\intel\xmt_obj\genexcep.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00083ea0_jgld___startTwoArgErrorHandling.match.csv	1
+jgld.dll	0x10083f00	21	__twoToTOS	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00083f00_jgld___twoToTOS.match.csv	1
+jgld.dll	0x10083f15	23	__load_CW	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00083f15_jgld___load_CW.match.csv	1
+jgld.dll	0x10083f2c	25	__convertTOStoQNaN	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00083f2c_jgld___convertTOStoQNaN.match.csv	1
+jgld.dll	0x10083f88	22	__checkTOS_withFB	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00083f88_jgld___checkTOS_withFB.match.csv	1
+jgld.dll	0x10083fe9	163	__check_range_exit	sp2_cmtd	..\build\intel\xmt_obj\common.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00083fe9_jgld___check_range_exit.match.csv	1
+jgld.dll	0x10085080	29	?unexpected@@YAXXZ	sp2_cmtd	build\intel\xmt_obj\hooks.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00085080_jgld__unexpected__YAXXZ.match.csv	1
+jgld.dll	0x1008510a	6	__rttospopde	sp2_cmtd	..\build\intel\xmt_obj\87disp.obj	100.0	-	3
+jgld.dll	0x10085b38	189	__except_handler3	sp2_cmtd	build\intel\xmt_obj\exsup3.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/00085b38_jgld___except_handler3.match.csv	1
+jgld.dll	0x1008fac0	21	?__CxxSetUnhandledExceptionFilter@@YAXXZ	sp2_cmtd	build\intel\xmt_obj\unhandld.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0008fac0_jgld____CxxSetUnhandledExceptionFilter__YAXXZ.match.csv	1
+jgld.dll	0x1008fae0	17	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	sp2_cmtd	build\intel\xmt_obj\unhandld.obj	100.0	log/roadmap/S10/7_lib/jgld/rev_sp2_cmtd/0008fae0_jgld____CxxRestoreUnhandledExceptionFilter__YAXXZ.match.csv	1

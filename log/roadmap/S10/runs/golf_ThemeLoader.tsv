@@ -1,0 +1,3 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/ThemeLoader.cpp	0x658b0	0x004658b0	226	G	LoadThemeFiles	?LoadThemeFiles@@YAXH@Z	public	100	100.0	87/87 ins	golf_hand_07_4658b0.cpp
+golf	golf/golf.exe/src/ThemeLoader.cpp	0x659a0	0x004659a0	2509	G	LoadThemeData	?LoadThemeData@@YAXXZ	public	100	100.0	854/854 ins	

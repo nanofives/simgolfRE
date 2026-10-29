@@ -7,6 +7,7 @@ rate-converting stereo 16-bit mixer, stored (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?mov_16216s2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001622a, 0x10016258): callee pops 0 bytes of stack arguments.
 
 ## Reads

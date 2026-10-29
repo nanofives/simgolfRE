@@ -1,0 +1,51 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/filters.cpp	0x13870	0x10013870	3	G	filter_stub	?filter_stub@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x13890	0x10013890	500	G	a16216s2s_straight	?a16216s2s_straight@@YAKPAPAX0HPAXK@Z	public	100	100.0	171/171 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x13b10	0x10013b10	549	G	a16216s2s_no_pitch	?a16216s2s_no_pitch@@YAKPAPAX0HPAXK@Z	public	100	100.0	185/185 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x13dd0	0x10013dd0	888	G	add_16216s2smb	?add_16216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	298/298 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x14230	0x10014230	6	G	add_16216s2mmb	?add_16216s2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x14250	0x10014250	549	G	a16216m2s_straight	?a16216m2s_straight@@YAKPAPAX0HPAXK@Z	public	100	100.0	186/186 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x14510	0x10014510	615	G	a16216m2s_no_pitch	?a16216m2s_no_pitch@@YAKPAPAX0HPAXK@Z	public	100	100.0	209/209 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x14820	0x10014820	1014	G	add_16216m2smb	?add_16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	352/352 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x14d20	0x10014d20	994	G	old_add_16216m2smb	?old_add_16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	350/350 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15210	0x10015210	3	G	add_16216m2mmb	?add_16216m2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15230	0x10015230	3	G	add_828s2smb	?add_828s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15250	0x10015250	3	G	add_828s2mmb	?add_828s2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15270	0x10015270	3	G	add_828m2smb	?add_828m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15290	0x10015290	3	G	add_828m2mmb	?add_828m2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x152b0	0x100152b0	797	G	add_8216s2smb	?add_8216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	257/257 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x156a0	0x100156a0	3	G	add_8216s2mmb	?add_8216s2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x156c0	0x100156c0	758	G	add_8216m2smb	?add_8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	247/247 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x15a80	0x10015a80	3	G	add_8216m2mmb	?add_8216m2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15aa0	0x10015aa0	452	G	m16216s2s_straight	?m16216s2s_straight@@YAKPAPAX0HPAXK@Z	public	100	100.0	154/154 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15cf0	0x10015cf0	497	G	m16216s2s_no_pitch	?m16216s2s_no_pitch@@YAKPAPAX0HPAXK@Z	public	100	100.0	168/168 ins	
+sound	sound/sound.dll/src/filters.cpp	0x15f70	0x10015f70	745	G	mov_16216s2smb	?mov_16216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	242/242 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16320	0x10016320	6	G	mov_16216s2mmb	?mov_16216s2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16340	0x10016340	471	G	m16216m2s_straight	?m16216m2s_straight@@YAKPAPAX0HPAXK@Z	public	100	100.0	166/166 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x165a0	0x100165a0	537	G	m16216m2s_no_pitch	?m16216m2s_no_pitch@@YAKPAPAX0HPAXK@Z	public	100	100.0	186/186 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x16850	0x10016850	936	G	mov_16216m2smb	?mov_16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	327/327 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x16cf0	0x10016cf0	3	G	mov_16216m2mmb	?mov_16216m2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16d10	0x10016d10	3	G	mov_828s2smb	?mov_828s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16d30	0x10016d30	3	G	mov_828s2mmb	?mov_828s2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16d50	0x10016d50	3	G	mov_828m2smb	?mov_828m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16d70	0x10016d70	3	G	mov_828m2mmb	?mov_828m2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x16d90	0x10016d90	749	G	mov_8216s2smb	?mov_8216s2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	240/240 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x17140	0x10017140	3	G	mov_8216s2mmb	?mov_8216s2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x17160	0x10017160	722	G	mov_8216m2smb	?mov_8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	232/232 ins	m36a_g5.cpp
+sound	sound/sound.dll/src/filters.cpp	0x17500	0x10017500	3	G	mov_8216m2mmb	?mov_8216m2mmb@@YAKPAPAX0HPAXK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/filters.cpp	0x17520	0x10017520	724	G	add_11k222k8216m2smb	?add_11k222k8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	235/235 ins	
+sound	sound/sound.dll/src/filters.cpp	0x178c0	0x100178c0	667	G	mov_11k222k8216m2smb	?mov_11k222k8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	216/216 ins	
+sound	sound/sound.dll/src/filters.cpp	0x17c10	0x10017c10	523	G	a11k16216m2s_straight	?a11k16216m2s_straight@@YAKPAPAX0HPAXK@Z	public	100	100.0	178/178 ins	
+sound	sound/sound.dll/src/filters.cpp	0x17eb0	0x10017eb0	469	G	m11k16216m2s_straight	?m11k16216m2s_straight@@YAKPAPAX0HPAXK@Z	public	100	100.0	160/160 ins	
+sound	sound/sound.dll/src/filters.cpp	0x18110	0x10018110	715	G	add_8k222k16216m2smb	?add_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	234/234 ins	
+sound	sound/sound.dll/src/filters.cpp	0x184a0	0x100184a0	838	G	fp_mov_8k16216m2smb	?fp_mov_8k16216m2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	271/271 ins	m36a_g6.cpp
+sound	sound/sound.dll/src/filters.cpp	0x188d0	0x100188d0	862	G	fp_add_8k16216m2smb	?fp_add_8k16216m2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	275/275 ins	m36a_g6_tail.cpp
+sound	sound/sound.dll/src/filters.cpp	0x18d10	0x10018d10	666	G	mov_8k222k16216m2smb	?mov_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	217/217 ins	
+sound	sound/sound.dll/src/filters.cpp	0x19060	0x10019060	736	G	a8k222k8216m2smb	?a8k222k8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	238/238 ins	
+sound	sound/sound.dll/src/filters.cpp	0x19400	0x10019400	695	G	m8k222k8216m2smb	?m8k222k8216m2smb@@YAKPAPAX0HPAXK@Z	public	100	100.0	226/226 ins	
+sound	sound/sound.dll/src/filters.cpp	0x19770	0x10019770	738	G	fp_add_16216m2smb	?fp_add_16216m2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	247/247 ins	m36a_g6.cpp
+sound	sound/sound.dll/src/filters.cpp	0x19b20	0x10019b20	726	G	fp_mov_16216m2smb	?fp_mov_16216m2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	243/243 ins	m36a_g6.cpp
+sound	sound/sound.dll/src/filters.cpp	0x19ec0	0x10019ec0	804	G	fp_mov_8216m2smb	?fp_mov_8216m2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	258/258 ins	m36a_g6.cpp
+sound	sound/sound.dll/src/filters.cpp	0x1a2c0	0x1001a2c0	816	G	fp_add_8216m2smb	?fp_add_8216m2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	262/262 ins	m36a_g6.cpp
+sound	sound/sound.dll/src/filters.cpp	0x1a6c0	0x1001a6c0	452	G	fp_mov_16216s2smb	?fp_mov_16216s2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	160/160 ins	m36a_g6.cpp
+sound	sound/sound.dll/src/filters.cpp	0x1a910	0x1001a910	461	G	fp_add_16216s2smb	?fp_add_16216s2smb@@YAKPANPAPAXHPAXK@Z	public	100	100.0	164/164 ins	m36a_g6.cpp

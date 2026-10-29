@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/NetFifo.cpp	0xa4b00	0x004a4b00	96	G	NetFifo::close	?close@NetFifo@@QAEXXZ	public	100	100.0	41/41 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/NetFifo.cpp	0xa4b60	0x004a4b60	261	G	NetFifo::add	?add@NetFifo@@QAEHPBXHHHH@Z	public	100	100.0	103/103 ins	golf_hand_08_c.cpp
+golf	golf/jackal.lib/src/NetFifo.cpp	0xa4c70	0x004a4c70	192	G	NetFifo::get	?get@NetFifo@@QAEHPAXPAH11@Z	public	100	100.0	79/79 ins	golf_hand_06_k.cpp

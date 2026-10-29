@@ -1,0 +1,26 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push edi,push edi,True
+3,"mov edi, dword ptr [ebp + 8]","mov edi, dword ptr [ebp + 8]",True
+4,"xor eax, eax","xor eax, eax",True
+5,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+6,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+7,inc ecx,inc ecx,True
+8,neg ecx,neg ecx,True
+9,dec edi,dec edi,True
+10,"mov al, byte ptr [ebp + 0xc]","mov al, byte ptr [ebp + 0xc]",True
+11,std ,std ,True
+12,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+13,inc edi,inc edi,True
+14,"cmp byte ptr [edi], al","cmp byte ptr [edi], al",True
+15,je 0x21,je 0x4a6c71,True
+16,"xor eax, eax","xor eax, eax",True
+17,jmp 0x23,jmp 0x4a6c73,True
+18,"mov eax, edi","mov eax, edi",True
+19,cld ,cld ,True
+20,pop edi,pop edi,True
+21,leave ,leave ,True
+22,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\strrchr.obj (library object, no compilation)",symbol=_strrchr,module=golf_clean.exe
+VERDICT,GREEN,23,100.0%

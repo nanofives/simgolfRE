@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 17 bytes, 5 instructions, subsystem `ui`. Mechanical tr
 returns 1 when bit 14 (0x4000) of the flag word at this+0x1f68 is clear, otherwise 0; takes one ignored argument (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BasePop.cpp` as `?on_key_up@BasePop@@UAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00490b1e): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00490b10 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

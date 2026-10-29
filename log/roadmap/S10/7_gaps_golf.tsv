@@ -1,0 +1,235 @@
+va	symbol	lib	member	pct	names_file	our_name	hooks_level	note
+0x004a4fac	__fpmath	rtm_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	-	__fpmath	-	
+0x004a4fc3	__fpclear	rtm_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	smsg_exe_1	FUN_004a4fc3	-	
+0x004a4fc4	__cfltcvt_init	rtm_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	exe_5	initFpControl	C4	
+0x004a4ffc	??3@YAXPAX@Z	rtm_cmt	build\intel\mt_obj\delete.obj	100.0	exe_7	operatorDelete_4a4ffc	C4	
+0x004a5007	_free	rtm_cmt	build\intel\mt_obj\free.obj	100.0	exe_15	_free	C2	
+0x004a504f	_malloc	rtm_cmt	build\intel\mt_obj\malloc.obj	100.0	exe_15	_malloc	C2	
+0x004a5061	__nh_malloc	rtm_cmt	build\intel\mt_obj\malloc.obj	100.0	-	__nh_malloc	-	
+0x004a508d	__heap_alloc	rtm_cmt	build\intel\mt_obj\malloc.obj	100.0	-	__heap_alloc	-	
+0x004a50db	__cinit	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	-	__cinit	-	
+0x004a5108	_exit	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	-	_exit	-	
+0x004a5119	__exit	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	-	__exit	-	
+0x004a51cf	__lockexit	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	-	FID_conflict:__lockexit	-	
+0x004a51d8	__unlockexit	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	-	FID_conflict:__lockexit	-	
+0x004a51fb	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	-	pdb-size
+0x004a522f	?_CallMemberFunction1@@YGXPAX00@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	FID_conflict:_CallMemberFunction1	-	
+0x004a5236	?_CallMemberFunction2@@YGXPAX00H@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	FID_conflict:_CallMemberFunction1	-	
+0x004a523d	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	-	
+0x004a528c	___CxxFrameHandler	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	___CxxFrameHandler	-	
+0x004a52c2	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	-	
+0x004a533b	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	-	
+0x004a5466	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	-	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	-	
+0x004a54e4	__global_unwind2	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	-	__global_unwind2	-	byte-identity (relocation sites masked)
+0x004a5526	__local_unwind2	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	-	__local_unwind2	-	byte-identity (relocation sites masked)
+0x004a557e	__NLG_Return2	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	-	(not in function list)	-	byte-identity (relocation sites masked)
+0x004a558e	__abnormal_termination	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	-	__abnormal_termination	-	byte-identity (relocation sites masked)
+0x004a55b1	__NLG_Notify1	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	-	__NLG_Notify1	-	byte-identity (relocation sites masked)
+0x004a55ba	__NLG_Notify	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	smsg_exe_1	FUN_004a55ba	-	lib-to-section-end
+0x004a55cd	__NLG_Dispatch	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	-	(not in function list)	-	pdb-size
+0x004a55d2	??_L@YGXPAXIHP6EX0@Z1@Z	rtm_cmt	build\intel\mt_obj\ehvecctr.obj	100.0	exe_15	ehVectorConstructorIterator	C4	pdb-size
+0x004a5654	__onexit	rtm_cmt	build\intel\mt_obj\onexit.obj	100.0	-	__onexit	-	
+0x004a56d2	_atexit	rtm_cmt	build\intel\mt_obj\onexit.obj	100.0	-	_atexit	-	
+0x004a56e4	___onexitinit	rtm_cmt	build\intel\mt_obj\onexit.obj	100.0	smsg_exe_1	FUN_004a56e4	-	pdb-size
+0x004a5713	??_M@YGXPAXIHP6EX0@Z@Z	rtm_cmt	build\intel\mt_obj\ehvecdtr.obj	100.0	-	??_M@YGXPAXIHP6EX0@Z@Z	-	pdb-size
+0x004a5793	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	rtm_cmt	build\intel\mt_obj\ehvecdtr.obj	100.0	exe_16	__ArrayUnwind	C3	pdb-size
+0x004a57f1	??2@YAPAXI@Z	rtm_cmt	build\intel\mt_obj\new.obj	100.0	exe_15	operator_new	C2	
+0x004a5800	_strpbrk	rtm_cmt	build\intel\mt_obj\strpbrk.obj	100.0	-	_strpbrk	-	
+0x004a583a	__read	rtm_cmt	build\intel\mt_obj\read.obj	100.0	-	__read	-	
+0x004a589f	__read_lk	rtm_cmt	build\intel\mt_obj\read.obj	100.0	-	__read_lk	-	
+0x004a5a78	__close	rtm_cmt	build\intel\mt_obj\close.obj	100.0	-	__close	-	
+0x004a5ad5	__close_lk	rtm_cmt	build\intel\mt_obj\close.obj	100.0	-	__close_lk	-	
+0x004a5b58	__write	rtm_cmt	build\intel\mt_obj\write.obj	100.0	-	__write	-	
+0x004a5bbd	__write_lk	rtm_cmt	build\intel\mt_obj\write.obj	100.0	-	__write_lk	-	
+0x004a5d48	__open	rtm_cmt	build\intel\mt_obj\open.obj	100.0	-	__open	-	
+0x004a5d5f	__sopen	rtm_cmt	build\intel\mt_obj\open.obj	100.0	-	__sopen	-	
+0x004a6030	__ftol	rtm_cmt	..\build\intel\mt_obj\ftol.obj	100.0	exe_15	__ftol	C4	
+0x004a6057	__tell	rtm_cmt	build\intel\mt_obj\tell.obj	100.0	-	__tell	-	
+0x004a6070	__chkstk	rtm_cmt	build\intel\mt_obj\chkstk.obj	100.0	smsg_exe_1	FUN_004a6070	-	
+0x004a609f	_fclose	rtm_cmt	build\intel\mt_obj\fclose.obj	100.0	exe_14	_fclose	C4	
+0x004a60d0	__fclose_lk	rtm_cmt	build\intel\mt_obj\fclose.obj	100.0	exe_15	__fclose_lk	C2	
+0x004a611c	__fsopen	rtm_cmt	build\intel\mt_obj\fopen.obj	100.0	exe_15	__fsopen	C2	
+0x004a614d	_fopen	rtm_cmt	build\intel\mt_obj\fopen.obj	100.0	exe_14	_fopen	C4	
+0x004a6170	_strchr	rtm_cmt	build\intel\mt_obj\strchr.obj	100.0	exe_15	_strchr	C4	lib-to-section-end
+0x004a6176	___from_strstr_to_strchr	rtm_cmt	build\intel\mt_obj\strchr.obj	100.0	-	(not in function list)	-	pdb-size
+0x004a622c	_fprintf	rtm_cmt	build\intel\mt_obj\fprintf.obj	100.0	-	_fprintf	-	
+0x004a6268	_fwrite	rtm_cmt	build\intel\mt_obj\fwrite.obj	100.0	-	_fwrite	-	
+0x004a6297	__fwrite_lk	rtm_cmt	build\intel\mt_obj\fwrite.obj	100.0	-	__fwrite_lk	-	
+0x004a63a1	_fread	rtm_cmt	build\intel\mt_obj\fread.obj	100.0	-	_fread	-	
+0x004a63d0	__fread_lk	rtm_cmt	build\intel\mt_obj\fread.obj	100.0	-	__fread_lk	-	
+0x004a64b8	_remove	rtm_cmt	build\intel\mt_obj\unlink.obj	100.0	smsg_exe_1	FUN_004a64b8	-	
+0x004a64f0	_strstr	rtm_cmt	build\intel\mt_obj\strstr.obj	100.0	exe_14	_strstr	C4	
+0x004a6570	_isdigit	rtm_cmt	build\intel\mt_obj\_ctype.obj	100.0	-	_isdigit	-	
+0x004a6598	_isspace	rtm_cmt	build\intel\mt_obj\_ctype.obj	100.0	-	_isspace	-	
+0x004a65c0	_isprint	rtm_cmt	build\intel\mt_obj\_ctype.obj	100.0	-	_isprint	-	
+0x004a65ee	_fgets	rtm_cmt	build\intel\mt_obj\fgets.obj	100.0	exe_14	_fgets	C4	
+0x004a6650	_toupper	rtm_cmt	build\intel\mt_obj\toupper.obj	100.0	-	_toupper	-	
+0x004a66bf	__toupper_lk	rtm_cmt	build\intel\mt_obj\toupper.obj	100.0	-	__toupper_lk	-	
+0x004a678b	_strtok	rtm_cmt	build\intel\mt_obj\strtok.obj	100.0	exe_14	_strtok	C4	
+0x004a682f	_WinMainCRTStartup	rtm_cmt	build\intel\mt_obj\wincrt0.obj	100.0	-	entry	-	pdb-size
+0x004a6980	_realloc	rtm_cmt	build\intel\mt_obj\realloc.obj	100.0	-	_realloc	-	
+0x004a6ab8	__purecall	rtm_cmt	build\intel\mt_obj\purevirt.obj	100.0	smsg_exe_1	FUN_004a6ab8	-	pdb-size trim-pad
+0x004a6ad0	_strncmp	rtm_cmt	build\intel\mt_obj\strncmp.obj	100.0	-	_strncmp	-	
+0x004a6b08	_atol	rtm_cmt	build\intel\mt_obj\atox.obj	100.0	-	_atol	-	
+0x004a6b93	_atoi	rtm_cmt	build\intel\mt_obj\atox.obj	100.0	-	_atoi	-	
+0x004a6ba0	_memchr	rtm_cmt	build\intel\mt_obj\memchr.obj	100.0	-	_memchr	-	
+0x004a6c50	_strrchr	rtm_cmt	build\intel\mt_obj\strrchr.obj	100.0	-	_strrchr	-	
+0x004a6c80	_strncpy	rtm_cmt	build\intel\mt_obj\strncpy.obj	100.0	-	_strncpy	-	
+0x004a6d80	_memmove	rtm_cmt	build\intel\mt_obj\memmove.obj	100.0	-	FID_conflict:_memcpy	-	byte-identity (relocation sites masked)
+0x004a70b5	_rewind	rtm_cmt	build\intel\mt_obj\rewind.obj	100.0	exe_15	_rewind	C4	
+0x004a7119	_fseek	rtm_cmt	build\intel\mt_obj\fseek.obj	100.0	exe_15	_fseek	C4	
+0x004a7145	__fseek_lk	rtm_cmt	build\intel\mt_obj\fseek.obj	100.0	-	__fseek_lk	-	
+0x004a71d2	_tolower	rtm_cmt	build\intel\mt_obj\tolower.obj	100.0	-	_tolower	-	
+0x004a7241	__tolower_lk	rtm_cmt	build\intel\mt_obj\tolower.obj	100.0	-	__tolower_lk	-	
+0x004a730c	__ftell_lk	rtm_cmt	build\intel\mt_obj\ftell.obj	100.0	-	__ftell_lk	-	
+0x004a7470	_strcspn	rtm_cmt	build\intel\mt_obj\strcspn.obj	100.0	-	_strcspn	-	
+0x004a74ae	__setdefaultprecision	rtm_cmt	build\intel\mt_obj\fp8.obj	100.0	-	__setdefaultprecision	-	
+0x004a74c0	__ms_p5_test_fdiv	rtm_cmt	..\build\intel\mt_obj\testfdiv.obj	100.0	-	__ms_p5_test_fdiv	-	
+0x004a74fe	__ms_p5_mp_test_fdiv	rtm_cmt	..\build\intel\mt_obj\testfdiv.obj	100.0	-	__ms_p5_mp_test_fdiv	-	
+0x004a7527	__forcdecpt	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	-	__forcdecpt	-	
+0x004a7581	__cropzeros	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	smsg_exe_1	FUN_004a7581	-	
+0x004a75cf	__positive	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	smsg_exe_1	FUN_004a75cf	-	
+0x004a75e7	__fassign	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	-	__fassign	-	
+0x004a7625	__cftoe	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	-	__cftoe	-	
+0x004a7748	__cftof	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	-	__cftof	-	
+0x004a7844	__cftog	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	-	__cftog	-	
+0x004a78d7	__cfltcvt	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	-	__cfltcvt	-	
+0x004a794d	__heap_init	rtm_cmt	build\intel\mt_obj\heapinit.obj	100.0	-	__heap_init	-	
+0x004a7989	__mtinitlocks	rtm_cmt	build\intel\mt_obj\mlock.obj	100.0	-	__mtinitlocks	-	
+0x004a79b2	__lock	rtm_cmt	build\intel\mt_obj\mlock.obj	100.0	-	__lock	-	
+0x004a7a13	__unlock	rtm_cmt	build\intel\mt_obj\mlock.obj	100.0	smsg_exe_1	FUN_004a7a13	-	
+0x004a7a28	___sbh_heap_init	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_heap_init	-	
+0x004a7a66	___sbh_find_block	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_find_block	-	
+0x004a7a91	___sbh_free_block	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_free_block	-	
+0x004a7dbc	___sbh_alloc_block	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_alloc_block	-	
+0x004a80c5	___sbh_alloc_new_region	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_alloc_new_region	-	
+0x004a8176	___sbh_alloc_new_group	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_alloc_new_group	-	
+0x004a8271	___sbh_resize_block	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	-	___sbh_resize_block	-	
+0x004a8567	__callnewh	rtm_cmt	build\intel\mt_obj\handler.obj	100.0	-	__callnewh	-	
+0x004a8582	___InternalCxxFrameHandler	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	-	___InternalCxxFrameHandler	-	
+0x004a88d7	___FrameUnwindToState	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	-	___FrameUnwindToState	-	lib-code-size
+0x004a8d0f	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	-	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	-	lib-code-size
+0x004a8da0	__CallSettingFrame@12	rtm_cmt	build\intel\mt_obj\lowhelpr.obj	100.0	-	__CallSettingFrame@12	-	lib-to-section-end
+0x004a8dc7	__NLG_Return	rtm_cmt	build\intel\mt_obj\lowhelpr.obj	100.0	-	(not in function list)	-	pdb-size
+0x004a8dec	__mtinit	rtm_cmt	build\intel\mt_obj\tidtable.obj	100.0	-	__mtinit	-	
+0x004a8e40	__initptd	rtm_cmt	build\intel\mt_obj\tidtable.obj	100.0	-	__initptd	-	
+0x004a8e53	__getptd	rtm_cmt	build\intel\mt_obj\tidtable.obj	100.0	exe_15	__getptd	C2	
+0x004a8eba	?terminate@@YAXXZ	rtm_cmt	build\intel\mt_obj\hooks.obj	100.0	-	?terminate@@YAXXZ	-	pdb-size
+0x004a8f1b	?_inconsistency@@YAXXZ	rtm_cmt	build\intel\mt_obj\hooks.obj	100.0	-	?_inconsistency@@YAXXZ	-	lib-code-size
+0x004a8f7c	__except_handler3	rtm_cmt	build\intel\mt_obj\exsup3.obj	100.0	smsg_exe_1	FUN_004a8f7c	-	byte-identity (relocation sites masked)
+0x004a9039	__seh_longjmp_unwind@4	rtm_cmt	build\intel\mt_obj\exsup3.obj	100.0	-	__seh_longjmp_unwind@4	-	
+0x004a9054	__msize	rtm_cmt	build\intel\mt_obj\msize.obj	100.0	-	__msize	-	
+0x004a9099	__dosmaperr	rtm_cmt	build\intel\mt_obj\dosmap.obj	100.0	-	__dosmaperr	-	
+0x004a910c	__errno	rtm_cmt	build\intel\mt_obj\dosmap.obj	100.0	exe_5	errnoPtr	C4	
+0x004a9115	___doserrno	rtm_cmt	build\intel\mt_obj\dosmap.obj	100.0	exe_5	doserrnoPtr	C4	
+0x004a911e	__alloc_osfhnd	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	-	__alloc_osfhnd	-	
+0x004a9241	__set_osfhnd	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	-	__set_osfhnd	-	
+0x004a92bd	__free_osfhnd	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	-	__free_osfhnd	-	
+0x004a933c	__get_osfhandle	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	-	__get_osfhandle	-	
+0x004a937e	__lock_fhandle	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	-	__lock_fhandle	-	
+0x004a93dd	__unlock_fhandle	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	-	__unlock_fhandle	-	
+0x004a93ff	__ioinit	rtm_cmt	build\intel\mt_obj\ioinit.obj	100.0	-	__ioinit	-	
+0x004a95bb	__lseek	rtm_cmt	build\intel\mt_obj\lseek.obj	100.0	-	__lseek	-	
+0x004a9620	__lseek_lk	rtm_cmt	build\intel\mt_obj\lseek.obj	100.0	-	__lseek_lk	-	
+0x004a9693	__chsize_lk	rtm_cmt	build\intel\mt_obj\chsize.obj	100.0	-	__chsize_lk	-	
+0x004a97b8	___initstdio	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	smsg_exe_1	FUN_004a97b8	-	pdb-size
+0x004a9860	___endstdio	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	smsg_exe_1	FUN_004a9860	-	
+0x004a9874	__lock_file	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	exe_15	__lock_file	C2	
+0x004a98a3	__lock_file2	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	-	FID_conflict:__lock_file2	-	
+0x004a98c6	__unlock_file	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	exe_15	__unlock_file	C2	
+0x004a98f5	__unlock_file2	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	-	FID_conflict:__lock_file2	-	
+0x004a9918	__freebuf	rtm_cmt	build\intel\mt_obj\_freebuf.obj	100.0	-	__freebuf	-	
+0x004a9943	_fflush	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	-	_fflush	-	
+0x004a9972	__fflush_lk	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	-	__fflush_lk	-	
+0x004a99a0	__flush	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	-	__flush	-	
+0x004a99fc	__flushall	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	smsg_exe_1	FUN_004a99fc	-	
+0x004a9aa9	__openfile	rtm_cmt	build\intel\mt_obj\_open.obj	100.0	-	__openfile	-	
+0x004a9c19	__getstream	rtm_cmt	build\intel\mt_obj\stream.obj	100.0	-	__getstream	-	
+0x004a9ce1	__stbuf	rtm_cmt	build\intel\mt_obj\_sftbuf.obj	100.0	-	__stbuf	-	
+0x004a9d6e	__ftbuf	rtm_cmt	build\intel\mt_obj\_sftbuf.obj	100.0	-	__ftbuf	-	
+0x004aa5a2	__flsbuf	rtm_cmt	build\intel\mt_obj\_flsbuf.obj	100.0	-	__flsbuf	-	
+0x004aa6c0	_memcpy	rtm_cmt	build\intel\mt_obj\memcpy.obj	100.0	-	FID_conflict:_memcpy	-	byte-identity (relocation sites masked)
+0x004aa9f5	__filbuf	rtm_cmt	build\intel\mt_obj\_filbuf.obj	100.0	exe_15	__filbuf	C2	
+0x004aaad1	__isctype	rtm_cmt	build\intel\mt_obj\isctype.obj	100.0	-	__isctype	-	
+0x004aab46	___crtLCMapStringA	rtm_cmt	build\intel\mt_obj\a_map.obj	100.0	-	___crtLCMapStringA	-	pdb-size
+0x004aad6a	__XcptFilter	rtm_cmt	build\intel\mt_obj\winxfltr.obj	100.0	-	__XcptFilter	-	
+0x004aaee2	__wincmdln	rtm_cmt	build\intel\mt_obj\wincmdln.obj	100.0	-	__wincmdln	-	
+0x004aaf3a	__setenvp	rtm_cmt	build\intel\mt_obj\stdenvp.obj	100.0	-	__setenvp	-	
+0x004aaff3	__setargv	rtm_cmt	build\intel\mt_obj\stdargv.obj	100.0	-	__setargv	-	
+0x004ab240	___crtGetEnvironmentStringsA	rtm_cmt	build\intel\mt_obj\a_env.obj	100.0	-	___crtGetEnvironmentStringsA	-	
+0x004ab372	__FF_MSGBANNER	rtm_cmt	build\intel\mt_obj\crt0msg.obj	100.0	-	__FF_MSGBANNER	-	
+0x004ab3ab	__NMSG_WRITE	rtm_cmt	build\intel\mt_obj\crt0msg.obj	100.0	-	__NMSG_WRITE	-	
+0x004ab500	__allmul	rtm_cmt	build\intel\mt_obj\llmul.obj	100.0	-	__allmul	-	
+0x004ab534	_calloc	rtm_cmt	build\intel\mt_obj\calloc.obj	100.0	-	_calloc	-	
+0x004ab5c1	__control87	rtm_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	-	__control87	-	
+0x004ab5f6	__controlfp	rtm_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	-	__controlfp	-	
+0x004ab727	__ZeroTail	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__ZeroTail	-	
+0x004ab770	__IncMan	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__IncMan	-	
+0x004ab7c6	__RoundMan	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__RoundMan	-	
+0x004ab852	__CopyMan	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__CopyMan	-	
+0x004ab86d	__FillZeroMan	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__FillZeroMan	-	
+0x004ab879	__IsZeroMan	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__IsZeroMan	-	
+0x004ab894	__ShrMan	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__ShrMan	-	
+0x004ab921	__ld12cvt	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	__ld12cvt	-	
+0x004aba8d	__ld12tod	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	FID_conflict:__ld12tod	-	
+0x004abaa3	__ld12tof	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	FID_conflict:__ld12tod	-	
+0x004abab9	__atodbl	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	FID_conflict:__atodbl	-	
+0x004abae6	__atoflt	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	-	FID_conflict:__atodbl	-	
+0x004abb13	__fptostr	rtm_cmt	build\intel\mt_obj\_fptostr.obj	100.0	-	__fptostr	-	
+0x004abb8a	__fltout2	rtm_cmt	..\build\intel\mt_obj\cfout.obj	100.0	-	__fltout2	-	
+0x004abbe6	___dtold	rtm_cmt	..\build\intel\mt_obj\cfout.obj	100.0	-	___dtold	-	
+0x004abca0	_strcpy	rtm_cmt	build\intel\mt_obj\strcat.obj	100.0	smsg_exe_1	FUN_004abca0	-	byte-identity (relocation sites masked)
+0x004abcb0	_strcat	rtm_cmt	build\intel\mt_obj\strcat.obj	100.0	-	_strcat	-	
+0x004abd90	_memset	rtm_cmt	build\intel\mt_obj\memset.obj	100.0	-	_memset	-	
+0x004abdf0	_strlen	rtm_cmt	build\intel\mt_obj\strlen.obj	100.0	-	_strlen	-	
+0x004abe6b	__fptrap	rtm_cmt	build\intel\mt_obj\crt0fp.obj	100.0	exe_5	amsgExitThunk	C2	
+0x004abe74	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	rtm_cmt	build\intel\mt_obj\unhandld.obj	100.0	-	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	-	
+0x004abeba	?__CxxSetUnhandledExceptionFilter@@YAXXZ	rtm_cmt	build\intel\mt_obj\unhandld.obj	100.0	smsg_exe_1	FUN_004abeba	-	
+0x004abecb	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	rtm_cmt	build\intel\mt_obj\unhandld.obj	100.0	smsg_exe_1	FUN_004abecb	-	
+0x004abed8	?_ValidateRead@@YAHPBXI@Z	rtm_cmt	build\intel\mt_obj\validate.obj	100.0	-	?_ValidateRead@@YAHPBXI@Z	-	
+0x004abef4	?_ValidateWrite@@YAHPAXI@Z	rtm_cmt	build\intel\mt_obj\validate.obj	100.0	-	?_ValidateWrite@@YAHPAXI@Z	-	
+0x004abf10	?_ValidateExecute@@YAHP6GHXZ@Z	rtm_cmt	build\intel\mt_obj\validate.obj	100.0	-	?_ValidateExecute@@YAHP6GHXZ@Z	-	
+0x004abf30	_strcmp	rtm_cmt	build\intel\mt_obj\strcmp.obj	100.0	-	_strcmp	-	pdb-size
+0x004abfb4	_abort	rtm_cmt	build\intel\mt_obj\abort.obj	100.0	-	_abort	-	
+0x004abfcb	__setmode_lk	rtm_cmt	build\intel\mt_obj\setmode.obj	100.0	-	__setmode_lk	-	
+0x004ac02c	__fcloseall	rtm_cmt	build\intel\mt_obj\closeall.obj	100.0	smsg_exe_1	FUN_004ac02c	-	
+0x004ac0ad	__commit	rtm_cmt	build\intel\mt_obj\commit.obj	100.0	-	__commit	-	
+0x004ac140	__isatty	rtm_cmt	build\intel\mt_obj\isatty.obj	100.0	-	__isatty	-	
+0x004ac169	_wctomb	rtm_cmt	build\intel\mt_obj\wctomb.obj	100.0	-	_wctomb	-	
+0x004ac1c2	__wctomb_lk	rtm_cmt	build\intel\mt_obj\wctomb.obj	100.0	-	__wctomb_lk	-	
+0x004ac230	__aulldiv	rtm_cmt	build\intel\mt_obj\ulldiv.obj	100.0	-	__aulldiv	-	
+0x004ac2a0	__aullrem	rtm_cmt	build\intel\mt_obj\ullrem.obj	100.0	-	__aullrem	-	
+0x004ac315	__getbuf	rtm_cmt	build\intel\mt_obj\_getbuf.obj	100.0	-	__getbuf	-	
+0x004ac359	___crtGetStringTypeA	rtm_cmt	build\intel\mt_obj\a_str.obj	100.0	-	___crtGetStringTypeA	-	pdb-size
+0x004ac4a2	__ismbblead	rtm_cmt	build\intel\mt_obj\ismbbyte.obj	100.0	-	__ismbblead	-	
+0x004ac4e4	__setmbcp	rtm_cmt	build\intel\mt_obj\mbctype.obj	100.0	-	__setmbcp	-	
+0x004ac8bc	___initmbctable	rtm_cmt	build\intel\mt_obj\mbctype.obj	100.0	-	___initmbctable	-	
+0x004ac8d8	___crtMessageBoxA	rtm_cmt	build\intel\mt_obj\crtmbox.obj	100.0	-	___crtMessageBoxA	-	
+0x004ac961	_raise	rtm_cmt	build\intel\mt_obj\winsig.obj	100.0	-	_raise	-	
+0x004acb20	___addl	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	-	___addl	-	
+0x004acb41	___add_12	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	-	___add_12	-	
+0x004acb9f	___shl_12	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	-	___shl_12	-	
+0x004acbcd	___shr_12	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	-	___shr_12	-	
+0x004acbfa	___mtold12	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	-	___mtold12	-	
+0x004accc1	___strgtold12	rtm_cmt	..\build\intel\mt_obj\strgtold.obj	100.0	-	___strgtold12	-	lib-to-section-end
+0x004ad192	_$I10_OUTPUT	rtm_cmt	..\build\intel\mt_obj\x10fout.obj	100.0	-	_$I10_OUTPUT	-	
+0x004ad425	__itoa	rtm_cmt	build\intel\mt_obj\xtoa.obj	100.0	exe_14	__itoa	C4	
+0x004ad4b0	__strcmpi	rtm_cmt	build\intel\mt_obj\stricmp.obj	100.0	exe_15	__strcmpi	C4	
+0x004ad580	__strnicmp	rtm_cmt	build\intel\mt_obj\strnicmp.obj	100.0	exe_15	__strnicmp	C4	
+0x004ad681	___ld12mul	rtm_cmt	..\build\intel\mt_obj\tenpow.obj	100.0	-	___ld12mul	-	
+0x004ad8a1	___multtenpow12	rtm_cmt	..\build\intel\mt_obj\tenpow.obj	100.0	-	___multtenpow12	-	
+0x004ad91d	_getenv	rtm_cmt	build\intel\mt_obj\getenv.obj	100.0	-	_getenv	-	
+0x004ad93e	__getenv_lk	rtm_cmt	build\intel\mt_obj\getenv.obj	100.0	-	__getenv_lk	-	
+0x004ad9bb	__mbsnbicoll	rtm_cmt	build\intel\mt_obj\mbsnbico.obj	100.0	-	__mbsnbicoll	-	
+0x004ad9fa	___wtomb_environ	rtm_cmt	build\intel\mt_obj\wtombenv.obj	100.0	-	___wtomb_environ	-	
+0x004ada68	___crtCompareStringA	rtm_cmt	build\intel\mt_obj\a_cmp.obj	100.0	-	___crtCompareStringA	-	lib-code-size
+0x004add10	___crtsetenv	rtm_cmt	build\intel\mt_obj\setenv.obj	100.0	-	___crtsetenv	-	
+0x004adf56	__mbschr	rtm_cmt	build\intel\mt_obj\mbschr.obj	100.0	-	__mbschr	-	
+0x004adfed	__strdup	rtm_cmt	build\intel\mt_obj\strdup.obj	100.0	-	__strdup	-	
+0x004b65d6	_sprintf	rtm_cmt	build\intel\mt_obj\sprintf.obj	100.0	-	_sprintf	-	
+0x004b6628	_sscanf	rtm_cmt	build\intel\mt_obj\sscanf.obj	100.0	-	_sscanf	-	
+0x004b665c	__input	rtm_cmt	build\intel\mt_obj\input.obj	100.0	-	__input	-	
+0x004b710d	_mbtowc	rtm_cmt	build\intel\mt_obj\mbtowc.obj	100.0	-	_mbtowc	-	
+0x004b716a	__mbtowc_lk	rtm_cmt	build\intel\mt_obj\mbtowc.obj	100.0	-	__mbtowc_lk	-	
+0x004b7240	__allshl	rtm_cmt	build\intel\mt_obj\llshl.obj	100.0	-	__allshl	-	
+0x004b725f	__ungetc_lk	rtm_cmt	build\intel\mt_obj\ungetc.obj	100.0	-	FID_conflict:_ungetc	-	

@@ -7,6 +7,7 @@ mono 16-bit samples stored twice per frame and used for two frames (`re/names/so
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?m11k16216m2s_straight@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001805e, 0x10018084): callee pops 0 bytes of stack arguments.
 
 ## Reads

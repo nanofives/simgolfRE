@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 62 bytes, 19 instructions, subsystem `ui`. Mechanical t
 first-button release event entry: clears the capture window and sends the release to the window under the pointer (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnLButtonUp@SysMessageHandler@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00495bcb): callee pops 8 bytes of stack arguments.
 
 ## Reads

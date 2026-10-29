@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x00487af0 (`re/names/undisc2_exe.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_ListBox.cpp` as `?on_dialog_focus@ListBox@@$4PPPPPPPM@A@AEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0048cd20 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

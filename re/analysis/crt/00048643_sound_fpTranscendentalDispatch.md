@@ -21,7 +21,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x100485fb `__ctrandisp2`, 0x1004877b `__ctrandisp1`
+0x10048580 `__cintrindisp2`, 0x100485be `__cintrindisp1`, 0x100485fb `__ctrandisp2`, 0x1004877b `__ctrandisp1`
 
 ## Constants
 - `0xfe` (254) at 0x10048643

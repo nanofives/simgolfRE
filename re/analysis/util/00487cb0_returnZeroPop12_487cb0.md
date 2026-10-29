@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 5 bytes, 2 instructions, subsystem `util`. Mechanical t
 Returns 0 and pops three arguments. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_FlicAnim.cpp` as `?decode_lc@FlicAnim@@QAEHPAUFlicAnimData@@PAUFlicSprite@@PAUSpriteObject@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00487cb2): callee pops 12 bytes of stack arguments.
 
 ## Reads

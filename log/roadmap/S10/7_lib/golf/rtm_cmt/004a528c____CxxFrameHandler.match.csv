@@ -1,0 +1,30 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 4","sub esp, 4",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,cld ,cld ,True
+7,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+8,"xor eax, eax","xor eax, eax",True
+9,push eax,push eax,True
+10,push eax,push eax,True
+11,push eax,push eax,True
+12,push dword ptr [ebp - 4],push dword ptr [ebp - 4],True
+13,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+14,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+15,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+16,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+17,call 0x26,call 0x4a8582,True
+18,"add esp, 0x20","add esp, 0x20",True
+19,"mov dword ptr [ebp + 0x14], eax","mov dword ptr [ebp + 0x14], eax",True
+20,pop edi,pop edi,True
+21,pop esi,pop esi,True
+22,pop ebx,pop ebx,True
+23,"mov eax, dword ptr [ebp + 0x14]","mov eax, dword ptr [ebp + 0x14]",True
+24,"mov esp, ebp","mov esp, ebp",True
+25,pop ebp,pop ebp,True
+26,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\trnsctrl.obj (library object, no compilation)",symbol=___CxxFrameHandler,module=golf_clean.exe
+VERDICT,GREEN,27,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 110 bytes, 34 instructions, subsystem `audio`. Mechanic
 Base-class volume setter: stores the 0..0x7f volume, scales it by the sound group gain and forwards it to the voice. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?set_volume@Sound@@UAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048468b): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0048462b before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

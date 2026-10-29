@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/SmallSprite.cpp	0x9d150	0x0049d150	10	L	$E10	_$E10	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/jackal.lib/src/SmallSprite.cpp	0x9d160	0x0049d160	10	L	$E6	_$E6	name	100	100.0	2/2 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/SmallSprite.cpp	0x9d170	0x0049d170	12	L	$E9	_$E9	name	100	100.0	4/4 ins	golf_raw_10.cpp
+golf	golf/jackal.lib/src/SmallSprite.cpp	0x9d180	0x0049d180	41	L	$E7	_$E7	name	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SmallSprite.cpp	0x9d1b0	0x0049d1b0	199	G	LoadSmallSprites	?LoadSmallSprites@@YAHXZ	public	100	100.0	53/53 ins	golf_hand_06_f.cpp
+golf	golf/jackal.lib/src/SmallSprite.cpp	0x9d280	0x0049d280	10	G	ReleaseSmallSprites	?ReleaseSmallSprites@@YAXXZ	public	100	100.0	2/2 ins	golf_raw_06.cpp

@@ -1,0 +1,50 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/dsb.cpp	0xeef0	0x1000eef0	78	G	CDSB::CDSB	??0CDSB@@QAE@XZ	public	100	100.0	28/28 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xef60	0x1000ef60	133	G	CDSB::~CDSB	??1CDSB@@QAE@XZ	public	100	100.0	56/56 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf020	0x1000f020	87	G	CDSB::resync	?resync@CDSB@@QAEXXZ	public	100	100.0	34/34 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf0a0	0x1000f0a0	16	G	CDSB::dsbrestore	?dsbrestore@CDSB@@AAE?AW4SNDERR@@XZ	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/dsb.cpp	0xf0c0	0x1000f0c0	27	G	CDSB::set_buffer_size	?set_buffer_size@CDSB@@QAE?AW4SNDERR@@K@Z	public	100	100.0	9/9 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf0f0	0x1000f0f0	77	G	CDSB::setsamplerate	?setsamplerate@CDSB@@QAE?AW4SNDERR@@K@Z	public	100	100.0	21/21 ins	
+sound	sound/sound.dll/src/dsb.cpp	0xf160	0x1000f160	21	G	CDSB::set_frequency	?set_frequency@CDSB@@QAEXK@Z	public	100	100.0	9/9 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf190	0x1000f190	27	G	CDSB::set_volume	?set_volume@CDSB@@QAEXJ@Z	public	100	100.0	10/10 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf1c0	0x1000f1c0	180	G	CDSB::set_volume	?set_volume@CDSB@@QAEXK@Z	public	100	100.0	49/49 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf2b0	0x1000f2b0	157	G	CDSB::set_volume	?set_volume@CDSB@@QAEXN@Z	public	100	100.0	44/44 ins	
+sound	sound/sound.dll/src/dsb.cpp	0xf380	0x1000f380	87	G	CDSB::setsamplesize	?setsamplesize@CDSB@@QAE?AW4SNDERR@@K@Z	public	100	100.0	22/22 ins	
+sound	sound/sound.dll/src/dsb.cpp	0xf400	0x1000f400	86	G	CDSB::setnumchannels	?setnumchannels@CDSB@@QAE?AW4SNDERR@@K@Z	public	100	100.0	22/22 ins	
+sound	sound/sound.dll/src/dsb.cpp	0xf480	0x1000f480	207	G	CDSB::dserrhandler	?dserrhandler@CDSB@@SA?AW4SNDERR@@J@Z	public	100	100.0	35/35 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf590	0x1000f590	309	G	CDSB::init	?init@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	87/87 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf720	0x1000f720	38	G	CDSB::reinit	?reinit@CDSB@@QAEXXZ	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/dsb.cpp	0xf760	0x1000f760	22	G	CDSB::stop	?stop@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf790	0x1000f790	91	G	CDSB::reset	?reset@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	39/39 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf810	0x1000f810	163	G	CDSB::quiet	?quiet@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	68/68 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf8f0	0x1000f8f0	114	G	CDSB::release	?release@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	49/49 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xf990	0x1000f990	427	G	CDSB::set_format	?set_format@CDSB@@QAE?AW4SNDERR@@PAUtWAVEFORMATEX@@@Z	public	100	100.0	120/120 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xfbb0	0x1000fbb0	619	G	CDSB::create	?create@CDSB@@QAE?AW4SNDERR@@PAUIDirectSound@@K@Z	public	100	100.0	201/201 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xfec0	0x1000fec0	20	G	CDSB::is_3d	?is_3d@CDSB@@QAE_NXZ	public	100	100.0	10/10 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xfef0	0x1000fef0	76	G	CDSB::init_3d	?init_3d@CDSB@@AAE?AW4SNDERR@@XZ	public	100	100.0	30/30 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xff60	0x1000ff60	66	G	CDSB::init_reverb	?init_reverb@CDSB@@AAE?AW4SNDERR@@XZ	public	100	100.0	29/29 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0xffd0	0x1000ffd0	57	G	CDSB::release_3d	?release_3d@CDSB@@AAE?AW4SNDERR@@XZ	public	100	100.0	23/23 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10020	0x10010020	34	G	CDSB::release_reverb	?release_reverb@CDSB@@AAE?AW4SNDERR@@XZ	public	100	100.0	15/15 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10060	0x10010060	143	G	CDSB::destroy	?destroy@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	61/61 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x10120	0x10010120	37	G	CDSB::get_cur_dsbwrite	?get_cur_dsbwrite@CDSB@@QAE?AW4SNDERR@@PAK@Z	public	100	100.0	16/16 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10160	0x10010160	36	G	CDSB::get_cur_dsbplay	?get_cur_dsbplay@CDSB@@QAE?AW4SNDERR@@PAK@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x101a0	0x100101a0	367	G	CDSB::lock	?lock@CDSB@@QAE?AW4SNDERR@@KKPAPAXPAK01@Z	public	100	100.0	80/80 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10370	0x10010370	42	G	CDSB::unlock	?unlock@CDSB@@QAE?AW4SNDERR@@PAXK0K@Z	public	100	100.0	17/17 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x103b0	0x100103b0	539	G	CDSB::get_pointer	?get_pointer@CDSB@@QAE?AW4SNDERR@@PAPAXPAK01@Z	public	100	100.0	152/152 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10660	0x10010660	62	G	CDSB::get_write_info	?get_write_info@CDSB@@QAE?AW4SNDERR@@PAK0K@Z	public	100	100.0	21/21 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x106b0	0x100106b0	333	G	CDSB::get_real_write_info	?get_real_write_info@CDSB@@QAE?AW4SNDERR@@PAK0@Z	public	100	100.0	141/141 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10860	0x10010860	131	G	CDSB::get_write_info	?get_write_info@CDSB@@QAE?AW4SNDERR@@KPAK@Z	public	100	100.0	53/53 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x10920	0x10010920	424	G	CDSB::get_emulated_write_info	?get_emulated_write_info@CDSB@@QAE?AW4SNDERR@@PAK0@Z	public	100	100.0	158/158 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10b40	0x10010b40	125	G	CDSB::sync_emulated	?sync_emulated@CDSB@@QAE?AW4SNDERR@@XZ	public	100	100.0	47/47 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10be0	0x10010be0	302	G	CDSB::get_emulated_write_info	?get_emulated_write_info@CDSB@@QAE?AW4SNDERR@@PAK0K@Z	public	100	100.0	107/107 ins	m36a_h1_dsbuf.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x10d60	0x10010d60	51	G	CDSB::release_pointer	?release_pointer@CDSB@@QAE?AW4SNDERR@@PAXK0K@Z	public	100	100.0	20/20 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10db0	0x10010db0	85	G	CDSB::play	?play@CDSB@@QAE?AW4SNDERR@@K@Z	public	100	100.0	34/34 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x10e30	0x10010e30	50	G	CDSB::is_playing	?is_playing@CDSB@@QAEHXZ	public	100	100.0	26/26 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x10e80	0x10010e80	27	G	CDSB::set_samples_per_tick	?set_samples_per_tick@CDSB@@QAEXK@Z	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/dsb.cpp	0x10eb0	0x10010eb0	82	G	CDSB::set_write_margin	?set_write_margin@CDSB@@QAE?AW4SNDERR@@KK@Z	public	100	100.0	29/29 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x10f30	0x10010f30	151	G	CDSB::set_type	?set_type@CDSB@@QAE?AW4SNDERR@@K@Z	public	100	100.0	51/51 ins	m36a_g3.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x11000	0x10011000	74	G	CDSB::set_position3d	?set_position3d@CDSB@@QAE?AW4SNDERR@@MMM@Z	public	100	100.0	24/24 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x11070	0x10011070	59	G	CDSB::set_xpos	?set_xpos@CDSB@@QAE?AW4SNDERR@@M@Z	public	100	100.0	21/21 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x110c0	0x100110c0	59	G	CDSB::set_ypos	?set_ypos@CDSB@@QAE?AW4SNDERR@@M@Z	public	100	100.0	21/21 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x11110	0x10011110	59	G	CDSB::set_zpos	?set_zpos@CDSB@@QAE?AW4SNDERR@@M@Z	public	100	100.0	21/21 ins	m36a_g4.cpp
+sound	sound/sound.dll/src/dsb.cpp	0x11160	0x10011160	8	G	CDSB::set_reverb_mix	?set_reverb_mix@CDSB@@QAE?AW4SNDERR@@M@Z	public	100	100.0	2/2 ins	

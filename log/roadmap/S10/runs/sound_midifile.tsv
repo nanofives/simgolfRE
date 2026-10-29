@@ -1,0 +1,38 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/midifile.cpp	0x1d380	0x1001d380	218	G	CMidiFile::CMidiFile	??0CMidiFile@@QAE@XZ	public	100	100.0	58/58 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1d4a0	0x1001d4a0	183	G	CMidiFile::undo_load	?undo_load@CMidiFile@@QAEXXZ	public	100	100.0	53/53 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1d590	0x1001d590	97	G	CMidiFile::get_pcur_event	?get_pcur_event@CMidiFile@@QAE?AW4SNDERR@@PAPAEK@Z	public	100	100.0	36/36 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1d620	0x1001d620	107	G	CMidiFile::get_pfirst_event	?get_pfirst_event@CMidiFile@@QAE?AW4SNDERR@@PAPAEK@Z	public	100	100.0	41/41 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1d6b0	0x1001d6b0	152	G	CMidiFile::advance_track	?advance_track@CMidiFile@@QAE?AW4SNDERR@@KK@Z	public	100	100.0	60/60 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1d780	0x1001d780	98	G	CMidiFile::get_track	?get_track@CMidiFile@@QAE?AW4SNDERR@@PAPAVCMidiTrack@@K@Z	public	100	100.0	39/39 ins	m36b_hand_04.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1d810	0x1001d810	965	G	CMidiFile::load	?load@CMidiFile@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	311/311 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1dce0	0x1001dce0	857	G	CMidiFile::load	?load@CMidiFile@@QAE?AW4SNDERR@@PAUHMMIO__@@@Z	public	100	100.0	276/276 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e120	0x1001e120	18	G	CMidiFile::reload	?reload@CMidiFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e150	0x1001e150	79	G	CMidiFile::post_reset	?post_reset@CMidiFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	27/27 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e1c0	0x1001e1c0	75	G	CMidiFile::reset	?reset@CMidiFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	27/27 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e230	0x1001e230	84	G	CMidiFile::reset_flags	?reset_flags@CMidiFile@@QAEXXZ	public	100	100.0	23/23 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e2b0	0x1001e2b0	211	G	CMidiFile::~CMidiFile	??1CMidiFile@@QAE@XZ	public	100	100.0	65/65 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e3d0	0x1001e3d0	241	G	CMidiFile::unload	?unload@CMidiFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	79/79 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e510	0x1001e510	3	G	CMidiFile::mmioerr	?mmioerr@CMidiFile@@AAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e530	0x1001e530	11	G	CMidiFile::play	?play@CMidiFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	5/5 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e550	0x1001e550	11	G	CMidiFile::fade	?fade@CMidiFile@@QAE?AW4SNDERR@@XZ	public	100	100.0	5/5 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e570	0x1001e570	82	G	CMidiFile::fade	?fade@CMidiFile@@QAE?AW4SNDERR@@K@Z	public	100	100.0	29/29 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e5f0	0x1001e5f0	42	G	CMidiFile::set_pan	?set_pan@CMidiFile@@QAEXH@Z	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e630	0x1001e630	62	G	CMidiFile::set_fade	?set_fade@CMidiFile@@QAEXK@Z	public	100	100.0	21/21 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e680	0x1001e680	23	G	CMidiFile::set_loop_state	?set_loop_state@CMidiFile@@QAEXH@Z	public	100	100.0	8/8 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e6b0	0x1001e6b0	28	G	CMidiFile::be2le	?be2le@CMidiFile@@QAEKK@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e6e0	0x1001e6e0	27	G	CMidiFile::be2le	?be2le@CMidiFile@@SAGG@Z	public	100	100.0	12/12 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e710	0x1001e710	40	G	CMidiFile::varlen2dw	?varlen2dw@CMidiFile@@SAKPAEPAK@Z	public	100	100.0	19/19 ins	m36b_hand_01.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e750	0x1001e750	93	G	CMidiTrack::CMidiTrack	??0CMidiTrack@@QAE@XZ	public	100	100.0	30/30 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e7d0	0x1001e7d0	103	G	CMidiTrack::~CMidiTrack	??1CMidiTrack@@QAE@XZ	public	100	100.0	28/28 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e860	0x1001e860	86	G	CMidiTrack::start_control	?start_control@CMidiTrack@@UAEHH@Z	public	100	100.0	38/38 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1e8e0	0x1001e8e0	133	G	CMidiTrack::reset	?reset@CMidiTrack@@QAEXXZ	public	100	100.0	54/54 ins	m36b_hand_05.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e9a0	0x1001e9a0	64	G	CMidiTrack::set_pdata	?set_pdata@CMidiTrack@@QAEXPAE@Z	public	100	100.0	21/21 ins	sound_raw_02.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1e9f0	0x1001e9f0	49	G	CMidiTrack::advance	?advance@CMidiTrack@@QAE?AW4SNDERR@@K@Z	public	100	100.0	19/19 ins	m36b_hand_01.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1ea40	0x1001ea40	67	G	CMidiTrack::set_tick_offset	?set_tick_offset@CMidiTrack@@QAEXK@Z	public	100	100.0	28/28 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1eab0	0x1001eab0	412	G	CMidiTrack::seek	?seek@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z	public	100	100.0	104/104 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1ecc0	0x1001ecc0	456	G	CMidiTrack::seek_to_prior	?seek_to_prior@CMidiTrack@@QAE?AW4SNDERR@@KPAK@Z	public	100	100.0	118/118 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1ef10	0x1001ef10	72	G	CMidiTrack::hw_notes_off	?hw_notes_off@CMidiTrack@@QAEXXZ	public	100	100.0	27/27 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1ef80	0x1001ef80	364	G	CMidiTrack::calc_total_ticks	?calc_total_ticks@CMidiTrack@@QAEKXZ	public	100	100.0	85/85 ins	
+sound	sound/sound.dll/src/midifile.cpp	0x1f150	0x1001f150	66	G	CMidiFile::set_all_tracks_inactive	?set_all_tracks_inactive@CMidiFile@@QAEXXZ	public	100	100.0	24/24 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/midifile.cpp	0x1f1c0	0x1001f1c0	125	G	DList<CMidiTrack>::~DList<CMidiTrack>	??1?$DList@VCMidiTrack@@@@QAE@XZ	public	100	100.0	46/46 ins	m36b_hand_05.cpp

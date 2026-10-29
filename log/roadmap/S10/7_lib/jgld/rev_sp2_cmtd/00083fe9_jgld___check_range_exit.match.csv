@@ -1,0 +1,60 @@
+instruction,library_object,original,match
+0,"sub esp, 8","sub esp, 8",True
+1,fst qword ptr [esp],fst qword ptr [esp],True
+2,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+3,"add esp, 8","add esp, 8",True
+4,"and eax, 0x7ff00000","and eax, 0x7ff00000",True
+5,je 0x51,je 0x1008403a,True
+6,"cmp eax, 0x7ff00000","cmp eax, 0x7ff00000",True
+7,je 0x7a,je 0x10084063,True
+8,"mov ax, word ptr [esp]","mov ax, word ptr [esp]",True
+9,"cmp ax, 0x27f","cmp ax, 0x27f",True
+10,je 0x4f,je 0x10084038,True
+11,"and ax, 0x20","and ax, 0x20",True
+12,jne 0x4c,jne 0x10084035,True
+13,wait ,wait ,True
+14,fnstsw ax,fnstsw ax,True
+15,"and ax, 0x20","and ax, 0x20",True
+16,je 0x4c,je 0x10084035,True
+17,"mov eax, 8","mov eax, 8",True
+18,"cmp edx, 0x1d","cmp edx, 0x1d",True
+19,je 0x45,je 0x1008402e,True
+20,call 0x43,call 0x10083eb7,True
+21,pop edx,pop edx,True
+22,ret ,ret ,True
+23,call 0x4a,call 0x10083ea0,True
+24,pop edx,pop edx,True
+25,ret ,ret ,True
+26,fldcw word ptr [esp],fldcw word ptr [esp],True
+27,pop edx,pop edx,True
+28,ret ,ret ,True
+29,fld qword ptr [0],fld qword ptr [0x1011f78c],True
+30,fxch st(1),fxch st(1),True
+31,fscale ,fscale ,True
+32,fstp st(1),fstp st(1),True
+33,fld st(0),fld st(0),True
+34,fabs ,fabs ,True
+35,fcomp qword ptr [0],fcomp qword ptr [0x1011f77c],True
+36,wait ,wait ,True
+37,fnstsw ax,fnstsw ax,True
+38,sahf ,sahf ,True
+39,"mov eax, 4","mov eax, 4",True
+40,jae 0x39,jae 0x10084022,True
+41,fmul qword ptr [0],fmul qword ptr [0x1011f79c],True
+42,jmp 0x39,jmp 0x10084022,True
+43,fld qword ptr [0],fld qword ptr [0x1011f784],True
+44,fxch st(1),fxch st(1),True
+45,fscale ,fscale ,True
+46,fstp st(1),fstp st(1),True
+47,fld st(0),fld st(0),True
+48,fabs ,fabs ,True
+49,fcomp qword ptr [0],fcomp qword ptr [0x1011f774],True
+50,wait ,wait ,True
+51,fnstsw ax,fnstsw ax,True
+52,sahf ,sahf ,True
+53,"mov eax, 3","mov eax, 3",True
+54,jbe 0x39,jbe 0x10084022,True
+55,fmul qword ptr [0],fmul qword ptr [0x1011f794],True
+56,jmp 0x39,jmp 0x10084022,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=..\build\intel\xmt_obj\common.obj (library object, no compilation)",symbol=__check_range_exit,module=jgld.dll
+VERDICT,GREEN,57,100.0%

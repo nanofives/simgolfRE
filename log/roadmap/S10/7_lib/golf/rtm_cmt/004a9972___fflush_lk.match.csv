@@ -1,0 +1,25 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,call 0xb,call 0x4a99a0,True
+4,"test eax, eax","test eax, eax",True
+5,pop ecx,pop ecx,True
+6,je 0x15,je 0x4a9987,True
+7,"or eax, 0xffffffff","or eax, 0xffffffff",True
+8,pop esi,pop esi,True
+9,ret ,ret ,True
+10,"test byte ptr [esi + 0xd], 0x40","test byte ptr [esi + 0xd], 0x40",True
+11,je 0x2a,je 0x4a999c,True
+12,push dword ptr [esi + 0x10],push dword ptr [esi + 0x10],True
+13,call 0x23,call 0x4ac0ad,True
+14,neg eax,neg eax,True
+15,pop ecx,pop ecx,True
+16,pop esi,pop esi,True
+17,"sbb eax, eax","sbb eax, eax",True
+18,ret ,ret ,True
+19,"xor eax, eax","xor eax, eax",True
+20,pop esi,pop esi,True
+21,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\fflush.obj (library object, no compilation)",symbol=__fflush_lk,module=golf_clean.exe
+VERDICT,GREEN,22,100.0%

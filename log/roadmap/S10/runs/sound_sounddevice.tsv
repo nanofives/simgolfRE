@@ -1,0 +1,119 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/sounddevice.cpp	0x28e70	0x10028e70	81	G	Sound_Device::attach	?attach@Sound_Device@@IAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x28ef0	0x10028ef0	92	G	Sound_Device::detach	?detach@Sound_Device@@IAE?AW4SNDERR@@XZ	public	100	100.0	37/37 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x28f70	0x10028f70	40	G	Sound_Device::Sound_Device	??0Sound_Device@@IAE@XZ	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x28fb0	0x10028fb0	43	G	Sound_Device::`scalar deleting destructor'	??_GSound_Device@@MAEPAXI@Z	public	100	100.0	16/16 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x28ff0	0x10028ff0	19	G	Sound_Device::~Sound_Device	??1Sound_Device@@MAE@XZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29020	0x10029020	122	G	Wave_Device::Wave_Device	??0Wave_Device@@QAE@XZ	public	100	100.0	38/38 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x290c0	0x100290c0	1	G	Wave_Device::timer_unhook	?timer_unhook@Wave_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x290e0	0x100290e0	3	G	Wave_Device::get_time_past	?get_time_past@Wave_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29100	0x10029100	3	G	Wave_Device::add_to_time_past	?add_to_time_past@Wave_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29120	0x10029120	1	G	Wave_Device::reset_time_past	?reset_time_past@Wave_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29140	0x10029140	30	G	Wave_Device::`scalar deleting destructor'	??_GWave_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29170	0x10029170	111	G	WaveControlGroup::~WaveControlGroup	??1WaveControlGroup@@QAE@XZ	public	100	100.0	49/49 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29200	0x10029200	103	G	Wave_Device::~Wave_Device	??1Wave_Device@@UAE@XZ	public	100	100.0	29/29 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29290	0x10029290	5	G	Wave_Device::create_device	?create_device@Wave_Device@@MAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x292b0	0x100292b0	3	G	Wave_Device::delete_device	?delete_device@Wave_Device@@MAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x292d0	0x100292d0	59	G	Wave_Device::init	?init@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	29/29 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29320	0x10029320	26	G	Wave_Device::release	?release@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29350	0x10029350	13	G	Wave_Device::suspend	?suspend@Wave_Device@@UAEXXZ	public	100	100.0	6/6 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29370	0x10029370	13	G	Wave_Device::restart	?restart@Wave_Device@@UAEXXZ	public	100	100.0	6/6 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29390	0x10029390	13	G	Wave_Device::update_sound	?update_sound@Wave_Device@@UAEXXZ	public	100	100.0	6/6 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x293b0	0x100293b0	15	G	Wave_Device::get_ndevices	?get_ndevices@Wave_Device@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x293d0	0x100293d0	28	G	Wave_Device::set_hwnd	?set_hwnd@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29400	0x10029400	15	G	Wave_Device::get_hw_mem_size	?get_hw_mem_size@Wave_Device@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29420	0x10029420	183	G	Wave_Device::select	?select@Wave_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	83/83 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29510	0x10029510	32	G	Wave_Device::get_description	?get_description@Wave_Device@@UAE?AW4SNDERR@@KPADK@Z	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29540	0x10029540	20	G	Wave_Device::set_rate	?set_rate@Wave_Device@@UAEXK@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29570	0x10029570	15	G	Wave_Device::get_rate	?get_rate@Wave_Device@@UAEKXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29590	0x10029590	20	G	Wave_Device::set_volume	?set_volume@Wave_Device@@UAEXK@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x295c0	0x100295c0	3	G	Wave_Device::get_volume	?get_volume@Wave_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x295e0	0x100295e0	3	G	Wave_Device::set_pan	?set_pan@Wave_Device@@UAEXH@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29600	0x10029600	15	G	Wave_Device::get_ds	?get_ds@Wave_Device@@UAEPAXXZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29620	0x10029620	5	G	Wave_Device::fade	?fade@Wave_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29640	0x10029640	3	G	Wave_Device::stop	?stop@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29660	0x10029660	15	G	Wave_Device::enable	?enable@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29680	0x10029680	15	G	Wave_Device::disable	?disable@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x296a0	0x100296a0	18	G	Wave_Device::is_disabled	?is_disabled@Wave_Device@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x296d0	0x100296d0	28	G	Wave_Device::start_raw_dump	?start_raw_dump@Wave_Device@@UAE?AW4SNDERR@@PAD@Z	public	100	100.0	10/10 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29700	0x10029700	18	G	Wave_Device::stop_raw_dump	?stop_raw_dump@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29730	0x10029730	93	G	Wave_Device::add_to_group	?add_to_group@Wave_Device@@QAE?AW4SNDERR@@IPAVSound@@@Z	public	100	100.0	39/39 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x297b0	0x100297b0	151	G	Wave_Device::pull_from_group	?pull_from_group@Wave_Device@@QAE?AW4SNDERR@@PAVSound@@@Z	public	100	100.0	56/56 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29880	0x10029880	121	G	Wave_Device::set_group_volume	?set_group_volume@Wave_Device@@QAE?AW4SNDERR@@II@Z	public	100	100.0	49/49 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29920	0x10029920	24	G	Wave_Device::get_group_volume	?get_group_volume@Wave_Device@@QAEII@Z	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29950	0x10029950	93	G	Wave_Device::enable_group	?enable_group@Wave_Device@@QAE?AW4SNDERR@@I@Z	public	100	100.0	37/37 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x299d0	0x100299d0	81	G	Wave_Device::muteGroup	?muteGroup@Wave_Device@@QAE?AW4SNDERR@@I@Z	public	100	100.0	31/31 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29a50	0x10029a50	30	G	Wave_Device::unMuteGroup	?unMuteGroup@Wave_Device@@QAE?AW4SNDERR@@I@Z	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29a80	0x10029a80	120	G	Wave_Device::disable_group	?disable_group@Wave_Device@@QAE?AW4SNDERR@@I@Z	public	100	100.0	50/50 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29b20	0x10029b20	29	G	Wave_Device::is_group_disabled	?is_group_disabled@Wave_Device@@QAE_NI@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29b50	0x10029b50	29	G	Wave_Device::isGroupMute	?isGroupMute@Wave_Device@@QAE_NI@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29b80	0x10029b80	27	G	WaveControlGroup::WaveControlGroup	??0WaveControlGroup@@QAE@XZ	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29bb0	0x10029bb0	15	G	Wave_Device::is_eax	?is_eax@Wave_Device@@UAE_NXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29bd0	0x10029bd0	31	G	Wave_Device::set_eax	?set_eax@Wave_Device@@UAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29c00	0x10029c00	28	G	Wave_Device::set_eax	?set_eax@Wave_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29c30	0x10029c30	31	G	Wave_Device::set_eax_mix	?set_eax_mix@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29c60	0x10029c60	18	G	Wave_Device::is_3d	?is_3d@Wave_Device@@UAE_NXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29c90	0x10029c90	41	G	Wave_Device::set_listener_position	?set_listener_position@Wave_Device@@UAE?AW4SNDERR@@MMM@Z	public	100	100.0	14/14 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29cd0	0x10029cd0	41	G	Wave_Device::get_listener_position	?get_listener_position@Wave_Device@@UAE?AW4SNDERR@@PAM00@Z	public	100	100.0	14/14 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29d10	0x10029d10	31	G	Wave_Device::set_listener_xpos	?set_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29d40	0x10029d40	31	G	Wave_Device::get_listener_xpos	?get_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	public	100	100.0	10/10 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29d70	0x10029d70	31	G	Wave_Device::set_listener_ypos	?set_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29da0	0x10029da0	31	G	Wave_Device::get_listener_ypos	?get_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29dd0	0x10029dd0	31	G	Wave_Device::set_listener_zpos	?set_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29e00	0x10029e00	31	G	Wave_Device::get_listener_zpos	?get_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29e30	0x10029e30	5	G	Midi_Device::create_device	?create_device@Midi_Device@@MAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29e50	0x10029e50	3	G	Midi_Device::delete_device	?delete_device@Midi_Device@@MAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29e70	0x10029e70	40	G	Midi_Device::Midi_Device	??0Midi_Device@@QAE@XZ	public	100	100.0	13/13 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29eb0	0x10029eb0	1	G	Midi_Device::timer_unhook	?timer_unhook@Midi_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29ed0	0x10029ed0	3	G	Midi_Device::get_time_past	?get_time_past@Midi_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29ef0	0x10029ef0	3	G	Midi_Device::add_to_time_past	?add_to_time_past@Midi_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29f10	0x10029f10	1	G	Midi_Device::reset_time_past	?reset_time_past@Midi_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x29f30	0x10029f30	30	G	Midi_Device::`scalar deleting destructor'	??_GMidi_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29f60	0x10029f60	19	G	Midi_Device::~Midi_Device	??1Midi_Device@@UAE@XZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x29f90	0x10029f90	66	G	Midi_Device::init	?init@Midi_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	30/30 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a000	0x1002a000	26	G	Midi_Device::release	?release@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a030	0x1002a030	3	G	Midi_Device::get_ndevices	?get_ndevices@Midi_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a050	0x1002a050	5	G	Midi_Device::select	?select@Midi_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a070	0x1002a070	5	G	Midi_Device::get_description	?get_description@Midi_Device@@UAE?AW4SNDERR@@KPADK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a090	0x1002a090	3	G	Midi_Device::set_volume	?set_volume@Midi_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a0b0	0x1002a0b0	3	G	Midi_Device::get_volume	?get_volume@Midi_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a0d0	0x1002a0d0	3	G	Midi_Device::set_pan	?set_pan@Midi_Device@@UAEXH@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a0f0	0x1002a0f0	5	G	Midi_Device::fade	?fade@Midi_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a110	0x1002a110	3	G	Midi_Device::stop	?stop@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a130	0x1002a130	1	G	Midi_Device::update_sound	?update_sound@Midi_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a150	0x1002a150	3	G	Midi_Device::set_rate	?set_rate@Midi_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a170	0x1002a170	3	G	Midi_Device::get_rate	?get_rate@Midi_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a190	0x1002a190	1	G	Midi_Device::suspend	?suspend@Midi_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a1b0	0x1002a1b0	1	G	Midi_Device::restart	?restart@Midi_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a1d0	0x1002a1d0	15	G	Midi_Device::enable	?enable@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a1f0	0x1002a1f0	15	G	Midi_Device::disable	?disable@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a210	0x1002a210	18	G	Midi_Device::is_disabled	?is_disabled@Midi_Device@@UAEHXZ	public	100	100.0	7/7 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a240	0x1002a240	40	G	Wave_In_Device::Wave_In_Device	??0Wave_In_Device@@QAE@XZ	public	100	100.0	13/13 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a280	0x1002a280	1	G	Wave_In_Device::timer_unhook	?timer_unhook@Wave_In_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a2a0	0x1002a2a0	3	G	Wave_In_Device::get_time_past	?get_time_past@Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a2c0	0x1002a2c0	3	G	Wave_In_Device::add_to_time_past	?add_to_time_past@Wave_In_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a2e0	0x1002a2e0	1	G	Wave_In_Device::reset_time_past	?reset_time_past@Wave_In_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a300	0x1002a300	3	G	Wave_In_Device::set_volume	?set_volume@Wave_In_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a320	0x1002a320	3	G	Wave_In_Device::get_volume	?get_volume@Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a340	0x1002a340	3	G	Wave_In_Device::set_pan	?set_pan@Wave_In_Device@@UAEXH@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a360	0x1002a360	5	G	Wave_In_Device::fade	?fade@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a380	0x1002a380	30	G	Wave_In_Device::`scalar deleting destructor'	??_GWave_In_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a3b0	0x1002a3b0	19	G	Wave_In_Device::~Wave_In_Device	??1Wave_In_Device@@UAE@XZ	public	100	100.0	7/7 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a3e0	0x1002a3e0	5	G	Wave_In_Device::create_device	?create_device@Wave_In_Device@@MAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a400	0x1002a400	3	G	Wave_In_Device::delete_device	?delete_device@Wave_In_Device@@MAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a420	0x1002a420	59	G	Wave_In_Device::init	?init@Wave_In_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	29/29 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a470	0x1002a470	33	G	Wave_In_Device::release	?release@Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	14/14 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a4b0	0x1002a4b0	28	G	Wave_In_Device::set_codec	?set_codec@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a4e0	0x1002a4e0	28	G	Wave_In_Device::set_vxw_key	?set_vxw_key@Wave_In_Device@@UAE?AW4SNDERR@@PAC@Z	public	100	100.0	10/10 ins	sound_raw_03.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a510	0x1002a510	3	G	Wave_In_Device::get_ndevices	?get_ndevices@Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a530	0x1002a530	5	G	Wave_In_Device::select	?select@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a550	0x1002a550	5	G	Wave_In_Device::get_description	?get_description@Wave_In_Device@@UAE?AW4SNDERR@@KPADK@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a570	0x1002a570	5	G	Wave_In_Device::get_caps	?get_caps@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a590	0x1002a590	3	G	Wave_In_Device::stop	?stop@Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a5b0	0x1002a5b0	1	G	Wave_In_Device::update_sound	?update_sound@Wave_In_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a5d0	0x1002a5d0	3	G	Wave_In_Device::set_rate	?set_rate@Wave_In_Device@@UAEXK@Z	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a5f0	0x1002a5f0	3	G	Wave_In_Device::get_rate	?get_rate@Wave_In_Device@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a610	0x1002a610	1	G	Wave_In_Device::suspend	?suspend@Wave_In_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a630	0x1002a630	1	G	Wave_In_Device::restart	?restart@Wave_In_Device@@UAEXXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a650	0x1002a650	15	G	Wave_In_Device::start_record	?start_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/sounddevice.cpp	0x2a670	0x1002a670	15	G	Wave_In_Device::end_record	?end_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	sound_raw_04.cpp

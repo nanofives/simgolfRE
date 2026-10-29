@@ -1,0 +1,51 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+3,push ebx,push ebx,True
+4,"mov ebx, dword ptr [ebp + 8]","mov ebx, dword ptr [ebp + 8]",True
+5,push edi,push edi,True
+6,"mov edi, ebx","mov edi, ebx",True
+7,jg 0x14,jg 0x4a6602,True
+8,"xor eax, eax","xor eax, eax",True
+9,jmp 0x5e,jmp 0x4a664c,True
+10,push esi,push esi,True
+11,"mov esi, dword ptr [ebp + 0x10]","mov esi, dword ptr [ebp + 0x10]",True
+12,push esi,push esi,True
+13,call 0x1e,call 0x4a9874,True
+14,pop ecx,pop ecx,True
+15,dec dword ptr [ebp + 0xc],dec dword ptr [ebp + 0xc],True
+16,je 0x51,je 0x4a663f,True
+17,dec dword ptr [esi + 4],dec dword ptr [esi + 4],True
+18,js 0x33,js 0x4a6621,True
+19,"mov ecx, dword ptr [esi]","mov ecx, dword ptr [esi]",True
+20,"movzx eax, byte ptr [ecx]","movzx eax, byte ptr [ecx]",True
+21,inc ecx,inc ecx,True
+22,"mov dword ptr [esi], ecx","mov dword ptr [esi], ecx",True
+23,jmp 0x3a,jmp 0x4a6628,True
+24,push esi,push esi,True
+25,call 0x39,call 0x4aa9f5,True
+26,pop ecx,pop ecx,True
+27,"cmp eax, -1","cmp eax, -1",True
+28,je 0x48,je 0x4a6636,True
+29,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+30,inc edi,inc edi,True
+31,"cmp al, 0xa","cmp al, 0xa",True
+32,je 0x51,je 0x4a663f,True
+33,jmp 0x1f,jmp 0x4a660d,True
+34,"cmp edi, dword ptr [ebp + 8]","cmp edi, dword ptr [ebp + 8]",True
+35,jne 0x51,jne 0x4a663f,True
+36,"xor ebx, ebx","xor ebx, ebx",True
+37,jmp 0x54,jmp 0x4a6642,True
+38,"and byte ptr [edi], 0","and byte ptr [edi], 0",True
+39,push esi,push esi,True
+40,call 0x5a,call 0x4a98c6,True
+41,pop ecx,pop ecx,True
+42,"mov eax, ebx","mov eax, ebx",True
+43,pop esi,pop esi,True
+44,pop edi,pop edi,True
+45,pop ebx,pop ebx,True
+46,pop ebp,pop ebp,True
+47,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\fgets.obj (library object, no compilation)",symbol=_fgets,module=golf_clean.exe
+VERDICT,GREEN,48,100.0%

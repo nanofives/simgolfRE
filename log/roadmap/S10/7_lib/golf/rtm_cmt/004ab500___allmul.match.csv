@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"mov ecx, dword ptr [esp + 0x10]","mov ecx, dword ptr [esp + 0x10]",True
+2,"or ecx, eax","or ecx, eax",True
+3,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+4,jne 0x19,jne 0x4ab519,True
+5,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+6,mul ecx,mul ecx,True
+7,ret 0x10,ret 0x10,True
+8,push ebx,push ebx,True
+9,mul ecx,mul ecx,True
+10,"mov ebx, eax","mov ebx, eax",True
+11,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+12,mul dword ptr [esp + 0x14],mul dword ptr [esp + 0x14],True
+13,"add ebx, eax","add ebx, eax",True
+14,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+15,mul ecx,mul ecx,True
+16,"add edx, ebx","add edx, ebx",True
+17,pop ebx,pop ebx,True
+18,ret 0x10,ret 0x10,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\llmul.obj (library object, no compilation)",symbol=__allmul,module=golf_clean.exe
+VERDICT,GREEN,19,100.0%

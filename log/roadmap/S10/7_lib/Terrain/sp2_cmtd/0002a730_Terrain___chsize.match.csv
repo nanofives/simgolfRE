@@ -1,0 +1,42 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"cmp eax, dword ptr [0]","cmp eax, dword ptr [0x10110f5c]",True
+5,jae 0x31,jae 0x1002a761,True
+6,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+7,"sar ecx, 5","sar ecx, 5",True
+8,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+9,"and edx, 0x1f","and edx, 0x1f",True
+10,"imul edx, edx, 0x24","imul edx, edx, 0x24",True
+11,"mov eax, dword ptr [ecx*4]","mov eax, dword ptr [ecx*4 + 0x10110e20]",True
+12,"movsx ecx, byte ptr [eax + edx + 4]","movsx ecx, byte ptr [eax + edx + 4]",True
+13,"and ecx, 1","and ecx, 1",True
+14,"test ecx, ecx","test ecx, ecx",True
+15,jne 0x41,jne 0x1002a771,True
+16,call 0x36,call 0x100243f0,True
+17,"mov dword ptr [eax], 9","mov dword ptr [eax], 9",True
+18,"or eax, 0xffffffff","or eax, 0xffffffff",True
+19,jmp 0x6f,jmp 0x1002a79f,True
+20,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+21,push edx,push edx,True
+22,call 0x4a,call 0x100262b0,True
+23,"add esp, 4","add esp, 4",True
+24,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+25,push eax,push eax,True
+26,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+27,push ecx,push ecx,True
+28,call 0x5a,call 0x1002a7b0,True
+29,"add esp, 8","add esp, 8",True
+30,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+31,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+32,push edx,push edx,True
+33,call 0x69,call 0x10026340,True
+34,"add esp, 4","add esp, 4",True
+35,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+36,"mov esp, ebp","mov esp, ebp",True
+37,pop ebp,pop ebp,True
+38,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\chsize.obj (library object, no compilation)",symbol=__chsize,module=Terrain.dll
+VERDICT,GREEN,39,100.0%

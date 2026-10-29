@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/infcodes.c	0x9f2f0	0x1009f2f0	127	G	inflate_codes_new	_inflate_codes_new	public	100	100.0	48/48 ins	jgld_zlib_infcodes.cpp
+jgld	jgl/zlib.lib/zlib/infcodes.c	0x9f370	0x1009f370	3433	G	inflate_codes	_inflate_codes	public	100	100.0	1133/1133 ins	jgld_zlib_infcodes.cpp
+jgld	jgl/zlib.lib/zlib/infcodes.c	0xa00e0	0x100a00e0	70	G	inflate_codes_free	_inflate_codes_free	public	100	100.0	30/30 ins	jgld_zlib_infcodes.cpp

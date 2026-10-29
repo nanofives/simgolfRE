@@ -1,0 +1,26 @@
+~/bin/py -3.12 scripts/re_classify.py promote 0x004012d0 --to C4 --evidence log/diff/004012d0__RenderPlot__YAXHHH_Z.match.csv   # drawRecords
+~/bin/py -3.12 scripts/re_classify.py promote 0x00409a90 --to C4 --evidence log/diff/00409a90__SpawnGolferDivot__YAXH_Z.match.csv   # addGolferToTable
+~/bin/py -3.12 scripts/re_classify.py promote 0x00409cf0 --to C4 --evidence log/diff/00409cf0__PlayScriptStep__YAXXZ.match.csv   # stepCourseEditQueue
+~/bin/py -3.12 scripts/re_classify.py promote 0x0040de70 --to C4 --evidence log/diff/0040de70__FindNearestBench__YAXHHH_Z.match.csv   # findNearestTargetTile
+~/bin/py -3.12 scripts/re_classify.py promote 0x0040e400 --to C4 --evidence log/diff/0040e400__DemolishBuilding__YAXH_Z.match.csv   # clearObjectFootprint
+~/bin/py -3.12 scripts/re_classify.py promote 0x00430360 --to C4 --evidence log/diff/00430360__UpdateAndRenderWildlife__YAXXZ.match.csv   # drawWorldObjects
+~/bin/py -3.12 scripts/re_classify.py promote 0x00432200 --to C4 --evidence log/diff/00432200__RenderToolbarRow__YAHHHHHHHHHHHH_Z.match.csv   # drawAmenityRow
+# 0x00434cf0 drawAmenitiesPanel golf/golf.exe/src/Toolbar.cpp: status miss 99.9
+~/bin/py -3.12 scripts/re_classify.py promote 0x004385d0 --to C4 --evidence log/diff/004385d0__RenderGolferCustomizationScreen__YAXHH_Z.match.csv   # showCharacterEditor
+~/bin/py -3.12 scripts/re_classify.py promote 0x0043a8c0 --to C4 --evidence log/diff/0043a8c0__ShowPickAProScreen__YAHXZ.match.csv   # pickAProScreen
+~/bin/py -3.12 scripts/re_classify.py promote 0x0043b610 --to C4 --evidence log/diff/0043b610__ShowLoadGameScreen__YAHHH_Z.match.csv   # loadGameBrowserScreen
+~/bin/py -3.12 scripts/re_classify.py promote 0x0043dbe0 --to C4 --evidence log/diff/0043dbe0__LoadThemeAssets__YAXXZ.match.csv   # loadWorldAssets
+~/bin/py -3.12 scripts/re_classify.py promote 0x00442180 --to C4 --evidence log/diff/00442180__ResetAllGameState__YAXH_Z.match.csv   # loadInterfaceArt
+~/bin/py -3.12 scripts/re_classify.py promote 0x0044bde0 --to C4 --evidence log/diff/0044bde0__LoadInfoScreenAssets__YAXXZ.match.csv   # loadInfoScreenArt
+~/bin/py -3.12 scripts/re_classify.py promote 0x0044cff0 --to C4 --evidence log/diff/0044cff0__RenderEndOfYearReport__YAXXZ.match.csv   # showEndOfYearScreen
+~/bin/py -3.12 scripts/re_classify.py promote 0x004587a0 --to C4 --evidence log/diff/004587a0__RenderTractPurchaseScreen__YAHXZ.match.csv   # showBuyLandScreen
+~/bin/py -3.12 scripts/re_classify.py promote 0x00459850 --to C4 --evidence log/diff/00459850__RenderGolferPairingScreen__YAXXZ.match.csv   # showGolferPairSelect
+~/bin/py -3.12 scripts/re_classify.py promote 0x0045baf0 --to C4 --evidence log/diff/0045baf0__WinMain_16.match.csv   # gameMain
+~/bin/py -3.12 scripts/re_classify.py promote 0x0045f870 --to C4 --evidence log/diff/0045f870__RenderTop10CoursesScreen__YAXXZ.match.csv   # showCourseRanking
+~/bin/py -3.12 scripts/re_classify.py promote 0x004604f0 --to C4 --evidence log/diff/004604f0__SetupTutorialMessage__YAXXZ.match.csv   # showTutorialText
+~/bin/py -3.12 scripts/re_classify.py promote 0x004615f0 --to C4 --evidence log/diff/004615f0__AdjustMoodInRadius__YAXHHH_Z.match.csv   # spreadShade
+~/bin/py -3.12 scripts/re_classify.py promote 0x00467600 --to C4 --evidence log/diff/00467600__BuildEmployeeName__YAXH_Z.match.csv   # appendWalkerName
+~/bin/py -3.12 scripts/re_classify.py promote 0x0046dea0 --to C4 --evidence log/diff/0046dea0__ShowListSelectionDialog__YAHPBDH_Z.match.csv   # runScrollText
+~/bin/py -3.12 scripts/re_classify.py promote 0x0046e260 --to C4 --evidence log/diff/0046e260__RenderMenuWithSelection__YAHPADH_Z.match.csv   # drawScrollText
+~/bin/py -3.12 scripts/re_classify.py promote 0x0046f550 --to C4 --evidence log/diff/0046f550__ShowWorldMapScreen__YAHXZ.match.csv   # courseActionMenu
+~/bin/py -3.12 scripts/re_classify.py promote 0x004725b0 --to C4 --evidence log/diff/004725b0__ShowThemeSelect__YAXXZ.match.csv   # showThemePackSelect

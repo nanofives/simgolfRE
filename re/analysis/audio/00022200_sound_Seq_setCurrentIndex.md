@@ -7,6 +7,7 @@ returns SNDERR 10 if param >= count-1 (count from vtbl+0xb4), else stores param 
 System writeup: `re/analysis/systems/sound_6.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_midimgr.cpp` as `?set_control_track@CMidiMgr@@QAE?AW4SNDERR@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002221c, 0x10022228): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10022201 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

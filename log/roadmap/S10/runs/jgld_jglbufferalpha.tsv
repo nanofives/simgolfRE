@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglbufferalpha.cpp	0xf6a0	0x1000f6a0	374	G	JGLBuffer::fill_shadow_over_underlay_16_16	?fill_shadow_over_underlay_16_16@JGLBuffer@@QAEHPAURect@@PAV1@HPAG@Z	public	100	100.0	137/137 ins	jgld_surface.cpp

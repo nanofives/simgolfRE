@@ -1,0 +1,32 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10129fd8]",True
+4,"imul eax, eax, 0x14","imul eax, eax, 0x14",True
+5,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10129fdc]",True
+6,"add ecx, eax","add ecx, eax",True
+7,"mov dword ptr [ebp - 0xc], ecx","mov dword ptr [ebp - 0xc], ecx",True
+8,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10129fdc]",True
+9,"mov dword ptr [ebp - 8], edx","mov dword ptr [ebp - 8], edx",True
+10,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+11,"cmp eax, dword ptr [ebp - 0xc]","cmp eax, dword ptr [ebp - 0xc]",True
+12,jae 0x4f,jae 0x100868ff,True
+13,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+14,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+15,"sub edx, dword ptr [ecx + 0xc]","sub edx, dword ptr [ecx + 0xc]",True
+16,"mov dword ptr [ebp - 4], edx","mov dword ptr [ebp - 4], edx",True
+17,"cmp dword ptr [ebp - 4], 0x100000","cmp dword ptr [ebp - 4], 0x100000",True
+18,jae 0x44,jae 0x100868f4,True
+19,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+20,jmp 0x51,jmp 0x10086901,True
+21,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+22,"add eax, 0x14","add eax, 0x14",True
+23,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+24,jmp 0x22,jmp 0x100868d2,True
+25,"xor eax, eax","xor eax, eax",True
+26,"mov esp, ebp","mov esp, ebp",True
+27,pop ebp,pop ebp,True
+28,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\sbheap.obj (library object, no compilation)",symbol=___sbh_find_block,module=jgld.dll
+VERDICT,GREEN,29,100.0%

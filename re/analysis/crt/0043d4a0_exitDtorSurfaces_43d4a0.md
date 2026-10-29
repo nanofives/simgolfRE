@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 43 bytes, 9 instructions, subsystem `crt`. Mechanical t
 atexit destructor of g_sprite5aa748 and the 56,640-entry g_cellPool Surface array (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_FlicBanks.cpp` as `_$E27` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0043d4ca): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -17,7 +18,7 @@ Globals:
 
 ## Callees
 - 0x00473ae0 `Surface_free` at 0x0043d4af
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0043d4c5
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x0043d4c5
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

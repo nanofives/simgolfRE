@@ -1,0 +1,45 @@
+| source | procs | mapped | new 100 | already | folded | miss | nosym | error |
+|---|---|---|---|---|---|---|---|---|
+| filemap.cpp | 10 | 10 | 0 | 10 | 0 | 0 | 0 | 0 |
+| jglmath.cpp | 86 | 86 | 0 | 86 | 0 | 0 | 0 | 0 |
+| gsobject.cpp | 19 | 19 | 0 | 19 | 0 | 0 | 0 | 0 |
+| random.cpp | 5 | 5 | 0 | 5 | 0 | 0 | 0 | 0 |
+| jglbuffer.cpp | 119 | 119 | 3 | 116 | 0 | 0 | 0 | 0 |
+| jglrect.cpp | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| jglbufferalpha.cpp | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
+| jglbufferpcx.cpp | 13 | 13 | 0 | 13 | 0 | 0 | 0 | 0 |
+| jglbufferblit8.cpp | 4 | 4 | 0 | 4 | 0 | 0 | 0 | 0 |
+| jglwinmisc.cpp | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
+| jglbufferpng.cpp | 3 | 3 | 0 | 3 | 0 | 0 | 0 | 0 |
+| jglsprite.cpp | 40 | 40 | 0 | 40 | 0 | 0 | 0 | 0 |
+| jglspriteblend.cpp | 7 | 7 | 1 | 6 | 0 | 0 | 0 | 0 |
+| jglsprite_16_16.cpp | 8 | 8 | 1 | 7 | 0 | 0 | 0 | 0 |
+| jglspriteall.cpp | 53 | 53 | 0 | 53 | 0 | 0 | 0 | 0 |
+| jglpalette.cpp | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| jglsprite_8_16c.cpp | 8 | 8 | 0 | 8 | 0 | 0 | 0 | 0 |
+| jglsprite_8_8.cpp | 7 | 7 | 0 | 7 | 0 | 0 | 0 | 0 |
+| jgl.cpp | 118 | 118 | 0 | 118 | 0 | 0 | 0 | 0 |
+| jglfont.cpp | 17 | 17 | 0 | 17 | 0 | 0 | 0 | 0 |
+| messagehandler.cpp | 17 | 17 | 1 | 16 | 0 | 0 | 0 | 0 |
+| jglpalettemgr.cpp | 20 | 20 | 0 | 20 | 0 | 0 | 0 | 0 |
+| jglmsgpump.cpp | 13 | 13 | 0 | 13 | 0 | 0 | 0 | 0 |
+| png.c | 17 | 17 | 0 | 17 | 0 | 0 | 0 | 0 |
+| pngerror.c | 9 | 9 | 0 | 9 | 0 | 0 | 0 | 0 |
+| pngget.c | 34 | 34 | 0 | 34 | 0 | 0 | 0 | 0 |
+| pngmem.c | 6 | 6 | 0 | 6 | 0 | 0 | 0 | 0 |
+| pngread.c | 12 | 12 | 0 | 12 | 0 | 0 | 0 | 0 |
+| pngrio.c | 3 | 3 | 0 | 3 | 0 | 0 | 0 | 0 |
+| pngrtran.c | 31 | 31 | 0 | 31 | 0 | 0 | 0 | 0 |
+| pngrutil.c | 29 | 29 | 0 | 29 | 0 | 0 | 0 | 0 |
+| pngset.c | 16 | 16 | 0 | 16 | 0 | 0 | 0 | 0 |
+| pngtrans.c | 17 | 17 | 0 | 17 | 0 | 0 | 0 | 0 |
+| adler32.c | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
+| crc32.c | 2 | 2 | 0 | 2 | 0 | 0 | 0 | 0 |
+| infblock.c | 5 | 5 | 0 | 5 | 0 | 0 | 0 | 0 |
+| infcodes.c | 3 | 3 | 0 | 3 | 0 | 0 | 0 | 0 |
+| inffast.c | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
+| inflate.c | 7 | 7 | 0 | 7 | 0 | 0 | 0 | 0 |
+| inftrees.c | 6 | 6 | 0 | 6 | 0 | 0 | 0 | 0 |
+| infutil.c | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
+| zutil.c | 4 | 4 | 0 | 4 | 0 | 0 | 0 | 0 |
+| **42 files** | **773** | **773** | **6** | **767** | **0** | **0** | **0** | **0** |

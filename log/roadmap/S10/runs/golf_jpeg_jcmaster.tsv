@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb51e0	0x004b51e0	191	G	jinit_c_master_control	_jinit_c_master_control	public	100	100.0	57/57 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb52a0	0x004b52a0	461	L	initial_setup	_initial_setup	name	100	100.0	163/163 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb5470	0x004b5470	927	L	validate_script	_validate_script	name	100	100.0	328/328 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb5810	0x004b5810	433	L	prepare_for_pass	_prepare_for_pass	name	100	100.0	142/142 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb59d0	0x004b59d0	255	L	select_scan_parameters	_select_scan_parameters	name	100	100.0	86/86 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb5ad0	0x004b5ad0	458	L	per_scan_setup	_per_scan_setup	name	100	100.0	140/140 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb5ca0	0x004b5ca0	43	L	pass_startup	_pass_startup	name	100	100.0	13/13 ins	golf_jpeg_cmaster.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	0xb5cd0	0x004b5cd0	120	L	finish_pass_master	_finish_pass_master	name	100	100.0	46/46 ins	golf_jpeg_cmaster.cpp

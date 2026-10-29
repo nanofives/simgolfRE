@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,push ecx,push ecx,True
+2,"mov ebx, 0","mov ebx, 0x10063ea0",True
+3,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+4,"mov dword ptr [ebx + 8], ecx","mov dword ptr [ebx + 8], ecx",True
+5,"mov dword ptr [ebx + 4], eax","mov dword ptr [ebx + 4], eax",True
+6,"mov dword ptr [ebx + 0xc], ebp","mov dword ptr [ebx + 0xc], ebp",True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\exsup.obj (library object, no compilation)",symbol=__NLG_Notify,module=Terrain.dll
+VERDICT,GREEN,7,100.0%

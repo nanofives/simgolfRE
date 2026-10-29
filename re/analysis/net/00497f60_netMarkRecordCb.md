@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 81 bytes, 29 instructions, subsystem `net`. Mechanical 
 five-argument callback netService registers: finds the record whose first dword equals its first argument and, if that record's flag bit 1 is set, marks it by writing 1 at +8; always returns 1 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Network.cpp` as `?players_in_group_callback@@YGHKKPBUDPNAME@@KPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00497f6e, 0x00497f8c, 0x00497fae): callee pops 20 bytes of stack arguments.
 
 ## Reads

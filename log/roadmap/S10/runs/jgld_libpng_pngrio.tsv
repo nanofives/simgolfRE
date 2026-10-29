@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/pngrio.c	0x78c40	0x10078c40	99	G	png_read_data	_png_read_data	public	100	100.0	40/40 ins	jgld_png_rio.cpp
+jgld	jgl/libpng.lib/libpng/pngrio.c	0x78cb0	0x10078cb0	143	G	png_set_read_fn	_png_set_read_fn	public	100	100.0	47/47 ins	jgld_png_rio.cpp
+jgld	jgl/libpng.lib/libpng/pngrio.c	0x78d40	0x10078d40	94	L	png_default_read_data	_png_default_read_data	name	100	100.0	38/38 ins	jgld_png_rio.cpp

@@ -1,0 +1,65 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 0","cmp dword ptr [0x840dec], 0",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,jne 0x1d,jne 0x4adf73,True
+6,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+7,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+8,call 0x19,call 0x4a6170,True
+9,pop ecx,pop ecx,True
+10,pop ecx,pop ecx,True
+11,jmp 0x93,jmp 0x4adfe9,True
+12,push 0x19,push 0x19,True
+13,call 0x24,call 0x4a79b2,True
+14,"mov esi, dword ptr [ebp + 8]","mov esi, dword ptr [ebp + 8]",True
+15,pop ecx,pop ecx,True
+16,"movzx bx, byte ptr [esi]","movzx bx, byte ptr [esi]",True
+17,"test bx, bx","test bx, bx",True
+18,je 0x7b,je 0x4adfd1,True
+19,"movzx eax, bl","movzx eax, bl",True
+20,"test byte ptr [eax + 1], 4","test byte ptr [eax + 0x840f01], 4",True
+21,je 0x57,je 0x4adfad,True
+22,"mov al, byte ptr [esi + 1]","mov al, byte ptr [esi + 1]",True
+23,inc esi,inc esi,True
+24,"test al, al","test al, al",True
+25,je 0x62,je 0x4adfb8,True
+26,"movzx ecx, bx","movzx ecx, bx",True
+27,"movzx eax, al","movzx eax, al",True
+28,"shl ecx, 8","shl ecx, 8",True
+29,"or ecx, eax","or ecx, eax",True
+30,"cmp dword ptr [ebp + 0xc], ecx","cmp dword ptr [ebp + 0xc], ecx",True
+31,je 0x6e,je 0x4adfc4,True
+32,jmp 0x5f,jmp 0x4adfb5,True
+33,"movzx eax, bx","movzx eax, bx",True
+34,"cmp dword ptr [ebp + 0xc], eax","cmp dword ptr [ebp + 0xc], eax",True
+35,je 0x7b,je 0x4adfd1,True
+36,inc esi,inc esi,True
+37,jmp 0x28,jmp 0x4adf7e,True
+38,push 0x19,push 0x19,True
+39,call 0x69,call 0x4a7a13,True
+40,pop ecx,pop ecx,True
+41,"xor eax, eax","xor eax, eax",True
+42,jmp 0x93,jmp 0x4adfe9,True
+43,push 0x19,push 0x19,True
+44,call 0x75,call 0x4a7a13,True
+45,pop ecx,pop ecx,True
+46,"lea eax, [esi - 1]","lea eax, [esi - 1]",True
+47,jmp 0x93,jmp 0x4adfe9,True
+48,push 0x19,push 0x19,True
+49,call 0x82,call 0x4a7a13,True
+50,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+51,pop ecx,pop ecx,True
+52,"movzx ecx, bx","movzx ecx, bx",True
+53,"sub eax, ecx","sub eax, ecx",True
+54,neg eax,neg eax,True
+55,"sbb eax, eax","sbb eax, eax",True
+56,not eax,not eax,True
+57,"and eax, esi","and eax, esi",True
+58,pop esi,pop esi,True
+59,pop ebx,pop ebx,True
+60,pop ebp,pop ebp,True
+61,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\mbschr.obj (library object, no compilation)",symbol=__mbschr,module=golf_clean.exe
+VERDICT,GREEN,62,100.0%

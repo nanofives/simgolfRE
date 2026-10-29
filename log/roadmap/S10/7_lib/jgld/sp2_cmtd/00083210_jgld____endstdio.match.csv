@@ -1,0 +1,12 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,call 8,call 0x10085460,True
+3,"movsx eax, byte ptr [0]","movsx eax, byte ptr [0x10128788]",True
+4,"test eax, eax","test eax, eax",True
+5,je 0x18,je 0x10083228,True
+6,call 0x18,call 0x1008e360,True
+7,pop ebp,pop ebp,True
+8,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\_file.obj (library object, no compilation)",symbol=___endstdio,module=jgld.dll
+VERDICT,GREEN,9,100.0%

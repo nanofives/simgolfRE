@@ -97,7 +97,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10045f92, 0x10045fb0, 0x10045fc4, 0x10045fe0, 0x10046002, 0x10046047, 0x10046082, 0x1004609c (+8 more)
 
 ## Callees
-- 0x10042cf0 `FID_conflict:_memcpy` at 0x10046249
+- 0x10042cf0 `_memmove` at 0x10046249
 - import `KERNEL32.dll!HeapFree` at 0x1004621f
 - indirect `call esi` at 0x100461b2, 0x1004620d
 

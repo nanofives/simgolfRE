@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/preemp.c	0x40da0	0x10040da0	135	G	preemp_	_preemp_	public	100	100.0	52/52 ins	m36c_D2_01.cpp

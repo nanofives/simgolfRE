@@ -7,6 +7,7 @@ constructor: zeroes flag at this+0, InitializeCriticalSection at this+4, clears 
 System writeup: `re/analysis/systems/sound_1.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_soundthread.cpp` as `??0SoundThread@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002a7f2): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002a7c1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

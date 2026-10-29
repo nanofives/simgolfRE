@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/GolferDialogue.cpp	0x67a00	0x00467a00	8221	G	SetGolferAction	?SetGolferAction@@YAXHHH@Z	public	100	100.0	2509/2509 ins	
+golf	golf/golf.exe/src/GolferDialogue.cpp	0x69a20	0x00469a20	212	G	AppendPartnerNote	?AppendPartnerNote@@YAXHH@Z	public	100	100.0	61/61 ins	golf_small27.cpp
+golf	golf/golf.exe/src/GolferDialogue.cpp	0x69b00	0x00469b00	11834	G	BuildGolferDialogue	?BuildGolferDialogue@@YAXHHHH@Z	public	100	100.0	3879/3879 ins	
+golf	golf/golf.exe/src/GolferDialogue.cpp	0x6c940	0x0046c940	44	G	IsGolferMale	?IsGolferMale@@YAHH@Z	public	100	100.0	12/12 ins	golf_util.cpp

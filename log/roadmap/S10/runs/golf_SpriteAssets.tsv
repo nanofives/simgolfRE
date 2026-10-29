@@ -1,0 +1,135 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4c10	0x00404c10	10	L	$E8	_$E8	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4c20	0x00404c20	200	L	$E5	_$E5	name	100	100.0	46/46 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4cf0	0x00404cf0	12	L	$E7	_$E7	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4d00	0x00404d00	231	L	$E6	_$E6	name	100	100.0	53/53 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4df0	0x00404df0	10	L	$E13	_$E13	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4e00	0x00404e00	136	L	$E10	_$E10	name	100	100.0	32/32 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4e90	0x00404e90	12	L	$E12	_$E12	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4ea0	0x00404ea0	148	L	$E11	_$E11	name	100	100.0	36/36 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4f40	0x00404f40	10	L	$E18	_$E18	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x4f50	0x00404f50	172	L	$E15	_$E15	name	100	100.0	43/43 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5000	0x00405000	12	L	$E17	_$E17	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5010	0x00405010	137	L	$E16	_$E16	name	100	100.0	36/36 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x50a0	0x004050a0	10	L	$E23	_$E23	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x50b0	0x004050b0	148	L	$E20	_$E20	name	100	100.0	37/37 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5150	0x00405150	12	L	$E22	_$E22	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5160	0x00405160	118	L	$E21	_$E21	name	100	100.0	31/31 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x51e0	0x004051e0	10	L	$E28	_$E28	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x51f0	0x004051f0	217	L	$E25	_$E25	name	100	100.0	55/55 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x52d0	0x004052d0	12	L	$E27	_$E27	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x52e0	0x004052e0	172	L	$E26	_$E26	name	100	100.0	46/46 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5390	0x00405390	10	L	$E33	_$E33	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x53a0	0x004053a0	145	L	$E30	_$E30	name	100	100.0	37/37 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5440	0x00405440	12	L	$E32	_$E32	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5450	0x00405450	115	L	$E31	_$E31	name	100	100.0	31/31 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x54d0	0x004054d0	10	L	$E38	_$E38	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x54e0	0x004054e0	145	L	$E35	_$E35	name	100	100.0	37/37 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5580	0x00405580	12	L	$E37	_$E37	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5590	0x00405590	115	L	$E36	_$E36	name	100	100.0	31/31 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5610	0x00405610	10	L	$E43	_$E43	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5620	0x00405620	145	L	$E40	_$E40	name	100	100.0	37/37 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x56c0	0x004056c0	12	L	$E42	_$E42	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x56d0	0x004056d0	115	L	$E41	_$E41	name	100	100.0	31/31 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5750	0x00405750	10	L	$E48	_$E48	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5760	0x00405760	193	L	$E45	_$E45	name	100	100.0	49/49 ins	golf_arrays.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5830	0x00405830	12	L	$E47	_$E47	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5840	0x00405840	153	L	$E46	_$E46	name	100	100.0	41/41 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x58e0	0x004058e0	10	L	$E53	_$E53	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x58f0	0x004058f0	10	L	$E50	_$E50	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5900	0x00405900	12	L	$E52	_$E52	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5910	0x00405910	10	L	$E51	_$E51	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5920	0x00405920	78	G	CalculateRandomShotVariance	?CalculateRandomShotVariance@@YAHXZ	public	100	100.0	31/31 ins	golf_small8.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5970	0x00405970	134	G	SpawnCritter	?SpawnCritter@@YAHHHE@Z	public	100	100.0	36/36 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5a00	0x00405a00	182	G	PlayCritterCall	?PlayCritterCall@@YAXHHH@Z	public	100	100.0	67/67 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5ac0	0x00405ac0	69	G	ValidateAndTrimString	?ValidateAndTrimString@@YAHPAD@Z	public	100	100.0	31/31 ins	golf_hand_01.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5b10	0x00405b10	786	G	ShowSaveGameDialog	?ShowSaveGameDialog@@YAXXZ	public	100	100.0	283/283 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x5e30	0x00405e30	616	G	TrySpawnWildlifeHabitat	?TrySpawnWildlifeHabitat@@YAXHHH@Z	public	100	100.0	187/187 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x60a0	0x004060a0	253	G	CalculateHoleTalentStrokeGap	?CalculateHoleTalentStrokeGap@@YAHHH@Z	public	100	100.0	96/96 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x61a0	0x004061a0	10	L	$E78	_$E78	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x61b0	0x004061b0	10	L	$E75	_$E75	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x61c0	0x004061c0	12	L	$E77	_$E77	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x61d0	0x004061d0	10	L	$E76	_$E76	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x61e0	0x004061e0	10	L	$E83	_$E83	name	100	100.0	2/2 ins	m36d_init.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x61f0	0x004061f0	10	L	$E80	_$E80	name	100	100.0	2/2 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6200	0x00406200	12	L	$E82	_$E82	name	100	100.0	4/4 ins	golf_raw_07.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6210	0x00406210	10	L	$E81	_$E81	name	100	100.0	2/2 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6220	0x00406220	44	G	DrawTerrainLineWrapper	?DrawTerrainLineWrapper@@YAXHHHHHHH@Z	public	100	100.0	17/17 ins	golf_small3.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6250	0x00406250	872	G	ShowLoadingScreen	?ShowLoadingScreen@@YAXH@Z	public	100	100.0	212/212 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x65c0	0x004065c0	176	G	ShowSkillPointsIntro	?ShowSkillPointsIntro@@YAXXZ	public	100	100.0	59/59 ins	golf_hand_05.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6670	0x00406670	1467	G	ProcessMembershipUpgrade	?ProcessMembershipUpgrade@@YAXH@Z	public	100	100.0	534/534 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6c30	0x00406c30	275	G	CheckCanAfford	?CheckCanAfford@@YAHH@Z	public	100	100.0	90/90 ins	golf_small33.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6d50	0x00406d50	457	G	FormatGolferMessage	?FormatGolferMessage@@YAXHH@Z	public	100	100.0	172/172 ins	golf_hand_s0.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6f20	0x00406f20	102	G	SmoothTerrainRaise	?SmoothTerrainRaise@@YAXHH@Z	public	100	100.0	39/39 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x6f90	0x00406f90	100	G	SmoothTerrainLower	?SmoothTerrainLower@@YAXHH@Z	public	100	100.0	38/38 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7000	0x00407000	168	G	InLandmarkInfluence	?InLandmarkInfluence@@YAHHHH@Z	public	100	100.0	57/57 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x70b0	0x004070b0	464	G	BallHitsObstacle	?BallHitsObstacle@@YAHHHHH@Z	public	100	100.0	125/125 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7280	0x00407280	192	G	AppendHoleName	?AppendHoleName@@YAXH@Z	public	100	100.0	71/71 ins	golf_small24.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7340	0x00407340	189	G	FindNearestHole	?FindNearestHole@@YAHHH@Z	public	100	100.0	68/68 ins	golf_hand_06_k.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7400	0x00407400	152	G	IsNeighborWalkable	?IsNeighborWalkable@@YAHHHH@Z	public	100	100.0	49/49 ins	golf_hand_04.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x74a0	0x004074a0	600	G	AppendLandmarkName	?AppendLandmarkName@@YAXHH@Z	public	100	100.0	137/137 ins	golf_hand_s0.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7700	0x00407700	1112	G	GetSceneryName	?GetSceneryName@@YAHHHH@Z	public	100	100.0	270/270 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7b60	0x00407b60	255	G	GetMemberNameAtPosition	?GetMemberNameAtPosition@@YAHHHH@Z	public	100	100.0	103/103 ins	golf_hand_r2.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7c60	0x00407c60	194	G	DrawCircleOnTerrain	?DrawCircleOnTerrain@@YAXHHHI@Z	public	100	100.0	73/73 ins	golf_small23.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7d30	0x00407d30	203	G	StartNewGameOnCourse	?StartNewGameOnCourse@@YAXH@Z	public	100	100.0	52/52 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x7e00	0x00407e00	6172	G	DisplayShotCommentary	?DisplayShotCommentary@@YAXHHHH@Z	public	100	100.0	1985/1985 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x9620	0x00409620	803	G	CheckGolferShotDeviation	?CheckGolferShotDeviation@@YAXH@Z	public	100	100.0	253/253 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x9950	0x00409950	148	G	AddGolferTrailPoint	?AddGolferTrailPoint@@YAXH@Z	public	100	100.0	44/44 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x99f0	0x004099f0	151	G	StartShotTrail	?StartShotTrail@@YAXH@Z	public	100	100.0	43/43 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x9a90	0x00409a90	345	G	SpawnGolferDivot	?SpawnGolferDivot@@YAXH@Z	public	100	100.0	104/104 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x9bf0	0x00409bf0	187	G	UpdateDivots	?UpdateDivots@@YAXXZ	public	100	100.0	71/71 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x9cb0	0x00409cb0	52	G	AppendScriptCommand	?AppendScriptCommand@@YAXHHH@Z	public	100	100.0	12/12 ins	golf_raw_01.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0x9cf0	0x00409cf0	1087	G	PlayScriptStep	?PlayScriptStep@@YAXXZ	public	100	100.0	295/295 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xa130	0x0040a130	38	G	SetTileDataAt	?SetTileDataAt@@YAXHHHE@Z	public	100	100.0	10/10 ins	golf_small2.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xa160	0x0040a160	887	G	BuildDemolishTooltipText	?BuildDemolishTooltipText@@YAHHH@Z	public	100	100.0	340/340 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xa4e0	0x0040a4e0	1213	G	DemolishTileAtPosition	?DemolishTileAtPosition@@YAXHH@Z	public	100	100.0	380/380 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xa9a0	0x0040a9a0	220	G	AppendClubName	?AppendClubName@@YAXH@Z	public	100	100.0	53/53 ins	golf_small15.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xaa80	0x0040aa80	586	G	ProcessHireEmployeeSelection	?ProcessHireEmployeeSelection@@YAXXZ	public	100	100.0	168/168 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xacd0	0x0040acd0	129	G	Math_Distance2D	?Math_Distance2D@@YAHHH@Z	public	100	100.0	49/49 ins	golf_util.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xad60	0x0040ad60	514	G	LoadOrGenerateHighScores	?LoadOrGenerateHighScores@@YAHXZ	public	100	100.0	154/154 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xaf70	0x0040af70	44	G	TransferSaveBlock	?TransferSaveBlock@@YAHPAXI@Z	public	100	100.0	15/15 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xafa0	0x0040afa0	1267	G	TransferGameState	?TransferGameState@@YAXH@Z	public	100	100.0	288/288 ins	golf_hand_t3.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xb4a0	0x0040b4a0	477	G	SaveGame	?SaveGame@@YAXPBD@Z	public	100	100.0	176/176 ins	golf_hand_s0.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xb680	0x0040b680	434	G	SaveCourseToFile	?SaveCourseToFile@@YAXXZ	public	100	100.0	153/153 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xb840	0x0040b840	358	G	LoadCourseFromFile	?LoadCourseFromFile@@YAXH@Z	public	100	100.0	116/116 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xb9b0	0x0040b9b0	576	G	LoadSavedGame	?LoadSavedGame@@YAXPBDHHH@Z	public	100	100.0	188/188 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xbbf0	0x0040bbf0	778	G	TransferCourseState	?TransferCourseState@@YAXH@Z	public	100	100.0	182/182 ins	golf_raw_11.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xbf00	0x0040bf00	20	G	TerrainMoveTo	?TerrainMoveTo@@YAXHH@Z	public	100	100.0	5/5 ins	golf_small.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xbf20	0x0040bf20	63	G	TerrainLineTo	?TerrainLineTo@@YAXHHIHH@Z	public	100	100.0	23/23 ins	golf_small6.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xbf60	0x0040bf60	51	G	IsPositionInvalid	?IsPositionInvalid@@YAHHH@Z	public	100	100.0	18/18 ins	golf_small5.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xbfa0	0x0040bfa0	55	G	GetTileAtPosition	?GetTileAtPosition@@YAHHH@Z	public	100	100.0	22/22 ins	golf_small5.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xbfe0	0x0040bfe0	388	G	GetCornerElevation	?GetCornerElevation@@YAHHHHH@Z	public	100	100.0	143/143 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc170	0x0040c170	374	G	GetTileElevation	?GetTileElevation@@YAHHHH@Z	public	100	100.0	125/125 ins	golf_hand_r3.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc2f0	0x0040c2f0	171	G	GetTerrainRowSlope	?GetTerrainRowSlope@@YAHHH@Z	public	100	100.0	72/72 ins	golf_small20.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc3a0	0x0040c3a0	173	G	GetTerrainColSlope	?GetTerrainColSlope@@YAHHH@Z	public	100	100.0	73/73 ins	golf_small20.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc450	0x0040c450	94	G	CalculateDirectionalOffset	?CalculateDirectionalOffset@@YAHHHH@Z	public	100	100.0	37/37 ins	golf_small9.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc4b0	0x0040c4b0	66	G	CalculateDistanceInYards	?CalculateDistanceInYards@@YAHHHHH@Z	public	100	100.0	21/21 ins	golf_util.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc500	0x0040c500	487	G	PlayPositionedSound	?PlayPositionedSound@@YAXHHHH@Z	public	100	100.0	157/157 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc6f0	0x0040c6f0	46	G	NotifyEvent	?NotifyEvent@@YAXHH@Z	public	100	100.0	15/15 ins	golf_small4.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc720	0x0040c720	122	G	AddFloatingMessage	?AddFloatingMessage@@YAXHHI@Z	public	100	100.0	39/39 ins	golf_small11.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc7a0	0x0040c7a0	185	G	RenderFloatingMessages	?RenderFloatingMessages@@YAXXZ	public	100	100.0	65/65 ins	golf_small26.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc860	0x0040c860	45	G	ClearFloatingMessageAtPosition	?ClearFloatingMessageAtPosition@@YAXHH@Z	public	100	100.0	12/12 ins	golf_small4.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc890	0x0040c890	118	G	AddMoneyPopup	?AddMoneyPopup@@YAXHHHH@Z	public	100	100.0	30/30 ins	golf_small10.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xc910	0x0040c910	251	G	RenderMoneyPopups	?RenderMoneyPopups@@YAXXZ	public	100	100.0	79/79 ins	golf_small27.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xca10	0x0040ca10	226	G	TilePatternToArea	?TilePatternToArea@@YAXHHHHH@Z	public	100	100.0	78/78 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xcb00	0x0040cb00	247	G	ShowStoryMessage	?ShowStoryMessage@@YAHIHH@Z	public	100	100.0	75/75 ins	golf_small30.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xcc00	0x0040cc00	455	G	DrawDialogFrameWithBorder	?DrawDialogFrameWithBorder@@YAXHHHHH@Z	public	100	100.0	156/156 ins	golf_hand_s2.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xcdd0	0x0040cdd0	288	G	DrawDialogShadow	?DrawDialogShadow@@YAXHHHHH@Z	public	100	100.0	104/104 ins	golf_raw_11.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xcef0	0x0040cef0	448	G	DrawPanelFrame	?DrawPanelFrame@@YAXHHHHH@Z	public	100	100.0	155/155 ins	golf_hand_r3.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xd0b0	0x0040d0b0	618	G	RenderUIFrameWithCorners	?RenderUIFrameWithCorners@@YAXHHHHH@Z	public	100	100.0	199/199 ins	golf_hand_s2.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xd320	0x0040d320	881	G	RenderSpeechBubbleWithPortrait	?RenderSpeechBubbleWithPortrait@@YAXHHHH@Z	public	100	100.0	298/298 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xd6a0	0x0040d6a0	183	G	RenderDialogueBubble	?RenderDialogueBubble@@YAXXZ	public	100	100.0	65/65 ins	golf_small24.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xd760	0x0040d760	68	G	GetColorForSkillSet	?GetColorForSkillSet@@YAIH@Z	public	100	100.0	15/15 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xd7b0	0x0040d7b0	214	G	FormatDateString	?FormatDateString@@YAXH@Z	public	100	100.0	84/84 ins	golf_small23.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xd890	0x0040d890	528	G	SelectScreenItem	?SelectScreenItem@@YAXHH@Z	public	100	100.0	150/150 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xdaa0	0x0040daa0	237	G	AppendCourseName	?AppendCourseName@@YAXH@Z	public	100	100.0	86/86 ins	golf_hand_07_40daa0.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xdb90	0x0040db90	536	G	ValidateBuildingPlacement	?ValidateBuildingPlacement@@YAHHHHH@Z	public	100	100.0	156/156 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xddb0	0x0040ddb0	183	G	FindNearestBuildingOfType	?FindNearestBuildingOfType@@YAHHHH@Z	public	100	100.0	57/57 ins	golf_small25.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xde70	0x0040de70	266	G	FindNearestBench	?FindNearestBench@@YAXHHH@Z	public	100	100.0	83/83 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xdf80	0x0040df80	119	G	FindBuildingAtTile	?FindBuildingAtTile@@YAHHH@Z	public	100	100.0	44/44 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xe000	0x0040e000	1011	G	PlaceBuildingOnTerrain	?PlaceBuildingOnTerrain@@YAHHHHH@Z	public	100	100.0	295/295 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xe400	0x0040e400	424	G	DemolishBuilding	?DemolishBuilding@@YAXH@Z	public	100	100.0	127/127 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xe5b0	0x0040e5b0	60	G	GetLotScoreTier	?GetLotScoreTier@@YAHH@Z	public	100	100.0	23/23 ins	golf_hand_01.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xe5f0	0x0040e5f0	293	G	BuildCourseUpgradeMessage	?BuildCourseUpgradeMessage@@YAXH@Z	public	100	100.0	118/118 ins	golf_hand_r3.cpp
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xe720	0x0040e720	2664	G	OpenHoleForPlay	?OpenHoleForPlay@@YAXXZ	public	100	100.0	852/852 ins	
+golf	golf/golf.exe/src/SpriteAssets.cpp	0xf190	0x0040f190	1068	G	StartProMatch	?StartProMatch@@YAXH@Z	public	100	100.0	282/282 ins	

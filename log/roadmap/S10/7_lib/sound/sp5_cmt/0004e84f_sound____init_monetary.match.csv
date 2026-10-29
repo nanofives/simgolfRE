@@ -1,0 +1,66 @@
+instruction,library_object,original,match
+0,"cmp dword ptr [0xc], 0","cmp dword ptr [0x100b5748], 0",True
+1,push esi,push esi,True
+2,je 0x80,je 0x1004e8cf,True
+3,push 0x30,push 0x30,True
+4,push 1,push 1,True
+5,call 0x13,call 0x100458a1,True
+6,"mov esi, eax","mov esi, eax",True
+7,pop ecx,pop ecx,True
+8,"test esi, esi","test esi, esi",True
+9,pop ecx,pop ecx,True
+10,jne 0x20,jne 0x1004e86f,True
+11,push 1,push 1,True
+12,pop eax,pop eax,True
+13,pop esi,pop esi,True
+14,ret ,ret ,True
+15,push esi,push esi,True
+16,call 0x26,call 0x1004e91a,True
+17,"test eax, eax","test eax, eax",True
+18,pop ecx,pop ecx,True
+19,je 0x3b,je 0x1004e88a,True
+20,push esi,push esi,True
+21,call 0x31,call 0x1004ea73,True
+22,push esi,push esi,True
+23,call 0x37,call 0x10042c07,True
+24,pop ecx,pop ecx,True
+25,pop ecx,pop ecx,True
+26,jmp 0x1b,jmp 0x1004e86a,True
+27,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100685a8]",True
+28,"mov eax, dword ptr [eax]","mov eax, dword ptr [eax]",True
+29,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+30,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100685a8]",True
+31,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+32,"mov dword ptr [esi + 4], eax","mov dword ptr [esi + 4], eax",True
+33,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100685a8]",True
+34,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+35,"mov dword ptr [esi + 8], eax","mov dword ptr [esi + 8], eax",True
+36,push dword ptr [0],push dword ptr [0x100b5770],True
+37,"mov dword ptr [0], esi","mov dword ptr [0x100685a8], esi",True
+38,call 0x6b,call 0x1004ea73,True
+39,push dword ptr [0],push dword ptr [0x100b5770],True
+40,call 0x76,call 0x10042c07,True
+41,pop ecx,pop ecx,True
+42,"mov dword ptr [0], esi","mov dword ptr [0x100b5770], esi",True
+43,pop ecx,pop ecx,True
+44,jmp 0xc7,jmp 0x1004e916,True
+45,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100685a8]",True
+46,push dword ptr [0],push dword ptr [0x100b5770],True
+47,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+48,"mov dword ptr [0], ecx","mov dword ptr [0x10068578], ecx",True
+49,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+50,"mov dword ptr [4], ecx","mov dword ptr [0x1006857c], ecx",True
+51,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+52,"mov dword ptr [8], eax","mov dword ptr [0x10068580], eax",True
+53,"mov dword ptr [0], 0","mov dword ptr [0x100685a8], 0x10068578",True
+54,call 0xb3,call 0x1004ea73,True
+55,push dword ptr [0],push dword ptr [0x100b5770],True
+56,call 0xbe,call 0x10042c07,True
+57,"and dword ptr [0], 0","and dword ptr [0x100b5770], 0",True
+58,pop ecx,pop ecx,True
+59,pop ecx,pop ecx,True
+60,"xor eax, eax","xor eax, eax",True
+61,pop esi,pop esi,True
+62,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\initmon.obj (library object, no compilation)",symbol=___init_monetary,module=sound.dll
+VERDICT,GREEN,63,100.0%

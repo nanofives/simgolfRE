@@ -1,0 +1,36 @@
+instruction,library_object,original,match
+0,"mov eax, 0","mov eax, 0x1005942a",True
+1,call 0xa,call 0x100437e0,True
+2,push ecx,push ecx,True
+3,push ecx,push ecx,True
+4,"and dword ptr [ebp - 0x10], 0","and dword ptr [ebp - 0x10], 0",True
+5,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+6,push esi,push esi,True
+7,"mov esi, ecx","mov esi, ecx",True
+8,"mov dword ptr [ebp - 0x14], esi","mov dword ptr [ebp - 0x14], esi",True
+9,je 0x35,je 0x10041a74,True
+10,"lea ecx, [esi + 8]","lea ecx, [esi + 8]",True
+11,"mov dword ptr [esi], 0","mov dword ptr [esi], 0x1005ecd8",True
+12,call 0x2a,call 0x10041e6f,True
+13,"mov dword ptr [ebp - 0x10], 1","mov dword ptr [ebp - 0x10], 1",True
+14,"and dword ptr [ebp - 4], 0","and dword ptr [ebp - 4], 0",True
+15,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+16,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+17,"mov dword ptr [eax + esi], 0","mov dword ptr [eax + esi], 0x1005ecd4",True
+18,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+19,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+20,"mov ecx, dword ptr [ecx + 4]","mov ecx, dword ptr [ecx + 4]",True
+21,push dword ptr [ecx + eax + 4],push dword ptr [ecx + eax + 4],True
+22,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+23,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+24,"add ecx, esi","add ecx, esi",True
+25,call 0x59,call 0x10041fe4,True
+26,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+27,"and dword ptr [esi + 4], 0","and dword ptr [esi + 4], 0",True
+28,"mov eax, esi","mov eax, esi",True
+29,pop esi,pop esi,True
+30,"mov dword ptr fs:[0], ecx","mov dword ptr fs:[0], ecx",True
+31,leave ,leave ,True
+32,ret 8,ret 8,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\ostream.obj (library object, no compilation)",symbol=??0ostream@@IAE@ABV0@@Z,module=sound.dll
+VERDICT,GREEN,33,100.0%

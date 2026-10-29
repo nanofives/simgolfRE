@@ -1,0 +1,424 @@
+when	pdb	source	procs	mapped	new_100	already_100	miss	nosym	folded	error	verified	canonical	wip	seconds
+2026-10-29 15:08	golf	golf/golf.exe/src/Plot.cpp	32	30	11	18	0	0	3	0	11/11	re/match/smsg_golf_Plot.cpp		1.5
+2026-10-29 15:08	golf	golf/golf.exe/src/InputPoll.cpp	8	8	6	2	0	0	0	0	6/6	re/match/smsg_golf_InputPoll.cpp		0.9
+2026-10-29 15:08	golf	golf/golf.exe/src/Geometry.cpp	14	14	5	9	0	0	0	0	5/5	re/match/smsg_golf_Geometry.cpp		1.1
+2026-10-29 15:12	Terrain	terrain/Terrain.dll/src/Bmp.cpp	11	11	0	11	0	0	0	0				1.2
+2026-10-29 15:12	Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	7	7	0	7	0	0	0	0				0.7
+2026-10-29 15:12	Terrain	terrain/Terrain.dll/src/VertexArrays.cpp	0	0	0	0	0	0	0	0				0.6
+2026-10-29 15:12	Terrain	terrain/Terrain.dll/src/Course.cpp	1	1	0	1	0	0	0	0				0.5
+2026-10-29 15:12	Terrain	terrain/Terrain.dll/src/Terrain.cpp	99	99	0	99	0	0	0	0				1.8
+2026-10-29 15:12	Terrain	terrain/Terrain.dll/src/Tile.cpp	51	51	0	51	0	0	0	0				1.6
+2026-10-29 15:25	golf	golf/golf.exe/src/Plot.cpp	32	30	11	18	0	0	3	0	11/11	re/match/smsg_golf_Plot.cpp		2.3
+2026-10-29 15:25	golf	golf/golf.exe/src/Employee.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_golf_Employee.cpp		2.9
+2026-10-29 15:25	golf	golf/golf.exe/src/EmployeeRender.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_EmployeeRender.cpp		1.4
+2026-10-29 15:26	golf	golf/golf.exe/src/FlicChannels.cpp	24	24	6	18	0	0	0	0	6/6	re/match/smsg_golf_FlicChannels.cpp		1.5
+2026-10-29 15:26	golf	golf/golf.exe/src/Globals.cpp	118	114	31	83	0	0	4	0	31/31	re/match/smsg_golf_Globals.cpp		3.3
+2026-10-29 15:26	golf	golf/golf.exe/src/ScreenText.cpp	7	7	0	7	0	0	0	0				0.8
+2026-10-29 15:26	golf	golf/golf.exe/src/SpriteAssets.cpp	134	134	49	85	0	0	0	0	49/49	re/match/smsg_golf_SpriteAssets.cpp		6.3
+2026-10-29 15:26	golf	golf/golf.exe/src/MainLoop.cpp	5	5	4	1	0	0	0	0	4/4	re/match/smsg_golf_MainLoop.cpp		24.7
+2026-10-29 15:26	golf	golf/golf.exe/src/GolferSpawn.cpp	6	6	2	4	0	0	0	0	2/2	re/match/smsg_golf_GolferSpawn.cpp		1.1
+2026-10-29 15:26	golf	golf/golf.exe/src/GolferShot.cpp	28	28	10	15	3	0	0	0	10/10	re/match/smsg_golf_GolferShot.cpp	re/match/wip/smsg_golf_GolferShot.cpp	4.4
+2026-10-29 15:26	golf	golf/golf.exe/src/WildlifeUpdate.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_golf_WildlifeUpdate.cpp		1.8
+2026-10-29 15:26	golf	golf/golf.exe/src/Toolbar.cpp	28	28	9	17	2	0	0	0	9/9	re/match/smsg_golf_Toolbar.cpp	re/match/wip/smsg_golf_Toolbar.cpp	2.1
+2026-10-29 15:26	golf	golf/golf.exe/src/SetupScreens.cpp	27	27	9	18	0	0	0	0	9/9	re/match/smsg_golf_SetupScreens.cpp		2.4
+2026-10-29 15:26	golf	golf/golf.exe/src/FlicBanks.cpp	42	42	11	31	0	0	0	0	11/11	re/match/smsg_golf_FlicBanks.cpp		7.0
+2026-10-29 15:26	golf	golf/golf.exe/src/TerrainView.cpp	38	38	16	22	0	0	0	0	16/16	re/match/smsg_golf_TerrainView.cpp		2.0
+2026-10-29 15:27	golf	golf/golf.exe/src/InfoScreens.cpp	96	96	17	78	1	0	0	0	17/17	re/match/smsg_golf_InfoScreens.cpp	re/match/wip/smsg_golf_InfoScreens.cpp	5.7
+2026-10-29 15:27	golf	golf/golf.exe/src/InputPoll.cpp	8	8	6	2	0	0	0	0	6/6	re/match/smsg_golf_InputPoll.cpp		1.4
+2026-10-29 15:27	golf	golf/golf.exe/src/StringPool.cpp	5	5	1	4	0	0	0	0	1/1	re/match/smsg_golf_StringPool.cpp		1.4
+2026-10-29 15:27	golf	golf/golf.exe/src/GameMain.cpp	11	11	3	8	0	0	0	0	3/3	re/match/smsg_golf_GameMain.cpp		1.3
+2026-10-29 15:27	golf	golf/golf.exe/src/InputWait.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_golf_InputWait.cpp		0.9
+2026-10-29 15:27	golf	golf/golf.exe/src/GolferPanel.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_golf_GolferPanel.cpp		1.5
+2026-10-29 15:27	golf	golf/golf.exe/src/GolferPairing.cpp	8	8	6	2	0	0	0	0	6/6	re/match/smsg_golf_GolferPairing.cpp		1.8
+2026-10-29 15:27	golf	golf/golf.exe/src/TerrainInfluence.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_TerrainInfluence.cpp		0.6
+2026-10-29 15:27	golf	golf/golf.exe/src/ShadeTable.cpp	4	4	3	1	0	0	0	0	3/3	re/match/smsg_golf_ShadeTable.cpp		1.2
+2026-10-29 15:27	golf	golf/golf.exe/src/RenderQueue.cpp	9	9	6	3	0	0	0	0	6/6	re/match/smsg_golf_RenderQueue.cpp		2.2
+2026-10-29 15:27	golf	golf/golf.exe/src/Screen.cpp	13	13	10	3	0	0	0	0	10/10	re/match/smsg_golf_Screen.cpp		1.5
+2026-10-29 15:27	golf	golf/golf.exe/src/ThemeLoader.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_ThemeLoader.cpp		1.4
+2026-10-29 15:27	golf	golf/golf.exe/src/Golfer.cpp	5	5	3	1	1	0	0	0	3/3	re/match/smsg_golf_Golfer.cpp	re/match/wip/smsg_golf_Golfer.cpp	1.4
+2026-10-29 15:27	golf	golf/golf.exe/src/Geometry.cpp	14	14	5	9	0	0	0	0	5/5	re/match/smsg_golf_Geometry.cpp		1.3
+2026-10-29 15:27	golf	golf/golf.exe/src/GolferDialogue.cpp	4	4	2	2	0	0	0	0	2/2	re/match/smsg_golf_GolferDialogue.cpp		2.4
+2026-10-29 15:27	golf	golf/golf.exe/src/Tournament.cpp	6	6	3	3	0	0	0	0	3/3	re/match/smsg_golf_Tournament.cpp		1.6
+2026-10-29 15:27	golf	golf/golf.exe/src/ListDialog.cpp	8	8	3	5	0	0	0	0	3/3	re/match/smsg_golf_ListDialog.cpp		1.2
+2026-10-29 15:27	golf	golf/golf.exe/src/WorldMap.cpp	15	15	9	6	0	0	0	0	9/9	re/match/smsg_golf_WorldMap.cpp		2.8
+2026-10-29 15:27	golf	golf/golf.exe/src/jgldefs.cpp	0	0	0	0	0	0	0	0				0.6
+2026-10-29 15:30	golf	golf/golf.exe/src/WorldMap.cpp	15	15	9	6	0	0	0	0	9/9	re/match/smsg_golf_WorldMap.cpp		2.3
+2026-10-29 15:30	golf	golf/golf.exe/src/Employee.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_golf_Employee.cpp		1.5
+2026-10-29 15:30	golf	golf/golf.exe/src/EmployeeRender.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_EmployeeRender.cpp		1.1
+2026-10-29 15:30	golf	golf/golf.exe/src/FlicChannels.cpp	24	24	6	18	0	0	0	0	6/6	re/match/smsg_golf_FlicChannels.cpp		1.1
+2026-10-29 15:30	golf	golf/golf.exe/src/Globals.cpp	118	114	31	83	0	0	4	0	31/31	re/match/smsg_golf_Globals.cpp		2.2
+2026-10-29 15:30	golf	golf/golf.exe/src/SpriteAssets.cpp	134	134	49	85	0	0	0	0	49/49	re/match/smsg_golf_SpriteAssets.cpp		5.0
+2026-10-29 15:30	golf	golf/golf.exe/src/MainLoop.cpp	5	5	4	1	0	0	0	0	4/4	re/match/smsg_golf_MainLoop.cpp		15.2
+2026-10-29 15:30	golf	golf/golf.exe/src/GolferSpawn.cpp	6	6	2	4	0	0	0	0	2/2	re/match/smsg_golf_GolferSpawn.cpp		1.4
+2026-10-29 15:31	golf	golf/golf.exe/src/GolferShot.cpp	28	28	10	15	3	0	0	0	10/10	re/match/smsg_golf_GolferShot.cpp	re/match/wip/smsg_golf_GolferShot.cpp	4.7
+2026-10-29 15:31	golf	golf/golf.exe/src/WildlifeUpdate.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_golf_WildlifeUpdate.cpp		1.6
+2026-10-29 15:31	golf	golf/golf.exe/src/Toolbar.cpp	28	28	9	17	2	0	0	0	9/9	re/match/smsg_golf_Toolbar.cpp	re/match/wip/smsg_golf_Toolbar.cpp	2.3
+2026-10-29 15:31	golf	golf/golf.exe/src/SetupScreens.cpp	27	27	9	18	0	0	0	0	9/9	re/match/smsg_golf_SetupScreens.cpp		2.4
+2026-10-29 15:31	golf	golf/golf.exe/src/FlicBanks.cpp	42	42	11	31	0	0	0	0	11/11	re/match/smsg_golf_FlicBanks.cpp		6.3
+2026-10-29 15:31	golf	golf/golf.exe/src/TerrainView.cpp	38	38	16	22	0	0	0	0	16/16	re/match/smsg_golf_TerrainView.cpp		1.9
+2026-10-29 15:31	golf	golf/golf.exe/src/InfoScreens.cpp	96	96	17	78	1	0	0	0	17/17	re/match/smsg_golf_InfoScreens.cpp	re/match/wip/smsg_golf_InfoScreens.cpp	5.3
+2026-10-29 15:31	golf	golf/golf.exe/src/StringPool.cpp	5	5	1	4	0	0	0	0	1/1	re/match/smsg_golf_StringPool.cpp		1.1
+2026-10-29 15:31	golf	golf/golf.exe/src/GameMain.cpp	11	11	3	8	0	0	0	0	3/3	re/match/smsg_golf_GameMain.cpp		1.5
+2026-10-29 15:31	golf	golf/golf.exe/src/InputWait.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_golf_InputWait.cpp		0.9
+2026-10-29 15:31	golf	golf/golf.exe/src/GolferPanel.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_golf_GolferPanel.cpp		1.4
+2026-10-29 15:31	golf	golf/golf.exe/src/GolferPairing.cpp	8	8	6	2	0	0	0	0	6/6	re/match/smsg_golf_GolferPairing.cpp		2.3
+2026-10-29 15:31	golf	golf/golf.exe/src/TerrainInfluence.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_TerrainInfluence.cpp		0.6
+2026-10-29 15:31	golf	golf/golf.exe/src/ShadeTable.cpp	4	4	3	1	0	0	0	0	3/3	re/match/smsg_golf_ShadeTable.cpp		1.3
+2026-10-29 15:31	golf	golf/golf.exe/src/RenderQueue.cpp	9	9	6	3	0	0	0	0	6/6	re/match/smsg_golf_RenderQueue.cpp		1.8
+2026-10-29 15:31	golf	golf/golf.exe/src/Screen.cpp	13	13	10	3	0	0	0	0	10/10	re/match/smsg_golf_Screen.cpp		1.2
+2026-10-29 15:31	golf	golf/golf.exe/src/ThemeLoader.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_ThemeLoader.cpp		1.3
+2026-10-29 15:31	golf	golf/golf.exe/src/Golfer.cpp	5	5	3	1	1	0	0	0	3/3	re/match/smsg_golf_Golfer.cpp	re/match/wip/smsg_golf_Golfer.cpp	1.1
+2026-10-29 15:31	golf	golf/golf.exe/src/GolferDialogue.cpp	4	4	2	2	0	0	0	0	2/2	re/match/smsg_golf_GolferDialogue.cpp		2.9
+2026-10-29 15:31	golf	golf/golf.exe/src/Tournament.cpp	6	6	3	3	0	0	0	0	3/3	re/match/smsg_golf_Tournament.cpp		1.5
+2026-10-29 15:31	golf	golf/golf.exe/src/ListDialog.cpp	8	8	3	5	0	0	0	0	3/3	re/match/smsg_golf_ListDialog.cpp		1.1
+2026-10-29 15:31	golf	golf/golf.exe/src/WorldMap.cpp	15	15	9	6	0	0	0	0	9/9	re/match/smsg_golf_WorldMap.cpp		2.2
+2026-10-29 15:34	golf	golf/jackal.lib/src/sprite.cpp	26	26	5	21	0	0	0	0	5/5	re/match/smsg_golf_jackal_sprite.cpp		1.4
+2026-10-29 15:34	golf	golf/jackal.lib/src/Heap.cpp	7	7	0	7	0	0	0	0				0.7
+2026-10-29 15:34	golf	golf/jackal.lib/src/ScratchSprite.cpp	4	4	1	3	0	0	0	0	1/1	re/match/smsg_golf_jackal_ScratchSprite.cpp		0.8
+2026-10-29 15:34	golf	golf/jackal.lib/src/buffer.cpp	91	91	27	64	0	0	0	0	27/27	re/match/smsg_golf_jackal_buffer.cpp		2.5
+2026-10-29 15:34	golf	golf/jackal.lib/src/window.cpp	138	136	40	96	0	0	2	0	40/40	re/match/smsg_golf_jackal_window.cpp		3.3
+2026-10-29 15:34	golf	golf/jackal.lib/src/GraphicWin.cpp	22	22	9	13	0	0	0	0	9/9	re/match/smsg_golf_jackal_GraphicWin.cpp		1.3
+2026-10-29 15:34	golf	golf/jackal.lib/src/FlicAnim.cpp	17	17	6	11	0	0	0	0	6/6	re/match/smsg_golf_jackal_FlicAnim.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/FlicSprite.cpp	6	6	1	5	0	0	0	0	1/1	re/match/smsg_golf_jackal_FlicSprite.cpp		0.8
+2026-10-29 15:34	golf	golf/jackal.lib/src/palette.cpp	29	29	6	23	0	0	0	0	6/6	re/match/smsg_golf_jackal_palette.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/font.cpp	15	15	4	11	0	0	0	0	4/4	re/match/smsg_golf_jackal_font.cpp		1.2
+2026-10-29 15:34	golf	golf/jackal.lib/src/MessagePump.cpp	14	14	1	13	0	0	0	0	1/1	re/match/smsg_golf_jackal_MessagePump.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/sound.cpp	115	115	53	62	0	0	0	0	53/53	re/match/smsg_golf_jackal_sound.cpp		2.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/EngineInit.cpp	4	4	1	3	0	0	0	0	1/1	re/match/smsg_golf_jackal_EngineInit.cpp		0.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/PCXFile.cpp	4	4	2	2	0	0	0	0	2/2	re/match/smsg_golf_jackal_PCXFile.cpp		0.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/EditBox.cpp	21	21	6	15	0	0	0	0	6/6	re/match/smsg_golf_jackal_EditBox.cpp		1.0
+2026-10-29 15:34	golf	golf/jackal.lib/src/Time.cpp	15	15	2	13	0	0	0	0	2/2	re/match/smsg_golf_jackal_Time.cpp		0.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/BinkPlayer.cpp	7	7	0	7	0	0	0	0				0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/SoundDevice.cpp	110	110	45	65	0	0	0	0	45/45	re/match/smsg_golf_jackal_SoundDevice.cpp		1.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/Text.cpp	27	27	6	21	0	0	0	0	6/6	re/match/smsg_golf_jackal_Text.cpp		1.3
+2026-10-29 15:34	golf	golf/jackal.lib/src/MouseCursor.cpp	3	3	0	3	0	0	0	0				0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/BaseButton.cpp	23	23	5	18	0	0	0	0	5/5	re/match/smsg_golf_jackal_BaseButton.cpp		1.4
+2026-10-29 15:34	golf	golf/jackal.lib/src/Dialog.cpp	15	15	1	14	0	0	0	0	1/1	re/match/smsg_golf_jackal_Dialog.cpp		1.2
+2026-10-29 15:34	golf	golf/jackal.lib/src/ListBox.cpp	46	46	13	33	0	0	0	0	13/13	re/match/smsg_golf_jackal_ListBox.cpp		2.0
+2026-10-29 15:34	golf	golf/jackal.lib/src/BasePop.cpp	96	96	27	68	1	0	0	0	27/27	re/match/smsg_golf_jackal_BasePop.cpp	re/match/wip/smsg_golf_jackal_BasePop.cpp	2.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/FixedMath.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_golf_jackal_FixedMath.cpp		0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/DataPath.cpp	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/SpriteExtract.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jackal_SpriteExtract.cpp		0.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/display.cpp	7	7	3	4	0	0	0	0	3/3	re/match/smsg_golf_jackal_display.cpp		0.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/StringUtil.cpp	5	5	0	5	0	0	0	0				0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/spot.cpp	19	19	5	14	0	0	0	0	5/5	re/match/smsg_golf_jackal_spot.cpp		1.0
+2026-10-29 15:34	golf	golf/jackal.lib/src/filemap.cpp	5	5	0	5	0	0	0	0				0.8
+2026-10-29 15:34	golf	golf/jackal.lib/src/PolyFill.cpp	7	7	1	6	0	0	0	0	1/1	re/match/smsg_golf_jackal_PolyFill.cpp		1.2
+2026-10-29 15:34	golf	golf/jackal.lib/src/MiscUtil.cpp	4	4	0	4	0	0	0	0				0.5
+2026-10-29 15:34	golf	golf/jackal.lib/src/ComboBox.cpp	12	12	3	9	0	0	0	0	3/3	re/match/smsg_golf_jackal_ComboBox.cpp		1.4
+2026-10-29 15:34	golf	golf/jackal.lib/src/TextTemplate.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_jackal_TextTemplate.cpp		1.2
+2026-10-29 15:34	golf	golf/jackal.lib/src/DottedLine16.cpp	2	2	2	0	0	0	0	0	2/2	re/match/smsg_golf_jackal_DottedLine16.cpp		0.9
+2026-10-29 15:34	golf	golf/jackal.lib/src/PCXLoad8.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jackal_PCXLoad8.cpp		1.2
+2026-10-29 15:34	golf	golf/jackal.lib/src/PCXLoad16.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jackal_PCXLoad16.cpp		1.0
+2026-10-29 15:34	golf	golf/jackal.lib/src/SysMessageHandler.cpp	14	14	12	2	0	0	0	0	12/12	re/match/smsg_golf_jackal_SysMessageHandler.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/AutoSound.cpp	2	2	0	2	0	0	0	0				0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/scroll.cpp	26	26	8	18	0	0	0	0	8/8	re/match/smsg_golf_jackal_scroll.cpp		1.3
+2026-10-29 15:34	golf	golf/jackal.lib/src/Network.cpp	21	21	7	14	0	0	0	0	7/7	re/match/smsg_golf_jackal_Network.cpp		1.8
+2026-10-29 15:34	golf	golf/jackal.lib/src/multidebug.cpp	10	10	2	7	1	0	0	0	2/2	re/match/smsg_golf_jackal_multidebug.cpp	re/match/wip/smsg_golf_jackal_multidebug.cpp	1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/PaletteList.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_jackal_PaletteList.cpp		0.8
+2026-10-29 15:34	golf	golf/jackal.lib/src/Video.cpp	9	9	3	6	0	0	0	0	3/3	re/match/smsg_golf_jackal_Video.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/strings.cpp	10	10	2	8	0	0	0	0	2/2	re/match/smsg_golf_jackal_strings.cpp		0.6
+2026-10-29 15:34	golf	golf/jackal.lib/src/SmallSprite.cpp	6	6	1	5	0	0	0	0	1/1	re/match/smsg_golf_jackal_SmallSprite.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/filewin.cpp	14	14	3	11	0	0	0	0	3/3	re/match/smsg_golf_jackal_filewin.cpp		1.1
+2026-10-29 15:34	golf	golf/jackal.lib/src/radiobut.cpp	26	26	9	17	0	0	0	0	9/9	re/match/smsg_golf_jackal_radiobut.cpp		1.5
+2026-10-29 15:34	golf	golf/jackal.lib/src/CheckBoxSprites.cpp	9	9	2	7	0	0	0	0	2/2	re/match/smsg_golf_jackal_CheckBoxSprites.cpp		1.0
+2026-10-29 15:34	golf	golf/jackal.lib/src/checkbox.cpp	34	34	8	26	0	0	0	0	8/8	re/match/smsg_golf_jackal_checkbox.cpp		1.4
+2026-10-29 15:35	golf	golf/jackal.lib/src/GraphsyLoader.cpp	2	2	0	2	0	0	0	0				0.6
+2026-10-29 15:35	golf	golf/jackal.lib/src/DataFile.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_jackal_DataFile.cpp		0.5
+2026-10-29 15:35	golf	golf/jackal.lib/src/log.cpp	10	10	1	9	0	0	0	0	1/1	re/match/smsg_golf_jackal_log.cpp		1.2
+2026-10-29 15:35	golf	golf/jackal.lib/src/ButtonGroup.cpp	1	1	0	1	0	0	0	0				0.8
+2026-10-29 15:35	golf	golf/jackal.lib/src/StringList.cpp	3	3	0	3	0	0	0	0				0.6
+2026-10-29 15:35	golf	golf/jackal.lib/src/Dialogs.cpp	28	28	1	26	0	0	1	0	1/1	re/match/smsg_golf_jackal_Dialogs.cpp		1.2
+2026-10-29 15:35	golf	golf/jackal.lib/src/ImageButton.cpp	5	5	3	2	0	0	0	0	3/3	re/match/smsg_golf_jackal_ImageButton.cpp		1.2
+2026-10-29 15:35	golf	golf/jackal.lib/src/EditGroup.cpp	21	21	5	16	0	0	0	0	5/5	re/match/smsg_golf_jackal_EditGroup.cpp		1.4
+2026-10-29 15:35	golf	golf/jackal.lib/src/SpriteBox.cpp	45	45	9	35	0	0	1	0	9/9	re/match/smsg_golf_jackal_SpriteBox.cpp		1.5
+2026-10-29 15:35	golf	golf/jackal.lib/src/PullDown.cpp	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:35	golf	golf/jackal.lib/src/NetFifo.cpp	3	3	0	3	0	0	0	0				0.5
+2026-10-29 15:35	golf	golf/jackal.lib/src/fifo.cpp	5	5	0	5	0	0	0	0				0.6
+2026-10-29 15:35	golf	golf/jackal.lib/src/FrameStyle.cpp	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:35	golf	golf/jackal.lib/src/FlatFrame.cpp	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:35	sound	sound/sound.dll/src/ambiencemgr.cpp	41	41	21	18	0	0	0	2	21/21	re/match/smsg_sound_ambiencemgr.cpp	re/match/wip/smsg_sound_ambiencemgr.cpp	2.2
+2026-10-29 15:35	sound	sound/sound.dll/src/avimgr.cpp	22	22	8	12	0	0	0	2	8/8	re/match/smsg_sound_avimgr.cpp	re/match/wip/smsg_sound_avimgr.cpp	1.2
+2026-10-29 15:35	sound	sound/sound.dll/src/Cmix.cpp	17	17	8	6	0	0	0	3	8/8	re/match/smsg_sound_Cmix.cpp	re/match/wip/smsg_sound_Cmix.cpp	1.3
+2026-10-29 15:35	sound	sound/sound.dll/src/CritReq.cpp	6	6	0	6	0	0	0	0				0.6
+2026-10-29 15:35	sound	sound/sound.dll/src/CTimer.cpp	12	12	0	9	0	0	0	3			re/match/wip/smsg_sound_CTimer.cpp	0.9
+2026-10-29 15:35	sound	sound/sound.dll/src/dllmain.cpp	13	13	7	3	0	0	0	3	7/7	re/match/smsg_sound_dllmain.cpp	re/match/wip/smsg_sound_dllmain.cpp	1.0
+2026-10-29 15:35	sound	sound/sound.dll/src/dllmididevice.cpp	30	30	10	18	0	0	0	2	10/10	re/match/smsg_sound_dllmididevice.cpp	re/match/wip/smsg_sound_dllmididevice.cpp	1.1
+2026-10-29 15:35	sound	sound/sound.dll/src/dlltrackset.cpp	2	2	0	2	0	0	0	0				0.6
+2026-10-29 15:35	sound	sound/sound.dll/src/dllwavedevice.cpp	64	64	21	33	0	0	0	10	21/21	re/match/smsg_sound_dllwavedevice.cpp	re/match/wip/smsg_sound_dllwavedevice.cpp	1.9
+2026-10-29 15:35	sound	sound/sound.dll/src/dllwaveindevice.cpp	28	28	15	13	0	0	0	0	15/15	re/match/smsg_sound_dllwaveindevice.cpp		1.2
+2026-10-29 15:35	sound	sound/sound.dll/src/dsb.cpp	49	49	9	31	0	0	0	9	9/9	re/match/smsg_sound_dsb.cpp	re/match/wip/smsg_sound_dsb.cpp	1.5
+2026-10-29 15:35	golf	golf/jackal.lib/src/buffer.cpp	91	91	27	64	0	0	0	0	27/27	re/match/smsg_golf_jackal_buffer.cpp		3.3
+2026-10-29 15:35	sound	sound/sound.dll/src/dsmgr.cpp	37	37	5	25	0	0	0	7	5/5	re/match/smsg_sound_dsmgr.cpp	re/match/wip/smsg_sound_dsmgr.cpp	1.5
+2026-10-29 15:35	sound	sound/sound.dll/src/filters.cpp	50	50	28	21	0	0	0	1	28/28	re/match/smsg_sound_filters.cpp	re/match/wip/smsg_sound_filters.cpp	2.1
+2026-10-29 15:35	sound	sound/sound.dll/src/keymap.cpp	11	11	2	9	0	0	0	0	2/2	re/match/smsg_sound_keymap.cpp		1.0
+2026-10-29 15:35	golf	golf/jackal.lib/src/window.cpp	138	136	40	96	0	0	2	0	40/40	re/match/smsg_golf_jackal_window.cpp		3.8
+2026-10-29 15:35	sound	sound/sound.dll/src/memtrack.cpp	2	2	2	0	0	0	0	0	2/2	re/match/smsg_sound_memtrack.cpp		1.0
+2026-10-29 15:35	sound	sound/sound.dll/src/miditools.cpp	81	81	27	46	0	0	0	8	27/27	re/match/smsg_sound_miditools.cpp	re/match/wip/smsg_sound_miditools.cpp	1.9
+2026-10-29 15:35	golf	golf/jackal.lib/src/GraphicWin.cpp	22	22	9	13	0	0	0	0	9/9	re/match/smsg_golf_jackal_GraphicWin.cpp		1.6
+2026-10-29 15:36	sound	sound/sound.dll/src/midifile.cpp	37	37	7	19	0	0	0	11	7/7	re/match/smsg_sound_midifile.cpp	re/match/wip/smsg_sound_midifile.cpp	1.5
+2026-10-29 15:36	golf	golf/jackal.lib/src/FlicAnim.cpp	17	17	6	11	0	0	0	0	6/6	re/match/smsg_golf_jackal_FlicAnim.cpp		1.6
+2026-10-29 15:36	golf	golf/jackal.lib/src/FlicSprite.cpp	6	6	1	5	0	0	0	0	1/1	re/match/smsg_golf_jackal_FlicSprite.cpp		1.0
+2026-10-29 15:36	sound	sound/sound.dll/src/midimgr.cpp	111	111	50	48	0	0	0	13	50/50	re/match/smsg_sound_midimgr.cpp	re/match/wip/smsg_sound_midimgr.cpp	2.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/palette.cpp	29	29	6	23	0	0	0	0	6/6	re/match/smsg_golf_jackal_palette.cpp		1.3
+2026-10-29 15:36	sound	sound/sound.dll/src/MMError.cpp	4	4	1	0	0	0	0	3	1/1	re/match/smsg_sound_MMError.cpp	re/match/wip/smsg_sound_MMError.cpp	1.0
+2026-10-29 15:36	golf	golf/jackal.lib/src/font.cpp	15	15	4	11	0	0	0	0	4/4	re/match/smsg_golf_jackal_font.cpp		1.2
+2026-10-29 15:36	sound	sound/sound.dll/src/mmxfilters.cpp	12	12	12	0	0	0	0	0	12/12	re/match/smsg_sound_mmxfilters.cpp		1.7
+2026-10-29 15:36	sound	sound/sound.dll/src/mpeg.cpp	0	0	0	0	0	0	0	0				0.5
+2026-10-29 15:36	sound	sound/sound.dll/src/random.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_sound_random.cpp		0.6
+2026-10-29 15:36	golf	golf/jackal.lib/src/MessagePump.cpp	14	14	1	13	0	0	0	0	1/1	re/match/smsg_golf_jackal_MessagePump.cpp		1.1
+2026-10-29 15:36	sound	sound/sound.dll/src/SndWin.cpp	10	10	5	5	0	0	0	0	5/5	re/match/smsg_sound_SndWin.cpp		1.3
+2026-10-29 15:36	golf	golf/jackal.lib/src/sound.cpp	115	115	53	62	0	0	0	0	53/53	re/match/smsg_golf_jackal_sound.cpp		2.9
+2026-10-29 15:36	sound	sound/sound.dll/src/sounddevice.cpp	118	118	76	29	0	0	0	13	76/76	re/match/smsg_sound_sounddevice.cpp	re/match/wip/smsg_sound_sounddevice.cpp	2.3
+2026-10-29 15:36	sound	sound/sound.dll/src/soundthread.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_sound_soundthread.cpp		1.0
+2026-10-29 15:36	golf	golf/jackal.lib/src/EngineInit.cpp	4	4	1	3	0	0	0	0	1/1	re/match/smsg_golf_jackal_EngineInit.cpp		1.3
+2026-10-29 15:36	golf	golf/jackal.lib/src/PCXFile.cpp	4	4	2	2	0	0	0	0	2/2	re/match/smsg_golf_jackal_PCXFile.cpp		1.4
+2026-10-29 15:36	golf	golf/jackal.lib/src/EditBox.cpp	21	21	6	15	0	0	0	0	6/6	re/match/smsg_golf_jackal_EditBox.cpp		1.6
+2026-10-29 15:36	sound	sound/sound.dll/src/sound.cpp	210	210	107	85	0	0	0	18	107/107	re/match/smsg_sound_sound.cpp	re/match/wip/smsg_sound_sound.cpp	4.3
+2026-10-29 15:36	sound	sound/sound.dll/src/sound_pch.cpp	0	0	0	0	0	0	0	0				0.5
+2026-10-29 15:36	golf	golf/jackal.lib/src/Time.cpp	15	15	2	13	0	0	0	0	2/2	re/match/smsg_golf_jackal_Time.cpp		1.0
+2026-10-29 15:36	sound	sound/sound.dll/src/SoundList.cpp	15	15	10	5	0	0	0	0	10/10	re/match/smsg_sound_SoundList.cpp		1.0
+2026-10-29 15:36	sound	sound/sound.dll/src/trace.cpp	7	7	0	2	0	0	0	5			re/match/wip/smsg_sound_trace.cpp	0.6
+2026-10-29 15:36	sound	sound/sound.dll/src/VoiceRxMgr.cpp	21	21	7	9	0	0	0	5	7/7	re/match/smsg_sound_VoiceRxMgr.cpp	re/match/wip/smsg_sound_VoiceRxMgr.cpp	1.2
+2026-10-29 15:36	golf	golf/jackal.lib/src/SoundDevice.cpp	110	110	45	65	0	0	0	0	45/45	re/match/smsg_golf_jackal_SoundDevice.cpp		2.3
+2026-10-29 15:36	sound	sound/sound.dll/src/VoiceTxMgr.cpp	16	16	4	10	0	0	0	2	4/4	re/match/smsg_sound_VoiceTxMgr.cpp	re/match/wip/smsg_sound_VoiceTxMgr.cpp	1.1
+2026-10-29 15:36	golf	golf/jackal.lib/src/Text.cpp	27	27	6	21	0	0	0	0	6/6	re/match/smsg_golf_jackal_Text.cpp		1.4
+2026-10-29 15:36	sound	sound/sound.dll/src/wavefile.cpp	86	86	26	45	0	0	0	15	26/26	re/match/smsg_sound_wavefile.cpp	re/match/wip/smsg_sound_wavefile.cpp	2.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/BaseButton.cpp	23	23	5	18	0	0	0	0	5/5	re/match/smsg_golf_jackal_BaseButton.cpp		1.4
+2026-10-29 15:36	sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	29	29	3	19	0	0	0	7	3/3	re/match/smsg_sound_WaveInDeviceMgr.cpp	re/match/wip/smsg_sound_WaveInDeviceMgr.cpp	1.2
+2026-10-29 15:36	golf	golf/jackal.lib/src/Dialog.cpp	15	15	1	14	0	0	0	0	1/1	re/match/smsg_golf_jackal_Dialog.cpp		1.2
+2026-10-29 15:36	sound	sound/sound.dll/src/wavemgr.cpp	44	44	13	30	0	0	0	1	13/13	re/match/smsg_sound_wavemgr.cpp	re/match/wip/smsg_sound_wavemgr.cpp	1.3
+2026-10-29 15:36	golf	golf/jackal.lib/src/ListBox.cpp	46	46	13	33	0	0	0	0	13/13	re/match/smsg_golf_jackal_ListBox.cpp		1.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/BasePop.cpp	96	96	28	68	0	0	0	0	28/28	re/match/smsg_golf_jackal_BasePop.cpp		2.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/FixedMath.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_golf_jackal_FixedMath.cpp		0.5
+2026-10-29 15:36	golf	golf/jackal.lib/src/SpriteExtract.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jackal_SpriteExtract.cpp		0.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/display.cpp	7	7	3	4	0	0	0	0	3/3	re/match/smsg_golf_jackal_display.cpp		0.8
+2026-10-29 15:36	golf	golf/jackal.lib/src/spot.cpp	19	19	5	14	0	0	0	0	5/5	re/match/smsg_golf_jackal_spot.cpp		1.0
+2026-10-29 15:36	golf	golf/jackal.lib/src/PolyFill.cpp	7	7	1	6	0	0	0	0	1/1	re/match/smsg_golf_jackal_PolyFill.cpp		1.1
+2026-10-29 15:36	golf	golf/jackal.lib/src/ComboBox.cpp	12	12	3	9	0	0	0	0	3/3	re/match/smsg_golf_jackal_ComboBox.cpp		1.5
+2026-10-29 15:36	golf	golf/jackal.lib/src/TextTemplate.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_jackal_TextTemplate.cpp		1.1
+2026-10-29 15:36	golf	golf/jackal.lib/src/DottedLine16.cpp	2	2	2	0	0	0	0	0	2/2	re/match/smsg_golf_jackal_DottedLine16.cpp		1.0
+2026-10-29 15:36	golf	golf/jackal.lib/src/PCXLoad8.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jackal_PCXLoad8.cpp		0.8
+2026-10-29 15:36	golf	golf/jackal.lib/src/PCXLoad16.cpp	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jackal_PCXLoad16.cpp		0.8
+2026-10-29 15:36	golf	golf/jackal.lib/src/SysMessageHandler.cpp	14	14	12	2	0	0	0	0	12/12	re/match/smsg_golf_jackal_SysMessageHandler.cpp		1.1
+2026-10-29 15:36	golf	golf/jackal.lib/src/scroll.cpp	26	26	8	18	0	0	0	0	8/8	re/match/smsg_golf_jackal_scroll.cpp		1.5
+2026-10-29 15:36	golf	golf/jackal.lib/src/Network.cpp	21	21	7	14	0	0	0	0	7/7	re/match/smsg_golf_jackal_Network.cpp		1.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/multidebug.cpp	10	10	2	7	1	0	0	0	2/2	re/match/smsg_golf_jackal_multidebug.cpp	re/match/wip/smsg_golf_jackal_multidebug.cpp	1.6
+2026-10-29 15:36	golf	golf/jackal.lib/src/PaletteList.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_jackal_PaletteList.cpp		0.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/Video.cpp	9	9	3	6	0	0	0	0	3/3	re/match/smsg_golf_jackal_Video.cpp		0.8
+2026-10-29 15:36	golf	golf/jackal.lib/src/strings.cpp	10	10	2	8	0	0	0	0	2/2	re/match/smsg_golf_jackal_strings.cpp		0.5
+2026-10-29 15:36	golf	golf/jackal.lib/src/SmallSprite.cpp	6	6	1	5	0	0	0	0	1/1	re/match/smsg_golf_jackal_SmallSprite.cpp		0.9
+2026-10-29 15:36	golf	golf/jackal.lib/src/filewin.cpp	14	14	3	11	0	0	0	0	3/3	re/match/smsg_golf_jackal_filewin.cpp		1.2
+2026-10-29 15:37	golf	golf/jackal.lib/src/radiobut.cpp	26	26	9	17	0	0	0	0	9/9	re/match/smsg_golf_jackal_radiobut.cpp		1.5
+2026-10-29 15:37	golf	golf/jackal.lib/src/CheckBoxSprites.cpp	9	9	2	7	0	0	0	0	2/2	re/match/smsg_golf_jackal_CheckBoxSprites.cpp		0.8
+2026-10-29 15:37	golf	golf/jackal.lib/src/checkbox.cpp	34	34	8	26	0	0	0	0	8/8	re/match/smsg_golf_jackal_checkbox.cpp		1.2
+2026-10-29 15:37	golf	golf/jackal.lib/src/DataFile.cpp	2	2	1	1	0	0	0	0	1/1	re/match/smsg_golf_jackal_DataFile.cpp		0.4
+2026-10-29 15:37	golf	golf/jackal.lib/src/log.cpp	10	10	1	9	0	0	0	0	1/1	re/match/smsg_golf_jackal_log.cpp		0.8
+2026-10-29 15:37	golf	golf/jackal.lib/src/Dialogs.cpp	28	28	1	26	0	0	1	0	1/1	re/match/smsg_golf_jackal_Dialogs.cpp		0.9
+2026-10-29 15:37	golf	golf/jackal.lib/src/ImageButton.cpp	5	5	3	2	0	0	0	0	3/3	re/match/smsg_golf_jackal_ImageButton.cpp		1.0
+2026-10-29 15:37	golf	golf/jackal.lib/src/EditGroup.cpp	21	21	5	16	0	0	0	0	5/5	re/match/smsg_golf_jackal_EditGroup.cpp		1.0
+2026-10-29 15:37	golf	golf/jackal.lib/src/SpriteBox.cpp	45	45	9	35	0	0	1	0	9/9	re/match/smsg_golf_jackal_SpriteBox.cpp		1.6
+2026-10-29 15:37	golf	golf/jackal.lib/src/sprite.cpp	26	26	5	21	0	0	0	0	5/5	re/match/smsg_golf_jackal_sprite.cpp		1.3
+2026-10-29 15:37	golf	golf/jackal.lib/src/ScratchSprite.cpp	4	4	1	3	0	0	0	0	1/1	re/match/smsg_golf_jackal_ScratchSprite.cpp		1.0
+2026-10-29 15:37	golf	golf/jackal.lib/src/BasePop.cpp	96	96	28	68	0	0	0	0	28/28	re/match/smsg_golf_jackal_BasePop.cpp		2.7
+2026-10-29 15:37	golf	golf/golf.exe/src/Golfer.cpp	5	5	4	1	0	0	0	0	4/4	re/match/smsg_golf_Golfer.cpp		1.0
+2026-10-29 15:37	golf	golf/golf.exe/src/Golfer.cpp	5	5	4	1	0	0	0	0	4/4	re/match/smsg_golf_Golfer.cpp		1.0
+2026-10-29 15:37	golf	golf/golf.exe/src/GolferShot.cpp	28	28	12	15	1	0	0	0	12/12	re/match/smsg_golf_GolferShot.cpp	re/match/wip/smsg_golf_GolferShot.cpp	5.1
+2026-10-29 15:38	golf	golf/golf.exe/src/InfoScreens.cpp	96	96	18	78	0	0	0	0	18/18	re/match/smsg_golf_InfoScreens.cpp		6.0
+2026-10-29 15:38	golf	golf/golf.exe/src/Toolbar.cpp	28	28	9	17	2	0	0	0	9/9	re/match/smsg_golf_Toolbar.cpp	re/match/wip/smsg_golf_Toolbar.cpp	2.8
+2026-10-29 15:38	golf	golf/jackal.lib/src/BasePop.cpp	96	96	28	68	0	0	0	0	28/28	re/match/smsg_golf_jackal_BasePop.cpp		2.6
+2026-10-29 15:38	golf	golf/jpeg.lib/CreateJPG.c	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jpeg_CreateJPG.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcapimin.c	4	4	0	4	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcapistd.c	2	2	0	2	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jccoefct.c	6	6	0	6	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jccolor.c	8	8	4	4	0	0	0	0	4/4	re/match/smsg_golf_jpeg_jccolor.cpp		0.6
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcdctmgr.c	4	4	3	1	0	0	0	0	3/3	re/match/smsg_golf_jpeg_jcdctmgr.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jchuff.c	14	14	1	13	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jchuff.cpp		0.7
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcinit.c	1	1	0	1	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcmainct.c	3	3	0	3	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	18	18	1	17	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jcmarker.cpp		0.6
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcmaster.c	8	8	0	8	0	0	0	0				0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcomapi.c	4	4	0	4	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcparam.c	9	9	0	9	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	13	13	0	13	0	0	0	0				0.6
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcprepct.c	6	6	1	5	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jcprepct.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jcsample.c	10	10	6	4	0	0	0	0	6/6	re/match/smsg_golf_jpeg_jcsample.cpp		0.6
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jctrans.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdapimin.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdapistd.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdatadst.c	4	4	2	2	0	0	0	0	2/2	re/match/smsg_golf_jpeg_jdatadst.cpp		0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdatasrc.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdcoefct.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdcolor.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jddctmgr.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdhuff.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdinput.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdmainct.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdmarker.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdmaster.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdmerge.c	0	0	0	0	0	0	0	0				0.3
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdphuff.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdpostct.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdsample.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jdtrans.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jerror.c	6	6	3	3	0	0	0	0	3/3	re/match/smsg_golf_jpeg_jerror.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jfdctflt.c	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jfdctflt.cpp		0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jfdctfst.c	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jfdctfst.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jfdctint.c	1	1	1	0	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jfdctint.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jidctflt.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jidctfst.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jidctint.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jidctred.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	15	15	0	15	0	0	0	0				0.6
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jmemnobs.c	8	8	1	7	0	0	0	0	1/1	re/match/smsg_golf_jpeg_jmemnobs.cpp		0.5
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jquant1.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jquant2.c	0	0	0	0	0	0	0	0				0.4
+2026-10-29 15:38	golf	golf/jpeg.lib/jpeg-6a/jutils.c	4	4	0	4	0	0	0	0				0.4
+2026-10-29 15:43	jgld	jgl/jgld.dll/src/filemap.cpp	10	10	0	10	0	0	0	0				1.0
+2026-10-29 15:43	jgld	jgl/jgld.dll/src/jglmath.cpp	86	86	0	86	0	0	0	0				1.3
+2026-10-29 15:43	jgld	jgl/jgld.dll/src/gsobject.cpp	19	19	0	19	0	0	0	0				0.9
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/random.cpp	5	5	0	5	0	0	0	0				0.4
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglbuffer.cpp	119	119	3	116	0	0	0	0	3/3	re/match/smsg_jgld_jglbuffer.cpp		2.7
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglrect.cpp	0	0	0	0	0	0	0	0				0.6
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglbufferalpha.cpp	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglbufferpcx.cpp	13	13	0	13	0	0	0	0				1.0
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglbufferblit8.cpp	4	4	0	4	0	0	0	0				0.8
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglwinmisc.cpp	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglbufferpng.cpp	3	3	0	3	0	0	0	0				0.6
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglsprite.cpp	40	40	0	40	0	0	0	0				1.2
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglspriteblend.cpp	7	7	1	6	0	0	0	0	1/1	re/match/smsg_jgld_jglspriteblend.cpp		1.0
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	8	8	1	7	0	0	0	0	1/1	re/match/smsg_jgld_jglsprite_16_16.cpp		1.0
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglspriteall.cpp	53	53	0	53	0	0	0	0				5.2
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglpalette.cpp	0	0	0	0	0	0	0	0				0.6
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	8	8	0	8	0	0	0	0				1.1
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglsprite_8_8.cpp	7	7	0	7	0	0	0	0				1.2
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jgl.cpp	118	118	0	118	0	0	0	0				1.8
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglfont.cpp	17	17	0	17	0	0	0	0				0.8
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/messagehandler.cpp	17	17	1	16	0	0	0	0	1/1	re/match/smsg_jgld_messagehandler.cpp		1.1
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglpalettemgr.cpp	20	20	0	20	0	0	0	0				0.9
+2026-10-29 15:44	jgld	jgl/jgld.dll/src/jglmsgpump.cpp	13	13	0	13	0	0	0	0				0.9
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/png.c	17	17	0	17	0	0	0	0				0.9
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngerror.c	9	9	0	9	0	0	0	0				0.5
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngget.c	34	34	0	34	0	0	0	0				0.8
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngmem.c	6	6	0	6	0	0	0	0				0.4
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngread.c	12	12	0	12	0	0	0	0				0.7
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngrio.c	3	3	0	3	0	0	0	0				0.6
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngrtran.c	31	31	0	31	0	0	0	0				1.8
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngrutil.c	29	29	0	29	0	0	0	0				1.2
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngset.c	16	16	0	16	0	0	0	0				0.6
+2026-10-29 15:44	jgld	jgl/libpng.lib/libpng/pngtrans.c	17	17	0	17	0	0	0	0				0.6
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/adler32.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/crc32.c	2	2	0	2	0	0	0	0				0.4
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/infblock.c	5	5	0	5	0	0	0	0				0.7
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/infcodes.c	3	3	0	3	0	0	0	0				0.5
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/inffast.c	1	1	0	1	0	0	0	0				0.5
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/inflate.c	7	7	0	7	0	0	0	0				0.7
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/inftrees.c	6	6	0	6	0	0	0	0				0.5
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/infutil.c	1	1	0	1	0	0	0	0				0.4
+2026-10-29 15:44	jgld	jgl/zlib.lib/zlib/zutil.c	4	4	0	4	0	0	0	0				0.5
+2026-10-29 15:45	jgld	jgl/jgld.dll/src/jglbuffer.cpp	119	119	3	116	0	0	0	0	3/3	re/match/smsg_jgld_jglbuffer.cpp		2.7
+2026-10-29 15:45	jgld	jgl/jgld.dll/src/jglsprite_16_16.cpp	8	8	1	7	0	0	0	0	1/1	re/match/smsg_jgld_jglsprite_16_16.cpp		1.3
+2026-10-29 15:45	jgld	jgl/jgld.dll/src/jglspriteblend.cpp	7	7	1	6	0	0	0	0	1/1	re/match/smsg_jgld_jglspriteblend.cpp		1.5
+2026-10-29 15:45	jgld	jgl/jgld.dll/src/messagehandler.cpp	17	17	1	16	0	0	0	0	1/1	re/match/smsg_jgld_messagehandler.cpp		1.4
+2026-10-29 15:56	sound	sound/sound.dll/src/ambiencemgr.cpp	41	41	21	18	0	0	0	2	21/21	re/match/smsg_sound_ambiencemgr.cpp	re/match/wip/smsg_sound_ambiencemgr.cpp	7.1
+2026-10-29 15:56	sound	sound/sound.dll/src/avimgr.cpp	22	22	8	12	0	0	0	2	8/8	re/match/smsg_sound_avimgr.cpp	re/match/wip/smsg_sound_avimgr.cpp	1.7
+2026-10-29 15:57	sound	sound/sound.dll/src/Cmix.cpp	17	17	8	6	0	0	0	3	8/8	re/match/smsg_sound_Cmix.cpp	re/match/wip/smsg_sound_Cmix.cpp	2.5
+2026-10-29 15:57	sound	sound/sound.dll/src/CritReq.cpp	6	6	0	6	0	0	0	0				1.0
+2026-10-29 15:57	sound	sound/sound.dll/src/CTimer.cpp	12	12	0	9	0	0	0	3			re/match/wip/smsg_sound_CTimer.cpp	1.2
+2026-10-29 15:57	sound	sound/sound.dll/src/dllmain.cpp	13	13	7	3	0	0	0	3	7/7	re/match/smsg_sound_dllmain.cpp	re/match/wip/smsg_sound_dllmain.cpp	1.5
+2026-10-29 15:57	sound	sound/sound.dll/src/dllmididevice.cpp	30	30	10	18	0	0	0	2	10/10	re/match/smsg_sound_dllmididevice.cpp	re/match/wip/smsg_sound_dllmididevice.cpp	1.7
+2026-10-29 15:57	sound	sound/sound.dll/src/dlltrackset.cpp	2	2	0	2	0	0	0	0				0.7
+2026-10-29 15:57	sound	sound/sound.dll/src/dllwavedevice.cpp	64	64	21	33	0	0	0	10	21/21	re/match/smsg_sound_dllwavedevice.cpp	re/match/wip/smsg_sound_dllwavedevice.cpp	2.3
+2026-10-29 15:57	sound	sound/sound.dll/src/dllwaveindevice.cpp	28	28	15	13	0	0	0	0	15/15	re/match/smsg_sound_dllwaveindevice.cpp		1.5
+2026-10-29 15:57	sound	sound/sound.dll/src/dsb.cpp	49	49	9	31	0	0	0	9	9/9	re/match/smsg_sound_dsb.cpp	re/match/wip/smsg_sound_dsb.cpp	1.8
+2026-10-29 15:57	sound	sound/sound.dll/src/dsmgr.cpp	37	37	5	25	0	0	0	7	5/5	re/match/smsg_sound_dsmgr.cpp	re/match/wip/smsg_sound_dsmgr.cpp	2.2
+2026-10-29 15:57	sound	sound/sound.dll/src/filters.cpp	50	50	28	21	0	0	0	1	28/28	re/match/smsg_sound_filters.cpp	re/match/wip/smsg_sound_filters.cpp	3.7
+2026-10-29 15:57	sound	sound/sound.dll/src/keymap.cpp	11	11	2	9	0	0	0	0	2/2	re/match/smsg_sound_keymap.cpp		2.4
+2026-10-29 15:57	sound	sound/sound.dll/src/memtrack.cpp	2	2	2	0	0	0	0	0	2/2	re/match/smsg_sound_memtrack.cpp		1.1
+2026-10-29 15:57	sound	sound/sound.dll/src/miditools.cpp	81	81	27	46	0	0	0	8	27/27	re/match/smsg_sound_miditools.cpp	re/match/wip/smsg_sound_miditools.cpp	2.2
+2026-10-29 15:57	sound	sound/sound.dll/src/midifile.cpp	37	37	7	19	0	0	0	11	7/7	re/match/smsg_sound_midifile.cpp	re/match/wip/smsg_sound_midifile.cpp	1.7
+2026-10-29 15:57	sound	sound/sound.dll/src/midimgr.cpp	111	111	50	48	0	0	0	13	50/50	re/match/smsg_sound_midimgr.cpp	re/match/wip/smsg_sound_midimgr.cpp	3.5
+2026-10-29 15:57	sound	sound/sound.dll/src/MMError.cpp	4	4	1	0	0	0	0	3	1/1	re/match/smsg_sound_MMError.cpp	re/match/wip/smsg_sound_MMError.cpp	1.2
+2026-10-29 15:57	sound	sound/sound.dll/src/mmxfilters.cpp	12	12	12	0	0	0	0	0	12/12	re/match/smsg_sound_mmxfilters.cpp		1.8
+2026-10-29 15:57	sound	sound/sound.dll/src/mpeg.cpp	0	0	0	0	0	0	0	0				1.0
+2026-10-29 15:57	sound	sound/sound.dll/src/random.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_sound_random.cpp		0.7
+2026-10-29 15:57	sound	sound/sound.dll/src/SndWin.cpp	10	10	5	5	0	0	0	0	5/5	re/match/smsg_sound_SndWin.cpp		1.7
+2026-10-29 15:57	sound	sound/sound.dll/src/sounddevice.cpp	118	118	76	29	0	0	0	13	76/76	re/match/smsg_sound_sounddevice.cpp	re/match/wip/smsg_sound_sounddevice.cpp	3.9
+2026-10-29 15:57	sound	sound/sound.dll/src/soundthread.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_sound_soundthread.cpp		1.3
+2026-10-29 15:57	sound	sound/sound.dll/src/sound.cpp	210	210	107	85	0	0	0	18	107/107	re/match/smsg_sound_sound.cpp	re/match/wip/smsg_sound_sound.cpp	4.6
+2026-10-29 15:57	sound	sound/sound.dll/src/sound_pch.cpp	0	0	0	0	0	0	0	0				0.7
+2026-10-29 15:57	sound	sound/sound.dll/src/SoundList.cpp	15	15	10	5	0	0	0	0	10/10	re/match/smsg_sound_SoundList.cpp		1.6
+2026-10-29 15:57	sound	sound/sound.dll/src/trace.cpp	7	7	0	2	0	0	0	5			re/match/wip/smsg_sound_trace.cpp	0.7
+2026-10-29 15:57	sound	sound/sound.dll/src/VoiceRxMgr.cpp	21	21	7	9	0	0	0	5	7/7	re/match/smsg_sound_VoiceRxMgr.cpp	re/match/wip/smsg_sound_VoiceRxMgr.cpp	1.4
+2026-10-29 15:57	sound	sound/sound.dll/src/VoiceTxMgr.cpp	16	16	4	10	0	0	0	2	4/4	re/match/smsg_sound_VoiceTxMgr.cpp	re/match/wip/smsg_sound_VoiceTxMgr.cpp	1.3
+2026-10-29 15:57	sound	sound/sound.dll/src/wavefile.cpp	86	86	26	45	0	0	0	15	26/26	re/match/smsg_sound_wavefile.cpp	re/match/wip/smsg_sound_wavefile.cpp	3.1
+2026-10-29 15:57	sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	29	29	3	19	0	0	0	7	3/3	re/match/smsg_sound_WaveInDeviceMgr.cpp	re/match/wip/smsg_sound_WaveInDeviceMgr.cpp	1.5
+2026-10-29 15:57	sound	sound/sound.dll/src/wavemgr.cpp	44	44	13	30	0	0	0	1	13/13	re/match/smsg_sound_wavemgr.cpp	re/match/wip/smsg_sound_wavemgr.cpp	2.0
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/analys.c	1	1	0	1	0	0	0	0				1.1
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/bsynz.c	1	1	0	1	0	0	0	0				1.2
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/chanwr.c	3	3	0	3	0	0	0	0				1.4
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/dcbias.c	1	1	0	1	0	0	0	0				0.8
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/decode.c	1	1	0	1	0	0	0	0				0.9
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/deemp.c	1	1	0	1	0	0	0	0				1.9
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/difmag.c	1	1	0	1	0	0	0	0				0.9
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/dyptrk.c	1	1	0	1	0	0	0	0				0.8
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/encode.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/energy.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/f2clib.c	3	3	0	3	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/ham84.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/hp100.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/invert.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/irc2pc.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/ivfilt.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcdec.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcenc.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcini.c	5	5	0	5	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpfilt.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/median.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/mload.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/onset.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/pitsyn.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/placea.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/placev.c	1	1	0	1	0	0	0	0				0.8
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/preemp.c	1	1	0	1	0	0	0	0				0.9
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/prepro.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/random.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/rcchk.c	1	1	0	1	0	0	0	0				0.6
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/synths.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/tbdm.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/voicin.c	1	1	0	1	0	0	0	0				0.8
+2026-10-29 15:58	sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/vparms.c	1	1	0	1	0	0	0	0				0.7
+2026-10-29 19:06	sound	sound/sound.dll/src/ambiencemgr.cpp	41	41	23	18	0	0	0	0	23/23	re/match/smsg_sound_ambiencemgr.cpp		2.8
+2026-10-29 19:06	sound	sound/sound.dll/src/avimgr.cpp	22	22	10	12	0	0	0	0	10/10	re/match/smsg_sound_avimgr.cpp		1.1
+2026-10-29 19:06	sound	sound/sound.dll/src/Cmix.cpp	17	17	11	6	0	0	0	0	11/11	re/match/smsg_sound_Cmix.cpp		1.3
+2026-10-29 19:06	sound	sound/sound.dll/src/CritReq.cpp	6	6	0	6	0	0	0	0				0.5
+2026-10-29 19:06	sound	sound/sound.dll/src/CTimer.cpp	12	12	3	9	0	0	0	0	3/3	re/match/smsg_sound_CTimer.cpp		0.8
+2026-10-29 19:06	sound	sound/sound.dll/src/dllmain.cpp	13	13	10	3	0	0	0	0	10/10	re/match/smsg_sound_dllmain.cpp		0.9
+2026-10-29 19:06	sound	sound/sound.dll/src/dllmididevice.cpp	30	30	12	18	0	0	0	0	12/12	re/match/smsg_sound_dllmididevice.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/dlltrackset.cpp	2	2	0	2	0	0	0	0				0.5
+2026-10-29 19:06	sound	sound/sound.dll/src/dllwavedevice.cpp	64	64	31	33	0	0	0	0	31/31	re/match/smsg_sound_dllwavedevice.cpp		1.7
+2026-10-29 19:06	sound	sound/sound.dll/src/dllwaveindevice.cpp	28	28	15	13	0	0	0	0	15/15	re/match/smsg_sound_dllwaveindevice.cpp		1.0
+2026-10-29 19:06	sound	sound/sound.dll/src/dsb.cpp	49	49	18	31	0	0	0	0	18/18	re/match/smsg_sound_dsb.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/dsmgr.cpp	37	37	12	25	0	0	0	0	12/12	re/match/smsg_sound_dsmgr.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/filters.cpp	50	50	29	21	0	0	0	0	29/29	re/match/smsg_sound_filters.cpp		1.8
+2026-10-29 19:06	sound	sound/sound.dll/src/keymap.cpp	11	11	2	9	0	0	0	0	2/2	re/match/smsg_sound_keymap.cpp		0.8
+2026-10-29 19:06	sound	sound/sound.dll/src/memtrack.cpp	2	2	2	0	0	0	0	0	2/2	re/match/smsg_sound_memtrack.cpp		0.7
+2026-10-29 19:06	sound	sound/sound.dll/src/miditools.cpp	81	81	35	46	0	0	0	0	35/35	re/match/smsg_sound_miditools.cpp		1.6
+2026-10-29 19:06	sound	sound/sound.dll/src/midifile.cpp	37	37	18	19	0	0	0	0	18/18	re/match/smsg_sound_midifile.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/midimgr.cpp	111	111	63	48	0	0	0	0	63/63	re/match/smsg_sound_midimgr.cpp		2.7
+2026-10-29 19:06	sound	sound/sound.dll/src/MMError.cpp	4	4	4	0	0	0	0	0	4/4	re/match/smsg_sound_MMError.cpp		0.9
+2026-10-29 19:06	sound	sound/sound.dll/src/mmxfilters.cpp	12	12	12	0	0	0	0	0	12/12	re/match/smsg_sound_mmxfilters.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/mpeg.cpp	0	0	0	0	0	0	0	0				0.5
+2026-10-29 19:06	sound	sound/sound.dll/src/random.cpp	3	3	1	2	0	0	0	0	1/1	re/match/smsg_sound_random.cpp		0.4
+2026-10-29 19:06	sound	sound/sound.dll/src/SndWin.cpp	10	10	5	5	0	0	0	0	5/5	re/match/smsg_sound_SndWin.cpp		0.9
+2026-10-29 19:06	sound	sound/sound.dll/src/sounddevice.cpp	118	118	89	29	0	0	0	0	89/89	re/match/smsg_sound_sounddevice.cpp		2.6
+2026-10-29 19:06	sound	sound/sound.dll/src/soundthread.cpp	8	8	4	4	0	0	0	0	4/4	re/match/smsg_sound_soundthread.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/sound.cpp	210	210	125	85	0	0	0	0	125/125	re/match/smsg_sound_sound.cpp		4.1
+2026-10-29 19:06	sound	sound/sound.dll/src/sound_pch.cpp	0	0	0	0	0	0	0	0				0.6
+2026-10-29 19:06	sound	sound/sound.dll/src/SoundList.cpp	15	15	10	5	0	0	0	0	10/10	re/match/smsg_sound_SoundList.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/trace.cpp	7	7	5	2	0	0	0	0	5/5	re/match/smsg_sound_trace.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/VoiceRxMgr.cpp	21	21	12	9	0	0	0	0	12/12	re/match/smsg_sound_VoiceRxMgr.cpp		1.2
+2026-10-29 19:06	sound	sound/sound.dll/src/VoiceTxMgr.cpp	16	16	6	10	0	0	0	0	6/6	re/match/smsg_sound_VoiceTxMgr.cpp		1.0
+2026-10-29 19:06	sound	sound/sound.dll/src/wavefile.cpp	86	86	41	45	0	0	0	0	41/41	re/match/smsg_sound_wavefile.cpp		2.4
+2026-10-29 19:06	sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	29	29	10	19	0	0	0	0	10/10	re/match/smsg_sound_WaveInDeviceMgr.cpp		1.1
+2026-10-29 19:06	sound	sound/sound.dll/src/wavemgr.cpp	44	44	14	30	0	0	0	0	14/14	re/match/smsg_sound_wavemgr.cpp		1.3

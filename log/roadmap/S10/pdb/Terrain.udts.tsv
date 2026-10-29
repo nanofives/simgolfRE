@@ -1,0 +1,95 @@
+CourseType	24	2
+DOUBLE	8	1
+Face	56	11
+FaceBlock	452	9
+HDC__	4	1
+HGLRC__	4	1
+HWND__	4	1
+LinkerVersion	4	3
+Point2D	8	2
+Terrain	1460944	72
+Tile	584	60
+TilePathFlags	7	9
+TileTypeDef	900	2
+TileWallState	44	4
+UnknownBB70	1	3
+Vec3	12	3
+_CONTEXT	716	25
+_CRT_CRITICAL_SECTION	24	6
+_CRT_CRITICAL_SECTION_DEBUG	48	8
+_CrtMemBlockHeader	32	8
+_CrtMemState	52	5
+_EXCEPTION_POINTERS	8	2
+_EXCEPTION_RECORD	80	6
+_FLOATING_SAVE_AREA	112	9
+_IMAGE_DATA_DIRECTORY	8	2
+_IMAGE_DOS_HEADER	64	19
+_IMAGE_FILE_HEADER	20	7
+_IMAGE_NT_HEADERS	248	3
+_IMAGE_OPTIONAL_HEADER	224	31
+_LIST_ENTRY	8	2
+_OSVERSIONINFOA	148	6
+_RTL_CRITICAL_SECTION	24	6
+_RTL_CRITICAL_SECTION_DEBUG	32	7
+_SECURITY_ATTRIBUTES	12	3
+_STARTUPINFOA	68	18
+_SYSTEMTIME	16	8
+_TIME_ZONE_INFORMATION	172	7
+_XCPT_ACTION	12	3
+__CRT_LIST_ENTRY	8	2
+__lc_time_data	172	8
+__old_region_map_t	8	2
+__old_sbh_page_struct	4096	5
+__old_sbh_region_struct	8224	7
+__unnamed	4	2
+__unnamed	12	3
+__unnamed	512	1
+_count_string	8	3
+_cpinfo	20	3
+_iobuf	32	8
+_strflt	16	4
+_tiddata	116	29
+code_page_info	48	3
+errentry	8	2
+filebuf	84	28
+ifstream	92	19
+ioinfo	36	5
+ios	80	76
+istream	92	59
+istream_withassign	92	11
+lconv	48	18
+ostream	88	45
+ostream_withassign	88	11
+rterrmsgs	8	2
+std::_Bidit<Tile *,int>	1	1
+std::allocator<Tile *>	1	15
+std::bidirectional_iterator_tag	1	1
+std::binary_function<Tile *,Tile *,bool>	1	3
+std::binder2nd<std::not_equal_to<Tile *> >	8	5
+std::forward_iterator_tag	1	1
+std::greater<Tile *>	1	2
+std::input_iterator_tag	1	0
+std::iterator<std::bidirectional_iterator_tag,Tile *,int>	1	3
+std::list<Tile *,std::allocator<Tile *> >	12	79
+std::list<Tile *,std::allocator<Tile *> >::_Acc	1	5
+std::list<Tile *,std::allocator<Tile *> >::_Node	12	3
+std::list<Tile *,std::allocator<Tile *> >::const_iterator	4	14
+std::list<Tile *,std::allocator<Tile *> >::iterator	4	11
+std::not_equal_to<Tile *>	1	2
+std::unary_function<Tile *,bool>	1	2
+streambuf	76	64
+tagBITMAPFILEHEADER	14	5
+tagBITMAPINFOHEADER	40	11
+tagEntry	12	3
+tagEntryEnd	4	1
+tagGroup	516	2
+tagHeader	20	5
+tagLC_ID	6	3
+tagLC_STRINGS	136	3
+tagLOCALETAB	8	2
+tagListHead	8	2
+tagPIXELFORMATDESCRIPTOR	40	26
+tagRGLOCINFO	44	8
+tagRegion	16836	5
+tm	36	9
+transitiondate	12	3

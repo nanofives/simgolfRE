@@ -30,6 +30,9 @@ def test_terrain_accessors_match_both_builds():
 @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
 def test_every_matched_source_is_100_percent(src):
     """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+    tc = match.file_toolchain(src.read_text(errors="replace"))
+    if not (match.TOOLCHAINS[tc]["bin"] / "cl.exe").exists():
+        pytest.skip(f"// TOOLCHAIN {tc} not present: no cl.exe in {match.TOOLCHAINS[tc]['bin']} (tools/ is local, not committed)")
     res = match.compare(src, "", False)
     assert res, f"{src.name} has no MATCH annotations"
     bad = [(r[0], hex(r[1]), f"{100 * r[4]:.1f}%") for r in res if r[4] != 1.0]

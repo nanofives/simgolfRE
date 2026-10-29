@@ -38,7 +38,7 @@ None.
 - indirect `call edi` at 0x10045da5, 0x10045db0
 
 ## Callers
-0x10043025 `__CRT_INIT@12`
+0x10043025 `__CRT_INIT`
 
 ## Constants
 - `0x0` at 0x10045dac, 0x10045db5, 0x10045dd1, 0x10045df7

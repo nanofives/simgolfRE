@@ -7,6 +7,7 @@ Reads the play/write cursors (GetCurrentPosition vtbl+0x10) and computes the wri
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsb.cpp` as `?get_pointer@CDSB@@QAE?AW4SNDERR@@PAPAXPAK01@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x100103d6, 0x10010404, 0x100104f9, 0x10010508, 0x1001051e): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x100103b5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -7,6 +7,7 @@ thiscall(obj): array-constructs the 0x10 sub-voice slots of 0x110 bytes at this+
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_wavefile.cpp` as `??0CWaveFile@@QAE@PAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10031fbb): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10031e65 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

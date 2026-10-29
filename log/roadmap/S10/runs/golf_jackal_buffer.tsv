@@ -1,0 +1,92 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/buffer.cpp	0x74ae0	0x00474ae0	306	G	AssetSurface::AssetSurface	??0AssetSurface@@QAE@XZ	public	100	100.0	80/80 ins	golf_hand_09_a.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x74c20	0x00474c20	30	G	AssetSurface::`scalar deleting destructor'	??_GAssetSurface@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x74c40	0x00474c40	99	G	AssetSurface::~AssetSurface	??1AssetSurface@@UAE@XZ	public	100	100.0	23/23 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x74cb0	0x00474cb0	286	G	AssetSurface::close	?close@AssetSurface@@QAEXXZ	public	100	100.0	84/84 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x74dd0	0x00474dd0	147	G	AssetSurface::Create	?Create@AssetSurface@@QAEHHHHHHH@Z	public	100	100.0	56/56 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x74e70	0x00474e70	111	G	AssetSurface::resize	?resize@AssetSurface@@QAEHHHH@Z	public	100	100.0	38/38 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x74ee0	0x00474ee0	361	G	AssetSurface::LoadBMPFile	?LoadBMPFile@AssetSurface@@QAEPAEPADPAPAUtagBITMAPINFOHEADER@@@Z	public	100	100.0	154/154 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75050	0x00475050	433	G	AssetSurface::ConvertBMP8ToSurface16	?ConvertBMP8ToSurface16@AssetSurface@@QAEHPAUtagBITMAPINFOHEADER@@PAE@Z	public	100	100.0	152/152 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x75210	0x00475210	508	G	AssetSurface::LoadBMPToSurface16	?LoadBMPToSurface16@AssetSurface@@QAEHPAD@Z	public	100	100.0	182/182 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x75410	0x00475410	356	G	AssetSurface::FlipImageVertically	?FlipImageVertically@AssetSurface@@QAEXPAEPAUtagBITMAPINFOHEADER@@@Z	public	100	100.0	125/125 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75580	0x00475580	693	G	AssetSurface::SaveSnapshot	?SaveSnapshot@AssetSurface@@QAEHPADPAURect@@@Z	public	100	100.0	235/235 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x75840	0x00475840	701	G	AssetSurface::load_pcx	?load_pcx@AssetSurface@@QAEHPBDPAVFLCPalette@@HHH@Z	public	100	100.0	206/206 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x75b00	0x00475b00	28	G	AssetSurface::set_clip	?set_clip@AssetSurface@@QAEHPAURect@@@Z	public	100	100.0	10/10 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75b20	0x00475b20	57	G	AssetSurface::SetClipRect	?SetClipRect@AssetSurface@@QAEXHHHH@Z	public	100	100.0	18/18 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75b60	0x00475b60	58	G	AssetSurface::draw	?draw@AssetSurface@@QAEHPAU1@HH@Z	public	100	100.0	21/21 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75ba0	0x00475ba0	63	G	AssetSurface::draw_dest	?draw_dest@AssetSurface@@QAEHPAU1@HHPAE@Z	public	100	100.0	23/23 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75be0	0x00475be0	63	G	AssetSurface::draw_multi_table_dest	?draw_multi_table_dest@AssetSurface@@QAEHPAU1@HHPAE@Z	public	100	100.0	23/23 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75c20	0x00475c20	63	G	AssetSurface::BlitVtable40	?BlitVtable40@AssetSurface@@QAEHPAU1@HHH@Z	public	100	100.0	23/23 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75c60	0x00475c60	47	G	AssetSurface::copy	?copy@AssetSurface@@QAEXPAU1@HHHHHH@Z	public	100	100.0	20/20 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x75c90	0x00475c90	111	G	AssetSurface::BlitRectToRect	?BlitRectToRect@AssetSurface@@QAEHPAU1@HHHH@Z	public	100	100.0	41/41 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75d00	0x00475d00	147	G	AssetSurface::BlitSurfaceRegion	?BlitSurfaceRegion@AssetSurface@@QAEHPAU1@HHHHHHHH@Z	public	100	100.0	51/51 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75da0	0x00475da0	70	G	AssetSurface::map_colors	?map_colors@AssetSurface@@QAEHHHHHPBE@Z	public	100	100.0	22/22 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75df0	0x00475df0	27	G	AssetSurface::poly	?poly@AssetSurface@@QAEHPAUVert@@HH@Z	public	100	100.0	10/10 ins	golf_raw_08.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x75e10	0x00475e10	411	G	AssetSurface::tile_mask	?tile_mask@AssetSurface@@QAEHPAU1@HHHHHHH@Z	public	100	100.0	154/154 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x75fb0	0x00475fb0	400	G	AssetSurface::tile	?tile@AssetSurface@@QAEHPAU1@HHHHHH@Z	public	100	100.0	149/149 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x76140	0x00476140	399	G	AssetSurface::TileSprite	?TileSprite@AssetSurface@@QAEHPAUSpriteObject@@HHHHHH@Z	public	100	100.0	144/144 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x762d0	0x004762d0	52	G	AssetSurface::SetFontsForStyles	?SetFontsForStyles@AssetSurface@@QAEHPAUFont@@000@Z	public	100	100.0	17/17 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x76310	0x00476310	37	G	AssetSurface::set_text_color	?set_text_color@AssetSurface@@QAEXHHHH@Z	public	100	100.0	9/9 ins	golf_small2.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76340	0x00476340	40	G	AssetSurface::set_text_color2	?set_text_color2@AssetSurface@@QAEXHHHH@Z	public	100	100.0	9/9 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76370	0x00476370	40	G	AssetSurface::set_text_color3	?set_text_color3@AssetSurface@@QAEXHHHH@Z	public	100	100.0	9/9 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x763a0	0x004763a0	40	G	AssetSurface::set_text_color_hyper	?set_text_color_hyper@AssetSurface@@QAEXHHHH@Z	public	100	100.0	9/9 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x763d0	0x004763d0	628	G	AssetSurface::write_strings	?write_strings@AssetSurface@@QAEHPAUStringList@@HHHH@Z	public	100	100.0	248/248 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x76650	0x00476650	80	G	AssetSurface::DrawTextLeftAlignedWithFont	?DrawTextLeftAlignedWithFont@AssetSurface@@QAEXPAUFont@@PBDHHH@Z	public	100	100.0	35/35 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x766a0	0x004766a0	85	G	AssetSurface::DrawTextCenteredInWidthWithFont	?DrawTextCenteredInWidthWithFont@AssetSurface@@QAEXPAUFont@@PBDHHHH@Z	public	100	100.0	37/37 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76700	0x00476700	80	G	AssetSurface::DrawTextCenteredWithFont	?DrawTextCenteredWithFont@AssetSurface@@QAEXPAUFont@@PBDHHH@Z	public	100	100.0	35/35 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76750	0x00476750	80	G	AssetSurface::DrawTextRightAlignedWithFont	?DrawTextRightAlignedWithFont@AssetSurface@@QAEXPAUFont@@PBDHHH@Z	public	100	100.0	35/35 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x767a0	0x004767a0	1439	G	AssetSurface::write_raw_l	?write_raw_l@AssetSurface@@QAEHPBDHHH@Z	public	100	100.0	477/477 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x76d40	0x00476d40	60	G	get_special	?get_special@@YAPADPADPAH@Z	public	100	100.0	29/29 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x76d80	0x00476d80	65	G	get_special_link	?get_special_link@@YAPADPADPAH@Z	public	100	100.0	31/31 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76dd0	0x00476dd0	70	G	get_special_dropdown	?get_special_dropdown@@YAPADPADPAH@Z	public	100	100.0	33/33 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76e20	0x00476e20	200	G	AssetSurface::wrap_height	?wrap_height@AssetSurface@@QAEHPADHPAPADPAH@Z	public	100	100.0	76/76 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x76ef0	0x00476ef0	854	G	AssetSurface::find_line_break_l	?find_line_break_l@AssetSurface@@QAEPADPADPAHH@Z	public	100	100.0	258/258 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x77250	0x00477250	44	G	AssetSurface::text_width	?text_width@AssetSurface@@QAEHPBD@Z	public	100	100.0	22/22 ins	golf_small4.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x77280	0x00477280	722	G	AssetSurface::CalculateFormattedTextWidth	?CalculateFormattedTextWidth@AssetSurface@@QAEHPBDI@Z	public	100	100.0	211/211 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x77560	0x00477560	28	G	AssetSurface::text_height	?text_height@AssetSurface@@QAEHXZ	public	100	100.0	11/11 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x77580	0x00477580	35	G	AssetSurface::text_line_height	?text_line_height@AssetSurface@@QAEHXZ	public	100	100.0	14/14 ins	golf_small2.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x775b0	0x004775b0	1650	G	AssetSurface::write_multi_font_raw_l	?write_multi_font_raw_l@AssetSurface@@QAEHPBDHHH@Z	public	100	100.0	518/518 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x77c30	0x00477c30	153	G	AssetSurface::write_l	?write_l@AssetSurface@@QAEHPBDHHH@Z	public	100	100.0	74/74 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x77cd0	0x00477cd0	206	G	AssetSurface::RenderTextVerticallyCentered	?RenderTextVerticallyCentered@AssetSurface@@QAEHPBDPAURect@@H@Z	public	100	100.0	86/86 ins	golf_hand_r1.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x77da0	0x00477da0	192	G	AssetSurface::RenderTextCenteredInWidth	?RenderTextCenteredInWidth@AssetSurface@@QAEHPBDHHHH@Z	public	100	100.0	91/91 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x77e60	0x00477e60	67	G	AssetSurface::write_cent_l	?write_cent_l@AssetSurface@@QAEHPBDHHHHH@Z	public	100	100.0	22/22 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x77eb0	0x00477eb0	269	G	AssetSurface::RenderTextCenteredInRect	?RenderTextCenteredInRect@AssetSurface@@QAEHPBDPAURect@@I@Z	public	100	100.0	112/112 ins	golf_hand_08_e.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x77fc0	0x00477fc0	177	G	AssetSurface::RenderTextHorizontallyCentered	?RenderTextHorizontallyCentered@AssetSurface@@QAEHPBDHHH@Z	public	100	100.0	86/86 ins	m36e_exe_00.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78080	0x00478080	179	G	AssetSurface::RenderTextRightAlignedInWidth	?RenderTextRightAlignedInWidth@AssetSurface@@QAEHPBDHHHH@Z	public	100	100.0	86/86 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78140	0x00478140	169	G	AssetSurface::write_right_l	?write_right_l@AssetSurface@@QAEHPBDHHH@Z	public	100	100.0	84/84 ins	m36e_exe_00.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x781f0	0x004781f0	221	G	AssetSurface::RenderTextRightAlignedInRectVCentered	?RenderTextRightAlignedInRectVCentered@AssetSurface@@QAEHPBDPAURect@@H@Z	public	100	100.0	98/98 ins	golf_hand_07_4781f0.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x782d0	0x004782d0	344	G	AssetSurface::RenderMultilineTextInRect	?RenderMultilineTextInRect@AssetSurface@@QAEHPADPAURect@@PAPADPAH@Z	public	100	100.0	127/127 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x78430	0x00478430	256	G	AssetSurface::wrap	?wrap@AssetSurface@@QAEHPADHHH@Z	public	100	100.0	98/98 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x78530	0x00478530	168	G	AssetSurface::wrap_cent	?wrap_cent@AssetSurface@@QAEHPADHHH@Z	public	100	100.0	74/74 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x785e0	0x004785e0	47	G	AssetSurface::TextLayout_BeginWithWidth	?TextLayout_BeginWithWidth@AssetSurface@@QAEHPADH@Z	public	100	100.0	13/13 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78610	0x00478610	227	G	AssetSurface::wrap_height_flying	?wrap_height_flying@AssetSurface@@QAEHPAD@Z	public	100	100.0	82/82 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x78700	0x00478700	67	G	AssetSurface::wrap_height_flying_flush	?wrap_height_flying_flush@AssetSurface@@QAEHXZ	public	100	100.0	23/23 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78750	0x00478750	67	G	AssetSurface::wrap_flying	?wrap_flying@AssetSurface@@QAEHPADHHH@Z	public	100	100.0	17/17 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x787a0	0x004787a0	463	G	AssetSurface::TextLayout_AppendAndWrap	?TextLayout_AppendAndWrap@AssetSurface@@QAEHPAD@Z	public	100	100.0	168/168 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x78970	0x00478970	125	G	AssetSurface::wrap_flying_flush	?wrap_flying_flush@AssetSurface@@QAEHXZ	public	100	100.0	44/44 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x789f0	0x004789f0	48	G	AssetSurface::sync_to_palette	?sync_to_palette@AssetSurface@@QAEHPAUPaletteBase@@@Z	public	100	100.0	16/16 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78a20	0x00478a20	67	G	AssetSurface::clear_links	?clear_links@AssetSurface@@QAEXXZ	public	100	100.0	18/18 ins	golf_small7.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78a70	0x00478a70	28	G	AssetSurface::resetDropDownSpots	?resetDropDownSpots@AssetSurface@@QAEXXZ	public	100	100.0	8/8 ins	golf_small2.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78a90	0x00478a90	87	G	AssetSurface::addDropDownSpot	?addDropDownSpot@AssetSurface@@QAEXHHHHHH@Z	public	100	100.0	27/27 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78af0	0x00478af0	62	G	AssetSurface::fill	?fill@AssetSurface@@QAEXHHHHH@Z	public	100	100.0	20/20 ins	golf_small6.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78b30	0x00478b30	22	G	AssetSurface::ClearToColor	?ClearToColor@AssetSurface@@QAEXI@Z	public	100	100.0	9/9 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78b50	0x00478b50	33	G	AssetSurface::Surface_FillRect	?Surface_FillRect@AssetSurface@@QAEHPAURect@@H@Z	public	100	100.0	12/12 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78b80	0x00478b80	42	G	AssetSurface::line	?line@AssetSurface@@QAEXHHHHH@Z	public	100	100.0	17/17 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78bb0	0x00478bb0	40	G	AssetSurface::hline	?hline@AssetSurface@@QAEXHHHH@Z	public	100	100.0	18/18 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78be0	0x00478be0	40	G	AssetSurface::vline	?vline@AssetSurface@@QAEXHHHH@Z	public	100	100.0	18/18 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78c10	0x00478c10	96	G	AssetSurface::dotted_hline	?dotted_hline@AssetSurface@@QAEXHHHH@Z	public	100	100.0	38/38 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78c70	0x00478c70	96	G	AssetSurface::dotted_vline	?dotted_vline@AssetSurface@@QAEXHHHH@Z	public	100	100.0	38/38 ins	golf_raw_13.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78cd0	0x00478cd0	283	G	AssetSurface::LoadImageFile	?LoadImageFile@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z	public	100	100.0	98/98 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x78df0	0x00478df0	168	G	AssetSurface::get_pixel	?get_pixel@AssetSurface@@QAEHHH@Z	public	100	100.0	73/73 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x78ea0	0x00478ea0	173	G	AssetSurface::put_pixel	?put_pixel@AssetSurface@@QAEHHHH@Z	public	100	100.0	71/71 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x78f50	0x00478f50	608	G	AssetSurface::get_pcx_dimensions	?get_pcx_dimensions@AssetSurface@@SAHPBDPAH1@Z	public	100	100.0	174/174 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x791b0	0x004791b0	937	G	AssetSurface::box_sprite	?box_sprite@AssetSurface@@QAEXPAURect@@PAUBoxSpriteParams@@@Z	public	100	100.0	396/396 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x79560	0x00479560	105	G	AssetSurface::box	?box@AssetSurface@@QAEXHHHHHH@Z	public	100	100.0	48/48 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x795d0	0x004795d0	53	G	AssetSurface::DrawBevelFrameInRect	?DrawBevelFrameInRect@AssetSurface@@QAEHPAURect@@HH@Z	public	100	100.0	22/22 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x79610	0x00479610	96	G	AssetSurface::DrawDottedRect	?DrawDottedRect@AssetSurface@@QAEXHHHHH@Z	public	100	100.0	45/45 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x79670	0x00479670	48	G	AssetSurface::dotted_box	?dotted_box@AssetSurface@@QAEHPAURect@@H@Z	public	100	100.0	20/20 ins	golf_raw_02.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x796a0	0x004796a0	381	G	AssetSurface::get_data	?get_data@AssetSurface@@QAEPAEHH@Z	public	100	100.0	141/141 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x79820	0x00479820	3	G	AssetSurface::is_graphicwin	?is_graphicwin@AssetSurface@@UAEPAUGraphicWin@@XZ	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/buffer.cpp	0x79830	0x00479830	144	G	AssetSurface::GetPixelRed	?GetPixelRed@AssetSurface@@QAEEHHE@Z	public	100	100.0	58/58 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x798c0	0x004798c0	144	G	AssetSurface::GetPixelGreen	?GetPixelGreen@AssetSurface@@QAEEHHE@Z	public	100	100.0	58/58 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/buffer.cpp	0x79950	0x00479950	110	G	AssetSurface::GetPixelBlue	?GetPixelBlue@AssetSurface@@QAEEHHE@Z	public	100	100.0	48/48 ins	

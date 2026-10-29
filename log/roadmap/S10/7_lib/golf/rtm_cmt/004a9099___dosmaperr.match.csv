@@ -1,0 +1,40 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,call 6,call 0x4a9115,True
+2,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+3,"xor esi, esi","xor esi, esi",True
+4,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+5,"mov eax, 0","mov eax, 0x4e4bf8",True
+6,"cmp ecx, dword ptr [eax]","cmp ecx, dword ptr [eax]",True
+7,je 0x39,je 0x4a90d2,True
+8,"add eax, 8","add eax, 8",True
+9,inc esi,inc esi,True
+10,"cmp eax, 0x168","cmp eax, 0x4e4d60",True
+11,jl 0x13,jl 0x4a90ac,True
+12,"cmp ecx, 0x13","cmp ecx, 0x13",True
+13,jb 0x49,jb 0x4a90e2,True
+14,"cmp ecx, 0x24","cmp ecx, 0x24",True
+15,ja 0x49,ja 0x4a90e2,True
+16,call 0x31,call 0x4a910c,True
+17,"mov dword ptr [eax], 0xd","mov dword ptr [eax], 0xd",True
+18,pop esi,pop esi,True
+19,ret ,ret ,True
+20,call 0x3e,call 0x4a910c,True
+21,"mov ecx, dword ptr [esi*8 + 4]","mov ecx, dword ptr [esi*8 + 0x4e4bfc]",True
+22,pop esi,pop esi,True
+23,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+24,ret ,ret ,True
+25,"cmp ecx, 0xbc","cmp ecx, 0xbc",True
+26,jb 0x66,jb 0x4a90ff,True
+27,"cmp ecx, 0xca","cmp ecx, 0xca",True
+28,ja 0x66,ja 0x4a90ff,True
+29,call 0x5e,call 0x4a910c,True
+30,"mov dword ptr [eax], 8","mov dword ptr [eax], 8",True
+31,pop esi,pop esi,True
+32,ret ,ret ,True
+33,call 0x6b,call 0x4a910c,True
+34,"mov dword ptr [eax], 0x16","mov dword ptr [eax], 0x16",True
+35,pop esi,pop esi,True
+36,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\dosmap.obj (library object, no compilation)",symbol=__dosmaperr,module=golf_clean.exe
+VERDICT,GREEN,37,100.0%

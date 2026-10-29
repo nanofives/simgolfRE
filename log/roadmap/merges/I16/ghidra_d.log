@@ -1,0 +1,476 @@
+== 2026-10-29T19:03:50-03:00 jgld.dll DeleteFunctions.java 1007fc1d 1007fc28 10080d01 10080d0c 10080dfd 10080e08 1008133d 10081348 100817b8 100817c3 10081bc1 10081bcc 100834b0 10085e91 10085f8a 100861b6 100863cb 10086470 1008650b 1008658d 
+INFO  Class search complete (943 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\DeleteFunctions.java (HeadlessAnalyzer)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1007fc1d FUN_1007fc1d (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1007fc28 FUN_1007fc28 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10080d01 FUN_10080d01 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10080d0c FUN_10080d0c (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10080dfd FUN_10080dfd (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10080e08 FUN_10080e08 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1008133d FUN_1008133d (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10081348 FUN_10081348 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100817b8 FUN_100817b8 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100817c3 FUN_100817c3 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10081bc1 FUN_10081bc1 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10081bcc FUN_10081bcc (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100834b0 _lockerr_exit (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10085e91 FUN_10085e91 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10085f8a FUN_10085f8a (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100861b6 FUN_100861b6 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100863cb FUN_100863cb (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10086470 FUN_10086470 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1008650b FUN_1008650b (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1008658d FUN_1008658d (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN removed=20 missing=0 (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:01-03:00 jgld.dll SetBodies.java 1007fbc0:160 10080b90:400 10080d40:217 100812b0:169 10081630:420 10081910:755 100834b0:28 10085df0:525 10086000:1153 10086490:326 
+INFO  Class search complete (1399 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\SetBodies.java (HeadlessAnalyzer)  
+INFO  SetBodies.java> SETBODY SET 1007fbc0 _nh_malloc_dbg [[1007fbc0, 1007fc5f]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10080b90 _msize_dbg [[10080b90, 10080d1f]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10080d40 _CrtSetDbgBlockType [[10080d40, 10080e18]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 100812b0 _CrtDoForAllClientObjects [[100812b0, 10081358]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10081630 _CrtMemCheckpoint [[10081630, 100817d3]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10081910 _CrtMemDumpAllObjectsSince [[10081910, 10081c02]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10085df0 _expand_base [[10085df0, 10085ffc]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10086000 _realloc_base [[10086000, 10086480]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10086490 _free_base [[10086490, 100865d5]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100834b0 _lockerr_exit [[100834b0, 100834cb]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY set=9 created=1 failed=0 (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:10-03:00 Terrain.dll DeleteFunctions.java 100159bd 100159c8 10016aa1 10016aac 10016b9d 10016ba8 100170dd 100170e8 10017558 10017563 10017961 1001796c 10019ed0 1001aa61 1001ab5a 1001ad86 1001af9b 1001b040 1001b0db 1001b15d 
+INFO  Class search complete (1412 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\DeleteFunctions.java (HeadlessAnalyzer)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100159bd FUN_100159bd (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100159c8 FUN_100159c8 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10016aa1 FUN_10016aa1 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10016aac FUN_10016aac (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10016b9d FUN_10016b9d (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10016ba8 FUN_10016ba8 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100170dd FUN_100170dd (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 100170e8 FUN_100170e8 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10017558 FUN_10017558 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10017563 FUN_10017563 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10017961 FUN_10017961 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001796c FUN_1001796c (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 10019ed0 _lockerr_exit (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001aa61 FUN_1001aa61 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001ab5a FUN_1001ab5a (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001ad86 FUN_1001ad86 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001af9b FUN_1001af9b (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001b040 FUN_1001b040 (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001b0db FUN_1001b0db (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN REMOVED 1001b15d FUN_1001b15d (GhidraScript)  
+INFO  DeleteFunctions.java> DELETEFN removed=20 missing=0 (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:19-03:00 Terrain.dll SetBodies.java 10015960:160 10016930:400 10016ae0:217 10017050:169 100173d0:420 100176b0:755 10019ed0:28 1001a9c0:525 1001abd0:1153 1001b060:326 
+INFO  Class search complete (1371 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\SetBodies.java (HeadlessAnalyzer)  
+INFO  SetBodies.java> SETBODY SET 10015960 _nh_malloc_dbg [[10015960, 100159ff]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10016930 _msize_dbg [[10016930, 10016abf]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10016ae0 _CrtSetDbgBlockType [[10016ae0, 10016bb8]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 10017050 _CrtDoForAllClientObjects [[10017050, 100170f8]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 100173d0 _CrtMemCheckpoint [[100173d0, 10017573]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 100176b0 _CrtMemDumpAllObjectsSince [[100176b0, 100179a2]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 1001a9c0 _expand_base [[1001a9c0, 1001abcc]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 1001abd0 _realloc_base [[1001abd0, 1001b050]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY SET 1001b060 _free_base [[1001b060, 1001b1a5]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10019ed0 _lockerr_exit [[10019ed0, 10019eeb]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY set=9 created=1 failed=0 (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:28-03:00 sound.dll SetBodies.java 10005880:91 10005900:259 10006b50:23 10006ba0:29 10006fc0:49 10007c10:5 100087a0:56 10008e00:32 10008e30:50 10008e80:54 10009240:121 100099d0:114 10009a70:1 10009e10:26 1000aa60:110 1000db60:95 1000e160:72 1000e370:5 1000e390:34 1000e3d0:5 1000e3f0:5 1000e410:5 1000e430:5 1000e450:5 1000e470:5 1000f0a0:16 1000f0f0:77 1000f380:87 1000f400:86 1000f720:38 10010120:37 10010160:36 10010d60:51 10010e80:27 10011600:122 10011720:1 10011740:1 10012020:8 10012060:3 10012080:3 10013470:77 10013870:3 1001b830:37 1001b9e0:78 1001c1b0:24 1001c260:40 1001c480:75 1001cad0:3 1001cd70:268 1001d030:70 1001d590:97 1001d620:107 1001d6b0:152 1001e120:18 1001e150:79 1001e510:3 1001e550:11 1001e570:82 1001e5f0:42 1001e6b0:28 1001ea40:67 10020270:8 10020aa0:37 10020ae0:90 10021560:35 10021ec0:8 10023750:230 10023b80:119 10024310:3 10024330:30 10024420:7 10024440:7 100244c0:1 100244e0:7 10025040:9 10025090:7 100250b0:86 10028e70:81 10028ef0:92 10028f70:40 10029730:93 100297b0:151 10029880:121 10029920:24 10029950:93 100299d0:81 10029a50:30 10029a80:120 10029b20:29 10029b50:29 1002af00:99 1002af90:96 1002c240:22 1002c790:51 1002c7e0:242 1002c920:105 1002c9b0:42 1002cd30:3 1002cd50:105 1002cde0:87 1002d010:118 1002d0b0:50 1002d2c0:287 1002d710:30 1002e2f0:98 1002e490:31 1002e4c0:42 1002f710:21 1002fe20:79 1002fe90:1 1002feb0:177 10030000:43 10030040:44 10030730:110 100307c0:85 10031120:29 10031150:3 10031170:3 10031670:50 10031a50:66 10032680:8 10033280:90 100338f0:113 10033f70:6 10034410:3 10034de0:78 10034e50:130 10034f10:72 10034f80:29 10035070:71 10035c30:74 100377b0:35 10037e90:65 10037f00:24 10038270:58 10038ed0:46 10038f40:6 100392c0:83 10039380:50 10039490:28 10039540:10 10039560:3 10039ca0:37 
+INFO  Class search complete (1403 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\SetBodies.java (HeadlessAnalyzer)  
+INFO  SetBodies.java> SETBODY NEW 10005880 FUN_10005880 [[10005880, 100058da]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10005900 FUN_10005900 [[10005900, 10005a02]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10006b50 FUN_10006b50 [[10006b50, 10006b66]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10006ba0 FUN_10006ba0 [[10006ba0, 10006bbc]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10006fc0 FUN_10006fc0 [[10006fc0, 10006ff0]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10007c10 FUN_10007c10 [[10007c10, 10007c14]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100087a0 FUN_100087a0 [[100087a0, 100087d7]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10008e00 FUN_10008e00 [[10008e00, 10008e1f]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10008e30 FUN_10008e30 [[10008e30, 10008e61]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10008e80 FUN_10008e80 [[10008e80, 10008eb5]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10009240 FUN_10009240 [[10009240, 100092b8]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100099d0 FUN_100099d0 [[100099d0, 10009a41]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10009a70 FUN_10009a70 [[10009a70, 10009a70]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10009e10 FUN_10009e10 [[10009e10, 10009e29]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000aa60 FUN_1000aa60 [[1000aa60, 1000aacd]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000db60 FUN_1000db60 [[1000db60, 1000dbbe]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e160 FUN_1000e160 [[1000e160, 1000e1a7]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e370 FUN_1000e370 [[1000e370, 1000e374]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e390 FUN_1000e390 [[1000e390, 1000e3b1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e3d0 FUN_1000e3d0 [[1000e3d0, 1000e3d4]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e3f0 FUN_1000e3f0 [[1000e3f0, 1000e3f4]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e410 FUN_1000e410 [[1000e410, 1000e414]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e430 FUN_1000e430 [[1000e430, 1000e434]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e450 FUN_1000e450 [[1000e450, 1000e454]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000e470 FUN_1000e470 [[1000e470, 1000e474]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000f0a0 FUN_1000f0a0 [[1000f0a0, 1000f0af]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000f0f0 FUN_1000f0f0 [[1000f0f0, 1000f13c]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000f380 FUN_1000f380 [[1000f380, 1000f3d6]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000f400 FUN_1000f400 [[1000f400, 1000f455]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1000f720 FUN_1000f720 [[1000f720, 1000f745]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10010120 FUN_10010120 [[10010120, 10010144]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10010160 FUN_10010160 [[10010160, 10010183]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10010d60 FUN_10010d60 [[10010d60, 10010d92]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10010e80 FUN_10010e80 [[10010e80, 10010e9a]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10011600 FUN_10011600 [[10011600, 10011679]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10011720 FUN_10011720 [[10011720, 10011720]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10011740 FUN_10011740 [[10011740, 10011740]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10012020 FUN_10012020 [[10012020, 10012027]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10012060 FUN_10012060 [[10012060, 10012062]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10012080 FUN_10012080 [[10012080, 10012082]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10013470 FUN_10013470 [[10013470, 100134bc]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10013870 FUN_10013870 [[10013870, 10013872]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001b830 FUN_1001b830 [[1001b830, 1001b854]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001b9e0 FUN_1001b9e0 [[1001b9e0, 1001ba2d]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001c1b0 FUN_1001c1b0 [[1001c1b0, 1001c1c7]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001c260 FUN_1001c260 [[1001c260, 1001c287]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001c480 FUN_1001c480 [[1001c480, 1001c4ca]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001cad0 FUN_1001cad0 [[1001cad0, 1001cad2]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001cd70 FUN_1001cd70 [[1001cd70, 1001ce7b]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001d030 FUN_1001d030 [[1001d030, 1001d075]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001d590 FUN_1001d590 [[1001d590, 1001d5f0]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001d620 FUN_1001d620 [[1001d620, 1001d68a]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001d6b0 FUN_1001d6b0 [[1001d6b0, 1001d747]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e120 FUN_1001e120 [[1001e120, 1001e131]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e150 FUN_1001e150 [[1001e150, 1001e19e]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e510 FUN_1001e510 [[1001e510, 1001e512]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e550 FUN_1001e550 [[1001e550, 1001e55a]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e570 FUN_1001e570 [[1001e570, 1001e5c1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e5f0 FUN_1001e5f0 [[1001e5f0, 1001e619]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001e6b0 FUN_1001e6b0 [[1001e6b0, 1001e6cb]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1001ea40 FUN_1001ea40 [[1001ea40, 1001ea82]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10020270 FUN_10020270 [[10020270, 10020277]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10020aa0 FUN_10020aa0 [[10020aa0, 10020ac4]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10020ae0 FUN_10020ae0 [[10020ae0, 10020b39]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10021560 FUN_10021560 [[10021560, 10021582]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10021ec0 FUN_10021ec0 [[10021ec0, 10021ec7]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10023750 FUN_10023750 [[10023750, 10023835]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10023b80 FUN_10023b80 [[10023b80, 10023bf6]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10024310 FUN_10024310 [[10024310, 10024312]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10024330 FUN_10024330 [[10024330, 1002434d]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10024420 FUN_10024420 [[10024420, 10024426]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10024440 FUN_10024440 [[10024440, 10024446]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100244c0 FUN_100244c0 [[100244c0, 100244c0]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100244e0 FUN_100244e0 [[100244e0, 100244e6]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10025040 FUN_10025040 [[10025040, 10025048]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10025090 FUN_10025090 [[10025090, 10025096]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100250b0 FUN_100250b0 [[100250b0, 10025105]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10028e70 FUN_10028e70 [[10028e70, 10028ec0]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10028ef0 FUN_10028ef0 [[10028ef0, 10028f4b]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10028f70 FUN_10028f70 [[10028f70, 10028f97]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029730 FUN_10029730 [[10029730, 1002978c]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100297b0 FUN_100297b0 [[100297b0, 10029846]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029880 FUN_10029880 [[10029880, 100298f8]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029920 FUN_10029920 [[10029920, 10029937]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029950 FUN_10029950 [[10029950, 100299ac]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100299d0 FUN_100299d0 [[100299d0, 10029a20]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029a50 FUN_10029a50 [[10029a50, 10029a6d]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029a80 FUN_10029a80 [[10029a80, 10029af7]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029b20 FUN_10029b20 [[10029b20, 10029b3c]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10029b50 FUN_10029b50 [[10029b50, 10029b6c]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002af00 FUN_1002af00 [[1002af00, 1002af62]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002af90 FUN_1002af90 [[1002af90, 1002afef]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002c240 FUN_1002c240 [[1002c240, 1002c255]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002c790 FUN_1002c790 [[1002c790, 1002c7c2]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002c7e0 FUN_1002c7e0 [[1002c7e0, 1002c8d1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002c920 FUN_1002c920 [[1002c920, 1002c988]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002c9b0 FUN_1002c9b0 [[1002c9b0, 1002c9d9]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002cd30 FUN_1002cd30 [[1002cd30, 1002cd32]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002cd50 FUN_1002cd50 [[1002cd50, 1002cdb8]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002cde0 FUN_1002cde0 [[1002cde0, 1002ce36]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002d010 FUN_1002d010 [[1002d010, 1002d085]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002d0b0 FUN_1002d0b0 [[1002d0b0, 1002d0e1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002d2c0 FUN_1002d2c0 [[1002d2c0, 1002d3de]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002d710 FUN_1002d710 [[1002d710, 1002d72d]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002e2f0 FUN_1002e2f0 [[1002e2f0, 1002e351]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002e490 FUN_1002e490 [[1002e490, 1002e4ae]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002e4c0 FUN_1002e4c0 [[1002e4c0, 1002e4e9]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002f710 FUN_1002f710 [[1002f710, 1002f724]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002fe20 FUN_1002fe20 [[1002fe20, 1002fe6e]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002fe90 FUN_1002fe90 [[1002fe90, 1002fe90]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 1002feb0 FUN_1002feb0 [[1002feb0, 1002ff60]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10030000 FUN_10030000 [[10030000, 1003002a]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10030040 FUN_10030040 [[10030040, 1003006b]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10030730 FUN_10030730 [[10030730, 1003079d]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100307c0 FUN_100307c0 [[100307c0, 10030814]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10031120 FUN_10031120 [[10031120, 1003113c]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10031150 FUN_10031150 [[10031150, 10031152]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10031170 FUN_10031170 [[10031170, 10031172]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10031670 FUN_10031670 [[10031670, 100316a1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10031a50 FUN_10031a50 [[10031a50, 10031a91]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10032680 FUN_10032680 [[10032680, 10032687]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10033280 FUN_10033280 [[10033280, 100332d9]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100338f0 FUN_100338f0 [[100338f0, 10033960]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10033f70 FUN_10033f70 [[10033f70, 10033f75]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10034410 FUN_10034410 [[10034410, 10034412]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10034de0 FUN_10034de0 [[10034de0, 10034e2d]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10034e50 FUN_10034e50 [[10034e50, 10034ed1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10034f10 FUN_10034f10 [[10034f10, 10034f57]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10034f80 FUN_10034f80 [[10034f80, 10034f9c]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10035070 FUN_10035070 [[10035070, 100350b6]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10035c30 FUN_10035c30 [[10035c30, 10035c79]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100377b0 FUN_100377b0 [[100377b0, 100377d2]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10037e90 FUN_10037e90 [[10037e90, 10037ed0]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10037f00 FUN_10037f00 [[10037f00, 10037f17]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10038270 FUN_10038270 [[10038270, 100382a9]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10038ed0 FUN_10038ed0 [[10038ed0, 10038efd]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10038f40 FUN_10038f40 [[10038f40, 10038f45]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 100392c0 FUN_100392c0 [[100392c0, 10039312]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10039380 FUN_10039380 [[10039380, 100393b1]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10039490 FUN_10039490 [[10039490, 100394ab]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10039540 FUN_10039540 [[10039540, 10039549]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10039560 FUN_10039560 [[10039560, 10039562]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY NEW 10039ca0 FUN_10039ca0 [[10039ca0, 10039cc4]] (GhidraScript)  
+INFO  SetBodies.java> SETBODY set=0 created=143 failed=0 (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:38-03:00 sound.dll ListFunctions.java C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_sound.dll.tsv -readOnly
+INFO  Class search complete (1361 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ListFunctions.java (HeadlessAnalyzer)  
+INFO  ListFunctions.java> LISTFUNCTIONS sound.dll 2358 -> C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_sound.dll.tsv (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:48-03:00 jgld.dll ListFunctions.java C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_jgld.dll.tsv -readOnly
+INFO  Class search complete (1429 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ListFunctions.java (HeadlessAnalyzer)  
+INFO  ListFunctions.java> LISTFUNCTIONS jgld.dll 1602 -> C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_jgld.dll.tsv (GhidraScript)  
+rc=0
+== 2026-10-29T19:04:58-03:00 Terrain.dll ListFunctions.java C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_Terrain.dll.tsv -readOnly
+INFO  Class search complete (1518 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ListFunctions.java (HeadlessAnalyzer)  
+INFO  ListFunctions.java> LISTFUNCTIONS Terrain.dll 1076 -> C:\Users\maria\Desktop\Proyectos\SimGolf\re\functions_ghidra_Terrain.dll.tsv (GhidraScript)  
+rc=0
+ghidra_d done

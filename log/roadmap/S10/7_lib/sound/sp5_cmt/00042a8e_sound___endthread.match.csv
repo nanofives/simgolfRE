@@ -1,0 +1,27 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10064ed0]",True
+1,"test eax, eax","test eax, eax",True
+2,je 0xb,je 0x10042a99,True
+3,call eax,call eax,True
+4,push esi,push esi,True
+5,call 0x11,call 0x10044171,True
+6,"mov esi, eax","mov esi, eax",True
+7,"test esi, esi","test esi, esi",True
+8,jne 0x1f,jne 0x10042aad,True
+9,push 0x10,push 0x10,True
+10,call 0x1e,call 0x1004319b,True
+11,pop ecx,pop ecx,True
+12,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+13,"cmp eax, -1","cmp eax, -1",True
+14,je 0x2e,je 0x10042abc,True
+15,push eax,push eax,True
+16,call dword ptr [0],call dword ptr [0x100b83f8],True
+17,push esi,push esi,True
+18,call 0x34,call 0x100441d8,True
+19,pop ecx,pop ecx,True
+20,push 0,push 0,True
+21,call dword ptr [0],call dword ptr [0x100b84e4],True
+22,pop esi,pop esi,True
+23,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\thread.obj (library object, no compilation)",symbol=__endthread,module=sound.dll
+VERDICT,GREEN,24,100.0%

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/onset.c	0x40ab0	0x10040ab0	749	G	onset_	_onset_	public	100	100.0	255/255 ins	m36c_D2_01.cpp

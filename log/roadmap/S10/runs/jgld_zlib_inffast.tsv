@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/inffast.c	0xa0340	0x100a0340	1585	G	inflate_fast	_inflate_fast	public	100	100.0	538/538 ins	jgld_zlib_inffast.cpp

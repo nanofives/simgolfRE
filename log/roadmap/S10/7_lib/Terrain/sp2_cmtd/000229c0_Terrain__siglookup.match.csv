@@ -1,0 +1,38 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+4,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+5,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+6,"mov edx, dword ptr [ecx + 4]","mov edx, dword ptr [ecx + 4]",True
+7,"cmp edx, dword ptr [ebp + 8]","cmp edx, dword ptr [ebp + 8]",True
+8,je 0x33,je 0x100229f3,True
+9,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+10,"add eax, 0xc","add eax, 0xc",True
+11,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+12,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100668ac]",True
+13,"imul ecx, ecx, 0xc","imul ecx, ecx, 0xc",True
+14,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+15,"add edx, ecx","add edx, ecx",True
+16,"cmp dword ptr [ebp - 4], edx","cmp dword ptr [ebp - 4], edx",True
+17,jae 0x33,jae 0x100229f3,True
+18,jmp 0xa,jmp 0x100229ca,True
+19,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100668ac]",True
+20,"imul eax, eax, 0xc","imul eax, eax, 0xc",True
+21,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+22,"add ecx, eax","add ecx, eax",True
+23,"cmp dword ptr [ebp - 4], ecx","cmp dword ptr [ebp - 4], ecx",True
+24,jae 0x55,jae 0x10022a15,True
+25,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+26,"mov eax, dword ptr [edx + 4]","mov eax, dword ptr [edx + 4]",True
+27,"cmp eax, dword ptr [ebp + 8]","cmp eax, dword ptr [ebp + 8]",True
+28,jne 0x55,jne 0x10022a15,True
+29,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+30,jmp 0x57,jmp 0x10022a17,True
+31,"xor eax, eax","xor eax, eax",True
+32,"mov esp, ebp","mov esp, ebp",True
+33,pop ebp,pop ebp,True
+34,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\winsig.obj (library object, no compilation)",symbol=_siglookup,module=Terrain.dll
+VERDICT,GREEN,35,100.0%

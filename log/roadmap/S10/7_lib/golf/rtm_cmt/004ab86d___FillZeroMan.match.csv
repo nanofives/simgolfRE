@@ -1,0 +1,11 @@
+instruction,library_object,original,match
+0,push edi,push edi,True
+1,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+2,"xor eax, eax","xor eax, eax",True
+3,"stosd dword ptr es:[edi], eax","stosd dword ptr es:[edi], eax",True
+4,"stosd dword ptr es:[edi], eax","stosd dword ptr es:[edi], eax",True
+5,"stosd dword ptr es:[edi], eax","stosd dword ptr es:[edi], eax",True
+6,pop edi,pop edi,True
+7,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\intrncvt.obj (library object, no compilation)",symbol=__FillZeroMan,module=golf_clean.exe
+VERDICT,GREEN,8,100.0%

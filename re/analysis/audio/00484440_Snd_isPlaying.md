@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 10 bytes, 4 instructions, subsystem `audio`. Mechanical
 Returns -1 while the sound state bit 0 (playing) is set, else 0. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?is_loaded@Sound@@UAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00484449): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00484440 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

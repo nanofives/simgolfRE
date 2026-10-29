@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,bytes +0x0: ddd8d9eec3ddd8ddd8d9e8c3dbbd62ff,bytes +0x0: ddd8d9eec3ddd8ddd8d9e8c3dbbd62ff,True
+1,bytes +0x10: ffffdbad62fffffff68569ffffff4074,bytes +0x10: ffffdbad62fffffff68569ffffff4074,True
+2,bytes +0x20: 08c68570ffffff07c3c68570ffffff01,bytes +0x20: 08c68570ffffff07c3c68570ffffff01,True
+3,bytes +0x30: dc05????????c3d9c9dbbd62ffffffdb,bytes +0x30: dc05????????c3d9c9dbbd62ffffffdb,True
+4,bytes +0x40: ad62fffffff68569ffffff407409c685,bytes +0x40: ad62fffffff68569ffffff407409c685,True
+5,bytes +0x50: 70ffffff07eb07c68570ffffff01dec1,bytes +0x50: 70ffffff07eb07c68570ffffff01dec1,True
+6,bytes +0x60: c3dbbd62ffffffdbad62fffffff68569,bytes +0x60: c3dbbd62ffffffdbad62fffffff68569,True
+7,bytes +0x70: ffffff407420d9c9dbbd62ffffffdbad,bytes +0x70: ffffff407420d9c9dbbd62ffffffdbad,True
+8,bytes +0x80: 62fffffff68569ffffff407409c68570,bytes +0x80: 62fffffff68569ffffff407409c68570,True
+9,bytes +0x90: ffffff07eb07c68570ffffff01dec1c3,bytes +0x90: ffffff07eb07c68570ffffff01dec1c3,True
+10,bytes +0xa0: ddd8ddd8db2d????????80bd70ffffff,bytes +0xa0: ddd8ddd8db2d????????80bd70ffffff,True
+11,bytes +0xb0: 007f07c68570ffffff010ac9c30ac974,bytes +0xb0: 007f07c68570ffffff010ac9c30ac974,True
+12,bytes +0xc0: 02d9e0c3,bytes +0xc0: 02d9e0c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87disp.obj (library object, no compilation)",symbol=__rtzeronpop,module=sound.dll
+VERDICT,GREEN,13,100.0%

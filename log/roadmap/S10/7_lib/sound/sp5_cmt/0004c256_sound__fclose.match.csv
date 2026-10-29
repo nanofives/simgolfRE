@@ -1,0 +1,23 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,"or edi, 0xffffffff","or edi, 0xffffffff",True
+4,"test byte ptr [esi + 0xc], 0x40","test byte ptr [esi + 0xc], 0x40",True
+5,je 0x15,je 0x1004c26b,True
+6,"and dword ptr [esi + 0xc], 0","and dword ptr [esi + 0xc], 0",True
+7,jmp 0x2c,jmp 0x1004c282,True
+8,push esi,push esi,True
+9,call 0x1b,call 0x1004368d,True
+10,push esi,push esi,True
+11,call 0x21,call 0x1004c287,True
+12,push esi,push esi,True
+13,"mov edi, eax","mov edi, eax",True
+14,call 0x29,call 0x100436df,True
+15,"add esp, 0xc","add esp, 0xc",True
+16,"mov eax, edi","mov eax, edi",True
+17,pop edi,pop edi,True
+18,pop esi,pop esi,True
+19,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\fclose.obj (library object, no compilation)",symbol=_fclose,module=sound.dll
+VERDICT,GREEN,20,100.0%

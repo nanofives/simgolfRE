@@ -1,0 +1,53 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+4,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+5,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+6,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+7,"add edx, dword ptr [ecx + 4]","add edx, dword ptr [ecx + 4]",True
+8,push edx,push edx,True
+9,call 0x1a,call 0x100355a0,True
+10,"add esp, 4","add esp, 4",True
+11,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+12,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+13,"mov edx, dword ptr [ecx + 4]","mov edx, dword ptr [ecx + 4]",True
+14,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+15,"mov ecx, dword ptr [eax + edx + 4]","mov ecx, dword ptr [eax + edx + 4]",True
+16,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+17,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+18,"mov edx, dword ptr [eax + 4]","mov edx, dword ptr [eax + 4]",True
+19,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+20,"mov edx, dword ptr [eax + edx + 4]","mov edx, dword ptr [eax + edx + 4]",True
+21,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+22,call dword ptr [eax + 4],call dword ptr [eax + 4],True
+23,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+24,"cmp dword ptr [ebp - 4], -1","cmp dword ptr [ebp - 4], -1",True
+25,jne 0x6e,jne 0x100358ee,True
+26,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+27,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+28,"mov eax, dword ptr [edx + 4]","mov eax, dword ptr [edx + 4]",True
+29,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+30,"mov edx, dword ptr [ecx + eax + 8]","mov edx, dword ptr [ecx + eax + 8]",True
+31,"or edx, 6","or edx, 6",True
+32,push edx,push edx,True
+33,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+34,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+35,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+36,"add edx, dword ptr [ecx + 4]","add edx, dword ptr [ecx + 4]",True
+37,"mov ecx, edx","mov ecx, edx",True
+38,call 0x6e,call 0x10033d70,True
+39,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+40,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+41,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+42,"add edx, dword ptr [ecx + 4]","add edx, dword ptr [ecx + 4]",True
+43,push edx,push edx,True
+44,call 0x7f,call 0x10034a40,True
+45,"add esp, 4","add esp, 4",True
+46,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+47,"mov esp, ebp","mov esp, ebp",True
+48,pop ebp,pop ebp,True
+49,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\istream.obj (library object, no compilation)",symbol=?sync@istream@@QAEHXZ,module=Terrain.dll
+VERDICT,GREEN,50,100.0%

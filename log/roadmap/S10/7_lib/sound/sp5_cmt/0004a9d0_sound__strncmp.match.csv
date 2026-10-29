@@ -1,0 +1,34 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push edi,push edi,True
+3,push esi,push esi,True
+4,push ebx,push ebx,True
+5,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+6,jecxz 0x31,jecxz 0x1004aa01,True
+7,"mov ebx, ecx","mov ebx, ecx",True
+8,"mov edi, dword ptr [ebp + 8]","mov edi, dword ptr [ebp + 8]",True
+9,"mov esi, edi","mov esi, edi",True
+10,"xor eax, eax","xor eax, eax",True
+11,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+12,neg ecx,neg ecx,True
+13,"add ecx, ebx","add ecx, ebx",True
+14,"mov edi, esi","mov edi, esi",True
+15,"mov esi, dword ptr [ebp + 0xc]","mov esi, dword ptr [ebp + 0xc]",True
+16,"repe cmpsb byte ptr [esi], byte ptr es:[edi]","repe cmpsb byte ptr [esi], byte ptr es:[edi]",True
+17,"mov al, byte ptr [esi - 1]","mov al, byte ptr [esi - 1]",True
+18,"xor ecx, ecx","xor ecx, ecx",True
+19,"cmp al, byte ptr [edi - 1]","cmp al, byte ptr [edi - 1]",True
+20,ja 0x2f,ja 0x1004a9ff,True
+21,je 0x31,je 0x1004aa01,True
+22,dec ecx,dec ecx,True
+23,dec ecx,dec ecx,True
+24,not ecx,not ecx,True
+25,"mov eax, ecx","mov eax, ecx",True
+26,pop ebx,pop ebx,True
+27,pop esi,pop esi,True
+28,pop edi,pop edi,True
+29,leave ,leave ,True
+30,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\strncmp.obj (library object, no compilation)",symbol=_strncmp,module=sound.dll
+VERDICT,GREEN,31,100.0%

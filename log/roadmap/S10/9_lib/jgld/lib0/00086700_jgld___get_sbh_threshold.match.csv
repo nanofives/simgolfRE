@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 3","cmp dword ptr [0x10129fb0], 3",True
+3,jne 0x13,jne 0x10086713,True
+4,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10129fe0]",True
+5,jmp 0x25,jmp 0x10086725,True
+6,"cmp dword ptr [0], 2","cmp dword ptr [0x10129fb0], 2",True
+7,jne 0x23,jne 0x10086723,True
+8,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10125784]",True
+9,jmp 0x25,jmp 0x10086725,True
+10,"xor eax, eax","xor eax, eax",True
+11,pop ebp,pop ebp,True
+12,ret ,ret ,True
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\sbheap.obj (library object, no compilation)",symbol=__get_sbh_threshold,module=jgld.dll
+VERDICT,GREEN,13,100.0%

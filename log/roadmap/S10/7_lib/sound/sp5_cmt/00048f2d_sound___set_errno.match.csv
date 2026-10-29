@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"cmp eax, 1","cmp eax, 1",True
+2,je 0x1c,je 0x10048f49,True
+3,jle 0x27,jle 0x10048f54,True
+4,"cmp eax, 3","cmp eax, 3",True
+5,jg 0x27,jg 0x10048f54,True
+6,call 0x15,call 0x1004588f,True
+7,"mov dword ptr [eax], 0x22","mov dword ptr [eax], 0x22",True
+8,ret ,ret ,True
+9,call 0x21,call 0x1004588f,True
+10,"mov dword ptr [eax], 0x21","mov dword ptr [eax], 0x21",True
+11,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpexcept.obj (library object, no compilation)",symbol=__set_errno,module=sound.dll
+VERDICT,GREEN,12,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 35 bytes, 13 instructions, subsystem `render`. Mechanic
 forwards five arguments to Surface_createFull with 0 inserted as the third (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_MainLoop.cpp` as `?Create@AssetSurface@@QAEHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00421b50): callee pops 20 bytes of stack arguments.
 
 ## Reads

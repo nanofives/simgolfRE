@@ -1,0 +1,6 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcini.c	0x3aa50	0x1003aa50	63	G	lpcini_	_lpcini_	public	100	100.0	20/20 ins	m36c_dbg_raw_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcini.c	0x3aa90	0x1003aa90	78	G	create_lpc10_encoder_state	_create_lpc10_encoder_state	public	100	100.0	30/30 ins	m36c_D1_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcini.c	0x3aae0	0x1003aae0	956	G	init_lpc10_encoder_state	_init_lpc10_encoder_state	public	100	100.0	214/214 ins	m36c_D1_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcini.c	0x3aea0	0x1003aea0	78	G	create_lpc10_decoder_state	_create_lpc10_decoder_state	public	100	100.0	30/30 ins	m36c_D1_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/lpcini.c	0x3aef0	0x1003aef0	608	G	init_lpc10_decoder_state	_init_lpc10_decoder_state	public	100	100.0	128/128 ins	m36c_D1_01.cpp

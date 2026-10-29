@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 34 bytes, 10 instructions, subsystem `util`. Mechanical
 Constructs one 0x1c-byte bucket record of a NodeList: vtable, zeroed links, default value 0x7f and the enabled byte set to 1. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SoundDevice.cpp` as `??0WaveControlGroup@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004877f1): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004877d0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

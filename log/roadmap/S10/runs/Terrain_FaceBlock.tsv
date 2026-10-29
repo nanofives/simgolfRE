@@ -1,0 +1,8 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x1fa0	0x10001fa0	48	G	FaceBlock::FaceBlock	??0FaceBlock@@QAE@XZ	public	100	100.0	22/22 ins	terrain_tile6.cpp
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x1fe0	0x10001fe0	36	G	FaceBlock::~FaceBlock	??1FaceBlock@@QAE@XZ	public	100	100.0	19/19 ins	terrain_tile6.cpp
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x2010	0x10002010	55	G	FloatToTexCoordCode	?FloatToTexCoordCode@@YAHM@Z	public	100	100.0	22/22 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x2060	0x10002060	1196	G	FaceBlock::InitTriangleMesh	?InitTriangleMesh@FaceBlock@@QAEXHHH@Z	public	100	100.0	339/339 ins	terrain_faces.cpp
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x2640	0x10002640	212	G	FaceBlock::SetNineVertexHeights	?SetNineVertexHeights@FaceBlock@@QAEXH@Z	public	100	100.0	64/64 ins	terrain_small3.cpp
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x2750	0x10002750	335	G	FaceBlock::setCornerVertexNormals	?setCornerVertexNormals@FaceBlock@@QAEXPAM@Z	public	100	100.0	99/99 ins	terrain_small3.cpp
+Terrain	terrain/Terrain.dll/src/FaceBlock.cpp	0x2900	0x10002900	480	G	FaceBlock::getMaxCornerVertexHeight	?getMaxCornerVertexHeight@FaceBlock@@QAEMXZ	public	100	100.0	151/151 ins	terrain_small4.cpp

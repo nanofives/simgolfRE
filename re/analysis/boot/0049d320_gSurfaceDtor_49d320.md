@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 41 bytes, 10 instructions, subsystem `boot`. Mechanical
 atexit destructor of the file-scope Surface at 0x840790: once only (guard bit 0x2 of the byte at 0x840740), sets its vtable and runs Surface_free on it (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_filewin.cpp` as `_$E22` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0049d348): callee pops 0 bytes of stack arguments.
 
 ## Reads

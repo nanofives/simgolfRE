@@ -122,6 +122,11 @@ average). Type -1 = free. 0x58bd0a / 0x58bd0c are record 5 x / y (showTutorialTe
 base 0x56d1d8 record 99 would end at 0x56e948, 0x20 bytes into the next table (0x56e928, listThemes 0x004724e9). The
 named g_animals 0x56d1d8 is field +0x20 (type, -1 free) of record 0. Model_scan's stride 0x14 is the `shl 2` after
 `* 15`, not a record size.
+S10.8 (log/roadmap/S10/8_merge.md section 2b): these 100 records are celebrity vacation-home residents, not animals.
+mainLoop 0x00417a5a draws a celebrity from g_celebrities 0x0055d738 for a type-5 lot, posts string 0x004c6444 and calls
+spawnObject, which copies the celebrity's kind byte (0x0040120a) into record +0x20 (0x00401232); +0x22 is one of six
+layout banks of g_recordBanks 0x004e6d20. The base correction above stands. The symbol and type renames (g_animalRecords
+-> g_vipResidents, Animal -> VipResident) rename port symbols and wait for a port step (decision D1, merge I16).
 
 **Habitats** 0x572cb0 (128 x 0x14, B clusters 797 / 798): documented for stream B, not typed here: +0 / +4 world
 x / y, +8 flags, +0xc head index (-1 = head), +0xe animation state, +0x10 frame, +0x11 direction, +0x12 kind 0..8 (0xff

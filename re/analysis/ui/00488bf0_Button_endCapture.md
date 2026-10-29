@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 179 bytes, 46 instructions, subsystem `ui`. Mechanical 
 Ends mouse capture on a button: drops the capture pointers that name it, stops its timer, waits out the minimum press time and, if the pressed flag at +0x614 was 1, clears it and refreshes the child window and layout. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BaseButton.cpp` as `?on_left_up@BaseButton@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00488ca0): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00488bf6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

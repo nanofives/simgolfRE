@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 20 bytes, 3 instructions, subsystem `boot`. Mechanical 
 Exit destructor of the global section reader g_sectionReader: restores its vtable and frees its file and line buffers. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Text.cpp` as `_$E2` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jfdctflt.c	0xb6360	0x004b6360	611	G	jpeg_fdct_float	_jpeg_fdct_float	public	100	100.0	180/180 ins	

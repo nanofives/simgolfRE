@@ -7,6 +7,7 @@ Allocates a {ptr,size} block object: returns SNDERR 0x10 if already allocated (*
 System writeup: `re/analysis/systems/sound_7.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_WaveInDeviceMgr.cpp` as `?set_buffer@WIBuffer@@QAE?AW4SNDERR@@K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10039500, 0x10039512, 0x10039527): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100394f1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

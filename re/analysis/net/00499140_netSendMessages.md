@@ -7,6 +7,7 @@ serializes and transmits queued network messages, retrying and logging repeated 
 System writeup: `re/analysis/systems/exe_5.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_Network.cpp` as `?send_packet_type@Net@@QAEHPAXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x0049aa2b): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00499161 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 
@@ -161,7 +162,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a4b60 `listAppend4a4b60` at 0x004992de, 0x004992f8
 - 0x004a5007 `_free` at 0x00499747, 0x0049983d, 0x00499943, 0x00499a5a, 0x00499cac, 0x0049a10c, 0x0049a212, 0x0049a308 (+4 more)
 - 0x004a504f `_malloc` at 0x00499312
-- 0x004a6070 `FUN_004a6070` at 0x0049915a
+- 0x004a6070 `__chkstk` at 0x0049915a
 - import `KERNEL32.dll!WaitForMultipleObjects` at 0x00499588, 0x00499ea2
 - import `USER32.dll!MessageBoxA` at 0x0049973c, 0x0049993c, 0x0049a20b, 0x0049a41f, 0x0049a554
 - import `WINMM.dll!timeGetTime` at 0x00499e1c

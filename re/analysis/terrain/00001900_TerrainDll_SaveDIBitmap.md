@@ -55,10 +55,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 
 ## Callees
 - 0x100158b0 `iabs` at 0x1000196c
-- 0x10017c20 `_fclose` at 0x10001a52, 0x10001a7e, 0x10001aaa, 0x10001abb
-- 0x10018080 `_fopen` at 0x10001921
+- 0x10017c20 `fclose` at 0x10001a52, 0x10001a7e, 0x10001aaa, 0x10001abb
+- 0x10018080 `fopen` at 0x10001921
 - 0x100180a0 `__chkesp` at 0x10001acd
-- 0x100180e0 `_fwrite` at 0x10001a41, 0x10001a6d, 0x10001a99
+- 0x100180e0 `fwrite` at 0x10001a41, 0x10001a6d, 0x10001a99
 - indirect `jmp [eax*4+0x10001ad6]` at 0x1000199e
 
 ## Callers

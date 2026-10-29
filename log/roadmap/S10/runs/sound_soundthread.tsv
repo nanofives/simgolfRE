@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/soundthread.cpp	0x2a690	0x1002a690	69	L	$E25	_$E25	name	100	100.0	15/15 ins	
+sound	sound/sound.dll/src/soundthread.cpp	0x2a700	0x1002a700	140	L	$E23	_$E23	name	100	100.0	35/35 ins	
+sound	sound/sound.dll/src/soundthread.cpp	0x2a7c0	0x1002a7c0	51	G	SoundThread::SoundThread	??0SoundThread@@QAE@XZ	public	100	100.0	17/17 ins	
+sound	sound/sound.dll/src/soundthread.cpp	0x2a810	0x1002a810	111	G	SoundThread::~SoundThread	??1SoundThread@@QAE@XZ	public	100	100.0	47/47 ins	
+sound	sound/sound.dll/src/soundthread.cpp	0x2a8a0	0x1002a8a0	81	G	SoundThread::stop	?stop@SoundThread@@QAEXXZ	public	100	100.0	37/37 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/soundthread.cpp	0x2a920	0x1002a920	54	G	SoundThread::start	?start@SoundThread@@QAEXXZ	public	100	100.0	21/21 ins	sound_raw_04.cpp
+sound	sound/sound.dll/src/soundthread.cpp	0x2a970	0x1002a970	210	G	SoundThread::fn_sound_thread	?fn_sound_thread@SoundThread@@CAXPAX@Z	public	100	100.0	74/74 ins	m36b_hand_10.cpp
+sound	sound/sound.dll/src/soundthread.cpp	0x2aa90	0x1002aa90	94	G	SoundThread::post_message	?post_message@SoundThread@@QAE?AW4SNDERR@@IJJ@Z	public	100	100.0	39/39 ins	m36b_hand_10.cpp

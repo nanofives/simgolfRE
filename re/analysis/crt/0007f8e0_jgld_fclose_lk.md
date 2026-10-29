@@ -33,11 +33,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1007f8fa, 0x1007f917, 0x1007f91e
 
 ## Callees
-- 0x10080710 `__free_dbg` at 0x1007f978
+- 0x10080710 `_free_dbg` at 0x1007f978
 - 0x10081f90 `_CrtDbgReport` at 0x1007f90c
-- 0x10085130 `__close` at 0x1007f951
-- 0x10085260 `__freebuf` at 0x1007f942
-- 0x100853a0 `__flush` at 0x1007f933
+- 0x10085130 `_close` at 0x1007f951
+- 0x10085260 `_freebuf` at 0x1007f942
+- 0x100853a0 `_flush` at 0x1007f933
 
 ## Callers
 0x1007f850 `fclose`

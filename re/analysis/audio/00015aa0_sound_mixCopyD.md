@@ -7,6 +7,7 @@ Unity-rate PCM copy/mix routine (no resampling), one format variant of the softw
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?m16216s2s_straight@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10015c3d, 0x10015c63): callee pops 0 bytes of stack arguments.
 
 ## Reads

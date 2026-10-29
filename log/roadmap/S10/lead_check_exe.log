@@ -1,0 +1,2550 @@
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/004012d0_drawRecords.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ei.cpp)
+  [PASS] source has a '// 0x004012d0' comment
+  [PASS] SG_HOOK registered at 0x004012d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004012d0_drawRecords.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0042fb90;0x0043d6f0;0x004628d0;0x00462a30;0x00473e60)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004012d0__RenderPlot__YAXHHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004012d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/sim/00409a90_scanNearbyGolfers.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dy.cpp)
+  [PASS] source has a '// 0x00409a90' comment
+  [PASS] SG_HOOK registered at 0x00409a90
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00409a90_scanNearbyGolfers.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004289e0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00407000;0x0040acd0;0x0045c1e0;0x00467a00)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00409a90__SpawnGolferDivot__YAXH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00409a90 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/terrain/00409cf0_editTerrainHeight.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ed.cpp)
+  [PASS] source has a '// 0x00409cf0' comment
+  [PASS] SG_HOOK registered at 0x00409cf0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00409cf0_editTerrainHeight.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0040e000;0x00421bc0;0x0042f2c0;0x0042f340;0x0042f7a0;0x004481b0;0x0045c1e0;0x00467150)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00409cf0__PlayScriptStep__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00409cf0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/golfer/0040de70_findNearestTargetTile.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3j.cpp)
+  [PASS] source has a '// 0x0040de70' comment
+  [PASS] SG_HOOK registered at 0x0040de70
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0040de70_findNearestTargetTile.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004289e0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0040acd0;0x0040bf60)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0040de70__FindNearestBench__YAXHHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0040de70 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/course/0040e400_clearObjectFootprint.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ah.cpp)
+  [PASS] source has a '// 0x0040e400' comment
+  [PASS] SG_HOOK registered at 0x0040e400
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0040e400_clearObjectFootprint.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040a4e0;0x0040f5c0;0x0046d0c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004011b0;0x0040c890;0x0042ef40;0x0042f7a0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0040e400__DemolishBuilding__YAXH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0040e400 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00430360_drawWorldObjects.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fv.cpp)
+  [PASS] source has a '// 0x00430360' comment
+  [PASS] SG_HOOK registered at 0x00430360
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00430360_drawWorldObjects.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00404bc0;0x00405a00;0x0040acd0;0x0040bf60;0x0040bfa0;0x0040c170;0x0040c500;0x0042fb90;0x0043d6f0;0x0045c1e0;0x00462a30;0x00467130;0x004671a0;0x00467a00;0x00474440;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00430360__UpdateAndRenderWildlife__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00430360 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00432200_drawAmenityRow.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ei.cpp)
+  [PASS] source has a '// 0x00432200' comment
+  [PASS] SG_HOOK registered at 0x00432200
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00432200_drawAmenityRow.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00434cf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0043d6f0;0x004628d0;0x00467170;0x00473cb0;0x00473f60)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00432200__RenderToolbarRow__YAHHHHHHHHHHHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00432200 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/golfer/004385d0_showCharacterEditor.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fx.cpp)
+  [PASS] source has a '// 0x004385d0' comment
+  [PASS] SG_HOOK registered at 0x004385d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004385d0_showCharacterEditor.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0;0x00436060)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404b70;0x00404bc0;0x0040cc00;0x00432620;0x00437910;0x00437fa0;0x00438260;0x00438390;0x0043d2a0;0x0043d6f0;0x004481b0;0x00448200;0x0045b0d0;0x0045b2c0;0x0045bf80;0x0045c030;0x0045c1e0;0x00462020;0x004628d0;0x004675d0;0x004676e0;0x00469b00;0x0046c940;0x0046d6e0;0x0046de70;0x00473cb0;0x00473e60;0x00474ae0;0x00474c40;0x00475840;0x00475c60;0x004762d0;0x00479830;0x004798c0;0x00479950;0x0047ab50;0x0047b670;0x00480b00;0x00480c80;0x00483420;0x00483bb0;0x00483c70;0x00483d30;0x00483d80;0x004860d0;0x00486110;0x00486200;0x00486250;0x00486b30;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004385d0__RenderGolferCustomizationScreen__YAXHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004385d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/frontend/0043a8c0_pickAProScreen.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fw.cpp)
+  [PASS] source has a '// 0x0043a8c0' comment
+  [PASS] SG_HOOK registered at 0x0043a8c0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0043a8c0_pickAProScreen.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0046ddd0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404ad0;0x00404b70;0x00404bc0;0x00437fa0;0x0043d2a0;0x0045ae50;0x0045ae70;0x0045bf80;0x0045c030;0x00467130;0x00467170;0x00469b00;0x0046d6e0;0x00473bf0;0x00473cb0;0x00473e60;0x00474ae0;0x00474c40;0x00475840;0x00475c60;0x004762d0;0x0047ab50;0x00480b00;0x00480c80;0x00483d30;0x004a55d2;0x004a5713;0x004a64b8;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0043a8c0__ShowPickAProScreen__YAHXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0043a8c0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/frontend/0043b610_loadGameBrowserScreen.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fw.cpp)
+  [PASS] source has a '// 0x0043b610' comment
+  [PASS] SG_HOOK registered at 0x0043b610
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0043b610_loadGameBrowserScreen.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0;0x0046ddd0;0x0046f550)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404b70;0x00404bc0;0x0040b4a0;0x0040b840;0x0040b9b0;0x0040ca10;0x0040daa0;0x0042dc00;0x0042dd50;0x0043d2a0;0x0045ae50;0x0045ae70;0x0045b9f0;0x0045bf80;0x0045c030;0x004658b0;0x00467130;0x00467170;0x0046d6e0;0x00473bf0;0x00473e60;0x00473f60;0x00474ae0;0x00474c40;0x00475840;0x00475c60;0x004762d0;0x0047ab50;0x00480b00;0x00480c80;0x00483d30;0x004a55d2;0x004a5713;0x004a64b8;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0043b610__ShowLoadGameScreen__YAHHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0043b610 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/0043dbe0_loadWorldAssets.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fv.cpp)
+  [PASS] source has a '// 0x0043dbe0' comment
+  [PASS] SG_HOOK registered at 0x0043dbe0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0043dbe0_loadWorldAssets.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040b9b0;0x0040f5c0;0x00442180)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0043d670;0x0043d740;0x00473bf0;0x00474ae0;0x00474c40;0x00474dd0;0x00475840)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0043dbe0__LoadThemeAssets__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0043dbe0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00442180_loadInterfaceArt.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fv.cpp)
+  [PASS] source has a '// 0x00442180' comment
+  [PASS] SG_HOOK registered at 0x00442180
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00442180_loadInterfaceArt.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040b840;0x0040f5c0;0x00407d30)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0043d2a0;0x0043d740;0x0043dbe0;0x0045b880;0x0045c1e0;0x004673e0;0x00473bf0;0x00474ae0;0x00474c40;0x00474dd0;0x00475840)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00442180__ResetAllGameState__YAXH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00442180 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0044bde0_loadInfoScreenArt.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fv.cpp)
+  [PASS] source has a '// 0x0044bde0' comment
+  [PASS] SG_HOOK registered at 0x0044bde0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0044bde0_loadInfoScreenArt.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473c60;0x00474ae0;0x00474c40;0x00474cb0;0x00474dd0;0x00475840;0x00483800)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0044bde0__LoadInfoScreenAssets__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0044bde0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/golfer/0044cff0_CareerRetirementFlow.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3er.cpp)
+  [PASS] source has a '// 0x0044cff0' comment
+  [PASS] SG_HOOK registered at 0x0044cff0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0044cff0_CareerRetirementFlow.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004074a0;0x0042dc00;0x0042dd50;0x004481b0;0x00448200;0x0045ae70;0x0045bf80;0x0045c030;0x0045c150;0x00466b70;0x00467130;0x004732d0;0x00473470;0x00473ab0;0x00473ae0;0x00473c60;0x00473e60;0x00473f60;0x00474440;0x00474ae0;0x00474c40;0x00474cb0;0x00474dd0;0x00475840;0x00476310;0x00476700;0x00476750;0x0047ab50;0x00480c80;0x00483d30;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0044cff0__RenderEndOfYearReport__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0044cff0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/economy/004587a0_showBuyLandScreen.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fr.cpp)
+  [PASS] source has a '// 0x004587a0' comment
+  [PASS] SG_HOOK registered at 0x004587a0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004587a0_showBuyLandScreen.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404b70;0x00404bc0;0x00406c30;0x0040bf00;0x0040bf20;0x0040c6f0;0x0042dc00;0x0043d6f0;0x004481b0;0x00456b70;0x00456be0;0x0045bf80;0x0045c030;0x0045c1e0;0x004628d0;0x00467130;0x00473e60;0x004762d0;0x00476310;0x00476700;0x00477c30;0x00478080;0x00478430;0x0047ab50;0x00480c80;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004587a0__RenderTractPurchaseScreen__YAHXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004587a0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/golfer/00459850_showGolferPairSelect.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3et.cpp)
+  [PASS] source has a '// 0x00459850' comment
+  [PASS] SG_HOOK registered at 0x00459850
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00459850_showGolferPairSelect.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404b70;0x004481b0;0x00453260;0x0045ae70;0x0045bf80;0x0045c030;0x0045de30;0x0045de80;0x004676e0;0x0046c940;0x00473cb0;0x00473e60;0x00474380;0x00474440;0x004762d0;0x0047ab50;0x00480c80;0x00483d30;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00459850__RenderGolferPairingScreen__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00459850 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/boot/0045baf0_gameMain.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fv.cpp)
+  [PASS] source has a '// 0x0045baf0' comment
+  [PASS] SG_HOOK registered at 0x0045baf0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0045baf0_gameMain.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a682f)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00404970;0x0040f5c0;0x0043cd70;0x00448220;0x004490b0;0x00449860;0x0044cce0;0x00461830;0x00467110;0x00474ae0;0x00474c40;0x00474dd0;0x004789f0;0x0047b310;0x0047b670;0x0047d840;0x004806c0;0x004808c0;0x00481870;0x00481b20;0x00483060;0x00483190;0x004832e0;0x00483800;0x00483850;0x00483bd0;0x00483e90;0x004855b0;0x00485740;0x0048de00;0x0048de90;0x00490c80;0x00490cc0;0x00490cf0;0x00490d20;0x004a504f)
+  [FAIL] no open semantic/structural uncertainties ['U-1351']
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0045baf0__WinMain_16.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0045baf0 C3 -> C4: REFUSED
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/economy/0045f870_showCourseRanking.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fb.cpp)
+  [PASS] source has a '// 0x0045f870' comment
+  [PASS] SG_HOOK registered at 0x0045f870
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0045f870_showCourseRanking.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00404ad0;0x00404bc0;0x0040daa0;0x00473e60;0x004762d0;0x00480b00;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0045f870__RenderTop10CoursesScreen__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0045f870 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/frontend/004604f0_showTutorialText.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ai.cpp)
+  [PASS] source has a '// 0x004604f0' comment
+  [PASS] SG_HOOK registered at 0x004604f0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004604f0_showTutorialText.path1.csv +19 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0040b4a0;0x0040cb00)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004604f0__SetupTutorialMessage__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004604f0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/terrain/004615f0_spreadShade.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3bs.cpp)
+  [PASS] source has a '// 0x004615f0' comment
+  [PASS] SG_HOOK registered at 0x004615f0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004615f0_spreadShade.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004616f0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0040bf60;0x00467130;0x00467170)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004615f0__AdjustMoodInRadius__YAXHHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004615f0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/golfer/00467600_pickGolferName.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3bs.cpp)
+  [PASS] source has a '// 0x00467600' comment
+  [PASS] SG_HOOK registered at 0x00467600
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00467600_pickGolferName.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004038f0;0x0040f5c0;0x00436c00;0x00436e50;0x00456be0)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (16)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00467600__BuildEmployeeName__YAXH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00467600 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0046dea0_runScrollText.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3el.cpp)
+  [PASS] source has a '// 0x0046dea0' comment
+  [PASS] SG_HOOK registered at 0x0046dea0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0046dea0_runScrollText.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0046de70)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00404970;0x0045ae30;0x0045ae70;0x0045bf80;0x0045c030;0x00465560;0x0046e260;0x004762d0;0x00477580;0x0047ab50;0x00483d30)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0046dea0__ShowListSelectionDialog__YAHPBDH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0046dea0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0046e260_drawScrollText.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eh.cpp)
+  [PASS] source has a '// 0x0046e260' comment
+  [PASS] SG_HOOK registered at 0x0046e260
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0046e260_drawScrollText.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0046dea0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00404970;0x004049d0;0x00404a20;0x0040d0b0;0x00467130;0x0046e710;0x00477250;0x00480c80;0x004a6170)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0046e260__RenderMenuWithSelection__YAHPADH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0046e260 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0046f550_courseActionMenu.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fw.cpp)
+  [PASS] source has a '// 0x0046f550' comment
+  [PASS] SG_HOOK registered at 0x0046f550
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0046f550_courseActionMenu.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0;0x00407d30)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404b70;0x00404bc0;0x0040b4a0;0x0040cb00;0x0040cc00;0x0040cef0;0x0040d320;0x0040d7b0;0x0040daa0;0x0042dc00;0x00432620;0x0043b610;0x004481b0;0x0045b2c0;0x0045bf80;0x0045c030;0x0045c0c0;0x0045c1e0;0x00467170;0x0046f1d0;0x0046f2b0;0x00473bf0;0x00473e60;0x00473f60;0x00474ae0;0x00474c40;0x00475840;0x00475c90;0x004762d0;0x0047ab50;0x00480c80;0x00482fd0;0x00483010;0x00483d30;0x004a55d2;0x004a5713;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0046f550__ShowWorldMapScreen__YAHXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0046f550 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/frontend/004725b0_showThemePackSelect.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fw.cpp)
+  [PASS] source has a '// 0x004725b0' comment
+  [PASS] SG_HOOK registered at 0x004725b0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004725b0_showThemePackSelect.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004049d0;0x00404b70;0x00404bc0;0x0040ca10;0x0045ae70;0x0045bf80;0x0045c030;0x00467170;0x004724c0;0x00473bf0;0x00473cb0;0x00473e60;0x00474ae0;0x00474c40;0x00475840;0x00475c60;0x004762d0;0x0047ab50;0x00480c80;0x00483d30;0x004a55d2;0x004a5713)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004725b0__ShowThemeSelect__YAXXZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004725b0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00475050_reloadBmp.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ee.cpp)
+  [PASS] source has a '// 0x00475050' comment
+  [PASS] SG_HOOK registered at 0x00475050
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00475050_reloadBmp.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00475210)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00474dd0;0x00475410;0x004a5007)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00475050_AssetSurface_ConvertBMP8ToSurface16.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00475050 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00475210_loadBmpSurface.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ee.cpp)
+  [PASS] source has a '// 0x00475210' comment
+  [PASS] SG_HOOK registered at 0x00475210
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00475210_loadBmpSurface.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0046e810)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00474dd0;0x00474ee0;0x00475050;0x00475410;0x004a5007)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00475210_AssetSurface_LoadBMPToSurface16.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00475210 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00475580_saveBmp.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ea.cpp)
+  [PASS] source has a '// 0x00475580' comment
+  [PASS] SG_HOOK registered at 0x00475580
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00475580_saveBmp.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00407e00;0x0046e810)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475410;0x004a4ffc;0x004a57f1;0x004a609f;0x004a614d;0x004a6268)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00475580_AssetSurface_SaveSnapshot.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00475580 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00475e10_blitLeft.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00475e10' comment
+  [PASS] SG_HOOK registered at 0x00475e10
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00475e10_blitLeft_full.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004791b0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475b00)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00475e10_AssetSurface_tile_mask.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00475e10 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00475fb0_blitMid.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00475fb0' comment
+  [PASS] SG_HOOK registered at 0x00475fb0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00475fb0_blitMid_full.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004791b0;0x0047d850;0x00490d60;0x0047e770)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475b00;0x00475c60)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00475fb0_AssetSurface_tile.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00475fb0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00476140_blitRight.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00476140' comment
+  [PASS] SG_HOOK registered at 0x00476140
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00476140_blitRight_full.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004791b0;0x004810d0;0x00493f50;0x00496fc0;0x00490d60;0x004a1580)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00475b00)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00476140_AssetSurface_TileSprite.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00476140 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004763d0_drawMenuList.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x004763d0' comment
+  [PASS] SG_HOOK registered at 0x004763d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004763d0_drawMenuList.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00490d60)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00402130;0x00402160;0x00477580;0x00478530;0x00478750;0x004787a0;0x00478970)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004763d0_AssetSurface_write_strings.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004763d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00476ef0_measureMarkupRun.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3df.cpp)
+  [PASS] source has a '// 0x00476ef0' comment
+  [PASS] SG_HOOK registered at 0x00476ef0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00476ef0_measureMarkupRun.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00476e20;0x004782d0;0x00478430;0x00478530;0x00478610;0x004787a0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00476d40;0x00476d80;0x00476dd0;0x00483980;0x004935b0;0x004a6170;0x004a6ad0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00476ef0_AssetSurface_find_line_break_l.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00476ef0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004782d0_measureText.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x004782d0' comment
+  [PASS] SG_HOOK registered at 0x004782d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004782d0_measureText_base.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049dab0;0x0049f370;0x004864f0;0x0048b3f0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00476ef0;0x00477580;0x00477c30)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004782d0_AssetSurface_RenderMultilineTextInRect.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004782d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00478430_measureText2.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00478430' comment
+  [PASS] SG_HOOK registered at 0x00478430
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00478430_measureText2_base.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004587a0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00476ef0;0x00477580;0x00477c30)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00478430_AssetSurface_wrap.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00478430 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00478530_measureText3.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00478530' comment
+  [PASS] SG_HOOK registered at 0x00478530
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00478530_measureText3_base.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00456be0;0x004763d0;0x004a1580)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00476ef0;0x00477580;0x00477da0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00478530_AssetSurface_wrap_cent.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00478530 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00478610_measureText4.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00478610' comment
+  [PASS] SG_HOOK registered at 0x00478610
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00478610_measureText4_base.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004785e0;0x0048fe60)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00476ef0;0x00477250;0x00477580)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00478610_AssetSurface_wrap_height_flying.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00478610 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004787a0_drawTextBlock.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x004787a0' comment
+  [PASS] SG_HOOK registered at 0x004787a0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004787a0_drawTextBlock_acc.path1.csv +7 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004763d0;0x00478750)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00476ef0;0x00477250;0x00477580;0x00477c30)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004787a0_AssetSurface_TextLayout_AppendAndWrap.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004787a0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00478df0_drawLineH.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3db.cpp)
+  [PASS] source has a '// 0x00478df0' comment
+  [PASS] SG_HOOK registered at 0x00478df0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00478df0_drawLineH.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0040f5c0;0x0047f340)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004796a0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00478df0_AssetSurface_get_pixel.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00478df0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00478f50_openImageAsset.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ee.cpp)
+  [PASS] source has a '// 0x00478f50' comment
+  [PASS] SG_HOOK registered at 0x00478f50
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00478f50_openImageAsset_m0.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048e1c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00492d80;0x00492dc0;0x00492dd0;0x00492e80;0x004a6ad0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00478f50_AssetSurface_get_pcx_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00478f50 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/004791b0_drawComposite.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x004791b0' comment
+  [PASS] SG_HOOK registered at 0x004791b0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004791b0_drawComposite_full.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a1580;0x0048c130)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00475e10;0x00475fb0;0x00476140)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004791b0_AssetSurface_box_sprite.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004791b0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0047ae80_setFocusItem.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3cg.cpp)
+  [PASS] source has a '// 0x0047ae80' comment
+  [PASS] SG_HOOK registered at 0x0047ae80
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0047ae80_setFocusItem.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00404360;0x00424120;0x0043cb50;0x00479c40;0x0047a3c0;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x0048ce00;0x00491410;0x00491500;0x00491680;0x00491710;0x00496030;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (28)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0047ae80_WidgetBase_set_dialog_focus.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0047ae80 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0047bab0_Window_runModal.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3el.cpp)
+  [PASS] source has a '// 0x0047bab0' comment
+  [PASS] SG_HOOK registered at 0x0047bab0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0047bab0_Window_runModal.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00404360;0x00424120;0x0043cb50;0x00479c40;0x0047a3c0;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x0048ce00;0x00491410;0x00491500;0x00491680;0x00491710;0x00491ad0;0x00496030;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00483ba0;0x00483d30)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0047bab0_WidgetBase_set_modal.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0047bab0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0047cce0_Window_shrinkRect.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3v.cpp)
+  [PASS] source has a '// 0x0047cce0' comment
+  [PASS] SG_HOOK registered at 0x0047cce0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0047cce0_Window_shrinkRect.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0047a4c0;0x0047b4e0)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (16)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0047cce0_WidgetBase_ShrinkRectForBorders.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0047cce0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0047d850_drawPanelContents.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eh.cpp)
+  [PASS] source has a '// 0x0047d850' comment
+  [PASS] SG_HOOK registered at 0x0047d850
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0047d850_drawPanelContents.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004810d0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475b00;0x00475fb0;0x004762d0;0x00476310;0x00477cd0;0x00477eb0;0x004781f0;0x00478b30;0x004795d0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0047d850_WidgetBase_on_redraw_nc.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0047d850 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/0047fab0_compositeScreen.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0047fab0' comment
+  [PASS] SG_HOOK registered at 0x0047fab0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0047fab0_compositeScreen_m10.path1.csv +11 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004959b0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0047b0d0;0x0047b120;0x0047b200;0x0047b2d0;0x0047ca10;0x0047cdb0;0x0047e140;0x0047f8e0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0047fab0_WidgetBase_do_tracking.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0047fab0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00480a10_Window_paintBackground.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dq.cpp)
+  [PASS] source has a '// 0x00480a10' comment
+  [PASS] SG_HOOK registered at 0x00480a10
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00480a10_Window_paintBackground.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00496fc0;0x0048b3f0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475c60;0x00475da0;0x00478b50)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00480a10_GraphicWin_EraseBackground.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00480a10 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00480b30_Window_createBackingSurface.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fa.cpp)
+  [PASS] source has a '// 0x00480b30' comment
+  [PASS] SG_HOOK registered at 0x00480b30
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00480b30_Window_createBackingSurface.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00404360;0x0043cb50;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x0048ce00;0x00491410;0x00491500;0x00491680;0x00491710;0x00491ad0;0x00496030;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a0740;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00474dd0;0x0047b4e0;0x0047ca10;0x0047cb10)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00480b30_GraphicWin_resize.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00480b30 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004810d0_drawPanel4810d0.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ei.cpp)
+  [PASS] source has a '// 0x004810d0' comment
+  [PASS] SG_HOOK registered at 0x004810d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004810d0_drawPanel4810d0.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491270)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00476140;0x00478b30;0x0047d850)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004810d0_GraphicWin_on_redraw_nc.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004810d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/boot/00482f20_atexitDtor_83aca8.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3cp.cpp)
+  [PASS] source has a '// 0x00482f20' comment
+  [PASS] SG_HOOK registered at 0x00482f20
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00482f20_atexitDtor_83aca8_clear.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00482f10)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004835f0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00482f20___E19.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00482f20 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00483980_wrapTextToWidth.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3z.cpp)
+  [PASS] source has a '// 0x00483980' comment
+  [PASS] SG_HOOK registered at 0x00483980
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00483980_wrapTextToWidth_acc0.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00476ef0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00483930;0x004a6ba0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00483980_Font_find_line_break_l.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00483980 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00485aa0_Image_savePcx.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ee.cpp)
+  [PASS] source has a '// 0x00485aa0' comment
+  [PASS] SG_HOOK registered at 0x00485aa0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00485aa0_Image_savePcx.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00437910)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004a4ffc;0x004a57f1;0x004a6268)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00485aa0_AssetSurface_SaveToPCX.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00485aa0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004863e0_EditBox_pixelToCharPos.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ct.cpp)
+  [PASS] source has a '// 0x004863e0' comment
+  [PASS] SG_HOOK registered at 0x004863e0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004863e0_EditBox_pixelToCharPos.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00486b90;0x00486be0;0x00486c40;0x004867b0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00477280;0x00477580;0x004862b0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004863e0_EditBox_pixel_to_pos.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004863e0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004867b0_EditBox_onKey.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fz.cpp)
+  [PASS] source has a '// 0x004867b0' comment
+  [PASS] SG_HOOK registered at 0x004867b0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004867b0_EditBox_onKey.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0043cb50;0x00486070)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00477580;0x004862b0;0x00486360;0x004863e0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004867b0_EditBox_on_key_down.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004867b0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00488ab0_Button_beginPress.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dl.cpp)
+  [PASS] source has a '// 0x00488ab0' comment
+  [PASS] SG_HOOK registered at 0x00488ab0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00488ab0_Button_beginPress_a.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00488500;0x00488650;0x00491410;0x00491710;0x00497a20;0x00499140;0x004a13f0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00480360;0x00486d90)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00488ab0_BaseButton_on_left_down.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00488ab0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048a120_ListBox_measure.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eh.cpp)
+  [PASS] source has a '// 0x0048a120' comment
+  [PASS] SG_HOOK registered at 0x0048a120
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048a120_ListBox_measure.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048a5d0;0x0048c6e0;0x004a11c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x00477250;0x00477580)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048a120_ListBox_calculate_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048a120 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048a5d0_ListBox_build.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fi.cpp)
+  [PASS] source has a '// 0x0048a5d0' comment
+  [PASS] SG_HOOK registered at 0x0048a5d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048a5d0_ListBox_build.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048c6e0;0x004a08a0;0x0048cd60;0x004a0ef0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x0047b9f0;0x0047ba10;0x0047ba30;0x0047ba50;0x0047ba70;0x0047ba90;0x004806c0;0x0048a120)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048a5d0_ListBox_attach.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048a5d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048aa00_ListBox_onNavKey.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ct.cpp)
+  [PASS] source has a '// 0x0048aa00' comment
+  [PASS] SG_HOOK registered at 0x0048aa00
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048aa00_ListBox_onNavKey.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048ccb0;0x004a0b50)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00489f50)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048aa00_ListBox_on_left_down.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048aa00 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048aea0_ListBox_typeAhead.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eg.cpp)
+  [PASS] source has a '// 0x0048aea0' comment
+  [PASS] SG_HOOK registered at 0x0048aea0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048aea0_ListBox_typeAhead.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048ccd0;0x004a0bf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0047b9f0;0x0047ba10;0x00480ce0;0x00489950;0x00489f50;0x004a71d2)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048aea0_ListBox_on_key_down.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048aea0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048c130_ListBox_drawContents.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eh.cpp)
+  [PASS] source has a '// 0x0048c130' comment
+  [PASS] SG_HOOK registered at 0x0048c130
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048c130_ListBox_drawContents.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048cc60;0x004a0d30;0x0048cd70)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475c60;0x004791b0;0x004795d0;0x004808c0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048c130_ListBox_on_redraw.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048c130 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048c6e0_ListBox_onMouse.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eg.cpp)
+  [PASS] source has a '// 0x0048c6e0' comment
+  [PASS] SG_HOOK registered at 0x0048c6e0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048c6e0_ListBox_onMouse.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00493b90)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0047b670;0x0047ba30;0x0047ba50;0x0047ba70;0x0047ba90;0x004801f0;0x00489950;0x00489f50;0x0048a120;0x0048a5d0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048c6e0_ListBox_update_changes.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048c6e0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048c8a0_ListBox_onDrag.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ct.cpp)
+  [PASS] source has a '// 0x0048c8a0' comment
+  [PASS] SG_HOOK registered at 0x0048c8a0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048c8a0_ListBox_onDrag.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048cc80;0x004a0ab0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00480ce0;0x00489f50)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048c8a0_ListBox_on_mouse_move.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048c8a0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048ce00_TextView_ctor.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ek.cpp)
+  [PASS] source has a '// 0x0048ce00' comment
+  [PASS] SG_HOOK registered at 0x0048ce00
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048ce00_TextView_ctor_s0.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491310;0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473ab0;0x00473ae0;0x004747a0;0x004804a0;0x0048e0b0;0x0048e120;0x0048e190;0x00492850;0x004a0740;0x004a13f0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048ce00___0BasePop__QAE_XZ.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048ce00 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048d480_TextView_reset.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ef.cpp)
+  [PASS] source has a '// 0x0048d480' comment
+  [PASS] SG_HOOK registered at 0x0048d480
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048d480_TextView_reset_a.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048db60;0x0048e1c0;0x00491710;0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473ae0;0x004747e0;0x00480610;0x00489e40;0x0048e0b0;0x0048e120;0x0048e190;0x0049d690;0x0049ece0;0x004a23a0;0x004a35e0;0x004a5007)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048d480_BasePop_close.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048d480 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048e1c0_TextView_layout.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ek.cpp)
+  [PASS] source has a '// 0x0048e1c0' comment
+  [PASS] SG_HOOK registered at 0x0048e1c0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048e1c0_TextView_layout_a.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00493670;0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473b50;0x00478f50;0x004801f0;0x00487e60;0x00487e70;0x00487e90;0x0048cd80;0x0048d480;0x0048db60;0x0048df20;0x0048dfc0;0x0048e010;0x0048e0b0;0x0048e120;0x0048e190;0x004925b0;0x004942f0;0x004a09a0;0x004a1370;0x004a28a0;0x004a29c0;0x004a6570;0x004a6b08;0x004a6b93)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048e1c0_BasePop_start.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048e1c0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048e900_TextView_build.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3et.cpp)
+  [PASS] source has a '// 0x0048e900' comment
+  [PASS] SG_HOOK registered at 0x0048e900
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048e900_TextView_build.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x004763a0;0x0047b8f0;0x004801f0;0x004806c0;0x004887c0;0x00488930;0x00488970;0x004889b0;0x00488a20;0x0048e0b0;0x0048e120;0x0048e190;0x00491490;0x004914b0;0x00494cb0;0x004a08a0;0x004a13f0;0x004a2980;0x004a5007;0x004a504f;0x004a57f1)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048e900_BasePop_exec.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048e900 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0048fe60_TextView_render.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eq.cpp)
+  [PASS] source has a '// 0x0048fe60' comment
+  [PASS] SG_HOOK registered at 0x0048fe60
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0048fe60_TextView_render.path1.csv +5 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048ce00;0x00491710;0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x004763a0;0x00476e20;0x00477250;0x00477580;0x004785e0;0x00478610;0x00478700;0x004898d0;0x00489ed0;0x00489f50;0x0048e0b0;0x0048e120;0x0048e190;0x004941e0;0x004a11c0;0x004a29a0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0048fe60_BasePop_calculate_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0048fe60 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00490d60_TextView_drawContents.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ek.cpp)
+  [PASS] source has a '// 0x00490d60' comment
+  [PASS] SG_HOOK registered at 0x00490d60
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00490d60_TextView_drawContents.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048ce00;0x00491710;0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00475fb0;0x00476140;0x004762d0;0x00476310;0x00476340;0x00476370;0x004763a0;0x004763d0;0x00478a20;0x0047b420;0x004808c0;0x004a48f0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00490d60_BasePop_on_redraw.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00490d60 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00491270_TextView_drawPanelWithImage.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x00491270' comment
+  [PASS] SG_HOOK registered at 0x00491270
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00491270_TextView_drawPanelWithImage.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048ce00;0x00491710;0x00497fc0;0x00499140;0x0049acf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x004810d0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00491270_BasePop_on_redraw_nc.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00491270 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004936a0_comboInit.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ek.cpp)
+  [PASS] source has a '// 0x004936a0' comment
+  [PASS] SG_HOOK registered at 0x004936a0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004936a0_comboInit_g.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004775b0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x0047d020;0x00480870;0x004887c0;0x00493b90;0x00493ef0;0x00494020)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004936a0_ComboBox_init.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004936a0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00493b90_comboOpenPopup.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ek.cpp)
+  [PASS] source has a '// 0x00493b90' comment
+  [PASS] SG_HOOK registered at 0x00493b90
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00493b90_comboOpenPopup_a.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004936a0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0047b170;0x0047b420;0x0047d020;0x00489ab0;0x0048c6e0;0x0048e190;0x00493a60;0x00493ed0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00493b90_ComboBox_updateListBoxPositionAndSize.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00493b90 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004940e0_comboFindItem.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3y.cpp)
+  [PASS] source has a '// 0x004940e0' comment
+  [PASS] SG_HOOK registered at 0x004940e0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004940e0_comboFindItem.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004942f0)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (20)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004940e0_ComboBox_getItemString.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004940e0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004942f0_expandTextMarkup.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ai.cpp)
+  [PASS] source has a '// 0x004942f0' comment
+  [PASS] SG_HOOK registered at 0x004942f0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004942f0_expandTextMarkup.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0048e1c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004935f0;0x004940e0;0x004a4ad0;0x004a64f0;0x004a6ad0;0x004ad425)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004942f0__parse_string__YAHPAD0_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004942f0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00494d30_drawColorRunA.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3db.cpp)
+  [PASS] source has a '// 0x00494d30' comment
+  [PASS] SG_HOOK registered at 0x00494d30
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00494d30_drawColorRunA.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00478c10)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (60)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00494d30_AssetSurface_dotted_hline_16.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00494d30 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00494f00_drawColorRunB.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3db.cpp)
+  [PASS] source has a '// 0x00494f00' comment
+  [PASS] SG_HOOK registered at 0x00494f00
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00494f00_drawColorRunB.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00478c70)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (60)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00494f00_AssetSurface_dotted_vline_16.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00494f00 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/render/00495420_decodeImage16.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ee.cpp)
+  [PASS] source has a '// 0x00495420' comment
+  [PASS] SG_HOOK registered at 0x00495420
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00495420_decodeImage16.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00478cd0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00474e70;0x00482fd0;0x00483010;0x00483020;0x00493630;0x004a6ad0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00495420_AssetSurface_load_pcx_8_16.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00495420 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/00496330_scrollbarCreate.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fi.cpp)
+  [PASS] source has a '// 0x00496330' comment
+  [PASS] SG_HOOK registered at 0x00496330
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (00496330_scrollbarCreate.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00496690;0x004966d0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004806c0;0x004887c0;0x004961d0;0x004967d0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (00496330_Scroll_init.match.csv)
+  [PASS] no STUB marker in the reimplementation
+00496330 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004974d0_scrollbarThumbRect.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dx.cpp)
+  [PASS] source has a '// 0x004974d0' comment
+  [PASS] SG_HOOK registered at 0x004974d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004974d0_scrollbarThumbRect.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00496fc0)
+  [PASS] leaf exemption: no callees and A/B covers >= 10 vectors (25)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004974d0_Scroll_compute_thumb_rect.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004974d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/net/0049ab40_netServiceControl.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ez.cpp)
+  [PASS] source has a '// 0x0049ab40' comment
+  [PASS] SG_HOOK registered at 0x0049ab40
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049ab40_netServiceControl.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00497b20;0x00497fc0;0x00499140)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00499140;0x0049acf0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049ab40_Net_check_polling.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049ab40 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/net/0049acf0_netHandleControl.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fj.cpp)
+  [PASS] source has a '// 0x0049acf0' comment
+  [PASS] SG_HOOK registered at 0x0049acf0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049acf0_netHandleControl.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049ab40;0x0049b7b0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473ae0;0x00474810;0x004805a0;0x00489370;0x00489b30;0x00489c90;0x0048ce00;0x0048d480;0x0048e1c0;0x0048e900;0x00491410;0x004914d0;0x00491500;0x00491710;0x004928d0;0x00493670;0x00494cb0;0x00499140;0x0049aa30;0x0049bec0;0x004a6070)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049acf0_Net_drop_player.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049acf0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/net/0049b970_netHeapAlloc.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dd.cpp)
+  [PASS] source has a '// 0x0049b970' comment
+  [PASS] SG_HOOK registered at 0x0049b970
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049b970_netHeapAlloc.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049b690)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00474860;0x004852e0;0x004a504f;0x004a5108)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049b970__add___ClassList_UJackalVoiceRx____QAEHH_Z.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049b970 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/video/0049c940_movieAdvanceFrame.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fa.cpp)
+  [PASS] source has a '// 0x0049c940' comment
+  [PASS] SG_HOOK registered at 0x0049c940
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049c940_movieAdvanceFrame.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049cb90;0x0049ccc0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004a0320)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049c940_Video_advance_frame.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049c940 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/video/0049ccc0_moviePlayFrame.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ev.cpp)
+  [PASS] source has a '// 0x0049ccc0' comment
+  [PASS] SG_HOOK registered at 0x0049ccc0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049ccc0_moviePlayFrame.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049c910;0x0049cae0;0x0049cb20)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0049c940;0x0049cb80;0x0049cb90;0x0049cf50;0x004a0320;0x004a4d30;0x004a4ea0;0x004a4ed0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049ccc0_Video_play_frame.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049ccc0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049d6d0_panelBuildRow.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ev.cpp)
+  [PASS] source has a '// 0x0049d6d0' comment
+  [PASS] SG_HOOK registered at 0x0049d6d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049d6d0_panelBuildRow.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a08a0;0x00491bf0;0x004a0ef0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004806c0;0x0049d770)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049d6d0_ListBoxCtl_attach.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049d6d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049d770_panelBuildText.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x0049d770' comment
+  [PASS] SG_HOOK registered at 0x0049d770
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049d770_panelBuildText.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049d6d0;0x004a11c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00477250;0x00477560)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049d770_ListBoxCtl_calculate_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049d770 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049dab0_listPanelDraw.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049dab0' comment
+  [PASS] SG_HOOK registered at 0x0049dab0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049dab0_listPanelDraw_a.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049e230;0x0049e450;0x0049e680)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00475c60;0x004762d0;0x00476310;0x00476340;0x00476370;0x00477580;0x00477cd0;0x004781f0;0x004782d0;0x00479670;0x00489a30;0x004a6170)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049dab0_ListBoxCtl_draw_item.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049dab0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049e450_listPanelRefresh.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049e450' comment
+  [PASS] SG_HOOK registered at 0x0049e450
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049e450_listPanelRefresh_a.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491b90;0x004a0bf0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00480ce0;0x0049dab0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049e450_ListBoxCtl_on_key_down.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049e450 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049e680_listPanelDrawContents.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049e680' comment
+  [PASS] SG_HOOK registered at 0x0049e680
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049e680_listPanelDrawContents_a.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491b50;0x004a0d30;0x00491c00)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475c60;0x00480ce0;0x0049dab0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049e680_ListBoxCtl_on_redraw.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049e680 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049e7d0_listPanelReadValue.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dx.cpp)
+  [PASS] source has a '// 0x0049e7d0' comment
+  [PASS] SG_HOOK registered at 0x0049e7d0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049e7d0_listPanelReadValue.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491b60;0x004a0ab0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00477580)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049e7d0_ListBoxCtl_on_mouse_move.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049e7d0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049ed20_optionDialogBuild.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049ed20' comment
+  [PASS] SG_HOOK registered at 0x0049ed20
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049ed20_optionDialogBuild.path1.csv +1 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a08a0;0x004a0040;0x004a0ef0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x004806c0;0x0049f050)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049ed20_CheckBoxCtl_attach.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049ed20 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049f050_optionDialogDraw.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x0049f050' comment
+  [PASS] SG_HOOK registered at 0x0049f050
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049f050_optionDialogDraw.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049ed20;0x004a11c0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x00477250;0x00477560)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049f050_CheckBoxCtl_calculate_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049f050 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049f370_optionListDraw.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049f370' comment
+  [PASS] SG_HOOK registered at 0x0049f370
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049f370_optionListDraw_a.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049f9a0;0x0049fa90;0x0049fc60)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00402160;0x00473e60;0x00475c60;0x00477580;0x00477cd0;0x004781f0;0x004782d0;0x00489a30;0x004a6170)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049f370_CheckBoxCtl_draw_item.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049f370 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049f9a0_optionDialogUpdate.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049f9a0' comment
+  [PASS] SG_HOOK registered at 0x0049f9a0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049f9a0_optionDialogUpdate_a.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049ffd0;0x004a0b50)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00480ce0;0x004899d0;0x00489a30;0x0049ee90;0x0049ef80;0x0049f030;0x0049f370)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049f9a0_CheckBoxCtl_on_left_down.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049f9a0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/0049fc60_optionDialogDrawContents.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ej.cpp)
+  [PASS] source has a '// 0x0049fc60' comment
+  [PASS] SG_HOOK registered at 0x0049fc60
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (0049fc60_optionDialogDrawContents_a.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x0049ffa0;0x004a0d30;0x004a0050)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475c60;0x0049f030;0x0049f370)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (0049fc60_CheckBoxCtl_on_redraw.match.csv)
+  [PASS] no STUB marker in the reimplementation
+0049fc60 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a1580_LabelButton_drawContents.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3et.cpp)
+  [PASS] source has a '// 0x004a1580' comment
+  [PASS] SG_HOOK registered at 0x004a1580
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a1580_LabelButton_drawContents.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491410;0x00491710;0x00497a20;0x00499140;0x004a13f0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00473fc0;0x00474ae0;0x00474c40;0x00474dd0;0x00475b00;0x00475d00;0x00476140;0x00476e20;0x00477250;0x00477560;0x00477580;0x00477cd0;0x00478530;0x004789f0;0x004791b0;0x004795d0;0x0047d7d0;0x004808c0;0x00488930)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a1580_ImageButton_on_redraw.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a1580 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a2010_LabelButton_onMouseMove.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3ek.cpp)
+  [PASS] source has a '// 0x004a2010' comment
+  [PASS] SG_HOOK registered at 0x004a2010
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a2010_LabelButton_onMouseMove.path1.csv +3 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x00491410;0x00491710;0x00497a20;0x00499140;0x004a13f0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x0047ab00;0x00480360;0x00486d20;0x00486e40;0x00486ec0;0x00488cf0;0x00488fd0;0x00492610)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a2010_ImageButton_on_mouse_move.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a2010 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a2400_panelCreate4a2400.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fb.cpp)
+  [PASS] source has a '// 0x004a2400' comment
+  [PASS] SG_HOOK registered at 0x004a2400
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a2400_panelCreate4a2400.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a08a0;0x004a30f0;0x004a0ef0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x004806c0;0x00486070;0x00486110;0x00486200;0x00486250;0x004a2a60;0x004a57f1)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a2400_EditGroup_attach.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a2400 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a2a60_panelBuildChildren.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3eh.cpp)
+  [PASS] source has a '// 0x004a2a60' comment
+  [PASS] SG_HOOK registered at 0x004a2a60
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a2a60_panelBuildChildren.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a11c0;0x004a2400)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x00477250;0x00477580)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a2a60_EditGroup_calculate_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a2a60 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a2d50_panelDrawRow.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x004a2d50' comment
+  [PASS] SG_HOOK registered at 0x004a2d50
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a2d50_panelDrawRow.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a3090;0x004a3100;0x004a0d30)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00475c60;0x00477cd0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a2d50_EditGroup_on_redraw.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a2d50 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a3880_panelBuild4a3880.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3fi.cpp)
+  [PASS] source has a '// 0x004a3880' comment
+  [PASS] SG_HOOK registered at 0x004a3880
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a3880_panelBuild4a3880.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a08a0;0x004a4ab0;0x004a0ef0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x004806c0;0x00492920;0x004929b0;0x004a3be0)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a3880_SpriteBox_attach.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a3880 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a3be0_panelBuildText4a3be0.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x004a3be0' comment
+  [PASS] SG_HOOK registered at 0x004a3be0
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a3be0_panelBuildText4a3be0.path1.csv) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a11c0;0x004a3880)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x004762d0;0x00476310;0x00476340;0x00476370;0x00477250;0x00477580)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a3be0_SpriteBox_calculate_dimensions.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a3be0 C3 -> C4: all gates pass
+  [PASS] one level at a time (C3 -> C4)
+  [PASS] analysis note exists (re/analysis/ui/004a3f10_panelDraw4a3f10.md)
+  [PASS] note has '## Signature'
+  [PASS] note has '## Reads'
+  [PASS] note has '## Writes'
+  [PASS] note has '## Callees'
+  [PASS] note has '## Constants'
+  [PASS] NO-GUESSING: no banned hedge words outside [UNCERTAIN] lines
+  [PASS] every [UNCERTAIN] marker is filed as [UNCERTAIN U-NNNN]
+  [PASS] referenced uncertainties exist in UNCERTAINTIES.md
+  [PASS] callers recorded (--callers 'none' or ';'-separated addrs/names)
+  [PASS] callees recorded (--callees 'none' for a leaf)
+  [PASS] ## Purpose is present and cites an address
+  [PASS] reimplementation under shim/src/re/ (shim/src/re/c3dv.cpp)
+  [PASS] source has a '// 0x004a3f10' comment
+  [PASS] SG_HOOK registered at 0x004a3f10
+  [PASS] shim build is newer than the source (run shim\build.bat)
+  [PASS] verified: path-1 A/B GREEN (004a3f10_panelDraw4a3f10.path1.csv +2 keys) or replay GREEN >= 100 real calls (none)
+  [PASS] install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV
+  [PASS] anti-island (callers): one caller at C2+ or identified (0x004a4350;0x004a4680;0x004a45b0)
+  [PASS] anti-island (callees): one callee at C2+ or identified (0x00473e60;0x00475c60;0x004762d0;0x00476310;0x00476340;0x00476370;0x00477cd0;0x00479560)
+  [PASS] no open semantic/structural uncertainties
+  [PASS] scenario ON/OFF GREEN with install witness in every scenario CSV (none) or 100% match with the original compiler (004a3f10_SpriteBox_draw_item.match.csv)
+  [PASS] no STUB marker in the reimplementation
+004a3f10 C3 -> C4: all gates pass

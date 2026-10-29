@@ -1,0 +1,112 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+1,push edi,push edi,True
+2,"test ecx, ecx","test ecx, ecx",True
+3,je 0x83,je 0x10022fa3,True
+4,push esi,push esi,True
+5,push ebx,push ebx,True
+6,"mov ebx, ecx","mov ebx, ecx",True
+7,"mov esi, dword ptr [esp + 0x14]","mov esi, dword ptr [esp + 0x14]",True
+8,"test esi, 3","test esi, 3",True
+9,"mov edi, dword ptr [esp + 0x10]","mov edi, dword ptr [esp + 0x10]",True
+10,jne 0x24,jne 0x10022f44,True
+11,"shr ecx, 2","shr ecx, 2",True
+12,jne 0x91,jne 0x10022fb1,True
+13,jmp 0x45,jmp 0x10022f65,True
+14,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+15,inc esi,inc esi,True
+16,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+17,inc edi,inc edi,True
+18,dec ecx,dec ecx,True
+19,je 0x52,je 0x10022f72,True
+20,"test al, al","test al, al",True
+21,je 0x5a,je 0x10022f7a,True
+22,"test esi, 3","test esi, 3",True
+23,jne 0x24,jne 0x10022f44,True
+24,"mov ebx, ecx","mov ebx, ecx",True
+25,"shr ecx, 2","shr ecx, 2",True
+26,jne 0x91,jne 0x10022fb1,True
+27,"and ebx, 3","and ebx, 3",True
+28,je 0x52,je 0x10022f72,True
+29,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+30,inc esi,inc esi,True
+31,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+32,inc edi,inc edi,True
+33,"test al, al","test al, al",True
+34,je 0x7e,je 0x10022f9e,True
+35,dec ebx,dec ebx,True
+36,jne 0x45,jne 0x10022f65,True
+37,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+38,pop ebx,pop ebx,True
+39,pop esi,pop esi,True
+40,pop edi,pop edi,True
+41,ret ,ret ,True
+42,"test edi, 3","test edi, 3",True
+43,je 0x74,je 0x10022f94,True
+44,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+45,inc edi,inc edi,True
+46,dec ecx,dec ecx,True
+47,je 0xf6,je 0x10023016,True
+48,"test edi, 3","test edi, 3",True
+49,jne 0x62,jne 0x10022f82,True
+50,"mov ebx, ecx","mov ebx, ecx",True
+51,"shr ecx, 2","shr ecx, 2",True
+52,jne 0xe7,jne 0x10023007,True
+53,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+54,inc edi,inc edi,True
+55,dec ebx,dec ebx,True
+56,jne 0x7b,jne 0x10022f9b,True
+57,pop ebx,pop ebx,True
+58,pop esi,pop esi,True
+59,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+60,pop edi,pop edi,True
+61,ret ,ret ,True
+62,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+63,"add edi, 4","add edi, 4",True
+64,dec ecx,dec ecx,True
+65,je 0x40,je 0x10022f60,True
+66,"mov edx, 0x7efefeff","mov edx, 0x7efefeff",True
+67,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+68,"add edx, eax","add edx, eax",True
+69,"xor eax, 0xffffffff","xor eax, 0xffffffff",True
+70,"xor eax, edx","xor eax, edx",True
+71,"mov edx, dword ptr [esi]","mov edx, dword ptr [esi]",True
+72,"add esi, 4","add esi, 4",True
+73,"test eax, 0x81010100","test eax, 0x81010100",True
+74,je 0x89,je 0x10022fa9,True
+75,"test dl, dl","test dl, dl",True
+76,je 0xdb,je 0x10022ffb,True
+77,"test dh, dh","test dh, dh",True
+78,je 0xd1,je 0x10022ff1,True
+79,"test edx, 0xff0000","test edx, 0xff0000",True
+80,je 0xc7,je 0x10022fe7,True
+81,"test edx, 0xff000000","test edx, 0xff000000",True
+82,jne 0x89,jne 0x10022fa9,True
+83,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+84,jmp 0xdf,jmp 0x10022fff,True
+85,"and edx, 0xffff","and edx, 0xffff",True
+86,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+87,jmp 0xdf,jmp 0x10022fff,True
+88,"and edx, 0xff","and edx, 0xff",True
+89,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+90,jmp 0xdf,jmp 0x10022fff,True
+91,"xor edx, edx","xor edx, edx",True
+92,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+93,"add edi, 4","add edi, 4",True
+94,"xor eax, eax","xor eax, eax",True
+95,dec ecx,dec ecx,True
+96,je 0xf1,je 0x10023011,True
+97,"xor eax, eax","xor eax, eax",True
+98,"mov dword ptr [edi], eax","mov dword ptr [edi], eax",True
+99,"add edi, 4","add edi, 4",True
+100,dec ecx,dec ecx,True
+101,jne 0xe9,jne 0x10023009,True
+102,"and ebx, 3","and ebx, 3",True
+103,jne 0x7b,jne 0x10022f9b,True
+104,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+105,pop ebx,pop ebx,True
+106,pop esi,pop esi,True
+107,pop edi,pop edi,True
+108,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\strncpy.obj (library object, no compilation)",symbol=_strncpy,module=Terrain.dll
+VERDICT,GREEN,109,100.0%

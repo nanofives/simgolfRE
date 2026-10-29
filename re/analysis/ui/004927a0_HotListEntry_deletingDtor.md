@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 90 bytes, 36 instructions, subsystem `ui`. Mechanical t
 scalar and vector deleting destructor of hot-list entries: destroys one entry or the array of 0x20-byte entries and frees the memory when bit 0 of the flag is set (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_spot.cpp` as `??_EHotSpot@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004927d5, 0x004927f7): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004927a6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 
@@ -25,7 +26,7 @@ Through registers:
 ## Callees
 - 0x00492660 `HotList::freeEntryTip` at 0x004927e0
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x004927c8, 0x004927eb
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x004927bd
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x004927bd
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

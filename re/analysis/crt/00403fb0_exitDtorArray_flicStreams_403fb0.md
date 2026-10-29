@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 23 bytes, 6 instructions, subsystem `crt`. Mechanical t
 atexit destructor of the global array g_flicStreams (591 elements of 0x44 bytes, element destructor C404200_dtor) (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_FlicChannels.cpp` as `_$E11` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00403fc6): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -15,7 +16,7 @@ None.
 None.
 
 ## Callees
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x00403fc1
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x00403fc1
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

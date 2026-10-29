@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,call 5,call 0x10042506,True
+1,call 0xa,call 0x100443a3,True
+2,"mov dword ptr [0], eax","mov dword ptr [0x100b5528], eax",True
+3,call 0x14,call 0x10044353,True
+4,fnclex ,fnclex ,True
+5,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpinit.obj (library object, no compilation)",symbol=__fpmath,module=sound.dll
+VERDICT,GREEN,6,100.0%

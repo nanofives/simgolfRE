@@ -1,0 +1,5 @@
+instruction,library_object,original,match
+0,fptan ,fptan ,True
+1,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\adj_fdiv.obj (library object, no compilation)",symbol=__adj_fptan,module=sound.dll
+VERDICT,GREEN,2,100.0%

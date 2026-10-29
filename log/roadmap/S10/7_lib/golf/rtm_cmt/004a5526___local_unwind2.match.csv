@@ -1,0 +1,14 @@
+instruction,library_object,original,match
+0,bytes +0x0: 5356578b442410506afe68????????64,bytes +0x0: 5356578b442410506afe68????????64,True
+1,bytes +0x10: ff3500000000648925000000008b4424,bytes +0x10: ff3500000000648925000000008b4424,True
+2,bytes +0x20: 208b58088b700c83feff742e3b742424,bytes +0x20: 208b58088b700c83feff742e3b742424,True
+3,bytes +0x30: 74288d34768b0cb3894c240889480c83,bytes +0x30: 74288d34768b0cb3894c240889480c83,True
+4,bytes +0x40: 7cb30400751268010100008b44b308e8,bytes +0x40: 7cb30400751268010100008b44b308e8,True
+5,bytes +0x50: 40000000ff54b308ebc3648f05000000,bytes +0x50: 40000000ff54b308ebc3648f05000000,True
+6,bytes +0x60: 0083c40c5f5e5bc333c0648b0d000000,bytes +0x60: 0083c40c5f5e5bc333c0648b0d000000,True
+7,bytes +0x70: 00817904????????75108b510c8b520c,bytes +0x70: 00817904????????75108b510c8b520c,True
+8,bytes +0x80: 3951087505b801000000c35351bb????,bytes +0x80: 3951087505b801000000c35351bb????,True
+9,bytes +0x90: ????eb0a5351bb????????8b4d08894b,bytes +0x90: ????eb0a5351bb????????8b4d08894b,True
+10,bytes +0xa0: 08894304896b0c595bc20400,bytes +0xa0: 08894304896b0c595bc20400,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\exsup.obj (library object, no compilation)",symbol=__local_unwind2,module=golf_clean.exe
+VERDICT,GREEN,11,100.0%

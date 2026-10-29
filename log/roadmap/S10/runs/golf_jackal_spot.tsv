@@ -1,0 +1,20 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/spot.cpp	0x92610	0x00492610	52	G	in_box	?in_box@@YAHHHPAURect@@@Z	public	100	100.0	24/24 ins	golf_small5.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92650	0x00492650	16	G	HotSpot::HotSpot	??0HotSpot@@QAE@XZ	public	100	100.0	4/4 ins	
+golf	golf/jackal.lib/src/spot.cpp	0x92660	0x00492660	37	G	HotSpot::close	?close@HotSpot@@QAEXXZ	public	100	100.0	14/14 ins	golf_small18.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92690	0x00492690	265	G	Spot::increase_spots	?increase_spots@Spot@@QAEXXZ	public	100	100.0	92/92 ins	golf_hand_08_d.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x927a0	0x004927a0	90	G	HotSpot::`vector deleting destructor'	??_EHotSpot@@UAEPAXI@Z	public	100	100.0	36/36 ins	
+golf	golf/jackal.lib/src/spot.cpp	0x92800	0x00492800	43	G	Spot::clear	?clear@Spot@@QAEXXZ	public	100	100.0	14/14 ins	
+golf	golf/jackal.lib/src/spot.cpp	0x92830	0x00492830	32	G	Spot::shutdown	?shutdown@Spot@@QAEXXZ	public	100	100.0	13/13 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92850	0x00492850	83	G	Spot::Spot	??0Spot@@QAE@XZ	public	100	100.0	22/22 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x928b0	0x004928b0	30	G	Spot::`scalar deleting destructor'	??_GSpot@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x928d0	0x004928d0	80	G	Spot::~Spot	??1Spot@@UAE@XZ	public	100	100.0	20/20 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92920	0x00492920	135	G	Spot::init	?init@Spot@@QAEXH@Z	public	100	100.0	44/44 ins	golf_hand_04.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x929b0	0x004929b0	223	G	Spot::add	?add@Spot@@QAEHHHHHHHPAD@Z	public	100	100.0	85/85 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92a90	0x00492a90	118	G	Spot::check	?check@Spot@@QAEHHHPAH0@Z	public	100	100.0	53/53 ins	golf_small11.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92b10	0x00492b10	160	G	Spot::check	?check@Spot@@QAEHHHPAH0PAURect@@@Z	public	100	100.0	68/68 ins	golf_small15.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92bb0	0x00492bb0	19	G	Spot::timer_callback_daemon	?timer_callback_daemon@Spot@@SAXHPAX@Z	public	100	100.0	7/7 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92bd0	0x00492bd0	229	G	Spot::timer_callback	?timer_callback@Spot@@QAEXH@Z	public	100	100.0	67/67 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92cc0	0x00492cc0	116	G	Spot::on_move	?on_move@Spot@@QAEXHHPAUWidgetBase@@@Z	public	100	100.0	49/49 ins	golf_hand_03.cpp
+golf	golf/jackal.lib/src/spot.cpp	0x92d40	0x00492d40	39	G	Spot::on_leave	?on_leave@Spot@@QAEXXZ	public	100	100.0	16/16 ins	
+golf	golf/jackal.lib/src/spot.cpp	0x92d70	0x00492d70	11	G	HotSpot::~HotSpot	??1HotSpot@@UAE@XZ	public	100	100.0	2/2 ins	

@@ -1,0 +1,430 @@
+va	verdict	symbol	name	reason
+0x1004164f	ACCEPT	??6ostream@@QAEAAV0@H@Z	ostream::operator_lshift	
+0x10041700	ACCEPT	??6ostream@@QAEAAV0@K@Z	ostream::operator_lshift_10041700	
+0x100417a4	ACCEPT	?opfx@ostream@@QAEHXZ	ostream::opfx	
+0x10041818	ACCEPT	?osfx@ostream@@QAEXXZ	ostream::osfx	
+0x100418c8	ACCEPT	??6ostream@@QAEAAV0@PBD@Z	ostream::operator_lshift_100418c8	
+0x100418f1	ACCEPT	?flush@ostream@@QAEAAV1@XZ	ostream::flush	
+0x10041979	ACCEPT	??0ostream@@IAE@XZ	ostream::ctor	
+0x100419af	ACCEPT	??_Gostream@@UAEPAXI@Z	ostream::scalar_deleting_destructor	
+0x100419da	ACCEPT	??0ostream@@QAE@PAVstreambuf@@@Z	ostream::ctor_100419da	
+0x10041a3f	ACCEPT	??0ostream@@IAE@ABV0@@Z	ostream::ctor_10041a3f	
+0x10041aad	HAS_ROW	??1ostream@@UAE@XZ	sound_8	
+0x10041abc	ACCEPT	??4ostream@@IAEAAV0@PAVstreambuf@@@Z	ostream::operator_assign	
+0x10041b42	ACCEPT	??0ostream_withassign@@QAE@XZ	ostream_withassign::ctor	
+0x10041b9d	HAS_ROW	??_Gostream_withassign@@UAEPAXI@Z	undisc_sound	
+0x10041bc8	ACCEPT	??0ostream_withassign@@QAE@PAVstreambuf@@@Z	ostream_withassign::ctor_10041bc8	
+0x10041c26	HAS_ROW	??1ostream_withassign@@UAE@XZ	sound_8	
+0x10041c39	ACCEPT	?writepad@ostream@@AAEAAV1@PBD0@Z	ostream::writepad	
+0x10041da5	ACCEPT	?sputc@streambuf@@QAEHH@Z	streambuf::sputc	
+0x10041dc7	ACCEPT	??6ostream@@QAEAAV0@E@Z	ostream::operator_lshift_10041dc7	
+0x10041e43	HAS_ROW	__mtlockinit	sound_8	
+0x10041e4e	HAS_ROW	__mtlockterm	sound_8	
+0x10041e59	HAS_ROW	__mtlock	sound_8	
+0x10041e64	HAS_ROW	__mtunlock	sound_8	
+0x10041e6f	ACCEPT	??0ios@@IAE@XZ	ios::ctor	
+0x10041ecd	ACCEPT	??_Gios@@UAEPAXI@Z	ios::scalar_deleting_destructor	
+0x10041ee9	NOT_FUNCTION	??0ios@@QAE@PAVstreambuf@@@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10041f52	ACCEPT	??0ios@@IAE@ABV0@@Z	ios::ctor_10041f52	
+0x10041f9a	ACCEPT	??1ios@@UAE@XZ	ios::dtor	
+0x10041fe4	ACCEPT	?init@ios@@IAEXPAVstreambuf@@@Z	ios::init	
+0x10042013	ACCEPT	??4ios@@IAEAAV0@ABV0@@Z	ios::operator_assign	
+0x1004204e	NOT_FUNCTION	?xalloc@ios@@SAHXZ	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004207f	NOT_FUNCTION	?bitalloc@ios@@SAJXZ	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100420a5	ACCEPT	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	_JumpToContinuation	
+0x100420d9	ACCEPT	?_CallMemberFunction0@@YGXPAX0@Z	_CallMemberFunction0	
+0x100420e0	ACCEPT	?_CallMemberFunction1@@YGXPAX00@Z	_CallMemberFunction1	
+0x100420e7	ACCEPT	?_CallMemberFunction2@@YGXPAX00H@Z	_CallMemberFunction2	
+0x100420ee	ACCEPT	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	_UnwindNestedFrames	
+0x1004213d	ACCEPT	___CxxFrameHandler	___CxxFrameHandler	
+0x10042173	NOT_FUNCTION	___CxxLongjmpUnwind@4	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004218d	ACCEPT	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	_CallCatchBlock2	
+0x10042206	ACCEPT	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	_CallSETranslator	
+0x10042331	ACCEPT	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	_GetRangeOfTrysToCheck	
+0x100423ac	ACCEPT	__global_unwind2	__global_unwind2	
+0x100423ee	ACCEPT	__local_unwind2	__local_unwind2	
+0x10042446	NOT_FUNCTION	__NLG_Return2	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10042456	ACCEPT	__abnormal_termination	__abnormal_termination	
+0x10042479	ACCEPT	__NLG_Notify1	__NLG_Notify1	
+0x10042482	HAS_ROW	__NLG_Notify	sound_8	
+0x10042495	NOT_FUNCTION	__NLG_Dispatch	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004249a	HAS_ROW	??3@YAXPAX@Z	sound_5	
+0x100424b0	HAS_ROW	_strrchr	sound_19	
+0x100424d7	HAS_ROW	??2@YAPAXI@Z	sound_19	
+0x100424e5	ACCEPT	__purecall	__purecall	
+0x100424ee	ACCEPT	__fpmath	__fpmath	
+0x10042505	ACCEPT	__fpclear	__fpclear	
+0x10042506	HAS_ROW	__cfltcvt_init	sound_8	
+0x1004253e	NOT_FUNCTION	___setfflag	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10042550	HAS_ROW	__ftol	sound_16	
+0x10042577	HAS_ROW	_sprintf	sound_19	
+0x100425c9	HAS_ROW	__onexit	sound_19	
+0x10042647	HAS_ROW	_atexit	sound_19	
+0x10042659	ACCEPT	___onexitinit	___onexitinit	
+0x10042690	HAS_ROW	_strstr	sound_8	
+0x10042710	ACCEPT	_strncpy	_strncpy	
+0x1004280e	HAS_ROW	??_M@YGXPAXIHP6EX0@Z@Z	sound_19	
+0x1004288e	HAS_ROW	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	sound_17	
+0x10042902	HAS_ROW	??_L@YGXPAXIHP6EX0@Z1@Z	sound_16	
+0x10042984	ACCEPT	__beginthread	__beginthread	
+0x10042a8e	HAS_ROW	__endthread	sound_1	
+0x10042acd	HAS_ROW	_malloc	sound_19	
+0x10042adf	HAS_ROW	__nh_malloc	sound_19	
+0x10042b0b	HAS_ROW	__heap_alloc	sound_5	
+0x10042c07	HAS_ROW	_free	sound_5	
+0x10042cf0	ACCEPT	_memmove	_memmove	
+0x10043025	ACCEPT	__CRT_INIT@12	__CRT_INIT	
+0x100430fe	ACCEPT	__DllMainCRTStartup@12	__DllMainCRTStartup	
+0x100431ce	ACCEPT	__chkesp	__chkesp	
+0x100431f0	HAS_ROW	__CIsqrt	sound_5	
+0x10043204	HAS_ROW	_sqrt	sound_5	
+0x100432b0	HAS_ROW	_exp	sound_5	
+0x100432ba	NOT_FUNCTION	__CIexp	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100432d0	HAS_ROW	__CIlog	sound_5	
+0x100432e4	HAS_ROW	_log	sound_5	
+0x1004339c	ACCEPT	_floor	_floor	
+0x1004346b	ACCEPT	_fflush	_fflush	
+0x1004349a	ACCEPT	__fflush_lk	__fflush_lk	
+0x100434c8	ACCEPT	__flush	__flush	
+0x10043524	ACCEPT	__flushall	__flushall	
+0x100435d1	ACCEPT	___initstdio	___initstdio	
+0x10043679	ACCEPT	___endstdio	___endstdio	
+0x1004368d	ACCEPT	__lock_file	__lock_file	
+0x100436bc	ACCEPT	__lock_file2	__lock_file2	
+0x100436df	ACCEPT	__unlock_file	__unlock_file	
+0x1004370e	ACCEPT	__unlock_file2	__unlock_file2	
+0x10043731	ACCEPT	??1type_info@@UAE@XZ	type_info::dtor	
+0x1004375a	ACCEPT	??_Gtype_info@@UAEPAXI@Z	type_info::scalar_deleting_destructor	
+0x10043776	NOT_FUNCTION	??8type_info@@QBEHABV0@@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10043791	NOT_FUNCTION	??9type_info@@QBEHABV0@@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100437ad	NOT_FUNCTION	?before@type_info@@QBEHABV1@@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100437cc	NOT_FUNCTION	?raw_name@type_info@@QBEPBDXZ	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100437d0	NOT_FUNCTION	??0type_info@@AAE@ABV0@@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100437db	NOT_FUNCTION	??4type_info@@AAEAAV0@ABV0@@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100437e0	HAS_ROW	__EH_prolog	sound_8	
+0x10043800	ACCEPT	_strlen	_strlen	
+0x1004387b	ACCEPT	___InternalCxxFrameHandler	___InternalCxxFrameHandler	
+0x10043bd0	ACCEPT	___FrameUnwindToState	___FrameUnwindToState	
+0x10044008	ACCEPT	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	_DestructExceptionObject	
+0x100440a0	ACCEPT	__CallSettingFrame@12	__CallSettingFrame	
+0x100440c7	NOT_FUNCTION	__NLG_Return	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100440ec	ACCEPT	__mtinit	__mtinit	
+0x10044140	ACCEPT	__mtterm	__mtterm	
+0x1004415e	ACCEPT	__initptd	__initptd	
+0x10044171	ACCEPT	__getptd	__getptd	
+0x100441d8	ACCEPT	__freeptd	__freeptd	
+0x10044278	NOT_FUNCTION	___threadid	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004427e	NOT_FUNCTION	___threadhandle	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10044284	ACCEPT	?terminate@@YAXXZ	terminate	
+0x100442e5	NOT_FUNCTION	?unexpected@@YAXXZ	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100442fd	ACCEPT	?_inconsistency@@YAXXZ	_inconsistency	
+0x10044353	ACCEPT	__setdefaultprecision	__setdefaultprecision	
+0x10044365	ACCEPT	__ms_p5_test_fdiv	__ms_p5_test_fdiv	
+0x100443a3	ACCEPT	__ms_p5_mp_test_fdiv	__ms_p5_mp_test_fdiv	
+0x100443cc	ACCEPT	__forcdecpt	__forcdecpt	
+0x10044426	ACCEPT	__cropzeros	__cropzeros	
+0x10044474	ACCEPT	__positive	__positive	
+0x1004448c	ACCEPT	__fassign	__fassign	
+0x100444ca	ACCEPT	__cftoe	__cftoe	
+0x100445ed	ACCEPT	__cftof	__cftof	
+0x100446e9	ACCEPT	__cftog	__cftog	
+0x1004477c	ACCEPT	__cfltcvt	__cfltcvt	
+0x100447f2	ACCEPT	__flsbuf	__flsbuf	
+0x1004490a	ACCEPT	__output	__output	
+0x10045114	ACCEPT	__cinit	__cinit	
+0x10045141	NOT_FUNCTION	_exit	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10045152	ACCEPT	__exit	__exit	
+0x10045163	ACCEPT	__cexit	__cexit	
+0x10045172	NOT_FUNCTION	__c_exit	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10045226	HAS_ROW	__lockexit	sound_19	
+0x1004522f	HAS_ROW	__unlockexit	sound_19	
+0x10045252	HAS_ROW	_realloc	sound_1	
+0x10045581	HAS_ROW	__msize	sound_8	
+0x10045680	HAS_ROW	_strchr	sound_5	
+0x10045686	NOT_FUNCTION	___from_strstr_to_strchr	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10045744	ACCEPT	__except_handler3	__except_handler3	
+0x10045801	ACCEPT	__seh_longjmp_unwind@4	__seh_longjmp_unwind	
+0x1004581c	ACCEPT	__dosmaperr	__dosmaperr	
+0x1004588f	HAS_ROW	__errno	sound_5	
+0x10045898	HAS_ROW	___doserrno	sound_5	
+0x100458a1	HAS_ROW	_calloc	sound_5	
+0x100459de	ACCEPT	__XcptFilter	__XcptFilter	
+0x10045b56	NOT_FUNCTION	?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10045b7a	NOT_FUNCTION	?_query_new_handler@@YAP6AHI@ZXZ	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10045b80	HAS_ROW	__callnewh	sound_19	
+0x10045b9b	HAS_ROW	__GetLinkerVersion	sound_8	
+0x10045bc8	HAS_ROW	___heap_select	sound_1	
+0x10045d10	HAS_ROW	__heap_init	sound_1	
+0x10045d6d	HAS_ROW	__heap_term	sound_8	
+0x10045e15	NOT_FUNCTION	__get_sbh_threshold	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10045e34	HAS_ROW	__set_sbh_threshold	sound_8	
+0x10045ee7	HAS_ROW	___sbh_heap_init	sound_8	
+0x10045f2f	ACCEPT	___sbh_find_block	___sbh_find_block	
+0x10045f5a	HAS_ROW	___sbh_free_block	sound_5	
+0x10046283	ACCEPT	___sbh_alloc_block	___sbh_alloc_block	
+0x1004658c	ACCEPT	___sbh_alloc_new_region	___sbh_alloc_new_region	
+0x1004663d	ACCEPT	___sbh_alloc_new_group	___sbh_alloc_new_group	
+0x10046738	ACCEPT	___sbh_resize_block	___sbh_resize_block	
+0x10046a2e	NOT_FUNCTION	___sbh_heapmin	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10046aff	ACCEPT	___sbh_heap_check	___sbh_heap_check	
+0x10046e2e	NOT_FUNCTION	__get_old_sbh_threshold	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10046e34	NOT_FUNCTION	__set_old_sbh_threshold	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10046e50	HAS_ROW	___old_sbh_new_region	sound_8	
+0x10046f94	HAS_ROW	___old_sbh_release_region	sound_8	
+0x10046fea	HAS_ROW	___old_sbh_decommit_pages	sound_8	
+0x100470ac	HAS_ROW	___old_sbh_find_block	sound_8	
+0x10047103	HAS_ROW	___old_sbh_free_block	sound_8	
+0x10047148	HAS_ROW	___old_sbh_alloc_block	sound_1	
+0x10047350	HAS_ROW	___old_sbh_alloc_block_from_page	sound_8	
+0x10047474	HAS_ROW	___old_sbh_resize_block	sound_8	
+0x1004751d	HAS_ROW	___old_sbh_heap_check	sound_8	
+0x1004767b	ACCEPT	__mtinitlocks	__mtinitlocks	
+0x100476a4	ACCEPT	__mtdeletelocks	__mtdeletelocks	
+0x10047710	HAS_ROW	__lock	sound_19	
+0x10047771	HAS_ROW	__unlock	sound_1	
+0x10047786	NOT_FUNCTION	__lockerr_exit	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004779e	ACCEPT	__ioinit	__ioinit	
+0x1004795a	ACCEPT	__ioterm	__ioterm	
+0x100479ae	ACCEPT	__setenvp	__setenvp	
+0x10047a67	ACCEPT	__setargv	__setargv	
+0x10047cb4	ACCEPT	___crtGetEnvironmentStringsA	___crtGetEnvironmentStringsA	
+0x10047de6	ACCEPT	__FF_MSGBANNER	__FF_MSGBANNER	
+0x10047e1f	ACCEPT	__NMSG_WRITE	__NMSG_WRITE	
+0x10047f72	NOT_FUNCTION	__GET_RTERRMSG	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10047fb0	ACCEPT	__trandisp1	__trandisp1	
+0x10048017	ACCEPT	__trandisp2	__trandisp2	
+0x100480a3	NOT_FUNCTION	__rttospopde	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480a8	NOT_FUNCTION	__rttospop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480aa	NOT_FUNCTION	__rtnospop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480ac	NOT_FUNCTION	__rttosnpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480ad	NOT_FUNCTION	__rtnospopde	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480b4	NOT_FUNCTION	__rtzeropop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480b6	NOT_FUNCTION	__rtzeronpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480bb	NOT_FUNCTION	__rtonepop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480bd	NOT_FUNCTION	__rtonenpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480c2	NOT_FUNCTION	__tosnan1	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480ed	NOT_FUNCTION	__nosnan2	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100480ef	NOT_FUNCTION	__tosnan2	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048117	NOT_FUNCTION	__nan2	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048156	NOT_FUNCTION	__rtindfpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048158	NOT_FUNCTION	__rtindfnpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048169	NOT_FUNCTION	__rttosnpopde	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048173	NOT_FUNCTION	__rtchsifneg	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048180	HAS_ROW	__startTwoArgErrorHandling	sound_8	
+0x10048197	ACCEPT	__startOneArgErrorHandling	__startOneArgErrorHandling	
+0x100481e0	NOT_FUNCTION	__twoToTOS	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100481f5	HAS_ROW	__load_CW	sound_8	
+0x1004820c	HAS_ROW	__convertTOStoQNaN	sound_8	
+0x10048225	ACCEPT	__fload_withFB	__fload_withFB	
+0x10048268	HAS_ROW	__checkTOS_withFB	sound_8	
+0x1004827e	NOT_FUNCTION	__fast_exit	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004828b	ACCEPT	__math_exit	__math_exit	
+0x100482b5	NOT_FUNCTION	__check_overflow_exit	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100482c9	NOT_FUNCTION	__check_range_exit	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048381	NOT_FUNCTION	__fFEXP	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100483e8	NOT_FUNCTION	__rtinfpopse	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100483ea	NOT_FUNCTION	__rtinfnpopse	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100483fa	NOT_FUNCTION	__fFLN	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100484af	NOT_FUNCTION	__rtinfpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100484b1	NOT_FUNCTION	__rtinfnpop	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100484ce	NOT_FUNCTION	__ffexpm1	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048580	ACCEPT	__cintrindisp2	__cintrindisp2	
+0x100485be	ACCEPT	__cintrindisp1	__cintrindisp1	
+0x100485fb	ACCEPT	__ctrandisp2	__ctrandisp2	
+0x1004877b	ACCEPT	__ctrandisp1	__ctrandisp1	
+0x100487ae	ACCEPT	__fload	__fload	
+0x100487ea	ACCEPT	__handle_qnan1	__handle_qnan1	
+0x1004883e	ACCEPT	__handle_qnan2	__handle_qnan2	
+0x1004889e	ACCEPT	__except1	__except1	
+0x10048936	ACCEPT	__except2	__except2	
+0x100489db	ACCEPT	__raise_exc	__raise_exc	
+0x10048c8e	ACCEPT	__handle_exc	__handle_exc	
+0x10048ea5	ACCEPT	__umatherr	__umatherr	
+0x10048f2d	ACCEPT	__set_errno	__set_errno	
+0x10048f7a	ACCEPT	__errcode	__errcode	
+0x10048fa7	ACCEPT	__frnd	__frnd	
+0x10048fb9	ACCEPT	__set_exp	__set_exp	
+0x10048fe2	NOT_FUNCTION	__get_exp	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10048ff6	NOT_FUNCTION	__add_exp	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10049022	ACCEPT	__set_bexp	__set_bexp	
+0x10049046	ACCEPT	__sptype	__sptype	
+0x100490a0	ACCEPT	__decomp	__decomp	
+0x10049161	ACCEPT	__statfp	__statfp	
+0x1004916f	ACCEPT	__clrfp	__clrfp	
+0x1004917e	ACCEPT	__ctrlfp	__ctrlfp	
+0x100491a1	ACCEPT	__set_statfp	__set_statfp	
+0x100491f7	ACCEPT	__commit	__commit	
+0x1004928a	ACCEPT	__write	__write	
+0x100492ef	ACCEPT	__write_lk	__write_lk	
+0x1004947a	ACCEPT	__fcloseall	__fcloseall	
+0x10049500	ACCEPT	_strcmp	_strcmp	
+0x10049584	ACCEPT	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	__CxxUnhandledExceptionFilter	
+0x100495ca	ACCEPT	?__CxxSetUnhandledExceptionFilter@@YAXXZ	__CxxSetUnhandledExceptionFilter	
+0x100495db	ACCEPT	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	__CxxRestoreUnhandledExceptionFilter	
+0x100495e8	ACCEPT	?_ValidateRead@@YAHPBXI@Z	_ValidateRead	
+0x10049604	HAS_ROW	?_ValidateWrite@@YAHPAXI@Z	sound_1	
+0x10049620	ACCEPT	?_ValidateExecute@@YAHP6GHXZ@Z	_ValidateExecute	
+0x10049638	ACCEPT	_abort	_abort	
+0x1004964f	NOT_FUNCTION	__statusfp	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10049662	ACCEPT	__clearfp	__clearfp	
+0x10049676	ACCEPT	__control87	__control87	
+0x100496ab	ACCEPT	__controlfp	__controlfp	
+0x100496c1	NOT_FUNCTION	__fpreset	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004983c	ACCEPT	__isctype	__isctype	
+0x100498b1	NOT_FUNCTION	__tolower	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100498b9	ACCEPT	_tolower	_tolower	
+0x10049928	ACCEPT	__tolower_lk	__tolower_lk	
+0x100499f3	ACCEPT	__ZeroTail	__ZeroTail	
+0x10049a3c	ACCEPT	__IncMan	__IncMan	
+0x10049a92	ACCEPT	__RoundMan	__RoundMan	
+0x10049b1e	ACCEPT	__CopyMan	__CopyMan	
+0x10049b39	ACCEPT	__FillZeroMan	__FillZeroMan	
+0x10049b45	ACCEPT	__IsZeroMan	__IsZeroMan	
+0x10049b60	ACCEPT	__ShrMan	__ShrMan	
+0x10049bed	ACCEPT	__ld12cvt	__ld12cvt	
+0x10049d59	ACCEPT	__ld12tod	__ld12tod	
+0x10049d6f	ACCEPT	__ld12tof	__ld12tof	
+0x10049d85	ACCEPT	__ld12told	__ld12told	
+0x10049dff	ACCEPT	__atodbl	__atodbl	
+0x10049e2c	ACCEPT	__atoldbl	__atoldbl	
+0x10049e5a	ACCEPT	__atoflt	__atoflt	
+0x10049e87	ACCEPT	__fptostr	__fptostr	
+0x10049efe	ACCEPT	__fltout2	__fltout2	
+0x10049f5a	ACCEPT	___dtold	___dtold	
+0x1004a010	HAS_ROW	_strcpy	sound_5	
+0x1004a020	ACCEPT	_strcat	_strcat	
+0x1004a100	ACCEPT	_memset	_memset	
+0x1004a158	HAS_ROW	__fptrap	sound_8	
+0x1004a161	ACCEPT	__lseek	__lseek	
+0x1004a1c6	ACCEPT	__lseek_lk	__lseek_lk	
+0x1004a239	ACCEPT	__getbuf	__getbuf	
+0x1004a27d	ACCEPT	__isatty	__isatty	
+0x1004a2a6	ACCEPT	_wctomb	_wctomb	
+0x1004a2ff	ACCEPT	__wctomb_lk	__wctomb_lk	
+0x1004a370	ACCEPT	__aulldiv	__aulldiv	
+0x1004a3e0	ACCEPT	__aullrem	__aullrem	
+0x1004a460	ACCEPT	_memcpy	_memcpy	
+0x1004a795	ACCEPT	_strtol	_strtol	
+0x1004a9b1	NOT_FUNCTION	_strtoul	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004a9d0	ACCEPT	_strncmp	_strncmp	
+0x1004aa10	HAS_ROW	__alloca_probe	sound_5	
+0x1004aa3f	ACCEPT	__setmbcp	__setmbcp	
+0x1004ae17	NOT_FUNCTION	__getmbcp	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004ae27	ACCEPT	___initmbctable	___initmbctable	
+0x1004ae43	ACCEPT	___crtMessageBoxA	___crtMessageBoxA	
+0x1004aecc	ACCEPT	__87except	__87except	
+0x1004af9c	ACCEPT	__powhlp	__powhlp	
+0x1004b0cc	ACCEPT	__d_inttype	__d_inttype	
+0x1004b140	NOT_FUNCTION	_fdiv_main_routine	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b257	NOT_FUNCTION	__adj_fdiv_r	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b6f6	NOT_FUNCTION	__fdivp_sti_st	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b709	NOT_FUNCTION	__fdivrp_sti_st	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b71c	NOT_FUNCTION	__adj_fdiv_m32	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b768	NOT_FUNCTION	__adj_fdiv_m64	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b7b4	NOT_FUNCTION	__adj_fdiv_m16i	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b7e8	NOT_FUNCTION	__adj_fdiv_m32i	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b81c	NOT_FUNCTION	__adj_fdivr_m32	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b868	NOT_FUNCTION	__adj_fdivr_m64	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b8b4	NOT_FUNCTION	__adj_fdivr_m16i	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b8e8	NOT_FUNCTION	__adj_fdivr_m32i	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b91c	NOT_FUNCTION	__safe_fdiv	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b931	NOT_FUNCTION	__safe_fdivr	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004b946	NOT_FUNCTION	__fprem_common	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004bb4c	NOT_FUNCTION	__adj_fprem	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004bbfe	NOT_FUNCTION	__fprem1_common	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004be04	NOT_FUNCTION	__adj_fprem1	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004beb9	NOT_FUNCTION	__safe_fprem	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004bebf	NOT_FUNCTION	__safe_fprem1	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004bec5	NOT_FUNCTION	__adj_fpatan	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004bec8	NOT_FUNCTION	__adj_fptan	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004becb	ACCEPT	__matherr	__matherr	
+0x1004bece	ACCEPT	__alloc_osfhnd	__alloc_osfhnd	
+0x1004bff1	ACCEPT	__set_osfhnd	__set_osfhnd	
+0x1004c06d	ACCEPT	__free_osfhnd	__free_osfhnd	
+0x1004c0ec	ACCEPT	__get_osfhandle	__get_osfhandle	
+0x1004c12e	ACCEPT	__open_osfhandle	__open_osfhandle	
+0x1004c1d5	ACCEPT	__lock_fhandle	__lock_fhandle	
+0x1004c234	ACCEPT	__unlock_fhandle	__unlock_fhandle	
+0x1004c256	ACCEPT	_fclose	_fclose	
+0x1004c287	ACCEPT	__fclose_lk	__fclose_lk	
+0x1004c2d3	ACCEPT	_signal	_signal	
+0x1004c4b7	ACCEPT	_raise	_raise	
+0x1004c676	NOT_FUNCTION	___fpecode	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004c67f	NOT_FUNCTION	___pxcptinfoptrs	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004c688	ACCEPT	___crtGetStringTypeA	___crtGetStringTypeA	
+0x1004c7d1	ACCEPT	_setlocale	_setlocale	
+0x1004cbeb	ACCEPT	__expandlocale	__expandlocale	
+0x1004cd03	ACCEPT	___init_dummy	___init_dummy	
+0x1004cd06	ACCEPT	__strcats	__strcats	
+0x1004cd2b	ACCEPT	___lc_strtolc	___lc_strtolc	
+0x1004cdf7	ACCEPT	___lc_lctostr	___lc_lctostr	
+0x1004ce4a	ACCEPT	___crtLCMapStringA	___crtLCMapStringA	
+0x1004d099	ACCEPT	___addl	___addl	
+0x1004d0ba	ACCEPT	___add_12	___add_12	
+0x1004d118	ACCEPT	___shl_12	___shl_12	
+0x1004d146	ACCEPT	___shr_12	___shr_12	
+0x1004d173	ACCEPT	___mtold12	___mtold12	
+0x1004d23a	ACCEPT	___strgtold12	___strgtold12	
+0x1004d70b	ACCEPT	___STRINGTOLD	___STRINGTOLD	
+0x1004d747	ACCEPT	_$I10_OUTPUT	__I10_OUTPUT	
+0x1004d9da	NOT_FUNCTION	__toupper	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004d9e2	ACCEPT	_toupper	_toupper	
+0x1004da51	ACCEPT	__toupper_lk	__toupper_lk	
+0x1004db1d	ACCEPT	__copysign	__copysign	
+0x1004db3e	ACCEPT	__chgsign	__chgsign	
+0x1004db63	NOT_FUNCTION	__scalb	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004db79	ACCEPT	__logb	__logb	
+0x1004dc60	ACCEPT	__nextafter	__nextafter	
+0x1004def5	NOT_FUNCTION	__finite	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004df09	NOT_FUNCTION	__isnan	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004df37	ACCEPT	__fpclass	__fpclass	
+0x1004dfc9	ACCEPT	__close	__close	
+0x1004e026	ACCEPT	__close_lk	__close_lk	
+0x1004e0a9	ACCEPT	__freebuf	__freebuf	
+0x1004e0d4	HAS_ROW	___init_time	undisc_sound	
+0x1004e643	ACCEPT	___init_numeric	___init_numeric	
+0x1004e84f	ACCEPT	___init_monetary	___init_monetary	
+0x1004eac1	ACCEPT	___init_ctype	___init_ctype	
+0x1004ed06	ACCEPT	___init_collate	___init_collate	
+0x1004ed10	ACCEPT	_strcspn	_strcspn	
+0x1004ed50	ACCEPT	_strpbrk	_strpbrk	
+0x1004ed8a	ACCEPT	___get_qualified_locale	___get_qualified_locale	
+0x1004f631	ACCEPT	___ld12mul	___ld12mul	
+0x1004f851	ACCEPT	___multtenpow12	___multtenpow12	
+0x1004f8cd	ACCEPT	_ldexp	_ldexp	
+0x1004fab3	ACCEPT	__Getdays	__Getdays	
+0x1004fb42	ACCEPT	__Getmonths	__Getmonths	
+0x1004fbd7	ACCEPT	__Gettnames	__Gettnames	
+0x1004fe09	NOT_FUNCTION	_strftime	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1004fe24	HAS_ROW	__Strftime	sound_8	
+0x100506bb	ACCEPT	___getlocaleinfo	___getlocaleinfo	
+0x100507f3	NOT_FUNCTION	_localeconv	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100507f9	ACCEPT	___crtGetStringTypeW	___crtGetStringTypeW	
+0x100509be	ACCEPT	__itoa	__itoa	
+0x10050a47	ACCEPT	__ltoa	__ltoa	
+0x10050a71	NOT_FUNCTION	__ultoa	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10050a8c	ACCEPT	__i64toa	__i64toa	
+0x10050b43	ACCEPT	__ui64toa	__ui64toa	
+0x10050b60	ACCEPT	__strcmpi	__strcmpi	
+0x10050c30	ACCEPT	__strnicmp	__strnicmp	
+0x10050d31	ACCEPT	_atol	_atol	
+0x10050dbc	NOT_FUNCTION	_atoi	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10050dc7	NOT_FUNCTION	__atoi64	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10050e81	ACCEPT	___tzset	___tzset	
+0x10050eaf	NOT_FUNCTION	__tzset	-	no function of ours starts here (entry label inside another body or a thunk)
+0x1005114c	NOT_FUNCTION	__isindst	-	no function of ours starts here (entry label inside another body or a thunk)
+0x10051459	ACCEPT	___crtGetLocaleInfoW	___crtGetLocaleInfoW	
+0x1005156c	ACCEPT	___crtGetLocaleInfoA	___crtGetLocaleInfoA	
+0x10051690	NOT_FUNCTION	__allmul	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100516c4	NOT_FUNCTION	_getenv	-	no function of ours starts here (entry label inside another body or a thunk)
+0x100516e5	ACCEPT	__getenv_lk	__getenv_lk	
+0x10051762	ACCEPT	__mbsnbicoll	__mbsnbicoll	
+0x100517a1	ACCEPT	___wtomb_environ	___wtomb_environ	
+0x1005180f	ACCEPT	___crtCompareStringA	___crtCompareStringA	
+0x10051ab7	ACCEPT	___crtsetenv	___crtsetenv	
+0x10051cfd	ACCEPT	__mbschr	__mbschr	
+0x10051d94	ACCEPT	__strdup	__strdup	
+0x100423cc	ACCEPT_REV	__unwind_handler	__unwind_handler	
+0x10043e1a	ACCEPT_REV	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	ExFilterRethrow	
+0x1004c455	ACCEPT_REV	_ctrlevent_capture@4	_ctrlevent_capture	
+0x1004c639	ACCEPT_REV	_siglookup	_siglookup	

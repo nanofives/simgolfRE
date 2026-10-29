@@ -20,7 +20,7 @@ None.
 - `jb` (unsigned) at 0x004a98d1
 
 ## Callees
-- 0x004a7a13 `FUN_004a7a13` at 0x004a98e3
+- 0x004a7a13 `__unlock` at 0x004a98e3
 - import `KERNEL32.dll!LeaveCriticalSection` at 0x004a98ee
 
 ## Callers

@@ -1,0 +1,37 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 4","sub esp, 4",True
+3,push ebx,push ebx,True
+4,push ecx,push ecx,True
+5,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+6,"add eax, 0xc","add eax, 0xc",True
+7,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+8,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+9,push ebp,push ebp,True
+10,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+11,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+12,"mov ebp, dword ptr [ebp - 4]","mov ebp, dword ptr [ebp - 4]",True
+13,call 0x23,call 0x4a55b1,True
+14,push esi,push esi,True
+15,push edi,push edi,True
+16,call eax,call eax,True
+17,pop edi,pop edi,True
+18,pop esi,pop esi,True
+19,"mov ebx, ebp","mov ebx, ebp",True
+20,pop ebp,pop ebp,True
+21,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+22,push ebp,push ebp,True
+23,"mov ebp, ebx","mov ebp, ebx",True
+24,"cmp ecx, 0x100","cmp ecx, 0x100",True
+25,jne 0x3f,jne 0x4a8ddf,True
+26,"mov ecx, 2","mov ecx, 2",True
+27,push ecx,push ecx,True
+28,call 0x45,call 0x4a55b1,True
+29,pop ebp,pop ebp,True
+30,pop ecx,pop ecx,True
+31,pop ebx,pop ebx,True
+32,leave ,leave ,True
+33,ret 0xc,ret 0xc,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\lowhelpr.obj (library object, no compilation)",symbol=__CallSettingFrame@12,module=golf_clean.exe
+VERDICT,GREEN,34,100.0%

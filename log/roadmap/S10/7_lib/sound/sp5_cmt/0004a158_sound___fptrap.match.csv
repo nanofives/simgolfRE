@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,push 2,push 2,True
+1,call 7,call 0x1004319b,True
+2,pop ecx,pop ecx,True
+3,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\crt0fp.obj (library object, no compilation)",symbol=__fptrap,module=sound.dll
+VERDICT,GREEN,4,100.0%

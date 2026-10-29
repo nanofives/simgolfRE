@@ -32,7 +32,7 @@ Globals:
 - import `KERNEL32.dll!HeapDestroy` at 0x10045d60
 
 ## Callers
-0x10043025 `__CRT_INIT@12`
+0x10043025 `__CRT_INIT`
 
 ## Constants
 - `0x0` at 0x10045d12

@@ -1,0 +1,42 @@
+instruction,library_object,original,match
+0,bytes +0x0: 558bec81c430fdffff539bd9bd5cffff,bytes +0x0: 558bec81c430fdffff539bd9bd5cffff,True
+1,bytes +0x10: ff9b833d????????007414e8????????,bytes +0x10: ff9b833d????????007414e8????????,True
+2,bytes +0x20: 808d38fdffff03e89e0000005bc9c3d9,bytes +0x20: 808d38fdffff03e89e0000005bc9c3d9,True
+3,bytes +0x30: c9dd957affffffd9c9dd5582ebdd558b,bytes +0x30: c9dd957affffffd9c9dd5582ebdd558b,True
+4,bytes +0x40: ec81c430fdffff539bd9bd5cffffff83,bytes +0x40: ec81c430fdffff539bd9bd5cffffff83,True
+5,bytes +0x50: 3d????????00741be8????????808d38,bytes +0x50: 3d????????00741be8????????808d38,True
+6,bytes +0x60: fdffff0180a538fdfffffde85a000000,bytes +0x60: fdffff0180a538fdfffffde85a000000,True
+7,bytes +0x70: 5bc9c3dd957affffffebdd558bec81c4,bytes +0x70: 5bc9c3dd957affffffebdd558bec81c4,True
+8,bytes +0x80: 30fdffff53ff750cff7508e89e010000,bytes +0x80: 30fdffff53ff750cff7508e89e010000,True
+9,bytes +0x90: 83c408ff7514ff7510e89001000083c4,bytes +0x90: 83c408ff7514ff7510e89001000083c4,True
+10,bytes +0xa0: 089bd9bd5cffffff808d38fdffff02c6,bytes +0xa0: 089bd9bd5cffffff808d38fdffff02c6,True
+11,bytes +0xb0: 8571ffffff01e8????????e803000000,bytes +0xb0: 8571ffffff01e8????????e803000000,True
+12,bytes +0xc0: 5bc9c380a538fdfffffe833d????????,bytes +0xc0: 5bc9c380a538fdfffffe833d????????,True
+13,bytes +0xd0: 00754cdd9530fdffff8a8570ffffff0a,bytes +0xd0: 00754cdd9530fdffff8a8570ffffff0a,True
+14,bytes +0xe0: c0741a3cff74403cfe743c0ac074300f,bytes +0xe0: c0741a3cff74403cfe743c0ac074300f,True
+15,bytes +0xf0: bec0898572ffffffe99c000000668b85,bytes +0xf0: bec0898572ffffffe99c000000668b85,True
+16,bytes +0x100: 5cffffff6683e02075159bdfe06683e0,bytes +0x100: 5cffffff6683e02075159bdfe06683e0,True
+17,bytes +0x110: 20740cc78572ffffff08000000eb7ad9,bytes +0x110: 20740cc78572ffffff08000000eb7ad9,True
+18,bytes +0x120: ad5cffffff9bc3668b8536fdffff6625,bytes +0x120: ad5cffffff9bc3668b8536fdffff6625,True
+19,bytes +0x130: f07f660bc07408663df07f7430ebbec7,bytes +0x130: f07f660bc07408663df07f7430ebbec7,True
+20,bytes +0x140: 8572ffffff04000000dd05????????d9,bytes +0x140: 8572ffffff04000000dd05????????d9,True
+21,bytes +0x150: c9d9fdddd9d9c0d9e1dc1d????????9b,bytes +0x150: c9d9fdddd9d9c0d9e1dc1d????????9b,True
+22,bytes +0x160: dfe09e7334dc0d????????eb2cc78572,bytes +0x160: dfe09e7334dc0d????????eb2cc78572,True
+23,bytes +0x170: ffffff03000000dd05????????d9c9d9,bytes +0x170: ffffff03000000dd05????????d9c9d9,True
+24,bytes +0x180: fdddd9d9c0d9e1dc1d????????9bdfe0,bytes +0x180: fdddd9d9c0d9e1dc1d????????9bdfe0,True
+25,bytes +0x190: 9e7606dc0d????????56578b9d6cffff,bytes +0x190: 9e7606dc0d????????56578b9d6cffff,True
+26,bytes +0x1a0: ff43899d76fffffff68538fdffff0175,bytes +0x1a0: ff43899d76fffffff68538fdffff0175,True
+27,bytes +0x1b0: 1afc8d75088dbd7affffffa5a5807b0c,bytes +0x1b0: 1afc8d75088dbd7affffffa5a5807b0c,True
+28,bytes +0x1c0: 0174088d75108d7d82a5a5dd5d8a8d85,bytes +0x1c0: 0174088d75108d7d82a5a5dd5d8a8d85,True
+29,bytes +0x1d0: 72ffffff8d9d5cffffff53508b9d6cff,bytes +0x1d0: 72ffffff8d9d5cffffff53508b9d6cff,True
+30,bytes +0x1e0: ffff8a430e0fbec050e8????????83c4,bytes +0x1e0: ffff8a430e0fbec050e8????????83c4,True
+31,bytes +0x1f0: 0c5f5edd458ae924ffffff558bec81c4,bytes +0x1f0: 0c5f5edd458ae924ffffff558bec81c4,True
+32,bytes +0x200: 30fdffff53ff750cff7508e81e000000,bytes +0x200: 30fdffff53ff750cff7508e81e000000,True
+33,bytes +0x210: 83c4089bd9bd5cffffff80a538fdffff,bytes +0x210: 83c4089bd9bd5cffffff80a538fdffff,True
+34,bytes +0x220: fde8????????e898feffff5bc9c3558b,bytes +0x220: fde8????????e898feffff5bc9c3558b,True
+35,bytes +0x230: ec83c4f453668b450e668bd86625f07f,bytes +0x230: ec83c4f453668b450e668bd86625f07f,True
+36,bytes +0x240: 663df07f751e6681cbff7f66895dfe8b,bytes +0x240: 663df07f751e6681cbff7f66895dfe8b,True
+37,bytes +0x250: 450c8b5d080fa4d80b8945fa895df6db,bytes +0x250: 450c8b5d080fa4d80b8945fa895df6db,True
+38,bytes +0x260: 6df6eb03dd45085bc9c3,bytes +0x260: 6df6eb03dd45085bc9c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87cdisp.obj (library object, no compilation)",symbol=__cintrindisp2,module=sound.dll
+VERDICT,GREEN,39,100.0%

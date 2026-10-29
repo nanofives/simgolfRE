@@ -1,0 +1,30 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"xor eax, eax","xor eax, eax",True
+4,push esi,push esi,True
+5,push eax,push eax,True
+6,push eax,push eax,True
+7,push eax,push eax,True
+8,"lea eax, [ebp - 0xc]","lea eax, [ebp - 0xc]",True
+9,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+10,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+11,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+12,push eax,push eax,True
+13,call 0x1e,call 0x1004d23a,True
+14,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+15,"mov esi, eax","mov esi, eax",True
+16,"lea eax, [ebp - 0xc]","lea eax, [ebp - 0xc]",True
+17,push eax,push eax,True
+18,call 0x2c,call 0x10049d85,True
+19,"add esp, 0x24","add esp, 0x24",True
+20,"cmp eax, 1","cmp eax, 1",True
+21,jne 0x37,jne 0x1004d742,True
+22,"or esi, 2","or esi, 2",True
+23,"mov eax, esi","mov eax, esi",True
+24,pop esi,pop esi,True
+25,leave ,leave ,True
+26,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\strgtold.obj (library object, no compilation)",symbol=___STRINGTOLD,module=sound.dll
+VERDICT,GREEN,27,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 506 bytes, 150 instructions, subsystem `ui`. Mechanical
 handles a click on an item of a list panel according to the panel mode: picks a shot style, jumps the camera to a golfer, selects a hole or selects a theme slot (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_SpriteAssets.cpp` as `?SelectScreenItem@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040d8ce, 0x0040d8db, 0x0040d8e8, 0x0040d8f5, 0x0040d902, 0x0040d971, 0x0040d97e, 0x0040d9dc (+1 more)): callee pops 0 bytes of stack arguments.
 
 ## Reads

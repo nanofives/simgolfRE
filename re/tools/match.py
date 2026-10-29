@@ -9,6 +9,13 @@ Source annotations (one per function, on the line before its definition):
 Flags, per module (or one line for all; --flags overrides):
     // FLAGS golf_clean.exe: /O2
     // FLAGS Terrain.dll: /Od /ZI /GZ
+Include path: `// INCLUDE <dir>` lines (repo-relative or absolute, in search order) are searched before VC6's
+include directory; a line `// INCLUDE $VC` places VC6's own directory at that point instead (re/tools/smsg_import.py).
+Compiled file: `// COMPILE <path>` (repo-relative) makes cl compile that file in place of the annotated one, which then only
+carries annotations: under /ZI `__LINE__` is the per-function line variable in the main source file but a constant in an
+#included one, so a wrapper that #includes a source does not compile it the same way.
+Toolchain: `// TOOLCHAIN sp5` runs VC6 SP5's cl / c1 / c1xx / c2 (tools/vc6sp5, C2 12.00.8966: sound.dll's C++ objects,
+Rich header entry 11/8966 x34); default `8168` (tools/vc6/vc98). Headers stay RTM's; `// INCLUDE $VCSP5` adds SP5's.
 Language: `// LANG c` compiles the whole file as C (/Tc; MATCH names are then `_name`); default C++ (/Tp).
 Modules: golf_clean.exe, Terrain.dll, jgld.dll, sound.dll (function lists in re/functions_ghidra*.tsv).
 `--only 0x<addr>` compares one annotated function (used by re/tools/match_permute.py).
@@ -68,13 +75,61 @@ def coff(path: pathlib.Path):
     return secs, syms
 
 
-def compile_obj(src: pathlib.Path, flags: str, lang: str = "c++") -> pathlib.Path:
-    """`lang` "c" compiles the file as C (/Tc, undecorated `_name` symbols), whatever its extension."""
-    out = pathlib.Path(tempfile.mkdtemp(prefix="vc6_")) / (src.stem + ".obj")
-    env = {"PATH": str(VC / "bin"), "INCLUDE": str(VC / "include"), "LIB": str(VC / "lib"),
+# Toolchains (`// TOOLCHAIN <id>`): the directory cl.exe and its passes (c1, c1xx, c2) are run from, the extra PATH
+# entries their DLLs need, and the compiler banner the evidence CSV records. The include directory stays RTM's for
+# every toolchain (SMSG-decomp build.bat line 96 builds sound.dll with SP5's msdev over RTM's VC98\INCLUDE); `$VCSP5`
+# in an INCLUDE line places SP5's own include directory (it differs from RTM's in fpieee.h, fstream, oleauto.h,
+# winnt.h and xtree).
+SP5 = ROOT / "tools" / "vc6sp5"
+TOOLCHAINS = {
+    "8168": {"bin": VC / "bin", "path": [], "args": [], "label": "cl 12.00.8168 (VC6)"},
+    "sp5": {"bin": SP5 / "VC98" / "BIN", "path": [SP5 / "Common" / "MSDev98" / "Bin"], "args": [],
+            "label": "cl 12.00.8804 / c1xx 12.00.8964 / c2 12.00.8966 (VC6 SP5)"},
+    # RTM's cl / c1 / c1xx with SP5's back end (cl's /B2 names the C2 DLL): the obj's @comp.id is 11/8966 as with
+    # `sp5`, so the Rich header cannot tell the two front ends apart (log/roadmap/S10/5_notes.md)
+    "sp5c2": {"bin": VC / "bin", "path": [], "args": [f"/B2{SP5 / 'VC98' / 'BIN' / 'C2.DLL'}"],
+              "label": "cl / c1xx 12.00.8168 + c2 12.00.8966 (VC6 RTM front end, SP5 back end)"},
+}
+DEFAULT_TOOLCHAIN = "8168"
+
+
+def file_toolchain(text: str) -> str:
+    """The file's `// TOOLCHAIN <id>` (default 8168, tools/vc6/vc98)."""
+    m = re.search(r"^\s*//\s*TOOLCHAIN\s+(\S+)\s*$", text, re.M)
+    tc = m.group(1) if m else DEFAULT_TOOLCHAIN
+    if tc not in TOOLCHAINS:
+        raise SystemExit(f"unknown // TOOLCHAIN {tc!r}; known: {sorted(TOOLCHAINS)}")
+    return tc
+
+
+def include_path(text: str) -> str:
+    """INCLUDE for cl from the file's `// INCLUDE <dir>` lines (none: VC6's include directory alone)."""
+    dirs = [d.strip() for d in re.findall(r"^\s*//\s*INCLUDE\s+(\S.*?)\s*$", text, re.M)]
+    vc = str(VC / "include")
+    special = {"$VC": vc, "$VCSP5": str(SP5 / "VC98" / "Include")}
+    out = [special.get(d) or str(d if pathlib.Path(d).is_absolute() else ROOT / d) for d in dirs]
+    return ";".join(out if vc in out else out + [vc])
+
+
+def compiled_file(src: pathlib.Path, text: str) -> pathlib.Path:
+    """The file cl compiles: `src` itself, or the repo-relative path of its `// COMPILE <path>` line."""
+    m = re.search(r"^\s*//\s*COMPILE\s+(\S.*?)\s*$", text, re.M)
+    return ROOT / m.group(1) if m else src
+
+
+def compile_obj(src: pathlib.Path, flags: str, lang: str = "c++", include: str = "",
+                toolchain: str = DEFAULT_TOOLCHAIN) -> pathlib.Path:
+    """`lang` "c" compiles the file as C (/Tc, undecorated `_name` symbols), whatever its extension.
+    `toolchain` is a TOOLCHAINS key: cl.exe runs from that directory, so its own c1 / c1xx / c2 do the work."""
+    tc = TOOLCHAINS[toolchain]
+    if not (tc["bin"] / "cl.exe").exists():
+        raise SystemExit(f"toolchain {toolchain!r} not present: no cl.exe in {tc['bin']} (tools/ is local, not committed)")
+    out =pathlib.Path(tempfile.mkdtemp(prefix="vc6_")) / (src.stem + ".obj")
+    env = {"PATH": ";".join(str(d) for d in [tc["bin"], *tc["path"]]), "INCLUDE": include or str(VC / "include"),
+           "LIB": str(VC / "lib"),
            "SystemRoot": r"C:\Windows", "TEMP": tempfile.gettempdir(), "TMP": tempfile.gettempdir()}
     srcarg = f"/Tc{src}" if lang == "c" else f"/Tp{src}"
-    cmd = [str(VC / "bin" / "cl.exe"), "/nologo", "/c", "/Gy", *flags.split(), f"/Fo{out}", f"/Fd{out.parent}\\", srcarg]
+    cmd = [str(tc["bin"] / "cl.exe"), "/nologo", "/c", "/Gy", *tc["args"], *flags.split(), f"/Fo{out}", f"/Fd{out.parent}\\", srcarg]
     r = subprocess.run(cmd, capture_output=True, text=True, env=env)
     if r.returncode != 0:
         raise SystemExit(f"VC6 compile failed:\n{r.stdout}{r.stderr}")
@@ -267,6 +322,24 @@ def image_relocs(mod: str):
     return _RELOCS[mod]
 
 
+def literal_values(code: bytes, is_abs) -> set[int]:
+    """Immediate and displacement values of `code` that `is_abs` does not call addresses (the obj's plain literals)."""
+    md = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
+    md.detail = True
+    out = set()
+    for ins in md.disasm(code, 0):
+        for i, op in enumerate(ins.operands):
+            if op.type == capstone.x86.X86_OP_IMM:
+                v = op.imm & 0xFFFFFFFF
+            elif op.type == capstone.x86.X86_OP_MEM:
+                v = op.mem.disp & 0xFFFFFFFF
+            else:
+                continue
+            if not is_abs(ins, i, v):
+                out.add(v)
+    return out
+
+
 def score_function(mod: str, addr: int, secs, syms, sym: str):
     """Compare one obj function (by symbol) with the original at `addr`: (acc, a, b, full, same, table_bad, sm)."""
     mine, relocs, full, local = function_from_obj(secs, syms, sym)
@@ -288,6 +361,7 @@ def score_function(mod: str, addr: int, secs, syms, sym: str):
 
     pe_base = image_base(mod)
     img_size, orig_relocs = image_relocs(mod)
+    mine_literals = set() if orig_relocs else literal_values(strip_switch_tables(mine, local), mine_abs)
     first_sec = min(s.VirtualAddress for s in pefile.PE(str(GAME / mod), fast_load=True).sections)
 
     def orig_abs(ins, i, v):
@@ -298,8 +372,12 @@ def score_function(mod: str, addr: int, secs, syms, sym: str):
             off = ins.imm_offset if op.type == capstone.x86.X86_OP_IMM else ins.disp_offset
             return bool(off) and ins.address + off in orig_relocs
         # no relocations (the exe): an address points into a section; the image base itself is the PE header,
-        # which code reaches only as a constant (`test eax, 0x400000` in 0x47d610 is a flag)
-        return pe_base + first_sec <= v < pe_base + img_size
+        # which code reaches only as a constant (`test eax, 0x400000` in 0x47d610 is a flag). A value the
+        # recompiled obj holds as a plain literal (no relocation) stays a literal on this side too: with no
+        # relocations the original's bytes cannot tell a constant from an address, so masking only this side made
+        # equal operands differ (rgb_ycc_start's `mov [esp+0x1c], 0x807fff`, U-1886). This can only make a pair
+        # equal when both sides encode the same value.
+        return pe_base + first_sec <= v < pe_base + img_size and v not in mine_literals
 
     a = normalize(strip_switch_tables(mine, local), 0, 0, mine_abs, obj=True)
     b = normalize(orig, addr, addr, orig_abs)
@@ -321,12 +399,17 @@ def score_function(mod: str, addr: int, secs, syms, sym: str):
     return acc, a, b, full, same, table_bad, sm
 
 
-def compare(src: pathlib.Path, flags: str, show: bool, only: int | None = None, quiet: bool = False):
+def compare(src: pathlib.Path, flags: str, show: bool, only: int | None = None, quiet: bool = False,
+            toolchain: str | None = None):
     """Per-module flags: `// FLAGS <module>: ...` (one source can match a release exe and a debug DLL).
-    `// LANG c` compiles the whole file as C. `only` restricts to one annotated address."""
+    `// LANG c` compiles the whole file as C. `only` restricts to one annotated address. `toolchain` overrides the
+    file's `// TOOLCHAIN` line (re-scoring a file with another compiler)."""
     text = src.read_text()
     anns = re.findall(r"//\s*MATCH:\s*(\S+)\s+(0x[0-9a-fA-F]+)\s+(\S+)", text)
     lang = "c" if re.search(r"//\s*LANG\s+c\b", text) else "c++"
+    tc = toolchain or file_toolchain(text)
+    if tc not in TOOLCHAINS:
+        raise SystemExit(f"unknown toolchain {tc!r}; known: {sorted(TOOLCHAINS)}")
     objs = {}
     results = []
     for mod, addr, sym in anns:
@@ -334,14 +417,15 @@ def compare(src: pathlib.Path, flags: str, show: bool, only: int | None = None, 
             continue
         fl = flags or file_flags(text, mod) or DEFAULT_FLAGS
         if fl not in objs:
-            objs[fl] = coff(compile_obj(src, fl, lang))
+            objs[fl] = coff(compile_obj(compiled_file(src, text), fl, lang, include_path(text), tc))
         secs, syms = objs[fl]
         addr = int(addr, 16)
         acc, a, b, full, same, table_bad, sm = score_function(mod, addr, secs, syms, sym)
-        results.append((mod, addr, sym, full, acc, a, b, fl))
+        results.append((mod, addr, sym, full, acc, a, b, fl, tc))
         if quiet:
             continue
         print(f"{mod:14} 0x{addr:08x} {sym}: {100 * acc:.1f}% ({same}/{max(len(a), len(b))} instructions)  flags={fl}"
+              + (f"  toolchain={tc}" if tc != DEFAULT_TOOLCHAIN else "")
               + (f"  SWITCH TABLE DIFFERS: {table_bad[:3]}" if table_bad else ""))
         if show or acc < 1:
             for tag, i1, i2, j1, j2 in sm.get_opcodes():
@@ -357,7 +441,8 @@ def compare(src: pathlib.Path, flags: str, show: bool, only: int | None = None, 
 def write_evidence(results):
     out = ROOT / "log" / "diff"
     out.mkdir(parents=True, exist_ok=True)
-    for mod, addr, sym, full, acc, a, b, flags in results:
+    for mod, addr, sym, full, acc, a, b, flags, *rest in results:
+        compiler = TOOLCHAINS[rest[0] if rest else DEFAULT_TOOLCHAIN]["label"]
         # tracker key: VA for golf_clean.exe, RVA for DLLs (same as hooks.csv); readable Class_method name
         key = tracker_key(mod, addr)
         parts = re.match(r"\?(\w+)@(\w+)@@", sym)
@@ -372,7 +457,7 @@ def write_evidence(results):
                 x = a[i] if i < len(a) else ("", "")
                 y = b[i] if i < len(b) else ("", "")
                 w.writerow([i, x[0], y[0], x[1] == y[1]])
-            w.writerow(["meta", f"compiler=cl 12.00.8168 (VC6) flags={flags}", f"symbol={full}", f"module={mod}"])
+            w.writerow(["meta", f"compiler={compiler} flags={flags}", f"symbol={full}", f"module={mod}"])
             w.writerow(["VERDICT", "GREEN" if acc == 1 else "RED", len(a), f"{100 * acc:.1f}%"])
 
 
@@ -383,8 +468,9 @@ def main():
     ap.add_argument("--show", action="store_true")
     ap.add_argument("--no-evidence", action="store_true")
     ap.add_argument("--only", default="", help="one annotated address (hex)")
+    ap.add_argument("--toolchain", default=None, help="override the file's // TOOLCHAIN line (8168, sp5, sp5c2)")
     a = ap.parse_args()
-    res = compare(pathlib.Path(a.src), a.flags, a.show, int(a.only, 16) if a.only else None)
+    res = compare(pathlib.Path(a.src), a.flags, a.show, int(a.only, 16) if a.only else None, toolchain=a.toolchain)
     if not a.no_evidence:
         write_evidence(res)
     return 0 if all(r[4] == 1 for r in res) else 1

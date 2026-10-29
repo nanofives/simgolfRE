@@ -7,6 +7,7 @@ ListBox's slot-60 body: the single instruction ret 4 at 0x00487af0; it pops its 
 System writeup: `re/analysis/systems/exe_8.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_ListBox.cpp` as `?on_dialog_focus@ListBox@@UAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487af0): callee pops 4 bytes of stack arguments.
 
 ## Reads

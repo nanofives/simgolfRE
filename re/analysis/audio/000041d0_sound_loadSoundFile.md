@@ -7,6 +7,7 @@ Master audio-file loader: opens a file through mmio and parses RIFF WAV and MIDI
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_19.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_ambiencemgr.cpp` as `?load@CAmbienceMgr@@UAE?AW4SNDERR@@PBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000507f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100041f2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 
@@ -130,7 +131,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10001127 -> 0x10024c50 `Voice_setPlayModeBits` (incremental-linking thunk) at 0x100044cc
 - 0x1000118b -> 0x10020fe0 `Seq_setupChannel` (incremental-linking thunk) at 0x10004c49
 - 0x10001249 -> 0x10023e10 `Seq_applyTrackFlag` (incremental-linking thunk) at 0x10004f3e
-- 0x1000132f -> 0x1002e3c0 `FUN_1002e3c0` (incremental-linking thunk) at 0x1000422f
+- 0x1000132f -> 0x1002e3c0 `GlblHeader::init` (incremental-linking thunk) at 0x1000422f
 - 0x10001410 -> 0x1000b000 `NodeB000_ctor` (incremental-linking thunk) at 0x100044ed
 - 0x100014bf -> 0x1001ccf0 `ChanRecord_init` (incremental-linking thunk) at 0x1000421a
 - 0x100014c9 -> 0x10021240 `Sound_findByName` (incremental-linking thunk) at 0x10004958

@@ -1,0 +1,49 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"cmp dword ptr [eax*4], 0","cmp dword ptr [eax*4 + 0x10123630], 0",True
+5,jne 0x82,jne 0x10083472,True
+6,push 0xe1,push 0xe1,True
+7,push 0,push 0x1011f71c,True
+8,push 2,push 2,True
+9,push 0x18,push 0x18,True
+10,call 0x24,call 0x1007fb70,True
+11,"add esp, 0x10","add esp, 0x10",True
+12,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+13,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+14,jne 0x3a,jne 0x1008342a,True
+15,push 0x11,push 0x11,True
+16,call 0x37,call 0x10082870,True
+17,"add esp, 4","add esp, 4",True
+18,push 0x11,push 0x11,True
+19,call 0x41,call 0x100833f0,True
+20,"add esp, 4","add esp, 4",True
+21,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+22,"cmp dword ptr [ecx*4], 0","cmp dword ptr [ecx*4 + 0x10123630], 0",True
+23,jne 0x6a,jne 0x1008345a,True
+24,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+25,push edx,push edx,True
+26,call dword ptr [0],call dword ptr [0x1012c41c],True
+27,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+28,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+29,"mov dword ptr [eax*4], ecx","mov dword ptr [eax*4 + 0x10123630], ecx",True
+30,jmp 0x78,jmp 0x10083468,True
+31,push 2,push 2,True
+32,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+33,push edx,push edx,True
+34,call 0x75,call 0x10080710,True
+35,"add esp, 8","add esp, 8",True
+36,push 0x11,push 0x11,True
+37,call 0x7f,call 0x10083490,True
+38,"add esp, 4","add esp, 4",True
+39,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+40,"mov ecx, dword ptr [eax*4]","mov ecx, dword ptr [eax*4 + 0x10123630]",True
+41,push ecx,push ecx,True
+42,call dword ptr [0],call dword ptr [0x1012c504],True
+43,"mov esp, ebp","mov esp, ebp",True
+44,pop ebp,pop ebp,True
+45,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\mlock.obj (library object, no compilation)",symbol=__lock,module=jgld.dll
+VERDICT,GREEN,46,100.0%

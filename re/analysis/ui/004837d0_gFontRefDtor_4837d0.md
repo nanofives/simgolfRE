@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 20 bytes, 3 instructions, subsystem `ui`. Mechanical tr
 Releases the file-scope FontRef g_font83ad20 at exit. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_font.cpp` as `_$E3` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

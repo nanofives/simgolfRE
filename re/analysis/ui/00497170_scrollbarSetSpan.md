@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 225 bytes, 96 instructions, subsystem `ui`. Mechanical 
 sets the span of the scrollbar from two values: records the lower one at +0x5c0, resets the thumb state and repositions the sub-window at +0xcdc accordingly (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_scroll.cpp` as `?on_resize@Scroll@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004971e3, 0x004971f5, 0x00497239, 0x0049724e): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0049717e before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

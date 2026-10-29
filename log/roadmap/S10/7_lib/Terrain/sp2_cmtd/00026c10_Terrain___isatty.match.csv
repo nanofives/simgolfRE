@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+3,"cmp eax, dword ptr [0]","cmp eax, dword ptr [0x10110f5c]",True
+4,jb 0x12,jb 0x10026c22,True
+5,"xor eax, eax","xor eax, eax",True
+6,jmp 0x30,jmp 0x10026c40,True
+7,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+8,"sar ecx, 5","sar ecx, 5",True
+9,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+10,"and edx, 0x1f","and edx, 0x1f",True
+11,"imul edx, edx, 0x24","imul edx, edx, 0x24",True
+12,"mov eax, dword ptr [ecx*4]","mov eax, dword ptr [ecx*4 + 0x10110e20]",True
+13,"movsx eax, byte ptr [eax + edx + 4]","movsx eax, byte ptr [eax + edx + 4]",True
+14,"and eax, 0x40","and eax, 0x40",True
+15,pop ebp,pop ebp,True
+16,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\isatty.obj (library object, no compilation)",symbol=__isatty,module=Terrain.dll
+VERDICT,GREEN,17,100.0%

@@ -1,0 +1,51 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,"cmp ebx, -1","cmp ebx, -1",True
+3,push esi,push esi,True
+4,je 0x4c,je 0x4b72ab,True
+5,"mov esi, dword ptr [esp + 0x10]","mov esi, dword ptr [esp + 0x10]",True
+6,"mov eax, dword ptr [esi + 0xc]","mov eax, dword ptr [esi + 0xc]",True
+7,"test al, 1","test al, 1",True
+8,jne 0x1e,jne 0x4b727d,True
+9,"test al, 0x80","test al, 0x80",True
+10,je 0x4c,je 0x4b72ab,True
+11,"test al, 2","test al, 2",True
+12,jne 0x4c,jne 0x4b72ab,True
+13,"cmp dword ptr [esi + 8], 0","cmp dword ptr [esi + 8], 0",True
+14,jne 0x2b,jne 0x4b728a,True
+15,push esi,push esi,True
+16,call 0x2a,call 0x4ac315,True
+17,pop ecx,pop ecx,True
+18,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+19,"cmp eax, dword ptr [esi + 8]","cmp eax, dword ptr [esi + 8]",True
+20,jne 0x3b,jne 0x4b729a,True
+21,"cmp dword ptr [esi + 4], 0","cmp dword ptr [esi + 4], 0",True
+22,jne 0x4c,jne 0x4b72ab,True
+23,inc eax,inc eax,True
+24,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+25,"test byte ptr [esi + 0xc], 0x40","test byte ptr [esi + 0xc], 0x40",True
+26,je 0x52,je 0x4b72b1,True
+27,dec dword ptr [esi],dec dword ptr [esi],True
+28,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+29,"cmp byte ptr [eax], bl","cmp byte ptr [eax], bl",True
+30,je 0x58,je 0x4b72b7,True
+31,inc eax,inc eax,True
+32,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+33,"or eax, 0xffffffff","or eax, 0xffffffff",True
+34,pop esi,pop esi,True
+35,pop ebx,pop ebx,True
+36,ret ,ret ,True
+37,dec dword ptr [esi],dec dword ptr [esi],True
+38,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+39,"mov byte ptr [eax], bl","mov byte ptr [eax], bl",True
+40,"mov eax, dword ptr [esi + 0xc]","mov eax, dword ptr [esi + 0xc]",True
+41,inc dword ptr [esi + 4],inc dword ptr [esi + 4],True
+42,"and al, 0xef","and al, 0xef",True
+43,"or al, 1","or al, 1",True
+44,"mov dword ptr [esi + 0xc], eax","mov dword ptr [esi + 0xc], eax",True
+45,"mov eax, ebx","mov eax, ebx",True
+46,"and eax, 0xff","and eax, 0xff",True
+47,jmp 0x4f,jmp 0x4b72ae,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\ungetc.obj (library object, no compilation)",symbol=__ungetc_lk,module=golf_clean.exe
+VERDICT,GREEN,48,100.0%

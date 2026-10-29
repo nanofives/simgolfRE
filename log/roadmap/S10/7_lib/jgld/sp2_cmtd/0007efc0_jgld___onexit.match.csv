@@ -1,0 +1,56 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,call 9,call 0x1007f310,True
+4,push 2,push 2,True
+5,"mov eax, dword ptr [0]","mov eax, dword ptr [0x1012b394]",True
+6,push eax,push eax,True
+7,call 0x16,call 0x10080b90,True
+8,"add esp, 8","add esp, 8",True
+9,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012b390]",True
+10,"sub ecx, dword ptr [0]","sub ecx, dword ptr [0x1012b394]",True
+11,"add ecx, 4","add ecx, 4",True
+12,"cmp eax, ecx","cmp eax, ecx",True
+13,jae 0x8d,jae 0x1007f04d,True
+14,push 0x68,push 0x68,True
+15,push 0,push 0x1011ec88,True
+16,push 2,push 2,True
+17,push 2,push 2,True
+18,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012b394]",True
+19,push edx,push edx,True
+20,call 0x43,call 0x10080b90,True
+21,"add esp, 8","add esp, 8",True
+22,"add eax, 0x10","add eax, 0x10",True
+23,push eax,push eax,True
+24,"mov eax, dword ptr [0]","mov eax, dword ptr [0x1012b394]",True
+25,push eax,push eax,True
+26,call 0x55,call 0x10080060,True
+27,"add esp, 0x14","add esp, 0x14",True
+28,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+29,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+30,jne 0x6a,jne 0x1007f02a,True
+31,call 0x66,call 0x1007f320,True
+32,"xor eax, eax","xor eax, eax",True
+33,jmp 0xaf,jmp 0x1007f06f,True
+34,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012b390]",True
+35,"sub ecx, dword ptr [0]","sub ecx, dword ptr [0x1012b394]",True
+36,"sar ecx, 2","sar ecx, 2",True
+37,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+38,"lea eax, [edx + ecx*4]","lea eax, [edx + ecx*4]",True
+39,"mov dword ptr [0], eax","mov dword ptr [0x1012b390], eax",True
+40,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+41,"mov dword ptr [0], ecx","mov dword ptr [0x1012b394], ecx",True
+42,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012b390]",True
+43,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+44,"mov dword ptr [edx], eax","mov dword ptr [edx], eax",True
+45,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012b390]",True
+46,"add ecx, 4","add ecx, 4",True
+47,"mov dword ptr [0], ecx","mov dword ptr [0x1012b390], ecx",True
+48,call 0xac,call 0x1007f320,True
+49,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+50,"mov esp, ebp","mov esp, ebp",True
+51,pop ebp,pop ebp,True
+52,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\onexit.obj (library object, no compilation)",symbol=__onexit,module=jgld.dll
+VERDICT,GREEN,53,100.0%

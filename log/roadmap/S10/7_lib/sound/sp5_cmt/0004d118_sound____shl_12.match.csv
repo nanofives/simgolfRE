@@ -1,0 +1,24 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,push esi,push esi,True
+2,push edi,push edi,True
+3,"mov esi, dword ptr [eax]","mov esi, dword ptr [eax]",True
+4,"mov edi, dword ptr [eax + 4]","mov edi, dword ptr [eax + 4]",True
+5,"mov ecx, esi","mov ecx, esi",True
+6,"add esi, esi","add esi, esi",True
+7,"mov dword ptr [eax], esi","mov dword ptr [eax], esi",True
+8,"lea esi, [edi + edi]","lea esi, [edi + edi]",True
+9,"shr ecx, 0x1f","shr ecx, 0x1f",True
+10,"or esi, ecx","or esi, ecx",True
+11,"mov ecx, dword ptr [eax + 8]","mov ecx, dword ptr [eax + 8]",True
+12,"mov edx, edi","mov edx, edi",True
+13,"mov dword ptr [eax + 4], esi","mov dword ptr [eax + 4], esi",True
+14,"shr edx, 0x1f","shr edx, 0x1f",True
+15,"shl ecx, 1","shl ecx, 1",True
+16,"or ecx, edx","or ecx, edx",True
+17,pop edi,pop edi,True
+18,"mov dword ptr [eax + 8], ecx","mov dword ptr [eax + 8], ecx",True
+19,pop esi,pop esi,True
+20,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\mantold.obj (library object, no compilation)",symbol=___shl_12,module=sound.dll
+VERDICT,GREEN,21,100.0%

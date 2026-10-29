@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push esi,push esi,True
+3,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+4,call 0xc,call 0x4a9874,True
+5,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+6,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+7,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+8,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+9,call 0x1d,call 0x4a6297,True
+10,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+11,"mov esi, eax","mov esi, eax",True
+12,call 0x27,call 0x4a98c6,True
+13,"add esp, 0x18","add esp, 0x18",True
+14,"mov eax, esi","mov eax, esi",True
+15,pop esi,pop esi,True
+16,pop ebp,pop ebp,True
+17,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\fwrite.obj (library object, no compilation)",symbol=_fwrite,module=golf_clean.exe
+VERDICT,GREEN,18,100.0%

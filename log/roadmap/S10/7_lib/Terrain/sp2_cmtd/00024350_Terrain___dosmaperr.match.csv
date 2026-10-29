@@ -1,0 +1,45 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,call 9,call 0x10024400,True
+4,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+5,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+6,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+7,jmp 0x20,jmp 0x10024370,True
+8,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+9,"add edx, 1","add edx, 1",True
+10,"mov dword ptr [ebp - 4], edx","mov dword ptr [ebp - 4], edx",True
+11,"cmp dword ptr [ebp - 4], 0x2d","cmp dword ptr [ebp - 4], 0x2d",True
+12,jae 0x4a,jae 0x1002439a,True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+15,"cmp ecx, dword ptr [eax*8]","cmp ecx, dword ptr [eax*8 + 0x10066680]",True
+16,jne 0x48,jne 0x10024398,True
+17,call 0x3a,call 0x100243f0,True
+18,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+19,"mov ecx, dword ptr [edx*8 + 4]","mov ecx, dword ptr [edx*8 + 0x10066684]",True
+20,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+21,jmp 0x8d,jmp 0x100243dd,True
+22,jmp 0x17,jmp 0x10024367,True
+23,"cmp dword ptr [ebp + 8], 0x13","cmp dword ptr [ebp + 8], 0x13",True
+24,jb 0x63,jb 0x100243b3,True
+25,"cmp dword ptr [ebp + 8], 0x24","cmp dword ptr [ebp + 8], 0x24",True
+26,ja 0x63,ja 0x100243b3,True
+27,call 0x5b,call 0x100243f0,True
+28,"mov dword ptr [eax], 0xd","mov dword ptr [eax], 0xd",True
+29,jmp 0x8d,jmp 0x100243dd,True
+30,"cmp dword ptr [ebp + 8], 0xbc","cmp dword ptr [ebp + 8], 0xbc",True
+31,jb 0x82,jb 0x100243d2,True
+32,"cmp dword ptr [ebp + 8], 0xca","cmp dword ptr [ebp + 8], 0xca",True
+33,ja 0x82,ja 0x100243d2,True
+34,call 0x7a,call 0x100243f0,True
+35,"mov dword ptr [eax], 8","mov dword ptr [eax], 8",True
+36,jmp 0x8d,jmp 0x100243dd,True
+37,call 0x87,call 0x100243f0,True
+38,"mov dword ptr [eax], 0x16","mov dword ptr [eax], 0x16",True
+39,"mov esp, ebp","mov esp, ebp",True
+40,pop ebp,pop ebp,True
+41,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dosmap.obj (library object, no compilation)",symbol=__dosmaperr,module=Terrain.dll
+VERDICT,GREEN,42,100.0%

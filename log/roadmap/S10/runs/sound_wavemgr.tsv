@@ -1,0 +1,45 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/wavemgr.cpp	0x39690	0x10039690	154	G	CWaveMgr::CWaveMgr	??0CWaveMgr@@QAE@XZ	public	100	100.0	42/42 ins	m36c_R3_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39760	0x10039760	30	G	CWaveMgr::`scalar deleting destructor'	??_GCWaveMgr@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39790	0x10039790	164	G	CWaveMgr::CWaveMgr	??0CWaveMgr@@QAE@PAUHWND__@@@Z	public	100	100.0	40/40 ins	m36c_R3_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39870	0x10039870	196	G	CWaveMgr::~CWaveMgr	??1CWaveMgr@@UAE@XZ	public	100	100.0	58/58 ins	m36c_R3_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39980	0x10039980	8	G	CWaveMgr::reload	?reload@CWaveMgr@@EAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x399a0	0x100399a0	307	G	CWaveMgr::load	?load@CWaveMgr@@UAE?AW4SNDERR@@PBD@Z	public	100	100.0	85/85 ins	m36c_R3_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39b30	0x10039b30	122	G	CWaveMgr::direct_unload	?direct_unload@CWaveMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	42/42 ins	m36c_R3_05.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39bd0	0x10039bd0	41	G	CWaveMgr::unload	?unload@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	19/19 ins	sound_raw_07.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39c10	0x10039c10	26	G	CWaveMgr::reset	?reset@CWaveMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	12/12 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39c40	0x10039c40	43	G	CWaveMgr::fade	?fade@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	17/17 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39c80	0x10039c80	8	G	CWaveMgr::fade_in	?fade_in@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39ca0	0x10039ca0	37	G	CWaveMgr::free_all	?free_all@CWaveMgr@@SAXXZ	public	100	100.0	15/15 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x39ce0	0x10039ce0	310	G	CWaveMgr::play	?play@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	106/106 ins	m36c_R3_05.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39e70	0x10039e70	141	G	CWaveMgr::play	?play@CWaveMgr@@UAE?AW4SNDERR@@H@Z	public	100	100.0	51/51 ins	m36c_R3_05.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x39f30	0x10039f30	208	G	CWaveMgr::play	?play@CWaveMgr@@UAE?AW4SNDERR@@PAH@Z	public	100	100.0	76/76 ins	m36c_R3_05.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a040	0x1003a040	38	G	CWaveMgr::stop	?stop@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	13/13 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a080	0x1003a080	28	G	CWaveMgr::release	?release@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	9/9 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a0b0	0x1003a0b0	8	G	CWaveMgr::detach	?detach@CWaveMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a0d0	0x1003a0d0	79	G	CWaveMgr::set_volume	?set_volume@CWaveMgr@@UAEXH@Z	public	100	100.0	32/32 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a140	0x1003a140	90	G	CWaveMgr::ramp	?ramp@CWaveMgr@@UAEXHHI@Z	public	100	100.0	37/37 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a1c0	0x1003a1c0	13	G	CWaveMgr::set_delay	?set_delay@CWaveMgr@@UAEXK@Z	public	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a1e0	0x1003a1e0	28	G	CWaveMgr::set_pan	?set_pan@CWaveMgr@@UAEXH@Z	public	100	100.0	12/12 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a210	0x1003a210	262	G	CWaveMgr::set_pitch	?set_pitch@CWaveMgr@@UAE?AW4SNDERR@@H@Z	public	100	100.0	85/85 ins	m36c_R3_07.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a370	0x1003a370	155	G	CWaveMgr::set_attrib	?set_attrib@CWaveMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	46/46 ins	m36c_R3_05.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a440	0x1003a440	213	G	CWaveMgr::set_link	?set_link@CWaveMgr@@UAE?AW4SNDERR@@PADPAK@Z	public	100	100.0	71/71 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a560	0x1003a560	22	G	CWaveMgr::get_attrib	?get_attrib@CWaveMgr@@UAEKXZ	public	100	100.0	9/9 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a590	0x1003a590	16	G	CWaveMgr::get_time	?get_time@CWaveMgr@@UAEKK@Z	public	100	100.0	5/5 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a5b0	0x1003a5b0	26	G	CWaveMgr::set_position3d	?set_position3d@CWaveMgr@@UAE?AW4SNDERR@@MMM@Z	public	100	100.0	9/9 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a5e0	0x1003a5e0	16	G	CWaveMgr::set_xpos	?set_xpos@CWaveMgr@@UAE?AW4SNDERR@@M@Z	public	100	100.0	5/5 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a600	0x1003a600	28	G	CWaveMgr::set_reverb_mix	?set_reverb_mix@CWaveMgr@@UAE?AW4SNDERR@@M@Z	public	100	100.0	12/12 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a630	0x1003a630	16	G	CWaveMgr::set_ypos	?set_ypos@CWaveMgr@@UAE?AW4SNDERR@@M@Z	public	100	100.0	5/5 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a650	0x1003a650	16	G	CWaveMgr::set_zpos	?set_zpos@CWaveMgr@@UAE?AW4SNDERR@@M@Z	public	100	100.0	5/5 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a670	0x1003a670	7	G	CWaveMgr::get_ms_length	?get_ms_length@CWaveMgr@@UAEIXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a690	0x1003a690	16	G	CWaveMgr::set_loop_state	?set_loop_state@CWaveMgr@@UAEXH@Z	public	100	100.0	5/5 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a6b0	0x1003a6b0	18	G	CWaveMgr::set_fade	?set_fade@CWaveMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	6/6 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a6e0	0x1003a6e0	18	G	CWaveMgr::set_fade_in	?set_fade_in@CWaveMgr@@UAE?AW4SNDERR@@I@Z	public	100	100.0	6/6 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a710	0x1003a710	7	G	CWaveMgr::get_time	?get_time@CWaveMgr@@UAEKXZ	public	100	100.0	2/2 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a730	0x1003a730	8	G	CWaveMgr::get_current_marker	?get_current_marker@CWaveMgr@@UAEKXZ	public	100	100.0	2/2 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a750	0x1003a750	13	G	CWaveMgr::is_looping	?is_looping@CWaveMgr@@UAEHXZ	public	100	100.0	4/4 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a770	0x1003a770	6	G	CWaveMgr::get_game_hwnd	?get_game_hwnd@CWaveMgr@@UAEPAUHWND__@@XZ	public	100	100.0	2/2 ins	m36c_R3_01.cpp
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a790	0x1003a790	23	G	CWaveMgr::is_playing	?is_playing@CWaveMgr@@UAEHXZ	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a7c0	0x1003a7c0	13	G	CWaveMgr::is_hwbuffer	?is_hwbuffer@CWaveMgr@@UAEHXZ	public	100	100.0	4/4 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a7e0	0x1003a7e0	13	G	CWaveMgr::is_loaded	?is_loaded@CWaveMgr@@UAEHXZ	public	100	100.0	4/4 ins	
+sound	sound/sound.dll/src/wavemgr.cpp	0x3a800	0x1003a800	27	G	CWaveMgr::is_3d	?is_3d@CWaveMgr@@UAE_NXZ	public	100	100.0	8/8 ins	sound_raw_06.cpp

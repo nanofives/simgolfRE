@@ -7,6 +7,7 @@ __thiscall accessor in Sound vtable slot 0xb4 (+0xb4): returns the dword at +0x1
 System writeup: `re/analysis/systems/sound_19.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_ambiencemgr.cpp` as `?get_ntracks@CMidiMgr@@UAEKXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10005f46): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10005f40 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

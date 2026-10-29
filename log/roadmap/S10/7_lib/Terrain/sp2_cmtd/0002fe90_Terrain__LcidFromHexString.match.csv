@@ -1,0 +1,45 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+4,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+5,"mov cl, byte ptr [eax]","mov cl, byte ptr [eax]",True
+6,"mov byte ptr [ebp - 8], cl","mov byte ptr [ebp - 8], cl",True
+7,"movsx edx, byte ptr [ebp - 8]","movsx edx, byte ptr [ebp - 8]",True
+8,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+9,"add eax, 1","add eax, 1",True
+10,"mov dword ptr [ebp + 8], eax","mov dword ptr [ebp + 8], eax",True
+11,"test edx, edx","test edx, edx",True
+12,je 0x6f,je 0x1002feff,True
+13,"movsx ecx, byte ptr [ebp - 8]","movsx ecx, byte ptr [ebp - 8]",True
+14,"cmp ecx, 0x61","cmp ecx, 0x61",True
+15,jl 0x42,jl 0x1002fed2,True
+16,"movsx edx, byte ptr [ebp - 8]","movsx edx, byte ptr [ebp - 8]",True
+17,"cmp edx, 0x66","cmp edx, 0x66",True
+18,jg 0x42,jg 0x1002fed2,True
+19,"mov al, byte ptr [ebp - 8]","mov al, byte ptr [ebp - 8]",True
+20,"add al, 0xd9","add al, 0xd9",True
+21,"mov byte ptr [ebp - 8], al","mov byte ptr [ebp - 8], al",True
+22,jmp 0x5c,jmp 0x1002feec,True
+23,"movsx ecx, byte ptr [ebp - 8]","movsx ecx, byte ptr [ebp - 8]",True
+24,"cmp ecx, 0x41","cmp ecx, 0x41",True
+25,jl 0x5c,jl 0x1002feec,True
+26,"movsx edx, byte ptr [ebp - 8]","movsx edx, byte ptr [ebp - 8]",True
+27,"cmp edx, 0x46","cmp edx, 0x46",True
+28,jg 0x5c,jg 0x1002feec,True
+29,"mov al, byte ptr [ebp - 8]","mov al, byte ptr [ebp - 8]",True
+30,"add al, 0xf9","add al, 0xf9",True
+31,"mov byte ptr [ebp - 8], al","mov byte ptr [ebp - 8], al",True
+32,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+33,"shl ecx, 4","shl ecx, 4",True
+34,"movsx edx, byte ptr [ebp - 8]","movsx edx, byte ptr [ebp - 8]",True
+35,"lea eax, [ecx + edx - 0x30]","lea eax, [ecx + edx - 0x30]",True
+36,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+37,jmp 0xd,jmp 0x1002fe9d,True
+38,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+39,"mov esp, ebp","mov esp, ebp",True
+40,pop ebp,pop ebp,True
+41,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\getqloc.obj (library object, no compilation)",symbol=_LcidFromHexString,module=Terrain.dll
+VERDICT,GREEN,42,100.0%

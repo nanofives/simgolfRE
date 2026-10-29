@@ -1,0 +1,30 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38650	0x10038650	106	G	WaveInDeviceMgr::WaveInDeviceMgr	??0WaveInDeviceMgr@@QAE@XZ	public	100	100.0	32/32 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x386e0	0x100386e0	30	G	WaveInDeviceMgr::`scalar deleting destructor'	??_GWaveInDeviceMgr@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38710	0x10038710	298	G	WaveInDeviceMgr::~WaveInDeviceMgr	??1WaveInDeviceMgr@@UAE@XZ	public	100	100.0	116/116 ins	m36c_R3_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38890	0x10038890	284	G	WaveInDeviceMgr::init	?init@WaveInDeviceMgr@@QAE?AW4SNDERR@@KK@Z	public	100	100.0	120/120 ins	m36c_R3_03.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38a00	0x10038a00	165	G	WaveInDeviceMgr::free_buffers	?free_buffers@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	68/68 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38ae0	0x10038ae0	47	G	WIBuffer::`scalar deleting destructor'	??_GWIBuffer@@QAEPAXI@Z	public	100	100.0	18/18 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38b20	0x10038b20	13	G	WaveInDeviceMgr::start_record	?start_record@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	5/5 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38b40	0x10038b40	232	G	WaveInDeviceMgr::prepare_headers	?prepare_headers@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	77/77 ins	m36c_R3_03.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38c70	0x10038c70	232	G	WaveInDeviceMgr::unprepare_headers	?unprepare_headers@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	77/77 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38da0	0x10038da0	232	G	WaveInDeviceMgr::add_buffers	?add_buffers@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	77/77 ins	m36c_R3_03.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38ed0	0x10038ed0	46	G	WaveInDeviceMgr::add_buffer	?add_buffer@WaveInDeviceMgr@@QAE?AW4SNDERR@@PAVWIBuffer@@@Z	public	100	100.0	16/16 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38f10	0x10038f10	27	G	WaveInDeviceMgr::stop_record	?stop_record@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	11/11 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38f40	0x10038f40	6	G	WaveInDeviceMgr::get_num_devices	?get_num_devices@WaveInDeviceMgr@@QAEKXZ	public	100	100.0	1/1 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38f60	0x10038f60	66	G	WaveInDeviceMgr::select	?select@WaveInDeviceMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	28/28 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x38fd0	0x10038fd0	89	G	WaveInDeviceMgr::call_back	?call_back@WaveInDeviceMgr@@SGXPAUHWAVEIN__@@GKKK@Z	public	100	100.0	26/26 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39050	0x10039050	188	G	WaveInDeviceMgr::enable	?enable@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	49/49 ins	m36c_R3_03.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39140	0x10039140	296	G	WaveInDeviceMgr::disable	?disable@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	87/87 ins	m36c_R3_03.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x392c0	0x100392c0	144	G	WaveInDeviceMgr::handle_error	?handle_error@WaveInDeviceMgr@@QAE?AW4SNDERR@@I@Z	public	100	100.0	21/21 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39380	0x10039380	50	G	WaveInDeviceMgr::set_format	?set_format@WaveInDeviceMgr@@QAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x393d0	0x100393d0	88	G	WaveInDeviceMgr::process_buffer	?process_buffer@WaveInDeviceMgr@@QAE?AW4SNDERR@@PAVWIBuffer@@@Z	public	100	100.0	35/35 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39450	0x10039450	12	G	WaveInDeviceMgr::hook_vtx	?hook_vtx@WaveInDeviceMgr@@QAE?AW4SNDERR@@PAVCVoiceTxMgr@@@Z	public	100	100.0	4/4 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39470	0x10039470	10	G	WaveInDeviceMgr::unhook_vtx	?unhook_vtx@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	3/3 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39490	0x10039490	28	G	WIBuffer::WIBuffer	??0WIBuffer@@QAE@XZ	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x394c0	0x100394c0	26	G	WIBuffer::~WIBuffer	??1WIBuffer@@QAE@XZ	public	100	100.0	11/11 ins	sound_raw_06.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x394f0	0x100394f0	58	G	WIBuffer::set_buffer	?set_buffer@WIBuffer@@QAE?AW4SNDERR@@K@Z	public	100	100.0	25/25 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39540	0x10039540	10	G	WIBuffer::set_next	?set_next@WIBuffer@@QAEXPAUwavehdr_tag@@@Z	public	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39560	0x10039560	3	G	WIBuffer::get_whdr	?get_whdr@WIBuffer@@QAEPAUwavehdr_tag@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39580	0x10039580	125	G	DList<WIBuffer>::~DList<WIBuffer>	??1?$DList@VWIBuffer@@@@QAE@XZ	public	100	100.0	46/46 ins	m36c_R3_02.cpp
+sound	sound/sound.dll/src/WaveInDeviceMgr.cpp	0x39620	0x10039620	66	G	DList<WIBuffer>::remove_head	?remove_head@?$DList@VWIBuffer@@@@QAEPAVWIBuffer@@XZ	public	100	100.0	27/27 ins	m36c_R3_02.cpp

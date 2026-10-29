@@ -1,0 +1,9 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x58970	0x10058970	2321	G	JGLSprite::draw_8_16c	?draw_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	public	100	100.0	699/699 ins	jgld_blitY10.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x594d0	0x100594d0	2291	G	JGLSprite::blit8to16_compressed	?blit8to16_compressed@JGLSprite@@QAEHPAVJGLBuffer@@HH@Z	public	100	100.0	691/691 ins	jgld_blitY8.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x5a000	0x1005a000	1549	G	JGLSprite::draw_z_outline_8_16c	?draw_z_outline_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HH0EH@Z	public	100	100.0	478/478 ins	jgld_blitY12.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x5a790	0x1005a790	1512	G	JGLSprite::draw_z_8_16c	?draw_z_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HH0E@Z	public	100	100.0	469/469 ins	jgld_blitY11.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x5af00	0x1005af00	2403	G	JGLSprite::draw_dest_8_16c	?draw_dest_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HHPAG@Z	public	100	100.0	721/721 ins	jgld_blitY9.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x5bac0	0x1005bac0	2297	G	JGLSprite::draw_mono_8_16c	?draw_mono_8_16c@JGLSprite@@QAEHPAVJGLBuffer@@HHH@Z	public	100	100.0	691/691 ins	jgld_blitY7.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x5c600	0x1005c600	2440	G	JGLSprite::blitRecolored8to16_compressed	?blitRecolored8to16_compressed@JGLSprite@@QAEHPAVJGLBuffer@@HHPAEPAG@Z	public	100	100.0	729/729 ins	jgld_blitY6.cpp
+jgld	jgl/jgld.dll/src/jglsprite_8_16c.cpp	0x5d1f0	0x1005d1f0	2442	G	JGLSprite::blitRecoloredAfterPalette8to16_compressed	?blitRecoloredAfterPalette8to16_compressed@JGLSprite@@QAEHPAVJGLBuffer@@HHPAEPAG@Z	public	100	100.0	729/729 ins	jgld_blitY5.cpp

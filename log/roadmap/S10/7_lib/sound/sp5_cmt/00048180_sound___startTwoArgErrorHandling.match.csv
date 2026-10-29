@@ -1,0 +1,9 @@
+instruction,library_object,original,match
+0,bytes +0x0: 558bec83c4e08945e08b45188945f08b,bytes +0x0: 558bec83c4e08945e08b45188945f08b,True
+1,bytes +0x10: 451c8945f4eb09558bec83c4e08945e0,bytes +0x10: 451c8945f4eb09558bec83c4e08945e0,True
+2,bytes +0x20: dd5df8894de48b45108b4d148945e889,bytes +0x20: dd5df8894de48b45108b4d148945e889,True
+3,bytes +0x30: 4dec8d45088d4de0505152e8????????,bytes +0x30: 4dec8d45088d4de0505152e8????????,True
+4,bytes +0x40: 83c40cdd45f866817d087f027403d96d,bytes +0x40: 83c40cdd45f866817d087f027403d96d,True
+5,bytes +0x50: 08c9c3,bytes +0x50: 08c9c3,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\genexcep.obj (library object, no compilation)",symbol=__startTwoArgErrorHandling,module=sound.dll
+VERDICT,GREEN,6,100.0%

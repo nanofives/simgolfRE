@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 4 bytes, 2 instructions, subsystem `audio`. Mechanical 
 Returns the mode of the sound. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?get_type@Sound@@UAE?AW4SOUNDTYPE@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004844d3): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004844d0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

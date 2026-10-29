@@ -1,0 +1,12 @@
+module	addr	name	type	evidence
+jgld.dll	0x1011d01c	MappedFile_vtable	void*[]	written by MappedFile::ctor 0x10002650 and MappedFile::dtor 0x10002820
+jgld.dll	0x1011d024	Matrix_vtable	void*[]	written by Matrix ctors 0x100031d0/0x10003230/0x10003290
+jgld.dll	0x1011d028	Transform_vtable	void*[]	written by Transform ctors 0x10003390/0x10003400/0x10003470
+jgld.dll	0x1011d0b0	Surface_vtable	void*[]	written by Surface::ctor 0x10007660 / Surface::ctorOwner 0x10007970
+jgld.dll	0x1011d220	SurfaceBase_vtable	void*[]	written by SurfaceBase::ctor 0x10009690 and SurfaceBase::dtor 0x100096f0
+jgld.dll	0x1011d380	Sprite_vtable	void*[]	written by Sprite ctors 0x10014af0/0x10014cd0 and Sprite::dtor 0x10014de0
+jgld.dll	0x1011d444	SpriteBase_vtable	void*[]	written by SpriteBase::ctor 0x10014c70
+jgld.dll	0x1011d04c	kHalf	float	read by Vector3::midpoint 0x10003f80; value 0.5
+jgld.dll	0x1011d0a0	kRandDivisor	float	read by Random::next 0x10007530; value 32768.0 (divides a 15-bit value to [0,1))
+jgld.dll	0x10128428	g_trackedList	LinkedList	destroyed by atexitDestroyGlobalList 0x10006a40 via LinkedList::dtor 0x10006cf0
+jgld.dll	0x10128444	g_trackedList_initFlag	int	bit0 guards the one-time teardown in atexitDestroyGlobalList 0x10006a40

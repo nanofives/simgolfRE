@@ -1,0 +1,16 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/WorldMap.cpp	0x6e7b0	0x0046e7b0	92	G	TriggerAccomplishment	?TriggerAccomplishment@@YAXHHH@Z	public	100	100.0	19/19 ins	golf_hand_02.cpp
+golf	golf/golf.exe/src/WorldMap.cpp	0x6e810	0x0046e810	2409	G	RenderAccomplishmentsScreen	?RenderAccomplishmentsScreen@@YAXXZ	public	100	100.0	716/716 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x6f180	0x0046f180	71	G	ShowAccomplishmentsScreen	?ShowAccomplishmentsScreen@@YAXXZ	public	100	100.0	15/15 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x6f1d0	0x0046f1d0	224	G	GetCoursePurchasePrice	?GetCoursePurchasePrice@@YAHH@Z	public	100	100.0	47/47 ins	golf_small15.cpp
+golf	golf/golf.exe/src/WorldMap.cpp	0x6f2b0	0x0046f2b0	669	G	InitWorldMapCourseList	?InitWorldMapCourseList@@YAXXZ	public	100	100.0	205/205 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x6f550	0x0046f550	5292	G	ShowWorldMapScreen	?ShowWorldMapScreen@@YAHXZ	public	100	100.0	1570/1570 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x70a00	0x00470a00	5	G	ChooseWorldMapCourse	?ChooseWorldMapCourse@@YAHH@Z	public	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x70a10	0x00470a10	76	G	SetTerrainTileType	?SetTerrainTileType@@YAXHH@Z	public	100	100.0	23/23 ins	golf_small8.cpp
+golf	golf/golf.exe/src/WorldMap.cpp	0x70a60	0x00470a60	6228	G	GenerateCourseMap	?GenerateCourseMap@@YAXH@Z	public	100	100.0	1729/1729 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x722c0	0x004722c0	512	G	UnlockLandmarkByGolfer	?UnlockLandmarkByGolfer@@YAXHH@Z	public	100	100.0	135/135 ins	golf_hand_r0.cpp
+golf	golf/golf.exe/src/WorldMap.cpp	0x724c0	0x004724c0	235	G	BuildThemeList	?BuildThemeList@@YAHXZ	public	100	100.0	90/90 ins	golf_hand_07_4724c0.cpp
+golf	golf/golf.exe/src/WorldMap.cpp	0x725b0	0x004725b0	3355	G	ShowThemeSelect	?ShowThemeSelect@@YAXXZ	public	100	100.0	1041/1041 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0x732d0	0x004732d0	409	G	HighScore_InsertEntry	?HighScore_InsertEntry@@YAHXZ	public	100	100.0	133/133 ins	golf_hand_r1.cpp
+golf	golf/golf.exe/src/WorldMap.cpp	0x73470	0x00473470	1509	G	RenderHighScoreScreen	?RenderHighScoreScreen@@YAXXZ	public	100	100.0	491/491 ins	
+golf	golf/golf.exe/src/WorldMap.cpp	0xa0890	0x004a0890	1	G	OnWorldMapClosed	?OnWorldMapClosed@@YAXXZ	name	100	100.0	1/1 ins	

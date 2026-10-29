@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 434 bytes, 153 instructions, subsystem `save`. Mechanic
 saves the current course to a file: two caption records, the course body and an end marker (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_SpriteAssets.cpp` as `?SaveCourseToFile@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040b831): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0040b683 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

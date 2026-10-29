@@ -1,0 +1,12 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/keymap.cpp	0x1ab60	0x1001ab60	67	G	Dll_KeyMap::Dll_KeyMap	??0Dll_KeyMap@@QAE@XZ	public	100	100.0	20/20 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1abd0	0x1001abd0	75	G	Dll_KeyMap::~Dll_KeyMap	??1Dll_KeyMap@@QAE@XZ	public	100	100.0	31/31 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1ac40	0x1001ac40	191	G	Dll_KeyMap::stop_all	?stop_all@Dll_KeyMap@@QAE?AW4SNDERR@@XZ	public	100	100.0	64/64 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1ad30	0x1001ad30	111	G	Dll_KeyMap::activeWaves	?activeWaves@Dll_KeyMap@@QAE_NXZ	public	100	100.0	52/52 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1adc0	0x1001adc0	40	G	Dll_KeyMap::get_next_key	?get_next_key@Dll_KeyMap@@QAEKXZ	public	100	100.0	11/11 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1ae00	0x1001ae00	56	G	Dll_KeyMap::set_cycle	?set_cycle@Dll_KeyMap@@QAEXKK@Z	public	100	100.0	16/16 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1ae50	0x1001ae50	128	G	Dll_KeyMap::set_release_time	?set_release_time@Dll_KeyMap@@QAEXK@Z	public	100	100.0	51/51 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1aef0	0x1001aef0	372	G	Dll_KeyMap::map_range	?map_range@Dll_KeyMap@@QAE?AW4SNDERR@@PAVKeyMapWave@@@Z	public	100	100.0	126/126 ins	
+sound	sound/sound.dll/src/keymap.cpp	0x1b0d0	0x1001b0d0	103	G	Dll_KeyMap::unmap_range	?unmap_range@Dll_KeyMap@@QAE?AW4SNDERR@@PAVCWaveMgr@@@Z	public	100	100.0	42/42 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1b160	0x1001b160	101	G	Dll_KeyMap::set_desc	?set_desc@Dll_KeyMap@@QAE?AW4SNDERR@@PBD@Z	public	100	100.0	46/46 ins	m36a_seq.cpp
+sound	sound/sound.dll/src/keymap.cpp	0x1b1f0	0x1001b1f0	426	G	Dll_KeyMap::set_base_path	?set_base_path@Dll_KeyMap@@QAEXPBD@Z	public	100	100.0	148/148 ins	

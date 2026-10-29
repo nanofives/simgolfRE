@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 19 bytes, 5 instructions, subsystem `render`. Mechanica
 Allocates the 0x50000-byte 16-bit colour lookup table g_color16Lut at startup. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_ShadeTable.cpp` as `_$E7` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00461802): callee pops 0 bytes of stack arguments.
 
 ## Reads

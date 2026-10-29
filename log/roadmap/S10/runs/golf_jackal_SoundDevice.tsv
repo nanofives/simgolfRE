@@ -1,0 +1,111 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x2180	0x00402180	5	G	Wave_In_Device::fade	?fade@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x2190	0x00402190	3	G	Wave_Device::add_to_time_past	?add_to_time_past@Wave_Device@@UAEXK@Z	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x2190	0x00402190	3	G	Midi_Device::add_to_time_past	?add_to_time_past@Midi_Device@@UAEXK@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x2190	0x00402190	3	G	Wave_In_Device::set_volume	?set_volume@Wave_In_Device@@UAEXK@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x2190	0x00402190	3	G	Wave_In_Device::set_pan	?set_pan@Wave_In_Device@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x2190	0x00402190	3	G	Wave_In_Device::add_to_time_past	?add_to_time_past@Wave_In_Device@@UAEXK@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x79820	0x00479820	3	G	Wave_Device::get_time_past	?get_time_past@Wave_Device@@UAEKXZ	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x79820	0x00479820	3	G	Midi_Device::get_time_past	?get_time_past@Midi_Device@@UAEKXZ	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x79820	0x00479820	3	G	Wave_In_Device::get_volume	?get_volume@Wave_In_Device@@UAEKXZ	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x79820	0x00479820	3	G	Wave_In_Device::get_time_past	?get_time_past@Wave_In_Device@@UAEKXZ	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x7e5e0	0x0047e5e0	1	G	Wave_Device::timer_unhook	?timer_unhook@Wave_Device@@UAEXXZ	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x7e5e0	0x0047e5e0	1	G	Wave_Device::reset_time_past	?reset_time_past@Wave_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x7e5e0	0x0047e5e0	1	G	Midi_Device::timer_unhook	?timer_unhook@Midi_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x7e5e0	0x0047e5e0	1	G	Midi_Device::reset_time_past	?reset_time_past@Midi_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x7e5e0	0x0047e5e0	1	G	Wave_In_Device::timer_unhook	?timer_unhook@Wave_In_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x7e5e0	0x0047e5e0	1	G	Wave_In_Device::reset_time_past	?reset_time_past@Wave_In_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87210	0x00487210	40	G	Sound_Device::Sound_Device	??0Sound_Device@@IAE@XZ	public	100	100.0	13/13 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87240	0x00487240	30	G	Sound_Device::`scalar deleting destructor'	??_GSound_Device@@MAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87260	0x00487260	19	G	Sound_Device::~Sound_Device	??1Sound_Device@@MAE@XZ	public	100	100.0	7/7 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87280	0x00487280	98	G	Wave_Device::Wave_Device	??0Wave_Device@@QAE@XZ	public	100	100.0	27/27 ins	golf_hand_r3.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x872f0	0x004872f0	30	G	Wave_Device::`scalar deleting destructor'	??_GWave_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87310	0x00487310	118	G	WaveControlGroup::~WaveControlGroup	??1WaveControlGroup@@QAE@XZ	public	100	100.0	50/50 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87390	0x00487390	92	G	Wave_Device::~Wave_Device	??1Wave_Device@@UAE@XZ	public	100	100.0	25/25 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x873f0	0x004873f0	50	G	Wave_Device::create_device	?create_device@Wave_Device@@MAE?AW4SNDERR@@K@Z	public	100	100.0	17/17 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87430	0x00487430	39	G	Wave_Device::delete_device	?delete_device@Wave_Device@@MAE?AW4SNDERR@@XZ	public	100	100.0	16/16 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87460	0x00487460	33	G	Wave_Device::release	?release@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	13/13 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87490	0x00487490	13	G	Wave_Device::suspend	?suspend@Wave_Device@@UAEXXZ	public	100	100.0	6/6 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x874a0	0x004874a0	13	G	Wave_Device::restart	?restart@Wave_Device@@UAEXXZ	public	100	100.0	6/6 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x874b0	0x004874b0	13	G	Wave_Device::update_sound	?update_sound@Wave_Device@@UAEXXZ	public	100	100.0	6/6 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x874c0	0x004874c0	15	G	Wave_Device::get_ndevices	?get_ndevices@Wave_Device@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x874d0	0x004874d0	28	G	Wave_Device::set_hwnd	?set_hwnd@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x874f0	0x004874f0	15	G	Wave_Device::get_hw_mem_size	?get_hw_mem_size@Wave_Device@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87500	0x00487500	183	G	Wave_Device::select	?select@Wave_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	83/83 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x875c0	0x004875c0	32	G	Wave_Device::get_description	?get_description@Wave_Device@@UAE?AW4SNDERR@@KPADK@Z	public	100	100.0	13/13 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x875e0	0x004875e0	20	G	Wave_Device::set_rate	?set_rate@Wave_Device@@UAEXK@Z	public	100	100.0	8/8 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87600	0x00487600	15	G	Wave_Device::get_rate	?get_rate@Wave_Device@@UAEKXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87610	0x00487610	20	G	Wave_Device::set_volume	?set_volume@Wave_Device@@UAEXK@Z	public	100	100.0	8/8 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87630	0x00487630	15	G	Wave_Device::get_ds	?get_ds@Wave_Device@@UAEPAXXZ	public	100	100.0	7/7 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87640	0x00487640	15	G	Wave_Device::enable	?enable@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87650	0x00487650	15	G	Wave_Device::disable	?disable@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87660	0x00487660	18	G	Wave_Device::is_disabled	?is_disabled@Wave_Device@@UAEHXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87680	0x00487680	28	G	Wave_Device::start_raw_dump	?start_raw_dump@Wave_Device@@UAE?AW4SNDERR@@PAD@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x876a0	0x004876a0	18	G	Wave_Device::stop_raw_dump	?stop_raw_dump@Wave_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x876c0	0x004876c0	162	G	Wave_Device::pull_from_group	?pull_from_group@Wave_Device@@QAE?AW4SNDERR@@PAVSound@@@Z	public	100	100.0	57/57 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87770	0x00487770	35	G	Wave_Device::is_group_disabled	?is_group_disabled@Wave_Device@@QAE_NI@Z	public	100	100.0	11/11 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x877a0	0x004877a0	35	G	Wave_Device::isGroupMute	?isGroupMute@Wave_Device@@QAE_NI@Z	public	100	100.0	11/11 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x877d0	0x004877d0	34	G	WaveControlGroup::WaveControlGroup	??0WaveControlGroup@@QAE@XZ	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87800	0x00487800	15	G	Wave_Device::is_eax	?is_eax@Wave_Device@@UAE_NXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87810	0x00487810	31	G	Wave_Device::set_eax	?set_eax@Wave_Device@@UAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87830	0x00487830	28	G	Wave_Device::set_eax	?set_eax@Wave_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87850	0x00487850	31	G	Wave_Device::set_eax_mix	?set_eax_mix@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87870	0x00487870	18	G	Wave_Device::is_3d	?is_3d@Wave_Device@@UAE_NXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87890	0x00487890	41	G	Wave_Device::set_listener_position	?set_listener_position@Wave_Device@@UAE?AW4SNDERR@@MMM@Z	public	100	100.0	14/14 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x878c0	0x004878c0	41	G	Wave_Device::get_listener_position	?get_listener_position@Wave_Device@@UAE?AW4SNDERR@@PAM00@Z	public	100	100.0	14/14 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x878f0	0x004878f0	31	G	Wave_Device::set_listener_xpos	?set_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87910	0x00487910	31	G	Wave_Device::get_listener_xpos	?get_listener_xpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87930	0x00487930	31	G	Wave_Device::set_listener_ypos	?set_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87950	0x00487950	31	G	Wave_Device::get_listener_ypos	?get_listener_ypos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87970	0x00487970	31	G	Wave_Device::set_listener_zpos	?set_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@M@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87990	0x00487990	31	G	Wave_Device::get_listener_zpos	?get_listener_zpos@Wave_Device@@UAE?AW4SNDERR@@PAM@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x879b0	0x004879b0	50	G	Midi_Device::create_device	?create_device@Midi_Device@@MAE?AW4SNDERR@@K@Z	public	100	100.0	17/17 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x879f0	0x004879f0	39	G	Midi_Device::delete_device	?delete_device@Midi_Device@@MAE?AW4SNDERR@@XZ	public	100	100.0	16/16 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87a20	0x00487a20	18	G	Midi_Device::Midi_Device	??0Midi_Device@@QAE@XZ	public	100	100.0	7/7 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87a40	0x00487a40	30	G	Midi_Device::`scalar deleting destructor'	??_GMidi_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87a60	0x00487a60	11	G	Midi_Device::~Midi_Device	??1Midi_Device@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87a70	0x00487a70	66	G	Midi_Device::init	?init@Midi_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	30/30 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87ac0	0x00487ac0	33	G	Midi_Device::release	?release@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	13/13 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87af0	0x00487af0	3	G	Wave_Device::set_pan	?set_pan@Wave_Device@@UAEXH@Z	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87af0	0x00487af0	3	G	Midi_Device::set_volume	?set_volume@Midi_Device@@UAEXK@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87af0	0x00487af0	3	G	Midi_Device::set_pan	?set_pan@Midi_Device@@UAEXH@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87af0	0x00487af0	3	G	Midi_Device::set_rate	?set_rate@Midi_Device@@UAEXK@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87af0	0x00487af0	3	G	Wave_In_Device::set_rate	?set_rate@Wave_In_Device@@UAEXK@Z	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b00	0x00487b00	5	G	Wave_Device::fade	?fade@Wave_Device@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b00	0x00487b00	5	G	Midi_Device::select	?select@Midi_Device@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b00	0x00487b00	5	G	Midi_Device::fade	?fade@Midi_Device@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b00	0x00487b00	5	G	Wave_In_Device::select	?select@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b00	0x00487b00	5	G	Wave_In_Device::get_caps	?get_caps@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b10	0x00487b10	15	G	Midi_Device::enable	?enable@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b20	0x00487b20	18	G	Midi_Device::is_disabled	?is_disabled@Midi_Device@@UAEHXZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b40	0x00487b40	18	G	Wave_In_Device::Wave_In_Device	??0Wave_In_Device@@QAE@XZ	public	100	100.0	7/7 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b60	0x00487b60	30	G	Wave_In_Device::`scalar deleting destructor'	??_GWave_In_Device@@UAEPAXI@Z	public	100	100.0	11/11 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b80	0x00487b80	11	G	Wave_In_Device::~Wave_In_Device	??1Wave_In_Device@@UAE@XZ	public	100	100.0	2/2 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87b90	0x00487b90	50	G	Wave_In_Device::create_device	?create_device@Wave_In_Device@@MAE?AW4SNDERR@@K@Z	public	100	100.0	17/17 ins	m36d_hand_01.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87bd0	0x00487bd0	39	G	Wave_In_Device::delete_device	?delete_device@Wave_In_Device@@MAE?AW4SNDERR@@XZ	public	100	100.0	16/16 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87c00	0x00487c00	59	G	Wave_Device::init	?init@Wave_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	29/29 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87c00	0x00487c00	59	G	Wave_In_Device::init	?init@Wave_In_Device@@UAE?AW4SNDERR@@PAUHWND__@@K@Z	name	100	100.0	29/29 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87c40	0x00487c40	33	G	Wave_In_Device::release	?release@Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	14/14 ins	golf_raw_04.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87c70	0x00487c70	28	G	Wave_In_Device::set_codec	?set_codec@Wave_In_Device@@UAE?AW4SNDERR@@K@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87c90	0x00487c90	28	G	Wave_In_Device::set_vxw_key	?set_vxw_key@Wave_In_Device@@UAE?AW4SNDERR@@PAC@Z	public	100	100.0	10/10 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87cb0	0x00487cb0	5	G	Midi_Device::get_description	?get_description@Midi_Device@@UAE?AW4SNDERR@@KPADK@Z	name	100	100.0	2/2 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87cb0	0x00487cb0	5	G	Wave_In_Device::get_description	?get_description@Wave_In_Device@@UAE?AW4SNDERR@@KPADK@Z	name	100	100.0	2/2 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87cc0	0x00487cc0	15	G	Midi_Device::disable	?disable@Midi_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87cc0	0x00487cc0	15	G	Wave_In_Device::start_record	?start_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ	name	100	100.0	7/7 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87cd0	0x00487cd0	15	G	Wave_In_Device::end_record	?end_record@Wave_In_Device@@UAE?AW4SNDERR@@XZ	public	100	100.0	7/7 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0x87ce0	0x00487ce0	137	G	SndNodeList::`scalar deleting destructor'	??_GSndNodeList@@UAEPAXI@Z	public	100	100.0	56/56 ins	golf_raw_09.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xa0890	0x004a0890	1	G	Midi_Device::update_sound	?update_sound@Midi_Device@@UAEXXZ	name	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xa0890	0x004a0890	1	G	Midi_Device::suspend	?suspend@Midi_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xa0890	0x004a0890	1	G	Midi_Device::restart	?restart@Midi_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xa0890	0x004a0890	1	G	Wave_In_Device::update_sound	?update_sound@Wave_In_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xa0890	0x004a0890	1	G	Wave_In_Device::suspend	?suspend@Wave_In_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xa0890	0x004a0890	1	G	Wave_In_Device::restart	?restart@Wave_In_Device@@UAEXXZ	name	100	100.0	1/1 ins	folded
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Wave_Device::get_volume	?get_volume@Wave_Device@@UAEKXZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Wave_Device::stop	?stop@Wave_Device@@UAE?AW4SNDERR@@XZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Midi_Device::get_ndevices	?get_ndevices@Midi_Device@@UAEKXZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Midi_Device::get_volume	?get_volume@Midi_Device@@UAEKXZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Midi_Device::stop	?stop@Midi_Device@@UAE?AW4SNDERR@@XZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Midi_Device::get_rate	?get_rate@Midi_Device@@UAEKXZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Wave_In_Device::get_ndevices	?get_ndevices@Wave_In_Device@@UAEKXZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Wave_In_Device::stop	?stop@Wave_In_Device@@UAE?AW4SNDERR@@XZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp
+golf	golf/jackal.lib/src/SoundDevice.cpp	0xb04b0	0x004b04b0	3	G	Wave_In_Device::get_rate	?get_rate@Wave_In_Device@@UAEKXZ	name	100	100.0	2/2 ins	golf_jpeg_memnobs.cpp

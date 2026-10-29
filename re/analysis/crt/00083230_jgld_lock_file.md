@@ -20,11 +20,11 @@ None.
 - `jb` (unsigned) at 0x1008323a
 
 ## Callees
-- 0x100833f0 `__lock` at 0x10083254
+- 0x100833f0 `_lock` at 0x10083254
 - import `KERNEL32.dll!EnterCriticalSection` at 0x10083265
 
 ## Callers
-0x1007f850 `fclose`, 0x10082d80 `_fread`, 0x10083010 `_fprintf`, 0x10085300 `_fflush`
+0x1007f850 `fclose`, 0x10082d80 `fread`, 0x10083010 `fprintf`, 0x10085300 `fflush`
 
 ## Constants
 - `0x4` at 0x10083259

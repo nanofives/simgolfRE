@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 140 bytes, 42 instructions, subsystem `ui`. Mechanical 
 pointer-exit handler of a label button: forwards to the mouse-move slot while the button is pressed, else clears the hover state, stops its timer, hides the tooltip and notifies the parent (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_ImageButton.cpp` as `?on_mouse_leave@ImageButton@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a21f4, 0x004a2249): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a21c8 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

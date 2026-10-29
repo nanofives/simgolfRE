@@ -36,7 +36,7 @@ Through registers:
 ## Callees
 - 0x10078e60 `png_malloc` at 0x10078b2a
 - 0x1007e780 `__chkesp` at 0x10078bd4
-- 0x10082c80 `_sprintf` at 0x10078bbb
+- 0x10082c80 `sprintf` at 0x10078bbb
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

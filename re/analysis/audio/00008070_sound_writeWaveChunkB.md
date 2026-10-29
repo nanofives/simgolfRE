@@ -7,6 +7,7 @@ Writes a data chunk to the open mmio WAVE file via mmioWrite. (`re/names/sound_0
 System writeup: `re/analysis/systems/sound_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_Cmix.cpp` as `?fpmb_2_3ddsb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0PANKKK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x100080ad, 0x100080f3, 0x10008395): callee pops 24 bytes of stack arguments.
 - `ecx` is read at 0x10008077 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

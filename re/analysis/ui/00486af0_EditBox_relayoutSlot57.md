@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 11 bytes, 3 instructions, subsystem `ui`. Mechanical tr
 Calls the window layout routine (own slot 72) and returns, popping two arguments it ignores. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_EditBox.cpp` as `?on_scrolled@EditBox@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00486af8): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00486af0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/PullDown.cpp	0xa4ad0	0x004a4ad0	42	G	PullDown::id_to_index	?id_to_index@PullDown@@QAEHH@Z	public	100	100.0	16/16 ins	golf_raw_13.cpp

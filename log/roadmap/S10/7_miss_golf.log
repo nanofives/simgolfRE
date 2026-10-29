@@ -1,0 +1,2 @@
+== 0x004a6937 __amsg_exit rtm_cmt build\intel\mt_obj\crt0.obj 80.0% [] lib 10 ins, ours 10 ins
+   replace lib[0:2] cmp dword ptr [0], 2; je 0xe  |  ours[0:2] cmp dword ptr [0x840ab4], 1; jne 0x4a6945

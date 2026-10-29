@@ -28,8 +28,8 @@ Through registers:
 - `jne` (equality) at 0x1004260c
 
 ## Callees
-- 0x10045226 `FID_conflict:__lockexit` at 0x100425ca
-- 0x1004522f `FID_conflict:__lockexit` at 0x1004263e
+- 0x10045226 `_lockexit` at 0x100425ca
+- 0x1004522f `_unlockexit` at 0x1004263e
 - 0x10045252 `crtRealloc` at 0x10042602
 - 0x10045581 `msize` at 0x100425d5, 0x100425f3
 

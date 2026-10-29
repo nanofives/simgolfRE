@@ -7,6 +7,7 @@ Module `sound.dll` (RVA `0x00026260`), 1151 bytes, 344 instructions, subsystem `
 System writeup: `re/analysis/systems/sound_3.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_mmxfilters.cpp` as `?mmx_mov_16216m2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100266b0, 0x100266de): callee pops 0 bytes of stack arguments.
 
 ## Reads

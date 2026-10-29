@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 41 bytes, 14 instructions, subsystem `util`. Mechanical
 Forwards slot 36 to the child object at this+0x14 (its vtable +0x90), returning 0x14 when there is no child. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SoundDevice.cpp` as `?get_listener_position@Wave_Device@@UAE?AW4SNDERR@@PAM00@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004878de, 0x004878e6): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x004878c0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/dyptrk.c	0x3f310	0x1003f310	1036	G	dyptrk_	_dyptrk_	public	100	100.0	335/335 ins	m36c_D2_01.cpp

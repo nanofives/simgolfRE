@@ -1,0 +1,22 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 1","cmp dword ptr [0x101287bc], 1",True
+3,je 0x1e,je 0x1008b19e,True
+4,"cmp dword ptr [0], 0","cmp dword ptr [0x101287bc], 0",True
+5,jne 0x47,jne 0x1008b1c7,True
+6,"cmp dword ptr [0], 1","cmp dword ptr [0x101287c0], 1",True
+7,jne 0x47,jne 0x1008b1c7,True
+8,push 0xfc,push 0xfc,True
+9,call 0x28,call 0x1008b1d0,True
+10,"add esp, 4","add esp, 4",True
+11,"cmp dword ptr [0], 0","cmp dword ptr [0x1012895c], 0",True
+12,je 0x3a,je 0x1008b1ba,True
+13,call dword ptr [0],call dword ptr [0x1012895c],True
+14,push 0xff,push 0xff,True
+15,call 0x44,call 0x1008b1d0,True
+16,"add esp, 4","add esp, 4",True
+17,pop ebp,pop ebp,True
+18,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\crt0msg.obj (library object, no compilation)",symbol=__FF_MSGBANNER,module=jgld.dll
+VERDICT,GREEN,19,100.0%

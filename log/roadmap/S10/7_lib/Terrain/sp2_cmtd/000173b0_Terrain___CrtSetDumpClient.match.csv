@@ -1,0 +1,14 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10112324]",True
+4,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,"mov dword ptr [0], ecx","mov dword ptr [0x10112324], ecx",True
+7,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+8,"mov esp, ebp","mov esp, ebp",True
+9,pop ebp,pop ebp,True
+10,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dbgheap.obj (library object, no compilation)",symbol=__CrtSetDumpClient,module=Terrain.dll
+VERDICT,GREEN,11,100.0%

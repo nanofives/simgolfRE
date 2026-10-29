@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 72 bytes, 24 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of the list embedded 0x28 bytes into a panel sub-view owner: runs panelSubDtor4a33e0, restores the heap-object base vtable and the saved heap pointer, and frees the owner when bit 0 of the flag is set (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SpriteBox.cpp` as `??_GSpriteList@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a33d5): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004a3392 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

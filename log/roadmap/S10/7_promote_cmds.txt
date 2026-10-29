@@ -1,0 +1,17 @@
+# copy step (the C4 gate reads log/diff)
+cp log/roadmap/S10/7_lib/golf/rtm_cmt/004a5793____ArrayUnwind__YGXPAXIHP6EX0_Z_Z.match.csv log/diff/004a5793____ArrayUnwind__YGXPAXIHP6EX0_Z_Z.match.csv
+cp log/roadmap/S10/7_lib/sound/sp5_cmt/00042550_sound___ftol.match.csv log/diff/00042550_sound___ftol.match.csv
+cp log/roadmap/S10/7_lib/sound/sp5_cmt/00042690_sound__strstr.match.csv log/diff/00042690_sound__strstr.match.csv
+cp log/roadmap/S10/7_lib/sound/sp5_cmt/0004288e_sound____ArrayUnwind__YGXPAXIHP6EX0_Z_Z.match.csv log/diff/0004288e_sound____ArrayUnwind__YGXPAXIHP6EX0_Z_Z.match.csv
+cp log/roadmap/S10/7_lib/sound/sp5_cmt/00045680_sound__strchr.match.csv log/diff/00045680_sound__strchr.match.csv
+cp log/roadmap/S10/7_lib/sound/sp5_cmt/00048268_sound___checkTOS_withFB.match.csv log/diff/00048268_sound___checkTOS_withFB.match.csv
+cp log/roadmap/S10/7_lib/sound/sp5_cmt/0004a010_sound__strcpy.match.csv log/diff/0004a010_sound__strcpy.match.csv
+
+# promotions
+~/bin/py -3.12 scripts/re_classify.py promote 0x004a5793 --to C4 --module golf_clean.exe --evidence log/diff/004a5793____ArrayUnwind__YGXPAXIHP6EX0_Z_Z.match.csv   # __ArrayUnwind = ?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z, rtm_cmt ehvecdtr.obj, note: pdb-size
+~/bin/py -3.12 scripts/re_classify.py promote 0x00042550 --to C4 --module sound.dll --evidence log/diff/00042550_sound___ftol.match.csv   # __ftol = __ftol, sp5_cmt ftol.obj, note: extent as listed
+~/bin/py -3.12 scripts/re_classify.py promote 0x00042690 --to C4 --module sound.dll --evidence log/diff/00042690_sound__strstr.match.csv   # strstr = _strstr, sp5_cmt strstr.obj, note: extent as listed
+~/bin/py -3.12 scripts/re_classify.py promote 0x0004288e --to C4 --module sound.dll --evidence log/diff/0004288e_sound____ArrayUnwind__YGXPAXIHP6EX0_Z_Z.match.csv   # __ArrayUnwind = ?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z, sp5_cmt ehvecdtr.obj, note: lib-code-size
+~/bin/py -3.12 scripts/re_classify.py promote 0x00045680 --to C4 --module sound.dll --evidence log/diff/00045680_sound__strchr.match.csv   # strchr = _strchr, sp5_cmt strchr.obj, note: lib-to-section-end
+~/bin/py -3.12 scripts/re_classify.py promote 0x00048268 --to C4 --module sound.dll --evidence log/diff/00048268_sound___checkTOS_withFB.match.csv   # doubleExponentField = __checkTOS_withFB, sp5_cmt common.obj, note: byte-identity (relocation sites masked)
+~/bin/py -3.12 scripts/re_classify.py promote 0x0004a010 --to C4 --module sound.dll --evidence log/diff/0004a010_sound__strcpy.match.csv   # strcpy = _strcpy, sp5_cmt strcat.obj, note: byte-identity (relocation sites masked)

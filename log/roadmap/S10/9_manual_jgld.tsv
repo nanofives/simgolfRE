@@ -1,0 +1,64 @@
+va	v	name	evidence	purpose
+0x100035b0	R	Transform<float>::Identity	no caller and no stored pointer: unreferenced	-
+0x100052b0	A	Matrix::MakeIdentity	caller Transform::getMatrix; calls Matrix::loadIdentity (thunk 0x100016db, 0x100052d0) on this and returns this; SMSG's class Matrix4<float> is our Matrix (its loadIdentity callee)	Loads the identity into this matrix (Matrix::loadIdentity) and returns this.
+0x10005300	R	Matrix4<float>::Transpose	empty body returning this; no caller, no stored pointer	-
+0x10005330	R	Matrix4<float>::Invert	empty body returning this; no caller, no stored pointer	-
+0x100074b0	A	dynInit_random1012844c	slot 66 of jgld's initializer table walked by __cinit; its only call is 0x100074f0 (`call 0x100074f0` 0x100074c8)	C++ dynamic initializer of the static Random object at 0x1012844c (calls constructRandom1012844c).
+0x100074f0	A	constructRandom1012844c	only caller dynInit_random1012844c 0x100074b0; `mov ecx, 0x1012844c` 0x10007508 then Random::ctor (thunk 0x1000154b, 0x1000750d)	Constructs the static Random object at 0x1012844c with Random::ctor.
+0x10009840	R	GSBuffer::sync_to_palette	empty body (`ret 4` after the frame): no instruction supports the verb	-
+0x10019c80	A	Sprite::draw_with_alpha	slot 22 (+0x58) of the Sprite vtable installed by Sprite::ctor (SMSG's JGLSprite table); calls redOf, greenOf, blueOf and makeColor (callees) to split and recombine pixel channels, over virtual reads of both surfaces (`call dword ptr [edx + 0xd8]` 0x10019cb5, `call dword ptr [edx + 0xdc]` 0x10019cce)	Draws the sprite blended into the destination: splits source and destination pixels into red / green / blue, mixes them and recombines with makeColor.
+0x1001a6b0	A	Sprite::draw_16_16	caller Sprite::drawB; clips the sprite rectangle against the destination with import IntersectRect after rectFromXYWH; returns 3 when the sprite has no pixel data ([this+0x14] zero) or no destination is given	Draws the sprite onto a 16-bit destination surface after clipping its rectangle (IntersectRect); 3 without pixel data or target.
+0x1001b590	R	JGLSprite::draw_16_shadows_16_16	constant stub (`xor eax, eax; ret 0x10`)	-
+0x1001b5d0	R	JGLSprite::draw_civ3_units_16_16	constant stub (`xor eax, eax; ret 0x10`)	-
+0x1001b610	R	JGLSprite::draw_sudo_trans_16_16_50	constant stub (`xor eax, eax; ret 0xc`)	-
+0x1001b650	R	JGLSprite::draw_sudo_trans_16_16_25	constant stub (`xor eax, eax; ret 0xc`)	-
+0x100650a0	A	atexitDtor_arrayE0	stored by registerArrayE0Teardown (pointer_callers: written by code); `mov ecx, 0x101286e0` 0x100650b8, Array_e0::dtor (thunk 0x10001771, 0x100650bd)	Exit-time destructor of the static array at 0x101286e0 (Array_e0::dtor).
+0x100651b0	A	atexitDtor_modes	stored by registerModesTeardown; `mov ecx, 0x101286c8` 0x100651c8, Array_Rec14::dtor (thunk 0x100016bd, 0x100651cd)	Exit-time destructor of the static display-mode array at 0x101286c8 (Array_Rec14::dtor).
+0x100652c0	A	atexitDtor_devmodes	stored by registerDevmodesTeardown; `mov ecx, 0x101286f8` 0x100652d8, Array_Rec94::dtor (thunk 0x1000150f, 0x100652dd)	Exit-time destructor of the static DEVMODE array at 0x101286f8 (Array_Rec94::dtor).
+0x100655c0	A	Display::scalarDeletingDtor	slot 0 of the Display vtable 0x1011d640 (installer Display::Display; SMSG's JGLSys vtable); calls the destructor 0x10065670 (thunk 0x100016ae, 0x100655e0), tests bit 0 of its argument (`and eax, 1` 0x100655e8) and frees this with operator_delete (0x100655f3); returns this	Scalar deleting destructor of the Display: destructs it and frees it when the flag's bit 0 is set.
+0x10065670	A	Display::dtor	only caller Display::scalarDeletingDtor 0x100655c0; re-installs the Display vtable (`mov dword ptr [eax], 0x1011d640` 0x10065690) and calls DisplayBase::dtor (thunk 0x10001159, 0x10065699)	Destructor of the Display: restores its vtable and runs the DisplayBase destructor.
+0x10066df0	R	GraphSys::init_device	constant stub (`mov eax, 0x18; ret 4`)	-
+0x10066e30	R	GraphSys::Unimplemented16	constant stub (`mov eax, 0x18; ret 4`)	-
+0x10066e70	R	GraphSys::get_devices	constant stub (`xor eax, eax; ret`)	-
+0x10066ea0	R	GraphSys::close_device	empty stub	-
+0x10066ed0	R	GraphSys::get_light_data	constant stub	-
+0x10066f10	R	GraphSys::delete_light_data	empty stub	-
+0x10066f40	R	GraphSys::clear_buffer	constant stub (0x18)	-
+0x10066f80	R	GraphSys::begin_scene	constant stub (0x18)	-
+0x10066fc0	R	GraphSys::end_scene	constant stub (0x18)	-
+0x10067000	R	GraphSys::create_verts	constant stub (0x18)	-
+0x10067040	R	GraphSys::set_material	constant stub (0x18)	-
+0x10067080	R	GraphSys::set_world_transform	constant stub (0x18)	-
+0x100670c0	R	GraphSys::set_camera_transform	constant stub (0x18)	-
+0x10067100	R	GraphSys::set_projection	constant stub (0x18)	-
+0x10067140	R	GraphSys::load_texture	constant stub (0x18)	-
+0x10067180	R	GraphSys::set_texture	constant stub (0x18)	-
+0x100671c0	R	GraphSys::zbuffer_enable	constant stub (0x18)	-
+0x10067200	R	GraphSys::zwrite_enable	constant stub (0x18)	-
+0x10067240	R	GraphSys::src_blend_enable	constant stub (0x18)	-
+0x10067280	R	GraphSys::specular_enable	constant stub (0x18)	-
+0x100672c0	R	GraphSys::read_x_file	constant stub (0x18)	-
+0x10067300	R	GraphSys::copy_verts	constant stub (0x18)	-
+0x10067340	R	GraphSys::render_verts	constant stub (0x18)	-
+0x10067380	R	GraphSys::set_src_blend	constant stub (0x18)	-
+0x100673c0	R	GraphSys::set_dst_blend	constant stub (0x18)	-
+0x10067400	R	GraphSys::set_cull_mode	constant stub (0x18)	-
+0x10067440	R	GraphSys::set_fill_mode	constant stub (0x18)	-
+0x10067480	R	GraphSys::set_shade_mode	constant stub (0x18)	-
+0x10067820	R	JGLSys::screen_mask	constant stub (`xor eax, eax; ret`)	-
+0x1006afc0	A	Random::seed	caller Palette::update (which seeds its generator, round 19); stores the argument into [this] (`mov dword ptr [eax], ecx` 0x1006afe3), the state word Random::next 0x10007530 reads (`mov ecx, dword ptr [eax]` 0x10007550)	Sets the generator's state word to the argument.
+0x1006b000	A	Palette::get_555_table	slot 6 of the Palette vtable (installer Palette::ctor; SMSG's JGLPalette table); returns this+0x40c (`add eax, 0x40c` 0x1006b020)	Returns the address of the table embedded at this+0x40c.
+0x1006b040	A	Palette::get_565_table	slot 7 of the Palette vtable; returns this+0x60c (`add eax, 0x60c` 0x1006b060)	Returns the address of the table embedded at this+0x60c.
+0x1006b080	A	Display::wait_task	slot 73 of the Display vtable 0x1011d640; calls its own slot 74 (`call dword ptr [edx + 0x128]` 0x1006b0a7, Display::do_task) and, when that finds nothing, import WaitMessage (0x1006b0bc)	Processes one pending window message through do_task, or blocks in WaitMessage until one arrives.
+0x1006b0f0	A	Display::do_task	slot 74 of the Display vtable; import PeekMessageA with PM_REMOVE over all messages (0x1006b11b), import TranslateMessage (0x1006b160) and import DispatchMessageA (0x1006b173)	Removes and dispatches one window message of any kind.
+0x1006b1d0	R	JGLSys::do_non_input	368-byte body not reviewed in depth	-
+0x1006b3a0	A	Display::do_draw	slot 76 of the Display vtable; import PeekMessageA for messages 0xf..0xf (WM_PAINT: `push 0xf` 0x1006b3c1, 0x1006b3c3; call 0x1006b3cb), then TranslateMessage / DispatchMessageA	Removes and dispatches one pending WM_PAINT message.
+0x1006b440	A	Display::do_key	slot 77 of the Display vtable; import PeekMessageA for messages 0x100..0x108 (the keyboard range: `push 0x108` 0x1006b461, `push 0x100` 0x1006b466), then TranslateMessage / DispatchMessageA	Removes and dispatches one pending keyboard message.
+0x1006b4f0	A	Display::do_mouse_move	slot 80 of the Display vtable; import PeekMessageA for messages 0x200..0x200 (WM_MOUSEMOVE: 0x1006b511, 0x1006b516), then TranslateMessage / DispatchMessageA	Removes and dispatches one pending WM_MOUSEMOVE message.
+0x1006b5a0	R	JGLSys::do_mouse_stroke	same mouse range as do_mouse in a 319-byte body; what makes it a stroke is not reviewed	-
+0x1006b730	A	Display::do_char	slot 78 of the Display vtable; import PeekMessageA for messages 0x102..0x102 (WM_CHAR: 0x1006b751, 0x1006b756), then TranslateMessage / DispatchMessageA	Removes and dispatches one pending WM_CHAR message.
+0x1006b7e0	A	Display::do_mouse	slot 79 (+0x13c) of the Display vtable (the slot pumpMessages calls, S7.4); import PeekMessageA for messages 0x200..0x20a (the mouse range: 0x1006b801, 0x1006b806), then TranslateMessage / DispatchMessageA	Removes and dispatches one pending mouse message.
+0x1006b890	A	Display::flush_keyboard	slot 82 of the Display vtable; import PeekMessageA with PM_REMOVE for the keyboard range 0x100..0x108 (0x1006b8b1, 0x1006b8b6, call 0x1006b8c1) and no dispatch	Removes pending keyboard messages without dispatching them.
+0x1006b900	A	Display::flush_mouse	slot 83 of the Display vtable; import PeekMessageA with PM_REMOVE for the mouse range 0x200..0x20a (0x1006b921, 0x1006b926, call 0x1006b931) and no dispatch	Removes pending mouse messages without dispatching them.
+0x1006b970	R	JGLSys::do_timer	peeks message 0x401 (WM_USER + 1); no code in jgld.dll posts 0x401 (the only `push 0x401` are this function's and flush_timer's), so the timer noun has no support	-
+0x1006ba20	R	JGLSys::flush_timer	same message 0x401 as do_timer: the timer noun has no support	-

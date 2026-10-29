@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 20 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 Destroys the five-element SpriteRef array g_spriteRef_820f40 at exit. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_InfoScreens.cpp` as `_$E31` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0044ad63): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -15,7 +16,7 @@ None.
 None.
 
 ## Callees
-- 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0044ad5e
+- 0x004a5713 `__M_YGXPAXIHP6EX0_Z_Z` at 0x0044ad5e
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

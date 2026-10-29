@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"xor ecx, ecx","xor ecx, ecx",True
+2,"cmp dword ptr [eax], 0","cmp dword ptr [eax], 0",True
+3,jne 0x18,jne 0x4ab891,True
+4,inc ecx,inc ecx,True
+5,"add eax, 4","add eax, 4",True
+6,"cmp ecx, 3","cmp ecx, 3",True
+7,jl 6,jl 0x4ab87f,True
+8,push 1,push 1,True
+9,pop eax,pop eax,True
+10,ret ,ret ,True
+11,"xor eax, eax","xor eax, eax",True
+12,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\intrncvt.obj (library object, no compilation)",symbol=__IsZeroMan,module=golf_clean.exe
+VERDICT,GREEN,13,100.0%

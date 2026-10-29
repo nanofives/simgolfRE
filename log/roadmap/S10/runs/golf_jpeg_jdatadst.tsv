@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jdatadst.c	0xae4d0	0x004ae4d0	61	G	jpeg_stdio_dest	_jpeg_stdio_dest	public	100	100.0	20/20 ins	golf_jpeg_datadst.cpp
+golf	golf/jpeg.lib/jpeg-6a/jdatadst.c	0xae510	0x004ae510	38	L	init_destination	_init_destination	name	100	100.0	14/14 ins	
+golf	golf/jpeg.lib/jpeg-6a/jdatadst.c	0xae540	0x004ae540	76	L	empty_output_buffer	_empty_output_buffer	name	100	100.0	27/27 ins	
+golf	golf/jpeg.lib/jpeg-6a/jdatadst.c	0xae590	0x004ae590	102	L	term_destination	_term_destination	name	100	100.0	41/41 ins	golf_jpeg_datadst.cpp

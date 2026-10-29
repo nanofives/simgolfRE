@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"cmp eax, 0x14","cmp eax, 0x14",True
+2,jge 0x14,jge 0x10043722,True
+3,"add eax, 0x1c","add eax, 0x1c",True
+4,push eax,push eax,True
+5,call 0x12,call 0x10047771,True
+6,pop ecx,pop ecx,True
+7,ret ,ret ,True
+8,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+9,"add eax, 0x20","add eax, 0x20",True
+10,push eax,push eax,True
+11,call dword ptr [0],call dword ptr [0x100b84e0],True
+12,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\_file.obj (library object, no compilation)",symbol=__unlock_file2,module=sound.dll
+VERDICT,GREEN,13,100.0%

@@ -1,0 +1,28 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push esi,push esi,True
+4,wait ,wait ,True
+5,fnstcw word ptr [ebp - 4],fnstcw word ptr [ebp - 4],True
+6,push dword ptr [ebp - 4],push dword ptr [ebp - 4],True
+7,call 0x11,call 0x4ab60c,True
+8,"mov esi, eax","mov esi, eax",True
+9,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+10,not eax,not eax,True
+11,"and esi, eax","and esi, eax",True
+12,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+13,"and eax, dword ptr [ebp + 0xc]","and eax, dword ptr [ebp + 0xc]",True
+14,"or esi, eax","or esi, eax",True
+15,push esi,push esi,True
+16,call 0x28,call 0x4ab69e,True
+17,pop ecx,pop ecx,True
+18,"mov dword ptr [ebp + 0xc], eax","mov dword ptr [ebp + 0xc], eax",True
+19,pop ecx,pop ecx,True
+20,fldcw word ptr [ebp + 0xc],fldcw word ptr [ebp + 0xc],True
+21,"mov eax, esi","mov eax, esi",True
+22,pop esi,pop esi,True
+23,leave ,leave ,True
+24,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=..\build\intel\mt_obj\ieee87.obj (library object, no compilation)",symbol=__control87,module=golf_clean.exe
+VERDICT,GREEN,25,100.0%

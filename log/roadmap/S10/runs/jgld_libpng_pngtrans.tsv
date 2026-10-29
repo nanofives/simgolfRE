@@ -1,0 +1,18 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d600	0x1006d600	46	G	png_set_bgr	_png_set_bgr	public	100	100.0	21/21 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d630	0x1006d630	61	G	png_set_swap	_png_set_swap	public	100	100.0	26/26 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d670	0x1006d670	71	G	png_set_packing	_png_set_packing	public	100	100.0	28/28 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d6c0	0x1006d6c0	64	G	png_set_packswap	_png_set_packswap	public	100	100.0	26/26 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d700	0x1006d700	68	G	png_set_shift	_png_set_shift	public	100	100.0	28/28 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d750	0x1006d750	72	G	png_set_interlace_handling	_png_set_interlace_handling	public	100	100.0	29/29 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d7a0	0x1006d7a0	164	G	png_set_filler	_png_set_filler	public	100	100.0	56/56 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d850	0x1006d850	49	G	png_set_swap_alpha	_png_set_swap_alpha	public	100	100.0	21/21 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d890	0x1006d890	49	G	png_set_invert_alpha	_png_set_invert_alpha	public	100	100.0	21/21 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d8d0	0x1006d8d0	46	G	png_set_invert_mono	_png_set_invert_mono	public	100	100.0	21/21 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d900	0x1006d900	122	G	png_do_invert	_png_do_invert	public	100	100.0	49/49 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6d980	0x1006d980	134	G	png_do_swap	_png_do_swap	public	100	100.0	52/52 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6da10	0x1006da10	169	G	png_do_packswap	_png_do_packswap	public	100	100.0	64/64 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6dac0	0x1006dac0	1356	G	png_do_strip_filler	_png_do_strip_filler	public	100	100.0	457/457 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6e010	0x1006e010	497	G	png_do_bgr	_png_do_bgr	public	100	100.0	174/174 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6e210	0x1006e210	58	G	png_set_user_transform_info	_png_set_user_transform_info	public	100	100.0	25/25 ins	jgld_png_trans.cpp
+jgld	jgl/libpng.lib/libpng/pngtrans.c	0x6e250	0x1006e250	37	G	png_get_user_transform_ptr	_png_get_user_transform_ptr	public	100	100.0	18/18 ins	jgld_png_trans.cpp

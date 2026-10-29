@@ -1,0 +1,3 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/GraphsyLoader.cpp	0xa0060	0x004a0060	52	G	FreeGraphsyDll	?FreeGraphsyDll@@YAXXZ	public	100	100.0	13/13 ins	golf_raw_11.cpp
+golf	golf/jackal.lib/src/GraphsyLoader.cpp	0xa00a0	0x004a00a0	74	G	LoadGraphsyDll	?LoadGraphsyDll@@YAPAVGraphSys@@PBD@Z	public	100	100.0	28/28 ins	golf_raw_11.cpp

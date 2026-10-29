@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+Terrain	terrain/Terrain.dll/src/Course.cpp	0x1af0	0x10001af0	91	G	Terrain::loadNewCourseType	?loadNewCourseType@Terrain@@QAEXH@Z	public	100	100.0	33/33 ins	terrain_methods2.cpp

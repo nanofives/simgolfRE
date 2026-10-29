@@ -34,7 +34,7 @@ Through registers:
 - import `KERNEL32.dll!TlsSetValue` at 0x004a8e87
 
 ## Callers
-0x004a533b `?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z`, 0x004a678b `_strtok`, 0x004a861d `?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z`, 0x004a87d0 `?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z`, 0x004a8a06 `?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z`, 0x004a8ad3 `FUN_004a8ad3`, 0x004a8eba `?terminate@@YAXXZ`, 0x004a910c `errnoPtr`, 0x004a9115 `doserrnoPtr`, 0x004aad6a `__XcptFilter`, 0x004ac961 `_raise`
+0x004a533b `_CallSETranslator`, 0x004a678b `_strtok`, 0x004a861d `?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z`, 0x004a87d0 `?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z`, 0x004a8a06 `?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z`, 0x004a8ad3 `FUN_004a8ad3`, 0x004a8eba `terminate`, 0x004a910c `errnoPtr`, 0x004a9115 `doserrnoPtr`, 0x004aad6a `__XcptFilter`, 0x004ac961 `_raise`
 
 ## Constants
 - `0x1` at 0x004a8e71

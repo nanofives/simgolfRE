@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 23 bytes, 9 instructions, subsystem `audio`. Mechanical
 Stores the loop flag in the sound and forwards it to the voice. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?set_loop_state@Sound@@UAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004846a4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00484694 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

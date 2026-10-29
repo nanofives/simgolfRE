@@ -7,6 +7,7 @@ Outer B-group render routine: dispatches to the unity-copy path at unity rate, e
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?old_add_16216m2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10014d99, 0x10014dbe, 0x10014e77, 0x10014e9f, 0x100150d3, 0x10015101): callee pops 0 bytes of stack arguments.
 
 ## Reads

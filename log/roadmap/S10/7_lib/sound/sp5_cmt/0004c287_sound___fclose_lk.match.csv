@@ -1,0 +1,33 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,"or edi, 0xffffffff","or edi, 0xffffffff",True
+4,"test byte ptr [esi + 0xc], 0x83","test byte ptr [esi + 0xc], 0x83",True
+5,je 0x43,je 0x1004c2ca,True
+6,push esi,push esi,True
+7,call 0x15,call 0x100434c8,True
+8,push esi,push esi,True
+9,"mov edi, eax","mov edi, eax",True
+10,call 0x1d,call 0x1004e0a9,True
+11,push dword ptr [esi + 0x10],push dword ptr [esi + 0x10],True
+12,call 0x25,call 0x1004dfc9,True
+13,"add esp, 0xc","add esp, 0xc",True
+14,"test eax, eax","test eax, eax",True
+15,jge 0x31,jge 0x1004c2b8,True
+16,"or edi, 0xffffffff","or edi, 0xffffffff",True
+17,jmp 0x43,jmp 0x1004c2ca,True
+18,"mov eax, dword ptr [esi + 0x1c]","mov eax, dword ptr [esi + 0x1c]",True
+19,"test eax, eax","test eax, eax",True
+20,je 0x43,je 0x1004c2ca,True
+21,push eax,push eax,True
+22,call 0x3e,call 0x10042c07,True
+23,"and dword ptr [esi + 0x1c], 0","and dword ptr [esi + 0x1c], 0",True
+24,pop ecx,pop ecx,True
+25,"and dword ptr [esi + 0xc], 0","and dword ptr [esi + 0xc], 0",True
+26,"mov eax, edi","mov eax, edi",True
+27,pop edi,pop edi,True
+28,pop esi,pop esi,True
+29,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\fclose.obj (library object, no compilation)",symbol=__fclose_lk,module=sound.dll
+VERDICT,GREEN,30,100.0%

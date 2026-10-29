@@ -1,0 +1,10 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/Video.cpp	0x9c8e0	0x0049c8e0	41	G	do_video	?do_video@@YAXXZ	public	100	100.0	17/17 ins	
+golf	golf/jackal.lib/src/Video.cpp	0x9c910	0x0049c910	47	G	Video::process	?process@Video@@QAEXXZ	public	100	100.0	18/18 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/Video.cpp	0x9c940	0x0049c940	408	G	Video::advance_frame	?advance_frame@Video@@QAEHXZ	public	100	100.0	133/133 ins	
+golf	golf/jackal.lib/src/Video.cpp	0x9cae0	0x0049cae0	64	G	Video::decode_frame_process	?decode_frame_process@Video@@QAEHXZ	public	100	100.0	23/23 ins	golf_classes.cpp
+golf	golf/jackal.lib/src/Video.cpp	0x9cb20	0x0049cb20	86	G	Video::read_frame_process	?read_frame_process@Video@@QAEHXZ	public	100	100.0	30/30 ins	golf_hand_02.cpp
+golf	golf/jackal.lib/src/Video.cpp	0x9cb80	0x0049cb80	8	G	Video::decode_frame	?decode_frame@Video@@QAEHH@Z	public	100	100.0	2/2 ins	golf_hand_00.cpp
+golf	golf/jackal.lib/src/Video.cpp	0x9cb90	0x0049cb90	301	G	Video::read_frame	?read_frame@Video@@QAEHXZ	public	100	100.0	112/112 ins	golf_hand_r2.cpp
+golf	golf/jackal.lib/src/Video.cpp	0x9ccc0	0x0049ccc0	645	G	Video::play_frame	?play_frame@Video@@QAEHXZ	public	100	100.0	203/203 ins	
+golf	golf/jackal.lib/src/Video.cpp	0x9cf50	0x0049cf50	173	G	Video::find_next_key	?find_next_key@Video@@QAEHH@Z	public	100	100.0	68/68 ins	golf_hand_05.cpp

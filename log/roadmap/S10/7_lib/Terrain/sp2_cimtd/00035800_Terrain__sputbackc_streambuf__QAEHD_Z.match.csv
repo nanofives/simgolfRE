@@ -1,0 +1,35 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,call 0x11,call 0x100344e0,True
+6,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+7,"cmp dword ptr [ecx + 0x24], eax","cmp dword ptr [ecx + 0x24], eax",True
+8,jae 0x3c,jae 0x1003583c,True
+9,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+10,"mov eax, dword ptr [edx + 0x28]","mov eax, dword ptr [edx + 0x28]",True
+11,"sub eax, 1","sub eax, 1",True
+12,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+13,"mov dword ptr [ecx + 0x28], eax","mov dword ptr [ecx + 0x28], eax",True
+14,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+15,"mov eax, dword ptr [edx + 0x28]","mov eax, dword ptr [edx + 0x28]",True
+16,"mov cl, byte ptr [ebp + 8]","mov cl, byte ptr [ebp + 8]",True
+17,"mov byte ptr [eax], cl","mov byte ptr [eax], cl",True
+18,"movsx edx, byte ptr [ebp + 8]","movsx edx, byte ptr [ebp + 8]",True
+19,"mov dword ptr [ebp - 8], edx","mov dword ptr [ebp - 8], edx",True
+20,jmp 0x4f,jmp 0x1003584f,True
+21,"movsx eax, byte ptr [ebp + 8]","movsx eax, byte ptr [ebp + 8]",True
+22,push eax,push eax,True
+23,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+24,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+25,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+26,call dword ptr [edx + 0x24],call dword ptr [edx + 0x24],True
+27,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+28,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+29,"mov esp, ebp","mov esp, ebp",True
+30,pop ebp,pop ebp,True
+31,ret 4,ret 4,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\istream.obj (library object, no compilation)",symbol=?sputbackc@streambuf@@QAEHD@Z,module=Terrain.dll
+VERDICT,GREEN,32,100.0%

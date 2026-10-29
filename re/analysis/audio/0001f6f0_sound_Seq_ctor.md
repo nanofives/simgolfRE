@@ -7,6 +7,7 @@ Constructor for the sequencer/player object: base ctor 0x1002d450, initializes t
 System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_6.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_midimgr.cpp` as `??0CMidiMgr@@QAE@PAUHWND__@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001f853): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001f709 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

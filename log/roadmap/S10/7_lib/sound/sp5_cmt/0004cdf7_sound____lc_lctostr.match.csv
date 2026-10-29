@@ -1,0 +1,30 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+2,push esi,push esi,True
+3,push dword ptr [esp + 0xc],push dword ptr [esp + 0xc],True
+4,call 0xf,call 0x1004a010,True
+5,"cmp byte ptr [esi + 0x40], 0","cmp byte ptr [esi + 0x40], 0",True
+6,"lea eax, [esi + 0x40]","lea eax, [esi + 0x40]",True
+7,pop ecx,pop ecx,True
+8,pop ecx,pop ecx,True
+9,je 0x2e,je 0x1004ce25,True
+10,push eax,push eax,True
+11,push 0,push 0x1005f400,True
+12,push 2,push 2,True
+13,push dword ptr [esp + 0x14],push dword ptr [esp + 0x14],True
+14,call 0x2b,call 0x1004cd06,True
+15,"add esp, 0x10","add esp, 0x10",True
+16,"cmp byte ptr [esi + 0x80], 0","cmp byte ptr [esi + 0x80], 0",True
+17,"lea eax, [esi + 0x80]","lea eax, [esi + 0x80]",True
+18,pop esi,pop esi,True
+19,je 0x52,je 0x1004ce49,True
+20,push eax,push eax,True
+21,push 0,push 0x1005f3fc,True
+22,push 2,push 2,True
+23,push dword ptr [esp + 0x10],push dword ptr [esp + 0x10],True
+24,call 0x4f,call 0x1004cd06,True
+25,"add esp, 0x10","add esp, 0x10",True
+26,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\setlocal.obj (library object, no compilation)",symbol=___lc_lctostr,module=sound.dll
+VERDICT,GREEN,27,100.0%

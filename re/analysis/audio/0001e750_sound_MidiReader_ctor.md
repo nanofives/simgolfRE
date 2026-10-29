@@ -7,6 +7,7 @@ Constructs the SMF reader object: chains to the CtrlObject2 base ctor then insta
 System writeup: `re/analysis/systems/sound_3.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_midifile.cpp` as `??0CMidiTrack@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001e7ac): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001e752 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

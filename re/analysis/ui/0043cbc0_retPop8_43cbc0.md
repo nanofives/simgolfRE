@@ -7,6 +7,7 @@ virtual slot default that does nothing and pops two stack arguments (`re/names/m
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_Globals.cpp` as `?on_mouse_leave@WidgetBase@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0043cbc0): callee pops 8 bytes of stack arguments.
 
 ## Reads

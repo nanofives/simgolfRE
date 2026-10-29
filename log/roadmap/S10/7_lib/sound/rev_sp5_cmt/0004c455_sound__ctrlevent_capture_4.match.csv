@@ -1,0 +1,45 @@
+instruction,library_object,original,match
+0,push ebx,push ebx,True
+1,push esi,push esi,True
+2,push edi,push edi,True
+3,push 1,push 1,True
+4,pop ebx,pop ebx,True
+5,push ebx,push ebx,True
+6,call 0xc,call 0x10047710,True
+7,"cmp dword ptr [esp + 0x14], 0","cmp dword ptr [esp + 0x14], 0",True
+8,pop ecx,pop ecx,True
+9,jne 0x23,jne 0x1004c478,True
+10,"mov esi, dword ptr [0]","mov esi, dword ptr [0x100b5718]",True
+11,"mov eax, 0","mov eax, 0x100b5718",True
+12,push 2,push 2,True
+13,jmp 0x30,jmp 0x1004c485,True
+14,"mov esi, dword ptr [0]","mov esi, dword ptr [0x100b571c]",True
+15,"mov eax, 0","mov eax, 0x100b571c",True
+16,push 0x15,push 0x15,True
+17,"test esi, esi","test esi, esi",True
+18,pop edi,pop edi,True
+19,jne 0x40,jne 0x1004c495,True
+20,push ebx,push ebx,True
+21,call 0x3b,call 0x10047771,True
+22,pop ecx,pop ecx,True
+23,"xor eax, eax","xor eax, eax",True
+24,jmp 0x5c,jmp 0x1004c4b1,True
+25,"cmp esi, ebx","cmp esi, ebx",True
+26,je 0x53,je 0x1004c4a8,True
+27,"and dword ptr [eax], 0","and dword ptr [eax], 0",True
+28,push ebx,push ebx,True
+29,call 0x4d,call 0x10047771,True
+30,push edi,push edi,True
+31,call esi,call esi,True
+32,pop ecx,pop ecx,True
+33,jmp 0x59,jmp 0x1004c4ae,True
+34,push ebx,push ebx,True
+35,call 0x59,call 0x10047771,True
+36,pop ecx,pop ecx,True
+37,"mov eax, ebx","mov eax, ebx",True
+38,pop edi,pop edi,True
+39,pop esi,pop esi,True
+40,pop ebx,pop ebx,True
+41,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\winsig.obj (library object, no compilation)",symbol=_ctrlevent_capture@4,module=sound.dll
+VERDICT,GREEN,42,100.0%

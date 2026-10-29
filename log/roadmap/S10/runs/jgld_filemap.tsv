@@ -1,0 +1,11 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2650	0x10002650	78	G	Filemap::Filemap	??0Filemap@@QAE@XZ	public	100	100.0	28/28 ins	jgld_raw_01.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x26c0	0x100026c0	81	G	Filemap::`scalar deleting destructor'	??_GFilemap@@UAEPAXI@Z	public	100	100.0	33/33 ins	jgld_raw_01.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2730	0x10002730	92	G	Filemap::Filemap	??0Filemap@@QAE@PBDH@Z	public	100	100.0	35/35 ins	jgld_raw_01.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x27b0	0x100027b0	90	G	Filemap::Filemap	??0Filemap@@QAE@PBD@Z	public	100	100.0	34/34 ins	jgld_raw_01.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2820	0x10002820	63	G	Filemap::~Filemap	??1Filemap@@UAE@XZ	public	100	100.0	26/26 ins	jgld_raw_01.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2870	0x10002870	341	G	Filemap::open_read	?open_read@Filemap@@QAEPAXPBDH@Z	public	100	100.0	118/118 ins	jgld_mappedfile.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2a20	0x10002a20	344	G	Filemap::open	?open@Filemap@@QAEPAXPBDH@Z	public	100	100.0	118/118 ins	jgld_mappedfile.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2bd0	0x10002bd0	458	G	Filemap::create	?create@Filemap@@QAEPAXPBDKH@Z	public	100	100.0	157/157 ins	jgld_mappedfile.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2e10	0x10002e10	169	G	Filemap::close	?close@Filemap@@QAEXXZ	public	100	100.0	58/58 ins	jgld_raw_01.cpp
+jgld	jgl/jgld.dll/src/filemap.cpp	0x2ef0	0x10002ef0	274	G	Filemap::Truncate	?Truncate@Filemap@@QAEXPAE@Z	public	100	100.0	92/92 ins	jgld_raw_01.cpp

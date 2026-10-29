@@ -1,0 +1,14 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb1f30	0x004b1f30	56	G	jinit_phuff_encoder	_jinit_phuff_encoder	public	100	100.0	21/21 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb1f70	0x004b1f70	454	L	start_pass_phuff	_start_pass_phuff	name	100	100.0	150/150 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb2140	0x004b2140	734	L	encode_mcu_DC_first	_encode_mcu_DC_first	name	100	100.0	248/248 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb2420	0x004b2420	60	L	dump_buffer	_dump_buffer	name	100	100.0	25/25 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb2460	0x004b2460	165	L	emit_restart	_emit_restart	name	100	100.0	58/58 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb2510	0x004b2510	190	L	flush_bits	_flush_bits	name	100	100.0	75/75 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb25d0	0x004b25d0	498	L	emit_eobrun	_emit_eobrun	name	100	100.0	179/179 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb27d0	0x004b27d0	228	L	emit_buffered_bits	_emit_buffered_bits	name	100	100.0	84/84 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb28c0	0x004b28c0	1128	L	encode_mcu_AC_first	_encode_mcu_AC_first	name	100	100.0	381/381 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb2d30	0x004b2d30	375	L	encode_mcu_DC_refine	_encode_mcu_DC_refine	name	100	100.0	127/127 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb2eb0	0x004b2eb0	1219	L	encode_mcu_AC_refine	_encode_mcu_AC_refine	name	100	100.0	400/400 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb3380	0x004b3380	64	L	finish_pass_phuff	_finish_pass_phuff	name	100	100.0	24/24 ins	golf_jpeg_cphuff.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcphuff.c	0xb33c0	0x004b33c0	235	L	finish_pass_gather_phuff	_finish_pass_gather_phuff	name	100	100.0	76/76 ins	golf_jpeg_cphuff.cpp

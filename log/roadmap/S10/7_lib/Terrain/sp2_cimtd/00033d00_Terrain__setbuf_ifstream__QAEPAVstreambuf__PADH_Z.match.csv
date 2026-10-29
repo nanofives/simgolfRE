@@ -1,0 +1,44 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 8","sub esp, 8",True
+3,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+4,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+5,call 0x11,call 0x10033da0,True
+6,"test eax, eax","test eax, eax",True
+7,jne 0x37,jne 0x10033d37,True
+8,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+9,push eax,push eax,True
+10,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+11,push ecx,push ecx,True
+12,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+13,call 0x25,call 0x10033ab0,True
+14,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+15,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+16,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+17,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+18,call dword ptr [eax + 8],call dword ptr [eax + 8],True
+19,"test eax, eax","test eax, eax",True
+20,jne 0x60,jne 0x10033d60,True
+21,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+22,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+23,"mov eax, dword ptr [edx + 4]","mov eax, dword ptr [edx + 4]",True
+24,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+25,"mov edx, dword ptr [ecx + eax + 8]","mov edx, dword ptr [ecx + eax + 8]",True
+26,"or edx, 2","or edx, 2",True
+27,push edx,push edx,True
+28,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+29,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+30,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+31,"add edx, dword ptr [ecx + 4]","add edx, dword ptr [ecx + 4]",True
+32,"mov ecx, edx","mov ecx, edx",True
+33,call 0x5c,call 0x10033d70,True
+34,"xor eax, eax","xor eax, eax",True
+35,jmp 0x68,jmp 0x10033d68,True
+36,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+37,call 0x68,call 0x10033ab0,True
+38,"mov esp, ebp","mov esp, ebp",True
+39,pop ebp,pop ebp,True
+40,ret 8,ret 8,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\ifstream.obj (library object, no compilation)",symbol=?setbuf@ifstream@@QAEPAVstreambuf@@PADH@Z,module=Terrain.dll
+VERDICT,GREEN,41,100.0%

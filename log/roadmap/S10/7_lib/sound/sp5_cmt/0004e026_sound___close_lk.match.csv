@@ -1,0 +1,55 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,push esi,push esi,True
+4,call 0xc,call 0x1004c0ec,True
+5,"cmp eax, -1","cmp eax, -1",True
+6,pop ecx,pop ecx,True
+7,je 0x4e,je 0x1004e074,True
+8,"cmp esi, 1","cmp esi, 1",True
+9,je 0x1c,je 0x1004e042,True
+10,"cmp esi, 2","cmp esi, 2",True
+11,jne 0x32,jne 0x1004e058,True
+12,push 2,push 2,True
+13,call 0x23,call 0x1004c0ec,True
+14,push 1,push 1,True
+15,"mov edi, eax","mov edi, eax",True
+16,call 0x2c,call 0x1004c0ec,True
+17,pop ecx,pop ecx,True
+18,"cmp eax, edi","cmp eax, edi",True
+19,pop ecx,pop ecx,True
+20,je 0x4e,je 0x1004e074,True
+21,push esi,push esi,True
+22,call 0x38,call 0x1004c0ec,True
+23,pop ecx,pop ecx,True
+24,push eax,push eax,True
+25,call dword ptr [0],call dword ptr [0x100b83f8],True
+26,"test eax, eax","test eax, eax",True
+27,jne 0x4e,jne 0x1004e074,True
+28,call dword ptr [0],call dword ptr [0x100b84d4],True
+29,"mov edi, eax","mov edi, eax",True
+30,jmp 0x50,jmp 0x1004e076,True
+31,"xor edi, edi","xor edi, edi",True
+32,push esi,push esi,True
+33,call 0x56,call 0x1004c06d,True
+34,"mov eax, esi","mov eax, esi",True
+35,"and esi, 0x1f","and esi, 0x1f",True
+36,"sar eax, 5","sar eax, 5",True
+37,pop ecx,pop ecx,True
+38,"mov eax, dword ptr [eax*4]","mov eax, dword ptr [eax*4 + 0x100b5ba0]",True
+39,"lea ecx, [esi + esi*8]","lea ecx, [esi + esi*8]",True
+40,"and byte ptr [eax + ecx*4 + 4], 0","and byte ptr [eax + ecx*4 + 4], 0",True
+41,"test edi, edi","test edi, edi",True
+42,je 0x7e,je 0x1004e0a4,True
+43,push edi,push edi,True
+44,call 0x78,call 0x1004581c,True
+45,pop ecx,pop ecx,True
+46,"or eax, 0xffffffff","or eax, 0xffffffff",True
+47,jmp 0x80,jmp 0x1004e0a6,True
+48,"xor eax, eax","xor eax, eax",True
+49,pop edi,pop edi,True
+50,pop esi,pop esi,True
+51,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\close.obj (library object, no compilation)",symbol=__close_lk,module=sound.dll
+VERDICT,GREEN,52,100.0%

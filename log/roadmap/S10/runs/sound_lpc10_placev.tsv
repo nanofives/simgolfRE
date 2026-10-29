@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/placev.c	0x40740	0x10040740	867	G	placev_	_placev_	public	100	100.0	303/303 ins	m36c_D2_01.cpp

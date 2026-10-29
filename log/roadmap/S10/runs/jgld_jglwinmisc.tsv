@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglwinmisc.cpp	0x14550	0x10014550	60	G	user_error_fn	_user_error_fn	public	100	100.0	25/25 ins	jgld_sprite.cpp

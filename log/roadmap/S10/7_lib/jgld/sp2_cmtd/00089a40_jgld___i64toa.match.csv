@@ -1,0 +1,31 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 0x14], 0xa","cmp dword ptr [ebp + 0x14], 0xa",True
+4,jne 0x21,jne 0x10089a61,True
+5,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+6,jg 0x21,jg 0x10089a61,True
+7,jl 0x18,jl 0x10089a58,True
+8,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+9,jae 0x21,jae 0x10089a61,True
+10,"mov dword ptr [ebp - 4], 1","mov dword ptr [ebp - 4], 1",True
+11,jmp 0x28,jmp 0x10089a68,True
+12,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,push eax,push eax,True
+15,"mov ecx, dword ptr [ebp + 0x14]","mov ecx, dword ptr [ebp + 0x14]",True
+16,push ecx,push ecx,True
+17,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+18,push edx,push edx,True
+19,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+20,push eax,push eax,True
+21,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+22,push ecx,push ecx,True
+23,call 0x41,call 0x10089a90,True
+24,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+25,"mov esp, ebp","mov esp, ebp",True
+26,pop ebp,pop ebp,True
+27,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\xtoa.obj (library object, no compilation)",symbol=__i64toa,module=jgld.dll
+VERDICT,GREEN,28,100.0%

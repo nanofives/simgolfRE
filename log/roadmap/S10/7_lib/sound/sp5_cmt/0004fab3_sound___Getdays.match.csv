@@ -1,0 +1,64 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push ecx,push ecx,True
+4,push ebx,push ebx,True
+5,push esi,push esi,True
+6,"mov esi, dword ptr [0]","mov esi, dword ptr [0x100684b8]",True
+7,push edi,push edi,True
+8,"mov dword ptr [ebp - 8], esi","mov dword ptr [ebp - 8], esi",True
+9,"xor ebx, ebx","xor ebx, ebx",True
+10,"mov dword ptr [ebp - 4], 7","mov dword ptr [ebp - 4], 7",True
+11,push dword ptr [esi + 0x1c],push dword ptr [esi + 0x1c],True
+12,call 0x22,call 0x10043800,True
+13,push dword ptr [esi],push dword ptr [esi],True
+14,"mov edi, eax","mov edi, eax",True
+15,call 0x2b,call 0x10043800,True
+16,"add eax, ebx","add eax, ebx",True
+17,pop ecx,pop ecx,True
+18,"add esi, 4","add esi, 4",True
+19,dec dword ptr [ebp - 4],dec dword ptr [ebp - 4],True
+20,pop ecx,pop ecx,True
+21,"lea ebx, [eax + edi + 2]","lea ebx, [eax + edi + 2]",True
+22,jne 0x1a,jne 0x1004facd,True
+23,inc ebx,inc ebx,True
+24,push ebx,push ebx,True
+25,call 0x42,call 0x10042acd,True
+26,"mov esi, eax","mov esi, eax",True
+27,pop ecx,pop ecx,True
+28,"test esi, esi","test esi, esi",True
+29,"mov dword ptr [ebp - 4], esi","mov dword ptr [ebp - 4], esi",True
+30,je 0x87,je 0x1004fb3a,True
+31,"mov edi, dword ptr [ebp - 8]","mov edi, dword ptr [ebp - 8]",True
+32,push 7,push 7,True
+33,pop ebx,pop ebx,True
+34,"mov byte ptr [esi], 0x3a","mov byte ptr [esi], 0x3a",True
+35,push dword ptr [edi],push dword ptr [edi],True
+36,inc esi,inc esi,True
+37,push esi,push esi,True
+38,call 0x5e,call 0x1004a010,True
+39,push eax,push eax,True
+40,call 0x64,call 0x10043800,True
+41,"add esi, eax","add esi, eax",True
+42,"mov byte ptr [esi], 0x3a","mov byte ptr [esi], 0x3a",True
+43,push dword ptr [edi + 0x1c],push dword ptr [edi + 0x1c],True
+44,inc esi,inc esi,True
+45,push esi,push esi,True
+46,call 0x73,call 0x1004a010,True
+47,push eax,push eax,True
+48,call 0x79,call 0x10043800,True
+49,"add esp, 0x18","add esp, 0x18",True
+50,"add esi, eax","add esi, eax",True
+51,"add edi, 4","add edi, 4",True
+52,dec ebx,dec ebx,True
+53,jne 0x52,jne 0x1004fb05,True
+54,"and byte ptr [esi], 0","and byte ptr [esi], 0",True
+55,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+56,pop edi,pop edi,True
+57,pop esi,pop esi,True
+58,pop ebx,pop ebx,True
+59,leave ,leave ,True
+60,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\strftime.obj (library object, no compilation)",symbol=__Getdays,module=sound.dll
+VERDICT,GREEN,61,100.0%

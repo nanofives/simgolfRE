@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,pop eax,pop eax,True
+1,pop ecx,pop ecx,True
+2,"xchg dword ptr [esp], eax","xchg dword ptr [esp], eax",True
+3,jmp eax,jmp eax,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\trnsctrl.obj (library object, no compilation)",symbol=?_CallMemberFunction2@@YGXPAX00H@Z,module=golf_clean.exe
+VERDICT,GREEN,4,100.0%

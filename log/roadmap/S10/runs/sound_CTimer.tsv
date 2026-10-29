@@ -1,0 +1,13 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/CTimer.cpp	0x88e0	0x100088e0	42	G	CTimer::register_device	?register_device@CTimer@@QAEXPAVSound_Device@@@Z	public	100	100.0	12/12 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x8920	0x10008920	147	G	CTimer::unregister_device	?unregister_device@CTimer@@QAE?AW4SNDERR@@PAVSound_Device@@@Z	public	100	100.0	57/57 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x89f0	0x100089f0	154	G	CTimer::CTimer	??0CTimer@@QAE@XZ	public	100	100.0	46/46 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x8ac0	0x10008ac0	234	G	CTimer::~CTimer	??1CTimer@@QAE@XZ	public	100	100.0	84/84 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x8bf0	0x10008bf0	186	G	CTimer::release	?release@CTimer@@QAEXXZ	public	100	100.0	68/68 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x8ce0	0x10008ce0	98	G	CTimer::start	?start@CTimer@@QAE?AW4SNDERR@@XZ	public	100	100.0	37/37 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x8d70	0x10008d70	100	G	CTimer::stop	?stop@CTimer@@QAE?AW4SNDERR@@XZ	public	100	100.0	32/32 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x8e00	0x10008e00	32	G	CTimer::get_samples_per_tick	?get_samples_per_tick@CTimer@@QAEHPAUtWAVEFORMATEX@@@Z	public	100	100.0	11/11 ins	
+sound	sound/sound.dll/src/CTimer.cpp	0x8e30	0x10008e30	50	G	CTimer::set_rate	?set_rate@CTimer@@QAE?AW4SNDERR@@K@Z	public	100	100.0	16/16 ins	
+sound	sound/sound.dll/src/CTimer.cpp	0x8e80	0x10008e80	54	G	CTimer::set_wave_format	?set_wave_format@CTimer@@QAE?AW4SNDERR@@PAUtWAVEFORMATEX@@@Z	public	100	100.0	18/18 ins	
+sound	sound/sound.dll/src/CTimer.cpp	0x8ed0	0x10008ed0	278	G	CTimer::timer_proc	?timer_proc@CTimer@@SGXIIKKK@Z	public	100	100.0	90/90 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/CTimer.cpp	0x9040	0x10009040	83	G	DList<Sound_Device>::add_to_head	?add_to_head@?$DList@VSound_Device@@@@QAEXPAVSound_Device@@@Z	public	100	100.0	32/32 ins	sound_raw_01.cpp

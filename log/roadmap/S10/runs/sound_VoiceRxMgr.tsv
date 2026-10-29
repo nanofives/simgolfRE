@@ -1,0 +1,22 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30080	0x10030080	147	G	CVoiceRxMgr::CVoiceRxMgr	??0CVoiceRxMgr@@QAE@XZ	public	100	100.0	43/43 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30150	0x10030150	30	G	CVoiceRxMgr::`scalar deleting destructor'	??_GCVoiceRxMgr@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30180	0x10030180	451	G	CVoiceRxMgr::~CVoiceRxMgr	??1CVoiceRxMgr@@UAE@XZ	public	100	100.0	159/159 ins	m36b_hand_12.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x303d0	0x100303d0	8	G	CVoiceRxMgr::detach	?detach@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	3/3 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x303f0	0x100303f0	303	G	CVoiceRxMgr::release	?release@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	114/114 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30570	0x10030570	280	G	CVoiceRxMgr::direct_unload	?direct_unload@CVoiceRxMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	104/104 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x306e0	0x100306e0	23	G	CVoiceRxMgr::unload	?unload@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30710	0x10030710	13	G	CVoiceRxMgr::add_buffer	?add_buffer@CVoiceRxMgr@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	4/4 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30730	0x10030730	110	G	CVoiceRxMgr::lpc10_write_16bit_samples	?lpc10_write_16bit_samples@CVoiceRxMgr@@QAEHPAFQAMH@Z	public	100	100.0	40/40 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x307c0	0x100307c0	85	G	CVoiceRxMgr::lpc10_read_bits	?lpc10_read_bits@CVoiceRxMgr@@QAEHPADPAHH@Z	public	100	100.0	38/38 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30840	0x10030840	687	G	CVoiceRxMgr::add_lpc10buffer	?add_lpc10buffer@CVoiceRxMgr@@AAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	202/202 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30ba0	0x10030ba0	823	G	CVoiceRxMgr::get_nsamples	?get_nsamples@CVoiceRxMgr@@QAE?AW4SNDERR@@PAXKKPAK@Z	public	100	100.0	296/296 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x30fb0	0x10030fb0	146	G	CVoiceRxMgr::init	?init@CVoiceRxMgr@@UAE?AW4SNDERR@@KPAUtWAVEFORMATEX@@K@Z	public	100	100.0	42/42 ins	m36c_R1_01.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x31080	0x10031080	72	G	CVoiceRxMgr::start	?start@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	28/28 ins	sound_raw_07.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x310f0	0x100310f0	23	G	CVoiceRxMgr::stop	?stop@CVoiceRxMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x31120	0x10031120	29	G	CVoiceRxMgr::discard_buffer	?discard_buffer@CVoiceRxMgr@@QAE?AW4SNDERR@@PAUHMMIO__@@@Z	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x31150	0x10031150	3	G	CVoiceRxMgr::enable	?enable@CVoiceRxMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x31170	0x10031170	3	G	CVoiceRxMgr::disable	?disable@CVoiceRxMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x31190	0x10031190	4	G	CVoiceRxMgr::get_nbuffers	?get_nbuffers@CVoiceRxMgr@@EAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x311b0	0x100311b0	7	G	CVoiceRxMgr::get_buffer_size	?get_buffer_size@CVoiceRxMgr@@UAEKXZ	public	100	100.0	2/2 ins	sound_raw_05.cpp
+sound	sound/sound.dll/src/VoiceRxMgr.cpp	0x311d0	0x100311d0	20	G	CVoiceRxMgr::is_playing	?is_playing@CVoiceRxMgr@@UAEHXZ	public	100	100.0	9/9 ins	

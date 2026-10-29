@@ -7,6 +7,7 @@ __thiscall Sound vtable slot 0x14: queues command 3 for this Sound on the MIDI d
 System writeup: `re/analysis/systems/sound_19.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_midimgr.cpp` as `?unload@CMidiMgr@@UAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10020498, 0x1002049e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10020480 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

@@ -7,6 +7,7 @@ Destroys a Sound object created by create_sound; reads g_100b4a1c, g_100b49ec, g
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllmain.cpp` as `?delete_sound@Sound@@SA?AW4SNDERR@@PAV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000995b): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -64,7 +65,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x1000988b, 0x1000993c
 
 ## Callers
-0x100288a0 `soundWindowProc`, 0x10028b70 `soundWindowSubclassProc`, 0x1002ac00 `SubChannel_dtor`, 0x1002b620 `Ch5bb90_dtor`, 0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002c5e0 `destroyMixerVoices`, 0x1002cb00 `Mixer_dtor`, 0x1002d560 `Ch5be88_dtorA`, 0x1002dff0 `Channel_releaseSound`, 0x1002e660 `Ch5be88_dtorB`, 0x1002ea30 `Ch5c178_dtor`, 0x1002eb40 `openSourceType4`, 0x1002ebd0 `FUN_1002ebd0`, 0x1002ef40 `Ch5c234_dtor`, 0x1002f060 `openSourceType6`, 0x1002f0f0 `FUN_1002f0f0`, 0x1002f3f0 `Ch5c2ec_dtor`, 0x1002f5a0 `FUN_1002f5a0`, 0x1002f5e0 `openSourceType7`
+0x100288a0 `soundWindowProc`, 0x10028b70 `soundWindowSubclassProc`, 0x1002ac00 `SubChannel_dtor`, 0x1002b620 `Ch5bb90_dtor`, 0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002c5e0 `destroyMixerVoices`, 0x1002cb00 `Mixer_dtor`, 0x1002d560 `Ch5be88_dtorA`, 0x1002dff0 `Channel_releaseSound`, 0x1002e660 `Ch5be88_dtorB`, 0x1002ea30 `Ch5c178_dtor`, 0x1002eb40 `openSourceType4`, 0x1002ebd0 `AviSound::release`, 0x1002ef40 `Ch5c234_dtor`, 0x1002f060 `openSourceType6`, 0x1002f0f0 `VoiceRx::release`, 0x1002f3f0 `Ch5c2ec_dtor`, 0x1002f5a0 `VoiceTx::unload`, 0x1002f5e0 `openSourceType7`
 
 ## Constants
 - `0x1` at 0x10009887, 0x10009930, 0x10009941

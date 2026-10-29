@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/infutil.c	0xa0130	0x100a0130	516	G	inflate_flush	_inflate_flush	public	100	100.0	182/182 ins	jgld_zlib_infutil.cpp

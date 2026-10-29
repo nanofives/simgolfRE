@@ -1,0 +1,460 @@
+golf_clean.exe 0x004b4ca0 _rgb_ycc_start: 98.2% (56/57 instructions)  flags=/O2
+   = sub esp, 8                                 | sub esp, 8
+   = mov eax, dword ptr [esp + 0xc]             | mov eax, dword ptr [esp + 0xc]
+   = push ebx                                   | push ebx
+   = push ebp                                   | push ebp
+   = push esi                                   | push esi
+   = mov ecx, dword ptr [eax + 4]               | mov ecx, dword ptr [eax + 4]
+   = mov esi, dword ptr [eax + 0x158]           | mov esi, dword ptr [eax + 0x158]
+   = push edi                                   | push edi
+   = push 0x2000                                | push 0x2000
+   = push 1                                     | push 1
+   = push eax                                   | push eax
+   = call dword ptr [ecx]                       | call dword ptr [ecx]
+   = mov dword ptr [esi + 8], eax               | mov dword ptr [esi + 8], eax
+   = xor edx, edx                               | xor edx, edx
+   = add esp, 0xc                               | add esp, 0xc
+   = xor ebx, ebx                               | xor ebx, ebx
+   = xor edi, edi                               | xor edi, edi
+   = xor esi, esi                               | xor esi, esi
+   = mov dword ptr [esp + 0x14], edx            | mov dword ptr [esp + 0x14], edx
+   = mov dword ptr [esp + 0x10], edx            | mov dword ptr [esp + 0x10], edx
+   ! mov dword ptr [esp + 0x1c], 0x807fff       | mov dword ptr [esp + 0x1c], 0x807fff
+   = mov ecx, 0x8000                            | mov ecx, 0x8000
+   = add eax, 0x800                             | add eax, 0x800
+   = mov ebp, dword ptr [esp + 0x1c]            | mov ebp, dword ptr [esp + 0x1c]
+   = mov dword ptr [eax - 0x800], edx           | mov dword ptr [eax - 0x800], edx
+   = mov dword ptr [eax - 0x400], esi           | mov dword ptr [eax - 0x400], esi
+   = mov dword ptr [eax], ecx                   | mov dword ptr [eax], ecx
+   = mov dword ptr [eax + 0x400], edi           | mov dword ptr [eax + 0x400], edi
+   = mov dword ptr [eax + 0x800], ebx           | mov dword ptr [eax + 0x800], ebx
+   = mov dword ptr [eax + 0xc00], ebp           | mov dword ptr [eax + 0xc00], ebp
+   = mov ebp, dword ptr [esp + 0x10]            | mov ebp, dword ptr [esp + 0x10]
+   = mov dword ptr [eax + 0x1000], ebp          | mov dword ptr [eax + 0x1000], ebp
+   = mov ebp, dword ptr [esp + 0x14]            | mov ebp, dword ptr [esp + 0x14]
+   = mov dword ptr [eax + 0x1400], ebp          | mov dword ptr [eax + 0x1400], ebp
+   = mov ebp, dword ptr [esp + 0x1c]            | mov ebp, dword ptr [esp + 0x1c]
+   = add ebp, 0x8000                            | add ebp, 0x8000
+   = add ecx, 0x1d2f                            | add ecx, 0x1d2f
+   = mov dword ptr [esp + 0x1c], ebp            | mov dword ptr [esp + 0x1c], ebp
+   = mov ebp, dword ptr [esp + 0x10]            | mov ebp, dword ptr [esp + 0x10]
+   = sub ebp, 0x6b2f                            | sub ebp, 0x6b2f
+   = add edx, 0x4c8b                            | add edx, 0x4c8b
+   = mov dword ptr [esp + 0x10], ebp            | mov dword ptr [esp + 0x10], ebp
+   = mov ebp, dword ptr [esp + 0x14]            | mov ebp, dword ptr [esp + 0x14]
+   = add eax, 4                                 | add eax, 4
+   = add esi, 0x9646                            | add esi, 0x9646
+   = sub edi, 0x2b33                            | sub edi, 0x2b33
+   = sub ebx, 0x54cd                            | sub ebx, 0x54cd
+   = sub ebp, 0x14d1                            | sub ebp, 0x14d1
+   = cmp ecx, 0x1d91d1                          | cmp ecx, 0x1d91d1
+   = mov dword ptr [esp + 0x14], ebp            | mov dword ptr [esp + 0x14], ebp
+   = jle 0x46                                   | jle 0x4b4ce6
+   = pop edi                                    | pop edi
+   = pop esi                                    | pop esi
+   = pop ebp                                    | pop ebp
+   = pop ebx                                    | pop ebx
+   = add esp, 8                                 | add esp, 8
+   = ret                                        | ret 
+golf_clean.exe 0x004b5d50 _jpeg_fdct_islow: 22.6% (72/318 instructions)  flags=/O2
+   ! sub esp, 0x18                              | sub esp, 0x14
+   ! mov eax, dword ptr [esp + 0x1c]            | mov eax, dword ptr [esp + 0x18]
+   = push ebx                                   | push ebx
+   = push ebp                                   | push ebp
+   = push esi                                   | push esi
+   = push edi                                   | push edi
+   = add eax, 8                                 | add eax, 8
+   ! mov dword ptr [esp + 0x24], 8              | mov dword ptr [esp + 0x20], 8
+   ! mov ecx, dword ptr [eax + 0x14]            | mov esi, dword ptr [eax + 0x14]
+   ! mov edx, dword ptr [eax - 8]               | mov ecx, dword ptr [eax - 8]
+   ! mov esi, dword ptr [eax - 4]               | mov edi, dword ptr [eax + 0x10]
+   !                                            | lea edx, [ecx + esi]
+   !                                            | sub ecx, esi
+   !                                            | mov dword ptr [esp + 0x18], ecx
+   !                                            | mov ecx, dword ptr [eax - 4]
+   !                                            | lea esi, [ecx + edi]
+   !                                            | sub ecx, edi
+   !                                            | mov edi, dword ptr [eax + 0xc]
+   !                                            | mov dword ptr [esp + 0x14], ecx
+   !                                            | mov ecx, dword ptr [eax]
+   !                                            | lea ebx, [edi + ecx]
+   !                                            | sub ecx, edi
+   !                                            | mov edi, dword ptr [eax + 8]
+   !                                            | mov dword ptr [esp + 0x10], ecx
+   !                                            | mov ecx, dword ptr [eax + 4]
+   !                                            | lea ebp, [ecx + edi]
+   !                                            | sub ecx, edi
+   !                                            | mov edi, ecx
+   !                                            | lea ecx, [edx + ebp]
+   !                                            | sub edx, ebp
+   !                                            | mov ebp, edx
+   !                                            | lea edx, [ebx + esi]
+   !                                            | sub esi, ebx
+   !                                            | mov dword ptr [esp + 0x1c], edi
+   = lea ebx, [edx + ecx]                       | lea ebx, [edx + ecx]
+   ! sub edx, ecx                               | sub ecx, edx
+   ! mov ecx, dword ptr [eax + 0x10]            | 
+   ! lea edi, [esi + ecx]                       | 
+   ! sub esi, ecx                               | 
+   ! mov ecx, dword ptr [eax + 0xc]             | 
+   ! mov dword ptr [esp + 0x1c], edi            | 
+   ! mov edi, dword ptr [eax]                   | 
+   ! lea ebp, [ecx + edi]                       | 
+   ! sub edi, ecx                               | 
+   ! mov ecx, dword ptr [eax + 4]               | 
+   ! mov dword ptr [esp + 0x14], ebp            | 
+   ! mov ebp, dword ptr [eax + 8]               | 
+   ! add ebp, ecx                               | 
+   ! mov dword ptr [esp + 0x18], ebp            | 
+   ! mov ebp, dword ptr [eax + 8]               | 
+   ! sub ecx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x18]            | 
+   ! mov dword ptr [esp + 0x10], ecx            | 
+   ! lea ecx, [ebx + ebp]                       | 
+   ! sub ebx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x14]            | 
+   ! mov dword ptr [esp + 0x20], ebx            | 
+   ! mov ebx, dword ptr [esp + 0x1c]            | 
+   ! add ebp, ebx                               | 
+   ! mov dword ptr [esp + 0x18], ebp            | 
+   ! mov ebp, dword ptr [esp + 0x14]            | 
+   ! sub ebx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x18]            | 
+   ! add ebp, ecx                               | 
+   ! mov dword ptr [esp + 0x1c], ebx            | 
+   ! shl ebp, 2                                 | 
+   ! mov dword ptr [eax - 8], ebp               | 
+   ! mov ebp, dword ptr [esp + 0x18]            | 
+   ! sub ecx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x20]            | 
+   = shl ecx, 2                                 | shl ecx, 2
+   ! add ebx, ebp                               | 
+   = mov dword ptr [eax + 8], ecx               | mov dword ptr [eax + 8], ecx
+   ! lea ecx, [ebx + ebx*2]                     | lea ecx, [esi + ebp]
+   !                                            | movsx edx, cx
+   !                                            | shl ebx, 2
+   !                                            | lea ecx, [edx + edx*2]
+   !                                            | mov dword ptr [eax - 8], ebx
+   = shl ecx, 3                                 | shl ecx, 3
+   ! sub ecx, ebx                               | sub ecx, edx
+   = lea ecx, [ecx + ecx*2]                     | lea ecx, [ecx + ecx*2]
+   ! lea ecx, [ebx + ecx*4]                     | lea ecx, [edx + ecx*4]
+   = shl ecx, 4                                 | shl ecx, 4
+   ! add ecx, ebx                               | add ecx, edx
+   ! lea ebx, [ebp + ebp*2]                     | movsx edx, bp
+   !                                            | lea ebx, [edx + edx*2]
+   = shl ebx, 4                                 | shl ebx, 4
+   ! add ebx, ebp                               | add ebx, edx
+   = shl ebx, 6                                 | shl ebx, 6
+   ! sub ebx, ebp                               | sub ebx, edx
+   ! lea ebx, [ecx + ebx*2 + 0x400]             | lea edx, [ecx + ebx*2 + 0x400]
+   ! sar ebx, 0xb                               | sar edx, 0xb
+   ! mov dword ptr [eax], ebx                   | mov dword ptr [eax], edx
+   ! mov ebx, dword ptr [esp + 0x1c]            | movsx edx, si
+   ! lea ebp, [ebx + ebx*2]                     | lea esi, [edx + edx*2]
+   ! lea ebp, [ebp + ebp*4]                     | lea esi, [esi + esi*4]
+   ! shl ebp, 2                                 | shl esi, 2
+   ! sub ebp, ebx                               | sub esi, edx
+   ! lea ebp, [ebx + ebp*8]                     | lea esi, [edx + esi*8]
+   ! shl ebp, 5                                 | shl esi, 5
+   ! add ebp, ebx                               | add esi, edx
+   ! sub ecx, ebp                               | mov edx, dword ptr [esp + 0x10]
+   ! lea ebp, [edi + edx]                       | sub ecx, esi
+   = add ecx, 0x400                             | add ecx, 0x400
+   = sar ecx, 0xb                               | sar ecx, 0xb
+   = mov dword ptr [eax + 0x10], ecx            | mov dword ptr [eax + 0x10], ecx
+   ! mov ecx, dword ptr [esp + 0x10]            | mov ecx, dword ptr [esp + 0x14]
+   ! lea ebx, [ecx + esi]                       | lea ebx, [edi + ecx]
+   ! add ebp, ebx                               | mov ecx, dword ptr [esp + 0x18]
+   ! lea ecx, [ebp + ebp*4]                     | lea ebp, [edx + ecx]
+   !                                            | lea edx, [ebx + ebp]
+   !                                            | movsx edx, dx
+   !                                            | lea ecx, [edx + edx*4]
+   = shl ecx, 6                                 | shl ecx, 6
+   ! add ecx, ebp                               | add ecx, edx
+   = lea ecx, [ecx + ecx*4]                     | lea ecx, [ecx + ecx*4]
+   ! lea ecx, [ebp + ecx*2]                     | lea edx, [edx + ecx*2]
+   ! lea ecx, [ecx + ecx*2]                     | mov ecx, dword ptr [esp + 0x14]
+   ! mov dword ptr [esp + 0x18], ecx            | lea esi, [edx + edx*2]
+   ! mov ecx, dword ptr [esp + 0x10]            | mov edx, dword ptr [esp + 0x18]
+   !                                            | add edx, edi
+   !                                            | movsx edi, dx
+   !                                            | mov edx, dword ptr [esp + 0x10]
+   !                                            | imul edi, edi, 0xffffe333
+   = add ecx, edx                               | add ecx, edx
+   ! lea ebp, [edi + esi]                       | add eax, 0x20
+   ! imul ecx, ecx, 0xffffe333                  | movsx edx, cx
+   ! imul esi, esi, 0x6254                      | mov ecx, edx
+   ! mov dword ptr [esp + 0x20], ecx            | 
+   ! mov ecx, ebp                               | 
+   = neg ecx                                    | neg ecx
+   = shl ecx, 2                                 | shl ecx, 2
+   ! sub ecx, ebp                               | sub ecx, edx
+   ! add eax, 0x20                              | 
+   = shl ecx, 3                                 | shl ecx, 3
+   ! sub ecx, ebp                               | sub ecx, edx
+   = shl ecx, 8                                 | shl ecx, 8
+   ! sub ecx, ebp                               | sub ecx, edx
+   = shl ecx, 1                                 | shl ecx, 1
+   ! sub ecx, ebp                               | sub ecx, edx
+   ! mov ebp, ebx                               | movsx edx, bx
+   ! shl ebp, 6                                 | mov ebx, edx
+   ! sub ebp, ebx                               | shl ebx, 6
+   ! shl ebp, 2                                 | sub ebx, edx
+   ! sub ebp, ebx                               | shl ebx, 2
+   ! shl ebp, 4                                 | sub ebx, edx
+   ! add ebp, ebx                               | shl ebx, 4
+   ! lea ebx, [ebx + ebp*4]                     | add ebx, edx
+   ! mov ebp, ebx                               | lea edx, [edx + ebx*4]
+   ! mov ebx, dword ptr [esp + 0x18]            | mov ebx, edx
+   ! sub ebx, ebp                               | mov edx, esi
+   ! mov dword ptr [esp + 0x14], ebx            | sub edx, ebx
+   ! lea ebx, [edi + edx]                       | movsx ebx, bp
+   ! imul edi, edi, 0x41b3                      | 
+   = lea ebp, [ebx + ebx*2]                     | lea ebp, [ebx + ebx*2]
+   = lea ebp, [ebx + ebp*8]                     | lea ebp, [ebx + ebp*8]
+   = shl ebp, 5                                 | shl ebp, 5
+   = sub ebp, ebx                               | sub ebp, ebx
+   ! mov ebx, dword ptr [esp + 0x18]            | movsx ebx, word ptr [esp + 0x1c]
+   !                                            | imul ebx, ebx, 0x98e
+   !                                            | add ebx, edx
+   = shl ebp, 2                                 | shl ebp, 2
+   ! sub ebx, ebp                               | lea ebx, [ebx + edi + 0x400]
+   ! mov ebp, dword ptr [esp + 0x14]            | sub esi, ebp
+   ! mov dword ptr [esp + 0x1c], ebx            | 
+   ! mov ebx, dword ptr [esp + 0x10]            | 
+   ! imul ebx, ebx, 0x98e                       | 
+   ! add ebx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x20]            | 
+   ! lea ebx, [ebx + ebp + 0x400]               | 
+   = sar ebx, 0xb                               | sar ebx, 0xb
+   = mov dword ptr [eax - 0xc], ebx             | mov dword ptr [eax - 0xc], ebx
+   ! mov ebx, dword ptr [esp + 0x1c]            | movsx ebx, word ptr [esp + 0x10]
+   ! add edi, ebx                               | imul ebx, ebx, 0x41b3
+   !                                            | add ebx, esi
+   !                                            | lea ebx, [ebx + ecx + 0x400]
+   !                                            | sar ebx, 0xb
+   !                                            | mov dword ptr [eax - 0x14], ebx
+   !                                            | movsx ebx, word ptr [esp + 0x14]
+   !                                            | imul ebx, ebx, 0x6254
+   = add ebx, edx                               | add ebx, edx
+   ! lea edi, [edi + ecx + 0x400]               | lea ecx, [ebx + ecx + 0x400]
+   ! sar edi, 0xb                               | 
+   ! mov dword ptr [eax - 0x14], edi            | 
+   ! mov edi, dword ptr [esp + 0x14]            | 
+   ! add esi, edi                               | 
+   ! lea ecx, [esi + ecx + 0x400]               | 
+   = sar ecx, 0xb                               | sar ecx, 0xb
+   = mov dword ptr [eax - 0x1c], ecx            | mov dword ptr [eax - 0x1c], ecx
+   ! lea ecx, [edx + edx*2]                     | movsx ecx, word ptr [esp + 0x18]
+   ! shl ecx, 9                                 | add esi, ecx
+   ! add ecx, edx                               | lea edx, [ecx + ecx*2]
+   ! lea ecx, [edx + ecx*4]                     | shl edx, 9
+   ! lea edx, [ebx + ecx*2]                     | add edx, ecx
+   ! lea ecx, [edx + ebp + 0x400]               | lea edx, [ecx + edx*4]
+   ! sar ecx, 0xb                               | lea ecx, [esi + edx*2]
+   ! mov dword ptr [eax - 0x24], ecx            | lea edx, [ecx + edi + 0x400]
+   ! mov ecx, dword ptr [esp + 0x24]            | mov ecx, dword ptr [esp + 0x20]
+   !                                            | sar edx, 0xb
+   !                                            | mov dword ptr [eax - 0x24], edx
+   = dec ecx                                    | dec ecx
+   ! mov dword ptr [esp + 0x24], ecx            | mov dword ptr [esp + 0x20], ecx
+   = jne 0x16                                   | jne 0x4b5d66
+   ! mov edx, dword ptr [esp + 0x2c]            | mov eax, dword ptr [esp + 0x28]
+   ! mov dword ptr [esp + 0x2c], 8              | mov dword ptr [esp + 0x28], 8
+   ! lea eax, [edx + 0x40]                      | add eax, 0x40
+   ! mov ecx, dword ptr [eax + 0xa0]            | mov esi, dword ptr [eax + 0xa0]
+   ! mov edx, dword ptr [eax - 0x40]            | mov ecx, dword ptr [eax - 0x40]
+   ! mov esi, dword ptr [eax - 0x20]            | mov edi, dword ptr [eax + 0x80]
+   ! lea ebx, [edx + ecx]                       | lea edx, [ecx + esi]
+   ! sub edx, ecx                               | sub ecx, esi
+   ! mov ecx, dword ptr [eax + 0x80]            | mov dword ptr [esp + 0x18], ecx
+   ! lea edi, [esi + ecx]                       | mov ecx, dword ptr [eax - 0x20]
+   ! sub esi, ecx                               | lea esi, [ecx + edi]
+   ! mov ecx, dword ptr [eax + 0x60]            | sub ecx, edi
+   !                                            | mov edi, dword ptr [eax + 0x60]
+   !                                            | mov dword ptr [esp + 0x14], ecx
+   !                                            | mov ecx, dword ptr [eax]
+   !                                            | lea ebx, [edi + ecx]
+   !                                            | sub ecx, edi
+   !                                            | mov edi, dword ptr [eax + 0x40]
+   !                                            | mov dword ptr [esp + 0x10], ecx
+   !                                            | mov ecx, dword ptr [eax + 0x20]
+   !                                            | lea ebp, [ecx + edi]
+   !                                            | sub ecx, edi
+   !                                            | mov edi, ecx
+   !                                            | lea ecx, [edx + ebp]
+   !                                            | sub edx, ebp
+   !                                            | mov ebp, edx
+   !                                            | lea edx, [ebx + esi]
+   !                                            | sub esi, ebx
+   = mov dword ptr [esp + 0x1c], edi            | mov dword ptr [esp + 0x1c], edi
+   ! mov edi, dword ptr [eax]                   | lea ebx, [edx + ecx + 2]
+   ! lea ebp, [ecx + edi]                       | sub ecx, edx
+   ! sub edi, ecx                               | 
+   ! mov ecx, dword ptr [eax + 0x20]            | 
+   ! mov dword ptr [esp + 0x14], ebp            | 
+   ! mov ebp, dword ptr [eax + 0x40]            | 
+   ! add ebp, ecx                               | 
+   ! mov dword ptr [esp + 0x18], ebp            | 
+   ! mov ebp, dword ptr [eax + 0x40]            | 
+   ! sub ecx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x18]            | 
+   ! mov dword ptr [esp + 0x10], ecx            | 
+   ! lea ecx, [ebx + ebp]                       | 
+   ! sub ebx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x14]            | 
+   ! mov dword ptr [esp + 0x20], ebx            | 
+   ! mov ebx, dword ptr [esp + 0x1c]            | 
+   ! add ebp, ebx                               | 
+   ! mov dword ptr [esp + 0x18], ebp            | 
+   ! mov ebp, dword ptr [esp + 0x14]            | 
+   ! sub ebx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x18]            | 
+   ! mov dword ptr [esp + 0x1c], ebx            | 
+   ! lea ebp, [ecx + ebp + 2]                   | 
+   ! sar ebp, 2                                 | 
+   ! mov dword ptr [eax - 0x40], ebp            | 
+   ! mov ebp, dword ptr [esp + 0x18]            | 
+   ! sub ecx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x20]            | 
+   = add ecx, 2                                 | add ecx, 2
+   ! add ebx, ebp                               | 
+   = sar ecx, 2                                 | sar ecx, 2
+   = mov dword ptr [eax + 0x40], ecx            | mov dword ptr [eax + 0x40], ecx
+   ! lea ecx, [ebx + ebx*2]                     | lea ecx, [esi + ebp]
+   !                                            | movsx edx, cx
+   !                                            | sar ebx, 2
+   !                                            | lea ecx, [edx + edx*2]
+   !                                            | mov dword ptr [eax - 0x40], ebx
+   = shl ecx, 3                                 | shl ecx, 3
+   ! sub ecx, ebx                               | sub ecx, edx
+   = lea ecx, [ecx + ecx*2]                     | lea ecx, [ecx + ecx*2]
+   ! lea ecx, [ebx + ecx*4]                     | lea ecx, [edx + ecx*4]
+   = shl ecx, 4                                 | shl ecx, 4
+   ! add ecx, ebx                               | add ecx, edx
+   ! lea ebx, [ebp + ebp*2]                     | movsx edx, bp
+   !                                            | lea ebx, [edx + edx*2]
+   = shl ebx, 4                                 | shl ebx, 4
+   ! add ebx, ebp                               | add ebx, edx
+   = shl ebx, 6                                 | shl ebx, 6
+   ! sub ebx, ebp                               | sub ebx, edx
+   ! lea ebx, [ecx + ebx*2 + 0x4000]            | lea edx, [ecx + ebx*2 + 0x4000]
+   ! sar ebx, 0xf                               | sar edx, 0xf
+   ! mov dword ptr [eax], ebx                   | mov dword ptr [eax], edx
+   ! mov ebx, dword ptr [esp + 0x1c]            | movsx edx, si
+   ! lea ebp, [ebx + ebx*2]                     | lea esi, [edx + edx*2]
+   ! lea ebp, [ebp + ebp*4]                     | lea esi, [esi + esi*4]
+   ! shl ebp, 2                                 | shl esi, 2
+   ! sub ebp, ebx                               | sub esi, edx
+   ! lea ebp, [ebx + ebp*8]                     | lea esi, [edx + esi*8]
+   ! shl ebp, 5                                 | shl esi, 5
+   ! add ebp, ebx                               | add esi, edx
+   ! sub ecx, ebp                               | mov edx, dword ptr [esp + 0x10]
+   ! lea ebp, [edi + edx]                       | sub ecx, esi
+   = add ecx, 0x4000                            | add ecx, 0x4000
+   = sar ecx, 0xf                               | sar ecx, 0xf
+   = mov dword ptr [eax + 0x80], ecx            | mov dword ptr [eax + 0x80], ecx
+   ! mov ecx, dword ptr [esp + 0x10]            | mov ecx, dword ptr [esp + 0x14]
+   ! lea ebx, [ecx + esi]                       | lea ebx, [edi + ecx]
+   ! add ebp, ebx                               | mov ecx, dword ptr [esp + 0x18]
+   ! lea ecx, [ebp + ebp*4]                     | lea ebp, [edx + ecx]
+   !                                            | lea edx, [ebx + ebp]
+   !                                            | movsx edx, dx
+   !                                            | lea ecx, [edx + edx*4]
+   = shl ecx, 6                                 | shl ecx, 6
+   ! add ecx, ebp                               | add ecx, edx
+   = lea ecx, [ecx + ecx*4]                     | lea ecx, [ecx + ecx*4]
+   ! lea ecx, [ebp + ecx*2]                     | lea edx, [edx + ecx*2]
+   ! lea ecx, [ecx + ecx*2]                     | mov ecx, dword ptr [esp + 0x14]
+   ! mov dword ptr [esp + 0x18], ecx            | lea esi, [edx + edx*2]
+   ! mov ecx, dword ptr [esp + 0x10]            | mov edx, dword ptr [esp + 0x18]
+   ! lea ebp, [edi + esi]                       | add edx, edi
+   !                                            | movsx edi, dx
+   !                                            | imul edi, edi, 0xffffe333
+   !                                            | mov edx, dword ptr [esp + 0x10]
+   !                                            | add eax, 4
+   = add ecx, edx                               | add ecx, edx
+   ! imul esi, esi, 0x6254                      | movsx edx, cx
+   ! imul ecx, ecx, 0xffffe333                  | mov ecx, edx
+   ! mov dword ptr [esp + 0x20], ecx            | 
+   ! mov ecx, ebp                               | 
+   = neg ecx                                    | neg ecx
+   = shl ecx, 2                                 | shl ecx, 2
+   ! sub ecx, ebp                               | sub ecx, edx
+   ! add eax, 4                                 | 
+   = shl ecx, 3                                 | shl ecx, 3
+   ! sub ecx, ebp                               | sub ecx, edx
+   = shl ecx, 8                                 | shl ecx, 8
+   ! sub ecx, ebp                               | sub ecx, edx
+   = shl ecx, 1                                 | shl ecx, 1
+   ! sub ecx, ebp                               | sub ecx, edx
+   ! mov ebp, ebx                               | movsx edx, bx
+   ! shl ebp, 6                                 | mov ebx, edx
+   ! sub ebp, ebx                               | shl ebx, 6
+   ! shl ebp, 2                                 | sub ebx, edx
+   ! sub ebp, ebx                               | shl ebx, 2
+   ! shl ebp, 4                                 | sub ebx, edx
+   ! add ebp, ebx                               | shl ebx, 4
+   ! lea ebx, [ebx + ebp*4]                     | add ebx, edx
+   ! mov ebp, ebx                               | lea edx, [edx + ebx*4]
+   ! mov ebx, dword ptr [esp + 0x18]            | mov ebx, edx
+   ! sub ebx, ebp                               | mov edx, esi
+   ! mov dword ptr [esp + 0x14], ebx            | sub edx, ebx
+   ! lea ebx, [edi + edx]                       | movsx ebx, bp
+   ! imul edi, edi, 0x41b3                      | 
+   = lea ebp, [ebx + ebx*2]                     | lea ebp, [ebx + ebx*2]
+   = lea ebp, [ebx + ebp*8]                     | lea ebp, [ebx + ebp*8]
+   = shl ebp, 5                                 | shl ebp, 5
+   = sub ebp, ebx                               | sub ebp, ebx
+   ! mov ebx, dword ptr [esp + 0x18]            | movsx ebx, word ptr [esp + 0x1c]
+   !                                            | imul ebx, ebx, 0x98e
+   !                                            | add ebx, edx
+   = shl ebp, 2                                 | shl ebp, 2
+   ! sub ebx, ebp                               | lea ebx, [ebx + edi + 0x4000]
+   ! mov ebp, dword ptr [esp + 0x14]            | sub esi, ebp
+   ! mov dword ptr [esp + 0x1c], ebx            | 
+   ! mov ebx, dword ptr [esp + 0x10]            | 
+   ! imul ebx, ebx, 0x98e                       | 
+   ! add ebx, ebp                               | 
+   ! mov ebp, dword ptr [esp + 0x20]            | 
+   ! lea ebx, [ebx + ebp + 0x4000]              | 
+   = sar ebx, 0xf                               | sar ebx, 0xf
+   = mov dword ptr [eax + 0x9c], ebx            | mov dword ptr [eax + 0x9c], ebx
+   ! mov ebx, dword ptr [esp + 0x1c]            | movsx ebx, word ptr [esp + 0x10]
+   ! add edi, ebx                               | imul ebx, ebx, 0x41b3
+   !                                            | add ebx, esi
+   !                                            | lea ebx, [ebx + ecx + 0x4000]
+   !                                            | sar ebx, 0xf
+   !                                            | mov dword ptr [eax + 0x5c], ebx
+   !                                            | movsx ebx, word ptr [esp + 0x14]
+   !                                            | imul ebx, ebx, 0x6254
+   = add ebx, edx                               | add ebx, edx
+   ! lea edi, [edi + ecx + 0x4000]              | lea ecx, [ebx + ecx + 0x4000]
+   ! sar edi, 0xf                               | 
+   ! mov dword ptr [eax + 0x5c], edi            | 
+   ! mov edi, dword ptr [esp + 0x14]            | 
+   ! add esi, edi                               | 
+   ! lea ecx, [esi + ecx + 0x4000]              | 
+   = sar ecx, 0xf                               | sar ecx, 0xf
+   = mov dword ptr [eax + 0x1c], ecx            | mov dword ptr [eax + 0x1c], ecx
+   ! lea ecx, [edx + edx*2]                     | movsx ecx, word ptr [esp + 0x18]
+   ! shl ecx, 9                                 | add esi, ecx
+   ! add ecx, edx                               | lea edx, [ecx + ecx*2]
+   ! lea ecx, [edx + ecx*4]                     | shl edx, 9
+   ! lea edx, [ebx + ecx*2]                     | add edx, ecx
+   ! lea ecx, [edx + ebp + 0x4000]              | lea edx, [ecx + edx*4]
+   ! sar ecx, 0xf                               | lea ecx, [esi + edx*2]
+   ! mov dword ptr [eax - 0x24], ecx            | lea edx, [ecx + edi + 0x4000]
+   ! mov ecx, dword ptr [esp + 0x2c]            | mov ecx, dword ptr [esp + 0x28]
+   !                                            | sar edx, 0xf
+   !                                            | mov dword ptr [eax - 0x24], edx
+   = dec ecx                                    | dec ecx
+   ! mov dword ptr [esp + 0x2c], ecx            | mov dword ptr [esp + 0x28], ecx
+   ! jne 0x202                                  | jne 0x4b5f36
+   = pop edi                                    | pop edi
+   = pop esi                                    | pop esi
+   = pop ebp                                    | pop ebp
+   = pop ebx                                    | pop ebx
+   ! add esp, 0x18                              | add esp, 0x14
+   = ret                                        | ret 

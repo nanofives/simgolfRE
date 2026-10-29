@@ -1,0 +1,17 @@
+instruction,library_object,original,match
+0,push 0x80,push 0x80,True
+1,call 0xa,call 0x4a504f,True
+2,"test eax, eax","test eax, eax",True
+3,pop ecx,pop ecx,True
+4,"mov dword ptr [0], eax","mov dword ptr [0x842170], eax",True
+5,jne 0x21,jne 0x4a5705,True
+6,push 0x18,push 0x18,True
+7,call 0x1b,call 0x4a6937,True
+8,"mov eax, dword ptr [0]","mov eax, dword ptr [0x842170]",True
+9,pop ecx,pop ecx,True
+10,"and dword ptr [eax], 0","and dword ptr [eax], 0",True
+11,"mov eax, dword ptr [0]","mov eax, dword ptr [0x842170]",True
+12,"mov dword ptr [0], eax",,False
+13,ret ,,False
+meta,"library=libcmt.lib member=build\intel\mt_obj\onexit.obj (library object, no compilation)",symbol=___onexitinit,module=golf_clean.exe
+VERDICT,RED,14,85.7%

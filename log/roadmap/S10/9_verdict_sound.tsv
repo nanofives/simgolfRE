@@ -1,0 +1,562 @@
+va	verdict	smsg	name	kind	detail
+0x10005670	ACCEPT_SET	Patch::set_fade_in	Patch::set_fade_in	SETTER	stores dword ptr [ecx + 0x38] from its arguments (0x10005680)
+0x100056a0	ACCEPT_GET	Sound::is_loaded	Sound::is_loaded	GETTER	reads dword ptr [ecx + 0x44] (from 0x100056a0), no store, no call
+0x100056c0	ACCEPT_GET	Sound::get_next	Sound::get_next	GETTER	reads dword ptr [ecx + 0x4c] (from 0x100056c0), no store, no call
+0x100056e0	ACCEPT_GET	Sound::get_prev	Sound::get_prev	GETTER	reads dword ptr [ecx + 0x48] (from 0x100056e0), no store, no call
+0x10005700	ACCEPT_GET	Sound::get_type	Sound::get_type	GETTER	reads dword ptr [ecx + 0x54] (from 0x10005700), no store, no call
+0x10005880	DEFER_NOT_A_FUNCTION	CAmbienceMgr::strip_path	CAmbienceMgr::strip_path	OTHER	
+0x10005900	DEFER_NOT_A_FUNCTION	CAmbienceMgr::make_path_local	CAmbienceMgr::make_path_local	OTHER	
+0x10005b00	REJECT_STUB	Midi::get_game_hwnd	Midi::get_game_hwnd	CONST	`xor eax, eax`; `ret` at 0x10005b00
+0x10005b20	REJECT_STUB	Midi::set_attrib	Midi::set_attrib	CONST	`mov eax, 0xb`; `ret 4` at 0x10005b20
+0x10005b40	REJECT_STUB	Midi::get_attrib	Midi::get_attrib	CONST	`xor eax, eax`; `ret` at 0x10005b40
+0x10005c70	MANUAL	MidiCtrl::refresh	MidiCtrl::refresh	OTHER	
+0x10005c90	MANUAL	MidiCtrl::do_control	MidiCtrl::do_control	GETTER	reads dword ptr [esp + 4] (from 0x10005c90), no store, no call
+0x10005cb0	REJECT_STUB	MidiCtrl::reset	MidiCtrl::reset	EMPTY	`ret` at 0x10005cb0
+0x10005cd0	REJECT_STUB	MidiCtrl::update	MidiCtrl::update	EMPTY	`ret` at 0x10005cd0
+0x10005cf0	ACCEPT_VT	MidiCtrl::`scalar deleting destructor'	MidiCtrl::scalarDeletingDtor	CTOR	stores 0x1005b19c into [esi] at 0x10005cf9; SMSG's public at that table: ??_7MidiCtrl@@6B@
+0x10005d20	REJECT_STUB	MidiCtrlDiskRead::set_type	MidiCtrlDiskRead::set_type	EMPTY	`ret` at 0x10005d20
+0x10005d40	MANUAL	MidiCtrlDiskRead::set_total_class_size	MidiCtrlDiskRead::set_total_class_size	OTHER	
+0x10005d60	MANUAL	CMidiMgr::set_loop_state	CMidiMgr::set_loop_state	OTHER	
+0x10005db0	ACCEPT_GET	CMidiMgr::is_looping	CMidiMgr::is_looping	GETTER	reads dword ptr [ecx + 0xac] (from 0x10005db0), no store, no call
+0x10005dd0	ACCEPT_GET	CMidiMgr::is_playing	CMidiMgr::is_playing	GETTER	reads dword ptr [ecx + 0xac] (from 0x10005dd0), no store, no call
+0x10005f60	ACCEPT_SET	CMidiMgr::switch_state	CMidiMgr::switch_state	SETTER	stores dword ptr [ecx + 0x214] from its arguments (0x10005f75)
+0x10005f90	ACCEPT_GET	CMidiMgr::get_control_track	CMidiMgr::get_control_track	GETTER	reads dword ptr [ecx + 0x20c] (from 0x10005f90), no store, no call
+0x10005fb0	ACCEPT_GET	CMidiMgr::get_key	CMidiMgr::get_key	GETTER	reads dword ptr [ecx + 0x73c] (from 0x10005fb0), no store, no call
+0x10005fd0	ACCEPT_SET	CMidiMgr::set_frame	CMidiMgr::set_frame	SETTER	stores dword ptr [ecx + 0x740] from its arguments (0x10005fda)
+0x10006000	ACCEPT_GET	CMidiMgr::get_frame	CMidiMgr::get_frame	GETTER	reads dword ptr [ecx + 0x740] (from 0x10006000), no store, no call
+0x10006310	MANUAL	CAviMgr::detach	CAviMgr::detach	OTHER	
+0x10006a60	MANUAL	CAviMgr::init	CAviMgr::init	OTHER	
+0x10006b50	DEFER_NOT_A_FUNCTION	CAviMgr::start	CAviMgr::start	OTHER	
+0x10006b80	MANUAL	CAviMgr::stop	CAviMgr::stop	OTHER	
+0x10006ba0	DEFER_NOT_A_FUNCTION	CAviMgr::discard_frame	CAviMgr::discard_frame	OTHER	
+0x10006d10	REJECT_STUB	AviSound::unload	AviSound::unload	CONST	`xor eax, eax`; `ret` at 0x10006d10
+0x10006d30	REJECT_STUB	AviSound::get_game_hwnd	AviSound::get_game_hwnd	CONST	`xor eax, eax`; `ret` at 0x10006d30
+0x10006d50	REJECT_STUB	AviSound::set_attrib	AviSound::set_attrib	CONST	`mov eax, 0xb`; `ret 4` at 0x10006d50
+0x10006d70	REJECT_STUB	AviSound::get_attrib	AviSound::get_attrib	CONST	`xor eax, eax`; `ret` at 0x10006d70
+0x10006d90	ACCEPT_GET	CAviMgr::get_cur_frame	CAviMgr::get_cur_frame	GETTER	reads dword ptr [ecx + 0xc8], dword ptr [ecx + 0xcc] (from 0x10006d90), no store, no call
+0x10006db0	ACCEPT_GET	CAviMgr::get_frame_size	CAviMgr::get_frame_size	GETTER	reads dword ptr [ecx + 0xb4] (from 0x10006db0), no store, no call
+0x10006dd0	ACCEPT_GET	CAviMgr::is_playing	CAviMgr::is_playing	GETTER	reads dword ptr [ecx + 0x58] (from 0x10006dd0), no store, no call
+0x10006fc0	DEFER_NOT_A_FUNCTION	CWaveMixer::fill_mixbuff	CWaveMixer::fill_mixbuff	OTHER	
+0x10007c10	DEFER_NOT_A_FUNCTION	CWaveMixer::mb_2_dsb	CWaveMixer::mb_2_dsb	CONST	`xor eax, eax`; `ret 0xc` at 0x10007c10
+0x100087a0	DEFER_NOT_A_FUNCTION	CWaveMixer::get_filter_index	CWaveMixer::get_filter_index	GETTER	reads dword ptr [esp + 4], dword ptr [esp + 8], word ptr [edx + 0xe] (from 0x100087a0), no store, no call
+0x10008e00	DEFER_NOT_A_FUNCTION	CTimer::get_samples_per_tick	CTimer::get_samples_per_tick	GETTER	reads dword ptr [eax + 4], dword ptr [esp + 4] (from 0x10008e00), no store, no call
+0x10008e30	DEFER_NOT_A_FUNCTION	CTimer::set_rate	CTimer::set_rate	SETTER	stores dword ptr [ecx] from its arguments (0x10008e5b)
+0x10008e80	DEFER_NOT_A_FUNCTION	CTimer::set_wave_format	CTimer::set_wave_format	SETTER	stores dword ptr [ecx], dword ptr [ecx + 4], dword ptr [ecx + 8], dword ptr [ecx + 0xc], word ptr [ecx + 0x10] from its arguments (0x10008e95)
+0x100090c0	MANUAL	$E29	$E29	OTHER	
+0x10009100	MANUAL	$E27	$E27	OTHER	
+0x10009210	MANUAL	DllMain	DllMain	OTHER	
+0x10009240	DEFER_NOT_A_FUNCTION	init_sound	init_sound	OTHER	
+0x100099d0	DEFER_NOT_A_FUNCTION	get_sound_type	get_sound_type	OTHER	
+0x10009a70	DEFER_NOT_A_FUNCTION	update_sound	update_sound	EMPTY	`ret` at 0x10009a70
+0x10009e10	DEFER_NOT_A_FUNCTION	Dll_Midi_Device::init_win_device	Dll_Midi_Device::init_win_device	OTHER	
+0x1000a0e0	REJECT_STUB	Dll_Midi_Device::get_description	Dll_Midi_Device::get_description	CONST	`mov eax, 0x2f`; `ret 0xc` at 0x1000a0e0
+0x1000a120	REJECT_STUB	Dll_Midi_Device::set_volume	Dll_Midi_Device::set_volume	EMPTY	`ret` at 0x1000a120
+0x1000a140	MANUAL	Dll_Midi_Device::suspend	Dll_Midi_Device::suspend	OTHER	
+0x1000aa60	DEFER_NOT_A_FUNCTION	Dll_Midi_Device::post_GT_request	Dll_Midi_Device::post_GT_request	OTHER	
+0x1000af20	ACCEPT_SET	Dll_Midi_Device::add_to_time_past	Dll_Midi_Device::add_to_time_past	SETTER	stores dword ptr [ecx + 0x34] from its arguments (0x1000af29)
+0x1000af40	ACCEPT_GET	Dll_Midi_Device::get_time_past	Dll_Midi_Device::get_time_past	GETTER	reads dword ptr [ecx + 0x34] (from 0x1000af40), no store, no call
+0x1000af60	ACCEPT_SET	Dll_Midi_Device::reset_time_past	Dll_Midi_Device::reset_time_past	OTHER	stores constants into this: `mov dword ptr [ecx + 0x34], 0` 0x1000af60
+0x1000af80	MANUAL	Dll_Midi_Device::timer_unhook	Dll_Midi_Device::timer_unhook	OTHER	
+0x1000afa0	ACCEPT_SET	Dll_Midi_Device::set_rate	Dll_Midi_Device::set_rate	SETTER	stores dword ptr [ecx + 0x30] from its arguments (0x1000afa4)
+0x1000afc0	ACCEPT_GET	Dll_Midi_Device::get_rate	Dll_Midi_Device::get_rate	GETTER	reads dword ptr [ecx + 0x30] (from 0x1000afc0), no store, no call
+0x1000afe0	ACCEPT_GET	Dll_Midi_Device::is_disabled	Dll_Midi_Device::is_disabled	GETTER	reads dword ptr [ecx + 0x24] (from 0x1000afe0), no store, no call
+0x1000db60	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::post_GT_request	Dll_Wave_Device::post_GT_request	OTHER	
+0x1000e160	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::update_hwbuffers	Dll_Wave_Device::update_hwbuffers	OTHER	
+0x1000e1d0	ACCEPT_SET	Dll_Wave_Device::add_to_time_past	Dll_Wave_Device::add_to_time_past	SETTER	stores dword ptr [ecx + 0x1b4], dword ptr [ecx + 0x1b0] from its arguments (0x1000e1dc)
+0x1000e200	ACCEPT_GET	Dll_Wave_Device::get_ndevices	Dll_Wave_Device::get_ndevices	GETTER	reads dword ptr [0x100b49f0], dword ptr [eax + 0x148] (from 0x1000e200), no store, no call
+0x1000e2f0	REJECT_STUB	Dll_Wave_Device::set_eax	Dll_Wave_Device::set_eax	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e2f0
+0x1000e370	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::get_eax	Dll_Wave_Device::get_eax	CONST	`xor eax, eax`; `ret 4` at 0x1000e370
+0x1000e390	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::get_eax	Dll_Wave_Device::get_eax	OTHER	
+0x1000e3d0	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::set_eax_volume	Dll_Wave_Device::set_eax_volume	CONST	`xor eax, eax`; `ret 4` at 0x1000e3d0
+0x1000e3f0	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::get_eax_volume	Dll_Wave_Device::get_eax_volume	CONST	`xor eax, eax`; `ret 4` at 0x1000e3f0
+0x1000e410	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::set_eax_decay	Dll_Wave_Device::set_eax_decay	CONST	`xor eax, eax`; `ret 4` at 0x1000e410
+0x1000e430	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::get_eax_decay	Dll_Wave_Device::get_eax_decay	CONST	`xor eax, eax`; `ret 4` at 0x1000e430
+0x1000e450	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::set_eax_damping	Dll_Wave_Device::set_eax_damping	CONST	`xor eax, eax`; `ret 4` at 0x1000e450
+0x1000e470	DEFER_NOT_A_FUNCTION	Dll_Wave_Device::get_eax_damping	Dll_Wave_Device::get_eax_damping	CONST	`xor eax, eax`; `ret 4` at 0x1000e470
+0x1000e490	MANUAL	Dll_Wave_Device::set_listener_position	Dll_Wave_Device::set_listener_position	OTHER	
+0x1000e4d0	REJECT_STUB	Dll_Wave_Device::get_listener_position	Dll_Wave_Device::get_listener_position	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1000e4d0
+0x1000e4f0	REJECT_STUB	Dll_Wave_Device::set_listener_xpos	Dll_Wave_Device::set_listener_xpos	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e4f0
+0x1000e510	REJECT_STUB	Dll_Wave_Device::get_listener_xpos	Dll_Wave_Device::get_listener_xpos	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e510
+0x1000e530	REJECT_STUB	Dll_Wave_Device::set_listener_ypos	Dll_Wave_Device::set_listener_ypos	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e530
+0x1000e550	REJECT_STUB	Dll_Wave_Device::get_listener_ypos	Dll_Wave_Device::get_listener_ypos	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e550
+0x1000e590	REJECT_STUB	Dll_Wave_Device::get_listener_zpos	Dll_Wave_Device::get_listener_zpos	CONST	`mov eax, 0xb`; `ret 4` at 0x1000e590
+0x1000e5b0	ACCEPT_GET	Dll_Wave_Device::is_3d	Dll_Wave_Device::is_3d	GETTER	reads byte ptr [eax + 0x6c], dword ptr [0x100b49f0] (from 0x1000e5b0), no store, no call
+0x1000e790	ACCEPT_SET	Dll_Wave_Device::reset_time_past	Dll_Wave_Device::reset_time_past	OTHER	stores constants into this: `mov dword ptr [ecx + 0x1b0], 0` 0x1000e790
+0x1000e7b0	ACCEPT_GET	Dll_Wave_Device::get_time_past	Dll_Wave_Device::get_time_past	GETTER	reads dword ptr [ecx + 0x1b0] (from 0x1000e7b0), no store, no call
+0x1000e7d0	ACCEPT_GET	Dll_Wave_Device::is_disabled	Dll_Wave_Device::is_disabled	GETTER	reads dword ptr [ecx + 0x1a4] (from 0x1000e7d0), no store, no call
+0x1000e7f0	MANUAL	Dll_Wave_Device::timer_unhook	Dll_Wave_Device::timer_unhook	OTHER	
+0x1000e810	ACCEPT_SET	Dll_Wave_Device::set_rate	Dll_Wave_Device::set_rate	SETTER	stores dword ptr [ecx + 0x1ac] from its arguments (0x1000e814)
+0x1000e830	ACCEPT_GET	Dll_Wave_Device::get_rate	Dll_Wave_Device::get_rate	GETTER	reads dword ptr [ecx + 0x1ac] (from 0x1000e830), no store, no call
+0x1000e850	ACCEPT_GET	Dll_Wave_Device::is_eax	Dll_Wave_Device::is_eax	GETTER	reads dword ptr [ecx + 0x1a4] (from 0x1000e850), no store, no call
+0x1000ebe0	REJECT_STUB	Dll_Wave_In_Device::set_vxw_key	Dll_Wave_In_Device::set_vxw_key	CONST	`xor eax, eax`; `ret 4` at 0x1000ebe0
+0x1000ec50	MANUAL	Dll_Wave_In_Device::suspend	Dll_Wave_In_Device::suspend	OTHER	
+0x1000ec80	MANUAL	Dll_Wave_In_Device::restart	Dll_Wave_In_Device::restart	OTHER	
+0x1000ecc0	REJECT_STUB	Dll_Wave_In_Device::select	Dll_Wave_In_Device::select	CONST	`xor eax, eax`; `ret 4` at 0x1000ecc0
+0x1000ece0	MANUAL	Dll_Wave_In_Device::update_sound	Dll_Wave_In_Device::update_sound	OTHER	
+0x1000ed00	ACCEPT_SET	Dll_Wave_In_Device::add_to_time_past	Dll_Wave_In_Device::add_to_time_past	SETTER	stores dword ptr [ecx + 0x3c], dword ptr [ecx + 0x38] from its arguments (0x1000ed09)
+0x1000ed30	REJECT_STUB	Dll_Wave_In_Device::get_ndevices	Dll_Wave_In_Device::get_ndevices	CONST	`xor eax, eax`; `ret` at 0x1000ed30
+0x1000ed50	REJECT_STUB	Dll_Wave_In_Device::get_description	Dll_Wave_In_Device::get_description	CONST	`xor eax, eax`; `ret 0xc` at 0x1000ed50
+0x1000edd0	ACCEPT_GET	Dll_Wave_In_Device::get_time_past	Dll_Wave_In_Device::get_time_past	GETTER	reads dword ptr [ecx + 0x38] (from 0x1000edd0), no store, no call
+0x1000edf0	ACCEPT_SET	Dll_Wave_In_Device::reset_time_past	Dll_Wave_In_Device::reset_time_past	OTHER	stores constants into this: `mov dword ptr [ecx + 0x38], 0` 0x1000edf0
+0x1000ee10	MANUAL	Dll_Wave_In_Device::timer_unhook	Dll_Wave_In_Device::timer_unhook	OTHER	
+0x1000ee30	ACCEPT_SET	Dll_Wave_In_Device::set_rate	Dll_Wave_In_Device::set_rate	SETTER	stores dword ptr [ecx + 0x34] from its arguments (0x1000ee34)
+0x1000ee50	ACCEPT_GET	Dll_Wave_In_Device::get_rate	Dll_Wave_In_Device::get_rate	GETTER	reads dword ptr [ecx + 0x34] (from 0x1000ee50), no store, no call
+0x1000ee70	REJECT_STUB	Dll_Wave_In_Device::set_volume	Dll_Wave_In_Device::set_volume	EMPTY	`ret` at 0x1000ee70
+0x1000ee90	REJECT_STUB	Dll_Wave_In_Device::get_volume	Dll_Wave_In_Device::get_volume	CONST	`xor eax, eax`; `ret` at 0x1000ee90
+0x1000eeb0	REJECT_STUB	Dll_Wave_In_Device::set_pan	Dll_Wave_In_Device::set_pan	EMPTY	`ret` at 0x1000eeb0
+0x1000eed0	REJECT_STUB	Dll_Wave_In_Device::fade	Dll_Wave_In_Device::fade	CONST	`xor eax, eax`; `ret 4` at 0x1000eed0
+0x1000f0a0	DEFER_NOT_A_FUNCTION	CDSB::dsbrestore	CDSB::dsbrestore	OTHER	
+0x1000f0f0	DEFER_NOT_A_FUNCTION	CDSB::setsamplerate	CDSB::setsamplerate	SETTER	stores dword ptr [ecx + 0xac], dword ptr [ecx + 0xb0] from its arguments (0x1000f122)
+0x1000f380	DEFER_NOT_A_FUNCTION	CDSB::setsamplesize	CDSB::setsamplesize	SETTER	stores word ptr [ecx + 0xb6], word ptr [ecx + 0xb4], dword ptr [ecx + 0xb0] from its arguments (0x1000f3ac)
+0x1000f400	DEFER_NOT_A_FUNCTION	CDSB::setnumchannels	CDSB::setnumchannels	SETTER	stores word ptr [ecx + 0xaa], word ptr [ecx + 0xb4], dword ptr [ecx + 0xb0] from its arguments (0x1000f42b)
+0x1000f720	DEFER_NOT_A_FUNCTION	CDSB::reinit	CDSB::reinit	OTHER	
+0x10010120	DEFER_NOT_A_FUNCTION	CDSB::get_cur_dsbwrite	CDSB::get_cur_dsbwrite	OTHER	
+0x10010160	DEFER_NOT_A_FUNCTION	CDSB::get_cur_dsbplay	CDSB::get_cur_dsbplay	OTHER	
+0x10010d60	DEFER_NOT_A_FUNCTION	CDSB::release_pointer	CDSB::release_pointer	OTHER	
+0x10010e80	DEFER_NOT_A_FUNCTION	CDSB::set_samples_per_tick	CDSB::set_samples_per_tick	SETTER	stores dword ptr [ecx + 0x34] from its arguments (0x10010e95)
+0x10011600	DEFER_NOT_A_FUNCTION	CDSMgr::init	CDSMgr::init	OTHER	
+0x10011720	DEFER_NOT_A_FUNCTION	CDSMgr::suspend	CDSMgr::suspend	EMPTY	`ret` at 0x10011720
+0x10011740	DEFER_NOT_A_FUNCTION	CDSMgr::restart	CDSMgr::restart	EMPTY	`ret` at 0x10011740
+0x10012020	DEFER_NOT_A_FUNCTION	CDSMgr::get_eax	CDSMgr::get_eax	CONST	`mov eax, 0xb`; `ret 4` at 0x10012020
+0x10012060	DEFER_NOT_A_FUNCTION	CDSMgr::init_A3D	CDSMgr::init_A3D	CONST	`xor eax, eax`; `ret` at 0x10012060
+0x10012080	DEFER_NOT_A_FUNCTION	CDSMgr::uninit_A3D	CDSMgr::uninit_A3D	CONST	`xor eax, eax`; `ret` at 0x10012080
+0x10013470	DEFER_NOT_A_FUNCTION	CDSMgr::attach_dsb	CDSMgr::attach_dsb	OTHER	
+0x10013870	DEFER_NOT_A_FUNCTION	filter_stub	filter_stub	CONST	`xor eax, eax`; `ret` at 0x10013870
+0x10014230	REJECT_STUB	add_16216s2mmb	add_16216s2mmb	CONST	`mov eax, 0xb`; `ret` at 0x10014230
+0x10015210	REJECT_STUB	add_16216m2mmb	add_16216m2mmb	CONST	`xor eax, eax`; `ret` at 0x10015210
+0x10015230	REJECT_STUB	add_828s2smb	add_828s2smb	CONST	`xor eax, eax`; `ret` at 0x10015230
+0x10015250	REJECT_STUB	add_828s2mmb	add_828s2mmb	CONST	`xor eax, eax`; `ret` at 0x10015250
+0x10015270	REJECT_STUB	add_828m2smb	add_828m2smb	CONST	`xor eax, eax`; `ret` at 0x10015270
+0x10015290	REJECT_STUB	add_828m2mmb	add_828m2mmb	CONST	`xor eax, eax`; `ret` at 0x10015290
+0x100156a0	REJECT_STUB	add_8216s2mmb	add_8216s2mmb	CONST	`xor eax, eax`; `ret` at 0x100156a0
+0x10015a80	REJECT_STUB	add_8216m2mmb	add_8216m2mmb	CONST	`xor eax, eax`; `ret` at 0x10015a80
+0x10016320	REJECT_STUB	mov_16216s2mmb	mov_16216s2mmb	CONST	`mov eax, 0xb`; `ret` at 0x10016320
+0x10016cf0	REJECT_STUB	mov_16216m2mmb	mov_16216m2mmb	CONST	`xor eax, eax`; `ret` at 0x10016cf0
+0x10016d10	REJECT_STUB	mov_828s2smb	mov_828s2smb	CONST	`xor eax, eax`; `ret` at 0x10016d10
+0x10016d30	REJECT_STUB	mov_828s2mmb	mov_828s2mmb	CONST	`xor eax, eax`; `ret` at 0x10016d30
+0x10016d50	REJECT_STUB	mov_828m2smb	mov_828m2smb	CONST	`xor eax, eax`; `ret` at 0x10016d50
+0x10016d70	REJECT_STUB	mov_828m2mmb	mov_828m2mmb	CONST	`xor eax, eax`; `ret` at 0x10016d70
+0x10017140	REJECT_STUB	mov_8216s2mmb	mov_8216s2mmb	CONST	`xor eax, eax`; `ret` at 0x10017140
+0x10017500	REJECT_STUB	mov_8216m2mmb	mov_8216m2mmb	CONST	`xor eax, eax`; `ret` at 0x10017500
+0x1001b1f0	MANUAL	Dll_KeyMap::set_base_path	Dll_KeyMap::set_base_path	OTHER	
+0x1001b410	MANUAL	$E29	$E29	OTHER	
+0x1001b450	MANUAL	$E27	$E27	OTHER	
+0x1001b550	MANUAL	$E27	$E27	OTHER	
+0x1001b6f0	MANUAL	$E32	$E32	OTHER	
+0x1001b750	MANUAL	$E37	$E37	OTHER	
+0x1001b7b0	MANUAL	$E42	$E42	OTHER	
+0x1001b810	MANUAL	$E47	$E47	OTHER	
+0x1001b830	DEFER_NOT_A_FUNCTION	MidiCtrlSocket::MidiCtrlSocket	MidiCtrlSocket::ctor	CTOR	stores 0x1005b58c into [eax] at 0x1001b840
+0x1001b9e0	DEFER_NOT_A_FUNCTION	MidiCtrlSocket::insert_after	MidiCtrlSocket::insert_after	OTHER	
+0x1001ba50	MANUAL	MidiCtrlSocket::is_ctrl_ok	MidiCtrlSocket::is_ctrl_ok	OTHER	
+0x1001ba70	MANUAL	MidiCtrlSocket::remove	MidiCtrlSocket::remove	OTHER	
+0x1001bcf0	MANUAL	MidiCtrlTarget::start_control	MidiCtrlTarget::start_control	OTHER	
+0x1001be60	ACCEPT_SET	NoteMap::set_type	NoteMap::set_type	SETTER	stores dword ptr [ecx + 0x1c] from its arguments (0x1001be64)
+0x1001be80	MANUAL	NoteMap::set_total_class_size	NoteMap::set_total_class_size	OTHER	
+0x1001c060	ACCEPT_VT	MidiCtrl::~MidiCtrl	MidiCtrl::dtor	CTOR	stores 0x1005b19c into [ecx] at 0x1001c060; SMSG's public at that table: ??_7MidiCtrl@@6B@
+0x1001c1b0	DEFER_NOT_A_FUNCTION	NoteMap::operator=	NoteMap::operator=	GETTER	reads [eax + 0x5c], [ecx + 0x5c], dword ptr [esp + 4] (from 0x1001c1b0), no store, no call
+0x1001c260	DEFER_NOT_A_FUNCTION	NoteMap::map_note	NoteMap::map_note	OTHER	
+0x1001c340	MANUAL	NoteMap::do_control	NoteMap::do_control	OTHER	
+0x1001c480	DEFER_NOT_A_FUNCTION	Stepper::Stepper	Stepper::ctor	CTOR	stores 0x1005b5cc into [eax] at 0x1001c4ac
+0x1001c4f0	ACCEPT_SET	Stepper::set_type	Stepper::set_type	SETTER	stores dword ptr [ecx + 0x1c] from its arguments (0x1001c4f4)
+0x1001c510	MANUAL	Stepper::set_total_class_size	Stepper::set_total_class_size	OTHER	
+0x1001c580	MANUAL	Stepper::do_control	Stepper::do_control	GETTER	reads dword ptr [ecx + 0x34], dword ptr [esp + 4] (from 0x1001c580), no store, no call
+0x1001c5a0	MANUAL	Stepper::update	Stepper::update	OTHER	
+0x1001c6a0	ACCEPT_SET	Randomizer::set_type	Randomizer::set_type	SETTER	stores dword ptr [ecx + 0x1c] from its arguments (0x1001c6a4)
+0x1001c6c0	MANUAL	Randomizer::set_total_class_size	Randomizer::set_total_class_size	OTHER	
+0x1001c730	MANUAL	Randomizer::set_range	Randomizer::set_range	OTHER	
+0x1001c820	MANUAL	Randomizer::reset	Randomizer::reset	OTHER	
+0x1001c910	ACCEPT_SET	Chooser::set_type	Chooser::set_type	SETTER	stores dword ptr [ecx + 0x1c] from its arguments (0x1001c914)
+0x1001c930	MANUAL	Chooser::set_total_class_size	Chooser::set_total_class_size	OTHER	
+0x1001cad0	DEFER_NOT_A_FUNCTION	Chooser::do_control	Chooser::do_control	CONST	`xor eax, eax`; `ret` at 0x1001cad0
+0x1001cb60	ACCEPT_SET	ChannelCtrl::set_type	ChannelCtrl::set_type	SETTER	stores dword ptr [ecx + 0x1c] from its arguments (0x1001cb64)
+0x1001cb80	MANUAL	ChannelCtrl::set_total_class_size	ChannelCtrl::set_total_class_size	OTHER	
+0x1001cc60	ACCEPT_SET	TrackCtrl::set_type	TrackCtrl::set_type	SETTER	stores dword ptr [ecx + 0x1c] from its arguments (0x1001cc64)
+0x1001cc80	MANUAL	TrackCtrl::set_total_class_size	TrackCtrl::set_total_class_size	OTHER	
+0x1001cd70	DEFER_NOT_A_FUNCTION	ProgramCtrl::set_base_filepath	ProgramCtrl::set_base_filepath	OTHER	
+0x1001d030	DEFER_NOT_A_FUNCTION	ProgramCtrl::get_new_pitch	ProgramCtrl::get_new_pitch	OTHER	
+0x1001d590	DEFER_NOT_A_FUNCTION	CMidiFile::get_pcur_event	CMidiFile::get_pcur_event	SETTER	stores dword ptr [ecx + 0x1a4], dword ptr [ecx + 0x1a4], dword ptr [ecx] from its arguments (0x1001d59a)
+0x1001d620	DEFER_NOT_A_FUNCTION	CMidiFile::get_pfirst_event	CMidiFile::get_pfirst_event	OTHER	
+0x1001d6b0	DEFER_NOT_A_FUNCTION	CMidiFile::advance_track	CMidiFile::advance_track	OTHER	
+0x1001e120	DEFER_NOT_A_FUNCTION	CMidiFile::reload	CMidiFile::reload	OTHER	
+0x1001e150	DEFER_NOT_A_FUNCTION	CMidiFile::post_reset	CMidiFile::post_reset	OTHER	
+0x1001e510	DEFER_NOT_A_FUNCTION	CMidiFile::mmioerr	CMidiFile::mmioerr	EMPTY	`ret` at 0x1001e510
+0x1001e550	DEFER_NOT_A_FUNCTION	CMidiFile::fade	CMidiFile::fade	OTHER	
+0x1001e570	DEFER_NOT_A_FUNCTION	CMidiFile::fade	CMidiFile::fade	SETTER	stores dword ptr [ecx + 0x174], dword ptr [ecx + 0x4c], dword ptr [ecx + 0x174], dword ptr [ecx + 0x4c] from its arguments (0x1001e595)
+0x1001e5f0	DEFER_NOT_A_FUNCTION	CMidiFile::set_pan	CMidiFile::set_pan	SETTER	stores dword ptr [ecx + 0x180], dword ptr [ecx + 0x180] from its arguments (0x1001e5fe)
+0x1001e680	MANUAL	CMidiFile::set_loop_state	CMidiFile::set_loop_state	SETTER	stores dword ptr [ecx + 0x4c] from its arguments (0x1001e691)
+0x1001e6b0	DEFER_NOT_A_FUNCTION	CMidiFile::be2le	CMidiFile::be2le	OTHER	
+0x1001e860	MANUAL	CMidiTrack::start_control	CMidiTrack::start_control	FORWARD	calls slot 0x10 of the object at dword ptr [ecx + 4]; slot 4 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1001ea40	DEFER_NOT_A_FUNCTION	CMidiTrack::set_tick_offset	CMidiTrack::set_tick_offset	OTHER	
+0x1001eab0	MANUAL	CMidiTrack::seek	CMidiTrack::seek	OTHER	
+0x1001ecc0	MANUAL	CMidiTrack::seek_to_prior	CMidiTrack::seek_to_prior	OTHER	
+0x1001f260	MANUAL	$E30	$E30	OTHER	
+0x1001f2a0	MANUAL	$E27	$E27	OTHER	
+0x1001f380	MANUAL	$E35	$E35	OTHER	
+0x1001f3c0	MANUAL	$E33	$E33	OTHER	
+0x10020270	DEFER_NOT_A_FUNCTION	CMidiMgr::reload	CMidiMgr::reload	OTHER	
+0x10020aa0	DEFER_NOT_A_FUNCTION	CMidiMgr::free_all	CMidiMgr::free_all	OTHER	
+0x10020ae0	DEFER_NOT_A_FUNCTION	CMidiMgr::post_unload	CMidiMgr::post_unload	OTHER	
+0x10020d50	MANUAL	CMidiMgr::play	CMidiMgr::play	GETTER	reads dword ptr [esp + 4] (from 0x10020d50), no store, no call
+0x10020fa0	REJECT_STUB	CMidiMgr::map_patch	CMidiMgr::map_patch	CONST	`mov eax, 0xb`; `ret 0xc` at 0x10020fa0
+0x10020fc0	REJECT_STUB	CMidiMgr::map_patch	CMidiMgr::map_patch	CONST	`mov eax, 0xb`; `ret 8` at 0x10020fc0
+0x100212e0	MANUAL	CMidiMgr::clear_patch	CMidiMgr::clear_patch	OTHER	
+0x10021350	MANUAL	CMidiMgr::set_pan	CMidiMgr::set_pan	OTHER	
+0x10021370	ACCEPT_GET	CMidiMgr::get_time	CMidiMgr::get_time	GETTER	reads dword ptr [ecx + 0x71c] (from 0x10021370), no store, no call
+0x10021390	MANUAL	CMidiMgr::get_total_track_ticks	CMidiMgr::get_total_track_ticks	OTHER	
+0x10021560	DEFER_NOT_A_FUNCTION	CMidiMgr::program_change	CMidiMgr::program_change	SETTER	stores dword ptr [ecx + eax*4 + 0x25c] from its arguments (0x10021574)
+0x100215a0	MANUAL	$E38	$E38	OTHER	
+0x10021ec0	DEFER_NOT_A_FUNCTION	CMidiMgr::pitch_wheel	CMidiMgr::pitch_wheel	CONST	`mov eax, 1`; `ret 8` at 0x10021ec0
+0x100227c0	MANUAL	CMidiMgr::add_switch_range	CMidiMgr::add_switch_range	OTHER	
+0x10023110	MANUAL	CMidiMgr::set_active_range_hi	CMidiMgr::set_active_range_hi	OTHER	
+0x100231a0	MANUAL	CMidiMgr::set_active_tracks	CMidiMgr::set_active_tracks	OTHER	
+0x100232a0	MANUAL	CMidiMgr::set_active_tracks	CMidiMgr::set_active_tracks	OTHER	
+0x10023430	MANUAL	CMidiMgr::play_trackset	CMidiMgr::play_trackset	OTHER	
+0x10023470	MANUAL	CMidiMgr::xpose_trackset	CMidiMgr::xpose_trackset	OTHER	
+0x100234b0	MANUAL	CMidiMgr::is_trackset_playing	CMidiMgr::is_trackset_playing	SETTER	stores dword ptr [ecx + 0x230], dword ptr [ecx + 0x230] from its arguments (0x100234c7)
+0x10023750	DEFER_NOT_A_FUNCTION	CMidiMgr::TT_play_trackset	CMidiMgr::TT_play_trackset	OTHER	
+0x10023880	MANUAL	CMidiMgr::stop_trackset	CMidiMgr::stop_trackset	OTHER	
+0x10023b80	DEFER_NOT_A_FUNCTION	CMidiMgr::TT_xpose_trackset	CMidiMgr::TT_xpose_trackset	OTHER	
+0x10023f60	MANUAL	CMidiMgr::get_track_velocity_offset	CMidiMgr::get_track_velocity_offset	OTHER	
+0x10023fd0	MANUAL	CMidiMgr::set_track_velocity_offset	CMidiMgr::set_track_velocity_offset	OTHER	
+0x10024230	MANUAL	CProgramMgr::CProgramMgr	CProgramMgr::ctor	OTHER	
+0x10024260	MANUAL	CProgramMgr::~CProgramMgr	CProgramMgr::dtor	OTHER	
+0x10024310	DEFER_NOT_A_FUNCTION	CProgramMgr::unload	CProgramMgr::unload	CONST	`xor eax, eax`; `ret` at 0x10024310
+0x10024330	DEFER_NOT_A_FUNCTION	CProgramMgr::stop	CProgramMgr::stop	OTHER	
+0x10024420	DEFER_NOT_A_FUNCTION	CProgramMgr::xlat_pitch	CProgramMgr::xlat_pitch	GETTER	reads dword ptr [esp + 4] (from 0x10024420), no store, no call
+0x10024440	DEFER_NOT_A_FUNCTION	CProgramMgr::xlat_volume	CProgramMgr::xlat_volume	GETTER	reads dword ptr [esp + 4] (from 0x10024440), no store, no call
+0x100244c0	DEFER_NOT_A_FUNCTION	CMidiChannel::reset_rnd_prgm_table	CMidiChannel::reset_rnd_prgm_table	EMPTY	`ret` at 0x100244c0
+0x100244e0	DEFER_NOT_A_FUNCTION	CMidiChannel::xlat_program	CMidiChannel::xlat_program	GETTER	reads dword ptr [esp + 4] (from 0x100244e0), no store, no call
+0x100245c0	MANUAL	CMidiMgr::unmute_track	CMidiMgr::unmute_track	OTHER	
+0x100248d0	MANUAL	CMidiMgr::set_base_path	CMidiMgr::set_base_path	OTHER	
+0x10024cc0	REJECT_STUB	CMidiMgr::load_patch	CMidiMgr::load_patch	CONST	`mov eax, 0x2f`; `ret 4` at 0x10024cc0
+0x10024ce0	REJECT_STUB	CMidiMgr::unload_patch	CMidiMgr::unload_patch	CONST	`mov eax, 0x2f`; `ret 4` at 0x10024ce0
+0x10024d00	ACCEPT_SET	CMidiMgr::set_patch	CMidiMgr::set_patch	SETTER	stores dword ptr [ecx + eax*4 + 0x25c] from its arguments (0x10024d1a)
+0x10025040	DEFER_NOT_A_FUNCTION	CMMError::CMMError	CMMError::ctor	CTOR	stores 0x1005b830 into [eax] at 0x10025042
+0x10025060	ACCEPT_VT	CMMError::`scalar deleting destructor'	CMMError::scalarDeletingDtor	CTOR	stores 0x1005b830 into [esi] at 0x10025069; SMSG's public at that table: ??_7CMMError@@6B@
+0x10025090	DEFER_NOT_A_FUNCTION	CMMError::~CMMError	CMMError::dtor	CTOR	stores 0x1005b830 into [ecx] at 0x10025090
+0x100250b0	DEFER_NOT_A_FUNCTION	CMMError::handle_error	CMMError::handle_error	OTHER	
+0x10028540	MANUAL	$E2	$E2	OTHER	
+0x100285e0	MANUAL	$E27	$E27	OTHER	
+0x10028e70	DEFER_NOT_A_FUNCTION	Sound_Device::attach	Sound_Device::attach	OTHER	
+0x10028ef0	DEFER_NOT_A_FUNCTION	Sound_Device::detach	Sound_Device::detach	OTHER	
+0x10028f70	DEFER_NOT_A_FUNCTION	Sound_Device::Sound_Device	Sound_Device::ctor	CTOR	stores 0x1005b8b0 into [eax] at 0x10028f75
+0x100290c0	REJECT_STUB	Wave_Device::timer_unhook	Wave_Device::timer_unhook	EMPTY	`ret` at 0x100290c0
+0x100290e0	REJECT_STUB	Wave_Device::get_time_past	Wave_Device::get_time_past	CONST	`xor eax, eax`; `ret` at 0x100290e0
+0x10029100	REJECT_STUB	Wave_Device::add_to_time_past	Wave_Device::add_to_time_past	EMPTY	`ret` at 0x10029100
+0x10029120	REJECT_STUB	Wave_Device::reset_time_past	Wave_Device::reset_time_past	EMPTY	`ret` at 0x10029120
+0x10029290	REJECT_STUB	Wave_Device::create_device	Wave_Device::create_device	CONST	`xor eax, eax`; `ret 4` at 0x10029290
+0x100292b0	REJECT_STUB	Wave_Device::delete_device	Wave_Device::delete_device	CONST	`xor eax, eax`; `ret` at 0x100292b0
+0x10029350	ACCEPT_FWD	Wave_Device::suspend	Wave_Device::suspend	FORWARD	calls slot 0x4c of the object at dword ptr [ecx + 0x14]; slot 19 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000ec50, 0x1002a190, 0x1000bef0
+0x10029370	ACCEPT_FWD	Wave_Device::restart	Wave_Device::restart	FORWARD	calls slot 0x50 of the object at dword ptr [ecx + 0x14]; slot 20 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002a630, 0x1000bf90, 0x1000ec80
+0x10029390	ACCEPT_FWD	Wave_Device::update_sound	Wave_Device::update_sound	FORWARD	calls slot 0x38 of the object at dword ptr [ecx + 0x14]; slot 14 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002a130, 0x1000ece0, 0x1000c230
+0x100293b0	ACCEPT_FWD	Wave_Device::get_ndevices	Wave_Device::get_ndevices	FORWARD	calls slot 0x18 of the object at dword ptr [ecx + 0x14]; slot 6 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000ed30, 0x1002a510, 0x1002a030
+0x100293d0	ACCEPT_FWD	Wave_Device::set_hwnd	Wave_Device::set_hwnd	FORWARD	calls slot 0x70 of the object at dword ptr [ecx + 0x14]; slot 28 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000b140
+0x10029400	ACCEPT_FWD	Wave_Device::get_hw_mem_size	Wave_Device::get_hw_mem_size	FORWARD	calls slot 0x5c of the object at dword ptr [ecx + 0x14]; slot 23 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e230
+0x10029420	MANUAL	Wave_Device::select	Wave_Device::select	FORWARD	calls slot 0x10 of the object at dword ptr [ecx + 0x14]; slot 4 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x10029510	ACCEPT_FWD	Wave_Device::get_description	Wave_Device::get_description	FORWARD	calls slot 0x20 of the object at dword ptr [ecx + 0x14]; slot 8 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000a0e0, 0x1000ed50, 0x1000e260
+0x10029540	ACCEPT_FWD	Wave_Device::set_rate	Wave_Device::set_rate	FORWARD	calls slot 0x3c of the object at dword ptr [ecx + 0x14]; slot 15 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002a150, 0x1000afa0, 0x1002a5d0
+0x10029570	ACCEPT_FWD	Wave_Device::get_rate	Wave_Device::get_rate	FORWARD	calls slot 0x40 of the object at dword ptr [ecx + 0x14]; slot 16 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e830, 0x1000afc0, 0x1000ee50
+0x10029590	ACCEPT_FWD	Wave_Device::set_volume	Wave_Device::set_volume	FORWARD	calls slot 0x24 of the object at dword ptr [ecx + 0x14]; slot 9 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e2a0, 0x1000ee70, 0x1000a120
+0x100295c0	REJECT_STUB	Wave_Device::get_volume	Wave_Device::get_volume	CONST	`xor eax, eax`; `ret` at 0x100295c0
+0x100295e0	REJECT_STUB	Wave_Device::set_pan	Wave_Device::set_pan	EMPTY	`ret` at 0x100295e0
+0x10029600	ACCEPT_FWD	Wave_Device::get_ds	Wave_Device::get_ds	FORWARD	calls slot 0x74 of the object at dword ptr [ecx + 0x14]; slot 29 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e2d0
+0x10029620	REJECT_STUB	Wave_Device::fade	Wave_Device::fade	CONST	`xor eax, eax`; `ret 4` at 0x10029620
+0x10029640	REJECT_STUB	Wave_Device::stop	Wave_Device::stop	CONST	`xor eax, eax`; `ret` at 0x10029640
+0x10029660	ACCEPT_FWD	Wave_Device::enable	Wave_Device::enable	FORWARD	calls slot 0x64 of the object at dword ptr [ecx + 0x14]; slot 25 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000baa0
+0x10029680	ACCEPT_FWD	Wave_Device::disable	Wave_Device::disable	FORWARD	calls slot 0x68 of the object at dword ptr [ecx + 0x14]; slot 26 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000be00
+0x100296a0	ACCEPT_FWD	Wave_Device::is_disabled	Wave_Device::is_disabled	FORWARD	calls slot 0x6c of the object at dword ptr [ecx + 0x14]; slot 27 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e7d0
+0x100296d0	ACCEPT_FWD	Wave_Device::start_raw_dump	Wave_Device::start_raw_dump	FORWARD	calls slot 0x54 of the object at dword ptr [ecx + 0x14]; slot 21 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000b110
+0x10029700	ACCEPT_FWD	Wave_Device::stop_raw_dump	Wave_Device::stop_raw_dump	FORWARD	calls slot 0x58 of the object at dword ptr [ecx + 0x14]; slot 22 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000b170
+0x10029730	DEFER_NOT_A_FUNCTION	Wave_Device::add_to_group	Wave_Device::add_to_group	OTHER	
+0x100297b0	DEFER_NOT_A_FUNCTION	Wave_Device::pull_from_group	Wave_Device::pull_from_group	OTHER	
+0x10029880	DEFER_NOT_A_FUNCTION	Wave_Device::set_group_volume	Wave_Device::set_group_volume	OTHER	
+0x10029920	DEFER_NOT_A_FUNCTION	Wave_Device::get_group_volume	Wave_Device::get_group_volume	GETTER	reads [eax + eax*2], dword ptr [ecx + eax*8 + 0x28], dword ptr [esp + 4] (from 0x10029920), no store, no call
+0x10029950	DEFER_NOT_A_FUNCTION	Wave_Device::enable_group	Wave_Device::enable_group	OTHER	
+0x100299d0	DEFER_NOT_A_FUNCTION	Wave_Device::muteGroup	Wave_Device::muteGroup	OTHER	
+0x10029a50	DEFER_NOT_A_FUNCTION	Wave_Device::unMuteGroup	Wave_Device::unMuteGroup	SETTER	stores byte ptr [ecx + eax*8 + 0x25] from its arguments (0x10029a64)
+0x10029a80	DEFER_NOT_A_FUNCTION	Wave_Device::disable_group	Wave_Device::disable_group	OTHER	
+0x10029b20	DEFER_NOT_A_FUNCTION	Wave_Device::is_group_disabled	Wave_Device::is_group_disabled	GETTER	reads [eax + eax*2], byte ptr [ecx + eax*8 + 0x24], dword ptr [esp + 4] (from 0x10029b20), no store, no call
+0x10029b50	DEFER_NOT_A_FUNCTION	Wave_Device::isGroupMute	Wave_Device::isGroupMute	GETTER	reads [eax + eax*2], byte ptr [ecx + eax*8 + 0x25], dword ptr [esp + 4] (from 0x10029b50), no store, no call
+0x10029bb0	ACCEPT_FWD	Wave_Device::is_eax	Wave_Device::is_eax	FORWARD	calls slot 0x78 of the object at dword ptr [ecx + 0x14]; slot 30 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e850
+0x10029bd0	ACCEPT_FWD	Wave_Device::set_eax	Wave_Device::set_eax	FORWARD	calls slot 0x80 of the object at dword ptr [ecx + 0x14]; slot 32 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e310
+0x10029c00	ACCEPT_FWD	Wave_Device::set_eax	Wave_Device::set_eax	FORWARD	calls slot 0x7c of the object at dword ptr [ecx + 0x14]; slot 31 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e2f0
+0x10029c30	ACCEPT_FWD	Wave_Device::set_eax_mix	Wave_Device::set_eax_mix	FORWARD	calls slot 0x84 of the object at dword ptr [ecx + 0x14]; slot 33 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e350
+0x10029c60	ACCEPT_FWD	Wave_Device::is_3d	Wave_Device::is_3d	FORWARD	calls slot 0x88 of the object at dword ptr [ecx + 0x14]; slot 34 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e5b0
+0x10029c90	ACCEPT_FWD	Wave_Device::set_listener_position	Wave_Device::set_listener_position	FORWARD	calls slot 0x8c of the object at dword ptr [ecx + 0x14]; slot 35 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e490
+0x10029cd0	ACCEPT_FWD	Wave_Device::get_listener_position	Wave_Device::get_listener_position	FORWARD	calls slot 0x90 of the object at dword ptr [ecx + 0x14]; slot 36 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e4d0
+0x10029d10	ACCEPT_FWD	Wave_Device::set_listener_xpos	Wave_Device::set_listener_xpos	FORWARD	calls slot 0x94 of the object at dword ptr [ecx + 0x14]; slot 37 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e4f0
+0x10029d40	ACCEPT_FWD	Wave_Device::get_listener_xpos	Wave_Device::get_listener_xpos	FORWARD	calls slot 0x98 of the object at dword ptr [ecx + 0x14]; slot 38 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e510
+0x10029d70	ACCEPT_FWD	Wave_Device::set_listener_ypos	Wave_Device::set_listener_ypos	FORWARD	calls slot 0x9c of the object at dword ptr [ecx + 0x14]; slot 39 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e530
+0x10029da0	ACCEPT_FWD	Wave_Device::get_listener_ypos	Wave_Device::get_listener_ypos	FORWARD	calls slot 0xa0 of the object at dword ptr [ecx + 0x14]; slot 40 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e550
+0x10029dd0	ACCEPT_FWD	Wave_Device::set_listener_zpos	Wave_Device::set_listener_zpos	FORWARD	calls slot 0xa4 of the object at dword ptr [ecx + 0x14]; slot 41 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e570
+0x10029e00	ACCEPT_FWD	Wave_Device::get_listener_zpos	Wave_Device::get_listener_zpos	FORWARD	calls slot 0xa8 of the object at dword ptr [ecx + 0x14]; slot 42 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000e590
+0x10029e30	REJECT_STUB	Midi_Device::create_device	Midi_Device::create_device	CONST	`xor eax, eax`; `ret 4` at 0x10029e30
+0x10029e50	REJECT_STUB	Midi_Device::delete_device	Midi_Device::delete_device	CONST	`xor eax, eax`; `ret` at 0x10029e50
+0x10029eb0	REJECT_STUB	Midi_Device::timer_unhook	Midi_Device::timer_unhook	EMPTY	`ret` at 0x10029eb0
+0x10029ed0	REJECT_STUB	Midi_Device::get_time_past	Midi_Device::get_time_past	CONST	`xor eax, eax`; `ret` at 0x10029ed0
+0x10029ef0	REJECT_STUB	Midi_Device::add_to_time_past	Midi_Device::add_to_time_past	EMPTY	`ret` at 0x10029ef0
+0x10029f10	REJECT_STUB	Midi_Device::reset_time_past	Midi_Device::reset_time_past	EMPTY	`ret` at 0x10029f10
+0x1002a030	REJECT_STUB	Midi_Device::get_ndevices	Midi_Device::get_ndevices	CONST	`xor eax, eax`; `ret` at 0x1002a030
+0x1002a050	REJECT_STUB	Midi_Device::select	Midi_Device::select	CONST	`xor eax, eax`; `ret 4` at 0x1002a050
+0x1002a070	REJECT_STUB	Midi_Device::get_description	Midi_Device::get_description	CONST	`xor eax, eax`; `ret 0xc` at 0x1002a070
+0x1002a090	REJECT_STUB	Midi_Device::set_volume	Midi_Device::set_volume	EMPTY	`ret` at 0x1002a090
+0x1002a0b0	REJECT_STUB	Midi_Device::get_volume	Midi_Device::get_volume	CONST	`xor eax, eax`; `ret` at 0x1002a0b0
+0x1002a0d0	REJECT_STUB	Midi_Device::set_pan	Midi_Device::set_pan	EMPTY	`ret` at 0x1002a0d0
+0x1002a0f0	REJECT_STUB	Midi_Device::fade	Midi_Device::fade	CONST	`xor eax, eax`; `ret 4` at 0x1002a0f0
+0x1002a110	REJECT_STUB	Midi_Device::stop	Midi_Device::stop	CONST	`xor eax, eax`; `ret` at 0x1002a110
+0x1002a130	REJECT_STUB	Midi_Device::update_sound	Midi_Device::update_sound	EMPTY	`ret` at 0x1002a130
+0x1002a150	REJECT_STUB	Midi_Device::set_rate	Midi_Device::set_rate	EMPTY	`ret` at 0x1002a150
+0x1002a170	REJECT_STUB	Midi_Device::get_rate	Midi_Device::get_rate	CONST	`xor eax, eax`; `ret` at 0x1002a170
+0x1002a190	REJECT_STUB	Midi_Device::suspend	Midi_Device::suspend	EMPTY	`ret` at 0x1002a190
+0x1002a1b0	REJECT_STUB	Midi_Device::restart	Midi_Device::restart	EMPTY	`ret` at 0x1002a1b0
+0x1002a1d0	ACCEPT_FWD	Midi_Device::enable	Midi_Device::enable	FORWARD	calls slot 0x58 of the object at dword ptr [ecx + 0x14]; slot 22 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000a200
+0x1002a1f0	ACCEPT_FWD	Midi_Device::disable	Midi_Device::disable	FORWARD	calls slot 0x5c of the object at dword ptr [ecx + 0x14]; slot 23 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000a1b0
+0x1002a210	ACCEPT_FWD	Midi_Device::is_disabled	Midi_Device::is_disabled	FORWARD	calls slot 0x60 of the object at dword ptr [ecx + 0x14]; slot 24 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000afe0
+0x1002a280	REJECT_STUB	Wave_In_Device::timer_unhook	Wave_In_Device::timer_unhook	EMPTY	`ret` at 0x1002a280
+0x1002a2a0	REJECT_STUB	Wave_In_Device::get_time_past	Wave_In_Device::get_time_past	CONST	`xor eax, eax`; `ret` at 0x1002a2a0
+0x1002a2c0	REJECT_STUB	Wave_In_Device::add_to_time_past	Wave_In_Device::add_to_time_past	EMPTY	`ret` at 0x1002a2c0
+0x1002a2e0	REJECT_STUB	Wave_In_Device::reset_time_past	Wave_In_Device::reset_time_past	EMPTY	`ret` at 0x1002a2e0
+0x1002a300	REJECT_STUB	Wave_In_Device::set_volume	Wave_In_Device::set_volume	EMPTY	`ret` at 0x1002a300
+0x1002a320	REJECT_STUB	Wave_In_Device::get_volume	Wave_In_Device::get_volume	CONST	`xor eax, eax`; `ret` at 0x1002a320
+0x1002a340	REJECT_STUB	Wave_In_Device::set_pan	Wave_In_Device::set_pan	EMPTY	`ret` at 0x1002a340
+0x1002a360	REJECT_STUB	Wave_In_Device::fade	Wave_In_Device::fade	CONST	`xor eax, eax`; `ret 4` at 0x1002a360
+0x1002a3e0	REJECT_STUB	Wave_In_Device::create_device	Wave_In_Device::create_device	CONST	`xor eax, eax`; `ret 4` at 0x1002a3e0
+0x1002a400	REJECT_STUB	Wave_In_Device::delete_device	Wave_In_Device::delete_device	CONST	`xor eax, eax`; `ret` at 0x1002a400
+0x1002a4b0	MANUAL	Wave_In_Device::set_codec	Wave_In_Device::set_codec	FORWARD	calls slot 0x64 of the object at dword ptr [ecx + 0x14]; slot 25 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002a4e0	ACCEPT_FWD	Wave_In_Device::set_vxw_key	Wave_In_Device::set_vxw_key	FORWARD	calls slot 0x68 of the object at dword ptr [ecx + 0x14]; slot 26 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000ebe0
+0x1002a510	REJECT_STUB	Wave_In_Device::get_ndevices	Wave_In_Device::get_ndevices	CONST	`xor eax, eax`; `ret` at 0x1002a510
+0x1002a530	REJECT_STUB	Wave_In_Device::select	Wave_In_Device::select	CONST	`xor eax, eax`; `ret 4` at 0x1002a530
+0x1002a550	REJECT_STUB	Wave_In_Device::get_description	Wave_In_Device::get_description	CONST	`xor eax, eax`; `ret 0xc` at 0x1002a550
+0x1002a570	REJECT_STUB	Wave_In_Device::get_caps	Wave_In_Device::get_caps	CONST	`xor eax, eax`; `ret 4` at 0x1002a570
+0x1002a590	REJECT_STUB	Wave_In_Device::stop	Wave_In_Device::stop	CONST	`xor eax, eax`; `ret` at 0x1002a590
+0x1002a5b0	REJECT_STUB	Wave_In_Device::update_sound	Wave_In_Device::update_sound	EMPTY	`ret` at 0x1002a5b0
+0x1002a5d0	REJECT_STUB	Wave_In_Device::set_rate	Wave_In_Device::set_rate	EMPTY	`ret` at 0x1002a5d0
+0x1002a5f0	REJECT_STUB	Wave_In_Device::get_rate	Wave_In_Device::get_rate	CONST	`xor eax, eax`; `ret` at 0x1002a5f0
+0x1002a610	REJECT_STUB	Wave_In_Device::suspend	Wave_In_Device::suspend	EMPTY	`ret` at 0x1002a610
+0x1002a630	REJECT_STUB	Wave_In_Device::restart	Wave_In_Device::restart	EMPTY	`ret` at 0x1002a630
+0x1002a650	ACCEPT_FWD	Wave_In_Device::start_record	Wave_In_Device::start_record	FORWARD	calls slot 0x5c of the object at dword ptr [ecx + 0x14]; slot 23 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000ea30
+0x1002a670	ACCEPT_FWD	Wave_In_Device::end_record	Wave_In_Device::end_record	FORWARD	calls slot 0x60 of the object at dword ptr [ecx + 0x14]; slot 24 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1000eaa0
+0x1002a690	MANUAL	$E25	$E25	OTHER	
+0x1002a700	MANUAL	$E23	$E23	OTHER	
+0x1002ab10	MANUAL	Sound::Sound	Sound::ctor	CTOR	stores 0x1005bae0 into [esi] at 0x1002ab4c
+0x1002ace0	ACCEPT_SET	Patch::set_fade	Patch::set_fade	SETTER	stores dword ptr [ecx + 0x38] from its arguments (0x1002acf0)
+0x1002af00	DEFER_NOT_A_FUNCTION	Sound::attach	Sound::attach	OTHER	
+0x1002af90	DEFER_NOT_A_FUNCTION	Sound::detach	Sound::detach	OTHER	
+0x1002b010	MANUAL	Sound::attach	Sound::attach	OTHER	
+0x1002b110	REJECT_STUB	Sound::load	Sound::load	CONST	`mov eax, 0xb`; `ret 4` at 0x1002b110
+0x1002b130	MANUAL	Sound::unload	Sound::unload	OTHER	
+0x1002b180	ACCEPT_FWD	Sound::play	Sound::play	FORWARD	calls slot 0x1c of the object at dword ptr [ecx + 0x40]; slot 7 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10020be0, 0x1002fa60, 0x10039ce0
+0x1002b1b0	ACCEPT_FWD	Sound::play	Sound::play	FORWARD	calls slot 0x18 of the object at dword ptr [ecx + 0x40]; slot 6 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10020d50
+0x1002b1e0	ACCEPT_FWD	Sound::is_playing	Sound::is_playing	FORWARD	calls slot 0x5c of the object at dword ptr [ecx + 0x40]; slot 23 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006dd0, 0x100311d0, 0x1002baa0
+0x1002b200	ACCEPT_FWD	Sound::stop	Sound::stop	FORWARD	calls slot 0x20 of the object at dword ptr [ecx + 0x40]; slot 8 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a040, 0x10006b80, 0x100310f0
+0x1002b230	ACCEPT_FWD	Sound::release	Sound::release	FORWARD	calls slot 0x38 of the object at dword ptr [ecx + 0x40]; slot 14 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006330, 0x1003a080, 0x1002f0f0
+0x1002b290	ACCEPT_FWD	Sound::set_loop_state	Sound::set_loop_state	FORWARD	calls slot 0x48 of the object at dword ptr [ecx + 0x40]; slot 18 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10005d60, 0x1003a690
+0x1002b2c0	ACCEPT_FWD	Sound::set_delay	Sound::set_delay	FORWARD	calls slot 0x4c of the object at dword ptr [ecx + 0x40]; slot 19 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a1c0
+0x1002b2f0	MANUAL	Sound::set_fade	Sound::set_fade	OTHER	
+0x1002b330	ACCEPT_FWD	Sound::set_fade_in	Sound::set_fade_in	FORWARD	calls slot 0x54 of the object at dword ptr [ecx + 0x40]; slot 21 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a6e0
+0x1002b370	ACCEPT_FWD	Sound::fade	Sound::fade	FORWARD	calls slot 0x28 of the object at dword ptr [ecx + 0x40]; slot 10 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002b3a0, 0x1002fc10, 0x10020ee0
+0x1002b3a0	MANUAL	Sound::fade	Sound::fade	OTHER	
+0x1002b3d0	ACCEPT_FWD	Sound::fade_in	Sound::fade_in	FORWARD	calls slot 0x30 of the object at dword ptr [ecx + 0x40]; slot 12 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002b430, 0x10039c80
+0x1002b400	ACCEPT_FWD	Sound::ramp	Sound::ramp	FORWARD	calls slot 0x34 of the object at dword ptr [ecx + 0x40]; slot 13 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002fb70, 0x1003a140
+0x1002b430	MANUAL	Sound::fade_in	Sound::fade_in	OTHER	
+0x1002b460	ACCEPT_FWD	Sound::is_looping	Sound::is_looping	FORWARD	calls slot 0x58 of the object at dword ptr [ecx + 0x40]; slot 22 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a750, 0x10005db0
+0x1002b480	ACCEPT_FWD	Sound::get_time	Sound::get_time	FORWARD	calls slot 0x74 of the object at dword ptr [ecx + 0x40]; slot 29 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10021370, 0x1003a710, 0x1002ed30
+0x1002b4a0	ACCEPT_FWD	Sound::set_pan	Sound::set_pan	FORWARD	calls slot 0x44 of the object at dword ptr [ecx + 0x40]; slot 17 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10021350, 0x1003a1e0
+0x1002b5d0	ACCEPT_FWD	Wave::is_loaded	Wave::is_loaded	FORWARD	calls slot 0x60 of the object at dword ptr [ecx + 0x40]; slot 24 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a7e0, 0x100056a0
+0x1002b790	ACCEPT_FWD	Wave::play	Wave::play	FORWARD	calls slot 0x98 of the object at dword ptr [ecx + 0x40]; slot 38 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10039e70
+0x1002b840	ACCEPT_FWD	Wave::play	Wave::play	FORWARD	calls slot 0x94 of the object at dword ptr [ecx + 0x40]; slot 37 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10039f30
+0x1002b870	MANUAL	Wave::stop_instance	Wave::stop_instance	FORWARD	calls slot 0xd0 of the object at dword ptr [ecx + 0x40]; slot 52 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002b8a0	MANUAL	Wave::fade_instance	Wave::fade_instance	FORWARD	calls slot 0xd4 of the object at dword ptr [ecx + 0x40]; slot 53 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002b8d0	MANUAL	Wave::init	Wave::init	OTHER	
+0x1002ba50	ACCEPT_FWD	Wave::is_hwbuffer	Wave::is_hwbuffer	FORWARD	calls slot 0xcc of the object at dword ptr [ecx + 0x40]; slot 51 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a7c0
+0x1002ba80	ACCEPT_GET	Wave::get_ms_length	Wave::get_ms_length	GETTER	reads dword ptr [ecx + 0x64] (from 0x1002ba80), no store, no call
+0x1002bba0	ACCEPT_FWD	Wave::set_link	Wave::set_link	FORWARD	calls slot 0xf0 of the object at dword ptr [ecx + 0x40]; slot 60 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a440
+0x1002be90	MANUAL	Wave::load	Wave::load	OTHER	
+0x1002bfa0	MANUAL	Wave::unload	Wave::unload	OTHER	
+0x1002c140	ACCEPT_FWD	Wave::get_time	Wave::get_time	FORWARD	calls slot 0xb8 of the object at dword ptr [ecx + 0x40]; slot 46 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a590
+0x1002c170	ACCEPT_FWD	Wave::get_current_marker	Wave::get_current_marker	FORWARD	calls slot 0xbc of the object at dword ptr [ecx + 0x40]; slot 47 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a730
+0x1002c1a0	ACCEPT_FWD	Wave::get_game_hwnd	Wave::get_game_hwnd	FORWARD	calls slot 0x3c of the object at dword ptr [ecx + 0x40]; slot 15 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002f360, 0x1002f7d0, 0x1002ee80
+0x1002c1c0	MANUAL	Wave::get_ndevices	Wave::get_ndevices	FORWARD	calls slot 0xc0 of the object at dword ptr [ecx + 0x40]; slot 48 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002c1f0	MANUAL	Wave::get_device_description	Wave::get_device_description	FORWARD	calls slot 0xc4 of the object at dword ptr [ecx + 0x40]; slot 49 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002c240	DEFER_NOT_A_FUNCTION	Wave::select_device	Wave::select_device	GETTER	reads dword ptr [eax + 0x40], dword ptr [ecx + 0x40] (from 0x1002c240), no store, no call
+0x1002c2b0	REJECT_STUB	Wave::set_bufflimit	Wave::set_bufflimit	CONST	`mov eax, 0xb`; `ret 4` at 0x1002c2b0
+0x1002c2d0	REJECT_STUB	Wave::set_asdr	Wave::set_asdr	CONST	`mov eax, 0xb`; `ret` at 0x1002c2d0
+0x1002c2f0	REJECT_STUB	Wave::set_attack	Wave::set_attack	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c2f0
+0x1002c310	REJECT_STUB	Wave::set_sustain	Wave::set_sustain	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c310
+0x1002c330	REJECT_STUB	Wave::set_decay	Wave::set_decay	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c330
+0x1002c350	REJECT_STUB	Wave::set_release	Wave::set_release	CONST	`mov eax, 0xb`; `ret 0xc` at 0x1002c350
+0x1002c390	ACCEPT_FWD	Wave::set_position3d	Wave::set_position3d	FORWARD	calls slot 0xd8 of the object at dword ptr [ecx + 0x40]; slot 54 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a5b0
+0x1002c3d0	ACCEPT_FWD	Wave::set_xpos	Wave::set_xpos	FORWARD	calls slot 0xdc of the object at dword ptr [ecx + 0x40]; slot 55 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a5e0
+0x1002c400	ACCEPT_FWD	Wave::set_ypos	Wave::set_ypos	FORWARD	calls slot 0xe0 of the object at dword ptr [ecx + 0x40]; slot 56 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a630
+0x1002c430	ACCEPT_FWD	Wave::set_zpos	Wave::set_zpos	FORWARD	calls slot 0xe4 of the object at dword ptr [ecx + 0x40]; slot 57 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a650
+0x1002c460	ACCEPT_FWD	Wave::is_3d	Wave::is_3d	FORWARD	calls slot 0xe8 of the object at dword ptr [ecx + 0x40]; slot 58 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a800
+0x1002c790	DEFER_NOT_A_FUNCTION	MpegStream::set_next	MpegStream::set_next	OTHER	
+0x1002c7e0	DEFER_NOT_A_FUNCTION	MpegStream::start	MpegStream::start	OTHER	
+0x1002c920	DEFER_NOT_A_FUNCTION	MpegStream::add_to_playlist	MpegStream::add_to_playlist	OTHER	
+0x1002c9b0	DEFER_NOT_A_FUNCTION	MpegStream::clear_playlist	MpegStream::clear_playlist	OTHER	
+0x1002cc20	MANUAL	SoundList::attach	SoundList::attach	OTHER	
+0x1002cca0	MANUAL	SoundList::detach	SoundList::detach	OTHER	
+0x1002cd10	REJECT_STUB	SoundList::stop	SoundList::stop	CONST	`mov eax, 0x13`; `ret` at 0x1002cd10
+0x1002cd30	DEFER_NOT_A_FUNCTION	SoundList::scaleVolumeToGroup	SoundList::scaleVolumeToGroup	EMPTY	`ret` at 0x1002cd30
+0x1002cd50	DEFER_NOT_A_FUNCTION	SoundList::add	SoundList::add	OTHER	
+0x1002cde0	DEFER_NOT_A_FUNCTION	SoundList::setListName	SoundList::setListName	OTHER	
+0x1002d010	DEFER_NOT_A_FUNCTION	KeyMap::~KeyMap	KeyMap::dtor	OTHER	
+0x1002d0b0	DEFER_NOT_A_FUNCTION	KeyMap::unmap_range	KeyMap::unmap_range	OTHER	
+0x1002d2c0	DEFER_NOT_A_FUNCTION	KeyMap::set_base_path	KeyMap::set_base_path	OTHER	
+0x1002d690	ACCEPT_FWD	Midi::play	Midi::play	FORWARD	calls slot 0x1c of the object at dword ptr [ecx + 0x40]; slot 7 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10020be0, 0x1002fa60, 0x10039ce0
+0x1002d6c0	ACCEPT_SET	Midi::set_volume	Midi::set_volume	SETTER	stores dword ptr [ecx + 4] from its arguments (0x1002d6c7)
+0x1002d6e0	ACCEPT_FWD	Midi::set_frame	Midi::set_frame	FORWARD	calls slot 0x130 of the object at dword ptr [ecx + 0x40]; slot 76 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10005fd0
+0x1002d710	DEFER_NOT_A_FUNCTION	Midi::set_frame_delay	Midi::set_frame_delay	OTHER	
+0x1002d740	ACCEPT_FWD	Midi::get_frame	Midi::get_frame	FORWARD	calls slot 0x134 of the object at dword ptr [ecx + 0x40]; slot 77 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006000
+0x1002d770	ACCEPT_FWD	Midi::switch_state	Midi::switch_state	FORWARD	calls slot 0xdc of the object at dword ptr [ecx + 0x40]; slot 55 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10005f60
+0x1002d7a0	ACCEPT_FWD	Midi::set_switch_type	Midi::set_switch_type	FORWARD	calls slot 0xe0 of the object at dword ptr [ecx + 0x40]; slot 56 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10022750
+0x1002d7d0	ACCEPT_FWD	Midi::add_switch_range	Midi::add_switch_range	FORWARD	calls slot 0xe8 of the object at dword ptr [ecx + 0x40]; slot 58 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100227c0
+0x1002d810	ACCEPT_FWD	Midi::set_nswitch_threads	Midi::set_nswitch_threads	FORWARD	calls slot 0xe4 of the object at dword ptr [ecx + 0x40]; slot 57 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100227a0
+0x1002d840	ACCEPT_FWD	Midi::map_patch	Midi::map_patch	FORWARD	calls slot 0xd0 of the object at dword ptr [ecx + 0x40]; slot 52 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10020fa0
+0x1002d880	ACCEPT_FWD	Midi::map_patch	Midi::map_patch	FORWARD	calls slot 0xcc of the object at dword ptr [ecx + 0x40]; slot 51 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10020fc0
+0x1002d8c0	ACCEPT_FWD	Midi::set_base_path	Midi::set_base_path	FORWARD	calls slot 0x10c of the object at dword ptr [ecx + 0x40]; slot 67 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100248d0
+0x1002d8f0	ACCEPT_FWD	Midi::clear_patch	Midi::clear_patch	FORWARD	calls slot 0xd4 of the object at dword ptr [ecx + 0x40]; slot 53 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100212e0
+0x1002d920	ACCEPT_FWD	Midi::reset	Midi::reset	FORWARD	calls slot 0xb8 of the object at dword ptr [ecx + 0x40]; slot 46 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10022240
+0x1002d950	ACCEPT_FWD	Midi::set_track	Midi::set_track	FORWARD	calls slot 0x110 of the object at dword ptr [ecx + 0x40]; slot 68 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024500
+0x1002d990	ACCEPT_FWD	Midi::mute_track	Midi::mute_track	FORWARD	calls slot 0x88 of the object at dword ptr [ecx + 0x40]; slot 34 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024630
+0x1002d9c0	ACCEPT_FWD	Midi::unmute_track	Midi::unmute_track	FORWARD	calls slot 0x8c of the object at dword ptr [ecx + 0x40]; slot 35 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100245c0
+0x1002d9f0	ACCEPT_FWD	Midi::set_active_tracks	Midi::set_active_tracks	FORWARD	calls slot 0x94 of the object at dword ptr [ecx + 0x40]; slot 37 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100232a0
+0x1002da30	ACCEPT_FWD	Midi::set_active_tracks	Midi::set_active_tracks	FORWARD	calls slot 0x90 of the object at dword ptr [ecx + 0x40]; slot 36 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100231a0
+0x1002da60	ACCEPT_FWD	Midi::play_trackset	Midi::play_trackset	FORWARD	calls slot 0xec of the object at dword ptr [ecx + 0x40]; slot 59 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023430
+0x1002da90	ACCEPT_FWD	Midi::xpose_trackset	Midi::xpose_trackset	FORWARD	calls slot 0xf4 of the object at dword ptr [ecx + 0x40]; slot 61 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023470
+0x1002dad0	ACCEPT_FWD	Midi::stop_trackset	Midi::stop_trackset	FORWARD	calls slot 0xf0 of the object at dword ptr [ecx + 0x40]; slot 60 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023880
+0x1002db00	ACCEPT_FWD	Midi::is_trackset_playing	Midi::is_trackset_playing	FORWARD	calls slot 0xf8 of the object at dword ptr [ecx + 0x40]; slot 62 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100234b0
+0x1002db30	ACCEPT_FWD	Midi::add_active_trackset	Midi::add_active_trackset	FORWARD	calls slot 0x98 of the object at dword ptr [ecx + 0x40]; slot 38 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100229f0
+0x1002db60	ACCEPT_FWD	Midi::set_active_range_lo	Midi::set_active_range_lo	FORWARD	calls slot 0xa0 of the object at dword ptr [ecx + 0x40]; slot 40 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023080
+0x1002dba0	ACCEPT_FWD	Midi::set_active_range_hi	Midi::set_active_range_hi	FORWARD	calls slot 0xa4 of the object at dword ptr [ecx + 0x40]; slot 41 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023110
+0x1002dbe0	ACCEPT_FWD	Midi::remove_active_trackset	Midi::remove_active_trackset	FORWARD	calls slot 0xa8 of the object at dword ptr [ecx + 0x40]; slot 42 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100228d0
+0x1002dc10	ACCEPT_FWD	Midi::get_trackset	Midi::get_trackset	FORWARD	calls slot 0x9c of the object at dword ptr [ecx + 0x40]; slot 39 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023000
+0x1002dc40	ACCEPT_FWD	Midi::get_ntracks	Midi::get_ntracks	FORWARD	calls slot 0xb4 of the object at dword ptr [ecx + 0x40]; slot 45 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10005f40
+0x1002dc70	ACCEPT_FWD	Midi::load_patch	Midi::load_patch	FORWARD	calls slot 0x100 of the object at dword ptr [ecx + 0x40]; slot 64 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024cc0
+0x1002dca0	ACCEPT_FWD	Midi::unload_patch	Midi::unload_patch	FORWARD	calls slot 0x104 of the object at dword ptr [ecx + 0x40]; slot 65 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024ce0
+0x1002dcd0	ACCEPT_FWD	Midi::set_patch	Midi::set_patch	FORWARD	calls slot 0x108 of the object at dword ptr [ecx + 0x40]; slot 66 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024d00
+0x1002dd10	MANUAL	Midi::init	Midi::init	OTHER	
+0x1002de80	ACCEPT_FWD	Midi::set_tempo	Midi::set_tempo	FORWARD	calls slot 0x84 of the object at dword ptr [ecx + 0x40]; slot 33 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10021ee0
+0x1002df30	MANUAL	Midi::load	Midi::load	OTHER	
+0x1002df70	MANUAL	Midi::load	Midi::load	OTHER	
+0x1002e060	MANUAL	Midi::get_time	Midi::get_time	FORWARD	calls slot 0xc8 of the object at dword ptr [ecx + 0x40]; slot 50 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002e090	ACCEPT_FWD	Midi::get_control_track	Midi::get_control_track	FORWARD	calls slot 0x11c of the object at dword ptr [ecx + 0x40]; slot 71 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10005f90
+0x1002e0c0	ACCEPT_FWD	Midi::get_total_track_ticks	Midi::get_total_track_ticks	FORWARD	calls slot 0x120 of the object at dword ptr [ecx + 0x40]; slot 72 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10021390
+0x1002e0f0	ACCEPT_FWD	Midi::set_control	Midi::set_control	FORWARD	calls slot 0x114 of the object at dword ptr [ecx + 0x40]; slot 69 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024040
+0x1002e130	ACCEPT_FWD	Midi::get_control_target	Midi::get_control_target	FORWARD	calls slot 0x118 of the object at dword ptr [ecx + 0x40]; slot 70 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100241f0
+0x1002e170	ACCEPT_FWD	Midi::set_track_loop_state	Midi::set_track_loop_state	FORWARD	calls slot 0xac of the object at dword ptr [ecx + 0x40]; slot 43 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023ea0
+0x1002e1b0	ACCEPT_FWD	Midi::get_track_loop_state	Midi::get_track_loop_state	FORWARD	calls slot 0xb0 of the object at dword ptr [ecx + 0x40]; slot 44 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023f10
+0x1002e1e0	ACCEPT_FWD	Midi::get_track_velocity_offset	Midi::get_track_velocity_offset	FORWARD	calls slot 0x128 of the object at dword ptr [ecx + 0x40]; slot 74 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023f60
+0x1002e220	ACCEPT_FWD	Midi::set_track_velocity_offset	Midi::set_track_velocity_offset	FORWARD	calls slot 0x124 of the object at dword ptr [ecx + 0x40]; slot 73 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10023fd0
+0x1002e260	ACCEPT_FWD	Midi::add_keymap	Midi::add_keymap	FORWARD	calls slot 0xd8 of the object at dword ptr [ecx + 0x40]; slot 54 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10022320
+0x1002e290	ACCEPT_FWD	Midi::set_play_type	Midi::set_play_type	FORWARD	calls slot 0xfc of the object at dword ptr [ecx + 0x40]; slot 63 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10024c50
+0x1002e2c0	ACCEPT_FWD	Midi::get_key	Midi::get_key	FORWARD	calls slot 0x12c of the object at dword ptr [ecx + 0x40]; slot 75 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10005fb0
+0x1002e2f0	DEFER_NOT_A_FUNCTION	Midi::get_tonal_center	Midi::get_tonal_center	OTHER	
+0x1002e460	MANUAL	TrackSet::set_hi	TrackSet::set_hi	SETTER	stores dword ptr [ecx + 8], dword ptr [ecx + 0xc] from its arguments (0x1002e46b)
+0x1002e490	DEFER_NOT_A_FUNCTION	Sound::unloadall	Sound::unloadall	OTHER	
+0x1002e4c0	DEFER_NOT_A_FUNCTION	Patch::Patch	Patch::ctor	OTHER	
+0x1002e500	ACCEPT_VT	Patch::`scalar deleting destructor'	Patch::scalarDeletingDtor	CTOR	stores 0x1005bb80 into [esi] at 0x1002e509; SMSG's public at that table: ??_7Patch@@6B@
+0x1002e530	ACCEPT_VT	Patch::~Patch	Patch::dtor	CTOR	stores 0x1005bb80 into [ecx] at 0x1002e530; SMSG's public at that table: ??_7Patch@@6B@
+0x1002e790	MANUAL	Ambience::load	Ambience::load	SDD	tests bit 0 of its argument (0x1002e790) around a call to the destructor
+0x1002e7c0	MANUAL	Ambience::load	Ambience::load	FORWARD	calls slot 0x44 of the object at dword ptr [ecx + 0x40]; slot 17 of other SMSG vtables holds a body (not a forwarder) of the same method name: none
+0x1002e8f0	MANUAL	Ambience::unload	Ambience::unload	OTHER	
+0x1002ebd0	MANUAL	AviSound::release	AviSound::release	OTHER	
+0x1002ec20	ACCEPT_FWD	AviSound::start	AviSound::start	FORWARD	calls slot 0x88 of the object at dword ptr [ecx + 0x40]; slot 34 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10031080, 0x10006b00
+0x1002ec50	ACCEPT_FWD	AviSound::stop	AviSound::stop	FORWARD	calls slot 0x20 of the object at dword ptr [ecx + 0x40]; slot 8 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a040, 0x10006b80, 0x100310f0
+0x1002ec70	ACCEPT_FWD	AviSound::get_frame	AviSound::get_frame	FORWARD	calls slot 0x8c of the object at dword ptr [ecx + 0x40]; slot 35 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006420
+0x1002eca0	ACCEPT_FWD	AviSound::return_frame	AviSound::return_frame	FORWARD	calls slot 0x90 of the object at dword ptr [ecx + 0x40]; slot 36 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006850
+0x1002ecd0	ACCEPT_FWD	AviSound::get_cur_frame	AviSound::get_cur_frame	FORWARD	calls slot 0x94 of the object at dword ptr [ecx + 0x40]; slot 37 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006d90
+0x1002ed00	ACCEPT_FWD	AviSound::get_frame_size	AviSound::get_frame_size	FORWARD	calls slot 0x98 of the object at dword ptr [ecx + 0x40]; slot 38 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006db0
+0x1002ed30	REJECT_STUB	AviSound::get_time	AviSound::get_time	CONST	`xor eax, eax`; `ret` at 0x1002ed30
+0x1002ee80	REJECT_STUB	VoiceRx::get_game_hwnd	VoiceRx::get_game_hwnd	CONST	`xor eax, eax`; `ret` at 0x1002ee80
+0x1002eea0	REJECT_STUB	VoiceRx::set_attrib	VoiceRx::set_attrib	CONST	`mov eax, 0xb`; `ret 4` at 0x1002eea0
+0x1002eec0	REJECT_STUB	VoiceRx::get_attrib	VoiceRx::get_attrib	CONST	`xor eax, eax`; `ret` at 0x1002eec0
+0x1002eee0	ACCEPT_FWD	VoiceRx::get_nbuffers	VoiceRx::get_nbuffers	FORWARD	calls slot 0x94 of the object at dword ptr [ecx + 0x40]; slot 37 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10031880, 0x10031190
+0x1002f0f0	MANUAL	VoiceRx::release	VoiceRx::release	OTHER	
+0x1002f140	ACCEPT_FWD	VoiceRx::start	VoiceRx::start	FORWARD	calls slot 0x88 of the object at dword ptr [ecx + 0x40]; slot 34 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10031080, 0x10006b00
+0x1002f170	ACCEPT_FWD	VoiceRx::stop	VoiceRx::stop	FORWARD	calls slot 0x20 of the object at dword ptr [ecx + 0x40]; slot 8 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a040, 0x10006b80, 0x100310f0
+0x1002f190	ACCEPT_FWD	VoiceRx::unload	VoiceRx::unload	FORWARD	calls slot 0x14 of the object at dword ptr [ecx + 0x40]; slot 5 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1002b130, 0x100306e0, 0x10020480
+0x1002f1c0	ACCEPT_FWD	VoiceRx::add_buffer	VoiceRx::add_buffer	FORWARD	calls slot 0x8c of the object at dword ptr [ecx + 0x40]; slot 35 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10030710
+0x1002f1f0	ACCEPT_FWD	VoiceRx::get_buffer_size	VoiceRx::get_buffer_size	FORWARD	calls slot 0x90 of the object at dword ptr [ecx + 0x40]; slot 36 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100311b0
+0x1002f360	REJECT_STUB	VoiceTx::get_game_hwnd	VoiceTx::get_game_hwnd	CONST	`xor eax, eax`; `ret` at 0x1002f360
+0x1002f380	REJECT_STUB	VoiceTx::set_attrib	VoiceTx::set_attrib	CONST	`mov eax, 0xb`; `ret 4` at 0x1002f380
+0x1002f3a0	REJECT_STUB	VoiceTx::get_attrib	VoiceTx::get_attrib	CONST	`xor eax, eax`; `ret` at 0x1002f3a0
+0x1002f510	ACCEPT_FWD	VoiceTx::release	VoiceTx::release	FORWARD	calls slot 0x38 of the object at dword ptr [ecx + 0x40]; slot 14 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006330, 0x1003a080, 0x1002f0f0
+0x1002f530	MANUAL	VoiceTx::start	VoiceTx::start	OTHER	
+0x1002f570	ACCEPT_FWD	VoiceTx::stop	VoiceTx::stop	FORWARD	calls slot 0x20 of the object at dword ptr [ecx + 0x40]; slot 8 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a040, 0x10006b80, 0x100310f0
+0x1002f5a0	MANUAL	VoiceTx::unload	VoiceTx::unload	OTHER	
+0x1002f6b0	ACCEPT_FWD	VoiceTx::get_next_buffer	VoiceTx::get_next_buffer	FORWARD	calls slot 0x88 of the object at dword ptr [ecx + 0x40]; slot 34 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x100318a0
+0x1002f6e0	ACCEPT_FWD	VoiceTx::return_buffer	VoiceTx::return_buffer	FORWARD	calls slot 0x8c of the object at dword ptr [ecx + 0x40]; slot 35 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10031960
+0x1002f710	DEFER_NOT_A_FUNCTION	do_message	do_message	OTHER	
+0x1002f7d0	ACCEPT_GET	dllSoundList::get_game_hwnd	dllSoundList::get_game_hwnd	GETTER	reads dword ptr [0x100b4a3c] (from 0x1002f7d0), no store, no call
+0x1002f7f0	REJECT_STUB	dllSoundList::set_attrib	dllSoundList::set_attrib	CONST	`mov eax, 0xb`; `ret 4` at 0x1002f7f0
+0x1002f810	REJECT_STUB	dllSoundList::get_attrib	dllSoundList::get_attrib	CONST	`xor eax, eax`; `ret` at 0x1002f810
+0x1002f830	ACCEPT_GET	dllSoundList::isAlreadyQueued	dllSoundList::isAlreadyQueued	GETTER	reads dword ptr [ecx + 0x104] (from 0x1002f830), no store, no call
+0x1002f850	ACCEPT_FWD	dllSoundList::is_playing	dllSoundList::is_playing	FORWARD	calls slot 0x5c of the object at dword ptr [ecx + 0xf8]; slot 23 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x10006dd0, 0x100311d0, 0x1002baa0
+0x1002f880	ACCEPT_VT	dllSoundList::`scalar deleting destructor'	dllSoundList::scalarDeletingDtor	SDD	tests bit 0 of its argument (0x1002f888) around a call to the destructor
+0x1002fa60	MANUAL	dllSoundList::play	dllSoundList::play	OTHER	
+0x1002fb40	ACCEPT_FWD	dllSoundList::stop	dllSoundList::stop	FORWARD	calls slot 0x20 of the object at dword ptr [ecx + 0xf8]; slot 8 of other SMSG vtables holds a body (not a forwarder) of the same method name: 0x1003a040, 0x10006b80, 0x100310f0
+0x1002fce0	MANUAL	dllSoundList::set_volume	dllSoundList::set_volume	OTHER	
+0x1002fd80	MANUAL	dllSoundList::set_scaled_volume	dllSoundList::set_scaled_volume	OTHER	
+0x1002fe20	DEFER_NOT_A_FUNCTION	CTrace::CTrace	CTrace::ctor	OTHER	
+0x1002fe90	DEFER_NOT_A_FUNCTION	CTrace::~CTrace	CTrace::dtor	EMPTY	`ret` at 0x1002fe90
+0x1002feb0	DEFER_NOT_A_FUNCTION	CTrace::dump_to_file	CTrace::dump_to_file	OTHER	
+0x10030000	DEFER_NOT_A_FUNCTION	CTrace::in_data	CTrace::in_data	SETTER	stores dword ptr [ecx + 0x108], dword ptr [ecx + 0x10c], dword ptr [ecx + 0x110], dword ptr [ecx + 0x114] from its arguments (0x10030008)
+0x10030040	DEFER_NOT_A_FUNCTION	CTrace::operator=	CTrace::operator=	GETTER	reads dword ptr [esp + 0xc] (from 0x10030040), no store, no call
+0x100303d0	MANUAL	CVoiceRxMgr::detach	CVoiceRxMgr::detach	OTHER	
+0x100306e0	MANUAL	CVoiceRxMgr::unload	CVoiceRxMgr::unload	OTHER	
+0x10030730	DEFER_NOT_A_FUNCTION	CVoiceRxMgr::lpc10_write_16bit_samples	CVoiceRxMgr::lpc10_write_16bit_samples	OTHER	
+0x100307c0	DEFER_NOT_A_FUNCTION	CVoiceRxMgr::lpc10_read_bits	CVoiceRxMgr::lpc10_read_bits	SETTER	stores dword ptr [esi - 4] from its arguments (0x10030806)
+0x100310f0	MANUAL	CVoiceRxMgr::stop	CVoiceRxMgr::stop	OTHER	
+0x10031120	DEFER_NOT_A_FUNCTION	CVoiceRxMgr::discard_buffer	CVoiceRxMgr::discard_buffer	OTHER	
+0x10031150	DEFER_NOT_A_FUNCTION	CVoiceRxMgr::enable	CVoiceRxMgr::enable	CONST	`xor eax, eax`; `ret` at 0x10031150
+0x10031170	DEFER_NOT_A_FUNCTION	CVoiceRxMgr::disable	CVoiceRxMgr::disable	CONST	`xor eax, eax`; `ret` at 0x10031170
+0x10031190	ACCEPT_GET	CVoiceRxMgr::get_nbuffers	CVoiceRxMgr::get_nbuffers	GETTER	reads dword ptr [ecx + 0x68] (from 0x10031190), no store, no call
+0x100311b0	ACCEPT_GET	CVoiceRxMgr::get_buffer_size	CVoiceRxMgr::get_buffer_size	GETTER	reads dword ptr [ecx + 0xb4] (from 0x100311b0), no store, no call
+0x100311d0	ACCEPT_GET	CVoiceRxMgr::is_playing	CVoiceRxMgr::is_playing	GETTER	reads dword ptr [ecx + 0x58] (from 0x100311d0), no store, no call
+0x10031670	DEFER_NOT_A_FUNCTION	CVoiceTxMgr::s2f_and_scale	CVoiceTxMgr::s2f_and_scale	OTHER	
+0x10031880	ACCEPT_GET	CVoiceTxMgr::get_nbuffers	CVoiceTxMgr::get_nbuffers	GETTER	reads dword ptr [ecx + 0x68] (from 0x10031880), no store, no call
+0x100318a0	MANUAL	CVoiceTxMgr::get_next_buffer	CVoiceTxMgr::get_next_buffer	OTHER	
+0x10031960	MANUAL	CVoiceTxMgr::return_buffer	CVoiceTxMgr::return_buffer	OTHER	
+0x10031a30	MANUAL	CVoiceTxMgr::stop	CVoiceTxMgr::stop	OTHER	
+0x10031a50	DEFER_NOT_A_FUNCTION	CVoiceTxMgr::lpc_write_bits	CVoiceTxMgr::lpc_write_bits	SETTER	stores byte ptr [esi] from its arguments (0x10031a7c)
+0x10032680	DEFER_NOT_A_FUNCTION	CWaveFile::mpeg_load	CWaveFile::mpeg_load	CONST	`mov eax, 0xb`; `ret 4` at 0x10032680
+0x10033280	DEFER_NOT_A_FUNCTION	CWaveFile::read_from_file	CWaveFile::read_from_file	OTHER	
+0x100338f0	DEFER_NOT_A_FUNCTION	CWaveFile::get_write_pointers	CWaveFile::get_write_pointers	OTHER	
+0x10033f70	DEFER_NOT_A_FUNCTION	CWaveFile::mpeg_unload	CWaveFile::mpeg_unload	CONST	`mov eax, 0xb`; `ret` at 0x10033f70
+0x10034410	DEFER_NOT_A_FUNCTION	CWaveFile::mmioerr	CWaveFile::mmioerr	EMPTY	`ret` at 0x10034410
+0x10034de0	DEFER_NOT_A_FUNCTION	CWaveFile::fade_in	CWaveFile::fade_in	OTHER	
+0x10034e50	DEFER_NOT_A_FUNCTION	CWaveFile::operator++	CWaveFile::operator++	OTHER	
+0x10034f10	DEFER_NOT_A_FUNCTION	CWaveFile::get_nsamples_left_in_buffer	CWaveFile::get_nsamples_left_in_buffer	GETTER	reads byte ptr [ecx + 0x58], dword ptr [ecx + 0x168], dword ptr [ecx + 0x16c], dword ptr [ecx + 8], dword ptr [edx + 0x1c], dword ptr [edx + 0x20], word ptr [ecx + 0x18c] (from 0x10034f10), no store, no call
+0x10034f80	DEFER_NOT_A_FUNCTION	CWaveFile::advance	CWaveFile::advance	OTHER	
+0x10035070	DEFER_NOT_A_FUNCTION	CWaveFile::need_to_advance	CWaveFile::need_to_advance	OTHER	
+0x10035c30	DEFER_NOT_A_FUNCTION	CWaveFile::get_mpeg_samples	CWaveFile::get_mpeg_samples	GETTER	reads dword ptr [ecx + 0x5c], dword ptr [esp + 0xc], dword ptr [esp + 8] (from 0x10035c30), no store, no call
+0x100377b0	DEFER_NOT_A_FUNCTION	CWaveFile::set_buffer_inactive	CWaveFile::set_buffer_inactive	OTHER	
+0x10037860	MANUAL	CWaveFile::get_time	CWaveFile::get_time	GETTER	reads dword ptr [eax + 0x58], dword ptr [edx + eax + 0x2f8], dword ptr [esp + 8] (from 0x10037860), no store, no call
+0x100378b0	MANUAL	CWaveFile::set_loop_state	CWaveFile::set_loop_state	SETTER	stores dword ptr [ecx + 0x58], dword ptr [ecx + 0x2d0] from its arguments (0x100378cc)
+0x10037e90	DEFER_NOT_A_FUNCTION	WaveBuffer::reset	WaveBuffer::reset	OTHER	
+0x10037f00	DEFER_NOT_A_FUNCTION	WaveBuffer::get_nsamples_left_in_buffer	WaveBuffer::get_nsamples_left_in_buffer	GETTER	reads dword ptr [ecx + 0x1c], dword ptr [ecx + 0x20], word ptr [ecx + 0xac] (from 0x10037f00), no store, no call
+0x10038270	DEFER_NOT_A_FUNCTION	WaveBuffer::fade_in	WaveBuffer::fade_in	OTHER	
+0x10038ed0	DEFER_NOT_A_FUNCTION	WaveInDeviceMgr::add_buffer	WaveInDeviceMgr::add_buffer	OTHER	
+0x10038f40	DEFER_NOT_A_FUNCTION	WaveInDeviceMgr::get_num_devices	WaveInDeviceMgr::get_num_devices	OTHER	
+0x100392c0	DEFER_NOT_A_FUNCTION	WaveInDeviceMgr::handle_error	WaveInDeviceMgr::handle_error	OTHER	
+0x10039380	DEFER_NOT_A_FUNCTION	WaveInDeviceMgr::set_format	WaveInDeviceMgr::set_format	OTHER	
+0x10039490	DEFER_NOT_A_FUNCTION	WIBuffer::WIBuffer	WIBuffer::ctor	OTHER	
+0x10039540	DEFER_NOT_A_FUNCTION	WIBuffer::set_next	WIBuffer::set_next	SETTER	stores dword ptr [ecx + 0x18] from its arguments (0x10039544)
+0x10039560	DEFER_NOT_A_FUNCTION	WIBuffer::get_whdr	WIBuffer::get_whdr	CONST	`mov eax, ecx`; `ret` at 0x10039560
+0x10039ca0	DEFER_NOT_A_FUNCTION	CWaveMgr::free_all	CWaveMgr::free_all	OTHER	
+0x1003a040	MANUAL	CWaveMgr::stop	CWaveMgr::stop	OTHER	
+0x1003a0b0	MANUAL	CWaveMgr::detach	CWaveMgr::detach	OTHER	
+0x1003a1c0	ACCEPT_SET	CWaveMgr::set_delay	CWaveMgr::set_delay	SETTER	stores dword ptr [ecx + 0x29c] from its arguments (0x1003a1c4)
+0x1003a1e0	MANUAL	CWaveMgr::set_pan	CWaveMgr::set_pan	OTHER	
+0x1003a440	MANUAL	CWaveMgr::set_link	CWaveMgr::set_link	OTHER	
+0x1003a590	MANUAL	CWaveMgr::get_time	CWaveMgr::get_time	OTHER	
+0x1003a670	ACCEPT_GET	CWaveMgr::get_ms_length	CWaveMgr::get_ms_length	GETTER	reads dword ptr [ecx + 0x140c] (from 0x1003a670), no store, no call
+0x1003a690	MANUAL	CWaveMgr::set_loop_state	CWaveMgr::set_loop_state	OTHER	
+0x1003a6b0	MANUAL	CWaveMgr::set_fade	CWaveMgr::set_fade	OTHER	
+0x1003a710	ACCEPT_GET	CWaveMgr::get_time	CWaveMgr::get_time	GETTER	reads dword ptr [ecx + 0x298] (from 0x1003a710), no store, no call
+0x1003a750	ACCEPT_GET	CWaveMgr::is_looping	CWaveMgr::is_looping	GETTER	reads dword ptr [ecx + 0xc8] (from 0x1003a750), no store, no call
+0x1003a790	ACCEPT_GET	CWaveMgr::is_playing	CWaveMgr::is_playing	GETTER	reads dword ptr [ecx + 0xc8] (from 0x1003a790), no store, no call
+0x1003a7c0	ACCEPT_GET	CWaveMgr::is_hwbuffer	CWaveMgr::is_hwbuffer	GETTER	reads dword ptr [ecx + 0xc8] (from 0x1003a7c0), no store, no call
+0x1003a7e0	ACCEPT_GET	CWaveMgr::is_loaded	CWaveMgr::is_loaded	GETTER	reads dword ptr [ecx + 0xc8] (from 0x1003a7e0), no store, no call

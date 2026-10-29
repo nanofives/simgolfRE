@@ -1,0 +1,69 @@
+instruction,library_object,original,match
+0,fld st(0),fld st(0),True
+1,fabs ,fabs ,True
+2,fld xword ptr [0],fld xword ptr [0x100675ce],True
+3,fcompp ,fcompp ,True
+4,wait ,wait ,True
+5,fnstsw word ptr [ebp - 0xa0],fnstsw word ptr [ebp - 0xa0],True
+6,wait ,wait ,True
+7,"test byte ptr [ebp - 0x9f], 0x41","test byte ptr [ebp - 0x9f], 0x41",True
+8,jne 0xffffffb2,jne 0x10048480,True
+9,fld st(0),fld st(0),True
+10,frndint ,frndint ,True
+11,ftst ,ftst ,True
+12,wait ,wait ,True
+13,fnstsw word ptr [ebp - 0xa0],fnstsw word ptr [ebp - 0xa0],True
+14,wait ,wait ,True
+15,"mov dl, byte ptr [ebp - 0x9f]","mov dl, byte ptr [ebp - 0x9f]",True
+16,fxch st(1),fxch st(1),True
+17,fsub st(1),fsub st(1),True
+18,ftst ,ftst ,True
+19,wait ,wait ,True
+20,fnstsw word ptr [ebp - 0xa0],fnstsw word ptr [ebp - 0xa0],True
+21,fabs ,fabs ,True
+22,f2xm1 ,f2xm1 ,True
+23,ret ,ret ,True
+24,fld st(0),fld st(0),True
+25,frndint ,frndint ,True
+26,fcomp st(1),fcomp st(1),True
+27,wait ,wait ,True
+28,fnstsw ax,fnstsw ax,True
+29,sahf ,sahf ,True
+30,jne 0x69,jne 0x10048537,True
+31,fld st(0),fld st(0),True
+32,fmul qword ptr [0],fmul qword ptr [0x100675e2],True
+33,fld st(0),fld st(0),True
+34,frndint ,frndint ,True
+35,fcompp ,fcompp ,True
+36,wait ,wait ,True
+37,fnstsw ax,fnstsw ax,True
+38,sahf ,sahf ,True
+39,je 0x70,je 0x1004853e,True
+40,"mov eax, 1","mov eax, 1",True
+41,ret ,ret ,True
+42,"mov eax, 0","mov eax, 0",True
+43,jmp 0x68,jmp 0x10048536,True
+44,"mov eax, 2","mov eax, 2",True
+45,jmp 0x68,jmp 0x10048536,True
+46,push esi,push esi,True
+47,"sub esp, 0x74","sub esp, 0x74",True
+48,"mov esi, esp","mov esi, esp",True
+49,push esi,push esi,True
+50,"sub esp, 8","sub esp, 8",True
+51,fstp qword ptr [esp],fstp qword ptr [esp],True
+52,"sub esp, 8","sub esp, 8",True
+53,fstp qword ptr [esp],fstp qword ptr [esp],True
+54,wait ,wait ,True
+55,fnsave dword ptr [esi + 8],fnsave dword ptr [esi + 8],True
+56,call 0x93,call 0x1004af9c,True
+57,"add esp, 0x14","add esp, 0x14",True
+58,frstor dword ptr [esi + 8],frstor dword ptr [esi + 8],True
+59,fld qword ptr [esi],fld qword ptr [esi],True
+60,"add esp, 0x74","add esp, 0x74",True
+61,pop esi,pop esi,True
+62,"test eax, eax","test eax, eax",True
+63,je 0xa8,je 0x10048576,True
+64,jmp 0xa8,jmp 0x10048169,True
+65,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87tran.obj (library object, no compilation)",symbol=__ffexpm1,module=sound.dll
+VERDICT,GREEN,66,100.0%

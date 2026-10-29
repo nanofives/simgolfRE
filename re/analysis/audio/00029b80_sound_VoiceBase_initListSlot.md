@@ -6,6 +6,7 @@ Module `sound.dll` (RVA `0x00029b80`), 27 bytes, 9 instructions, subsystem `audi
 __thiscall constructor of the 0x18-byte list slot VoiceBase_clearList empties: {+0 byte 1, +4 = 0x7f, list head +8 / tail +0xc / +0x10 / count +0x14 = 0}; returns this. (`re/names/sound_19.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_sounddevice.cpp` as `??0WaveControlGroup@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10029b9a): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10029b80 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

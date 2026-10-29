@@ -1,0 +1,16 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaee30	0x004aee30	308	G	jinit_memory_mgr	_jinit_memory_mgr	public	100	100.0	98/98 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaef70	0x004aef70	303	L	alloc_small	_alloc_small	name	100	100.0	110/110 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf0a0	0x004af0a0	29	L	out_of_memory	_out_of_memory	name	100	100.0	11/11 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf0c0	0x004af0c0	161	L	alloc_large	_alloc_large	name	100	100.0	60/60 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf170	0x004af170	168	L	alloc_sarray	_alloc_sarray	name	100	100.0	69/69 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf220	0x004af220	176	L	alloc_barray	_alloc_barray	name	100	100.0	71/71 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf2d0	0x004af2d0	110	L	request_virt_sarray	_request_virt_sarray	name	100	100.0	38/38 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf340	0x004af340	110	L	request_virt_barray	_request_virt_barray	name	100	100.0	38/38 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf3b0	0x004af3b0	385	L	realize_virt_arrays	_realize_virt_arrays	name	100	100.0	155/155 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf540	0x004af540	335	L	access_virt_sarray	_access_virt_sarray	name	100	100.0	131/131 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf690	0x004af690	154	L	do_sarray_io	_do_sarray_io	name	100	100.0	72/72 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf730	0x004af730	330	L	access_virt_barray	_access_virt_barray	name	100	100.0	132/132 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf880	0x004af880	159	L	do_barray_io	_do_barray_io	name	100	100.0	74/74 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xaf920	0x004af920	241	L	free_pool	_free_pool	name	100	100.0	98/98 ins	golf_jpeg_memmgr.cpp
+golf	golf/jpeg.lib/jpeg-6a/jmemmgr.c	0xafa20	0x004afa20	55	L	self_destruct	_self_destruct	name	100	100.0	22/22 ins	golf_jpeg_memmgr.cpp

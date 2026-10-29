@@ -1,0 +1,100 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x1880	0x10001880	40	G	degreesToRadians	?degreesToRadians@@YAMM@Z	public	100	100.0	18/18 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x18b0	0x100018b0	67	G	ios::lock	?lock@ios@@QAAXXZ	public	100	100.0	27/27 ins	terrain_iostream.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x2510	0x10002510	45	G	ios::fail	?fail@ios@@QBEHXZ	public	100	100.0	22/22 ins	terrain_iostream.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x2ae0	0x10002ae0	1064	G	Terrain::Terrain	??0Terrain@@QAE@JJ@Z	public	100	100.0	292/292 ins	terrain_ctor.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x2f80	0x10002f80	50	G	Tile::setRandomVariation	?setRandomVariation@Tile@@QAEXH@Z	public	100	100.0	22/22 ins	terrain_tile.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3090	0x10003090	226	G	Terrain::~Terrain	??1Terrain@@QAE@XZ	public	100	100.0	60/60 ins	terrain_small3.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x31a0	0x100031a0	161	G	Terrain::getInstance	?getInstance@Terrain@@SAPAV1@XZ	public	100	100.0	48/48 ins	terrain_instance.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3270	0x10003270	51	G	Terrain::getNormalArray	?getNormalArray@Terrain@@QAEPAUVec3@@XZ	public	100	100.0	23/23 ins	terrain_tile2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x32b0	0x100032b0	51	G	Terrain::getVertexArray	?getVertexArray@Terrain@@QAEPAUVec3@@XZ	public	100	100.0	23/23 ins	terrain_tile2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x32f0	0x100032f0	128	G	Terrain::setType	?setType@Terrain@@QAEXPAVTile@@HH@Z	public	100	100.0	48/48 ins	terrain_methods2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3390	0x10003390	59	G	Terrain::getVariation	?getVariation@Terrain@@QAEHPAVTile@@@Z	public	100	100.0	25/25 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x33e0	0x100033e0	272	G	Terrain::initGLRenderState	?initGLRenderState@Terrain@@QAE_NXZ	public	100	100.0	81/81 ins	terrain_tile4.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3540	0x10003540	526	G	Terrain::changeLighting	?changeLighting@Terrain@@QAEXH@Z	public	100	100.0	141/141 ins	terrain_large1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x37e0	0x100037e0	56	G	Terrain::initLighting	?initLighting@Terrain@@QAE_NXZ	public	100	100.0	25/25 ins	terrain_tile3.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3830	0x10003830	257	G	Terrain::EnableBlackFillLight	?EnableBlackFillLight@Terrain@@QAEXXZ	public	100	100.0	68/68 ins	terrain_small3.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3980	0x10003980	159	G	Terrain::LoadLightingForCourseType	?LoadLightingForCourseType@Terrain@@QAEXXZ	public	100	100.0	47/47 ins	terrain_tile3.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3a50	0x10003a50	535	G	rotateVectorAboutAxis	?rotateVectorAboutAxis@@YAXMMMMPAM@Z	public	100	100.0	172/172 ins	terrain_large1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x3f80	0x10003f80	42	G	ios::lockptr	?lockptr@ios@@IAEPAU_CRT_CRITICAL_SECTION@@XZ	public	100	100.0	21/21 ins	terrain_iostream.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x42a0	0x100042a0	38	G	Terrain::drawCircle	?drawCircle@Terrain@@QAEXPAVTile@@M@Z	public	100	100.0	19/19 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x46a0	0x100046a0	68	G	ifstream::`vbase destructor'	??_Difstream@@QAEXXZ	public	100	100.0	28/28 ins	terrain_iostream.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x48a0	0x100048a0	734	G	Terrain::drawLine	?drawLine@Terrain@@QAEXHHHHHHH@Z	public	100	100.0	219/219 ins	terrain_drawline.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x4c70	0x10004c70	834	G	Terrain::drawCardinalSpline	?drawCardinalSpline@Terrain@@QAEXHHHHHHHHHHH@Z	public	100	100.0	248/248 ins	terrain_splines.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x5090	0x10005090	322	G	Terrain::evalCardinalSplinePoint2D	?evalCardinalSplinePoint2D@Terrain@@QAEXPAUPoint2D@@M0000@Z	public	100	100.0	102/102 ins	terrain_small3.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x5230	0x10005230	1042	G	Terrain::drawBezierSpline	?drawBezierSpline@Terrain@@QAEXHHHHHHHHH@Z	public	100	100.0	309/309 ins	terrain_splines.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x5750	0x10005750	180	G	Terrain::bernsteinBasisTerm	?bernsteinBasisTerm@Terrain@@QAEMMH@Z	public	100	100.0	65/65 ins	terrain_small2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x5840	0x10005840	70	G	powf	?powf@@YAMMM@Z	public	100	100.0	28/28 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x58a0	0x100058a0	93	G	factorial	?factorial@@YAHH@Z	public	100	100.0	37/37 ins	terrain_small2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x5960	0x10005960	42	G	Tile::getGridX	?getGridX@Tile@@QAEHXZ	public	100	100.0	21/21 ins	terrain_tile.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x5990	0x10005990	1279	G	Terrain::render	?render@Terrain@@QAE_NPAVTile@@M@Z	public	100	100.0	399/399 ins	terrain_render.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x6410	0x10006410	757	G	Terrain::pathUpdateRender	?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z	public	100	100.0	239/239 ins	terrain_pathrender.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x6810	0x10006810	42	G	Tile::getGridY	?getGridY@Tile@@QAEHXZ	public	100	100.0	21/21 ins	terrain_tile.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x6850	0x10006850	1005	G	Terrain::IsTileCulled	?IsTileCulled@Terrain@@QAE_NPAVTile@@0M@Z	public	100	100.0	311/311 ins	terrain_culled.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x6dd0	0x10006dd0	1313	G	Terrain::LoadLightingFromFile	?LoadLightingFromFile@Terrain@@QAEXPBD@Z	public	100	100.0	325/325 ins	terrain_lighting.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x7380	0x10007380	853	G	Terrain::InsertWallAdjacentTilesInDrawOrder	?InsertWallAdjacentTilesInDrawOrder@Terrain@@QAEXPAVTile@@0M@Z	public	100	100.0	290/290 ins	terrain_draw.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x76e0	0x100076e0	2313	G	Terrain::LoadCourseTextures	?LoadCourseTextures@Terrain@@QAEXXZ	public	100	100.0	587/587 ins	terrain_textures.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x80e0	0x100080e0	760	G	Terrain::renderTile	?renderTile@Terrain@@QAEXHHHHH@Z	public	100	100.0	219/219 ins	terrain_tga.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x89e0	0x100089e0	1200	G	Terrain::localRender	?localRender@Terrain@@QAEXPAVTile@@0M@Z	public	100	100.0	380/380 ins	terrain_localrender.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x8fc0	0x10008fc0	543	G	Terrain::setZoomLevel	?setZoomLevel@Terrain@@QAEXH@Z	public	100	100.0	157/157 ins	terrain_large1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x9270	0x10009270	1872	G	Terrain::stripRender	?stripRender@Terrain@@QAEXPAVTile@@HM@Z	public	100	100.0	592/592 ins	terrain_strip.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x9ba0	0x10009ba0	179	G	Terrain::closeSystem	?closeSystem@Terrain@@QAEXXZ	public	100	100.0	63/63 ins	terrain_small2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x9c80	0x10009c80	486	G	Terrain::initSystem	?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z	public	100	100.0	147/147 ins	terrain_system.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x9ed0	0x10009ed0	487	G	Terrain::resize	?resize@Terrain@@QAEXHH@Z	public	100	100.0	150/150 ins	terrain_system.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa130	0x1000a130	549	G	Terrain::initTileGrid	?initTileGrid@Terrain@@QAE_NXZ	public	100	100.0	174/174 ins	terrain_tile5.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa3e0	0x1000a3e0	84	G	Terrain::layPath	?layPath@Terrain@@QAEXPAVTile@@HH@Z	public	100	100.0	35/35 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa450	0x1000a450	71	G	Terrain::hasConnectedPath	?hasConnectedPath@Terrain@@QAE_NHH@Z	public	100	100.0	30/30 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa4b0	0x1000a4b0	75	G	Terrain::updatePath	?updatePath@Terrain@@QAEXHHH@Z	public	100	100.0	32/32 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa510	0x1000a510	56	G	Terrain::hasPath	?hasPath@Terrain@@QAE_NPAVTile@@@Z	public	100	100.0	24/24 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa560	0x1000a560	68	G	Terrain::setWall	?setWall@Terrain@@QAEXPAVTile@@HH_N@Z	public	100	100.0	30/30 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa5c0	0x1000a5c0	66	G	Terrain::elevateCorner	?elevateCorner@Terrain@@QAEXPAVTile@@H@Z	public	100	100.0	28/28 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa620	0x1000a620	66	G	Terrain::lowerCorner	?lowerCorner@Terrain@@QAEXPAVTile@@H@Z	public	100	100.0	28/28 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa680	0x1000a680	86	G	Terrain::lowerEdgeCorner	?lowerEdgeCorner@Terrain@@QAEXPAVTile@@H0M@Z	public	100	100.0	36/36 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa6f0	0x1000a6f0	62	G	Terrain::calcNormals	?calcNormals@Terrain@@QAEXPAVTile@@@Z	public	100	100.0	26/26 ins	terrain_methods.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa740	0x1000a740	201	G	Terrain::calcAllNormals	?calcAllNormals@Terrain@@QAEXPAVTile@@@Z	public	100	100.0	72/72 ins	terrain_methods2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa840	0x1000a840	46	G	Terrain::setSplineHeight	?setSplineHeight@Terrain@@QAEXM@Z	public	100	100.0	21/21 ins	terrain_small1.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa880	0x1000a880	182	G	Terrain::passCollarInfo	?passCollarInfo@Terrain@@QAEXQAHH@Z	public	100	100.0	62/62 ins	terrain_methods2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xa970	0x1000a970	118	G	Terrain::initTerrain	?initTerrain@Terrain@@QAEXXZ	public	100	100.0	43/43 ins	terrain_methods2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xaa10	0x1000aa10	224	G	Terrain::resetTerrain	?resetTerrain@Terrain@@QAEXXZ	public	100	100.0	76/76 ins	terrain_methods2.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xab30	0x1000ab30	524	G	Terrain::tileHit	?tileHit@Terrain@@QAEPAVTile@@HH@Z	public	100	100.0	170/170 ins	terrain_tilehit.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xadc0	0x1000adc0	118	G	Terrain::SetRotationQuadrantFromDegrees	?SetRotationQuadrantFromDegrees@Terrain@@QAEXM@Z	public	100	100.0	35/35 ins	terrain_tile3.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xae60	0x1000ae60	89	G	std::list<Tile *,std::allocator<Tile *> >::list<Tile *,std::allocator<Tile *> >	??0?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@ABV?$allocator@PAVTile@@@1@@Z	public	100	100.0	35/35 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xaed0	0x1000aed0	123	G	std::list<Tile *,std::allocator<Tile *> >::~list<Tile *,std::allocator<Tile *> >	??1?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@XZ	public	100	100.0	47/47 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xaf70	0x1000af70	84	G	std::list<Tile *,std::allocator<Tile *> >::begin	?begin@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@XZ	public	100	100.0	35/35 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xafe0	0x1000afe0	73	G	std::list<Tile *,std::allocator<Tile *> >::end	?end@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@XZ	public	100	100.0	31/31 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb040	0x1000b040	59	G	std::list<Tile *,std::allocator<Tile *> >::empty	?empty@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBE_NXZ	public	100	100.0	27/27 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb090	0x1000b090	79	G	std::list<Tile *,std::allocator<Tile *> >::push_back	?push_back@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAEXABQAVTile@@@Z	public	100	100.0	34/34 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb100	0x1000b100	209	G	std::list<Tile *,std::allocator<Tile *> >::insert	?insert@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@V312@ABQAVTile@@@Z	public	100	100.0	79/79 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb210	0x1000b210	88	G	std::list<Tile *,std::allocator<Tile *> >::clear	?clear@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAEXXZ	public	100	100.0	38/38 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb280	0x1000b280	57	G	std::list<Tile *,std::allocator<Tile *> >::iterator::iterator	??0iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@XZ	public	100	100.0	25/25 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb2d0	0x1000b2d0	60	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator*	??Diterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBEAAPAVTile@@XZ	public	100	100.0	27/27 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb320	0x1000b320	75	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator++	??Eiterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AV012@H@Z	public	100	100.0	31/31 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb380	0x1000b380	53	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator==	??8iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBE_NABV012@@Z	public	100	100.0	25/25 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb3d0	0x1000b3d0	70	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator!=	??9iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBE_NABV012@@Z	public	100	100.0	30/30 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb430	0x1000b430	42	G	std::list<Tile *,std::allocator<Tile *> >::size	?size@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBEIXZ	public	100	100.0	21/21 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb470	0x1000b470	111	G	std::list<Tile *,std::allocator<Tile *> >::erase	?erase@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@V312@0@Z	public	100	100.0	45/45 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb500	0x1000b500	138	G	std::list<Tile *,std::allocator<Tile *> >::_Buynode	?_Buynode@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@IAEPAU_Node@12@PAU312@0@Z	public	100	100.0	53/53 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb5b0	0x1000b5b0	62	G	std::list<Tile *,std::allocator<Tile *> >::_Freenode	?_Freenode@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@IAEXPAU_Node@12@@Z	public	100	100.0	27/27 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb600	0x1000b600	34	G	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Next	?_Next@_Acc@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@SAAAPAU_Node@23@PAU423@@Z	public	100	100.0	17/17 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb630	0x1000b630	37	G	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Prev	?_Prev@_Acc@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@SAAAPAU_Node@23@PAU423@@Z	public	100	100.0	18/18 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb660	0x1000b660	37	G	std::list<Tile *,std::allocator<Tile *> >::_Acc::_Value	?_Value@_Acc@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@SAAAPAVTile@@PAU_Node@23@@Z	public	100	100.0	18/18 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb690	0x1000b690	64	G	std::allocator<Tile *>::construct	?construct@?$allocator@PAVTile@@@std@@QAEXPAPAVTile@@ABQAV3@@Z	public	100	100.0	28/28 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb6e0	0x1000b6e0	39	G	std::list<Tile *,std::allocator<Tile *> >::const_iterator::const_iterator	??0const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@XZ	public	100	100.0	20/20 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb710	0x1000b710	41	G	std::list<Tile *,std::allocator<Tile *> >::const_iterator::_Mynode	?_Mynode@const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBEPAU_Node@23@XZ	public	100	100.0	21/21 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb750	0x1000b750	63	G	std::list<Tile *,std::allocator<Tile *> >::iterator::iterator	??0iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@PAU_Node@12@@Z	public	100	100.0	27/27 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb7a0	0x1000b7a0	70	G	std::list<Tile *,std::allocator<Tile *> >::iterator::operator++	??Eiterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAEAAV012@XZ	public	100	100.0	31/31 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb800	0x1000b800	213	G	std::list<Tile *,std::allocator<Tile *> >::erase	?erase@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@V312@@Z	public	100	100.0	80/80 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb910	0x1000b910	62	G	std::allocator<Tile *>::_Charalloc	?_Charalloc@?$allocator@PAVTile@@@std@@QAEPADI@Z	public	100	100.0	27/27 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb960	0x1000b960	60	G	std::allocator<Tile *>::deallocate	?deallocate@?$allocator@PAVTile@@@std@@QAEXPAXI@Z	public	100	100.0	26/26 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb9b0	0x1000b9b0	49	G	std::list<Tile *,std::allocator<Tile *> >::const_iterator::const_iterator	??0const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@PAU_Node@12@@Z	public	100	100.0	23/23 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xb9f0	0x1000b9f0	60	G	std::allocator<Tile *>::destroy	?destroy@?$allocator@PAVTile@@@std@@QAEXPAPAVTile@@@Z	public	100	100.0	26/26 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xba40	0x1000ba40	89	G	std::_Construct	?_Construct@std@@YAXPAPAVTile@@ABQAV2@@Z	public	100	100.0	35/35 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xbab0	0x1000bab0	34	G	operator new	??2@YAPAXIPAX@Z	public	100	100.0	17/17 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xbae0	0x1000bae0	66	G	std::_Allocate	?_Allocate@std@@YAPADHPAD@Z	public	100	100.0	26/26 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0xbb40	0x1000bb40	31	G	std::_Destroy	?_Destroy@std@@YAXPAPAVTile@@@Z	public	100	100.0	16/16 ins	terrain_list.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x10590	0x10010590	131	G	istream::getline	?getline@istream@@QAEAAV1@PADHD@Z	public	100	100.0	51/51 ins	terrain_iostream.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x37930	0x10037930	67	G	ios::unlock	?unlock@ios@@QAAXXZ	public	100	100.0	27/27 ins	terrain_iostream.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x37c80	0x10037c80	139	G	Vec3_Normalize	?Vec3_Normalize@@YAXPAM@Z	public	100	100.0	53/53 ins	terrain_tile5.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x380a0	0x100380a0	244	G	Terrain::freeCourseTextures	?freeCourseTextures@Terrain@@QAEXXZ	public	100	100.0	76/76 ins	terrain_tile4.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x381a0	0x100381a0	1877	G	Terrain::InsertTileInDrawOrder	?InsertTileInDrawOrder@Terrain@@QAEXPAVTile@@0M@Z	public	100	100.0	566/566 ins	terrain_drawtile.cpp
+Terrain	terrain/Terrain.dll/src/Terrain.cpp	0x38900	0x10038900	1638	G	Terrain::RenderTileEdgeSkirt	?RenderTileEdgeSkirt@Terrain@@QAEXPAVTile@@0M@Z	public	100	100.0	486/486 ins	terrain_edge.cpp

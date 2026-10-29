@@ -1,0 +1,7 @@
+// MATCH: golf_clean.exe 0x0048e900 ?exec@BasePop@@QAEHHP6AHXZ@Z   // miss 99.9% 1418/1419 ins (BasePop::exec)
+golf_clean.exe 0x0048e900 ?exec@BasePop@@QAEHHP6AHXZ@Z: 99.9% (1418/1419 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+   ! test dword ptr [ebp + 0x1f68], 0x800000    | test dword ptr [ebp + 0x1f68], 0x800000
+// MATCH: golf_clean.exe 0x0049c780 ??1MultiDebug@@UAE@XZ   // miss 92.9% 26/28 ins (MultiDebug::~MultiDebug)
+golf_clean.exe 0x0049c780 ??1MultiDebug@@UAE@XZ: 92.9% (26/28 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+   ! mov dword ptr [esp + 0x10], 2              | mov dword ptr [esp + 0x10], 1
+   ! mov byte ptr [esp + 0x10], 1               | 

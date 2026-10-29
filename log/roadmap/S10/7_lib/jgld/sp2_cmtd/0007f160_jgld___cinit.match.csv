@@ -1,0 +1,18 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 0","cmp dword ptr [0x101232f8], 0",True
+3,je 0x12,je 0x1007f172,True
+4,call dword ptr [0],call dword ptr [0x101232f8],True
+5,push 0,push 0x10122638,True
+6,push 0,push 0x10122320,True
+7,call 0x21,call 0x1007f330,True
+8,"add esp, 8","add esp, 8",True
+9,push 0,push 0x1012221c,True
+10,push 0,push 0x10122000,True
+11,call 0x33,call 0x1007f330,True
+12,"add esp, 8","add esp, 8",True
+13,pop ebp,pop ebp,True
+14,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\crt0dat.obj (library object, no compilation)",symbol=__cinit,module=jgld.dll
+VERDICT,GREEN,15,100.0%

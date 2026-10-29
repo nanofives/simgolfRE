@@ -1,0 +1,79 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+1,push ebx,push ebx,True
+2,"test eax, eax","test eax, eax",True
+3,je 0x53,je 0x4a6bf3,True
+4,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+5,"xor ebx, ebx","xor ebx, ebx",True
+6,"mov bl, byte ptr [esp + 0xc]","mov bl, byte ptr [esp + 0xc]",True
+7,"test edx, 3","test edx, 3",True
+8,je 0x2d,je 0x4a6bcd,True
+9,"mov cl, byte ptr [edx]","mov cl, byte ptr [edx]",True
+10,inc edx,inc edx,True
+11,"xor cl, bl","xor cl, bl",True
+12,je 0x8e,je 0x4a6c2e,True
+13,dec eax,dec eax,True
+14,je 0x53,je 0x4a6bf3,True
+15,"test edx, 3","test edx, 3",True
+16,jne 0x1b,jne 0x4a6bbb,True
+17,"sub eax, 4","sub eax, 4",True
+18,jb 0x44,jb 0x4a6be4,True
+19,push edi,push edi,True
+20,"mov edi, ebx","mov edi, ebx",True
+21,"shl ebx, 8","shl ebx, 8",True
+22,"add ebx, edi","add ebx, edi",True
+23,"mov edi, ebx","mov edi, ebx",True
+24,"shl ebx, 0x10","shl ebx, 0x10",True
+25,"add ebx, edi","add ebx, edi",True
+26,jmp 0x5a,jmp 0x4a6bfa,True
+27,pop edi,pop edi,True
+28,"add eax, 4","add eax, 4",True
+29,je 0x53,je 0x4a6bf3,True
+30,"mov cl, byte ptr [edx]","mov cl, byte ptr [edx]",True
+31,inc edx,inc edx,True
+32,"xor cl, bl","xor cl, bl",True
+33,je 0x8e,je 0x4a6c2e,True
+34,dec eax,dec eax,True
+35,jne 0x49,jne 0x4a6be9,True
+36,pop ebx,pop ebx,True
+37,ret ,ret ,True
+38,"sub eax, 4","sub eax, 4",True
+39,jb 0x43,jb 0x4a6be3,True
+40,"mov ecx, dword ptr [edx]","mov ecx, dword ptr [edx]",True
+41,"xor ecx, ebx","xor ecx, ebx",True
+42,"mov edi, 0x7efefeff","mov edi, 0x7efefeff",True
+43,"add edi, ecx","add edi, ecx",True
+44,"xor ecx, 0xffffffff","xor ecx, 0xffffffff",True
+45,"xor ecx, edi","xor ecx, edi",True
+46,"add edx, 4","add edx, 4",True
+47,"and ecx, 0x81010100","and ecx, 0x81010100",True
+48,je 0x55,je 0x4a6bf5,True
+49,"mov ecx, dword ptr [edx - 4]","mov ecx, dword ptr [edx - 4]",True
+50,"xor cl, bl","xor cl, bl",True
+51,je 0x9f,je 0x4a6c3f,True
+52,"xor ch, bl","xor ch, bl",True
+53,je 0x99,je 0x4a6c39,True
+54,"shr ecx, 0x10","shr ecx, 0x10",True
+55,"xor cl, bl","xor cl, bl",True
+56,je 0x93,je 0x4a6c33,True
+57,"xor ch, bl","xor ch, bl",True
+58,je 0x8d,je 0x4a6c2d,True
+59,jmp 0x55,jmp 0x4a6bf5,True
+60,pop edi,pop edi,True
+61,"lea eax, [edx - 1]","lea eax, [edx - 1]",True
+62,pop ebx,pop ebx,True
+63,ret ,ret ,True
+64,"lea eax, [edx - 2]","lea eax, [edx - 2]",True
+65,pop edi,pop edi,True
+66,pop ebx,pop ebx,True
+67,ret ,ret ,True
+68,"lea eax, [edx - 3]","lea eax, [edx - 3]",True
+69,pop edi,pop edi,True
+70,pop ebx,pop ebx,True
+71,ret ,ret ,True
+72,"lea eax, [edx - 4]","lea eax, [edx - 4]",True
+73,pop edi,pop edi,True
+74,pop ebx,pop ebx,True
+75,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\memchr.obj (library object, no compilation)",symbol=_memchr,module=golf_clean.exe
+VERDICT,GREEN,76,100.0%

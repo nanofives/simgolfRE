@@ -1,0 +1,30 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,push 9,push 9,True
+2,call 8,call 0x4a79b2,True
+3,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+4,push esi,push esi,True
+5,call 0x12,call 0x4a7a66,True
+6,pop ecx,pop ecx,True
+7,"test eax, eax","test eax, eax",True
+8,pop ecx,pop ecx,True
+9,je 0x28,je 0x4a907c,True
+10,"mov esi, dword ptr [esi - 4]","mov esi, dword ptr [esi - 4]",True
+11,push 9,push 9,True
+12,"sub esi, 9","sub esi, 9",True
+13,call 0x25,call 0x4a7a13,True
+14,pop ecx,pop ecx,True
+15,jmp 0x41,jmp 0x4a9095,True
+16,push 9,push 9,True
+17,call 0x2f,call 0x4a7a13,True
+18,pop ecx,pop ecx,True
+19,push esi,push esi,True
+20,push 0,push 0,True
+21,push dword ptr [0],push dword ptr [0x84215c],True
+22,call dword ptr [0],call dword ptr [0x4ba0fc],True
+23,"mov esi, eax","mov esi, eax",True
+24,"mov eax, esi","mov eax, esi",True
+25,pop esi,pop esi,True
+26,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\msize.obj (library object, no compilation)",symbol=__msize,module=golf_clean.exe
+VERDICT,GREEN,27,100.0%

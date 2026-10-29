@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/PCXLoad8.cpp	0x95100	0x00495100	795	G	AssetSurface::load_pcx_8_8	?load_pcx_8_8@AssetSurface@@QAEHPADHPAVFLCPalette@@HH@Z	public	100	100.0	247/247 ins	

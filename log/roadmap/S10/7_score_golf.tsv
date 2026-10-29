@@ -1,0 +1,263 @@
+va	symbol	source	lib	member	pct	same	n	note
+0x004a4f10	?getInstance@Terrain@@SAPAV1@XZ	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f16	?drawLine@Terrain@@QAEXHHHHHHH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f1c	?loadNewCourseType@Terrain@@QAEXH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f22	?passCollarInfo@Terrain@@QAEXQAHH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f28	?setType@Terrain@@QAEXPAVTile@@HH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f2e	?getVariation@Terrain@@QAEHPAVTile@@@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f34	?resetTerrain@Terrain@@QAEXXZ	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f3a	?layPath@Terrain@@QAEXPAVTile@@HH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f40	?setWall@Terrain@@QAEXPAVTile@@HH_N@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f46	?calcNormals@Terrain@@QAEXPAVTile@@@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f4c	?elevateCorner@Terrain@@QAEXPAVTile@@H@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f52	?initTerrain@Terrain@@QAEXXZ	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f58	?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f5e	??1Terrain@@QAE@XZ	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f64	?closeSystem@Terrain@@QAEXXZ	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f6a	?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f70	?localRender@Terrain@@QAEXPAVTile@@0M@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f76	?calcAllNormals@Terrain@@QAEXPAVTile@@@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f7c	?setZoomLevel@Terrain@@QAEXH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f82	?render@Terrain@@QAE_NPAVTile@@M@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f88	?lowerEdgeCorner@Terrain@@QAEXPAVTile@@H0M@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f8e	?lowerCorner@Terrain@@QAEXPAVTile@@H@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f94	?hasConnectedPath@Terrain@@QAE_NHH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4f9a	?updatePath@Terrain@@QAEXHHH@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4fa0	?hasPath@Terrain@@QAE_NPAVTile@@@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4fa6	?stripRender@Terrain@@QAEXPAVTile@@HM@Z	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004a4fac	__fpmath	public	rtm_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	6	6	
+0x004a4fc3	__fpclear	public	rtm_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	1	1	
+0x004a4fc4	__cfltcvt_init	public	rtm_cmt	..\build\intel\mt_obj\fpinit.obj	100.0	8	8	
+0x004a4ffc	??3@YAXPAX@Z	public	rtm_cmt	build\intel\mt_obj\delete.obj	100.0	4	4	
+0x004a5007	_free	public	rtm_cmt	build\intel\mt_obj\free.obj	100.0	29	29	
+0x004a504f	_malloc	public	rtm_cmt	build\intel\mt_obj\malloc.obj	100.0	6	6	
+0x004a5061	__nh_malloc	public	rtm_cmt	build\intel\mt_obj\malloc.obj	100.0	16	16	
+0x004a508d	__heap_alloc	public	rtm_cmt	build\intel\mt_obj\malloc.obj	100.0	30	30	
+0x004a50db	__cinit	public	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	12	12	
+0x004a5108	_exit	public	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	6	6	
+0x004a5119	__exit	public	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	6	6	
+0x004a51cf	__lockexit	public	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	4	4	
+0x004a51d8	__unlockexit	public	rtm_cmt	build\intel\mt_obj\crt0dat.obj	100.0	4	4	
+0x004a51fb	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	22	22	pdb-size
+0x004a522f	?_CallMemberFunction1@@YGXPAX00@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	4	4	
+0x004a5236	?_CallMemberFunction2@@YGXPAX00H@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	4	4	
+0x004a523d	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	29	29	
+0x004a528c	___CxxFrameHandler	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	27	27	
+0x004a52c2	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	26	26	
+0x004a533b	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	57	57	
+0x004a5466	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	public	rtm_cmt	build\intel\mt_obj\trnsctrl.obj	100.0	51	51	
+0x004a54e4	__global_unwind2	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	15	15	byte-identity (relocation sites masked)
+0x004a5526	__local_unwind2	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	11	11	byte-identity (relocation sites masked)
+0x004a557e	__NLG_Return2	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	6	6	byte-identity (relocation sites masked)
+0x004a558e	__abnormal_termination	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	5	5	byte-identity (relocation sites masked)
+0x004a55b1	__NLG_Notify1	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	3	3	byte-identity (relocation sites masked)
+0x004a55ba	__NLG_Notify	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	10	10	lib-to-section-end
+0x004a55cd	__NLG_Dispatch	public	rtm_cmt	build\intel\mt_obj\exsup.obj	100.0	3	3	pdb-size
+0x004a55d2	??_L@YGXPAXIHP6EX0@Z1@Z	public	rtm_cmt	build\intel\mt_obj\ehvecctr.obj	100.0	44	44	pdb-size
+0x004a5654	__onexit	public	rtm_cmt	build\intel\mt_obj\onexit.obj	100.0	37	37	
+0x004a56d2	_atexit	public	rtm_cmt	build\intel\mt_obj\onexit.obj	100.0	8	8	
+0x004a56e4	___onexitinit	public	rtm_cmt	build\intel\mt_obj\onexit.obj	100.0	14	14	pdb-size
+0x004a5713	??_M@YGXPAXIHP6EX0@Z@Z	public	rtm_cmt	build\intel\mt_obj\ehvecdtr.obj	100.0	42	42	pdb-size
+0x004a5793	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	public	rtm_cmt	build\intel\mt_obj\ehvecdtr.obj	100.0	35	35	pdb-size
+0x004a57f1	??2@YAPAXI@Z	public	rtm_cmt	build\intel\mt_obj\new.obj	100.0	6	6	
+0x004a5800	_strpbrk	public	rtm_cmt	build\intel\mt_obj\strpbrk.obj	100.0	32	32	
+0x004a583a	__read	public	rtm_cmt	build\intel\mt_obj\read.obj	100.0	34	34	
+0x004a589f	__read_lk	public	rtm_cmt	build\intel\mt_obj\read.obj	100.0	170	170	
+0x004a5a78	__close	public	rtm_cmt	build\intel\mt_obj\close.obj	100.0	32	32	
+0x004a5ad5	__close_lk	public	rtm_cmt	build\intel\mt_obj\close.obj	100.0	52	52	
+0x004a5b58	__write	public	rtm_cmt	build\intel\mt_obj\write.obj	100.0	34	34	
+0x004a5bbd	__write_lk	public	rtm_cmt	build\intel\mt_obj\write.obj	100.0	135	135	
+0x004a5d48	__open	public	rtm_cmt	build\intel\mt_obj\open.obj	100.0	7	7	
+0x004a5d5f	__sopen	public	rtm_cmt	build\intel\mt_obj\open.obj	100.0	241	241	
+0x004a6030	__ftol	public	rtm_cmt	..\build\intel\mt_obj\ftol.obj	100.0	16	16	
+0x004a6057	__tell	public	rtm_cmt	build\intel\mt_obj\tell.obj	100.0	6	6	
+0x004a6070	__chkstk	public	rtm_cmt	build\intel\mt_obj\chkstk.obj	100.0	17	17	
+0x004a609f	_fclose	public	rtm_cmt	build\intel\mt_obj\fclose.obj	100.0	20	20	
+0x004a60d0	__fclose_lk	public	rtm_cmt	build\intel\mt_obj\fclose.obj	100.0	30	30	
+0x004a611c	__fsopen	public	rtm_cmt	build\intel\mt_obj\fopen.obj	100.0	21	21	
+0x004a614d	_fopen	public	rtm_cmt	build\intel\mt_obj\fopen.obj	100.0	6	6	
+0x004a6170	_strchr	public	rtm_cmt	build\intel\mt_obj\strchr.obj	100.0	86	86	lib-to-section-end
+0x004a6176	___from_strstr_to_strchr	public	rtm_cmt	build\intel\mt_obj\strchr.obj	100.0	84	84	pdb-size
+0x004a622c	_fprintf	public	rtm_cmt	build\intel\mt_obj\fprintf.obj	100.0	26	26	
+0x004a6268	_fwrite	public	rtm_cmt	build\intel\mt_obj\fwrite.obj	100.0	18	18	
+0x004a6297	__fwrite_lk	public	rtm_cmt	build\intel\mt_obj\fwrite.obj	100.0	106	106	
+0x004a63a1	_fread	public	rtm_cmt	build\intel\mt_obj\fread.obj	100.0	18	18	
+0x004a63d0	__fread_lk	public	rtm_cmt	build\intel\mt_obj\fread.obj	100.0	92	92	
+0x004a64b8	_remove	public	rtm_cmt	build\intel\mt_obj\unlink.obj	100.0	16	16	
+0x004a64f0	_strstr	public	rtm_cmt	build\intel\mt_obj\strstr.obj	100.0	66	66	
+0x004a6570	_isdigit	public	rtm_cmt	build\intel\mt_obj\_ctype.obj	100.0	13	13	
+0x004a6598	_isspace	public	rtm_cmt	build\intel\mt_obj\_ctype.obj	100.0	13	13	
+0x004a65c0	_isprint	public	rtm_cmt	build\intel\mt_obj\_ctype.obj	100.0	13	13	
+0x004a65ee	_fgets	public	rtm_cmt	build\intel\mt_obj\fgets.obj	100.0	48	48	
+0x004a6650	_toupper	public	rtm_cmt	build\intel\mt_obj\toupper.obj	100.0	44	44	
+0x004a66bf	__toupper_lk	public	rtm_cmt	build\intel\mt_obj\toupper.obj	100.0	71	71	
+0x004a678b	_strtok	public	rtm_cmt	build\intel\mt_obj\strtok.obj	100.0	78	78	
+0x004a682f	_WinMainCRTStartup	public	rtm_cmt	build\intel\mt_obj\wincrt0.obj	100.0	84	84	pdb-size
+0x004a6937	__amsg_exit	public	rtm_cmt	build\intel\mt_obj\crt0.obj	80.0	8	10	
+0x004a6980	_realloc	public	rtm_cmt	build\intel\mt_obj\realloc.obj	100.0	125	125	
+0x004a6ab8	__purecall	public	rtm_cmt	build\intel\mt_obj\purevirt.obj	100.0	4	4	pdb-size trim-pad
+0x004a6ad0	_strncmp	public	rtm_cmt	build\intel\mt_obj\strncmp.obj	100.0	31	31	
+0x004a6b08	_atol	public	rtm_cmt	build\intel\mt_obj\atox.obj	100.0	59	59	
+0x004a6b93	_atoi	public	rtm_cmt	build\intel\mt_obj\atox.obj	100.0	4	4	
+0x004a6ba0	_memchr	public	rtm_cmt	build\intel\mt_obj\memchr.obj	100.0	76	76	
+0x004a6c50	_strrchr	public	rtm_cmt	build\intel\mt_obj\strrchr.obj	100.0	23	23	
+0x004a6c80	_strncpy	public	rtm_cmt	build\intel\mt_obj\strncpy.obj	100.0	109	109	
+0x004a6d80	_memmove	public	rtm_cmt	build\intel\mt_obj\memmove.obj	100.0	52	52	byte-identity (relocation sites masked)
+0x004a70b5	_rewind	public	rtm_cmt	build\intel\mt_obj\rewind.obj	100.0	38	38	
+0x004a7119	_fseek	public	rtm_cmt	build\intel\mt_obj\fseek.obj	100.0	17	17	
+0x004a7145	__fseek_lk	public	rtm_cmt	build\intel\mt_obj\fseek.obj	100.0	55	55	
+0x004a71d2	_tolower	public	rtm_cmt	build\intel\mt_obj\tolower.obj	100.0	44	44	
+0x004a7241	__tolower_lk	public	rtm_cmt	build\intel\mt_obj\tolower.obj	100.0	78	78	
+0x004a730c	__ftell_lk	public	rtm_cmt	build\intel\mt_obj\ftell.obj	100.0	127	127	
+0x004a7470	_strcspn	public	rtm_cmt	build\intel\mt_obj\strcspn.obj	100.0	35	35	
+0x004a74ae	__setdefaultprecision	public	rtm_cmt	build\intel\mt_obj\fp8.obj	100.0	6	6	
+0x004a74c0	__ms_p5_test_fdiv	public	rtm_cmt	..\build\intel\mt_obj\testfdiv.obj	100.0	24	24	
+0x004a74fe	__ms_p5_mp_test_fdiv	public	rtm_cmt	..\build\intel\mt_obj\testfdiv.obj	100.0	13	13	
+0x004a7527	__forcdecpt	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	37	37	
+0x004a7581	__cropzeros	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	38	38	
+0x004a75cf	__positive	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	11	11	
+0x004a75e7	__fassign	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	29	29	
+0x004a7625	__cftoe	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	42	42	
+0x004a7748	__cftof	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	37	37	
+0x004a7844	__cftog	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	66	66	
+0x004a78d7	__cfltcvt	public	rtm_cmt	..\build\intel\mt_obj\cvt.obj	100.0	29	29	
+0x004a794d	__heap_init	public	rtm_cmt	build\intel\mt_obj\heapinit.obj	100.0	20	20	
+0x004a7989	__mtinitlocks	public	rtm_cmt	build\intel\mt_obj\mlock.obj	100.0	12	12	
+0x004a79b2	__lock	public	rtm_cmt	build\intel\mt_obj\mlock.obj	100.0	37	37	
+0x004a7a13	__unlock	public	rtm_cmt	build\intel\mt_obj\mlock.obj	100.0	7	7	
+0x004a7a28	___sbh_heap_init	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	15	15	
+0x004a7a66	___sbh_find_block	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	14	14	
+0x004a7a91	___sbh_free_block	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	264	264	
+0x004a7dbc	___sbh_alloc_block	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	275	275	
+0x004a80c5	___sbh_alloc_new_region	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	53	53	
+0x004a8176	___sbh_alloc_new_group	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	85	85	
+0x004a8271	___sbh_resize_block	public	rtm_cmt	build\intel\mt_obj\sbheap.obj	100.0	259	259	
+0x004a8567	__callnewh	public	rtm_cmt	build\intel\mt_obj\handler.obj	100.0	13	13	
+0x004a8582	___InternalCxxFrameHandler	public	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	61	61	
+0x004a88d7	___FrameUnwindToState	public	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	56	56	lib-code-size
+0x004a8d0f	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	public	rtm_cmt	build\intel\mt_obj\frame.obj	100.0	39	39	lib-code-size
+0x004a8da0	__CallSettingFrame@12	public	rtm_cmt	build\intel\mt_obj\lowhelpr.obj	100.0	34	34	lib-to-section-end
+0x004a8dc7	__NLG_Return	public	rtm_cmt	build\intel\mt_obj\lowhelpr.obj	100.0	17	17	pdb-size
+0x004a8dec	__mtinit	public	rtm_cmt	build\intel\mt_obj\tidtable.obj	100.0	32	32	
+0x004a8e40	__initptd	public	rtm_cmt	build\intel\mt_obj\tidtable.obj	100.0	4	4	
+0x004a8e53	__getptd	public	rtm_cmt	build\intel\mt_obj\tidtable.obj	100.0	38	38	
+0x004a8eba	?terminate@@YAXXZ	public	rtm_cmt	build\intel\mt_obj\hooks.obj	100.0	32	32	pdb-size
+0x004a8f1b	?_inconsistency@@YAXXZ	public	rtm_cmt	build\intel\mt_obj\hooks.obj	100.0	29	29	lib-code-size
+0x004a8f7c	__except_handler3	public	rtm_cmt	build\intel\mt_obj\exsup3.obj	100.0	14	14	byte-identity (relocation sites masked)
+0x004a9039	__seh_longjmp_unwind@4	public	rtm_cmt	build\intel\mt_obj\exsup3.obj	100.0	11	11	
+0x004a9054	__msize	public	rtm_cmt	build\intel\mt_obj\msize.obj	100.0	27	27	
+0x004a9099	__dosmaperr	public	rtm_cmt	build\intel\mt_obj\dosmap.obj	100.0	37	37	
+0x004a910c	__errno	public	rtm_cmt	build\intel\mt_obj\dosmap.obj	100.0	3	3	
+0x004a9115	___doserrno	public	rtm_cmt	build\intel\mt_obj\dosmap.obj	100.0	3	3	
+0x004a911e	__alloc_osfhnd	public	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	103	103	
+0x004a9241	__set_osfhnd	public	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	47	47	
+0x004a92bd	__free_osfhnd	public	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	48	48	
+0x004a933c	__get_osfhandle	public	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	19	19	
+0x004a937e	__lock_fhandle	public	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	34	34	
+0x004a93dd	__unlock_fhandle	public	rtm_cmt	build\intel\mt_obj\osfinfo.obj	100.0	10	10	
+0x004a93ff	__ioinit	public	rtm_cmt	build\intel\mt_obj\ioinit.obj	100.0	150	150	
+0x004a95bb	__lseek	public	rtm_cmt	build\intel\mt_obj\lseek.obj	100.0	34	34	
+0x004a9620	__lseek_lk	public	rtm_cmt	build\intel\mt_obj\lseek.obj	100.0	41	41	
+0x004a9693	__chsize_lk	public	rtm_cmt	build\intel\mt_obj\chsize.obj	100.0	103	103	
+0x004a97b8	___initstdio	public	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	60	60	pdb-size
+0x004a9860	___endstdio	public	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	5	5	
+0x004a9874	__lock_file	public	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	17	17	
+0x004a98a3	__lock_file2	public	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	13	13	
+0x004a98c6	__unlock_file	public	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	17	17	
+0x004a98f5	__unlock_file2	public	rtm_cmt	build\intel\mt_obj\_file.obj	100.0	13	13	
+0x004a9918	__freebuf	public	rtm_cmt	build\intel\mt_obj\_freebuf.obj	100.0	17	17	
+0x004a9943	_fflush	public	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	22	22	
+0x004a9972	__fflush_lk	public	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	22	22	
+0x004a99a0	__flush	public	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	40	40	
+0x004a99fc	__flushall	public	rtm_cmt	build\intel\mt_obj\fflush.obj	100.0	4	4	
+0x004a9aa9	__openfile	public	rtm_cmt	build\intel\mt_obj\_open.obj	100.0	124	124	
+0x004a9c19	__getstream	public	rtm_cmt	build\intel\mt_obj\stream.obj	100.0	73	73	
+0x004a9ce1	__stbuf	public	rtm_cmt	build\intel\mt_obj\_sftbuf.obj	100.0	53	53	
+0x004a9d6e	__ftbuf	public	rtm_cmt	build\intel\mt_obj\_sftbuf.obj	100.0	15	15	
+0x004aa5a2	__flsbuf	public	rtm_cmt	build\intel\mt_obj\_flsbuf.obj	100.0	106	106	
+0x004aa6c0	_memcpy	public	rtm_cmt	build\intel\mt_obj\memcpy.obj	100.0	52	52	byte-identity (relocation sites masked)
+0x004aa9f5	__filbuf	public	rtm_cmt	build\intel\mt_obj\_filbuf.obj	100.0	79	79	
+0x004aaad1	__isctype	public	rtm_cmt	build\intel\mt_obj\isctype.obj	100.0	46	46	
+0x004aab46	___crtLCMapStringA	public	rtm_cmt	build\intel\mt_obj\a_map.obj	100.0	193	193	pdb-size
+0x004aad6a	__XcptFilter	public	rtm_cmt	build\intel\mt_obj\winxfltr.obj	100.0	102	102	
+0x004aaee2	__wincmdln	public	rtm_cmt	build\intel\mt_obj\wincmdln.obj	100.0	39	39	
+0x004aaf3a	__setenvp	public	rtm_cmt	build\intel\mt_obj\stdenvp.obj	100.0	71	71	
+0x004aaff3	__setargv	public	rtm_cmt	build\intel\mt_obj\stdargv.obj	100.0	62	62	
+0x004ab240	___crtGetEnvironmentStringsA	public	rtm_cmt	build\intel\mt_obj\a_env.obj	100.0	132	132	
+0x004ab372	__FF_MSGBANNER	public	rtm_cmt	build\intel\mt_obj\crt0msg.obj	100.0	18	18	
+0x004ab3ab	__NMSG_WRITE	public	rtm_cmt	build\intel\mt_obj\crt0msg.obj	100.0	100	100	
+0x004ab500	__allmul	public	rtm_cmt	build\intel\mt_obj\llmul.obj	100.0	19	19	
+0x004ab534	_calloc	public	rtm_cmt	build\intel\mt_obj\calloc.obj	100.0	56	56	
+0x004ab5c1	__control87	public	rtm_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	25	25	
+0x004ab5f6	__controlfp	public	rtm_cmt	..\build\intel\mt_obj\ieee87.obj	100.0	8	8	
+0x004ab727	__ZeroTail	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	36	36	
+0x004ab770	__IncMan	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	43	43	
+0x004ab7c6	__RoundMan	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	71	71	
+0x004ab852	__CopyMan	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	13	13	
+0x004ab86d	__FillZeroMan	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	8	8	
+0x004ab879	__IsZeroMan	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	13	13	
+0x004ab894	__ShrMan	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	64	64	
+0x004ab921	__ld12cvt	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	138	138	
+0x004aba8d	__ld12tod	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	6	6	
+0x004abaa3	__ld12tof	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	6	6	
+0x004abab9	__atodbl	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	21	21	
+0x004abae6	__atoflt	public	rtm_cmt	..\build\intel\mt_obj\intrncvt.obj	100.0	21	21	
+0x004abb13	__fptostr	public	rtm_cmt	build\intel\mt_obj\_fptostr.obj	100.0	57	57	
+0x004abb8a	__fltout2	public	rtm_cmt	..\build\intel\mt_obj\cfout.obj	100.0	41	41	
+0x004abbe6	___dtold	public	rtm_cmt	..\build\intel\mt_obj\cfout.obj	100.0	70	70	
+0x004abca0	_strcpy	public	rtm_cmt	build\intel\mt_obj\strcat.obj	100.0	15	15	byte-identity (relocation sites masked)
+0x004abcb0	_strcat	public	rtm_cmt	build\intel\mt_obj\strcat.obj	100.0	84	84	
+0x004abd90	_memset	public	rtm_cmt	build\intel\mt_obj\memset.obj	100.0	40	40	
+0x004abdf0	_strlen	public	rtm_cmt	build\intel\mt_obj\strlen.obj	100.0	44	44	
+0x004abe6b	__fptrap	public	rtm_cmt	build\intel\mt_obj\crt0fp.obj	100.0	4	4	
+0x004abe74	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	public	rtm_cmt	build\intel\mt_obj\unhandld.obj	100.0	24	24	
+0x004abeba	?__CxxSetUnhandledExceptionFilter@@YAXXZ	public	rtm_cmt	build\intel\mt_obj\unhandld.obj	100.0	4	4	
+0x004abecb	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	public	rtm_cmt	build\intel\mt_obj\unhandld.obj	100.0	3	3	
+0x004abed8	?_ValidateRead@@YAHPBXI@Z	public	rtm_cmt	build\intel\mt_obj\validate.obj	100.0	12	12	
+0x004abef4	?_ValidateWrite@@YAHPAXI@Z	public	rtm_cmt	build\intel\mt_obj\validate.obj	100.0	12	12	
+0x004abf10	?_ValidateExecute@@YAHP6GHXZ@Z	public	rtm_cmt	build\intel\mt_obj\validate.obj	100.0	11	11	
+0x004abf30	_strcmp	public	rtm_cmt	build\intel\mt_obj\strcmp.obj	100.0	56	56	pdb-size
+0x004abfb4	_abort	public	rtm_cmt	build\intel\mt_obj\abort.obj	100.0	8	8	
+0x004abfcb	__setmode_lk	public	rtm_cmt	build\intel\mt_obj\setmode.obj	100.0	31	31	
+0x004ac02c	__fcloseall	public	rtm_cmt	build\intel\mt_obj\closeall.obj	100.0	49	49	
+0x004ac0ad	__commit	public	rtm_cmt	build\intel\mt_obj\commit.obj	100.0	52	52	
+0x004ac140	__isatty	public	rtm_cmt	build\intel\mt_obj\isatty.obj	100.0	13	13	
+0x004ac169	_wctomb	public	rtm_cmt	build\intel\mt_obj\wctomb.obj	100.0	39	39	
+0x004ac1c2	__wctomb_lk	public	rtm_cmt	build\intel\mt_obj\wctomb.obj	100.0	38	38	
+0x004ac230	__aulldiv	public	rtm_cmt	build\intel\mt_obj\ulldiv.obj	100.0	43	43	
+0x004ac2a0	__aullrem	public	rtm_cmt	build\intel\mt_obj\ullrem.obj	100.0	44	44	
+0x004ac315	__getbuf	public	rtm_cmt	build\intel\mt_obj\_getbuf.obj	100.0	19	19	
+0x004ac359	___crtGetStringTypeA	public	rtm_cmt	build\intel\mt_obj\a_str.obj	100.0	123	123	pdb-size
+0x004ac4a2	__ismbblead	public	rtm_cmt	build\intel\mt_obj\ismbbyte.obj	100.0	6	6	
+0x004ac4e4	__setmbcp	public	rtm_cmt	build\intel\mt_obj\mbctype.obj	100.0	143	143	
+0x004ac8bc	___initmbctable	public	rtm_cmt	build\intel\mt_obj\mbctype.obj	100.0	7	7	
+0x004ac8d8	___crtMessageBoxA	public	rtm_cmt	build\intel\mt_obj\crtmbox.obj	100.0	50	50	
+0x004ac961	_raise	public	rtm_cmt	build\intel\mt_obj\winsig.obj	100.0	138	138	
+0x004acb20	___addl	public	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	15	15	
+0x004acb41	___add_12	public	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	38	38	
+0x004acb9f	___shl_12	public	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	21	21	
+0x004acbcd	___shr_12	public	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	21	21	
+0x004acbfa	___mtold12	public	rtm_cmt	..\build\intel\mt_obj\mantold.obj	100.0	76	76	
+0x004accc1	___strgtold12	public	rtm_cmt	..\build\intel\mt_obj\strgtold.obj	100.0	417	417	lib-to-section-end
+0x004ad192	_$I10_OUTPUT	public	rtm_cmt	..\build\intel\mt_obj\x10fout.obj	100.0	232	232	
+0x004ad425	__itoa	public	rtm_cmt	build\intel\mt_obj\xtoa.obj	100.0	18	18	
+0x004ad4b0	__strcmpi	public	rtm_cmt	build\intel\mt_obj\stricmp.obj	100.0	85	85	
+0x004ad580	__strnicmp	public	rtm_cmt	build\intel\mt_obj\strnicmp.obj	100.0	103	103	
+0x004ad681	___ld12mul	public	rtm_cmt	..\build\intel\mt_obj\tenpow.obj	100.0	177	177	
+0x004ad8a1	___multtenpow12	public	rtm_cmt	..\build\intel\mt_obj\tenpow.obj	100.0	52	52	
+0x004ad91d	_getenv	public	rtm_cmt	build\intel\mt_obj\getenv.obj	100.0	12	12	
+0x004ad93e	__getenv_lk	public	rtm_cmt	build\intel\mt_obj\getenv.obj	100.0	51	51	
+0x004ad9bb	__mbsnbicoll	public	rtm_cmt	build\intel\mt_obj\mbsnbico.obj	100.0	24	24	
+0x004ad9fa	___wtomb_environ	public	rtm_cmt	build\intel\mt_obj\wtombenv.obj	100.0	58	58	
+0x004ada68	___crtCompareStringA	public	rtm_cmt	build\intel\mt_obj\a_cmp.obj	100.0	239	239	lib-code-size
+0x004add10	___crtsetenv	public	rtm_cmt	build\intel\mt_obj\setenv.obj	100.0	155	155	
+0x004adf56	__mbschr	public	rtm_cmt	build\intel\mt_obj\mbschr.obj	100.0	62	62	
+0x004adfed	__strdup	public	rtm_cmt	build\intel\mt_obj\strdup.obj	100.0	23	23	
+0x004b65d0	_RtlUnwind@16	public	-	-	0.0	0	0	no member defines it or no body in our list
+0x004b65d6	_sprintf	public	rtm_cmt	build\intel\mt_obj\sprintf.obj	100.0	32	32	
+0x004b6628	_sscanf	public	rtm_cmt	build\intel\mt_obj\sscanf.obj	100.0	19	19	
+0x004b665c	__input	public	rtm_cmt	build\intel\mt_obj\input.obj	100.0	906	906	
+0x004b710d	_mbtowc	public	rtm_cmt	build\intel\mt_obj\mbtowc.obj	100.0	39	39	
+0x004b716a	__mbtowc_lk	public	rtm_cmt	build\intel\mt_obj\mbtowc.obj	100.0	75	75	
+0x004b7240	__allshl	public	rtm_cmt	build\intel\mt_obj\llshl.obj	100.0	15	15	
+0x004b725f	__ungetc_lk	public	rtm_cmt	build\intel\mt_obj\ungetc.obj	100.0	48	48	

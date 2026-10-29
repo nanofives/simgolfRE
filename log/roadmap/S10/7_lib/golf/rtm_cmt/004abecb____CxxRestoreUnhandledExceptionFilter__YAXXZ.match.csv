@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,push dword ptr [0],push dword ptr [0x840c6c],True
+1,call dword ptr [0],call dword ptr [0x4ba04c],True
+2,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\unhandld.obj (library object, no compilation)",symbol=?__CxxRestoreUnhandledExceptionFilter@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

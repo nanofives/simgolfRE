@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 31 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 Caret-blink timer callback: flips the caret-visible flag at +0x5a8 of the edit box it receives and re-lays it out. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_EditBox.cpp` as `?caret_callback@EditBox@@SAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
 ## Reads

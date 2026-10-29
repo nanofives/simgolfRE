@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 45 bytes, 15 instructions, subsystem `ui`. Mechanical t
 Passes a mouse position on to Button::onMouseMove only when this button is the focused window and g_pressWin is 1. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BaseButton.cpp` as `?on_mouse_leave@BaseButton@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00488cea): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00488cce before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

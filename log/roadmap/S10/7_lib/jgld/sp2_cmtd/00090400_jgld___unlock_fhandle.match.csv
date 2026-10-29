@@ -1,0 +1,16 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+3,"sar eax, 5","sar eax, 5",True
+4,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+5,"and ecx, 0x1f","and ecx, 0x1f",True
+6,"imul ecx, ecx, 0x24","imul ecx, ecx, 0x24",True
+7,"mov edx, dword ptr [eax*4]","mov edx, dword ptr [eax*4 + 0x10129e60]",True
+8,"lea eax, [edx + ecx + 0xc]","lea eax, [edx + ecx + 0xc]",True
+9,push eax,push eax,True
+10,call dword ptr [0],call dword ptr [0x1012c508],True
+11,pop ebp,pop ebp,True
+12,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\osfinfo.obj (library object, no compilation)",symbol=__unlock_fhandle,module=jgld.dll
+VERDICT,GREEN,13,100.0%

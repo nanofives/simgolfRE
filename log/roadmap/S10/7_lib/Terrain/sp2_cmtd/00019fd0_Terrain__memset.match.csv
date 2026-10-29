@@ -1,0 +1,43 @@
+instruction,library_object,original,match
+0,"mov edx, dword ptr [esp + 0xc]","mov edx, dword ptr [esp + 0xc]",True
+1,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+2,"test edx, edx","test edx, edx",True
+3,je 0x53,je 0x1001a023,True
+4,"xor eax, eax","xor eax, eax",True
+5,"mov al, byte ptr [esp + 8]","mov al, byte ptr [esp + 8]",True
+6,push edi,push edi,True
+7,"mov edi, ecx","mov edi, ecx",True
+8,"cmp edx, 4","cmp edx, 4",True
+9,jb 0x47,jb 0x1001a017,True
+10,neg ecx,neg ecx,True
+11,"and ecx, 3","and ecx, 3",True
+12,je 0x29,je 0x10019ff9,True
+13,"sub edx, ecx","sub edx, ecx",True
+14,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+15,inc edi,inc edi,True
+16,dec ecx,dec ecx,True
+17,jne 0x23,jne 0x10019ff3,True
+18,"mov ecx, eax","mov ecx, eax",True
+19,"shl eax, 8","shl eax, 8",True
+20,"add eax, ecx","add eax, ecx",True
+21,"mov ecx, eax","mov ecx, eax",True
+22,"shl eax, 0x10","shl eax, 0x10",True
+23,"add eax, ecx","add eax, ecx",True
+24,"mov ecx, edx","mov ecx, edx",True
+25,"and edx, 3","and edx, 3",True
+26,"shr ecx, 2","shr ecx, 2",True
+27,je 0x47,je 0x1001a017,True
+28,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+29,"test edx, edx","test edx, edx",True
+30,je 0x4d,je 0x1001a01d,True
+31,"mov byte ptr [edi], al","mov byte ptr [edi], al",True
+32,inc edi,inc edi,True
+33,dec edx,dec edx,True
+34,jne 0x47,jne 0x1001a017,True
+35,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+36,pop edi,pop edi,True
+37,ret ,ret ,True
+38,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+39,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\memset.obj (library object, no compilation)",symbol=_memset,module=Terrain.dll
+VERDICT,GREEN,40,100.0%

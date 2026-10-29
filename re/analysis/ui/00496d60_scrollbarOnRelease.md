@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 208 bytes, 56 instructions, subsystem `ui`. Mechanical 
 mouse-release handler of the scrollbar: reports the final thumb value to the owner, runs the release hook and resets the pressed state at +0x59c to -1 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_scroll.cpp` as `?on_left_click@Scroll@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00496e2d): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00496d61 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

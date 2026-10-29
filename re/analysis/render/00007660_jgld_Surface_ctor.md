@@ -64,7 +64,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x100014dd -> 0x100092e0 `initDepthInfo` (incremental-linking thunk) at 0x100076a7
 - 0x10001582 -> 0x1000a660 `makeColor` (incremental-linking thunk) at 0x1000782e
 - 0x1007e780 `__chkesp` at 0x10007814, 0x1000786a
-- 0x1007e7c0 `_memset` at 0x100077fb
+- 0x1007e7c0 `memset` at 0x100077fb
 - import `KERNEL32.dll!InitializeCriticalSection` at 0x1000780c
 
 ## Callers

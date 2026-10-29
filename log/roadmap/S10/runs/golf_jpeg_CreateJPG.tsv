@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/CreateJPG.c	0xae020	0x004ae020	293	G	CreateJPG	_CreateJPG	public	100	100.0	83/83 ins	

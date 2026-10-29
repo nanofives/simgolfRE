@@ -1,0 +1,32 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+4,jmp 0x16,jmp 0x1002a066,True
+5,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+6,"add eax, 1","add eax, 1",True
+7,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+8,"cmp dword ptr [ebp - 4], 0x101","cmp dword ptr [ebp - 4], 0x101",True
+9,jge 0x2b,jge 0x1002a07b,True
+10,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+11,"mov byte ptr [ecx], 0","mov byte ptr [ecx + 0x10110d00], 0",True
+12,jmp 0xd,jmp 0x1002a05d,True
+13,"mov dword ptr [0], 0","mov dword ptr [0x10110b74], 0",True
+14,"mov dword ptr [0], 0","mov dword ptr [0x10110bfc], 0",True
+15,"mov dword ptr [0], 0","mov dword ptr [0x10110e04], 0",True
+16,"mov dword ptr [ebp - 4], 0","mov dword ptr [ebp - 4], 0",True
+17,jmp 0x5b,jmp 0x1002a0ab,True
+18,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+19,"add edx, 1","add edx, 1",True
+20,"mov dword ptr [ebp - 4], edx","mov dword ptr [ebp - 4], edx",True
+21,"cmp dword ptr [ebp - 4], 6","cmp dword ptr [ebp - 4], 6",True
+22,jge 0x70,jge 0x1002a0c0,True
+23,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+24,"mov word ptr [eax*2], 0","mov word ptr [eax*2 + 0x10110bf0], 0",True
+25,jmp 0x52,jmp 0x1002a0a2,True
+26,"mov esp, ebp","mov esp, ebp",True
+27,pop ebp,pop ebp,True
+28,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\mbctype.obj (library object, no compilation)",symbol=_setSBCS,module=Terrain.dll
+VERDICT,GREEN,29,100.0%

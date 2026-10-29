@@ -1,0 +1,17 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,call 6,call 0x1004c67f,True
+2,"mov esi, dword ptr [eax]","mov esi, dword ptr [eax]",True
+3,fninit ,fninit ,True
+4,call 0xf,call 0x10044353,True
+5,"test esi, esi","test esi, esi",True
+6,je 0x29,je 0x100496ea,True
+7,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+8,"test dword ptr [eax], 0x10008","test dword ptr [eax], 0x10008",True
+9,je 0x29,je 0x100496ea,True
+10,"and dword ptr [eax + 0x20], 0","and dword ptr [eax + 0x20], 0",True
+11,"mov dword ptr [eax + 0x24], 0xffff","mov dword ptr [eax + 0x24], 0xffff",True
+12,pop esi,pop esi,True
+13,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\ieee87.obj (library object, no compilation)",symbol=__fpreset,module=sound.dll
+VERDICT,GREEN,14,100.0%

@@ -7,6 +7,7 @@ Second RIFF WAVE file writer variant (mmioWrite). (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_Cmix.cpp` as `?mix_2_3d_mb@CWaveMixer@@QAE?AW4SNDERR@@PAVCDSB@@0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10007a41, 0x10007a79, 0x10007a88, 0x10007a97): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x100075ef before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

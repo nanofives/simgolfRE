@@ -7,6 +7,7 @@ Recomputes the attenuation from the owner master level (owner +0x188) and applie
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsb.cpp` as `?set_volume@CDSB@@QAEXN@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000f34a): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1000f2b4 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

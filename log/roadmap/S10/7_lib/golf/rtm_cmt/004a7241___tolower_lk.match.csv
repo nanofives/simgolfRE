@@ -1,0 +1,81 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [8], 0","cmp dword ptr [0x840b44], 0",True
+4,push ebx,push ebx,True
+5,push esi,push esi,True
+6,push edi,push edi,True
+7,jne 0x2d,jne 0x4a726e,True
+8,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+9,"cmp eax, 0x41","cmp eax, 0x41",True
+10,jl 0xc6,jl 0x4a7307,True
+11,"cmp eax, 0x5a","cmp eax, 0x5a",True
+12,jg 0xc6,jg 0x4a7307,True
+13,"add eax, 0x20","add eax, 0x20",True
+14,jmp 0xc6,jmp 0x4a7307,True
+15,"mov ebx, dword ptr [ebp + 8]","mov ebx, dword ptr [ebp + 8]",True
+16,"mov edi, 0x100","mov edi, 0x100",True
+17,push 1,push 1,True
+18,"cmp ebx, edi","cmp ebx, edi",True
+19,pop esi,pop esi,True
+20,jge 0x61,jge 0x4a72a2,True
+21,"cmp dword ptr [0], esi","cmp dword ptr [0x4e521c], esi",True
+22,jle 0x4f,jle 0x4a7290,True
+23,push esi,push esi,True
+24,push ebx,push ebx,True
+25,call 0x4b,call 0x4aaad1,True
+26,pop ecx,pop ecx,True
+27,pop ecx,pop ecx,True
+28,jmp 0x59,jmp 0x4a729a,True
+29,"mov eax, dword ptr [0]","mov eax, dword ptr [0x4e5010]",True
+30,"mov al, byte ptr [eax + ebx*2]","mov al, byte ptr [eax + ebx*2]",True
+31,"and eax, esi","and eax, esi",True
+32,"test eax, eax","test eax, eax",True
+33,jne 0x61,jne 0x4a72a2,True
+34,"mov eax, ebx","mov eax, ebx",True
+35,jmp 0xc6,jmp 0x4a7307,True
+36,"mov edx, dword ptr [0]","mov edx, dword ptr [0x4e5010]",True
+37,"mov eax, ebx","mov eax, ebx",True
+38,"sar eax, 8","sar eax, 8",True
+39,"movzx ecx, al","movzx ecx, al",True
+40,"test byte ptr [edx + ecx*2 + 1], 0x80","test byte ptr [edx + ecx*2 + 1], 0x80",True
+41,je 0x85,je 0x4a72c6,True
+42,"and byte ptr [ebp + 0xa], 0","and byte ptr [ebp + 0xa], 0",True
+43,push 2,push 2,True
+44,"mov byte ptr [ebp + 8], al","mov byte ptr [ebp + 8], al",True
+45,"mov byte ptr [ebp + 9], bl","mov byte ptr [ebp + 9], bl",True
+46,pop eax,pop eax,True
+47,jmp 0x8e,jmp 0x4a72cf,True
+48,"and byte ptr [ebp + 9], 0","and byte ptr [ebp + 9], 0",True
+49,"mov byte ptr [ebp + 8], bl","mov byte ptr [ebp + 8], bl",True
+50,"mov eax, esi","mov eax, esi",True
+51,push esi,push esi,True
+52,push 0,push 0,True
+53,"lea ecx, [ebp - 4]","lea ecx, [ebp - 4]",True
+54,push 3,push 3,True
+55,push ecx,push ecx,True
+56,push eax,push eax,True
+57,"lea eax, [ebp + 8]","lea eax, [ebp + 8]",True
+58,push eax,push eax,True
+59,push edi,push edi,True
+60,push dword ptr [8],push dword ptr [0x840b44],True
+61,call 0xa8,call 0x4aab46,True
+62,"add esp, 0x20","add esp, 0x20",True
+63,"test eax, eax","test eax, eax",True
+64,je 0x5d,je 0x4a729e,True
+65,"cmp eax, esi","cmp eax, esi",True
+66,jne 0xb9,jne 0x4a72fa,True
+67,"movzx eax, byte ptr [ebp - 4]","movzx eax, byte ptr [ebp - 4]",True
+68,jmp 0xc6,jmp 0x4a7307,True
+69,"movzx eax, byte ptr [ebp - 3]","movzx eax, byte ptr [ebp - 3]",True
+70,"movzx ecx, byte ptr [ebp - 4]","movzx ecx, byte ptr [ebp - 4]",True
+71,"shl eax, 8","shl eax, 8",True
+72,"or eax, ecx","or eax, ecx",True
+73,pop edi,pop edi,True
+74,pop esi,pop esi,True
+75,pop ebx,pop ebx,True
+76,leave ,leave ,True
+77,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\tolower.obj (library object, no compilation)",symbol=__tolower_lk,module=golf_clean.exe
+VERDICT,GREEN,78,100.0%

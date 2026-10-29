@@ -1,0 +1,20 @@
+file	addr	old	new	evidence
+sound_3.tsv	0x1001f4a0	Sound5b6a8_ctor	Seq::ctor_1001f4a0	stores vtable 0x1005b6a8 at 0x1001f52a; SMSG's public there is ??_7CMidiMgr@@6B@ and its PDB names the function CMidiMgr::CMidiMgr; SMSG has 2 functions named CMidiMgr::CMidiMgr, so this one carries its address
+sound_3.tsv	0x1001ff50	Sound5b6a8_dtor	Seq::dtor	stores vtable 0x1005b6a8 at 0x1001ff72; SMSG's public there is ??_7CMidiMgr@@6B@ and its PDB names the function CMidiMgr::~CMidiMgr
+sound_4.tsv	0x10030180	Sound5c450_dtor	CVoiceRxMgr::dtor	stores vtable 0x1005c450 at 0x100301a0; SMSG's public there is ??_7CVoiceRxMgr@@6B@ and its PDB names the function CVoiceRxMgr::~CVoiceRxMgr
+sound_4.tsv	0x10030080	Sound5c450_ctor	CVoiceRxMgr::ctor	stores vtable 0x1005c450 at 0x100300b9; SMSG's public there is ??_7CVoiceRxMgr@@6B@ and its PDB names the function CVoiceRxMgr::CVoiceRxMgr
+sound_6.tsv	0x1001bd90	Ctrl5b5c0_ctor	NoteMap::ctor_1001bd90	stores vtable 0x1005b5c0 at 0x1001bde7; SMSG's public there is ??_7NoteMap@@6BMidiCtrlTarget@@@ and its PDB names the function NoteMap::NoteMap; SMSG has 2 functions named NoteMap::NoteMap, so this one carries its address
+sound_6.tsv	0x1001c870	Ctrl5b638_ctor	Chooser::ctor	stores vtable 0x1005b638 at 0x1001c8c4; SMSG's public there is ??_7Chooser@@6BMidiCtrlTarget@@@ and its PDB names the function Chooser::Chooser
+sound_6.tsv	0x1001c5c0	Ctrl5b5f0_ctor	Randomizer::ctor	stores vtable 0x1005b5f0 at 0x1001c610; SMSG's public there is ??_7Randomizer@@6B@ and its PDB names the function Randomizer::Randomizer
+sound_6.tsv	0x1001cbf0	Ctrl5b668_ctor	TrackCtrl::ctor	stores vtable 0x1005b668 at 0x1001cc1d; SMSG's public there is ??_7TrackCtrl@@6B@ and its PDB names the function TrackCtrl::TrackCtrl
+sound_6.tsv	0x1001bee0	Ctrl5b19c_ctor	NoteMap::ctor_1001bee0	stores vtable 0x1005b5c0 at 0x1001bfae; SMSG's public there is ??_7NoteMap@@6BMidiCtrlTarget@@@ and its PDB names the function NoteMap::NoteMap; SMSG has 2 functions named NoteMap::NoteMap, so this one carries its address
+sound_6.tsv	0x1002b620	Ch5bb90_dtor	Wave::dtor	stores vtable 0x1005bb90 at 0x1002b63e; SMSG's public there is ??_7Wave@@6B@ and its PDB names the function Wave::~Wave
+sound_6.tsv	0x1002c490	Ch5bb90_ctor	MpegStream::ctor	stores vtable 0x1005bcb4 at 0x1002c544; SMSG's public there is ??_7MpegStream@@6B@ and its PDB names the function MpegStream::MpegStream
+sound_6.tsv	0x1002e550	Ch5c000_ctor	Ambience::ctor	stores vtable 0x1005c000 at 0x1002e5e1; SMSG's public there is ??_7Ambience@@6B@ and its PDB names the function Ambience::Ambience
+sound_6.tsv	0x1002e930	Ch5c178_ctor	AviSound::ctor	stores vtable 0x1005c178 at 0x1002e9aa; SMSG's public there is ??_7AviSound@@6B@ and its PDB names the function AviSound::AviSound
+sound_6.tsv	0x1002ea30	Ch5c178_dtor	AviSound::dtor	stores vtable 0x1005c178 at 0x1002ea4e; SMSG's public there is ??_7AviSound@@6B@ and its PDB names the function AviSound::~AviSound
+sound_6.tsv	0x1002ef40	Ch5c234_dtor	VoiceRx::dtor	stores vtable 0x1005c234 at 0x1002ef5e; SMSG's public there is ??_7VoiceRx@@6B@ and its PDB names the function VoiceRx::~VoiceRx
+sound_6.tsv	0x1002f3f0	Ch5c2ec_dtor	VoiceTx::dtor	stores vtable 0x1005c2ec at 0x1002f40e; SMSG's public there is ??_7VoiceTx@@6B@ and its PDB names the function VoiceTx::~VoiceTx
+sound_6.tsv	0x1002d560	Ch5be88_dtorA	Midi::dtor	stores vtable 0x1005be88 at 0x1002d57e; SMSG's public there is ??_7Midi@@6B@ and its PDB names the function Midi::~Midi
+sound_6.tsv	0x1002d450	Ch5be88_ctor	Midi::ctor	stores vtable 0x1005be88 at 0x1002d4c6; SMSG's public there is ??_7Midi@@6B@ and its PDB names the function Midi::Midi
+sound_6.tsv	0x1002f740	Ch5c3a4_ctor	dllSoundList::ctor	stores vtable 0x1005c3a4 at 0x1002f76c; SMSG's public there is ??_7dllSoundList@@6B@ and its PDB names the function dllSoundList::dllSoundList

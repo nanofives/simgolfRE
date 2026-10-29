@@ -1,0 +1,21 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,call 9,call 0x10034fc0,True
+4,"cmp dword ptr [0], 7","cmp dword ptr [0x10067a54], 7",True
+5,jl 0x1b,jl 0x10034f9b,True
+6,"mov dword ptr [ebp - 4], 0xffffffff","mov dword ptr [ebp - 4], 0xffffffff",True
+7,jmp 0x31,jmp 0x10034fb1,True
+8,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10067a54]",True
+9,"add eax, 1","add eax, 1",True
+10,"mov dword ptr [0], eax","mov dword ptr [0x10067a54], eax",True
+11,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10067a54]",True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,call 0x36,call 0x10034fe0,True
+14,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+15,"mov esp, ebp","mov esp, ebp",True
+16,pop ebp,pop ebp,True
+17,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/LIBCIMTD.LIB member=build\intel\xmt_obj\_ios.obj (library object, no compilation)",symbol=?xalloc@ios@@SAHXZ,module=Terrain.dll
+VERDICT,GREEN,18,100.0%

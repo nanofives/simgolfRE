@@ -1,0 +1,19 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafaf0	0x004afaf0	97	G	jinit_marker_writer	_jinit_marker_writer	public	100	100.0	22/22 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafb60	0x004afb60	79	L	write_any_marker	_write_any_marker	name	100	100.0	35/35 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafbb0	0x004afbb0	60	L	emit_byte	_emit_byte	name	100	100.0	26/26 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafbf0	0x004afbf0	32	L	emit_marker	_emit_marker	name	100	100.0	12/12 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafc10	0x004afc10	40	L	emit_2bytes	_emit_2bytes	name	100	100.0	17/17 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafc40	0x004afc40	59	L	write_file_header	_write_file_header	name	100	100.0	20/20 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafc80	0x004afc80	151	L	emit_jfif_app0	_emit_jfif_app0	name	100	100.0	54/54 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafd20	0x004afd20	146	L	emit_adobe_app14	_emit_adobe_app14	name	100	100.0	57/57 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafdc0	0x004afdc0	246	L	write_frame_header	_write_frame_header	name	100	100.0	104/104 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xafec0	0x004afec0	214	L	emit_dqt	_emit_dqt	name	100	100.0	77/77 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xaffa0	0x004affa0	184	L	emit_sof	_emit_sof	name	100	100.0	75/75 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb0060	0x004b0060	190	L	write_scan_header	_write_scan_header	name	100	100.0	71/71 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb0120	0x004b0120	191	L	emit_dht	_emit_dht	name	100	100.0	74/74 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb01e0	0x004b01e0	1	L	emit_dac	_emit_dac	name	100	100.0	1/1 ins	golf_jpeg_ccolor.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb01f0	0x004b01f0	42	L	emit_dri	_emit_dri	name	100	100.0	15/15 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb0220	0x004b0220	221	L	emit_sos	_emit_sos	name	100	100.0	77/77 ins	golf_jpeg_cmarker.cpp
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb0300	0x004b0300	19	L	write_file_trailer	_write_file_trailer	name	100	100.0	6/6 ins	
+golf	golf/jpeg.lib/jpeg-6a/jcmarker.c	0xb0320	0x004b0320	128	L	write_tables_only	_write_tables_only	name	100	100.0	52/52 ins	golf_jpeg_cmarker.cpp

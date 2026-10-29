@@ -7,6 +7,7 @@ Writes WAVE file header fields via mmioWrite. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_Cmix.cpp` as `?right_fp2word@CWaveMixer@@QAEXPAFPANK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10007d2e): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10007cc3 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

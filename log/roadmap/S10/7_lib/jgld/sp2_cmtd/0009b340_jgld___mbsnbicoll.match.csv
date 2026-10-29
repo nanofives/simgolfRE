@@ -1,0 +1,35 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 0x10], 0","cmp dword ptr [ebp + 0x10], 0",True
+4,jne 0xe,jne 0x1009b34e,True
+5,"xor eax, eax","xor eax, eax",True
+6,jmp 0x4b,jmp 0x1009b38b,True
+7,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10129bb4]",True
+8,push eax,push eax,True
+9,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+10,push ecx,push ecx,True
+11,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+12,push edx,push edx,True
+13,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+14,push eax,push eax,True
+15,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+16,push ecx,push ecx,True
+17,push 1,push 1,True
+18,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10129e44]",True
+19,push edx,push edx,True
+20,call 0x32,call 0x1009b440,True
+21,"add esp, 0x1c","add esp, 0x1c",True
+22,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+23,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+24,jne 0x45,jne 0x1009b385,True
+25,"mov eax, 0x7fffffff","mov eax, 0x7fffffff",True
+26,jmp 0x4b,jmp 0x1009b38b,True
+27,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+28,"sub eax, 2","sub eax, 2",True
+29,"mov esp, ebp","mov esp, ebp",True
+30,pop ebp,pop ebp,True
+31,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\mbsnbico.obj (library object, no compilation)",symbol=__mbsnbicoll,module=jgld.dll
+VERDICT,GREEN,32,100.0%

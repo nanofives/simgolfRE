@@ -1,0 +1,10 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [esp + 0xa]","mov eax, dword ptr [esp + 0xa]",True
+1,"xor ecx, ecx","xor ecx, ecx",True
+2,"and ax, 0x7ff0","and ax, 0x7ff0",True
+3,"cmp ax, 0x7ff0","cmp ax, 0x7ff0",True
+4,setne cl,setne cl,True
+5,"mov eax, ecx","mov eax, ecx",True
+6,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\ieeemisc.obj (library object, no compilation)",symbol=__finite,module=sound.dll
+VERDICT,GREEN,7,100.0%

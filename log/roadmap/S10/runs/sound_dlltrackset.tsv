@@ -1,0 +1,3 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/dlltrackset.cpp	0xb000	0x1000b000	29	G	DllTrackSet::DllTrackSet	??0DllTrackSet@@QAE@XZ	public	100	100.0	12/12 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/dlltrackset.cpp	0xb030	0x1000b030	10	G	DllTrackSet::get_ntracks	?get_ntracks@DllTrackSet@@QAEKXZ	public	100	100.0	5/5 ins	sound_raw_01.cpp

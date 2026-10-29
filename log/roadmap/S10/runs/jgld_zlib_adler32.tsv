@@ -1,0 +1,2 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/zlib.lib/zlib/adler32.c	0x9e370	0x1009e370	652	G	adler32	_adler32	public	100	100.0	226/226 ins	jgld_zlib_adler32.cpp

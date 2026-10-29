@@ -1,0 +1,23 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/avimgr.cpp	0x6020	0x10006020	194	G	CAviMgr::CAviMgr	??0CAviMgr@@QAE@XZ	public	100	100.0	54/54 ins	m36a_g1_gx.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6130	0x10006130	30	G	CAviMgr::`scalar deleting destructor'	??_GCAviMgr@@UAEPAXI@Z	public	100	100.0	11/11 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6160	0x10006160	333	G	CAviMgr::~CAviMgr	??1CAviMgr@@UAE@XZ	public	100	100.0	122/122 ins	m36a_g1_gx.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6310	0x10006310	8	G	CAviMgr::detach	?detach@CAviMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	3/3 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6330	0x10006330	185	G	CAviMgr::release	?release@CAviMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	77/77 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6420	0x10006420	138	G	CAviMgr::get_frame	?get_frame@CAviMgr@@UAEPAU_MMIOINFO@@K@Z	public	100	100.0	45/45 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x64e0	0x100064e0	698	G	CAviMgr::get_nsamples	?get_nsamples@CAviMgr@@QAE?AW4SNDERR@@PAXKKPAK@Z	public	100	100.0	244/244 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6850	0x10006850	409	G	CAviMgr::return_frame	?return_frame@CAviMgr@@UAE?AW4SNDERR@@PAU_MMIOINFO@@@Z	public	100	100.0	132/132 ins	m36a_g1_gx.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6a60	0x10006a60	123	G	CAviMgr::init	?init@CAviMgr@@UAE?AW4SNDERR@@PAUAVIStreamHeader@@0PAUtWAVEFORMATEX@@K@Z	public	100	100.0	43/43 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6b00	0x10006b00	52	G	CAviMgr::start	?start@CAviMgr@@UAE?AW4SNDERR@@K@Z	public	100	100.0	15/15 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6b50	0x10006b50	23	G	CAviMgr::start	?start@CAviMgr@@QAE?AW4SNDERR@@XZ	public	100	100.0	10/10 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6b80	0x10006b80	11	G	CAviMgr::stop	?stop@CAviMgr@@UAE?AW4SNDERR@@XZ	public	100	100.0	5/5 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6ba0	0x10006ba0	29	G	CAviMgr::discard_frame	?discard_frame@CAviMgr@@QAE?AW4SNDERR@@PAUHMMIO__@@@Z	public	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6bd0	0x10006bd0	113	G	CAviMgr::update_cur_frame	?update_cur_frame@CAviMgr@@QAEXXZ	public	100	100.0	36/36 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6c70	0x10006c70	125	G	DList<WaveBuffer>::~DList<WaveBuffer>	??1?$DList@VWaveBuffer@@@@QAE@XZ	public	100	100.0	46/46 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6d10	0x10006d10	3	G	AviSound::unload	?unload@AviSound@@UAE?AW4SNDERR@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6d30	0x10006d30	3	G	AviSound::get_game_hwnd	?get_game_hwnd@AviSound@@UAEPAUHWND__@@XZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6d50	0x10006d50	8	G	AviSound::set_attrib	?set_attrib@AviSound@@UAE?AW4SNDERR@@K@Z	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6d70	0x10006d70	3	G	AviSound::get_attrib	?get_attrib@AviSound@@UAEKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6d90	0x10006d90	15	G	CAviMgr::get_cur_frame	?get_cur_frame@CAviMgr@@UAEHXZ	public	100	100.0	4/4 ins	
+sound	sound/sound.dll/src/avimgr.cpp	0x6db0	0x10006db0	7	G	CAviMgr::get_frame_size	?get_frame_size@CAviMgr@@UAEKXZ	public	100	100.0	2/2 ins	sound_raw_01.cpp
+sound	sound/sound.dll/src/avimgr.cpp	0x6dd0	0x10006dd0	20	G	CAviMgr::is_playing	?is_playing@CAviMgr@@UAEHXZ	public	100	100.0	9/9 ins	

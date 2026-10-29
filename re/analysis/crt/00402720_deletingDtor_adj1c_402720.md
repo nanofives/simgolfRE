@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 99 bytes, 29 instructions, subsystem `crt`. Mechanical 
 scalar deleting destructor of an SgRecList-derived object reached through its +0x1c sub-object (this - 0x1c): clears the list and frees the object (`re/names/model_h1.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_Plot.cpp` as `??_G?$ClassList@UStringStruct@@@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00402780): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00402721 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

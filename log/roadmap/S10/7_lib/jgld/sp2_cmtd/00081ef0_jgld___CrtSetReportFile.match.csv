@@ -1,0 +1,41 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+4,jl 0x10,jl 0x10081f00,True
+5,"cmp dword ptr [ebp + 8], 3","cmp dword ptr [ebp + 8], 3",True
+6,jl 0x17,jl 0x10081f07,True
+7,"mov eax, 0xfffffffe","mov eax, 0xfffffffe",True
+8,jmp 0x7a,jmp 0x10081f6a,True
+9,"cmp dword ptr [ebp + 0xc], -6","cmp dword ptr [ebp + 0xc], -6",True
+10,jne 0x29,jne 0x10081f19,True
+11,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+12,"mov eax, dword ptr [eax*4]","mov eax, dword ptr [eax*4 + 0x10123384]",True
+13,jmp 0x7a,jmp 0x10081f6a,True
+14,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+15,"mov edx, dword ptr [ecx*4]","mov edx, dword ptr [ecx*4 + 0x10123384]",True
+16,"mov dword ptr [ebp - 4], edx","mov dword ptr [ebp - 4], edx",True
+17,"cmp dword ptr [ebp + 0xc], -4","cmp dword ptr [ebp + 0xc], -4",True
+18,jne 0x50,jne 0x10081f40,True
+19,push -0xb,push -0xb,True
+20,call dword ptr [0],call dword ptr [0x1012c4e0],True
+21,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+22,"mov dword ptr [ecx*4], eax","mov dword ptr [ecx*4 + 0x10123384], eax",True
+23,jmp 0x77,jmp 0x10081f67,True
+24,"cmp dword ptr [ebp + 0xc], -5","cmp dword ptr [ebp + 0xc], -5",True
+25,jne 0x6a,jne 0x10081f5a,True
+26,push -0xc,push -0xc,True
+27,call dword ptr [0],call dword ptr [0x1012c4e0],True
+28,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+29,"mov dword ptr [edx*4], eax","mov dword ptr [edx*4 + 0x10123384], eax",True
+30,jmp 0x77,jmp 0x10081f67,True
+31,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+32,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+33,"mov dword ptr [eax*4], ecx","mov dword ptr [eax*4 + 0x10123384], ecx",True
+34,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+35,"mov esp, ebp","mov esp, ebp",True
+36,pop ebp,pop ebp,True
+37,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\dbgrpt.obj (library object, no compilation)",symbol=__CrtSetReportFile,module=jgld.dll
+VERDICT,GREEN,38,100.0%

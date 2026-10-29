@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 11 bytes, 3 instructions, subsystem `terrain`. Mechanic
 Stores the Terrain.dll singleton returned by Terrain::getInstance into gTerrain at startup. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_TerrainView.cpp` as `_$E7` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0044917a): callee pops 0 bytes of stack arguments.
 
 ## Reads

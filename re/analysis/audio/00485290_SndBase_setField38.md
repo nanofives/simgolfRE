@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 24 bytes, 8 instructions, subsystem `audio`. Mechanical
 Stores a nonzero value in m_38 without touching the device and returns 0, or returns 0xa when the value is zero. (`re/names/model_h3.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_sound.cpp` as `?set_fade_in@Patch@@UAE?AW4SNDERR@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048529d, 0x004852a5): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004852a0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

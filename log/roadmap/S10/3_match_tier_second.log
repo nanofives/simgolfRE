@@ -1,0 +1,30 @@
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 76%]
+........................................................................ [ 91%]
+...................................F.....                                [100%]
+================================== FAILURES ===================================
+_______________ test_every_match_annotation_is_a_function_entry _______________
+
+    def test_every_match_annotation_is_a_function_entry():
+        """A typo in a // MATCH: address would compare the wrong bytes; every address must be a function entry in
+        its module's list (re/functions_ghidra*.tsv)."""
+        entries = {m: {int(l.split("\t")[0], 16) for l in (ROOT / "re" / t).read_text().splitlines()[1:]}
+                   for m, t in match.TSV.items()}
+        for m in entries:
+            entries[m] |= set(match.boundary_overrides(m))     # entries Ghidra merged into a neighbour
+        bad = []
+        for f in sorted((ROOT / "re" / "match").rglob("*.cpp")):
+            for mod, a in re.findall(r"// MATCH: (\S+) 0x([0-9a-fA-F]+)", f.read_text()):
+                if match.tracker_key(mod, int(a, 16)) not in entries[mod]:
+                    bad.append(f"{f.name}: {mod} 0x{a}")
+>       assert not bad, bad
+E       AssertionError: ['smsg_sound_ambiencemgr.cpp: sound.dll 0x10005880', 'smsg_sound_ambiencemgr.cpp: sound.dll 0x10005900', 'smsg_sound_a...: sound.dll 0x10006ba0', 'smsg_sound_Cmix.cpp: sound.dll 0x10006fc0', 'smsg_sound_Cmix.cpp: sound.dll 0x10007c10', ...]
+E       assert not ['smsg_sound_ambiencemgr.cpp: sound.dll 0x10005880', 'smsg_sound_ambiencemgr.cpp: sound.dll 0x10005900', 'smsg_sound_a...: sound.dll 0x10006ba0', 'smsg_sound_Cmix.cpp: sound.dll 0x10006fc0', 'smsg_sound_Cmix.cpp: sound.dll 0x10007c10', ...]
+
+tests\test_match_tools.py:43: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_match_tools.py::test_every_match_annotation_is_a_function_entry
+1 failed, 472 passed in 195.62s (0:03:15)

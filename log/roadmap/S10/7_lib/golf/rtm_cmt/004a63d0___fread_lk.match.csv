@@ -1,0 +1,95 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"mov edi, dword ptr [ebp + 0xc]","mov edi, dword ptr [ebp + 0xc]",True
+7,"imul edi, dword ptr [ebp + 0x10]","imul edi, dword ptr [ebp + 0x10]",True
+8,"mov ebx, dword ptr [ebp + 8]","mov ebx, dword ptr [ebp + 8]",True
+9,"mov ecx, edi","mov ecx, edi",True
+10,"test edi, edi","test edi, edi",True
+11,"mov dword ptr [ebp - 4], edi","mov dword ptr [ebp - 4], edi",True
+12,"mov dword ptr [ebp + 8], ecx","mov dword ptr [ebp + 8], ecx",True
+13,jne 0x24,jne 0x4a63f4,True
+14,"xor eax, eax","xor eax, eax",True
+15,jmp 0xcd,jmp 0x4a649d,True
+16,"mov esi, dword ptr [ebp + 0x14]","mov esi, dword ptr [ebp + 0x14]",True
+17,"test word ptr [esi + 0xc], 0x10c","test word ptr [esi + 0xc], 0x10c",True
+18,je 0x37,je 0x4a6407,True
+19,"mov eax, dword ptr [esi + 0x18]","mov eax, dword ptr [esi + 0x18]",True
+20,"mov dword ptr [ebp + 0x14], eax","mov dword ptr [ebp + 0x14], eax",True
+21,jmp 0x43,jmp 0x4a6413,True
+22,"mov dword ptr [ebp + 0x14], 0x1000","mov dword ptr [ebp + 0x14], 0x1000",True
+23,jmp 0x43,jmp 0x4a6413,True
+24,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+25,"test word ptr [esi + 0xc], 0x10c","test word ptr [esi + 0xc], 0x10c",True
+26,je 0x75,je 0x4a6445,True
+27,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+28,"test eax, eax","test eax, eax",True
+29,je 0x75,je 0x4a6445,True
+30,"cmp ecx, eax","cmp ecx, eax",True
+31,"mov edi, ecx","mov edi, ecx",True
+32,jb 0x5a,jb 0x4a642a,True
+33,"mov edi, eax","mov edi, eax",True
+34,push edi,push edi,True
+35,push dword ptr [esi],push dword ptr [esi],True
+36,push ebx,push ebx,True
+37,call 0x63,call 0x4aa6c0,True
+38,"sub dword ptr [ebp + 8], edi","sub dword ptr [ebp + 8], edi",True
+39,"sub dword ptr [esi + 4], edi","sub dword ptr [esi + 4], edi",True
+40,"add dword ptr [esi], edi","add dword ptr [esi], edi",True
+41,"add esp, 0xc","add esp, 0xc",True
+42,"add ebx, edi","add ebx, edi",True
+43,"mov edi, dword ptr [ebp - 4]","mov edi, dword ptr [ebp - 4]",True
+44,jmp 0xc0,jmp 0x4a6490,True
+45,"cmp ecx, dword ptr [ebp + 0x14]","cmp ecx, dword ptr [ebp + 0x14]",True
+46,jb 0xa8,jb 0x4a6478,True
+47,"cmp dword ptr [ebp + 0x14], 0","cmp dword ptr [ebp + 0x14], 0",True
+48,"mov eax, ecx","mov eax, ecx",True
+49,je 0x8b,je 0x4a645b,True
+50,"xor edx, edx","xor edx, edx",True
+51,div dword ptr [ebp + 0x14],div dword ptr [ebp + 0x14],True
+52,"mov eax, ecx","mov eax, ecx",True
+53,"sub eax, edx","sub eax, edx",True
+54,push eax,push eax,True
+55,push ebx,push ebx,True
+56,push dword ptr [esi + 0x10],push dword ptr [esi + 0x10],True
+57,call 0x95,call 0x4a583a,True
+58,"add esp, 0xc","add esp, 0xc",True
+59,"test eax, eax","test eax, eax",True
+60,je 0xd2,je 0x4a64a2,True
+61,"cmp eax, -1","cmp eax, -1",True
+62,je 0xd8,je 0x4a64a8,True
+63,"sub dword ptr [ebp + 8], eax","sub dword ptr [ebp + 8], eax",True
+64,"add ebx, eax","add ebx, eax",True
+65,jmp 0xc0,jmp 0x4a6490,True
+66,push esi,push esi,True
+67,call 0xae,call 0x4aa9f5,True
+68,"cmp eax, -1","cmp eax, -1",True
+69,pop ecx,pop ecx,True
+70,je 0xdc,je 0x4a64ac,True
+71,"mov byte ptr [ebx], al","mov byte ptr [ebx], al",True
+72,"mov eax, dword ptr [esi + 0x18]","mov eax, dword ptr [esi + 0x18]",True
+73,inc ebx,inc ebx,True
+74,dec dword ptr [ebp + 8],dec dword ptr [ebp + 8],True
+75,"mov dword ptr [ebp + 0x14], eax","mov dword ptr [ebp + 0x14], eax",True
+76,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+77,jne 0x40,jne 0x4a6410,True
+78,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+79,pop edi,pop edi,True
+80,pop esi,pop esi,True
+81,pop ebx,pop ebx,True
+82,leave ,leave ,True
+83,ret ,ret ,True
+84,"or dword ptr [esi + 0xc], 0x10","or dword ptr [esi + 0xc], 0x10",True
+85,jmp 0xdc,jmp 0x4a64ac,True
+86,"or dword ptr [esi + 0xc], 0x20","or dword ptr [esi + 0xc], 0x20",True
+87,"mov eax, edi","mov eax, edi",True
+88,"xor edx, edx","xor edx, edx",True
+89,"sub eax, dword ptr [ebp + 8]","sub eax, dword ptr [ebp + 8]",True
+90,div dword ptr [ebp + 0xc],div dword ptr [ebp + 0xc],True
+91,jmp 0xcd,jmp 0x4a649d,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\fread.obj (library object, no compilation)",symbol=__fread_lk,module=golf_clean.exe
+VERDICT,GREEN,92,100.0%

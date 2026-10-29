@@ -1,0 +1,14 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/sound.dll/src/dllmain.cpp	0x90c0	0x100090c0	34	L	$E29	_$E29	name	100	100.0	9/9 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x9100	0x10009100	141	L	$E27	_$E27	name	100	100.0	46/46 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x91c0	0x100091c0	22	L	$E34	_$E34	name	100	100.0	6/6 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x91f0	0x100091f0	10	L	$E32	_$E32	name	100	100.0	2/2 ins	m36a_g1_tail.cpp
+sound	sound/sound.dll/src/dllmain.cpp	0x9210	0x10009210	29	G	DllMain	_DllMain@12	public	100	100.0	8/8 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x9240	0x10009240	121	G	init_sound	?init_sound@@YA?AW4SNDERR@@PAUHWND__@@K@Z	public	100	100.0	31/31 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x92e0	0x100092e0	100	G	init_sound_timer	?init_sound_timer@@YA?AW4SNDERR@@KK@Z	public	100	100.0	27/27 ins	m36a_g1_gx.cpp
+sound	sound/sound.dll/src/dllmain.cpp	0x9370	0x10009370	6	G	get_sound_version	?get_sound_version@@YAKXZ	public	100	100.0	2/2 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x9390	0x10009390	59	G	release_sound	?release_sound@@YA?AW4SNDERR@@XZ	public	100	100.0	19/19 ins	m36a_g1.cpp
+sound	sound/sound.dll/src/dllmain.cpp	0x93e0	0x100093e0	800	G	Sound::create_sound	?create_sound@Sound@@SA?AW4SNDERR@@PAPAV1@PBDW4SOUNDTYPE@@@Z	public	100	100.0	222/222 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x97d0	0x100097d0	396	G	Sound::delete_sound	?delete_sound@Sound@@SA?AW4SNDERR@@PAV1@@Z	public	100	100.0	132/132 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x99d0	0x100099d0	114	G	get_sound_type	?get_sound_type@@YA?AW4SOUNDTYPE@@PBD@Z	public	100	100.0	43/43 ins	
+sound	sound/sound.dll/src/dllmain.cpp	0x9a70	0x10009a70	1	G	update_sound	_update_sound	public	100	100.0	1/1 ins	

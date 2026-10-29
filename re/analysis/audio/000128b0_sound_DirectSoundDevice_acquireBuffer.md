@@ -7,6 +7,7 @@ Reserves a buffer slot (counts +0x154/+0x158/+0x150) and returns an idle buffer 
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsmgr.cpp` as `?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@PAU_DSBUFFERDESC@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10012ae4): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x100128c5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

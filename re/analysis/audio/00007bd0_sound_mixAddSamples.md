@@ -6,6 +6,7 @@ Module `sound.dll` (RVA `0x00007bd0`), 47 bytes, 27 instructions, subsystem `aud
 Accumulates param_3*2 16-bit samples from the source buffer into the destination buffer (PCM mix-add). (`re/names/sound_2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_Cmix.cpp` as `?mix_2_fpbuffer@CWaveMixer@@QAE?AW4SNDERR@@PAN0K@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10007bfc): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10007bd5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

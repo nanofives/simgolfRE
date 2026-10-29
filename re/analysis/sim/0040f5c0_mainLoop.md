@@ -7,6 +7,7 @@ top-level game/menu dispatch and per-frame update loop: title menu, input handli
 System writeup: `re/analysis/systems/exe_0.md`, `re/analysis/systems/exe_2.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_MainLoop.cpp` as `?MainLoop@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040fb04): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -1419,7 +1420,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a5b58 `__write` at 0x0040fa82
 - 0x004a5d48 `__open` at 0x0040fa6d
 - 0x004a6030 `__ftol` at 0x00417335
-- 0x004a6070 `FUN_004a6070` at 0x0040f5da
+- 0x004a6070 `__chkstk` at 0x0040f5da
 - 0x004ad425 `__itoa` at 0x0041009e, 0x00410112, 0x004101e0, 0x0041076a, 0x00410822, 0x00416022, 0x00416596, 0x00417413 (+33 more)
 - import `KERNEL32.dll!FindFirstFileA` at 0x0040f9f1
 - import `USER32.dll!GetAsyncKeyState` at 0x00418d7d

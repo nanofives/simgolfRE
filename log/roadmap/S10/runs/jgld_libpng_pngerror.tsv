@@ -1,0 +1,10 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x78fe0	0x10078fe0	92	G	png_error	_png_error	public	100	100.0	38/38 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x79040	0x10079040	94	G	png_warning	_png_warning	public	100	100.0	39/39 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x790a0	0x100790a0	86	G	png_chunk_error	_png_chunk_error	public	100	100.0	33/33 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x79100	0x10079100	326	L	png_format_buffer	_png_format_buffer	name	100	100.0	108/108 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x79250	0x10079250	86	G	png_chunk_warning	_png_chunk_warning	public	100	100.0	33/33 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x792b0	0x100792b0	74	L	png_default_error	_png_default_error	name	100	100.0	29/29 ins	m36e_jgld_png.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x79300	0x10079300	63	L	png_default_warning	_png_default_warning	name	100	100.0	25/25 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x79340	0x10079340	58	G	png_set_error_fn	_png_set_error_fn	public	100	100.0	25/25 ins	jgld_png_error.cpp
+jgld	jgl/libpng.lib/libpng/pngerror.c	0x79380	0x10079380	37	G	png_get_error_ptr	_png_get_error_ptr	public	100	100.0	18/18 ins	jgld_png_error.cpp

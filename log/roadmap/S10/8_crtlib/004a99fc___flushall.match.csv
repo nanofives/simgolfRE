@@ -1,0 +1,7 @@
+instruction,library_object,original,match
+0,push 1,push 1,True
+1,call 7,call 0x4a9a05,True
+2,pop ecx,pop ecx,True
+3,ret ,ret ,True
+meta,"library=libcmt.lib member=build\intel\mt_obj\fflush.obj (library object, no compilation)",symbol=__flushall,module=golf_clean.exe
+VERDICT,GREEN,4,100.0%

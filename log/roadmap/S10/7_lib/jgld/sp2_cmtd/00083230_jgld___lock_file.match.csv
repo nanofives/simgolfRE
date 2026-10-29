@@ -1,0 +1,23 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0x101233b0",True
+3,jb 0x2e,jb 0x1008325e,True
+4,"cmp dword ptr [ebp + 8], 0x260","cmp dword ptr [ebp + 8], 0x10123610",True
+5,ja 0x2e,ja 0x1008325e,True
+6,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+7,"sub eax, 0","sub eax, 0x101233b0",True
+8,"sar eax, 5","sar eax, 5",True
+9,"add eax, 0x1c","add eax, 0x1c",True
+10,push eax,push eax,True
+11,call 0x29,call 0x100833f0,True
+12,"add esp, 4","add esp, 4",True
+13,jmp 0x3b,jmp 0x1008326b,True
+14,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+15,"add ecx, 0x20","add ecx, 0x20",True
+16,push ecx,push ecx,True
+17,call dword ptr [0],call dword ptr [0x1012c504],True
+18,pop ebp,pop ebp,True
+19,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\_file.obj (library object, no compilation)",symbol=__lock_file,module=jgld.dll
+VERDICT,GREEN,20,100.0%

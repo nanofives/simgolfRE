@@ -7,6 +7,7 @@ Main wave command executor: switches on the command type (cases 1-4) over the wa
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllwavedevice.cpp` as `?clean_request_queue@Dll_Wave_Device@@AAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000c444, 0x1000ca8f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000c424 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

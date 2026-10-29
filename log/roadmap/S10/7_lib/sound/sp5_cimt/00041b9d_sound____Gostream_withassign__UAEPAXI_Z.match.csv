@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"lea esi, [ecx - 8]","lea esi, [ecx - 8]",True
+2,push edi,push edi,True
+3,"lea edi, [esi + 8]","lea edi, [esi + 8]",True
+4,"mov ecx, edi","mov ecx, edi",True
+5,call 0xf,call 0x10041c26,True
+6,"mov ecx, edi","mov ecx, edi",True
+7,call 0x16,call 0x10041f9a,True
+8,"test byte ptr [esp + 0xc], 1","test byte ptr [esp + 0xc], 1",True
+9,je 0x24,je 0x10041bc1,True
+10,push esi,push esi,True
+11,call 0x23,call 0x1004249a,True
+12,pop ecx,pop ecx,True
+13,"mov eax, esi","mov eax, esi",True
+14,pop edi,pop edi,True
+15,pop esi,pop esi,True
+16,ret 4,ret 4,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCIMT.LIB member=build\intel\mt_obj\ostream.obj (library object, no compilation)",symbol=??_Gostream_withassign@@UAEPAXI@Z,module=sound.dll
+VERDICT,GREEN,17,100.0%

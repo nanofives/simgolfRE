@@ -1,0 +1,48 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push -1,False
+3,"mov eax, dword ptr [0]",push 0x1011f288,False
+4,"and eax, 1",push 0x10085b38,False
+5,"test eax, eax","mov eax, dword ptr fs:[0]",False
+6,jne 0x12,push eax,False
+7,jmp 0x63,"mov dword ptr fs:[0], esp",False
+8,push 9,"add esp, -0xc",False
+9,call 0x19,push ebx,False
+10,"add esp, 4",push esi,False
+11,"mov ecx, dword ptr [0]",push edi,False
+12,"mov dword ptr [ebp - 4], ecx","mov eax, dword ptr [0x10123350]",False
+13,jmp 0x2f,"and eax, 1",False
+14,"mov edx, dword ptr [ebp - 4]","test eax, eax",False
+15,"mov eax, dword ptr [edx]",jne 0x100812e1,False
+16,"mov dword ptr [ebp - 4], eax",jmp 0x10081348,False
+17,"cmp dword ptr [ebp - 4], 0",push 9,False
+18,je 0x59,call 0x100833f0,False
+19,"mov ecx, dword ptr [ebp - 4]","add esp, 4",False
+20,"mov edx, dword ptr [ecx + 0x14]","mov dword ptr [ebp - 4], 0",False
+21,"and edx, 0xffff","mov ecx, dword ptr [0x101287a0]",False
+22,"cmp edx, 4","mov dword ptr [ebp - 0x1c], ecx",False
+23,jne 0x57,jmp 0x10081305,False
+24,"mov eax, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp - 0x1c]",False
+25,push eax,"mov eax, dword ptr [edx]",False
+26,"mov ecx, dword ptr [ebp - 4]","mov dword ptr [ebp - 0x1c], eax",False
+27,"add ecx, 0x20","cmp dword ptr [ebp - 0x1c], 0",False
+28,push ecx,je 0x1008132f,False
+29,call dword ptr [ebp + 8],"mov ecx, dword ptr [ebp - 0x1c]",False
+30,"add esp, 8","mov edx, dword ptr [ecx + 0x14]",False
+31,jmp 0x27,"and edx, 0xffff",False
+32,push 9,"cmp edx, 4",False
+33,call 0x60,jne 0x1008132d,False
+34,"add esp, 4","mov eax, dword ptr [ebp + 0xc]",False
+35,"mov esp, ebp",push eax,False
+36,pop ebp,"mov ecx, dword ptr [ebp - 0x1c]",False
+37,ret ,"add ecx, 0x20",False
+38,,push ecx,False
+39,,call dword ptr [ebp + 8],False
+40,,"add esp, 8",False
+41,,jmp 0x100812fd,False
+42,,"mov dword ptr [ebp - 4], 0xffffffff",False
+43,,call 0x1008133d,False
+44,,jmp 0x10081348,False
+meta,"library=LIBCMTD.LIB member=build\intel\xmt_obj\dbgheap.obj (library object, no compilation)",symbol=__CrtDoForAllClientObjects,module=jgld.dll
+VERDICT,RED,38,44.4%

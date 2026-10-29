@@ -7,6 +7,7 @@ Resampling stream renderer: reads 16-bit samples (short* voice+0x18/+0xd8) throu
 System writeup: `re/analysis/systems/sound_3.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_filters.cpp` as `?mov_8k222k16216m2smb@@YAKPAPAX0HPAXK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10018f7b, 0x10018fa9): callee pops 0 bytes of stack arguments.
 
 ## Reads

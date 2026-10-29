@@ -1,0 +1,15 @@
+instruction,library_object,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b5d20]",True
+1,"cmp eax, 3","cmp eax, 3",True
+2,jne 0x10,jne 0x10045e25,True
+3,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b5d0c]",True
+4,ret ,ret ,True
+5,dec eax,dec eax,True
+6,dec eax,dec eax,True
+7,neg eax,neg eax,True
+8,"sbb eax, eax","sbb eax, eax",True
+9,not eax,not eax,True
+10,"and eax, dword ptr [0]","and eax, dword ptr [0x100673fc]",True
+11,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=build\intel\mt_obj\sbheap.obj (library object, no compilation)",symbol=__get_sbh_threshold,module=sound.dll
+VERDICT,GREEN,12,100.0%

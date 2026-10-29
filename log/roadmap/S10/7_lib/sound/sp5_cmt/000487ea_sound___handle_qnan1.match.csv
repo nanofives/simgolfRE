@@ -1,0 +1,36 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [0], 0","cmp dword ptr [0x10067be0], 0",True
+3,jne 0x35,jne 0x1004881f,True
+4,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+5,fld qword ptr [ebp + 0xc],fld qword ptr [ebp + 0xc],True
+6,push ecx,push ecx,True
+7,push ecx,push ecx,True
+8,fstp qword ptr [esp],fstp qword ptr [esp],True
+9,push ecx,push ecx,True
+10,push ecx,push ecx,True
+11,fldz ,fldz ,True
+12,fstp qword ptr [esp],fstp qword ptr [esp],True
+13,fld qword ptr [ebp + 0xc],fld qword ptr [ebp + 0xc],True
+14,push ecx,push ecx,True
+15,push ecx,push ecx,True
+16,fstp qword ptr [esp],fstp qword ptr [esp],True
+17,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+18,push 1,push 1,True
+19,call 0x30,call 0x10048ea5,True
+20,"add esp, 0x24","add esp, 0x24",True
+21,pop ebp,pop ebp,True
+22,ret ,ret ,True
+23,call 0x3a,call 0x1004588f,True
+24,push 0xffff,push 0xffff,True
+25,"mov dword ptr [eax], 0x21","mov dword ptr [eax], 0x21",True
+26,push dword ptr [ebp + 0x14],push dword ptr [ebp + 0x14],True
+27,call 0x4d,call 0x1004917e,True
+28,fld qword ptr [ebp + 0xc],fld qword ptr [ebp + 0xc],True
+29,pop ecx,pop ecx,True
+30,pop ecx,pop ecx,True
+31,pop ebp,pop ebp,True
+32,ret ,ret ,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\fpexcept.obj (library object, no compilation)",symbol=__handle_qnan1,module=sound.dll
+VERDICT,GREEN,33,100.0%

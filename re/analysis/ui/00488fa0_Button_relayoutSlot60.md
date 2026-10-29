@@ -7,6 +7,7 @@ Calls the window layout routine (own slot 72) and returns, popping one argument 
 System writeup: `re/analysis/systems/model_h3.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_BaseButton.cpp` as `?on_dialog_focus@BaseButton@@UAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00488fa8): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00488fa0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

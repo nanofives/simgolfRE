@@ -1,0 +1,5 @@
+instruction,library_object,original,match
+0,"mov edx, 0","mov edx, 0x100675ea",True
+1,jmp 0xa,jmp 0x100485be,True
+meta,"library=tools/vc6sp5/VC98/lib/LIBCMT.LIB member=..\build\intel\mt_obj\87ctran.obj (library object, no compilation)",symbol=__CIexp,module=sound.dll
+VERDICT,GREEN,2,100.0%

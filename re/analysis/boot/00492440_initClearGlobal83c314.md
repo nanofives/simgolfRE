@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `boot`. Mechanical 
 static initializer: zeroes the global dword at 0x0083c314 (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_display.cpp` as `_$E1` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0049244a): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -1,0 +1,22 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/jackal.lib/src/Network.cpp	0x97b00	0x00497b00	25	G	do_net	?do_net@@YAXXZ	public	100	100.0	8/8 ins	golf_small17.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97b20	0x00497b20	25	G	check_net	?check_net@@YAXXZ	public	100	100.0	8/8 ins	golf_small17.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97b40	0x00497b40	224	G	Net::send_player_order	?send_player_order@Net@@QAEXXZ	public	100	100.0	81/81 ins	golf_hand_07_497b40.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97c20	0x00497c20	78	G	Net::StartPacketVoice	?StartPacketVoice@Net@@QAEHH@Z	public	100	100.0	20/20 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97c70	0x00497c70	78	G	Net::start_voice	?start_voice@Net@@QAEHH@Z	public	100	100.0	20/20 ins	golf_raw_05.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97cc0	0x00497cc0	69	G	Net::stop_voice	?stop_voice@Net@@QAEXXZ	public	100	100.0	20/20 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97d10	0x00497d10	586	G	Net::close	?close@Net@@QAEXXZ	public	100	100.0	191/191 ins	golf_hand_s2.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x97f60	0x00497f60	81	G	players_in_group_callback	?players_in_group_callback@@YGHKKPBUDPNAME@@KPAX@Z	public	100	100.0	29/29 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x97fc0	0x00497fc0	4479	G	Net::SendMessageWithRetry	?SendMessageWithRetry@Net@@QAEHPAXHHHH@Z	public	100	100.0	869/869 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x99140	0x00499140	6382	G	Net::send_packet_type	?send_packet_type@Net@@QAEHPAXHHHH@Z	public	100	100.0	1285/1285 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x9aa30	0x0049aa30	53	G	Net::get_player_name	?get_player_name@Net@@QAEPADH@Z	public	100	100.0	19/19 ins	golf_hand_01.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x9aa70	0x0049aa70	199	G	Net::process_voice	?process_voice@Net@@QAEXXZ	public	100	100.0	76/76 ins	golf_hand_06_l.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x9ab40	0x0049ab40	432	G	Net::check_polling	?check_polling@Net@@QAEXXZ	public	100	100.0	135/135 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x9acf0	0x0049acf0	2460	G	Net::drop_player	?drop_player@Net@@QAEHHH@Z	public	100	100.0	464/464 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x9b690	0x0049b690	282	G	Net::add_player	?add_player@Net@@QAEXPBDHH@Z	public	100	100.0	95/95 ins	golf_hand_08_h.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x9b7b0	0x0049b7b0	448	G	Net::handle_sys_msg	?handle_sys_msg@Net@@QAEXXZ	public	100	100.0	154/154 ins	golf_hand_r0.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x9b970	0x0049b970	1346	G	ClassList<JackalVoiceRx>::add	?add@?$ClassList@UJackalVoiceRx@@@@QAEHH@Z	public	100	100.0	375/375 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x9bec0	0x0049bec0	166	G	ClassList<JackalVoiceRx>::remove	?remove@?$ClassList@UJackalVoiceRx@@@@QAEXH@Z	public	100	100.0	67/67 ins	golf_hand_05.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x9bf70	0x0049bf70	65	G	JackalVoiceRx::`scalar deleting destructor'	??_GJackalVoiceRx@@UAEPAXI@Z	public	100	100.0	20/20 ins	golf_raw_14.cpp
+golf	golf/jackal.lib/src/Network.cpp	0x9bfc0	0x0049bfc0	5	G	JackalVoiceRx::~JackalVoiceRx	??1JackalVoiceRx@@UAE@XZ	public	100	100.0	1/1 ins	
+golf	golf/jackal.lib/src/Network.cpp	0x9bfd0	0x0049bfd0	8	G	JackalVoiceRx::`vector deleting destructor'	??_EJackalVoiceRx@@WFM@AEPAXI@Z	public	100	100.0	2/2 ins	m36d_thunks.cpp

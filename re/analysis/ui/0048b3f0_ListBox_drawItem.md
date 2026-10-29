@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 3384 bytes, 1087 instructions, subsystem `ui`. Mechanic
 draws one row of a list box: fills its rectangle, picks the normal, selected or marked colours, calls the item callbacks and draws the item text and bevel (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_ListBox.cpp` as `?draw_item@ListBox@@UAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048be72, 0x0048c125): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0048b3fd before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

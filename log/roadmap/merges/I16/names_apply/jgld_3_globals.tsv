@@ -1,0 +1,17 @@
+module	addr	name	type	evidence
+jgld.dll	0x10122dc0	g_blitScaleX	int	written by Display::setScale 0x10067d50; read as the horizontal scale numerator by the sprite blitters (re/match/jgld_blit16.cpp)
+jgld.dll	0x10122dc4	g_blitScaleY	int	written by Display::setScale 0x10067d50; read as the vertical scale numerator by the sprite blitters (re/match/jgld_blit16.cpp)
+jgld.dll	0x10122dc8	g_blitScaleDen	int	written by Display::setScale 0x10067d50; read as the scale denominator by the sprite blitters (re/match/jgld_blit16.cpp)
+jgld.dll	0x101286c8	g_modes	Array<ModeInfo>	constructed by Array_Rec14::ctor 0x100680a0 at static init 0x10065120; filled and cleared by Display::enumModes 0x10065a90; iterated by Display::findMode 0x10065c30
+jgld.dll	0x101286f8	g_devmodes	Array<DEVMODEA>	constructed by Array_Rec94::ctor 0x10068300 at static init 0x10065230; filled by Display::enumModes 0x10065a90; indexed by Display::setModeIndex 0x100662a0
+jgld.dll	0x101286e0	g_arrayE0	Array<T>	constructed by Array_e0::ctor 0x10067fa0 at static init 0x10065010; element type not determined (no add() located in this range)
+jgld.dll	0x10128734	g_rgbScratch	BYTE[3]	written and returned by Palette::getColor 0x1006add0 (one RGB triple scratch buffer)
+jgld.dll	0x1011d640	Display_vtable	void*[86]	written by the Display constructor path 0x10065670; holds the Display virtual overrides (createWindow, present, mode and factory slots)
+jgld.dll	0x1011d7dc	DisplayBase_vtable	void*[86]	written by DisplayBase::dtor 0x10066d20 and DisplayBase ctor 0x10065630; holds the base defaults (getHwnd/getInstance/setWindowPos/setCommandHandler)
+jgld.dll	0x1011da58	Array_e0_vtable	void*[]	written by Array_e0::ctor 0x10067fa0 and Array_e0::dtor 0x100669e0; single slot is the deleting destructor 0x10066bd0
+jgld.dll	0x1011da5c	Array_Rec14_vtable	void*[]	written by Array_Rec14::ctor 0x100680a0 and Array_Rec14::dtor 0x10066a30; single slot is the deleting destructor 0x10066c40
+jgld.dll	0x1011da60	Array_Rec94_vtable	void*[]	written by Array_Rec94::ctor 0x10068300 and Array_Rec94::dtor 0x10066b00; single slot is the deleting destructor 0x10066cb0
+jgld.dll	0x1011da6c	Font_vtable	void*[5]	written by the Font constructor 0x10068660; slots are deletingDtor/loadFile/create/release/textWidth
+jgld.dll	0x1011da90	FontBase_vtable	void*[5]	written by FontBase::ctor 0x10069220; holds the FontBase defaults overridden by Font
+jgld.dll	0x1011db10	Palette_vtable	void*[9]	written by Palette::ctor 0x1006a150; holds the Palette virtual overrides (setDefault/animate/setRGB/getColor)
+jgld.dll	0x1011db3c	PaletteBase_vtable	void*[9]	written by PaletteBase::ctor 0x1006a260 and PaletteBase::dtor 0x1006af00; slot 0 is the deleting destructor, the rest pure

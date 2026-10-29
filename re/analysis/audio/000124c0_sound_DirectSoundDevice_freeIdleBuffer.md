@@ -7,6 +7,7 @@ Finds the first idle buffer in the device list +0x168 (via DsBuffer::isBusy), st
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsmgr.cpp` as `?free_a_duphwdsb@CDSMgr@@QAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100124ec, 0x10012518, 0x1001257e, 0x10012628): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100124c1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

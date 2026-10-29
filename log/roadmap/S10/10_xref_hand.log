@@ -1,0 +1,71 @@
+0x00432f90 hitTestSlot432f90  size 167
+  callers: 0x00433040 clickSlotPanel, 0x00433190 showInfoCursorPanel
+  callees: 0x00467170 approxDistance
+  data: 0x00432fc1 0x00432fe1 0x00433013 0x00433029 0x00433030 0x004c79b6 0x00570cd4
+---
+0x00433c60 hitBuildTool433c60  size 193
+  callers: 0x00433d30 clickBuildTool433d30, 0x00433e50 drawTerrainToolbar
+  callees: 0x00467170 approxDistance
+  data: 0x00433c8e 0x00433cac 0x00433cc6 0x00433ce0 0x00433cfb 0x00433d1d
+---
+0x00433d30 clickBuildTool433d30  size 277
+  callers: 0x00434140 pickBuilding
+  callees: 0x0040d320 drawWindow, 0x00433c60 hitBuildTool433c60, 0x0045c0c0 pumpAndRedraw, 0x00480c80 Window::refreshFull
+  string 0x004c7e7c: 'Right click again to effect the change. Your money will be refunded!'
+  string 0x004c7ec4: 'To UNDO a previous action, right click on the map to display the effect of the undo. '
+  data: 0x00433d6b 0x00433e25 0x00433e44 0x004c2848 0x004c2e08 0x00519a60 0x0051a068 0x00542f20 0x0055e928 0x00567afc 0x0059e7b8
+---
+0x00434980 pickAmenity434980  size 315
+  callers: 0x00434ac0 clickAmenityPanel, 0x00434cf0 drawAmenitiesPanel
+  callees: 0x00467170 approxDistance
+  data: 0x004349ae 0x004349cc 0x004349ec 0x00434a06 0x00434a26 0x00434a40 0x00434a5a 0x00434a75 0x00434a95 0x00434ab7
+---
+0x00435570 hitEmployeeSlot435570  size 264
+  callers: 0x00435680 clickEmployeeView, 0x00435760 drawEmployeeViewPanel
+  callees: 0x00467130 clamp, 0x00467170 approxDistance
+  data: 0x004355d7 0x004355f7 0x00435617 0x00435637 0x00435658 0x00435674
+---
+0x00435f00 hitGolferPanel435f00  size 348
+  callers: 0x00436060 clickGolferPanel, 0x004362f0 drawGolferActionPanel
+  callees: 0x00467170 approxDistance
+  data: 0x00435f2b 0x00435f4c 0x00435f66 0x00435f80 0x00435fad 0x00435fc7 0x00435fe1 0x00435ffb 0x00436015 0x00436036 0x00436058 0x00567afc
+---
+0x00436b00 hitEmployee436b00  size 250
+  callers: 0x00436c00 handleEmployeeAction, 0x00436e50 drawEmployeeDetailPanel
+  callees: 0x00467170 approxDistance
+  data: 0x00436b38 0x00436b5b 0x00436ba5 0x00436bd9 0x00436be1 0x00436bf0 0x004c7af0 0x004c7af8 0x004c7afc
+---
+0x0042f530 relaxEdges42f530  size 251
+  callers: 0x0042f7a0 rebuildHeightfield
+  callees: 0x0040bf60 tileBlocked, 0x0040bfe0 cornerHeights, 0x0042f4b0 cornerRange
+  data: 0x0042f573 0x0042f5d1 0x0042f609
+---
+0x0042f630 relaxTile42f630  size 172
+  callers: 0x0042f7a0 rebuildHeightfield
+  callees: 0x0040bf60 tileBlocked
+  data: 0x0042f660 0x0042f6c0
+---
+0x0042fa30 heightAt42fa30  size 342
+  callers: 0x004226a0 trialShot, 0x004289e0 updateGolfers
+  callees: 0x0040bfe0 cornerHeights, 0x0042f4b0 cornerRange
+  data: 0x0042fa6d 0x0042fa97 0x0042fac1 0x0042fb23
+---
+0x00449310 tileQuery449310  size 26
+  callers: 0x00449540 rebuildTerrainGrid, 0x00449fa0 applyTileElevation
+  callees: 0x0040bfe0 cornerHeights
+---
+0x00456b70 mapToScreen456b70  size 59
+  callers: 0x00456be0 showRoutingMapScreen, 0x004587a0 showBuyLandScreen
+  callees: none
+  data: 0x00822b80
+---
+0x0045b8b0 appendToBuffer45b8b0  size 310
+  callers: 0x0040f5c0 mainLoop, 0x00427380 matchUpdate, 0x00432720 showSystemMenu
+  callees: none
+  data: 0x0045b916 0x0045b925 0x0045b934 0x0045b93b 0x0045b95c 0x0045b962 0x0045b96e 0x0045b97d 0x0045b9de 0x0051a068 0x0059d81c 0x0059d91c
+---
+0x004049d0 drawText4049d0  size 68
+  callers: 0x0040f5c0 mainLoop, 0x00435760 drawEmployeeViewPanel, 0x004362f0 drawGolferActionPanel, 0x004385d0 showCharacterEditor, 0x0043a8c0 pickAProScreen, 0x0043b610 loadGameBrowserScreen, 0x00455
+  callees: 0x00476310 Widget_setQuad, 0x00477c30 drawText
+  data: 0x00404a13 0x004c1570
+---

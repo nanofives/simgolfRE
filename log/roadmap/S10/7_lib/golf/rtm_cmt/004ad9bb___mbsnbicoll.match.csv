@@ -1,0 +1,27 @@
+instruction,library_object,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"cmp dword ptr [ebp + 0x10], 0","cmp dword ptr [ebp + 0x10], 0",True
+3,jne 0xd,jne 0x4ad9c8,True
+4,"xor eax, eax","xor eax, eax",True
+5,pop ebp,pop ebp,True
+6,ret ,ret ,True
+7,push dword ptr [0],push dword ptr [0x840dd8],True
+8,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+9,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+10,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+11,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+12,push 1,push 1,True
+13,push dword ptr [0],push dword ptr [0x841004],True
+14,call 0x2c,call 0x4ada68,True
+15,"add esp, 0x1c","add esp, 0x1c",True
+16,"test eax, eax","test eax, eax",True
+17,jne 0x3a,jne 0x4ad9f5,True
+18,"mov eax, 0x7fffffff","mov eax, 0x7fffffff",True
+19,pop ebp,pop ebp,True
+20,ret ,ret ,True
+21,"add eax, -2","add eax, -2",True
+22,pop ebp,pop ebp,True
+23,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\mbsnbico.obj (library object, no compilation)",symbol=__mbsnbicoll,module=golf_clean.exe
+VERDICT,GREEN,24,100.0%

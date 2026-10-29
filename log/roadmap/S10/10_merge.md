@@ -1,0 +1,106 @@
+# S10.10 merge list (for the S10 lead / orchestrator)
+
+S10.10 made no tracker write, no ApplyNames and no edit of re/names, port/, shim/ or the master. Everything below is
+for the lead to apply.
+
+## 1. New names file
+
+None. Every one of the 204 rows already has a names row (`log/roadmap/S10/10_tools/rows.py` printed 0 NOROW), and the
+forwarder targets without a row are sound.dll bodies S10.9 rejected. No re/names/smsg_exe_2.tsv was written.
+
+## 2. Renames of existing rows (50)
+
+Apply by editing the name column of the row in its file, then ApplyNames overwrite on golf_clean.exe and
+`re_classify.py retag` (levels unchanged), as in S10.8's merge.
+- Port column: P means the old name occurs in port/src, port/test, shim/src or re/frida (whole word,
+  `log/roadmap/S10/10_tools/portcol.py`). The counts are files.
+- hooks.csv names are the port's registry, vector and golden keys. So the P rows need the lead's decision (S10.8
+  section 2): either port aliases, or a rename of re/names and Ghidra only.
+- Rows marked - have no reference there.
+- Machine-readable copy with the full evidence: log/roadmap/S10/10_renames.tsv.
+- Per-row verdicts for all 204 rows: log/roadmap/S10/10_verdict_exe.tsv.
+
+Naming:
+- Methods are camelCase (the exe's convention) and keep OUR class prefix. golf.pdb's class names have no support
+  (U-1889).
+- A name that is already taken, or proposed twice, gets the address appended (S10.9 convention).
+
+| file | addr | old | new | port | rule | evidence (our disassembly) |
+|---|---|---|---|---|---|---|
+| exe_0.tsv | 0x004049d0 | drawText4049d0 | drawTextWithColor | P (21 port / 27 shim+frida files) | ACCEPT_HAND | Widget_setQuad(colour = 4th argument [esp+0x10], -1, 2, 2) on the quad 0x4c1570 (0x004049d0..0x004049e1), then drawText(text, x, y, strlen(text)) (0x004049f6..0x00404a0d): the colour argument is what the name adds |
+| exe_1.tsv | 0x0042f530 | relaxEdges42f530 | calcTileWallMask | P (2 port / 2 shim+frida files) | ACCEPT_HAND | writes no height: clears g_tileWallMask[x*50+y] (0x0042f550..0x0042f568) and, for each of four neighbour steps of the tables 0x4c2878 / 0x4c2898 not tileBlocked (0x0042f58d), sets bit k+1 when a cornerHeights value of the neighbour is below this tile's (0x0042f5c0..0x0042f5cf, 0x0042f5f8..0x0042f607); golf.pdb CalculateTileSlopeFlags, noun from our model (g_tileWallMask, read by wallHeight) |
+| exe_1.tsv | 0x0042f630 | relaxTile42f630 | propagateMinTileLevel | P (2 port / 3 shim+frida files) | ACCEPT_HAND | for the four neighbour steps (0x0042f668..0x0042f6ce) of a non-blocked neighbour with the same g_tileType byte (0x0042f69c) and a lower g_tileLevel (0x0042f6a7) stores that level into this tile's g_tileLevel (0x0042f6b1) and returns 1 when it changed (0x0042f6b8, 0x0042f6d0); golf.pdb PropagateMinElevation, noun from our model (g_tileLevel) |
+| exe_1.tsv | 0x00449310 | tileQuery449310 | cornerHeightAt | P (2 port / 8 shim+frida files) | ACCEPT_HAND | returns cornerHeights(a0, a1, a2, 1) (push 1 at 0x0044931c, call 0x00449321): one corner's height; golf.pdb GetCornerElevationAt |
+| exe_3.tsv | 0x00483bd0 | pumpInput483bd0 | doAllTasks | P (17 port / 21 shim+frida files) | ACCEPT_PUMP | sets the input phase 0x0083ad4c to 0x3f and repeats 0x00483bb0 until it returns 0 (0x00483bd0..0x00483bf4); 0x00483bb0 tail-jumps to slot +0x128 of the display 0x0083ad50 (0x00483bc7), jgld Display::do_task 0x1006b0f0 (PeekMessageA over all messages, smsg_jgld_1.tsv); golf.pdb do_all_tasks |
+| exe_3.tsv | 0x00483c90 | pumpInput483c90 | doAllKeys | P (1 port / 6 shim+frida files) | ACCEPT_PUMP | phase 2, repeats 0x00483c70 until 0 (0x00483c90..0x00483cb4); 0x00483c70 tail-jumps to display slot +0x134 (0x00483c82) = jgld Display::do_key 0x1006b440 (PeekMessageA 0x100..0x108); golf.pdb do_all_keys |
+| exe_3.tsv | 0x00483cd0 | frameTick483cd0 | doMouse | P (8 port / 9 shim+frida files) | ACCEPT_PUMP | calls 0x0049c8e0 and 0x00497b20, then tail-jumps to display slot +0x13c (0x00483ce2) = jgld Display::do_mouse 0x1006b7e0 (PeekMessageA 0x200..0x20a); golf.pdb do_mouse |
+| exe_3.tsv | 0x00483cf0 | pumpInput483cf0 | doAllMouse | P (1 port / 7 shim+frida files) | ACCEPT_PUMP | phase 8, repeats 0x00483cd0 (doMouse) until 0 (0x00483cf0..0x00483d14); golf.pdb do_all_mouse |
+| exe_3.tsv | 0x00483d30 | enterModal483d30 | flushInput | P (15 port / 30 shim+frida files) | ACCEPT_PUMP | calls 0x00483d40 (flushKeyboard) and 0x00483d60 (flushMouse), then tail-jumps to 0x00497b20 (0x00483d30..0x00483d3a); golf.pdb flush_input |
+| exe_3.tsv | 0x00483d40 | modalPush483d40 | flushKeyboard | P (0 port / 3 shim+frida files) | ACCEPT_PUMP | calls display slot +0x148 (0x00483d48) = jgld Display::flush_keyboard 0x1006b890 (PM_REMOVE over 0x100..0x108), then 0x00497b20; golf.pdb flush_keyboard |
+| exe_3.tsv | 0x00483d60 | modalFocusClear483d60 | flushMouse | P (0 port / 3 shim+frida files) | ACCEPT_PUMP | calls display slot +0x14c (0x00483d68) = jgld Display::flush_mouse 0x1006b900 (PM_REMOVE over 0x200..0x20a), zeroes 0x0083ab40 / 0x0083ab44 (0x00483d70 / 0x00483d75), then 0x00497b20; golf.pdb flush_mouse |
+| exe_3.tsv | 0x004840e0 | createSound4840e0 | createSound | P (2 port / 7 shim+frida files) | ACCEPT_HAND | when g_soundReady is set calls [0x0083af6c] with its three arguments (0x004840fe); soundVersionCheck fills 0x0083af6c with GetProcAddress(sound.dll, ordinal 1) (0x00483ff1..0x0048400c, ordinal edi + 1 = 1), and sound.dll's export ordinal 1 is create_sound (0x1000137a); golf.pdb Sound::create_sound |
+| model_h2.tsv | 0x004845b0 | Snd::fwdVoice18 | Snd::play_4845b0 | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x18 (0x004845c3) of vtable(s) 0x1005c450,0x1005c7e8 -> 0x1002b1b0,0x1002b1b0 = SubChannel::play_1002b1b0,SubChannel::play_1002b1b0 (sound.pdb Sound::play,Sound::play); `Snd::play` is taken or proposed twice, so the address is appended |
+| exe_3.tsv | 0x004845d0 | Snd::queryDevice4845d0 | Snd::isPlaying_4845d0 | P (2 port / 6 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x5c (0x004845d9) of vtable(s) 0x1005c450,0x1005c7e8 -> 0x100311d0,0x1003a790 = CVoiceRxMgr::is_playing,MultiSound::is_playing (sound.pdb CVoiceRxMgr::is_playing,CWaveMgr::is_playing); `Snd::isPlaying` is taken or proposed twice, so the address is appended |
+| exe_3.tsv | 0x004846b0 | Snd::setField34 | Snd::setDelay | P (2 port / 4 shim+frida files) | ACCEPT_FWD | stores its argument at this+0x34 (0x004846b4), then calls slot 19 (+0x4c, 0x004846c1) of the object at this+0x40, whose bodies are MultiSound::set_delay 0x1003a1c0 (type-1 object) and SubChannel::set_delay 0x1002b2c0 (type-6 object, VoiceRx tables); golf.pdb Sound::set_delay |
+| model_h2.tsv | 0x004847d0 | Snd::fwdVoice58 | Snd::isLooping | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x58 (0x004847d9) of vtable(s) 0x1005c450,0x1005c7e8 -> 0x1002b460,0x1003a750 = SubChannel::is_looping,MultiSound::is_looping (sound.pdb Sound::is_looping,CWaveMgr::is_looping) |
+| model_h2.tsv | 0x004847e0 | Snd::fwdVoice74 | Snd::getTime_4847e0 | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x74 (0x004847e9) of vtable(s) 0x1005c450,0x1005c7e8 -> 0x1002b480,0x1003a710 = SubChannel::get_time,MultiSound::get_time_1003a710 (sound.pdb Sound::get_time,CWaveMgr::get_time); `Snd::getTime` is taken or proposed twice, so the address is appended |
+| model_h2.tsv | 0x00484870 | Snd::fwdVoice60 | Snd::isLoaded | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x60 (0x00484879) of vtable(s) 0x1005c7e8 -> 0x1003a7e0 = MultiSound::is_loaded (sound.pdb CWaveMgr::is_loaded) |
+| model_h2.tsv | 0x00484b00 | Snd::fwdVoiceCC | Snd::isHwbuffer | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0xcc (0x00484b09) of vtable(s) 0x1005c7e8 -> 0x1003a7c0 = MultiSound::is_hwbuffer (sound.pdb CWaveMgr::is_hwbuffer) |
+| model_h2.tsv | 0x00485040 | Snd::fwdVoiceB8 | Snd::getTime_485040 | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0xb8 (0x0048504e) of vtable(s) 0x1005c7e8 -> 0x1003a590 = MultiSound::get_time (sound.pdb CWaveMgr::get_time); `Snd::getTime` is taken or proposed twice, so the address is appended |
+| model_h3.tsv | 0x00485390 | VoiceRx::fwdDev37 | VoiceRx::getNbuffers | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x94 (0x00485399) of vtable(s) 0x1005c450 -> 0x10031190 = CVoiceRxMgr::get_nbuffers (sound.pdb CVoiceRxMgr::get_nbuffers) |
+| model_h3.tsv | 0x00485570 | VoiceRx::fwdDev36 | VoiceRx::getBufferSize | P (3 port / 0 shim+frida files) | ACCEPT_FWD | `mov ecx, [ecx+0x40]` then slot 0x90 (0x00485579) of vtable(s) 0x1005c450 -> 0x100311b0 = CVoiceRxMgr::get_buffer_size (sound.pdb CVoiceRxMgr::get_buffer_size) |
+| model_h3.tsv | 0x004874c0 | NodeList::fwdChild6 | NodeList::getNdevices | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x18 (0x004874c9) of vtable(s) 0x1005b304 -> 0x1000e200 = Wave_Device::get_ndevices (sound.pdb Dll_Wave_Device::get_ndevices) |
+| model_h3.tsv | 0x004875e0 | NodeList::fwdChild15 | NodeList::setRate | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x3c (0x004875ee) of vtable(s) 0x1005b304 -> 0x1000e810 = Wave_Device::set_rate (sound.pdb Dll_Wave_Device::set_rate) |
+| model_h3.tsv | 0x00487600 | NodeList::fwdChild16 | NodeList::getRate | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x40 (0x00487609) of vtable(s) 0x1005b304 -> 0x1000e830 = Wave_Device::get_rate (sound.pdb Dll_Wave_Device::get_rate) |
+| model_h3.tsv | 0x00487660 | NodeList::fwdChild27 | NodeList::isDisabled | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x6c (0x00487669) of vtable(s) 0x1005b304 -> 0x1000e7d0 = Wave_Device::is_disabled (sound.pdb Dll_Wave_Device::is_disabled) |
+| model_h3.tsv | 0x00487800 | NodeList::fwdChild30 | NodeList::isEax | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x78 (0x00487809) of vtable(s) 0x1005b304 -> 0x1000e850 = Wave_Device::is_eax (sound.pdb Dll_Wave_Device::is_eax) |
+| model_h3.tsv | 0x00487870 | NodeList::fwdChild34 | NodeList::is3d | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x88 (0x00487879) of vtable(s) 0x1005b304 -> 0x1000e5b0 = Wave_Device::is_3d (sound.pdb Dll_Wave_Device::is_3d) |
+| model_h3.tsv | 0x00487b20 | NodeListB::fwdChild24 | NodeListB::isDisabled | - | ACCEPT_FWD | `mov ecx, [ecx+0x14]` then slot 0x60 (0x00487b29) of vtable(s) 0x1005b28c -> 0x1000afe0 = Midi_Device::is_disabled (sound.pdb Dll_Midi_Device::is_disabled) |
+| model_h4.tsv | 0x004913c0 | TextView::setField14bcTriple | TextView::setSprites | - | ACCEPT_SET | slot 92 (+0x170) of the TextView table 0x004bb3f8; stores its three arguments at this+0x14bc / +0x14c0 / +0x14c4, no call (S10.9 rule ACCEPT_SET, noun from golf.pdb BasePop::set_sprites) |
+| model_h4.tsv | 0x004913f0 | TextView::setField14d0 | TextView::setHighlightColor | - | ACCEPT_SET | slot 93 (+0x174) of the TextView table 0x004bb3f8; stores its argument at this+0x14d0 (0x004913f4), no call (ACCEPT_SET, noun from golf.pdb BasePop::set_highlight_color) |
+| model_h4.tsv | 0x00491400 | TextView::setField14d4 | TextView::setSelectedColor | - | ACCEPT_SET | slot 94 (+0x178) of the TextView table 0x004bb3f8; stores its argument at this+0x14d4 (0x00491404), no call (ACCEPT_SET, noun from golf.pdb BasePop::set_selected_color) |
+| undisc2_exe.tsv | 0x004919a0 | viewDispatchSlot29_vtordisp | viewDispatchOnLeftClick_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (004919a0 sub ecx, dword ptr [ecx - 4]; 004919a3 jmp 0x4a0db0) to 0x4a0db0 viewDispatchSlot29, renamed viewDispatchOnLeftClick |
+| undisc2_exe.tsv | 0x004919b0 | viewDispatchSlot30_vtordisp | viewDispatchOnLeftDown_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (004919b0 sub ecx, dword ptr [ecx - 4]; 004919b3 jmp 0x4a0b50) to 0x4a0b50 viewDispatchSlot30, renamed viewDispatchOnLeftDown |
+| undisc2_exe.tsv | 0x004919c0 | viewDispatchSlot31_vtordisp | viewDispatchOnLeftUp_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (004919c0 sub ecx, dword ptr [ecx - 4]; 004919c3 jmp 0x4a0e60) to 0x4a0e60 viewDispatchSlot31, renamed viewDispatchOnLeftUp |
+| undisc2_exe.tsv | 0x004919d0 | viewDispatchSlot32_vtordisp | viewDispatchOnRightClick_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (004919d0 sub ecx, dword ptr [ecx - 4]; 004919d3 jmp 0x4a0eb0) to 0x4a0eb0 viewDispatchSlot32, renamed viewDispatchOnRightClick |
+| undisc2_exe.tsv | 0x004919e0 | viewDispatchSlot33_vtordisp | viewDispatchOnRightDown_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (004919e0 sub ecx, dword ptr [ecx - 4]; 004919e3 jmp 0x4a0e20) to 0x4a0e20 viewDispatchSlot33, renamed viewDispatchOnRightDown |
+| undisc2_exe.tsv | 0x004919f0 | viewDispatchSlot34_vtordisp | viewDispatchOnRightUp_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (004919f0 sub ecx, dword ptr [ecx - 4]; 004919f3 jmp 0x4a0e90) to 0x4a0e90 viewDispatchSlot34, renamed viewDispatchOnRightUp |
+| undisc2_exe.tsv | 0x00491a00 | viewDispatchSlot36_vtordisp | viewDispatchOnKeyDown_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (00491a00 sub ecx, dword ptr [ecx - 4]; 00491a03 jmp 0x4a0bf0) to 0x4a0bf0 viewDispatchSlot36, renamed viewDispatchOnKeyDown |
+| undisc2_exe.tsv | 0x00491a20 | viewDispatchSlot39_vtordisp | viewDispatchOnRightDoubleClick_vtordisp | P (0 port / 3 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (00491a20 sub ecx, dword ptr [ecx - 4]; 00491a23 jmp 0x4a0e40) to 0x4a0e40 viewDispatchSlot39, renamed viewDispatchOnRightDoubleClick |
+| exe_9.tsv | 0x0049fc30 | optionDialogSlot38 | optionDialogOnLeftDoubleClick | P (0 port / 2 shim+frida files) | ACCEPT_SLOT | slot 38 (+0x98) of the optionDialog table 0x004bbeb0 through its vtordisp thunk 0x0049fff0; slot 38 of the root window table 0x004ba2fc is rootWin_onPress1b 0x004657e0, the double click (S7.4 cross-check); golf.pdb CheckBoxCtl::on_left_double_click, Screen::on_left_double_click at slot 38 |
+| undisc2_exe.tsv | 0x0049fff0 | optionDialogSlot38_vtordisp | optionDialogOnLeftDoubleClick_vtordisp | P (0 port / 2 shim+frida files) | ACCEPT_THUNK | this-adjustor thunk (0049fff0 sub ecx, dword ptr [ecx - 4]; 0049fff3 jmp 0x49fc30) to 0x49fc30 optionDialogSlot38, renamed optionDialogOnLeftDoubleClick |
+| undisc2_exe.tsv | 0x004a0b50 | viewDispatchSlot30 | viewDispatchOnLeftDown | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 30 (+0x78): its vtordisp thunk sits at dword 0x004bb948 = slot 30 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 30 of the root window table 0x004ba2fc is rootWin_onPoint 0x00465610, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 30 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0bf0 | viewDispatchSlot36 | viewDispatchOnKeyDown | P (0 port / 3 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 36 (+0x90): its vtordisp thunk sits at dword 0x004bb960 = slot 36 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 36 of the root window table 0x004ba2fc is rootWin_onChar 0x004657b0, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 36 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0db0 | viewDispatchSlot29 | viewDispatchOnLeftClick | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 29 (+0x74): its vtordisp thunk sits at dword 0x004bb944 = slot 29 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 29 of the root window table 0x004ba2fc is rootWin_onPress1 0x00465580, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 29 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0e20 | viewDispatchSlot33 | viewDispatchOnRightDown | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 33 (+0x84): its vtordisp thunk sits at dword 0x004bb954 = slot 33 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 33 of the root window table 0x004ba2fc is rootWin_onPoint2 0x00465720, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 33 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0e40 | viewDispatchSlot39 | viewDispatchOnRightDoubleClick | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 39 (+0x9c): its vtordisp thunk sits at dword 0x004bb96c = slot 39 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 39 of the root window table 0x004ba2fc is rootWin_onPress2b 0x00465840, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 39 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0e60 | viewDispatchSlot31 | viewDispatchOnLeftUp | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 31 (+0x7c): its vtordisp thunk sits at dword 0x004bb94c = slot 31 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 31 of the root window table 0x004ba2fc is rootWin_onUnpoint 0x00465650, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 31 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0e90 | viewDispatchSlot34 | viewDispatchOnRightUp | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 34 (+0x88): its vtordisp thunk sits at dword 0x004bb958 = slot 34 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 34 of the root window table 0x004ba2fc is rootWin_onUnpoint2 0x00465740, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 34 the same in both classes (Screen / Dialogs) |
+| undisc2_exe.tsv | 0x004a0eb0 | viewDispatchSlot32 | viewDispatchOnRightClick | P (0 port / 4 shim+frida files) | ACCEPT_SLOT | dispatcher of Window slot 32 (+0x80): its vtordisp thunk sits at dword 0x004bb950 = slot 32 of the composite view table 0x004bb8d0 (installers viewCtor4a0740, CompositeView::dtor); slot 32 of the root window table 0x004ba2fc is rootWin_onPress2 0x00465680, whose message is measured (re/analysis/sim/time_model.md input section, S7.4); golf.pdb names slot 32 the same in both classes (Screen / Dialogs) |
+
+## 3. Two contradictions found on the way (named rows, outside the 204; for the lead)
+
+The pump helpers that doAllTasks and doAllKeys loop over are named rows whose names our own disassembly contradicts.
+S10.8 reviewed only five contradictions; these two follow from section 2.
+
+| file | addr | old | new | port | evidence (our disassembly) |
+|---|---|---|---|---|---|
+| exe_3.tsv | 0x00483bb0 | showScreen | doTask | P (7 port / 8 shim+frida files) | calls 0x0049c8e0, 0x00497b00 and 0x00497b20, then tail-jumps to slot +0x128 of the display 0x0083ad50 (0x00483bc7) = jgld Display::do_task 0x1006b0f0 (PeekMessageA over all messages); it shows no screen. golf.pdb do_task |
+| exe_3.tsv | 0x00483c70 | redrawAll | doKey | P (4 port / 12 shim+frida files) | calls 0x0049c8e0 and 0x00497b20, then tail-jumps to display slot +0x134 (0x00483c82) = jgld Display::do_key 0x1006b440 (PeekMessageA 0x100..0x108); it redraws nothing itself. golf.pdb do_key |
+
+hideScreen 0x00483c10 (golf.pdb do_non_input) tail-jumps to display slot +0x12c (0x00483c27). Its body, jgld 0x1006b1d0,
+has no name (S10.9: not reviewed), so no rename is proposed.
+
+## 4. UNCERTAINTIES.md rows
+
+Add U-1895..U-1897 (text in log/roadmap/S10/10_uncertain.tsv):
+- U-1895: Window slot events no measurement routes, and the panel nouns.
+- U-1896: our MultiSound slot names against sound.pdb.
+- U-1897: the jgld object behind DC_call*, and the scroll-bar axis of +0x26c / +0x270.
+
+U-1889 (S10.8) can be set to partial: the Snd / VoiceRx / NodeList forwarders are resolved (sections 2 and
+10_notes.md). The constructor, destructor and `$E` parts stay open.
+
+## 5. Counts
+
+See log/roadmap/S10/10_notes.md section 1.

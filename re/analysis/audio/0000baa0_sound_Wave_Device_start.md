@@ -7,6 +7,7 @@ Starts wave output: creates the DirectSound device (g_100b49f0), primary buffer 
 System writeup: `re/analysis/systems/sound_0.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dllwavedevice.cpp` as `?enable@Dll_Wave_Device@@UAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000bab1, 0x1000bb27, 0x1000bc9d, 0x1000bcf2, 0x1000bd23, 0x1000bd3c, 0x1000bd44): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000baa1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

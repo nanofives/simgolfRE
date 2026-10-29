@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 316 bytes, 111 instructions, subsystem `ui`. Mechanical
 Recreates the window surface (and the second surface when flagged) at the requested size, applies the palette and reports the new size through Window::resized. (`re/names/model_h2.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_GraphicWin.cpp` as `?on_size@GraphicWin@@UAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004810b9): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x00480f88 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

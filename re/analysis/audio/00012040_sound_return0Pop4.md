@@ -7,6 +7,7 @@ Returns 0 and pops one stack argument (ret 4 at 0x10012042); serviceWaveDevice 0
 System writeup: `re/analysis/systems/sound_13.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsmgr.cpp` as `?set_eax@CDSMgr@@QAE?AW4SNDERR@@PAUEAX_REVERB_PROPERTIES@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10012042): callee pops 4 bytes of stack arguments.
 
 ## Reads

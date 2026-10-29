@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,"mov eax, dword ptr [esi + 0xc]","mov eax, dword ptr [esi + 0xc]",True
+3,"test al, 0x83","test al, 0x83",True
+4,je 0x29,je 0x4a9941,True
+5,"test al, 8","test al, 8",True
+6,je 0x29,je 0x4a9941,True
+7,push dword ptr [esi + 8],push dword ptr [esi + 8],True
+8,call 0x18,call 0x4a5007,True
+9,"and word ptr [esi + 0xc], 0xfbf7","and word ptr [esi + 0xc], 0xfbf7",True
+10,"xor eax, eax","xor eax, eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+13,"mov dword ptr [esi + 8], eax","mov dword ptr [esi + 8], eax",True
+14,"mov dword ptr [esi + 4], eax","mov dword ptr [esi + 4], eax",True
+15,pop esi,pop esi,True
+16,ret ,ret ,True
+meta,"library=tools/vc6/vc98/lib/libcmt.lib member=build\intel\mt_obj\_freebuf.obj (library object, no compilation)",symbol=__freebuf,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

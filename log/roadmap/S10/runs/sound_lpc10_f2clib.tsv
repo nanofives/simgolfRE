@@ -1,0 +1,4 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/f2clib.c	0x3e2c0	0x1003e2c0	184	G	pow_ii	_pow_ii	public	100	100.0	67/67 ins	m36c_D1_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/f2clib.c	0x3e380	0x1003e380	118	G	r_sign	_r_sign	public	100	100.0	47/47 ins	m36c_D1_01.cpp
+sound	sound/lpc10.lib/lpc10/lpc10-1.5/lpc55-C/lpc10/f2clib.c	0x3e400	0x1003e400	127	G	i_nint	_i_nint	public	100	100.0	45/45 ins	m36c_D1_01.cpp

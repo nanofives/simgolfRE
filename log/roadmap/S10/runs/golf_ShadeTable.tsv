@@ -1,0 +1,5 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+golf	golf/golf.exe/src/ShadeTable.cpp	0x617e0	0x004617e0	5	L	$E8	_$E8	name	100	100.0	1/1 ins	
+golf	golf/golf.exe/src/ShadeTable.cpp	0x617f0	0x004617f0	19	L	$E7	_$E7	name	100	100.0	5/5 ins	
+golf	golf/golf.exe/src/ShadeTable.cpp	0x61810	0x00461810	21	G	ClampBrightnessAdd32	?ClampBrightnessAdd32@@YAHH@Z	public	100	100.0	7/7 ins	golf_small.cpp
+golf	golf/golf.exe/src/ShadeTable.cpp	0x61830	0x00461830	2020	G	Render_InitColorTable	?Render_InitColorTable@@YAHXZ	public	100	100.0	551/551 ins	

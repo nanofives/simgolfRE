@@ -7,6 +7,7 @@ Walks the WAVEHDR list at this+0x5c calling waveInUnprepareHeader(this+0x44, hdr
 System writeup: `re/analysis/systems/sound_4.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_WaveInDeviceMgr.cpp` as `?unprepare_headers@WaveInDeviceMgr@@QAE?AW4SNDERR@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10038c8c, 0x10038c9b, 0x10038ccb, 0x10038cea, 0x10038cf2, 0x10038cfa, 0x10038d02, 0x10038d0a (+2 more)): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10038c71 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

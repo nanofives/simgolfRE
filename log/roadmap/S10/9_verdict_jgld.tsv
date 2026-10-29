@@ -1,0 +1,121 @@
+va	verdict	smsg	name	kind	detail
+0x100035b0	MANUAL	Transform<float>::Identity	Transform<float>::Identity	OTHER	
+0x100052b0	MANUAL	Matrix4<float>::MakeIdentity	Matrix4<float>::MakeIdentity	OTHER	
+0x10005300	MANUAL	Matrix4<float>::Transpose	Matrix4<float>::Transpose	OTHER	
+0x10005330	MANUAL	Matrix4<float>::Invert	Matrix4<float>::Invert	OTHER	
+0x100074b0	MANUAL	$E2	$E2	OTHER	
+0x100074f0	MANUAL	$E1	$E1	OTHER	
+0x10009840	MANUAL	GSBuffer::sync_to_palette	GSBuffer::sync_to_palette	OTHER	
+0x10019c80	MANUAL	JGLSprite::draw_with_alpha	JGLSprite::draw_with_alpha	OTHER	
+0x1001a6b0	MANUAL	JGLSprite::draw_16_16	JGLSprite::draw_16_16	OTHER	
+0x1001b590	MANUAL	JGLSprite::draw_16_shadows_16_16	JGLSprite::draw_16_shadows_16_16	OTHER	
+0x1001b5d0	MANUAL	JGLSprite::draw_civ3_units_16_16	JGLSprite::draw_civ3_units_16_16	OTHER	
+0x1001b610	MANUAL	JGLSprite::draw_sudo_trans_16_16_50	JGLSprite::draw_sudo_trans_16_16_50	OTHER	
+0x1001b650	MANUAL	JGLSprite::draw_sudo_trans_16_16_25	JGLSprite::draw_sudo_trans_16_16_25	OTHER	
+0x100650a0	MANUAL	$E13	$E13	OTHER	
+0x100651b0	MANUAL	$E18	$E18	OTHER	
+0x100652c0	MANUAL	$E23	$E23	OTHER	
+0x100655c0	MANUAL	JGLSys::`scalar deleting destructor'	JGLSys::scalarDeletingDtor	OTHER	
+0x10065670	MANUAL	JGLSys::~JGLSys	JGLSys::dtor	CTOR	stores 0x1011d640 into [eax] at 0x10065690
+0x10066df0	MANUAL	GraphSys::init_device	GraphSys::init_device	OTHER	
+0x10066e30	MANUAL	GraphSys::Unimplemented16	GraphSys::Unimplemented16	OTHER	
+0x10066e70	MANUAL	GraphSys::get_devices	GraphSys::get_devices	OTHER	
+0x10066ea0	MANUAL	GraphSys::close_device	GraphSys::close_device	OTHER	
+0x10066ed0	MANUAL	GraphSys::get_light_data	GraphSys::get_light_data	OTHER	
+0x10066f10	MANUAL	GraphSys::delete_light_data	GraphSys::delete_light_data	OTHER	
+0x10066f40	MANUAL	GraphSys::clear_buffer	GraphSys::clear_buffer	OTHER	
+0x10066f80	MANUAL	GraphSys::begin_scene	GraphSys::begin_scene	OTHER	
+0x10066fc0	MANUAL	GraphSys::end_scene	GraphSys::end_scene	OTHER	
+0x10067000	MANUAL	GraphSys::create_verts	GraphSys::create_verts	OTHER	
+0x10067040	MANUAL	GraphSys::set_material	GraphSys::set_material	OTHER	
+0x10067080	MANUAL	GraphSys::set_world_transform	GraphSys::set_world_transform	OTHER	
+0x100670c0	MANUAL	GraphSys::set_camera_transform	GraphSys::set_camera_transform	OTHER	
+0x10067100	MANUAL	GraphSys::set_projection	GraphSys::set_projection	OTHER	
+0x10067140	MANUAL	GraphSys::load_texture	GraphSys::load_texture	OTHER	
+0x10067180	MANUAL	GraphSys::set_texture	GraphSys::set_texture	OTHER	
+0x100671c0	MANUAL	GraphSys::zbuffer_enable	GraphSys::zbuffer_enable	OTHER	
+0x10067200	MANUAL	GraphSys::zwrite_enable	GraphSys::zwrite_enable	OTHER	
+0x10067240	MANUAL	GraphSys::src_blend_enable	GraphSys::src_blend_enable	OTHER	
+0x10067280	MANUAL	GraphSys::specular_enable	GraphSys::specular_enable	OTHER	
+0x100672c0	MANUAL	GraphSys::read_x_file	GraphSys::read_x_file	OTHER	
+0x10067300	MANUAL	GraphSys::copy_verts	GraphSys::copy_verts	OTHER	
+0x10067340	MANUAL	GraphSys::render_verts	GraphSys::render_verts	OTHER	
+0x10067380	MANUAL	GraphSys::set_src_blend	GraphSys::set_src_blend	OTHER	
+0x100673c0	MANUAL	GraphSys::set_dst_blend	GraphSys::set_dst_blend	OTHER	
+0x10067400	MANUAL	GraphSys::set_cull_mode	GraphSys::set_cull_mode	OTHER	
+0x10067440	MANUAL	GraphSys::set_fill_mode	GraphSys::set_fill_mode	OTHER	
+0x10067480	MANUAL	GraphSys::set_shade_mode	GraphSys::set_shade_mode	OTHER	
+0x10067820	MANUAL	JGLSys::screen_mask	JGLSys::screen_mask	OTHER	
+0x1006afc0	MANUAL	PRNG::Seed	PRNG::Seed	OTHER	
+0x1006b000	MANUAL	JGLPalette::get_555_table	JGLPalette::get_555_table	OTHER	
+0x1006b040	MANUAL	JGLPalette::get_565_table	JGLPalette::get_565_table	OTHER	
+0x1006b080	MANUAL	JGLSys::wait_task	JGLSys::wait_task	OTHER	
+0x1006b0f0	MANUAL	JGLSys::do_task	JGLSys::do_task	OTHER	
+0x1006b1d0	MANUAL	JGLSys::do_non_input	JGLSys::do_non_input	OTHER	
+0x1006b3a0	MANUAL	JGLSys::do_draw	JGLSys::do_draw	OTHER	
+0x1006b440	MANUAL	JGLSys::do_key	JGLSys::do_key	OTHER	
+0x1006b4f0	MANUAL	JGLSys::do_mouse_move	JGLSys::do_mouse_move	OTHER	
+0x1006b5a0	MANUAL	JGLSys::do_mouse_stroke	JGLSys::do_mouse_stroke	OTHER	
+0x1006b730	MANUAL	JGLSys::do_char	JGLSys::do_char	OTHER	
+0x1006b7e0	MANUAL	JGLSys::do_mouse	JGLSys::do_mouse	OTHER	
+0x1006b890	MANUAL	JGLSys::flush_keyboard	JGLSys::flush_keyboard	OTHER	
+0x1006b900	MANUAL	JGLSys::flush_mouse	JGLSys::flush_mouse	OTHER	
+0x1006b970	MANUAL	JGLSys::do_timer	JGLSys::do_timer	OTHER	
+0x1006ba20	MANUAL	JGLSys::flush_timer	JGLSys::flush_timer	OTHER	
+0x1007f110	MANUAL	operator new[]	operator new[]	OTHER	
+0x1007f360	MANUAL	_purecall	_purecall	OTHER	
+0x1007fbc0	MANUAL	_nh_malloc_dbg	_nh_malloc_dbg	OTHER	
+0x100806d0	MANUAL	free	free	OTHER	
+0x10080b70	MANUAL	_msize	_msize	OTHER	
+0x10080b90	MANUAL	_msize_dbg	_msize_dbg	OTHER	
+0x10080d20	MANUAL	_CrtSetBreakAlloc	_CrtSetBreakAlloc	OTHER	
+0x10080d40	MANUAL	_CrtSetDbgBlockType	_CrtSetDbgBlockType	OTHER	
+0x10080e20	MANUAL	_CrtSetAllocHook	_CrtSetAllocHook	OTHER	
+0x10080ed0	MANUAL	_CrtCheckMemory	_CrtCheckMemory	OTHER	
+0x100812b0	MANUAL	_CrtDoForAllClientObjects	_CrtDoForAllClientObjects	OTHER	
+0x100813b0	MANUAL	_CrtIsValidHeapPointer	_CrtIsValidHeapPointer	OTHER	
+0x10081610	MANUAL	_CrtSetDumpClient	_CrtSetDumpClient	OTHER	
+0x10081630	MANUAL	_CrtMemCheckpoint	_CrtMemCheckpoint	OTHER	
+0x10081910	MANUAL	_CrtMemDumpAllObjectsSince	_CrtMemDumpAllObjectsSince	OTHER	
+0x10081f70	MANUAL	_CrtSetReportHook	_CrtSetReportHook	OTHER	
+0x10083490	MANUAL	_unlock	_unlock	OTHER	
+0x100834b0	MANUAL	_lockerr_exit	_lockerr_exit	OTHER	
+0x10084fd0	MANUAL	__threadid	__threadid	OTHER	
+0x10084fe0	MANUAL	__threadhandle	__threadhandle	OTHER	
+0x10085af0	MANUAL	_query_new_handler	_query_new_handler	GETTER	reads dword ptr [0x1012882c] (from 0x10085af0), no store, no call
+0x10085de0	MANUAL	_CrtDefaultAllocHook	_CrtDefaultAllocHook	OTHER	
+0x10085df0	MANUAL	_expand_base	_expand_base	OTHER	
+0x10086000	MANUAL	_realloc_base	_realloc_base	OTHER	
+0x10086490	MANUAL	_free_base	_free_base	OTHER	
+0x10086700	MANUAL	_get_sbh_threshold	_get_sbh_threshold	GETTER	reads dword ptr [0x10125784], dword ptr [0x10129fe0] (from 0x10086700), no store, no call
+0x10086730	MANUAL	_set_sbh_threshold	_set_sbh_threshold	OTHER	
+0x10086970	MANUAL	__sbh_free_block	__sbh_free_block	OTHER	
+0x100884d0	MANUAL	_get_old_sbh_threshold	_get_old_sbh_threshold	GETTER	reads dword ptr [0x10125784] (from 0x100884d0), no store, no call
+0x100884e0	MANUAL	_set_old_sbh_threshold	_set_old_sbh_threshold	OTHER	
+0x10088510	MANUAL	__old_sbh_new_region	__old_sbh_new_region	OTHER	
+0x100886f0	MANUAL	__old_sbh_release_region	__old_sbh_release_region	OTHER	
+0x10088770	MANUAL	__old_sbh_decommit_pages	__old_sbh_decommit_pages	OTHER	
+0x100888d0	MANUAL	__old_sbh_find_block	__old_sbh_find_block	OTHER	
+0x10088960	MANUAL	__old_sbh_free_block	__old_sbh_free_block	OTHER	
+0x100889d0	MANUAL	__old_sbh_alloc_block	__old_sbh_alloc_block	OTHER	
+0x10088d90	MANUAL	__old_sbh_alloc_block_from_page	__old_sbh_alloc_block_from_page	OTHER	
+0x10089040	MANUAL	__old_sbh_resize_block	__old_sbh_resize_block	OTHER	
+0x100891b0	MANUAL	__old_sbh_heap_check	__old_sbh_heap_check	OTHER	
+0x100893f0	MANUAL	_GetLinkerVersion	_GetLinkerVersion	OTHER	
+0x10089450	MANUAL	__heap_select	__heap_select	OTHER	
+0x10089680	MANUAL	_heap_init	_heap_init	OTHER	
+0x10089710	MANUAL	_heap_term	_heap_term	OTHER	
+0x10089db0	MANUAL	$$$00001	$$$00001	GETTER	reads [esp + 8], dword ptr [eax + 4], dword ptr [eax] (from 0x10089db0), no store, no call
+0x1008a350	MANUAL	__fpecode	__fpecode	OTHER	
+0x1008e8e0	MANUAL	_tolower	_tolower	GETTER	reads dword ptr [ebp + 8] (from 0x1008e8e0), no store, no call
+0x100904d0	MANUAL	_errno	_errno	OTHER	
+0x100904e0	MANUAL	__doserrno	__doserrno	OTHER	
+0x10091200	DEFER_NOT_A_FUNCTION	$$$00001	$$$00001	OTHER	
+0x10091e00	MANUAL	_getmbcp	_getmbcp	GETTER	reads dword ptr [0x10129bb4] (from 0x10091e00), no store, no call
+0x10093e00	MANUAL	__init_dummy	__init_dummy	OTHER	
+0x100959e0	MANUAL	_toupper	_toupper	GETTER	reads dword ptr [ebp + 8] (from 0x100959e0), no store, no call
+0x10097330	MANUAL	__init_collate	__init_collate	OTHER	
+0x10098d90	MANUAL	strftime	strftime	OTHER	
+0x10098db0	MANUAL	_Strftime	_Strftime	OTHER	
+0x10099ec0	MANUAL	localeconv	localeconv	GETTER	reads dword ptr [0x10126a38] (from 0x10099ec0), no store, no call
+0x1009e600	MANUAL	zlibVersion	zlibVersion	GETTER	reads [ebp - 0x40] (from 0x1009e600), no store, no call

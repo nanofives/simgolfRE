@@ -7,6 +7,7 @@ Allocates a 0xd4 DsBuffer, creates it with size +0x164, and links it into g_dsBu
 System writeup: `re/analysis/systems/sound_2.md`.
 
 ## Signature
+- Matched at 100% by `re/match/smsg_sound_dsmgr.cpp` as `?create_dsb@CDSMgr@@QAE?AW4SNDERR@@PAPAVCDSB@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10012153, 0x10012217): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10012135 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

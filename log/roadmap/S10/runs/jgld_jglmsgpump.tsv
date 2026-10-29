@@ -1,0 +1,14 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b080	0x1006b080	90	G	JGLSys::wait_task	?wait_task@JGLSys@@UAEXXZ	public	100	100.0	36/36 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b0f0	0x1006b0f0	170	G	JGLSys::do_task	?do_task@JGLSys@@UAEHXZ	public	100	100.0	61/61 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b1d0	0x1006b1d0	368	G	JGLSys::do_non_input	?do_non_input@JGLSys@@UAEHXZ	public	100	100.0	121/121 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b3a0	0x1006b3a0	124	G	JGLSys::do_draw	?do_draw@JGLSys@@UAEHXZ	public	100	100.0	49/49 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b440	0x1006b440	130	G	JGLSys::do_key	?do_key@JGLSys@@UAEHXZ	public	100	100.0	49/49 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b4f0	0x1006b4f0	130	G	JGLSys::do_mouse_move	?do_mouse_move@JGLSys@@UAEHXZ	public	100	100.0	49/49 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b5a0	0x1006b5a0	319	G	JGLSys::do_mouse_stroke	?do_mouse_stroke@JGLSys@@UAEHXZ	public	100	100.0	107/107 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b730	0x1006b730	130	G	JGLSys::do_char	?do_char@JGLSys@@UAEHXZ	public	100	100.0	49/49 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b7e0	0x1006b7e0	130	G	JGLSys::do_mouse	?do_mouse@JGLSys@@UAEHXZ	public	100	100.0	49/49 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b890	0x1006b890	85	G	JGLSys::flush_keyboard	?flush_keyboard@JGLSys@@UAEXXZ	public	100	100.0	35/35 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b900	0x1006b900	85	G	JGLSys::flush_mouse	?flush_mouse@JGLSys@@UAEXXZ	public	100	100.0	35/35 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6b970	0x1006b970	130	G	JGLSys::do_timer	?do_timer@JGLSys@@UAEHXZ	public	100	100.0	49/49 ins	jgld_app.cpp
+jgld	jgl/jgld.dll/src/jglmsgpump.cpp	0x6ba20	0x1006ba20	123	G	JGLSys::flush_timer	?flush_timer@JGLSys@@UAEXXZ	public	100	100.0	47/47 ins	jgld_app.cpp

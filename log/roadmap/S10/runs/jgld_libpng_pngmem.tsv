@@ -1,0 +1,7 @@
+pdb	source	rva	va	size	kind	pdb_name	symbol	how	status	score	note	already
+jgld	jgl/libpng.lib/libpng/pngmem.c	0x78da0	0x10078da0	117	G	png_create_struct	_png_create_struct	public	100	100.0	44/44 ins	jgld_png_mem.cpp
+jgld	jgl/libpng.lib/libpng/pngmem.c	0x78e20	0x10078e20	59	G	png_destroy_struct	_png_destroy_struct	public	100	100.0	25/25 ins	jgld_png_mem.cpp
+jgld	jgl/libpng.lib/libpng/pngmem.c	0x78e60	0x10078e60	98	G	png_malloc	_png_malloc	public	100	100.0	38/38 ins	jgld_png_mem.cpp
+jgld	jgl/libpng.lib/libpng/pngmem.c	0x78ed0	0x10078ed0	67	G	png_free	_png_free	public	100	100.0	28/28 ins	jgld_png_mem.cpp
+jgld	jgl/libpng.lib/libpng/pngmem.c	0x78f20	0x10078f20	92	G	png_memcpy_check	_png_memcpy_check	public	100	100.0	37/37 ins	jgld_png_mem.cpp
+jgld	jgl/libpng.lib/libpng/pngmem.c	0x78f80	0x10078f80	92	G	png_memset_check	_png_memset_check	public	100	100.0	37/37 ins	jgld_png_mem.cpp

@@ -1,0 +1,20 @@
+instruction,library_object,original,match
+0,push ecx,push ecx,True
+1,"cmp eax, 0x1000","cmp eax, 0x1000",True
+2,"lea ecx, [esp + 8]","lea ecx, [esp + 8]",True
+3,jb 0x20,jb 0x10024340,True
+4,"sub ecx, 0x1000","sub ecx, 0x1000",True
+5,"sub eax, 0x1000","sub eax, 0x1000",True
+6,"test dword ptr [ecx], eax","test dword ptr [ecx], eax",True
+7,"cmp eax, 0x1000","cmp eax, 0x1000",True
+8,jae 0xc,jae 0x1002432c,True
+9,"sub ecx, eax","sub ecx, eax",True
+10,"mov eax, esp","mov eax, esp",True
+11,"test dword ptr [ecx], eax","test dword ptr [ecx], eax",True
+12,"mov esp, ecx","mov esp, ecx",True
+13,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+14,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+15,push eax,push eax,True
+16,ret ,ret ,True
+meta,"library=tools/vc6sp2/VC98/lib/lib/libcmtd.lib member=build\intel\xmt_obj\chkstk.obj (library object, no compilation)",symbol=__alloca_probe,module=Terrain.dll
+VERDICT,GREEN,17,100.0%

@@ -6,6 +6,7 @@ Module `golf_clean.exe`, 63 bytes, 18 instructions, subsystem `ui`. Mechanical t
 window activation event entry: on deactivation it drops the focus windows and releases the cursor clip, on activation it re-applies the clip rectangle (`re/names/model_h4.tsv`)
 
 ## Signature
+- Matched at 100% by `re/match/smsg_golf_jackal_SysMessageHandler.cpp` as `?OnActivate@SysMessageHandler@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00495c95, 0x00495cac): callee pops 8 bytes of stack arguments.
 
 ## Reads
