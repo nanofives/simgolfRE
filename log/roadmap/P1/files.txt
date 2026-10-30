@@ -1,0 +1,13 @@
+port/include/portsim/sim/soundstate.h
+port/src/sim/audio_exe.cpp
+port/test/test_audio_exe.py
+port/test/test_audio_names.py
+re/roadmap/S4_functions.tsv
+log/roadmap/P1/edits.py
+log/roadmap/P1/make_edits.py
+log/roadmap/P1/rename_map.json
+log/roadmap/P1/golden_keys.py
+log/roadmap/P1/lookup_sim.py
+log/roadmap/P1/build.sh
+log/roadmap/P1/gates.sh
+log/roadmap/P1/notes.md

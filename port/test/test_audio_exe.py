@@ -184,7 +184,7 @@ def test_device_present_end_to_end(lib):
 
 
 @pytest.mark.parametrize("fn", ["playSound", "Snd::applyMode484e30", "loadSoundTable", "shutdownSoundSystem", "soundVersionCheck",
-                                "snd.FUN_1000e830"])
+                                "snd.Wave_Device::get_rate"])
 def test_device_negctl_red(lib, fn):
     """a wrong body changes the device stream (the pinned stream digest), or stops the chain"""
     g = json.loads(AS.GOLDEN.read_text()).get("$device", {}) if AS.GOLDEN.exists() else {}

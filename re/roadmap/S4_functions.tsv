@@ -30,8 +30,8 @@ step	family	rva	name	level	status	path1_csvs	oracle	hook_source
 -	list	0x1bb10	PtrList_deleteAll	C2	dead	0	dead	
 -	dev	0x1bbb0	Ctrl5b5c0_resetElements	C2	dead	0	dead	
 -	dev	0x1c400	Ctrl5b5c0_buildTable	C2	dead	0	dead	
--	dev	0x1c5c0	Ctrl5b5f0_ctor	C2	dead	0	dead	
--	dev	0x1c870	Ctrl5b638_ctor	C2	dead	0	dead	
+-	dev	0x1c5c0	Randomizer::ctor	C2	dead	0	dead	
+-	dev	0x1c870	Chooser::ctor	C2	dead	0	dead	
 -	wave	0x1e750	MidiReader_ctor	C2	dead	0	dead	
 -	seq	0x1f6f0	Seq_ctor	C2	dead	0	dead	
 -	seq	0x207f0	Seq_preRollAllTracks	C2	dead	0	dead	
@@ -48,7 +48,7 @@ step	family	rva	name	level	status	path1_csvs	oracle	hook_source
 -	dev	0x2bbe0	Device_createAndStart	C2	dead	0	dead	
 -	chan	0x2c490	Ch5bb90_ctor	C2	dead	1	dead	
 -	sound	0x2ce60	MultiSound_freeSlots	C2	dead	0	dead	
--	chan	0x2e550	Ch5c000_ctor	C2	dead	0	dead	
+-	chan	0x2e550	Ambience::ctor	C2	dead	0	dead	
 -	sound~	0x2ffa0	markSoundTime	C2	dead	0	dead	
 -	sound~	0x2ffd0	updateSoundTimer	C2	dead	0	dead	
 -	chan	0x31e50	Channel_ctor	C2	dead	0	dead	
@@ -64,9 +64,9 @@ step	family	rva	name	level	status	path1_csvs	oracle	hook_source
 -	wave	0x38f60	WaveInDevice_queryCaps	C2	dead	0	dead	
 -	list~	0x394c0	freePointerAndClear	C2	dead	0	dead	
 -	list~	0x394f0	MemBlock_alloc	C2	dead	0	dead	
--	crt	0x41aad	iosResetVtable	C4	verified	1	path1+emu	c3cm.cpp
--	crt	0x41b9d	ostream::scalarDtorAdj8	C2	transcribed	0	emu-only	
--	crt	0x41c26	ostreamResetVtable	C4	verified	1	path1+emu	c3cx.cpp
+-	crt	0x41aad	ostream::dtor	C4	verified	1	path1+emu	c3cm.cpp
+-	crt	0x41b9d	ostream_withassign::scalar_deleting_destructor	C2	transcribed	0	emu-only	
+-	crt	0x41c26	ostream_withassign::dtor	C4	verified	1	path1+emu	c3cx.cpp
 -	crt	0x41e43	initCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
 -	crt	0x41e4e	deleteCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
 -	crt	0x41e59	enterCriticalSection	C4	verified	1	path1+emu	c3dt.cpp
@@ -90,7 +90,7 @@ S4.11	crt	0x42c07	free	C2	transcribed	0	emu-only
 -	crt	0x431f0	CIsqrt	C2	dead	0	dead	
 -	crt	0x43204	sqrt	C2	transcribed	0	emu-only	
 -	crt	0x4320d	sqrt_classify	C2	transcribed	0	emu-only	
--	crt	0x432b0	CItranscendental1	C2	transcribed	0	emu-only	
+-	crt	0x432b0	_exp	C2	transcribed	0	emu-only	
 -	crt	0x432d0	CIlog	C2	dead	0	dead	
 -	crt	0x432e4	log	C2	transcribed	0	emu-only	
 -	crt	0x432ed	log_classify	C2	transcribed	0	emu-only	
@@ -119,19 +119,19 @@ S4.11	crt	0x45581	msize	C2	transcribed	0	emu-only
 -	crt	0x46f94	sbhRegionFree	C2	transcribed	0	emu-only	
 -	crt	0x46fea	sbhRegionDecommit	C2	transcribed	0	emu-only	
 -	crt	0x470ac	sbhRegionLocate	C4	verified	1	path1+emu	c3dh.cpp
--	crt	0x47103	sbhPageFree	C4	verified	2	path1+emu	c3cx.cpp
--	crt	0x47148	crtCommitPages	C2	transcribed	0	emu-only	
--	crt	0x47350	sbhFindFreeRun	C2	transcribed	0	emu-only	
+-	crt	0x47103	___old_sbh_free_block	C4	verified	2	path1+emu	c3cx.cpp
+-	crt	0x47148	___old_sbh_alloc_block	C2	transcribed	0	emu-only	
+-	crt	0x47350	___old_sbh_alloc_block_from_page	C2	transcribed	0	emu-only	
 -	crt	0x47474	sbhResizeBlock	C4	verified	1	path1+emu	c3cx.cpp
 -	crt	0x4751d	sbhRegionHeapCheck	C2	dead	0	dead	
 S4.11	crt	0x47771	_unlock	C4	verified	1	path1+emu	c3dt.cpp
 -	crt	0x48180	fp2ArgResultDispatch	C2	transcribed	0	emu-only	
 -	crt	0x481f5	fpuSetControlWord	C2	transcribed	0	emu-only	
--	crt	0x4820c	fpStatusExceptionType	C2	transcribed	0	emu-only	
+-	crt	0x4820c	__convertTOStoQNaN	C2	transcribed	0	emu-only	
 -	crt	0x48268	doubleExponentField	C3	impl	1	path1+emu	c3cm.cpp
 -	crt	0x48643	fpTranscendentalDispatch	C2	transcribed	0	emu-only	
 -	crt	0x4864a	fpIntrinsicDispatch	C2	transcribed	0	emu-only	
--	crt	0x49604	crtValidatePointer	C4	verified	2	path1+emu	c3cm.cpp
+-	crt	0x49604	_ValidateWrite	C4	verified	2	path1+emu	c3cm.cpp
 -	crt	0x4a010	strcpy	C3	verified	1	path1+emu	c3cm.cpp
 -	crt	0x4a158	__fptrap	C2	transcribed	0	emu-only	
 -	crt	0x4aa10	_alloca_probe	C2	transcribed	0	emu-only	

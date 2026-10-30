@@ -2268,7 +2268,7 @@ void a_device_step(Ctx &c, const uint32_t *a, Ret &r) {
 }
 
 // ---- sound.dll functions with no hooks.csv row (reached on the device-present path; U-1498) -------------------------------
-// FUN_1000e810 (Wave_Device's table slot 15, +0x3c of the table rva 0x5b304): `mov eax, [esp + 4]; mov [ecx + 0x1ac], eax;
+// Wave_Device::set_rate (Wave_Device's table slot 15, +0x3c of the table rva 0x5b304): `mov eax, [esp + 4]; mov [ecx + 0x1ac], eax;
 // ret 4`: the device's +0x1ac = v, eax = v
 int g_neg_sndExtra = 0;
 void a_snd_e810(Ctx &c, const uint32_t *a, Ret &r) {
@@ -2278,13 +2278,13 @@ void a_snd_e810(Ctx &c, const uint32_t *a, Ret &r) {
 // Wave_Device's other unnamed slots (table rva 0x5b304), from their instructions:
 //   slot 1 FUN_10029290 / slot 12 FUN_10029620  `xor eax, eax; ret 4`      slot 2 / 10 / 13 FUN_100292b0 / 295c0 / 29640  `xor eax, eax; ret`
 //   slot 11 FUN_100295e0  `ret 4` (eax untouched: the caller's; the port answers 0, U-1496)
-//   slot 3 FUN_1000e7f0  [this + 0x1a8] = 0          slot 24 FUN_1000e790  [this + 0x1b0] = 0
-//   slot 16 FUN_1000e830  eax = [this + 0x1ac]        slot 18 FUN_1000e7b0  eax = [this + 0x1b0]
-//   slot 27 FUN_1000e7d0  eax = ([this + 0x1a4] >> 1) & 1      slot 30 FUN_1000e850  eax = ([this + 0x1a4] >> 3) & 1
-//   slot 17 FUN_1000e1d0(v)  [this + 0x1b4] = v, [this + 0x1b0] += v, eax = v
-//   slot 6 FUN_1000e200  g_dsDevice (rva 0xb49f0) ? [it + 0x148] : 0
-//   slot 34 FUN_1000e5b0  g_dsDevice ? (byte [it + 0x6c] >> 3) & 1 (al; eax's upper bytes the device's) : al 0 (upper bytes 0)
-//   slot 35 FUN_1000e490(a, b, d)  g_dsDevice ? Ds3DListener::setPosition(a, b, d) through the thunk rva 0x164a with ecx =
+//   slot 3 Wave_Device::timer_unhook  [this + 0x1a8] = 0          slot 24 Wave_Device::reset_time_past  [this + 0x1b0] = 0
+//   slot 16 Wave_Device::get_rate  eax = [this + 0x1ac]        slot 18 Wave_Device::get_time_past  eax = [this + 0x1b0]
+//   slot 27 Wave_Device::is_disabled  eax = ([this + 0x1a4] >> 1) & 1      slot 30 Wave_Device::is_eax  eax = ([this + 0x1a4] >> 3) & 1
+//   slot 17 Wave_Device::add_to_time_past(v)  [this + 0x1b4] = v, [this + 0x1b0] += v, eax = v
+//   slot 6 Wave_Device::get_ndevices  g_dsDevice (rva 0xb49f0) ? [it + 0x148] : 0
+//   slot 34 Wave_Device::is_3d  g_dsDevice ? (byte [it + 0x6c] >> 3) & 1 (al; eax's upper bytes the device's) : al 0 (upper bytes 0)
+//   slot 35 Wave_Device::set_listener_position(a, b, d)  g_dsDevice ? Ds3DListener::setPosition(a, b, d) through the thunk rva 0x164a with ecx =
 //     g_dsDevice (its eax) : 3
 //   slots 31, 36..39 FUN_1000e2f0 / e4d0 / e4f0 / e510 / e530  eax = 0xb (`ret 4`, `ret 0xc` for e4d0)
 constexpr U4 kRvaDsDevice = 0xb49f0;
@@ -2317,30 +2317,30 @@ void a_snd_e490(Ctx &c, const uint32_t *a, Ret &r) {
   }
   r = snd_call(c, 0x164a, SndAbi::Thiscall, {d, a[1], a[2], a[3]});
 }
-// FUN_1003a7c0 (thiscall, `ret`): eax = (int)([this + 0xc8] << 3) >> 31, i.e. -1 when bit 28 is set, else 0
+// MultiSound::is_hwbuffer (thiscall, `ret`): eax = (int)([this + 0xc8] << 3) >> 31, i.e. -1 when bit 28 is set, else 0
 void a_snd_3a7c0(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_u32((L32(c, a[0] + 0xc8) & (NG(sndExtra) == 1 ? (1u << 27) : (1u << 28))) ? 0xffffffffu : 0u);
 }
 // MultiSound's unnamed slots (table rva 0x5c7e8; the same layout as the exe's Snd: device +0x40, flags +0x44, links +0x48 /
 // +0x4c) and their small callees, from their instructions (log/roadmap/S4/10_work/ms_dis.txt):
 //   FUN_1003a6b0(v)  Channel_recomputeVoiceGains(this + 0x70, v) (thunk 0x1efb); 0
-//   FUN_10005670(v)  v 0 -> 0xa; [this + 0x38] = v; 0                       FUN_1003a1c0(v)  [this + 0x29c] = v; eax = v
-//   FUN_1002b1b0(v)  the device (+0x40) slot 0x18(v)'s eax, else 0x14
-//   FUN_1003a040()   [this + 0xc8] bit 1 clear -> 0x14; else the queue at rva 0xb4a20, when set, WaveCmdQueue::pushNode(this, 2)
+//   Patch::set_fade_in(v)  v 0 -> 0xa; [this + 0x38] = v; 0                       MultiSound::set_delay(v)  [this + 0x29c] = v; eax = v
+//   SubChannel::play_1002b1b0(v)  the device (+0x40) slot 0x18(v)'s eax, else 0x14
+//   MultiSound::stop()   [this + 0xc8] bit 1 clear -> 0x14; else the queue at rva 0xb4a20, when set, WaveCmdQueue::pushNode(this, 2)
 //                    (thunk 0x20b3); 0
-//   FUN_1002b3a0(a) / FUN_1002b430(a)  own slot 4 / 0x54 with a; zero -> own slot 0x28's result
-//   FUN_1003a1e0(v)  FUN_1002b4a0(v) (thunk 0x15c8) then Channel_setPanGains(this + 0x70, v) (thunk 0x1a7d), its eax
-//   FUN_1002b4a0(p)  p clamped to [-0x40, 0x3f] into +8; the device's slot 0x44(p)'s eax, else the clamped p
-//   FUN_1003a690(v)  FUN_100378b0(this + 0x70, v) (thunk 0x25f9)
-//   FUN_100378b0(v)  +0x58 bit 2 = v bit 0, +0x2d0 bit 0 = v bit 0 (a 16-pass loop that sets the same bit); eax = the new +0x2d0
-//   FUN_1003a590(k)  FUN_10037860(this + 0x70, k) (thunk 0x1b09)
-//   FUN_10037860(k)  bit k of (+0x58 >> 12) & 0xffff set -> [this + 0x110 k + 0x2f8], else 0
-//   FUN_1003a750 / FUN_1003a7e0 / FUN_1003a7c0  -(bit 2 / 1 / 28 of [this + 0xc8])
-//   FUN_1003a790     [this + 0xc8] bit 6 set and bit 4 clear -> 1, else 0
-//   FUN_100056c0 / 56e0 / 5700 / 1003a710 / 1003a670  eax = [this + 0x4c / 0x48 / 0x54 / 0x298 / 0x140c]
-//   FUN_1002b010     linkIntoList on the list at rva 0xb5070 (head) / 0xb506c (tail), as the exe's Snd::linkIntoList
-//   FUN_1003a0b0     unlinkFromActiveList (thunk 0x2419); 0
-//   FUN_1002be90(a, m)  own slot 0x88(a, m); m bit 2 -> 0; else own slot 0x8c's result (the exe's Snd::applyMode484e30)
+//   SubChannel::fade_1002b3a0(a) / SubChannel::fade_in_1002b430(a)  own slot 4 / 0x54 with a; zero -> own slot 0x28's result
+//   MultiSound::set_pan(v)  SubChannel::set_pan(v) (thunk 0x15c8) then Channel_setPanGains(this + 0x70, v) (thunk 0x1a7d), its eax
+//   SubChannel::set_pan(p)  p clamped to [-0x40, 0x3f] into +8; the device's slot 0x44(p)'s eax, else the clamped p
+//   MultiSound::set_loop_state(v)  Channel::set_loop_state(this + 0x70, v) (thunk 0x25f9)
+//   Channel::set_loop_state(v)  +0x58 bit 2 = v bit 0, +0x2d0 bit 0 = v bit 0 (a 16-pass loop that sets the same bit); eax = the new +0x2d0
+//   MultiSound::get_time(k)  Channel::get_time(this + 0x70, k) (thunk 0x1b09)
+//   Channel::get_time(k)  bit k of (+0x58 >> 12) & 0xffff set -> [this + 0x110 k + 0x2f8], else 0
+//   MultiSound::is_looping / MultiSound::is_loaded / MultiSound::is_hwbuffer  -(bit 2 / 1 / 28 of [this + 0xc8])
+//   MultiSound::is_playing     [this + 0xc8] bit 6 set and bit 4 clear -> 1, else 0
+//   SubChannel::get_next / 56e0 / 5700 / 1003a710 / 1003a670  eax = [this + 0x4c / 0x48 / 0x54 / 0x298 / 0x140c]
+//   SubChannel::attach     linkIntoList on the list at rva 0xb5070 (head) / 0xb506c (tail), as the exe's Snd::linkIntoList
+//   MultiSound::detach     unlinkFromActiveList (thunk 0x2419); 0
+//   Wave::load(a, m)  own slot 0x88(a, m); m bit 2 -> 0; else own slot 0x8c's result (the exe's Snd::applyMode484e30)
 //   FUN_1002b110 / 2c2b0 (`ret 4`), 2c2d0 (`ret`), 2c2f0 / 2c310 / 2c330 / 2c350 (`ret 0xc`)  eax = 0xb
 //   FUN_1002c1c0     the device's slot 0xc0 (tail jump), else 0
 //   FUN_1002c1f0(a, b, d)  the device's slot 0xc4(a, b, d), else (d != 0: byte [a] = 0) 1
@@ -2485,7 +2485,7 @@ template <U4 Slot> void a_snd_fwd1(Ctx &c, const uint32_t *a, Ret &r) {
   }
   r = dslot(c, d, Slot, {a[1]});
 }
-// FUN_1000af20(v)  [this + 0x34] += v; eax = v
+// Midi_Device::add_to_time_past(v)  [this + 0x34] += v; eax = v
 void a_snd_af20(Ctx &c, const uint32_t *a, Ret &r) {
   S32(c, a[0] + 0x34, L32(c, a[0] + 0x34) + (NG(sndExtra) == 1 ? a[1] + 1 : a[1]));
   r.set_u32(a[1]);
@@ -2493,9 +2493,9 @@ void a_snd_af20(Ctx &c, const uint32_t *a, Ret &r) {
 // Midi_Device's unnamed slots (table rva 0x5b28c), from their instructions:
 //   FUN_10029e30 / 2a0f0 (`ret 4`), 29e50 / 2a0b0 / 2a110 (`ret`)  eax = 0;   FUN_1000a120 / 2a0d0  `ret 4`, eax the caller's
 //   FUN_1000a0e0  eax = 0x2f (`ret 0xc`)
-//   FUN_1000af80 / af60  [this + 0x2c] / [this + 0x34] = 0;   FUN_1000afa0(v)  [this + 0x30] = v, eax = v
-//   FUN_1000afc0 / af40  eax = [this + 0x30] / [this + 0x34];   FUN_1000afe0  eax = -(bit 0 of [this + 0x24])
-//   FUN_1000a140  [this + 0x2c] set -> SoundTimer::unregisterClient(this) on g_soundTimer (rva 0xb49ec, thunk 0x1ed3), its
+//   Midi_Device::timer_unhook / af60  [this + 0x2c] / [this + 0x34] = 0;   Midi_Device::set_rate(v)  [this + 0x30] = v, eax = v
+//   Midi_Device::get_rate / af40  eax = [this + 0x30] / [this + 0x34];   Midi_Device::is_disabled  eax = -(bit 0 of [this + 0x24])
+//   Midi_Device::suspend  [this + 0x2c] set -> SoundTimer::unregisterClient(this) on g_soundTimer (rva 0xb49ec, thunk 0x1ed3), its
 //                 eax; else eax = 0 (the field)
 template <U4 Off> void a_snd_zero(Ctx &c, const uint32_t *a, Ret &) { S32(c, a[0] + Off, NG(sndExtra) == 1 ? 1u : 0u); }
 template <U4 Off> void a_snd_set(Ctx &c, const uint32_t *a, Ret &r) {
@@ -2517,29 +2517,29 @@ void a_snd_a140(Ctx &c, const uint32_t *a, Ret &r) {
 const ExeFn kSndExtra[] = {
     {0x29e30, "snd.FUN_10029e30"}, {0x2a0f0, "snd.FUN_1002a0f0"}, {0x29e50, "snd.FUN_10029e50"},
     {0x2a0b0, "snd.FUN_1002a0b0"}, {0x2a110, "snd.FUN_1002a110"}, {0xa120, "snd.FUN_1000a120"},
-    {0x2a0d0, "snd.FUN_1002a0d0"}, {0xa0e0, "snd.FUN_1000a0e0"}, {0xaf80, "snd.FUN_1000af80"},
-    {0xaf60, "snd.FUN_1000af60"}, {0xafa0, "snd.FUN_1000afa0"}, {0xafc0, "snd.FUN_1000afc0"},
-    {0xaf40, "snd.FUN_1000af40"}, {0xafe0, "snd.FUN_1000afe0"}, {0xa140, "snd.FUN_1000a140"},
-    {0xaf20, "snd.FUN_1000af20"},
-    {0x3a6b0, "snd.FUN_1003a6b0"}, {0x5670, "snd.FUN_10005670"}, {0x2b110, "snd.FUN_1002b110"},
-    {0x2b1b0, "snd.FUN_1002b1b0"}, {0x3a040, "snd.FUN_1003a040"}, {0x2b3a0, "snd.FUN_1002b3a0"},
-    {0x2b430, "snd.FUN_1002b430"}, {0x3a1e0, "snd.FUN_1003a1e0"}, {0x2b4a0, "snd.FUN_1002b4a0"},
-    {0x3a690, "snd.FUN_1003a690"}, {0x378b0, "snd.FUN_100378b0"}, {0x3a1c0, "snd.FUN_1003a1c0"},
-    {0x3a750, "snd.FUN_1003a750"}, {0x3a790, "snd.FUN_1003a790"}, {0x3a7e0, "snd.FUN_1003a7e0"},
-    {0x56c0, "snd.FUN_100056c0"}, {0x56e0, "snd.FUN_100056e0"}, {0x3a710, "snd.FUN_1003a710"},
-    {0x5700, "snd.FUN_10005700"}, {0x2b010, "snd.FUN_1002b010"}, {0x3a0b0, "snd.FUN_1003a0b0"},
-    {0x2be90, "snd.FUN_1002be90"}, {0x2c2b0, "snd.FUN_1002c2b0"}, {0x2c2d0, "snd.FUN_1002c2d0"},
+    {0x2a0d0, "snd.FUN_1002a0d0"}, {0xa0e0, "snd.FUN_1000a0e0"}, {0xaf80, "snd.Midi_Device::timer_unhook"},
+    {0xaf60, "snd.Midi_Device::reset_time_past"}, {0xafa0, "snd.Midi_Device::set_rate"}, {0xafc0, "snd.Midi_Device::get_rate"},
+    {0xaf40, "snd.Midi_Device::get_time_past"}, {0xafe0, "snd.Midi_Device::is_disabled"}, {0xa140, "snd.Midi_Device::suspend"},
+    {0xaf20, "snd.Midi_Device::add_to_time_past"},
+    {0x3a6b0, "snd.FUN_1003a6b0"}, {0x5670, "snd.Patch::set_fade_in"}, {0x2b110, "snd.FUN_1002b110"},
+    {0x2b1b0, "snd.SubChannel::play_1002b1b0"}, {0x3a040, "snd.MultiSound::stop"}, {0x2b3a0, "snd.SubChannel::fade_1002b3a0"},
+    {0x2b430, "snd.SubChannel::fade_in_1002b430"}, {0x3a1e0, "snd.MultiSound::set_pan"}, {0x2b4a0, "snd.SubChannel::set_pan"},
+    {0x3a690, "snd.MultiSound::set_loop_state"}, {0x378b0, "snd.Channel::set_loop_state"}, {0x3a1c0, "snd.MultiSound::set_delay"},
+    {0x3a750, "snd.MultiSound::is_looping"}, {0x3a790, "snd.MultiSound::is_playing"}, {0x3a7e0, "snd.MultiSound::is_loaded"},
+    {0x56c0, "snd.SubChannel::get_next"}, {0x56e0, "snd.SubChannel::get_prev"}, {0x3a710, "snd.MultiSound::get_time_1003a710"},
+    {0x5700, "snd.SubChannel::get_type"}, {0x2b010, "snd.SubChannel::attach"}, {0x3a0b0, "snd.MultiSound::detach"},
+    {0x2be90, "snd.Wave::load"}, {0x2c2b0, "snd.FUN_1002c2b0"}, {0x2c2d0, "snd.FUN_1002c2d0"},
     {0x2c2f0, "snd.FUN_1002c2f0"}, {0x2c310, "snd.FUN_1002c310"}, {0x2c330, "snd.FUN_1002c330"},
-    {0x2c350, "snd.FUN_1002c350"}, {0x3a590, "snd.FUN_1003a590"}, {0x37860, "snd.FUN_10037860"},
-    {0x2c1c0, "snd.FUN_1002c1c0"}, {0x2c1f0, "snd.FUN_1002c1f0"}, {0x3a670, "snd.FUN_1003a670"},
+    {0x2c350, "snd.FUN_1002c350"}, {0x3a590, "snd.MultiSound::get_time"}, {0x37860, "snd.Channel::get_time"},
+    {0x2c1c0, "snd.FUN_1002c1c0"}, {0x2c1f0, "snd.FUN_1002c1f0"}, {0x3a670, "snd.MultiSound::get_ms_length"},
     {0x2b870, "snd.FUN_1002b870"}, {0x2b8a0, "snd.FUN_1002b8a0"},
-    {0x3a7c0, "snd.FUN_1003a7c0"},
-    {0xe810, "snd.FUN_1000e810"}, {0x29290, "snd.FUN_10029290"}, {0x29620, "snd.FUN_10029620"},
+    {0x3a7c0, "snd.MultiSound::is_hwbuffer"},
+    {0xe810, "snd.Wave_Device::set_rate"}, {0x29290, "snd.FUN_10029290"}, {0x29620, "snd.FUN_10029620"},
     {0x292b0, "snd.FUN_100292b0"}, {0x295c0, "snd.FUN_100295c0"}, {0x29640, "snd.FUN_10029640"},
-    {0x295e0, "snd.FUN_100295e0"}, {0xe7f0, "snd.FUN_1000e7f0"}, {0xe790, "snd.FUN_1000e790"},
-    {0xe830, "snd.FUN_1000e830"}, {0xe7b0, "snd.FUN_1000e7b0"}, {0xe7d0, "snd.FUN_1000e7d0"},
-    {0xe850, "snd.FUN_1000e850"}, {0xe1d0, "snd.FUN_1000e1d0"}, {0xe200, "snd.FUN_1000e200"},
-    {0xe5b0, "snd.FUN_1000e5b0"}, {0xe490, "snd.FUN_1000e490"}, {0xe2f0, "snd.FUN_1000e2f0"},
+    {0x295e0, "snd.FUN_100295e0"}, {0xe7f0, "snd.Wave_Device::timer_unhook"}, {0xe790, "snd.Wave_Device::reset_time_past"},
+    {0xe830, "snd.Wave_Device::get_rate"}, {0xe7b0, "snd.Wave_Device::get_time_past"}, {0xe7d0, "snd.Wave_Device::is_disabled"},
+    {0xe850, "snd.Wave_Device::is_eax"}, {0xe1d0, "snd.Wave_Device::add_to_time_past"}, {0xe200, "snd.Wave_Device::get_ndevices"},
+    {0xe5b0, "snd.Wave_Device::is_3d"}, {0xe490, "snd.Wave_Device::set_listener_position"}, {0xe2f0, "snd.FUN_1000e2f0"},
     {0xe4d0, "snd.FUN_1000e4d0"}, {0xe4f0, "snd.FUN_1000e4f0"}, {0xe510, "snd.FUN_1000e510"},
     {0xe530, "snd.FUN_1000e530"},
 };
@@ -2736,10 +2736,10 @@ const FuncDef kFuncs[] = {
     {"audio_exe.deviceStep", "default", "uint32", 2, 0, a_device_step, &g_neg_none},
     // sound.dll functions with no hooks.csv row that the device-present start-up reaches (gate c; the core finds them
     // through audio_exe_sound_name, U-1498)
-    {"snd.FUN_1000e810", "thiscall", "uint32", 2, 0, a_snd_e810, &g_neg_sndExtra},
-    {"snd.FUN_1003a7c0", "thiscall", "uint32", 1, 0, a_snd_3a7c0, &g_neg_sndExtra},
+    {"snd.Wave_Device::set_rate", "thiscall", "uint32", 2, 0, a_snd_e810, &g_neg_sndExtra},
+    {"snd.MultiSound::is_hwbuffer", "thiscall", "uint32", 1, 0, a_snd_3a7c0, &g_neg_sndExtra},
     {"snd.FUN_1003a6b0", "thiscall", "uint32", 2, 0, a_snd_3a6b0, &g_neg_sndExtra},
-    {"snd.FUN_1000af20", "thiscall", "uint32", 2, 0, a_snd_af20, &g_neg_sndExtra},
+    {"snd.Midi_Device::add_to_time_past", "thiscall", "uint32", 2, 0, a_snd_af20, &g_neg_sndExtra},
     {"snd.FUN_10029e30", "thiscall", "uint32", 2, 0, a_snd_ret0, &g_neg_sndExtra},
     {"snd.FUN_1002a0f0", "thiscall", "uint32", 2, 0, a_snd_ret0, &g_neg_sndExtra},
     {"snd.FUN_10029e50", "thiscall", "uint32", 1, 0, a_snd_ret0, &g_neg_sndExtra},
@@ -2748,43 +2748,43 @@ const FuncDef kFuncs[] = {
     {"snd.FUN_1000a120", "thiscall", "uint32", 2, 0, a_snd_ret0, &g_neg_sndExtra},
     {"snd.FUN_1002a0d0", "thiscall", "uint32", 2, 0, a_snd_ret0, &g_neg_sndExtra},
     {"snd.FUN_1000a0e0", "thiscall", "uint32", 4, 0, a_snd_ret2f, &g_neg_sndExtra},
-    {"snd.FUN_1000af80", "thiscall", "void", 1, 0, a_snd_zero<0x2c>, &g_neg_sndExtra},
-    {"snd.FUN_1000af60", "thiscall", "void", 1, 0, a_snd_zero<0x34>, &g_neg_sndExtra},
-    {"snd.FUN_1000afa0", "thiscall", "uint32", 2, 0, a_snd_set<0x30>, &g_neg_sndExtra},
-    {"snd.FUN_1000afc0", "thiscall", "uint32", 1, 0, a_snd_field<0x30>, &g_neg_sndExtra},
-    {"snd.FUN_1000af40", "thiscall", "uint32", 1, 0, a_snd_field<0x34>, &g_neg_sndExtra},
-    {"snd.FUN_1000afe0", "thiscall", "uint32", 1, 0, a_snd_negbit_at<0x24, 0>, &g_neg_sndExtra},
-    {"snd.FUN_1000a140", "thiscall", "uint32", 1, 0, a_snd_a140, &g_neg_sndExtra},
-    {"snd.FUN_10005670", "thiscall", "uint32", 2, 0, a_snd_5670, &g_neg_sndExtra},
+    {"snd.Midi_Device::timer_unhook", "thiscall", "void", 1, 0, a_snd_zero<0x2c>, &g_neg_sndExtra},
+    {"snd.Midi_Device::reset_time_past", "thiscall", "void", 1, 0, a_snd_zero<0x34>, &g_neg_sndExtra},
+    {"snd.Midi_Device::set_rate", "thiscall", "uint32", 2, 0, a_snd_set<0x30>, &g_neg_sndExtra},
+    {"snd.Midi_Device::get_rate", "thiscall", "uint32", 1, 0, a_snd_field<0x30>, &g_neg_sndExtra},
+    {"snd.Midi_Device::get_time_past", "thiscall", "uint32", 1, 0, a_snd_field<0x34>, &g_neg_sndExtra},
+    {"snd.Midi_Device::is_disabled", "thiscall", "uint32", 1, 0, a_snd_negbit_at<0x24, 0>, &g_neg_sndExtra},
+    {"snd.Midi_Device::suspend", "thiscall", "uint32", 1, 0, a_snd_a140, &g_neg_sndExtra},
+    {"snd.Patch::set_fade_in", "thiscall", "uint32", 2, 0, a_snd_5670, &g_neg_sndExtra},
     {"snd.FUN_1002b110", "thiscall", "uint32", 2, 0, a_snd_retB, &g_neg_sndExtra},
-    {"snd.FUN_1002b1b0", "thiscall", "uint32", 2, 0, a_snd_2b1b0, &g_neg_sndExtra},
-    {"snd.FUN_1003a040", "thiscall", "uint32", 1, 0, a_snd_3a040, &g_neg_sndExtra},
-    {"snd.FUN_1002b3a0", "thiscall", "uint32", 2, 0, a_snd_apply<4>, &g_neg_sndExtra},
-    {"snd.FUN_1002b430", "thiscall", "uint32", 2, 0, a_snd_apply<0x54>, &g_neg_sndExtra},
-    {"snd.FUN_1003a1e0", "thiscall", "uint32", 2, 0, a_snd_3a1e0, &g_neg_sndExtra},
-    {"snd.FUN_1002b4a0", "thiscall", "uint32", 2, 0, a_snd_2b4a0, &g_neg_sndExtra},
-    {"snd.FUN_1003a690", "thiscall", "uint32", 2, 0, a_snd_3a690, &g_neg_sndExtra},
-    {"snd.FUN_100378b0", "thiscall", "uint32", 2, 0, a_snd_378b0, &g_neg_sndExtra},
-    {"snd.FUN_1003a1c0", "thiscall", "uint32", 2, 0, a_snd_3a1c0, &g_neg_sndExtra},
-    {"snd.FUN_1003a750", "thiscall", "uint32", 1, 0, a_snd_negbit<2>, &g_neg_sndExtra},
-    {"snd.FUN_1003a790", "thiscall", "uint32", 1, 0, a_snd_3a790, &g_neg_sndExtra},
-    {"snd.FUN_1003a7e0", "thiscall", "uint32", 1, 0, a_snd_negbit<1>, &g_neg_sndExtra},
-    {"snd.FUN_100056c0", "thiscall", "uint32", 1, 0, a_snd_field<0x4c>, &g_neg_sndExtra},
-    {"snd.FUN_100056e0", "thiscall", "uint32", 1, 0, a_snd_field<0x48>, &g_neg_sndExtra},
-    {"snd.FUN_1003a710", "thiscall", "uint32", 1, 0, a_snd_field<0x298>, &g_neg_sndExtra},
-    {"snd.FUN_10005700", "thiscall", "uint32", 1, 0, a_snd_field<0x54>, &g_neg_sndExtra},
-    {"snd.FUN_1003a670", "thiscall", "uint32", 1, 0, a_snd_field<0x140c>, &g_neg_sndExtra},
-    {"snd.FUN_1002b010", "thiscall", "uint32", 1, 0, a_snd_2b010, &g_neg_sndExtra},
-    {"snd.FUN_1003a0b0", "thiscall", "uint32", 1, 0, a_snd_3a0b0, &g_neg_sndExtra},
-    {"snd.FUN_1002be90", "thiscall", "uint32", 3, 0, a_snd_2be90, &g_neg_sndExtra},
+    {"snd.SubChannel::play_1002b1b0", "thiscall", "uint32", 2, 0, a_snd_2b1b0, &g_neg_sndExtra},
+    {"snd.MultiSound::stop", "thiscall", "uint32", 1, 0, a_snd_3a040, &g_neg_sndExtra},
+    {"snd.SubChannel::fade_1002b3a0", "thiscall", "uint32", 2, 0, a_snd_apply<4>, &g_neg_sndExtra},
+    {"snd.SubChannel::fade_in_1002b430", "thiscall", "uint32", 2, 0, a_snd_apply<0x54>, &g_neg_sndExtra},
+    {"snd.MultiSound::set_pan", "thiscall", "uint32", 2, 0, a_snd_3a1e0, &g_neg_sndExtra},
+    {"snd.SubChannel::set_pan", "thiscall", "uint32", 2, 0, a_snd_2b4a0, &g_neg_sndExtra},
+    {"snd.MultiSound::set_loop_state", "thiscall", "uint32", 2, 0, a_snd_3a690, &g_neg_sndExtra},
+    {"snd.Channel::set_loop_state", "thiscall", "uint32", 2, 0, a_snd_378b0, &g_neg_sndExtra},
+    {"snd.MultiSound::set_delay", "thiscall", "uint32", 2, 0, a_snd_3a1c0, &g_neg_sndExtra},
+    {"snd.MultiSound::is_looping", "thiscall", "uint32", 1, 0, a_snd_negbit<2>, &g_neg_sndExtra},
+    {"snd.MultiSound::is_playing", "thiscall", "uint32", 1, 0, a_snd_3a790, &g_neg_sndExtra},
+    {"snd.MultiSound::is_loaded", "thiscall", "uint32", 1, 0, a_snd_negbit<1>, &g_neg_sndExtra},
+    {"snd.SubChannel::get_next", "thiscall", "uint32", 1, 0, a_snd_field<0x4c>, &g_neg_sndExtra},
+    {"snd.SubChannel::get_prev", "thiscall", "uint32", 1, 0, a_snd_field<0x48>, &g_neg_sndExtra},
+    {"snd.MultiSound::get_time_1003a710", "thiscall", "uint32", 1, 0, a_snd_field<0x298>, &g_neg_sndExtra},
+    {"snd.SubChannel::get_type", "thiscall", "uint32", 1, 0, a_snd_field<0x54>, &g_neg_sndExtra},
+    {"snd.MultiSound::get_ms_length", "thiscall", "uint32", 1, 0, a_snd_field<0x140c>, &g_neg_sndExtra},
+    {"snd.SubChannel::attach", "thiscall", "uint32", 1, 0, a_snd_2b010, &g_neg_sndExtra},
+    {"snd.MultiSound::detach", "thiscall", "uint32", 1, 0, a_snd_3a0b0, &g_neg_sndExtra},
+    {"snd.Wave::load", "thiscall", "uint32", 3, 0, a_snd_2be90, &g_neg_sndExtra},
     {"snd.FUN_1002c2b0", "thiscall", "uint32", 2, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1002c2d0", "thiscall", "uint32", 1, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1002c2f0", "thiscall", "uint32", 4, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1002c310", "thiscall", "uint32", 4, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1002c330", "thiscall", "uint32", 4, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1002c350", "thiscall", "uint32", 4, 0, a_snd_retB, &g_neg_sndExtra},
-    {"snd.FUN_1003a590", "thiscall", "uint32", 2, 0, a_snd_3a590, &g_neg_sndExtra},
-    {"snd.FUN_10037860", "thiscall", "uint32", 2, 0, a_snd_37860, &g_neg_sndExtra},
+    {"snd.MultiSound::get_time", "thiscall", "uint32", 2, 0, a_snd_3a590, &g_neg_sndExtra},
+    {"snd.Channel::get_time", "thiscall", "uint32", 2, 0, a_snd_37860, &g_neg_sndExtra},
     {"snd.FUN_1002c1c0", "thiscall", "uint32", 1, 0, a_snd_2c1c0, &g_neg_sndExtra},
     {"snd.FUN_1002c1f0", "thiscall", "uint32", 4, 0, a_snd_2c1f0, &g_neg_sndExtra},
     {"snd.FUN_1002b870", "thiscall", "uint32", 2, 0, a_snd_fwd1<0xd0>, &g_neg_sndExtra},
@@ -2795,16 +2795,16 @@ const FuncDef kFuncs[] = {
     {"snd.FUN_100295c0", "thiscall", "uint32", 1, 0, a_snd_ret0, &g_neg_sndExtra},
     {"snd.FUN_10029640", "thiscall", "uint32", 1, 0, a_snd_ret0, &g_neg_sndExtra},
     {"snd.FUN_100295e0", "thiscall", "uint32", 2, 0, a_snd_ret0, &g_neg_sndExtra},
-    {"snd.FUN_1000e7f0", "thiscall", "void", 1, 0, a_snd_e7f0, &g_neg_sndExtra},
-    {"snd.FUN_1000e790", "thiscall", "void", 1, 0, a_snd_e790, &g_neg_sndExtra},
-    {"snd.FUN_1000e830", "thiscall", "uint32", 1, 0, a_snd_e830, &g_neg_sndExtra},
-    {"snd.FUN_1000e7b0", "thiscall", "uint32", 1, 0, a_snd_e7b0, &g_neg_sndExtra},
-    {"snd.FUN_1000e7d0", "thiscall", "uint32", 1, 0, a_snd_e7d0, &g_neg_sndExtra},
-    {"snd.FUN_1000e850", "thiscall", "uint32", 1, 0, a_snd_e850, &g_neg_sndExtra},
-    {"snd.FUN_1000e1d0", "thiscall", "uint32", 2, 0, a_snd_e1d0, &g_neg_sndExtra},
-    {"snd.FUN_1000e200", "thiscall", "uint32", 1, 0, a_snd_e200, &g_neg_sndExtra},
-    {"snd.FUN_1000e5b0", "thiscall", "uint32", 1, 0, a_snd_e5b0, &g_neg_sndExtra},
-    {"snd.FUN_1000e490", "thiscall", "uint32", 4, 0, a_snd_e490, &g_neg_sndExtra},
+    {"snd.Wave_Device::timer_unhook", "thiscall", "void", 1, 0, a_snd_e7f0, &g_neg_sndExtra},
+    {"snd.Wave_Device::reset_time_past", "thiscall", "void", 1, 0, a_snd_e790, &g_neg_sndExtra},
+    {"snd.Wave_Device::get_rate", "thiscall", "uint32", 1, 0, a_snd_e830, &g_neg_sndExtra},
+    {"snd.Wave_Device::get_time_past", "thiscall", "uint32", 1, 0, a_snd_e7b0, &g_neg_sndExtra},
+    {"snd.Wave_Device::is_disabled", "thiscall", "uint32", 1, 0, a_snd_e7d0, &g_neg_sndExtra},
+    {"snd.Wave_Device::is_eax", "thiscall", "uint32", 1, 0, a_snd_e850, &g_neg_sndExtra},
+    {"snd.Wave_Device::add_to_time_past", "thiscall", "uint32", 2, 0, a_snd_e1d0, &g_neg_sndExtra},
+    {"snd.Wave_Device::get_ndevices", "thiscall", "uint32", 1, 0, a_snd_e200, &g_neg_sndExtra},
+    {"snd.Wave_Device::is_3d", "thiscall", "uint32", 1, 0, a_snd_e5b0, &g_neg_sndExtra},
+    {"snd.Wave_Device::set_listener_position", "thiscall", "uint32", 4, 0, a_snd_e490, &g_neg_sndExtra},
     {"snd.FUN_1000e2f0", "thiscall", "uint32", 2, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1000e4d0", "thiscall", "uint32", 4, 0, a_snd_retB, &g_neg_sndExtra},
     {"snd.FUN_1000e4f0", "thiscall", "uint32", 2, 0, a_snd_retB, &g_neg_sndExtra},

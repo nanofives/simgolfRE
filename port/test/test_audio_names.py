@@ -175,6 +175,7 @@ def test_every_sound_row_of_a_ported_step_is_registered_once():
     ([("tick", "snd.Seq_setTempo")], "has the sound.dll prefix"),
     ([("audio_exe", "snd.FUN_1002e3c0")], "is not a sound.dll name"),     # GlblHeader::init has a name (re/names/sound_19.tsv)
     ([("audio_exe", "snd.FUN_1002e3c1")], "is not a sound.dll name"),     # not a function entry of the master's listing
+    ([("audio_exe", "snd.FUN_1000e810")], "is not a sound.dll name"),     # Wave_Device::set_rate (re/names/smsg_sound_1.tsv)
 ])
 def test_the_check_catches_each_rule(pairs, why):
     """Negative controls of the check itself: each broken table is reported."""
@@ -183,7 +184,7 @@ def test_the_check_catches_each_rule(pairs, why):
 
 @pytest.mark.static
 def test_an_unnamed_function_is_accepted_by_its_listing_name():
-    assert "FUN_1000e810" in sound_rows() and check([("audio_exe", "snd.FUN_1000e810")]) == []
+    assert "FUN_10029e30" in sound_rows() and check([("audio_exe", "snd.FUN_10029e30")]) == []
 
 
 @pytest.mark.static
