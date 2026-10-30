@@ -64,7 +64,7 @@ Each wake-up (a child's completion notification, or the heartbeat) runs these st
    section) and into the affected rows.
 6. If nothing is running and no row can start, stop the loop and report (below).
 
-Heartbeat: run under `/loop` (dynamic). Every turn that leaves children running ends with ScheduleWakeup 1800 s as a fallback;
+Heartbeat: run under `/loop` (dynamic). Every turn that leaves children running ends with ScheduleWakeup 600-900 s (Mariano, 2026-10-29: check in every 10-15 min; was 1800 s) as a fallback;
 child notifications are the primary wake signal. On a heartbeat with no new report, call `mcp__happy__list_children`: a child
 `stopped` at a session limit sends no report. Try `mcp__happy__resume_child` once; if it does not come back, spawn a fresh lead of
 the same model with "continue from log/roadmap/S<n>/STATUS.md" and close the stopped one.
