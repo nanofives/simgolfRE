@@ -9,6 +9,15 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G14, S9 network play, 2026-10-29: close S9 as "the original has no network play".** The net layer is dormant in v1.00 and v1.03 (no
+  session store, DirectPlay never loaded, no dialogs; re/analysis/net/NET_MODEL.md). Merge the survey, port the dormant layer as
+  specification (S9.3, judged by its C3 rows), drop the recording / interop steps.
+- **G13 (final), 2026-10-29: Windows GL default with a startup self-check.** Full census: GlRaster PASS 100 / FAIL 537 / UNSUPPORTED 51; host GL (opengl32) PASS 612 / FAIL 61 / UNSUPPORTED 15, 0 PASS lost. Host GL becomes the Windows default; at startup the app draws a small reference terrain pass and falls back to GlRaster if it differs (or without a 555 format); proven on LIVING-PC only (U-1810). Earlier the same day: **decide after the full census.** GlRaster stays the default, wgl opt-in, until S3.15 has both full-census counts; then ask again. S3.15 found the census HUD / bottom_panel / view one-level residue is
+  all GlRaster's leftover rasteriser difference (U-1392; no simple rule closes it). Windows' generic opengl32 on the original's 16-bit
+  555 DIB is pixel-exact (sandbox_basic sandbox_00 / sandbox_40: 0 px in every region, I14 had 125). Options: keep GlRaster the
+  default with wgl opt-in (S3 lead's recommendation until the full census numbers are in; one renderer for every host, S5 GDI /
+  FreeType precedent), or wgl default on Windows and GlRaster elsewhere. wgl is built opt-in either way (one-line switch later).
+
 - **G12, network play, 2026-10-29: start S9 now** (Mariano: "Start S9 network play too"). Supersedes D6's `later`. Plan
   re/roadmap/S9_PLAN.md; it needs two game slots for original host + client recordings.
 - **G11, suite reuse, 2026-10-29: reuse the lead's suite results when the trees are byte-identical.** An integrator whose mirror equals
