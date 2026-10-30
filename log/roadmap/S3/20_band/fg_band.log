@@ -1,0 +1,15 @@
+sandbox_basic single: 10 rows Counter({'PASS': 10}) renderer {'wgl'} | render n=2 median=40.7 max=41.5 | per-call n=2 median=40.7 max=41.5
+sandbox_basic bands=2: images 10 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=2 median=25.7 max=26.8 | per-call n=2 median=25.7 max=26.8
+sandbox_basic bands=3: images 10 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=2 median=21.0 max=22.6 | per-call n=2 median=21.0 max=22.6
+sandbox_basic bands=4: images 10 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=2 median=20.6 max=27.4 | per-call n=2 median=20.6 max=27.4
+sandbox_basic bands=6: images 10 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=2 median=15.2 max=17.8 | per-call n=2 median=15.2 max=17.8
+cov_k3_camera2 single: 25 rows Counter({'PASS': 24, 'FAIL': 1}) renderer {'wgl'} | render n=8 median=26.0 max=45.9 | per-call n=8 median=26.0 max=45.9
+cov_k3_camera2 bands=2: images 25 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=8 median=18.7 max=34.8 | per-call n=8 median=18.7 max=34.8
+cov_k3_camera2 bands=3: images 25 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=8 median=13.3 max=23.9 | per-call n=8 median=13.3 max=23.9
+cov_k3_camera2 bands=4: images 25 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=8 median=12.2 max=17.8 | per-call n=8 median=12.2 max=17.8
+cov_k3_camera2 bands=6: images 25 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=8 median=9.5 max=15.7 | per-call n=8 median=9.5 max=15.7
+cov_a_keys single: 23 rows Counter({'PASS': 20, 'FAIL': 3}) renderer {'wgl'} | render n=14 median=35.2 max=225.9 | per-call n=29 median=21.1 max=225.9
+cov_a_keys bands=2: images 23 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=14 median=27.3 max=224.2 | per-call n=29 median=17.7 max=224.2
+cov_a_keys bands=3: images 23 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=14 median=17.3 max=29.8 | per-call n=29 median=14.6 max=229.4
+cov_a_keys bands=4: images 23 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=14 median=18.4 max=31.6 | per-call n=29 median=14.6 max=161.7
+cov_a_keys bands=6: images 23 compared, differing 0, missing 0, rows differing 0, check {'self-check passed'} | render n=14 median=13.8 max=48.7 | per-call n=29 median=12.9 max=226.0

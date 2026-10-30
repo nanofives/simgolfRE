@@ -1,0 +1,16 @@
+[1/16] test_static 6 passed in 6.85s
+[2/16] test_dialogs 27 passed, 7 skipped in 120.21s (0:02:00)
+[3/16] test_commands 83 passed, 44 skipped in 387.01s (0:06:27)
+[4/16] test_shots 33 passed, 1 skipped in 480.33s (0:08:00)
+[5/16] test_gfx 25 passed in 150.92s (0:02:30)
+[6/16] test_framegate 32 passed in 84.37s (0:01:24)
+[7/16] test_gfx_eoi 5 passed in 44.41s
+[8/16] test_gfx_hud 34 passed, 7 skipped in 1277.67s (0:21:17)
+[9/16] test_gfx_s2_10 13 passed in 665.78s (0:11:05)
+[10/16] test_gfx_scene 118 passed in 405.99s (0:06:45)
+[11/16] test_gfx_text 32 passed, 20 skipped in 523.00s (0:08:42)
+[12/16] test_terrain_overlay 12 passed, 6 skipped in 7.99s
+[13/16] test_gfx_dialogs 32 passed in 757.91s (0:12:37)
+[14/16] test_gfx_dialogs2 ...........
+[15/16] test_gfx_reports 24 passed, 12 deselected in 175.79s (0:02:55)
+[16/16] test_tick 81 passed, 169 deselected in 54.01s

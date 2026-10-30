@@ -11,9 +11,9 @@ plus the screens' drawing calls in routing.cpp (MapDraw) and saveload.cpp (the b
 (tick_boot.inc) and Image_draw's scale test (gfx.cpp), all through 4_merge.md.
 
 FRAMES: cov_k1_routing `routing` and cov_a_keys `k_dlg_L` equal the original's back buffer in every pixel. cov_a_keys `k_dlg_R`
-(two holes built) differs only inside the map's hole overlay: the tee and flag sprites (FLIC sheet cells drawn through the sprite
-queue at the display scale: roadmap S3.4 / S3.5) and the white tee-to-green lines (Terrain::drawLine, OpenGL: S3.8); the test
-pins that bound. Controls RED on the frames: prim_fill 1 / 3, routing 1 / 2 / 3 / 4, showRoutingMapScreen 10, loadGameBrowserScreen
+(two holes built) differs only inside the map's hole overlay: the white tee-to-green lines (Terrain::drawLine, OpenGL: S3.8, not
+drawn without LiveTerrain's GL context in this run); the test pins that bound. The tee and flag sprites are drawn since roadmap
+S3.17 (addSprite of the FLIC sheet cells, test_gfx_s3_17.py). Controls RED on the frames: prim_fill 1 / 3, routing 1 / 2 / 3 / 4, showRoutingMapScreen 10, loadGameBrowserScreen
 9, prim_text2 1 / 2 (the k_dlg_R labels). Judged by unit tests instead: prim_fill 2 (style 0 tiles: the browser's tip, no frame),
 prim_fill 4 (the scale: no Image_draw runs at another scale on the frames).
 """
@@ -383,7 +383,7 @@ def test_centered_text2_negctl_red(tlib, mode):
 # ------------------------------------------------------------------------------------------------ the frames
 ROUTE = ("cov_k1_routing", ["routing"])
 KEYS = ("cov_a_keys", ["k_dlg_R", "k_dlg_L"])
-K_DLG_R_BOUND = 370   # the hole overlay's sprites and GL lines (S3.4 / S3.5 / S3.8); everything else is 0
+K_DLG_R_BOUND = 246   # the hole overlay's GL lines (S3.8: no Terrain GL context in this run); the sprites are drawn (S3.17)
 
 
 def _have(scen, chk):
@@ -419,8 +419,8 @@ def test_routing_map_with_holes_differs_only_in_the_hole_overlay(keys_run):
     assert 0 <= r["total"] <= K_DLG_R_BOUND, r
     x0, y0, x1, y1 = r["bbox"]
     assert 0x184 <= x0 and x1 <= 0x1e0 and 0x160 <= y0 and y1 <= 0x1a0, r   # the two holes' map area
-    for drop in ("showRoutingMapScreen.teeSprite", "showRoutingMapScreen.flagSprite"):
-        assert f"no body: {drop}" in keys_run.log, drop
+    assert "no body: showRoutingMapScreen" not in keys_run.log   # roadmap S3.17: the tee / flag sprites through addSprite
+    assert "handled	addSprite	" in keys_run.log
     assert "handled\tlineTo\t" in keys_run.log   # roadmap S3.8: the hole line through setLinePoint / lineTo
 
 

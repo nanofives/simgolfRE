@@ -1,0 +1,170 @@
+single us=31033 diff_post=0
+SINGLE edit_raise median_us=31033
+BANDS edit_raise n=1 median_us=30883 diff_single=0 diff_post=0
+BANDS edit_raise n=2 median_us=19537 diff_single=0 diff_post=0
+BANDS edit_raise n=4 median_us=15564 diff_single=0 diff_post=0
+single us=1985 diff_post=0
+SINGLE edit_raise_local median_us=1985
+BANDS edit_raise_local n=1 median_us=2086 diff_single=0 diff_post=0
+BANDS edit_raise_local n=2 median_us=2012 diff_single=0 diff_post=0
+BANDS edit_raise_local n=4 median_us=2050 diff_single=0 diff_post=0
+single us=35527 diff_post=0
+SINGLE fuzz1_z0 median_us=35527
+BANDS fuzz1_z0 n=1 median_us=33897 diff_single=0 diff_post=0
+BANDS fuzz1_z0 n=2 median_us=23732 diff_single=0 diff_post=0
+BANDS fuzz1_z0 n=4 median_us=20205 diff_single=0 diff_post=0
+single us=33982 diff_post=0
+SINGLE fuzz2_z0 median_us=33982
+BANDS fuzz2_z0 n=1 median_us=37625 diff_single=0 diff_post=0
+BANDS fuzz2_z0 n=2 median_us=24184 diff_single=0 diff_post=0
+BANDS fuzz2_z0 n=4 median_us=34165 diff_single=0 diff_post=0
+single us=34522 diff_post=0
+SINGLE fuzz3_z0 median_us=34522
+BANDS fuzz3_z0 n=1 median_us=34837 diff_single=0 diff_post=0
+BANDS fuzz3_z0 n=2 median_us=23180 diff_single=0 diff_post=0
+BANDS fuzz3_z0 n=4 median_us=18540 diff_single=0 diff_post=0
+single us=29356 diff_post=0
+SINGLE fuzz4_z0 median_us=29356
+BANDS fuzz4_z0 n=1 median_us=31741 diff_single=0 diff_post=0
+BANDS fuzz4_z0 n=2 median_us=23002 diff_single=0 diff_post=0
+BANDS fuzz4_z0 n=4 median_us=24234 diff_single=0 diff_post=0
+single us=36908 diff_post=0
+SINGLE fuzz5_z0 median_us=36908
+BANDS fuzz5_z0 n=1 median_us=35858 diff_single=0 diff_post=0
+BANDS fuzz5_z0 n=2 median_us=21925 diff_single=0 diff_post=0
+BANDS fuzz5_z0 n=4 median_us=17274 diff_single=0 diff_post=0
+single us=29708 diff_post=0
+SINGLE fuzz6_z0 median_us=29708
+BANDS fuzz6_z0 n=1 median_us=28914 diff_single=0 diff_post=0
+BANDS fuzz6_z0 n=2 median_us=22409 diff_single=0 diff_post=0
+BANDS fuzz6_z0 n=4 median_us=22335 diff_single=0 diff_post=0
+single us=57154 diff_post=0
+SINGLE fuzz7_z1 median_us=57154
+BANDS fuzz7_z1 n=1 median_us=61389 diff_single=0 diff_post=0
+BANDS fuzz7_z1 n=2 median_us=51961 diff_single=0 diff_post=0
+BANDS fuzz7_z1 n=4 median_us=51175 diff_single=0 diff_post=0
+single us=63603 diff_post=0
+SINGLE fuzz8_z1 median_us=63603
+BANDS fuzz8_z1 n=1 median_us=60174 diff_single=0 diff_post=0
+BANDS fuzz8_z1 n=2 median_us=56003 diff_single=0 diff_post=0
+BANDS fuzz8_z1 n=4 median_us=55763 diff_single=0 diff_post=0
+single us=70014 diff_post=0
+SINGLE fuzz9_z1 median_us=70014
+BANDS fuzz9_z1 n=1 median_us=61542 diff_single=0 diff_post=0
+BANDS fuzz9_z1 n=2 median_us=52259 diff_single=0 diff_post=0
+BANDS fuzz9_z1 n=4 median_us=58039 diff_single=0 diff_post=0
+single us=2234 diff_post=0
+SINGLE golf_tools_local median_us=2234
+BANDS golf_tools_local n=1 median_us=2270 diff_single=0 diff_post=0
+BANDS golf_tools_local n=2 median_us=3355 diff_single=0 diff_post=0
+BANDS golf_tools_local n=4 median_us=2094 diff_single=0 diff_post=0
+single us=36325 diff_post=0
+SINGLE hole median_us=36325
+BANDS hole n=1 median_us=35125 diff_single=0 diff_post=0
+BANDS hole n=2 median_us=20313 diff_single=0 diff_post=0
+BANDS hole n=4 median_us=24374 diff_single=0 diff_post=0
+single us=1077 diff_post=0
+SINGLE hole_local median_us=1077
+BANDS hole_local n=1 median_us=1156 diff_single=0 diff_post=0
+BANDS hole_local n=2 median_us=1225 diff_single=0 diff_post=0
+BANDS hole_local n=4 median_us=1124 diff_single=0 diff_post=0
+single us=26927 diff_post=0
+SINGLE paths median_us=26927
+BANDS paths n=1 median_us=28961 diff_single=0 diff_post=0
+BANDS paths n=2 median_us=19614 diff_single=0 diff_post=0
+BANDS paths n=4 median_us=18962 diff_single=0 diff_post=0
+single us=28597 diff_post=0
+SINGLE paths_prep median_us=28597
+BANDS paths_prep n=1 median_us=29846 diff_single=0 diff_post=0
+BANDS paths_prep n=2 median_us=20472 diff_single=0 diff_post=0
+BANDS paths_prep n=4 median_us=23542 diff_single=0 diff_post=0
+single us=31019 diff_post=0
+SINGLE sandbox median_us=31019
+BANDS sandbox n=1 median_us=30720 diff_single=0 diff_post=0
+BANDS sandbox n=2 median_us=21442 diff_single=0 diff_post=0
+BANDS sandbox n=4 median_us=16207 diff_single=0 diff_post=0
+single us=25218 diff_post=0
+SINGLE terrain_tools_off median_us=25218
+BANDS terrain_tools_off n=1 median_us=25198 diff_single=0 diff_post=0
+BANDS terrain_tools_off n=2 median_us=19337 diff_single=0 diff_post=0
+BANDS terrain_tools_off n=4 median_us=14530 diff_single=0 diff_post=0
+single us=31081 diff_post=0
+SINGLE view3 median_us=31081
+BANDS view3 n=1 median_us=30097 diff_single=0 diff_post=0
+BANDS view3 n=2 median_us=20952 diff_single=0 diff_post=0
+BANDS view3 n=4 median_us=18118 diff_single=0 diff_post=0
+single us=29324 diff_post=0
+SINGLE view5 median_us=29324
+BANDS view5 n=1 median_us=28701 diff_single=0 diff_post=0
+BANDS view5 n=2 median_us=21017 diff_single=0 diff_post=0
+BANDS view5 n=4 median_us=20648 diff_single=0 diff_post=0
+single us=45738 diff_post=0
+SINGLE view_zoom1 median_us=45738
+BANDS view_zoom1 n=1 median_us=46933 diff_single=0 diff_post=0
+BANDS view_zoom1 n=2 median_us=39970 diff_single=0 diff_post=0
+BANDS view_zoom1 n=4 median_us=39798 diff_single=0 diff_post=0
+single us=26080 diff_post=0
+SINGLE z0_r1 median_us=26080
+BANDS z0_r1 n=1 median_us=24643 diff_single=0 diff_post=0
+BANDS z0_r1 n=2 median_us=20075 diff_single=0 diff_post=0
+BANDS z0_r1 n=4 median_us=13470 diff_single=0 diff_post=0
+single us=25125 diff_post=0
+SINGLE z0_r2 median_us=25125
+BANDS z0_r2 n=1 median_us=25221 diff_single=0 diff_post=0
+BANDS z0_r2 n=2 median_us=18984 diff_single=0 diff_post=0
+BANDS z0_r2 n=4 median_us=13928 diff_single=0 diff_post=0
+single us=34394 diff_post=0
+SINGLE z1_r0 median_us=34394
+BANDS z1_r0 n=1 median_us=25088 diff_single=0 diff_post=0
+BANDS z1_r0 n=2 median_us=18733 diff_single=0 diff_post=0
+BANDS z1_r0 n=4 median_us=13432 diff_single=0 diff_post=0
+single us=25092 diff_post=0
+SINGLE z1_r2 median_us=25092
+BANDS z1_r2 n=1 median_us=25030 diff_single=0 diff_post=0
+BANDS z1_r2 n=2 median_us=18328 diff_single=0 diff_post=0
+BANDS z1_r2 n=4 median_us=16092 diff_single=0 diff_post=0
+single us=26858 diff_post=0
+SINGLE z1_r3 median_us=26858
+BANDS z1_r3 n=1 median_us=24732 diff_single=0 diff_post=0
+BANDS z1_r3 n=2 median_us=18884 diff_single=0 diff_post=0
+BANDS z1_r3 n=4 median_us=13627 diff_single=0 diff_post=0
+single us=14962 diff_post=0
+SINGLE z2_r0 median_us=14962
+BANDS z2_r0 n=1 median_us=15051 diff_single=0 diff_post=0
+BANDS z2_r0 n=2 median_us=13153 diff_single=0 diff_post=0
+BANDS z2_r0 n=4 median_us=12967 diff_single=0 diff_post=0
+single us=22565 diff_post=0
+SINGLE z2_r1 median_us=22565
+BANDS z2_r1 n=1 median_us=22465 diff_single=0 diff_post=0
+BANDS z2_r1 n=2 median_us=17550 diff_single=0 diff_post=0
+BANDS z2_r1 n=4 median_us=13007 diff_single=0 diff_post=0
+single us=25755 diff_post=0
+SINGLE z2_r2 median_us=25755
+BANDS z2_r2 n=1 median_us=25897 diff_single=0 diff_post=0
+BANDS z2_r2 n=2 median_us=18793 diff_single=0 diff_post=0
+BANDS z2_r2 n=4 median_us=14061 diff_single=0 diff_post=0
+single us=25077 diff_post=0
+SINGLE z2_r3 median_us=25077
+BANDS z2_r3 n=1 median_us=24851 diff_single=0 diff_post=0
+BANDS z2_r3 n=2 median_us=18393 diff_single=0 diff_post=0
+BANDS z2_r3 n=4 median_us=13613 diff_single=0 diff_post=0
+single us=24274 diff_post=0
+SINGLE zoom1 median_us=24274
+BANDS zoom1 n=1 median_us=24311 diff_single=0 diff_post=0
+BANDS zoom1 n=2 median_us=18520 diff_single=0 diff_post=0
+BANDS zoom1 n=4 median_us=13818 diff_single=0 diff_post=0
+single us=20336 diff_post=0
+SINGLE zoom2 median_us=20336
+BANDS zoom2 n=1 median_us=20764 diff_single=0 diff_post=0
+BANDS zoom2 n=2 median_us=16436 diff_single=0 diff_post=0
+BANDS zoom2 n=4 median_us=13929 diff_single=0 diff_post=0
+single us=28661 diff_post=0
+SINGLE zoomback0 median_us=28661
+BANDS zoomback0 n=1 median_us=30293 diff_single=0 diff_post=0
+BANDS zoomback0 n=2 median_us=19104 diff_single=0 diff_post=0
+BANDS zoomback0 n=4 median_us=15124 diff_single=0 diff_post=0
+single us=29943 diff_post=0
+SINGLE zoomback1 median_us=29943
+BANDS zoomback1 n=1 median_us=35781 diff_single=0 diff_post=0
+BANDS zoomback1 n=2 median_us=22047 diff_single=0 diff_post=0
+BANDS zoomback1 n=4 median_us=21215 diff_single=0 diff_post=0

@@ -1,0 +1,3 @@
+[1/2] t_test_gfx_credits rc=0 46 s :: 47 passed in 44.82s
+[2/2] match_smsg rc=0 6 s :: 3 passed, 466 deselected in 4.95s
+[done] gates t_test_gfx_credits match_smsg

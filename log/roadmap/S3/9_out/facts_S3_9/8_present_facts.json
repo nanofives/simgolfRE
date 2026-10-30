@@ -1,0 +1,93 @@
+{
+ "present_point": {
+  "sandbox_basic": {
+   "presents_by_kind": {
+    "r": 448,
+    "w": 0,
+    "m": 0,
+    "p": 0
+   },
+   "r_superseded": 3,
+   "records": 439,
+   "presents": 448
+  },
+  "course_season": {
+   "presents_by_kind": {
+    "r": 6305,
+    "w": 0,
+    "m": 0,
+    "p": 0
+   },
+   "r_superseded": 8,
+   "records": 6296,
+   "presents": 6305
+  },
+  "cov_a_keys": {
+   "presents_by_kind": {
+    "r": 2117,
+    "w": 0,
+    "m": 0,
+    "p": 0
+   },
+   "r_superseded": 39,
+   "records": 2103,
+   "presents": 2117
+  },
+  "cov_k1_routing": {
+   "presents_by_kind": {
+    "r": 431,
+    "w": 0,
+    "m": 0,
+    "p": 0
+   },
+   "r_superseded": 16,
+   "records": 422,
+   "presents": 431
+  }
+ },
+ "long_memory": {
+  "growth_bound": 3338240,
+  "growth_keep": 138285056,
+  "records": 51092,
+  "bound_seconds": 740.9,
+  "keep_seconds": 711.0,
+  "bound_memory": {
+   "start": {
+    "frame": 0,
+    "working_set": 173588480,
+    "peak_working_set": 211972096,
+    "private_bytes": 199872512,
+    "terrain_log": 0
+   },
+   "end": {
+    "frame": 51092,
+    "working_set": 286941184,
+    "peak_working_set": 310468608,
+    "private_bytes": 335458304,
+    "terrain_log": 0
+   },
+   "samples": 54
+  },
+  "keep_memory": {
+   "start": {
+    "frame": 0,
+    "working_set": 173592576,
+    "peak_working_set": 211714048,
+    "private_bytes": 199897088,
+    "terrain_log": 0
+   },
+   "end": {
+    "frame": 51092,
+    "working_set": 390209536,
+    "peak_working_set": 471146496,
+    "private_bytes": 479105024,
+    "terrain_log": 25671
+   },
+   "samples": 54
+  },
+  "terrain_calls": 25671,
+  "keep_terrain_log_end": 25671,
+  "trace_bytes": 12746518,
+  "spilled_events": 367704
+ }
+}

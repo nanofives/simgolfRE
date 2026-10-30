@@ -1706,6 +1706,90 @@ differing; port suite x64 82 / 82 files, Win32 the 22 known ids; controls RED: `
 MSVC 19.44 Release x64, three interleaved sessions): zoom frames 39..58 ms at 54..82 % load against 133..175 ms for plain e179bd24 at
 59..96 %; idle (1..9 %) every terrain-pass frame 10..30 ms against 25..112 ms. The app's live-trace frame at cov_a_keys k_dlg_J varies in
 about 1 run of 6 without workers too (U-1399).
+Roadmap S3.17, the last two missing gfx bodies (2026-10-29, notes log/roadmap/S3/17_notes.md, merge 17_merge.md, U-1830..U-1833):
+I14's census had 44 UNSUPPORTED rows stopping on `no body: Surface_createFull_fwd1` (22) and `no body: showRoutingMapScreen.teeSprite`
+(22); a run's unsupported list is cumulative, so every row after the call kept the status. The routing map's tee and flag are now the
+original's addSprite calls of the sheet cells (routing.cpp MapDraw::hole_map: tee = last column of sheet 0x18d + clamp(par - 3, 0, 2),
+row 0, shade 4, flags 0x5e; flag = sheet 0x189 + g_courseType, column 0, row 3, shade 2, flags g_courseType + 0x60), drawn at once by
+the scene family's addSprite body: cov_a_keys k_dlg_R 135 px (134 beyond one level) -> 1 px one level on a hole line (U-1832).
+Surface_createFull_fwd1 (mainLoop's forwarder for the 'B' snapshot and the '.' / '/' routing render images) is Surface_createFull's
+body with (this, a1, a2, 0, a3, a4, a5), the order checked on the original under Unicorn (U-1833). The 42 other rows now FAIL with
+exactly I14's px, all HUD / bottom-panel / view residue (S3.15 / S3.16) except ui_tour `menus`' 252 px beyond one level, the money
+popup `-$600` the port does not draw (S3.16's drawMoneyLabels gap). cov_a_champ n_yes / end were not fwd1: the boot's last frame never
+made TraceInput's tail idle passes (only a boot with no frame head did), so the title menu after `Yes, cancel.` stopped at its first
+pumpMessages before it drew; tick_run_frames' last-frame branch now sets them (control tick.frame 13), both PASS 0 px (U-1831). The
+boot gate never runs that branch (it stops at the end checkpoint; only to_end runs: framegate, gfx.render, test_boot / test_gfx_eoi /
+test_video). Controls RED: showRoutingMapScreen 11 / 12, surface 9 (unit test; equivalent on the frames: Image_ctor already erased
+the key), tick.frame 13. Tests port/test/test_gfx_s3_17.py.
+Roadmap S3.18, the bulletin board's photos (2026-10-29, notes log/roadmap/S3/18_notes.md, merge 18_merge.md, U-1840..U-1845): the
+photo is not narrateShot's: showBulletinBoard's first call with a pending photo position saves the root's 0xc8 x 0xa0 rectangle at
+(clamp(sx - 0x64, 0, 0x258), clamp(sy - 0x64, 0, 0x1b8)) as `snapshots\accomp<record>.bmp` (saveBmp, 24-bit, rows bottom-up, no
+padding), and the board loads every listed event's file into ONE photo Image (loadBmpSurface; FitSurface only grows it, so a missing
+file redraws the previous event's photo) and blits it. The shipped install (original\, every instance, the cab) has no `snapshots`
+folder, so the original's fopen fails and no pinned frame shows a photo; data1.hdr's directory table lists `Snapshots` (U-1840).
+gfx_bulletin.cpp's `showBulletinBoard.capture` writes the file through GameFiles only when that directory exists (dialogs.cpp hands
+it the call) and `.photo` reads it back: the capture's bytes equal the ORIGINAL saveBmp's and the decode the ORIGINAL loadBmpSurface's
+under Unicorn (SG_EMU_ORACLE=1, port/test/test_gfx_s3_18.py); the file goes through the GameFiles write overlay (the app's --data
+directory), and a run over an install holding `snapshots` leaves every install file byte-identical. cov_b_holes18's 5 UNSUPPORTED rows now FAIL with exactly I14's px (HUD
+and view residue); the board is modal inside P5, so no H1WAIT checkpoint shows it. cov_r_bio's 2 rows (the bio EditBox, a window-tree
+child drawn only inside the bio loop and covered by the editor's next pass) are HELD for S3.19 (U-1844); all 7 rows were
+UNSUPPORTED only through framegate's cumulative reason list (U-1845).
+Roadmap S3.19, the bio EditBox (2026-10-29, notes log/roadmap/S3/19_notes.md, merge 19_merge.md, U-1846..U-1849): the character
+editor's bio EditBox is a window-tree child of the root with its own 0x12c x 0xc8 window surface at (0x1e0, 0x70) (Window::create
+with flags 0x2020: no edges, innerSize unchanged). Body family `editbox` (gfx_editbox.cpp) ports EditBox::drawContents (the
+EditBox vtable's slot +0x58, called by Window::show and by Window::doLayout after every edit): Window::paint, the bevel passes,
+the inset clip, wrapToLines, lineIndexAt, the first visible line kept around the caret, drawTextLines and the caret line;
+gfx_text.cpp draws marked-up text on a window target (its surface, clip, the Image's fonts and text object; measureMarkupRun
+with wrapTextToWidth and the break tail) and gfx.cpp's Window::refreshFull composes shown children over the root's copy
+(Window::blitToTarget). chareditor.cpp's bio entry hands the calls over (show, every key the EditBox takes, a refresh per pass,
+close). drawContents STORES the first visible line [+0x57c], a ui-class GameState word the port's bio_entry never writes; the
+backend keeps the same rule in its own state; its only reader (pixelToCharPos, from Up / Down and the caret clicks) is not
+ported and cov_r_bio never changes it (U-1846). The colours are palette indices: Window::paint gets Palette::nearest(white),
+which the port does not store, so the backend paints direct white; text and caret are index 0, drawn black (jgld
+Palette::setDefault's table; the palette at the bio is not measured, U-1847). The port's boot never runs the EditBox's static constructor, so the backend reads an unconstructed Image (vtable word 0)
+as Image_ctor / EditBox::create leave it; the caret does not blink (U-1848). Evidence: the emulator CALL oracle
+(port/test/test_gfx_s3_19.py, SG_EMU_ORACLE=1: the ORIGINAL drawContents under Unicorn with recording callees against the port's
+record mode) equal on 300 / 300 varied EditBox states, controls 1 2 3 4 8 RED; a composed frame of a constructed bio state
+(controls 5 6 7 9 RED); a cov_r_bio boot with the backend PASS with no unsupported reason left for the bio, and framegate's
+cov_r_bio exit / end UNSUPPORTED -> FAIL with S3.18's px (107,138 / 130, HUD and view residue); no reference frame can hold the
+box (U-1849). Finding in the original: with 32 wrapped lines wrapToLines' end entry lands on drawContents' return address (its
+line table holds 32), so it returns into the text; the bio cannot reach 32 lines.
+Roadmap S3.16, wave 7: 2D pixels beyond one level in the view (2026-10-29, notes log/roadmap/S3/16_notes.md, edits
+16_edits.py applied by 16_assemble.py on 12_assemble's tree, U-1820..U-1825). Drawing calls the port had dropped now reach an
+attached graphics backend: drawLabels / drawMoneyLabels' setDrawTarget + drawCenteredText2 (tick_leaves.inc: the floating text
+and money labels, cov_l_camera `-600` 227 px), narrateShot's shadow line and flight arc (setLinePoint / lineTo, shots.cpp),
+drawGolferInfoPanel's whole panel (dialogs.cpp, from c3fr.cpp GolferPanel_re in its order: about 100,000 px on 15 rows -> 0),
+composeGolferSprite(0x99)'s palette before drawFlyingBall's preview-golfer addSprite (tick_ball.inc; a registered function's
+drawing half must be handed over with gfx_drop), and the Window::refreshFull the panel handlers make between drawWindow and
+pumpAndRedraw (commands_panels.inc help_window, canAfford; cov_r_palette_hot undo_help 46,200 -> 0; clickSlotPanel /
+clickAmenityPanel also drew at the ticker's position). GATE HARNESS: a checkpoint's clock call is its POLL record's position
+when the poll rode on a non-tgt call (gfx.checkpoint_ordinal, framegate): status.tgt pointed at H1's g_frameMs read, after the
+frame's present (7 rows, 53-2,648 px each -> 0..2; SG_GFX_CHECKPOINT_AT=tgt restores the old mapping). The bottom_panel
+residue (26 / 29 / 45 / 50 one-level px) is terrain, not 2D (U-1821).
+Roadmap S3.15, the HUD top-bar residue (2026-10-29, notes log/roadmap/S3/15_notes.md, merge 15_merge.md, U-1810..U-1814): I14's
+446 FAIL rows with one-level px in hud_title / hud_meters / hud_message / toolbar hold TERRAIN pixels, not 2D ones: split against the
+original's root at updateTerrainRender's return (S3.2's exit.bin, 15_terrsplit.py) every differing pixel of sandbox_basic,
+cov_k1_river, cov_k3_camera2 and championship already differs in the terrain, and the half-bright frames over them are exact. The
+remaining GlRaster residual (U-1392: textured pixels within 0.015..0.08 8-bit units of a dither threshold) was not closed by float32
+plane, fixed-point weight, texel or colour models. Instead the terrain can be drawn by the host's own OpenGL: gl::WglSink
+(gl_wgl.h, opengl32 loaded at run time onto the original's 16-bit 555 DIB, glreplay.exe's method, which is bit-exact on the c7
+passes), selected per LiveTerrain by terrainLive.hostGl(1) / SG_GL_BACKEND=wgl / framegate --host-gl; default GlRaster. Full census with it: PASS
+100 -> 612 of 698 (476 FAIL and 36 UNSUPPORTED rows to PASS), 0 rows lose PASS, the GlRaster census equal to I15 row for row, x64 = Win32; what is
+left is cov_a_golfer's undrawn golfer info panel (U-1814) and sprite / view content of S3.16's. Controls 8 (565 DIB) and 10 (root not
+loaded into the DIB) RED; 9 (top-down DIB) and 11 (texture names unmapped) blind with the reason (U-1811).
+Roadmap S3.20, the host-OpenGL startup self-check (2026-10-30, decision G13 final, notes log/roadmap/S3/20_notes.md, merge 20_merge.md,
+U-1815..U-1819): GlRaster stays the default terrain renderer; the host's OpenGL (S3.15's gl::WglSink) is opt-in. In the app,
+`--gl auto` (or SG_GL_BACKEND=auto) runs a startup self-check and uses the host GL only if it passes, else GlRaster; `--gl host` (= wgl)
+takes the host GL without the check. framegate has the same `--gl` (default raster) and columns renderer / renderer_reason. The app logs
+its choice (stderr `simgolf_port: terrain renderer ...`, terrain_renderer.json). The check (gl_wgl.h wgl_self_check,
+LiveTerrain::choose_renderer) runs the port's own GL setup from the user's install into a WglSink the way the live path does, draws the
+19 triangles of the original's recorded pass c7/z2_r1 that reach a 32 x 32 rectangle (port/src/sim/gl_wgl_ref.inc, generated by
+log/roadmap/S3/20_make_ref.py) and compares SHA-256 of the rectangle with the hash of the ORIGINAL's pixels there. Host GL equals the
+original in 1,024 / 1,024 px; GlRaster differs in 45 (U-1392). Fallbacks, with the reason logged: wrong pinned hash (control 13),
+perturbed reference (14), 565 DIB (8), no 16-bit generic pixel format (12). Census: default (GlRaster) 111 PASS / 577 FAIL / 10 NOT_RUN
+of 698, equal to S3.9's row for row; opt-in auto 638 / 50 / 10, 0 PASS lost. Why not the default (U-1818): a full host-GL pass takes
+33..43 ms against GlRaster's 6..12 ms with workers; app terrain frames median 45 / max 95 ms against 19 / 40. A banded host GL
+(20_band/, measurement only) gave the same pixels and median 21 / max 46 ms, but hung inside opengl32 twice (U-1819).
 Section S4, audio engine model (2026-10-24, lead notes log/roadmap/S4/STATUS.md, steps re/roadmap/S4_steps.tsv, function map
 re/roadmap/S4_functions.tsv: 744 sound.dll rows, 573 C3/C4 + 31 C2 ported in S4.2..S4.9, 71 CRT and 69 dead not ported).
 The path-1 CSVs keep only an FNV-1a hash of each region's raw bytes, and every one of the 19,785 regions of the 980 sound.dll

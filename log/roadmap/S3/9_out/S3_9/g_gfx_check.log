@@ -1,0 +1,11 @@
+== gfx_check start 2026-10-29 23:36:58 free=31GB tree=S3_9 jobs=1 token=/c/Users/maria/Desktop/Proyectos/SimGolf/log/roadmap/S3/w7_heavy.lock
+x64 duplicates 0 bodies 138 not_drawing 10
+  body	Surface_drawSprite	reports
+  body	Widget_fillRect	reports
+  body	drawStringRightAt	text
+  body	drawWindow.frame	text
+win32 duplicates 0 bodies 138 not_drawing 10
+  body	Surface_drawSprite	reports
+  body	Widget_fillRect	reports
+  body	drawStringRightAt	text
+  body	drawWindow.frame	text

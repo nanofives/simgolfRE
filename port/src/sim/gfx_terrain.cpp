@@ -34,12 +34,30 @@
 //   5 Window::paint leaves the root surface as it was
 //   6 LiveTerrain's call log kept off (set_keep_log(false) at the first call: the recorder's lines are empty; terrain_live.cpp)
 //   7 LiveTerrain's compact log record drops setType's variation (its line has no `var=`; terrain_live.cpp)
+//   8 the host-GL backend's DIB has RGB565 masks (terrain_live.cpp; read when the LiveTerrain is made, SG_GL_BACKEND=wgl)
+//   9 the host-GL backend's DIB has its rows top-down (biHeight < 0): an equivalent mutant on every pinned frame (the generic
+//     implementation writes the same memory rows either way; log/roadmap/S3/15_notes.md)
+//  10 the host-GL pass does not load the root surface into the DIB first (the DIB keeps what the previous pass left)
+//  11 the host-GL backend binds the port's texture names unmapped (gl_wgl.h gen_textures_mapped)
+//  12 the host-GL backend finds no pixel format (as a host without a generic 16-bit one): terrainLive.hostGl returns 0, the
+//     setup and the passes stay GlRaster's (the fallback; port/test/test_gl_wgl.py)
+//  13 the startup self-check's pinned hash wrong (one hex digit): LiveTerrain::choose_renderer("auto") falls back to GlRaster
+//  14 the self-check's reference pass perturbed (every texture coordinate one texel off): "auto" falls back to GlRaster
+//     (both roadmap S3.20, terrain_live.cpp choose_renderer; port/test/test_gl_wgl_selfcheck.py)
+//
+// Host OpenGL (roadmap S3.15, U-1810): with SG_GL_BACKEND=wgl the LiveTerrain also feeds the GL setup to the host's own OpenGL 1.1
+// software implementation (gl_wgl.h: Windows' generic opengl32 on the original's 16-bit DIB) and terrain.pass draws through it: the
+// terrain picture is then the one the original's own implementation drew, bit for bit on Windows (GlRaster, the portable default,
+// leaves a one-level residual on about 0.05 % of the textured pixels, U-1392). A host without it keeps GlRaster (host_gl() null).
+// Roadmap S3.20 (decision G13, final): GlRaster stays the default; the app and framegate take the host's OpenGL as an opt-in
+// (--gl host, or --gl auto: LiveTerrain::choose_renderer runs the startup self-check of gl_wgl.h wgl_self_check first and keeps
+// GlRaster when it fails), with the choice and its reason logged.
 //
 // Rasteriser workers (roadmap S3.10, log/roadmap/S3/10_notes.md): the passes run the rasteriser's pixel loop on
 // GlRaster::set_threads workers, min(4, max(1, hardware threads / 2)) of them, SG_RASTER_THREADS=<n> to choose (1 = none). The
 // frame is the same for every count (gl_raster.h). Development switch: SG_TERRAIN_PASS_LOG=<file> appends one line per
 // terrain.pass, `<updateTerrainRender call k> <pass j in it> <entry kind> <microseconds in terrain_render_entry> <pixels written>
-// <triangles> <pixels of the checked reciprocal path> <workers>`.
+// <triangles> <pixels of the checked reciprocal path> <workers>` (the host GL's passes, roadmap S3.20: the three counts -1, workers 0).
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS   // std::getenv / std::fopen of the development switch
 #endif
@@ -125,7 +143,29 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t j = v.passes_in_frame++;
   const bool keep_pass = j < 8;
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
-  if (SG_NEGCTL(g_negctl_gfx_terrain) != 3) {
+  if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
+    // roadmap S3.15 (U-1810): the host's own OpenGL draws the pass into its DIB, which holds the root surface's pixels around it
+    gl::WglSink &w = *lt->host_gl();
+    TerrainGlobals &tg = lt->globals();
+    const auto t0 = std::chrono::steady_clock::now();
+    if (SG_NEGCTL(g_negctl_gfx_terrain) != 10) w.set_pixels(g.root.px);
+    w.set_arrays(tg.vertices.data(), tg.normals.data());
+    if (!terrain_render_entry(ctx, w, tg, static_cast<int32_t>(a[0]), a[1], a[2], a[3], a[4])) {
+      g.unsup("terrain.pass: an entry kind the renderer does not have");
+      return;
+    }
+    w.get_pixels(g.root.px);
+    // roadmap S3.20: the pass log line of the host GL (the DIB load, the pass and the read back; the implementation reports no
+    // pixel or triangle counts: -1, workers 0); v.pixels_drawn is not counted on this path
+    if (const char *log = std::getenv("SG_TERRAIN_PASS_LOG")) {
+      const long long us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+      if (FILE *f = std::fopen(log, "a")) {
+        std::fprintf(f, "%u %d %u %lld -1 -1 -1 0\n", v.frames, j, a[0], us);
+        std::fclose(f);
+      }
+    }
+    ++v.passes;
+  } else if (SG_NEGCTL(g_negctl_gfx_terrain) != 3) {
     if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
     r.pixels() = g.root.px;
     TerrainGlobals &tg = lt->globals();

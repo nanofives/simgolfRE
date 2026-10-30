@@ -27,6 +27,11 @@
 //       which only entry 1 is known (U-1230: RGB (0x80, 0, 0)); another index is reported.
 //   drawMarkupRun(text, len) (c3o.cpp DrawMarkupRun_re): the width with the same tokens over its own style / dropdown words
 //       (+0x38 / +0x4c), the dropdown arrow 0x1e (0x19 with +0x54 set) wide; Text_put = drawMarkupRun(text, strlen).
+//   WINDOW TARGETS (roadmap S3.19): gfxt::set_text_target makes the run drawer, drawRichText and drawMarkupRun work on a
+//       window-tree child's surface (clipped to its handle's setClip rectangle), with its Image's fonts and text object; with
+//       one set, measureMarkupRun (c3df.cpp: the markup walk with wrapTextToWidth, c3z.cpp, and the break tail that moves a
+//       mid-word break back to a space) serves the bio EditBox's wrapToLines / drawTextLines (gfx_editbox.cpp), and a colour
+//       index 0 is black (U-1847). The root's paths are unchanged.
 //
 // Negative controls (g_negctl_gfx_text, sg_negctl_set "gfx.family.text"):
 //   1 `{` does not change the style (the delimiter is still skipped)   2 a doubled `{{` draws no literal brace
@@ -88,7 +93,22 @@ struct TextState {
   std::map<uint32_t, TextObj> obj;   // by target (the root surface's address)
 };
 TextState &st(Gfx &g) { return g.state_of<TextState>("text"); }
-TextObj &root_obj(Gfx &g, Ctx &ctx) { return st(g).obj[g.root_va(ctx)]; }
+
+// roadmap S3.19: a drawing target other than the root, the window surface of a window-tree child (the bio EditBox, drawn by
+// the editbox family, gfx_editbox.cpp): its surface, the clip rectangle its handle's setClip holds, its Image's four fonts
+// (+0x5c..+0x68) and the Image's address (the key of its text object). Set around one call by gfxt::set_text_target; with
+// none set every path below is the root's, unchanged.
+struct Target {
+  Surface16 *s = nullptr;
+  int32_t clip[4] = {0, 0, 0, 0};
+  uint32_t fonts[4] = {0, 0, 0, 0};
+  uint32_t obj = 0;
+};
+thread_local const Target *t_target = nullptr;
+thread_local Target t_target_slot;
+
+TextObj &root_obj(Gfx &g, Ctx &ctx) { return st(g).obj[t_target ? t_target->obj : g.root_va(ctx)]; }
+const uint32_t *fonts_of(Gfx &g) { return t_target ? t_target->fonts : g.fonts; }
 
 // ------------------------------------------------------------------------------------------------ measuring
 // The provider measures a string in the address space: the text is put into g_textBuffer for the call and the bytes put back
@@ -135,8 +155,9 @@ int32_t measure(Ctx &ctx, uint32_t font, const std::string &s) {
 }
 
 uint32_t style_font(Gfx &g, int32_t s) {
-  if (s >= 0 && s < 4 && g.fonts[s] != 0) return g.fonts[s];
-  return g.fonts[0];
+  const uint32_t *f = fonts_of(g);
+  if (s >= 0 && s < 4 && f[s] != 0) return f[s];
+  return f[0];
 }
 
 // ------------------------------------------------------------------------------------------------ the scanners
@@ -177,6 +198,12 @@ struct RunColours {
 
 bool colour_ref(Gfx &g, uint32_t c, uint32_t &ref, const char *who) {
   if (!(c & 0x80000000u)) {
+    // roadmap S3.19: on a window target index 0 is black, jgld Palette::setDefault's entry 0 (g_defaultPaletteLo's first
+    // triple; the palette that answers at the bio EditBox is not measured, U-1847); the root path is unchanged
+    if (c == 0 && t_target) {
+      ref = 0;
+      return true;
+    }
     if (c != 1) {
       g.unsup(std::string(who) + ": a run palette colour index other than 1");
       return false;
@@ -197,9 +224,10 @@ int32_t draw_run_rec(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32
     if (c == '_') c = ' ';
   const uint32_t font = style_font(g, s);
   int32_t h = 0;
+  const uint32_t *fonts = fonts_of(g);
   for (int i = 0; i < 3; ++i) {
-    if (g.fonts[i] == 0) continue;
-    const int32_t v = ctx.mem.load<int32_t>(g.fonts[i] + 0x10);
+    if (fonts[i] == 0) continue;
+    const int32_t v = ctx.mem.load<int32_t>(fonts[i] + 0x10);
     if (v > h) h = v;
   }
   const int32_t yb = add32(y, h);
@@ -251,17 +279,32 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
     if (c == '_') c = ' ';
   const uint32_t font = style_font(g, s);
   int32_t asc = 0;
+  const uint32_t *fonts = fonts_of(g);
   for (int i = 0; i < 3; ++i) {
     int32_t v = 0;
-    if (g.fonts[i] && tm->glyph_ascent(ctx, g.fonts[i], v) && v > asc) asc = v;
+    if (fonts[i] && tm->glyph_ascent(ctx, fonts[i], v) && v > asc) asc = v;
   }
   const int32_t yb = add32(y, asc);
   if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return x;
+  // the glyphs go to the root, or to a window target through a scratch copy of its surface of which only the clip rectangle
+  // is kept (roadmap S3.19: the target's handle clips its text, setClip's region)
+  auto put_glyphs = [&](const std::string &seg, int32_t px, int32_t py, uint32_t ref) {
+    if (!t_target) return tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h);
+    Surface16 &d = *t_target->s;
+    std::vector<uint16_t> tmp = d.px;
+    const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, tmp.data(), d.w, d.h);
+    const int32_t *c = t_target->clip;
+    for (int32_t yy = std::max(c[1], 0); yy < std::min(c[3], d.h); ++yy)
+      for (int32_t xx = std::max(c[0], 0); xx < std::min(c[2], d.w); ++xx) {
+        const size_t k = static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx);
+        d.px[k] = tmp[k];
+      }
+    return ok;
+  };
   auto glyphs = [&](const std::string &seg, int32_t px, int32_t py, uint32_t colour) {
     uint32_t ref = 0;
     if (seg.empty() || !colour_ref(g, colour, ref, who)) return;
-    if (!tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h))
-      g.unsup(std::string(who) + ": the provider cannot draw");
+    if (!put_glyphs(seg, px, py, ref)) g.unsup(std::string(who) + ": the provider cannot draw");
   };
   auto runs = [&](int32_t px, int32_t py, uint32_t colour, bool advance_only) {
     int32_t pen = px;
@@ -282,8 +325,7 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
     uint32_t ref = 0;
     if (colour_ref(g, rc.shadow, ref, who)) {
       const int32_t sy = add32(add32(yb, rc.dy), mode() == 4 ? 1 : 0);
-      if (!tm->draw_glyphs(ctx, font, buf, add32(x, rc.dx), sy, ref, g.root.px.data(), g.root.w, g.root.h))
-        g.unsup(std::string(who) + ": the provider cannot draw");
+      if (!put_glyphs(buf, add32(x, rc.dx), sy, ref)) g.unsup(std::string(who) + ": the provider cannot draw");
     }
   }
   runs(x, yb, rc.main, false);
@@ -488,6 +530,192 @@ void draw_string(Gfx &g, Ctx &ctx, const std::string &text, int32_t x0, int32_t 
   int32_t x = x0;
   if (centre) x = add32(x0, (0 - markup_width(g, ctx, text, len)) / 2);
   draw_rich(g, ctx, text, x, y0, len, colour, 0xffffffffu, 2, 2, who);
+}
+
+// ------------------------------------------------------------------------------------------------ roadmap S3.19: window targets
+// The bio EditBox (gfx_editbox.cpp) draws its text with these, on its own window surface and its own Image (the Image at
+// EditBox + 0x274, in the GameState: g_characterEditorEditBox).
+
+// the run drawer, drawRichText, drawMarkupRun and measureMarkupRun work on the window surface s (clip {l, t, r, b}), the
+// Image's fonts and the text object of the Image at obj until the next call; s == nullptr goes back to the root
+void set_text_target(Surface16 *s, const int32_t *clip, const uint32_t *fonts, uint32_t obj) {
+  if (!s) {
+    t_target = nullptr;
+    return;
+  }
+  t_target_slot.s = s;
+  for (int i = 0; i < 4; ++i) {
+    t_target_slot.clip[i] = clip[i];
+    t_target_slot.fonts[i] = fonts[i];
+  }
+  t_target_slot.obj = obj;
+  t_target = &t_target_slot;
+}
+
+// The text object of the Image at `image` from its words w[off / 4] (off < 0xac, the caller reads them: gfx_editbox.cpp takes the
+// constructor's words for an Image the port's state never constructed): with `fresh` (a new window) its style, dropdown and
+// link words (they persist in the object between calls, as the original keeps them in the Image), and every time its per-style
+// colours, shadow colours and shadow offsets (+0x6c, +0x7c, +0x8c, +0x9c plus 4 k: Image_ctor's and Widget_setQuad's words)
+void load_text_obj(Gfx &g, uint32_t image, bool fresh, const uint32_t *w) {
+  TextObj &o = st(g).obj[image];
+  auto W = [&](uint32_t off) { return static_cast<int32_t>(w[off / 4]); };
+  if (fresh) {
+    o.s30 = W(0x30);
+    o.s34 = W(0x34);
+    o.s38 = W(0x38);
+    o.link = W(0x3c);
+    o.d48 = W(0x48);
+    o.d4c = W(0x4c);
+    o.d50 = W(0x50);
+  }
+  for (uint32_t k = 0; k < 4; ++k) {
+    o.colour[k] = w[(0x6c + 4 * k) / 4];
+    o.shadow[k] = w[(0x7c + 4 * k) / 4];
+    o.dx[k] = w[(0x8c + 4 * k) / 4];
+    o.dy[k] = w[(0x9c + 4 * k) / 4];
+  }
+}
+
+namespace {
+// wrapTextToWidth(font, s, &budget, remain) (c3z.cpp Wrap_re): greedy word wrap of t[s, s + remain) on one font, words
+// delimited by a space found by memchr from the word's second byte; `acc` is the width accumulator the original keeps in a
+// global (measureTextWidth on the font is the provider's width). Returns the break offset, or npos when the run fits.
+size_t wrap_to_width(Ctx &ctx, uint32_t font, const std::string &t, size_t s, int32_t &budget, int32_t remain, int32_t &acc) {
+  auto at = [&](size_t i) { return i < t.size() ? t[i] : '\0'; };
+  auto width = [&](size_t a, int32_t n) {
+    return n > 0 ? measure(ctx, font, t.substr(a < t.size() ? a : t.size(), static_cast<size_t>(n))) : 0;
+  };
+  int32_t left = budget;
+  size_t word = s;
+  for (;;) {
+    if (remain == 0) {
+      acc = add32(acc, sub32(budget, left));
+      budget = left;
+      return std::string::npos;
+    }
+    size_t sp = std::string::npos;
+    for (int32_t k = 0; k < remain; ++k)
+      if (at(word + 1 + static_cast<size_t>(k)) == ' ') {
+        sp = word + 1 + static_cast<size_t>(k);
+        break;
+      }
+    if (sp == std::string::npos) break;
+    const int32_t wd = width(word, static_cast<int32_t>(sp - word));
+    const int32_t prev = acc;
+    left = sub32(left, wd);
+    if (word == s) {
+      if (left < 0) {
+        budget = 0;
+        return prev == 0 ? sp + 1 : word;
+      }
+    } else if (left < 0) {
+      budget = 0;
+      return word + 1;
+    }
+    remain = add32(remain, static_cast<int32_t>(word) - static_cast<int32_t>(sp));
+    word = sp;
+  }
+  const int32_t wd = width(word, remain);
+  const int32_t prev = acc;
+  left = sub32(left, wd);
+  if (left >= 0) {
+    acc = add32(acc, sub32(budget, left));
+    budget = left;
+    return std::string::npos;
+  }
+  budget = 0;
+  if (word == s) return prev == 0 ? std::string::npos : word;
+  return word + 1;
+}
+
+// the tail that moves a mid-word break back to a space (c3df.cpp TidyA / TidyB / TidyC): the break itself after a space or
+// at the piece start, else reverseFindChar(run start, break, ' ') (c3r.cpp: the bytes at break, break - 1, ... down to run
+// start + 1; none found is NULL, which the caller takes as `the run fits`)
+size_t tidy(const std::string &t, size_t brk, size_t piece, size_t run) {
+  if (brk > 0 && brk - 1 < t.size() && t[brk - 1] == ' ') return brk;
+  if (brk == piece) return brk;
+  if (brk == run) return std::string::npos;
+  for (size_t p = brk; p > run; --p)
+    if (p < t.size() && t[p] == ' ') return p;
+  return std::string::npos;
+}
+}  // namespace
+
+// measureMarkupRun(text, &budget, len) (c3df.cpp MeasureMarkupRun_re) on the current target's Image (markup on): how much of
+// t[text0, text0 + len) fits in budget pixels, walking the markup with the Image's measureMarkupRun words (+0x34 style,
+// +0x3c link, +0x48 dropdown). Returns the break offset (the start of the line that continues) or npos when the run fits.
+size_t measure_markup_run(Gfx &g, Ctx &ctx, const std::string &t, size_t text0, int32_t &budget, int32_t len, int32_t &acc) {
+  TextObj &o = root_obj(g, ctx);
+  const uint32_t *fonts = fonts_of(g);
+  if (o.d48 == 2) o.d48 = 1;
+  size_t start = text0;
+  for (;;) {
+    size_t p;
+    if (o.d48 == 1) p = scan(t, start, len, 2);
+    else if (o.s34 == 3) p = scan(t, start, len, 1);
+    else p = scan(t, start, len, 0);
+    const int32_t piece = static_cast<int32_t>(p - start);
+    const uint32_t sf = (o.s34 >= 0 && o.s34 < 4) ? fonts[o.s34] : 0;
+    if (len == 0) {
+      const size_t brk = wrap_to_width(ctx, sf != 0 ? sf : fonts[0], t, start, budget, piece, acc);
+      o.link = 0;
+      if (brk != std::string::npos) return tidy(t, brk, start, text0);
+      o.d48 = 0;
+      return std::string::npos;
+    }
+    int32_t style = o.s34;
+    const char c = p < t.size() ? t[p] : '\0';
+    const char c1 = p + 1 < t.size() ? t[p + 1] : '\0';
+    switch (c) {
+      case '$':
+        if (token_at(ctx, t, p, 0x3c, 6)) {
+          o.link = 1;
+          style = 3;
+        } else if (token_at(ctx, t, p, 0x30, 9)) {
+          o.d48 = 1;
+        } else if (token_at(ctx, t, p, 0x24, 9)) {
+          o.d48 = 1;
+          style = 3;
+        }
+        break;
+      case '=': o.link = 2; break;
+      case '^': o.d48 = 2; style = 0; break;
+      case '{': if (c1 == '{') { ++p; --len; } else style = 1; break;
+      case '[': if (c1 == '[') { ++p; --len; } else style = 2; break;
+      case '}': if (c1 == '}') { ++p; --len; } else style = 0; break;
+      case ']': if (c1 == ']') { ++p; --len; } else style = 0; break;
+      default: break;
+    }
+    // the text before the delimiter, on the font of the style that was current
+    const size_t brk = wrap_to_width(ctx, sf != 0 ? sf : fonts[0], t, start, budget, piece, acc);
+    if (brk != std::string::npos) {
+      o.link = 0;
+      return tidy(t, brk, start, text0);
+    }
+    const int32_t link = o.link;
+    if (link == 1) {
+      p += 5;
+      len -= 5;
+    } else if (o.d48 == 1) {
+      p += 9;
+      len -= 9;
+    } else if (o.d48 == 2) {
+      o.d48 = 0;
+    }
+    start = p + 1;
+    if (link == 2) {
+      const size_t gt = t.find('>', start);
+      style = 0;
+      if (gt != std::string::npos) {
+        len = add32(len, static_cast<int32_t>(start) - static_cast<int32_t>(gt) - 1);
+        start = gt + 1;
+      }
+      o.link = 0;
+    }
+    o.s34 = style;
+    --len;
+    if (len < 0) return std::string::npos;   // a token past the count: the original reads on; the port stops at the end
+  }
 }
 
 }  // namespace gfxt

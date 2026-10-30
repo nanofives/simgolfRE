@@ -1,0 +1,5 @@
+......                                                                   [100%]
+6 passed, 15 deselected in 42.81s
+SKIPPED [5] port\test\test_gfx_s3_19.py:266: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+15 passed, 6 skipped in 39.61s
+== 20:13:13 rc=0

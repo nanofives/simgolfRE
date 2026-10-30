@@ -1,0 +1,49 @@
+F.......F.F                                                              [100%]
+================================== FAILURES ===================================
+__________________ test_source_tables_follow_the_naming_rule __________________
+
+    @pytest.mark.static
+    def test_source_tables_follow_the_naming_rule():
+        pairs = source_names()
+        mods = {m for m, _ in pairs}
+        assert set(SOUND_MODULES) <= mods, sorted(set(SOUND_MODULES) - mods)
+>       assert check(pairs) == []
+E       AssertionError: assert ['audio_exe: .../names)', ...] == []
+E         
+E         Left contains 43 more items, first extra item: 'audio_exe: snd.FUN_1000e810 is not a sound.dll name (S4_functions.tsv, hooks.csv, re/names)'
+E         Use -v to get more diff
+
+port\test\test_audio_names.py:157: AssertionError
+__________ test_an_unnamed_function_is_accepted_by_its_listing_name ___________
+
+    @pytest.mark.static
+    def test_an_unnamed_function_is_accepted_by_its_listing_name():
+>       assert "FUN_1000e810" in sound_rows() and check([("audio_exe", "snd.FUN_1000e810")]) == []
+E       AssertionError: assert ('FUN_1000e810' in {'Ambience::ctor', 'Ambience::load', 'Ambience::load_1002e7c0', 'Ambience::unload', 'AviSound::get_cur_frame', 'AviSound::get_frame', ...})
+E        +  where {'Ambience::ctor', 'Ambience::load', 'Ambience::load_1002e7c0', 'Ambience::unload', 'AviSound::get_cur_frame', 'AviSound::get_frame', ...} = sound_rows()
+
+port\test\test_audio_names.py:186: AssertionError
+____________________ test_registry_follows_the_naming_rule ____________________
+
+    def test_registry_follows_the_naming_rule():
+        lib = R.load_lib()
+        pairs = []
+        for i in range(lib.dll.sg_func_count()):
+            fi = L.SgFuncInfo()
+            assert lib.dll.sg_func_info_get(i, C.byref(fi)) == L.SG_OK
+            pairs.append((fi.module.decode(), fi.name.decode()))
+        mods = {m for m, _ in pairs}
+        if not set(SOUND_MODULES) <= mods:
+            pytest.skip(f"the DLL lacks {sorted(set(SOUND_MODULES) - mods)}")
+>       assert check(pairs) == []
+E       AssertionError: assert ['audio_exe: .../names)', ...] == []
+E         
+E         Left contains 43 more items, first extra item: 'audio_exe: snd.FUN_1000e810 is not a sound.dll name (S4_functions.tsv, hooks.csv, re/names)'
+E         Use -v to get more diff
+
+port\test\test_audio_names.py:212: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_audio_names.py::test_source_tables_follow_the_naming_rule
+FAILED port/test/test_audio_names.py::test_an_unnamed_function_is_accepted_by_its_listing_name
+FAILED port/test/test_audio_names.py::test_registry_follows_the_naming_rule
+3 failed, 8 passed in 1.12s

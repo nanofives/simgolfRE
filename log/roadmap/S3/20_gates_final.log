@@ -1,0 +1,18 @@
+[1/17] build_x64 rc=0 40 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20\port\build\x64\Release\portsim_c.dll
+[2/17] build_w32 rc=0 31 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20\port\build\Win32\Release\portsim_c.dll
+[3/17] static rc=1 728 s :: 3 failed, 738 passed, 39 skipped, 46 deselected in 723.62s (0:12:03)
+[4/17] t_test_static rc=0 1 s :: 6 passed in 0.44s
+[5/17] t_test_gl_wgl_selfcheck rc=0 88 s :: 23 passed in 87.34s (0:01:27)
+[6/17] w32_test_gl_wgl_selfcheck rc=0 84 s :: 23 passed in 81.74s (0:01:21)
+[7/17] t_test_gl_wgl rc=0 124 s :: 9 passed in 122.38s (0:02:02)
+[8/17] w32_test_gl_wgl rc=0 129 s :: 9 passed in 128.03s (0:02:08)
+[9/17] t_test_app_live rc=0 188 s :: 13 passed in 186.42s (0:03:06)
+[10/17] t_test_app_ingame rc=0 487 s :: 14 passed in 485.30s (0:08:05)
+[11/17] t_test_app_present rc=0 170 s :: 3 passed, 4 deselected in 169.39s (0:02:49)
+[12/17] t_test_app_replay rc=0 25 s :: 14 passed in 24.27s
+[13/17] segs_x64 rc=0 403 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 402.0}
+[14/17] segs_win32 rc=0 497 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 496.1}
+[15/17] boot_x64 rc=0 527 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[16/17] boot_win32 rc=0 857 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[17/17] census rc=0 2 s :: {"rows": 698, "counts": {"PASS": 638, "FAIL": 50, "NOT_RUN": 10}}
+[done] gates build_x64 build_w32 static t_test_static t_test_gl_wgl_selfcheck w32_test_gl_wgl_selfcheck t_test_gl_wgl w32_test_gl_wgl t_test_app_live t_test_app_ingame t_test_app_present t_test_app_replay segs_x64 segs_win32 boot_x64 boot_win32 census

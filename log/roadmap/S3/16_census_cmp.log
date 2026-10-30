@@ -1,0 +1,12 @@
+I14 rows 698 Counter({'FAIL': 537, 'PASS': 100, 'UNSUPPORTED': 51, 'NOT_RUN': 10})
+S3.16 rows 698 Counter({'FAIL': 528, 'PASS': 109, 'UNSUPPORTED': 51, 'NOT_RUN': 10})
+against I14: PASS lost 0, PASS gained 9, rows with more px 0, with fewer 38
+  gained: cov_l_camera/step1 cov_l_camera/step2 cov_l_camera/step3 cov_l_camera/step4 cov_l_camera/step5 cov_l_camera/step6 cov_l_camera/step7 cov_l_camera/step8 cov_l_camera/step9
+snapshot position: 110 rows run without the fix, 7 differ from the run with it
+  MOVED cov_a_flags zdemo without fix FAIL 3070 px (beyond 2068) -> with fix FAIL 112 px (beyond 2)
+  MOVED cov_a_flags ztut without fix FAIL 231 px (beyond 89) -> with fix FAIL 107 px (beyond 1)
+  MOVED cov_a_keys3 season without fix FAIL 2475 px (beyond 1588) -> with fix FAIL 101 px (beyond 0)
+  MOVED cov_k1_paths cart without fix FAIL 2133 px (beyond 1421) -> with fix FAIL 102 px (beyond 0)
+  MOVED cov_k1_river r20 without fix FAIL 4058 px (beyond 2010) -> with fix FAIL 270 px (beyond 1)
+  MOVED cov_k1_routing end without fix FAIL 2057 px (beyond 1394) -> with fix FAIL 102 px (beyond 0)
+  MOVED cov_l_bridge obj5 without fix FAIL 3065 px (beyond 2648) -> with fix FAIL 72 px (beyond 0)

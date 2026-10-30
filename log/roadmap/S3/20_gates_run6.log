@@ -1,0 +1,3 @@
+[1/1] census_raster rc=0 2376 s :: {"rows": 698, "counts": {"PASS": 111, "FAIL": 577, "NOT_RUN": 10}}
+log/roadmap/S3/20_gates.sh: line 82: syntax error near unexpected token `)'
+log/roadmap/S3/20_gates.sh: line 82: `) - t0 )) s :: $(tail -1 $G | cut -c1-160)"'

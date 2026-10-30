@@ -31,7 +31,10 @@ One TSV row per checkpoint (columns in COLUMNS):
 
     ~/bin/py -3.12 -m port.test.framegate sandbox_basic cov_b_location --out log/roadmap/S0/2_sample.tsv
     ~/bin/py -3.12 -m port.test.framegate --all --jobs 2 --out <tsv> [--resume]          # the census (step S0.3)
-    options: --checkpoints a,b  --negctl gfx.attach=1  --swap-ref <chk>=<scenario>/<chk>  --images <dir>  --no-probe
+    options: --checkpoints a,b  --negctl gfx.attach=1  --swap-ref <chk>=<scenario>/<chk>  --images <dir>  --no-probe  --host-gl
+             --gl raster|auto|host (roadmap S3.20, decision G13: the terrain renderer; default raster = GlRaster; opt-in auto = the
+             host's OpenGL when the startup self-check of gl_wgl.h passes, else GlRaster; host (or wgl) = the host's OpenGL without
+             the check; columns renderer / renderer_reason say what each run drew with)
 """
 from __future__ import annotations
 
@@ -65,7 +68,9 @@ MAX_JOBS = 2
 PROBE_LIMIT = 3_000_000      # TkBase calls traced by the order probe (about 60 MB of trace, deleted afterwards)
 COLUMNS = ["scenario", "checkpoint", "status", "detail", "kind", "context", "frame", "wait_ticks", "terrain", "terrain_rule", "total_px",
            "one_level_px", "one_level_pct", "beyond_px", "regions", "unsup_before", "first_unsupported", "first_unsupported_drawing", "unsupported_before",
-           "unsup_order", "boot_status", "boot_records", "liveterrain", "backend", "variant", "reference", "terrain_drawn"]
+           "unsup_order", "boot_status", "boot_records", "liveterrain", "backend", "variant", "reference", "terrain_drawn",
+           "renderer", "renderer_reason"]
+GL_MODES = {"raster": 0, "wgl": 1, "host": 1, "auto": 2}   # terrainLive.renderer's argument (terrain_live.cpp, roadmap S3.20)
 
 # The H1 frame wait of mainLoop (re/analysis/sim/time_model.md: 0x0041e631..0x0041e6b1, timeGetTime via [0x004ba21c] then
 # waitTicks(1, 0) steps): its own clock reads return inside this range
@@ -380,13 +385,20 @@ def terrain_address(scenario: str) -> int:
 
 def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, negctl: tuple[str, int] | None = None,
                  swap: dict | None = None, images: pathlib.Path | None = None, probe: bool = True,
-                 probe_limit: int = PROBE_LIMIT, live: bool = True, terrain_va: int | None = None) -> list[dict]:
-    """One boot of `scenario` with gfx and LiveTerrain attached; one row per checkpoint."""
+                 probe_limit: int = PROBE_LIMIT, live: bool = True, terrain_va: int | None = None,
+                 host_gl: bool | str = False, gl: str = "raster") -> list[dict]:
+    """One boot of `scenario` with gfx and LiveTerrain attached; one row per checkpoint. host_gl: the terrain passes drawn by the
+    host's own OpenGL (terrainLive.hostGl, port/include/portsim/sim/gl_wgl.h; roadmap S3.15) instead of GlRaster; "try" = ask for
+    it and keep GlRaster when the host has none (the fallback), True = refuse to run without it. gl (roadmap S3.20, decision G13;
+    used when host_gl is not given): the renderer LiveTerrain::choose_renderer picks, "raster" (GlRaster, the default) or the opt-in
+    "auto" (the host's OpenGL when the startup self-check passes, else GlRaster) or "host" / "wgl" (the host's OpenGL without the
+    check); rows carry renderer / renderer_reason."""
     lib = lib or L.load()
     backend = L.backend()
     chks = checkpoints or scenario_checkpoints(scenario)
     variant = ",".join(x for x in ([f"negctl {negctl[0]}={negctl[1]}"] if negctl else []) +
-                       [f"ref {k}={v}" for k, v in (swap or {}).items()])
+                       [f"ref {k}={v}" for k, v in (swap or {}).items()] + (["host-gl"] if host_gl else []) +
+                       ([f"gl {gl}"] if gl != "raster" and not host_gl else []))
     base = {"scenario": scenario, "backend": backend, "variant": variant}
     trp = B.TRACES / f"{scenario}.trace"
     if not trp.exists() or not chks:
@@ -399,6 +411,10 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
         if kind == 1:
             tgt[k] = (ordinal, value)
             k += 1
+    polls = {}
+    for r in tr.records:
+        if r.type == TF.POLL and r.f.get("checkpoint") and r.f["checkpoint"] not in polls:
+            polls[r.f["checkpoint"]] = r.f["pos"]
     summ = json.loads((GX.REFS / scenario / "det_b" / "summary.json").read_text())
     meta, ords = {}, []
     for c in chks:
@@ -407,6 +423,9 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
             meta[c] = {"error": f"the trace's tgt call {st['tgt']} is not the checkpoint's T {st['T']}"}
             continue
         o = tgt[st["tgt"]][0]
+        # roadmap S3.16: the clock call the checkpoint's POLL rode on when it is not a tgt call (gfx.checkpoint_ordinal, U-1820)
+        if os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll" and polls.get(c) is not None and polls[c] < o:
+            o = polls[c]
         meta[c] = dict(classify(tr, o), ordinal=o)
         ords.append((o, c))
     ords.sort()
@@ -420,6 +439,7 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
     to_end = no_frames or max_records > len(frames_pos)
     del tr
     snaps, glog_txt, live_info = {}, "", {"attached": "n/a"}
+    renderer = {"renderer": "", "renderer_reason": "no LiveTerrain" if not live else ""}
     use_live = live and lib.has("gfx.attach")
     va = (terrain_address(scenario) if terrain_va is None else terrain_va) if use_live else 0
     from port.test import terrainlive as TLm
@@ -433,6 +453,17 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
         if use_live:
             if TLm.live_attach(lib, st, va) != 0:
                 raise RuntimeError("sg_ts_live_attach failed")
+            if host_gl:
+                on = st.call("terrainLive.hostGl", [1]).eax == 1
+                if not on and host_gl != "try":
+                    raise RuntimeError("terrainLive.hostGl: the host has no OpenGL implementation the sink can use")
+                renderer.update(renderer="wgl" if on else "raster", renderer_reason="--host-gl" + ("" if on else " (no host OpenGL)"))
+            else:
+                st.call("terrainLive.renderer", [GL_MODES[gl]])
+                t = (st.files_read("$wgl/renderer.txt") or b"").decode(errors="replace")
+                kv = dict(ln.split(" ", 1) for ln in t.splitlines() if " " in ln)
+                renderer.update(renderer=kv.get("backend", "?"), renderer_reason=f"{kv.get('mode', gl)}: {kv.get('reason', '')}"
+                                + (f" [check {kv.get('check')} {kv.get('ms')} ms]" if kv.get("check") not in (None, "none") else ""))
 
     def after(st, _res):
         nonlocal glog_txt
@@ -475,7 +506,7 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
     for i, (o, c) in enumerate(ords):
         m = meta[c]
         row = dict(base, checkpoint=c, context=m["context"], frame=m["frame"], wait_ticks=m["wait_ticks"], boot_status=bres.status,
-                   boot_records=f"{bres.records}/{bres.expected}", liveterrain=live_txt, seconds=secs)
+                   boot_records=f"{bres.records}/{bres.expected}", liveterrain=live_txt, seconds=secs, **renderer)
         kind = screen_kind(m["context"], m["frame"], m["wait_ticks"], glog["handled"])
         row["kind"] = kind
         row["terrain"], row["terrain_rule"] = terrain_rule(m["context"], m["frame"])
@@ -543,6 +574,10 @@ def _worker_args(a) -> list[str]:
         out.append("--no-probe")
     if a.no_live:
         out.append("--no-live")
+    if a.host_gl:
+        out.append("--host-gl")
+    if a.gl != "raster":
+        out += ["--gl", a.gl]
     out += ["--probe-limit", str(a.probe_limit)]
     return out
 
@@ -573,6 +608,10 @@ def main(argv=None) -> int:
     ap.add_argument("--no-probe", action="store_true")
     ap.add_argument("--no-live", action="store_true", help="LiveTerrain not attached (development)")
     ap.add_argument("--probe-limit", type=int, default=PROBE_LIMIT)
+    ap.add_argument("--host-gl", action="store_true", help="terrain drawn by the host's own OpenGL (roadmap S3.15)")
+    ap.add_argument("--gl", choices=sorted(GL_MODES), default="raster",
+                    help="the terrain renderer (roadmap S3.20): raster (the default) = GlRaster; opt-in auto = the host's OpenGL when "
+                         "its self-check passes, else GlRaster; host (= wgl) = the host's OpenGL without the check")
     ap.add_argument("--worker", help=argparse.SUPPRESS)
     ap.add_argument("--probe-run", help=argparse.SUPPRESS)
     a = ap.parse_args(argv)
@@ -590,7 +629,7 @@ def main(argv=None) -> int:
     chks = a.checkpoints.split(",") if a.checkpoints else None
     if a.worker:
         rows = run_scenario(a.worker, chks, negctl=negctl, swap=swap, images=a.images, probe=not a.no_probe,
-                            probe_limit=a.probe_limit, live=not a.no_live)
+                            probe_limit=a.probe_limit, live=not a.no_live, host_gl=a.host_gl, gl=a.gl)
         print(json.dumps(rows))
         return 0
     names = all_scenarios() if a.all else a.scenarios

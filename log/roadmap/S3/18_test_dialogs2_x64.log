@@ -1,0 +1,23 @@
+[test-slot] all 6 test slots busy, waiting (0s so far). Holders:
+  slot 0: pid 22148 since 10-29 19:01 in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_16: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest -q -p no:cacheprovider port/test/test_gfx_s2_10.py
+  slot 1: pid 13628 since 10-29 19:07 in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I15: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest port/test/test_gfx_hud.py -m  -q -p no:cacheprovider
+  slot 2: pid 10696 since 10-29 18:42 in C:\Users\maria\Desktop\Proyectos\Simcity: bash -c py -3.12 -u "C:/Users/maria/AppData/Local/Temp/claude/C--Users-maria-Desktop-Proyectos-Simcity/9767b93c-e26b-4c8d-98d4-1117dc277874/
+  slot 3: pid 23064 since 10-29 19:03 in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I15: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest port/test/test_boot.py -m  -q -p no:cacheprovider
+  slot 4: pid 22584 since 10-29 19:09 in C:\Users\maria\Desktop\Proyectos\SimGolf: C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe -m pytest tests/test_match.py tests/test_match_tools.py -q
+  slot 5: pid 7928 since 10-29 19:06 in C:\Users\maria\Desktop\Proyectos\Carcassonne: bash -c bash scripts/release.sh 0.26.3
+[test-slot] acquired slot 6/6 after 2s
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_18
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 27 items / 21 deselected / 6 selected
+
+port/test/test_gfx_dialogs2.py::test_dialog_rectangles_equal_the_original_outside_held_pixels[cov_r_s2_screens-bulletin] PASSED [ 16%]
+port/test/test_gfx_dialogs2.py::test_bulletin_board_judges_every_pixel PASSED [ 33%]
+port/test/test_gfx_dialogs2.py::test_frames_negctl_red[gfx.family.bulletin-1-cov_r_s2_screens-bulletin-the board image one pixel lower] PASSED [ 50%]
+port/test/test_gfx_dialogs2.py::test_frames_negctl_red[gfx.family.bulletin-2-cov_r_s2_screens-bulletin-the trophy one pixel to the right] PASSED [ 66%]
+port/test/test_gfx_dialogs2.py::test_frames_negctl_red[gfx.family.bulletin-3-cov_r_s2_screens-bulletin-the notes' x without the s / 2 term] PASSED [ 83%]
+port/test/test_gfx_dialogs2.py::test_frames_negctl_red[gfx.family.bulletin-4-cov_r_s2_screens-bulletin-the TableRow cuts read the w / h one entry later] PASSED [100%]
+
+================= 6 passed, 21 deselected in 84.06s (0:01:24) =================

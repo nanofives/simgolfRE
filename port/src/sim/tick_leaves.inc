@@ -188,6 +188,9 @@ struct Leaves : TkBase {
     cc("appendNumber", mul32(gs().g_cash_div100, 100));
     StrCat(kBuf, GS(f_strpool_4c4944));
     drawWindow(0xc8, 0x96, static_cast<int>(0x80007fffu), -2);
+    // roadmap S3.16: Window::refreshFull(root, 0, 0) shows the window before the wait (c3em.cpp CanAfford_re; a drop an
+    // attached graphics backend draws; negative control canAfford 2: skipped)
+    if (SG_NEGCTL(g_negctl_can_afford) != 2) tc("Window::refreshFull", GS(g_rootWindow), 0, 0);
     cc("pumpAndRedraw", 0);
     return 0;
   }
@@ -268,7 +271,10 @@ struct Leaves : TkBase {
   }
 
   // drawLabels() (c3dv.cpp): the 8 floating text labels: a live timer (g_labelQueueB[k]) counts down, and an on-screen
-  // label's text (g_labelQueueText + 0x40 k) goes into g_textBuffer for its drawing (dropped). Returns the last slot's eax.
+  // label's text (g_labelQueueText + 0x40 k) goes into g_textBuffer, then setDrawTarget(the text object, g_font51b360, 0, 0, 0)
+  // and drawCenteredText2(g_textBuffer, sx, sy - 4, g_labelQueueA[k]) draw it (drops: an attached graphics backend draws
+  // them, roadmap S3.16). Returns the last slot's eax (the drop's 0). Negative controls: 1 the timer kept, 2 the label drawn
+  // one pixel lower (S3.16).
   int drawLabels() {
     int eax = 0;
     for (int k = 0; k < 8; k++) {
@@ -281,14 +287,19 @@ struct Leaves : TkBase {
       eax = cc("worldToScreen", G32(GS(g_labelQueueC) + 4u * k).get(), wy, &sx, &sy, 0);
       if (eax == 0) continue;
       StrCpy(kBuf, GS(g_labelQueueText) + 0x40u * k);
-      eax = 0;  // drawCenteredText2's result (drawing)
+      tc("setDrawTarget", Root(), GS(g_font51b360), 0, 0, 0);
+      eax = cc("drawCenteredText2", static_cast<int>(kBuf), sx.get(), sy.get() - 4 + (SG_NEGCTL(g_negctl_draw_labels) == 2 ? 1 : 0),
+               G32(GS(g_labelQueueA) + 4u * k).get());
     }
     return eax;
   }
 
   // drawMoneyLabels() (c3dv.cpp): the 8 money popups: unless g_flags bit 24 (championship), a live timer
   // (g_moneyLabelTime[k]) counts down, and an on-screen one builds "<+><amount * 100 as money>" in g_textBuffer
-  // (appendNumber, which writes g_textBuf) for its drawing (dropped)
+  // (appendNumber, which writes g_textBuf), then setDrawTarget(the text object, g_font51b360, 0, 0, 0) and
+  // drawCenteredText2(g_textBuffer, sx, sy - 4, colour) draw it, colour 0x80007d08 for an amount <= 0 (red) and 0x800023e8
+  // otherwise (green; drops: an attached graphics backend draws them, roadmap S3.16). Negative controls: 1 the timer kept,
+  // 2 the popup drawn in the other sign's colour (S3.16).
   int drawMoneyLabels() {
     int eax = 0;
     for (int k = 0; k < 8; k++) {
@@ -304,7 +315,9 @@ struct Leaves : TkBase {
       const int amount = G32(GS(g_moneyLabelValue) + 4u * k);
       StrCpy(kBuf, amount > 0 ? GS(f_strpool_4c5340) : GS(g_str4e9a84));
       cc("appendNumber", mul32(amount, 100));
-      eax = 0;  // drawCenteredText2's result (drawing)
+      tc("setDrawTarget", Root(), GS(g_font51b360), 0, 0, 0);
+      const bool neg = (G32(GS(g_moneyLabelValue) + 4u * k).get() <= 0) != (SG_NEGCTL(g_negctl_draw_money_labels) == 2);
+      eax = cc("drawCenteredText2", static_cast<int>(kBuf), sx.get(), sy.get() - 4, static_cast<int>(neg ? 0x80007d08u : 0x800023e8u));
     }
     return eax;
   }

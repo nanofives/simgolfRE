@@ -263,15 +263,29 @@ struct MapDraw {
   }
 
   // the hole's tee, waypoint line, number and green on the map. Drawn: the hole number
-  // (drawCenteredText2 in 0x80007ff0, outside the employee mode) at the waypoint, or halfway between tee and green. Not
-  // drawn, reported through drops without a body: the tee and flag sprites (addSprite of a sprite-sheet cell: the FLIC
-  // sheets and the sprite queue's scaled draw are roadmap S3.4 / S3.5) and the lines (lineTo = Terrain::drawLine, an
-  // OpenGL line into the same back buffer: S3.8).
+  // (drawCenteredText2 in 0x80007ff0, outside the employee mode) at the waypoint, or halfway between tee and green, the
+  // lines (lineTo = Terrain::drawLine, an OpenGL line into the same back buffer: S3.8) and, since roadmap S3.17, the tee and
+  // flag sprites: addSprite of a sprite-sheet cell (drawn at once through drawQueuedSprite: the scene family's addSprite
+  // body, S3.4 / S3.5). The tee is the last column of sheet 0x18d + clamp(par - 3, 0, 2), row 0, at shade 4 with flags
+  // 0x5e; the flag column 0, row 3 of sheet 0x189 + g_courseType (a signed byte), at shade 2 with flags g_courseType + 0x60.
+  // The original also stores each cell into g_map822b80[1] (engine class, never compared); a drawing pass leaves the
+  // GameState as it was, so the port does not (U-1830).
+  // Negative controls: 11 the tee drawn one pixel right, 12 the flag drawn at shade 4.
+  uint32_t sheet_cell(int32_t table, int32_t col, int32_t row) const {
+    return cm::call_peer(ctx, "cellAt", {u32(table), u32(col), u32(row)}).eax;
+  }
   void hole_map(int32_t mode, int32_t h, uint32_t rec, uint32_t way) const {
+    const int nc = SG_NEGCTL(g_negctl_routing_map);
     int32_t tx, ty;
     map_to_screen(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0xc), tx, ty);
     gx("setLinePoint", {u32(tx), u32(ty)});   // roadmap S3.8: the hole line starts at the tee
-    gx("showRoutingMapScreen.teeSprite", {u32(tx), u32(ty)});
+    {
+      const int32_t pv = clamp(sub32(m.load<int8_t>(rec), 3), 0, 2);
+      const uint32_t cols = state_va(ctx, &GameState::g_sheetCols);
+      const uint32_t cell = sheet_cell(add32(pv, 0x18d), sub32(m.load<int32_t>(cols + 4u * u32(add32(pv, 0x18d))), 1), 0);
+      const int32_t sx = nc == 11 ? add32(tx, 1) : tx;
+      gx("addSprite", {u32(sx), u32(ty), u32(ty), 0x28, 0x28, cell, 4, 0x5e});
+    }
     int32_t ax = 0, ay = 0;
     bool have = true;
     if (m.load<int32_t>(way + 0x10) != -1) {
@@ -297,7 +311,11 @@ struct MapDraw {
       });
     }
     gx("lineTo", {u32(gx_), u32(gy_), 0x80007fffu, 2u, 0xau});
-    gx("showRoutingMapScreen.flagSprite", {u32(gx_), u32(gy_)});
+    {
+      const int32_t ct = m.load<int8_t>(state_va(ctx, &GameState::g_courseType));
+      const uint32_t cell = sheet_cell(add32(ct, 0x189), 0, 3);
+      gx("addSprite", {u32(gx_), u32(gy_), u32(gy_), 0x28, 0x28, cell, nc == 12 ? 4u : 2u, u32(add32(ct, 0x60))});
+    }
   }
 
   // the buttons: the hovered button's image, the mode's own button, the compass, then the refresh

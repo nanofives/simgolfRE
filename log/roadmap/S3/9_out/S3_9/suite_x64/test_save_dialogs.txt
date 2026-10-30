@@ -1,0 +1,4 @@
+ssssssssssssssssssssssssss......                                         [100%]
+=========================== short test summary info ===========================
+SKIPPED [26] port\test\test_save_dialogs.py:204: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+6 passed, 26 skipped in 3.03s

@@ -1,0 +1,14 @@
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 30%]
+........................................................................ [ 41%]
+.................................................................sssssss [ 51%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 61%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 72%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 82%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 92%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssss                     [100%]
+=========================== short test summary info ===========================
+SKIPPED [247] port\test\test_audio_wave.py:169: SG_EMU_ORACLE=1 runs the emulator
+SKIPPED [100] port\test\test_audio_wave.py:178: SG_EMU_ORACLE=1 runs the emulator
+353 passed, 347 skipped in 225.28s (0:03:45)

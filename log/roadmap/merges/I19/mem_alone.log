@@ -1,0 +1,12 @@
+== start 2026-10-30 19:52:50
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I19
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 1 item
+
+port/test/test_app_present.py::test_long_session_memory_bounded PASSED   [100%]
+
+======================= 1 passed in 1083.11s (0:18:03) ========================
+== rc=0 2026-10-30 20:10:54

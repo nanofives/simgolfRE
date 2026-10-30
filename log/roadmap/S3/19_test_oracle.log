@@ -1,0 +1,43 @@
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_c.dll
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_c.dll
+    @ORACLE
+    @pytest.mark.parametrize("mode,what", CALL_NEGCTL)
+    def test_drawcontents_calls_negctl_red(elib, mode, what):
+        from port.test import cmdemu as CE
+        emu = CE.Emu()
+        cases = _cases(80, 0x5319)
+        differ = 0
+        with _Negctl(elib, mode):
+            for case in cases:
+                if _port_calls(elib, case) != _emu_calls(emu, elib, case):
+                    differ += 1
+>       assert differ > 0, (mode, what)
+E       AssertionError: (4, 'the visible-line count without value - get')
+E       assert 0 > 0
+
+port\test\test_gfx_s3_19.py:275: AssertionError
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_equal_the_original
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_negctl_red[1-the caret one pixel right]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_negctl_red[2-the first line not raised below the window]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_negctl_red[3-the inset left out of the text rectangle]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_negctl_red[8-the bevel's colours swapped]
+PASSED port/test/test_gfx_s3_19.py::test_bodies_registered_without_duplicates
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[1-the caret one pixel right]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[2-the first line not raised below the window]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[3-the inset left out of the text rectangle]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[4-the visible-line count without value - get]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[8-the bevel's colours swapped]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_close
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_negctl_red[5-the window composed one pixel lower]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_negctl_red[6-Window::paint does not clear the surface]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_close_negctl_red
+PASSED port/test/test_gfx_s3_19.py::test_wrap_width_negctl_red
+PASSED port/test/test_gfx_s3_19.py::test_caret_follows_the_caret_position
+PASSED port/test/test_gfx_s3_19.py::test_cov_r_bio_boot_draws_the_bio_box
+FAILED port/test/test_gfx_s3_19.py::test_drawcontents_calls_negctl_red[4-the visible-line count without value - get]
+1 failed, 20 passed in 79.22s (0:01:19)
+== 20:05:32 rc=1

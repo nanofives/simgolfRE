@@ -1,0 +1,4 @@
+....................................................................s.   [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_course.py:409: both peers registered: covered by the segments
+69 passed, 1 skipped in 27.71s

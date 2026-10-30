@@ -1,4 +1,33 @@
-# Regression baseline at HEAD + S3 wave 6 (I15, 2026-10-29)
+# Regression baseline at HEAD + S3 wave 7 (I19, 2026-10-30)
+
+## HEAD + S3 wave 7 (I19)
+
+This file now describes **HEAD + S3 wave 7**. That is c7412150 (S9 + P1 on top of wave 6) plus S3.15..S3.20 and S3.9
+(`log/roadmap/S3/MERGE_w7.md`, files `log/roadmap/S3/files_w7.txt`). It was measured by I19 in `port/build/I19`: `git archive c7412150`
++ I18's junctions + w7_assemble.py's EXTRA_JUNCTIONS, then `w7_assemble.py` + `20_assemble.py --only-20`, with 153 anchored edits
+applied once each. The documents were applied with `log/roadmap/merges/I19/apply_docs.py`. Raw logs are in `log/roadmap/merges/I19/`
+(`log/roadmap/merges/I19.md`). Pass `-m ""` to pytest for these counts. The census runs use `--no-probe`.
+
+| Gate | HEAD + S3 wave 7 (I19) |
+|---|---|
+| repo static | 811 passed, 2 skipped, 46 deselected (= I18) |
+| build x64 / Win32, gfx.check | 0 errors; 0 duplicates, 138 bodies + 10 not_drawing (I15 131) |
+| segments x64 / Win32 / freetype | 205 / 205 each |
+| boot x64 / Win32 / freetype | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each |
+| chains / ledger | 342 / 342; ledger 30 rows, 2 without a cause: showRoutingMapScreen.exitRemapReadsFrame (I14's) and S9's netHandleControl.slot15Stays (no evidence entry in integrator.py, from c7412150) |
+| frame census, default GlRaster | 698 rows: **PASS 111**, FAIL 577, UNSUPPORTED 0, NOT_RUN 10 (I15 100 / 537 / 51 / 10) |
+| frame census, opt-in `--gl auto` | 698 rows: PASS 638, FAIL 50, UNSUPPORTED 0, NOT_RUN 10 |
+| S3.2 terrain verdict | 527 PASS, 75 NOT_MEASURED |
+| S7 live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266 (3 / 3) |
+| S3 own gates | test_gl_wgl_selfcheck 23 and test_gl_wgl 9 on x64 and Win32; ctl13 (tick.frame 13) RED: cov_a_champ n_yes / end 479,920 px each; test_net Win32 29 |
+| port suite x64 | 102 files, one per process, test_app_* last: 101 PASS. test_audio_core 146 + 128 skipped and test_audio_names 12 now pass (P1). test_app_present::test_long_session_memory_bounded failed under suite load (growth 4,300,800 B, limit 4,194,304) and passed alone (3,338,240 B, 18 min): it depends on load |
+| port suite Win32 | 72 files (I18's 66 + test_gfx_info_panel, test_gfx_s3_17 / 18 / 19, test_gl_wgl, test_gl_wgl_selfcheck): 20 failed ids, all among I10's 22 known (test_fttext's 2 pass), 0 new |
+
+Reference TSVs for later runs: `log/roadmap/merges/I19/{segs,boot,equiv,app_replay}_{x64,win32}.tsv`, `segs_ft_x64.tsv`, `boot_ft_x64.tsv`,
+`census.tsv`, `census_auto.tsv`, `terrain_verdicts.tsv`, `chain_x64.tsv`, `ledger_divergences.tsv`, `win32_failed_ids.txt`.
+
+## Before wave 7 (I15, HEAD + S3 wave 6)
+
 
 This file now describes **HEAD + S3 wave 6** (S3.12: the rasteriser worker threads and fast pixel loop, the Terrain-state rebuild speed,
 the LiveTerrain log switch; `log/roadmap/S3/MERGE_w6.md`), measured by I15 in `port/build/I15` (`log/roadmap/merges/I15.md`). Every row

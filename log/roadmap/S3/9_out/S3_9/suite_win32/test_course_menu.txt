@@ -1,0 +1,29 @@
+...ssssssssssssssssssssssssF...                                          [100%]
+================================== FAILURES ===================================
+_____________________________ test_golden_digests _____________________________
+
+portlib = <port.test.lib32.Lib32 object at 0x000001CA2F0033E0>
+
+    @need_exe
+    @need_saves
+    def test_golden_digests(portlib):
+        if os.environ.get("SG_EMU_ORACLE") == "update":
+            bad = [f"{sc[0]}: {m}" for sc in SCEN for m in [compare(portlib, sc)] if m]
+            assert not bad, f"oracle RED: not pinned: {bad[:4]}"
+            E.golden_update("courseActionMenu", {"files": _files_sha(), "digests": _digests(portlib)})
+        g = E.golden_load().get("courseActionMenu")
+        if not g:
+            pytest.skip("courseActionMenu: no pinned digests (SG_EMU_ORACLE=update)")
+        if g["files"] != _files_sha():
+            pytest.skip("courseActionMenu: the install's files differ from the pinned run")
+        got = _digests(portlib)
+        bad = [k for k in got if got[k] != g["digests"].get(k)]
+>       assert not bad, f"{len(bad)} scenarios differ from the pinned digests: {bad[:6]}"
+E       AssertionError: 3 scenarios differ from the pinned digests: ['save_dialog', 'load_then_cancel', 'load_a_game']
+E       assert not ['save_dialog', 'load_then_cancel', 'load_a_game']
+
+port\test\test_course_menu.py:340: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [24] port\test\test_course_menu.py:290: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+FAILED port/test/test_course_menu.py::test_golden_digests - AssertionError: 3...
+1 failed, 6 passed, 24 skipped in 4.76s

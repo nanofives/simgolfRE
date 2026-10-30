@@ -1,0 +1,11 @@
+............................................ssssssssssssssssssssssssssss [ 52%]
+ssssssssssssssssss..................ss.............ssssssssssssss        [100%]
+=========================== short test summary info ===========================
+SKIPPED [24] port\test\test_terrain.py:404: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [4] port\test\test_terrain.py:414: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [9] port\test\test_terrain.py:820: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [9] port\test\test_terrain.py:828: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [2] port\test\test_terrain.py:1001: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [6] port\test\test_terrain.py:1147: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [8] port\test\test_terrain.py:1155: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+75 passed, 62 skipped in 220.49s (0:03:40)

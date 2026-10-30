@@ -9,6 +9,7 @@
 #include <cstring>
 
 #include "portsim/arith.h"
+#include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/terrain_render.h"
@@ -41,6 +42,77 @@ LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after
   raster_ = std::make_unique<gl::GlRaster>(800, 600);
   raster_->no_context();
   dll_.setup.b = raster_.get();
+  // roadmap S3.15 (U-1810): SG_GL_BACKEND=wgl also feeds the setup to the host's own OpenGL (gl_wgl.h); the terrain passes then
+  // draw through it (gfx_terrain.cpp). Read when the interface is made, so a run keeps one choice. Roadmap S3.20: raster / host
+  // (= wgl) / auto too.
+  const char *be = std::getenv("SG_GL_BACKEND");
+  if (be && (std::strcmp(be, "wgl") == 0 || std::strcmp(be, "host") == 0 || std::strcmp(be, "auto") == 0 || std::strcmp(be, "raster") == 0))
+    choose_renderer(be);
+}
+
+// Roadmap S3.20 (decision G13). The host's OpenGL is made like use_host_gl does (with the negative controls' sink variants), the
+// self-check draws its reference through a sink of the same variant; a refused check or a host without a 16-bit generic pixel
+// format leaves GlRaster. Controls (g_negctl_gfx_terrain): 13 the pinned hash wrong, 14 the reference pass perturbed (every texture
+// coordinate one texel off): both make "auto" fall back to GlRaster with the check's reason.
+const LiveTerrain::RendererChoice &LiveTerrain::choose_renderer(const std::string &asked) {
+  const std::string mode = asked == "host" ? "wgl" : asked;   // `host` is `wgl`'s other name
+  RendererChoice c;
+  c.mode = mode;
+  if (calls_ != 0) {
+    c.reason = "asked after the first Terrain call: the setup already went to the rasteriser alone";
+    if (host_gl()) c.backend = "wgl";
+    choice_ = c;
+    return choice_;
+  }
+  if (mode == "raster") {
+    use_host_gl(false);
+    c.reason = "GlRaster (the default renderer, decision G13)";
+  } else if (mode == "wgl") {
+    if (use_host_gl(true)) {
+      c.backend = "wgl";
+      c.reason = "the host's OpenGL asked for (no self-check)";
+    } else {
+      c.reason = "the host's OpenGL asked for, unavailable: " + host_gl_why();
+      use_host_gl(false);
+    }
+  } else {   // auto
+    if (!use_host_gl(true)) {
+      c.reason = "no host OpenGL: " + host_gl_why();
+      use_host_gl(false);
+    } else {
+      const int ctl = SG_NEGCTL(g_negctl_gfx_terrain);
+      const int variant = ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0;
+      c.check = gl::wgl_self_check(ctx_, variant, ctl == 13 ? 1 : ctl == 14 ? 2 : 0);
+      c.checked = true;
+      if (c.check.pass) {
+        c.backend = "wgl";
+        c.reason = "self-check passed: " + c.check.reason;
+      } else {
+        c.reason = "self-check failed: " + c.check.reason;
+        use_host_gl(false);
+      }
+    }
+  }
+  choice_ = c;
+  return choice_;
+}
+
+bool LiveTerrain::use_host_gl(bool on) {
+  if (!on) {
+    dll_.setup.b = raster_.get();
+    pair_.reset();
+    wgl_.reset();
+    return true;
+  }
+  if (wgl_) return wgl_->ok();
+  // negative controls 8 / 9 / 11 / 12 (gfx_terrain.cpp): a DIB with RGB565 masks / with its rows top-down / texture names not
+  // mapped / no pixel format (the fallback: the sink is not ok, the setup stays GlRaster's alone)
+  const int ctl = SG_NEGCTL(g_negctl_gfx_terrain);
+  wgl_ = std::make_unique<gl::WglSink>(800, 600, ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0);
+  if (!wgl_->ok()) return false;
+  pair_ = std::make_unique<gl::SetupPair>(raster_.get(), wgl_.get());
+  dll_.setup.b = pair_.get();
+  return true;
 }
 
 LiveTerrain::~LiveTerrain() = default;
@@ -362,7 +434,7 @@ uint32_t LiveTerrain::operator_new(uint32_t size) { return engine_->operator_new
 // Harness entries (roadmap S3.2), by sg_call: terrainLive.keepFrame(k) asks the terrain body family to copy the root surface around
 // updateTerrainRender's k-th call (from 0) into `$gfx/terrain_<k>_*.555`; terrainLive.passes / terrainLive.pixels return the passes
 // rasterised and the pixels they wrote (low dword); terrainLive.frames the updateTerrainRender calls seen. A context whose TerrainApi
-// is not a LiveTerrain throws MissingResource.
+// is not a LiveTerrain throws MissingResource. terrainLive.hostGl(on) selects the host's own OpenGL (below).
 namespace {
 LiveTerrain &need_live(Ctx &c) {
   LiveTerrain *lt = has_terrain_api(c) ? dynamic_cast<LiveTerrain *>(&terrain_api(c)) : nullptr;
@@ -376,11 +448,35 @@ void a_keep_frame(Ctx &c, const uint32_t *a, Ret &r) {
 void a_passes(Ctx &c, const uint32_t *, Ret &r) { r.set_u32(static_cast<uint32_t>(need_live(c).view().passes)); }
 void a_pixels(Ctx &c, const uint32_t *, Ret &r) { r.set_u32(static_cast<uint32_t>(need_live(c).view().pixels_drawn)); }
 void a_frames(Ctx &c, const uint32_t *, Ret &r) { r.set_u32(need_live(c).view().frames); }
+// terrainLive.hostGl(on) (roadmap S3.15): the host's own OpenGL beside the rasteriser (gl_wgl.h), chosen before the LiveTerrain's
+// first call (the GL setup must reach it from the start); returns 1 when it is in use, 0 when the host has none or it came too late
+void a_host_gl(Ctx &c, const uint32_t *a, Ret &r) {
+  LiveTerrain &lt = need_live(c);
+  r.set_u32(lt.calls() == 0 && lt.use_host_gl(a[0] != 0) && a[0] != 0 ? 1u : 0u);
+}
+// terrainLive.renderer(mode) (roadmap S3.20): 0 = GlRaster, 1 = the host's OpenGL without the check, 2 = auto (the self-check
+// decides); returns 1 when the host's OpenGL draws, and writes the choice to `$wgl/renderer.txt` (mode, backend, reason, check,
+// got, want, ms). Before the LiveTerrain's first call.
+void a_renderer(Ctx &c, const uint32_t *a, Ret &r) {
+  LiveTerrain &lt = need_live(c);
+  const LiveTerrain::RendererChoice &ch = lt.choose_renderer(a[0] == 0 ? "raster" : a[0] == 1 ? "wgl" : "auto");
+  char ms[32];
+  std::snprintf(ms, sizeof ms, "%.1f", ch.check.ms);
+  const std::string t = "mode " + ch.mode + "\nbackend " + ch.backend + "\nreason " + ch.reason + "\ncheck " +
+                        (ch.checked ? (ch.check.pass ? "pass" : "fail") : "none") + "\ngot " + ch.check.got + "\nwant " +
+                        ch.check.want + "\nms " + ms + "\n";
+  GameFiles &f = c.files();
+  auto *d = dynamic_cast<DirGameFiles *>(&f);
+  if (!d || !d->write_through()) f.write("$wgl/renderer.txt", std::vector<uint8_t>(t.begin(), t.end()));
+  r.set_u32(ch.backend == "wgl" ? 1u : 0u);
+}
 const FuncDef kFuncs[] = {
     {"terrainLive.keepFrame", "default", "int", 1, 0, a_keep_frame, nullptr},
     {"terrainLive.passes", "default", "int", 0, 0, a_passes, nullptr},
     {"terrainLive.pixels", "default", "int", 0, 0, a_pixels, nullptr},
     {"terrainLive.frames", "default", "int", 0, 0, a_frames, nullptr},
+    {"terrainLive.hostGl", "default", "int", 1, 0, a_host_gl, nullptr},
+    {"terrainLive.renderer", "default", "int", 1, 0, a_renderer, nullptr},
 };
 }  // namespace
 

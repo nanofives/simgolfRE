@@ -1,0 +1,7 @@
+[1/6] cov_a_flags FAIL=10 PASS=1 (22.1 s)
+[2/6] cov_a_keys3 FAIL=4 PASS=2 (32.2 s)
+[3/6] cov_k1_paths FAIL=3 PASS=1 (7.4 s)
+[4/6] cov_k1_river FAIL=71 PASS=1 (6.2 s)
+[5/6] cov_k1_routing FAIL=2 PASS=2 (6.7 s)
+[6/6] cov_l_bridge FAIL=12 PASS=1 (5.1 s)
+{"rows": 110, "counts": {"PASS": 8, "FAIL": 102}}

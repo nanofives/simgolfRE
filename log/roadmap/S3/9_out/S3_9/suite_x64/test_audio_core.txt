@@ -1,0 +1,24 @@
+F....................................................................... [ 26%]
+........................................................................ [ 52%]
+..ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 78%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssss               [100%]
+================================== FAILURES ===================================
+_______________________ test_soundstate_header_current ________________________
+
+    @pytest.mark.static
+    def test_soundstate_header_current():
+        _need_dll_file()
+        r = subprocess.run([sys.executable, str(ROOT / "re" / "tools" / "soundstate_gen.py"), "--check"], capture_output=True,
+                           text=True)
+>       assert r.returncode == 0, r.stdout + r.stderr
+E       AssertionError: soundstate.h is stale: rerun re/tools/soundstate_gen.py
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\maria\\AppData\\Local\\Programs\\Python\\Python312\\python.exe', 'C:\\Users\\maria\...state_gen.py', '--check'], returncode=1, stdout='soundstate.h is stale: rerun re/tools/soundstate_gen.py\n', stderr='').returncode
+
+port\test\test_audio_core.py:88: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [68] port\test\test_audio_core.py:502: SG_EMU_ORACLE=1 runs the emulator
+SKIPPED [60] port\test\test_audio_core.py:511: SG_EMU_ORACLE=1 runs the emulator
+FAILED port/test/test_audio_core.py::test_soundstate_header_current - Asserti...
+1 failed, 145 passed, 128 skipped in 112.46s (0:01:52)

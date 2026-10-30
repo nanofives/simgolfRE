@@ -1,0 +1,26 @@
+port/build/S3_18/port/src/sim/gfx_bulletin.cpp   (mirror; delivered as 18_edits.py)
+port/build/S3_18/port/src/sim/dialogs.cpp   (mirror; delivered as 18_edits.py)
+port/build/S3_18/port/test/test_gfx_s3_18.py   (mirror; delivered as 18_new/)
+log/roadmap/S3/18_assemble.py
+log/roadmap/S3/18_make_edits.py
+log/roadmap/S3/18_edits.py
+log/roadmap/S3/18_env.sh
+log/roadmap/S3/18_base/port/src/sim/gfx_bulletin.cpp
+log/roadmap/S3/18_base/port/src/sim/dialogs.cpp
+log/roadmap/S3/18_base/port/src/sim/gfx_chareditor.cpp
+log/roadmap/S3/18_base/port/src/sim/chareditor.cpp
+log/roadmap/S3/18_new/port/test/test_gfx_s3_18.py
+log/roadmap/S3/18_notes.md
+log/roadmap/S3/18_merge.md
+log/roadmap/S3/18_files.txt
+log/roadmap/S3/18_uncertain.tsv
+log/roadmap/S3/18_assemble_base.log
+log/roadmap/S3/18_build_x64.log
+log/roadmap/S3/18_test_x64.log
+log/roadmap/S3/18_test_oracle.log
+log/roadmap/S3/18_test_dialogs2_x64.log
+log/roadmap/S3/18_fg/new_cov_b_holes18.tsv
+log/roadmap/S3/18_fg/new_cov_b_holes18.log
+log/roadmap/S3/18_test_static.log
+log/roadmap/S3/18_fg/new_cov_r_bio.tsv
+log/roadmap/S3/18_fg/new_cov_r_bio.log

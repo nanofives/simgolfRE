@@ -1,0 +1,219 @@
+junction original
+junction log
+junction port/corpus
+junction tests/golden
+junction tests/fixtures
+junction re/versions
+junction tools/vc6
+junction shim/build
+junction re/replay
+junction extracted
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk base 37e58e96ddd9eb105a72a59f1902b88b1dc72a2a
+junction tools/dxsdk8
+junction tools/vc6sp5
+junction tools/vc6sp2
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\17_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk --only --no-docs --no-tick
+edit port/src/sim/routing.cpp s317 17_edits (without tick.cpp) edit 1
+edit port/src/sim/routing.cpp s317 17_edits (without tick.cpp) edit 2
+edit port/src/sim/routing.cpp s317 17_edits (without tick.cpp) edit 3
+edit port/src/sim/gfx_surface.cpp s317 17_edits (without tick.cpp) edit 4
+edit port/src/sim/gfx_surface.cpp s317 17_edits (without tick.cpp) edit 5
+edit port/src/sim/gfx_surface.cpp s317 17_edits (without tick.cpp) edit 6
+edit port/src/sim/gfx_surface.cpp s317 17_edits (without tick.cpp) edit 7
+edit port/test/test_gfx_routing.py s317 17_edits (without tick.cpp) edit 8
+edit port/test/test_gfx_routing.py s317 17_edits (without tick.cpp) edit 9
+edit port/test/test_gfx_routing.py s317 17_edits (without tick.cpp) edit 10
+new port/test/test_gfx_s3_17.py
+wrote port/src/sim/routing.cpp
+wrote port/src/sim/gfx_surface.cpp
+wrote port/test/test_gfx_routing.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
+edit port/src/sim/tick.cpp s317 tick.cpp (17_merge.md section 3) edit 1
+wrote port/src/sim/tick.cpp
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\18_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk --only --no-docs
+dialogs.cpp anchor: once on the base and once with 16_edits.py
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 1
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 2
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 3
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 4
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 5
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 6
+edit port/src/sim/dialogs.cpp s318 18_edits dialogs.cpp (after S3.16's edits) edit 1
+new port/test/test_gfx_s3_18.py
+wrote port/src/sim/gfx_bulletin.cpp
+wrote port/src/sim/dialogs.cpp
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\19_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk --only --no-docs
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 1
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 2
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 3
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 4
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 5
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 6
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 7
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 8
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 9
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 10
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 11
+edit port/src/sim/gfx.cpp s319 19_edits edit 12
+edit port/src/sim/gfx.cpp s319 19_edits edit 13
+edit port/src/sim/chareditor.cpp s319 19_edits edit 14
+edit port/src/sim/chareditor.cpp s319 19_edits edit 15
+edit port/src/sim/chareditor.cpp s319 19_edits edit 16
+edit port/src/sim/chareditor.cpp s319 19_edits edit 17
+edit port/src/sim/chareditor.cpp s319 19_edits edit 18
+edit port/src/sim/chareditor.cpp s319 19_edits edit 19
+edit port/src/sim/gfx_families.inc s319 19_edits edit 20
+new port/src/sim/gfx_editbox.cpp
+new port/test/test_gfx_s3_19.py
+wrote port/src/sim/gfx_text.cpp
+wrote port/src/sim/gfx.cpp
+wrote port/src/sim/chareditor.cpp
+wrote port/src/sim/gfx_families.inc
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\16_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk --only drawing
+edit port/src/sim/tick_leaves.inc 91 -> 387
+edit port/src/sim/tick_leaves.inc 125 -> 407
+edit port/src/sim/tick_leaves.inc 116 -> 310
+edit port/src/sim/tick_leaves.inc 70 -> 415
+edit port/src/sim/tick_leaves.inc 108 -> 371
+edit port/src/sim/shots.cpp 110 -> 191
+edit port/src/sim/shots.cpp 334 -> 1163
+edit port/src/sim/shots.cpp 77 -> 167
+edit port/src/sim/dialogs.cpp 47 -> 184
+edit port/src/sim/dialogs.cpp 134 -> 1528
+edit port/src/sim/dialogs.cpp 72 -> 113
+edit port/src/sim/dialogs.cpp 30 -> 1436
+edit port/src/sim/dialogs.cpp 92 -> 188
+edit port/src/sim/dialogs.cpp 158 -> 199
+edit port/src/sim/dialogs.cpp 17 -> 58
+edit port/src/sim/dialogs.cpp 99 -> 143
+edit port/src/sim/dialogs.cpp 115 -> 1317
+edit port/src/sim/dialogs.cpp 277 -> 784
+edit port/src/sim/dialogs.cpp 101 -> 180
+edit port/src/sim/dialogs.cpp 81 -> 489
+edit port/src/sim/dialogs.cpp 30 -> 72
+edit port/src/sim/dialogs.cpp 84 -> 209
+edit port/src/sim/dialogs.cpp 23 -> 33
+edit port/src/sim/dialogs.cpp 85 -> 155
+edit port/src/sim/dialogs.cpp 84 -> 154
+edit port/src/sim/dialogs.cpp 64 -> 83
+edit port/src/sim/dialogs.cpp 52 -> 568
+edit port/src/sim/dialogs.cpp 61 -> 112
+edit port/src/sim/dialogs.cpp 90 -> 393
+edit port/src/sim/dialogs.cpp 137 -> 245
+edit port/src/sim/dialogs.cpp 67 -> 1041
+edit port/src/sim/dialogs.cpp 164 -> 817
+edit port/src/sim/dialogs.cpp 135 -> 296
+edit port/src/sim/tick_ball.inc 224 -> 859
+edit port/src/sim/commands_panels.inc 124 -> 1012
+edit port/src/sim/commands_panels.inc 130 -> 84
+edit port/src/sim/commands_panels.inc 60 -> 53
+edit port/src/sim/commands_panels.inc 91 -> 38
+edit port/src/sim/commands_panels.inc 87 -> 45
+edit port/src/sim/commands_panels.inc 84 -> 42
+new port\test\test_gfx_info_panel.py
+applied 40 edits to C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\16_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk --only snapshot
+edit port/test/gfx.py 27 -> 37
+edit port/test/gfx.py 62 -> 726
+edit port/test/gfx.py 153 -> 294
+edit port/test/framegate.py 102 -> 283
+edit port/test/framegate.py 81 -> 350
+applied 5 edits to C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\15_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk --only-15
+edit port/src/sim/gfx_terrain.cpp s315 15_edits edit 1
+edit port/src/sim/gfx_terrain.cpp s315 15_edits edit 2
+edit port/src/sim/terrain_live.cpp s315 15_edits edit 3
+edit port/src/sim/terrain_live.cpp s315 15_edits edit 4
+edit port/src/sim/terrain_live.cpp s315 15_edits edit 5
+edit port/src/sim/terrain_live.cpp s315 15_edits edit 6
+edit port/include/portsim/sim/terrain_live.h s315 15_edits edit 7
+edit port/include/portsim/sim/terrain_live.h s315 15_edits edit 8
+edit port/include/portsim/sim/terrain_live.h s315 15_edits edit 9
+edit port/src/sim/modules.inc s315 15_edits shared edit 1
+edit port/test/framegate.py s315 15_framegate_edits edit 1
+edit port/test/framegate.py s315 15_framegate_edits edit 2
+edit port/test/framegate.py s315 15_framegate_edits edit 3
+edit port/test/framegate.py s315 15_framegate_edits edit 4
+edit port/test/framegate.py s315 15_framegate_edits edit 5
+edit port/test/framegate.py s315 15_framegate_edits edit 6
+edit port/test/framegate.py s315 15_framegate_edits edit 7
+wrote port/src/sim/gfx_terrain.cpp
+wrote port/src/sim/terrain_live.cpp
+wrote port/include/portsim/sim/terrain_live.h
+wrote port/src/sim/modules.inc
+wrote port/test/framegate.py
+new port/include/portsim/sim/gl_wgl.h
+new port/src/sim/gl_wgl.cpp
+new port/test/test_gl_wgl.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
+edit port/test/test_app_ingame.py s39 9_edits edit 1
+edit port/test/test_gfx_credits.py s39 9_edits edit 2
+wrote port/test/test_app_ingame.py
+wrote port/test/test_gfx_credits.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk
+edit port/include/portsim/sim/gl_wgl.h s320 20_edits edit 1
+edit port/include/portsim/sim/gl_wgl.h s320 20_edits edit 2
+edit port/src/sim/gl_wgl.cpp s320 20_edits edit 3
+edit port/src/sim/gl_wgl.cpp s320 20_edits edit 4
+edit port/src/sim/gl_wgl.cpp s320 20_edits edit 5
+edit port/src/sim/gl_wgl.cpp s320 20_edits edit 6
+edit port/include/portsim/sim/terrain_live.h s320 20_edits edit 7
+edit port/include/portsim/sim/terrain_live.h s320 20_edits edit 8
+edit port/src/sim/terrain_live.cpp s320 20_edits edit 9
+edit port/src/sim/terrain_live.cpp s320 20_edits edit 10
+edit port/src/sim/terrain_live.cpp s320 20_edits edit 11
+edit port/src/sim/terrain_live.cpp s320 20_edits edit 12
+edit port/src/sim/terrain_live.cpp s320 20_edits edit 13
+edit port/src/sim/gfx_terrain.cpp s320 20_edits edit 14
+edit port/src/sim/gfx_terrain.cpp s320 20_edits edit 15
+edit port/src/sim/gfx_terrain.cpp s320 20_edits edit 16
+edit port/src/sim/gfx_terrain.cpp s320 20_edits edit 17
+edit port/src/sim/gfx_terrain.cpp s320 20_edits edit 18
+edit port/app/main.cpp s320 20_edits edit 19
+edit port/app/main.cpp s320 20_edits edit 20
+edit port/app/main.cpp s320 20_edits edit 21
+edit port/app/main.cpp s320 20_edits edit 22
+edit port/app/main.cpp s320 20_edits edit 23
+edit port/app/main.cpp s320 20_edits edit 24
+edit port/app/main.cpp s320 20_edits edit 25
+edit port/app/main.cpp s320 20_edits edit 26
+edit port/test/framegate.py s320 20_edits edit 27
+edit port/test/framegate.py s320 20_edits edit 28
+edit port/test/framegate.py s320 20_edits edit 29
+edit port/test/framegate.py s320 20_edits edit 30
+edit port/test/framegate.py s320 20_edits edit 31
+edit port/test/framegate.py s320 20_edits edit 32
+edit port/test/framegate.py s320 20_edits edit 33
+edit port/test/framegate.py s320 20_edits edit 34
+edit port/test/framegate.py s320 20_edits edit 35
+edit port/test/framegate.py s320 20_edits edit 36
+edit port/test/framegate.py s320 20_edits edit 37
+edit port/test/test_gl_wgl.py s320 20_edits edit 38
+edit port/test/test_app_ingame.py s320 20_edits edit 39
+edit port/test/test_app_ingame.py s320 20_edits edit 40
+edit port/test/test_app_ingame.py s320 20_edits edit 41
+edit port/test/test_app_ingame.py s320 20_edits edit 42
+edit port/test/test_app_ingame.py s320 20_edits edit 43
+edit port/test/test_app_ingame.py s320 20_edits edit 44
+edit port/test/test_app_ingame.py s320 20_edits edit 45
+edit port/test/test_app_ingame.py s320 20_edits edit 46
+edit port/test/test_app_live.py s320 20_edits edit 47
+edit port/test/test_app_live.py s320 20_edits edit 48
+edit port/test/test_app_live.py s320 20_edits edit 49
+edit port/test/test_app_live.py s320 20_edits edit 50
+edit port/test/test_app_live.py s320 20_edits edit 51
+wrote port/include/portsim/sim/gl_wgl.h
+wrote port/src/sim/gl_wgl.cpp
+wrote port/include/portsim/sim/terrain_live.h
+wrote port/src/sim/terrain_live.cpp
+wrote port/src/sim/gfx_terrain.cpp
+wrote port/app/main.cpp
+wrote port/test/framegate.py
+wrote port/test/test_gl_wgl.py
+wrote port/test/test_app_ingame.py
+wrote port/test/test_app_live.py
+new port/src/sim/gl_wgl_ref.inc
+new port/test/test_gl_wgl_selfcheck.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20_chk

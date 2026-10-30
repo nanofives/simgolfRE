@@ -1,0 +1,20 @@
+[1/19] build_x64 rc=0 125 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\port\build\x64\Release\portsim_c.dll
+[2/19] build_w32 rc=0 114 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\port\build\Win32\Release\portsim_c.dll
+[3/19] gfx_check rc=0 1 s ::   body	drawWindow.frame	text
+[4/19] segs_x64 rc=0 380 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 379.2}
+[5/19] segs_win32 rc=0 473 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 472.5}
+[6/19] boot_x64 rc=0 576 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[7/19] boot_win32 rc=0 627 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[8/19] live_equiv_x64 rc=0 1815 s :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[9/19] live_equiv_win32 rc=0 2421 s :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[10/19] app_replay_x64 rc=0 5 s :: saveload                 PASS  records 266/266 code 0 first None (1.3 s)
+[11/19] app_replay_win32 rc=0 6 s :: saveload                 PASS  records 266/266 code 0 first None (1.7 s)
+[12/19] t_test_app_live rc=0 313 s :: 13 passed in 311.14s (0:05:11)
+[13/19] t_test_app_ingame rc=1 443 s :: 1 failed, 12 passed in 440.99s (0:07:20)
+[14/19] t_test_tick rc=0 40 s :: 81 passed, 169 deselected in 38.85s
+[15/19] ctl13 rc=0 15 s :: {"rows": 2, "counts": {"FAIL": 2}}
+[16/19] census rc=0 2080 s :: {"rows": 698, "counts": {"PASS": 111, "FAIL": 577, "NOT_RUN": 10}}
+[17/19] static rc=1 489 s :: 3 failed, 738 passed, 39 skipped, 46 deselected in 486.65s (0:08:06)
+[100/100] suite_x64 rc=0 258 s :: [100/100] test_win32 PASS 258 s (185 passed, 1120 skipped in 257.44s (0:04:17))
+[71/71] suite_win32 rc=0 74 s :: [71/71] test_gl_wgl PASS 74 s (8 passed in 73.12s (0:01:13))
+[done] gates build_x64 build_w32 gfx_check segs_x64 segs_win32 boot_x64 boot_win32 live_equiv_x64 live_equiv_win32 app_replay_x64 app_replay_win32 t_test_app_live t_test_app_ingame t_test_tick ctl13 census static suite_x64 suite_win32

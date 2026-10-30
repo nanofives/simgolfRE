@@ -131,11 +131,19 @@ def checkpoint_plan(scenario: str) -> dict:
             tgt[k] = (ordinal, value)
             k += 1
     summ = json.loads((GX.REFS / scenario / "det_b" / "summary.json").read_text())
+    # roadmap S3.9: framegate's checkpoint position (roadmap S3.16, U-1820): a checkpoint whose POLL rode on a clock call that is
+    # not a tgt call is taken at the POLL's position (SG_GFX_CHECKPOINT_AT=tgt restores status.tgt's call, as in framegate)
+    polls = {}
+    for r in tr.records:
+        if r.type == TF.POLL and r.f.get("checkpoint") and r.f["checkpoint"] not in polls:
+            polls[r.f["checkpoint"]] = r.f["pos"]
     rows = []
     for c in FG.scenario_checkpoints(scenario):
         st = summ["checkpoints"][c]["status"]
         if st["tgt"] in tgt and tgt[st["tgt"]][1] == st["T"]:
             o = tgt[st["tgt"]][0]
+            if os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll" and polls.get(c) is not None and polls[c] < o:
+                o = polls[c]
             rows.append(dict(FG.classify(tr, o), checkpoint=c, ordinal=o))
     rows.sort(key=lambda r: r["ordinal"])
     frames_pos = [r.f["pos"] for r in tr.records if r.type == TF.FRAME]
@@ -177,14 +185,15 @@ def app_live_trace(exe, scenario: str, plan: dict, extra=()) -> dict:
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-def framegate_frames(scenario: str, checkpoints: list[str]) -> tuple[list[dict], dict]:
-    """framegate's own run (sg_run_boot, gfx + LiveTerrain): its rows and its port frame per checkpoint (RGB)"""
+def framegate_frames(scenario: str, checkpoints: list[str], gl: str = "raster") -> tuple[list[dict], dict]:
+    """framegate's own run (sg_run_boot, gfx + LiveTerrain with the terrain renderer `gl`, roadmap S3.20): its rows and its port
+    frame per checkpoint (RGB)"""
     from PIL import Image
 
     from port.test import framegate as FG
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="s7_5_fg_"))
     try:
-        rows = FG.run_scenario(scenario, checkpoints, lib=_lib(), images=tmp, probe=False)
+        rows = FG.run_scenario(scenario, checkpoints, lib=_lib(), images=tmp, probe=False, gl=gl)
         imgs = {}
         for c in checkpoints:
             p = tmp / f"{scenario}.{c}.port.png"
@@ -194,16 +203,17 @@ def framegate_frames(scenario: str, checkpoints: list[str]) -> tuple[list[dict],
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-def judge_live_trace(exe, scenario: str, extra=()) -> list[dict]:
+def judge_live_trace(exe, scenario: str, extra=(), gl: str = "raster") -> list[dict]:
     """per in-game checkpoint: the app path's verdict against the original (framegate's regions), its pixels against
-    framegate's own frame, and the present that showed it"""
+    framegate's own frame, and the present that showed it. gl (roadmap S3.20): the terrain renderer of both sides (the app's
+    --gl and framegate's)"""
     from port.test import framegate as FG
     from port.test import gfx as GX
     lib = _lib()
     plan = checkpoint_plan(scenario)
-    app = app_live_trace(exe, scenario, plan, extra)
+    app = app_live_trace(exe, scenario, plan, list(extra) + ([] if gl == "raster" else ["--gl", gl]))
     glog = FG.parse_gfx_log(app["gfx_log"])
-    fg_rows, fg_imgs = framegate_frames(scenario, [r["checkpoint"] for r in plan["rows"]])
+    fg_rows, fg_imgs = framegate_frames(scenario, [r["checkpoint"] for r in plan["rows"]], gl)
     fg_by = {r["checkpoint"]: r for r in fg_rows}
     out = []
     for k, row in enumerate(plan["rows"]):
@@ -335,6 +345,11 @@ def replay(s: Session, positions: list[int], terrain: bool = True) -> dict:
                 st.call("gfx.snapshotAt", [p])
             if terrain:
                 assert TL.live_attach(lib, st, 0) == 0
+                # roadmap S3.20 (decision G13): the renderer the session's app chose (terrain_renderer.json; a --terrain headless
+                # session writes none: GlRaster)
+                rp = s.rec / "terrain_renderer.json"
+                mode = 1 if rp.exists() and json.loads(rp.read_text())["backend"] == "wgl" else 0
+                assert st.call("terrainLive.renderer", [mode]).eax == mode
             code, n, ts, hs = st.run_boot(trace, nrec + 1)
             for k in range(len(chunk)):
                 raw = st.files_read(f"$gfx/snapshot_{k}.555")
@@ -522,6 +537,19 @@ def test_app_path_equals_framegate_and_its_present(judged):
            if r["status"] == "NO_SNAPSHOT" or r["px_vs_framegate"] != 0 or not r["shown_by_present"]]
     assert not bad, bad
     assert sum(1 for r in judged if r["kind"] == "ingame") >= 20
+
+
+def test_app_gl_auto_end_to_end(exe):
+    """roadmap S3.20 (decision G13, final: GlRaster default, the host's OpenGL opt-in): the opt-in path in the app itself. `--gl
+    auto` (the startup self-check, then the host's OpenGL) on the app's live path equals framegate's `--gl auto` frame in every pixel
+    at every sandbox_basic checkpoint, and is the host GL's: every in-game frame equals the original's (0 px), where GlRaster keeps
+    its one-level residual (U-1392: sandbox_00's 125 px)"""
+    rows = judge_live_trace(exe, "sandbox_basic", gl="auto")
+    bad = [(r["checkpoint"], r.get("status"), r.get("px_vs_framegate")) for r in rows
+           if r.get("status") == "NO_SNAPSHOT" or r.get("px_vs_framegate") != 0]
+    assert rows and not bad, bad
+    ingame = [r for r in rows if r["kind"] == "ingame"]
+    assert ingame and all(r["status"] == "PASS" for r in ingame), [(r["checkpoint"], r["app_px"]) for r in ingame]
 
 
 # ------------------------------------------------------------------------------------------------ controls (RED)

@@ -1,0 +1,50 @@
+sss......FF..                                                            [100%]
+================================== FAILURES ===================================
+_____ test_segment_passes_with_every_clock_record_served[championship/02] _____
+
+portlib = <port.test.lib32.Lib32 object at 0x000001ABD7E52B70>
+seg = 'championship/02'
+
+    @need_exe
+    @need_segments
+    @pytest.mark.parametrize("seg", SEGMENTS)
+    def test_segment_passes_with_every_clock_record_served(portlib, seg):
+        """the segment PASSes, and the port took exactly the trace's clock records at the screen's five sites, in order,
+        none missing and no dispatch delivered after a later clock read"""
+        from port.test import segments as S
+        r = S.SegmentRunner(portlib).run(S.load_segment(S.SEG_DIR / seg))
+        assert r.status == "PASS", f"{seg}: {r.status} {r.frames_run}/{r.frames_expected} {r.detail} | {r.run_detail}"
+        n = _trace_reads(seg)
+>       assert f"clock queries {n} served, 0 none left, 0 dispatches late" in r.run_detail, (n, r.run_detail)
+E       AssertionError: (457, '')
+E       assert 'clock queries 457 served, 0 none left, 0 dispatches late' in ''
+E        +  where '' = SegmentResult(name='championship/02', status='PASS', detail='', frames_expected=394, frames_run=394, first_divergence=None, noncausal='', run_detail='').run_detail
+
+port\test\test_holestats.py:409: AssertionError
+_____ test_segment_passes_with_every_clock_record_served[cov_a_keys2/02] ______
+
+portlib = <port.test.lib32.Lib32 object at 0x000001ABD7E52B70>
+seg = 'cov_a_keys2/02'
+
+    @need_exe
+    @need_segments
+    @pytest.mark.parametrize("seg", SEGMENTS)
+    def test_segment_passes_with_every_clock_record_served(portlib, seg):
+        """the segment PASSes, and the port took exactly the trace's clock records at the screen's five sites, in order,
+        none missing and no dispatch delivered after a later clock read"""
+        from port.test import segments as S
+        r = S.SegmentRunner(portlib).run(S.load_segment(S.SEG_DIR / seg))
+        assert r.status == "PASS", f"{seg}: {r.status} {r.frames_run}/{r.frames_expected} {r.detail} | {r.run_detail}"
+        n = _trace_reads(seg)
+>       assert f"clock queries {n} served, 0 none left, 0 dispatches late" in r.run_detail, (n, r.run_detail)
+E       AssertionError: (385, '')
+E       assert 'clock queries 385 served, 0 none left, 0 dispatches late' in ''
+E        +  where '' = SegmentResult(name='cov_a_keys2/02', status='PASS', detail='', frames_expected=254, frames_run=254, first_divergence=None, noncausal='', run_detail='').run_detail
+
+port\test\test_holestats.py:409: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [2] port\test\test_holestats.py:250: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_holestats.py:263: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+FAILED port/test/test_holestats.py::test_segment_passes_with_every_clock_record_served[championship/02]
+FAILED port/test/test_holestats.py::test_segment_passes_with_every_clock_record_served[cov_a_keys2/02]
+2 failed, 8 passed, 3 skipped in 11.74s

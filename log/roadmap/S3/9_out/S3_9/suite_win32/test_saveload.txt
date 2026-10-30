@@ -1,0 +1,297 @@
+.....FFFFFsssssssssssssssssssssssssssssssF..............ssssss.          [100%]
+================================== FAILURES ===================================
+_____ test_save_writes_the_loaded_body_back_byte_for_byte[&AutoSave1.sve] _____
+
+portlib = <port.test.lib32.Lib32 object at 0x000002341E2E0D10>
+name = '&AutoSave1.sve'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo0')
+
+    @need_exe
+    @need_saves
+    @pytest.mark.parametrize("name", sorted(real_saves()))
+    def test_save_writes_the_loaded_body_back_byte_for_byte(portlib, name, tmp_path):
+        """load a real save, restore its flag word, save it: the body of the new file equals the old one's"""
+        root = tmp_path / "install"
+        for k, v in real_saves().items():
+            (root / "Saved Games").mkdir(parents=True, exist_ok=True)
+            (root / "Saved Games" / k).write_bytes(v)
+        raw = real_saves()[name]
+        _, flags, end = expected_ranges(raw)
+        img = bytearray(base_image(portlib))
+        eax, loaded, code, _ = port_run(portlib, "loadGame", [BLOCK_VA, 0, 0, 0], bytes(img), E.Files(), root=root,
+                                        text_at=name_block(name))
+        assert code == 0
+        img2 = bytearray(loaded)
+        put(portlib, img2, "g_flags", struct.pack("<I", flags))
+        eax, _, code, _ = port_run(portlib, "saveGame", [BLOCK_VA], bytes(img2), E.Files(), root=root,
+                                   text_at=name_block("roundtrip"))
+        assert code == 0 and eax == 0
+>       new = (root / "Saved Games" / "roundtrip.sve").read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_saveload.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo0/install/Saved Games/roundtrip.sve')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\maria\\AppData\\Local\\Temp\\pytest-of-maria\\pytest-1110\\test_save_writes_the_loaded_bo0\\install\\Saved Games\\roundtrip.sve'
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1013: FileNotFoundError
+_____ test_save_writes_the_loaded_body_back_byte_for_byte[&AutoSave2.sve] _____
+
+portlib = <port.test.lib32.Lib32 object at 0x000002341E2E0D10>
+name = '&AutoSave2.sve'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo1')
+
+    @need_exe
+    @need_saves
+    @pytest.mark.parametrize("name", sorted(real_saves()))
+    def test_save_writes_the_loaded_body_back_byte_for_byte(portlib, name, tmp_path):
+        """load a real save, restore its flag word, save it: the body of the new file equals the old one's"""
+        root = tmp_path / "install"
+        for k, v in real_saves().items():
+            (root / "Saved Games").mkdir(parents=True, exist_ok=True)
+            (root / "Saved Games" / k).write_bytes(v)
+        raw = real_saves()[name]
+        _, flags, end = expected_ranges(raw)
+        img = bytearray(base_image(portlib))
+        eax, loaded, code, _ = port_run(portlib, "loadGame", [BLOCK_VA, 0, 0, 0], bytes(img), E.Files(), root=root,
+                                        text_at=name_block(name))
+        assert code == 0
+        img2 = bytearray(loaded)
+        put(portlib, img2, "g_flags", struct.pack("<I", flags))
+        eax, _, code, _ = port_run(portlib, "saveGame", [BLOCK_VA], bytes(img2), E.Files(), root=root,
+                                   text_at=name_block("roundtrip"))
+        assert code == 0 and eax == 0
+>       new = (root / "Saved Games" / "roundtrip.sve").read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_saveload.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo1/install/Saved Games/roundtrip.sve')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\maria\\AppData\\Local\\Temp\\pytest-of-maria\\pytest-1110\\test_save_writes_the_loaded_bo1\\install\\Saved Games\\roundtrip.sve'
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1013: FileNotFoundError
+_______ test_save_writes_the_loaded_body_back_byte_for_byte[mood5.sve] ________
+
+portlib = <port.test.lib32.Lib32 object at 0x000002341E2E0D10>
+name = 'mood5.sve'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo2')
+
+    @need_exe
+    @need_saves
+    @pytest.mark.parametrize("name", sorted(real_saves()))
+    def test_save_writes_the_loaded_body_back_byte_for_byte(portlib, name, tmp_path):
+        """load a real save, restore its flag word, save it: the body of the new file equals the old one's"""
+        root = tmp_path / "install"
+        for k, v in real_saves().items():
+            (root / "Saved Games").mkdir(parents=True, exist_ok=True)
+            (root / "Saved Games" / k).write_bytes(v)
+        raw = real_saves()[name]
+        _, flags, end = expected_ranges(raw)
+        img = bytearray(base_image(portlib))
+        eax, loaded, code, _ = port_run(portlib, "loadGame", [BLOCK_VA, 0, 0, 0], bytes(img), E.Files(), root=root,
+                                        text_at=name_block(name))
+        assert code == 0
+        img2 = bytearray(loaded)
+        put(portlib, img2, "g_flags", struct.pack("<I", flags))
+        eax, _, code, _ = port_run(portlib, "saveGame", [BLOCK_VA], bytes(img2), E.Files(), root=root,
+                                   text_at=name_block("roundtrip"))
+        assert code == 0 and eax == 0
+>       new = (root / "Saved Games" / "roundtrip.sve").read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_saveload.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo2/install/Saved Games/roundtrip.sve')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\maria\\AppData\\Local\\Temp\\pytest-of-maria\\pytest-1110\\test_save_writes_the_loaded_bo2\\install\\Saved Games\\roundtrip.sve'
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1013: FileNotFoundError
+______ test_save_writes_the_loaded_body_back_byte_for_byte[stories5.sve] ______
+
+portlib = <port.test.lib32.Lib32 object at 0x000002341E2E0D10>
+name = 'stories5.sve'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo3')
+
+    @need_exe
+    @need_saves
+    @pytest.mark.parametrize("name", sorted(real_saves()))
+    def test_save_writes_the_loaded_body_back_byte_for_byte(portlib, name, tmp_path):
+        """load a real save, restore its flag word, save it: the body of the new file equals the old one's"""
+        root = tmp_path / "install"
+        for k, v in real_saves().items():
+            (root / "Saved Games").mkdir(parents=True, exist_ok=True)
+            (root / "Saved Games" / k).write_bytes(v)
+        raw = real_saves()[name]
+        _, flags, end = expected_ranges(raw)
+        img = bytearray(base_image(portlib))
+        eax, loaded, code, _ = port_run(portlib, "loadGame", [BLOCK_VA, 0, 0, 0], bytes(img), E.Files(), root=root,
+                                        text_at=name_block(name))
+        assert code == 0
+        img2 = bytearray(loaded)
+        put(portlib, img2, "g_flags", struct.pack("<I", flags))
+        eax, _, code, _ = port_run(portlib, "saveGame", [BLOCK_VA], bytes(img2), E.Files(), root=root,
+                                   text_at=name_block("roundtrip"))
+        assert code == 0 and eax == 0
+>       new = (root / "Saved Games" / "roundtrip.sve").read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_saveload.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo3/install/Saved Games/roundtrip.sve')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\maria\\AppData\\Local\\Temp\\pytest-of-maria\\pytest-1110\\test_save_writes_the_loaded_bo3\\install\\Saved Games\\roundtrip.sve'
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1013: FileNotFoundError
+______ test_save_writes_the_loaded_body_back_byte_for_byte[stories9.sve] ______
+
+portlib = <port.test.lib32.Lib32 object at 0x000002341E2E0D10>
+name = 'stories9.sve'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo4')
+
+    @need_exe
+    @need_saves
+    @pytest.mark.parametrize("name", sorted(real_saves()))
+    def test_save_writes_the_loaded_body_back_byte_for_byte(portlib, name, tmp_path):
+        """load a real save, restore its flag word, save it: the body of the new file equals the old one's"""
+        root = tmp_path / "install"
+        for k, v in real_saves().items():
+            (root / "Saved Games").mkdir(parents=True, exist_ok=True)
+            (root / "Saved Games" / k).write_bytes(v)
+        raw = real_saves()[name]
+        _, flags, end = expected_ranges(raw)
+        img = bytearray(base_image(portlib))
+        eax, loaded, code, _ = port_run(portlib, "loadGame", [BLOCK_VA, 0, 0, 0], bytes(img), E.Files(), root=root,
+                                        text_at=name_block(name))
+        assert code == 0
+        img2 = bytearray(loaded)
+        put(portlib, img2, "g_flags", struct.pack("<I", flags))
+        eax, _, code, _ = port_run(portlib, "saveGame", [BLOCK_VA], bytes(img2), E.Files(), root=root,
+                                   text_at=name_block("roundtrip"))
+        assert code == 0 and eax == 0
+>       new = (root / "Saved Games" / "roundtrip.sve").read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_saveload.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1110/test_save_writes_the_loaded_bo4/install/Saved Games/roundtrip.sve')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\maria\\AppData\\Local\\Temp\\pytest-of-maria\\pytest-1110\\test_save_writes_the_loaded_bo4\\install\\Saved Games\\roundtrip.sve'
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1013: FileNotFoundError
+_____________________________ test_golden_digests _____________________________
+
+portlib = <port.test.lib32.Lib32 object at 0x000002341E2E0D10>
+
+    @need_exe
+    @need_saves
+    def test_golden_digests(portlib):
+        """the port reproduces the pinned results of the emulated original; SG_EMU_ORACLE=update checks every case against the
+        oracle first, then pins"""
+        if os.environ.get("SG_EMU_ORACLE") == "update":
+            bad = [f"{c[0]}: {m}" for c in CASES for m in [compare(portlib, c)] if m]
+            assert not bad, f"oracle RED: not pinned: {bad[:4]}"
+            E.golden_update("saveload", {"files": _files_sha(), "digests": _digests(portlib)})
+        g = E.golden_load().get("saveload")
+        if not g:
+            pytest.skip("saveload: no pinned digests (SG_EMU_ORACLE=update)")
+        if g["files"] != _files_sha():
+            pytest.skip("saveload: the install's saved games differ from the pinned run")
+        got = _digests(portlib)
+        bad = [k for k in got if got[k] != g["digests"].get(k)]
+>       assert not bad, f"{len(bad)} cases differ from the pinned digests: {bad[:6]}"
+E       AssertionError: 12 cases differ from the pinned digests: ['save_date0', 'save_date1', 'save_date2', 'save_date3', 'save_date4', 'save_date5']
+E       assert not ['save_date0', 'save_date1', 'save_date2', 'save_date3', 'save_date4', 'save_date5', ...]
+
+port\test\test_saveload.py:396: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [31] port\test\test_saveload.py:341: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [6] port\test\test_saveload.py:457: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+FAILED port/test/test_saveload.py::test_save_writes_the_loaded_body_back_byte_for_byte[&AutoSave1.sve]
+FAILED port/test/test_saveload.py::test_save_writes_the_loaded_body_back_byte_for_byte[&AutoSave2.sve]
+FAILED port/test/test_saveload.py::test_save_writes_the_loaded_body_back_byte_for_byte[mood5.sve]
+FAILED port/test/test_saveload.py::test_save_writes_the_loaded_body_back_byte_for_byte[stories5.sve]
+FAILED port/test/test_saveload.py::test_save_writes_the_loaded_body_back_byte_for_byte[stories9.sve]
+FAILED port/test/test_saveload.py::test_golden_digests - AssertionError: 12 c...
+6 failed, 20 passed, 37 skipped in 14.05s

@@ -1,0 +1,6 @@
+.......................ssssssssss                                        [100%]
+=========================== short test summary info ===========================
+SKIPPED [5] port\test\test_gfx_s3_18.py:507: emulator oracle: SG_EMU_ORACLE=1
+SKIPPED [4] port\test\test_gfx_s3_18.py:533: emulator oracle: SG_EMU_ORACLE=1
+SKIPPED [1] port\test\test_gfx_s3_18.py:569: emulator oracle: SG_EMU_ORACLE=1
+23 passed, 10 skipped in 9.96s

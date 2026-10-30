@@ -1,0 +1,822 @@
+--- a/port/include/portsim/sim/gl_wgl.h
++++ b/port/include/portsim/sim/gl_wgl.h
+@@ -30,7 +30,20 @@
+ class Ctx;
+ namespace gl {
+ 
+-class WglSink : public GlSink {
++// What the terrain pass needs of a host-OpenGL sink besides the GL calls (roadmap S3.20: the single-context WglSink and the banded
++// WglBands, a measurement of the band option, implement it)
++class HostGl : public GlSink {
++ public:
++  virtual bool ok() const = 0;
++  virtual const std::string &why() const = 0;
++  virtual bool has_context() const = 0;
++  virtual void set_pixels(const std::vector<uint16_t> &px) = 0;
++  virtual void get_pixels(std::vector<uint16_t> &px) = 0;
++  virtual void set_arrays(const float *vertices, const float *normals) = 0;
++  virtual bool gen_textures_mapped(int32_t n, const uint32_t *names) = 0;
++};
++
++class WglSink : public HostGl {
+  public:
+   // variant: 0 = the original's DIB; the negative controls of gfx_terrain.cpp make a wrong one (1 = RGB565 masks, 2 = rows top-down,
+   // 3 = the port's texture names bound unmapped, 4 = no pixel format chosen: the sink is not ok(), as on a host without one)
+@@ -40,18 +53,24 @@
+   WglSink &operator=(const WglSink &) = delete;
+ 
+   // false when the host has no opengl32 / no generic pixel format (the reason in why())
+-  bool ok() const;
+-  const std::string &why() const;
+-  bool has_context() const;
++  bool ok() const override;
++  const std::string &why() const override;
++  bool has_context() const override;
+   int width() const { return w_; }
+   int height() const { return h_; }
+ 
+   // the DIB's pixels (RGB555, memory order) in and out around a pass; get_pixels finishes the GL work first (glFinish + GdiFlush)
+-  void set_pixels(const std::vector<uint16_t> &px);
+-  void get_pixels(std::vector<uint16_t> &px);
+-  void set_arrays(const float *vertices, const float *normals);
++  void set_pixels(const std::vector<uint16_t> &px) override;
++  void get_pixels(std::vector<uint16_t> &px) override;
++  void set_arrays(const float *vertices, const float *normals) override;
+   // gen_textures with the port's names already chosen: asks the implementation for n names and maps names[i] to them
+-  bool gen_textures_mapped(int32_t n, const uint32_t *names);
++  bool gen_textures_mapped(int32_t n, const uint32_t *names) override;
++  // roadmap S3.20 band measurement: limit drawing to memory rows [y0, y1) (glScissor + GL_SCISSOR_TEST; memory row = window y)
++  void scissor_band(int y0, int y1);
++  // the DIB's rows [y0, y1) (glFinish + GdiFlush first) into px at the same rows
++  void get_rows(std::vector<uint16_t> &px, int y0, int y1);
++  // px's rows [y0, y1) into the DIB's same rows
++  void set_rows(const std::vector<uint16_t> &px, int y0, int y1);
+ 
+   void load_identity() override;
+   void push_matrix() override;
+@@ -100,11 +119,78 @@
+   int w_, h_;
+ };
+ 
+-// One sink for the GL setup that feeds two (LiveTerrain's GlRaster and a WglSink): every call goes to both, glGenTextures takes the
++// Roadmap S3.20, measurement of the band option: N WglSinks, each on its own worker thread with its own DIB and context, each limited
++// to one horizontal band of rows by glScissor. Calls outside a pass (the setup, setZoomLevel, the texture reloads) go to every worker
++// in order. A pass (set_pixels .. get_pixels) is recorded; get_pixels hands it to every worker, which replays the state calls and only
++// the glBegin .. glEnd blocks whose window bounding box (the tracked projection and modelview, the viewport) comes within kMargin rows
++// of its band, with the current normal and texture coordinate each kept block started with; then the bands are composed. A recorded
++// pass whose vertex arrays are not 3 tight floats keeps every block in every band.
++class WglBands : public HostGl {
++ public:
++  static constexpr double kMargin = 3.0;
++  WglBands(int width, int height, int bands, int variant = 0);
++  ~WglBands() override;
++  WglBands(const WglBands &) = delete;
++  WglBands &operator=(const WglBands &) = delete;
++  bool ok() const override;
++  const std::string &why() const override;
++  bool has_context() const override;
++  void set_pixels(const std::vector<uint16_t> &px) override;
++  void get_pixels(std::vector<uint16_t> &px) override;
++  void set_arrays(const float *vertices, const float *normals) override;
++  bool gen_textures_mapped(int32_t n, const uint32_t *names) override;
++
++  void load_identity() override;
++  void push_matrix() override;
++  void pop_matrix() override;
++  void rotated(double angle, double x, double y, double z) override;
++  void rotatef(float angle, float x, float y, float z) override;
++  void translatef(float x, float y, float z) override;
++  void bind_texture(uint32_t target, uint32_t id) override;
++  void begin(uint32_t mode) override;
++  void end() override;
++  void tex_coord2fv(const float *v) override;
++  void tex_coord2f(float s, float t) override;
++  void array_element(int32_t i) override;
++  void normal3fv(const float *v) override;
++  void vertex3fv(const float *v) override;
++  void vertex3f(float x, float y, float z) override;
++  void enable(uint32_t cap) override;
++  void disable(uint32_t cap) override;
++  void blend_func(uint32_t src, uint32_t dst) override;
++  void flush() override;
++  void context_create() override;
++  void hint(uint32_t target, uint32_t mode) override;
++  void enable_client_state(uint32_t array) override;
++  void front_face(uint32_t mode) override;
++  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override;
++  void matrix_mode(uint32_t mode) override;
++  void ortho(double l, double r, double b, double t, double n, double f) override;
++  void light(uint32_t light, uint32_t pname, const float *v4) override;
++  void material(uint32_t face, uint32_t pname, const float *v4) override;
++  void material_shininess(uint32_t face, int32_t s) override;
++  bool gen_textures(int32_t n, uint32_t *names) override;
++  void delete_textures(int32_t n, const uint32_t *names) override;
++  void tex_parameteri(uint32_t target, uint32_t pname, int32_t v) override;
++  void tex_parameterf(uint32_t target, uint32_t pname, float v) override;
++  void tex_envi(uint32_t target, uint32_t pname, int32_t v) override;
++  void tex_image2d(uint32_t target, int32_t level, int32_t internal, int32_t w, int32_t h, int32_t border, uint32_t format,
++                   uint32_t type, const uint8_t *data) override;
++  void vertex_pointer(int32_t size, uint32_t type, int32_t stride) override;
++  void normal_pointer(uint32_t type, int32_t stride) override;
++
++  int64_t blocks_recorded = 0, blocks_drawn = 0;   // over all passes: blocks recorded once, blocks drawn summed over the bands
++
++ private:
++  struct Impl;
++  std::unique_ptr<Impl> p_;
++};
++
++// One sink for the GL setup that feeds two (LiveTerrain's GlRaster and a host-GL sink): every call goes to both, glGenTextures takes the
+ // first's names and maps them in the second.
+ class SetupPair : public GlSink {
+  public:
+-  SetupPair(GlSink *a, WglSink *b) : a_(a), b_(b) {}
++  SetupPair(GlSink *a, HostGl *b) : a_(a), b_(b) {}
+   void load_identity() override { a_->load_identity(); b_->load_identity(); }
+   void push_matrix() override { a_->push_matrix(); b_->push_matrix(); }
+   void pop_matrix() override { a_->pop_matrix(); b_->pop_matrix(); }
+@@ -156,7 +242,7 @@
+ 
+  private:
+   GlSink *a_;
+-  WglSink *b_;
++  HostGl *b_;
+ };
+ 
+ // The startup self-check (roadmap S3.20, decision G13: on Windows the host's OpenGL is the default terrain renderer, GlRaster the
+@@ -176,7 +262,7 @@
+ };
+ // variant: the WglSink variant (as LiveTerrain makes it for the negative controls 8 / 9 / 11 / 12); perturb (negative controls of
+ // the check itself): 1 = the pinned hash with one hex digit changed, 2 = the reference pass with every texture coordinate moved by one texel
+-SelfCheck wgl_self_check(Ctx &ctx, int variant = 0, int perturb = 0);
++SelfCheck wgl_self_check(Ctx &ctx, int variant = 0, int perturb = 0, int bands = 0);   // bands > 0: through WglBands (S3.20 measurement)
+ // The same reference pass through the portable rasteriser (tests: the check's sensitivity to the U-1392 residual)
+ SelfCheck raster_self_check(Ctx &ctx);
+ // SHA-256 of a byte string, lower-case hex (FIPS 180-4)
+--- a/port/src/sim/gl_wgl.cpp
++++ b/port/src/sim/gl_wgl.cpp
+@@ -5,7 +5,16 @@
+ #endif
+ #include "portsim/sim/gl_wgl.h"
+ 
++#include <algorithm>
++#include <array>
++#include <atomic>
+ #include <chrono>
++#include <cmath>
++#include <condition_variable>
++#include <deque>
++#include <functional>
++#include <mutex>
++#include <thread>
+ #include <cstdio>
+ #include <cstring>
+ #include <set>
+@@ -61,6 +70,7 @@
+   void(WINAPI *EnableClientState)(uint32_t) = nullptr;
+   void(WINAPI *FrontFace)(uint32_t) = nullptr;
+   void(WINAPI *Viewport)(int32_t, int32_t, int32_t, int32_t) = nullptr;
++  void(WINAPI *Scissor)(int32_t, int32_t, int32_t, int32_t) = nullptr;
+   void(WINAPI *MatrixMode)(uint32_t) = nullptr;
+   void(WINAPI *Ortho)(double, double, double, double, double, double) = nullptr;
+   void(WINAPI *Lightfv)(uint32_t, uint32_t, const float *) = nullptr;
+@@ -96,7 +106,7 @@
+               get(TexCoord2f, "glTexCoord2f") & get(ArrayElement, "glArrayElement") & get(Normal3fv, "glNormal3fv") &
+               get(Vertex3fv, "glVertex3fv") & get(Vertex3f, "glVertex3f") & get(Enable, "glEnable") & get(Disable, "glDisable") &
+               get(BlendFunc, "glBlendFunc") & get(Flush, "glFlush") & get(Finish, "glFinish") & get(Hint, "glHint") &
+-              get(EnableClientState, "glEnableClientState") & get(FrontFace, "glFrontFace") & get(Viewport, "glViewport") &
++              get(EnableClientState, "glEnableClientState") & get(FrontFace, "glFrontFace") & get(Viewport, "glViewport") & get(Scissor, "glScissor") &
+               get(MatrixMode, "glMatrixMode") & get(Ortho, "glOrtho") & get(Lightfv, "glLightfv") & get(Materialfv, "glMaterialfv") &
+               get(Materiali, "glMateriali") & get(GenTextures, "glGenTextures") & get(DeleteTextures, "glDeleteTextures") &
+               get(TexParameteri, "glTexParameteri") & get(TexParameterf, "glTexParameterf") & get(TexEnvi, "glTexEnvi") &
+@@ -209,6 +219,27 @@
+   px.assign(p_->bits, p_->bits + static_cast<size_t>(w_) * static_cast<size_t>(h_));
+ }
+ 
++void WglSink::scissor_band(int y0, int y1) {
++  if (!p_->cur()) return;
++  p_->gl.Scissor(0, y0, w_, y1 - y0);
++  p_->gl.Enable(0x0C11);   // GL_SCISSOR_TEST
++}
++
++void WglSink::get_rows(std::vector<uint16_t> &px, int y0, int y1) {
++  if (!p_->bits || px.size() != static_cast<size_t>(w_) * static_cast<size_t>(h_)) return;
++  if (p_->cur()) p_->gl.Finish();
++  GdiFlush();
++  const size_t a = static_cast<size_t>(y0) * static_cast<size_t>(w_), b = static_cast<size_t>(y1) * static_cast<size_t>(w_);
++  std::memcpy(px.data() + a, p_->bits + a, (b - a) * 2);
++}
++
++void WglSink::set_rows(const std::vector<uint16_t> &px, int y0, int y1) {
++  if (!p_->bits || px.size() != static_cast<size_t>(w_) * static_cast<size_t>(h_)) return;
++  GdiFlush();
++  const size_t a = static_cast<size_t>(y0) * static_cast<size_t>(w_), b = static_cast<size_t>(y1) * static_cast<size_t>(w_);
++  std::memcpy(p_->bits + a, px.data() + a, (b - a) * 2);
++}
++
+ void WglSink::set_arrays(const float *vertices, const float *normals) {
+   Impl &p = *p_;
+   p.verts = vertices;
+@@ -333,6 +364,9 @@
+ void WglSink::set_pixels(const std::vector<uint16_t> &) {}
+ void WglSink::get_pixels(std::vector<uint16_t> &) {}
+ void WglSink::set_arrays(const float *, const float *) {}
++void WglSink::scissor_band(int, int) {}
++void WglSink::get_rows(std::vector<uint16_t> &, int, int) {}
++void WglSink::set_rows(const std::vector<uint16_t> &, int, int) {}
+ bool WglSink::gen_textures_mapped(int32_t, const uint32_t *) { return false; }
+ void WglSink::load_identity() {}
+ void WglSink::push_matrix() {}
+@@ -374,6 +408,8 @@
+ 
+ #endif
+ 
++#include "gl_wgl_bands.inc"
++
+ // ------------------------------------------------------------------------------------------------ the startup self-check (S3.20)
+ 
+ std::string sha256_hex(const uint8_t *data, size_t n) {
+@@ -583,10 +619,13 @@
+ 
+ }  // namespace
+ 
+-SelfCheck wgl_self_check(Ctx &ctx, int variant, int perturb) {
++SelfCheck wgl_self_check(Ctx &ctx, int variant, int perturb, int bands) {
+   SelfCheck s;
+   const auto t0 = std::chrono::steady_clock::now();
+-  WglSink w(800, 600, variant);
++  std::unique_ptr<HostGl> hw;
++  if (bands > 0) hw = std::make_unique<WglBands>(800, 600, bands, variant);
++  else hw = std::make_unique<WglSink>(800, 600, variant);
++  HostGl &w = *hw;
+   if (!w.ok()) {
+     s.reason = "no host OpenGL: " + w.why();
+   } else {
+--- a/port/include/portsim/sim/terrain_live.h
++++ b/port/include/portsim/sim/terrain_live.h
+@@ -109,7 +109,7 @@
+   // roadmap S3.15 (U-1810): the host's own OpenGL beside the rasteriser (gl_wgl.h), made before the setup's first call (the
+   // constructor reads SG_GL_BACKEND=wgl; true = in use). host_gl() is null when it is not in use or the host has none.
+   bool use_host_gl(bool on);
+-  gl::WglSink *host_gl() { return wgl_ && wgl_->ok() && wgl_->has_context() ? wgl_.get() : nullptr; }
++  gl::HostGl *host_gl() { return wgl_ && wgl_->ok() && wgl_->has_context() ? wgl_.get() : nullptr; }
+   const std::string host_gl_why() const { return wgl_ ? wgl_->why() : std::string("not selected"); }
+   // roadmap S3.20 (decision G13): the terrain renderer of this LiveTerrain, chosen before its first call. mode "raster" = GlRaster;
+   // "wgl" = the host's OpenGL without the check (S3.15's opt-in); "auto" = the host's OpenGL when it exists and the startup
+@@ -157,7 +157,8 @@
+   bool keep_log_ = true;
+   uint64_t calls_ = 0;
+   std::unique_ptr<gl::GlRaster> raster_;
+-  std::unique_ptr<gl::WglSink> wgl_;
++  std::unique_ptr<gl::HostGl> wgl_;
++  int bands_ = 0;   // roadmap S3.20 band measurement: > 0 = WglBands with this many bands (choose_renderer "wglband", SG_GL_BANDS)
+   std::unique_ptr<gl::SetupPair> pair_;
+   RendererChoice choice_;
+   LiveTerrainView view_;
+--- a/port/src/sim/terrain_live.cpp
++++ b/port/src/sim/terrain_live.cpp
+@@ -45,7 +45,9 @@
+   // roadmap S3.15 (U-1810): SG_GL_BACKEND=wgl also feeds the setup to the host's own OpenGL (gl_wgl.h); the terrain passes then
+   // draw through it (gfx_terrain.cpp). Read when the interface is made, so a run keeps one choice. Roadmap S3.20: raster / auto too.
+   const char *be = std::getenv("SG_GL_BACKEND");
+-  if (be && (std::strcmp(be, "wgl") == 0 || std::strcmp(be, "auto") == 0 || std::strcmp(be, "raster") == 0)) choose_renderer(be);
++  if (be && (std::strcmp(be, "wgl") == 0 || std::strcmp(be, "auto") == 0 || std::strcmp(be, "raster") == 0 ||
++             std::strcmp(be, "wglband") == 0))
++    choose_renderer(be);
+ }
+ 
+ // Roadmap S3.20 (decision G13). The host's OpenGL is made like use_host_gl does (with the negative controls' sink variants), the
+@@ -72,14 +74,18 @@
+       c.reason = "the host's OpenGL asked for, unavailable: " + host_gl_why();
+       use_host_gl(false);
+     }
+-  } else {   // auto
++  } else {   // auto, or wglband (roadmap S3.20 measurement: auto through WglBands, SG_GL_BANDS bands, default 4)
++    if (mode == "wglband") {
++      const char *nb = std::getenv("SG_GL_BANDS");
++      bands_ = nb && std::atoi(nb) > 0 ? std::atoi(nb) : 4;
++    }
+     if (!use_host_gl(true)) {
+       c.reason = "no host OpenGL: " + host_gl_why();
+       use_host_gl(false);
+     } else {
+       const int ctl = SG_NEGCTL(g_negctl_gfx_terrain);
+       const int variant = ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0;
+-      c.check = gl::wgl_self_check(ctx_, variant, ctl == 13 ? 1 : ctl == 14 ? 2 : 0);
++      c.check = gl::wgl_self_check(ctx_, variant, ctl == 13 ? 1 : ctl == 14 ? 2 : 0, bands_);
+       c.checked = true;
+       if (c.check.pass) {
+         c.backend = "wgl";
+@@ -105,7 +111,9 @@
+   // negative controls 8 / 9 / 11 / 12 (gfx_terrain.cpp): a DIB with RGB565 masks / with its rows top-down / texture names not
+   // mapped / no pixel format (the fallback: the sink is not ok, the setup stays GlRaster's alone)
+   const int ctl = SG_NEGCTL(g_negctl_gfx_terrain);
+-  wgl_ = std::make_unique<gl::WglSink>(800, 600, ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0);
++  const int var = ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0;
++  if (bands_ > 0) wgl_ = std::make_unique<gl::WglBands>(800, 600, bands_, var);
++  else wgl_ = std::make_unique<gl::WglSink>(800, 600, var);
+   if (!wgl_->ok()) return false;
+   pair_ = std::make_unique<gl::SetupPair>(raster_.get(), wgl_.get());
+   dll_.setup.b = pair_.get();
+@@ -456,7 +464,7 @@
+ // got, want, ms). Before the LiveTerrain's first call.
+ void a_renderer(Ctx &c, const uint32_t *a, Ret &r) {
+   LiveTerrain &lt = need_live(c);
+-  const LiveTerrain::RendererChoice &ch = lt.choose_renderer(a[0] == 0 ? "raster" : a[0] == 1 ? "wgl" : "auto");
++  const LiveTerrain::RendererChoice &ch = lt.choose_renderer(a[0] == 0 ? "raster" : a[0] == 1 ? "wgl" : a[0] == 3 ? "wglband" : "auto");
+   char ms[32];
+   std::snprintf(ms, sizeof ms, "%.1f", ch.check.ms);
+   const std::string t = "mode " + ch.mode + "\nbackend " + ch.backend + "\nreason " + ch.reason + "\ncheck " +
+--- a/port/src/sim/gfx_terrain.cpp
++++ b/port/src/sim/gfx_terrain.cpp
+@@ -144,7 +144,7 @@
+   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
+   if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
+     // roadmap S3.15 (U-1810): the host's own OpenGL draws the pass into its DIB, which holds the root surface's pixels around it
+-    gl::WglSink &w = *lt->host_gl();
++    gl::HostGl &w = *lt->host_gl();
+     TerrainGlobals &tg = lt->globals();
+     const auto t0 = std::chrono::steady_clock::now();
+     if (SG_NEGCTL(g_negctl_gfx_terrain) != 10) w.set_pixels(g.root.px);
+--- a/port/test/framegate.py
++++ b/port/test/framegate.py
+@@ -69,7 +69,7 @@
+            "one_level_px", "one_level_pct", "beyond_px", "regions", "unsup_before", "first_unsupported", "first_unsupported_drawing", "unsupported_before",
+            "unsup_order", "boot_status", "boot_records", "liveterrain", "backend", "variant", "reference", "terrain_drawn",
+            "renderer", "renderer_reason"]
+-GL_MODES = {"raster": 0, "wgl": 1, "auto": 2}   # terrainLive.renderer's argument (terrain_live.cpp, roadmap S3.20)
++GL_MODES = {"raster": 0, "wgl": 1, "auto": 2, "wglband": 3}   # terrainLive.renderer's argument (terrain_live.cpp, roadmap S3.20)
+ 
+ # The H1 frame wait of mainLoop (re/analysis/sim/time_model.md: 0x0041e631..0x0041e6b1, timeGetTime via [0x004ba21c] then
+ # waitTicks(1, 0) steps): its own clock reads return inside this range
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -1067,7 +1067,7 @@
+       if (!val(o.terrain) || (o.terrain != "live" && o.terrain != "headless")) return false;
+     }
+     else if (a == "--gl") {
+-      if (!val(o.gl) || (o.gl != "auto" && o.gl != "wgl" && o.gl != "raster")) return false;
++      if (!val(o.gl) || (o.gl != "auto" && o.gl != "wgl" && o.gl != "raster" && o.gl != "wglband")) return false;
+     }
+     else if (a == "--terrain-va") { if (!val(v)) return false; o.terrain_va = static_cast<uint32_t>(std::strtoul(v.c_str(), nullptr, 0)); }
+     else if (a == "--live-trace") { if (!val(o.live_trace)) return false; }
+@@ -1110,6 +1110,8 @@
+ int main(int argc, char **argv) {
+   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+   Options o;
++  // roadmap S3.20 band measurement (mirror only): SG_GL_DEFAULT sets --gl's default (a test that drives the app without the option)
++  if (const char *gd = std::getenv("SG_GL_DEFAULT")) o.gl = gd;
+   if (!parse(argc, argv, o)) {
+     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");
+     return 2;
+--- a/port/src/sim/gl_wgl_bands.inc
++++ b/port/src/sim/gl_wgl_bands.inc
+@@ -0,0 +1,448 @@
++// WglBands (portsim/sim/gl_wgl.h; roadmap S3.20, measurement of the band option). Included by gl_wgl.cpp inside namespace gl.
++
++namespace {
++
++struct M4 {
++  double m[16];   // column-major, as GL
++  static M4 id() {
++    M4 r{};
++    r.m[0] = r.m[5] = r.m[10] = r.m[15] = 1.0;
++    return r;
++  }
++  M4 mul(const M4 &b) const {
++    M4 r{};
++    for (int c = 0; c < 4; ++c)
++      for (int rr = 0; rr < 4; ++rr) {
++        double s = 0.0;
++        for (int k = 0; k < 4; ++k) s += m[k * 4 + rr] * b.m[c * 4 + k];
++        r.m[c * 4 + rr] = s;
++      }
++    return r;
++  }
++};
++M4 rot_m(double a, double x, double y, double z) {
++  const double n = std::sqrt(x * x + y * y + z * z);
++  M4 r = M4::id();
++  if (n == 0.0) return r;
++  x /= n; y /= n; z /= n;
++  const double rad = a * 3.14159265358979323846 / 180.0, c = std::cos(rad), s = std::sin(rad), t = 1.0 - c;
++  r.m[0] = x * x * t + c;     r.m[4] = x * y * t - z * s; r.m[8] = x * z * t + y * s;
++  r.m[1] = y * x * t + z * s; r.m[5] = y * y * t + c;     r.m[9] = y * z * t - x * s;
++  r.m[2] = x * z * t - y * s; r.m[6] = y * z * t + x * s; r.m[10] = z * z * t + c;
++  return r;
++}
++
++enum OpKind : uint8_t { opLI, opPush, opPop, opRotD, opRotF, opTrF, opBind, opBegin, opEnd, opTc2fv, opTc2f, opArr, opNrm, opVtxV, opVtx3f, opEn, opDis,
++                        opBlend, opFlush, opFunc };
++struct Op {
++  OpKind k;
++  uint32_t u0 = 0, u1 = 0;
++  float f[4] = {0, 0, 0, 0};
++  double d[4] = {0, 0, 0, 0};
++};
++struct Block {
++  double ylo = 1e300, yhi = -1e300;
++  float n_in[3] = {0, 0, 1}, tc_in[2] = {0, 0};
++};
++
++}  // namespace
++
++struct WglBands::Impl {
++  int w = 0, h = 0, n = 0, variant = 0;
++  std::string why;
++  struct Worker {
++    std::thread th;
++    std::mutex m;
++    std::condition_variable cv, done;
++    std::deque<std::function<void(WglSink &)>> q;
++    size_t pending = 0;
++    bool stop = false, started = false, ok = false, ctx = false;
++    std::string why;
++  };
++  std::vector<std::unique_ptr<Worker>> ws;
++  // tracking on the calling thread
++  uint32_t mode = 0x1700;
++  std::vector<M4> proj{M4::id()}, mv{M4::id()};
++  int32_t vx = 0, vy = 0, vw = 0, vh = 0;
++  const float *verts = nullptr, *norms = nullptr;
++  int32_t vsize = 3, vstride = 0, nstride = 0;
++  uint32_t vtype = 0x1406, ntype = 0x1406;
++  float cur_n[3] = {0, 0, 1}, cur_tc[2] = {0, 0};
++  std::set<uint32_t> used;
++  // the recorded pass
++  bool rec = false, cull = true;
++  std::vector<Op> ops;
++  std::vector<Block> blocks;
++  std::vector<std::function<void(WglSink &)>> funcs;
++  std::vector<uint16_t> root;
++
++  void worker_main(Worker *wk) {
++    WglSink sink(w, h, variant);
++    {
++      std::lock_guard<std::mutex> l(wk->m);
++      wk->ok = sink.ok();
++      wk->why = sink.why();
++      wk->started = true;
++    }
++    wk->done.notify_all();
++    for (;;) {
++      std::function<void(WglSink &)> job;
++      {
++        std::unique_lock<std::mutex> l(wk->m);
++        wk->cv.wait(l, [&] { return wk->stop || !wk->q.empty(); });
++        if (wk->q.empty()) break;
++        job = std::move(wk->q.front());
++        wk->q.pop_front();
++      }
++      job(sink);
++      {
++        std::lock_guard<std::mutex> l(wk->m);
++        wk->ctx = sink.has_context();
++        --wk->pending;
++      }
++      wk->done.notify_all();
++    }
++  }
++  void post(Worker &wk, std::function<void(WglSink &)> f) {
++    {
++      std::lock_guard<std::mutex> l(wk.m);
++      wk.q.push_back(std::move(f));
++      ++wk.pending;
++    }
++    wk.cv.notify_one();
++  }
++  void broadcast(const std::function<void(WglSink &)> &f) {
++    if (rec) {   // a call that is not a draw call during a pass: kept in order with the recorded ops
++      Op o;
++      o.k = opFunc;
++      o.u0 = static_cast<uint32_t>(funcs.size());
++      funcs.push_back(f);
++      ops.push_back(o);
++      return;
++    }
++    for (auto &wk : ws) post(*wk, f);
++  }
++  void wait_all() {
++    for (auto &wk : ws) {
++      std::unique_lock<std::mutex> l(wk->m);
++      wk->done.wait(l, [&] { return wk->pending == 0; });
++    }
++  }
++  M4 &top() { return mode == 0x1701 ? proj.back() : mv.back(); }
++  void track_vertex(const float *p) {
++    if (blocks.empty()) return;
++    const M4 f = proj.back().mul(mv.back());
++    const double x = p[0], y = p[1], z = p[2];
++    const double cy = f.m[1] * x + f.m[5] * y + f.m[9] * z + f.m[13], cw = f.m[3] * x + f.m[7] * y + f.m[11] * z + f.m[15];
++    if (cw == 0.0) {
++      cull = false;
++      return;
++    }
++    const double wy = (cy / cw + 1.0) * vh / 2.0 + vy;
++    Block &b = blocks.back();
++    if (wy < b.ylo) b.ylo = wy;
++    if (wy > b.yhi) b.yhi = wy;
++  }
++  void rec_op(const Op &o) { ops.push_back(o); }
++
++  // one band's replay of the recorded pass (on its worker)
++  int64_t replay(WglSink &s, int y0, int y1) {
++    int64_t drawn = 0;
++    bool skip = false;
++    for (const Op &o : ops) {
++      if (skip) {
++        if (o.k == opEnd) skip = false;
++        continue;
++      }
++      switch (o.k) {
++        case opLI: s.load_identity(); break;
++        case opPush: s.push_matrix(); break;
++        case opPop: s.pop_matrix(); break;
++        case opRotD: s.rotated(o.d[0], o.d[1], o.d[2], o.d[3]); break;
++        case opRotF: s.rotatef(o.f[0], o.f[1], o.f[2], o.f[3]); break;
++        case opTrF: s.translatef(o.f[0], o.f[1], o.f[2]); break;
++        case opBind: s.bind_texture(o.u0, o.u1); break;
++        case opBegin: {
++          const Block &b = blocks[o.u1];
++          if (cull && (b.yhi < y0 - kMargin || b.ylo > y1 + kMargin)) {
++            skip = true;
++            break;
++          }
++          s.normal3fv(b.n_in);   // the current normal and texture coordinate the block started with in the whole pass
++          s.tex_coord2fv(b.tc_in);
++          s.begin(o.u0);
++          ++drawn;
++          break;
++        }
++        case opEnd: s.end(); break;
++        case opTc2fv: s.tex_coord2fv(o.f); break;
++        case opTc2f: s.tex_coord2f(o.f[0], o.f[1]); break;
++        case opArr: s.array_element(static_cast<int32_t>(o.u0)); break;
++        case opNrm: s.normal3fv(o.f); break;
++        case opVtxV: s.vertex3fv(o.f); break;
++        case opVtx3f: s.vertex3f(o.f[0], o.f[1], o.f[2]); break;
++        case opEn: s.enable(o.u0); break;
++        case opDis: s.disable(o.u0); break;
++        case opBlend: s.blend_func(o.u0, o.u1); break;
++        case opFlush: s.flush(); break;
++        case opFunc: funcs[o.u0](s); break;
++      }
++    }
++    return drawn;
++  }
++};
++
++WglBands::WglBands(int width, int height, int bands, int variant) : p_(std::make_unique<Impl>()) {
++  Impl &p = *p_;
++  p.w = width;
++  p.h = height;
++  p.n = bands < 1 ? 1 : bands;
++  p.variant = variant;
++  p.vw = width;
++  p.vh = height;
++  for (int k = 0; k < p.n; ++k) {
++    p.ws.push_back(std::make_unique<Impl::Worker>());
++    Impl::Worker *wk = p.ws.back().get();
++    wk->th = std::thread([&p, wk] { p.worker_main(wk); });
++  }
++  for (auto &wk : p.ws) {
++    std::unique_lock<std::mutex> l(wk->m);
++    wk->done.wait(l, [&] { return wk->started; });
++    if (!wk->ok && p.why.empty()) p.why = wk->why;
++  }
++}
++
++WglBands::~WglBands() {
++  for (auto &wk : p_->ws) {
++    {
++      std::lock_guard<std::mutex> l(wk->m);
++      wk->stop = true;
++    }
++    wk->cv.notify_one();
++  }
++  for (auto &wk : p_->ws) wk->th.join();
++}
++
++bool WglBands::ok() const { return p_->why.empty(); }
++const std::string &WglBands::why() const { return p_->why; }
++bool WglBands::has_context() const {
++  p_->wait_all();
++  for (auto &wk : p_->ws)
++    if (!wk->ctx) return false;
++  return true;
++}
++
++void WglBands::set_pixels(const std::vector<uint16_t> &px) {
++  Impl &p = *p_;
++  p.wait_all();
++  p.root = px;
++  p.rec = true;
++  p.cull = p.verts != nullptr && p.vsize == 3 && (p.vstride == 0 || p.vstride == 12) && p.vtype == 0x1406;
++  p.ops.clear();
++  p.blocks.clear();
++  p.funcs.clear();
++}
++
++void WglBands::get_pixels(std::vector<uint16_t> &px) {
++  Impl &p = *p_;
++  if (!p.rec) {
++    p.wait_all();
++    return;
++  }
++  p.rec = false;
++  blocks_recorded += static_cast<int64_t>(p.blocks.size());
++  std::atomic<int64_t> drawn{0};
++  if (px.size() != static_cast<size_t>(p.w) * static_cast<size_t>(p.h)) px.assign(static_cast<size_t>(p.w) * static_cast<size_t>(p.h), 0);
++  const float *v = p.verts, *nm = p.norms;
++  // the rows any block reaches: a band no block reaches draws nothing, so its rows keep the root surface's values (px holds them)
++  double ylo = 1e300, yhi = -1e300;
++  for (const Block &bl : p.blocks)
++    if (bl.ylo <= bl.yhi) {
++      ylo = std::min(ylo, bl.ylo);
++      yhi = std::max(yhi, bl.yhi);
++    }
++  const bool has_func = !p.funcs.empty();
++  if (px.data() != p.root.data()) px = p.root;
++  for (int k = 0; k < p.n; ++k) {
++    const int y0 = p.h * k / p.n, y1 = p.h * (k + 1) / p.n;
++    if (p.cull && !has_func && (yhi < y0 - kMargin || ylo > y1 + kMargin)) continue;
++    p.post(*p.ws[static_cast<size_t>(k)], [&p, &px, &drawn, v, nm, y0, y1](WglSink &s) {
++      s.set_rows(p.root, y0, y1);   // the scissor limits the band's drawing and blending reads to its rows
++      s.set_arrays(v, nm);
++      s.scissor_band(y0, y1);
++      drawn += p.replay(s, y0, y1);
++      s.get_rows(px, y0, y1);
++    });
++  }
++  p.wait_all();
++  blocks_drawn += drawn.load();
++}
++
++void WglBands::set_arrays(const float *vertices, const float *normals) {
++  Impl &p = *p_;
++  p.verts = vertices;
++  p.norms = normals;
++  if (!p.rec) p.broadcast([vertices, normals](WglSink &s) { s.set_arrays(vertices, normals); });
++}
++
++bool WglBands::gen_textures_mapped(int32_t n, const uint32_t *names) {
++  std::vector<uint32_t> nm(names, names + (n > 0 ? n : 0));
++  p_->broadcast([nm](WglSink &s) { s.gen_textures_mapped(static_cast<int32_t>(nm.size()), nm.data()); });
++  return true;
++}
++
++// the calls: tracked on this thread; recorded during a pass, else sent to every worker
++#define BAND_REC(op_expr, ...)  \
++  do {                            \
++    if (p_->rec) {                \
++      Op o;                       \
++      op_expr;                    \
++      p_->rec_op(o);              \
++    } else {                      \
++      p_->broadcast(__VA_ARGS__); \
++    }                             \
++  } while (0)
++
++void WglBands::load_identity() {
++  p_->top() = M4::id();
++  BAND_REC(o.k = opLI, [](WglSink &s) { s.load_identity(); });
++}
++void WglBands::push_matrix() {
++  auto &st = p_->mode == 0x1701 ? p_->proj : p_->mv;
++  st.push_back(st.back());
++  BAND_REC(o.k = opPush, [](WglSink &s) { s.push_matrix(); });
++}
++void WglBands::pop_matrix() {
++  auto &st = p_->mode == 0x1701 ? p_->proj : p_->mv;
++  if (st.size() > 1) st.pop_back();
++  BAND_REC(o.k = opPop, [](WglSink &s) { s.pop_matrix(); });
++}
++void WglBands::rotated(double a, double x, double y, double z) {
++  p_->top() = p_->top().mul(rot_m(a, x, y, z));
++  BAND_REC((o.k = opRotD, o.d[0] = a, o.d[1] = x, o.d[2] = y, o.d[3] = z), [a, x, y, z](WglSink &s) { s.rotated(a, x, y, z); });
++}
++void WglBands::rotatef(float a, float x, float y, float z) {
++  p_->top() = p_->top().mul(rot_m(a, x, y, z));
++  BAND_REC((o.k = opRotF, o.f[0] = a, o.f[1] = x, o.f[2] = y, o.f[3] = z), [a, x, y, z](WglSink &s) { s.rotatef(a, x, y, z); });
++}
++void WglBands::translatef(float x, float y, float z) {
++  M4 t = M4::id();
++  t.m[12] = x; t.m[13] = y; t.m[14] = z;
++  p_->top() = p_->top().mul(t);
++  BAND_REC((o.k = opTrF, o.f[0] = x, o.f[1] = y, o.f[2] = z), [x, y, z](WglSink &s) { s.translatef(x, y, z); });
++}
++void WglBands::bind_texture(uint32_t t, uint32_t id) {
++  BAND_REC((o.k = opBind, o.u0 = t, o.u1 = id), [t, id](WglSink &s) { s.bind_texture(t, id); });
++}
++void WglBands::begin(uint32_t m) {
++  if (p_->rec) {
++    Block b;
++    std::memcpy(b.n_in, p_->cur_n, sizeof b.n_in);
++    std::memcpy(b.tc_in, p_->cur_tc, sizeof b.tc_in);
++    p_->blocks.push_back(b);
++  }
++  BAND_REC((o.k = opBegin, o.u0 = m, o.u1 = static_cast<uint32_t>(p_->blocks.size() - 1)), [m](WglSink &s) { s.begin(m); });
++}
++void WglBands::end() { BAND_REC(o.k = opEnd, [](WglSink &s) { s.end(); }); }
++void WglBands::tex_coord2fv(const float *v) {
++  p_->cur_tc[0] = v[0];
++  p_->cur_tc[1] = v[1];
++  const float a = v[0], b = v[1];
++  BAND_REC((o.k = opTc2fv, o.f[0] = a, o.f[1] = b), [a, b](WglSink &s) { const float t[2] = {a, b}; s.tex_coord2fv(t); });
++}
++void WglBands::tex_coord2f(float a, float b) {
++  p_->cur_tc[0] = a;
++  p_->cur_tc[1] = b;
++  BAND_REC((o.k = opTc2f, o.f[0] = a, o.f[1] = b), [a, b](WglSink &s) { s.tex_coord2f(a, b); });
++}
++void WglBands::array_element(int32_t i) {
++  Impl &p = *p_;
++  if (p.rec && p.cull && p.verts) p.track_vertex(p.verts + static_cast<size_t>(i) * 3);
++  if (p.norms && (p.nstride == 0 || p.nstride == 12) && p.ntype == 0x1406) std::memcpy(p.cur_n, p.norms + static_cast<size_t>(i) * 3, 12);
++  BAND_REC((o.k = opArr, o.u0 = static_cast<uint32_t>(i)), [i](WglSink &s) { s.array_element(i); });
++}
++void WglBands::normal3fv(const float *v) {
++  std::memcpy(p_->cur_n, v, 12);
++  const float a = v[0], b = v[1], c = v[2];
++  BAND_REC((o.k = opNrm, o.f[0] = a, o.f[1] = b, o.f[2] = c), [a, b, c](WglSink &s) { const float t[3] = {a, b, c}; s.normal3fv(t); });
++}
++void WglBands::vertex3fv(const float *v) {
++  if (p_->rec) p_->track_vertex(v);
++  const float a = v[0], b = v[1], c = v[2];
++  BAND_REC((o.k = opVtxV, o.f[0] = a, o.f[1] = b, o.f[2] = c), [a, b, c](WglSink &s) { const float t[3] = {a, b, c}; s.vertex3fv(t); });
++}
++void WglBands::vertex3f(float x, float y, float z) {
++  const float v[3] = {x, y, z};
++  if (p_->rec) p_->track_vertex(v);
++  BAND_REC((o.k = opVtx3f, o.f[0] = x, o.f[1] = y, o.f[2] = z), [x, y, z](WglSink &s) { s.vertex3f(x, y, z); });
++}
++void WglBands::enable(uint32_t c) { BAND_REC((o.k = opEn, o.u0 = c), [c](WglSink &s) { s.enable(c); }); }
++void WglBands::disable(uint32_t c) { BAND_REC((o.k = opDis, o.u0 = c), [c](WglSink &s) { s.disable(c); }); }
++void WglBands::blend_func(uint32_t a, uint32_t b) { BAND_REC((o.k = opBlend, o.u0 = a, o.u1 = b), [a, b](WglSink &s) { s.blend_func(a, b); }); }
++void WglBands::flush() { BAND_REC(o.k = opFlush, [](WglSink &s) { s.flush(); }); }
++#undef BAND_REC
++
++void WglBands::context_create() {
++  p_->used.clear();
++  p_->broadcast([](WglSink &s) { s.context_create(); });
++}
++void WglBands::hint(uint32_t t, uint32_t m) { p_->broadcast([t, m](WglSink &s) { s.hint(t, m); }); }
++void WglBands::enable_client_state(uint32_t a) { p_->broadcast([a](WglSink &s) { s.enable_client_state(a); }); }
++void WglBands::front_face(uint32_t m) { p_->broadcast([m](WglSink &s) { s.front_face(m); }); }
++void WglBands::viewport(int32_t x, int32_t y, int32_t w, int32_t h) {
++  p_->vx = x; p_->vy = y; p_->vw = w; p_->vh = h;
++  p_->broadcast([x, y, w, h](WglSink &s) { s.viewport(x, y, w, h); });
++}
++void WglBands::matrix_mode(uint32_t m) {
++  p_->mode = m;
++  p_->broadcast([m](WglSink &s) { s.matrix_mode(m); });
++}
++void WglBands::ortho(double l, double r, double b, double t, double n, double f) {
++  M4 o = M4::id();
++  o.m[0] = 2.0 / (r - l); o.m[5] = 2.0 / (t - b); o.m[10] = -2.0 / (f - n);
++  o.m[12] = -(r + l) / (r - l); o.m[13] = -(t + b) / (t - b); o.m[14] = -(f + n) / (f - n);
++  p_->top() = p_->top().mul(o);
++  p_->broadcast([l, r, b, t, n, f](WglSink &s) { s.ortho(l, r, b, t, n, f); });
++}
++void WglBands::light(uint32_t l, uint32_t pn, const float *v) {
++  const std::array<float, 4> a{v[0], v[1], v[2], v[3]};
++  p_->broadcast([l, pn, a](WglSink &s) { s.light(l, pn, a.data()); });
++}
++void WglBands::material(uint32_t fc, uint32_t pn, const float *v) {
++  const std::array<float, 4> a{v[0], v[1], v[2], v[3]};
++  p_->broadcast([fc, pn, a](WglSink &s) { s.material(fc, pn, a.data()); });
++}
++void WglBands::material_shininess(uint32_t fc, int32_t sh) { p_->broadcast([fc, sh](WglSink &s) { s.material_shininess(fc, sh); }); }
++bool WglBands::gen_textures(int32_t n, uint32_t *names) {   // only when this sink is the setup's sole sink: the driver's rule here
++  for (int32_t i = 0; i < n; ++i) {
++    uint32_t k = 1;
++    while (p_->used.count(k)) ++k;
++    p_->used.insert(k);
++    names[i] = k;
++  }
++  return gen_textures_mapped(n, names);
++}
++void WglBands::delete_textures(int32_t n, const uint32_t *names) {
++  std::vector<uint32_t> nm(names, names + (n > 0 ? n : 0));
++  for (uint32_t k : nm) p_->used.erase(k);
++  p_->broadcast([nm](WglSink &s) { s.delete_textures(static_cast<int32_t>(nm.size()), nm.data()); });
++}
++void WglBands::tex_parameteri(uint32_t t, uint32_t pn, int32_t v) { p_->broadcast([t, pn, v](WglSink &s) { s.tex_parameteri(t, pn, v); }); }
++void WglBands::tex_parameterf(uint32_t t, uint32_t pn, float v) { p_->broadcast([t, pn, v](WglSink &s) { s.tex_parameterf(t, pn, v); }); }
++void WglBands::tex_envi(uint32_t t, uint32_t pn, int32_t v) { p_->broadcast([t, pn, v](WglSink &s) { s.tex_envi(t, pn, v); }); }
++void WglBands::tex_image2d(uint32_t t, int32_t l, int32_t i, int32_t w, int32_t h, int32_t b, uint32_t f, uint32_t ty, const uint8_t *d) {
++  std::shared_ptr<std::vector<uint8_t>> data;
++  if (d && w > 0 && h > 0) {
++    const size_t bytes = static_cast<size_t>(w) * static_cast<size_t>(h) * (f == 0x1908 ? 4u : 3u);   // GL_RGBA else GL_RGB, bytes
++    data = std::make_shared<std::vector<uint8_t>>(d, d + bytes);
++  }
++  p_->broadcast([t, l, i, w, h, b, f, ty, data](WglSink &s) { s.tex_image2d(t, l, i, w, h, b, f, ty, data ? data->data() : nullptr); });
++}
++void WglBands::vertex_pointer(int32_t sz, uint32_t ty, int32_t st) {
++  p_->vsize = sz; p_->vtype = ty; p_->vstride = st;
++  p_->broadcast([sz, ty, st](WglSink &s) { s.vertex_pointer(sz, ty, st); });
++}
++void WglBands::normal_pointer(uint32_t ty, int32_t st) {
++  p_->ntype = ty; p_->nstride = st;
++  p_->broadcast([ty, st](WglSink &s) { s.normal_pointer(ty, st); });
++}

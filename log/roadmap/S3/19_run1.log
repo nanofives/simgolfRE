@@ -1,0 +1,81 @@
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/app/CMakeLists.txt
+  main.cpp
+  window.cpp
+  present.cpp
+  pacing.cpp
+  saves.cpp
+  host.cpp
+  Generando código...
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/app/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/CMakeLists.txt
+  portsim_c.cpp
+  core_test.cpp
+  gamestate_layout_test.cpp
+  input_check.cpp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_layout_test.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/build/x64/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_c.dll
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\app\Release\simgolf_input_check.exe
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_core_test.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_19/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_c.dll
+......                                                                   [100%]
+6 passed in 3.27s
+ssssssCALLS_GOLDEN = '4bcd00b57a591483c50726c4e305811097b842d38005a878b23f5856b81d89cc'
+.............F
+================================== FAILURES ===================================
+____________________ test_cov_r_bio_boot_draws_the_bio_box ____________________
+
+elib = <port.test.lib.Lib object at 0x000002A3AD5D17C0>
+
+    def test_cov_r_bio_boot_draws_the_bio_box(elib):
+        if not (B.TRACES / "cov_r_bio.trace").exists():
+            pytest.skip("no cov_r_bio trace")
+        seen = {}
+    
+        def before(st):
+            st.call("gfx.attach", [])
+    
+        def after(st, _res):
+            st.call("gfx.log", [])
+            seen["log"] = st.files_read("$gfx/log.txt").decode()
+            st.call("gfx.detach", [])
+    
+        res = B.run("cov_r_bio", elib, before=before, after=after)
+        assert res.status == "PASS", res.detail
+        log = seen["log"]
+        handled = {ln.split("\t")[1]: int(ln.split("\t")[2]) for ln in log.splitlines() if ln.startswith("handled\t")}
+        assert handled.get("EditBox::drawContents", 0) >= 2 and handled.get("EditBox.window", 0) == 2, handled
+        assert handled.get("EditBox.close", 0) == 2
+        firsts = [ln for ln in log.splitlines() if ln.startswith("first\t")]
+>       assert not any("bio" in ln or "EditBox" in ln for ln in firsts), firsts
+E       AssertionError: ['first\t0\tEditBox::drawContents: an Image with markup off', 'first\t1\tEditBox::drawContents: the original faults or reads its stack here (first line outside the line table)']
+E       assert not True
+E        +  where True = any(<generator object test_cov_r_bio_boot_draws_the_bio_box.<locals>.<genexpr> at 0x000002A3AD667AC0>)
+
+port\test\test_gfx_s3_19.py:455: AssertionError
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[1-the caret one pixel right]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[2-the first line not raised below the window]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[3-the inset left out of the text rectangle]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[4-the visible-line count without value - get]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[8-the bevel's colours swapped]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_close
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_negctl_red[5-the window composed one pixel lower]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_negctl_red[6-Window::paint does not clear the surface]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_close_negctl_red
+PASSED port/test/test_gfx_s3_19.py::test_wrap_width_negctl_red
+PASSED port/test/test_gfx_s3_19.py::test_caret_follows_the_caret_position
+SKIPPED [1] port\test\test_gfx_s3_19.py:234: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [5] port\test\test_gfx_s3_19.py:260: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+FAILED port/test/test_gfx_s3_19.py::test_cov_r_bio_boot_draws_the_bio_box - A...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 13 passed, 6 skipped in 29.24s
+== 19:57:53 rc=1

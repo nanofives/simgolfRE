@@ -1,0 +1,3 @@
+[wait] pid 6800 ended, token w7_heavy.lock released
+[3/7] census_tgt rc=0 90 s :: {"rows": 110, "counts": {"PASS": 8, "FAIL": 102}}
+[4/7] segs_x64 rc=0 399 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 398.1}

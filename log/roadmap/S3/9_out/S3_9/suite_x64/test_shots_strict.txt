@@ -1,0 +1,7 @@
+.....................ssssssssssssssssssssssss.s                          [100%]
+=========================== short test summary info ===========================
+SKIPPED [8] port\test\test_shots_strict.py:303: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [8] port\test\test_shots_strict.py:315: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [8] port\test\test_shots_strict.py:327: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_shots_strict.py:355: regeneration only (SG_EMU_ORACLE=update)
+22 passed, 25 skipped in 9.02s

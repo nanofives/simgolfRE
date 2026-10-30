@@ -1,0 +1,29 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 20 items
+
+port/test/test_gl_wgl_selfcheck.py::test_reference_hash_is_the_originals PASSED [  5%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_passes_on_this_host PASSED [ 10%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_sees_the_rasteriser_residual PASSED [ 15%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_controls_read_red[args0-wrong pinned hash] PASSED [ 20%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_controls_read_red[args1-texture coordinates one texel off] PASSED [ 25%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_controls_read_red[args2-RGB565 DIB] PASSED [ 30%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_blind_variants[2] PASSED [ 35%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_blind_variants[3] PASSED [ 40%]
+port/test/test_gl_wgl_selfcheck.py::test_self_check_without_a_pixel_format PASSED [ 45%]
+port/test/test_gl_wgl_selfcheck.py::test_auto_picks_the_host_gl PASSED   [ 50%]
+port/test/test_gl_wgl_selfcheck.py::test_auto_falls_back_to_the_rasteriser[13-self-check failed] PASSED [ 55%]
+port/test/test_gl_wgl_selfcheck.py::test_auto_falls_back_to_the_rasteriser[14-self-check failed] PASSED [ 60%]
+port/test/test_gl_wgl_selfcheck.py::test_auto_falls_back_to_the_rasteriser[8-self-check failed] PASSED [ 65%]
+port/test/test_gl_wgl_selfcheck.py::test_auto_falls_back_to_the_rasteriser[12-no host OpenGL] PASSED [ 70%]
+port/test/test_gl_wgl_selfcheck.py::test_explicit_modes PASSED           [ 75%]
+port/test/test_gl_wgl_selfcheck.py::test_framegate_fallback_rows_equal_the_rasteriser PASSED [ 80%]
+port/test/test_gl_wgl_selfcheck.py::test_app_default_is_the_checked_host_gl PASSED [ 85%]
+port/test/test_gl_wgl_selfcheck.py::test_app_falls_back_with_the_log_line[13-self-check failed] PASSED [ 90%]
+port/test/test_gl_wgl_selfcheck.py::test_app_falls_back_with_the_log_line[12-no host OpenGL] PASSED [ 95%]
+port/test/test_gl_wgl_selfcheck.py::test_app_explicit_raster PASSED      [100%]
+
+============================= 20 passed in 41.34s =============================

@@ -50,7 +50,8 @@ namespace {
 //                     3 = hole-distance divisor always 4 (BLIND), 4 = landing value weight 4 (BLIND),
 //                     5 = prune tolerance starts at 0x40 (BLIND)
 //   scanShotArea      1 = narrate when D > k * v (instead of (k + 1) * v)
-//   narrateShot       1 = the skill cap bucket * 2 + 5 (BLIND), 2 = the off-screen exit sets hole flag bit 2
+//   narrateShot       1 = the skill cap bucket * 2 + 5 (BLIND), 2 = the off-screen exit sets hole flag bit 2,
+//                     3 = the flight arc drawn one pixel lower (roadmap S3.16)
 int g_negctl_shot_power = 0;
 int g_negctl_wobble = 0;
 int g_negctl_trial_shot = 0;
@@ -1513,15 +1514,28 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     rep_movs(m, w.golfers + 0x99u * 0x100u, S + 0x288, 0x100);
     w.rec(0x98).w(kPartner, 0x99);
     int32_t sx = 0, sy = 0;
+    // roadmap S3.16: the two flight lines are drops an attached graphics backend draws (overlay lines of the terrain family):
+    // the shadow at the ground points (setLinePoint(sx, sy + 1) for point 0, else lineTo(sx, sy + 1, 0x80000000, 2, 7)) and
+    // the arc at the lifted points (setLinePoint(sx, sy) / lineTo(sx, sy, 0x80007fff, 2, 7)); a point worldToScreen puts
+    // off screen draws nothing (narrateShot, c3fr.cpp)
+    const bool lines = g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr;
+    auto line = [&](int32_t i, int32_t x, int32_t y, uint32_t colour) {
+      if (!lines) return;
+      const uint32_t a[5] = {u32(x), u32(y), colour, 2, 7};
+      if (i == 0) gfx_drop(ctx, "setLinePoint", a, 2);
+      else gfx_drop(ctx, "lineTo", a, 5);
+    };
     const int32_t n = static_cast<int16_t>(m.load<uint16_t>(S + 4));
-    for (int32_t i = 0; i < n; ++i)  // the shadow line (drawing dropped); worldToScreen still runs for its out values
-      world_to_screen(ctx, m.load<int32_t>(S + 8 + 4u * u32(i)), m.load<int32_t>(S + 0x88 + 4u * u32(i)), sx, sy, 0);
+    for (int32_t i = 0; i < n; ++i)  // the shadow line; worldToScreen also runs for its out values
+      if (world_to_screen(ctx, m.load<int32_t>(S + 8 + 4u * u32(i)), m.load<int32_t>(S + 0x88 + 4u * u32(i)), sx, sy, 0) != 0)
+        line(i, sx, add32(sy, 1), 0x80000000u);
     for (int32_t i = 0; i < static_cast<int16_t>(m.load<uint16_t>(S + 4)); ++i) {
       if (world_to_screen(ctx, m.load<int32_t>(S + 8 + 4u * u32(i)), m.load<int32_t>(S + 0x88 + 4u * u32(i)), sx, sy,
                           0) == 0)
         continue;
       const int32_t v = mul32(mul32(m.load<int32_t>(S + 0x108 + 4u * u32(i)), s.f_w_4c2e00[0]), s.g_zoomScale);
       sy = add32(sy, neg32(v / 4) / 16);
+      line(i, sx, add32(sy, SG_NEGCTL(g_negctl_narrate_shot) == 3 ? 1 : 0), 0x80007fffu);
       if (!(sx >= minX)) minX = sx;
       if (!(sx <= maxX)) maxX = sx;
       if (!(sy >= minY)) minY = sy;

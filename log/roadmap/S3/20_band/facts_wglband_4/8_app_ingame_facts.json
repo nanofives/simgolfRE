@@ -1,0 +1,109 @@
+{
+ "ingame_session": {
+  "session": {
+   "code": 0,
+   "detail": "",
+   "stop": "host",
+   "records": 374,
+   "violations": 0,
+   "first_violation": -1,
+   "first_violation_what": "",
+   "asks": 1286,
+   "reasks": 0,
+   "dispatches": 40,
+   "clocks": 6006124,
+   "cursors": 1171,
+   "asyncs": 0,
+   "body_calls": 748,
+   "modal_calls": 538,
+   "paced_calls": 0,
+   "idle_declines": 28,
+   "inflated": 0,
+   "marks": 164,
+   "presents": 164,
+   "idle_passes": 28,
+   "presents_by_kind": {
+    "r": 164,
+    "w": 0,
+    "m": 0,
+    "p": 0
+   },
+   "present_points": {
+    "r": 411,
+    "w": 0,
+    "m": 32,
+    "p": 0
+   },
+   "r_superseded": 158,
+   "w_skipped": 369,
+   "memory": {
+    "start": {
+     "frame": 0,
+     "working_set": 144453632,
+     "peak_working_set": 184938496,
+     "private_bytes": 142110720,
+     "terrain_log": 0
+    },
+    "end": {
+     "frame": 374,
+     "working_set": 319127552,
+     "peak_working_set": 730845184,
+     "private_bytes": 314818560,
+     "terrain_log": 0
+    },
+    "samples": 3
+   },
+   "terrain_log": {
+    "calls": 55026,
+    "max_len": 1,
+    "len_end": 0,
+    "kept": false
+   },
+   "waits": 28,
+   "wait_ms": 5432,
+   "deliveries": 40,
+   "delivered_commands": 51,
+   "stalls": 0,
+   "trace_bytes": 168252112,
+   "trace_streamed": true,
+   "spilled_events": 6005857,
+   "held_events": 2852
+  },
+  "error": "",
+  "ingame_from": 6,
+  "periods": {
+   "n": 368,
+   "min": 6,
+   "max": 97,
+   "median": 92.0,
+   "mean": 90.88,
+   "within_quantum": 1.0
+  },
+  "work_ms": {
+   "n": 364,
+   "min": 4,
+   "max": 50,
+   "median": 8.0,
+   "mean": 8.31,
+   "within_quantum": 1.0
+  },
+  "work_ms_frames_with_terrain_passes": {
+   "n": 11,
+   "min": 18,
+   "max": 50,
+   "median": 22,
+   "mean": 26.45,
+   "within_quantum": 1.0
+  },
+  "frames_with_terrain_passes": 11,
+  "terrain_passes": 15,
+  "terrain_pixels": 0,
+  "kinds": {
+   "r": 164,
+   "m": 0,
+   "w": 0,
+   "p": 0
+  },
+  "presents": 164
+ }
+}

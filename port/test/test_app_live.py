@@ -219,11 +219,21 @@ def _to_game(app, s, frames):
     s.facts["frames_seen"] = _wait_frames(s.rec, frames, 30 + frames * 0.2)
 
 
-def _live_terrain(lib, st):
+def _live_terrain(lib, st, s=None):
     """roadmap S7.5: the app draws the course with LiveTerrain at address 0 (main.cpp --terrain live, the default), so a replay
-    that rebuilds its frames attaches the same (gfx.attach, gfx.snapshotAt, then the terrain, as port/test/framegate.py)"""
+    that rebuilds its frames attaches the same (gfx.attach, gfx.snapshotAt, then the terrain, as port/test/framegate.py).
+    Roadmap S3.20 (decision G13): and draws it with the renderer the session chose (terrain_renderer.json: GlRaster by default,
+    the host's OpenGL when the session opted in)"""
     from port.test import terrainlive as TL
     assert TL.live_attach(lib, st, 0) == 0
+    if s is not None:
+        assert st.call("terrainLive.renderer", [session_renderer(s)]).eax == session_renderer(s)
+
+
+def session_renderer(s) -> int:
+    """terrainLive.renderer's mode for the renderer a session's app used (1 = the host's OpenGL, 0 = GlRaster)"""
+    rp = s.rec / "terrain_renderer.json"    # a --terrain headless session writes none
+    return 1 if rp.exists() and json.loads(rp.read_text())["backend"] == "wgl" else 0
 
 
 def replay(s: Session, snapshots: list[int] | None = None, draws: bool = False):
@@ -244,7 +254,7 @@ def replay(s: Session, snapshots: list[int] | None = None, draws: bool = False):
             st.call("gfx.attach", [])
             for p in chunk:
                 st.call("gfx.snapshotAt", [p])
-            _live_terrain(lib, st)
+            _live_terrain(lib, st, s)
             code, n, ts, hs = st.run_boot(trace, nrec + 1)
             for k in range(len(chunk)):
                 raw = st.files_read(f"$gfx/snapshot_{k}.555")
@@ -389,7 +399,7 @@ def _hover_frames(s: Session, hashes: list[int]) -> list[np.ndarray]:
         st.call("gfx.attach", [])
         for i in order:
             st.call("gfx.snapshotAt", [pos[i]])
-        _live_terrain(lib, st)
+        _live_terrain(lib, st, s)
         st.run_boot((s.rec / "trace.trace").read_bytes(), len(s.records()) + 1)
         raws = [st.files_read(f"$gfx/snapshot_{k}.555") for k in range(len(order))]
         st.call("gfx.detach", [])

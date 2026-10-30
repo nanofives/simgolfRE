@@ -1,0 +1,229 @@
+junction original
+junction log
+junction port/corpus
+junction tests/golden
+junction tests/fixtures
+junction re/versions
+junction tools/vc6
+junction shim/build
+junction re/replay
+junction extracted
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19v base ee6efc1dc296bfdbd6e66a4453d5505fda27ff30
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 1
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 2
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 3
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 4
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 5
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 6
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 7
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 8
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 9
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 10
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 11
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 12
+edit port/src/sim/gl_raster.cpp s312 12_edits edit 13
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 14
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 15
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 16
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 17
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 18
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 19
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 20
+edit port/include/portsim/sim/gl_raster.h s312 12_edits edit 21
+edit port/test/test_gl_raster.py s312 12_edits edit 22
+edit port/src/sim/gfx_terrain.cpp s312 12_edits edit 23
+edit port/src/sim/gfx_terrain.cpp s312 12_edits edit 24
+edit port/src/sim/gfx_terrain.cpp s312 12_edits edit 25
+edit port/src/sim/gfx_terrain.cpp s312 12_edits edit 26
+edit port/src/sim/gfx_terrain.cpp s312 12_edits edit 27
+edit port/src/sim/gfx_terrain.cpp s312 12_edits edit 28
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 29
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 30
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 31
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 32
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 33
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 34
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 35
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 36
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 37
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 38
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 39
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 40
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 41
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 42
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 43
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 44
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 45
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 46
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 47
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 48
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 49
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 50
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 51
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 52
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 53
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 54
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 55
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 56
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 57
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 58
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 59
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 60
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 61
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 62
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 63
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 64
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 65
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 66
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 67
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 68
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 69
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 70
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 71
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 72
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 73
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 74
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 75
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 76
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 77
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 78
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 79
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 80
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 81
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 82
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 83
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 84
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 85
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 86
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 87
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 88
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 89
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 90
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 91
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 92
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 93
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 94
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 95
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 96
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 97
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 98
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 99
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 100
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 101
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 102
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 103
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 104
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 105
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 106
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 107
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 108
+edit port/src/sim/terrain_state.cpp s312 12_edits edit 109
+edit port/test/test_terrain_state.py s312 12_edits edit 110
+edit port/src/sim/terrain_live.cpp s312 12_edits edit 111
+edit port/src/sim/terrain_live.cpp s312 12_edits edit 112
+edit port/src/sim/terrain_live.cpp s312 12_edits edit 113
+edit port/src/sim/terrain_live.cpp s312 12_edits edit 114
+edit port/src/sim/terrain_live.cpp s312 12_edits edit 115
+edit port/include/portsim/sim/terrain_live.h s312 12_edits edit 116
+edit port/include/portsim/sim/terrain_live.h s312 12_edits edit 117
+edit port/include/portsim/sim/terrain_live.h s312 12_edits edit 118
+edit port/app/host.cpp s312 12_edits edit 119
+edit port/app/host.cpp s312 12_edits edit 120
+edit port/app/host.cpp s312 12_edits edit 121
+edit port/app/host.cpp s312 12_edits edit 122
+edit port/app/host.cpp s312 12_edits edit 123
+edit port/app/host.h s312 12_edits edit 124
+edit port/app/host.h s312 12_edits edit 125
+edit port/test/test_app_ingame.py s312 12_edits edit 126
+edit port/test/test_app_ingame.py s312 12_edits edit 127
+edit port/test/test_app_live.py s312 12_edits edit 128
+edit port/test/test_app_present.py s312 12_edits edit 129
+edit port/test/test_app_present.py s312 12_edits edit 130
+edit CLAUDE.md s312 CLAUDE.md
+row replace U-1673 s312 UNCERTAINTIES U-1673
+row replace U-1398 s312 UNCERTAINTIES U-1398
+rows UNCERTAINTIES.md s312 UNCERTAINTIES append U-1388 .. U-1399 3
+wrote port/src/sim/gl_raster.cpp
+wrote port/include/portsim/sim/gl_raster.h
+wrote port/test/test_gl_raster.py
+wrote port/src/sim/gfx_terrain.cpp
+wrote port/src/sim/terrain_state.cpp
+wrote port/test/test_terrain_state.py
+wrote port/src/sim/terrain_live.cpp
+wrote port/include/portsim/sim/terrain_live.h
+wrote port/app/host.cpp
+wrote port/app/host.h
+wrote port/test/test_app_ingame.py
+wrote port/test/test_app_live.py
+wrote port/test/test_app_present.py
+wrote CLAUDE.md
+wrote UNCERTAINTIES.md
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19v
+edit port/src/sim/routing.cpp s317 17_edits edit 1
+edit port/src/sim/routing.cpp s317 17_edits edit 2
+edit port/src/sim/routing.cpp s317 17_edits edit 3
+edit port/src/sim/gfx_surface.cpp s317 17_edits edit 4
+edit port/src/sim/gfx_surface.cpp s317 17_edits edit 5
+edit port/src/sim/gfx_surface.cpp s317 17_edits edit 6
+edit port/src/sim/gfx_surface.cpp s317 17_edits edit 7
+edit port/src/sim/tick.cpp s317 17_edits edit 8
+edit port/test/test_gfx_routing.py s317 17_edits edit 9
+edit port/test/test_gfx_routing.py s317 17_edits edit 10
+edit port/test/test_gfx_routing.py s317 17_edits edit 11
+new port/test/test_gfx_s3_17.py
+rows UNCERTAINTIES.md s317 UNCERTAINTIES U-1830..U-1833 U-1830 .. U-1833 4
+edit CLAUDE.md s317 CLAUDE.md
+wrote port/src/sim/routing.cpp
+wrote port/src/sim/gfx_surface.cpp
+wrote port/src/sim/tick.cpp
+wrote port/test/test_gfx_routing.py
+wrote UNCERTAINTIES.md
+wrote CLAUDE.md
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19v
+dialogs.cpp anchor: once on the base and once with 16_edits.py
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 1
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 2
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 3
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 4
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 5
+edit port/src/sim/gfx_bulletin.cpp s318 18_edits (gfx_bulletin.cpp) edit 6
+edit port/src/sim/dialogs.cpp s318 18_edits dialogs.cpp (after S3.16's edits) edit 1
+new port/test/test_gfx_s3_18.py
+rows UNCERTAINTIES.md s318 UNCERTAINTIES U-1840.. U-1840 .. U-1845 6
+edit CLAUDE.md s318 CLAUDE.md
+wrote port/src/sim/gfx_bulletin.cpp
+wrote port/src/sim/dialogs.cpp
+wrote UNCERTAINTIES.md
+wrote CLAUDE.md
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19v
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 1
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 2
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 3
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 4
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 5
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 6
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 7
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 8
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 9
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 10
+edit port/src/sim/gfx_text.cpp s319 19_edits edit 11
+edit port/src/sim/gfx.cpp s319 19_edits edit 12
+edit port/src/sim/gfx.cpp s319 19_edits edit 13
+edit port/src/sim/chareditor.cpp s319 19_edits edit 14
+edit port/src/sim/chareditor.cpp s319 19_edits edit 15
+edit port/src/sim/chareditor.cpp s319 19_edits edit 16
+edit port/src/sim/chareditor.cpp s319 19_edits edit 17
+edit port/src/sim/chareditor.cpp s319 19_edits edit 18
+edit port/src/sim/chareditor.cpp s319 19_edits edit 19
+edit port/src/sim/gfx_families.inc s319 19_edits edit 20
+new port/src/sim/gfx_editbox.cpp
+new port/test/test_gfx_s3_19.py
+rows UNCERTAINTIES.md s319 UNCERTAINTIES U-1846.. U-1846 .. U-1849 4
+edit CLAUDE.md s319 CLAUDE.md
+wrote port/src/sim/gfx_text.cpp
+wrote port/src/sim/gfx.cpp
+wrote port/src/sim/chareditor.cpp
+wrote port/src/sim/gfx_families.inc
+wrote UNCERTAINTIES.md
+wrote CLAUDE.md
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19v

@@ -1,4 +1,15 @@
-# S7 STATUS (lead: session cmvmrorle3t0no115odl0j9k8, claude3 opus since the license move; row S7 of re/roadmap/sections.tsv; D1 Windows first)
+# S7 STATUS (wave 4 lead: session cmvub8baf23epp7153aj6ibzq, claude2 opus; waves 1-3 lead was cmvmrorle3t0no115odl0j9k8; row S7 of re/roadmap/sections.tsv)
+
+wave 4 (AUDIO OUT): DONE, S7.10..S7.13 accepted (S7.13 = G16 music folders, run by the lead, folded into MERGE_w4 before I19 committed); merge gate on S7_w4_root green
+design: sim context unchanged (device-less path, as the pinned corpus); a second context on an audio thread runs S4's device path into a real DirectSound sink; the sim's playSound / startSoundSlot / Snd::status requests are mirrored to it
+workers alive: none (S7.10 / S7.11 / S7.12 closed; S7.11 and S7.12 stalled after their work, the lead finished their heavy parts)
+game slots: none; heavy slot RELEASED 2026-10-30 14:20
+waves 1-3: 9 of 9 accepted and merged (37e58e96 holds them)
+gate wave 4: (a) device run through the app sink = $device 4b6ed61a; (b) app tests / segments / boot / app replay unchanged; (c) output capture vs install WAVs, controls RED; (d) Mariano listens
+U range wave 4: U-1686..U-1699 (U-1600..U-1685 are taken)
+last event: 2026-10-30 15:35 S7.13 gated and folded into MERGE_w4 / files_w4.txt; idle until the I20 verdict
+
+## Waves 1-3 (done)
 
 steps: 9 of 9 accepted; resubmission = log/roadmap/S7/9_merge.md (waves 1-3 as one merge on 78ffb06d); play session waits on G8
 workers alive: none; cap 1

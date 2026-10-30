@@ -1,0 +1,9 @@
+== test_gfx_eoi
+.....                                                                    [100%]
+5 passed in 81.62s (0:01:21)
+== test_video
+=========================== short test summary info ===========================
+SKIPPED [23] port\test\test_video.py:255: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_video.py:269: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+32 passed, 24 skipped in 8.23s
+== test_boot

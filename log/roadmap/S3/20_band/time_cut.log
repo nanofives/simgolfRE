@@ -1,0 +1,25 @@
+SINGLE sandbox median_us=32823
+BANDS sandbox n=2 median_us=17999 diff_single=0 diff_post=0
+BANDS sandbox n=3 median_us=11985 diff_single=0 diff_post=0
+BANDS sandbox n=4 median_us=11710 diff_single=0 diff_post=0
+BANDS sandbox n=6 median_us=9236 diff_single=0 diff_post=0
+SINGLE fuzz1_z0 median_us=34063
+BANDS fuzz1_z0 n=2 median_us=16715 diff_single=35644 diff_post=35644
+BANDS fuzz1_z0 n=3 median_us=14638 diff_single=35644 diff_post=35644
+BANDS fuzz1_z0 n=4 median_us=11210 diff_single=35644 diff_post=35644
+BANDS fuzz1_z0 n=6 median_us=9935 diff_single=36776 diff_post=36776
+SINGLE view_zoom1 median_us=50732
+BANDS view_zoom1 n=2 median_us=32464 diff_single=0 diff_post=0
+BANDS view_zoom1 n=3 median_us=23177 diff_single=0 diff_post=0
+BANDS view_zoom1 n=4 median_us=19244 diff_single=0 diff_post=0
+BANDS view_zoom1 n=6 median_us=15736 diff_single=0 diff_post=0
+SINGLE z2_r1 median_us=23583
+BANDS z2_r1 n=2 median_us=16182 diff_single=0 diff_post=0
+BANDS z2_r1 n=3 median_us=11766 diff_single=0 diff_post=0
+BANDS z2_r1 n=4 median_us=10669 diff_single=0 diff_post=0
+BANDS z2_r1 n=6 median_us=8934 diff_single=0 diff_post=0
+SINGLE hole median_us=32439
+BANDS hole n=2 median_us=16050 diff_single=0 diff_post=0
+BANDS hole n=3 median_us=10906 diff_single=0 diff_post=0
+BANDS hole n=4 median_us=9343 diff_single=0 diff_post=0
+BANDS hole n=6 median_us=9258 diff_single=0 diff_post=0

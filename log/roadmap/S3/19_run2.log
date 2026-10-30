@@ -1,0 +1,24 @@
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_c.dll
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_19\port\build\x64\Release\portsim_c.dll
+ssssssCALLS_GOLDEN = '4bcd00b57a591483c50726c4e305811097b842d38005a878b23f5856b81d89cc'
+..............
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[1-the caret one pixel right]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[2-the first line not raised below the window]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[3-the inset left out of the text rectangle]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[4-the visible-line count without value - get]
+PASSED port/test/test_gfx_s3_19.py::test_drawcontents_calls_golden_negctl_red[8-the bevel's colours swapped]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_close
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_negctl_red[5-the window composed one pixel lower]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_frame_negctl_red[6-Window::paint does not clear the surface]
+PASSED port/test/test_gfx_s3_19.py::test_composed_bio_close_negctl_red
+PASSED port/test/test_gfx_s3_19.py::test_wrap_width_negctl_red
+PASSED port/test/test_gfx_s3_19.py::test_caret_follows_the_caret_position
+PASSED port/test/test_gfx_s3_19.py::test_cov_r_bio_boot_draws_the_bio_box
+SKIPPED [1] port\test\test_gfx_s3_19.py:234: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [5] port\test\test_gfx_s3_19.py:260: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+14 passed, 6 skipped in 43.90s
+== 20:02:16 rc=0

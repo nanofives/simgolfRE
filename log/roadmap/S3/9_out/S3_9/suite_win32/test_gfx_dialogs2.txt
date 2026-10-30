@@ -1,0 +1,4 @@
+..............s............                                              [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_gfx_dialogs2.py:164: tournament_end has a snapshot (U-1120 fixed): not judged yet, U-1218
+26 passed, 1 skipped in 2158.27s (0:35:58)

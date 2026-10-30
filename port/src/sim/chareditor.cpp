@@ -552,11 +552,25 @@ int32_t bio_command(Ctx &ctx, uint32_t eb, const Command &c) {
   return apply_command(ctx, c);
 }
 
+// Roadmap S3.19: THE BIO ENTRY'S DRAWING, made only with a graphics backend attached (body family editbox, gfx_editbox.cpp):
+// the EditBox's window surface (EditBox::create's Window::create at (0x1e0, 0x70), 0x12c x 0xc8, shown by Window::show),
+// EditBox::drawContents at the show and after every key the EditBox takes (insertChar and onKey end in its slot +0x120,
+// Window::doLayout, which draws it again), Window::refreshFull of the root before the first input and at the end of every pass
+// (the window tree composes the EditBox over the root's copy), and the window taken off the tree by releaseState. The original
+// stores Palette::nearest(white) at +0x584 and paints with it; the port stores 0 (the palette is not modelled) and hands the
+// backend white as a direct RGB555 word (U-1847). Nothing here writes the GameState.
+constexpr uint32_t kBioPaint = 0x80000000u | 0x7fffu;
+
 void bio_entry(Ctx &ctx, uint32_t bio) {
   GameState &gs = ctx.gs();
   const Memory &m = ctx.mem;
   const int neg = SG_NEGCTL(g_negctl_editor);
   const uint32_t eb = GS(g_characterEditorEditBox);
+  const bool drawing = g_gfx_attached.load(std::memory_order_relaxed) != 0;
+  auto gx = [&](const char *name, std::initializer_list<uint32_t> a) {
+    if (drawing) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+  };
+  const uint32_t root_win = GS(g_rootWindow);
   editbox_create(ctx, eb, GS(g_rootWindow));
   m.store<uint32_t>(eb + kBlink, 1);  // setCaretActive(1): the flag (its Timer::startOnce is the window tree's)
   editbox_resize_buffer(ctx, eb, 0x1f4);
@@ -566,6 +580,9 @@ void bio_entry(Ctx &ctx, uint32_t bio) {
   m.store<uint32_t>(eb + 0x594, 2);
   m.store<uint32_t>(eb + 0x598, 0);
   m.store<uint32_t>(eb + 0x59c, 4);
+  gx("EditBox.window", {eb, 0x1e0, 0x70, 0x12c, 0xc8});
+  gx("EditBox::drawContents", {eb, kBioPaint});
+  gx("Window::refreshFull", {root_win, 0});
   gs.g_rootInput[kButton] = 0;
   gs.gDirtyFlagB = 0;
   do {
@@ -573,8 +590,14 @@ void bio_entry(Ctx &ctx, uint32_t bio) {
     InputSource *src = input_source(ctx);
     if (!src || src->exhausted()) throw NeedInput{{"showCharacterEditor: the bio EditBox"}};
     std::vector<Command> batch;
+    bool edited = false;
     if (src->batch(PumpKind::Blocking, batch))
-      for (const Command &c : batch) bio_command(ctx, eb, c);
+      for (const Command &c : batch) {
+        bio_command(ctx, eb, c);
+        if (c.kind == CmdKind::RootHandler && (c.handler == kFocusKeyDown || c.handler == kFocusChar)) edited = true;
+      }
+    if (edited) gx("EditBox::drawContents", {eb, kBioPaint});
+    gx("Window::refreshFull", {root_win, 0});
     gs.g_rootInput[kClicked] = 0;
   } while (gs.g_rootInput[kButton] == 0 && gs.gDirtyFlagB != (neg == 10 ? 0x0a : 0x0d));
   if (neg != 11) {
@@ -582,6 +605,7 @@ void bio_entry(Ctx &ctx, uint32_t bio) {
     cat(ctx, bio, m.load<uint32_t>(eb + kText));
   }
   editbox_release_state(ctx, eb);
+  gx("EditBox.close", {eb});
 }
 }  // namespace
 
@@ -998,8 +1022,7 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
         case 20:  // the bio (non-members): the global EditBox edits the record's bio until a press or Enter
           if (member) break;
           d.gx("drawPanelS2", {0x1d8, 0x68, 0x13c, 0xd8, 1});
-          d.gx("showCharacterEditor.bio", {});   // the EditBox's own drawing: reported, not modelled
-          bio_entry(ctx, R1 + 0x30);
+          bio_entry(ctx, R1 + 0x30);   // the EditBox's drawing: bio_entry hands it to the editbox family (roadmap S3.19)
           break;
       }
     } else if (ctl == -1) {

@@ -1,0 +1,2 @@
+[1/1] cov_r_bio FAIL=2 PASS=3 UNSUPPORTED=2 (19.4 s)
+{"rows": 7, "counts": {"FAIL": 2, "PASS": 3, "UNSUPPORTED": 2}}

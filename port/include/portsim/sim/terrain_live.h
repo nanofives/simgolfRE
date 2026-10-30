@@ -26,6 +26,7 @@
 
 #include "portsim/registry.h"
 #include "portsim/sim/gl_raster.h"
+#include "portsim/sim/gl_wgl.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_state.h"
 
@@ -105,6 +106,25 @@ class LiveTerrain : public TerrainApi {
   TerrainGlobals &globals() { return g_; }
   // drawing (roadmap S3.2)
   gl::GlRaster &raster() { return *raster_; }
+  // roadmap S3.15 (U-1810): the host's own OpenGL beside the rasteriser (gl_wgl.h), made before the setup's first call (the
+  // constructor reads SG_GL_BACKEND=wgl; true = in use). host_gl() is null when it is not in use or the host has none.
+  bool use_host_gl(bool on);
+  gl::WglSink *host_gl() { return wgl_ && wgl_->ok() && wgl_->has_context() ? wgl_.get() : nullptr; }
+  const std::string host_gl_why() const { return wgl_ ? wgl_->why() : std::string("not selected"); }
+  // roadmap S3.20 (decision G13, final: GlRaster is the default, the host's OpenGL opt-in): the terrain renderer of this LiveTerrain,
+  // chosen before its first call. mode "raster" = GlRaster (the default); "wgl" or "host" = the host's OpenGL without the check
+  // (S3.15's opt-in); "auto" = the host's OpenGL when it exists and the startup self-check (gl_wgl.h wgl_self_check) draws the
+  // original's reference pixels, else GlRaster. The constructor applies SG_GL_BACKEND (raster | wgl | host | auto) when it is set;
+  // an unset variable leaves GlRaster.
+  struct RendererChoice {
+    std::string mode = "raster";     // what was asked
+    std::string backend = "raster";  // what draws: "wgl" (the host's OpenGL) or "raster" (GlRaster)
+    std::string reason = "the default (no choice made)";
+    bool checked = false;            // the self-check ran
+    gl::SelfCheck check;
+  };
+  const RendererChoice &choose_renderer(const std::string &mode);
+  const RendererChoice &renderer() const { return choice_; }
   LiveTerrainView &view() { return view_; }
   bool setup_names_differ() const { return dll_.setup.names_differ; }
   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
@@ -138,6 +158,9 @@ class LiveTerrain : public TerrainApi {
   bool keep_log_ = true;
   uint64_t calls_ = 0;
   std::unique_ptr<gl::GlRaster> raster_;
+  std::unique_ptr<gl::WglSink> wgl_;
+  std::unique_ptr<gl::SetupPair> pair_;
+  RendererChoice choice_;
   LiveTerrainView view_;
   bool to_gfx(const char *name, std::initializer_list<uint32_t> args);
   uint32_t terrain_tile_at_exe(int32_t x, int32_t y);

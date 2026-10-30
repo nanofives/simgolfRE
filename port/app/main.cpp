@@ -10,6 +10,10 @@
 //                    [--max-records <n>] [--record-dir <dir>]   (S7.5) the live core over a corpus trace, presented like a session
 //   every run mode takes --terrain live|headless (default live: port/src/sim/terrain_live.cpp draws the course into the gfx
 //   root surface, as port/test/framegate.py attaches it) and --terrain-va <v> (the Terrain object's address, 0 = a free range)
+//   and --gl raster|auto|host (roadmap S3.20, decision G13: GlRaster is the default; opt-in: auto = the host's OpenGL when the
+//   startup self-check of gl_wgl.h passes, else GlRaster; host (or wgl) = the host's OpenGL without the check). Without --gl the
+//   environment's SG_GL_BACKEND (the same values) chooses, else GlRaster. The choice, where it came from and its reason go to
+//   stderr and to terrain_renderer.json in the record directory.
 //   simgolf_port.exe --selftest                      pacing, saves overlay and presenter unit tests ("[k/n] name PASS")
 //   simgolf_port.exe --translate <input.jsonl> [--out <file>]   re-translates a session's input log offline
 //   simgolf_port.exe --install <dir> --data <dir> --cat <logical> <out> | --write <logical> <file> | --remove <logical>
@@ -251,6 +255,7 @@ struct Options {
   // of its Terrain object (0: a free range of the address space)
   std::string terrain = "live";
   uint32_t terrain_va = 0;
+  std::string gl;                        // S3.20: --gl raster|auto|host|wgl, the terrain renderer of a live terrain ("" = not given)
   std::string live_trace;                // --live-trace: the live core over a corpus trace (LiveTracePresenter)
   std::vector<int64_t> snapshot_list;    // --snapshots a,b,c: gfx.snapshotAt ordinals of a --live-trace run
   std::string op;  // cat / write / remove / list
@@ -297,10 +302,41 @@ struct TerrainGuard {
   TerrainGuard() = default;
   TerrainGuard(const TerrainGuard &) = delete;
   TerrainGuard &operator=(const TerrainGuard &) = delete;
-  void attach(const Options &o, portsim::Ctx &c) {
+  void attach(const Options &o, portsim::Ctx &c, const fs::path &rec) {
     if (o.terrain != "live") return;
     ctx = &c;
     live = std::make_unique<portsim::LiveTerrain>(c, o.terrain_va, std::vector<uint32_t>{});
+    // S3.20 (decision G13, final): the terrain renderer, chosen before the first Terrain call: --gl, else SG_GL_BACKEND, else
+    // GlRaster; logged with where the choice came from and its reason
+    std::string mode = o.gl, source = "--gl";
+    if (mode.empty()) {
+      const char *be = std::getenv("SG_GL_BACKEND");
+      const std::string e = be ? be : "";
+      if (e == "raster" || e == "auto" || e == "host" || e == "wgl") {
+        mode = e;
+        source = "SG_GL_BACKEND";
+      } else {
+        mode = "raster";
+        source = "default";
+      }
+    }
+    const portsim::LiveTerrain::RendererChoice &ch = live->choose_renderer(mode);
+    const std::string took = ch.checked ? " [self-check " + std::to_string(static_cast<int>(ch.check.ms)) + " ms]" : "";
+    std::fprintf(stderr, "simgolf_port: terrain renderer %s (%s %s): %s%s\n", ch.backend.c_str(), source.c_str(), mode.c_str(),
+                 ch.reason.c_str(), took.c_str());
+    auto esc = [](const std::string &t) {
+      std::string r;
+      for (char k : t) {
+        if (k == '"' || k == '\\') r += '\\';
+        r += k;
+      }
+      return r;
+    };
+    const std::string js = "{\"source\":\"" + esc(source) + "\",\"mode\":\"" + esc(ch.mode) + "\",\"backend\":\"" + esc(ch.backend) + "\",\"reason\":\"" + esc(ch.reason) +
+                           "\",\"checked\":" + (ch.checked ? "true" : "false") + ",\"pass\":" + (ch.check.pass ? "true" : "false") +
+                           ",\"got\":\"" + ch.check.got + "\",\"want\":\"" + ch.check.want + "\",\"ms\":" +
+                           std::to_string(ch.check.ms) + "}\n";
+    write_file(rec / "terrain_renderer.json", js.data(), js.size());
     portsim::set_terrain_api(c, live.get());
   }
   ~TerrainGuard() {
@@ -357,7 +393,7 @@ PresentResult present_trace(const Options &o, AppFiles &files, const fs::path &r
   }
   TerrainGuard terrain;
   RegNegctl reg_negctl(o.negctl);
-  terrain.attach(o, *ctx);
+  terrain.attach(o, *ctx, rec);
   pr.run.code = run_guarded(ctx.get(), &trace, maxf, &pr.run);
   // the frame: the requested snapshot, else the back buffer now
   const std::string name = o.snapshot_at >= 0 ? "$gfx/snapshot_0.555" : "$gfx/back.555";
@@ -466,7 +502,7 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
     if (err.empty()) {
       TerrainGuard terrain;
       RegNegctl reg_negctl(o.negctl);
-      terrain.attach(o, *ctx);
+      terrain.attach(o, *ctx, rec);
       auto inner = portsim::make_trace_live_host(*ctx, trace.data(), trace.size(), &why);
       if (!inner) err = "trace host refused: " + why;
       if (err.empty()) {
@@ -601,7 +637,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   }
   TerrainGuard terrain;
   RegNegctl reg_negctl(o.negctl);
-  terrain.attach(o, *ctx);
+  terrain.attach(o, *ctx, rec);
   session.terrain_view = terrain.live ? &terrain.live->view() : nullptr;
   TerrainLogBound tlog;  // S7.8 (U-1643)
   tlog.live = terrain.live.get();
@@ -1043,6 +1079,9 @@ bool parse(int argc, char **argv, Options &o) {
     }
     else if (a == "--terrain") {
       if (!val(o.terrain) || (o.terrain != "live" && o.terrain != "headless")) return false;
+    }
+    else if (a == "--gl") {
+      if (!val(o.gl) || (o.gl != "auto" && o.gl != "wgl" && o.gl != "host" && o.gl != "raster")) return false;
     }
     else if (a == "--terrain-va") { if (!val(v)) return false; o.terrain_va = static_cast<uint32_t>(std::strtoul(v.c_str(), nullptr, 0)); }
     else if (a == "--live-trace") { if (!val(o.live_trace)) return false; }

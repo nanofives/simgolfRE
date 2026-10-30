@@ -1,0 +1,109 @@
+{
+ "ingame_session": {
+  "session": {
+   "code": 0,
+   "detail": "",
+   "stop": "host",
+   "records": 376,
+   "violations": 0,
+   "first_violation": -1,
+   "first_violation_what": "",
+   "asks": 1290,
+   "reasks": 0,
+   "dispatches": 41,
+   "clocks": 4440072,
+   "cursors": 1177,
+   "asyncs": 0,
+   "body_calls": 752,
+   "modal_calls": 538,
+   "paced_calls": 0,
+   "idle_declines": 28,
+   "inflated": 0,
+   "marks": 165,
+   "presents": 165,
+   "idle_passes": 28,
+   "presents_by_kind": {
+    "r": 165,
+    "w": 0,
+    "m": 0,
+    "p": 0
+   },
+   "present_points": {
+    "r": 413,
+    "w": 0,
+    "m": 32,
+    "p": 0
+   },
+   "r_superseded": 159,
+   "w_skipped": 371,
+   "memory": {
+    "start": {
+     "frame": 0,
+     "working_set": 69550080,
+     "peak_working_set": 69685248,
+     "private_bytes": 58347520,
+     "terrain_log": 0
+    },
+    "end": {
+     "frame": 376,
+     "working_set": 213348352,
+     "peak_working_set": 516214784,
+     "private_bytes": 200470528,
+     "terrain_log": 0
+    },
+    "samples": 3
+   },
+   "terrain_log": {
+    "calls": 55026,
+    "max_len": 1,
+    "len_end": 0,
+    "kept": false
+   },
+   "waits": 28,
+   "wait_ms": 5455,
+   "deliveries": 41,
+   "delivered_commands": 51,
+   "stalls": 0,
+   "trace_bytes": 124403676,
+   "trace_streamed": true,
+   "spilled_events": 4439803,
+   "held_events": 2867
+  },
+  "error": "",
+  "ingame_from": 6,
+  "periods": {
+   "n": 370,
+   "min": 6,
+   "max": 97,
+   "median": 92.0,
+   "mean": 90.83,
+   "within_quantum": 1.0
+  },
+  "work_ms": {
+   "n": 366,
+   "min": 4,
+   "max": 76,
+   "median": 8.0,
+   "mean": 8.79,
+   "within_quantum": 1.0
+  },
+  "work_ms_frames_with_terrain_passes": {
+   "n": 11,
+   "min": 19,
+   "max": 76,
+   "median": 35,
+   "mean": 41.73,
+   "within_quantum": 1.0
+  },
+  "frames_with_terrain_passes": 11,
+  "terrain_passes": 15,
+  "terrain_pixels": 0,
+  "kinds": {
+   "r": 165,
+   "m": 0,
+   "w": 0,
+   "p": 0
+  },
+  "presents": 165
+ }
+}

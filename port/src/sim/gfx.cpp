@@ -78,6 +78,9 @@ void gfx_set_refresh_hook(Ctx &ctx, GfxRefreshHook fn, void *arg) {
 namespace gfxf {
 const int32_t *blit_scale(Gfx &g);   // gfx_prim_fill.cpp (roadmap S2.4): Display::setScale's three words
 }
+namespace gfxe {
+void compose(Gfx &g, Ctx &ctx);   // gfx_editbox.cpp (roadmap S3.19): the window tree's shown child surfaces onto the back buffer
+}
 
 void Gfx::unsup(const std::string &why) {
   if (++unsupported[why] == 1) notes.push_back(why);
@@ -503,6 +506,7 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (SG_NEGCTL(g_negctl_gfx) == 4) return;
   g.back.px = g.root.px;
+  gfxe::compose(g, ctx);   // roadmap S3.19: Window::blitToTarget of every shown child window over the root's copy
   gfxh::after_present(g, ctx);
   g.back_terrain = g.root_terrain;
   std::pair<GfxRefreshHook, void *> h{nullptr, nullptr};

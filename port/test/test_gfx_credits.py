@@ -133,7 +133,7 @@ def _negctl(lib, name, mode):
 # ------------------------------------------------------------------------------------------------ the family table
 def test_families_registered_without_duplicates(glib):
     with _state(glib) as st:
-        assert st.call("gfx.family.surface", []).eax == 9
+        assert st.call("gfx.family.surface", []).eax == 10   # 9 + Surface_createFull_fwd1 (roadmap S3.17)
         assert st.call("gfx.family.prim_text", []).eax == 2
         assert st.call("gfx.family.credits", []).eax == 4
         assert st.call("gfx.check", []).eax == 0, st.files_read("$gfx/bodies.txt")

@@ -1,0 +1,3 @@
+[1/1] cov_r_bio FAIL=4 PASS=3 (17.5 s)
+{"rows": 7, "counts": {"FAIL": 4, "PASS": 3}}
+== 20:08:49 rc=0

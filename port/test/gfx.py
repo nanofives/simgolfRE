@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import sys
 from dataclasses import dataclass, field
@@ -58,6 +59,12 @@ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
     summ = json.loads((REFS / scenario / "det_b" / "summary.json").read_text())
     st = summ["checkpoints"][checkpoint]["status"]
     tr = TF.read(boot.TRACES / f"{scenario}.trace")
+    # roadmap S3.16: the trace's POLL record of the checkpoint gives the clock call the poll rode on (pos = the calls before
+    # it). When that call is not a tgt call (jgld Palette::update's QueryPerformanceCounter reads at the start of a frame body
+    # that reads no timeGetTime before H1's wait), status.tgt counts the tgt calls before it and the tgt-th call lies later,
+    # in H1's wait: after that frame's present, while the reference frame is the back buffer before it (cov_k1_paths cart,
+    # cov_k1_river r20: 7 census rows, U-1820)
+    poll = next((r.f["pos"] for r in tr.records if r.type == TF.POLL and r.f.get("checkpoint") == checkpoint), None)
     k = 0
     for ordinal, _ra, _slot, kind, value in TF.clock_calls(tr):
         if kind != 1:
@@ -65,6 +72,8 @@ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
         if k == st["tgt"]:
             if value != st["T"]:
                 raise ValueError(f"{scenario}/{checkpoint}: tgt call {k} has value {value}, the checkpoint's T is {st['T']}")
+            if poll is not None and poll < ordinal and os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll":
+                return poll
             return ordinal
         k += 1
     raise ValueError(f"{scenario}/{checkpoint}: the trace has only {k} tgt calls")

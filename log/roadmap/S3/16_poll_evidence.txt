@@ -1,0 +1,21 @@
+cov_k1_paths/cart: POLL record index 457 pos 64805 (the clock call it rode on: ordinal 64805, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 46359 (T 1094935) = clock ordinal 64815, return address 0x41e641 (kind 1); frame head FRAME pos 64805
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (64805, 64814, 10), '0x41e641 kind 1': (64815, 64815, 1)}
+cov_k1_river/r20: POLL record index 151 pos 30599 (the clock call it rode on: ordinal 30599, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 15453 (T 1064029) = clock ordinal 30609, return address 0x41e641 (kind 1); frame head FRAME pos 30599
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (30599, 30608, 10), '0x41e641 kind 1': (30609, 30609, 1)}
+cov_k1_routing/end: POLL record index 485 pos 67463 (the clock call it rode on: ordinal 67463, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 49187 (T 1097763) = clock ordinal 67473, return address 0x41e641 (kind 1); frame head FRAME pos 67463
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (67463, 67472, 10), '0x41e641 kind 1': (67473, 67473, 1)}
+cov_a_keys3/season: POLL record index 2401 pos 389471 (the clock call it rode on: ordinal 389471, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 242703 (T 1291279) = clock ordinal 389557, return address 0x41e641 (kind 1); frame head FRAME pos 389471
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (389471, 389556, 86), '0x41e641 kind 1': (389557, 389557, 1)}
+cov_l_bridge/obj5: POLL record index 256 pos 42364 (the clock call it rode on: ordinal 42364, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 26058 (T 1074634) = clock ordinal 42374, return address 0x41e641 (kind 1); frame head FRAME pos 42364
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (42364, 42373, 10), '0x41e641 kind 1': (42374, 42374, 1)}
+cov_a_flags/zdemo: POLL record index 757 pos 103331 (the clock call it rode on: ordinal 103331, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 76659 (T 1125235) = clock ordinal 103397, return address 0x41e641 (kind 1); frame head FRAME pos 103331
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (103331, 103396, 66), '0x41e641 kind 1': (103397, 103397, 1)}
+cov_a_flags/ztut: POLL record index 520 pos 68382 (the clock call it rode on: ordinal 68382, return address 0x8106a414, kind 2 = QPC)
+   status.tgt 52722 (T 1101298) = clock ordinal 68392, return address 0x41e641 (kind 1); frame head FRAME pos 68382
+   clock calls from the frame head to the tgt call: {'0x8106a414 kind 2': (68382, 68391, 10), '0x41e641 kind 1': (68392, 68392, 1)}

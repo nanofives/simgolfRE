@@ -9,6 +9,7 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G16, music folders (U-1608), 2026-10-30: extend the alias to them.** The exe opens six tracks under `sounds\music\Desert Music\`, `Links Music\`, `Tropical Music\`; the extracted install has `Desert_Music` / `Links_Music` / `Tropical_Music` (the Golf_Sfx rename). G15's switch also tries the underscore folders for these three (profile `fixed`, app only, sim unchanged). The seven names wrong on the CD itself stay as the original.
 - **G15, course sfx folder name (U-1499), 2026-10-30: the port finds both names.** The stock install has `sounds\Golf_Sfx`, the exe
   opens `sounds\Golf sfx`, so the original never plays those 26 sounds. A defect switch (default 1 = the original's failed opens; 0 =
   also try `Golf_Sfx`) in profile `fixed`, used by the app; install files untouched; simulation unchanged.

@@ -1,0 +1,5 @@
+[1/4] t_test_app_live rc=0 300 s :: 13 passed in 298.95s (0:04:58)
+[2/4] t_test_app_ingame rc=1 411 s :: 7 failed, 6 passed in 409.89s (0:06:49)
+[3/4] t_test_app_present rc=0 178 s :: 3 passed, 4 deselected in 177.62s (0:02:57)
+[4/4] t_test_app_replay rc=0 22 s :: 14 passed in 21.74s
+[done] gates t_test_app_live t_test_app_ingame t_test_app_present t_test_app_replay

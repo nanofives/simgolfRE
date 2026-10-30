@@ -1,0 +1,3 @@
+== ctl13 start 2026-10-30 01:35:26 free=33GB tree=S3_9 jobs=1 token=/c/Users/maria/Desktop/Proyectos/SimGolf/log/roadmap/S3/w7_heavy.lock
+[1/1] cov_a_champ FAIL=2 (13.4 s)
+{"rows": 2, "counts": {"FAIL": 2}}

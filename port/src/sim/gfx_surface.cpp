@@ -18,6 +18,13 @@
 //                                  is created, so a later read of it reports "no image" (loadImage, the only use the credits and
 //                                  the frame code make of it, replaces the handle with its own 8-bit surface: decodePcx8's
 //                                  Surface_paint)
+//   Surface_createFull_fwd1(this, a1, a2, a3, a4, a5)
+//                                  roadmap S3.17: mainLoop's forwarder (its two calls: the golfer-snapshot key 'B' and the
+//                                  routing render keys '.' / '/', each on a frame-local Image just constructed, 0x320 x 0x258)
+//                                  passes this through ecx and calls Surface_createFull(this, a1, a2, 0, a3, a4, a5): it
+//                                  reads its five stack arguments, pushes them with a 0 as the third and pops 0x14 bytes
+//                                  (re/analysis/render/00421b30_Surface_createFull_fwd1.md). The body hands that argument
+//                                  list to Surface_createFull's body, so the key's entries are erased the same way
 //   Surface_blitTakeDirty(this, src, x, y, w, h, kind, trim)
 //                                  c3da.cpp: Surface_blit (cropSprite of src's 8-bit image into this), then src's palette cache
 //                                  +0xac moves to this +0xc. The crop copies the palette words, so the move changes nothing the
@@ -37,6 +44,7 @@
 //   5 Surface_drawRegion draws byte 0xff too (no transparency)   6 Surface_drawRegion ignores the trim offsets +0x20 / +0x24
 //   7 Surface_blitThunk passes (x2, y2) as the source corner and (x1, y1) as the destination's
 //   8 Image_ctor / Surface_ctor leave the key's entries in place
+//   9 Surface_createFull_fwd1 does nothing (the key keeps its image; roadmap S3.17)
 #include <algorithm>
 #include <cstdint>
 
@@ -85,6 +93,13 @@ void call_body(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
     return;
   }
   g.unsup(std::string("gfx_surface: no body ") + name);
+}
+
+// Surface_createFull_fwd1(this, a1 .. a5) = Surface_createFull(this, a1, a2, 0, a3, a4, a5)
+void b_create_full_fwd1(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (mode() == 9) return;
+  const uint32_t b[7] = {a[0], a[1], a[2], 0, a[3], a[4], a[5]};
+  call_body(g, ctx, "Surface_createFull", b, 7);
 }
 
 void b_blit_take(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
@@ -136,6 +151,7 @@ const GfxBodyDef kBodies[] = {
     {"Surface_ctor", b_surface_ctor},
     {"Surface_free", b_surface_free},
     {"Surface_createFull", b_create_full},
+    {"Surface_createFull_fwd1", b_create_full_fwd1},
     {"Surface_blitTakeDirty", b_blit_take},
     {"Surface_drawRegion", b_draw_region},
     {"Surface_blitThunk", b_blit_thunk},

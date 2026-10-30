@@ -1,0 +1,11 @@
+[1/10] build_w32 rc=0 142 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_20\port\build\Win32\Release\portsim_c.dll
+[2/10] w32_test_gl_wgl_selfcheck rc=0 60 s :: 20 passed in 58.57s
+[3/10] w32_test_gl_wgl rc=0 123 s :: 9 passed in 121.43s (0:02:01)
+[4/10] fg_x64 rc=0 38 s :: {"rows": 107, "counts": {"PASS": 106, "FAIL": 1}}
+[5/10] fg_w32 rc=0 40 s :: {"rows": 107, "counts": {"PASS": 106, "FAIL": 1}}
+[6/10] segs_x64 rc=0 441 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 440.3}
+[7/10] segs_win32 rc=0 621 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 620.4}
+[8/10] boot_x64 rc=0 654 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[9/10] boot_win32 rc=0 778 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[10/10] census rc=0 2254 s :: {"rows": 698, "counts": {"PASS": 638, "FAIL": 50, "NOT_RUN": 10}}
+[done] gates build_w32 w32_test_gl_wgl_selfcheck w32_test_gl_wgl fg_x64 fg_w32 segs_x64 segs_win32 boot_x64 boot_win32 census

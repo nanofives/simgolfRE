@@ -1,0 +1,4 @@
+s...                                                                     [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_gfx_info_panel.py:152: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+3 passed, 1 skipped in 8.39s

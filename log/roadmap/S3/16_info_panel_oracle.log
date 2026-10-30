@@ -1,0 +1,4 @@
+.s                                                                       [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_gfx_info_panel.py:188: golden not pinned yet: 299d474290a0d26a
+1 passed, 1 skipped, 2 deselected in 17.12s

@@ -1,0 +1,290 @@
+== static start 2026-10-30 02:10:23 free=34GB tree=S3_9 jobs=1 token=/c/Users/maria/Desktop/Proyectos/SimGolf/log/roadmap/S3/w7_heavy.lock
+.....................................s.................................. [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 27%]
+........................................................................ [ 36%]
+........................................................................ [ 46%]
+..F..F.................................................................. [ 55%]
+.F............ssssssssssssssssssssssssssssss............................ [ 64%]
+..................................sssssss............................... [ 73%]
+..........s............................................................. [ 83%]
+........................................................................ [ 92%]
+............................................................             [100%]
+================================== FAILURES ===================================
+_______ test_every_matched_source_is_100_percent[smsg_golf_GolferPanel] _______
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_9/re/match/smsg_golf_GolferPanel.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        tc = match.file_toolchain(src.read_text(errors="replace"))
+        if not (match.TOOLCHAINS[tc]["bin"] / "cl.exe").exists():
+            pytest.skip(f"// TOOLCHAIN {tc} not present: no cl.exe in {match.TOOLCHAINS[tc]['bin']} (tools/ is local, not committed)")
+        res = match.compare(src, "", False)
+        assert res, f"{src.name} has no MATCH annotations"
+        bad = [(r[0], hex(r[1]), f"{100 * r[4]:.1f}%") for r in res if r[4] != 1.0]
+>       assert not bad, bad
+E       AssertionError: [('golf_clean.exe', '0x45c560', '94.7%')]
+E       assert not [('golf_clean.exe', '0x45c560', '94.7%')]
+
+tests\test_match.py:39: AssertionError
+---------------------------- Captured stdout call -----------------------------
+golf_clean.exe 0x0045c180 _$E12: 100.0% (1/1 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045c190 _$E11: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045c200 ?RenderGolferPortrait@@YAHHHHH@Z: 100.0% (185/185 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x0045c560 ?RenderGolferInfoPanel@@YAXHH@Z: 94.7% (1837/1939 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+   ! je 0x189a                                  | je 0x45ddec
+   ! xor ebx, ebx                               | push 0
+   ! push ebx                                   | push 0
+   ! push ebx                                   | push 0
+   ! push ebx                                   | 
+   ! mov byte ptr [0], bl                       | mov byte ptr [0x51a068], 0
+   !                                            | or ebx, 0xffffffff
+   ! or ecx, 0xffffffff                         | mov ecx, ebx
+   ! push 0x80000000                            | 
+   ! push 0x94                                  | push 0x80000000
+   ! or ecx, 0xffffffff                         | mov ecx, ebx
+   !                                            | push 0x94
+   !                                            | and ecx, 3
+   ! and ecx, 3                                 | rep movsb byte ptr es:[edi], byte ptr [esi]
+   ! rep movsb byte ptr es:[edi], byte ptr [esi] | 
+   ! mov dword ptr [0], 0xffffffff              | mov dword ptr [0x824130], ebx
+   ! push ebx                                   | push 0
+   ! push ebx                                   | push 0
+   ! push ebx                                   | push 0
+   ! cmp dword ptr [esp + 0x28], ebx            | mov eax, dword ptr [esp + 0x28]
+   ! je 0x12a6                                  | test eax, eax
+   !                                            | je 0x45d80a
+   ! jl 0xf07                                   | jl 0x45d46b
+   ! je 0xed9                                   | je 0x45d43d
+   ! jne 0xe2e                                  | jne 0x45d392
+   ! je 0xe85                                   | je 0x45d3e9
+   ! je 0xed9                                   | je 0x45d43d
+   ! jle 0xe06                                  | jle 0x45d36a
+   ! jmp 0xf0c                                  | jmp 0x45d470
+   ! jle 0xf20                                  | jle 0x45d484
+   ! jmp 0xcfe                                  | jmp 0x45d262
+   ! jge 0xf63                                  | jge 0x45d4c7
+   ! jge 0xf93                                  | jge 0x45d4f7
+   ! jge 0xfc2                                  | jge 0x45d526
+   ! jge 0xff1                                  | jge 0x45d555
+   ! jge 0x101f                                 | jge 0x45d583
+   ! jmp 0x1024                                 | jmp 0x45d588
+   ! jne 0x104c                                 | jne 0x45d5b0
+   ! jne 0x104c                                 | jne 0x45d5b0
+   ! jne 0x104c                                 | jne 0x45d5b0
+   ! jne 0x109f                                 | jne 0x45d603
+   ! je 0x10da                                  | je 0x45d63e
+   ! jne 0x1294                                 | jne 0x45d7f8
+   ! jle 0x189a                                 | jle 0x45ddec
+   ! ja 0x127a                                  | ja 0x45d7de
+   ! jmp 0x125a                                 | jmp 0x45d7be
+   ! jmp 0x1275                                 | jmp 0x45d7d9
+   ! jmp 0x125a                                 | jmp 0x45d7be
+   ! jmp 0x1275                                 | jmp 0x45d7d9
+   ! jge 0x12e5                                 | jge 0x45d84d
+   ! mov dword ptr [0], ebx                     | mov dword ptr [0x824130], 0
+   ! jge 0x1314                                 | jge 0x45d87c
+   ! jge 0x1343                                 | jge 0x45d8ab
+   ! jge 0x1372                                 | jge 0x45d8da
+   ! jge 0x13a1                                 | jge 0x45d909
+   ! cmp ecx, ebx                               | test ecx, ecx
+   !                                            | sete al
+   ! sete al                                    | push 0
+   ! push ebx                                   | lea edx, [eax + eax*4]
+   ! lea edx, [eax + eax*4]                     | 
+   ! push ebx                                   | push 0
+   ! push ebx                                   | push 0
+   ! cmp word ptr [ebp + 0xb0], -1              | cmp word ptr [ebp + 0x579568], bx
+   ! je 0x1496                                  | je 0x45da01
+   ! push ebx                                   | push 0
+   ! push ebx                                   | push 0
+   ! jne 0x159b                                 | jne 0x45dae9
+   ! jle 0x15a1                                 | jle 0x45daf3
+   ! cmp eax, -1                                | cmp eax, ebx
+   ! je 0x15a1                                  | je 0x45daf3
+   ! ja 0x1587                                  | ja 0x45dad5
+   ! jmp 0x1567                                 | jmp 0x45dab6
+   ! or ecx, 0xffffffff                         | jmp 0x45da95
+   !                                            | mov edi, 0x4d39a4
+   !                                            | jmp 0x45dab6
+   !                                            | mov edi, 0x4d3978
+   !                                            | mov ecx, ebx
+   ! jmp 0x1582                                 | jmp 0x45dad0
+   ! jmp 0x1567                                 | mov ecx, ebx
+   ! mov edi, 0                                 | 
+   ! or ecx, 0xffffffff                         | 
+   ! xor eax, eax                               | 
+   ! repne scasb al, byte ptr es:[edi]          | 
+   ! not ecx                                    | 
+   ! sub edi, ecx                               | 
+   ! mov edx, ecx                               | 
+   ! mov esi, edi                               | 
+   ! mov edi, 0                                 | 
+   ! shr ecx, 2                                 | 
+   ! rep movsd dword ptr es:[edi], dword ptr [esi] | 
+   ! mov ecx, edx                               | 
+   ! jmp 0x1582                                 | 
+   ! mov edi, 0                                 | 
+   ! or ecx, 0xffffffff                         | 
+   ! jmp 0x15a1                                 | jmp 0x45daf3
+   ! mov dword ptr [0], ebx                     | mov dword ptr [0x823768], 0
+   ! js 0x189a                                  | js 0x45ddec
+   ! je 0x1893                                  | je 0x45dde5
+   ! je 0x16d0                                  | je 0x45dc22
+   ! je 0x17b6                                  | je 0x45dd08
+   ! jne 0x17cd                                 | jne 0x45dd1f
+   ! jne 0x17d8                                 | jne 0x45dd2a
+   ! jne 0x17e7                                 | jne 0x45dd39
+   ! je 0x17fb                                  | je 0x45dd4d
+   ! jne 0x1893                                 | jne 0x45dde5
+   ! jle 0x184c                                 | jle 0x45dd9e
+   ! jne 0x183a                                 | jne 0x45dd8c
+   ! jmp 0x1852                                 | jmp 0x45dda4
+   ! jmp 0x185c                                 | jmp 0x45ddae
+   ! jge 0x189a                                 | jge 0x45ddec
+   ! jns 0x15db                                 | jns 0x45db2d
+_______ test_every_matched_source_is_100_percent[smsg_golf_InfoScreens] _______
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_9/re/match/smsg_golf_InfoScreens.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        tc = match.file_toolchain(src.read_text(errors="replace"))
+        if not (match.TOOLCHAINS[tc]["bin"] / "cl.exe").exists():
+            pytest.skip(f"// TOOLCHAIN {tc} not present: no cl.exe in {match.TOOLCHAINS[tc]['bin']} (tools/ is local, not committed)")
+        res = match.compare(src, "", False)
+        assert res, f"{src.name} has no MATCH annotations"
+        bad = [(r[0], hex(r[1]), f"{100 * r[4]:.1f}%") for r in res if r[4] != 1.0]
+>       assert not bad, bad
+E       AssertionError: [('golf_clean.exe', '0x44f6b0', '98.8%')]
+E       assert not [('golf_clean.exe', '0x44f6b0', '98.8%')]
+
+tests\test_match.py:39: AssertionError
+---------------------------- Captured stdout call -----------------------------
+golf_clean.exe 0x0044acb0 _$E26: 100.0% (19/19 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044ad50 _$E31: 100.0% (6/6 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044ada0 _$E36: 100.0% (3/3 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044bde0 ?LoadInfoScreenAssets@@YAXXZ: 100.0% (1166/1166 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044cff0 ?RenderEndOfYearReport@@YAXXZ: 100.0% (1776/1776 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044e770 ?RenderKeyboardShortcutsScreen@@YAXXZ: 100.0% (1228/1228 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0044f6b0 ?RenderFinancialReportScreen@@YAXXZ: 98.8% (340/344 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+   ! mov dword ptr [esp + 0x40], esi            | mov dword ptr [esp + 0x44], esi
+   ! mov dword ptr [esp + 0x30], eax            | mov dword ptr [esp + 0x2c], eax
+   ! mov esi, dword ptr [esp + 0x2c]            | mov eax, dword ptr [esp + 0x2c]
+   ! mov eax, dword ptr [esp + 0x30]            | mov esi, dword ptr [esp + 0x30]
+golf_clean.exe 0x0044fb30 ?RenderHoleInfoOverlay@@YAXH@Z: 100.0% (4715/4715 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00453330 ?RenderHoleStatsScreen@@YAXH@Z: 100.0% (1633/1633 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004546b0 ?RenderPlayerCommentsReport@@YAXXZ: 100.0% (461/461 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00454c50 ?RenderMembershipRosterScreen@@YAXXZ: 100.0% (1149/1149 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00455a30 ?RenderBestHoleScoresScreen@@YAXXZ: 100.0% (396/396 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00455ed0 ?RenderHistographScreen@@YAXXZ: 100.0% (948/948 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00456be0 ?RenderRoutingMapScreen@@YAXXZ: 100.0% (2098/2098 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004587a0 ?RenderTractPurchaseScreen@@YAHXZ: 100.0% (1001/1001 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00459400 ?RenderHireEmployeeScreen@@YAHXZ: 100.0% (338/338 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00459850 ?RenderGolferPairingScreen@@YAXXZ: 100.0% (677/677 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0045a090 ?RenderTournamentLeaderboard@@YAXXZ: 100.0% (1093/1093 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+______ test_every_matched_source_is_100_percent[smsg_golf_SpriteAssets] _______
+
+src = WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_9/re/match/smsg_golf_SpriteAssets.cpp')
+
+    @pytest.mark.parametrize("src", sorted((ROOT / "re" / "match").glob("*.cpp")), ids=lambda p: p.stem)
+    def test_every_matched_source_is_100_percent(src):
+        """Every MATCH annotation in re/match/ recompiles with VC6 to the original instructions."""
+        tc = match.file_toolchain(src.read_text(errors="replace"))
+        if not (match.TOOLCHAINS[tc]["bin"] / "cl.exe").exists():
+            pytest.skip(f"// TOOLCHAIN {tc} not present: no cl.exe in {match.TOOLCHAINS[tc]['bin']} (tools/ is local, not committed)")
+        res = match.compare(src, "", False)
+        assert res, f"{src.name} has no MATCH annotations"
+        bad = [(r[0], hex(r[1]), f"{100 * r[4]:.1f}%") for r in res if r[4] != 1.0]
+>       assert not bad, bad
+E       AssertionError: [('golf_clean.exe', '0x407e00', '99.0%')]
+E       assert not [('golf_clean.exe', '0x407e00', '99.0%')]
+
+tests\test_match.py:39: AssertionError
+---------------------------- Captured stdout call -----------------------------
+golf_clean.exe 0x00404d00 _$E6: 100.0% (53/53 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00404ea0 _$E11: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405010 _$E16: 100.0% (36/36 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405160 _$E21: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004052e0 _$E26: 100.0% (46/46 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405450 _$E31: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405590 _$E36: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004056d0 _$E41: 100.0% (31/31 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405840 _$E46: 100.0% (41/41 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405910 _$E51: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405b10 ?ShowSaveGameDialog@@YAXXZ: 100.0% (283/283 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00405e30 ?TrySpawnWildlifeHabitat@@YAXHHH@Z: 100.0% (187/187 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004060a0 ?CalculateHoleTalentStrokeGap@@YAHHH@Z: 100.0% (96/96 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004061d0 _$E76: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406210 _$E81: 100.0% (2/2 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406250 ?ShowLoadingScreen@@YAXH@Z: 100.0% (212/212 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406670 ?ProcessMembershipUpgrade@@YAXH@Z: 100.0% (534/534 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406f20 ?SmoothTerrainRaise@@YAXHH@Z: 100.0% (39/39 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00406f90 ?SmoothTerrainLower@@YAXHH@Z: 100.0% (38/38 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407000 ?InLandmarkInfluence@@YAHHHH@Z: 100.0% (57/57 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407700 ?GetSceneryName@@YAHHHH@Z: 100.0% (270/270 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407d30 ?StartNewGameOnCourse@@YAXH@Z: 100.0% (52/52 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00407e00 ?DisplayShotCommentary@@YAXHHHH@Z: 99.0% (1965/1985 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+   !                                            | mov ebp, dword ptr [esp + 0x68]
+   ! mov ebp, dword ptr [esp + 0x68]            | 
+   ! mov dword ptr [esp + 0x68], 0              | mov dword ptr [esp + 0x6c], 0
+   ! mov dword ptr [esp + 0x64], 0x100          | mov dword ptr [esp + 0x68], 0x100
+   ! mov dword ptr [esp + 0x64], 2              | mov dword ptr [esp + 0x68], 2
+   ! mov dword ptr [esp + 0x64], 4              | mov dword ptr [esp + 0x68], 4
+   ! mov dword ptr [esp + 0x64], 0x20           | mov dword ptr [esp + 0x68], 0x20
+   ! mov dword ptr [esp + 0x64], 0x40           | mov dword ptr [esp + 0x68], 0x40
+   ! mov dword ptr [esp + 0x64], 0x80           | mov dword ptr [esp + 0x68], 0x80
+   ! mov dword ptr [esp + 0x64], 1              | mov dword ptr [esp + 0x68], 1
+   ! mov dword ptr [esp + 0x64], 8              | mov dword ptr [esp + 0x68], 8
+   ! mov dword ptr [esp + 0x64], 0x10           | mov dword ptr [esp + 0x68], 0x10
+   ! mov dword ptr [esp + 0x64], edi            | mov dword ptr [esp + 0x68], edi
+   ! mov eax, dword ptr [esp + 0x64]            | mov eax, dword ptr [esp + 0x68]
+   ! mov eax, dword ptr [esp + 0x64]            | mov eax, dword ptr [esp + 0x68]
+   ! mov byte ptr [esp + 0x64], al              | mov byte ptr [esp + 0x68], al
+   ! movsx eax, byte ptr [esp + 0x6c]           | movsx eax, byte ptr [esp + 0x70]
+   ! mov dword ptr [esp + 0x64], ecx            | mov dword ptr [esp + 0x68], ecx
+   ! mov dword ptr [esp + 0x64], ecx            | mov dword ptr [esp + 0x68], ecx
+   ! mov dword ptr [esp + 0x64], 0              | mov dword ptr [esp + 0x68], 0
+   ! mov eax, dword ptr [esp + 0x64]            | mov eax, dword ptr [esp + 0x68]
+golf_clean.exe 0x00409620 ?CheckGolferShotDeviation@@YAXH@Z: 100.0% (253/253 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409950 ?AddGolferTrailPoint@@YAXH@Z: 100.0% (44/44 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x004099f0 ?StartShotTrail@@YAXH@Z: 100.0% (43/43 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409a90 ?SpawnGolferDivot@@YAXH@Z: 100.0% (104/104 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409bf0 ?UpdateDivots@@YAXXZ: 100.0% (71/71 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x00409cf0 ?PlayScriptStep@@YAXXZ: 100.0% (295/295 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040a160 ?BuildDemolishTooltipText@@YAHHH@Z: 100.0% (340/340 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040a4e0 ?DemolishTileAtPosition@@YAXHH@Z: 100.0% (380/380 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040aa80 ?ProcessHireEmployeeSelection@@YAXXZ: 100.0% (168/168 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040ad60 ?LoadOrGenerateHighScores@@YAHXZ: 100.0% (154/154 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040af70 ?TransferSaveBlock@@YAHPAXI@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040b680 ?SaveCourseToFile@@YAXXZ: 100.0% (153/153 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040b9b0 ?LoadSavedGame@@YAXPBDHHH@Z: 100.0% (188/188 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040bfe0 ?GetCornerElevation@@YAHHHHH@Z: 100.0% (143/143 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040c500 ?PlayPositionedSound@@YAXHHHH@Z: 100.0% (157/157 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040ca10 ?TilePatternToArea@@YAXHHHHH@Z: 100.0% (78/78 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040d320 ?RenderSpeechBubbleWithPortrait@@YAXHHHH@Z: 100.0% (298/298 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040d760 ?GetColorForSkillSet@@YAIH@Z: 100.0% (15/15 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040d890 ?SelectScreenItem@@YAXHH@Z: 100.0% (150/150 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040db90 ?ValidateBuildingPlacement@@YAHHHHH@Z: 100.0% (156/156 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040de70 ?FindNearestBench@@YAXHHH@Z: 100.0% (83/83 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040df80 ?FindBuildingAtTile@@YAHHH@Z: 100.0% (44/44 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040e000 ?PlaceBuildingOnTerrain@@YAHHHHH@Z: 100.0% (295/295 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040e400 ?DemolishBuilding@@YAXH@Z: 100.0% (127/127 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040e720 ?OpenHoleForPlay@@YAXXZ: 100.0% (852/852 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+golf_clean.exe 0x0040f190 ?StartProMatch@@YAXH@Z: 100.0% (282/282 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl /GX
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_failure_tools.py:55: run re/tools/invariants.py TerrainDll_tileAt
+SKIPPED [30] tests\test_match.py:35: // TOOLCHAIN sp5 not present: no cl.exe in C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\tools\vc6sp5\VC98\BIN (tools/ is local, not committed)
+SKIPPED [1] tests\test_match_toolchain.py:29: VC6 RTM or SP5 toolchain not in tools/
+SKIPPED [3] tests\test_match_toolchain.py:36: VC6 RTM or SP5 toolchain not in tools/
+SKIPPED [1] tests\test_match_toolchain.py:49: VC6 RTM or SP5 toolchain not in tools/
+SKIPPED [1] tests\test_match_toolchain.py:69: VC6 RTM or SP5 toolchain not in tools/
+SKIPPED [1] tests\test_match_toolchain.py:76: VC6 RTM or SP5 toolchain not in tools/
+SKIPPED [1] tests\test_patches.py:33: got empty parameter set for (path)
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_GolferPanel]
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_InfoScreens]
+FAILED tests/test_match.py::test_every_matched_source_is_100_percent[smsg_golf_SpriteAssets]
+3 failed, 738 passed, 39 skipped, 46 deselected in 486.65s (0:08:06)

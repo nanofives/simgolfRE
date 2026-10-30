@@ -1,0 +1,37 @@
+port/build/S3_19/port/src/sim/gfx_text.cpp   (mirror; delivered as 19_edits.py)
+port/build/S3_19/port/src/sim/gfx.cpp   (mirror; delivered as 19_edits.py)
+port/build/S3_19/port/src/sim/chareditor.cpp   (mirror; delivered as 19_edits.py)
+port/build/S3_19/port/src/sim/gfx_families.inc   (mirror; delivered as 19_edits.py)
+port/build/S3_19/port/src/sim/gfx_editbox.cpp   (mirror; delivered as 19_new/)
+port/build/S3_19/port/test/test_gfx_s3_19.py   (mirror; delivered as 19_new/)
+log/roadmap/S3/19_assemble.py
+log/roadmap/S3/19_make_edits.py
+log/roadmap/S3/19_edits.py
+log/roadmap/S3/19_heavy.sh
+log/roadmap/S3/19_run1.sh
+log/roadmap/S3/19_run2.sh
+log/roadmap/S3/19_run3.sh
+log/roadmap/S3/19_run4.sh
+log/roadmap/S3/19_run5.sh
+log/roadmap/S3/19_base/port/src/sim/gfx_text.cpp
+log/roadmap/S3/19_base/port/src/sim/gfx.cpp
+log/roadmap/S3/19_base/port/src/sim/chareditor.cpp
+log/roadmap/S3/19_base/port/src/sim/gfx_families.inc
+log/roadmap/S3/19_new/port/src/sim/gfx_editbox.cpp
+log/roadmap/S3/19_new/port/test/test_gfx_s3_19.py
+log/roadmap/S3/19_notes.md
+log/roadmap/S3/19_merge.md
+log/roadmap/S3/19_files.txt
+log/roadmap/S3/19_uncertain.tsv
+log/roadmap/S3/19_assemble_base.log
+log/roadmap/S3/19_assemble_base2.log
+log/roadmap/S3/19_assemble_verify.log
+log/roadmap/S3/19_run1.log
+log/roadmap/S3/19_run2.log
+log/roadmap/S3/19_test_oracle.log
+log/roadmap/S3/19_test_x64.log
+log/roadmap/S3/19_fg/new_cov_r_bio.tsv
+log/roadmap/S3/19_fg/new_cov_r_bio.log
+log/roadmap/S3/19_fg/new_cov_r_bio.tsv.d
+log/roadmap/S3/19_run6.sh
+log/roadmap/S3/19_test_oracle_arms.log

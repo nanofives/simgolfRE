@@ -1,0 +1,18 @@
+F..............................................                          [100%]
+================================== FAILURES ===================================
+_________________ test_families_registered_without_duplicates _________________
+
+glib = <port.test.lib.Lib object at 0x000001F6FFC69340>
+
+    def test_families_registered_without_duplicates(glib):
+        with _state(glib) as st:
+>           assert st.call("gfx.family.surface", []).eax == 9
+E           AssertionError: assert 10 == 9
+E            +  where 10 = <port.test.lib.SgRet object at 0x000001F6FFC885D0>.eax
+E            +    where <port.test.lib.SgRet object at 0x000001F6FFC885D0> = call('gfx.family.surface', [])
+E            +      where call = <port.test.lib.State object at 0x000001F6FD9D9AC0>.call
+
+port\test\test_gfx_credits.py:136: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_gfx_credits.py::test_families_registered_without_duplicates
+1 failed, 46 passed in 55.38s

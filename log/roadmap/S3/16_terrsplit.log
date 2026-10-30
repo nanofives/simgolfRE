@@ -1,0 +1,71 @@
+== cov_l_camera step1 frame 170  diff 0  terrain-exit diff 0
+  hud_title: 0  T 0  TB 0  B 0
+  hud_meters: 0  T 0  TB 0  B 0
+  hud_message: 0  T 0  TB 0  B 0
+  toolbar: 0  T 0  TB 0  B 0
+  bottom_panel: 0  T 0  TB 0  B 0
+  view: 0  T 0  TB 0  B 0
+== cov_a_build2 buildings frame 860  diff 106  terrain-exit diff 170
+  hud_title: 9  T 8  TB 1  B 0
+  hud_meters: 16  T 15  TB 1  B 0
+  hud_message: 4  T 4  TB 0  B 0
+  toolbar: 1  T 1  TB 0  B 0
+  bottom_panel: 29  T 29  TB 0  B 0
+  view: 47  T 43  TB 4  B 0
+== championship tour_0180 frame 1910  diff 123  terrain-exit diff 166
+  hud_title: 12  T 9  TB 3  B 0
+  hud_meters: 18  T 16  TB 2  B 0
+  hud_message: 6  T 6  TB 0  B 0
+  toolbar: 2  T 2  TB 0  B 0
+  bottom_panel: 15  T 13  TB 2  B 0
+  view: 70  T 64  TB 5  B 1
+== cov_a_golfer panel_1 frame 2793  diff 76  terrain-exit diff 165
+  hud_title: 9  T 8  TB 1  B 0
+  hud_meters: 16  T 15  TB 1  B 0
+  hud_message: 4  T 4  TB 0  B 0
+  toolbar: 1  T 1  TB 0  B 0
+  bottom_panel: 0  T 0  TB 0  B 0
+  view: 46  T 37  TB 5  B 4
+== cov_a_play end frame 594  diff 73  terrain-exit diff 165
+  hud_title: 9  T 8  TB 1  B 0
+  hud_meters: 16  T 15  TB 1  B 0
+  hud_message: 4  T 4  TB 0  B 0
+  toolbar: 1  T 1  TB 0  B 0
+  bottom_panel: 0  T 0  TB 0  B 0
+  view: 43  T 38  TB 5  B 0
+== cov_k1_paths cart: no recording s32c_cov_k1_paths
+== golfer_stories season_end frame 2083  diff 753  terrain-exit diff 168
+  hud_title: 405  T 8  TB 1  B 396
+  hud_meters: 10  T 5  TB 5  B 0
+  hud_message: 4  T 4  TB 0  B 0
+  toolbar: 1  T 1  TB 0  B 0
+  bottom_panel: 0  T 0  TB 0  B 0
+  view: 333  T 38  TB 6  B 289
+== cov_k3_camera y_inj3 frame 221  diff 1002  terrain-exit diff 188
+  hud_title: 19  T 16  TB 3  B 0
+  hud_meters: 17  T 14  TB 3  B 0
+  hud_message: 23  T 23  TB 0  B 0
+  toolbar: 4  T 4  TB 0  B 0
+  bottom_panel: 1  T 0  TB 0  B 1
+  view: 938  T 90  TB 2  B 846
+== cov_k3_camera2 y_inj4 frame 153  diff 524  terrain-exit diff 135
+  hud_title: 15  T 5  TB 10  B 0
+  hud_meters: 0  T 0  TB 0  B 0
+  hud_message: 0  T 0  TB 0  B 0
+  toolbar: 250  T 18  TB 0  B 232
+  bottom_panel: 0  T 0  TB 0  B 0
+  view: 259  T 77  TB 0  B 182
+== cov_b_inject zoom_box frame 1031  diff 31  terrain-exit diff 169
+  hud_title: 0  T 0  TB 0  B 0
+  hud_meters: 4  T 0  TB 0  B 4
+  hud_message: 0  T 0  TB 0  B 0
+  toolbar: 0  T 0  TB 0  B 0
+  bottom_panel: 0  T 0  TB 0  B 0
+  view: 27  T 0  TB 0  B 27
+== course_season sandbox frame 22  diff 125  terrain-exit diff 189
+  hud_title: 8  T 8  TB 0  B 0
+  hud_meters: 16  T 15  TB 1  B 0
+  hud_message: 4  T 4  TB 0  B 0
+  toolbar: 1  T 1  TB 0  B 0
+  bottom_panel: 45  T 45  TB 0  B 0
+  view: 51  T 46  TB 5  B 0

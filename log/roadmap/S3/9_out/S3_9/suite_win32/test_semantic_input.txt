@@ -1,0 +1,330 @@
+.......FFFF                                                              [100%]
+================================== FAILURES ===================================
+_____________ test_gate_d_championship_by_semantic_commands_only ______________
+
+portlib = <port.test.lib32.Lib32 object at 0x0000024AD866C7A0>
+
+    @pytest.mark.port
+    @need_segments
+    @need_install
+    def test_gate_d_championship_by_semantic_commands_only(portlib):
+        """Gate d: championship/00..02 PASS with every recorded dispatch replaced by its semantic translation (no RootHandler
+        command from the trace), in the probe run (click targets unstated) and the final run (targets stated and checked)."""
+        _need_module(portlib)
+        if not portlib.has("integrator.setBatchOverrides"):
+            pytest.skip("the integrator module is not in this build")
+        for sg in CHAMP:
+>           d = SEM.gate_segment(_spec(portlib), sg)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_semantic_input.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+port\test\semantic.py:574: in gate_segment
+    probe, log = run_input(spec, segname, rows, log=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+port\test\semantic.py:499: in run_input
+    lib = I.load_lib(spec)
+          ^^^^^^^^^^^^^^^^
+port\test\integrator.py:110: in load_lib
+    lib = L.load(spec.dll) if spec.dll else L.load()
+          ^^^^^^^^^^^^^^^^
+port\test\lib.py:352: in load
+    lib = Lib(pathlib.Path(p))
+          ^^^^^^^^^^^^^^^^^^^^
+port\test\lib.py:106: in __init__
+    self.dll = C.CDLL(str(self.path))
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <CDLL 'C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\port\build\Win32\Release\portsim_runner32.exe', handle 0 at 0x24af03bbc20>
+name = 'C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\port\\build\\S3_9\\port\\build\\Win32\\Release\\portsim_runner32.exe'
+mode = 4352, handle = None, use_errno = False, use_last_error = False
+winmode = None
+
+    def __init__(self, name, mode=DEFAULT_MODE, handle=None,
+                 use_errno=False,
+                 use_last_error=False,
+                 winmode=None):
+        if name:
+            name = _os.fspath(name)
+        self._name = name
+        flags = self._func_flags_
+        if use_errno:
+            flags |= _FUNCFLAG_USE_ERRNO
+        if use_last_error:
+            flags |= _FUNCFLAG_USE_LASTERROR
+        if _sys.platform.startswith("aix"):
+            """When the name contains ".a(" and ends with ")",
+               e.g., "libFOO.a(libFOO.so)" - this is taken to be an
+               archive(member) syntax for dlopen(), and the mode is adjusted.
+               Otherwise, name is presented to dlopen() as a file argument.
+            """
+            if name and name.endswith(")") and ".a(" in name:
+                mode |= ( _os.RTLD_MEMBER | _os.RTLD_NOW )
+        if _os.name == "nt":
+            if winmode is not None:
+                mode = winmode
+            else:
+                import nt
+                mode = nt._LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
+                if '/' in name or '\\' in name:
+                    self._name = nt._getfullpathname(self._name)
+                    mode |= nt._LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
+    
+        class _FuncPtr(_CFuncPtr):
+            _flags_ = flags
+            _restype_ = self._func_restype_
+        self._FuncPtr = _FuncPtr
+    
+        if handle is None:
+>           self._handle = _dlopen(self._name, mode)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           OSError: [WinError 193] %1 no es una aplicación Win32 válida
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\ctypes\__init__.py:379: OSError
+__________________ test_gate_d_negative_controls_read_red[1] __________________
+
+portlib = <port.test.lib32.Lib32 object at 0x0000024AD866C7A0>, mode = 1
+
+    @pytest.mark.port
+    @need_segments
+    @need_install
+    @pytest.mark.parametrize("mode", [1, 2, 3])
+    def test_gate_d_negative_controls_read_red(portlib, mode):
+        """The semantic module's wrong lowerings fail championship/00 driven by semantic commands: 1 the left click lowered as
+        a right click, 2 a character key without its WM_CHAR, 3 a stated target that holds refused."""
+        _need_module(portlib)
+>       d = SEM.gate_segment(_spec(portlib), "championship/00", negctl={"semantic.apply": mode})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_semantic_input.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+port\test\semantic.py:574: in gate_segment
+    probe, log = run_input(spec, segname, rows, log=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+port\test\semantic.py:499: in run_input
+    lib = I.load_lib(spec)
+          ^^^^^^^^^^^^^^^^
+port\test\integrator.py:110: in load_lib
+    lib = L.load(spec.dll) if spec.dll else L.load()
+          ^^^^^^^^^^^^^^^^
+port\test\lib.py:352: in load
+    lib = Lib(pathlib.Path(p))
+          ^^^^^^^^^^^^^^^^^^^^
+port\test\lib.py:106: in __init__
+    self.dll = C.CDLL(str(self.path))
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <CDLL 'C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\port\build\Win32\Release\portsim_runner32.exe', handle 0 at 0x24aeefe3c80>
+name = 'C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\port\\build\\S3_9\\port\\build\\Win32\\Release\\portsim_runner32.exe'
+mode = 4352, handle = None, use_errno = False, use_last_error = False
+winmode = None
+
+    def __init__(self, name, mode=DEFAULT_MODE, handle=None,
+                 use_errno=False,
+                 use_last_error=False,
+                 winmode=None):
+        if name:
+            name = _os.fspath(name)
+        self._name = name
+        flags = self._func_flags_
+        if use_errno:
+            flags |= _FUNCFLAG_USE_ERRNO
+        if use_last_error:
+            flags |= _FUNCFLAG_USE_LASTERROR
+        if _sys.platform.startswith("aix"):
+            """When the name contains ".a(" and ends with ")",
+               e.g., "libFOO.a(libFOO.so)" - this is taken to be an
+               archive(member) syntax for dlopen(), and the mode is adjusted.
+               Otherwise, name is presented to dlopen() as a file argument.
+            """
+            if name and name.endswith(")") and ".a(" in name:
+                mode |= ( _os.RTLD_MEMBER | _os.RTLD_NOW )
+        if _os.name == "nt":
+            if winmode is not None:
+                mode = winmode
+            else:
+                import nt
+                mode = nt._LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
+                if '/' in name or '\\' in name:
+                    self._name = nt._getfullpathname(self._name)
+                    mode |= nt._LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
+    
+        class _FuncPtr(_CFuncPtr):
+            _flags_ = flags
+            _restype_ = self._func_restype_
+        self._FuncPtr = _FuncPtr
+    
+        if handle is None:
+>           self._handle = _dlopen(self._name, mode)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           OSError: [WinError 193] %1 no es una aplicación Win32 válida
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\ctypes\__init__.py:379: OSError
+__________________ test_gate_d_negative_controls_read_red[2] __________________
+
+portlib = <port.test.lib32.Lib32 object at 0x0000024AD866C7A0>, mode = 2
+
+    @pytest.mark.port
+    @need_segments
+    @need_install
+    @pytest.mark.parametrize("mode", [1, 2, 3])
+    def test_gate_d_negative_controls_read_red(portlib, mode):
+        """The semantic module's wrong lowerings fail championship/00 driven by semantic commands: 1 the left click lowered as
+        a right click, 2 a character key without its WM_CHAR, 3 a stated target that holds refused."""
+        _need_module(portlib)
+>       d = SEM.gate_segment(_spec(portlib), "championship/00", negctl={"semantic.apply": mode})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_semantic_input.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+port\test\semantic.py:574: in gate_segment
+    probe, log = run_input(spec, segname, rows, log=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+port\test\semantic.py:499: in run_input
+    lib = I.load_lib(spec)
+          ^^^^^^^^^^^^^^^^
+port\test\integrator.py:110: in load_lib
+    lib = L.load(spec.dll) if spec.dll else L.load()
+          ^^^^^^^^^^^^^^^^
+port\test\lib.py:352: in load
+    lib = Lib(pathlib.Path(p))
+          ^^^^^^^^^^^^^^^^^^^^
+port\test\lib.py:106: in __init__
+    self.dll = C.CDLL(str(self.path))
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <CDLL 'C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\port\build\Win32\Release\portsim_runner32.exe', handle 0 at 0x24af03b91f0>
+name = 'C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\port\\build\\S3_9\\port\\build\\Win32\\Release\\portsim_runner32.exe'
+mode = 4352, handle = None, use_errno = False, use_last_error = False
+winmode = None
+
+    def __init__(self, name, mode=DEFAULT_MODE, handle=None,
+                 use_errno=False,
+                 use_last_error=False,
+                 winmode=None):
+        if name:
+            name = _os.fspath(name)
+        self._name = name
+        flags = self._func_flags_
+        if use_errno:
+            flags |= _FUNCFLAG_USE_ERRNO
+        if use_last_error:
+            flags |= _FUNCFLAG_USE_LASTERROR
+        if _sys.platform.startswith("aix"):
+            """When the name contains ".a(" and ends with ")",
+               e.g., "libFOO.a(libFOO.so)" - this is taken to be an
+               archive(member) syntax for dlopen(), and the mode is adjusted.
+               Otherwise, name is presented to dlopen() as a file argument.
+            """
+            if name and name.endswith(")") and ".a(" in name:
+                mode |= ( _os.RTLD_MEMBER | _os.RTLD_NOW )
+        if _os.name == "nt":
+            if winmode is not None:
+                mode = winmode
+            else:
+                import nt
+                mode = nt._LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
+                if '/' in name or '\\' in name:
+                    self._name = nt._getfullpathname(self._name)
+                    mode |= nt._LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
+    
+        class _FuncPtr(_CFuncPtr):
+            _flags_ = flags
+            _restype_ = self._func_restype_
+        self._FuncPtr = _FuncPtr
+    
+        if handle is None:
+>           self._handle = _dlopen(self._name, mode)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           OSError: [WinError 193] %1 no es una aplicación Win32 válida
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\ctypes\__init__.py:379: OSError
+__________________ test_gate_d_negative_controls_read_red[3] __________________
+
+portlib = <port.test.lib32.Lib32 object at 0x0000024AD866C7A0>, mode = 3
+
+    @pytest.mark.port
+    @need_segments
+    @need_install
+    @pytest.mark.parametrize("mode", [1, 2, 3])
+    def test_gate_d_negative_controls_read_red(portlib, mode):
+        """The semantic module's wrong lowerings fail championship/00 driven by semantic commands: 1 the left click lowered as
+        a right click, 2 a character key without its WM_CHAR, 3 a stated target that holds refused."""
+        _need_module(portlib)
+>       d = SEM.gate_segment(_spec(portlib), "championship/00", negctl={"semantic.apply": mode})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+port\test\test_semantic_input.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+port\test\semantic.py:574: in gate_segment
+    probe, log = run_input(spec, segname, rows, log=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+port\test\semantic.py:499: in run_input
+    lib = I.load_lib(spec)
+          ^^^^^^^^^^^^^^^^
+port\test\integrator.py:110: in load_lib
+    lib = L.load(spec.dll) if spec.dll else L.load()
+          ^^^^^^^^^^^^^^^^
+port\test\lib.py:352: in load
+    lib = Lib(pathlib.Path(p))
+          ^^^^^^^^^^^^^^^^^^^^
+port\test\lib.py:106: in __init__
+    self.dll = C.CDLL(str(self.path))
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <CDLL 'C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_9\port\build\Win32\Release\portsim_runner32.exe', handle 0 at 0x24aeeaf5fa0>
+name = 'C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\port\\build\\S3_9\\port\\build\\Win32\\Release\\portsim_runner32.exe'
+mode = 4352, handle = None, use_errno = False, use_last_error = False
+winmode = None
+
+    def __init__(self, name, mode=DEFAULT_MODE, handle=None,
+                 use_errno=False,
+                 use_last_error=False,
+                 winmode=None):
+        if name:
+            name = _os.fspath(name)
+        self._name = name
+        flags = self._func_flags_
+        if use_errno:
+            flags |= _FUNCFLAG_USE_ERRNO
+        if use_last_error:
+            flags |= _FUNCFLAG_USE_LASTERROR
+        if _sys.platform.startswith("aix"):
+            """When the name contains ".a(" and ends with ")",
+               e.g., "libFOO.a(libFOO.so)" - this is taken to be an
+               archive(member) syntax for dlopen(), and the mode is adjusted.
+               Otherwise, name is presented to dlopen() as a file argument.
+            """
+            if name and name.endswith(")") and ".a(" in name:
+                mode |= ( _os.RTLD_MEMBER | _os.RTLD_NOW )
+        if _os.name == "nt":
+            if winmode is not None:
+                mode = winmode
+            else:
+                import nt
+                mode = nt._LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
+                if '/' in name or '\\' in name:
+                    self._name = nt._getfullpathname(self._name)
+                    mode |= nt._LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
+    
+        class _FuncPtr(_CFuncPtr):
+            _flags_ = flags
+            _restype_ = self._func_restype_
+        self._FuncPtr = _FuncPtr
+    
+        if handle is None:
+>           self._handle = _dlopen(self._name, mode)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           OSError: [WinError 193] %1 no es una aplicación Win32 válida
+
+C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\ctypes\__init__.py:379: OSError
+=========================== short test summary info ===========================
+FAILED port/test/test_semantic_input.py::test_gate_d_championship_by_semantic_commands_only
+FAILED port/test/test_semantic_input.py::test_gate_d_negative_controls_read_red[1]
+FAILED port/test/test_semantic_input.py::test_gate_d_negative_controls_read_red[2]
+FAILED port/test/test_semantic_input.py::test_gate_d_negative_controls_read_red[3]
+4 failed, 7 passed in 3.29s

@@ -1,0 +1,6 @@
+sss...........                                                           [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_routing.py:304: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_routing.py:315: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_routing.py:331: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+11 passed, 3 skipped in 13.23s

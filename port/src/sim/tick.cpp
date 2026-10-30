@@ -1684,6 +1684,11 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
         const TraceFrame &f = frames[k - 1];
         const FrameInput in = frame_input(f);
         input.begin(f, k);
+        // roadmap S3.17 (U-1831): past the frame's last dispatch a modal loop still makes the idle passes the original made,
+        // one per unread CURSOR record, as in the boot of a trace with no frame head (cov_a_champ: the title menu's hover loop
+        // after a cancelled tournament draws and refreshes once per pass; without them its first pumpMessages found no
+        // input and the loop never drew). Negative control tick.frame 13 leaves them off
+        if (SG_NEGCTL(tk::g_negctl_frame) != 13) input.set_tail_idle(true);
         tk::FrameIoStats io;
         FrameExit ex = FrameExit::Wait;
         bool out_of_input = false;

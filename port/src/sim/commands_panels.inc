@@ -268,6 +268,20 @@ int32_t golfer_panel_action(Ctx &ctx, int32_t spot) {
   }
 }
 
+// roadmap S3.16: the help / refusal window of the panel handlers (c3em.cpp): drawWindow(0xc8, 0x154, 0x80007fff, -2), then
+// Window::refreshFull(root, 0, 0) puts it on the screen before pumpAndRedraw(0) waits for a click or key. The refresh is a
+// drop an attached graphics backend draws (before S3.16 the window never reached the back buffer and clickSlotPanel /
+// clickAmenityPanel drew it at the ticker's position: cov_r_palette_hot undo_help, 46,200 px). Negative control
+// clickSlotPanel 3: the refresh skipped.
+int32_t help_window(Ctx &ctx, const char *where) {
+  draw_window_effect(ctx, -2, 0xc8, 0x154);
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && SG_NEGCTL(g_negctl_slot_panel) != 3) {
+    const uint32_t a[3] = {state_va(ctx, &GameState::g_rootWindow), 0, 0};
+    gfx_drop(ctx, "Window::refreshFull", a, 3);
+  }
+  return pump_and_redraw(ctx, 0, where);
+}
+
 // clickBuildTool433d30 (x, y): the terrain tool palette. -2 closes it, -3 shows the help window (then waits for a click),
 // a tool index selects it (flag bit 1) and returns the flag word; -1 is returned unchanged.
 int32_t build_tool_action(Ctx &ctx, int32_t r) {
@@ -283,11 +297,10 @@ int32_t build_tool_action(Ctx &ctx, int32_t r) {
     cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
     gs.f_w_4c2e00[2] = -0x16;
     cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
-    draw_window_effect(ctx, -2, 0xc8, 0x154);
     gs.g_flags &= ~2u;
     gs.g_buildPanelPick = 0;
     gs.g_panelListMode = 1;
-    return pump_and_redraw(ctx, 0, "clickBuildTool433d30");
+    return help_window(ctx, "clickBuildTool433d30");
   }
   if (r >= 0) {
     gs.g_ui_542f20 = u32(r);
@@ -310,8 +323,7 @@ int32_t building_action(Ctx &ctx, int32_t r) {
     cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
     gs.f_w_4c2e00[2] = -0x16;
     cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
-    draw_window_effect(ctx, -2, 0xc8, 0x154);
-    pump_and_redraw(ctx, 0, "pickBuilding");
+    help_window(ctx, "pickBuilding");
     return 0;
   }
   if (r == -2) {
@@ -382,8 +394,7 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
       cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
       gs.f_w_4c2e00[2] = -0x16;
       cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
-      draw_window_effect(ctx, -2);
-      pump_and_redraw(ctx, 0, "clickAmenityPanel");
+      help_window(ctx, "clickAmenityPanel");
       return gs.g_panelState[5];
     default: break;
   }
@@ -417,8 +428,7 @@ int32_t slot_action(Ctx &ctx, int32_t r) {
       cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
       gs.f_w_4c2e00[2] = -0x16;
       cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
-      draw_window_effect(ctx, -2);
-      pump_and_redraw(ctx, 0, "clickSlotPanel");
+      help_window(ctx, "clickSlotPanel");
     } else if (r == 0x16) {
       gs.g_buildPanelSlot = 1;
       gs.g_panelListMode = 0;

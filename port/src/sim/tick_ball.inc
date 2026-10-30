@@ -193,6 +193,13 @@ void drawFlyingBall() {
                     G<unsigned char>((GS(g_golfers) + 39192)) = 0x24;                                // drawFlyingBall+0x5ab
                     G<unsigned char>((GS(g_golfers) + 39197)) = 7;                                   // drawFlyingBall+0x5b2
                     kComposeGolferSprite(0x99);                                         // drawFlyingBall+0x5b9
+                    // roadmap S3.16: composeGolferSprite is a registered function (its look-index write-back), so its
+                    // palette layers reach an attached graphics backend only through its body here: the addSprite below
+                    // draws the preview golfer with g_images[0] as this call left it (control drawFlyingBall 2: skipped)
+                    if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && SG_NEGCTL(g_negctl_draw_flying_ball) != 2) {
+                        const uint32_t a99[1] = {0x99u};
+                        gfx_drop(ctx, "composeGolferSprite", a99, 1);
+                    }
                     FI(0x10) = 0;                                                       // drawFlyingBall+0x5c1
                     tag = 0;                                                            // drawFlyingBall+0x5c5
                 }

@@ -1,0 +1,21 @@
+........................................................................ [ 28%]
+........................................................................ [ 57%]
+........................................................................ [ 86%]
+.................................F                                       [100%]
+================================== FAILURES ===================================
+___________________ test_run_frames_reports_why_it_stopped ____________________
+
+portlib = <port.test.lib32.Lib32 object at 0x0000027DDB7BE960>
+
+    @need_segments
+    def test_run_frames_reports_why_it_stopped(portlib):
+        """sg_run_frames' detail names a callee that is neither ported nor a drop (MissingResource) instead of skipping it."""
+        import ctypes as C
+>       portlib.dll.sg_run_frames_detail.restype = C.c_char_p
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'sg_run_frames_detail'
+
+port\test\test_tick.py:417: AttributeError
+=========================== short test summary info ===========================
+FAILED port/test/test_tick.py::test_run_frames_reports_why_it_stopped - Attri...
+1 failed, 249 passed in 601.21s (0:10:01)

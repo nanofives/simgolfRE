@@ -1,0 +1,7 @@
+sssssssssssssssssssssssssssssssssssssssssssssss........................  [100%]
+=========================== short test summary info ===========================
+SKIPPED [15] port\test\test_menu.py:337: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [5] port\test\test_menu.py:359: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [16] port\test\test_menu.py:416: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [11] port\test\test_menu.py:559: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+24 passed, 47 skipped in 24.98s

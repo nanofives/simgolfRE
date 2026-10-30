@@ -1,0 +1,31 @@
+ssssssssssssssssssssssssssF........                                      [100%]
+================================== FAILURES ===================================
+_____________________________ test_golden_digests _____________________________
+
+portlib = <port.test.lib32.Lib32 object at 0x0000023E54ABB500>
+
+    @need_exe
+    @need_saves
+    def test_golden_digests(portlib):
+        """the port reproduces the pinned results of the emulated original; SG_EMU_ORACLE=update checks every scenario against
+        the oracle first, then pins"""
+        if os.environ.get("SG_EMU_ORACLE") == "update":
+            bad = [f"{sc[0]}: {m}" for sc in SCEN for m in [compare(portlib, sc)] if m]
+            assert not bad, f"oracle RED: not pinned: {bad[:4]}"
+            E.golden_update("browser", {"files": _files_sha(), "digests": _digests(portlib)})
+        g = E.golden_load().get("browser")
+        if not g:
+            pytest.skip("browser: no pinned digests (SG_EMU_ORACLE=update)")
+        if g["files"] != _files_sha():
+            pytest.skip("browser: the install's files differ from the pinned run")
+        got = _digests(portlib)
+        bad = [k for k in got if got[k] != g["digests"].get(k)]
+>       assert not bad, f"{len(bad)} scenarios differ from the pinned digests: {bad[:6]}"
+E       AssertionError: 20 scenarios differ from the pinned digests: ['load_row', 'load_row_other_theme', 'cancel', 'load_no_selection', 'click_below_list', 'click_left_of_list']
+E       assert not ['load_row', 'load_row_other_theme', 'cancel', 'load_no_selection', 'click_below_list', 'click_left_of_list', ...]
+
+port\test\test_browser.py:323: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [26] port\test\test_browser.py:271: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+FAILED port/test/test_browser.py::test_golden_digests - AssertionError: 20 sc...
+1 failed, 8 passed, 26 skipped in 30.26s

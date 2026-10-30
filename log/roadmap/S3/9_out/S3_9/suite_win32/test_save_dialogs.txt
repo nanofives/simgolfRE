@@ -1,0 +1,26 @@
+ssssssssssssssssssssssssssF.....                                         [100%]
+================================== FAILURES ===================================
+_____________________________ test_golden_digests _____________________________
+
+portlib = <port.test.lib32.Lib32 object at 0x000001FDB67C3C80>
+
+    @need_exe
+    def test_golden_digests(portlib):
+        if os.environ.get("SG_EMU_ORACLE") == "update":
+            bad = [f"{sc[0]}: {m}" for sc in SCEN for m in [compare(portlib, sc)] if m]
+            assert not bad, f"oracle RED: not pinned: {bad[:4]}"
+            E.golden_update("saveDialogs", {"digests": _digests(portlib)})
+        g = E.golden_load().get("saveDialogs")
+        if not g:
+            pytest.skip("saveDialogs: no pinned digests (SG_EMU_ORACLE=update)")
+        got = _digests(portlib)
+        bad = [k for k in got if got[k] != g["digests"].get(k)]
+>       assert not bad, f"{len(bad)} scenarios differ from the pinned digests: {bad[:6]}"
+E       AssertionError: 22 scenarios differ from the pinned digests: ['course_save', 'course_save_record0', 'course_save_negative_record', 'course_save_flags', 'dialog_default_name', 'dialog_title_custom']
+E       assert not ['course_save', 'course_save_record0', 'course_save_negative_record', 'course_save_flags', 'dialog_default_name', 'dialog_title_custom', ...]
+
+port\test\test_save_dialogs.py:240: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [26] port\test\test_save_dialogs.py:204: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+FAILED port/test/test_save_dialogs.py::test_golden_digests - AssertionError: ...
+1 failed, 5 passed, 26 skipped in 4.05s

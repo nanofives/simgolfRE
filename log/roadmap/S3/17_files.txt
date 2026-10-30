@@ -1,0 +1,29 @@
+# S3.17: files changed in the mirror port/build/S3_17 (delivered as anchored edits log/roadmap/S3/17_edits.py)
+port/src/sim/routing.cpp
+port/src/sim/gfx_surface.cpp
+port/src/sim/tick.cpp
+port/test/test_gfx_routing.py
+# new file (copy of log/roadmap/S3/17_new/port/test/test_gfx_s3_17.py)
+port/test/test_gfx_s3_17.py
+# documents (applied by 17_assemble.py)
+UNCERTAINTIES.md
+CLAUDE.md
+# S3.17's own files
+log/roadmap/S3/17_notes.md
+log/roadmap/S3/17_merge.md
+log/roadmap/S3/17_files.txt
+log/roadmap/S3/17_edits.py
+log/roadmap/S3/17_make_edits.py
+log/roadmap/S3/17_assemble.py
+log/roadmap/S3/17_uncertain.tsv
+log/roadmap/S3/17_env.sh
+log/roadmap/S3/17_base/
+log/roadmap/S3/17_new/
+log/roadmap/S3/17_fg/
+log/roadmap/S3/17_build_base_x64.log
+log/roadmap/S3/17_build_x64.log
+log/roadmap/S3/17_build_w32.log
+log/roadmap/S3/17_test_x64.log
+log/roadmap/S3/17_test_oracle.log
+log/roadmap/S3/17_test_toend_x64.log
+log/roadmap/S3/17_assemble_verify.log

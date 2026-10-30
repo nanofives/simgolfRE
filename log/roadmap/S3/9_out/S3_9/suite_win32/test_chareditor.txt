@@ -1,0 +1,4 @@
+ssss...................                                                  [100%]
+=========================== short test summary info ===========================
+SKIPPED [4] port\test\test_chareditor.py:429: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+19 passed, 4 skipped in 50.89s

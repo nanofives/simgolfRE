@@ -1,0 +1,20 @@
+== t_test_app_ingame start 2026-10-30 01:27:21 free=31GB tree=S3_9 jobs=1 token=/c/Users/maria/Desktop/Proyectos/SimGolf/log/roadmap/S3/w7_heavy.lock
+........F....                                                            [100%]
+================================== FAILURES ===================================
+_______________ test_app_path_equals_framegate_and_its_present ________________
+
+judged = [{'scenario': 'cov_a_keys', 'checkpoint': 'menu', 'kind': 'title', 'context': 'BOOT:playAudioFile', ...}, {'scenario':... 'H1WAIT', ...}, {'scenario': 'cov_a_keys', 'checkpoint': 'k_cheats', 'kind': 'ingame', 'context': 'H1WAIT', ...}, ...]
+
+    def test_app_path_equals_framegate_and_its_present(judged):
+        """every checkpoint of the judged scenarios: the app path's frame = framegate's frame in every pixel, and = the present
+        the app made just before the snapshot (what the window showed there)"""
+        bad = [(r["scenario"], r["checkpoint"], r.get("px_vs_framegate"), r.get("shown_by_present")) for r in judged
+               if r["status"] == "NO_SNAPSHOT" or r["px_vs_framegate"] != 0 or not r["shown_by_present"]]
+>       assert not bad, bad
+E       AssertionError: [('cov_k1_routing', 'end', 1955, True)]
+E       assert not [('cov_k1_routing', 'end', 1955, True)]
+
+port\test\test_app_ingame.py:523: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_app_ingame.py::test_app_path_equals_framegate_and_its_present
+1 failed, 12 passed in 440.99s (0:07:20)
