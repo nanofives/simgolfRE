@@ -9,6 +9,12 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G15, course sfx folder name (U-1499), 2026-10-30: the port finds both names.** The stock install has `sounds\Golf_Sfx`, the exe
+  opens `sounds\Golf sfx`, so the original never plays those 26 sounds. A defect switch (default 1 = the original's failed opens; 0 =
+  also try `Golf_Sfx`) in profile `fixed`, used by the app; install files untouched; simulation unchanged.
+- **G13 revised, 2026-10-30: GlRaster stays the default; host GL (with its self-check) is opt-in only, no banded work.** Single-context
+  host GL took zoom frames to 95 ms against the 87 ms budget; four-band host GL fixed the time (37-41 ms) with equal pixels but hung
+  twice inside opengl32 (U-1819). Mariano chose to keep GlRaster as the default.
 - **G14, S9 network play, 2026-10-29: close S9 as "the original has no network play".** The net layer is dormant in v1.00 and v1.03 (no
   session store, DirectPlay never loaded, no dialogs; re/analysis/net/NET_MODEL.md). Merge the survey, port the dormant layer as
   specification (S9.3, judged by its C3 rows), drop the recording / interop steps.
