@@ -1,0 +1,27 @@
+va	symbol	gs_class	readers	writers	stored	meaning
+004c1434	f_strpool_4c1434	const	S3List_addVoiceRx	-	-	string read by S3List_addVoiceRx out-of-heap abort (binary text; not net state)
+004c1458	f_strpool_4c1434+0x24	const	S3List_addVoiceRx	-	-	string read by S3List_addVoiceRx out-of-heap abort (binary text; not net state)
+004c3f70	f_strpool_4c3f70	const	netSendMessages;netService	-	-	string pool entry addressed by the senders error dialogs (binary text)
+004c4944	f_strpool_4c4944	const	netSendMessages;netService	-	-	string pool entry addressed by the senders error dialogs (binary text)
+004c52b8	f_strpool_4c528c+0x2c	const	netSendMessages;netService	-	-	string pool entry addressed by the senders error dialogs (binary text)
+004e4680	f_strpool_4e4680	const	netHandleControl;netSendMessages;netService	-	-	jgld text-file section prefix the net dialogs load through TextView::loadScript
+004e47b0	f_strpool_4e47b0	const	netSendMessages;netService	-	-	send-failure dialog text (senders)
+004e47c8	f_strpool_4e47b0+0x18	const	netSendMessages;netService	-	-	net dialog caption (senders)
+004e47e8	f_strpool_4e47b0+0x38	const	netSendMessages;netService	-	-	dialog section id NET_SENDTIMEDOUT (senders)
+004e47fc	f_strpool_4e47b0+0x4c	const	netSendMessages	-	-	send-failure-after-retries dialog text (netSendMessages)
+004e4824	f_strpool_4e47b0+0x74	const	netHandleControl	-	-	dialog section id NET_OKTODROPHOST (netHandleControl)
+004e4838	f_strpool_4e47b0+0x88	const	netHandleControl	-	-	dialog section id NET_OKTODROPCLIENT (netHandleControl)
+004e484c	f_strpool_4e47b0+0x9c	const	netHandleControl	-	-	dialog section id NET_ADJUSTTOLERANCE (netHandleControl)
+004e4860	f_strpool_4e47b0+0xb0	const	netHandleControl	-	-	dialog section id NET_OKTODROPHOSTS (netHandleControl)
+00839650	g_newObjectHeap	engine	S3List_addVoiceRx	S3List_addVoiceRx;netHandleControl;netSendMessages;netService	eax;ebp;ebx;ecx;edi;edx	heap word copied into every heap object; the in-frame dialogs and VoiceRx nodes save and restore it (not net-owned)
+0083ab88	g_ui_83ab88	ui	-	Window::onCommand	eax	command id stored by Window::onCommand on its non-net branch (0x0047eed0); not net state
+0083afcc	g_flag_83afcc	render	-	netHandleControl;netSendMessages;netService	0x1	set to 1 by the net dialogs (netService 0x00498cc4, netSendMessages, netHandleControl); render-class flag shared with the UI
+0083c340	g_netBuf83c340	engine	netSendMessages;netService	netSendMessages;netService	0x0	byte set to 0 when a guaranteed send passes 20000 ms (cmp 0x0049876a, store 0x00498775); its address is also an immediate operand in both senders
+0083ff6c	g_netPeerTable	pointer	netMarkRecordCb	netService	eax	peer table pointer: netService stores session+0x170 (0x0049832b / 0x00498331) before EnumGroupPlayers; netMarkRecordCb reads it
+0083ff9c	g_ui_83ff9c	ui	netPoll	-	-	DPNAME out-buffer of GetPlayerName (netPoll 0x0049b8bb, size word 0x100 at 0x0049b8ad); ends at 0x0084009c
+0083ffa8	g_ui_83ff9c+0xc	ui	netPoll	-	-	DPNAME.lpszLongNameA (+0xc) of that buffer, passed to netQueueMessage as the new peer name (0x0049b8d6)
+008400ac	g_net8400ac	engine	-	netHandleControl	eax	previous host id: when the removed peer is the host (cmp 0x0049b5c3) netHandleControl stores +0x780 here (0x0049b5c7) and makes slot 0 the host (+0x780 = +0x170, 0x0049b5d7); no reader in the image
+008400b0	g_netInterface	engine	gfxFlushA;gfxFlushB;netBeginOp0;netBeginOp1;netPoll;netSendMessages;netSendShutdown;netService;netServiceControl	netSendShutdown	ebx	IDirectPlay2A interface (dplay.h slots); only store is 0 (netSendShutdown 0x00497d78, ebx = 0 from 0x00497d20); .bss, so NULL for the whole process
+008400b8	g_netSession	engine	Window::onCommand;gfxFlushA;gfxFlushB;uiIdleNetPoll	-	-	Jackal net session object; NO store in the image; .bss, so NULL for the whole process; every entry into the net layer tests it
+008400bc	g_netControl8400bc	engine	netServiceControl	netServiceControl	0x0;edi	netServiceControl re-entry guard for the peer timeout scan (set 0x0049abb7, cleared 0x0049ac35 / 0x0049ac85 / 0x0049ace0)
+008400c0	g_netControl8400bc+0x4	engine	netServiceControl	netServiceControl	0x0;edi	netServiceControl re-entry guard around the keep-alive send (set 0x0049ab8d, cleared 0x0049aba7)

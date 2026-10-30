@@ -1,0 +1,9 @@
++ cmake --build C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S9_3 --config Release --target portsim_c -- /m
+VersiÃ³n de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  net.cpp
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S9_3\Release\portsim.lib
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S9_3/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S9_3/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S9_3\Release\portsim_c.dll
+DLL C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S9_3\Release\portsim_c.dll

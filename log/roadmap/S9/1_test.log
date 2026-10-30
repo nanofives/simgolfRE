@@ -1,0 +1,18 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 9 items
+
+tests/test_net_survey.py::test_tsvs_agree_with_the_binary PASSED         [ 11%]
+tests/test_net_survey.py::test_control_changed_row_reads_red[state-008400b8-writers-netService] PASSED [ 22%]
+tests/test_net_survey.py::test_control_changed_row_reads_red[functions-00497d10-dp_calls-Close x1] PASSED [ 33%]
+tests/test_net_survey.py::test_control_changed_row_reads_red[messages-A80-type-0x40] PASSED [ 44%]
+tests/test_net_survey.py::test_control_changed_row_reads_red[messages-S102-parse_sites-0049b918;00497b00] PASSED [ 55%]
+tests/test_net_survey.py::test_control_removed_message_row_reads_red PASSED [ 66%]
+tests/test_net_survey.py::test_no_directplay_import_and_no_reference PASSED [ 77%]
+tests/test_net_survey.py::test_session_pointer_is_never_set PASSED       [ 88%]
+tests/test_net_survey.py::test_interface_slots_follow_dplay_h PASSED     [100%]
+
+============================= 9 passed in 31.35s ==============================

@@ -1,0 +1,16 @@
+[1/13] net_win32 rc=0 3 s :: 29 passed in 1.73s
+[2/13] static rc=0 661 s :: 811 passed, 2 skipped, 46 deselected in 659.38s (0:10:59)
+[3/13] segs_x64 rc=0 112 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 111.1}
+[4/13] segs_win32 rc=0 168 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 167.4}
+[5/13] segs_ft_x64 rc=0 123 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 122.7}
+[6/13] boot_x64 rc=0 221 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[7/13] boot_win32 rc=0 299 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[8/13] boot_ft_x64 rc=0 213 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[9/13] live_equiv_x64 rc=0 604 s :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[10/13] live_equiv_win32 rc=0 772 s :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[11/13] app_replay_x64 rc=0 4 s :: saveload                 PASS  records 266/266 code 0 first None (1.2 s)
+[12/13] app_replay_win32 rc=0 5 s :: saveload                 PASS  records 266/266 code 0 first None (1.4 s)
+[13/13] census rc=0 1091 s :: {"rows": 698, "counts": {"PASS": 100, "FAIL": 537, "UNSUPPORTED": 51, "NOT_RUN": 10}}
+== suite_x64 start 2026-10-30 01:30:43
+== suite_win32 start 2026-10-30 04:35:03
+[queue done] 2026-10-30 07:51:36

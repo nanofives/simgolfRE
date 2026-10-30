@@ -2113,6 +2113,27 @@ Wave 2: the SimGolf demo's sound.dll (archive.org Simgolfdemo, InstallShield 6) 
 (2,146 procedures, 1,493 class layouts; re/tools/cv_debug.py): 58 map to retail by code identity (LPC-10, CRT asm), the rest only
 through vtable slots (45 of 47 tables), giving 13 names and 72 cited field proposals. Two exe misses reach 100% only with SP5's
 front end, but the exe's Rich header lists only build 8168 objects, so they are not evidence (U-1910).
+Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
+net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
+the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the
+image; the four entries into the layer (gfxFlushA / gfxFlushB from the input pumps, uiIdleNetPoll, Window::onCommand) test it
+and return; g_netInterface 0x008400b0 (IDirectPlay2A) is only ever stored 0 (0x00497d78). No DPLAYX.dll import descriptor
+(golf.exe, golf_clean.exe, v1.00: only the name string 0x004bf82e, unreferenced), no LoadLibraryA of it, no CreateThread /
+CreateEventA / socket import, no Receive / Open / EnumSessions call; the DirectPlay GUIDs 0x004bc3e8..0x004bc428 are
+unreferenced and the connect / host / join dialogs exist only in jackal.txt. The 13 interface calls: Close, Release,
+EnumGroupPlayers (callback netMarkRecordCb), 9 Send, GetPlayerName. Packet = type word, sequence dword, payload at +8;
+types 0x10 roster (host only), 0x20 keep-alive every 2 s, 0x80 peer drop, 0x100 / 0x200 stream data / end; DPSYS 3 / 5 /
+0x31 / 0x102 / 0x103 parsed by netPoll; no simulation state is sent (membership, liveness and a stream only; host migration
+by slot order). All 205 segment images hold 0 in every net global. The firewall here is BlockInbound with notification and
+has no rule for the game. S9.2 part 1 built a generic DirectPlay recorder (re/frida/js/net_rec.js, reader
+re/tools/net_trace.py, 24 static tests); its Frida part never ran, since no organic run can reach DirectPlay.
+Decision G14 (Mariano, 2026-10-29): S9 closes as `the original has no network play`; recordings, replay and interop gates
+dropped; the dormant layer is ported as specification only (S9.3: module net, 12 bodies + 13 registered
+names over a recording NetHost at the IDirectPlay2A slot level, never called from tick; port/test/test_net.py 29 passed, 13 / 13
+controls RED; only netNameOf (20 rows) and netPump's address-free rows are CSV-exact path-1 replays, because the other
+net path-1 CSVs hash fixture blocks that hold the run's own heap addresses, so the rest are judged by instruction-level
+assertions on rebuilt session objects with the host call log checked call by call; uiIdleNetPoll, netMarkRecordCb,
+netService, netSendMessages have no path-1 rows and stay host calls; netHandleControl.slot15Stays default 1; U-1770..U-1774).
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

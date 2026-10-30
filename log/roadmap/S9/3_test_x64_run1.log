@@ -1,0 +1,178 @@
+FFF.........F...F.F...F..F...                                            [100%]
+================================== FAILURES ===================================
+___________________________ test_name_of_replays_c3 ___________________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6C3E2A0>
+
+    @need_net
+    def test_name_of_replays_c3(sess):
+>       good, bad = _name_of(sess)
+                    ^^^^^^^^^^^^^^
+
+port\test\test_net.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = <port.test.test_net.Sess object at 0x00000250C6C3E2A0>, mode = 0
+
+    def _name_of(s, mode=0):
+        s.lib.negctl("netNameOf", mode)
+        for k, pid in enumerate(NAME_IDS):
+            s.peer(k, pid, b"N%d" % k)
+        bad = good = 0
+        for row in rows("0049aa30_netNameOf.path1.csv"):
+            got = s.call("netNameOf", int(row["vector"].split()[1]))
+>           want = 0 if row["original"] in ("0", "null") else BASE + int(row["original"].split("+")[1], 16)
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+port\test\test_net.py:107: IndexError
+_____________________________ test_name_of_negctl _____________________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C43D65D0>
+
+    @need_net
+    def test_name_of_negctl(sess):
+>       assert _name_of(sess, 1)[1] > 0
+               ^^^^^^^^^^^^^^^^^
+
+port\test\test_net.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = <port.test.test_net.Sess object at 0x00000250C43D65D0>, mode = 1
+
+    def _name_of(s, mode=0):
+        s.lib.negctl("netNameOf", mode)
+        for k, pid in enumerate(NAME_IDS):
+            s.peer(k, pid, b"N%d" % k)
+        bad = good = 0
+        for row in rows("0049aa30_netNameOf.path1.csv"):
+            got = s.call("netNameOf", int(row["vector"].split()[1]))
+>           want = 0 if row["original"] in ("0", "null") else BASE + int(row["original"].split("+")[1], 16)
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+port\test\test_net.py:107: IndexError
+____________________________ test_pump_replays_c3 _____________________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6D57F50>
+
+    @need_net
+    def test_pump_replays_c3(sess):
+        csvrows = rows("0049aa70_netPump.path1.csv")
+        exact = 0
+        for i, row in enumerate(csvrows):
+>           got, flags, log = _pump(sess, i)
+                              ^^^^^^^^^^^^^^
+
+port\test\test_net.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = <port.test.test_net.Sess object at 0x00000250C6D57F50>, i = 12, mode = 0
+
+    def _pump(s, i, mode=0):
+        s.lib.negctl("netPump", mode)
+>       r = PUMP[i]
+            ^^^^^^^
+E       IndexError: list index out of range
+
+port\test\test_net.py:133: IndexError
+_____________________________ test_queue_message ______________________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6D0D610>
+
+    @need_net
+    def test_queue_message(sess):
+        _queue_fix(sess, host=False)
+        name = _put_name(sess, 0x1800, b"new peer")
+        sess.w(0xC8, 0xC8)                                    # list head +8 non-zero
+        assert sess.call("netQueueMessage", name, 0x14, 0) == 0x55
+>       assert sess.r(0x170 + 0x58) == 0x14 and sess.buf[0x170 + 0x58 + 0x15:0x170 + 0x58 + 0x1D] == b"new peer"
+E       AssertionError: assert (20 == 20 and [110, 101, 11...112, 101, ...] == b'new peer'
+E        +  where 20 = r((368 + 88))
+E        +    where r = <port.test.test_net.Sess object at 0x00000250C6D0D610>.r
+E         
+E         Use -v to get more diff)
+
+port\test\test_net.py:263: AssertionError
+___________________ test_service_control_drops_silent_peer ____________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6D0ECC0>
+
+    @need_net
+    def test_service_control_drops_silent_peer(sess):
+        sess.iface()
+        sess.answer(IMP_TIME, 0x100000)
+        sess.w(0xE8, 0x40000); sess.w(0xF0, 1000); sess.w(0x77C, 5); sess.w(0x780, 5); sess.w(0xEC, 0)
+        sess.peer(0, 0x11, b"a", 0, 0x10); sess.peer(1, 0x12, b"b", 0, 0x100000 - 1); sess.peer(2, 5, b"h", 0, 5)
+        sess.call("netServiceControl")
+>       assert [c for c, a, p in sess.log()].count(NET_SEND) == 1
+E       assert 2 == 1
+E        +  where 2 = <built-in method count of list object at 0x00000250C707CBC0>(12289)
+E        +    where <built-in method count of list object at 0x00000250C707CBC0> = [16384, 12289, 16384, 16384, 20480, 20481, ...].count
+
+port\test\test_net.py:313: AssertionError
+______________________________ test_list_remove _______________________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6D0E0C0>
+
+    @need_net
+    def test_list_remove(sess):
+        _ring(sess, [5, 6, 7])
+        sess.call("netListRemove", 99)                                  # miss: nothing removed, cursor back where it started
+        assert sess.r(0xC0 + 0x10) == 3 and sess.r(0xC0 + 0xC) == BASE + 0x1000 and sess.log() == []
+        sess.call("netListRemove", 6)
+>       assert sess.r(0xC0 + 0x10) == 2 and sess.r(0xC0 + 0xC) == BASE + 0x1000 + 0x80
+E       assert (3 == 2)
+E        +  where 3 = r((192 + 16))
+E        +    where r = <port.test.test_net.Sess object at 0x00000250C6D0E0C0>.r
+
+port\test\test_net.py:348: AssertionError
+__________________ test_handle_control_host_and_drop_notice ___________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6D0CDD0>
+
+    @need_net
+    def test_handle_control_host_and_drop_notice(sess):
+        _peers(sess, [0x41, 0x42, 0x43], host_id=0x42)
+        sess.w(0x77C, 0x41)
+        assert sess.call("netHandleControl", 0x42, 0) == 0 or True      # flag 0 on a client asks the dialogs first
+        assert sess.call("netHandleControl", 0x99, 1) == 0              # unknown id
+        sess.st.call("net.hostReset", [])
+        _peers(sess, [0x41, 0x42, 0x43], host_id=0x42)
+        sess.w(0x77C, 0x41); sess.w(0x1C8, 0)
+        sess.call("netHandleControl", 0x42, 1)
+>       assert sess.r(0x780) == 0x41 and sess.st.read({n: o for n, o, s in sess.lib.objects()}["g_net8400ac"], 4) == struct.pack("<I", 0x42)
+E       assert (66 == 65)
+E        +  where 66 = r(1920)
+E        +    where r = <port.test.test_net.Sess object at 0x00000250C6D0CDD0>.r
+
+port\test\test_net.py:408: AssertionError
+_________________________ test_poll_roster_and_create _________________________
+
+sess = <port.test.test_net.Sess object at 0x00000250C6D57CE0>
+
+    @need_net
+    def test_poll_roster_and_create(sess):
+        sess.iface(1)
+        sess.w(4, BASE + 0x1C00)
+        roster = bytes([0x10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) + struct.pack("<I", 0x31) + b"zed\x00".ljust(0x20, b"\x00") + struct.pack("<I", 1)
+        _push(sess, 1, roster)
+        sess.call("netPoll")
+>       assert sess.r(0x170) == 0x31 and sess.buf[0x185:0x188] == b"zed" and sess.r(0x6F8) == 1
+E       AssertionError: assert (49 == 49 and [122, 101, 100] == b'zed'
+E        +  where 49 = r(368)
+E        +    where r = <port.test.test_net.Sess object at 0x00000250C6D57CE0>.r
+E         
+E         Use -v to get more diff)
+
+port\test\test_net.py:447: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_net.py::test_name_of_replays_c3 - IndexError: list inde...
+FAILED port/test/test_net.py::test_name_of_negctl - IndexError: list index ou...
+FAILED port/test/test_net.py::test_pump_replays_c3 - IndexError: list index o...
+FAILED port/test/test_net.py::test_queue_message - AssertionError: assert (20...
+FAILED port/test/test_net.py::test_service_control_drops_silent_peer - assert...
+FAILED port/test/test_net.py::test_list_remove - assert (3 == 2)
+FAILED port/test/test_net.py::test_handle_control_host_and_drop_notice - asse...
+FAILED port/test/test_net.py::test_poll_roster_and_create - AssertionError: a...
+8 failed, 21 passed in 1.50s

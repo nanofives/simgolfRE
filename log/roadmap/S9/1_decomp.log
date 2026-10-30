@@ -1,0 +1,1562 @@
+// ===== 0x497fc0 (golf_clean.exe)
+
+/* WARNING: Type propagation algorithm not settling */
+
+undefined4 netService(DWORD param_1,undefined4 param_2,HANDLE param_3,int param_4,DWORD param_5)
+
+{
+  char cVar1;
+  code *pcVar2;
+  int *piVar3;
+  DWORD *pDVar4;
+  DWORD DVar5;
+  DWORD DVar6;
+  int iVar7;
+  char *pcVar8;
+  int *this;
+  uint uVar9;
+  int iVar10;
+  int *piVar11;
+  uint uVar12;
+  uint *puVar13;
+  ushort *puVar14;
+  char *pcVar15;
+  char *pcVar16;
+  undefined **ppuStack000000d4;
+  undefined4 in_stack_000014e0;
+  void *in_stack_000021e8;
+  undefined4 *in_stack_000021f8;
+  uint in_stack_000021fc;
+  int in_stack_00002200;
+  ushort in_stack_00002204;
+  uint in_stack_00002208;
+  ushort *local_c;
+  code *local_8;
+  int iStack_4;
+  
+  iStack_4 = -1;
+  local_8 = FUN_004b880f;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  FUN_004a6070();
+  TextView::ctor(&stack0x000000d4);
+  param_3 = (HANDLE)this[5];
+  param_4 = this[6];
+  if (g_netState == (int *)0x0) {
+    ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+    TextView::reset((int *)&stack0x000000d4);
+    HotList::dtor((undefined4 *)&stack0x00001fd8);
+    Dialog::viewDtor((int)&stack0x00001730);
+    ListModel::dtor((undefined4 *)&stack0x00001ca8);
+    Base4805a0::dtor((int *)&stack0x00001730);
+    modelListDtor489c90((int)&stack0x000014e4);
+    modelListDtor489c90((int)&stack0x000014b4);
+    Surface_free((int)&stack0x00001474);
+    LabelButton::dtor((int *)&stack0x00000d80);
+    LabelButton::dtor((int *)&stack0x000006b0);
+    goto LAB_004990ff;
+  }
+  if (((int)in_stack_000021fc < 0) || (this[0x1c0] < (int)in_stack_000021fc)) {
+    ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+    TextView::reset((int *)&stack0x000000d4);
+    HotList::dtor((undefined4 *)&stack0x00001fd8);
+    Dialog::viewDtor((int)&stack0x00001730);
+    ListModel::dtor((undefined4 *)&stack0x00001ca8);
+    Base4805a0::dtor((int *)&stack0x00001730);
+    modelListDtor489c90((int)&stack0x000014e4);
+    modelListDtor489c90((int)&stack0x000014b4);
+    Surface_free((int)&stack0x00001474);
+    LabelButton::dtor((int *)&stack0x00000d80);
+    LabelButton::dtor((int *)&stack0x000006b0);
+    goto LAB_004990ff;
+  }
+  netServiceControl((int)this);
+  if (((in_stack_00002204 & 0xfff0) == 0) &&
+     (((*(byte *)(this + 0x3a) & 1) != 0 || ((in_stack_00002208 & 4) != 0)))) {
+    iVar10 = this[0x1df];
+    if (in_stack_00002200 == iVar10) {
+      listAppend4a4b60(this + 0x48,in_stack_000021f8,in_stack_000021fc,iVar10,0,0xffffffff);
+      goto LAB_00498479;
+    }
+    if ((in_stack_00002200 == 0) &&
+       (listAppend4a4b60(this + 0x48,in_stack_000021f8,in_stack_000021fc,iVar10,0,0xffffffff),
+       this[0x1be] < 2)) goto LAB_00498479;
+  }
+  local_c = _malloc(in_stack_000021fc + 0xc);
+  if (local_c == (ushort *)0x0) {
+    ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+    TextView::reset((int *)&stack0x000000d4);
+    HotList::dtor((undefined4 *)&stack0x00001fd8);
+    Dialog::viewDtor((int)&stack0x00001730);
+    ListModel::dtor((undefined4 *)&stack0x00001ca8);
+    Base4805a0::dtor((int *)&stack0x00001730);
+    modelListDtor489c90((int)&stack0x000014e4);
+    modelListDtor489c90((int)&stack0x000014b4);
+    Surface_free((int)&stack0x00001474);
+    LabelButton::dtor((int *)&stack0x00000d80);
+    LabelButton::dtor((int *)&stack0x000006b0);
+    goto LAB_004990ff;
+  }
+  local_8 = (code *)(in_stack_00002208 & 1);
+  if (local_8 == (code *)0x0) {
+    local_c[2] = 0;
+    local_c[3] = 0;
+  }
+  else {
+    iVar10 = this[0x3d];
+    this[0x3d] = iVar10 + 1;
+    *(int *)(local_c + 2) = iVar10 + 1;
+  }
+  if (in_stack_000021f8 != (undefined4 *)0x0) {
+    puVar14 = local_c + 4;
+    for (uVar9 = in_stack_000021fc >> 2; uVar9 != 0; uVar9 = uVar9 - 1) {
+      *(undefined4 *)puVar14 = *in_stack_000021f8;
+      in_stack_000021f8 = in_stack_000021f8 + 1;
+      puVar14 = puVar14 + 2;
+    }
+    for (uVar9 = in_stack_000021fc & 3; uVar9 != 0; uVar9 = uVar9 - 1) {
+      *(undefined1 *)puVar14 = *(undefined1 *)in_stack_000021f8;
+      in_stack_000021f8 = (undefined4 *)((int)in_stack_000021f8 + 1);
+      puVar14 = (ushort *)((int)puVar14 + 1);
+    }
+  }
+  if ((local_8 == (code *)0x0) || ((this[0x3a] & 0x10000000U) != 0)) {
+    *local_c = in_stack_00002204;
+    if (g_netState == (int *)0x0) {
+      _free(local_c);
+      ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d4);
+      HotList::dtor((undefined4 *)&stack0x00001fd8);
+      Dialog::viewDtor((int)&stack0x00001730);
+      ListModel::dtor((undefined4 *)&stack0x00001ca8);
+      Base4805a0::dtor((int *)&stack0x00001730);
+      modelListDtor489c90((int)&stack0x000014e4);
+      modelListDtor489c90((int)&stack0x000014b4);
+      Surface_free((int)&stack0x00001474);
+      LabelButton::dtor((int *)&stack0x00000d80);
+      LabelButton::dtor((int *)&stack0x000006b0);
+LAB_004990ff:
+      Buf_dtor((undefined4 *)&stack0x00000678);
+      Base4805a0::dtor((int *)&stack0x000000d4);
+      ExceptionList = in_stack_000021e8;
+      return 0;
+    }
+    iVar10 = (**(code **)(*g_netState + 0x68))();
+    if (iVar10 != 0) {
+      _free(local_c);
+      ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d4);
+      HotList::dtor((undefined4 *)&stack0x00001fd8);
+      Dialog::viewDtor((int)&stack0x00001730);
+      ListModel::dtor((undefined4 *)&stack0x00001ca8);
+      Base4805a0::dtor((int *)&stack0x00001730);
+      modelListDtor489c90((int)&stack0x000014e4);
+      modelListDtor489c90((int)&stack0x000014b4);
+      Surface_free((int)&stack0x00001474);
+      LabelButton::dtor((int *)&stack0x00000d80);
+      LabelButton::dtor((int *)&stack0x000006b0);
+      goto LAB_004990ff;
+    }
+  }
+  else {
+    piVar11 = this + 0x5e;
+    *local_c = in_stack_00002204 | 4;
+    iVar10 = 0x10;
+    piVar3 = piVar11;
+    do {
+      *piVar3 = 0;
+      piVar3 = piVar3 + 0x16;
+      iVar10 = iVar10 + -1;
+    } while (iVar10 != 0);
+    DAT_0083ff6c = this + 0x5c;
+    if (g_netState == (int *)0x0) {
+      _free(local_c);
+      ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d4);
+      HotList::dtor((undefined4 *)&stack0x00001fd8);
+      Dialog::viewDtor((int)&stack0x00001730);
+      ListModel::dtor((undefined4 *)&stack0x00001ca8);
+      Base4805a0::dtor((int *)&stack0x00001730);
+      modelListDtor489c90((int)&stack0x000014e4);
+      modelListDtor489c90((int)&stack0x000014b4);
+      Surface_free((int)&stack0x00001474);
+      LabelButton::dtor((int *)&stack0x00000d80);
+      LabelButton::dtor((int *)&stack0x000006b0);
+      goto LAB_004990ff;
+    }
+    (**(code **)(*g_netState + 0x28))();
+    param_1 = 0xffffffff;
+    iVar10 = 0;
+    do {
+      if (*piVar11 != 0) {
+        *(undefined4 *)(&stack0x00000054 + iVar10 * 4) = 1;
+        DVar5 = this[iVar10 * 0x16 + 0x5f];
+        *(DWORD *)(&stack0x00000094 + iVar10 * 4) = DVar5;
+        pcVar2 = timeGetTime_exref;
+        if (DVar5 != 0xffffffff) {
+          param_1 = DVar5;
+        }
+        goto joined_r0x004985e5;
+      }
+      iVar10 = iVar10 + 1;
+      piVar11 = piVar11 + 0x16;
+    } while (iVar10 < 0x10);
+  }
+LAB_0049846c:
+  _free(local_c);
+LAB_00498479:
+  iVar10 = this[0x3d];
+  ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+  TextView::reset((int *)&stack0x000000d4);
+  HotList::dtor((undefined4 *)&stack0x00001fd8);
+  Dialog::viewDtor((int)&stack0x00001730);
+  ListModel::dtor((undefined4 *)&stack0x00001ca8);
+  Base4805a0::dtor((int *)&stack0x00001730);
+  ListModel::destroyNodes((int)&stack0x0000150c);
+  ListModel::destroyNodes((int)&stack0x000014dc);
+  DAT_00839650 = in_stack_000014e0;
+  Surface_free((int)&stack0x00001474);
+  LabelButton::dtor((int *)&stack0x00000d80);
+  LabelButton::dtor((int *)&stack0x000006b0);
+  Buf_dtor((undefined4 *)&stack0x00000678);
+  Base4805a0::dtor((int *)&stack0x000000d4);
+  ExceptionList = in_stack_000021e8;
+  return iVar10;
+joined_r0x004985e5:
+  do {
+    timeGetTime_exref = pcVar2;
+    if (g_netState == (int *)0x0) {
+      _free(local_c);
+      ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d4);
+      HotList::dtor((undefined4 *)&stack0x00001fd8);
+      Dialog::viewDtor((int)&stack0x00001730);
+      ListModel::dtor((undefined4 *)&stack0x00001ca8);
+      Base4805a0::dtor((int *)&stack0x00001730);
+      modelListDtor489c90((int)&stack0x000014e4);
+      modelListDtor489c90((int)&stack0x000014b4);
+      Surface_free((int)&stack0x00001474);
+      LabelButton::dtor((int *)&stack0x00000d80);
+      LabelButton::dtor((int *)&stack0x000006b0);
+      goto LAB_004990ff;
+    }
+    param_5 = timeGetTime();
+    puVar14 = local_c;
+    pDVar4 = (DWORD *)&stack0x00000018;
+    iVar10 = 0xf;
+    do {
+      *pDVar4 = param_5;
+      pDVar4 = pDVar4 + 1;
+      iVar10 = iVar10 + -1;
+    } while (iVar10 != 0);
+    iVar10 = (**(code **)(*g_netState + 0x68))();
+    if (iVar10 != 0) {
+      _free(puVar14);
+      ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d4);
+      HotList::dtor((undefined4 *)&stack0x00001fd8);
+      Dialog::viewDtor((int)&stack0x00001730);
+      ListModel::dtor((undefined4 *)&stack0x00001ca8);
+      Base4805a0::dtor((int *)&stack0x00001730);
+      modelListDtor489c90((int)&stack0x000014e4);
+      modelListDtor489c90((int)&stack0x000014b4);
+      Surface_free((int)&stack0x00001474);
+      LabelButton::dtor((int *)&stack0x00000d80);
+      LabelButton::dtor((int *)&stack0x000006b0);
+      goto LAB_004990ff;
+    }
+    DVar5 = timeGetTime();
+    DVar6 = timeGetTime();
+    uVar9 = DVar6 - DVar5;
+    while (uVar9 < 20000) {
+      ResetEvent((HANDLE)this[6]);
+      ResetEvent((HANDLE)this[5]);
+      DVar6 = WaitForMultipleObjects(2,&param_3,0,param_1);
+      if (DVar6 == 1) {
+        netPoll(this);
+      }
+      local_8 = (code *)(*pcVar2)();
+      iStack_4 = 0;
+      puVar13 = (uint *)(this + 0x5f);
+      iVar10 = 0;
+      do {
+        if (*(int *)(&stack0x00000054 + iVar10) != 0) {
+          if (puVar13[-3] == 0) {
+            *(undefined4 *)(&stack0x00000054 + iVar10) = 0;
+          }
+          else if (puVar13[-1] == 0) {
+            DVar6 = timeGetTime();
+            uVar9 = *puVar13;
+            *(undefined4 *)(&stack0x00000054 + iVar10) = 0;
+            *puVar13 = DVar6 + 0x14 + (uVar9 - *(int *)((int)&param_5 + iVar10)) >> 1;
+          }
+          else {
+            if (*(uint *)(&stack0x00000094 + iVar10) <
+                (uint)((int)local_8 - *(int *)((int)&param_5 + iVar10))) {
+              *(uint *)(&stack0x00000094 + iVar10) = *(uint *)(&stack0x00000094 + iVar10) * 3 >> 1;
+              if (g_netState == (int *)0x0) {
+                _free(local_c);
+                ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+                TextView::reset((int *)&stack0x000000d4);
+                HotList::dtor((undefined4 *)&stack0x00001fd8);
+                Dialog::viewDtor((int)&stack0x00001730);
+                ListModel::dtor((undefined4 *)&stack0x00001ca8);
+                Base4805a0::dtor((int *)&stack0x00001730);
+                modelListDtor489c90((int)&stack0x000014e4);
+                modelListDtor489c90((int)&stack0x000014b4);
+                Surface_free((int)&stack0x00001474);
+                LabelButton::dtor((int *)&stack0x00000d80);
+                LabelButton::dtor((int *)&stack0x000006b0);
+                goto LAB_004990ff;
+              }
+              DVar6 = timeGetTime();
+              *(DWORD *)((int)&param_5 + iVar10) = DVar6;
+              iVar7 = (**(code **)(*g_netState + 0x68))();
+              if (iVar7 != 0) {
+                MessageBoxA((HWND)0x0,s_Oh_no___Send_failed__004e47b0,
+                            s_Message_from_the_Net_Underworld_004e47c8,0);
+                _free(local_c);
+                ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+                TextView::reset((int *)&stack0x000000d4);
+                HotList::dtor((undefined4 *)&stack0x00001fd8);
+                Dialog::viewDtor((int)&stack0x00001730);
+                ListModel::dtor((undefined4 *)&stack0x00001ca8);
+                Base4805a0::dtor((int *)&stack0x00001730);
+                modelListDtor489c90((int)&stack0x000014e4);
+                modelListDtor489c90((int)&stack0x000014b4);
+                Surface_free((int)&stack0x00001474);
+                LabelButton::dtor((int *)&stack0x00000d80);
+                LabelButton::dtor((int *)&stack0x000006b0);
+                goto LAB_004990ff;
+              }
+            }
+            iStack_4 = 1;
+          }
+        }
+        iVar10 = iVar10 + 4;
+        puVar13 = puVar13 + 0x16;
+      } while (iVar10 < 0x40);
+      if (iStack_4 == 0) goto LAB_0049846c;
+      DVar6 = timeGetTime();
+      pcVar2 = timeGetTime_exref;
+      uVar9 = DVar6 - DVar5;
+    }
+    DAT_0083c340._0_1_ = 0;
+    iStack_4 = 1;
+    piVar11 = this + 0x5c;
+    local_8 = (code *)0x10;
+    do {
+      if (piVar11[2] != 0) {
+        pcVar8 = (char *)netNameOf(this,*piVar11);
+        uVar9 = 0xffffffff;
+        do {
+          pcVar16 = pcVar8;
+          if (uVar9 == 0) break;
+          uVar9 = uVar9 - 1;
+          pcVar16 = pcVar8 + 1;
+          cVar1 = *pcVar8;
+          pcVar8 = pcVar16;
+        } while (cVar1 != '\0');
+        uVar9 = ~uVar9;
+        iVar10 = -1;
+        pcVar8 = (char *)&DAT_0083c340;
+        do {
+          pcVar15 = pcVar8;
+          if (iVar10 == 0) break;
+          iVar10 = iVar10 + -1;
+          pcVar15 = pcVar8 + 1;
+          cVar1 = *pcVar8;
+          pcVar8 = pcVar15;
+        } while (cVar1 != '\0');
+        pcVar8 = pcVar16 + -uVar9;
+        pcVar16 = pcVar15 + -1;
+        for (uVar12 = uVar9 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+          *(undefined4 *)pcVar16 = *(undefined4 *)pcVar8;
+          pcVar8 = pcVar8 + 4;
+          pcVar16 = pcVar16 + 4;
+        }
+        for (uVar9 = uVar9 & 3; uVar9 != 0; uVar9 = uVar9 - 1) {
+          *pcVar16 = *pcVar8;
+          pcVar8 = pcVar8 + 1;
+          pcVar16 = pcVar16 + 1;
+        }
+        if (iStack_4 == 0) {
+          uVar9 = 0xffffffff;
+          pcVar8 = &DAT_004c52b8;
+          do {
+            pcVar16 = pcVar8;
+            if (uVar9 == 0) break;
+            uVar9 = uVar9 - 1;
+            pcVar16 = pcVar8 + 1;
+            cVar1 = *pcVar8;
+            pcVar8 = pcVar16;
+          } while (cVar1 != '\0');
+          uVar9 = ~uVar9;
+          iVar10 = -1;
+          pcVar8 = (char *)&DAT_0083c340;
+          do {
+            pcVar15 = pcVar8;
+            if (iVar10 == 0) break;
+            iVar10 = iVar10 + -1;
+            pcVar15 = pcVar8 + 1;
+            cVar1 = *pcVar8;
+            pcVar8 = pcVar15;
+          } while (cVar1 != '\0');
+          pcVar8 = pcVar16 + -uVar9;
+          pcVar16 = pcVar15 + -1;
+          for (uVar12 = uVar9 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+            *(undefined4 *)pcVar16 = *(undefined4 *)pcVar8;
+            pcVar8 = pcVar8 + 4;
+            pcVar16 = pcVar16 + 4;
+          }
+          for (uVar9 = uVar9 & 3; uVar9 != 0; uVar9 = uVar9 - 1) {
+            *pcVar16 = *pcVar8;
+            pcVar8 = pcVar8 + 1;
+            pcVar16 = pcVar16 + 1;
+          }
+          uVar9 = 0xffffffff;
+          pcVar8 = &DAT_004c3f70;
+          do {
+            pcVar16 = pcVar8;
+            if (uVar9 == 0) break;
+            uVar9 = uVar9 - 1;
+            pcVar16 = pcVar8 + 1;
+            cVar1 = *pcVar8;
+            pcVar8 = pcVar16;
+          } while (cVar1 != '\0');
+          uVar9 = ~uVar9;
+          iVar10 = -1;
+          pcVar8 = (char *)&DAT_0083c340;
+          do {
+            pcVar15 = pcVar8;
+            if (iVar10 == 0) break;
+            iVar10 = iVar10 + -1;
+            pcVar15 = pcVar8 + 1;
+            cVar1 = *pcVar8;
+            pcVar8 = pcVar15;
+          } while (cVar1 != '\0');
+          pcVar8 = pcVar16 + -uVar9;
+          pcVar16 = pcVar15 + -1;
+          for (uVar12 = uVar9 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+            *(undefined4 *)pcVar16 = *(undefined4 *)pcVar8;
+            pcVar8 = pcVar8 + 4;
+            pcVar16 = pcVar16 + 4;
+          }
+          for (uVar9 = uVar9 & 3; uVar9 != 0; uVar9 = uVar9 - 1) {
+            *pcVar16 = *pcVar8;
+            pcVar8 = pcVar8 + 1;
+            pcVar16 = pcVar16 + 1;
+          }
+        }
+        iStack_4 = 0;
+      }
+      piVar11 = piVar11 + 0x16;
+      local_8 = local_8 + -1;
+    } while (local_8 != (code *)0x0);
+    uVar9 = 0xffffffff;
+    pcVar8 = &DAT_004c4944;
+    do {
+      pcVar16 = pcVar8;
+      if (uVar9 == 0) break;
+      uVar9 = uVar9 - 1;
+      pcVar16 = pcVar8 + 1;
+      cVar1 = *pcVar8;
+      pcVar8 = pcVar16;
+    } while (cVar1 != '\0');
+    uVar9 = ~uVar9;
+    iVar10 = -1;
+    pcVar8 = (char *)&DAT_0083c340;
+    do {
+      pcVar15 = pcVar8;
+      if (iVar10 == 0) break;
+      iVar10 = iVar10 + -1;
+      pcVar15 = pcVar8 + 1;
+      cVar1 = *pcVar8;
+      pcVar8 = pcVar15;
+    } while (cVar1 != '\0');
+    pcVar8 = pcVar16 + -uVar9;
+    pcVar16 = pcVar15 + -1;
+    for (uVar12 = uVar9 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+      *(undefined4 *)pcVar16 = *(undefined4 *)pcVar8;
+      pcVar8 = pcVar8 + 4;
+      pcVar16 = pcVar16 + 4;
+    }
+    for (uVar9 = uVar9 & 3; uVar9 != 0; uVar9 = uVar9 - 1) {
+      *pcVar16 = *pcVar8;
+      pcVar8 = pcVar8 + 1;
+      pcVar16 = pcVar16 + 1;
+    }
+    setHudTextSlot(0,(char *)&DAT_0083c340,-1,-1);
+    TextView::loadScript(&stack0x000000d4,s_jackal_004e4680,0x4e47e8,-1,(undefined *)0x0,0,0);
+    iVar10 = TextView::build(&stack0x000000d4,0,0);
+    pcVar2 = timeGetTime_exref;
+  } while (iVar10 == 0);
+  if (iVar10 == 1) {
+    netSendShutdown((int)this);
+  }
+  else if (iVar10 == 2) {
+    DAT_0083afcc = 1;
+  }
+  _free(local_c);
+  ppuStack000000d4 = &PTR_scalarDtor_004bb3f8;
+  TextView::reset((int *)&stack0x000000d4);
+  HotList::dtor((undefined4 *)&stack0x00001fd8);
+  Dialog::viewDtor((int)&stack0x00001730);
+  ListModel::dtor((undefined4 *)&stack0x00001ca8);
+  Base4805a0::dtor((int *)&stack0x00001730);
+  ListModel::destroyNodes((int)&stack0x0000150c);
+  ListModel::destroyNodes((int)&stack0x000014dc);
+  DAT_00839650 = in_stack_000014e0;
+  Surface_free((int)&stack0x00001474);
+  LabelButton::dtor((int *)&stack0x00000d80);
+  LabelButton::dtor((int *)&stack0x000006b0);
+  goto LAB_004990ff;
+}
+
+
+// ===== 0x499140 (golf_clean.exe)
+
+undefined4 netSendMessages(void)
+
+{
+  char cVar1;
+  bool bVar2;
+  DWORD DVar3;
+  DWORD DVar4;
+  char *pcVar5;
+  uint *puVar6;
+  DWORD *pDVar7;
+  int iVar8;
+  int *this;
+  uint uVar9;
+  int iVar10;
+  uint uVar11;
+  uint uVar12;
+  int *piVar13;
+  uint *puVar14;
+  code *pcVar15;
+  char *pcVar16;
+  char *pcVar17;
+  int unaff_retaddr;
+  HANDLE pvStack00000010;
+  int iStack00000014;
+  DWORD in_stack_00000018;
+  undefined **ppuStack000000d8;
+  int in_stack_000014bc;
+  undefined4 in_stack_000014e4;
+  int in_stack_000014ec;
+  undefined4 in_stack_00001514;
+  void *in_stack_000021ec;
+  code *in_stack_000021fc;
+  uint in_stack_00002200;
+  uint in_stack_00002204;
+  ushort in_stack_00002208;
+  uint in_stack_0000220c;
+  DWORD *local_c;
+  code *local_8;
+  int *piStack_4;
+  
+  piStack_4 = (int *)0xffffffff;
+  local_8 = FUN_004b8e40;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  FUN_004a6070();
+  TextView::ctor(&stack0x000000d8);
+  pvStack00000010 = (HANDLE)this[5];
+  iStack00000014 = this[6];
+  if (g_netState == (int *)0x0) {
+    ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+    TextView::reset((int *)&stack0x000000d8);
+    HotList::dtor((undefined4 *)&stack0x00001fdc);
+    Dialog::viewDtor((int)&stack0x00001734);
+    ListModel::dtor((undefined4 *)&stack0x00001cac);
+    Base4805a0::dtor((int *)&stack0x00001734);
+    modelListDtor489c90((int)&stack0x000014e8);
+    modelListDtor489c90((int)&stack0x000014b8);
+    Surface_free((int)&stack0x00001478);
+    LabelButton::dtor((int *)&stack0x00000d84);
+    LabelButton::dtor((int *)&stack0x000006b4);
+  }
+  else {
+    if (((int)in_stack_00002200 < 0) || (this[2] < (int)in_stack_00002200)) {
+      ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d8);
+      HotList::dtor((undefined4 *)&stack0x00001fdc);
+      Dialog::viewDtor((int)&stack0x00001734);
+      ListModel::dtor((undefined4 *)&stack0x00001cac);
+      Base4805a0::dtor((int *)&stack0x00001734);
+      modelListDtor489c90((int)&stack0x000014e8);
+      modelListDtor489c90((int)&stack0x000014b8);
+      Surface_free((int)&stack0x00001478);
+      LabelButton::dtor((int *)&stack0x00000d84);
+      LabelButton::dtor((int *)&stack0x000006b4);
+      goto LAB_0049a9ee;
+    }
+    netServiceControl((int)this);
+    if (((in_stack_00002208 & 0xfff0) == 0) && ((in_stack_0000220c & 4) != 0)) {
+      uVar9 = this[0x1df];
+      if (in_stack_00002204 == uVar9) {
+        listAppend4a4b60(this + 0x48,(undefined4 *)in_stack_000021fc,in_stack_00002200,uVar9,0,
+                         0xffffffff);
+        goto LAB_00499a62;
+      }
+      if ((in_stack_00002204 == 0) &&
+         (listAppend4a4b60(this + 0x48,(undefined4 *)in_stack_000021fc,in_stack_00002200,uVar9,0,
+                           0xffffffff), this[0x1be] < 2)) goto LAB_00499a62;
+    }
+    local_8 = _malloc(in_stack_00002200 + 0xc);
+    if (local_8 != (code *)0x0) {
+      if ((in_stack_0000220c & 1) == 0) {
+        *(undefined4 *)(local_8 + 4) = 0;
+      }
+      else {
+        iVar10 = this[0x3d];
+        this[0x3d] = iVar10 + 1;
+        *(int *)(local_8 + 4) = iVar10 + 1;
+      }
+      if (in_stack_000021fc != (code *)0x0) {
+        pcVar15 = local_8 + 8;
+        for (uVar9 = in_stack_00002200 >> 2; uVar9 != 0; uVar9 = uVar9 - 1) {
+          *(undefined4 *)pcVar15 = *(undefined4 *)in_stack_000021fc;
+          in_stack_000021fc = in_stack_000021fc + 4;
+          pcVar15 = pcVar15 + 4;
+        }
+        for (uVar9 = in_stack_00002200 & 3; uVar9 != 0; uVar9 = uVar9 - 1) {
+          *pcVar15 = *in_stack_000021fc;
+          in_stack_000021fc = in_stack_000021fc + 1;
+          pcVar15 = pcVar15 + 1;
+        }
+      }
+      if (((in_stack_0000220c & 1) == 0) || ((this[0x3a] & 0x10000000U) != 0)) {
+        *(ushort *)local_8 = in_stack_00002208;
+        if (g_netState == (int *)0x0) {
+          _free(local_8);
+          ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+          TextView::reset((int *)&stack0x000000d8);
+          HotList::dtor((undefined4 *)&stack0x00001fdc);
+          Dialog::viewDtor((int)&stack0x00001734);
+          ListModel::dtor((undefined4 *)&stack0x00001cac);
+          Base4805a0::dtor((int *)&stack0x00001734);
+          modelListDtor489c90((int)&stack0x000014e8);
+          modelListDtor489c90((int)&stack0x000014b8);
+          Surface_free((int)&stack0x00001478);
+          LabelButton::dtor((int *)&stack0x00000d84);
+          LabelButton::dtor((int *)&stack0x000006b4);
+          goto LAB_0049a9ee;
+        }
+        iVar10 = (**(code **)(*g_netState + 0x68))();
+        if (iVar10 != 0) {
+          _free(local_8);
+          ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+          TextView::reset((int *)&stack0x000000d8);
+          HotList::dtor((undefined4 *)&stack0x00001fdc);
+          Dialog::viewDtor((int)&stack0x00001734);
+          ListModel::dtor((undefined4 *)&stack0x00001cac);
+          Base4805a0::dtor((int *)&stack0x00001734);
+          modelListDtor489c90((int)&stack0x000014e8);
+          modelListDtor489c90((int)&stack0x000014b8);
+          Surface_free((int)&stack0x00001478);
+          LabelButton::dtor((int *)&stack0x00000d84);
+          LabelButton::dtor((int *)&stack0x000006b4);
+          goto LAB_0049a9ee;
+        }
+      }
+      else {
+        *(ushort *)local_8 = in_stack_00002208 | 4;
+        if (in_stack_00002204 == 0) {
+          uVar9 = 0xffffffff;
+          bVar2 = false;
+          puVar6 = (uint *)(this + 0x5f);
+          iVar10 = 0;
+          do {
+            if (((puVar6[-3] == 0) || (puVar6[-3] == this[0x1df])) ||
+               (((puVar6[2] & 2) == 0 && ((in_stack_00002208 & 0x10) == 0)))) {
+              puVar6[-1] = 0;
+              *(undefined4 *)(&stack0x00000098 + iVar10) = 0;
+            }
+            else {
+              puVar6[-1] = 1;
+              uVar11 = *puVar6;
+              *(undefined4 *)(&stack0x00000098 + iVar10) = 1;
+              *(uint *)(&stack0x00000058 + iVar10) = uVar11;
+              bVar2 = true;
+              if (uVar11 < uVar9) {
+                uVar9 = uVar11;
+              }
+            }
+            iVar10 = iVar10 + 4;
+            puVar6 = puVar6 + 0x16;
+          } while (iVar10 < 0x40);
+          if (bVar2) {
+            do {
+              if (g_netState == (int *)0x0) {
+                _free(local_8);
+                ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                TextView::reset((int *)&stack0x000000d8);
+                HotList::dtor((undefined4 *)&stack0x00001fdc);
+                Dialog::viewDtor((int)&stack0x00001734);
+                ListModel::dtor((undefined4 *)&stack0x00001cac);
+                Base4805a0::dtor((int *)&stack0x00001734);
+                modelListDtor489c90((int)&stack0x000014e8);
+                modelListDtor489c90((int)&stack0x000014b8);
+                Surface_free((int)&stack0x00001478);
+                LabelButton::dtor((int *)&stack0x00000d84);
+                LabelButton::dtor((int *)&stack0x000006b4);
+                goto LAB_0049a9ee;
+              }
+              in_stack_00000018 = timeGetTime();
+              pcVar15 = local_8;
+              pDVar7 = (DWORD *)&stack0x0000001c;
+              iVar10 = 0xf;
+              do {
+                *pDVar7 = in_stack_00000018;
+                pDVar7 = pDVar7 + 1;
+                iVar10 = iVar10 + -1;
+              } while (iVar10 != 0);
+              iVar10 = (**(code **)(*g_netState + 0x68))();
+              if (iVar10 != 0) {
+                MessageBoxA((HWND)0x0,s_Oh_no___Send_failed__004e47b0,
+                            s_Message_from_the_Net_Underworld_004e47c8,0);
+                _free(pcVar15);
+                ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                TextView::reset((int *)&stack0x000000d8);
+                HotList::dtor((undefined4 *)&stack0x00001fdc);
+                Dialog::viewDtor((int)&stack0x00001734);
+                ListModel::dtor((undefined4 *)&stack0x00001cac);
+                Base4805a0::dtor((int *)&stack0x00001734);
+                modelListDtor489c90((int)&stack0x000014e8);
+                modelListDtor489c90((int)&stack0x000014b8);
+                Surface_free((int)&stack0x00001478);
+                LabelButton::dtor((int *)&stack0x00000d84);
+                LabelButton::dtor((int *)&stack0x000006b4);
+                goto LAB_0049a9ee;
+              }
+              DVar3 = timeGetTime();
+              DVar4 = timeGetTime();
+              uVar11 = DVar4 - DVar3;
+              while (uVar11 < 20000) {
+                ResetEvent((HANDLE)this[6]);
+                ResetEvent((HANDLE)this[5]);
+                DVar4 = WaitForMultipleObjects(2,&stack0x00000010,0,uVar9);
+                if (DVar4 == 1) {
+                  netPoll(this);
+                }
+                piStack_4 = (int *)timeGetTime();
+                iVar10 = 0;
+                local_c = (DWORD *)0x0;
+                puVar6 = (uint *)(this + 0x5f);
+                do {
+                  if (*(int *)(&stack0x00000098 + iVar10) != 0) {
+                    if (puVar6[-3] == 0) {
+                      *(undefined4 *)(&stack0x00000098 + iVar10) = 0;
+                    }
+                    else if (puVar6[-1] == 0) {
+                      DVar4 = timeGetTime();
+                      uVar11 = *puVar6;
+                      *(undefined4 *)(&stack0x00000098 + iVar10) = 0;
+                      *puVar6 = DVar4 + 0x14 + (uVar11 - *(int *)((int)&stack0x00000018 + iVar10))
+                                >> 1;
+                    }
+                    else {
+                      if (*(uint *)(&stack0x00000058 + iVar10) <
+                          (uint)((int)piStack_4 - *(int *)((int)&stack0x00000018 + iVar10))) {
+                        *(uint *)(&stack0x00000058 + iVar10) =
+                             *(uint *)(&stack0x00000058 + iVar10) * 3 >> 1;
+                        if (g_netState == (int *)0x0) {
+                          _free(local_8);
+                          ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                          TextView::reset((int *)&stack0x000000d8);
+                          HotList::dtor((undefined4 *)&stack0x00001fdc);
+                          Dialog::viewDtor((int)&stack0x00001734);
+                          ListModel::dtor((undefined4 *)&stack0x00001cac);
+                          Base4805a0::dtor((int *)&stack0x00001734);
+                          ListModel::destroyNodes((int)&stack0x00001510);
+                          DAT_00839650 = in_stack_00001514;
+                          modelListDtor489c90((int)&stack0x000014b8);
+                          Surface_free((int)&stack0x00001478);
+                          LabelButton::dtor((int *)&stack0x00000d84);
+                          LabelButton::dtor((int *)&stack0x000006b4);
+                          goto LAB_0049a9ee;
+                        }
+                        DVar4 = timeGetTime();
+                        *(DWORD *)((int)&stack0x00000018 + iVar10) = DVar4;
+                        iVar8 = (**(code **)(*g_netState + 0x68))();
+                        if (iVar8 != 0) {
+                          MessageBoxA((HWND)0x0,s_Oh_no___Send_failed__004e47b0,
+                                      s_Message_from_the_Net_Underworld_004e47c8,0);
+                          _free(local_8);
+                          ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                          TextView::reset((int *)&stack0x000000d8);
+                          HotList::dtor((undefined4 *)&stack0x00001fdc);
+                          Dialog::viewDtor((int)&stack0x00001734);
+                          ListModel::dtor((undefined4 *)&stack0x00001cac);
+                          Base4805a0::dtor((int *)&stack0x00001734);
+                          ListModel::destroyNodes((int)&stack0x00001510);
+                          DAT_00839650 = in_stack_00001514;
+                          modelListDtor489c90((int)&stack0x000014b8);
+                          Surface_free((int)&stack0x00001478);
+                          LabelButton::dtor((int *)&stack0x00000d84);
+                          LabelButton::dtor((int *)&stack0x000006b4);
+                          goto LAB_0049a9ee;
+                        }
+                      }
+                      local_c = (DWORD *)0x1;
+                    }
+                  }
+                  iVar10 = iVar10 + 4;
+                  puVar6 = puVar6 + 0x16;
+                } while (iVar10 < 0x40);
+                if (local_c == (DWORD *)0x0) goto LAB_00499a55;
+                DVar4 = timeGetTime();
+                uVar11 = DVar4 - DVar3;
+              }
+              DAT_0083c340._0_1_ = 0;
+              local_c = (DWORD *)0x1;
+              piVar13 = this + 0x5c;
+              piStack_4 = (int *)0x10;
+              do {
+                if (piVar13[2] != 0) {
+                  pcVar5 = (char *)netNameOf(this,*piVar13);
+                  uVar11 = 0xffffffff;
+                  do {
+                    pcVar17 = pcVar5;
+                    if (uVar11 == 0) break;
+                    uVar11 = uVar11 - 1;
+                    pcVar17 = pcVar5 + 1;
+                    cVar1 = *pcVar5;
+                    pcVar5 = pcVar17;
+                  } while (cVar1 != '\0');
+                  uVar11 = ~uVar11;
+                  iVar10 = -1;
+                  pcVar5 = (char *)&DAT_0083c340;
+                  do {
+                    pcVar16 = pcVar5;
+                    if (iVar10 == 0) break;
+                    iVar10 = iVar10 + -1;
+                    pcVar16 = pcVar5 + 1;
+                    cVar1 = *pcVar5;
+                    pcVar5 = pcVar16;
+                  } while (cVar1 != '\0');
+                  pcVar5 = pcVar17 + -uVar11;
+                  pcVar17 = pcVar16 + -1;
+                  for (uVar12 = uVar11 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+                    *(undefined4 *)pcVar17 = *(undefined4 *)pcVar5;
+                    pcVar5 = pcVar5 + 4;
+                    pcVar17 = pcVar17 + 4;
+                  }
+                  for (uVar11 = uVar11 & 3; uVar11 != 0; uVar11 = uVar11 - 1) {
+                    *pcVar17 = *pcVar5;
+                    pcVar5 = pcVar5 + 1;
+                    pcVar17 = pcVar17 + 1;
+                  }
+                  if (local_c == (DWORD *)0x0) {
+                    uVar11 = 0xffffffff;
+                    pcVar5 = &DAT_004c52b8;
+                    do {
+                      pcVar17 = pcVar5;
+                      if (uVar11 == 0) break;
+                      uVar11 = uVar11 - 1;
+                      pcVar17 = pcVar5 + 1;
+                      cVar1 = *pcVar5;
+                      pcVar5 = pcVar17;
+                    } while (cVar1 != '\0');
+                    uVar11 = ~uVar11;
+                    iVar10 = -1;
+                    pcVar5 = (char *)&DAT_0083c340;
+                    do {
+                      pcVar16 = pcVar5;
+                      if (iVar10 == 0) break;
+                      iVar10 = iVar10 + -1;
+                      pcVar16 = pcVar5 + 1;
+                      cVar1 = *pcVar5;
+                      pcVar5 = pcVar16;
+                    } while (cVar1 != '\0');
+                    pcVar5 = pcVar17 + -uVar11;
+                    pcVar17 = pcVar16 + -1;
+                    for (uVar12 = uVar11 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+                      *(undefined4 *)pcVar17 = *(undefined4 *)pcVar5;
+                      pcVar5 = pcVar5 + 4;
+                      pcVar17 = pcVar17 + 4;
+                    }
+                    for (uVar11 = uVar11 & 3; uVar11 != 0; uVar11 = uVar11 - 1) {
+                      *pcVar17 = *pcVar5;
+                      pcVar5 = pcVar5 + 1;
+                      pcVar17 = pcVar17 + 1;
+                    }
+                    uVar11 = 0xffffffff;
+                    pcVar5 = &DAT_004c3f70;
+                    do {
+                      pcVar17 = pcVar5;
+                      if (uVar11 == 0) break;
+                      uVar11 = uVar11 - 1;
+                      pcVar17 = pcVar5 + 1;
+                      cVar1 = *pcVar5;
+                      pcVar5 = pcVar17;
+                    } while (cVar1 != '\0');
+                    uVar11 = ~uVar11;
+                    iVar10 = -1;
+                    pcVar5 = (char *)&DAT_0083c340;
+                    do {
+                      pcVar16 = pcVar5;
+                      if (iVar10 == 0) break;
+                      iVar10 = iVar10 + -1;
+                      pcVar16 = pcVar5 + 1;
+                      cVar1 = *pcVar5;
+                      pcVar5 = pcVar16;
+                    } while (cVar1 != '\0');
+                    pcVar5 = pcVar17 + -uVar11;
+                    pcVar17 = pcVar16 + -1;
+                    for (uVar12 = uVar11 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+                      *(undefined4 *)pcVar17 = *(undefined4 *)pcVar5;
+                      pcVar5 = pcVar5 + 4;
+                      pcVar17 = pcVar17 + 4;
+                    }
+                    for (uVar11 = uVar11 & 3; uVar11 != 0; uVar11 = uVar11 - 1) {
+                      *pcVar17 = *pcVar5;
+                      pcVar5 = pcVar5 + 1;
+                      pcVar17 = pcVar17 + 1;
+                    }
+                  }
+                  local_c = (DWORD *)0x0;
+                }
+                piVar13 = piVar13 + 0x16;
+                piStack_4 = (int *)((int)piStack_4 - 1);
+              } while (piStack_4 != (int *)0x0);
+              uVar11 = 0xffffffff;
+              pcVar5 = &DAT_004c4944;
+              do {
+                pcVar17 = pcVar5;
+                if (uVar11 == 0) break;
+                uVar11 = uVar11 - 1;
+                pcVar17 = pcVar5 + 1;
+                cVar1 = *pcVar5;
+                pcVar5 = pcVar17;
+              } while (cVar1 != '\0');
+              uVar11 = ~uVar11;
+              iVar10 = -1;
+              pcVar5 = (char *)&DAT_0083c340;
+              do {
+                pcVar16 = pcVar5;
+                if (iVar10 == 0) break;
+                iVar10 = iVar10 + -1;
+                pcVar16 = pcVar5 + 1;
+                cVar1 = *pcVar5;
+                pcVar5 = pcVar16;
+              } while (cVar1 != '\0');
+              pcVar5 = pcVar17 + -uVar11;
+              pcVar17 = pcVar16 + -1;
+              for (uVar12 = uVar11 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+                *(undefined4 *)pcVar17 = *(undefined4 *)pcVar5;
+                pcVar5 = pcVar5 + 4;
+                pcVar17 = pcVar17 + 4;
+              }
+              for (uVar11 = uVar11 & 3; uVar11 != 0; uVar11 = uVar11 - 1) {
+                *pcVar17 = *pcVar5;
+                pcVar5 = pcVar5 + 1;
+                pcVar17 = pcVar17 + 1;
+              }
+              setHudTextSlot(0,(char *)&DAT_0083c340,-1,-1);
+              TextView::loadScript
+                        (&stack0x000000d8,s_jackal_004e4680,0x4e47e8,-1,(undefined *)0x0,0,0);
+              iVar10 = TextView::build(&stack0x000000d8,0,0);
+            } while (iVar10 == 0);
+            if (iVar10 == 1) {
+              netSendShutdown((int)this);
+            }
+            else if (iVar10 == 2) {
+              DAT_0083afcc = 1;
+            }
+            MessageBoxA((HWND)0x0,s_Oh_no___Send_failed_after_many_t_004e47fc,
+                        s_Message_from_the_Net_Underworld_004e47c8,0);
+            _free(local_8);
+            ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+            TextView::reset((int *)&stack0x000000d8);
+            HotList::dtor((undefined4 *)&stack0x00001fdc);
+            Dialog::viewDtor((int)&stack0x00001734);
+            ListModel::dtor((undefined4 *)&stack0x00001cac);
+            Base4805a0::dtor((int *)&stack0x00001734);
+            ListModel::destroyNodes((int)&stack0x00001510);
+            ListModel::destroyNodes((int)&stack0x000014e0);
+            DAT_00839650 = in_stack_000014e4;
+            Surface_free((int)&stack0x00001478);
+            local_c = (DWORD *)&stack0x00000d84;
+            LabelButton::reset((int *)&stack0x00000d84);
+            Button::dtor((int *)&stack0x00000d84);
+            local_c = (DWORD *)&stack0x000006b4;
+            LabelButton::reset((int *)&stack0x000006b4);
+            Button::dtor((int *)&stack0x000006b4);
+            goto LAB_0049a9ee;
+          }
+        }
+        else {
+          uVar9 = 0xffffffff;
+          bVar2 = false;
+          iVar10 = 0;
+          puVar14 = (uint *)&stack0x00000058;
+          puVar6 = (uint *)(this + 0x5f);
+          do {
+            if ((puVar6[-3] == in_stack_00002204) &&
+               (((puVar6[2] & 2) != 0 || ((in_stack_00002208 & 0x10) != 0)))) {
+              bVar2 = true;
+              *puVar14 = *puVar6;
+              puVar6[-1] = 1;
+              unaff_retaddr = iVar10;
+              if (*puVar6 < uVar9) {
+                uVar9 = *puVar6;
+              }
+            }
+            else {
+              puVar6[-1] = 0;
+            }
+            iVar10 = iVar10 + 1;
+            puVar14 = puVar14 + 1;
+            puVar6 = puVar6 + 0x16;
+          } while (iVar10 < 0x10);
+          if (bVar2) {
+            local_c = &stack0x00000018 + unaff_retaddr;
+            DVar3 = timeGetTime();
+            (&stack0x00000018)[unaff_retaddr] = DVar3;
+            iVar10 = (**(code **)(*g_netState + 0x68))();
+            pcVar15 = ResetEvent_exref;
+            while (ResetEvent_exref = pcVar15, iVar10 == 0) {
+              DVar3 = timeGetTime();
+              DVar4 = timeGetTime();
+              pDVar7 = local_c;
+              if (DVar4 - DVar3 < 20000) {
+                piStack_4 = this + unaff_retaddr * 0x16;
+                do {
+                  (*pcVar15)();
+                  (*pcVar15)();
+                  DVar4 = WaitForMultipleObjects(2,&stack0x00000010,0,uVar9);
+                  if (DVar4 == 1) {
+                    netPoll(this);
+                  }
+                  if ((piStack_4[0x5e] == 0) || (piStack_4[0x5c] == 0)) {
+                    DVar3 = timeGetTime();
+                    this[unaff_retaddr * 0x16 + 0x5f] =
+                         DVar3 + 0x14 + (this[unaff_retaddr * 0x16 + 0x5f] - *pDVar7) >> 1;
+                    goto LAB_00499a55;
+                  }
+                  uVar11 = *(uint *)(&stack0x00000058 + unaff_retaddr * 4);
+                  DVar4 = timeGetTime();
+                  if (uVar11 < DVar4 - *pDVar7) {
+                    *(uint *)(&stack0x00000058 + unaff_retaddr * 4) = uVar11 * 3 >> 1;
+                    if (g_netState == (int *)0x0) {
+                      _free(local_8);
+                      ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                      TextView::reset((int *)&stack0x000000d8);
+                      HotList::dtor((undefined4 *)&stack0x00001fdc);
+                      Dialog::viewDtor((int)&stack0x00001734);
+                      ListModel::dtor((undefined4 *)&stack0x00001cac);
+                      Base4805a0::dtor((int *)&stack0x00001734);
+                      modelListDtor489c90((int)&stack0x000014e8);
+                      modelListDtor489c90((int)&stack0x000014b8);
+                      Surface_free((int)&stack0x00001478);
+                      LabelButton::dtor((int *)&stack0x00000d84);
+                      LabelButton::dtor((int *)&stack0x000006b4);
+                      goto LAB_0049a9ee;
+                    }
+                    DVar4 = timeGetTime();
+                    pcVar15 = local_8;
+                    *pDVar7 = DVar4;
+                    iVar10 = (**(code **)(*g_netState + 0x68))();
+                    if (iVar10 != 0) {
+                      MessageBoxA((HWND)0x0,s_Oh_no___Send_failed__004e47b0,
+                                  s_Message_from_the_Net_Underworld_004e47c8,0);
+                      _free(pcVar15);
+                      ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                      TextView::reset((int *)&stack0x000000d8);
+                      HotList::dtor((undefined4 *)&stack0x00001fdc);
+                      Dialog::viewDtor((int)&stack0x00001734);
+                      ListModel::dtor((undefined4 *)&stack0x00001cac);
+                      Base4805a0::dtor((int *)&stack0x00001734);
+                      modelListDtor489c90((int)&stack0x000014e8);
+                      modelListDtor489c90((int)&stack0x000014b8);
+                      Surface_free((int)&stack0x00001478);
+                      LabelButton::dtor((int *)&stack0x00000d84);
+                      LabelButton::dtor((int *)&stack0x000006b4);
+                      goto LAB_0049a9ee;
+                    }
+                  }
+                  DVar4 = timeGetTime();
+                  pcVar15 = ResetEvent_exref;
+                } while (DVar4 - DVar3 < 20000);
+              }
+              DAT_0083c340._0_1_ = 0;
+              pcVar5 = (char *)netNameOf(this,this[unaff_retaddr * 0x16 + 0x5c]);
+              uVar11 = 0xffffffff;
+              do {
+                pcVar17 = pcVar5;
+                if (uVar11 == 0) break;
+                uVar11 = uVar11 - 1;
+                pcVar17 = pcVar5 + 1;
+                cVar1 = *pcVar5;
+                pcVar5 = pcVar17;
+              } while (cVar1 != '\0');
+              uVar11 = ~uVar11;
+              iVar10 = -1;
+              pcVar5 = (char *)&DAT_0083c340;
+              do {
+                pcVar16 = pcVar5;
+                if (iVar10 == 0) break;
+                iVar10 = iVar10 + -1;
+                pcVar16 = pcVar5 + 1;
+                cVar1 = *pcVar5;
+                pcVar5 = pcVar16;
+              } while (cVar1 != '\0');
+              pcVar5 = pcVar17 + -uVar11;
+              pcVar17 = pcVar16 + -1;
+              for (uVar12 = uVar11 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+                *(undefined4 *)pcVar17 = *(undefined4 *)pcVar5;
+                pcVar5 = pcVar5 + 4;
+                pcVar17 = pcVar17 + 4;
+              }
+              for (uVar11 = uVar11 & 3; uVar11 != 0; uVar11 = uVar11 - 1) {
+                *pcVar17 = *pcVar5;
+                pcVar5 = pcVar5 + 1;
+                pcVar17 = pcVar17 + 1;
+              }
+              uVar11 = 0xffffffff;
+              pcVar5 = &DAT_004c4944;
+              do {
+                pcVar17 = pcVar5;
+                if (uVar11 == 0) break;
+                uVar11 = uVar11 - 1;
+                pcVar17 = pcVar5 + 1;
+                cVar1 = *pcVar5;
+                pcVar5 = pcVar17;
+              } while (cVar1 != '\0');
+              uVar11 = ~uVar11;
+              iVar10 = -1;
+              pcVar5 = (char *)&DAT_0083c340;
+              do {
+                pcVar16 = pcVar5;
+                if (iVar10 == 0) break;
+                iVar10 = iVar10 + -1;
+                pcVar16 = pcVar5 + 1;
+                cVar1 = *pcVar5;
+                pcVar5 = pcVar16;
+              } while (cVar1 != '\0');
+              pcVar5 = pcVar17 + -uVar11;
+              pcVar17 = pcVar16 + -1;
+              for (uVar12 = uVar11 >> 2; uVar12 != 0; uVar12 = uVar12 - 1) {
+                *(undefined4 *)pcVar17 = *(undefined4 *)pcVar5;
+                pcVar5 = pcVar5 + 4;
+                pcVar17 = pcVar17 + 4;
+              }
+              for (uVar11 = uVar11 & 3; uVar11 != 0; uVar11 = uVar11 - 1) {
+                *pcVar17 = *pcVar5;
+                pcVar5 = pcVar5 + 1;
+                pcVar17 = pcVar17 + 1;
+              }
+              setHudTextSlot(0,(char *)&DAT_0083c340,-1,-1);
+              TextView::loadScript
+                        (&stack0x000000d8,s_jackal_004e4680,0x4e47e8,-1,(undefined *)0x0,0,0);
+              iVar10 = TextView::build(&stack0x000000d8,0,0);
+              if (iVar10 != 0) {
+                if (iVar10 == 1) {
+                  netSendShutdown((int)this);
+                }
+                else if (iVar10 == 2) {
+                  DAT_0083afcc = 1;
+                }
+                _free(local_8);
+                ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+                TextView::reset((int *)&stack0x000000d8);
+                HotList::dtor((undefined4 *)&stack0x00001fdc);
+                Dialog::viewDtor((int)&stack0x00001734);
+                ListModel::dtor((undefined4 *)&stack0x00001cac);
+                Base4805a0::dtor((int *)&stack0x00001734);
+                modelListDtor489c90((int)&stack0x000014e8);
+                modelListDtor489c90((int)&stack0x000014b8);
+                Surface_free((int)&stack0x00001478);
+                LabelButton::dtor((int *)&stack0x00000d84);
+                LabelButton::dtor((int *)&stack0x000006b4);
+                goto LAB_0049a9ee;
+              }
+              DVar3 = timeGetTime();
+              *local_c = DVar3;
+              iVar10 = (**(code **)(*g_netState + 0x68))();
+              pcVar15 = ResetEvent_exref;
+            }
+            MessageBoxA((HWND)0x0,s_Oh_no___Send_failed__004e47b0,
+                        s_Message_from_the_Net_Underworld_004e47c8,0);
+            _free(local_8);
+            ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+            TextView::reset((int *)&stack0x000000d8);
+            HotList::dtor((undefined4 *)&stack0x00001fdc);
+            Dialog::viewDtor((int)&stack0x00001734);
+            ListModel::dtor((undefined4 *)&stack0x00001cac);
+            Base4805a0::dtor((int *)&stack0x00001734);
+            modelListDtor489c90((int)&stack0x000014e8);
+            modelListDtor489c90((int)&stack0x000014b8);
+            Surface_free((int)&stack0x00001478);
+            LabelButton::dtor((int *)&stack0x00000d84);
+            LabelButton::dtor((int *)&stack0x000006b4);
+            goto LAB_0049a9ee;
+          }
+        }
+      }
+LAB_00499a55:
+      _free(local_8);
+LAB_00499a62:
+      iVar10 = this[0x3d];
+      ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+      TextView::reset((int *)&stack0x000000d8);
+      HotList::dtor((undefined4 *)&stack0x00001fdc);
+      Dialog::viewDtor((int)&stack0x00001734);
+      ListModel::dtor((undefined4 *)&stack0x00001cac);
+      Base4805a0::dtor((int *)&stack0x00001734);
+      local_c = (DWORD *)&stack0x00001510;
+      *(undefined ***)(&stack0x000014ec + *(int *)(in_stack_000014ec + 4)) = &PTR_FUN_004bb228;
+      List402_clear((int *)&stack0x000014e8);
+      List401c70_dtor((int)&stack0x00001504);
+      local_c = (DWORD *)&stack0x000014e0;
+      *(undefined ***)(&stack0x000014bc + *(int *)(in_stack_000014bc + 4)) = &PTR_FUN_004bb228;
+      List402_clear((int *)&stack0x000014b8);
+      List401c70_dtor((int)&stack0x000014d4);
+      DAT_00839650 = in_stack_000014e4;
+      Surface_free((int)&stack0x00001478);
+      local_c = (DWORD *)&stack0x00000d84;
+      LabelButton::reset((int *)&stack0x00000d84);
+      Button::dtor((int *)&stack0x00000d84);
+      local_c = (DWORD *)&stack0x000006b4;
+      LabelButton::reset((int *)&stack0x000006b4);
+      Button::dtor((int *)&stack0x000006b4);
+      Buf_dtor((undefined4 *)&stack0x0000067c);
+      Base4805a0::dtor((int *)&stack0x000000d8);
+      ExceptionList = in_stack_000021ec;
+      return iVar10;
+    }
+    ppuStack000000d8 = &PTR_scalarDtor_004bb3f8;
+    TextView::reset((int *)&stack0x000000d8);
+    HotList::dtor((undefined4 *)&stack0x00001fdc);
+    Dialog::viewDtor((int)&stack0x00001734);
+    ListModel::dtor((undefined4 *)&stack0x00001cac);
+    Base4805a0::dtor((int *)&stack0x00001734);
+    modelListDtor489c90((int)&stack0x000014e8);
+    modelListDtor489c90((int)&stack0x000014b8);
+    Surface_free((int)&stack0x00001478);
+    LabelButton::dtor((int *)&stack0x00000d84);
+    LabelButton::dtor((int *)&stack0x000006b4);
+  }
+LAB_0049a9ee:
+  Buf_dtor((undefined4 *)&stack0x0000067c);
+  Base4805a0::dtor((int *)&stack0x000000d8);
+  ExceptionList = in_stack_000021ec;
+  return 0;
+}
+
+
+// ===== 0x49b690 (golf_clean.exe)
+
+void __thiscall netQueueMessage(void *this,char *param_1,int param_2,byte param_3)
+
+{
+  char cVar1;
+  uint uVar2;
+  int iVar3;
+  uint uVar4;
+  int *piVar5;
+  int iVar6;
+  char *pcVar7;
+  char *pcVar8;
+  char *pcVar9;
+  
+  iVar6 = 0;
+  piVar5 = (int *)((int)this + 0x170);
+  do {
+    if (*piVar5 == 0) {
+      if (iVar6 < 0x10) {
+        uVar2 = 0xffffffff;
+        *(int *)((int)this + iVar6 * 0x58 + 0x170) = param_2;
+        *(byte *)((int)this + iVar6 * 0x58 + 0x184) = param_3;
+        pcVar7 = (char *)((int)this + iVar6 * 0x58 + 0x185);
+        *pcVar7 = '\0';
+        goto code_r0x0049b6ec;
+      }
+      break;
+    }
+    if (*piVar5 == param_2) {
+      return;
+    }
+    iVar6 = iVar6 + 1;
+    piVar5 = piVar5 + 0x16;
+  } while (iVar6 < 0x10);
+  goto LAB_0049b729;
+  while( true ) {
+    uVar2 = uVar2 - 1;
+    pcVar9 = param_1 + 1;
+    cVar1 = *param_1;
+    param_1 = pcVar9;
+    if (cVar1 == '\0') break;
+code_r0x0049b6ec:
+    pcVar9 = param_1;
+    if (uVar2 == 0) break;
+  }
+  uVar2 = ~uVar2;
+  iVar3 = -1;
+  do {
+    pcVar8 = pcVar7;
+    if (iVar3 == 0) break;
+    iVar3 = iVar3 + -1;
+    pcVar8 = pcVar7 + 1;
+    cVar1 = *pcVar7;
+    pcVar7 = pcVar8;
+  } while (cVar1 != '\0');
+  pcVar7 = pcVar9 + -uVar2;
+  pcVar9 = pcVar8 + -1;
+  for (uVar4 = uVar2 >> 2; uVar4 != 0; uVar4 = uVar4 - 1) {
+    *(undefined4 *)pcVar9 = *(undefined4 *)pcVar7;
+    pcVar7 = pcVar7 + 4;
+    pcVar9 = pcVar9 + 4;
+  }
+  for (uVar2 = uVar2 & 3; uVar2 != 0; uVar2 = uVar2 - 1) {
+    *pcVar9 = *pcVar7;
+    pcVar7 = pcVar7 + 1;
+    pcVar9 = pcVar9 + 1;
+  }
+  if ((param_3 & 1) != 0) {
+    *(int *)((int)this + 0x780) = param_2;
+  }
+LAB_0049b729:
+  *(int *)((int)this + 0x6f8) = *(int *)((int)this + 0x6f8) + 1;
+  if (*(int *)((int)this + 0x77c) == *(int *)((int)this + 0x780)) {
+    netSendList((int)this);
+  }
+  (**(code **)(*(int *)this + 8))
+            ((int)this + iVar6 * 0x58 + 0x185,*(undefined4 *)((int)this + iVar6 * 0x58 + 0x170));
+  S3List_addVoiceRx((undefined4 *)((int)this + 0xc0));
+  if (*(int *)((int)this + 200) == 0) {
+    piVar5 = (int *)0x0;
+  }
+  else {
+    piVar5 = *(int **)(*(int *)((int)this + 0xcc) + 8);
+  }
+  (**(code **)(*piVar5 + 0x84))(0x1000,0,0);
+  return;
+}
+
+
+// ===== 0x497b40 (golf_clean.exe)
+
+void __fastcall netSendList(int param_1)
+
+{
+  char cVar1;
+  undefined1 *puVar2;
+  uint uVar3;
+  int iVar4;
+  uint uVar5;
+  char *pcVar6;
+  undefined1 *puVar7;
+  char *pcVar8;
+  char *pcVar9;
+  char *pcVar10;
+  int local_10;
+  
+  if ((*(int *)(param_1 + 0x77c) == *(int *)(param_1 + 0x780)) &&
+     (local_10 = *(int *)(param_1 + 0x6f8), local_10 != 0)) {
+    puVar2 = _malloc(local_10 * 0x2c + 4);
+    *puVar2 = (char)local_10;
+    if (0 < local_10) {
+      pcVar6 = puVar2 + 8;
+      puVar7 = (undefined1 *)(param_1 + 0x1a4);
+      do {
+        *(undefined4 *)(pcVar6 + -4) = *(undefined4 *)(puVar7 + -0x34);
+        *pcVar6 = '\0';
+        uVar3 = 0xffffffff;
+        *puVar7 = 0;
+        pcVar8 = puVar7 + -0x1f;
+        do {
+          pcVar10 = pcVar8;
+          if (uVar3 == 0) break;
+          uVar3 = uVar3 - 1;
+          pcVar10 = pcVar8 + 1;
+          cVar1 = *pcVar8;
+          pcVar8 = pcVar10;
+        } while (cVar1 != '\0');
+        uVar3 = ~uVar3;
+        iVar4 = -1;
+        pcVar8 = pcVar6;
+        do {
+          pcVar9 = pcVar8;
+          if (iVar4 == 0) break;
+          iVar4 = iVar4 + -1;
+          pcVar9 = pcVar8 + 1;
+          cVar1 = *pcVar8;
+          pcVar8 = pcVar9;
+        } while (cVar1 != '\0');
+        pcVar8 = pcVar10 + -uVar3;
+        pcVar10 = pcVar9 + -1;
+        for (uVar5 = uVar3 >> 2; uVar5 != 0; uVar5 = uVar5 - 1) {
+          *(undefined4 *)pcVar10 = *(undefined4 *)pcVar8;
+          pcVar8 = pcVar8 + 4;
+          pcVar10 = pcVar10 + 4;
+        }
+        for (uVar3 = uVar3 & 3; uVar3 != 0; uVar3 = uVar3 - 1) {
+          *pcVar10 = *pcVar8;
+          pcVar8 = pcVar8 + 1;
+          pcVar10 = pcVar10 + 1;
+        }
+        local_10 = local_10 + -1;
+        *(uint *)(pcVar6 + 0x20) = (uint)(byte)puVar7[-0x20];
+        pcVar6 = pcVar6 + 0x28;
+        puVar7 = puVar7 + 0x58;
+      } while (local_10 != 0);
+    }
+    netSendMessages();
+    if (puVar2 != (undefined1 *)0x0) {
+      _free(puVar2);
+    }
+  }
+  return;
+}
+
+
+// ===== 0x49aa70 (golf_clean.exe)
+
+void __fastcall netPump(int param_1)
+
+{
+  int *piVar1;
+  uint uVar2;
+  int iVar3;
+  
+  if ((*(uint *)(param_1 + 0xe8) & 0x40000000) == 0) {
+    piVar1 = (int *)(param_1 + 100);
+    uVar2 = (**(code **)(*(int *)(param_1 + 100) + 0x94))();
+    if (100 < uVar2) {
+      *(uint *)(param_1 + 0xe8) = *(uint *)(param_1 + 0xe8) | 0x40000000;
+      (**(code **)(*piVar1 + 0x20))();
+      return;
+    }
+    iVar3 = (**(code **)(*piVar1 + 0x88))();
+    if (iVar3 != 0) {
+      if (*(int *)(param_1 + 0x60) != 0) {
+        netService(*(int *)(iVar3 + 0x18),*(int *)(iVar3 + 0x20) - *(int *)(iVar3 + 0x18),
+                   *(HANDLE *)(param_1 + 0xe4),0x100,0);
+        (**(code **)(*piVar1 + 0x8c))(iVar3);
+        return;
+      }
+      netSendMessages();
+      (**(code **)(*piVar1 + 0x8c))(iVar3);
+    }
+  }
+  else {
+    uVar2 = (**(code **)(*(int *)(param_1 + 100) + 0x94))();
+    if (uVar2 < 0x32) {
+      *(uint *)(param_1 + 0xe8) = *(uint *)(param_1 + 0xe8) & 0xbfffffff;
+      return;
+    }
+  }
+  return;
+}
+
+
+// ===== 0x49ab40 (golf_clean.exe)
+
+void __fastcall netServiceControl(int param_1)
+
+{
+  DWORD DVar1;
+  int iVar2;
+  DWORD DVar3;
+  DWORD *pDVar4;
+  int *piVar5;
+  int local_4;
+  
+  if (((g_netState != 0) && (DVar1 = timeGetTime(), *(uint *)(param_1 + 0xec) < DVar1 - 2000)) &&
+     (DAT_008400c0 == 0)) {
+    DAT_008400c0 = 1;
+    netSendMessages();
+    DVar1 = timeGetTime();
+    *(DWORD *)(param_1 + 0xec) = DVar1;
+    DAT_008400c0 = 0;
+    if (DAT_008400bc == 0) {
+      DAT_008400bc = 1;
+      if ((*(uint *)(param_1 + 0xe8) & 0x40000) != 0) {
+        if (*(int *)(param_1 + 0x77c) == *(int *)(param_1 + 0x780)) {
+          piVar5 = (int *)(param_1 + 0x170);
+          local_4 = 0x10;
+          do {
+            if (((*piVar5 != 0) && (*piVar5 != *(int *)(param_1 + 0x77c))) &&
+               ((iVar2 = piVar5[4], iVar2 != 0 &&
+                ((DVar1 = timeGetTime(), *(uint *)(param_1 + 0xf0) < DVar1 - iVar2 &&
+                 (iVar2 = netHandleControl(), iVar2 == 0)))))) {
+              DVar1 = timeGetTime();
+              piVar5[4] = DVar1;
+            }
+            piVar5 = piVar5 + 0x16;
+            local_4 = local_4 + -1;
+          } while (local_4 != 0);
+          DAT_008400bc = 0;
+          return;
+        }
+        if (*(int *)(param_1 + 0x77c) == *(int *)(param_1 + 0x1c8)) {
+          iVar2 = *(int *)(param_1 + 0x180);
+          if (((iVar2 != 0) && (DVar1 = timeGetTime(), *(uint *)(param_1 + 0xf0) < DVar1 - iVar2))
+             && (iVar2 = netHandleControl(), iVar2 == 0)) {
+            DVar1 = timeGetTime();
+            *(DWORD *)(param_1 + 0x180) = DVar1;
+            DAT_008400bc = 0;
+            return;
+          }
+        }
+        else {
+          iVar2 = 0;
+          pDVar4 = (DWORD *)(param_1 + 0x180);
+          do {
+            DVar1 = *pDVar4;
+            if (DVar1 == 0) {
+              return;
+            }
+            DVar3 = timeGetTime();
+            if (DVar3 - DVar1 < *(uint *)(param_1 + 0xf0)) {
+              return;
+            }
+            iVar2 = iVar2 + 1;
+            pDVar4 = pDVar4 + 0x16;
+          } while (iVar2 < 2);
+          iVar2 = netHandleControl();
+          if (iVar2 == 0) {
+            DVar1 = timeGetTime();
+            *(DWORD *)(param_1 + 0x1d8) = DVar1;
+            *(DWORD *)(param_1 + 0x180) = DVar1;
+          }
+        }
+      }
+      DAT_008400bc = 0;
+    }
+  }
+  return;
+}
+
+
+// ===== 0x497f60 (golf_clean.exe)
+
+undefined4 FUN_00497f60(int param_1)
+
+{
+  int iVar1;
+  int *piVar2;
+  
+  if (DAT_0083ff6c == (int *)0x0) {
+    return 0;
+  }
+  iVar1 = 0;
+  piVar2 = DAT_0083ff6c;
+  do {
+    if (*piVar2 == param_1) {
+      if ((*(byte *)(DAT_0083ff6c + iVar1 * 0x16 + 5) & 2) != 0) {
+        DAT_0083ff6c[iVar1 * 0x16 + 2] = 1;
+      }
+      return 1;
+    }
+    iVar1 = iVar1 + 1;
+    piVar2 = piVar2 + 0x16;
+  } while (iVar1 < 0x10);
+  return 1;
+}
+
+

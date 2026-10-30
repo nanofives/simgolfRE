@@ -46,3 +46,7 @@ Mariano started this section on 2026-10-29. Decision D6 had held it back as `lat
 - Port defaults of defects follow D5 / G3. The slot-15 duplicate is kept unless Mariano decides otherwise.
 - Firewall prompts: the original binds sockets. If Windows asks for a firewall rule, stop and report BLOCKED_DECISION, because only
   Mariano can approve it.
+
+## Outcome (G14, 2026-10-29)
+
+The original has no network play (re/analysis/net/NET_MODEL.md section 0). The survey is merged, the dormant layer is ported as specification (S9.3, module net), and the recording, replay and interop gates are dropped.

@@ -91,3 +91,6 @@ through the context (ctx.mem), with a typed `Ptr<T>` wrapper in port code; an un
 native pointer in state and no original address literal. Why: all 15,191 vectors and 190 segments are byte images with these
 addresses, and U-0703 means a translation table would miss plainly typed objects that hold data-section addresses. A later
 cleanup (phase 7) may convert modules to native references one at a time, with the same vectors and segments as the net.
+
+## 2026-10-29, correction reported by S9.1, to apply at the start of the next model phase
+- `g_ui_83ff9c` 0x0083ff9c (re/model/addresses.tsv, int32_t[4], class ui) is GetPlayerName's DPNAME out-buffer: netPoll passes it with a size word of 0x100 (0x0049b8ad / 0x0049b8bb) and reads +0xc = lpszLongNameA (0x0049b8d6). Proposed: `g_netPlayerName` uint8_t[0x100], ending at 0x0084009c (below g_net8400ac). Evidence: log/roadmap/S9/1_merge.md section 3, re/analysis/net/NET_MODEL.md.

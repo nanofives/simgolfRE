@@ -1,0 +1,5 @@
+ID	addr	type	description	path to resolution	status
+U-1771	0x00497b40	behavioural	netSendList builds its packet in a malloc block; bytes 1..3 and the record bytes the copy never writes hold malloc garbage in the original. The port sends 0 there.	A heap stand-in with a known fill would settle the original's bytes	open
+U-1772	0x0049b970	structural	S3List_addVoiceRx (ring add with a 0x64-byte VoiceRx payload through operator new and VoiceRx::ctor) is forwarded to the host, not ported.	Port the ring add once a VoiceRx/sound-object peer exists	open
+U-1773	0x0049acf0	structural	netHandleControl's dialogs (TextView ctor, loadScript with 0x004e4680 + text ids, build, SEH teardown) are one DialogRun host call; the render flag word set on the first dialog's drop answer is not modelled.	Model the TextView screens in the UI port	open
+U-1774	0x0049b7b0	structural	netPoll passes GetPlayerName the size 0x100 by value; the original passes the address of a stack word holding 0x100.	None needed unless a real DirectPlay host is added	open

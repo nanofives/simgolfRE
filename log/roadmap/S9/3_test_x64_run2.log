@@ -1,0 +1,63 @@
+................F........F...                                            [100%]
+================================== FAILURES ===================================
+___________________ test_service_control_drops_silent_peer ____________________
+
+sess = <port.test.test_net.Sess object at 0x000002C3EDE1DE20>
+
+    @need_net
+    def test_service_control_drops_silent_peer(sess):
+        sess.iface()
+        sess.answer(IMP_TIME, 0x100000)
+        sess.w(0xE8, 0x40000); sess.w(0xF0, 1000); sess.w(0x77C, 5); sess.w(0x780, 5); sess.w(0xEC, 0)
+        sess.w(0x6F8, 3)
+        sess.peer(0, 0x11, b"a", 0, 0x10); sess.peer(1, 0x12, b"b", 0, 0x100000 - 1); sess.peer(2, 5, b"h", 0, 5)
+        sess.call("netServiceControl")
+        sends = [(a, p) for c, a, p in sess.log() if c == NET_SEND]
+>       assert [a[3] for a, p in sends] == [0x20, 0x80] and sends[1][1] == struct.pack("<I", 0x11)   # keep-alive, then the drop notice
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert ([0, 128] == [32, 128]
+E         
+E         At index 0 diff: 0 != 32
+E         Use -v to get more diff)
+
+port\test\test_net.py:315: AssertionError
+_________________________ test_poll_roster_and_create _________________________
+
+sess = <port.test.test_net.Sess object at 0x000002C3EDDD0410>
+
+    @need_net
+    def test_poll_roster_and_create(sess):
+        sess.iface(1)
+        sess.w(4, BASE + 0x1C00)
+        roster = bytes([0x10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) + struct.pack("<I", 0x31) + b"zed\x00".ljust(0x20, b"\x00") + struct.pack("<I", 1)
+        _push(sess, 1, roster)
+        sess.call("netPoll")
+        assert sess.r(0x170) == 0x31 and bytes(sess.buf[0x185:0x188]) == b"zed" and sess.r(0x6F8) == 1
+        sess.st.call("net.hostReset", [])
+        sess.w(0x77C, 3); sess.w(0x780, 3)
+        _push(sess, 0, struct.pack("<IIII", 3, 1, 0x90, 0))
+>       sess.call("netPoll")
+
+port\test\test_net.py:452: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+port\test\test_net.py:60: in call
+    return self.st.call(fn, [BASE] + [a & 0xFFFFFFFF for a in args]).eax
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <port.test.lib.State object at 0x000002C3EDDD0EC0>, name = 'netPoll'
+args = [1073741824]
+
+    def call(self, name: str, args: list[int]) -> SgRet:
+        arr = (C.c_uint32 * max(1, len(args)))(*[a & 0xFFFFFFFF for a in args])
+        r = SgRet()
+        code = self.lib.dll.sg_call(self.ctx, name.encode(), arr, len(args), C.byref(r))
+        if code != SG_OK:
+>           raise SgError(code, f"sg_call {name}")
+E           port.test.lib.SgError: sg_call netPoll: fault (unmapped address)
+
+port\test\lib.py:301: SgError
+=========================== short test summary info ===========================
+FAILED port/test/test_net.py::test_service_control_drops_silent_peer - assert...
+FAILED port/test/test_net.py::test_poll_roster_and_create - port.test.lib.SgE...
+2 failed, 27 passed in 1.54s
