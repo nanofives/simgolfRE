@@ -33,15 +33,16 @@ namespace portapp {
 // ------------------------------------------------------------------------------------------------ S7.8: resources (U-1643)
 void TerrainLogBound::frame_end() {
   if (!live) return;
-  const uint64_t n = live->log().size();
+  const uint64_t n = live->log_size();   // counted, not formatted (roadmap S3.10b: formatting cost about 1 us per call)
   max_len = std::max(max_len, n);
-  if (keep || n == 0) return;
+  if (keep) return;
+  // the app reads no line of the log (roadmap S3.12, U-1673): the lines of the boot's first frame are dropped and LiveTerrain
+  // records no call after it (set_keep_log); calls() still counts every call
   dropped += n;
-  // LiveTerrain::log() hands out its own vector (terrain_live.h); the app is its only reader and needs no line of it
-  std::vector<std::string> &lines = const_cast<std::vector<std::string> &>(live->log());
-  std::vector<std::string>().swap(lines);
+  if (n) live->drop_log();
+  live->set_keep_log(false);
 }
-uint64_t TerrainLogBound::calls() const { return dropped + length(); }
+uint64_t TerrainLogBound::calls() const { return live ? live->calls() : 0; }
 
 bool RecordStreams::open(const std::string &dir, portsim::LiveOptions &o) {
   std::error_code ec;
@@ -77,7 +78,7 @@ std::vector<uint8_t> framehash_bytes(const portsim::LiveResult &r) {
   }
   return fh;
 }
-uint64_t TerrainLogBound::length() const { return live ? live->log().size() : 0; }
+uint64_t TerrainLogBound::length() const { return live ? live->log_size() : 0; }
 
 bool process_memory(MemSample &m) {
   PROCESS_MEMORY_COUNTERS_EX pmc{};

@@ -585,7 +585,9 @@ def test_replay_equals_the_original(lib, corpus, step):
     assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures", "view", "render")), d
 
 
-NEGCTL_REPLAY = tuple(range(1, 23))
+# 1..22 the bodies; 23 (roadmap S3.10b) drops the object view's one-byte stores, so it reads RED only when the replay runs through
+# the view (terrain_state.cpp VPtr / ViewScope): the evidence that the view, not Memory's path, is what the replay judges
+NEGCTL_REPLAY = tuple(range(1, 24))
 
 
 @pytest.mark.parametrize("mode", NEGCTL_REPLAY)

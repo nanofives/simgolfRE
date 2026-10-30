@@ -1,0 +1,142 @@
+-- Building for: Visual Studio 17 2022
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x86/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x86-windows/share/freetype (module fttext)
+-- Configuring done (2.2s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_p01/port/build/Win32
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_p01/port/app/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_p01/port/CMakeLists.txt
+  portsim.cpp
+  input_map.cpp
+  registry.cpp
+  state_hash.cpp
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\app\Release\portapp_input.lib
+  ptr.cpp
+  execonst.cpp
+  gamefiles.cpp
+  bridge.cpp
+  buyland.cpp
+  chareditor.cpp
+  commands.cpp
+  core.cpp
+  course.cpp
+  dialogs.cpp
+  economy.cpp
+  events.cpp
+  flic.cpp
+  fttext.cpp
+  fttext_raster.cpp
+  gditext.cpp
+  gfx.cpp
+  Generando código...
+  Compilando...
+  gfx_boot_screens.cpp
+  gfx_bulletin.cpp
+  gfx_buyland.cpp
+  gfx_chareditor.cpp
+  gfx_credits.cpp
+  gfx_dialogs.cpp
+  gfx_hud.cpp
+  gfx_pixel.cpp
+  gfx_prim_fill.cpp
+  gfx_prim_text.cpp
+  gfx_prim_text2.cpp
+  gfx_reports.cpp
+  gfx_results.cpp
+  gfx_routing.cpp
+  gfx_scene.cpp
+  gfx_selftest.cpp
+  gfx_simfoto.cpp
+  gfx_surface.cpp
+  gfx_terrain.cpp
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(127,44): error C2039: "threads": no es un miembro de "portsim::gl::GlRaster" [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\include\portsim\sim\gl_raster.h(25,7):
+      vea la declaración de 'portsim::gl::GlRaster'
+  
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(127,63): error C2039: "set_threads": no es un miembro de "portsim::gl::GlRaster" [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\include\portsim\sim\gl_raster.h(25,7):
+      vea la declaración de 'portsim::gl::GlRaster'
+  
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(131,100): error C2039: "fast_px": no es un miembro de "portsim::gl::GlRaster::Stats" [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\include\portsim\sim\gl_raster.h(115,10):
+      vea la declaración de 'portsim::gl::GlRaster::Stats'
+  
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(131,78): error C2737: 'fast_before': se debe inicializar el objeto const [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(137,7): error C2039: "finish": no es un miembro de "portsim::gl::GlRaster" [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\include\portsim\sim\gl_raster.h(25,7):
+      vea la declaración de 'portsim::gl::GlRaster'
+  
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(142,109): error C2039: "fast_px": no es un miembro de "portsim::gl::GlRaster::Stats" [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\include\portsim\sim\gl_raster.h(115,10):
+      vea la declaración de 'portsim::gl::GlRaster::Stats'
+  
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(143,24): error C2039: "threads": no es un miembro de "portsim::gl::GlRaster" [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\include\portsim\sim\gl_raster.h(25,7):
+      vea la declaración de 'portsim::gl::GlRaster'
+  
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(141,25): warning C4473: "fprintf": no se pasaron suficientes argumentos para la cadena de formato [C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\build\Win32\portsim.vcxproj]
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(141,25):
+      los marcadores de posición y sus parámetros esperan 8 argumentos variádicos, pero se proporcionaron 6
+      C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\src\sim\gfx_terrain.cpp(141,25):
+      el argumento variádico 7 que falta es requerido por la cadena de formato '%lld'
+  
+  gfx_text.cpp
+  Generando código...
+  Compilando...
+  gl_raster.cpp
+  golfers.cpp
+  holestats.cpp
+  integrator.cpp
+  live.cpp
+  loaders.cpp
+  menu.cpp
+  reports.cpp
+  routing.cpp
+  saveload.cpp
+  semantic.cpp
+  shots.cpp
+  shotstyle.cpp
+  terrain.cpp
+  terrain_course.cpp
+  terrain_dll.cpp
+  terrain_fake.cpp
+  terrain_gen.cpp
+  terrain_gl_setup.cpp
+  terrain_live.cpp
+  Generando código...
+  Compilando...
+  terrain_overlay.cpp
+  terrain_path.cpp
+  terrain_render.cpp
+  terrain_setup.cpp
+  terrain_state.cpp
+  terrain_text.cpp
+  text.cpp
+  textlab.cpp
+  tick.cpp
+  tiles.cpp
+  util.cpp
+  video.cpp
+  x87probe.cpp
+  Generando código...
+Traceback (most recent call last):
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\test\build.py", line 110, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\test\build.py", line 105, in main
+    print(build(a.arch, a.config, a.negctl))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_p01\port\test\build.py", line 92, in build
+    raise RuntimeError(f"cmake build failed\n{(r.stdout or '')[-6000:]}{(r.stderr or '')[-2000:]}")
+RuntimeError: cmake build failed
+

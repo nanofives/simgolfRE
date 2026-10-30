@@ -59,7 +59,10 @@ SNAP_CHUNK = 60             # gfx.snapshotAt requests per replay run (each snaps
 # the scenarios whose in-game checkpoints the app's live path is judged on (2): the ones framegate passes in game under S3
 # (5_notes.md section 2 lists the census rows) and two with the course view on screen at every in-game checkpoint
 LIVE_TRACE_SCENARIOS = ("cov_a_keys", "cov_k1_routing", "sandbox_basic", "course_season")
-FACTS = ROOT / "log" / "roadmap" / "S7" / "8_app_ingame_facts.json"  # S7.8 (S7.5 wrote 5_app_ingame_facts.json)
+# S7.8 (S7.5 wrote 5_app_ingame_facts.json). Roadmap S3.12 (U-1398): SG_APP_FACTS_DIR=<dir> writes the facts file there instead, so
+# a mirror's run (whose log/ is a junction to the shared one) leaves the tracked file alone; S3.10's private copy of this module
+# had hard-coded log/roadmap/S3/10_app_ingame_facts_app.json
+FACTS = pathlib.Path(os.environ.get("SG_APP_FACTS_DIR") or ROOT / "log" / "roadmap" / "S7") / "8_app_ingame_facts.json"
 
 
 def _sources():
@@ -482,9 +485,8 @@ def test_pacing_under_ingame_load(ingame):
     assert len(nowait) <= 8, nowait                          # the five build clicks of the script
 
 
-@pytest.mark.xfail(reason="U-1640: a frame with two full terrain passes (the zoom keys) works 144..186 ms on this PC (three "
-                          "sessions, loaded and less loaded); the rasteriser is S3's (log/roadmap/S7/5_merge.md section 2)",
-                   strict=False)
+# roadmap S3.12: U-1640 resolved by S3 wave 6 (S3.10 workers, S3.10b state rebuild, the LiveTerrain log switch): zoom frames 41..49 ms
+# at 84..97 % load (log/roadmap/S3/12_notes.md), so the xfail of S7.5 is gone
 def test_terrain_pass_frames_fit_the_frame(ingame):
     """gate (3) strictly: no in-game frame overruns 87 ms, the ones that rasterise terrain passes included"""
     over = [r for r in _frame_periods(ingame, _ingame_from(ingame)) if r["waited"] and r["work"] >= 87]

@@ -83,13 +83,23 @@ class LiveTerrain : public TerrainApi {
   uint32_t reset_terrain(uint32_t self) override;
 
   struct Snapshot {
-    uint32_t after = 0;               // calls logged before it
+    uint32_t after = 0;               // calls made before it (calls())
     std::vector<uint8_t> object;
     std::vector<float> vertices, normals;
     std::vector<uint32_t> textures;
     int32_t view_index = 0;
   };
-  const std::vector<std::string> &log() const { return log_; }
+  // the recorder's lines, formatted on demand from the compact records `call` keeps (roadmap S3.10b: formatting each line as the
+  // call ran cost about 1 us per call, 14 ms of a zoom key's 14,804 calls)
+  const std::vector<std::string> &log() const;
+  // the calls logged since the last drop_log (the lines `log()` would hold), without formatting them; drop_log empties the log (the
+  // next call's seq is 0 again, as when a reader emptied the vector `log()` returns)
+  size_t log_size() const { return log_.size() + recs_.size(); }
+  void drop_log();
+  // roadmap S7.8 / S3.12 (U-1673): false = record no call at all (a play session: nothing reads the lines; the app's
+  // TerrainLogBound sets it); calls() counts every call either way, and the snapshots are placed by it
+  void set_keep_log(bool keep) { keep_log_ = keep; }
+  uint64_t calls() const { return calls_; }
   const std::vector<Snapshot> &snapshots() const { return snaps_; }
   uint32_t object_va() const { return dll_.terrain; }
   TerrainGlobals &globals() { return g_; }
@@ -113,7 +123,20 @@ class LiveTerrain : public TerrainApi {
   std::vector<uint32_t> snap_after_;
   size_t next_snap_ = 0;
   std::vector<Snapshot> snaps_;
-  std::vector<std::string> log_;
+  struct LogRec {
+    uint64_t seq;                     // the line's number (calls logged before it since the last drop)
+    const char *name;                 // a string literal of this file's call sites
+    uint32_t self, a[5], ret;
+    uint8_t k;                        // arguments given (the others print `-`)
+    bool has_var;                     // setType with a tile: the variation it drew, read when the call returned
+    int32_t var;
+    std::vector<int32_t> tbl;         // passCollarInfo's table (`tbl=` when `has_tbl`)
+    bool has_tbl;
+  };
+  mutable std::vector<LogRec> recs_;       // calls not formatted yet (log() moves them into log_)
+  mutable std::vector<std::string> log_;
+  bool keep_log_ = true;
+  uint64_t calls_ = 0;
   std::unique_ptr<gl::GlRaster> raster_;
   LiveTerrainView view_;
   bool to_gfx(const char *name, std::initializer_list<uint32_t> args);

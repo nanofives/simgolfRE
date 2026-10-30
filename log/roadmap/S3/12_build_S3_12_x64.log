@@ -1,0 +1,109 @@
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x64-windows/share/freetype (module fttext)
+-- Configuring done (0.0s)
+-- Generating done (0.5s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  input_map.cpp
+  execonst.cpp
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\app\Release\portapp_input.lib
+  gamefiles.cpp
+  portsim.cpp
+  ptr.cpp
+  registry.cpp
+  bridge.cpp
+  buyland.cpp
+  chareditor.cpp
+  commands.cpp
+  core.cpp
+  course.cpp
+  dialogs.cpp
+  economy.cpp
+  events.cpp
+  flic.cpp
+  fttext.cpp
+  fttext_raster.cpp
+  gditext.cpp
+  gfx.cpp
+  gfx_boot_screens.cpp
+  Generando código...
+  Compilando...
+  gfx_bulletin.cpp
+  gfx_buyland.cpp
+  gfx_chareditor.cpp
+  gfx_credits.cpp
+  gfx_dialogs.cpp
+  gfx_hud.cpp
+  gfx_pixel.cpp
+  gfx_prim_fill.cpp
+  gfx_prim_text.cpp
+  gfx_prim_text2.cpp
+  gfx_reports.cpp
+  gfx_results.cpp
+  gfx_routing.cpp
+  gfx_scene.cpp
+  gfx_selftest.cpp
+  gfx_simfoto.cpp
+  gfx_surface.cpp
+  gfx_terrain.cpp
+  gfx_text.cpp
+  gl_raster.cpp
+  Generando código...
+  Compilando...
+  golfers.cpp
+  holestats.cpp
+  integrator.cpp
+  live.cpp
+  loaders.cpp
+  menu.cpp
+  reports.cpp
+  routing.cpp
+  saveload.cpp
+  semantic.cpp
+  shots.cpp
+  shotstyle.cpp
+  terrain.cpp
+  terrain_course.cpp
+  terrain_dll.cpp
+  terrain_fake.cpp
+  terrain_gen.cpp
+  terrain_gl_setup.cpp
+  terrain_live.cpp
+  terrain_overlay.cpp
+  Generando código...
+  Compilando...
+  terrain_path.cpp
+  terrain_render.cpp
+  terrain_setup.cpp
+  terrain_state.cpp
+  terrain_text.cpp
+  text.cpp
+  textlab.cpp
+  tick.cpp
+  tiles.cpp
+  util.cpp
+  video.cpp
+  x87probe.cpp
+  state_hash.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\Release\portsim.lib
+  host.cpp
+  main.cpp
+  pacing.cpp
+  present.cpp
+  saves.cpp
+  window.cpp
+  Generando código...
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\app\Release\simgolf_port.exe
+  portsim_c.cpp
+  core_test.cpp
+  gamestate_layout_test.cpp
+  input_check.cpp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\Release\portsim_layout_test.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12/port/build/x64/Release/portsim_c.exp
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\app\Release\simgolf_input_check.exe
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\Release\portsim_c.dll
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\Release\portsim_core_test.exe
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12\port\build\x64\Release\portsim_c.dll

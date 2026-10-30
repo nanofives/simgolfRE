@@ -1,0 +1,7 @@
+sandbox_basic	mode 0	calls_equal=True	25405/25405 calls	first_diff=None	ok
+sandbox_basic	mode 6	calls_equal=False	25405/0 calls	first_diff=(0, 'getInstance 0x0 0x0 0x0 0x0 0x0', '<end>')	ok
+sandbox_basic	mode 7	calls_equal=False	25405/25405 calls	first_diff=(4, 'setType T2499 0x14 0x0 0x0 0x0 var=0', 'setType T2499 0x14 0x0 0x0 0x0')	ok
+cov_k1_terrain	mode 0	calls_equal=True	26017/26017 calls	first_diff=None	ok
+cov_k1_terrain	mode 6	calls_equal=False	26017/0 calls	first_diff=(0, 'getInstance 0x0 0x0 0x0 0x0 0x0', '<end>')	ok
+cov_k1_terrain	mode 7	calls_equal=False	26017/26017 calls	first_diff=(4, 'setType T2499 0x14 0x0 0x0 0x0 var=0', 'setType T2499 0x14 0x0 0x0 0x0')	ok
+controls: all as expected

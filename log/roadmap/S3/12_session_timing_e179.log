@@ -1,0 +1,89 @@
+=== e179 r1 01:21:11
+run 0: load {'load': '96', 'MSBuild': '4', 'py': '9', 'python': '11'} error '' rc 0
+  frame   60 passes 1 px  480679 work 53 period 87
+  frame   73 passes 1 px  464530 work 59 period 91
+  frame   85 passes 1 px  405618 work 59 period 94
+  frame   98 passes 1 px  458813 work 51 period 97
+  frame  110 passes 1 px  480679 work 52 period 93
+  frame  123 passes 1 px  480513 work 61 period 92
+  frame  136 passes 1 px  480568 work 48 period 90
+  frame  149 passes 2 px  956626 work 133 period 136
+  frame  161 passes 1 px  451287 work 55 period 87
+  frame  173 passes 2 px  764560 work 137 period 138
+  frame  185 passes 1 px  262017 work 38 period 91
+  over 87 ms: [(149, 133, 2), (173, 137, 2)]  max terrain-frame work 137
+=== 12 r1 01:22:01
+run 0: load {'load': '73', 'MSBuild': '4', 'py': '9', 'python': '11'} error '' rc 0
+  frame   59 passes 1 px  480679 work 18 period 94
+  frame   72 passes 1 px  464530 work 19 period 94
+  frame   84 passes 1 px  405618 work 16 period 91
+  frame   96 passes 1 px  458813 work 18 period 91
+  frame  109 passes 1 px  480679 work 22 period 95
+  frame  122 passes 1 px  480513 work 21 period 97
+  frame  134 passes 1 px  480568 work 22 period 96
+  frame  147 passes 2 px  956626 work 50 period 93
+  frame  159 passes 1 px  451287 work 19 period 93
+  frame  171 passes 2 px  764560 work 39 period 92
+  frame  183 passes 1 px  262017 work 13 period 89
+  over 87 ms: []  max terrain-frame work 50
+=== e179 r2 01:22:50
+run 0: load {'load': '93', 'MSBuild': '4', 'py': '9', 'python': '11'} error '' rc 0
+  frame   60 passes 1 px  480679 work 75 period 97
+  frame   73 passes 1 px  464530 work 65 period 88
+  frame   86 passes 1 px  405618 work 61 period 94
+  frame   99 passes 1 px  458813 work 64 period 87
+  frame  112 passes 1 px  480679 work 77 period 87
+  frame  125 passes 1 px  480513 work 75 period 87
+  frame  138 passes 1 px  480568 work 86 period 96
+  frame  151 passes 2 px  956626 work 175 period 179
+  frame  163 passes 1 px  451287 work 61 period 94
+  frame  175 passes 2 px  764560 work 171 period 174
+  frame  188 passes 1 px  262017 work 41 period 93
+  frame  274 passes 1 px   98307 work 24 period 90
+  frame  275 passes 1 px   75062 work 23 period 97
+  frame  276 passes 1 px   55166 work 18 period 92
+  frame  277 passes 1 px   35270 work 33 period 97
+  frame  279 passes 1 px   15534 work 7 period 91
+  over 87 ms: [(151, 175, 2), (175, 171, 2), (269, 244, 0)]  max terrain-frame work 175
+=== 12 r2 01:23:41
+run 0: load {'load': '82', 'MSBuild': '4', 'py': '10', 'python': '12'} error '' rc 0
+  frame   60 passes 1 px  480679 work 19 period 91
+  frame   74 passes 1 px  464530 work 19 period 94
+  frame   86 passes 1 px  405618 work 14 period 88
+  frame   99 passes 1 px  458813 work 16 period 90
+  frame  112 passes 1 px  480679 work 20 period 96
+  frame  124 passes 1 px  480513 work 18 period 94
+  frame  136 passes 1 px  480568 work 18 period 91
+  frame  148 passes 2 px  956626 work 55 period 88
+  frame  160 passes 1 px  451287 work 18 period 93
+  frame  172 passes 2 px  764560 work 58 period 89
+  frame  184 passes 1 px  262017 work 15 period 89
+  over 87 ms: []  max terrain-frame work 58
+=== e179 r3 01:24:31
+run 0: load {'load': '59', 'MSBuild': '4', 'py': '9', 'python': '11'} error '' rc 0
+  frame   60 passes 1 px  480679 work 72 period 95
+  frame   73 passes 1 px  464530 work 64 period 96
+  frame   87 passes 1 px  405618 work 59 period 90
+  frame  100 passes 1 px  458813 work 67 period 89
+  frame  113 passes 1 px  480679 work 70 period 92
+  frame  126 passes 1 px  480513 work 69 period 91
+  frame  139 passes 1 px  480568 work 58 period 91
+  frame  152 passes 2 px  956626 work 151 period 154
+  frame  164 passes 1 px  451287 work 52 period 95
+  frame  176 passes 2 px  764560 work 139 period 141
+  frame  188 passes 1 px  262017 work 32 period 97
+  over 87 ms: [(152, 151, 2), (176, 139, 2)]  max terrain-frame work 151
+=== 12 r3 01:25:20
+run 0: load {'load': '54', 'cl': '1', 'MSBuild': '5', 'py': '10', 'python': '10'} error '' rc 0
+  frame   60 passes 1 px  480679 work 22 period 87
+  frame   73 passes 1 px  464530 work 23 period 89
+  frame   86 passes 1 px  405618 work 15 period 92
+  frame   99 passes 1 px  458813 work 17 period 91
+  frame  112 passes 1 px  480679 work 17 period 92
+  frame  125 passes 1 px  480513 work 18 period 91
+  frame  138 passes 1 px  480568 work 19 period 91
+  frame  151 passes 2 px  956626 work 51 period 94
+  frame  163 passes 1 px  451287 work 18 period 92
+  frame  175 passes 2 px  764560 work 41 period 94
+  frame  187 passes 1 px  262017 work 14 period 89
+  over 87 ms: []  max terrain-frame work 51

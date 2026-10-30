@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import pathlib
 import shutil
 import subprocess
@@ -40,7 +41,8 @@ pytestmark = pytest.mark.port
 PRESENT_SCENARIOS = ("sandbox_basic", "course_season", "cov_a_keys", "cov_k1_routing")
 LONG = "course_season_6y"
 OUT = ROOT / "log" / "roadmap" / "S7" / "8_long"
-FACTS = ROOT / "log" / "roadmap" / "S7" / "8_present_facts.json"
+# roadmap S3.12 (U-1398): SG_APP_FACTS_DIR=<dir> writes the facts file there instead of the tracked one
+FACTS = pathlib.Path(os.environ.get("SG_APP_FACTS_DIR") or ROOT / "log" / "roadmap" / "S7") / "8_present_facts.json"
 
 
 def _facts_update(key: str, value) -> None:

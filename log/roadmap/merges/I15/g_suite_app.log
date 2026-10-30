@@ -1,0 +1,6 @@
+[1/6] test_app_ingame PASS 382 s free=36GB (13 passed in 381.34s (0:06:21))
+[2/6] test_app_input PASS 33 s free=36GB (16 passed in 32.20s)
+[3/6] test_app_live PASS 261 s free=36GB (13 passed in 259.81s (0:04:19))
+[4/6] test_app_present PASS 1613 s free=36GB (7 passed in 1611.74s (0:26:51))
+[5/6] test_app_replay PASS 35 s free=31GB (14 passed in 32.75s)
+[6/6] test_app_shell PASS 286 s free=31GB (18 passed in 283.05s (0:04:43))

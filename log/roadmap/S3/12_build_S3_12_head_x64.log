@@ -1,0 +1,38 @@
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x64-windows/share/freetype (module fttext)
+-- Configuring done (0.0s)
+-- Generating done (0.8s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/CMakeLists.txt
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\app\Release\portapp_input.lib
+  gfx_terrain.cpp
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\Release\portsim.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/app/CMakeLists.txt
+  main.cpp
+  window.cpp
+  present.cpp
+  pacing.cpp
+  saves.cpp
+  host.cpp
+  Generando código...
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/app/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/CMakeLists.txt
+  core_test.cpp
+  input_check.cpp
+  portsim_c.cpp
+  gamestate_layout_test.cpp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\Release\portsim_layout_test.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/build/x64/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\Release\portsim_c.dll
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\app\Release\simgolf_input_check.exe
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\Release\portsim_core_test.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_12_head/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12_head\port\build\x64\Release\portsim_c.dll

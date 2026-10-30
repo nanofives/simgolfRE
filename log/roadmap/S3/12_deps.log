@@ -1,0 +1,181 @@
+== 01d84188: 15 code files modified in the working tree against it
+  port/include/portsim/sim/gl_raster.h: 34 working-tree-only names
+    Pool: 6 committed code line(s) elsewhere
+      01d84188:re/frida/js/fixtures.d/c3dm.js:36:  function Pool(blk, start) {
+      01d84188:re/frida/js/fixtures.d/c3dm.js:73:      const pool = Pool(blk, 0x3f00);
+      01d84188:re/frida/js/fixtures.d/c3dm.js:173:      const pool = Pool(blk, 0x3f00);
+      01d84188:re/tools/scenario_refs.py:504:class Pool:
+      01d84188:re/tools/scenario_refs.py:542:    pool = Pool(a.instances, a.jobs)
+      01d84188:re/tools/scenario_refs.py:669:    pool = Pool(a.instances, a.jobs)
+    const_cast: 1 committed code line(s) elsewhere
+      01d84188:port/app/host.cpp:41:  std::vector<std::string> &lines = const_cast<std::vector<std::string> &>(live->log());
+    counters: 14 committed code line(s) elsewhere
+      01d84188:port/include/portsim_c.h:174:/* the last live run's counters: violations, first violation record, asks, reasks, clocks, cursors, asyncs, dispatches,
+      01d84188:re/frida/js/fixtures.d/c3bn.js:175:      const counters = __keepAlloc(n * 0x40);
+      01d84188:re/frida/js/fixtures.d/c3bn.js:176:      for (let o = 0; o < n * 0x40; o += 4) counters.add(o).writeU32(0);
+      01d84188:re/frida/js/fixtures.d/c3bn.js:181:        a.add(i * 0x480 + 0x458).writePointer(withCounters ? counters.add(i * 0x40) : ptr(0));
+      01d84188:re/frida/js/fixtures.d/c3bn.js:182:        counters.add(i * 0x40 + 0x34).writeU32(100 + i);
+      01d84188:re/frida/js/fixtures.d/c3bn.js:184:      return { base: a, counters: counters, n: n };
+      01d84188:re/frida/js/fixtures.d/c3bn.js:223:      arena: ar.base, counters: ar.counters,
+      01d84188:re/frida/js/fixtures.d/c3bn.js:224:      arena2: arNoCounter.base, counters2: arNoCounter.counters,
+    delete: 142 committed code line(s) elsewhere
+      01d84188:port/app/host.h:137:  LiveSession(const LiveSession &) = delete;
+      01d84188:port/app/host.h:138:  LiveSession &operator=(const LiveSession &) = delete;
+      01d84188:port/app/main.cpp:288:  RegNegctl(const RegNegctl &) = delete;
+      01d84188:port/app/main.cpp:289:  RegNegctl &operator=(const RegNegctl &) = delete;
+      01d84188:port/app/main.cpp:298:  TerrainGuard(const TerrainGuard &) = delete;
+      01d84188:port/app/main.cpp:299:  TerrainGuard &operator=(const TerrainGuard &) = delete;
+      01d84188:port/app/pacing.h:80:  RealClock(const RealClock &) = delete;
+      01d84188:port/app/pacing.h:81:  RealClock &operator=(const RealClock &) = delete;
+    fast_px: 2 committed code line(s) elsewhere
+      01d84188:port/src/sim/gfx_terrain.cpp:131:    const int64_t before = r.stats.drawn_px, tri_before = r.stats.triangles, fast_before = r.stats.fast_px;
+      01d84188:port/src/sim/gfx_terrain.cpp:142:                     static_cast<long long>(r.stats.triangles - tri_before), static_cast<long long>(r.stats.fast_px - fast_before),
+    finish: 44 committed code line(s) elsewhere
+      01d84188:port/include/portsim/sim/saveload.h:36:int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, int32_t championship);
+      01d84188:port/src/sim/gfx_terrain.cpp:137:    r.finish();   // the workers' pixels and counters
+      01d84188:port/src/sim/live.cpp:681:      finish(quit);
+      01d84188:port/src/sim/live.cpp:685:    finish(quit);
+      01d84188:port/src/sim/live.cpp:974:  void finish(bool quit) {
+      01d84188:port/src/sim/routing.cpp:862:  void finish() const {
+      01d84188:port/src/sim/routing.cpp:918:    rd.finish();
+      01d84188:port/src/sim/saveload.cpp:246:int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, int32_t championship) {
+    linear: 8 committed code line(s) elsewhere
+      01d84188:port/src/sim/fttext.cpp:547:        const bool linear = !hinting || ltsh_linear || !f.hinted_advances;
+      01d84188:port/src/sim/fttext.cpp:548:        const FT_Int32 flags = FT_LOAD_NO_BITMAP | (linear ? FT_LOAD_NO_HINTING : FT_LOAD_TARGET_MONO);
+      01d84188:port/src/sim/fttext.cpp:550:        if (linear) a = static_cast<int32_t>((f.ft->glyph->linearHoriAdvance + 0x8000) >> 16);
+      01d84188:port/src/sim/gl_raster.cpp:360:  const bool linear = (filter == kLinear || filter == 0x2701 || filter == 0x2703) && tune[11] != 4;
+      01d84188:port/src/sim/gl_raster.cpp:488:      const double s = linear ? (a0 * v0->s + a1 * v1->s + a2 * v2->s) / arA : (w0 * v0->s + w1 * v1->s + w2 * v2->s) / ar;
+      01d84188:port/src/sim/gl_raster.cpp:489:      const double t = linear ? (a0 * v0->t + a1 * v1->t + a2 * v2->t) / arA : (w0 * v0->t + w1 * v1->t + w2 * v2->t) / ar;
+      01d84188:port/src/sim/gl_raster.cpp:497:      if (!linear) {
+      01d84188:port/test/test_gl_raster.py:137:    coverage and attributes; the default) gives fewer one-level pixels than the earlier exact-edge, linear-sample-shift model (tune 26)."""
+    maxx: 2 committed code line(s) elsewhere
+      01d84188:port/src/sim/gl_raster.cpp:362:  const int maxx = std::min(w_ - 1, static_cast<int>(std::ceil(std::max({v0->x, v1->x, v2->x}))));
+      01d84188:port/src/sim/gl_raster.cpp:423:    for (int x = minx; x <= maxx; ++x) {
+    maxy: 2 committed code line(s) elsewhere
+      01d84188:port/src/sim/gl_raster.cpp:364:  const int maxy = std::min(h_ - 1, static_cast<int>(std::ceil(std::max({v0->y, v1->y, v2->y}))));
+      01d84188:port/src/sim/gl_raster.cpp:422:  for (int y = miny; y <= maxy; ++y) {
+    memory: 81 committed code line(s) elsewhere
+      01d84188:port/README.md:16:- **Corpora stay local** (decision 5): `corpus/` (memory dumps, vectors, traces) and `build/` are gitignored; generators
+      01d84188:port/app/host.cpp:504:  memory.maybe(frame, terrain_log ? terrain_log->length() : 0);
+      01d84188:port/app/host.cpp:544:  memory.sample(0, terrain_log ? terrain_log->length() : 0);
+      01d84188:port/app/host.cpp:546:  memory.sample(frame_, terrain_log ? terrain_log->length() : 0);
+      01d84188:port/app/host.cpp:609:  const std::string mt = memory.tsv();  // S7.8
+      01d84188:port/app/host.cpp:638:  s += ",\"memory\":" + memory.json();
+      01d84188:port/app/host.cpp:691:  memory.maybe(frame, terrain_log ? terrain_log->length() : 0);
+      01d84188:port/app/host.h:43:#include <memory>
+    minx: 2 committed code line(s) elsewhere
+      01d84188:port/src/sim/gl_raster.cpp:361:  const int minx = std::max(0, static_cast<int>(std::floor(std::min({v0->x, v1->x, v2->x}))));
+      01d84188:port/src/sim/gl_raster.cpp:423:    for (int x = minx; x <= maxx; ++x) {
+    miny: 2 committed code line(s) elsewhere
+      01d84188:port/src/sim/gl_raster.cpp:363:  const int miny = std::max(0, static_cast<int>(std::floor(std::min({v0->y, v1->y, v2->y}))));
+      01d84188:port/src/sim/gl_raster.cpp:422:  for (int y = miny; y <= maxy; ++y) {
+    operator: 64 committed code line(s) elsewhere
+      01d84188:port/app/host.h:138:  LiveSession &operator=(const LiveSession &) = delete;
+      01d84188:port/app/main.cpp:289:  RegNegctl &operator=(const RegNegctl &) = delete;
+      01d84188:port/app/main.cpp:299:  TerrainGuard &operator=(const TerrainGuard &) = delete;
+      01d84188:port/app/pacing.h:81:  RealClock &operator=(const RealClock &) = delete;
+      01d84188:port/app/window.h:91:  AppWindow &operator=(const AppWindow &) = delete;
+      01d84188:port/include/portsim/ptr.h:45:  explicit operator bool() const { return va_ != 0; }
+      01d84188:port/include/portsim/ptr.h:49:  Ptr operator+(int32_t n) const { return Ptr(*mem_, va_ + u32(n) * static_cast<uint32_t>(sizeof(T))); }
+      01d84188:port/include/portsim/ptr.h:50:  Ptr operator-(int32_t n) const { return Ptr(*mem_, va_ - u32(n) * static_cast<uint32_t>(sizeof(T))); }
+    part: 66 committed code line(s) elsewhere
+      01d84188:port/CORE.md:103:Formats are not part of the interface (phase 4).
+      01d84188:port/app/saves.cpp:45:  std::string part;
+      01d84188:port/app/saves.cpp:49:      if (part == "..") return false;
+      01d84188:port/app/saves.cpp:50:      part.clear();
+      01d84188:port/app/saves.cpp:52:      part += c;
+      01d84188:port/include/portsim_c.h:117: * part, mainLoop's Setup, the title menu and Session) and output record 0 is the state at the first frame head. */
+      01d84188:port/schemas/trace.md:12:conditions, agent statistics, sha256, comparison with the pinned reference); the sidecar is not part of the trace.
+      01d84188:port/src/sim/gfx_scene.cpp:653:      const std::array<uint16_t, 256> *part = gfxh::palette_of(g, images_slot(ctx, static_cast<uint32_t>(slot)), false);
+    parts: 126 committed code line(s) elsewhere
+      01d84188:port/test/test_bridge.py:70:    """c3p.js _c3p_view(rot, W, dbl, 'w2s') over terrain_slopes / golf_tables / tile_types_pattern (the parts the
+      01d84188:port/test/test_commands.py:790:    parts = text.split(b"\n")
+      01d84188:port/test/test_commands.py:791:    widest = max(_width(rule, p) for p in parts)
+      01d84188:port/test/test_commands.py:797:    for i, p in enumerate(parts[:lines]):
+      01d84188:port/test/test_gditext.py:162:    parts = []
+      01d84188:port/test/test_gditext.py:166:            parts.append(bytes(rng.choice(ALPHA[:19]) for _ in range(rng.randrange(1, 6))))
+      01d84188:port/test/test_gditext.py:168:            parts.append(bytes([rng.choice(b"{}[]$=>^")]))
+      01d84188:port/test/test_gditext.py:170:            parts.append(bytes([rng.choice(b"{}[]")]) * 2)
+    queue_: 32 committed code line(s) elsewhere
+      01d84188:port/app/host.cpp:230:      queue_.push_back(c);
+      01d84188:port/app/host.cpp:408:    for (; i < queue_.size(); ++i) {
+      01d84188:port/app/host.cpp:412:    if (i == queue_.size()) return false;
+      01d84188:port/app/host.cpp:415:    while (j < queue_.size() && queue_seq_[j] == seq) ++j;
+      01d84188:port/app/host.cpp:416:    std::rotate(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(i), queue_.begin() + static_cast<std::ptrdiff_t>(j));
+      01d84188:port/app/host.cpp:424:    for (; n < queue_.size(); ++n) {
+      01d84188:port/app/host.cpp:426:      const uint32_t h = queue_[n].handler;
+      01d84188:port/app/host.cpp:430:    out.assign(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(n));
+    set_threads: 1 committed code line(s) elsewhere
+      01d84188:port/src/sim/gfx_terrain.cpp:127:    if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+    shininess: 6 committed code line(s) elsewhere
+      01d84188:port/src/sim/gl_raster.cpp:59:double spec_lookup(double nh, double shininess) {
+      01d84188:port/src/sim/gl_raster.cpp:60:  const double t = std::pow(0.0005, 1.0 / shininess);
+      01d84188:port/src/sim/gl_raster.cpp:64:  return std::pow(t + i / scale, shininess);
+      01d84188:port/test/test_gl_raster.py:18:specular term read from a 256-entry table over [0.0005^(1/shininess), 1] at the nearest entry (`#tune 27 1` restores the exact
+      01d84188:port/test/test_gl_raster.py:153:    """U-1300: on every pass the generic GL's specular table (256 entries over [0.0005^(1/shininess), 1], the nearest entry; the
+      01d84188:port/test/test_gl_raster.py:154:    default) gives fewer one-level pixels than the exact (n.h)^shininess (tune 27)."""
+    this: 349 committed code line(s) elsewhere
+      01d84188:port/CORE.md:43:7. **Loops the original cannot leave.** When the port can prove the original would spin forever from this state (a
+      01d84188:port/CORE.md:102:golfer roster) uses it first: the loader port reads bytes through this interface and parses them itself.
+      01d84188:port/app/CMakeLists.txt:11:  return()  # port/ included this directory while this file was adding port/ (standalone shell build)
+      01d84188:port/app/host.cpp:53:  o.on_record_arg = this;
+      01d84188:port/app/host.cpp:545:  r.code = run_guarded(&ctx, this, &o, &r.live, &r.detail);
+      01d84188:port/app/window.cpp:169:                           nullptr, nullptr, inst, this);
+      01d84188:port/include/portsim/ptr.h:51:  Ptr at(int32_t i) const { return *this + i; }
+      01d84188:port/include/portsim_c.h:14: * dword first; thiscall `this` and fastcall ecx/edx are slots 0 / 0-1 as in the vector corpus). The result is what the
+    threads: 9 committed code line(s) elsewhere
+      01d84188:port/src/sim/gfx_terrain.cpp:127:    if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+      01d84188:port/src/sim/gfx_terrain.cpp:143:                     r.threads());
+      01d84188:re/frida/js/freeze.js:74:    const threads = Process.enumerateThreads();
+      01d84188:re/frida/js/freeze.js:75:    const tid = threads.length ? threads[0].id : 0;
+      01d84188:re/frida/scenario_ab.py:975:    target's state and counts (main thread and other threads, boot and total)."""
+      01d84188:re/tools/scenario_refs.py:508:        self.threads: list[threading.Thread] = []
+      01d84188:re/tools/scenario_refs.py:529:        self.threads.append(t)
+      01d84188:re/tools/scenario_refs.py:533:        for t in self.threads:
+    unique_ptr: 57 committed code line(s) elsewhere
+      01d84188:port/app/host.h:261:  LiveTracePresenter(std::unique_ptr<portsim::LiveHost> inner, uint32_t snapshots_requested)
+      01d84188:port/app/host.h:292:  std::unique_ptr<portsim::LiveHost> inner_;
+      01d84188:port/app/main.cpp:296:  std::unique_ptr<portsim::LiveTerrain> live;
+      01d84188:port/app/saves.h:69:  std::unique_ptr<portsim::DirGameFiles> install_files_;  // read-only use: write / remove are never called on it
+      01d84188:port/app/saves.h:70:  std::unique_ptr<portsim::DirGameFiles> data_files_;     // write-through: its writes land under data_
+      01d84188:port/include/portsim/registry.h:101:  std::unique_ptr<GameState> gs_;  // declared before `mem`, which is built from it
+      01d84188:port/include/portsim/sim/fttext.h:67:  std::unique_ptr<Impl> impl_;
+      01d84188:port/include/portsim/sim/gditext.h:127:  std::unique_ptr<Impl> impl_;
+  port/src/sim/gl_raster.cpp: 103 working-tree-only names
+    GetCurrentThread: 1 committed code line(s) elsewhere
+      01d84188:port/app/host.cpp:534:  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
+    NOMINMAX: 14 committed code line(s) elsewhere
+      01d84188:port/app/host.cpp:7:#ifndef NOMINMAX
+      01d84188:port/app/host.cpp:8:#define NOMINMAX
+      01d84188:port/app/main.cpp:59:#ifndef NOMINMAX
+      01d84188:port/app/main.cpp:60:#define NOMINMAX
+      01d84188:port/app/pacing.cpp:8:#ifndef NOMINMAX
+      01d84188:port/app/pacing.cpp:9:#define NOMINMAX
+      01d84188:port/app/present.cpp:8:#ifndef NOMINMAX
+      01d84188:port/app/present.cpp:9:#define NOMINMAX
+    Pool: 6 committed code line(s) elsewhere
+      01d84188:re/frida/js/fixtures.d/c3dm.js:36:  function Pool(blk, start) {
+      01d84188:re/frida/js/fixtures.d/c3dm.js:73:      const pool = Pool(blk, 0x3f00);
+      01d84188:re/frida/js/fixtures.d/c3dm.js:173:      const pool = Pool(blk, 0x3f00);
+      01d84188:re/tools/scenario_refs.py:504:class Pool:
+      01d84188:re/tools/scenario_refs.py:542:    pool = Pool(a.instances, a.jobs)
+      01d84188:re/tools/scenario_refs.py:669:    pool = Pool(a.instances, a.jobs)
+    SetThreadPriority: 1 committed code line(s) elsewhere
+      01d84188:port/app/host.cpp:534:  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
+    WIN32_LEAN_AND_MEAN: 14 committed code line(s) elsewhere
+      01d84188:port/app/host.cpp:4:#ifndef WIN32_LEAN_AND_MEAN
+      01d84188:port/app/host.cpp:5:#define WIN32_LEAN_AND_MEAN
+      01d84188:port/app/main.cpp:56:#ifndef WIN32_LEAN_AND_MEAN
+      01d84188:port/app/main.cpp:57:#define WIN32_LEAN_AND_MEAN
+      01d84188:port/app/pacing.cpp:5:#ifndef WIN32_LEAN_AND_MEAN
+      01d84188:port/app/pacing.cpp:6:#define WIN32_LEAN_AND_MEAN
+      01d84188:port/app/present.cpp:5:#ifndef WIN32_LEAN_AND_MEAN
+      01d84188:port/app/present.cpp:6:#define WIN32_LEAN_AND_MEAN
+    _WIN32: 20 committed code line(s) elsewhere
+      01d84188:port/app/pacing.cpp:4:#ifdef _WIN32
+      01d84188:port/app/pacing.cpp:78:#ifdef _WIN32
+      01d84188:port/app/pacing.h:73:#ifdef _WIN32
+      01d84188:port/app/present.cpp:4:#ifdef _WIN32
+      01d84188:port/app/present.cpp:61:#ifdef _WIN32
+      01d84188:port/app/present.h:52:#ifdef _WIN32
+      01d84188:port/include/portsim_c.h:23:#ifdef _WIN32

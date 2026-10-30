@@ -1687,6 +1687,25 @@ but S3's boot loading screens are 431-776 ms apart (flic sheets decoded for the 
 among them goes to the boot's load pump; app_replay._to_monterey and test_app_live._to_title now wait for the title menu's frame
 (app_replay.title_menu_hash = the pinned sandbox_basic `menu` reference, U-1396). The app files' pacing gates measure the host:
 run them one file per process at low load.
+Roadmap S3 wave 6, S3.10 / S3.10b / the LiveTerrain log switch (2026-10-28 / 29, step S3.12, notes log/roadmap/S3/12_notes.md, merge
+log/roadmap/S3/MERGE_w6.md, U-1388 / U-1389 / U-1399 / U-1673 / U-1398). Base e179bd24: 01d84188's committed gfx_terrain.cpp held S3.10's
+thread calls while its gl_raster.h did not (7 C2039 / C2737 errors on x64 and Win32, all in that file; no other committed file used
+working-copy-only code), and e179bd24 put I13's file back. S3.10: GlRaster's default pipeline runs a fast pixel loop that writes the old
+loop's bits (edge functions exact as int64 in units of 2^-16, each row's covered span from the three inside tests, each pixel first with
+reciprocals and kept only when every texel and 5-bit rounding decision is clear of its boundary) on pixel-loop workers that own interleaved
+4-row bands (GlRaster::set_threads; gfx_terrain.cpp starts min(4, hardware threads / 2), SG_RASTER_THREADS=<n>); stream lines `#fastpath
+<m>`, `#threads <n>` and the worker control `#workerctl 1`; SG_TERRAIN_PASS_LOG times each pass. S3.10b: terrain_state.cpp resolves the
+Terrain object once per exported call and reads and writes it in place (VPtr), no float changed. LiveTerrain keeps a compact record per
+call and formats the lines only when log() is read; log_size() / drop_log() / set_keep_log(false) / calls() let the app's TerrainLogBound
+bound the log without a const_cast (U-1673). The app tests take SG_APP_FACTS_DIR (U-1398), and test_app_ingame's zoom test is strict (its
+U-1640 xfail removed). Evidence against plain e179bd24 (whose port/ equals I13's mirror): all 299 recorded stream and chain passes
+bit-identical to the old rasteriser with and without 4 workers, census 698 rows PASS 100 with every row's pixel count unchanged, terrain
+527 / 527, segments 205 / 205 and boot 66 / 2 / 2 on x64 and Win32, live equivalence 68 + 2 and app replay 3 / 3, all with 0 rows
+differing; port suite x64 82 / 82 files, Win32 the 22 known ids; controls RED: `#workerctl 1` on 270 / 299 passes, `#fastpath 4` on 47 /
+268 (`#fastpath 3` blind, U-1389), terrain_state 23, LiveTerrain 6 (log off) / 7 (setType variation lost). App (LIVING-PC, Ryzen 5 3600,
+MSVC 19.44 Release x64, three interleaved sessions): zoom frames 39..58 ms at 54..82 % load against 133..175 ms for plain e179bd24 at
+59..96 %; idle (1..9 %) every terrain-pass frame 10..30 ms against 25..112 ms. The app's live-trace frame at cov_a_keys k_dlg_J varies in
+about 1 run of 6 without workers too (U-1399).
 Section S4, audio engine model (2026-10-24, lead notes log/roadmap/S4/STATUS.md, steps re/roadmap/S4_steps.tsv, function map
 re/roadmap/S4_functions.tsv: 744 sound.dll rows, 573 C3/C4 + 31 C2 ported in S4.2..S4.9, 71 CRT and 69 dead not ported).
 The path-1 CSVs keep only an FNV-1a hash of each region's raw bytes, and every one of the 19,785 regions of the 980 sound.dll

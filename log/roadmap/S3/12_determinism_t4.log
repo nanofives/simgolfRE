@@ -1,0 +1,30 @@
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12 SG_RASTER_THREADS=(default) scenario cov_a_keys
+run 0 done
+run 1 done
+run 2 done
+run 3 done
+run 4 done
+run 5 done
+end	app	STABLE	{'2e05155ae900': 6}
+holes	app	STABLE	{'e2f1d7ff767e': 6}
+k_B	app	STABLE	{'0c0f97d1be1e': 6}
+k_C	app	STABLE	{'2f654dd33b86': 6}
+k_cheats	app	STABLE	{'3c32cfd00392': 6}
+k_cheats2	app	STABLE	{'02904e461bc4': 6}
+k_dialogs	app	STABLE	{'5b92cf19ed98': 6}
+k_dlg_J	app	VARIES	{'019371043c52': 5, 'ce732697574a': 1}
+k_dlg_L	app	STABLE	{'98f5a4e7bd07': 6}
+k_dlg_R	app	STABLE	{'8e73602f0915': 6}
+k_dlg_S	app	STABLE	{'cfa5ec547e32': 6}
+k_files	app	STABLE	{'bd08b0c118ae': 6}
+k_holes	app	STABLE	{'87b05fb7671e': 6}
+k_misc	app	STABLE	{'4226fa479849': 6}
+k_render	app	STABLE	{'d243dd35e506': 6}
+k_render_dot	app	STABLE	{'7323a824eb57': 6}
+k_render_slash	app	STABLE	{'86c4ee94a0fc': 6}
+k_speed	app	STABLE	{'be97cdaef1ff': 6}
+k_terrain	app	STABLE	{'afedf0c66e76': 6}
+k_tools	app	STABLE	{'e5ddcdd9f493': 6}
+k_vk	app	STABLE	{'06107530640d': 6}
+k_worldmap	app	STABLE	{'93293e2c09b1': 6}
+menu	app	STABLE	{'c3d93c078614': 6}

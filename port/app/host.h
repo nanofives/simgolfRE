@@ -61,15 +61,15 @@ namespace portapp {
 
 // S7.8 (U-1643): LiveTerrain logs one text line per Terrain call (terrain_live.h: for the comparison with a recording of the
 // original) and never drops one, so a play session's memory grows with every call. The app reads the log only for its length,
-// so at each frame end the lines are dropped and counted (calls() stays the session's total). A LiveTerrain option that keeps
-// no log is requested from S3 (log/roadmap/S7/8_merge.md); until it lands the lines are cleared through the log's reference.
+// so at the first frame end the lines are dropped and LiveTerrain::set_keep_log(false) stops the log (roadmap S3.12, U-1673:
+// the option log/roadmap/S7/8_merge.md section 3 requested); calls() is LiveTerrain::calls(), the session's total.
 struct TerrainLogBound {
   portsim::LiveTerrain *live = nullptr;
   bool keep = false;          // negative control (--negctl terrain-log-keep): never drop the lines
   uint64_t dropped = 0;       // lines dropped so far
   uint64_t max_len = 0;       // the most lines the log held at a frame end
   void frame_end();
-  uint64_t calls() const;     // every call logged since the LiveTerrain was made
+  uint64_t calls() const;     // every Terrain call since the LiveTerrain was made, logged or not
   uint64_t length() const;    // lines held now
 };
 

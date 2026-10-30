@@ -13,6 +13,7 @@
 
 #include <cstdint>
 #include <map>
+#include <memory>
 #include <string>
 #include <set>
 #include <vector>
@@ -26,12 +27,25 @@ class GlRaster : public GlSink {
  public:
   // width x height pixels, 16 bits each (RGB555), row 0 = window y 0
   GlRaster(int width, int height);
+  ~GlRaster() override;
+  GlRaster(const GlRaster &) = delete;
+  GlRaster &operator=(const GlRaster &) = delete;
+
+  // Pixel-loop workers of the default pipeline (roadmap S3.10): n > 1 starts n threads that rasterise queued triangles (each owns
+  // every n-th band of 4 rows, so every pixel gets the same writes in the same order as with none); 1 (the default) stops them and
+  // rasterises each triangle at once. finish() waits until every queued triangle is written and adds their pixel counters to
+  // stats; pixels(), glFlush, texture uploads and the general loop call it, a caller reading stats calls it first. Stream line
+  // `#threads <n>`.
+  void set_threads(int n);
+  int threads() const;
+  void finish();
 
   int width() const { return w_; }
   int height() const { return h_; }
-  std::vector<uint16_t> &pixels() { return fb_; }
+  std::vector<uint16_t> &pixels() { finish(); return fb_; }
   // diagnostics: the colour of every written pixel before it is quantised to 5 bits (0..255 per channel, 3 floats a pixel)
   void keep_float(bool on) {
+    finish();
     keep_float_ = on;
     if (on) { ffb_.assign(fb_.size() * 3, -1.0f); sfb_.assign(fb_.size() * 8, -1.0f); rfb_.assign(fb_.size(), -1.0f); tid_.assign(fb_.size(), -1); tris_.clear(); }
   }
@@ -45,7 +59,7 @@ class GlRaster : public GlSink {
   // three vertices in the counter-clockwise order the rasteriser uses, then their s, t
   const std::vector<int32_t> &triangle_ids() const { return tid_; }
   const std::vector<double> &triangles() const { return tris_; }
-  const std::vector<uint16_t> &pixels() const { return fb_; }
+  const std::vector<uint16_t> &pixels() const { const_cast<GlRaster *>(this)->finish(); return fb_; }
 
   // ---- the GlSink calls of the render path ----
   void load_identity() override;
@@ -111,9 +125,19 @@ class GlRaster : public GlSink {
   static constexpr int kTunes = 32;
   int tune[kTunes] = {};
 
+  // The pixel loop of the default pipeline (every tune knob 0 except tune 11, keep_float off; roadmap S3.10): 1 (default) the fast
+  // loop with the checked reciprocal path, 2 the fast loop with the general loop's exact expressions only, 0 the general loop.
+  // Negative controls: 3 the reciprocal path without its boundary checks, 4 with reciprocals rounded to float (errors larger than
+  // the checks allow). Set with the stream line `#fastpath <mode>`.
+  int fast_mode = 1;
+  // Negative control of the workers (roadmap S3.12): 1 = the last of several workers flips bit 0 of the first pixel it writes in
+  // each row of a triangle (no effect with one thread, so it reads only the worker path). Stream line `#workerctl <mode>`.
+  int worker_ctl = 0;
+
   // counters of the last frame (what the rasteriser saw), for the tests' diagnostics
   struct Stats {
     int64_t triangles = 0, culled = 0, drawn_px = 0, blended_px = 0, bad_texture = 0;
+    int64_t fast_px = 0;   // pixels the checked reciprocal path wrote (the rest of drawn_px took the exact expressions)
   } stats;
 
  private:
@@ -173,7 +197,21 @@ class GlRaster : public GlSink {
   Mat &cur() { return mode_ == 0x1701 ? proj_ : mv_; }
   void mul(const Mat &b);
   void emit(double x, double y, double z, const float *normal);
+  // emit's per-vertex invariants (roadmap S3.10): the inverse of the modelview's upper 3x3 for its nine values, the specular table
+  bool inv_ok_ = false;
+  double inv_key_[9] = {}, inv_[9] = {};
+  double spec_lookup_(double nh, double shininess);
+  double spec_sh_ = -1.0, spec_t_ = 0.0, spec_scale_ = 0.0, spec_tab_[256] = {};
   void triangle(const Vtx &a, const Vtx &b, const Vtx &c);
+  // the default pipeline's pixel loop (roadmap S3.10): the same values as triangle()'s general loop, computed with exact integer
+  // edge functions and row spans; false (nothing written) when its preconditions do not hold
+  bool fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear, int minx, int maxx,
+                      int miny, int maxy, const bool inc[3]);
+  struct FastJob;   // one queued triangle (gl_raster.cpp)
+  struct Pool;
+  std::unique_ptr<Pool> pool_;
+  void queue_(const FastJob &j);
+  static void fast_rows_(const FastJob &j, int part, int parts, int64_t *counters);
 };
 
 }  // namespace gl

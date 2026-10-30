@@ -46,9 +46,9 @@ LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after
 LiveTerrain::~LiveTerrain() = default;
 
 void LiveTerrain::keep_snapshots() {
-  while (next_snap_ < snap_after_.size() && snap_after_[next_snap_] <= log_.size()) {
+  while (next_snap_ < snap_after_.size() && snap_after_[next_snap_] <= calls_) {
     Snapshot s;
-    s.after = static_cast<uint32_t>(log_.size());
+    s.after = static_cast<uint32_t>(calls_);
     s.object = object_;
     s.vertices = g_.vertices;
     s.normals = g_.normals;
@@ -64,18 +64,43 @@ uint32_t LiveTerrain::call(const char *name, uint32_t self, std::initializer_lis
   size_t k = 0;
   for (uint32_t v : args) a[k++] = v;
   const uint32_t ret = terrain_dll_call(ctx_, g_, dll_, name, self, a, table, n);
-  // the recorder's line: seq tid depth name ecx a0..a4 ret [tbl=...]
-  std::string line = std::to_string(log_.size()) + " 0 0 " + name + " " + hex(self);
-  for (size_t i = 0; i < 5; ++i) line += " " + (i < k ? hex(a[i]) : std::string("-"));
-  line += " " + hex(ret);
-  if (table) {
-    line += " tbl=";
-    for (int32_t i = 0; i < n; ++i) line += (i ? "," : "") + std::to_string(table[i]);
+  if (SG_NEGCTL(g_negctl_gfx_terrain) == 6) keep_log_ = false;   // control 6: the log kept off in a run that reads it
+  if (keep_log_) {
+    LogRec r{static_cast<uint64_t>(log_size()), name, self, {a[0], a[1], a[2], a[3], a[4]}, ret, static_cast<uint8_t>(k), false, 0,
+             {}, table != nullptr};
+    if (table) r.tbl.assign(table, table + (n > 0 ? n : 0));
+    // control 7: the compact record loses setType's variation (the lazy line then prints no `var=`)
+    if (std::strcmp(name, "setType") == 0 && a[0] && SG_NEGCTL(g_negctl_gfx_terrain) != 7) {
+      r.has_var = true;
+      r.var = Ptr<TerrainTile>(ctx_.mem, a[0]).field(&TerrainTile::variation).get();
+    }
+    recs_.push_back(std::move(r));
   }
-  if (std::strcmp(name, "setType") == 0 && a[0]) line += " var=" + std::to_string(Ptr<TerrainTile>(ctx_.mem, a[0]).field(&TerrainTile::variation).get());
-  log_.push_back(std::move(line));
+  ++calls_;
   keep_snapshots();
   return ret;
+}
+
+const std::vector<std::string> &LiveTerrain::log() const {
+  // the recorder's line: seq tid depth name ecx a0..a4 ret [tbl=...] [var=...]; the pending records move into the lines
+  for (const LogRec &r : recs_) {
+    std::string line = std::to_string(r.seq) + " 0 0 " + r.name + " " + hex(r.self);
+    for (size_t i = 0; i < 5; ++i) line += " " + (i < r.k ? hex(r.a[i]) : std::string("-"));
+    line += " " + hex(r.ret);
+    if (r.has_tbl) {
+      line += " tbl=";
+      for (size_t i = 0; i < r.tbl.size(); ++i) line += (i ? "," : "") + std::to_string(r.tbl[i]);
+    }
+    if (r.has_var) line += " var=" + std::to_string(r.var);
+    log_.push_back(std::move(line));
+  }
+  recs_.clear();
+  return log_;
+}
+
+void LiveTerrain::drop_log() {
+  std::vector<std::string>().swap(log_);
+  std::vector<LogRec>().swap(recs_);
 }
 
 uint32_t LiveTerrain::get_instance() {

@@ -1,0 +1,18 @@
+== S3_12_p01 x64: 7 distinct errors
+  src\sim\gfx_terrain.cpp(127,44): error C2039: "threads": no es un miembro de "portsim::gl::GlRaster"
+  src\sim\gfx_terrain.cpp(127,63): error C2039: "set_threads": no es un miembro de "portsim::gl::GlRaster"
+  src\sim\gfx_terrain.cpp(131,100): error C2039: "fast_px": no es un miembro de "portsim::gl::GlRaster::Stats"
+  src\sim\gfx_terrain.cpp(131,78): error C2737: 'fast_before': se debe inicializar el objeto const
+  src\sim\gfx_terrain.cpp(137,7): error C2039: "finish": no es un miembro de "portsim::gl::GlRaster"
+  src\sim\gfx_terrain.cpp(142,109): error C2039: "fast_px": no es un miembro de "portsim::gl::GlRaster::Stats"
+  src\sim\gfx_terrain.cpp(143,24): error C2039: "threads": no es un miembro de "portsim::gl::GlRaster"
+== S3_12_p01 Win32: 7 distinct errors
+  src\sim\gfx_terrain.cpp(127,44): error C2039: "threads": no es un miembro de "portsim::gl::GlRaster"
+  src\sim\gfx_terrain.cpp(127,63): error C2039: "set_threads": no es un miembro de "portsim::gl::GlRaster"
+  src\sim\gfx_terrain.cpp(131,100): error C2039: "fast_px": no es un miembro de "portsim::gl::GlRaster::Stats"
+  src\sim\gfx_terrain.cpp(131,78): error C2737: 'fast_before': se debe inicializar el objeto const
+  src\sim\gfx_terrain.cpp(137,7): error C2039: "finish": no es un miembro de "portsim::gl::GlRaster"
+  src\sim\gfx_terrain.cpp(142,109): error C2039: "fast_px": no es un miembro de "portsim::gl::GlRaster::Stats"
+  src\sim\gfx_terrain.cpp(143,24): error C2039: "threads": no es un miembro de "portsim::gl::GlRaster"
+== S3_12_e179 x64: 0 distinct errors
+== S3_12_e179 Win32: 0 distinct errors

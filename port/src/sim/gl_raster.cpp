@@ -3,9 +3,25 @@
 #include "portsim/sim/gl_raster.h"
 
 #include <algorithm>
+#include <array>
+#include <atomic>
 #include <cmath>
+#include <condition_variable>
 #include <cstdlib>
 #include <cstring>
+#include <memory>
+#include <mutex>
+#include <thread>
+
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>   // the workers take the priority of the thread that feeds them (GlRaster::set_threads)
+#endif
 
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
@@ -55,17 +71,60 @@ constexpr double kAttrScaleX = 1.046e-5, kAttrScaleY = 1.355e-5;
 // spanning [t, 1], t = 0.0005^(1 / shininess) (below t the term is 0), at the entry NEAREST to n.h, without interpolation:
 // i = round((n.h - t) * 255 / (1 - t)), value (t + i * (1 - t) / 255)^shininess. Measured with untextured constant-colour quads of
 // the real software GL (port/test/glprobe.py untex, white specular only): 0 of 4,923 quads outside the interval their 16 dither
-// cells allow, against 793 for the exact pow; shininess 13 is the terrain's (initGL's glMateriali).
-double spec_lookup(double nh, double shininess) {
-  const double t = std::pow(0.0005, 1.0 / shininess);
-  if (nh <= t) return 0.0;
-  const double scale = 255.0 / (1.0 - t);
-  const double i = std::min(255.0, std::floor((nh - t) * scale + 0.5));
-  return std::pow(t + i / scale, shininess);
-}
+// cells allow, against 793 for the exact pow; shininess 13 is the terrain's (initGL's glMateriali). GlRaster::spec_lookup_.
 int wrap_repeat(int64_t i, uint32_t n) {
   const int64_t m = i % static_cast<int64_t>(n);
   return static_cast<int>(m < 0 ? m + n : m);
+}
+
+// ---- helpers of the fast pixel loop (GlRaster::fast_triangle_, roadmap S3.10): each returns exactly what the general loop's
+// expression returns, without its CRT call or 64-bit division
+// static_cast<int>(std::floor(v)): the truncation corrected by one below zero, std::floor itself outside +-2^31 and for NaN
+inline int floor_int(double v) {
+  if (!(v > -2147483648.0 && v < 2147483648.0)) return static_cast<int>(std::floor(v));
+  const int i = static_cast<int>(v);
+  return v < static_cast<double>(i) ? i - 1 : i;
+}
+// static_cast<int64_t>(std::floor(v)), the same way (a truncated double is an integer the double holds exactly)
+inline int64_t floor_i64(double v) {
+  if (!(v > -4.0e18 && v < 4.0e18)) return static_cast<int64_t>(std::floor(v));
+  const int64_t i = static_cast<int64_t>(v);
+  return v < static_cast<double>(i) ? i - 1 : i;
+}
+// wrap_repeat for an index already in [0, n) without the division
+inline int wrap_fast(int64_t i, uint32_t n) { return static_cast<uint64_t>(i) < n ? static_cast<int>(i) : wrap_repeat(i, n); }
+// floor(a / b) and ceil(a / b) for b > 0
+inline int64_t floor_div(int64_t a, int64_t b) {
+  const int64_t q = a / b;
+  return (a % b != 0 && a < 0) ? q - 1 : q;
+}
+inline int64_t ceil_div(int64_t a, int64_t b) {
+  const int64_t q = a / b;
+  return (a % b != 0 && a > 0) ? q + 1 : q;
+}
+// the dither offsets quantize() adds for control 0 (the correct pipeline), 1 and 2, and dst * 255.0 / 31.0 for a 5-bit dst, each
+// computed by the same expression as there
+struct FastTables {
+  double dither[3][4][4];
+  double expand5[32];
+  FastTables() {
+    for (int y = 0; y < 4; ++y)
+      for (int x = 0; x < 4; ++x) {
+        dither[0][y][x] = (kDither[y][x] + 0.5) / 16.0;
+        dither[1][y][x] = 0.5;
+        dither[2][y][x] = kDither[y][x] / 16.0;
+      }
+    for (int d = 0; d < 32; ++d) expand5[d] = d * 255.0 / 31.0;
+  }
+};
+const FastTables &fast_tables() {
+  static const FastTables t;
+  return t;
+}
+// quantize() with the dither offset d already chosen
+inline int quantize_d(double c, double d) {
+  const int o = floor_int(c * 31.0 / 255.0 + d);
+  return o < 0 ? 0 : (o > 31 ? 31 : o);
 }
 }  // namespace
 
@@ -204,6 +263,7 @@ bool GlRaster::gen_textures(int32_t n, uint32_t *names) {
 void GlRaster::color4f(float r, float g, float b, float a) { cur_c_[0] = r; cur_c_[1] = g; cur_c_[2] = b; cur_c_[3] = a; }
 void GlRaster::normal3f(float x, float y, float z) { cur_n_[0] = x; cur_n_[1] = y; cur_n_[2] = z; }
 void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t h, int32_t, uint32_t format, uint32_t, const uint8_t *data) {
+  finish();   // queued triangles read the texel bytes this may replace
   if (!ctx_ || level != 0 || w <= 0 || h <= 0 || !data) return;
   const uint32_t width = static_cast<uint32_t>(w), height = static_cast<uint32_t>(h);
   Tex &t = textures_[bound_];
@@ -214,6 +274,7 @@ void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t 
   t.data.assign(data, data + n);
 }
 void GlRaster::delete_textures(int32_t n, const uint32_t *ids) {
+  finish();
   if (!ctx_) return;
   for (int i = 0; i < n; ++i) {
     textures_.erase(ids[i]);
@@ -227,7 +288,7 @@ void GlRaster::set_arrays(const float *v, size_t nv, const float *n, size_t nn) 
   varr_.assign(v, v + nv * 3);
   narr_.assign(n, n + nn * 3);
 }
-void GlRaster::flush() {}
+void GlRaster::flush() { finish(); }
 void GlRaster::tex_coord2fv(const float *v) { cur_s_ = v[0]; cur_t_ = v[1]; }
 void GlRaster::tex_coord2f(float s, float t) { cur_s_ = s; cur_t_ = t; }
 void GlRaster::normal3fv(const float *v) { cur_n_[0] = v[0]; cur_n_[1] = v[1]; cur_n_[2] = v[2]; }
@@ -238,6 +299,20 @@ void GlRaster::begin(uint32_t mode) {
   in_begin_ = true;
   verts_.clear();
 }
+// the specular table (SPECULAR above): t = 0.0005^(1 / shininess), entry i = (t + i / scale)^shininess, scale = 255 / (1 - t); the
+// 256 entries are computed once per shininess by the same expressions (roadmap S3.10)
+double GlRaster::spec_lookup_(double nh, double shininess) {
+  if (shininess != spec_sh_) {
+    spec_sh_ = shininess;
+    spec_t_ = std::pow(0.0005, 1.0 / shininess);
+    spec_scale_ = 255.0 / (1.0 - spec_t_);
+    for (int i = 0; i < 256; ++i) spec_tab_[i] = std::pow(spec_t_ + static_cast<double>(i) / spec_scale_, shininess);
+  }
+  if (nh <= spec_t_) return 0.0;
+  const double i = std::min(255.0, std::floor((nh - spec_t_) * spec_scale_ + 0.5));
+  return spec_tab_[static_cast<int>(i)];
+}
+
 void GlRaster::emit(double x, double y, double z, const float *normal) {
   // object -> eye -> clip (orthographic here, but the divide is done) -> window
   const double *m = mv_.m, *p = proj_.m;
@@ -262,11 +337,19 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
   auto Q = [f32](double x) { return f32 ? static_cast<double>(static_cast<float>(x)) : x; };
   if (lighting_) {
     // eye-space normal = the inverse transpose of the modelview's upper 3x3 applied to the object normal
-    const double a0 = m[0], a1 = m[4], a2 = m[8], b0 = m[1], b1 = m[5], b2 = m[9], c0 = m[2], c1 = m[6], c2 = m[10];
-    const double det = a0 * (b1 * c2 - b2 * c1) - a1 * (b0 * c2 - b2 * c0) + a2 * (b0 * c1 - b1 * c0);
-    const double i00 = (b1 * c2 - b2 * c1) / det, i01 = (a2 * c1 - a1 * c2) / det, i02 = (a1 * b2 - a2 * b1) / det;
-    const double i10 = (b2 * c0 - b0 * c2) / det, i11 = (a0 * c2 - a2 * c0) / det, i12 = (a2 * b0 - a0 * b2) / det;
-    const double i20 = (b0 * c1 - b1 * c0) / det, i21 = (a1 * c0 - a0 * c1) / det, i22 = (a0 * b1 - a1 * b0) / det;
+    // (computed once per modelview: the same expressions of the same nine values give the same inverse, roadmap S3.10)
+    const double key[9] = {m[0], m[4], m[8], m[1], m[5], m[9], m[2], m[6], m[10]};
+    if (!inv_ok_ || std::memcmp(key, inv_key_, sizeof key) != 0) {
+      const double a0 = key[0], a1 = key[1], a2 = key[2], b0 = key[3], b1 = key[4], b2 = key[5], c0 = key[6], c1 = key[7], c2 = key[8];
+      const double det = a0 * (b1 * c2 - b2 * c1) - a1 * (b0 * c2 - b2 * c0) + a2 * (b0 * c1 - b1 * c0);
+      inv_[0] = (b1 * c2 - b2 * c1) / det; inv_[1] = (a2 * c1 - a1 * c2) / det; inv_[2] = (a1 * b2 - a2 * b1) / det;
+      inv_[3] = (b2 * c0 - b0 * c2) / det; inv_[4] = (a0 * c2 - a2 * c0) / det; inv_[5] = (a2 * b0 - a0 * b2) / det;
+      inv_[6] = (b0 * c1 - b1 * c0) / det; inv_[7] = (a1 * c0 - a0 * c1) / det; inv_[8] = (a0 * b1 - a1 * b0) / det;
+      std::memcpy(inv_key_, key, sizeof key);
+      inv_ok_ = true;
+    }
+    const double i00 = inv_[0], i01 = inv_[1], i02 = inv_[2], i10 = inv_[3], i11 = inv_[4], i12 = inv_[5];
+    const double i20 = inv_[6], i21 = inv_[7], i22 = inv_[8];
     // (M^-1)^T n: row j of the transpose is column j of the inverse
     const double nx = Q(i00 * normal[0] + i10 * normal[1] + i20 * normal[2]);
     const double ny = Q(i01 * normal[0] + i11 * normal[1] + i21 * normal[2]);
@@ -289,8 +372,9 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
           const double n = static_cast<double>(tune[7] < 0 ? -tune[7] : tune[7]);
           nh = (tune[7] < 0 ? std::floor(nh * n) : std::floor(nh * n + 0.5)) / n;
         }
-        double f = Q(nh > 0 ? std::pow(nh, shininess_) : 0.0);
-        if (tune[7] == 0 && tune[27] == 0 && shininess_ > 0) f = spec_lookup(nh, shininess_);   // tune 27 = 1: the exact pow
+        double f;
+        if (tune[7] == 0 && tune[27] == 0 && shininess_ > 0) f = spec_lookup_(nh, shininess_);   // tune 27 = 1: the exact pow
+        else f = Q(nh > 0 ? std::pow(nh, shininess_) : 0.0);
         for (int k = 0; k < 3; ++k) col[k] += f * light_[2][k] * mat_spec_[k];
       }
     }
@@ -414,6 +498,14 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     for (int i = 0; i < 3; ++i) { cov[i].x = sx_[i]; cov[i].y = sy_[i]; }
   const Vtx *c0 = &cov[0], *c1 = &cov[1], *c2 = &cov[2];
   const bool cinc0 = inclusive(*c1, *c2), cinc1 = inclusive(*c2, *c0), cinc2 = inclusive(*c0, *c1);
+  // the default pipeline (every experiment knob 0 except the negative controls of tune 11, no float diagnostics) has a fast loop
+  bool fast = fixed && !keep_float_ && fast_mode != 0;
+  for (int i = 0; i < kTunes && fast; ++i) fast = (i == 11 || tune[i] == 0);
+  if (fast) {
+    const bool inc[3] = {cinc0, cinc1, cinc2};
+    if (fast_triangle_(v0, v1, v2, ar, tex, linear, minx, maxx, miny, maxy, inc)) return;
+  }
+  finish();   // the general loop writes after every queued triangle
   const int32_t tri_id = keep_float_ ? static_cast<int32_t>(tris_.size() / 12) : -1;
   if (keep_float_) {
     for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->x); tris_.push_back(q->y); }
@@ -573,6 +665,361 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
   }
 }
 
+// everything the fast pixel loop reads of one triangle (captured when the triangle is set up, so a queued job does not depend on
+// later state calls; the texel pointer stays valid because every texture upload / deletion runs the queue first)
+struct GlRaster::FastJob {
+  uint16_t *fb;
+  int fbw, miny, maxy, minx, maxx;
+  int64_t A[3], B[3], X[3], Y[3];
+  bool inc[3];
+  double s0, s1, s2, t0, t1, t2, r0, r1, r2, g0, g1, g2, b0, b1, b2;
+  double div_st, arA, inv_st, inv_a, twd, thd;
+  const uint8_t *td;
+  uint32_t tw, th;
+  int bpp, dith;
+  bool linear, modulate, blend, white, approx, sloppy;
+  bool wctl;   // worker_ctl (negative control)
+};
+
+// The pixel-loop workers (set_threads): a ring of jobs written in order by the thread that sets the triangles up; worker k
+// rasterises, for every job in order, only the rows whose 4-row band (y >> 2) is k modulo the worker count. Each pixel then sees
+// the same writes in the same order as with one thread, so the frame is the same; the counters are summed by finish().
+struct GlRaster::Pool {
+  static constexpr uint64_t kCap = 4096;
+  std::vector<FastJob> ring;
+  std::atomic<uint64_t> published{0};
+  std::unique_ptr<std::atomic<uint64_t>[]> done;
+  std::vector<std::array<int64_t, 3>> counters;   // per worker: drawn, blended, fast (written by the worker before done)
+  std::mutex m;
+  std::condition_variable cv_work, cv_done;
+  bool stop = false;
+  int parts = 0;
+  std::vector<std::thread> threads;
+
+  uint64_t min_done() const {
+    uint64_t lo = ~0ull;
+    for (int k = 0; k < parts; ++k) lo = std::min(lo, done[k].load());
+    return lo;
+  }
+  void work(int k) {
+    uint64_t i = 0;
+    for (;;) {
+      const uint64_t n = published.load();
+      if (i < n) {
+        int64_t *c = counters[static_cast<size_t>(k)].data();
+        for (; i < n; ++i) fast_rows_(ring[i % kCap], k, parts, c);
+        done[k].store(i);
+        std::lock_guard<std::mutex> lk(m);
+        cv_done.notify_all();
+        continue;
+      }
+      std::unique_lock<std::mutex> lk(m);
+      cv_work.wait(lk, [&] { return stop || published.load() > i; });
+      if (stop && published.load() <= i) return;
+    }
+  }
+};
+
+GlRaster::~GlRaster() { set_threads(1); }
+
+void GlRaster::set_threads(int n) {
+  finish();
+  if (pool_) {
+    {
+      std::lock_guard<std::mutex> lk(pool_->m);
+      pool_->stop = true;
+    }
+    pool_->cv_work.notify_all();
+    for (std::thread &t : pool_->threads) t.join();
+    pool_.reset();
+  }
+  if (n <= 1) return;
+  pool_ = std::make_unique<Pool>();
+  Pool &p = *pool_;
+  p.ring.resize(Pool::kCap);
+  p.parts = n;
+  p.done = std::make_unique<std::atomic<uint64_t>[]>(static_cast<size_t>(n));
+  for (int k = 0; k < n; ++k) p.done[k].store(0);
+  p.counters.assign(static_cast<size_t>(n), {0, 0, 0});
+#ifdef _WIN32
+  const int prio = GetThreadPriority(GetCurrentThread());   // the workers run at the priority of the thread that feeds them
+#endif
+  for (int k = 0; k < n; ++k) {
+    p.threads.emplace_back([&p, k] { p.work(k); });
+#ifdef _WIN32
+    if (prio != THREAD_PRIORITY_ERROR_RETURN) SetThreadPriority(p.threads.back().native_handle(), prio);
+#endif
+  }
+}
+
+int GlRaster::threads() const { return pool_ ? pool_->parts : 1; }
+
+void GlRaster::finish() {
+  if (!pool_) return;
+  Pool &p = *pool_;
+  const uint64_t n = p.published.load();
+  {
+    std::unique_lock<std::mutex> lk(p.m);
+    p.cv_work.notify_all();
+    p.cv_done.wait(lk, [&] { return p.min_done() >= n; });
+  }
+  for (std::array<int64_t, 3> &c : p.counters) {
+    stats.drawn_px += c[0];
+    stats.blended_px += c[1];
+    stats.fast_px += c[2];
+    c = {0, 0, 0};
+  }
+}
+
+void GlRaster::queue_(const FastJob &j) {
+  Pool &p = *pool_;
+  const uint64_t n = p.published.load();
+  if (n - p.min_done() >= Pool::kCap) {
+    std::unique_lock<std::mutex> lk(p.m);
+    p.cv_work.notify_all();
+    p.cv_done.wait(lk, [&] { return n - p.min_done() < Pool::kCap; });
+  }
+  p.ring[n % Pool::kCap] = j;
+  p.published.store(n + 1);
+  if (((n + 1) & 15) == 0) {
+    std::lock_guard<std::mutex> lk(p.m);
+    p.cv_work.notify_all();
+  }
+}
+
+// The general loop of triangle() with every tune knob 0 (tune 11 aside) and keep_float_ off, computed faster to the same bits
+// (roadmap S3.10, log/roadmap/S3/10_notes.md section 2):
+//   - the setup vertices sx_ / sy_ are multiples of 2^-8 (nearbyint(256 v) / 256); while they and the pixel centres stay below
+//     2^14 in magnitude, every edge function of the general loop, (bx - ax) * (py - ay) - (by - ay) * (px - ax), is exact in
+//     double (differences of 23 significant bits, products of 46, their difference of 47), so it equals the int64 value in units
+//     of 2^-16 used here, and its sign and zero tests are the same. The attribute weights a0..a2 of the general loop are the same
+//     edge functions of the same vertices at the same centre (spx = px, spy = py with tunes 6 / 15 / 18 / 19 at 0), so they are
+//     these values converted back to double (exact below 2^53);
+//   - per row, each edge's inside test (w > 0, or w == 0 on an owning edge) is linear in the pixel column, so the covered pixels
+//     are the integer interval the three tests give (floor / ceil divisions), clipped to the general loop's bounding box;
+//   - floor, the repeat wrap, the dither offset and dst * 255 / 31 are the helpers and tables above.
+// The exact branch of the loop writes every other expression (texture coordinates, filtering, colours, modulation, blending,
+// quantisation) as the general loop does, in the same order. Returns false without writing when a precondition fails: the caller
+// then runs the general loop.
+// THE CHECKED RECIPROCAL PATH (fast_mode 1) computes a pixel first with the five divisions by the triangle's areas and the
+// three by 255 replaced by products with the reciprocals, and keeps that pixel only when it cannot differ from the exact branch's:
+//   - the numerators are the same doubles, so each quotient differs from the exact one by at most 1.5 * 2^-52 relative; with the
+//     texel coordinates u, v below 2^16 they differ by less than 1e-10, and so do the bilinear fractions ax, ay (fu - floor(fu) is
+//     exact). The texel indices are equal when the fraction is farther than kTexEps = 1e-9 from 0 and 1 (nearest: u - floor(u));
+//   - then each filtered channel differs by at most 255 * 2 (|d ax| + |d ay|) < 1.1e-7, the vertex colours are in [0, 1] (checked
+//     per triangle), the blend's alpha by at most 4.4e-10, the blended channel by at most 2.2e-7, and the quantiser's
+//     c * 31 / 255 + d by at most 3e-8: floor gives the same 5-bit value when the fraction is farther than kQuantEps = 1e-6 from 0
+//     and 1 (30 times that bound);
+// any other pixel (and every pixel of a triangle with a zero or non-finite area, or colours outside [0, 1]) takes the exact branch.
+// With workers (set_threads) the job is queued and rasterised by them; finish() waits for it.
+// port/test/test_gl_raster.py compares whole frames of the loops (fast_mode 0, 1, 2, workers) on the recorded streams.
+bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear, int minx,
+                              int maxx, int miny, int maxy, const bool inc[3]) {
+  constexpr double kLim = 16384.0;   // 2^14
+  if (w_ >= 16384 || h_ >= 16384) return false;
+  for (int i = 0; i < 3; ++i)
+    if (!(std::fabs(sx_[i]) < kLim && std::fabs(sy_[i]) < kLim)) return false;
+  FastJob j;
+  const int ctl = tune[11];
+  j.fb = fb_.data();
+  j.fbw = w_;
+  j.minx = minx; j.maxx = maxx; j.miny = miny; j.maxy = maxy;
+  j.dith = ctl == 1 ? 1 : ctl == 2 ? 2 : 0;
+  j.modulate = env_mode_ == 0x2100 && ctl != 5;
+  j.blend = blend_ && ctl != 6;
+  j.white = ctl == 3;
+  // fixed-point vertices in units of 2^-8 (exact: sx_ * 256 is an integer below 2^22)
+  for (int i = 0; i < 3; ++i) { j.X[i] = static_cast<int64_t>(sx_[i] * 256.0); j.Y[i] = static_cast<int64_t>(sy_[i] * 256.0); }
+  // edge i runs from vertex P = (i + 1) % 3 to Q = (i + 2) % 3: w_i = A (PY - Py) - B (PX - Px), PX = 256 x + 128, PY = 256 y + 128
+  for (int i = 0; i < 3; ++i) {
+    const int p = (i + 1) % 3, q = (i + 2) % 3;
+    j.A[i] = j.X[q] - j.X[p];
+    j.B[i] = j.Y[q] - j.Y[p];
+    j.inc[i] = inc[i];
+  }
+  j.arA = std::fabs(edge(sx_[0], sy_[0], sx_[1], sy_[1], sx_[2], sy_[2]));
+  j.div_st = linear ? j.arA : ar;   // the general loop divides the texture coordinates by arA (linear) or ar (nearest)
+  j.linear = linear;
+  j.bpp = tex.fmt == kGlRgba ? 4 : 3;
+  j.td = tex.data.data();
+  j.tw = tex.w;
+  j.th = tex.h;
+  j.twd = static_cast<double>(tex.w);
+  j.thd = static_cast<double>(tex.h);
+  j.s0 = v0->s; j.s1 = v1->s; j.s2 = v2->s; j.t0 = v0->t; j.t1 = v1->t; j.t2 = v2->t;
+  j.r0 = v0->r; j.r1 = v1->r; j.r2 = v2->r; j.g0 = v0->g; j.g1 = v1->g; j.g2 = v2->g; j.b0 = v0->b; j.b1 = v1->b; j.b2 = v2->b;
+  // the checked reciprocal path (fast_mode 1; negative controls: 3 skips the boundary checks, 4 rounds the reciprocals to float)
+  j.sloppy = fast_mode == 3;
+  j.wctl = worker_ctl == 1;
+  bool approx = (fast_mode == 1 || fast_mode == 3 || fast_mode == 4) && j.div_st > 0 && j.div_st < 1e300 && j.arA > 0 &&
+                j.arA < 1e300;
+  for (const Vtx *p : {v0, v1, v2})
+    approx = approx && p->r >= 0 && p->r <= 1 && p->g >= 0 && p->g <= 1 && p->b >= 0 && p->b <= 1 && std::isfinite(p->s) &&
+             std::isfinite(p->t);
+  j.approx = approx;
+  j.inv_st = approx ? 1.0 / j.div_st : 0.0;
+  j.inv_a = approx ? 1.0 / j.arA : 0.0;
+  if (fast_mode == 4) {
+    j.inv_st = static_cast<float>(j.inv_st);
+    j.inv_a = static_cast<float>(j.inv_a);
+  }
+  if (pool_) {
+    queue_(j);
+  } else {
+    int64_t c[3] = {0, 0, 0};
+    fast_rows_(j, 0, 1, c);
+    stats.drawn_px += c[0];
+    stats.blended_px += c[1];
+    stats.fast_px += c[2];
+  }
+  return true;
+}
+
+// the rows y of job j with (y >> 2) % parts == part; c: drawn, blended and reciprocal-path pixel counts
+void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
+  const FastTables &tb = fast_tables();
+  const double(*dith)[4] = tb.dither[j.dith];
+  constexpr double kUnit = 1.0 / 65536.0;
+  constexpr double kTexLim = 65536.0, kTexEps = 1e-9, kQuantEps = 1e-6, kInv255 = 1.0 / 255.0, k31of255 = 31.0 / 255.0;
+  const bool linear = j.linear, modulate = j.modulate, blend = j.blend, white = j.white, approx = j.approx, sloppy = j.sloppy;
+  const int bpp = j.bpp;
+  const uint8_t *td = j.td;
+  const uint32_t tw = j.tw, th = j.th;
+  const double twd = j.twd, thd = j.thd, div_st = j.div_st, arA = j.arA, inv_st = j.inv_st, inv_a = j.inv_a;
+  const double s0 = j.s0, s1 = j.s1, s2 = j.s2, t0 = j.t0, t1 = j.t1, t2 = j.t2;
+  const double r0 = j.r0, r1 = j.r1, r2 = j.r2, g0 = j.g0, g1 = j.g1, g2 = j.g2, b0 = j.b0, b1 = j.b1, b2 = j.b2;
+  int64_t drawn = 0, blended = 0, fastn = 0;
+  for (int y = j.miny; y <= j.maxy; ++y) {
+    if (parts > 1 && ((y >> 2) % parts) != part) continue;
+    const int64_t PY = 256 * static_cast<int64_t>(y) + 128;
+    int64_t xl = j.minx, xr = j.maxx, K[3];
+    for (int i = 0; i < 3; ++i) {
+      const int p = (i + 1) % 3;
+      K[i] = j.A[i] * (PY - j.Y[p]) + j.B[i] * j.X[p];   // w_i(x) = K_i - B_i * PX
+      const int64_t R = K[i] - (j.inc[i] ? 0 : 1);        // inside: w_i >= 0 on an owning edge, w_i >= 1 otherwise: B_i * PX <= R
+      if (j.B[i] > 0) xr = std::min(xr, floor_div(floor_div(R, j.B[i]) - 128, 256));
+      else if (j.B[i] < 0) xl = std::max(xl, ceil_div(ceil_div(-R, -j.B[i]) - 128, 256));
+      else if (R < 0) xr = xl - 1;
+    }
+    if (xl > xr) continue;
+    const int64_t PX0 = 256 * xl + 128;
+    int64_t w0 = K[0] - j.B[0] * PX0, w1 = K[1] - j.B[1] * PX0, w2 = K[2] - j.B[2] * PX0;
+    const int64_t d0 = 256 * j.B[0], d1 = 256 * j.B[1], d2 = 256 * j.B[2];
+    uint16_t *row = j.fb + static_cast<size_t>(y) * static_cast<size_t>(j.fbw);
+    const double(&drow)[4] = dith[y & 3];
+    for (int x = static_cast<int>(xl); x <= static_cast<int>(xr); ++x, w0 -= d0, w1 -= d1, w2 -= d2) {
+      const double a0 = static_cast<double>(w0) * kUnit, a1 = static_cast<double>(w1) * kUnit, a2 = static_cast<double>(w2) * kUnit;
+      if (approx) {
+        // the same pixel with the divisions replaced by products with the reciprocals; kept only when every rounding decision is
+        // farther from its boundary than the two computations can differ (bounds in the comment of fast_triangle_)
+        const double s = (a0 * s0 + a1 * s1 + a2 * s2) * inv_st, t = (a0 * t0 + a1 * t1 + a2 * t2) * inv_st;
+        const double u = s * twd, v = t * thd;
+        if (std::fabs(u) < kTexLim && std::fabs(v) < kTexLim) {
+          double r, g, bl, al = 255.0, fr_u, fr_v;
+          if (!linear) {
+            const int64_t iu0 = floor_i64(u), iv0 = floor_i64(v);
+            fr_u = u - iu0;
+            fr_v = v - iv0;
+            const uint8_t *tp = &td[(static_cast<size_t>(wrap_fast(iv0, th)) * tw + wrap_fast(iu0, tw)) * bpp];
+            r = tp[0]; g = tp[1]; bl = tp[2];
+            if (bpp == 4) al = tp[3];
+          } else {
+            const double fu = u - 0.5, fv = v - 0.5;
+            const int64_t i0 = floor_i64(fu), j0 = floor_i64(fv);
+            const double ax = fu - i0, ay = fv - j0;
+            fr_u = ax;
+            fr_v = ay;
+            const int x0 = wrap_fast(i0, tw), x1 = wrap_fast(i0 + 1, tw);
+            const size_t ry0 = static_cast<size_t>(wrap_fast(j0, th)) * tw, ry1 = static_cast<size_t>(wrap_fast(j0 + 1, th)) * tw;
+            const uint8_t *p00 = &td[(ry0 + x0) * bpp], *p01 = &td[(ry0 + x1) * bpp];
+            const uint8_t *p10 = &td[(ry1 + x0) * bpp], *p11 = &td[(ry1 + x1) * bpp];
+            const double w00 = (1 - ax) * (1 - ay), w01 = ax * (1 - ay), w10 = (1 - ax) * ay, w11 = ax * ay;
+            r = w00 * p00[0] + w01 * p01[0] + w10 * p10[0] + w11 * p11[0];
+            g = w00 * p00[1] + w01 * p01[1] + w10 * p10[1] + w11 * p11[1];
+            bl = w00 * p00[2] + w01 * p01[2] + w10 * p10[2] + w11 * p11[2];
+            if (bpp == 4) al = w00 * p00[3] + w01 * p01[3] + w10 * p10[3] + w11 * p11[3];
+          }
+          if (fr_u > kTexEps && fr_u < 1.0 - kTexEps && fr_v > kTexEps && fr_v < 1.0 - kTexEps) {
+            if (modulate) {
+              r *= white ? 1.0 : (a0 * r0 + a1 * r1 + a2 * r2) * inv_a;
+              g *= white ? 1.0 : (a0 * g0 + a1 * g1 + a2 * g2) * inv_a;
+              bl *= white ? 1.0 : (a0 * b0 + a1 * b1 + a2 * b2) * inv_a;
+            }
+            const uint16_t dsts = row[x];
+            if (blend) {
+              const double alpha = al * kInv255, beta = 1 - alpha;
+              r = r * alpha + tb.expand5[(dsts >> 10) & 31] * beta;
+              g = g * alpha + tb.expand5[(dsts >> 5) & 31] * beta;
+              bl = bl * alpha + tb.expand5[dsts & 31] * beta;
+            }
+            const double d = drow[x & 3];
+            const double qr = r * k31of255 + d, qg = g * k31of255 + d, qb = bl * k31of255 + d;
+            const int orr = floor_int(qr), og = floor_int(qg), ob = floor_int(qb);
+            const double fr = qr - orr, fg = qg - og, fb = qb - ob;
+            if (sloppy || (fr > kQuantEps && fr < 1.0 - kQuantEps && fg > kQuantEps && fg < 1.0 - kQuantEps && fb > kQuantEps &&
+                           fb < 1.0 - kQuantEps)) {
+              auto clamp5 = [](int o) { return o < 0 ? 0 : (o > 31 ? 31 : o); };
+              row[x] = static_cast<uint16_t>((clamp5(orr) << 10) | (clamp5(og) << 5) | clamp5(ob));
+              if (blend) ++blended;
+              ++drawn;
+              ++fastn;
+              continue;
+            }
+          }
+        }
+      }
+      // the exact branch: the general loop's expressions
+      const double s = (a0 * s0 + a1 * s1 + a2 * s2) / div_st;
+      const double t = (a0 * t0 + a1 * t1 + a2 * t2) / div_st;
+      const double u = s * twd, v = t * thd;
+      double r, g, bl, al = 255.0;
+      if (!linear) {
+        const int iu = wrap_fast(floor_i64(u), tw), iv = wrap_fast(floor_i64(v), th);
+        const uint8_t *tp = &td[(static_cast<size_t>(iv) * tw + iu) * bpp];
+        r = tp[0]; g = tp[1]; bl = tp[2];
+        if (bpp == 4) al = tp[3];
+      } else {
+        const double fu = u - 0.5, fv = v - 0.5;
+        const int64_t i0 = floor_i64(fu), j0 = floor_i64(fv);
+        const double ax = fu - i0, ay = fv - j0;
+        const int x0 = wrap_fast(i0, tw), x1 = wrap_fast(i0 + 1, tw);
+        const size_t ry0 = static_cast<size_t>(wrap_fast(j0, th)) * tw, ry1 = static_cast<size_t>(wrap_fast(j0 + 1, th)) * tw;
+        const uint8_t *p00 = &td[(ry0 + x0) * bpp], *p01 = &td[(ry0 + x1) * bpp];
+        const uint8_t *p10 = &td[(ry1 + x0) * bpp], *p11 = &td[(ry1 + x1) * bpp];
+        const double w00 = (1 - ax) * (1 - ay), w01 = ax * (1 - ay), w10 = (1 - ax) * ay, w11 = ax * ay;
+        double acc[4] = {0, 0, 0, 0};
+        for (int k = 0; k < bpp; ++k) acc[k] += w00 * p00[k];
+        for (int k = 0; k < bpp; ++k) acc[k] += w01 * p01[k];
+        for (int k = 0; k < bpp; ++k) acc[k] += w10 * p10[k];
+        for (int k = 0; k < bpp; ++k) acc[k] += w11 * p11[k];
+        r = acc[0]; g = acc[1]; bl = acc[2];
+        if (bpp == 4) al = acc[3];
+      }
+      double cr = (a0 * r0 + a1 * r1 + a2 * r2) / arA, cg = (a0 * g0 + a1 * g1 + a2 * g2) / arA;
+      double cb = (a0 * b0 + a1 * b1 + a2 * b2) / arA;
+      if (white) cr = cg = cb = 1.0;
+      if (modulate) { r *= cr; g *= cg; bl *= cb; }
+      uint16_t &dst = row[x];
+      double ro = r, go = g, bo = bl;
+      if (blend) {
+        const double alpha = al / 255.0;
+        const int dr = ((dst >> 10) & 31), dg = ((dst >> 5) & 31), db = dst & 31;
+        ro = r * alpha + tb.expand5[dr] * (1 - alpha);
+        go = g * alpha + tb.expand5[dg] * (1 - alpha);
+        bo = bl * alpha + tb.expand5[db] * (1 - alpha);
+        ++blended;
+      }
+      const double d = drow[x & 3];
+      dst = static_cast<uint16_t>((quantize_d(ro, d) << 10) | (quantize_d(go, d) << 5) | quantize_d(bo, d));
+      ++drawn;
+    }
+    if (j.wctl && parts > 1 && part == parts - 1) row[xl] ^= 1;   // negative control: a wrong pixel from the last worker only
+  }
+  c[0] += drawn;
+  c[1] += blended;
+  c[2] += fastn;
+}
+
 // ------------------------------------------------------------------------------------------------ recorded streams
 bool GlRaster::exec_line(const std::string &line) {
   if (line.rfind("#tune ", 0) == 0) {
@@ -580,6 +1027,19 @@ bool GlRaster::exec_line(const std::string &line) {
     const long i = std::strtol(line.c_str() + 6, &e, 10);
     const long v = std::strtol(e, nullptr, 10);
     if (i >= 0 && i < kTunes) tune[i] = static_cast<int>(v);
+    return true;
+  }
+  if (line.rfind("#threads ", 0) == 0) {
+    set_threads(static_cast<int>(std::strtol(line.c_str() + 9, nullptr, 10)));
+    return true;
+  }
+  if (line.rfind("#workerctl ", 0) == 0) {
+    finish();
+    worker_ctl = static_cast<int>(std::strtol(line.c_str() + 11, nullptr, 10));
+    return true;
+  }
+  if (line.rfind("#fastpath ", 0) == 0) {
+    fast_mode = static_cast<int>(std::strtol(line.c_str() + 10, nullptr, 10));
     return true;
   }
   if (line.empty() || line[0] == '#') return true;

@@ -1,0 +1,10 @@
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_12 SG_RASTER_THREADS=1 scenario cov_a_keys
+run 0 done
+run 1 done
+run 2 done
+run 3 done
+run 4 done
+run 5 done
+k_dlg_J	app	STABLE	{'019371043c52': 6}
+k_dlg_L	app	STABLE	{'98f5a4e7bd07': 6}
+k_dlg_S	app	STABLE	{'cfa5ec547e32': 6}

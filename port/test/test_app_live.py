@@ -326,7 +326,8 @@ def main(exe):
              "work_ms": stats([w[1] for w in waits]), "wait_end_ms": stats([w[3] for w in waits]),
              "kinds": {k: sum(1 for p in s.presents if p["kind"] == k) for k in "rmwp"}, "shown": len(s.shown),
              "hover_new_presents": [h[2] for h in s.facts.get("hover", [])], "session": s.session["session"]}
-    out = ROOT / "log" / "roadmap" / "S7" / "8_app_live_facts.json"  # S7.8 (S7.6 wrote 6_app_live_facts.json)
+    # S7.8 (S7.6 wrote 6_app_live_facts.json); roadmap S3.12 (U-1398): SG_APP_FACTS_DIR=<dir> writes it there instead
+    out = pathlib.Path(os.environ.get("SG_APP_FACTS_DIR") or ROOT / "log" / "roadmap" / "S7") / "8_app_live_facts.json"
     if out.parent.is_dir():
         out.write_text(json.dumps(facts, indent=1))
     s.cleanup()

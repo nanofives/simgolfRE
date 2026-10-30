@@ -1,0 +1,14 @@
+ 13 port/src/sim/gl_raster.cpp
+  8 port/include/portsim/sim/gl_raster.h
+  1 port/test/test_gl_raster.py
+  6 port/src/sim/gfx_terrain.cpp
+ 81 port/src/sim/terrain_state.cpp
+  1 port/test/test_terrain_state.py
+  5 port/src/sim/terrain_live.cpp
+  3 port/include/portsim/sim/terrain_live.h
+  5 port/app/host.cpp
+  2 port/app/host.h
+  2 port/test/test_app_ingame.py
+  1 port/test/test_app_live.py
+  2 port/test/test_app_present.py
+edits 130 -> C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\12_edits.py

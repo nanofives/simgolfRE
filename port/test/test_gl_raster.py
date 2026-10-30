@@ -216,3 +216,67 @@ def test_probe_tie_rule(lib):
     real = GP.real_frame(d)
     cov = {t: int(((GP.port_frame(lib, d, {10: t}) != 0) != (real != 0)).sum()) for t in range(6)}
     assert cov[0] <= 48 and all(cov[0] < cov[t] for t in range(1, 6)), cov
+
+
+# Roadmap S3.10 (U-1640, log/roadmap/S3/10_notes.md): GlRaster's fast pixel loop (exact integer edge functions and row spans, the
+# checked reciprocal path, pixel-loop workers) must give the general loop's frame bit for bit, so every G2 verdict above stays what
+# it was. Each snapshot of c7 and g6 is replayed with the general loop (`#fastpath 0`, the rasteriser before S3.10) and with the
+# default fast loop, its exact branch alone (`#fastpath 2`) and 4 workers (`#threads 4`): frames and pixel counters must be equal.
+# log/roadmap/S3/10_equiv.py runs the same over every recorded corpus (c3 .. c7, g2 .. g6: 268 passes, 0 differ).
+FAST_LABELS = ("c7", "g6")
+FAST_MODES = {"fast": "", "exact": "#fastpath 2\n", "threads": "#threads 4\n"}
+# Negative control: reciprocals rounded to float (`#fastpath 4`, errors above what the boundary checks allow) changes pixels; on c7
+# it does on 20 of 34 passes, these two by 5 pixels each. Blind by measurement: `#fastpath 3` (no boundary checks at all) leaves all
+# 268 recorded passes unchanged, since no pixel of them comes within the double quotients' error of a rounding boundary.
+CRUDE_STEPS = ("fuzz8_z1", "fuzz9_z1")
+
+
+def _frame(lib, setup, step, line):
+    def patch(r, dll):
+        if line:
+            dll.sg_raster_exec(r, line.encode(), len(line))
+    post, got, st, unknown, pre = R.run(lib, setup, step, patch=patch)
+    return got.copy(), st
+
+
+@pytest.mark.parametrize("label", FAST_LABELS)
+def test_fast_loop_equals_the_general_loop(lib, label):
+    root = G.CORPUS / label
+    steps = G.snaps(root)
+    if not steps:
+        pytest.skip(f"no corpus port/corpus/gl/{label}")
+    setup_ = R.Setup(root)
+    bad = []
+    for step in steps:
+        ref, rst = _frame(lib, setup_, step, "#fastpath 0\n")
+        for mode, line in FAST_MODES.items():
+            got, st = _frame(lib, setup_, step, line)
+            if int((got != ref).sum()) or st[:5] != rst[:5]:
+                bad.append((step, mode, int((got != ref).sum()), st[:5], rst[:5]))
+    assert not bad, bad[:5]
+
+
+@pytest.mark.parametrize("step", RENDER_STEPS or ["-"])
+def test_fast_loop_with_workers_equals_the_general_loop_on_the_chain(lib, setup, step):
+    """The port's Terrain::render drives the rasteriser directly: 4 workers give the general loop's frame and counters."""
+    if step == "-":
+        pytest.skip("no corpus")
+    out = []
+    for line in (b"#fastpath 0\n", b"#threads 4\n"):
+        def patch(r, dll, line=line):
+            dll.sg_raster_exec(r, line, len(line))
+        post, got, st, pre = R.run_chain(lib, setup, step, patch=patch)
+        out.append((got.copy(), st[:5]))
+    assert int((out[0][0] != out[1][0]).sum()) == 0 and out[0][1] == out[1][1], step
+
+
+def test_fast_loop_control_float_reciprocals_changes_the_frame(lib, setup):
+    changed = []
+    for step in CRUDE_STEPS:
+        if step not in STEPS:
+            continue
+        ref, _ = _frame(lib, setup, step, "#fastpath 0\n")
+        got, _ = _frame(lib, setup, step, "#fastpath 4\n")
+        if int((got != ref).sum()):
+            changed.append(step)
+    assert changed, "control #fastpath 4 (float reciprocals) left every frame unchanged: the comparison cannot see it"

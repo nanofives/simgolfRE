@@ -1,4 +1,14 @@
-# Regression baseline at HEAD 10e9d507 + S4 (I14, 2026-10-29)
+# Regression baseline at HEAD + S3 wave 6 (I15, 2026-10-29)
+
+This file now describes **HEAD + S3 wave 6** (S3.12: the rasteriser worker threads and fast pixel loop, the Terrain-state rebuild speed,
+the LiveTerrain log switch; `log/roadmap/S3/MERGE_w6.md`), measured by I15 in `port/build/I15` (`log/roadmap/merges/I15.md`). Every row
+equals I14's below except: port suite x64 95 / 95 files PASS (test_fttext passed on this host), test_app_ingame 13 passed with no xfail
+(the zoom test is strict), Win32 20 failed ids (test_fttext's 2 pass), S3 frames 0 / 299 differ at 1 and 4 threads, app session max
+terrain-frame work 71 ms (no frame over 87 ms).
+
+## Before wave 6 (I14, HEAD + S4)
+
+
 
 This file now describes **HEAD + S4**: the S4 audio engine (sound.dll's engine ported behind an AudioSink, `log/roadmap/S4/MERGE.md`,
 files `log/roadmap/S4/files.txt`, shared edits `2b_apply_shared.py`) on 6e6df6e7, whose port/ equals e179bd24's (= I13's state below).

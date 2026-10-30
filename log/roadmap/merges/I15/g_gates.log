@@ -1,0 +1,33 @@
+[0] assemble 130/130 edits + docs, base ee6efc1d 2026-10-29 14:07:33
+== suite_win32 start 2026-10-29 14:36:18
+[1/19] static rc=0 370 s :: 630 passed, 2 skipped, 46 deselected in 367.05s (0:06:07)
+[2/19] segs_x64 rc=0 126 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 124.7}
+[3/19] segs_win32 rc=0 201 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 200.1}
+[4/19] segs_ft_x64 rc=0 98 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 97.2}
+[5/19] boot_x64 rc=0 181 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[6/19] boot_win32 rc=0 326 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[7/19] boot_ft_x64 rc=0 208 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[8/19] chain rc=0 708 s :: {"backend": "x64", "counts": {"PASS": 342}, "breaks": {}, "wall_s": 707.6}
+[9/19] defects rc=0 2213 s :: -> s3r\ledger\divergences.tsv
+[10/19] census rc=0 1670 s :: {"rows": 698, "counts": {"PASS": 100, "FAIL": 537, "UNSUPPORTED": 51, "NOT_RUN": 10}}
+[11/19] terrain rc=0 870 s :: {"PASS": 527, "NOT_MEASURED": 75}
+[12/19] live_equiv_x64 rc=0 620 s :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[13/19] live_equiv_win32 rc=0 1051 s :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[14/19] app_replay_x64 rc=0 8 s :: saveload                 PASS  records 266/266 code 0 first None (1.7 s)
+[15/19] app_replay_win32 rc=0 8 s :: saveload                 PASS  records 266/266 code 0 first None (2.0 s)
+[16/19] gfx_check rc=0 2 s ::   body	drawWindow.frame	text
+[17/19] s3_raster rc=0 456 s :: 712 passed in 454.28s (0:07:34)
+[18/19] equiv rc=0 313 s :: passes 268: fast / exact / threads / chain differing from the general loop: 0; sloppy control differs on 0, crude control on 47, workerctl control on 239
+[19/19] s3_ctl_live rc=0 26 s :: controls: all as expected
+== suite_x64_a start 2026-10-29 17:14:13
+== suite_x64_b start 2026-10-29 20:23:35
+[queue1 done] 2026-10-29 20:40:44
+[queue2 done] 2026-10-29 21:41:34
+[1/4] frames rc=0 65 s :: 299 rows of C:/Users/maria/Desktop/Proyectos/SimGolf/log/roadmap/S3/10_frames_old.tsv, 299 of log/roadmap/merges/I15/frames_default.tsv: 0 differ (frame SHA-1 o
+[2/4] frames_t4 rc=0 22 s :: 299 rows of C:/Users/maria/Desktop/Proyectos/SimGolf/log/roadmap/S3/10_frames_old.tsv, 299 of log/roadmap/merges/I15/frames_t4.tsv: 0 differ (frame SHA-1 or cou
+[3/4] frames_ctl rc=0 22 s :: (control: rows must differ)
+[4/4] s3_session rc=1 0 s :: FileNotFoundError: [WinError 3] El sistema no puede encontrar la ruta especificada: 'C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\log\\port\\build\\I15'
+== suite_app start 2026-10-29 21:43:36
+[queue3 done] 2026-10-29 22:27:10
+[1/1] s3_session_r2 rc=0 145 s ::   over 87 ms: []  max terrain-frame work 71
+[queue4 done] 2026-10-29 22:29:39
