@@ -35,11 +35,14 @@
 #define PORTSIM_SIM_AUDIO_EXE_H
 
 #include <cstdint>
+#include <functional>
 #include <initializer_list>
+#include <memory>
 #include <string>
 
 #include "portsim/registry.h"
 #include "portsim/sim/audio.h"
+#include "portsim/sim/audio_sink.h"
 
 namespace portsim {
 
@@ -104,6 +107,45 @@ const AudioExeCounters &audio_exe_counters(Ctx &ctx);
 // "golf_clean.exe", checked against the anchored layout) unless the address is already mapped. Called before the first
 // class-table read; MissingResource when the file is absent or another build.
 void exe_map_image(Ctx &ctx);
+
+// ---- the application's audio host (roadmap S7.10, port/app/audio_out.h) ---------------------------------------------------
+// REQUEST OBSERVER: called at every request (a call from another module into this module, Req depth 0) before it runs, with
+// its hooks.csv name and argument slots. It only copies: the context, its GameState and the call are left as they are.
+// An empty function removes it. The app's sim context mirrors its requests to a shadow audio context through it.
+using AudioRequestObserver = std::function<void(const char *name, const uint32_t *args, int nargs)>;
+void audio_exe_set_observer(Ctx &ctx, AudioRequestObserver obs);
+
+// DeviceSink's answer model (the sink audio_exe.deviceFixture(1) attaches; audio_exe.cpp "the device sink"), for a host
+// sink that answers through it. Every command is logged in `lines` (a host may clear them between calls). The timer
+// client timeSetEvent registered (callback, user word, id, period in ms) and the virtual clock its timeGetTime reads advance.
+// S7.11: the model's heap (16 MB chunks from 0xF4000000): the bump arena's bytes, its chunks, the live blocks and bytes
+// (allocated, not freed) and the freed blocks kept for reuse by an allocation of the same rounded size.
+struct DeviceHeapUsage {
+  uint32_t arena_bytes = 0, chunks = 0, live_blocks = 0, freed_blocks = 0;
+  uint64_t live_bytes = 0;
+};
+class DeviceModel : public RecordingSink {
+ public:
+  uint32_t clock = 0x100000u;
+  uint32_t timer_cb = 0, timer_user = 0, timer_id = 0, timer_period = 0;
+  int unanswered = 0;
+  // S7.12: mmioOpenA of a file name (not a memory file): the file there, absent, and found under the install's `Golf_Sfx` through the
+  // defect switch sound.golfSfxAlias = 0 (audio_exe.cpp golf_sfx_name)
+  uint32_t file_present = 0, file_absent = 0, file_aliased = 0;
+  virtual DeviceHeapUsage heap_usage() const { return {}; }
+};
+std::unique_ptr<DeviceModel> make_device_model();
+
+// deviceFixture with an external sink: the context's GameState prepared as audio_exe.deviceFixture prepares it (a segment
+// start image: no sound library, empty device holders and sound list, every Snd closed and nameless) and `sink` attached as
+// the module's and the audio core's sink; `model` is the DeviceModel the sink answers through (deviceStep 3 / 4 and
+// streamLog use it). prepare = false attaches only (a GameState the host built itself: audio_exe_construct_holders).
+void audio_exe_device_fixture(Ctx &ctx, AudioSink *sink, DeviceModel *model, bool prepare = true);
+
+// The CRT's static constructors of the three device holders (staticInit_g83ad80 -> NodeList::ctor on g_musicDevice,
+// staticInit_g83ad58 -> NodeListB::ctor on g_sfxDevice, staticInit_g83af98 -> NodeListC::ctor on g_voiceDevice), for a
+// GameState filled from the exe's initialised data (ExeConstants InitialImage), which has them unconstructed.
+void audio_exe_construct_holders(Ctx &ctx);
 
 }  // namespace portsim
 

@@ -1,0 +1,4141 @@
+import portsim!frame 0
+import golf_clean.exe!arrayStaticInit_448160
+import golf_clean.exe!initSound 1 138
+import KERNEL32.dll!HeapAlloc 0 0 96
+import WINMM.dll!timeGetDevCaps 4093640772 8
+import KERNEL32.dll!InitializeCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16480
+import KERNEL32.dll!EnterCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16864
+import USER32.dll!SetWindowLongA 1 4294967292 268445167
+import KERNEL32.dll!HeapAlloc 0 0 448
+import DSOUND.dll!#2 268441507 4093674160
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 16
+import ole32.dll!CoInitialize 0
+import ole32.dll!CoCreateInstance 268818044 0 1 268817884 4093674160
+com 1.10 4273995776 0
+com 1.6 4273995776 1 2
+com 1.4 4273995776 4093674172
+com 1.3 4273995776 4093674384 4093674368 0
+com 2.3 4273995856 4093674420
+com 2.14 4273995856 4093674440
+com 2.12 4273995856 0 0 1
+com 2.5 4273995856 4093674440 18 0
+import KERNEL32.dll!HeapAlloc 0 0 64
+import KERNEL32.dll!HeapAlloc 0 0 131072
+import KERNEL32.dll!HeapAlloc 0 0 224
+com 1.3 4273995776 4093871520 4093871504 0
+com 2.3 4273995968 4093871556
+com 2.5 4273995968 4093871576 18 0
+com 2.11 4273995968 0 65536 4273012664 4273012660 4273012656 4273012652 2
+com 2.19 4273995968 4093871632 65536 0 0  ; unlock 65536+0 bytes, 0 not silent, fnv fe72814514a90383
+import WINMM.dll!timeGetTime
+com 2.12 4273995968 0 0 1
+com 2.5 4273995968 4093871576 18 0
+import KERNEL32.dll!HeapFree 0 0 4093740336
+import KERNEL32.dll!HeapAlloc 0 0 148064
+import KERNEL32.dll!EnterCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import WINMM.dll!timeBeginPeriod 1
+import WINMM.dll!timeSetEvent 30 1 268440202 4093640704 1
+import KERNEL32.dll!HeapAlloc 0 0 80
+import KERNEL32.dll!HeapAlloc 0 0 112
+import WINMM.dll!waveInGetNumDevs
+import WINMM.dll!waveInGetDevCapsA 4294967295 4094085336 48
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 368
+import KERNEL32.dll!HeapAlloc 0 0 16
+import golf_clean.exe!loadSoundTable
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 48
+import KERNEL32.dll!HeapAlloc 0 0 5200
+import KERNEL32.dll!HeapAlloc 0 0 32
+import golf_clean.exe!playSound 24 100 0 0 0
+import WINMM.dll!mmioOpenA 4094629012 0 0  ; file sounds/effects/boing.wav
+import KERNEL32.dll!HeapAlloc 0 0 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4096 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844752 0
+import WINMM.dll!mmioDescend 4096 4273012608 4273012568 16
+import WINMM.dll!mmioRead 4096 4094629296 16
+import WINMM.dll!mmioAscend 4096 4273012608 0
+import WINMM.dll!mmioStringToFOURCCA 268844744 0
+import WINMM.dll!mmioDescend 4096 4273012588 4273012568 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4096 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4096 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844736 0
+import WINMM.dll!mmioDescend 4096 4273012628 4273012568 16
+import WINMM.dll!mmioAscend 4096 4273012568 0
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4096 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4096 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844728 0
+import WINMM.dll!mmioDescend 4096 4273012648 4273012568 16
+import WINMM.dll!mmioSetBuffer 4096 0 24578 0
+import WINMM.dll!mmioGetInfo 4096 4094628924 0
+import WINMM.dll!mmioAdvance 4096 4094628924 0
+import WINMM.dll!mmioAdvance 4096 4094628924 0
+import KERNEL32.dll!HeapAlloc 0 0 16
+tick 0
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapFree 0 0 4095213808
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 1
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 40544 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093912176 2648 0 0  ; unlock 2648+0 bytes, 2398 not silent, fnv 8842c865646be59b
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 2
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 43192 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093914824 2644 0 0  ; unlock 2644+0 bytes, 2530 not silent, fnv 0009abd567e6cba7
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 3
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 45836 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093917468 2648 0 0  ; unlock 2648+0 bytes, 2570 not silent, fnv 7cf1f5ca5ad5608f
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 4
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 48484 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093920116 2644 0 0  ; unlock 2644+0 bytes, 2616 not silent, fnv 1677ec74782c391b
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 5
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 51128 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093922760 2648 0 0  ; unlock 2648+0 bytes, 2586 not silent, fnv 922f1050c60f0583
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 6
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 53776 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093925408 2644 0 0  ; unlock 2644+0 bytes, 2580 not silent, fnv 4db929f4318ae95f
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 7
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 56420 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093928052 2648 0 0  ; unlock 2648+0 bytes, 2566 not silent, fnv 97579dab2a5973cf
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 8
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 59068 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093930700 2644 0 0  ; unlock 2644+0 bytes, 2548 not silent, fnv e9de1d87dd649083
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 9
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 61712 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093933344 2648 0 0  ; unlock 2648+0 bytes, 2542 not silent, fnv b83791171780ed77
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 10
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 64360 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093935992 1176 4093871632 1468  ; unlock 1176+1468 bytes, 2514 not silent, fnv 1d3e6f8ea18dd807
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 11
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 1468 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093873100 2648 0 0  ; unlock 2648+0 bytes, 2448 not silent, fnv 0b514e75e6055ed3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 12
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 4116 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093875748 2644 0 0  ; unlock 2644+0 bytes, 2420 not silent, fnv e85cfa93621eb6fb
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 13
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 6760 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093878392 2648 0 0  ; unlock 2648+0 bytes, 2452 not silent, fnv 842afd73846e932f
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 14
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 9408 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093881040 2644 0 0  ; unlock 2644+0 bytes, 2466 not silent, fnv 36096a4a6d68c67f
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 15
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 12052 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093883684 2648 0 0  ; unlock 2648+0 bytes, 2398 not silent, fnv 3e6d5722bbb28477
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 16
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 14700 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093886332 2644 0 0  ; unlock 2644+0 bytes, 2352 not silent, fnv 344f5e0866822dbf
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 17
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 17344 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093888976 2648 0 0  ; unlock 2648+0 bytes, 2238 not silent, fnv 1e215db7195a6dc3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 18
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 19992 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093891624 2644 0 0  ; unlock 2644+0 bytes, 2060 not silent, fnv d7263f173c8e99b3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 19
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 22636 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093894268 2648 0 0  ; unlock 2648+0 bytes, 1116 not silent, fnv 6e36f53bd9304dc3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapFree 0 0 4095213824
+import KERNEL32.dll!HeapAlloc 0 0 16
+import USER32.dll!PostMessageA 1 2030 0 4095213808
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import WINMM.dll!mmioClose 4096 0
+import KERNEL32.dll!HeapFree 0 0 4095189200
+import KERNEL32.dll!HeapFree 0 0 4095213808
+tick 20
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 25284 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093896916 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 21
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 27928 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093899560 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 22
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 30576 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093902208 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 23
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 33220 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093904852 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 24
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 35868 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093907500 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 25
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 38512 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093910144 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 26
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 41160 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093912792 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 27
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 43804 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093915436 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 28
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 46452 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093918084 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 29
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 49096 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093920728 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!playSound 24 60 0 0 0
+import WINMM.dll!mmioOpenA 4094629012 0 0  ; file sounds/effects/boing.wav
+import KERNEL32.dll!HeapAlloc 0 0 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4097 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844752 0
+import WINMM.dll!mmioDescend 4097 4273012608 4273012568 16
+import WINMM.dll!mmioRead 4097 4094629296 16
+import WINMM.dll!mmioAscend 4097 4273012608 0
+import WINMM.dll!mmioStringToFOURCCA 268844744 0
+import WINMM.dll!mmioDescend 4097 4273012588 4273012568 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4097 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4097 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844736 0
+import WINMM.dll!mmioDescend 4097 4273012628 4273012568 16
+import WINMM.dll!mmioAscend 4097 4273012568 0
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4097 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4097 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844728 0
+import WINMM.dll!mmioDescend 4097 4273012648 4273012568 16
+import WINMM.dll!mmioSetBuffer 4097 0 24578 0
+import WINMM.dll!mmioGetInfo 4097 4094628924 0
+import WINMM.dll!mmioAdvance 4097 4094628924 0
+import WINMM.dll!mmioAdvance 4097 4094628924 0
+import KERNEL32.dll!HeapAlloc 0 0 16
+tick 30
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapFree 0 0 4095189200
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 51744 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093923376 2644 0 0  ; unlock 2644+0 bytes, 2320 not silent, fnv bca676383bf82e33
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 31
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 54388 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093926020 2648 0 0  ; unlock 2648+0 bytes, 2506 not silent, fnv c87ee4930de7ad8b
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 32
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 57036 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093928668 2644 0 0  ; unlock 2644+0 bytes, 2546 not silent, fnv 2a5740901baf6f3b
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 33
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 59680 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093931312 2648 0 0  ; unlock 2648+0 bytes, 2606 not silent, fnv fc2abc0c324c344f
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 34
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 62328 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093933960 2644 0 0  ; unlock 2644+0 bytes, 2574 not silent, fnv 915f998301416b93
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 35
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 64972 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093936604 564 4093871632 2084  ; unlock 564+2084 bytes, 2562 not silent, fnv a422464ead55665b
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 36
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 2084 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093873716 2644 0 0  ; unlock 2644+0 bytes, 2548 not silent, fnv 46ca8970cc3e44c7
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 37
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 4728 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093876360 2648 0 0  ; unlock 2648+0 bytes, 2522 not silent, fnv 7188ec46f1b26d77
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 38
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 7376 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093879008 2644 0 0  ; unlock 2644+0 bytes, 2508 not silent, fnv cf0b4c586424ce27
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 39
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 10020 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093881652 2648 0 0  ; unlock 2648+0 bytes, 2458 not silent, fnv 98e171fafd7e86af
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 40
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 12668 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093884300 2644 0 0  ; unlock 2644+0 bytes, 2358 not silent, fnv 6036665266cd2a53
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 41
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 15312 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093886944 2648 0 0  ; unlock 2648+0 bytes, 2326 not silent, fnv f403a053f5d7fbe3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 42
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 17960 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093889592 2644 0 0  ; unlock 2644+0 bytes, 2372 not silent, fnv eb97c85b86c58df7
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 43
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 20604 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093892236 2648 0 0  ; unlock 2648+0 bytes, 2418 not silent, fnv 1c5a49185efb7abb
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 44
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 23252 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093894884 2644 0 0  ; unlock 2644+0 bytes, 2320 not silent, fnv 221d80c32b8f0e5f
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 45
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 25896 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093897528 2648 0 0  ; unlock 2648+0 bytes, 2274 not silent, fnv 20449a434f7a6dc3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 46
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 28544 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093900176 2644 0 0  ; unlock 2644+0 bytes, 2122 not silent, fnv f33a5cfb3b2154a3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 47
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 31188 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093902820 2648 0 0  ; unlock 2648+0 bytes, 1964 not silent, fnv 8f62682c6bd9f39b
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 48
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 33836 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093905468 2644 0 0  ; unlock 2644+0 bytes, 1052 not silent, fnv 843ac93bd0b99afb
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapFree 0 0 4095213808
+import KERNEL32.dll!HeapAlloc 0 0 16
+import USER32.dll!PostMessageA 1 2030 0 4095189200
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import WINMM.dll!mmioClose 4097 0
+import KERNEL32.dll!HeapFree 0 0 4095213824
+import KERNEL32.dll!HeapFree 0 0 4095189200
+tick 49
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 36480 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093908112 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 50
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 39128 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093910760 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 51
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 41772 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093913404 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 52
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 44420 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093916052 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 53
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 47064 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093918696 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 54
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 49712 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093921344 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 55
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 52356 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093923988 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 56
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 55004 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093926636 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 57
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 57648 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093929280 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 58
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 60296 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093931928 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 59
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 62940 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093934572 2596 4093871632 52  ; unlock 2596+52 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!playSound 24 100 4294967196 0 0
+import WINMM.dll!mmioOpenA 4094629012 0 0  ; file sounds/effects/boing.wav
+import KERNEL32.dll!HeapAlloc 0 0 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4098 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844752 0
+import WINMM.dll!mmioDescend 4098 4273012608 4273012568 16
+import WINMM.dll!mmioRead 4098 4094629296 16
+import WINMM.dll!mmioAscend 4098 4273012608 0
+import WINMM.dll!mmioStringToFOURCCA 268844744 0
+import WINMM.dll!mmioDescend 4098 4273012588 4273012568 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4098 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4098 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844736 0
+import WINMM.dll!mmioDescend 4098 4273012628 4273012568 16
+import WINMM.dll!mmioAscend 4098 4273012568 0
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4098 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4098 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844728 0
+import WINMM.dll!mmioDescend 4098 4273012648 4273012568 16
+import WINMM.dll!mmioSetBuffer 4098 0 24578 0
+import WINMM.dll!mmioGetInfo 4098 4094628924 0
+import WINMM.dll!mmioAdvance 4098 4094628924 0
+import WINMM.dll!mmioAdvance 4098 4094628924 0
+import KERNEL32.dll!HeapAlloc 0 0 16
+tick 60
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapFree 0 0 4095213824
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 52 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093871684 2644 0 0  ; unlock 2644+0 bytes, 625 not silent, fnv 5952d342bf323c5c
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 61
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 2696 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093874328 2648 0 0  ; unlock 2648+0 bytes, 645 not silent, fnv 136973fd9462ec9d
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 62
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 5344 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093876976 2644 0 0  ; unlock 2644+0 bytes, 647 not silent, fnv 88fc73e5c4a3478c
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 63
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 7988 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093879620 2648 0 0  ; unlock 2648+0 bytes, 660 not silent, fnv 97db1e3f18daa4ce
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 64
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 10636 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093882268 2644 0 0  ; unlock 2644+0 bytes, 653 not silent, fnv 6982cbd2263125f8
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 65
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 13280 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093884912 2648 0 0  ; unlock 2648+0 bytes, 650 not silent, fnv d802edde79b05654
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 66
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 15928 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093887560 2644 0 0  ; unlock 2644+0 bytes, 646 not silent, fnv 46f9cb26a379cdaa
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 67
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 18572 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093890204 2648 0 0  ; unlock 2648+0 bytes, 645 not silent, fnv c529e45a9ab01986
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 68
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 21220 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093892852 2644 0 0  ; unlock 2644+0 bytes, 644 not silent, fnv 24bc5ba86ea444b9
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 69
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 23864 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093895496 2648 0 0  ; unlock 2648+0 bytes, 644 not silent, fnv 72b1fa4224b62866
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 70
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 26512 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093898144 2644 0 0  ; unlock 2644+0 bytes, 629 not silent, fnv 8853bad85560c4dd
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 71
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 29156 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093900788 2648 0 0  ; unlock 2648+0 bytes, 625 not silent, fnv a4c9bff3a8b1a781
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 72
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 31804 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093903436 2644 0 0  ; unlock 2644+0 bytes, 626 not silent, fnv bd47f28161877549
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 73
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 34448 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093906080 2648 0 0  ; unlock 2648+0 bytes, 633 not silent, fnv 7b39a70b8d2aab6c
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 74
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 37096 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093908728 2644 0 0  ; unlock 2644+0 bytes, 621 not silent, fnv 585d570d8e859ee4
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 75
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 39740 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093911372 2648 0 0  ; unlock 2648+0 bytes, 610 not silent, fnv 54ad26ea21756306
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 76
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 42388 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093914020 2644 0 0  ; unlock 2644+0 bytes, 590 not silent, fnv 14cc30c42873efa6
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 77
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 45032 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093916664 2648 0 0  ; unlock 2648+0 bytes, 553 not silent, fnv b24c9e74e97bd360
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 78
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 47680 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093919312 2644 0 0  ; unlock 2644+0 bytes, 304 not silent, fnv 4e3c25739ad6c652
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapFree 0 0 4095189200
+import KERNEL32.dll!HeapAlloc 0 0 16
+import USER32.dll!PostMessageA 1 2030 0 4095213824
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import WINMM.dll!mmioClose 4098 0
+import KERNEL32.dll!HeapFree 0 0 4095213808
+import KERNEL32.dll!HeapFree 0 0 4095213824
+tick 79
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 50324 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093921956 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 80
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 52972 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093924604 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 81
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 55616 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093927248 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 82
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 58264 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093929896 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 83
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 60908 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093932540 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 84
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 63556 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093935188 1980 4093871632 664  ; unlock 1980+664 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 85
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 664 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093872296 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 86
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 3312 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093874944 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 87
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 5956 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093877588 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 88
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 8604 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093880236 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 89
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 11248 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093882880 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!playSound 24 100 100 0 0
+import WINMM.dll!mmioOpenA 4094629012 0 0  ; file sounds/effects/boing.wav
+import KERNEL32.dll!HeapAlloc 0 0 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4099 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844752 0
+import WINMM.dll!mmioDescend 4099 4273012608 4273012568 16
+import WINMM.dll!mmioRead 4099 4094629296 16
+import WINMM.dll!mmioAscend 4099 4273012608 0
+import WINMM.dll!mmioStringToFOURCCA 268844744 0
+import WINMM.dll!mmioDescend 4099 4273012588 4273012568 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4099 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4099 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844736 0
+import WINMM.dll!mmioDescend 4099 4273012628 4273012568 16
+import WINMM.dll!mmioAscend 4099 4273012568 0
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4099 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4099 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844728 0
+import WINMM.dll!mmioDescend 4099 4273012648 4273012568 16
+import WINMM.dll!mmioSetBuffer 4099 0 24578 0
+import WINMM.dll!mmioGetInfo 4099 4094628924 0
+import WINMM.dll!mmioAdvance 4099 4094628924 0
+import WINMM.dll!mmioAdvance 4099 4094628924 0
+import KERNEL32.dll!HeapAlloc 0 0 16
+tick 90
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!HeapFree 0 0 4095213808
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 13896 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093885528 2644 0 0  ; unlock 2644+0 bytes, 625 not silent, fnv aa9abe7ba10c5a44
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 91
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 16540 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093888172 2648 0 0  ; unlock 2648+0 bytes, 645 not silent, fnv ec8e8316f1c1aa7d
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 92
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 19188 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093890820 2644 0 0  ; unlock 2644+0 bytes, 647 not silent, fnv 5b56791ee2535cd4
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 93
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 21832 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093893464 2648 0 0  ; unlock 2648+0 bytes, 660 not silent, fnv 1abac9276ebc6676
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 94
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 24480 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093896112 2644 0 0  ; unlock 2644+0 bytes, 653 not silent, fnv 49f35a5b1f7515b0
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 95
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 27124 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093898756 2648 0 0  ; unlock 2648+0 bytes, 650 not silent, fnv 1ff0e1e6e8f246ac
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 96
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 29772 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093901404 2644 0 0  ; unlock 2644+0 bytes, 646 not silent, fnv 6616343726185392
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 97
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 32416 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093904048 2648 0 0  ; unlock 2648+0 bytes, 645 not silent, fnv eeba2ac2013b28be
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 98
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 35064 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093906696 2644 0 0  ; unlock 2644+0 bytes, 644 not silent, fnv f795ee37ac122de9
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 99
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 37708 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093909340 2648 0 0  ; unlock 2648+0 bytes, 644 not silent, fnv f51cfea8b9d8185e
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 100
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 40356 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093911988 2644 0 0  ; unlock 2644+0 bytes, 629 not silent, fnv 937cd8edbe44da5d
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 101
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 43000 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093914632 2648 0 0  ; unlock 2648+0 bytes, 625 not silent, fnv 721b05ba5fe2dce1
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 102
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 45648 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093917280 2644 0 0  ; unlock 2644+0 bytes, 626 not silent, fnv d847bf7fd0308b99
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 103
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 48292 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093919924 2648 0 0  ; unlock 2648+0 bytes, 633 not silent, fnv ad337342124bf614
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 104
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 50940 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093922572 2644 0 0  ; unlock 2644+0 bytes, 621 not silent, fnv 54841e88bd67795c
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 105
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 53584 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093925216 2648 0 0  ; unlock 2648+0 bytes, 610 not silent, fnv 5f51302cc7a8c37e
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 106
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 56232 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093927864 2644 0 0  ; unlock 2644+0 bytes, 590 not silent, fnv 75b5998fe06d07fe
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 107
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 58876 2648 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093930508 2648 0 0  ; unlock 2648+0 bytes, 553 not silent, fnv 9099eae63df5aca8
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 108
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+import WINMM.dll!timeGetTime
+com 2.11 4273995968 61524 2644 4273012344 4273012316 4273012340 4273012320 0
+com 2.19 4273995968 4093933156 2644 0 0  ; unlock 2644+0 bytes, 304 not silent, fnv 0e483f6d3c05cbca
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapFree 0 0 4095213824
+import KERNEL32.dll!HeapAlloc 0 0 16
+import USER32.dll!PostMessageA 1 2030 0 4095213808
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import WINMM.dll!mmioClose 4099 0
+import KERNEL32.dll!HeapFree 0 0 4095189200
+import KERNEL32.dll!HeapFree 0 0 4095213808
+tick 109
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 64168 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093935800 1368 4093871632 1280  ; unlock 1368+1280 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 110
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 1280 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093872912 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 111
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 3924 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093875556 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 112
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 6572 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093878204 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 113
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 9216 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093880848 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 114
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 11864 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093883496 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 115
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 14508 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093886140 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 116
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 17156 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093888788 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 117
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 19800 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093891432 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 118
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 22448 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093894080 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 119
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 25092 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093896724 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!playSound 44 100 100 0 0
+import WINMM.dll!mmioOpenA 4094749412 0 0  ; file sounds/buy2short.wav
+import KERNEL32.dll!HeapAlloc 0 0 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4100 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844752 0
+import WINMM.dll!mmioDescend 4100 4273012608 4273012568 16
+import WINMM.dll!mmioRead 4100 4094749696 16
+import WINMM.dll!mmioAscend 4100 4273012608 0
+import WINMM.dll!mmioStringToFOURCCA 268844744 0
+import WINMM.dll!mmioDescend 4100 4273012588 4273012568 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4100 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4100 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844736 0
+import WINMM.dll!mmioDescend 4100 4273012628 4273012568 16
+import WINMM.dll!mmioAscend 4100 4273012568 0
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4100 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4100 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844728 0
+import WINMM.dll!mmioDescend 4100 4273012648 4273012568 16
+import KERNEL32.dll!HeapAlloc 0 0 224
+com 1.3 4273995776 4095287728 4095287712 0
+com 2.3 4273996080 4095287764
+com 2.5 4273996080 4095287784 18 0
+com 2.11 4273996080 0 1118108 4273012544 4273012528 4273012536 4273012532 0
+import WINMM.dll!mmioRead 4100 4095287840 1118108
+com 2.19 4273996080 4095287840 1118108 0 0  ; unlock 1118108+0 bytes, 1061225 not silent, fnv ff087be3a2583b12
+import WINMM.dll!mmioClose 4100 0
+import KERNEL32.dll!HeapFree 0 0 4095213824
+import KERNEL32.dll!HeapAlloc 0 0 16
+tick 120
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapAlloc 0 0 16
+com 2.9 4273996080 4273012372
+com 2.17 4273996080 22050
+import WINMM.dll!timeGetTime
+com 2.12 4273996080 0 0 0
+com 2.5 4273996080 4095287784 18 0
+import KERNEL32.dll!HeapFree 0 0 4095189200
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 27740 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093899372 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 121
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 30384 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093902016 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 122
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 33032 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093904664 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 123
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 35676 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093907308 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 124
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 38324 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093909956 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 125
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 40968 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093912600 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 126
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 43616 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093915248 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 127
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 46260 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093917892 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 128
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 48908 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093920540 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 129
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 51552 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093923184 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 130
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 54200 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093925832 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 131
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 56844 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093928476 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 132
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 59492 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093931124 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 133
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 62136 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093933768 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 134
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 64784 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093936416 752 4093871632 1892  ; unlock 752+1892 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 135
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 1892 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093873524 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 136
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 4540 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093876172 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 137
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 7184 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093878816 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 138
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 9832 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093881464 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 139
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 12476 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093884108 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 140
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 15124 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093886756 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 141
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 17768 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093889400 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 142
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 20416 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093892048 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 143
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 23060 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093894692 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 144
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 25708 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093897340 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 145
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 28352 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093899984 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 146
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 31000 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093902632 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 147
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 33644 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093905276 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 148
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 36292 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093907924 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 149
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 38936 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093910568 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 150
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 41584 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093913216 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 151
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 44228 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093915860 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 152
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 46876 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093918508 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 153
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 49520 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093921152 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 154
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 52168 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093923800 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 155
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 54812 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093926444 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 156
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 57460 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093929092 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 157
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 60104 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093931736 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 158
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 62752 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093934384 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 159
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 65396 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093937028 140 4093871632 2508  ; unlock 140+2508 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 160
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 2508 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093874140 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 161
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 5152 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093876784 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 162
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 7800 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093879432 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 163
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 10444 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093882076 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 164
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 13092 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093884724 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 165
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 15736 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093887368 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 166
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 18384 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093890016 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 167
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 21028 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093892660 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 168
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 23676 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093895308 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 169
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 26320 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093897952 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 170
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 28968 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093900600 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 171
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 31612 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093903244 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 172
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 34260 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093905892 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 173
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 36904 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093908536 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 174
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 39552 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093911184 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 175
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 42196 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093913828 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 176
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 44844 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093916476 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 177
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 47488 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093919120 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 178
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 50136 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093921768 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 179
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.11 4273995968 52780 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093924412 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!startSoundSlot 44
+tick 180
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294967017
+com 2.11 4273995968 55428 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093927060 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 181
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966985
+com 2.11 4273995968 58072 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093929704 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 182
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966952
+com 2.11 4273995968 60720 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093932352 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 183
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966918
+com 2.11 4273995968 63364 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093934996 2172 4093871632 476  ; unlock 2172+476 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 184
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966883
+com 2.11 4273995968 476 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093872108 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 185
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966834
+com 2.11 4273995968 3120 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093874752 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 186
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966796
+com 2.11 4273995968 5768 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093877400 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 187
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966756
+com 2.11 4273995968 8412 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093880044 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 188
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966715
+com 2.11 4273995968 11060 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093882692 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 189
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966672
+com 2.11 4273995968 13704 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093885336 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 190
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966627
+com 2.11 4273995968 16352 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093887984 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 191
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966579
+com 2.11 4273995968 18996 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093890628 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 192
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966530
+com 2.11 4273995968 21644 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093893276 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 193
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966478
+com 2.11 4273995968 24288 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093895920 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 194
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966423
+com 2.11 4273995968 26936 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093898568 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 195
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966364
+com 2.11 4273995968 29580 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093901212 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 196
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966302
+com 2.11 4273995968 32228 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093903860 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 197
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966237
+com 2.11 4273995968 34872 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093906504 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 198
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966166
+com 2.11 4273995968 37520 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093909152 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 199
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966090
+com 2.11 4273995968 40164 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093911796 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 200
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294966008
+com 2.11 4273995968 42812 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093914444 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 201
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965918
+com 2.11 4273995968 45456 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093917088 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 202
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965820
+com 2.11 4273995968 48104 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093919736 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 203
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965710
+com 2.11 4273995968 50748 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093922380 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 204
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965588
+com 2.11 4273995968 53396 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093925028 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 205
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965448
+com 2.11 4273995968 56040 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093927672 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 206
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965286
+com 2.11 4273995968 58688 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093930320 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 207
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294965091
+com 2.11 4273995968 61332 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093932964 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 208
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294964850
+com 2.11 4273995968 63980 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093935612 1556 4093871632 1088  ; unlock 1556+1088 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 209
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294964532
+com 2.11 4273995968 1088 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093872720 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 210
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294964062
+com 2.11 4273995968 3736 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093875368 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 211
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294963145
+com 2.11 4273995968 6380 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093878012 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 212
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.15 4273996080 4294957296
+com 2.11 4273995968 9028 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093880660 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 213
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996080 4273012336
+com 2.18 4273996080
+com 2.11 4273995968 11672 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093883304 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapFree 0 0 4095213808
+import KERNEL32.dll!HeapAlloc 0 0 16
+import USER32.dll!PostMessageA 1 2030 0 4095213824
+import KERNEL32.dll!LeaveCriticalSection 269175184
+com 2.18 4273996080
+com 2.2 4273996080
+import KERNEL32.dll!HeapFree 0 0 4095287616
+import KERNEL32.dll!HeapFree 0 0 4095213824
+tick 214
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 14320 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093885952 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 215
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 16964 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093888596 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 216
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 19612 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093891244 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 217
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 22256 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093893888 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 218
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 24904 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093896536 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 219
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 27548 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093899180 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 220
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 30196 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093901828 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 221
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 32840 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093904472 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 222
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 35488 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093907120 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 223
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 38132 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093909764 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 224
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 40780 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093912412 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 225
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 43424 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093915056 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 226
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 46072 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093917704 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 227
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 48716 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093920348 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 228
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 51364 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093922996 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 229
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 54008 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093925640 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!playSound 128 100 0 0 0
+import WINMM.dll!mmioOpenA 4094791284 0 0  ; file sounds/Music Idea.wav
+import KERNEL32.dll!HeapAlloc 0 0 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4101 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844752 0
+import WINMM.dll!mmioDescend 4101 4273012608 4273012568 16
+import WINMM.dll!mmioRead 4101 4094791568 16
+import WINMM.dll!mmioAscend 4101 4273012608 0
+import WINMM.dll!mmioStringToFOURCCA 268844744 0
+import WINMM.dll!mmioDescend 4101 4273012588 4273012568 16
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4101 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4101 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844736 0
+import WINMM.dll!mmioDescend 4101 4273012628 4273012568 16
+import WINMM.dll!mmioAscend 4101 4273012568 0
+import WINMM.dll!mmioStringToFOURCCA 268844768 0
+import WINMM.dll!mmioSeek 4101 0 0
+import WINMM.dll!mmioStringToFOURCCA 268844760 0
+import WINMM.dll!mmioDescend 4101 4273012568 0 32
+import WINMM.dll!mmioStringToFOURCCA 268844728 0
+import WINMM.dll!mmioDescend 4101 4273012648 4273012568 16
+import KERNEL32.dll!HeapAlloc 0 0 224
+com 1.3 4273995776 4095287728 4095287712 0
+com 2.3 4273996192 4095287764
+com 2.5 4273996192 4095287784 18 0
+com 2.11 4273996192 0 4234248 4273012544 4273012528 4273012536 4273012532 0
+import WINMM.dll!mmioRead 4101 4096405952 4234248
+com 2.19 4273996192 4096405952 4234248 0 0  ; unlock 4234248+0 bytes, 4108696 not silent, fnv 63dbe2d6a65d55db
+import WINMM.dll!mmioClose 4101 0
+import KERNEL32.dll!HeapFree 0 0 4095189200
+import KERNEL32.dll!HeapAlloc 0 0 16
+tick 230
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapAlloc 0 0 16
+com 2.9 4273996192 4273012372
+com 2.17 4273996192 22050
+import WINMM.dll!timeGetTime
+com 2.12 4273996192 0 0 0
+com 2.5 4273996192 4095287784 18 0
+import KERNEL32.dll!HeapFree 0 0 4095213808
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 56656 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093928288 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 231
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 59300 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093930932 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 232
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 61948 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093933580 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 233
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 64592 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093936224 944 4093871632 1704  ; unlock 944+1704 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 234
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 1704 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093873336 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 235
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 4348 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093875980 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 236
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 6996 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093878628 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 237
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 9640 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093881272 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 238
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 12288 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093883920 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 239
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 14932 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093886564 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 240
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 17580 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093889212 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 241
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 20224 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093891856 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 242
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 22872 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093894504 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 243
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 25516 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093897148 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 244
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 28164 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093899796 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 245
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 30808 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093902440 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 246
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 33456 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093905088 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 247
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 36100 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093907732 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 248
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 38748 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093910380 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 249
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 41392 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093913024 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 250
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 44040 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093915672 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 251
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 46684 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093918316 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 252
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 49332 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093920964 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 253
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 51976 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093923608 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 254
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 54624 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093926256 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 255
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 57268 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093928900 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 256
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 59916 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093931548 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 257
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 62560 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093934192 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 258
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 65208 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093936840 328 4093871632 2316  ; unlock 328+2316 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 259
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 2316 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093873948 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 260
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 4964 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093876596 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 261
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 7608 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093879240 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 262
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 10256 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093881888 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 263
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 12900 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093884532 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 264
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 15548 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093887180 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 265
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 18192 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093889824 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 266
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 20840 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093892472 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 267
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 23484 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093895116 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 268
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 26132 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093897764 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 269
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 28776 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093900408 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 270
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 31424 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093903056 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 271
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 34068 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093905700 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 272
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 36716 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093908348 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 273
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 39360 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093910992 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 274
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 42008 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093913640 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 275
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 44652 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093916284 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 276
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 47300 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093918932 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 277
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 49944 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093921576 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 278
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 52592 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093924224 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 279
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 55236 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093926868 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 280
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 57884 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093929516 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 281
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 60528 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093932160 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 282
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 63176 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093934808 2360 4093871632 284  ; unlock 2360+284 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 283
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 284 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093871916 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 284
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 2932 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093874564 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 285
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 5576 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093877208 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 286
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 8224 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093879856 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 287
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 10868 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093882500 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 288
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 13516 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093885148 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 289
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.11 4273995968 16160 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093887792 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import golf_clean.exe!startSoundSlot 128
+tick 290
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294967017
+com 2.11 4273995968 18808 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093890440 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 291
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966985
+com 2.11 4273995968 21452 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093893084 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 292
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966952
+com 2.11 4273995968 24100 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093895732 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 293
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966918
+com 2.11 4273995968 26744 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093898376 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 294
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966883
+com 2.11 4273995968 29392 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093901024 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 295
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966834
+com 2.11 4273995968 32036 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093903668 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 296
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966796
+com 2.11 4273995968 34684 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093906316 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 297
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966756
+com 2.11 4273995968 37328 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093908960 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 298
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966715
+com 2.11 4273995968 39976 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093911608 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 299
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966672
+com 2.11 4273995968 42620 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093914252 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 300
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966627
+com 2.11 4273995968 45268 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093916900 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 301
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966579
+com 2.11 4273995968 47912 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093919544 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 302
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966530
+com 2.11 4273995968 50560 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093922192 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 303
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966478
+com 2.11 4273995968 53204 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093924836 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 304
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966423
+com 2.11 4273995968 55852 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093927484 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 305
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966364
+com 2.11 4273995968 58496 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093930128 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 306
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966302
+com 2.11 4273995968 61144 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093932776 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 307
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966237
+com 2.11 4273995968 63788 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093935420 1748 4093871632 900  ; unlock 1748+900 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 308
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966166
+com 2.11 4273995968 900 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093872532 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 309
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966090
+com 2.11 4273995968 3544 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093875176 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 310
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294966008
+com 2.11 4273995968 6192 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093877824 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 311
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965918
+com 2.11 4273995968 8836 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093880468 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 312
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965820
+com 2.11 4273995968 11484 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093883116 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 313
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965710
+com 2.11 4273995968 14128 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093885760 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 314
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965588
+com 2.11 4273995968 16776 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093888408 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 315
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965448
+com 2.11 4273995968 19420 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093891052 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 316
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965286
+com 2.11 4273995968 22068 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093893700 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 317
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294965091
+com 2.11 4273995968 24712 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093896344 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 318
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294964850
+com 2.11 4273995968 27360 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093898992 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 319
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294964532
+com 2.11 4273995968 30004 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093901636 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 320
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294964062
+com 2.11 4273995968 32652 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093904284 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 321
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294963145
+com 2.11 4273995968 35296 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093906928 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 322
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.15 4273996192 4294957296
+com 2.11 4273995968 37944 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093909576 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 323
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.9 4273996192 4273012336
+com 2.18 4273996192
+com 2.11 4273995968 40588 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093912220 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!HeapFree 0 0 4095213824
+import KERNEL32.dll!HeapAlloc 0 0 16
+import USER32.dll!PostMessageA 1 2030 0 4095189200
+import KERNEL32.dll!LeaveCriticalSection 269175184
+com 2.18 4273996192
+com 2.2 4273996192
+import KERNEL32.dll!HeapFree 0 0 4095287616
+import KERNEL32.dll!HeapFree 0 0 4095189200
+tick 324
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 43236 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093914868 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 325
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 45880 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093917512 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 326
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 48528 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093920160 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 327
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 51172 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093922804 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 328
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 53820 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093925452 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 329
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 56464 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093928096 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 330
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 59112 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093930744 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 331
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 61756 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093933388 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 332
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 64404 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093936036 1132 4093871632 1512  ; unlock 1132+1512 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 333
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 1512 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093873144 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 334
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 4160 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093875792 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 335
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 6804 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093878436 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 336
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 9452 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093881084 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 337
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 12096 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093883728 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 338
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 14744 2644 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093886376 2644 0 0  ; unlock 2644+0 bytes, 0 not silent, fnv 7c86c61f86de70f3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184
+tick 339
+import KERNEL32.dll!EnterCriticalSection 269175184
+import WINMM.dll!timeGetTime
+import WINMM.dll!timeGetTime
+com 2.4 4273995968 4273012308 4273012312
+com 2.11 4273995968 17388 2648 4273012384 4273012380 4273012368 4273012376 0
+com 2.19 4273995968 4093889020 2648 0 0  ; unlock 2648+0 bytes, 0 not silent, fnv 02cfd07dc33f6da3
+import WINMM.dll!timeGetTime
+import KERNEL32.dll!LeaveCriticalSection 269175184

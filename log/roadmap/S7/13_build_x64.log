@@ -1,0 +1,27 @@
+synced port/src/sim/audio_exe.cpp
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: no FreeType (module fttext throws MissingResource)
+-- Configuring done (0.1s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_w4_root/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  audio_exe.cpp
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\Release\portsim.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_w4_root/port/CMakeLists.txt
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_w4_root/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_w4_root/port/build/x64/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\Release\portsim_c.dll
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\app\Release\portapp_input.lib
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\Release\portsim.lib
+  portapp_audio.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\app\Release\portapp_audio.lib
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\app\Release\simgolf_port.exe
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\Release\portsim.lib
+  portapp_audio.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\app\Release\portapp_audio.lib
+  simgolf_audio_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root\port\build\x64\app\Release\simgolf_audio_check.exe

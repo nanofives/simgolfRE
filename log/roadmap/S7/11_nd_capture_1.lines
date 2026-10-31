@@ -1,0 +1,27 @@
+import portsim!frame 0
+import golf_clean.exe!arrayStaticInit_448160
+import golf_clean.exe!initSound 1 138
+import KERNEL32.dll!HeapAlloc 0 0 96
+import WINMM.dll!timeGetDevCaps 4093640772 8
+import KERNEL32.dll!InitializeCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16480
+import KERNEL32.dll!EnterCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16
+import KERNEL32.dll!LeaveCriticalSection 269175184
+import KERNEL32.dll!HeapAlloc 0 0 16864
+import USER32.dll!SetWindowLongA 1 4294967292 268445167
+import KERNEL32.dll!HeapAlloc 0 0 448
+import DSOUND.dll!#2 268441507 4093674160
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 32
+import KERNEL32.dll!HeapAlloc 0 0 16
+import ole32.dll!CoInitialize 0
+import ole32.dll!CoCreateInstance 268818044 0 1 268817884 4093674160
+com 1.10 4273995776 0
+com 1.2 4273995776
+import KERNEL32.dll!HeapFree 0 0 4093674688
+import KERNEL32.dll!HeapFree 0 0 4093674720
+import KERNEL32.dll!HeapFree 0 0 4093674656
+import ole32.dll!CoUninitialize
+import KERNEL32.dll!HeapFree 0 0 4093674160
+import KERNEL32.dll!HeapFree 0 0 4093657296

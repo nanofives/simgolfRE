@@ -1,0 +1,10 @@
+synced port/app/audio_out.h
+synced port/app/audio_out.cpp
+synced port/app/ds_sink.h
+synced port/app/ds_sink.cpp
+synced port/app/tools/audio_check.cpp
+synced port/app/main.cpp
+synced port/app/CMakeLists.txt
+synced port/test/test_app_audio.py
+synced port/src/sim/audio_exe.cpp
+synced port/include/portsim/sim/audio_exe.h

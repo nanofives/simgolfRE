@@ -1,0 +1,24 @@
+== app_replay_win32 start 2026-10-30 03:24:12 free=33GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_11_root
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 14 items
+
+port/test/test_app_replay.py::test_recording_replays_x64[hole] PASSED    [  7%]
+port/test/test_app_replay.py::test_recording_replays_x64[saveload] PASSED [ 14%]
+port/test/test_app_replay.py::test_recording_replays_x64[report] PASSED  [ 21%]
+port/test/test_app_replay.py::test_recording_replays_win32[hole] PASSED  [ 28%]
+port/test/test_app_replay.py::test_recording_replays_win32[saveload] PASSED [ 35%]
+port/test/test_app_replay.py::test_recording_replays_win32[report] PASSED [ 42%]
+port/test/test_app_replay.py::test_backends_identical PASSED             [ 50%]
+port/test/test_app_replay.py::test_recordings_cover_the_inputs PASSED    [ 57%]
+port/test/test_app_replay.py::test_control_input_byte_changed PASSED     [ 64%]
+port/test/test_app_replay.py::test_control_framehash_record_changed[hash] PASSED [ 71%]
+port/test/test_app_replay.py::test_control_framehash_record_changed[T] PASSED [ 78%]
+port/test/test_app_replay.py::test_h1_dispatches_hold_one_mouse_message[hole] PASSED [ 85%]
+port/test/test_app_replay.py::test_h1_dispatches_hold_one_mouse_message[saveload] PASSED [ 92%]
+port/test/test_app_replay.py::test_h1_dispatches_hold_one_mouse_message[report] PASSED [100%]
+
+============================= 14 passed in 21.75s =============================

@@ -1,0 +1,4 @@
+== replay_win32 start 2026-10-30 13:51:25 free=29GB
+hole                     PASS  records 340/340 code 0 first None (3.7 s)
+report                   PASS  records 205/205 code 0 first None (1.9 s)
+saveload                 PASS  records 266/266 code 0 first None (2.1 s)

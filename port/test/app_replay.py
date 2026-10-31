@@ -101,14 +101,42 @@ def compare(expected: list[tuple[int, list[int]]], got: dict, names: list[str]) 
     return {"status": status, "records": n, "expected": len(expected), "code": got["code"], "first": first}
 
 
-def gate_one(lib, name: str, trace: bytes | None = None, framehash: bytes | None = None) -> dict:
+def session_switches(session: dict | None) -> dict[str, int]:
+    """S7.12: the defect switches a session ran with (session.json `defects`, every switch with its value). A session written
+    before S7.12 has none: the app then applied no profile, every switch at its default 1 (= profile `original`)."""
+    return {k: int(v) for k, v in ((session or {}).get("defects") or {}).items()}
+
+
+def apply_switches(lib, sw: dict[str, int]) -> None:
+    """every switch back to 1, then the recorded values; a recorded switch the library lacks is an error (nothing changed)"""
+    known = set(lib.defects())
+    bad = sorted(s for s in sw if s not in known)
+    if bad:
+        raise ValueError(f"the recording names switches this library lacks: {', '.join(bad)}")
+    lib.defect_reset()
+    for s, v in sw.items():
+        lib.defect(s, bool(v))
+
+
+def gate_one(lib, name: str, trace: bytes | None = None, framehash: bytes | None = None, session: dict | None = None,
+             switches: dict[str, int] | None = None) -> dict:
+    """the replay runs under the switches the session recorded (session.json beside the recording, or `session`); `switches`
+    overrides them (the S7.12 control); every switch is back at 1 afterwards"""
     d = CORPUS / name
+    if session is None and (d / "session.json").exists():
+        session = json.loads((d / "session.json").read_text())
+    sw = session_switches(session) if switches is None else switches
     names = [o[0] if isinstance(o, (tuple, list)) else o for o in lib.objects("sim")]
     trace = trace if trace is not None else (d / "trace.trace").read_bytes()
     exp = read_framehash(framehash if framehash is not None else (d / "framehash.bin").read_bytes(), len(names))
-    got = replay(lib, trace, len(exp) + 1)
+    apply_switches(lib, sw)
+    try:
+        got = replay(lib, trace, len(exp) + 1)
+    finally:
+        lib.defect_reset()
     r = compare(exp, got, names)
     r["name"] = name
+    r["profile"] = (session or {}).get("profile", "original")
     return r
 
 

@@ -1,0 +1,9 @@
+Files port/build/I20/port/include/portsim/sim/gl_wgl.h and port/build/S7_w4_root/port/include/portsim/sim/gl_wgl.h differ
+Files port/build/I20/port/src/sim/gl_wgl.cpp and port/build/S7_w4_root/port/src/sim/gl_wgl.cpp differ
+Files port/build/I20/port/src/sim/gl_wgl_ref.inc and port/build/S7_w4_root/port/src/sim/gl_wgl_ref.inc differ
+Files port/build/I20/port/test/integrator.py and port/build/S7_w4_root/port/test/integrator.py differ
+Files port/build/I20/port/test/test_gfx_info_panel.py and port/build/S7_w4_root/port/test/test_gfx_info_panel.py differ
+Files port/build/I20/port/test/test_gfx_s3_17.py and port/build/S7_w4_root/port/test/test_gfx_s3_17.py differ
+Files port/build/I20/port/test/test_gfx_s3_18.py and port/build/S7_w4_root/port/test/test_gfx_s3_18.py differ
+Files port/build/I20/port/test/test_gl_wgl.py and port/build/S7_w4_root/port/test/test_gl_wgl.py differ
+Files port/build/I20/port/test/test_gl_wgl_selfcheck.py and port/build/S7_w4_root/port/test/test_gl_wgl_selfcheck.py differ

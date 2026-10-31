@@ -1,0 +1,19 @@
+# S7.10 gate (c): the title menu's sound requests (port/src/sim/tick_boot.inc BootSetup, tick_menu.inc Session) with click
+# sounds and a panned static-buffer sound (slot 0x2c), driven through simgolf_audio_check `script` (port/app/tools/audio_check.cpp); 1 tick = 30 ms.
+req loadSoundTable
+req playSound 0x18 100 0 0 0
+ticks 30
+req playSound 0x18 60 0 0 0
+ticks 30
+req playSound 0x18 100 -100 0 0
+ticks 30
+req playSound 0x18 100 100 0 0
+ticks 30
+req playSound 0x2c 100 100 0 0
+ticks 60
+req startSoundSlot 0x2c
+ticks 50
+req playSound 0x80 100 0 0 0
+ticks 60
+req startSoundSlot 0x80
+ticks 50

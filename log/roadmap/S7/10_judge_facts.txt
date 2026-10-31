@@ -1,0 +1,15 @@
+bad []
+rate 44100
+frames 449820
+click0 0.4596 [0.7891, 0.7891] [1.0, 1.0]
+click1 1.3297 [0.4766, 0.4766] [1.0, 1.0]
+click2 2.2297 [1.0, 0.0] [1.0, 0.0]
+click3 3.1297 [-0.0, 1.0] [-0.00305, 0.99998]
+buy2short 3.63 [1.0, 1.0] [1.0, 0.99964]
+buy2short_fade [0.795, 0.634, 0.541, 0.462, 0.376, 0.311, 0.225, 0.156, 0.089, 0.029, 0.0, 0.0, 0.0, 0.0, 0.0, 0.004]
+Music Idea 6.93 [1.0, 1.0] [1.0, 1.0]
+Music Idea_fade [0.809, 0.639, 0.541, 0.46, 0.372, 0.306, 0.223, 0.153, 0.08, 0.019, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+control unlock: 6 failures  ['click0: not found after 0.0 s (None)', 'click1: not found after 0.9 s (None)']
+control volume: 2 failures  ['buy2short: fade [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.476, 0.0, 0.0, 0.0, 0.0, 0.004]', 'Music Idea: fade [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.555, 0.0, 0.0, 0.0, 0.0, 0.0]']
+control pan: 0 failures capture identical []
+control frequency: 0 failures capture identical []

@@ -1,0 +1,46 @@
+switch 1 152 names 31 absent
+   sounds\Celebs\Marshal Male.wav
+   sounds\Celebs\mGREETING.wav
+   sounds\Golf sfx\Ball Drop Fairway.wav
+   sounds\Golf sfx\Ball Drop Sand.wav
+   sounds\Golf sfx\Ball In Hole.wav
+   sounds\Golf sfx\Ball Tree Leaves.wav
+   sounds\Golf sfx\Ball Tree.wav
+   sounds\Golf sfx\Ball Tree2.wav
+   sounds\Golf sfx\Ball Water.wav
+   sounds\Golf sfx\Chip.wav
+   sounds\Golf sfx\Drive With Ball.wav
+   sounds\Golf sfx\Golf Swing NoAcc.wav
+   sounds\Golf sfx\Golf Swing NoImag M.wav
+   sounds\Golf sfx\Golf Swing Perfect FM.wav
+   sounds\Golf sfx\Golf Swing Perfect M.wav
+   sounds\Golf sfx\Iron.wav
+   sounds\Golf sfx\Putt.wav
+   sounds\Golf sfx\Tiger Bounce 3.wav
+   sounds\Golf sfx\Tiger Swing 1.wav
+   sounds\effects\Alligator.wav
+   sounds\effects\forest2.wav
+   sounds\effects\lake 1.wav
+   sounds\effects\wind 1.wav
+   sounds\emotion\PLS Sid mix.wav
+   sounds\golf sfx\Cart Away.wav
+   sounds\music\Desert Music\Spanish Guitar 1.wav
+   sounds\music\Desert Music\Spanish Guitar 3.wav
+   sounds\music\Links Music\Bagpipe2.wav
+   sounds\music\Links Music\Harpiscord 1.wav
+   sounds\music\Tropical Music\Steel Drum 1a.wav
+   sounds\music\Tropical Music\Steel Drums 3.wav
+switch 0 152 names 13 absent
+   sounds\Celebs\Marshal Male.wav
+   sounds\Celebs\mGREETING.wav
+   sounds\effects\Alligator.wav
+   sounds\effects\forest2.wav
+   sounds\effects\lake 1.wav
+   sounds\effects\wind 1.wav
+   sounds\emotion\PLS Sid mix.wav
+   sounds\music\Desert Music\Spanish Guitar 1.wav
+   sounds\music\Desert Music\Spanish Guitar 3.wav
+   sounds\music\Links Music\Bagpipe2.wav
+   sounds\music\Links Music\Harpiscord 1.wav
+   sounds\music\Tropical Music\Steel Drum 1a.wav
+   sounds\music\Tropical Music\Steel Drums 3.wav

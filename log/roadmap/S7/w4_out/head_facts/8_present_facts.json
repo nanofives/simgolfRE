@@ -1,0 +1,47 @@
+{
+ "long_memory": {
+  "growth_bound": 4337664,
+  "growth_keep": 139272192,
+  "records": 51092,
+  "bound_seconds": 910.0,
+  "keep_seconds": 767.6,
+  "bound_memory": {
+   "start": {
+    "frame": 0,
+    "working_set": 173674496,
+    "peak_working_set": 211791872,
+    "private_bytes": 199897088,
+    "terrain_log": 0
+   },
+   "end": {
+    "frame": 51092,
+    "working_set": 287633408,
+    "peak_working_set": 311513088,
+    "private_bytes": 336195584,
+    "terrain_log": 0
+   },
+   "samples": 54
+  },
+  "keep_memory": {
+   "start": {
+    "frame": 0,
+    "working_set": 173645824,
+    "peak_working_set": 211767296,
+    "private_bytes": 199892992,
+    "terrain_log": 0
+   },
+   "end": {
+    "frame": 51092,
+    "working_set": 390762496,
+    "peak_working_set": 496144384,
+    "private_bytes": 479842304,
+    "terrain_log": 25671
+   },
+   "samples": 54
+  },
+  "terrain_calls": 25671,
+  "keep_terrain_log_end": 25671,
+  "trace_bytes": 12746518,
+  "spilled_events": 367704
+ }
+}

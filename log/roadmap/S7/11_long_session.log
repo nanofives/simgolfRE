@@ -1,0 +1,5 @@
+rc=0 wall_s=612
+{"mode":"model","requests":2359,"replayed":2360,"failed":0,"ticks":20337,"delivered":0,"dropped":41,"late_ticks":0,"skipped_periods":0,"tick_span_ns":610063164500,"tick_ns_total":29388579500,"tick_ns_max":2321800,"buffers":5,"real_buffers":0,"real_failures":0,"init_eax":0,"sound_ready":1,"device_less":false,"thread_ended":false,"dropped_requests":0,"closed_early":false,"closed_drops":0,"window_at_stop":-1,"no_device_answers":0,"heap_arena_bytes":14453616,"heap_live_bytes":14265124,"heap_live_blocks":573,"heap_peak_live_bytes":14452724,"heap_peak_arena_bytes":14452944,"handles_before":104,"threads_before":4,"handles_after":109,"threads_after":2,"threads_added":1,"first_error":"","first_failure":""}
+DONE live-trace records=51092 code=0 stop=host presents=51109 snapshots=0
+
+[exited with code 0]

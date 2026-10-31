@@ -7,7 +7,7 @@ game slots: none; heavy slot RELEASED 2026-10-30 14:20
 waves 1-3: 9 of 9 accepted and merged (37e58e96 holds them)
 gate wave 4: (a) device run through the app sink = $device 4b6ed61a; (b) app tests / segments / boot / app replay unchanged; (c) output capture vs install WAVs, controls RED; (d) Mariano listens
 U range wave 4: U-1686..U-1699 (U-1600..U-1685 are taken)
-last event: 2026-10-30 15:35 S7.13 gated and folded into MERGE_w4 / files_w4.txt; idle until the I20 verdict
+last event: 2026-10-30 wave 5 (picker) WITHDRAWN by Mariano (meant for SimCity): S7.14 / S7.15 withdrawn, log/roadmap/S7/PICKER.md kept as a plan only; idle until I20's verdict, then gate (d) listening
 
 ## Waves 1-3 (done)
 

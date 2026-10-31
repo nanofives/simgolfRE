@@ -1,0 +1,13 @@
+arch	session	run	ticks	mean_ms	max_ms
+x64	device	0	40	17.229	24.323
+x64	device	1	40	17.100	21.236
+x64	device	2	40	16.471	17.696
+x64	title	0	340	0.105	0.590
+x64	title	1	340	0.108	0.679
+x64	title	2	340	0.101	0.420
+w32	device	0	40	32.313	41.491
+w32	device	1	40	36.946	122.268
+w32	device	2	40	32.547	43.945
+w32	title	0	340	0.254	1.123
+w32	title	1	340	0.254	0.991
+w32	title	2	340	0.240	0.728

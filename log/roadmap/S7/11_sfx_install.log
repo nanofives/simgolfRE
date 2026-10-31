@@ -1,0 +1,14 @@
+{
+ "original": {
+  "lines": 13020,
+  "mmioOpen": 211,
+  "CreateSoundBuffer": 14,
+  "unlocks_not_silent": 51
+ },
+ "golf_sfx_renamed": {
+  "lines": 14309,
+  "mmioOpen": 229,
+  "CreateSoundBuffer": 14,
+  "unlocks_not_silent": 51
+ }
+}

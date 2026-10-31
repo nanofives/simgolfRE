@@ -1,0 +1,210 @@
++
++
++
++
++
++
++
++
++
++
++                                            sizeof(kDefects) / sizeof(kDefects[0])};
++            if (DeviceModel *dm = device_model(c)) dm->lines.push_back(std::string("missing ") + (m.what ? m.what : "?"));
++        ++(c.files().exists(n) ? file_present : file_absent);
++        const std::string n = golf_sfx_name(c.files(), x);  // S7.12: sound.golfSfxAlias (x itself at switch 1)
++        const std::string x = game_name(cstr(c, a[0]));
++        if (!e.is_dir) return head + d.name + "/" + e.name;
++        if (n != x) ++file_aliased;
++        lines.back() += "  ; file " + x + (n != x ? " (alias " + n + ")" : "") + (c.files().exists(n) ? "" : " (absent)");
++        return c.files().exists(NG(golfSfx) == 2 ? n : golf_sfx_name(c.files(), n));  // S7.12: sound.golfSfxAlias
++      // `Golf sfx`: U-1499; at sound.golfSfxAlias 0 those count too)
++      DeviceModel &d = *dm;
++      DeviceModel *dm = device_model(c);
++      for (const DirEntry &e : f.list(head + d.name + "/" + rest))
++      if (dm == nullptr || dm->timer_cb == 0) throw MissingResource{"a registered timer client"};
++      if (e.observer) e.observer(name, a, n);
++      timer_period = arg(0);
++     "a course effect the exe opens as `sounds\\Golf sfx\\<file>` fails like the original's mmioOpenA on an extracted "
++     "install's `Golf_Sfx` directory (the CD names it `Golf Sfx`); at 0 the install's Golf_Sfx file is opened",
++     &g_defect_golf_sfx},
++    DeviceHeapUsage u;
++    S32(c, k + 4, NG(constructHolders) == 1 ? 0x7eu : 0x7fu);
++    S32(c, k + 8, b + 0xbafacu);
++    S32(c, o + 4, 0);
++    S32(c, o + 8, 0x7f);
++    S32(c, o, b + 0xbaeacu);
++    S<uint8_t>(c, k, 1);
++    auto ds = device_sinks().find(&c);
++    const U4 k = m + 0x24 + i * 0x1cu;
++    const auto x = static_cast<unsigned char>(a[i]), y = static_cast<unsigned char>(b[i]);
++    device_sinks().erase(&ctx);
++    else external_models().erase(&ctx);
++    else if (auto xm = external_models().find(&c); xm != external_models().end()) rs = xm->second;  // S7.10
++    external_models().erase(&c);
++    for (U4 off : {0xcu, 0x10u, 0x14u, 0x18u}) S32(c, k + off, 0);
++    for (U4 off : {0xcu, 0x18u, 0x1cu, 0x10u, 0x14u}) S32(c, o + off, 0);
++    for (const auto &kv : sizes) u.live_bytes += kv.second;
++    if (ch == '\\') ch = '/';
++    if (d.is_dir)
++    if (ds != device_sinks().end() && e.sink == ds->second.get()) rs = ds->second.get();
++    if (fold ? std::tolower(x) != std::tolower(y) : x != y) return false;
++    if (model) external_models()[&ctx] = model;
++    return u;
++    std::lock_guard<std::mutex> lk(g_dev_mu);
++    std::lock_guard<std::mutex> lk(g_dev_mu);
++    std::lock_guard<std::mutex> lk(g_dev_mu);
++    std::lock_guard<std::mutex> lk(g_mu);
++    table().erase(&ctx);
++    u.arena_bytes = chunks.empty() ? 0u : used;
++    u.chunks = static_cast<uint32_t>(chunks.size());
++    u.freed_blocks = static_cast<uint32_t>(freed.size());
++    u.live_blocks = static_cast<uint32_t>(sizes.size());
++    {"audio_exe.constructHolders", "default", "uint32", 0, 0, a_construct_holders, &g_neg_constructHolders},  // S7.10
++    {"audio_exe.golfSfxName", "default", "uint32", 0, 0, a_golf_sfx_name, &g_neg_golfSfx},
++    {"sound.golfSfxAlias", "S7.12 (U-1499, G15)",
++  AudioRequestObserver observer;  // S7.10: the app's request mirror (audio_exe_set_observer)
++  DeviceHeapUsage heap_usage() const override {  // S7.11 (audio_exe.h)
++  ExeCtx &e = ectx(c);
++  ExeCtx &e = ectx(ctx);
++  S32(c, m + 0x20, 0);
++  S32(c, m, b + 0xbaf00u);
++  S32(c, sfx, b + 0xbafb0u);
++  S32(c, voice, b + 0xbb014u);
++  U4 next_handle = 0x1000;   // clock, timer_cb / _user / _id / _period, unanswered: DeviceModel (audio_exe.h)
++  audio_exe_reset(c);
++  audio_exe_reset(ctx);
++  audio_set_sink(ctx, sink);
++  auto strlist = [&](U4 o) {
++  c.files().write("$audio_exe/sfxname.out", std::vector<uint8_t>(n.begin(), n.end()));
++  const U4 b = exe_base(c);
++  const U4 m = music_device(c);
++  const U4 sfx = GSV(c, &GameState::g_sfxDevice), voice = GSV(c, &GameState::g_voiceDevice);
++  const bool fold = NG(golfSfx) != 1;
++  const size_t a = n.find('/'), b = a == std::string::npos ? a : n.find('/', a + 1);
++  const std::string head = n.substr(0, a + 1), rest = n.substr(b + 1);
++  const std::string n = golf_sfx_name(c.files(), x);
++  const std::vector<uint8_t> b = c.files().read_all("$audio_exe/sfxname");
++  construct_holders(c);
++  device_prepare(c);
++  e.sink = sink;
++  external_models().erase(&ctx);
++  for (U4 i = 0; i < 16; ++i) {
++  for (char &ch : x)
++  for (const DirEntry &d : f.list(head + "Golf_Sfx"))  // the install's own spelling (a case-sensitive host)
++  for (size_t i = 0; i < a.size(); ++i) {
++  if (!ieq(n.substr(0, a), "sounds", fold) || !ieq(n.substr(a + 1, b - a - 1), "Golf sfx", fold)) return n;
++  if (SG_DEFECT(g_defect_golf_sfx) || n.empty() || f.exists(n)) return n;
++  if (a.size() != b.size()) return false;
++  if (auto it = device_sinks().find(&c); it != device_sinks().end()) return it->second.get();
++  if (auto it = external_models().find(&c); it != external_models().end()) return it->second;
++  if (b == std::string::npos || b + 1 >= n.size()) return n;
++  if (f.exists(head + "Golf_Sfx/" + rest)) return head + "Golf_Sfx/" + rest;
++  if (prepare) device_prepare(ctx);
++  r.set_u32(c.files().exists(n) ? 1u : 0u);
++  r.set_u32(music_device(c));
++  return m;
++  return n;
++  return nullptr;
++  return true;
++  static std::map<const Ctx *, DeviceModel *> m;
++  std::lock_guard<std::mutex> lk(g_dev_mu);
++  std::lock_guard<std::mutex> lk(g_dev_mu);
++  std::string x(b.begin(), b.end());
++  strlist(m);
++  strlist(sfx);
++  strlist(voice);
++  {
++  {
++  {
++  }
++  }
++  }
++  }
++  }
++  }
++  };
++// (g_sfxDevice): StrList::ctor, [o] = rva 0xbafb0. staticInit_g83af98 -> NodeListC::ctor(g_voiceDevice): StrList::ctor,
++// (its +0x50 held a heap pointer of the recorded process); device 1 = a DeviceSink (else a RecordingSink answering 0) as the
++// ---- S7.10: the application's audio host (audio_exe.h) -------------------------------------------------------------------
++// ---- S7.12: the course-sfx directory (U-1499, roadmap decision G15; log/roadmap/S7/12_notes.md) --------------------------
++// CD's InstallShield header names the directory `Golf Sfx`, which an NTFS install matches case-insensitively, but the extracted
++// S7.10: the CRT's static constructors of the three device holders (written from the instructions, log/roadmap/S7/10_notes.md
++// The exe's sound table names the course effects `sounds\Golf sfx\<file>` (17 strings, one more as `sounds\golf sfx\`). The
++// [b+4] = 0x7f, byte [b] = 1), [o] = NodeList's table (rva 0xbaf00), [o+0x20] = 0. staticInit_g83ad58 -> NodeListB::ctor
++// [o+0x10] / [o+0x14] = 0. staticInit_g83ad80 -> NodeList::ctor(g_musicDevice): StrList::ctor, then the eh vector constructor
++// [o] = rva 0xbb014. neg 1: the buckets' default word is 0x7e.
++// `n` as a GameFiles name (`/` separators). The install's name for an absent `sounds/Golf sfx/<file>` at switch 0, else n.
++// audio_exe.constructHolders(): construct_holders; returns g_musicDevice's address
++// audio_exe.deviceFixture(device): the context's GameState (a segment start image, the exe's device-less state) prepared for a
++// audio_exe.golfSfxName() (S7.12, tests): the name in "$audio_exe/sfxname" (`\` or `/`) as the device sink's mmioOpenA opens
++// device-present start: no sound library, no sound function, empty device holders and sound list, every Snd closed and nameless
++// deviceFixture's preparation of a segment start image (see a_device_fixture)
++// install (unshield writes spaces in directory names as underscores) holds `sounds\Golf_Sfx`, so on it every mmioOpenA of those
++// it, into "$audio_exe/sfxname.out"; returns 1 when that file exists
++// iterator over the 16 buckets of 0x1c at +0x24 (NodeListBucket::ctor: [b+8] = its table rva 0xbafac, [b+0xc..b+0x18] = 0,
++// matched case-insensitively). The simulation never opens a sound file (every segment runs the exe's device-less sound path),
++// module's and the audio core's sink; production mode (no host).
++// names fails in the original and those slots never sound (U-1499). Defect switch sound.golfSfxAlias: 1 (default) = the
++// original's failed open; 0 = when the exe's name is absent, the same file under the install's `Golf_Sfx` (directory and file
++// section 3). StrList::ctor(o): [o] = the StrList table (rva 0xbaeac), [o+4] = 0, [o+8] = 0x7f, [o+0xc] / [o+0x18] / [o+0x1c] /
++// since the app runs a shadow audio context on its own thread beside the sim's
++// so the switch reaches only a device sink.
++// the context's model: its DeviceSink, else the external sink's model, else nullptr
++// the contexts' DeviceSinks (deviceFixture(1)) and the external sinks' models (audio_exe_device_fixture); S7.10: one lock,
++DeviceModel *device_model(const Ctx &c) {
++bool ieq(const std::string &a, const std::string &b, bool fold) {
++class DeviceSink : public DeviceModel {
++const DefectDef kDefects[] = {
++extern const ModuleDef kModule_audio_exe = {"audio_exe", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
++int g_defect_golf_sfx = 1;
++int g_neg_constructHolders = 0;
++int g_neg_golfSfx = 0;  // 1: the directory compared case-sensitively; 2: deviceStep 3's slot check ignores the alias
++namespace {
++std::map<const Ctx *, DeviceModel *> &external_models() {
++std::mutex g_dev_mu;
++std::string golf_sfx_name(const GameFiles &f, const std::string &n) {
++std::unique_ptr<DeviceModel> make_device_model() { return std::make_unique<DeviceSink>(); }
++void a_construct_holders(Ctx &c, const uint32_t *, Ret &r) {
++void a_device_fixture(Ctx &c, const uint32_t *a, Ret &r) {
++void a_golf_sfx_name(Ctx &c, const uint32_t *, Ret &r) {
++void audio_exe_construct_holders(Ctx &ctx) { construct_holders(ctx); }
++void audio_exe_device_fixture(Ctx &ctx, AudioSink *sink, DeviceModel *model, bool prepare) {
++void audio_exe_set_observer(Ctx &ctx, AudioRequestObserver obs) { ectx(ctx).observer = std::move(obs); }
++void construct_holders(Ctx &c) {
++void device_prepare(Ctx &c) {
++}
++}
++}
++}
++}
++}
++}
++}
++}
++}  // namespace
++};
+-              it->second->lines.push_back(std::string("missing ") + (m.what ? m.what : "?"));
+-            if (auto it = device_sinks().find(&c); it != device_sinks().end())
+-        const std::string n = game_name(cstr(c, a[0]));
+-        lines.back() += "  ; file " + n + (c.files().exists(n) ? "" : " (absent)");
+-        return c.files().exists(n);
+-      // `Golf sfx`: U-1499)
+-      DeviceSink &d = *it->second;
+-      auto it = device_sinks().find(&c);
+-      if (it == device_sinks().end() || it->second->timer_cb == 0) throw MissingResource{"a registered timer client"};
+-  ExeCtx &e = ectx(c);
+-  U4 clock = 0x100000, next_handle = 0x1000;
+-  U4 timer_cb = 0, timer_user = 0, timer_id = 0;
+-  audio_exe_reset(c);
+-  auto ds = device_sinks().find(&c);
+-  if (ds != device_sinks().end() && e.sink == ds->second.get()) rs = ds->second.get();
+-  int unanswered = 0;
+-  std::lock_guard<std::mutex> lk(g_mu);
+-  table().erase(&ctx);
+-// (its +0x50 held a heap pointer of the recorded process); device 1 = a DeviceSink (else a RecordingSink answering 0) as the
+-// audio_exe.deviceFixture(device): the context's GameState (a segment start image, the exe's device-less state) prepared for a
+-// device-present start: no sound library, no sound function, empty device holders and sound list, every Snd closed and nameless
+-// module's and the audio core's sink; production mode (no host).
+-class DeviceSink : public RecordingSink {
+-extern const ModuleDef kModule_audio_exe = {"audio_exe", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+-void a_device_fixture(Ctx &c, const uint32_t *a, Ret &r) {

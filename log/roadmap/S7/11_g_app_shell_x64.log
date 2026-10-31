@@ -1,0 +1,28 @@
+== app_shell_x64 start 2026-10-30 03:24:35 free=33GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_11_root
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 18 items
+
+port/test/test_app_shell.py::test_selftest_all_rows_pass PASSED          [  5%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[pacing-no-bit17] PASSED [ 11%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[pacing-quantum] PASSED [ 16%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[pacing-signed] PASSED [ 22%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[present-stale] PASSED [ 27%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[present-swap] PASSED [ 33%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[saves-inside] PASSED [ 38%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[saves-install] PASSED [ 44%]
+port/test/test_app_shell.py::test_selftest_controls_read_red[saves-noreadback] PASSED [ 50%]
+port/test/test_app_shell.py::test_present_trace_equals_reference_and_port PASSED [ 55%]
+port/test/test_app_shell.py::test_window_presents_and_translates[96] PASSED [ 61%]
+port/test/test_app_shell.py::test_window_presents_and_translates[144] PASSED [ 66%]
+port/test/test_app_shell.py::test_window_presents_and_translates[240] PASSED [ 72%]
+port/test/test_app_shell.py::test_control_present_stale_reads_red PASSED [ 77%]
+port/test/test_app_shell.py::test_control_present_swap_reads_red PASSED  [ 83%]
+port/test/test_app_shell.py::test_control_input_bypass_reads_red PASSED  [ 88%]
+port/test/test_app_shell.py::test_saves_quit_run_writes_only_the_data_dir PASSED [ 94%]
+port/test/test_app_shell.py::test_saves_refuse_a_data_dir_inside_the_install PASSED [100%]
+
+======================== 18 passed in 66.83s (0:01:06) ========================

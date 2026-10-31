@@ -1,0 +1,27 @@
+== rerun armed 2026-10-31 02:19:23
+  load ok: cpu=3% free=24GB / cpu=19% free=25GB
+== live_equiv_win32_alone start 2026-10-31 03:02:02 cpu=22% free=25GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I20
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 1 item
+
+port/test/test_live.py::test_equivalence_all PASSED                      [100%]
+
+======================== 1 passed in 709.89s (0:11:49) ========================
+== live_equiv_win32_alone rc=0 711 s end 2026-10-31 03:13:54 cpu=17% free=26GB
+  load ok: cpu=1% free=26GB / cpu=6% free=26GB
+== memory_x64_alone start 2026-10-31 03:14:29 cpu=13% free=26GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I20
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 1 item
+
+port/test/test_app_present.py::test_long_session_memory_bounded PASSED   [100%]
+
+======================= 1 passed in 1017.87s (0:16:57) ========================
+== memory_x64_alone rc=0 1019 s end 2026-10-31 03:31:29 cpu=4% free=26GB

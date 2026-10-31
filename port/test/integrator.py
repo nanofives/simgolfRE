@@ -884,7 +884,11 @@ def ledger_rows(seg_tsv: pathlib.Path, chain_tsv: pathlib.Path | None, defects_t
                  "generateRandomCourse.placementBound": "port/test/test_defects_gen_w2.py::test_blocked_site_search_hangs_at_1_and_returns_at_0 (state)",
                  # roadmap S3.4b (D53): the stock game's tropical tree load faults at 1, the alias names load at 0
                  "flic.treeAliasNames": "port/test/test_defects_flic.py::test_fault_probe_on_and_off, "
-                                        "test_tropical_world_loads_equal_the_alias_recording_off (state)"}
+                                        "test_tropical_world_loads_equal_the_alias_recording_off (state)",
+                 # roadmap S7.12 (D54, G15): the device sink opens the 18 course effects through the alias at 0, line for line
+                 # an install with the exe's directory name; the switch-1 run is golden $device
+                 "sound.golfSfxAlias": "port/test/test_defects_golfsfx.py::test_device_run_switch_zero_opens_the_course_effects, "
+                                       "test_device_run_switch_zero_equals_a_renamed_install (device sink)"}
         for r in read_tsv(defects_tsv):
             n = int(r["segments_changed"])
             ev = [f"{n} segments change ({r['changed']})"] if n else []

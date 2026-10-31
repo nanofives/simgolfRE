@@ -1,0 +1,8 @@
+[1/7] defects_x64 rc=0 233 s free=28GB :: ======================= 65 passed in 231.78s (0:03:51) ========================
+[2/7] app_audio_x64 rc=0 201 s free=29GB :: ======================= 28 passed in 199.66s (0:03:19) ========================
+[3/7] app_audio_win32 rc=0 209 s free=28GB :: ======================= 28 passed in 207.91s (0:03:27) ========================
+[4/7] segs0_x64 rc=0 335 s free=29GB :: {'switch': 'sound.golfSfxAlias=0', 'counts': {'PASS': 205}, 'wall_s': 335.3}
+[5/7] segs0_win32 rc=0 417 s free=30GB :: {'switch': 'sound.golfSfxAlias=0', 'counts': {'PASS': 205}, 'wall_s': 416.0}
+[6/7] boot0_x64 rc=0 182 s free=27GB :: {"switch": "sound.golfSfxAlias=0", "counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[7/7] boot0_win32 rc=0 294 s free=27GB :: {"switch": "sound.golfSfxAlias=0", "counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[done] defects_x64 app_audio_x64 app_audio_win32 segs0_x64 segs0_win32 boot0_x64 boot0_win32

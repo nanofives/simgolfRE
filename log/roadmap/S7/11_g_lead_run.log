@@ -1,0 +1,22 @@
+[1/22] app_ingame_x64 rc=1 145 s free=31GB :: ============== 1 failed, 9 passed, 3 errors in 143.49s (0:02:23) ==============
+[2/22] app_ingame_win32 rc=1 145 s free=33GB :: ============== 1 failed, 9 passed, 3 errors in 143.67s (0:02:23) ==============
+[3/22] app_input_x64 rc=0 34 s free=32GB :: ============================= 16 passed in 33.51s =============================
+[4/22] app_input_win32 rc=0 31 s free=32GB :: ============================= 16 passed in 30.80s =============================
+[5/22] app_live_x64 rc=0 304 s free=32GB :: ======================= 13 passed in 303.07s (0:05:03) ========================
+[6/22] app_live_win32 rc=0 166 s free=24GB :: ======================= 13 passed in 165.59s (0:02:45) ========================
+[7/22] app_present_x64 rc=1 1846 s free=34GB :: ================== 1 failed, 6 passed in 1845.13s (0:30:45) ===================
+[8/22] app_present_win32 rc=0 2451 s free=30GB :: ======================= 7 passed in 2449.87s (0:40:49) ========================
+[9/22] app_replay_x64 rc=0 23 s free=34GB :: ============================= 14 passed in 22.17s =============================
+[10/22] app_replay_win32 rc=0 22 s free=33GB :: ============================= 14 passed in 21.75s =============================
+[11/22] app_shell_x64 rc=0 68 s free=33GB :: ======================== 18 passed in 66.83s (0:01:06) ========================
+[12/22] app_shell_win32 rc=0 66 s free=34GB :: ======================== 18 passed in 64.92s (0:01:04) ========================
+[13/22] app_audio_x64 rc=0 202 s free=33GB :: ======================= 28 passed in 201.37s (0:03:21) ========================
+[14/22] app_audio_win32 rc=1 210 s free=33GB :: ================== 1 failed, 27 passed in 209.36s (0:03:29) ===================
+[15/22] segs_x64 rc=0 101 s free=32GB :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 101.2}
+[16/22] segs_win32 rc=0 132 s free=33GB :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 131.7}
+[17/22] boot_x64 rc=0 181 s free=33GB :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[18/22] boot_win32 rc=0 249 s free=33GB :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[19/22] equiv_x64 rc=0 579 s free=33GB :: {"counts": {"PASS": 68, "NO_FRAMES": 2}}
+[20/22] equiv_win32 rc=0 598 s free=31GB :: {"counts": {"PASS": 14, "ERROR": 56}}
+[21/22] replay_x64 rc=0 4 s free=34GB :: saveload                 PASS  records 266/266 code 0 first None (1.2 s)
+[22/22] replay_win32 rc=0 5 s free=34GB :: saveload                 PASS  records 266/266 code 0 first None (1.5 s)

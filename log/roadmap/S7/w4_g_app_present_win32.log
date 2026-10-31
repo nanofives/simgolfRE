@@ -1,0 +1,17 @@
+== app_present_win32 start 2026-10-30 12:16:19 free=28GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 7 items
+
+port/test/test_app_present.py::test_presents_at_the_original_point PASSED [ 14%]
+port/test/test_app_present.py::test_every_checkpoint_is_shown_by_a_present PASSED [ 28%]
+port/test/test_app_present.py::test_control_present_point_off PASSED     [ 42%]
+port/test/test_app_present.py::test_spilled_recording_equals_the_in_memory_one PASSED [ 57%]
+port/test/test_app_present.py::test_long_session_equals_the_capture PASSED [ 71%]
+port/test/test_app_present.py::test_long_session_terrain_log_bounded PASSED [ 85%]
+port/test/test_app_present.py::test_long_session_memory_bounded PASSED   [100%]
+
+======================= 7 passed in 2596.68s (0:43:16) ========================

@@ -1,3 +1,3 @@
 # merge queue, first = next integrator (orchestrator-owned)
-I15 MERGED 37e58e96 (S3 wave 6); S10 MERGED 613976b3 + 32aeab6b; I18 MERGED a5419a66 (S9); P1 c7412150; I19 MERGED (S3 wave 7)
-NEXT: I20 S7 wave 4 + S7.13 (log/roadmap/S7/MERGE_w4.md, files_w4.txt; base = the I19 commit; main.cpp from log/roadmap/S7/w4_rebase/main_merged.cpp)
+I15 MERGED 37e58e96 (S3 wave 6); S10 MERGED; I18 MERGED a5419a66 (S9); P1 c7412150; I19 MERGED f2dff003 (S3 wave 7); I20 MERGED (S7 wave 4 + S7.13)
+NEXT: S3 wave 8 (S3.21 part 1 + 21b layer, S3.22 W8.6, S3.23 split verdict, S3.24, S3.26) when DONE

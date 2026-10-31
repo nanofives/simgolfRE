@@ -1,0 +1,32 @@
+{
+ "switch1": {
+  "steps": [
+   0,
+   0,
+   0,
+   40,
+   0
+  ],
+  "lines": 13020,
+  "stream_sha256": "4b6ed61a9306793c298044d20fb3c91e32c2fa9a4e75b11220220c43b8f0eddb",
+  "mmio": 211,
+  "aliased": 0,
+  "music_aliased": 0,
+  "absent": 1
+ },
+ "switch0": {
+  "steps": [
+   0,
+   0,
+   0,
+   40,
+   0
+  ],
+  "lines": 14833,
+  "stream_sha256": "07f83f3fce538b032224583239c1b55773728396ff334d2cfb1844811918c812",
+  "mmio": 235,
+  "aliased": 24,
+  "music_aliased": 6,
+  "absent": 0
+ }
+}

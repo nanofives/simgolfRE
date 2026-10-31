@@ -1,0 +1,15 @@
+cycle 0 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 105->105 threads 4->4 first_error 
+cycle 1 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 105->105 threads 4->4 first_error 
+cycle 2 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 105->105 threads 4->4 first_error 
+cycle 3 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 105->105 threads 4->4 first_error 
+== capture 1 rc=0
+cycle 0 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 105->123 threads 4->4 first_error 
+cycle 1 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 123->123 threads 4->4 first_error 
+cycle 2 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 123->123 threads 4->2 first_error 
+cycle 3 requests 10 replayed 1 failed 0 ticks 0 device_less 1 dropped 9 handles 123->123 threads 2->2 first_error 
+== dsound 0 rc=0
+cycle 0 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 105->105 threads 4->4 first_error 
+cycle 1 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 105->105 threads 4->4 first_error 
+cycle 2 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 105->105 threads 4->4 first_error 
+cycle 3 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 105->105 threads 4->4 first_error 
+== capture 0 rc=0

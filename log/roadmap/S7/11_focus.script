@@ -1,0 +1,6 @@
+# S7.11: the buffer flags of a static (music) buffer while it plays (DsSink describe), playSound 0x80 = Music Idea.wav
+req loadSoundTable
+req playSound 0x80 100 0 0 0
+ticks 10
+req playSound 0x18 100 0 0 0
+ticks 5

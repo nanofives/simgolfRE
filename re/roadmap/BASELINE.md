@@ -1,6 +1,29 @@
-# Regression baseline at HEAD + S3 wave 7 (I19, 2026-10-30)
+# Regression baseline at HEAD + S7 wave 4 (I20, 2026-10-31)
 
-## HEAD + S3 wave 7 (I19)
+## HEAD + S7 wave 4 (I20)
+
+This file now describes **HEAD + S7 wave 4**: f2dff003 (S3 wave 7, = I19's tree) plus S7.10..S7.13, audio out and the app's defect
+profile (`log/roadmap/S7/MERGE_w4.md`, files `log/roadmap/S7/files_w4.txt`). Measured by I20 in `port/build/I20` (`git archive f2dff003` +
+I19's junctions + S7's files, `log/roadmap/merges/I20/make_mirror.py`; `log/roadmap/merges/I20.md`). Pass `-m ""` to pytest for these counts.
+By decision G17 (re/roadmap/DECISIONS_PENDING.md) the suites ran only the files wave 4 can reach (block 2, 30 files) and the census and
+terrain gates were not run (wave 4 changes no drawing code): for every other file and those two gates the record is I19's below.
+
+| Gate | HEAD + S7 wave 4 (I20) |
+|---|---|
+| repo static | 811 passed, 2 skipped, 46 deselected (= I19) |
+| build x64 / Win32 | 0 errors, 0 warnings; simgolf_port, simgolf_audio_check, portsim_runner32 |
+| segments x64 / Win32 / freetype | 205 / 205 each; at sound.golfSfxAlias = 0 205 / 205 on x64 and Win32 |
+| boot x64 / Win32 / freetype | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each; at sound.golfSfxAlias = 0 the same on x64 and Win32 |
+| chains / ledger | 342 / 342; ledger 31 rows (I19's 30 + sound.golfSfxAlias with evidence), 2 without a cause (I19's two) |
+| live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266 (3 / 3) |
+| block 2 x64 (30 files: test_audio_* 13, test_defects_* 6, test_profiles, test_integrator, test_static, test_live, test_app_* 7) | 29 PASS; test_app_present::test_long_session_memory_bounded failed in the suite (growth 4,325,376 B, limit 4,194,304) and passed alone (1 passed, 1,019 s, CPU 13 % -> 4 %, 26 GB free): load-dependent, as at I19 |
+| block 2 Win32 (same 30 files, app files with the Win32 app) | failed ids: test_integrator's 4 (all in I10's win32_failed_ids.txt) and test_live::test_equivalence_all (cov_a_build2 FAIL `{"record": 0, "objects": ["(record count)"]}` in the suite; the gate live_equiv_win32 passed it, and alone the test passed, 1 passed in 710 s, CPU 22 % -> 17 %, 25-26 GB free): load-dependent |
+| new files | test_app_audio 28 / 28 and test_defects_golfsfx 65 / 65 on x64 and Win32 |
+
+Reference TSVs: `log/roadmap/merges/I20/{segs,segs0,boot,boot0,equiv,app_replay}_{x64,win32}.tsv`, `segs_ft_x64.tsv`, `boot_ft_x64.tsv`,
+`chain_x64.tsv`, `ledger_divergences.tsv`, `b2_win32_failed_ids.txt`.
+
+## Before S7 wave 4 (I19, HEAD + S3 wave 7)
 
 This file now describes **HEAD + S3 wave 7**. That is c7412150 (S9 + P1 on top of wave 6) plus S3.15..S3.20 and S3.9
 (`log/roadmap/S3/MERGE_w7.md`, files `log/roadmap/S3/files_w7.txt`). It was measured by I19 in `port/build/I19`: `git archive c7412150`

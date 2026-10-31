@@ -1,0 +1,2 @@
+scenario	status	records	expected	boot_status	live_vs_boot	replay_vs_live	violations	detail	extra
+mood5_fixture	PASS	245	245	PASS			0		{"live_code": 0, "boot_code": 0, "stats": {"violations": 0, "first_violation": -1, "asks": 1586, "reasks": 0, "clocks": 247, "cursors": 1325, "asyncs": 0, "dispatches": 24, "writes": 2, "body_calls": 490, "modal_calls": 1096, "paced_calls": 0, "idle_declines": 584, "inflated": 0}, "live_detail": "live: max_records, 245 records, 24 dispatches, 0 violations", "live_capture_status": "PASS", "replay_code": 0}

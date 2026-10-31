@@ -45,6 +45,13 @@ def main():
         assert r["id"] not in out, r["id"]
         out[r["id"]] = dict(r, verified="stock-game measurement (S3.4 / S3.4b)")
     d5_s3 = {r["id"] for r in d}
+    # roadmap S7.12 (G15, Mariano 2026-10-30): the course-sfx directory alias
+    h7, g = read(ROOT / "log" / "roadmap" / "S7" / "12_decisions.tsv")
+    assert h7 == h6, h7
+    for r in g:
+        assert r["id"] not in out, r["id"]
+        out[r["id"]] = dict(r, verified="device-sink run (S7.12)")
+    g15 = {r["id"] for r in g}
     cols = list(h6) + ["verified", "decision", "profile_fixed"]
     rows = sorted(out.values(), key=lambda r: key(r["id"]))
     # G3 (Mariano, re/roadmap/DECISIONS_PENDING.md): the two hangs become fix, the other 24 ask rows stay keep.
@@ -55,6 +62,8 @@ def main():
             r.update(recommendation="fix", switch=g3_fix[r["id"]], decision="G3 fix (wave 2)")
         elif r["recommendation"] == "ask":
             r.update(recommendation="keep", decision="G3 keep")
+        elif r["id"] in g15:
+            r["decision"] = "G15 fix (S7.12)"
         elif r["recommendation"] == "fix":
             r["decision"] = "D5 fix (S3 wave 2)" if r["id"] in d5_s3 else "D5 fix (wave 1)"
         if r["recommendation"] == "fix":

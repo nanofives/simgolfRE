@@ -1,0 +1,23 @@
+== app_live_win32 start 2026-10-30 02:09:23 free=24GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_11_root
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 13 items
+
+port/test/test_app_live.py::test_session_ran PASSED                      [  7%]
+port/test/test_app_live.py::test_title_menu_is_the_original_frame PASSED [ 15%]
+port/test/test_app_live.py::test_title_idle_cpu PASSED                   [ 23%]
+port/test/test_app_live.py::test_hover_follows_the_cursor PASSED         [ 30%]
+port/test/test_app_live.py::test_shown_frames_are_the_presents PASSED    [ 38%]
+port/test/test_app_live.py::test_pacing_held PASSED                      [ 46%]
+port/test/test_app_live.py::test_recording_replays PASSED                [ 53%]
+port/test/test_app_live.py::test_presents_replay PASSED                  [ 61%]
+port/test/test_app_live.py::test_control_pacing_off PASSED               [ 69%]
+port/test/test_app_live.py::test_control_dropped_batch PASSED            [ 76%]
+port/test/test_app_live.py::test_control_stale_present PASSED            [ 84%]
+port/test/test_app_live.py::test_control_idle_pass_left_out PASSED       [ 92%]
+port/test/test_app_live.py::test_plain_install_start_reaches_title PASSED [100%]
+
+======================= 13 passed in 165.59s (0:02:45) ========================

@@ -1,0 +1,37 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 28 items
+
+port\test\test_app_audio.py::test_device_stream_through_the_app_sink_equals_golden[x64] PASSED [  3%]
+port\test\test_app_audio.py::test_device_stream_through_the_app_sink_equals_golden[w32] PASSED [  7%]
+port\test\test_app_audio.py::test_device_stream_control_red[1] PASSED    [ 10%]
+port\test\test_app_audio.py::test_device_stream_control_red[2] PASSED    [ 14%]
+port\test\test_app_audio.py::test_device_stream_tick_clock_is_blind PASSED [ 17%]
+port\test\test_app_audio.py::test_shadow_start_equals_a_captured_image PASSED [ 21%]
+port\test\test_app_audio.py::test_shadow_start_control_red PASSED        [ 25%]
+port\test\test_app_audio.py::test_title_capture_meets_the_install_files[x64] PASSED [ 28%]
+port\test\test_app_audio.py::test_title_capture_meets_the_install_files[w32] PASSED [ 32%]
+port\test\test_app_audio.py::test_title_capture_x64_equals_win32 PASSED  [ 35%]
+port\test\test_app_audio.py::test_title_capture_controls_red[unlock] PASSED [ 39%]
+port\test\test_app_audio.py::test_title_capture_controls_red[volume] PASSED [ 42%]
+port\test\test_app_audio.py::test_title_capture_equivalent_controls[pan] PASSED [ 46%]
+port\test\test_app_audio.py::test_title_capture_equivalent_controls[frequency] PASSED [ 50%]
+port\test\test_app_audio.py::test_audio_out_leaves_the_sim_unchanged[sandbox_basic] PASSED [ 53%]
+port\test\test_app_audio.py::test_live_window_session_plays_the_title_music PASSED [ 57%]
+port\test\test_app_audio.py::test_no_device_takes_the_original_path[x64] PASSED [ 60%]
+port\test\test_app_audio.py::test_no_device_takes_the_original_path[w32] PASSED [ 64%]
+port\test\test_app_audio.py::test_no_device_control_keep_thread_red PASSED [ 67%]
+port\test\test_app_audio.py::test_dsound_on_this_pc PASSED               [ 71%]
+port\test\test_app_audio.py::test_shutdown_leaves_nothing[capture-x64] PASSED [ 75%]
+port\test\test_app_audio.py::test_shutdown_leaves_nothing[capture-w32] PASSED [ 78%]
+port\test\test_app_audio.py::test_shutdown_leaves_nothing[dsound-x64] PASSED [ 82%]
+port\test\test_app_audio.py::test_shutdown_leaves_nothing[dsound-w32] PASSED [ 85%]
+port\test\test_app_audio.py::test_shutdown_control_leak_red PASSED       [ 89%]
+port\test\test_app_audio.py::test_no_device_app_leaves_the_sim_unchanged PASSED [ 92%]
+port\test\test_app_audio.py::test_app_controls_red PASSED                [ 96%]
+port\test\test_app_audio.py::test_window_close_stops_the_audio_first PASSED [100%]
+
+======================= 28 passed in 199.59s (0:03:19) ========================

@@ -1,0 +1,46 @@
+{
+ "backend": "x64",
+ "switch1": {
+  "steps": [
+   0,
+   0,
+   0,
+   40,
+   0
+  ],
+  "lines": 13020,
+  "sha": "4b6ed61a9306793c298044d20fb3c91e32c2fa9a4e75b11220220c43b8f0eddb",
+  "mmioOpen": 211,
+  "aliased": 0,
+  "absent": 1
+ },
+ "switch0": {
+  "steps": [
+   0,
+   0,
+   0,
+   40,
+   0
+  ],
+  "lines": 14309,
+  "sha": "fcbc91953c989668f510771fe00b9ae30a8082c987ba885700711c6861a593ea",
+  "mmioOpen": 229,
+  "aliased": 18,
+  "absent": 0
+ },
+ "renamed_install": {
+  "steps": [
+   0,
+   0,
+   0,
+   40,
+   0
+  ],
+  "lines": 14309,
+  "sha": "a64a9003cad61ba291f1376059c17ec6566c1a113124d70a311c55e21a441448",
+  "mmioOpen": 229,
+  "aliased": 0,
+  "absent": 0
+ },
+ "switch0_equals_renamed_install_without_alias_notes": true
+}

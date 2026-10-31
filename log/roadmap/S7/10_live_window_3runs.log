@@ -1,0 +1,6 @@
+1 passed, 15 deselected in 9.56s
+run 1 load 65% ticks 279 late 0 skipped 0 span_s 8.314 period_ms 29.9071 tick_mean_ms 0.217 tick_max_ms 1.446
+1 passed, 15 deselected in 9.40s
+run 2 load 48% ticks 279 late 0 skipped 0 span_s 8.307 period_ms 29.8817 tick_mean_ms 0.208 tick_max_ms 1.472
+1 passed, 15 deselected in 9.37s
+run 3 load 68% ticks 280 late 0 skipped 0 span_s 8.344 period_ms 29.9065 tick_mean_ms 0.205 tick_max_ms 0.934

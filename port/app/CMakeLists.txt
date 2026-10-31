@@ -43,10 +43,21 @@ endif()
 
 # S7.3: the app. Windows only (the window, GDI presentation and the pacing clock are Win32).
 if(PORTAPP_SHELL AND WIN32 AND TARGET portsim)
+  # S7.10: audio out (audio_out.*: the shadow audio context on its thread; ds_sink.*: the DirectSound / capture sink). dsound.lib
+  # and winmm.lib are Windows system libraries.
+  add_library(portapp_audio STATIC audio_out.cpp ds_sink.cpp)
+  target_include_directories(portapp_audio PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+  target_link_libraries(portapp_audio PUBLIC portsim dsound winmm)
+  target_compile_definitions(portapp_audio PRIVATE _CRT_SECURE_NO_WARNINGS)
   add_executable(simgolf_port main.cpp window.cpp present.cpp pacing.cpp saves.cpp host.cpp)
-  target_link_libraries(simgolf_port PRIVATE portapp_input portsim winmm)
+  target_link_libraries(simgolf_port PRIVATE portapp_input portapp_audio portsim winmm)
   target_compile_definitions(simgolf_port PRIVATE UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
+  add_executable(simgolf_audio_check tools/audio_check.cpp)
+  target_link_libraries(simgolf_audio_check PRIVATE portapp_audio)
+  target_compile_definitions(simgolf_audio_check PRIVATE _CRT_SECURE_NO_WARNINGS)
   if(MSVC)
     target_compile_options(simgolf_port PRIVATE /W4 /WX /permissive- /EHsc)
+    target_compile_options(portapp_audio PRIVATE /W4 /WX /permissive- /EHsc)
+    target_compile_options(simgolf_audio_check PRIVATE /W4 /WX /permissive- /EHsc)
   endif()
 endif()

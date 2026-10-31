@@ -8,12 +8,17 @@
 //                    [--no-activate] [--no-window] [--exit-after <ms>] [--record-dir <dir>] [--negctl <name>]
 //   simgolf_port.exe --install <dir> [--data <dir>] --live-trace <scenario | file.trace> [--corpus <dir>] [--snapshots a,b,..]
 //                    [--max-records <n>] [--record-dir <dir>]   (S7.5) the live core over a corpus trace, presented like a session
+//   --live-trace and the live session take --audio off|on|model|capture (S7.10; default on since S7.11: audio_out.h; on =
+//   DirectSound, which falls back to the original's device-less path when no output device exists) and --audio-no-device
+//   (S7.11 test switch: DirectSoundCreate answers DSERR_NODRIVER); --negctl audio-keep-thread | audio-leak-thread (S7.11)
 //   every run mode takes --terrain live|headless (default live: port/src/sim/terrain_live.cpp draws the course into the gfx
 //   root surface, as port/test/framegate.py attaches it) and --terrain-va <v> (the Terrain object's address, 0 = a free range)
 //   and --gl raster|auto|host (roadmap S3.20, decision G13: GlRaster is the default; opt-in: auto = the host's OpenGL when the
 //   startup self-check of gl_wgl.h passes, else GlRaster; host (or wgl) = the host's OpenGL without the check). Without --gl the
 //   environment's SG_GL_BACKEND (the same values) chooses, else GlRaster. The choice, where it came from and its reason go to
 //   stderr and to terrain_renderer.json in the record directory.
+//   every run mode takes --profile original|fixed (S7.12: the defect switches; default fixed, recorded in session.json);
+//   simgolf_port.exe --profile-list original|fixed   prints every switch and the value that profile gives it
 //   simgolf_port.exe --selftest                      pacing, saves overlay and presenter unit tests ("[k/n] name PASS")
 //   simgolf_port.exe --translate <input.jsonl> [--out <file>]   re-translates a session's input log offline
 //   simgolf_port.exe --install <dir> --data <dir> --cat <logical> <out> | --write <logical> <file> | --remove <logical>
@@ -80,6 +85,7 @@
 #include <thread>
 #include <vector>
 
+#include "audio_out.h"
 #include "host.h"
 #include "input_map.h"
 #include "pacing.h"
@@ -254,6 +260,11 @@ struct Options {
   // gfx root surface, as port/test/framegate.py attaches it; headless = tick.cpp's stand-in, no terrain pixels) and the address
   // of its Terrain object (0: a free range of the address space)
   std::string terrain = "live";
+  std::string audio = "on";  // S7.10: off | on | model | capture (AudioGuard); S7.11: default on
+  std::string profile = "fixed";  // S7.12: original | fixed (apply_profile); --profile-list prints it and exits
+  bool profile_list = false;
+  bool audio_no_device = false;  // S7.11: --audio-no-device (the sink's DirectSoundCreate fails)
+  void *audio_hwnd = nullptr;  // S7.10: the window for --audio on (set by run_live_window)
   uint32_t terrain_va = 0;
   std::string gl;                        // S3.20: --gl raster|auto|host|wgl, the terrain renderer of a live terrain ("" = not given)
   std::string live_trace;                // --live-trace: the live core over a corpus trace (LiveTracePresenter)
@@ -293,6 +304,59 @@ struct RegNegctl {
   RegNegctl(const RegNegctl &) = delete;
   RegNegctl &operator=(const RegNegctl &) = delete;
 };
+
+// S7.12: the defect profile of a run (port/test/profiles.py; the switches are process-wide, portsim/registry.h DefectDef).
+// `fixed` (the default) = every switch 1, then the members below; `original` = every switch 1 (the oracle). The members are
+// re/port/defect_profiles.tsv's rows, compiled in because the LAN build ships no repo file; port/test/test_defects_golfsfx.py
+// compares them with the TSV through --profile-list. Each run's session.json records the profile and every switch's value
+// (profile_json), and port/test/app_replay.py replays a recording under the switches it recorded.
+struct ProfileMember {
+  const char *sw;
+  int value;
+};
+const ProfileMember kFixedProfile[] = {
+    {"placeHabitat.clusterLoopBound", 0}, {"spawnObject.cellSearchBound", 0}, {"loadGolfPro.divideAndRejectGuard", 0},
+    {"placeAnimal.zeroFrameCount", 0},    {"replaceInText.tailLimit", 0},     {"generateRandomCourse.searchBound", 0},
+    {"loadGolfPro.negativeWindowBound", 0}, {"generateRandomCourse.placementBound", 0}, {"flic.treeAliasNames", 0},
+    {"sound.golfSfxAlias", 0},
+};
+
+// every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
+// `--negctl profile-ignored` records the profile but leaves every switch at 1 (the app as before S7.12).
+std::string apply_profile(const std::string &p, bool ignored) {
+  if (p != "original" && p != "fixed") return "unknown profile " + p + " (original | fixed)";
+  if (p == "fixed")
+    for (const ProfileMember &m : kFixedProfile)
+      if (portsim::defect_find(m.sw) < 0) return std::string("profile fixed names a switch the library lacks: ") + m.sw;
+  for (int i = 0; i < portsim::defect_count(); ++i) *portsim::defect_at(i, nullptr)->flag = 1;
+  if (p == "fixed" && !ignored)
+    for (const ProfileMember &m : kFixedProfile) *portsim::defect_at(portsim::defect_find(m.sw), nullptr)->flag = m.value;
+  return "";
+}
+
+// session.json's fields: the profile's name and every switch with the value the run used
+std::string profile_json(const std::string &p) {
+  std::string s = ",\"profile\":\"" + p + "\",\"defects\":{";
+  for (int i = 0; i < portsim::defect_count(); ++i) {
+    const portsim::DefectDef *d = portsim::defect_at(i, nullptr);
+    s += std::string(i ? "," : "") + "\"" + d->name + "\":" + std::to_string(*d->flag);
+  }
+  return s + "}";
+}
+
+// --profile-list <original | fixed>: every switch and the value the profile gives it, "name<TAB>value" lines
+int run_profile_list(const std::string &p) {
+  const std::string err = apply_profile(p, false);
+  if (!err.empty()) {
+    std::fprintf(stderr, "%s\n", err.c_str());
+    return 2;
+  }
+  for (int i = 0; i < portsim::defect_count(); ++i) {
+    const portsim::DefectDef *d = portsim::defect_at(i, nullptr);
+    std::printf("%s\t%d\n", d->name, *d->flag);
+  }
+  return 0;
+}
 
 // S7.5: the terrain of a run (Options::terrain), attached after gfx.attach as port/test/framegate.py does (gfx.attach,
 // gfx.snapshotAt, sg_ts_live_attach); detached when the guard goes, before the context it was declared after.
@@ -342,6 +406,125 @@ struct TerrainGuard {
   ~TerrainGuard() {
     if (live) portsim::set_terrain_api(*ctx, nullptr);
   }
+};
+
+// S7.10: audio out (audio_out.h) of a live run (Options::audio): off, on (DirectSound, the window's handle; the default since
+// S7.11, device-less without an output device), model
+// (S4's device model only) or capture (a software device: <rec>/audio.wav). The sim context's sound requests are copied to a
+// shadow context on the audio thread; the sim's own calls and GameState are left as they are. finish() (or the guard going)
+// detaches the observer and stops the thread before the context goes; <rec>/audio.json holds the counters.
+// S7.11 SHUTDOWN ORDER: the original's gameMain runs shutdownSoundSystem after mainLoop returns, before its window goes. In
+// the window session the window can close first (the user, or WM_CLOSE after the game's quit), so the window is subclassed
+// (audio_close_proc) and its WM_CLOSE stops the shadow (AudioOut::close_early: shutdownSoundSystem, the real buffers and
+// device released, the thread joined) before DestroyWindow. g_close_mu serialises it with AudioGuard::finish.
+std::mutex g_close_mu;
+app::AudioOut *g_close_audio = nullptr;
+WNDPROC g_close_prev = nullptr;
+LRESULT CALLBACK audio_close_proc(HWND h, UINT msg, WPARAM wp, LPARAM lp) {
+  if (msg == WM_CLOSE) {
+    std::lock_guard<std::mutex> lk(g_close_mu);
+    if (g_close_audio) g_close_audio->close_early();
+  }
+  return CallWindowProcW(g_close_prev, h, msg, wp, lp);
+}
+
+struct AudioGuard {
+  portsim::Ctx *ctx = nullptr;
+  std::unique_ptr<app::AudioOut> out;
+  std::string mode, error;
+  fs::path rec;
+  app::ProcCounts before;
+  bool count_only = false;
+  void *win = nullptr;  // S7.11: the session's window (window_at_stop)
+  AudioGuard() = default;
+  AudioGuard(const AudioGuard &) = delete;
+  AudioGuard &operator=(const AudioGuard &) = delete;
+  void attach(const Options &o, portsim::Ctx &c, const portsim::ExeConstants &ec, uint32_t data_va, const std::string &install,
+              void *hwnd, const fs::path &r) {
+    if (o.audio == "off") {
+      // S7.11 reference for the shutdown count: --audio off --negctl audio-count-only counts the same span with no shadow
+      count_only = o.negctl == "audio-count-only";
+      rec = r;
+      before = app::proc_counts();
+      return;
+    }
+    app::AudioOutOptions ao;
+    ao.mode = o.audio == "model" ? app::SinkMode::Model : o.audio == "capture" ? app::SinkMode::Capture : app::SinkMode::DSound;
+    ao.install = install;
+    ao.exe = &ec;
+    ao.data_va = data_va;
+    ao.hwnd = hwnd;
+    ao.tick_clock_ms = 30;  // the timer's period: the model / capture device plays it between ticks
+    ao.force_no_device = o.audio_no_device;                                               // S7.11
+    ao.control = o.negctl == "audio-keep-thread" ? 3 : o.negctl == "audio-leak-thread" ? 4 : 0;  // S7.11 controls
+    mode = o.audio;
+    rec = r;
+    before = app::proc_counts();  // S7.11: the process before the audio thread exists
+    out = std::make_unique<app::AudioOut>();
+    if (!out->start(ao, &error)) {
+      out.reset();
+      return;
+    }
+    ctx = &c;
+    out->attach(c);
+    win = hwnd;
+    if (hwnd) {  // S7.11: the window session's WM_CLOSE stops it first (audio_close_proc)
+      std::lock_guard<std::mutex> lk(g_close_mu);
+      g_close_audio = out.get();
+    }
+  }
+  void finish() {
+    if (count_only) {
+      count_only = false;
+      const app::ProcCounts after = app::proc_counts();
+      char b[160];
+      const int n = std::snprintf(b, sizeof b,
+                                  "{\"mode\":\"off\",\"handles_before\":%u,\"threads_before\":%u,\"handles_after\":%u,"
+                                  "\"threads_after\":%u,\"threads_added\":%u}\n", before.handles, before.threads,
+                                  after.handles, after.threads, app::threads_added(before, after));
+      if (n > 0) write_file(rec / "audio.json", b, static_cast<size_t>(std::min(n, static_cast<int>(sizeof b) - 1)));
+    }
+    if (!out) {
+      if (!error.empty()) write_file(rec / "audio.json", ("{\"error\":\"" + error + "\"}\n").data(), error.size() + 13);
+      return;
+    }
+    {
+      std::lock_guard<std::mutex> lk(g_close_mu);  // S7.11: no close_early from now on (and none running)
+      if (g_close_audio == out.get()) g_close_audio = nullptr;
+    }
+    out->detach(*ctx);
+    if (mode == "capture") out->write_capture((rec / "audio.wav").string());
+    const bool win_now = win != nullptr && IsWindow(static_cast<HWND>(win));
+    out->stop();
+    const app::AudioOutStats s = out->stats();
+    // S7.11: whether the window still existed when the shadow stopped (-1 no window; close_early runs inside WM_CLOSE)
+    const int window_at_stop = win == nullptr ? -1 : (s.closed_early || win_now) ? 1 : 0;
+    if (out->leaks_thread()) (void)out.release();  // S7.11 control audio-leak-thread: the running thread keeps its object
+    out.reset();
+    const app::ProcCounts after = app::proc_counts();  // S7.11: the thread joined, the device and its buffers released
+    char b[1536];
+    const int n = std::snprintf(
+        b, sizeof b,
+        "{\"mode\":\"%s\",\"requests\":%u,\"replayed\":%u,\"failed\":%u,\"ticks\":%u,\"delivered\":%u,"
+        "\"dropped\":%u,\"late_ticks\":%u,\"skipped_periods\":%u,\"tick_span_ns\":%llu,\"tick_ns_total\":%llu,"
+        "\"tick_ns_max\":%llu,\"buffers\":%u,\"real_buffers\":%u,\"real_failures\":%u,\"init_eax\":%u,\"sound_ready\":%d,"
+        "\"device_less\":%s,\"thread_ended\":%s,\"dropped_requests\":%u,\"closed_early\":%s,\"closed_drops\":%u,\"window_at_stop\":%d,\"no_device_answers\":%u,"
+        "\"heap_arena_bytes\":%u,\"heap_live_bytes\":%llu,\"heap_live_blocks\":%u,\"heap_peak_live_bytes\":%llu,"
+        "\"heap_peak_arena_bytes\":%u,\"handles_before\":%u,\"threads_before\":%u,\"handles_after\":%u,"
+        "\"threads_after\":%u,\"threads_added\":%u,\"files_present\":%u,\"files_absent\":%u,\"files_aliased\":%u,"
+        "\"first_error\":\"%s\",\"first_failure\":\"%s\"}\n",
+        mode.c_str(), s.requests, s.replayed, s.failed, s.ticks, s.delivered, s.dropped, s.late_ticks, s.skipped_periods,
+        static_cast<unsigned long long>(s.tick_span_ns), static_cast<unsigned long long>(s.tick_ns_total),
+        static_cast<unsigned long long>(s.tick_ns_max), s.sink.buffers, s.sink.real_buffers, s.sink.real_failures, s.init_eax,
+        s.sound_ready, s.device_less ? "true" : "false", s.thread_ended ? "true" : "false", s.dropped_requests,
+        s.closed_early ? "true" : "false", s.closed_drops, window_at_stop, s.sink.no_device_answers, s.heap.arena_bytes,
+        static_cast<unsigned long long>(s.heap.live_bytes), s.heap.live_blocks,
+        static_cast<unsigned long long>(s.heap_peak.live_bytes), s.heap_peak.arena_bytes, before.handles, before.threads,
+        after.handles, after.threads, app::threads_added(before, after), s.files_present, s.files_absent, s.files_aliased,
+        s.first_error.c_str(), s.sink.first_failure.c_str());
+    if (n > 0) write_file(rec / "audio.json", b, static_cast<size_t>(std::min(n, static_cast<int>(sizeof b) - 1)));
+  }
+  ~AudioGuard() { finish(); }
 };
 
 // The present-trace run: everything the worker thread does.
@@ -518,7 +701,10 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
         lopt.max_records = o.max_records;
         lopt.scenario = "simgolf_port live-trace";
         if (!o.in_memory) streamed = streams.open(rec.string(), lopt);  // S7.8 (U-1643)
+        AudioGuard audio;  // S7.10
+        audio.attach(o, *ctx, ec, data_va, files.install_root(), nullptr, rec);
         code = live_guarded(ctx.get(), &host, &lopt, &res, &detail);
+        audio.finish();
         streams.close();
         host.memory.sample(static_cast<uint32_t>(res.records), tlog.length());
         presents = host.presents();
@@ -567,6 +753,7 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
     write_file(rec / "trace.trace", res.trace.data(), res.trace.size());
   }
   std::string s = "{\"app\":\"simgolf_port\",\"mode\":\"live-trace\",\"trace\":\"" + jesc(tp) + "\",\"terrain\":\"" + o.terrain + "\"";
+  s += profile_json(o.profile);  // S7.12
   s += ",\"error\":\"" + jesc(err) + "\",\"code\":" + std::to_string(code) + ",\"detail\":\"" + jesc(detail.substr(0, 2000)) + "\"";
   s += ",\"stop\":\"" + jesc(res.stop) + "\",\"records\":" + std::to_string(res.records);
   s += ",\"violations\":" + std::to_string(res.violations) + ",\"presents\":" + std::to_string(presents.size());
@@ -644,7 +831,10 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   tlog.keep = o.negctl == "terrain-log-keep";
   session.terrain_log = tlog.live ? &tlog : nullptr;
   session.memory.every = static_cast<uint32_t>(std::max<int32_t>(0, o.mem_every));
+  AudioGuard audio;  // S7.10
+  audio.attach(o, *ctx, ec, lo.data_va, files.install_root(), o.audio_hwnd, rec);
   lo.res = session.run(*ctx);
+  audio.finish();
   session.terrain_view = nullptr;
   session.terrain_log = nullptr;
   if (terrain.live) {
@@ -709,7 +899,14 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     session.on_input(e);
   });
   LiveOut lo;
-  std::thread sim([&]() { lo = live_run(o, files, session, rec); });
+  Options oa = o;  // S7.10: --audio on uses the window's handle for DirectSound's cooperative level
+  oa.audio_hwnd = hwnd;
+  // S7.11: WM_CLOSE stops the audio before the window goes (audio_close_proc); --negctl audio-close-late leaves it to the
+  // sim thread's finish, after the window is gone (the control)
+  if (o.audio != "off" && o.negctl != "audio-close-late")
+    g_close_prev = reinterpret_cast<WNDPROC>(
+        SetWindowLongPtrW(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&audio_close_proc)));
+  std::thread sim([&]() { lo = live_run(oa, files, session, rec); });
   std::printf("READY hwnd=0x%llx client=%dx%d dpi=%u record=%s\n", static_cast<unsigned long long>(reinterpret_cast<uintptr_t>(hwnd)),
               win.client_w(), win.client_h(), win.dpi(), rec.string().c_str());
   std::fflush(stdout);
@@ -748,6 +945,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   if (shown) std::fclose(shown);
   std::string s = "{\"app\":\"simgolf_port\",\"mode\":\"live\",\"install\":\"" + jesc(files.install_root()) + "\",\"data\":\"" +
                   jesc(files.data_root()) + "\"";
+  s += profile_json(o.profile);  // S7.12
   s += ",\"error\":\"" + jesc(lo.error) + "\",\"data_va\":" + std::to_string(lo.data_va);
   s += ",\"idle_ms\":" + std::to_string(o.idle_ms) + ",\"pass_ms\":" + std::to_string(o.pass_ms) + ",\"cursor\":\"" + o.cursor + "\"";
   s += ",\"keys\":\"" + o.keys + "\",\"clock_origin\":" + std::to_string(o.clock_origin);
@@ -1080,6 +1278,14 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--terrain") {
       if (!val(o.terrain) || (o.terrain != "live" && o.terrain != "headless")) return false;
     }
+    else if (a == "--audio-no-device") o.audio_no_device = true;  // S7.11
+    else if (a == "--profile" || a == "--profile-list") {  // S7.12
+      o.profile_list = a == "--profile-list";
+      if (!val(o.profile) || (o.profile != "original" && o.profile != "fixed")) return false;
+    }
+    else if (a == "--audio") {  // S7.10
+      if (!val(o.audio) || (o.audio != "off" && o.audio != "on" && o.audio != "model" && o.audio != "capture")) return false;
+    }
     else if (a == "--gl") {
       if (!val(o.gl) || (o.gl != "auto" && o.gl != "wgl" && o.gl != "host" && o.gl != "raster")) return false;
     }
@@ -1130,6 +1336,14 @@ int main(int argc, char **argv) {
   }
   if (o.selftest) return run_selftest(o);
   if (!o.translate_in.empty()) return run_translate(o);
+  if (o.profile_list) return run_profile_list(o.profile);  // S7.12
+  {
+    const std::string perr = apply_profile(o.profile, o.negctl == "profile-ignored");  // S7.12: before any run
+    if (!perr.empty()) {
+      std::fprintf(stderr, "%s\n", perr.c_str());
+      return 2;
+    }
+  }
   if (o.install.empty()) {
     std::fprintf(stderr, "--install <dir> is required (the directory holding the user's golf_clean.exe)\n");
     return 2;
@@ -1171,6 +1385,7 @@ int main(int argc, char **argv) {
   PresentResult pr;
   auto write_session = [&](const AppWindow *w, uint32_t events) {
     std::string s = "{\"app\":\"simgolf_port\",\"mode\":\"" + std::string(o.trace.empty() ? "shell" : "present-trace") + "\"";
+    s += profile_json(o.profile);  // S7.12
     s += ",\"install\":\"" + jesc(files.install_root()) + "\",\"data\":\"" + jesc(files.data_root()) + "\"";
     s += ",\"trace\":\"" + jesc(o.trace) + "\",\"snapshot_at\":" + std::to_string(o.snapshot_at);
     s += ",\"max_records\":" + std::to_string(o.max_records) + ",\"records\":" + std::to_string(pr.run.done);

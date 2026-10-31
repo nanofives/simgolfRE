@@ -1,0 +1,12 @@
+== test_audio_exe
+=========================== short test summary info ===========================
+SKIPPED [5] port\test\test_audio_exe.py:128: SG_EMU_ORACLE=1 runs the emulated original
+302 passed, 5 skipped in 89.48s (0:01:29)
+== test_audio_ds
+SKIPPED [70] port\test\test_audio_ds.py:214: SG_EMU_ORACLE=1 runs the emulator
+SKIPPED [1] port\test\test_audio_ds.py:278: SG_EMU_ORACLE=1 runs the emulator
+131 passed, 71 skipped in 91.30s (0:01:31)
+== test_audio_core
+SKIPPED [60] port\test\test_audio_core.py:511: SG_EMU_ORACLE=1 runs the emulator
+FAILED port/test/test_audio_core.py::test_soundstate_header_current - Asserti...
+1 failed, 145 passed, 128 skipped in 99.11s (0:01:39)

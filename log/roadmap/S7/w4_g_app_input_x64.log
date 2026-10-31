@@ -1,0 +1,26 @@
+== app_input_x64 start 2026-10-30 11:36:12 free=28GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 16 items
+
+port/test/test_app_input.py::test_selftest PASSED                        [  6%]
+port/test/test_app_input.py::test_every_msg_record_of_the_corpus PASSED  [ 12%]
+port/test/test_app_input.py::test_mouse_move_cursor_read_follows_the_cursor_not_the_message PASSED [ 18%]
+port/test/test_app_input.py::test_scaled_host_window_gives_the_same_logical_input[1600,1200,8,31] PASSED [ 25%]
+port/test/test_app_input.py::test_scaled_host_window_gives_the_same_logical_input[1000,750,0,0] PASSED [ 31%]
+port/test/test_app_input.py::test_scaled_host_window_gives_the_same_logical_input[1920,1440,3,40] PASSED [ 37%]
+port/test/test_app_input.py::test_negative_control_reads_red[buttons swapped] PASSED [ 43%]
+port/test/test_app_input.py::test_negative_control_reads_red[WM_CHAR / WM_KEYDOWN handler shapes swapped] PASSED [ 50%]
+port/test/test_app_input.py::test_negative_control_reads_red[y flipped] PASSED [ 56%]
+port/test/test_app_input.py::test_negative_control_reads_red[y offset by the caption height] PASSED [ 62%]
+port/test/test_app_input.py::test_negative_control_reads_red[Ctrl bit dropped] PASSED [ 68%]
+port/test/test_app_input.py::test_negative_control_reads_red[focus child never takes a key] PASSED [ 75%]
+port/test/test_app_input.py::test_negative_control_reads_red[a key-down is always onChar] PASSED [ 81%]
+port/test/test_app_input.py::test_negative_control_reads_red[WM_CHAR code is its own character] PASSED [ 87%]
+port/test/test_app_input.py::test_negative_control_reads_red[Shift bit dropped] PASSED [ 93%]
+port/test/test_app_input.py::test_viewport_control_is_blind_on_the_identity_window_and_red_on_a_scaled_one PASSED [100%]
+
+============================= 16 passed in 32.99s =============================

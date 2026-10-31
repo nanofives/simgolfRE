@@ -1,0 +1,25 @@
+...............F                                                         [100%]
+================================== FAILURES ===================================
+_______________ test_live_window_session_plays_the_title_music ________________
+
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1043/test_live_window_session_plays0')
+
+    def test_live_window_session_plays_the_title_music(tmp_path):
+        """the app's window session with --audio capture for 8 s on the title menu: the boot's requests (arrayStaticInit_448160,
+        loadSoundTable, playSound 0x80) reach the shadow, its timer runs in real time (about one tick per 30 ms) and the capture
+        holds `Music Idea.wav` at unity gain"""
+        rec = tmp_path / "rec"
+        subprocess.run([str(app_exe()), "--install", str(INSTALL), "--data", str(tmp_path / "data"), "--record-dir", str(rec),
+                        "--audio", "capture", "--exit-after", "8000", "--no-activate"], cwd=str(ROOT), capture_output=True,
+                       text=True, timeout=120)
+        a = json.loads((rec / "audio.json").read_text())
+        assert a["failed"] == 0 and a["requests"] >= 3, a
+>       assert 200 <= a["ticks"] <= 300, a        # 8 s plus the start at 30 ms per tick
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: {'mode': 'capture', 'requests': 3, 'replayed': 4, 'failed': 0, ...}
+E       assert 200 <= 166
+
+port\test\test_app_audio.py:321: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_app_audio.py::test_live_window_session_plays_the_title_music
+1 failed, 15 passed in 70.01s (0:01:10)

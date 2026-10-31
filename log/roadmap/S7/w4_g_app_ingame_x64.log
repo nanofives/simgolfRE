@@ -1,0 +1,24 @@
+== app_ingame_x64 start 2026-10-30 11:20:21 free=30GB
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_w4_root
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 14 items
+
+port/test/test_app_ingame.py::test_ingame_session_ran PASSED             [  7%]
+port/test/test_app_ingame.py::test_recording_replays PASSED              [ 14%]
+port/test/test_app_ingame.py::test_ingame_presents_equal_the_port_back_buffer PASSED [ 21%]
+port/test/test_app_ingame.py::test_ingame_presents_hold_the_terrain PASSED [ 28%]
+port/test/test_app_ingame.py::test_pacing_under_ingame_load PASSED       [ 35%]
+port/test/test_app_ingame.py::test_terrain_pass_frames_fit_the_frame PASSED [ 42%]
+port/test/test_app_ingame.py::test_live_path_ran PASSED                  [ 50%]
+port/test/test_app_ingame.py::test_ingame_framegate_pass_rows_pass_on_the_app_path PASSED [ 57%]
+port/test/test_app_ingame.py::test_app_path_equals_framegate_and_its_present PASSED [ 64%]
+port/test/test_app_ingame.py::test_app_gl_auto_end_to_end PASSED         [ 71%]
+port/test/test_app_ingame.py::test_control_terrain_pass_skipped_in_the_app PASSED [ 78%]
+port/test/test_app_ingame.py::test_control_terrain_pass_skipped_on_the_live_path PASSED [ 85%]
+port/test/test_app_ingame.py::test_control_pacing_off_in_game PASSED     [ 92%]
+port/test/test_app_ingame.py::test_control_headless_terrain_in_the_app PASSED [100%]
+
+======================= 14 passed in 446.28s (0:07:26) ========================

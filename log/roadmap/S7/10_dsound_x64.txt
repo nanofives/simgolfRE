@@ -1,0 +1,2 @@
+buf 0xfec00050 primary fmt 1/2/44100/16 size 0 flags 0x1 playing 1 loop 1 vol 0 pan 0 freq 0 real 0
+buf 0xfec000c0 secondary fmt 1/2/22050/16 size 65536 flags 0x10088 playing 1 loop 1 vol 0 pan 0 freq 0 real 0

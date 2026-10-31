@@ -1,0 +1,120 @@
+synced port/app/main.cpp
+synced port/app/CMakeLists.txt
+synced port/src/sim/audio_exe.cpp
+synced port/include/portsim/sim/audio_exe.h
+-- Building for: Visual Studio 17 2022
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- portsim: no FreeType (module fttext throws MissingResource)
+-- Configuring done (3.4s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_10_root/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_10_root/port/CMakeLists.txt
+  portsim.cpp
+  registry.cpp
+  state_hash.cpp
+  ptr.cpp
+  execonst.cpp
+  gamefiles.cpp
+  audio_chan.cpp
+  audio_codec.cpp
+  audio_core.cpp
+  audio_crt.cpp
+  audio_dev.cpp
+  audio_ds.cpp
+  audio_exe.cpp
+  audio_mixer.cpp
+  audio_seq.cpp
+  audio_sound.cpp
+  audio_soundfile.cpp
+  audio_wave.cpp
+  bridge.cpp
+  buyland.cpp
+  Generando código...
+  Compilando...
+  chareditor.cpp
+  commands.cpp
+  core.cpp
+  course.cpp
+  dialogs.cpp
+  economy.cpp
+  events.cpp
+  flic.cpp
+  fttext.cpp
+  fttext_raster.cpp
+  gditext.cpp
+  gfx.cpp
+  gfx_boot_screens.cpp
+  gfx_bulletin.cpp
+  gfx_buyland.cpp
+  gfx_chareditor.cpp
+  gfx_credits.cpp
+  gfx_dialogs.cpp
+  gfx_hud.cpp
+  gfx_pixel.cpp
+  Generando código...
+  Compilando...
+  gfx_prim_fill.cpp
+  gfx_prim_text.cpp
+  gfx_prim_text2.cpp
+  gfx_reports.cpp
+  gfx_results.cpp
+  gfx_routing.cpp
+  gfx_scene.cpp
+  gfx_selftest.cpp
+  gfx_simfoto.cpp
+  gfx_surface.cpp
+  gfx_terrain.cpp
+  gfx_text.cpp
+  gl_raster.cpp
+  golfers.cpp
+  holestats.cpp
+  integrator.cpp
+  live.cpp
+  loaders.cpp
+  menu.cpp
+  reports.cpp
+  Generando código...
+  Compilando...
+  routing.cpp
+  saveload.cpp
+  semantic.cpp
+  shots.cpp
+  shotstyle.cpp
+  terrain.cpp
+  terrain_course.cpp
+  terrain_dll.cpp
+  terrain_fake.cpp
+  terrain_gen.cpp
+  terrain_gl_setup.cpp
+  terrain_live.cpp
+  terrain_overlay.cpp
+  terrain_path.cpp
+  terrain_render.cpp
+  terrain_setup.cpp
+  terrain_state.cpp
+  terrain_text.cpp
+  text.cpp
+  textlab.cpp
+  Generando código...
+  Compilando...
+  tick.cpp
+  tiles.cpp
+  util.cpp
+  video.cpp
+  x87probe.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_10_root\port\build\x64\Release\portsim.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_10_root/port/CMakeLists.txt
+  portsim_c.cpp
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_10_root/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S7_10_root/port/build/x64/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S7_10_root\port\build\x64\Release\portsim_c.dll
