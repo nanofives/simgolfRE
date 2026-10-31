@@ -15,6 +15,8 @@
 //   5 drawMarkupRun's closing tokens `}` `]` keep the current style instead of resetting it to 0
 //   6 the `{` token selects style 2 instead of 1
 //   7 the TextMetrics interface call ignores its font argument (the context's own +0x5c is measured)
+//   8 P2 fix off: an existing temporary directory is accepted and the fonts are registered session-wide (the old
+//     behaviour; read RED by port/test/test_gditext_tempdir.py)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -158,7 +160,10 @@ struct GdiTextMetrics::Impl {
   ~Impl() {
     for (auto &f : fonts)
       if (f.second.h) DeleteObject(f.second.h);
-    for (auto &f : fots) RemoveFontResourceA(f.second.c_str());
+    for (auto &f : fots) {
+      if (SG_NEGCTL(g_negctl_gditext) == 8) RemoveFontResourceA(f.second.c_str());
+      else RemoveFontResourceExA(f.second.c_str(), FR_PRIVATE, nullptr);
+    }
     for (auto it = temp_files.rbegin(); it != temp_files.rend(); ++it) DeleteFileA(it->c_str());
     if (!temp_dir.empty()) RemoveDirectoryA(temp_dir.c_str());
     if (dc) DeleteDC(dc);
@@ -176,11 +181,31 @@ struct GdiTextMetrics::Impl {
       if (n == 0 || n > MAX_PATH) throw MissingResource{"text font file"};
       static long counter = 0;
       char name[MAX_PATH + 64];
-      std::snprintf(name, sizeof(name), "%ssg_gditext_%lu_%ld", base, static_cast<unsigned long>(GetCurrentProcessId()),
-                    InterlockedIncrement(&counter));
-      if (!CreateDirectoryA(name, nullptr) && GetLastError() != ERROR_ALREADY_EXISTS)
-        throw MissingResource{"text font file"};
-      temp_dir = name;
+      // P2 (2026-10-31): a FRESH directory every time. A process killed before ~Impl leaves its .ttf locked by the
+      // session; a later process that Windows gives the same pid would pick the same name and fail to overwrite the
+      // locked file. An existing directory is therefore never accepted: the name gets a tick-count suffix after the
+      // first clash, and the search gives up after a bounded number of tries.
+      for (int tries = 0; tries < 64; ++tries) {
+        const long seq = InterlockedIncrement(&counter);
+        if (tries == 0)
+          std::snprintf(name, sizeof(name), "%ssg_gditext_%lu_%ld", base,
+                        static_cast<unsigned long>(GetCurrentProcessId()), seq);
+        else
+          std::snprintf(name, sizeof(name), "%ssg_gditext_%lu_%ld_%llx", base,
+                        static_cast<unsigned long>(GetCurrentProcessId()), seq,
+                        static_cast<unsigned long long>(GetTickCount64()) + static_cast<unsigned>(tries));
+        if (CreateDirectoryA(name, nullptr)) {
+          temp_dir = name;
+          break;
+        }
+        const DWORD err = GetLastError();
+        if (err == ERROR_ALREADY_EXISTS && SG_NEGCTL(g_negctl_gditext) == 8) {  // fix off: the old acceptance
+          temp_dir = name;
+          break;
+        }
+        if (err != ERROR_ALREADY_EXISTS) throw MissingResource{"text font file"};
+      }
+      if (temp_dir.empty()) throw MissingResource{"text font file"};
     }
     return temp_dir;
   }
@@ -206,7 +231,14 @@ struct GdiTextMetrics::Impl {
       if (err != ERROR_FILE_EXISTS && err != 0) throw MissingResource{"text font file"};
     }
     temp_files.push_back(fot);
-    if (!AddFontResourceA(fot.c_str())) throw MissingResource{"text font file"};
+    // The original registers session-wide (Font::loadFile: AddFontResourceA). The port's provider is a host service, so
+    // the registration is process-private (FR_PRIVATE, a port choice): it ends with the process even when it is killed
+    // and leaves no locked font file behind. CreateFontIndirectA still resolves the faces by name inside the process.
+    if (SG_NEGCTL(g_negctl_gditext) == 8) {
+      if (!AddFontResourceA(fot.c_str())) throw MissingResource{"text font file"};
+    } else if (!AddFontResourceExA(fot.c_str(), FR_PRIVATE, nullptr)) {
+      throw MissingResource{"text font file"};
+    }
     fots[key] = fot;
   }
   Font &font(const LOGFONTA &lf) {

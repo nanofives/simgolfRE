@@ -2152,6 +2152,12 @@ SIMGOLF_GAME_DIR=instances/<name>` for game.py / diff_hook, and `SIMGOLF_BUILD_D
 SIMGOLF_RE_BATCHES` for build.bat. Keep copies at short paths (a Temp-path copy failed). Track the PID you spawn
 and kill only that one. Without SIMGOLF_ALLOW_MULTI `Game.start()` refuses while another SimGolf window exists.
 Never blanket-kill by name.
+GDI font temp dirs (P2, 2026-10-31, log/roadmap/P2/notes.md): until P2 the port's GDI text provider (gditext.cpp) copied the two
+game fonts into %TEMP%\sg_gditext_<pid>_<n>, accepted an existing directory and registered them session-wide
+(AddFontResourceA). A killed test process left its .ttf locked by the session, and a later process that got the same pid failed
+at record 0 with `missing text font file` / sg_run_boot -11 (I21 hit it three times in one day). Now every provider creates a
+new directory and registers with FR_PRIVATE (negctl gditext 8 restores the old way; port/test/test_gditext_tempdir.py). A tree
+built before P2 still leaks: release a dead pid's stale registration with RemoveFontResourceA on its .fot (deletes nothing).
 Frida temp (2026-10-12): frida-core unpacks a 22-50 MB agent dir (%TEMP%rida-<hash>) per Python process and
 removes it only on a clean exit, so runners killed on a timeout leak one each: 6,461 (326 GB) filled C: during round 29.
 Game.start() now calls re/tools/game.py purge_frida_temp(): it deletes only dirs created before every running python /
