@@ -16,7 +16,11 @@ exactly), glTexParameterf filters (GL_LINEAR, passed as floats) for the path tex
 texture, source-alpha blending, and the triangle setup: vertices scaled by 1 - 2^-8 / h about the viewport centre and rounded to
 8 fractional bits, for coverage and attributes, sampled at pixel centres (section 18; `#tune 26 1` restores the linear model); the
 specular term read from a 256-entry table over [0.0005^(1/shininess), 1] at the nearest entry (`#tune 27 1` restores the exact
-pow); pixel centres exactly on an edge owned by edges pointing to +y, or to +x when horizontal (`#tune 10 2` restores -x).
+pow); pixel centres exactly on an edge owned by edges pointing to +y, or to +x when horizontal (`#tune 10 2` restores -x);
+since roadmap S3.21 (U-1392) the vertex positions by the generic GL's own float32 arithmetic (float32 matrices with the MVP updated
+by every modelview operation, the translation added first, window = round-half-even(f32(ndc * (h - 2^-8)) + centre) to 2^-8;
+`#tune 28 1` restores the double model) and triangles crossing the view volume clipped like the generic GL and drawn as fans
+(`#tune 29 1` restores no clipping): the one-level pixels fell about tenfold (c7 sandbox 188 -> 11, zoom1 342 -> 11).
 
 Negative controls (the `#tune 11 <mode>` knob of GlRaster), each of which must break the criterion on at least one pass.
 """
@@ -280,3 +284,74 @@ def test_fast_loop_control_float_reciprocals_changes_the_frame(lib, setup):
         if int((got != ref).sum()):
             changed.append(step)
     assert changed, "control #fastpath 4 (float reciprocals) left every frame unchanged: the comparison cannot see it"
+
+
+# ---- roadmap S3.21 (U-1392): the generic GL's float32 vertex arithmetic and its frustum clipping, measured against the real
+# software GL's GL_FEEDBACK output (log/roadmap/S3/21_notes.md: every vertex of the 268 corpus passes, 973,749, equal; the clipper's
+# output triangles equal on the passes checked). The G2 criterion above is too loose to see them, so these tests bound the one-level
+# pixels of four c7 passes tightly: the rules meet the bound, and each old behaviour breaks it (the negative controls:
+# `#tune 28 1` the earlier double vertex model, `#tune 29 1` no clipping).
+S321_STEPS = ("sandbox", "zoom1", "z2_r1", "hole")
+S321_MAX_ONE_LEVEL_SUM = 80   # measured 40 (11 + 11 + 11 + 7); tune 28 = 1 gives 1,213, tune 29 = 1 216
+
+
+def _one_level(lib, setup, step, lines=""):
+    def patch(r, dll):
+        if lines:
+            t = lines.encode()
+            dll.sg_raster_exec(r, t, len(t))
+    post, got, st, unknown, pre = R.run(lib, setup, step, patch=patch)
+    rep = R.report(post, got, pre)
+    return rep["diff"] - rep["gt1"]
+
+
+def _s321_sum(lib, setup, lines):
+    steps = [s for s in S321_STEPS if s in STEPS]
+    if len(steps) != len(S321_STEPS):
+        pytest.skip("c7 lacks one of " + ", ".join(S321_STEPS))
+    return {s: _one_level(lib, setup, s, lines) for s in steps}
+
+
+def test_s321_rules_meet_the_tight_bound(lib, setup):
+    per = _s321_sum(lib, setup, "")
+    assert sum(per.values()) <= S321_MAX_ONE_LEVEL_SUM, per
+
+
+@pytest.mark.parametrize("control", ["#tune 28 1\n", "#tune 29 1\n"])
+def test_s321_old_behaviour_breaks_the_tight_bound(lib, setup, control):
+    per = _s321_sum(lib, setup, control)
+    assert sum(per.values()) > S321_MAX_ONE_LEVEL_SUM, (control, per)
+
+
+@pytest.mark.parametrize("step", STEPS or ["none"])
+def test_s321_vertex_rule_is_no_worse_than_the_double_model(lib, setup, step):
+    if step == "none":
+        pytest.skip("no corpus")
+    assert _one_level(lib, setup, step) <= _one_level(lib, setup, step, "#tune 28 1\n"), step
+
+
+# ---- roadmap S3.21b (U-1309): the generic GL's incremental 16.16 attribute stepping, opt-in (`#tune 30`), measured on probes of the
+# real GL (log/roadmap/S3/21_ramp.py dense, 21_modprobe.py; the real frames are the probe scenes' dib_post.bin, local corpus).
+# Untextured: exact on the slow ramp (705 -> 0 px); textured (MODULATE) triangles are not covered by the model (constant texture x
+# Gouraud colour 15 -> 298 with the 5-bit quantum), so the default stays off and `#tune 30 2` steps untextured triangles only.
+S321B_PROBE = G.CORPUS / "probe" / "s321_ramp_dense"
+
+
+def _probe_diff(lib, d, knobs):
+    import numpy as np
+    from port.test import glprobe as GP
+    real = np.frombuffer((d / "snaps" / "s1" / "dib_post.bin").read_bytes(), "<u2")
+    port = GP.port_frame(lib, d, knobs)
+    return int((real != port).sum())
+
+
+def test_s321b_stepping_is_exact_on_the_ramp_probe(lib):
+    if not (S321B_PROBE / "snaps" / "s1" / "dib_post.bin").exists():
+        pytest.skip("no s321_ramp_dense probe (run log/roadmap/S3/21_ramp.py dense with re/tools/glexact/glreplay.exe)")
+    assert _probe_diff(lib, S321B_PROBE, {30: 2}) == 0
+
+
+def test_s321b_control_stepping_off_reads_red(lib):
+    if not (S321B_PROBE / "snaps" / "s1" / "dib_post.bin").exists():
+        pytest.skip("no s321_ramp_dense probe")
+    assert _probe_diff(lib, S321B_PROBE, None) > 100   # measured 705 with the plane

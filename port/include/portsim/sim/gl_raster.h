@@ -121,7 +121,10 @@ class GlRaster : public GlSink {
   // 16 attribute-plane vertex rounding f32(v + 2^k) - 2^k, 17 attribute arithmetic in float32, 18 / 19 an absolute shift of the
   // attribute sample position in x / y, in units of 1e-5 pixel, 20 per-vertex attribute offsets sign(ndc) * value / 256 px where |ndc| >= 0.5,
   // 22 attribute setup from 8-fractional-bit window coordinates of a viewport scaled by half-size + 2^-8 (U-1076 experiments),
-  // 27 = 1 the exact pow for the specular term instead of the generic GL's 256-entry nearest-entry table (U-1300)
+  // 27 = 1 the exact pow for the specular term instead of the generic GL's 256-entry nearest-entry table (U-1300),
+  // 28 = 1 the earlier double-precision vertex model (window position scaled by 1 - 2^-8 / h and rounded) instead of the generic GL's
+  // float32 vertex arithmetic (roadmap S3.21, U-1392), 29 = 1 no frustum clipping (with tune 28 = 0 the triangles crossing the view
+  // volume are clipped like the generic GL's and drawn as the fan of the clipped polygon)
   static constexpr int kTunes = 32;
   int tune[kTunes] = {};
 
@@ -150,6 +153,8 @@ class GlRaster : public GlSink {
     double x, y, z;       // window coordinates
     double s, t;
     double r, g, b, a;    // the lit colour (0..1)
+    double qx, qy;        // the vertex snapped to 2^-8 by the float32 vertex rule (tune 28 = 0)
+    float c[4];           // its float32 clip coordinates (tune 28 = 0)
   };
   struct Mat {
     double m[16];         // column-major
@@ -195,6 +200,15 @@ class GlRaster : public GlSink {
   std::map<std::string, std::vector<uint8_t>> tex_bytes_;
 
   Mat &cur() { return mode_ == 0x1701 ? proj_ : mv_; }
+  // the generic GL's own matrices (roadmap S3.21): float32, column-major; the MVP is updated by every modelview operation itself
+  // (not recomputed as P * MV) and recomputed only when the projection changes; push / pop of the modelview saves it too
+  struct FMat {
+    float m[16];
+  };
+  FMat fmv_, fproj_, fmvp_;
+  std::vector<FMat> fstack_[2], fstack_mvp_;
+  void fpost_(const FMat &b);       // the current float matrix times b, and the MVP with it
+  static void fmul_(const FMat &a, const FMat &b, FMat &r);
   void mul(const Mat &b);
   void emit(double x, double y, double z, const float *normal);
   // emit's per-vertex invariants (roadmap S3.10): the inverse of the modelview's upper 3x3 for its nine values, the specular table
@@ -203,6 +217,11 @@ class GlRaster : public GlSink {
   double spec_lookup_(double nh, double shininess);
   double spec_sh_ = -1.0, spec_t_ = 0.0, spec_scale_ = 0.0, spec_tab_[256] = {};
   void triangle(const Vtx &a, const Vtx &b, const Vtx &c);
+  // the window position of float32 clip coordinates under the vertex rule (x, y unrounded; qx, qy snapped to 2^-8)
+  void window_of_(const float c[4], Vtx &v) const;
+  // frustum clipping (tune 29 = 0): true when the triangle was handled (culled, clipped and drawn as a fan, or clipped away)
+  bool clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c);
+  bool in_clip_ = false;
   // the default pipeline's pixel loop (roadmap S3.10): the same values as triangle()'s general loop, computed with exact integer
   // edge functions and row spans; false (nothing written) when its preconditions do not hold
   bool fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear, int minx, int maxx,

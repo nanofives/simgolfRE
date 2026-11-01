@@ -1,0 +1,37 @@
+free commit 21.4 GB (need 16)
+[turn] start 00:54:14 framegate 24_rows lines-off cov_a_golfer,cov_a_champ,cov_a_build + rule6 batch B
+rule 6 (was 0)
+cov_a_golfer	panel_0	5249	4825	FAIL
+cov_a_golfer	panel_1	1594	1467	FAIL
+cov_a_golfer	panel_2	644	606	FAIL
+cov_a_golfer	panel_3	715	690	FAIL
+cov_a_golfer	button_3	662	638	FAIL
+cov_a_golfer	mod_11	4806	4324	FAIL
+cov_a_golfer	shift_tee_300	3373	3145	FAIL
+cov_a_golfer	shift_tee_570	3049	2662	FAIL
+cov_a_golfer	tee_300	1325	1095	FAIL
+cov_a_golfer	tee_570	563	539	FAIL
+cov_a_golfer	strip	1931	1779	FAIL
+cov_a_champ	champ_render	1609	1519	FAIL
+cov_a_champ	n_prompt	858	809	FAIL
+cov_a_champ	n_cancel	1609	1519	FAIL
+cov_a_champ	X	1609	1519	FAIL
+cov_a_build	terrain_03	468	449	FAIL
+cov_a_build	terrain_07	468	449	FAIL
+cov_a_build	terrain_11	525	504	FAIL
+cov_a_build	brush_465	560	537	FAIL
+rows PASS 0
+rule 6 (was 0)
+cov_a_keys	k_dlg_R	1	0	FAIL
+cov_a_keys	k_render_dot	46	3	FAIL
+cov_a_keys	k_render_slash	18	4	FAIL
+cov_a_keys3	panel	1	0	FAIL
+cov_a_play	shot_keys	23	0	FAIL
+cov_b_decor	terrain	45	9	FAIL
+cov_r_bio	panel	4	0	FAIL
+cov_r_bio	exit	4	0	FAIL
+cov_r_tutorial	p18	0	0	PASS
+ui_tour	practice	6	2	FAIL
+ui_tour_v	practice	6	0	FAIL
+rows PASS 1
+[turn] end 00:58:23 rc=0

@@ -1,0 +1,29 @@
+[w8_lock] S3.26 queued at 2026-10-31 03:36:33
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 03:36:33 (waited 0 s, free commit 24.5 GB)
+cov_k3_camera2 sandbox PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 edge PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge0 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge1 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge2 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge3 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge4 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge5 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge6 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge7 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge8 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_edge9 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 x_after PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj0 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj1 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj2 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj3 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj4 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj5 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj6 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj7 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj8 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_inj9 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 y_after PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k3_camera2 end PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+states [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+[w8_lock] S3.26 released at 2026-10-31 03:36:40

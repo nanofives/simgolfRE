@@ -1,0 +1,4 @@
+9534 calls, 8551251 pixels the real GL changed
+rule 0: differing 879 (one level 776, beyond 103), calls with a difference 316, newly wrong against rule 0: 0
+rule 2: differing 104 (one level 103, beyond 1), calls with a difference 99, newly wrong against rule 0: 0
+rule 6: differing 473 (one level 422, beyond 51), calls with a difference 207, newly wrong against rule 0: 0

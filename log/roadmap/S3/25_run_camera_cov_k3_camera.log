@@ -1,0 +1,41 @@
+[heavy] 23:20:21 waiting behind older waits ['w8_wait_S3.24'] (17 s since our release)
+[heavy] 23:20:41 waiting behind older waits ['w8_wait_S3.24'] (37 s since our release)
+[heavy] 23:21:01 waiting behind older waits ['w8_wait_S3.24'] (57 s since our release)
+[heavy] 23:21:21 waiting behind older waits ['w8_wait_S3.24'] (77 s since our release)
+[heavy] 23:21:41 waiting behind older waits ['w8_wait_S3.24'] (97 s since our release)
+[heavy] 23:22:01 waiting behind older waits ['w8_wait_S3.24'] (117 s since our release)
+[heavy] 23:22:21 waiting behind older waits ['w8_wait_S3.24'] (137 s since our release)
+[heavy] 23:22:41 waiting behind older waits ['w8_wait_S3.24'] (157 s since our release)
+[heavy] 23:23:01 waiting behind older waits ['w8_wait_S3.24'] (177 s since our release)
+[heavy] 23:23:21 waiting behind older waits ['w8_wait_S3.24'] (197 s since our release)
+[heavy] 23:23:41 waiting behind older waits ['w8_wait_S3.24'] (217 s since our release)
+[heavy] 23:24:01 waiting behind older waits ['w8_wait_S3.24'] (237 s since our release)
+[heavy] 23:24:21 waiting behind older waits ['w8_wait_S3.24'] (257 s since our release)
+[heavy] 23:24:41 lock held by: S3.24 build x64 S3_24 (retry) 23:24
+free commit 19.3 GB (need 16)
+free commit 19.3 GB (need 16)
+[heavy] 23:25:01 lock taken: rec camera cov_k3_camera
+  [off] checkpoint sandbox T=8585 tgt=8585 date=0x00000027 seed=0x58dc2675
+  [off] checkpoint edge T=12928 tgt=12928 date=0x00000053 seed=0xcfcb3161
+  [off] checkpoint x_edge0 T=22321 tgt=22321 date=0x000000b5 seed=0x858cfe26
+  [off] checkpoint x_edge1 T=22422 tgt=22422 date=0x000000b6 seed=0x2860cacc
+  [off] checkpoint x_edge2 T=22523 tgt=22523 date=0x000000b7 seed=0x2f922ca2
+  [off] checkpoint x_edge3 T=22624 tgt=22624 date=0x000000b9 seed=0x83cc98db
+  [off] checkpoint x_edge4 T=22725 tgt=22725 date=0x000000ba seed=0x0cbde329
+  [off] checkpoint x_edge5 T=22826 tgt=22826 date=0x000000bb seed=0xf57ef4df
+  [off] checkpoint x_edge6 T=22927 tgt=22927 date=0x000000bc seed=0x1afd9d8b
+  [off] checkpoint x_edge7 T=23028 tgt=23028 date=0x000000bd seed=0xc814c9f7
+  [off] checkpoint x_after T=25654 tgt=25654 date=0x000000d8 seed=0xf7b214c4
+  [off] checkpoint y_inj0 T=25755 tgt=25755 date=0x000000d9 seed=0xfabc6980
+  [off] checkpoint y_inj1 T=25856 tgt=25856 date=0x000000da seed=0x708a98ce
+  [off] checkpoint y_inj2 T=25957 tgt=25957 date=0x000000dc seed=0x4f55af88
+  [off] checkpoint y_inj3 T=26058 tgt=26058 date=0x000000dd seed=0x3709571e
+  [off] checkpoint y_inj4 T=26159 tgt=26159 date=0x000000de seed=0xb847c3ce
+  [off] checkpoint y_inj5 T=26260 tgt=26260 date=0x000000df seed=0xcc12bc7e
+  [off] checkpoint y_inj6 T=26361 tgt=26361 date=0x000000e0 seed=0x1ff57e5c
+  [off] checkpoint y_inj7 T=26462 tgt=26462 date=0x000000e1 seed=0xdcd5adea
+  [off] checkpoint y_after T=29088 tgt=29088 date=0x000000fb seed=0xa1f985d2
+  [off] checkpoint end T=32623 tgt=32623 date=0x00000120 seed=0x31618844
+run cov_k3_camera/s325_camera: OK polls=324 checkpoints=21
+cov_k3_camera/camera: 21 checkpoints -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\corpus\w8rec\cov_k3_camera\camera; run rc 0; vs det_b: SAME (21 checkpoints)
+[heavy] 23:26:27 lock released

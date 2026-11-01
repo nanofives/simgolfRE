@@ -177,8 +177,10 @@ struct SelfCheck {
 // variant: the WglSink variant (as LiveTerrain makes it for the negative controls 8 / 9 / 11 / 12); perturb (negative controls of
 // the check itself): 1 = the pinned hash with one hex digit changed, 2 = the reference pass with every texture coordinate moved by one texel
 SelfCheck wgl_self_check(Ctx &ctx, int variant = 0, int perturb = 0);
-// The same reference pass through the portable rasteriser (tests: the check's sensitivity to the U-1392 residual)
-SelfCheck raster_self_check(Ctx &ctx);
+// The same reference pass through the portable rasteriser (tests). Since roadmap S3.21 GlRaster equals the original on the reference
+// rectangle; old_rules = 1 sets GlRaster tune 28 and 29 (S3.21's pre-rule vertex model and no clipping) on this rasteriser only,
+// the check's negative control (45 of the 1,024 px differ, the U-1392 residual S3.20 measured)
+SelfCheck raster_self_check(Ctx &ctx, int old_rules = 0);
 // SHA-256 of a byte string, lower-case hex (FIPS 180-4)
 std::string sha256_hex(const uint8_t *data, size_t n);
 

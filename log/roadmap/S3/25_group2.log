@@ -1,0 +1,25 @@
+course: terrain frame 279 passes []; box px exit != scene root 0, exit != det_b 0, exit != course exit 0
+radial_hover: terrain frame 306 passes []; box px exit != scene root 0, exit != det_b 0, exit != course exit 0
+rep_comments: terrain frame 318 passes []; box px exit != scene root 0, exit != det_b 201, exit != course exit 0
+rep_histograph: terrain frame 342 passes []; box px exit != scene root 0, exit != det_b 201, exit != course exit 0
+rep_financial: terrain frame 366 passes []; box px exit != scene root 0, exit != det_b 201, exit != course exit 0
+rep_report1: terrain frame 390 passes []; box px exit != scene root 0, exit != det_b 201, exit != course exit 0
+rep_shortcuts: terrain frame 414 passes []; box px exit != scene root 0, exit != det_b 201, exit != course exit 0
+rep_roster: terrain frame 438 passes []; box px exit != scene root 0, exit != det_b 254, exit != course exit 0
+course exit, RGB555, x 781..799:
+451 0000 0000 0420 0000 0020 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000   last terrain x -; nonzero dark px x 783..785
+452 0020 0421 0000 0421 0020 0421 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000   last terrain x -; nonzero dark px x 781..786
+453 2e09 25e8 0420 0000 0421 0000 0020 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000   last terrain x 782; nonzero dark px x 783..787
+454 29e8 2a09 25e7 0421 0000 0421 0000 0421 0000 0421 0000 0000 0000 0000 0000 0000 0000 0000 0000   last terrain x 783; nonzero dark px x 784..790
+455 1d86 21a7 21c7 25c7 21c7 0000 0020 0000 0020 0000 0420 0000 0000 0000 0000 0000 0000 0000 0000   last terrain x 785; nonzero dark px x 787..791
+456 29c7 2187 21c7 29e8 25e8 25c7 0020 0421 0020 0421 0020 0421 0020 0000 0000 0000 0000 0000 0000   last terrain x 786; nonzero dark px x 787..793
+457 29e7 29e8 2586 21a7 21c7 21a6 25e8 0000 0421 0000 0020 0000 0421 0000 0000 0000 0000 0000 0000   last terrain x 787; nonzero dark px x 789..793
+458 3228 366a 3208 3628 1965 21a7 25c7 29e8 0000 0421 0020 0421 0000 0421 0020 0421 0000 0000 0000   last terrain x 788; nonzero dark px x 790..796
+459 364a 362a 3629 2de7 3209 1d45 1d86 1d86 25e7 25e8 0420 0000 0020 0000 0020 0000 0020 0000 0000   last terrain x 790; nonzero dark px x 791..797
+460 3649 2de8 3649 3e8a 3a6a 2de8 2166 2186 21c7 2a08 25c7 0421 0020 0421 0000 0421 0020 0421 0020   last terrain x 791; nonzero dark px x 792..799
+461 3229 3208 3208 2e07 29e6 3229 2e07 1d65 2166 1da6 21a6 21c7 0421 0000 0420 0000 0020 0000 0420   last terrain x 792; nonzero dark px x 793..799
+462 3209 3629 3208 3628 29c7 3229 3228 3229 29c7 1945 2186 29e8 25c7 0421 0020 0421 0000 0421 0000   last terrain x 793; nonzero dark px x 794..798
+463 364a 3609 3a4a 2e08 3629 3228 3228 3228 2de7 21a6 1945 1d86 25e8 21c7 25e8 0000 0420 0000 0420   last terrain x 795; nonzero dark px x 797..799
+464 31e8 364a 3229 3629 3208 2de7 2de7 3629 3628 362a 2de7 2586 1945 21a7 25c7 2e29 0020 0421 0020   last terrain x 796; nonzero dark px x 797..799
+465 3a4a 3649 3649 29c6 2e07 2e08 2e07 2de7 3608 31e8 3e6b 29a7 2586 1945 21a6 25c7 2a08 0000 0420   last terrain x 797; nonzero dark px x 799..799
+466 2de7 3228 2e08 2e08 3649 3a4a 2dc7 3228 2de8 3209 3629 2de8 2de7 29c8 1945 2187 25c7 2a08 0000   last terrain x 798; nonzero dark px x -..-

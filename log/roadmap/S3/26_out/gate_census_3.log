@@ -1,0 +1,19 @@
+[w8_lock] S3.26 queued at 2026-10-31 05:44:27
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 05:44:27 (waited 0 s, free commit 27.4 GB)
+batch 3: cov_k2_simfoto cov_k3_build cov_k3_camera cov_k3_camera2 cov_k3_career cov_k3_champ cov_k3_hole19 cov_l_bridge cov_l_camera cov_l_point cov_r_bio cov_r_course cov_r_flic_input cov_r_palette_hot 
+[1/14] cov_k2_simfoto FAIL=3 (10.0 s)
+[2/14] cov_k3_build FAIL=12 (9.4 s)
+[3/14] cov_k3_camera FAIL=21 (4.7 s)
+[4/14] cov_k3_camera2 FAIL=25 (4.0 s)
+[5/14] cov_k3_career FAIL=3 PASS=2 (5.7 s)
+[6/14] cov_k3_champ FAIL=12 PASS=1 (8.9 s)
+[7/14] cov_k3_hole19 FAIL=8 (5.7 s)
+[8/14] cov_l_bridge FAIL=12 PASS=1 (4.7 s)
+[9/14] cov_l_camera PASS=13 (5.9 s)
+[10/14] cov_l_point FAIL=4 PASS=1 (3.6 s)
+[11/14] cov_r_bio FAIL=4 PASS=3 (9.9 s)
+[12/14] cov_r_course FAIL=3 (13.9 s)
+[13/14] cov_r_flic_input FAIL=2 PASS=2 (3.8 s)
+[14/14] cov_r_palette_hot FAIL=6 (6.1 s)
+{"rows": 138, "counts": {"FAIL": 115, "PASS": 23}}
+[w8_lock] S3.26 released at 2026-10-31 05:46:15

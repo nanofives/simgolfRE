@@ -1,0 +1,3 @@
+test_gfx_pixel rc=0 17 passed in 32.02s 18:13:36
+test_gfx_reports rc=0 36 passed in 252.09s (0:04:12) 18:22:00
+mem_alone rc=0 1 passed, 6 deselected in 1070.15s (0:17:50) 22:04:53

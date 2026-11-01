@@ -1,0 +1,23 @@
+start 2026-11-01 02:01:22
+edit port/test/test_gl_wgl.py
+edit port/include/portsim/sim/gl_wgl.h
+edit port/src/sim/gl_wgl.cpp
+edit port/src/sim/gl_wgl.cpp
+edit port/src/sim/gl_wgl.cpp
+edit port/src/sim/gl_wgl.cpp
+edit port/test/test_gl_wgl_selfcheck.py
+edit port/test/test_gl_wgl_selfcheck.py
+edit port/test/test_gl_wgl_selfcheck.py
+wrote port/test/test_gl_wgl.py
+wrote port/include/portsim/sim/gl_wgl.h
+wrote port/src/sim/gl_wgl.cpp
+wrote port/test/test_gl_wgl_selfcheck.py
+apply rc=0
+[build] x64 rc=0 [build] done 02:01:54  / w32 rc=0
+x64 test_gl_wgl rc=0 9 passed in 63.71s (0:01:03) 02:02:59
+x64 test_gl_wgl_selfcheck rc=0 24 passed in 49.38s 02:03:50
+win32 test_gl_wgl rc=0 9 passed in 78.99s (0:01:18) 02:05:10
+win32 test_gl_wgl_selfcheck rc=0 24 passed in 52.00s 02:06:03
+segs_x64 rc=0 {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 99.5}
+segs_win32 rc=0 {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 133.9}
+[post_fix2 done] 2026-11-01 02:09:58

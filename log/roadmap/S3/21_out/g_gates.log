@@ -1,0 +1,16 @@
+[1/13] build_x64 rc=1 22 s :: 
+[2/13] build_w32 rc=1 203 s :: 
+[1/1] build_x64 rc=0 24 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\x64\Release\portsim_c.dll
+[1/6] build_w32 rc=0 39 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_c.dll
+[2/6] t_test_gl_raster rc=0 196 s :: 248 passed in 194.72s (0:03:14)
+[3/6] sample rc=0 181 s :: {"rows": 133, "counts": {"PASS": 4, "FAIL": 129}}
+[4/6] sample_ctl28 rc=0 30 s :: {"rows": 82, "counts": {"PASS": 2, "FAIL": 80}}
+[5/6] sample_w32 rc=0 23 s :: {"rows": 82, "counts": {"PASS": 2, "FAIL": 80}}
+[6/6] terrain rc=0 1876 s :: {"PASS": 527, "NOT_MEASURED": 75}
+[1/3] census rc=0 1936 s :: {"rows": 698, "counts": {"PASS": 122, "FAIL": 566, "NOT_RUN": 10}}
+[1/2] segs_x64 rc=0 368 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 367.7}
+[2/3] t_test_terrain_render rc=0 190 s :: 522 passed in 189.39s (0:03:09)
+[2/2] boot_x64 rc=0 558 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[1/2] segs_win32 rc=0 489 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 487.8}
+[3/3] t_test_static rc=0 5 s :: 6 passed in 2.38s
+[2/2] boot_win32 rc=0 665 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}

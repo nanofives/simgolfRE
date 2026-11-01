@@ -1,0 +1,11 @@
+[w8_lock] S3.26 queued at 2026-10-31 02:56:20
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.23'] free_commit=20.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.7 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.6 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.4 GB
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 02:57:50 (waited 90 s, free commit 20.7 GB)
+cov_r_s2_screens   boot PASS    calls orig 20204 port 20204 EQUAL states 32/32 equal
+[w8_lock] S3.26 released at 2026-10-31 02:57:54

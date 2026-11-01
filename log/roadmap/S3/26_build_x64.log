@@ -1,0 +1,110 @@
+[w8_lock] S3.26 queued at 2026-10-31 03:07:05
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=21.8 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=21.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=21.7 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=21.6 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=22.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=23.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=23.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=23.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.6 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.7 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=24.8 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.4 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.4 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.4 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='step=I20-rerun' ahead=['S3.24', 'S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.24', 'S3.23'] free_commit=26.0 GB
+[w8_lock] BREACH logged: hand-taken lock 'S3.24 gate census_4 03:31'
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.0 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=25.1 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.7 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.2 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.4 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.2 GB
+[w8_lock] S3.26 waiting: lock='S3.24 gate census_4 03:31' ahead=['S3.23'] free_commit=24.1 GB
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.23'] free_commit=25.3 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=24.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=24.4 GB
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 03:35:56 (waited 1731 s, free commit 24.7 GB)
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x64-windows/share/freetype (module fttext)
+-- Configuring done (0.0s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\app\Release\portapp_input.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/CMakeLists.txt
+  commands.cpp
+  gfx_pixel.cpp
+  tick.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\Release\portsim.lib
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/CMakeLists.txt
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/build/x64/Release/portsim_c.exp
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\app\Release\simgolf_input_check.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/CMakeLists.txt
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\Release\portsim_core_test.exe
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\Release\portsim_c.dll
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\Release\portsim_layout_test.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_26/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_26\port\build\x64\Release\portsim_c.dll
+[w8_lock] S3.26 released at 2026-10-31 03:36:12

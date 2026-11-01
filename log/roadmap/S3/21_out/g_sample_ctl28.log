@@ -1,0 +1,4 @@
+== sample_ctl28 start 2026-10-30 23:17:50
+[1/2] sandbox_basic FAIL=9 PASS=1 (10.5 s)
+[2/2] cov_k1_river FAIL=71 PASS=1 (9.5 s)
+{"rows": 82, "counts": {"PASS": 2, "FAIL": 80}}

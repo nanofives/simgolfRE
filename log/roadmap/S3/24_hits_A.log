@@ -1,0 +1,53 @@
+free commit 21.4 GB (need 16)
+[turn] start 00:34:19 glreplay ~40 dumped records (cov_a_golfer)
+scene 0: 9 records
+scene 1: 4 records
+scene 2: 1 records
+scene 3: 1 records
+scene 4: 1 records
+scene 5: 1 records
+cov_a_golfer panel_0 (376, 350) pre [18, 24, 14] port_post [18, 24, 14] real_post [18, 24, 14] frame_port [np.int64(18), np.int64(25), np.int64(14)] ref [np.int64(18), np.int64(24), np.int64(14)] REAL==REF
+cov_a_golfer panel_0 (377, 351) pre [16, 21, 11] port_post [16, 21, 11] real_post [16, 21, 11] frame_port [np.int64(16), np.int64(22), np.int64(11)] ref [np.int64(16), np.int64(21), np.int64(11)] REAL==REF
+cov_a_golfer panel_0 (378, 352) pre [14, 20, 10] port_post [14, 20, 10] real_post [14, 20, 10] frame_port [np.int64(14), np.int64(21), np.int64(10)] ref [np.int64(14), np.int64(20), np.int64(10)] REAL==REF
+cov_a_golfer panel_0 (379, 353) pre [14, 19, 10] port_post [14, 19, 10] real_post [14, 19, 10] frame_port [np.int64(14), np.int64(20), np.int64(10)] ref [np.int64(14), np.int64(19), np.int64(10)] REAL==REF
+cov_a_golfer tee_300 (249, 183) pre [11, 16, 7] port_post [11, 16, 7] real_post [11, 16, 7] frame_port [np.int64(5), np.int64(8), np.int64(3)] ref [np.int64(5), np.int64(7), np.int64(3)] 
+cov_a_golfer tee_300 (248, 184) pre [14, 20, 11] port_post [14, 20, 11] real_post [14, 20, 11] frame_port [np.int64(7), np.int64(10), np.int64(5)] ref [np.int64(7), np.int64(9), np.int64(5)] 
+cov_a_golfer tee_300 (247, 185) pre [11, 16, 7] port_post [11, 16, 7] real_post [11, 16, 7] frame_port [np.int64(4), np.int64(7), np.int64(3)] ref [np.int64(4), np.int64(6), np.int64(3)] 
+cov_a_golfer tee_300 (247, 204) pre [13, 19, 10] port_post [13, 19, 10] real_post [13, 19, 10] frame_port [np.int64(6), np.int64(9), np.int64(5)] ref [np.int64(7), np.int64(9), np.int64(5)] 
+cov_a_golfer tee_300 (250, 207) pre [13, 19, 10] port_post [13, 19, 10] real_post [13, 19, 10] frame_port [np.int64(6), np.int64(9), np.int64(5)] ref [np.int64(7), np.int64(9), np.int64(5)] 
+cov_a_golfer strip (427, 292) pre [10, 24, 8] port_post [10, 24, 8] real_post [10, 24, 8] frame_port [np.int64(10), np.int64(9), np.int64(6)] ref [np.int64(11), np.int64(8), np.int64(6)] 
+cov_a_golfer strip (426, 293) pre [10, 24, 7] port_post [10, 24, 7] real_post [10, 24, 7] frame_port [np.int64(12), np.int64(10), np.int64(7)] ref [np.int64(13), np.int64(9), np.int64(7)] 
+cov_a_golfer strip (425, 294) pre [9, 24, 7] port_post [9, 24, 7] real_post [9, 24, 7] frame_port [np.int64(8), np.int64(7), np.int64(3)] ref [np.int64(9), np.int64(6), np.int64(3)] 
+cov_a_golfer strip (424, 295) pre [10, 20, 7] port_post [10, 20, 7] real_post [10, 20, 7] frame_port [np.int64(10), np.int64(8), np.int64(5)] ref [np.int64(11), np.int64(7), np.int64(5)] 
+cov_a_golfer strip (423, 296) pre [10, 24, 7] port_post [10, 24, 7] real_post [10, 24, 7] frame_port [np.int64(8), np.int64(6), np.int64(4)] ref [np.int64(9), np.int64(6), np.int64(4)] 
+cov_a_golfer strip (380, 298) pre [12, 22, 8] port_post [12, 22, 8] real_post [12, 22, 8] frame_port [np.int64(14), np.int64(11), np.int64(7)] ref [np.int64(14), np.int64(10), np.int64(7)] 
+cov_a_golfer strip (421, 298) pre [9, 24, 7] port_post [9, 24, 7] real_post [9, 24, 7] frame_port [np.int64(6), np.int64(5), np.int64(3)] ref [np.int64(6), np.int64(4), np.int64(3)] 
+cov_a_golfer strip (381, 299) pre [14, 17, 8] port_post [13, 18, 8] real_post [13, 18, 8] frame_port [np.int64(16), np.int64(13), np.int64(8)] ref [np.int64(16), np.int64(12), np.int64(8)] 
+cov_a_golfer strip (382, 300) pre [16, 12, 8] port_post [15, 15, 8] real_post [15, 15, 8] frame_port [np.int64(16), np.int64(13), np.int64(8)] ref [np.int64(16), np.int64(12), np.int64(8)] 
+cov_a_golfer panel_2 (359, 313) pre [16, 21, 12] port_post [16, 21, 12] real_post [16, 21, 12] frame_port [np.int64(16), np.int64(22), np.int64(12)] ref [np.int64(16), np.int64(21), np.int64(12)] REAL==REF
+cov_a_golfer panel_2 (360, 314) pre [15, 20, 11] port_post [15, 20, 11] real_post [15, 20, 11] frame_port [np.int64(15), np.int64(21), np.int64(11)] ref [np.int64(15), np.int64(20), np.int64(11)] REAL==REF
+cov_a_golfer panel_2 (361, 315) pre [14, 19, 10] port_post [14, 19, 10] real_post [14, 19, 10] frame_port [np.int64(14), np.int64(20), np.int64(10)] ref [np.int64(14), np.int64(19), np.int64(10)] REAL==REF
+cov_a_golfer panel_2 (362, 316) pre [12, 17, 9] port_post [6, 9, 5] real_post [6, 9, 5] frame_port [np.int64(12), np.int64(18), np.int64(9)] ref [np.int64(12), np.int64(17), np.int64(9)] 
+cov_a_golfer panel_2 (316, 338) pre [10, 14, 17] port_post [10, 14, 17] real_post [10, 14, 17] frame_port [np.int64(10), np.int64(15), np.int64(17)] ref [np.int64(10), np.int64(14), np.int64(17)] REAL==REF
+cov_a_golfer panel_2 (317, 339) pre [13, 17, 19] port_post [13, 17, 19] real_post [13, 17, 19] frame_port [np.int64(13), np.int64(18), np.int64(18)] ref [np.int64(13), np.int64(17), np.int64(19)] REAL==REF
+cov_a_golfer panel_2 (318, 340) pre [10, 16, 18] port_post [10, 16, 18] real_post [10, 16, 18] frame_port [np.int64(10), np.int64(17), np.int64(18)] ref [np.int64(10), np.int64(16), np.int64(18)] REAL==REF
+cov_a_golfer panel_2 (319, 341) pre [10, 14, 14] port_post [10, 14, 14] real_post [10, 14, 14] frame_port [np.int64(10), np.int64(15), np.int64(14)] ref [np.int64(10), np.int64(14), np.int64(14)] REAL==REF
+cov_a_golfer mod_11 (550, 360) pre [12, 16, 9] port_post [17, 14, 9] real_post [17, 14, 9] frame_port [np.int64(13), np.int64(17), np.int64(11)] ref [np.int64(12), np.int64(16), np.int64(9)] 
+cov_a_golfer mod_11 (551, 361) pre [11, 15, 8] port_post [14, 14, 8] real_post [14, 14, 8] frame_port [np.int64(12), np.int64(16), np.int64(9)] ref [np.int64(11), np.int64(15), np.int64(8)] 
+cov_a_golfer mod_11 (552, 362) pre [4, 13, 5] port_post [4, 13, 5] real_post [4, 13, 5] frame_port [np.int64(11), np.int64(13), np.int64(9)] ref [np.int64(9), np.int64(12), np.int64(7)] 
+cov_a_champ champ_render (339, 238) pre [14, 18, 9] port_post [14, 18, 9] real_post [14, 18, 9] frame_port [np.int64(14), np.int64(18), np.int64(9)] ref [np.int64(15), np.int64(19), np.int64(10)] 
+cov_a_champ champ_render (340, 239) pre [13, 16, 9] port_post [13, 16, 9] real_post [13, 16, 9] frame_port [np.int64(13), np.int64(16), np.int64(9)] ref [np.int64(14), np.int64(18), np.int64(10)] 
+cov_a_champ champ_render (341, 240) pre [15, 19, 10] port_post [15, 19, 10] real_post [15, 19, 10] frame_port [np.int64(15), np.int64(19), np.int64(10)] ref [np.int64(16), np.int64(20), np.int64(11)] 
+cov_a_champ champ_render (342, 241) pre [13, 17, 8] port_post [13, 17, 8] real_post [13, 17, 8] frame_port [np.int64(13), np.int64(17), np.int64(8)] ref [np.int64(14), np.int64(18), np.int64(9)] 
+cov_a_champ champ_render (343, 242) pre [12, 17, 8] port_post [12, 17, 8] real_post [12, 17, 8] frame_port [np.int64(12), np.int64(17), np.int64(8)] ref [np.int64(13), np.int64(18), np.int64(9)] 
+cov_a_champ champ_render (344, 243) pre [11, 16, 7] port_post [11, 16, 7] real_post [11, 16, 7] frame_port [np.int64(11), np.int64(16), np.int64(7)] ref [np.int64(12), np.int64(18), np.int64(8)] 
+cov_a_champ champ_render (345, 244) pre [10, 15, 7] port_post [10, 15, 7] real_post [10, 15, 7] frame_port [np.int64(10), np.int64(15), np.int64(7)] ref [np.int64(11), np.int64(16), np.int64(7)] 
+cov_a_champ champ_render (346, 245) pre [12, 16, 8] port_post [12, 16, 8] real_post [12, 16, 8] frame_port [np.int64(12), np.int64(16), np.int64(8)] ref [np.int64(13), np.int64(17), np.int64(9)] 
+cov_a_champ champ_render (347, 246) pre [12, 17, 8] port_post [12, 17, 8] real_post [12, 17, 8] frame_port [np.int64(12), np.int64(17), np.int64(8)] ref [np.int64(13), np.int64(18), np.int64(9)] 
+cov_a_champ champ_render (348, 247) pre [12, 16, 9] port_post [12, 16, 9] real_post [12, 16, 9] frame_port [np.int64(12), np.int64(16), np.int64(9)] ref [np.int64(13), np.int64(18), np.int64(10)] 
+cov_a_champ champ_render (349, 248) pre [12, 18, 8] port_post [12, 18, 8] real_post [12, 18, 8] frame_port [np.int64(12), np.int64(18), np.int64(8)] ref [np.int64(13), np.int64(19), np.int64(9)] 
+cov_a_build brush_465 (655, 373) pre [3, 7, 21] port_post [4, 7, 21] real_post [3, 7, 21] frame_port [np.int64(4), np.int64(7), np.int64(21)] ref [np.int64(3), np.int64(7), np.int64(21)] REAL==REF
+cov_a_build brush_465 (654, 415) pre [10, 13, 8] port_post [10, 13, 8] real_post [10, 13, 8] frame_port [np.int64(10), np.int64(13), np.int64(8)] ref [np.int64(10), np.int64(14), np.int64(8)] 
+cov_a_build brush_465 (655, 415) pre [9, 15, 7] port_post [10, 15, 8] real_post [9, 15, 7] frame_port [np.int64(10), np.int64(15), np.int64(8)] ref [np.int64(9), np.int64(15), np.int64(7)] REAL==REF
+43 pixels; 13 where the real GL on the port's call gives the reference value
+[turn] end 00:34:24 rc=0

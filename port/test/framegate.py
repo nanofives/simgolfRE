@@ -32,6 +32,10 @@ One TSV row per checkpoint (columns in COLUMNS):
     ~/bin/py -3.12 -m port.test.framegate sandbox_basic cov_b_location --out log/roadmap/S0/2_sample.tsv
     ~/bin/py -3.12 -m port.test.framegate --all --jobs 2 --out <tsv> [--resume]          # the census (step S0.3)
     options: --checkpoints a,b  --negctl gfx.attach=1  --swap-ref <chk>=<scenario>/<chk>  --images <dir>  --no-probe  --host-gl
+             --split (roadmap S3.23, decision G18: a second boot of each scenario with the host-GL terrain splits every differing
+             pixel into terrain-origin (differs under GlRaster, equals the reference under the host GL) and 2D (the rest); the
+             split verdict needs 2D px = 0 in every region and the terrain-origin px within G2 (glraster.MAX_ONE_LEVEL of the view
+             area, MAX_BIG px beyond one level); the raw columns are unchanged, SPLIT_COLUMNS are added)
              --gl raster|auto|host (roadmap S3.20, decision G13: the terrain renderer; default raster = GlRaster; opt-in auto = the
              host's OpenGL when the startup self-check of gl_wgl.h passes, else GlRaster; host (or wgl) = the host's OpenGL without
              the check; columns renderer / renderer_reason say what each run drew with)
@@ -70,6 +74,7 @@ COLUMNS = ["scenario", "checkpoint", "status", "detail", "kind", "context", "fra
            "one_level_px", "one_level_pct", "beyond_px", "regions", "unsup_before", "first_unsupported", "first_unsupported_drawing", "unsupported_before",
            "unsup_order", "boot_status", "boot_records", "liveterrain", "backend", "variant", "reference", "terrain_drawn",
            "renderer", "renderer_reason"]
+SPLIT_COLUMNS = ["split_status", "split_detail", "terrain_origin_px", "terrain_origin_beyond", "twod_px", "twod_beyond", "split_regions"]
 GL_MODES = {"raster": 0, "wgl": 1, "host": 1, "auto": 2}   # terrainLive.renderer's argument (terrain_live.cpp, roadmap S3.20)
 
 # The H1 frame wait of mainLoop (re/analysis/sim/time_model.md: 0x0041e631..0x0041e6b1, timeGetTime via [0x004ba21c] then
@@ -83,10 +88,10 @@ FULL_SCREEN_MODALS = {"showCreditsScreen"}
 H1_WAIT_READS = 11
 # Drops gfx.log counts as unsupported although they draw nothing, by their reason in tick.cpp's kDrops table: playSound /
 # startSoundSlot "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty
-# function", waitTicks "wait loop (pacing)", saveCourseJpg "screenshot file", Widget_readPixel "a pixel read of the root surface",
-# enterModal483d30 "modal stack push and focus clear of the window tree". They are listed but never make a row UNSUPPORTED.
+# function", waitTicks "wait loop (pacing)", saveCourseJpg "screenshot file", enterModal483d30 "modal stack push and focus clear of
+# the window tree". They are listed but never make a row UNSUPPORTED. Widget_readPixel has a body since roadmap S3.26.
 NOT_DRAWING = {"playSound", "startSoundSlot", "Snd::status", "capsLockOff", "emptyFunc_4a0890", "waitTicks", "saveCourseJpg",
-               "Widget_readPixel", "enterModal483d30"}
+               "enterModal483d30"}
 
 # ------------------------------------------------------------------------------------------------ regions per screen kind
 # rectangles (x, y, w, h); anchors from the frame code, extents measured on the reference named in the comment
@@ -154,6 +159,70 @@ def region_numbers(port: np.ndarray, ref: np.ndarray, kind: str) -> dict:
         px = int((d[m] > 0).sum())
         one = int((d[m] == 1).sum())
         out[n] = {"px": px, "one": one, "pct": round(100.0 * one / area, 3) if area else 0.0, "beyond": px - one, "area": area}
+    return out
+
+
+def split_numbers(raster: np.ndarray, host: np.ndarray, ref: np.ndarray, kind: str, terrain_on: bool) -> dict:
+    """The split of roadmap S3.23 (decision G18). Levels as region_numbers(). A pixel is TERRAIN-ORIGIN when it differs from the
+    reference in the GlRaster frame and equals it in the host-GL frame (the host GL equals the original's terrain bit for bit,
+    S3.15), and only on a row with terrain on screen; every other differing pixel (differs with the host GL, or differs with
+    GlRaster where no terrain is drawn) is 2D. Per region: twod px / beyond one level (levels of the host-GL frame, else
+    GlRaster's) and terrain px / beyond (levels of the GlRaster frame). drawn = the view region's area for in-game rows (U-1121's
+    rule: the terrain fills the view), else the whole frame."""
+    from port.test import glraster as GR
+    def lv(x):
+        return x.astype(np.int16) >> 3
+    dr = np.abs(lv(raster) - lv(ref)).max(axis=2)
+    dh = np.abs(lv(host) - lv(ref)).max(axis=2)
+    terr = (dr > 0) & (dh == 0) if terrain_on else np.zeros(dr.shape, dtype=bool)
+    twod = (dh > 0) | ((dr > 0) & ~terr)
+    d2 = np.where(dh > 0, dh, dr)
+    lab, names = label_map(kind)
+    out = {}
+    for i, n in enumerate(names):
+        m = lab == i
+        t, q = m & terr, m & twod
+        out[n] = {"twod": int(q.sum()), "twod_beyond": int((d2[q] > 1).sum()), "terr": int(t.sum()),
+                  "terr_beyond": int((dr[t] > 1).sum()), "area": int(m.sum())}
+    big = sum(v["terr_beyond"] for v in out.values())
+    one = sum(v["terr"] for v in out.values()) - big
+    drawn = out[REST_NAME.get(kind, "frame")]["area"] if kind == "ingame" else W * H
+    return {"regions": out, "terrain_one": one, "terrain_big": big, "drawn": drawn,
+            "g2_ok": one <= GR.MAX_ONE_LEVEL * max(drawn, 1) and big <= GR.MAX_BIG}
+
+
+def split_row(raw_status: str, sn: dict | None, reason: str = "") -> dict:
+    """The SPLIT_COLUMNS of a row. A row that is not judged raw (NOT_RUN / UNSUPPORTED) keeps that status; no host-GL frame =
+    UNJUDGED with the reason, never PASS."""
+    if raw_status in ("NOT_RUN", "UNSUPPORTED"):
+        return {"split_status": raw_status, "split_detail": "raw verdict"}
+    if sn is None:
+        return {"split_status": "UNJUDGED", "split_detail": reason or "no host-GL frame"}
+    rg = sn["regions"]
+    two = sum(v["twod"] for v in rg.values())
+    why = []
+    if two:
+        why.append("2D " + ",".join(f"{n}={v['twod']}" for n, v in rg.items() if v["twod"]))
+    if not sn["g2_ok"]:
+        why.append(f"terrain-origin over G2 (one-level {sn['terrain_one']} of {sn['drawn']}, beyond {sn['terrain_big']})")
+    return {"split_status": "FAIL" if why else "PASS", "split_detail": "; ".join(why),
+            "terrain_origin_px": sn["terrain_one"] + sn["terrain_big"], "terrain_origin_beyond": sn["terrain_big"],
+            "twod_px": two, "twod_beyond": sum(v["twod_beyond"] for v in rg.values()),
+            "split_regions": ";".join(f"{n}={v['twod']}/{v['twod_beyond']}/{v['terr']}/{v['terr_beyond']}" for n, v in rg.items())}
+
+
+def plant(img: np.ndarray, rect: tuple, n: int, ref: np.ndarray, *others: np.ndarray) -> np.ndarray:
+    """Test-only control (roadmap S3.23, env SG_FRAMEGATE_PLANT): n pixels of img inside rect = (x, y, w, h) that equal the
+    reference in img and in every frame of `others` get their red channel moved by 24 (3 levels). Returns a copy."""
+    out = img.copy()
+    x0, y0, w, h = rect
+    eq = (img == ref).all(axis=2)
+    for o in others:
+        eq &= (o == ref).all(axis=2)
+    ys, xs = np.nonzero(eq[y0:y0 + h, x0:x0 + w])
+    for yy, xx in list(zip(ys, xs))[:n]:
+        v = int(out[y0 + yy, x0 + xx, 0])
+        out[y0 + yy, x0 + xx, 0] = v + 24 if v < 232 else v - 24
     return out
 
 
@@ -386,7 +455,7 @@ def terrain_address(scenario: str) -> int:
 def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, negctl: tuple[str, int] | None = None,
                  swap: dict | None = None, images: pathlib.Path | None = None, probe: bool = True,
                  probe_limit: int = PROBE_LIMIT, live: bool = True, terrain_va: int | None = None,
-                 host_gl: bool | str = False, gl: str = "raster") -> list[dict]:
+                 host_gl: bool | str = False, gl: str = "raster", snap_sink: dict | None = None) -> list[dict]:
     """One boot of `scenario` with gfx and LiveTerrain attached; one row per checkpoint. host_gl: the terrain passes drawn by the
     host's own OpenGL (terrainLive.hostGl, port/include/portsim/sim/gl_wgl.h; roadmap S3.15) instead of GlRaster; "try" = ask for
     it and keep GlRaster when the host has none (the fallback), True = refuse to run without it. gl (roadmap S3.20, decision G13;
@@ -415,6 +484,7 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
     for r in tr.records:
         if r.type == TF.POLL and r.f.get("checkpoint") and r.f["checkpoint"] not in polls:
             polls[r.f["checkpoint"]] = r.f["pos"]
+    heads = {r.f["pos"] for r in tr.records if r.type == TF.FRAME}
     summ = json.loads((GX.REFS / scenario / "det_b" / "summary.json").read_text())
     meta, ords = {}, []
     for c in chks:
@@ -423,9 +493,8 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
             meta[c] = {"error": f"the trace's tgt call {st['tgt']} is not the checkpoint's T {st['T']}"}
             continue
         o = tgt[st["tgt"]][0]
-        # roadmap S3.16: the clock call the checkpoint's POLL rode on when it is not a tgt call (gfx.checkpoint_ordinal, U-1820)
-        if os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll" and polls.get(c) is not None and polls[c] < o:
-            o = polls[c]
+        # roadmap S3.16 / S3.26: the clock call the checkpoint's POLL rode on (gfx.poll_position, U-1820, U-1951)
+        o = GX.poll_position(o, polls.get(c), heads)
         meta[c] = dict(classify(tr, o), ordinal=o)
         ords.append((o, c))
     ords.sort()
@@ -490,6 +559,8 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
         if negctl:
             lib.negctl(negctl[0], prev or 0)
     secs = round(time.time() - t0, 1)
+    if snap_sink is not None:
+        snap_sink.update(snaps)
     glog = parse_gfx_log(glog_txt)
     # the order of the reasons is needed for any snapshot with one before it (its first unsupported call), unless the backend
     # gave its own first-occurrence list
@@ -555,6 +626,45 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
     return rows
 
 
+def run_scenario_split(scenario: str, **kw) -> list[dict]:
+    """run_scenario's rows (the GlRaster run, raw columns unchanged) plus SPLIT_COLUMNS from a second boot with the host-GL terrain
+    (roadmap S3.23). kw as run_scenario's (gl / host_gl are fixed: raster arm, host-GL arm). Test seam SG_FRAMEGATE_PLANT=
+    <both|raster>:<region>:<n> plants n px in a region of the in-game frames after the snapshots: `both` in both arms (a 2D
+    difference), `raster` in the GlRaster arm only (a terrain-origin difference)."""
+    kw.pop("gl", None)
+    kw.pop("host_gl", None)
+    sa, sb = {}, {}
+    rows = run_scenario(scenario, snap_sink=sa, **kw)
+    reason = ""
+    try:
+        run_scenario(scenario, snap_sink=sb, host_gl=True, **{k: v for k, v in kw.items() if k != "images"})
+    except RuntimeError as e:      # terrainLive.hostGl: the host has no 16-bit generic pixel format
+        sb, reason = {}, str(e)[:160]
+    pl = os.environ.get("SG_FRAMEGATE_PLANT", "")
+    for r in rows:
+        c = r["checkpoint"]
+        ia, ib = sa.get(c), sb.get(c)
+        if ia is None or not r.get("regions") or r["status"] in ("NOT_RUN", "UNSUPPORTED"):
+            r.update(split_row(r["status"], None, "no snapshot" if ia is None else ""))
+            continue
+        if ib is None:
+            r.update(split_row(r["status"], None, reason or "no host-GL snapshot"))
+            continue
+        rs, rc = r["reference"].split("/", 1)
+        ref = GX.reference(rs, rc)
+        if pl and r["kind"] == "ingame":
+            who, reg, n = pl.split(":")
+            rect = dict(INGAME_REGIONS).get(reg, (0, 0, W, H))
+            if who == "both":
+                pa = plant(ia, rect, int(n), ref, ib)
+                ib = np.where((pa != ia).any(axis=2)[..., None], pa, ib)       # the same pixels, the same value, in both arms
+                ia = pa
+            else:
+                ia = plant(ia, rect, int(n), ref, ib)
+        r.update(split_row(r["status"], split_numbers(ia, ib, ref, r["kind"], r["terrain"] == "yes")))
+    return rows
+
+
 # ------------------------------------------------------------------------------------------------ CLI
 def effective_jobs(n: int) -> int:
     return max(1, min(n, MAX_JOBS))
@@ -578,6 +688,8 @@ def _worker_args(a) -> list[str]:
         out.append("--host-gl")
     if a.gl != "raster":
         out += ["--gl", a.gl]
+    if a.split:
+        out.append("--split")
     out += ["--probe-limit", str(a.probe_limit)]
     return out
 
@@ -589,9 +701,10 @@ def _signature(a) -> str:
 def write_tsv(path: pathlib.Path, rows: list[dict]):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as f:
-        f.write("\t".join(COLUMNS) + "\n")
+        cols = COLUMNS + (SPLIT_COLUMNS if any("split_status" in r for r in rows) else [])
+        f.write("\t".join(cols) + "\n")
         for r in rows:
-            f.write("\t".join(str(r.get(k, "")).replace("\t", " ").replace("\n", " ") for k in COLUMNS) + "\n")
+            f.write("\t".join(str(r.get(k, "")).replace("\t", " ").replace("\n", " ") for k in cols) + "\n")
 
 
 def main(argv=None) -> int:
@@ -612,6 +725,8 @@ def main(argv=None) -> int:
     ap.add_argument("--gl", choices=sorted(GL_MODES), default="raster",
                     help="the terrain renderer (roadmap S3.20): raster (the default) = GlRaster; opt-in auto = the host's OpenGL when "
                          "its self-check passes, else GlRaster; host (= wgl) = the host's OpenGL without the check")
+    ap.add_argument("--split", action="store_true",
+                    help="the split verdict (roadmap S3.23, decision G18): a second boot with the host-GL terrain")
     ap.add_argument("--worker", help=argparse.SUPPRESS)
     ap.add_argument("--probe-run", help=argparse.SUPPRESS)
     a = ap.parse_args(argv)
@@ -628,8 +743,12 @@ def main(argv=None) -> int:
     swap = dict(s.split("=", 1) for s in (a.swap_ref or []))
     chks = a.checkpoints.split(",") if a.checkpoints else None
     if a.worker:
-        rows = run_scenario(a.worker, chks, negctl=negctl, swap=swap, images=a.images, probe=not a.no_probe,
-                            probe_limit=a.probe_limit, live=not a.no_live, host_gl=a.host_gl, gl=a.gl)
+        if a.split:
+            rows = run_scenario_split(a.worker, checkpoints=chks, negctl=negctl, swap=swap, images=a.images, probe=not a.no_probe,
+                                      probe_limit=a.probe_limit, live=not a.no_live)
+        else:
+            rows = run_scenario(a.worker, chks, negctl=negctl, swap=swap, images=a.images, probe=not a.no_probe,
+                                probe_limit=a.probe_limit, live=not a.no_live, host_gl=a.host_gl, gl=a.gl)
         print(json.dumps(rows))
         return 0
     names = all_scenarios() if a.all else a.scenarios

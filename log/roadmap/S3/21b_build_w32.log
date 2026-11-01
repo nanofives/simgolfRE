@@ -1,0 +1,59 @@
+[w8_lock] S3.21 queued at 2026-10-31 02:15:38
+[w8_lock] BREACH logged: hand-taken lock 'S3.24 gate pytest_x64 02:15'
+[w8_lock] S3.21 waiting: lock='S3.24 gate pytest_x64 02:15' ahead=['S3.25', 'S3.23'] free_commit=19.7 GB
+[w8_lock] BREACH logged: hand-taken lock 'S3.25 rec inject cov_b_inject2 02:15:44'
+[w8_lock] S3.21 waiting: lock='S3.25 rec inject cov_b_inject2 02:15:44' ahead=['S3.23'] free_commit=19.3 GB
+[w8_lock] S3.21 waiting: lock='S3.25 rec inject cov_b_inject2 02:15:44' ahead=['S3.23'] free_commit=19.4 GB
+[w8_lock] S3.21 waiting: lock='S3.25 rec inject cov_b_inject2 02:15:44' ahead=['S3.23'] free_commit=19.5 GB
+[w8_lock] S3.21 waiting: lock='S3.25 rec inject cov_b_inject2 02:15:44' ahead=['S3.23'] free_commit=19.3 GB
+[w8_lock] S3.21 waiting: lock='S3.25 rec inject cov_b_inject2 02:15:44' ahead=['S3.23'] free_commit=19.1 GB
+[w8_lock] S3.21 waiting: lock='free' ahead=['S3.23'] free_commit=19.7 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.7 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=19.3 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=19.2 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=19.0 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.7 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.5 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.4 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.2 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.3 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.2 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.3 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.2 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.1 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.7 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.8 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.7 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.7 GB
+[w8_lock] S3.21 waiting: lock='step=S3.23' ahead=[] free_commit=18.8 GB
+[w8_lock] S3.21 TOOK the lock at 2026-10-31 02:21:58 (waited 380 s, free commit 19.6 GB)
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x86-windows/share/freetype (module fttext)
+-- Configuring done (0.1s)
+-- Generating done (0.7s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_21/port/build/Win32
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\app\Release\portapp_input.lib
+  gfx_terrain.cpp
+  gl_raster.cpp
+  gl_wgl.cpp
+  terrain_dll.cpp
+  terrain_live.cpp
+  terrain_overlay.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim.lib
+  host.cpp
+  main.cpp
+  Generando código...
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\app\Release\simgolf_port.exe
+  portsim_c.cpp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_layout_test.exe
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_core_test.exe
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\app\Release\simgolf_input_check.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_21/port/build/Win32/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_21/port/build/Win32/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_c.dll
+  portsim_runner32.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_runner32.exe
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_c.dll
+[w8_lock] S3.21 released at 2026-10-31 02:22:16

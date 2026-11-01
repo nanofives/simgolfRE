@@ -1,0 +1,7 @@
+[1/6] build x64 rc=0
+[2/6] build Win32 rc=0
+[3/6] test_gl_wgl x64 rc=0 :: 9 passed in 74.95s (0:01:14)
+[4/6] test_gl_wgl_selfcheck x64 rc=0 :: 17 passed, 7 skipped in 25.08s
+[5/6] test_gl_wgl win32 rc=0 :: 9 passed in 83.22s (0:01:23)
+[6/6] test_gl_wgl_selfcheck win32 rc=0 :: 17 passed, 7 skipped in 26.00s
+FIX2_CHECK_DONE

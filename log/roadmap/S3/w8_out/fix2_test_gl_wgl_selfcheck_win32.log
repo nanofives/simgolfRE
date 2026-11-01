@@ -1,0 +1,35 @@
+[w8_lock] S3-lead queued at 2026-10-31 18:56:57
+[w8_lock] S3-lead waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=20.0 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.4 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.4 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.5 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.1 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.2 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.7 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.2 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.0 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.1 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.2 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.5 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.4 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.7 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.5 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.7 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.6 GB
+[w8_lock] S3-lead waiting: lock='free' ahead=['I21'] free_commit=18.1 GB
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 19:04:48 (waited 470 s, free commit 18.1 GB)
+.................sssssss                                                 [100%]
+=========================== short test summary info ===========================
+SKIPPED [7] port\test\test_gl_wgl_selfcheck.py:205: SG_APP_EXE (simgolf_port.exe) not set
+17 passed, 7 skipped in 26.00s
+[w8_lock] S3-lead released at 2026-10-31 19:05:14

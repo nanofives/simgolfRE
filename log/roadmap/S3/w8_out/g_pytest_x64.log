@@ -1,0 +1,36 @@
+[w8_lock] S3-lead queued at 2026-10-31 06:05:10
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 06:05:10 (waited 0 s, free commit 27.1 GB)
+== test_static
+......                                                                   [100%]
+6 passed in 1.13s
+== test_gl_raster
+........................................................................ [ 28%]
+........................................................................ [ 57%]
+........................................................................ [ 86%]
+..................................                                       [100%]
+250 passed in 76.81s (0:01:16)
+== test_terrain_overlay
+.................................ssssss                                  [100%]
+=========================== short test summary info ===========================
+SKIPPED [4] port\test\test_terrain_overlay.py:308: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+SKIPPED [2] port\test\test_terrain_overlay.py:323: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+33 passed, 6 skipped in 6.30s
+== test_framegate
+................................                                         [100%]
+32 passed in 35.86s
+== test_framegate_split
+.................                                                        [100%]
+17 passed in 29.64s
+== test_gfx
+.........................                                                [100%]
+25 passed in 42.91s
+== test_gfx_s3_26
+.........                                                                [100%]
+9 passed in 92.78s (0:01:32)
+== test_gfx_s3_19
+ssssss...............                                                    [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_gfx_s3_19.py:238: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+SKIPPED [5] port\test\test_gfx_s3_19.py:266: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+15 passed, 6 skipped in 14.67s
+[w8_lock] S3-lead released at 2026-10-31 06:10:15

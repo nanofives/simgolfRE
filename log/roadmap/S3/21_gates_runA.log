@@ -1,0 +1,7 @@
+[1/6] build_w32 rc=0 39 s :: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_21\port\build\Win32\Release\portsim_c.dll
+[2/6] t_test_gl_raster rc=0 196 s :: 248 passed in 194.72s (0:03:14)
+[3/6] sample rc=0 181 s :: {"rows": 133, "counts": {"PASS": 4, "FAIL": 129}}
+[4/6] sample_ctl28 rc=0 30 s :: {"rows": 82, "counts": {"PASS": 2, "FAIL": 80}}
+[5/6] sample_w32 rc=0 23 s :: {"rows": 82, "counts": {"PASS": 2, "FAIL": 80}}
+[6/6] terrain rc=0 1876 s :: {"PASS": 527, "NOT_MEASURED": 75}
+[done] gates build_w32 t_test_gl_raster sample sample_ctl28 sample_w32 terrain

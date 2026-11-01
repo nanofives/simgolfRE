@@ -611,11 +611,12 @@ SelfCheck wgl_self_check(Ctx &ctx, int variant, int perturb) {
   return s;
 }
 
-SelfCheck raster_self_check(Ctx &ctx) {
+SelfCheck raster_self_check(Ctx &ctx, int old_rules) {
   SelfCheck s;
   const auto t0 = std::chrono::steady_clock::now();
   GlRaster r(800, 600);
   r.no_context();
+  if (old_rules) r.tune[28] = r.tune[29] = 1;   // roadmap S3.21's off switches (= SG_RASTER_TUNE=28=1,29=1), this rasteriser only
   const std::vector<float> v = ref_floats(kRefVertices, sizeof(kRefVertices) / 4), n = ref_floats(kRefNormals, sizeof(kRefNormals) / 4);
   if (guarded(s, [&] { ref_setup(ctx, r); })) {
     r.pixels().assign(static_cast<size_t>(800) * 600, 0);
@@ -632,8 +633,8 @@ SelfCheck raster_self_check(Ctx &ctx) {
 
 namespace {
 // Harness entries (roadmap S3.20): glWgl.selfCheck(variant, perturb) runs the startup self-check (1 = it passed) and writes
-// `$wgl/selfcheck.txt` (pass, reason, got, want, ms) and `$wgl/selfcheck_rect.555` (the rectangle drawn); glWgl.rasterCheck() the
-// same reference through GlRaster (`$wgl/raster_rect.555`).
+// `$wgl/selfcheck.txt` (pass, reason, got, want, ms) and `$wgl/selfcheck_rect.555` (the rectangle drawn); glWgl.rasterCheck(old_rules)
+// the same reference through GlRaster (`$wgl/raster_rect.555`; old_rules 1 = S3.21's rules off, the negative control).
 void put(Ctx &c, const std::string &name, const std::string &text) {
   GameFiles &f = c.files();
   if (auto *d = dynamic_cast<DirGameFiles *>(&f))
@@ -659,15 +660,15 @@ void a_self_check(Ctx &c, const uint32_t *a, Ret &r) {
   put_rect(c, "$wgl/selfcheck_rect.555", s.rect);
   r.set_u32(s.pass ? 1u : 0u);
 }
-void a_raster_check(Ctx &c, const uint32_t *, Ret &r) {
-  const gl::SelfCheck s = gl::raster_self_check(c);
+void a_raster_check(Ctx &c, const uint32_t *a, Ret &r) {
+  const gl::SelfCheck s = gl::raster_self_check(c, static_cast<int>(a[0]));
   put(c, "$wgl/rastercheck.txt", text_of(s));
   put_rect(c, "$wgl/raster_rect.555", s.rect);
   r.set_u32(s.pass ? 1u : 0u);
 }
 const FuncDef kFuncs[] = {
     {"glWgl.selfCheck", "default", "int", 2, 0, a_self_check, nullptr},
-    {"glWgl.rasterCheck", "default", "int", 0, 0, a_raster_check, nullptr},
+    {"glWgl.rasterCheck", "default", "int", 1, 0, a_raster_check, nullptr},
 };
 }  // namespace
 

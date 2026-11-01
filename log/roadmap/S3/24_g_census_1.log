@@ -1,0 +1,19 @@
+free commit 20.5 GB (need 16)
+[turn] start 02:41:30 gate census_1
+batch 1: cov_a_quit cov_a_quit_title cov_b_build cov_b_career cov_b_career_types cov_b_decor cov_b_holes18 cov_b_inject cov_b_inject2 cov_b_location cov_b_locations cov_b_paths cov_b_people cov_b_shots 
+[1/14] cov_a_quit FAIL=5 PASS=10 (9.8 s)
+[2/14] cov_a_quit_title PASS=9 (3.4 s)
+[3/14] cov_b_build FAIL=7 (35.4 s)
+[4/14] cov_b_career FAIL=6 (15.6 s)
+[5/14] cov_b_career_types FAIL=12 (35.4 s)
+[6/14] cov_b_decor FAIL=5 (35.8 s)
+[7/14] cov_b_holes18 FAIL=6 (43.1 s)
+[8/14] cov_b_inject FAIL=5 (23.1 s)
+[9/14] cov_b_inject2 FAIL=5 (24.0 s)
+[10/14] cov_b_location PASS=5 (5.5 s)
+[11/14] cov_b_locations FAIL=2 (11.9 s)
+[12/14] cov_b_paths FAIL=4 (16.3 s)
+[13/14] cov_b_people FAIL=5 (14.5 s)
+[14/14] cov_b_shots FAIL=7 (81.3 s)
+{"rows": 93, "counts": {"PASS": 24, "FAIL": 69}}
+[turn] end 02:47:47 rc=0

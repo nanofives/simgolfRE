@@ -73,10 +73,11 @@ def test_host_gl_frames_equal_the_original(lib, scenario):
     assert not bad, bad
 
 
-def test_raster_backend_is_unchanged(lib):
-    # GlRaster (--gl raster) keeps its residual: sandbox_00's I14 census numbers (125 px, all one level)
+def test_raster_backend_equals_its_census_row(lib):
+    # GlRaster (--gl raster) keeps a residual on sandbox_00: its census row after roadmap S3.21 (float32 vertex rule and clipping,
+    # default on) is 9 px, all one level (I14 had 125 px before S3.21; log/roadmap/S3/w8_out/census_split.tsv)
     r = {x["checkpoint"]: x for x in _run(lib, "sandbox_basic", host_gl=False, gl="raster")}["sandbox_00"]
-    assert r["status"] == "FAIL" and int(r["total_px"]) == 125 and int(r["beyond_px"]) == 0 and r["renderer"] == "raster", r
+    assert r["status"] == "FAIL" and int(r["total_px"]) == 9 and int(r["beyond_px"]) == 0 and r["renderer"] == "raster", r
 
 
 def test_default_is_glraster_and_auto_is_the_checked_host_gl(lib):

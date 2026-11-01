@@ -11,7 +11,8 @@ log/roadmap/S3/20_make_ref.py) is the part of the original's recorded pass c7/z2
                                                                          the app tests need SG_APP_EXE + SG_PORTSIM_DLL of one build)
 Controls (RED): the pinned hash with one hex digit changed (perturb 1, negctl gfx.family.terrain 13), the reference pass with every
 texture coordinate one texel off (perturb 2, negctl 14), a DIB with RGB565 masks (variant 1, negctl 8), the same reference through
-GlRaster (its U-1392 residual: 45 of the 1,024 pixels). Blind, recorded: the DIB rows top-down (variant 2) and the texture names
+GlRaster with roadmap S3.21's rules off (glWgl.rasterCheck(1): the U-1392 residual S3.20 measured, 45 of the 1,024 pixels). Since
+S3.21 the default GlRaster passes the check too (0 pixels differ); the app's `--gl auto` runs the check on the host GL only. Blind, recorded: the DIB rows top-down (variant 2) and the texture names
 bound unmapped (variant 3), as for the frames (log/roadmap/S3/15_notes.md, U-1811). Fallback: no pixel format (variant 4, negctl 12).
 """
 from __future__ import annotations
@@ -39,7 +40,7 @@ REF_INC = ROOT / "port" / "src" / "sim" / "gl_wgl_ref.inc"
 # the generator: in the repository, or (a mirror tree under port/build) in the repository holding it
 GEN = next((p / "log" / "roadmap" / "S3" / "20_make_ref.py" for p in (ROOT, *ROOT.parents)
             if (p / "log" / "roadmap" / "S3" / "20_make_ref.py").exists()), ROOT / "log" / "roadmap" / "S3" / "20_make_ref.py")
-RASTER_PX = 45          # pixels of the rectangle GlRaster draws differently from the original (U-1392)
+RASTER_PX = 45          # pixels of the rectangle GlRaster with S3.21's rules off draws differently from the original (U-1392)
 
 
 def _ref():
@@ -104,9 +105,17 @@ def test_self_check_passes_on_this_host(lib):
         assert int((px != _original_rect()).sum()) == 0
 
 
+def test_default_rasteriser_passes_the_self_check(lib):
+    """roadmap S3.21 (float32 vertex rule and clipping, default on): GlRaster equals the original on the reference rectangle"""
+    ret, kv, px, _ = _check(lib, "glWgl.rasterCheck", (0,))
+    assert ret == 1 and kv["pass"] == "1" and kv["got"] == kv["want"] == _ref()["sha"], kv
+    if SNAP.exists():
+        assert int((px != _original_rect()).sum()) == 0
+
+
 def test_self_check_sees_the_rasteriser_residual(lib):
-    """GlRaster on the same reference: RED, on exactly the U-1392 one-level pixels"""
-    ret, kv, px, _ = _check(lib, "glWgl.rasterCheck", ())
+    """GlRaster with S3.21's rules off on the same reference: RED, on exactly the U-1392 one-level pixels"""
+    ret, kv, px, _ = _check(lib, "glWgl.rasterCheck", (1,))
     assert ret == 0 and kv["pass"] == "0" and kv["got"] != kv["want"], kv
     if SNAP.exists():
         orig = _original_rect()

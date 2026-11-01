@@ -1,0 +1,3 @@
+[1/2] segs_x64 rc=0 368 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 367.7}
+[2/2] boot_x64 rc=0 558 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}
+[done] gates segs_x64 boot_x64

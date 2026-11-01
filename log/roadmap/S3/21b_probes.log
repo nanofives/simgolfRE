@@ -1,0 +1,9 @@
+default      s321_ramp_dense:705/0/cov0  s321_gour_untex:481/0/cov0  s321_gour_const:15/0/cov0  s321_const_rand:285/0/cov0  s321_gour_rand:306/0/cov0
+30=1         s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:298/0/cov0  s321_const_rand:285/0/cov0  s321_gour_rand:434/0/cov0
+30=1,31=16   s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:298/0/cov0  s321_const_rand:3535/0/cov0  s321_gour_rand:3199/0/cov0
+30=1,31=12   s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:298/0/cov0  s321_const_rand:41313/0/cov0  s321_gour_rand:35096/0/cov0
+30=1,31=8    s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:298/0/cov0  s321_const_rand:192588/81761/cov0  s321_gour_rand:147134/65808/cov0
+30=2         s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:15/0/cov0  s321_const_rand:285/0/cov0  s321_gour_rand:306/0/cov0
+30=3         s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:38/0/cov0  s321_const_rand:285/0/cov0  s321_gour_rand:322/0/cov0
+30=4         s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:9559/0/cov0  s321_const_rand:285/0/cov0  s321_gour_rand:7490/0/cov0
+30=5         s321_ramp_dense:0/0/cov0  s321_gour_untex:90/0/cov0  s321_gour_const:46/0/cov0  s321_const_rand:285/0/cov0  s321_gour_rand:315/0/cov0

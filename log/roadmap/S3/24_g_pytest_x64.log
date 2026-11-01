@@ -1,0 +1,66 @@
+free commit 20.1 GB (need 16)
+[turn] start 02:15:32 gate pytest_x64
+F.......F....................F...ssssss                                  [100%]
+================================== FAILURES ===================================
+____________________ test_probe_meets_g2_and_pinned[rand] _____________________
+
+lib = <port.test.lib.Lib object at 0x000001D3B20DE180>, name = 'rand'
+
+    @pytest.mark.parametrize("name", SCENES)
+    def test_probe_meets_g2_and_pinned(lib, name):
+        real = real_frame(name)
+        _lines, pre = scene(name)
+        got = compare(real, pre, port_frame(lib, name))
+        changed, differ, one, beyond = got
+        assert changed > 0
+        assert g2(changed, one, beyond), got
+>       assert got == PINNED_SPAN[name], (got, PINNED_SPAN[name])     # the build's default line rule is the span rule (S3.24)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: ((74466, 7, 6, 1), (74466, 8, 7, 1))
+E       assert (74466, 7, 6, 1) == (74466, 8, 7, 1)
+E         
+E         At index 1 diff: 7 != 8
+E         Use -v to get more diff
+
+port\test\test_terrain_overlay.py:181: AssertionError
+____________________ test_span_rule_pinned[rand-2-pinned0] ____________________
+
+lib = <port.test.lib.Lib object at 0x000001D3B20DE180>, name = 'rand', rule = 2
+pinned = {'rand': (74466, 8, 7, 1), 'widths': (27689, 12, 6, 6), 'short': (744, 0, 0, 0), 'flip': (18261, 5, 3, 2)}
+
+    @pytest.mark.parametrize("rule,pinned", [(SPAN_RULE, PINNED_SPAN), (NOTIE_RULE, PINNED_NOTIE)])
+    @pytest.mark.parametrize("name", SCENES)
+    def test_span_rule_pinned(lib, name, rule, pinned):
+        real = real_frame(name)
+        _lines, pre = scene(name)
+>       assert compare(real, pre, port_frame(lib, name, rule=rule)) == pinned[name]
+E       assert (74466, 7, 6, 1) == (74466, 8, 7, 1)
+E         
+E         At index 1 diff: 7 != 8
+E         Use -v to get more diff
+
+port\test\test_terrain_overlay.py:216: AssertionError
+__________________________ test_negctl_reads_red[5] ___________________________
+
+lib = <port.test.lib.Lib object at 0x000001D3B20DE180>, mode = 5
+
+    @pytest.mark.parametrize("mode", sorted(CONTROLS))
+    def test_negctl_reads_red(lib, mode):
+        name = CONTROLS[mode]
+        real = real_frame(name)
+        _lines, pre = scene(name)
+        changed, _d, one, beyond = compare(real, pre, port_frame(lib, name, mode))
+>       assert not g2(changed, one, beyond), (mode, changed, one, beyond)
+E       AssertionError: (5, 74466, 1085, 1)
+E       assert not True
+E        +  where True = g2(74466, 1085, 1)
+
+port\test\test_terrain_overlay.py:248: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [4] port\test\test_terrain_overlay.py:302: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+SKIPPED [2] port\test\test_terrain_overlay.py:317: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+FAILED port/test/test_terrain_overlay.py::test_probe_meets_g2_and_pinned[rand]
+FAILED port/test/test_terrain_overlay.py::test_span_rule_pinned[rand-2-pinned0]
+FAILED port/test/test_terrain_overlay.py::test_negctl_reads_red[5] - Assertio...
+3 failed, 30 passed, 6 skipped in 7.92s
+[turn] end 02:15:40 rc=1

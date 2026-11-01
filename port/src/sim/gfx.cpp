@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <map>
 #include <memory>
@@ -843,10 +844,10 @@ const GfxBodyDef kBodies[] = {
 // Drops that draw nothing (pacing, audio, input, files, the window tree's modal stack): not reported as unsupported drawing.
 // Each one's reason in tick.cpp's kDrops table says it does not draw: waitTicks "wait loop (pacing)", startSoundSlot / playSound
 // "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty function",
-// saveCourseJpg "screenshot file", Widget_readPixel "a pixel read of the root surface", enterModal483d30 "modal stack push and
-// focus clear of the window tree" (port/test/framegate.py NOT_DRAWING holds the same names).
-const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot", "playSound",        "Snd::status",     "capsLockOff",
-                                   "emptyFunc_4a0890", "saveCourseJpg", "Widget_readPixel", "enterModal483d30"};
+// saveCourseJpg "screenshot file", enterModal483d30 "modal stack push and focus clear of the window tree" (port/test/framegate.py
+// NOT_DRAWING holds the same names). Widget_readPixel has a body since roadmap S3.26 (gfx_pixel.cpp: it hands the pixel back).
+const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot", "playSound",     "Snd::status",     "capsLockOff",
+                                   "emptyFunc_4a0890", "saveCourseJpg", "enterModal483d30"};
 
 }  // namespace gfxb
 
@@ -955,6 +956,11 @@ void gfx_progress(Ctx &ctx, uint32_t pos) {
     g->snap_terrain.push_back(g->back_terrain);
     try {
       gfxb::put_file(ctx, "$gfx/snapshot_" + std::to_string(g->snap_next) + ".555", gfxb::surface_bytes(g->back));
+      // development (roadmap S3.26): SG_GFX_SNAPSTATE=1 also keeps the GameState of the snapshot's instant
+      static const char *snapstate = std::getenv("SG_GFX_SNAPSTATE");
+      if (snapstate && snapstate[0] == '1')
+        gfxb::put_file(ctx, "$gfx/state_" + std::to_string(g->snap_next) + ".bin",
+                       std::vector<uint8_t>(ctx.bytes(), ctx.bytes() + sizeof(GameState)));
     } catch (...) {
       g->unsup("snapshot: the files overlay refused it");
     }

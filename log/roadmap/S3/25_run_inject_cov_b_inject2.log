@@ -1,0 +1,17 @@
+[heavy] 02:13:44 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (1 s since our release)
+[heavy] 02:14:04 waiting behind older waits ['w8_wait_S3.24'] (21 s since our release)
+[heavy] 02:14:24 waiting behind older waits ['w8_wait_S3.24'] (41 s since our release)
+[heavy] 02:14:44 waiting behind older waits ['w8_wait_S3.24'] (61 s since our release)
+[heavy] 02:15:04 waiting behind older waits ['w8_wait_S3.24'] (81 s since our release)
+[heavy] 02:15:24 waiting behind older waits ['w8_wait_S3.24'] (101 s since our release)
+free commit 19.9 GB (need 16)
+free commit 19.9 GB (need 16)
+[heavy] 02:15:44 lock taken: rec inject cov_b_inject2
+  [off] checkpoint course T=101101 tgt=101101 date=0x000003e7 seed=0x3f4fd507
+  [off] checkpoint debug_overlay T=115140 tgt=115140 date=0x00000467 seed=0x2f529fbf
+  [off] checkpoint zoom_box T=120998 tgt=120998 date=0x00000479 seed=0xc62dcdef
+  [off] checkpoint forced_events T=155944 tgt=155944 date=0x000023d4 seed=0x502e4e09
+  [off] checkpoint end T=186345 tgt=186345 date=0x00002507 seed=0x076a5883
+run cov_b_inject2/s325_inject: OK polls=1846 checkpoints=5
+cov_b_inject2/inject: 5 checkpoints -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\corpus\w8rec\cov_b_inject2\inject; run rc 0; vs det_b: SAME (5 checkpoints)
+[heavy] 02:16:47 lock released

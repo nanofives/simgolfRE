@@ -1,0 +1,2 @@
+[1/2] segs_win32 rc=0 489 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 487.8}
+[2/2] boot_win32 rc=0 665 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2}}

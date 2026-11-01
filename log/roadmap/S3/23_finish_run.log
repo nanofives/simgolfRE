@@ -1,0 +1,87 @@
+[resume] ui_tour: 10 rows
+[resume] ui_tour_v: 10 rows
+{"rows": 698, "counts": {"PASS": 111, "FAIL": 577, "NOT_RUN": 10}}
+scenarios 70 rows 698
+raw {'PASS': 111, 'FAIL': 577, 'NOT_RUN': 10} | raw equal to f2dff003 census (status, total_px, regions): 698 differ: 0
+split {'PASS': 638, 'FAIL': 50, 'NOT_RUN': 10}
+split vs host-GL census: {'FAIL/FAIL': 50, 'NOT_RUN/NOT_RUN': 10, 'PASS/PASS': 638}
+-> C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\23_compare.tsv 0 rows listed
+[w8_lock] S3.23 queued at 2026-10-31 04:21:03
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=[] free_commit=25.1 GB
+[w8_lock] S3.23 TOOK the lock at 2026-10-31 04:21:43 (waited 40 s, free commit 25.6 GB)
+......                                                                   [100%]
+6 passed in 1.31s
+[w8_lock] S3.23 released at 2026-10-31 04:21:45
+[port static] rc=0
+[w8_lock] S3.23 queued at 2026-10-31 04:23:50
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=['S3.24'] free_commit=24.4 GB
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=['S3.24'] free_commit=24.5 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 TOOK the lock at 2026-10-31 04:31:20 (waited 450 s, free commit 25.6 GB)
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_23\port\build\Win32\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_23/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_23\port\build\Win32\Release\portsim_c.dll
+[w8_lock] S3.23 released at 2026-10-31 04:33:02
+[build Win32] rc=0
+[w8_lock] S3.23 queued at 2026-10-31 04:35:07
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=['S3.24'] free_commit=24.3 GB
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=['S3.24'] free_commit=24.1 GB
+[w8_lock] S3.23 waiting: lock='step=S3.26' ahead=['S3.24'] free_commit=24.0 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=23.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=23.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.0 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=23.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.0 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=23.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.23 waiting: lock='step=S3.24' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.23 TOOK the lock at 2026-10-31 04:45:48 (waited 640 s, free commit 25.3 GB)
+.................                                                        [100%]
+17 passed in 35.01s
+[w8_lock] S3.23 released at 2026-10-31 04:46:23
+[pytest split win32] rc=0
+FINISH_DONE

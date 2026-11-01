@@ -46,6 +46,9 @@ namespace portsim {
 // (gfx_results.cpp), for showTournamentResults' drawing positions (tick_panels.inc)
 bool gfx_sprite_cut(Ctx &ctx, uint32_t sref, int32_t &w, int32_t &h);
 bool results_control(int m);
+// roadmap S3.26: a frame-code read that lands inside a SpriteRef the graphics backend holds (gfx_pixel.cpp), for P4's
+// selected-golfer sprite when the selection word is not a golfer index (tick_frame.inc P4_selectedSprite)
+bool gfx_sprite_ref_read(Ctx &ctx, uint32_t va, uint32_t size, uint32_t &v);
 namespace tk {
 
 // ------------------------------------------------------------------------------------------------ negative controls

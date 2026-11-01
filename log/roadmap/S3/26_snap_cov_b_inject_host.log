@@ -1,0 +1,15 @@
+[w8_lock] S3.26 queued at 2026-10-31 02:49:55
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.23'] free_commit=20.3 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.4 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.3 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.2 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.3 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=19.2 GB
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 02:51:35 (waited 100 s, free commit 20.1 GB)
+cov_b_inject course PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_b_inject debug_overlay PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_b_inject zoom_box PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_b_inject forced_events PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_b_inject end PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+states [0, 1, 2, 3, 4]
+[w8_lock] S3.26 released at 2026-10-31 02:51:58

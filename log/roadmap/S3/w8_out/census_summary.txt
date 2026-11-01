@@ -1,0 +1,20 @@
+rows 698
+raw    {'PASS': 123, 'FAIL': 565, 'NOT_RUN': 10}
+split  {'PASS': 677, 'FAIL': 11, 'NOT_RUN': 10}
+raw vs f2dff003: PASS lost 0 worse 0 fewer px 576 new PASS 12
+raw differing px f2dff003 71871 -> 6203
+split vs S3.23 split (f2dff003): PASS lost 0 new PASS 39
+split vs census_auto (host GL f2dff003): PASS lost 0
+split FAIL rows 11 2D-only 11
+max terrain_origin px 27 beyond 7
+  FAIL cov_a_build brush_465 2d 3 beyond 0
+  FAIL cov_a_keys k_dlg_R 2d 1 beyond 0
+  FAIL cov_k3_camera y_inj3 2d 847 beyond 759
+  FAIL cov_r_s2_screens course 2d 65 beyond 20
+  FAIL cov_r_s2_screens radial_hover 2d 65 beyond 20
+  FAIL cov_r_s2_screens rep_comments 2d 20 beyond 20
+  FAIL cov_r_s2_screens rep_financial 2d 20 beyond 20
+  FAIL cov_r_s2_screens rep_histograph 2d 20 beyond 20
+  FAIL cov_r_s2_screens rep_report1 2d 20 beyond 20
+  FAIL cov_r_s2_screens rep_roster 2d 11 beyond 11
+  FAIL cov_r_s2_screens rep_shortcuts 2d 20 beyond 20

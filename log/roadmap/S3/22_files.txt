@@ -1,0 +1,23 @@
+log/roadmap/S3/22_assemble.py
+log/roadmap/S3/22_boot_x64.log
+log/roadmap/S3/22_boot_x64.tsv
+log/roadmap/S3/22_build_w32.log
+log/roadmap/S3/22_build_x64.log
+log/roadmap/S3/22_causes.tsv
+log/roadmap/S3/22_count_bodies.py
+log/roadmap/S3/22_edits.py
+log/roadmap/S3/22_gates.sh
+log/roadmap/S3/22_gates_run.log
+log/roadmap/S3/22_make_causes.py
+log/roadmap/S3/22_make_edits.py
+log/roadmap/S3/22_notes.md
+log/roadmap/S3/22_pytest_gfx_w32.log
+log/roadmap/S3/22_pytest_gfx_x64.log
+log/roadmap/S3/22_rows.py
+log/roadmap/S3/22_rows.tsv
+log/roadmap/S3/22_rows_run1.log
+log/roadmap/S3/22_rows_run2.log
+log/roadmap/S3/22_segs_x64.log
+log/roadmap/S3/22_segs_x64.tsv
+log/roadmap/S3/22_img/
+port/src/sim/gfx_chareditor.cpp (via 22_edits.py; mirror port/build/S3_22)

@@ -1,0 +1,7 @@
+== sample start 2026-10-30 23:11:53
+[1/5] sandbox_basic FAIL=9 PASS=1 (12.8 s)
+[2/5] cov_k1_river FAIL=71 PASS=1 (9.4 s)
+[3/5] championship FAIL=5 PASS=1 (63.4 s)
+[4/5] cov_k3_camera2 FAIL=25 (8.5 s)
+[5/5] cov_a_build FAIL=19 PASS=1 (62.6 s)
+{"rows": 133, "counts": {"PASS": 4, "FAIL": 129}}

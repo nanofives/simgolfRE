@@ -1,0 +1,11 @@
+[w8_lock] S3.26 queued at 2026-10-31 04:11:23
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.23'] free_commit=25.9 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 04:13:23 (waited 120 s, free commit 26.0 GB)
+........................................................................ [ 88%]
+.........                                                                [100%]
+81 passed, 169 deselected in 30.40s
+[w8_lock] S3.26 released at 2026-10-31 04:13:54

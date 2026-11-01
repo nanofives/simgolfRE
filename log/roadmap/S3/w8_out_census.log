@@ -1,0 +1,12 @@
+[7/70] census batch: championship course_season course_season_6y cov_a_build cov_a_build2 cov_a_build3 cov_a_career
+[14/70] census batch: cov_a_champ cov_a_flags cov_a_golfer cov_a_keys cov_a_keys2 cov_a_keys3 cov_a_play
+[21/70] census batch: cov_a_quit cov_a_quit_title cov_b_build cov_b_career cov_b_career_types cov_b_decor cov_b_holes18
+[28/70] census batch: cov_b_inject cov_b_inject2 cov_b_location cov_b_locations cov_b_paths cov_b_people cov_b_shots
+[35/70] census batch: cov_b_shots2 cov_b_title cov_k1_animals cov_k1_label cov_k1_magazine_d2900 cov_k1_paths cov_k1_river
+[42/70] census batch: cov_k1_routing cov_k1_steps cov_k1_terrain cov_k1_washers cov_k2_build cov_k2_golfers cov_k2_label
+[49/70] census batch: cov_k2_simfoto cov_k3_build cov_k3_camera cov_k3_camera2 cov_k3_career cov_k3_champ cov_k3_hole19
+[56/70] census batch: cov_l_bridge cov_l_camera cov_l_point cov_r_bio cov_r_course cov_r_flic_input cov_r_palette_hot
+[63/70] census batch: cov_r_quit cov_r_reload cov_r_s2_screens cov_r_sve cov_r_theme_cancel cov_r_tutorial golfer_events
+[70/70] census batch: golfer_stories mood5_fixture sandbox_basic stories9_fixture stories_fixture ui_tour ui_tour_v
+census rc=0 [w8_lock] S3-lead released at 2026-10-31 07:47:57
+W8_CENSUS_DONE

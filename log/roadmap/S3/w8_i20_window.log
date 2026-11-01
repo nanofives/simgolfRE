@@ -1,0 +1,5 @@
+2026-10-31 02:21:35	started; waiting for [queue done]
+2026-10-31 03:01:05	[queue done] seen; taking the lock as I20-rerun (priority)
+2026-10-31 03:01:35	lock held; waiting for [rerun done]
+2026-10-31 03:31:35	[rerun done] seen
+2026-10-31 03:31:35	released; window closed

@@ -1,0 +1,59 @@
+[w8_lock] S3.24 queued at 2026-10-31 04:53:38
+[w8_lock] S3.24 waiting: lock='free' ahead=['S3.26'] free_commit=26.4 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.1 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.2 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.1 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.2 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.8 GB
+[w8_lock] S3.24 TOOK the lock at 2026-10-31 05:01:08 (waited 450 s, free commit 26.3 GB)
+rule: the build's default
+championship	tour_0180	0	0	PASS
+cov_a_build	terrain_03	0	0	PASS
+cov_a_build	terrain_07	0	0	PASS
+cov_a_build	terrain_11	0	0	PASS
+cov_a_build	brush_465	3	0	FAIL
+cov_a_champ	champ_render	0	0	PASS
+cov_a_champ	n_prompt	0	0	PASS
+cov_a_champ	n_cancel	0	0	PASS
+cov_a_champ	X	0	0	PASS
+cov_a_golfer	panel_0	0	0	PASS
+cov_a_golfer	panel_1	0	0	PASS
+cov_a_golfer	panel_2	0	0	PASS
+cov_a_golfer	panel_3	0	0	PASS
+cov_a_golfer	button_3	0	0	PASS
+cov_a_golfer	mod_11	0	0	PASS
+cov_a_golfer	shift_tee_300	0	0	PASS
+cov_a_golfer	shift_tee_570	0	0	PASS
+cov_a_golfer	tee_300	0	0	PASS
+cov_a_golfer	tee_570	0	0	PASS
+cov_a_golfer	strip	0	0	PASS
+cov_a_keys	k_dlg_R	1	0	FAIL
+cov_a_keys	k_render_dot	0	0	PASS
+cov_a_keys	k_render_slash	0	0	PASS
+cov_a_keys3	panel	0	0	PASS
+cov_a_play	shot_keys	0	0	PASS
+cov_b_decor	terrain	0	0	PASS
+cov_r_bio	panel	0	0	PASS
+cov_r_bio	exit	0	0	PASS
+cov_r_tutorial	p18	0	0	PASS
+ui_tour	practice	0	0	PASS
+ui_tour_v	practice	0	0	PASS
+rows PASS 29
+[w8_lock] S3.24 released at 2026-10-31 05:06:41

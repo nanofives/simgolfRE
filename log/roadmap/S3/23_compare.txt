@@ -1,0 +1,5 @@
+scenarios 70 rows 698
+raw {'PASS': 111, 'FAIL': 577, 'NOT_RUN': 10} | raw equal to f2dff003 census (status, total_px, regions): 698 differ: 0
+split {'PASS': 638, 'FAIL': 50, 'NOT_RUN': 10}
+split vs host-GL census: {'FAIL/FAIL': 50, 'NOT_RUN/NOT_RUN': 10, 'PASS/PASS': 638}
+-> C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\23_compare.tsv 0 rows listed

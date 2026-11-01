@@ -1,0 +1,10 @@
+cov_a_keys k_dlg_R 1 {'MID': 1}
+cov_a_keys k_render_dot 46 {'TIE': 29, 'MID+TIE': 14, 'END+MID+TIE': 2, 'END+TIE': 1}
+cov_a_keys k_render_slash 18 {'MID+TIE': 6, 'TIE': 12}
+cov_a_keys3 panel 1 {'MID+TIE': 1}
+cov_a_play shot_keys 23 {'TIE': 19, 'MID+TIE': 4}
+cov_b_decor terrain 45 {'MID+TIE': 33, 'END+MID+TIE': 8, 'TIE': 2, 'END+TIE': 2}
+cov_r_bio panel 4 {'TIE': 4}
+cov_r_bio exit 4 {'TIE': 4}
+ui_tour practice 6 {'MID+TIE': 6}
+ui_tour_v practice 6 {'MID+TIE': 1, 'TIE': 5}

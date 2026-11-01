@@ -1,0 +1,4 @@
+[1/3] census rc=0 1936 s :: {"rows": 698, "counts": {"PASS": 122, "FAIL": 566, "NOT_RUN": 10}}
+[2/3] t_test_terrain_render rc=0 190 s :: 522 passed in 189.39s (0:03:09)
+[3/3] t_test_static rc=0 5 s :: 6 passed in 2.38s
+[done] gates census t_test_terrain_render t_test_static

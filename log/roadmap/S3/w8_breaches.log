@@ -1,0 +1,31 @@
+2026-10-31 01:31:28	lock taken by hand: 'S3.25 rec queue cov_b_holes18 01:26:56'	while S3.21 waited via w8_lock.py
+2026-10-31 01:51:14	lock taken by hand: 'S3.25 rec queue cov_b_holes18 01:50:56'	while S3.21 waited via w8_lock.py
+2026-10-31 01:52:28	lock taken by hand: 'S3.25 rec queue cov_b_holes18 01:50:56'	while S3.23 waited via w8_lock.py
+2026-10-31 02:13:11	lock taken by hand: 'S3.24 gate build_x64 02:13'	while S3.21 waited via w8_lock.py
+2026-10-31 02:13:31	lock taken by hand: 'S3.25 rec queue cov_k3_camera2 02:13:27'	while S3.21 waited via w8_lock.py
+2026-10-31 02:15:37	lock taken by hand: 'S3.24 gate pytest_x64 02:15'	while S3.23 waited via w8_lock.py
+2026-10-31 02:15:38	lock taken by hand: 'S3.24 gate pytest_x64 02:15'	while S3.21 waited via w8_lock.py
+2026-10-31 02:15:47	lock taken by hand: 'S3.25 rec inject cov_b_inject2 02:15:44'	while S3.23 waited via w8_lock.py
+2026-10-31 02:15:48	lock taken by hand: 'S3.25 rec inject cov_b_inject2 02:15:44'	while S3.21 waited via w8_lock.py
+2026-10-31 02:22:34	lock taken by hand: 'S3.25 rec queue golfer_stories_box 02:22:27'	while S3.21 waited via w8_lock.py
+2026-10-31 02:23:34	lock taken by hand: 'S3.24 gate census_0 02:23'	while S3.21 waited via w8_lock.py
+2026-10-31 02:23:59	lock taken by hand: 'S3.24 gate census_0 02:23'	while S3.23 waited via w8_lock.py
+2026-10-31 02:32:08	lock taken by hand: 'S3.24 gate census_0 02:23'	while S3.26 waited via w8_lock.py
+2026-10-31 02:41:46	lock taken by hand: 'S3.24 gate census_1 02:41'	while S3.26 waited via w8_lock.py
+2026-10-31 02:43:26	lock taken by hand: 'S3.24 gate census_1 02:41'	while S3.23 waited via w8_lock.py
+2026-10-31 02:52:09	lock taken by hand: 'S3.24 gate census_2 02:52'	while S3.26 waited via w8_lock.py
+2026-10-31 02:53:32	lock taken by hand: 'S3.24 gate census_2 02:52'	while S3.23 waited via w8_lock.py
+2026-10-31 02:58:27	lock taken by hand: 'S3.24 gate census_3 02:58'	while S3.26 waited via w8_lock.py
+2026-10-31 02:59:51	lock taken by hand: 'S3.24 gate census_3 02:58'	while S3.23 waited via w8_lock.py
+2026-10-31 03:31:38	lock taken by hand: 'S3.24 gate census_4 03:31'	while S3.23 waited via w8_lock.py
+2026-10-31 03:31:46	lock taken by hand: 'S3.24 gate census_4 03:31'	while S3.26 waited via w8_lock.py
+2026-10-31 03:37:38	lock taken by hand: 'S3.24 gate build_w32 03:37'	while S3.26 waited via w8_lock.py
+2026-10-31 03:37:54	lock taken by hand: 'S3.24 gate build_w32 03:37'	while S3.23 waited via w8_lock.py
+2026-10-31 03:41:38	lock taken by hand: 'S3.24 gate pytest_w32 03:41'	while S3.26 waited via w8_lock.py
+2026-10-31 03:47:37	lock taken by hand: 'S3.24 gate rows_default 03:47'	while S3.23 waited via w8_lock.py
+2026-10-31 03:47:42	lock taken by hand: 'S3.24 gate rows_default 03:47'	while S3.26 waited via w8_lock.py
+2026-10-31 03:54:27	lock taken by hand: 'S3.24 gate segs_x64 03:54'	while S3.26 waited via w8_lock.py
+2026-10-31 03:55:37	lock taken by hand: 'S3.24 gate segs_x64 03:54'	while S3.23 waited via w8_lock.py
+2026-10-31 04:03:02	lock taken by hand: 'S3.24 gate boot_x64 04:02'	while S3.26 waited via w8_lock.py
+2026-10-31 04:04:13	lock taken by hand: 'S3.24 gate boot_x64 04:02'	while S3.23 waited via w8_lock.py
+2026-10-31 04:14:05	lock taken by hand: 'S3.24 gate streams (glreplay of the dumped game calls) 04:13'	while S3.26 waited via w8_lock.py

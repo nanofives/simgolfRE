@@ -1,0 +1,4 @@
+order	idx	sortKey	anchorX	anchorY	x	y	flags	shade	shade_f32	aux	obj	cell	sheet	col	row	path
+4	5	140	48	140	8	100	0x0000001d	4	5.60519e-45	0	0x0079c948	46354	0x1a0	2	0	Scenic\Desert_waterspray / Scenic\Links_waterspray / Scenic\Trop_waterspray / Scenic\waterspray
+6	16	155	108	155	78	115	0x00000079	4	5.60519e-45	0	0x0072882c	35549	0x116	10	2	
+19	22	215	44	215	-78	93	0x00000028	-7	nan	0	0x007a0a40	46732	0x19d	15	3	trees\Desert\JoshuaTree_Lg / trees\TreeMapleLarge / trees\Tropic\TropicalBrush_Lg

@@ -1,0 +1,82 @@
+[w8_lock] S3.26 queued at 2026-10-31 03:39:26
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.23'] free_commit=24.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 03:40:56 (waited 90 s, free commit 24.4 GB)
+cov_k1_river menu PASS 0 0 label_continue=0/0/0.0/0;label_new=0/0/0.0/0;label_theme=0/0/0.0/0;label_champ=0/0/0.0/0;label_sandbox=0/0/0.0/0;button_continue=0/0/0.0/0;button_new=0/0/0.0/0;button_theme=0/0/0.0/0;button_champ=0/0/0.0/0;button_sandbox=0/0/0.0/0;button_exit=0/0/0.0/0;logo=0/0/0.0/0;background=0/0/0.0/0 
+cov_k1_river r00 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r01 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r02 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r03 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r04 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r05 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r06 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r07 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r08 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r09 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r10 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r11 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r12 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r13 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r14 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r15 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r16 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r17 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r18 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r19 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r20 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r21 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r22 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r23 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r24 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r25 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r26 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r27 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r28 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r29 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r30 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r31 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r32 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r33 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r34 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r35 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r36 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r37 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r38 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r39 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r40 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r41 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r42 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r43 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r44 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r45 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r46 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r47 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r48 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r49 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r50 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r51 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r52 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r53 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r54 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r55 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r56 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r57 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r58 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r59 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r60 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r61 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r62 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r63 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r64 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r65 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r66 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r67 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r68 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river r69 PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_k1_river end PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+states [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+[w8_lock] S3.26 released at 2026-10-31 03:41:11

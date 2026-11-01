@@ -1,0 +1,25 @@
+01:53:41 step build_x64
+02:13:12 step build_x64 rc=0
+02:13:39 step pytest_x64
+02:15:40 step pytest_x64 rc=0
+02:17:50 step census_0
+02:36:46 step census_0 rc=0
+02:38:56 step census_1
+02:47:47 step census_1 rc=0
+02:49:57 step census_2
+02:55:59 step census_2 rc=0
+02:58:09 step census_3
+03:00:12 step census_3 rc=0
+03:02:22 step census_4
+03:34:52 step census_4 rc=0
+03:37:02 step build_w32
+03:39:18 step build_w32 rc=0
+03:41:28 step pytest_w32
+03:42:03 step pytest_w32 rc=0
+03:44:13 step rows_default
+03:51:49 step rows_default rc=0
+03:53:59 step segs_x64
+03:59:26 step segs_x64 rc=0
+04:01:37 step boot_x64
+04:10:02 step boot_x64 rc=0
+04:10:02 chain done

@@ -8,7 +8,6 @@
 //   showCharacterEditor.background(root)   every pass: Surface_blitThunk(image, root, 0, 0, 0, 0, 0x320, 0x258) (the core
 //                                          Surface_blit3 through gfx_surface.cpp's thunk body)
 //   showCharacterEditor.teardown           the Image destructor: the backend's image dropped
-//   showCharacterEditor.bio                the bio EditBox's window-tree drawing: reported (not modelled)
 //   drawMessageBuffer(cols, x, y, colour)  the text buffer wrapped at cols * 8 pixels (gfxb::draw_message_buffer, gfx.cpp)
 //
 // Negative controls (g_negctl_gfx_chareditor, sg_negctl_set "gfx.family.chareditor"):
@@ -62,10 +61,6 @@ void b_background(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 
 void b_teardown(Gfx &g, Ctx &, const uint32_t *, int) { g.images.erase(kImage); }
 
-void b_bio(Gfx &g, Ctx &, const uint32_t *, int) {
-  g.unsup("showCharacterEditor.bio: the bio EditBox's drawing (window tree) is not modelled");
-}
-
 void b_message_buffer(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t x = add32(static_cast<int32_t>(a[1]), mode() == 3 ? 1 : 0);
   gfxb::draw_message_buffer(g, ctx, static_cast<int32_t>(a[0]), x, static_cast<int32_t>(a[2]), a[3]);
@@ -75,7 +70,6 @@ const GfxBodyDef kBodies[] = {
     {"showCharacterEditor.setup", b_setup},
     {"showCharacterEditor.background", b_background},
     {"showCharacterEditor.teardown", b_teardown},
-    {"showCharacterEditor.bio", b_bio},
     {"drawMessageBuffer", b_message_buffer},
 };
 

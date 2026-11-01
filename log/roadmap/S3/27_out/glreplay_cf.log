@@ -1,0 +1,27 @@
+[w8_lock] S3.27 queued at 2026-10-31 06:56:02
+[w8_lock] S3.27 TOOK the lock at 2026-10-31 06:59:43 (waited 220 s, free commit 26.6 GB)
+stream 83460 lines, context at 4120, pass 1167 lines, DIB 800x600 16bpp comp 3 biHeight 600
+pixel format 204, Microsoft Corporation | GDI Generic
+draw blocks in the pass: 124
+replay hash b4dcd8ca320eae66  game hash 1882be1298e2bdf5  pre hash 124b83b155ff2857
+pixels the game changed in the pass: 2063
+pixels differing from the game's result: 65 of 480000  (first at x=783 row-in-memory=451: replay 0000 game 0420)
+texture uploads without bytes skipped: 0, unhandled calls: 0
+cf_k019_local_o5 rc=1
+stream 83460 lines, context at 4120, pass 1167 lines, DIB 800x600 16bpp comp 3 biHeight 600
+pixel format 204, Microsoft Corporation | GDI Generic
+draw blocks in the pass: 124
+replay hash 1882be1298e2bdf5  game hash 1882be1298e2bdf5  pre hash 7b8370831971f019
+pixels the game changed in the pass: 2063
+pixels differing from the game's result: 0 of 480000  -> BIT-EXACT
+texture uploads without bytes skipped: 0, unhandled calls: 0
+k019_local_o5 rc=0
+stream 83460 lines, context at 4120, pass 374 lines, DIB 800x600 16bpp comp 3 biHeight 600
+pixel format 204, Microsoft Corporation | GDI Generic
+draw blocks in the pass: 40
+replay hash 47bbfb02fb56ffb0  game hash 47bbfb02fb56ffb0  pre hash 98084342b4f66a1d
+pixels the game changed in the pass: 1497
+pixels differing from the game's result: 0 of 480000  -> BIT-EXACT
+texture uploads without bytes skipped: 0, unhandled calls: 0
+k005_lowerEdge_o3 rc=0
+[w8_lock] S3.27 released at 2026-10-31 06:59:46

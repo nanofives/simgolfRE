@@ -1,0 +1,45 @@
+[w8_lock] S3-lead queued at 2026-10-31 18:46:41
+[w8_lock] S3-lead waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=19.9 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.4 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.3 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.4 GB
+[w8_lock] S3-lead waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.2 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.3 GB
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 18:48:51 (waited 130 s, free commit 19.6 GB)
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x64-windows/share/freetype (module fttext)
+-- Configuring done (0.1s)
+-- Generating done (0.6s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\app\Release\portapp_input.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/CMakeLists.txt
+  gfx_terrain.cpp
+  gl_wgl.cpp
+  terrain_dll.cpp
+  terrain_live.cpp
+  terrain_overlay.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\Release\portsim.lib
+  portapp_audio.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\app\Release\portapp_audio.lib
+  host.cpp
+  main.cpp
+  Generando código...
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/CMakeLists.txt
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\app\Release\simgolf_input_check.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/CMakeLists.txt
+  portsim_c.cpp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\Release\portsim_layout_test.exe
+  simgolf_audio_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\app\Release\simgolf_audio_check.exe
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\Release\portsim_core_test.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/build/x64/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\Release\portsim_c.dll
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_W8/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_W8\port\build\x64\Release\portsim_c.dll
+[w8_lock] S3-lead released at 2026-10-31 18:49:14

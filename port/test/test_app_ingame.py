@@ -137,13 +137,13 @@ def checkpoint_plan(scenario: str) -> dict:
     for r in tr.records:
         if r.type == TF.POLL and r.f.get("checkpoint") and r.f["checkpoint"] not in polls:
             polls[r.f["checkpoint"]] = r.f["pos"]
+    heads = {r.f["pos"] for r in tr.records if r.type == TF.FRAME}
     rows = []
     for c in FG.scenario_checkpoints(scenario):
         st = summ["checkpoints"][c]["status"]
         if st["tgt"] in tgt and tgt[st["tgt"]][1] == st["T"]:
             o = tgt[st["tgt"]][0]
-            if os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll" and polls.get(c) is not None and polls[c] < o:
-                o = polls[c]
+            o = GX.poll_position(o, polls.get(c), heads)   # roadmap S3.26: framegate's rule (gfx.poll_position)
             rows.append(dict(FG.classify(tr, o), checkpoint=c, ordinal=o))
     rows.sort(key=lambda r: r["ordinal"])
     frames_pos = [r.f["pos"] for r in tr.records if r.type == TF.FRAME]

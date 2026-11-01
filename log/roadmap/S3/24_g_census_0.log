@@ -1,0 +1,19 @@
+free commit 19.5 GB (need 16)
+[turn] start 02:23:29 gate census_0
+batch 0: championship course_season course_season_6y cov_a_build cov_a_build2 cov_a_build3 cov_a_career cov_a_champ cov_a_flags cov_a_golfer cov_a_keys cov_a_keys2 cov_a_keys3 cov_a_play 
+[1/14] championship FAIL=5 PASS=1 (30.3 s)
+[2/14] course_season FAIL=12 (47.6 s)
+[3/14] course_season_6y FAIL=12 (372.5 s)
+[4/14] cov_a_build FAIL=19 PASS=1 (37.6 s)
+[5/14] cov_a_build2 FAIL=9 PASS=1 (11.9 s)
+[6/14] cov_a_build3 FAIL=7 PASS=1 (17.9 s)
+[7/14] cov_a_career FAIL=13 PASS=2 (84.3 s)
+[8/14] cov_a_champ FAIL=8 PASS=3 (12.7 s)
+[9/14] cov_a_flags FAIL=10 PASS=1 (15.0 s)
+[10/14] cov_a_golfer FAIL=27 PASS=2 (41.1 s)
+[11/14] cov_a_keys FAIL=20 PASS=3 (18.6 s)
+[12/14] cov_a_keys2 FAIL=8 PASS=1 (12.5 s)
+[13/14] cov_a_keys3 FAIL=4 PASS=2 (23.1 s)
+[14/14] cov_a_play FAIL=7 PASS=1 (7.7 s)
+{"rows": 180, "counts": {"PASS": 19, "FAIL": 161}}
+[turn] end 02:36:46 rc=0

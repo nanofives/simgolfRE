@@ -19,8 +19,12 @@
 //     coverage is clamp(w / 2 + 0.5 - |n|) * clamp(t + 0.5) * clamp(L - t + 0.5) (each factor clamped to [0, 1]);
 //   - the fragment's alpha is alpha * coverage, blended against the 5-bit destination expanded by 255 / 31 and written with the
 //     4x4 ordered dither of the triangles (gl_raster.cpp quantize).
-//   What it does not reproduce: a few pixels at the footprint's edge whose coverage is under 0.13 are not drawn by the real GL
-//   (10 of 12,080 covered pixels in the probe; U-1370).
+//   - the footprint (roadmap S3.24, log/roadmap/S3/24_notes.md): per column of the major axis (x when |dx| >= |dy|) at most
+//     N = floor(w * L / |major|) + 2 pixels are drawn, the pixel centres whose minor offset o from the line centre (at the pixel
+//     centre's major coordinate) times the tie sign lies in [-N/2, N/2); the tie sign is sign(dx) * sign(dy) for an x-major line,
+//     sign(dx) for a y-major one. This is what U-1370 saw as `footprint-edge pixels under 0.13 coverage`.
+//   What it does not reproduce: at the second vertex of wide lines the real GL leaves out a corner pixel next to the cap in some
+//   columns (U-1826), and a few exact ties of y-major lines and pixels within 0.001 of N/2 follow a rule not determined (U-1827).
 //
 // The exe's drawers over it (all drops of the frame loop; with a graphics backend and a LiveTerrain attached they draw into the
 // root surface, gfx_terrain.cpp's family lists their bodies): drawMapLine (Terrain::drawLine with the seven arguments),
@@ -80,7 +84,8 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 
 // negative controls (sg_negctl_set "overlay.rasterLine"): 1 hard-edged line (no coverage ramp), 2 alpha ignored, 3 no clipping
 // (the end ramps at the unclipped ends), 4 the flip byte inverted, 5 no fixed-point snap of the ends, 6 lineTo keeps the old line
-// point, 7 drawCircle's segments 3 wide instead of 2, 8 the width not clamped at 10, 9 drawn without a GL context, 10 the gfx bodies draw nothing (the baseline of the frame tests)
+// point, 7 drawCircle's segments 3 wide instead of 2, 8 the width not clamped at 10, 9 drawn without a GL context, 10 the gfx bodies draw nothing (the baseline of the frame tests),
+// 11 S3.8's footprint (no span rule: the rule before roadmap S3.24)
 extern int g_negctl_terrain_overlay;
 
 }  // namespace portsim

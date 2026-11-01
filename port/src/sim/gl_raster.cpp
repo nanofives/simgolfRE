@@ -1,5 +1,6 @@
 // The port's software rasteriser (phase 5 step 3). See portsim/sim/gl_raster.h. Module file only because every file of
 // src/sim is a module; it registers no function (the C entry points are sg_raster_* in portsim_c.h).
+#define _CRT_SECURE_NO_WARNINGS   // the development switch SG_RASTER_TUNE uses getenv
 #include "portsim/sim/gl_raster.h"
 
 #include <algorithm>
@@ -66,6 +67,8 @@ int quantize(double c, int x, int y, int ctl) {
 // integer vertices, the mean of a linear ramp for fractional ones). The older model below (tune 26 = 1) kept exact edges and
 // sampled at x' = c + (x - c) * (1 + e), the straight-line fit of that staircase: e = 1.046e-5 in x, 1.355e-5 in y (glshift_fit.py);
 // tune[6] / tune[15] override e in units of 1e-9 (0 = the fitted constant, -1 = none).
+// Since roadmap S3.21 the snapped positions come from the generic GL's own float32 vertex arithmetic (VERTEX RULE in emit); the
+// scaled double model above is what `#tune 28 1` restores. Its residue sat on the vertices within a float ulp of a 2^-8 tie (U-1392).
 constexpr double kAttrScaleX = 1.046e-5, kAttrScaleY = 1.355e-5;
 // SPECULAR (U-1300, log/roadmap/S3/1b_notes.md): the generic GL does not evaluate (n.h)^shininess; it reads a table of 256 entries
 // spanning [t, 1], t = 0.0005^(1 / shininess) (below t the term is 0), at the entry NEAREST to n.h, without interpolation:
@@ -133,6 +136,26 @@ GlRaster::GlRaster(int width, int height) : w_(width), h_(height), fb_(static_ca
   std::memset(proj_.m, 0, sizeof proj_.m);
   mv_.m[0] = mv_.m[5] = mv_.m[10] = mv_.m[15] = 1.0;
   proj_ = mv_;
+  std::memset(fmv_.m, 0, sizeof fmv_.m);
+  fmv_.m[0] = fmv_.m[5] = fmv_.m[10] = fmv_.m[15] = 1.0f;
+  fproj_ = fmv_;
+  fmvp_ = fmv_;
+  // SG_RASTER_TUNE=<i>=<v>[,<i>=<v>...]: tune knobs for every rasteriser of the process (development and negative controls only,
+  // e.g. `28=1,29=1` puts the pre-S3.21 vertex model and no clipping back on the live terrain path; unset = every knob 0)
+  if (const char *env = std::getenv("SG_RASTER_TUNE")) {
+    const char *p = env;
+    while (*p) {
+      char *e = nullptr;
+      const long i = std::strtol(p, &e, 10);
+      if (e == p || *e != '=') break;
+      const char *q = e + 1;
+      const long v = std::strtol(q, &e, 10);
+      if (e == q) break;
+      if (i >= 0 && i < kTunes) tune[i] = static_cast<int>(v);
+      p = *e == ',' ? e + 1 : e;
+      if (e == q || (*e != ',' && *e != 0)) break;
+    }
+  }
   vp_w_ = width;
   vp_h_ = height;
 }
@@ -149,22 +172,95 @@ void GlRaster::mul(const Mat &b) {
     }
   a = c;
 }
+// FLOAT32 MATRICES (roadmap S3.21, U-1392): measured with feedback-mode probes of the real software GL (log/roadmap/S3/21_notes.md):
+// every product and sum of the matrix arithmetic is a float32 operation, a product's four terms summed in order k = 0..3 (so a
+// translation column is x * m0 + y * m1 + z * m2 + m3), and the MVP is the modelview operations applied to the MVP itself.
+// Volatile stores keep each operation a separately rounded float on every compiler setting.
+void GlRaster::fmul_(const FMat &a, const FMat &b, FMat &r) {
+  FMat c;
+  for (int j = 0; j < 4; ++j)
+    for (int i = 0; i < 4; ++i) {
+      volatile float s = a.m[i] * b.m[4 * j];
+      for (int k = 1; k < 4; ++k) {
+        volatile float p = a.m[i + 4 * k] * b.m[k + 4 * j];
+        s = s + p;
+      }
+      c.m[i + 4 * j] = s;
+    }
+  r = c;
+}
+void GlRaster::fpost_(const FMat &b) {
+  if (mode_ == kProjection) {
+    fmul_(fproj_, b, fproj_);
+    fmul_(fproj_, fmv_, fmvp_);
+  } else {
+    fmul_(fmv_, b, fmv_);
+    fmul_(fmvp_, b, fmvp_);
+  }
+}
 void GlRaster::load_identity() {
   Mat &a = cur();
   std::memset(a.m, 0, sizeof a.m);
   a.m[0] = a.m[5] = a.m[10] = a.m[15] = 1.0;
+  FMat &f = mode_ == kProjection ? fproj_ : fmv_;
+  std::memset(f.m, 0, sizeof f.m);
+  f.m[0] = f.m[5] = f.m[10] = f.m[15] = 1.0f;
+  if (mode_ == kProjection) fmul_(fproj_, fmv_, fmvp_);
+  else fmvp_ = fproj_;
 }
-void GlRaster::push_matrix() { stack_[mode_ == kProjection ? 1 : 0].push_back(cur()); }
+void GlRaster::push_matrix() {
+  stack_[mode_ == kProjection ? 1 : 0].push_back(cur());
+  if (mode_ == kProjection) {
+    fstack_[1].push_back(fproj_);
+  } else {
+    fstack_[0].push_back(fmv_);
+    fstack_mvp_.push_back(fmvp_);
+  }
+}
 void GlRaster::pop_matrix() {
   auto &st = stack_[mode_ == kProjection ? 1 : 0];
   if (st.empty()) return;
   cur() = st.back();
   st.pop_back();
+  if (mode_ == kProjection) {
+    if (!fstack_[1].empty()) { fproj_ = fstack_[1].back(); fstack_[1].pop_back(); }
+    fmul_(fproj_, fmv_, fmvp_);
+  } else if (!fstack_[0].empty()) {
+    fmv_ = fstack_[0].back(); fstack_[0].pop_back();
+    fmvp_ = fstack_mvp_.back(); fstack_mvp_.pop_back();
+  }
 }
 void GlRaster::matrix_mode(uint32_t mode) { mode_ = mode; }
 void GlRaster::rotated(double angle, double x, double y, double z) {
   const double n = std::sqrt(x * x + y * y + z * z);
   if (n == 0) return;
+  {
+    // the float32 rotation (roadmap S3.21): the axis normalised in float, cos / sin of the angle in radians rounded to float,
+    // the diagonal as the Red Book's u u^T + cos (I - u u^T): x^2 + (1 - x^2) c (a probe with a general axis needs that form: the
+    // (1 - c) x^2 + c form is one float ulp off), the off-diagonal terms (1 - c) x y -+ s z
+    volatile float fx = static_cast<float>(x), fy = static_cast<float>(y), fz = static_cast<float>(z);
+    volatile float xx = fx * fx, yy = fy * fy, zz = fz * fz;
+    volatile float n2 = xx + yy;
+    n2 = n2 + zz;
+    const float fn = static_cast<float>(std::sqrt(static_cast<double>(n2)));
+    if (fn != 1.0f) { fx = fx / fn; fy = fy / fn; fz = fz / fn; xx = fx * fx; yy = fy * fy; zz = fz * fz; }
+    const double rad = angle * 3.14159265358979323846 / 180.0;
+    const float c = static_cast<float>(std::cos(rad)), s = static_cast<float>(std::sin(rad));
+    volatile float t = 1.0f - c;
+    auto diag = [c](float q) { volatile float a = 1.0f - q; volatile float b = a * c; volatile float r = q + b; return static_cast<float>(r); };
+    auto off = [](float t_, float p, float q, float sv, float w, bool plus) {
+      volatile float a = t_ * p; volatile float b = a * q; volatile float d = sv * w;
+      volatile float r = plus ? b + d : b - d;
+      return static_cast<float>(r);
+    };
+    FMat r;
+    const float v[16] = {diag(xx),                 off(t, fx, fy, s, fz, true),  off(t, fx, fz, s, fy, false), 0,
+                         off(t, fx, fy, s, fz, false), diag(yy),                 off(t, fy, fz, s, fx, true),  0,
+                         off(t, fx, fz, s, fy, true),  off(t, fy, fz, s, fx, false), diag(zz),                 0,
+                         0, 0, 0, 1};
+    std::memcpy(r.m, v, sizeof v);
+    fpost_(r);
+  }
   x /= n; y /= n; z /= n;
   const double rad = angle * 3.14159265358979323846 / 180.0, c = std::cos(rad), s = std::sin(rad), t = 1 - c;
   Mat r;
@@ -182,6 +278,11 @@ void GlRaster::translatef(float x, float y, float z) {
   r.m[0] = r.m[5] = r.m[10] = r.m[15] = 1.0;
   r.m[12] = x; r.m[13] = y; r.m[14] = z;
   mul(r);
+  FMat f;
+  std::memset(f.m, 0, sizeof f.m);
+  f.m[0] = f.m[5] = f.m[10] = f.m[15] = 1.0f;
+  f.m[12] = x; f.m[13] = y; f.m[14] = z;
+  fpost_(f);
 }
 void GlRaster::ortho(double l, double r, double b, double t, double n, double f) {
   Mat o;
@@ -194,6 +295,9 @@ void GlRaster::ortho(double l, double r, double b, double t, double n, double f)
   o.m[14] = -(f + n) / (f - n);
   o.m[15] = 1.0;
   mul(o);
+  FMat fo;   // the elements in double, stored as float (a probe of the terrain's projection: float operands give the same values)
+  for (int i = 0; i < 16; ++i) fo.m[i] = static_cast<float>(o.m[i]);
+  fpost_(fo);
 }
 void GlRaster::viewport(int32_t x, int32_t y, int32_t w, int32_t h) { vp_x_ = x; vp_y_ = y; vp_w_ = w; vp_h_ = h; }
 
@@ -330,6 +434,27 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
   v.x = G(vp_x_ + G(G(G(cx / cw) + 1.0) * 0.5) * vp_w_);
   v.y = G(vp_y_ + G(G(G(cy / cw) + 1.0) * 0.5) * vp_h_);
   v.z = (cz / cw + 1.0) * 0.5;
+  v.qx = v.qy = 0;
+  if (tune[28] == 0) {
+    // VERTEX RULE (roadmap S3.21, U-1392; measured against the real GL's feedback points, log/roadmap/S3/21_notes.md): the object
+    // coordinates as floats through the float32 MVP, the translation added FIRST (m3 + x m0 + y m1 + z m2, each operation rounded
+    // to float), then window = ndc * (half-size - 2^-8) rounded to float, plus the centre, rounded half to even to 2^-8 in one step
+    // (a biased float add). Matches every vertex of the recorded passes (21_vcheck_all.log); the double model above misses the
+    // vertices whose window coordinate sits within a float ulp of a 2^-8 rounding tie.
+    const float *M = fmvp_.m;
+    const float o[3] = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)};
+    float clip[4];
+    for (int r = 0; r < 4; ++r) {
+      volatile float acc = M[12 + r];
+      for (int k = 0; k < 3; ++k) {
+        volatile float term = o[k] * M[r + 4 * k];
+        acc = acc + term;
+      }
+      clip[r] = acc;
+    }
+    std::memcpy(v.c, clip, sizeof clip);
+    window_of_(clip, v);
+  }
   v.s = cur_s_;
   v.t = cur_t_;
   v.r = cur_c_[0]; v.g = cur_c_[1]; v.b = cur_c_[2]; v.a = cur_c_[3];
@@ -390,6 +515,107 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
   }
   verts_.push_back(v);
 }
+void GlRaster::window_of_(const float c[4], Vtx &v) const {
+  float nx = c[0], ny = c[1];
+  if (c[3] != 1.0f) {   // not measured: the terrain's projections are orthographic (w = 1)
+    volatile float inv = 1.0f / c[3];
+    volatile float a = c[0] * inv, b = c[1] * inv;
+    nx = a; ny = b;
+  }
+  const double hx = vp_w_ * 0.5, hy = vp_h_ * 0.5;
+  volatile float px = nx * static_cast<float>(hx - 1.0 / 256.0), py = ny * static_cast<float>(hy - 1.0 / 256.0);
+  const double wx = static_cast<double>(px) + (vp_x_ + hx), wy = static_cast<double>(py) + (vp_y_ + hy);
+  v.x = wx;
+  v.y = wy;
+  v.qx = std::nearbyint(256.0 * wx) / 256.0;
+  v.qy = std::nearbyint(256.0 * wy) / 256.0;
+}
+
+// FRUSTUM CLIPPING (roadmap S3.21, U-1392; measured against the real GL's triangle feedback, log/roadmap/S3/21_notes.md): a triangle
+// with a vertex outside -w <= x, y, z <= w is culled first (on its snapped window positions; a zero area is not a back face), then
+// clipped in clip space against x >= -w, x <= w, y >= -w, y <= w, z >= -w, z <= w in that order, Sutherland-Hodgman with the
+// classic output order (for each edge prev -> cur: the intersection when the edge crosses, then cur when inside); an intersection
+// is t = d_in / (d_in - d_out) (d = w +- coordinate, float) and every attribute is in + t (out - in) in float, from the inside
+// vertex; the polygon is drawn as the fan of its first vertex. Without it (GlRaster before S3.21, tune 29 = 1) the unclipped
+// triangle's attribute planes stand where the real GL has the fan triangles', the residue in the bands at the viewport edges.
+bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
+  const Vtx *in3[3] = {&a, &b, &c};
+  bool out = false;
+  for (const Vtx *p : in3)
+    for (int k = 0; k < 3; ++k) out = out || !(p->c[k] >= -p->c[3] && p->c[k] <= p->c[3]);
+  if (!out) return false;
+  const double area = edge(a.qx, a.qy, b.qx, b.qy, c.qx, c.qy);
+  const bool front = (front_ == 0x0901) ? area >= 0 : area <= 0;
+  ++stats.triangles;
+  if (cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return true; }
+  struct CV { float c[4]; float s, t, r, g, b, a; };
+  auto to = [](const Vtx &v) {
+    CV r;
+    std::memcpy(r.c, v.c, sizeof r.c);
+    r.s = static_cast<float>(v.s); r.t = static_cast<float>(v.t);
+    r.r = static_cast<float>(v.r); r.g = static_cast<float>(v.g); r.b = static_cast<float>(v.b); r.a = static_cast<float>(v.a);
+    return r;
+  };
+  std::vector<CV> poly = {to(a), to(b), to(c)}, next;
+  auto dist = [](const CV &v, int plane) {
+    const int k = plane >> 1;
+    volatile float d = (plane & 1) ? v.c[3] - v.c[k] : v.c[3] + v.c[k];
+    return static_cast<float>(d);
+  };
+  auto lerp = [](float p, float q, float t) {
+    volatile float d = q - p;
+    volatile float m = t * d;
+    volatile float r = p + m;
+    return static_cast<float>(r);
+  };
+  for (int plane = 0; plane < 6 && !poly.empty(); ++plane) {
+    const size_t n = poly.size();
+    std::vector<float> d(n);
+    bool all_in = true;
+    for (size_t i = 0; i < n; ++i) { d[i] = dist(poly[i], plane); all_in = all_in && d[i] >= 0; }
+    if (all_in) continue;
+    next.clear();
+    for (size_t i = 0; i < n; ++i) {
+      const size_t pi = (i + n - 1) % n;
+      const float dp = d[pi], dc = d[i];
+      if ((dp >= 0) != (dc >= 0)) {
+        const CV &ii = dp >= 0 ? poly[pi] : poly[i];
+        const CV &oo = dp >= 0 ? poly[i] : poly[pi];
+        const float di = dp >= 0 ? dp : dc, dout = dp >= 0 ? dc : dp;
+        volatile float den = di - dout;
+        volatile float t = di / den;
+        CV nv;
+        for (int k = 0; k < 4; ++k) nv.c[k] = lerp(ii.c[k], oo.c[k], t);
+        nv.s = lerp(ii.s, oo.s, t); nv.t = lerp(ii.t, oo.t, t);
+        nv.r = lerp(ii.r, oo.r, t); nv.g = lerp(ii.g, oo.g, t); nv.b = lerp(ii.b, oo.b, t); nv.a = lerp(ii.a, oo.a, t);
+        next.push_back(nv);
+      }
+      if (dc >= 0) next.push_back(poly[i]);
+    }
+    poly.swap(next);
+  }
+  if (poly.size() < 3) return true;
+  // the unclipped vertices keep their own values (the clipper copies them); new ones take the window rule of their clip coordinates
+  std::vector<Vtx> vs(poly.size());
+  for (size_t i = 0; i < poly.size(); ++i) {
+    const CV &p = poly[i];
+    Vtx &v = vs[i];
+    const Vtx *orig = nullptr;
+    for (const Vtx *q : in3)
+      if (std::memcmp(q->c, p.c, sizeof p.c) == 0 && static_cast<float>(q->s) == p.s && static_cast<float>(q->t) == p.t) orig = q;
+    if (orig) { v = *orig; continue; }
+    std::memcpy(v.c, p.c, sizeof p.c);
+    window_of_(p.c, v);
+    v.z = 0.5;
+    v.s = p.s; v.t = p.t; v.r = p.r; v.g = p.g; v.b = p.b; v.a = p.a;
+  }
+  in_clip_ = true;
+  for (size_t i = 1; i + 1 < vs.size(); ++i) triangle(vs[0], vs[i], vs[i + 1]);
+  in_clip_ = false;
+  --stats.triangles;   // counted once above for the original triangle; the fan's triangles count themselves
+  return true;
+}
+
 void GlRaster::array_element(int32_t i) {
   const size_t k = static_cast<size_t>(static_cast<uint32_t>(i)) * 3;
   if (k + 3 > varr_.size()) { ++stats.bad_texture; return; }
@@ -409,11 +635,12 @@ void GlRaster::end() {
 }
 
 void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
+  if (tune[28] == 0 && tune[29] == 0 && !in_clip_ && clip_triangle_(a, b, c)) return;
   ++stats.triangles;
   const double area = edge(a.x, a.y, b.x, b.y, c.x, c.y);
   if (area == 0) return;
   const bool front = (front_ == 0x0901) ? area > 0 : area < 0;
-  if (cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return; }
+  if (!in_clip_ && cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return; }
   const auto tit = textures_.find(bound_);
   // A texture object with no image (id 0, or never loaded) is incomplete, and OpenGL then draws without texturing: the
   // fragment is the lit colour. A white 1x1 texel stands in for it (modulated by the colour, it is the colour).
@@ -480,6 +707,11 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     const double k = tune[22] == 0 ? -1.0 : (tune[22] == 1 || tune[22] == -1) ? tune[22] : tune[22] / 100.0;
     const double cxs = cxv + tune[21] / 256.0, cys = cyv + tune[21] / 256.0;
     for (int i = 0; i < 3; ++i) {
+      if (tune[28] == 0) {   // the float32 vertex rule's snapped positions (emit)
+        sx_[i] = vs[i]->qx;
+        sy_[i] = vs[i]->qy;
+        continue;
+      }
       if (tune[25] != 0) {
         // float32 evaluation of ndc * (half-size - 2^-8) + centre (tune 25)
         const float nx = static_cast<float>((vs[i]->x - cxs) / hx), ny = static_cast<float>((vs[i]->y - cys) / hy);
@@ -510,6 +742,70 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
   if (keep_float_) {
     for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->x); tris_.push_back(q->y); }
     for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->s); tris_.push_back(q->t); }
+  }
+  // ATTRIBUTE STEPPING (roadmap S3.21b, U-1309; opt-in `#tune 30 1`, `#tune 31 <F>` adds the texture coordinates): the generic GL's
+  // incremental fixed point, measured on a slow-ramp probe (log/roadmap/S3/21_notes.md section 10): rows walk from the largest y
+  // down; the first covered row's start (its first covered pixel) is the plane value, every later row's start is the previous one
+  // plus ONE held step trunc(Q * (-dA/dy * rows + dA/dx * (ix - ix_prev))) / Q, and each pixel adds trunc(Q * dA/dx) / Q; colour
+  // Q = 31 * 2^16 (the 5-bit range, 16.16), texture coordinates Q = texture size * 2^F (texel units).
+  const bool stepping = tune[30] != 0 && fixed && !(textured && tune[30] == 2);
+  const int nstep = (stepping && tune[31] > 0) ? 5 : 3;
+  std::vector<int> st_ix;
+  std::vector<double> st_v, st_q;
+  double st_gx[5] = {}, st_gy[5] = {};
+  if (stepping) {
+    const double A[5][3] = {{v0->r, v1->r, v2->r}, {v0->g, v1->g, v2->g}, {v0->b, v1->b, v2->b},
+                            {v0->s * tex.w, v1->s * tex.w, v2->s * tex.w}, {v0->t * tex.h, v1->t * tex.h, v2->t * tex.h}};
+    // colour quantum: untextured 31 * 2^16 (measured); textured triangles by tune 30 (1: the same, 2: not stepped, 3: 255 * 2^16,
+    // 4: 2^16, 5: 31 * 2^16 * 8)
+    double cq = 31.0 * 65536.0;
+    if (textured) cq = tune[30] == 3 ? 255.0 * 65536.0 : tune[30] == 4 ? 65536.0 : tune[30] == 5 ? 31.0 * 65536.0 * 8.0 : cq;
+    const double scl[5] = {cq, cq, cq, std::ldexp(1.0, tune[31]), std::ldexp(1.0, tune[31])};
+    const double arS = edge(sx_[0], sy_[0], sx_[1], sy_[1], sx_[2], sy_[2]);
+    const double dx1 = sx_[1] - sx_[0], dy1 = sy_[1] - sy_[0], dx2 = sx_[2] - sx_[0], dy2 = sy_[2] - sy_[0];
+    for (int k = 0; k < nstep; ++k) {
+      const double d1 = A[k][1] - A[k][0], d2 = A[k][2] - A[k][0];
+      st_gx[k] = arS != 0 ? (d1 * dy2 - d2 * dy1) / arS : 0.0;
+      st_gy[k] = arS != 0 ? (d2 * dx1 - d1 * dx2) / arS : 0.0;
+    }
+    auto Q = [&](double v, int k) { return std::trunc(v * scl[k]) / scl[k]; };
+    const int rows = maxy - miny + 1;
+    st_ix.assign(rows, INT32_MIN);
+    st_v.assign(static_cast<size_t>(rows) * 5, 0.0);
+    st_q.assign(5, 0.0);
+    for (int k = 0; k < nstep; ++k) st_q[k] = Q(st_gx[k], k);
+    int prev_y = 0, prev_ix = 0;
+    double prev[5] = {};
+    bool have = false;
+    const double arA0 = std::fabs(arS);
+    for (int y = maxy; y >= miny; --y) {
+      int ix = INT32_MIN;
+      for (int x = minx; x <= maxx && ix == INT32_MIN; ++x) {
+        const double px = x + 0.5, py = y + 0.5;
+        const double w0 = edge(c1->x, c1->y, c2->x, c2->y, px, py);
+        const double w1 = edge(c2->x, c2->y, c0->x, c0->y, px, py);
+        const double w2 = edge(c0->x, c0->y, c1->x, c1->y, px, py);
+        if (w0 < 0 || w1 < 0 || w2 < 0) continue;
+        if ((w0 == 0 && !cinc0) || (w1 == 0 && !cinc1) || (w2 == 0 && !cinc2)) continue;
+        ix = x;
+      }
+      if (ix == INT32_MIN) continue;
+      double cur[5];
+      if (!have) {
+        const double px = ix + 0.5, py = y + 0.5;
+        const double b0 = edge(sx_[1], sy_[1], sx_[2], sy_[2], px, py), b1 = edge(sx_[2], sy_[2], sx_[0], sy_[0], px, py);
+        const double b2 = edge(sx_[0], sy_[0], sx_[1], sy_[1], px, py);
+        for (int k = 0; k < nstep; ++k) cur[k] = arA0 != 0 ? (b0 * A[k][0] + b1 * A[k][1] + b2 * A[k][2]) / arA0 : A[k][0];
+        have = true;
+      } else {
+        for (int k = 0; k < nstep; ++k)
+          cur[k] = prev[k] + Q(-st_gy[k] * (prev_y - y) + st_gx[k] * (ix - prev_ix), k);
+      }
+      st_ix[y - miny] = ix;
+      for (int k = 0; k < nstep; ++k) { st_v[static_cast<size_t>(y - miny) * 5 + k] = cur[k]; prev[k] = cur[k]; }
+      prev_y = y;
+      prev_ix = ix;
+    }
   }
   for (int y = miny; y <= maxy; ++y) {
     for (int x = minx; x <= maxx; ++x) {
@@ -580,6 +876,12 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
       const double s = linear ? (a0 * v0->s + a1 * v1->s + a2 * v2->s) / arA : (w0 * v0->s + w1 * v1->s + w2 * v2->s) / ar;
       const double t = linear ? (a0 * v0->t + a1 * v1->t + a2 * v2->t) / arA : (w0 * v0->t + w1 * v1->t + w2 * v2->t) / ar;
       double u = s * tex.w, v = t * tex.h;
+      const int st_row = y - miny;
+      const bool st_px = stepping && st_ix[st_row] != INT32_MIN;
+      if (st_px && nstep == 5) {   // the stepped texture coordinates (texel units)
+        u = st_v[static_cast<size_t>(st_row) * 5 + 3] + (x - st_ix[st_row]) * st_q[3];
+        v = st_v[static_cast<size_t>(st_row) * 5 + 4] + (x - st_ix[st_row]) * st_q[4];
+      }
       if (tune[2] > 0) {
         const double q = static_cast<double>(1ull << tune[2]);
         u = std::floor(u * q) / q;
@@ -627,6 +929,11 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
       }
       double cr = (a0 * v0->r + a1 * v1->r + a2 * v2->r) / arA, cg = (a0 * v0->g + a1 * v1->g + a2 * v2->g) / arA;
       double cb = (a0 * v0->b + a1 * v1->b + a2 * v2->b) / arA;
+      if (st_px) {   // the stepped colour (21b)
+        const double *sv = &st_v[static_cast<size_t>(st_row) * 5];
+        const double dxs = x - st_ix[st_row];
+        cr = sv[0] + dxs * st_q[0]; cg = sv[1] + dxs * st_q[1]; cb = sv[2] + dxs * st_q[2];
+      }
       if (tune[3] > 0) {
         const double q = static_cast<double>((1ull << tune[3]) - 1);
         cr = std::floor(cr * q + 0.5) / q;

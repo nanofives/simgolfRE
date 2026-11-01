@@ -5,10 +5,13 @@
 // draws one drawLine into a w x h RGB555 buffer of the address space at buf (flags bit 0 = the flip byte, bit 1 = no GL context;
 // prev_width = the line width before the call as float bits, 0 = GL's default 1.0) and returns the pixels written. The gfx bodies
 // (drawMapLine, drawMinimapSegment, setLinePoint, lineTo, drawCircle) are listed in gfx_terrain.cpp's family table.
+#define _CRT_SECURE_NO_WARNINGS   // the development dump (SG_OVERLAY_DUMP) uses fopen / getenv
 #include "portsim/sim/terrain_overlay.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -31,6 +34,22 @@ namespace {
 
 int mode() { return SG_NEGCTL(g_negctl_terrain_overlay); }
 
+// the line rule (roadmap S3.24; log/roadmap/S3/24_notes.md). Default 2: per column of the major axis the generic GL draws
+// N = floor(w * L / |major|) + 2 pixels, the pixel centres whose minor offset o from the line centre, times the tie sign, lies in
+// [-N/2, N/2); the tie sign is sign(dx) * sign(dy) for an x-major line and sign(dx) for a y-major one. 0 = S3.8's model (no span);
+// development variants: 1 = the sign of the minor delta, 3 = sign(dx) * sign(dy) on both axes, 4 = +1, 5 = -1, 6 = no tie decision
+// (|o| <= N/2 + kSpanSlack), 7 = x-major sign(dx) * sign(dy), y-major -sign(dx) * sign(dy). Set by overlay.setRule or,
+// before that, by SG_OVERLAY_RULE; negative control 11 = rule 0.
+constexpr double kSpanSlack = 0.002;
+int g_line_rule = -1;
+int line_rule() {
+  if (g_line_rule < 0) {
+    const char *e = std::getenv("SG_OVERLAY_RULE");
+    g_line_rule = (e && *e) ? std::atoi(e) : 2;
+  }
+  return g_line_rule;
+}
+
 // the 4x4 ordered dither of the generic GL's 16-bit write (gl_raster.cpp quantize, fitted on the terrain frames)
 constexpr int kDither[4][4] = {{15, 7, 13, 5}, {3, 11, 1, 9}, {12, 4, 14, 6}, {0, 8, 2, 10}};
 int quantize(double c, int32_t x, int32_t y) {
@@ -40,6 +59,44 @@ int quantize(double c, int32_t x, int32_t y) {
 }
 
 double clamp01(double v) { return v < 0.0 ? 0.0 : (v > 1.0 ? 1.0 : v); }
+
+// development switch SG_OVERLAY_DUMP=<file> (roadmap S3.24): every drawn call appends its arguments, the GL state and the pixels of
+// its box before and after, so the same calls can be replayed through the real software GL (log/roadmap/S3/24_probe.py)
+struct LineDump {
+  const char *path;
+  uint16_t *fb;
+  int32_t w, x0, y0, x1, y1;
+  std::vector<uint8_t> rec;
+  LineDump(uint16_t *f, int32_t fw, int32_t fh, int32_t a, int32_t b, int32_t c, int32_t d)
+      : path(std::getenv("SG_OVERLAY_DUMP")), fb(f), w(fw), x0(std::max(0, a - 2)), y0(std::max(0, b - 2)),
+        x1(std::min(fw - 1, c + 2)), y1(std::min(fh - 1, d + 2)) {}
+  bool on() const { return path && *path && x1 >= x0 && y1 >= y0; }
+  void put(int32_t v) {
+    const uint8_t *p = reinterpret_cast<const uint8_t *>(&v);
+    rec.insert(rec.end(), p, p + 4);
+  }
+  void box() {
+    for (int32_t y = y0; y <= y1; ++y) {
+      const uint8_t *p = reinterpret_cast<const uint8_t *>(fb + static_cast<size_t>(y) * static_cast<size_t>(w) + x0);
+      rec.insert(rec.end(), p, p + 2 * static_cast<size_t>(x1 - x0 + 1));
+    }
+  }
+  void head(int32_t ax, int32_t ay, int32_t bx, int32_t by, uint32_t colour, int32_t width, int32_t alpha, const LineGl &gl) {
+    uint32_t wb;
+    std::memcpy(&wb, &gl.line_width, 4);
+    for (int32_t v : {0x314c564f, ax, ay, bx, by, static_cast<int32_t>(colour), width, alpha, static_cast<int32_t>(wb),
+                      gl.flip_y ? 1 : 0, gl.screen_w, gl.screen_h, w, x0, y0, x1, y1})
+      put(v);
+    box();
+  }
+  void tail() {
+    box();
+    if (FILE *f = std::fopen(path, "ab")) {
+      std::fwrite(rec.data(), 1, rec.size(), f);
+      std::fclose(f);
+    }
+  }
+};
 
 // U-1076's fixed-point window-coordinate setup: c + (v - c) * (1 - 2^-8 / h), rounded to 8 fractional bits
 double snap(double v, double c, double h) {
@@ -198,9 +255,27 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t 
   const int32_t xe = std::min(fb_w - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
   const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
   const int32_t ye = std::min(fb_h - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+  LineDump dump(fb, fb_w, fb_h, x0, y0, xe, ye);
+  if (dump.on()) dump.head(x1, y1, x2, y2, colour, width, alpha, gl);
+  // the span rule (roadmap S3.24): per column of the major axis the real GL draws N = floor(w * L / |major|) + 2 pixels, the
+  // pixel centres whose minor offset s from the line centre (o times the tie sign) lies in [-N/2, N/2)
+  const int rule = mode() == 11 ? 0 : line_rule();   // control 11: S3.8's footprint, no span
+  const bool xmaj = std::fabs(dx) >= std::fabs(dy);
+  double span_n = 0.0, span_sign = 1.0;
+  if (rule != 0) {
+    span_n = std::floor(wd * len / std::max(std::fabs(dx), std::fabs(dy))) + 2.0;
+    const double sgx = dx < 0.0 ? -1.0 : 1.0, sgy = dy < 0.0 ? -1.0 : 1.0;
+    span_sign = rule == 1 ? (xmaj ? sgy : sgx) : rule == 2 ? (xmaj ? sgx * sgy : sgx) : rule == 3 ? sgx * sgy
+                : rule == 7 ? (xmaj ? sgx * sgy : -sgx * sgy) : rule == 5 ? -1.0 : 1.0;
+  }
   int64_t written = 0;
   for (int32_t y = y0; y <= ye; ++y) {
     for (int32_t x = x0; x <= xe; ++x) {
+      if (rule != 0) {
+        const double o = xmaj ? (y + 0.5) - (ay + (x + 0.5 - ax) * dy / dx) : (x + 0.5) - (ax + (y + 0.5 - ay) * dx / dy);
+        const double s = o * span_sign;
+        if (rule == 6 ? std::fabs(o) > span_n / 2.0 + kSpanSlack : !(s >= -span_n / 2.0 && s < span_n / 2.0)) continue;
+      }
       const double px = x + 0.5 - ax, py = y + 0.5 - ay;
       const double t = px * ux + py * uy, n = -px * uy + py * ux;
       double cov;
@@ -219,6 +294,7 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t 
       ++written;
     }
   }
+  if (dump.on()) dump.tail();
   return written;
 }
 
@@ -328,6 +404,12 @@ void a_raster_line(Ctx &ctx, const uint32_t *a, Ret &ret) {
   ret.edx = wb;
 }
 
+// overlay.setRule(rule): the line rule (overlay::line_rule); eax = the rule before the call
+void a_set_rule(Ctx &, const uint32_t *a, Ret &ret) {
+  ret.set_u32(static_cast<uint32_t>(overlay::line_rule()));
+  overlay::g_line_rule = static_cast<int>(a[0]);
+}
+
 // overlay.logStart(): the attached backend logs every Terrain::drawLine call from now on (eax 0 without a backend)
 void a_log_start(Ctx &ctx, const uint32_t *, Ret &ret) {
   Gfx *g = gfx(ctx);
@@ -350,6 +432,7 @@ void a_log_write(Ctx &ctx, const uint32_t *, Ret &ret) {
 
 const FuncDef kFuncs[] = {
     {"overlay.rasterLine", "default", "uint32", 12, 0, a_raster_line, &g_negctl_terrain_overlay},
+    {"overlay.setRule", "default", "uint32", 1, 0, a_set_rule, nullptr},
     {"overlay.logStart", "default", "uint32", 0, 0, a_log_start, nullptr},
     {"overlay.logWrite", "default", "uint32", 0, 0, a_log_write, nullptr},
 };

@@ -1,6 +1,31 @@
-# Regression baseline at HEAD + S7 wave 4 (I20, 2026-10-31)
+# Regression baseline at HEAD + S3 wave 8 (I21, 2026-11-01)
 
-## HEAD + S7 wave 4 (I20)
+## HEAD + S3 wave 8 (I21)
+
+This file now describes **HEAD + S3 wave 8**: 2291a342 (S7 wave 4, = I20's tree) plus S3.21..S3.27 (`log/roadmap/S3/MERGE_w8.md`, files
+`log/roadmap/S3/files_w8.txt` + `27_files.txt`) and the S3 lead's two fix layers `w8_fix_i21.py` / `w8_fix_i21b.py` (stale test pins
+wave 8 moved; the host-GL self-check's negative control). Measured by I21 in `port/build/I21` (`log/roadmap/merges/I21.md`); P2
+(2733b4e5, gditext temp directories) touches no file of it. Pass `-m ""` to pytest for these counts.
+
+| Gate | HEAD + S3 wave 8 (I21) |
+|---|---|
+| repo static | 811 passed, 2 skipped, 46 deselected (= I20) |
+| build x64 / Win32, gfx.check | rc 0; 0 duplicates, 138 bodies |
+| segments x64 / Win32 / freetype | 205 / 205 each (equal to I20's rows) |
+| boot x64 / Win32 / freetype | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each |
+| chains / ledger | 342 / 342; ledger 32 rows = I20's, 2 without a cause |
+| live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266 |
+| census raw (GlRaster), 698 rows | **PASS 123** / FAIL 565 / 0 / NOT_RUN 10 (I19 111 / 577); differing px 71,871 -> 6,203 |
+| census split (G18, terrain-origin pixels under G2, 2D exact) | **PASS 677** / FAIL 11 / 0 / 10 |
+| census --gl auto (host GL) | 677 / 11 / 0 / 10 (I19 638 / 50 / 10) |
+| terrain verdict | 527 PASS, 75 NOT_MEASURED |
+| x64 suite, 106 files | all PASS with the fix layers; test_app_present::test_long_session_memory_bounded passes alone (load-dependent) |
+| Win32 suite, 76 files | only I10's 20 known ids |
+
+Reference TSVs: `log/roadmap/merges/I21/{segs,boot}_{x64,win32}.tsv`, `segs_ft_x64.tsv`, `boot_ft_x64.tsv`, `chain_x64.tsv`,
+`ledger_divergences.tsv`, `census.tsv`, `census_split.tsv`, `census_auto.tsv` + `census_auto_s2_rerun.tsv`, `terrain_verdicts.tsv`.
+
+## Before S3 wave 8 (I20, HEAD + S7 wave 4)
 
 This file now describes **HEAD + S7 wave 4**: f2dff003 (S3 wave 7, = I19's tree) plus S7.10..S7.13, audio out and the app's defect
 profile (`log/roadmap/S7/MERGE_w4.md`, files `log/roadmap/S7/files_w4.txt`). Measured by I20 in `port/build/I20` (`git archive f2dff003` +

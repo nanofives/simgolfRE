@@ -1,0 +1,12 @@
+[heavy] 22:32:18 lock held by: S3.23 census split  championship course_season course_season_6y cov_a_build 22:26
+free commit 19.3 GB (need 16)
+free commit 19.2 GB (need 16)
+[heavy] 22:52:59 lock taken: rec inject cov_b_inject
+  [off] checkpoint course T=86456 tgt=86456 date=0x0000034f seed=0xc06b49a1
+  [off] checkpoint debug_overlay T=100495 tgt=100495 date=0x000003dc seed=0x72cd23f3
+  [off] checkpoint zoom_box T=106353 tgt=106353 date=0x00000407 seed=0x58f78043
+  [off] checkpoint forced_events T=141299 tgt=141299 date=0x000023d4 seed=0x011240f2
+  [off] checkpoint end T=171700 tgt=171700 date=0x00002507 seed=0x19d5c5bb
+run cov_b_inject/s325_inject: OK polls=1701 checkpoints=5
+cov_b_inject/inject: 5 checkpoints -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\corpus\w8rec\cov_b_inject\inject; run rc 0; vs det_b: SAME (5 checkpoints)
+[heavy] 22:56:04 lock released

@@ -1,0 +1,19 @@
+[w8_lock] S3.26 queued at 2026-10-31 05:46:15
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 05:46:15 (waited 0 s, free commit 27.5 GB)
+batch 4: cov_r_quit cov_r_reload cov_r_s2_screens cov_r_sve cov_r_theme_cancel cov_r_tutorial golfer_events golfer_stories mood5_fixture sandbox_basic stories9_fixture stories_fixture ui_tour ui_tour_v 
+[1/14] cov_r_quit FAIL=5 PASS=10 (10.8 s)
+[2/14] cov_r_reload FAIL=3 (17.6 s)
+[3/14] cov_r_s2_screens FAIL=21 PASS=11 (15.7 s)
+[4/14] cov_r_sve FAIL=3 (17.0 s)
+[5/14] cov_r_theme_cancel FAIL=2 PASS=4 (6.9 s)
+[6/14] cov_r_tutorial FAIL=34 (17.2 s)
+[7/14] golfer_events NOT_RUN=10 (- s)
+[8/14] golfer_stories FAIL=5 PASS=1 (16.7 s)
+[9/14] mood5_fixture FAIL=3 PASS=1 (5.5 s)
+[10/14] sandbox_basic FAIL=9 PASS=1 (5.5 s)
+[11/14] stories9_fixture FAIL=3 PASS=1 (8.2 s)
+[12/14] stories_fixture FAIL=3 PASS=1 (6.2 s)
+[13/14] ui_tour FAIL=8 PASS=2 (27.0 s)
+[14/14] ui_tour_v FAIL=8 PASS=2 (22.5 s)
+{"rows": 151, "counts": {"PASS": 34, "FAIL": 107, "NOT_RUN": 10}}
+[w8_lock] S3.26 released at 2026-10-31 05:49:29

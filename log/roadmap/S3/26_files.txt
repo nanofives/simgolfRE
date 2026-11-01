@@ -1,0 +1,27 @@
+# S3.26 files (tracked unless marked local)
+log/roadmap/S3/26_notes.md
+log/roadmap/S3/26_merge.md
+log/roadmap/S3/26_uncertain.tsv
+log/roadmap/S3/26_files.txt
+log/roadmap/S3/26_edits.py
+log/roadmap/S3/26_make_edits.py
+log/roadmap/S3/26_assemble.py
+log/roadmap/S3/26_snap.py
+log/roadmap/S3/26_snaps.sh
+log/roadmap/S3/26_probe.py
+log/roadmap/S3/26_run.sh
+log/roadmap/S3/26_gates.sh
+log/roadmap/S3/26_gate_all.sh
+log/roadmap/S3/26_queue1.sh
+log/roadmap/S3/26_queue2.sh
+log/roadmap/S3/26_build_x64.log
+log/roadmap/S3/26_tlive_s2.log
+log/roadmap/S3/26_snap_*.log
+log/roadmap/S3/26_out/                       # gate logs and TSVs (census_b*.tsv.d per scenario)
+# local (not to be committed: game frames, GameState images, trees)
+log/roadmap/S3/26_img/                       local: port frames / diff PNGs and snapshot GameStates (game bytes)
+port/corpus/terrain/pin_cov_r_s2_screens/    local: copy of S3.25's terrain recording for port.test.terrainlive
+port/build/S3_26/                            local: the measured tree
+port/build/S3_26v/                           local: the fresh-assembly check tree (holds junctions: never rm -rf it)
+port/build/S3_26m/                           local: 22 + 23 + 26 stack check tree (holds junctions: never rm -rf it)
+log/roadmap/S3/26_census_cmp.py

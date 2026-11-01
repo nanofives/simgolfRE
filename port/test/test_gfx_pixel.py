@@ -104,7 +104,8 @@ def _fill_owner(lib):
 
 def test_family_registered(plib):
     with _state(plib) as st:
-        assert st.call("gfx.family.pixel", []).eax == (1 if plib.has("gfx.family.reports") else 2)
+        # roadmap S3.26 added the Widget_readPixel body to this family (Widget_fillRect is the reports family's when it is linked)
+        assert st.call("gfx.family.pixel", []).eax == (2 if plib.has("gfx.family.reports") else 3)
         assert st.call("gfx.check", []).eax == 0, st.files_read("$gfx/bodies.txt")
 
 

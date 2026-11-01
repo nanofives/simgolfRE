@@ -1,0 +1,19 @@
+# S3.27 files (tracked unless marked local)
+log/roadmap/S3/27_notes.md
+log/roadmap/S3/27_uncertain.tsv
+log/roadmap/S3/27_files.txt
+log/roadmap/S3/27_gl_rec.js                  recorder agent (copy of re/frida/js/gl_rec.js + per-kind ordinals, keep rule, kind 5 = lowerEdgeCorner)
+log/roadmap/S3/27_gl_record.py               driver (re/tools/gl_record.py --scenario mode with 27_gl_rec.js)
+log/roadmap/S3/27_analyze.py                 box per kept pass, box dumps
+log/roadmap/S3/27_streams.py                 port draw lists (glcorpus.render) against the recorded passes
+log/roadmap/S3/27_glreplay.sh                Windows GL replay of s327_s2 steps
+log/roadmap/S3/27_glreplay_cf.sh             Windows GL replay of s327_s2b steps
+log/roadmap/S3/27_counterfactual.py          localRender o5 without the kind-5 pixels, compared with the port's course frame
+log/roadmap/S3/27_out/                       logs: rec_*, check_* (SAME), streams_s327_s2.log, glreplay*.log, counterfactual.log
+# local (not to be committed: game frames, GL corpora, runs)
+log/roadmap/S3/27_img/                       local: corner crops (render o1 result, localRender o0 start, changed mask)
+log/p5/gl/corpus/s327_s2/                    local: run 1 (86 passes, stream, textures)
+log/p5/gl/corpus/s327_s2b/                   local: run 2 (98 passes incl. 12 lowerEdgeCorner) + cf_k019_local_o5
+log/p5/s327/replay/                          local: glreplay outputs
+log/c3/alt/refs/cov_r_s2_screens/s327_s2/    local: scenario run 1 (SAME as det_b)
+log/c3/alt/refs/cov_r_s2_screens/s327_s2b/   local: scenario run 2 (SAME as det_b)

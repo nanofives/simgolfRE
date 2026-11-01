@@ -1790,6 +1790,76 @@ perturbed reference (14), 565 DIB (8), no 16-bit generic pixel format (12). Cens
 of 698, equal to S3.9's row for row; opt-in auto 638 / 50 / 10, 0 PASS lost. Why not the default (U-1818): a full host-GL pass takes
 33..43 ms against GlRaster's 6..12 ms with workers; app terrain frames median 45 / max 95 ms against 19 / 40. A banded host GL
 (20_band/, measurement only) gave the same pixels and median 21 / max 46 ms, but hung inside opengl32 twice (U-1819).
+Roadmap S3.21, U-1392 part 1 (2026-10-30, notes log/roadmap/S3/21_notes.md, U-1305..U-1309): GlRaster's terrain residue came from
+two stages of Windows' generic GL it did not model, both measured exactly with a feedback-mode probe (log/roadmap/S3/21_glfeed/
+glfeed.exe: the pass replayed in GL_FEEDBACK, GLFEED_POINTS=1 one point per vertex): (1) the VERTEX RULE: float32 matrices, the MVP
+updated by every modelview operation (not recomputed as P * MV), clip = m3 + x m0 + y m1 + z m2 with every operation float32 (the
+translation FIRST), window = round-half-even(f32(ndc * f32(h - 2^-8)) + centre) to 2^-8: all 973,749 vertices of the 268 corpus passes
+equal (the double model missed 20,709, the vertices within a float ulp of a 2^-8 tie: S3.16's x bands); (2) CLIPPING: triangles crossing
+the view volume are culled on their snapped positions (zero area kept), clipped in clip space (x >= -w, x <= w, y, z; classic
+Sutherland-Hodgman order; t = d_in / (d_in - d_out) and attributes in float from the inside vertex) and drawn as the fan of the
+polygon. GlRaster's `#tune 28 1` / `#tune 29 1` restore the old model / no clipping, `SG_RASTER_TUNE=<i>=<v>,...` sets knobs for a
+process. One-level px of the 271 stream passes 18,234 -> 2,296, of the 237 draw-list chains 10,300 -> 1,605; census sample (5 scenarios,
+133 rows) differing px 24,960 -> 1,902 with no row worse and no PASS lost; full census: 21_notes.md section 7. What is left (U-1309) is
+the attribute interpolation: incremental 16.16 fixed-point stepping of the 5-bit-scaled colour, truncated, rows walked from the
+largest-y vertex (exact on a slow-ramp probe, 480 -> 90 on random Gouraud quads), not yet in GlRaster.
+S3.21b (21b_edits.py, opt-in #tune 30): the 16.16 fixed-point colour stepping is exact on untextured triangles (ramp 705 -> 0 px,
+Gouraud 481 -> 90) and changes nothing on the textured terrain, so it stays off; U-1309 is the textured (GL_MODULATE) interpolation.
+Both part 1 rules are on by default (orchestrator, 2026-10-31: exact stage models, not fitted); SG_RASTER_TUNE=28=1,29=1 restores the
+old renderer row for row.
+Roadmap S3.24, the overlay line's footprint (2026-10-31, notes log/roadmap/S3/24_notes.md, edits 24_edits.py, U-1826..U-1829;
+U-1370 resolved): Windows' generic GL draws an antialiased line per column of the major axis as at most N = floor(w * L / |major|) + 2
+pixels, the centres whose minor offset o from the line centre times the tie sign (x-major sign(dx) * sign(dy), y-major sign(dx)) lies
+in [-N/2, N/2); S3.8's coverage formula gives the values inside. Measured with glreplay.exe on 16-dither-phase probe sets (the cut
+meets N/2 at every width and angle where S3.8's support reached past it) and fitted on exact ties. terrain_overlay.cpp's line rule 2
+is the default (overlay.setRule / SG_OVERLAY_RULE: 0 = S3.8's model, 6 = no tie decision, 1 / 3 / 4 / 5 / 7 other tie signs;
+control 11 = rule 0); SG_OVERLAY_DUMP=<file> dumps every drawn call with its box before / after. Results: S3.8's probe scenes 108 / 88 /
+1 / 18 -> 7 / 12 / 0 / 5 px with none newly wrong; the game's own 9,534 dumped calls through the real GL 879 -> 104 px, none newly
+wrong; the 31 overlay-line census rows (22_causes.tsv group 1) 29 PASS with the host-GL terrain (left: cov_a_build brush_465 3 px, the
+second-vertex end-cap drop U-1826; cov_a_keys k_dlg_R 1 px value); the default GlRaster census 111 / 577 / 0 / 10 equal in status,
+0 PASS lost, 0 rows with more px, 29 rows with fewer (71,871 -> 71,517); segments 205 / 205 and boot 66 / 2 / 2 unchanged; unit tests
+33 on x64 and Win32. Open: the end-cap drop at the second vertex of wide lines (U-1826) and a few y-major / non-45-degree ties (U-1827).
+Roadmap S3.23, the census split verdict (2026-10-31, decision G18, notes log/roadmap/S3/23_notes.md, edits 23_edits.py): framegate.py
+--split runs each scenario a second time with the host-GL terrain (S3.15's WglSink, bit-exact against the original's terrain). A
+differing pixel is terrain-origin when it differs under GlRaster and equals the reference under host GL, on rows with terrain on
+screen; every other differing pixel is 2D. Split PASS = 2D px 0 in every region and terrain-origin px within G2 over the view area (the
+census's G2 denominator, U-1121). Raw columns stay unchanged (raw = f2dff003 on 698 / 698 rows); a host without a 16-bit generic pixel
+format reads UNJUDGED, never PASS. Census 70 scenarios: split 638 / 50 / 10 / 0 = the host-GL census row for row; every split FAIL is
+2D only; the largest terrain-origin count is 270 px (8 beyond), inside G2. Test seam SG_FRAMEGATE_PLANT=<both|raster>:<region>:<n>
+(controls: a 2D pixel planted in hud_title stays FAIL; a terrain-only difference beyond G2 fails as terrain-origin).
+port/test/test_framegate_split.py 17 x64 + Win32.
+Roadmap S3.26, wave 8's 2D residue (2026-10-31, notes log/roadmap/S3/26_notes.md, merge 26_merge.md, U-1834 settled, U-1950..U-1952):
+four of the six cause groups S3.22 found in the host-GL census's 50 FAIL rows are fixed, each from S3.25's recordings of the original.
+Zoom box marker (cov_b_inject / inject2 zoom_box, forced_events, end, 15 px each): Widget_readPixel was a not-drawing drop returning
+0, so mainLoop P5's `== 0x7fff` test (0x00418b98) never let the port draw g_sprite567b08; family `pixel` now has its body (c3db.cpp
+GetPixel_re) and hands the root pixel back through gfx_take_value with a backend (without one the drop still returns 0). Hire dialog
+(cov_r_s2_screens hire, 1,397 px): the four employees are addSprite of cellAt(idx + 0x20e, frame mod cols, s) (0x00459777); the port
+had passed cell 0. Selected-golfer sprite (golfer_stories season_end, 685 px): f_w_4c2e00[2] = -2 (sim class, the original's value
+too) and P4 tests only -1, so the original reads `golfer -2` inside g_sprites5791f8 (element 4's cut size 80 x 80 places it, element
+5's handle byte gates it); the port keeps SpriteRef fields in the backend only, so P4's three reads go through gfx_sprite_ref_read
+(gfx_pixel.cpp) when a backend is attached (U-1950: the handle byte is answered 1). Animated sprites (cov_k3_camera2 y_inj4 414 px,
+cov_b_holes18 holes 2,829 px): not a drawing body: the checkpoint's POLL rode on the frame-head clock call (its pos is a FRAME record's;
+S3.25's call log has 153 resetSpriteQueue calls there), and the snapshot rule skipped that frame's own cursor reads, so the port showed
+the next frame's spray columns; gfx.poll_position (framegate, gfx.checkpoint_ordinal, test_app_ingame) now takes such a checkpoint at
+the head call (pos - 1); 9 of 688 checkpoints have such a POLL (U-1951), SG_GFX_CHECKPOINT_AT=poll16 restores S3.16's rule. All six rows
+PASS on host GL. Not fixed: cov_k3_camera y_inj3 (847 px): worldToScreen(0xc7ff, 0xd800) is tile (49, 54), past the grids; its level
+read g_tileLevel[2504] lands on byte 0 of g_surfaces5439e0, the vtable 0x004ba2d8 Surface_ctor stores (0xd8 = -40, sy + 215 instead of
++ 15), and the port's GameState holds no vtable words (U-1834 settled; kept as an explained frame divergence on cov_k3_camera y_inj3 (orchestrator, 2026-10-31)).
+cov_r_s2_screens course / radial_hover / report rows (65 / 20 / 11 px) are terrain: terrainlive over S3.25's recording gives 20,204 =
+20,204 Terrain calls and 32 / 32 states equal, and the original's pass draws a near-black dither over the map's right edge that the
+port's draw list does not hold (U-1952). Development switch SG_GFX_SNAPSTATE=1 (gfx.cpp) keeps the GameState with every gfx snapshot
+(`$gfx/state_<k>.bin`; log/roadmap/S3/26_snap.py). Controls RED: pixel 2 and 3, showHireEmployeeDialog 3, SG_GFX_CHECKPOINT_AT=poll16.
+S3 wave 8 heavy-run lock (2026-10-31): log/roadmap/S3/w8_lock.py take | release | run <step> -- <cmd> | status enforces one S3
+heavy run at a time (a build, a pytest file, a census batch or a game boot): `take` writes w8_wait_<step> (epoch, its pid), blocks
+until that file is the oldest live wait file, the lock dir w8_heavy.lock is free and >= 16 GB commit charge is free; wait files of a dead
+take pid are removed; `release` refuses another step's lock; `run` always releases; `--priority` (lead / orchestrator only) ranks first,
+used for I20's quiet window (w8_i20_window.py). A hand-written lock seen by a waiter is logged to w8_breaches.log. It replaced a written
+oldest-first rule that workers broke four times in one night (a helper that checked only the lock dir, an unlocked finish step).
+S3.22 (W8.3) classified the 50 host-GL FAIL rows into seven cause groups (22_causes.tsv, images local) and removed the unused body
+showCharacterEditor.bio (W8.6, gfx.check 137 bodies); S3.25 (W8.4b) recorded the original for groups 2-7 on instance s3_w8 (8 runs SAME
+as det_b, port/corpus/w8rec/ and log/p5/terrain/s325_* local, 25_notes.md).
+Merged-tree census on 2291a342: raw 123 / 565 / 0 / 10 (0 PASS lost, 576 rows fewer px, 71,871 -> 6,203), split 677 / 11 / 0 / 10; the
+11 are group 5 (explained), group 2 (U-1952, 8 rows), U-1826, U-1829.
 Section S4, audio engine model (2026-10-24, lead notes log/roadmap/S4/STATUS.md, steps re/roadmap/S4_steps.tsv, function map
 re/roadmap/S4_functions.tsv: 744 sound.dll rows, 573 C3/C4 + 31 C2 ported in S4.2..S4.9, 71 CRT and 69 dead not ported).
 The path-1 CSVs keep only an FNV-1a hash of each region's raw bytes, and every one of the 19,785 regions of the 980 sound.dll

@@ -1,0 +1,11 @@
+04:21:23 step pytest_static
+04:21:55 step pytest_static rc=0
+04:21:55 step segs_w32
+04:31:14 step segs_w32 rc=0
+04:31:14 step boot_w32
+04:45:39 step boot_w32 rc=0
+04:45:39 step pytest_x64_frames
+04:53:38 step pytest_x64_frames rc=0
+04:53:38 step rows_w32
+05:06:41 step rows_w32 rc=0
+05:06:41 chain done

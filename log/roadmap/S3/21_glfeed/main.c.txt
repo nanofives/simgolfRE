@@ -1,0 +1,58 @@
+int main(int argc, char **argv) {
+    char path[800], sdpath[800]; size_t sz, psz = 0; unsigned char *text, *ptext = 0;
+    int npl = 0; char **plines = 0;
+    int W, H, bpp, bih, comp, start, i, ctx_line = -1, unh = 0, state_end;
+    BYTE bi_buf[sizeof(BITMAPINFOHEADER) + 12]; BITMAPINFOHEADER *bih_p = (BITMAPINFOHEADER *)bi_buf; DWORD *masks = (DWORD *)(bi_buf + sizeof(BITMAPINFOHEADER));
+    void *bits = 0; HDC dc; HBITMAP bm; HGLRC rc; int pf; PIXELFORMATDESCRIPTOR pfd;
+    GLfloat *fb; GLint nfb, cap = 16 * 1024 * 1024; FILE *fo; unsigned short cw;
+    if (argc < 4) { printf("usage: glfeed <root> <step> <out.f32>\n"); return 2; }
+    dir = argv[1];
+    sprintf(sdpath, "%s/snaps/%s", dir, argv[2]); sdir = sdpath;
+    W = meta_i(sdir, "w", 800); H = meta_i(sdir, "h", 600); bpp = meta_i(sdir, "bpp", 16);
+    bih = meta_i(sdir, "biHeight", 600); comp = meta_i(sdir, "comp", 3);
+    state_end = meta_i(sdir, "stateIdx", -1);
+    sprintf(path, "%s/stream.gl.txt", dir); text = slurp(path, &sz);
+    sprintf(path, "%s/vtx.bin", sdir); vtx = slurp(path, 0);
+    sprintf(path, "%s/nrm.bin", sdir); nrm = slurp(path, 0);
+    sprintf(path, "%s/pass.gl.txt", sdir); ptext = slurp(path, &psz); start = state_end;
+    if (!text || !vtx || !nrm || !ptext || start < 0) { printf("missing input\n"); return 2; }
+    nlines = split(text, &lines); npl = split(ptext, &plines);
+    for (i = 0; i < nlines; i++) if (!strncmp(lines[i], "wglCreateContext", 16)) { ctx_line = i; break; }
+    memset(bi_buf, 0, sizeof bi_buf);
+    bih_p->biSize = sizeof(BITMAPINFOHEADER); bih_p->biWidth = W; bih_p->biHeight = bih; bih_p->biPlanes = 1; bih_p->biBitCount = (WORD)bpp; bih_p->biCompression = comp;
+    masks[0] = meta_i(sdir, "m0", 0x7c00); masks[1] = meta_i(sdir, "m1", 0x3e0); masks[2] = meta_i(sdir, "m2", 0x1f);
+    dc = CreateCompatibleDC(0);
+    bm = CreateDIBSection(dc, (BITMAPINFO *)bi_buf, DIB_RGB_COLORS, &bits, 0, 0);
+    SelectObject(dc, bm);
+    memset(&pfd, 0, sizeof pfd); pfd.nSize = sizeof pfd; pfd.nVersion = 1; pfd.dwFlags = PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL; pfd.cColorBits = 16;
+    pf = ChoosePixelFormat(dc, &pfd);
+    if (!pf || !SetPixelFormat(dc, pf, &pfd)) { printf("pixel format failed\n"); return 2; }
+    rc = wglCreateContext(dc); wglMakeCurrent(dc, rc);
+    __asm fnstcw cw
+    printf("pixel format %d, %s | %s, fpu cw %04x\n", pf, glGetString(GL_VENDOR), glGetString(GL_RENDERER), cw);
+    {   int in_begin = 0;
+        for (i = ctx_line + 1; i < start && i < nlines; i++) {
+            if (!strncmp(lines[i], "glBegin", 7)) { in_begin = 1; continue; }
+            if (!strncmp(lines[i], "glEnd", 5)) { in_begin = 0; continue; }
+            if (in_begin || !strncmp(lines[i], "glFlush", 7)) continue;
+            unh += exec(lines[i]);
+        }
+    }
+    if (getenv("GLFEED_NOCULL")) glDisable(GL_CULL_FACE);
+    fb = (GLfloat *)malloc(sizeof(GLfloat) * cap);
+    glFeedbackBuffer(cap, GL_3D_COLOR_TEXTURE, fb);
+    glRenderMode(GL_FEEDBACK);
+    {   int points = getenv("GLFEED_POINTS") != 0;
+        for (i = 0; i < npl; i++) {
+            if (points && !strncmp(plines[i], "glBegin", 7)) { glBegin(GL_POINTS); continue; }
+            unh += exec(plines[i]);
+        }
+    }
+    nfb = glRenderMode(GL_RENDER);
+    printf("feedback values %d (overflow if negative), unhandled %d\n", nfb, unh);
+    fo = fopen(argv[3], "wb");
+    { float n = (float)nfb; fwrite(&n, 4, 1, fo); }
+    if (nfb > 0) fwrite(fb, 4, nfb, fo);
+    fclose(fo);
+    return 0;
+}

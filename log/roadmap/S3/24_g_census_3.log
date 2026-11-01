@@ -1,0 +1,19 @@
+free commit 20.5 GB (need 16)
+[turn] start 02:58:20 gate census_3
+batch 3: cov_k2_simfoto cov_k3_build cov_k3_camera cov_k3_camera2 cov_k3_career cov_k3_champ cov_k3_hole19 cov_l_bridge cov_l_camera cov_l_point cov_r_bio cov_r_course cov_r_flic_input cov_r_palette_hot 
+[1/14] cov_k2_simfoto FAIL=3 (11.0 s)
+[2/14] cov_k3_build FAIL=12 (9.1 s)
+[3/14] cov_k3_camera FAIL=21 (4.4 s)
+[4/14] cov_k3_camera2 FAIL=25 (4.2 s)
+[5/14] cov_k3_career FAIL=3 PASS=2 (5.7 s)
+[6/14] cov_k3_champ FAIL=12 PASS=1 (8.7 s)
+[7/14] cov_k3_hole19 FAIL=8 (5.6 s)
+[8/14] cov_l_bridge FAIL=12 PASS=1 (4.9 s)
+[9/14] cov_l_camera PASS=13 (5.3 s)
+[10/14] cov_l_point FAIL=4 PASS=1 (4.4 s)
+[11/14] cov_r_bio FAIL=4 PASS=3 (10.7 s)
+[12/14] cov_r_course FAIL=3 (15.6 s)
+[13/14] cov_r_flic_input FAIL=2 PASS=2 (3.3 s)
+[14/14] cov_r_palette_hot FAIL=6 (6.0 s)
+{"rows": 138, "counts": {"FAIL": 115, "PASS": 23}}
+[turn] end 03:00:12 rc=0

@@ -1,0 +1,85 @@
+[w8_lock] S3.27 queued at 2026-10-31 06:27:40
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=25.4 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=25.1 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.2 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.1 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.0 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.2 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.1 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.2 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.1 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.0 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.1 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.0 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.1 GB
+[w8_lock] S3.27 waiting: lock='step=S3-lead' ahead=[] free_commit=26.1 GB
+[w8_lock] S3.27 TOOK the lock at 2026-10-31 06:33:20 (waited 340 s, free commit 26.5 GB)
+  [gl27] loading_t200: kept 0 ords {} received 0
+  [off] checkpoint loading_t200 T=202 tgt=202 date=0x00000000 seed=0x49afaac8
+  [gl27] loading_t300: kept 0 ords {} received 0
+  [off] checkpoint loading_t300 T=303 tgt=303 date=0x00000000 seed=0x5c357286
+  [gl27] menu: kept 0 ords {} received 0
+  [off] checkpoint menu T=3434 tgt=3434 date=0x00000000 seed=0x1f98dc65
+  [gl27] theme_packs: kept 0 ords {} received 0
+  [off] checkpoint theme_packs T=8181 tgt=8181 date=0x00000000 seed=0x1f98dc65
+  [gl27] difficulty: kept 0 ords {} received 0
+  [off] checkpoint difficulty T=16160 tgt=16160 date=0x00000000 seed=0x29a93474
+  [gl27] champ_courses: kept 0 ords {} received 0
+  [off] checkpoint champ_courses T=27775 tgt=27775 date=0x00000000 seed=0x919c49c8
+  [gl27] pick_a_pro: kept 0 ords {} received 0
+  [off] checkpoint pick_a_pro T=34138 tgt=34138 date=0x00002c00 seed=0x8f50937a
+  [gl27] title_back: kept 0 ords {} received 0
+  [off] checkpoint title_back T=38885 tgt=38885 date=0x00000000 seed=0x28fc0c4a
+  [gl27] course: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint course T=72518 tgt=72518 date=0x00000117 seed=0xadc607b1
+  [gl27] radial_hover: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint radial_hover T=75144 tgt=75144 date=0x00000132 seed=0xc0ec8d59
+  [gl27] rep_comments: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint rep_comments T=79487 tgt=79487 date=0x0000013e seed=0x96e9b41a
+  [gl27] rep_histograph: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint rep_histograph T=85042 tgt=85042 date=0x00000156 seed=0xce68ac1c
+  [gl27] rep_financial: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint rep_financial T=90597 tgt=90597 date=0x0000016e seed=0x6f0decce
+  [gl27] rep_report1: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint rep_report1 T=96152 tgt=96152 date=0x00000186 seed=0x493f4612
+  [gl27] rep_shortcuts: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint rep_shortcuts T=101707 tgt=101707 date=0x0000019e seed=0xa5e5ae13
+  [gl27] rep_roster: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint rep_roster T=107262 tgt=107262 date=0x000001b6 seed=0xac02996d
+  [gl27] bulletin: kept 84 ords {'2': 2, '3': 82} received 84
+  [off] checkpoint bulletin T=112817 tgt=112817 date=0x000001ce seed=0xd2fb7120
+  [gl27] hole_stats: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint hole_stats T=118372 tgt=118372 date=0x000001e6 seed=0x24972645
+  [gl27] best_scores: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint best_scores T=126957 tgt=126957 date=0x00000203 seed=0x90b9f8e9
+  [gl27] system_menu: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint system_menu T=131906 tgt=131906 date=0x00000220 seed=0x33053950
+  [gl27] preferences: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint preferences T=140491 tgt=140491 date=0x0000023c seed=0xb330e5d2
+  [gl27] hire: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint hire T=153116 tgt=153116 date=0x00000299 seed=0x0e8524de
+  [gl27] end_of_year: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint end_of_year T=166852 tgt=166852 date=0x00002000 seed=0x09d144c7
+  [gl27] skill_points: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint skill_points T=184426 tgt=184426 date=0x00002069 seed=0x664f5ddc
+  [gl27] skill_popup: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint skill_popup T=191294 tgt=191294 date=0x00002069 seed=0x664f5ddc
+  [gl27] practice: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint practice T=207858 tgt=207858 date=0x000020d1 seed=0xa22fe16f
+  [gl27] cancel_prompt: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint cancel_prompt T=213716 tgt=213716 date=0x000020d8 seed=0x8dcfa17c
+  [gl27] editor: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint editor T=230482 tgt=230482 date=0x00002123 seed=0xb5511a01
+  [gl27] pre_land: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint pre_land T=240279 tgt=240279 date=0x0000217f seed=0x3d63f081
+  [gl27] land_popup: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint land_popup T=244420 tgt=244420 date=0x00002181 seed=0x91cb5f07
+  [gl27] buy_land: kept 85 ords {'1': 1, '2': 2, '3': 82} received 85
+  [off] checkpoint buy_land T=249167 tgt=249167 date=0x00002181 seed=0x67584c4f
+  [gl27] end: kept 86 ords {'1': 1, '2': 3, '3': 92} received 86
+  [off] checkpoint end T=260681 tgt=260681 date=0x000021f0 seed=0xde5e76a8
+run cov_r_s2_screens/s327_s2: OK polls=2582 checkpoints=32
+86 snapshots, 83460 stream lines, 473 textures -> C:\Users\maria\Desktop\Proyectos\SimGolf\log\p5\gl\corpus\s327_s2 (scenario_refs rc 0)
+[w8_lock] S3.27 released at 2026-10-31 06:34:22

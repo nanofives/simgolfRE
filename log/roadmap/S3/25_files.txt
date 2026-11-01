@@ -1,0 +1,32 @@
+log/roadmap/S3/25_rec.js
+log/roadmap/S3/25_rec.py
+log/roadmap/S3/25_heavy.py
+log/roadmap/S3/25_decode.py
+log/roadmap/S3/25_cells.py
+log/roadmap/S3/25_group2.py
+log/roadmap/S3/25_table.py
+log/roadmap/S3/25_chain.sh
+log/roadmap/S3/25_notes.md
+log/roadmap/S3/25_recordings.tsv
+log/roadmap/S3/25_uncertain.tsv
+log/roadmap/S3/25_files.txt
+log/roadmap/S3/25_group2.log
+log/roadmap/S3/25_group3_holes_cells.log
+log/roadmap/S3/25_group4_queue.tsv
+log/roadmap/S3/25_group5.log
+log/roadmap/S3/25_group7.log
+log/roadmap/S3/25_chain.log
+log/roadmap/S3/25_original_saves_before.txt
+log/roadmap/S3/25_original_saves_after.txt
+log/roadmap/S3/25_run_inject_cov_b_inject.log
+log/roadmap/S3/25_run_inject_cov_b_inject2.log
+log/roadmap/S3/25_run_terrain_cov_r_s2_screens.log
+log/roadmap/S3/25_run_camera_cov_k3_camera.log
+log/roadmap/S3/25_run_queue_golfer_stories.log
+log/roadmap/S3/25_run_queue_golfer_stories_box.log
+log/roadmap/S3/25_run_queue_cov_b_holes18.log
+log/roadmap/S3/25_run_queue_cov_k3_camera2.log
+port/corpus/w8rec/ (local, gitignored: cov_b_inject/inject, cov_b_inject2/inject, cov_k3_camera/camera, golfer_stories/queue, golfer_stories/queue_box, cov_b_holes18/queue, cov_k3_camera2/queue)
+log/p5/terrain/s325_cov_r_s2_screens/ (local, gitignored)
+log/c3/alt/refs/<scenario>/s325_* (local run dirs: inject, camera, queue, queue_box, s325_cov_r_s2_screens)
+instances/s3_w8/ (local game slot)

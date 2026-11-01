@@ -102,8 +102,9 @@ def scene(name: str):
 
 
 SCENES = ["rand", "widths", "short", "flip"]
-# the port against the real GL per scene: (pixels the real GL changed, pixels differing, of them one level, beyond one level)
-# (measured 2026-10-25 on x64 and Win32; the differences are the footprint-edge pixels of U-1370 and one-level rounding)
+# S3.8's model (line rule 0, control 11) against the real GL per scene: (pixels the real GL changed, pixels differing, of them one
+# level, beyond one level) (measured 2026-10-25 on x64 and Win32; the differences are the footprint-edge pixels of U-1370, which the
+# span rule of S3.24 removes, and one-level rounding)
 PINNED: dict[str, tuple[int, int, int, int]] = {
     "rand": (74466, 108, 98, 10), "widths": (27689, 88, 48, 40), "short": (744, 1, 0, 1), "flip": (18261, 18, 16, 2)}
 
@@ -128,17 +129,22 @@ def real_frame(name: str) -> np.ndarray:
     return _REAL[name]
 
 
-def port_frame(lib, name: str, mode: int = 0, context: bool = True) -> np.ndarray:
+def port_frame(lib, name: str, mode: int = 0, context: bool = True, rule: int | None = None) -> np.ndarray:
+    """the port's frame of a scene; rule = the overlay line rule for the call (None: the build's default)"""
     lines, pre = scene(name)
     prev = lib.negctl("overlay.rasterLine", mode)
     try:
         with lib.state() as st:
+            if rule is not None:
+                old_rule = st.call("overlay.setRule", [rule]).eax
             buf = (C.c_uint16 * (W * H))(*pre.reshape(-1).tolist())
             st.map(BUF, buf)
             wbits = 0
             for x1, y1, x2, y2, c, w, a, flip in lines:
                 r = st.call("overlay.rasterLine", [BUF, W, H, x1, y1, x2, y2, c, w, a, (1 if flip else 0) | (0 if context else 2), wbits])
                 wbits = r.edx
+            if rule is not None:
+                st.call("overlay.setRule", [old_rule])
             return np.frombuffer(bytes(buf), dtype="<u2").reshape(H, W).copy()
     finally:
         lib.negctl("overlay.rasterLine", prev or 0)
@@ -172,8 +178,62 @@ def test_probe_meets_g2_and_pinned(lib, name):
     changed, differ, one, beyond = got
     assert changed > 0
     assert g2(changed, one, beyond), got
-    if name in PINNED:
-        assert got == PINNED[name], (got, PINNED[name])
+    assert got == PINNED_SPAN[name], (got, PINNED_SPAN[name])     # the build's default line rule is the span rule (S3.24)
+
+
+@pytest.mark.parametrize("name", SCENES)
+def test_old_rule_keeps_s38_counts(lib, name):
+    """rule 0 (and control 11) is S3.8's model: its pinned counts are unchanged"""
+    real = real_frame(name)
+    _lines, pre = scene(name)
+    assert compare(real, pre, port_frame(lib, name, rule=OLD_RULE)) == PINNED[name]
+    assert compare(real, pre, port_frame(lib, name, mode=11)) == PINNED[name]
+
+
+# ------------------------------------------------------------------------------------------------ the span rule (roadmap S3.24)
+# overlay.setRule: 0 = S3.8's model (PINNED above); 2 = the per-column span: N = floor(w * L / |major|) + 2 pixels per column of
+# the major axis, the pixel centres whose minor offset s = o * sign (x-major: sign(dx) * sign(dy), y-major: sign(dx)) lies in
+# [-N/2, N/2) (log/roadmap/S3/24_notes.md); 6 = the same span without a tie decision (|o| <= N/2 + 0.002). Counts per scene (same
+# columns as PINNED); measured with the C++ body (log/roadmap/S3/24_scenes.py's Python model gives rand 8 for rule 2: it does not clip
+# the ends to the viewport before the span test)
+SPAN_RULE, NOTIE_RULE, OLD_RULE = 2, 6, 0
+PINNED_SPAN: dict[str, tuple[int, int, int, int]] = {
+    "rand": (74466, 7, 6, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2)}
+PINNED_NOTIE: dict[str, tuple[int, int, int, int]] = {
+    "rand": (74466, 9, 8, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2)}
+
+
+def wrong(real: np.ndarray, port: np.ndarray) -> np.ndarray:
+    r5 = np.stack([(real >> s) & 31 for s in (10, 5, 0)]).astype(int)
+    p5 = np.stack([(port >> s) & 31 for s in (10, 5, 0)]).astype(int)
+    return (r5 != p5).any(axis=0)
+
+
+@pytest.mark.parametrize("rule,pinned", [(SPAN_RULE, PINNED_SPAN), (NOTIE_RULE, PINNED_NOTIE)])
+@pytest.mark.parametrize("name", SCENES)
+def test_span_rule_pinned(lib, name, rule, pinned):
+    real = real_frame(name)
+    _lines, pre = scene(name)
+    assert compare(real, pre, port_frame(lib, name, rule=rule)) == pinned[name]
+
+
+@pytest.mark.parametrize("rule", [SPAN_RULE, NOTIE_RULE])
+@pytest.mark.parametrize("name", SCENES)
+def test_span_rule_fewer_and_none_new(lib, name, rule):
+    """every pixel the span rule gets wrong was wrong under S3.8's model too, and it gets fewer wrong"""
+    real = real_frame(name)
+    old, new = wrong(real, port_frame(lib, name, rule=OLD_RULE)), wrong(real, port_frame(lib, name, rule=rule))
+    assert not (new & ~old).any(), int((new & ~old).sum())
+    assert new.sum() < old.sum() or old.sum() == 0
+
+
+def test_span_rule_control_old_rule_reads_red(lib):
+    """control 11 (S3.8's footprint back) breaks the default's pinned counts on every scene with a cut"""
+    for name in ("rand", "widths", "flip"):
+        real = real_frame(name)
+        _lines, pre = scene(name)
+        assert compare(real, pre, port_frame(lib, name, mode=11)) != PINNED_SPAN[name]
+        assert compare(real, pre, port_frame(lib, name, rule=OLD_RULE)) != PINNED_SPAN[name]
 
 
 # control mode -> the scene that must break G2 with it
@@ -185,7 +245,12 @@ def test_negctl_reads_red(lib, mode):
     name = CONTROLS[mode]
     real = real_frame(name)
     _lines, pre = scene(name)
-    changed, _d, one, beyond = compare(real, pre, port_frame(lib, name, mode))
+    changed, differ, one, beyond = compare(real, pre, port_frame(lib, name, mode))
+    if mode == 5:
+        # no snap: with the span rule the scene stays 0.04 % inside G2 (1,085 one-level px of 74,466), so the control reads RED
+        # on its distance from the default's pinned count instead (more than 100 times the default's differing pixels)
+        assert differ > 100 * PINNED_SPAN[name][1], (mode, changed, differ, one, beyond)
+        return
     assert not g2(changed, one, beyond), (mode, changed, one, beyond)
 
 

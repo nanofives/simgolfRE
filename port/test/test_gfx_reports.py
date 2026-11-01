@@ -41,9 +41,10 @@ JUDGED_CHECKPOINTS = ["rep_comments", "rep_histograph", "rep_financial", "rep_sh
 # original's
 JUDGED = {"rep_comments": 53893, "rep_histograph": 411234, "rep_financial": 195269, "rep_shortcuts": 266940, "rep_roster": 434887,
           "hole_stats": 100373, "best_scores": 45359, "end_of_year": 92616, "hire": 148198}
-# judged pixels that still differ, all of them the hire dialog's four animated employees: addSprite draws a FLIC sheet cell
-# through drawQueuedSprite (roadmap S3's sprites; reported unsupported, U-1272): checkpoint -> (count, bbox x0, y0, x1, y1)
-RESIDUAL = {"hire": (1397, (556, 167, 586, 403))}
+# judged pixels that still differ: checkpoint -> (count, bbox x0, y0, x1, y1). Empty since roadmap S3.26: the hire dialog's four
+# animated employees (1,397 px in (556, 167, 586, 403) before) are drawn from cellAt(idx + 0x20e, frame mod cols, s)
+# (commands_screens.inc show_hire_employee_dialog), so every judged pixel of `hire` equals the original's.
+RESIDUAL = {}
 # frame controls of the reports family (log/roadmap/S2/8_controls.tsv): mode -> the checkpoints it changes. Modes 1 (the
 # quarter blend halved), 5 (a line one pixel longer) and 7 (Surface_box without effect) change no judged pixel on these frames
 # (the dimming lies under held pixels only, no histograph line crosses the box on this early date): unit tests below.

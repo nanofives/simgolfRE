@@ -53,6 +53,25 @@ def menu_regions() -> dict:
     return regs
 
 
+def poll_position(ordinal: int, poll, heads) -> int:
+    """The snapshot position of a checkpoint whose tgt call has clock ordinal `ordinal` and whose POLL record has pos `poll`
+    (None: no POLL); `heads` = the pos of every FRAME record. A snapshot is taken at the first trace item the run consumes past
+    the position (gfx.cpp gfx_progress). SG_GFX_CHECKPOINT_AT: `poll` (default), `poll16` (roadmap S3.16's rule only), `tgt`.
+    - S3.16 (U-1820): a POLL before the tgt call rode on a call that is not a tgt call: the position is the POLL's.
+    - S3.26 (U-1951): a POLL whose pos is a FRAME record's rode on that frame's head clock call (a record with pos n is written
+      inside or after clock call n - 1: trace_schema.md), before the frame's body; the frame's own cursor reads have that pos
+      too, so the position is the head call, pos - 1, and the first of them takes the snapshot (cov_k3_camera2 y_inj4: with
+      `poll16` the snapshot fell at the next frame's cursor read, after this frame's present)."""
+    mode = os.environ.get("SG_GFX_CHECKPOINT_AT", "poll")
+    if mode == "tgt" or poll is None:
+        return ordinal
+    if mode == "poll" and poll in heads and poll <= ordinal:
+        return poll - 1
+    if poll < ordinal:
+        return poll
+    return ordinal
+
+
 def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
     """The trace's clock ordinal of the checkpoint's clock call: the status.tgt-th main-thread timeGetTime call (0-based
     count of the calls before it), whose value must be the checkpoint's T."""
@@ -65,6 +84,7 @@ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
     # in H1's wait: after that frame's present, while the reference frame is the back buffer before it (cov_k1_paths cart,
     # cov_k1_river r20: 7 census rows, U-1820)
     poll = next((r.f["pos"] for r in tr.records if r.type == TF.POLL and r.f.get("checkpoint") == checkpoint), None)
+    heads = {r.f["pos"] for r in tr.records if r.type == TF.FRAME}
     k = 0
     for ordinal, _ra, _slot, kind, value in TF.clock_calls(tr):
         if kind != 1:
@@ -72,9 +92,7 @@ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
         if k == st["tgt"]:
             if value != st["T"]:
                 raise ValueError(f"{scenario}/{checkpoint}: tgt call {k} has value {value}, the checkpoint's T is {st['T']}")
-            if poll is not None and poll < ordinal and os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll":
-                return poll
-            return ordinal
+            return poll_position(ordinal, poll, heads)
         k += 1
     raise ValueError(f"{scenario}/{checkpoint}: the trace has only {k} tgt calls")
 

@@ -1,0 +1,59 @@
+[heavy] 23:08:52 waiting behind older waits ['w8_wait_S3.24'] (768 s since our release)
+[heavy] 23:09:12 waiting behind older waits ['w8_wait_S3.24'] (788 s since our release)
+[heavy] 23:09:32 waiting behind older waits ['w8_wait_S3.24'] (808 s since our release)
+[heavy] 23:09:52 waiting behind older waits ['w8_wait_S3.24'] (828 s since our release)
+[heavy] 23:10:12 waiting behind older waits ['w8_wait_S3.24'] (848 s since our release)
+[heavy] 23:10:32 waiting behind older waits ['w8_wait_S3.24'] (868 s since our release)
+[heavy] 23:10:52 waiting behind older waits ['w8_wait_S3.24'] (888 s since our release)
+[heavy] 23:11:12 waiting behind older waits ['w8_wait_S3.24'] (908 s since our release)
+[heavy] 23:11:32 waiting behind older waits ['w8_wait_S3.24'] (928 s since our release)
+[heavy] 23:11:52 waiting behind older waits ['w8_wait_S3.24'] (948 s since our release)
+[heavy] 23:12:12 waiting behind older waits ['w8_wait_S3.24'] (968 s since our release)
+[heavy] 23:12:32 waiting behind older waits ['w8_wait_S3.24'] (988 s since our release)
+[heavy] 23:12:52 waiting behind older waits ['w8_wait_S3.24'] (1008 s since our release)
+[heavy] 23:13:12 waiting behind older waits ['w8_wait_S3.24'] (1028 s since our release)
+[heavy] 23:13:32 waiting behind older waits ['w8_wait_S3.24'] (1048 s since our release)
+[heavy] 23:13:52 waiting behind older waits ['w8_wait_S3.24'] (1068 s since our release)
+[heavy] 23:14:12 waiting behind older waits ['w8_wait_S3.24'] (1088 s since our release)
+[heavy] 23:14:32 waiting behind older waits ['w8_wait_S3.24'] (1108 s since our release)
+[heavy] 23:14:52 waiting behind older waits ['w8_wait_S3.24'] (1128 s since our release)
+[heavy] 23:15:12 lock held by: S3.24 build x64 S3_24 23:14
+[heavy] 23:17:52 lock held by: S3.21 sample_ctl28 23:17
+free commit 18.8 GB (need 16)
+free commit 18.8 GB (need 16)
+[heavy] 23:18:32 lock taken: rec terrain cov_r_s2_screens
+  [off] checkpoint loading_t200 T=202 tgt=202 date=0x00000000 seed=0x49afaac8
+  [off] checkpoint loading_t300 T=303 tgt=303 date=0x00000000 seed=0x5c357286
+  [off] checkpoint menu T=3434 tgt=3434 date=0x00000000 seed=0x1f98dc65
+  [off] checkpoint theme_packs T=8181 tgt=8181 date=0x00000000 seed=0x1f98dc65
+  [off] checkpoint difficulty T=16160 tgt=16160 date=0x00000000 seed=0x29a93474
+  [off] checkpoint champ_courses T=27775 tgt=27775 date=0x00000000 seed=0x919c49c8
+  [off] checkpoint pick_a_pro T=34138 tgt=34138 date=0x00002c00 seed=0x8f50937a
+  [off] checkpoint title_back T=38885 tgt=38885 date=0x00000000 seed=0x28fc0c4a
+  [off] checkpoint course T=72518 tgt=72518 date=0x00000117 seed=0xadc607b1
+  [off] checkpoint radial_hover T=75144 tgt=75144 date=0x00000132 seed=0xc0ec8d59
+  [off] checkpoint rep_comments T=79487 tgt=79487 date=0x0000013e seed=0x96e9b41a
+  [off] checkpoint rep_histograph T=85042 tgt=85042 date=0x00000156 seed=0xce68ac1c
+  [off] checkpoint rep_financial T=90597 tgt=90597 date=0x0000016e seed=0x6f0decce
+  [off] checkpoint rep_report1 T=96152 tgt=96152 date=0x00000186 seed=0x493f4612
+  [off] checkpoint rep_shortcuts T=101707 tgt=101707 date=0x0000019e seed=0xa5e5ae13
+  [off] checkpoint rep_roster T=107262 tgt=107262 date=0x000001b6 seed=0xac02996d
+  [off] checkpoint bulletin T=112817 tgt=112817 date=0x000001ce seed=0xd2fb7120
+  [off] checkpoint hole_stats T=118372 tgt=118372 date=0x000001e6 seed=0x24972645
+  [off] checkpoint best_scores T=126957 tgt=126957 date=0x00000203 seed=0x90b9f8e9
+  [off] checkpoint system_menu T=131906 tgt=131906 date=0x00000220 seed=0x33053950
+  [off] checkpoint preferences T=140491 tgt=140491 date=0x0000023c seed=0xb330e5d2
+  [off] checkpoint hire T=153116 tgt=153116 date=0x00000299 seed=0x0e8524de
+  [off] checkpoint end_of_year T=166852 tgt=166852 date=0x00002000 seed=0x09d144c7
+  [off] checkpoint skill_points T=184426 tgt=184426 date=0x00002069 seed=0x664f5ddc
+  [off] checkpoint skill_popup T=191294 tgt=191294 date=0x00002069 seed=0x664f5ddc
+  [off] checkpoint practice T=207858 tgt=207858 date=0x000020d1 seed=0xa22fe16f
+  [off] checkpoint cancel_prompt T=213716 tgt=213716 date=0x000020d8 seed=0x8dcfa17c
+  [off] checkpoint editor T=230482 tgt=230482 date=0x00002123 seed=0xb5511a01
+  [off] checkpoint pre_land T=240279 tgt=240279 date=0x0000217f seed=0x3d63f081
+  [off] checkpoint land_popup T=244420 tgt=244420 date=0x00002181 seed=0x91cb5f07
+  [off] checkpoint buy_land T=249167 tgt=249167 date=0x00002181 seed=0x67584c4f
+  [off] checkpoint end T=260681 tgt=260681 date=0x000021f0 seed=0xde5e76a8
+run cov_r_s2_screens/s325_cov_r_s2_screens: OK polls=2582 checkpoints=32
+22857 calls, 32 snapshots -> C:\Users\maria\Desktop\Proyectos\SimGolf\log\p5\terrain\s325_cov_r_s2_screens (scenario_refs rc 0)
+[heavy] 23:20:03 lock released

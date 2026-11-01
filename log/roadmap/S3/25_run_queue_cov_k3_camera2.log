@@ -1,0 +1,46 @@
+[heavy] 02:08:27 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.23', 'w8_wait_S3.24'] (0 s since our release)
+[heavy] 02:08:47 waiting behind older waits ['w8_wait_S3.23', 'w8_wait_S3.24'] (20 s since our release)
+[heavy] 02:09:07 waiting behind older waits ['w8_wait_S3.24'] (40 s since our release)
+[heavy] 02:09:27 waiting behind older waits ['w8_wait_S3.24'] (60 s since our release)
+[heavy] 02:09:47 waiting behind older waits ['w8_wait_S3.24'] (80 s since our release)
+[heavy] 02:10:07 waiting behind older waits ['w8_wait_S3.24'] (100 s since our release)
+[heavy] 02:10:27 waiting behind older waits ['w8_wait_S3.24'] (120 s since our release)
+[heavy] 02:10:47 waiting behind older waits ['w8_wait_S3.24'] (140 s since our release)
+[heavy] 02:11:07 waiting behind older waits ['w8_wait_S3.24'] (160 s since our release)
+[heavy] 02:11:27 waiting behind older waits ['w8_wait_S3.24'] (180 s since our release)
+[heavy] 02:11:47 waiting behind older waits ['w8_wait_S3.24'] (200 s since our release)
+[heavy] 02:12:07 waiting behind older waits ['w8_wait_S3.24'] (220 s since our release)
+[heavy] 02:12:27 waiting behind older waits ['w8_wait_S3.24'] (240 s since our release)
+[heavy] 02:12:47 waiting behind older waits ['w8_wait_S3.24'] (260 s since our release)
+[heavy] 02:13:07 lock held by: S3.24 gate build_x64 02:13
+free commit 19.9 GB (need 16)
+free commit 19.9 GB (need 16)
+[heavy] 02:13:27 lock taken: rec queue cov_k3_camera2
+  [off] checkpoint sandbox T=8585 tgt=8585 date=0x00000027 seed=0x58dc2675
+  [off] checkpoint edge T=12928 tgt=12928 date=0x00000053 seed=0xcfcb3161
+  [off] checkpoint x_edge0 T=14443 tgt=14443 date=0x00000062 seed=0x3697b99c
+  [off] checkpoint x_edge1 T=14544 tgt=14544 date=0x00000063 seed=0xd53ce0fd
+  [off] checkpoint x_edge2 T=14645 tgt=14645 date=0x00000064 seed=0xb30b5310
+  [off] checkpoint x_edge3 T=14746 tgt=14746 date=0x00000065 seed=0x95d432bf
+  [off] checkpoint x_edge4 T=14847 tgt=14847 date=0x00000066 seed=0xfeb416dc
+  [off] checkpoint x_edge5 T=14948 tgt=14948 date=0x00000068 seed=0x12aec568
+  [off] checkpoint x_edge6 T=15049 tgt=15049 date=0x00000069 seed=0x776650f6
+  [off] checkpoint x_edge7 T=15150 tgt=15150 date=0x0000006a seed=0xc9dfeab4
+  [off] checkpoint x_edge8 T=15251 tgt=15251 date=0x0000006b seed=0x7ed9ba04
+  [off] checkpoint x_edge9 T=15352 tgt=15352 date=0x0000006c seed=0x743ffdf2
+  [off] checkpoint x_after T=17978 tgt=17978 date=0x00000086 seed=0xbe929de9
+  [off] checkpoint y_inj0 T=19493 tgt=19493 date=0x00000095 seed=0xab05d498
+  [off] checkpoint y_inj1 T=19594 tgt=19594 date=0x00000096 seed=0x852fd1f3
+  [off] checkpoint y_inj2 T=19695 tgt=19695 date=0x00000097 seed=0x3612d212
+  [off] checkpoint y_inj3 T=19796 tgt=19796 date=0x00000098 seed=0xe85545d3
+  [off] checkpoint y_inj4 T=19897 tgt=19897 date=0x00000099 seed=0xf6da0240
+  [off] checkpoint y_inj5 T=19998 tgt=19998 date=0x0000009b seed=0x6069381e
+  [off] checkpoint y_inj6 T=20099 tgt=20099 date=0x0000009c seed=0x83bb7fda
+  [off] checkpoint y_inj7 T=20200 tgt=20200 date=0x0000009d seed=0x4f160dfb
+  [off] checkpoint y_inj8 T=20301 tgt=20301 date=0x0000009e seed=0xb22bbd48
+  [off] checkpoint y_inj9 T=20402 tgt=20402 date=0x0000009f seed=0xc37a25db
+  [off] checkpoint y_after T=23028 tgt=23028 date=0x000000b9 seed=0xdd8b4c0f
+  [off] checkpoint end T=25149 tgt=25149 date=0x000000cf seed=0x7b6bb643
+run cov_k3_camera2/s325_queue: OK polls=250 checkpoints=25
+cov_k3_camera2/queue: 25 checkpoints -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\corpus\w8rec\cov_k3_camera2\queue; run rc 0; vs det_b: SAME (25 checkpoints)
+[heavy] 02:13:43 lock released

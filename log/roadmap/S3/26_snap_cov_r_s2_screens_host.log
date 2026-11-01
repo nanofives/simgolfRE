@@ -1,0 +1,36 @@
+[w8_lock] S3.26 queued at 2026-10-31 02:57:55
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 02:57:55 (waited 0 s, free commit 20.6 GB)
+cov_r_s2_screens loading_t200 PASS 0 0 frame=0/0/0.0/0 
+cov_r_s2_screens loading_t300 PASS 0 0 frame=0/0/0.0/0 
+cov_r_s2_screens menu PASS 0 0 label_continue=0/0/0.0/0;label_new=0/0/0.0/0;label_theme=0/0/0.0/0;label_champ=0/0/0.0/0;label_sandbox=0/0/0.0/0;button_continue=0/0/0.0/0;button_new=0/0/0.0/0;button_theme=0/0/0.0/0;button_champ=0/0/0.0/0;button_sandbox=0/0/0.0/0;button_exit=0/0/0.0/0;logo=0/0/0.0/0;background=0/0/0.0/0 
+cov_r_s2_screens theme_packs PASS 0 0 frame=0/0/0.0/0 
+cov_r_s2_screens difficulty PASS 0 0 frame=0/0/0.0/0 
+cov_r_s2_screens champ_courses PASS 0 0 frame=0/0/0.0/0 
+cov_r_s2_screens pick_a_pro PASS 0 0 frame=0/0/0.0/0 
+cov_r_s2_screens title_back PASS 0 0 label_continue=0/0/0.0/0;label_new=0/0/0.0/0;label_theme=0/0/0.0/0;label_champ=0/0/0.0/0;label_sandbox=0/0/0.0/0;button_continue=0/0/0.0/0;button_new=0/0/0.0/0;button_theme=0/0/0.0/0;button_champ=0/0/0.0/0;button_sandbox=0/0/0.0/0;button_exit=0/0/0.0/0;logo=0/0/0.0/0;background=0/0/0.0/0 
+cov_r_s2_screens course FAIL 65 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=65/45/0.013/20 view=65
+cov_r_s2_screens radial_hover FAIL 65 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=65/45/0.013/20 view=65
+cov_r_s2_screens rep_comments FAIL 20 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=20/0/0.0/20 view=20
+cov_r_s2_screens rep_histograph FAIL 20 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=20/0/0.0/20 view=20
+cov_r_s2_screens rep_financial FAIL 20 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=20/0/0.0/20 view=20
+cov_r_s2_screens rep_report1 FAIL 20 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=20/0/0.0/20 view=20
+cov_r_s2_screens rep_shortcuts FAIL 20 20 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=20/0/0.0/20 view=20
+cov_r_s2_screens rep_roster FAIL 11 11 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=11/0/0.0/11 view=11
+cov_r_s2_screens bulletin PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens hole_stats PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens best_scores PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens system_menu PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens preferences PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens hire PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens end_of_year PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens skill_points PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens skill_popup PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens practice PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens cancel_prompt PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens editor PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens pre_land PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens land_popup PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens buy_land PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+cov_r_s2_screens end PASS 0 0 hud_title=0/0/0.0/0;hud_meters=0/0/0.0/0;hud_message=0/0/0.0/0;toolbar=0/0/0.0/0;bottom_panel=0/0/0.0/0;view=0/0/0.0/0 
+states [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+[w8_lock] S3.26 released at 2026-10-31 02:58:17

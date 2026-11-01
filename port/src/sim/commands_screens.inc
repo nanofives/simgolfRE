@@ -483,8 +483,10 @@ int32_t show_credits_screen(Ctx &ctx) {
 // before the loop): the hire art over its mask, the OK button (its hover image when no row is selected and the cursor is in its
 // box), the title centred in g_fontRef_821020, then in g_fontRef_821ee8 a band head before every second row (0xe7, at y 0x97,
 // 0xde, 0x125, 0x16c) and each row 0x14 lower (8 more after the odd one), the selected row on a fillWindowRect bar (0x80007f40:
-// the display's slot +0xb4 is jgld's `xor eax, eax; ret`), the four animated employees (addSprite of a FLIC sheet cell: no body,
-// reported, roadmap S3) and the refresh.
+// the display's slot +0xb4 is jgld's `xor eax, eax; ret`), the four animated employees and the refresh. Employee s (row b = 2s + 1,
+// idx = s, or s + 4 on its selected row) is addSprite(0x240, 0xc0 + 0x46 s, y, 0x28, 0x28, cellAt(idx + 0x20e, frame mod
+// g_sheetCols[idx + 0x20e], s), 4, idx + 0x82) (showHireEmployeeDialog+0x364..+0x3b5); roadmap S3.26 hands the scene family that cell (cellAt
+// only reads the sheet tables), the call before it gave cell 0 (the 1,397 px of cov_r_s2_screens `hire`).
 int32_t show_hire_employee_dialog(Ctx &ctx) {
   GameState &gs = ctx.gs();
   InputSource *src = input_source(ctx);
@@ -531,9 +533,12 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
     frame = add32(frame, 1);
     for (int32_t s = 0, b = 1, sx = 0xc0; b < 9; b += 2, ++s, sx += 0x46) {
       const int32_t c = s * 4 + (sel == b ? 0x10 : 0);
-      (void)mod32(frame, *(state_arr(ctx, &GameState::g_sheetCols) + (0x20e + c / 4)));
+      const int32_t col = mod32(frame, *(state_arr(ctx, &GameState::g_sheetCols) + (0x20e + c / 4)));
       const int32_t idx = sel == b ? s + 4 : s;
-      d.gx("addSprite", {0x240, u32(sx), u32(y), 0x28, 0x28, 0, 4, u32(idx + 0x82)});
+      // negative control 3: the cell one animation column later
+      const int32_t ccol = SG_NEGCTL(g_negctl_hire_dialog) == 3 ? add32(col, 1) : col;
+      const uint32_t cell = d.on ? call_peer(ctx, "cellAt", {u32(idx + 0x20e), u32(ccol), u32(s)}).eax : 0;
+      d.gx("addSprite", {0x240, u32(sx), u32(y), 0x28, 0x28, cell, 4, u32(idx + 0x82)});
     }
     d.gx("Window::refreshFull", {d.window(), 0});
     pump_messages(ctx, PumpKind::Blocking, "showHireEmployeeDialog");

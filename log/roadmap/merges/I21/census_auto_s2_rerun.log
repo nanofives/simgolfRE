@@ -1,0 +1,4 @@
+start 2026-10-31 15:25:44
+[1/1] cov_r_s2_screens FAIL=8 PASS=24 (17.1 s)
+{"rows": 32, "counts": {"PASS": 24, "FAIL": 8}}
+rc=0 2026-10-31 15:26:05

@@ -1,0 +1,19 @@
+[w8_lock] S3.26 queued at 2026-10-31 05:34:51
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 05:34:51 (waited 0 s, free commit 27.4 GB)
+batch 1: cov_a_quit cov_a_quit_title cov_b_build cov_b_career cov_b_career_types cov_b_decor cov_b_holes18 cov_b_inject cov_b_inject2 cov_b_location cov_b_locations cov_b_paths cov_b_people cov_b_shots 
+[1/14] cov_a_quit FAIL=5 PASS=10 (9.8 s)
+[2/14] cov_a_quit_title PASS=9 (3.4 s)
+[3/14] cov_b_build FAIL=7 (34.0 s)
+[4/14] cov_b_career FAIL=6 (14.2 s)
+[5/14] cov_b_career_types FAIL=12 (37.2 s)
+[6/14] cov_b_decor FAIL=5 (32.7 s)
+[7/14] cov_b_holes18 FAIL=6 (38.6 s)
+[8/14] cov_b_inject FAIL=5 (20.6 s)
+[9/14] cov_b_inject2 FAIL=5 (21.2 s)
+[10/14] cov_b_location PASS=5 (5.3 s)
+[11/14] cov_b_locations FAIL=2 (11.2 s)
+[12/14] cov_b_paths FAIL=4 (14.3 s)
+[13/14] cov_b_people FAIL=5 (13.2 s)
+[14/14] cov_b_shots FAIL=7 (71.3 s)
+{"rows": 93, "counts": {"PASS": 24, "FAIL": 69}}
+[w8_lock] S3.26 released at 2026-10-31 05:40:37

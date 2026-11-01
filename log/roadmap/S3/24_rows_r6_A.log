@@ -1,0 +1,25 @@
+free commit 21.5 GB (need 16)
+[turn] start 23:59:49 framegate 24_rows rule6 batch A (4 scen)
+rule 6 (was 0)
+championship	tour_0180	0	0	PASS
+cov_a_build	terrain_03	0	0	PASS
+cov_a_build	terrain_07	0	0	PASS
+cov_a_build	terrain_11	0	0	PASS
+cov_a_build	brush_465	3	0	FAIL
+cov_a_champ	champ_render	11	3	FAIL
+cov_a_champ	n_prompt	0	0	PASS
+cov_a_champ	n_cancel	11	3	FAIL
+cov_a_champ	X	11	3	FAIL
+cov_a_golfer	panel_0	4	0	FAIL
+cov_a_golfer	panel_1	4	0	FAIL
+cov_a_golfer	panel_2	8	0	FAIL
+cov_a_golfer	panel_3	4	2	FAIL
+cov_a_golfer	button_3	4	0	FAIL
+cov_a_golfer	mod_11	3	2	FAIL
+cov_a_golfer	shift_tee_300	3	0	FAIL
+cov_a_golfer	shift_tee_570	4	0	FAIL
+cov_a_golfer	tee_300	5	0	FAIL
+cov_a_golfer	tee_570	4	0	FAIL
+cov_a_golfer	strip	9	0	FAIL
+rows PASS 5
+[turn] end 00:01:54 rc=0

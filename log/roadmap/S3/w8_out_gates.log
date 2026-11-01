@@ -1,0 +1,8 @@
+[1/7] build_x64 rc=0 138 s :: [w8_lock] S3-lead released at 2026-10-31 06:03:23
+[2/7] build_w32 rc=0 106 s :: [w8_lock] S3-lead released at 2026-10-31 06:05:09
+[3/7] pytest_x64 rc=0 306 s :: [w8_lock] S3-lead released at 2026-10-31 06:10:15
+[4/7] pytest_w32 rc=0 240 s :: [w8_lock] S3-lead released at 2026-10-31 06:14:15
+[5/7] segs_x64 rc=0 306 s :: [w8_lock] S3-lead released at 2026-10-31 06:19:21
+[6/7] segs_w32 rc=0 388 s :: [w8_lock] S3-lead released at 2026-10-31 06:25:49
+[7/7] boot_x64 rc=0 442 s :: [w8_lock] S3-lead released at 2026-10-31 06:33:11
+W8_GATES_DONE

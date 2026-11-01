@@ -1,0 +1,14 @@
+[w8_lock] S3.26 queued at 2026-10-31 04:21:34
+[w8_lock] S3.26 waiting: lock='free' ahead=['S3.23', 'S3.24'] free_commit=25.5 GB
+[w8_lock] S3.26 waiting: lock='step=S3.23' ahead=['S3.24'] free_commit=25.2 GB
+[w8_lock] S3.26 waiting: lock='step=S3.24' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.26 TOOK the lock at 2026-10-31 04:22:04 (waited 30 s, free commit 25.6 GB)
+[1/7] cov_b_inject PASS=5 (22.3 s)
+[2/7] cov_b_inject2 PASS=5 (22.2 s)
+[3/7] cov_r_s2_screens FAIL=8 PASS=24 (15.8 s)
+[4/7] golfer_stories PASS=6 (17.1 s)
+[5/7] cov_k3_camera FAIL=1 PASS=20 (4.7 s)
+[6/7] cov_k3_camera2 PASS=25 (4.4 s)
+[7/7] cov_b_holes18 PASS=6 (40.1 s)
+{"rows": 100, "counts": {"PASS": 91, "FAIL": 9}}
+[w8_lock] S3.26 released at 2026-10-31 04:24:21

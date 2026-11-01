@@ -1,0 +1,24 @@
+[heavy] 01:47:55 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (63 s since our release)
+[heavy] 01:48:15 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (83 s since our release)
+[heavy] 01:48:35 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (103 s since our release)
+[heavy] 01:48:55 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (123 s since our release)
+[heavy] 01:49:15 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (143 s since our release)
+[heavy] 01:49:35 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (163 s since our release)
+[heavy] 01:49:56 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (183 s since our release)
+[heavy] 01:50:16 waiting behind older waits ['w8_wait_S3.21', 'w8_wait_S3.24'] (203 s since our release)
+[heavy] 01:50:36 lock held by: step=S3.21
+what=21b build x64
+time=2026-10-31 01:50:29
+epoch=1793422229.101
+free commit 21.0 GB (need 16)
+free commit 20.9 GB (need 16)
+[heavy] 01:50:56 lock taken: rec queue cov_b_holes18
+  [off] checkpoint zoom1 T=11413 tgt=11413 date=0x00000044 seed=0xcd3160d6
+  [off] checkpoint long_holes T=118776 tgt=118776 date=0x00000470 seed=0x4729e136
+  [off] checkpoint holes T=323200 tgt=323200 date=0x00000cc2 seed=0x57314626
+  [off] checkpoint hired T=410363 tgt=410363 date=0x00001035 seed=0xbf26f15a
+  [off] checkpoint limit T=437229 tgt=437229 date=0x0000114e seed=0x0750b6c9
+  [off] checkpoint end T=479346 tgt=479346 date=0x000012f7 seed=0xb30d39b0
+run cov_b_holes18/s325_queue: OK polls=4747 checkpoints=6
+cov_b_holes18/queue: 6 checkpoints -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\corpus\w8rec\cov_b_holes18\queue; run rc 0; vs det_b: SAME (6 checkpoints)
+[heavy] 02:08:27 lock released

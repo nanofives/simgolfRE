@@ -1,0 +1,27 @@
+[w8_lock] S3.24 queued at 2026-10-31 04:45:39
+[w8_lock] S3.24 waiting: lock='free' ahead=['S3.23', 'S3.26'] free_commit=25.3 GB
+[w8_lock] S3.24 waiting: lock='step=S3.23' ahead=['S3.26'] free_commit=24.9 GB
+[w8_lock] S3.24 waiting: lock='step=S3.23' ahead=['S3.26'] free_commit=24.7 GB
+[w8_lock] S3.24 waiting: lock='step=S3.23' ahead=['S3.26'] free_commit=24.8 GB
+[w8_lock] S3.24 waiting: lock='free' ahead=['S3.26'] free_commit=25.2 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=24.5 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=24.4 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=24.3 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.2 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.3 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.4 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.4 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.4 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.6 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.6 GB
+[w8_lock] S3.24 waiting: lock='step=S3.26' ahead=[] free_commit=25.5 GB
+[w8_lock] S3.24 TOOK the lock at 2026-10-31 04:51:39 (waited 360 s, free commit 26.4 GB)
+......                                                                   [100%]
+6 passed, 33 deselected in 118.35s (0:01:58)
+[w8_lock] S3.24 released at 2026-10-31 04:53:38

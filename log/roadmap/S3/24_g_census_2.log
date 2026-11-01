@@ -1,0 +1,19 @@
+free commit 20.1 GB (need 16)
+[turn] start 02:52:00 gate census_2
+batch 2: cov_b_shots2 cov_b_title cov_k1_animals cov_k1_label cov_k1_magazine_d2900 cov_k1_paths cov_k1_river cov_k1_routing cov_k1_steps cov_k1_terrain cov_k1_washers cov_k2_build cov_k2_golfers cov_k2_label 
+[1/14] cov_b_shots2 FAIL=8 (87.3 s)
+[2/14] cov_b_title FAIL=3 PASS=3 (16.9 s)
+[3/14] cov_k1_animals FAIL=4 PASS=1 (12.7 s)
+[4/14] cov_k1_label FAIL=3 (21.1 s)
+[5/14] cov_k1_magazine_d2900 FAIL=3 (11.5 s)
+[6/14] cov_k1_paths FAIL=3 PASS=1 (6.3 s)
+[7/14] cov_k1_river FAIL=71 PASS=1 (4.7 s)
+[8/14] cov_k1_routing FAIL=2 PASS=2 (5.5 s)
+[9/14] cov_k1_steps FAIL=2 PASS=1 (7.8 s)
+[10/14] cov_k1_terrain FAIL=4 PASS=1 (6.3 s)
+[11/14] cov_k1_washers FAIL=4 PASS=1 (14.4 s)
+[12/14] cov_k2_build FAIL=8 (11.0 s)
+[13/14] cov_k2_golfers FAIL=4 (10.2 s)
+[14/14] cov_k2_label FAIL=6 (5.4 s)
+{"rows": 136, "counts": {"FAIL": 125, "PASS": 11}}
+[turn] end 02:55:58 rc=0

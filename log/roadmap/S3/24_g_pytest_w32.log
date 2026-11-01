@@ -1,0 +1,14 @@
+free commit 24.2 GB (need 16)
+[turn] start 03:41:28 gate pytest_w32
+.................................ssssss                                  [100%]
+=========================== short test summary info ===========================
+SKIPPED [4] port\test\test_terrain_overlay.py:308: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+SKIPPED [2] port\test\test_terrain_overlay.py:323: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+33 passed, 6 skipped in 6.97s
+== Win32
+.................................ssssss                                  [100%]
+=========================== short test summary info ===========================
+SKIPPED [4] port\test\test_terrain_overlay.py:308: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+SKIPPED [2] port\test\test_terrain_overlay.py:323: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+33 passed, 6 skipped in 25.83s
+[turn] end 03:42:03 rc=0

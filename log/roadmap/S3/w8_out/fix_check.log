@@ -1,0 +1,5 @@
+[1/4] test_gfx_pixel x64 rc=0 :: 17 passed in 37.27s
+[2/4] test_gfx_reports x64 rc=0 :: 24 passed, 12 deselected in 97.99s (0:01:37)
+[3/4] test_gfx_pixel win32 rc=0 :: 17 passed in 48.60s
+[4/4] test_gfx_reports win32 rc=0 :: 24 passed, 12 deselected in 240.64s (0:04:00)
+FIX_CHECK_DONE

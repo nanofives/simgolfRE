@@ -1,0 +1,11 @@
+scenario	checkpoint	base_status	base_px	new_status	new_px
+cov_b_holes18	holes	FAIL	2916	FAIL	88
+cov_b_inject	end	FAIL	31	FAIL	16
+cov_b_inject	forced_events	FAIL	31	FAIL	16
+cov_b_inject	zoom_box	FAIL	31	FAIL	16
+cov_b_inject2	end	FAIL	31	FAIL	16
+cov_b_inject2	forced_events	FAIL	31	FAIL	16
+cov_b_inject2	zoom_box	FAIL	31	FAIL	16
+cov_k3_camera2	y_inj4	FAIL	524	FAIL	110
+cov_r_s2_screens	hire	FAIL	1437	FAIL	40
+golfer_stories	season_end	FAIL	753	FAIL	68
