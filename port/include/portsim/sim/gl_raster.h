@@ -124,8 +124,14 @@ class GlRaster : public GlSink {
   // 27 = 1 the exact pow for the specular term instead of the generic GL's 256-entry nearest-entry table (U-1300),
   // 28 = 1 the earlier double-precision vertex model (window position scaled by 1 - 2^-8 / h and rounded) instead of the generic GL's
   // float32 vertex arithmetic (roadmap S3.21, U-1392), 29 = 1 no frustum clipping (with tune 28 = 0 the triangles crossing the view
-  // volume are clipped like the generic GL's and drawn as the fan of the clipped polygon)
-  static constexpr int kTunes = 32;
+  // volume are clipped like the generic GL's and drawn as the fan of the clipped polygon),
+  // 32 = 1 the TEXTURED WALK (roadmap S3.29, U-1309): a textured triangle whose texture has a GL_LINEAR filter takes the generic GL's
+  // float32 interpolation (float32 gradients, rows walked from the largest y, float32 sums along each span; GlRaster::TexWalk) for its
+  // texture coordinates and colour instead of the exact plane, and an unblended GL_MODULATE pixel of it the float32 filter / modulate /
+  // dither (walk_final in gl_raster.cpp); 33 (with 32) the gradient anchor (0 the lowest vertex, 1 the highest,
+  // 2 the first in stream order), 34 = 1 (with 32) no restart of the row starts where the left edge turns at the middle vertex,
+  // 35 = 1 (with 32) the double-precision filter / modulate / dither of the other pixels instead of the walk's float32 final stage
+  static constexpr int kTunes = 40;
   int tune[kTunes] = {};
 
   // The pixel loop of the default pipeline (every tune knob 0 except tune 11, keep_float off; roadmap S3.10): 1 (default) the fast
@@ -224,8 +230,18 @@ class GlRaster : public GlSink {
   bool in_clip_ = false;
   // the default pipeline's pixel loop (roadmap S3.10): the same values as triangle()'s general loop, computed with exact integer
   // edge functions and row spans; false (nothing written) when its preconditions do not hold
+  // the textured walk (tune 32, roadmap S3.29): per row of the triangle's box the first covered pixel and the float32 row-start values
+  // of u, v (texel units) and r, g, b (times 31), and the float32 x gradients a span adds per pixel
+  struct TexWalk {
+    int miny = 0;
+    std::vector<int32_t> ix;
+    std::vector<float> start;   // 5 per row
+    float gx[5] = {};
+  };
+  std::shared_ptr<const TexWalk> tex_walk_(const Vtx *const abc[3], const Tex &tex, int minx, int maxx, int miny, int maxy,
+                                           const Vtx *const cov[3], const bool inc[3]) const;
   bool fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear, int minx, int maxx,
-                      int miny, int maxy, const bool inc[3]);
+                      int miny, int maxy, const bool inc[3], std::shared_ptr<const TexWalk> walk = nullptr);
   struct FastJob;   // one queued triangle (gl_raster.cpp)
   struct Pool;
   std::unique_ptr<Pool> pool_;

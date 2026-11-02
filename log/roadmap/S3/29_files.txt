@@ -1,0 +1,35 @@
+port/src/sim/gl_raster.cpp
+port/include/portsim/sim/gl_raster.h
+port/test/test_gl_raster.py
+log/roadmap/S3/29_notes.md
+log/roadmap/S3/29_files.txt
+log/roadmap/S3/29_merge.md
+log/roadmap/S3/29_uncertain.tsv
+log/roadmap/S3/29_edits.py
+log/roadmap/S3/29_make_edits.py
+log/roadmap/S3/29_assemble.py
+log/roadmap/S3/29_gates.sh
+log/roadmap/S3/29_census.sh
+log/roadmap/S3/29_equiv.sh
+log/roadmap/S3/29_census_cmp.py
+log/roadmap/S3/29_probes.py
+log/roadmap/S3/29_cmp.py
+log/roadmap/S3/29_texfit.py
+log/roadmap/S3/29_flips.py
+log/roadmap/S3/29_ducmp.py
+log/roadmap/S3/29_needed.py
+log/roadmap/S3/29_detail.py
+log/roadmap/S3/29_where.py
+log/roadmap/S3/29_resid.py
+log/roadmap/S3/29_locate.py
+log/roadmap/S3/29_pxdump.py
+log/roadmap/S3/29_blendfit.py
+log/roadmap/S3/29_cover.py
+log/roadmap/S3/29_covfit.py
+log/roadmap/S3/29_framehash.py
+log/roadmap/S3/29_rest.sh
+log/roadmap/S3/29_final.sh
+log/roadmap/S3/29_build_x64.log
+log/roadmap/S3/29_out/   (gate logs and TSVs: equiv_*.log/tsv, g_*.log, g2_*.log, segs_*.tsv, boot_*.tsv, t_*.log, census_on.tsv / .log, framehash_*.json)
+LOCAL (not tracked, game-derived frames): port/corpus/gl/probe/s329_* (probe scenes with the real GL's frames: regenerate with 29_probes.py), port/corpus/gl/probe/s329_bg_only
+LOCAL: log/roadmap/S3/29_out/census_on.tsv.d/ (framegate's per-scenario cache)

@@ -1,0 +1,11 @@
+== fh_s329 start 2026-10-31 18:45:36
+[w8_lock] S3.29 queued at 2026-10-31 18:45:36
+[w8_lock] S3.29 waiting: lock='free' ahead=['I21', 'S3-lead'] free_commit=20.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3-lead'] free_commit=19.5 GB
+[w8_lock] S3.29 waiting: lock='free' ahead=['S3-lead', 'I21'] free_commit=20.0 GB
+[w8_lock] S3.29 waiting: lock='step=S3-lead' ahead=['I21'] free_commit=19.4 GB
+[w8_lock] S3.29 waiting: lock='step=S3-lead' ahead=['I21'] free_commit=19.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=20.0 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 18:46:46 (waited 70 s, free commit 19.8 GB)
+passes 505
+[w8_lock] S3.29 released at 2026-10-31 18:48:32

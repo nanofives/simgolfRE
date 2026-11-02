@@ -1,0 +1,288 @@
+[w8_lock] S3.29 queued at 2026-10-31 08:53:09
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.6 GB
+[w8_lock] S3.29 waiting: lock='free' ahead=['S3.28'] free_commit=25.6 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 08:56:49 (waited 220 s, free commit 25.6 GB)
+c3	hole	0	0	0	0	0	0	0	
+c3	paths	33607	0	0	0	0	0	749	
+c4	edit_raise	32013	0	0	0	0	0	716	
+c4	golf_tools	32027	0	0	0	0	0	710	
+c4	hole	32038	0	0	0	0	0	710	
+c4	z0_r0	32025	0	0	0	0	1	714	
+c4	z0_r1	32038	0	0	0	0	0	712	
+c4	z0_r2	32030	0	0	0	0	0	716	
+c4	z0_r3	32038	0	0	0	0	0	710	
+c5	edit_raise_local	32013	0	0	0	0	0	716	
+c5	golf_tools_local	32027	0	0	0	0	0	710	
+c5	hole_local	0	0	0	0	0	0	0	
+c6	edit_raise_local	32014	0	0	0	0	0	719	
+c6	golf_tools_local	32027	0	0	0	0	0	710	
+c6	hole_local	0	0	0	0	0	0	0	
+c7	edit_raise	463382	0	0	0	0	0	10411	0
+c7	edit_raise_local	32013	0	0	0	0	0	716	
+c7	fuzz1_z0	539742	0	0	0	0	0	10443	0
+c7	fuzz2_z0	534552	0	0	0	0	0	10636	0
+c7	fuzz3_z0	534069	0	0	0	0	2	10288	0
+c7	fuzz4_z0	491570	0	0	0	0	1	9255	0
+c7	fuzz5_z0	455762	0	0	0	0	0	9033	0
+c7	fuzz6_z0	455172	0	0	0	0	0	9014	0
+c7	fuzz7_z1	432332	0	0	0	0	3	16077	0
+c7	fuzz8_z1	458161	0	0	0	0	8	17475	0
+c7	fuzz9_z1	460288	0	0	0	0	7	17392	0
+c7	golf_tools_local	32027	0	0	0	0	0	710	
+c7	hole	480148	0	0	0	0	1	10825	0
+c7	hole_local	8263	0	0	0	0	0	205	
+c7	paths	415505	0	0	0	0	1	8935	0
+c7	paths_prep	463382	0	0	0	0	0	10411	0
+c7	sandbox	480252	0	0	0	0	0	10875	0
+c7	terrain_tools_off	415505	0	0	0	0	1	8941	0
+c7	view3	480000	0	0	0	0	0	10810	0
+c7	view5	463382	0	0	0	0	0	10412	0
+c7	view_zoom1	381899	0	0	0	0	3	16181	0
+c7	z0_r1	397150	0	0	0	0	1	8970	0
+c7	z0_r2	407497	0	0	0	0	2	9172	0
+c7	z1_r0	407497	0	0	0	0	2	9172	0
+c7	z1_r2	397150	0	0	0	0	1	8970	0
+c7	z1_r3	407497	0	0	0	0	2	9172	0
+c7	z2_r0	244365	0	0	0	0	1	5583	0
+c7	z2_r1	362198	0	0	0	0	0	8183	0
+c7	z2_r2	423139	0	0	0	0	0	9522	0
+c7	z2_r3	402534	0	0	0	0	0	9084	0
+c7	zoom1	397150	0	0	0	0	1	8970	0
+c7	zoom2	336290	0	0	0	0	1	7584	0
+c7	zoomback0	457933	0	0	0	0	1	9316	0
+c7	zoomback1	489104	0	0	0	0	1	10531	0
+g2	i001_zoom1_pathupd	4800	0	0	0	0	0	196	
+g2	i002_zoom1_pathupd	4800	0	0	0	0	0	196	
+g2	i003_zoom1_pathupd	4800	0	0	0	0	0	210	
+g2	i004_zoom1_pathupd	4800	0	0	0	0	0	208	
+g2	i005_zoom1_pathupd	4800	0	0	0	0	0	196	
+g2	i006_zoom1_strip	47977	0	0	0	0	0	2162	
+g2	i007_zoom1_strip	8960	0	0	0	0	0	424	
+g2	i008_zoom1_strip	26312	0	0	0	0	0	1183	
+g2	i009_zoom1_strip	17352	0	0	0	0	0	759	
+g2	i010_zoom1_strip	87326	0	0	0	0	0	3468	
+g2	i011_zoom1_strip	69974	0	0	0	0	0	2936	
+g2	i012_zoom1_strip	108991	0	0	0	0	0	4357	
+g2	i013_zoom1_strip	39017	0	0	0	0	0	1738	
+g2	i020_long_holes_strip	237195	0	0	0	0	0	4740	
+g2	i021_long_holes_strip	85193	0	0	0	0	0	1864	
+g2	i022_long_holes_strip	180061	0	0	0	0	0	3709	
+g2	i023_long_holes_strip	94868	0	0	0	0	0	2221	
+g2	i024_long_holes_strip	219055	0	0	0	0	1	4466	
+g2	i025_long_holes_strip	124187	0	0	0	0	1	2806	
+g2	i026_long_holes_strip	276189	0	0	0	0	1	5351	
+g2	i027_long_holes_strip	152002	0	0	0	0	0	3448	
+g2	i034_holes_strip	237365	0	0	0	0	0	4742	
+g2	i035_holes_strip	85193	0	0	0	0	0	1864	
+g2	i036_holes_strip	180061	0	0	0	0	0	3709	
+g2	i037_holes_strip	94868	0	0	0	0	0	2221	
+g2	i038_holes_strip	219055	0	0	0	0	1	4466	
+g2	i039_holes_strip	124187	0	0	0	0	1	2806	
+g2	i040_holes_strip	276359	0	0	0	0	1	5353	
+g2	i041_holes_strip	152172	0	0	0	0	0	3450	
+g2	organic_local	31700	0	0	0	0	0	704	
+g2	organic_strip	27653	0	0	0	0	1	320	
+g3	i001_paths_pathupd	49628	0	0	0	0	0	905	
+g3	i002_paths_pathupd	49628	0	0	0	0	0	905	
+g3	i003_paths_pathupd	48150	0	0	0	0	1	881	
+g3	i004_paths_pathupd	48609	0	0	0	0	0	867	
+g3	i005_paths_pathupd	47220	0	0	0	0	0	871	
+g3	i006_paths_strip	238532	0	0	0	0	0	4710	
+g3	i007_paths_strip	83283	0	0	0	0	0	1844	
+g3	i008_paths_strip	175093	0	0	0	0	0	3703	
+g3	i009_paths_strip	91810	0	0	0	0	0	2156	
+g3	i010_paths_strip	216149	0	0	0	0	0	4391	
+g3	i011_paths_strip	124339	0	0	0	0	0	2810	
+g3	i012_paths_strip	279588	0	0	0	0	0	5420	
+g3	i013_paths_strip	155249	0	0	0	0	0	3510	
+g3	i014_paths_strip	228512	0	0	0	0	0	4782	
+g3	i015_paths_strip	54278	0	0	0	0	0	1297	
+g3	i016_paths_strip	166642	0	0	0	0	0	3560	
+g3	i017_paths_strip	112364	0	0	0	0	0	2498	
+g3	i018_paths_strip	208433	0	0	0	0	1	4219	
+g3	i019_paths_strip	96069	0	0	0	0	1	2253	
+g3	i020_paths_strip	270303	0	0	0	0	1	5450	
+g3	i021_paths_strip	174234	0	0	0	0	0	4009	
+g3	i022_paths_strip	253438	0	0	0	0	0	4930	
+g3	i023_paths_strip	99200	0	0	0	0	0	2049	
+g3	i024_paths_strip	200237	0	0	0	0	0	3812	
+g3	i025_paths_strip	101037	0	0	0	0	0	2172	
+g3	i026_paths_strip	216908	0	0	0	0	0	4257	
+g3	i027_paths_strip	115871	0	0	0	0	0	2591	
+g3	i028_paths_strip	270109	0	0	0	0	0	5249	
+g3	i029_paths_strip	154238	0	0	0	0	0	3499	
+g3	i030_paths_strip	226942	0	0	0	0	0	4608	
+g3	i031_paths_strip	58808	0	0	0	0	0	1358	
+g3	i032_paths_strip	190160	0	0	0	0	0	3808	
+g3	i033_paths_strip	131352	0	0	0	0	0	2749	
+g3	i034_paths_strip	226537	0	0	0	0	0	4412	
+g3	i035_paths_strip	95185	0	0	0	0	0	2202	
+g3	i036_paths_strip	263319	0	0	0	0	0	5229	
+g3	i037_paths_strip	168134	0	0	0	0	0	3759	
+g3	i038_paths_strip	0	0	0	0	0	0	0	
+g3	i039_paths_strip	0	0	0	0	0	0	0	
+g3	i040_paths_strip	0	0	0	0	0	0	0	
+g3	i041_paths_strip	0	0	0	0	0	0	0	
+g3	i042_paths_strip	0	0	0	0	0	0	0	
+g3	i043_paths_strip	0	0	0	0	0	0	0	
+g3	i044_paths_strip	0	0	0	0	0	0	0	
+g3	i045_paths_strip	0	0	0	0	0	0	0	
+g3	i046_paths_pathupd	49628	0	0	0	0	0	905	
+g3	i047_paths_strip	0	0	0	0	0	0	0	
+g3	i051_paths_strip	0	0	0	0	0	0	0	
+g3	i052_paths_strip	0	0	0	0	0	0	0	
+g3	i053_paths_strip	0	0	0	0	0	0	0	
+g3	i054_paths_strip	0	0	0	0	0	0	0	
+g3	i055_paths_pathupd	49628	0	0	0	0	0	905	
+g3	i056_water_pathupd	48150	0	0	0	0	1	881	
+g3	i057_water_pathupd	49628	0	0	0	0	0	905	
+g3	i058_water_pathupd	48150	0	0	0	0	1	881	
+g3	i059_water_pathupd	48609	0	0	0	0	0	867	
+g3	i060_water_pathupd	47220	0	0	0	0	0	871	
+g3	i061_water_strip	238532	0	0	0	0	0	4710	
+g3	i062_water_strip	83283	0	0	0	0	0	1844	
+g3	i063_water_strip	175093	0	0	0	0	0	3703	
+g3	i064_water_strip	91810	0	0	0	0	0	2156	
+g3	i065_water_strip	216149	0	0	0	0	0	4391	
+g3	i066_water_strip	124339	0	0	0	0	0	2810	
+g3	i067_water_strip	279588	0	0	0	0	0	5420	
+g3	i068_water_strip	155249	0	0	0	0	0	3510	
+g3	i069_water_strip	228512	0	0	0	0	0	4782	
+g3	i070_water_strip	54278	0	0	0	0	0	1297	
+g3	i071_water_strip	166642	0	0	0	0	0	3560	
+g3	i072_water_strip	112364	0	0	0	0	0	2498	
+g3	i073_water_strip	208433	0	0	0	0	1	4219	
+g3	i074_water_strip	96069	0	0	0	0	1	2253	
+g3	i075_water_strip	270303	0	0	0	0	1	5450	
+g3	i076_water_strip	174234	0	0	0	0	0	4009	
+g3	i077_water_strip	253438	0	0	0	0	0	4930	
+g3	i078_water_strip	99200	0	0	0	0	0	2049	
+g3	i079_water_strip	200237	0	0	0	0	0	3812	
+g3	i080_water_strip	101037	0	0	0	0	0	2172	
+g3	i081_water_strip	216908	0	0	0	0	0	4257	
+g3	i082_water_strip	115871	0	0	0	0	0	2591	
+g3	i083_water_strip	270109	0	0	0	0	0	5249	
+g3	i084_water_strip	154238	0	0	0	0	0	3499	
+g3	i085_water_strip	226942	0	0	0	0	0	4608	
+g3	i086_water_strip	58808	0	0	0	0	0	1358	
+g3	i087_water_strip	190160	0	0	0	0	0	3808	
+g3	i088_water_strip	131352	0	0	0	0	0	2749	
+g3	i089_water_strip	226537	0	0	0	0	0	4412	
+g3	i090_water_strip	95185	0	0	0	0	0	2202	
+g3	i091_water_strip	263319	0	0	0	0	0	5229	
+g3	i092_water_strip	168134	0	0	0	0	0	3759	
+g3	i093_water_strip	0	0	0	0	0	0	0	
+g3	i094_water_strip	0	0	0	0	0	0	0	
+g3	i095_water_strip	0	0	0	0	0	0	0	
+g3	i096_water_strip	0	0	0	0	0	0	0	
+g3	i097_water_strip	0	0	0	0	0	0	0	
+g3	i098_water_strip	0	0	0	0	0	0	0	
+g3	i099_water_strip	0	0	0	0	0	0	0	
+g3	i100_water_strip	0	0	0	0	0	0	0	
+g3	i101_water_pathupd	48150	0	0	0	0	1	881	
+g3	i102_water_strip	0	0	0	0	0	0	0	
+g3	i106_water_strip	0	0	0	0	0	0	0	
+g3	i107_water_strip	0	0	0	0	0	0	0	
+g3	i108_water_strip	0	0	0	0	0	0	0	
+g3	i109_water_strip	0	0	0	0	0	0	0	
+g3	i110_water_pathupd	48150	0	0	0	0	1	881	
+g3	organic_local	32927	0	0	0	0	0	721	
+g4	i001_zoom2early_pathupd	1200	0	0	0	0	0	94	
+g4	i002_zoom2early_pathupd	1200	0	0	0	0	0	94	
+g4	i003_zoom2early_pathupd	1200	0	0	0	0	0	108	
+g4	i004_zoom2early_pathupd	1200	0	0	0	0	0	94	
+g4	i005_zoom2early_pathupd	1200	0	0	0	0	0	94	
+g4	i006_zoom2early_strip	1278	0	0	0	0	0	105	
+g4	i010_zoom2early_strip	19010	0	0	0	0	0	1128	
+g4	i011_zoom2early_strip	19010	0	0	0	0	0	1128	
+g4	i012_zoom2early_strip	20288	0	0	0	0	0	1233	
+g4	i013_zoom2early_strip	1278	0	0	0	0	0	105	
+g4	i014_zoom2early_strip	4331	0	0	0	0	0	249	
+g4	i018_zoom2early_strip	3632	0	0	0	0	0	286	
+g4	i019_zoom2early_strip	3632	0	0	0	0	0	286	
+g4	i020_zoom2early_strip	7963	0	0	0	0	0	535	
+g4	i021_zoom2early_strip	4331	0	0	0	0	0	249	
+g4	i022_zoom2early_strip	1305	0	0	0	0	0	104	
+g4	i026_zoom2early_strip	12106	0	0	0	0	0	946	
+g4	i027_zoom2early_strip	12106	0	0	0	0	0	946	
+g4	i028_zoom2early_strip	13411	0	0	0	0	0	1050	
+g4	i029_zoom2early_strip	1305	0	0	0	0	0	104	
+g4	i030_zoom2early_strip	1897	0	0	0	0	0	160	
+g4	i034_zoom2early_strip	3632	0	0	0	0	0	289	
+g4	i035_zoom2early_strip	3632	0	0	0	0	0	289	
+g4	i036_zoom2early_strip	5529	0	0	0	0	0	449	
+g4	i037_zoom2early_strip	1897	0	0	0	0	0	160	
+g4	organic_local	31700	0	0	0	0	0	704	
+g4	organic_strip	27653	0	0	0	0	1	320	
+g5	i001_raised_pathupd	377180	0	0	0	0	1	5901	
+g5	i002_raised_pathupd	377180	0	0	0	0	1	5901	
+g5	i003_raised_pathupd	239204	0	0	0	0	0	3567	
+g5	i004_raised_pathupd	239204	0	0	0	0	0	3567	
+g5	i005_raised_pathupd	444973	0	0	0	0	0	7252	
+g5	i006_raised_pathupd	444973	0	0	0	0	0	7252	
+g5	i007_raised_pathupd	263605	0	0	0	0	0	4620	
+g5	i008_raised_pathupd	263605	0	0	0	0	0	4620	
+g5	i009_raised_pathupd	249526	0	0	0	0	0	4411	
+g5	i010_raised_pathupd	249526	0	0	0	0	0	4411	
+g5	i011_raised_strip	92327	0	0	0	0	0	1582	
+g5	i012_raised_strip	260957	0	0	0	0	0	4471	
+g5	i013_raised_strip	52655	0	0	0	0	0	791	
+g5	i014_raised_strip	99335	0	0	0	0	0	1178	
+g5	i015_raised_strip	68109	0	0	0	0	0	1221	
+g5	i016_raised_strip	197903	0	0	0	0	0	2946	
+g5	i017_raised_strip	22468	0	0	0	0	0	245	
+g5	i018_raised_strip	20046	0	0	0	0	0	279	
+g5	i019_raised_strip	81460	0	0	0	0	0	1453	
+g5	i020_raised_strip	232526	0	0	0	0	0	4166	
+g5	i021_raised_strip	106960	0	0	0	0	0	1733	
+g5	i022_raised_strip	189429	0	0	0	0	0	2885	
+g5	i023_raised_local	85199	0	0	0	0	0	1202	
+g5	i024_raised_local	34832	0	0	0	0	0	407	
+g5	i025_raised_local	80050	0	0	0	0	0	1359	
+g5	i026_raised_local	46943	0	0	0	0	0	853	
+g5	i027_raised_local	53778	0	0	0	0	0	944	
+g5	organic_local	32927	0	0	0	0	0	721	
+g6	i001_raised_pathupd	412785	0	0	0	0	2	6617	
+g6	i002_raised_pathupd	412785	0	0	0	0	2	6617	
+g6	i003_raised_pathupd	265452	0	0	0	0	0	4396	
+g6	i004_raised_pathupd	265452	0	0	0	0	0	4396	
+g6	i005_raised_pathupd	484261	0	0	0	0	1	7896	
+g6	i006_raised_pathupd	484261	0	0	0	0	1	7896	
+g6	i007_raised_pathupd	347904	0	0	0	0	0	5770	
+g6	i008_raised_pathupd	347904	0	0	0	0	0	5770	
+g6	i009_raised_pathupd	277094	0	0	0	0	0	4702	
+g6	i010_raised_pathupd	277094	0	0	0	0	0	4702	
+g6	i011_raised_strip	96976	0	0	0	0	0	1601	
+g6	i012_raised_strip	250466	0	0	0	0	0	4211	
+g6	i013_raised_strip	50306	0	0	0	0	0	934	
+g6	i014_raised_strip	79816	0	0	0	0	0	1404	
+g6	i015_raised_strip	80032	0	0	0	0	0	1420	
+g6	i016_raised_strip	189799	0	0	0	0	0	3367	
+g6	i017_raised_strip	21901	0	0	0	0	0	361	
+g6	i018_raised_strip	20095	0	0	0	0	0	391	
+g6	i019_raised_strip	94331	0	0	0	0	0	1628	
+g6	i020_raised_strip	223166	0	0	0	0	1	3792	
+g6	i021_raised_strip	71552	0	0	0	0	0	1165	
+g6	i022_raised_strip	178546	0	0	0	0	0	2924	
+g6	i023_raised_local	81616	0	0	0	0	0	1260	
+g6	i024_raised_local	36624	0	0	0	0	0	548	
+g6	i025_raised_local	101036	0	0	0	0	0	1666	
+g6	i026_raised_local	57989	0	0	0	0	0	969	
+g6	i027_raised_local	73576	0	0	0	0	0	1362	
+g6	organic_local	32927	0	0	0	0	0	721	
+passes 268: fast / exact / threads / chain differing from the general loop: 0; sloppy control differs on 0, crude control on 46, workerctl control on 239
+[w8_lock] S3.29 released at 2026-10-31 08:59:19

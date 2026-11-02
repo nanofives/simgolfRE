@@ -355,3 +355,68 @@ def test_s321b_control_stepping_off_reads_red(lib):
     if not (S321B_PROBE / "snaps" / "s1" / "dib_post.bin").exists():
         pytest.skip("no s321_ramp_dense probe")
     assert _probe_diff(lib, S321B_PROBE, None) > 100   # measured 705 with the plane
+
+
+# ---- roadmap S3.29 (U-1309): the textured walk, opt-in (`#tune 32 1`), measured on probes of the real GL (log/roadmap/S3/29_probes.py
+# through re/tools/glexact/glreplay.exe; local corpus port/corpus/gl/probe/s329_*, the S3.21 ones s321_*): a textured triangle whose
+# texture has a GL_LINEAR filter is interpolated in float32 (float32 gradients from the lowest vertex, rows walked from the largest y,
+# float32 sums along each span) and its unblended GL_MODULATE pixels are filtered, modulated and dithered in float32. Exact on the
+# probes below; NOT exact on every probe (the S3.29_LEFT bounds: 1-2 float32 ulps of u or v the measured forms do not reproduce), so
+# the default stays off. Controls: the plane (rule off), the double final stage (`#tune 35 1`), the highest-vertex anchor
+# (`#tune 33 1`), the stream-first anchor (`#tune 33 2`), no restart at the middle vertex (`#tune 34 1`).
+S329_EXACT = ("s321_gour_rand", "s321_gour_const", "s329_cramp_lin", "s329_cramp_mix", "s329_uramp_lin", "s329_uramp_mix",
+              "s329_vramp_lin", "s329_fin_near", "s329_fin_lin")
+S329_LEFT = {"s329_perm_rand": 19, "s329_perm_big": 13, "s321_const_rand": 5, "s329_alt_big": 1}   # measured with the rule (every
+# differing pixel: perm_rand 16 values + 3 coverage, perm_big 12 + 1; the coverage ones are the same with the rule off)
+S329_PLANE = {"s329_alt_big": 64599, "s321_const_rand": 285, "s321_gour_rand": 306, "s329_perm_big": 935, "s329_fin_near": 10064,
+              "s329_fin_lin": 9792}   # measured with the rule off
+S329_CONTROLS = [({32: 1, 35: 1}, "s329_fin_near", 1000), ({32: 1, 35: 1}, "s329_fin_lin", 1000), ({32: 1, 33: 1}, "s329_alt_big", 1000),
+                 ({32: 1, 33: 2}, "s329_perm_big", 30), ({32: 1, 34: 1}, "s329_perm_big", 20)]
+
+
+def _s329_probe(name):
+    d = G.CORPUS / "probe" / name
+    if not (d / "snaps" / "s1" / "dib_post.bin").exists():
+        pytest.skip(f"no {name} probe (run log/roadmap/S3/29_probes.py with re/tools/glexact/glreplay.exe)")
+    return d
+
+
+@pytest.mark.parametrize("name", S329_EXACT)
+def test_s329_walk_is_exact_on_the_probe(lib, name):
+    assert _probe_diff(lib, _s329_probe(name), {32: 1}) == 0
+
+
+@pytest.mark.parametrize("name", sorted(S329_LEFT))
+def test_s329_walk_residue_is_bounded(lib, name):
+    assert _probe_diff(lib, _s329_probe(name), {32: 1}) <= S329_LEFT[name]
+
+
+@pytest.mark.parametrize("name", sorted(S329_PLANE))
+def test_s329_control_rule_off_reads_red(lib, name):
+    n = _probe_diff(lib, _s329_probe(name), None)
+    assert n > 10 * max(1, S329_LEFT.get(name, 0)), (name, n)
+
+
+@pytest.mark.parametrize("knobs,name,floor", S329_CONTROLS)
+def test_s329_control_wrong_detail_reads_red(lib, knobs, name, floor):
+    n = _probe_diff(lib, _s329_probe(name), knobs)
+    assert n > floor, (knobs, name, n)
+
+
+@pytest.mark.parametrize("step", ["sandbox", "fuzz1_z0", "fuzz7_z1"])
+def test_s329_walk_is_the_same_in_every_pixel_loop(lib, setup, step):
+    """the general loop, the fast loop and 4 workers give the same frame with the walk on (S3.10's identity, tune 32)"""
+    if step not in STEPS:
+        pytest.skip("c7 lacks " + step)
+    frames = [_frame(lib, setup, step, "#tune 32 1\n" + extra)[0] for extra in ("#fastpath 0\n", "", "#fastpath 2\n", "#threads 4\n")]
+    for f in frames[1:]:
+        assert (f == frames[0]).all(), step
+
+
+def test_s329_walk_lowers_the_c7_one_level_pixels(lib, setup):
+    steps = [s for s in ("sandbox", "zoom1", "z2_r1", "hole", "fuzz1_z0", "fuzz7_z1", "view3") if s in STEPS]
+    if len(steps) != 7:
+        pytest.skip("c7 lacks one of the seven passes")
+    on = sum(_one_level(lib, setup, s, "#tune 32 1\n") for s in steps)
+    off = sum(_one_level(lib, setup, s) for s in steps)
+    assert on <= 154 and off >= 173, (on, off)   # measured 154 / 173

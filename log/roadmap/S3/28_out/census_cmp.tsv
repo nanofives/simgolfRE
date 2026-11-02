@@ -1,0 +1,9 @@
+scenario	checkpoint	raw_before	raw_after	total_px_before	total_px_after	beyond_before	beyond_after	split_before	split_after	twod_before	twod_after	terr_before	terr_after
+cov_r_s2_screens	course	FAIL	FAIL	69	4	20	0	FAIL	PASS	65	0	4	4
+cov_r_s2_screens	radial_hover	FAIL	FAIL	68	3	20	0	FAIL	PASS	65	0	3	3
+cov_r_s2_screens	rep_comments	FAIL	FAIL	24	4	20	0	FAIL	PASS	20	0	4	4
+cov_r_s2_screens	rep_financial	FAIL	FAIL	21	1	20	0	FAIL	PASS	20	0	1	1
+cov_r_s2_screens	rep_histograph	FAIL	PASS	20	0	20	0	FAIL	PASS	20	0	0	0
+cov_r_s2_screens	rep_report1	FAIL	PASS	20	0	20	0	FAIL	PASS	20	0	0	0
+cov_r_s2_screens	rep_roster	FAIL	PASS	11	0	11	0	FAIL	PASS	11	0	0	0
+cov_r_s2_screens	rep_shortcuts	FAIL	FAIL	21	1	20	0	FAIL	PASS	20	0	1	1

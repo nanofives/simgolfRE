@@ -59,11 +59,19 @@ void terrain_local_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t 
 void terrain_strip_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t pivot, int32_t dir, float angle);
 void terrain_path_update_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t pivot, float angle);
 
+// renderTileAtFiveOffsets(tile, pivot, angle) (roadmap S3.28): the draw half of Terrain::lowerEdgeCorner(tile, corner, pivot,
+// angle), which calls it before lowering the corner. When a neighbour toward the camera is missing or hidden it draws the tile five
+// times at +-10 offsets with light 0 off and a black light 1 on (only the global ambient term is left: a near-black silhouette).
+// Faults on a NULL tile (the original's debug assert).
+void terrain_render_tile_at_five_offsets(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t tile, uint32_t pivot,
+                                         float angle);
+
 // The four exported render entry points by the corpus's entry kind, with the raw argument dwords of the exported call (floats
 // as bit patterns): 1 stripRender(a0 pivot, a1 dir, a2 angle), 2 render(a0 tile, a1 angle), 3 localRender(a0 tile, a1 pivot,
-// a2 angle), 4 pathUpdateRender(a0 pivot, a1 angle). Returns false for any other kind (nothing drawn).
+// a2 angle), 4 pathUpdateRender(a0 pivot, a1 angle), and 5 renderTileAtFiveOffsets(a0 tile, a1 pivot, a2 angle) = lowerEdgeCorner's
+// arguments 0, 2 and 3 (its corner is the state side's). Returns false for any other kind (nothing drawn).
 enum TerrainRenderEntry : int32_t {
-  kEntryStripRender = 1, kEntryRender = 2, kEntryLocalRender = 3, kEntryPathUpdateRender = 4
+  kEntryStripRender = 1, kEntryRender = 2, kEntryLocalRender = 3, kEntryPathUpdateRender = 4, kEntryRenderTileAtFiveOffsets = 5
 };
 bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1,
                           uint32_t a2);

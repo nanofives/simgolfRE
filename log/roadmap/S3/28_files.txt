@@ -1,0 +1,54 @@
+# S3.28 files. Tracked (commit by explicit path):
+log/roadmap/S3/28_brief.md
+log/roadmap/S3/28_notes.md
+log/roadmap/S3/28_merge.md
+log/roadmap/S3/28_files.txt
+log/roadmap/S3/28_uncertain.tsv
+log/roadmap/S3/28_edits.py
+log/roadmap/S3/28_make_edits.py
+log/roadmap/S3/28_assemble.py
+log/roadmap/S3/28_gl_rec.js
+log/roadmap/S3/28_gl_record.py
+log/roadmap/S3/28_census.sh
+log/roadmap/S3/28_census_cmp.py
+log/roadmap/S3/28_interim.py
+log/roadmap/S3/28_rows_cmp.py
+log/roadmap/S3/28_gates.sh
+log/roadmap/S3/28_gates2.sh
+log/roadmap/S3/28_queue.sh
+log/roadmap/S3/28_queue2.sh
+log/roadmap/S3/28_passlog.sh
+log/roadmap/S3/28_passlog.py
+log/roadmap/S3/28_out/census_split.tsv
+log/roadmap/S3/28_out/census_cmp.tsv
+log/roadmap/S3/28_out/census_split.log
+log/roadmap/S3/28_out/fg_s2.log
+log/roadmap/S3/28_out/rec_s328_s2.log
+log/roadmap/S3/28_out/rec_s328_s2b.log
+log/roadmap/S3/28_out/queue.log
+log/roadmap/S3/28_out/queue2.log
+log/roadmap/S3/28_out/gates2.log
+log/roadmap/S3/28_out/g_build_x64.log
+log/roadmap/S3/28_out/g_build_w32.log
+log/roadmap/S3/28_out/g_pytest_x64.log
+log/roadmap/S3/28_out/g2_*.log
+log/roadmap/S3/28_out/segs_x64.tsv
+log/roadmap/S3/28_out/segs_w32.tsv
+log/roadmap/S3/28_out/boot_x64.tsv
+log/roadmap/S3/28_out/boot_w32.tsv
+log/roadmap/S3/28_out/pixels_s328_s2b.txt
+log/roadmap/S3/28_out/assemble_base.log
+log/roadmap/S3/28_out/assemble_v.log
+log/roadmap/S3/28_out/assemble_root.log
+log/roadmap/S3/28_out/census_driver.log
+# The port changes reach the repo through 28_edits.py (28_assemble.py --root <tree> --only-28): port/include/portsim/sim/terrain_render.h,
+# port/src/sim/terrain_render.cpp, port/src/sim/terrain_live.cpp, port/src/sim/gfx_terrain.cpp, port/test/test_terrain_s3_28.py (new).
+#
+# LOCAL (game bytes, recordings, build trees; never tracked):
+# local log/p5/gl/corpus/s328_s2/            first recording (tiles inside the hidden ring; not exported)
+# local log/p5/gl/corpus/s328_s2b/           the recording the tests use (32 kind-5 snapshots, stream, textures)
+# local port/corpus/gl/s328_s2b/             its export (kind 5) read by port/test/test_terrain_s3_28.py
+# local log/c3/alt/refs/cov_r_s2_screens/s328_s2/, s328_s2b/   the two runs (scenario_refs check SAME as det_b)
+# local log/roadmap/S3/28_out/census_split.tsv.d/, notrun_*.json   census cache and the four NOT_RUN entries replaced
+# local port/build/S3_28v/, port/build/S3_28r/   the fresh 28_assemble.py check trees (--dst, and w8_assemble + --root)
+# local port/build/S3_28/, port/build/S3_28_base/                 the measured tree and the plain stack

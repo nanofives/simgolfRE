@@ -1,0 +1,5 @@
+[w8_lock] S3.28 queued at 2026-10-31 08:02:54
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:02:54 (waited 0 s, free commit 24.9 GB)
+[1/1] cov_r_s2_screens FAIL=16 PASS=16 (16.3 s)
+{"rows": 32, "counts": {"PASS": 16, "FAIL": 16}}
+[w8_lock] S3.28 released at 2026-10-31 08:03:36

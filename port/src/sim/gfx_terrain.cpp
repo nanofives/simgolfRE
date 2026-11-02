@@ -19,7 +19,9 @@
 //
 // Drops (a[0..12) the argument slots):
 //   terrain.windowPaint                        the root surface filled with 0
-//   terrain.pass(kind, self, a0, a1, a2)       one draw pass (terrain_render.h's entry kinds) rasterised over the root surface
+//   terrain.pass(kind, self, a0, a1, a2)       one draw pass (terrain_render.h's entry kinds) rasterised over the root surface; kind 5
+//                                              (renderTileAtFiveOffsets, lowerEdgeCorner's draw half, roadmap S3.28) takes no pass
+//                                              number: the original's pass copies (terrain_calls.js PASSES) count kinds 1..4 only
 //   terrain.blit(dir, sx, sy, tx, ty, w, h, u) dir 1 the root surface onto the back surface, else the back surface onto the root
 //                                              surface; u = 1: renderTerrainStrip's screen size has uninitialised widths
 //   terrain.frameBegin(k) / terrain.frameEnd(k) updateTerrainRender's k-th call (from 0) begins / returns
@@ -44,6 +46,7 @@
 //  13 the startup self-check's pinned hash wrong (one hex digit): LiveTerrain::choose_renderer("auto") falls back to GlRaster
 //  14 the self-check's reference pass perturbed (every texture coordinate one texel off): "auto" falls back to GlRaster
 //     (both roadmap S3.20, terrain_live.cpp choose_renderer; port/test/test_gl_wgl_selfcheck.py)
+//  15 lowerEdgeCorner's pass (kind 5) is not handed to the backend (terrain_live.cpp; roadmap S3.28, port/test/test_terrain_s3_28.py)
 //
 // Host OpenGL (roadmap S3.15, U-1810): with SG_GL_BACKEND=wgl the LiveTerrain also feeds the GL setup to the host's own OpenGL 1.1
 // software implementation (gl_wgl.h: Windows' generic opengl32 on the original's 16-bit DIB) and terrain.pass draws through it: the
@@ -140,8 +143,9 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (lt->setup_names_differ()) g.unsup("terrain.pass: the rasteriser's texture names differ from the setup's");
   LiveTerrainView &v = lt->view();
-  const int32_t j = v.passes_in_frame++;
-  const bool keep_pass = j < 8;
+  const bool numbered = a[0] != static_cast<uint32_t>(kEntryRenderTileAtFiveOffsets);
+  const int32_t j = numbered ? v.passes_in_frame++ : -1;
+  const bool keep_pass = numbered && j < 8;
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
   if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
     // roadmap S3.15 (U-1810): the host's own OpenGL draws the pass into its DIB, which holds the root surface's pixels around it

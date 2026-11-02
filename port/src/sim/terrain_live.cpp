@@ -220,7 +220,13 @@ uint32_t LiveTerrain::elevate_corner(uint32_t self, uint32_t tile, int32_t corne
 uint32_t LiveTerrain::lower_corner(uint32_t self, uint32_t tile, int32_t corner) {
   return call("lowerCorner", self, {tile, static_cast<uint32_t>(corner)});
 }
+// roadmap S3.28 (U-1952): Terrain::lowerEdgeCorner draws first (renderTileAtFiveOffsets with the tile, the pivot and the angle) and
+// lowers the corner after it (Tile::lowerCorner; re/match/terrain_methods.cpp); the pass reads the tile's heights and the
+// vertex arrays before the lowering, so it is handed to the backend BEFORE the state call. A NULL tile does neither. Control 15
+// of the terrain body family: the pass is not handed over.
 uint32_t LiveTerrain::lower_edge_corner(uint32_t self, uint32_t tile, int32_t corner, uint32_t tile2, uint32_t angle) {
+  if (tile != 0 && SG_NEGCTL(g_negctl_gfx_terrain) != 15)
+    to_gfx("terrain.pass", {static_cast<uint32_t>(kEntryRenderTileAtFiveOffsets), self, tile, tile2, angle});
   return call("lowerEdgeCorner", self, {tile, static_cast<uint32_t>(corner), tile2, angle});
 }
 uint32_t LiveTerrain::update_path(uint32_t self, int32_t x, int32_t y, int32_t flag40) {

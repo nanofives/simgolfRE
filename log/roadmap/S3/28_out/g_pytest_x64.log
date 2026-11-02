@@ -1,0 +1,196 @@
+[w8_lock] S3.28 queued at 2026-10-31 10:27:42
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=19.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=19.5 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=19.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=19.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=19.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=18.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.3 GB
+[w8_lock] removing stale wait file of S3.29 (take pid 11828 is gone)
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=15.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=18.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=18.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=18.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.9 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 10:51:44 (waited 1442 s, free commit 18.4 GB)
+== test_static
+F.....                                                                   [100%]
+================================== FAILURES ===================================
+___________________ test_no_original_addresses_in_port_code ___________________
+
+    def test_no_original_addresses_in_port_code():
+        """README rule: no original address in port code. Literals inside the exe image (0x00400000-0x008fffff) or a
+        DLL image (0x1000xxxx-0x101xxxxx) are refused; gamestate_addresses.inc is tooling only."""
+        bad = []
+        for p in _port_sources():
+            text = p.read_text(encoding="utf-8")
+            if "gamestate_addresses.inc" in text:
+                bad.append(f"{p.name}: includes gamestate_addresses.inc")
+            for m in re.finditer(r"0x([0-9a-fA-F]{6,8})", text):
+                v = int(m.group(1), 16)
+                if 0x00400000 <= v < 0x00900000 or 0x10001000 <= v < 0x10200000:
+                    bad.append(f"{p.relative_to(ROOT)}: {m.group(0)}")
+>       assert not bad, bad
+E       AssertionError: ['port\\src\\sim\\terrain_live.cpp: 0x1000a6b2', 'port\\src\\sim\\terrain_live.cpp: 0x1000a6be']
+E       assert not ['port\\src\\sim\\terrain_live.cpp: 0x1000a6b2', 'port\\src\\sim\\terrain_live.cpp: 0x1000a6be']
+
+port\test\test_static.py:34: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_static.py::test_no_original_addresses_in_port_code - As...
+1 failed, 5 passed in 4.05s
+FAILED test_static
+== test_terrain_s3_28
+........................................................................ [ 67%]
+..................................F                                      [100%]
+================================== FAILURES ===================================
+_______________________ test_map_corner_box_negctl_red ________________________
+
+glib = <port.test.lib.Lib object at 0x000001EE282CD850>
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1214/test_map_corner_box_negctl_red0')
+
+    def test_map_corner_box_negctl_red(glib, tmp_path):
+        """gfx.family.terrain 15: LiveTerrain hands no kind-5 pass over, the port's terrain shows through the corner (27_notes.md: the
+        counterfactual differs from the original in 65 px of the box)."""
+        _any, big = _box(glib, tmp_path, negctl=("gfx.family.terrain", 15))
+>       assert big >= 50, (_any, big)
+E       AssertionError: (65, 20)
+E       assert 20 >= 50
+
+port\test\test_terrain_s3_28.py:328: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_terrain_s3_28.py::test_map_corner_box_negctl_red - Asse...
+1 failed, 106 passed in 412.51s (0:06:52)
+FAILED test_terrain_s3_28
+== test_terrain_render
+........................................................................ [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 41%]
+........................................................................ [ 55%]
+........................................................................ [ 68%]
+........................................................................ [ 82%]
+........................................................................ [ 96%]
+..................                                                       [100%]
+522 passed in 387.15s (0:06:27)
+== test_gfx
+.........................                                                [100%]
+25 passed in 77.71s (0:01:17)
+== test_framegate_split
+.................                                                        [100%]
+17 passed in 50.29s
+== test_terrain_live
+........................................................................ [ 16%]
+........................................................................ [ 33%]
+........................................................................ [ 50%]
+........................................................................ [ 66%]
+........................................................................ [ 83%]
+......................................................................[w8_lock] S3.28 released at 2026-10-31 11:23:09

@@ -1,3 +1,5 @@
 # merge queue, first = next integrator (orchestrator-owned)
-I15 MERGED 37e58e96 (S3 wave 6); S10 MERGED; I18 MERGED a5419a66 (S9); P1 c7412150; I19 MERGED f2dff003 (S3 wave 7); I20 MERGED 2291a342 (S7 wave 4 + S7.13); P2 2733b4e5 (gditext temp dirs); I21 MERGED (S3 wave 8 + fix layers w8_fix_i21 / i21b)
-NEXT: I22 S3 wave 9 (MERGE_w9.md + files_w9.txt: S3.28 lowerEdgeCorner pass, S3.29 opt-in textured interpolation) on I21's commit (w9_assemble.py layers 4-5 only)
+I15 MERGED 37e58e96 (S3 wave 6); S10 MERGED; I18 MERGED a5419a66 (S9); P1 c7412150; I19 MERGED f2dff003 (S3 wave 7); I20 MERGED 2291a342 (S7 wave 4 + S7.13); P2 2733b4e5 (gditext temp dirs); I21 MERGED (S3 wave 8 + fix layers w8_fix_i21 / i21b); I22 MERGED (S3 wave 9)
+RUNNING: I23 S11 wave 1 (log/roadmap/S11/MERGE.md, trackers / names only, orchestrator applies after the I22 commit)
+QUEUED after S3 wave 10 merges: I25 S11 wave 2 (log/roadmap/S11/MERGE_w2.md: re-run 4_assemble.py --check-only on the post-wave-10 tree, re-pin goldens through a GREEN oracle, full suites)
+QUEUED (not an integrator): P3 bimodal memory growth investigation (log/roadmap/P3/BRIEF.md, G21 b), spawn after I22 frees the lock

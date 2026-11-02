@@ -1,0 +1,148 @@
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\w7_assemble.py --dst S3_28v --commit 2291a342 --plain
+junction original
+junction log
+junction port/corpus
+junction tests/golden
+junction tests/fixtures
+junction re/versions
+junction tools/vc6
+junction shim/build
+junction re/replay
+junction extracted
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v base 2291a34258fd777aa572f280d13364b85b45161a
+junction tools/dxsdk8
+junction tools/vc6sp5
+junction tools/vc6sp2
+plain tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\22_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v --only-22
+edit port/src/sim/gfx_chareditor.cpp s322 22_edits edit 1
+edit port/src/sim/gfx_chareditor.cpp s322 22_edits edit 2
+edit port/src/sim/gfx_chareditor.cpp s322 22_edits edit 3
+wrote port/src/sim/gfx_chareditor.cpp
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\21_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 1
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 2
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 3
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 4
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 5
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 6
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 7
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 8
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 9
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 10
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 11
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 12
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 13
+edit port/src/sim/gl_raster.cpp s321 21_edits edit 14
+edit port/include/portsim/sim/gl_raster.h s321 21_edits edit 15
+edit port/include/portsim/sim/gl_raster.h s321 21_edits edit 16
+edit port/include/portsim/sim/gl_raster.h s321 21_edits edit 17
+edit port/include/portsim/sim/gl_raster.h s321 21_edits edit 18
+edit port/test/test_gl_raster.py s321 21_edits edit 19
+edit port/test/test_gl_raster.py s321 21_edits edit 20
+wrote port/src/sim/gl_raster.cpp
+wrote port/include/portsim/sim/gl_raster.h
+wrote port/test/test_gl_raster.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\21b_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
+edit port/src/sim/gl_raster.cpp s321b 21b_edits edit 1
+edit port/src/sim/gl_raster.cpp s321b 21b_edits edit 2
+edit port/src/sim/gl_raster.cpp s321b 21b_edits edit 3
+edit port/test/test_gl_raster.py s321b 21b_edits edit 4
+wrote port/src/sim/gl_raster.cpp
+wrote port/test/test_gl_raster.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\24_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v --only-24
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 1
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 2
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 3
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 4
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 5
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 6
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 7
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 8
+edit port/src/sim/terrain_overlay.cpp s324 24_edits edit 9
+edit port/include/portsim/sim/terrain_overlay.h s324 24_edits edit 10
+edit port/include/portsim/sim/terrain_overlay.h s324 24_edits edit 11
+edit port/test/test_terrain_overlay.py s324 24_edits edit 12
+edit port/test/test_terrain_overlay.py s324 24_edits edit 13
+edit port/test/test_terrain_overlay.py s324 24_edits edit 14
+edit port/test/test_terrain_overlay.py s324 24_edits edit 15
+edit port/test/test_terrain_overlay.py s324 24_edits edit 16
+edit port/test/test_terrain_overlay.py s324 24_edits edit 17
+wrote port/src/sim/terrain_overlay.cpp
+wrote port/include/portsim/sim/terrain_overlay.h
+wrote port/test/test_terrain_overlay.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\23_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v --only-23
+edit port/test/framegate.py s323 23_edits edit 1
+edit port/test/framegate.py s323 23_edits edit 2
+edit port/test/framegate.py s323 23_edits edit 3
+edit port/test/framegate.py s323 23_edits edit 4
+edit port/test/framegate.py s323 23_edits edit 5
+edit port/test/framegate.py s323 23_edits edit 6
+edit port/test/framegate.py s323 23_edits edit 7
+edit port/test/framegate.py s323 23_edits edit 8
+edit port/test/framegate.py s323 23_edits edit 9
+edit port/test/framegate.py s323 23_edits edit 10
+edit port/test/framegate.py s323 23_edits edit 11
+wrote port/test/framegate.py
+new port/test/test_framegate_split.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\26_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v --only-26
+edit port/src/sim/gfx_pixel.cpp s326 26_edits edit 1
+edit port/src/sim/gfx_pixel.cpp s326 26_edits edit 2
+edit port/src/sim/gfx_pixel.cpp s326 26_edits edit 3
+edit port/src/sim/gfx_pixel.cpp s326 26_edits edit 4
+edit port/src/sim/gfx.cpp s326 26_edits edit 5
+edit port/src/sim/gfx.cpp s326 26_edits edit 6
+edit port/src/sim/gfx.cpp s326 26_edits edit 7
+edit port/src/sim/commands_screens.inc s326 26_edits edit 8
+edit port/src/sim/commands_screens.inc s326 26_edits edit 9
+edit port/src/sim/commands_screens.inc s326 26_edits edit 10
+edit port/test/framegate.py s326 26_edits edit 11
+edit port/test/framegate.py s326 26_edits edit 12
+edit port/test/framegate.py s326 26_edits edit 13
+edit port/test/framegate.py s326 26_edits edit 14
+edit port/test/test_gfx.py s326 26_edits edit 15
+edit port/test/test_framegate.py s326 26_edits edit 16
+edit port/test/gfx.py s326 26_edits edit 17
+edit port/test/gfx.py s326 26_edits edit 18
+edit port/test/gfx.py s326 26_edits edit 19
+edit port/test/test_app_ingame.py s326 26_edits edit 20
+edit port/test/test_app_ingame.py s326 26_edits edit 21
+edit port/src/sim/tick.cpp s326 26_edits edit 22
+edit port/src/sim/tick_frame.inc s326 26_edits edit 23
+edit port/src/sim/tick_frame.inc s326 26_edits edit 24
+edit port/src/sim/tick_frame.inc s326 26_edits edit 25
+new port/test/test_gfx_s3_26.py
+wrote port/src/sim/gfx_pixel.cpp
+wrote port/src/sim/gfx.cpp
+wrote port/src/sim/commands_screens.inc
+wrote port/test/framegate.py
+wrote port/test/test_gfx.py
+wrote port/test/test_framegate.py
+wrote port/test/gfx.py
+wrote port/test/test_app_ingame.py
+wrote port/src/sim/tick.cpp
+wrote port/src/sim/tick_frame.inc
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
+wave 8 tree ready: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v
+edit port/include/portsim/sim/terrain_render.h s328 28_edits edit 1
+edit port/include/portsim/sim/terrain_render.h s328 28_edits edit 2
+edit port/include/portsim/sim/terrain_render.h s328 28_edits edit 3
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 4
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 5
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 6
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 7
+edit port/src/sim/terrain_live.cpp s328 28_edits edit 8
+edit port/src/sim/gfx_terrain.cpp s328 28_edits edit 9
+edit port/src/sim/gfx_terrain.cpp s328 28_edits edit 10
+edit port/src/sim/gfx_terrain.cpp s328 28_edits edit 11
+new port/test/test_terrain_s3_28.py
+wrote port/include/portsim/sim/terrain_render.h
+wrote port/src/sim/terrain_render.cpp
+wrote port/src/sim/terrain_live.cpp
+wrote port/src/sim/gfx_terrain.cpp
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28v

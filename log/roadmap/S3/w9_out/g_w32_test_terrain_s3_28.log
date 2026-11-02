@@ -1,0 +1,21 @@
+[w8_lock] S3-lead queued at 2026-10-31 21:27:58
+[w8_lock] S3-lead waiting: lock='free' ahead=['I21'] free_commit=22.2 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.7 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.5 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.4 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=20.9 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.4 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.2 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.6 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.7 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.6 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.7 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.5 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=21.7 GB
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 21:31:28 (waited 210 s, free commit 22.1 GB)
+ssssssssssssssssssssssssssssssss..ssssssssssssssssssssssssssssssssssssss [ 67%]
+sssssssssssssssssssssssssssssssss..                                      [100%]
+=========================== short test summary info ===========================
+SKIPPED [103] port\test\test_terrain_s3_28.py:72: the Win32 runner serves no sg_gl_* / sg_raster_* entry point (port/test/lib32.py): the renderer's streams and pixels are judged through the x64 DLL
+4 passed, 103 skipped in 30.00s
+[w8_lock] S3-lead released at 2026-10-31 21:31:58

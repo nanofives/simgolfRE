@@ -1,0 +1,9 @@
+== x64_all start 2026-10-31 11:26:29
+[w8_lock] S3.29 queued at 2026-10-31 11:26:31
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.6 GB
+[w8_lock] S3.29 waiting: lock='step=S3.28' ahead=[] free_commit=16.7 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 11:27:12 (waited 41 s, free commit 16.7 GB)
+{"backend": "x64", "counts": {"PASS": 205}, "wall_s": 569.8}
+[w8_lock] S3.29 released at 2026-10-31 11:36:48

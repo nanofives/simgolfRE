@@ -5,10 +5,25 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Open
 
-(none)
+- **G26 (S11, U-2000), 2026-11-01: does an SMSG function whose whole body is ONE inline `__asm` block inside a compiled C
+  function count as C4 match evidence?** fillSpanDown 0x00493000 / fillSpanUp 0x00493080 match 100% (41/41, 40/40) from SMSG's
+  source: the compiler makes the prologue / epilogue, the asm is the entire body. Round 36's rules (re/C4_PLAN.md): a naked
+  transcription is not evidence (these two rows were demoted on it), an inline block inside a compiled C body is (85 rows). Here
+  the compiled part is only the frame. Options: (a) not evidence, the rows keep needing scenario evidence (orchestrator's
+  recommendation: the asm is copied, only the frame could fail); (b) evidence under the inline-asm rule. Blocks: 2 rows of S11 wave 1
+  (held, the wave merges without them).
 
 ## Answered
 
+- **G22, ASUS ArmourySocketServer after the reboot, 2026-11-01: delete the task and end the process.** It came back at logon from the surviving scheduled task \ASUS\ArmourySocketServer (the Section-handle leak, about 25 GB before); Mariano runs the elevated command the orchestrator gives (log/roadmap/LIVING-PC_memory_2026-11-01.md, after the reboot).
+- **G23, the RE track after S3, 2026-11-01: RE upkeep (new section S11).** The deferred S10 renames in port / shim keys (D1 `P` rows), the g_animalRecords / g_recordBanks symbols, ApplyNames leftovers, the last C3 rows to C4, then a triage of the open C2 rows (dead / trivial / reachable). Port-key renames wait for S3's last wave to merge.
+- **G24, golfer_events' 10 NOT_RUN checkpoints (U-0681), 2026-11-01: extend the trace schema and re-record.** A DELIVER kind for injected calls in trace_rec.js / trace_format / the port's replay; golfer_events re-recorded and judged like every other scenario (S3 wave 10).
+- **G25, the stale shared working copy, 2026-11-01: back up, then reset.** `git diff` of the working copy saved to log/roadmap/worktree_pre_reset.patch, then the tracked port/ files and the stale docs (equal to an older commit) checked out from HEAD; orchestrator files with newer content and untracked files untouched.
+- **G21, the long-session memory test's limit, 2026-11-01: (a) 8 MB now, the 0.97 MB mode investigated in the background.** test_app_present.py GROWTH_LIMIT 4 << 20 -> 8 << 20 (applied in I22's mirror); the control still has to grow past ten times it (139 MB); step P3 looks for what makes some runs gain about 4.28 MB instead of about 3.3 MB.
+- **G20, I22's suite scope, 2026-11-01: no answer before the gates ended, so the full suites ran (the default).** Recorded for the record.
+- **G19, picker tool, 2026-10-30: withdrawn.** Mariano: the request was meant for the SimCity project; S7 wave 5 dropped (log/roadmap/S7/PICKER.md kept as a plan only).
+- **G17, I20's suite scope, 2026-10-30: the changed-code block.** I20 runs every regression gate plus the audio, defect, profile, integrator, static, live and app test files on x64 and Win32, then stops (the rest of both suites is skipped for this merge); the sound build ships tonight.
+- **G18, census terrain-origin rule (S3 W8.1), 2026-10-30: both in parallel.** W8.1 makes the census judge terrain-origin pixels under G2 and 2D pixels exactly, reporting the raw and the split verdict; W8.2 (the time-boxed GlRaster residue hunt, U-1392) runs at the same time.
 - **G16, music folders (U-1608), 2026-10-30: extend the alias to them.** The exe opens six tracks under `sounds\music\Desert Music\`, `Links Music\`, `Tropical Music\`; the extracted install has `Desert_Music` / `Links_Music` / `Tropical_Music` (the Golf_Sfx rename). G15's switch also tries the underscore folders for these three (profile `fixed`, app only, sim unchanged). The seven names wrong on the CD itself stay as the original.
 - **G15, course sfx folder name (U-1499), 2026-10-30: the port finds both names.** The stock install has `sounds\Golf_Sfx`, the exe
   opens `sounds\Golf sfx`, so the original never plays those 26 sounds. A defect switch (default 1 = the original's failed opens; 0 =

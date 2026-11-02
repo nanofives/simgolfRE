@@ -1,13 +1,13 @@
-# S3 status (in-game frame) — lead session cmvu18cc81fcpp715vy6fd2dv (claude3; was cmvqfhvak, context full 2026-10-29 18:05; before that cmvmns8s)
+# S3 status (in-game frame) — lead session cmvy4ggg53y79p71hei2lzzug (claude2, wave 10; earlier leads cmvu18cc, cmvqfhvak, cmvmns8s)
 
-steps: 35 total: 35 accepted, 0 running; MERGE_w9 READY (w9_assemble.py on 2291a342 + wave 8 + I21 fix layers)
-live workers: none
-game slots held: 0 (instance s3_w8 idle, kept); ONE heavy run at a time via w8_lock.py, one file / batch / step per hold, >= 16 GB free commit
-mirror: wave 9 workers build port/build/S3_28 / S3_29 = w8_assemble.py on 2291a342 (the wave 8 stack); shared rules W9_COMMON.md
-waiting on: I21 (MERGE_w8 + fix layers), then I22 (MERGE_w9 layers 4-5); idle until a verdict
-Widget_writePixel: moved to S3 (orchestrator 2026-10-24), given to S3.6 (gfx_pixel.cpp, own merge section)
-last event: 2026-11-01 00:00 MERGE_w9 ready: census raw 126 / 562 / 10, split 685 / 3 / 10, 0 lost / 0 worse; segs / boot 0 differ
-next: idle until the orchestrator decides wave 10 or the integrators report
+steps: 38 total: 35 accepted, 2 running (S3.30, S3.31), 1 planned (S3.32); wave 10 = close the section
+live workers: S3.30 cmvy4p2w (G24 golfer_events trace kind, opus high, game slot), S3.31 cmvy4p5w (overlay line residue, opus high)
+game slots held: 1 (S3.30, instance s3_30); heavy runs one at a time via w8_lock.py (W10_COMMON.md)
+base: I22's port tree = log/roadmap/S3/w10_base.py --dst S3_<k> (d075dc56 + wave 9 rows 4-5 + G21 test edit; verified 0 differ vs port/build/I22)
+targets (I22 split census): FAIL cov_k3_camera y_inj3 847 (S3.32), cov_a_build brush_465 3 + cov_a_keys k_dlg_R 1 (S3.31); NOT_RUN golfer_events 10 (S3.30)
+S3.32 (y_inj3, U-1834 option b; orchestrator chose a on 2026-10-31) starts when a worker closes (cap 2)
+last event: 2026-11-01 wave 10 planned, S3.30 + S3.31 spawned
+next: judge S3.30 / S3.31, spawn S3.32, MERGE_w10.md + files_w10.txt
 
 ## Log
 - 2026-10-24: lead started. Steps planned from census causes: terrain not drawn 520 (S3.1 + S3.2), Surface_blit3 168 (S3.6),
@@ -178,3 +178,7 @@ next: idle until the orchestrator decides wave 10 or the integrators report
 
 2026-11-01 00:00: MERGE_w9 READY (MERGE_w9.md, files_w9.txt 166 paths, w9_uncertain.md 11 rows). S3_W9 stack: builds rc 0; x64 12 files / Win32 3 files pass; segs 205 x64 + Win32 0 differ from wave 8; boot 66/2/2 both 0 differ; census raw 126 / 562 / 0 / 10, split 685 / 3 / 0 / 10, exactly S3.28 8 rows moved, 0 lost, 0 worse.
 2026-11-01: orchestrator: MERGE_w9 queued as I22 (layers 4-5 on I21's commit), after I21 commits (its mirror gets w8_fix_i21b.py after the suites). Lead idle until an integrator verdict.
+
+2026-11-01 (after reboot): fresh lead cmvy4ggg. Wave 10 planned (S3.30 G24 golfer_events, S3.31 overlay residue, S3.32 y_inj3 option b). w10_base.py (= I22 port tree, verified 0 differ) and W10_COMMON.md written. S3.30 cmvy4p2w and S3.31 cmvy4p5w spawned on claude2 opus high.
+2026-11-01: model check: both workers' transcripts (under .claude-account3: the folder flag places the children there) show claude-opus-5-5 only.
+2026-11-01: orchestrator FYI: S11 (I23) resolves U-1351 and applies the D1 P port-key renames (g_animalRecords / g_recordBanks) after wave 10; wave 10 renames / moves no symbol (rule added to W10_COMMON.md).

@@ -1,0 +1,86 @@
+[w8_lock] S3.28 queued at 2026-10-31 15:11:00
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21', 'S3.29', 'I21-rerun', 'P2'] free_commit=20.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=20.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=19.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29', 'I21-rerun', 'P2'] free_commit=18.3 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29', 'I21', 'I21-rerun', 'P2'] free_commit=20.9 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.9 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.9 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=19.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.3 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.1 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21', 'I21-rerun', 'P2'] free_commit=20.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['I21-rerun', 'P2'] free_commit=20.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['I21-rerun', 'P2'] free_commit=20.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['I21-rerun', 'P2'] free_commit=20.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['I21-rerun', 'P2'] free_commit=20.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['I21-rerun', 'P2'] free_commit=20.7 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21', 'P2'] free_commit=21.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=21.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=21.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=21.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=20.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=20.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=20.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=20.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['P2'] free_commit=20.0 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['P2', 'I21'] free_commit=21.0 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21'] free_commit=20.9 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21'] free_commit=20.6 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21'] free_commit=20.5 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21r', 'I21'] free_commit=20.4 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21r', 'I21'] free_commit=20.5 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21r', 'I21'] free_commit=20.4 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21r', 'I21'] free_commit=20.6 GB
+[w8_lock] S3.28 waiting: lock='step=P2' ahead=['I21r', 'I21'] free_commit=20.4 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21r', 'I21'] free_commit=20.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21r' ahead=['I21'] free_commit=19.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21r' ahead=['I21'] free_commit=19.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=20.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=20.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=20.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=20.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=20.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=20.2 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 15:27:50 (waited 1010 s, free commit 20.8 GB)
+ssssssssssssssssssssssssssssssss..ssssssssssssssssssssssssssssssssssssss [ 67%]
+sssssssssssssssssssssssssssssssss..                                      [100%]
+=========================== short test summary info ===========================
+SKIPPED [103] port\test\test_terrain_s3_28.py:72: the Win32 runner serves no sg_gl_* / sg_raster_* entry point (port/test/lib32.py): the renderer's streams and pixels are judged through the x64 DLL
+4 passed, 103 skipped in 29.92s
+[w8_lock] S3.28 released at 2026-10-31 15:28:21

@@ -1860,6 +1860,43 @@ showCharacterEditor.bio (W8.6, gfx.check 137 bodies); S3.25 (W8.4b) recorded the
 as det_b, port/corpus/w8rec/ and log/p5/terrain/s325_* local, 25_notes.md).
 Merged-tree census on 2291a342: raw 123 / 565 / 0 / 10 (0 PASS lost, 576 rows fewer px, 71,871 -> 6,203), split 677 / 11 / 0 / 10; the
 11 are group 5 (explained), group 2 (U-1952, 8 rows), U-1826, U-1829.
+Roadmap S3.28, lowerEdgeCorner's black-light pass (2026-10-31, notes log/roadmap/S3/28_notes.md, merge 28_merge.md, U-1955..U-1957,
+U-1960, U-1961): U-1952's near-black dither in cov_r_s2_screens' map corner is Terrain::lowerEdgeCorner's draw half,
+renderTileAtFiveOffsets (Terrain.dll 0x10038900, re/match/terrain_edge.cpp): localRender's transform without a draw list and, when a
+neighbour toward the camera is outside the grid or hidden, enableBlackLight1 (0x10003830: light 0 off, light 1 on with zero ambient /
+diffuse / specular) and the tile rendered at five offsets, leaving only the global ambient term (0.04 x texel). It is terrain pass kind
+5 (terrain_render.h: a0 tile, a1 pivot, a2 angle = lowerEdgeCorner's arguments 0, 2, 3); LiveTerrain::lower_edge_corner hands it to the
+backend before the state call (the original draws before Tile::lowerCorner), and it takes no p<j> pass number (the original's pass
+copies count kinds 1..4). GlRaster needs no GL_LIGHT1 model while its colours are 0. Recorder log/roadmap/S3/28_gl_rec.js /
+28_gl_record.py: entry a3 (lowerEdgeCorner's angle), renderTileAtFiveOffsets as a direct kind-5 entry for injection, kind-5 passes that
+draw nothing kept. Recording s328_s2b (cov_r_s2_screens, SAME as det_b): 12 organic passes (angle 0, as every organic lowerEdgeCorner
+call of the pinned terrain recordings) and 20 direct calls on the edges of the land (x, y = 12..37) at 0 / 90 / 180 / -90, each edge
+tile drawing at exactly two angles. All 32 streams equal the original's line for line; GlRaster meets G2 and the host GL equals the
+original's back buffer on every pass. Census (698 rows) against the wave 8 stack: exactly the 8 cov_r_s2_screens rows of group 2 move,
+split 677 -> 685 PASS (all 8 PASS), raw 123 -> 126 PASS (rep_histograph, rep_report1, rep_roster; the other five keep 1..4 px of
+GlRaster terrain residue, none beyond one level), 0 PASS lost, 0 rows worse. Controls RED: kind 5 skipped (gfx.family.terrain 15: 65
+px in the corner box, 20 beyond one level), renderer 15 / 16 / 18 on the streams, 17 on the streams and the host GL (blind in GlRaster
+by construction).
+Roadmap S3.29, U-1309 (2026-10-31, notes log/roadmap/S3/29_notes.md, U-1965..U-1969): the generic GL's textured interpolation, measured
+with probes replayed through glreplay.exe (log/roadmap/S3/29_probes.py; slow ramps, alternating 0 / 255 texels that amplify u's error
+255 x, random triangles with permuted vertex order, and boundary probes whose exact value sits on a 5-bit boundary for one dither cell so
+the arithmetic decides it; fitted by 29_texfit.py), is in GlRaster behind `#tune 32 1` (default off), in both pixel loops: a textured
+triangle whose texture has a GL_LINEAR filter is interpolated in float32 (gradients by the t1..t4 form from the lowest vertex, rows walked
+from the largest y with the row start = float32(previous + float32(-dA/dy rows) + float32(dA/dx pixels)), restarted from the exact plane
+where the left edge turns at the middle vertex, float32 sums along each span; colour at the 5-bit scale), and an unblended GL_MODULATE
+pixel is filtered, modulated and dithered in float32 with texel = byte / 255.0f (GlRaster::TexWalk, walk_final). Exact on 9 probes
+(alt_big 64,599 -> 1 is one of the 4 that are not: 1-2 float32 ulps of u or v left, U-1965); all-NEAREST textures take another path
+(U-1966); the blend's float form is not determined (976 of 1,115,136 channel values, U-1967). The terrain's remaining residue is mostly
+not interpolation (per-vertex lighting, coverage ownership 2e-6 .. 2.4e-3 px from an edge, blending: U-1968): c7's seven passes one-level
+173 -> 154 with the rule; full census with the rule raw 123 -> 131 PASS of 698, differing px 6,203 -> 4,221, 0 PASS lost, split verdict
+unchanged (677 PASS).
+S3 wave 9 (2026-10-31, merge log/roadmap/S3/MERGE_w9.md, stack w9_assemble.py): on 2291a342 + wave 8 + the two I21 fix layers
+(w8_fix_i21.py: the pixel family's body count and the hire RESIDUAL after S3.26; w8_fix_i21b.py: test_gl_wgl's sandbox_00 pin 125 -> 9 px
+and the self-check's GlRaster control, which turns S3.21's rules off with glWgl.rasterCheck(1) since the default GlRaster now passes the
+check) S3.28 and S3.29 give census raw 126 / 562 / 0 / 10 and split 685 / 3 / 0 / 10 (0 PASS lost, 0 rows worse); the 3 split FAIL rows
+left are cov_k3_camera y_inj3 (U-1834, explained), cov_a_build brush_465 (U-1826) and cov_a_keys k_dlg_R (U-1829). w8_lock.py: a
+`--priority` step that made the last hold yields one turn (alternation), one pytest file per hold, and `run` starts its command with
+CreateProcess (wrap ~/bin/py in `bash -c`; test-slot the same: `test-slot bash -c '...'`).
 Section S4, audio engine model (2026-10-24, lead notes log/roadmap/S4/STATUS.md, steps re/roadmap/S4_steps.tsv, function map
 re/roadmap/S4_functions.tsv: 744 sound.dll rows, 573 C3/C4 + 31 C2 ported in S4.2..S4.9, 71 CRT and 69 dead not ported).
 The path-1 CSVs keep only an FNV-1a hash of each region's raw bytes, and every one of the 19,785 regions of the 980 sound.dll

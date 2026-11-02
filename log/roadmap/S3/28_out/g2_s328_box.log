@@ -1,0 +1,55 @@
+[w8_lock] S3.28 queued at 2026-10-31 11:27:10
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=16.9 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.9 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.9 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.3 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=15.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=15.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=15.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=14.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=14.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=14.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=14.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=15.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=16.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.1 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=17.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=16.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 11:37:32 (waited 621 s, free commit 17.2 GB)
+..                                                                       [100%]
+2 passed, 105 deselected in 60.94s (0:01:00)
+[w8_lock] S3.28 released at 2026-10-31 11:38:34

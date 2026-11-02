@@ -1,0 +1,2335 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 6a5b156e..261b9c71 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -1790,76 +1790,6 @@ perturbed reference (14), 565 DIB (8), no 16-bit generic pixel format (12). Cens
+ of 698, equal to S3.9's row for row; opt-in auto 638 / 50 / 10, 0 PASS lost. Why not the default (U-1818): a full host-GL pass takes
+ 33..43 ms against GlRaster's 6..12 ms with workers; app terrain frames median 45 / max 95 ms against 19 / 40. A banded host GL
+ (20_band/, measurement only) gave the same pixels and median 21 / max 46 ms, but hung inside opengl32 twice (U-1819).
+-Roadmap S3.21, U-1392 part 1 (2026-10-30, notes log/roadmap/S3/21_notes.md, U-1305..U-1309): GlRaster's terrain residue came from
+-two stages of Windows' generic GL it did not model, both measured exactly with a feedback-mode probe (log/roadmap/S3/21_glfeed/
+-glfeed.exe: the pass replayed in GL_FEEDBACK, GLFEED_POINTS=1 one point per vertex): (1) the VERTEX RULE: float32 matrices, the MVP
+-updated by every modelview operation (not recomputed as P * MV), clip = m3 + x m0 + y m1 + z m2 with every operation float32 (the
+-translation FIRST), window = round-half-even(f32(ndc * f32(h - 2^-8)) + centre) to 2^-8: all 973,749 vertices of the 268 corpus passes
+-equal (the double model missed 20,709, the vertices within a float ulp of a 2^-8 tie: S3.16's x bands); (2) CLIPPING: triangles crossing
+-the view volume are culled on their snapped positions (zero area kept), clipped in clip space (x >= -w, x <= w, y, z; classic
+-Sutherland-Hodgman order; t = d_in / (d_in - d_out) and attributes in float from the inside vertex) and drawn as the fan of the
+-polygon. GlRaster's `#tune 28 1` / `#tune 29 1` restore the old model / no clipping, `SG_RASTER_TUNE=<i>=<v>,...` sets knobs for a
+-process. One-level px of the 271 stream passes 18,234 -> 2,296, of the 237 draw-list chains 10,300 -> 1,605; census sample (5 scenarios,
+-133 rows) differing px 24,960 -> 1,902 with no row worse and no PASS lost; full census: 21_notes.md section 7. What is left (U-1309) is
+-the attribute interpolation: incremental 16.16 fixed-point stepping of the 5-bit-scaled colour, truncated, rows walked from the
+-largest-y vertex (exact on a slow-ramp probe, 480 -> 90 on random Gouraud quads), not yet in GlRaster.
+-S3.21b (21b_edits.py, opt-in #tune 30): the 16.16 fixed-point colour stepping is exact on untextured triangles (ramp 705 -> 0 px,
+-Gouraud 481 -> 90) and changes nothing on the textured terrain, so it stays off; U-1309 is the textured (GL_MODULATE) interpolation.
+-Both part 1 rules are on by default (orchestrator, 2026-10-31: exact stage models, not fitted); SG_RASTER_TUNE=28=1,29=1 restores the
+-old renderer row for row.
+-Roadmap S3.24, the overlay line's footprint (2026-10-31, notes log/roadmap/S3/24_notes.md, edits 24_edits.py, U-1826..U-1829;
+-U-1370 resolved): Windows' generic GL draws an antialiased line per column of the major axis as at most N = floor(w * L / |major|) + 2
+-pixels, the centres whose minor offset o from the line centre times the tie sign (x-major sign(dx) * sign(dy), y-major sign(dx)) lies
+-in [-N/2, N/2); S3.8's coverage formula gives the values inside. Measured with glreplay.exe on 16-dither-phase probe sets (the cut
+-meets N/2 at every width and angle where S3.8's support reached past it) and fitted on exact ties. terrain_overlay.cpp's line rule 2
+-is the default (overlay.setRule / SG_OVERLAY_RULE: 0 = S3.8's model, 6 = no tie decision, 1 / 3 / 4 / 5 / 7 other tie signs;
+-control 11 = rule 0); SG_OVERLAY_DUMP=<file> dumps every drawn call with its box before / after. Results: S3.8's probe scenes 108 / 88 /
+-1 / 18 -> 7 / 12 / 0 / 5 px with none newly wrong; the game's own 9,534 dumped calls through the real GL 879 -> 104 px, none newly
+-wrong; the 31 overlay-line census rows (22_causes.tsv group 1) 29 PASS with the host-GL terrain (left: cov_a_build brush_465 3 px, the
+-second-vertex end-cap drop U-1826; cov_a_keys k_dlg_R 1 px value); the default GlRaster census 111 / 577 / 0 / 10 equal in status,
+-0 PASS lost, 0 rows with more px, 29 rows with fewer (71,871 -> 71,517); segments 205 / 205 and boot 66 / 2 / 2 unchanged; unit tests
+-33 on x64 and Win32. Open: the end-cap drop at the second vertex of wide lines (U-1826) and a few y-major / non-45-degree ties (U-1827).
+-Roadmap S3.23, the census split verdict (2026-10-31, decision G18, notes log/roadmap/S3/23_notes.md, edits 23_edits.py): framegate.py
+---split runs each scenario a second time with the host-GL terrain (S3.15's WglSink, bit-exact against the original's terrain). A
+-differing pixel is terrain-origin when it differs under GlRaster and equals the reference under host GL, on rows with terrain on
+-screen; every other differing pixel is 2D. Split PASS = 2D px 0 in every region and terrain-origin px within G2 over the view area (the
+-census's G2 denominator, U-1121). Raw columns stay unchanged (raw = f2dff003 on 698 / 698 rows); a host without a 16-bit generic pixel
+-format reads UNJUDGED, never PASS. Census 70 scenarios: split 638 / 50 / 10 / 0 = the host-GL census row for row; every split FAIL is
+-2D only; the largest terrain-origin count is 270 px (8 beyond), inside G2. Test seam SG_FRAMEGATE_PLANT=<both|raster>:<region>:<n>
+-(controls: a 2D pixel planted in hud_title stays FAIL; a terrain-only difference beyond G2 fails as terrain-origin).
+-port/test/test_framegate_split.py 17 x64 + Win32.
+-Roadmap S3.26, wave 8's 2D residue (2026-10-31, notes log/roadmap/S3/26_notes.md, merge 26_merge.md, U-1834 settled, U-1950..U-1952):
+-four of the six cause groups S3.22 found in the host-GL census's 50 FAIL rows are fixed, each from S3.25's recordings of the original.
+-Zoom box marker (cov_b_inject / inject2 zoom_box, forced_events, end, 15 px each): Widget_readPixel was a not-drawing drop returning
+-0, so mainLoop P5's `== 0x7fff` test (0x00418b98) never let the port draw g_sprite567b08; family `pixel` now has its body (c3db.cpp
+-GetPixel_re) and hands the root pixel back through gfx_take_value with a backend (without one the drop still returns 0). Hire dialog
+-(cov_r_s2_screens hire, 1,397 px): the four employees are addSprite of cellAt(idx + 0x20e, frame mod cols, s) (0x00459777); the port
+-had passed cell 0. Selected-golfer sprite (golfer_stories season_end, 685 px): f_w_4c2e00[2] = -2 (sim class, the original's value
+-too) and P4 tests only -1, so the original reads `golfer -2` inside g_sprites5791f8 (element 4's cut size 80 x 80 places it, element
+-5's handle byte gates it); the port keeps SpriteRef fields in the backend only, so P4's three reads go through gfx_sprite_ref_read
+-(gfx_pixel.cpp) when a backend is attached (U-1950: the handle byte is answered 1). Animated sprites (cov_k3_camera2 y_inj4 414 px,
+-cov_b_holes18 holes 2,829 px): not a drawing body: the checkpoint's POLL rode on the frame-head clock call (its pos is a FRAME record's;
+-S3.25's call log has 153 resetSpriteQueue calls there), and the snapshot rule skipped that frame's own cursor reads, so the port showed
+-the next frame's spray columns; gfx.poll_position (framegate, gfx.checkpoint_ordinal, test_app_ingame) now takes such a checkpoint at
+-the head call (pos - 1); 9 of 688 checkpoints have such a POLL (U-1951), SG_GFX_CHECKPOINT_AT=poll16 restores S3.16's rule. All six rows
+-PASS on host GL. Not fixed: cov_k3_camera y_inj3 (847 px): worldToScreen(0xc7ff, 0xd800) is tile (49, 54), past the grids; its level
+-read g_tileLevel[2504] lands on byte 0 of g_surfaces5439e0, the vtable 0x004ba2d8 Surface_ctor stores (0xd8 = -40, sy + 215 instead of
+-+ 15), and the port's GameState holds no vtable words (U-1834 settled; kept as an explained frame divergence on cov_k3_camera y_inj3 (orchestrator, 2026-10-31)).
+-cov_r_s2_screens course / radial_hover / report rows (65 / 20 / 11 px) are terrain: terrainlive over S3.25's recording gives 20,204 =
+-20,204 Terrain calls and 32 / 32 states equal, and the original's pass draws a near-black dither over the map's right edge that the
+-port's draw list does not hold (U-1952). Development switch SG_GFX_SNAPSTATE=1 (gfx.cpp) keeps the GameState with every gfx snapshot
+-(`$gfx/state_<k>.bin`; log/roadmap/S3/26_snap.py). Controls RED: pixel 2 and 3, showHireEmployeeDialog 3, SG_GFX_CHECKPOINT_AT=poll16.
+-S3 wave 8 heavy-run lock (2026-10-31): log/roadmap/S3/w8_lock.py take | release | run <step> -- <cmd> | status enforces one S3
+-heavy run at a time (a build, a pytest file, a census batch or a game boot): `take` writes w8_wait_<step> (epoch, its pid), blocks
+-until that file is the oldest live wait file, the lock dir w8_heavy.lock is free and >= 16 GB commit charge is free; wait files of a dead
+-take pid are removed; `release` refuses another step's lock; `run` always releases; `--priority` (lead / orchestrator only) ranks first,
+-used for I20's quiet window (w8_i20_window.py). A hand-written lock seen by a waiter is logged to w8_breaches.log. It replaced a written
+-oldest-first rule that workers broke four times in one night (a helper that checked only the lock dir, an unlocked finish step).
+-S3.22 (W8.3) classified the 50 host-GL FAIL rows into seven cause groups (22_causes.tsv, images local) and removed the unused body
+-showCharacterEditor.bio (W8.6, gfx.check 137 bodies); S3.25 (W8.4b) recorded the original for groups 2-7 on instance s3_w8 (8 runs SAME
+-as det_b, port/corpus/w8rec/ and log/p5/terrain/s325_* local, 25_notes.md).
+-Merged-tree census on 2291a342: raw 123 / 565 / 0 / 10 (0 PASS lost, 576 rows fewer px, 71,871 -> 6,203), split 677 / 11 / 0 / 10; the
+-11 are group 5 (explained), group 2 (U-1952, 8 rows), U-1826, U-1829.
+ Section S4, audio engine model (2026-10-24, lead notes log/roadmap/S4/STATUS.md, steps re/roadmap/S4_steps.tsv, function map
+ re/roadmap/S4_functions.tsv: 744 sound.dll rows, 573 C3/C4 + 31 C2 ported in S4.2..S4.9, 71 CRT and 69 dead not ported).
+ The path-1 CSVs keep only an FNV-1a hash of each region's raw bytes, and every one of the 19,785 regions of the 980 sound.dll
+diff --git a/UNCERTAINTIES.md b/UNCERTAINTIES.md
+index 6004defc..c9ae9629 100644
+--- a/UNCERTAINTIES.md
++++ b/UNCERTAINTIES.md
+@@ -480,7 +480,7 @@ Types: `semantic` / `structural` block C3 for that address; `behavioural` / `too
+ | U-1304 |  | evidence | [roadmap S3.1] The G2 check is vacuous on four kind-3 passes: c3 hole, c5 hole_local and c6 hole_local draw 0 pixels in GlRaster (their 25 tiles are off the viewport around the translated pivot) and the original changed none (dib_pre = dib_post); their streams are still compared line for line. 14 of the other 17 kind-3 passes redraw unchanged tiles over an identical frame (changed 0 pixels), so their G2 compares the redraw with the earlier full frame's pixels. | A localRender recorded right after a state change of its tiles (an edit), where dib_pre and dib_post differ (c4's five passes are those: 465 .. 506 pixels changed). | open |
+ | U-1390 |  | behavioural | [roadmap S3.1b] The generic GL's specular term is a table of 256 entries over [t, 1], t = 0.0005^(1 / shininess), read at the NEAREST entry without interpolation (i = round((n.h - t) * 255 / (1 - t)), value (t + i * (1 - t) / 255)^shininess, 0 for n.h <= t). Measured with untextured constant-colour quads through re/tools/glexact/glreplay.exe (port/test/glprobe.py untex, log/roadmap/S3/1b_litfit.py): 0 of 4,923 quads outside the interval their 16 dither cells allow (white specular only, four seeds), against 793 for the exact pow; every pixel equal at shininess 1, 5, 13, 40 and 128. Not determined: whether the index and the table are evaluated in float32 or double (both give 0 violations), and the behaviour with a positional light or a local viewer (the terrain uses neither: a directional light 0, viewer at infinity). | A probe with a positional light / GL_LIGHT_MODEL_LOCAL_VIEWER, only if a future caller sets them. | open |
+ | U-1391 |  | behavioural | [roadmap S3.1b] Pixel centres exactly on an edge: the rule `an edge owns them when it points to +y, or to +x when horizontal` (spans: ymin <= y + 0.5 < ymax, xl < x + 0.5 <= xr) is the best of the six simple rules on the tie probe (port/test/glprobe.py tie: 48 coverage differences of about 4,600 pixels against 288 .. 923), and it takes g6/i005_raised_pathupd from 145 to 10 pixels more than one level off. The 48 left are centres exactly on a vertex (40) or on a diagonal edge (8), where the real GL's choice follows no direction rule (both signs occur for the same edge direction): a fixed-point edge walker's rounding, not modelled. In the recorded corpora such pixels are what is left of the pixels more than one level off (at most 13 per pass, c7 fuzz frames). | A probe of the real GL with one triangle per scene and its vertex moved along the 1/256 grid around a centre, to read the edge walker's start and step arithmetic. | open |
+-| U-1392 |  | evidence | [roadmap S3.1b] What is left of the one-level noise after U-1390 / U-1391 is 0.0 .. 0.21 % of the drawn pixels per pass on every recorded pass (c3 .. c7, t3, g2 .. g6; mean 0.03 .. 0.06 % per corpus), down from 0.33 .. 0.49 % (1.21 % on g6); its origin was not split further. Section 18's `per-triangle constant shift would still remove about 70 %` measurement (U-1076) was taken with the exact pow, whose error is constant per flat-normal triangle, so that residual needs re-measuring with the table before it is attributed to the setup. | Re-run section 18's per-triangle fit (sg_raster_get_tri_ids) on t3 / c7 with the table and the tie rule. [roadmap S3.21] the vertex rule and clipping are modelled since S3.21; what is left is U-1309 (the attribute interpolation). | open |
++| U-1392 |  | evidence | [roadmap S3.1b] What is left of the one-level noise after U-1390 / U-1391 is 0.0 .. 0.21 % of the drawn pixels per pass on every recorded pass (c3 .. c7, t3, g2 .. g6; mean 0.03 .. 0.06 % per corpus), down from 0.33 .. 0.49 % (1.21 % on g6); its origin was not split further. Section 18's `per-triangle constant shift would still remove about 70 %` measurement (U-1076) was taken with the exact pow, whose error is constant per flat-normal triangle, so that residual needs re-measuring with the table before it is attributed to the setup. | Re-run section 18's per-triangle fit (sg_raster_get_tri_ids) on t3 / c7 with the table and the tie rule. | open |
+ | U-1591 | 0x0046c970 | behavioural | [S6, 7] D42c: the port decides the pro draw can never be accepted when the bound tries / (4 - d) + rep + cash < -vmax, vmax = max\|skill - 10\|^2 / \|(d * 5 + 0x14) * 2\| * (1 + \|d\|) + 0x10000 over the 100 pro records (covers the g == 0 adjustment by about -d * v / 3 and the flag-0x4000000 draw in 0..0xffff). The bound is an argument from the transcription, checked against the original in Unicorn only on 36 synthetic states and the probe states (log/roadmap/S6/7_emu_check.log: 11 hang = 11 NoReturn) | a proof against every pro-skill value, or the emulator oracle over random rosters at d = 5 / 6 | open |
+ | U-1592 | 0x0046c970 | behavioural | [S6, 7] D42c: on states where the original passes the draw, the emulator stops at loadThemeFile file I/O (KERNEL32 EnterCriticalSection), so the whole image after a completing d = 5 / 6 call is judged only by switch 1 = switch 0 in the port and by the 2 loadGolfPro vectors (difficulty 0..3) | a vector or emulator run of loadGolfPro at d = 5 / 6 with the file layer stood in | open |
+ | U-1598 | 0x0047172e | behavioural | [S6, 8] D52b3 loop A (location 4): the original has no `not placed` arm after the search 0x0047172e..0x0047176f; with placementBound 0 the port stamps no object (the type-4 object of value 0xE at 0x00471771.. is skipped) and goes on | the lead or Mariano to confirm skip vs another site rule | open |
+@@ -656,7 +656,7 @@ Types: `semantic` / `structural` block C3 for that address; `behavioural` / `too
+ | U-1366 | 0x004775b0 | scope | [roadmap S3.7] drawRichText's dropdown (`^` while +0x50 is 1) builds a combo from the g_richTextPairs slot of the digit after the dropdown token, and RichTail draws the arrow image +0x54; the root Image's +0x54 is 0 (Image_ctor) and the slots are 0 in every pinned image, so the port draws no combo and reports a filled slot. Only the window tree's widgets (TextView) set either. | A frame-code text with a dropdown token over a filled slot. | open |
+ | U-1367 | 0x004493d0 | scope | [roadmap S3.7] The hover tips' and thought labels' dark bars are drawMapLine (Terrain::drawLine, an OpenGL line in the terrain view): S3.8's line passes. The text family calls the body by name when the tree holds one and otherwise reports `no body: drawMapLine` as the frame code does; the tips' texts are judged without their bars (the opaque measure leaves the missing bar's pixels out). | S3.8. | open |
+ | U-1368 | 0x0040d320 | scope | [roadmap S3.7] cov_r_s2_screens skill_popup: with the ticker now drawn, its window (left by the frame before the modal skillPointDialog) shows in the port's frame where the original's shows the dialog over a black screen: skillPointDialog draws nothing in the port (S2's screens). 1,765 hud_message px against 0 before; every other changed row improved (log/roadmap/S3/7_cmp_base_d2.log). | S2's skillPointDialog drawing. | open |
+-| U-1370 |  | rule | [roadmap S3.8] Windows' generic GL leaves out some pixels at the edge of a wide antialiased line's footprint that the port's coverage ramp gives a small coverage (all under 0.13 in the probes): 10 of 12,080 covered pixels in the random-short-line probe (log/roadmap/S3/8_probe.py, scene excl), 40 beyond-one-level pixels of 27,689 in the white-on-black width probe (port/test/test_terrain_overlay.py PINNED widths), always at angles near 45 degrees. The per-column spans measured (log/roadmap/S3/8_probe.py, a8-style listing in 8_notes.md section 2) cut at \|offset\| 2.0 (width 2, 44-45 degrees), 2.5 (width 3, 40), 3.85 (width 5, 40), 4.0 (width 5, 42-44), 7.0 (width 10, 40), 7.5 (width 10, 44) while the ramp reaches 2.07 .. 7.60; the rule that sets the span (a pixel count per column from the line's fixed-point setup) is not determined. Effect on in-game frames: the census line pixels (8_linegate.tsv) meet G2. | The generic implementation's AA-line span rule (more probes per slope and width, or its code). [roadmap S3.24] the footprint is the per-column span of N = floor(w * L / \|major\|) + 2 pixels (log/roadmap/S3/24_notes.md); the end-cap and tie remainders are U-1826 / U-1827. | resolved |
++| U-1370 |  | rule | [roadmap S3.8] Windows' generic GL leaves out some pixels at the edge of a wide antialiased line's footprint that the port's coverage ramp gives a small coverage (all under 0.13 in the probes): 10 of 12,080 covered pixels in the random-short-line probe (log/roadmap/S3/8_probe.py, scene excl), 40 beyond-one-level pixels of 27,689 in the white-on-black width probe (port/test/test_terrain_overlay.py PINNED widths), always at angles near 45 degrees. The per-column spans measured (log/roadmap/S3/8_probe.py, a8-style listing in 8_notes.md section 2) cut at \|offset\| 2.0 (width 2, 44-45 degrees), 2.5 (width 3, 40), 3.85 (width 5, 40), 4.0 (width 5, 42-44), 7.0 (width 10, 40), 7.5 (width 10, 44) while the ramp reaches 2.07 .. 7.60; the rule that sets the span (a pixel count per column from the line's fixed-point setup) is not determined. Effect on in-game frames: the census line pixels (8_linegate.tsv) meet G2. | The generic implementation's AA-line span rule (more probes per slope and width, or its code). | open |
+ | U-1371 |  | rule | [roadmap S3.8] The antialiased line model (coverage = clamp(w / 2 + 0.5 - \|n\|) * clamp(t + 0.5) * clamp(L - t + 0.5) at pixel centres, ends clipped to the viewport then snapped with U-1076's fixed-point setup, width clamped to 10, alpha * coverage blended and dithered as the triangles) is fitted to probes of the real software GL, not read from its code. Residual one-level pixels: 98 of 74,466 changed pixels in the random probe (rand), 48 of 27,689 (widths), 16 of 18,261 (flip); the fully covered interior is exact for every colour and alpha the game passes (36 of 36 colour x alpha blocks, 0 pixels differ). | The generic implementation's coverage arithmetic (fixed-point bits of the distance and of alpha * coverage). | open |
+ | U-1372 |  | evidence | [roadmap S3.8] Only the flip-byte-set projection glOrtho(0, 800, 0, 600) occurs in the game: all 25,413 two-dimensional glOrtho calls of the recorded streams (port/corpus/gl/*/stream.gl.txt) have bottom 0 and top 600. The other branch (flip byte clear, glOrtho(0, W, H, 0)) is judged only by the probe scene flip (18 of 18,261 pixels differ, control 4 RED). | None for the game; a recording with the flip byte clear if the port ever runs another window size. | open |
+ | U-1373 |  | evidence | [roadmap S3.8] The recorded GL streams keep every call Terrain.dll makes except the vertex data of glBegin..glEnd blocks (gl_rec.js multi mode), so the stream check (log/roadmap/S3/8_streams.tsv) compares each drawLine's count, width, colour and alpha but not its ends. The ends are judged by the frame census only where the line is still visible at a checkpoint (a sprite, a panel or text later drawn over a line hides it). | A recording with glVertex2i kept for drawLine (gl_rec.js keeping the GL_LINES block bodies; NEED_GAME). | open |
+@@ -886,16 +886,3 @@ Types: `semantic` / `structural` block C3 for that address; `behavioural` / `too
+ | U-1627 |  | fidelity | [S7.12] audio_stream's device run at switch 1 opens one course-effect name, `sounds/Golf sfx/Ball Tree Leaves.wav` (line 500, absent), although deviceStep 3's slot check skips every slot whose own name is absent: a slot whose own file is present opens it, which slot was not traced. At switch 0 it opens through the alias with the other 17. | print the slot index and its +0x50 name around line 500 of the switch-1 device run | open |
+ | U-1628 |  | fidelity | [S7.12] The app over course_season with --audio model (log/roadmap/S7/12_app_course_season.log): under `original` 138 file opens (22 present, 116 absent), under `fixed` 64 (35 present, 29 absent, 13 of the present through the alias). The engine opens a failed sound again on later plays while a sound whose file opened is not reopened; the retry rule in sound.dll's code was not read. | read MultiSound / Sound open paths for the failed-open state (sound.dll create_sound callers) and count opens per slot in the two runs | open |
+ | U-1638 |  | tooling | [S7.12] port/test/app_replay.py replays a recording under the switches its session.json records (none recorded = every switch 1, the app before S7.12). The other replays of app sessions (port/test/test_app_live.py, port/test/live.py equivalence) do not read session.json and run with every switch 1; they stay equal on their recordings because no `fixed` switch fires on them (Monterey sessions and corpus traces the original completed), but an app session on a tropical course replayed there would fault at the first Tree Cerc load. | make those replays call app_replay.session_switches / apply_switches (heavy app files; the lead's slot) | open |
+-| U-1305 |  | behavioural | [port/src/sim/gl_raster.cpp window_of_] The vertex rule's perspective divide is not measured: every terrain projection is orthographic (clip w = 1 on all 973,749 corpus vertices), so window_of_ divides by w in float (ndc = clip * f32(1 / w)) only as a guess for w != 1; no port path draws with w != 1. | a feedback probe with glFrustum / a perspective matrix | open |
+-| U-1306 |  | behavioural | [port/src/sim/gl_raster.cpp rotated (float32 rotation)] The float32 rotation matrix is measured for the terrain's axis-aligned rotations (every element formula gives the same floats there) and for one general axis (37 degrees about (0.3, 0.7, 0.5): the diagonal must be x^2 + (1 - x^2) c, rows 0 and 1 off-diagonal (1 - c) x y -+ s z fit); row 2's off-diagonal terms, the cos / sin source (double cos of the double radians rounded to float, or float radians) and the axis normalisation (divide vs multiply by the inverse) are not separated by any probe (all variants equal on the tested angles). | a probe sweeping general axes and angles with points near ties | open |
+-| U-1307 |  | behavioural | [port/src/sim/gl_raster.cpp clip_triangle_] The real GL's triangle feedback gives texture coordinates for clipped vertices of blocks drawn with texture 0 bound (incomplete, untextured) that are not the interpolated ones (the same (0.453, 0.547) / (1.0, 0.203) recur on unrelated triangles of c7/fuzz1_z0: 36 of 3,933 triangles); positions are exact. No pixel reads them (the fragment is the lit colour), so GlRaster interpolates them like any other; colour interpolation of clipped vertices (float lerp from the inside vertex) is assumed the texcoords' rule, not measured on its own. | triangle feedback of a textured probe and an untextured one crossing the edge | open |
+-| U-1308 |  | behavioural | [port/src/sim/gl_raster.cpp emit (lighting)] GlRaster still lights vertices in double: the real GL's feedback colour differs by up to 1.4e-7 (c7/fuzz1_z0: 2,981 of 31,650 channel values float-equal to the double result cast; sandbox 27,211 of 27,459), i.e. at most 4e-5 of an 8-bit level after the texel product; tune 12 (every lighting intermediate float32) changes no pixel of the seven c7 passes measured. The pixels within 1e-4 of a 5-bit boundary among the remaining one-level ones are in reach of this difference. | fit the float lighting order against the feedback colours (21_litfit.py has the data path) | open |
+-| U-1309 |  | behavioural | [port/src/sim/gl_raster.cpp triangle (attribute interpolation)] The rest of U-1392 after the vertex and clip rules (one-level px of the 271 stream passes 18,234 -> 2,296) is the attribute interpolation: the generic GL steps attributes incrementally in fixed point. Measured (21_ramp.py dense, 21_interpfit.py edgewalk): rows walk from the vertex of largest y; a row start = the previous row start + trunc(31 * 2^16 * (-dv/dy * rows + dv/dx * dx)) / (31 * 2^16) (colour in the 5-bit range, 16.16 fixed, truncated), span pixels + trunc(31 * 2^16 * dv/dx) / (31 * 2^16), the first row exact: a slow ramp probe 0 of 477,802 px wrong (exact plane 705), random Gouraud quads 480 -> 90 (all 90 in triangles with a horizontal top edge, deep in their walk; floor / rounding, separate x / y steps, float32 gradients and 2^-8..2^-30 edge DDAs do not remove them). Texture coordinates are assumed to step the same way (the bilinear probe residue has the same size), not measured. S3.21b put it in GlRaster's general loop as opt-in `#tune 30` (default off): exact on the untextured ramp, but under GL_MODULATE every stepped variant (colour quanta 31 / 255 / 1 x 2^16, texture coordinates at 2^-8..2^-16 texel) is worse than the plane on the textured probes, and on the c7 terrain passes untextured-only stepping changes nothing (173 / 22): the terrain residue is the textured interpolation, not measured. | the 90 px of the Gouraud probe (row start after an x-schedule change, first-row start), a slow-ramp probe of a texture coordinate and of the colour over a constant texture (21_ramp.py's method), then the fast loop | open |
+-| U-1826 | 0x000048a0 | rule | [Terrain.dll 0x000048a0] [roadmap S3.24] At the SECOND vertex of an antialiased line of width 3 or more (never at the first), Windows' generic GL leaves out, in some columns, the outermost pixel next to the end cap although it lies inside S3.8's support (t - L 0.31 .. 0.49): 20 of 1,016 visible past-cap pixels of the white probe set (log/roadmap/S3/24_capfit.py). In the canonical frame (major and minor increasing, origin at the second vertex) the dropped pixels sit at (u, v) = (-0.5, +1.5), (-0.5, +2.5), (-2.5, +3.5), (+1.5, -1.5), (+2.5, -4.5) ...; at (-0.5, +1.5) they are dropped for slopes 0.615 .. 0.65 (widths 3, 5, 10 alike) and drawn at 0.605 and below and at 0.667 .. 0.72 (24_capcol.py). Neither a cap test at a shifted sample point (24_capscan.py, best of 81 shifts errs on 47 of 52) nor a count from the window start (24_probe.py rule ecNN) separates them. In the census it leaves cov_a_build brush_465 (3 px, one level). | The generic implementation's end-cap span arithmetic (more probes per slope at the last columns, or its code). | open |
+-| U-1827 | 0x000048a0 | rule | [Terrain.dll 0x000048a0] [roadmap S3.24] The span rule's tie convention (a pixel centre exactly at +-N/2) is fitted, not read from the implementation: s = o * sign(dx) * sign(dy) for x-major lines and o * sign(dx) for y-major lines in [-N/2, N/2) (line rule 2). It decides every 45-degree tie of the probes in all four directions and makes 29 of the 31 census rows of log/roadmap/S3/22_causes.tsv group 1 exact, but on the game-like probe sets 5 pixels are wrong that S3.8's model had right (24_newbad.py b8s1: 4 in syn_white, 1 in syn_game): exact ties of y-major lines whose side varies between lines of one octant, and two pixels 0.0007 / 0.0009 beyond N/2 that the real GL draws. Vertex precision models (rounding of the setup to 4 .. 20 bits, unrounded double / float32) do not explain them (24_tieprec.py: chance level). | The generic implementation's minor-axis DDA (start rounding, slope bits); a dedicated tie probe set per slope and octant (24_probe.py synth ties). | open |
+-| U-1828 | 0x004493d0 | evidence | [golf_clean.exe 0x004493d0] [roadmap S3.24] The census rows were judged with the port's own drawLine ends (the recorded GL streams keep no glBegin..glEnd vertices, U-1373) and through framegate's frames only: the dumped calls (SG_OVERLAY_DUMP) span every frame of a run, so a dumped call is not tied to the checkpoint frame it belongs to; the census-harvested tie labels (24_harvest.py) are therefore not used as evidence. | A frame index in the dump (development switch) if the ties are revisited. | open |
+-| U-1829 | 0x000048a0 | evidence | [Terrain.dll 0x000048a0] [roadmap S3.24] cov_a_keys k_dlg_R keeps 1 px one level on a hole line after the span rule (class MID: neither tie, cut nor cap); the line's value arithmetic (U-1371) is the only candidate left and is not separated from the terrain below the line under GlRaster. | A real-GL replay of that checkpoint's line call over its own background. | open |
+-| U-1834 | 0x0042fb90 | evidence | [golf_clean.exe 0x0042fb90] [roadmap S3.25, settled by S3.26] cov_k3_camera y_inj3: the original's worldToScreen(0xc7ff, 0xd800) = (431, 496). Tile (49, 54): cell 49 * 50 + 54 = 2504, past the 2,500-byte grids. g_tileType[2504] = 0x00572cb0 = byte 0 of g_habitatSlots, 0 in the segment image cov_k3_camera/03 = type 0 `tees`, flags word (+0x2c) 4, so the height step is sy -= (g_tileLevel[cell] - 3) * S * Z / 4 with S = f_w_4c2e00[0] = 5, Z = g_zoomScale = 4. g_tileLevel[2504] = 0x005439e0 = byte 0 of g_surfaces5439e0[0], which holds the vtable 0x004ba2d8 that Surface_ctor stores (0x00473ab7; initGlobalArray_00404c20's step 0x00404c85 constructs the 16 elements): 0xd8 = -40, (-43) * 5 * 4 / 4 = -215, sy + 215. The neighbour corner (0xc400, 0xd7ff) is cell 2503 = 0x005439df = 0: sy + 15. Base 300 and 281; with the byte 0 the corner would be (431, 296), level with the opposite corner (368, 295). The port's GameState holds 0 at 0x005439e0 (its boot runs no Surface_ctor), so the port draws a regular diamond. Not fixed: storing the vtable word needs an exe .rdata address in the port's GameState (decision, 26_notes.md). DECISION (orchestrator, 2026-10-31): option (a), keep the port's regular diamond: an EXPLAINED FRAME DIVERGENCE on one row, cov_k3_camera y_inj3, 847 px (the out-of-map read lands on a Surface vtable byte; copying it would put an exe .rdata value into the port's state and no simulation read of those bytes is measured). Re-open only if a simulation read of those objects shows up. | - | resolved |
+-| U-1950 | 0x00415a3f | evidence | [golf_clean.exe 0x00415a3f] [roadmap S3.26] P4's selected-golfer sprite with f_w_4c2e00[2] = -2 reads `golfer -2` (0x005792b8), inside g_sprites5791f8: +8 / +0xc = element 4's +0x18 / +0x1c (cut 80 x 80 in all 205 segment start images) and the byte +0x21 = byte 1 of element 5's handle +4 (a jgld Sprite heap pointer). The port answers the handle byte as 1 whenever the backend holds element 5's sprite (gfx_sprite_ref_read): the byte is nonzero in all 205 recorded images, but its value is a heap address byte the port does not reproduce, so a heap pointer whose byte 1 is 0 (the original then draws nothing) is not modelled. Other negative selection words (f_w_4c2e00[2] = -4 in 16 images) read other objects: only reads that land in a SpriteRef the backend holds, at +0x10..+0x24 or the handle, are answered; any other read takes the GameState word (0 for pointer-class objects). | A record of the original's handle words (a jgld heap with byte 1 = 0) and of the other selection values' draws | open |
+-| U-1951 |  | tooling | [-] [roadmap S3.26] gfx.poll_position: a checkpoint whose POLL record has the pos of a FRAME record rode on that frame's head clock call (trace_schema.md: a record at pos n is written inside or after clock call n - 1), so its snapshot position is pos - 1 and the frame's own cursor reads (also at pos n) take it. Measured on cov_k3_camera2 y_inj4: S3.25's call log has 153 resetSpriteQueue calls at the poll (frame 153 had not drawn) and the sprays' column = g_date 152 mod 13; with S3.16's rule the snapshot fell at frame 154's first cursor read, after frame 153's present (the port's state there held g_date 155 against the checkpoint's 153). 9 of 688 pinned checkpoints have such a POLL (cov_a_flags ztut / zdemo, cov_a_keys3 season, cov_b_holes18 holes, cov_k1_paths cart, cov_k1_river r20, cov_k1_routing end, cov_k3_camera2 y_inj4, cov_l_bridge obj5). The rule was not checked on a recording that puts a present between a frame head and the frame's first cursor read (none of the 9 has one). | - | open |
+-| U-1952 |  | evidence | [Terrain.dll render] [roadmap S3.26] cov_r_s2_screens course / radial_hover (65 px) and the six report rows (20 / 11 px): the map-corner box 781..799 x 451..466 is terrain. The port's Terrain calls equal the original's (port.test.terrainlive over S3.25's recording: 20,204 = 20,204 calls EQUAL, Terrain states 32 / 32 equal), and with the host's OpenGL drawing every triangle the port hands it, the port's corner still differs: on rows 453..466 the port's terrain pixels reach 1..3 px further right, where the original has a near-black dither (0x0020 / 0x0421 / 0x0420 with 0x0000) over the edge tiles' right side (e.g. row 458: port 29e8 25e7 2e09 0000, original 29e8 0000 0421 0020). So the original's pass draws a dark primitive over the map's right edge that the port's draw list does not hold. Which pass (the full render at Terrain call seq 19931 or one of the 80 localRenders before frame 155) and which primitive were not measured: S3.1 compared localRender / stripRender / pathUpdateRender draw lists line for line, never a full render. | A GL stream recording (re/tools/gl_record.py) of cov_r_s2_screens' render at seq 19931, compared with the port's terrain_render_entry kind 2 stream | open |
+diff --git a/port/app/host.cpp b/port/app/host.cpp
+index aec4848f..2c282831 100644
+--- a/port/app/host.cpp
++++ b/port/app/host.cpp
+@@ -33,16 +33,15 @@ namespace portapp {
+ // ------------------------------------------------------------------------------------------------ S7.8: resources (U-1643)
+ void TerrainLogBound::frame_end() {
+   if (!live) return;
+-  const uint64_t n = live->log_size();   // counted, not formatted (roadmap S3.10b: formatting cost about 1 us per call)
++  const uint64_t n = live->log().size();
+   max_len = std::max(max_len, n);
+-  if (keep) return;
+-  // the app reads no line of the log (roadmap S3.12, U-1673): the lines of the boot's first frame are dropped and LiveTerrain
+-  // records no call after it (set_keep_log); calls() still counts every call
++  if (keep || n == 0) return;
+   dropped += n;
+-  if (n) live->drop_log();
+-  live->set_keep_log(false);
++  // LiveTerrain::log() hands out its own vector (terrain_live.h); the app is its only reader and needs no line of it
++  std::vector<std::string> &lines = const_cast<std::vector<std::string> &>(live->log());
++  std::vector<std::string>().swap(lines);
+ }
+-uint64_t TerrainLogBound::calls() const { return live ? live->calls() : 0; }
++uint64_t TerrainLogBound::calls() const { return dropped + length(); }
+ 
+ bool RecordStreams::open(const std::string &dir, portsim::LiveOptions &o) {
+   std::error_code ec;
+@@ -78,7 +77,7 @@ std::vector<uint8_t> framehash_bytes(const portsim::LiveResult &r) {
+   }
+   return fh;
+ }
+-uint64_t TerrainLogBound::length() const { return live ? live->log_size() : 0; }
++uint64_t TerrainLogBound::length() const { return live ? live->log().size() : 0; }
+ 
+ bool process_memory(MemSample &m) {
+   PROCESS_MEMORY_COUNTERS_EX pmc{};
+diff --git a/port/app/host.h b/port/app/host.h
+index 6d39fd4d..f7739831 100644
+--- a/port/app/host.h
++++ b/port/app/host.h
+@@ -61,15 +61,15 @@ namespace portapp {
+ 
+ // S7.8 (U-1643): LiveTerrain logs one text line per Terrain call (terrain_live.h: for the comparison with a recording of the
+ // original) and never drops one, so a play session's memory grows with every call. The app reads the log only for its length,
+-// so at the first frame end the lines are dropped and LiveTerrain::set_keep_log(false) stops the log (roadmap S3.12, U-1673:
+-// the option log/roadmap/S7/8_merge.md section 3 requested); calls() is LiveTerrain::calls(), the session's total.
++// so at each frame end the lines are dropped and counted (calls() stays the session's total). A LiveTerrain option that keeps
++// no log is requested from S3 (log/roadmap/S7/8_merge.md); until it lands the lines are cleared through the log's reference.
+ struct TerrainLogBound {
+   portsim::LiveTerrain *live = nullptr;
+   bool keep = false;          // negative control (--negctl terrain-log-keep): never drop the lines
+   uint64_t dropped = 0;       // lines dropped so far
+   uint64_t max_len = 0;       // the most lines the log held at a frame end
+   void frame_end();
+-  uint64_t calls() const;     // every Terrain call since the LiveTerrain was made, logged or not
++  uint64_t calls() const;     // every call logged since the LiveTerrain was made
+   uint64_t length() const;    // lines held now
+ };
+ 
+diff --git a/port/include/portsim/sim/gl_raster.h b/port/include/portsim/sim/gl_raster.h
+index d52ac9e0..52d9ba45 100644
+--- a/port/include/portsim/sim/gl_raster.h
++++ b/port/include/portsim/sim/gl_raster.h
+@@ -121,10 +121,7 @@ class GlRaster : public GlSink {
+   // 16 attribute-plane vertex rounding f32(v + 2^k) - 2^k, 17 attribute arithmetic in float32, 18 / 19 an absolute shift of the
+   // attribute sample position in x / y, in units of 1e-5 pixel, 20 per-vertex attribute offsets sign(ndc) * value / 256 px where |ndc| >= 0.5,
+   // 22 attribute setup from 8-fractional-bit window coordinates of a viewport scaled by half-size + 2^-8 (U-1076 experiments),
+-  // 27 = 1 the exact pow for the specular term instead of the generic GL's 256-entry nearest-entry table (U-1300),
+-  // 28 = 1 the earlier double-precision vertex model (window position scaled by 1 - 2^-8 / h and rounded) instead of the generic GL's
+-  // float32 vertex arithmetic (roadmap S3.21, U-1392), 29 = 1 no frustum clipping (with tune 28 = 0 the triangles crossing the view
+-  // volume are clipped like the generic GL's and drawn as the fan of the clipped polygon)
++  // 27 = 1 the exact pow for the specular term instead of the generic GL's 256-entry nearest-entry table (U-1300)
+   static constexpr int kTunes = 32;
+   int tune[kTunes] = {};
+ 
+@@ -133,9 +130,6 @@ class GlRaster : public GlSink {
+   // Negative controls: 3 the reciprocal path without its boundary checks, 4 with reciprocals rounded to float (errors larger than
+   // the checks allow). Set with the stream line `#fastpath <mode>`.
+   int fast_mode = 1;
+-  // Negative control of the workers (roadmap S3.12): 1 = the last of several workers flips bit 0 of the first pixel it writes in
+-  // each row of a triangle (no effect with one thread, so it reads only the worker path). Stream line `#workerctl <mode>`.
+-  int worker_ctl = 0;
+ 
+   // counters of the last frame (what the rasteriser saw), for the tests' diagnostics
+   struct Stats {
+@@ -153,8 +147,6 @@ class GlRaster : public GlSink {
+     double x, y, z;       // window coordinates
+     double s, t;
+     double r, g, b, a;    // the lit colour (0..1)
+-    double qx, qy;        // the vertex snapped to 2^-8 by the float32 vertex rule (tune 28 = 0)
+-    float c[4];           // its float32 clip coordinates (tune 28 = 0)
+   };
+   struct Mat {
+     double m[16];         // column-major
+@@ -200,15 +192,6 @@ class GlRaster : public GlSink {
+   std::map<std::string, std::vector<uint8_t>> tex_bytes_;
+ 
+   Mat &cur() { return mode_ == 0x1701 ? proj_ : mv_; }
+-  // the generic GL's own matrices (roadmap S3.21): float32, column-major; the MVP is updated by every modelview operation itself
+-  // (not recomputed as P * MV) and recomputed only when the projection changes; push / pop of the modelview saves it too
+-  struct FMat {
+-    float m[16];
+-  };
+-  FMat fmv_, fproj_, fmvp_;
+-  std::vector<FMat> fstack_[2], fstack_mvp_;
+-  void fpost_(const FMat &b);       // the current float matrix times b, and the MVP with it
+-  static void fmul_(const FMat &a, const FMat &b, FMat &r);
+   void mul(const Mat &b);
+   void emit(double x, double y, double z, const float *normal);
+   // emit's per-vertex invariants (roadmap S3.10): the inverse of the modelview's upper 3x3 for its nine values, the specular table
+@@ -217,11 +200,6 @@ class GlRaster : public GlSink {
+   double spec_lookup_(double nh, double shininess);
+   double spec_sh_ = -1.0, spec_t_ = 0.0, spec_scale_ = 0.0, spec_tab_[256] = {};
+   void triangle(const Vtx &a, const Vtx &b, const Vtx &c);
+-  // the window position of float32 clip coordinates under the vertex rule (x, y unrounded; qx, qy snapped to 2^-8)
+-  void window_of_(const float c[4], Vtx &v) const;
+-  // frustum clipping (tune 29 = 0): true when the triangle was handled (culled, clipped and drawn as a fan, or clipped away)
+-  bool clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c);
+-  bool in_clip_ = false;
+   // the default pipeline's pixel loop (roadmap S3.10): the same values as triangle()'s general loop, computed with exact integer
+   // edge functions and row spans; false (nothing written) when its preconditions do not hold
+   bool fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear, int minx, int maxx,
+diff --git a/port/include/portsim/sim/gl_wgl.h b/port/include/portsim/sim/gl_wgl.h
+index d7496fa7..f050a895 100644
+--- a/port/include/portsim/sim/gl_wgl.h
++++ b/port/include/portsim/sim/gl_wgl.h
+@@ -177,10 +177,8 @@ struct SelfCheck {
+ // variant: the WglSink variant (as LiveTerrain makes it for the negative controls 8 / 9 / 11 / 12); perturb (negative controls of
+ // the check itself): 1 = the pinned hash with one hex digit changed, 2 = the reference pass with every texture coordinate moved by one texel
+ SelfCheck wgl_self_check(Ctx &ctx, int variant = 0, int perturb = 0);
+-// The same reference pass through the portable rasteriser (tests). Since roadmap S3.21 GlRaster equals the original on the reference
+-// rectangle; old_rules = 1 sets GlRaster tune 28 and 29 (S3.21's pre-rule vertex model and no clipping) on this rasteriser only,
+-// the check's negative control (45 of the 1,024 px differ, the U-1392 residual S3.20 measured)
+-SelfCheck raster_self_check(Ctx &ctx, int old_rules = 0);
++// The same reference pass through the portable rasteriser (tests: the check's sensitivity to the U-1392 residual)
++SelfCheck raster_self_check(Ctx &ctx);
+ // SHA-256 of a byte string, lower-case hex (FIPS 180-4)
+ std::string sha256_hex(const uint8_t *data, size_t n);
+ 
+diff --git a/port/include/portsim/sim/terrain_live.h b/port/include/portsim/sim/terrain_live.h
+index ba4686cb..256f594a 100644
+--- a/port/include/portsim/sim/terrain_live.h
++++ b/port/include/portsim/sim/terrain_live.h
+@@ -26,7 +26,6 @@
+ 
+ #include "portsim/registry.h"
+ #include "portsim/sim/gl_raster.h"
+-#include "portsim/sim/gl_wgl.h"
+ #include "portsim/sim/terrain_api.h"
+ #include "portsim/sim/terrain_state.h"
+ 
+@@ -84,47 +83,18 @@ class LiveTerrain : public TerrainApi {
+   uint32_t reset_terrain(uint32_t self) override;
+ 
+   struct Snapshot {
+-    uint32_t after = 0;               // calls made before it (calls())
++    uint32_t after = 0;               // calls logged before it
+     std::vector<uint8_t> object;
+     std::vector<float> vertices, normals;
+     std::vector<uint32_t> textures;
+     int32_t view_index = 0;
+   };
+-  // the recorder's lines, formatted on demand from the compact records `call` keeps (roadmap S3.10b: formatting each line as the
+-  // call ran cost about 1 us per call, 14 ms of a zoom key's 14,804 calls)
+-  const std::vector<std::string> &log() const;
+-  // the calls logged since the last drop_log (the lines `log()` would hold), without formatting them; drop_log empties the log (the
+-  // next call's seq is 0 again, as when a reader emptied the vector `log()` returns)
+-  size_t log_size() const { return log_.size() + recs_.size(); }
+-  void drop_log();
+-  // roadmap S7.8 / S3.12 (U-1673): false = record no call at all (a play session: nothing reads the lines; the app's
+-  // TerrainLogBound sets it); calls() counts every call either way, and the snapshots are placed by it
+-  void set_keep_log(bool keep) { keep_log_ = keep; }
+-  uint64_t calls() const { return calls_; }
++  const std::vector<std::string> &log() const { return log_; }
+   const std::vector<Snapshot> &snapshots() const { return snaps_; }
+   uint32_t object_va() const { return dll_.terrain; }
+   TerrainGlobals &globals() { return g_; }
+   // drawing (roadmap S3.2)
+   gl::GlRaster &raster() { return *raster_; }
+-  // roadmap S3.15 (U-1810): the host's own OpenGL beside the rasteriser (gl_wgl.h), made before the setup's first call (the
+-  // constructor reads SG_GL_BACKEND=wgl; true = in use). host_gl() is null when it is not in use or the host has none.
+-  bool use_host_gl(bool on);
+-  gl::WglSink *host_gl() { return wgl_ && wgl_->ok() && wgl_->has_context() ? wgl_.get() : nullptr; }
+-  const std::string host_gl_why() const { return wgl_ ? wgl_->why() : std::string("not selected"); }
+-  // roadmap S3.20 (decision G13, final: GlRaster is the default, the host's OpenGL opt-in): the terrain renderer of this LiveTerrain,
+-  // chosen before its first call. mode "raster" = GlRaster (the default); "wgl" or "host" = the host's OpenGL without the check
+-  // (S3.15's opt-in); "auto" = the host's OpenGL when it exists and the startup self-check (gl_wgl.h wgl_self_check) draws the
+-  // original's reference pixels, else GlRaster. The constructor applies SG_GL_BACKEND (raster | wgl | host | auto) when it is set;
+-  // an unset variable leaves GlRaster.
+-  struct RendererChoice {
+-    std::string mode = "raster";     // what was asked
+-    std::string backend = "raster";  // what draws: "wgl" (the host's OpenGL) or "raster" (GlRaster)
+-    std::string reason = "the default (no choice made)";
+-    bool checked = false;            // the self-check ran
+-    gl::SelfCheck check;
+-  };
+-  const RendererChoice &choose_renderer(const std::string &mode);
+-  const RendererChoice &renderer() const { return choice_; }
+   LiveTerrainView &view() { return view_; }
+   bool setup_names_differ() const { return dll_.setup.names_differ; }
+   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
+@@ -143,24 +113,8 @@ class LiveTerrain : public TerrainApi {
+   std::vector<uint32_t> snap_after_;
+   size_t next_snap_ = 0;
+   std::vector<Snapshot> snaps_;
+-  struct LogRec {
+-    uint64_t seq;                     // the line's number (calls logged before it since the last drop)
+-    const char *name;                 // a string literal of this file's call sites
+-    uint32_t self, a[5], ret;
+-    uint8_t k;                        // arguments given (the others print `-`)
+-    bool has_var;                     // setType with a tile: the variation it drew, read when the call returned
+-    int32_t var;
+-    std::vector<int32_t> tbl;         // passCollarInfo's table (`tbl=` when `has_tbl`)
+-    bool has_tbl;
+-  };
+-  mutable std::vector<LogRec> recs_;       // calls not formatted yet (log() moves them into log_)
+-  mutable std::vector<std::string> log_;
+-  bool keep_log_ = true;
+-  uint64_t calls_ = 0;
++  std::vector<std::string> log_;
+   std::unique_ptr<gl::GlRaster> raster_;
+-  std::unique_ptr<gl::WglSink> wgl_;
+-  std::unique_ptr<gl::SetupPair> pair_;
+-  RendererChoice choice_;
+   LiveTerrainView view_;
+   bool to_gfx(const char *name, std::initializer_list<uint32_t> args);
+   uint32_t terrain_tile_at_exe(int32_t x, int32_t y);
+diff --git a/port/include/portsim/sim/terrain_overlay.h b/port/include/portsim/sim/terrain_overlay.h
+index 26fdd6f3..692351d0 100644
+--- a/port/include/portsim/sim/terrain_overlay.h
++++ b/port/include/portsim/sim/terrain_overlay.h
+@@ -19,12 +19,8 @@
+ //     coverage is clamp(w / 2 + 0.5 - |n|) * clamp(t + 0.5) * clamp(L - t + 0.5) (each factor clamped to [0, 1]);
+ //   - the fragment's alpha is alpha * coverage, blended against the 5-bit destination expanded by 255 / 31 and written with the
+ //     4x4 ordered dither of the triangles (gl_raster.cpp quantize).
+-//   - the footprint (roadmap S3.24, log/roadmap/S3/24_notes.md): per column of the major axis (x when |dx| >= |dy|) at most
+-//     N = floor(w * L / |major|) + 2 pixels are drawn, the pixel centres whose minor offset o from the line centre (at the pixel
+-//     centre's major coordinate) times the tie sign lies in [-N/2, N/2); the tie sign is sign(dx) * sign(dy) for an x-major line,
+-//     sign(dx) for a y-major one. This is what U-1370 saw as `footprint-edge pixels under 0.13 coverage`.
+-//   What it does not reproduce: at the second vertex of wide lines the real GL leaves out a corner pixel next to the cap in some
+-//   columns (U-1826), and a few exact ties of y-major lines and pixels within 0.001 of N/2 follow a rule not determined (U-1827).
++//   What it does not reproduce: a few pixels at the footprint's edge whose coverage is under 0.13 are not drawn by the real GL
++//   (10 of 12,080 covered pixels in the probe; U-1370).
+ //
+ // The exe's drawers over it (all drops of the frame loop; with a graphics backend and a LiveTerrain attached they draw into the
+ // root surface, gfx_terrain.cpp's family lists their bodies): drawMapLine (Terrain::drawLine with the seven arguments),
+@@ -84,8 +80,7 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
+ 
+ // negative controls (sg_negctl_set "overlay.rasterLine"): 1 hard-edged line (no coverage ramp), 2 alpha ignored, 3 no clipping
+ // (the end ramps at the unclipped ends), 4 the flip byte inverted, 5 no fixed-point snap of the ends, 6 lineTo keeps the old line
+-// point, 7 drawCircle's segments 3 wide instead of 2, 8 the width not clamped at 10, 9 drawn without a GL context, 10 the gfx bodies draw nothing (the baseline of the frame tests),
+-// 11 S3.8's footprint (no span rule: the rule before roadmap S3.24)
++// point, 7 drawCircle's segments 3 wide instead of 2, 8 the width not clamped at 10, 9 drawn without a GL context, 10 the gfx bodies draw nothing (the baseline of the frame tests)
+ extern int g_negctl_terrain_overlay;
+ 
+ }  // namespace portsim
+diff --git a/port/src/sim/commands_screens.inc b/port/src/sim/commands_screens.inc
+index 6564c740..847a9459 100644
+--- a/port/src/sim/commands_screens.inc
++++ b/port/src/sim/commands_screens.inc
+@@ -483,10 +483,8 @@ int32_t show_credits_screen(Ctx &ctx) {
+ // before the loop): the hire art over its mask, the OK button (its hover image when no row is selected and the cursor is in its
+ // box), the title centred in g_fontRef_821020, then in g_fontRef_821ee8 a band head before every second row (0xe7, at y 0x97,
+ // 0xde, 0x125, 0x16c) and each row 0x14 lower (8 more after the odd one), the selected row on a fillWindowRect bar (0x80007f40:
+-// the display's slot +0xb4 is jgld's `xor eax, eax; ret`), the four animated employees and the refresh. Employee s (row b = 2s + 1,
+-// idx = s, or s + 4 on its selected row) is addSprite(0x240, 0xc0 + 0x46 s, y, 0x28, 0x28, cellAt(idx + 0x20e, frame mod
+-// g_sheetCols[idx + 0x20e], s), 4, idx + 0x82) (showHireEmployeeDialog+0x364..+0x3b5); roadmap S3.26 hands the scene family that cell (cellAt
+-// only reads the sheet tables), the call before it gave cell 0 (the 1,397 px of cov_r_s2_screens `hire`).
++// the display's slot +0xb4 is jgld's `xor eax, eax; ret`), the four animated employees (addSprite of a FLIC sheet cell: no body,
++// reported, roadmap S3) and the refresh.
+ int32_t show_hire_employee_dialog(Ctx &ctx) {
+   GameState &gs = ctx.gs();
+   InputSource *src = input_source(ctx);
+@@ -533,12 +531,9 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
+     frame = add32(frame, 1);
+     for (int32_t s = 0, b = 1, sx = 0xc0; b < 9; b += 2, ++s, sx += 0x46) {
+       const int32_t c = s * 4 + (sel == b ? 0x10 : 0);
+-      const int32_t col = mod32(frame, *(state_arr(ctx, &GameState::g_sheetCols) + (0x20e + c / 4)));
++      (void)mod32(frame, *(state_arr(ctx, &GameState::g_sheetCols) + (0x20e + c / 4)));
+       const int32_t idx = sel == b ? s + 4 : s;
+-      // negative control 3: the cell one animation column later
+-      const int32_t ccol = SG_NEGCTL(g_negctl_hire_dialog) == 3 ? add32(col, 1) : col;
+-      const uint32_t cell = d.on ? call_peer(ctx, "cellAt", {u32(idx + 0x20e), u32(ccol), u32(s)}).eax : 0;
+-      d.gx("addSprite", {0x240, u32(sx), u32(y), 0x28, 0x28, cell, 4, u32(idx + 0x82)});
++      d.gx("addSprite", {0x240, u32(sx), u32(y), 0x28, 0x28, 0, 4, u32(idx + 0x82)});
+     }
+     d.gx("Window::refreshFull", {d.window(), 0});
+     pump_messages(ctx, PumpKind::Blocking, "showHireEmployeeDialog");
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+index d7814a10..07c31bd3 100644
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -28,7 +28,6 @@
+ #include <algorithm>
+ #include <array>
+ #include <cstdio>
+-#include <cstdlib>
+ #include <cstring>
+ #include <map>
+ #include <memory>
+@@ -844,10 +843,10 @@ const GfxBodyDef kBodies[] = {
+ // Drops that draw nothing (pacing, audio, input, files, the window tree's modal stack): not reported as unsupported drawing.
+ // Each one's reason in tick.cpp's kDrops table says it does not draw: waitTicks "wait loop (pacing)", startSoundSlot / playSound
+ // "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty function",
+-// saveCourseJpg "screenshot file", enterModal483d30 "modal stack push and focus clear of the window tree" (port/test/framegate.py
+-// NOT_DRAWING holds the same names). Widget_readPixel has a body since roadmap S3.26 (gfx_pixel.cpp: it hands the pixel back).
+-const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot", "playSound",     "Snd::status",     "capsLockOff",
+-                                   "emptyFunc_4a0890", "saveCourseJpg", "enterModal483d30"};
++// saveCourseJpg "screenshot file", Widget_readPixel "a pixel read of the root surface", enterModal483d30 "modal stack push and
++// focus clear of the window tree" (port/test/framegate.py NOT_DRAWING holds the same names).
++const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot", "playSound",        "Snd::status",     "capsLockOff",
++                                   "emptyFunc_4a0890", "saveCourseJpg", "Widget_readPixel", "enterModal483d30"};
+ 
+ }  // namespace gfxb
+ 
+@@ -956,11 +955,6 @@ void gfx_progress(Ctx &ctx, uint32_t pos) {
+     g->snap_terrain.push_back(g->back_terrain);
+     try {
+       gfxb::put_file(ctx, "$gfx/snapshot_" + std::to_string(g->snap_next) + ".555", gfxb::surface_bytes(g->back));
+-      // development (roadmap S3.26): SG_GFX_SNAPSTATE=1 also keeps the GameState of the snapshot's instant
+-      static const char *snapstate = std::getenv("SG_GFX_SNAPSTATE");
+-      if (snapstate && snapstate[0] == '1')
+-        gfxb::put_file(ctx, "$gfx/state_" + std::to_string(g->snap_next) + ".bin",
+-                       std::vector<uint8_t>(ctx.bytes(), ctx.bytes() + sizeof(GameState)));
+     } catch (...) {
+       g->unsup("snapshot: the files overlay refused it");
+     }
+diff --git a/port/src/sim/gfx_chareditor.cpp b/port/src/sim/gfx_chareditor.cpp
+index 4fbc9d7d..4715b80d 100644
+--- a/port/src/sim/gfx_chareditor.cpp
++++ b/port/src/sim/gfx_chareditor.cpp
+@@ -8,6 +8,7 @@
+ //   showCharacterEditor.background(root)   every pass: Surface_blitThunk(image, root, 0, 0, 0, 0, 0x320, 0x258) (the core
+ //                                          Surface_blit3 through gfx_surface.cpp's thunk body)
+ //   showCharacterEditor.teardown           the Image destructor: the backend's image dropped
++//   showCharacterEditor.bio                the bio EditBox's window-tree drawing: reported (not modelled)
+ //   drawMessageBuffer(cols, x, y, colour)  the text buffer wrapped at cols * 8 pixels (gfxb::draw_message_buffer, gfx.cpp)
+ //
+ // Negative controls (g_negctl_gfx_chareditor, sg_negctl_set "gfx.family.chareditor"):
+@@ -61,6 +62,10 @@ void b_background(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+ 
+ void b_teardown(Gfx &g, Ctx &, const uint32_t *, int) { g.images.erase(kImage); }
+ 
++void b_bio(Gfx &g, Ctx &, const uint32_t *, int) {
++  g.unsup("showCharacterEditor.bio: the bio EditBox's drawing (window tree) is not modelled");
++}
++
+ void b_message_buffer(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   const int32_t x = add32(static_cast<int32_t>(a[1]), mode() == 3 ? 1 : 0);
+   gfxb::draw_message_buffer(g, ctx, static_cast<int32_t>(a[0]), x, static_cast<int32_t>(a[2]), a[3]);
+@@ -70,6 +75,7 @@ const GfxBodyDef kBodies[] = {
+     {"showCharacterEditor.setup", b_setup},
+     {"showCharacterEditor.background", b_background},
+     {"showCharacterEditor.teardown", b_teardown},
++    {"showCharacterEditor.bio", b_bio},
+     {"drawMessageBuffer", b_message_buffer},
+ };
+ 
+diff --git a/port/src/sim/gfx_pixel.cpp b/port/src/sim/gfx_pixel.cpp
+index 6e2fa621..ad51cf44 100644
+--- a/port/src/sim/gfx_pixel.cpp
++++ b/port/src/sim/gfx_pixel.cpp
+@@ -9,25 +9,9 @@
+ //       Modelled: the root surface (16 bits, the address f_stateptr_4c1570 holds) and the hud family's 16-bit surfaces; the
+ //       pixel is the top-down word at (x, y) (allocDrawBuffer's DIB, the one Surface_pixelPtr walks). Any other Surface is
+ //       reported.
+-//   Widget_readPixel(this, x, y) (roadmap S3.26; c3db.cpp GetPixel_re, C4): 0 for a NULL handle, x < 0, y < 0 (signed), x >= the
+-//       handle's width or y >= its height; otherwise the pixel Surface_pixelPtr(x, y) addresses, the word on a 16-bit surface.
+-//       It is a drop of the frame code (tick.cpp kDrops) whose only use gates a dropped sprite draw: mainLoop P5's zoom box draws
+-//       g_sprite567b08 over each ball whose magnified pixel is 0x7fff (ML+0x95d3; log/roadmap/S3/25_notes.md "Group 7"). With a
+-//       backend the read is handed back to the frame code through gfx_take_value (Text_put's way, S3.7); without one the drop
+-//       returns 0 as before, so no GameState byte depends on it. Modelled on the root and the hud family's 16-bit surfaces;
+-//       any other Surface is reported and reads 0.
+-//
+-//   gfx_sprite_ref_read(ctx, va, size, v) (roadmap S3.26; not a body: the frame code calls it): a read the frame code makes into
+-//       a SpriteRef object (0x2c bytes) the backend holds a sprite for answers what cropSprite stored there (c3ee.cpp
+-//       CropSprite_re): +0x10 the kept width, +0x14 the kept height, +0x18 / +0x1c the requested width / height, +0x20 left
+-//       trim, +0x24 top trim (dwords at those offsets); a byte of the handle +4..+7 reads 1 (the original holds a non-NULL heap
+-//       pointer there, whose bytes are not reproducible: U-1950). Anything else is not modelled (false: the caller reads the
+-//       GameState). Used by tick_frame.inc P4_selectedSprite.
+ //
+ // Negative control (g_negctl_gfx_pixel, sg_negctl_set "gfx.family.pixel"):
+ //   1 the word is written one row lower (y + 1)
+-//   2 Widget_readPixel hands back the pixel with bit 0 flipped
+-//   3 gfx_sprite_ref_read answers +0x1c (the requested height) one larger
+ //
+ // Widget_fillRect is S2's body (gfx_reports.cpp, the same jgld line16 with Surface_box's clip; U-1356, U-1278): S3.6's copy
+ // and its control 2 were removed when S2 wave 5 came into the tree (roadmap S3.6b).
+@@ -67,53 +51,12 @@ void b_write_pixel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   gfxpx::write_pixel(*d, static_cast<int32_t>(a[1]), y, a[3]);
+ }
+ 
+-void b_read_pixel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+-  g.ensure_root(ctx);
+-  g.has_value = true;
+-  g.value = 0;
+-  Surface16 *d = a[0] == g.root_va(ctx) ? &g.root : gfxh::family_surface(g, a[0]);
+-  if (!d) {
+-    g.unsup("Widget_readPixel: a Surface other than the root or a 16-bit family surface");
+-    return;
+-  }
+-  const int32_t x = static_cast<int32_t>(a[1]), y = static_cast<int32_t>(a[2]);
+-  if (x < 0 || y < 0 || x >= d->w || y >= d->h) return;
+-  g.value = d->px[static_cast<size_t>(y) * static_cast<size_t>(d->w) + static_cast<size_t>(x)];
+-  if (SG_NEGCTL(g_negctl_gfx_pixel) == 2) g.value ^= 1;
+-}
+-
+ const GfxBodyDef kBodies[] = {
+     {"Widget_writePixel", b_write_pixel},
+-    {"Widget_readPixel", b_read_pixel},
+ };
+ 
+ }  // namespace
+ 
+ extern const GfxFamily kGfxFamily_pixel = {"pixel", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
+ 
+-bool gfx_sprite_ref_read(Ctx &ctx, uint32_t va, uint32_t size, uint32_t &v) {
+-  Gfx *g = gfx(ctx);
+-  if (!g) return false;
+-  auto it = g->sprites.upper_bound(va);
+-  if (it == g->sprites.begin()) return false;
+-  --it;
+-  const uint32_t o = va - it->first;
+-  if (o >= 0x2c) return false;
+-  const Sprite8 &s = it->second;
+-  if (size == 1 && o >= 4 && o < 8) {
+-    v = 1;
+-    return true;
+-  }
+-  if (size != 4) return false;
+-  switch (o) {
+-    case 0x10: v = static_cast<uint32_t>(s.w); return true;
+-    case 0x14: v = static_cast<uint32_t>(s.h); return true;
+-    case 0x18: v = static_cast<uint32_t>(s.cut_w); return true;
+-    case 0x1c: v = static_cast<uint32_t>(s.cut_h + (SG_NEGCTL(g_negctl_gfx_pixel) == 3 ? 1 : 0)); return true;
+-    case 0x20: v = static_cast<uint32_t>(s.left); return true;
+-    case 0x24: v = static_cast<uint32_t>(s.top); return true;
+-    default: return false;
+-  }
+-}
+-
+ }  // namespace portsim
+diff --git a/port/src/sim/gfx_terrain.cpp b/port/src/sim/gfx_terrain.cpp
+index 293df845..f6cab469 100644
+--- a/port/src/sim/gfx_terrain.cpp
++++ b/port/src/sim/gfx_terrain.cpp
+@@ -32,32 +32,12 @@
+ //   3 pass skipped: terrain.pass draws nothing
+ //   4 renderTerrainStrip's shifted copy made without its shift (source = destination position)
+ //   5 Window::paint leaves the root surface as it was
+-//   6 LiveTerrain's call log kept off (set_keep_log(false) at the first call: the recorder's lines are empty; terrain_live.cpp)
+-//   7 LiveTerrain's compact log record drops setType's variation (its line has no `var=`; terrain_live.cpp)
+-//   8 the host-GL backend's DIB has RGB565 masks (terrain_live.cpp; read when the LiveTerrain is made, SG_GL_BACKEND=wgl)
+-//   9 the host-GL backend's DIB has its rows top-down (biHeight < 0): an equivalent mutant on every pinned frame (the generic
+-//     implementation writes the same memory rows either way; log/roadmap/S3/15_notes.md)
+-//  10 the host-GL pass does not load the root surface into the DIB first (the DIB keeps what the previous pass left)
+-//  11 the host-GL backend binds the port's texture names unmapped (gl_wgl.h gen_textures_mapped)
+-//  12 the host-GL backend finds no pixel format (as a host without a generic 16-bit one): terrainLive.hostGl returns 0, the
+-//     setup and the passes stay GlRaster's (the fallback; port/test/test_gl_wgl.py)
+-//  13 the startup self-check's pinned hash wrong (one hex digit): LiveTerrain::choose_renderer("auto") falls back to GlRaster
+-//  14 the self-check's reference pass perturbed (every texture coordinate one texel off): "auto" falls back to GlRaster
+-//     (both roadmap S3.20, terrain_live.cpp choose_renderer; port/test/test_gl_wgl_selfcheck.py)
+-//
+-// Host OpenGL (roadmap S3.15, U-1810): with SG_GL_BACKEND=wgl the LiveTerrain also feeds the GL setup to the host's own OpenGL 1.1
+-// software implementation (gl_wgl.h: Windows' generic opengl32 on the original's 16-bit DIB) and terrain.pass draws through it: the
+-// terrain picture is then the one the original's own implementation drew, bit for bit on Windows (GlRaster, the portable default,
+-// leaves a one-level residual on about 0.05 % of the textured pixels, U-1392). A host without it keeps GlRaster (host_gl() null).
+-// Roadmap S3.20 (decision G13, final): GlRaster stays the default; the app and framegate take the host's OpenGL as an opt-in
+-// (--gl host, or --gl auto: LiveTerrain::choose_renderer runs the startup self-check of gl_wgl.h wgl_self_check first and keeps
+-// GlRaster when it fails), with the choice and its reason logged.
+ //
+ // Rasteriser workers (roadmap S3.10, log/roadmap/S3/10_notes.md): the passes run the rasteriser's pixel loop on
+ // GlRaster::set_threads workers, min(4, max(1, hardware threads / 2)) of them, SG_RASTER_THREADS=<n> to choose (1 = none). The
+ // frame is the same for every count (gl_raster.h). Development switch: SG_TERRAIN_PASS_LOG=<file> appends one line per
+ // terrain.pass, `<updateTerrainRender call k> <pass j in it> <entry kind> <microseconds in terrain_render_entry> <pixels written>
+-// <triangles> <pixels of the checked reciprocal path> <workers>` (the host GL's passes, roadmap S3.20: the three counts -1, workers 0).
++// <triangles> <pixels of the checked reciprocal path> <workers>`.
+ #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+ #define _CRT_SECURE_NO_WARNINGS   // std::getenv / std::fopen of the development switch
+ #endif
+@@ -143,29 +123,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   const int32_t j = v.passes_in_frame++;
+   const bool keep_pass = j < 8;
+   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
+-  if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
+-    // roadmap S3.15 (U-1810): the host's own OpenGL draws the pass into its DIB, which holds the root surface's pixels around it
+-    gl::WglSink &w = *lt->host_gl();
+-    TerrainGlobals &tg = lt->globals();
+-    const auto t0 = std::chrono::steady_clock::now();
+-    if (SG_NEGCTL(g_negctl_gfx_terrain) != 10) w.set_pixels(g.root.px);
+-    w.set_arrays(tg.vertices.data(), tg.normals.data());
+-    if (!terrain_render_entry(ctx, w, tg, static_cast<int32_t>(a[0]), a[1], a[2], a[3], a[4])) {
+-      g.unsup("terrain.pass: an entry kind the renderer does not have");
+-      return;
+-    }
+-    w.get_pixels(g.root.px);
+-    // roadmap S3.20: the pass log line of the host GL (the DIB load, the pass and the read back; the implementation reports no
+-    // pixel or triangle counts: -1, workers 0); v.pixels_drawn is not counted on this path
+-    if (const char *log = std::getenv("SG_TERRAIN_PASS_LOG")) {
+-      const long long us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+-      if (FILE *f = std::fopen(log, "a")) {
+-        std::fprintf(f, "%u %d %u %lld -1 -1 -1 0\n", v.frames, j, a[0], us);
+-        std::fclose(f);
+-      }
+-    }
+-    ++v.passes;
+-  } else if (SG_NEGCTL(g_negctl_gfx_terrain) != 3) {
++  if (SG_NEGCTL(g_negctl_gfx_terrain) != 3) {
+     if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+     r.pixels() = g.root.px;
+     TerrainGlobals &tg = lt->globals();
+diff --git a/port/src/sim/gl_raster.cpp b/port/src/sim/gl_raster.cpp
+index 38d4d136..45f01a6f 100644
+--- a/port/src/sim/gl_raster.cpp
++++ b/port/src/sim/gl_raster.cpp
+@@ -1,6 +1,5 @@
+ // The port's software rasteriser (phase 5 step 3). See portsim/sim/gl_raster.h. Module file only because every file of
+ // src/sim is a module; it registers no function (the C entry points are sg_raster_* in portsim_c.h).
+-#define _CRT_SECURE_NO_WARNINGS   // the development switch SG_RASTER_TUNE uses getenv
+ #include "portsim/sim/gl_raster.h"
+ 
+ #include <algorithm>
+@@ -67,8 +66,6 @@ int quantize(double c, int x, int y, int ctl) {
+ // integer vertices, the mean of a linear ramp for fractional ones). The older model below (tune 26 = 1) kept exact edges and
+ // sampled at x' = c + (x - c) * (1 + e), the straight-line fit of that staircase: e = 1.046e-5 in x, 1.355e-5 in y (glshift_fit.py);
+ // tune[6] / tune[15] override e in units of 1e-9 (0 = the fitted constant, -1 = none).
+-// Since roadmap S3.21 the snapped positions come from the generic GL's own float32 vertex arithmetic (VERTEX RULE in emit); the
+-// scaled double model above is what `#tune 28 1` restores. Its residue sat on the vertices within a float ulp of a 2^-8 tie (U-1392).
+ constexpr double kAttrScaleX = 1.046e-5, kAttrScaleY = 1.355e-5;
+ // SPECULAR (U-1300, log/roadmap/S3/1b_notes.md): the generic GL does not evaluate (n.h)^shininess; it reads a table of 256 entries
+ // spanning [t, 1], t = 0.0005^(1 / shininess) (below t the term is 0), at the entry NEAREST to n.h, without interpolation:
+@@ -136,26 +133,6 @@ GlRaster::GlRaster(int width, int height) : w_(width), h_(height), fb_(static_ca
+   std::memset(proj_.m, 0, sizeof proj_.m);
+   mv_.m[0] = mv_.m[5] = mv_.m[10] = mv_.m[15] = 1.0;
+   proj_ = mv_;
+-  std::memset(fmv_.m, 0, sizeof fmv_.m);
+-  fmv_.m[0] = fmv_.m[5] = fmv_.m[10] = fmv_.m[15] = 1.0f;
+-  fproj_ = fmv_;
+-  fmvp_ = fmv_;
+-  // SG_RASTER_TUNE=<i>=<v>[,<i>=<v>...]: tune knobs for every rasteriser of the process (development and negative controls only,
+-  // e.g. `28=1,29=1` puts the pre-S3.21 vertex model and no clipping back on the live terrain path; unset = every knob 0)
+-  if (const char *env = std::getenv("SG_RASTER_TUNE")) {
+-    const char *p = env;
+-    while (*p) {
+-      char *e = nullptr;
+-      const long i = std::strtol(p, &e, 10);
+-      if (e == p || *e != '=') break;
+-      const char *q = e + 1;
+-      const long v = std::strtol(q, &e, 10);
+-      if (e == q) break;
+-      if (i >= 0 && i < kTunes) tune[i] = static_cast<int>(v);
+-      p = *e == ',' ? e + 1 : e;
+-      if (e == q || (*e != ',' && *e != 0)) break;
+-    }
+-  }
+   vp_w_ = width;
+   vp_h_ = height;
+ }
+@@ -172,95 +149,22 @@ void GlRaster::mul(const Mat &b) {
+     }
+   a = c;
+ }
+-// FLOAT32 MATRICES (roadmap S3.21, U-1392): measured with feedback-mode probes of the real software GL (log/roadmap/S3/21_notes.md):
+-// every product and sum of the matrix arithmetic is a float32 operation, a product's four terms summed in order k = 0..3 (so a
+-// translation column is x * m0 + y * m1 + z * m2 + m3), and the MVP is the modelview operations applied to the MVP itself.
+-// Volatile stores keep each operation a separately rounded float on every compiler setting.
+-void GlRaster::fmul_(const FMat &a, const FMat &b, FMat &r) {
+-  FMat c;
+-  for (int j = 0; j < 4; ++j)
+-    for (int i = 0; i < 4; ++i) {
+-      volatile float s = a.m[i] * b.m[4 * j];
+-      for (int k = 1; k < 4; ++k) {
+-        volatile float p = a.m[i + 4 * k] * b.m[k + 4 * j];
+-        s = s + p;
+-      }
+-      c.m[i + 4 * j] = s;
+-    }
+-  r = c;
+-}
+-void GlRaster::fpost_(const FMat &b) {
+-  if (mode_ == kProjection) {
+-    fmul_(fproj_, b, fproj_);
+-    fmul_(fproj_, fmv_, fmvp_);
+-  } else {
+-    fmul_(fmv_, b, fmv_);
+-    fmul_(fmvp_, b, fmvp_);
+-  }
+-}
+ void GlRaster::load_identity() {
+   Mat &a = cur();
+   std::memset(a.m, 0, sizeof a.m);
+   a.m[0] = a.m[5] = a.m[10] = a.m[15] = 1.0;
+-  FMat &f = mode_ == kProjection ? fproj_ : fmv_;
+-  std::memset(f.m, 0, sizeof f.m);
+-  f.m[0] = f.m[5] = f.m[10] = f.m[15] = 1.0f;
+-  if (mode_ == kProjection) fmul_(fproj_, fmv_, fmvp_);
+-  else fmvp_ = fproj_;
+-}
+-void GlRaster::push_matrix() {
+-  stack_[mode_ == kProjection ? 1 : 0].push_back(cur());
+-  if (mode_ == kProjection) {
+-    fstack_[1].push_back(fproj_);
+-  } else {
+-    fstack_[0].push_back(fmv_);
+-    fstack_mvp_.push_back(fmvp_);
+-  }
+ }
++void GlRaster::push_matrix() { stack_[mode_ == kProjection ? 1 : 0].push_back(cur()); }
+ void GlRaster::pop_matrix() {
+   auto &st = stack_[mode_ == kProjection ? 1 : 0];
+   if (st.empty()) return;
+   cur() = st.back();
+   st.pop_back();
+-  if (mode_ == kProjection) {
+-    if (!fstack_[1].empty()) { fproj_ = fstack_[1].back(); fstack_[1].pop_back(); }
+-    fmul_(fproj_, fmv_, fmvp_);
+-  } else if (!fstack_[0].empty()) {
+-    fmv_ = fstack_[0].back(); fstack_[0].pop_back();
+-    fmvp_ = fstack_mvp_.back(); fstack_mvp_.pop_back();
+-  }
+ }
+ void GlRaster::matrix_mode(uint32_t mode) { mode_ = mode; }
+ void GlRaster::rotated(double angle, double x, double y, double z) {
+   const double n = std::sqrt(x * x + y * y + z * z);
+   if (n == 0) return;
+-  {
+-    // the float32 rotation (roadmap S3.21): the axis normalised in float, cos / sin of the angle in radians rounded to float,
+-    // the diagonal as the Red Book's u u^T + cos (I - u u^T): x^2 + (1 - x^2) c (a probe with a general axis needs that form: the
+-    // (1 - c) x^2 + c form is one float ulp off), the off-diagonal terms (1 - c) x y -+ s z
+-    volatile float fx = static_cast<float>(x), fy = static_cast<float>(y), fz = static_cast<float>(z);
+-    volatile float xx = fx * fx, yy = fy * fy, zz = fz * fz;
+-    volatile float n2 = xx + yy;
+-    n2 = n2 + zz;
+-    const float fn = static_cast<float>(std::sqrt(static_cast<double>(n2)));
+-    if (fn != 1.0f) { fx = fx / fn; fy = fy / fn; fz = fz / fn; xx = fx * fx; yy = fy * fy; zz = fz * fz; }
+-    const double rad = angle * 3.14159265358979323846 / 180.0;
+-    const float c = static_cast<float>(std::cos(rad)), s = static_cast<float>(std::sin(rad));
+-    volatile float t = 1.0f - c;
+-    auto diag = [c](float q) { volatile float a = 1.0f - q; volatile float b = a * c; volatile float r = q + b; return static_cast<float>(r); };
+-    auto off = [](float t_, float p, float q, float sv, float w, bool plus) {
+-      volatile float a = t_ * p; volatile float b = a * q; volatile float d = sv * w;
+-      volatile float r = plus ? b + d : b - d;
+-      return static_cast<float>(r);
+-    };
+-    FMat r;
+-    const float v[16] = {diag(xx),                 off(t, fx, fy, s, fz, true),  off(t, fx, fz, s, fy, false), 0,
+-                         off(t, fx, fy, s, fz, false), diag(yy),                 off(t, fy, fz, s, fx, true),  0,
+-                         off(t, fx, fz, s, fy, true),  off(t, fy, fz, s, fx, false), diag(zz),                 0,
+-                         0, 0, 0, 1};
+-    std::memcpy(r.m, v, sizeof v);
+-    fpost_(r);
+-  }
+   x /= n; y /= n; z /= n;
+   const double rad = angle * 3.14159265358979323846 / 180.0, c = std::cos(rad), s = std::sin(rad), t = 1 - c;
+   Mat r;
+@@ -278,11 +182,6 @@ void GlRaster::translatef(float x, float y, float z) {
+   r.m[0] = r.m[5] = r.m[10] = r.m[15] = 1.0;
+   r.m[12] = x; r.m[13] = y; r.m[14] = z;
+   mul(r);
+-  FMat f;
+-  std::memset(f.m, 0, sizeof f.m);
+-  f.m[0] = f.m[5] = f.m[10] = f.m[15] = 1.0f;
+-  f.m[12] = x; f.m[13] = y; f.m[14] = z;
+-  fpost_(f);
+ }
+ void GlRaster::ortho(double l, double r, double b, double t, double n, double f) {
+   Mat o;
+@@ -295,9 +194,6 @@ void GlRaster::ortho(double l, double r, double b, double t, double n, double f)
+   o.m[14] = -(f + n) / (f - n);
+   o.m[15] = 1.0;
+   mul(o);
+-  FMat fo;   // the elements in double, stored as float (a probe of the terrain's projection: float operands give the same values)
+-  for (int i = 0; i < 16; ++i) fo.m[i] = static_cast<float>(o.m[i]);
+-  fpost_(fo);
+ }
+ void GlRaster::viewport(int32_t x, int32_t y, int32_t w, int32_t h) { vp_x_ = x; vp_y_ = y; vp_w_ = w; vp_h_ = h; }
+ 
+@@ -434,27 +330,6 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
+   v.x = G(vp_x_ + G(G(G(cx / cw) + 1.0) * 0.5) * vp_w_);
+   v.y = G(vp_y_ + G(G(G(cy / cw) + 1.0) * 0.5) * vp_h_);
+   v.z = (cz / cw + 1.0) * 0.5;
+-  v.qx = v.qy = 0;
+-  if (tune[28] == 0) {
+-    // VERTEX RULE (roadmap S3.21, U-1392; measured against the real GL's feedback points, log/roadmap/S3/21_notes.md): the object
+-    // coordinates as floats through the float32 MVP, the translation added FIRST (m3 + x m0 + y m1 + z m2, each operation rounded
+-    // to float), then window = ndc * (half-size - 2^-8) rounded to float, plus the centre, rounded half to even to 2^-8 in one step
+-    // (a biased float add). Matches every vertex of the recorded passes (21_vcheck_all.log); the double model above misses the
+-    // vertices whose window coordinate sits within a float ulp of a 2^-8 rounding tie.
+-    const float *M = fmvp_.m;
+-    const float o[3] = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)};
+-    float clip[4];
+-    for (int r = 0; r < 4; ++r) {
+-      volatile float acc = M[12 + r];
+-      for (int k = 0; k < 3; ++k) {
+-        volatile float term = o[k] * M[r + 4 * k];
+-        acc = acc + term;
+-      }
+-      clip[r] = acc;
+-    }
+-    std::memcpy(v.c, clip, sizeof clip);
+-    window_of_(clip, v);
+-  }
+   v.s = cur_s_;
+   v.t = cur_t_;
+   v.r = cur_c_[0]; v.g = cur_c_[1]; v.b = cur_c_[2]; v.a = cur_c_[3];
+@@ -515,107 +390,6 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
+   }
+   verts_.push_back(v);
+ }
+-void GlRaster::window_of_(const float c[4], Vtx &v) const {
+-  float nx = c[0], ny = c[1];
+-  if (c[3] != 1.0f) {   // not measured: the terrain's projections are orthographic (w = 1)
+-    volatile float inv = 1.0f / c[3];
+-    volatile float a = c[0] * inv, b = c[1] * inv;
+-    nx = a; ny = b;
+-  }
+-  const double hx = vp_w_ * 0.5, hy = vp_h_ * 0.5;
+-  volatile float px = nx * static_cast<float>(hx - 1.0 / 256.0), py = ny * static_cast<float>(hy - 1.0 / 256.0);
+-  const double wx = static_cast<double>(px) + (vp_x_ + hx), wy = static_cast<double>(py) + (vp_y_ + hy);
+-  v.x = wx;
+-  v.y = wy;
+-  v.qx = std::nearbyint(256.0 * wx) / 256.0;
+-  v.qy = std::nearbyint(256.0 * wy) / 256.0;
+-}
+-
+-// FRUSTUM CLIPPING (roadmap S3.21, U-1392; measured against the real GL's triangle feedback, log/roadmap/S3/21_notes.md): a triangle
+-// with a vertex outside -w <= x, y, z <= w is culled first (on its snapped window positions; a zero area is not a back face), then
+-// clipped in clip space against x >= -w, x <= w, y >= -w, y <= w, z >= -w, z <= w in that order, Sutherland-Hodgman with the
+-// classic output order (for each edge prev -> cur: the intersection when the edge crosses, then cur when inside); an intersection
+-// is t = d_in / (d_in - d_out) (d = w +- coordinate, float) and every attribute is in + t (out - in) in float, from the inside
+-// vertex; the polygon is drawn as the fan of its first vertex. Without it (GlRaster before S3.21, tune 29 = 1) the unclipped
+-// triangle's attribute planes stand where the real GL has the fan triangles', the residue in the bands at the viewport edges.
+-bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
+-  const Vtx *in3[3] = {&a, &b, &c};
+-  bool out = false;
+-  for (const Vtx *p : in3)
+-    for (int k = 0; k < 3; ++k) out = out || !(p->c[k] >= -p->c[3] && p->c[k] <= p->c[3]);
+-  if (!out) return false;
+-  const double area = edge(a.qx, a.qy, b.qx, b.qy, c.qx, c.qy);
+-  const bool front = (front_ == 0x0901) ? area >= 0 : area <= 0;
+-  ++stats.triangles;
+-  if (cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return true; }
+-  struct CV { float c[4]; float s, t, r, g, b, a; };
+-  auto to = [](const Vtx &v) {
+-    CV r;
+-    std::memcpy(r.c, v.c, sizeof r.c);
+-    r.s = static_cast<float>(v.s); r.t = static_cast<float>(v.t);
+-    r.r = static_cast<float>(v.r); r.g = static_cast<float>(v.g); r.b = static_cast<float>(v.b); r.a = static_cast<float>(v.a);
+-    return r;
+-  };
+-  std::vector<CV> poly = {to(a), to(b), to(c)}, next;
+-  auto dist = [](const CV &v, int plane) {
+-    const int k = plane >> 1;
+-    volatile float d = (plane & 1) ? v.c[3] - v.c[k] : v.c[3] + v.c[k];
+-    return static_cast<float>(d);
+-  };
+-  auto lerp = [](float p, float q, float t) {
+-    volatile float d = q - p;
+-    volatile float m = t * d;
+-    volatile float r = p + m;
+-    return static_cast<float>(r);
+-  };
+-  for (int plane = 0; plane < 6 && !poly.empty(); ++plane) {
+-    const size_t n = poly.size();
+-    std::vector<float> d(n);
+-    bool all_in = true;
+-    for (size_t i = 0; i < n; ++i) { d[i] = dist(poly[i], plane); all_in = all_in && d[i] >= 0; }
+-    if (all_in) continue;
+-    next.clear();
+-    for (size_t i = 0; i < n; ++i) {
+-      const size_t pi = (i + n - 1) % n;
+-      const float dp = d[pi], dc = d[i];
+-      if ((dp >= 0) != (dc >= 0)) {
+-        const CV &ii = dp >= 0 ? poly[pi] : poly[i];
+-        const CV &oo = dp >= 0 ? poly[i] : poly[pi];
+-        const float di = dp >= 0 ? dp : dc, dout = dp >= 0 ? dc : dp;
+-        volatile float den = di - dout;
+-        volatile float t = di / den;
+-        CV nv;
+-        for (int k = 0; k < 4; ++k) nv.c[k] = lerp(ii.c[k], oo.c[k], t);
+-        nv.s = lerp(ii.s, oo.s, t); nv.t = lerp(ii.t, oo.t, t);
+-        nv.r = lerp(ii.r, oo.r, t); nv.g = lerp(ii.g, oo.g, t); nv.b = lerp(ii.b, oo.b, t); nv.a = lerp(ii.a, oo.a, t);
+-        next.push_back(nv);
+-      }
+-      if (dc >= 0) next.push_back(poly[i]);
+-    }
+-    poly.swap(next);
+-  }
+-  if (poly.size() < 3) return true;
+-  // the unclipped vertices keep their own values (the clipper copies them); new ones take the window rule of their clip coordinates
+-  std::vector<Vtx> vs(poly.size());
+-  for (size_t i = 0; i < poly.size(); ++i) {
+-    const CV &p = poly[i];
+-    Vtx &v = vs[i];
+-    const Vtx *orig = nullptr;
+-    for (const Vtx *q : in3)
+-      if (std::memcmp(q->c, p.c, sizeof p.c) == 0 && static_cast<float>(q->s) == p.s && static_cast<float>(q->t) == p.t) orig = q;
+-    if (orig) { v = *orig; continue; }
+-    std::memcpy(v.c, p.c, sizeof p.c);
+-    window_of_(p.c, v);
+-    v.z = 0.5;
+-    v.s = p.s; v.t = p.t; v.r = p.r; v.g = p.g; v.b = p.b; v.a = p.a;
+-  }
+-  in_clip_ = true;
+-  for (size_t i = 1; i + 1 < vs.size(); ++i) triangle(vs[0], vs[i], vs[i + 1]);
+-  in_clip_ = false;
+-  --stats.triangles;   // counted once above for the original triangle; the fan's triangles count themselves
+-  return true;
+-}
+-
+ void GlRaster::array_element(int32_t i) {
+   const size_t k = static_cast<size_t>(static_cast<uint32_t>(i)) * 3;
+   if (k + 3 > varr_.size()) { ++stats.bad_texture; return; }
+@@ -635,12 +409,11 @@ void GlRaster::end() {
+ }
+ 
+ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
+-  if (tune[28] == 0 && tune[29] == 0 && !in_clip_ && clip_triangle_(a, b, c)) return;
+   ++stats.triangles;
+   const double area = edge(a.x, a.y, b.x, b.y, c.x, c.y);
+   if (area == 0) return;
+   const bool front = (front_ == 0x0901) ? area > 0 : area < 0;
+-  if (!in_clip_ && cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return; }
++  if (cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return; }
+   const auto tit = textures_.find(bound_);
+   // A texture object with no image (id 0, or never loaded) is incomplete, and OpenGL then draws without texturing: the
+   // fragment is the lit colour. A white 1x1 texel stands in for it (modulated by the colour, it is the colour).
+@@ -707,11 +480,6 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
+     const double k = tune[22] == 0 ? -1.0 : (tune[22] == 1 || tune[22] == -1) ? tune[22] : tune[22] / 100.0;
+     const double cxs = cxv + tune[21] / 256.0, cys = cyv + tune[21] / 256.0;
+     for (int i = 0; i < 3; ++i) {
+-      if (tune[28] == 0) {   // the float32 vertex rule's snapped positions (emit)
+-        sx_[i] = vs[i]->qx;
+-        sy_[i] = vs[i]->qy;
+-        continue;
+-      }
+       if (tune[25] != 0) {
+         // float32 evaluation of ndc * (half-size - 2^-8) + centre (tune 25)
+         const float nx = static_cast<float>((vs[i]->x - cxs) / hx), ny = static_cast<float>((vs[i]->y - cys) / hy);
+@@ -743,70 +511,6 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
+     for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->x); tris_.push_back(q->y); }
+     for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->s); tris_.push_back(q->t); }
+   }
+-  // ATTRIBUTE STEPPING (roadmap S3.21b, U-1309; opt-in `#tune 30 1`, `#tune 31 <F>` adds the texture coordinates): the generic GL's
+-  // incremental fixed point, measured on a slow-ramp probe (log/roadmap/S3/21_notes.md section 10): rows walk from the largest y
+-  // down; the first covered row's start (its first covered pixel) is the plane value, every later row's start is the previous one
+-  // plus ONE held step trunc(Q * (-dA/dy * rows + dA/dx * (ix - ix_prev))) / Q, and each pixel adds trunc(Q * dA/dx) / Q; colour
+-  // Q = 31 * 2^16 (the 5-bit range, 16.16), texture coordinates Q = texture size * 2^F (texel units).
+-  const bool stepping = tune[30] != 0 && fixed && !(textured && tune[30] == 2);
+-  const int nstep = (stepping && tune[31] > 0) ? 5 : 3;
+-  std::vector<int> st_ix;
+-  std::vector<double> st_v, st_q;
+-  double st_gx[5] = {}, st_gy[5] = {};
+-  if (stepping) {
+-    const double A[5][3] = {{v0->r, v1->r, v2->r}, {v0->g, v1->g, v2->g}, {v0->b, v1->b, v2->b},
+-                            {v0->s * tex.w, v1->s * tex.w, v2->s * tex.w}, {v0->t * tex.h, v1->t * tex.h, v2->t * tex.h}};
+-    // colour quantum: untextured 31 * 2^16 (measured); textured triangles by tune 30 (1: the same, 2: not stepped, 3: 255 * 2^16,
+-    // 4: 2^16, 5: 31 * 2^16 * 8)
+-    double cq = 31.0 * 65536.0;
+-    if (textured) cq = tune[30] == 3 ? 255.0 * 65536.0 : tune[30] == 4 ? 65536.0 : tune[30] == 5 ? 31.0 * 65536.0 * 8.0 : cq;
+-    const double scl[5] = {cq, cq, cq, std::ldexp(1.0, tune[31]), std::ldexp(1.0, tune[31])};
+-    const double arS = edge(sx_[0], sy_[0], sx_[1], sy_[1], sx_[2], sy_[2]);
+-    const double dx1 = sx_[1] - sx_[0], dy1 = sy_[1] - sy_[0], dx2 = sx_[2] - sx_[0], dy2 = sy_[2] - sy_[0];
+-    for (int k = 0; k < nstep; ++k) {
+-      const double d1 = A[k][1] - A[k][0], d2 = A[k][2] - A[k][0];
+-      st_gx[k] = arS != 0 ? (d1 * dy2 - d2 * dy1) / arS : 0.0;
+-      st_gy[k] = arS != 0 ? (d2 * dx1 - d1 * dx2) / arS : 0.0;
+-    }
+-    auto Q = [&](double v, int k) { return std::trunc(v * scl[k]) / scl[k]; };
+-    const int rows = maxy - miny + 1;
+-    st_ix.assign(rows, INT32_MIN);
+-    st_v.assign(static_cast<size_t>(rows) * 5, 0.0);
+-    st_q.assign(5, 0.0);
+-    for (int k = 0; k < nstep; ++k) st_q[k] = Q(st_gx[k], k);
+-    int prev_y = 0, prev_ix = 0;
+-    double prev[5] = {};
+-    bool have = false;
+-    const double arA0 = std::fabs(arS);
+-    for (int y = maxy; y >= miny; --y) {
+-      int ix = INT32_MIN;
+-      for (int x = minx; x <= maxx && ix == INT32_MIN; ++x) {
+-        const double px = x + 0.5, py = y + 0.5;
+-        const double w0 = edge(c1->x, c1->y, c2->x, c2->y, px, py);
+-        const double w1 = edge(c2->x, c2->y, c0->x, c0->y, px, py);
+-        const double w2 = edge(c0->x, c0->y, c1->x, c1->y, px, py);
+-        if (w0 < 0 || w1 < 0 || w2 < 0) continue;
+-        if ((w0 == 0 && !cinc0) || (w1 == 0 && !cinc1) || (w2 == 0 && !cinc2)) continue;
+-        ix = x;
+-      }
+-      if (ix == INT32_MIN) continue;
+-      double cur[5];
+-      if (!have) {
+-        const double px = ix + 0.5, py = y + 0.5;
+-        const double b0 = edge(sx_[1], sy_[1], sx_[2], sy_[2], px, py), b1 = edge(sx_[2], sy_[2], sx_[0], sy_[0], px, py);
+-        const double b2 = edge(sx_[0], sy_[0], sx_[1], sy_[1], px, py);
+-        for (int k = 0; k < nstep; ++k) cur[k] = arA0 != 0 ? (b0 * A[k][0] + b1 * A[k][1] + b2 * A[k][2]) / arA0 : A[k][0];
+-        have = true;
+-      } else {
+-        for (int k = 0; k < nstep; ++k)
+-          cur[k] = prev[k] + Q(-st_gy[k] * (prev_y - y) + st_gx[k] * (ix - prev_ix), k);
+-      }
+-      st_ix[y - miny] = ix;
+-      for (int k = 0; k < nstep; ++k) { st_v[static_cast<size_t>(y - miny) * 5 + k] = cur[k]; prev[k] = cur[k]; }
+-      prev_y = y;
+-      prev_ix = ix;
+-    }
+-  }
+   for (int y = miny; y <= maxy; ++y) {
+     for (int x = minx; x <= maxx; ++x) {
+       const double px = x + 0.5, py = y + 0.5;
+@@ -876,12 +580,6 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
+       const double s = linear ? (a0 * v0->s + a1 * v1->s + a2 * v2->s) / arA : (w0 * v0->s + w1 * v1->s + w2 * v2->s) / ar;
+       const double t = linear ? (a0 * v0->t + a1 * v1->t + a2 * v2->t) / arA : (w0 * v0->t + w1 * v1->t + w2 * v2->t) / ar;
+       double u = s * tex.w, v = t * tex.h;
+-      const int st_row = y - miny;
+-      const bool st_px = stepping && st_ix[st_row] != INT32_MIN;
+-      if (st_px && nstep == 5) {   // the stepped texture coordinates (texel units)
+-        u = st_v[static_cast<size_t>(st_row) * 5 + 3] + (x - st_ix[st_row]) * st_q[3];
+-        v = st_v[static_cast<size_t>(st_row) * 5 + 4] + (x - st_ix[st_row]) * st_q[4];
+-      }
+       if (tune[2] > 0) {
+         const double q = static_cast<double>(1ull << tune[2]);
+         u = std::floor(u * q) / q;
+@@ -929,11 +627,6 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
+       }
+       double cr = (a0 * v0->r + a1 * v1->r + a2 * v2->r) / arA, cg = (a0 * v0->g + a1 * v1->g + a2 * v2->g) / arA;
+       double cb = (a0 * v0->b + a1 * v1->b + a2 * v2->b) / arA;
+-      if (st_px) {   // the stepped colour (21b)
+-        const double *sv = &st_v[static_cast<size_t>(st_row) * 5];
+-        const double dxs = x - st_ix[st_row];
+-        cr = sv[0] + dxs * st_q[0]; cg = sv[1] + dxs * st_q[1]; cb = sv[2] + dxs * st_q[2];
+-      }
+       if (tune[3] > 0) {
+         const double q = static_cast<double>((1ull << tune[3]) - 1);
+         cr = std::floor(cr * q + 0.5) / q;
+@@ -985,7 +678,6 @@ struct GlRaster::FastJob {
+   uint32_t tw, th;
+   int bpp, dith;
+   bool linear, modulate, blend, white, approx, sloppy;
+-  bool wctl;   // worker_ctl (negative control)
+ };
+ 
+ // The pixel-loop workers (set_threads): a ring of jobs written in order by the thread that sets the triangles up; worker k
+@@ -1157,7 +849,6 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
+   j.r0 = v0->r; j.r1 = v1->r; j.r2 = v2->r; j.g0 = v0->g; j.g1 = v1->g; j.g2 = v2->g; j.b0 = v0->b; j.b1 = v1->b; j.b2 = v2->b;
+   // the checked reciprocal path (fast_mode 1; negative controls: 3 skips the boundary checks, 4 rounds the reciprocals to float)
+   j.sloppy = fast_mode == 3;
+-  j.wctl = worker_ctl == 1;
+   bool approx = (fast_mode == 1 || fast_mode == 3 || fast_mode == 4) && j.div_st > 0 && j.div_st < 1e300 && j.arA > 0 &&
+                 j.arA < 1e300;
+   for (const Vtx *p : {v0, v1, v2})
+@@ -1320,7 +1011,6 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
+       dst = static_cast<uint16_t>((quantize_d(ro, d) << 10) | (quantize_d(go, d) << 5) | quantize_d(bo, d));
+       ++drawn;
+     }
+-    if (j.wctl && parts > 1 && part == parts - 1) row[xl] ^= 1;   // negative control: a wrong pixel from the last worker only
+   }
+   c[0] += drawn;
+   c[1] += blended;
+@@ -1340,11 +1030,6 @@ bool GlRaster::exec_line(const std::string &line) {
+     set_threads(static_cast<int>(std::strtol(line.c_str() + 9, nullptr, 10)));
+     return true;
+   }
+-  if (line.rfind("#workerctl ", 0) == 0) {
+-    finish();
+-    worker_ctl = static_cast<int>(std::strtol(line.c_str() + 11, nullptr, 10));
+-    return true;
+-  }
+   if (line.rfind("#fastpath ", 0) == 0) {
+     fast_mode = static_cast<int>(std::strtol(line.c_str() + 10, nullptr, 10));
+     return true;
+diff --git a/port/src/sim/gl_wgl.cpp b/port/src/sim/gl_wgl.cpp
+index cab80b8b..3d1623da 100644
+--- a/port/src/sim/gl_wgl.cpp
++++ b/port/src/sim/gl_wgl.cpp
+@@ -611,12 +611,11 @@ SelfCheck wgl_self_check(Ctx &ctx, int variant, int perturb) {
+   return s;
+ }
+ 
+-SelfCheck raster_self_check(Ctx &ctx, int old_rules) {
++SelfCheck raster_self_check(Ctx &ctx) {
+   SelfCheck s;
+   const auto t0 = std::chrono::steady_clock::now();
+   GlRaster r(800, 600);
+   r.no_context();
+-  if (old_rules) r.tune[28] = r.tune[29] = 1;   // roadmap S3.21's off switches (= SG_RASTER_TUNE=28=1,29=1), this rasteriser only
+   const std::vector<float> v = ref_floats(kRefVertices, sizeof(kRefVertices) / 4), n = ref_floats(kRefNormals, sizeof(kRefNormals) / 4);
+   if (guarded(s, [&] { ref_setup(ctx, r); })) {
+     r.pixels().assign(static_cast<size_t>(800) * 600, 0);
+@@ -633,8 +632,8 @@ SelfCheck raster_self_check(Ctx &ctx, int old_rules) {
+ 
+ namespace {
+ // Harness entries (roadmap S3.20): glWgl.selfCheck(variant, perturb) runs the startup self-check (1 = it passed) and writes
+-// `$wgl/selfcheck.txt` (pass, reason, got, want, ms) and `$wgl/selfcheck_rect.555` (the rectangle drawn); glWgl.rasterCheck(old_rules)
+-// the same reference through GlRaster (`$wgl/raster_rect.555`; old_rules 1 = S3.21's rules off, the negative control).
++// `$wgl/selfcheck.txt` (pass, reason, got, want, ms) and `$wgl/selfcheck_rect.555` (the rectangle drawn); glWgl.rasterCheck() the
++// same reference through GlRaster (`$wgl/raster_rect.555`).
+ void put(Ctx &c, const std::string &name, const std::string &text) {
+   GameFiles &f = c.files();
+   if (auto *d = dynamic_cast<DirGameFiles *>(&f))
+@@ -660,15 +659,15 @@ void a_self_check(Ctx &c, const uint32_t *a, Ret &r) {
+   put_rect(c, "$wgl/selfcheck_rect.555", s.rect);
+   r.set_u32(s.pass ? 1u : 0u);
+ }
+-void a_raster_check(Ctx &c, const uint32_t *a, Ret &r) {
+-  const gl::SelfCheck s = gl::raster_self_check(c, static_cast<int>(a[0]));
++void a_raster_check(Ctx &c, const uint32_t *, Ret &r) {
++  const gl::SelfCheck s = gl::raster_self_check(c);
+   put(c, "$wgl/rastercheck.txt", text_of(s));
+   put_rect(c, "$wgl/raster_rect.555", s.rect);
+   r.set_u32(s.pass ? 1u : 0u);
+ }
+ const FuncDef kFuncs[] = {
+     {"glWgl.selfCheck", "default", "int", 2, 0, a_self_check, nullptr},
+-    {"glWgl.rasterCheck", "default", "int", 1, 0, a_raster_check, nullptr},
++    {"glWgl.rasterCheck", "default", "int", 0, 0, a_raster_check, nullptr},
+ };
+ }  // namespace
+ 
+diff --git a/port/src/sim/terrain_live.cpp b/port/src/sim/terrain_live.cpp
+index 3759fe3e..d0030a30 100644
+--- a/port/src/sim/terrain_live.cpp
++++ b/port/src/sim/terrain_live.cpp
+@@ -9,7 +9,6 @@
+ #include <cstring>
+ 
+ #include "portsim/arith.h"
+-#include "portsim/gamefiles.h"
+ #include "portsim/ptr.h"
+ #include "portsim/sim/gfx.h"
+ #include "portsim/sim/terrain_render.h"
+@@ -42,85 +41,14 @@ LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after
+   raster_ = std::make_unique<gl::GlRaster>(800, 600);
+   raster_->no_context();
+   dll_.setup.b = raster_.get();
+-  // roadmap S3.15 (U-1810): SG_GL_BACKEND=wgl also feeds the setup to the host's own OpenGL (gl_wgl.h); the terrain passes then
+-  // draw through it (gfx_terrain.cpp). Read when the interface is made, so a run keeps one choice. Roadmap S3.20: raster / host
+-  // (= wgl) / auto too.
+-  const char *be = std::getenv("SG_GL_BACKEND");
+-  if (be && (std::strcmp(be, "wgl") == 0 || std::strcmp(be, "host") == 0 || std::strcmp(be, "auto") == 0 || std::strcmp(be, "raster") == 0))
+-    choose_renderer(be);
+-}
+-
+-// Roadmap S3.20 (decision G13). The host's OpenGL is made like use_host_gl does (with the negative controls' sink variants), the
+-// self-check draws its reference through a sink of the same variant; a refused check or a host without a 16-bit generic pixel
+-// format leaves GlRaster. Controls (g_negctl_gfx_terrain): 13 the pinned hash wrong, 14 the reference pass perturbed (every texture
+-// coordinate one texel off): both make "auto" fall back to GlRaster with the check's reason.
+-const LiveTerrain::RendererChoice &LiveTerrain::choose_renderer(const std::string &asked) {
+-  const std::string mode = asked == "host" ? "wgl" : asked;   // `host` is `wgl`'s other name
+-  RendererChoice c;
+-  c.mode = mode;
+-  if (calls_ != 0) {
+-    c.reason = "asked after the first Terrain call: the setup already went to the rasteriser alone";
+-    if (host_gl()) c.backend = "wgl";
+-    choice_ = c;
+-    return choice_;
+-  }
+-  if (mode == "raster") {
+-    use_host_gl(false);
+-    c.reason = "GlRaster (the default renderer, decision G13)";
+-  } else if (mode == "wgl") {
+-    if (use_host_gl(true)) {
+-      c.backend = "wgl";
+-      c.reason = "the host's OpenGL asked for (no self-check)";
+-    } else {
+-      c.reason = "the host's OpenGL asked for, unavailable: " + host_gl_why();
+-      use_host_gl(false);
+-    }
+-  } else {   // auto
+-    if (!use_host_gl(true)) {
+-      c.reason = "no host OpenGL: " + host_gl_why();
+-      use_host_gl(false);
+-    } else {
+-      const int ctl = SG_NEGCTL(g_negctl_gfx_terrain);
+-      const int variant = ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0;
+-      c.check = gl::wgl_self_check(ctx_, variant, ctl == 13 ? 1 : ctl == 14 ? 2 : 0);
+-      c.checked = true;
+-      if (c.check.pass) {
+-        c.backend = "wgl";
+-        c.reason = "self-check passed: " + c.check.reason;
+-      } else {
+-        c.reason = "self-check failed: " + c.check.reason;
+-        use_host_gl(false);
+-      }
+-    }
+-  }
+-  choice_ = c;
+-  return choice_;
+-}
+-
+-bool LiveTerrain::use_host_gl(bool on) {
+-  if (!on) {
+-    dll_.setup.b = raster_.get();
+-    pair_.reset();
+-    wgl_.reset();
+-    return true;
+-  }
+-  if (wgl_) return wgl_->ok();
+-  // negative controls 8 / 9 / 11 / 12 (gfx_terrain.cpp): a DIB with RGB565 masks / with its rows top-down / texture names not
+-  // mapped / no pixel format (the fallback: the sink is not ok, the setup stays GlRaster's alone)
+-  const int ctl = SG_NEGCTL(g_negctl_gfx_terrain);
+-  wgl_ = std::make_unique<gl::WglSink>(800, 600, ctl == 8 ? 1 : ctl == 9 ? 2 : ctl == 11 ? 3 : ctl == 12 ? 4 : 0);
+-  if (!wgl_->ok()) return false;
+-  pair_ = std::make_unique<gl::SetupPair>(raster_.get(), wgl_.get());
+-  dll_.setup.b = pair_.get();
+-  return true;
+ }
+ 
+ LiveTerrain::~LiveTerrain() = default;
+ 
+ void LiveTerrain::keep_snapshots() {
+-  while (next_snap_ < snap_after_.size() && snap_after_[next_snap_] <= calls_) {
++  while (next_snap_ < snap_after_.size() && snap_after_[next_snap_] <= log_.size()) {
+     Snapshot s;
+-    s.after = static_cast<uint32_t>(calls_);
++    s.after = static_cast<uint32_t>(log_.size());
+     s.object = object_;
+     s.vertices = g_.vertices;
+     s.normals = g_.normals;
+@@ -136,45 +64,20 @@ uint32_t LiveTerrain::call(const char *name, uint32_t self, std::initializer_lis
+   size_t k = 0;
+   for (uint32_t v : args) a[k++] = v;
+   const uint32_t ret = terrain_dll_call(ctx_, g_, dll_, name, self, a, table, n);
+-  if (SG_NEGCTL(g_negctl_gfx_terrain) == 6) keep_log_ = false;   // control 6: the log kept off in a run that reads it
+-  if (keep_log_) {
+-    LogRec r{static_cast<uint64_t>(log_size()), name, self, {a[0], a[1], a[2], a[3], a[4]}, ret, static_cast<uint8_t>(k), false, 0,
+-             {}, table != nullptr};
+-    if (table) r.tbl.assign(table, table + (n > 0 ? n : 0));
+-    // control 7: the compact record loses setType's variation (the lazy line then prints no `var=`)
+-    if (std::strcmp(name, "setType") == 0 && a[0] && SG_NEGCTL(g_negctl_gfx_terrain) != 7) {
+-      r.has_var = true;
+-      r.var = Ptr<TerrainTile>(ctx_.mem, a[0]).field(&TerrainTile::variation).get();
+-    }
+-    recs_.push_back(std::move(r));
++  // the recorder's line: seq tid depth name ecx a0..a4 ret [tbl=...]
++  std::string line = std::to_string(log_.size()) + " 0 0 " + name + " " + hex(self);
++  for (size_t i = 0; i < 5; ++i) line += " " + (i < k ? hex(a[i]) : std::string("-"));
++  line += " " + hex(ret);
++  if (table) {
++    line += " tbl=";
++    for (int32_t i = 0; i < n; ++i) line += (i ? "," : "") + std::to_string(table[i]);
+   }
+-  ++calls_;
++  if (std::strcmp(name, "setType") == 0 && a[0]) line += " var=" + std::to_string(Ptr<TerrainTile>(ctx_.mem, a[0]).field(&TerrainTile::variation).get());
++  log_.push_back(std::move(line));
+   keep_snapshots();
+   return ret;
+ }
+ 
+-const std::vector<std::string> &LiveTerrain::log() const {
+-  // the recorder's line: seq tid depth name ecx a0..a4 ret [tbl=...] [var=...]; the pending records move into the lines
+-  for (const LogRec &r : recs_) {
+-    std::string line = std::to_string(r.seq) + " 0 0 " + r.name + " " + hex(r.self);
+-    for (size_t i = 0; i < 5; ++i) line += " " + (i < r.k ? hex(r.a[i]) : std::string("-"));
+-    line += " " + hex(r.ret);
+-    if (r.has_tbl) {
+-      line += " tbl=";
+-      for (size_t i = 0; i < r.tbl.size(); ++i) line += (i ? "," : "") + std::to_string(r.tbl[i]);
+-    }
+-    if (r.has_var) line += " var=" + std::to_string(r.var);
+-    log_.push_back(std::move(line));
+-  }
+-  recs_.clear();
+-  return log_;
+-}
+-
+-void LiveTerrain::drop_log() {
+-  std::vector<std::string>().swap(log_);
+-  std::vector<LogRec>().swap(recs_);
+-}
+-
+ uint32_t LiveTerrain::get_instance() {
+   if (!dll_.constructed) {
+     object_.assign(kTerrainObjectSize, kNewFill);   // operator new's fill (debug CRT)
+@@ -434,7 +337,7 @@ uint32_t LiveTerrain::operator_new(uint32_t size) { return engine_->operator_new
+ // Harness entries (roadmap S3.2), by sg_call: terrainLive.keepFrame(k) asks the terrain body family to copy the root surface around
+ // updateTerrainRender's k-th call (from 0) into `$gfx/terrain_<k>_*.555`; terrainLive.passes / terrainLive.pixels return the passes
+ // rasterised and the pixels they wrote (low dword); terrainLive.frames the updateTerrainRender calls seen. A context whose TerrainApi
+-// is not a LiveTerrain throws MissingResource. terrainLive.hostGl(on) selects the host's own OpenGL (below).
++// is not a LiveTerrain throws MissingResource.
+ namespace {
+ LiveTerrain &need_live(Ctx &c) {
+   LiveTerrain *lt = has_terrain_api(c) ? dynamic_cast<LiveTerrain *>(&terrain_api(c)) : nullptr;
+@@ -448,35 +351,11 @@ void a_keep_frame(Ctx &c, const uint32_t *a, Ret &r) {
+ void a_passes(Ctx &c, const uint32_t *, Ret &r) { r.set_u32(static_cast<uint32_t>(need_live(c).view().passes)); }
+ void a_pixels(Ctx &c, const uint32_t *, Ret &r) { r.set_u32(static_cast<uint32_t>(need_live(c).view().pixels_drawn)); }
+ void a_frames(Ctx &c, const uint32_t *, Ret &r) { r.set_u32(need_live(c).view().frames); }
+-// terrainLive.hostGl(on) (roadmap S3.15): the host's own OpenGL beside the rasteriser (gl_wgl.h), chosen before the LiveTerrain's
+-// first call (the GL setup must reach it from the start); returns 1 when it is in use, 0 when the host has none or it came too late
+-void a_host_gl(Ctx &c, const uint32_t *a, Ret &r) {
+-  LiveTerrain &lt = need_live(c);
+-  r.set_u32(lt.calls() == 0 && lt.use_host_gl(a[0] != 0) && a[0] != 0 ? 1u : 0u);
+-}
+-// terrainLive.renderer(mode) (roadmap S3.20): 0 = GlRaster, 1 = the host's OpenGL without the check, 2 = auto (the self-check
+-// decides); returns 1 when the host's OpenGL draws, and writes the choice to `$wgl/renderer.txt` (mode, backend, reason, check,
+-// got, want, ms). Before the LiveTerrain's first call.
+-void a_renderer(Ctx &c, const uint32_t *a, Ret &r) {
+-  LiveTerrain &lt = need_live(c);
+-  const LiveTerrain::RendererChoice &ch = lt.choose_renderer(a[0] == 0 ? "raster" : a[0] == 1 ? "wgl" : "auto");
+-  char ms[32];
+-  std::snprintf(ms, sizeof ms, "%.1f", ch.check.ms);
+-  const std::string t = "mode " + ch.mode + "\nbackend " + ch.backend + "\nreason " + ch.reason + "\ncheck " +
+-                        (ch.checked ? (ch.check.pass ? "pass" : "fail") : "none") + "\ngot " + ch.check.got + "\nwant " +
+-                        ch.check.want + "\nms " + ms + "\n";
+-  GameFiles &f = c.files();
+-  auto *d = dynamic_cast<DirGameFiles *>(&f);
+-  if (!d || !d->write_through()) f.write("$wgl/renderer.txt", std::vector<uint8_t>(t.begin(), t.end()));
+-  r.set_u32(ch.backend == "wgl" ? 1u : 0u);
+-}
+ const FuncDef kFuncs[] = {
+     {"terrainLive.keepFrame", "default", "int", 1, 0, a_keep_frame, nullptr},
+     {"terrainLive.passes", "default", "int", 0, 0, a_passes, nullptr},
+     {"terrainLive.pixels", "default", "int", 0, 0, a_pixels, nullptr},
+     {"terrainLive.frames", "default", "int", 0, 0, a_frames, nullptr},
+-    {"terrainLive.hostGl", "default", "int", 1, 0, a_host_gl, nullptr},
+-    {"terrainLive.renderer", "default", "int", 1, 0, a_renderer, nullptr},
+ };
+ }  // namespace
+ 
+diff --git a/port/src/sim/terrain_overlay.cpp b/port/src/sim/terrain_overlay.cpp
+index ced5579a..b2ce6a0e 100644
+--- a/port/src/sim/terrain_overlay.cpp
++++ b/port/src/sim/terrain_overlay.cpp
+@@ -5,13 +5,10 @@
+ // draws one drawLine into a w x h RGB555 buffer of the address space at buf (flags bit 0 = the flip byte, bit 1 = no GL context;
+ // prev_width = the line width before the call as float bits, 0 = GL's default 1.0) and returns the pixels written. The gfx bodies
+ // (drawMapLine, drawMinimapSegment, setLinePoint, lineTo, drawCircle) are listed in gfx_terrain.cpp's family table.
+-#define _CRT_SECURE_NO_WARNINGS   // the development dump (SG_OVERLAY_DUMP) uses fopen / getenv
+ #include "portsim/sim/terrain_overlay.h"
+ 
+ #include <algorithm>
+ #include <cmath>
+-#include <cstdio>
+-#include <cstdlib>
+ #include <cstring>
+ #include <string>
+ 
+@@ -34,22 +31,6 @@ namespace {
+ 
+ int mode() { return SG_NEGCTL(g_negctl_terrain_overlay); }
+ 
+-// the line rule (roadmap S3.24; log/roadmap/S3/24_notes.md). Default 2: per column of the major axis the generic GL draws
+-// N = floor(w * L / |major|) + 2 pixels, the pixel centres whose minor offset o from the line centre, times the tie sign, lies in
+-// [-N/2, N/2); the tie sign is sign(dx) * sign(dy) for an x-major line and sign(dx) for a y-major one. 0 = S3.8's model (no span);
+-// development variants: 1 = the sign of the minor delta, 3 = sign(dx) * sign(dy) on both axes, 4 = +1, 5 = -1, 6 = no tie decision
+-// (|o| <= N/2 + kSpanSlack), 7 = x-major sign(dx) * sign(dy), y-major -sign(dx) * sign(dy). Set by overlay.setRule or,
+-// before that, by SG_OVERLAY_RULE; negative control 11 = rule 0.
+-constexpr double kSpanSlack = 0.002;
+-int g_line_rule = -1;
+-int line_rule() {
+-  if (g_line_rule < 0) {
+-    const char *e = std::getenv("SG_OVERLAY_RULE");
+-    g_line_rule = (e && *e) ? std::atoi(e) : 2;
+-  }
+-  return g_line_rule;
+-}
+-
+ // the 4x4 ordered dither of the generic GL's 16-bit write (gl_raster.cpp quantize, fitted on the terrain frames)
+ constexpr int kDither[4][4] = {{15, 7, 13, 5}, {3, 11, 1, 9}, {12, 4, 14, 6}, {0, 8, 2, 10}};
+ int quantize(double c, int32_t x, int32_t y) {
+@@ -60,44 +41,6 @@ int quantize(double c, int32_t x, int32_t y) {
+ 
+ double clamp01(double v) { return v < 0.0 ? 0.0 : (v > 1.0 ? 1.0 : v); }
+ 
+-// development switch SG_OVERLAY_DUMP=<file> (roadmap S3.24): every drawn call appends its arguments, the GL state and the pixels of
+-// its box before and after, so the same calls can be replayed through the real software GL (log/roadmap/S3/24_probe.py)
+-struct LineDump {
+-  const char *path;
+-  uint16_t *fb;
+-  int32_t w, x0, y0, x1, y1;
+-  std::vector<uint8_t> rec;
+-  LineDump(uint16_t *f, int32_t fw, int32_t fh, int32_t a, int32_t b, int32_t c, int32_t d)
+-      : path(std::getenv("SG_OVERLAY_DUMP")), fb(f), w(fw), x0(std::max(0, a - 2)), y0(std::max(0, b - 2)),
+-        x1(std::min(fw - 1, c + 2)), y1(std::min(fh - 1, d + 2)) {}
+-  bool on() const { return path && *path && x1 >= x0 && y1 >= y0; }
+-  void put(int32_t v) {
+-    const uint8_t *p = reinterpret_cast<const uint8_t *>(&v);
+-    rec.insert(rec.end(), p, p + 4);
+-  }
+-  void box() {
+-    for (int32_t y = y0; y <= y1; ++y) {
+-      const uint8_t *p = reinterpret_cast<const uint8_t *>(fb + static_cast<size_t>(y) * static_cast<size_t>(w) + x0);
+-      rec.insert(rec.end(), p, p + 2 * static_cast<size_t>(x1 - x0 + 1));
+-    }
+-  }
+-  void head(int32_t ax, int32_t ay, int32_t bx, int32_t by, uint32_t colour, int32_t width, int32_t alpha, const LineGl &gl) {
+-    uint32_t wb;
+-    std::memcpy(&wb, &gl.line_width, 4);
+-    for (int32_t v : {0x314c564f, ax, ay, bx, by, static_cast<int32_t>(colour), width, alpha, static_cast<int32_t>(wb),
+-                      gl.flip_y ? 1 : 0, gl.screen_w, gl.screen_h, w, x0, y0, x1, y1})
+-      put(v);
+-    box();
+-  }
+-  void tail() {
+-    box();
+-    if (FILE *f = std::fopen(path, "ab")) {
+-      std::fwrite(rec.data(), 1, rec.size(), f);
+-      std::fclose(f);
+-    }
+-  }
+-};
+-
+ // U-1076's fixed-point window-coordinate setup: c + (v - c) * (1 - 2^-8 / h), rounded to 8 fractional bits
+ double snap(double v, double c, double h) {
+   if (mode() == 5) return v;
+@@ -255,27 +198,9 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t
+   const int32_t xe = std::min(fb_w - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
+   const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
+   const int32_t ye = std::min(fb_h - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+-  LineDump dump(fb, fb_w, fb_h, x0, y0, xe, ye);
+-  if (dump.on()) dump.head(x1, y1, x2, y2, colour, width, alpha, gl);
+-  // the span rule (roadmap S3.24): per column of the major axis the real GL draws N = floor(w * L / |major|) + 2 pixels, the
+-  // pixel centres whose minor offset s from the line centre (o times the tie sign) lies in [-N/2, N/2)
+-  const int rule = mode() == 11 ? 0 : line_rule();   // control 11: S3.8's footprint, no span
+-  const bool xmaj = std::fabs(dx) >= std::fabs(dy);
+-  double span_n = 0.0, span_sign = 1.0;
+-  if (rule != 0) {
+-    span_n = std::floor(wd * len / std::max(std::fabs(dx), std::fabs(dy))) + 2.0;
+-    const double sgx = dx < 0.0 ? -1.0 : 1.0, sgy = dy < 0.0 ? -1.0 : 1.0;
+-    span_sign = rule == 1 ? (xmaj ? sgy : sgx) : rule == 2 ? (xmaj ? sgx * sgy : sgx) : rule == 3 ? sgx * sgy
+-                : rule == 7 ? (xmaj ? sgx * sgy : -sgx * sgy) : rule == 5 ? -1.0 : 1.0;
+-  }
+   int64_t written = 0;
+   for (int32_t y = y0; y <= ye; ++y) {
+     for (int32_t x = x0; x <= xe; ++x) {
+-      if (rule != 0) {
+-        const double o = xmaj ? (y + 0.5) - (ay + (x + 0.5 - ax) * dy / dx) : (x + 0.5) - (ax + (y + 0.5 - ay) * dx / dy);
+-        const double s = o * span_sign;
+-        if (rule == 6 ? std::fabs(o) > span_n / 2.0 + kSpanSlack : !(s >= -span_n / 2.0 && s < span_n / 2.0)) continue;
+-      }
+       const double px = x + 0.5 - ax, py = y + 0.5 - ay;
+       const double t = px * ux + py * uy, n = -px * uy + py * ux;
+       double cov;
+@@ -294,7 +219,6 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t
+       ++written;
+     }
+   }
+-  if (dump.on()) dump.tail();
+   return written;
+ }
+ 
+@@ -404,12 +328,6 @@ void a_raster_line(Ctx &ctx, const uint32_t *a, Ret &ret) {
+   ret.edx = wb;
+ }
+ 
+-// overlay.setRule(rule): the line rule (overlay::line_rule); eax = the rule before the call
+-void a_set_rule(Ctx &, const uint32_t *a, Ret &ret) {
+-  ret.set_u32(static_cast<uint32_t>(overlay::line_rule()));
+-  overlay::g_line_rule = static_cast<int>(a[0]);
+-}
+-
+ // overlay.logStart(): the attached backend logs every Terrain::drawLine call from now on (eax 0 without a backend)
+ void a_log_start(Ctx &ctx, const uint32_t *, Ret &ret) {
+   Gfx *g = gfx(ctx);
+@@ -432,7 +350,6 @@ void a_log_write(Ctx &ctx, const uint32_t *, Ret &ret) {
+ 
+ const FuncDef kFuncs[] = {
+     {"overlay.rasterLine", "default", "uint32", 12, 0, a_raster_line, &g_negctl_terrain_overlay},
+-    {"overlay.setRule", "default", "uint32", 1, 0, a_set_rule, nullptr},
+     {"overlay.logStart", "default", "uint32", 0, 0, a_log_start, nullptr},
+     {"overlay.logWrite", "default", "uint32", 0, 0, a_log_write, nullptr},
+ };
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+index 35600def..0821c136 100644
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -46,9 +46,6 @@ namespace portsim {
+ // (gfx_results.cpp), for showTournamentResults' drawing positions (tick_panels.inc)
+ bool gfx_sprite_cut(Ctx &ctx, uint32_t sref, int32_t &w, int32_t &h);
+ bool results_control(int m);
+-// roadmap S3.26: a frame-code read that lands inside a SpriteRef the graphics backend holds (gfx_pixel.cpp), for P4's
+-// selected-golfer sprite when the selection word is not a golfer index (tick_frame.inc P4_selectedSprite)
+-bool gfx_sprite_ref_read(Ctx &ctx, uint32_t va, uint32_t size, uint32_t &v);
+ namespace tk {
+ 
+ // ------------------------------------------------------------------------------------------------ negative controls
+diff --git a/port/src/sim/tick_frame.inc b/port/src/sim/tick_frame.inc
+index 6e53c969..c13f7d71 100644
+--- a/port/src/sim/tick_frame.inc
++++ b/port/src/sim/tick_frame.inc
+@@ -4373,27 +4373,16 @@ void P4_flyingBall(u32 F) {
+ // ---------------------------------------------------------------------------------------------------------------
+ // ML+0x6437..ML+0x6484: with byte [g_ui_569498] == 1 and golfer g = [f_w_4c2e00+0x8] != -1 whose byte +0x19
+ // (g_golfers+0x21 + 0x100 g) is set, Sprite g_sprite5423e8 is drawn at (x - 0x14, y - 0xa) with frame [g_color16Lut].
+-// The only test is -1, and startMessage stores its third argument in the word (tick_leaves.inc). With -2 (golfer_stories
+-// season_end) the original reads "golfer -2", 0x200 bytes before g_golfers, inside g_sprites5791f8 (SpriteRef[16]): +8 / +0xc
+-// are element 4's cut size +0x18 / +0x1c (80, 80 in all 205 segment start images), +0x21 is byte 1 of element 5's handle +4.
+-// The port keeps SpriteRef fields in the graphics backend only, so with one attached these three reads go through it
+-// (gfx_sprite_ref_read; roadmap S3.26); they decide only the dropped Sprite_draw and its position, no GameState byte.
+ void P4_selectedSprite(u32 F) {
+     (void)F;
+     if (GU8(GS(g_ui_569498)) != 1) return;                                         // ML+0x643e
+     int eax = G32((GS(f_w_4c2e00) + 8));                                                // ML+0x6440
+     if (eax == -1) return;                                                    // ML+0x6448
+     u32 g = (u32)eax << 8;                                                    // ML+0x644a
+-    const bool gx = g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr;
+-    auto rd = [&](u32 va, u32 size) -> u32 {
+-        uint32_t v = 0;
+-        if (gx && gfx_sprite_ref_read(ctx, va, size, v)) return v;
+-        return size == 1 ? GU8(va) : (u32)G32(va);
+-    };
+-    if (rd(g + (GS(g_golfers) + 33), 1) == 0) return;                                     // ML+0x644d / ML+0x6455
++    if (GU8(g + (GS(g_golfers) + 33)) == 0) return;                                     // ML+0x644d / ML+0x6455
+     int edx = G32(GS(g_color16Lut));                                                // ML+0x6457
+-    int ecx = (int)rd(g + (GS(g_golfers) + 12), 4) - 0xa;                                 // ML+0x645d / ML+0x6471
+-    int x = (int)rd(g + (GS(g_golfers) + 8), 4) - 0x14;                                  // ML+0x6466 / ML+0x6474
++    int ecx = G32(g + (GS(g_golfers) + 12)) - 0xa;                                      // ML+0x645d / ML+0x6471
++    int x = G32(g + (GS(g_golfers) + 8)) - 0x14;                                       // ML+0x6466 / ML+0x6474
+     tc("Sprite_draw", GS(g_sprite5423e8), Root(), x, ecx, edx, 0);                       // Sprite_draw ML+0x647f
+ }
+ 
+diff --git a/port/test/framegate.py b/port/test/framegate.py
+index 6a2e48d8..2faba05f 100644
+--- a/port/test/framegate.py
++++ b/port/test/framegate.py
+@@ -88,10 +88,10 @@ FULL_SCREEN_MODALS = {"showCreditsScreen"}
+ H1_WAIT_READS = 11
+ # Drops gfx.log counts as unsupported although they draw nothing, by their reason in tick.cpp's kDrops table: playSound /
+ # startSoundSlot "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty
+-# function", waitTicks "wait loop (pacing)", saveCourseJpg "screenshot file", enterModal483d30 "modal stack push and focus clear of
+-# the window tree". They are listed but never make a row UNSUPPORTED. Widget_readPixel has a body since roadmap S3.26.
++# function", waitTicks "wait loop (pacing)", saveCourseJpg "screenshot file", Widget_readPixel "a pixel read of the root surface",
++# enterModal483d30 "modal stack push and focus clear of the window tree". They are listed but never make a row UNSUPPORTED.
+ NOT_DRAWING = {"playSound", "startSoundSlot", "Snd::status", "capsLockOff", "emptyFunc_4a0890", "waitTicks", "saveCourseJpg",
+-               "enterModal483d30"}
++               "Widget_readPixel", "enterModal483d30"}
+ 
+ # ------------------------------------------------------------------------------------------------ regions per screen kind
+ # rectangles (x, y, w, h); anchors from the frame code, extents measured on the reference named in the comment
+@@ -484,7 +484,6 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None,
+     for r in tr.records:
+         if r.type == TF.POLL and r.f.get("checkpoint") and r.f["checkpoint"] not in polls:
+             polls[r.f["checkpoint"]] = r.f["pos"]
+-    heads = {r.f["pos"] for r in tr.records if r.type == TF.FRAME}
+     summ = json.loads((GX.REFS / scenario / "det_b" / "summary.json").read_text())
+     meta, ords = {}, []
+     for c in chks:
+@@ -493,8 +492,9 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None,
+             meta[c] = {"error": f"the trace's tgt call {st['tgt']} is not the checkpoint's T {st['T']}"}
+             continue
+         o = tgt[st["tgt"]][0]
+-        # roadmap S3.16 / S3.26: the clock call the checkpoint's POLL rode on (gfx.poll_position, U-1820, U-1951)
+-        o = GX.poll_position(o, polls.get(c), heads)
++        # roadmap S3.16: the clock call the checkpoint's POLL rode on when it is not a tgt call (gfx.checkpoint_ordinal, U-1820)
++        if os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll" and polls.get(c) is not None and polls[c] < o:
++            o = polls[c]
+         meta[c] = dict(classify(tr, o), ordinal=o)
+         ords.append((o, c))
+     ords.sort()
+diff --git a/port/test/gfx.py b/port/test/gfx.py
+index d964e473..e057df99 100644
+--- a/port/test/gfx.py
++++ b/port/test/gfx.py
+@@ -53,25 +53,6 @@ def menu_regions() -> dict:
+     return regs
+ 
+ 
+-def poll_position(ordinal: int, poll, heads) -> int:
+-    """The snapshot position of a checkpoint whose tgt call has clock ordinal `ordinal` and whose POLL record has pos `poll`
+-    (None: no POLL); `heads` = the pos of every FRAME record. A snapshot is taken at the first trace item the run consumes past
+-    the position (gfx.cpp gfx_progress). SG_GFX_CHECKPOINT_AT: `poll` (default), `poll16` (roadmap S3.16's rule only), `tgt`.
+-    - S3.16 (U-1820): a POLL before the tgt call rode on a call that is not a tgt call: the position is the POLL's.
+-    - S3.26 (U-1951): a POLL whose pos is a FRAME record's rode on that frame's head clock call (a record with pos n is written
+-      inside or after clock call n - 1: trace_schema.md), before the frame's body; the frame's own cursor reads have that pos
+-      too, so the position is the head call, pos - 1, and the first of them takes the snapshot (cov_k3_camera2 y_inj4: with
+-      `poll16` the snapshot fell at the next frame's cursor read, after this frame's present)."""
+-    mode = os.environ.get("SG_GFX_CHECKPOINT_AT", "poll")
+-    if mode == "tgt" or poll is None:
+-        return ordinal
+-    if mode == "poll" and poll in heads and poll <= ordinal:
+-        return poll - 1
+-    if poll < ordinal:
+-        return poll
+-    return ordinal
+-
+-
+ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
+     """The trace's clock ordinal of the checkpoint's clock call: the status.tgt-th main-thread timeGetTime call (0-based
+     count of the calls before it), whose value must be the checkpoint's T."""
+@@ -84,7 +65,6 @@ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
+     # in H1's wait: after that frame's present, while the reference frame is the back buffer before it (cov_k1_paths cart,
+     # cov_k1_river r20: 7 census rows, U-1820)
+     poll = next((r.f["pos"] for r in tr.records if r.type == TF.POLL and r.f.get("checkpoint") == checkpoint), None)
+-    heads = {r.f["pos"] for r in tr.records if r.type == TF.FRAME}
+     k = 0
+     for ordinal, _ra, _slot, kind, value in TF.clock_calls(tr):
+         if kind != 1:
+@@ -92,7 +72,9 @@ def checkpoint_ordinal(scenario: str, checkpoint: str) -> int:
+         if k == st["tgt"]:
+             if value != st["T"]:
+                 raise ValueError(f"{scenario}/{checkpoint}: tgt call {k} has value {value}, the checkpoint's T is {st['T']}")
+-            return poll_position(ordinal, poll, heads)
++            if poll is not None and poll < ordinal and os.environ.get("SG_GFX_CHECKPOINT_AT", "poll") == "poll":
++                return poll
++            return ordinal
+         k += 1
+     raise ValueError(f"{scenario}/{checkpoint}: the trace has only {k} tgt calls")
+ 
+diff --git a/port/test/test_app_ingame.py b/port/test/test_app_ingame.py
+index 9cf62da0..d988934a 100644
+--- a/port/test/test_app_ingame.py
++++ b/port/test/test_app_ingame.py
+@@ -59,10 +59,7 @@ SNAP_CHUNK = 60             # gfx.snapshotAt requests per replay run (each snaps
+ # the scenarios whose in-game checkpoints the app's live path is judged on (2): the ones framegate passes in game under S3
+ # (5_notes.md section 2 lists the census rows) and two with the course view on screen at every in-game checkpoint
+ LIVE_TRACE_SCENARIOS = ("cov_a_keys", "cov_k1_routing", "sandbox_basic", "course_season")
+-# S7.8 (S7.5 wrote 5_app_ingame_facts.json). Roadmap S3.12 (U-1398): SG_APP_FACTS_DIR=<dir> writes the facts file there instead, so
+-# a mirror's run (whose log/ is a junction to the shared one) leaves the tracked file alone; S3.10's private copy of this module
+-# had hard-coded log/roadmap/S3/10_app_ingame_facts_app.json
+-FACTS = pathlib.Path(os.environ.get("SG_APP_FACTS_DIR") or ROOT / "log" / "roadmap" / "S7") / "8_app_ingame_facts.json"
++FACTS = ROOT / "log" / "roadmap" / "S7" / "8_app_ingame_facts.json"  # S7.8 (S7.5 wrote 5_app_ingame_facts.json)
+ 
+ 
+ def _sources():
+@@ -131,19 +128,11 @@ def checkpoint_plan(scenario: str) -> dict:
+             tgt[k] = (ordinal, value)
+             k += 1
+     summ = json.loads((GX.REFS / scenario / "det_b" / "summary.json").read_text())
+-    # roadmap S3.9: framegate's checkpoint position (roadmap S3.16, U-1820): a checkpoint whose POLL rode on a clock call that is
+-    # not a tgt call is taken at the POLL's position (SG_GFX_CHECKPOINT_AT=tgt restores status.tgt's call, as in framegate)
+-    polls = {}
+-    for r in tr.records:
+-        if r.type == TF.POLL and r.f.get("checkpoint") and r.f["checkpoint"] not in polls:
+-            polls[r.f["checkpoint"]] = r.f["pos"]
+-    heads = {r.f["pos"] for r in tr.records if r.type == TF.FRAME}
+     rows = []
+     for c in FG.scenario_checkpoints(scenario):
+         st = summ["checkpoints"][c]["status"]
+         if st["tgt"] in tgt and tgt[st["tgt"]][1] == st["T"]:
+             o = tgt[st["tgt"]][0]
+-            o = GX.poll_position(o, polls.get(c), heads)   # roadmap S3.26: framegate's rule (gfx.poll_position)
+             rows.append(dict(FG.classify(tr, o), checkpoint=c, ordinal=o))
+     rows.sort(key=lambda r: r["ordinal"])
+     frames_pos = [r.f["pos"] for r in tr.records if r.type == TF.FRAME]
+@@ -185,15 +174,14 @@ def app_live_trace(exe, scenario: str, plan: dict, extra=()) -> dict:
+         shutil.rmtree(tmp, ignore_errors=True)
+ 
+ 
+-def framegate_frames(scenario: str, checkpoints: list[str], gl: str = "raster") -> tuple[list[dict], dict]:
+-    """framegate's own run (sg_run_boot, gfx + LiveTerrain with the terrain renderer `gl`, roadmap S3.20): its rows and its port
+-    frame per checkpoint (RGB)"""
++def framegate_frames(scenario: str, checkpoints: list[str]) -> tuple[list[dict], dict]:
++    """framegate's own run (sg_run_boot, gfx + LiveTerrain): its rows and its port frame per checkpoint (RGB)"""
+     from PIL import Image
+ 
+     from port.test import framegate as FG
+     tmp = pathlib.Path(tempfile.mkdtemp(prefix="s7_5_fg_"))
+     try:
+-        rows = FG.run_scenario(scenario, checkpoints, lib=_lib(), images=tmp, probe=False, gl=gl)
++        rows = FG.run_scenario(scenario, checkpoints, lib=_lib(), images=tmp, probe=False)
+         imgs = {}
+         for c in checkpoints:
+             p = tmp / f"{scenario}.{c}.port.png"
+@@ -203,17 +191,16 @@ def framegate_frames(scenario: str, checkpoints: list[str], gl: str = "raster")
+         shutil.rmtree(tmp, ignore_errors=True)
+ 
+ 
+-def judge_live_trace(exe, scenario: str, extra=(), gl: str = "raster") -> list[dict]:
++def judge_live_trace(exe, scenario: str, extra=()) -> list[dict]:
+     """per in-game checkpoint: the app path's verdict against the original (framegate's regions), its pixels against
+-    framegate's own frame, and the present that showed it. gl (roadmap S3.20): the terrain renderer of both sides (the app's
+-    --gl and framegate's)"""
++    framegate's own frame, and the present that showed it"""
+     from port.test import framegate as FG
+     from port.test import gfx as GX
+     lib = _lib()
+     plan = checkpoint_plan(scenario)
+-    app = app_live_trace(exe, scenario, plan, list(extra) + ([] if gl == "raster" else ["--gl", gl]))
++    app = app_live_trace(exe, scenario, plan, extra)
+     glog = FG.parse_gfx_log(app["gfx_log"])
+-    fg_rows, fg_imgs = framegate_frames(scenario, [r["checkpoint"] for r in plan["rows"]], gl)
++    fg_rows, fg_imgs = framegate_frames(scenario, [r["checkpoint"] for r in plan["rows"]])
+     fg_by = {r["checkpoint"]: r for r in fg_rows}
+     out = []
+     for k, row in enumerate(plan["rows"]):
+@@ -345,11 +332,6 @@ def replay(s: Session, positions: list[int], terrain: bool = True) -> dict:
+                 st.call("gfx.snapshotAt", [p])
+             if terrain:
+                 assert TL.live_attach(lib, st, 0) == 0
+-                # roadmap S3.20 (decision G13): the renderer the session's app chose (terrain_renderer.json; a --terrain headless
+-                # session writes none: GlRaster)
+-                rp = s.rec / "terrain_renderer.json"
+-                mode = 1 if rp.exists() and json.loads(rp.read_text())["backend"] == "wgl" else 0
+-                assert st.call("terrainLive.renderer", [mode]).eax == mode
+             code, n, ts, hs = st.run_boot(trace, nrec + 1)
+             for k in range(len(chunk)):
+                 raw = st.files_read(f"$gfx/snapshot_{k}.555")
+@@ -500,8 +482,9 @@ def test_pacing_under_ingame_load(ingame):
+     assert len(nowait) <= 8, nowait                          # the five build clicks of the script
+ 
+ 
+-# roadmap S3.12: U-1640 resolved by S3 wave 6 (S3.10 workers, S3.10b state rebuild, the LiveTerrain log switch): zoom frames 41..49 ms
+-# at 84..97 % load (log/roadmap/S3/12_notes.md), so the xfail of S7.5 is gone
++@pytest.mark.xfail(reason="U-1640: a frame with two full terrain passes (the zoom keys) works 144..186 ms on this PC (three "
++                          "sessions, loaded and less loaded); the rasteriser is S3's (log/roadmap/S7/5_merge.md section 2)",
++                   strict=False)
+ def test_terrain_pass_frames_fit_the_frame(ingame):
+     """gate (3) strictly: no in-game frame overruns 87 ms, the ones that rasterise terrain passes included"""
+     over = [r for r in _frame_periods(ingame, _ingame_from(ingame)) if r["waited"] and r["work"] >= 87]
+@@ -539,19 +522,6 @@ def test_app_path_equals_framegate_and_its_present(judged):
+     assert sum(1 for r in judged if r["kind"] == "ingame") >= 20
+ 
+ 
+-def test_app_gl_auto_end_to_end(exe):
+-    """roadmap S3.20 (decision G13, final: GlRaster default, the host's OpenGL opt-in): the opt-in path in the app itself. `--gl
+-    auto` (the startup self-check, then the host's OpenGL) on the app's live path equals framegate's `--gl auto` frame in every pixel
+-    at every sandbox_basic checkpoint, and is the host GL's: every in-game frame equals the original's (0 px), where GlRaster keeps
+-    its one-level residual (U-1392: sandbox_00's 125 px)"""
+-    rows = judge_live_trace(exe, "sandbox_basic", gl="auto")
+-    bad = [(r["checkpoint"], r.get("status"), r.get("px_vs_framegate")) for r in rows
+-           if r.get("status") == "NO_SNAPSHOT" or r.get("px_vs_framegate") != 0]
+-    assert rows and not bad, bad
+-    ingame = [r for r in rows if r["kind"] == "ingame"]
+-    assert ingame and all(r["status"] == "PASS" for r in ingame), [(r["checkpoint"], r["app_px"]) for r in ingame]
+-
+-
+ # ------------------------------------------------------------------------------------------------ controls (RED)
+ def _short(d):
+     from port.test import app_replay as AR
+diff --git a/port/test/test_app_live.py b/port/test/test_app_live.py
+index c7c76b8f..c5618735 100644
+--- a/port/test/test_app_live.py
++++ b/port/test/test_app_live.py
+@@ -219,21 +219,11 @@ def _to_game(app, s, frames):
+     s.facts["frames_seen"] = _wait_frames(s.rec, frames, 30 + frames * 0.2)
+ 
+ 
+-def _live_terrain(lib, st, s=None):
++def _live_terrain(lib, st):
+     """roadmap S7.5: the app draws the course with LiveTerrain at address 0 (main.cpp --terrain live, the default), so a replay
+-    that rebuilds its frames attaches the same (gfx.attach, gfx.snapshotAt, then the terrain, as port/test/framegate.py).
+-    Roadmap S3.20 (decision G13): and draws it with the renderer the session chose (terrain_renderer.json: GlRaster by default,
+-    the host's OpenGL when the session opted in)"""
++    that rebuilds its frames attaches the same (gfx.attach, gfx.snapshotAt, then the terrain, as port/test/framegate.py)"""
+     from port.test import terrainlive as TL
+     assert TL.live_attach(lib, st, 0) == 0
+-    if s is not None:
+-        assert st.call("terrainLive.renderer", [session_renderer(s)]).eax == session_renderer(s)
+-
+-
+-def session_renderer(s) -> int:
+-    """terrainLive.renderer's mode for the renderer a session's app used (1 = the host's OpenGL, 0 = GlRaster)"""
+-    rp = s.rec / "terrain_renderer.json"    # a --terrain headless session writes none
+-    return 1 if rp.exists() and json.loads(rp.read_text())["backend"] == "wgl" else 0
+ 
+ 
+ def replay(s: Session, snapshots: list[int] | None = None, draws: bool = False):
+@@ -254,7 +244,7 @@ def replay(s: Session, snapshots: list[int] | None = None, draws: bool = False):
+             st.call("gfx.attach", [])
+             for p in chunk:
+                 st.call("gfx.snapshotAt", [p])
+-            _live_terrain(lib, st, s)
++            _live_terrain(lib, st)
+             code, n, ts, hs = st.run_boot(trace, nrec + 1)
+             for k in range(len(chunk)):
+                 raw = st.files_read(f"$gfx/snapshot_{k}.555")
+@@ -336,8 +326,7 @@ def main(exe):
+              "work_ms": stats([w[1] for w in waits]), "wait_end_ms": stats([w[3] for w in waits]),
+              "kinds": {k: sum(1 for p in s.presents if p["kind"] == k) for k in "rmwp"}, "shown": len(s.shown),
+              "hover_new_presents": [h[2] for h in s.facts.get("hover", [])], "session": s.session["session"]}
+-    # S7.8 (S7.6 wrote 6_app_live_facts.json); roadmap S3.12 (U-1398): SG_APP_FACTS_DIR=<dir> writes it there instead
+-    out = pathlib.Path(os.environ.get("SG_APP_FACTS_DIR") or ROOT / "log" / "roadmap" / "S7") / "8_app_live_facts.json"
++    out = ROOT / "log" / "roadmap" / "S7" / "8_app_live_facts.json"  # S7.8 (S7.6 wrote 6_app_live_facts.json)
+     if out.parent.is_dir():
+         out.write_text(json.dumps(facts, indent=1))
+     s.cleanup()
+@@ -399,7 +388,7 @@ def _hover_frames(s: Session, hashes: list[int]) -> list[np.ndarray]:
+         st.call("gfx.attach", [])
+         for i in order:
+             st.call("gfx.snapshotAt", [pos[i]])
+-        _live_terrain(lib, st, s)
++        _live_terrain(lib, st)
+         st.run_boot((s.rec / "trace.trace").read_bytes(), len(s.records()) + 1)
+         raws = [st.files_read(f"$gfx/snapshot_{k}.555") for k in range(len(order))]
+         st.call("gfx.detach", [])
+diff --git a/port/test/test_app_present.py b/port/test/test_app_present.py
+index a04fa41a..d97d085b 100644
+--- a/port/test/test_app_present.py
++++ b/port/test/test_app_present.py
+@@ -25,7 +25,6 @@ from __future__ import annotations
+ 
+ import hashlib
+ import json
+-import os
+ import pathlib
+ import shutil
+ import subprocess
+@@ -41,8 +40,7 @@ pytestmark = pytest.mark.port
+ PRESENT_SCENARIOS = ("sandbox_basic", "course_season", "cov_a_keys", "cov_k1_routing")
+ LONG = "course_season_6y"
+ OUT = ROOT / "log" / "roadmap" / "S7" / "8_long"
+-# roadmap S3.12 (U-1398): SG_APP_FACTS_DIR=<dir> writes the facts file there instead of the tracked one
+-FACTS = pathlib.Path(os.environ.get("SG_APP_FACTS_DIR") or ROOT / "log" / "roadmap" / "S7") / "8_present_facts.json"
++FACTS = ROOT / "log" / "roadmap" / "S7" / "8_present_facts.json"
+ 
+ 
+ def _facts_update(key: str, value) -> None:
+diff --git a/port/test/test_framegate.py b/port/test/test_framegate.py
+index 61b09034..5c4edeef 100644
+--- a/port/test/test_framegate.py
++++ b/port/test/test_framegate.py
+@@ -104,7 +104,7 @@ def test_not_drawing_names_are_kdrops_with_those_reasons():
+     src = (FG.ROOT / "port" / "src" / "sim" / "tick.cpp").read_text()
+     drops = dict(re.findall(r'\{"([^"]+)", "([^"]+)"\}', src))
+     want = {"capsLockOff": "keybd_event", "emptyFunc_4a0890": "empty function", "waitTicks": "wait loop",
+-            "saveCourseJpg": "screenshot file", "enterModal483d30": "modal stack"}
++            "saveCourseJpg": "screenshot file", "Widget_readPixel": "pixel read", "enterModal483d30": "modal stack"}
+     # the three audio requests left kDrops with S4.10: audio_exe registers them (log/roadmap/S4/10_merge.md section 2)
+     audio = {"playSound", "startSoundSlot", "Snd::status"}
+     assert set(want) | audio == FG.NOT_DRAWING
+diff --git a/port/test/test_gfx.py b/port/test/test_gfx.py
+index a2a7017e..97efecd7 100644
+--- a/port/test/test_gfx.py
++++ b/port/test/test_gfx.py
+@@ -144,7 +144,7 @@ ROOT_W, ROOT_H = 0x320, 0x258
+ SELFTEST_NEGCTL = [(1, "fillRoot leaves the rectangle's last column unfilled"), (2, "loadCopy copies to (x + 1, y)")]
+ # kNotDrawing (gfx.cpp): drops that draw nothing, never reported unsupported (S0 recommendation 1; framegate.py NOT_DRAWING)
+ NOT_DRAWING = ("waitTicks", "startSoundSlot", "playSound", "Snd::status", "capsLockOff", "emptyFunc_4a0890", "saveCourseJpg",
+-               "enterModal483d30")
++               "Widget_readPixel", "enterModal483d30")
+ 
+ 
+ @pytest.fixture(scope="module")
+diff --git a/port/test/test_gfx_pixel.py b/port/test/test_gfx_pixel.py
+index fe1308be..c2dabdd6 100644
+--- a/port/test/test_gfx_pixel.py
++++ b/port/test/test_gfx_pixel.py
+@@ -104,8 +104,7 @@ def _fill_owner(lib):
+ 
+ def test_family_registered(plib):
+     with _state(plib) as st:
+-        # roadmap S3.26 added the Widget_readPixel body to this family (Widget_fillRect is the reports family's when it is linked)
+-        assert st.call("gfx.family.pixel", []).eax == (2 if plib.has("gfx.family.reports") else 3)
++        assert st.call("gfx.family.pixel", []).eax == (1 if plib.has("gfx.family.reports") else 2)
+         assert st.call("gfx.check", []).eax == 0, st.files_read("$gfx/bodies.txt")
+ 
+ 
+diff --git a/port/test/test_gfx_reports.py b/port/test/test_gfx_reports.py
+index 92bd707d..d098ec76 100644
+--- a/port/test/test_gfx_reports.py
++++ b/port/test/test_gfx_reports.py
+@@ -41,10 +41,9 @@ JUDGED_CHECKPOINTS = ["rep_comments", "rep_histograph", "rep_financial", "rep_sh
+ # original's
+ JUDGED = {"rep_comments": 53893, "rep_histograph": 411234, "rep_financial": 195269, "rep_shortcuts": 266940, "rep_roster": 434887,
+           "hole_stats": 100373, "best_scores": 45359, "end_of_year": 92616, "hire": 148198}
+-# judged pixels that still differ: checkpoint -> (count, bbox x0, y0, x1, y1). Empty since roadmap S3.26: the hire dialog's four
+-# animated employees (1,397 px in (556, 167, 586, 403) before) are drawn from cellAt(idx + 0x20e, frame mod cols, s)
+-# (commands_screens.inc show_hire_employee_dialog), so every judged pixel of `hire` equals the original's.
+-RESIDUAL = {}
++# judged pixels that still differ, all of them the hire dialog's four animated employees: addSprite draws a FLIC sheet cell
++# through drawQueuedSprite (roadmap S3's sprites; reported unsupported, U-1272): checkpoint -> (count, bbox x0, y0, x1, y1)
++RESIDUAL = {"hire": (1397, (556, 167, 586, 403))}
+ # frame controls of the reports family (log/roadmap/S2/8_controls.tsv): mode -> the checkpoints it changes. Modes 1 (the
+ # quarter blend halved), 5 (a line one pixel longer) and 7 (Surface_box without effect) change no judged pixel on these frames
+ # (the dimming lies under held pixels only, no histograph line crosses the box on this early date): unit tests below.
+diff --git a/port/test/test_gfx_s3_26.py b/port/test/test_gfx_s3_26.py
+deleted file mode 100644
+index f43f4029..00000000
+--- a/port/test/test_gfx_s3_26.py
++++ /dev/null
+@@ -1,130 +0,0 @@
+-"""Roadmap S3.26: the 2D residue of wave 8's groups 7, 6, 4 and 3 (log/roadmap/S3/26_notes.md), judged in the boxes 22_rows.tsv
+-measured, against the original's back buffer, on framegate's boot (LiveTerrain attached, the default renderer: the boxes hold
+-2D pixels drawn over the terrain, so they are judged beyond one level, which GlRaster's terrain residue never reaches).
+-
+-  * group 7, cov_b_inject `zoom_box`: mainLoop P5's ball marker over the zoom box (Surface_drawScaled of g_sprite567b08 at
+-    0x00418bb8) is drawn only when Widget_readPixel of the magnified point is 0x7fff (0x00418b98). The pixel family's
+-    Widget_readPixel body hands the root's pixel back to the frame code (gfx_take_value). Control pixel 2 (the value with bit 0
+-    flipped): the marker is not drawn, 15 px.
+-  * group 6, cov_r_s2_screens `hire`: the four employees are addSprite of cellAt(idx + 0x20e, frame mod cols, s) (0x00459777),
+-    the port handed cell 0. Control showHireEmployeeDialog 3 (the next animation column).
+-  * group 4, golfer_stories `season_end`: P4's selected-golfer sprite read "golfer -2" (f_w_4c2e00[2] = -2), which lies in
+-    g_sprites5791f8; the reads go through the backend's SpriteRef fields (gfx_sprite_ref_read). Control pixel 3 (the requested
+-    height one larger: the sprite one row lower).
+-  * group 3, cov_k3_camera2 `y_inj4`: the checkpoint's POLL rode on frame 153's head clock call, so the snapshot is taken at
+-    that frame's first cursor read (gfx.poll_position, U-1951). Control SG_GFX_CHECKPOINT_AT=poll16 (S3.16's rule: the next
+-    frame's present, the spray one animation column later).
+-"""
+-from __future__ import annotations
+-
+-import os
+-import pathlib
+-
+-import numpy as np
+-import pytest
+-from PIL import Image
+-
+-from port.test import framegate as FG
+-from port.test import gfx as GX
+-from port.test import lib as L
+-from port.test import segments as SG
+-
+-pytestmark = pytest.mark.port
+-
+-# (scenario, checkpoint, boxes (x0, y0, x1, y1) inclusive, from log/roadmap/S3/22_rows.tsv)
+-ZOOM = ("cov_b_inject", "zoom_box", [(142, 89, 145, 92)])
+-HIRE = ("cov_r_s2_screens", "hire", [(558, 305, 586, 335), (556, 238, 580, 265), (559, 381, 582, 403), (559, 167, 579, 193)])
+-STORY = ("golfer_stories", "season_end", [(60, 70, 102, 90)])
+-SPRAY = ("cov_k3_camera2", "y_inj4", [(65, 413, 97, 451)])
+-
+-
+-@pytest.fixture(scope="module")
+-def glib():
+-    lib = L.load()
+-    if not lib.has("gfx.attach") or not lib.has("gditext.attach"):
+-        pytest.skip("the library has no gfx module / host text provider")
+-    if not lib.exe_loaded() and lib.exe_load():
+-        pytest.skip("no exe image (original/golf_clean.exe or SG_EXE_PATH)")
+-    return lib
+-
+-
+-def _boxes(lib, case, tmp, negctl=None, env=None):
+-    """beyond-one-level differing px per box of the port's frame against the reference (None: no frame)"""
+-    scen, chk, boxes = case
+-    if not (GX.REFS / scen / "det_b" / f"{chk}.png").exists() or not SG.INSTALL.is_dir():
+-        pytest.skip("no pinned reference / install")
+-    old = {k: os.environ.get(k) for k in (env or {})}
+-    os.environ.update(env or {})
+-    try:
+-        FG.run_scenario(scen, [chk], lib, negctl=negctl, images=tmp, probe=False)
+-    finally:
+-        for k, v in old.items():
+-            if v is None:
+-                os.environ.pop(k, None)
+-            else:
+-                os.environ[k] = v
+-    p = tmp / f"{scen}.{chk}.port.png"
+-    if not p.exists():
+-        return None
+-    port = np.array(Image.open(p).convert("RGB")).astype(int) >> 3
+-    ref = GX.reference(scen, chk).astype(int) >> 3
+-    out = []
+-    for x0, y0, x1, y1 in boxes:
+-        d = np.abs(port[y0:y1 + 1, x0:x1 + 1] - ref[y0:y1 + 1, x0:x1 + 1]).max(axis=2)
+-        out.append(int((d > 1).sum()))
+-    return out
+-
+-
+-def test_zoom_marker_equals_the_original(glib, tmp_path):
+-    assert _boxes(glib, ZOOM, tmp_path) == [0]
+-
+-
+-def test_zoom_marker_negctl_red(glib, tmp_path):
+-    got = _boxes(glib, ZOOM, tmp_path, negctl=("gfx.family.pixel", 2))
+-    assert got is not None and got[0] >= 10, got
+-
+-
+-def test_hire_employees_equal_the_original(glib, tmp_path):
+-    assert _boxes(glib, HIRE, tmp_path) == [0, 0, 0, 0]
+-
+-
+-def test_hire_employees_negctl_red(glib, tmp_path):
+-    got = _boxes(glib, HIRE, tmp_path, negctl=("showHireEmployeeDialog", 3))
+-    assert got is not None and sum(got) > 100, got
+-
+-
+-def test_selected_golfer_sprite_equals_the_original(glib, tmp_path):
+-    assert _boxes(glib, STORY, tmp_path) == [0]
+-
+-
+-def test_selected_golfer_sprite_negctl_red(glib, tmp_path):
+-    got = _boxes(glib, STORY, tmp_path, negctl=("gfx.family.pixel", 3))
+-    assert got is not None and got[0] > 20, got
+-
+-
+-def test_frame_head_poll_snapshot_equals_the_original(glib, tmp_path):
+-    assert _boxes(glib, SPRAY, tmp_path) == [0]
+-
+-
+-def test_frame_head_poll_old_rule_red(glib, tmp_path):
+-    got = _boxes(glib, SPRAY, tmp_path, env={"SG_GFX_CHECKPOINT_AT": "poll16"})
+-    assert got is not None and got[0] > 100, got
+-
+-
+-@pytest.mark.static
+-def test_poll_position_rules():
+-    heads = {100, 200}
+-    old = os.environ.pop("SG_GFX_CHECKPOINT_AT", None)
+-    try:
+-        assert GX.poll_position(200, 200, heads) == 199     # a POLL on the frame-head call: the head call
+-        assert GX.poll_position(250, 240, heads) == 240     # S3.16: a POLL before the tgt call
+-        assert GX.poll_position(150, 150, heads) == 150     # a POLL inside the tgt call's predecessor, no frame head there
+-        assert GX.poll_position(150, None, heads) == 150
+-        os.environ["SG_GFX_CHECKPOINT_AT"] = "poll16"
+-        assert GX.poll_position(200, 200, heads) == 200
+-        os.environ["SG_GFX_CHECKPOINT_AT"] = "tgt"
+-        assert GX.poll_position(250, 240, heads) == 250
+-    finally:
+-        os.environ.pop("SG_GFX_CHECKPOINT_AT", None)
+-        if old is not None:
+-            os.environ["SG_GFX_CHECKPOINT_AT"] = old
+diff --git a/port/test/test_gl_raster.py b/port/test/test_gl_raster.py
+index be695d2c..ff779084 100644
+--- a/port/test/test_gl_raster.py
++++ b/port/test/test_gl_raster.py
+@@ -16,11 +16,7 @@ exactly), glTexParameterf filters (GL_LINEAR, passed as floats) for the path tex
+ texture, source-alpha blending, and the triangle setup: vertices scaled by 1 - 2^-8 / h about the viewport centre and rounded to
+ 8 fractional bits, for coverage and attributes, sampled at pixel centres (section 18; `#tune 26 1` restores the linear model); the
+ specular term read from a 256-entry table over [0.0005^(1/shininess), 1] at the nearest entry (`#tune 27 1` restores the exact
+-pow); pixel centres exactly on an edge owned by edges pointing to +y, or to +x when horizontal (`#tune 10 2` restores -x);
+-since roadmap S3.21 (U-1392) the vertex positions by the generic GL's own float32 arithmetic (float32 matrices with the MVP updated
+-by every modelview operation, the translation added first, window = round-half-even(f32(ndc * (h - 2^-8)) + centre) to 2^-8;
+-`#tune 28 1` restores the double model) and triangles crossing the view volume clipped like the generic GL and drawn as fans
+-(`#tune 29 1` restores no clipping): the one-level pixels fell about tenfold (c7 sandbox 188 -> 11, zoom1 342 -> 11).
++pow); pixel centres exactly on an edge owned by edges pointing to +y, or to +x when horizontal (`#tune 10 2` restores -x).
+ 
+ Negative controls (the `#tune 11 <mode>` knob of GlRaster), each of which must break the criterion on at least one pass.
+ """
+@@ -284,74 +280,3 @@ def test_fast_loop_control_float_reciprocals_changes_the_frame(lib, setup):
+         if int((got != ref).sum()):
+             changed.append(step)
+     assert changed, "control #fastpath 4 (float reciprocals) left every frame unchanged: the comparison cannot see it"
+-
+-
+-# ---- roadmap S3.21 (U-1392): the generic GL's float32 vertex arithmetic and its frustum clipping, measured against the real
+-# software GL's GL_FEEDBACK output (log/roadmap/S3/21_notes.md: every vertex of the 268 corpus passes, 973,749, equal; the clipper's
+-# output triangles equal on the passes checked). The G2 criterion above is too loose to see them, so these tests bound the one-level
+-# pixels of four c7 passes tightly: the rules meet the bound, and each old behaviour breaks it (the negative controls:
+-# `#tune 28 1` the earlier double vertex model, `#tune 29 1` no clipping).
+-S321_STEPS = ("sandbox", "zoom1", "z2_r1", "hole")
+-S321_MAX_ONE_LEVEL_SUM = 80   # measured 40 (11 + 11 + 11 + 7); tune 28 = 1 gives 1,213, tune 29 = 1 216
+-
+-
+-def _one_level(lib, setup, step, lines=""):
+-    def patch(r, dll):
+-        if lines:
+-            t = lines.encode()
+-            dll.sg_raster_exec(r, t, len(t))
+-    post, got, st, unknown, pre = R.run(lib, setup, step, patch=patch)
+-    rep = R.report(post, got, pre)
+-    return rep["diff"] - rep["gt1"]
+-
+-
+-def _s321_sum(lib, setup, lines):
+-    steps = [s for s in S321_STEPS if s in STEPS]
+-    if len(steps) != len(S321_STEPS):
+-        pytest.skip("c7 lacks one of " + ", ".join(S321_STEPS))
+-    return {s: _one_level(lib, setup, s, lines) for s in steps}
+-
+-
+-def test_s321_rules_meet_the_tight_bound(lib, setup):
+-    per = _s321_sum(lib, setup, "")
+-    assert sum(per.values()) <= S321_MAX_ONE_LEVEL_SUM, per
+-
+-
+-@pytest.mark.parametrize("control", ["#tune 28 1\n", "#tune 29 1\n"])
+-def test_s321_old_behaviour_breaks_the_tight_bound(lib, setup, control):
+-    per = _s321_sum(lib, setup, control)
+-    assert sum(per.values()) > S321_MAX_ONE_LEVEL_SUM, (control, per)
+-
+-
+-@pytest.mark.parametrize("step", STEPS or ["none"])
+-def test_s321_vertex_rule_is_no_worse_than_the_double_model(lib, setup, step):
+-    if step == "none":
+-        pytest.skip("no corpus")
+-    assert _one_level(lib, setup, step) <= _one_level(lib, setup, step, "#tune 28 1\n"), step
+-
+-
+-# ---- roadmap S3.21b (U-1309): the generic GL's incremental 16.16 attribute stepping, opt-in (`#tune 30`), measured on probes of the
+-# real GL (log/roadmap/S3/21_ramp.py dense, 21_modprobe.py; the real frames are the probe scenes' dib_post.bin, local corpus).
+-# Untextured: exact on the slow ramp (705 -> 0 px); textured (MODULATE) triangles are not covered by the model (constant texture x
+-# Gouraud colour 15 -> 298 with the 5-bit quantum), so the default stays off and `#tune 30 2` steps untextured triangles only.
+-S321B_PROBE = G.CORPUS / "probe" / "s321_ramp_dense"
+-
+-
+-def _probe_diff(lib, d, knobs):
+-    import numpy as np
+-    from port.test import glprobe as GP
+-    real = np.frombuffer((d / "snaps" / "s1" / "dib_post.bin").read_bytes(), "<u2")
+-    port = GP.port_frame(lib, d, knobs)
+-    return int((real != port).sum())
+-
+-
+-def test_s321b_stepping_is_exact_on_the_ramp_probe(lib):
+-    if not (S321B_PROBE / "snaps" / "s1" / "dib_post.bin").exists():
+-        pytest.skip("no s321_ramp_dense probe (run log/roadmap/S3/21_ramp.py dense with re/tools/glexact/glreplay.exe)")
+-    assert _probe_diff(lib, S321B_PROBE, {30: 2}) == 0
+-
+-
+-def test_s321b_control_stepping_off_reads_red(lib):
+-    if not (S321B_PROBE / "snaps" / "s1" / "dib_post.bin").exists():
+-        pytest.skip("no s321_ramp_dense probe")
+-    assert _probe_diff(lib, S321B_PROBE, None) > 100   # measured 705 with the plane
+diff --git a/port/test/test_gl_wgl.py b/port/test/test_gl_wgl.py
+index bc5ce658..e2f06955 100644
+--- a/port/test/test_gl_wgl.py
++++ b/port/test/test_gl_wgl.py
+@@ -73,11 +73,10 @@ def test_host_gl_frames_equal_the_original(lib, scenario):
+     assert not bad, bad
+ 
+ 
+-def test_raster_backend_equals_its_census_row(lib):
+-    # GlRaster (--gl raster) keeps a residual on sandbox_00: its census row after roadmap S3.21 (float32 vertex rule and clipping,
+-    # default on) is 9 px, all one level (I14 had 125 px before S3.21; log/roadmap/S3/w8_out/census_split.tsv)
++def test_raster_backend_is_unchanged(lib):
++    # GlRaster (--gl raster) keeps its residual: sandbox_00's I14 census numbers (125 px, all one level)
+     r = {x["checkpoint"]: x for x in _run(lib, "sandbox_basic", host_gl=False, gl="raster")}["sandbox_00"]
+-    assert r["status"] == "FAIL" and int(r["total_px"]) == 9 and int(r["beyond_px"]) == 0 and r["renderer"] == "raster", r
++    assert r["status"] == "FAIL" and int(r["total_px"]) == 125 and int(r["beyond_px"]) == 0 and r["renderer"] == "raster", r
+ 
+ 
+ def test_default_is_glraster_and_auto_is_the_checked_host_gl(lib):
+diff --git a/port/test/test_gl_wgl_selfcheck.py b/port/test/test_gl_wgl_selfcheck.py
+index f11694d4..ecd13ee8 100644
+--- a/port/test/test_gl_wgl_selfcheck.py
++++ b/port/test/test_gl_wgl_selfcheck.py
+@@ -11,8 +11,7 @@ log/roadmap/S3/20_make_ref.py) is the part of the original's recorded pass c7/z2
+                                                                          the app tests need SG_APP_EXE + SG_PORTSIM_DLL of one build)
+ Controls (RED): the pinned hash with one hex digit changed (perturb 1, negctl gfx.family.terrain 13), the reference pass with every
+ texture coordinate one texel off (perturb 2, negctl 14), a DIB with RGB565 masks (variant 1, negctl 8), the same reference through
+-GlRaster with roadmap S3.21's rules off (glWgl.rasterCheck(1): the U-1392 residual S3.20 measured, 45 of the 1,024 pixels). Since
+-S3.21 the default GlRaster passes the check too (0 pixels differ); the app's `--gl auto` runs the check on the host GL only. Blind, recorded: the DIB rows top-down (variant 2) and the texture names
++GlRaster (its U-1392 residual: 45 of the 1,024 pixels). Blind, recorded: the DIB rows top-down (variant 2) and the texture names
+ bound unmapped (variant 3), as for the frames (log/roadmap/S3/15_notes.md, U-1811). Fallback: no pixel format (variant 4, negctl 12).
+ """
+ from __future__ import annotations
+@@ -40,7 +39,7 @@ REF_INC = ROOT / "port" / "src" / "sim" / "gl_wgl_ref.inc"
+ # the generator: in the repository, or (a mirror tree under port/build) in the repository holding it
+ GEN = next((p / "log" / "roadmap" / "S3" / "20_make_ref.py" for p in (ROOT, *ROOT.parents)
+             if (p / "log" / "roadmap" / "S3" / "20_make_ref.py").exists()), ROOT / "log" / "roadmap" / "S3" / "20_make_ref.py")
+-RASTER_PX = 45          # pixels of the rectangle GlRaster with S3.21's rules off draws differently from the original (U-1392)
++RASTER_PX = 45          # pixels of the rectangle GlRaster draws differently from the original (U-1392)
+ 
+ 
+ def _ref():
+@@ -105,17 +104,9 @@ def test_self_check_passes_on_this_host(lib):
+         assert int((px != _original_rect()).sum()) == 0
+ 
+ 
+-def test_default_rasteriser_passes_the_self_check(lib):
+-    """roadmap S3.21 (float32 vertex rule and clipping, default on): GlRaster equals the original on the reference rectangle"""
+-    ret, kv, px, _ = _check(lib, "glWgl.rasterCheck", (0,))
+-    assert ret == 1 and kv["pass"] == "1" and kv["got"] == kv["want"] == _ref()["sha"], kv
+-    if SNAP.exists():
+-        assert int((px != _original_rect()).sum()) == 0
+-
+-
+ def test_self_check_sees_the_rasteriser_residual(lib):
+-    """GlRaster with S3.21's rules off on the same reference: RED, on exactly the U-1392 one-level pixels"""
+-    ret, kv, px, _ = _check(lib, "glWgl.rasterCheck", (1,))
++    """GlRaster on the same reference: RED, on exactly the U-1392 one-level pixels"""
++    ret, kv, px, _ = _check(lib, "glWgl.rasterCheck", ())
+     assert ret == 0 and kv["pass"] == "0" and kv["got"] != kv["want"], kv
+     if SNAP.exists():
+         orig = _original_rect()
+diff --git a/port/test/test_terrain_overlay.py b/port/test/test_terrain_overlay.py
+index 7001a33a..2618d060 100644
+--- a/port/test/test_terrain_overlay.py
++++ b/port/test/test_terrain_overlay.py
+@@ -102,9 +102,8 @@ def scene(name: str):
+ 
+ 
+ SCENES = ["rand", "widths", "short", "flip"]
+-# S3.8's model (line rule 0, control 11) against the real GL per scene: (pixels the real GL changed, pixels differing, of them one
+-# level, beyond one level) (measured 2026-10-25 on x64 and Win32; the differences are the footprint-edge pixels of U-1370, which the
+-# span rule of S3.24 removes, and one-level rounding)
++# the port against the real GL per scene: (pixels the real GL changed, pixels differing, of them one level, beyond one level)
++# (measured 2026-10-25 on x64 and Win32; the differences are the footprint-edge pixels of U-1370 and one-level rounding)
+ PINNED: dict[str, tuple[int, int, int, int]] = {
+     "rand": (74466, 108, 98, 10), "widths": (27689, 88, 48, 40), "short": (744, 1, 0, 1), "flip": (18261, 18, 16, 2)}
+ 
+@@ -129,22 +128,17 @@ def real_frame(name: str) -> np.ndarray:
+     return _REAL[name]
+ 
+ 
+-def port_frame(lib, name: str, mode: int = 0, context: bool = True, rule: int | None = None) -> np.ndarray:
+-    """the port's frame of a scene; rule = the overlay line rule for the call (None: the build's default)"""
++def port_frame(lib, name: str, mode: int = 0, context: bool = True) -> np.ndarray:
+     lines, pre = scene(name)
+     prev = lib.negctl("overlay.rasterLine", mode)
+     try:
+         with lib.state() as st:
+-            if rule is not None:
+-                old_rule = st.call("overlay.setRule", [rule]).eax
+             buf = (C.c_uint16 * (W * H))(*pre.reshape(-1).tolist())
+             st.map(BUF, buf)
+             wbits = 0
+             for x1, y1, x2, y2, c, w, a, flip in lines:
+                 r = st.call("overlay.rasterLine", [BUF, W, H, x1, y1, x2, y2, c, w, a, (1 if flip else 0) | (0 if context else 2), wbits])
+                 wbits = r.edx
+-            if rule is not None:
+-                st.call("overlay.setRule", [old_rule])
+             return np.frombuffer(bytes(buf), dtype="<u2").reshape(H, W).copy()
+     finally:
+         lib.negctl("overlay.rasterLine", prev or 0)
+@@ -178,62 +172,8 @@ def test_probe_meets_g2_and_pinned(lib, name):
+     changed, differ, one, beyond = got
+     assert changed > 0
+     assert g2(changed, one, beyond), got
+-    assert got == PINNED_SPAN[name], (got, PINNED_SPAN[name])     # the build's default line rule is the span rule (S3.24)
+-
+-
+-@pytest.mark.parametrize("name", SCENES)
+-def test_old_rule_keeps_s38_counts(lib, name):
+-    """rule 0 (and control 11) is S3.8's model: its pinned counts are unchanged"""
+-    real = real_frame(name)
+-    _lines, pre = scene(name)
+-    assert compare(real, pre, port_frame(lib, name, rule=OLD_RULE)) == PINNED[name]
+-    assert compare(real, pre, port_frame(lib, name, mode=11)) == PINNED[name]
+-
+-
+-# ------------------------------------------------------------------------------------------------ the span rule (roadmap S3.24)
+-# overlay.setRule: 0 = S3.8's model (PINNED above); 2 = the per-column span: N = floor(w * L / |major|) + 2 pixels per column of
+-# the major axis, the pixel centres whose minor offset s = o * sign (x-major: sign(dx) * sign(dy), y-major: sign(dx)) lies in
+-# [-N/2, N/2) (log/roadmap/S3/24_notes.md); 6 = the same span without a tie decision (|o| <= N/2 + 0.002). Counts per scene (same
+-# columns as PINNED); measured with the C++ body (log/roadmap/S3/24_scenes.py's Python model gives rand 8 for rule 2: it does not clip
+-# the ends to the viewport before the span test)
+-SPAN_RULE, NOTIE_RULE, OLD_RULE = 2, 6, 0
+-PINNED_SPAN: dict[str, tuple[int, int, int, int]] = {
+-    "rand": (74466, 7, 6, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2)}
+-PINNED_NOTIE: dict[str, tuple[int, int, int, int]] = {
+-    "rand": (74466, 9, 8, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2)}
+-
+-
+-def wrong(real: np.ndarray, port: np.ndarray) -> np.ndarray:
+-    r5 = np.stack([(real >> s) & 31 for s in (10, 5, 0)]).astype(int)
+-    p5 = np.stack([(port >> s) & 31 for s in (10, 5, 0)]).astype(int)
+-    return (r5 != p5).any(axis=0)
+-
+-
+-@pytest.mark.parametrize("rule,pinned", [(SPAN_RULE, PINNED_SPAN), (NOTIE_RULE, PINNED_NOTIE)])
+-@pytest.mark.parametrize("name", SCENES)
+-def test_span_rule_pinned(lib, name, rule, pinned):
+-    real = real_frame(name)
+-    _lines, pre = scene(name)
+-    assert compare(real, pre, port_frame(lib, name, rule=rule)) == pinned[name]
+-
+-
+-@pytest.mark.parametrize("rule", [SPAN_RULE, NOTIE_RULE])
+-@pytest.mark.parametrize("name", SCENES)
+-def test_span_rule_fewer_and_none_new(lib, name, rule):
+-    """every pixel the span rule gets wrong was wrong under S3.8's model too, and it gets fewer wrong"""
+-    real = real_frame(name)
+-    old, new = wrong(real, port_frame(lib, name, rule=OLD_RULE)), wrong(real, port_frame(lib, name, rule=rule))
+-    assert not (new & ~old).any(), int((new & ~old).sum())
+-    assert new.sum() < old.sum() or old.sum() == 0
+-
+-
+-def test_span_rule_control_old_rule_reads_red(lib):
+-    """control 11 (S3.8's footprint back) breaks the default's pinned counts on every scene with a cut"""
+-    for name in ("rand", "widths", "flip"):
+-        real = real_frame(name)
+-        _lines, pre = scene(name)
+-        assert compare(real, pre, port_frame(lib, name, mode=11)) != PINNED_SPAN[name]
+-        assert compare(real, pre, port_frame(lib, name, rule=OLD_RULE)) != PINNED_SPAN[name]
++    if name in PINNED:
++        assert got == PINNED[name], (got, PINNED[name])
+ 
+ 
+ # control mode -> the scene that must break G2 with it
+@@ -245,12 +185,7 @@ def test_negctl_reads_red(lib, mode):
+     name = CONTROLS[mode]
+     real = real_frame(name)
+     _lines, pre = scene(name)
+-    changed, differ, one, beyond = compare(real, pre, port_frame(lib, name, mode))
+-    if mode == 5:
+-        # no snap: with the span rule the scene stays 0.04 % inside G2 (1,085 one-level px of 74,466), so the control reads RED
+-        # on its distance from the default's pinned count instead (more than 100 times the default's differing pixels)
+-        assert differ > 100 * PINNED_SPAN[name][1], (mode, changed, differ, one, beyond)
+-        return
++    changed, _d, one, beyond = compare(real, pre, port_frame(lib, name, mode))
+     assert not g2(changed, one, beyond), (mode, changed, one, beyond)
+ 
+ 
+diff --git a/re/PORT_PLAN.md b/re/PORT_PLAN.md
+index e12afdc1..94ed21a2 100644
+--- a/re/PORT_PLAN.md
++++ b/re/PORT_PLAN.md
+@@ -108,7 +108,7 @@ Dropped from the port: the CRT, unwind funclets, vendored libpng/zlib/libjpeg (u
+ | 2. Oracle | done (2026-10-19): traces, 190 + 10 segments, 15,191 vectors, harness with x64 and Win32 (x87) backends | re/PHASE23_PLAN.md, port/test/ |
+ | 3. Headless simulation core | done (2026-10-20): all 200 accepted segments PASS on x64 and Win32; gates (c) 6.22-year course_season_6y as one run, (d) championship driven by semantic commands only, (e) divergence ledger, (f) 8,192 frames in 23 s x64 / 29 s Win32 | re/PHASE38_PLAN.md section 5, log/p38/MERGES.md |
+ | 4. Formats and loaders | .sve round trip done (2026-10-21): in cov_r_sve and cov_r_reload the port writes the 10 saves the original wrote with equal bodies and header text (x64 and Win32) and plays on from its own save; header residue after the NUL not compared (U-1060). Done inside phase 3: GameFiles, themes, story files, golfer roster, the load browser, loadWorldAssets / loadInterfaceArt(0). Course files done (2026-10-22): cov_r_course's `.cse` (body and header text) and `.srf` info file (every byte) equal, and the tournament loads the port's own file. Boot path done (2026-10-22): from the user's exe image alone (no original image), gameMain's part, Setup with loadInterfaceArt(1), the title menu (Select A Theme included) and every frame after: 57 of 60 scenarios equal in every record, 2 equal but for the cursor tile in 7 / 67 records (U-1062: the original reads uninitialised stack), 1 with no frame record; x64 = Win32. Loose ends (roadmap S1, 2026-10-24): U-1060, U-1067, U-1012, U-1032, U-1051 and U-1066's tutorial pages / theme Cancel resolved, palette groups 21 / 22 open (U-1170); six new boot scenarios all PASS | re/analysis/data/sve_roundtrip.md, re/PHASE4_BOOT_PLAN.md, port/test/test_sve_roundtrip.py, port/test/boot.py, test_boot.py; modules course, loaders, saveload, menu, tick (tick_boot.inc) |
+-| 5. Backends | step 1 done (2026-10-22): the software RGB555 gfx backend (module gfx) draws sandbox_basic's title menu frame and all five cov_b_location (location screen) checkpoints pixel-exact against the original's back buffer (x64 and Win32), from the user's install, labels through the host GDI provider; segment and boot gates unchanged. Before it: text widths as a host GDI provider (module gditext) and Terrain.dll as the TerrainApi interface with a headless stand-in. Frame census (roadmap S0, 2026-10-24, re/roadmap/frame_census.tsv, port/test/framegate.py): of 609 checkpoints 45 PASS at S0; after S2 waves 1-4 + S3 wave 1 (2026-10-25) 82 of 698 PASS (73 of S0's 609, none lost), after I6 87 PASS, after I7 (2026-10-26) 88 PASS; after I13 (roadmap S3, 2026-10-28) 100 PASS with none lost: FLIC sprite sheets, the sprite queue, golfers and ball, HUD panels, ticker, cursor, tooltip and overlay lines drawn, and the app runs S3's frame; after I19 (roadmap S3 wave 7, 2026-10-30) 111 PASS with none lost (labels, money labels, ball-flight lines, golfer info panel, bulletin photo, bio EditBox) and an opt-in host OpenGL terrain renderer with a startup self-check (`--gl auto`: 638 PASS; GlRaster stays the default, decision G13); after I21 (roadmap S3 wave 8, 2026-11-01) the default census reads 123 PASS of 698 (differing px 71,871 -> 6,203) and 677 PASS under the split verdict (terrain-origin pixels judged under G2, 2D pixels exactly, decision G18), with the float32 vertex rule and clipping of Windows' generic GL in GlRaster and the antialiased line footprint; the port draws the terrain into the frame (roadmap S3.2: 527/527 terrain checkpoints within the G2 criterion); gfx bodies live in per-family files (S2 wave 1); the software rasteriser matches Windows' software GL within 0.06 % one-level pixels (S3.1b); regression baseline re/roadmap/BASELINE.md. Text without GDI (roadmap S5, 2026-10-26): an optional FreeType text provider (modules textlab, fttext, fttext_raster; SG_TEXT_METRICS=freetype) gives segments 205/205 and boot rows equal to GDI's, GDI stays the default (decision G5). Video (roadmap S8, 2026-10-24, D2): every Bink movie listed with its call site and skipped through the movie interface (module video), tested from boot with the intro on (cov_r_s8_play 216/216); a decoder is not decided | re/PHASE5_GFX_PLAN.md, port/test/gfx.py, test_gfx.py, portsim/sim/gfx.h, gditext.h, terrain_api.h |
++| 5. Backends | step 1 done (2026-10-22): the software RGB555 gfx backend (module gfx) draws sandbox_basic's title menu frame and all five cov_b_location (location screen) checkpoints pixel-exact against the original's back buffer (x64 and Win32), from the user's install, labels through the host GDI provider; segment and boot gates unchanged. Before it: text widths as a host GDI provider (module gditext) and Terrain.dll as the TerrainApi interface with a headless stand-in. Frame census (roadmap S0, 2026-10-24, re/roadmap/frame_census.tsv, port/test/framegate.py): of 609 checkpoints 45 PASS at S0; after S2 waves 1-4 + S3 wave 1 (2026-10-25) 82 of 698 PASS (73 of S0's 609, none lost), after I6 87 PASS, after I7 (2026-10-26) 88 PASS; after I13 (roadmap S3, 2026-10-28) 100 PASS with none lost: FLIC sprite sheets, the sprite queue, golfers and ball, HUD panels, ticker, cursor, tooltip and overlay lines drawn, and the app runs S3's frame; after I19 (roadmap S3 wave 7, 2026-10-30) 111 PASS with none lost (labels, money labels, ball-flight lines, golfer info panel, bulletin photo, bio EditBox) and an opt-in host OpenGL terrain renderer with a startup self-check (`--gl auto`: 638 PASS; GlRaster stays the default, decision G13); the port draws the terrain into the frame (roadmap S3.2: 527/527 terrain checkpoints within the G2 criterion); gfx bodies live in per-family files (S2 wave 1); the software rasteriser matches Windows' software GL within 0.06 % one-level pixels (S3.1b); regression baseline re/roadmap/BASELINE.md. Text without GDI (roadmap S5, 2026-10-26): an optional FreeType text provider (modules textlab, fttext, fttext_raster; SG_TEXT_METRICS=freetype) gives segments 205/205 and boot rows equal to GDI's, GDI stays the default (decision G5). Video (roadmap S8, 2026-10-24, D2): every Bink movie listed with its call site and skipped through the movie interface (module video), tested from boot with the intro on (cov_r_s8_play 216/216); a decoder is not decided | re/PHASE5_GFX_PLAN.md, port/test/gfx.py, test_gfx.py, portsim/sim/gfx.h, gditext.h, terrain_api.h |
+ | 6. UI and screens | command effects of every screen a segment reaches are ported (Command / InputSource, semantic commands); drawing: roadmap S2 done (2026-10-26, 14 steps): credits, routing map, load browser, quit, boot screens, the report screens, dialogs, buy land, the bulletin board, tournament results and SimFoto are drawn by the backend and judged against the original's frames; cov_r_s2_screens boots to its end (1,268/1,268) | modules commands, dialogs, reports, routing, chareditor, semantic |
+ | 7. Defect decisions | decisions made (re/port/defect_decisions.tsv, 75 rows: 13 fix, 62 keep; G3 answered the 26 asks, D53 is the tropical-tree fault of roadmap S3.4b); profile fixed = 9 switches over the hang and fault defects (re/port/defect_profiles.tsv); profile original = every switch 1 | re/port/divergences.tsv, re/analysis/data/model_defects.md |
+ | 8. Playable host | wave 4 merged (roadmap S7, 2026-10-31, I20): simgolf_port.exe plays the game's sound through DirectSound on its own audio thread (sim unchanged), runs with the `fixed` defect profile by default (tropical courses, course sfx and theme music under both folder names, G15 / G16); waves 1-3 merged (2026-10-27, I10): simgolf_port.exe plays from the user's install (live core = sg_run_boot on 70 scenarios, app recordings replay to equal sim hashes x64 + Win32, present at Display::present like the original, frames 87..100 ms); S3 merged 2026-10-28 (I13), so the play session (G8) can start | re/roadmap/sections.tsv |
+diff --git a/re/roadmap/BASELINE.md b/re/roadmap/BASELINE.md
+index c72f674a..8aaea6f8 100644
+--- a/re/roadmap/BASELINE.md
++++ b/re/roadmap/BASELINE.md
+@@ -1,31 +1,6 @@
+-# Regression baseline at HEAD + S3 wave 8 (I21, 2026-11-01)
++# Regression baseline at HEAD + S7 wave 4 (I20, 2026-10-31)
+ 
+-## HEAD + S3 wave 8 (I21)
+-
+-This file now describes **HEAD + S3 wave 8**: 2291a342 (S7 wave 4, = I20's tree) plus S3.21..S3.27 (`log/roadmap/S3/MERGE_w8.md`, files
+-`log/roadmap/S3/files_w8.txt` + `27_files.txt`) and the S3 lead's two fix layers `w8_fix_i21.py` / `w8_fix_i21b.py` (stale test pins
+-wave 8 moved; the host-GL self-check's negative control). Measured by I21 in `port/build/I21` (`log/roadmap/merges/I21.md`); P2
+-(2733b4e5, gditext temp directories) touches no file of it. Pass `-m ""` to pytest for these counts.
+-
+-| Gate | HEAD + S3 wave 8 (I21) |
+-|---|---|
+-| repo static | 811 passed, 2 skipped, 46 deselected (= I20) |
+-| build x64 / Win32, gfx.check | rc 0; 0 duplicates, 138 bodies |
+-| segments x64 / Win32 / freetype | 205 / 205 each (equal to I20's rows) |
+-| boot x64 / Win32 / freetype | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each |
+-| chains / ledger | 342 / 342; ledger 32 rows = I20's, 2 without a cause |
+-| live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266 |
+-| census raw (GlRaster), 698 rows | **PASS 123** / FAIL 565 / 0 / NOT_RUN 10 (I19 111 / 577); differing px 71,871 -> 6,203 |
+-| census split (G18, terrain-origin pixels under G2, 2D exact) | **PASS 677** / FAIL 11 / 0 / 10 |
+-| census --gl auto (host GL) | 677 / 11 / 0 / 10 (I19 638 / 50 / 10) |
+-| terrain verdict | 527 PASS, 75 NOT_MEASURED |
+-| x64 suite, 106 files | all PASS with the fix layers; test_app_present::test_long_session_memory_bounded passes alone (load-dependent) |
+-| Win32 suite, 76 files | only I10's 20 known ids |
+-
+-Reference TSVs: `log/roadmap/merges/I21/{segs,boot}_{x64,win32}.tsv`, `segs_ft_x64.tsv`, `boot_ft_x64.tsv`, `chain_x64.tsv`,
+-`ledger_divergences.tsv`, `census.tsv`, `census_split.tsv`, `census_auto.tsv` + `census_auto_s2_rerun.tsv`, `terrain_verdicts.tsv`.
+-
+-## Before S3 wave 8 (I20, HEAD + S7 wave 4)
++## HEAD + S7 wave 4 (I20)
+ 
+ This file now describes **HEAD + S7 wave 4**: f2dff003 (S3 wave 7, = I19's tree) plus S7.10..S7.13, audio out and the app's defect
+ profile (`log/roadmap/S7/MERGE_w4.md`, files `log/roadmap/S7/files_w4.txt`). Measured by I20 in `port/build/I20` (`git archive f2dff003` +

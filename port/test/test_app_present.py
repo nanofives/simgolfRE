@@ -95,7 +95,9 @@ def test_control_present_point_off(exe):  # noqa: F811
 
 
 # ------------------------------------------------------------------------------------------------ U-1643: a long session
-GROWTH_LIMIT = 4 << 20   # private bytes a bounded run may gain after frame 2,000 (measured: 28,672 over 49,000 frames)
+GROWTH_LIMIT = 8 << 20   # private bytes a bounded run may gain after frame 2,000 (measured: 28,672 over 49,000 frames at S7.8;
+                         # since S3 wave 7 about 3.3 MB or about 4.28 MB per run on the same build, so 4 << 20 failed half the
+                         # runs: decision G21, 2026-11-01, 8 MB; the control still grows past ten times it, 139 MB)
 
 
 def _long_run(exe, variant: str, extra=()) -> dict:  # noqa: F811

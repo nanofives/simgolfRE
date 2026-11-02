@@ -257,3 +257,12 @@ context or GlRaster, and a longer stress run).
     were the same before and after the default changed; that census was moved to census_auto.tsv and the default one re-run fresh;
   - S3.9's w7 tree moved twice during the step (9_edits.py's checkpoint_plan fix, then test_gfx_credits.py). The mirror carries
     both, and `20_assemble.py --dst S3_20_chk` equals the mirror file for file.
+
+## Addendum (lead, 2026-10-31, after S3.21; w8_fix_i21b.py)
+
+The self-check's reference rectangle (c7/z2_r1, 32 x 32) is now exact under GlRaster too: with roadmap S3.21's float32 vertex rule and
+clipping (default on) GlRaster draws all 1,024 pixels equal to the original (I21's suite: got == want f270e5be...), where S3.20 measured
+45 one-level pixels. The test's negative control therefore turns S3.21's rules off on that rasteriser (glWgl.rasterCheck(1): GlRaster
+tune 28 and 29, the same as SG_RASTER_TUNE=28=1,29=1) and reads the 45 px RED; the default GlRaster passing the check is pinned as its
+own test. The app's `--gl auto` decision does not change: LiveTerrain::choose_renderer runs wgl_self_check on the host's OpenGL only and
+falls back to GlRaster when that fails; raster_self_check has no caller outside the test harness entry.

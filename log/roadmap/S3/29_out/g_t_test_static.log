@@ -1,0 +1,10 @@
+== t_test_static start 2026-10-31 19:21:31
+[w8_lock] S3.29 queued at 2026-10-31 19:21:32
+[w8_lock] S3.29 waiting: lock='free' ahead=['I21'] free_commit=16.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=16.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=16.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=16.5 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 19:22:12 (waited 40 s, free commit 16.6 GB)
+......                                                                   [100%]
+6 passed in 3.69s
+[w8_lock] S3.29 released at 2026-10-31 19:22:17

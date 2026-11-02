@@ -1,0 +1,8 @@
+== g2_chain_on start 2026-10-31 18:54:13
+[w8_lock] S3.29 queued at 2026-10-31 18:54:14
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3-lead'] free_commit=17.3 GB
+[w8_lock] S3.29 waiting: lock='step=S3-lead' ahead=[] free_commit=19.0 GB
+[w8_lock] S3.29 waiting: lock='step=S3-lead' ahead=[] free_commit=18.8 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 18:54:44 (waited 30 s, free commit 19.4 GB)
+FAIL 0
+[w8_lock] S3.29 released at 2026-10-31 18:55:11

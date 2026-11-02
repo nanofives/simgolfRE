@@ -1,0 +1,32 @@
+[w8_lock] S3-lead queued at 2026-10-31 20:50:44
+[w8_lock] S3-lead waiting: lock='free' ahead=['I21'] free_commit=20.1 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.8 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.5 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.2 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.2 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.1 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.2 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.1 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.4 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.5 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.1 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.1 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.0 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=18.9 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.4 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.3 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.4 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.6 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.6 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=19.5 GB
+[w8_lock] S3-lead waiting: lock='step=I21' ahead=[] free_commit=20.7 GB
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 20:56:14 (waited 330 s, free commit 20.6 GB)
+........................                                                 [100%]
+24 passed, 12 deselected in 131.47s (0:02:11)
+[w8_lock] S3-lead released at 2026-10-31 20:58:27

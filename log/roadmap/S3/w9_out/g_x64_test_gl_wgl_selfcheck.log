@@ -1,0 +1,8 @@
+[w8_lock] S3-lead queued at 2026-10-31 20:11:23
+[w8_lock] S3-lead waiting: lock='free' ahead=['I21'] free_commit=20.1 GB
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 20:11:33 (waited 10 s, free commit 20.3 GB)
+.................sssssss                                                 [100%]
+=========================== short test summary info ===========================
+SKIPPED [7] port\test\test_gl_wgl_selfcheck.py:205: SG_APP_EXE (simgolf_port.exe) not set
+17 passed, 7 skipped in 24.59s
+[w8_lock] S3-lead released at 2026-10-31 20:11:59

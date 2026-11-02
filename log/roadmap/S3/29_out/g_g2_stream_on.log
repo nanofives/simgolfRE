@@ -1,0 +1,19 @@
+== g2_stream_on start 2026-10-31 10:28:06
+[w8_lock] S3.29 queued at 2026-10-31 10:28:07
+[w8_lock] S3.29 waiting: lock='free' ahead=['I21', 'S3.28'] free_commit=20.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=19.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=19.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.4 GB

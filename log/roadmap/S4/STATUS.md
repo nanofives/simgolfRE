@@ -1,11 +1,12 @@
+S4 DONE and CLOSED (2026-10-29): merged by I14 as ee6efc1d (log/roadmap/merges/I14.md); build dirs S4r2 / S4r / S4rx deleted
 S4 status (lead: cmvsixi81044xp727qsgerjz6, fourth lead from 2026-10-28 on claude2, continuing after I11's refusal; earlier leads claude2, claude3, claude2 cmvphl14)
 steps: 15 planned, 14 accepted, 1 held (S4.10g: U-1421, codec only on the network voice path), 0 running
 live workers: none (S4.12 closed 2026-10-29)
 game slots held: none
 function map: re/roadmap/S4_functions.tsv (744 sound.dll rows: 573 C3/C4 + 31 C2 emu-only to S4.2..S4.9; 71 CRT and 69 dead not ported)
 decision G1 answered 2026-10-24 by Mariano: proposed reading accepted (DECISIONS_PENDING.md Answered); written into S4_steps.tsv gates
-last event: 2026-10-29 S4.12 accepted: resubmission proven on e179bd24 + S4 (mirror port/build/S4r2; --prove SAME also on 6e6df6e7), MERGE.md rewritten; S4 DONE sent
-next: idle until I14 (cmvtcrf3, merging on HEAD 6e6df6e7) reports; MERGED -> delete port/build/S4r2, S4r, S4rx (junctions unlinked first); REFUSED -> lead takes the fix
+last event: 2026-10-29 I14 MERGED (ee6efc1d); lead deleted port/build/S4r2, S4r, S4rx (junctions unlinked first, no process used them); S4 CLOSED
+next: none (orchestrator runs 11_merge.md section 6 tracker steps; S4.10g / U-1421 stays held for D6 network voice)
 uncertainty ids: S4.k gets U-14(k-1)0..U-14(k-1)9
 
 ## G1, the gate question (sent to the orchestrator)
@@ -60,3 +61,4 @@ S4.1's census gives the exact count of rows each tier covers.
 
 - 2026-10-29 S4.12 accepted (12_notes.md, resub2/*_compare.log checked by the lead): static 630/2; segments 205/205 x64 + Win32 + freetype, boot 66/2/2 on all three, live equivalence 68+2 and app replay 340/205/266 both backends, census 698 PASS 100 none lost, terrain 527, chains 342: 0 rows differ from I13 / I12; x64 suite 95 files 94 PASS (test_fttext U-1393); Win32 20 failed ids all known, 0 new; G1 1,087 / 16,859 GREEN 0 fallbacks, goldens EQUAL, controls 667/669 RED (2 blind as accepted). U-1546 resolved by e179bd24 (kept in 12_uncertain.tsv). MERGE.md: I11 block, --prove sentence, proof and command block replaced (old text in resub2/MERGE.old_proof_78ffb06d.md); --prove re-run by the lead on 6e6df6e7 SAME 8/8.
 - 2026-10-29 ORCH: S4 DONE received; I14 (cmvtcrf3) merging on 6e6df6e7. Lead idle until its verdict.
+- 2026-10-29 I14 MERGED as ee6efc1d (suite numbers reused under G11: I14's mirror byte-identical to S4r2). Lead deleted port/build/S4r2, S4r, S4rx after checking no process used them; junctions unlinked first, original/ log/ port/corpus/ tools/vc6 intact. S4 CLOSED.

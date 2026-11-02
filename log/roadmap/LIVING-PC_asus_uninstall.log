@@ -1,0 +1,27 @@
+12:42:06  === elevated: True
+12:42:06  ArmourySocketServer pid 16052 handles 148317
+12:42:09  ArmourySocketServer running after stop: True
+12:42:09  commit free after stop: 10,2 GB
+12:42:09  START {40dadfa2-acc5-4f75-9138-52616f20c493} :: C:\ProgramData\Package Cache\{40dadfa2-acc5-4f75-9138-52616f20c493}\AacMBSetup.exe /uninstall /quiet /norestart
+12:42:34  END   {40dadfa2-acc5-4f75-9138-52616f20c493} exit 0
+12:42:34  START {49c4358d-054e-4cf1-9ec1-dca3487f304a} :: C:\ProgramData\Package Cache\{49c4358d-054e-4cf1-9ec1-dca3487f304a}\AacExtCardSetup.exe /uninstall /quiet /norestart
+12:43:20  END   {49c4358d-054e-4cf1-9ec1-dca3487f304a} exit 0
+12:43:20  START {f70a8a88-540d-485d-9aa8-001486fb050e} :: C:\ProgramData\Package Cache\{f70a8a88-540d-485d-9aa8-001486fb050e}\AacSetup.exe /uninstall /quiet /norestart
+12:43:38  END   {f70a8a88-540d-485d-9aa8-001486fb050e} exit 0
+12:43:38  START {2dcabc26-feae-4bc3-afc0-fba6e9f32af4} :: C:\ProgramData\Package Cache\{2dcabc26-feae-4bc3-afc0-fba6e9f32af4}\AacSetup.exe /uninstall /quiet /norestart
+12:43:57  END   {2dcabc26-feae-4bc3-afc0-fba6e9f32af4} exit 0
+12:43:57  START {4726e749-b1f1-43ce-95e4-2972f1911f8c} :: C:\ProgramData\Package Cache\{4726e749-b1f1-43ce-95e4-2972f1911f8c}\AacAIOFanSetup.exe /uninstall /quiet /norestart
+12:44:13  END   {4726e749-b1f1-43ce-95e4-2972f1911f8c} exit 0
+12:44:13  msi {359B9A9D-A289-4962-BCE2-13EBFD50D532} already gone
+12:44:14  msi {237E1CAC-1708-4940-AC34-DF15C079AB70} already gone
+12:44:14  msi {86D4C8A2-DB22-4948-950D-28DD5145F91C} already gone
+12:44:14  msi {965CDF5F-901C-476F-B3A8-7396701B1129} already gone
+12:44:14  msi {EAE80DED-1A39-41C5-9F60-87CC947F6454} already gone
+12:44:14  START msi {A92DAB39-4E2C-4304-9AB6-BC44E68B55E2} :: msiexec.exe /x {A92DAB39-4E2C-4304-9AB6-BC44E68B55E2} /qn /norestart
+12:44:15  END   msi {A92DAB39-4E2C-4304-9AB6-BC44E68B55E2} exit 0
+12:44:15  START InstallShield {06EA142E-8DA4-4917-8AD5-443F483B502D} :: C:\Program Files (x86)\InstallShield Installation Information\{06EA142E-8DA4-4917-8AD5-443F483B502D}\setup.exe -runfromtemp -l0x0409 -removeonly
+2026-11-01 17:06:51 == G22: end ArmourySocketServer and delete its scheduled task
+2026-11-01 17:06:51 process pid 13580 handles 2959
+2026-11-01 17:06:54 process left: 0
+2026-11-01 17:06:57 task \ASUS\ArmourySocketServer deleted
+2026-11-01 17:06:58 \ASUS\ tasks left: AcPowerNotification, ASUSUpdateTaskMachineCore1dc14c72d182eb5, ASUSUpdateTaskMachineUA, NoiseCancelingEngine, P508PowerAgent_sdk

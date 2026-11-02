@@ -1,13 +1,14 @@
 # S7 STATUS (wave 4 lead: session cmvub8baf23epp7153aj6ibzq, claude2 opus; waves 1-3 lead was cmvmrorle3t0no115odl0j9k8; row S7 of re/roadmap/sections.tsv)
 
-wave 4 (AUDIO OUT): DONE, S7.10..S7.13 accepted (S7.13 = G16 music folders, run by the lead, folded into MERGE_w4 before I19 committed); merge gate on S7_w4_root green
+S7 DONE 2026-11-01: gate (d) PASSED (Mariano played the published LAN build on MARIANO-PC with sound; the reported crash was the window closed by him)
+wave 4 (AUDIO OUT): MERGED as 2291a342 (S7.10..S7.13)
 design: sim context unchanged (device-less path, as the pinned corpus); a second context on an audio thread runs S4's device path into a real DirectSound sink; the sim's playSound / startSoundSlot / Snd::status requests are mirrored to it
 workers alive: none (S7.10 / S7.11 / S7.12 closed; S7.11 and S7.12 stalled after their work, the lead finished their heavy parts)
 game slots: none; heavy slot RELEASED 2026-10-30 14:20
 waves 1-3: 9 of 9 accepted and merged (37e58e96 holds them)
 gate wave 4: (a) device run through the app sink = $device 4b6ed61a; (b) app tests / segments / boot / app replay unchanged; (c) output capture vs install WAVs, controls RED; (d) Mariano listens
 U range wave 4: U-1686..U-1699 (U-1600..U-1685 are taken)
-last event: 2026-10-30 wave 5 (picker) WITHDRAWN by Mariano (meant for SimCity): S7.14 / S7.15 withdrawn, log/roadmap/S7/PICKER.md kept as a plan only; idle until I20's verdict, then gate (d) listening
+last event: 2026-10-31 wave 4 committed 2291a342; shared port/app/main.cpp restored to HEAD; idle until gate (d) or a new wave
 
 ## Waves 1-3 (done)
 

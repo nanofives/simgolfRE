@@ -1,0 +1,22 @@
+[w8_lock] S3.28 queued at 2026-10-31 11:23:45
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.7 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.0 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=18.3 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.5 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=17.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=17.1 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 11:26:56 (waited 190 s, free commit 17.4 GB)
+......                                                                   [100%]
+6 passed in 5.93s
+[w8_lock] S3.28 released at 2026-10-31 11:27:06

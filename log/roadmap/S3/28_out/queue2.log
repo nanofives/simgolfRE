@@ -1,0 +1,5 @@
+record rc=0 [w8_lock] S3.28 released at 2026-10-31 09:38:52
+cov_r_s2_screens s328_s2b vs det_b: SAME (32 checkpoints)
+exported 32 snapshots to C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_28\port\corpus\gl\s328_s2b
+[1/8] build_x64 rc=0 1797 s :: [w8_lock] S3.28 released at 2026-10-31 10:08:57
+[2/8] build_w32 rc=127 1123 s :: [w8_lock] S3.28 released at 2026-10-31 10:27:40

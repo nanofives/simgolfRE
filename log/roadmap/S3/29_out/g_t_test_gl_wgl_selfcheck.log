@@ -1,0 +1,13 @@
+== t_test_gl_wgl_selfcheck start 2026-10-31 19:24:24
+[w8_lock] S3.29 queued at 2026-10-31 19:24:24
+[w8_lock] S3.29 waiting: lock='free' ahead=['I21'] free_commit=19.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=18.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=18.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=17.9 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 19:25:14 (waited 50 s, free commit 18.2 GB)
+.................sssssss                                                 [100%]
+=========================== short test summary info ===========================
+SKIPPED [7] port\test\test_gl_wgl_selfcheck.py:205: SG_APP_EXE (simgolf_port.exe) not set
+17 passed, 7 skipped in 36.78s
+[w8_lock] S3.29 released at 2026-10-31 19:25:53

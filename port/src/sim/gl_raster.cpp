@@ -105,6 +105,47 @@ inline int64_t ceil_div(int64_t a, int64_t b) {
   const int64_t q = a / b;
   return (a % b != 0 && a > 0) ? q + 1 : q;
 }
+// The textured walk's final stage (tune 32, roadmap S3.29): the generic GL filters, modulates and dithers a walked pixel in float32.
+// Measured with the boundary probes log/roadmap/S3/29_probes.py fin_near / fin_lin (each quad's exact value on a 5-bit boundary for
+// one dither cell, so the arithmetic decides it): texel = byte / 255.0f (a float division; byte * (1 / 255) gave 784 / 2,144 wrong
+// px, the double model 10,064 / 9,792, this form 0 / 0 of 371,712); GL_LINEAR weights (1 - a)(1 - b), a (1 - b), (1 - a) b, a b in
+// float32 from a = frac(u - 0.5) of the float32 u, summed in texel order (j0 i0, j0 i1, j1 i0, j1 i1); the 5-bit value = colour x 31
+// (float32, wacc[2..4]) times the texel, plus the dither offset (k + 0.5) / 16, floored and clamped.
+inline uint16_t walk_final(const uint8_t *td, uint32_t tw, uint32_t th, int bpp, bool linear, const float wacc[5], float d) {
+  float tx[3];
+  if (!linear) {
+    const int iu = wrap_repeat(static_cast<int64_t>(std::floor(static_cast<double>(wacc[0]))), tw);
+    const int iv = wrap_repeat(static_cast<int64_t>(std::floor(static_cast<double>(wacc[1]))), th);
+    const uint8_t *tp = &td[(static_cast<size_t>(iv) * tw + iu) * bpp];
+    for (int k = 0; k < 3; ++k) tx[k] = static_cast<float>(tp[k]) / 255.0f;
+  } else {
+    const float fu = wacc[0] - 0.5f, fv = wacc[1] - 0.5f;
+    const float fi = std::floor(fu), fj = std::floor(fv);
+    const float ax = fu - fi, ay = fv - fj;
+    const int64_t i0 = static_cast<int64_t>(fi), j0 = static_cast<int64_t>(fj);
+    const size_t x0 = static_cast<size_t>(wrap_repeat(i0, tw)), x1 = static_cast<size_t>(wrap_repeat(i0 + 1, tw));
+    const size_t y0 = static_cast<size_t>(wrap_repeat(j0, th)) * tw, y1 = static_cast<size_t>(wrap_repeat(j0 + 1, th)) * tw;
+    const float oma = 1.0f - ax, omb = 1.0f - ay;
+    const float m0 = oma * omb, m1 = ax * omb, m2 = oma * ay, m3 = ax * ay;
+    const uint8_t *q0 = &td[(y0 + x0) * bpp], *q1 = &td[(y0 + x1) * bpp], *q2 = &td[(y1 + x0) * bpp], *q3 = &td[(y1 + x1) * bpp];
+    for (int k = 0; k < 3; ++k) {
+      const float p0 = m0 * (static_cast<float>(q0[k]) / 255.0f), p1 = m1 * (static_cast<float>(q1[k]) / 255.0f);
+      const float p2 = m2 * (static_cast<float>(q2[k]) / 255.0f), p3 = m3 * (static_cast<float>(q3[k]) / 255.0f);
+      float acc = p0 + p1;
+      acc = acc + p2;
+      acc = acc + p3;
+      tx[k] = acc;
+    }
+  }
+  int o5[3];
+  for (int k = 0; k < 3; ++k) {
+    const float val = wacc[2 + k] * tx[k];
+    const float q = val + d;
+    const int o = static_cast<int>(std::floor(q));
+    o5[k] = o < 0 ? 0 : (o > 31 ? 31 : o);
+  }
+  return static_cast<uint16_t>((o5[0] << 10) | (o5[1] << 5) | o5[2]);
+}
 // the dither offsets quantize() adds for control 0 (the correct pipeline), 1 and 2, and dst * 255.0 / 31.0 for a 5-bit dst, each
 // computed by the same expression as there
 struct FastTables {
@@ -730,12 +771,22 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     for (int i = 0; i < 3; ++i) { cov[i].x = sx_[i]; cov[i].y = sy_[i]; }
   const Vtx *c0 = &cov[0], *c1 = &cov[1], *c2 = &cov[2];
   const bool cinc0 = inclusive(*c1, *c2), cinc1 = inclusive(*c2, *c0), cinc2 = inclusive(*c0, *c1);
-  // the default pipeline (every experiment knob 0 except the negative controls of tune 11, no float diagnostics) has a fast loop
+  // TEXTURED WALK (tune 32, roadmap S3.29, U-1309): the generic GL interpolates a textured triangle whose texture has a GL_LINEAR
+  // filter in float32 (GlRaster::tex_walk_); an all-GL_NEAREST texture and an untextured triangle take other paths (not modelled here)
+  std::shared_ptr<const TexWalk> walk;
+  if (tune[32] != 0 && fixed && tune[28] == 0 && textured && !(tex.mag == kNearest && (tex.min == kNearest || tex.min == 0x2700))) {
+    const Vtx *const abc[3] = {&a, &b, &c};
+    const Vtx *const cv[3] = {c0, c1, c2};
+    const bool ci[3] = {cinc0, cinc1, cinc2};
+    walk = tex_walk_(abc, tex, minx, maxx, miny, maxy, cv, ci);
+  }
+  // the default pipeline (every experiment knob 0 except the negative controls of tune 11 and the walk's 32..35, no float
+  // diagnostics) has a fast loop
   bool fast = fixed && !keep_float_ && fast_mode != 0;
-  for (int i = 0; i < kTunes && fast; ++i) fast = (i == 11 || tune[i] == 0);
+  for (int i = 0; i < kTunes && fast; ++i) fast = (i == 11 || (i >= 32 && i <= 35) || tune[i] == 0);
   if (fast) {
     const bool inc[3] = {cinc0, cinc1, cinc2};
-    if (fast_triangle_(v0, v1, v2, ar, tex, linear, minx, maxx, miny, maxy, inc)) return;
+    if (fast_triangle_(v0, v1, v2, ar, tex, linear, minx, maxx, miny, maxy, inc, walk)) return;
   }
   finish();   // the general loop writes after every queued triangle
   const int32_t tri_id = keep_float_ ? static_cast<int32_t>(tris_.size() / 12) : -1;
@@ -808,6 +859,9 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     }
   }
   for (int y = miny; y <= maxy; ++y) {
+    const int32_t wix = walk ? walk->ix[static_cast<size_t>(y - walk->miny)] : INT32_MIN;
+    float wacc[5] = {};
+    int wx = INT32_MIN;
     for (int x = minx; x <= maxx; ++x) {
       const double px = x + 0.5, py = y + 0.5;
       const double w0 = edge(c1->x, c1->y, c2->x, c2->y, px, py);
@@ -882,6 +936,18 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         u = st_v[static_cast<size_t>(st_row) * 5 + 3] + (x - st_ix[st_row]) * st_q[3];
         v = st_v[static_cast<size_t>(st_row) * 5 + 4] + (x - st_ix[st_row]) * st_q[4];
       }
+      const bool wpx = wix != INT32_MIN;
+      if (wpx) {   // the textured walk (tune 32): the row start, then one float32 sum per pixel along the span
+        if (wx == INT32_MIN || x < wx) {
+          const float *st0 = &walk->start[static_cast<size_t>(y - walk->miny) * 5];
+          for (int k = 0; k < 5; ++k) wacc[k] = st0[k];
+          wx = wix;
+        }
+        for (; wx < x; ++wx)
+          for (int k = 0; k < 5; ++k) wacc[k] = wacc[k] + walk->gx[k];
+        u = wacc[0];
+        v = wacc[1];
+      }
       if (tune[2] > 0) {
         const double q = static_cast<double>(1ull << tune[2]);
         u = std::floor(u * q) / q;
@@ -934,6 +1000,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         const double dxs = x - st_ix[st_row];
         cr = sv[0] + dxs * st_q[0]; cg = sv[1] + dxs * st_q[1]; cb = sv[2] + dxs * st_q[2];
       }
+      if (wpx) { cr = wacc[2] / 31.0; cg = wacc[3] / 31.0; cb = wacc[4] / 31.0; }
       if (tune[3] > 0) {
         const double q = static_cast<double>((1ull << tune[3]) - 1);
         cr = std::floor(cr * q + 0.5) / q;
@@ -966,6 +1033,12 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         f[0] = static_cast<float>(ro); f[1] = static_cast<float>(go); f[2] = static_cast<float>(bo);
       }
       const int ctl = tune[11];   // deliberately wrong behaviours for the negative controls (0 = the correct pipeline)
+      if (wpx && tune[35] == 0 && !blend_ && env_mode_ == 0x2100 && ctl == 0) {   // the walk's float32 final stage
+        const float d = static_cast<float>((kDither[y & 3][x & 3] + 0.5) / 16.0);
+        dst = walk_final(tex.data.data(), tex.w, tex.h, bpp, linear, wacc, d);
+        ++stats.drawn_px;
+        continue;
+      }
       dst = static_cast<uint16_t>((quantize(ro, x, y, ctl) << 10) | (quantize(go, x, y, ctl) << 5) | quantize(bo, x, y, ctl));
       ++stats.drawn_px;
     }
@@ -986,6 +1059,8 @@ struct GlRaster::FastJob {
   int bpp, dith;
   bool linear, modulate, blend, white, approx, sloppy;
   bool wctl;   // worker_ctl (negative control)
+  std::shared_ptr<const GlRaster::TexWalk> walk;   // the textured walk (tune 32), else empty
+  bool wfinal;   // the walk's float32 final stage (tune 32 with tune 35 = 0 and tune 11 = 0)
 };
 
 // The pixel-loop workers (set_threads): a ring of jobs written in order by the thread that sets the triangles up; worker k
@@ -1120,8 +1195,128 @@ void GlRaster::queue_(const FastJob &j) {
 // any other pixel (and every pixel of a triangle with a zero or non-finite area, or colours outside [0, 1]) takes the exact branch.
 // With workers (set_threads) the job is queued and rasterised by them; finish() waits for it.
 // port/test/test_gl_raster.py compares whole frames of the loops (fast_mode 0, 1, 2, workers) on the recorded streams.
+// TEXTURED WALK (roadmap S3.29, U-1309; log/roadmap/S3/29_notes.md): measured with probes of the real software GL
+// (log/roadmap/S3/29_probes.py through re/tools/glexact/glreplay.exe, fitted by 29_texfit.py). A textured triangle whose texture has
+// a GL_LINEAR filter is interpolated in float32, not as an exact plane:
+//   - attributes: u = s * width, v = t * height (texel units), r, g, b = float32(colour) * 31 (the 5-bit range);
+//   - gradients (float32, every product and sum rounded): with c the vertex of lowest window y (the first in stream order on a
+//     tie; tune 33 picks another), a, b the next two in stream order, dxAC = xa - xc, dxBC, dyAC, dyBC, area = dxAC dyBC - dxBC
+//     dyAC, r = 1 / area, t1 = dyAC r, t2 = dyBC r, t3 = dxAC r, t4 = dxBC r, dA/dx = dAC t2 - dBC t1, dA/dy = dBC t3 - dAC t4;
+//   - rows walk from the largest y down; the first covered row's start (its first covered pixel) is float32 of the exact plane value
+//     there; when the middle vertex lies left of the long edge, the first row below it starts the same way again (the left edge
+//     turns; tune 34 = 1 keeps walking); every other row's start is the previous one plus float32(-dA/dy * rows + dA/dx * pixels),
+//     each product and the sum rounded to float32;
+//   - along a span every pixel adds dA/dx in float32.
+// Probes: s329_alt_big (u's error amplified 255 x by alternating texels) 64,599 -> 1 differing px, const_rand 285 -> 5, gour_rand
+// 306 -> 0, cramp_lin 31 -> 0 (29_notes.md section 2 for every probe and what is left).
+std::shared_ptr<const GlRaster::TexWalk> GlRaster::tex_walk_(const Vtx *const abc[3], const Tex &tex, int minx, int maxx, int miny,
+                                                             int maxy, const Vtx *const cov[3], const bool inc[3]) const {
+  auto w = std::make_shared<TexWalk>();
+  w->miny = miny;
+  const int rows = maxy - miny + 1;
+  if (rows <= 0) return nullptr;
+  w->ix.assign(static_cast<size_t>(rows), INT32_MIN);
+  w->start.assign(static_cast<size_t>(rows) * 5, 0.0f);
+  // the attributes of the three vertices in stream order: double (the plane) and float32 (the gradients)
+  double A[5][3];
+  float Af[5][3];
+  for (int i = 0; i < 3; ++i) {
+    const Vtx &p = *abc[i];
+    A[0][i] = p.s * tex.w;
+    A[1][i] = p.t * tex.h;
+    const double cc[3] = {p.r, p.g, p.b};
+    for (int k = 0; k < 3; ++k) A[2 + k][i] = cc[k] * 31.0;
+    Af[0][i] = static_cast<float>(A[0][i]);
+    Af[1][i] = static_cast<float>(A[1][i]);
+    for (int k = 0; k < 3; ++k) {
+      const float cf = static_cast<float>(cc[k]);
+      Af[2 + k][i] = cf * 31.0f;
+    }
+  }
+  const double X[3] = {abc[0]->qx, abc[1]->qx, abc[2]->qx}, Y[3] = {abc[0]->qy, abc[1]->qy, abc[2]->qy};
+  // the gradient anchor: the lowest vertex (tune 33: 1 the highest, 2 the first in stream order)
+  int ci = 0;
+  for (int i = 1; i < 3; ++i) {
+    if (tune[33] == 1 ? Y[i] > Y[ci] : Y[i] < Y[ci]) ci = i;
+  }
+  if (tune[33] == 2) ci = 0;
+  const int ai = (ci + 1) % 3, bi = (ci + 2) % 3;
+  const float dxAC = static_cast<float>(X[ai]) - static_cast<float>(X[ci]), dxBC = static_cast<float>(X[bi]) - static_cast<float>(X[ci]);
+  const float dyAC = static_cast<float>(Y[ai]) - static_cast<float>(Y[ci]), dyBC = static_cast<float>(Y[bi]) - static_cast<float>(Y[ci]);
+  const float p1 = dxAC * dyBC, p2 = dxBC * dyAC;
+  const float area = p1 - p2;
+  if (!(area != 0.0f)) return nullptr;
+  const float rcp = 1.0f / area;
+  const float t1 = dyAC * rcp, t2 = dyBC * rcp, t3 = dxAC * rcp, t4 = dxBC * rcp;
+  float gy[5];
+  for (int k = 0; k < 5; ++k) {
+    const float dAC = Af[k][ai] - Af[k][ci], dBC = Af[k][bi] - Af[k][ci];
+    const float x1 = dAC * t2, x2 = dBC * t1, y1 = dBC * t3, y2 = dAC * t4;
+    w->gx[k] = x1 - x2;
+    gy[k] = y1 - y2;
+  }
+  // the exact plane over the snapped vertices (stream order)
+  const double ar = edge(X[0], Y[0], X[1], Y[1], X[2], Y[2]);
+  auto plane = [&](int k, double px, double py) {
+    const double w0 = edge(X[1], Y[1], X[2], Y[2], px, py), w1 = edge(X[2], Y[2], X[0], Y[0], px, py);
+    const double w2 = edge(X[0], Y[0], X[1], Y[1], px, py);
+    return (w0 * A[k][0] + w1 * A[k][1] + w2 * A[k][2]) / ar;
+  };
+  // the left edge's turn: the middle vertex (by y, then stream order) left of the long edge
+  int o[3] = {0, 1, 2};
+  for (int i = 0; i < 3; ++i)
+    for (int k = i + 1; k < 3; ++k)
+      if (Y[o[k]] < Y[o[i]] || (Y[o[k]] == Y[o[i]] && o[k] < o[i])) std::swap(o[i], o[k]);
+  const int vmin = o[0], vmid = o[1], vmax = o[2];
+  bool midleft = false;
+  if (Y[vmin] != Y[vmax]) {
+    const double xl = X[vmax] + (X[vmin] - X[vmax]) * (Y[vmid] - Y[vmax]) / (Y[vmin] - Y[vmax]);
+    midleft = X[vmid] < xl && tune[34] == 0;
+  }
+  // rows from the largest y down: the first covered pixel (the general loop's coverage test), then the row start
+  const Vtx *c0 = cov[0], *c1 = cov[1], *c2 = cov[2];
+  bool have = false, switched = false;
+  int prev_y = 0, prev_ix = 0;
+  float prev[5] = {};
+  for (int y = maxy; y >= miny; --y) {
+    int ix = INT32_MIN;
+    for (int x = minx; x <= maxx && ix == INT32_MIN; ++x) {
+      const double px = x + 0.5, py = y + 0.5;
+      const double e0 = edge(c1->x, c1->y, c2->x, c2->y, px, py);
+      const double e1 = edge(c2->x, c2->y, c0->x, c0->y, px, py);
+      const double e2 = edge(c0->x, c0->y, c1->x, c1->y, px, py);
+      if (e0 < 0 || e1 < 0 || e2 < 0) continue;
+      if ((e0 == 0 && !inc[0]) || (e1 == 0 && !inc[1]) || (e2 == 0 && !inc[2])) continue;
+      ix = x;
+    }
+    if (ix == INT32_MIN) continue;
+    const bool lower = midleft && (y + 0.5) < Y[vmid];
+    float cur[5];
+    if (!have || (lower && !switched)) {
+      for (int k = 0; k < 5; ++k) cur[k] = static_cast<float>(plane(k, ix + 0.5, y + 0.5));
+    } else {
+      const float fdy = static_cast<float>(prev_y - y), fdi = static_cast<float>(ix - prev_ix);
+      for (int k = 0; k < 5; ++k) {
+        const float sy = (-gy[k]) * fdy, sx = w->gx[k] * fdi;
+        const float st = sy + sx;
+        cur[k] = prev[k] + st;
+      }
+    }
+    switched = switched || lower;
+    have = true;
+    w->ix[static_cast<size_t>(y - miny)] = ix;
+    for (int k = 0; k < 5; ++k) {
+      w->start[static_cast<size_t>(y - miny) * 5 + k] = cur[k];
+      prev[k] = cur[k];
+    }
+    prev_y = y;
+    prev_ix = ix;
+  }
+  return w;
+}
+
 bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear, int minx,
-                              int maxx, int miny, int maxy, const bool inc[3]) {
+                              int maxx, int miny, int maxy, const bool inc[3], std::shared_ptr<const TexWalk> walk) {
   constexpr double kLim = 16384.0;   // 2^14
   if (w_ >= 16384 || h_ >= 16384) return false;
   for (int i = 0; i < 3; ++i)
@@ -1158,6 +1353,8 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
   // the checked reciprocal path (fast_mode 1; negative controls: 3 skips the boundary checks, 4 rounds the reciprocals to float)
   j.sloppy = fast_mode == 3;
   j.wctl = worker_ctl == 1;
+  j.walk = std::move(walk);
+  j.wfinal = tune[35] == 0 && ctl == 0;
   bool approx = (fast_mode == 1 || fast_mode == 3 || fast_mode == 4) && j.div_st > 0 && j.div_st < 1e300 && j.arA > 0 &&
                 j.arA < 1e300;
   for (const Vtx *p : {v0, v1, v2})
@@ -1214,9 +1411,29 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
     const int64_t d0 = 256 * j.B[0], d1 = 256 * j.B[1], d2 = 256 * j.B[2];
     uint16_t *row = j.fb + static_cast<size_t>(y) * static_cast<size_t>(j.fbw);
     const double(&drow)[4] = dith[y & 3];
+    // the textured walk (tune 32): the row's float32 accumulators from its first covered pixel (the general loop's rule)
+    const GlRaster::TexWalk *wk = j.walk.get();
+    const int32_t wix = wk ? wk->ix[static_cast<size_t>(y - wk->miny)] : INT32_MIN;
+    float wacc[5] = {};
+    int wx = INT32_MIN;
+    if (wix != INT32_MIN) {
+      const float *st0 = &wk->start[static_cast<size_t>(y - wk->miny) * 5];
+      for (int k = 0; k < 5; ++k) wacc[k] = st0[k];
+      wx = wix;
+    }
     for (int x = static_cast<int>(xl); x <= static_cast<int>(xr); ++x, w0 -= d0, w1 -= d1, w2 -= d2) {
       const double a0 = static_cast<double>(w0) * kUnit, a1 = static_cast<double>(w1) * kUnit, a2 = static_cast<double>(w2) * kUnit;
-      if (approx) {
+      const bool wpx = wix != INT32_MIN;
+      if (wpx) {
+        if (x < wx) {
+          const float *st0 = &wk->start[static_cast<size_t>(y - wk->miny) * 5];
+          for (int k = 0; k < 5; ++k) wacc[k] = st0[k];
+          wx = wix;
+        }
+        for (; wx < x; ++wx)
+          for (int k = 0; k < 5; ++k) wacc[k] = wacc[k] + wk->gx[k];
+      }
+      if (approx && !wpx) {
         // the same pixel with the divisions replaced by products with the reciprocals; kept only when every rounding decision is
         // farther from its boundary than the two computations can differ (bounds in the comment of fast_triangle_)
         const double s = (a0 * s0 + a1 * s1 + a2 * s2) * inv_st, t = (a0 * t0 + a1 * t1 + a2 * t2) * inv_st;
@@ -1275,10 +1492,15 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
           }
         }
       }
-      // the exact branch: the general loop's expressions
+      if (wpx && j.wfinal && !blend && modulate) {   // the walk's float32 final stage, as the general loop
+        row[x] = walk_final(td, tw, th, bpp, linear, wacc, static_cast<float>(drow[x & 3]));
+        ++drawn;
+        continue;
+      }
+      // the exact branch: the general loop's expressions (the walked values with tune 32)
       const double s = (a0 * s0 + a1 * s1 + a2 * s2) / div_st;
       const double t = (a0 * t0 + a1 * t1 + a2 * t2) / div_st;
-      const double u = s * twd, v = t * thd;
+      const double u = wpx ? static_cast<double>(wacc[0]) : s * twd, v = wpx ? static_cast<double>(wacc[1]) : t * thd;
       double r, g, bl, al = 255.0;
       if (!linear) {
         const int iu = wrap_fast(floor_i64(u), tw), iv = wrap_fast(floor_i64(v), th);
@@ -1304,6 +1526,7 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
       }
       double cr = (a0 * r0 + a1 * r1 + a2 * r2) / arA, cg = (a0 * g0 + a1 * g1 + a2 * g2) / arA;
       double cb = (a0 * b0 + a1 * b1 + a2 * b2) / arA;
+      if (wpx) { cr = wacc[2] / 31.0; cg = wacc[3] / 31.0; cb = wacc[4] / 31.0; }
       if (white) cr = cg = cb = 1.0;
       if (modulate) { r *= cr; g *= cg; bl *= cb; }
       uint16_t &dst = row[x];

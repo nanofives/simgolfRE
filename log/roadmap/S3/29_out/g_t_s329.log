@@ -1,0 +1,123 @@
+== t_s329 start 2026-10-31 10:10:56
+[w8_lock] S3.29 queued at 2026-10-31 10:10:57
+[w8_lock] S3.29 waiting: lock='free' ahead=['I21', 'S3.28'] free_commit=25.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=23.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=22.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=20.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=20.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=20.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=20.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=20.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=21.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=20.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=19.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=15.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=15.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=15.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=15.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=15.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.4 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=16.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.3 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.2 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.7 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.8 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=17.9 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.5 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.1 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.0 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=['S3.28'] free_commit=18.1 GB
+[w8_lock] S3.29 waiting: lock='free' ahead=['S3.28'] free_commit=19.4 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 10:27:50 (waited 1013 s, free commit 20.0 GB)
+...........FF...............                                             [100%]
+================================== FAILURES ===================================
+______________ test_s329_walk_residue_is_bounded[s329_perm_big] _______________
+
+lib = <port.test.lib.Lib object at 0x000002017E981EB0>, name = 's329_perm_big'
+
+    @pytest.mark.parametrize("name", sorted(S329_LEFT))
+    def test_s329_walk_residue_is_bounded(lib, name):
+>       assert _probe_diff(lib, _s329_probe(name), {32: 1}) <= S329_LEFT[name]
+E       AssertionError: assert 13 <= 12
+E        +  where 13 = _probe_diff(<port.test.lib.Lib object at 0x000002017E981EB0>, WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_29/port/corpus/gl/probe/s329_perm_big'), {32: 1})
+E        +    where WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_29/port/corpus/gl/probe/s329_perm_big') = _s329_probe('s329_perm_big')
+
+port\test\test_gl_raster.py:390: AssertionError
+______________ test_s329_walk_residue_is_bounded[s329_perm_rand] ______________
+
+lib = <port.test.lib.Lib object at 0x000002017E981EB0>, name = 's329_perm_rand'
+
+    @pytest.mark.parametrize("name", sorted(S329_LEFT))
+    def test_s329_walk_residue_is_bounded(lib, name):
+>       assert _probe_diff(lib, _s329_probe(name), {32: 1}) <= S329_LEFT[name]
+E       AssertionError: assert 19 <= 16
+E        +  where 19 = _probe_diff(<port.test.lib.Lib object at 0x000002017E981EB0>, WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_29/port/corpus/gl/probe/s329_perm_rand'), {32: 1})
+E        +    where WindowsPath('C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_29/port/corpus/gl/probe/s329_perm_rand') = _s329_probe('s329_perm_rand')
+
+port\test\test_gl_raster.py:390: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_gl_raster.py::test_s329_walk_residue_is_bounded[s329_perm_big]
+FAILED port/test/test_gl_raster.py::test_s329_walk_residue_is_bounded[s329_perm_rand]
+2 failed, 26 passed, 250 deselected in 13.56s
+[w8_lock] S3.29 released at 2026-10-31 10:28:06

@@ -1,0 +1,8 @@
+== t_test_gl_wgl start 2026-10-31 19:22:18
+[w8_lock] S3.29 queued at 2026-10-31 19:22:18
+[w8_lock] S3.29 waiting: lock='free' ahead=['I21'] free_commit=16.6 GB
+[w8_lock] S3.29 waiting: lock='step=I21' ahead=[] free_commit=18.7 GB
+[w8_lock] S3.29 TOOK the lock at 2026-10-31 19:22:38 (waited 20 s, free commit 18.8 GB)
+.........                                                                [100%]
+9 passed in 103.12s (0:01:43)
+[w8_lock] S3.29 released at 2026-10-31 19:24:24

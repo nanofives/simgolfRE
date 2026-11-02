@@ -1,0 +1,295 @@
+[w8_lock] S3.28 queued at 2026-10-31 08:03:57
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:03:57 (waited 0 s, free commit 24.9 GB)
+[1/7] championship FAIL=5 PASS=1 (28.4 s)
+[2/7] course_season FAIL=12 (49.5 s)
+[3/7] course_season_6y FAIL=12 (354.4 s)
+[4/7] cov_a_build NOT_RUN=20 (- s)
+[5/7] cov_a_build2 NOT_RUN=10 (- s)
+[6/7] cov_a_build3 NOT_RUN=8 (- s)
+[7/7] cov_a_career NOT_RUN=15 (- s)
+{"rows": 83, "counts": {"PASS": 1, "FAIL": 29, "NOT_RUN": 53}}
+[w8_lock] S3.28 released at 2026-10-31 08:18:44
+[w8_lock] S3.28 queued at 2026-10-31 08:19:43
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:19:43 (waited 0 s, free commit 25.7 GB)
+[1/7] cov_a_champ FAIL=8 PASS=3 (11.2 s)
+[2/7] cov_a_flags FAIL=10 PASS=1 (12.8 s)
+[3/7] cov_a_golfer FAIL=27 PASS=2 (37.8 s)
+[4/7] cov_a_keys FAIL=19 PASS=4 (17.1 s)
+[5/7] cov_a_keys2 FAIL=7 PASS=2 (11.3 s)
+[6/7] cov_a_keys3 FAIL=4 PASS=2 (21.4 s)
+[7/7] cov_a_play FAIL=7 PASS=1 (7.5 s)
+{"rows": 97, "counts": {"PASS": 15, "FAIL": 82}}
+[w8_lock] S3.28 released at 2026-10-31 08:24:16
+[w8_lock] S3.28 queued at 2026-10-31 08:24:17
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29'] free_commit=26.1 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=[] free_commit=25.9 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:24:37 (waited 20 s, free commit 26.0 GB)
+[1/7] cov_a_quit FAIL=5 PASS=10 (10.5 s)
+[2/7] cov_a_quit_title PASS=9 (3.3 s)
+[3/7] cov_b_build FAIL=7 (33.1 s)
+[4/7] cov_b_career FAIL=6 (14.3 s)
+[5/7] cov_b_career_types FAIL=12 (32.5 s)
+[6/7] cov_b_decor FAIL=5 (33.8 s)
+[7/7] cov_b_holes18 FAIL=5 PASS=1 (38.8 s)
+{"rows": 60, "counts": {"PASS": 20, "FAIL": 40}}
+[w8_lock] S3.28 released at 2026-10-31 08:30:33
+[w8_lock] S3.28 queued at 2026-10-31 08:30:34
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21', 'S3.29'] free_commit=25.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=['S3.29'] free_commit=25.7 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29'] free_commit=25.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=[] free_commit=25.7 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:34:34 (waited 240 s, free commit 25.8 GB)
+[1/7] cov_b_inject FAIL=5 (21.2 s)
+[2/7] cov_b_inject2 FAIL=5 (21.4 s)
+[3/7] cov_b_location PASS=5 (5.3 s)
+[4/7] cov_b_locations FAIL=2 (11.7 s)
+[5/7] cov_b_paths FAIL=4 (14.4 s)
+[6/7] cov_b_people FAIL=5 (13.4 s)
+[7/7] cov_b_shots FAIL=7 (74.1 s)
+{"rows": 33, "counts": {"FAIL": 28, "PASS": 5}}
+[w8_lock] S3.28 released at 2026-10-31 08:40:15
+[w8_lock] S3.28 queued at 2026-10-31 08:40:15
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=25.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.8 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.0 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:46:46 (waited 390 s, free commit 25.5 GB)
+[1/7] cov_b_shots2 FAIL=8 (77.2 s)
+[2/7] cov_b_title FAIL=3 PASS=3 (18.4 s)
+[3/7] cov_k1_animals FAIL=4 PASS=1 (12.5 s)
+[4/7] cov_k1_label FAIL=3 (19.0 s)
+[5/7] cov_k1_magazine_d2900 FAIL=3 (11.6 s)
+[6/7] cov_k1_paths FAIL=3 PASS=1 (5.9 s)
+[7/7] cov_k1_river FAIL=71 PASS=1 (5.0 s)
+{"rows": 101, "counts": {"FAIL": 95, "PASS": 6}}
+[w8_lock] S3.28 released at 2026-10-31 08:52:14
+[w8_lock] S3.28 queued at 2026-10-31 08:52:15
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=25.8 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=25.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 08:54:35 (waited 140 s, free commit 25.6 GB)
+[1/7] cov_k1_routing FAIL=2 PASS=2 (5.9 s)
+[2/7] cov_k1_steps FAIL=2 PASS=1 (7.7 s)
+[3/7] cov_k1_terrain FAIL=4 PASS=1 (6.1 s)
+[4/7] cov_k1_washers FAIL=4 PASS=1 (14.0 s)
+[5/7] cov_k2_build FAIL=8 (10.7 s)
+[6/7] cov_k2_golfers FAIL=4 (9.9 s)
+[7/7] cov_k2_label FAIL=6 (5.0 s)
+{"rows": 35, "counts": {"PASS": 5, "FAIL": 30}}
+[w8_lock] S3.28 released at 2026-10-31 08:56:47
+[w8_lock] S3.28 queued at 2026-10-31 08:56:48
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=25.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 09:01:48 (waited 300 s, free commit 25.6 GB)
+[1/7] cov_k2_simfoto FAIL=3 (10.0 s)
+[2/7] cov_k3_build FAIL=12 (9.2 s)
+[3/7] cov_k3_camera FAIL=14 PASS=7 (4.3 s)
+[4/7] cov_k3_camera2 FAIL=25 (4.2 s)
+[5/7] cov_k3_career FAIL=3 PASS=2 (5.8 s)
+[6/7] cov_k3_champ FAIL=12 PASS=1 (8.6 s)
+[7/7] cov_k3_hole19 FAIL=8 (5.8 s)
+{"rows": 87, "counts": {"FAIL": 77, "PASS": 10}}
+[w8_lock] S3.28 released at 2026-10-31 09:03:42
+[w8_lock] S3.28 queued at 2026-10-31 09:03:43
+[w8_lock] S3.28 waiting: lock='free' ahead=['S3.29', 'I21'] free_commit=25.6 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=25.2 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=25.3 GB
+[w8_lock] S3.28 waiting: lock='step=S3.29' ahead=['I21'] free_commit=25.2 GB
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=25.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 09:07:43 (waited 240 s, free commit 26.0 GB)
+[1/7] cov_l_bridge FAIL=12 PASS=1 (4.6 s)
+[2/7] cov_l_camera PASS=13 (5.5 s)
+[3/7] cov_l_point FAIL=4 PASS=1 (3.8 s)
+[4/7] cov_r_bio FAIL=4 PASS=3 (9.7 s)
+[5/7] cov_r_course FAIL=3 (14.2 s)
+[6/7] cov_r_flic_input FAIL=2 PASS=2 (3.5 s)
+[7/7] cov_r_palette_hot FAIL=6 (6.3 s)
+{"rows": 51, "counts": {"PASS": 20, "FAIL": 31}}
+[w8_lock] S3.28 released at 2026-10-31 09:09:31
+[w8_lock] S3.28 queued at 2026-10-31 09:09:32
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=25.9 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.5 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 09:12:32 (waited 180 s, free commit 26.1 GB)
+[1/6] cov_r_quit FAIL=5 PASS=10 (9.4 s)
+[2/6] cov_r_reload FAIL=3 (17.2 s)
+[3/6] cov_r_sve FAIL=3 (16.7 s)
+[4/6] cov_r_theme_cancel FAIL=2 PASS=4 (7.0 s)
+[5/6] cov_r_tutorial FAIL=34 (16.8 s)
+[6/6] golfer_events NOT_RUN=10 (- s)
+{"rows": 71, "counts": {"PASS": 14, "FAIL": 47, "NOT_RUN": 10}}
+[w8_lock] S3.28 released at 2026-10-31 09:15:05
+[w8_lock] S3.28 queued at 2026-10-31 09:15:06
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=26.1 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=22.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.3 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.2 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.8 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 09:19:06 (waited 240 s, free commit 26.1 GB)
+[1/7] golfer_stories FAIL=5 PASS=1 (21.8 s)
+[2/7] mood5_fixture FAIL=3 PASS=1 (5.6 s)
+[3/7] sandbox_basic FAIL=9 PASS=1 (5.3 s)
+[4/7] stories9_fixture FAIL=3 PASS=1 (8.7 s)
+[5/7] stories_fixture FAIL=3 PASS=1 (6.2 s)
+[6/7] ui_tour FAIL=8 PASS=2 (26.5 s)
+[7/7] ui_tour_v FAIL=8 PASS=2 (22.2 s)
+{"rows": 48, "counts": {"PASS": 9, "FAIL": 39}}
+[w8_lock] S3.28 released at 2026-10-31 09:22:31
+[w8_lock] S3.28 queued at 2026-10-31 09:22:32
+[w8_lock] S3.28 waiting: lock='free' ahead=['I21'] free_commit=26.0 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.6 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.5 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.4 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=23.7 GB
+[w8_lock] S3.28 waiting: lock='step=I21' ahead=[] free_commit=24.4 GB
+[w8_lock] S3.28 TOOK the lock at 2026-10-31 09:25:22 (waited 170 s, free commit 26.0 GB)
+[resume] championship: 6 rows
+[resume] course_season: 12 rows
+[resume] course_season_6y: 12 rows
+[resume] cov_a_champ: 11 rows
+[resume] cov_a_flags: 11 rows
+[resume] cov_a_golfer: 29 rows
+[resume] cov_a_keys: 23 rows
+[resume] cov_a_keys2: 9 rows
+[resume] cov_a_keys3: 6 rows
+[resume] cov_a_play: 8 rows
+[resume] cov_a_quit: 15 rows
+[resume] cov_a_quit_title: 9 rows
+[resume] cov_b_build: 7 rows
+[resume] cov_b_career: 6 rows
+[resume] cov_b_career_types: 12 rows
+[resume] cov_b_decor: 5 rows
+[resume] cov_b_holes18: 6 rows
+[resume] cov_b_inject: 5 rows
+[resume] cov_b_inject2: 5 rows
+[resume] cov_b_location: 5 rows
+[resume] cov_b_locations: 2 rows
+[resume] cov_b_paths: 4 rows
+[resume] cov_b_people: 5 rows
+[resume] cov_b_shots: 7 rows
+[resume] cov_b_shots2: 8 rows
+[resume] cov_b_title: 6 rows
+[resume] cov_k1_animals: 5 rows
+[resume] cov_k1_label: 3 rows
+[resume] cov_k1_magazine_d2900: 3 rows
+[resume] cov_k1_paths: 4 rows
+[resume] cov_k1_river: 72 rows
+[resume] cov_k1_routing: 4 rows
+[resume] cov_k1_steps: 3 rows
+[resume] cov_k1_terrain: 5 rows
+[resume] cov_k1_washers: 5 rows
+[resume] cov_k2_build: 8 rows
+[resume] cov_k2_golfers: 4 rows
+[resume] cov_k2_label: 6 rows
+[resume] cov_k2_simfoto: 3 rows
+[resume] cov_k3_build: 12 rows
+[resume] cov_k3_camera: 21 rows
+[resume] cov_k3_camera2: 25 rows
+[resume] cov_k3_career: 5 rows
+[resume] cov_k3_champ: 13 rows
+[resume] cov_k3_hole19: 8 rows
+[resume] cov_l_bridge: 13 rows
+[resume] cov_l_camera: 13 rows
+[resume] cov_l_point: 5 rows
+[resume] cov_r_bio: 7 rows
+[resume] cov_r_course: 3 rows
+[resume] cov_r_flic_input: 4 rows
+[resume] cov_r_palette_hot: 6 rows
+[resume] cov_r_quit: 15 rows
+[resume] cov_r_reload: 3 rows
+[resume] cov_r_s2_screens: 32 rows
+[resume] cov_r_sve: 3 rows
+[resume] cov_r_theme_cancel: 6 rows
+[resume] cov_r_tutorial: 34 rows
+[resume] golfer_events: 10 rows
+[resume] golfer_stories: 6 rows
+[resume] mood5_fixture: 4 rows
+[resume] sandbox_basic: 10 rows
+[resume] stories9_fixture: 4 rows
+[resume] stories_fixture: 4 rows
+[resume] ui_tour: 10 rows
+[resume] ui_tour_v: 10 rows
+[1/4] cov_a_build FAIL=19 PASS=1 (23.8 s)
+[2/4] cov_a_build2 FAIL=9 PASS=1 (10.7 s)
+[3/4] cov_a_build3 FAIL=7 PASS=1 (13.1 s)
+[4/4] cov_a_career FAIL=13 PASS=2 (61.5 s)
+{"rows": 698, "counts": {"PASS": 126, "FAIL": 562, "NOT_RUN": 10}}
+[w8_lock] S3.28 released at 2026-10-31 09:29:23

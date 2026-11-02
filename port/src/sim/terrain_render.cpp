@@ -32,6 +32,9 @@ namespace {
 //   9 the draw list is rendered in reverse order       10 the draw list's second tile is not rendered
 //  11 stripRender's outer loops start one row later   12 pathUpdateRender clips its left edge at x (not x + 1)
 //  13 drawTileObjects follows no wall                 14 drawTile keeps duplicates (no same-tile test)
+//  15 renderTileAtFiveOffsets draws nothing           16 renderTileAtFiveOffsets' second offset -10 (not -20)
+//  17 enableBlackLight1 gives light 1 the ambient (0.2, 0.2, 0.2, 1) (GlRaster models light 0 only: blind in its pixels)
+//  18 renderTileAtFiveOffsets swaps its 90 and 180 degree neighbour sets
 int32_t g_negctl_terrain_render = 0;
 
 // Terrain object fields
@@ -142,6 +145,63 @@ class Renderer {
         for (int32_t x = px - 2; x <= px + 2; ++x) visit(x, y);
     }
     end_pass();
+  }
+
+  // Terrain::renderTileAtFiveOffsets(pTile, pivot, angle) (roadmap S3.28; reading reference re/match/terrain_edge.cpp), the draw
+  // half of Terrain::lowerEdgeCorner, which calls it before Tile::lowerCorner. localRender's transform (no draw list); when one of
+  // the three neighbours toward the camera is outside the grid or hidden, enableBlackLight1 and Tile::render of pTile at the five
+  // cumulative offsets (10, 0, -10), (-20, 0, 0), (0, 0, 20), (20, 0, 0), (-10, 0, -10), then light 1 off and light 0 on. The
+  // original asserts pTile != NULL first (its debug assert ends the process there), and reads the pivot's position only when
+  // pTile != NULL, which the assert already holds.
+  void render_tile_at_five_offsets(uint32_t ptile, uint32_t pivot, float angle) {
+    if (ptile == 0) throw Fault{0, 4};
+    if (g_negctl_terrain_render == 15) return;
+    gl_.load_identity();
+    gl_.push_matrix();
+    gl_.rotated(static_cast<double>(g_.screen_scale), 1.0, 0.0, 0.0);
+    gl_.rotatef(45.0f + angle, 0.0f, 1.0f, 0.0f);
+    gl_.translatef(static_cast<float>(25 - tile_x(pivot)) * 100.0f, 0.0f, static_cast<float>(25 - tile_y(pivot)) * 100.0f);
+    set_view_angle(angle);
+    const int32_t x = tile_x(ptile), y = tile_y(ptile);
+    auto open = [&](int32_t nx, int32_t ny) {   // tileAt(...) == NULL || tileAt(...)->isHidden()
+      const uint32_t t = tile_at(nx, ny);
+      return t == 0 || hidden(t);
+    };
+    int32_t dx, dy;   // the neighbours toward the camera: (x + dx, y), (x, y + dy), (x + dx, y + dy)
+    const bool swap18 = g_negctl_terrain_render == 18;
+    if (angle == 0.0f) { dx = 1; dy = -1; }
+    else if (angle == (swap18 ? 180.0f : 90.0f)) { dx = 1; dy = 1; }
+    else if (angle == (swap18 ? 90.0f : 180.0f)) { dx = -1; dy = 1; }
+    else { dx = -1; dy = -1; }
+    if (open(x + dx, y) || open(x, y + dy) || open(x + dx, y + dy)) {
+      enable_black_light1();
+      gl_.translatef(10.0f, 0.0f, -10.0f);
+      tile_render(ptile);
+      gl_.translatef(g_negctl_terrain_render == 16 ? -10.0f : -20.0f, 0.0f, 0.0f);
+      tile_render(ptile);
+      gl_.translatef(0.0f, 0.0f, 20.0f);
+      tile_render(ptile);
+      gl_.translatef(20.0f, 0.0f, 0.0f);
+      tile_render(ptile);
+      gl_.translatef(-10.0f, 0.0f, -10.0f);
+      tile_render(ptile);
+      gl_.disable(0x4001);   // GL_LIGHT1
+      gl_.enable(0x4000);    // GL_LIGHT0
+    }
+    gl_.pop_matrix();
+    gl_.flush();
+  }
+
+  // Terrain::enableBlackLight1 (re/match/terrain_small3.cpp): light 0 off, light 1's ambient, diffuse and specular all 0 in that
+  // order, light 1 on. With both lights' colours out of the sum only the global ambient term is left (GL_MODULATE: 0.04 x texel).
+  void enable_black_light1() {
+    gl_.disable(0x4000);
+    const float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    const float amb17[4] = {0.2f, 0.2f, 0.2f, 1.0f};   // control 17's wrong ambient
+    gl_.light(0x4001, 0x1200, g_negctl_terrain_render == 17 ? amb17 : zero);   // GL_AMBIENT
+    gl_.light(0x4001, 0x1201, zero);                                          // GL_DIFFUSE
+    gl_.light(0x4001, 0x1202, zero);                                          // GL_SPECULAR
+    gl_.enable(0x4001);
   }
 
   // Terrain::stripRender(pivot, dir, angle): the tiles of diagonal strips around `pivot` for view direction 1..8. An odd
@@ -678,6 +738,12 @@ void terrain_path_update_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uin
   r.path_update_render(pivot, angle);
 }
 
+void terrain_render_tile_at_five_offsets(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t tile, uint32_t pivot,
+                                         float angle) {
+  Renderer r(ctx, gl, g, terrain);
+  r.render_tile_at_five_offsets(tile, pivot, angle);
+}
+
 bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1,
                           uint32_t a2) {
   auto f = [](uint32_t bits) {
@@ -690,6 +756,7 @@ bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t e
     case kEntryRender: terrain_render(ctx, gl, g, terrain, a0, f(a1)); return true;
     case kEntryLocalRender: terrain_local_render(ctx, gl, g, terrain, a0, a1, f(a2)); return true;
     case kEntryPathUpdateRender: terrain_path_update_render(ctx, gl, g, terrain, a0, f(a1)); return true;
+    case kEntryRenderTileAtFiveOffsets: terrain_render_tile_at_five_offsets(ctx, gl, g, terrain, a0, a1, f(a2)); return true;
     default: return false;
   }
 }

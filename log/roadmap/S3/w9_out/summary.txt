@@ -1,0 +1,18 @@
+rows 698
+raw    {'PASS': 126, 'FAIL': 562, 'NOT_RUN': 10}  w8 {'PASS': 123, 'FAIL': 565, 'NOT_RUN': 10}
+split  {'PASS': 685, 'FAIL': 3, 'NOT_RUN': 10}  w8 {'PASS': 677, 'FAIL': 11, 'NOT_RUN': 10}
+rows moved vs wave 8: 8
+   cov_r_s2_screens course FAIL 69 FAIL -> FAIL 4 PASS
+   cov_r_s2_screens radial_hover FAIL 68 FAIL -> FAIL 3 PASS
+   cov_r_s2_screens rep_comments FAIL 24 FAIL -> FAIL 4 PASS
+   cov_r_s2_screens rep_histograph FAIL 20 FAIL -> PASS 0 PASS
+   cov_r_s2_screens rep_financial FAIL 21 FAIL -> FAIL 1 PASS
+   cov_r_s2_screens rep_report1 FAIL 20 FAIL -> PASS 0 PASS
+   cov_r_s2_screens rep_shortcuts FAIL 21 FAIL -> FAIL 1 PASS
+   cov_r_s2_screens rep_roster FAIL 11 FAIL -> PASS 0 PASS
+raw PASS lost 0 split PASS lost 0 rows worse 0
+raw differing px 6203 -> 5962
+w9_out/segs_x64.tsv 205 differ 0
+w9_out/segs_w32.tsv 205 differ 0
+boot x64 differ 0
+boot w32 vs x64 differ 0

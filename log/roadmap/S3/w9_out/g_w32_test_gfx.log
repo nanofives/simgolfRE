@@ -1,0 +1,6 @@
+[w8_lock] S3-lead queued at 2026-10-31 21:35:46
+[w8_lock] S3-lead waiting: lock='free' ahead=['I21'] free_commit=22.1 GB
+[w8_lock] S3-lead TOOK the lock at 2026-10-31 21:35:56 (waited 10 s, free commit 22.1 GB)
+.........................                                                [100%]
+25 passed in 51.56s
+[w8_lock] S3-lead released at 2026-10-31 21:36:48

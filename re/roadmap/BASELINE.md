@@ -1,4 +1,28 @@
-# Regression baseline at HEAD + S3 wave 8 (I21, 2026-11-01)
+# Regression baseline at HEAD + S3 wave 9 (I22, 2026-11-01)
+
+## HEAD + S3 wave 9 (I22)
+
+This file now describes **HEAD + S3 wave 9**: d075dc56 (S3 wave 8 + P2, = I21's tree) plus S3.28 (lowerEdgeCorner pass) and S3.29
+(opt-in textured interpolation rule, default off) as `log/roadmap/S3/28_assemble.py --only-28` / `29_assemble.py --only-29`, and G21's
+8 MB limit in test_app_present. Measured by I22 in `port/build/I22` (`log/roadmap/merges/I22.md`). Pass `-m ""` to pytest for these counts.
+
+| Gate | HEAD + S3 wave 9 (I22) |
+|---|---|
+| repo static | 811 passed, 2 skipped (= I21) |
+| build x64 / Win32, gfx.check | rc 0; 0 duplicates, 138 bodies |
+| segments x64 / Win32 / freetype | 205 / 205 each |
+| boot x64 / Win32 / freetype | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each |
+| chains / ledger | 342 / 342; ledger = I21's 32 rows |
+| live equivalence / app replay x64 + Win32 | 68 PASS + 2 NO_FRAMES; hole 340, report 205, saveload 266 |
+| census raw (GlRaster), 698 rows | **PASS 126** / FAIL 562 / 0 / NOT_RUN 10 (I21 123 / 565) |
+| census split (G18) | **PASS 685** / FAIL 3 / 0 / 10 (I21 677 / 11); the 3 FAIL rows and golfer_events' 10 NOT_RUN are S3 wave 10's |
+| census --gl auto (host GL) | 685 / 3 / 0 / 10 |
+| terrain verdict | 527 PASS, 75 NOT_MEASURED |
+| x64 suite, 108 files | 107 PASS; test_app_present::test_long_session_memory_bounded passes at G21's 8 MB (bimodal 3.3 / 4.28 MB, P3) |
+| Win32 suite, 77 files | only I10's known ids (20) |
+
+Reference TSVs: `log/roadmap/merges/I22/{segs,boot}_{x64,win32}.tsv`, `segs_ft_x64.tsv`, `boot_ft_x64.tsv`, `chain_x64.tsv`,
+`ledger_divergences.tsv`, `census.tsv`, `census_split.tsv`, `census_auto.tsv`, `terrain_verdicts.tsv`.
 
 ## HEAD + S3 wave 8 (I21)
 
