@@ -455,6 +455,7 @@ struct AudioCtx {
   std::unique_ptr<RecordingSink> owned_sink;
   std::vector<uint8_t> sink_block;  // interface objects (audio_sink_object)
   uint32_t sink_used = 0;
+  std::multimap<uint64_t, uint32_t> sink_free;  // P3: returned objects, keyed by iface << 32 | nslots
   AudioCounters counters;
   std::string detail;
   std::map<uint32_t, const FuncDef *> port_cache;  // rva -> registered port function (nullptr = none)
@@ -894,13 +895,26 @@ uint32_t audio_sink_object(Ctx &ctx, uint32_t iface, uint32_t nslots) {
     if (!ctx.mem.map(kSinkObjBase, a.sink_block.data(), kSinkObjSize, false)) throw MissingResource{"sink object block"};
   }
   const uint32_t need = 4 + 4 * nslots;
-  if (iface >= (kSinkTrapSize >> 12) || nslots > 0x400 || a.sink_used + need > kSinkObjSize)
-    throw MissingResource{"sink object block full"};
+  if (iface >= (kSinkTrapSize >> 12) || nslots > 0x400) throw MissingResource{"sink object block full"};
+  if (auto it = a.sink_free.find((uint64_t{iface} << 32) | nslots); it != a.sink_free.end()) {  // P3: a returned object
+    const uint32_t obj = it->second;
+    a.sink_free.erase(it);
+    st<uint32_t>(ctx, obj, obj + 4);
+    for (uint32_t s = 0; s < nslots; ++s) st<uint32_t>(ctx, obj + 4 + 4 * s, kSinkTrapBase + (iface << 12) + 4 * s);
+    return obj;
+  }
+  if (a.sink_used + need > kSinkObjSize) throw MissingResource{"sink object block full"};
   const uint32_t obj = kSinkObjBase + a.sink_used;
   st<uint32_t>(ctx, obj, obj + 4);
   for (uint32_t s = 0; s < nslots; ++s) st<uint32_t>(ctx, obj + 4 + 4 * s, kSinkTrapBase + (iface << 12) + 4 * s);
   a.sink_used += (need + 15u) & ~15u;
   return obj;
+}
+
+void audio_sink_object_free(Ctx &ctx, uint32_t obj, uint32_t iface, uint32_t nslots) {
+  AudioCtx &a = actx(ctx);
+  if (obj < kSinkObjBase || obj >= kSinkObjBase + a.sink_used) return;  // not one of this block's objects
+  a.sink_free.emplace((uint64_t{iface} << 32) | nslots, obj);
 }
 
 AudioReply RecordingSink::import(Ctx &, const AudioCommand &cmd) {

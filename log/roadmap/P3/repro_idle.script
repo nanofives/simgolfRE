@@ -1,0 +1,82 @@
+# P3 repro: playSound of the static slots 0x2c / 0x80 with 60 s idle gaps (the engine's idle reaper), capture mode
+req loadSoundTable
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000

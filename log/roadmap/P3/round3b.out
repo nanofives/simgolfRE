@@ -1,0 +1,18 @@
+[1/8] t_test_audio_names_r3 rc=0 4 s :: 12 passed in 2.16s
+[2/8] t_test_static_r3 rc=0 1 s :: 6 passed in 0.85s
+[3/8] t_test_app_audio_r3 rc=1 201 s :: 2 failed, 26 passed in 199.52s (0:03:19)
+[4/8] segs_x64_r3 rc=0 113 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 111.9}
+[5/8] segs_win32_r3 rc=0 146 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 144.8}
+[6/8] boot_x64_r3 rc=0 182 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2, "FAIL": 1}}
+[7/8] t_test_app_live_r3 rc=1 166 s :: 1 failed, 12 passed in 164.53s (0:02:44)
+[8/8] t_test_app_present_r3 rc=0 1919 s :: 7 passed in 1918.04s (0:31:58)
+[done] gates t_test_audio_names t_test_static t_test_app_audio segs_x64 segs_win32 boot_x64 t_test_app_live t_test_app_present
+[1/1] mem_r3_1 rc=0 1145 s :: 1 passed, 6 deselected in 1142.61s (0:19:02)
+[done] gates mem
+[1/1] mem_r3_2 rc=0 1136 s :: 1 passed, 6 deselected in 1134.99s (0:18:54)
+[done] gates mem
+[1/1] mem_r3_3 rc=0 1144 s :: 1 passed, 6 deselected in 1142.19s (0:19:02)
+[done] gates mem
+[1/1] mem_r3_4 rc=0 3469 s :: 1 passed, 6 deselected in 3468.12s (0:57:48)
+[done] gates mem
+[round3b done] 2026-11-02 09:47:29

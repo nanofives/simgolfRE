@@ -12,6 +12,7 @@
 //           30 ms; dsound: n real periods), `sleep <ms>` (dsound); capture writes the mixed output to --wav;
 //           S7.11: [--no-device 1] (the sink's DirectSoundCreate fails) [--control 3|4] [--cycles n] (start .. stop n times;
 //           the stats carry the process's handle / thread counts before the first and after the last)
+// P3: [--negctl <registry name>=<mode>] sets that entry's negative-control switch (both commands).
 // Exit code 0 when every request ran (stats.failed 0), 1 otherwise, 2 on bad arguments.
 #include <algorithm>
 #include <chrono>
@@ -26,6 +27,7 @@
 
 #include "../audio_out.h"
 #include "portsim/execonst.h"
+#include "portsim/registry_list.h"
 
 namespace {
 
@@ -41,6 +43,18 @@ bool read_all(const std::string &p, std::vector<uint8_t> &out) {
   return true;
 }
 uint32_t num(const std::string &s) { return static_cast<uint32_t>(std::strtoll(s.c_str(), nullptr, 0)); }
+
+// P3: --negctl <registry name>=<mode> sets that entry's negative-control switch for the process (false: no such entry)
+bool set_negctl(const std::string &spec) {
+  const size_t eq = spec.find('=');
+  if (eq == std::string::npos) return false;
+  const int i = portsim::registry_find(spec.substr(0, eq).c_str());
+  if (i < 0) return false;
+  int *sw = portsim::registry_at(i, nullptr)->negctl;
+  if (!sw) return false;
+  *sw = std::atoi(spec.c_str() + eq + 1);
+  return true;
+}
 
 // the exe's .data VA (the GameState's address): PE32 section ".data"
 bool data_va_of(const std::vector<uint8_t> &exe, uint32_t &va) {
@@ -226,6 +240,8 @@ int main(int argc, char **argv) {
   std::string why;
   if (!ec.loaded() && !ec.load_file(a["--exe"].c_str(), &why)) return std::fprintf(stderr, "exe: %s\n", why.c_str()), 2;
   const std::string cmd = argv[1];
+  if (a.count("--negctl") && !set_negctl(a["--negctl"]))  // P3
+    return std::fprintf(stderr, "--negctl: no registry entry with a switch: %s\n", a["--negctl"].c_str()), 2;
   if (cmd == "device") return device_mode(a, ec, data_va);
   if (cmd == "script") return script_mode(a, ec, data_va);
   return std::fprintf(stderr, "unknown command %s\n", cmd.c_str()), 2;

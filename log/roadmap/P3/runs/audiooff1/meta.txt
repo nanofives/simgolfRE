@@ -1,0 +1,2 @@
+start 2026-11-01 23:43:24 envs=[] extra=[--audio off]
+end 2026-11-02 00:02:34 rc=0 seconds=1149 framehash=equal

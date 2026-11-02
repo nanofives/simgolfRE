@@ -2181,6 +2181,22 @@ switch 1 = golden $device, switch 0 fcbc9195 (229 opens against 211) = an instal
 = Win32. `simgolf_port --profile original|fixed` (default fixed, compiled copy of defect_profiles.tsv, `--profile-list`); every
 session.json records `profile` and every switch's value, and app_replay.gate_one replays under them. The tropical study trace runs
 under fixed and faults under original (va 8, the stock game's). The same unshield rename hides six music files (U-1608). S7.13 (G16): the same switch opens the six theme music tracks under sounds\music\Desert Music / Links Music / Tropical Music from the install's underscore folders (kDirAliases); the seven names wrong on the CD stay absent; switch-0 device run 07f83f3f, 235 opens (24 aliased), x64 = Win32.
+Roadmap P3, the long session's bimodal memory (2026-11-02, notes log/roadmap/P3/notes.md, edits log/roadmap/P3/edits.py,
+U-2050..U-2053, U-1692 resolved): test_long_session_memory_bounded's number depended on the PC's audio device and on the heap.
+(1) The app takes its last memory sample after audio.finish(), which frees the shadow audio context: with no device the shadow
+fails at initSound and is gone before frame 2,000, with one (LIVING-PC has VB-Audio `CABLE Input` since 2026-11-01) it is alive
+at frame 2,000 and freed at the end, so the measure read -19.9 MB. (2) Through (1), three leaks of ours in audio_exe.cpp
+DeviceSink, which the app's DirectSound sink answers through: Release kept a buffer's storage (16 MB-chunk arena, at most 8) and
+interface object (64 KB block), a freed block served only a request of its exact rounded size, and mmioClose kept mmio's own
+buffer. A sink that reports a buffer's end (the real device, Capture) lets the engine reap idle sounds and load them again, so the
+shadow grew with wall time (base1: 8 of 8 chunks after 1,571 s) until MissingResource silenced it. Fixed (edits.py A / A2 / A3,
+control registry `audio_exe.deviceHeap` 1): the same session with the device holds a 13.4 MB arena and 2.0 MB live; capture WAVs
+are byte-identical; port/test/test_audio_device_heap.py. (3) With audio off the growth is the sim's: the present log (24 B per
+present; every in-game frame presents since S3) reallocated by 1.5x among three 960,000-B buffers per present, and whether its
+983,160-B block found a free hole is the 0.97 MB between the modes (no-device runs 3,407,872 / 4,300,800 / 4,403,200;
+SG_RASTER_THREADS=1 and --terrain headless show both modes). LiveTracePresenter reserves the log from the trace's frame count
+(no-device growth 892,928 / 962,560), and the memory test measures up to the last in-session sample. test_app_audio's dsound
+shutdown test fails with a real device on any build (cycle 1 releases 6 handles, U-2050).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

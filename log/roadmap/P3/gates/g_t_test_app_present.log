@@ -1,0 +1,28 @@
+== t_test_app_present start 2026-11-02 06:01:43 free=45GB
+......F                                                                  [100%]
+================================== FAILURES ===================================
+______________________ test_long_session_memory_bounded _______________________
+
+long_bound = {'rc': 0, 'stderr': 'simgolf_port: terrain renderer raster (default raster): GlRaster (the default renderer, decision ...top\\Proyectos\\SimGolf\\port\\build\\P3f\\port\\corpus\\traces\\course_season_6y.trace', 'terrain': 'live', ...}, ...}
+long_keep = {'rc': 0, 'stderr': 'simgolf_port: terrain renderer raster (default raster): GlRaster (the default renderer, decision ...top\\Proyectos\\SimGolf\\port\\build\\P3f\\port\\corpus\\traces\\course_season_6y.trace', 'terrain': 'live', ...}, ...}
+
+    @pytest.mark.slow
+    def test_long_session_memory_bounded(long_bound, long_keep):
+        """the streaming run's private bytes stay flat after the world load; the control's grow with every frame (RED); both runs
+        give the same frame records and the same recording"""
+        gb, gk = _growth(long_bound["memory"]), _growth(long_keep["memory"])
+        ks = long_keep["session"]
+        _facts_update("long_memory", {"growth_bound": gb, "growth_keep": gk, "records": long_bound["session"]["records"],
+                                      "bound_seconds": long_bound["seconds"], "keep_seconds": long_keep["seconds"],
+                                      "bound_memory": long_bound["session"]["memory"], "keep_memory": ks["memory"],
+                                      "terrain_calls": long_bound["session"]["terrain_calls"],
+                                      "keep_terrain_log_end": ks["terrain_log_end"], "trace_bytes": long_bound["session"]["trace_bytes"],
+                                      "spilled_events": long_bound["session"]["spilled_events"]})
+>       assert gb < GROWTH_LIMIT, gb
+E       AssertionError: 103481344
+E       assert 103481344 < 8388608
+
+port\test\test_app_present.py:202: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_app_present.py::test_long_session_memory_bounded - Asse...
+1 failed, 6 passed in 1632.60s (0:27:12)

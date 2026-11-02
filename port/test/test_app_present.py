@@ -161,8 +161,11 @@ def long_keep(exe):  # noqa: F811
 
 
 def _growth(mem: list[list[int]]) -> int:
-    """private bytes at the end minus at the first sample from frame 2,000 on (the world is loaded by then)"""
-    after = [m for m in mem if m[0] >= 2000]
+    """private bytes at the last sample taken during the session minus at the first sample from frame 2,000 on (the world
+    is loaded by then). P3 (log/roadmap/P3/notes.md): the end sample is taken after audio.finish(), which frees the shadow
+    audio context, so with an audio device it left out what the shadow holds (and would have read the sim's growth minus
+    the shadow's footprint); the last periodic sample still has it."""
+    after = [m for m in mem if 2000 <= m[0] < mem[-1][0]] or [m for m in mem if m[0] >= 2000]
     return after[-1][3] - after[0][3]
 
 

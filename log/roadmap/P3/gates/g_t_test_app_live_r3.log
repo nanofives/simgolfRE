@@ -1,0 +1,27 @@
+== t_test_app_live start 2026-11-02 07:14:34 free=45GB
+.......F.....                                                            [100%]
+================================== FAILURES ===================================
+____________________________ test_presents_replay _____________________________
+
+main = <port.test.test_app_live.Session object at 0x0000025A9FB92DB0>
+
+    def test_presents_replay(main):
+        """every present's frame is the replay's gfx back buffer at that present's recorded position, and the replay makes the
+        session's drawing calls (U-1601: the idle passes are recorded, so the replay takes the same passes)"""
+        judged, shared = _judged(main.presents)
+        assert [p["index"] for p in shared] == [0], shared      # the boot's title present only (U-1685)
+        r = replay(main, [p["pos"] for p in judged], draws=True)
+        bad = [p["index"] for p, h in zip(judged, r["snapshots"]) if h != p["hash"]]
+        assert not bad, (len(bad), bad[:10])
+>       assert r["draws"] == _live_draws(main)
+E       AssertionError: assert {'Display::se...d2': 421, ...} == {'Display::se...d2': 421, ...}
+E         
+E         Omitting 32 identical items, use -vv to show
+E         Differing items:
+E         {'Window::refreshFull': 511} != {'Window::refreshFull': 510}
+E         Use -v to get more diff
+
+port\test\test_app_live.py:459: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_app_live.py::test_presents_replay - AssertionError: ass...
+1 failed, 12 passed in 164.53s (0:02:44)

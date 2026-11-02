@@ -1,0 +1,17 @@
+[w8_lock] P3b queued at 2026-11-02 06:48:23
+[w8_lock] P3b TOOK the lock at 2026-11-02 06:48:23 (waited 0 s, free commit 46.0 GB)
+[w8_lock] P3b released at 2026-11-02 06:48:31
+build x64 rc=0 06:48:31
+[w8_lock] P3b queued at 2026-11-02 06:48:32
+[w8_lock] P3b TOOK the lock at 2026-11-02 06:48:32 (waited 0 s, free commit 46.3 GB)
+[w8_lock] P3b released at 2026-11-02 06:48:38
+build Win32 rc=0 06:48:38
+[1/2] t_test_audio_device_heap_r3 rc=0 31 s :: 4 passed in 29.50s
+[2/2] t_test_audio_exe_r3 rc=0 95 s :: 302 passed, 5 skipped in 93.77s (0:01:33)
+[done] gates t_test_audio_device_heap t_test_audio_exe
+[w8_lock] P3f queued at 2026-11-02 06:50:46
+[w8_lock] P3f TOOK the lock at 2026-11-02 06:50:46 (waited 0 s, free commit 43.1 GB)
+[w8_lock] P3f released at 2026-11-02 06:59:29
+start 2026-11-02 06:50:46 envs=[] extra=[]
+end 2026-11-02 06:59:30 rc=0 seconds=523 framehash=equal
+[round3 done] 2026-11-02 06:59:30

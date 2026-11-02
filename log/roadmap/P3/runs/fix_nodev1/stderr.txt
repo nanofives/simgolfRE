@@ -1,0 +1,1 @@
+simgolf_port: terrain renderer raster (default raster): GlRaster (the default renderer, decision G13)

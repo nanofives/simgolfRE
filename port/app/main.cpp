@@ -691,6 +691,8 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
       if (err.empty()) {
         LiveTracePresenter host(std::move(inner), static_cast<uint32_t>(o.snapshot_list.size()));
         host.no_present_point = o.negctl == "present-point-off";
+        // P3: a present per frame at most, plus the boot's and modal screens' (51,109 for course_season_6y's 51,092 records)
+        if (o.negctl != "presents-no-reserve") host.reserve_presents(static_cast<size_t>(std::max<int32_t>(0, count_frames(trace))) + 4096);
         TerrainLogBound tlog;  // S7.8 (U-1643)
         tlog.live = terrain.live.get();
         tlog.keep = o.negctl == "terrain-log-keep";

@@ -1,0 +1,11 @@
+[w8_lock] P3h queued at 2026-11-02 07:02:38
+[w8_lock] P3h waiting: lock='step=P3g' ahead=[] free_commit=45.1 GB
+[w8_lock] P3h waiting: lock='step=P3g' ahead=[] free_commit=45.6 GB
+[w8_lock] P3h waiting: lock='step=P3g' ahead=[] free_commit=45.5 GB
+[w8_lock] P3h waiting: lock='step=P3g' ahead=[] free_commit=45.4 GB
+[w8_lock] P3h waiting: lock='step=P3g' ahead=[] free_commit=45.5 GB
+[w8_lock] P3h TOOK the lock at 2026-11-02 07:03:48 (waited 70 s, free commit 46.1 GB)
+.....                                                                    [100%]
+5 passed in 195.91s (0:03:15)
+[w8_lock] P3h released at 2026-11-02 07:07:05
+rc=0

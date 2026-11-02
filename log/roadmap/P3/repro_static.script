@@ -1,0 +1,162 @@
+# P3 repro: the static-buffer slots 0x2c and 0x80 started again and again (each to its end), capture mode
+req loadSoundTable
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120
+req startSoundSlot 0x2c
+ticks 120
+req startSoundSlot 0x80
+ticks 120

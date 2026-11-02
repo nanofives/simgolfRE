@@ -1,0 +1,6 @@
+[1/5] segs_x64 rc=0 120 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 118.5}
+[2/5] segs_win32 rc=0 178 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 177.9}
+[3/5] boot_x64 rc=0 209 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2, "FAIL": 1}}
+[4/5] t_test_app_live rc=0 334 s :: 13 passed in 332.33s (0:05:32)
+[5/5] t_test_app_present rc=1 1634 s :: 1 failed, 6 passed in 1632.60s (0:27:12)
+[done] gates segs_x64 segs_win32 boot_x64 t_test_app_live t_test_app_present

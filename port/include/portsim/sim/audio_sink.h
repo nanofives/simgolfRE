@@ -51,6 +51,9 @@ class AudioSink {
 // the given interface id. Returns the object's virtual address (the dword at it is the vtable address). Objects live in
 // a block the audio core maps for the context (freed with audio_detach).
 uint32_t audio_sink_object(Ctx &ctx, uint32_t iface, uint32_t nslots);
+// P3: returns an object audio_sink_object made; the next object of the same interface and slot count reuses it (a sink
+// whose objects are released and created again over a session then needs no more of the block than it holds at once)
+void audio_sink_object_free(Ctx &ctx, uint32_t obj, uint32_t iface, uint32_t nslots);
 
 // One text line per command, e.g. "import DSOUND.dll!DirectSoundCreate 0x0 0x30001000 0x0" / "com 2.12 0x...";
 // every reply is `answer` (0 = S_OK / MMSYSERR_NOERROR).

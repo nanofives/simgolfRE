@@ -1696,12 +1696,17 @@ void a_fwd_dev49(Ctx &c, const uint32_t *a, Ret &r) {
 //     E_NOINTERFACE;
 //   USER32: a window class and window handle, no messages (PeekMessageA 0), message boxes answered IDOK.
 // Anything else answers 0 and is logged as `unanswered`.
+// P3 (log/roadmap/P3/notes.md): negative control of the device sink's frees (registry entry audio_exe.deviceHeap):
+// 1 = nothing freed (a released buffer's storage and object, HeapReAlloc's old block stay allocated: the old behaviour)
+int g_neg_deviceHeap = 0;
+
 class DeviceSink : public DeviceModel {
  public:
   enum Iface : U4 { kDs = 1, kDsBuf = 2 };
   struct Buf {
     U4 storage = 0, size = 0, play = 0, status = 0;
     U4 freq = 22050, vol = 0, pan = 0;
+    U4 refs = 1;  // P3: AddRef / Release; the last Release frees the storage and the object
   };
   struct MmFile {
     std::vector<uint8_t> bytes;
@@ -1738,10 +1743,13 @@ class DeviceSink : public DeviceModel {
     }
     const U4 need = (std::max<U4>(n, 1) + 15u) & ~15u;
     if (need > kChunk) throw MissingResource{"device sink block over 16 MB"};
-    U4 p;
+    U4 p = 0;
     if (auto it = freed.find(need); it != freed.end()) {
       p = it->second;
       freed.erase(it);
+    } else if (!chunks.empty() && used + need > static_cast<U4>(chunks.size()) * kChunk && NG(deviceHeap) != 1 &&
+               take_free(need, p)) {
+      // P3: a coalesced freed block (or the bump, given back a free run at its top) instead of a new chunk
     } else {
       if (chunks.empty() || used + need > static_cast<U4>(chunks.size()) * kChunk) {   // the block opens a new chunk
         if (chunks.size() >= kChunks) throw MissingResource{"device sink arena full"};
@@ -1761,6 +1769,48 @@ class DeviceSink : public DeviceModel {
     return p;
   }
   U4 obj(Ctx &c, U4 iface, U4 nslots) { return audio_sink_object(c, iface, nslots); }
+  // P3: before a new chunk: merge address-adjacent freed blocks of one chunk, give a free run that ends at the bump top of
+  // the last chunk back to the bump, then take the bump if it has room again, else the smallest freed block that fits (its
+  // rest stays freed). false = nothing fits (the caller opens a chunk).
+  bool take_free(U4 need, U4 &p) {
+    std::map<U4, U4> by_addr;  // address -> rounded size
+    for (const auto &kv : freed) by_addr[kv.second] = kv.first;
+    std::vector<std::pair<U4, U4>> runs;
+    for (const auto &kv : by_addr) {
+      if (!runs.empty() && runs.back().first + runs.back().second == kv.first &&
+          (runs.back().first - kBase) / kChunk == (kv.first - kBase) / kChunk) {
+        runs.back().second += kv.second;
+        continue;
+      }
+      runs.push_back(kv);
+    }
+    const U4 last = static_cast<U4>(chunks.size() - 1);
+    while (!runs.empty() && runs.back().first + runs.back().second == kBase + used && (runs.back().first - kBase) / kChunk == last) {
+      used -= runs.back().second;
+      runs.pop_back();
+    }
+    freed.clear();
+    for (const auto &r : runs) freed.emplace(r.second, r.first);
+    if (used + need <= static_cast<U4>(chunks.size()) * kChunk) {
+      p = kBase + used;
+      used += need;
+      return true;
+    }
+    auto best = freed.lower_bound(need);
+    if (best == freed.end()) return false;
+    p = best->second;
+    const U4 sz = best->first;
+    freed.erase(best);
+    if (sz > need) freed.emplace(sz - need, p + need);
+    return true;
+  }
+  // P3: a block back to the arena (reused by the next allocation of its rounded size), as HeapFree does
+  void free_block(U4 p) {
+    if (auto it = sizes.find(p); it != sizes.end()) {
+      freed.emplace((std::max<U4>(it->second, 1) + 15u) & ~15u, p);
+      sizes.erase(it);
+    }
+  }
   DeviceHeapUsage heap_usage() const override {  // S7.11 (audio_exe.h)
     DeviceHeapUsage u;
     u.arena_bytes = chunks.empty() ? 0u : used;
@@ -1934,6 +1984,8 @@ class DeviceSink : public DeviceModel {
     }
     if (f == nullptr) return ok(name == "mmioRead" || name == "mmioSeek" ? 0xffffffffu : 5u);  // MMSYSERR_INVALHANDLE
     if (name == "mmioClose") {
+      if (auto it = mm.find(a[0]); it != mm.end() && it->second.own && it->second.buf && NG(deviceHeap) != 1)
+        free_block(it->second.buf);  // P3: mmio's own buffer, as winmm frees it
       mm.erase(a[0]);
       return ok(0);
     }
@@ -2016,10 +2068,17 @@ class DeviceSink : public DeviceModel {
       if (a[2] == 0) {
         if (f->buffered) f->pos = f->buf_off + f->next;
         f->buffered = false;
+        if (f->own && f->buf && !f->mem && NG(deviceHeap) != 1) {  // P3: unbuffered from now on: mmio's own buffer goes
+          free_block(f->buf);
+          f->buf = 0;
+          f->own = false;
+        }
       } else {
         const U4 at = mm_pos(*f);
+        if (f->own && f->buf && f->buf != a[1] && NG(deviceHeap) != 1) free_block(f->buf);  // P3: the own buffer it replaces
         f->buffered = true;
         f->cch = a[2];
+        f->own = a[1] == 0;  // P3: mmio allocates (and later frees) the buffer only when the caller gives none
         f->buf = a[1] ? a[1] : alloc(c, a[2]);
         f->buf_off = at;
         f->next = f->end_read = 0;
@@ -2044,15 +2103,13 @@ class DeviceSink : public DeviceModel {
       const U4 old = arg(2);
       const U4 k = std::min(sizes.count(old) ? sizes[old] : 0u, arg(3));
       for (U4 i = 0; i < k; ++i) S<uint8_t>(c, p + i, L<uint8_t>(c, old + i));
+      if (NG(deviceHeap) != 1 && old != p) free_block(old);  // P3: the old block, as HeapReAlloc frees it
       return ok(p);
     }
     if (n == "HeapSize") return ok(sizes.count(arg(2)) ? sizes[arg(2)] : 0xffffffffu);
     if (n == "HeapFree" || n == "VirtualFree") {
       const U4 p = n == "HeapFree" ? arg(2) : arg(0);
-      if (auto it = sizes.find(p); it != sizes.end()) {
-        freed.emplace((std::max<U4>(it->second, 1) + 15u) & ~15u, p);
-        sizes.erase(it);
-      }
+      free_block(p);
       return ok(1);
     }
     if (n == "HeapDestroy" || n == "VirtualFree" || n == "CloseHandle" || n == "SetEvent" ||
@@ -2174,7 +2231,16 @@ class DeviceSink : public DeviceModel {
       Buf &b = bufs[arg(0)];
       switch (cmd.slot) {
         case 0: return ok(0x80004002u);
-        case 1: case 2: return ok(1);
+        case 1: ++b.refs; return ok(1);                    // AddRef (the answer stays 1)
+        case 2:                                             // Release (the answer stays 1)
+          // P3: the last Release frees the storage and the object (the engine creates the buffer again on its next play)
+          if (--b.refs == 0 && NG(deviceHeap) != 1) {
+            const U4 o = arg(0);
+            if (b.storage) free_block(b.storage);
+            bufs.erase(o);
+            audio_sink_object_free(c, o, kDsBuf, 24);
+          }
+          return ok(1);
         case 3:                                               // GetCaps
           if (arg(1)) S32(c, arg(1) + 12, b.size);
           return ok(0);
@@ -2325,6 +2391,9 @@ void a_construct_holders(Ctx &c, const uint32_t *, Ret &r) {
   construct_holders(c);
   r.set_u32(music_device(c));
 }
+
+// audio_exe.deviceHeap(): returns 0; the entry carries the device sink's free control g_neg_deviceHeap (P3)
+void a_device_heap(Ctx &, const uint32_t *, Ret &r) { r.set_u32(0); }
 
 // audio_exe.deviceStep(step, n): 1 initSound(window 1, 0x8a) as gameMain calls it, 2 loadSoundTable(), 3 playSound for the first
 // n slots loadSoundTable fills (volume 100, pan 0, pitch 0), 4 n timer ticks (the client timeSetEvent registered, called as the
@@ -2881,6 +2950,7 @@ const FuncDef kFuncs[] = {
     {"audio_exe.mapImage", "default", "uint32", 0, 0, a_map_image, &g_neg_none},
     {"audio_exe.deviceFixture", "default", "uint32", 1, 0, a_device_fixture, &g_neg_none},
     {"audio_exe.deviceStep", "default", "uint32", 2, 0, a_device_step, &g_neg_none},
+    {"audio_exe.deviceHeap", "default", "uint32", 0, 0, a_device_heap, &g_neg_deviceHeap},  // P3: the control's switch
     {"audio_exe.constructHolders", "default", "uint32", 0, 0, a_construct_holders, &g_neg_constructHolders},  // S7.10
     // sound.dll functions with no hooks.csv row that the device-present start-up reaches (gate c; the core finds them
     // through audio_exe_sound_name, U-1498)

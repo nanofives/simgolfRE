@@ -1,0 +1,281 @@
+[w8_lock] P3 queued at 2026-11-01 23:17:42
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.2 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.6 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.6 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.2 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.9 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.6 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.2 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=40.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=38.5 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=40.5 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=40.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=42.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=42.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=42.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=41.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=42.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=42.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=42.7 GB
+[w8_lock] P3 TOOK the lock at 2026-11-01 23:43:24 (waited 1542 s, free commit 43.2 GB)
+[w8_lock] P3 released at 2026-11-02 00:02:33
+start 2026-11-01 23:43:24 envs=[] extra=[--audio off]
+end 2026-11-02 00:02:34 rc=0 seconds=1149 framehash=equal
+[w8_lock] P3 queued at 2026-11-02 00:02:34
+[w8_lock] P3 waiting: lock='free' ahead=['S3.31', 'P3b', 'S3.30'] free_commit=43.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=42.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=42.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.8 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=42.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.6 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=41.2 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.7 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.8 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.2 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.1 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=39.8 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=40.0 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='free' ahead=['P3b', 'S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=40.2 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=40.1 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=40.1 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=40.4 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.9 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.3 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.5 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.3 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.3 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.6 GB
+[w8_lock] P3 waiting: lock='step=P3b' ahead=['S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='free' ahead=['S3.30'] free_commit=39.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=36.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=36.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=36.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=36.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=37.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.7 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.3 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.5 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.1 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.6 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.8 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.0 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=38.9 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=39.2 GB
+[w8_lock] P3 waiting: lock='step=S3.30' ahead=[] free_commit=40.3 GB
+[w8_lock] P3 TOOK the lock at 2026-11-02 00:34:07 (waited 1893 s, free commit 39.8 GB)
+[w8_lock] P3 released at 2026-11-02 00:57:15
+start 2026-11-02 00:34:07 envs=[] extra=[--audio off]
+end 2026-11-02 00:57:16 rc=0 seconds=1389 framehash=equal
+[w8_lock] P3 queued at 2026-11-02 00:57:18
+[w8_lock] P3 waiting: lock='free' ahead=['S3.31', 'P3b', 'P3g', 'S3.30'] free_commit=40.2 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'P3g', 'S3.30'] free_commit=39.3 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'P3g', 'S3.30'] free_commit=39.4 GB
+[w8_lock] P3 waiting: lock='step=S3.31' ahead=['P3b', 'P3g', 'S3.30'] free_commit=39.1 GB

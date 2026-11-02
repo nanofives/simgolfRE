@@ -1,0 +1,63 @@
+== t_test_app_audio start 2026-11-02 07:00:18 free=46GB
+......................FF....                                             [100%]
+================================== FAILURES ===================================
+__________________ test_shutdown_leaves_nothing[dsound-x64] ___________________
+
+arch = 'x64', mode = 'dsound'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1335/test_shutdown_leaves_nothing_d0')
+
+    @pytest.mark.parametrize("arch", ["x64", "w32"])
+    @pytest.mark.parametrize("mode", ["capture", "dsound"])
+    def test_shutdown_leaves_nothing(arch, mode, tmp_path):
+        """four start .. stop cycles in one process (the title script, shutdownSoundSystem, the device and buffers released, the
+        thread joined): no thread id is left that was not there before the cycle (Toolhelp32; the count alone moves with the
+        system's thread-pool workers) and the handle count stops growing after the first cycle (a first DirectSoundCreate loads
+        the system's audio DLLs once)"""
+        r = run_check(arch, "script", "--script", str(SCRIPT), "--mode", mode, "--cycles", "4")
+        rows = [ln.split() for ln in r.stdout.split(NL) if ln.startswith("cycle ")]
+        assert len(rows) == 4 and r.returncode == 0, r.stdout + r.stderr
+        cnt = lambda row, key: [int(x) for x in row[row.index(key) + 1].split("->")]  # noqa: E731
+        assert all(int(row[row.index("new") + 1]) == 0 for row in rows), r.stdout  # no thread id that was not there before
+        hs = [cnt(row, "handles") for row in rows]
+>       assert all(h1 == h0 for h0, h1 in hs[1:]), r.stdout
+E       AssertionError: cycle 0 requests 10 replayed 11 failed 0 ticks 339 device_less 0 dropped 0 handles 97->177 threads 4->7 new 0 first_error 
+E         cycle 1 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 171->165 threads 7->7 new 0 first_error 
+E         cycle 2 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 165->165 threads 7->7 new 0 first_error 
+E         cycle 3 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 165->165 threads 7->7 new 0 first_error 
+E         
+E       assert False
+E        +  where False = all(<generator object test_shutdown_leaves_nothing.<locals>.<genexpr> at 0x000001D548B9E400>)
+
+port\test\test_app_audio.py:428: AssertionError
+__________________ test_shutdown_leaves_nothing[dsound-w32] ___________________
+
+arch = 'w32', mode = 'dsound'
+tmp_path = WindowsPath('C:/Users/maria/AppData/Local/Temp/pytest-of-maria/pytest-1335/test_shutdown_leaves_nothing_d1')
+
+    @pytest.mark.parametrize("arch", ["x64", "w32"])
+    @pytest.mark.parametrize("mode", ["capture", "dsound"])
+    def test_shutdown_leaves_nothing(arch, mode, tmp_path):
+        """four start .. stop cycles in one process (the title script, shutdownSoundSystem, the device and buffers released, the
+        thread joined): no thread id is left that was not there before the cycle (Toolhelp32; the count alone moves with the
+        system's thread-pool workers) and the handle count stops growing after the first cycle (a first DirectSoundCreate loads
+        the system's audio DLLs once)"""
+        r = run_check(arch, "script", "--script", str(SCRIPT), "--mode", mode, "--cycles", "4")
+        rows = [ln.split() for ln in r.stdout.split(NL) if ln.startswith("cycle ")]
+        assert len(rows) == 4 and r.returncode == 0, r.stdout + r.stderr
+        cnt = lambda row, key: [int(x) for x in row[row.index(key) + 1].split("->")]  # noqa: E731
+        assert all(int(row[row.index("new") + 1]) == 0 for row in rows), r.stdout  # no thread id that was not there before
+        hs = [cnt(row, "handles") for row in rows]
+>       assert all(h1 == h0 for h0, h1 in hs[1:]), r.stdout
+E       AssertionError: cycle 0 requests 10 replayed 11 failed 0 ticks 339 device_less 0 dropped 0 handles 116->196 threads 4->7 new 0 first_error 
+E         cycle 1 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 190->184 threads 7->7 new 0 first_error 
+E         cycle 2 requests 10 replayed 11 failed 0 ticks 341 device_less 0 dropped 0 handles 184->184 threads 7->7 new 0 first_error 
+E         cycle 3 requests 10 replayed 11 failed 0 ticks 340 device_less 0 dropped 0 handles 184->184 threads 7->7 new 0 first_error 
+E         
+E       assert False
+E        +  where False = all(<generator object test_shutdown_leaves_nothing.<locals>.<genexpr> at 0x000001D548B9F920>)
+
+port\test\test_app_audio.py:428: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_app_audio.py::test_shutdown_leaves_nothing[dsound-x64]
+FAILED port/test/test_app_audio.py::test_shutdown_leaves_nothing[dsound-w32]
+2 failed, 26 passed in 199.52s (0:03:19)

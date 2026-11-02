@@ -1,0 +1,6 @@
+[1/5] t_test_audio_device_heap rc=0 64 s :: 4 passed in 59.75s
+[2/5] t_test_audio_exe rc=0 170 s :: 302 passed, 5 skipped in 167.39s (0:02:47)
+[3/5] t_test_audio_names rc=0 5 s :: 12 passed in 3.14s
+[4/5] t_test_static rc=0 3 s :: 6 passed in 1.58s
+[5/5] t_test_app_audio rc=1 214 s :: 2 failed, 26 passed in 212.94s (0:03:32)
+[done] gates t_test_audio_device_heap t_test_audio_exe t_test_audio_names t_test_static t_test_app_audio

@@ -1,0 +1,776 @@
+# P3 repro 2: playSound of slots 0x00..0x80 in turn, each followed by a 60 s idle gap (the engine's idle reaper), three passes, capture mode
+req loadSoundTable
+req playSound 0x0 100 0 0 0
+ticks 2000
+req playSound 0x1 100 0 0 0
+ticks 2000
+req playSound 0x2 100 0 0 0
+ticks 2000
+req playSound 0x3 100 0 0 0
+ticks 2000
+req playSound 0x4 100 0 0 0
+ticks 2000
+req playSound 0x5 100 0 0 0
+ticks 2000
+req playSound 0x6 100 0 0 0
+ticks 2000
+req playSound 0x7 100 0 0 0
+ticks 2000
+req playSound 0x8 100 0 0 0
+ticks 2000
+req playSound 0x9 100 0 0 0
+ticks 2000
+req playSound 0xa 100 0 0 0
+ticks 2000
+req playSound 0xb 100 0 0 0
+ticks 2000
+req playSound 0xc 100 0 0 0
+ticks 2000
+req playSound 0xd 100 0 0 0
+ticks 2000
+req playSound 0xe 100 0 0 0
+ticks 2000
+req playSound 0xf 100 0 0 0
+ticks 2000
+req playSound 0x10 100 0 0 0
+ticks 2000
+req playSound 0x11 100 0 0 0
+ticks 2000
+req playSound 0x12 100 0 0 0
+ticks 2000
+req playSound 0x13 100 0 0 0
+ticks 2000
+req playSound 0x14 100 0 0 0
+ticks 2000
+req playSound 0x15 100 0 0 0
+ticks 2000
+req playSound 0x16 100 0 0 0
+ticks 2000
+req playSound 0x17 100 0 0 0
+ticks 2000
+req playSound 0x18 100 0 0 0
+ticks 2000
+req playSound 0x19 100 0 0 0
+ticks 2000
+req playSound 0x1a 100 0 0 0
+ticks 2000
+req playSound 0x1b 100 0 0 0
+ticks 2000
+req playSound 0x1c 100 0 0 0
+ticks 2000
+req playSound 0x1d 100 0 0 0
+ticks 2000
+req playSound 0x1e 100 0 0 0
+ticks 2000
+req playSound 0x1f 100 0 0 0
+ticks 2000
+req playSound 0x20 100 0 0 0
+ticks 2000
+req playSound 0x21 100 0 0 0
+ticks 2000
+req playSound 0x22 100 0 0 0
+ticks 2000
+req playSound 0x23 100 0 0 0
+ticks 2000
+req playSound 0x24 100 0 0 0
+ticks 2000
+req playSound 0x25 100 0 0 0
+ticks 2000
+req playSound 0x26 100 0 0 0
+ticks 2000
+req playSound 0x27 100 0 0 0
+ticks 2000
+req playSound 0x28 100 0 0 0
+ticks 2000
+req playSound 0x29 100 0 0 0
+ticks 2000
+req playSound 0x2a 100 0 0 0
+ticks 2000
+req playSound 0x2b 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x2d 100 0 0 0
+ticks 2000
+req playSound 0x2e 100 0 0 0
+ticks 2000
+req playSound 0x2f 100 0 0 0
+ticks 2000
+req playSound 0x30 100 0 0 0
+ticks 2000
+req playSound 0x31 100 0 0 0
+ticks 2000
+req playSound 0x32 100 0 0 0
+ticks 2000
+req playSound 0x33 100 0 0 0
+ticks 2000
+req playSound 0x34 100 0 0 0
+ticks 2000
+req playSound 0x35 100 0 0 0
+ticks 2000
+req playSound 0x36 100 0 0 0
+ticks 2000
+req playSound 0x37 100 0 0 0
+ticks 2000
+req playSound 0x38 100 0 0 0
+ticks 2000
+req playSound 0x39 100 0 0 0
+ticks 2000
+req playSound 0x3a 100 0 0 0
+ticks 2000
+req playSound 0x3b 100 0 0 0
+ticks 2000
+req playSound 0x3c 100 0 0 0
+ticks 2000
+req playSound 0x3d 100 0 0 0
+ticks 2000
+req playSound 0x3e 100 0 0 0
+ticks 2000
+req playSound 0x3f 100 0 0 0
+ticks 2000
+req playSound 0x40 100 0 0 0
+ticks 2000
+req playSound 0x41 100 0 0 0
+ticks 2000
+req playSound 0x42 100 0 0 0
+ticks 2000
+req playSound 0x43 100 0 0 0
+ticks 2000
+req playSound 0x44 100 0 0 0
+ticks 2000
+req playSound 0x45 100 0 0 0
+ticks 2000
+req playSound 0x46 100 0 0 0
+ticks 2000
+req playSound 0x47 100 0 0 0
+ticks 2000
+req playSound 0x48 100 0 0 0
+ticks 2000
+req playSound 0x49 100 0 0 0
+ticks 2000
+req playSound 0x4a 100 0 0 0
+ticks 2000
+req playSound 0x4b 100 0 0 0
+ticks 2000
+req playSound 0x4c 100 0 0 0
+ticks 2000
+req playSound 0x4d 100 0 0 0
+ticks 2000
+req playSound 0x4e 100 0 0 0
+ticks 2000
+req playSound 0x4f 100 0 0 0
+ticks 2000
+req playSound 0x50 100 0 0 0
+ticks 2000
+req playSound 0x51 100 0 0 0
+ticks 2000
+req playSound 0x52 100 0 0 0
+ticks 2000
+req playSound 0x53 100 0 0 0
+ticks 2000
+req playSound 0x54 100 0 0 0
+ticks 2000
+req playSound 0x55 100 0 0 0
+ticks 2000
+req playSound 0x56 100 0 0 0
+ticks 2000
+req playSound 0x57 100 0 0 0
+ticks 2000
+req playSound 0x58 100 0 0 0
+ticks 2000
+req playSound 0x59 100 0 0 0
+ticks 2000
+req playSound 0x5a 100 0 0 0
+ticks 2000
+req playSound 0x5b 100 0 0 0
+ticks 2000
+req playSound 0x5c 100 0 0 0
+ticks 2000
+req playSound 0x5d 100 0 0 0
+ticks 2000
+req playSound 0x5e 100 0 0 0
+ticks 2000
+req playSound 0x5f 100 0 0 0
+ticks 2000
+req playSound 0x60 100 0 0 0
+ticks 2000
+req playSound 0x61 100 0 0 0
+ticks 2000
+req playSound 0x62 100 0 0 0
+ticks 2000
+req playSound 0x63 100 0 0 0
+ticks 2000
+req playSound 0x64 100 0 0 0
+ticks 2000
+req playSound 0x65 100 0 0 0
+ticks 2000
+req playSound 0x66 100 0 0 0
+ticks 2000
+req playSound 0x67 100 0 0 0
+ticks 2000
+req playSound 0x68 100 0 0 0
+ticks 2000
+req playSound 0x69 100 0 0 0
+ticks 2000
+req playSound 0x6a 100 0 0 0
+ticks 2000
+req playSound 0x6b 100 0 0 0
+ticks 2000
+req playSound 0x6c 100 0 0 0
+ticks 2000
+req playSound 0x6d 100 0 0 0
+ticks 2000
+req playSound 0x6e 100 0 0 0
+ticks 2000
+req playSound 0x6f 100 0 0 0
+ticks 2000
+req playSound 0x70 100 0 0 0
+ticks 2000
+req playSound 0x71 100 0 0 0
+ticks 2000
+req playSound 0x72 100 0 0 0
+ticks 2000
+req playSound 0x73 100 0 0 0
+ticks 2000
+req playSound 0x74 100 0 0 0
+ticks 2000
+req playSound 0x75 100 0 0 0
+ticks 2000
+req playSound 0x76 100 0 0 0
+ticks 2000
+req playSound 0x77 100 0 0 0
+ticks 2000
+req playSound 0x78 100 0 0 0
+ticks 2000
+req playSound 0x79 100 0 0 0
+ticks 2000
+req playSound 0x7a 100 0 0 0
+ticks 2000
+req playSound 0x7b 100 0 0 0
+ticks 2000
+req playSound 0x7c 100 0 0 0
+ticks 2000
+req playSound 0x7d 100 0 0 0
+ticks 2000
+req playSound 0x7e 100 0 0 0
+ticks 2000
+req playSound 0x7f 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x0 100 0 0 0
+ticks 2000
+req playSound 0x1 100 0 0 0
+ticks 2000
+req playSound 0x2 100 0 0 0
+ticks 2000
+req playSound 0x3 100 0 0 0
+ticks 2000
+req playSound 0x4 100 0 0 0
+ticks 2000
+req playSound 0x5 100 0 0 0
+ticks 2000
+req playSound 0x6 100 0 0 0
+ticks 2000
+req playSound 0x7 100 0 0 0
+ticks 2000
+req playSound 0x8 100 0 0 0
+ticks 2000
+req playSound 0x9 100 0 0 0
+ticks 2000
+req playSound 0xa 100 0 0 0
+ticks 2000
+req playSound 0xb 100 0 0 0
+ticks 2000
+req playSound 0xc 100 0 0 0
+ticks 2000
+req playSound 0xd 100 0 0 0
+ticks 2000
+req playSound 0xe 100 0 0 0
+ticks 2000
+req playSound 0xf 100 0 0 0
+ticks 2000
+req playSound 0x10 100 0 0 0
+ticks 2000
+req playSound 0x11 100 0 0 0
+ticks 2000
+req playSound 0x12 100 0 0 0
+ticks 2000
+req playSound 0x13 100 0 0 0
+ticks 2000
+req playSound 0x14 100 0 0 0
+ticks 2000
+req playSound 0x15 100 0 0 0
+ticks 2000
+req playSound 0x16 100 0 0 0
+ticks 2000
+req playSound 0x17 100 0 0 0
+ticks 2000
+req playSound 0x18 100 0 0 0
+ticks 2000
+req playSound 0x19 100 0 0 0
+ticks 2000
+req playSound 0x1a 100 0 0 0
+ticks 2000
+req playSound 0x1b 100 0 0 0
+ticks 2000
+req playSound 0x1c 100 0 0 0
+ticks 2000
+req playSound 0x1d 100 0 0 0
+ticks 2000
+req playSound 0x1e 100 0 0 0
+ticks 2000
+req playSound 0x1f 100 0 0 0
+ticks 2000
+req playSound 0x20 100 0 0 0
+ticks 2000
+req playSound 0x21 100 0 0 0
+ticks 2000
+req playSound 0x22 100 0 0 0
+ticks 2000
+req playSound 0x23 100 0 0 0
+ticks 2000
+req playSound 0x24 100 0 0 0
+ticks 2000
+req playSound 0x25 100 0 0 0
+ticks 2000
+req playSound 0x26 100 0 0 0
+ticks 2000
+req playSound 0x27 100 0 0 0
+ticks 2000
+req playSound 0x28 100 0 0 0
+ticks 2000
+req playSound 0x29 100 0 0 0
+ticks 2000
+req playSound 0x2a 100 0 0 0
+ticks 2000
+req playSound 0x2b 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x2d 100 0 0 0
+ticks 2000
+req playSound 0x2e 100 0 0 0
+ticks 2000
+req playSound 0x2f 100 0 0 0
+ticks 2000
+req playSound 0x30 100 0 0 0
+ticks 2000
+req playSound 0x31 100 0 0 0
+ticks 2000
+req playSound 0x32 100 0 0 0
+ticks 2000
+req playSound 0x33 100 0 0 0
+ticks 2000
+req playSound 0x34 100 0 0 0
+ticks 2000
+req playSound 0x35 100 0 0 0
+ticks 2000
+req playSound 0x36 100 0 0 0
+ticks 2000
+req playSound 0x37 100 0 0 0
+ticks 2000
+req playSound 0x38 100 0 0 0
+ticks 2000
+req playSound 0x39 100 0 0 0
+ticks 2000
+req playSound 0x3a 100 0 0 0
+ticks 2000
+req playSound 0x3b 100 0 0 0
+ticks 2000
+req playSound 0x3c 100 0 0 0
+ticks 2000
+req playSound 0x3d 100 0 0 0
+ticks 2000
+req playSound 0x3e 100 0 0 0
+ticks 2000
+req playSound 0x3f 100 0 0 0
+ticks 2000
+req playSound 0x40 100 0 0 0
+ticks 2000
+req playSound 0x41 100 0 0 0
+ticks 2000
+req playSound 0x42 100 0 0 0
+ticks 2000
+req playSound 0x43 100 0 0 0
+ticks 2000
+req playSound 0x44 100 0 0 0
+ticks 2000
+req playSound 0x45 100 0 0 0
+ticks 2000
+req playSound 0x46 100 0 0 0
+ticks 2000
+req playSound 0x47 100 0 0 0
+ticks 2000
+req playSound 0x48 100 0 0 0
+ticks 2000
+req playSound 0x49 100 0 0 0
+ticks 2000
+req playSound 0x4a 100 0 0 0
+ticks 2000
+req playSound 0x4b 100 0 0 0
+ticks 2000
+req playSound 0x4c 100 0 0 0
+ticks 2000
+req playSound 0x4d 100 0 0 0
+ticks 2000
+req playSound 0x4e 100 0 0 0
+ticks 2000
+req playSound 0x4f 100 0 0 0
+ticks 2000
+req playSound 0x50 100 0 0 0
+ticks 2000
+req playSound 0x51 100 0 0 0
+ticks 2000
+req playSound 0x52 100 0 0 0
+ticks 2000
+req playSound 0x53 100 0 0 0
+ticks 2000
+req playSound 0x54 100 0 0 0
+ticks 2000
+req playSound 0x55 100 0 0 0
+ticks 2000
+req playSound 0x56 100 0 0 0
+ticks 2000
+req playSound 0x57 100 0 0 0
+ticks 2000
+req playSound 0x58 100 0 0 0
+ticks 2000
+req playSound 0x59 100 0 0 0
+ticks 2000
+req playSound 0x5a 100 0 0 0
+ticks 2000
+req playSound 0x5b 100 0 0 0
+ticks 2000
+req playSound 0x5c 100 0 0 0
+ticks 2000
+req playSound 0x5d 100 0 0 0
+ticks 2000
+req playSound 0x5e 100 0 0 0
+ticks 2000
+req playSound 0x5f 100 0 0 0
+ticks 2000
+req playSound 0x60 100 0 0 0
+ticks 2000
+req playSound 0x61 100 0 0 0
+ticks 2000
+req playSound 0x62 100 0 0 0
+ticks 2000
+req playSound 0x63 100 0 0 0
+ticks 2000
+req playSound 0x64 100 0 0 0
+ticks 2000
+req playSound 0x65 100 0 0 0
+ticks 2000
+req playSound 0x66 100 0 0 0
+ticks 2000
+req playSound 0x67 100 0 0 0
+ticks 2000
+req playSound 0x68 100 0 0 0
+ticks 2000
+req playSound 0x69 100 0 0 0
+ticks 2000
+req playSound 0x6a 100 0 0 0
+ticks 2000
+req playSound 0x6b 100 0 0 0
+ticks 2000
+req playSound 0x6c 100 0 0 0
+ticks 2000
+req playSound 0x6d 100 0 0 0
+ticks 2000
+req playSound 0x6e 100 0 0 0
+ticks 2000
+req playSound 0x6f 100 0 0 0
+ticks 2000
+req playSound 0x70 100 0 0 0
+ticks 2000
+req playSound 0x71 100 0 0 0
+ticks 2000
+req playSound 0x72 100 0 0 0
+ticks 2000
+req playSound 0x73 100 0 0 0
+ticks 2000
+req playSound 0x74 100 0 0 0
+ticks 2000
+req playSound 0x75 100 0 0 0
+ticks 2000
+req playSound 0x76 100 0 0 0
+ticks 2000
+req playSound 0x77 100 0 0 0
+ticks 2000
+req playSound 0x78 100 0 0 0
+ticks 2000
+req playSound 0x79 100 0 0 0
+ticks 2000
+req playSound 0x7a 100 0 0 0
+ticks 2000
+req playSound 0x7b 100 0 0 0
+ticks 2000
+req playSound 0x7c 100 0 0 0
+ticks 2000
+req playSound 0x7d 100 0 0 0
+ticks 2000
+req playSound 0x7e 100 0 0 0
+ticks 2000
+req playSound 0x7f 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000
+req playSound 0x0 100 0 0 0
+ticks 2000
+req playSound 0x1 100 0 0 0
+ticks 2000
+req playSound 0x2 100 0 0 0
+ticks 2000
+req playSound 0x3 100 0 0 0
+ticks 2000
+req playSound 0x4 100 0 0 0
+ticks 2000
+req playSound 0x5 100 0 0 0
+ticks 2000
+req playSound 0x6 100 0 0 0
+ticks 2000
+req playSound 0x7 100 0 0 0
+ticks 2000
+req playSound 0x8 100 0 0 0
+ticks 2000
+req playSound 0x9 100 0 0 0
+ticks 2000
+req playSound 0xa 100 0 0 0
+ticks 2000
+req playSound 0xb 100 0 0 0
+ticks 2000
+req playSound 0xc 100 0 0 0
+ticks 2000
+req playSound 0xd 100 0 0 0
+ticks 2000
+req playSound 0xe 100 0 0 0
+ticks 2000
+req playSound 0xf 100 0 0 0
+ticks 2000
+req playSound 0x10 100 0 0 0
+ticks 2000
+req playSound 0x11 100 0 0 0
+ticks 2000
+req playSound 0x12 100 0 0 0
+ticks 2000
+req playSound 0x13 100 0 0 0
+ticks 2000
+req playSound 0x14 100 0 0 0
+ticks 2000
+req playSound 0x15 100 0 0 0
+ticks 2000
+req playSound 0x16 100 0 0 0
+ticks 2000
+req playSound 0x17 100 0 0 0
+ticks 2000
+req playSound 0x18 100 0 0 0
+ticks 2000
+req playSound 0x19 100 0 0 0
+ticks 2000
+req playSound 0x1a 100 0 0 0
+ticks 2000
+req playSound 0x1b 100 0 0 0
+ticks 2000
+req playSound 0x1c 100 0 0 0
+ticks 2000
+req playSound 0x1d 100 0 0 0
+ticks 2000
+req playSound 0x1e 100 0 0 0
+ticks 2000
+req playSound 0x1f 100 0 0 0
+ticks 2000
+req playSound 0x20 100 0 0 0
+ticks 2000
+req playSound 0x21 100 0 0 0
+ticks 2000
+req playSound 0x22 100 0 0 0
+ticks 2000
+req playSound 0x23 100 0 0 0
+ticks 2000
+req playSound 0x24 100 0 0 0
+ticks 2000
+req playSound 0x25 100 0 0 0
+ticks 2000
+req playSound 0x26 100 0 0 0
+ticks 2000
+req playSound 0x27 100 0 0 0
+ticks 2000
+req playSound 0x28 100 0 0 0
+ticks 2000
+req playSound 0x29 100 0 0 0
+ticks 2000
+req playSound 0x2a 100 0 0 0
+ticks 2000
+req playSound 0x2b 100 0 0 0
+ticks 2000
+req playSound 0x2c 100 0 0 0
+ticks 2000
+req playSound 0x2d 100 0 0 0
+ticks 2000
+req playSound 0x2e 100 0 0 0
+ticks 2000
+req playSound 0x2f 100 0 0 0
+ticks 2000
+req playSound 0x30 100 0 0 0
+ticks 2000
+req playSound 0x31 100 0 0 0
+ticks 2000
+req playSound 0x32 100 0 0 0
+ticks 2000
+req playSound 0x33 100 0 0 0
+ticks 2000
+req playSound 0x34 100 0 0 0
+ticks 2000
+req playSound 0x35 100 0 0 0
+ticks 2000
+req playSound 0x36 100 0 0 0
+ticks 2000
+req playSound 0x37 100 0 0 0
+ticks 2000
+req playSound 0x38 100 0 0 0
+ticks 2000
+req playSound 0x39 100 0 0 0
+ticks 2000
+req playSound 0x3a 100 0 0 0
+ticks 2000
+req playSound 0x3b 100 0 0 0
+ticks 2000
+req playSound 0x3c 100 0 0 0
+ticks 2000
+req playSound 0x3d 100 0 0 0
+ticks 2000
+req playSound 0x3e 100 0 0 0
+ticks 2000
+req playSound 0x3f 100 0 0 0
+ticks 2000
+req playSound 0x40 100 0 0 0
+ticks 2000
+req playSound 0x41 100 0 0 0
+ticks 2000
+req playSound 0x42 100 0 0 0
+ticks 2000
+req playSound 0x43 100 0 0 0
+ticks 2000
+req playSound 0x44 100 0 0 0
+ticks 2000
+req playSound 0x45 100 0 0 0
+ticks 2000
+req playSound 0x46 100 0 0 0
+ticks 2000
+req playSound 0x47 100 0 0 0
+ticks 2000
+req playSound 0x48 100 0 0 0
+ticks 2000
+req playSound 0x49 100 0 0 0
+ticks 2000
+req playSound 0x4a 100 0 0 0
+ticks 2000
+req playSound 0x4b 100 0 0 0
+ticks 2000
+req playSound 0x4c 100 0 0 0
+ticks 2000
+req playSound 0x4d 100 0 0 0
+ticks 2000
+req playSound 0x4e 100 0 0 0
+ticks 2000
+req playSound 0x4f 100 0 0 0
+ticks 2000
+req playSound 0x50 100 0 0 0
+ticks 2000
+req playSound 0x51 100 0 0 0
+ticks 2000
+req playSound 0x52 100 0 0 0
+ticks 2000
+req playSound 0x53 100 0 0 0
+ticks 2000
+req playSound 0x54 100 0 0 0
+ticks 2000
+req playSound 0x55 100 0 0 0
+ticks 2000
+req playSound 0x56 100 0 0 0
+ticks 2000
+req playSound 0x57 100 0 0 0
+ticks 2000
+req playSound 0x58 100 0 0 0
+ticks 2000
+req playSound 0x59 100 0 0 0
+ticks 2000
+req playSound 0x5a 100 0 0 0
+ticks 2000
+req playSound 0x5b 100 0 0 0
+ticks 2000
+req playSound 0x5c 100 0 0 0
+ticks 2000
+req playSound 0x5d 100 0 0 0
+ticks 2000
+req playSound 0x5e 100 0 0 0
+ticks 2000
+req playSound 0x5f 100 0 0 0
+ticks 2000
+req playSound 0x60 100 0 0 0
+ticks 2000
+req playSound 0x61 100 0 0 0
+ticks 2000
+req playSound 0x62 100 0 0 0
+ticks 2000
+req playSound 0x63 100 0 0 0
+ticks 2000
+req playSound 0x64 100 0 0 0
+ticks 2000
+req playSound 0x65 100 0 0 0
+ticks 2000
+req playSound 0x66 100 0 0 0
+ticks 2000
+req playSound 0x67 100 0 0 0
+ticks 2000
+req playSound 0x68 100 0 0 0
+ticks 2000
+req playSound 0x69 100 0 0 0
+ticks 2000
+req playSound 0x6a 100 0 0 0
+ticks 2000
+req playSound 0x6b 100 0 0 0
+ticks 2000
+req playSound 0x6c 100 0 0 0
+ticks 2000
+req playSound 0x6d 100 0 0 0
+ticks 2000
+req playSound 0x6e 100 0 0 0
+ticks 2000
+req playSound 0x6f 100 0 0 0
+ticks 2000
+req playSound 0x70 100 0 0 0
+ticks 2000
+req playSound 0x71 100 0 0 0
+ticks 2000
+req playSound 0x72 100 0 0 0
+ticks 2000
+req playSound 0x73 100 0 0 0
+ticks 2000
+req playSound 0x74 100 0 0 0
+ticks 2000
+req playSound 0x75 100 0 0 0
+ticks 2000
+req playSound 0x76 100 0 0 0
+ticks 2000
+req playSound 0x77 100 0 0 0
+ticks 2000
+req playSound 0x78 100 0 0 0
+ticks 2000
+req playSound 0x79 100 0 0 0
+ticks 2000
+req playSound 0x7a 100 0 0 0
+ticks 2000
+req playSound 0x7b 100 0 0 0
+ticks 2000
+req playSound 0x7c 100 0 0 0
+ticks 2000
+req playSound 0x7d 100 0 0 0
+ticks 2000
+req playSound 0x7e 100 0 0 0
+ticks 2000
+req playSound 0x7f 100 0 0 0
+ticks 2000
+req playSound 0x80 100 0 0 0
+ticks 2000

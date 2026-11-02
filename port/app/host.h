@@ -266,6 +266,7 @@ class LiveTracePresenter : public portsim::LiveHost {
     uint64_t hash;
   };
   const std::vector<Present> &presents() const { return presents_; }
+  void reserve_presents(size_t n) { presents_.reserve(n); }  // P3: the log reserved once (no reallocation in a session)
   const std::vector<uint16_t> &last() const { return last_; }
 
   void boot(portsim::Ctx &ctx) override;

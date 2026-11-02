@@ -1,0 +1,2 @@
+start 2026-11-02 04:32:27 envs=[ SG_RASTER_THREADS=1] extra=[--audio-no-device]
+end 2026-11-02 04:44:06 rc=0 seconds=698 framehash=equal
