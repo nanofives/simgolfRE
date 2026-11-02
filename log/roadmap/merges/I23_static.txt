@@ -1,0 +1,77 @@
+...............................................s........................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 26%]
+........................................................................ [ 34%]
+........................................................................ [ 43%]
+........................................................................ [ 52%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+.....................................................s.................. [ 78%]
+........................................................................ [ 87%]
+........................................................................ [ 96%]
+F..............................                                          [100%]
+================================== FAILURES ===================================
+___________________ test_every_stored_trace_still_validates ___________________
+
+    def test_every_stored_trace_still_validates():
+        files = stored()
+        if not files:
+            pytest.skip("port/corpus is local and not present")
+        bad = {}
+        for p in files:
+>           errs = [e for e in TF.validate(TF.read(p)) if "no preceding harness DELIVER" in e]
+                                           ^^^^^^^^^^
+
+tests\test_trace_format_s1.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+re\tools\trace_format.py:175: in read
+    return parse(f.read())
+           ^^^^^^^^^^^^^^^
+re\tools\trace_format.py:167: in parse
+    r.f = decode(r)
+          ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+r = Record(type=3, sub=7, payload=b'h\x1b\x05\x00\xc0"G\x00\x02\x00\x00\x00\x02\x00\x00\x00\x06\x00\x00\x00', offset=2823793, f={})
+
+    def decode(r: Record) -> dict:
+        t, p = r.type, r.payload
+        if t in FIXED:
+            fmt = FIXED[t]
+            if len(p) != struct.calcsize(fmt):
+                raise TraceError(f"{r.name} at {r.offset:#x}: payload {len(p)} bytes, expected {struct.calcsize(fmt)}")
+            v = struct.unpack(fmt, p)
+            if t == CLOCKRUN:
+                return {"kind": r.sub, "first": v[0], "count": v[1], "ra": v[2], "slot": v[3], "v0": v[4]}
+            if t == FRAME:
+                return {"frame": v[0], "pos": v[1], "t": v[2], "snap": v[3]}
+            if t == MSG:
+                return {"pos": v[0], "msg": v[1], "wp": v[2], "lp": v[3], "wp_is_timer": r.sub == 1}
+            if t == KEYSTATE:
+                return {"pos": v[0], "api": r.sub, "ra": v[1], "vk": v[2], "result": v[3]}
+            if t == CURSOR:
+                return {"pos": v[0], "ok": r.sub, "x": v[1], "y": v[2]}
+            if t == HANDLER:
+                return {"pos": v[0], "handler": r.sub, "a0": v[1], "a1": v[2]}
+            if t == TAKE:
+                return {"pos": v[0], "which": r.sub, "ra": v[1], "value": v[2]}
+            if t == SLEEP:
+                return {"pos": v[0], "ra": v[1], "ms": v[2]}
+            if t == MAPVK:
+                return {"pos": v[0], "ra": v[1], "code": v[2], "maptype": v[3], "result": v[4]}
+            if t == TIMERSET:
+                return {"pos": v[0], "api": r.sub, "ra": v[1], "handle": v[2], "period": v[3], "fn": v[4], "extra": v[5]}
+            if t == END:
+                return {"n": v[0], "frames": v[1], "polls": v[2], "dumps": v[3]}
+        if t == DELIVER:
+            fmt = DELIVER_FMT.get(r.sub)
+            if fmt is None:
+>               raise TraceError(f"DELIVER at {r.offset:#x}: unknown kind {r.sub}")
+E               trace_format.TraceError: DELIVER at 0x2b1671: unknown kind 7
+
+re\tools\trace_format.py:107: TraceError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_failure_tools.py:55: run re/tools/invariants.py TerrainDll_tileAt
+SKIPPED [1] tests\test_patches.py:33: got empty parameter set for (path)
+FAILED tests/test_trace_format_s1.py::test_every_stored_trace_still_validates
+1 failed, 820 passed, 2 skipped, 46 deselected in 1098.36s (0:18:18)

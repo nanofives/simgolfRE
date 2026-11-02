@@ -1,0 +1,171 @@
+// Apply the evidence-backed names of re/names/*.tsv to the open program. Function rows (module addr name subsystem
+// evidence purpose) rename a function when its current name is DEFAULT or ANALYSIS (FUN_*, FidDb names stay only if
+// they were imported or user-set); `Class::method` puts the function in a class namespace. Rows of *_globals.tsv
+// (module addr name type evidence) label data addresses whose primary symbol is a default one. Script arg: the
+// re/names directory; optional second arg `overwrite` also replaces USER_DEFINED names that differ (to correct
+// names this script applied earlier; IMPORTED names always stay). Rows of re/names/withdrawn.tsv (module addr
+// reason) reset a function to its default FUN_ name; a withdrawn row whose reason starts `label <name>` removes that
+// USER_DEFINED label at the address (UNLABEL, counted in reset) unless a globals row names it again (S11.2).
+// Prints one line per change and a summary.
+// A non-function LABEL with the new name already at the entry (FID / analysis labels such as __lockexit 0x004a51cf)
+// made setNameAndNamespace throw DuplicateNameException after the earlier renames were saved (merge I16); that label is
+// now removed and the rename retried (DUPLABEL line); any other duplicate is reported (DUPFAIL) and the row skipped.
+//@category Symbol
+import ghidra.app.script.GhidraScript;
+import ghidra.app.util.NamespaceUtils;
+import ghidra.program.model.address.Address;
+import ghidra.program.model.listing.Function;
+import ghidra.program.model.symbol.*;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
+
+public class ApplyNames extends GhidraScript {
+	@Override
+	protected void run() throws Exception {
+		File dir = new File(getScriptArgs()[0]);
+		boolean overwrite = getScriptArgs().length > 1 && getScriptArgs()[1].equals("overwrite");
+		String prog = currentProgram.getName();
+		SymbolTable st = currentProgram.getSymbolTable();
+		int renamed = 0, kept = 0, missing = 0, labeled = 0, reset = 0;
+		File[] files = dir.listFiles((d, n) -> n.endsWith(".tsv"));
+		java.util.Arrays.sort(files);
+		// a withdrawn address that a names file names again (new evidence) is renamed, not reset
+		java.util.Set<String> named = new java.util.HashSet<>();
+		java.util.Set<String> globalNamed = new java.util.HashSet<>();
+		for (File f : files) {
+			if (f.getName().endsWith("_globals.tsv")) {
+				for (String l : Files.readAllLines(f.toPath())) {
+					String[] c = l.split("\t");
+					if (c.length >= 3 && c[0].equals(prog)) {
+						globalNamed.add(c[1].toLowerCase() + "|" + SymbolUtilities.replaceInvalidChars(c[2], true));
+					}
+				}
+				continue;
+			}
+			if (f.getName().equals("withdrawn.tsv")) {
+				continue;
+			}
+			for (String l : Files.readAllLines(f.toPath())) {
+				String[] c = l.split("	");
+				if (c.length >= 3 && c[0].equals(prog)) {
+					named.add(c[1].toLowerCase());
+				}
+			}
+		}
+		for (File f : files) {
+			boolean globals = f.getName().endsWith("_globals.tsv");
+			boolean withdrawn = f.getName().equals("withdrawn.tsv");
+			List<String> lines = Files.readAllLines(f.toPath());
+			for (int i = 1; i < lines.size(); i++) {
+				String[] c = lines.get(i).split("\t");
+				if (c.length < 3 || !c[0].equals(prog) || c[2].isEmpty()) {
+					continue;
+				}
+				Address addr = toAddr(Long.parseLong(c[1].replace("0x", ""), 16));
+				if (globals) {
+					Symbol cur = st.getPrimarySymbol(addr);
+					String label = SymbolUtilities.replaceInvalidChars(c[2], true);
+					if (cur != null && cur.getSource() != SourceType.DEFAULT) {
+						boolean replace = overwrite && cur.getSource() == SourceType.USER_DEFINED
+								&& cur.getSymbolType() == SymbolType.LABEL && !cur.getName().equals(label);
+						if (!replace) {
+							kept++;
+							continue;
+						}
+						println("RELABEL " + addr + " " + cur.getName() + " -> " + label);
+						cur.delete();
+					}
+					Symbol s = st.createLabel(addr, label, SourceType.USER_DEFINED);
+					s.setPrimary();
+					labeled++;
+					continue;
+				}
+				Function fn = getFunctionAt(addr);
+				if (withdrawn && c[2].startsWith("label ")) {
+					// `label <name> withdrawn ...` (stream G1, 2026-10-18): remove that USER_DEFINED label at the address
+					// unless a globals row puts the same name there again. Before S11.2 these rows were skipped (no
+					// function at the address), so the four G1 labels stayed in the master.
+					String wname = SymbolUtilities.replaceInvalidChars(c[2].split(" ")[1], true);
+					if (globalNamed.contains(c[1].toLowerCase() + "|" + wname)) {
+						continue;
+					}
+					for (Symbol s : st.getSymbols(addr)) {
+						if (s.getSymbolType() == SymbolType.LABEL && s.getSource() == SourceType.USER_DEFINED
+								&& s.getName().equals(wname)) {
+							s.delete();
+							println("UNLABEL " + addr + " " + wname);
+							reset++;
+						}
+					}
+					continue;
+				}
+				if (withdrawn) {
+					if (named.contains(c[1].toLowerCase())) {
+						continue;
+					}
+					if (fn != null && fn.getSymbol().getSource() != SourceType.DEFAULT) {
+						fn.getSymbol().setNameAndNamespace(null, currentProgram.getGlobalNamespace(), SourceType.DEFAULT);
+						println("RESET " + addr + " -> " + fn.getName());
+						reset++;
+					}
+					continue;
+				}
+				if (fn == null) {
+					println("MISSING " + addr + " " + c[2] + " (" + f.getName() + ")");
+					missing++;
+					continue;
+				}
+				SourceType src = fn.getSymbol().getSource();
+				// The name the rename below would give: scope `<` `>` `*` -> `(` `)` `P`, invalid characters of the last part
+				// replaced. Comparing only the raw row text re-renamed rows such as `std::list<Tile*>::list` or `operator new`
+				// (Terrain.dll, 32 rows) to the same name on every run (S11.2).
+				int msep = c[2].lastIndexOf("::");
+				String mapped = msep > 0
+						? c[2].substring(0, msep).replace("<", "(").replace(">", ")").replace("*", "P") + "::"
+								+ SymbolUtilities.replaceInvalidChars(c[2].substring(msep + 2), true)
+						: SymbolUtilities.replaceInvalidChars(c[2], true);
+				if (fn.getName(true).equals(c[2]) || fn.getName(true).equals(mapped)) {
+					// Already the name (any source). Renaming to the same name and namespace is a no-op that keeps an
+					// ANALYSIS source (the demangled exe exports 0x4490d0..0x449150), so it was reported every run.
+					kept++;
+					continue;
+				}
+				if (src == SourceType.IMPORTED || (src == SourceType.USER_DEFINED && !(overwrite && !fn.getName(true).equals(c[2])))) {
+					if (!fn.getName(true).equals(c[2])) {
+						println("KEEP " + addr + " " + fn.getName(true) + " (" + src + ") over " + c[2]);
+					}
+					kept++;
+					continue;
+				}
+				String full = c[2];
+				int sep = full.lastIndexOf("::");
+				Namespace ns = currentProgram.getGlobalNamespace();
+				String name = full;
+				if (sep > 0) {
+					String scope = full.substring(0, sep);
+					name = full.substring(sep + 2);
+					ns = NamespaceUtils.createNamespaceHierarchy(scope.replace("<", "(").replace(">", ")").replace("*", "P"),
+							null, currentProgram, SourceType.USER_DEFINED);
+				}
+				name = SymbolUtilities.replaceInvalidChars(name, true);
+				try {
+					fn.getSymbol().setNameAndNamespace(name, ns, SourceType.USER_DEFINED);
+				} catch (ghidra.util.exception.DuplicateNameException e) {
+					Symbol dup = st.getSymbol(name, addr, ns);
+					if (dup == null || dup.getSymbolType() != SymbolType.LABEL) {
+						println("DUPFAIL " + addr + " " + full);
+						continue;
+					}
+					println("DUPLABEL " + addr + " " + dup.getName(true) + " (" + dup.getSource() + ") removed");
+					dup.delete();
+					fn.getSymbol().setNameAndNamespace(name, ns, SourceType.USER_DEFINED);
+				}
+				println("RENAME " + addr + " " + full);
+				renamed++;
+			}
+		}
+		println("APPLYNAMES " + prog + " renamed=" + renamed + " labeled=" + labeled + " kept=" + kept + " missing=" + missing + " reset=" + reset);
+	}
+}

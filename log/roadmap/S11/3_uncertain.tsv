@@ -1,0 +1,5 @@
+ID	addr	type	description	path to resolution	status
+U-2020	0x004a682f	structural	endstate.py dead_checks pass the PE entry points (golf_clean.exe 0x004a682f _WinMainCRTStartup, jgld.dll rva 0x82770, sound.dll rva 0x430fe, Terrain.dll rva 0x19b80) because the loader calls them via the PE header, not code or data; the triage lists them as endstate none	add an AddressOfEntryPoint / TLS callback check to endstate.py	open
+U-2021		evidence	log/diff/*.match.csv names carry no module tag for sound.dll (00402180_Wave_In_Device_fade.match.csv beside the exe 00402180), so a CSV cannot be tied to a module by name; the triage match column is the MATCH line in re/match/*.cpp only	put the module in match CSV names or index CSVs by their MATCH line	open
+U-2022		evidence	no file states which port module replaces a given jgld.dll or Terrain.dll function; port_module is none-stated, with the module-level target in port_source	a later port step names it	open
+U-2023		evidence	542 of 561 open sound.dll C2 rows have no row in re/roadmap/S4_functions.tsv (S4 listed C3/C4 and 31 C2 rows)	add rows when S4 scope is revisited	open

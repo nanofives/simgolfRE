@@ -1,0 +1,68 @@
+[base] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[tt2_plus] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[case_m2_swap] 99.6% (679/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+    ! mov dword ptr [esp + 0x4c], eax            | mov dword ptr [esp + 0x48], eax
+    ! mov ecx, dword ptr [esp + 0x20]            | mov ecx, dword ptr [esp + 0x1c]
+[tt1_tt2_vars] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[decl_order] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[decl_split] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[id_local_landmark] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[switch_default] 95.0% (651/685
+    ! jne 0x39f                                  | jne 0x435090
+    ! je 0x36c                                   | je 0x43505d
+    ! je 0x368                                   | je 0x435059
+    ! sub ebp, 0                                 | cmp ebp, 3
+    ! je 0x326                                   | ja 0x43503c
+    ! dec ebp                                    | jmp dword ptr [ebp*4 + 0x43552c]
+    ! je 0x304                                   |
+    ! dec ebp                                    |
+    ! je 0x2fd                                   |
+    ! jmp 0x346                                  | jmp 0x435037
+    ! jmp 0x32b                                  | jmp 0x43501c
+    ! jmp 0x346                                  | jmp 0x435037
+    ! mov edx, dword ptr [esp + 0x1c]            |
+    !                                            | mov edx, dword ptr [esp + 0x1c]
+    ! jne 0x402                                  | jne 0x4350f3
+    ! je 0x3d0                                   | je 0x4350c1
+    ! jne 0x463                                  | jne 0x435154
+    ! je 0x430                                   | je 0x435121
+    ! jne 0x4c2                                  | jne 0x4351b3
+    ! je 0x494                                   | je 0x435185
+    ! jne 0x823                                  | jne 0x435514
+    ! je 0x833                                   | je 0x435524
+    ! jle 0x833                                  | jle 0x435524
+    ! ja 0x718                                   | ja 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! jmp 0x718                                  | jmp 0x435409
+    ! je 0x833                                   | je 0x435524
+    ! jne 0x800                                  | jne 0x4354f1
+[freelm_ne0] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[hover_y_first] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |
+[y_copy] 99.9% (681/682
+    !                                            | mov esi, dword ptr [esp + 0x28]
+    ! mov esi, dword ptr [esp + 0x28]            |

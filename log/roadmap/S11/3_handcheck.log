@@ -1,0 +1,137 @@
+=== golf_clean.exe 004a7470 _strcspn size 62 verdict dead hooks callers none
+  byte scan hits: none; PE entry point 0x004a682f
+    0x004a7470  push ebp
+    0x004a7471  mov ebp, esp
+    0x004a7473  push esi
+    0x004a7474  xor eax, eax
+    0x004a7476  push eax
+    0x004a7477  push eax
+    0x004a7478  push eax
+    0x004a7479  push eax
+    0x004a747a  push eax
+    0x004a747b  push eax
+    0x004a747c  push eax
+    0x004a747d  push eax
+    0x004a747e  mov edx, dword ptr [ebp + 0xc]
+    0x004a7481  lea ecx, [ecx]
+    0x004a7484  mov al, byte ptr [edx]
+    0x004a7486  or al, al
+    0x004a7488  je 0x4a7491
+    0x004a748a  inc edx
+    0x004a748b  bts dword ptr [esp], eax
+    0x004a748f  jmp 0x4a7484
+    0x004a7491  mov esi, dword ptr [ebp + 8]
+    0x004a7494  or ecx, 0xffffffff
+    0x004a7497  nop 
+=== golf_clean.exe 004a9039 __seh_longjmp_unwind size 27 verdict dead hooks callers none
+  byte scan hits: none; PE entry point 0x004a682f
+    0x004a9039  push ebp
+    0x004a903a  mov ecx, dword ptr [esp + 8]
+    0x004a903e  mov ebp, dword ptr [ecx]
+    0x004a9040  mov eax, dword ptr [ecx + 0x1c]
+    0x004a9043  push eax
+    0x004a9044  mov eax, dword ptr [ecx + 0x18]
+    0x004a9047  push eax
+    0x004a9048  call 0x4a5526
+    0x004a904d  add esp, 8
+    0x004a9050  pop ebp
+    0x004a9051  ret 4
+=== golf_clean.exe 00402180 return0Pop4_402180 size 5 verdict trivial hooks callers none
+  byte scan hits: ['dword .rdata 0x004ba270', 'dword .rdata 0x004ba2ac', 'dword .rdata 0x004ba2c4', 'dword .rdata 0x004ba324', 'dword .rdata 0x004ba3c4', 'dword .rdata 0x004ba4d0', 'dword .rdata 0x004ba53c', 'dword .rdata 0x004ba570', 'dword .rdata 0x004ba8dc', 'dword .rdata 0x004ba944', 'dword .rdata 0x004ba948', 'dword .rdata 0x004ba97c', 'dword .rdata 0x004baa58', 'dword .rdata 0x004baac0', 'dword .rdata 0x004baac4', 'dword .rdata 0x004baaf8', 'dword .rdata 0x004bb044', 'dword .rdata 0x004bb0d0', 'dword .rdata 0x004bb170', 'dword .rdata 0x004bb288', 'dword .rdata 0x004bb2f4', 'dword .rdata 0x004bb328', 'dword .rdata 0x004bb420', 'dword .rdata 0x004bb4c0', 'dword .rdata 0x004bb5dc', 'dword .rdata 0x004bb67c', 'dword .rdata 0x004bb76c', 'dword .rdata 0x004bb7d8', 'dword .rdata 0x004bb80c', 'dword .rdata 0x004bb8f8', 'dword .rdata 0x004bb964', 'dword .rdata 0x004bb998', 'dword .rdata 0x004bbaf0', 'dword .rdata 0x004bbb58', 'dword .rdata 0x004bbb5c', 'dword .rdata 0x004bbd1c', 'dword .rdata 0x004bbd84', 'dword .rdata 0x004bbd88', 'dword .rdata 0x004bbdbc', 'dword .rdata 0x004bbed8', 'dword .rdata 0x004bbf44', 'dword .rdata 0x004bbf78', 'dword .rdata 0x004bc0d0', 'dword .rdata 0x004bc138', 'dword .rdata 0x004bc13c', 'dword .rdata 0x004bc170', 'dword .rdata 0x004bc26c', 'dword .rdata 0x004bc2d8', 'dword .rdata 0x004bc30c']; PE entry point 0x004a682f
+    0x00402180  xor eax, eax
+    0x00402182  ret 4
+=== golf_clean.exe 00488cb0 returnZeroPop8_488cb0 size 5 verdict trivial hooks callers none
+  byte scan hits: ['dword .rdata 0x004bb134', 'dword .rdata 0x004bb640']; PE entry point 0x004a682f
+    0x00488cb0  xor eax, eax
+    0x00488cb2  ret 8
+=== Terrain.dll 00021b70 __threadid size 11 verdict dead hooks callers none
+  byte scan hits: none; PE entry point 0x10019b80
+    0x10021b70  push ebp
+    0x10021b71  mov ebp, esp
+    0x10021b73  call dword ptr [0x10113530]
+    0x10021b79  pop ebp
+    0x10021b7a  ret 
+=== Terrain.dll 0002a9e0 setlocale size 1007 verdict dead hooks callers none
+  byte scan hits: none; PE entry point 0x10019b80
+    0x1002a9e0  push ebp
+    0x1002a9e1  mov ebp, esp
+    0x1002a9e3  sub esp, 0xb0
+    0x1002a9e9  cmp dword ptr [ebp + 8], 0
+    0x1002a9ed  jl 0x1002a9f5
+    0x1002a9ef  cmp dword ptr [ebp + 8], 5
+    0x1002a9f3  jle 0x1002a9fc
+    0x1002a9f5  xor eax, eax
+    0x1002a9f7  jmp 0x1002adcb
+    0x1002a9fc  push 0x13
+    0x1002a9fe  call 0x10019e10
+    0x1002aa03  add esp, 4
+=== Terrain.dll 0001a200 _CrtDefaultAllocHook size 10 verdict trivial hooks callers none
+  byte scan hits: ['dword .data 0x10064000']; PE entry point 0x10019b80
+    0x1001a200  push ebp
+    0x1001a201  mov ebp, esp
+    0x1001a203  mov eax, 1
+    0x1001a208  pop ebp
+    0x1001a209  ret 
+=== jgld.dll 0007f110 operator_new_array size 26 verdict dead hooks callers none
+  byte scan hits: none; PE entry point 0x10082770
+    0x1007f110  push ebp
+    0x1007f111  mov ebp, esp
+    0x1007f113  push ecx
+    0x1007f114  mov eax, dword ptr [ebp + 8]
+    0x1007f117  push eax
+    0x1007f118  call 0x1007f0f0
+    0x1007f11d  add esp, 4
+    0x1007f120  mov dword ptr [ebp - 4], eax
+    0x1007f123  mov eax, dword ptr [ebp - 4]
+    0x1007f126  mov esp, ebp
+    0x1007f128  pop ebp
+    0x1007f129  ret 
+=== jgld.dll 00089a40 _i64toa size 72 verdict dead hooks callers none
+  byte scan hits: none; PE entry point 0x10082770
+    0x10089a40  push ebp
+    0x10089a41  mov ebp, esp
+    0x10089a43  push ecx
+    0x10089a44  cmp dword ptr [ebp + 0x14], 0xa
+    0x10089a48  jne 0x10089a61
+    0x10089a4a  cmp dword ptr [ebp + 0xc], 0
+    0x10089a4e  jg 0x10089a61
+    0x10089a50  jl 0x10089a58
+    0x10089a52  cmp dword ptr [ebp + 8], 0
+    0x10089a56  jae 0x10089a61
+    0x10089a58  mov dword ptr [ebp - 4], 1
+    0x10089a5f  jmp 0x10089a68
+    0x10089a61  mov dword ptr [ebp - 4], 0
+=== sound.dll 0001c730 Randomizer::set_range size 65 verdict dead hooks callers none
+  byte scan hits: ['rel32 e9 at 0x10001c76']; PE entry point 0x100430fe
+    0x1001c730  push esi
+    0x1001c731  mov esi, ecx
+    0x1001c733  push edi
+    0x1001c734  mov edi, dword ptr [esp + 0xc]
+    0x1001c738  mov eax, dword ptr [esi + 0x2c]
+    0x1001c73b  mov dword ptr [esi + 0x3c], edi
+    0x1001c73e  test eax, eax
+    0x1001c740  je 0x1001c752
+    0x1001c742  push eax
+    0x1001c743  call 0x1004249a
+    0x1001c748  add esp, 4
+    0x1001c74b  mov dword ptr [esi + 0x2c], 0
+    0x1001c752  push edi
+    0x1001c753  call 0x100424d7
+=== sound.dll 00042505 __fpclear size 1 verdict trivial hooks callers none
+  byte scan hits: ['dword .data 0x10064ecc', 'dword .data 0x10064ed0']; PE entry point 0x100430fe
+    0x10042505  ret 
+=== golf_clean.exe 004a682f _WinMainCRTStartup size 253 verdict none hooks callers none
+  byte scan hits: none; PE entry point 0x004a682f = THIS FUNCTION
+    0x004a682f  push ebp
+    0x004a6830  mov ebp, esp
+    0x004a6832  push -1
+    0x004a6834  push 0x4bc468
+    0x004a6839  push 0x4a8f7c
+    0x004a683e  mov eax, dword ptr fs:[0]
+    0x004a6844  push eax
+    0x004a6845  mov dword ptr fs:[0], esp
+    0x004a684c  sub esp, 0x58
+    0x004a684f  push ebx
+    0x004a6850  push esi
+    0x004a6851  push edi
+    0x004a6852  mov dword ptr [ebp - 0x18], esp

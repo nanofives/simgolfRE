@@ -1,0 +1,7 @@
+counts {'fn_rows': 5222, 'globals_rows': 1091, 'withdrawn_rows': 15, 'fn_addrs': 5222, 'global_addrs': 1091}
+differences 8
+  Terrain.dll     fn_name              1
+  golf_clean.exe  fn_name              1
+  golf_clean.exe  withdrawn_label_present 4
+  jgld.dll        fn_name              1
+  sound.dll       fn_name              1

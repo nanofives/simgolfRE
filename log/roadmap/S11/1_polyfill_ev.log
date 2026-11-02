@@ -1,0 +1,2 @@
+golf_clean.exe 0x00493000 ?scan_out_line_poly_16@@YAXHH@Z: 100.0% (41/41 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl
+golf_clean.exe 0x00493080 ?scan_out_line_poly_8@@YAXHH@Z: 100.0% (40/40 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl

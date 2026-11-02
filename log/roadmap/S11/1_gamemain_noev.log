@@ -1,0 +1,1 @@
+golf_clean.exe 0x0045baf0 _WinMain@16: 100.0% (320/320 instructions)  flags=/MT /O2 /DWIN32 /DNDEBUG /D_WINDOWS /GR- /Zl

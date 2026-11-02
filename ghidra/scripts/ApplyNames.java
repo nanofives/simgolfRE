@@ -4,7 +4,9 @@
 // (module addr name type evidence) label data addresses whose primary symbol is a default one. Script arg: the
 // re/names directory; optional second arg `overwrite` also replaces USER_DEFINED names that differ (to correct
 // names this script applied earlier; IMPORTED names always stay). Rows of re/names/withdrawn.tsv (module addr
-// reason) reset a function to its default FUN_ name. Prints one line per change and a summary.
+// reason) reset a function to its default FUN_ name; a withdrawn row whose reason starts `label <name>` removes that
+// USER_DEFINED label at the address (UNLABEL, counted in reset) unless a globals row names it again (S11.2).
+// Prints one line per change and a summary.
 // A non-function LABEL with the new name already at the entry (FID / analysis labels such as __lockexit 0x004a51cf)
 // made setNameAndNamespace throw DuplicateNameException after the earlier renames were saved (merge I16); that label is
 // now removed and the rename retried (DUPLABEL line); any other duplicate is reported (DUPFAIL) and the row skipped.
@@ -31,8 +33,18 @@ public class ApplyNames extends GhidraScript {
 		java.util.Arrays.sort(files);
 		// a withdrawn address that a names file names again (new evidence) is renamed, not reset
 		java.util.Set<String> named = new java.util.HashSet<>();
+		java.util.Set<String> globalNamed = new java.util.HashSet<>();
 		for (File f : files) {
-			if (f.getName().endsWith("_globals.tsv") || f.getName().equals("withdrawn.tsv")) {
+			if (f.getName().endsWith("_globals.tsv")) {
+				for (String l : Files.readAllLines(f.toPath())) {
+					String[] c = l.split("\t");
+					if (c.length >= 3 && c[0].equals(prog)) {
+						globalNamed.add(c[1].toLowerCase() + "|" + SymbolUtilities.replaceInvalidChars(c[2], true));
+					}
+				}
+				continue;
+			}
+			if (f.getName().equals("withdrawn.tsv")) {
 				continue;
 			}
 			for (String l : Files.readAllLines(f.toPath())) {
@@ -71,6 +83,24 @@ public class ApplyNames extends GhidraScript {
 					continue;
 				}
 				Function fn = getFunctionAt(addr);
+				if (withdrawn && c[2].startsWith("label ")) {
+					// `label <name> withdrawn ...` (stream G1, 2026-10-18): remove that USER_DEFINED label at the address
+					// unless a globals row puts the same name there again. Before S11.2 these rows were skipped (no
+					// function at the address), so the four G1 labels stayed in the master.
+					String wname = SymbolUtilities.replaceInvalidChars(c[2].split(" ")[1], true);
+					if (globalNamed.contains(c[1].toLowerCase() + "|" + wname)) {
+						continue;
+					}
+					for (Symbol s : st.getSymbols(addr)) {
+						if (s.getSymbolType() == SymbolType.LABEL && s.getSource() == SourceType.USER_DEFINED
+								&& s.getName().equals(wname)) {
+							s.delete();
+							println("UNLABEL " + addr + " " + wname);
+							reset++;
+						}
+					}
+					continue;
+				}
 				if (withdrawn) {
 					if (named.contains(c[1].toLowerCase())) {
 						continue;
@@ -88,7 +118,15 @@ public class ApplyNames extends GhidraScript {
 					continue;
 				}
 				SourceType src = fn.getSymbol().getSource();
-				if (fn.getName(true).equals(c[2])) {
+				// The name the rename below would give: scope `<` `>` `*` -> `(` `)` `P`, invalid characters of the last part
+				// replaced. Comparing only the raw row text re-renamed rows such as `std::list<Tile*>::list` or `operator new`
+				// (Terrain.dll, 32 rows) to the same name on every run (S11.2).
+				int msep = c[2].lastIndexOf("::");
+				String mapped = msep > 0
+						? c[2].substring(0, msep).replace("<", "(").replace(">", ")").replace("*", "P") + "::"
+								+ SymbolUtilities.replaceInvalidChars(c[2].substring(msep + 2), true)
+						: SymbolUtilities.replaceInvalidChars(c[2], true);
+				if (fn.getName(true).equals(c[2]) || fn.getName(true).equals(mapped)) {
 					// Already the name (any source). Renaming to the same name and namespace is a no-op that keeps an
 					// ANALYSIS source (the demangled exe exports 0x4490d0..0x449150), so it was reported every run.
 					kept++;

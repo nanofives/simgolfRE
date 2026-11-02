@@ -1,0 +1,13 @@
+counts {'fn_rows': 5223, 'globals_rows': 1091, 'withdrawn_rows': 18, 'fn_addrs': 5223, 'global_addrs': 1091}
+differences 9
+  Terrain.dll     fn_name              1
+  golf_clean.exe  fn_missing           1
+  golf_clean.exe  fn_name              2
+  golf_clean.exe  global_name          1
+  golf_clean.exe  withdrawn_label_present 1
+  jgld.dll        fn_name              1
+  jgld.dll        withdrawn_named      1
+  sound.dll       fn_name              1
+
+withdrawn target 10001780 get_graphsy_object_ptr
+expected {'fn_name': 5, 'global_name': 1, 'withdrawn_named': 1, 'fn_missing': 1, 'withdrawn_label_present': 1} got {'withdrawn_named': 1, 'fn_missing': 1, 'fn_name': 5, 'withdrawn_label_present': 1, 'global_name': 1} RED

@@ -1,5 +1,5 @@
 # merge queue, first = next integrator (orchestrator-owned)
-I15 MERGED 37e58e96 (S3 wave 6); S10 MERGED; I18 MERGED a5419a66 (S9); P1 c7412150; I19 MERGED f2dff003 (S3 wave 7); I20 MERGED 2291a342 (S7 wave 4 + S7.13); P2 2733b4e5 (gditext temp dirs); I21 MERGED (S3 wave 8 + fix layers w8_fix_i21 / i21b); I22 MERGED (S3 wave 9)
-RUNNING: I23 S11 wave 1 (log/roadmap/S11/MERGE.md, trackers / names only, orchestrator applies after the I22 commit)
+I15 MERGED 37e58e96 (S3 wave 6); S10 MERGED; I18 MERGED a5419a66 (S9); P1 c7412150; I19 MERGED f2dff003 (S3 wave 7); I20 MERGED 2291a342 (S7 wave 4 + S7.13); P2 2733b4e5 (gditext temp dirs); I21 MERGED (S3 wave 8 + fix layers w8_fix_i21 / i21b); I22 MERGED e9f59779 (S3 wave 9); I23 MERGED (S11 wave 1)
+NEXT: I24 S3 wave 10 (when the S3 lead reports DONE)
 QUEUED after S3 wave 10 merges: I25 S11 wave 2 (log/roadmap/S11/MERGE_w2.md: re-run 4_assemble.py --check-only on the post-wave-10 tree, re-pin goldens through a GREEN oracle, full suites)
-QUEUED (not an integrator): P3 bimodal memory growth investigation (log/roadmap/P3/BRIEF.md, G21 b), spawn after I22 frees the lock
+RUNNING (not an integrator): P3 bimodal memory growth investigation, child cmvykf9b (log/roadmap/P3/BRIEF.md, G21 b)

@@ -1,0 +1,4 @@
+strcat.obj section 1 .text: _strcpy at +0x0, span 0xf0 bytes, relocations in span: 0
+entry 7 bytes: lib 578b7c2408eb6a sound.dll 578b7c2408eb6a equal=True
+strcpy's jump: 0x1004a015 jmp 0x1004a081; branch targets outside the span: []
+rows 15/15 equal -> GREEN; wrote log\roadmap\S11\1_strcpy_lib.csv

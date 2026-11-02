@@ -1,0 +1,9 @@
+module	addr	file	expected	master_name	master_source	category	detail
+Terrain.dll	0x10019b80	smsg_terrain_lib.tsv	_DllMainCRTStartup	entry	IMPORTED	fn_name	
+golf_clean.exe	0x004a682f	smsg_exe_lib.tsv	_WinMainCRTStartup	entry	IMPORTED	fn_name	
+jgld.dll	0x10082770	smsg_jgld_lib.tsv	_DllMainCRTStartup	entry	IMPORTED	fn_name	
+sound.dll	0x100430fe	smsg_sound_lib.tsv	__DllMainCRTStartup	entry	IMPORTED	fn_name	
+golf_clean.exe	0x0059d91c	withdrawn.tsv	(no label gTextBuffer2Index)	gTextBuffer2Index	USER_DEFINED	withdrawn_label_present	primary
+golf_clean.exe	0x0056d1d8	withdrawn.tsv	(no label g_animals)	g_animals	USER_DEFINED	withdrawn_label_present	primary
+golf_clean.exe	0x00578372	withdrawn.tsv	(no label g_typeAttr)	g_typeAttr	USER_DEFINED	withdrawn_label_present	primary
+golf_clean.exe	0x004e6d70	withdrawn.tsv	(no label g_recordOccupancy)	g_recordOccupancy	USER_DEFINED	withdrawn_label_present	primary
