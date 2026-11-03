@@ -23,8 +23,12 @@ CLOCKRUN, FRAME, DELIVER, POLL, MSG, KEYSTATE, KBSTATE, CURSOR, HANDLER, TAKE, S
 TYPE_NAMES = {CLOCKRUN: "CLOCKRUN", FRAME: "FRAME", DELIVER: "DELIVER", POLL: "POLL", MSG: "MSG", KEYSTATE: "KEYSTATE",
               KBSTATE: "KBSTATE", CURSOR: "CURSOR", HANDLER: "HANDLER", TAKE: "TAKE", SLEEP: "SLEEP", MAPVK: "MAPVK",
               TIMERSET: "TIMERSET", END: "END"}
-DELIVER_KINDS = {1: "cursor", 2: "vkey", 3: "post", 4: "w32", 5: "timer", 6: "note"}
-DELIVER_FMT = {1: "<Iii", 2: "<III", 3: "<IIIIII", 4: "<III", 5: "<IIII", 6: "<I"}
+DELIVER_KINDS = {1: "cursor", 2: "vkey", 3: "post", 4: "w32", 5: "timer", 6: "note", 7: "call"}
+DELIVER_FMT = {1: "<Iii", 2: "<III", 3: "<IIIIII", 4: "<III", 5: "<IIII", 6: "<I", 7: "<IIIII"}
+# DELIVER call (kind 7, roadmap S3.30, U-0681): a function of golf_clean.exe the harness called ON THE MAIN THREAD from inside
+# a clock call (log/c3/s36a_agent_ext.js action `call`: cdecl, int arguments, result discarded): pos, addr (its VA), argc
+# (0..CALL_MAX_ARGS), then CALL_MAX_ARGS argument slots (those past argc are 0)
+CALL_MAX_ARGS = 2
 # FRAME snapshot: (va, length) in order; 0x60 bytes
 SNAPSHOT = [(0x00822D58, 0x40), (0x00822B98, 4), (0x00822B9C, 4), (0x0083821C, 4), (0x00838208, 4), (0x0083AB9C, 4),
             (0x0059E7B8, 4), (0x00834170, 4), (0x00822D9C, 4)]
@@ -119,6 +123,12 @@ def decode(r: Record) -> dict:
             d.update(addr=v[1], v=v[2])
         elif r.sub == 5:
             d.update(tkind=v[1], handle=v[2], t=v[3])
+        elif r.sub == 7:
+            if v[2] > CALL_MAX_ARGS:
+                raise TraceError(f"DELIVER/call at {r.offset:#x}: argc {v[2]} > {CALL_MAX_ARGS}")
+            if any(v[3 + k] for k in range(v[2], CALL_MAX_ARGS)):
+                raise TraceError(f"DELIVER/call at {r.offset:#x}: an argument slot past argc {v[2]} is not 0")
+            d.update(addr=v[1], argc=v[2], args=[v[3 + k] for k in range(v[2])])
         return d
     if t == POLL:
         if len(p) < 9 or len(p) != 9 + p[8]:
@@ -226,6 +236,13 @@ class Writer:
     def deliver(self, kind: str, *vals):
         k = {v: k for k, v in DELIVER_KINDS.items()}[kind]
         self.buf.write(rec(DELIVER, k, struct.pack(DELIVER_FMT[k], self.n, *vals)))
+
+    def call(self, addr: int, *args: int):
+        """DELIVER call: the harness called `addr` with `args` (at most CALL_MAX_ARGS) at the current position."""
+        if len(args) > CALL_MAX_ARGS:
+            raise TraceError(f"call with {len(args)} arguments")
+        slots = [a & 0xFFFFFFFF for a in args] + [0] * (CALL_MAX_ARGS - len(args))
+        self.buf.write(rec(DELIVER, 7, struct.pack(DELIVER_FMT[7], self.n, addr, len(args), *slots)))
 
     def poll(self, checkpoint: str | None = None, final=False):
         nb = (checkpoint or "").encode("latin-1")
@@ -487,6 +504,10 @@ def replay_plan(tr: Trace) -> tuple[bytes, list[dict], list[str]]:
                         a["hwnd"] = f["hwnd"]
                 elif f["kind"] == "w32":
                     a.update(addr=f["addr"], v=f["v"])
+                elif f["kind"] == "call":
+                    # log/c3/s36a_agent_ext.js's action: a0 / a1 (signed ints), argc kept for the recorder's DELIVER
+                    args = [x - (1 << 32) if x & 0x80000000 else x for x in f["args"]]
+                    a.update(addr=f["addr"], argc=f["argc"], **{f"a{k}": x for k, x in enumerate(args)})
                 deliveries.append({"pos": pos, "k": "act", "a": a, "cls": f.get("cls", -1)})
         elif r.type == POLL:
             deliveries.append({"pos": f["pos"], "k": "poll", "t": (last_tgt + tr.step) & 0xFFFFFFFF})

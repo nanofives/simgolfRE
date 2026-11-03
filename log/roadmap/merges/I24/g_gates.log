@@ -1,0 +1,25 @@
+== queue start 2026-11-02 16:50:34
+[build] x64 rc=0 [build] done 16:55:15  / w32 rc=0
+[1/18] static rc=0 369 s :: 811 passed, 2 skipped, 46 deselected in 367.59s (0:06:07)
+== resume after reboot 2026-11-02 17:05:56
+[1/17] segs_x64 rc=0 104 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 103.0}
+[2/17] segs_win32 rc=0 134 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 134.2}
+[3/17] segs_ft_x64 rc=0 102 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 100.7}
+[4/17] boot_x64 rc=0 185 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[5/17] boot_win32 rc=0 252 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[6/17] boot_ft_x64 rc=0 177 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[7/17] chain rc=0 502 s :: {"backend": "x64", "counts": {"PASS": 342}, "breaks": {}, "wall_s": 501.4}
+[8/17] defects rc=0 1751 s :: -> s3r\ledger\divergences.tsv
+[9/17] live_equiv_x64 rc=0 666 s :: {"counts": {"PASS": 69, "NO_FRAMES": 2}}
+[10/17] live_equiv_win32 rc=0 902 s :: {"counts": {"PASS": 69, "NO_FRAMES": 2}}
+[11/17] app_replay_x64 rc=0 4 s :: saveload                 PASS  records 266/266 code 0 first None (0.9 s)
+[12/17] app_replay_win32 rc=0 5 s :: saveload                 PASS  records 266/266 code 0 first None (1.0 s)
+[13/17] gfx_check rc=0 0 s ::   body	drawWindow.frame	text
+[14/17] census rc=0 1812 s :: {"rows": 698, "counts": {"PASS": 127, "FAIL": 571}}
+[15/17] census_split rc=0 2535 s :: {"rows": 698, "counts": {"PASS": 127, "FAIL": 571}}
+[16/17] census_auto rc=0 1121 s :: {"rows": 698, "counts": {"PASS": 697, "FAIL": 1}}
+[17/17] terrain rc=0 1173 s :: {"PASS": 527, "NOT_MEASURED": 75}
+[gates done] 2026-11-02 20:16:39
+== suite_x64 start 2026-11-02 20:16:42
+== suite_win32 start 2026-11-03 00:29:29
+[queue done] 2026-11-03 03:26:01

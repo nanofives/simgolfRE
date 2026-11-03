@@ -1,0 +1,4 @@
+== app_replay_win32 start 2026-11-02 16:48:25
+hole                     PASS  records 340/340 code 0 first None (1.4 s)
+report                   PASS  records 205/205 code 0 first None (0.8 s)
+saveload                 PASS  records 266/266 code 0 first None (1.0 s)

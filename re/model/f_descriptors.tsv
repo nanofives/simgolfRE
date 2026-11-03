@@ -1,4 +1,5 @@
 symbol	file_offset	size	element_type	count	stride	has_pointers	kind	readers	va	access	confidence	clusters	note
+f_imm_473ab9	0x73ab9	0x4	ptr	1	4	1	code_immediate	Surface_ctor@473ab0	0x00473ab9	ro	high	0	the imm32 of Surface_ctor's `mov dword ptr [eax], imm32` at 0x00473ab7: the vtable word every Surface (SpriteRef) gets at +0 (S3.32: the boot's static Surface constructions, tick_boot_surfaces.inc)
 f_iat_4ba024	0xba024	0xc	ptr	3	4	1	import_address_table	MappedFile::open@492dd0;netService@497fc0;netSendMessages@499140	0x004ba024	ro	high	0	
 f_iat_4ba090	0xba090	0x5c	ptr	23	4	1	import_address_table	loadTopScores@40ad60;mainLoop@40f5c0;fileExists@4378a0;listMatchingFiles@43d2a0;initTerrain@449790;showThemePackSelect@4725b0;loadImage@475840;openImageAsset@478f50;+14	0x004ba090	ro	high	1	
 f_iat_4ba1a4	0xba1a4	0xc0	ptr	48	4	1	import_address_table	S3List_add@401d10;S3List_add2@402280;mainLoop@40f5c0;capsLockOff@4321d0;playAudioFile@43cce0;showCreditsScreen@44b9c0;showHoleStatsScreen@453330;gameMain@45baf0;+63	0x004ba1a4	ro	high	2	

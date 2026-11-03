@@ -1,0 +1,9 @@
+== census_3 start 2026-11-02 16:05:53
+[1/7] cov_a_quit FAIL=5 PASS=10 (10.4 s)
+[2/7] cov_a_quit_title PASS=9 (3.1 s)
+[3/7] cov_b_build FAIL=7 (37.2 s)
+[4/7] cov_b_career FAIL=6 (15.9 s)
+[5/7] cov_b_career_types FAIL=12 (36.5 s)
+[6/7] cov_b_decor FAIL=5 (38.7 s)
+[7/7] cov_b_holes18 FAIL=5 PASS=1 (42.0 s)
+{"rows": 60, "counts": {"PASS": 20, "FAIL": 40}}

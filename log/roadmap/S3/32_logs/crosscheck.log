@@ -1,0 +1,3 @@
+constructed elements 60773; segment-constant 0x004ba2d8 words 60773
+constructed elements whose +0 is 0x004ba2d8 in all 205 images: 60773; other: 0 (values at constructed +0 words: {'0x004ba2d8': 60773})
+0x004ba2d8 words no static initializer stores: 0

@@ -1,13 +1,14 @@
 # S3 status (in-game frame) — lead session cmvy4ggg53y79p71hei2lzzug (claude2, wave 10; earlier leads cmvu18cc, cmvqfhvak, cmvmns8s)
 
-steps: 38 total: 35 accepted, 2 running (S3.30, S3.31), 1 planned (S3.32); wave 10 = close the section
-live workers: S3.30 cmvy4p2w (G24 golfer_events trace kind, opus high, game slot), S3.31 cmvy4p5w (overlay line residue, opus high)
-game slots held: 1 (S3.30, instance s3_30); heavy runs one at a time via w8_lock.py (W10_COMMON.md)
-base: I22's port tree = log/roadmap/S3/w10_base.py --dst S3_<k> (d075dc56 + wave 9 rows 4-5 + G21 test edit; verified 0 differ vs port/build/I22)
-targets (I22 split census): FAIL cov_k3_camera y_inj3 847 (S3.32), cov_a_build brush_465 3 + cov_a_keys k_dlg_R 1 (S3.31); NOT_RUN golfer_events 10 (S3.30)
-S3.32 (y_inj3, U-1834 option b; orchestrator chose a on 2026-10-31) starts when a worker closes (cap 2)
-last event: 2026-11-01 wave 10 planned, S3.30 + S3.31 spawned
-next: judge S3.30 / S3.31, spawn S3.32, MERGE_w10.md + files_w10.txt
+steps: 38 total: 38 accepted (S3.30, S3.31, S3.32 = wave 10); no worker alive
+live workers: none
+game slots held: 0 (instance s3_30 idle, kept)
+base: wave 10 merges on a2f1f3c4 (= w10_base.py tree); stack w10_assemble.py = base + 31 + 30 + 32 -> port/build/S3_W10
+gate chain: log/roadmap/S3/w10_chain.sh (detached, started 12:54) -> w10_out/g_gates.log, chain.log; builds, tests, segs/boot x64/w32/ft, equiv x64/w32 --jobs 3, census 10 batches + full
+expected: split 698 rows 697 PASS / 1 FAIL (k_dlg_R held, G27, U-1978) / 0 NOT_RUN
+decision: S3.32 option (b) ON by default, orchestrator ruling 2026-11-02 (reverses its own 2026-10-31 option a)
+last event: 2026-11-02 12:54 S3.32 accepted, wave 10 stack assembled, gate chain started
+next: read w10_out, write MERGE_w10.md + files_w10.txt, report DONE
 
 ## Log
 - 2026-10-24: lead started. Steps planned from census causes: terrain not drawn 520 (S3.1 + S3.2), Surface_blit3 168 (S3.6),
@@ -182,3 +183,14 @@ next: judge S3.30 / S3.31, spawn S3.32, MERGE_w10.md + files_w10.txt
 2026-11-01 (after reboot): fresh lead cmvy4ggg. Wave 10 planned (S3.30 G24 golfer_events, S3.31 overlay residue, S3.32 y_inj3 option b). w10_base.py (= I22 port tree, verified 0 differ) and W10_COMMON.md written. S3.30 cmvy4p2w and S3.31 cmvy4p5w spawned on claude2 opus high.
 2026-11-01: model check: both workers' transcripts (under .claude-account3: the folder flag places the children there) show claude-opus-5-5 only.
 2026-11-01: orchestrator FYI: S11 (I23) resolves U-1351 and applies the D1 P port-key renames (g_animalRecords / g_recordBanks) after wave 10; wave 10 renames / moves no symbol (rule added to W10_COMMON.md).
+2026-11-01: I22 committed e9f59779, I23 a2f1f3c4 = wave 10 base; port/ equals the w10_base tree (only test_terrain_s3_28.py line ends differ). S3.30's corpus trace fails tests/test_trace_format_s1.py until its trace_format change merges: in MERGE_w10's gate list.
+2026-11-02 02:28: S3.30's live_equiv_x64 at --jobs 1 held the lock 70 min (27/71). Lead edited 30_gates.sh to --jobs 3, killed its own pid 18796 (log kept as 30_work/g_live_equiv_x64.jobs1_killed.log; 27 PASS before the kill), and re-queued the step detached through 30_chain.sh. Rule in W10_COMMON.md: equivalence runs use --jobs 3.
+2026-11-02: S3.31 ACCEPTED (lead recomputed from 31_out/census_split.tsv.d: 698 rows raw 126/562/10, split 686/2/10, only brush_465 moved 11 FAIL -> 8 PASS, 0 lost / 0 worse; boot x64/w32 = I22 + golfer_events FAIL (S3.30's corpus trace), segs 205 both; test_terrain_overlay 56 + 6 skipped x64 / Win32; controls 12 / 13 RED, 12 blind on old unit scenes U-1979). k_dlg_R 1 px held as finding U-1978. Closed. S3.32 cmvyzzj9 spawned (claude2 opus high).
+2026-11-02: orchestrator: no host-GL overlay work (G13). k_dlg_R filed as G27 for Mariano, recommendation (a): S3 closes with the row held, reason U-1978; MERGE_w10 carries a 'held:' line. P3 asked to keep one lock entry.
+2026-11-02: S3.30 ACCEPTED (lead read 30_work: boot x64/w32 71 rows 67/2/2 = I22 + golfer_events PASS; segs 205 both, 0 differ; equiv_x64 69 + 2 NO_FRAMES, 0 differ, golfer_events PASS (30_live_equiv.py, one process per scenario; it also cancelled the lead's re-queued --jobs 3 run before it ran); census golfer_events 10 rows split PASS (raw 1 PASS, 9 FAIL 4..9 px terrain); test_trace_call 12 x64 / 12 Win32; test_trace_format_s1 7; controls 20/21/22 FAIL at record 2244 x64 + Win32). live.cpp / live.h edits accepted into its row. Win32 equiv runs in the wave 10 gate (--jobs 3). Game slot returned. Closed.
+2026-11-02 08:40: S3.32 cmvyzzj9 stalled since 05:52 (no 32_gates.sh, no notes, no process); nudged, no reply in 5 min, closed. Fresh S3.32 cmvz6mzv spawned (claude2 opus high), continuing from 32_measure.py / 32_gen.py / 32_logs (crosscheck: 60,773 constructed elements, all 0x004ba2d8 at +0 in 205 images) and tree S3_32; told to write scripts in small appends.
+2026-11-02: S3.32 ACCEPTED (lead recomputed from 32_work/census_split.tsv.d: 698 rows raw 126/562/10, split 686/2/10, only y_inj3 moved FAIL 859 -> PASS 12; segs 205 x64/w32, boot = I22 + golfer_events FAIL (no S3.30 layer in its tree); test_boot_surfaces 4 x64/w32; static 6; control tick.frame 14 RED). Default ON reverses option (a): to the orchestrator. Closed. Wave 10 stack S3_W10 assembled (31, 30, 32 all applied); gate chain w10_chain.sh started detached 12:54.
+2026-11-02: orchestrator RULING: S3.32 option (b) ON by default (U-1834; option (a) was the orchestrator's own 2026-10-31 choice, reversed on new evidence). 32_edits.py stays in wave 10; MERGE_w10 cites the ruling. Report DONE with S3_W10 numbers, merge as I24.
+2026-11-02: Mariano G27 = (a): S3 closes with k_dlg_R held (U-1978), no host-GL overlay step. G29: roadmap wraps up after S3 and S11. MERGE_w10 keeps the held: line and carries the wave 10 CLAUDE.md paragraph.
+- 2026-11-02 15:05 W10 combined gates (port/build/S3_W10, w10_out/): builds x64 / Win32, static 6, gfx_check, s1_trace 22, the three new test files x64 + Win32 pass; segments 205 / 205 x64 / Win32 / freetype with 0 rows (status, digest) differing from I22; boot 67 / 2 / 2 on x64 / Win32 / freetype = I22's 70 rows unchanged + golfer_events PASS 2522 / 2522. Live equivalence and the census still running.
+- 2026-11-02 17:00 W10 combined gates DONE on port/build/S3_W10 (w10_out/): live equivalence 69 + 2 x64 and Win32 (0 rows differing from I22, golfer_events PASS), chain 342 / 342, app replay 3 / 3 x64 + Win32, census raw 127 / 571 / 0 / 0 and split 697 / 1 / 0 / 0 (0 PASS lost; y_inj3 / brush_465 split PASS, golfer_events 10 / 10 split PASS; k_dlg_R held, G27 a). MERGE_w10.md + files_w10.txt written; reported S3 DONE to the orchestrator.

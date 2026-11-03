@@ -1,0 +1,11 @@
+[w8_lock] S3.30 queued at 2026-11-01 17:16:38
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 17:30:51 (waited 852 s, free commit 40.3 GB)
+[1/1] static_trace rc=0 3 s :: 28 passed in 1.28s
+[done] gates static_trace
+[w8_lock] S3.30 released at 2026-11-01 17:41:52
+[w8_lock] S3.30 queued at 2026-11-01 17:41:52
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 18:27:36 (waited 2744 s, free commit 42.2 GB)
+[1/1] validate_all rc=0 72 s :: 71 / 71 valid
+[done] gates validate_all
+[w8_lock] S3.30 released at 2026-11-01 18:28:48
+[w8_lock] S3.30 queued at 2026-11-01 18:28:49

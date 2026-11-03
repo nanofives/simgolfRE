@@ -1,0 +1,239 @@
+[w8_lock] S3.30 queued at 2026-11-01 16:08:49
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=36.5 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=36.1 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=35.5 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=35.4 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=35.7 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=36.1 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=35.9 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=36.3 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=['S3.31'] free_commit=36.2 GB
+[w8_lock] S3.30 waiting: lock='free' ahead=['S3.31', 'I22'] free_commit=36.5 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.6 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.4 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.6 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.3 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.2 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.7 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.8 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.9 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.7 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.8 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.2 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.7 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.9 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.3 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.7 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.1 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.0 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.5 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.6 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=36.7 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.8 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.6 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.3 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.8 GB
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 16:15:30 (waited 401 s, free commit 37.1 GB)
+[test-slot] all 6 test slots busy, waiting (0s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18696 since 11-01 16:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-S07: bash -c cmd //c "set MASHED_NO_DEPLOY=1&& mashedmod\build.bat"
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (30s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (60s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (90s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (120s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (150s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (180s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (210s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (240s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (270s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (300s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (330s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (360s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (390s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (420s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (450s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (480s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (510s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (540s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (570s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (600s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (630s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (660s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (690s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (720s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (750s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] all 6 test slots busy, waiting (780s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 20256 since 11-01 14:50 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-WSB-PORT-NARROW-TAIL: bash -c py -3.12 verify/d4wsb_portnarrowtail_20261101/drive_nt.py shadow 00574920 005749b0 00574a20 00574ac0 0057c1b0 0057c220 0057c270 0057
+  slot 2: pid 18748 since 11-01 16:15 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c bash log/roadmap/S11/4_gates.sh build_x64 build_w32
+  slot 3: pid 19948 since 11-01 16:11 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T13: bash D:/MashedWT/MATCH-TOPDOWN-T13_data/gates.sh
+  slot 4: pid 24032 since 11-01 15:44 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_a --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 25404 since 11-01 15:45 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --label D4-DC-RFX-CORE -- bash -c 'A4_OUT=D:/MashedWT/D4-DC-RFX-CORE
+[test-slot] acquired slot 4/6 after 810s
+  [off] checkpoint menu T=3434 tgt=3434 date=0x00000000 seed=0x1f98dc65
+  [off] checkpoint sandbox T=6969 tgt=6969 date=0x00000016 seed=0xd81ce2c9
+  [off] checkpoint hole_open T=20806 tgt=20806 date=0x000000a7 seed=0x3d6b9a4f
+  [off] checkpoint season_0050 T=71407 tgt=71407 date=0x000002a6 seed=0xa92e2573
+  [off] checkpoint season_0100 T=122008 tgt=122008 date=0x000004a5 seed=0xcbe6444f
+  [off] checkpoint season_0150 T=172609 tgt=172609 date=0x000006a0 seed=0x6441729e
+  [off] checkpoint season_0200 T=223210 tgt=223210 date=0x000008a0 seed=0x10077cc3
+  [off] checkpoint golfer_panel T=224927 tgt=224927 date=0x000008b2 seed=0x0ee705da
+  [off] checkpoint landmark T=233714 tgt=233714 date=0x0000090c seed=0x9787141c
+  [off] checkpoint after_0020 T=254015 tgt=254015 date=0x000009d9 seed=0x8c77f9f9
+run golfer_events/s330_rec2: OK polls=2516 checkpoints=10
+record golfer_events/s330_rec2: ..\..\..\log\roadmap\S3\30_work\golfer_events.rec2.trace 3167288 bytes sha 91e7760d84e19ba1 validate OK vs reference: SAME (10 checkpoints)
+[w8_lock] S3.30 released at 2026-11-01 16:30:29

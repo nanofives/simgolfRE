@@ -57,7 +57,7 @@ record:    u8 type, u8 sub, u16 payload length, payload
 |---|---|---|---|---|
 | 0x01 | CLOCKRUN | kind 1 tgt, 2 qpc | u32 first, u32 count, u32 ra, u32 slot, u64 v0 | `count` consecutive clock calls (ordinals first..first+count-1) from one call site and slot; call k returns v0 + k*step (tgt) or v0 + k*qstep (qpc). A run breaks at any other record, another site, another slot or a value off the step. |
 | 0x02 | FRAME | 0 | u32 frame, u32 pos, u32 t, 96 bytes snapshot | mainLoop frame head: written right after the timeGetTime call at 0x0040fc29 (ra 0x0040fc2f), `t` its value. Snapshot (in this order): g_rootInput 0x00822d58 (0x40), key code 0x00822b98, key 0x00822b9c, char 0x0083821c, 0x00838208, g_ui83ab9c 0x0083ab9c (4 bytes), g_flags 0x0059e7b8, g_date 0x00834170, g_rng 0x00822d9c. |
-| 0x03 | DELIVER | kind | u32 pos, then by kind: 1 cursor `i32 x, i32 y`; 2 vkey `u32 vk, u32 state` (0 pass-through, 1 forced up, 2 forced down); 3 post `u32 cls, u32 hwnd, u32 msg, u32 wp, u32 lp` (cls 0 NULL hwnd = the thread queue, 1 the game window, 2 explicit hwnd); 4 w32 `u32 addr, u32 value`; 5 timer `u32 tkind (1 window, 2 mm), u32 handle, u32 t`; 6 note (no fields) | what the harness did: SimGolfShim_SetVirtualCursor, SimGolfShim_SetVirtualKey, PostMessageW from the main thread, a fixture's memory write, a virtual timer firing (window timer: the TIMERPROC called as (hwnd, WM_TIMER, id, t); mm timer: the callback called as (id, 0, dwUser, 0, 0)). |
+| 0x03 | DELIVER | kind | u32 pos, then by kind: 1 cursor `i32 x, i32 y`; 2 vkey `u32 vk, u32 state` (0 pass-through, 1 forced up, 2 forced down); 3 post `u32 cls, u32 hwnd, u32 msg, u32 wp, u32 lp` (cls 0 NULL hwnd = the thread queue, 1 the game window, 2 explicit hwnd); 4 w32 `u32 addr, u32 value`; 5 timer `u32 tkind (1 window, 2 mm), u32 handle, u32 t`; 6 note (no fields); 7 call `u32 addr, u32 argc, u32 a0, u32 a1` (argc <= 2, slots past argc 0) | what the harness did: SimGolfShim_SetVirtualCursor, SimGolfShim_SetVirtualKey, PostMessageW from the main thread, a fixture's memory write, a virtual timer firing (window timer: the TIMERPROC called as (hwnd, WM_TIMER, id, t); mm timer: the callback called as (id, 0, dwUser, 0, 0)), an injected call (kind 7, roadmap S3.30: the cdecl golf_clean.exe function at `addr` called on the main thread with the int arguments, its result discarded; log/c3/s36a_agent_ext.js action `call`, golfer_events' landmark notice). The record is written before the call runs, so every record the call makes follows it. |
 | 0x04 | POLL | bit0 checkpoint, bit1 final | u32 pos, u32 index, u8 len, name | a poll of the driver (every 100 virtual ms); with bit0 the checkpoint dump taken there and its name. Exactly one poll has bit1: the last, after which the trace ends. |
 | 0x05 | MSG | 1 = wp is a timer handle | u32 pos, u32 msg, u32 wp, u32 lp | a message entering jgld's window procedure 0x100692b0 on the main thread, in dispatch order; only input classes: 0x100..0x109, 0x113, 0x200..0x20e, 0x400..0xbfff (others, e.g. registered 0xc000+ messages, are counted in the sidecar only) |
 | 0x06 | KEYSTATE | 1 GetKeyState, 2 GetAsyncKeyState | u32 pos, u32 ra, u32 vk, u32 result (low 16 bits) | a key-state read through golf_clean.exe's import (after the shim's virtual-key overlay) |
@@ -88,10 +88,17 @@ Readers must reject an unknown type (version 1 has no skippable records).
 call by call, the recorded values (a call whose exe return address differs from the recorded one is counted as a
 mismatch); at each recorded delivery position, the recorded deliveries in recorded order (cursor, virtual keys, posts to
 the game window found by class `JackalClass`, memory writes, virtual timer deliveries to the timer registered under that
-handle ordinal); polls and checkpoint dumps at the recorded positions. The scenario script, its schedule and
+handle ordinal, injected calls of the same function with the same arguments); polls and checkpoint dumps at the recorded
+positions. The scenario script, its schedule and
 scenario_det.js's virtual clock are not used on the main thread (its timeGetTime counter stays 0). The replay writes its
 own trace; sufficiency is shown when that trace is byte-identical to the source and the checkpoints equal the pinned
 reference (results in re/analysis/sim/time_model.md section 9).
+
+The port (port/src/sim/tick.cpp, TraceInput) applies a DELIVER w32 and a DELIVER call at the same point of its run: in the
+frame they belong to, in trace order, before the first dispatch, modal cursor read or frame wait that comes after their
+position (inside the frame-head clock call: before the frame body). A call runs the registered port function of that
+address (tick.cpp kInjectedCalls; an address not in the table stops the run with MissingResource); the live core records it
+again as a DELIVER call (LiveWriteLog::called).
 
 Conditions a replay shares with the record (outside the trace): the install files and shim build, the audio stand-in
 (C3FT_AUDIO=none), the b5 stack seed, the scenario family's restore of saves / themes before boot, and the host's

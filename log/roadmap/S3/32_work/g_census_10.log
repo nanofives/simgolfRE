@@ -1,0 +1,9 @@
+== census_10 start 2026-11-02 12:45:42
+[1/7] golfer_stories FAIL=5 PASS=1 (19.1 s)
+[2/7] mood5_fixture FAIL=3 PASS=1 (5.7 s)
+[3/7] sandbox_basic FAIL=9 PASS=1 (5.5 s)
+[4/7] stories9_fixture FAIL=3 PASS=1 (8.5 s)
+[5/7] stories_fixture FAIL=3 PASS=1 (6.3 s)
+[6/7] ui_tour FAIL=8 PASS=2 (32.3 s)
+[7/7] ui_tour_v FAIL=8 PASS=2 (29.2 s)
+{"rows": 48, "counts": {"PASS": 9, "FAIL": 39}}

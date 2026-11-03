@@ -29,3 +29,6 @@
 2026-10-31 04:03:02	lock taken by hand: 'S3.24 gate boot_x64 04:02'	while S3.26 waited via w8_lock.py
 2026-10-31 04:04:13	lock taken by hand: 'S3.24 gate boot_x64 04:02'	while S3.23 waited via w8_lock.py
 2026-10-31 04:14:05	lock taken by hand: 'S3.24 gate streams (glreplay of the dumped game calls) 04:13'	while S3.26 waited via w8_lock.py
+2026-11-01 18:40:58	lock taken by hand: '(no owner.txt)'	while S3.30 waited via w8_lock.py
+2026-11-01 18:40:58	lock taken by hand: '(no owner.txt)'	while I22 waited via w8_lock.py
+2026-11-02 05:01:23	lock taken by hand: '(no owner.txt)'	while S3.31 waited via w8_lock.py

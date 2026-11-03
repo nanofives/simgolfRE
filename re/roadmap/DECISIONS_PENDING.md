@@ -5,16 +5,20 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Open
 
-- **G26 (S11, U-2000), 2026-11-01: does an SMSG function whose whole body is ONE inline `__asm` block inside a compiled C
-  function count as C4 match evidence?** fillSpanDown 0x00493000 / fillSpanUp 0x00493080 match 100% (41/41, 40/40) from SMSG's
-  source: the compiler makes the prologue / epilogue, the asm is the entire body. Round 36's rules (re/C4_PLAN.md): a naked
-  transcription is not evidence (these two rows were demoted on it), an inline block inside a compiled C body is (85 rows). Here
-  the compiled part is only the frame. Options: (a) not evidence, the rows keep needing scenario evidence (orchestrator's
-  recommendation: the asm is copied, only the frame could fail); (b) evidence under the inline-asm rule. Blocks: 2 rows of S11 wave 1
-  (held, the wave merges without them).
+(none)
 
 ## Answered
 
+- **G26, fillSpan C4 evidence (U-2000), 2026-11-02: not evidence.** An SMSG body that is one inline `__asm` block inside a compiled C
+  frame matches by construction (only the frame could fail), as round 36's naked-asm rule: fillSpanDown 0x00493000 / fillSpanUp
+  0x00493080 stay C3 held until scenario evidence (S11 wave 2 rewords their c3_hold.tsv reason).
+- **G27, S3's last FAIL row (U-1978), 2026-11-02: close S3 with cov_a_keys k_dlg_R held.** 1 px one level on a routing-map hole
+  line, antialiased-line arithmetic not determined; no host-GL overlay step (G13 stands).
+- **G28, reboot timing for the token-holder search, 2026-11-02: after S3 wave 10 merges.** The orchestrator tells Mariano when the merge
+  is committed and no heavy run is active; GlobalFlag 0x4000 (set 2026-11-01 17:25) is then active, pidlog.py starts early,
+  objcreators.py (elevated) after an hour of load, then GlobalFlag back to 0.
+- **G29, after S3 and S11, 2026-11-02: wrap up the roadmap.** No new section: the end steps of re/ROADMAP_ORCHESTRATOR.md ("The end":
+  the slow suite through one integrator, the final report per section, every child closed).
 - **G22, ASUS ArmourySocketServer after the reboot, 2026-11-01: delete the task and end the process.** It came back at logon from the surviving scheduled task \ASUS\ArmourySocketServer (the Section-handle leak, about 25 GB before); Mariano runs the elevated command the orchestrator gives (log/roadmap/LIVING-PC_memory_2026-11-01.md, after the reboot).
 - **G23, the RE track after S3, 2026-11-01: RE upkeep (new section S11).** The deferred S10 renames in port / shim keys (D1 `P` rows), the g_animalRecords / g_recordBanks symbols, ApplyNames leftovers, the last C3 rows to C4, then a triage of the open C2 rows (dead / trivial / reachable). Port-key renames wait for S3's last wave to merge.
 - **G24, golfer_events' 10 NOT_RUN checkpoints (U-0681), 2026-11-01: extend the trace schema and re-record.** A DELIVER kind for injected calls in trace_rec.js / trace_format / the port's replay; golfer_events re-recorded and judged like every other scenario (S3 wave 10).

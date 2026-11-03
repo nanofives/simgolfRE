@@ -918,10 +918,26 @@ struct TBatch {
   bool load = false;
   std::vector<Command> cmds;
 };
-// A harness memory write (DELIVER kind 4, a dword) and the clock ordinal it was made in.
+// A harness memory write (DELIVER kind 4, a dword) and the clock ordinal it was made in. Roadmap S3.30 (U-0681): or a function
+// the harness CALLED on the main thread from inside a clock call (DELIVER kind 7: va = the function's address, fn = the name the
+// port registers it under, argc / args its int arguments); both kinds apply in one trace-ordered list (TraceInput::apply).
 struct TWrite {
   uint32_t pos = 0, va = 0, value = 0;
+  bool call = false;
+  const char *fn = nullptr;  // kInjectedCalls' name of va, nullptr = an address the table does not hold
+  uint32_t argc = 0;
+  uint32_t args[2] = {0, 0};
 };
+
+// The functions a harness calls (DELIVER call), as offsets from the frame-head return address (no image address in this file),
+// and the hooks.csv name the port registers each under. golfer_events' landmark notice: log/c3/s36a_run.py sc_golfer_events
+// calls LANDMARK_NOTICE_FN (re/tools/scenario.py; hooks.csv announceLandmark, a cdecl void (golfer, story)) after the golfer
+// panel checkpoint.
+struct InjectedCall {
+  int32_t off;
+  const char *name;
+};
+constexpr InjectedCall kInjectedCalls[] = {{0x62691, "announceLandmark"}};
 
 struct TraceFrame {
   uint32_t index = 0, pos = 0, t = 0;
@@ -1096,6 +1112,20 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
       }
     } else if (type == 0x03 && sub == 4) {  // DELIVER w32: pos, addr, value
       if (!frames.empty()) frames.back().writes.push_back({rd32(q), rd32(q + 4), rd32(q + 8)});
+    } else if (type == 0x03 && sub == 7 && len >= 20) {  // DELIVER call: pos, addr, argc, a0, a1 (roadmap S3.30)
+      if (!frames.empty()) {
+        TWrite w;
+        w.pos = rd32(q);
+        w.va = rd32(q + 4);
+        w.call = true;
+        w.argc = std::min<uint32_t>(rd32(q + 8), 2);
+        w.args[0] = rd32(q + 12);
+        w.args[1] = rd32(q + 16);
+        const int32_t off = static_cast<int32_t>(w.va - frame_ra);
+        for (const InjectedCall &c : kInjectedCalls)
+          if (c.off == off) w.fn = c.name;
+        frames.back().writes.push_back(w);
+      }
     } else if (type == 0x02) {  // FRAME: frame, pos, t, snapshot
       focus_resolve();
       focus_flush();
@@ -1223,10 +1253,13 @@ class TraceInput : public InputSource {
     refused_at_ = SIZE_MAX;
     record_ = record;
     if (SG_NEGCTL(g_negctl_frame) != 5)
-      for (const TWrite &w : f.head_writes) {
-        ctx_.mem.store<uint32_t>(w.va, w.value);
-        if (write_hook) write_hook(write_arg, w.va, w.value);
-      }
+      for (const TWrite &w : f.head_writes) apply(w);
+    // negative control 22 (roadmap S3.30): the frame's injected calls run at its start, before the frame body, not at their
+    // trace position
+    if (SG_NEGCTL(g_negctl_frame) == 22)
+      for (const auto *list : {&f.head_writes, &f.writes})
+        for (const TWrite &w : *list)
+          if (w.call) run_call(w);
   }
   // H1's frame wait: the writes made in the frame's clock calls up to the first dispatch after H1's g_frameMs read (a
   // dispatch of an H2 modal); the wait itself dispatches nothing (time_model.md section 7)
@@ -1311,8 +1344,10 @@ class TraceInput : public InputSource {
     return ex;
   }
   void set_tail_idle(bool on) { tail_idle_ = on; }
-  // roadmap S7.1: told of every harness write this source applies (the trace host of the live run core records them)
+  // roadmap S7.1: told of every harness write this source applies (the trace host of the live run core records them);
+  // roadmap S3.30: and of every injected call it runs (addr, argc, a0, a1)
   void (*write_hook)(void *, uint32_t va, uint32_t value) = nullptr;
+  void (*call_hook)(void *, uint32_t addr, uint32_t argc, uint32_t a0, uint32_t a1) = nullptr;
   void *write_arg = nullptr;
   // the modal loops' cursor reads share the frame's CURSOR records with the frame body's (one read order)
   bool cursor(int32_t &x, int32_t &y) override {
@@ -1366,11 +1401,35 @@ class TraceInput : public InputSource {
   }
   void writes_before(uint32_t pos) {
     if (SG_NEGCTL(g_negctl_frame) == 5) return;  // negative control: the harness's memory writes skipped
-    while (fr_ && wnext_ < fr_->writes.size() && fr_->writes[wnext_].pos < pos) {
-      ctx_.mem.store<uint32_t>(fr_->writes[wnext_].va, fr_->writes[wnext_].value);
-      if (write_hook) write_hook(write_arg, fr_->writes[wnext_].va, fr_->writes[wnext_].value);
-      ++wnext_;
+    while (fr_ && wnext_ < fr_->writes.size() && fr_->writes[wnext_].pos < pos) apply(fr_->writes[wnext_++]);
+  }
+  // one DELIVER w32 or DELIVER call, at its point of the run
+  void apply(const TWrite &w) {
+    if (!w.call) {
+      ctx_.mem.store<uint32_t>(w.va, w.value);
+      if (write_hook) write_hook(write_arg, w.va, w.value);
+      return;
     }
+    if (SG_NEGCTL(g_negctl_frame) == 22) return;  // negative control 22: already run at the frame's start (begin)
+    run_call(w);
+  }
+  // An injected call (roadmap S3.30): the registered port function of the original's address, called as the harness called the
+  // original's (cdecl, int arguments, result discarded) at the same point of the frame. Negative controls: 20 the call dropped,
+  // 21 its last argument + 1.
+  void run_call(const TWrite &w) {
+    if (SG_NEGCTL(g_negctl_frame) == 20) return;
+    if (!w.fn) throw MissingResource{"injected call (DELIVER call): an address tick.cpp kInjectedCalls does not name"};
+    const int i = registry_find(w.fn);
+    if (i < 0) throw MissingResource{w.fn};
+    const FuncDef *f = registry_at(i, nullptr);
+    if (f->arity != static_cast<int>(w.argc) || std::strcmp(f->abi, "default") != 0)
+      throw MissingResource{"injected call (DELIVER call): argument count or convention differs from the registered function"};
+    uint32_t v[16] = {0};
+    for (uint32_t k = 0; k < w.argc; ++k) v[k] = w.args[k];
+    if (SG_NEGCTL(g_negctl_frame) == 21 && w.argc > 0) v[w.argc - 1] += 1;
+    Ret r;
+    f->fn(ctx_, v, r);
+    if (call_hook) call_hook(write_arg, w.va, w.argc, w.args[0], w.args[1]);
   }
   Ctx &ctx_;
   const TraceFrame *fr_ = nullptr;
@@ -1438,6 +1497,7 @@ class TraceHost : public LiveHost {
 
   void boot(Ctx &) override {
     input_.write_hook = &TraceHost::on_write;
+    input_.call_hook = &TraceHost::on_call;
     input_.write_arg = this;
     start(0);
     if (frames_.size() < 2) input_.set_tail_idle(true);
@@ -1516,6 +1576,10 @@ class TraceHost : public LiveHost {
   static void on_write(void *self, uint32_t va, uint32_t value) {
     TraceHost &h = *static_cast<TraceHost *>(self);
     if (h.writes) h.writes->wrote(va, value);
+  }
+  static void on_call(void *self, uint32_t addr, uint32_t argc, uint32_t a0, uint32_t a1) {
+    TraceHost &h = *static_cast<TraceHost *>(self);
+    if (h.writes) h.writes->called(addr, argc, a0, a1);
   }
   TraceInput input_;
   std::vector<TraceFrame> frames_;

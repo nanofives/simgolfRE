@@ -1,0 +1,9 @@
+== census_7 start 2026-11-02 12:36:04
+[1/7] cov_k2_simfoto FAIL=3 (13.2 s)
+[2/7] cov_k3_build FAIL=12 (11.9 s)
+[3/7] cov_k3_camera FAIL=14 PASS=7 (4.6 s)
+[4/7] cov_k3_camera2 FAIL=25 (4.1 s)
+[5/7] cov_k3_career FAIL=3 PASS=2 (12.5 s)
+[6/7] cov_k3_champ FAIL=12 PASS=1 (10.8 s)
+[7/7] cov_k3_hole19 FAIL=8 (6.8 s)
+{"rows": 87, "counts": {"FAIL": 77, "PASS": 10}}

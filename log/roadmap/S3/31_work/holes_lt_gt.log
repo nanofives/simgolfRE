@@ -1,0 +1,18 @@
+syn_white.npz lt_gt {'rec': 600, 'r8': 35, 'holes': 6, 'new': 0, 'fixed': 29, 'beyond_r8': 17, 'beyond_h': 2}
+syn_game.npz lt_gt {'rec': 600, 'r8': 26, 'holes': 3, 'new': 0, 'fixed': 23, 'beyond_r8': 6, 'beyond_h': 0}
+syn_ties.npz lt_gt {'rec': 900, 'r8': 110, 'holes': 21, 'new': 1, 'fixed': 90, 'beyond_r8': 51, 'beyond_h': 11}
+sweep.npz lt_gt {'rec': 2133, 'r8': 336, 'holes': 69, 'new': 1, 'fixed': 268, 'beyond_r8': 212, 'beyond_h': 42}
+sweep8.npz lt_gt {'rec': 1432, 'r8': 210, 'holes': 44, 'new': 1, 'fixed': 167, 'beyond_r8': 101, 'beyond_h': 5}
+len.npz lt_gt {'rec': 4464, 'r8': 2007, 'holes': 150, 'new': 92, 'fixed': 1949, 'beyond_r8': 1098, 'beyond_h': 17}
+Traceback (most recent call last):
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\31_holes.py", line 88, in <module>
+    main()
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\31_holes.py", line 72, in main
+    for r in P.load(p):
+             ^^^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\24_probe.py", line 353, in load
+    for i in range(int(z["n"])):
+                       ~^^^^^
+  File "C:\Users\maria\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_npyio_impl.py", line 243, in __getitem__
+    raise KeyError(f"{key} is not a file in the archive") from None
+KeyError: 'n is not a file in the archive'

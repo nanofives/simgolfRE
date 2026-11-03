@@ -1,0 +1,76 @@
+[w8_lock] S3.30 queued at 2026-11-01 18:39:33
+[w8_lock] BREACH logged: hand-taken lock '(no owner.txt)'
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 18:46:49 (waited 436 s, free commit 43.2 GB)
+[1/1] census_ge rc=0 109 s :: {"rows": 10, "counts": {"PASS": 1, "FAIL": 9}}
+[done] gates census_ge
+[w8_lock] S3.30 released at 2026-11-01 18:48:39
+[w8_lock] S3.30 queued at 2026-11-01 18:48:39
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 19:34:58 (waited 2778 s, free commit 36.7 GB)
+[1/1] w32_test_trace_call rc=1 687 s :: 1 failed, 11 passed in 674.25s (0:11:14)
+[done] gates w32_test_trace_call
+[w8_lock] S3.30 released at 2026-11-01 19:46:33
+[w8_lock] S3.30 queued at 2026-11-01 19:46:34
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 20:11:16 (waited 1482 s, free commit 35.8 GB)
+[1/1] controls_x64 rc=0 43 s :: 22 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["g_tileFlags", "g_walkers", "unk_005a9ccc", "g_rng"]}
+[done] gates controls_x64
+[w8_lock] S3.30 released at 2026-11-01 20:30:46
+[w8_lock] S3.30 queued at 2026-11-01 20:30:47
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 21:16:51 (waited 2764 s, free commit 36.8 GB)
+[1/1] validate_segs rc=0 70 s :: 205 / 205 valid
+[done] gates validate_segs
+[w8_lock] S3.30 released at 2026-11-01 21:18:01
+[w8_lock] S3.30 queued at 2026-11-01 21:18:02
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 21:44:06 (waited 1564 s, free commit 36.3 GB)
+[1/1] boot_x64 rc=0 1343 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[done] gates boot_x64
+[w8_lock] S3.30 released at 2026-11-01 22:06:31
+[w8_lock] S3.30 queued at 2026-11-01 22:06:31
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 22:23:43 (waited 1032 s, free commit 40.9 GB)
+[1/1] segs_x64 rc=0 873 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 872.2}
+[done] gates segs_x64
+[w8_lock] S3.30 released at 2026-11-01 22:38:17
+[w8_lock] S3.30 queued at 2026-11-01 22:38:17
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 22:48:09 (waited 591 s, free commit 38.6 GB)
+[1/1] controls_win32 rc=0 65 s :: 22 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["g_tileFlags", "g_walkers", "unk_005a9ccc", "g_rng"]}
+[done] gates controls_win32
+[w8_lock] S3.30 released at 2026-11-01 22:49:15
+[w8_lock] S3.30 queued at 2026-11-01 22:49:15
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 23:24:41 (waited 2126 s, free commit 40.8 GB)
+[1/1] boot_win32 rc=0 1121 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[done] gates boot_win32
+[w8_lock] S3.30 released at 2026-11-01 23:43:23
+[w8_lock] S3.30 queued at 2026-11-01 23:43:23
+[w8_lock] S3.30 TOOK the lock at 2026-11-02 00:12:56 (waited 1773 s, free commit 39.7 GB)
+[1/1] segs_win32 rc=0 1261 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 1259.9}
+[done] gates segs_win32
+[w8_lock] S3.30 released at 2026-11-02 00:33:57
+[w8_lock] S3.30 queued at 2026-11-02 00:33:58
+[w8_lock] S3.30 TOOK the lock at 2026-11-02 01:18:01 (waited 2644 s, free commit 38.5 GB)
+[1/1] live_equiv_x64 rc=1 4193 s :: [28/71] cov_b_shots PASS 8151 
+[done] gates live_equiv_x64
+[w8_lock] S3.30 released at 2026-11-02 02:27:56
+[chain done] census_ge w32_test_trace_call controls_x64 validate_segs boot_x64 segs_x64 controls_win32 boot_win32 segs_win32 live_equiv_x64
+[w8_lock] S3.30 queued at 2026-11-02 02:28:14
+[w8_lock] S3.30 queued at 2026-11-02 02:29:41
+[w8_lock] S3.30 TOOK the lock at 2026-11-02 03:01:04 (waited 1882 s, free commit 41.9 GB)
+[1/1] live_equiv_x64p rc=0 1950 s :: {"counts": {"PASS": 69, "NO_FRAMES": 2}}
+[done] gates live_equiv_x64p
+[w8_lock] S3.30 released at 2026-11-02 03:33:35
+[w8_lock] S3.30 queued at 2026-11-02 03:33:35
+[w8_lock] S3.30 TOOK the lock at 2026-11-02 03:53:26 (waited 1191 s, free commit 41.6 GB)
+[1/1] t_test_trace_call rc=0 81 s :: 12 passed in 79.37s (0:01:19)
+[done] gates t_test_trace_call
+[w8_lock] S3.30 released at 2026-11-02 03:54:47
+[w8_lock] S3.30 queued at 2026-11-02 03:54:48
+[w8_lock] S3.30 TOOK the lock at 2026-11-02 04:17:20 (waited 1352 s, free commit 42.6 GB)
+[1/1] w32_test_trace_call rc=0 111 s :: 12 passed in 109.92s (0:01:49)
+[done] gates w32_test_trace_call
+[w8_lock] S3.30 released at 2026-11-02 04:19:13
+[chain done] live_equiv_x64p t_test_trace_call w32_test_trace_call
+[w8_lock] S3.30 queued at 2026-11-02 05:09:48
+[w8_lock] removing stale wait file of S3.31 (take pid 25112 is gone)
+[w8_lock] S3.30 TOOK the lock at 2026-11-02 05:48:11 (waited 2302 s, free commit 44.0 GB)
+[1/1] s1_trace rc=0 63 s :: 7 passed in 61.82s (0:01:01)
+[done] gates s1_trace
+[w8_lock] S3.30 released at 2026-11-02 05:49:14
+[chain done] s1_trace

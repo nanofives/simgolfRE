@@ -10,9 +10,11 @@
 //
 // How Windows' generic implementation rasterises that line, measured with re/tools/glexact/glreplay.exe (the real software GL) on
 // synthetic drawLine sequences (log/roadmap/S3/8_probe.py; numbers in the notes):
-//   - the segment is clipped to the viewport [0, W] x [0, H] in window coordinates, then each end goes through the same fixed-point
-//     setup as triangles (U-1076: c + (v - c) * (1 - 2^-8 / h), rounded to 8 fractional bits, c / h the viewport's centre and
-//     half-size per axis); a segment of length 0 draws nothing;
+//   - the ends go through the triangles' float32 vertex stage (roadmap S3.21 / S3.31: clip = m12 + v * m0 in float with glOrtho's
+//     elements stored as float, the segment clipped in clip space in float, window = float(ndc * float(h - 2^-8)) + h rounded half
+//     to even to 2^-8; line rules 8 and 9, terrain_overlay.cpp float_ends); rules 0..7 clip in window coordinates and take
+//     U-1076's double form c + (v - c) * (1 - 2^-8 / h) rounded to 8 fractional bits (they differ at x 200 / 599 and at clipped
+//     ends); a segment of length 0 draws nothing;
 //   - the width is clamped to 10 (widths 12, 15, 20, 30 draw exactly what 10 draws); glLineWidth(w <= 0) is GL_INVALID_VALUE and
 //     keeps the previous width;
 //   - at each pixel centre, with n its distance from the segment's line and t its position along it from the first end, the
@@ -23,8 +25,12 @@
 //     N = floor(w * L / |major|) + 2 pixels are drawn, the pixel centres whose minor offset o from the line centre (at the pixel
 //     centre's major coordinate) times the tie sign lies in [-N/2, N/2); the tie sign is sign(dx) * sign(dy) for an x-major line,
 //     sign(dx) for a y-major one. This is what U-1370 saw as `footprint-edge pixels under 0.13 coverage`.
-//   What it does not reproduce: at the second vertex of wide lines the real GL leaves out a corner pixel next to the cap in some
-//   columns (U-1826), and a few exact ties of y-major lines and pixels within 0.001 of N/2 follow a rule not determined (U-1827).
+//   - the second-vertex holes (roadmap S3.31, line rule 9, the default; U-1826): in the segment's canonical frame (u major, v minor,
+//     both increasing from the first end to the second end b, origin b; s = |minor / major|) no fragment is generated where
+//     0 < frac(o + N/2) < 1 - s and q > 1 - sqrt(1 + s^2) / 2, with o = v - u s and q = u + v s, q measured from
+//     b' = a + round(b - a) (terrain_overlay.cpp second_vertex_hole); the first end has none.
+//   What it does not reproduce: a few exact ties of y-major lines and pixels within 0.001 of N/2 follow a rule not determined
+//   (U-1827), and the side coverage's arithmetic near a 5-bit threshold (U-1978).
 //
 // The exe's drawers over it (all drops of the frame loop; with a graphics backend and a LiveTerrain attached they draw into the
 // root surface, gfx_terrain.cpp's family lists their bodies): drawMapLine (Terrain::drawLine with the seven arguments),
@@ -85,7 +91,8 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 // negative controls (sg_negctl_set "overlay.rasterLine"): 1 hard-edged line (no coverage ramp), 2 alpha ignored, 3 no clipping
 // (the end ramps at the unclipped ends), 4 the flip byte inverted, 5 no fixed-point snap of the ends, 6 lineTo keeps the old line
 // point, 7 drawCircle's segments 3 wide instead of 2, 8 the width not clamped at 10, 9 drawn without a GL context, 10 the gfx bodies draw nothing (the baseline of the frame tests),
-// 11 S3.8's footprint (no span rule: the rule before roadmap S3.24)
+// 11 S3.8's footprint (no span rule: the rule before roadmap S3.24), 12 the double snap of the ends under line rules 8 / 9 (the
+// vertex stage before roadmap S3.31), 13 no second-vertex holes under line rule 9
 extern int g_negctl_terrain_overlay;
 
 }  // namespace portsim

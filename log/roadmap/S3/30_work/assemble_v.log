@@ -1,0 +1,95 @@
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\w7_assemble.py --dst S3_30v --commit d075dc56 --plain
+junction original
+junction log
+junction port/corpus
+junction tests/golden
+junction tests/fixtures
+junction re/versions
+junction tools/vc6
+junction shim/build
+junction re/replay
+junction extracted
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v base d075dc56e01118032ba0793532a0e943a3667e3b
+junction tools/dxsdk8
+junction tools/vc6sp5
+junction tools/vc6sp2
+plain tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\28_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v --only-28
+edit port/include/portsim/sim/terrain_render.h s328 28_edits edit 1
+edit port/include/portsim/sim/terrain_render.h s328 28_edits edit 2
+edit port/include/portsim/sim/terrain_render.h s328 28_edits edit 3
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 4
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 5
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 6
+edit port/src/sim/terrain_render.cpp s328 28_edits edit 7
+edit port/src/sim/terrain_live.cpp s328 28_edits edit 8
+edit port/src/sim/gfx_terrain.cpp s328 28_edits edit 9
+edit port/src/sim/gfx_terrain.cpp s328 28_edits edit 10
+edit port/src/sim/gfx_terrain.cpp s328 28_edits edit 11
+new port/test/test_terrain_s3_28.py
+wrote port/include/portsim/sim/terrain_render.h
+wrote port/src/sim/terrain_render.cpp
+wrote port/src/sim/terrain_live.cpp
+wrote port/src/sim/gfx_terrain.cpp
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S3\29_assemble.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v --only-29
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 1
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 2
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 3
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 4
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 5
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 6
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 7
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 8
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 9
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 10
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 11
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 12
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 13
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 14
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 15
+edit port/src/sim/gl_raster.cpp s329 29_edits edit 16
+edit port/include/portsim/sim/gl_raster.h s329 29_edits edit 17
+edit port/include/portsim/sim/gl_raster.h s329 29_edits edit 18
+edit port/test/test_gl_raster.py s329 29_edits edit 19
+wrote port/src/sim/gl_raster.cpp
+wrote port/include/portsim/sim/gl_raster.h
+wrote port/test/test_gl_raster.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v
+copied port\test\test_app_present.py from I22 (G21)
+edit re/tools/trace_format.py s330 30_edits edit 1
+edit re/tools/trace_format.py s330 30_edits edit 2
+edit re/tools/trace_format.py s330 30_edits edit 3
+edit re/tools/trace_format.py s330 30_edits edit 4
+edit re/frida/js/trace_rec.js s330 30_edits edit 5
+edit re/frida/js/trace_rec.js s330 30_edits edit 6
+edit re/model/trace_schema.md s330 30_edits edit 7
+edit re/model/trace_schema.md s330 30_edits edit 8
+edit re/model/trace_schema.md s330 30_edits edit 9
+edit port/schemas/trace.md s330 30_edits edit 10
+edit port/schemas/trace.md s330 30_edits edit 11
+edit port/schemas/trace.md s330 30_edits edit 12
+edit port/src/sim/tick.cpp s330 30_edits edit 13
+edit port/src/sim/tick.cpp s330 30_edits edit 14
+edit port/src/sim/tick.cpp s330 30_edits edit 15
+edit port/src/sim/tick.cpp s330 30_edits edit 16
+edit port/src/sim/tick.cpp s330 30_edits edit 17
+edit port/src/sim/tick.cpp s330 30_edits edit 18
+edit port/src/sim/tick.cpp s330 30_edits edit 19
+edit port/src/sim/tick.cpp s330 30_edits edit 20
+edit port/src/sim/live.cpp s330 30_edits edit 21
+edit port/src/sim/live.cpp s330 30_edits edit 22
+edit port/src/sim/live.cpp s330 30_edits edit 23
+edit port/src/sim/live.cpp s330 30_edits edit 24
+edit port/src/sim/live.cpp s330 30_edits edit 25
+edit port/src/sim/live.cpp s330 30_edits edit 26
+edit port/include/portsim/sim/live.h s330 30_edits edit 27
+new port/test/test_trace_call.py
+wrote re/tools/trace_format.py
+wrote re/frida/js/trace_rec.js
+wrote re/model/trace_schema.md
+wrote port/schemas/trace.md
+wrote port/src/sim/tick.cpp
+wrote port/src/sim/live.cpp
+wrote port/include/portsim/sim/live.h
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30v

@@ -1,0 +1,16 @@
+I22 698 rows raw {'FAIL': 562, 'NOT_RUN': 10, 'PASS': 126} split {'FAIL': 3, 'NOT_RUN': 10, 'PASS': 685}
+S3.32 698 rows raw {'FAIL': 562, 'NOT_RUN': 10, 'PASS': 126} split {'': 10, 'FAIL': 2, 'PASS': 686}
+only I22 0 rows []; only S3.32 0 rows []
+lost 0, worse 0, better 1, rows changed 11
+   (('cov_k3_camera', 'y_inj3'), {'total_px': ('859', '12'), 'beyond_px': ('760', '1'), 'twod_px': ('847', '0')})
+   changed ('cov_k3_camera', 'y_inj3') {'status': ('FAIL', 'FAIL'), 'split_status': ('FAIL', 'PASS'), 'total_px': ('859', '12'), 'beyond_px': ('760', '1'), 'twod_px': ('847', '0'), 'terrain_origin_px': ('12', '12')}
+   changed ('golfer_events', 'after_0020') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'golfer_panel') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'hole_open') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'landmark') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'menu') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'sandbox') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'season_0050') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'season_0100') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'season_0150') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}
+   changed ('golfer_events', 'season_0200') {'status': ('NOT_RUN', 'NOT_RUN'), 'split_status': ('NOT_RUN', ''), 'total_px': ('', ''), 'beyond_px': ('', ''), 'twod_px': ('', ''), 'terrain_origin_px': ('', '')}

@@ -1,0 +1,21 @@
+log/roadmap/S3/32_notes.md
+log/roadmap/S3/32_files.txt
+log/roadmap/S3/32_uncertain.tsv
+log/roadmap/S3/32_merge.md
+log/roadmap/S3/32_measure.py
+log/roadmap/S3/32_gen.py
+log/roadmap/S3/32_make_edits.py
+log/roadmap/S3/32_edits.py
+log/roadmap/S3/32_assemble.py
+log/roadmap/S3/32_gates.sh
+log/roadmap/S3/32_run_gates.sh
+log/roadmap/S3/32_cmp_gates.py
+log/roadmap/S3/32_census_cmp.py
+log/roadmap/S3/32_logs/   (measurements and build logs; const_words.tsv 5 MB, local)
+log/roadmap/S3/32_work/   (gate logs and TSVs; census_split.tsv.d cache, local)
+port/build/S3_32/port/src/sim/tick_boot.inc            (tree; delivered through 32_edits.py)
+port/build/S3_32/port/src/sim/tick_boot_surfaces.inc   (tree, new; delivered through 32_edits.py NEW_FILES)
+port/build/S3_32/port/test/test_boot_surfaces.py       (tree, new; delivered through 32_edits.py NEW_FILES)
+port/build/S3_32/port/include/portsim/execonst_desc.inc (tree; delivered through 32_edits.py)
+port/build/S3_32/re/model/f_descriptors.tsv            (tree; delivered through 32_edits.py)
+port/build/S3_32, S3_32v, S3_32chk   (build / check trees, local)

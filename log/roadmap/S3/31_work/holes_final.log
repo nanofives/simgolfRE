@@ -1,0 +1,11 @@
+syn_white.npz lt_gt_1e-9 {'rec': 600, 'r8': 35, 'holes': 6, 'new': 0, 'fixed': 29, 'beyond_r8': 17, 'beyond_h': 2}
+syn_game.npz lt_gt_1e-9 {'rec': 600, 'r8': 26, 'holes': 3, 'new': 0, 'fixed': 23, 'beyond_r8': 6, 'beyond_h': 0}
+syn_ties.npz lt_gt_1e-9 {'rec': 900, 'r8': 110, 'holes': 21, 'new': 0, 'fixed': 89, 'beyond_r8': 51, 'beyond_h': 12}
+ph_fan.npz lt_gt_1e-9 {'rec': 2480, 'r8': 130, 'holes': 25, 'new': 0, 'fixed': 105, 'beyond_r8': 24, 'beyond_h': 24}
+ph_rand.npz lt_gt_1e-9 {'rec': 3840, 'r8': 271, 'holes': 54, 'new': 0, 'fixed': 217, 'beyond_r8': 181, 'beyond_h': 50}
+ph_short.npz lt_gt_1e-9 {'rec': 5440, 'r8': 216, 'holes': 24, 'new': 0, 'fixed': 192, 'beyond_r8': 0, 'beyond_h': 0}
+sweep.npz lt_gt_1e-9 {'rec': 2133, 'r8': 336, 'holes': 69, 'new': 0, 'fixed': 267, 'beyond_r8': 212, 'beyond_h': 42}
+sweep8.npz lt_gt_1e-9 {'rec': 1432, 'r8': 210, 'holes': 43, 'new': 0, 'fixed': 167, 'beyond_r8': 101, 'beyond_h': 4}
+len.npz lt_gt_1e-9 {'rec': 4464, 'r8': 2007, 'holes': 58, 'new': 0, 'fixed': 1949, 'beyond_r8': 1098, 'beyond_h': 6}
+rev.npz lt_gt_1e-9 {'rec': 4464, 'r8': 2007, 'holes': 166, 'new': 0, 'fixed': 1841, 'beyond_r8': 1085, 'beyond_h': 16}
+streams.npz lt_gt_1e-9 {'rec': 9534, 'r8': 91, 'holes': 43, 'new': 0, 'fixed': 48, 'beyond_r8': 1, 'beyond_h': 1}

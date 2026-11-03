@@ -1,0 +1,87 @@
+# S3 wave 10 files for the merge commit (the port tree changes come from the three layers' edits; local items are in MERGE_w10.md section 5)
+## Tree files the layers write (apply 31, 30, 32 with their assemblers)
+port/src/sim/terrain_overlay.cpp
+port/include/portsim/sim/terrain_overlay.h
+port/test/test_terrain_overlay.py
+re/tools/trace_format.py
+re/frida/js/trace_rec.js
+re/model/trace_schema.md
+port/schemas/trace.md
+port/src/sim/tick.cpp
+port/src/sim/live.cpp
+port/include/portsim/sim/live.h
+port/test/test_trace_call.py
+port/src/sim/tick_boot.inc
+port/src/sim/tick_boot_surfaces.inc
+port/test/test_boot_surfaces.py
+port/include/portsim/execonst_desc.inc
+re/model/f_descriptors.tsv
+## Step files
+log/roadmap/S3/30_edits.py
+log/roadmap/S3/30_make_edits.py
+log/roadmap/S3/30_assemble.py
+log/roadmap/S3/30_gates.sh
+log/roadmap/S3/30_run_gates.sh
+log/roadmap/S3/30_chain.sh
+log/roadmap/S3/30_validate_all.py
+log/roadmap/S3/30_controls.py
+log/roadmap/S3/30_live_equiv.py
+log/roadmap/S3/30_cmp_gates.py
+log/roadmap/S3/30_notes.md
+log/roadmap/S3/30_merge.md
+log/roadmap/S3/30_uncertain.tsv
+log/roadmap/S3/30_files.txt
+log/roadmap/S3/30_work/ (logs and scripts; not the *.trace files)
+log/roadmap/S3/31_notes.md
+log/roadmap/S3/31_files.txt
+log/roadmap/S3/31_uncertain.tsv
+log/roadmap/S3/31_merge.md
+log/roadmap/S3/31_edits.py
+log/roadmap/S3/31_make_edits.py
+log/roadmap/S3/31_assemble.py
+log/roadmap/S3/31_cap.py
+log/roadmap/S3/31_shape.py
+log/roadmap/S3/31_holes.py
+log/roadmap/S3/31_score.py
+log/roadmap/S3/31_f32.py
+log/roadmap/S3/31_feed.py
+log/roadmap/S3/31_alpha.py
+log/roadmap/S3/31_cppcheck.py
+log/roadmap/S3/31_census.sh
+log/roadmap/S3/31_cppcheck.log
+log/roadmap/S3/31_cppcheck9.log
+log/roadmap/S3/31_build_x64.log
+log/roadmap/S3/31_g_pytest_x64.log
+log/roadmap/S3/31_work/ (not *.tsv.d)
+log/roadmap/S3/31_out/ (not *.tsv.d)
+log/roadmap/S3/32_notes.md
+log/roadmap/S3/32_files.txt
+log/roadmap/S3/32_uncertain.tsv
+log/roadmap/S3/32_merge.md
+log/roadmap/S3/32_measure.py
+log/roadmap/S3/32_gen.py
+log/roadmap/S3/32_make_edits.py
+log/roadmap/S3/32_edits.py
+log/roadmap/S3/32_assemble.py
+log/roadmap/S3/32_gates.sh
+log/roadmap/S3/32_run_gates.sh
+log/roadmap/S3/32_cmp_gates.py
+log/roadmap/S3/32_census_cmp.py
+log/roadmap/S3/32_logs/ (not const_words.tsv)
+log/roadmap/S3/32_work/ (not *.tsv.d)
+## Lead files
+log/roadmap/S3/w10_base.py
+log/roadmap/S3/w10_assemble.py
+log/roadmap/S3/w10_gates.sh
+log/roadmap/S3/w10_run_gates.sh
+log/roadmap/S3/w10_chain.sh
+log/roadmap/S3/W10_COMMON.md
+log/roadmap/S3/STATUS.md
+log/roadmap/S3/MERGE_w10.md
+log/roadmap/S3/files_w10.txt
+log/roadmap/S3/w8_breaches.log
+re/roadmap/S3_steps.tsv
+log/roadmap/S3/w10_out/g_gates.log
+log/roadmap/S3/w10_out/g_*.log
+log/roadmap/S3/w10_out/*.tsv (not *.tsv.d)
+## UNCERTAINTIES.md / CLAUDE.md: per MERGE_w10.md sections 6 and 7

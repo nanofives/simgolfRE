@@ -1,0 +1,81 @@
+junction original
+junction log
+junction port/corpus
+junction tests/golden
+junction tests/fixtures
+junction re/versions
+junction tools/vc6
+junction shim/build
+junction re/replay
+junction extracted
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I24 base c316a3a6b4c33d12c259c2b2f28a02c6bbb278f3
+junction tools/dxsdk8
+junction tools/vc6sp5
+junction tools/vc6sp2
+plain tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I24
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 1
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 2
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 3
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 4
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 5
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 6
+edit port/src/sim/terrain_overlay.cpp s331 31_edits edit 7
+edit port/include/portsim/sim/terrain_overlay.h s331 31_edits edit 8
+edit port/include/portsim/sim/terrain_overlay.h s331 31_edits edit 9
+edit port/include/portsim/sim/terrain_overlay.h s331 31_edits edit 10
+edit port/test/test_terrain_overlay.py s331 31_edits edit 11
+edit port/test/test_terrain_overlay.py s331 31_edits edit 12
+edit port/test/test_terrain_overlay.py s331 31_edits edit 13
+edit port/test/test_terrain_overlay.py s331 31_edits edit 14
+edit port/test/test_terrain_overlay.py s331 31_edits edit 15
+edit port/test/test_terrain_overlay.py s331 31_edits edit 16
+edit port/test/test_terrain_overlay.py s331 31_edits edit 17
+wrote port/src/sim/terrain_overlay.cpp
+wrote port/include/portsim/sim/terrain_overlay.h
+wrote port/test/test_terrain_overlay.py
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I24
+edit re/tools/trace_format.py s330 30_edits edit 1
+edit re/tools/trace_format.py s330 30_edits edit 2
+edit re/tools/trace_format.py s330 30_edits edit 3
+edit re/tools/trace_format.py s330 30_edits edit 4
+edit re/frida/js/trace_rec.js s330 30_edits edit 5
+edit re/frida/js/trace_rec.js s330 30_edits edit 6
+edit re/model/trace_schema.md s330 30_edits edit 7
+edit re/model/trace_schema.md s330 30_edits edit 8
+edit re/model/trace_schema.md s330 30_edits edit 9
+edit port/schemas/trace.md s330 30_edits edit 10
+edit port/schemas/trace.md s330 30_edits edit 11
+edit port/schemas/trace.md s330 30_edits edit 12
+edit port/src/sim/tick.cpp s330 30_edits edit 13
+edit port/src/sim/tick.cpp s330 30_edits edit 14
+edit port/src/sim/tick.cpp s330 30_edits edit 15
+edit port/src/sim/tick.cpp s330 30_edits edit 16
+edit port/src/sim/tick.cpp s330 30_edits edit 17
+edit port/src/sim/tick.cpp s330 30_edits edit 18
+edit port/src/sim/tick.cpp s330 30_edits edit 19
+edit port/src/sim/tick.cpp s330 30_edits edit 20
+edit port/src/sim/live.cpp s330 30_edits edit 21
+edit port/src/sim/live.cpp s330 30_edits edit 22
+edit port/src/sim/live.cpp s330 30_edits edit 23
+edit port/src/sim/live.cpp s330 30_edits edit 24
+edit port/src/sim/live.cpp s330 30_edits edit 25
+edit port/src/sim/live.cpp s330 30_edits edit 26
+edit port/include/portsim/sim/live.h s330 30_edits edit 27
+new port/test/test_trace_call.py
+wrote re/tools/trace_format.py
+wrote re/frida/js/trace_rec.js
+wrote re/model/trace_schema.md
+wrote port/schemas/trace.md
+wrote port/src/sim/tick.cpp
+wrote port/src/sim/live.cpp
+wrote port/include/portsim/sim/live.h
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I24
+edit port/src/sim/tick_boot.inc s332 32_edits edit 1
+edit port/include/portsim/execonst_desc.inc s332 32_edits edit 2
+edit re/model/f_descriptors.tsv s332 32_edits edit 3
+new port/src/sim/tick_boot_surfaces.inc
+new port/test/test_boot_surfaces.py
+wrote port/src/sim/tick_boot.inc
+wrote port/include/portsim/execonst_desc.inc
+wrote re/model/f_descriptors.tsv
+done C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I24

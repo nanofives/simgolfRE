@@ -1,0 +1,75 @@
+{
+ "call": {
+  "after_frame_record": 2243,
+  "pos": 334696,
+  "addr": "0x4722c0",
+  "args": [
+   2,
+   6
+  ]
+ },
+ "backend": "win32",
+ "0": {
+  "status": "PASS",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": null,
+  "detail": "",
+  "run_detail": ""
+ },
+ "20": {
+  "status": "FAIL",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": {
+   "record": 2244,
+   "T_port": 1275241,
+   "T_orig": 1275241,
+   "objects": [
+    "f_w_4c2e00",
+    "unk_005a6d40",
+    "g_messageTimer",
+    "g_freeUnlockMask",
+    "g_rng"
+   ]
+  },
+  "detail": "{\"record\": 2244, \"T_port\": 1275241, \"T_orig\": 1275241, \"objects\": [\"f_w_4c2e00\", \"unk_005a6d40\", \"g_messageTimer\", \"g_freeUnlockMask\", \"g_rng\"]}",
+  "run_detail": ""
+ },
+ "21": {
+  "status": "FAIL",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": {
+   "record": 2244,
+   "T_port": 1275241,
+   "T_orig": 1275241,
+   "objects": [
+    "unk_005a6d40",
+    "g_messageTimer",
+    "g_freeUnlockMask",
+    "g_rng"
+   ]
+  },
+  "detail": "{\"record\": 2244, \"T_port\": 1275241, \"T_orig\": 1275241, \"objects\": [\"unk_005a6d40\", \"g_messageTimer\", \"g_freeUnlockMask\", \"g_rng\"]}",
+  "run_detail": ""
+ },
+ "22": {
+  "status": "FAIL",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": {
+   "record": 2244,
+   "T_port": 1275241,
+   "T_orig": 1275241,
+   "objects": [
+    "g_tileFlags",
+    "g_walkers",
+    "unk_005a9ccc",
+    "g_rng"
+   ]
+  },
+  "detail": "{\"record\": 2244, \"T_port\": 1275241, \"T_orig\": 1275241, \"objects\": [\"g_tileFlags\", \"g_walkers\", \"unk_005a9ccc\", \"g_rng\"]}",
+  "run_detail": ""
+ }
+}

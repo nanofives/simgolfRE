@@ -1,0 +1,29 @@
+port/build/S3_31/port/src/sim/terrain_overlay.cpp	(tree file; delivered as 31_edits.py)
+port/build/S3_31/port/include/portsim/sim/terrain_overlay.h	(tree file; delivered as 31_edits.py)
+port/build/S3_31/port/test/test_terrain_overlay.py	(tree file; delivered as 31_edits.py)
+log/roadmap/S3/31_notes.md
+log/roadmap/S3/31_files.txt
+log/roadmap/S3/31_uncertain.tsv
+log/roadmap/S3/31_merge.md
+log/roadmap/S3/31_edits.py
+log/roadmap/S3/31_make_edits.py
+log/roadmap/S3/31_assemble.py
+log/roadmap/S3/31_cap.py
+log/roadmap/S3/31_shape.py
+log/roadmap/S3/31_holes.py
+log/roadmap/S3/31_score.py
+log/roadmap/S3/31_f32.py
+log/roadmap/S3/31_feed.py
+log/roadmap/S3/31_alpha.py
+log/roadmap/S3/31_cppcheck.py
+log/roadmap/S3/31_census.sh
+log/roadmap/S3/31_cppcheck.log
+log/roadmap/S3/31_cppcheck9.log
+log/roadmap/S3/31_build_x64.log
+log/roadmap/S3/31_g_pytest_x64.log
+log/roadmap/S3/31_work/	(analysis scripts a1..a32 and their logs)
+log/roadmap/S3/31_out/	(census and gate outputs)
+log/roadmap/S3/31_data/	(LOCAL, not for commit: real-GL captures *.npz, nline_42_15.json)
+port/build/S3_31/	(LOCAL: the tree)
+port/build/S3_31chk/	(LOCAL: the assemble check tree)
+port/corpus/probe/s331_*	(LOCAL: glreplay scene directories)

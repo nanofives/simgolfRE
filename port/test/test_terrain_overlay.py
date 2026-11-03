@@ -89,6 +89,27 @@ def scene(name: str):
                 k += 1
                 ln.append((cx, cy, cx + dx, cy + dy, 0x7FFF, w, 10, True))
         return ln, np.zeros((H, W), dtype="<u2")
+    if name == "vertex":     # roadmap S3.31: ends where the float32 vertex stage and the double snap differ (x 200 / 599, y 150 with the
+        #                        flip byte set, y 450 without) and segments leaving the viewport (clipped in clip space)
+        rng = np.random.default_rng(31)
+        ln = []
+        for k in range(160):
+            kind = k % 5
+            flip = kind != 3
+            x2, y2 = int(rng.integers(40, 760)), int(rng.integers(40, 560))
+            if kind == 0:
+                x1, y1 = 200, int(rng.integers(20, 580))
+            elif kind == 1:
+                x1, y1 = 599, int(rng.integers(20, 580))
+            elif kind == 2:
+                x1, y1 = int(rng.integers(20, 780)), 150
+            elif kind == 3:
+                x1, y1 = int(rng.integers(20, 780)), 450
+            else:
+                x1, y1 = int(rng.choice([-1, 1]) * rng.integers(810, 900) % 900), int(rng.integers(-80, 680))
+            x2, y2 = x1 + int(rng.integers(-70, 70)), y1 + int(rng.integers(-70, 70))
+            ln.append((x1, y1, x2, y2, int(rng.choice(COLOURS[:7])), int(rng.choice([1, 2, 3, 5, 10])), int(rng.choice([4, 5, 7, 10])), flip))
+        return ln, rng.integers(0, 32768, size=(H, W)).astype("<u2")
     if name == "flip":       # the other projection (flip byte clear: glOrtho(0, W, H, 0)), alphas 0 and above 10 (clamped)
         rng = np.random.default_rng(23)
         ln = []
@@ -101,12 +122,13 @@ def scene(name: str):
     raise KeyError(name)
 
 
-SCENES = ["rand", "widths", "short", "flip"]
+SCENES = ["rand", "widths", "short", "flip", "vertex"]
 # S3.8's model (line rule 0, control 11) against the real GL per scene: (pixels the real GL changed, pixels differing, of them one
 # level, beyond one level) (measured 2026-10-25 on x64 and Win32; the differences are the footprint-edge pixels of U-1370, which the
 # span rule of S3.24 removes, and one-level rounding)
 PINNED: dict[str, tuple[int, int, int, int]] = {
-    "rand": (74466, 108, 98, 10), "widths": (27689, 88, 48, 40), "short": (744, 1, 0, 1), "flip": (18261, 18, 16, 2)}
+    "rand": (74466, 108, 98, 10), "widths": (27689, 88, 48, 40), "short": (744, 1, 0, 1), "flip": (18261, 18, 16, 2),
+    "vertex": (33414, 446, 444, 2)}
 
 
 # ------------------------------------------------------------------------------------------------ runs
@@ -178,7 +200,7 @@ def test_probe_meets_g2_and_pinned(lib, name):
     changed, differ, one, beyond = got
     assert changed > 0
     assert g2(changed, one, beyond), got
-    assert got == PINNED_SPAN[name], (got, PINNED_SPAN[name])     # the build's default line rule is the span rule (S3.24)
+    assert got == PINNED_DEFAULT[name], (got, PINNED_DEFAULT[name])   # the build's default line rule (8, roadmap S3.31)
 
 
 @pytest.mark.parametrize("name", SCENES)
@@ -198,9 +220,60 @@ def test_old_rule_keeps_s38_counts(lib, name):
 # the ends to the viewport before the span test)
 SPAN_RULE, NOTIE_RULE, OLD_RULE = 2, 6, 0
 PINNED_SPAN: dict[str, tuple[int, int, int, int]] = {
-    "rand": (74466, 7, 6, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2)}
+    "rand": (74466, 7, 6, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2),
+    "vertex": (33414, 370, 369, 1)}
 PINNED_NOTIE: dict[str, tuple[int, int, int, int]] = {
-    "rand": (74466, 9, 8, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2)}
+    "rand": (74466, 9, 8, 1), "widths": (27689, 12, 6, 6), "short": (744, 0, 0, 0), "flip": (18261, 5, 3, 2),
+    "vertex": (33414, 370, 369, 1)}
+
+# ------------------------------------------------------------------------------------------------ roadmap S3.31
+# line rule 8 = rule 2's footprint with the ends through the generic GL's float32 vertex stage and the segment clipped in clip space
+# in float (terrain_overlay.cpp float_ends; log/roadmap/S3/31_notes.md); it differs from rule 2 only at ends on x 200 / 599, y 150
+# (flip) / 450 (no flip) and at clipped ends, which the scene `vertex` holds (the other scenes give rule 2's counts).
+# line rule 9 (the default) = rule 8 plus the second-vertex holes (second_vertex_hole). Control 12 = the double snap of the ends
+# under rules 8 / 9 (equal to rule 2 under rule 8), control 13 = no holes under rule 9 (equal to rule 8).
+VERTEX_RULE, DEFAULT_RULE = 8, 9
+PINNED_VERTEX: dict[str, tuple[int, int, int, int]] = {**PINNED_SPAN, "vertex": (33414, 9, 8, 1)}
+PINNED_DEFAULT: dict[str, tuple[int, int, int, int]] = {
+    "rand": (74466, 2, 2, 0), "widths": (27689, 0, 0, 0), "short": (744, 0, 0, 0), "flip": (18261, 0, 0, 0), "vertex": (33414, 0, 0, 0)}
+
+
+@pytest.mark.parametrize("rule,base", [(VERTEX_RULE, SPAN_RULE), (DEFAULT_RULE, VERTEX_RULE)])
+@pytest.mark.parametrize("name", SCENES)
+def test_s331_rules_fewer_and_none_new(lib, name, rule, base):
+    """every pixel rule 8 gets wrong rule 2 got wrong too, and every pixel rule 9 gets wrong rule 8 got wrong too"""
+    real = real_frame(name)
+    rb, rn = wrong(real, port_frame(lib, name, rule=base)), wrong(real, port_frame(lib, name, rule=rule))
+    assert not (rn & ~rb).any(), int((rn & ~rb).sum())
+    if rule == VERTEX_RULE and name == "vertex":
+        assert rn.sum() < rb.sum(), (int(rn.sum()), int(rb.sum()))
+
+
+@pytest.mark.parametrize("name", SCENES)
+def test_vertex_rule_pinned(lib, name):
+    real = real_frame(name)
+    _lines, pre = scene(name)
+    assert compare(real, pre, port_frame(lib, name, rule=VERTEX_RULE)) == PINNED_VERTEX[name]
+
+
+def test_vertex_rule_control_reads_red(lib):
+    """control 12 (rule 2's double snap of the ends under rule 8) gives rule 2's counts and breaks rule 8's pin on the vertex scene"""
+    real = real_frame("vertex")
+    _lines, pre = scene("vertex")
+    got = compare(real, pre, port_frame(lib, "vertex", mode=12, rule=VERTEX_RULE))
+    assert got == PINNED_SPAN["vertex"] and got != PINNED_VERTEX["vertex"], got
+
+
+def test_hole_rule_control_reads_red(lib):
+    """control 13 (no second-vertex holes) gives rule 8's counts and breaks the default's pin on every scene with holes"""
+    red = 0
+    for name in SCENES:
+        real = real_frame(name)
+        _lines, pre = scene(name)
+        got = compare(real, pre, port_frame(lib, name, mode=13))
+        assert got == PINNED_VERTEX[name], (name, got)
+        red += got != PINNED_DEFAULT[name]
+    assert red >= 3, red
 
 
 def wrong(real: np.ndarray, port: np.ndarray) -> np.ndarray:
@@ -247,9 +320,9 @@ def test_negctl_reads_red(lib, mode):
     _lines, pre = scene(name)
     changed, differ, one, beyond = compare(real, pre, port_frame(lib, name, mode))
     if mode == 5:
-        # no snap: with the span rule the scene stays 0.04 % inside G2 (1,085 one-level px of 74,466), so the control reads RED
-        # on its distance from the default's pinned count instead (more than 100 times the default's differing pixels)
-        assert differ > 100 * PINNED_SPAN[name][1], (mode, changed, differ, one, beyond)
+        # no snap: the scene stays inside G2 (rule 2: 1,085 one-level px of 74,466; rule 9: about 450), so the control reads RED on
+        # its distance from the default's pinned count instead (more than 50 times the default's differing pixels)
+        assert differ > 50 * PINNED_DEFAULT[name][1], (mode, changed, differ, one, beyond)
         return
     assert not g2(changed, one, beyond), (mode, changed, one, beyond)
 

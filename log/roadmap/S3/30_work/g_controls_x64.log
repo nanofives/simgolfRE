@@ -1,0 +1,5 @@
+== controls_x64 start 2026-11-01 20:30:03
+0 PASS 2522 2522 null
+20 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["f_w_4c2e00", "unk_005a6d40", "g_messageTimer", "g_freeUnlockMask", "g_rng"]}
+21 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["unk_005a6d40", "g_messageTimer", "g_freeUnlockMask", "g_rng"]}
+22 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["g_tileFlags", "g_walkers", "unk_005a9ccc", "g_rng"]}

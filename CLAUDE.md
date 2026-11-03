@@ -1897,6 +1897,14 @@ check) S3.28 and S3.29 give census raw 126 / 562 / 0 / 10 and split 685 / 3 / 0 
 left are cov_k3_camera y_inj3 (U-1834, explained), cov_a_build brush_465 (U-1826) and cov_a_keys k_dlg_R (U-1829). w8_lock.py: a
 `--priority` step that made the last hold yields one turn (alternation), one pytest file per hold, and `run` starts its command with
 CreateProcess (wrap ~/bin/py in `bash -c`; test-slot the same: `test-slot bash -c '...'`).
+S3 wave 10 (2026-11-02/03, merge log/roadmap/S3/MERGE_w10.md + log/roadmap/merges/I24.md, layers 31 / 30 / 32 applied in that order by
+their assemblers, U-1970..U-1983): S3.30 adds trace DELIVER kind 7 `call` (pos, addr, argc, a0, a1), written by trace_rec.js, applied by
+TraceInput in trace order and re-recorded by the live core (`LiveWriteLog::called`), so golfer_events' injected landmark call replays
+(boot PASS 2522 / 2522); S3.31 is overlay line rule 9 (float32 line ends and the second-vertex holes, U-1826; brush_465 split PASS);
+S3.32 makes Surface_ctor's vtable stores for the boot's 147 static Surface objects, the word read from the user's exe through
+f_imm_473ab9 (U-1834 option b, default ON, control tick.frame 14; y_inj3 split PASS). Census raw 127 / 571 / 0 / 0, split 697 / 1 / 0 / 0:
+the one split FAIL is cov_a_keys k_dlg_R's 1 px (held, G27 = a). tests/test_trace_format_s1.py fails on any tree without S3.30's
+trace_format.py, since the shared corpus holds the kind-7 golfer_events.trace.
 Section S4, audio engine model (2026-10-24, lead notes log/roadmap/S4/STATUS.md, steps re/roadmap/S4_steps.tsv, function map
 re/roadmap/S4_functions.tsv: 744 sound.dll rows, 573 C3/C4 + 31 C2 ported in S4.2..S4.9, 71 CRT and 69 dead not ported).
 The path-1 CSVs keep only an FNV-1a hash of each region's raw bytes, and every one of the 19,785 regions of the 980 sound.dll

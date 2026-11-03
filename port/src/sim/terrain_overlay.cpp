@@ -40,14 +40,117 @@ int mode() { return SG_NEGCTL(g_negctl_terrain_overlay); }
 // development variants: 1 = the sign of the minor delta, 3 = sign(dx) * sign(dy) on both axes, 4 = +1, 5 = -1, 6 = no tie decision
 // (|o| <= N/2 + kSpanSlack), 7 = x-major sign(dx) * sign(dy), y-major -sign(dx) * sign(dy). Set by overlay.setRule or,
 // before that, by SG_OVERLAY_RULE; negative control 11 = rule 0.
+// Roadmap S3.31 (log/roadmap/S3/31_notes.md): 8 = rule 2's footprint with the ends through the generic GL's float32 vertex
+// stage (float_ends below) instead of the double snap; 9 (the default) = rule 8 plus the second-vertex holes (second_vertex_hole
+// below). Negative control 12 = the double snap of the ends under rules 8 / 9, 13 = no holes under rule 9.
 constexpr double kSpanSlack = 0.002;
 int g_line_rule = -1;
 int line_rule() {
   if (g_line_rule < 0) {
     const char *e = std::getenv("SG_OVERLAY_RULE");
-    g_line_rule = (e && *e) ? std::atoi(e) : 2;
+    g_line_rule = (e && *e) ? std::atoi(e) : 9;
   }
   return g_line_rule;
+}
+
+// THE FLOAT32 VERTEX STAGE (roadmap S3.31): drawLine's glVertex2i ends through glOrtho's matrix as the generic GL keeps it (each
+// element computed in double, stored as float; the modelview is the identity, so the MVP is the projection), clip = m12 + v * m0
+// per axis with every operation in float (GlRaster's vertex rule, roadmap S3.21); the segment is clipped in clip space against
+// x >= -1, x <= 1, y >= -1, y <= 1 in that order (w = 1), t = d_in / (d_in - d_out) and the new end = in + t (out - in) per
+// coordinate in float, from the inside end; window = float(ndc * float(h - 2^-8)) + h, rounded half to even to 2^-8 (h the
+// viewport's half-size). Measured against the real GL (log/roadmap/S3/31_score.py): on S3.24's probe sets and the 9,534 dumped
+// game calls it changes no pixel the double snap had right and fixes 170; the double snap differs from it at the integer
+// coordinates x 200 and 599 and at ends the clip moved. Returns false when the segment lies outside the viewport.
+// THE SECOND-VERTEX HOLES (roadmap S3.31, U-1826): at the second end b of a segment the generic GL generates no fragment for
+// some pixels inside the end cap. In the segment's canonical frame (u along the major axis and v along the minor one, both
+// increasing from the first end a to b, origin b; s = |minor / major|), with o = v - u s the pixel centre's minor offset from the
+// line centre, N the span count and q = u' + v' s, a pixel is left out when 0 < frac(o + N/2) < 1 - s (its row held the same span
+// cell in the previous column) and q > 1 - sqrt(1 + s^2) / 2 (it lies beyond the end cap q = sqrt(1 + s^2) / 2 mirrored about the
+// perpendicular through b + (0.5, 0)). q is measured from b' = a + round(b - a) per axis (the first end plus the rounded delta:
+// where the 2^-8 snap moved b but not a, the real GL keeps the pixels a q from b would leave out), o from b; a, b are the ends
+// before the clip (a clipped second end leaves no hole on screen). A segment whose first end the clip moved gets no holes: on such
+// lines the real GL kept pixels this rule leaves out (two of the unit scenes' lines, U-1982). Exact ties are kept
+// (kHoleEps). Measured with glreplay on dense sub-pixel samples of the canonical plane (log/roadmap/S3/31_shape.py) and checked on
+// every probe set and the dumped game calls (31_holes.py); the first end has no holes.
+constexpr double kHoleEps = 1e-9;
+bool second_vertex_hole(double px, double py, double ax, double ay, double bx, double by, double wd) {
+  const double dx = bx - ax, dy = by - ay;
+  const bool xmaj = std::fabs(dx) >= std::fabs(dy);
+  const double maj = xmaj ? dx : dy, mnr = xmaj ? dy : dx;
+  if (maj == 0.0) return false;
+  // only the pixels within 2 px of the second end along the line can be holes (q > 1 - sqrt(1 + s^2) / 2 and inside the cap)
+  const double len = std::sqrt(dx * dx + dy * dy);
+  if (((px - bx) * dx + (py - by) * dy) / len < -2.0) return false;
+  const double span_n = std::floor(wd * len / std::fabs(maj)) + 2.0;
+  const double sM = maj < 0.0 ? -1.0 : 1.0, sm = mnr < 0.0 ? -1.0 : 1.0;
+  const double sl = std::fabs(mnr / maj);
+  const double u = ((xmaj ? px : py) - (xmaj ? bx : by)) * sM;
+  const double v = ((xmaj ? py : px) - (xmaj ? by : bx)) * sm;
+  const double o = v - u * sl;
+  const double c = o + span_n / 2.0;
+  const double f = c - std::floor(c);
+  const double bpx = ax + std::nearbyint(dx), bpy = ay + std::nearbyint(dy);
+  const double uq = ((xmaj ? px : py) - (xmaj ? bpx : bpy)) * sM;
+  const double vq = ((xmaj ? py : px) - (xmaj ? bpy : bpx)) * sm;
+  const double q = uq + vq * sl;
+  return f > kHoleEps && f < 1.0 - sl - kHoleEps && q > 1.0 - 0.5 * std::sqrt(1.0 + sl * sl);
+}
+
+bool float_ends(const LineGl &gl, int32_t fb_w, int32_t fb_h, int32_t x1, int32_t y1, int32_t x2, int32_t y2, bool clip_on, bool snap_on,
+                double &ax, double &ay, double &bx, double &by, double *unclipped = nullptr) {
+  const float mx0 = static_cast<float>(2.0 / gl.screen_w), mx12 = -1.0f;
+  const double ybot = gl.flip_y ? 0.0 : gl.screen_h, ytop = gl.flip_y ? gl.screen_h : 0.0;
+  const float my0 = static_cast<float>(2.0 / (ytop - ybot)), my12 = static_cast<float>(-(ytop + ybot) / (ytop - ybot));
+  auto clipc = [](float m12, float m0, int32_t v) {
+    volatile float p = static_cast<float>(v) * m0;
+    volatile float c = m12 + p;
+    return static_cast<float>(c);
+  };
+  float a[2] = {clipc(mx12, mx0, x1), clipc(my12, my0, y1)};
+  float b[2] = {clipc(mx12, mx0, x2), clipc(my12, my0, y2)};
+  const float a_in[2] = {a[0], a[1]}, b_in[2] = {b[0], b[1]};
+  if (clip_on) {
+    const int axis[4] = {0, 0, 1, 1};
+    const float sg[4] = {1.0f, -1.0f, 1.0f, -1.0f};
+    for (int k = 0; k < 4; ++k) {
+      const int i = axis[k];
+      volatile float da = 1.0f + sg[k] * a[i], db = 1.0f + sg[k] * b[i];
+      const float fa = da, fb = db;
+      if (fa < 0.0f && fb < 0.0f) return false;
+      if (fa < 0.0f || fb < 0.0f) {
+        float *in = fa < 0.0f ? b : a, *out = fa < 0.0f ? a : b;
+        const float din = fa < 0.0f ? fb : fa, dout = fa < 0.0f ? fa : fb;
+        volatile float den = din - dout;
+        volatile float t = din / den;
+        float nw[2];
+        for (int j = 0; j < 2; ++j) {
+          volatile float diff = out[j] - in[j];
+          volatile float step = t * diff;
+          volatile float val = in[j] + step;
+          nw[j] = val;
+        }
+        out[0] = nw[0];
+        out[1] = nw[1];
+      }
+    }
+  }
+  auto win = [snap_on](float c, double h) {
+    volatile float p = c * static_cast<float>(h - 1.0 / 256.0);
+    const double w = static_cast<double>(p) + h;
+    return snap_on ? std::nearbyint(256.0 * w) / 256.0 : w;
+  };
+  const double hx = fb_w / 2.0, hy = fb_h / 2.0;
+  ax = win(a[0], hx);
+  ay = win(a[1], hy);
+  bx = win(b[0], hx);
+  by = win(b[1], hy);
+  if (unclipped) {
+    unclipped[0] = win(a_in[0], hx);
+    unclipped[1] = win(a_in[1], hy);
+    unclipped[2] = win(b_in[0], hx);
+    unclipped[3] = win(b_in[1], hy);
+  }
+  return true;
 }
 
 // the 4x4 ordered dither of the generic GL's 16-bit write (gl_raster.cpp quantize, fitted on the terrain frames)
@@ -237,16 +340,39 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t 
   const double ca = mode() == 2 ? 1.0 : clamp01(static_cast<float>(alpha) / 10.0f);
   // window coordinates through glOrtho and the viewport (0, 0, fb_w, fb_h)
   const bool flip = mode() == 4 ? !gl.flip_y : gl.flip_y;
-  const double sx = static_cast<double>(fb_w) / gl.screen_w, sy = static_cast<double>(fb_h) / gl.screen_h;
-  double ax = x1 * sx, bx = x2 * sx;
-  double ay = flip ? y1 * sy : (gl.screen_h - static_cast<double>(y1)) * sy;
-  double by = flip ? y2 * sy : (gl.screen_h - static_cast<double>(y2)) * sy;
-  if (mode() != 3 && !clip(ax, ay, bx, by, fb_w, fb_h)) return 0;
-  const double cx = fb_w / 2.0, cy = fb_h / 2.0;
-  ax = snap(ax, cx, cx);
-  bx = snap(bx, cx, cx);
-  ay = snap(ay, cy, cy);
-  by = snap(by, cy, cy);
+  // the line rule (see line_rule); control 11 = rule 0, control 12 = the double snap of the ends under rules 8 / 9, control 13 =
+  // no second-vertex holes under rule 9
+  const int rule = mode() == 11 ? 0 : line_rule();
+  const bool float_vertex = (rule == 8 || rule == 9) && mode() != 12;
+  bool holes = rule == 9 && mode() != 13;
+  double ax, ay, bx, by;
+  double ends0[4] = {0.0, 0.0, 0.0, 0.0};   // the ends before the clip (the second-vertex holes are measured from them)
+  if (float_vertex) {
+    LineGl g2 = gl;
+    g2.flip_y = flip;
+    if (!float_ends(g2, fb_w, fb_h, x1, y1, x2, y2, mode() != 3, mode() != 5, ax, ay, bx, by, ends0)) return 0;
+    if (ax != ends0[0] || ay != ends0[1]) holes = false;   // the clip moved the first end
+  } else {
+    const double sx = static_cast<double>(fb_w) / gl.screen_w, sy = static_cast<double>(fb_h) / gl.screen_h;
+    ax = x1 * sx;
+    bx = x2 * sx;
+    ay = flip ? y1 * sy : (gl.screen_h - static_cast<double>(y1)) * sy;
+    by = flip ? y2 * sy : (gl.screen_h - static_cast<double>(y2)) * sy;
+    {
+      const double cx0 = fb_w / 2.0, cy0 = fb_h / 2.0;
+      ends0[0] = snap(ax, cx0, cx0);
+      ends0[1] = snap(ay, cy0, cy0);
+      ends0[2] = snap(bx, cx0, cx0);
+      ends0[3] = snap(by, cy0, cy0);
+    }
+    if (mode() != 3 && !clip(ax, ay, bx, by, fb_w, fb_h)) return 0;
+    const double cx = fb_w / 2.0, cy = fb_h / 2.0;
+    if (snap(ax, cx, cx) != ends0[0] || snap(ay, cy, cy) != ends0[1]) holes = false;   // the clip moved the first end
+    ax = snap(ax, cx, cx);
+    bx = snap(bx, cx, cx);
+    ay = snap(ay, cy, cy);
+    by = snap(by, cy, cy);
+  }
   const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
   if (len == 0.0) return 0;
   const double ux = dx / len, uy = dy / len, half = wd / 2.0;
@@ -259,13 +385,12 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t 
   if (dump.on()) dump.head(x1, y1, x2, y2, colour, width, alpha, gl);
   // the span rule (roadmap S3.24): per column of the major axis the real GL draws N = floor(w * L / |major|) + 2 pixels, the
   // pixel centres whose minor offset s from the line centre (o times the tie sign) lies in [-N/2, N/2)
-  const int rule = mode() == 11 ? 0 : line_rule();   // control 11: S3.8's footprint, no span
   const bool xmaj = std::fabs(dx) >= std::fabs(dy);
   double span_n = 0.0, span_sign = 1.0;
   if (rule != 0) {
     span_n = std::floor(wd * len / std::max(std::fabs(dx), std::fabs(dy))) + 2.0;
     const double sgx = dx < 0.0 ? -1.0 : 1.0, sgy = dy < 0.0 ? -1.0 : 1.0;
-    span_sign = rule == 1 ? (xmaj ? sgy : sgx) : rule == 2 ? (xmaj ? sgx * sgy : sgx) : rule == 3 ? sgx * sgy
+    span_sign = (rule == 2 || rule == 8 || rule == 9) ? (xmaj ? sgx * sgy : sgx) : rule == 1 ? (xmaj ? sgy : sgx) : rule == 3 ? sgx * sgy
                 : rule == 7 ? (xmaj ? sgx * sgy : -sgx * sgy) : rule == 5 ? -1.0 : 1.0;
   }
   int64_t written = 0;
@@ -284,6 +409,7 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t 
       else
         cov = clamp01(half + 0.5 - std::fabs(n)) * clamp01(t + 0.5) * clamp01(len - t + 0.5);
       if (cov <= 0.0) continue;
+      if (holes && second_vertex_hole(x + 0.5, y + 0.5, ends0[0], ends0[1], ends0[2], ends0[3], wd)) continue;
       const double al = ca * cov;
       uint16_t &d = fb[static_cast<size_t>(y) * static_cast<size_t>(fb_w) + static_cast<size_t>(x)];
       const int dr = (d >> 10) & 31, dg = (d >> 5) & 31, db = d & 31;

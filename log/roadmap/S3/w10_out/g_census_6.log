@@ -1,0 +1,9 @@
+== census_6 start 2026-11-02 16:24:41
+[1/7] cov_k1_routing FAIL=2 PASS=2 (6.1 s)
+[2/7] cov_k1_steps FAIL=2 PASS=1 (8.1 s)
+[3/7] cov_k1_terrain FAIL=4 PASS=1 (6.1 s)
+[4/7] cov_k1_washers FAIL=4 PASS=1 (14.9 s)
+[5/7] cov_k2_build FAIL=8 (11.2 s)
+[6/7] cov_k2_golfers FAIL=4 (10.2 s)
+[7/7] cov_k2_label FAIL=6 (4.8 s)
+{"rows": 35, "counts": {"PASS": 5, "FAIL": 30}}

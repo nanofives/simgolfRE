@@ -1,0 +1,8 @@
+syn_ties.npz {'rec': 900, 'r2': 118, 'r8': 110, 'c12': 118, 'new': 0, 'fixed': 8, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+ph_fan.npz {'rec': 2480, 'r2': 144, 'r8': 130, 'c12': 144, 'new': 0, 'fixed': 14, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+ph_short.npz {'rec': 5440, 'r2': 230, 'r8': 216, 'c12': 230, 'new': 0, 'fixed': 14, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+sweep.npz {'rec': 2133, 'r2': 410, 'r8': 336, 'c12': 410, 'new': 0, 'fixed': 74, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+sweep8.npz {'rec': 1432, 'r2': 245, 'r8': 210, 'c12': 245, 'new': 0, 'fixed': 35, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+len.npz {'rec': 4464, 'r2': 2254, 'r8': 2007, 'c12': 2254, 'new': 0, 'fixed': 247, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+rev.npz {'rec': 4464, 'r2': 2254, 'r8': 2007, 'c12': 2254, 'new': 0, 'fixed': 247, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}
+streams.npz {'rec': 9534, 'r2': 104, 'r8': 91, 'c12': 104, 'new': 0, 'fixed': 13, 'py_differ': 0, 'rec_py_differ': 0, 'r2_vs_py_snap': 0}

@@ -1,0 +1,77 @@
+[w8_lock] S3.30 queued at 2026-11-01 16:55:15
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.7 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.6 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.1 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.2 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.1 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.0 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.6 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.5 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.7 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.9 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.7 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.1 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.3 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.6 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.3 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.9 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.7 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.8 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.5 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.1 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.3 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=34.7 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.2 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.3 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.4 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=35.8 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.2 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.2 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.3 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.4 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=37.2 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=37.5 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=37.2 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=36.9 GB
+[w8_lock] S3.30 waiting: lock='step=S11.4' ahead=['S3.31', 'I22'] free_commit=37.0 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.2 GB
+[w8_lock] S3.30 waiting: lock='step=S3.31' ahead=['I22'] free_commit=37.6 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=37.2 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.4 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.3 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.9 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.8 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.4 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.8 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.0 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.9 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.7 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.1 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.2 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=35.9 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.4 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.6 GB
+[w8_lock] S3.30 waiting: lock='step=I22' ahead=[] free_commit=36.7 GB
+[w8_lock] S3.30 TOOK the lock at 2026-11-01 17:05:06 (waited 591 s, free commit 36.8 GB)
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_30
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 12 items
+
+port/test/test_trace_call.py::test_call_round_trip_and_replay_plan PASSED [  8%]
+port/test/test_trace_call.py::test_call_record_rules[3-slots0-argc 3] PASSED [ 16%]
+port/test/test_trace_call.py::test_call_record_rules[1-slots1-past argc] PASSED [ 25%]
+port/test/test_trace_call.py::test_writer_refuses_three_arguments PASSED [ 33%]
+port/test/test_trace_call.py::test_recorder_encodes_call_and_flags_unknown_actions PASSED [ 41%]
+port/test/test_trace_call.py::test_golfer_events_trace_has_one_call PASSED [ 50%]
+port/test/test_trace_call.py::test_golfer_events_boot_passes PASSED      [ 58%]
+port/test/test_trace_call.py::test_call_controls_red[20] PASSED          [ 66%]
+port/test/test_trace_call.py::test_call_controls_red[21] PASSED          [ 75%]
+port/test/test_trace_call.py::test_call_controls_red[22] PASSED          [ 83%]
+port/test/test_trace_call.py::test_unknown_call_address_stops_the_run PASSED [ 91%]
+port/test/test_trace_call.py::test_live_core_records_the_call PASSED     [100%]
+
+======================= 12 passed in 169.15s (0:02:49) ========================
+[w8_lock] S3.30 released at 2026-11-01 17:07:58

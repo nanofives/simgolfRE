@@ -1,0 +1,65 @@
+[w8_lock] S3.32 queued at 2026-11-02 11:19:17
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 11:19:17 (waited 0 s, free commit 43.7 GB)
+[1/1] t_test_boot_surfaces rc=0 6 s :: 4 passed in 4.37s
+[done] gates t_test_boot_surfaces
+[w8_lock] S3.32 released at 2026-11-02 11:19:23
+[w8_lock] S3.32 queued at 2026-11-02 11:19:23
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 11:19:23 (waited 0 s, free commit 43.8 GB)
+[1/1] w32_test_boot_surfaces rc=0 3 s :: 4 passed in 2.43s
+[done] gates w32_test_boot_surfaces
+[w8_lock] S3.32 released at 2026-11-02 11:19:27
+[w8_lock] S3.32 queued at 2026-11-02 11:19:27
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 11:19:27 (waited 0 s, free commit 43.7 GB)
+[1/1] census_1 rc=0 1501 s :: {"rows": 83, "counts": {"PASS": 6, "FAIL": 77}}
+[done] gates census_1
+[w8_lock] S3.32 released at 2026-11-02 11:44:29
+[w8_lock] S3.32 queued at 2026-11-02 11:44:29
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 11:44:29 (waited 0 s, free commit 45.7 GB)
+[1/1] census_2 rc=0 319 s :: {"rows": 97, "counts": {"PASS": 15, "FAIL": 82}}
+[done] gates census_2
+[w8_lock] S3.32 released at 2026-11-02 11:49:48
+[w8_lock] S3.32 queued at 2026-11-02 11:49:48
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 11:49:48 (waited 0 s, free commit 45.6 GB)
+[1/1] census_3 rc=0 779 s :: {"rows": 60, "counts": {"PASS": 20, "FAIL": 40}}
+[done] gates census_3
+[w8_lock] S3.32 released at 2026-11-02 12:02:47
+[w8_lock] S3.32 queued at 2026-11-02 12:02:47
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:02:47 (waited 0 s, free commit 46.2 GB)
+[1/1] census_4 rc=0 1223 s :: {"rows": 33, "counts": {"FAIL": 28, "PASS": 5}}
+[done] gates census_4
+[w8_lock] S3.32 released at 2026-11-02 12:23:12
+[w8_lock] S3.32 queued at 2026-11-02 12:23:13
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:23:13 (waited 0 s, free commit 46.3 GB)
+[1/1] census_5 rc=0 598 s :: {"rows": 101, "counts": {"FAIL": 95, "PASS": 6}}
+[done] gates census_5
+[w8_lock] S3.32 released at 2026-11-02 12:33:13
+[w8_lock] S3.32 queued at 2026-11-02 12:33:13
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:33:13 (waited 0 s, free commit 46.3 GB)
+[1/1] census_6 rc=0 171 s :: {"rows": 35, "counts": {"PASS": 5, "FAIL": 30}}
+[done] gates census_6
+[w8_lock] S3.32 released at 2026-11-02 12:36:04
+[w8_lock] S3.32 queued at 2026-11-02 12:36:04
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:36:04 (waited 0 s, free commit 46.5 GB)
+[1/1] census_7 rc=0 160 s :: {"rows": 87, "counts": {"FAIL": 77, "PASS": 10}}
+[done] gates census_7
+[w8_lock] S3.32 released at 2026-11-02 12:38:44
+[w8_lock] S3.32 queued at 2026-11-02 12:38:45
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:38:45 (waited 0 s, free commit 46.4 GB)
+[1/1] census_8 rc=0 172 s :: {"rows": 51, "counts": {"PASS": 20, "FAIL": 31}}
+[done] gates census_8
+[w8_lock] S3.32 released at 2026-11-02 12:41:37
+[w8_lock] S3.32 queued at 2026-11-02 12:41:38
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:41:38 (waited 0 s, free commit 46.5 GB)
+[1/1] census_9 rc=0 243 s :: {"rows": 103, "counts": {"PASS": 30, "FAIL": 63, "NOT_RUN": 10}}
+[done] gates census_9
+[w8_lock] S3.32 released at 2026-11-02 12:45:41
+[w8_lock] S3.32 queued at 2026-11-02 12:45:41
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:45:41 (waited 0 s, free commit 46.7 GB)
+[1/1] census_10 rc=0 314 s :: {"rows": 48, "counts": {"PASS": 9, "FAIL": 39}}
+[done] gates census_10
+[w8_lock] S3.32 released at 2026-11-02 12:50:56
+[w8_lock] S3.32 queued at 2026-11-02 12:50:56
+[w8_lock] S3.32 TOOK the lock at 2026-11-02 12:50:56 (waited 0 s, free commit 46.9 GB)
+[1/1] census_full rc=0 1 s :: {"rows": 698, "counts": {"PASS": 126, "FAIL": 562, "NOT_RUN": 10}}
+[done] gates census_full
+[w8_lock] S3.32 released at 2026-11-02 12:50:57

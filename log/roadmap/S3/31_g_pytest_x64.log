@@ -1,0 +1,69 @@
+[test-slot] all 6 test slots busy, waiting (0s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (30s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (60s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (90s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (120s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (150s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (180s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (210s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 14772 since 11-01 17:12 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\D4-DC-RFX-CORE: bash -c py -3.12 ../orch-integration/re/orchestrator/mashed_lock.py run --solo --label D4-DC-RFX-CORE-gates -- bash -c 'A4_OUT=D:/MashedWT/D
+[test-slot] all 6 test slots busy, waiting (240s so far). Holders:
+  slot 0: pid 8296 since 11-01 14:36 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c sh log/roadmap/merges/I22/resume_win32.sh
+  slot 1: pid 25452 since 11-01 16:50 in C:\Users\maria\Desktop\Proyectos\SimGolf: bash -c while ! grep -q build_w32 log/roadmap/S11/4_out/g_gates.log; do sleep 20; done; bash log/roadmap/S11/4_gates.sh static model_header 
+  slot 2: pid 10712 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh on_a --timeout 300 --hooks 0x00468980,0x00470670
+  slot 3: pid 19104 since 11-01 17:14 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash D:/MashedWT/MATCH-TOPDOWN-T03_data/gates.sh g1
+  slot 4: pid 18060 since 11-01 16:31 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\PROMOTE-DETORIG-PILOT: bash -c bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh off_c --timeout 300; bash /d/MashedWT/PROMOTE-DETORIG-PILOT_data/run_arm.sh o
+  slot 5: pid 26280 since 11-01 17:20 in C:\Users\maria\Desktop\Proyectos\Mashed\.worktrees\MATCH-TOPDOWN-T03: bash -c cmd //c "set MASHED_NO_DEPLOY=1&& mashedmod\build.bat"
+[test-slot] acquired slot 6/6 after 260s
+........................................................ssssss           [100%]
+=========================== short test summary info ===========================
+SKIPPED [4] port\test\test_terrain_overlay.py:381: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+SKIPPED [2] port\test\test_terrain_overlay.py:396: opt-in: SG_S38_FRAMES=1 (pinned boots, a few minutes)
+56 passed, 6 skipped in 88.52s (0:01:28)

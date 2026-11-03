@@ -1,0 +1,124 @@
+sim objects with a constructed Surface vtable word within 0x400 bytes: 123
+  g_cornerCache                0x0051b770 size 0x 4e20  after: +0 (4 words)       before: -
+  g_memberTypeHistory          0x00520640 size 0x  3e8  after: -                  before: -44 (4 words)
+  g_storyDefs                  0x0053a454 size 0x 1388  after: +4 (22 words)      before: -
+  g_tilePathCost               0x0053bbac size 0x  9c4  after: +0 (24 words)      before: -48 (22 words)
+  g_tileFlags                  0x0053caf0 size 0x 1388  after: +0 (24 words)      before: -44 (23 words)
+  g_funHistory                 0x0053e63c size 0x  3e8  after: -                  before: -48 (23 words)
+  g_thoughtOnPartner           0x005409a8 size 0x    4  after: +1004 (1 words)    before: -44 (23 words)
+  g_skillHistory               0x005409ac size 0x  3e8  after: +4 (24 words)      before: -48 (23 words)
+  g_holeDirMask                0x00541318 size 0x    4  after: +612 (10 words)    before: -44 (23 words)
+  g_panelListIds               0x0054131c size 0x  264  after: +0 (24 words)      before: -48 (23 words)
+  g_skyActors                  0x005419d0 size 0x   40  after: +8 (16 words)      before: -44 (23 words)
+  g_probeType1Strokes          0x00541a10 size 0x    4  after: +4 (16 words)      before: -108 (21 words)
+  g_skillRatingX100            0x00541cd8 size 0x    4  after: -                  before: -44 (21 words)
+  g_topScores                  0x00541ce0 size 0x  618  after: +240 (1 words)     before: -52 (21 words)
+  g_courseRanking              0x005422f8 size 0x   f0  after: +0 (1 words)       before: -
+  g_tileTypeSaved              0x00542414 size 0x  9c4  after: +120 (8 words)     before: -44 (1 words)
+  g_probeShotX                 0x00542dfc size 0x   28  after: +44 (8 words)      before: -
+  g_probeShotY                 0x00542e24 size 0x   28  after: +4 (8 words)       before: -
+  g_tileLevel                  0x00543018 size 0x  9c4  after: +4 (16 words)      before: -108 (8 words)
+  g_activeObjectLevel          0x00543ca0 size 0x   50  after: -                  before: -44 (16 words)
+  unk_00543cf4                 0x00543cf4 size 0x    4  after: -                  before: -128 (16 words)
+  unk_00543cf8                 0x00543cf8 size 0x    4  after: -                  before: -132 (16 words)
+  g_amenityUnlockMask          0x00543cfc size 0x    4  after: -                  before: -136 (16 words)
+  g_cachedCameraTileY          0x00543d00 size 0x    4  after: -                  before: -140 (16 words)
+  g_cachedCameraTileX          0x00543d04 size 0x    4  after: -                  before: -144 (16 words)
+  g_cursorTileX                0x00543d08 size 0x    4  after: -                  before: -148 (16 words)
+  g_cursorTileY                0x00543d0c size 0x    4  after: -                  before: -152 (16 words)
+  g_golferPhrases              0x00543d10 size 0x19a28  after: -                  before: -156 (16 words)
+  g_celebrities                0x0055d738 size 0x  e74  after: +4 (23 words)      before: -
+  g_lastTipDate                0x0055e5ac size 0x    4  after: +0 (23 words)      before: -
+  g_tileScreenX                0x0055eb40 size 0x 1388  after: -                  before: -44 (22 words)
+  g_tileScreenY                0x0055fec8 size 0x 1388  after: +16 (23 words)     before: -
+  g_courseReportScore          0x00561250 size 0x    4  after: +12 (23 words)     before: -
+  g_awardStories               0x00561258 size 0x    4  after: +4 (24 words)      before: -
+  g_panelListCount             0x0056199c size 0x    4  after: -                  before: -44 (23 words)
+  g_tileWallMask               0x005619a0 size 0x  9c4  after: +4 (24 words)      before: -48 (23 words)
+  g_theme                      0x00567328 size 0x   64  after: +4 (24 words)      before: -44 (23 words)
+  g_tutorialPage               0x00567a18 size 0x    4  after: +4 (6 words)       before: -44 (23 words)
+  g_eventFlags567a1c           0x00567a1c size 0x    4  after: +0 (6 words)       before: -48 (23 words)
+  g_tournamentPurse            0x00567b04 size 0x    4  after: +0 (1 words)       before: -52 (22 words)
+  g_ballTrailX                 0x00567b34 size 0x  260  after: -                  before: -44 (22 words)
+  g_golferStripSlot            0x00567ff4 size 0x  260  after: +4 (20 words)      before: -
+  g_holesPlusOne               0x005685f0 size 0x    4  after: -                  before: -84 (20 words)
+  g_cameraRot                  0x005685f4 size 0x    4  after: -                  before: -88 (20 words)
+  g_holeNoticeMask             0x005685f8 size 0x    4  after: -                  before: -92 (20 words)
+  g_cameraTargetY              0x005685fc size 0x    4  after: -                  before: -96 (20 words)
+  g_eventHistory               0x00568600 size 0x  3e8  after: -                  before: -100 (20 words)
+  g_scenicDedications          0x005689e8 size 0x  320  after: +704 (8 words)     before: -
+  g_saveFd                     0x00568d08 size 0x    4  after: +700 (8 words)     before: -
+  g_nearTileDist               0x00568d0c size 0x    4  after: +696 (8 words)     before: -
+  g_accuracySkillX100          0x0056949c size 0x    4  after: -                  before: -48 (23 words)
+  g_unreadText569528           0x00569528 size 0x   80  after: -                  before: -188 (20 words)
+  g_tileVariant                0x0056988c size 0x  9c4  after: +0 (22 words)      before: -
+  unk_0056a514                 0x0056a514 size 0x    4  after: +56 (21 words)     before: -48 (16 words)
+  unk_0056a518                 0x0056a518 size 0x    4  after: +52 (21 words)     before: -52 (16 words)
+  g_nextArrivalOrder           0x0056a51c size 0x    4  after: +48 (21 words)     before: -56 (16 words)
+  unk_0056a520                 0x0056a520 size 0x    4  after: +44 (21 words)     before: -60 (16 words)
+  g_bestRounds                 0x0056a524 size 0x   28  after: +4 (22 words)      before: -64 (16 words)
+  g_nearTileX                  0x0056a91c size 0x    4  after: +40 (23 words)     before: -48 (21 words)
+  g_nearTileY                  0x0056a920 size 0x    4  after: +36 (23 words)     before: -52 (21 words)
+  g_golferStats                0x0056ae70 size 0x 1700  after: +584 (1 words)     before: -44 (23 words)
+  g_floatLabelY                0x0056c794 size 0x   20  after: +4 (1 words)       before: -
+  g_forcedEventBits            0x0056c7b4 size 0x    4  after: +0 (1 words)       before: -
+  g_tileMoodDown               0x0056c7e4 size 0x  9c4  after: -                  before: -44 (1 words)
+  g_namePool                   0x0056fcb0 size 0x 1002  after: +6 (24 words)      before: -
+  g_thoughtSeenHi              0x00571d38 size 0x    4  after: +4 (15 words)      before: -44 (23 words)
+  g_cash_div100                0x00571fd4 size 0x    4  after: -                  before: -44 (23 words)
+  g_courseTable                0x00571fd8 size 0x  30e  after: -                  before: -48 (23 words)
+  g_tileType                   0x005722e8 size 0x  9c4  after: -                  before: -832 (5 words)
+  g_tileTypeAttrs              0x00578350 size 0x  450  after: +0 (2 words)       before: -
+  g_awardTournamentPoints      0x005787cc size 0x    4  after: +0 (1 words)       before: -44 (1 words)
+  g_golfers                    0x005794b8 size 0x 9c00  after: -                  before: -44 (17 words)
+  g_tileBuildCode              0x005830b8 size 0x  9c4  after: +4 (24 words)      before: -
+  g_financeYears               0x00584210 size 0x  7d0  after: -                  before: -44 (23 words)
+  g_editQueueX                 0x00586b50 size 0x  400  after: +0 (2 words)       before: -
+  g_editQueueY                 0x00586fa8 size 0x  400  after: +0 (24 words)      before: -44 (2 words)
+  g_pendingCourseInfo          0x00587da0 size 0x   dc  after: +44 (23 words)     before: -748 (7 words)
+  g_textBuf                    0x0058a528 size 0x   10  after: +0 (24 words)      before: -44 (23 words)
+  g_commentTone                0x0058b198 size 0x    4  after: +4 (23 words)      before: -44 (23 words)
+  g_nameLabelCount             0x0058bcb0 size 0x    4  after: -                  before: -44 (23 words)
+  g_placed_objects             0x0058bcb8 size 0x 1000  after: +0 (24 words)      before: -52 (23 words)
+  g_courseYards                0x0058d36c size 0x    4  after: -                  before: -44 (23 words)
+  g_pathGrid                   0x0058d370 size 0x  9c4  after: -                  before: -48 (23 words)
+  g_golferTypesBackup          0x0058f338 size 0x b7c0  after: +8 (20 words)      before: -
+  g_ratingMilestone            0x0059aaf8 size 0x    4  after: +4 (20 words)      before: -
+  g_coursePar                  0x0059aafc size 0x    4  after: +0 (20 words)      before: -
+  g_funRating                  0x0059ae78 size 0x    4  after: +468 (13 words)    before: -44 (20 words)
+  g_nextGolferSlot             0x0059ae7c size 0x    4  after: +464 (13 words)    before: -48 (20 words)
+  g_holePoints                 0x0059ae80 size 0x  1c8  after: +8 (24 words)      before: -52 (20 words)
+  g_lastStoryAdvanceDate       0x0059b048 size 0x    4  after: +4 (24 words)      before: -508 (12 words)
+  unk_0059b04c                 0x0059b04c size 0x    4  after: +0 (24 words)      before: -512 (12 words)
+  g_challengeLevel             0x0059b730 size 0x    4  after: +12 (23 words)     before: -44 (23 words)
+  unk_0059b734                 0x0059b734 size 0x    4  after: +8 (23 words)      before: -48 (23 words)
+  unk_0059b738                 0x0059b738 size 0x    4  after: +4 (23 words)      before: -52 (23 words)
+  unk_0059b73c                 0x0059b73c size 0x    4  after: +0 (23 words)      before: -56 (23 words)
+  g_courseIndex                0x0059bf90 size 0x    4  after: +4 (1 words)       before: -44 (23 words)
+  g_thoughtSeenLo              0x0059c08c size 0x    4  after: -                  before: -244 (18 words)
+  g_tileRefund                 0x0059c090 size 0x  9c4  after: +4 (24 words)      before: -248 (18 words)
+  g_namePoolOffset             0x0059d81c size 0x  100  after: +4 (24 words)      before: -48 (23 words)
+  g_golferClassSlotCounts      0x0059dea0 size 0x   80  after: +0 (24 words)      before: -44 (23 words)
+  g_flags                      0x0059e7b8 size 0x    4  after: +4 (24 words)      before: -44 (23 words)
+  g_storyPairs                 0x0059fc60 size 0x 3880  after: +24 (23 words)     before: -44 (23 words)
+  g_courseType                 0x005a34e0 size 0x    1  after: +23 (23 words)     before: -
+  g_namePoolLength             0x005a46b8 size 0x  100  after: +304 (4 words)     before: -44 (23 words)
+  g_tournamentPrep             0x005a47e0 size 0x    4  after: +260 (4 words)     before: -340 (16 words)
+  g_lastEditTileY              0x005a47e4 size 0x    4  after: +256 (4 words)     before: -344 (16 words)
+  g_ballScreenXs               0x005a47e8 size 0x   80  after: +128 (4 words)     before: -348 (16 words)
+  g_ballScreenYs               0x005a4868 size 0x   80  after: +0 (4 words)       before: -476 (13 words)
+  g_cornerLevel                0x005a4998 size 0x  a29  after: +7 (24 words)      before: -44 (10 words)
+  g_playerGolfer               0x005a59f8 size 0x    4  after: -                  before: -44 (23 words)
+  g_lastCameraRot              0x005a59fc size 0x    4  after: -                  before: -48 (23 words)
+  g_preferences                0x005a5a00 size 0x    4  after: -                  before: -52 (23 words)
+  g_playerSkills               0x005a5a04 size 0x   20  after: -                  before: -56 (23 words)
+  g_lastAllocatedGolfer        0x005a5a24 size 0x    4  after: -                  before: -88 (22 words)
+  g_editQueueMode              0x005a8834 size 0x  400  after: +92 (22 words)     before: -
+  g_objectTypeLevel            0x005a8c38 size 0x   50  after: +8 (24 words)      before: -
+  g_frameMs                    0x005a8c88 size 0x    4  after: +4 (24 words)      before: -
+  static_820f04                0x00820f04 size 0x    4  after: +56 (21 words)     before: -44 (2 words)
+  g_freeUnlockMask             0x00822c70 size 0x    4  after: +36 (1 words)      before: -288 (17 words)
+  g_courseId                   0x00822c78 size 0x    4  after: +28 (1 words)      before: -296 (17 words)
+  g_difficulty                 0x00822c88 size 0x    4  after: +12 (1 words)      before: -312 (17 words)
+  g_rng                        0x00822d9c size 0x    4  after: -                  before: -260 (11 words)
+  g_tileShadeA                 0x00822da0 size 0x  9c4  after: -                  before: -264 (11 words)

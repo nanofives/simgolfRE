@@ -1,0 +1,16 @@
+[1/1] static_trace rc=0 3 s :: 28 passed in 1.28s
+[1/1] validate_all rc=0 72 s :: 71 / 71 valid
+[1/1] census_ge rc=0 109 s :: {"rows": 10, "counts": {"PASS": 1, "FAIL": 9}}
+[1/1] w32_test_trace_call rc=1 687 s :: 1 failed, 11 passed in 674.25s (0:11:14)
+[1/1] controls_x64 rc=0 43 s :: 22 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["g_tileFlags", "g_walkers", "unk_005a9ccc", "g_rng"]}
+[1/1] validate_segs rc=0 70 s :: 205 / 205 valid
+[1/1] boot_x64 rc=0 1343 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[1/1] segs_x64 rc=0 873 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 872.2}
+[1/1] controls_win32 rc=0 65 s :: 22 FAIL 2522 2522 {"record": 2244, "T_port": 1275241, "T_orig": 1275241, "objects": ["g_tileFlags", "g_walkers", "unk_005a9ccc", "g_rng"]}
+[1/1] boot_win32 rc=0 1121 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[1/1] segs_win32 rc=0 1261 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 1259.9}
+[1/1] live_equiv_x64 rc=1 4193 s :: [28/71] cov_b_shots PASS 8151 
+[1/1] live_equiv_x64p rc=0 1950 s :: {"counts": {"PASS": 69, "NO_FRAMES": 2}}
+[1/1] t_test_trace_call rc=0 81 s :: 12 passed in 79.37s (0:01:19)
+[1/1] w32_test_trace_call rc=0 111 s :: 12 passed in 109.92s (0:01:49)
+[1/1] s1_trace rc=0 63 s :: 7 passed in 61.82s (0:01:01)

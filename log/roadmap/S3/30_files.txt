@@ -1,0 +1,28 @@
+re/tools/trace_format.py
+re/frida/js/trace_rec.js
+re/model/trace_schema.md
+port/schemas/trace.md
+port/src/sim/tick.cpp
+port/src/sim/live.cpp
+port/include/portsim/sim/live.h
+port/test/test_trace_call.py
+log/roadmap/S3/30_edits.py
+log/roadmap/S3/30_make_edits.py
+log/roadmap/S3/30_assemble.py
+log/roadmap/S3/30_gates.sh
+log/roadmap/S3/30_run_gates.sh
+log/roadmap/S3/30_chain.sh
+log/roadmap/S3/30_validate_all.py
+log/roadmap/S3/30_controls.py
+log/roadmap/S3/30_live_equiv.py
+log/roadmap/S3/30_cmp_gates.py
+log/roadmap/S3/30_notes.md
+log/roadmap/S3/30_merge.md
+log/roadmap/S3/30_uncertain.tsv
+log/roadmap/S3/30_files.txt
+log/roadmap/S3/30_work/ (local: logs, gate TSVs, the four golfer_events record / replay traces, helper scripts cmp_old.py cmp_rep.py cursor.py inspect_old.py)
+port/corpus/traces/golfer_events.trace (local, gitignored: rec2, sha256 91e7760d84e19ba1...)
+port/corpus/traces/golfer_events.trace.json (local, its sidecar)
+log/c3/alt/refs/golfer_events/s330_rec1, s330_rec2, s330_rep1, s330_rep2 (local run folders of scenario_refs.py)
+instances/s3_30 (local instance: original\ + winmm.dll 381ed2b2 from s3_w8)
+port/build/S3_30 (local tree; its `instances` is a junction to the repo's instances\), port/build/S3_30_base, port/build/S3_30v (local)

@@ -1,0 +1,9 @@
+== census_1 start 2026-11-02 11:19:28
+[1/7] championship FAIL=5 PASS=1 (64.2 s)
+[2/7] course_season FAIL=12 (150.6 s)
+[3/7] course_season_6y FAIL=12 (423.7 s)
+[4/7] cov_a_build FAIL=19 PASS=1 (28.5 s)
+[5/7] cov_a_build2 FAIL=9 PASS=1 (11.1 s)
+[6/7] cov_a_build3 FAIL=7 PASS=1 (15.3 s)
+[7/7] cov_a_career FAIL=13 PASS=2 (73.2 s)
+{"rows": 83, "counts": {"PASS": 6, "FAIL": 77}}

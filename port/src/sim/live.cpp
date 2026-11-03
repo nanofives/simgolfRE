@@ -76,6 +76,7 @@ class Recorder {
   struct Ev {
     uint8_t type = 0, sub = 0;  // trace record type / sub
     uint32_t a = 0, b = 0, c = 0;
+    uint32_t d = 0;             // DELIVER call (roadmap S3.30): argc (a = addr, b / c = the arguments)
     uint64_t v = 0;             // CLOCKRUN value
     uint32_t snap = 0;          // FRAME: index into snaps_
     uint32_t grp = 0;           // the dispatch the record belongs to (k + 1), 0 = none
@@ -238,6 +239,13 @@ class Recorder {
             u32(1);
             u32(0);
             u32(e.a);
+            u32(e.b);
+            u32(e.c);
+          } else if (e.sub == 7) {  // call (roadmap S3.30): pos, addr, argc, a0, a1
+            head(0x03, 7, 20);
+            u32(n);
+            u32(e.a);
+            u32(e.d);
             u32(e.b);
             u32(e.c);
           } else {
@@ -572,11 +580,26 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
     ++res_.writes;
     if (!rec_.on) return;
     if (in_head_) {
-      head_writes_.emplace_back(va, value);
+      head_writes_.push_back({4, va, value, 0, 0});
       return;
     }
     rec_.rec(0x03, 4, va, value);
     writes_pending_ = true;
+  }
+  // roadmap S3.30: an injected call is recorded where a write would be (TraceInput applies both from one list)
+  void called(uint32_t addr, uint32_t argc, uint32_t a0, uint32_t a1) override {
+    ++res_.writes;
+    if (!rec_.on) return;
+    if (in_head_) {
+      head_writes_.push_back({7, addr, a0, a1, argc});
+      return;
+    }
+    rec_call(addr, argc, a0, a1);
+    writes_pending_ = true;
+  }
+  void rec_call(uint32_t addr, uint32_t argc, uint32_t a0, uint32_t a1) {
+    rec_.rec(0x03, 7, addr, a0, a1);
+    rec_.ev.back().d = argc;
   }
 
   // ---- LiveMarker (roadmap S7.6)
@@ -943,7 +966,10 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
     rec_.frame(t, snapshot());
     last_body_ctx_ = true;
     open_batch_ = false;
-    for (const auto &w : head_writes_) rec_.rec(0x03, 4, w.first, w.second);
+    for (const HeadItem &w : head_writes_) {
+      if (w.sub == 7) rec_call(w.a, w.d, w.b, w.c);
+      else rec_.rec(0x03, 4, w.a, w.b);
+    }
     writes_pending_ = !head_writes_.empty();
     head_writes_.clear();
   }
@@ -1007,7 +1033,11 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
   bool open_batch_ = false;
   bool writes_pending_ = false;
   bool in_head_ = false;
-  std::vector<std::pair<uint32_t, uint32_t>> head_writes_;
+  struct HeadItem {  // a write (sub 4: a = va, b = value) or a call (sub 7: a = addr, b / c = arguments, d = argc)
+    uint8_t sub;
+    uint32_t a, b, c, d;
+  };
+  std::vector<HeadItem> head_writes_;
   uint64_t clock_answers_ = 0, cursor_answers_ = 0, batches_ = 0;
   // roadmap S7.6
   size_t cursor_ph_ = SIZE_MAX;   // the CURSOR record an inflated dispatch put in front of itself, until a read fills it

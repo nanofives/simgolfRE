@@ -1,0 +1,9 @@
+== census_4 start 2026-11-02 16:12:22
+[1/7] cov_b_inject FAIL=5 (22.6 s)
+[2/7] cov_b_inject2 FAIL=5 (22.7 s)
+[3/7] cov_b_location PASS=5 (5.7 s)
+[4/7] cov_b_locations FAIL=2 (11.8 s)
+[5/7] cov_b_paths FAIL=4 (15.7 s)
+[6/7] cov_b_people FAIL=5 (14.0 s)
+[7/7] cov_b_shots FAIL=7 (82.6 s)
+{"rows": 33, "counts": {"FAIL": 28, "PASS": 5}}

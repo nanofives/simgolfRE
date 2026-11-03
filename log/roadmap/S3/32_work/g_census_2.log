@@ -1,0 +1,9 @@
+== census_2 start 2026-11-02 11:44:29
+[1/7] cov_a_champ FAIL=8 PASS=3 (12.4 s)
+[2/7] cov_a_flags FAIL=10 PASS=1 (13.3 s)
+[3/7] cov_a_golfer FAIL=27 PASS=2 (42.7 s)
+[4/7] cov_a_keys FAIL=19 PASS=4 (19.6 s)
+[5/7] cov_a_keys2 FAIL=7 PASS=2 (12.4 s)
+[6/7] cov_a_keys3 FAIL=4 PASS=2 (28.2 s)
+[7/7] cov_a_play FAIL=7 PASS=1 (8.9 s)
+{"rows": 97, "counts": {"PASS": 15, "FAIL": 82}}

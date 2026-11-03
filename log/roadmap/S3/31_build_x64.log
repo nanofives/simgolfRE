@@ -1,0 +1,51 @@
+[w8_lock] S3.31 queued at 2026-11-01 17:04:08
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=['S3.30', 'S11.4'] free_commit=36.0 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=['S3.30', 'S11.4'] free_commit=36.1 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=['S3.30', 'S11.4'] free_commit=36.3 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=['S3.30', 'S11.4'] free_commit=36.6 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=['S3.30', 'S11.4'] free_commit=36.9 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.7 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.4 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.0 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=35.7 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=35.9 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.9 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.6 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.4 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.5 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=36.6 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=37.6 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=37.5 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=37.8 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=38.6 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=38.7 GB
+[w8_lock] S3.31 waiting: lock='step=S3.30' ahead=['I22', 'S11.4'] free_commit=39.0 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=['S11.4'] free_commit=38.9 GB
+[w8_lock] S3.31 waiting: lock='step=S11.4' ahead=['I22'] free_commit=38.3 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=[] free_commit=38.5 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=[] free_commit=38.6 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=[] free_commit=38.2 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=[] free_commit=38.2 GB
+[w8_lock] S3.31 waiting: lock='step=I22' ahead=[] free_commit=38.3 GB
+[w8_lock] S3.31 TOOK the lock at 2026-11-01 17:09:39 (waited 331 s, free commit 38.2 GB)
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x64-windows/share/freetype (module fttext)
+-- Configuring done (0.6s)
+-- Generating done (1.6s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_31/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\app\Release\portapp_input.lib
+  terrain_overlay.cpp
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\Release\portsim.lib
+  portapp_audio.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\app\Release\portapp_audio.lib
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\app\Release\simgolf_port.exe
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\app\Release\simgolf_input_check.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_31/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/S3_31/port/build/x64/Release/portsim_c.exp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\Release\portsim_layout_test.exe
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\Release\portsim_c.dll
+  simgolf_audio_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\app\Release\simgolf_audio_check.exe
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\Release\portsim_core_test.exe
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\S3_31\port\build\x64\Release\portsim_c.dll
+[w8_lock] S3.31 released at 2026-11-01 17:09:54

@@ -1,0 +1,9 @@
+== census_9 start 2026-11-02 12:41:38
+[1/7] cov_r_quit FAIL=5 PASS=10 (13.0 s)
+[2/7] cov_r_reload FAIL=3 (23.9 s)
+[3/7] cov_r_s2_screens FAIL=16 PASS=16 (19.6 s)
+[4/7] cov_r_sve FAIL=3 (20.3 s)
+[5/7] cov_r_theme_cancel FAIL=2 PASS=4 (7.5 s)
+[6/7] cov_r_tutorial FAIL=34 (21.4 s)
+[7/7] golfer_events NOT_RUN=10 (- s)
+{"rows": 103, "counts": {"PASS": 30, "FAIL": 63, "NOT_RUN": 10}}

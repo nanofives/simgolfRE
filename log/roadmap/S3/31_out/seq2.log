@@ -1,0 +1,12 @@
+21:07:22 census batch cov_a_quit cov_a_quit_title cov_b_build cov_b_career cov_b_career_types cov_b_decor cov_b_holes18: 21 cached
+21:37:43 census batch cov_b_inject cov_b_inject2 cov_b_location cov_b_locations cov_b_paths cov_b_people cov_b_shots: 28 cached
+22:24:03 census batch cov_b_shots2 cov_b_title cov_k1_animals cov_k1_label cov_k1_magazine_d2900 cov_k1_paths cov_k1_river: 35 cached
+22:48:25 census batch cov_k1_routing cov_k1_steps cov_k1_terrain cov_k1_washers cov_k2_build cov_k2_golfers cov_k2_label: 42 cached
+23:24:57 census batch cov_k2_simfoto cov_k3_build cov_k3_camera cov_k3_camera2 cov_k3_career cov_k3_champ cov_k3_hole19: 49 cached
+00:09:02 census batch cov_l_bridge cov_l_camera cov_l_point cov_r_bio cov_r_course cov_r_flic_input cov_r_palette_hot: 56 cached
+01:11:11 census batch cov_r_quit cov_r_reload cov_r_s2_screens cov_r_sve cov_r_theme_cancel cov_r_tutorial golfer_events: 63 cached
+02:35:50 census batch golfer_stories mood5_fixture sandbox_basic stories9_fixture stories_fixture ui_tour ui_tour_v: 70 cached
+03:40:33 segments x64 rc=0
+04:04:23 segments Win32 rc=0
+04:32:21 boot x64 rc=0
+05:17:45 boot Win32 rc=0

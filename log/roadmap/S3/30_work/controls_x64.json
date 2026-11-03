@@ -1,0 +1,75 @@
+{
+ "call": {
+  "after_frame_record": 2243,
+  "pos": 334696,
+  "addr": "0x4722c0",
+  "args": [
+   2,
+   6
+  ]
+ },
+ "backend": "x64",
+ "0": {
+  "status": "PASS",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": null,
+  "detail": "",
+  "run_detail": "end checkpoint at site 312196 (a frame-wait site): the last frame ran to the frame wait; input: 242 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 434 served, 0 none left, 0 dispatches late"
+ },
+ "20": {
+  "status": "FAIL",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": {
+   "record": 2244,
+   "T_port": 1275241,
+   "T_orig": 1275241,
+   "objects": [
+    "f_w_4c2e00",
+    "unk_005a6d40",
+    "g_messageTimer",
+    "g_freeUnlockMask",
+    "g_rng"
+   ]
+  },
+  "detail": "{\"record\": 2244, \"T_port\": 1275241, \"T_orig\": 1275241, \"objects\": [\"f_w_4c2e00\", \"unk_005a6d40\", \"g_messageTimer\", \"g_freeUnlockMask\", \"g_rng\"]}",
+  "run_detail": "end checkpoint at site 312196 (a frame-wait site): the last frame ran to the frame wait; input: 242 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 434 served, 0 none left, 0 dispatches late"
+ },
+ "21": {
+  "status": "FAIL",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": {
+   "record": 2244,
+   "T_port": 1275241,
+   "T_orig": 1275241,
+   "objects": [
+    "unk_005a6d40",
+    "g_messageTimer",
+    "g_freeUnlockMask",
+    "g_rng"
+   ]
+  },
+  "detail": "{\"record\": 2244, \"T_port\": 1275241, \"T_orig\": 1275241, \"objects\": [\"unk_005a6d40\", \"g_messageTimer\", \"g_freeUnlockMask\", \"g_rng\"]}",
+  "run_detail": "end checkpoint at site 312196 (a frame-wait site): the last frame ran to the frame wait; input: 242 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 434 served, 0 none left, 0 dispatches late"
+ },
+ "22": {
+  "status": "FAIL",
+  "records": 2522,
+  "expected": 2522,
+  "first_divergence": {
+   "record": 2244,
+   "T_port": 1275241,
+   "T_orig": 1275241,
+   "objects": [
+    "g_tileFlags",
+    "g_walkers",
+    "unk_005a9ccc",
+    "g_rng"
+   ]
+  },
+  "detail": "{\"record\": 2244, \"T_port\": 1275241, \"T_orig\": 1275241, \"objects\": [\"g_tileFlags\", \"g_walkers\", \"unk_005a9ccc\", \"g_rng\"]}",
+  "run_detail": "end checkpoint at site 312196 (a frame-wait site): the last frame ran to the frame wait; input: 242 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 434 served, 0 none left, 0 dispatches late"
+ }
+}

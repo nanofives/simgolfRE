@@ -244,7 +244,7 @@ function trHandleNew(keys) { const k = trHRaw.length; trHRaw.push(keys[0]); for 
 const trHandle = (key) => { const k = trH.get(key); return k === undefined ? 0xffffffff : k; };
 
 // ---- deliveries (record: wrappers of scenario_det's functions; replay: the same wrappers, called by onReplayDue)
-const TRD = { cursor: 1, vkey: 2, post: 3, w32: 4, timer: 5, note: 6 };
+const TRD = { cursor: 1, vkey: 2, post: 3, w32: 4, timer: 5, note: 6, call: 7 };
 const _doAction = doAction, _fireTimer = fireTimer, _poll = poll, _dumpRegions = dumpRegions;
 doAction = function (a) {
   const k = TRD[a.k] || 0;
@@ -253,7 +253,16 @@ doAction = function (a) {
   else if (a.k === 'vkey') f = [['u32', a.vk], ['u32', a.st]];
   else if (a.k === 'post') f = [['u32', a.hwnd ? 2 : (HWND.isNull() ? 0 : 1)], ['u32', a.hwnd ? a.hwnd : 0], ['u32', a.msg], ['u32', a.wp], ['u32', a.lp]];
   else if (a.k === 'w32') f = [['u32', a.addr], ['u32', a.v]];
-  else f = [];
+  else if (a.k === 'call') {
+    // roadmap S3.30 (U-0681): log/c3/s36a_agent_ext.js's action `call` runs the cdecl function at a.addr with the int
+    // arguments a0, a1 on the main thread (its NativeFunction is void(int, int), so argc is 2 unless the action says otherwise);
+    // written BEFORE the call, so every record the call makes follows it
+    const argc = a.argc === undefined ? 2 : a.argc;
+    f = [['u32', a.addr], ['u32', argc], ['u32', argc > 0 ? a.a0 | 0 : 0], ['u32', argc > 1 ? a.a1 | 0 : 0]];
+  } else {
+    if (a.k !== 'note') send({ type: 'error', where: 'trace doAction', msg: 'no DELIVER kind for action ' + a.k });
+    f = [];
+  }
   trEvent(TRT.DELIVER, k, [['u32', trPos()], ...f]);
   return _doAction(a);
 };

@@ -79,6 +79,14 @@ class LiveWriteLog {
  public:
   virtual ~LiveWriteLog() = default;
   virtual void wrote(uint32_t va, uint32_t value) = 0;
+  // roadmap S3.30: a function the test host's trace says the harness called (DELIVER call: the original's address, argc and
+  // the int arguments), run by the host at that point; the core records it
+  virtual void called(uint32_t addr, uint32_t argc, uint32_t a0, uint32_t a1) {
+    (void)addr;
+    (void)argc;
+    (void)a0;
+    (void)a1;
+  }
 };
 
 // What the frame loop asks. Every call happens on the thread that called run_live, in the port's read order.
