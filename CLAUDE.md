@@ -2320,6 +2320,10 @@ build is 24 h old); publish.sh appends each release to log/roadmap/lan_releases.
 new manifest no longer lists (refused above half of them unless PRUNE_FORCE=1), so the server holds one copy of the game.
 Player PCs prune too (since 2026-10-29): update.bat deletes files under game\ the manifest no longer lists (`-NoPrune` keeps them;
 above half of game\ it stops unless `-Prune` is given), never anything outside game\.
+GitHub release (Mariano, 2026-11-03): every LAN publish also makes a GitHub release of the same commit on the PUBLIC repo nanofives/simgolfRE:
+publish.sh pushes HEAD to origin/main and runs scripts/lan_release/github_release.py (tag port-<date>-<commit>, a zip of simgolf_port.exe,
+freetype.dll, the VC runtime, a Play SimGolf.bat that takes SIMGOLF_INSTALL and a README with the FreeType credit; never game\, the
+updater or manifest.json), logged in log/roadmap/github_releases.tsv. NO_GITHUB_RELEASE=1 skips it, GITHUB_RELEASE_NOTES=<file> sets the notes.
 
 ### SMSG-decomp snapshot (third_party/smsg)
 `third_party/smsg/` (2026-10-29, copied on Mariano's instruction; PROVENANCE.md has the commits) holds github.com/SMSG-decomp: an

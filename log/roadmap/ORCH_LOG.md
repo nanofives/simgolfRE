@@ -394,3 +394,4 @@
 2026-11-03 17:19 P8A committed 559680f4; LAN release 559680f4 published
 2026-11-03 19:27 P8B merged over P8A (widescreen stages 2 + 3, native-resolution world, G32); segments x64 205/205 = I25, selftests 37/6/9/11, app files pass; banner checked under wide. Commit + LAN release next.
 2026-11-03 19:32 P8B committed b83d8213; LAN release b83d8213 published
+2026-11-03 19:43 GitHub releases (Mariano): pushed main to origin (79 commits since 2026-10-20), release port-2026-11-03-b83d8213 created (port zip only, no game files); publish.sh now pushes and releases after every LAN publish (scripts/lan_release/github_release.py).

@@ -43,3 +43,11 @@ bash "$HERE/deploy_lan_release.sh" "$STAGE"
 # history of what went out (release_due.py reads the server's manifest, not this file)
 mkdir -p "$ROOT/log/roadmap"
 printf '%s\t%s\t%s\n' "$(date '+%F %T')" "$sha" "$label" >> "$ROOT/log/roadmap/lan_releases.tsv"
+
+# Mariano (2026-11-03): every LAN publish also gets a GitHub release of the same commit (port files only, no game files).
+# The commit must be on origin; set NO_GITHUB_RELEASE=1 to skip. Notes: GITHUB_RELEASE_NOTES=<markdown file>.
+if [ "${NO_GITHUB_RELEASE:-0}" != "1" ]; then
+    echo "[+] GitHub release"
+    git -C "$ROOT" push -q origin HEAD:main || { echo "[!] push failed: GitHub release skipped"; exit 1; }
+    py -3.12 "$HERE/github_release.py" ${GITHUB_RELEASE_NOTES:+--notes "$GITHUB_RELEASE_NOTES"}
+fi
