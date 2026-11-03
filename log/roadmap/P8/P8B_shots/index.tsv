@@ -1,0 +1,47 @@
+file	scenario	present	client	world_layer	view
+sandbox_basic_wide1080_300_frame.png	sandbox_basic	300	1920x1080	1920x1080 wide	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_wide1080_447_frame.png	sandbox_basic	447	1920x1080	1920x1080 wide	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_wide1080_300_world.png	sandbox_basic	300	1920x1080	1920x1080 wide	world layer under the frame (P8B)
+sandbox_basic_wide1080_447_world.png	sandbox_basic	447	1920x1080	1920x1080 wide	world layer under the frame (P8B)
+sandbox_basic_wide1440_300_frame.png	sandbox_basic	300	2560x1440	2560x1440 wide	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_wide1440_447_frame.png	sandbox_basic	447	2560x1440	2560x1440 wide	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_wide1440_300_world.png	sandbox_basic	300	2560x1440	2560x1440 wide	world layer under the frame (P8B)
+sandbox_basic_wide1440_447_world.png	sandbox_basic	447	2560x1440	2560x1440 wide	world layer under the frame (P8B)
+sandbox_basic_43_1080_300_frame.png	sandbox_basic	300	1920x1080	1440x1080 4:3	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_43_1080_447_frame.png	sandbox_basic	447	1920x1080	1440x1080 4:3	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_43_1080_300_world.png	sandbox_basic	300	1920x1080	1440x1080 4:3	world layer under the frame (P8B)
+sandbox_basic_43_1080_447_world.png	sandbox_basic	447	1920x1080	1440x1080 4:3	world layer under the frame (P8B)
+sandbox_basic_43_1440_300_frame.png	sandbox_basic	300	2560x1440	1920x1440 4:3	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_43_1440_447_frame.png	sandbox_basic	447	2560x1440	1920x1440 4:3	the same present without it (P7 stage 1: black side bands)
+sandbox_basic_43_1440_300_world.png	sandbox_basic	300	2560x1440	1920x1440 4:3	world layer under the frame (P8B)
+sandbox_basic_43_1440_447_world.png	sandbox_basic	447	2560x1440	1920x1440 4:3	world layer under the frame (P8B)
+course_season_wide1080_1000_frame.png	course_season	1000	1920x1080	1920x1080 wide	the same present without it (P7 stage 1: black side bands)
+course_season_wide1080_3000_frame.png	course_season	3000	1920x1080	1920x1080 wide	the same present without it (P7 stage 1: black side bands)
+course_season_wide1080_6304_frame.png	course_season	6304	1920x1080	1920x1080 wide	the same present without it (P7 stage 1: black side bands)
+course_season_wide1080_1000_world.png	course_season	1000	1920x1080	1920x1080 wide	world layer under the frame (P8B)
+course_season_wide1080_3000_world.png	course_season	3000	1920x1080	1920x1080 wide	world layer under the frame (P8B)
+course_season_wide1080_6304_world.png	course_season	6304	1920x1080	1920x1080 wide	world layer under the frame (P8B)
+course_season_wide1440_1000_frame.png	course_season	1000	2560x1440	2560x1440 wide	the same present without it (P7 stage 1: black side bands)
+course_season_wide1440_3000_frame.png	course_season	3000	2560x1440	2560x1440 wide	the same present without it (P7 stage 1: black side bands)
+course_season_wide1440_6304_frame.png	course_season	6304	2560x1440	2560x1440 wide	the same present without it (P7 stage 1: black side bands)
+course_season_wide1440_1000_world.png	course_season	1000	2560x1440	2560x1440 wide	world layer under the frame (P8B)
+course_season_wide1440_3000_world.png	course_season	3000	2560x1440	2560x1440 wide	world layer under the frame (P8B)
+course_season_wide1440_6304_world.png	course_season	6304	2560x1440	2560x1440 wide	world layer under the frame (P8B)
+course_season_43_1080_1000_frame.png	course_season	1000	1920x1080	1440x1080 4:3	the same present without it (P7 stage 1: black side bands)
+course_season_43_1080_3000_frame.png	course_season	3000	1920x1080	1440x1080 4:3	the same present without it (P7 stage 1: black side bands)
+course_season_43_1080_6304_frame.png	course_season	6304	1920x1080	1440x1080 4:3	the same present without it (P7 stage 1: black side bands)
+course_season_43_1080_1000_world.png	course_season	1000	1920x1080	1440x1080 4:3	world layer under the frame (P8B)
+course_season_43_1080_3000_world.png	course_season	3000	1920x1080	1440x1080 4:3	world layer under the frame (P8B)
+course_season_43_1080_6304_world.png	course_season	6304	1920x1080	1440x1080 4:3	world layer under the frame (P8B)
+live_edge_left_dpi96_native_auto_edgeoff.png	live app session	-	1067x600 (96 dpi)	native	P8B_drive.py capture
+live_edge_left_dpi96_native_auto_edgeon.png	live app session	-	1067x600 (96 dpi)	native	P8B_drive.py capture
+live_ingame_dpi96_native_auto_edgeoff.png	live app session	-	1067x600 (96 dpi)	native	P8B_drive.py capture
+live_ingame_dpi96_native_auto_edgeon.png	live app session	-	1067x600 (96 dpi)	native	P8B_drive.py capture
+live_side_park_dpi96_native_auto_edgeoff.png	live app session	-	1067x600 (96 dpi)	native	P8B_drive.py capture
+live_side_park_dpi96_native_auto_edgeon.png	live app session	-	1067x600 (96 dpi)	native	P8B_drive.py capture
+G32_sandbox_play_sidescenery_1920x1080.png	sandbox_basic	447	1920x1080	world 1920x1080 wide	G32: play profile, view width 1066, side scenery (wide scene), HUD not anchored
+G32_sandbox_play_hud_1920x1080.png	sandbox_basic	447	1920x1080	world 1920x1080 wide	G32: side scenery + HUD compositor
+G32_course_hud_2560x1440.png	course_season	6304	2560x1440	world 2560x1440 wide	G32: built course, HUD at the edges (fixed profile)
+G32_live_resize_1600x900_dpi96_native_auto_edgeon_hud.png	live app session	-	resized	native	G32: live window, play profile
+G32_live_resize_1400x600_dpi96_native_auto_edgeon_play_resize.png	live app session	-	resized	native	G32: live window, play profile
+G32_live_paused_dpi96_native_auto_edgeon_hud.png	live app session	-	resized	native	G32: live window, play profile

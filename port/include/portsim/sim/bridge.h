@@ -49,6 +49,22 @@ void queue_message(Ctx &ctx, int32_t a, int32_t b, int32_t c);
 // g_points59abb0: x, y, pts, 0x18; slot = (slot + 1) % 8 (unchecked).
 void points_popup(Ctx &ctx, int32_t pts, int32_t x, int32_t y, int32_t who);
 
+// P8B (widescreen stage 2, decision G32; log/roadmap/P8/P8B_notes.md): the VIEW BLOCK, 64 KB of the context's address space at
+// kPortViewVa, outside the GameState and every image. Word +0 is the logical width of the course view the host shows (800 = the
+// original's window; the wide view's W = window width * 600 / window height). Nothing of the original reads it; the `play`
+// switches worldToScreen.wideViewVisibility and tileToScreen.wideViewVisibility do. A host changes it only inside a frame-head
+// call, as a recorded harness write (DELIVER w32), so a replay applies it before the same frame body (tick.cpp head_writes).
+constexpr uint32_t kPortViewVa = 0xFDF00000u;
+constexpr uint32_t kPortViewSize = 0x10000u;
+constexpr uint32_t kPortViewWidthVa = kPortViewVa;
+// maps the block (width 800) when the context has none; true when it is mapped afterwards
+bool view_map(Ctx &ctx);
+// the logical view width: 800 when the block is not mapped or holds less than 800
+int32_t view_width(Ctx &ctx);
+// the side margin E = (view width - 800) / 2 the wide visibility switches add on each side; 0 with the switch at 1 (the original)
+int32_t wide_view_margin_w2s(Ctx &ctx);
+int32_t wide_view_margin_t2s(Ctx &ctx);
+
 }  // namespace portsim
 
 #endif  // PORTSIM_SIM_BRIDGE_H

@@ -30,7 +30,174 @@ std::string hex(uint32_t v) {
   std::snprintf(b, sizeof b, "0x%x", v);
   return b;
 }
+
+// P8B: the GL setup's fan to the primary sink (the 800 x 600 rasteriser, or SetupPair with the host's OpenGL) and the world layer's
+// rasteriser (LiveTerrainWorld). Every call goes to both in the same order; the world's viewport is the setup's mapped into the
+// world's pixels (x * fw / 800 + ox, y * ph / 600); texture names are the primary's (the world's must come out equal: both
+// rasterisers start empty and hand out the lowest free name, gl_raster.h; a difference turns the world layer off).
+class WorldFan : public gl::GlSink {
+ public:
+  WorldFan(gl::GlSink *a, LiveTerrainWorld &w) : a_(a), w_(w), b_(w.raster.get()) {}
+  void load_identity() override { a_->load_identity(); b_->load_identity(); }
+  void push_matrix() override { a_->push_matrix(); b_->push_matrix(); }
+  void pop_matrix() override { a_->pop_matrix(); b_->pop_matrix(); }
+  void rotated(double an, double x, double y, double z) override { a_->rotated(an, x, y, z); b_->rotated(an, x, y, z); }
+  void rotatef(float an, float x, float y, float z) override { a_->rotatef(an, x, y, z); b_->rotatef(an, x, y, z); }
+  void translatef(float x, float y, float z) override { a_->translatef(x, y, z); b_->translatef(x, y, z); }
+  void bind_texture(uint32_t t, uint32_t id) override { a_->bind_texture(t, id); b_->bind_texture(t, id); }
+  void begin(uint32_t m) override { a_->begin(m); b_->begin(m); }
+  void end() override { a_->end(); b_->end(); }
+  void tex_coord2fv(const float *v) override { a_->tex_coord2fv(v); b_->tex_coord2fv(v); }
+  void tex_coord2f(float s, float t) override { a_->tex_coord2f(s, t); b_->tex_coord2f(s, t); }
+  void array_element(int32_t i) override { a_->array_element(i); b_->array_element(i); }
+  void normal3fv(const float *v) override { a_->normal3fv(v); b_->normal3fv(v); }
+  void vertex3fv(const float *v) override { a_->vertex3fv(v); b_->vertex3fv(v); }
+  void vertex3f(float x, float y, float z) override { a_->vertex3f(x, y, z); b_->vertex3f(x, y, z); }
+  void enable(uint32_t c) override { a_->enable(c); b_->enable(c); }
+  void disable(uint32_t c) override { a_->disable(c); b_->disable(c); }
+  void blend_func(uint32_t s, uint32_t d) override { a_->blend_func(s, d); b_->blend_func(s, d); }
+  void flush() override { a_->flush(); b_->flush(); }
+  void context_create() override { a_->context_create(); b_->context_create(); }
+  void hint(uint32_t t, uint32_t m) override { a_->hint(t, m); b_->hint(t, m); }
+  void enable_client_state(uint32_t a) override { a_->enable_client_state(a); b_->enable_client_state(a); }
+  void front_face(uint32_t m) override { a_->front_face(m); b_->front_face(m); }
+  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override {
+    a_->viewport(x, y, w, h);
+    vp_[0] = x;
+    vp_[1] = y;
+    vp_[2] = w;
+    vp_[3] = h;
+    has_vp_ = true;
+    remap();
+  }
+  // the last setup viewport mapped into the world's current size (G32: called again after a resize)
+  void remap() {
+    if (!has_vp_) return;
+    const int64_t fw = w_.fw, ph = w_.ph;
+    b_->viewport(static_cast<int32_t>(w_.ox + vp_[0] * fw / 800), static_cast<int32_t>(vp_[1] * ph / 600),
+                 static_cast<int32_t>(vp_[2] * fw / 800), static_cast<int32_t>(vp_[3] * ph / 600));
+  }
+  void matrix_mode(uint32_t m) override { a_->matrix_mode(m); b_->matrix_mode(m); }
+  void ortho(double l, double r, double bo, double t, double n, double f) override {
+    a_->ortho(l, r, bo, t, n, f);
+    b_->ortho(l, r, bo, t, n, f);
+  }
+  void light(uint32_t l, uint32_t p, const float *v) override { a_->light(l, p, v); b_->light(l, p, v); }
+  void material(uint32_t f, uint32_t p, const float *v) override { a_->material(f, p, v); b_->material(f, p, v); }
+  void material_shininess(uint32_t f, int32_t s) override { a_->material_shininess(f, s); b_->material_shininess(f, s); }
+  bool gen_textures(int32_t n, uint32_t *names) override {
+    const bool r = a_->gen_textures(n, names);
+    if (r && n > 0) {
+      std::vector<uint32_t> mine(static_cast<size_t>(n), 0);
+      b_->gen_textures(n, mine.data());
+      for (int32_t i = 0; i < n; ++i)
+        if (mine[static_cast<size_t>(i)] != names[i]) w_.names_differ = true;
+    }
+    return r;
+  }
+  void delete_textures(int32_t n, const uint32_t *names) override { a_->delete_textures(n, names); b_->delete_textures(n, names); }
+  void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override { a_->tex_parameteri(t, p, v); b_->tex_parameteri(t, p, v); }
+  void tex_parameterf(uint32_t t, uint32_t p, float v) override { a_->tex_parameterf(t, p, v); b_->tex_parameterf(t, p, v); }
+  void tex_envi(uint32_t t, uint32_t p, int32_t v) override { a_->tex_envi(t, p, v); b_->tex_envi(t, p, v); }
+  void tex_image2d(uint32_t t, int32_t l, int32_t i, int32_t w, int32_t h, int32_t bo, uint32_t f, uint32_t ty,
+                   const uint8_t *d) override {
+    a_->tex_image2d(t, l, i, w, h, bo, f, ty, d);
+    b_->tex_image2d(t, l, i, w, h, bo, f, ty, d);
+  }
+  void vertex_pointer(int32_t s, uint32_t t, int32_t st) override { a_->vertex_pointer(s, t, st); b_->vertex_pointer(s, t, st); }
+  void normal_pointer(uint32_t t, int32_t st) override { a_->normal_pointer(t, st); b_->normal_pointer(t, st); }
+
+ private:
+  gl::GlSink *a_;
+  LiveTerrainWorld &w_;
+  gl::GlRaster *b_;
+  int32_t vp_[4] = {0, 0, 0, 0};
+  bool has_vp_ = false;
+};
+
+// the size-dependent parts of a world layer (set_world_view, resize_world)
+void world_geometry(LiveTerrainWorld &w, int32_t pw, int32_t ph) {
+  w.pw = pw;
+  w.ph = ph;
+  w.fw = static_cast<int32_t>(static_cast<int64_t>(ph) * 800 / 600);
+  w.ox = (pw - w.fw) / 2;
+  // the side margin in logical pixels: the ox world pixels left of the frame, at fw / 800 world pixels per logical one, rounded up
+  w.margin = static_cast<int32_t>((static_cast<int64_t>(w.ox) * 800 + w.fw - 1) / w.fw) + 1;
+  w.raster->set_clip_x(static_cast<float>(static_cast<double>(pw) / static_cast<double>(w.fw)));
+  // the dither phase of the frame's own columns (window x - ox): exact at render scale 1; any scale keeps a 4x4 matrix
+  w.raster->set_dither_dx(-w.ox);
+  w.back.assign(static_cast<size_t>(pw) * static_cast<size_t>(ph), 0);
+}
 }  // namespace
+
+bool LiveTerrain::set_world_view(int32_t pw, int32_t ph, std::string *why) {
+  auto fail = [why](const char *t) {
+    if (why) *why = t;
+    return false;
+  };
+  if (calls_ != 0) return fail("asked after the first Terrain call: the setup already went to the primary sink alone");
+  if (ph < 600 / 4 || pw <= 0) return fail("a world layer smaller than a quarter of the frame");
+  const int32_t fw = static_cast<int32_t>(static_cast<int64_t>(ph) * 800 / 600);
+  if (pw < fw) return fail("a world layer narrower than the 800 x 600 frame's aspect");
+  auto w = std::make_unique<LiveTerrainWorld>();
+  w->raster = std::make_unique<gl::GlRaster>(pw, ph);
+  w->raster->no_context();
+  world_geometry(*w, pw, ph);
+  w->terrain800.assign(static_cast<size_t>(800) * 600, 0);
+  world_ = std::move(w);
+  world_fan_ = std::make_unique<WorldFan>(dll_.setup.b, *world_);
+  dll_.setup.b = world_fan_.get();
+  if (why) *why = "on";
+  return true;
+}
+
+bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
+  if (!world_ || ph < 600 / 4 || pw < static_cast<int32_t>(static_cast<int64_t>(ph) * 800 / 600)) return false;
+  if (pw == world_->pw && ph == world_->ph) return true;
+  world_->raster->resize_frame(pw, ph);
+  world_geometry(*world_, pw, ph);
+  if (world_fan_) static_cast<WorldFan *>(world_fan_.get())->remap();
+  world_->valid = false;
+  world_->dirty = true;
+  world_->strip_full = false;
+  ++world_->resizes;
+  return true;
+}
+
+bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
+                              std::vector<uint8_t> &mask) const {
+  if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
+  if (back800.size() != world_->terrain800.size()) return false;
+  px = world_->raster->pixels();
+  mask.resize(back800.size());
+  const LiveTerrainWorld &w = *world_;
+  if (!w.scene_valid || w.s1.size() != back800.size() || w.scene.size() != static_cast<size_t>(w.scene_w) * 600) {
+    for (size_t i = 0; i < back800.size(); ++i) mask[i] = back800[i] == w.terrain800[i] ? 1 : 0;
+    return true;
+  }
+  // G32: the wide scene's sprite pixels over the world (nearest: world pixel (x, y) shows scene pixel
+  // (floor((x - ox) * 800 / fw) + scene_e, floor(y * 600 / ph)))
+  std::vector<int32_t> col(static_cast<size_t>(w.pw));
+  for (int32_t x = 0; x < w.pw; ++x) {
+    const int64_t d = static_cast<int64_t>(x - w.ox) * 800;
+    const int64_t q = d >= 0 ? d / w.fw : -((-d + w.fw - 1) / w.fw);
+    col[static_cast<size_t>(x)] = static_cast<int32_t>(q) + w.scene_e;
+  }
+  for (int32_t y = 0; y < w.ph; ++y) {
+    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
+    const uint16_t *sr = w.scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    const uint16_t *br = w.scene_base.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+    for (int32_t x = 0; x < w.pw; ++x) {
+      const int32_t lx = col[static_cast<size_t>(x)];
+      if (lx >= 0 && lx < w.scene_w && sr[lx] != br[lx]) dst[x] = sr[lx];
+    }
+  }
+  const bool s0_ok = w.s0.size() == back800.size();
+  for (size_t i = 0; i < back800.size(); ++i)
+    mask[i] = back800[i] == w.terrain800[i] || (back800[i] == w.s1[i] && (!s0_ok || w.s1[i] != w.s0[i])) ? 1 : 0;
+  return true;
+}
 
 LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after)
     : ctx_(ctx), engine_(make_headless_terrain(ctx)), snap_after_(std::move(snap_after)) {
@@ -98,6 +265,16 @@ const LiveTerrain::RendererChoice &LiveTerrain::choose_renderer(const std::strin
 }
 
 bool LiveTerrain::use_host_gl(bool on) {
+  // P8B: a world layer made before keeps its fan, rebuilt over the new primary sink
+  struct Refan {
+    LiveTerrain &t;
+    ~Refan() {
+      if (t.world_ && t.world_fan_ && t.dll_.setup.b != t.world_fan_.get()) {
+        t.world_fan_ = std::make_unique<WorldFan>(t.dll_.setup.b, *t.world_);
+        t.dll_.setup.b = t.world_fan_.get();
+      }
+    }
+  } refan{*this};
   if (!on) {
     dll_.setup.b = raster_.get();
     pair_.reset();
@@ -476,7 +653,53 @@ void a_renderer(Ctx &c, const uint32_t *a, Ret &r) {
   if (!d || !d->write_through()) f.write("$wgl/renderer.txt", std::vector<uint8_t>(t.begin(), t.end()));
   r.set_u32(ch.backend == "wgl" ? 1u : 0u);
 }
+// P8B: terrainLive.worldView(pw, ph) makes the world layer (LiveTerrain::set_world_view; 1 = on, 0 = refused, the reason in
+// `$gfx/world_why.txt`); terrainLive.worldCheck(on) switches the render-scale-1 gate on (terrain_live.h); terrainLive.worldStats(i)
+// returns 0 passes, 1 pixels, 2 microseconds, 3 checks, 4 checks with a difference, 5 differing pixels (low dword), 6 pw, 7 ph, 8 ox;
+// terrainLive.worldDump() writes the world root `$gfx/world.555` (pw * ph words) and `$gfx/world_t800.555` (T), returns 1, 0 without
+// a world layer
+void put(Ctx &c, const std::string &name, const std::vector<uint8_t> &bytes) {   // a harness file (never the install), as a_renderer
+  GameFiles &f = c.files();
+  auto *d = dynamic_cast<DirGameFiles *>(&f);
+  if (!d || !d->write_through()) f.write(name, bytes);
+}
+void a_world_view(Ctx &c, const uint32_t *a, Ret &r) {
+  std::string why;
+  const bool ok = need_live(c).set_world_view(static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), &why);
+  put(c, "$gfx/world_why.txt", std::vector<uint8_t>(why.begin(), why.end()));
+  r.set_u32(ok ? 1u : 0u);
+}
+void a_world_check(Ctx &c, const uint32_t *a, Ret &r) {
+  LiveTerrainWorld *w = need_live(c).world();
+  if (w) w->check_central = a[0] != 0;
+  r.set_u32(w ? 1u : 0u);
+}
+void a_world_stats(Ctx &c, const uint32_t *a, Ret &r) {
+  LiveTerrainWorld *w = need_live(c).world();
+  if (!w) throw MissingResource{"terrainLive.worldStats: no world layer"};
+  const int64_t v[] = {w->passes, w->pixels, w->us, w->checks, w->checks_differing, w->diff_px, w->pw, w->ph, w->ox};
+  r.set_u32(a[0] < 9 ? static_cast<uint32_t>(v[a[0]]) : 0u);
+}
+void a_world_dump(Ctx &c, const uint32_t *, Ret &r) {
+  LiveTerrainWorld *w = need_live(c).world();
+  if (!w) {
+    r.set_u32(0);
+    return;
+  }
+  auto bytes = [](const std::vector<uint16_t> &px) {
+    std::vector<uint8_t> b(px.size() * 2);
+    std::memcpy(b.data(), px.data(), b.size());
+    return b;
+  };
+  put(c, "$gfx/world.555", bytes(w->raster->pixels()));
+  put(c, "$gfx/world_t800.555", bytes(w->terrain800));
+  r.set_u32(1);
+}
 const FuncDef kFuncs[] = {
+    {"terrainLive.worldView", "default", "int", 2, 0, a_world_view, nullptr},
+    {"terrainLive.worldCheck", "default", "int", 1, 0, a_world_check, nullptr},
+    {"terrainLive.worldStats", "default", "int", 1, 0, a_world_stats, nullptr},
+    {"terrainLive.worldDump", "default", "int", 0, 0, a_world_dump, nullptr},
     {"terrainLive.keepFrame", "default", "int", 1, 0, a_keep_frame, nullptr},
     {"terrainLive.passes", "default", "int", 0, 0, a_passes, nullptr},
     {"terrainLive.pixels", "default", "int", 0, 0, a_pixels, nullptr},

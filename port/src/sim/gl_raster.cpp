@@ -582,8 +582,16 @@ void GlRaster::window_of_(const float c[4], Vtx &v) const {
 bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
   const Vtx *in3[3] = {&a, &b, &c};
   bool out = false;
+  const float kx = clip_kx_;   // P8B (set_clip_x): 1 = the original's planes (the branches below then run the old expressions)
   for (const Vtx *p : in3)
-    for (int k = 0; k < 3; ++k) out = out || !(p->c[k] >= -p->c[3] && p->c[k] <= p->c[3]);
+    for (int k = 0; k < 3; ++k) {
+      if (k == 0 && kx != 1.0f) {
+        const float wx = kx * p->c[3];
+        out = out || !(p->c[0] >= -wx && p->c[0] <= wx);
+      } else {
+        out = out || !(p->c[k] >= -p->c[3] && p->c[k] <= p->c[3]);
+      }
+    }
   if (!out) return false;
   const double area = edge(a.qx, a.qy, b.qx, b.qy, c.qx, c.qy);
   const bool front = (front_ == 0x0901) ? area >= 0 : area <= 0;
@@ -598,8 +606,13 @@ bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
     return r;
   };
   std::vector<CV> poly = {to(a), to(b), to(c)}, next;
-  auto dist = [](const CV &v, int plane) {
+  auto dist = [kx](const CV &v, int plane) {
     const int k = plane >> 1;
+    if (k == 0 && kx != 1.0f) {   // P8B: the moved x planes
+      volatile float wx = kx * v.c[3];
+      volatile float dx = (plane & 1) ? wx - v.c[0] : wx + v.c[0];
+      return static_cast<float>(dx);
+    }
     volatile float d = (plane & 1) ? v.c[3] - v.c[k] : v.c[3] + v.c[k];
     return static_cast<float>(d);
   };
@@ -1034,12 +1047,13 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
       }
       const int ctl = tune[11];   // deliberately wrong behaviours for the negative controls (0 = the correct pipeline)
       if (wpx && tune[35] == 0 && !blend_ && env_mode_ == 0x2100 && ctl == 0) {   // the walk's float32 final stage
-        const float d = static_cast<float>((kDither[y & 3][x & 3] + 0.5) / 16.0);
+        const float d = static_cast<float>((kDither[y & 3][(x + dither_dx_) & 3] + 0.5) / 16.0);
         dst = walk_final(tex.data.data(), tex.w, tex.h, bpp, linear, wacc, d);
         ++stats.drawn_px;
         continue;
       }
-      dst = static_cast<uint16_t>((quantize(ro, x, y, ctl) << 10) | (quantize(go, x, y, ctl) << 5) | quantize(bo, x, y, ctl));
+      const int qx = x + dither_dx_;   // P8B: set_dither_dx (0 = x)
+      dst = static_cast<uint16_t>((quantize(ro, qx, y, ctl) << 10) | (quantize(go, qx, y, ctl) << 5) | quantize(bo, qx, y, ctl));
       ++stats.drawn_px;
     }
   }
@@ -1050,6 +1064,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
 struct GlRaster::FastJob {
   uint16_t *fb;
   int fbw, miny, maxy, minx, maxx;
+  int ddx;   // P8B: GlRaster::dither_dx_
   int64_t A[3], B[3], X[3], Y[3];
   bool inc[3];
   double s0, s1, s2, t0, t1, t2, r0, r1, r2, g0, g1, g2, b0, b1, b2;
@@ -1325,6 +1340,7 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
   const int ctl = tune[11];
   j.fb = fb_.data();
   j.fbw = w_;
+  j.ddx = dither_dx_;
   j.minx = minx; j.maxx = maxx; j.miny = miny; j.maxy = maxy;
   j.dith = ctl == 1 ? 1 : ctl == 2 ? 2 : 0;
   j.modulate = env_mode_ == 0x2100 && ctl != 5;
@@ -1476,7 +1492,7 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
               g = g * alpha + tb.expand5[(dsts >> 5) & 31] * beta;
               bl = bl * alpha + tb.expand5[dsts & 31] * beta;
             }
-            const double d = drow[x & 3];
+            const double d = drow[(x + j.ddx) & 3];
             const double qr = r * k31of255 + d, qg = g * k31of255 + d, qb = bl * k31of255 + d;
             const int orr = floor_int(qr), og = floor_int(qg), ob = floor_int(qb);
             const double fr = qr - orr, fg = qg - og, fb = qb - ob;
@@ -1493,7 +1509,7 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
         }
       }
       if (wpx && j.wfinal && !blend && modulate) {   // the walk's float32 final stage, as the general loop
-        row[x] = walk_final(td, tw, th, bpp, linear, wacc, static_cast<float>(drow[x & 3]));
+        row[x] = walk_final(td, tw, th, bpp, linear, wacc, static_cast<float>(drow[(x + j.ddx) & 3]));
         ++drawn;
         continue;
       }
@@ -1539,7 +1555,7 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
         bo = bl * alpha + tb.expand5[db] * (1 - alpha);
         ++blended;
       }
-      const double d = drow[x & 3];
+      const double d = drow[(x + j.ddx) & 3];
       dst = static_cast<uint16_t>((quantize_d(ro, d) << 10) | (quantize_d(go, d) << 5) | quantize_d(bo, d));
       ++drawn;
     }

@@ -158,6 +158,7 @@ void BootStaticSurfaces() {
 }
 
 void BootCrt() {
+    view_map(ctx);   // P8B: the view block (bridge.h; outside the GameState, width 800 until a live host writes it)
     BootStaticSurfaces();
     cc("staticInit_820f04");
     cc("arrayStaticInit_448160");   // the CRT initializer dynInit_arrayStaticInit_448160: the 300 g_sounds records

@@ -926,6 +926,11 @@ Gfx *gfx(Ctx &ctx) {
   auto it = attached().find(&ctx);
   return it == attached().end() ? nullptr : it->second;
 }
+// P8B: the back buffer's terrain flag (Gfx::back_terrain); false without a backend
+bool gfx_back_terrain(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->back_terrain != 0;
+}
 
 bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;

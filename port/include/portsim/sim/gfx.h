@@ -47,6 +47,9 @@ void gfx_end_of_input(Ctx &ctx);
 // original's back buffer reaches the window. nullptr removes it. Only a live run's core sets one (live.cpp).
 using GfxRefreshHook = void (*)(void *arg);
 void gfx_set_refresh_hook(Ctx &ctx, GfxRefreshHook fn, void *arg);
+// P8B: whether the back buffer holds a terrain picture (Gfx::back_terrain: set by a terrain pass or restore, cleared by a 2D
+// write covering the whole root surface, copied at Window::refreshFull); false without a backend
+bool gfx_back_terrain(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
 }

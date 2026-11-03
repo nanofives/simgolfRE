@@ -160,6 +160,8 @@ struct Rend : TkBase {
 
   // renderSpriteQueue (c3ev.cpp): drawQueuedSprite for every entry in list order
   int renderSpriteQueue() {
+    // G32: the wide scene's start (gfx_scene.cpp); draws nothing into the root surface
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "renderSpriteQueue.begin", nullptr, 0);
     for (int i = gs().g_spriteQueueHead; i != -1; i = qa(GS(g_spriteQueueNext), i)) drawQueuedSprite(i);
     if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "renderSpriteQueue.end", nullptr, 0);
     return 0;
@@ -190,7 +192,8 @@ struct Rend : TkBase {
     }
     cc("worldToScreen", (tx << 10) + 0x200, (ty << 10) + 0x200, sx, sy, 0);
     const int x = G32(sx), y = G32(sy);
-    if (x >= -0x40 && x < gs().g_screenWidth + 0x40 && y >= -0x2a && y < gs().g_screenHeight + 0x2a) {
+    const int E = wide_view_margin_t2s(ctx);   // P8B: tileToScreen.wideViewVisibility (0 = the original's window)
+    if (x >= -0x40 - E && x < gs().g_screenWidth + 0x40 + E && y >= -0x2a && y < gs().g_screenHeight + 0x2a) {
       if (SG_NEGCTL(g_negctl_tile_to_screen) == 1) return 1;  // the on-screen point is not cached
       G16(GS(g_tileScreenX) + cell * 2) = static_cast<int16_t>(x);
       G16(GS(g_tileScreenY) + cell * 2) = static_cast<int16_t>(y);

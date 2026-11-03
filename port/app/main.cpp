@@ -21,11 +21,21 @@
 //   simgolf_port.exe --profile-list original|fixed|play   prints every switch and the value that profile gives it
 //   simgolf_port.exe --selftest                      pacing, saves overlay and presenter unit tests ("[k/n] name PASS")
 //   simgolf_port.exe --selftest-p5b | --selftest-p7  the P5B scale modes / the P7 wide side bands
+//   simgolf_port.exe --selftest-p8b                  P8B: the world layer under the frame (control --negctl p8b-mask-ignored)
 //   simgolf_port.exe --compose <in.555> <cw> <ch> <out.bmp> [--wide --wide-fill soft|clamp|black] [--scale m]
 //                    [--compose-band extend|black]   P7: the presenter's client image of one 800x600 frame, as a BMP
 //   P7 (widescreen stage 1, default off): --wide [on|off] (or SG_APP_WIDE=on) opens the window at --wide-width (1067) x 600
 //   logical pixels; the 4:3 game image stays fitted at full height, and the side bands of the full-screen 2D screens shown
 //   before a game's frame loop runs carry the frame's edge colours outward (--wide-fill soft|clamp|black); in game they stay black.
+//   P8B (widescreen stage 2 + the world at the window's pixel resolution, default off; log/roadmap/P8/P8B_notes.md):
+//   --render-scale 1|native|<pw>x<ph> (default 1): with `native` the course is rasterised at the window's client size at the
+//   session's start (a second rasteriser, the WORLD LAYER of the LiveTerrain: terrain_live.h), with <pw>x<ph> at that size; `1`
+//   gives a world layer only with --wide (W x 600 at render scale 1). With a world layer the 800 x 600 frame is composed over it
+//   (present.h WorldImage): the course shows through wherever the frame shows terrain, and in the side columns of a wide window.
+//   --wide-edge on|off (default on with --wide): H1's edge scroll fires at the wide window's edges, not at the 800 frame's.
+//   --live-trace only: --world-shots i,j,.. writes world_shot_<i>.bmp (the client image with the world layer) and frame_shot_<i>.bmp
+//   (the same present without it) at those present indices, at --shot-size <cw>x<ch> (default the world layer's size);
+//   --world-check switches on the render-scale-1 gate of the central 800 columns (session.json `world`).
 //   simgolf_port.exe --translate <input.jsonl> [--out <file>]   re-translates a session's input log offline
 //   simgolf_port.exe --install <dir> --data <dir> --cat <logical> <out> | --write <logical> <file> | --remove <logical>
 //                    | --list <pattern>             one operation through the saves overlay (saves.h)
@@ -80,6 +90,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -105,6 +116,7 @@
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
+#include "portsim/sim/gfx.h"  // P8B: gfx_back_terrain
 #include "portsim/sim/live.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
@@ -256,7 +268,7 @@ struct Options {
   bool in_memory = false;                // S7.8: --in-memory (S7.5's way: records held until the end)
   int32_t mem_every = 1000;             // S7.8: --mem-every (memory.tsv sampling period in live frames)
   uint32_t dpi = 0, exit_after = 0;
-  bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false;
+  bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false;
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -273,9 +285,19 @@ struct Options {
   std::string scale = "auto";      // --scale auto|nearest|smooth (item 4)
   // P7 (widescreen stage 1, log/roadmap/P7/PLAN.md; default off until Mariano has seen it; SG_APP_WIDE=on|off): the window opens
   // at wide_width x 600 logical pixels and the full-screen 2D screens' side bands show their edge colours (present.h WideFill)
-  bool wide = false;               // --wide (or --wide on|off)
+  bool wide = true;                // --wide (or --wide on|off); G32: on by default (SG_APP_P8B=off: off, the tests' default)
   int32_t wide_width = 1067;       // --wide-width <800..2400> (1067 = 16:9 at 600 rows)
   std::string wide_fill = "soft";  // --wide-fill soft|clamp|black
+  // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md; default off: render scale 1 and no --wide = no world layer)
+  std::string render_scale = "auto";  // --render-scale auto|1|native|<pw>x<ph> (G32: auto = native with --wide, none without)
+  bool wide_edge = true;           // --wide-edge on|off (with --wide and a world layer)
+  bool hud_anchor = true;          // G32: --hud-anchor on|off (with --wide: the HUD panels at the wide view's edges)
+  int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
+  std::vector<int64_t> world_shots;    // --world-shots (live-trace)
+  int32_t shot_w = 0, shot_h = 0;      // --shot-size
+  bool world_check = false;            // --world-check (live-trace)
+  int32_t view_width = 0;              // G32: --view-width (live-trace: the view block's width at the first frame head)
+  bool ui_union = false;               // G32 development: --ui-union (live-trace)
   // P7: --compose <in.555> <cw> <ch> <out.bmp> [--compose-band extend|black]: the presenter's client image of one frame
   std::vector<std::string> compose;
   std::string compose_band = "extend";
@@ -302,6 +324,36 @@ struct Options {
 ScaleMode scale_mode(const std::string &s) {
   return s == "smooth" ? ScaleMode::Smooth : s == "auto" ? ScaleMode::Auto : ScaleMode::Nearest;
 }
+
+// P8B: Options::world_pw / world_ph (the world layer's size; 0 = none) from --render-scale, --wide and the window's client cw x ch
+// (0 = no window: `native` then gives none). native = the client at the session's start (the content rectangle's height, the
+// client's width with --wide, else the content rectangle's); 1 = W x 600 with --wide (W = --wide-width), else none; <pw>x<ph> as given
+void world_size(Options &o, int32_t cw, int32_t ch) {
+  o.world_pw = o.world_ph = 0;
+  if (o.terrain != "live") return;
+  int pw = 0, ph = 0;
+  const bool native = o.render_scale == "native" || (o.render_scale == "auto" && o.wide && cw > 0);
+  if (o.render_scale == "auto" && !native) {
+    if (!o.wide) return;
+    pw = o.wide_width;   // no window (live-trace): W x 600
+    ph = kLogicalH;
+  } else if (native) {
+    if (cw <= 0 || ch <= 0) return;
+    const Viewport vp = fit_viewport(cw, ch);
+    ph = vp.client_h;
+    pw = o.wide ? cw : vp.client_w;
+  } else if (o.render_scale == "1") {
+    if (!o.wide) return;
+    pw = o.wide_width;
+    ph = kLogicalH;
+  } else if (std::sscanf(o.render_scale.c_str(), "%dx%d", &pw, &ph) != 2) {
+    return;
+  }
+  o.world_pw = pw;
+  o.world_ph = ph;
+}
+
+bool write_bmp(const fs::path &path, const std::vector<uint32_t> &px, int cw, int ch);  // P8B (below)
 
 // P7: --wide / --wide-fill
 WideFill wide_fill(const Options &o) {
@@ -379,6 +431,8 @@ const ProfileMember kPlayProfile[] = {
     {"updateGolfers.walkOffGrid", 0},               // P6A
     {"mainLoop.cameraFollowOffGrid", 0},            // P6A
     {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)
+    {"worldToScreen.wideViewVisibility", 0},        // P8B (G32: the on-screen test over the wide view)
+    {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -467,6 +521,15 @@ struct TerrainGuard {
                            ",\"got\":\"" + ch.check.got + "\",\"want\":\"" + ch.check.want + "\",\"ms\":" +
                            std::to_string(ch.check.ms) + "}\n";
     write_file(rec / "terrain_renderer.json", js.data(), js.size());
+    if (o.world_pw > 0 && o.world_ph > 0) {  // P8B: the world layer, before the first Terrain call
+      std::string wwhy;
+      const bool won = live->set_world_view(o.world_pw, o.world_ph, &wwhy);
+      std::fprintf(stderr, "simgolf_port: world layer %dx%d %s\n", o.world_pw, o.world_ph, won ? "on" : ("refused: " + wwhy).c_str());
+      const std::string wj = "{\"pw\":" + std::to_string(o.world_pw) + ",\"ph\":" + std::to_string(o.world_ph) + ",\"on\":" +
+                             (won ? "true" : "false") + ",\"why\":\"" + esc(wwhy) + "\"}\n";
+      write_file(rec / "world_layer.json", wj.data(), wj.size());
+      if (won && o.world_check) live->world()->check_central = true;
+    }
     portsim::set_terrain_api(c, live.get());
   }
   ~TerrainGuard() {
@@ -715,7 +778,9 @@ int live_guarded(portsim::Ctx *ctx, portsim::LiveHost *host, const portsim::Live
 // a LiveTracePresenter over the corpus trace (host.h). Writes, in the record directory: presents.tsv (index, kind, live
 // frame, snapshots existing when it was made, sgh64), back.555 (the last present), snapshot_<k>.555 for each --snapshots
 // ordinal, framehash.bin (the live run's records), gfx_log.txt, session.json.
-int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
+int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+  Options o = o_in;  // P8B: the world layer's size (no window: --render-scale <pw>x<ph>, or 1 with --wide)
+  world_size(o, 0, 0);
   std::string err, why, detail;
   std::vector<uint8_t> exe, trace;
   uint32_t data_va = 0;
@@ -737,6 +802,9 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
   int64_t tlog_max = -1, tlog_end = -1;
   RecordStreams streams;  // S7.8: the recording and the frame records written as they are made
   bool streamed = false;
+  std::string world_json = "null";  // P8B
+  uint32_t world_shots_made = 0;
+  int64_t terrain_us = 0;
   if (err.empty()) {
     auto ctx = std::make_unique<portsim::Ctx>();
     ctx->exe_ptr = &ec;
@@ -757,12 +825,56 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
       if (err.empty()) {
         LiveTracePresenter host(std::move(inner), static_cast<uint32_t>(o.snapshot_list.size()));
         host.no_present_point = o.negctl == "present-point-off";
+        host.view_width = o.view_width;  // G32
         // P3: a present per frame at most, plus the boot's and modal screens' (51,109 for course_season_6y's 51,092 records)
         if (o.negctl != "presents-no-reserve") host.reserve_presents(static_cast<size_t>(std::max<int32_t>(0, count_frames(trace))) + 4096);
         TerrainLogBound tlog;  // S7.8 (U-1643)
         tlog.live = terrain.live.get();
         tlog.keep = o.negctl == "terrain-log-keep";
         if (tlog.live) host.terrain_log = &tlog;
+        std::vector<uint32_t> ui_union;  // G32 development (--ui-union): per frame pixel, the presents where it was a 2D pixel
+        uint32_t ui_presents = 0;
+        if (o.ui_union && terrain.live) {
+          ui_union.assign(static_cast<size_t>(kLogicalW) * kLogicalH, 0);
+          host.on_present = [&](portsim::Ctx &c, uint32_t, const std::vector<uint16_t> &px) {
+            WorldImage wi;
+            if (!terrain.live->world() || !terrain.live->world_frame(px, portsim::gfx_back_terrain(c), wi.px, wi.mask)) return;
+            ++ui_presents;
+            for (size_t i = 0; i < wi.mask.size(); ++i) ui_union[i] += wi.mask[i] ? 0u : 1u;
+          };
+        }
+        if (!o.world_shots.empty() && terrain.live) {  // P8B: --world-shots
+          host.on_present = [&](portsim::Ctx &c, uint32_t index, const std::vector<uint16_t> &px) {
+            if (std::find(o.world_shots.begin(), o.world_shots.end(), static_cast<int64_t>(index)) == o.world_shots.end()) return;
+            const portsim::LiveTerrainWorld *w = terrain.live->world();
+            WorldImage wi;
+            if (w && terrain.live->world_frame(px, portsim::gfx_back_terrain(c), wi.px, wi.mask)) {
+              wi.pw = w->pw;
+              wi.ph = w->ph;
+              wi.fw = w->fw;
+              wi.ox = w->ox;
+            }
+            const int cw = o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
+            Presenter p(PresentDefect::None, scale_mode(o.scale));
+            p.set_wide(wide_fill(o));
+            std::vector<uint32_t> img;
+            p.set_frame(px, BandFill::Black);
+            p.render(cw, ch, img);
+            write_bmp(rec / ("frame_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
+            p.set_hud_anchor(o.wide && o.hud_anchor);  // G32
+            p.set_frame_world(px, BandFill::Black, std::move(wi));
+            p.render(cw, ch, img);
+            write_bmp(rec / ("world_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
+            if (o.world_check && w) {  // the raw layers for the render-scale-1 gate: world root, T, the frame
+              const std::vector<uint16_t> &wp = terrain.live->world()->raster->pixels();
+              write_file(rec / ("world_" + std::to_string(index) + ".555"), wp.data(), wp.size() * 2);
+              const std::vector<uint16_t> &t8 = terrain.live->world()->terrain800;
+              write_file(rec / ("t800_" + std::to_string(index) + ".555"), t8.data(), t8.size() * 2);
+              write_file(rec / ("frame_" + std::to_string(index) + ".555"), px.data(), px.size() * 2);
+            }
+            ++world_shots_made;
+          };
+        }
         host.memory.every = static_cast<uint32_t>(std::max<int32_t>(0, o.mem_every));
         host.memory.sample(0, tlog.length());
         portsim::LiveOptions lopt;
@@ -771,12 +883,34 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
         if (!o.in_memory) streamed = streams.open(rec.string(), lopt);  // S7.8 (U-1643)
         AudioGuard audio;  // S7.10
         audio.attach(o, *ctx, ec, data_va, files.install_root(), nullptr, rec);
+        struct UiOut {  // G32 development: ui_union.bin (u32 per pixel) and its present count
+          const std::vector<uint32_t> &u;
+          const uint32_t &n;
+          fs::path p;
+          ~UiOut() {
+            if (u.empty()) return;
+            write_file(p / "ui_union.bin", u.data(), u.size() * 4);
+            const std::string t = std::to_string(n) + "\n";
+            write_file(p / "ui_union.txt", t.data(), t.size());
+          }
+        } ui_out{ui_union, ui_presents, rec};
+        const auto run_t0 = std::chrono::steady_clock::now();
         code = live_guarded(ctx.get(), &host, &lopt, &res, &detail);
+        terrain_us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - run_t0).count();
         audio.finish();
         streams.close();
         host.memory.sample(static_cast<uint32_t>(res.records), tlog.length());
         presents = host.presents();
         last = host.last();
+        if (terrain.live && terrain.live->world()) {  // P8B
+          const portsim::LiveTerrainWorld &w = *terrain.live->world();
+          world_json = "{\"pw\":" + std::to_string(w.pw) + ",\"ph\":" + std::to_string(w.ph) + ",\"fw\":" + std::to_string(w.fw) +
+                       ",\"ox\":" + std::to_string(w.ox) + ",\"margin\":" + std::to_string(w.margin) + ",\"passes\":" +
+                       std::to_string(w.passes) + ",\"pixels\":" + std::to_string(w.pixels) + ",\"us\":" + std::to_string(w.us) +
+                       ",\"checks\":" + std::to_string(w.checks) + ",\"checks_differing\":" + std::to_string(w.checks_differing) +
+                       ",\"diff_px\":" + std::to_string(w.diff_px) + ",\"shots\":" + std::to_string(world_shots_made) +
+                       ",\"view_us\":" + std::to_string(terrain_us) + "}";
+        }
         if (terrain.live) {
           tpasses = terrain.live->view().passes;
           tpixels = terrain.live->view().pixels_drawn;
@@ -828,6 +962,7 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"snapshots_requested\":" + std::to_string(o.snapshot_list.size()) + ",\"snapshots_taken\":" + std::to_string(snaps_taken);
   s += ",\"terrain_passes\":" + std::to_string(tpasses) + ",\"terrain_pixels\":" + std::to_string(tpixels);
   s += ",\"terrain_calls\":" + std::to_string(tcalls);
+  s += ",\"world\":" + world_json + ",\"render_scale\":\"" + jesc(o.render_scale) + "\"";  // P8B
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made[0]) + ",\"w\":" + std::to_string(made[1]) + ",\"m\":" +
        std::to_string(made[2]) + ",\"p\":" + std::to_string(made[3]) + "},\"r_superseded\":" + std::to_string(r_superseded);
   s += ",\"terrain_log_max\":" + std::to_string(tlog_max) + ",\"terrain_log_end\":" + std::to_string(tlog_end);
@@ -934,9 +1069,16 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.edge_guard = o.edge_guard;      // P5B item 1
   ho.close_prompt = o.close_prompt;  // P5B item 3
   ho.loading_overlay = o.loading_overlay;  // P6B item 2
+  ho.world = o.wide || (o.render_scale != "1" && o.render_scale != "auto");  // P8B: presents carry the world layer (when one exists)
+  ho.wide_edge = o.wide && o.wide_edge && ho.world;   // P8B
+  ho.wide = o.wide;                                    // G32: W follows the window
+  static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
+  if (o.wide && o.hud_anchor) ho.remap = &g_remap;
+  ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
   if (o.negctl == "present-point-off") ho.defect = HostDefect::NoPresentPoint;
+  if (o.negctl == "view-write-unrecorded") ho.defect = HostDefect::ViewWriteUnrecorded;  // G32
   LiveSession session(ho, rec.string());
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
@@ -945,7 +1087,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_wide(wide_fill(o));  // P7
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes
+  if (ho.remap) {  // G32: the HUD compositor
+    presenter.set_hud_anchor(true);
+    presenter.set_remap(const_cast<PanelRemap *>(ho.remap));
+  }
   WindowOptions wo;
+  wo.remap = ho.remap;  // G32
   wo.dpi = o.dpi;
   if (o.wide) wo.logical_w = o.wide_width;  // P7
   wo.activate = o.activate;
@@ -964,6 +1111,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   HWND hwnd = static_cast<HWND>(win.hwnd());
   session.set_window(hwnd, win.viewport());
+  Options ow = o;  // P8B: the world layer's size from the window's client at the session's start (render_scale native), the
+                   // wide width (render scale 1 with --wide) or the explicit size
+  world_size(ow, win.client_w(), win.client_h());
   std::FILE *log = std::fopen((rec / "input.jsonl").string().c_str(), "wb");
   std::FILE *shown = std::fopen((rec / "shown.tsv").string().c_str(), "wb");
   if (shown) std::fprintf(shown, "index\thash\n");
@@ -977,7 +1127,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     session.on_input(e);
   });
   LiveOut lo;
-  Options oa = o;  // S7.10: --audio on uses the window's handle for DirectSound's cooperative level
+  Options oa = ow;  // S7.10: --audio on uses the window's handle for DirectSound's cooperative level (P8B: ow's world size)
   oa.audio_hwnd = hwnd;
   // S7.11: WM_CLOSE stops the audio before the window goes (audio_close_proc); --negctl audio-close-late leaves it to the
   // sim thread's finish, after the window is gone (the control)
@@ -996,8 +1146,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgPresent) {
       uint32_t index = 0;
       BandFill band = BandFill::Black;
-      if (session.take_frame(px, index, &band)) {
-        presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
+      WorldImage wi;  // P8B
+      if (session.take_frame(px, index, &band, &wi)) {
+        if (ho.world) presenter.set_frame_world(px, band, std::move(wi));  // P8B: with its world layer (none = as before)
+        else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
         win.invalidate();
         if (shown && index != LiveSession::kBannerIndex) {
           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
@@ -1033,6 +1185,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
   s += ",\"p7\":{\"wide\":" + std::to_string(o.wide ? 1 : 0) + ",\"wide_width\":" + std::to_string(o.wide_width) +
        ",\"wide_fill\":\"" + o.wide_fill + "\"}";  // P7
+  s += ",\"p8b\":{\"render_scale\":\"" + jesc(o.render_scale) + "\",\"world_pw\":" + std::to_string(ow.world_pw) +
+       ",\"world_ph\":" + std::to_string(ow.world_ph) + ",\"wide_edge\":" + std::to_string(ho.wide_edge ? 1 : 0) + "}";  // P8B
   s += ",\"p6b\":{\"loading_overlay\":" + std::to_string(o.loading_overlay ? 1 : 0) + "}";  // P6B
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
@@ -1347,6 +1501,142 @@ void selftest_p7(Tests &t, bool wrong) {
   }
 }
 
+// P8B (--selftest-p8b): the world layer under the frame (present.h WorldImage, Presenter::compose_world). Control
+// --negctl p8b-mask-ignored (PresentDefect::WorldMaskIgnored): the world shows over the whole content rectangle, so the rows that
+// need the frame's own pixels read RED. Control --negctl p8b-hud-unmoved (PresentDefect::HudUnmoved, G32): the HUD compositor off,
+// so the three hud rows read RED.
+void selftest_p8b(Tests &t, bool wrong, bool hud_wrong = false) {
+  const PresentDefect pd = hud_wrong ? PresentDefect::HudUnmoved : wrong ? PresentDefect::WorldMaskIgnored : PresentDefect::None;
+  std::vector<uint16_t> f(static_cast<size_t>(kLogicalW) * kLogicalH);
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x) f[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>((x * 7 + y * 131) & 0x7fff);
+  auto world_of = [&](int pw, int ph, uint8_t m) {
+    WorldImage w;
+    w.pw = pw;
+    w.ph = ph;
+    w.fw = static_cast<int32_t>(static_cast<int64_t>(ph) * kLogicalW / kLogicalH);
+    w.ox = (pw - w.fw) / 2;
+    w.px.resize(static_cast<size_t>(pw) * ph);
+    for (int y = 0; y < ph; ++y)
+      for (int x = 0; x < pw; ++x) w.px[static_cast<size_t>(y) * pw + x] = static_cast<uint16_t>((x * 13 + y * 29 + 5) & 0x7fff);
+    w.mask.assign(static_cast<size_t>(kLogicalW) * kLogicalH, m);
+    return w;
+  };
+  auto render = [&](ScaleMode m, int cw, int ch, WorldImage *w, WideFill wf = WideFill::Off) {
+    Presenter p(pd, m);
+    p.set_wide(wf);
+    if (w) p.set_frame_world(f, BandFill::Extend, std::move(*w));
+    else p.set_frame(f, BandFill::Extend);
+    std::vector<uint32_t> out;
+    p.render(cw, ch, out);
+    return out;
+  };
+  {  // an empty world layer = set_frame (the pre-P8B image), also with P7's bands
+    WorldImage none;
+    t.add("p8b.empty_world_equals_set_frame", render(ScaleMode::Smooth, 1920, 1080, &none, WideFill::Soft) ==
+                                                 render(ScaleMode::Smooth, 1920, 1080, nullptr, WideFill::Soft));
+  }
+  {  // a world made at the client's size, mask all 1: the client image is the world, pixel for pixel
+    for (auto sz : {std::pair<int, int>{1067, 600}, {1920, 1080}, {2560, 1440}}) {
+      WorldImage w = world_of(sz.first, sz.second, 1);
+      const std::vector<uint16_t> wp = w.px;
+      const auto o = render(ScaleMode::Smooth, sz.first, sz.second, &w);
+      bool ok = true;
+      for (size_t i = 0; i < wp.size(); ++i) ok = ok && o[i] == rgb555_to_bgra(wp[i]);
+      t.add("p8b.world_at_client_size_is_identity_" + std::to_string(sz.first), ok);
+    }
+  }
+  {  // mask all 0: the content rectangle is the frame (as without a world), the side columns the world
+    WorldImage w = world_of(1067, 600, 0);
+    const std::vector<uint16_t> wp = w.px;
+    const auto o = render(ScaleMode::Nearest, 1067, 600, &w);
+    const auto plain = render(ScaleMode::Nearest, 1067, 600, nullptr);
+    bool frame_ok = true, side_ok = true;
+    for (int y = 0; y < 600; ++y)
+      for (int x = 0; x < 1067; ++x) {
+        const size_t i = static_cast<size_t>(y) * 1067 + x;
+        if (x >= 133 && x < 933) frame_ok = frame_ok && o[i] == plain[i];
+        else side_ok = side_ok && o[i] == rgb555_to_bgra(wp[i]);
+      }
+    t.add("p8b.mask0_content_is_the_frame", frame_ok);
+    t.add("p8b.side_columns_are_the_world", side_ok);
+  }
+  {  // a mixed mask: one logical pixel of the frame kept, its neighbour the world (render scale 1, 1067 x 600)
+    WorldImage w = world_of(1067, 600, 1);
+    w.mask[static_cast<size_t>(300) * 800 + 400] = 0;
+    const std::vector<uint16_t> wp = w.px;
+    const auto o = render(ScaleMode::Nearest, 1067, 600, &w);
+    t.add("p8b.mask_selects_per_logical_pixel", o[static_cast<size_t>(300) * 1067 + 533] == rgb555_to_bgra(f[static_cast<size_t>(300) * 800 + 400]) &&
+                                                  o[static_cast<size_t>(300) * 1067 + 534] == rgb555_to_bgra(wp[static_cast<size_t>(300) * 1067 + 534]));
+  }
+  {  // a world of 1067 x 600 shown at 2134 x 1200, nearest: each world pixel covers 2 x 2 client pixels
+    WorldImage w = world_of(1067, 600, 1);
+    const std::vector<uint16_t> wp = w.px;
+    const auto o = render(ScaleMode::Nearest, 2134, 1200, &w);
+    const Viewport vp = fit_viewport(2134, 1200);  // content 1600 x 1200 at x 267: world x = floor((x - 267) / 2) + 133
+    bool ok = true;
+    for (int y = 0; y < 1200; y += 7)
+      for (int x = 0; x < 2134; x += 5) {
+        const int d = x - vp.origin_x;
+        int wx = (d >= 0 ? d / 2 : -((-d + 1) / 2)) + 133;
+        wx = std::min(std::max(wx, 0), 1066);
+        ok = ok && o[static_cast<size_t>(y) * 2134 + x] == rgb555_to_bgra(wp[static_cast<size_t>(y / 2) * 1067 + wx]);
+      }
+    t.add("p8b.scaled_world_nearest_2x", ok);
+  }
+  {  // G32: the HUD compositor. Mask 0 (2D) only on two pixels: one in the title panel (left anchor), one in the meters (right)
+    WorldImage w = world_of(1067, 600, 1);
+    w.mask[static_cast<size_t>(40) * 800 + 100] = 0;   // title panel (0..250, 0..95)
+    w.mask[static_cast<size_t>(40) * 800 + 700] = 0;   // meters (630..800, 0..145)
+    const std::vector<uint16_t> wp = w.px;
+    PanelRemap rm;
+    Presenter p(pd, ScaleMode::Nearest);
+    p.set_hud_anchor(true);
+    p.set_remap(&rm);
+    p.set_frame_world(f, BandFill::Black, std::move(w));
+    std::vector<uint32_t> o;
+    p.render(1067, 600, o);
+    const uint32_t f100 = rgb555_to_bgra(f[static_cast<size_t>(40) * 800 + 100]), f700 = rgb555_to_bgra(f[static_cast<size_t>(40) * 800 + 700]);
+    // origin 133, right band 134: the title pixel at client 100 (133 + 100 - 133), the meter pixel at 967 (133 + 700 + 134)
+    t.add("p8b.hud_panels_at_the_edges", o[static_cast<size_t>(40) * 1067 + 100] == f100 && o[static_cast<size_t>(40) * 1067 + 967] == f700);
+    t.add("p8b.hud_vacated_place_shows_the_world", o[static_cast<size_t>(40) * 1067 + 233] == rgb555_to_bgra(wp[static_cast<size_t>(40) * 1067 + 233]) &&
+                                                     o[static_cast<size_t>(40) * 1067 + 833] == rgb555_to_bgra(wp[static_cast<size_t>(40) * 1067 + 833]));
+    int32_t x1 = 100, y1 = 40, x2 = 967, y2 = 40, x3 = 500, y3 = 300;
+    rm.map(x1, y1);
+    rm.map(x2, y2);
+    rm.map(x3, y3);
+    t.add("p8b.hud_remap_to_800_space", x1 == 233 && x2 == 833 && x3 == 500);
+  }
+}
+
+// P8B: a client image (BGRA words, rows top-down) as a 24-bit BMP
+bool write_bmp(const fs::path &path, const std::vector<uint32_t> &px, int cw, int ch) {
+  if (cw <= 0 || ch <= 0 || px.size() != static_cast<size_t>(cw) * static_cast<size_t>(ch)) return false;
+  const uint32_t stride = (static_cast<uint32_t>(cw) * 3 + 3) & ~3u, img = stride * static_cast<uint32_t>(ch);
+  std::vector<uint8_t> bmp(54 + img, 0);
+  auto put32 = [&](size_t at, uint32_t v) { std::memcpy(bmp.data() + at, &v, 4); };
+  bmp[0] = 'B';
+  bmp[1] = 'M';
+  put32(2, 54 + img);
+  put32(10, 54);
+  put32(14, 40);
+  put32(18, static_cast<uint32_t>(cw));
+  put32(22, static_cast<uint32_t>(ch));
+  bmp[26] = 1;
+  bmp[28] = 24;
+  put32(34, img);
+  for (int y = 0; y < ch; ++y) {
+    uint8_t *row = bmp.data() + 54 + static_cast<size_t>(ch - 1 - y) * stride;
+    for (int x = 0; x < cw; ++x) {
+      const uint32_t v = px[static_cast<size_t>(y) * static_cast<size_t>(cw) + static_cast<size_t>(x)];
+      row[x * 3] = static_cast<uint8_t>(v);
+      row[x * 3 + 1] = static_cast<uint8_t>(v >> 8);
+      row[x * 3 + 2] = static_cast<uint8_t>(v >> 16);
+    }
+  }
+  return write_file(path, bmp.data(), bmp.size());
+}
+
 int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bmp>
   std::vector<uint8_t> raw;
   if (!read_file(o.compose[0], raw) || raw.size() != static_cast<size_t>(kLogicalW) * kLogicalH * 2) {
@@ -1397,6 +1687,10 @@ int run_selftest(const Options &o) {
   }
   if (o.selftest_p7) {
     selftest_p7(t, o.negctl == "p7-band-black");
+    return t.print();
+  }
+  if (o.selftest_p8b) {  // P8B
+    selftest_p8b(t, o.negctl == "p8b-mask-ignored", o.negctl == "p8b-hud-unmoved");
     return t.print();
   }
   PresentDefect pd = PresentDefect::None;
@@ -1567,6 +1861,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--selftest") o.selftest = true;
     else if (a == "--selftest-p5b") o.selftest = o.selftest_p5b = true;  // P5B
     else if (a == "--selftest-p7") o.selftest = o.selftest_p7 = true;    // P7
+    else if (a == "--selftest-p8b") o.selftest = o.selftest_p8b = true;  // P8B
     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
       o.wide = true;
       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
@@ -1575,6 +1870,42 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v)) return false;
       o.wide_width = std::atoi(v.c_str());
       if (o.wide_width < kLogicalW || o.wide_width > 2400) return false;
+    }
+    else if (a == "--render-scale") {  // P8B
+      if (!val(o.render_scale)) return false;
+      if (o.render_scale != "1" && o.render_scale != "native" && o.render_scale != "auto") {
+        int pw = 0, ph = 0;
+        if (std::sscanf(o.render_scale.c_str(), "%dx%d", &pw, &ph) != 2 || pw < 200 || ph < 150 || pw > 8192 || ph > 8192) return false;
+      }
+    }
+    else if (a == "--wide-edge") {  // P8B
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.wide_edge = v == "on";
+    }
+    else if (a == "--world-check") o.world_check = true;  // P8B
+    else if (a == "--hud-anchor") {  // G32
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_anchor = v == "on";
+    }
+    else if (a == "--ui-union") o.ui_union = true;        // G32 development
+    else if (a == "--view-width") {  // G32
+      if (!val(v)) return false;
+      o.view_width = std::atoi(v.c_str());
+      if (o.view_width < 0 || o.view_width > 8192) return false;
+    }
+    else if (a == "--world-shots") {  // P8B
+      if (!val(v)) return false;
+      size_t p = 0;
+      while (p <= v.size()) {
+        const size_t c = v.find(',', p);
+        const std::string t = v.substr(p, c == std::string::npos ? std::string::npos : c - p);
+        if (!t.empty()) o.world_shots.push_back(std::strtoll(t.c_str(), nullptr, 0));
+        if (c == std::string::npos) break;
+        p = c + 1;
+      }
+    }
+    else if (a == "--shot-size") {  // P8B
+      if (!val(v) || std::sscanf(v.c_str(), "%dx%d", &o.shot_w, &o.shot_h) != 2 || o.shot_w <= 0 || o.shot_h <= 0) return false;
     }
     else if (a == "--wide-fill") {
       if (!val(o.wide_fill) || (o.wide_fill != "soft" && o.wide_fill != "clamp" && o.wide_fill != "black")) return false;
@@ -1625,6 +1956,8 @@ int main(int argc, char **argv) {
       o.zoom_keys = "off";
       o.scale = "nearest";
     }
+  if (const char *ep = std::getenv("SG_APP_P8B"))  // G32: --wide is on by default; SG_APP_P8B=off (port/test/conftest.py) turns it off
+    if (!std::strcmp(ep, "off")) o.wide = false;
   if (const char *ep = std::getenv("SG_APP_WIDE"))  // P7: flags still win
     o.wide = !std::strcmp(ep, "on") || !std::strcmp(ep, "1");
   if (const char *ep = std::getenv("SG_APP_P6B"))  // P6B: the loading overlay off for the app tests (window pixels)

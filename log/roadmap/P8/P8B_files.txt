@@ -1,0 +1,32 @@
+# P8B changed files (port/build/P8B against b786c29a, line-ending-insensitive diff; <file> <changed lines>), stage 2 + G32
+port/src/sim/bridge.cpp	44
+port/src/sim/gfx.cpp	5
+port/src/sim/gfx_scene.cpp	90
+port/src/sim/gfx_terrain.cpp	119
+port/src/sim/gl_raster.cpp	30
+port/src/sim/live.cpp	12
+port/src/sim/terrain_live.cpp	223
+port/src/sim/terrain_render.cpp	5
+port/src/sim/tick.cpp	1
+port/src/sim/tick_boot.inc	1
+port/src/sim/tick_frame.inc	2
+port/src/sim/tick_hook.h	13
+port/src/sim/tick_render.inc	5
+port/include/portsim/registry.h	2
+port/include/portsim/sim/bridge.h	16
+port/include/portsim/sim/gfx.h	3
+port/include/portsim/sim/gl_raster.h	18
+port/include/portsim/sim/live.h	7
+port/include/portsim/sim/terrain_live.h	51
+port/include/portsim/sim/terrain_render.h	4
+port/include/portsim/sim/tick.h	4
+port/app/host.cpp	125
+port/app/host.h	29
+port/app/main.cpp	345
+port/app/present.cpp	158
+port/app/present.h	60
+port/app/window.cpp	11
+port/app/window.h	3
+port/test/conftest.py	2
+# present.* (P8A changed its loading code): only WorldImage, HudPanel / kHudPanels, PanelRemap, set_frame_world, compose_world, the HUD controls and the two compose calls in render(); P8A's loading functions are untouched
+# tools in log/roadmap/P8: P8B_lt.py, P8B_drive.py, P8B_batch.sh, P8B_times.py; profile rows P8B_profile.tsv

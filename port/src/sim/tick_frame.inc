@@ -8286,7 +8286,9 @@ a41e070:
     }
     if ((G32(GS(g_flags)) & 0x200000) && G32(GS(g_msgState53df54)) == ebp)  // ML+0xeb86..ML+0xeb98
         cc("showTournamentResults");                                // ML+0xeb9a showTournamentResults
+    io.cursor_site = kCursorSiteEdgeScroll;                  // P8B: names the read for a live host (tick_hook.h); no effect here
     tc("View_toLocal", GS(g_rootWindow), FA(0x214), FA(0x1E8)); // ML+0xebb4 View_toLocal (push FA(0x1e8); push FA(0x214))
+    io.cursor_site = 0;
     edx = FD(0x214);                                   // ML+0xebb9
     eax = 0; ecx = 0;                                  // ML+0xebc0/ML+0xebc2
     if (edx <= ebp) { eax = edi; ecx = edi; }          // ML+0xebc4 cmp edx,ebp; jg skip (edi=-1)

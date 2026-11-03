@@ -1,0 +1,7 @@
+[1/6] p5b.smooth_uniform_frame_stays_uniform PASS
+[2/6] p5b.smooth_at_1x_equals_nearest PASS
+[3/6] p5b.auto_at_2x_is_nearest PASS
+[4/6] p5b.auto_at_1_5x_is_smooth PASS
+[5/6] p5b.smooth_blends_neighbours PASS
+[6/6] p5b.smooth_letterbox_bars_black PASS
+selftest 6 passed 0 failed

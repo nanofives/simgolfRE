@@ -32,6 +32,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/bridge.h"  // P8B: the view block (tick_render.inc, tick_boot.inc)
 #include "portsim/sim/gfx.h"
 #include "portsim/execonst.h"
 #include "portsim/sim/integrator.h"

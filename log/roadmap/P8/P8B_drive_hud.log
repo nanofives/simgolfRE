@@ -1,0 +1,82 @@
+{
+ "client": [
+  1067,
+  600
+ ],
+ "content_w": 800,
+ "origin_x": 133,
+ "args": [
+  "--install",
+  "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\port\\build\\P8B\\original",
+  "--data",
+  "C:\\Users\\maria\\AppData\\Local\\Temp\\p8b_spizsqrx\\data",
+  "--record-dir",
+  "C:\\Users\\maria\\AppData\\Local\\Temp\\p8b_spizsqrx\\rec",
+  "--no-activate",
+  "--dpi",
+  "96",
+  "--cursor",
+  "message",
+  "--keys",
+  "message",
+  "--clock-origin",
+  "1048576",
+  "--profile",
+  "play",
+  "--wide",
+  "--render-scale",
+  "native",
+  "--scale",
+  "auto",
+  "--wide-edge",
+  "on",
+  "--audio",
+  "off"
+ ],
+ "pause_click_client": [
+  105,
+  567
+ ],
+ "resized_clients": [
+  [
+   1400,
+   600
+  ],
+  [
+   1600,
+   900
+  ]
+ ],
+ "close_rc": 0,
+ "side_park_changed_px": 886,
+ "edge_left_changed_px": 253670,
+ "view_px": 272000,
+ "ingame_side_nonblack_px": 79754,
+ "ingame_side_px": 79800,
+ "p8b": {
+  "render_scale": "native",
+  "world_pw": 1067,
+  "world_ph": 600,
+  "wide_edge": 1
+ },
+ "session_p8b": {
+  "world": 1,
+  "wide_edge": 1,
+  "presents_world": 119,
+  "edge_reads": 120,
+  "edge_clamped": 56,
+  "wide": 1,
+  "view_writes": 3,
+  "world_resizes": 2,
+  "view_width": 1066,
+  "hud_remapped": 3
+ },
+ "records": 119,
+ "gate": {
+  "status": "PASS",
+  "records": 119,
+  "expected": 119,
+  "first": null,
+  "profile": "play"
+ }
+}

@@ -71,6 +71,8 @@
 #include "portsim/ptr.h"
 #include "portsim/sim/golfers.h"
 #include "portsim/sim/gfx_hud.h"
+#include "portsim/sim/terrain_api.h"
+#include "portsim/sim/terrain_live.h"   // G32: the wide scene
 
 namespace portsim {
 
@@ -1063,6 +1065,61 @@ void draw_entry(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t p7, int32_t a8, 
   dlog("  bbox n=" + std::to_string(n) + " x=" + std::to_string(x0) + ".." + std::to_string(x1) + " y=" + std::to_string(y0) + ".." + std::to_string(y1));
 }
 
+// ---- G32: the wide scene (terrain_live.h LiveTerrainWorld::scene). The queue's draws run a second time with the wide surface in
+// the root surface's place and every x moved by scene_e; the 800 x 600 root is put back after each one, so the frame is unchanged.
+LiveTerrainWorld *wide_world(Ctx &ctx) {
+  LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+  LiveTerrainWorld *w = lt ? lt->world() : nullptr;
+  return w && w->valid && w->scene_w > 0 ? w : nullptr;
+}
+template <class F>
+void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
+  Surface16 wide;
+  wide.w = w.scene_w;
+  wide.h = 600;
+  wide.px.swap(w.scene);
+  std::swap(g.root, wide);
+  const int rt = g.root_terrain;
+  f();
+  g.root_terrain = rt;
+  std::swap(g.root, wide);
+  wide.px.swap(w.scene);
+}
+// renderSpriteQueue's start: the wide surface's base
+void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  g.ensure_root(ctx);
+  LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+  LiveTerrainWorld *w = lt ? lt->world() : nullptr;
+  if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
+    if (w) w->scene_w = 0;
+    return;
+  }
+  const int32_t E = w->ox > 0 ? static_cast<int32_t>((static_cast<int64_t>(w->ox) * 800 + w->fw - 1) / w->fw) : 0;
+  const int32_t W = 800 + 2 * E;
+  w->scene_e = E;
+  w->scene_w = W;
+  w->scene_base.assign(static_cast<size_t>(W) * 600, 0);
+  const std::vector<uint16_t> &wp = w->raster->pixels();
+  for (int32_t y = 0; y < 600; ++y) {
+    uint16_t *row = w->scene_base.data() + static_cast<size_t>(y) * static_cast<size_t>(W);
+    int32_t wy = static_cast<int32_t>(static_cast<int64_t>(y) * w->ph / 600);
+    if (wy >= w->ph) wy = w->ph - 1;
+    for (int32_t x = 0; x < W; ++x) {
+      const int32_t fx = x - E;
+      if (fx >= 0 && fx < 800) {
+        row[x] = g.root.px[static_cast<size_t>(y) * 800 + static_cast<size_t>(fx)];
+        continue;
+      }
+      int64_t wx = w->ox + static_cast<int64_t>(fx) * w->fw / 800;
+      if (wx < 0) wx = 0;
+      if (wx >= w->pw) wx = w->pw - 1;
+      row[x] = wp[static_cast<size_t>(wy) * static_cast<size_t>(w->pw) + static_cast<size_t>(wx)];
+    }
+  }
+  w->scene = w->scene_base;
+  w->s0 = g.root.px;
+}
+
 void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t i = static_cast<int32_t>(a[0]);
   if (i < 0 || i >= 1024) {
@@ -1073,10 +1130,21 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const size_t k = static_cast<size_t>(i);
   draw_entry(g, ctx, gs.g_spriteX[k], gs.g_spriteY[k], gs.g_spriteShade[k], static_cast<int32_t>(gs.g_spriteFlags[k]),
              gs.g_spriteObj[k]);
+  if (LiveTerrainWorld *w = wide_world(ctx))   // G32: the same entry on the wide scene
+    on_wide(g, *w, [&] {
+      draw_entry(g, ctx, add32(gs.g_spriteX[k], w->scene_e), gs.g_spriteY[k], gs.g_spriteShade[k],
+                 static_cast<int32_t>(gs.g_spriteFlags[k]), gs.g_spriteObj[k]);
+    });
 }
 
 // drawQueuedSprite's golfer label: after the simulation part built the name in g_textBuffer
+void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff);
 void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  queue_label(g, ctx, a, 0);
+  if (LiveTerrainWorld *w = wide_world(ctx)) on_wide(g, *w, [&] { queue_label(g, ctx, a, w->scene_e); });   // G32
+}
+// the label of queue entry a[0], its x moved by xoff (G32: the wide scene)
+void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
   const int32_t i = static_cast<int32_t>(a[0]);
   if (i < 0 || i >= 1024) return;
   GameState &gs = ctx.gs();
@@ -1110,7 +1178,7 @@ void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (!label) return;
   const uint32_t fl = m.load<uint32_t>(rec + 0x10);
   const uint32_t col = (fl & (1u << 29)) ? 0x80007d08u : 0x80007fffu;
-  const int32_t ax = gs.g_spriteAnchorX[k], ay = gs.g_spriteAnchorY[k];
+  const int32_t ax = add32(gs.g_spriteAnchorX[k], xoff), ay = gs.g_spriteAnchorY[k];
   call_body(g, ctx, "drawCenteredText",
             {state_va(ctx, &GameState::g_textBuffer), u(ax), u(mode() == 6 ? ay + 1 : ay), col});
   const int16_t sv = m.load<int16_t>(rec + 0xa4);
@@ -1274,6 +1342,25 @@ void b_blit_test(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // for (gfx_scene.captureQueueAt) writes the root surface to `$gfx/queue_<ordinal>.555` (the ORIGINAL's at the same return is
 // recorded by log/roadmap/S3/5_tools/scene_rec.py)
 void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  if (LiveTerrainWorld *w = wide_world(ctx)) {   // G32: the frame at the queue's end
+    g.ensure_root(ctx);
+    w->s1 = g.root.px;
+    w->scene_valid = true;
+    ++w->scene_passes;
+    // development switch SG_WIDE_SCENE_DUMP=<prefix>: the wide scene, its base and s1 of every queue pass go to <prefix>_<pass>.*
+    if (const char *dp = std::getenv("SG_WIDE_SCENE_DUMP")) {
+      const std::string base = std::string(dp) + "_" + std::to_string(w->scene_passes);
+      auto put = [&](const char *ext, const std::vector<uint16_t> &v) {
+        if (FILE *f = std::fopen((base + ext).c_str(), "wb")) {
+          std::fwrite(v.data(), 2, v.size(), f);
+          std::fclose(f);
+        }
+      };
+      put(".scene", w->scene);
+      put(".base", w->scene_base);
+      put(".s1", w->s1);
+    }
+  }
   SceneState &ss = st(g);
   ss.queue_calls += 1;
   dlog("end " + std::to_string(ss.queue_calls));
@@ -1320,6 +1407,7 @@ const GfxBodyDef kBodies[] = {
     {"addSprite", b_add_sprite},
     {"gfx_scene.blitTest", b_blit_test},
     {"renderSpriteQueue.end", b_queue_end},
+    {"renderSpriteQueue.begin", b_queue_begin},   // G32
     {"gfx_scene.captureQueueAt", b_capture_at},
     {"gfx_scene.dumpNoSprite", b_dump_no_sprite},
     {"gfx_scene.spriteInfo", b_sprite_info},

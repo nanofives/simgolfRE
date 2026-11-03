@@ -54,6 +54,12 @@ class LiveHost : public HostInput {
     POINT p = {0, 0};
     GetCursorPos(&p);
     ScreenToClient(hwnd_, &p);
+    if (opt_.remap) {  // G32
+      int32_t x = p.x, y = p.y;
+      opt_.remap->map(x, y);
+      p.x = x;
+      p.y = y;
+    }
     HostAnswer a;
     a.api = HostAnswer::Api::Cursor;
     a.x = p.x;
@@ -267,6 +273,11 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
     e.wp = wp;
   }
   if (opt_.before_translate) opt_.before_translate(msg, wp);
+  if (opt_.remap && msg >= kWmMouseMove && msg <= 0x20a) {  // G32: a point over a moved HUD panel goes to its 800-space place
+    int32_t x = static_cast<int16_t>(lp & 0xffff), y = static_cast<int16_t>(lp >> 16);
+    opt_.remap->map(x, y);
+    lp = (static_cast<uint32_t>(static_cast<uint16_t>(y)) << 16) | static_cast<uint16_t>(x);
+  }
   if (opt_.input_defect == InputDefect::Bypass) {
     // the wrong path: client coordinates straight into a click, no reads
     e.evidence = Translator::evidence_of(msg);

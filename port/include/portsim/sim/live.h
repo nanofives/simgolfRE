@@ -43,6 +43,7 @@
 
 #include "portsim/registry.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/tick.h"   // P8B: kCursorSiteEdgeScroll
 
 namespace portsim {
 
@@ -110,6 +111,12 @@ class LiveHost {
   virtual bool clock(Ctx &, int32_t site, bool body, uint32_t &t) = 0;
   // the cursor in root-window client coordinates (Display::getCursor); modal = a modal loop's read (InputSource::cursor)
   virtual void cursor(Ctx &, bool modal, int32_t &x, int32_t &y) = 0;
+  // P8B: the same with the read's site (kCursorSiteEdgeScroll for H1's edge-scroll read, 0 for every other read); the answer is
+  // recorded like cursor()'s, so a replay needs no site
+  virtual void cursor_at(Ctx &c, bool modal, int32_t site, int32_t &x, int32_t &y) {
+    (void)site;
+    cursor(c, modal, x, y);
+  }
   // GetAsyncKeyState(vk) as the game reads it outside the root handlers (low 16 bits)
   virtual uint16_t async_key(Ctx &, int vk) = 0;
   // a pump call: Deliver with the batch in `out` (RootHandler commands, in dispatch order), Decline, or Stop

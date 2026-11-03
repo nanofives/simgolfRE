@@ -1,0 +1,12 @@
+[1/11] p8b.empty_world_equals_set_frame PASS
+[2/11] p8b.world_at_client_size_is_identity_1067 PASS
+[3/11] p8b.world_at_client_size_is_identity_1920 PASS
+[4/11] p8b.world_at_client_size_is_identity_2560 PASS
+[5/11] p8b.mask0_content_is_the_frame PASS
+[6/11] p8b.side_columns_are_the_world PASS
+[7/11] p8b.mask_selects_per_logical_pixel PASS
+[8/11] p8b.scaled_world_nearest_2x PASS
+[9/11] p8b.hud_panels_at_the_edges FAIL
+[10/11] p8b.hud_vacated_place_shows_the_world FAIL
+[11/11] p8b.hud_remap_to_800_space FAIL
+selftest 8 passed 3 failed

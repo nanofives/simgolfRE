@@ -23,8 +23,9 @@
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
+#include "portsim/sim/bridge.h"  // G32: the view block
 #include "portsim/sim/flic.h"
-#include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P6B item 2: sheet_to_gfx_stats
+#include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P8B: gfx_back_terrain  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/state_hash.h"
 
@@ -221,11 +222,64 @@ void LiveSession::set_window(void *hwnd, const Viewport &vp) {
   std::lock_guard<std::mutex> lk(mu_);
   hwnd_ = hwnd;
   vp_ = vp;
+  update_view_target();
 }
 
 void LiveSession::set_viewport(const Viewport &vp) {
   std::lock_guard<std::mutex> lk(mu_);
   vp_ = vp;
+  update_view_target();
+}
+
+// G32 (HostOptions::wide): the view the client asks for. W = floor(800 * client width / content width), at least 800 (a client
+// taller than 4:3 has a letterbox, W 800); the world layer: native = the client's width (the 4:3 content's without wide) by the
+// content's height, render scale 1 = W x 600.
+void LiveSession::update_view_target() {
+  if (!opt_.wide && opt_.world_mode == 0) return;
+  int32_t cw = vp_.origin_x * 2 + vp_.client_w;
+  if (hwnd_) {
+    RECT c;
+    if (GetClientRect(static_cast<HWND>(hwnd_), &c)) cw = c.right - c.left;
+  }
+  if (vp_.client_w <= 0 || vp_.client_h <= 0 || cw <= 0) return;
+  int32_t w = static_cast<int32_t>(static_cast<int64_t>(kLogicalW) * cw / vp_.client_w);
+  if (!opt_.wide || w < kLogicalW) w = kLogicalW;
+  want_w_ = w;
+  if (opt_.world_mode == 2) {
+    want_pw_ = opt_.wide ? std::max(cw, vp_.client_w) : vp_.client_w;
+    want_ph_ = vp_.client_h;
+  } else if (opt_.world_mode == 1) {
+    want_pw_ = w;
+    want_ph_ = kLogicalH;
+  }
+}
+
+// G32: at a frame head (inside the frame-head call, so the write is one of the frame's head writes, which a replay applies before
+// the frame body: tick.cpp TraceInput::begin): the view block's width and the world layer's size, when they changed
+void LiveSession::apply_view(portsim::Ctx &ctx) {
+  int32_t w, pw, ph;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    w = want_w_;
+    pw = want_pw_;
+    ph = want_ph_;
+  }
+  if (opt_.wide && w != applied_w_ && portsim::view_map(ctx)) {
+    const int32_t now = ctx.mem.load<int32_t>(portsim::kPortViewWidthVa);
+    if (now != w) {
+      ctx.mem.store<int32_t>(portsim::kPortViewWidthVa, w);
+      // negative control (--negctl view-write-unrecorded): the width is stored but not recorded, so a replay keeps 800
+      if (writes && opt_.defect != HostDefect::ViewWriteUnrecorded) writes->wrote(portsim::kPortViewWidthVa, static_cast<uint32_t>(w));
+      ++view_writes_;
+    }
+    applied_w_ = w;
+  }
+  if (pw > 0 && ph > 0 && (pw != applied_pw_ || ph != applied_ph_) && terrain_log && terrain_log->live) {
+    const portsim::LiveTerrainWorld *cur = terrain_log->live->world();
+    if (cur && (cur->pw != pw || cur->ph != ph) && terrain_log->live->resize_world(pw, ph)) ++world_resizes_;
+    applied_pw_ = pw;
+    applied_ph_ = ph;
+  }
 }
 
 void LiveSession::on_input(const InputEvent &e) {
@@ -388,12 +442,14 @@ void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
     in_game_ = true;
 }
 
-bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band) {
+bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
   std::lock_guard<std::mutex> lk(frame_mu_);
   if (!frame_waiting_) return false;
   px = frame_slot_;
   index = frame_index_;
   if (band) *band = frame_band_;
+  if (world) *world = std::move(frame_world_);  // P8B
+  frame_world_ = WorldImage{};
   frame_waiting_ = false;
   return true;
 }
@@ -455,8 +511,20 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   last_presented_ = px;
   const uint32_t index = static_cast<uint32_t>(presents_.size());
   presents_.push_back({index, mark, frame_, records_, kind, frame_hash(px)});
+  WorldImage wi;  // P8B: the world layer under this frame (none without HostOptions::world or before the first terrain pass)
+  if (opt_.world && terrain_log && terrain_log->live) {
+    if (const portsim::LiveTerrainWorld *w = terrain_log->live->world())
+      if (terrain_log->live->world_frame(px, portsim::gfx_back_terrain(ctx), wi.px, wi.mask)) {
+        wi.pw = w->pw;
+        wi.ph = w->ph;
+        wi.fw = w->fw;
+        wi.ox = w->ox;
+        ++presents_world_;
+      }
+  }
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
+    frame_world_ = std::move(wi);
     frame_slot_ = std::move(show);
     frame_index_ = index;
     frame_band_ = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
@@ -488,6 +556,7 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
     ctx.mem.store<uint32_t>(va, flags);
     if (writes) writes->wrote(va, flags);
   }
+  apply_view(ctx);                // G32: the window's view width and world size (recorded write, before the frame body)
   track_screen(ctx, true);        // P7: a frame head is the frame loop
   title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
   end_load(ctx);                  // P6B item 2
@@ -529,6 +598,12 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   GetCursorPos(&p);
   const POINT screen = p;
   if (hwnd_) ScreenToClient(static_cast<HWND>(hwnd_), &p);
+  if (opt_.remap) {  // G32: a point over a moved HUD panel answers its 800-space place
+    int32_t rx = p.x, ry = p.y;
+    opt_.remap->map(rx, ry);
+    p.x = rx;
+    p.y = ry;
+  }
   const Point l = Translator(vp_).to_logical(Point{p.x, p.y});
   if (opt_.edge_guard && hwnd_) {
     // P5B item 1: the original reads GetCursorPos + ScreenToClient unclamped, so a cursor left of the window gives x < 0 and
@@ -549,6 +624,35 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   }
   x = l.x;
   y = l.y;
+}
+
+// P8B (HostOptions::wide_edge): H1's edge-scroll read. The cursor answer is the logical point (cursor() above); on a client wider
+// than the 4:3 content rectangle the side columns give x < 0 or x > 799, which H1 (ML+0xebc4..ML+0xebe3: x <= 0, x >= 0x31f)
+// would take as the edge. Here x is 0 / 0x31f only when the point is at or beyond the client's own left / right edge, else it is
+// clamped to 1..0x31e; y is unchanged (the content rectangle has the client's full height in a wide window).
+void LiveSession::cursor_at(portsim::Ctx &ctx, bool modal, int32_t site, int32_t &x, int32_t &y) {
+  cursor(ctx, modal, x, y);
+  if (!opt_.wide_edge || site != portsim::kCursorSiteEdgeScroll) return;
+  Viewport vp;
+  int32_t cw = 0;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    vp = vp_;
+    cw = vp_.origin_x * 2 + vp_.client_w;
+    if (hwnd_) {
+      RECT c;
+      if (GetClientRect(static_cast<HWND>(hwnd_), &c)) cw = c.right - c.left;
+    }
+  }
+  if (vp.origin_x <= 0 || cw <= 0) return;  // no side columns: the original's test as it is
+  ++edge_reads_;
+  const Translator t(vp);
+  const int32_t left = t.to_logical(Point{0, 0}).x, right = t.to_logical(Point{cw - 1, 0}).x;
+  const int32_t was = x;
+  if (x <= left) x = 0;
+  else if (x >= right) x = kLogicalW - 1;
+  else x = std::min(std::max(x, 1), kLogicalW - 2);
+  if (x != was) ++edge_clamped_;
 }
 
 uint16_t LiveSession::async_key(portsim::Ctx &, int vk) {
@@ -892,6 +996,12 @@ std::string LiveSession::summary_json(const Result &r) const {
        ",\"m\":" + std::to_string(opportunities_[2]) + ",\"p\":" + std::to_string(opportunities_[3]) + "}";
   s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
   s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + "}";  // P7
+  s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
+       ",\"presents_world\":" + std::to_string(presents_world_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
+       ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
+       ",\"view_writes\":" + std::to_string(view_writes_) + ",\"world_resizes\":" + std::to_string(world_resizes_) +
+       ",\"view_width\":" + std::to_string(applied_w_) + ",\"hud_remapped\":" +
+       std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32
   s += ",\"memory\":" + memory.json();
   if (tlog_calls_ >= 0)
     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +
@@ -913,7 +1023,14 @@ void LiveTracePresenter::boot(portsim::Ctx &ctx) {
 
 bool LiveTracePresenter::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   frame_ = frame;
-  return inner_->frame_head(ctx, frame, t);
+  const bool ok = inner_->frame_head(ctx, frame, t);
+  // G32 (--view-width): the view block's width written once, at the first frame head, as the live session's host writes it
+  if (ok && view_width > 0 && !view_written_ && portsim::view_map(ctx)) {
+    ctx.mem.store<int32_t>(portsim::kPortViewWidthVa, view_width);
+    if (writes) writes->wrote(portsim::kPortViewWidthVa, static_cast<uint32_t>(view_width));
+    view_written_ = true;
+  }
+  return ok;
 }
 
 void LiveTracePresenter::present(portsim::Ctx &ctx, char kind) {
@@ -933,6 +1050,7 @@ void LiveTracePresenter::present(portsim::Ctx &ctx, char kind) {
   uint32_t snaps = 0;
   while (snaps < snaps_requested_ && ctx.files().size("$gfx/snapshot_" + std::to_string(snaps) + ".555") >= 0) ++snaps;
   presents_.push_back({static_cast<uint32_t>(presents_.size()), frame_, snaps, kind, frame_hash(px)});
+  if (on_present) on_present(ctx, static_cast<uint32_t>(presents_.size() - 1), px);  // P8B
   last_ = std::move(px);
 }
 

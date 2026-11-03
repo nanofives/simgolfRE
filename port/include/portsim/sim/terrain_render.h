@@ -78,6 +78,10 @@ bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t e
 
 // Negative-control mode of the renderer's deliberately wrong bodies (0 = correct); see terrain_render.cpp.
 void terrain_render_negctl(int32_t mode);
+// P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): the world layer's passes widen isCulled's x bounds by m logical pixels on
+// each side (shifted left by the Terrain object's zoom field, like halfW); 0 (the default) = the original's bounds. The caller sets
+// it around one pass and puts 0 back.
+void terrain_render_set_cull_margin(int32_t m);
 
 }  // namespace portsim
 

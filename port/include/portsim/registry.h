@@ -96,6 +96,8 @@ class Ctx {
   uint8_t *bytes() { return reinterpret_cast<uint8_t *>(gs_.get()); }
   // the CRT low-level descriptors __open hands out (module saveload owns the type; empty until a file is opened)
   std::shared_ptr<void> lowio;
+  // P8B: the view block's host memory (bridge.h view_map; empty until mapped)
+  std::shared_ptr<void> view;
 
  private:
   std::unique_ptr<GameState> gs_;  // declared before `mem`, which is built from it

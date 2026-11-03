@@ -1,6 +1,9 @@
 // The view / simulation bridge (see portsim/sim/bridge.h). Phase 3.3, written from the specification (analysis notes,
 // hook sources as reading reference, the C3 path-1 runs); no original address or code.
 #include "portsim/sim/bridge.h"
+#include <vector>
+#include <memory>
+#include <cstring>
 
 #include <initializer_list>
 
@@ -57,6 +60,26 @@ int32_t play_sound(Ctx &ctx, int32_t idx, int32_t volume, int32_t pan, int32_t p
 }
 }  // namespace
 
+// ------------------------------------------------------------------------------------------------ the view block (P8B)
+int g_defect_w2s_wide = 1;   // worldToScreen.wideViewVisibility
+int g_defect_t2s_wide = 1;   // tileToScreen.wideViewVisibility (tick_render.inc)
+bool view_map(Ctx &ctx) {
+  if (ctx.view) return true;
+  auto block = std::make_shared<std::vector<uint8_t>>(static_cast<size_t>(kPortViewSize));   // zero-filled
+  const uint32_t w = 800;
+  std::memcpy(block->data(), &w, 4);
+  if (!ctx.mem.map(kPortViewVa, block->data(), kPortViewSize, false)) return false;
+  ctx.view = block;
+  return true;
+}
+int32_t view_width(Ctx &ctx) {
+  if (!ctx.view) return 800;
+  const int32_t w = ctx.mem.load<int32_t>(kPortViewWidthVa);
+  return w < 800 ? 800 : w;
+}
+int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
+int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
+
 // ------------------------------------------------------------------------------------------------ worldToScreen
 int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &sy, int32_t m) {
   GameState &gs = ctx.gs();
@@ -96,8 +119,10 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
     sy = add32(add32(add32(ay, ax), H / 2), mul32(gs.g_zoomScale, 5));
     W = gs.g_screenWidth;
   }
-  const int32_t nm = neg32(m), half = m / 2;
-  if (sx < nm || sx >= add32(W, m)) return 0;
+  // P8B: with worldToScreen.wideViewVisibility at 0 the x window is the wide view's (E more on each side); E = 0 at 1
+  const int32_t E = wide_view_margin_w2s(ctx);
+  const int32_t nm = sub32(neg32(m), E), half = m / 2;
+  if (sx < nm || sx >= add32(add32(W, m), E)) return 0;
   if (sy < neg32(half) || sy >= add32(half, gs.g_screenHeight)) return 0;
 
   const int32_t tx = sar32(wx, 10), ty = sar32(wy, 10);
@@ -135,7 +160,7 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
     sy = sub32(mul32(sy, 2), 300);
   }
   const int32_t m2 = mode == 2 ? 0 : m, h2 = mode == 2 ? 0 : half;
-  if (sx < neg32(m2) || sx >= add32(gs.g_screenWidth, m2)) return 0;
+  if (sx < sub32(neg32(m2), E) || sx >= add32(add32(gs.g_screenWidth, m2), E)) return 0;
   if (sy < neg32(h2) || sy >= add32(h2, gs.g_screenHeight)) return 0;
   return 1;
 }
@@ -290,6 +315,17 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+const DefectDef kDefects[] = {
+    {"worldToScreen.wideViewVisibility", "P8B,G32",
+     "worldToScreen's on-screen test (playSoundAt's RNG draw, the story advances of golfers on screen) is the original's 800-wide "
+     "window whatever the host's view width; fixed: the window is the wide view's (view block width W: (W - 800) / 2 more on each side)",
+     &g_defect_w2s_wide},
+    {"tileToScreen.wideViewVisibility", "P8B,G32",
+     "tileToScreen caches and returns a tile's screen point only inside x -0x40 .. 800 + 0x40 (the scenery buildSceneSprites queues); "
+     "fixed: that x window is the wide view's (view block width W: (W - 800) / 2 more on each side)",
+     &g_defect_t2s_wide},
+};
+extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                         sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

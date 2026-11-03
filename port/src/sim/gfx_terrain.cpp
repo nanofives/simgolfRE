@@ -125,11 +125,94 @@ int raster_threads() {
   return n;
 }
 
+// ---- P8B: the world layer (terrain_live.h LiveTerrainWorld; log/roadmap/P8/P8B_notes.md). Each terrain operation of the 800 x 600
+// root surface is mirrored on the world's surfaces, and T (the frame's terrain picture) follows the root surface:
+//   windowPaint      world root filled with 0; T = the root (0)
+//   pass             the same pass on the world's rasteriser with isCulled widened (a strip pass is drawn there as a full render of
+//                    the same pivot and angle over a cleared surface: the 800 strip and its shifted copy have no exact counterpart
+//                    at another pixel scale); T takes the root's pixels the pass changed
+//   blit 1           the world root copied to the world back surface
+//   blit 0           the world back surface copied to the world root (skipped after a strip pass, which drew everything); T = root
+// Nothing here writes the GameState or the address space; TerrainGlobals::view_index is put back after a world pass.
+LiveTerrainWorld *world_of(Gfx &g, Ctx &ctx) {
+  LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+  (void)g;
+  return lt ? lt->world() : nullptr;
+}
+// the gate of LiveTerrainWorld::check_central (render scale 1 only)
+void world_check(LiveTerrainWorld &w) {
+  if (!w.check_central || w.fw != 800 || w.ph != 600) return;
+  const std::vector<uint16_t> &px = w.raster->pixels();
+  int64_t d = 0;
+  for (int32_t y = 0; y < 600; ++y)
+    for (int32_t x = 0; x < 800; ++x)
+      if (px[static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(w.ox + x)] !=
+          w.terrain800[static_cast<size_t>(y) * 800 + static_cast<size_t>(x)])
+        ++d;
+  ++w.checks;
+  if (d) ++w.checks_differing;
+  w.diff_px += d;
+}
+void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const uint32_t *a, const std::vector<uint16_t> &before) {
+  if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
+    for (size_t i = 0; i < before.size(); ++i)
+      if (g.root.px[i] != before[i]) w.terrain800[i] = g.root.px[i];
+  gl::GlRaster &r = *w.raster;
+  if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+  TerrainGlobals &tg = lt.globals();
+  const int32_t view = tg.view_index;
+  r.set_arrays(tg.vertices.data(), tg.vertices.size() / 3, tg.normals.data(), tg.normals.size() / 3);
+  const int64_t before_px = r.stats.drawn_px;
+  const auto t0 = std::chrono::steady_clock::now();
+  terrain_render_set_cull_margin(w.margin);
+  const int32_t kind = static_cast<int32_t>(a[0]);
+  if (kind == kEntryRender || kind == kEntryStripRender) {   // G32: the camera's pivot and angle, for a redraw after a resize
+    w.has_last = true;
+    w.last_self = a[1];
+    w.last_pivot = a[2];
+    w.last_angle = kind == kEntryRender ? a[3] : a[4];
+  }
+  bool ok;
+  if (kind == kEntryStripRender) {
+    std::vector<uint16_t> &px = r.pixels();
+    std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+    ok = terrain_render_entry(ctx, r, tg, kEntryRender, a[1], a[2], a[4], 0);
+    w.strip_full = true;
+  } else {
+    ok = terrain_render_entry(ctx, r, tg, kind, a[1], a[2], a[3], a[4]);
+  }
+  terrain_render_set_cull_margin(0);
+  r.finish();
+  tg.view_index = view;
+  const long long us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+  w.us += us;
+  if (!ok) g.unsup("terrain.pass (world layer): an entry kind the renderer does not have");
+  w.pixels += r.stats.drawn_px - before_px;
+  // development switch SG_WORLD_PASS_LOG=<file>: one line per world pass, `<updateTerrainRender call k> <entry kind> <microseconds>
+  // <pixels written> <workers> <pw> <ph>` (the 800 x 600 passes: SG_TERRAIN_PASS_LOG above)
+  if (const char *log = std::getenv("SG_WORLD_PASS_LOG")) {
+    if (FILE *f = std::fopen(log, "a")) {
+      std::fprintf(f, "%u %d %lld %lld %d %d %d\n", lt.view().frames, kind, us, static_cast<long long>(r.stats.drawn_px - before_px),
+                   r.threads(), w.pw, w.ph);
+      std::fclose(f);
+    }
+  }
+  ++w.passes;
+  w.valid = true;
+  world_check(w);
+}
+
 void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
   if (SG_NEGCTL(g_negctl_gfx_terrain) == 5) return;
   std::fill(g.root.px.begin(), g.root.px.end(), static_cast<uint16_t>(0));
   g.root_terrain = 0;
+  if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
+    std::vector<uint16_t> &px = w->raster->pixels();
+    std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+    w->terrain800 = g.root.px;
+    world_check(*w);
+  }
 }
 
 void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -147,6 +230,9 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t j = numbered ? v.passes_in_frame++ : -1;
   const bool keep_pass = numbered && j < 8;
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
+  LiveTerrainWorld *const world = lt->world();   // P8B
+  std::vector<uint16_t> world_before;
+  if (world) world_before = g.root.px;
   if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
     // roadmap S3.15 (U-1810): the host's own OpenGL draws the pass into its DIB, which holds the root surface's pixels around it
     gl::WglSink &w = *lt->host_gl();
@@ -195,6 +281,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     g.root.px = r.pixels();
   }
   g.root_terrain = 1;
+  if (world && SG_NEGCTL(g_negctl_gfx_terrain) != 3) world_pass(g, ctx, *lt, *world, a, world_before);   // P8B
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_post").c_str(), g.root);
 }
 
@@ -212,9 +299,11 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   int32_t sx = static_cast<int32_t>(a[1]), sy = static_cast<int32_t>(a[2]);
   const int32_t tx = static_cast<int32_t>(a[3]), ty = static_cast<int32_t>(a[4]), w = static_cast<int32_t>(a[5]),
                 h = static_cast<int32_t>(a[6]);
+  LiveTerrainWorld *const world = lt->world();   // P8B
   if (a[0] == 1) {
     copy16(g.root.px, g.root.w, g.root.h, v.back_surface, v.back_w, v.back_h, sx, sy, tx, ty, w, h);
     v.back_terrain = g.root_terrain;
+    if (world) world->back = world->raster->pixels();
     return;
   }
   if (SG_NEGCTL(g_negctl_gfx_terrain) == 4) {
@@ -223,6 +312,12 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   copy16(v.back_surface, v.back_w, v.back_h, g.root.px, g.root.w, g.root.h, sx, sy, tx, ty, w, h);
   g.root_terrain = (g.root_terrain || v.back_terrain) ? 1 : 0;
+  if (world) {
+    if (world->strip_full) world->strip_full = false;
+    else world->raster->pixels() = world->back;
+    world->terrain800 = g.root.px;
+    world_check(*world);
+  }
 }
 
 void b_frame_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
@@ -231,7 +326,29 @@ void b_frame_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
 }
 void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
-  if (LiveTerrain *lt = live(g, ctx, "terrain.frameEnd")) keep(g, ctx, *lt, "exit", g.root);
+  LiveTerrain *lt = live(g, ctx, "terrain.frameEnd");
+  if (!lt) return;
+  keep(g, ctx, *lt, "exit", g.root);
+  // G32: a world layer resized since its last picture is drawn whole from the camera's last pass (window cleared, full render, the
+  // back copy taken), as updateTerrainRender's repaint path draws the 800 frame
+  LiveTerrainWorld *w = lt->world();
+  if (!w || !w->dirty || !w->has_last) return;
+  gl::GlRaster &r = *w->raster;
+  if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+  TerrainGlobals &tg = lt->globals();
+  const int32_t view = tg.view_index;
+  r.set_arrays(tg.vertices.data(), tg.vertices.size() / 3, tg.normals.data(), tg.normals.size() / 3);
+  std::vector<uint16_t> &px = r.pixels();
+  std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+  terrain_render_set_cull_margin(w->margin);
+  terrain_render_entry(ctx, r, tg, kEntryRender, w->last_self, w->last_pivot, w->last_angle, 0);
+  terrain_render_set_cull_margin(0);
+  r.finish();
+  tg.view_index = view;
+  w->back = r.pixels();
+  w->dirty = false;
+  w->valid = true;
+  ++w->redraws;
 }
 
 const GfxBodyDef kBodies[] = {

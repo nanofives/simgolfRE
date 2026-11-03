@@ -36,6 +36,7 @@ namespace {
 //  17 enableBlackLight1 gives light 1 the ambient (0.2, 0.2, 0.2, 1) (GlRaster models light 0 only: blind in its pixels)
 //  18 renderTileAtFiveOffsets swaps its 90 and 180 degree neighbour sets
 int32_t g_negctl_terrain_render = 0;
+int32_t g_cull_margin = 0;   // P8B: terrain_render_set_cull_margin
 
 // Terrain object fields
 constexpr uint32_t kTerWidth = 0x14, kTerHeight = 0x18, kTerZoom = 0x1C, kTerScreenW = 0x20, kTerScreenH = 0x24;
@@ -456,7 +457,8 @@ class Renderer {
     const int32_t zoom = i32(terrain_ + kTerZoom);
     if (zoom == 2) return false;
     const int32_t w = i32(terrain_ + kTerScreenW), h = i32(terrain_ + kTerScreenH);
-    const int32_t halfW = (w >> 1) * zoom, halfH = (h >> 1) * zoom;
+    // P8B: the world layer's side margin (0 = the original's test: adding 0 changes no comparison)
+    const int32_t halfW = (w >> 1) * zoom + (g_cull_margin << zoom), halfH = (h >> 1) * zoom;
     const int32_t dy = tile_y(t) - tile_y(center), dx = tile_x(t) - tile_x(center);
     // The four footprint constants per window size; any other size leaves them uninitialised (the debug build's stack fill)
     int32_t A = static_cast<int32_t>(0xCCCCCCCCu), B = A, C = A, D = A;
@@ -762,6 +764,7 @@ bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t e
 }
 
 void terrain_render_negctl(int32_t mode) { g_negctl_terrain_render = mode; }
+void terrain_render_set_cull_margin(int32_t m) { g_cull_margin = m; }
 
 // No sg_call functions yet: the renderer needs a sink and the host's globals, so it has its own C entry points (portsim_c.h).
 extern const ModuleDef kModule_terrain_render = {"terrain_render", nullptr, 0};

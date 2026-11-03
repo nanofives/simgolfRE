@@ -134,6 +134,12 @@ struct LiveIo {
   virtual ~LiveIo() = default;
   virtual uint32_t clock_site(int32_t site) = 0;        // TkBase::clock_site
   virtual void body_cursor(int32_t &x, int32_t &y) = 0; // TkBase::cursor_read (the frame body's Display::getCursor)
+  // P8B: the same with the read's site (FrameIo::cursor_site: 0 = no site named; kCursorSiteEdgeScroll = H1's View_toLocal whose
+  // answer the edge scroll tests). The site changes nothing in the port: a host may answer by it (the app's wide view)
+  virtual void body_cursor_site(int32_t site, int32_t &x, int32_t &y) {
+    (void)site;
+    body_cursor(x, y);
+  }
   virtual uint16_t async_key(int vk) = 0;               // TkBase::key_async
   // P6B: one pass of the title menu's hover loop ran (ML+0x11a65..ML+0x11ca5). A notification only (it changes nothing):
   // the app learns that the title menu is on screen (trace runs have no LiveIo)
@@ -167,6 +173,9 @@ struct FrameIo {
   size_t cursor_used = 0;
   int32_t cursor_x = 0, cursor_y = 0;
   uint32_t cursor_overrun = 0;  // reads with no record left (the port read the cursor more often than the original)
+  // P8B: the site of the cursor read that comes next (set around H1's View_toLocal at ML+0xebb4; 0 elsewhere): a live host may
+  // answer by it (LiveIo::body_cursor_site); trace runs ignore it
+  int32_t cursor_site = 0;
   // stop the frame in H1's wait (a run's end checkpoint taken there): the body throws StopAtWait at that point
   bool stop_at_wait = false;
 };
@@ -252,8 +261,8 @@ struct TkBase {
   void stack_pop(uint32_t n);
   // the next cursor position (Display::getCursor)
   void cursor_read(int32_t &x, int32_t &y) {
-    if (io.live) {  // roadmap S7.1: a live run
-      io.live->body_cursor(io.cursor_x, io.cursor_y);
+    if (io.live) {  // roadmap S7.1: a live run (P8B: with FrameIo::cursor_site)
+      io.live->body_cursor_site(io.cursor_site, io.cursor_x, io.cursor_y);
       ++io.cursor_used;
       x = io.cursor_x;
       y = io.cursor_y;

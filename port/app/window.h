@@ -71,6 +71,9 @@ class ScriptedHost : public HostInput {
 enum class InputDefect : uint8_t { None = 0, Bypass = 1 };
 
 struct WindowOptions {
+  // G32: the HUD compositor's point remap (present.h PanelRemap): applied to every mouse message's point and cursor read before
+  // the translator; null = none
+  const class PanelRemap *remap = nullptr;
   std::string title = "SimGolf (port)";
   uint32_t dpi = 0;           // 0 = the monitor's (GetDpiForWindow), else fixed
   bool activate = true;       // false: shown without taking the focus (test runs)

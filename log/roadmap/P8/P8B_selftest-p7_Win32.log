@@ -1,0 +1,10 @@
+[1/9] p7.wide_off_equals_pre_p7_render PASS
+[2/9] p7.black_hint_equals_wide_off PASS
+[3/9] p7.content_pixels_untouched PASS
+[4/9] p7.extend_lights_the_bands PASS
+[5/9] p7.soft_uniform_frame_fills_uniform PASS
+[6/9] p7.clamp_uniform_frame_fills_uniform PASS
+[7/9] p7.clamp_repeats_edge_column PASS
+[8/9] p7.soft_blur_grows_with_distance PASS
+[9/9] p7.letterbox_rows_stay_black PASS
+selftest 9 passed 0 failed

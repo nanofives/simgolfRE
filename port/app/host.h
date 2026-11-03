@@ -40,6 +40,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <deque>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -112,6 +113,7 @@ enum class HostDefect : uint8_t {
   PacingOff = 1,     // the frame wait does not wait
   PresentLate = 2,   // each present shows the previous present's frame (a stale buffer)
   NoPresentPoint = 3,  // S7.8: no present at Window::refreshFull (S7.5's points only: frame wait and modal pumps)
+  ViewWriteUnrecorded = 4,  // G32: the view width written into the view block but not recorded (a replay keeps 800)
 };
 
 struct HostOptions {
@@ -141,6 +143,18 @@ struct HostOptions {
   // P8A: the game-styled `Loading...` banner (gfx body loading.banner: the message window frame and banner font, a progress bar) over the last frame; the game itself presents
   // nothing during that load (its loading screen is drawn only while g_difficulty is -1: the boot, menu.cpp load_flic)
   bool loading_overlay = true;
+  // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): each present carries the attached LiveTerrain's world layer
+  // (LiveTerrain::world_frame) when it has one; `wide_edge`: H1's edge-scroll cursor read (portsim::kCursorSiteEdgeScroll) is
+  // answered 0 / 0x31f only at the client's own left / right edge and clamped to 1..0x31e elsewhere, so a cursor over the wide
+  // view's side columns (logical x < 0 or > 799) does not scroll; every other read gets the unclamped logical point
+  bool world = false;
+  bool wide_edge = false;
+  // G32 (the wide view follows the window): with `wide` the logical view width W = 800 * client width / content width (at least
+  // 800) is written into the view block (portsim bridge.h kPortViewWidthVa) at the next frame head after it changes, as a recorded
+  // harness write (DELIVER w32), and the world layer is resized: world_mode 2 = the client's pixels (native), 1 = W x 600, 0 = kept
+  bool wide = false;
+  int world_mode = 0;
+  const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -174,7 +188,7 @@ class LiveSession : public portsim::LiveHost {
   // the newest presented frame (WM_APP + 2); false when none is waiting. `band` (P7): Extend when the frame is a full-screen
   // 2D screen shown before a game's frame loop runs (boot loading screens, title menu, its sub-screens, the location screen,
   // the world-load screens), Black once the frame loop runs (the course view, and every report or dialog over it)
-  bool take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band = nullptr);
+  bool take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band = nullptr, WorldImage *world = nullptr);
   bool focus_child_takes(uint32_t msg, uint32_t wp);  // U-1616, U-1650
   // S7.4: every input message before the translator reads anything for it (the message-key table), and the key state the
   // translator and async_key read in keys_from_messages mode (-1: ask Windows)
@@ -194,6 +208,7 @@ class LiveSession : public portsim::LiveHost {
   bool frame_head(portsim::Ctx &, uint32_t frame, uint32_t &t) override;
   bool clock(portsim::Ctx &, int32_t site, bool body, uint32_t &t) override;
   void cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) override;
+  void cursor_at(portsim::Ctx &, bool modal, int32_t site, int32_t &x, int32_t &y) override;  // P8B: HostOptions::wide_edge
   uint16_t async_key(portsim::Ctx &, int vk) override;
   portsim::LiveReply pump(portsim::Ctx &, const portsim::LivePump &p, std::vector<portsim::Command> &out) override;
   void wait_point(portsim::Ctx &) override;
@@ -290,6 +305,14 @@ class LiveSession : public portsim::LiveHost {
   std::vector<uint16_t> frame_slot_, last_presented_, previous_;
   uint32_t frame_index_ = 0;
   BandFill frame_band_ = BandFill::Black;  // P7: the band hint of frame_slot_
+  WorldImage frame_world_;                 // P8B: the world layer of frame_slot_ (HostOptions::world)
+  // G32: the view the window asks for (window thread, under mu_) and the one applied at a frame head (sim thread)
+  int32_t want_w_ = 800, want_pw_ = 0, want_ph_ = 0;
+  int32_t applied_w_ = -1, applied_pw_ = 0, applied_ph_ = 0;
+  uint64_t view_writes_ = 0, world_resizes_ = 0;
+  void update_view_target();   // under mu_
+  void apply_view(portsim::Ctx &ctx);
+  uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
   bool frame_waiting_ = false;
   std::vector<Present> presents_;
   uint32_t last_dump_ms_ = 0;
@@ -357,6 +380,9 @@ class LiveTracePresenter : public portsim::LiveHost {
   void present_point(portsim::Ctx &ctx) override;  // S7.8 ('r'); `no_present_point` = the S7.5 points only (control)
   bool blocking() const override { return inner_->blocking(); }
   bool no_present_point = false;
+  int32_t view_width = 0;  // G32: --view-width (0 = the view block keeps 800)
+  // P8B: called after every present with its index and the back buffer (the world layer through terrain_log->live)
+  std::function<void(portsim::Ctx &, uint32_t, const std::vector<uint16_t> &)> on_present;
   TerrainLogBound *terrain_log = nullptr;  // S7.8 (U-1643)
   MemSampler memory;                        // S7.8
   // S7.8 counters (as LiveSession's): presents by kind 'r' 'w' 'm' 'p', and 'r' presents superseded before a w / m / p point
@@ -370,6 +396,7 @@ class LiveTracePresenter : public portsim::LiveHost {
   uint32_t frame_ = 0;
   std::vector<uint16_t> last_;
   std::vector<Present> presents_;
+  bool view_written_ = false;
 };
 
 }  // namespace portapp

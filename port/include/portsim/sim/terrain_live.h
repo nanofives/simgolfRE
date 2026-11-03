@@ -45,6 +45,44 @@ struct LiveTerrainView {
   int64_t passes = 0, pixels_drawn = 0; // passes rasterised, pixels they wrote (GlRaster stats)
 };
 
+// P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): the WORLD LAYER, a second rasteriser of pw x ph pixels that gets the same
+// GL setup (viewports mapped, x clip planes moved out: gl_raster.h set_clip_x) and every terrain pass the 800 x 600 one gets, with
+// isCulled's x bounds widened by `margin` (terrain_render.h). Outside the GameState and the address space: nothing a pass reads
+// changes (TerrainGlobals::view_index is put back after each world pass). The presenter composes it under the 800 frame.
+struct LiveTerrainWorld {
+  int32_t pw = 0, ph = 0;      // the world layer's pixels
+  int32_t fw = 0, ox = 0;      // the 800 x 600 frame's width (= ph * 800 / 600) and left edge in world pixels
+  int32_t margin = 0;          // isCulled's side margin in the frame's logical pixels
+  std::unique_ptr<gl::GlRaster> raster;   // its pixels() are the world's root surface
+  std::vector<uint16_t> back;             // the world's copy of the exe's back surface
+  std::vector<uint16_t> terrain800;       // T: the 800 frame's terrain picture (the root surface after each terrain operation;
+                                          // a pass updates only the pixels it changed)
+  bool valid = false;          // a pass has drawn
+  bool strip_full = false;     // a strip pass was drawn as a full render: the next shifted copy of the back surface is skipped
+  bool names_differ = false;   // a texture name of the world's rasteriser differed from the primary's (the layer is then off)
+  // G32 (dynamic view): after resize_world the world is redrawn whole at the next updateTerrainRender return, from the pivot and
+  // angle of the last full or strip pass (the camera's), when one has run
+  bool dirty = false;
+  bool has_last = false;
+  uint32_t last_self = 0, last_pivot = 0, last_angle = 0;
+  int64_t resizes = 0, redraws = 0;
+  // G32: the WIDE SCENE (gfx_scene.cpp): every sprite-queue entry and golfer label drawn a second time into scene_w x 600 logical
+  // pixels, the frame's 800 columns at scene_e, over scene_base (the root surface at the queue's start in those columns, the world
+  // layer sampled down beside them); s1 = the root surface at the queue's end. With scene_valid, world_frame lays the scene's sprite
+  // pixels over the world, and the frame's pixel p shows that world image where back[p] == T[p] (terrain) or back[p] == s1[p] !=
+  // s0[p] (a pixel the queue drew); the rest (2D drawn before the queue in the frame, such as walker labels, and the HUD after it)
+  // stays the frame's
+  std::vector<uint16_t> scene, scene_base, s0, s1;   // s0 = the root surface at the queue's start
+  int32_t scene_w = 0, scene_e = 0;
+  bool scene_valid = false;
+  int64_t scene_passes = 0;
+  int64_t passes = 0, pixels = 0, us = 0;
+  // gate (sg_call terrainLive.worldCheck(1)): after every terrain operation of a world whose frame is 800 x 600 world pixels (render
+  // scale 1), the world root's central 800 columns compared with T: operations checked, operations with a difference, pixels
+  bool check_central = false;
+  int64_t checks = 0, checks_differing = 0, diff_px = 0;
+};
+
 class LiveTerrain : public TerrainApi {
  public:
   // va: where getInstance puts the object (0 = a free range of the address space). snap_after: call counts after which a copy
@@ -127,6 +165,17 @@ class LiveTerrain : public TerrainApi {
   const RendererChoice &renderer() const { return choice_; }
   LiveTerrainView &view() { return view_; }
   bool setup_names_differ() const { return dll_.setup.names_differ; }
+  // P8B: the world layer of pw x ph pixels (section above). Before the first Terrain call (the setup must reach it from the
+  // start); false (with `why`) otherwise or for a size smaller than the 800 x 600 frame's aspect allows (pw < ph * 4 / 3).
+  bool set_world_view(int32_t pw, int32_t ph, std::string *why = nullptr);
+  LiveTerrainWorld *world() { return world_ && !world_->names_differ ? world_.get() : nullptr; }
+  // G32: a new size for the world layer (the window was resized): framebuffer, viewport mapping, clip planes, dither phase and cull
+  // margin follow; the picture is redrawn whole at the next updateTerrainRender return (LiveTerrainWorld::dirty). False without one.
+  bool resize_world(int32_t pw, int32_t ph);
+  // The world layer for a presented frame: px = its pixels (pw * ph), mask[p] = 1 where the frame's pixel p (800 x 600) shows the
+  // world (it equals the terrain picture T there). False (nothing written) without a world layer, before its first pass, or when
+  // the frame holds no terrain (back_terrain 0: the 2D screens and full-screen overlays are shown as before).
+  bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask) const;
   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
   void frame_begin();
   void frame_end();
@@ -160,6 +209,8 @@ class LiveTerrain : public TerrainApi {
   std::unique_ptr<gl::GlRaster> raster_;
   std::unique_ptr<gl::WglSink> wgl_;
   std::unique_ptr<gl::SetupPair> pair_;
+  std::unique_ptr<LiveTerrainWorld> world_;   // P8B
+  std::unique_ptr<gl::GlSink> world_fan_;     // P8B: the setup's fan to the primary sink and the world's rasteriser
   RendererChoice choice_;
   LiveTerrainView view_;
   bool to_gfx(const char *name, std::initializer_list<uint32_t> args);

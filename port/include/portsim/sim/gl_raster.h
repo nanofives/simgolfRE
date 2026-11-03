@@ -42,6 +42,22 @@ class GlRaster : public GlSink {
 
   int width() const { return w_; }
   int height() const { return h_; }
+  // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): the x clip planes at |x| <= kx * w instead of |x| <= w, so a buffer
+  // wider than the viewport is drawn beyond the viewport's sides with the same clip coordinates (the world layer of
+  // LiveTerrain). 1 (the default) keeps the original's planes and the code path unchanged.
+  void set_clip_x(float kx) { finish(); clip_kx_ = kx; }
+  float clip_x() const { return clip_kx_; }
+  // P8B: the 4x4 dither matrix's column index taken from (x + dx) & 3 instead of x & 3 (a world layer whose 800 x 600 frame starts
+  // at column ox sets dx = ox & 3 at render scale 1, so its central columns keep the frame's dither phase); 0 = the original's
+  void set_dither_dx(int dx) { finish(); dither_dx_ = dx & 3; }
+  // P8B (G32: the world layer follows window resizes): a new framebuffer of w x h words (0), textures, matrices, lights and every
+  // other state kept; the caller sets the viewport again
+  void resize_frame(int w, int h) {
+    finish();
+    w_ = w;
+    h_ = h;
+    fb_.assign(static_cast<size_t>(w) * static_cast<size_t>(h), 0);
+  }
   std::vector<uint16_t> &pixels() { finish(); return fb_; }
   // diagnostics: the colour of every written pixel before it is quantised to 5 bits (0..255 per channel, 3 floats a pixel)
   void keep_float(bool on) {
@@ -184,6 +200,8 @@ class GlRaster : public GlSink {
   std::vector<Mat> stack_[2];
   Mat mv_, proj_;
   int32_t vp_x_ = 0, vp_y_ = 0, vp_w_ = 0, vp_h_ = 0;
+  float clip_kx_ = 1.0f;   // P8B: set_clip_x
+  int dither_dx_ = 0;      // P8B: set_dither_dx
   // state
   bool texture2d_ = false, cull_ = false, blend_ = false, lighting_ = false, light0_ = false;
   uint32_t front_ = 0x0901;              // GL_CCW

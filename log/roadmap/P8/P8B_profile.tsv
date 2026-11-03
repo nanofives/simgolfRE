@@ -1,0 +1,4 @@
+# P8B rows for re/port/play_profile.tsv (decision G32, 2026-11-03); the app's compiled copy (port/app/main.cpp kPlayProfile) has them
+switch	value	decision_id	reason
+worldToScreen.wideViewVisibility	0	G32,P8B	worldToScreen's on-screen test (playSoundAt's RNG draw, the story advances of golfers on screen) covers the host's wide view (W = window width * 600 / height, the view block's word): the same share of the view as the original's 800 of its own, centred; the original tests 800 only
+tileToScreen.wideViewVisibility	0	G32,P8B	tileToScreen's x window (the tiles whose scenery buildSceneSprites queues) covers the wide view the same way, so the side columns get their trees and objects; the original queues only x -0x40 .. 0x35f

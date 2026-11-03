@@ -2439,6 +2439,12 @@ with the ticker window's own calls (drawFrameR3, g_font51b360, drawTextSurface's
 back buffer (no GameState or back-buffer write); P6B's GDI box is gone. Standing rule (Mariano): every UI the port adds uses the game's own
 fonts and art through the gfx backend. Widescreen decisions G32 (re/roadmap/DECISIONS_PENDING.md): sim visibility window scaled to the wide
 view behind a `play` switch, HUD panels anchored to the edges and scaled with window height, `--wide` on by default and following resizes.
+P8B (2026-11-03, merge log/roadmap/P8/MERGE_P8B.md, notes P8B_notes.md 7-9): widescreen stages 2 + 3. `--wide` is ON by default and
+follows window resizes (view width W in a view block at 0xFDF00000 outside the GameState, written at a frame head as a recorded harness write);
+the world (terrain via GlRaster::resize_frame, scene sprites incl. side-column scenery, overlay lines) renders at the window's native pixels
+(`--render-scale auto`); the HUD compositor (present.h kHudPanels) moves the title panel left, the meters right and the bottom band left, scaled
+with window height, and PanelRemap maps clicks back to 800-space. `play` switches worldToScreen / tileToScreen.wideViewVisibility widen the sim's
+visibility and scenery windows to the wide view. SG_APP_P8B=off (conftest) or `--wide off` gives the pre-P8B app.
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

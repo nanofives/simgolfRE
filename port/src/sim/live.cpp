@@ -425,6 +425,7 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
     return t;
   }
   void body_cursor(int32_t &x, int32_t &y) override { cursor_answer(false, x, y); }
+  void body_cursor_site(int32_t site, int32_t &x, int32_t &y) override { cursor_answer(false, x, y, site); }   // P8B
   // roadmap S7.8 (U-1642): Window::refreshFull ran, where the original's back buffer reaches the window. Roadmap S7.9 (U-1670):
   // the gfx backend calls it from its refreshFull body (gfx.h gfx_set_refresh_hook), so the refreshes the modules issue through
   // their own drawing calls (the boot's loading screens, the modal screens) present too, not only the frame code's drop
@@ -821,8 +822,9 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
     placeholder_ = SIZE_MAX;
   }
 
-  void cursor_answer(bool modal, int32_t &x, int32_t &y) {
-    host_.cursor(ctx_, modal, x, y);
+  void cursor_answer(bool modal, int32_t &x, int32_t &y, int32_t site = 0) {
+    if (site != 0) host_.cursor_at(ctx_, modal, site, x, y);   // P8B
+    else host_.cursor(ctx_, modal, x, y);
     if ((mode_ & 15) == 3 && cursor_answers_ == static_cast<uint64_t>(mode_ >> 4)) host_.cursor(ctx_, modal, x, y);
     if ((mode_ & 15) == 4 && cursor_answers_ == static_cast<uint64_t>(mode_ >> 4)) ++x;  // control 4: one read off by 1
     ++cursor_answers_;
@@ -1379,6 +1381,12 @@ class PrefixHost : public LiveHost {
   void cursor(Ctx &c, bool modal, int32_t &x, int32_t &y) override {
     if (on_b_) return b_->cursor(c, modal, x, y);
     a_->cursor(c, modal, x, y);
+    cx_ = x;
+    cy_ = y;
+  }
+  void cursor_at(Ctx &c, bool modal, int32_t site, int32_t &x, int32_t &y) override {   // P8B
+    if (on_b_) return b_->cursor_at(c, modal, site, x, y);
+    a_->cursor_at(c, modal, site, x, y);
     cx_ = x;
     cy_ = y;
   }
