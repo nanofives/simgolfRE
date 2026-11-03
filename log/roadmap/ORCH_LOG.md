@@ -383,3 +383,4 @@
 2026-11-03 07:44 LAN release 70c2e89c published (P4: profile play as the app default): 1 of 5,659 files sent, manifest verified through nginx
 2026-11-03 10:31 Mariano play-test feedback round 1 (9 items, log/roadmap/P5/BRIEF.md): workers P5A (opus: exit hover area, theme-pack highlight cut, park highlight only on mouse move, course report / top 10 designers not working) and P5B (opus: edge scroll when unfocused, +/- zoom keys, X asks to save, resizable 4:3 window with smooth scaling option, widescreen scoped only) spawned on claude2.
 2026-11-03 11:43 P5 merged (feedback round 1: 2 play switches, 2 port bugs fixed, 4 app options, widescreen scoped); workers closed. LAN release next.
+2026-11-03 11:46 LAN release 766dc35a published (P5 feedback fixes): 1 of 5,659 files sent, manifest verified
