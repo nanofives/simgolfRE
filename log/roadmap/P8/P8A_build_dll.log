@@ -1,0 +1,10 @@
++ cmake --build C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P8A\port\build\P8A_x64 --config Release --target portsim_c -- /m
+VersiÃ³n de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P8A\port\build\P8A_x64\Release\portsim.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P8A/port/CMakeLists.txt
+  portsim_c.cpp
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P8A/port/build/P8A_x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P8A/port/build/P8A_x64/Release/portsim_c.exp
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P8A\port\build\P8A_x64\Release\portsim_c.dll
+DLL C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P8A\port\build\P8A_x64\Release\portsim_c.dll

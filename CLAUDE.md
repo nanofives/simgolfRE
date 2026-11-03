@@ -2434,6 +2434,11 @@ updateGolfers.walkOffGrid, mainLoop.cameraFollowOffGrid: the original follows an
 camera). hoverTip.tenFrameDwell shows HUD tips after 3 frames instead of 10. App options: --loading-overlay (default on; the world load
 is about 1.5 s, flic sheet decoding 60-65 % of it) and widescreen stage 1 `--wide` (default off; 16:9 window, bands filled from the 2D
 screens' edge colours, black in game; plan log/roadmap/P7/PLAN.md). SG_APP_P6B=off turns P6B's options off (conftest sets it).
+P8A (2026-11-03, merge log/roadmap/P8/MERGE_P8A.md): the world-load indicator is the gfx body `loading.banner` (text family), drawn
+with the ticker window's own calls (drawFrameR3, g_font51b360, drawTextSurface's colour) plus a bar in the panel colours, on a copy of the
+back buffer (no GameState or back-buffer write); P6B's GDI box is gone. Standing rule (Mariano): every UI the port adds uses the game's own
+fonts and art through the gfx backend. Widescreen decisions G32 (re/roadmap/DECISIONS_PENDING.md): sim visibility window scaled to the wide
+view behind a `play` switch, HUD panels anchored to the edges and scaled with window height, `--wide` on by default and following resizes.
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

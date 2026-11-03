@@ -1,0 +1,7 @@
+[w8_lock] P8M queued at 2026-11-03 17:05:05
+[w8_lock] P8M waiting: lock='free' ahead=['P8B'] free_commit=22.1 GB
+[w8_lock] P8M waiting: lock='step=P8B' ahead=[] free_commit=21.7 GB
+[w8_lock] P8M TOOK the lock at 2026-11-03 17:05:25 (waited 20 s, free commit 22.2 GB)
+..............                                                           [100%]
+14 passed in 14.47s
+[w8_lock] P8M released at 2026-11-03 17:05:40

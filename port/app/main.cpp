@@ -999,16 +999,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       if (session.take_frame(px, index, &band)) {
         presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
         win.invalidate();
-        if (shown) {
+        if (shown && index != LiveSession::kBannerIndex) {
           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
           std::fflush(shown);
         }
       }
-      continue;
-    }
-    if (m.hwnd == hwnd && m.message == LiveSession::kMsgLoading) {  // P6B item 2: the overlay's progress (0 = off)
-      presenter.set_loading(static_cast<uint32_t>(m.wParam), static_cast<uint32_t>(m.lParam));
-      win.invalidate();
       continue;
     }
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgEnded) {  // the game quit (or failed): close the window

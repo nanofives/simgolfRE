@@ -1336,7 +1336,40 @@ void b_test(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
 }
 
+// loading.banner(done, expected) (P8A, the world load's banner): the game's own message window look, drawn the way drawWindow
+// draws the ticker (drawFrameR3 at (x - 8, y - 8, 0x1a0, H + 0x10), the base banner font g_font51b360, drawTextSurface's
+// colour 0x80007fff at (x + 0xc, y + 0x10)) over a COPY of the back buffer: the root surface is swapped for the copy while the
+// body runs and put back, so the real back buffer, g.root_terrain and the GameState are untouched. The bar under the text is
+// a track and a fill in the banner's own colours (white 0x7fff border, the panel dark 0x2108, the text-frame gold 0x7fe7);
+// it fills done / expected (at most 95 %). The picture goes to `$gfx/banner.555`.
+void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  g.ensure_root(ctx);
+  if (g.back.px.empty() || g.back.w != g.root.w || g.back.h != g.root.h) return;
+  Surface16 saved = std::move(g.root);
+  const int saved_terrain = g.root_terrain;
+  g.root = g.back;
+  const int32_t x = (g.root.w - 0x1a0) / 2 + 8, y = g.root.h * 5 / 12;
+  const uint32_t root = g.root_va(ctx);
+  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  call(g, ctx, "drawFrameR3", {u(x - 8), u(y - 8), 0x1a0, 0x50, 1});
+  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  text_surface(g, ctx, "Loading...", x + 0xc, y + 0x10, 0x80007fffu);
+  const int32_t tx = x + 0xc, ty = y + 0x30, tw = 0x1a0 - 0x28, th = 12;
+  const double f = a[1] ? std::min(0.95, static_cast<double>(a[0]) / a[1]) : 0.5;
+  const int32_t fw = static_cast<int32_t>((tw - 4) * f);
+  for (int32_t yy = 0; yy < th; ++yy)
+    for (int32_t xx = 0; xx < tw; ++xx) {
+      const bool edge = yy == 0 || yy == th - 1 || xx == 0 || xx == tw - 1;
+      const bool fill = !edge && yy >= 2 && yy < th - 2 && xx >= 2 && xx < 2 + fw;
+      g.root.px[static_cast<size_t>(ty + yy) * g.root.w + (tx + xx)] = edge ? 0x7fff : fill ? 0x7fe7 : 0x2108;
+    }
+  gfxb::put_file(ctx, "$gfx/banner.555", gfxb::surface_bytes(g.root));
+  g.root = std::move(saved);
+  g.root_terrain = saved_terrain;
+}
+
 const GfxBodyDef kBodies[] = {
+    {"loading.banner", b_loading_banner},
     {"Widget_setQuad70", b_set_quad70},
     {"Widget_setQuad74", b_set_quad74},
     {"Widget_setQuad78", b_set_quad78},

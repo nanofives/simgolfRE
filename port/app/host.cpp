@@ -23,7 +23,8 @@
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
-#include "portsim/sim/flic.h"  // P6B item 2: sheet_to_gfx_stats
+#include "portsim/sim/flic.h"
+#include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/state_hash.h"
 
@@ -281,16 +282,41 @@ void LiveSession::hide_window() {
   if (h) ShowWindowAsync(static_cast<HWND>(h), SW_HIDE);
 }
 
-// P6B item 2: the overlay's progress (posted at most every 50 ms) and the end of a load
-void LiveSession::post_loading(uint32_t done) {
+// P8A: the world load's banner. Built on the sim thread by the gfx backend's `loading.banner` body (the game's own message
+// window frame and base banner font over a copy of the back buffer: nothing in the GameState or the real back buffer is
+// written) and handed to the window as an ordinary frame with index kBannerIndex. done == 0 puts the frame the load interrupted
+// (last_presented_) back on screen.
+void LiveSession::post_loading(portsim::Ctx &ctx, uint32_t done) {
+  std::vector<uint16_t> px;
+  if (done == 0) {
+    if (!banner_shown_) return;
+    banner_shown_ = false;
+    px = last_presented_;
+    if (px.empty()) return;
+  } else {
+    const uint32_t a[2] = {done, load_expected_};
+    if (!portsim::gfx_drop(ctx, "loading.banner", a, 2) || !ctx.files_ptr) return;
+    const int64_t n = ctx.files().size("$gfx/banner.555");
+    if (n != static_cast<int64_t>(kLogicalW) * kLogicalH * 2) return;
+    px.resize(static_cast<size_t>(n / 2));
+    ctx.files().read("$gfx/banner.555", 0, px.data(), static_cast<uint64_t>(n));
+    banner_shown_ = true;
+  }
+  {
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    frame_slot_ = std::move(px);
+    frame_index_ = kBannerIndex;
+    frame_band_ = BandFill::Extend;
+    frame_waiting_ = true;
+  }
   void *h;
   {
     std::lock_guard<std::mutex> lk(mu_);
     h = hwnd_;
   }
-  if (h) PostMessageW(static_cast<HWND>(h), kMsgLoading, done, load_expected_);
+  if (h) PostMessageW(static_cast<HWND>(h), kMsgPresent, 0, 0);
 }
-void LiveSession::end_load() {
+void LiveSession::end_load(portsim::Ctx &ctx) {
   if (!loading_) return;
   loading_ = false;
   const uint32_t now_ms = timeGetTime();
@@ -301,7 +327,7 @@ void LiveSession::end_load() {
                     static_cast<uint32_t>((us - load_dec_us0_) / 1000), static_cast<uint32_t>(calls - load_dec_calls0_), frame_});
   // the next load's bar is scaled by this one's pump count (the first by the Monterey load's, measured: P6B_notes.md item 2)
   load_expected_ = load_pumps_;
-  if (opt_.loading_overlay && title_ever_) post_loading(0);
+  if (opt_.loading_overlay && title_ever_) post_loading(ctx, 0);
 }
 
 // P6B item 1 (host.h request_close)
@@ -464,7 +490,7 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   }
   track_screen(ctx, true);        // P7: a frame head is the frame loop
   title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
-  end_load();                     // P6B item 2
+  end_load(ctx);                  // P6B item 2
   close_check(ctx, true, false);  // P5B item 3: a close request becomes the system menu's Exit flag here
   if (frames_log_) {
     std::fprintf(frames_log_, "%u\t%u\t%u\n", frame, t, flags);
@@ -559,10 +585,10 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
     ++load_pumps_;
     if (opt_.loading_overlay && title_ever_ && (load_post_ms_ == 0 || now_ms - load_post_ms_ >= 50)) {
       load_post_ms_ = now_ms;
-      post_loading(load_pumps_);
+      post_loading(ctx, load_pumps_);
     }
   } else {
-    end_load();
+    end_load(ctx);
   }
   if (exit_req_.load() || exiting_) {  // P6B item 1
     const uint32_t now_ms = timeGetTime();

@@ -71,14 +71,6 @@ class Presenter {
   bool has_frame() const { return !frame_.empty(); }
   const std::vector<uint16_t> &frame() const { return frame_; }
   uint32_t frames_set() const { return frames_set_; }
-  // P6B item 2: the `Loading` box drawn over the frame while a world load runs (done = pumps so far, 0 = off; expected = the
-  // pumps the bar is scaled to). Drawn into the window DC only (paint): frame(), render() and every frame hash are unchanged
-  void set_loading(uint32_t done, uint32_t expected) {
-    loading_done_ = done;
-    loading_expected_ = expected;
-  }
-  bool loading() const { return loading_done_ != 0; }
-
   // The client image for cw x ch: BGRA words, rows top-down (vp receives the content rectangle).
   void render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vp = nullptr) const;
 
@@ -95,7 +87,6 @@ class Presenter {
   WideFill wide_ = WideFill::Off;  // P7
   BandFill band_ = BandFill::Black;
   void fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P7
-  uint32_t loading_done_ = 0, loading_expected_ = 0;  // P6B item 2
   mutable std::vector<uint32_t> scratch_;
 };
 

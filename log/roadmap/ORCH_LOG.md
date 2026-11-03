@@ -389,3 +389,5 @@
 2026-11-03 15:43 after the 15:34 reboot: P6A / P7 closed again (they came back as running), P6B resumed from its notes; P6A + P7 merged cleanly into port/build/P6M (3-way against HEAD f04c7591), waiting for P6B.
 2026-11-03 16:40 P6 + P7 merged (feedback round 2: X exits through the game's title exit, 4 play switches, --loading-overlay, widescreen stage 1 behind --wide off by default; band hint fixed to clear on the title menu after a game); segments x64 205/205 = I25, app selftests 37/6/9, port test_static / profiles / defects_p6a / app_shell / input / replay pass. Commit + LAN release next.
 2026-11-03 16:31 P6 + P7 committed 649b6a5e; LAN release 649b6a5e published (1 of 5,659 files sent, manifest verified)
+2026-11-03 16:39 feedback round 3 (log/roadmap/P8/BRIEF.md): P8A (sonnet: loading banner in the game's own banner style; standing rule: every port UI uses the game's fonts / art) and P8B (opus: widescreen stage 2 + world rendered at the window's native resolution) spawned on claude2, trees port/build/P8A / P8B from b786c29a.
+2026-11-03 17:16 P8A merged (loading banner in the game's style); G32 recorded and sent to P8B. Commit + LAN release next.

@@ -138,7 +138,7 @@ struct HostOptions {
   // item 3: the window's close button (SC_CLOSE) asks for the game's own quit prompt (LiveSession::request_close)
   bool close_prompt = true;
   // P6B item 2: while a world load runs after the title menu (loadWorldAssets' loadFlic pumps, PumpKind::Load) the window shows
-  // a `Loading` box with a progress bar over the last frame (kMsgLoading, Presenter::set_loading); the game itself presents
+  // P8A: the game-styled `Loading...` banner (gfx body loading.banner: the message window frame and banner font, a progress bar) over the last frame; the game itself presents
   // nothing during that load (its loading screen is drawn only while g_difficulty is -1: the boot, menu.cpp load_flic)
   bool loading_overlay = true;
 };
@@ -211,8 +211,8 @@ class LiveSession : public portsim::LiveHost {
   // window message ids the session posts
   static constexpr uint32_t kMsgPresent = 0x8000 + 2;  // WM_APP + 2: a frame is waiting (take_frame)
   static constexpr uint32_t kMsgEnded = 0x8000 + 3;    // WM_APP + 3: the session ended (the game quit or it failed)
-  // P6B item 2: WM_APP + 4: wParam = the load's pumps so far (0 = the load ended: overlay off), lParam = the pumps expected
-  static constexpr uint32_t kMsgLoading = 0x8000 + 4;
+  // P8A: take_frame's index of a banner frame (not a present: no frame hash is logged for it)
+  static constexpr uint32_t kBannerIndex = 0xffffffffu;
   // the first world load's expected pump count (later loads use the previous load's count): measured, P6B_notes.md item 2
   static constexpr uint32_t kWorldLoadPumps = 120;  // the Monterey sandbox load (P6B_runs/load_after_*: 120 pumps)
 
@@ -275,8 +275,9 @@ class LiveSession : public portsim::LiveHost {
   uint32_t load_t0_ = 0, load_pumps_ = 0, load_post_ms_ = 0, load_expected_ = 0, session_t0_ = 0;
   uint64_t load_dec_us0_ = 0, load_dec_calls0_ = 0;
   std::atomic<uint32_t> last_input_ms_{0};
-  void post_loading(uint32_t done);
-  void end_load();
+  void post_loading(portsim::Ctx &ctx, uint32_t done);
+  void end_load(portsim::Ctx &ctx);
+  bool banner_shown_ = false;  // P8A: the window shows the banner frame, not the last present
   Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
   // P7: whether a game's frame loop has run since the title menu (sim thread only): set at a frame head or a body pump with
   // g_difficulty != -1, cleared at any pump that reads g_difficulty == -1 (the title menu stores -1 there, 0x0040f8ab)

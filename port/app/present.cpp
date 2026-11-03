@@ -171,35 +171,6 @@ void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   bi.bmiHeader.biCompression = BI_RGB;
   SetDIBitsToDevice(static_cast<HDC>(hdc), 0, 0, static_cast<DWORD>(cw), static_cast<DWORD>(ch), 0, 0, 0,
                     static_cast<UINT>(ch), scratch_.data(), &bi, DIB_RGB_COLORS);
-  if (loading_done_ == 0) return;
-  // P6B item 2: a box at the content rectangle's centre (40 % x 10 % of it), a dark green fill, a white frame, `Loading` and
-  // a bar; the bar fills done / expected of its width (at most 95 %: the count of a load is known only once it ended)
-  const Viewport vp = fit_viewport(cw, ch);
-  const HDC dc = static_cast<HDC>(hdc);
-  const int bw = vp.client_w * 2 / 5, bh = std::max(vp.client_h / 10, 40);
-  const int bx = vp.origin_x + (vp.client_w - bw) / 2, by = vp.origin_y + (vp.client_h - bh) / 2;
-  RECT box = {bx, by, bx + bw, by + bh};
-  HBRUSH fill = CreateSolidBrush(RGB(16, 48, 24)), white = CreateSolidBrush(RGB(255, 255, 255)),
-         bar = CreateSolidBrush(RGB(96, 200, 72));
-  FillRect(dc, &box, fill);
-  FrameRect(dc, &box, white);
-  const int pad = std::max(bh / 8, 4);
-  RECT track = {bx + pad, by + bh - pad - bh / 4, bx + bw - pad, by + bh - pad};
-  FrameRect(dc, &track, white);
-  const double f = loading_expected_ ? std::min(0.95, static_cast<double>(loading_done_) / loading_expected_) : 0.5;
-  RECT done = {track.left + 2, track.top + 2, track.left + 2 + static_cast<LONG>((track.right - track.left - 4) * f), track.bottom - 2};
-  if (done.right > done.left) FillRect(dc, &done, bar);
-  HFONT font = CreateFontW(-(bh / 3), 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, L"Arial");
-  HGDIOBJ old = SelectObject(dc, font);
-  SetBkMode(dc, TRANSPARENT);
-  SetTextColor(dc, RGB(255, 255, 255));
-  RECT text = {bx, by + pad / 2, bx + bw, track.top};
-  DrawTextW(dc, L"Loading...", -1, &text, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-  SelectObject(dc, old);
-  DeleteObject(font);
-  DeleteObject(fill);
-  DeleteObject(white);
-  DeleteObject(bar);
 }
 #endif
 
