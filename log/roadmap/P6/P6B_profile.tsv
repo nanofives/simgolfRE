@@ -1,0 +1,2 @@
+switch	value	decision_id	reason
+hoverTip.tenFrameDwell	0	G30,P6	the HUD panels (build palette, terrain toolbar, buildings, amenities, employee and golfer panels) draw a hovered control's tip after more than 3 frames on it (about 0.37 s) instead of more than 10 (about 1.0 s): the original's `cmp [g_ui_5aa554], 0xa` at 0x00433257 / 0x004338ff and the same compare in the five other panels

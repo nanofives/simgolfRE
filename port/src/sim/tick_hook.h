@@ -135,6 +135,9 @@ struct LiveIo {
   virtual uint32_t clock_site(int32_t site) = 0;        // TkBase::clock_site
   virtual void body_cursor(int32_t &x, int32_t &y) = 0; // TkBase::cursor_read (the frame body's Display::getCursor)
   virtual uint16_t async_key(int vk) = 0;               // TkBase::key_async
+  // P6B: one pass of the title menu's hover loop ran (ML+0x11a65..ML+0x11ca5). A notification only (it changes nothing):
+  // the app learns that the title menu is on screen (trace runs have no LiveIo)
+  virtual void title_menu_pass() {}
 };
 
 // What a converted body needs from the frame driver: the clock values of the frame and the asynchronous key state.

@@ -29,6 +29,8 @@ def pytest_configure(config):
     # P5B: the app's window / input defaults (edge guard, +/- zoom keys, close prompt, resizable window, smooth scaling) are off
     # for the app tests, which compare nearest-pixel frames, drive an unfocused window and close it with WM_CLOSE
     os.environ.setdefault("SG_APP_P5B", "off")
+    # P6B: the loading overlay (a box drawn into the window while a world load runs) is off for the app tests too
+    os.environ.setdefault("SG_APP_P6B", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

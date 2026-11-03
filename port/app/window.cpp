@@ -197,7 +197,7 @@ bool AppWindow::create() {
 void AppWindow::size_for_dpi(uint32_t dpi, const void *suggested) {
   HWND h = static_cast<HWND>(hwnd_);
   dpi_ = dpi ? dpi : 96;
-  const int cw = MulDiv(kLogicalW, static_cast<int>(dpi_), 96), ch = MulDiv(kLogicalH, static_cast<int>(dpi_), 96);
+  const int cw = MulDiv(opt_.logical_w, static_cast<int>(dpi_), 96), ch = MulDiv(kLogicalH, static_cast<int>(dpi_), 96);  // P7: logical_w
   // the frame for the window's own monitor dpi (the client size is the content's, chosen above)
   const UINT frame_dpi = GetDpiForWindow(h);
   RECT r = {0, 0, cw, ch};

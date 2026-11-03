@@ -1,0 +1,15 @@
+port/src/sim/golfers.cpp
+port/src/sim/golfers_walkers.inc
+port/src/sim/tick.cpp
+port/src/sim/tick_frame.inc
+port/src/sim/tick_golfers.inc
+port/src/sim/tick_leaves.inc
+port/src/sim/commands.cpp
+port/src/sim/commands_keys.inc
+port/src/sim/commands_panels.inc
+port/src/sim/dialogs.cpp
+port/src/sim/terrain_gen.cpp
+port/include/portsim/sim/tick.h
+port/app/main.cpp
+re/port/play_profile.tsv
+port/test/test_defects_p6a.py

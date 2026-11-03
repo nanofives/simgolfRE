@@ -69,6 +69,11 @@ int g_defect_zero_frame_count = 1;    // placeAnimal.zeroFrameCount (D43)
 // g_holesPlusOne's, every time and applies its four thresholds twice. Fixed (0): hole records 1..18 once each, thresholds once.
 int g_defect_reset_single_hole = 1;
 int g_defect_walker_table_full = 1;   // spawnWalker.fullTable (D11)
+// updateWalkers.cursorTargetOffGrid (P6A, 2026-11-03, Mariano's play-test): Gary Golf's walker (kind 0xfa) walks to the cursor
+// tile while hole 1 has no par (updateWalkers+0x6db..updateWalkers+0x727), and screenToTile returns tiles past the 50 x 50 grid when the cursor
+// is over the black void; pathStep then returns its unclamped direction (pathStep+0x2f, pathStep+0xdd..pathStep+0xf2) and he walks off
+// the land. 0 = the cursor tile is clamped to 0..0x31 for that target, and every walker's position stays inside the grid.
+int g_defect_walker_cursor_offgrid = 1;
 
 Ptr<Golfer> golfer(Ctx &c, int32_t g) { return state_arr(c, &GameState::g_golfers) + g; }
 Ptr<ShotTrack> track(Ctx &c, int32_t p) { return state_arr(c, &GameState::g_storyPairs) + p; }
@@ -321,6 +326,9 @@ const DefectDef kDefects[] = {
     {"spawnWalker.fullTable", "model_defects#11",
      "all 64 walker records live: the original initialises a record past the table (over g_editQueueX); 0 spawns nothing and returns -1",
      &g_defect_walker_table_full},
+    {"updateWalkers.cursorTargetOffGrid", "P6A",
+     "Gary Golf's walker follows the cursor tile (updateWalkers+0x6db..updateWalkers+0x727) with no grid bound, and pathStep returns the unclamped direction when the clamped tiles meet (pathStep+0xdd), so he walks off the land; 0 clamps that target to the grid and keeps every walker's position inside it",
+     &g_defect_walker_cursor_offgrid},
     {"placeAnimal.zeroFrameCount", "model_defects#43", "idiv by a sprite frame count of 0", &g_defect_zero_frame_count},
     {"resetGolferState.singleHoleRecord", "model_defects#44",
      "the 18-iteration par loop re-derives the par of one hole record (g_holesPlusOne's) 18 times, thresholds applied twice",

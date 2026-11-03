@@ -6820,6 +6820,7 @@ L41b44a:
         G32(GS(gCameraTileX)) = (G32(o + (GS(g_holes) + 24)) + 2 * hx) / 3;   // ML+0xbf38..ML+0xbf55 (55555556 magic /3)
         int hy = G32(rec + (GS(g_golfers) + 4)) >> 10;             // ML+0xbf5b/ML+0xbf61
         G32(GS(gCameraTileY)) = (G32(o + (GS(g_holes) + 28)) + 2 * hy) / 3;   // ML+0xbf4f..ML+0xbf79
+        camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     }
     ebp = cc("clamp", FD(0x34), 0, esi);               // ML+0xbf83 clamp([F+0x34], 0, esi)
     {
@@ -7105,6 +7106,7 @@ int Ph_0041c0c5(u32 F, int* h2in) {
     eax = (int)G16((GS(g_placed_objects) + 4)) - 4;           // ML+0xcb5f movsx; sub eax,4
     G32(GS(g_zoomScale)) = 4;                      // ML+0xcb69
     G32(GS(gCameraTileY)) = eax;                    // ML+0xcb73
+    camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     eax = G32(GS(g_flags));                    // ML+0xcb78
     eax &= 0xFFFF7FFF;                        // ML+0xcb7d and ah,0x7f (clear bit 0x8000)
     G32(GS(g_flags)) = eax;                    // ML+0xcb80
@@ -7464,6 +7466,7 @@ a41c954:  // key 0x30
     eax = (int)G16((GS(g_placed_objects) + 4));               // ML+0xd3a3 movsx
     G32(GS(gCameraTileX)) = edx;                     // ML+0xd3aa
     G32(GS(gCameraTileY)) = eax;                     // ML+0xd3b0
+    camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
 a41c975:
     G32(GS(g_cameraRot)) = ebp;                     // ML+0xd3b5
     goto a41de11;                             // ML+0xd3bb
@@ -8534,6 +8537,7 @@ a41e722:  // idx3
     if (G32(eax + (GS(g_golfers) + 8)) == -1) {                 // ML+0xf173 cmp; jne ML+0xf19a
         G32(GS(gCameraTileX)) = G32(eax + GS(g_golfers)) >> 0xA;  // ML+0xf17c..ML+0xf18e (sar signed)
         G32(GS(gCameraTileY)) = G32(eax + (GS(g_golfers) + 4)) >> 0xA;  // ML+0xf182..ML+0xf194
+        camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     }
     if (G8(eax + (GS(g_golfers) + 132)) == 0) G8(eax + (GS(g_golfers) + 132)) = 1;  // ML+0xf19a..ML+0xf1a9
     edi ^= ebx;                                        // ML+0xf1ab
@@ -8872,6 +8876,7 @@ int H2_Select(u32 F, int ebp) {
             u32 r = (u32)g << 8;                      // ML+0xf98b
             G32(GS(gCameraTileX)) = G32(GS(g_golfers) + r) >> 10;   // ML+0xf994 / ML+0xf9a6
             G32(GS(gCameraTileY)) = G32((GS(g_golfers) + 4) + r) >> 10;   // ML+0xf99a / ML+0xf9ac
+            camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
             return kFrame;                            // ML+0xf9b2
         }
     }

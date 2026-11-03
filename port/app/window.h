@@ -93,6 +93,9 @@ struct WindowOptions {
   // zoom_context() says the game is in its frame body (never in a text box, popup or menu)
   uint8_t zoom_keys = 0;
   std::function<bool()> zoom_context;
+  // P7 (widescreen stage 1): the logical width the client opens at (its height stays 600 logical pixels; both scaled by the
+  // dpi). kLogicalW = the 800x600 window; `--wide` gives 1067 (16:9). The 4:3 content stays fitted (full height, centred).
+  int32_t logical_w = kLogicalW;
 };
 
 class AppWindow {

@@ -100,6 +100,9 @@ std::string resolve_name(const GameFiles &files, const std::string &name);
 // returns -1; otherwise the load's Status (a non-zero one is reported as unsupported, no cells are set). Writes nothing
 // into the GameState.
 int32_t sheet_to_gfx(Ctx &ctx, uint32_t path_va, int32_t frames, int32_t size, int32_t flag, uint32_t first_cell_va);
+// P6B (measurement only): the wall time all sheet_to_gfx calls of the process took (microseconds) and their count; the app
+// logs the deltas per world load (session.json `loads`)
+void sheet_to_gfx_stats(uint64_t &us, uint64_t &calls);
 
 }  // namespace flic
 }  // namespace portsim

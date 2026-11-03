@@ -162,6 +162,7 @@ hover_loop:  // ML+0x11a65
 
     // Window::refreshFull(g_rootWindow, 0)                             ML+0x11ca5
     tc("Window::refreshFull", GS(g_rootWindow), 0);
+    if (io.live) io.live->title_menu_pass();  // P6B: a notification for a live host (tick_hook.h); nothing changes here
     if (G32((GS(g_rootInput) + 16)) == 0) goto hover_loop;   // no mouse click     ML+0x11cb1
     if (ebx == -1) goto hover_loop;            // no item under cursor ML+0x11cba
 

@@ -1,0 +1,32 @@
+{
+ "capture_s": 0.409,
+ "events": [
+  [
+   1.57,
+   "frame",
+   1
+  ],
+  [
+   1.741,
+   "shown",
+   1
+  ],
+  [
+   1.741,
+   "frame",
+   2
+  ],
+  [
+   1.749,
+   "shown",
+   2
+  ],
+  [
+   1.828,
+   "frame",
+   3
+  ]
+ ],
+ "first_frame_s": 1.57,
+ "shown_before_first_frame": []
+}

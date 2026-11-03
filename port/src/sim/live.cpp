@@ -429,6 +429,7 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
   // the gfx backend calls it from its refreshFull body (gfx.h gfx_set_refresh_hook), so the refreshes the modules issue through
   // their own drawing calls (the boot's loading screens, the modal screens) present too, not only the frame code's drop
   static void on_refresh(void *self) { static_cast<Core *>(self)->host_.present_point(static_cast<Core *>(self)->ctx_); }
+  void title_menu_pass() override { host_.title_menu(ctx_); }  // P6B
   uint16_t async_key(int vk) override {
     const uint16_t r = host_.async_key(ctx_, vk & 0xff);
     ++res_.asyncs;
@@ -1401,6 +1402,7 @@ class PrefixHost : public LiveHost {
   void pace(Ctx &c, int32_t site) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).pace(c, site); }
   void wait_point(Ctx &c) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).wait_point(c); }
   void present_point(Ctx &c) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).present_point(c); }
+  void title_menu(Ctx &c) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).title_menu(c); }  // P6B
   bool blocking() const override { return on_b_ ? b_->blocking() : a_->blocking(); }
 
  private:

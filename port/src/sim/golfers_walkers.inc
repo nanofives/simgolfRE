@@ -241,10 +241,14 @@ int32_t update_walkers(Ctx &ctx) {
           }
         }
         if (static_cast<uint8_t>(W_kind.get()) == 0xfa && (state_arr(ctx, &GameState::g_holes) + 1).field(&HoleRecord::par).get() == 0) {
+          // P6A (updateWalkers.cursorTargetOffGrid = 0): the cursor tile clamped to the grid, as pathStep clamps its tiles
+          const bool on_map = !SG_DEFECT(g_defect_walker_cursor_offgrid);
+          const int32_t cur_tx = on_map ? clamp(gs.g_cursorTileX, 0, 0x31) : gs.g_cursorTileX;
+          const int32_t cur_ty = on_map ? clamp(gs.g_cursorTileY, 0, 0x31) : gs.g_cursorTileY;
           if ((u32(gs.g_date) & 0x200u) == 0 &&
-              static_cast<uint8_t>(ttype[add32(gs.g_cursorTileY, mul32(gs.g_cursorTileX, 50))]) != 0x11) {
-            tx = add32(shl32(gs.g_cursorTileX, 10), 0x200);
-            ty = add32(shl32(gs.g_cursorTileY, 10), 0x200);
+              static_cast<uint8_t>(ttype[add32(cur_ty, mul32(cur_tx, 50))]) != 0x11) {
+            tx = add32(shl32(cur_tx, 10), 0x200);
+            ty = add32(shl32(cur_ty, 10), 0x200);
           } else {
             tx = W_x.get();
             ty = W_y.get();
@@ -421,6 +425,10 @@ int32_t update_walkers(Ctx &ctx) {
     W_x.set(add32(W_x.get(), (mul32(dx8[dsel], sp) / 2) / div));
     const int32_t dsel2 = W_facing.get();
     W_y.set(add32(W_y.get(), (mul32(dy8[dsel2], sp) / 2) / (((static_cast<uint8_t>(W_facing.get()) & 1) != 0 ? 1 : 0) + 3)));
+    if (!SG_DEFECT(g_defect_walker_cursor_offgrid)) {  // P6A: the step never leaves the 50 x 50 grid (world 0..0xc7ff)
+      W_x.set(clamp(W_x.get(), 0, 0xc7ff));
+      W_y.set(clamp(W_y.get(), 0, 0xc7ff));
+    }
     W_steps.set(static_cast<int16_t>(W_steps.get() - 1));
     if (W_steps.get() != 0) {
       if (static_cast<int16_t>(rnd(4)) == 0) W_steps.set(static_cast<int16_t>(W_steps.get() - 1));

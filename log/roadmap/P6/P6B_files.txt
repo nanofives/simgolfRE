@@ -1,0 +1,18 @@
+# P6B: files changed in port/build/P6B against f04c7591 (all modified, none new), plus the run tool in the shared log/
+port/app/host.cpp
+port/app/host.h
+port/app/main.cpp
+port/app/present.cpp
+port/app/present.h
+port/include/portsim/sim/flic.h
+port/include/portsim/sim/live.h
+port/src/sim/flic.cpp
+port/src/sim/gfx.cpp
+port/src/sim/gfx_hud.cpp
+port/src/sim/live.cpp
+port/src/sim/tick.cpp
+port/src/sim/tick_hook.h
+port/src/sim/tick_menu.inc
+port/src/sim/tick_panels.inc
+port/test/conftest.py
+# tool (already in the shared tree through the log junction): log/roadmap/P6/P6B_drive.py

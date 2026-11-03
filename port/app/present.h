@@ -43,6 +43,17 @@ inline uint32_t rgb555_to_bgra(uint16_t v) {
 // Nearest when the content rectangle is an integer multiple of 800x600 (1x, 2x, ...: sharp pixels, no blur), else Smooth.
 enum class ScaleMode : uint8_t { Nearest = 0, Smooth = 1, Auto = 2 };
 
+// P7 (widescreen, stage 1; log/roadmap/P7/PLAN.md). The game still draws 800x600; on a client wider than 4:3 the content
+// rectangle is unchanged (fit_viewport: full height, centred, so the input mapping is unchanged) and the side bands, black
+// before P7, can show the frame's own edge colours carried outward. BandFill is the host's per-frame hint (LiveSession: Extend
+// for the full-screen 2D screens before a game's frame loop runs, Black once it runs); WideFill is the app option
+// (`--wide-fill`): Off = black bands always (the pre-P7 image, byte for byte), Soft = each band column takes the frame's edge
+// colour (the mean of its outer 4 logical columns, per row) blurred vertically by a radius that grows with the distance from
+// the frame (d / 2 client pixels, at most 48 logical rows), Clamp = the frame's outermost column repeated, no blur.
+// Rows of a letterbox (a client taller than 4:3) stay black.
+enum class BandFill : uint8_t { Black = 0, Extend = 1 };
+enum class WideFill : uint8_t { Off = 0, Soft = 1, Clamp = 2 };
+
 class Presenter {
  public:
   explicit Presenter(PresentDefect d = PresentDefect::None, ScaleMode s = ScaleMode::Nearest) : defect_(d), scale_(s) {}
@@ -50,11 +61,23 @@ class Presenter {
   ScaleMode scale() const { return scale_; }
   // the mode a content rectangle of w x h is drawn with (Auto resolved)
   ScaleMode effective_scale(int32_t w, int32_t h) const;
-  // A new frame: 800 * 600 RGB555 words, rows top-down. Returns false when the size is wrong.
-  bool set_frame(const std::vector<uint16_t> &px);
+  // A new frame: 800 * 600 RGB555 words, rows top-down. Returns false when the size is wrong. `band`: P7's hint for the side
+  // bands (used only when set_wide is not Off).
+  bool set_frame(const std::vector<uint16_t> &px, BandFill band = BandFill::Black);
+  // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
+  void set_wide(WideFill w) { wide_ = w; }
+  WideFill wide() const { return wide_; }
+  BandFill band() const { return band_; }
   bool has_frame() const { return !frame_.empty(); }
   const std::vector<uint16_t> &frame() const { return frame_; }
   uint32_t frames_set() const { return frames_set_; }
+  // P6B item 2: the `Loading` box drawn over the frame while a world load runs (done = pumps so far, 0 = off; expected = the
+  // pumps the bar is scaled to). Drawn into the window DC only (paint): frame(), render() and every frame hash are unchanged
+  void set_loading(uint32_t done, uint32_t expected) {
+    loading_done_ = done;
+    loading_expected_ = expected;
+  }
+  bool loading() const { return loading_done_ != 0; }
 
   // The client image for cw x ch: BGRA words, rows top-down (vp receives the content rectangle).
   void render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vp = nullptr) const;
@@ -69,6 +92,10 @@ class Presenter {
   ScaleMode scale_;
   std::vector<uint16_t> frame_;
   uint32_t frames_set_ = 0;
+  WideFill wide_ = WideFill::Off;  // P7
+  BandFill band_ = BandFill::Black;
+  void fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P7
+  uint32_t loading_done_ = 0, loading_expected_ = 0;  // P6B item 2
   mutable std::vector<uint32_t> scratch_;
 };
 

@@ -125,6 +125,8 @@ class LiveHost {
   // A presenting host shows the back buffer here. Modal screens that draw through their own module (credits, routing map,
   // load browser) do not come here; their pumps do.
   virtual void present_point(Ctx &) {}
+  // P6B: a pass of the title menu's hover loop ended (tick_hook.h LiveIo::title_menu_pass): a notification, no answer
+  virtual void title_menu(Ctx &) {}
   // whether a must_deliver decline is asked again (a host that waits for its player); false: the decline stands
   virtual bool blocking() const { return true; }
   // the core's write log (set by run_live before boot)

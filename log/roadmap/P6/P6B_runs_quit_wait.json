@@ -1,0 +1,35 @@
+{
+ "answer": "wait",
+ "alive_after_close": true,
+ "rc": null,
+ "exit_s": null,
+ "still_running_after_s": 20.0,
+ "forced_close_rc": 0,
+ "session": {
+  "stop": "host",
+  "records": 275,
+  "close_prompt": 1,
+  "close_flag_writes": 1,
+  "close_at_menu": 0,
+  "close_cancelled": 1,
+  "close_exit": {
+   "title_exits": 0,
+   "esc_posted": 0,
+   "fallback_stops": 0
+  }
+ },
+ "data_files": [],
+ "gate": {
+  "status": "PASS",
+  "records": 275,
+  "expected": 275,
+  "code": 0,
+  "first": null
+ },
+ "replay": {
+  "code": 0,
+  "records": 275,
+  "top10.sve": false,
+  "Themes/Default.pro": false
+ }
+}

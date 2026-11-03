@@ -1,0 +1,18 @@
+{
+ "rc": 0,
+ "exit_s": 1.05,
+ "session": {
+  "stop": "quit",
+  "records": 0,
+  "close_at_menu": 0,
+  "close_exit": {
+   "title_exits": 1,
+   "esc_posted": 1,
+   "fallback_stops": 0
+  }
+ },
+ "data_files": [
+  "data\\files\\Themes\\Default.pro",
+  "data\\files\\top10.sve"
+ ]
+}

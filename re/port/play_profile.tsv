@@ -21,3 +21,7 @@ buildGolferComment.slotLimit	0	G30,D48a	name and third text cut to their stack s
 postEvent.idBound	0	G30,D49a	bulletin event id of 22 or more ignored
 mainLoop.titleExitHotspotWide	0	G30,P5	the title menu's exit is selected only inside its own 0x3a x 0x39 icon, not over the 0x140 x 0x50 nearest-point area around the icon's corner
 showThemePackSelect.column5StackWord	0	G30,P5	the theme-pack screen draws no sixth column cell (the original draws one at a stack word it never writes: a yellow cell left of the list on the current theme's row)
+updateWalkers.cursorTargetOffGrid	0	G30,P6A	Gary Golf follows the cursor tile only up to the 50 x 50 grid's edge (the cursor tile is clamped for his walk target) and no walker's step leaves the grid
+updateGolfers.walkOffGrid	0	G30,P6A	a golfer's walking step is clamped to the 50 x 50 grid, so no golfer (Gary Golf included) walks past the edge of the land
+mainLoop.cameraFollowOffGrid	0	G30,P6A	every camera writer that follows a golfer, walker, ball or photo, or offsets from a hole or object, clamps the camera tile to 0..0x31 like the arrow-key and edge-pan cases, so the view centre stays on the map
+hoverTip.tenFrameDwell	0	G30,P6	the HUD panels (build palette, terrain toolbar, buildings, amenities, employee and golfer panels) draw a hovered control's tip after more than 3 frames on it (about 0.37 s) instead of more than 10 (about 1.0 s): the original's `cmp [g_ui_5aa554], 0xa` at 0x00433257 / 0x004338ff and the same compare in the five other panels

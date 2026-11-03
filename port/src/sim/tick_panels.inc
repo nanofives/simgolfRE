@@ -40,7 +40,7 @@ int drawBuildingPanel(int a, int b) {
     int sel = kBuildingHit(a, b);                                            // drawBuildingPanel+0x32
     int L = sel;
     VP<char> text = vp<char>(GS(g_textBuffer));
-    if (sel == G<int>((GS(g_panelState) + 4)) && sel >= 0 && G<int>(GS(g_ui_5aa554)) > 10) {  // drawBuildingPanel+0x41 / drawBuildingPanel+0x47 / drawBuildingPanel+0x4d / drawBuildingPanel+0x55
+    if (sel == G<int>((GS(g_panelState) + 4)) && sel >= 0 && G<int>(GS(g_ui_5aa554)) > hover_tip_dwell()) {  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp); drawBuildingPanel+0x41 / drawBuildingPanel+0x47 / drawBuildingPanel+0x4d / drawBuildingPanel+0x55
         int base = (sel > 4) ? 0x1af : 0x187;                                // drawBuildingPanel+0x62..drawBuildingPanel+0x6c
         int rem = sel % 5;                                                   // drawBuildingPanel+0x73..drawBuildingPanel+0x79
         int x = kClamp(add(base, mul(rem, 80)), 0x50, 0x2d0);                // drawBuildingPanel+0x8b

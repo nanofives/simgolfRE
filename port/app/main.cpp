@@ -20,6 +20,12 @@
 //   every run mode takes --profile original|fixed|play (S7.12 / G30: the defect switches; default play, recorded in session.json);
 //   simgolf_port.exe --profile-list original|fixed|play   prints every switch and the value that profile gives it
 //   simgolf_port.exe --selftest                      pacing, saves overlay and presenter unit tests ("[k/n] name PASS")
+//   simgolf_port.exe --selftest-p5b | --selftest-p7  the P5B scale modes / the P7 wide side bands
+//   simgolf_port.exe --compose <in.555> <cw> <ch> <out.bmp> [--wide --wide-fill soft|clamp|black] [--scale m]
+//                    [--compose-band extend|black]   P7: the presenter's client image of one 800x600 frame, as a BMP
+//   P7 (widescreen stage 1, default off): --wide [on|off] (or SG_APP_WIDE=on) opens the window at --wide-width (1067) x 600
+//   logical pixels; the 4:3 game image stays fitted at full height, and the side bands of the full-screen 2D screens shown
+//   before a game's frame loop runs carry the frame's edge colours outward (--wide-fill soft|clamp|black); in game they stay black.
 //   simgolf_port.exe --translate <input.jsonl> [--out <file>]   re-translates a session's input log offline
 //   simgolf_port.exe --install <dir> --data <dir> --cat <logical> <out> | --write <logical> <file> | --remove <logical>
 //                    | --list <pattern>             one operation through the saves overlay (saves.h)
@@ -250,7 +256,7 @@ struct Options {
   bool in_memory = false;                // S7.8: --in-memory (S7.5's way: records held until the end)
   int32_t mem_every = 1000;             // S7.8: --mem-every (memory.tsv sampling period in live frames)
   uint32_t dpi = 0, exit_after = 0;
-  bool activate = true, window = true, selftest = false, selftest_p5b = false;
+  bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false;
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -265,6 +271,16 @@ struct Options {
   bool close_prompt = true;        // --close-prompt on|off (item 3)
   bool resizable = true;           // --resizable on|off (item 4)
   std::string scale = "auto";      // --scale auto|nearest|smooth (item 4)
+  // P7 (widescreen stage 1, log/roadmap/P7/PLAN.md; default off until Mariano has seen it; SG_APP_WIDE=on|off): the window opens
+  // at wide_width x 600 logical pixels and the full-screen 2D screens' side bands show their edge colours (present.h WideFill)
+  bool wide = false;               // --wide (or --wide on|off)
+  int32_t wide_width = 1067;       // --wide-width <800..2400> (1067 = 16:9 at 600 rows)
+  std::string wide_fill = "soft";  // --wide-fill soft|clamp|black
+  // P7: --compose <in.555> <cw> <ch> <out.bmp> [--compose-band extend|black]: the presenter's client image of one frame
+  std::vector<std::string> compose;
+  std::string compose_band = "extend";
+  // P6B (log/roadmap/P6/P6B_notes.md): on by default; SG_APP_P6B=off (port/test/conftest.py) turns it off
+  bool loading_overlay = true;     // --loading-overlay on|off (item 2: a `Loading` box while a world load runs)
   // S7.5: the terrain (live = portsim::LiveTerrain: Terrain.dll's state kept by the port and its draw passes rasterised into the
   // gfx root surface, as port/test/framegate.py attaches it; headless = tick.cpp's stand-in, no terrain pixels) and the address
   // of its Terrain object (0: a free range of the address space)
@@ -285,6 +301,12 @@ struct Options {
 // P5B item 4: --scale
 ScaleMode scale_mode(const std::string &s) {
   return s == "smooth" ? ScaleMode::Smooth : s == "auto" ? ScaleMode::Auto : ScaleMode::Nearest;
+}
+
+// P7: --wide / --wide-fill
+WideFill wide_fill(const Options &o) {
+  if (!o.wide) return WideFill::Off;
+  return o.wide_fill == "clamp" ? WideFill::Clamp : o.wide_fill == "black" ? WideFill::Off : WideFill::Soft;
 }
 
 struct PresentResult {
@@ -353,6 +375,10 @@ const ProfileMember kPlayProfile[] = {
     {"postEvent.idBound", 0},
     {"mainLoop.titleExitHotspotWide", 0},           // P5A (Mariano's play-test, 2026-11-03)
     {"showThemePackSelect.column5StackWord", 0},    // P5A
+    {"updateWalkers.cursorTargetOffGrid", 0},      // P6A (Mariano's play-test 2, 2026-11-03)
+    {"updateGolfers.walkOffGrid", 0},               // P6A
+    {"mainLoop.cameraFollowOffGrid", 0},            // P6A
+    {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -907,6 +933,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.in_memory = o.in_memory;
   ho.edge_guard = o.edge_guard;      // P5B item 1
   ho.close_prompt = o.close_prompt;  // P5B item 3
+  ho.loading_overlay = o.loading_overlay;  // P6B item 2
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
   if (o.negctl == "present-point-off") ho.defect = HostDefect::NoPresentPoint;
@@ -916,9 +943,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
+  presenter.set_wide(wide_fill(o));  // P7
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes
   WindowOptions wo;
   wo.dpi = o.dpi;
+  if (o.wide) wo.logical_w = o.wide_width;  // P7
   wo.activate = o.activate;
   wo.input_defect = o.negctl == "input-bypass" ? InputDefect::Bypass : InputDefect::None;
   wo.resizable = o.resizable;  // P5B item 4
@@ -966,14 +995,20 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   while (GetMessageW(&m, nullptr, 0, 0) > 0) {
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgPresent) {
       uint32_t index = 0;
-      if (session.take_frame(px, index)) {
-        presenter.set_frame(px);
+      BandFill band = BandFill::Black;
+      if (session.take_frame(px, index, &band)) {
+        presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
         win.invalidate();
         if (shown) {
           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
           std::fflush(shown);
         }
       }
+      continue;
+    }
+    if (m.hwnd == hwnd && m.message == LiveSession::kMsgLoading) {  // P6B item 2: the overlay's progress (0 = off)
+      presenter.set_loading(static_cast<uint32_t>(m.wParam), static_cast<uint32_t>(m.lParam));
+      win.invalidate();
       continue;
     }
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgEnded) {  // the game quit (or failed): close the window
@@ -1001,6 +1036,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p5b\":{\"edge_guard\":" + std::to_string(o.edge_guard ? 1 : 0) + ",\"zoom_keys\":\"" + o.zoom_keys +  // P5B
        "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
        ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
+  s += ",\"p7\":{\"wide\":" + std::to_string(o.wide ? 1 : 0) + ",\"wide_width\":" + std::to_string(o.wide_width) +
+       ",\"wide_fill\":\"" + o.wide_fill + "\"}";  // P7
+  s += ",\"p6b\":{\"loading_overlay\":" + std::to_string(o.loading_overlay ? 1 : 0) + "}";  // P6B
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
@@ -1241,10 +1279,129 @@ void selftest_p5b(Tests &t, bool wrong) {
   }
 }
 
+// P7 (--selftest-p7): the wide side bands (present.h WideFill). Control --negctl p7-band-black: every frame's hint is Black,
+// so the fill rows read RED.
+void selftest_p7(Tests &t, bool wrong) {
+  std::vector<uint16_t> f(static_cast<size_t>(kLogicalW) * kLogicalH);
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x) f[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>((x * 7 + y * 131) & 0x7fff);
+  auto render = [&](WideFill w, BandFill b, ScaleMode m, int cw, int ch, const std::vector<uint16_t> &fr, Viewport *vp = nullptr) {
+    Presenter p(PresentDefect::None, m);
+    p.set_wide(w);
+    p.set_frame(fr, wrong ? BandFill::Black : b);
+    std::vector<uint32_t> out;
+    p.render(cw, ch, out, vp);
+    return out;
+  };
+  const int cw = 1920, ch = 1080;
+  const auto off = render(WideFill::Off, BandFill::Extend, ScaleMode::Smooth, cw, ch, f);
+  {
+    Presenter p(PresentDefect::None, ScaleMode::Smooth);  // the pre-P7 presenter (no set_wide, no hint)
+    p.set_frame(f);
+    std::vector<uint32_t> o0;
+    p.render(cw, ch, o0);
+    t.add("p7.wide_off_equals_pre_p7_render", o0 == off);
+  }
+  t.add("p7.black_hint_equals_wide_off", render(WideFill::Soft, BandFill::Black, ScaleMode::Smooth, cw, ch, f) == off);
+  Viewport vp;
+  const auto soft = render(WideFill::Soft, BandFill::Extend, ScaleMode::Smooth, cw, ch, f, &vp);
+  {
+    bool same = true, band_lit = false;
+    for (int y = 0; y < ch; ++y)
+      for (int x = 0; x < cw; ++x) {
+        const size_t i = static_cast<size_t>(y) * cw + x;
+        const bool inside = x >= vp.origin_x && x < vp.origin_x + vp.client_w;
+        if (inside)
+          same = same && soft[i] == off[i];
+        else
+          band_lit = band_lit || soft[i] != 0xff000000u;
+      }
+    t.add("p7.content_pixels_untouched", same);
+    t.add("p7.extend_lights_the_bands", band_lit);
+  }
+  std::vector<uint16_t> flat(f.size(), 0x2a55);
+  for (WideFill w : {WideFill::Soft, WideFill::Clamp}) {
+    const auto o = render(w, BandFill::Extend, ScaleMode::Nearest, 1067, 600, flat);
+    bool ok = true;
+    for (uint32_t v : o) ok = ok && v == rgb555_to_bgra(0x2a55);
+    t.add(w == WideFill::Soft ? "p7.soft_uniform_frame_fills_uniform" : "p7.clamp_uniform_frame_fills_uniform", ok);
+  }
+  {  // clamp at 1x: band pixel (x, y) = the frame's edge pixel of row y
+    const auto o = render(WideFill::Clamp, BandFill::Extend, ScaleMode::Nearest, 1067, 600, f);
+    bool ok = true;
+    const int ox = (1067 - 800) / 2;
+    for (int y = 0; y < 600; ++y) {
+      ok = ok && o[static_cast<size_t>(y) * 1067 + 0] == rgb555_to_bgra(f[static_cast<size_t>(y) * 800]);
+      ok = ok && o[static_cast<size_t>(y) * 1067 + ox - 1] == rgb555_to_bgra(f[static_cast<size_t>(y) * 800]);
+      ok = ok && o[static_cast<size_t>(y) * 1067 + 1066] == rgb555_to_bgra(f[static_cast<size_t>(y) * 800 + 799]);
+    }
+    t.add("p7.clamp_repeats_edge_column", ok);
+  }
+  {  // soft: a one-row white line on black reaches the band unblurred next to the frame, spread and dimmer far out
+    std::vector<uint16_t> g(f.size(), 0);
+    for (int x = 0; x < 800; ++x) g[static_cast<size_t>(300) * 800 + x] = 0x7fff;
+    const auto o = render(WideFill::Soft, BandFill::Extend, ScaleMode::Nearest, 1067, 600, g);
+    const uint32_t near_line = o[static_cast<size_t>(300) * 1067 + 132] & 0xff, far_line = o[static_cast<size_t>(300) * 1067 + 0] & 0xff,
+                   far_above = o[static_cast<size_t>(290) * 1067 + 0] & 0xff;
+    t.add("p7.soft_blur_grows_with_distance", near_line == 255 && far_line > 0 && far_line < 64 && far_above > 0);
+  }
+  {  // a client taller than 4:3: the letterbox rows stay black
+    const auto o = render(WideFill::Soft, BandFill::Extend, ScaleMode::Nearest, 800, 900, flat);
+    t.add("p7.letterbox_rows_stay_black", o[0] == 0xff000000u && o[static_cast<size_t>(899) * 800 + 799] == 0xff000000u &&
+                                              o[static_cast<size_t>(450) * 800 + 400] == rgb555_to_bgra(0x2a55));
+  }
+}
+
+int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bmp>
+  std::vector<uint8_t> raw;
+  if (!read_file(o.compose[0], raw) || raw.size() != static_cast<size_t>(kLogicalW) * kLogicalH * 2) {
+    std::fprintf(stderr, "compose: %s is not an 800x600 RGB555 frame\n", o.compose[0].c_str());
+    return 2;
+  }
+  const int cw = std::atoi(o.compose[1].c_str()), ch = std::atoi(o.compose[2].c_str());
+  if (cw <= 0 || ch <= 0 || cw > 8192 || ch > 8192) return 2;
+  std::vector<uint16_t> px(raw.size() / 2);
+  std::memcpy(px.data(), raw.data(), raw.size());
+  Presenter p(PresentDefect::None, scale_mode(o.scale));
+  p.set_wide(wide_fill(o));
+  p.set_frame(px, o.compose_band == "black" ? BandFill::Black : BandFill::Extend);
+  std::vector<uint32_t> out;
+  p.render(cw, ch, out);
+  const uint32_t stride = (static_cast<uint32_t>(cw) * 3 + 3) & ~3u, img = stride * static_cast<uint32_t>(ch);
+  std::vector<uint8_t> bmp(54 + img, 0);
+  auto put32 = [&](size_t at, uint32_t v) { std::memcpy(bmp.data() + at, &v, 4); };
+  bmp[0] = 'B';
+  bmp[1] = 'M';
+  put32(2, 54 + img);
+  put32(10, 54);
+  put32(14, 40);
+  put32(18, static_cast<uint32_t>(cw));
+  put32(22, static_cast<uint32_t>(ch));
+  bmp[26] = 1;
+  bmp[28] = 24;
+  put32(34, img);
+  for (int y = 0; y < ch; ++y) {
+    uint8_t *row = bmp.data() + 54 + static_cast<size_t>(ch - 1 - y) * stride;
+    for (int x = 0; x < cw; ++x) {
+      const uint32_t v = out[static_cast<size_t>(y) * cw + x];
+      row[x * 3] = static_cast<uint8_t>(v & 255);
+      row[x * 3 + 1] = static_cast<uint8_t>((v >> 8) & 255);
+      row[x * 3 + 2] = static_cast<uint8_t>((v >> 16) & 255);
+    }
+  }
+  if (!write_file(o.compose[3], bmp.data(), bmp.size())) return 3;
+  std::printf("composed %dx%d %s\n", cw, ch, o.compose[3].c_str());
+  return 0;
+}
+
 int run_selftest(const Options &o) {
   Tests t;
   if (o.selftest_p5b) {
     selftest_p5b(t, o.negctl == "p5b-smooth-ignored");
+    return t.print();
+  }
+  if (o.selftest_p7) {
+    selftest_p7(t, o.negctl == "p7-band-black");
     return t.print();
   }
   PresentDefect pd = PresentDefect::None;
@@ -1364,6 +1521,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       (a == "--edge-guard" ? o.edge_guard : a == "--close-prompt" ? o.close_prompt : o.resizable) = v == "on";
     }
+    else if (a == "--loading-overlay") {  // P6B item 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.loading_overlay = v == "on";
+    }
     else if (a == "--zoom-keys") {
       if (!val(o.zoom_keys) || (o.zoom_keys != "all" && o.zoom_keys != "numpad" && o.zoom_keys != "off")) return false;
     }
@@ -1410,6 +1571,27 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--no-window") o.window = false;
     else if (a == "--selftest") o.selftest = true;
     else if (a == "--selftest-p5b") o.selftest = o.selftest_p5b = true;  // P5B
+    else if (a == "--selftest-p7") o.selftest = o.selftest_p7 = true;    // P7
+    else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
+      o.wide = true;
+      if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
+    }
+    else if (a == "--wide-width") {
+      if (!val(v)) return false;
+      o.wide_width = std::atoi(v.c_str());
+      if (o.wide_width < kLogicalW || o.wide_width > 2400) return false;
+    }
+    else if (a == "--wide-fill") {
+      if (!val(o.wide_fill) || (o.wide_fill != "soft" && o.wide_fill != "clamp" && o.wide_fill != "black")) return false;
+    }
+    else if (a == "--compose") {
+      if (i + 4 >= argc) return false;
+      o.compose = {argv[i + 1], argv[i + 2], argv[i + 3], argv[i + 4]};
+      i += 4;
+    }
+    else if (a == "--compose-band") {
+      if (!val(o.compose_band) || (o.compose_band != "extend" && o.compose_band != "black")) return false;
+    }
     else if (a == "--translate") { if (!val(o.translate_in)) return false; }
     else if (a == "--out") { if (!val(o.translate_out)) return false; }
     else if (a == "--cat" || a == "--write") {
@@ -1448,11 +1630,16 @@ int main(int argc, char **argv) {
       o.zoom_keys = "off";
       o.scale = "nearest";
     }
+  if (const char *ep = std::getenv("SG_APP_WIDE"))  // P7: flags still win
+    o.wide = !std::strcmp(ep, "on") || !std::strcmp(ep, "1");
+  if (const char *ep = std::getenv("SG_APP_P6B"))  // P6B: the loading overlay off for the app tests (window pixels)
+    if (!std::strcmp(ep, "off")) o.loading_overlay = false;
   if (!parse(argc, argv, o)) {
     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");
     return 2;
   }
   if (o.selftest) return run_selftest(o);
+  if (!o.compose.empty()) return run_compose(o);  // P7
   if (!o.translate_in.empty()) return run_translate(o);
   if (o.profile_list) return run_profile_list(o.profile);  // S7.12
   {

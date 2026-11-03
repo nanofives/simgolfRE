@@ -16,6 +16,7 @@
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
+#include "portsim/sim/tick.h"
 #include "portsim/sim/util.h"
 
 namespace portsim {
@@ -1030,6 +1031,7 @@ void show_bulletin_board(Ctx &ctx) {
         0) {
       gs.gCameraTileX = sar32(m.load<int32_t>(photo + 4), 10);
       gs.gCameraTileY = sar32(m.load<int32_t>(wy), 10);
+      camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     } else {
       itoa10(ctx, m.load<int32_t>(photo), numbuf);   // the file name; clamp and the rectangle only feed saveBmp
       // roadmap S3.18: saveBmp's capture of the root for an attached graphics backend (gfx_bulletin.cpp; nothing without one)

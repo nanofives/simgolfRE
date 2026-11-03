@@ -137,6 +137,10 @@ struct HostOptions {
   bool edge_guard = true;
   // item 3: the window's close button (SC_CLOSE) asks for the game's own quit prompt (LiveSession::request_close)
   bool close_prompt = true;
+  // P6B item 2: while a world load runs after the title menu (loadWorldAssets' loadFlic pumps, PumpKind::Load) the window shows
+  // a `Loading` box with a progress bar over the last frame (kMsgLoading, Presenter::set_loading); the game itself presents
+  // nothing during that load (its loading screen is drawn only while g_difficulty is -1: the boot, menu.cpp load_flic)
+  bool loading_overlay = true;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -155,12 +159,22 @@ class LiveSession : public portsim::LiveHost {
   // closes); in a game the system menu's Exit row is reproduced: unk_0059b734 = 1 (what showSystemMenu stores before it returns
   // 0x1b, 0x00432af1) written at the next frame head as a recorded write, so H1 (ML+0xf11a) opens the game's quit prompt; when
   // the player then quits to the title menu, the window closes. A second press (before or during the prompt) closes at once.
+  // P6B item 1: closing means leaving to Windows the way the game's own exit does. On the title menu the window hides at once
+  // and the menu's next pass clicks its exit icon: the pass's cursor read (View_toLocal, ML+0x11a90) is answered with the icon's
+  // centre (749, 556) and the button word g_rootInput + 0x10 is set to 1 there as a recorded harness write (DELIVER w32, so
+  // the recording replays), so the click test ML+0x11cb1 takes hotspot 5 (selection -2): Session's QUIT path writes top10.sve
+  // and Default.pro, the closing movie is skipped (no Bink), the credits end on the button word (an Esc is posted too), and the
+  // session ends with stop `quit`. After the in-game prompt (save then quit, or quit) the game's quit save returns to the title menu, whose
+  // first pass does the same, so the app closes instead of showing the title menu. Off the title menu's loop (the boot, the
+  // location / difficulty screens) the session stops when no title pass came within 0.5 s, as before.
   void request_close();
   // P5B item 2: whether the game is in its frame body (the last pump call was P6 / H1), where + and - may be read as the
   // zoom keys; false in every modal loop (text entry, popups, reports, the title menu)
   bool in_frame_body() const { return body_mode_.load(); }
-  // the newest presented frame (WM_APP + 2); false when none is waiting
-  bool take_frame(std::vector<uint16_t> &px, uint32_t &index);
+  // the newest presented frame (WM_APP + 2); false when none is waiting. `band` (P7): Extend when the frame is a full-screen
+  // 2D screen shown before a game's frame loop runs (boot loading screens, title menu, its sub-screens, the location screen,
+  // the world-load screens), Black once the frame loop runs (the course view, and every report or dialog over it)
+  bool take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band = nullptr);
   bool focus_child_takes(uint32_t msg, uint32_t wp);  // U-1616, U-1650
   // S7.4: every input message before the translator reads anything for it (the message-key table), and the key state the
   // translator and async_key read in keys_from_messages mode (-1: ask Windows)
@@ -185,6 +199,7 @@ class LiveSession : public portsim::LiveHost {
   void wait_point(portsim::Ctx &) override;
   void present_point(portsim::Ctx &) override;  // S7.8: present where the original's Display::present runs ('r')
   void frame_end(portsim::Ctx &, uint32_t frame) override;  // S7.8: the terrain log bound and the memory samples
+  void title_menu(portsim::Ctx &) override;  // P6B item 1: a pass of the title menu's hover loop ended
   bool blocking() const override { return true; }
   TerrainLogBound *terrain_log = nullptr;  // S7.8 (main.cpp sets it with the LiveTerrain; read only inside run)
   MemSampler memory;                        // S7.8
@@ -196,6 +211,10 @@ class LiveSession : public portsim::LiveHost {
   // window message ids the session posts
   static constexpr uint32_t kMsgPresent = 0x8000 + 2;  // WM_APP + 2: a frame is waiting (take_frame)
   static constexpr uint32_t kMsgEnded = 0x8000 + 3;    // WM_APP + 3: the session ended (the game quit or it failed)
+  // P6B item 2: WM_APP + 4: wParam = the load's pumps so far (0 = the load ended: overlay off), lParam = the pumps expected
+  static constexpr uint32_t kMsgLoading = 0x8000 + 4;
+  // the first world load's expected pump count (later loads use the previous load's count): measured, P6B_notes.md item 2
+  static constexpr uint32_t kWorldLoadPumps = 120;  // the Monterey sandbox load (P6B_runs/load_after_*: 120 pumps)
 
  private:
   struct Present {
@@ -236,12 +255,40 @@ class LiveSession : public portsim::LiveHost {
   bool quit_armed_ = false;           // the prompt consumed it: close at the title menu, unless a frame body runs first
   uint32_t close_written_ = 0, close_direct_ = 0, close_cancelled_ = 0;
   bool close_check(portsim::Ctx &ctx, bool at_head, bool body);  // sim thread: true = stop the session now (item 3)
+  // P6B item 1 (request_close): title_seen_ the title menu's loop ran since the last frame head; exit_req_ a close press there
+  // (window thread), exiting_ the menu took its exit (sim thread); exit_esc_ Esc keys posted to end the credits
+  std::atomic<bool> title_seen_{false}, exit_req_{false};
+  std::atomic<uint32_t> exit_req_ms_{0};
+  bool exiting_ = false, exit_arm_ = false;
+  uint32_t exit_begin_ms_ = 0, last_esc_ms_ = 0;
+  uint32_t exit_title_ = 0, exit_esc_ = 0, exit_fallback_ = 0;
+  void hide_window();
+  // the title menu's exit icon: Setup's slots put hotspot 5 at (0x2d1, 0x210), the icon 0x3a x 0x39 (tick.cpp
+  // mainLoop.titleExitHotspotWide); its centre is inside the icon (play's rule) and nearest to hotspot 5 (the original's)
+  static constexpr int32_t kExitIconX = 0x2d1 + 0x1c, kExitIconY = 0x210 + 0x1c;
+  // P6B item 2: world loads (a run of PumpKind::Load pumps): their timing, kept for session.json `loads`
+  struct LoadRow {
+    uint32_t start_ms, dur_ms, pumps, from_input_ms, decode_ms, decode_calls, frame;
+  };
+  std::vector<LoadRow> loads_;
+  bool loading_ = false, title_ever_ = false;
+  uint32_t load_t0_ = 0, load_pumps_ = 0, load_post_ms_ = 0, load_expected_ = 0, session_t0_ = 0;
+  uint64_t load_dec_us0_ = 0, load_dec_calls0_ = 0;
+  std::atomic<uint32_t> last_input_ms_{0};
+  void post_loading(uint32_t done);
+  void end_load();
   Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
+  // P7: whether a game's frame loop has run since the title menu (sim thread only): set at a frame head or a body pump with
+  // g_difficulty != -1, cleared at any pump that reads g_difficulty == -1 (the title menu stores -1 there, 0x0040f8ab)
+  bool in_game_ = false;
+  void track_screen(portsim::Ctx &ctx, bool frame_loop);
+  uint64_t presents_extend_ = 0, presents_black_ = 0;  // presents by band hint (summary_json)
   uint64_t guarded_reads_ = 0;        // cursor reads answered with last_inside_
   // presents
   std::mutex frame_mu_;
   std::vector<uint16_t> frame_slot_, last_presented_, previous_;
   uint32_t frame_index_ = 0;
+  BandFill frame_band_ = BandFill::Black;  // P7: the band hint of frame_slot_
   bool frame_waiting_ = false;
   std::vector<Present> presents_;
   uint32_t last_dump_ms_ = 0;

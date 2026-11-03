@@ -23,6 +23,7 @@
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
+#include "portsim/sim/flic.h"  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/state_hash.h"
 
@@ -205,7 +206,9 @@ std::string jesc(const std::string &s) {
 
 }  // namespace
 
-LiveSession::LiveSession(HostOptions opt, const std::string &record_dir) : opt_(opt), rec_(record_dir) {}
+LiveSession::LiveSession(HostOptions opt, const std::string &record_dir) : opt_(opt), rec_(record_dir) {
+  session_t0_ = timeGetTime();  // P6B item 2
+}
 
 LiveSession::~LiveSession() {
   if (frames_log_) std::fclose(frames_log_);
@@ -225,6 +228,7 @@ void LiveSession::set_viewport(const Viewport &vp) {
 }
 
 void LiveSession::on_input(const InputEvent &e) {
+  last_input_ms_.store(timeGetTime());  // P6B item 2
   {
     std::lock_guard<std::mutex> lk(mu_);
     for (const portsim::Command &c : e.commands) {
@@ -250,13 +254,70 @@ void LiveSession::request_close() {
     request_stop();
     return;
   }
-  // the title menu / the boot, or a second press (before the prompt came, or while it is open): close at once
-  if (at_menu_.load() || close_req_.load() != 0) {
+  // a second press (before the prompt came, while it is open, or while the game's exit runs): close at once
+  if (close_req_.load() != 0 || exit_req_.load()) {
     request_stop();
+    return;
+  }
+  // P6B item 1: the title menu / the boot: hide the window now; the menu's next pass takes its exit (title_menu), or the
+  // session stops after 0.5 s without one (pump)
+  if (at_menu_.load()) {
+    exit_req_ms_.store(timeGetTime());
+    exit_req_.store(true);
+    hide_window();
+    cv_.notify_all();
     return;
   }
   close_req_.store(1);
   cv_.notify_all();
+}
+
+void LiveSession::hide_window() {
+  void *h;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    h = hwnd_;
+  }
+  if (h) ShowWindowAsync(static_cast<HWND>(h), SW_HIDE);
+}
+
+// P6B item 2: the overlay's progress (posted at most every 50 ms) and the end of a load
+void LiveSession::post_loading(uint32_t done) {
+  void *h;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    h = hwnd_;
+  }
+  if (h) PostMessageW(static_cast<HWND>(h), kMsgLoading, done, load_expected_);
+}
+void LiveSession::end_load() {
+  if (!loading_) return;
+  loading_ = false;
+  const uint32_t now_ms = timeGetTime();
+  uint64_t us = 0, calls = 0;
+  portsim::flic::sheet_to_gfx_stats(us, calls);
+  const uint32_t li = last_input_ms_.load();
+  loads_.push_back({load_t0_ - session_t0_, now_ms - load_t0_, load_pumps_, li && li <= load_t0_ ? load_t0_ - li : 0,
+                    static_cast<uint32_t>((us - load_dec_us0_) / 1000), static_cast<uint32_t>(calls - load_dec_calls0_), frame_});
+  // the next load's bar is scaled by this one's pump count (the first by the Monterey load's, measured: P6B_notes.md item 2)
+  load_expected_ = load_pumps_;
+  if (opt_.loading_overlay && title_ever_) post_loading(0);
+}
+
+// P6B item 1 (host.h request_close)
+void LiveSession::title_menu(portsim::Ctx &) {
+  title_seen_.store(true);
+  title_ever_ = true;  // P6B item 2: loads after this are world loads (no game loading screen)
+  at_menu_.store(true);
+  if (exiting_ || exit_arm_) return;
+  // a close press on the title menu, or the in-game prompt's quit: its quit save (H2_QuitSave) came back here. Stage 2
+  // counts too: with g_debtYears >= 3 and flag 0x1000000 set, H1's quit goes to the quit save with no prompt (ML+0x11585)
+  if (exit_req_.load() || close_req_.load() >= 2) {
+    if (!exit_req_.load()) hide_window();
+    exit_arm_ = true;  // the next pass's cursor read clicks the exit icon (cursor)
+    exit_begin_ms_ = timeGetTime();
+    close_req_.store(0);
+  }
 }
 
 bool LiveSession::close_check(portsim::Ctx &ctx, bool at_head, bool body) {
@@ -273,7 +334,9 @@ bool LiveSession::close_check(portsim::Ctx &ctx, bool at_head, bool body) {
     return false;
   }
   const int32_t diff = ctx.mem.load<int32_t>(portsim::state_va(ctx, &portsim::GameState::g_difficulty));
-  const bool menu = frame_ == 0 || diff == -1;  // g_difficulty is -1 on the title menu (0x0040f8ab)
+  // g_difficulty is -1 on the boot's title menu (0x0040f8ab); after a session the title menu keeps the session's value
+  // (that store is mainLoop+0x2eb, the boot path only), so P6B adds the title menu's own signal (title_menu)
+  const bool menu = frame_ == 0 || diff == -1 || title_seen_.load();
   at_menu_.store(menu);
   body_mode_.store(body);
   if (st == 2 && ctx.mem.load<int32_t>(quit_va) == 0) close_req_.store(3);  // H1 cleared it (ML+0x11511): the prompt runs
@@ -281,18 +344,30 @@ bool LiveSession::close_check(portsim::Ctx &ctx, bool at_head, bool body) {
     close_req_.store(0);
     ++close_cancelled_;
   }
-  if (menu && close_req_.load() != 0) {
+  if (menu && close_req_.load() == 1) {  // pressed on a screen that is no frame (before P6B: also after the prompt's quit)
     ++close_direct_;
     return true;
   }
   return false;
 }
 
-bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index) {
+// P7 (host.h in_game_): the band hint follows the game's own state word, read only (nothing is written)
+void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
+  const int32_t diff = ctx.mem.load<int32_t>(portsim::state_va(ctx, &portsim::GameState::g_difficulty));
+  // g_difficulty is -1 only on the boot's title menu (0x0040f8ab, P6B item 1); after a session the title menu reports itself
+  // through title_menu() (title_seen_), so both clear the in-game hint (P6 merge)
+  if (diff == -1 || title_seen_.load())
+    in_game_ = false;
+  else if (frame_loop)
+    in_game_ = true;
+}
+
+bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band) {
   std::lock_guard<std::mutex> lk(frame_mu_);
   if (!frame_waiting_) return false;
   px = frame_slot_;
   index = frame_index_;
+  if (band) *band = frame_band_;
   frame_waiting_ = false;
   return true;
 }
@@ -358,6 +433,8 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     std::lock_guard<std::mutex> lk(frame_mu_);
     frame_slot_ = std::move(show);
     frame_index_ = index;
+    frame_band_ = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
+    ++(in_game_ ? presents_black_ : presents_extend_);
     frame_waiting_ = true;
   }
   void *h;
@@ -385,6 +462,9 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
     ctx.mem.store<uint32_t>(va, flags);
     if (writes) writes->wrote(va, flags);
   }
+  track_screen(ctx, true);        // P7: a frame head is the frame loop
+  title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
+  end_load();                     // P6B item 2
   close_check(ctx, true, false);  // P5B item 3: a close request becomes the system menu's Exit flag here
   if (frames_log_) {
     std::fprintf(frames_log_, "%u\t%u\t%u\n", frame, t, flags);
@@ -399,8 +479,20 @@ bool LiveSession::clock(portsim::Ctx &, int32_t, bool body, uint32_t &t) {
   return true;
 }
 
-void LiveSession::cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) {
+void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) {
   if (modal) w_check_ = true;  // S7.8
+  if (exit_arm_) {  // P6B item 1 (host.h request_close): the title menu's exit icon, clicked at the next cursor read (the
+    // title loop's View_toLocal does not come as a modal read: with `&& modal` the exit was never taken)
+    exit_arm_ = false;
+    exiting_ = true;
+    ++exit_title_;
+    const uint32_t button = portsim::state_va(ctx, &portsim::GameState::g_rootInput) + 0x10;
+    ctx.mem.store<int32_t>(button, 1);
+    if (writes) writes->wrote(button, 1);
+    x = kExitIconX;
+    y = kExitIconY;
+    return;
+  }
   std::lock_guard<std::mutex> lk(mu_);
   if (opt_.cursor == CursorSource::Message) {
     x = msg_cursor_.x;
@@ -449,9 +541,51 @@ uint16_t LiveSession::async_key(portsim::Ctx &, int vk) {
 
 portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump &p, std::vector<portsim::Command> &out) {
   if (stopping()) return portsim::LiveReply::Stop;
+  track_screen(ctx, p.body);  // P7: the side-band hint of the next presents
   if (close_check(ctx, false, p.body)) {  // P5B item 3: the close button on the title menu (or after the quit prompt)
     stop_.store(true);
     return portsim::LiveReply::Stop;
+  }
+  if (p.kind == portsim::PumpKind::Load) {  // P6B item 2: a world load's pump (loadFlic +0x54)
+    const uint32_t now_ms = timeGetTime();
+    if (!loading_) {
+      loading_ = true;
+      load_t0_ = now_ms;
+      load_pumps_ = 0;
+      load_post_ms_ = 0;
+      portsim::flic::sheet_to_gfx_stats(load_dec_us0_, load_dec_calls0_);
+      if (load_expected_ == 0) load_expected_ = kWorldLoadPumps;
+    }
+    ++load_pumps_;
+    if (opt_.loading_overlay && title_ever_ && (load_post_ms_ == 0 || now_ms - load_post_ms_ >= 50)) {
+      load_post_ms_ = now_ms;
+      post_loading(load_pumps_);
+    }
+  } else {
+    end_load();
+  }
+  if (exit_req_.load() || exiting_) {  // P6B item 1
+    const uint32_t now_ms = timeGetTime();
+    if ((!exiting_ && !exit_arm_ && now_ms - exit_req_ms_.load() > 500) || (exiting_ && now_ms - exit_begin_ms_ > 15000)) {
+      ++exit_fallback_;  // no title-menu pass came (another screen), or the exit path did not end: stop here
+      stop_.store(true);
+      return portsim::LiveReply::Stop;
+    }
+    if (exiting_ && !p.body && p.kind == portsim::PumpKind::Blocking && now_ms - last_esc_ms_ >= 100) {
+      // the credits (showCreditsScreen) end on a key; Esc is posted as the keyboard would send it (the translator records it)
+      void *h;
+      {
+        std::lock_guard<std::mutex> lk(mu_);
+        h = queue_.empty() ? hwnd_ : nullptr;
+      }
+      if (h) {
+        PostMessageW(static_cast<HWND>(h), WM_KEYDOWN, VK_ESCAPE, 0x00010001);
+        PostMessageW(static_cast<HWND>(h), WM_CHAR, 0x1b, 0x00010001);
+        PostMessageW(static_cast<HWND>(h), WM_KEYUP, VK_ESCAPE, 0xc0010001);
+        last_esc_ms_ = now_ms;
+        ++exit_esc_;
+      }
+    }
   }
   if (!p.body) w_check_ = true;  // S7.8
   // one dispatch: the queued commands up to the first release whose press is in the same dispatch (a press and its release
@@ -711,7 +845,19 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"inflated\":" + std::to_string(l.inflated) + ",\"marks\":" + std::to_string(l.mark_pos.size());
   // P5B: the close button (item 3) and the cursor guard (item 1)
   s += ",\"close_prompt\":" + std::to_string(opt_.close_prompt ? 1 : 0) + ",\"close_flag_writes\":" + std::to_string(close_written_) +
-       ",\"close_at_menu\":" + std::to_string(close_direct_) + ",\"close_cancelled\":" + std::to_string(close_cancelled_);
+       ",\"close_at_menu\":" + std::to_string(close_direct_) + ",\"close_cancelled\":" + std::to_string(close_cancelled_) +
+       ",\"close_exit\":{\"title_exits\":" + std::to_string(exit_title_) + ",\"esc_posted\":" + std::to_string(exit_esc_) +
+       ",\"fallback_stops\":" + std::to_string(exit_fallback_) + "}";
+  // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
+  s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";
+  for (size_t i = 0; i < loads_.size(); ++i) {
+    const LoadRow &lr = loads_[i];
+    s += std::string(i ? "," : "") + "{\"start_ms\":" + std::to_string(lr.start_ms) + ",\"dur_ms\":" + std::to_string(lr.dur_ms) +
+         ",\"pumps\":" + std::to_string(lr.pumps) + ",\"from_input_ms\":" + std::to_string(lr.from_input_ms) +
+         ",\"decode_ms\":" + std::to_string(lr.decode_ms) + ",\"decode_calls\":" + std::to_string(lr.decode_calls) +
+         ",\"frame\":" + std::to_string(lr.frame) + "}";
+  }
+  s += "]";
   s += ",\"edge_guard\":" + std::to_string(opt_.edge_guard ? 1 : 0) + ",\"guarded_cursor_reads\":" + std::to_string(guarded_reads_);
   s += ",\"presents\":" + std::to_string(presents_.size()) + ",\"idle_passes\":" + std::to_string(idle_passes_);
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made_[0]) + ",\"w\":" + std::to_string(made_[1]) +
@@ -719,6 +865,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"present_points\":{\"r\":" + std::to_string(opportunities_[0]) + ",\"w\":" + std::to_string(opportunities_[1]) +
        ",\"m\":" + std::to_string(opportunities_[2]) + ",\"p\":" + std::to_string(opportunities_[3]) + "}";
   s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
+  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + "}";  // P7
   s += ",\"memory\":" + memory.json();
   if (tlog_calls_ >= 0)
     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +

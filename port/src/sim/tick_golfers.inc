@@ -1046,6 +1046,10 @@ int updateGolfers() {
             else FLAGS(i) &= ~0x80000u;                                                 // updateGolfers+0x30ed
             GD(i, GS(g_golfers)) += Dx8(GC(i, (GS(g_golfers) + 26))) * stp;                              // updateGolfers+0x30f9..updateGolfers+0x3112
             GD(i, (GS(g_golfers) + 4)) += Dy8(GC(i, (GS(g_golfers) + 26))) * stp;                              // updateGolfers+0x3118..updateGolfers+0x3131
+            if (!SG_DEFECT(g_defect_golfer_walk_offgrid)) {  // P6A updateGolfers.walkOffGrid: the step stays on the grid
+                { const int v = GD(i, GS(g_golfers)); GD(i, GS(g_golfers)) = v < 0 ? 0 : v > 0xc7ff ? 0xc7ff : v; }
+                { const int v = GD(i, (GS(g_golfers) + 4)); GD(i, (GS(g_golfers) + 4)) = v < 0 ? 0 : v > 0xc7ff ? 0xc7ff : v; }
+            }
             GW(i, (GS(g_golfers) + 20)) = static_cast<short>(GW(i, (GS(g_golfers) + 20)) - stp);                // updateGolfers+0x313b
         }
         if (G<unsigned char>(GS(g_tileType) + L3c) != 0x11 && kTypeAtPos(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4))) == 0x11)   // updateGolfers+0x3137..updateGolfers+0x3164
@@ -1105,6 +1109,7 @@ int updateGolfers() {
                 if (GD(i, (GS(g_golfers) + 8)) == -1) {                                            // updateGolfers+0x347d..updateGolfers+0x3488
                     G<int>(GS(gCameraTileX)) = GD(i, GS(g_golfers)) >> 10;                         // updateGolfers+0x348a..updateGolfers+0x349c
                     G<int>(GS(gCameraTileY)) = GD(i, (GS(g_golfers) + 4)) >> 10;                         // updateGolfers+0x3490..updateGolfers+0x34a2
+                    camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
                 }
                 GD(i, (GS(g_golfers) + 204)) = -1;                                                   // updateGolfers+0x34a8
                 G<int>(GS(g_playerShotStyle)) = 0;                                                 // updateGolfers+0x34b6

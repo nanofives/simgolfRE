@@ -21,6 +21,8 @@
 #include "portsim/sim/flic.h"
 
 #include <algorithm>
+#include <atomic>
+#include <chrono>
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -523,7 +525,24 @@ namespace {
 std::string vstr(const Memory &m, uint32_t va);
 }
 
+namespace {
+std::atomic<uint64_t> g_s2g_us{0}, g_s2g_calls{0};
+int32_t sheet_to_gfx_body(Ctx &ctx, uint32_t path_va, int32_t frames, int32_t size, int32_t flag, uint32_t first_cell_va);
+}  // namespace
+void sheet_to_gfx_stats(uint64_t &us, uint64_t &calls) {
+  us = g_s2g_us.load();
+  calls = g_s2g_calls.load();
+}
+// P6B: the decode timed (no effect on what it does)
 int32_t sheet_to_gfx(Ctx &ctx, uint32_t path_va, int32_t frames, int32_t size, int32_t flag, uint32_t first_cell_va) {
+  const auto t0 = std::chrono::steady_clock::now();
+  const int32_t r = sheet_to_gfx_body(ctx, path_va, frames, size, flag, first_cell_va);
+  g_s2g_us += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count());
+  ++g_s2g_calls;
+  return r;
+}
+namespace {
+int32_t sheet_to_gfx_body(Ctx &ctx, uint32_t path_va, int32_t frames, int32_t size, int32_t flag, uint32_t first_cell_va) {
 #if SG_FLIC_GFX
   Gfx *g = gfx(ctx);
   if (!g) return -1;
@@ -562,6 +581,7 @@ int32_t sheet_to_gfx(Ctx &ctx, uint32_t path_va, int32_t frames, int32_t size, i
   return -1;
 #endif
 }
+}  // namespace (P6B: sheet_to_gfx_body)
 
 namespace {
 // ------------------------------------------------------------------------------------------------ test entry

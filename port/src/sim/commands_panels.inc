@@ -194,6 +194,7 @@ int32_t employee_action(Ctx &ctx, int32_t r) {
   const uint32_t rec = walkers + u32(mul32(*(state_arr(ctx, &GameState::g_employeeDetailList) + sel), 0x4c));
   gs.gCameraTileX = sar32(ctx.mem.load<int32_t>(rec), 10);
   gs.gCameraTileY = sar32(ctx.mem.load<int32_t>(rec + 4), 10);
+  camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
   return -1;
 }
 
@@ -210,6 +211,7 @@ int32_t employee_view_action(Ctx &ctx, int32_t r) {
       if (ctx.mem.load<int32_t>(rec + 8) != -1 || gs.g_msgState53df54 > 0) gs.g_msgState53df54 = add32(e, 1);
       gs.gCameraTileX = sar32(ctx.mem.load<int32_t>(rec), mode == 1 ? 9 : 10);
       gs.gCameraTileY = sar32(ctx.mem.load<int32_t>(rec + 4), 10);
+      camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     }
   }
   if (r == -3) {

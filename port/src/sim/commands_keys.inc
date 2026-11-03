@@ -37,6 +37,7 @@ int32_t panel_list_select(Ctx &ctx, int32_t item, int32_t direct) {
     else gs.g_msgState53df54 = add32(id, 1);
     gs.gCameraTileX = sar32(m.load<int32_t>(rec), 10);
     gs.gCameraTileY = sar32(m.load<int32_t>(rec + 4), 10);
+    camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     return gs.gCameraTileY;
   }
   if (list_mode == 1) {

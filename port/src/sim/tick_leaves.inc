@@ -335,6 +335,11 @@ struct Leaves : TkBase {
       G32(GS(g_cameraRot)) = 0;                               // showTutorialText+0x15
       if (static_cast<unsigned>(G32(GS(g_tutorialPage)) - 1) > 0x1c) return;    // showTutorialText+0x6..showTutorialText+0x1f
 
+      // P6A (mainLoop.cameraFollowOffGrid = 0): the page's camera offsets (hole / object + up to 10) clamped to the grid on return
+      struct CamOnMap {
+        Ctx &c;
+        ~CamOnMap() { camera_on_map(c); }
+      } cam_on_map_{ctx};
       // negative control 3: the camera put back when the page returns (its move dropped)
       struct CamBack {
         Ctx &c;

@@ -10,6 +10,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/tiles.h"
+#include "portsim/sim/tick.h"
 #include "portsim/sim/util.h"
 
 namespace portsim {
@@ -414,6 +415,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   leaving.field(&HoleRecord::tee_y).set(cy);
   g.gCameraTileX = add32(cx, 6);
   g.gCameraTileY = sub32(cy, mode == 1 ? 3 : 4);
+  camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
 
   if (u32(c0) <= 0xF) {
     switch (c0) {

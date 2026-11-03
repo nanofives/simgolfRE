@@ -1,0 +1,5 @@
+[w8_lock] P6M queued at 2026-11-03 16:23:39
+[w8_lock] P6M TOOK the lock at 2026-11-03 16:23:39 (waited 0 s, free commit 23.9 GB)
+.....................                                                    [100%]
+21 passed in 6.30s
+[w8_lock] P6M released at 2026-11-03 16:23:46

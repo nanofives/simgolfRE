@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\log\roadmap\P6\P6B_drive.py", line 158, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\log\roadmap\P6\P6B_drive.py", line 154, in main
+    return a.fn(a)
+           ^^^^^^^
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\log\roadmap\P6\P6B_drive.py", line 48, in cmd_quit
+    d.key(VK_RETURN, tag="Enter")
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\port\test\app_replay.py", line 266, in key
+    self.key_up(vk, tag, sys_key, alt)
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\port\test\app_replay.py", line 277, in key_up
+    self.post(WM_SYSKEYUP if sys_key else WM_KEYUP, vk,
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\port\test\app_replay.py", line 219, in post
+    self.app.post(msg, wp & 0xFFFFFFFF, lp & 0xFFFFFFFF)
+  File "C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6B\port\app\tools\app_drive.py", line 147, in post
+    raise OSError(C.get_last_error(), "PostMessageW")
+OSError: [Errno 1400] PostMessageW

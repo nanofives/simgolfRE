@@ -2426,6 +2426,14 @@ draw); app options, each default on and all off with SG_APP_P5B=off (port/test/c
 outside the focused client area), --zoom-keys all|numpad|off (+ / - become the game's z / x in the frame loop; `all` drops the original's
 + money / - terrain keys), --close-prompt (X opens the game's exit prompt), --resizable and --scale auto|nearest|smooth (4:3 bars, mouse
 mapped back). Widescreen is scoped only (P5B_notes.md: 0x320 / 0x258 hard-coded at about 180 sites, rasteriser fixed at 800 x 600).
+P6 + P7, second play-test feedback (2026-11-03, merge log/roadmap/P6/MERGE.md): X now leaves the app through the game's own
+title-menu exit (P5B's title test used g_difficulty == -1, stored only on the boot path 0x0040f8ab; tick_menu.inc now notifies the host
+through LiveIo::title_menu_pass, and the app clicks the exit icon at the next cursor read, so top10.sve / Default.pro are written).
+Three `play` switches keep walkers, golfers and the camera centre on the 50 x 50 grid (updateWalkers.cursorTargetOffGrid,
+updateGolfers.walkOffGrid, mainLoop.cameraFollowOffGrid: the original follows an unbounded cursor tile and only H1's keys clamp the
+camera). hoverTip.tenFrameDwell shows HUD tips after 3 frames instead of 10. App options: --loading-overlay (default on; the world load
+is about 1.5 s, flic sheet decoding 60-65 % of it) and widescreen stage 1 `--wide` (default off; 16:9 window, bands filled from the 2D
+screens' edge colours, black in game; plan log/roadmap/P7/PLAN.md). SG_APP_P6B=off turns P6B's options off (conftest sets it).
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

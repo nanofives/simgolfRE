@@ -1,0 +1,31 @@
+{
+ "events": [
+  [
+   1.573,
+   "frame",
+   1
+  ],
+  [
+   1.724,
+   "shown",
+   1
+  ],
+  [
+   1.724,
+   "frame",
+   2
+  ],
+  [
+   1.742,
+   "shown",
+   2
+  ],
+  [
+   1.812,
+   "frame",
+   3
+  ]
+ ],
+ "first_frame_s": 1.573,
+ "shown_before_first_frame": []
+}

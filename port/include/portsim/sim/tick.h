@@ -86,6 +86,9 @@ std::unique_ptr<TerrainApi> make_headless_terrain(Ctx &ctx);
 // roadmap S7.9 (U-1681): drops the blocks make_headless_terrain keeps for this context (call before the context is freed)
 void release_headless_terrain(const Ctx &ctx);
 
+// P6A (mainLoop.cameraFollowOffGrid = 0): clamps gCameraTileX / gCameraTileY to the grid (0..0x31); does nothing at 1.
+void camera_on_map(Ctx &ctx);
+
 // Per-callee call counts of the frames run on this thread since the last reset (development and notes).
 std::vector<std::pair<std::string, uint64_t>> tick_callee_counts();
 void tick_callee_counts_reset();

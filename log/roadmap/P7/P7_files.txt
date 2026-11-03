@@ -1,0 +1,19 @@
+# P7: files changed in port/build/P7 against its base f04c7591 (no port/src, port/include or port/test file changed)
+port/app/present.h       BandFill / WideFill; Presenter::set_wide, set_frame(px, band), fill_bands
+port/app/present.cpp     fill_bands (soft / clamp side bands from the content rectangle's edge columns), called at the end of render
+port/app/host.h          take_frame(px, index, &band); in_game_ / track_screen; frame_band_; presents_band counters
+port/app/host.cpp        track_screen (g_difficulty == -1 clears, a frame head / body pump sets), the band hint per present, summary_json presents_band
+port/app/window.h        WindowOptions::logical_w (the client's logical width at open)
+port/app/window.cpp      size_for_dpi uses logical_w
+port/app/main.cpp        --wide [on|off], --wide-width, --wide-fill, SG_APP_WIDE; --selftest-p7 (9 rows, control --negctl p7-band-black); --compose op; session.json p7 block; usage lines
+# deliverables (log/ is shared)
+log/roadmap/P7/PLAN.md
+log/roadmap/P7/P7_notes.md
+log/roadmap/P7/P7_files.txt
+log/roadmap/P7/P7_compose.py          screenshots from the pinned reference frames through simgolf_port --compose
+log/roadmap/P7/P7_drive.py            the live app with --wide (title, location, in game), recording replayed through sg_run_boot
+log/roadmap/P7/shots/                 composed screenshots (index.tsv)
+log/roadmap/P7/live/                  live app captures and the session recording (result_*.json)
+log/roadmap/P7/P7_build_x64.log, P7_build_Win32.log
+log/roadmap/P7/P7_selftest*.log
+log/roadmap/P7/P7_segs_x64.tsv

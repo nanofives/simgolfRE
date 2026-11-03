@@ -57,6 +57,18 @@ namespace portsim {
 
 int g_negctl_gfx_hud = 0;
 
+// hoverTip.tenFrameDwell (P6B, 2026-11-03, Mariano's play-test: `the build palette's popup should come sooner`): every HUD panel
+// keeps one hover counter pair, the last hovered control g_panelState + 4 and its count g_ui_5aa554,
+// and draws a control's tip only once the count is above 10: showInfoCursorPanel `cmp [g_ui_5aa554], 0xa; jle` at
+// showInfoCursorPanel+0xc7 (the tool tip) and `cmp eax, 0xa; jle` at showInfoCursorPanel+0x76f (the slot tip), drawTerrainToolbar+0x140,
+// drawBuildingPanel+0x55, drawAmenitiesPanel+0x4fd, drawEmployeeViewPanel+0x6ca, drawGolferActionPanel+0x635 (the same compare).
+// The counter grows by one per frame on the same control, so the tip comes 11 frames after the first hovered frame (about 1.0 s
+// at mainLoop's 87..100 ms frame). Default 1 = the original's 10; play (0): 3, the tip 4 frames after the first hover (about
+// 0.37 s, near Windows' own 400 ms hover time). The counters are ui class (the HUD panels' drawing keeps its own copy); at 0
+// drawBuildingPanel's tip also builds its text in g_textBuffer (class hidden) and appendNumber's g_textBuf (NON_CAUSAL) sooner.
+int g_defect_tip_dwell = 1;
+int32_t hover_tip_dwell() { return SG_DEFECT(g_defect_tip_dwell) ? 10 : 3; }
+
 namespace {
 
 int mode() { return SG_NEGCTL(g_negctl_gfx_hud); }
@@ -1307,7 +1319,7 @@ void toolbar_dwell(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b) {
     return;
   }
   ++ip.count;
-  if (sel != -1 && ip.count > 10) gfxt::terrain_toolbar_tip(g, ctx, sel, a, b);
+  if (sel != -1 && ip.count > hover_tip_dwell()) gfxt::terrain_toolbar_tip(g, ctx, sel, a, b);
 }
 
 // drawAmenityRow's drawing (c3ei.cpp DrawAmenityRow_re; its hit result is commands_layout.inc's amenity_row_hit): with n = p3
@@ -1445,7 +1457,7 @@ void amenities_panel(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
     return;
   }
   ++ip.count;
-  if (L != -1 && ip.count > 10) gfxt::amenities_tip(g, ctx, L, a, b);   // roadmap S3.7
+  if (L != -1 && ip.count > hover_tip_dwell()) gfxt::amenities_tip(g, ctx, L, a, b);   // roadmap S3.7
 }
 
 void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -1464,7 +1476,7 @@ void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   auto tid = [&](int32_t i) { return static_cast<int32_t>(static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, i))))); };
   const int32_t sel = static_cast<int32_t>(cm::call_peer(ctx, "hitTestSlot432f90", {a[0], a[1]}).eax);
   InfoPanelState &ip = info_panel_state(g, ctx);
-  if (sel == ip.prev && sel != -1 && sel < 0x14 && ip.count > 10) gfxt::info_panel_tool_tip(g, ctx, sel);   // roadmap S3.7
+  if (sel == ip.prev && sel != -1 && sel < 0x14 && ip.count > hover_tip_dwell()) gfxt::info_panel_tool_tip(g, ctx, sel);   // roadmap S3.7
   auto stretch = [&](uint32_t s, uint32_t m, int32_t x, int32_t y) {
     call(g, ctx, "Surface_stretchBlit", {s, m, root, static_cast<uint32_t>(x), static_cast<uint32_t>(y), 0});
   };
@@ -1508,7 +1520,7 @@ void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (sel == ip.prev) {
     ++ip.count;
-    if (sel >= 0x14 && ip.count > 10) gfxt::info_panel_slot_tip(g, ctx, sel);   // roadmap S3.7
+    if (sel >= 0x14 && ip.count > hover_tip_dwell()) gfxt::info_panel_slot_tip(g, ctx, sel);   // roadmap S3.7
   } else {
     ip.count = 0;
     ip.prev = sel;
@@ -1725,7 +1737,7 @@ void b_action_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     return;
   }
   ++ip.count;
-  if (h != -1 && ip.count > 10)   // roadmap S3.7
+  if (h != -1 && ip.count > hover_tip_dwell())   // roadmap S3.7
     gfxt::action_panel_tip(g, ctx, h, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
 }
 // ------------------------------------------------------------------------------------------------ the employee panels
@@ -1791,7 +1803,7 @@ void dwell(Gfx &g, Ctx &ctx, int32_t hover, const char *tip, const std::function
     return;
   }
   ++ip.count;
-  if (hover != -1 && ip.count > 10) {
+  if (hover != -1 && ip.count > hover_tip_dwell()) {
     prec(g, "tooltip", {});
     (void)tip;
     draw_tip();   // roadmap S3.7

@@ -67,9 +67,28 @@ int g_defect_cash_low_word = 1;
 // wide and 0x50 tall around the icon's corner, most of it outside the icon. Fixed (0): the exit hotspot is taken only with the
 // cursor inside its icon (x 0x2d1 .. 0x30a, y 0x210 .. 0x248), where it wins; the five labelled hotspots keep their test.
 int g_defect_title_exit_hotspot = 1;
+// mainLoop.cameraFollowOffGrid (P6A, 2026-11-03, Mariano's play-test): the camera tile pair gCameraTileX / gCameraTileY is
+// clamped to 0..0x31 only by the key and edge-pan cases of H1 (ML+0xe971..ML+0xea73, ML+0xec6b..ML+0xec89); the writers that
+// copy a golfer's, walker's, ball's or photo's world position >> 10 (P7 ML+0xbf38, H2 ML+0xf17c / ML+0xf994, updateGolfers'
+// follow, the panel and key centring of commands.cpp, showBulletinBoard) and the hole / object offsets (Esc reset, key 0x30,
+// showTutorialText, generateRandomCourse) store with no bound, so a golfer off the land takes the view off the map until the
+// next H1 clamp, and every frame again. Fixed (0): each of those writers clamps the pair to the same 0..0x31 (camera_on_map).
+int g_defect_camera_follow_offgrid = 1;
+// updateGolfers.walkOffGrid (P6A): a golfer's walking step (updateGolfers+0x30f9..updateGolfers+0x3131) has no grid test, and
+// the reversal turn (updateGolfers+0x29cf..updateGolfers+0x29e6) and the step overshoot can take a golfer past the edge
+// (log/c3/c3fyl/audit123.md, U1). Fixed (0): the golfer's world position is clamped to 0..0xc7ff after the step.
+int g_defect_golfer_walk_offgrid = 1;
+int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
   return static_cast<int16_t>(v > 0x7fff ? 0x7fff : v < -0x8000 ? -0x8000 : v);
+}
+// P6A: keep the camera tile pair on the 50 x 50 grid (mainLoop.cameraFollowOffGrid = 0); no change at 1
+void camera_on_map(Ctx &ctx) {
+  if (SG_DEFECT(g_defect_camera_follow_offgrid)) return;
+  GameState &g = ctx.gs();
+  g.gCameraTileX = g.gCameraTileX < 0 ? 0 : g.gCameraTileX > 0x31 ? 0x31 : g.gCameraTileX;
+  g.gCameraTileY = g.gCameraTileY < 0 ? 0 : g.gCameraTileY > 0x31 ? 0x31 : g.gCameraTileY;
 }
 namespace tk {
 
@@ -569,6 +588,7 @@ int fb_show_bulletin_board(TkBase &t, const uint32_t *, int) {
     if (t.cc("worldToScreen", t.G32(GS(f_w_4e3db8) + 4).get(), t.G32(GS(g_scrollTextWin) + 0x54).get(), &sx, &sy, 0) == 0) {
       t.G32(GS(gCameraTileX)) = sar32(t.G32(GS(f_w_4e3db8) + 4), 10);
       t.G32(GS(gCameraTileY)) = sar32(t.G32(GS(g_scrollTextWin) + 0x54), 10);
+      camera_on_map(ctx);  // P6A mainLoop.cameraFollowOffGrid
     } else {
       t.cc("clamp", sx - 0x64, 0, 0x258);
       t.cc("clamp", sy - 0x64, 0, 0x1b8);
@@ -1974,6 +1994,13 @@ const DefectDef kDefects[] = {
      "the title menu's exit hotspot is the nearest-point test around the exit icon's top-left corner (about 0x140 x 0x50 px); "
      "fixed: only the icon's own 0x3a x 0x39 rectangle selects it",
      &g_defect_title_exit_hotspot},
+    {"mainLoop.cameraFollowOffGrid", "P6A",
+     "the camera writers that follow a golfer, walker, ball or photo position (and the hole / object offsets) store no grid bound, "
+     "so the view leaves the map; fixed: each clamps the camera tile pair to 0..0x31 like H1's key and edge-pan cases",
+     &g_defect_camera_follow_offgrid},
+    {"updateGolfers.walkOffGrid", "P6A",
+     "a golfer's walking step has no grid test (reversal turn, step overshoot); fixed: the position is clamped to the grid after the step",
+     &g_defect_golfer_walk_offgrid},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

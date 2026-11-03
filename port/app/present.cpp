@@ -1,6 +1,8 @@
 // Presenting the RGB555 back buffer (present.h).
 #include "present.h"
 
+#include <algorithm>
+
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -10,6 +12,8 @@
 #endif
 #include <windows.h>
 #endif
+
+#include <algorithm>  // P6B item 2 (std::min / max in paint)
 
 namespace portapp {
 
@@ -32,11 +36,12 @@ Viewport fit_viewport(int32_t cw, int32_t ch) {
   return v;
 }
 
-bool Presenter::set_frame(const std::vector<uint16_t> &px) {
+bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   if (px.size() != static_cast<size_t>(kLogicalW) * kLogicalH) return false;
   ++frames_set_;
   if (defect_ == PresentDefect::Stale && !frame_.empty()) return true;
   frame_ = px;
+  band_ = band;
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
   return true;
@@ -94,6 +99,7 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
         dst[x] = mix(a, b, v.f) | 0xff000000u;
       }
     }
+    if (wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
     return;
   }
   std::vector<int32_t> col(static_cast<size_t>(vp.client_w));
@@ -104,6 +110,51 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
     const uint16_t *src = frame_.data() + static_cast<size_t>(ly) * kLogicalW;
     uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
     for (int32_t x = 0; x < vp.client_w; ++x) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
+  }
+  if (wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+}
+
+// P7 (present.h WideFill): the side bands from the content rectangle's own edge columns, in client pixels. The content is
+// already drawn, so the bands follow the scaled image exactly (nearest or smooth) and the content's pixels are not touched.
+void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+  const int32_t ox = vp.origin_x, oy = vp.origin_y, w = vp.client_w, h = vp.client_h;
+  if (w <= 0 || h <= 0 || cw <= 0 || ch <= 0 || oy + h > ch || ox + w > cw) return;
+  const bool clamp = wide_ == WideFill::Clamp;
+  // client columns averaged at each edge (the frame's outer 4 logical columns) and the largest blur radius (48 logical rows)
+  const int32_t k = clamp ? 1 : std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(w) * 4 / kLogicalW));
+  const int32_t rmax = clamp ? 0 : std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(h) * 48 / kLogicalH));
+  std::vector<uint64_t> pre[3];
+  for (auto &v : pre) v.assign(static_cast<size_t>(h) + 1, 0);
+  for (int side = 0; side < 2; ++side) {
+    const int32_t band = side == 0 ? ox : cw - (ox + w);
+    if (band <= 0) continue;
+    // per row: the mean of the k edge columns (channels scaled by 256 to keep the fraction), as prefix sums over the rows
+    for (int32_t y = 0; y < h; ++y) {
+      const uint32_t *row = out.data() + static_cast<size_t>(oy + y) * static_cast<size_t>(cw);
+      uint32_t s[3] = {0, 0, 0};
+      for (int32_t j = 0; j < k; ++j) {
+        const uint32_t v = row[side == 0 ? ox + j : ox + w - 1 - j];
+        s[0] += (v >> 16) & 255;
+        s[1] += (v >> 8) & 255;
+        s[2] += v & 255;
+      }
+      for (int c = 0; c < 3; ++c)
+        pre[c][static_cast<size_t>(y) + 1] = pre[c][static_cast<size_t>(y)] + (static_cast<uint64_t>(s[c]) * 256 + k / 2) / k;
+    }
+    for (int32_t d = 1; d <= band; ++d) {
+      const int32_t r = std::min(d / 2, rmax);
+      const int32_t x = side == 0 ? ox - d : ox + w - 1 + d;
+      for (int32_t y = 0; y < h; ++y) {
+        const int32_t lo = std::max(0, y - r), hi = std::min(h - 1, y + r);
+        const uint64_t n = static_cast<uint64_t>(hi - lo + 1) * 256;
+        uint32_t c8[3];
+        for (int c = 0; c < 3; ++c) {
+          const uint64_t sum = pre[c][static_cast<size_t>(hi) + 1] - pre[c][static_cast<size_t>(lo)];
+          c8[c] = static_cast<uint32_t>((sum + n / 2) / n);
+        }
+        out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + x] = 0xff000000u | (c8[0] << 16) | (c8[1] << 8) | c8[2];
+      }
+    }
   }
 }
 
@@ -120,6 +171,35 @@ void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   bi.bmiHeader.biCompression = BI_RGB;
   SetDIBitsToDevice(static_cast<HDC>(hdc), 0, 0, static_cast<DWORD>(cw), static_cast<DWORD>(ch), 0, 0, 0,
                     static_cast<UINT>(ch), scratch_.data(), &bi, DIB_RGB_COLORS);
+  if (loading_done_ == 0) return;
+  // P6B item 2: a box at the content rectangle's centre (40 % x 10 % of it), a dark green fill, a white frame, `Loading` and
+  // a bar; the bar fills done / expected of its width (at most 95 %: the count of a load is known only once it ended)
+  const Viewport vp = fit_viewport(cw, ch);
+  const HDC dc = static_cast<HDC>(hdc);
+  const int bw = vp.client_w * 2 / 5, bh = std::max(vp.client_h / 10, 40);
+  const int bx = vp.origin_x + (vp.client_w - bw) / 2, by = vp.origin_y + (vp.client_h - bh) / 2;
+  RECT box = {bx, by, bx + bw, by + bh};
+  HBRUSH fill = CreateSolidBrush(RGB(16, 48, 24)), white = CreateSolidBrush(RGB(255, 255, 255)),
+         bar = CreateSolidBrush(RGB(96, 200, 72));
+  FillRect(dc, &box, fill);
+  FrameRect(dc, &box, white);
+  const int pad = std::max(bh / 8, 4);
+  RECT track = {bx + pad, by + bh - pad - bh / 4, bx + bw - pad, by + bh - pad};
+  FrameRect(dc, &track, white);
+  const double f = loading_expected_ ? std::min(0.95, static_cast<double>(loading_done_) / loading_expected_) : 0.5;
+  RECT done = {track.left + 2, track.top + 2, track.left + 2 + static_cast<LONG>((track.right - track.left - 4) * f), track.bottom - 2};
+  if (done.right > done.left) FillRect(dc, &done, bar);
+  HFONT font = CreateFontW(-(bh / 3), 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, L"Arial");
+  HGDIOBJ old = SelectObject(dc, font);
+  SetBkMode(dc, TRANSPARENT);
+  SetTextColor(dc, RGB(255, 255, 255));
+  RECT text = {bx, by + pad / 2, bx + bw, track.top};
+  DrawTextW(dc, L"Loading...", -1, &text, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+  SelectObject(dc, old);
+  DeleteObject(font);
+  DeleteObject(fill);
+  DeleteObject(white);
+  DeleteObject(bar);
 }
 #endif
 

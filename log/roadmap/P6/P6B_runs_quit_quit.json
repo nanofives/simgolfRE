@@ -1,0 +1,37 @@
+{
+ "answer": "quit",
+ "alive_after_close": true,
+ "rc": 0,
+ "exit_s": 0.47,
+ "session": {
+  "stop": "quit",
+  "records": 58,
+  "close_prompt": 1,
+  "close_flag_writes": 1,
+  "close_at_menu": 0,
+  "close_cancelled": 0,
+  "close_exit": {
+   "title_exits": 1,
+   "esc_posted": 1,
+   "fallback_stops": 0
+  }
+ },
+ "data_files": [
+  "data\\files\\Themes\\Default.pro",
+  "data\\files\\saved games\\&QuitSave.sve",
+  "data\\files\\top10.sve"
+ ],
+ "gate": {
+  "status": "PASS",
+  "records": 58,
+  "expected": 58,
+  "code": 0,
+  "first": null
+ },
+ "replay": {
+  "code": 0,
+  "records": 58,
+  "top10.sve": true,
+  "Themes/Default.pro": true
+ }
+}

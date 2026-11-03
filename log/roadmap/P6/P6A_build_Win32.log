@@ -1,0 +1,155 @@
+-- Building for: Visual Studio 17 2022
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x86/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x86-windows/share/freetype (module fttext)
+-- Configuring done (2.2s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/build/Win32
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/app/CMakeLists.txt
+  input_map.cpp
+  portsim.cpp
+  registry.cpp
+  state_hash.cpp
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\app\Release\portapp_input.lib
+  ptr.cpp
+  execonst.cpp
+  gamefiles.cpp
+  audio_chan.cpp
+  audio_codec.cpp
+  audio_core.cpp
+  audio_crt.cpp
+  audio_dev.cpp
+  audio_ds.cpp
+  audio_exe.cpp
+  audio_mixer.cpp
+  audio_seq.cpp
+  audio_sound.cpp
+  audio_soundfile.cpp
+  audio_wave.cpp
+  bridge.cpp
+  buyland.cpp
+  Generando código...
+  Compilando...
+  chareditor.cpp
+  commands.cpp
+  core.cpp
+  course.cpp
+  dialogs.cpp
+  economy.cpp
+  events.cpp
+  flic.cpp
+  fttext.cpp
+  fttext_raster.cpp
+  gditext.cpp
+  gfx.cpp
+  gfx_boot_screens.cpp
+  gfx_bulletin.cpp
+  gfx_buyland.cpp
+  gfx_chareditor.cpp
+  gfx_credits.cpp
+  gfx_dialogs.cpp
+  gfx_editbox.cpp
+  gfx_hud.cpp
+  Generando código...
+  Compilando...
+  gfx_pixel.cpp
+  gfx_prim_fill.cpp
+  gfx_prim_text.cpp
+  gfx_prim_text2.cpp
+  gfx_reports.cpp
+  gfx_results.cpp
+  gfx_routing.cpp
+  gfx_scene.cpp
+  gfx_selftest.cpp
+  gfx_simfoto.cpp
+  gfx_surface.cpp
+  gfx_terrain.cpp
+  gfx_text.cpp
+  gl_raster.cpp
+  gl_wgl.cpp
+  golfers.cpp
+  holestats.cpp
+  integrator.cpp
+  live.cpp
+  loaders.cpp
+  Generando código...
+  Compilando...
+  menu.cpp
+  net.cpp
+  reports.cpp
+  routing.cpp
+  saveload.cpp
+  semantic.cpp
+  shots.cpp
+  shotstyle.cpp
+  terrain.cpp
+  terrain_course.cpp
+  terrain_dll.cpp
+  terrain_fake.cpp
+  terrain_gen.cpp
+  terrain_gl_setup.cpp
+  terrain_live.cpp
+  terrain_overlay.cpp
+  terrain_path.cpp
+  terrain_render.cpp
+  terrain_setup.cpp
+  terrain_state.cpp
+  Generando código...
+  Compilando...
+  terrain_text.cpp
+  text.cpp
+  textlab.cpp
+  tick.cpp
+  tiles.cpp
+  util.cpp
+  video.cpp
+  x87probe.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\Release\portsim.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/app/CMakeLists.txt
+  audio_out.cpp
+  ds_sink.cpp
+  Generando código...
+  portapp_audio.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\app\Release\portapp_audio.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/app/CMakeLists.txt
+  main.cpp
+  window.cpp
+  present.cpp
+  pacing.cpp
+  saves.cpp
+  host.cpp
+  Generando código...
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/app/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/app/CMakeLists.txt
+  portsim_c.cpp
+  gamestate_layout_test.cpp
+  input_check.cpp
+  core_test.cpp
+  audio_check.cpp
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\Release\portsim_layout_test.exe
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/build/Win32/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/build/Win32/Release/portsim_c.exp
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\app\Release\simgolf_input_check.exe
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\Release\portsim_c.dll
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+  runner32.cpp
+  simgolf_audio_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\app\Release\simgolf_audio_check.exe
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\Release\portsim_core_test.exe
+  portsim_runner32.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\Release\portsim_runner32.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P6A/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P6A\port\build\Win32\Release\portsim_c.dll
+w32rc=0

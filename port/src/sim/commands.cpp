@@ -18,6 +18,7 @@
 #include "portsim/sim/gfx.h"
 #include "gfx_reports.h"
 #include "portsim/sim/semantic.h"
+#include "portsim/sim/tick.h"
 #include "portsim/sim/util.h"
 
 namespace portsim {

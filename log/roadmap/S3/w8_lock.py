@@ -1,6 +1,6 @@
 """S3 wave 8 heavy-run lock (W8_HEAVY_RULE.md), enforced in code.
 
-    ~/bin/py -3.12 log/roadmap/S3/w8_lock.py take <step> [--what "<run>"] [--need-gb 16] [--max-wait <s>]
+    ~/bin/py -3.12 log/roadmap/S3/w8_lock.py take <step> [--what "<run>"] [--need-gb 8] [--max-wait <s>]
     ~/bin/py -3.12 log/roadmap/S3/w8_lock.py release <step>
     ~/bin/py -3.12 log/roadmap/S3/w8_lock.py run <step> [--what "<run>"] -- <command ...>
     ~/bin/py -3.12 log/roadmap/S3/w8_lock.py status
@@ -124,7 +124,7 @@ def stamp():
     return time.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def take(step, what="", need_gb=16.0, max_wait=None, priority=False):
+def take(step, what="", need_gb=8.0, max_wait=None, priority=False):
     wp = wait_path(step)
     if wp.exists():
         kv = read_kv(wp) or {}
@@ -232,7 +232,7 @@ def main(argv):
         print(__doc__)
         return 1
     cmd, step, rest = argv[0], argv[1], argv[2:]
-    what, need, max_wait, command, priority = "", 16.0, None, [], False
+    what, need, max_wait, command, priority = "", 8.0, None, [], False
     if "--" in rest:
         i = rest.index("--")
         rest, command = rest[:i], rest[i + 1:]

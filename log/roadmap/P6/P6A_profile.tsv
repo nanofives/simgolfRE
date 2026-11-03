@@ -1,0 +1,4 @@
+switch	value	decision_id	reason
+updateWalkers.cursorTargetOffGrid	0	G30,P6A	Gary Golf follows the cursor tile only up to the 50 x 50 grid's edge (the cursor tile is clamped for his walk target) and no walker's step leaves the grid
+updateGolfers.walkOffGrid	0	G30,P6A	a golfer's walking step is clamped to the 50 x 50 grid, so no golfer (Gary Golf included) walks past the edge of the land
+mainLoop.cameraFollowOffGrid	0	G30,P6A	every camera writer that follows a golfer, walker, ball or photo, or offsets from a hole or object, clamps the camera tile to 0..0x31 like the arrow-key and edge-pan cases, so the view centre stays on the map

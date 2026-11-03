@@ -1070,12 +1070,18 @@ const FuncDef kFuncs[] = {
 }  // namespace
 
 extern int g_defect_themepack_col5;  // gfx_boot_screens.cpp
+extern int g_defect_tip_dwell;       // gfx_hud.cpp (P6B)
 namespace {
 const DefectDef kDefects[] = {
     {"showThemePackSelect.column5StackWord", "P5A",
      "the theme-pack screen draws a sixth column cell at a stack word the original never writes (U-1260: a yellow cell at x -17 on "
      "the current theme's row); fixed: no column-5 cell",
      &g_defect_themepack_col5},
+    {"hoverTip.tenFrameDwell", "P6B",
+     "the HUD panels draw a control's hover tip only after more than 10 frames on it (about 1.0 s; showInfoCursorPanel+0xc7 / "
+     "+0x76f, drawTerrainToolbar+0x140, drawBuildingPanel+0x55, drawAmenitiesPanel+0x4fd, drawEmployeeViewPanel+0x6ca, "
+     "drawGolferActionPanel+0x635); fixed: more than 3 frames (about 0.37 s)",
+     &g_defect_tip_dwell},
 };
 }  // namespace
 

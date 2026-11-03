@@ -1,0 +1,56 @@
+{
+ "client": [
+  1067,
+  600
+ ],
+ "content_w": 800,
+ "origin_x": 133,
+ "args": [
+  "--install",
+  "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\port\\build\\P7\\original",
+  "--data",
+  "C:\\Users\\maria\\AppData\\Local\\Temp\\p7_jjwltqo2\\data",
+  "--record-dir",
+  "C:\\Users\\maria\\AppData\\Local\\Temp\\p7_jjwltqo2\\rec",
+  "--no-activate",
+  "--dpi",
+  "96",
+  "--cursor",
+  "message",
+  "--keys",
+  "message",
+  "--clock-origin",
+  "1048576",
+  "--profile",
+  "fixed",
+  "--wide",
+  "--wide-fill",
+  "soft",
+  "--scale",
+  "nearest"
+ ],
+ "close_rc": 0,
+ "title_band_nonblack_px": 160200,
+ "title_band_px": 160200,
+ "location_band_nonblack_px": 160200,
+ "location_band_px": 160200,
+ "ingame_band_nonblack_px": 0,
+ "ingame_band_px": 160200,
+ "p7": {
+  "wide": 1,
+  "wide_width": 1067,
+  "wide_fill": "soft"
+ },
+ "presents_band": {
+  "extend": 56,
+  "black": 57
+ },
+ "records": 57,
+ "gate": {
+  "status": "PASS",
+  "records": 57,
+  "expected": 57,
+  "first": null,
+  "profile": "fixed"
+ }
+}
