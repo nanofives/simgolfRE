@@ -1,0 +1,21 @@
+# Members of the `play` profile in addition to every member of `fixed` (decision G30, 2026-11-03: the port diverges from the original on
+# purpose; `play` is the app default, `fixed` stays hangs and faults only, `original` stays every switch at 1 and the test oracle).
+# Columns as re/port/defect_profiles.tsv: switch value decision_id reason. A switch listed here must not also be in defect_profiles.tsv.
+switch	value	decision_id	reason
+sinScaled.readPastTable	0	G30,D10	sinScaled interpolates index 255 towards the dword after g_sinTable (never written, 0): it uses entry 255 itself, a flat last segment (model_defects #10)
+shotPower.cacheIgnoresPutt	0	G30,D18	the 10-entry shot power cache key leaves out the putt argument, so a putt can return a full-shot result: a putt bypasses the cache (model_defects #18)
+chooseShotTarget.strictFlagSticky	0	G30,D37	the strict-scan flag is never cleared within a target search, so once set every later landing is scanned strict: it is cleared before each landing's test (model_defects #37)
+prepareShot.hazardCellTransposed	0	G30,D38	the hazard cell passed to the golfer thoughts is y * 50 + x against the grids' x * 50 + y: it is passed in grid order (model_defects #38)
+narrateShot.maskNotRestored	0	G30,D39	two missed-shot exits skip restoring the named golfer's skill mask: it is restored on those exits too (model_defects #39)
+loadGolferRoster.namedStoryStride	0	G30,D17	g_namedStoryIndex stored as the 50-byte story id 2k of the opening file k (its readers' unit), not the 0x64-byte slot number k
+loadGolferRoster.skillsNextRecord	0	G30,D19	a theme .pro golfer's ten skill bytes and their sum go into its own pro record, not the next one
+mainLoop.cashLowWordOnly	0	G30,D23	cash stored into the int16 month history and ledger entry is saturated to -32768..32767 instead of wrapping
+showFinancialReport.sumWriteBack	0	G30,D24	opening the financial report no longer writes each drawn year's column sum into the saved ledger row
+emitGolferThought.tileMoodWrap	0	G30,D26	per-tile thought counters g_tileMoodUp / g_tileMoodDown saturate at 255 instead of wrapping to 0
+resetGolferState.singleHoleRecord	0	G30,D44	the par re-derivation walks hole records 1..18 once each instead of one record 18 times
+spawnWalker.fullTable	0	G30,D11	no free walker record: spawn nothing instead of writing over g_editQueueX
+ballScreenList.overflow	0	G30,D12	at most 32 ball screen points appended
+cornerLevel.unclampedAndShared	0	G30,D21	corner level stops at 0 / 255 and the key-0x58 reset writes all 51 bytes
+loadStoryStrings.cacheEntryLimit	0	G30,D47b	story cache text cut to the 0x100-byte field
+buildGolferComment.slotLimit	0	G30,D48a	name and third text cut to their stack slots
+postEvent.idBound	0	G30,D49a	bulletin event id of 22 or more ignored

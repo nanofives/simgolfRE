@@ -683,7 +683,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
 
   // ---- M: the walker at the clubhouse, the saved tile types, the border sweeps
   const int32_t w = i32(call_peer(ctx, "spawnWalker", {u32(-6)}).eax);
-  {
+  if (w >= 0) {  // w is -1 only with spawnWalker.fullTable at 0
     const int8_t px = static_cast<int8_t>(leaving.field(&HoleRecord::tee_x).get());
     const int8_t py = static_cast<int8_t>(leaving.field(&HoleRecord::tee_y).get());
     const Ptr<Walker> wk = state_arr(ctx, &GameState::g_walkers) + w;

@@ -213,16 +213,19 @@ void reset_golfer_state(Ctx &ctx) {
   const int32_t mult = (state_arr(ctx, &GameState::g_objectTypeLevel) + 10).get();
   // the 18-iteration loop works on ONE course record (g_holesPlusOne's), as in the original
   const Ptr<HoleRecord> h = state_arr(ctx, &GameState::g_holes) + rec;
-  const Ptr<uint8_t> par = h.field(&HoleRecord::par).as<uint8_t>();
   const int32_t top = SG_NEGCTL(g_negctl_reset_golfer_state) == 1 ? 0x270 : 0x271;
+  const bool one_record = SG_DEFECT(g_defect_reset_single_hole);
   for (int32_t n = 0x12; n != 0; --n) {
+    // D44 fixed (switch 0): hole n is record n (record 0 is the swap slot), so the 18 passes walk records 18..1
+    const Ptr<HoleRecord> hr = one_record ? h : state_arr(ctx, &GameState::g_holes) + n;
+    const Ptr<uint8_t> par = hr.field(&HoleRecord::par).as<uint8_t>();
     if (par.get() == 0) continue;
     par.set(3);
-    const uint8_t f = h.field(&HoleRecord::flags).as<uint8_t>().get();
-    int32_t v = h.field(&HoleRecord::length).get();
+    const uint8_t f = hr.field(&HoleRecord::flags).as<uint8_t>().get();
+    int32_t v = hr.field(&HoleRecord::length).get();
     if ((f & 0x60) != 0 && v > 0xfa) v += 0x19;
     if (v > 0x12c) v = sub32(v, mul32(25, mult));
-    for (int pass = 0; pass < 2; ++pass) {  // the same four thresholds twice, as in the original
+    for (int pass = 0; pass < (one_record ? 2 : 1); ++pass) {  // the same four thresholds twice, as in the original
       if (v <= 0x32) par.set(2);
       if (v >= 0xfa) par.set(4);
       if (v >= 0x1db) par.set(5);

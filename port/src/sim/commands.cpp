@@ -73,6 +73,11 @@ int g_negctl_detail_panel = 0;
 int g_negctl_view_panel = 0;
 int g_negctl_tick_message = 0;
 int g_negctl_reports = 0;
+// Compatibility switch (port/CORE.md "Defects"), 1 = behave like the original.
+//   showFinancialReport.sumWriteBack  model_defects#24 (D24): the report sums entries 0..7 of every drawn year row and
+//                            stores the int16 sum into entry 8 (+0x10) of that row, so opening the
+//                            report changes the saved ledger. Fixed (0): the sum is drawn and not stored.
+int g_defect_finance_sum_write_back = 1;
 int g_negctl_hire_dialog = 0;
 int g_negctl_credits = 0;
 int g_negctl_difficulty = 0;
@@ -693,8 +698,14 @@ const FuncDef kFuncs[] = {
 #undef V0
 };
 #undef XY
+
+const DefectDef kDefects[] = {
+    {"showFinancialReport.sumWriteBack", "model_defects#24",
+     "the report writes each drawn year row's column sum back into the row's entry 8 (+0x10)", &g_defect_finance_sum_write_back},
+};
 }  // namespace
 
-extern const ModuleDef kModule_commands = {"commands", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_commands = {"commands", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                           sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

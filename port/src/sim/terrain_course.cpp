@@ -14,6 +14,10 @@
 
 namespace portsim {
 
+// P4 (G30) defect switches shared with tick.cpp (mainLoop's sites). 1 = the original, 0 = the fix.
+int g_defect_corner_level_clamp = 1;  // cornerLevel.unclampedAndShared (D21): no wrap on inc / dec, the reset writes all 51 bytes
+int g_defect_ball_list_bound = 1;     // ballScreenList.overflow (D12): at most 32 entries are appended
+
 namespace {
 // Negative controls: mode 0 is the correct body.
 //   stampCourseTiles      1 = the corner cell (r == side - 1, c == 0) also takes the level, 2 = kind 0xa marks all 1
@@ -240,8 +244,13 @@ int32_t step_course_edit_queue(Ctx &ctx) {
     g.f_w_4c2848[3] = -1;
   } else {
     const Ptr<uint8_t> lv = state_arr(ctx, &GameState::g_cornerLevel) + add32(mul32(51, row), col);
-    if (mode == 0x7F) lv.set(static_cast<uint8_t>(lv.get() + 1));
-    if (mode == 0x7E) lv.set(static_cast<uint8_t>(lv.get() - 1));
+    if (SG_DEFECT(g_defect_corner_level_clamp)) {
+      if (mode == 0x7F) lv.set(static_cast<uint8_t>(lv.get() + 1));
+      if (mode == 0x7E) lv.set(static_cast<uint8_t>(lv.get() - 1));
+    } else {  // D21 fix: the byte stops at 0xff / 0 instead of wrapping
+      if (mode == 0x7F && lv.get() != 0xFF) lv.set(static_cast<uint8_t>(lv.get() + 1));
+      if (mode == 0x7E && lv.get() != 0) lv.set(static_cast<uint8_t>(lv.get() - 1));
+    }
     if (mode < 0x7D) {
       int32_t H = g.g_holesPlusOne;
       const int32_t hole_no = mode == 0 ? H : H - 1;
@@ -568,6 +577,15 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_terrain_course = {"terrain_course", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+const DefectDef kDefects[] = {
+    {"cornerLevel.unclampedAndShared", "model_defects#21",
+     "stepCourseEditQueue's corner-level inc / dec wraps the byte; mainLoop's key-0x58 reset writes 50 of 51 bytes per row",
+     &g_defect_corner_level_clamp},
+    {"ballScreenList.overflow", "model_defects#12",
+     "mainLoop appends one ball screen point per labelled golfer with no bound (arrays hold 32)", &g_defect_ball_list_bound},
+};
+
+extern const ModuleDef kModule_terrain_course = {"terrain_course", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                                 sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

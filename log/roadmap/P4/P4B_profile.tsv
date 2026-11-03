@@ -1,0 +1,6 @@
+spawnWalker.fullTable	0	D11	no free walker record: spawn nothing instead of writing over g_editQueueX
+ballScreenList.overflow	0	D12	at most 32 ball screen points appended
+cornerLevel.unclampedAndShared	0	D21	corner level stops at 0 / 255 and the key-0x58 reset writes all 51 bytes
+loadStoryStrings.cacheEntryLimit	0	D47b	story cache text cut to the 0x100-byte field
+buildGolferComment.slotLimit	0	D48a	name and third text cut to their stack slots
+postEvent.idBound	0	D49a	bulletin event id of 22 or more ignored

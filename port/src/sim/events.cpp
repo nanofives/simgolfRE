@@ -44,6 +44,23 @@ int g_negctl_replace_in_text = 0;
 //                            the return address). Fixed (0): a tail of 0x200 characters or more refuses the replacement
 //                            and leaves the text untouched.
 int g_defect_replace_tail_limit = 1;
+//   emitGolferThought.tileMoodWrap  model_defects#26 (D26): the per-tile thought counters g_tileMoodUp / g_tileMoodDown
+//                            are bytes incremented with no test, so the
+//                            256th thought at one tile turns 255 into 0. Fixed (0): a byte at 255 stays at 255.
+int g_defect_tile_mood_wrap = 1;
+//   computeStoryReply.clampLowerBound  model_defects#48 (D48b): the partner's mood (+0xa4) is clamped with the partner's
+//                            story counter (+0xb4) as the LOWER bound (clamp(x, lo, hi) with the arguments
+//                            (mood, counter, 0x63)). Fixed (0): clamp(mood, 0, 0x63).
+int g_defect_story_clamp_lo = 1;
+// P4 (G30): postEvent.idBound (D49a). 1 = the original: the id indexes the 22-entry ring at g_bulletinEvents unchecked.
+// 0 = an id of 22 or more (or negative) is ignored.
+int g_defect_post_event_id = 1;
+// P4 (G30): loadStoryStrings.cacheEntryLimit (D47b). 1 = the original: strcpy of the whole text into a 0x100-byte cache
+// field. 0 = the copy stops at 0xff characters.
+int g_defect_story_cache_limit = 1;
+// P4 (G30): buildGolferComment.slotLimit (D48a). 1 = the original. 0 = the golfer-name text is cut to 0x37 characters
+// (slot 0x38 bytes at buildGolferComment+0x29cf) and the third text to 0x7f (slot 0x80 bytes at buildGolferComment+0x2bbf).
+int g_defect_comment_slot_limit = 1;
 int g_negctl_thought_balance = 0;
 int g_negctl_thought_flag = 0;
 int g_negctl_append_opinion = 0;
@@ -198,6 +215,9 @@ void append_opinion(Ctx &ctx, int32_t rating, int32_t twist) {
 
 void post_event(Ctx &ctx, int32_t id, int32_t a, int32_t b) {
   if (ctx.gs().g_flags & 0x4000000u) return;
+  if (!SG_DEFECT(g_defect_post_event_id) &&
+      static_cast<uint32_t>(id) >= static_cast<uint32_t>(sizeof(GameState::g_bulletinEvents) / sizeof(BulletinEvent)))
+    return;  // D49a fix
   const Ptr<BulletinEvent> rec = state_arr(ctx, &GameState::g_bulletinEvents) + id;
   if (rec.field(&BulletinEvent::date).get() != 0 && SG_NEGCTL(g_negctl_post_event) != 1) return;
   state_arr(ctx, &GameState::f_w_4e3db8).set(u32(id));
@@ -262,6 +282,18 @@ const DefectDef kDefects[] = {
     {"replaceInText.tailLimit", "model_defects#46",
      "a tail of 0x200 characters or more after the match overflows the original's stack buffer",
      &g_defect_replace_tail_limit},
+    {"emitGolferThought.tileMoodWrap", "model_defects#26",
+     "the per-tile thought counters g_tileMoodUp / g_tileMoodDown wrap from 255 to 0", &g_defect_tile_mood_wrap},
+    {"computeStoryReply.clampLowerBound", "model_defects#48",
+     "the partner's mood is clamped with the partner's story counter as the lower bound instead of 0",
+     &g_defect_story_clamp_lo},
+    {"postEvent.idBound", "model_defects#49",
+     "an id of 22 or more indexes past the 22-entry bulletin ring (showTournamentResults passes 0x11 + course type)",
+     &g_defect_post_event_id},
+    {"loadStoryStrings.cacheEntryLimit", "model_defects#47",
+     "the cache store strcpy's the whole text buffer into a 0x100-byte entry field", &g_defect_story_cache_limit},
+    {"buildGolferComment.slotLimit", "model_defects#48",
+     "golfer-name and third-text copies into stack slots of 0x38 and 0x80 bytes with no length test", &g_defect_comment_slot_limit},
 };
 
 const FuncDef kFuncs[] = {

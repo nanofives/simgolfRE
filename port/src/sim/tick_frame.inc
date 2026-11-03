@@ -4273,9 +4273,11 @@ edx = ((int)(edx)) >> (4); // ML+0x61f2  sar edx, 4
 eax = (eax) - (edx); // ML+0x61f5  sub eax, edx
 edx = G32(ebp + (GS(g_golfers) + 16)); // ML+0x61f7  mov edx, dword ptr [ebp + g_golfers+0x10]
 sp += 8; // ML+0x61fd  add esp, 0x20  (caller stack cleanup)
+if (::portsim::g_defect_ball_list_bound != 0 || (u32)edi < 32u) { // D12 fix (switch 0): no append past 32 entries
 G32(edi*4 + GS(g_ballScreenXs)) = ebx; // ML+0x6200  mov dword ptr [edi*4 + g_ballScreenXs], ebx
 G32(edi*4 + GS(g_ballScreenYs)) = eax; // ML+0x6207  mov dword ptr [edi*4 + g_ballScreenYs], eax
 edi = (edi) + 1; // ML+0x620e  inc edi
+}
 // ML+0x620f  test edx, code:0
 G32(GS(g_nameLabelCount)) = edi; // ML+0x6215  mov dword ptr [g_nameLabelCount], edi
 if (((((edx) & ((1u << 22))))) == 0) goto La_41565c; // ML+0x621b  je ML+0x609c
@@ -5271,7 +5273,7 @@ int P5_dateTick(u32 F) {
     edi = G32(GS(g_date));                                 // ML+0x83b3
     const int slot = (edi / 1024) % 500;                   // ML+0x83be..ML+0x83cd
     const short sk = G16(GS(g_skillRatingX100));                      // ML+0x83cf
-    const short cash = G16(GS(g_cash_div100));                    // ML+0x83d5 (low word of the cash dword)
+    const short cash = cash_word(G32(GS(g_cash_div100)));         // ML+0x83d5 (low word of the cash dword; D23 switch)
     G16(GS(g_skillHistory) + slot * 2) = sk;                       // ML+0x83e0
     G16(GS(g_funHistory) + slot * 2) = G16(GS(g_funRating));          // ML+0x83e7 / ML+0x83ed
     G16(GS(g_cashHistory) + slot * 2) = cash;                     // ML+0x83f4
@@ -5387,7 +5389,7 @@ void P5_monthly(u32 F, int edi) {
     // ML+0x86cc..ML+0x8715: the word logs again (store order of the original)
     const int slot = (G32(GS(g_date)) / 1024) % 500;      // ML+0x86cc..ML+0x86eb
     const short sk = G16(GS(g_skillRatingX100));                      // ML+0x86ed
-    const short cash = G16(GS(g_cash_div100));                    // ML+0x86f3
+    const short cash = cash_word(G32(GS(g_cash_div100)));         // ML+0x86f3 (low word; D23 switch)
     G16(GS(g_skillHistory) + slot * 2) = sk;                       // ML+0x8701
     const short fun = G16(GS(g_funRating));                     // ML+0x8708
     G16(GS(g_cashHistory) + slot * 2) = cash;                     // ML+0x870e
@@ -7511,6 +7513,7 @@ a41ca4b:
         for (int i = 0; i < 0xC; i++)                  // ML+0xd48b rep stosd ecx=0xc
             G32(esi + 4 * i) = 0x04040404;
         G16(esi + 0x30) = (short)0x0404;               // ML+0xd499 stosw (edi at esi+0x30)
+        if (::portsim::g_defect_corner_level_clamp == 0) G8(esi + 0x32) = 4;  // D21 fix: byte 50 of the row is reset too
         for (int k = 0; k < 0x32; k++) {               // ML+0xd49b..ML+0xd4a9 loop eax=0x32
             G16(edx) = (short)(G16(edx) & 0x480);      // ML+0xd4a0 and word [edx],0x480
             edx += 2;                                  // ML+0xd4a5 add edx,2

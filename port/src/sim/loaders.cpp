@@ -26,6 +26,18 @@ namespace {
 //                      (not the next), 5 = story index taken from the LAST match, 6 = pro look_hi stored without the
 //                      arithmetic shift (c / 16 instead of c >> 4), 7 = celebrity look_a accepts '4'
 int g_negctl_list_matching_files = 0;
+// Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
+//   loadGolferRoster.skillsNextRecord  model_defects#19 (D19): in the theme's .pro loop the record pointer advances by 0x38
+//                            before the ten skill bytes and their sum are stored, so
+//                            they land in the NEXT pro record (the last one past the table). Fixed (0): into the record
+//                            being loaded.
+//   loadGolferRoster.namedStoryStride  model_defects#17 (D17): g_namedStoryIndex is the slot number of the 0x64-byte file
+//                            name table (`add esi, 0x64` per slot), but its readers use it as a story
+//                            id over the 50-byte g_storyDefs table (pairGolfersWithStory compares it and stores it into golfer +0xb0),
+//                            where file k is id 2k. Fixed (0): the index is stored as the story id 2k; a match in a slot
+//                            k >= 50 (not copied into g_storyDefs) leaves the index unchanged, as no match does.
+int g_defect_roster_skills_next = 1;
+int g_defect_named_story_stride = 1;
 int g_negctl_load_golfer_roster = 0;
 
 uint32_t text_va(Ctx &c) { return state_va(c, &GameState::g_textBuffer); }
@@ -162,7 +174,10 @@ int32_t load_golfer_roster(Ctx &ctx) {
   for (int32_t i = 0; i < 100; ++i) {
     const std::string slot = read_str(ctx.mem, state_va(ctx, &GameState::g_fileNames) + u32(i) * 0x64u);
     if (slot.find(opening) != std::string::npos) {
-      gs.g_namedStoryIndex = i;
+      if (SG_DEFECT(g_defect_named_story_stride))
+        gs.g_namedStoryIndex = i;
+      else if (i < 50)
+        gs.g_namedStoryIndex = 2 * i;  // D17 fixed: the story id of file i in g_storyDefs' 50-byte unit
       if (mode != 5) break;
     }
   }
@@ -297,7 +312,7 @@ int32_t load_golfer_roster(Ctx &ctx) {
     rec.field(&GolfPro::look_25).set(static_cast<int8_t>(t76.field(&GolferType::look_25).get()));
     // the original advances its record pointer BEFORE these stores, so the ten skill bytes and their sum land in the NEXT
     // record (the last one writes past the table)
-    const Ptr<GolfPro> dst = mode == 4 ? rec : rec + 1;
+    const Ptr<GolfPro> dst = (mode == 4 || !SG_DEFECT(g_defect_roster_skills_next)) ? rec : rec + 1;
     uint16_t sum = 0;
     for (int32_t i = 0; i < 10; ++i) {
       const uint8_t v = g76.field(&Golfer::skill).at(i).get();
@@ -319,8 +334,16 @@ const FuncDef kFuncs[] = {
     {"listMatchingFiles", "default", "int", 3, 0, a_list_matching_files, &g_negctl_list_matching_files},
     {"loadGolferRoster", "default", "int", 0, 0, a_load_golfer_roster, &g_negctl_load_golfer_roster},
 };
+
+const DefectDef kDefects[] = {
+    {"loadGolferRoster.skillsNextRecord", "model_defects#19",
+     "the theme .pro loop stores each golfer's skills and their sum into the next pro record", &g_defect_roster_skills_next},
+    {"loadGolferRoster.namedStoryStride", "model_defects#17",
+     "g_namedStoryIndex is stored as a 0x64-byte file slot number but read as a 50-byte story id", &g_defect_named_story_stride},
+};
 }  // namespace
 
-extern const ModuleDef kModule_loaders = {"loaders", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_loaders = {"loaders", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                          sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

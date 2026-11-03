@@ -63,7 +63,7 @@ def test_profile_names_and_original_not_editable(tmp_path):
         P.members("original", p)
     with pytest.raises(P.ProfileError, match="unknown profile"):
         P.members("fast")
-    assert P.EDITABLE == ("fixed",) and "original" not in P.EDITABLE
+    assert P.EDITABLE == ("fixed", "play") and "original" not in P.EDITABLE
     with pytest.raises(P.ProfileError, match="not found"):
         P.load_table(tmp_path / "missing.tsv")
 
@@ -159,3 +159,18 @@ def test_profile_turning_a_switch_off_reads_red(portlib, vrunner, tmp_path):
     assert all(vecs[f.i]["args"][2]["int"] != 0 for f in r.failures)
     P.apply(portlib, "original")
     assert vrunner.run_function("shotPower").verdict == "GREEN"
+
+
+@pytest.mark.static
+def test_play_is_fixed_plus_its_own_table():
+    # G30: `play` = every `fixed` member plus re/port/play_profile.tsv; no switch in both tables
+    fixed, play = P.members("fixed"), P.members("play")
+    extra = {r["switch"]: r["value"] for r in P.load_table(P.PLAY_TABLE)}
+    assert extra and not set(extra) & set(fixed)
+    assert play == {**fixed, **extra}
+
+
+def test_play_switches_exist_and_apply(portlib):
+    m = P.apply(portlib, "play")
+    assert P.current(portlib) == "play" and m == P.members("play")
+    P.apply(portlib, "original")

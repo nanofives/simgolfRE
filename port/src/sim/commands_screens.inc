@@ -232,8 +232,12 @@ int32_t show_financial_report(Ctx &ctx) {
       total = add32(total, v);
     }
     call_peer(ctx, "appendNumber", {u32(mul32(total, 100))});
-    ctx.mem.store<int16_t>(row + 16, static_cast<int16_t>(SG_NEGCTL(g_negctl_reports) == 2 ? total + 1 : total));
-    cell(total, ctx.mem.load<int16_t>(row + 16), false);
+    if (SG_DEFECT(g_defect_finance_sum_write_back)) {
+      ctx.mem.store<int16_t>(row + 16, static_cast<int16_t>(SG_NEGCTL(g_negctl_reports) == 2 ? total + 1 : total));
+      cell(total, ctx.mem.load<int16_t>(row + 16), false);
+    } else {
+      cell(total, static_cast<int16_t>(total), false);  // D24 fixed: the row's entry 8 is left as it was
+    }
   }
   d.gx("Image_draw", {GS(g_spriteRef_820f40), root, 0x2d6, 0xf9, 0});
   d.gx("Window::refreshFull", {d.window(), 0});

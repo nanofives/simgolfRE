@@ -1,0 +1,16 @@
+port/src/sim/golfers.cpp
+port/src/sim/terrain_gen.cpp
+port/src/sim/tick_leaves.inc
+port/src/sim/events.cpp
+port/src/sim/events_story.inc
+port/src/sim/events_think.inc
+port/src/sim/terrain_course.cpp
+port/src/sim/tick.cpp
+port/src/sim/tick_frame.inc
+log/roadmap/P4/P4B_notes.md
+log/roadmap/P4/P4B_files.txt
+log/roadmap/P4/P4B_profile.tsv
+log/roadmap/P4/P4B_build_x64.log
+log/roadmap/P4/P4B_build_win32.log
+log/roadmap/P4/P4B_segments.log
+log/roadmap/P4/P4B_segs_x64.tsv

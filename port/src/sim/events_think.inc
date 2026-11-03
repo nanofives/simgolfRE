@@ -214,8 +214,14 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     if (switchDelta < 0) G<unsigned short>(ctx, r + 0x88) |= 0x8000;
     if (delta < 0) G<unsigned char>(ctx, r + 0x89) |= 0xc0;
     const unsigned tl = static_cast<unsigned>((G<int>(ctx, r + 0) >> 10) * 50 + (G<int>(ctx, r + 4) >> 10));
-    if (delta > 0) G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) += 1;
-    if (delta < 0) G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) += 1;
+    if (SG_DEFECT(g_defect_tile_mood_wrap)) {
+        if (delta > 0) G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) += 1;
+        if (delta < 0) G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) += 1;
+    } else {
+        // fixed: saturate at 255 instead of wrapping to 0
+        if (delta > 0 && G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) != 0xff) G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) += 1;
+        if (delta < 0 && G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) != 0xff) G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) += 1;
+    }
     if (kind == 0x32) return;
     const uint32_t pron = kTypeBit7Clear(g) != 0 ? (GS(f_strpool_4c6d6c) + 4) : GS(f_strpool_4c6d6c);
     unsigned seen;
@@ -725,6 +731,10 @@ void build_golfer_comment(Ctx &ctx, int32_t kind, int32_t arg, int32_t place, in
     }
     if (g > 0x98) CatAt(GS(f_strpool_4c59e0));
     third = portsim::ev::grab(ctx, buf);
+    if (!SG_DEFECT(g_defect_comment_slot_limit)) {  // D48a fix: cut each text to its slot (size counts the NUL)
+      if (own.size() > 0x38) { own.resize(0x38); own.back() = 0; }
+      if (third.size() > 0x80) { third.resize(0x80); third.back() = 0; }
+    }
     portsim::ev::put(ctx, buf, saved);
     portsim::ev::replace_with(ctx, (GS(f_strpool_4d3954) + 8), own);
     portsim::ev::replace_with(ctx, GS(f_strpool_4d3954), other);

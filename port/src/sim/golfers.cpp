@@ -65,6 +65,10 @@ int g_defect_cell_search_bound = 1;   // spawnObject.cellSearchBound (D41)
 int g_defect_pro_window_bound = 1;    // loadGolfPro.negativeWindowBound (D42c)
 int g_defect_pro_divide_guard = 1;    // loadGolfPro.divideAndRejectGuard (D42a, D42b)
 int g_defect_zero_frame_count = 1;    // placeAnimal.zeroFrameCount (D43)
+// resetGolferState.singleHoleRecord (D44): the 18-iteration par loop indexes ONE hole record,
+// g_holesPlusOne's, every time and applies its four thresholds twice. Fixed (0): hole records 1..18 once each, thresholds once.
+int g_defect_reset_single_hole = 1;
+int g_defect_walker_table_full = 1;   // spawnWalker.fullTable (D11)
 
 Ptr<Golfer> golfer(Ctx &c, int32_t g) { return state_arr(c, &GameState::g_golfers) + g; }
 Ptr<ShotTrack> track(Ctx &c, int32_t p) { return state_arr(c, &GameState::g_storyPairs) + p; }
@@ -212,7 +216,11 @@ void spawn_vip_resident(Ctx &ctx, int32_t lot, int32_t kind, int32_t a, int32_t 
 int32_t spawn_walker(Ctx &ctx, int32_t kind) {
   const Ptr<Walker> walkers = state_arr(ctx, &GameState::g_walkers);
   int32_t idx = 0;
-  while ((walkers + idx).field(&Walker::flags).get() != 0) ++idx;  // no bound (model_defects#11)
+  constexpr int32_t kWalkerRecords = static_cast<int32_t>(sizeof(GameState::g_walkers) / sizeof(Walker));
+  while ((walkers + idx).field(&Walker::flags).get() != 0) {  // no bound in the original (model_defects#11)
+    ++idx;
+    if (idx >= kWalkerRecords && !SG_DEFECT(g_defect_walker_table_full)) return -1;  // D11 fix: table full, spawn nothing
+  }
   const Ptr<Walker> w = walkers + idx;
   for (uint32_t i = 0; i < sizeof(Walker); i += 4) ctx.mem.store<uint32_t>(w.va() + i, 0);
   const int32_t r1 = i32(random_range(rng(ctx), 5));
@@ -310,7 +318,13 @@ const DefectDef kDefects[] = {
      "idiv by a zero divisor (difficulty -4 or 4) and a rejection loop over an empty pro roster", &g_defect_pro_divide_guard},
     {"loadGolfPro.negativeWindowBound", "model_defects#42",
      "difficulty 5 or 6: the acceptance bound tries / (4 - difficulty) falls without end, so the pro draw never accepts", &g_defect_pro_window_bound},
+    {"spawnWalker.fullTable", "model_defects#11",
+     "all 64 walker records live: the original initialises a record past the table (over g_editQueueX); 0 spawns nothing and returns -1",
+     &g_defect_walker_table_full},
     {"placeAnimal.zeroFrameCount", "model_defects#43", "idiv by a sprite frame count of 0", &g_defect_zero_frame_count},
+    {"resetGolferState.singleHoleRecord", "model_defects#44",
+     "the 18-iteration par loop re-derives the par of one hole record (g_holesPlusOne's) 18 times, thresholds applied twice",
+     &g_defect_reset_single_hole},
 };
 
 extern const ModuleDef kModule_golfers = {"golfers", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

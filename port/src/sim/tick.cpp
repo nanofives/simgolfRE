@@ -42,6 +42,8 @@
 #include "tick_hook.h"
 
 namespace portsim {
+extern int g_defect_corner_level_clamp;  // terrain_course.cpp (D21)
+extern int g_defect_ball_list_bound;     // terrain_course.cpp (D12)
 // roadmap S2.11: the graphics backend's cut size of a SpriteRef (gfx_reports.cpp) and the results family's layout controls
 // (gfx_results.cpp), for showTournamentResults' drawing positions (tick_panels.inc)
 bool gfx_sprite_cut(Ctx &ctx, uint32_t sref, int32_t &w, int32_t &h);
@@ -49,6 +51,19 @@ bool results_control(int m);
 // roadmap S3.26: a frame-code read that lands inside a SpriteRef the graphics backend holds (gfx_pixel.cpp), for P4's
 // selected-golfer sprite when the selection word is not a golfer index (tick_frame.inc P4_selectedSprite)
 bool gfx_sprite_ref_read(Ctx &ctx, uint32_t va, uint32_t size, uint32_t &v);
+// Compatibility switch (port/CORE.md "Defects"), 1 = behave like the original.
+//   mainLoop.cashLowWordOnly  model_defects#23 (D23): the month histories store the cash g_cash_div100's low word into the
+//                            int16 ring g_cashHistory (mainLoop ML+0x83d5 / ML+0x83f4 and ML+0x86f3 / ML+0x870e), and the
+//                            new-course paths store it into the int16 ledger entry `other` (+0xe) of the year row (mainLoop
+//                            ML+0x656..ML+0x65d; switchToCourse in course.cpp, the same store): from 32768
+//                            ($3,276,800) on the stored word wraps to a negative value. Fixed (0): the value is saturated to
+//                            the int16 range (-32768..32767). Both tables keep their int16 layout (GameState is the exe's
+//                            .data image and the save stores them as such), so the full 32-bit value cannot be kept there.
+int g_defect_cash_low_word = 1;
+inline int16_t cash_word(int32_t v) {
+  if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
+  return static_cast<int16_t>(v > 0x7fff ? 0x7fff : v < -0x8000 ? -0x8000 : v);
+}
 namespace tk {
 
 // ------------------------------------------------------------------------------------------------ negative controls
@@ -1944,6 +1959,13 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+const DefectDef kDefects[] = {
+    {"mainLoop.cashLowWordOnly", "model_defects#23",
+     "the month cash history and the new-course ledger entry store only the cash's low word (wraps above 32767)",
+     &g_defect_cash_low_word},
+};
+
+extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                       sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

@@ -335,7 +335,7 @@ int Session(u32 F, int sel) {
             G32(GS(g_buildingUnlockLevel)) = 0x11;                 // ML+0x642
             G32(GS(g_amenityUnlockMask)) = 0x3FFF;               // ML+0x64c
         }
-        GU16((GS(g_financeYears) + 14)) = GU16(GS(g_cash_div100));        // ML+0x656..ML+0x65d (mov dx,[g_cash_div100]; mov [g_financeYears+0xe],dx)
+        GU16((GS(g_financeYears) + 14)) = static_cast<u16>(cash_word(G32(GS(g_cash_div100))));  // ML+0x656..ML+0x65d (D23 switch) (mov dx,[g_cash_div100]; mov [g_financeYears+0xe],dx)
         return sFrame;                              // ML+0x664 falls into FramePreamble
     }
     // loadWorldAssets block ML+0x5a3 (reached by the championship's startNewCourse != 0 and mode == 6 fall-throughs)

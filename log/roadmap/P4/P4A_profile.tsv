@@ -1,0 +1,8 @@
+switch	value	decision_id	reason
+loadGolferRoster.namedStoryStride	0	D17	g_namedStoryIndex stored as the 50-byte story id 2k of the opening file k (its readers' unit), not the 0x64-byte slot number k
+loadGolferRoster.skillsNextRecord	0	D19	a theme .pro golfer's ten skill bytes and their sum go into its own pro record, not the next one
+mainLoop.cashLowWordOnly	0	D23	cash stored into the int16 month history and ledger entry is saturated to -32768..32767 instead of wrapping
+showFinancialReport.sumWriteBack	0	D24	opening the financial report no longer writes each drawn year's column sum into the saved ledger row
+emitGolferThought.tileMoodWrap	0	D26	per-tile thought counters g_tileMoodUp / g_tileMoodDown saturate at 255 instead of wrapping to 0
+resetGolferState.singleHoleRecord	0	D44	the par re-derivation walks hole records 1..18 once each instead of one record 18 times
+computeStoryReply.clampLowerBound	0	D48b	the partner's mood is clamped to 0..0x63 instead of using the story counter as the lower bound

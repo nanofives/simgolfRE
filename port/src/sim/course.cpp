@@ -775,6 +775,7 @@ Ret call_peer_or(Ctx &ctx, const char *fname, std::initializer_list<uint32_t> ar
 // (int16) g_cash_div100, generateRandomCourse(chosen) and rebuildHeightfield run, then restored; g_courseType =
 // the chosen record's course_type (set before those calls); applyCourseType(g_courseType) and refreshTerrain (render
 // backend, when registered) end it. The 3.1a callees are called through the registry (MissingResource while absent).
+extern int g_defect_cash_low_word;  // mainLoop.cashLowWordOnly (D23), tick.cpp: the same low-word store
 void switch_to_course_chosen(Ctx &ctx, int32_t chosen) {
   const int mode = SG_NEGCTL(g_negctl_switch_to_course);
   GameState &gs = ctx.gs();
@@ -788,7 +789,9 @@ void switch_to_course_chosen(Ctx &ctx, int32_t chosen) {
   const int32_t row = int32_t(gs.g_year) % 100;
   (state_arr(ctx, &GameState::g_financeYears) + (mode == 1 ? row + 1 : row))
       .field(&FinanceYear::other)
-      .set(static_cast<int16_t>(gs.g_cash_div100));
+      .set(SG_DEFECT(g_defect_cash_low_word)
+               ? static_cast<int16_t>(gs.g_cash_div100)
+               : static_cast<int16_t>(gs.g_cash_div100 > 0x7fff ? 0x7fff : gs.g_cash_div100 < -0x8000 ? -0x8000 : gs.g_cash_div100));
   call_peer_or(ctx, "generateRandomCourse", {u32(chosen)}, true);
   call_peer_or(ctx, "rebuildHeightfield", {}, true);
   gs.g_date = date;

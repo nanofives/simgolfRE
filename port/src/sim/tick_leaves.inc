@@ -245,6 +245,7 @@ struct Leaves : TkBase {
     }
     if (canAfford(0) == 0) return 0;
     const int g = cc("spawnWalker", -2 - k / 3);
+    if (g < 0) return 0;  // spawnWalker.fullTable at 0: table full, nothing spawned
     const uint32_t r = GS(g_walkers) + 0x4cu * static_cast<uint32_t>(g);
     if (GU8(GS(g_holes) + 0x208) != 0) {
       const uint32_t c = (GU8(GS(g_holes) + 0x209) + 2u) & 7u;

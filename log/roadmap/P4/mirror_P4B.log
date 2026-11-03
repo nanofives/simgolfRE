@@ -1,0 +1,15 @@
+junction original
+junction log
+junction port/corpus
+junction tests/golden
+junction tests/fixtures
+junction re/versions
+junction tools/vc6
+junction shim/build
+junction re/replay
+junction extracted
+tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4B base 7f7860c5614b444d0d3e2664644aaf8b13116f6f
+junction tools/dxsdk8
+junction tools/vc6sp5
+junction tools/vc6sp2
+plain tree C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4B

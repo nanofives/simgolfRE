@@ -232,7 +232,7 @@ def live_trace(tmp: pathlib.Path, trace: pathlib.Path, tag: str, *extra: str) ->
     return rec, json.loads((rec / "session.json").read_text())
 
 
-@pytest.mark.parametrize("profile", ["original", "fixed"])
+@pytest.mark.parametrize("profile", ["original", "fixed", "play"])
 def test_app_profile_list_equals_the_table(portlib, profile):
     r = app("--profile-list", profile, timeout=60)
     assert r.returncode == 0, r.stderr

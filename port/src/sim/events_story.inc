@@ -178,7 +178,17 @@ int32_t load_story_strings(Ctx &ctx, int32_t file, int32_t key, int32_t sel, int
   if (mode != -1) return mode;
   const int32_t s2 = state_obj(ctx, &GameState::g_story838220).get();
   const Ptr<StoryFileRec> e2 = cache + s2;
-  vstrcpy(m, e2.va() + 0xC, buf);
+  if (SG_DEFECT(g_defect_story_cache_limit)) {
+    vstrcpy(m, e2.va() + 0xC, buf);
+  } else {  // D47b fix: at most 0xff characters and the NUL fit the entry's text field
+    uint32_t n = 0;
+    for (; n < 0xFF; ++n) {
+      const uint8_t ch = m.load<uint8_t>(buf + n);
+      if (ch == 0) break;
+      m.store<uint8_t>(e2.va() + 0xC + n, ch);
+    }
+    m.store<uint8_t>(e2.va() + 0xC + n, 0);
+  }
   e2.field(&StoryFileRec::f_04).set(u32(key));
   const int32_t next = static_cast<int16_t>(static_cast<uint16_t>(s2 + 1)) % 8;
   state_obj(ctx, &GameState::g_story838220).set(static_cast<int16_t>(next));
@@ -202,7 +212,8 @@ int32_t compute_story_reply(Ctx &ctx, int32_t file, int32_t key, int32_t hole, i
         if (thoughts.byte(n).get() != 0x13) break;
       }
     }
-    const int32_t c = clamp(p.field(&Golfer::mood).get(), p.field(&Golfer::story_counter).get(), 0x63);
+    const int32_t c = clamp(p.field(&Golfer::mood).get(),
+                            SG_DEFECT(g_defect_story_clamp_lo) ? int32_t(p.field(&Golfer::story_counter).get()) : 0, 0x63);
     int32_t v = (c - 1) / 2;
     if (key >= 2 && v > key - 1) v = key - 1;
     const Ptr<Golfer> pp = golfer(ctx, own.field(&Golfer::partner).get());

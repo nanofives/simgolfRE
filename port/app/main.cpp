@@ -17,8 +17,8 @@
 //   startup self-check of gl_wgl.h passes, else GlRaster; host (or wgl) = the host's OpenGL without the check). Without --gl the
 //   environment's SG_GL_BACKEND (the same values) chooses, else GlRaster. The choice, where it came from and its reason go to
 //   stderr and to terrain_renderer.json in the record directory.
-//   every run mode takes --profile original|fixed (S7.12: the defect switches; default fixed, recorded in session.json);
-//   simgolf_port.exe --profile-list original|fixed   prints every switch and the value that profile gives it
+//   every run mode takes --profile original|fixed|play (S7.12 / G30: the defect switches; default play, recorded in session.json);
+//   simgolf_port.exe --profile-list original|fixed|play   prints every switch and the value that profile gives it
 //   simgolf_port.exe --selftest                      pacing, saves overlay and presenter unit tests ("[k/n] name PASS")
 //   simgolf_port.exe --translate <input.jsonl> [--out <file>]   re-translates a session's input log offline
 //   simgolf_port.exe --install <dir> --data <dir> --cat <logical> <out> | --write <logical> <file> | --remove <logical>
@@ -261,7 +261,7 @@ struct Options {
   // of its Terrain object (0: a free range of the address space)
   std::string terrain = "live";
   std::string audio = "on";  // S7.10: off | on | model | capture (AudioGuard); S7.11: default on
-  std::string profile = "fixed";  // S7.12: original | fixed (apply_profile); --profile-list prints it and exits
+  std::string profile = "play";  // S7.12 / G30: original | fixed | play (apply_profile); --profile-list prints it and exits
   bool profile_list = false;
   bool audio_no_device = false;  // S7.11: --audio-no-device (the sink's DirectSoundCreate fails)
   void *audio_hwnd = nullptr;  // S7.10: the window for --audio on (set by run_live_window)
@@ -320,17 +320,41 @@ const ProfileMember kFixedProfile[] = {
     {"loadGolfPro.negativeWindowBound", 0}, {"generateRandomCourse.placementBound", 0}, {"flic.treeAliasNames", 0},
     {"sound.golfSfxAlias", 0},
 };
+// G30 (2026-11-03): `play` = every `fixed` member plus these, re/port/play_profile.tsv's rows (gameplay fixes: the port diverges from the
+// original on purpose; `fixed` stays hangs and faults only). The app's default.
+const ProfileMember kPlayProfile[] = {
+    {"sinScaled.readPastTable", 0},       {"shotPower.cacheIgnoresPutt", 0}, {"chooseShotTarget.strictFlagSticky", 0},
+    {"prepareShot.hazardCellTransposed", 0}, {"narrateShot.maskNotRestored", 0},
+    {"loadGolferRoster.namedStoryStride", 0},
+    {"loadGolferRoster.skillsNextRecord", 0},
+    {"mainLoop.cashLowWordOnly", 0},
+    {"showFinancialReport.sumWriteBack", 0},
+    {"emitGolferThought.tileMoodWrap", 0},
+    {"resetGolferState.singleHoleRecord", 0},
+    {"spawnWalker.fullTable", 0},
+    {"ballScreenList.overflow", 0},
+    {"cornerLevel.unclampedAndShared", 0},
+    {"loadStoryStrings.cacheEntryLimit", 0},
+    {"buildGolferComment.slotLimit", 0},
+    {"postEvent.idBound", 0},
+};
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
 // `--negctl profile-ignored` records the profile but leaves every switch at 1 (the app as before S7.12).
 std::string apply_profile(const std::string &p, bool ignored) {
-  if (p != "original" && p != "fixed") return "unknown profile " + p + " (original | fixed)";
-  if (p == "fixed")
+  if (p != "original" && p != "fixed" && p != "play") return "unknown profile " + p + " (original | fixed | play)";
+  const bool fixed = p == "fixed" || p == "play", play = p == "play";
+  if (fixed)
     for (const ProfileMember &m : kFixedProfile)
       if (portsim::defect_find(m.sw) < 0) return std::string("profile fixed names a switch the library lacks: ") + m.sw;
+  if (play)
+    for (const ProfileMember &m : kPlayProfile)
+      if (portsim::defect_find(m.sw) < 0) return std::string("profile play names a switch the library lacks: ") + m.sw;
   for (int i = 0; i < portsim::defect_count(); ++i) *portsim::defect_at(i, nullptr)->flag = 1;
-  if (p == "fixed" && !ignored)
+  if (fixed && !ignored)
     for (const ProfileMember &m : kFixedProfile) *portsim::defect_at(portsim::defect_find(m.sw), nullptr)->flag = m.value;
+  if (play && !ignored)
+    for (const ProfileMember &m : kPlayProfile) *portsim::defect_at(portsim::defect_find(m.sw), nullptr)->flag = m.value;
   return "";
 }
 
@@ -344,7 +368,7 @@ std::string profile_json(const std::string &p) {
   return s + "}";
 }
 
-// --profile-list <original | fixed>: every switch and the value the profile gives it, "name<TAB>value" lines
+// --profile-list <original | fixed | play>: every switch and the value the profile gives it, "name<TAB>value" lines
 int run_profile_list(const std::string &p) {
   const std::string err = apply_profile(p, false);
   if (!err.empty()) {
@@ -1283,7 +1307,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--audio-no-device") o.audio_no_device = true;  // S7.11
     else if (a == "--profile" || a == "--profile-list") {  // S7.12
       o.profile_list = a == "--profile-list";
-      if (!val(o.profile) || (o.profile != "original" && o.profile != "fixed")) return false;
+      if (!val(o.profile) || (o.profile != "original" && o.profile != "fixed" && o.profile != "play")) return false;
     }
     else if (a == "--audio") {  // S7.10
       if (!val(o.audio) || (o.audio != "off" && o.audio != "on" && o.audio != "model" && o.audio != "capture")) return false;
@@ -1332,6 +1356,10 @@ bool parse(int argc, char **argv, Options &o) {
 int main(int argc, char **argv) {
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   Options o;
+  // G30: the default profile is `play`; SG_APP_PROFILE=original|fixed|play overrides it (port/test/conftest.py sets `fixed`, so the
+  // app tests keep their pre-G30 behaviour); an explicit --profile wins over both
+  if (const char *ep = std::getenv("SG_APP_PROFILE"))
+    if (!std::strcmp(ep, "original") || !std::strcmp(ep, "fixed") || !std::strcmp(ep, "play")) o.profile = ep;
   if (!parse(argc, argv, o)) {
     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");
     return 2;

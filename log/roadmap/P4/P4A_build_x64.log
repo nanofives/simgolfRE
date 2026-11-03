@@ -1,0 +1,35 @@
+[w8_lock] P4A queued at 2026-11-03 07:29:21
+[w8_lock] P4A TOOK the lock at 2026-11-03 07:29:21 (waited 0 s, free commit 18.0 GB)
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- portsim: FreeType 2.14.3 from C:/Users/maria/vcpkg/installed/x64-windows/share/freetype (module fttext)
+-- Configuring done (0.0s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/build/x64
+Versión de MSBuild 17.14.60+43b635718 para .NET Framework
+
+  Checking File Globs
+  1>Checking Build System
+  portapp_input.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\app\Release\portapp_input.lib
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/CMakeLists.txt
+  commands.cpp
+  events.cpp
+  golfers.cpp
+  loaders.cpp
+  tick.cpp
+  Generando código...
+  portsim.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\Release\portsim.lib
+  portapp_audio.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\app\Release\portapp_audio.lib
+  simgolf_port.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\app\Release\simgolf_port.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/CMakeLists.txt
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/CMakeLists.txt
+  simgolf_input_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\app\Release\simgolf_input_check.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/CMakeLists.txt
+     Creando biblioteca C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/build/x64/Release/portsim_c.lib y objeto C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/build/x64/Release/portsim_c.exp
+  simgolf_audio_check.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\app\Release\simgolf_audio_check.exe
+  portsim_c.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\Release\portsim_c.dll
+  portsim_core_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\Release\portsim_core_test.exe
+  portsim_layout_test.vcxproj -> C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\Release\portsim_layout_test.exe
+  Building Custom Rule C:/Users/maria/Desktop/Proyectos/SimGolf/port/build/P4A/port/CMakeLists.txt
+C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A\port\build\x64\Release\portsim_c.dll
+[w8_lock] P4A released at 2026-11-03 07:29:41

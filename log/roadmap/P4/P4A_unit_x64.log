@@ -1,0 +1,21 @@
+[w8_lock] P4A queued at 2026-11-03 07:30:05
+[w8_lock] P4A TOOK the lock at 2026-11-03 07:30:05 (waited 0 s, free commit 18.1 GB)
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Programs\Python\Python312\python.exe
+rootdir: C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\P4A
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 9 items
+
+port/test/test_static.py::test_no_original_addresses_in_port_code PASSED [ 11%]
+port/test/test_static.py::test_every_module_file_is_listed PASSED        [ 22%]
+port/test/test_static.py::test_block_bases_change_page_offsets_and_do_not_overlap PASSED [ 33%]
+port/test/test_static.py::test_vec_path_naming PASSED                    [ 44%]
+port/test/test_static.py::test_first_divergent_record PASSED             [ 55%]
+port/test/test_static.py::test_manifests_readable PASSED                 [ 66%]
+port/test/test_defects_p4a.py::test_switches_registered_default_original PASSED [ 77%]
+port/test/test_defects_p4a.py::test_reset_golfer_state_switch PASSED     [ 88%]
+port/test/test_defects_p4a.py::test_compute_story_reply_switch PASSED    [100%]
+
+============================== 9 passed in 0.33s ==============================
+[w8_lock] P4A released at 2026-11-03 07:30:06

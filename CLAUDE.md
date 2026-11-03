@@ -2411,6 +2411,14 @@ containing the module's AddressOfEntryPoint or a TLS callback (`not the PE entry
 TLS directory) and count an export inside a function's range, not only at its entry; before, the four CRT startups passed as dead (S11.3
 left them out of its marks by hand). tests/test_endstate_entry.py: the entry points refused, every hooks.csv dead / trivial row still
 passing, stubbed TLS / export cases, controls RED.
+P4, the port diverges from the original (2026-11-03, decision G30, merge log/roadmap/P4/MERGE.md, brief log/roadmap/P4/BRIEF.md): profile
+`play` = every `fixed` member plus re/port/play_profile.tsv (17 rows: the five existing gameplay switches and twelve new ones for D11 D12 D17
+D19 D21 D23 D24 D26 D44 D47b D48a D49a), compiled into port/app/main.cpp (kPlayProfile) and the app's default; `--profile` or
+SG_APP_PROFILE chooses another, and port/test/conftest.py sets SG_APP_PROFILE=fixed so app tests that compare with the original's
+recordings are unchanged. Every switch still defaults to 1, so `original` stays the oracle (segments 205 / 205 x64 + Win32 with 0
+digests changed). computeStoryReply.clampLowerBound (D48b) exists but is not in `play` (intended clamp not determined); D5 / D6
+(grid-edge reads, about 30 sites) have no switch yet. A trace recorded from the original stops driving a `play` run once the game
+diverges (course_season: 1,426 of 6,296 frames, then a modal wait): replay gates under `play` need recordings made under `play`.
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

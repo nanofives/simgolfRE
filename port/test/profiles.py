@@ -20,8 +20,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 DEFAULT_TABLE = ROOT / "re" / "port" / "defect_profiles.tsv"
-PROFILES = ("original", "fixed")
-EDITABLE = ("fixed",)
+PLAY_TABLE = ROOT / "re" / "port" / "play_profile.tsv"   # G30: `play` = every `fixed` member plus these rows (the app default)
+PROFILES = ("original", "fixed", "play")
+EDITABLE = ("fixed", "play")
 COLUMNS = ["switch", "value", "decision_id", "reason"]
 
 
@@ -65,12 +66,19 @@ def members(profile: str, path=None) -> dict[str, int]:
         if path is not None:
             raise ProfileError("profile `original` is not editable: it takes no member list")
         return {}
+    if profile == "play":
+        fixed = {r["switch"]: r["value"] for r in load_table(None)}
+        extra = {r["switch"]: r["value"] for r in load_table(path or PLAY_TABLE)}
+        both = sorted(set(fixed) & set(extra))
+        if both:
+            raise ProfileError(f"play_profile.tsv repeats `fixed` members: {', '.join(both)}")
+        return {**fixed, **extra}
     return {r["switch"]: r["value"] for r in load_table(path)}
 
 
-def validate(lib, path=None) -> dict[str, int]:
-    """The `fixed` members checked against the library: a name the library does not have is an error (all reported)."""
-    m = members("fixed", path)
+def validate(lib, path=None, profile: str = "fixed") -> dict[str, int]:
+    """The members of `fixed` (or `play`) checked against the library: a name the library does not have is an error (all reported)."""
+    m = members(profile, path)
     known = set(lib.defects())
     bad = sorted(s for s in m if s not in known)
     if bad:
@@ -84,7 +92,7 @@ def apply(lib, profile: str, path=None) -> dict[str, int]:
     if profile == "original":
         m = members("original", path)
     else:
-        m = validate(lib, path) if profile == "fixed" else members(profile, path)
+        m = validate(lib, path, profile) if profile in EDITABLE else members(profile, path)
     lib.defect_reset()
     for s, v in m.items():
         lib.defect(s, bool(v))
@@ -96,13 +104,16 @@ def state(lib) -> dict[str, int]:
 
 
 def current(lib, path=None) -> str:
-    """'original' when every switch is 1, 'fixed' when the state equals the `fixed` list applied to all-ones, else 'custom'."""
+    """'original' when every switch is 1, 'fixed' / 'play' when the state equals that list applied to all-ones, else 'custom'."""
     st = state(lib)
     if all(v == 1 for v in st.values()):
         return "original"
-    want = {n: 1 for n in st}
-    want.update(members("fixed", path))
-    return "fixed" if st == want else "custom"
+    for prof in ("fixed", "play"):
+        want = {n: 1 for n in st}
+        want.update(members(prof, path if prof == "fixed" else None))
+        if st == want:
+            return prof
+    return "custom"
 
 
 def main(argv=None) -> int:
@@ -111,11 +122,12 @@ def main(argv=None) -> int:
     ap.add_argument("cmd", choices=["validate", "show"])
     ap.add_argument("--dll")
     ap.add_argument("--file")
+    ap.add_argument("--profile", default="fixed", choices=list(EDITABLE))
     a = ap.parse_args(argv)
     from port.test import lib as L
     lib = L.load(a.dll) if a.dll else L.load()
-    m = validate(lib, a.file)
-    print(f"profile fixed: {len(m)} member(s) of {len(lib.defects())} switches")
+    m = validate(lib, a.file, a.profile)
+    print(f"profile {a.profile}: {len(m)} member(s) of {len(lib.defects())} switches")
     for s, v in m.items():
         print(f"  {s} = {v}")
     return 0
