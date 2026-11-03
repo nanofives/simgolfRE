@@ -1,0 +1,14 @@
+handled	Image_draw	154
+handled	Surface_blit3	22
+handled	Window::refreshFull	24
+handled	drawCenteredText	131
+handled	loadImage	2
+handled	loadInfoScreenArt.images	1
+handled	loadInterfaceArt.ballArt	1
+handled	loadInterfaceArt.bulletinArt	1
+handled	loadInterfaceArt.dialogArt	1
+handled	loadInterfaceArt.images	1
+handled	setDrawTarget	4
+handled	showLoadingScreen.draw	4
+handled	showTitleScreen	1
+snapshots	0 of 0

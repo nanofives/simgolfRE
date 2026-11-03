@@ -19,3 +19,5 @@ cornerLevel.unclampedAndShared	0	G30,D21	corner level stops at 0 / 255 and the k
 loadStoryStrings.cacheEntryLimit	0	G30,D47b	story cache text cut to the 0x100-byte field
 buildGolferComment.slotLimit	0	G30,D48a	name and third text cut to their stack slots
 postEvent.idBound	0	G30,D49a	bulletin event id of 22 or more ignored
+mainLoop.titleExitHotspotWide	0	G30,P5	the title menu's exit is selected only inside its own 0x3a x 0x39 icon, not over the 0x140 x 0x50 nearest-point area around the icon's corner
+showThemePackSelect.column5StackWord	0	G30,P5	the theme-pack screen draws no sixth column cell (the original draws one at a stack word it never writes: a yellow cell left of the list on the current theme's row)

@@ -2419,6 +2419,13 @@ recordings are unchanged. Every switch still defaults to 1, so `original` stays 
 digests changed). computeStoryReply.clampLowerBound (D48b) exists but is not in `play` (intended clamp not determined); D5 / D6
 (grid-edge reads, about 30 sites) have no switch yet. A trace recorded from the original stops driving a `play` run once the game
 diverges (course_season: 1,426 of 6,296 frames, then a modal wait): replay gates under `play` need recordings made under `play`.
+P5, first play-test feedback (2026-11-03, merge log/roadmap/P5/MERGE.md): two more `play` switches (mainLoop.titleExitHotspotWide: the
+title exit is chosen only over its icon; showThemePackSelect.column5StackWord: U-1260's stray cell not drawn); two port bugs fixed (the
+world map now runs its 50 ms passes without input, `--no-timed-passes` restores the wait; the course report and top-10 trophy screens
+draw); app options, each default on and all off with SG_APP_P5B=off (port/test/conftest.py): --edge-guard (no edge scroll from a cursor
+outside the focused client area), --zoom-keys all|numpad|off (+ / - become the game's z / x in the frame loop; `all` drops the original's
++ money / - terrain keys), --close-prompt (X opens the game's exit prompt), --resizable and --scale auto|nearest|smooth (4:3 bars, mouse
+mapped back). Widescreen is scoped only (P5B_notes.md: 0x320 / 0x258 hard-coded at about 180 sites, rasteriser fixed at 800 x 600).
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

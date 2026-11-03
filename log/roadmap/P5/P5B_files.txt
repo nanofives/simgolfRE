@@ -1,0 +1,17 @@
+# P5B: files changed in port/build/P5B against its base b89154c4 (shared HEAD unchanged for these files)
+port/app/host.h          HostOptions edge_guard / close_prompt; LiveSession request_close, in_frame_body, close stages, cursor guard state
+port/app/host.cpp        request_close / close_check (item 3), cursor / async_key guard (item 1), body-mode flag (item 2), summary counters
+port/app/window.h        WindowOptions resizable / on_close_button / zoom_keys / zoom_context; client_changed, zoom remap state
+port/app/window.cpp      resizable style, WM_SIZE / WM_GETMINMAXINFO / WM_DPICHANGED (item 4), WM_SYSCOMMAND SC_CLOSE (item 3), +/- remap (item 2)
+port/app/present.h       ScaleMode nearest / smooth / auto (item 4)
+port/app/present.cpp     bilinear scaling, effective_scale (item 4)
+port/app/main.cpp        options --edge-guard --zoom-keys --close-prompt --resizable --scale, SG_APP_P5B=off, --selftest-p5b, session.json p5b block
+port/test/conftest.py    SG_APP_P5B=off for the app tests (setdefault)
+# deliverables (log/ is shared)
+log/roadmap/P5/P5B_notes.md
+log/roadmap/P5/P5B_files.txt
+log/roadmap/P5/P5B_drive.py
+log/roadmap/P5/P5B_runs/            ingame_all, ingame_off, title, edge_on, edge_off, resize_auto (session recordings and frames)
+log/roadmap/P5/P5B_build_x64.log, P5B_build_Win32.log
+log/roadmap/P5/P5B_pytest_test_app_*.log
+log/roadmap/P5/P5B_segs_x64.tsv

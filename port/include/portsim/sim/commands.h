@@ -144,6 +144,12 @@ class InputSource {
   // flushRedraw clears a pending redraw left by an earlier key (textInputBox's Enter), so a key handed to the first pass is
   // cleared with it where the original's, arriving passes later, ends the wait (cov_r_sve, the SimFoto wait).
   virtual void pace(int32_t site) { (void)site; }
+  // TIMED PASS (P5A, 2026-11-03): a modal loop whose original runs one pass per waitTicks period and reads the cursor before
+  // every further pump call (courseActionMenu: waitTicks(5, 0), then View_toLocal, then pumpMessages) names that period in ms
+  // for its NEXT Blocking pump call (0 = none; the source clears it after the call). A decline there replays as one more pass
+  // (the next call comes at a higher cursor count), so a playing host may run the loop's passes on time with no input, as the
+  // original does, instead of waiting for input. Trace-driven sources ignore it.
+  virtual void timed_pass(uint32_t ms) { (void)ms; }
 };
 // A Blocking pump found no input left: neither an InputSource nor a remaining command (C ABI: SG_E_NO_RESOURCE). `what`
 // is the hooks.csv name of the waiting function.

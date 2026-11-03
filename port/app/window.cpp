@@ -129,7 +129,23 @@ uint32_t ScriptedHost::now_ms() {
 namespace {
 const wchar_t kClass[] = L"SimGolfPortWindow";
 constexpr DWORD kStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+constexpr DWORD kResizableStyle = kStyle | WS_THICKFRAME | WS_MAXIMIZEBOX;  // P5B item 4
 constexpr DWORD kExStyle = 0;
+constexpr int kMinClientW = 400, kMinClientH = 300;  // P5B item 4: half the logical size
+
+// P5B item 2: the zoom-key remap (WindowOptions::zoom_keys): 'Z' / 'z' for +, 'X' / 'x' for -
+bool zoom_key(uint32_t vk, uint8_t mode, bool &in) {
+  if (mode == 0) return false;
+  if (vk == VK_ADD || (mode >= 2 && vk == VK_OEM_PLUS)) {
+    in = true;
+    return true;
+  }
+  if (vk == VK_SUBTRACT || (mode >= 2 && vk == VK_OEM_MINUS)) {
+    in = false;
+    return true;
+  }
+  return false;
+}
 
 LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM wp, LPARAM lp) {
   if (m == WM_NCCREATE) {
@@ -165,7 +181,7 @@ bool AppWindow::create() {
     return false;
   }
   std::wstring title(opt_.title.begin(), opt_.title.end());
-  HWND h = CreateWindowExW(kExStyle, kClass, title.c_str(), kStyle, CW_USEDEFAULT, CW_USEDEFAULT, kLogicalW, kLogicalH,
+  HWND h = CreateWindowExW(kExStyle, kClass, title.c_str(), opt_.resizable ? kResizableStyle : kStyle, CW_USEDEFAULT, CW_USEDEFAULT, kLogicalW, kLogicalH,
                            nullptr, nullptr, inst, this);
   if (!h) {
     error_ = "CreateWindowExW failed";
@@ -185,7 +201,7 @@ void AppWindow::size_for_dpi(uint32_t dpi, const void *suggested) {
   // the frame for the window's own monitor dpi (the client size is the content's, chosen above)
   const UINT frame_dpi = GetDpiForWindow(h);
   RECT r = {0, 0, cw, ch};
-  AdjustWindowRectExForDpi(&r, kStyle, FALSE, kExStyle, frame_dpi);
+  AdjustWindowRectExForDpi(&r, opt_.resizable ? kResizableStyle : kStyle, FALSE, kExStyle, frame_dpi);
   int x = CW_USEDEFAULT, y = CW_USEDEFAULT;
   if (suggested) {
     const RECT *s = static_cast<const RECT *>(suggested);
@@ -198,8 +214,12 @@ void AppWindow::size_for_dpi(uint32_t dpi, const void *suggested) {
     y = cur.top;
   }
   SetWindowPos(h, nullptr, x, y, r.right - r.left, r.bottom - r.top, SWP_NOZORDER | SWP_NOACTIVATE);
+  client_changed();
+}
+
+void AppWindow::client_changed() {
   RECT c;
-  GetClientRect(h, &c);
+  GetClientRect(static_cast<HWND>(hwnd_), &c);
   cw_ = c.right - c.left;
   ch_ = c.bottom - c.top;
   tr_.set_viewport(fit_viewport(cw_, ch_));
@@ -226,6 +246,26 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
   e.wp = wp;
   e.lp = lp;
   e.vp = tr_.viewport();
+  // P5B item 2: + / - become the game's own zoom keys while the frame body runs (event_json records the remapped message, so
+  // --translate re-checks what the game received)
+  if (opt_.zoom_keys) {
+    bool in = false;
+    if (msg == kWmKeyDown || msg == kWmKeyUp) {
+      if (zoom_key(wp, opt_.zoom_keys, in) && (msg == kWmKeyUp || !opt_.zoom_context || opt_.zoom_context())) {
+        wp = in ? 'Z' : 'X';
+        if (msg == kWmKeyDown) {
+          zoom_char_ = in ? 'z' : 'x';  // lower case: 'Z' / 'X' (0x5a / 0x58) are other H1 keys (0x58 rebuilds the tables)
+          ++zoom_remaps_;
+        }
+      } else if (msg == kWmKeyDown) {
+        zoom_char_ = 0;
+      }
+    } else if (msg == kWmChar && zoom_char_) {
+      wp = zoom_char_;
+      zoom_char_ = 0;
+    }
+    e.wp = wp;
+  }
   if (opt_.before_translate) opt_.before_translate(msg, wp);
   if (opt_.input_defect == InputDefect::Bypass) {
     // the wrong path: client coordinates straight into a click, no reads
@@ -267,9 +307,40 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
     case WM_ERASEBKGND:
       return 1;
     case WM_DPICHANGED:
-      if (!opt_.dpi) size_for_dpi(HIWORD(wp), reinterpret_cast<const RECT *>(lp));
+      if (!opt_.dpi) {
+        if (opt_.resizable) {  // P5B item 4: the user's size, as Windows rescaled it for the new monitor
+          const RECT *s = reinterpret_cast<const RECT *>(lp);
+          dpi_ = HIWORD(wp);
+          SetWindowPos(h, nullptr, s->left, s->top, s->right - s->left, s->bottom - s->top, SWP_NOZORDER | SWP_NOACTIVATE);
+          client_changed();
+        } else {
+          size_for_dpi(HIWORD(wp), reinterpret_cast<const RECT *>(lp));
+        }
+      }
       invalidate();
       return 0;
+    case WM_SIZE:  // P5B item 4 (a fixed window gets one too, with the size it already has)
+      if (wp != SIZE_MINIMIZED) {
+        client_changed();
+        invalidate();
+      }
+      return 0;
+    case WM_GETMINMAXINFO:
+      if (opt_.resizable) {
+        MINMAXINFO *mi = reinterpret_cast<MINMAXINFO *>(lp);
+        RECT r = {0, 0, MulDiv(kMinClientW, static_cast<int>(dpi_), 96), MulDiv(kMinClientH, static_cast<int>(dpi_), 96)};
+        AdjustWindowRectExForDpi(&r, kResizableStyle, FALSE, kExStyle, GetDpiForWindow(h));
+        mi->ptMinTrackSize.x = r.right - r.left;
+        mi->ptMinTrackSize.y = r.bottom - r.top;
+        return 0;
+      }
+      return DefWindowProcW(h, msg, wp, lp);
+    case WM_SYSCOMMAND:
+      if ((wp & 0xfff0) == SC_CLOSE && opt_.on_close_button) {  // P5B item 3: the close button / Alt+F4
+        opt_.on_close_button();
+        return 0;
+      }
+      return DefWindowProcW(h, msg, wp, lp);
     case WM_TIMER:
       if (wp == 1) {
         KillTimer(h, 1);

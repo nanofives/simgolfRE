@@ -1,0 +1,6 @@
+[w8_lock] P5A queued at 2026-11-03 10:48:18
+[w8_lock] P5A TOOK the lock at 2026-11-03 10:48:18 (waited 0 s, free commit 17.0 GB)
+run 0 done
+run 1 done
+run 2 done
+[w8_lock] P5A released at 2026-11-03 10:49:41

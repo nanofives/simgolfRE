@@ -1,0 +1,14 @@
+port/src/sim/commands_menus.inc
+port/src/sim/reports.cpp
+port/src/sim/saveload.cpp
+port/src/sim/live.cpp
+port/src/sim/tick.cpp
+port/src/sim/tick_menu.inc
+port/src/sim/gfx.cpp
+port/src/sim/gfx_boot_screens.cpp
+port/include/portsim/sim/commands.h
+port/include/portsim/sim/live.h
+port/app/host.cpp
+port/app/host.h
+port/app/main.cpp
+re/port/play_profile.tsv

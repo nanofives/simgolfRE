@@ -88,6 +88,11 @@
 namespace portsim {
 
 int g_negctl_gfx_boot_screens = 0;
+// showThemePackSelect.column5StackWord (P5A, 2026-11-03, Mariano's play-test: `the highlight behind Standard is cut off on the
+// left`): the sixth column cell drawn at the never-written stack word (COLUMN 5 above), x = 0x1a - 0x2b = -17 on the current
+// theme's row, a yellow 0x57-wide cell over x 0..69 left of the list panel. Default 1 = the original's cell as the pinned runs
+// show it; fixed (0): no column-5 cell (there are five columns) and nothing reported. Drawing only: no GameState byte depends on it.
+int g_defect_themepack_col5 = 1;
 
 namespace {
 
@@ -281,6 +286,7 @@ ThemeState &tst(Gfx &g) { return g.state_of<ThemeState>("boot_screens.themes"); 
 // column 5's word (COLUMN 5 above): false = no cell
 bool col5_word(int32_t &w) {
   w = 0x1a;
+  if (!SG_DEFECT(g_defect_themepack_col5)) return false;
   if (const char *e = std::getenv("SG_GFX_THEMEPACK_COL5")) {
     if (std::strcmp(e, "none") == 0) return false;
     w = static_cast<int16_t>(std::strtol(e, nullptr, 0));
@@ -353,7 +359,7 @@ void b_tp_redraw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     const int32_t fl = static_cast<int8_t>(static_cast<size_t>(i) < ts.flags.size() ? ts.flags[static_cast<size_t>(i)] : 0);
     for (int b = 0; b < 6; ++b) {
       if (b == 5 && !has5) {
-        if (fl & (1 << b) || cur) g.unsup("showThemePackSelect.redraw: column 5's cell left out (SG_GFX_THEMEPACK_COL5=none)");
+        if ((fl & (1 << b) || cur) && SG_DEFECT(g_defect_themepack_col5)) g.unsup("showThemePackSelect.redraw: column 5's cell left out (SG_GFX_THEMEPACK_COL5=none)");
         continue;
       }
       const int32_t col = b < 5 ? kColX[b] : w5;

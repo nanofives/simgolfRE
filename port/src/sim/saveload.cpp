@@ -1059,6 +1059,9 @@ int32_t course_action_menu(Ctx &ctx) {
         nearest = k;
       }
     }
+    // P5A: the original passes every waitTicks(5, 0) (50 ms) and reads the cursor twice before its next pump, so a playing
+    // host may run the passes with no input (the nearest site's plate drawn on the next pass, the pin blink, the tips)
+    if (InputSource *s2 = input_source(ctx)) s2->timed_pass(50);
     cm::pump_messages(ctx, PumpKind::Blocking, "courseActionMenu");
     const int32_t btn = gs.g_rootInput[kRootButton];
     if (btn == 0) continue;

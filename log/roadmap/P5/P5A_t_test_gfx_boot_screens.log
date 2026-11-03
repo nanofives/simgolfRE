@@ -1,0 +1,21 @@
+[w8_lock] P5A queued at 2026-11-03 11:09:40
+[w8_lock] P5A waiting: lock='free' ahead=['P5B'] free_commit=16.7 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.2 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.1 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.6 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.0 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.1 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.8 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.3 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.5 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.2 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.3 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.2 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.3 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.5 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.0 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.1 GB
+[w8_lock] P5A TOOK the lock at 2026-11-03 11:15:11 (waited 330 s, free commit 17.0 GB)
+................................                                         [100%]
+32 passed in 107.88s (0:01:47)
+[w8_lock] P5A released at 2026-11-03 11:17:00

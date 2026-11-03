@@ -33,7 +33,8 @@
 // through portsim::run_live with a LiveSession host (host.h): the window's real input as root-handler commands, real-time
 // pacing, a present at every frame wait and modal pump call whose back buffer changed, the session recorded. --cursor
 // message answers the game's cursor reads from the last mouse message (drivers that post messages without moving the
-// system cursor); --idle-ms / --pass-ms set the idle passes of the menu loops (U-1601); --flag17 a:b (tests) sets g_flags
+// system cursor); --idle-ms / --pass-ms set the idle passes of the menu loops (U-1601); --no-timed-passes (P5A) makes the
+// world map (courseActionMenu) wait for input again instead of passing every 50 ms as the original does; --flag17 a:b (tests) sets g_flags
 // bit 17 at live frame a and clears it at b as recorded harness writes; --max-records ends the session after n records.
 // The session ends when the window closes (at the next frame head or pump) or when the game quits (the window closes).
 // Negative controls: --negctl pacing-off | present-late | present-point-off (host.h HostDefect; present-point-off also on
@@ -249,13 +250,21 @@ struct Options {
   bool in_memory = false;                // S7.8: --in-memory (S7.5's way: records held until the end)
   int32_t mem_every = 1000;             // S7.8: --mem-every (memory.tsv sampling period in live frames)
   uint32_t dpi = 0, exit_after = 0;
-  bool activate = true, window = true, selftest = false;
+  bool activate = true, window = true, selftest = false, selftest_p5b = false;
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
+  bool timed_passes = true;  // P5A (--no-timed-passes)
   std::string cursor = "system";
   int32_t flag17_from = -1, flag17_to = -1;
   int64_t clock_origin = -1;  // S7.4
   std::string keys = "system";
+  // P5B (log/roadmap/P5/P5B_notes.md): the window and input behaviours from Mariano's play-test, on by default;
+  // SG_APP_P5B=off (port/test/conftest.py) gives S7's behaviour for all five, the switches below for each one
+  bool edge_guard = true;          // --edge-guard on|off (item 1)
+  std::string zoom_keys = "all";   // --zoom-keys all|numpad|off (item 2)
+  bool close_prompt = true;        // --close-prompt on|off (item 3)
+  bool resizable = true;           // --resizable on|off (item 4)
+  std::string scale = "auto";      // --scale auto|nearest|smooth (item 4)
   // S7.5: the terrain (live = portsim::LiveTerrain: Terrain.dll's state kept by the port and its draw passes rasterised into the
   // gfx root surface, as port/test/framegate.py attaches it; headless = tick.cpp's stand-in, no terrain pixels) and the address
   // of its Terrain object (0: a free range of the address space)
@@ -272,6 +281,11 @@ struct Options {
   std::string op;  // cat / write / remove / list
   std::vector<std::string> op_args;
 };
+
+// P5B item 4: --scale
+ScaleMode scale_mode(const std::string &s) {
+  return s == "smooth" ? ScaleMode::Smooth : s == "auto" ? ScaleMode::Auto : ScaleMode::Nearest;
+}
 
 struct PresentResult {
   bool ok = false;
@@ -337,6 +351,8 @@ const ProfileMember kPlayProfile[] = {
     {"loadStoryStrings.cacheEntryLimit", 0},
     {"buildGolferComment.slotLimit", 0},
     {"postEvent.idBound", 0},
+    {"mainLoop.titleExitHotspotWide", 0},           // P5A (Mariano's play-test, 2026-11-03)
+    {"showThemePackSelect.column5StackWord", 0},    // P5A
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -881,6 +897,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   HostOptions ho;
   ho.idle_ms = o.idle_ms;
   ho.pass_ms = o.pass_ms;
+  ho.timed_passes = o.timed_passes;
   ho.cursor = o.cursor == "message" ? CursorSource::Message : CursorSource::System;
   ho.flag17_from = o.flag17_from;
   ho.flag17_to = o.flag17_to;
@@ -888,6 +905,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.clock_origin = o.clock_origin;
   ho.keys_from_messages = o.keys == "message";
   ho.in_memory = o.in_memory;
+  ho.edge_guard = o.edge_guard;      // P5B item 1
+  ho.close_prompt = o.close_prompt;  // P5B item 3
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
   if (o.negctl == "present-point-off") ho.defect = HostDefect::NoPresentPoint;
@@ -896,12 +915,16 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
                                                   : PresentDefect::None;
-  Presenter presenter(pd);
+  Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes
   WindowOptions wo;
   wo.dpi = o.dpi;
   wo.activate = o.activate;
   wo.input_defect = o.negctl == "input-bypass" ? InputDefect::Bypass : InputDefect::None;
+  wo.resizable = o.resizable;  // P5B item 4
+  wo.zoom_keys = static_cast<uint8_t>(o.zoom_keys == "all" ? 2 : o.zoom_keys == "numpad" ? 1 : 0);  // P5B item 2
+  wo.zoom_context = [&session]() { return session.in_frame_body(); };
+  if (o.close_prompt) wo.on_close_button = [&session]() { session.request_close(); };  // P5B item 3
   wo.focus_child_takes = [&session](uint32_t msg, uint32_t wp) { return session.focus_child_takes(msg, wp); };  // U-1616
   wo.before_translate = [&session](uint32_t msg, uint32_t wp) { session.before_translate(msg, wp); };  // S7.4
   wo.key_state = [&session](uint32_t vk, bool async) { return session.key_state(vk, async); };
@@ -975,6 +998,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"error\":\"" + jesc(lo.error) + "\",\"data_va\":" + std::to_string(lo.data_va);
   s += ",\"idle_ms\":" + std::to_string(o.idle_ms) + ",\"pass_ms\":" + std::to_string(o.pass_ms) + ",\"cursor\":\"" + o.cursor + "\"";
   s += ",\"keys\":\"" + o.keys + "\",\"clock_origin\":" + std::to_string(o.clock_origin);
+  s += ",\"p5b\":{\"edge_guard\":" + std::to_string(o.edge_guard ? 1 : 0) + ",\"zoom_keys\":\"" + o.zoom_keys +  // P5B
+       "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
+       ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
@@ -1177,8 +1203,50 @@ void selftest_present(Tests &t, PresentDefect d) {
                                      rgb555_to_bgra(0x7c00) == 0xffff0000u);
 }
 
+// P5B item 4 (--selftest-p5b; separate so --selftest keeps its 37 rows): the presenter's scale modes
+void selftest_p5b(Tests &t, bool wrong) {
+  std::vector<uint16_t> f(static_cast<size_t>(kLogicalW) * kLogicalH);
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x) f[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>((x * 7 + y * 131) & 0x7fff);
+  auto render = [&](ScaleMode m, int cw, int ch, const std::vector<uint16_t> &fr) {
+    Presenter p(PresentDefect::None, wrong && m == ScaleMode::Smooth ? ScaleMode::Nearest : m);  // control: smooth ignored
+    p.set_frame(fr);
+    std::vector<uint32_t> out;
+    p.render(cw, ch, out);
+    return out;
+  };
+  std::vector<uint16_t> flat(f.size(), 0x1234);
+  {
+    const auto o = render(ScaleMode::Smooth, 1200, 900, flat);
+    bool ok = true;
+    for (uint32_t v : o) ok = ok && v == rgb555_to_bgra(0x1234);
+    t.add("p5b.smooth_uniform_frame_stays_uniform", ok);
+  }
+  t.add("p5b.smooth_at_1x_equals_nearest", render(ScaleMode::Smooth, 800, 600, f) == render(ScaleMode::Nearest, 800, 600, f));
+  t.add("p5b.auto_at_2x_is_nearest", render(ScaleMode::Auto, 1600, 1200, f) == render(ScaleMode::Nearest, 1600, 1200, f));
+  const auto a15 = render(ScaleMode::Auto, 1200, 900, f), s15 = render(ScaleMode::Smooth, 1200, 900, f),
+             n15 = render(ScaleMode::Nearest, 1200, 900, f);
+  t.add("p5b.auto_at_1_5x_is_smooth", a15 == s15 && s15 != n15);
+  {  // column 0 black, column 1 white: client column 1 of a 2x smooth image lies between them (weight 64 / 256 of white)
+    std::vector<uint16_t> g(f.size(), 0);
+    for (int y = 0; y < kLogicalH; ++y) g[static_cast<size_t>(y) * kLogicalW + 1] = 0x7fff;
+    const auto o = render(ScaleMode::Smooth, 1600, 1200, g);
+    const uint32_t v = o[static_cast<size_t>(600) * 1600 + 1] & 0xff;
+    t.add("p5b.smooth_blends_neighbours", v == 63);
+  }
+  {  // letterbox bars stay black in smooth mode
+    const auto o = render(ScaleMode::Smooth, 1300, 900, flat);
+    t.add("p5b.smooth_letterbox_bars_black", o[0] == 0xff000000u && o[static_cast<size_t>(899) * 1300 + 1299] == 0xff000000u &&
+                                                o[static_cast<size_t>(450) * 1300 + 650] == rgb555_to_bgra(0x1234));
+  }
+}
+
 int run_selftest(const Options &o) {
   Tests t;
+  if (o.selftest_p5b) {
+    selftest_p5b(t, o.negctl == "p5b-smooth-ignored");
+    return t.print();
+  }
   PresentDefect pd = PresentDefect::None;
   SavesDefect sd = SavesDefect::None;
   if (o.negctl == "present-stale") pd = PresentDefect::Stale;
@@ -1287,10 +1355,21 @@ bool parse(int argc, char **argv, Options &o) {
     }
     else if (a == "--idle-ms") { if (!val(v)) return false; o.idle_ms = static_cast<uint32_t>(std::atoi(v.c_str())); }
     else if (a == "--pass-ms") { if (!val(v)) return false; o.pass_ms = static_cast<uint32_t>(std::atoi(v.c_str())); }
+    else if (a == "--no-timed-passes") o.timed_passes = false;
     else if (a == "--cursor") {
       if (!val(o.cursor) || (o.cursor != "system" && o.cursor != "message")) return false;
     }
     else if (a == "--clock-origin") { if (!val(v)) return false; o.clock_origin = std::strtoll(v.c_str(), nullptr, 0); }
+    else if (a == "--edge-guard" || a == "--close-prompt" || a == "--resizable") {  // P5B
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      (a == "--edge-guard" ? o.edge_guard : a == "--close-prompt" ? o.close_prompt : o.resizable) = v == "on";
+    }
+    else if (a == "--zoom-keys") {
+      if (!val(o.zoom_keys) || (o.zoom_keys != "all" && o.zoom_keys != "numpad" && o.zoom_keys != "off")) return false;
+    }
+    else if (a == "--scale") {
+      if (!val(o.scale) || (o.scale != "auto" && o.scale != "nearest" && o.scale != "smooth")) return false;
+    }
     else if (a == "--keys") {
       if (!val(o.keys) || (o.keys != "system" && o.keys != "message")) return false;
     }
@@ -1330,6 +1409,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--no-activate") o.activate = false;
     else if (a == "--no-window") o.window = false;
     else if (a == "--selftest") o.selftest = true;
+    else if (a == "--selftest-p5b") o.selftest = o.selftest_p5b = true;  // P5B
     else if (a == "--translate") { if (!val(o.translate_in)) return false; }
     else if (a == "--out") { if (!val(o.translate_out)) return false; }
     else if (a == "--cat" || a == "--write") {
@@ -1360,6 +1440,14 @@ int main(int argc, char **argv) {
   // app tests keep their pre-G30 behaviour); an explicit --profile wins over both
   if (const char *ep = std::getenv("SG_APP_PROFILE"))
     if (!std::strcmp(ep, "original") || !std::strcmp(ep, "fixed") || !std::strcmp(ep, "play")) o.profile = ep;
+  // P5B: SG_APP_P5B=off restores S7's window and input behaviour (port/test/conftest.py sets it, so the app tests that compare
+  // with nearest-pixel frames, drive an unfocused window or close it with WM_CLOSE keep their behaviour); flags still win
+  if (const char *ep = std::getenv("SG_APP_P5B"))
+    if (!std::strcmp(ep, "off")) {
+      o.edge_guard = o.close_prompt = o.resizable = false;
+      o.zoom_keys = "off";
+      o.scale = "nearest";
+    }
   if (!parse(argc, argv, o)) {
     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");
     return 2;
@@ -1449,6 +1537,8 @@ int main(int argc, char **argv) {
   wo.dpi = o.dpi;
   wo.activate = o.activate;
   wo.input_defect = o.negctl == "input-bypass" ? InputDefect::Bypass : InputDefect::None;
+  wo.resizable = o.resizable;  // P5B item 4
+  presenter.set_scale(scale_mode(o.scale));
   AppWindow win(presenter, wo);
   if (!win.create()) {
     std::fprintf(stderr, "%s\n", win.error().c_str());

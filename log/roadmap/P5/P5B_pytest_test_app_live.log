@@ -1,0 +1,16 @@
+..F..........                                                            [100%]
+================================== FAILURES ===================================
+_____________________________ test_title_idle_cpu _____________________________
+
+main = <port.test.test_app_live.Session object at 0x0000025606B329C0>
+
+    def test_title_idle_cpu(main):
+        """a blocking pump sleeps on input: under 5 % of one core over 10 s with no input on the title menu"""
+>       assert main.facts["idle_cpu"] < 5.0, main.facts["idle_cpu"]
+E       AssertionError: 8.43701179915341
+E       assert 8.43701179915341 < 5.0
+
+port\test\test_app_live.py:371: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_app_live.py::test_title_idle_cpu - AssertionError: 8.43...
+1 failed, 12 passed in 312.83s (0:05:12)

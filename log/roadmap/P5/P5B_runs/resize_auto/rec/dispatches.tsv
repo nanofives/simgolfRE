@@ -1,0 +1,7 @@
+index	frame	body	body_call	kind	calls	cursor_reads	may	must	ncmds	first_seq	last_seq
+0	0	0	0	1	407	20	1	0	1	2	2
+1	0	0	0	1	1	21	1	0	2	3	3
+2	0	0	0	1	15	52	1	0	1	5	5
+3	0	0	0	1	1	54	1	0	2	6	6
+4	41	1	0	2	1	1	1	0	2	7	8
+5	43	1	0	2	1	1	1	0	1	9	9

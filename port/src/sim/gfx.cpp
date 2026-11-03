@@ -1069,6 +1069,17 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_gfx = {"gfx", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern int g_defect_themepack_col5;  // gfx_boot_screens.cpp
+namespace {
+const DefectDef kDefects[] = {
+    {"showThemePackSelect.column5StackWord", "P5A",
+     "the theme-pack screen draws a sixth column cell at a stack word the original never writes (U-1260: a yellow cell at x -17 on "
+     "the current theme's row); fixed: no column-5 cell",
+     &g_defect_themepack_col5},
+};
+}  // namespace
+
+extern const ModuleDef kModule_gfx = {"gfx", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                      sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

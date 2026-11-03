@@ -1,0 +1,22 @@
+[w8_lock] P5A queued at 2026-11-03 11:03:27
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.8 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.7 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.1 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.9 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.8 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.9 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=15.8 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.2 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.3 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.4 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.3 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.4 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.2 GB
+[w8_lock] P5A TOOK the lock at 2026-11-03 11:06:37 (waited 190 s, free commit 16.8 GB)
+record worldmap -> C:UsersmariaAppDataLocalTemp\claude\p5a_app\p5a_worldmap: rc 0 error '' posted 6 matched 6
+p5a_worldmap presents 15 gate {"status": "PASS", "records": 0, "expected": 0, "code": 0, "first": null, "name": "p5a_worldmap", "profile": "fixed"}
+record report -> C:UsersmariaAppDataLocalTemp\claude\p5a_app\p5a_report: rc 0 error '' posted 24 matched 24
+p5a_report presents 259 gate {"status": "PASS", "records": 203, "expected": 203, "code": 0, "first": null, "name": "p5a_report", "profile": "fixed"}
+record worldmap -> C:UsersmariaAppDataLocalTemp\claude\p5a_app\p5a_worldmap_off: rc 0 error '' posted 6 matched 6
+p5a_worldmap_off presents 11 gate {"status": "PASS", "records": 0, "expected": 0, "code": 0, "first": null, "name": "p5a_worldmap_off", "profile": "fixed"}
+[w8_lock] P5A released at 2026-11-03 11:08:02

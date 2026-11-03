@@ -10,6 +10,7 @@
 // What is dropped: widget, image and string drawing, window refresh, the text assembled in g_textBuffer, waits and the
 // audio requests (startSoundSlot; playSound only as the optional audio backend call).
 #include "portsim/arith.h"
+#include "portsim/execonst.h"
 #include "portsim/ptr.h"
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
@@ -175,6 +176,142 @@ struct ReportDraw {
     gx("Surface_stretchBlit", {sga, sga + 0x2c, root, 0x23, 0x1a, 0});
     quad(0x80000000u);
   }
+  // P5A (2026-11-03, Mariano: `Course Report does nothing`): mode 0's per-hole table (F1, the Information menu's Course
+  // Report) as c3fr.cpp ShowCourseReport_re draws it (showCourseReport+0x40..+0x35f8 there). The art is g_spriteRef_821308's cells:
+  // [0] the head, [2] a row band, [4] the subtotal band, [6] the foot, [8 + k] the hole-kind / green marks, [0x19 + k] .. the
+  // column icons; the icon x positions are f_tab_layoutInts_4ba62c's dwords 3..11 in the user's exe (.rdata).
+  uint32_t art(uint32_t k) const { return state_va(ctx, &GameState::g_spriteRef_821308) + 0x2cu * k; }
+  int32_t cut_h(uint32_t sref) const {
+    int32_t w = 0, h = 0;
+    gfx_sprite_cut(ctx, sref, w, h);
+    return h;
+  }
+  int32_t lay(uint32_t i) const { return ctx.exe().get<int32_t>("f_tab_layoutInts_4ba62c", i); }
+  void table_head() const {
+    gx("Display::setScale", {1, 1, 1});
+    gx("Surface_drawSprite", {state_va(ctx, &GameState::g_spriteRef_821040), root, 0, 0, 0x3e800000u, 0, 1});
+    quad(0x80000000u);
+    gx("Surface_stretchBlit", {art(0), art(1), root, 0, 0, 0});
+    quad(0x80000000u);
+  }
+  // the icon of a percentage column: v < 0 -> 0, 0 <= v < 50 -> none, 50 <= v < 100 -> 2, v >= 100 -> 1
+  static int pct_icon(int32_t v) { return v < 0x32 ? (v < 0 ? 0 : -1) : (v < 100 ? 2 : 1); }
+  struct Row {
+    int32_t h, par, len, cnt, wsum, time, pace, d[3], best, which, flags, a, b, c;
+    uint32_t hflags;   // the hole record's +0x200 dword
+    int32_t big;       // +0x104 / 2 + +0x110 + +0xee
+    int32_t w1fc;      // +0x1fc
+  };
+  // one table row at y; returns the next row's y
+  int32_t table_row(const Row &r, int32_t y) const {
+    const uint32_t f = f_ee8, s = state_va(ctx, &GameState::f_strpool_4d3140), pct = state_va(ctx, &GameState::f_strpool_4c60c4);
+    gx("Surface_stretchBlit", {art(2), art(3), root, 0, u32(y), 0});
+    const int32_t ty = y + 2;
+    quad(0x80000000u);
+    const int fi = (r.hflags & 1) == 0 ? 0 : ((r.hflags & 2) ? 2 : 1);
+    const int hi = (r.big < 8 ? 0 : 3) + fi + 2;
+    text([&] { call_peer(ctx, "appendHoleName", {u32(r.h)}); if (hi > 2) img(art(8 + u32(hi)), 0x5a, y); }, "Widget_draw", f, 0xf,
+         ty);
+    text([&] { cat_itoa(r.len); }, "drawStringAt2", f, 0x97, ty);
+    text([&] { cat_itoa(r.par); }, "drawStringAt", f, 0xac, ty);
+    text([&] {
+      cm::append_cents(ctx, r.cnt == 0 ? 0 : div32(mul32(r.wsum, 100), r.cnt));
+      if ((r.hflags & 0xc) != 0) img(art(0x19), lay(3), y);
+    }, "drawStringAt2", f, 0xe3, ty);
+    text([&] {
+      cat_itoa(r.time);
+      cat(s);
+      const int ti = !(r.time < mul32(r.par, 5)) ? 0 : (r.time > mul32(r.par, 3) ? -1 : 1);
+      if (ti >= 0) img(art(0x19 + u32(ti)), lay(3), y);
+    }, "drawStringAt2", f, 0x116, ty);
+    text([&] {
+      cat_itoa(r.pace);
+      cat(pct);
+      const int pi = !(r.pace >= 10) ? 0 : (r.pace < 0x32 ? -1 : 1);
+      if (pi >= 0) img(art(0x1c + u32(pi)), lay(4), y);
+    }, "drawStringAt2", f, 0x144, ty);
+    static const int32_t kDx[3] = {0x171, 0x19f, 0x1ce};
+    for (uint32_t c = 0; c < 3; ++c) {
+      text([&] {
+        cm::append_cents(ctx, r.d[c]);
+        const int ic = pct_icon(r.d[c]);
+        if (ic >= 0) img(art(0x1f + 3 * c + u32(ic)), lay(5 + c), y);
+      }, "drawStringAt2", f, kDx[c], ty);
+    }
+    const int32_t flags = r.best < 100 ? (r.flags & ~r.which) : r.flags;
+    text([&] {
+      vstrcpy(m, tb, m.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c2a18) + 0x10 + 4 * u32(flags)));
+      const int li = !(r.w1fc >= 2) ? 1 : (r.w1fc <= 2 ? -1 : 0);
+      if (li >= 0) img(art(0x28 + u32(li)), lay(8), y);
+    }, "Widget_draw", f, 0x1d7, ty);
+    {
+      const uint32_t gi = (r.hflags & 0x60) == 0 ? 1u : ((r.hflags >> 4) & 2u);
+      img(art(8 + gi), 0x22b, ty - 1);
+    }
+    text([&] { number(r.cnt == 0 ? 0 : div32(mul32(r.a, 100), r.cnt)); }, "drawStringAt2", f, 0x27b, ty);
+    text([&] { number(mul32(r.a, 100)); }, "drawStringAt2", f, 0x2c5, ty);
+    text([&] {
+      const int32_t net = sub32(sub32(r.a, r.b), r.c);
+      number(mul32(net, 100));
+      if (net < 0) img(art(0x31), lay(11), y);
+    }, "drawStringAt2", f, 0x312, ty);
+    return ty + 0xf;
+  }
+  // the subtotal row after hole 18 at y (S the running sums, time the last hole's time); returns the next y
+  int32_t table_subtotal(const int32_t *S, int32_t holes, int32_t time, int32_t y) const {
+    const uint32_t f = f_ee8, s = state_va(ctx, &GameState::f_strpool_4d3140), pct = state_va(ctx, &GameState::f_strpool_4c60c4);
+    const uint32_t dollar = state_va(ctx, &GameState::f_strpool_4c61dc) + 4;
+    gx("Surface_stretchBlit", {art(4), art(5), root, 0, u32(y - 2), 0});
+    const int32_t ty = y + 9;
+    text([&] { vstrcpy(m, tb, pool + 0x504); }, "Widget_draw", f, 0xf, ty);   // h is 18 here (the h == 9 text never shows)
+    text([&] { number(S[0]); }, "drawStringAt2", f, 0x97, ty);
+    text([&] { cat_itoa(S[1]); }, "drawStringAt", f, 0xac, ty);
+    text([&] { cm::append_cents(ctx, S[2]); }, "drawStringAt2", f, 0xe3, ty);
+    text([&] {
+      if (!(S[3] < 0x3c)) {
+        cat_itoa(S[3] / 60);
+        cat(pool + 0x500);
+      }
+      cat_itoa(time % 60);   // the last hole's time, as the original
+      cat(s);
+    }, "drawStringAt2", f, 0x116, ty);
+    text([&] { cat_itoa(div32(S[4], holes)); cat(pct); }, "drawStringAt2", f, 0x144, ty);
+    static const int32_t kDx[3] = {0x171, 0x19f, 0x1ce};
+    for (uint32_t c = 0; c < 3; ++c) {
+      const int32_t v = div32(S[5 + c], holes);
+      text([&] {
+        cm::append_cents(ctx, v);
+        const int ic = pct_icon(v);
+        // the third column's index is a colour word with bit 31 set: its `jle` skips the icon on every value
+        if (c < 2 && ic > 0) img(art(0x1f + 3 * c + u32(ic)), lay(5 + c), ty - 2);
+      }, "drawStringAt2", f, kDx[c], ty);
+    }
+    text([&] { vstrcpy(m, tb, dollar); number(div32(S[9], holes)); }, "drawStringAt2", f, 0x27b, ty);
+    text([&] { vstrcpy(m, tb, dollar); number(mul32(S[10], 100)); }, "drawStringAt2", f, 0x2c5, ty);
+    text([&] {
+      vstrcpy(m, tb, dollar);
+      number(mul32(S[11], 100));
+      if (S[11] < 0) img(art(0x31), lay(11), ty - 2);
+    }, "drawStringAt2", f, 0x312, ty);
+    return cut_h(art(4)) + ty - 0xb;
+  }
+  // the foot at y; returns the OK button's y (its x is 0x2de)
+  int32_t table_foot(int32_t y, int32_t holes) const {
+    const int32_t fy = holes != 0 ? y : y - 2;
+    gx("Surface_stretchBlit", {art(6), art(7), root, 0, u32(fy), 0});
+    const int32_t ly = fy + cut_h(art(6)) - 0x3f;
+    str("drawStringAt", f_020, pool + 0x224, 0x13c, 0x23);
+    str("drawStringAt", f_ee8, pool + 0x214, 0xb2, ly);
+    str("drawStringAt", f_ee8, pool + 0x208, 0x14f, ly);
+    str("drawStringAt", f_ee8, pool + 0x1fc, 0x1e7, ly);
+    const uint32_t titles = state_va(ctx, &GameState::f_ptrtab_4d2054) + 0x24, xs = state_va(ctx, &GameState::g_ui_4d20ac);
+    for (uint32_t i = 0; i < 12; ++i) {
+      const uint32_t t = m.load<uint32_t>(titles + 4 * i);
+      if (t == 0) continue;
+      str("drawStringAt", f_ee8, t, m.load<int32_t>(xs + 4 * i), 0x4c);
+    }
+    return ly + 0xf;
+  }
   void page(const Page &p) const {
     const uint32_t cl = state_va(ctx, &GameState::f_strpool_4c59e0);   // ")"
     str("Widget_draw", f_020, pool + 0x4dc, 0xbe, 0x2a);
@@ -270,6 +407,14 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
   int32_t cnt = 0, flags = 0, best = 0, wsum = 0, time = 0, pace = 0;
   int32_t d1 = 0, d2 = 0, d3 = 0, which = 0;
   int32_t r94[8] = {0}, rb8[8] = {0};
+  // P5A: mode 0's table is drawn as the rows are computed (the original's order); y is the table's pen (its L2c)
+  ReportDraw rd(ctx);
+  const bool table_on = mode == 0 && ReportDraw::on();
+  int32_t table_y = 0;
+  if (table_on) {
+    rd.table_head();
+    table_y = rd.cut_h(rd.art(0));
+  }
 
   for (int32_t h = 1; h < 0x13; ++h) {
     const uint32_t hr = holes_va + u32(mul32(static_cast<int32_t>(kHoleSize), h));
@@ -370,6 +515,29 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
       number(ctx, cnt == 0 ? 0 : div32(mul32(a, 100), cnt));
       number(ctx, mul32(a, 100));
       number(ctx, mul32(sub32(sub32(a, b), c), 100));
+      if (table_on) {
+        ReportDraw::Row r{};
+        r.h = h;
+        r.par = par;
+        r.len = m.load<int16_t>(hr + 4);
+        r.cnt = cnt;
+        r.wsum = wsum;
+        r.time = time;
+        r.pace = pace;
+        r.d[0] = d1;
+        r.d[1] = d2;
+        r.d[2] = d3;
+        r.best = best;
+        r.which = which;
+        r.flags = flags;
+        r.a = a;
+        r.b = b;
+        r.c = c;
+        r.hflags = m.load<uint32_t>(hr + 0x200);
+        r.big = add32(add32(m.load<int16_t>(hr + 0x104) / 2, m.load<int16_t>(hr + 0x110)), m.load<int16_t>(hr + 0xee));
+        r.w1fc = m.load<int32_t>(hr + 0x1fc);
+        table_y = rd.table_row(r, table_y);
+      }
     }
     if (h % 18 != 0 || nholes == 0) continue;   // the subtotal row after hole 18
     number(ctx, S[0]);
@@ -381,9 +549,9 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     number(ctx, div32(S[9], nholes));
     number(ctx, mul32(S[10], 100));
     number(ctx, mul32(S[11], 100));
+    if (table_on) table_y = rd.table_subtotal(S, nholes, time, table_y);
   }
 
-  ReportDraw rd(ctx);
   Page pg;
   struct Mark {   // the dialog markers around the grading page (the backend's held-pixel probe reads them; gfx_dialogs.cpp)
     Ctx &c;
@@ -396,8 +564,14 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     }
   } mark(ctx, mode != 0 && ReportDraw::on());
   if (mode != 0 && ReportDraw::on()) rd.head();
+  Hover ok{0x2bd, 0x18e, false};   // the page's OK button
   if (mode == 0) {
-    // the table's foot is drawing; the button belongs to the modal loop below
+    // the table's foot and its OK button (x 0x2de, y the foot's text line + 0xf)
+    if (table_on) {
+      ok.x = 0x2de;
+      ok.y = rd.table_foot(table_y, nholes);
+      rd.img(state_va(ctx, &GameState::g_spriteRef_820f40), ok.x, ok.y);
+    }
   } else {
     int32_t score = 0;
     int32_t crit;
@@ -499,9 +673,8 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     if (ReportDraw::on()) rd.page(pg);
   }
   if (mode == 2) return 0;
-  if (mode != 0 && ReportDraw::on()) rd.gx("Window::refreshFull", {rd.win, 0});   // the modal loop's first refresh
-  Hover ok{0x2bd, 0x18e, false};   // the page's OK button (mode 0's table draws nothing, so no hover either)
-  report_loop(ctx, false, "showCourseReport", mode != 0 ? &ok : nullptr);
+  if (ReportDraw::on()) rd.gx("Window::refreshFull", {rd.win, 0});   // the modal loop's first refresh
+  report_loop(ctx, false, "showCourseReport", &ok);
   gs.g_ui_569498 = mutant == 6 ? 1 : 0;
   cm::pump_light(ctx, "showCourseReport");
   return 0;

@@ -81,6 +81,18 @@ struct WindowOptions {
   // translator's GetKeyState / GetAsyncKeyState reads get (a result < 0: ask Windows); both default to nothing
   std::function<void(uint32_t msg, uint32_t wp)> before_translate;
   std::function<int32_t(uint32_t vk, bool async)> key_state;
+  // P5B (log/roadmap/P5/P5B_notes.md; defaults are the S7 behaviour here, main.cpp turns the new ones on):
+  // item 4: a sizing border and the maximise box; the client follows the user's size (the 4:3 content fitted inside it)
+  bool resizable = false;
+  // item 3: the close button / Alt+F4 (WM_SYSCOMMAND SC_CLOSE) calls this instead of closing; a WM_CLOSE sent to the window
+  // (--exit-after, the game's quit, a test driver) still closes it
+  std::function<void()> on_close_button;
+  // item 2: + and - as the game's zoom keys: 0 off, 1 the numeric keypad's (VK_ADD / VK_SUBTRACT), 2 those and the main
+  // keyboard's (VK_OEM_PLUS / VK_OEM_MINUS). A key-down of one becomes the 'Z' (zoom in) / 'X' (zoom out) key-down and its
+  // WM_CHAR the character 'z' / 'x', the keys mainLoop H1 zooms with (key 0x7a ML+0xd36d, key 0x78 ML+0xd327), but only while
+  // zoom_context() says the game is in its frame body (never in a text box, popup or menu)
+  uint8_t zoom_keys = 0;
+  std::function<bool()> zoom_context;
 };
 
 class AppWindow {
@@ -111,6 +123,14 @@ class AppWindow {
  private:
   void size_for_dpi(uint32_t dpi, const void *suggested_rect);
   void input(uint32_t msg, uint32_t wp, uint32_t lp);
+  void client_changed();       // P5B item 4: re-read the client size, refit the viewport
+  uint32_t zoom_char_ = 0;     // P5B item 2: the character the next WM_CHAR becomes (0: none)
+  uint32_t zoom_remaps_ = 0;
+
+ public:
+  uint32_t zoom_remaps() const { return zoom_remaps_; }
+
+ private:
   Presenter &presenter_;
   WindowOptions opt_;
   void *hwnd_ = nullptr;

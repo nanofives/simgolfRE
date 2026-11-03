@@ -60,6 +60,13 @@ bool gfx_sprite_ref_read(Ctx &ctx, uint32_t va, uint32_t size, uint32_t &v);
 //                            the int16 range (-32768..32767). Both tables keep their int16 layout (GameState is the exe's
 //                            .data image and the save stores them as such), so the full 32-bit value cannot be kept there.
 int g_defect_cash_low_word = 1;
+// mainLoop.titleExitHotspotWide (P5A, 2026-11-03, Mariano's play-test): the title menu picks the hotspot nearest to the
+// cursor among six, distance(x - hx, (y - hy) * 4 - 0x18) < 0xa0 (ML+0x11a95..ML+0x11af0), with each hotspot point at its
+// text centre; the exit button has no text and its point is the top-left corner of its 0x3a x 0x39 icon at (0x2d1, 0x210)
+// (Setup's slot stores; the icon is showTitleScreen's seventh button cut), so the exit highlights over an area about 0x140 px
+// wide and 0x50 tall around the icon's corner, most of it outside the icon. Fixed (0): the exit hotspot is taken only with the
+// cursor inside its icon (x 0x2d1 .. 0x30a, y 0x210 .. 0x248), where it wins; the five labelled hotspots keep their test.
+int g_defect_title_exit_hotspot = 1;
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
   return static_cast<int16_t>(v > 0x7fff ? 0x7fff : v < -0x8000 ? -0x8000 : v);
@@ -1963,6 +1970,10 @@ const DefectDef kDefects[] = {
     {"mainLoop.cashLowWordOnly", "model_defects#23",
      "the month cash history and the new-course ledger entry store only the cash's low word (wraps above 32767)",
      &g_defect_cash_low_word},
+    {"mainLoop.titleExitHotspotWide", "P5A",
+     "the title menu's exit hotspot is the nearest-point test around the exit icon's top-left corner (about 0x140 x 0x50 px); "
+     "fixed: only the icon's own 0x3a x 0x39 rectangle selects it",
+     &g_defect_title_exit_hotspot},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

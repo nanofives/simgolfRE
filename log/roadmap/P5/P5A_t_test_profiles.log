@@ -1,0 +1,6 @@
+[w8_lock] P5A queued at 2026-11-03 11:09:22
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.2 GB
+[w8_lock] P5A TOOK the lock at 2026-11-03 11:09:32 (waited 10 s, free commit 16.6 GB)
+.....................                                                    [100%]
+21 passed in 7.10s
+[w8_lock] P5A released at 2026-11-03 11:09:40

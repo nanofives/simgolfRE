@@ -243,6 +243,51 @@ void LiveSession::request_stop() {
   cv_.notify_all();
 }
 
+// P5B item 3 (host.h). close_req_ stages: 0 none, 1 asked (the next frame head writes the flag), 2 written (H1 has not read
+// it), 3 the prompt took it (close at the title menu unless a frame body runs first: the player chose to go on).
+void LiveSession::request_close() {
+  if (!opt_.close_prompt) {
+    request_stop();
+    return;
+  }
+  // the title menu / the boot, or a second press (before the prompt came, or while it is open): close at once
+  if (at_menu_.load() || close_req_.load() != 0) {
+    request_stop();
+    return;
+  }
+  close_req_.store(1);
+  cv_.notify_all();
+}
+
+bool LiveSession::close_check(portsim::Ctx &ctx, bool at_head, bool body) {
+  if (!opt_.close_prompt) return false;
+  const uint32_t quit_va = portsim::state_va(ctx, &portsim::GameState::unk_0059b734);
+  const int st = close_req_.load();
+  if (at_head) {
+    if (st == 1) {  // the system menu's Exit row: showSystemMenu stores 1 here and returns 0x1b (0x00432af1)
+      ctx.mem.store<int32_t>(quit_va, 1);
+      if (writes) writes->wrote(quit_va, 1);
+      close_req_.store(2);
+      ++close_written_;
+    }
+    return false;
+  }
+  const int32_t diff = ctx.mem.load<int32_t>(portsim::state_va(ctx, &portsim::GameState::g_difficulty));
+  const bool menu = frame_ == 0 || diff == -1;  // g_difficulty is -1 on the title menu (0x0040f8ab)
+  at_menu_.store(menu);
+  body_mode_.store(body);
+  if (st == 2 && ctx.mem.load<int32_t>(quit_va) == 0) close_req_.store(3);  // H1 cleared it (ML+0x11511): the prompt runs
+  if (close_req_.load() == 3 && body) {  // the player answered "go on": the frame loop runs again
+    close_req_.store(0);
+    ++close_cancelled_;
+  }
+  if (menu && close_req_.load() != 0) {
+    ++close_direct_;
+    return true;
+  }
+  return false;
+}
+
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index) {
   std::lock_guard<std::mutex> lk(frame_mu_);
   if (!frame_waiting_) return false;
@@ -340,6 +385,7 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
     ctx.mem.store<uint32_t>(va, flags);
     if (writes) writes->wrote(va, flags);
   }
+  close_check(ctx, true, false);  // P5B item 3: a close request becomes the system menu's Exit flag here
   if (frames_log_) {
     std::fprintf(frames_log_, "%u\t%u\t%u\n", frame, t, flags);
     std::fflush(frames_log_);
@@ -363,8 +409,26 @@ void LiveSession::cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) {
   }
   POINT p = {0, 0};
   GetCursorPos(&p);
+  const POINT screen = p;
   if (hwnd_) ScreenToClient(static_cast<HWND>(hwnd_), &p);
   const Point l = Translator(vp_).to_logical(Point{p.x, p.y});
+  if (opt_.edge_guard && hwnd_) {
+    // P5B item 1: the original reads GetCursorPos + ScreenToClient unclamped, so a cursor left of the window gives x < 0 and
+    // H1 (ML+0xebb4..ML+0xebe3) scrolls the course. Only a cursor inside the client area of the foreground window counts;
+    // otherwise the last inside answer, one pixel away from every edge, is given again.
+    HWND h = static_cast<HWND>(hwnd_);
+    RECT c;
+    GetClientRect(h, &c);
+    const bool inside = p.x >= c.left && p.x < c.right && p.y >= c.top && p.y < c.bottom;
+    const bool top = GetForegroundWindow() == h && WindowFromPoint(screen) == h;
+    if (!inside || !top) {
+      ++guarded_reads_;
+      x = std::min(std::max(last_inside_.x, 1), kLogicalW - 2);
+      y = std::min(std::max(last_inside_.y, 1), kLogicalH - 2);
+      return;
+    }
+    last_inside_ = l;
+  }
   x = l.x;
   y = l.y;
 }
@@ -372,11 +436,23 @@ void LiveSession::cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) {
 uint16_t LiveSession::async_key(portsim::Ctx &, int vk) {
   const int32_t k = key_state(static_cast<uint32_t>(vk), true);
   if (k >= 0) return static_cast<uint16_t>(k);
+  if (opt_.edge_guard) {  // P5B item 1: keys and buttons held for another window are not the game's
+    void *h;
+    {
+      std::lock_guard<std::mutex> lk(mu_);
+      h = hwnd_;
+    }
+    if (h && GetForegroundWindow() != static_cast<HWND>(h)) return 0;
+  }
   return static_cast<uint16_t>(GetAsyncKeyState(vk & 0xff));
 }
 
 portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump &p, std::vector<portsim::Command> &out) {
   if (stopping()) return portsim::LiveReply::Stop;
+  if (close_check(ctx, false, p.body)) {  // P5B item 3: the close button on the title menu (or after the quit prompt)
+    stop_.store(true);
+    return portsim::LiveReply::Stop;
+  }
   if (!p.body) w_check_ = true;  // S7.8
   // one dispatch: the queued commands up to the first release whose press is in the same dispatch (a press and its release
   // are never dispatched by one pump call: real input has the player's hold between them, and the game's loops read the
@@ -471,7 +547,10 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
       const uint32_t gap = now - last_pass_ms_;
       const bool moved = events_ != events_seen_ || !queue_.empty();
       const bool idle_due = opt_.idle_ms != 0 && now - start >= opt_.idle_ms;
-      if (gap >= opt_.pass_ms && (paced || moved || idle_due)) {
+      // P5A: a timed loop (LivePump::timed_pass_ms, courseActionMenu) passes once per its original period, input or not
+      const bool timed = p.timed_pass_ms != 0 && opt_.timed_passes;
+      const uint32_t period = timed ? std::max(opt_.pass_ms, p.timed_pass_ms) : opt_.pass_ms;
+      if (gap >= period && (paced || timed || moved || idle_due)) {
         last_pass_ms_ = now;
         events_seen_ = events_;
         if (!paced) ++idle_passes_;
@@ -481,8 +560,8 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
         }
         return portsim::LiveReply::Decline;
       }
-      uint32_t ms = gap < opt_.pass_ms ? opt_.pass_ms - gap : 0;
-      if (!paced && !moved) ms = std::max(ms, opt_.idle_ms ? opt_.idle_ms - std::min(opt_.idle_ms, now - start) : 250u);
+      uint32_t ms = gap < period ? period - gap : 0;
+      if (!paced && !timed && !moved) ms = std::max(ms, opt_.idle_ms ? opt_.idle_ms - std::min(opt_.idle_ms, now - start) : 250u);
       waited = true;
       cv_.wait_for(lk, std::chrono::milliseconds(std::max(1u, ms)));
       continue;
@@ -630,6 +709,10 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"body_calls\":" + std::to_string(l.body_calls) + ",\"modal_calls\":" + std::to_string(l.modal_calls);
   s += ",\"paced_calls\":" + std::to_string(l.paced_calls) + ",\"idle_declines\":" + std::to_string(l.idle_declines);
   s += ",\"inflated\":" + std::to_string(l.inflated) + ",\"marks\":" + std::to_string(l.mark_pos.size());
+  // P5B: the close button (item 3) and the cursor guard (item 1)
+  s += ",\"close_prompt\":" + std::to_string(opt_.close_prompt ? 1 : 0) + ",\"close_flag_writes\":" + std::to_string(close_written_) +
+       ",\"close_at_menu\":" + std::to_string(close_direct_) + ",\"close_cancelled\":" + std::to_string(close_cancelled_);
+  s += ",\"edge_guard\":" + std::to_string(opt_.edge_guard ? 1 : 0) + ",\"guarded_cursor_reads\":" + std::to_string(guarded_reads_);
   s += ",\"presents\":" + std::to_string(presents_.size()) + ",\"idle_passes\":" + std::to_string(idle_passes_);
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made_[0]) + ",\"w\":" + std::to_string(made_[1]) +
        ",\"m\":" + std::to_string(made_[2]) + ",\"p\":" + std::to_string(made_[3]) + "}";

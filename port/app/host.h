@@ -117,6 +117,7 @@ enum class HostDefect : uint8_t {
 struct HostOptions {
   uint32_t idle_ms = 200;    // an idle pass of a modal loop at least this often while nothing happens (0: only on a cursor move)
   uint32_t pass_ms = 10;     // the shortest time between two passes of a modal loop
+  bool timed_passes = true;  // P5A: a timed modal loop (LivePump::timed_pass_ms) passes on its own period (--no-timed-passes: off)
   CursorSource cursor = CursorSource::System;
   HostDefect defect = HostDefect::None;
   int32_t flag17_from = -1;  // test only: g_flags bit 17 set at this live frame's head (a recorded harness write), -1 never
@@ -128,6 +129,14 @@ struct HostOptions {
   bool keys_from_messages = false;  // GetKeyState / GetAsyncKeyState answered from the key messages the window received
                                     // (down 0x8000 / 0x8001, as the shim's SetVirtualKey forced-down answers), not the keyboard
   bool in_memory = false;           // S7.8: keep the recording and the frame records in memory until the end (RecordStreams)
+  // P5B (Mariano's play-test, 2026-11-03; log/roadmap/P5/P5B_notes.md). Defaults are the new behaviour; SG_APP_P5B=off (main.cpp)
+  // or the per-option switches give the S7 behaviour back.
+  // item 1: while the window is not the foreground window, or the system cursor is outside its client area (or over
+  // another window), the cursor answer is the last answer given inside, clamped to (1..798, 1..598), so H1's edge scroll
+  // (mainLoop ML+0xebb4..ML+0xebe3: x <= 0, y <= 0, x >= 0x31f, y >= 0x257) does not run; GetAsyncKeyState answers 0 then
+  bool edge_guard = true;
+  // item 3: the window's close button (SC_CLOSE) asks for the game's own quit prompt (LiveSession::request_close)
+  bool close_prompt = true;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -142,6 +151,14 @@ class LiveSession : public portsim::LiveHost {
   void set_viewport(const Viewport &vp);
   void on_input(const InputEvent &e);               // AppWindow's sink
   void request_stop();                              // the window is closing: end the session at the next frame head or pump
+  // P5B item 3: the player pressed the window's close button. On the boot or the title menu the session stops (the window
+  // closes); in a game the system menu's Exit row is reproduced: unk_0059b734 = 1 (what showSystemMenu stores before it returns
+  // 0x1b, 0x00432af1) written at the next frame head as a recorded write, so H1 (ML+0xf11a) opens the game's quit prompt; when
+  // the player then quits to the title menu, the window closes. A second press (before or during the prompt) closes at once.
+  void request_close();
+  // P5B item 2: whether the game is in its frame body (the last pump call was P6 / H1), where + and - may be read as the
+  // zoom keys; false in every modal loop (text entry, popups, reports, the title menu)
+  bool in_frame_body() const { return body_mode_.load(); }
   // the newest presented frame (WM_APP + 2); false when none is waiting
   bool take_frame(std::vector<uint16_t> &px, uint32_t &index);
   bool focus_child_takes(uint32_t msg, uint32_t wp);  // U-1616, U-1650
@@ -211,6 +228,16 @@ class LiveSession : public portsim::LiveHost {
   Viewport vp_;
   Point msg_cursor_{0, 0};           // CursorSource::Message: the last mouse message's logical point
   std::atomic<bool> stop_{false};
+  // P5B
+  std::atomic<bool> body_mode_{false};
+  std::atomic<bool> at_menu_{true};   // the boot or the title menu (frame 0, or g_difficulty == -1)
+  std::atomic<int> close_req_{0};     // close-button presses the sim thread has not handled
+  bool quit_written_ = false;         // unk_0059b734 = 1 written for a close request, not consumed by H1 yet
+  bool quit_armed_ = false;           // the prompt consumed it: close at the title menu, unless a frame body runs first
+  uint32_t close_written_ = 0, close_direct_ = 0, close_cancelled_ = 0;
+  bool close_check(portsim::Ctx &ctx, bool at_head, bool body);  // sim thread: true = stop the session now (item 3)
+  Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
+  uint64_t guarded_reads_ = 0;        // cursor reads answered with last_inside_
   // presents
   std::mutex frame_mu_;
   std::vector<uint16_t> frame_slot_, last_presented_, previous_;

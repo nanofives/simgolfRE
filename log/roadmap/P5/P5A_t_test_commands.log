@@ -1,0 +1,21 @@
+[w8_lock] P5A queued at 2026-11-03 11:24:01
+[w8_lock] P5A waiting: lock='free' ahead=['P5B'] free_commit=17.6 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.9 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=17.0 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=17.1 GB
+[w8_lock] P5A waiting: lock='step=P5B' ahead=[] free_commit=16.9 GB
+[w8_lock] P5A TOOK the lock at 2026-11-03 11:26:22 (waited 140 s, free commit 17.6 GB)
+sssssssssssssssssssssssssss.ssssssssssssss.............................. [ 56%]
+..s...............................s...................s                  [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_commands.py:145: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [4] port\test\test_commands.py:167: judged against the emulated original (SG_EMU_ORACLE=1)
+SKIPPED [16] port\test\test_commands.py:437: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [6] port\test\test_commands.py:554: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [9] port\test\test_commands.py:749: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [5] port\test\test_commands.py:991: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_commands.py:1123: showLoadingScreen: no pinned digests (SG_EMU_ORACLE=update)
+SKIPPED [1] port\test\test_commands.py:1135: showLoadingScreen: no pinned digests
+SKIPPED [1] port\test\test_commands.py:1225: no pinned digests (SG_EMU_ORACLE=update)
+83 passed, 44 skipped in 69.10s (0:01:09)
+[w8_lock] P5A released at 2026-11-03 11:27:32

@@ -460,8 +460,12 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
     pace_ = site;
     host_.pace(ctx_, site);
   }
+  void timed_pass(uint32_t ms) override { timed_ms_ = ms; }
   bool batch(PumpKind kind, std::vector<Command> &out) override {
     out.clear();
+    // P5A: the hint holds for this call only
+    const uint32_t timed_hint = timed_ms_;
+    timed_ms_ = 0;
     tk::FrameIo &io = tk::cur_io();
     // U-1604: loadFlic's pump (PumpKind::Load, S1) takes the dispatch a recording puts before a world load's first palette
     // QPC; TraceInput::batch tests it apart from the frame-body / modal classes, so it is neither
@@ -508,10 +512,14 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
         hyp.push_back(self);
         const int fut = static_cast<int>(hyp.size()) - 1;
         later = taker(hyp, base, false) == fut || (cursor_ph_ == SIZE_MAX && taker(hyp, base + 1, false) == fut);
+        // P5A (InputSource::timed_pass): the loop reads the cursor before its next pump call, so a dispatch recorded there has
+        // a higher cursor count than this call and TraceInput passes this call for it (j.count < count, not stuck)
+        if (timed_hint != 0) later = true;
       }
     }
     p.must_deliver = kind == PumpKind::Blocking && !paced && !later;
     p.idle_ok = modal_blocking && !paced && !p.must_deliver;
+    p.timed_pass_ms = p.idle_ok ? timed_hint : 0;
     std::vector<Command> cmds;
     for (uint64_t tries = 0;; ++tries) {
       ++res_.asks;
@@ -1044,6 +1052,7 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
   int32_t last_cx_ = 0, last_cy_ = 0;
   uint32_t marks_ = 0;
   uint64_t idle_count_ = 0, host_dispatches_ = 0;
+  uint32_t timed_ms_ = 0;  // P5A: InputSource::timed_pass's hint for the next batch call
   bool drop_cursor_ = false;      // negative control 5
   std::string stop_;
   uint32_t snap_va_[9] = {};

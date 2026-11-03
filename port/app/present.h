@@ -37,9 +37,19 @@ inline uint32_t rgb555_to_bgra(uint16_t v) {
   return 0xff000000u | (r8 << 16) | (g8 << 8) | b8;
 }
 
+// P5B item 4: how the 800x600 frame is scaled to the content rectangle. Nearest = S7.3's mapping (every client pixel shows
+// exactly one logical pixel; the reference the app tests compare with). Smooth = bilinear over the 8-bit channels: client pixel
+// centre (x + 0.5) * 800 / w - 0.5 (clamped to the frame) interpolated between its four neighbours, 8-bit weights. Auto =
+// Nearest when the content rectangle is an integer multiple of 800x600 (1x, 2x, ...: sharp pixels, no blur), else Smooth.
+enum class ScaleMode : uint8_t { Nearest = 0, Smooth = 1, Auto = 2 };
+
 class Presenter {
  public:
-  explicit Presenter(PresentDefect d = PresentDefect::None) : defect_(d) {}
+  explicit Presenter(PresentDefect d = PresentDefect::None, ScaleMode s = ScaleMode::Nearest) : defect_(d), scale_(s) {}
+  void set_scale(ScaleMode s) { scale_ = s; }
+  ScaleMode scale() const { return scale_; }
+  // the mode a content rectangle of w x h is drawn with (Auto resolved)
+  ScaleMode effective_scale(int32_t w, int32_t h) const;
   // A new frame: 800 * 600 RGB555 words, rows top-down. Returns false when the size is wrong.
   bool set_frame(const std::vector<uint16_t> &px);
   bool has_frame() const { return !frame_.empty(); }
@@ -56,6 +66,7 @@ class Presenter {
 
  private:
   PresentDefect defect_;
+  ScaleMode scale_;
   std::vector<uint16_t> frame_;
   uint32_t frames_set_ = 0;
   mutable std::vector<uint32_t> scratch_;

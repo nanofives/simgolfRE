@@ -110,6 +110,11 @@ hover_loop:  // ML+0x11a65
             int d = cc("distance",
                        FD(0x1E4) - (int)FW(0xF4 + esi * 4),
                        (FD(0x1D8) - (int)FW(0xF6 + esi * 4)) * 4 - 0x18);
+            if (esi == 5 && !SG_DEFECT(g_defect_title_exit_hotspot)) {
+                // P5A fix (mainLoop.titleExitHotspotWide = 0): the exit icon's own rectangle (its point is the icon's corner)
+                const int px = FD(0x1E4) - (int)FW(0xF4 + esi * 4), py = FD(0x1D8) - (int)FW(0xF6 + esi * 4);
+                d = (px >= 0 && px < 0x3A && py >= 0 && py < 0x39) ? 0 : bestDist;
+            }
             if (d < bestDist) {      //                               ML+0x11adb jge ML+0x11ae9
                 bestDist = d;
                 ebx = esi;

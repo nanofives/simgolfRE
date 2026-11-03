@@ -26,6 +26,9 @@ def pytest_configure(config):
     # G30: the app's default profile is `play` (gameplay fixes); app tests compare against the original's recordings, so they run
     # the app under `fixed` unless a test passes --profile (or the caller set SG_APP_PROFILE)
     os.environ.setdefault("SG_APP_PROFILE", "fixed")
+    # P5B: the app's window / input defaults (edge guard, +/- zoom keys, close prompt, resizable window, smooth scaling) are off
+    # for the app tests, which compare nearest-pixel frames, drive an unfocused window and close it with WM_CLOSE
+    os.environ.setdefault("SG_APP_P5B", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

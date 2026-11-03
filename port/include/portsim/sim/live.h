@@ -59,6 +59,9 @@ struct LivePump {
   // roadmap S7.6: a decline here replays as an idle pass of a modal loop (a Blocking, unpaced modal call that is not
   // must_deliver); a playing host declines here when the player gave nothing but cursor movement or time
   bool idle_ok = false;
+  // P5A: the original's pass period of this modal loop (InputSource::timed_pass), 0 = none; set only on an idle_ok call. A
+  // playing host declines such a call once per period while nothing happens (the loop's timer passes)
+  uint32_t timed_pass_ms = 0;
 };
 
 // Roadmap S7.6: a host marks a point of the session (a present) with LiveMarker::mark; LiveResult::mark_pos gives its
