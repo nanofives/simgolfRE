@@ -67,7 +67,7 @@ typedef int(__fastcall* Tn7_t)(void* ecx, void* edx, int, int, int, int, int, in
 typedef char*(__cdecl* Itoa_t)(int value, char* buf, int radix);
 
 // ---- callees (original addresses) ----
-const C4_t kDrawText = reinterpret_cast<C4_t>(0x004049D0);             // drawText4049d0 (text, x, y, colour)
+const C4_t kDrawText = reinterpret_cast<C4_t>(0x004049D0);             // drawTextWithColor (text, x, y, colour)
 const C4_t kDrawCenteredText = reinterpret_cast<C4_t>(0x00404B70);     // drawCenteredText (text, x, y, colour)
 const C4_t kDrawCenteredText2 = reinterpret_cast<C4_t>(0x00404BC0);    // drawCenteredText2 (text, x, y, colour)
 const C5_t kDrawPanelS2 = reinterpret_cast<C5_t>(0x0040CC00);          // drawPanelS2 (x, y, w, h, 1)

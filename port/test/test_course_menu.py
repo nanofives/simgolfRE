@@ -274,9 +274,9 @@ def compare(lib, scen, mode=0) -> str:
         return f"eax port {eax} original {r.eax}"
     if out != r.image:
         return TS.first_diff(lib, out, r.image)
-    # enterModal483d30 is also called from inside the original's real pumpAndRedraw (the port's modal pump does not call it:
+    # flushInput is also called from inside the original's real pumpAndRedraw (the port's modal pump does not call it:
     # a drop, no simulation effect); the function's own call is its last: compare the rest and that last call
-    modal = E.fnv1a("enterModal483d30")
+    modal = E.fnv1a("flushInput")
     strip = lambda cs: [c for c in cs if c[0] != modal]
     if strip(calls) != strip(io.peer_calls) or not calls or calls[-1][0] != modal or io.peer_calls[-1][0] != modal:
         f = lambda cs: [(hex(c[0])[-4:], c[1:1 + c[7]]) for c in cs]

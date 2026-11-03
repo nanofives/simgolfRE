@@ -43,12 +43,12 @@ entry	name	size	callers	callees	ranges
 0000122b	Channel_setStreamSource	5	1	0	0000122b-00001230
 00001230	buildVoiceRxName	5	1	0	00001230-00001235
 00001235	PtrList_init	5	2	0	00001235-0000123a
-0000123f	Ctrl5b19c_ctor	5	5	0	0000123f-00001244
+0000123f	NoteMap::ctor_1001bee0	5	5	0	0000123f-00001244
 00001249	Seq_applyTrackFlag	5	1	0	00001249-0000124e
 0000124e	Midi_Device::handleMetaEvent	5	1	0	0000124e-00001253
 00001253	clearField6cReturn0	5	1	0	00001253-00001258
 00001258	clearNodeListG	5	3	0	00001258-0000125d
-0000125d	Ch5c178_ctor	5	1	0	0000125d-00001262
+0000125d	AviSound::ctor	5	1	0	0000125d-00001262
 00001262	Channel_set3DPositionZ	5	1	0	00001262-00001267
 00001299	pairStore	5	5	0	00001299-0000129e
 0000129e	MidiReader_dtor	5	1	0	0000129e-000012a3
@@ -99,7 +99,7 @@ entry	name	size	callers	callees	ranges
 000015d2	Seq_loadChannelDesc	5	1	0	000015d2-000015d7
 000015e1	CommandQueue::push	5	10	0	000015e1-000015e6
 000015e6	mixMonoGainFadeAdd	5	2	0	000015e6-000015eb
-000015f5	Ch5be88_ctor	5	2	0	000015f5-000015fa
+000015f5	Midi::ctor	5	2	0	000015f5-000015fa
 000015fa	Seq_listGetAt	5	26	0	000015fa-000015ff
 00001604	Sound_setAltName	5	3	0	00001604-00001609
 00001622	PtrList_freeNodesB	5	1	0	00001622-00001627
@@ -142,9 +142,9 @@ entry	name	size	callers	callees	ranges
 0000187a	Channel_findVoiceByTag	5	1	0	0000187a-0000187f
 00001889	Ds3DBuffer::setPosition	5	2	0	00001889-0000188e
 0000188e	Wave_Device::flushCommandQueue	5	1	0	0000188e-00001893
-00001893	Sound5b6a8_dtor	5	4	0	00001893-00001898
+00001893	Seq::dtor	5	4	0	00001893-00001898
 000018a2	Sound_setSourceType	5	16	0	000018a2-000018a7
-000018c5	Sound5c450_ctor	5	1	0	000018c5-000018ca
+000018c5	CVoiceRxMgr::ctor	5	1	0	000018c5-000018ca
 000018ca	MidiReader_freeContent	5	1	0	000018ca-000018cf
 000018f7	DsBuffer::setVolume	5	4	0	000018f7-000018fc
 00001906	Seq_firstTrackData	5	2	0	00001906-0000190b
@@ -162,7 +162,7 @@ entry	name	size	callers	callees	ranges
 0000198d	Channel_applyFlags	5	1	0	0000198d-00001992
 00001997	pumpWaveMessages	5	3	0	00001997-0000199c
 000019a1	CommandQueue::clear	5	3	0	000019a1-000019a6
-000019c4	Sound5c450_dtor	5	1	0	000019c4-000019c9
+000019c4	CVoiceRxMgr::dtor	5	1	0	000019c4-000019c9
 000019ce	DeviceBase_dtorA	5	2	0	000019ce-000019d3
 000019d3	clearNodeListB	5	1	0	000019d3-000019d8
 000019e2	Midi_Device::dtor	5	1	0	000019e2-000019e7
@@ -177,7 +177,7 @@ entry	name	size	callers	callees	ranges
 00001a55	Sound_reapIdle	5	1	0	00001a55-00001a5a
 00001a5f	Dll_Midi_Device::delete_device	5	0	0	00001a5f-00001a64
 00001a73	MixBuffer_ctor	5	1	0	00001a73-00001a78
-00001a78	Ch5c178_dtor	5	4	0	00001a78-00001a7d
+00001a78	AviSound::dtor	5	4	0	00001a78-00001a7d
 00001a7d	Channel_setPanGains	5	5	0	00001a7d-00001a82
 00001a87	delete_sound	5	20	0	00001a87-00001a8c
 00001a9b	Wave_Device::stop	5	1	0	00001a9b-00001aa0
@@ -218,8 +218,8 @@ entry	name	size	callers	callees	ranges
 00001ca3	Seq_rewindTracks	5	5	0	00001ca3-00001ca8
 00001cb2	writeWaveChunkB	5	1	0	00001cb2-00001cb7
 00001cb7	ResourceList_pushBack	5	1	0	00001cb7-00001cbc
-00001cc1	Ch5be88_dtorA	5	5	0	00001cc1-00001cc6
-00001cc6	Ch5c234_dtor	5	4	1	00001cc6-00001ccb
+00001cc1	Midi::dtor	5	5	0	00001cc1-00001cc6
+00001cc6	VoiceRx::dtor	5	4	1	00001cc6-00001ccb
 00001cda	PtrList_freeNodesA	5	1	1	00001cda-00001cdf
 00001cdf	nodeListClear2	5	3	1	00001cdf-00001ce4
 00001d02	mixStereoAdd	5	1	0	00001d02-00001d07
@@ -286,7 +286,7 @@ entry	name	size	callers	callees	ranges
 000020e5	Dll_Wave_In_Device::create_device	5	0	0	000020e5-000020ea
 000020f4	Voice_notifyChannelNotes	5	1	0	000020f4-000020f9
 000020f9	DirectSoundDevice::stopAll	5	1	0	000020f9-000020fe
-00002108	Ch5bb90_dtor	5	7	0	00002108-0000210d
+00002108	Wave::dtor	5	7	0	00002108-0000210d
 00002117	Channel_broadcastVoiceBit1	5	1	0	00002117-0000211c
 0000211c	Channel_setRateGlide	5	1	0	0000211c-00002121
 00002121	WaveInDevice_start	5	1	0	00002121-00002126
@@ -295,7 +295,7 @@ entry	name	size	callers	callees	ranges
 00002153	Channel_propagateFlag0	5	2	0	00002153-00002158
 0000215d	Midi_scanTrack	5	3	0	0000215d-00002162
 00002162	WaveInDevice_allocCaptureBuffers	5	1	0	00002162-00002167
-00002180	Ctrl5b668_ctor	5	1	0	00002180-00002185
+00002180	TrackCtrl::ctor	5	1	0	00002180-00002185
 0000218a	SoundTimer::stop	5	1	0	0000218a-0000218f
 0000219e	WaveInDevice_prepareHeaders	5	1	0	0000219e-000021a3
 000021a3	initSoundVoice	5	1	0	000021a3-000021a8
@@ -326,7 +326,7 @@ entry	name	size	callers	callees	ranges
 0000233d	DsBuffer::getPosition	5	3	0	0000233d-00002342
 00002351	appendNodeC	5	2	0	00002351-00002356
 00002360	SoundWindowObj_unsubclass	5	1	0	00002360-00002365
-0000237e	Ch5c3a4_ctor	5	1	0	0000237e-00002383
+0000237e	dllSoundList::ctor	5	1	0	0000237e-00002383
 00002388	DirectSoundDevice::setMasterVolume	5	1	0	00002388-0000238d
 0000239c	Track_resetReadState	5	1	0	0000239c-000023a1
 000023ab	Seq_buildTrack14	5	1	0	000023ab-000023b0
@@ -356,7 +356,7 @@ entry	name	size	callers	callees	ranges
 000024e6	SoundTimer::stopKeepLock	5	1	0	000024e6-000024eb
 000024f0	Channel_setRate	5	1	0	000024f0-000024f5
 00002509	beginDecodeStreamA	5	1	0	00002509-0000250e
-00002513	Sound5b6a8_ctor	5	2	0	00002513-00002518
+00002513	Seq::ctor_1001f4a0	5	2	0	00002513-00002518
 00002518	WaveStream::destroy	5	1	0	00002518-0000251d
 0000251d	mixMonoDupSet	5	1	0	0000251d-00002522
 00002522	stubReturnBC	5	1	0	00002522-00002527
@@ -366,7 +366,7 @@ entry	name	size	callers	callees	ranges
 00002595	Ctrl5b58c_dtorEmbedded	5	1	0	00002595-0000259a
 0000259a	Midi_Device::drainCommandQueue	5	1	0	0000259a-0000259f
 0000259f	openMmioSound	5	1	0	0000259f-000025a4
-000025b3	Ctrl5b5c0_ctor	5	1	0	000025b3-000025b8
+000025b3	NoteMap::ctor_1001bd90	5	1	0	000025b3-000025b8
 000025bd	NodeList_pushBack	5	2	0	000025bd-000025c2
 000025c2	Seq_cmdHandler8	5	2	0	000025c2-000025c7
 000025c7	Channel_set3DBufferStub	5	1	0	000025c7-000025cc
@@ -376,7 +376,7 @@ entry	name	size	callers	callees	ranges
 000025f4	getField204	5	2	0	000025f4-000025f9
 000025f9	Channel::set_loop_state	5	1	0	000025f9-000025fe
 0000260d	MidiDeviceBase_ctor	5	2	0	0000260d-00002612
-00002612	Ch5c2ec_dtor	5	3	0	00002612-00002617
+00002612	VoiceTx::dtor	5	3	0	00002612-00002617
 00002617	Voice_mixAddMono16	5	2	0	00002617-0000261c
 00002621	VoiceSlot_init	5	1	0	00002621-00002626
 0000262b	mixStereoGainAdd	5	1	0	0000262b-00002630
@@ -811,11 +811,11 @@ entry	name	size	callers	callees	ranges
 0001bc50	CtrlObject::ctor	50	0	0	0001bc50-0001bc82
 0001bca0	CtrlObject2_ctor	51	0	0	0001bca0-0001bcd3
 0001bcf0	FUN_1001bcf0	114	0	0	0001bcf0-0001bd62
-0001bd90	Ctrl5b5c0_ctor	151	0	0	0001bd90-0001be27
+0001bd90	NoteMap::ctor_1001bd90	151	0	0	0001bd90-0001be27
 0001be60	NoteMap::set_type	10	0	0	0001be60-0001be6a
 0001be80	NoteMap::set_total_class_size	8	0	0	0001be80-0001be88
 0001bea0	ChainObject_scalarDtor	34	0	2	0001bea0-0001bec2
-0001bee0	Ctrl5b19c_ctor	295	0	2	0001bee0-0001c007
+0001bee0	NoteMap::ctor_1001bee0	295	0	2	0001bee0-0001c007
 0001c060	MidiCtrl::dtor	7	0	0	0001c060-0001c067
 0001c080	Ctrl5b58c_dtor	229	0	1	0001c080-0001c165
 0001c1b0	FUN_1001c1b0	24	0	0	0001c1b0-0001c1c8
@@ -853,7 +853,7 @@ entry	name	size	callers	callees	ranges
 0001cb80	ChannelCtrl::set_total_class_size	8	0	0	0001cb80-0001cb88
 0001cba0	CtrlObject_scalarDtorC	30	0	2	0001cba0-0001cbbe
 0001cbd0	CtrlObject_dtorC	7	0	0	0001cbd0-0001cbd7
-0001cbf0	Ctrl5b668_ctor	72	0	0	0001cbf0-0001cc38
+0001cbf0	TrackCtrl::ctor	72	0	0	0001cbf0-0001cc38
 0001cc60	TrackCtrl::set_type	10	0	0	0001cc60-0001cc6a
 0001cc80	TrackCtrl::set_total_class_size	8	0	0	0001cc80-0001cc88
 0001cca0	CtrlObject_scalarDtorD	30	0	2	0001cca0-0001ccbe
@@ -909,11 +909,11 @@ entry	name	size	callers	callees	ranges
 0001f2a0	atexitDtor_list100b5000	167	0	1	0001f2a0-0001f347
 0001f380	dynInit_list100b4fe8	34	0	1	0001f380-0001f3a2
 0001f3c0	atexitDtor_list100b4fe8	167	0	1	0001f3c0-0001f467
-0001f4a0	Sound5b6a8_ctor	426	0	5	0001f4a0-0001f64a
+0001f4a0	Seq::ctor_1001f4a0	426	0	5	0001f4a0-0001f64a
 0001f6c0	Sound5b6a8_scalarDtor	30	0	2	0001f6c0-0001f6de
 0001f6f0	Seq_ctor	358	0	5	0001f6f0-0001f856
 0001f8c0	Voice::update	1338	0	7	0001f8c0-0001fdfa
-0001ff50	Sound5b6a8_dtor	640	0	6	0001ff50-000201d0
+0001ff50	Seq::dtor	640	0	6	0001ff50-000201d0
 00020270	FUN_10020270	8	0	0	00020270-00020278
 00020290	Seq::loadFile	148	0	4	00020290-00020324
 00020360	Midi_loadMemoryAndPreRoll	211	0	3	00020360-00020433
@@ -1204,7 +1204,7 @@ entry	name	size	callers	callees	ranges
 0002b4e0	SubChannel_ctor	190	0	1	0002b4e0-0002b59e
 0002b5d0	Wave::is_loaded	15	0	0	0002b5d0-0002b5df
 0002b5f0	Ch5bb90_scalarDtor	30	0	2	0002b5f0-0002b60e
-0002b620	Ch5bb90_dtor	273	0	2	0002b620-0002b731
+0002b620	Wave::dtor	273	0	2	0002b620-0002b731
 0002b790	Wave::play	31	0	0	0002b790-0002b7af
 0002b7c0	startDevicePlayback	93	0	2	0002b7c0-0002b81d
 0002b840	Wave::play_1002b840	31	0	0	0002b840-0002b85f
@@ -1244,7 +1244,7 @@ entry	name	size	callers	callees	ranges
 0002c400	Wave::set_ypos	31	0	0	0002c400-0002c41f
 0002c430	Wave::set_zpos	31	0	0	0002c430-0002c44f
 0002c460	Wave::is_3d	18	0	0	0002c460-0002c472
-0002c490	Ch5bb90_ctor	214	0	1	0002c490-0002c566
+0002c490	MpegStream::ctor	214	0	1	0002c490-0002c566
 0002c5b0	MixerVoiceArray_scalarDtor	30	0	2	0002c5b0-0002c5ce
 0002c5e0	destroyMixerVoices	327	0	2	0002c5e0-0002c727
 0002c790	FUN_1002c790	51	0	0	0002c790-0002c7c3
@@ -1270,9 +1270,9 @@ entry	name	size	callers	callees	ranges
 0002d240	Voice_setName	93	0	2	0002d240-0002d29d
 0002d2c0	FUN_1002d2c0	287	0	0	0002d2c0-0002d3df
 0002d430	getField204	7	0	0	0002d430-0002d437
-0002d450	Ch5be88_ctor	166	0	0	0002d450-0002d4f6
+0002d450	Midi::ctor	166	0	0	0002d450-0002d4f6
 0002d530	Ch5be88_scalarDtorA	30	0	2	0002d530-0002d54e
-0002d560	Ch5be88_dtorA	226	0	2	0002d560-0002d642
+0002d560	Midi::dtor	226	0	2	0002d560-0002d642
 0002d690	Midi::play	18	0	0	0002d690-0002d6a2
 0002d6c0	Midi::set_volume	13	0	0	0002d6c0-0002d6cd
 0002d6e0	Midi::set_frame	23	0	0	0002d6e0-0002d6f7
@@ -1340,9 +1340,9 @@ entry	name	size	callers	callees	ranges
 0002e790	Ambience::load	24	0	0	0002e790-0002e7a8
 0002e7c0	Ambience::load_1002e7c0	240	0	3	0002e7c0-0002e8b0
 0002e8f0	Ambience::unload	44	0	0	0002e8f0-0002e91c
-0002e930	Ch5c178_ctor	153	0	1	0002e930-0002e9c9
+0002e930	AviSound::ctor	153	0	1	0002e930-0002e9c9
 0002ea00	Ch5c178_scalarDtor	30	0	2	0002ea00-0002ea1e
-0002ea30	Ch5c178_dtor	201	0	2	0002ea30-0002eaf9
+0002ea30	AviSound::dtor	201	0	2	0002ea30-0002eaf9
 0002eb40	openSourceType4	105	0	2	0002eb40-0002eba9
 0002ebd0	AviSound::release	59	0	1	0002ebd0-0002ec0b
 0002ec20	AviSound::start	25	0	0	0002ec20-0002ec39
@@ -1358,7 +1358,7 @@ entry	name	size	callers	callees	ranges
 0002eec0	FUN_1002eec0	3	0	0	0002eec0-0002eec3
 0002eee0	VoiceRx::get_nbuffers	18	0	0	0002eee0-0002eef2
 0002ef10	Ch5c234_scalarDtor	30	0	2	0002ef10-0002ef2e
-0002ef40	Ch5c234_dtor	220	1	2	0002ef40-0002f01c
+0002ef40	VoiceRx::dtor	220	1	2	0002ef40-0002f01c
 0002f060	openSourceType6	100	0	2	0002f060-0002f0c4
 0002f0f0	VoiceRx::release	59	0	1	0002f0f0-0002f12b
 0002f140	VoiceRx::start	18	0	0	0002f140-0002f152
@@ -1371,7 +1371,7 @@ entry	name	size	callers	callees	ranges
 0002f380	FUN_1002f380	8	0	0	0002f380-0002f388
 0002f3a0	FUN_1002f3a0	3	0	0	0002f3a0-0002f3a3
 0002f3c0	Ch5c2ec_scalarDtor	30	0	2	0002f3c0-0002f3de
-0002f3f0	Ch5c2ec_dtor	223	0	2	0002f3f0-0002f4cf
+0002f3f0	VoiceTx::dtor	223	0	2	0002f3f0-0002f4cf
 0002f510	VoiceTx::release	15	0	0	0002f510-0002f51f
 0002f530	VoiceTx::start	40	0	0	0002f530-0002f558
 0002f570	VoiceTx::stop	21	0	0	0002f570-0002f585
@@ -1381,7 +1381,7 @@ entry	name	size	callers	callees	ranges
 0002f6b0	VoiceTx::get_next_buffer	18	0	0	0002f6b0-0002f6c2
 0002f6e0	VoiceTx::return_buffer	31	0	0	0002f6e0-0002f6ff
 0002f710	do_message	21	0	0	0002f710-0002f725
-0002f740	Ch5c3a4_ctor	107	0	2	0002f740-0002f7ab
+0002f740	dllSoundList::ctor	107	0	2	0002f740-0002f7ab
 0002f7d0	dllSoundList::get_game_hwnd	6	0	0	0002f7d0-0002f7d6
 0002f7f0	FUN_1002f7f0	8	0	0	0002f7f0-0002f7f8
 0002f810	FUN_1002f810	3	0	0	0002f810-0002f813
@@ -1403,9 +1403,9 @@ entry	name	size	callers	callees	ranges
 0002ffd0	updateSoundTimer	17	0	1	0002ffd0-0002ffe1
 00030000	FUN_10030000	43	0	0	00030000-0003002b
 00030040	FUN_10030040	44	0	0	00030040-0003006c
-00030080	Sound5c450_ctor	147	0	2	00030080-00030113
+00030080	CVoiceRxMgr::ctor	147	0	2	00030080-00030113
 00030150	Sound5c450_scalarDtor	30	0	2	00030150-0003016e
-00030180	Sound5c450_dtor	451	0	4	00030180-00030343
+00030180	CVoiceRxMgr::dtor	451	0	4	00030180-00030343
 000303d0	CVoiceRxMgr::detach	8	0	1	000303d0-000303d8
 000303f0	Sound_stop	303	0	3	000303f0-0003051f
 00030570	Sound_freeBufferList	280	0	3	00030570-00030688

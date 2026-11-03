@@ -437,8 +437,8 @@ unsigned __fastcall Pull_re(void* self, void*, void* dst, unsigned count, unsign
 // Each case allocates (operator new) and builds one Sound class, stores it at *out and returns 0; a NULL allocation leaves
 // *out = 0 (the heap stand-in never returns NULL, so those arms do not run). Cases idx1 and idx4 first return 3 when the
 // gate global [0x100b4a1c] is 0 (0x100094d5 / 0x10009583). Index 2 is the default (0xb). The seven constructors
-// (MultiSound_ctorWithType 0x10039790, Sound5b6a8_ctor 0x1001f4a0, WaveStream::ctor 0x10006020, Sound::ctor 0x10003f30,
-// Sound5c450_ctor 0x10030080, StreamReader_ctor 0x10031200, Ch5c3a4_ctor 0x1002f740) and the name setters (Object_setName
+// (MultiSound_ctorWithType 0x10039790, Seq::ctor_1001f4a0 0x1001f4a0, WaveStream::ctor 0x10006020, Sound::ctor 0x10003f30,
+// CVoiceRxMgr::ctor 0x10030080, StreamReader_ctor 0x10031200, dllSoundList::ctor 0x1002f740) and the name setters (Object_setName
 // 0x1002bb10, Sound_assignName 0x1002ddf0) are all C3; the fixture stubs them (recording, returning `this`), so this body's
 // evidence is the dispatch (which type, which size, which constructor and name call), not the constructors' interiors.
 // Object_setName / Sound_assignName take only `name`: the -1 stored at [esp+0x10] before each call is the EH try-level, not
@@ -475,7 +475,7 @@ int __cdecl CreateSound_re(void** out, const char* name, unsigned type) {
         if (!c3fq_g<unsigned>(0x000b4a1c)) return 3;                           // 0x100094d5-0x100094de
         {
             void* o = c3fq_new(0x948);                                         // 0x100094f3-0x100094f8
-            if (o) c3fq_fn<Ctor0_t>(0x00002513)(o, 0);                        // 0x10009510-0x10009512 Sound5b6a8_ctor
+            if (o) c3fq_fn<Ctor0_t>(0x00002513)(o, 0);                        // 0x10009510-0x10009512 Seq::ctor_1001f4a0
             *out = o;                                                          // 0x1000952a
             c3fq_fn<SetName_t>(0x0000105f)(o, 0, name);           // 0x1000952c Sound_assignName
             return 0;                                                          // 0x10009531
@@ -497,7 +497,7 @@ int __cdecl CreateSound_re(void** out, const char* name, unsigned type) {
         }
     case 5: {                                                                  // 0x100095e1 Sound5c450, 0xe8
         void* o = c3fq_new(0xe8);                                            // 0x100095e1-0x100095e6
-        if (o) c3fq_fn<Ctor0_t>(0x000018c5)(o, 0);                          // 0x10009604 Sound5c450_ctor
+        if (o) c3fq_fn<Ctor0_t>(0x000018c5)(o, 0);                          // 0x10009604 CVoiceRxMgr::ctor
         *out = o;                                                            // 0x1000960d
         return 0;                                                            // 0x1000960f
     }
@@ -509,7 +509,7 @@ int __cdecl CreateSound_re(void** out, const char* name, unsigned type) {
     }
     case 7: {                                                                  // 0x10009675 Ch5c3a4, 0x10c
         void* o = c3fq_new(0x10c);                                           // 0x10009675-0x1000967a
-        if (o) c3fq_fn<Ctor0_t>(0x0000237e)(o, 0);                          // 0x10009694 Ch5c3a4_ctor
+        if (o) c3fq_fn<Ctor0_t>(0x0000237e)(o, 0);                          // 0x10009694 dllSoundList::ctor
         *out = o;                                                            // 0x1000969d
         return 0;                                                            // 0x1000969f
     }

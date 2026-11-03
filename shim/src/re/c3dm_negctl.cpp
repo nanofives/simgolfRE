@@ -714,7 +714,7 @@ void __fastcall WidgetClearArea_re(void* self, void*, int v) {
     reinterpret_cast<Thiscall2_t>(Vtbl(dev)[0x44 / 4])(dev, nullptr, v, 0);      // 0x00478b3b-0x00478b40
 }
 
-// 0x004845d0  Snd::queryDevice4845d0(): the device at +0x40 (mov ecx, [ecx + 0x40], 0x004845d0); null returns 0 (xor eax,
+// 0x004845d0  Snd::isPlaying_4845d0(): the device at +0x40 (mov ecx, [ecx + 0x40], 0x004845d0); null returns 0 (xor eax,
 // eax, 0x004845dc); otherwise a tail jump to its virtual slot 0x5c (jmp [eax + 0x5c], 0x004845d9), whose result is returned.
 typedef int(__fastcall* SndQuery_t)(void* ecx, void* edx);
 SndQuery_t SndQueryDevice_orig;
@@ -831,7 +831,7 @@ int __cdecl ReleaseSoundObj_re(int p) {
     return (*reinterpret_cast<SndFn1_t*>(0x0083af70))(p + 1);                        // 0x0048411f-0x0048412d
 }
 
-// 0x004840e0  createSound4840e0(a, b, c): without the sound library it returns 1 (0x004840e9); otherwise the cdecl function at
+// 0x004840e0  createSound(a, b, c): without the sound library it returns 1 (0x004840e9); otherwise the cdecl function at
 // 0x0083af6c (table entry 0) runs with the same three arguments in the same order (push eax = c, push ecx = b, push edx = a,
 // call [0x83af6c] at 0x004840fb-0x0048410e) - the call is at 0x004840fe and the stack is cleaned at 0x00484104 and its result is returned (0x00484107).
 typedef int(__cdecl* CreateSound_t)(int a, int b, int c);
@@ -1005,7 +1005,7 @@ SG_HOOK("golf_clean.exe", 0x0047c360, Window_mouseDispatch250, M250::re, M250::o
 SG_HOOK("golf_clean.exe", 0x0047c500, Window_mouseDispatch258, M258::re, M258::orig);
 // 0x00478b30  Widget_clearArea
 SG_HOOK("golf_clean.exe", 0x00478b30, Widget_clearArea, WidgetClearArea_re, WidgetClearArea_orig);
-// 0x004845d0  Snd::queryDevice4845d0
+// 0x004845d0  Snd::isPlaying_4845d0
 SG_HOOK("golf_clean.exe", 0x004845d0, Snd_queryDevice4845d0, SndQueryDevice_re, SndQueryDevice_orig);
 // 0x004845e0  Snd::status
 SG_HOOK("golf_clean.exe", 0x004845e0, Snd_status, SndStatus_re, SndStatus_orig);
@@ -1019,7 +1019,7 @@ SG_HOOK("golf_clean.exe", 0x00483800, Surface_createFromId, SurfaceCreateFromId_
 SG_HOOK("golf_clean.exe", 0x00483850, Surface_createSized, SurfaceCreateSized_re, SurfaceCreateSized_orig);
 // 0x00484110  releaseSoundObj
 SG_HOOK("golf_clean.exe", 0x00484110, releaseSoundObj, ReleaseSoundObj_re, ReleaseSoundObj_orig);
-// 0x004840e0  createSound4840e0
+// 0x004840e0  createSound
 SG_HOOK("golf_clean.exe", 0x004840e0, createSound4840e0, CreateSound4840e0_re, CreateSound4840e0_orig);
 // 0x00484130  clearSoundPtrs
 SG_HOOK("golf_clean.exe", 0x00484130, clearSoundPtrs, ClearSoundPtrs_re, ClearSoundPtrs_orig);

@@ -126,7 +126,8 @@ S10.8 (log/roadmap/S10/8_merge.md section 2b): these 100 records are celebrity v
 mainLoop 0x00417a5a draws a celebrity from g_celebrities 0x0055d738 for a type-5 lot, posts string 0x004c6444 and calls
 spawnObject, which copies the celebrity's kind byte (0x0040120a) into record +0x20 (0x00401232); +0x22 is one of six
 layout banks of g_recordBanks 0x004e6d20. The base correction above stands. The symbol and type renames (g_animalRecords
--> g_vipResidents, Animal -> VipResident) rename port symbols and wait for a port step (decision D1, merge I16).
+-> g_vipResidents, Animal -> VipResident) were applied by roadmap S11.4 (2026-11-01, log/roadmap/S11/4_notes.md), with
+g_recordBanks -> g_homeLayouts (SgRecordBank -> SgHomeLayout).
 
 **Habitats** 0x572cb0 (128 x 0x14, B clusters 797 / 798): documented for stream B, not typed here: +0 / +4 world
 x / y, +8 flags, +0xc head index (-1 = head), +0xe animation state, +0x10 frame, +0x11 direction, +0x12 kind 0..8 (0xff

@@ -52,7 +52,7 @@ uint32_t propagate_type11(Ctx &ctx, int32_t x, int32_t y);  // returns the origi
 // rebuildTileCoverage: clears flag bit 0x40 everywhere, flood-marks from the clubhouse footprint (placed object 0),
 // then recomputes bit 0x40 of every placed object's flags byte.
 void rebuild_tile_coverage(Ctx &ctx);
-// relaxTile42f630 / raiseFromNeighbours: g_tileLevel[x][y] lowered (raised) to the lowest (highest) qualifying
+// propagateMinTileLevel / raiseFromNeighbours: g_tileLevel[x][y] lowered (raised) to the lowest (highest) qualifying
 // orthogonal neighbour of the same type; 1 when it changed.
 int32_t relax_tile(Ctx &ctx, int32_t x, int32_t y);
 int32_t raise_from_neighbours(Ctx &ctx, int32_t x, int32_t y, int32_t same_byte);
@@ -64,8 +64,8 @@ void spread_shade(Ctx &ctx, int32_t row, int32_t col, int32_t value);
 // heightBlend: the display height level 3..15 of tile (x, y) (3 off the grid or with g_flags bit 0; the corner level
 // once g_date != 0; else sampleHeight scaled by g_heightRelief and the course record's relief and type).
 int32_t height_blend(Ctx &ctx, int32_t x, int32_t y);
-// rateTile: rating of golfer record i (skills, class, lie under the ball, preference flag), capped at 330.
-int32_t rate_tile(Ctx &ctx, int32_t i);
+// golferShotReach: rating of golfer record i (skills, class, lie under the ball, preference flag), capped at 330.
+int32_t golfer_shot_reach(Ctx &ctx, int32_t i);
 // markTileKind11: variant 2 on every tile of collar group 0x11, then propagateType11 on each of them.
 uint32_t mark_tile_kind11(Ctx &ctx);  // returns the original's eax
 // spreadAllShade: clears g_tileShadeA / B, then (ball-stop total >= 10) spreads every g_tileMoodUp / Down byte.
@@ -87,15 +87,15 @@ void corner_range(Ctx &ctx, int32_t x, int32_t y, int32_t &mx, int32_t &mn);
 // an even corner; the g_cornerCache byte when flag != 0 and it is non-zero; per the type's TTA_* flags the tile level
 // or cornerRange's min / max, 3 for flag 8; else heightBlend of that corner.
 int32_t corner_heights(Ctx &ctx, int32_t x, int32_t y, int32_t corner, int32_t flag);
-// tileQuery449310: cornerHeights(a, b, c, 1).
-int32_t tile_query449310(Ctx &ctx, int32_t a, int32_t b, int32_t c);
+// cornerHeightAt: cornerHeights(a, b, c, 1).
+int32_t corner_height_at(Ctx &ctx, int32_t a, int32_t b, int32_t c);
 // slopeY / slopeX: the corner-height difference across the half of the tile that world point (x, y) lies in (0 for
 // g_flags bit 0, types 7 / 9 and types with flags & 0xe).
 int32_t slope_y(Ctx &ctx, int32_t x, int32_t y);
 int32_t slope_x(Ctx &ctx, int32_t x, int32_t y);
 // slopeMix: dirDy[dir] * slopeX + dirDx[dir] * slopeY, both clamped to -1..1 for odd dir.
 int32_t slope_mix(Ctx &ctx, int32_t x, int32_t y, int32_t dir);
-// relaxEdges42f530: recomputes g_tileWallMask[x][y] from the corner heights against the 4 orthogonal neighbours.
+// calcTileWallMask: recomputes g_tileWallMask[x][y] from the corner heights against the 4 orthogonal neighbours.
 void relax_edges(Ctx &ctx, int32_t x, int32_t y);
 // heightAt42fa30: terrain height (level - 3) * 16 at world point (x, y), bilinear over the tile's corners.
 int32_t height_at(Ctx &ctx, int32_t x, int32_t y);
@@ -112,7 +112,7 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
 
 // ---- new-course setup (terrain_setup.cpp); callees of other children through the registry
 // buildGolferBioText: the new-course reset (course, golfer, walker, object and history tables), the twelve arrival
-// type picks and the bios of golfer types 0..75; returns initRecords' result. NoReturn when a pick is impossible.
+// type picks and the bios of golfer types 0..75; returns initHomeLayouts' result. NoReturn when a pick is impossible.
 int32_t build_golfer_bio_text(Ctx &ctx);
 // customizeCharacter: the player's pair of golfers (updateMembership x2), optionally the chosen golf pro (its .pro
 // file through loadThemeFile into golfer type 76); returns g2's flags with the start walker's byte in the low byte.

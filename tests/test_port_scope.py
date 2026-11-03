@@ -12,6 +12,8 @@ pytestmark = pytest.mark.static
 
 sys.path.insert(0, str(ROOT / "re" / "tools"))
 import port_scope as PS  # noqa: E402
+sys.path.insert(0, str(ROOT / "port" / "test"))
+import renames  # noqa: E402  (S11.4: re/port tables keep the pre-S11.4 symbols)
 
 
 def fn(addr, name, tag="-", calls=(), phases=(), boot=False, touch=None, size=10, tag_src="own"):
@@ -90,7 +92,7 @@ def test_sim_objects_of_sim_core_are_listed():
     for r in scope:
         listed = [s for s in r["sim_objects"].split(";") if s]
         assert len(listed) == int(r["touches_sim_objects"])
-        assert set(listed) <= simsyms
+        assert set(renames.symbols(listed)) <= simsyms
         if r["port_module"] in ("sim-core", "sim-leaf-util"):
             assert r["addr"] in order
             assert set(listed) <= set(order[r["addr"]]["globals_sim"].split(";"))

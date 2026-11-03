@@ -26,10 +26,10 @@ NEGCTL_RED = [
     ("typeBit7Clear", 1, "bit 6"),
     ("appendEndearment", 1, "phrases 1 / 2 swapped"),
     ("appendWalkerName", 1, "table strings swapped"), ("appendWalkerName", 2, "flag bit 2"),
-    ("spawnObject", 1, "row / column swapped"), ("spawnObject", 2, "sprite base 0x14d"),
+    ("spawnVipResident", 1, "row / column swapped"), ("spawnVipResident", 2, "sprite base 0x14d"),
     ("spawnWalker", 1, "direction without -2"), ("spawnWalker", 2, "start offset 0x400"),
     ("addHabitatSlot", 1, "state -10"), ("addHabitatSlot", 2, "link 0"),
-    ("tickAnimals", 1, "last record skipped"),
+    ("updateVipResidents", 1, "last record skipped"),
     ("placeHabitat", 1, "flag mask 0xdf"),
     ("initGolferState", 1, "one golfer per open hole"),
     ("addGolferToTable", 1, "speed / 4"), ("addGolferToTable", 2, "forced event bit kept"),
@@ -37,7 +37,7 @@ NEGCTL_RED = [
 ]
 # wrong bodies of a function without vectors of its own, read RED through a caller's vectors: (function, mode, caller, what)
 NEGCTL_RED_VIA = [
-    ("placeAnimal", 2, "tickAnimals", "the wait is not counted down"),
+    ("updateVipResident", 2, "updateVipResidents", "the wait is not counted down"),
 ]
 # wrong bodies whose function needs a peer that is not registered yet (skipped until it is)
 NEGCTL_RED_PEER = [
@@ -49,7 +49,7 @@ NEGCTL_BLIND = [
     ("appendPairTrackPoint", 2, "count cap 32: no vector starts at count 31 (test_track_point_cap)"),
     ("addGolferPair", 2, "count not reset: every free slot's count is already 0 (test_add_golfer_pair_slots)"),
     ("resetGolfer", 1, "hole byte kept: every vector's hole byte is already 0 (test_reset_golfer_clears_hole)"),
-    ("tickAnimals:placeAnimal", 1, "on-screen frame wrap: the tick vectors are all off screen (test_place_animal_on_screen)"),
+    ("updateVipResidents:updateVipResident", 1, "on-screen frame wrap: the tick vectors are all off screen (test_place_animal_on_screen)"),
     ("updateWalkers", 1, "sale cash +3: no vector reaches the sale arm (test_update_walkers_sale)"),
 ]
 # no vectors at all: the state tests below run every mode (test_reset_golfer_state_*, test_compose_golfer_sprite_*)
@@ -171,19 +171,19 @@ def test_reset_golfer_clears_hole(portlib, mode):
 # ------------------------------------------------------------------------------------------- spawning
 def test_spawn_object_no_free_cell_never_returns(portlib):
     """No free occupancy cell in rows / columns 0..3: the original's draw loop never ends; the port reports it."""
-    an, rb = off(portlib, "g_animalRecords"), off(portlib, "g_recordBanks")
+    an, rb = off(portlib, "g_vipResidents"), off(portlib, "g_homeLayouts")
     with portlib.state() as st:
         st.set_data_base(VL.DATA_VA)
         st.write(an + 0x20, struct.pack("<h", -1))
         st.write(rb + 2 * 0x74 + 0x50, b"\x01" * 36)
         with pytest.raises(L.SgError) as e:
-            st.call("spawnObject", [2, 0, 1, 1])
+            st.call("spawnVipResident", [2, 0, 1, 1])
         assert e.value.code == L.SG_E_NO_RETURN
         # record 0 was claimed before the loop (as in the original), so the next spawn takes record 1
         assert struct.unpack("<h", st.read(an + 0x20, 2))[0] == 0
         st.write(an + 0x3c + 0x20, struct.pack("<h", -1))
         st.write(rb + 2 * 0x74 + 0x50 + 3 * 6 + 2, b"\xff")
-        st.call("spawnObject", [2, 0, 1, 1])
+        st.call("spawnVipResident", [2, 0, 1, 1])
         sx, sy = struct.unpack("<ii", st.read(an + 0x3c + 0x30, 8))
     assert (sx, sy) == (((3 << 10) + 0x200) // 2, ((2 << 10) + 0x200) // 2)
 
@@ -231,28 +231,28 @@ def _animal_on_screen(s, frame, cols):
     s.w("g_screenWidth", 0, "i", 800)
     s.w("g_screenHeight", 0, "i", 600)
     s.w("g_tileTypeAttrs", 0x2c, "I", 8)
-    s.w("g_animalRecords", 0x20, "hhhhhhh", 3, 0, 0, 1, 1, 0, 0x140)
-    s.w("g_animalRecords", 0x30, "iibbb", 0x200, 0x200, 0, 0, frame)
+    s.w("g_vipResidents", 0x20, "hhhhhhh", 3, 0, 0, 1, 1, 0, 0x140)
+    s.w("g_vipResidents", 0x30, "iibbb", 0x200, 0x200, 0, 0, frame)
     s.w("g_sheetCols", 4 * (3 + 0x140), "i", cols)
 
 
 @pytest.mark.parametrize("mode", [0, 1])
 def test_place_animal_on_screen(portlib, mode):
     """coverage none: the on-screen arm: frame % count, advance and wrap, g_textBuffer = x digits, separator, y digits."""
-    portlib.negctl("placeAnimal", mode)
+    portlib.negctl("updateVipResident", mode)
     with portlib.state() as st:
         st.set_data_base(VL.DATA_VA)
         s = S(portlib, st)
         _animal_on_screen(s, 7, 4)
         s.w("g_flags", 0, "I", 4)                       # paused: no advance, no rolls
-        st.call("placeAnimal", [0])
-        assert s.r("g_animalRecords", 0x3a, "b") == 3   # 7 % 4, not advanced
+        st.call("updateVipResident", [0])
+        assert s.r("g_vipResidents", 0x3a, "b") == 3   # 7 % 4, not advanced
         assert st.read(s.o["g_textBuffer"], 3) == b"11\0"   # the separator pool is empty in a zero state
         s.w("g_flags", 0, "I", 0)
-        s.w("g_animalRecords", 0x2a, "h", 5)            # waiting: the wait arm returns before the rolls
-        st.call("placeAnimal", [0])
-        frame = s.r("g_animalRecords", 0x3a, "b")
-        assert s.r("g_animalRecords", 0x2a, "h") == 4 and s.r("g_animalRecords", 0x2c, "h") == 0x140
+        s.w("g_vipResidents", 0x2a, "h", 5)            # waiting: the wait arm returns before the rolls
+        st.call("updateVipResident", [0])
+        frame = s.r("g_vipResidents", 0x3a, "b")
+        assert s.r("g_vipResidents", 0x2a, "h") == 4 and s.r("g_vipResidents", 0x2c, "h") == 0x140
     assert frame == (0 if mode == 0 else 4), "3 + 1 wraps at the frame count 4"
 
 
@@ -262,7 +262,7 @@ def test_place_animal_zero_frame_count_faults(portlib):
         st.set_data_base(VL.DATA_VA)
         _animal_on_screen(S(portlib, st), 1, 0)
         with pytest.raises(L.SgError) as e:
-            st.call("placeAnimal", [0])
+            st.call("updateVipResident", [0])
         assert e.value.code == L.SG_E_DIVIDE
 
 
@@ -274,19 +274,19 @@ def test_place_animal_walk_step(portlib, mode):
     portlib.exe_load()
     dx = struct.unpack("<8i", portlib.exe_const("f_tab_dirDx_4c2878"))
     dy = struct.unpack("<8i", portlib.exe_const("f_tab_dirDy_4c2898"))
-    portlib.negctl("placeAnimal", mode)
+    portlib.negctl("updateVipResident", mode)
     with portlib.state() as st:
         st.set_data_base(VL.DATA_VA)
         st.fill_from_exe()
         s = S(portlib, st)
         s.w("g_flags", 0, "I", 4)
-        s.w("g_animalRecords", 0x2a, "hh", 0, 0x15a)
-        s.w("g_animalRecords", 0x30, "iiBBb", 0x300, 0x100, 3, 2, 0)
-        st.call("placeAnimal", [0])
-        assert s.r("g_animalRecords", 0x30, "ii") == (0x300 + int((dx[3] << 10) / 32), 0x100 + int((dy[3] << 10) / 32))
-        assert s.r("g_animalRecords", 0x39, "B") == 1 and s.r("g_animalRecords", 0x2c, "h") == 0x15a
-        st.call("placeAnimal", [0])
-        assert s.r("g_animalRecords", 0x39, "B") == 0 and s.r("g_animalRecords", 0x2c, "h") == 0x140
+        s.w("g_vipResidents", 0x2a, "hh", 0, 0x15a)
+        s.w("g_vipResidents", 0x30, "iiBBb", 0x300, 0x100, 3, 2, 0)
+        st.call("updateVipResident", [0])
+        assert s.r("g_vipResidents", 0x30, "ii") == (0x300 + int((dx[3] << 10) / 32), 0x100 + int((dy[3] << 10) / 32))
+        assert s.r("g_vipResidents", 0x39, "B") == 1 and s.r("g_vipResidents", 0x2c, "h") == 0x15a
+        st.call("updateVipResident", [0])
+        assert s.r("g_vipResidents", 0x39, "B") == 0 and s.r("g_vipResidents", 0x2c, "h") == 0x140
 
 
 @pytest.mark.parametrize("length,flags,par", [(0x272, 0, 6), (0x271, 0, 5), (0x1db, 0, 5), (0xfa, 0, 4), (0xe1, 0x60, 3),

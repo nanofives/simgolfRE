@@ -55,7 +55,7 @@ DROPPED = sorted((set(WIDGET_DROPPED) | {
     0x00475580, 0x00475840, 0x00475C90, 0x00475210, 0x00474440,   # saveBmp, loadImage, fillRegion, loadBmpSurface, drawSprite
 }) - {TEXT_PUT})
 SHOW_SCREEN, GFX_FLUSH_A, PUMP_INPUT_BD0 = 0x00483BB0, 0x00497B00, 0x00483BD0
-NORET = (0x00483D30, 0x00483C30, 0x00483C70, 0x00483BD0)   # enterModal483d30, pumpInput483c30, redrawAll, pumpInput483bd0
+NORET = (0x00483D30, 0x00483C30, 0x00483C70, 0x00483BD0)   # flushInput, pumpInput483c30, redrawAll, doAllTasks
 # peers scripted on both sides in the info panel's oracle (their own oracles are phase 3.5's: their story files cannot be
 # opened under the emulator); eax = script_value(args, salt) for storyText, 0 for the others; the calls are compared
 SCRIPTED = {"loadStoryStrings": (0x00466B70, 4), "storyText": (0x004668F0, 3), "substituteStoryNames": (0x0045C460, 1),
@@ -101,8 +101,8 @@ def emu_run(name, img, args, inputs, cursors, rule, salt=None, block=None):
         if name != "showBulletinBoard" or a != PUMP_INPUT_BD0:
             emu.stub(a, 0, 0, False)
     if name == "showBulletinBoard":
-        # the board's wait is pumpInput483bd0, whose showScreen loop is where jgld dispatches the messages: its call is
-        # sent to the oracle's dispatch point (frameTick483cd0, which returns 0 and so ends the showScreen loop)
+        # the board's wait is doAllTasks, whose showScreen loop is where jgld dispatches the messages: its call is
+        # sent to the oracle's dispatch point (doMouse, which returns 0 and so ends the showScreen loop)
         data = bytearray(emu.img.data)
         at = SHOW_SCREEN - 0x00400000
         data[at:at + 5] = b"\xE9" + struct.pack("<i", CE.FRAME_TICK - (SHOW_SCREEN + 5))

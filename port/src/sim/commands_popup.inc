@@ -63,7 +63,7 @@ void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_
         const uint32_t set = bit & u32(mask);
         const uint32_t colour = set != 0 ? 0x80007fffu : 0x80000210u + (odd != 0 ? 0x1ef8u : 0u);
         if (sel == idx) popup_gx(ctx, "drawTextSurface", {line, u32(add32(left, 0x24)), u32(add32(line_y, 7)), colour});
-        else popup_gx(ctx, "drawText4049d0", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), colour});
+        else popup_gx(ctx, "drawTextWithColor", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), colour});
         if (flag4 == 0)
           popup_gx(ctx, "Surface_drawScaled", {GS(g_sprites561260) + 0x2c * (set != 0 ? 1u : 2u), root,
                                                u32(add32(left, 8)), u32(line_y), 1, 1, 1, 0});
@@ -71,7 +71,7 @@ void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_
           popup_gx(ctx, "Surface_stretchBlit", {bullets + 0x2c * (set != 0 ? 0u : 2u), bmask, root, u32(add32(left, 0xc)),
                                                 u32(add32(line_y, 4)), 0});
       } else {
-        popup_gx(ctx, "drawText4049d0", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), 0x80006318u});
+        popup_gx(ctx, "drawTextWithColor", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), 0x80006318u});
       }
     } else {
       popup_gx(ctx, "drawCenteredText2", {line, u32(x), u32(line_y), 0x80007ff0u + (flag4 != 0 ? 0xfu : 0u)});
@@ -241,10 +241,10 @@ int32_t text_input_box(Ctx &ctx, uint32_t title, int32_t x, int32_t y, int32_t m
       popup_gx(ctx, "Win_fillRect", {root, u32(sub32(x, 1)), u32(sub32(y, 1)), u32(add32(width, 0x20)), 0x30, 0x80007fffu});
       popup_gx(ctx, "Win_fillRect", {root, u32(add32(x, 1)), u32(add32(y, 1)), u32(add32(width, 0x20)), 0x30, 0x80000000u});
       popup_gx(ctx, "Win_fillRect", {root, u32(x), u32(y), u32(add32(width, 0x20)), 0x30, 0x800035b3u});
-      popup_gx(ctx, "drawText4049d0", {title, u32(add32(x, 4)), u32(add32(y, 6)), 0x80007fffu});
+      popup_gx(ctx, "drawTextWithColor", {title, u32(add32(x, 4)), u32(add32(y, 6)), 0x80007fffu});
       popup_gx(ctx, "Win_fillRect", {root, u32(add32(x, 0x10)), u32(add32(y, 0x17)), u32(width), 0x16, 0x80007fffu});
       popup_gx(ctx, "setDrawTarget", {root, font, 0, 0, 0});
-      popup_gx(ctx, "drawText4049d0", {tb, u32(add32(x, 0x14)), u32(add32(y, 0x1c)), 0x80000000u});
+      popup_gx(ctx, "drawTextWithColor", {tb, u32(add32(x, 0x14)), u32(add32(y, 0x1c)), 0x80000000u});
       const uint8_t saved = m.load<uint8_t>(tb + u32(cur));
       m.store<uint8_t>(tb + u32(cur), 0);
       const int32_t cx = add32(add32(x, text_put(ctx, font, tb)), 0x14);

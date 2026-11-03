@@ -166,7 +166,7 @@ void LowerStep(char* tile, int x, int y, int c, int x2, int y2, int copy) {
 // 0x0044a167 / 0x0044a176). For corners c = 1, 3, 5, 7 (ebp from 1, `add ebp, 2; cmp ebp, 8; jl`
 // 0x0044a323..0x0044a334) with the tile's height h = [tile + 4 + 8 * (c - 1) / 2] (the pointer at [esp+0x18] starts at
 // tile + 4, 0x00449fb2, and steps by 8, 0x0044a326; h is 0 for a NULL tile, 0x00449fca) and the target q =
-// tileQuery449310(x, y, c) - 3 (0x00449fdd / 0x00449fe2):
+// cornerHeightAt(x, y, c) - 3 (0x00449fdd / 0x00449fe2):
 //   q > h (`jle` 0x00449fea): Terrain::elevateCorner(tile, c) (0x00449ff8), [0x00820f2c] = 1 and the result byte = 1
 //     (0x00449ffd / 0x0044a004), then again while q > h, both re-read (0x0044a009..0x0044a042);
 //   else q is re-read and, when q < h (`jge` 0x0044a066 skips), one lowering step (0x0044a06c..0x0044a1a5), [0x00820f2c]

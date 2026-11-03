@@ -607,7 +607,7 @@ unsigned __fastcall LoadMulti_re(void* self, void*, const char* name) {
 // (0x10005474): a dword tag, a dword size n, then n bytes into the CtrlObject's +0x10 (0x10005488-0x100054ab). The frame holds
 // 0x18 bytes there: the CtrlObject's +0x28 is the SEH record's link that 0x100055e6 / 0x100055ed reload into fs:[0], so an n
 // above 0x18 replaces the thread's exception chain head with file bytes at the return. When the dword at +0x1c (the read's +0xc) is 3 (0x100054ad): operator new 0xe4
-// (0x100054be), Ctrl5b5c0_ctor (thunk 0x100025b3), then three (size, bytes) pairs read into the new object's +0x20, +8 and +0x58
+// (0x100054be), NoteMap::ctor_1001bd90 (thunk 0x100025b3), then three (size, bytes) pairs read into the new object's +0x20, +8 and +0x58
 // (0x100054fa-0x10005550); its embedded record +0x2c gets the CtrlObject's dwords +4..+0x24 (the word at +0x18) at the same
 // offsets (0x10005552-0x10005592): +4 'ctrl', +8 a stack dword nothing writes (the constructor skips it, the read starts at
 // +0x10), +0xc 0x18, then the bytes read (or the constructor's values where the read was short); a 0xc-byte node {0, 0, record}

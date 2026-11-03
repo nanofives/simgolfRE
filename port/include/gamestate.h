@@ -655,7 +655,7 @@ struct GameState {
     uint32_t f_stateptr_4e4a10[7];                           // +0x023a10 pointer
     char f_strpool_4e4a2c[71];                               // +0x023a2c const
     uint8_t gap_023a73[8877];                                // +0x023a73 unmodeled
-    SgRecordBank g_recordBanks[6];                           // +0x025d20 render
+    SgHomeLayout g_homeLayouts[6];                           // +0x025d20 render
     uint8_t gap_025fd8[10904];                               // +0x025fd8 unmodeled
     char g_itoaBuf4e9a70[16];                                // +0x028a70 sim
     int32_t g_animalCell;                                    // +0x028a80 render
@@ -850,7 +850,7 @@ struct GameState {
     uint8_t g_tileMoodDown[2500];                            // +0x0ab7e4 sim H0 saved
     int32_t g_ui_56d1a8[3];                                  // +0x0ac1a8 ui H3
     uint8_t gap_0ac1b4[4];                                   // +0x0ac1b4 unmodeled
-    Animal g_animalRecords[100];                             // +0x0ac1b8 sim saved
+    VipResident g_vipResidents[100];                         // +0x0ac1b8 sim saved
     char g_themeName[32];                                    // +0x0ad928 ui
     uint8_t gap_0ad948[4968];                                // +0x0ad948 unmodeled
     char g_namePool[4098];                                   // +0x0aecb0 sim H0 saved
@@ -2073,7 +2073,7 @@ static_assert(offsetof(GameState, f_strpool_4e4874) == 0x23874 && sizeof(GameSta
 static_assert(offsetof(GameState, f_stateptr_4e4a10) == 0x23a10 && sizeof(GameState::f_stateptr_4e4a10) == 0x1c, "f_stateptr_4e4a10");
 static_assert(offsetof(GameState, f_strpool_4e4a2c) == 0x23a2c && sizeof(GameState::f_strpool_4e4a2c) == 0x47, "f_strpool_4e4a2c");
 static_assert(offsetof(GameState, gap_023a73) == 0x23a73 && sizeof(GameState::gap_023a73) == 0x22ad, "gap_023a73");
-static_assert(offsetof(GameState, g_recordBanks) == 0x25d20 && sizeof(GameState::g_recordBanks) == 0x2b8, "g_recordBanks");
+static_assert(offsetof(GameState, g_homeLayouts) == 0x25d20 && sizeof(GameState::g_homeLayouts) == 0x2b8, "g_homeLayouts");
 static_assert(offsetof(GameState, gap_025fd8) == 0x25fd8 && sizeof(GameState::gap_025fd8) == 0x2a98, "gap_025fd8");
 static_assert(offsetof(GameState, g_itoaBuf4e9a70) == 0x28a70 && sizeof(GameState::g_itoaBuf4e9a70) == 0x10, "g_itoaBuf4e9a70");
 static_assert(offsetof(GameState, g_animalCell) == 0x28a80 && sizeof(GameState::g_animalCell) == 0x4, "g_animalCell");
@@ -2268,7 +2268,7 @@ static_assert(offsetof(GameState, g_sprite56c7b8) == 0xab7b8 && sizeof(GameState
 static_assert(offsetof(GameState, g_tileMoodDown) == 0xab7e4 && sizeof(GameState::g_tileMoodDown) == 0x9c4, "g_tileMoodDown");
 static_assert(offsetof(GameState, g_ui_56d1a8) == 0xac1a8 && sizeof(GameState::g_ui_56d1a8) == 0xc, "g_ui_56d1a8");
 static_assert(offsetof(GameState, gap_0ac1b4) == 0xac1b4 && sizeof(GameState::gap_0ac1b4) == 0x4, "gap_0ac1b4");
-static_assert(offsetof(GameState, g_animalRecords) == 0xac1b8 && sizeof(GameState::g_animalRecords) == 0x1770, "g_animalRecords");
+static_assert(offsetof(GameState, g_vipResidents) == 0xac1b8 && sizeof(GameState::g_vipResidents) == 0x1770, "g_vipResidents");
 static_assert(offsetof(GameState, g_themeName) == 0xad928 && sizeof(GameState::g_themeName) == 0x20, "g_themeName");
 static_assert(offsetof(GameState, gap_0ad948) == 0xad948 && sizeof(GameState::gap_0ad948) == 0x1368, "gap_0ad948");
 static_assert(offsetof(GameState, g_namePool) == 0xaecb0 && sizeof(GameState::g_namePool) == 0x1002, "g_namePool");

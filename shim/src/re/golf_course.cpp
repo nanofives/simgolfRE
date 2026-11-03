@@ -22,7 +22,7 @@ const Xy_t kObjectAt = reinterpret_cast<Xy_t>(0x0040df80);
 signed char tile(int cell) { return at<signed char>(0x005722e8 + cell); }
 unsigned courseRec() { return 0x00571ff4 + at<int>(0x0059bf90) * 0x2e; }
 
-// 0x00422530  rateTile(i): rating of golfer record i (0x100 bytes at 0x005794c0 + i*0x100), capped at 330.
+// 0x00422530  golferShotReach(i): rating of golfer record i (0x100 bytes at 0x005794c0 + i*0x100), capped at 330.
 Int1_t RateTile_orig;
 int __cdecl RateTile_re(int i) {
     const unsigned g = 0x005794c0 + i * 0x100;

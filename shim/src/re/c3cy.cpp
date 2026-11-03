@@ -11,7 +11,7 @@
 // cites the address of each instruction it reproduces. __thiscall is emulated with __fastcall (ecx = this, edx
 // unused). Callees run through their original addresses:
 //   MappedFile::dtor / MappedFile::open (exe) -> MappedFile::close 0x00492e80 (this batch)
-//   Snd::busy                               -> Snd::queryDevice4845d0 0x004845d0 (C2)
+//   Snd::busy                               -> Snd::isPlaying_4845d0 0x004845d0 (C2)
 //   jgld MappedFile::dtor                   -> MappedFile::close through its thunk 0x100018bb (this batch)
 //   jgld MappedFile::deletingDtor           -> MappedFile::dtor through its thunk 0x100012c1 (this batch),
 //                                              operator delete 0x1007e6d0 (heap stand-in in the fixture)
@@ -230,7 +230,7 @@ int __cdecl FileExists_re(const char* name) {
 
 // 0x00484b30  Snd::busy(this): with a device object at +0x40 (read 0x00484b33, `jne` 0x00484b38) or bit 4 of the
 // flags at +0x58 clear (`shr eax, 4; test al, 1` 0x00484b3d / 0x00484b40, `je` 0x00484b42), the answer comes from
-// Snd::queryDevice4845d0 0x004845d0 (0x00484b68 / 0x00484b6a), which asks the device's vtable slot +0x5c and returns
+// Snd::isPlaying_4845d0 0x004845d0 (0x00484b68 / 0x00484b6a), which asks the device's vtable slot +0x5c and returns
 // 0 without a device. Otherwise a zero start time at +0x68 (0x00484b44 / 0x00484b49) returns 0 (0x00484b64), and a
 // set one compares the elapsed time timeGetTime() [0x4ba21c] - [+0x68] (0x00484b4b / 0x00484b57) with the duration
 // at +0x64 unsigned: duration > elapsed returns 1 (`cmp ecx, eax; jbe` 0x00484b59 / 0x00484b5b, 0x00484b5d), else 0.

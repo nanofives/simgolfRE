@@ -335,7 +335,7 @@ SAVE_PEERS = [
     (0x0043DBE0, "loadWorldAssets", 0, False), (0x00449520, "refreshTerrain", 0, False),
     (0x0040D320, "drawWindow", 4, False), (0x00480C80, "Window::refreshFull", 1, True),
     (0x00442180, "loadInterfaceArt", 1, False), (0x004315E0, "buildGolferBioText", 0, False),
-    (0x00483D30, "enterModal483d30", 0, False), (0x0046D6E0, "showPopup", 5, False),
+    (0x00483D30, "flushInput", 0, False), (0x0046D6E0, "showPopup", 5, False),
     (0x00449540, "rebuildTerrainGrid", 0, False),
     (0x0046DE70, "scrollTextWindow", 3, False), (0x004481B0, "playSound", 5, False), (0x0040CB00, "startMessage", 3, False), (0x0045B2C0, "textInputBox", 4, False),
 ]

@@ -117,7 +117,7 @@ static inline void AppendText(const char* s) {
 }  // namespace
 
 // ====================================================================================================================
-// 0x004038f0  drawFlyingBall(): queues the sprites and labels of the walker records 0x00585850 (64 x 0x4c) for the
+// 0x004038f0  drawWalkers(): queues the sprites and labels of the walker records 0x00585850 (64 x 0x4c) for the
 // current view, plus the flying-golfer sprite when the selection [0x004c2e10] names a golfer (>= 0x80).
 // ====================================================================================================================
 // cdecl, no arguments, plain `ret` (0x00403efd); mainLoop's call at 0x0041596e is followed by `mov esi, [0x4c2e28]`, so

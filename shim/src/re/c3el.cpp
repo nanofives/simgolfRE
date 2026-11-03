@@ -60,7 +60,7 @@ const unsigned kIatSetCursor = 0x004ba1f8;
 // 0x00497b00  gfxFlushA: ecx = [0x008400b8] (0x00497b00); zero returns with eax untouched (test 0x00497b06, je 0x00497b08 ->
 // ret 0x00497b18). eax = [0x008400b0] (0x00497b0a); zero returns 0 (0x00497b0f / 0x00497b11). Otherwise a tail jmp to
 // netPump 0x0049aa70 (0x00497b13) with ecx = the net object: the result is netPump's. The naked entry hands the entry eax to
-// the body (pumpInput483bd0 / 483c30 / 483c90 / 483cf0 jump here with eax = 0).
+// the body (doAllTasks / 483c30 / 483c90 / 483cf0 jump here with eax = 0).
 static int __cdecl GfxFlushABody(int eaxIn) {
     void* net = G<void*>(0x008400b8);                                       // 0x00497b00
     if (net == 0) return eaxIn;                                             // 0x00497b06 / 0x00497b08
@@ -79,7 +79,7 @@ C0_t GfxFlushA_orig;
 // 0x00497b00
 SG_HOOK("golf_clean.exe", 0x00497b00, gfxFlushA, GfxFlushA_re, GfxFlushA_orig);
 
-// 0x00483c90  pumpInput483c90: [0x0083ad4c] = 2 (0x00483c90); redrawAll 0x00483c70 (0x00483c9a); a zero result goes to
+// 0x00483c90  doAllKeys: [0x0083ad4c] = 2 (0x00483c90); redrawAll 0x00483c70 (0x00483c9a); a zero result goes to
 // 0x00483cb6 (test 0x00483c9f, je 0x00483ca1). A non-zero result loops: [0x0083ad4c] = 2 (0x00483ca3), redrawAll (0x00483cad)
 // while non-zero (0x00483cb2 / 0x00483cb4). [0x0083ad4c] = 0 (0x00483cb6), then a tail jmp to gfxFlushA (0x00483cc0) with
 // eax = 0 (the loop leaves on a zero result).
@@ -97,7 +97,7 @@ C0_t PumpInput483c90_orig;
 // 0x00483c90
 SG_HOOK("golf_clean.exe", 0x00483c90, pumpInput483c90, PumpInput483c90_re, PumpInput483c90_orig);
 
-// 0x00483cf0  pumpInput483cf0: the same shape with [0x0083ad4c] = 8 (0x00483cf0, 0x00483d03) and frameTick483cd0 0x00483cd0
+// 0x00483cf0  doAllMouse: the same shape with [0x0083ad4c] = 8 (0x00483cf0, 0x00483d03) and doMouse 0x00483cd0
 // (0x00483cfa, 0x00483d0d; tests 0x00483cff / 0x00483d01 and 0x00483d12 / 0x00483d14); [0x0083ad4c] = 0 (0x00483d16) and a
 // tail jmp to gfxFlushA (0x00483d20) with eax = 0.
 int __cdecl PumpInput483cf0_re() {
@@ -126,7 +126,7 @@ SG_HOOK("golf_clean.exe", 0x00483cf0, pumpInput483cf0, PumpInput483cf0_re, PumpI
 //   slot +0x10 (0x0047bb02) and [0x0083ab30] = 0 (0x0047bb05). [0x0083ab38] = 0 (0x0047bb0d).
 //   A non-NULL obj (0x0047bb0b / 0x0047bb13) is stored in [0x0083ab50] (0x0047bb15) and gets its slot +4 with 0 (0x0047bb20).
 //   flags & 2 == 0 (0x0047bb23..0x0047bb2a) calls this's slot +4 with 0 (0x0047bb31).
-//   enterModal483d30 (0x0047bb34); SetCursor(LoadCursorA(NULL, 0x7f00)) through [0x004ba1c4] / [0x004ba1f8] (0x0047bb3f,
+//   flushInput (0x0047bb34); SetCursor(LoadCursorA(NULL, 0x7f00)) through [0x004ba1c4] / [0x004ba1f8] (0x0047bb3f,
 //   0x0047bb46).
 //   flags & 2 != 0 (0x0047bb4c / 0x0047bb4e) or [0x0083ab54] != this (0x0047bb50 / 0x0047bb56) returns 0.
 //   Loop (0x0047bb5c): this's slot +0x114 returning 0 (0x0047bb60..0x0047bb68) returns 0. A non-NULL poll (0x0047bb6a /
@@ -224,7 +224,7 @@ const C0_t kResetScrollText = reinterpret_cast<C0_t>(0x00465560);
 //   [0x00838f74] = 0x80000018 (0x0046df36..0x0046df59), replaced when bit 0 of the byte [0x00839264] is set (test 0x0046df33,
 //   je 0x0046df63) by 0x80007fff, 0x800003ff, 0x800003ff, 0x80006318 (0x0046df65..0x0046df79). done = 0, hover = 1
 //   (0x0046df8f / 0x0046df93). drawScrollText 0x0046e260 (buffer, [0x004e3da4]) (0x0046df97); a non-zero [0x00838f70] is
-//   cleared and -1 returned (0x0046df9c..0x0046dfba). waitTicks(0x1e, 0) (0x0046dfbe), enterModal483d30 (0x0046dfc6),
+//   cleared and -1 returned (0x0046df9c..0x0046dfba). waitTicks(0x1e, 0) (0x0046dfbe), flushInput (0x0046dfc6),
 //   [0x00822d68] = 0 (0x0046dfcb).
 //   Loop (0x0046dfd1): [0x00838eec] = 0; pumpMessages 0x0045c030 (0x0046dfd7). With [0x00822d68] == 0 and hover == 0
 //   (0x0046dfe1..0x0046dfe9) only flushRedraw 0x0045ae70 runs (0x0046dfeb): 0 keeps sel, else the key branch. Otherwise hover = 1
@@ -399,9 +399,9 @@ static inline unsigned slen(const char* s) { unsigned n = 0; while (s[n] != 0) +
 //   width = maxLen * 12 (lea / shl 0x0045b33e / 0x0045b342).
 //   Draw (0x0045b34f): setDrawTarget 0x004762d0 on [0x004c1570] with (0x51b360, 0, 0, 0) (0x0045b360); Win_fillRect 0x00478af0
 //   (thiscall on [0x004c1570]) (x - 1, y - 1, width + 0x20, 0x30, 0x80007fff), (x + 1, y + 1, .., 0x80000000), (x, y, ..,
-//   0x800035b3) (0x0045b382, 0x0045b39d, 0x0045b3b2); drawText4049d0 (title copy, x + 4, y + 6, 0x80007fff) (0x0045b3c9);
+//   0x800035b3) (0x0045b382, 0x0045b39d, 0x0045b3b2); drawTextWithColor (title copy, x + 4, y + 6, 0x80007fff) (0x0045b3c9);
 //   Win_fillRect (x + 0x10, y + 0x17, width, 0x16, 0x80007fff) (0x0045b3eb); setDrawTarget (0x519928, 0, 0, 0) (0x0045b401);
-//   drawText4049d0 (0x51a068, x + 0x14, y + 0x1c, 0x80000000) (0x0045b418); the byte at the cursor is replaced by 0 while
+//   drawTextWithColor (0x51a068, x + 0x14, y + 0x1c, 0x80000000) (0x0045b418); the byte at the cursor is replaced by 0 while
 //   Text_put 0x00477250 measures the head (0x0045b41d..0x0045b44f); Widget_fillRect 0x00478b80 on 0x00519cd4 draws the caret
 //   (cx, y + 0x1a, cx, y + 0x2a, 0x80006000) with cx = x + head + 0x14 (0x0045b45b); w = Text_put(text) (0x0045b46b). While
 //   w > width - 0x10 (signed, 0x0045b477 / 0x0045b4c6) the last character is cut (0x0045b48e), a cursor above the new length

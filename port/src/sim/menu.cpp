@@ -159,7 +159,7 @@ int32_t flic_cols(Ctx &ctx, const std::string &name) {
 // loadFlic(id, path, frames, delay, flag) (re/analysis/render/0043d740_loadFlic.md, a C2 row: written from its instructions,
 // cited by offset). The prefix: g_flicLoadCount + 1 (+0x0..+0x15); on every 100th load waitTicks(10, 0) and, while
 // g_difficulty is -1 (boot only: a session sets it from the menu first), showLoadingScreen(count / 4) (+0x1f..+0x34); then
-// pumpInput483bd0 (+0x54: a Load pump, U-1051: it takes the one dispatch a trace puts before the load's first palette QPC). A delay of -1 loads one frame
+// doAllTasks (+0x54: a Load pump, U-1051: it takes the one dispatch a trace puts before the load's first palette QPC). A delay of -1 loads one frame
 // (+0x5d..+0x62). The sheet id + g_sheetBase (+0x87..+0x91) gets the path (+0xab..+0xd1) and its columns from the flic
 // (flicOpenStream +0x231; an optional shadow flic's open writes the same word first, +0x178), rows = frames (+0x266). The
 // cells: with a free list (g_cellFreeStart[0] != -2, +0x263) allocBlock(rows * columns) (+0x279); none fits (-1) or no free
@@ -196,7 +196,7 @@ void load_flic(Ctx &ctx, const FlicCall &f, int mode) {
         }
     }
   }
-  cm::pump_load(ctx);   // +0x54 pumpInput483bd0
+  cm::pump_load(ctx);   // +0x54 doAllTasks
   const int32_t frames = f.delay == -1 ? 1 : f.frames;
   const int32_t id = add32(static_cast<int32_t>(f.id), gs.g_sheetBase);
   const uint32_t path = ctx.mem.data_base() + f.path;
@@ -569,13 +569,13 @@ int32_t start_new_course(Ctx &ctx) {
 namespace {
 constexpr int kRootClickX = 2, kRootClickY = 3, kRootButton = 4;   // g_rootInput slots (commands.cpp RootSlot)
 uint32_t name_at(Ctx &ctx, int32_t i) { return state_va(ctx, &GameState::g_fileNames) + static_cast<uint32_t>(mul32(i, 100)); }
-// enterModal483d30 (the modal stack push and focus clear of the window tree, the UI's): through the registry when a module
+// flushInput (the modal stack push and focus clear of the window tree, the UI's): through the registry when a module
 // registers it (a test records it), else nothing, as module saveload calls it
 void enter_modal(Ctx &ctx) {
   try {
-    cm::call_peer(ctx, "enterModal483d30", {});
+    cm::call_peer(ctx, "flushInput", {});
   } catch (const MissingResource &e) {
-    if (e.what == nullptr || std::strcmp(e.what, "enterModal483d30") != 0) throw;
+    if (e.what == nullptr || std::strcmp(e.what, "flushInput") != 0) throw;
   }
 }
 }  // namespace
@@ -639,7 +639,7 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
     for (int32_t i = scroll; i < add32(scroll, 0x10) && i < n; ++i) {
       vstrcpy(m, text, name_at(ctx, i));
       if (sel == i) gx("fillWindowRect", {win, 0x136, static_cast<uint32_t>(row_y - 1), 0x1C8, 0xF, 0x80001284u});
-      gx("drawText4049d0", {text, row_x, static_cast<uint32_t>(row_y), sel == i ? kWhite : kInk});
+      gx("drawTextWithColor", {text, row_x, static_cast<uint32_t>(row_y), sel == i ? kWhite : kInk});
       row_y = add32(row_y, 0x10);
     }
     if (sel != -1) {   // the selected pro's card: its texts
@@ -653,18 +653,18 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
       }
       vstrcpy(m, text, state_va(ctx, &GameState::g_golferTypes) + 0x10);
       vstrcat(m, text, p8808);
-      gx("drawText4049d0", {text, 0x38, 0xFF, kInk});
+      gx("drawTextWithColor", {text, 0x38, 0xFF, kInk});
       vstrcpy(m, text, quote);
       m.store<int16_t>(state_va(ctx, &GameState::g_golfers) + 0xB6, 0);
       cm::call_peer(ctx, "buildGolferComment", {0x3E, 0, 0, 0});
       vstrcat(m, text, quote);
       gx("pickAProScreen.textSurface", {text, 0x24, 0x232, kWhite});
-      gx("drawText4049d0", {p8794 + 0x60, 0x38, 0x220, kInk});
+      gx("drawTextWithColor", {p8794 + 0x60, 0x38, 0x220, kInk});
       const uint32_t names = state_va(ctx, &GameState::f_ptrtab_4c2c3c);
       int32_t skill_y = 0x117;
       for (uint32_t i = 0; i < 10; ++i) {
         vstrcpy(m, text, m.load<uint32_t>(names + 4u * i));
-        gx("drawText4049d0", {text, 0x5E, static_cast<uint32_t>(skill_y), kSkill});
+        gx("drawTextWithColor", {text, 0x5E, static_cast<uint32_t>(skill_y), kSkill});
         vstrcpy(m, text, state_va(ctx, &GameState::f_strpool_4c5340));
         // the skill byte of row i (signed) * 10
         const int32_t v = mul32(m.load<int8_t>(state_va(ctx, &GameState::g_playerSkills) + i), 10);
@@ -727,7 +727,7 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
           break;
         }
         gx("setDrawTarget", {root, state_va(ctx, &GameState::g_font519928), 0, 0, 0});   // the loading message
-        gx("drawText4049d0", {state_va(ctx, &GameState::f_strpool_4c3f74) + 0x34, 0x184, 0x1D8, kWhite});
+        gx("drawTextWithColor", {state_va(ctx, &GameState::f_strpool_4c3f74) + 0x34, 0x184, 0x1D8, kWhite});
         gx("setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
         gx("Window::refreshFull", {win, 0});
         if (mode != 2) cm::call_peer(ctx, "loadThemeFile", {name_at(ctx, sel), 0, 1});

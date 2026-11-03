@@ -46,7 +46,7 @@ constexpr int32_t kNoTarget = 7, kNotOpened = 1;    // BinkPlayer::play's answer
 // BinkPlayer fields (re/model/include/sections/e2.h BinkPlayer): +4 Bink handle, +8 buffer, +0xc target, +0x10 / +0x14 the
 // offsets given to _BinkBufferSetOffset
 constexpr uint32_t kHandle = 4, kBuffer = 8, kTarget = 0xc, kOffX = 0x10, kOffY = 0x14;
-// pumpInput483bd0 / 483c90 / 483cf0 store these in g_inputPhase while their message loop runs, and 0 after it
+// doAllTasks / 483c90 / 483cf0 store these in g_inputPhase while their message loop runs, and 0 after it
 constexpr uint32_t kPhase483bd0 = 0x3f, kPhase483c90 = 2, kPhase483cf0 = 8;
 
 std::mutex &mu() {
@@ -181,7 +181,7 @@ int32_t play_audio_file(Ctx &ctx, uint32_t path, int32_t immediate) {
   MovieHost &h = movie_host(ctx);
   const uint32_t bink = ctx.mem.va_of(&gs.g_bink);
   bink_player_set_target(ctx, bink, h.window(ctx));
-  pump(ctx, kPhase483bd0);              // pumpInput483bd0
+  pump(ctx, kPhase483bd0);              // doAllTasks
   // Window::paint(root, 0x80007fff): the root repaint before the movie (drawing)
   bink_player_play(ctx, bink, path, 0, 0, 0);
   const int32_t r = bink_player_close(ctx, bink);
@@ -246,10 +246,10 @@ class ScriptedHost : public MovieHost {
 };
 
 // TEST INPUT (video.setInput(clock, key_pass, key_t)): the InputSource of a unit test. clock() at playAudioFile's deadline
-// site answers `clock` once; Drain pumps are counted (1 = playAudioFile's pumpInput483bd0, then two per not-due pass of the
-// frame loop: pumpInput483c90, pumpInput483cf0) and, with key_pass k > 0, the k-th pass's pumpInput483cf0 (Drain number
+// site answers `clock` once; Drain pumps are counted (1 = playAudioFile's doAllTasks, then two per not-due pass of the
+// frame loop: doAllKeys, doAllMouse) and, with key_pass k > 0, the k-th pass's doAllMouse (Drain number
 // 1 + 2k) delivers one rootWin_onKey (Esc) whose deadline test reads the clock key_t; every other pump delivers nothing.
-// The oracle delivers the same key through the k-th frameTick483cd0 (only pumpInput483cf0 reaches it).
+// The oracle delivers the same key through the k-th doMouse (only doAllMouse reaches it).
 class TestInput : public InputSource {
  public:
   uint32_t clock_t = 0, key_pass = 0, key_t = 0;

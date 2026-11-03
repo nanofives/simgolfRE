@@ -502,7 +502,7 @@ uint32_t bwin(Ctx &ctx) { return state_va(ctx, &GameState::g_rootWindow); }
 void bimg(Ctx &ctx, uint32_t k, int32_t x, int32_t y) { gx(ctx, "Image_draw", {bsurf(k), broot(ctx), u32(x), u32(y), 0}); }
 void bfont(Ctx &ctx, uint32_t f) { gx(ctx, "setDrawTarget", {broot(ctx), f, 0, 0, 0}); }
 void bcentre(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawCenteredText", {s, u32(x), u32(y), c}); }
-void bleft(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawText4049d0", {s, u32(x), u32(y), c}); }
+void bleft(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawTextWithColor", {s, u32(x), u32(y), c}); }
 void brefresh(Ctx &ctx) { gx(ctx, "Window::refreshFull", {bwin(ctx), 0}); }
 // the frame objects and the two images' cuts
 void browser_setup(Ctx &ctx) {
@@ -806,7 +806,7 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
         load_game(ctx, name_at(ctx, pick), resume == 0 ? 1 : 0, 0, 0);
       }
       if (read_str(ctx.mem, state_va(ctx, &GameState::g_theme)) != theme_copy && mode != 6) load_themes(ctx, 1);
-      peer_optional(ctx, "enterModal483d30", {});
+      peer_optional(ctx, "flushInput", {});
       browser_teardown(ctx);
       return 1;
     }
@@ -816,7 +816,7 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
     gs.g_courseType = static_cast<int8_t>(saved_type);
     if (plain && mode != 5) load_game(ctx, course_pool + 0x54, 1, 0, 0);
   }
-  peer_optional(ctx, "enterModal483d30", {});
+  peer_optional(ctx, "flushInput", {});
   browser_teardown(ctx);
   return 0;
 }
@@ -919,11 +919,11 @@ int32_t course_action_menu(Ctx &ctx) {
     // the legend: the three pin states (cells 17, 16, 18 of the plate array over their masks) and their labels
     gx(ctx, "setDrawTarget", {root, f_small, 0, 0, 0});
     gx(ctx, "Surface_stretchBlit", {plates + 0x2C * 17, masks + 0x2C * 17, root, 0x18, 0x226, 0});
-    gx(ctx, "drawText4049d0", {p4e3fbc + 0x3C, 0x2C, 0x230, kBlack});
+    gx(ctx, "drawTextWithColor", {p4e3fbc + 0x3C, 0x2C, 0x230, kBlack});
     gx(ctx, "Surface_stretchBlit", {plates + 0x2C * 16, masks + 0x2C * 16, root, 0x7C, 0x226, 0});
-    gx(ctx, "drawText4049d0", {p4e3fbc + 0x28, 0x90, 0x230, kBlack});
+    gx(ctx, "drawTextWithColor", {p4e3fbc + 0x28, 0x90, 0x230, kBlack});
     gx(ctx, "Surface_stretchBlit", {plates + 0x2C * 18, masks + 0x2C * 18, root, 0xF4, 0x226, 0});
-    gx(ctx, "drawText4049d0", {p4e3fbc + 0x14, 0x108, 0x230, kBlack});
+    gx(ctx, "drawTextWithColor", {p4e3fbc + 0x14, 0x108, 0x230, kBlack});
     mod16 = nearest % 16;
     for (int32_t k = 15; k >= 0; --k) {
       const uint32_t d = site_def(ctx, k);
@@ -1123,7 +1123,7 @@ int32_t course_action_menu(Ctx &ctx) {
     result = c;
     break;
   }
-  peer_optional(ctx, "enterModal483d30", {});
+  peer_optional(ctx, "flushInput", {});
   gs.g_rootInput[kRootButton] = 0;
   return result;
 }

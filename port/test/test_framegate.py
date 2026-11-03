@@ -104,7 +104,7 @@ def test_not_drawing_names_are_kdrops_with_those_reasons():
     src = (FG.ROOT / "port" / "src" / "sim" / "tick.cpp").read_text()
     drops = dict(re.findall(r'\{"([^"]+)", "([^"]+)"\}', src))
     want = {"capsLockOff": "keybd_event", "emptyFunc_4a0890": "empty function", "waitTicks": "wait loop",
-            "saveCourseJpg": "screenshot file", "enterModal483d30": "modal stack"}
+            "saveCourseJpg": "screenshot file", "flushInput": "modal stack"}
     # the three audio requests left kDrops with S4.10: audio_exe registers them (log/roadmap/S4/10_merge.md section 2)
     audio = {"playSound", "startSoundSlot", "Snd::status"}
     assert set(want) | audio == FG.NOT_DRAWING

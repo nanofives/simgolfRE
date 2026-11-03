@@ -6,7 +6,7 @@ no decoder, decision D2), and drive the frame loop through a host that can (a sc
   * EMULATOR ORACLE (opt-in SG_EMU_ORACLE=1, development): the ORIGINAL playAudioFile / BinkPlayer::play / close / setTarget run
     under Unicorn (port/test/cmdemu.py) over the same states; binkw32's imports answer the scripted host's script, the display's
     window slot (+0x20) answers 1 (0 for the no-window case), fileExists answers the case's file presence, the drawing callees
-    (Window::paint, showScreen, redrawAll, gfxFlushA) are stubbed, frameTick483cd0 delivers the case's key on the chosen pass.
+    (Window::paint, showScreen, redrawAll, gfxFlushA) are stubbed, doMouse delivers the case's key on the chosen pass.
     The whole data image and eax must equal the port's (BinkPlayer::play alone: the handle / buffer words compared as zero /
     non-zero, the port stores tokens), and the host's frame counter the emulated BINK header's FrameNum.
   * PINNED DIGESTS (default): port/test/golden_video.json, written from the port with SG_EMU_ORACLE=update after the oracle was

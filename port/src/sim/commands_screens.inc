@@ -162,7 +162,7 @@ int32_t show_histograph_screen(Ctx &ctx) {
         d.gx("fillWindowRect", {d.window(), u32(add32(x2, 10)), u32(base), 2, 2, 0x80000210u});
         d.gx("Widget_fillRect", {root, u32(add32(x2, 11)), u32(base), u32(add32(x2, 11)), u32(sub32(0x209, slot)), 0x800003ffu});
         d.gx("fillWindowRect", {d.window(), u32(add32(x2, 11)), u32(sub32(0x209, slot)), 2, 2, 0x80000210u});
-        // the marker's text (drawText4049d0 at (x2 + 14, 0x209 - slot - 3) inside the GDI clip region Surface_box selected)
+        // the marker's text (drawTextWithColor at (x2 + 14, 0x209 - slot - 3) inside the GDI clip region Surface_box selected)
         // is not drawn: no body, so the backend reports it (U-1273)
         d.gx("showHistographScreen.eventText", {u32(code)});
       }
@@ -518,7 +518,7 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
     for (int32_t k = 0; k < 8; ++k) {
       if ((k & 1) == 0) {
         y = static_cast<int32_t>(kHead[k / 2][1]) + (gfxr::ScreenDraw::ctl(18) ? 1 : 0);
-        d.gx("drawText4049d0", {pool + kHead[k / 2][0], 0xe7, u32(y), 0x80000000u});
+        d.gx("drawTextWithColor", {pool + kHead[k / 2][0], 0xe7, u32(y), 0x80000000u});
       }
       y = add32(y, 0x14);
       if (SG_NEGCTL(g_negctl_hire_dialog) != 2)
@@ -527,7 +527,7 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
       call_peer(ctx, "appendNumber", {u32(mul32(static_cast<int32_t>(*(state_arr(ctx, &GameState::f_tab_bytes_4c2e2c) + k)), 100))});
       cat(ctx, text, state_va(ctx, &GameState::f_strpool_4d36bc) + 0x20);
       if (sel == k) d.gx("fillWindowRect", {d.window(), 0xe7, u32(sub32(y, 2)), 0x123, 0x10, 0x80007f40u});
-      d.gx("drawText4049d0", {text, 0xf6, u32(y), 0x80000000u});
+      d.gx("drawTextWithColor", {text, 0xf6, u32(y), 0x80000000u});
       if ((k & 1) != 0) y = add32(y, 8);
     }
     frame = add32(frame, 1);

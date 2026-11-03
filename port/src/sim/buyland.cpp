@@ -286,7 +286,7 @@ struct BuyLand {
       if (count == 0) {
         if (on) image(img + 0x18c, layout_at(0x12c, lot), layout_at(0x150, lot));
         cpy(ctx, tb, state_va(ctx, &GameState::f_strpool_4d368c) + 0x18);
-        gx("drawText4049d0", {tb, u32(add32(label_x, 4)), u32(add32(label_y, 2)), 0x80002108u});
+        gx("drawTextWithColor", {tb, u32(add32(label_x, 4)), u32(add32(label_y, 2)), 0x80002108u});
         continue;
       }
       lot_text(lot, count);

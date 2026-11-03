@@ -19,8 +19,8 @@ namespace portsim {
 
 namespace {
 // Negative controls: mode 0 is the correct body.
-//   freeRecordAtPos     1 = frees only the first match, 2 = y compared with x's word
-//   initRecords         1 = 99 animal slots, 2 = placeRecord(bank, 0, 0, 0)
+//   removeVipResidentAt  1 = frees only the first match, 2 = y compared with x's word
+//   initHomeLayouts     1 = 99 animal slots, 2 = placeHomeLayoutPart(bank, 0, 0, 0)
 //   clearMatching       1 = b not compared (BLIND: every seed's g_labelQueueB is 0, so a wrong clear is invisible),
 //                       2 = stores -1 instead of 0
 //   staticInit_820f04   1 = no fabs
@@ -44,8 +44,8 @@ namespace {
 //   seedCourseTable     1 = records 12..15 never redraw, 2 = setting 2 subtracts 10 for every record
 //   buildScenarioIntro  1 = g_messageTimer not set to 0x80, 2 = cash divided by 100, 3 = startMessage priority 0 (BLIND:
 //                       no vector has a message pending, so priority 0 and 1 behave alike)
-int g_negctl_free_record_at_pos = 0;
-int g_negctl_init_records = 0;
+int g_negctl_remove_vip_resident_at = 0;
+int g_negctl_init_home_layouts = 0;
 int g_negctl_clear_matching = 0;
 int g_negctl_static_init_820f04 = 0;
 int g_negctl_set_pending_course_info = 0;
@@ -87,38 +87,38 @@ Ptr<HoleRecord> hole_at(Ctx &c, int32_t h) { return state_arr(c, &GameState::g_h
 }  // namespace
 
 // ------------------------------------------------------------------------------------------------ records
-void free_record_at_pos(Ctx &ctx, int32_t x, int32_t y) {
-  const int mode = SG_NEGCTL(g_negctl_free_record_at_pos);
-  const Ptr<Animal> a0 = state_arr(ctx, &GameState::g_animalRecords);
+void remove_vip_resident_at(Ctx &ctx, int32_t x, int32_t y) {
+  const int mode = SG_NEGCTL(g_negctl_remove_vip_resident_at);
+  const Ptr<VipResident> a0 = state_arr(ctx, &GameState::g_vipResidents);
   for (int32_t i = 0; i < 100; ++i) {
-    const Ptr<Animal> a = a0 + i;
-    if (a.field(&Animal::x).get() != x) continue;
-    if ((mode == 2 ? a.field(&Animal::x).get() : a.field(&Animal::y).get()) != y) continue;
-    a.field(&Animal::type).set(static_cast<int16_t>(-1));
+    const Ptr<VipResident> a = a0 + i;
+    if (a.field(&VipResident::x).get() != x) continue;
+    if ((mode == 2 ? a.field(&VipResident::x).get() : a.field(&VipResident::y).get()) != y) continue;
+    a.field(&VipResident::type).set(static_cast<int16_t>(-1));
     if (mode == 1) return;
   }
 }
 
-void reset_record_bank(Ctx &ctx, int32_t bank) {
-  const Ptr<SgRecordBank> b = state_arr(ctx, &GameState::g_recordBanks) + bank;
-  const Ptr<int32_t> ids = b.field(&SgRecordBank::id).as<int32_t>();
+void reset_home_layout(Ctx &ctx, int32_t bank) {
+  const Ptr<SgHomeLayout> b = state_arr(ctx, &GameState::g_homeLayouts) + bank;
+  const Ptr<int32_t> ids = b.field(&SgHomeLayout::id).as<int32_t>();
   for (int32_t i = 0; i < 8; ++i) ids.at(i).set(-1);
-  const Ptr<int32_t> occ = b.field(&SgRecordBank::occupancy).as<int32_t>();
+  const Ptr<int32_t> occ = b.field(&SgHomeLayout::occupancy).as<int32_t>();
   for (int32_t i = 0; i < 9; ++i) occ.at(i).set(-1);
 }
 
-int32_t place_record(Ctx &ctx, int32_t bank, int32_t type, int32_t row, int32_t col) {
+int32_t place_home_layout_part(Ctx &ctx, int32_t bank, int32_t type, int32_t row, int32_t col) {
   // the original's first loop only computes a flag it then jumps past (its note), so placement is unconditional
-  const Ptr<SgRecordBank> b = state_arr(ctx, &GameState::g_recordBanks) + bank;
-  const Ptr<int16_t> ids = b.field(&SgRecordBank::id);
+  const Ptr<SgHomeLayout> b = state_arr(ctx, &GameState::g_homeLayouts) + bank;
+  const Ptr<int16_t> ids = b.field(&SgHomeLayout::id);
   for (int32_t slot = 0; slot < 16; ++slot) {
     if (ids[slot] != -1) continue;
     ids.at(slot).set(static_cast<int16_t>(type));
-    b.field(&SgRecordBank::x).at(slot).set(static_cast<int8_t>(row));
-    b.field(&SgRecordBank::y).at(slot).set(static_cast<int8_t>(col));
-    b.field(&SgRecordBank::anim).at(slot).set(static_cast<int8_t>(-1));
+    b.field(&SgHomeLayout::x).at(slot).set(static_cast<int8_t>(row));
+    b.field(&SgHomeLayout::y).at(slot).set(static_cast<int8_t>(col));
+    b.field(&SgHomeLayout::anim).at(slot).set(static_cast<int8_t>(-1));
     const Ptr<uint8_t> defs = (state_arr(ctx, &GameState::g_recordDefs) + type).field(&F_RecordDef::footprint);
-    const Ptr<int8_t> occ = b.field(&SgRecordBank::occupancy);
+    const Ptr<int8_t> occ = b.field(&SgHomeLayout::occupancy);
     for (int32_t r = 0; r < 6; ++r) {
       const uint8_t bits = defs[r];
       for (int32_t c = 0; c < 6; ++c)
@@ -129,14 +129,14 @@ int32_t place_record(Ctx &ctx, int32_t bank, int32_t type, int32_t row, int32_t 
   return 0;
 }
 
-int32_t init_records(Ctx &ctx) {
-  const int mode = SG_NEGCTL(g_negctl_init_records);
-  const Ptr<Animal> a0 = state_arr(ctx, &GameState::g_animalRecords);
-  for (int32_t i = 0; i < (mode == 1 ? 99 : 100); ++i) (a0 + i).field(&Animal::type).set(static_cast<int16_t>(-1));
+int32_t init_home_layouts(Ctx &ctx) {
+  const int mode = SG_NEGCTL(g_negctl_init_home_layouts);
+  const Ptr<VipResident> a0 = state_arr(ctx, &GameState::g_vipResidents);
+  for (int32_t i = 0; i < (mode == 1 ? 99 : 100); ++i) (a0 + i).field(&VipResident::type).set(static_cast<int16_t>(-1));
   int32_t r = 0;
   for (int32_t bank = 0; bank < 6; ++bank) {
-    reset_record_bank(ctx, bank);
-    r = place_record(ctx, bank, mode == 2 ? 0 : bank, 0, 0);
+    reset_home_layout(ctx, bank);
+    r = place_home_layout_part(ctx, bank, mode == 2 ? 0 : bank, 0, 0);
   }
   return r;
 }
@@ -827,8 +827,8 @@ uint32_t list_erase_range(Ctx &ctx, uint32_t self, uint32_t out, uint32_t first,
 // ------------------------------------------------------------------------------------------------ adapters
 namespace {
 int32_t s(uint32_t v) { return static_cast<int32_t>(v); }
-void a_free_record_at_pos(Ctx &c, const uint32_t *a, Ret &) { free_record_at_pos(c, s(a[0]), s(a[1])); }
-void a_init_records(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(init_records(c)); }
+void a_remove_vip_resident_at(Ctx &c, const uint32_t *a, Ret &) { remove_vip_resident_at(c, s(a[0]), s(a[1])); }
+void a_init_home_layouts(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(init_home_layouts(c)); }
 void a_clear_matching(Ctx &c, const uint32_t *a, Ret &) { clear_matching(c, s(a[0]), s(a[1])); }
 void a_static_init_820f04(Ctx &c, const uint32_t *, Ret &r) {
   static_init_820f04(c);
@@ -855,8 +855,8 @@ void a_seed_course_table(Ctx &c, const uint32_t *, Ret &) { seed_course_table(c)
 void a_build_scenario_intro(Ctx &c, const uint32_t *, Ret &) { build_scenario_intro(c); }
 
 const FuncDef kFuncs[] = {
-    {"freeRecordAtPos", "default", "void", 2, 0, a_free_record_at_pos, &g_negctl_free_record_at_pos},
-    {"initRecords", "default", "int", 0, 0, a_init_records, &g_negctl_init_records},
+    {"removeVipResidentAt", "default", "void", 2, 0, a_remove_vip_resident_at, &g_negctl_remove_vip_resident_at},
+    {"initHomeLayouts", "default", "int", 0, 0, a_init_home_layouts, &g_negctl_init_home_layouts},
     {"clearMatching", "default", "void", 2, 0, a_clear_matching, &g_negctl_clear_matching},
     {"staticInit_820f04", "default", "void", 0, 0x027F, a_static_init_820f04, &g_negctl_static_init_820f04},
     {"setPendingCourseInfo", "default", "int", 1, 0, a_set_pending_course_info, &g_negctl_set_pending_course_info},

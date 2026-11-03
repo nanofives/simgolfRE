@@ -66,7 +66,7 @@ const XY_t kTileByte = reinterpret_cast<XY_t>(0x004492f0);         // unsigned b
 const XYC_t kTileQuery = reinterpret_cast<XYC_t>(0x00449310);      // cornerHeights 0x0040bfe0 (x, y, c, 1)
 const XYC_t kWallHeight = reinterpret_cast<XYC_t>(0x00449330);
 const XY_t kTileFlag20 = reinterpret_cast<XY_t>(0x004493b0);       // [0x0053caf0 + (x * 50 + y) * 2] & 0x20
-const C0_t kPumpInput = reinterpret_cast<C0_t>(0x00483bd0);        // pumpInput483bd0
+const C0_t kPumpInput = reinterpret_cast<C0_t>(0x00483bd0);        // doAllTasks
 const TerTileII_t kTerSetType = reinterpret_cast<TerTileII_t>(0x004a4f28);       // jmp [0x004ba19c] Terrain::setType
 const TerTile_t kTerGetVariation = reinterpret_cast<TerTile_t>(0x004a4f2e);      // jmp [0x004ba198] Terrain::getVariation
 const TerTileII_t kTerLayPath = reinterpret_cast<TerTileII_t>(0x004a4f3a);       // jmp [0x004ba190] Terrain::layPath
@@ -88,7 +88,7 @@ char* TileAt(int x, int y) {
 }  // namespace
 
 // 0x00449470  syncTiles(): for x = 49 down to 0 (edi, `dec edi; jns 0x449479` 0x00449509) the input pump
-// pumpInput483bd0 runs once (0x00449479), then for y = 49 down to 0 (esi, `dec esi; jns 0x449483` 0x00449502) the tile
+// doAllTasks runs once (0x00449479), then for y = 49 down to 0 (esi, `dec esi; jns 0x449483` 0x00449502) the tile
 // (x, y) is fetched (0x00449483..0x004494b1) and its type field +0x24 read (0x004494b3, no NULL test: the 50 x 50 game
 // grid always has the tile). When tileType(x, y) (0x004494b8) differs from it (`jne 0x4494e0` 0x004494c2), or else when
 // Terrain::getVariation(tile) (0x004494cb) differs from tileByte(x, y) (0x004494d4, `je 0x449502` 0x004494de skips),
@@ -125,7 +125,7 @@ SG_HOOK("golf_clean.exe", 0x00449470, syncTiles, SyncTiles_re, SyncTiles_orig);
 //   1. (edi = x, pump once per x at 0x00449549) Terrain::setType(tile(x, y), tileType(x, y), tileByte(x, y))
 //      (tile 0x00449553..0x00449581, tileByte 0x00449585, tileType 0x00449590, setType 0x004495a0).
 //   2. (esi = x, pump once per x at 0x004495b0) tiles whose tileType is not 0x11 (`cmp eax, 0x11; je` 0x004495c4): for
-//      corners c = 1, 3, 5, 7 (ebx, `add ebx, 2; cmp ebx, 8; jl` 0x0044963c), when tileQuery449310(x, y, c) > 3
+//      corners c = 1, 3, 5, 7 (ebx, `add ebx, 2; cmp ebx, 8; jl` 0x0044963c), when cornerHeightAt(x, y, c) > 3
 //      (0x004495d1, `jle` 0x004495dc) and tileQuery(x, y, c) - 3 > 0 again (0x004495e3, `jle` 0x004495f0),
 //      Terrain::elevateCorner(tile(x, y), c) (0x00449624), repeated while the count is below tileQuery(x, y, c) - 3,
 //      which is re-read after every raise (0x0044962d, `jl` 0x0044963a).

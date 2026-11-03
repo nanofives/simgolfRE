@@ -1,0 +1,25 @@
+.F..                                                                     [100%]
+================================== FAILURES ===================================
+________________________ test_info_panel_calls_golden _________________________
+
+plib = <port.test.lib.Lib object at 0x000001C6419B7530>
+
+    @need_exe
+    def test_info_panel_calls_golden(plib):
+        d = _digest(plib)
+        if os.environ.get("SG_EMU_ORACLE") == "update" or GOLDEN == "pending":
+            print("GOLDEN digest", d)
+            if GOLDEN == "pending":
+                pytest.skip(f"golden not pinned yet: {d}")
+>       assert d == GOLDEN
+E       AssertionError: assert '2e59300991f7ec7c' == '299d474290a0d26a'
+E         
+E         - 299d474290a0d26a
+E         + 2e59300991f7ec7c
+
+port\test\test_gfx_info_panel.py:189: AssertionError
+---------------------------- Captured stdout call -----------------------------
+GOLDEN digest 2e59300991f7ec7c
+=========================== short test summary info ===========================
+FAILED port/test/test_gfx_info_panel.py::test_info_panel_calls_golden - Asser...
+1 failed, 3 passed in 19.75s

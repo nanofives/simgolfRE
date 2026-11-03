@@ -78,7 +78,7 @@ void* __fastcall CrInit_re(void* self, void*) {
 // 0x0001cd30  ChanRecord_freeBuffers (VA 0x1001cd30). __thiscall, no stack argument, plain `ret` (0x1001cd54). A non-NULL +0x1c
 // goes to operator delete 0x1004249a (`test` / `je` 0x1001cd36 / 0x1001cd38, call 0x1001cd3b), then a non-NULL +0x24 too
 // (0x1001cd46 / 0x1001cd48, call 0x1001cd4b). Neither field is cleared. Every caller discards eax (Seq_setupChannel 0x10021042,
-// 0x10021169; Sound5b6a8_dtor 0x1001ffb3): void.
+// 0x10021169; Seq::dtor 0x1001ffb3): void.
 typedef void(__fastcall* Void0_t)(void*, void*);
 Void0_t CrFree_orig;
 void __fastcall CrFree_re(void* self, void*) {
@@ -414,7 +414,7 @@ unsigned __fastcall UpdCh_re(void* self, void*, unsigned* desc) {
     return 0;                                                                  // 0x1002215a
 }
 
-// 0x0001ff50  Sound5b6a8_dtor (VA 0x1001ff50). __thiscall, no stack argument, plain `ret` (0x1001ffcf). vtable 0x1005b6a8 at +0
+// 0x0001ff50  Seq::dtor (VA 0x1001ff50). __thiscall, no stack argument, plain `ret` (0x1001ffcf). vtable 0x1005b6a8 at +0
 // (0x1001ff72). Bit 0 of +0xac (0x1001ff86) runs Midi_Device::closeFile on this+0x60 through the thunk 0x10001014 (0x1001ff8d).
 // The 0x7f channel records at +0x744 .. +0x93c (counter 0x7f 0x1001ff98, `jne` 0x1001ffcb): each non-NULL one gets +0x30 = 0,
 // ChanRecord_freeBuffers through 0x10002004, operator delete, and its slot 0 (0x1001ffa5-0x1001ffbc). The list {+0x218 head,
@@ -423,7 +423,7 @@ unsigned __fastcall UpdCh_re(void* self, void*, unsigned* desc) {
 // vector destructor ??_M 0x1004280e (__stdcall, four arguments) destroys the 0x10 elements of 0x4c bytes at +0x250 with the
 // destructor thunk 0x1000166d (0x10020066-0x1002007b). The list {+0x228, +0x22c, +0x234 count} is popped the same way freeing
 // only the nodes (0x10020080-0x1002010b), then the first list again, nodes only (0x1002010d-0x10020198). Seq_dtor runs on
-// this+0x60 through 0x100014d8 (0x100201a2-0x100201a9; this is never NULL here) and Ch5be88_dtorA on this through 0x10001cc1
+// this+0x60 through 0x100014d8 (0x100201a2-0x100201a9; this is never NULL here) and Midi::dtor on this through 0x10001cc1
 // (0x100201b8). Callers discard eax (Sound5b6a8_scalarDtor 0x1001f6c0, Sound::dtor 0x10004000): void.
 void c3fk_drainNodes(void* self, int head, int tail, int count, bool freePayload) {
     while (fat<void*>(self, head)) {
@@ -458,7 +458,7 @@ void __fastcall S5b6a8Dtor_re(void* self, void*) {
     c3fk_fn<Th0_t>(0x00001cc1)(self, 0);                                       // 0x100201b8
 }
 
-// 0x00030180  Sound5c450_dtor (VA 0x10030180). __thiscall, no stack argument, plain `ret` (0x10030342). vtable 0x1005c450 at +0
+// 0x00030180  CVoiceRxMgr::dtor (VA 0x10030180). __thiscall, no stack argument, plain `ret` (0x10030342). vtable 0x1005c450 at +0
 // (0x100301a0). The buffer list {+0x5c head, +0x60 tail, +0x68 count} is popped (0x100301a6-0x100301e4, 0x10030283-0x100302b3):
 // node freed, count decremented, and a NULL payload ends the loop. For each payload b: when b+0x44 is non-NULL (0x100301f0 /
 // 0x100301f5) mmioClose(b+0x44, 0) runs through the IAT slot [0x100b8670] (0x100301f7-0x100301f9) and the open-mmio list
@@ -467,7 +467,7 @@ void __fastcall S5b6a8Dtor_re(void* self, void*) {
 // freed (0x1003024f) and the count 0x100b49d4 decremented (0x10030254-0x1003025d). Then the open count 0x100b4a08 is
 // decremented (0x10030262-0x1003026b), VoiceSlot_dtorEmpty runs on b through the thunk 0x10001b45 (0x10030275) and b is freed
 // (0x1003027b). After the loop (0x100302b9-0x1003031f) whatever the NULL payload left is popped again, freeing nodes only.
-// Ch5c234_dtor runs on this through 0x10001cc6 (0x1003032b). The only caller, Sound5c450_scalarDtor 0x10030150, discards eax.
+// VoiceRx::dtor runs on this through 0x10001cc6 (0x1003032b). The only caller, Sound5c450_scalarDtor 0x10030150, discards eax.
 Void0_t S5c450Dtor_orig;
 void __fastcall S5c450Dtor_re(void* self, void*) {
     fat<void*>(self, 0) = c3fk_sound(0x0005c450);                              // 0x100301a0

@@ -36,16 +36,16 @@
   "lwa:tropical_from_parkland_alias": "20393722560de10cb5662530",
   "lwa:type_5": "f99ac8518ac79019fa7ff7be",
   "lwa:type_minus1": "77c93afddf6c151f4c900ac4",
-  "screen:back_only": "5811e9807de3fd723622f7ce",
-  "screen:below_list": "4f142db645846cd375d7416b",
-  "screen:champ_course_back": "5be0a024e3207fc54411516f",
-  "screen:champ_pro_back": "8ed4bcd7b4fc0daaa820e254",
-  "screen:champ_start": "19f5ff91a2e6e1fda57a09db",
-  "screen:esc": "70dffa00b7bdbdfaf2cb5e92",
-  "screen:load_none": "cfc19070e723c61a17b92aca",
-  "screen:many_scroll": "f66491aacdc98c1d907c85fc",
+  "screen:back_only": "81966cc9a4cb0277fd68269e",
+  "screen:below_list": "1368847dd560d20fc15d0a25",
+  "screen:champ_course_back": "f4ea1ce6a120979c48550b24",
+  "screen:champ_pro_back": "c3c87514b3b2ae32261996bc",
+  "screen:champ_start": "b21f2c143192f1a3a20b8574",
+  "screen:esc": "add10c7aa2cacde107a4e35e",
+  "screen:load_none": "5f07df73c886ef1ca767b1dd",
+  "screen:many_scroll": "ac2338b7cf5f471eb04e509b",
   "screen:needs_input": "4eceb41ffb459a73246bd1c5",
-  "screen:pick_back": "279e431c23894e9870391ca3",
-  "screen:pick_load": "e0a8ba721ef096738d0e6b66"
+  "screen:pick_back": "707f2696586e468844881c86",
+  "screen:pick_load": "8de0a13f15436f463a1c3d19"
  }
 }

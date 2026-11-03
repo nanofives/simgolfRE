@@ -12,8 +12,8 @@
 // (re/frida/js/importstandin.js) sees it.
 //
 // Hooked callees of other batches (the verifier re-runs these keys with those hooks off; the full list is
-// log/c3/c3eq_hooks_off.txt, 28 addresses): pumpInput483c90 / 483cf0 0x00483c90 / 0x00483cf0 and BinkPlayer::frame
-// 0x00487180 under BinkPlayer::play; fileExists 0x004378a0, BinkPlayer::setTarget 0x00487050, pumpInput483bd0
+// log/c3/c3eq_hooks_off.txt, 28 addresses): doAllKeys / 483cf0 0x00483c90 / 0x00483cf0 and BinkPlayer::frame
+// 0x00487180 under BinkPlayer::play; fileExists 0x004378a0, BinkPlayer::setTarget 0x00487050, doAllTasks
 // 0x00483bd0, Window::paint 0x004808c0, resourceQuery 0x00487630 and BinkPlayer::close 0x00487060 under
 // playAudioFile; the twenty measuring and setter callees under TextView::render.
 // Hooked in THIS batch and called by this batch: BinkPlayer::play <- playAudioFile.
@@ -62,9 +62,9 @@ typedef int(__fastcall* Thi0_t)(void* ecx, void* edx);
 typedef int(__fastcall* Thi1_t)(void* ecx, void* edx, unsigned a);
 typedef int(__fastcall* Thi4_t)(void* ecx, void* edx, unsigned a, unsigned b, unsigned c, unsigned d);
 typedef unsigned char(__fastcall* Thi0b_t)(void* ecx, void* edx);
-const Cdecl0_t kPumpInput483c90 = reinterpret_cast<Cdecl0_t>(0x00483c90);   // pumpInput483c90 (c3el)
-const Cdecl0_t kPumpInput483cf0 = reinterpret_cast<Cdecl0_t>(0x00483cf0);   // pumpInput483cf0 (c3el)
-const Cdecl0_t kPumpInput483bd0 = reinterpret_cast<Cdecl0_t>(0x00483bd0);   // pumpInput483bd0 (c3dw)
+const Cdecl0_t kPumpInput483c90 = reinterpret_cast<Cdecl0_t>(0x00483c90);   // doAllKeys (c3el)
+const Cdecl0_t kPumpInput483cf0 = reinterpret_cast<Cdecl0_t>(0x00483cf0);   // doAllMouse (c3el)
+const Cdecl0_t kPumpInput483bd0 = reinterpret_cast<Cdecl0_t>(0x00483bd0);   // doAllTasks (c3dw)
 const Thi0b_t kBinkPlayerFrame = reinterpret_cast<Thi0b_t>(0x00487180);     // BinkPlayer::frame (c3dl)
 const Cdecl1_t kFileExists = reinterpret_cast<Cdecl1_t>(0x004378a0);        // fileExists (c3dw)
 const Thi1_t kBinkSetTarget = reinterpret_cast<Thi1_t>(0x00487050);         // BinkPlayer::setTarget (c3bj)
@@ -99,8 +99,8 @@ static inline Thi0_t VSlot0(void* obj, unsigned slot) {
 // this+0x10 / this+0x14 (0x00487110 / 0x00487113).
 // ShowCursor [0x4ba200] (0) hides the pointer (push 0x00487122, call 0x0048712b) and the byte 0x0083ab9c is set to 1
 // (0x00487124). The loop (0x00487133): _BinkWait [0x4ba25c] on the handle (push 0x00487136, call 0x00487137); a
-// non-zero result (`test eax, eax; jne` 0x00487139 / 0x0048713b) runs pumpInput483c90 0x00483c90 (call 0x00487153) and
-// pumpInput483cf0 0x00483cf0 (call 0x00487158) and repeats (0x0048715d). A zero result reads the byte 0x0083ab9c
+// non-zero result (`test eax, eax; jne` 0x00487139 / 0x0048713b) runs doAllKeys 0x00483c90 (call 0x00487153) and
+// doAllMouse 0x00483cf0 (call 0x00487158) and repeats (0x0048715d). A zero result reads the byte 0x0083ab9c
 // (0x0048713d): zero ends the loop (`je` 0x00487144), else BinkPlayer::frame 0x00487180 runs on this (call 0x00487148)
 // and a false result ends the loop (`test al, al; je` 0x0048714d / 0x0048714f), a true one repeats (0x00487151).
 // The end shows the pointer again, ShowCursor(1) (push 0x0048715f, call 0x00487161), and returns 0 (`xor eax, eax`
@@ -154,7 +154,7 @@ int __fastcall BinkPlayerPlay_re(void* self, void*, unsigned path, unsigned offX
 // `add eax, 0x1b58` 0x0043cd00, store 0x0043cd05); a non-zero one sets it to 0 (0x0043cd0c). The display 0x0083ad50 is
 // asked for its window through vtable slot +0x20 (0x0043cd16-0x0043cd1e) and that result is given to
 // BinkPlayer::setTarget 0x00487050 on 0x005aa6d0 (push 0x0043cd21, `mov ecx, 0x5aa6d0` 0x0043cd22, call 0x0043cd27).
-// pumpInput483bd0 0x00483bd0 runs once (call 0x0043cd2c), then Window::paint 0x004808c0 on the window 0x00519a60 with
+// doAllTasks 0x00483bd0 runs once (call 0x0043cd2c), then Window::paint 0x004808c0 on the window 0x00519a60 with
 // 0x80007fff (push 0x0043cd31, `mov ecx, 0x519a60` 0x0043cd36, call 0x0043cd3b) and resourceQuery 0x00487630 on
 // 0x0083ad80 (`mov ecx, 0x83ad80` 0x0043cd40, call 0x0043cd45). Its result is the fourth argument of BinkPlayer::play
 // 0x00487090 (pushes 0x0043cd4a-0x0043cd4f: the path, 0 and 0; `mov ecx, 0x5aa6d0` 0x0043cd50, call 0x0043cd55), so the

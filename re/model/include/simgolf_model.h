@@ -279,7 +279,7 @@ typedef struct HoleRecord {           /* 0x208 bytes */
     int32_t  money;                   /* +0x1f0 pointsPopup subtracts its amount */
     int32_t  u1f4;                    /* +0x1f4 compared with 200 and 400 */
     int32_t  ticks;                   /* +0x1f8 counted while par != 0 */
-    int32_t  magazine_score;          /* +0x1fc holeMagazineEvent */
+    int32_t  magazine_score;          /* +0x1fc rateCourseHoles */
     uint32_t flags;                   /* +0x200 */
     uint8_t  pad204[4];               /* +0x204 no access */
 } HoleRecord;
@@ -306,7 +306,7 @@ SGC_STATIC_ASSERT(sizeof(PlacedObject) == 0x10, placed_object_size);
 #define SGC_ANIMALS 100
 #define SGC_ANIMAL_FREE (-1)
 
-typedef struct Animal {               /* 0x3c bytes */
+typedef struct VipResident {               /* 0x3c bytes */
     int32_t  u00;                     /* +0x00 written 0 on spawn, never read */
     uint8_t  u04[28];                 /* +0x04 no access outside the save [U-0203] */
     int16_t  type;                    /* +0x20 -1 = free slot; flic id base from the species byte (stream B) */
@@ -323,8 +323,8 @@ typedef struct Animal {               /* 0x3c bytes */
     uint8_t  walk_steps;              /* +0x39 0x10 when a walk starts, -1 per step, idle again at <= 0 (stream B, merged by G1) */
     int8_t   frame;                   /* +0x3a */
     uint8_t  pad3b;                   /* +0x3b no access */
-} Animal;
-SGC_STATIC_ASSERT(sizeof(Animal) == 0x3c, animal_size);
+} VipResident;
+SGC_STATIC_ASSERT(sizeof(VipResident) == 0x3c, animal_size);
 
 /* ------------------------------------------------------------------------------- Terrain.dll boundary (heap)
  * The exe holds one pointer to this object; Terrain.dll allocates it (getInstance, `new Terrain(50, 50)`) and the
@@ -990,7 +990,7 @@ SGB_STATIC_ASSERT(sizeof(SkillMaskBlock) == 0x12, SkillMaskBlock_size);
 
 /* ---- forced-event request bits (g_forcedEventBits) -------------------------------------------------- */
 #define SGB_FORCE_EV_GOLFER_THOUGHT  0x01    /* consumed by addGolferToTable */
-#define SGB_FORCE_EV_MAGAZINE        0x02    /* consumed by holeMagazineEvent */
+#define SGB_FORCE_EV_MAGAZINE        0x02    /* consumed by rateCourseHoles */
 #define SGB_FORCE_EV_STORY_STEP      0x04    /* mainLoop: advanceStory + golfer flag 0x200000, then cleared */
 #define SGB_FORCE_EV_MOOD_DROP       0x08    /* mainLoop: nearest golfer mood -1 + thought 8, then cleared */
 #define SGB_FORCE_EV_NARRATE         0x10    /* consumed by scanShotArea */
@@ -1088,7 +1088,7 @@ typedef struct SgSnd {
     int32_t pan;            /* +0x08 -0x40..0x3f (Snd::setPan clamps) */
     uint32_t unk_0c[9];     /* +0x0c..+0x2f zeroed by the base ctor, never read by a Snd method [U-0320] */
     uint32_t loop;          /* +0x30 nonzero = looping; mapped to bit 1 by Snd::flags */
-    int32_t field_34;       /* +0x34 stored by Snd::setField34, passed to the voice slot +0x4c [U-0320] */
+    int32_t field_34;       /* +0x34 stored by Snd::setDelay, passed to the voice slot +0x4c [U-0320] */
     int32_t field_38;       /* +0x38 default 1000, nonzero only (Snd::setField38), passed to voice slot +0x04 [U-0320] */
     uint32_t group;         /* +0x3c 0..15 = index into SgSndGroupDevice.groups, 0x10 = none (default) */
     uint32_t voice;         /* +0x40 device voice object created by sound.dll entry 1, 0 = not open */
@@ -1168,15 +1168,15 @@ typedef struct SgSkyActor {
 } SgSkyActor;
 SG_STATIC_ASSERT(sizeof(SgSkyActor) == 0x10, SgSkyActor_size);
 
-/* Placement bank (placeRecord / resetRecordBank / drawRecords): 16 placed objects over a 6 x 6 occupancy grid. */
-typedef struct SgRecordBank {
+/* Placement bank (placeHomeLayoutPart / resetHomeLayout / drawHomeLayout): 16 placed objects over a 6 x 6 occupancy grid. */
+typedef struct SgHomeLayout {
     int16_t id[16];         /* +0x00 object type, -1 = free slot */
     int8_t x[16];           /* +0x20 column of the object's footprint origin */
     int8_t y[16];           /* +0x30 row */
     int8_t anim[16];        /* +0x40 animation step, -1 = none */
     int8_t occupancy[36];   /* +0x50 [row * 6 + column] = slot index, -1 = free */
-} SgRecordBank;
-SG_STATIC_ASSERT(sizeof(SgRecordBank) == 0x74, SgRecordBank_size);
+} SgHomeLayout;
+SG_STATIC_ASSERT(sizeof(SgHomeLayout) == 0x74, SgHomeLayout_size);
 
 #endif /* SIMGOLF_MODEL_SECTION_D_H */
 
@@ -1490,7 +1490,7 @@ typedef struct Snd {
     int32_t pan;                       /* +0x008 -0x40..0x3f (Snd::setPan) */
     uint32_t unk_0c[9];                /* +0x00c [U-0462] */
     uint32_t loop;                     /* +0x030 read by Snd::flags / Snd::start (D: nonzero = looping) */
-    int32_t field_34;                  /* +0x034 Snd::setField34, forwarded to Sound slot 19 */
+    int32_t field_34;                  /* +0x034 Snd::setDelay, forwarded to Sound slot 19 */
     int32_t rate;                      /* +0x038 default 1000 (Snd::setField38), forwarded to Sound slot 1 */
     uint32_t group;                    /* +0x03c 0x10 = none (Snd::ctorDerived) [U-0486] */
     uint32_t sound;                    /* +0x040 ptr sound.dll object from create_sound (kind 1 MultiSound, kind 2 Sound5b6a8); the Snd::fwdVoiceNN slots forward through it */

@@ -60,7 +60,7 @@ static const SaveField kSerializeFields[] = {
     {offsetof(GameState, g_golferTypeState) + 0x0u, 0xe70u},  // ser 55: g_golferTypeState+0x0
     {offsetof(GameState, g_playerGolfer) + 0x0u, 0x4u},  // ser 56: g_playerGolfer+0x0
     {offsetof(GameState, g_playerSkills) + 0x0u, 0x20u},  // ser 57: g_playerSkills+0x0
-    {offsetof(GameState, g_animalRecords) + 0x0u, 0x1770u},  // ser 58: g_animalRecords+0x0
+    {offsetof(GameState, g_vipResidents) + 0x0u, 0x1770u},  // ser 58: g_vipResidents+0x0
     {offsetof(GameState, g_skillMaskBlock) + 0x0u, 0x12u},  // ser 59: g_skillMaskBlock+0x0
     {offsetof(GameState, g_scenicDedications) + 0x0u, 0x320u},  // ser 60: g_scenicDedications+0x0
     {offsetof(GameState, g_skyActors) + 0x0u, 0x40u},  // ser 61: g_skyActors+0x0
@@ -132,7 +132,7 @@ static const SaveField kDeserializeFields[] = {
     {offsetof(GameState, g_visitor60Count) + 0x0u, 0x4u},  // des 39: g_visitor60Count+0x0
     {offsetof(GameState, g_ratingMilestone) + 0x0u, 0x4u},  // des 40: g_ratingMilestone+0x0
     {offsetof(GameState, g_holePoints) + 0x0u, 0x1c8u},  // des 41: g_holePoints+0x0
-    {offsetof(GameState, g_animalRecords) + 0x0u, 0x1770u},  // des 42: g_animalRecords+0x0
+    {offsetof(GameState, g_vipResidents) + 0x0u, 0x1770u},  // des 42: g_vipResidents+0x0
     {offsetof(GameState, g_skillMaskBlock) + 0x0u, 0x12u},  // des 43: g_skillMaskBlock+0x0
     {offsetof(GameState, g_scenicDedications) + 0x0u, 0x320u},  // des 44: g_scenicDedications+0x0
     {offsetof(GameState, g_skyActors) + 0x0u, 0x40u},  // des 45: g_skyActors+0x0

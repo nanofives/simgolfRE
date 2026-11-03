@@ -1,0 +1,25 @@
+== t_test_gfx_info_panel start 2026-11-03 06:25:45 free=20GB
+sF..                                                                     [100%]
+================================== FAILURES ===================================
+________________________ test_info_panel_calls_golden _________________________
+
+plib = <port.test.lib.Lib object at 0x00000274BD615970>
+
+    @need_exe
+    def test_info_panel_calls_golden(plib):
+        d = _digest(plib)
+        if os.environ.get("SG_EMU_ORACLE") == "update" or GOLDEN == "pending":
+            print("GOLDEN digest", d)
+            if GOLDEN == "pending":
+                pytest.skip(f"golden not pinned yet: {d}")
+>       assert d == GOLDEN
+E       AssertionError: assert '2e59300991f7ec7c' == '299d474290a0d26a'
+E         
+E         - 299d474290a0d26a
+E         + 2e59300991f7ec7c
+
+port\test\test_gfx_info_panel.py:189: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_gfx_info_panel.py:152: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+FAILED port/test/test_gfx_info_panel.py::test_info_panel_calls_golden - Asser...
+1 failed, 2 passed, 1 skipped in 6.73s

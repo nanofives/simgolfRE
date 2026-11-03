@@ -1,8 +1,8 @@
 module	addr	name	subsystem	evidence	purpose
 golf_clean.exe	0x0042f2c0	markTileKind11	terrain	match re/match/golf_small11.cpp; callee 0x42f1c0	Scans a tile grid via FUN_0042f1c0, writing a kind marker into tables 0x5722e8 and 0x572cac.
 golf_clean.exe	0x0042f4b0	cornerRange	terrain	match re/match/golf_small12.cpp; callee 0x40c170 (r3_f40c170)	Computes the min/max of the four corner heights of a tile into two out-params.
-golf_clean.exe	0x0042f530	relaxEdges42f530	terrain	match re/match/golf_hand_r0.cpp; callee 0x40bf60 (tileBlocked); callee 0x42f4b0 (cornerRange)	Relaxes heightfield edges around a tile, skipping blocked tiles.
-golf_clean.exe	0x0042f630	relaxTile42f630	terrain	match re/match/golf_hand_05.cpp; callee 0x40bf60 (tileBlocked)	Smooths one tile's corner heights toward its neighbours.
+golf_clean.exe	0x0042f530	calcTileWallMask	terrain	match re/match/golf_hand_r0.cpp; callee 0x40bf60 (tileBlocked); callee 0x42f4b0 (cornerRange)	Relaxes heightfield edges around a tile, skipping blocked tiles.
+golf_clean.exe	0x0042f630	propagateMinTileLevel	terrain	match re/match/golf_hand_05.cpp; callee 0x40bf60 (tileBlocked)	Smooths one tile's corner heights toward its neighbours.
 golf_clean.exe	0x0042f6e0	raiseFromNeighbours	terrain	match re/match/golf_small28.cpp; callee 0x40bf60 (tileBlocked)	Raises a tile corner to match the highest of its neighbouring corners.
 golf_clean.exe	0x0042f7a0	rebuildHeightfield	terrain	match re/match/golf_hand_r0.cpp; callee 0x42f530/0x42f630/0x42f6e0	Rebuilds the terrain heightfield by relaxing edges and raising corners across the grid.
 golf_clean.exe	0x0042f940	tileToScreen	render	match re/match/golf_small27.cpp; callee 0x42fb90 (worldToScreen)	Converts a tile coordinate to screen pixels via worldToScreen.
@@ -70,7 +70,7 @@ golf_clean.exe	0x00449150	Terrain::getType	terrain	match re/match/terrain.cpp	Ex
 golf_clean.exe	0x00449210	initList820f18	terrain	callee operator_new; writes g_820f18/g_820f1c/g_820f20 read by 0x44a5b0 (rebuildTileData)	static construction of a std::list held in globals: allocator byte 0x00820f18 (0x00449217), a self-linked 0xc-byte head node from operator new 0x004a57f1 (0x0044921c) at 0x00820f1c (0x00449226), size 0x00820f20 = 0 (0x0044922b). Renamed from allocTileBuffer 2026-10-10: it allocates no tile buffer
 golf_clean.exe	0x004492d0	tileType	terrain	match re/match/golf_small.cpp; callers 0x449470/0x449540	Returns the type id of a tile from the exe tile array.
 golf_clean.exe	0x004492f0	tileByte	terrain	match re/match/golf_small.cpp; callers 0x449470/0x449540	Returns a raw byte of a tile from the exe tile array.
-golf_clean.exe	0x00449310	tileQuery449310	terrain	match re/match/golf_small.cpp; callee 0x40bfe0; callers 0x449540/0x449fa0	Returns a per-tile value used by terrain elevation/wall sync.
+golf_clean.exe	0x00449310	cornerHeightAt	terrain	match re/match/golf_small.cpp; callee 0x40bfe0; callers 0x449540/0x449fa0	Returns a per-tile value used by terrain elevation/wall sync.
 golf_clean.exe	0x00449330	wallHeight	terrain	match re/match/golf_small12.cpp; callers 0x449540/0x44a380	Computes the wall height for a tile edge.
 golf_clean.exe	0x004493b0	tileFlag20	terrain	match re/match/golf_small2.cpp; callers 0x449540/0x44a410	Returns tile flag bit 0x20 (path) for a tile.
 golf_clean.exe	0x004493d0	drawMapLine	render	callee drawLine (jgld import); many callers	Draws a line on the map surface via the jgld drawLine export (g_820ed0).

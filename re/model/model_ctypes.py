@@ -407,7 +407,7 @@ class PlacedObject(ctypes.Structure):  # c.h, 0x10 bytes
     ]
 
 
-class Animal(ctypes.Structure):  # c.h, 0x3c bytes
+class VipResident(ctypes.Structure):  # c.h, 0x3c bytes
     _fields_ = [
         ("u00", ctypes.c_int32),
         ("u04", (ctypes.c_uint8 * 28)),
@@ -581,7 +581,7 @@ class SgSkyActor(ctypes.Structure):  # d.h, 0x10 bytes
     ]
 
 
-class SgRecordBank(ctypes.Structure):  # d.h, 0x74 bytes
+class SgHomeLayout(ctypes.Structure):  # d.h, 0x74 bytes
     _fields_ = [
         ("id", (ctypes.c_int16 * 16)),
         ("x", (ctypes.c_int8 * 16)),
@@ -1664,7 +1664,7 @@ STRUCT_SIZES = {
     "TopScore": 0x9c,
     "HoleRecord": 0x208,
     "PlacedObject": 0x10,
-    "Animal": 0x3c,
+    "VipResident": 0x3c,
     "TerrainTypeInfo": 0x18,
     "TerrainTile": 0x248,
     "TerrainObject": 0x164ad0,
@@ -1678,7 +1678,7 @@ STRUCT_SIZES = {
     "SgCursorObj": 0x4,
     "SgPolyFill": 0x48,
     "SgSkyActor": 0x10,
-    "SgRecordBank": 0x74,
+    "SgHomeLayout": 0x74,
     "SgHotListEntry": 0x20,
     "SgHotList": 0x60,
     "SgViewList": 0x18,
@@ -1771,7 +1771,7 @@ STRUCT_OFFSETS = {
     "TopScore": {"designer": 0x0, "course_title": 0x40, "fun_rating": 0x80, "skill_rating_x100": 0x84, "cash_div100": 0x88, "u8c": 0x8c, "level": 0x96, "course_id": 0x98},
     "HoleRecord": {"par": 0x0, "direction": 0x1, "u002": 0x2, "pad003": 0x3, "length": 0x4, "pad006": 0x6, "tee_x": 0x8, "tee_y": 0xc, "tee2_x": 0x10, "tee2_y": 0x14, "cup_x": 0x18, "cup_y": 0x1c, "first_shots": 0x20, "u024": 0x24, "histogram": 0x28, "comment_count": 0xd8, "mood_sum": 0x158, "u15a": 0x15a, "stat": 0x15c, "comment_last": 0x16c, "u1ec": 0x1ec, "money": 0x1f0, "u1f4": 0x1f4, "ticks": 0x1f8, "magazine_score": 0x1fc, "flags": 0x200, "pad204": 0x204},
     "PlacedObject": {"type": 0x0, "x": 0x2, "y": 0x4, "orientation": 0x6, "flags": 0x7, "value": 0x8, "value2": 0xc},
-    "Animal": {"u00": 0x0, "u04": 0x4, "type": 0x20, "kind": 0x22, "pad24": 0x24, "x": 0x26, "y": 0x28, "countdown": 0x2a, "sprite_base": 0x2c, "pad2e": 0x2e, "sub_x": 0x30, "sub_y": 0x34, "heading": 0x38, "walk_steps": 0x39, "frame": 0x3a, "pad3b": 0x3b},
+    "VipResident": {"u00": 0x0, "u04": 0x4, "type": 0x20, "kind": 0x22, "pad24": 0x24, "x": 0x26, "y": 0x28, "countdown": 0x2a, "sprite_base": 0x2c, "pad2e": 0x2e, "sub_x": 0x30, "sub_y": 0x34, "heading": 0x38, "walk_steps": 0x39, "frame": 0x3a, "pad3b": 0x3b},
     "TerrainTypeInfo": {"name": 0x0, "count": 0x14},
     "TerrainTile": {"corner": 0x0, "type": 0x24, "rotation": 0x28, "x": 0x2c, "y": 0x30, "neighbour": 0x34, "face_count": 0x44, "face": 0x48, "has_path": 0x208, "path_connected": 0x209, "draw_path": 0x20a, "path_info": 0x20b, "pad20f": 0x20f, "wall_height": 0x210, "wall_on": 0x234, "pad23d": 0x23d, "variation": 0x240, "normals_dirty": 0x244, "pad245": 0x245},
     "TerrainObject": {"glrc": 0x0, "ambient": 0x4, "width": 0x14, "height": 0x18, "zoom": 0x1c, "screen_w": 0x20, "screen_h": 0x24, "flip_y": 0x28, "textures_loaded": 0x29, "pad02a": 0x2a, "types": 0x2c, "tiles": 0x3a4, "draw_list": 0x164ac4},
@@ -1785,7 +1785,7 @@ STRUCT_OFFSETS = {
     "SgCursorObj": {"vptr": 0x0},
     "SgPolyFill": {"fill_color": 0x0, "bottom_vertex": 0x4, "unk_08": 0x8, "verts": 0xc, "clip_left": 0x10, "clip_top": 0x14, "unk_18": 0x18, "vert_count": 0x2c, "pixels16": 0x30, "pixels8": 0x34, "scan_y": 0x38, "pitch": 0x3c, "clip_right": 0x40, "clip_bottom": 0x44},
     "SgSkyActor": {"x": 0x0, "y": 0x4, "size": 0x8, "dir": 0xc, "kind": 0xd, "unk_0e": 0xe},
-    "SgRecordBank": {"id": 0x0, "x": 0x20, "y": 0x30, "anim": 0x40, "occupancy": 0x50},
+    "SgHomeLayout": {"id": 0x0, "x": 0x20, "y": 0x30, "anim": 0x40, "occupancy": 0x50},
     "SgHotListEntry": {"vtbl": 0x0, "unk_004": 0x4, "tip_text": 0x1c},
     "SgHotList": {"vtbl": 0x0, "f_004": 0x4, "f_008": 0x8, "f_00c": 0xc, "f_010": 0x10, "f_014": 0x14, "f_018": 0x18, "f_01c": 0x1c, "timer": 0x20, "entries": 0x50, "capacity": 0x54, "count": 0x58, "tip_delay_ms": 0x5c},
     "SgViewList": {"vtbl": 0x0, "head": 0x4, "cursor": 0x8, "count": 0xc, "cursor_index": 0x10, "keep_data": 0x14},
@@ -2253,7 +2253,6 @@ SYMBOLS = {  # model symbol -> (element type, shape, stream)
     "g_animPalettes": ("PaletteCache", [591], "e2"),
     "g_animSprites": ("SpriteRef", [591], "g1"),
     "g_animalCell": ("int32_t", [], "d"),
-    "g_animalRecords": ("Animal", [100], "c"),
     "g_audio5aa774": ("uint32_t", [], "e2"),
     "g_awardCashThousands": ("int32_t", [], "b"),
     "g_awardHoleHonours": ("int32_t", [], "b"),
@@ -2438,6 +2437,7 @@ SYMBOLS = {  # model symbol -> (element type, shape, stream)
     "g_holePoints": ("HolePoints", [19], "b"),
     "g_holes": ("HoleRecord", [20], "c"),
     "g_holesPlusOne": ("int32_t", [], "e2"),
+    "g_homeLayouts": ("SgHomeLayout", [6], "d"),
     "g_hotListFreeGuard": ("int32_t", [], "e1"),
     "g_hscrollHeight": ("int32_t", [], "e1"),
     "g_hudPairs": ("int32_t", [20], "e1"),
@@ -2570,7 +2570,6 @@ SYMBOLS = {  # model symbol -> (element type, shape, stream)
     "g_probeType1Strokes": ("int32_t", [], "b"),
     "g_rankComponent3": ("int32_t", [], "b"),
     "g_ratingMilestone": ("int32_t", [], "b"),
-    "g_recordBanks": ("SgRecordBank", [6], "d"),
     "g_recordDefs": ("F_RecordDef", [15], "f"),
     "g_redrawPending": ("int32_t", [], "d"),
     "g_removingWin": ("uint32_t", [], "e2"),
@@ -2848,6 +2847,7 @@ SYMBOLS = {  # model symbol -> (element type, shape, stream)
     "g_value587ea0": ("int32_t", [], "b"),
     "g_viewDefaults": ("int32_t", [4], "e1"),
     "g_viewTreeRoot": ("uint32_t", [], "e2"),
+    "g_vipResidents": ("VipResident", [100], "c"),
     "g_visitor60Count": ("int32_t", [], "b"),
     "g_voiceDevice": ("StrList", [], "e2"),
     "g_walkers": ("Walker", [64], "b"),

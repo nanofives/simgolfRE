@@ -1,0 +1,5 @@
+== t_test_shotstyle start 2026-11-03 06:25:43 free=20GB
+s....                                                                    [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_shotstyle.py:49: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+4 passed, 1 skipped in 0.15s

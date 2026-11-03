@@ -147,13 +147,13 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
     for (int32_t y = 49; y >= 0; --y) {
       if (tile_type(ctx, x, y) == 0x11) continue;
       for (int32_t c = 1; c < 8; c += 2) {
-        if (tile_query449310(ctx, x, y, c) <= 3) continue;
+        if (corner_height_at(ctx, x, y, c) <= 3) continue;
         int32_t n = 0;
-        if (tile_query449310(ctx, x, y, c) - 3 <= 0) continue;
+        if (corner_height_at(ctx, x, y, c) - 3 <= 0) continue;
         do {
           api().elevate_corner(self, tile_at_va(ctx, x, y), c);
           ++n;
-        } while (n < tile_query449310(ctx, x, y, c) - 3 - short_by);
+        } while (n < corner_height_at(ctx, x, y, c) - 3 - short_by);
       }
     }
   }
@@ -206,28 +206,28 @@ int32_t apply_tile_elevation(Ctx &ctx, uint32_t tile, int32_t x, int32_t y, int3
     const uint32_t off = kTileHeights + 8 * u32(k);
     const auto height = [&] { return tile != 0 ? ctx.mem.load<int32_t>(tile + off) : 0; };
     int32_t h = height();
-    q = tile_query449310(ctx, x, y, c) - 3;
+    q = corner_height_at(ctx, x, y, c) - 3;
     if (q > h) {
       api().elevate_corner(terrain_self(ctx), tile, c);
       need_normals(ctx).set(1);
       res = 1;
       for (;;) {
         h = height();
-        q = tile_query449310(ctx, x, y, c) - 3;
+        q = corner_height_at(ctx, x, y, c) - 3;
         if (q <= h) break;
         api().elevate_corner(terrain_self(ctx), tile, c);
       }
       continue;
     }
     h = height();
-    q = tile_query449310(ctx, x, y, c) - 3;
+    q = corner_height_at(ctx, x, y, c) - 3;
     if (q >= h) continue;
     lower_step(ctx, tile, x, y, c, x2, y2);
     need_normals(ctx).set(1);
     res = 1;
     for (;;) {
       h = height();
-      q = tile_query449310(ctx, x, y, c) - 3;
+      q = corner_height_at(ctx, x, y, c) - 3;
       if (q >= h) break;
       lower_step(ctx, tile, x, y, c, x2, y2);
     }

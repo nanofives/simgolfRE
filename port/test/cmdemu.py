@@ -5,7 +5,7 @@ layout: sections at their VAs, data image supplied by the caller, IAT slots poin
 
   * DROPPED callees stubbed: every drawing / display / window-tree call the port drops is replaced by a stub that returns
     a fixed eax and writes nothing (`Emu.stub`), so the original and the port must agree on every remaining write;
-  * the MODAL PUMP modelled exactly as the port models it (portsim/sim/commands.h, "MODAL BLOCKS"): frameTick483cd0, the
+  * the MODAL PUMP modelled exactly as the port models it (portsim/sim/commands.h, "MODAL BLOCKS"): doMouse, the
     point where jgld's pumps dispatch window messages, pops the next batch of scripted raw commands and runs the ORIGINAL
     root-window handlers on them (a trampoline of `push a1; push a0; call handler` per command), with GetAsyncKeyState
     and timeGetTime answered from the command (async_ctrl / async_shift / t). A batch is every command up to and
@@ -35,9 +35,9 @@ import vector_lib as VL  # noqa: E402
 ROOT_HANDLERS = {1: 0x00465580, 2: 0x00465610, 3: 0x00465650, 4: 0x00465680, 5: 0x00465720, 6: 0x00465740,
                  7: 0x00465750, 8: 0x004657B0, 9: 0x004657D0, 10: 0x004657E0, 11: 0x00465840}
 STOP_HANDLERS = (1, 4, 7, 8, 10, 11)     # a batch ends after a press or a key
-FRAME_TICK = 0x00483CD0                  # frameTick483cd0: the dispatch point
+FRAME_TICK = 0x00483CD0                  # doMouse: the dispatch point
 # pumpMessages' callers whose pump is a DRAIN (commands.h, MODAL BLOCKS): the return address of their pumpMessages call,
-# read at [esp + 0x20] when frameTick483cd0 is entered (pumpMessages: sub esp, 0x1c; its pushes are popped by then)
+# read at [esp + 0x20] when doMouse is entered (pumpMessages: sub esp, 0x1c; its pushes are popped by then)
 DRAIN_CALLERS = {0x0045C164: "pumpLight", 0x0045BFCF: "waitTicks"}
 TRAMP = 0x7EF00000                       # trampoline page for the handler calls
 
@@ -169,7 +169,7 @@ class Emu:
             return list(struct.unpack(f"<{n}I", uc.mem_read(esp + 4, 4 * n))) if n else []
 
         def dispatch():
-            """frameTick483cd0: build a trampoline for the next batch and enter it; its final `ret` returns to the
+            """doMouse: build a trampoline for the next batch and enter it; its final `ret` returns to the
             caller of frameTick (eax = 0)"""
             caller = struct.unpack("<I", uc.mem_read(uc.reg_read(X.UC_X86_REG_ESP) + 0x20, 4))[0]
             if caller in DRAIN_CALLERS:     # a drain: the scripted input never "has arrived" (QueueInput's rule)

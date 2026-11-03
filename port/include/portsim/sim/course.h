@@ -15,18 +15,18 @@
 namespace portsim {
 
 // ------------------------------------------------------------------------------------------------ records
-// freeRecordAtPos (re/analysis/course/004011b0): every animal record (100) whose signed x word equals x and y word
+// removeVipResidentAt (re/analysis/course/004011b0): every animal record (100) whose signed x word equals x and y word
 // equals y gets type 0xffff (all matches, not only the first).
-void free_record_at_pos(Ctx &ctx, int32_t x, int32_t y);
-// initRecords (re/analysis/sim/00401750): every animal's type word = 0xffff; then for bank 0..5 resetRecordBank(bank)
-// and placeRecord(bank, bank, 0, 0). Returns the last placeRecord result (bank 5).
-int32_t init_records(Ctx &ctx);
-// resetRecordBank (callee of initRecords): fills 8 dwords of g_recordBanks[bank].id and 9 dwords of .occupancy with -1.
-void reset_record_bank(Ctx &ctx, int32_t bank);
-// placeRecord (callee of initRecords): first free id slot (-1) of bank `bank` gets (type, row, col, anim 0xff) and
+void remove_vip_resident_at(Ctx &ctx, int32_t x, int32_t y);
+// initHomeLayouts (re/analysis/sim/00401750): every animal's type word = 0xffff; then for bank 0..5 resetHomeLayout(bank)
+// and placeHomeLayoutPart(bank, bank, 0, 0). Returns the last placeHomeLayoutPart result (bank 5).
+int32_t init_home_layouts(Ctx &ctx);
+// resetHomeLayout (callee of initHomeLayouts): fills 8 dwords of g_homeLayouts[bank].id and 9 dwords of .occupancy with -1.
+void reset_home_layout(Ctx &ctx, int32_t bank);
+// placeHomeLayoutPart (callee of initHomeLayouts): first free id slot (-1) of bank `bank` gets (type, row, col, anim 0xff) and
 // the footprint bits of g_recordDefs[type] stamp the slot index into the bank's 6-wide occupancy grid; 0 when the bank
 // is full, else 1.
-int32_t place_record(Ctx &ctx, int32_t bank, int32_t type, int32_t row, int32_t col);
+int32_t place_home_layout_part(Ctx &ctx, int32_t bank, int32_t type, int32_t row, int32_t col);
 // clearMatching (re/analysis/sim/0040c860): for the 8 label slots i, g_labelQueueB[i] = 0 when g_labelQueueC[i] == a
 // and g_floatLabelY[i] == b.
 void clear_matching(Ctx &ctx, int32_t a, int32_t b);

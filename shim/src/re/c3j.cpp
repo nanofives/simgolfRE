@@ -142,7 +142,7 @@ unsigned __fastcall SetVolume_re(void* self, void*, unsigned v) {
     return eax;
 }
 
-// 0x004846b0  Snd::setField34(v): stores v at this+0x34 (0x004846b4); if the device object at this+0x40 is
+// 0x004846b0  Snd::setDelay(v): stores v at this+0x34 (0x004846b4); if the device object at this+0x40 is
 // non-null (0x004846ba) it forwards v to the device virtual +0x4c (0x004846c1) and leaves that call's eax,
 // otherwise eax is still v; `ret 4` at 0x004846c4. Fixed 2026-10-11 after c3dy's device probe (the first body
 // dropped the forward).

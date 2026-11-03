@@ -467,7 +467,7 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public 
     // QPC; TraceInput::batch tests it apart from the frame-body / modal classes, so it is neither
     const bool load = kind == PumpKind::Load;
     const bool body = !load && io.pump_site != tk::kPumpSiteModal;
-    // TraceInput::batch: a modal loop's Drain pump never takes a dispatch (pumpLight, pumpInput483bd0 in a loop): not asked
+    // TraceInput::batch: a modal loop's Drain pump never takes a dispatch (pumpLight, doAllTasks in a loop): not asked
     if (!body && kind == PumpKind::Drain) return false;
     const bool paced = kind == PumpKind::Blocking && pace_ != 0;
     const bool modal_blocking = !body && kind == PumpKind::Blocking;

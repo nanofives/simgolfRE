@@ -56,7 +56,7 @@ menu_top:  // ML+0x11875
     if (menu_neg() != 2) GU32(GS(g_date)) = 0;   // g_date = 0              ML+0x1188a
     GU32(GS(g_flags)) = 0x40000000;     //                               ML+0x11890
     if (menu_neg() != 1) cc("buildGolferBioText");   // buildGolferBioText()  ML+0x1189a (no pushed args)
-    cc("initRecords");                    // initRecords()                  ML+0x1189f
+    cc("initHomeLayouts");                    // initHomeLayouts()                  ML+0x1189f
     for (int i = 0; i < 8; i++) GU32(GS(g_playerSkills) + 4 * i) = 0;  // ML+0x118b1 rep stosd
     for (int i = 0; i < 8; i++) GU32(GS(g_moneyLabelTime) + 4 * i) = 0;  // ML+0x118bd rep stosd
     // setDrawTarget(Root, g_font51a028, 0, 0, 0)                         ML+0x118cc
@@ -95,7 +95,7 @@ menu_top:  // ML+0x11875
     // --- hover / click loop (ML+0x11a65..ML+0x11cba) ---
 hover_loop:  // ML+0x11a65
     cc("waitTicks", 1, 0);              // waitTicks(1, 0)                ML+0x11a69
-    cc("pumpInput483bd0");                    // pumpInput483bd0()              ML+0x11a71 (no pushed args)
+    cc("doAllTasks");                    // doAllTasks()              ML+0x11a71 (no pushed args)
     cc("pumpMessages");                    // pumpMessages()                 ML+0x11a76 (no pushed args)
     // View_toLocal(g_rootWindow, &F[0x1e4], &F[0x1d8])                   ML+0x11a90
     tc("View_toLocal", GS(g_rootWindow), FA(0x1E4), FA(0x1D8));

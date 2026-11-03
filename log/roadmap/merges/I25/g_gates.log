@@ -1,0 +1,21 @@
+== queue start 2026-11-03 06:02:56
+[build] x64 rc=0 [build] done 06:07:38  / w32 rc=0
+[1/18] static rc=1 339 s :: 1 failed, 819 passed, 3 skipped, 46 deselected in 336.51s (0:05:36)
+[2/18] segs_x64 rc=0 102 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 100.8}
+[3/18] segs_win32 rc=0 138 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 137.6}
+[4/18] boot_x64 rc=0 166 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[5/18] boot_win32 rc=0 234 s :: {"counts": {"PASS": 67, "KNOWN": 2, "NO_FRAMES": 2}}
+[6/18] app_replay_x64 rc=0 3 s :: saveload                 PASS  records 266/266 code 0 first None (0.7 s)
+[7/18] gfx_check rc=0 0 s ::   body	drawWindow.frame	text
+[8/18] t_test_static rc=0 3 s :: 6 passed in 1.58s
+[9/18] t_test_golfers rc=0 13 s :: 60 passed in 11.25s
+[10/18] t_test_saveload rc=0 8 s :: 26 passed, 37 skipped in 7.08s
+[11/18] t_test_course_menu rc=1 4 s :: 1 failed, 6 passed, 24 skipped in 3.46s
+[12/18] t_test_browser rc=1 25 s :: 1 failed, 8 passed, 26 skipped in 23.61s
+[13/18] t_test_save_dialogs rc=0 4 s :: 6 passed, 26 skipped in 2.83s
+[14/18] t_test_loaders rc=0 11 s :: 14 passed, 50 skipped in 10.42s
+[15/18] t_test_menu rc=1 24 s :: 1 failed, 23 passed, 47 skipped in 22.50s
+[16/18] t_test_shotstyle rc=0 1 s :: 4 passed, 1 skipped in 0.15s
+[17/18] t_test_gfx_info_panel rc=1 8 s :: 1 failed, 2 passed, 1 skipped in 6.73s
+[18/18] t_test_tick rc=0 343 s :: 250 passed in 341.97s (0:05:41)
+[queue done] 2026-11-03 06:31:37

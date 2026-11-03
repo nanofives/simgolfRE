@@ -10,7 +10,7 @@ namespace {
 
 template <typename T> T& ref(unsigned addr) { return *reinterpret_cast<T*>(addr); }
 
-// A hole record is 0x208 bytes; the per-hole tables of holeMagazineEvent are addressed as fieldBase + hole*0x208
+// A hole record is 0x208 bytes; the per-hole tables of rateCourseHoles are addressed as fieldBase + hole*0x208
 // (the asm forms hole*0x208 as ((hole<<6)+hole)<<3 at 0x0042df36; the decompiler's "hole*0x82" is the same offset in
 // dword units). hole runs 1..0x12.
 template <typename T> T& fld(unsigned base, int hole) { return ref<T>(base + hole * 0x208); }
@@ -50,7 +50,7 @@ const char* const kFeesSuffix = reinterpret_cast<const char*>(0x004C7708);// " I
 const char* const kTop18 = reinterpret_cast<const char*>(0x004C76DC);     // " has been rated as one of the Top 18 holes "
 const char* const kByGreat = reinterpret_cast<const char*>(0x004C76AC);   // "in the country by Great Golf Holes magazine!"
 
-// 0x0042dea0  holeMagazineEvent(): once-per-tick pass over the 18 holes of the current course. For each hole with a
+// 0x0042dea0  rateCourseHoles(): once-per-tick pass over the 18 holes of the current course. For each hole with a
 // non-zero par byte (0x00575ab0 + hole*0x208, 0x0042df40) it: accumulates the course totals g_par 0x0059aafc,
 // g_yards 0x0058d36c and (when the dword 0x00575ad0 != 0) g_fun_rating 0x0059ae78 (0x0042dfc7); builds the per-hole
 // shot histogram at 0x00575ada (9 rows x 8 columns of signed shorts, 0x0042dff0) into column sums col40/col20;

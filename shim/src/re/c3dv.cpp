@@ -204,7 +204,7 @@ Render1_t RenderTextWidget_orig;
 // ' ', 0x0a and '^' set the break index e = i (0x0045b151..0x0045b161). A break is taken at 0x0a and '^' always
 // (0x0045b163..0x0045b169) or when acc > cols * 8 (0x0045b16b..0x0045b17c, signed): buf[e] is cut to NUL (0x0045b182..
 // 0x0045b194), the line from the start index st is drawn at (x, y) - drawTextSurface 0x00404ad0 when H > 0x10 (signed) and
-// colour == 0x80007fff (0x0045b19b..0x0045b1bd), else drawText4049d0 0x004049d0 (0x0045b1c4..0x0045b1d9) - buf[e] is
+// colour == 0x80007fff (0x0045b19b..0x0045b1bd), else drawTextWithColor 0x004049d0 (0x0045b1c4..0x0045b1d9) - buf[e] is
 // restored (0x0045b1df..0x0045b1e6), y += H, acc = 0, st = e + 1 (e + 2 when buf[i] is '^'), i = e (0x0045b1f2..0x0045b214);
 // y > 0x248 (signed) returns y (0x0045b20e..0x0045b216). After the last character a pending line (acc > 0, y <= 0x248) is
 // drawn the same way, y += H (0x0045b234..0x0045b29f) and y is returned.

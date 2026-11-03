@@ -19,7 +19,7 @@ struct World : TkBase {
   static constexpr signed char kSpawnRise[20] = {-55, -54, -52, -49, -45, -40, -34, -27, -19, -10,
                                                  0,   -4,  -7,  -8,  -7,  -4,  0,   -2,  0,   0};
 
-  struct Animal {  // a ground animal: +0 x, +4 y, +8 flags, +0xc leader, +0xe state, +0x10 frame, +0x11 dir, +0x12 kind
+  struct VipResident {  // a ground animal: +0 x, +4 y, +8 flags, +0xc leader, +0xe state, +0x10 frame, +0x11 dir, +0x12 kind
     World *w;
     uint32_t r;
     Ref<int32_t> x() const { return w->G<int32_t>(r); }
@@ -31,10 +31,10 @@ struct World : TkBase {
     Ref<int8_t> dir() const { return w->G<int8_t>(r + 0x11); }
     Ref<int8_t> kind() const { return w->G<int8_t>(r + 0x12); }
   };
-  Animal Rec(int i) { return Animal{this, GS(g_habitatSlots) + static_cast<uint32_t>(mul32(0x14, i))}; }
+  VipResident Rec(int i) { return VipResident{this, GS(g_habitatSlots) + static_cast<uint32_t>(mul32(0x14, i))}; }
 
   // the decisions taken when an animal's animation frame wraps to 0
-  void Decide(Animal a, int index) {
+  void Decide(VipResident a, int index) {
     int target;
     const int16_t lead = a.leader();
     if (lead == -1 && Rec(-1).kind() != -1) {  // record -1's kind byte (the word before g_habitatSlots)
@@ -68,7 +68,7 @@ struct World : TkBase {
       }
     } else {
       // follow the leader record (record -1 when the index is -1)
-      Animal l = Rec(lead);
+      VipResident l = Rec(lead);
       const int dx = l.x() - a.x(), dy = l.y() - a.y();
       int d = cc("distance", dx, dy);
       if (GU8(l.r + 8) & 2) {
@@ -107,7 +107,7 @@ struct World : TkBase {
   void drawWorldObjects() {
     LV sx(*this), sy(*this);  // worldToScreen's outputs, kept across the whole body like the original's frame slots
     for (int i = 0; i < 0x80; i++) {
-      Animal a = Rec(i);
+      VipResident a = Rec(i);
       if (a.kind() == -1 || !(GU8(GS(g_preferences)) & 0x20)) continue;
       if (a.kind() >= 9) a.kind() = 1;
       int lf;

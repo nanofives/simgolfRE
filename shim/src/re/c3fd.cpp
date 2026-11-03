@@ -245,7 +245,7 @@ void* __fastcall MsCtorT_re(void* self, void*, unsigned type) {
 // their vtable slot 0 with 1 pushed when non-NULL (0x100398b2-0x100398ba) and cleared (0x100398bc). With bit 1 of the byte at
 // +0xc8 set (0x100398d1 / 0x100398d8) Channel_releaseBuffers runs on this+0x70 (thunk 0x10001d11, 0x100398dd). A non-NULL
 // +0x1430 (0x100398e8 / 0x100398ea) is passed to operator delete (0x100398ed) and cleared (0x100398f5). Channel_closeAndFree
-// runs on this+0x70, or on NULL when this is NULL (0x100398ff-0x1003990f, thunk 0x100011b8), then Ch5bb90_dtor on this (thunk
+// runs on this+0x70, or on NULL when this is NULL (0x100398ff-0x1003990f, thunk 0x100011b8), then Wave::dtor on this (thunk
 // 0x10002108, 0x1003991e).
 typedef void(__fastcall* MsDtor_t)(void*, void*);
 MsDtor_t MsDtor_orig;
@@ -273,7 +273,7 @@ void __fastcall MsDtor_re(void* self, void*) {
     c3fd_fn<Th0_t>(0x00002108)(self, 0);                                      // 0x1003991e
 }
 
-// 0x0001e2b0  Seq_dtor (VA 0x1001e2b0). __thiscall, no stack argument (plain `ret` 0x1001e382); its caller Sound5b6a8_dtor
+// 0x0001e2b0  Seq_dtor (VA 0x1001e2b0). __thiscall, no stack argument (plain `ret` 0x1001e382); its caller Seq::dtor
 // makes another call right after it (0x100201a9 / 0x100201b8), so eax is not passed on (ret void). With bit 0 of the byte at
 // +0x4c set (0x1001e2cf / 0x1001e2d4 / 0x1001e2da) Midi_Device::closeFile runs on this (thunk 0x10001014, 0x1001e2dc). Then
 // the node list at +0x19c is torn down from the head: for a node n, its next n[1] (0x1001e2f3) becomes the head with its
@@ -840,7 +840,7 @@ void c3fd_drainList(void* self, int hOff, int cOff) {
 // 0x100040b7-0x10004141): pop the head (its next becomes the head with the back link cleared, 0x10004039-0x10004042, or head and
 // tail are cleared, 0x1000404a / 0x10004050), read the payload +8 (0x10004056), operator delete the node (0x1000405a), decrement
 // the count (0x1000405f-0x1000406b), and stop on a NULL payload (0x10004069 / 0x10004071) or an empty list (0x10004079 /
-// 0x1000407b); the second pass therefore goes on past the first NULL payload. Then Sound5b6a8_dtor runs on this (thunk
+// 0x1000407b); the second pass therefore goes on past the first NULL payload. Then Seq::dtor runs on this (thunk
 // 0x10001893, 0x1000414d).
 typedef void(__fastcall* SoundDtor_t)(void*, void*);
 SoundDtor_t SoundDtor_orig;
@@ -858,7 +858,7 @@ void __fastcall SoundDtor_re(void* self, void*) {
 // 0x100b4a08 is decremented (0x1003130e-0x10031316), p goes to operator delete (0x1003131c) and the next head is popped
 // (0x10031321-0x10031351), the walk ending on an empty list (0x10031327 / 0x10031329). Then, with the wave-in device 0x100b4a24
 // non-NULL (0x10031356-0x1003135e), Wave_In_Device::clearStream runs on it (thunk 0x10001ba4, 0x10031360). The list is then drained
-// once more without closing anything (0x10031365-0x100313cb, stopping on a NULL payload) and Ch5c2ec_dtor runs on this (thunk
+// once more without closing anything (0x10031365-0x100313cb, stopping on a NULL payload) and VoiceTx::dtor runs on this (thunk
 // 0x10002612, 0x100313d7).
 typedef void(__fastcall* SrDtor_t)(void*, void*);
 SrDtor_t SrDtor_orig;

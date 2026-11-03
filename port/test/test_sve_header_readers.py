@@ -7,7 +7,7 @@ buffer, so the bytes after the text's NUL are leftover text. The test pins:
      write it with __write (the savers);
   2. that the body decoders (serializeCourse, deserializeCourse, saveFieldIo) hold no reference into the buffer;
   3. that the consumers of the loaded text, the browser's list builder (loadGameBrowserScreen) and the text draw path
-     (drawText4049d0 -> drawText 0x477c30), measure the text with a NUL scan (`repne scasb`) and never with the 0x64
+     (drawTextWithColor -> drawText 0x477c30), measure the text with a NUL scan (`repne scasb`) and never with the 0x64
      length: no `push 0x64` and no 0x64 compare in the browser's header-consuming loops.
 """
 import re

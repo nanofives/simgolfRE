@@ -2387,7 +2387,7 @@ stk[--sp] = (int)(esi); // ML+0x4978  push esi
 eax = (eax) & (1); // ML+0x4979  and eax, 1
 stk[--sp] = (int)(edi); // ML+0x497c  push edi
 stk[--sp] = (int)(eax); // ML+0x497d  push eax
-eax = cc("drawRecords", stk[sp+0], stk[sp+1], stk[sp+2]); // drawRecords  ML+0x497e
+eax = cc("drawHomeLayout", stk[sp+0], stk[sp+1], stk[sp+2]); // drawHomeLayout  ML+0x497e
 sp += 3; // ML+0x4983  add esp, 0xc  (caller stack cleanup)
 La_413f46:;
 eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x4986  mov ax, word ptr [ebp*2 + g_tileFlags]
@@ -4351,11 +4351,11 @@ void P4_records5736b8(u32 F) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// ML+0x63ae..ML+0x6437: drawFlyingBall, then the counter [g_landingAnimFrame]: while it is not -1 and below
+// ML+0x63ae..ML+0x6437: drawWalkers, then the counter [g_landingAnimFrame]: while it is not -1 and below
 // [g_sheetCols+0x3e0] it queues cell (0xf8, counter, 0) as a sprite at the projection of (g_golfer5787fc, g_golfer578800)
 // (stored to unk_005a9cc8) and steps; at the limit it becomes -1.
 void P4_flyingBall(u32 F) {
-    cc("drawFlyingBall");                                                           // drawFlyingBall ML+0x63ae (pushes nothing)
+    cc("drawWalkers");                                                           // drawWalkers ML+0x63ae (pushes nothing)
     int esi = G32(GS(g_landingAnimFrame));                                                // ML+0x63b3
     if (esi == -1) return;                                                    // ML+0x63bc je ML+0x6437
     if (esi < G32((GS(g_sheetCols) + 992))) {                                              // ML+0x63c4 jge ML+0x642d
@@ -4410,13 +4410,13 @@ void P4_markerCircle(u32 F) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// ML+0x64b7..ML+0x65ad: tickAnimals; with [g_playerGolfer] == -1 and bit 200000 of [g_flags] clear, six
+// ML+0x64b7..ML+0x65ad: updateVipResidents; with [g_playerGolfer] == -1 and bit 200000 of [g_flags] clear, six
 // fields of golfer record 0x99 are set; in mode [g_panelListMode] == 3 the golfer [g_playerGolfer] with x > 0 gets the
 // image g_surfaces59b050 + 44 * clamp(byte +0x2e + 2, 0, 4), drawn when that byte is below 3 or when the date has
 // bit 4 (|byte| == 3) or bit 2 (otherwise) set.
 void P4_animalsAndImage(u32 F) {
     (void)F;
-    cc("tickAnimals");                                                           // tickAnimals ML+0x64b7
+    cc("updateVipResidents");                                                           // updateVipResidents ML+0x64b7
     int esi = G32(GS(g_playerGolfer));                                                // ML+0x64bc
     if (esi == -1 && (G32(GS(g_flags)) & 0x200000) == 0) {                     // ML+0x64c5 / ML+0x64d1
         short ax = (short)G8((GS(g_golferTypes) + 33));                                     // ML+0x64d3 movsx ax
@@ -5328,7 +5328,7 @@ int P5_dateTick(u32 F) {
                         cc("playSound", 0x33, 0x64, 0, 0, 0);   // ML+0x8625 playSound
                         G32((GS(f_w_4c2848) + 4)) = G32((GS(f_w_4c2848) + 4)) + 1;  // ML+0x862a / ML+0x8633 / ML+0x863b
                         const int r6 = Rnd(6) & 0xffff;    // ML+0x8641 / ML+0x864f
-                        cc("spawnObject", r6, who, (int)G16(ebx - 0xa), (int)G16(ebx - 8));   // ML+0x8657 spawnObject
+                        cc("spawnVipResident", r6, who, (int)G16(ebx - 0xa), (int)G16(ebx - 8));   // ML+0x8657 spawnVipResident
                     }
                 }
             }
@@ -5743,14 +5743,14 @@ void P6_Census(u32 F) {
 }
 
 // icon + count text: Image_draw of the icon at (ix, y), kBuf = f_strpool_4c61dc+0x8 (one letter) + __itoa([cnt]) with [cnt]
-// read after Image_draw as the original does, drawText4049d0 of kBuf at (tx, y). The original repeats this sequence
+// read after Image_draw as the original does, drawTextWithColor of kBuf at (tx, y). The original repeats this sequence
 // five times; each caller cites its call sites.
 void P6_IconCount(u32 img, int ix, int y, u32 cnt, int tx) {
     tc("Image_draw", static_cast<int>(img), Root(), ix, y, 0);   // Image_draw
     StrCpy(kBuf, (GS(f_strpool_4c61dc) + 8));
     int r = Itoa(G32(cnt), GS(g_textBuf), 10);     // __itoa
     StrCat(kBuf, static_cast<u32>(r));
-    cc("drawText4049d0", static_cast<int>(kBuf), tx, y, 0x80007FFFu);   // drawText4049d0
+    cc("drawTextWithColor", static_cast<int>(kBuf), tx, y, 0x80007FFFu);   // drawTextWithColor
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -5909,7 +5909,7 @@ void P6_Hud(u32 F) {
 // (drawScaledSprite421b90 then Surface_stretchBlit each); [unk_0056a520] = 0; kBuf = f_strpool_4c61dc+0x4 + appendNumber(cash * 100)
 // (+ f_strpool_4c61dc when bit 20000000 of [g_flags]), drawn at (0x2c4, 0x23) in 800023e8 when cash >= 0, else in
 // 80007d08 only while bit 2 of [g_date] is set; nothing of it when bit 1000000 of [g_flags]. Then
-// __itoa([g_funRating]) at (0x2d2, 0x4e), holeMagazineEvent, appendCents([g_skillRatingX100]) at (0x2dc, 0x79); kBuf is left
+// __itoa([g_funRating]) at (0x2d2, 0x4e), rateCourseHoles, appendCents([g_skillRatingX100]) at (0x2dc, 0x79); kBuf is left
 // holding f_strpool_4c615c+0x50 + appendNumber([g_ui_56d1a8+0x8]) (not drawn in this range). View_toLocal into F+0xb8 / F+0xb0,
 // capsLockOff, display slot +0x9c.
 void P6_StatusBar(u32 F) {
@@ -5944,7 +5944,7 @@ void P6_StatusBar(u32 F) {
         StrCat(kBuf, static_cast<u32>(r));      // ML+0xa07d..ML+0xa0b4
         cc("drawCenteredText2", static_cast<int>(kBuf), 0x2d2, 0x4e, 0x80007FF0u);   // ML+0xa0b6 drawCenteredText2
     }
-    cc("holeMagazineEvent");                             // ML+0xa0be holeMagazineEvent
+    cc("rateCourseHoles");                             // ML+0xa0be rateCourseHoles
     {
         int v = G32(GS(g_halfBrightLut));                // ML+0xa0c3
         tc("drawScaledSprite421b90", (GS(g_sprites520590) + 132), Root(), 0x2bb, 0x63, v, 1, 1, 0);   // ML+0xa0e1 drawScaledSprite421b90
@@ -6055,7 +6055,7 @@ void P6_PauseLabel(u32 F) {
 }
 
 // ------------------------------------------------------------------------------------------------------------------
-// ML+0xa3f4..ML+0xa657  setDrawTarget g_font519948, kBuf centred at (0x190, 0xa); pumpInput483bd0; View_toLocal into
+// ML+0xa3f4..ML+0xa657  setDrawTarget g_font519948, kBuf centred at (0x190, 0xa); doAllTasks; View_toLocal into
 // F+0x68 / F+0x58; [unk_005a9cc0] = [unk_005a9cbc]; screenToTile(F+0x68, F+0x58) into g_cursorTileX / g_cursorTileY. When
 // F+0x58 < 0x1f4, ([f_w_4c2848] == -1 and [f_w_4c2848+0xc] == -1, or mode [g_panelListMode] 2 or 5) and [g_rootInput+0x34] != -1:
 // q = distance(F+0x68 - [g_rootInput+0x34], (F+0x58 - [g_rootInput+0x38]) * 32 / 20) * 25 / (11 * [g_zoomScale]); when q > 25 four
@@ -6064,7 +6064,7 @@ void P6_PauseLabel(u32 F) {
 int P6_Cursor(u32 F) {
     tc("setDrawTarget", Root(), GS(g_font519948), 0, 0, 0);   // ML+0xa402 setDrawTarget
     cc("drawCenteredText2", static_cast<int>(kBuf), 0x190, 0xa, 0x80007FFFu);   // ML+0xa418 drawCenteredText2
-    pump_at("pumpInput483bd0", kPumpSiteP6);                             // ML+0xa420 pumpInput483bd0
+    pump_at("doAllTasks", kPumpSiteP6);                             // ML+0xa420 doAllTasks
     tc("View_toLocal", GS(g_rootWindow), FA(0x68), FA(0x58));   // ML+0xa434 View_toLocal
     {
         int vy = FD(0x58);                      // ML+0xa439
@@ -6768,7 +6768,7 @@ L41b358:
         G32(rec + (GS(g_golfers) + 196)) = ecx;                      // ML+0xbde0
         G32(rec + (GS(g_golfers) + 200)) = edx;                      // ML+0xbded
     }
-    esi = cc("rateTile", G32(GS(g_playerGolfer)));                  // ML+0xbdf3 rateTile (esi = drag length / quality)
+    esi = cc("golferShotReach", G32(GS(g_playerGolfer)));                  // ML+0xbdf3 golferShotReach (esi = drag length / quality)
     {
         int mode = G32(GS(g_playerShotStyle));                       // ML+0xbdfa
         if (mode == 3) {                                // ML+0xbe02/ML+0xbe05
@@ -6936,7 +6936,7 @@ L41b8d7:    // per-club-stat row loop (10 rows); [F+0xc]=index, [F+0x20]=label t
         }
         // bit == 0x10 or 0x200: esi stays 0
         int col = ((esi != 0) ? 0x3def : 0) + 0x80004210;  // ML+0xc4ed..ML+0xc4fb
-        cc("drawText4049d0", GS(g_textBuffer), FD(0x2c), FD(0x10), col);   // ML+0xc50d drawText4049d0
+        cc("drawTextWithColor", GS(g_textBuffer), FD(0x2c), FD(0x10), col);   // ML+0xc50d drawTextWithColor
         int y = FD(0x10) + 0xc;                         // ML+0xc512
         FD(0x10) = y;                                   // ML+0xc51e
         if (y >= 0x258) {                               // ML+0xc518 (signed)
@@ -7376,7 +7376,7 @@ a41c6d9:  // key 0x68
     G32(GS(g_playerShotStyle)) = edx;                    // ML+0xd11e  (=3)
     goto a41de11;                             // ML+0xd124
 a41c6e9:
-    cc("announceBuilding");                           // ML+0xd129 announceBuilding
+    cc("openHole");                           // ML+0xd129 openHole
     goto a41de11;                             // ML+0xd12e
 a41c6f3:  // key 0x64
     G32(GS(g_playerShotStyle)) = ebx;                    // ML+0xd133  (=1)
@@ -7730,7 +7730,7 @@ a41d223:
 a41d270:
     {
         int color = edx;                                // edx = [F+ebx*4+0x290] color (push at ML+0xdcb3)
-        cc("drawText4049d0", (int)kBuf, 0x128, 0x90 - ebx * 20, color);  // ML+0xdcc9 drawText4049d0
+        cc("drawTextWithColor", (int)kBuf, 0x128, 0x90 - ebx * 20, color);  // ML+0xdcc9 drawTextWithColor
     }
     ecx = G32(GS(g_cursorTileX));                              // ML+0xdcce
     esi = G32(GS(g_cursorTileY));                              // ML+0xdcd4
@@ -7898,7 +7898,7 @@ a41d893:
     if (esi != 0xB) goto a41d8eb;                        // ML+0xe2df cmp esi,0xb; ML+0xe2e2 jne
     cc("pumpAndRedraw", 0);                                  // ML+0xe2e6 pumpAndRedraw (push 0)
     tc("Surface_blit3", FA(0x624), Root(), 0, 0, 0x320, 0x258, 0, 0, 0x320, 0x258);  // ML+0xe317 Surface_blit3
-    cc("enterModal483d30");                                     // ML+0xe31c enterModal483d30
+    cc("flushInput");                                     // ML+0xe31c flushInput
     G32((GS(g_rootInput) + 16)) = 0;                                // ML+0xe321
 a41d8eb:
     esi++;                                              // ML+0xe32b
@@ -8327,7 +8327,7 @@ a41e290:
     if (!(G8(GS(g_eventFlags567a1c)) & 1)) goto a41e366;           // ML+0xece0 test byte,1; je
     cc("playSound", 0x38, 0x64, ebp, ebp, ebp);         // ML+0xecf4 playSound
     cc("waitTicks", 0x5A, ebp);                         // ML+0xecfc waitTicks (push ebp; push 0x5a)
-    cc("enterModal483d30");                                    // ML+0xed01 enterModal483d30
+    cc("flushInput");                                    // ML+0xed01 flushInput
     StrCpy(kBuf, (GS(f_strpool_4c5d20) + 84));                          // ML+0xed06..ML+0xed33 (push ebp,ebx,ebx,0xa0)
     StrCat(kBuf, (GS(f_strpool_4c5d20) + 40));                          // ML+0xed35..ML+0xed63 (push 0x1c2)
     eax = cc("showPopup", 0x1C2, 0xA0, ebx, ebx, ebp);  // ML+0xed65 showPopup
@@ -8829,7 +8829,7 @@ int H2_Select(u32 F, int ebp) {
                 int h = w & 0x1f;                     // ML+0xf7ba
                 G32(GS(g_msgState53df54)) = -h;                 // ML+0xf7c6
                 if (GU8(GS(g_holes) + H2_hole(h)) != 0) return kFrame;   // ML+0xf7d5 / ML+0xf7d8
-                cc("announceBuilding");                       // ML+0xf7de announceBuilding
+                cc("openHole");                       // ML+0xf7de openHole
                 G32(GS(g_msgState53df54)) = 0;                  // ML+0xf7e3
                 return kFrame;                        // ML+0xf7ed
             }

@@ -429,7 +429,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ctrl5b19c_ctor",
+  "name": "snd.NoteMap::ctor_1001bee0",
   "regions": [
    [
     805335376,
@@ -1043,7 +1043,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ctrl5b5c0_ctor",
+  "name": "snd.NoteMap::ctor_1001bd90",
   "regions": [
    [
     805335376,
@@ -1472,7 +1472,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ctrl5b668_ctor",
+  "name": "snd.TrackCtrl::ctor",
   "regions": [
    [
     805335376,

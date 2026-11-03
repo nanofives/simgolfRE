@@ -782,7 +782,7 @@ void text_surface(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t 
 // per character i the width of that character alone (Text_put of the two-byte string f_strpool_4c3f70 with its first byte
 // replaced: drawMarkupRun, so a markup character measures 0 and moves the measure style) accumulates; ' ', newline and '^'
 // mark the break e; a newline or '^', or a width above cols * 8, draws buf[st, e) at (x, y) through drawTextSurface when
-// H > 16 and colour is 0x80007fff, else drawText4049d0 (setQuad(colour, -1, 2, 2)), y += H, st = e + 1 (e + 2 after a '^'),
+// H > 16 and colour is 0x80007fff, else drawTextWithColor (setQuad(colour, -1, 2, 2)), y += H, st = e + 1 (e + 2 after a '^'),
 // i = e; y > 0x248 stops. A pending line (acc > 0, y <= 0x248) is drawn the same way at the end. Returns y.
 int32_t message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
   const std::string buf = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer));
@@ -799,7 +799,7 @@ int32_t message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uin
   auto line = [&](size_t st, size_t e) {
     const std::string s = st < buf.size() ? buf.substr(st, e >= st ? e - st : std::string::npos) : std::string();
     if (shadowed) text_surface(g, ctx, s, x, y, colour);
-    else draw_text_q(g, ctx, s, x, y, colour, 0xffffffffu, 2, 2, "drawText4049d0");
+    else draw_text_q(g, ctx, s, x, y, colour, 0xffffffffu, 2, 2, "drawTextWithColor");
   };
   size_t st = 0, e = 0, i = 0;
   int32_t acc = 0;
@@ -1280,7 +1280,7 @@ void b_set_quad78(Gfx &g, Ctx &, const uint32_t *a, int) { b_set_quad_k(g, a, 3)
 
 // gfx_text.test(op, ...): TEST-ONLY entry points of port/test/test_gfx_text.py. op 1 record on (log cleared, the root's text
 // state reset to Image_ctor's), 2 record off and the log into `$gfx/text_calls.txt`; the original functions over the root:
-// 3 drawText4049d0(text, x, y, colour), 4 drawTextSurface(text, x, y, colour), 5 drawCenteredText(text, x, y, colour),
+// 3 drawTextWithColor(text, x, y, colour), 4 drawTextSurface(text, x, y, colour), 5 drawCenteredText(text, x, y, colour),
 // 6 drawCenteredText2(text, x, y, colour), 7 drawMessageBuffer(cols, x, y, colour), 8 Text_put(text) (logs `width w`),
 // 9 drawWindow(x, y, mode, h) after the caller stored H
 void b_test(Gfx &g, Ctx &ctx, const uint32_t *a, int) {

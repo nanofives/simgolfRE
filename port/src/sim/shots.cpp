@@ -99,7 +99,7 @@ class Foreign {
 const Foreign f_heightAt("heightAt42fa30", "3.1a");          // (x, y) world -> height
 const Foreign f_slopeMix("slopeMix", "3.1a");               // (x, y, octant)
 const Foreign f_heightBlend("heightBlend", "3.1a");         // (tx, ty, 0)
-const Foreign f_rateTile("rateTile", "3.1a");               // (g) -> reach in yards
+const Foreign f_golferShotReach("golferShotReach", "3.1a");               // (g) -> reach in yards
 const Foreign f_scanTileLine("scanTileLine", "3.1a");       // (x0, y0, x1, y1, reach, aim, strict)
 const Foreign f_holeQuadrants("holeQuadrants", "3.1b");     // (x, y, n)
 const Foreign f_appendTrack("appendPairTrackPoint", "3.3");  // (slot)
@@ -432,7 +432,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   };
   int32_t aim = aim_in;  // the argument slot is rewritten
   const int32_t hole0 = r.hole();
-  const int32_t reach = f_rateTile(ctx, {g});
+  const int32_t reach = f_golferShotReach(ctx, {g});
   if (r.u(kFlags) & 1u) {
     ctx.mem.store<uint8_t>(w.attr_va(0x11, 2), 0x20);
     ctx.mem.store<uint8_t>(w.attr_va(0x14, 2), 0x20);
@@ -1096,7 +1096,7 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
   int32_t bestX = -1;  // F+0x78
   int32_t bestAim = 0;  // F+0x6c
   int32_t bestY = 0, bestHalf = 0;  // F+0xa4, F+0xac
-  const int32_t reach = f_rateTile(ctx, {g});  // F+0x4c
+  const int32_t reach = f_golferShotReach(ctx, {g});  // F+0x4c
   const int32_t entryTX = r.i(kTargetX), entryTY = r.i(kTargetY);
   const int32_t bx = sar32(r.i(kBallX), 10), by = sar32(r.i(kBallY), 10);
   const int32_t ballCell = World::cell(bx, by);
@@ -1119,8 +1119,8 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
     r.i(kDir, angle_fixed(dx, dy));
   }
   int32_t outOfReach = 0;  // F+0x88
-  r.b(kStrokes, r.b(kStrokes) + 1);  // rateTile at one stroke more
-  if (holeDist > add32(f_rateTile(ctx, {g}), reach)) outOfReach = 1;
+  r.b(kStrokes, r.b(kStrokes) + 1);  // golferShotReach at one stroke more
+  if (holeDist > add32(f_golferShotReach(ctx, {g}), reach)) outOfReach = 1;
   r.b(kStrokes, r.b(kStrokes) - 1);
   int32_t aimX, aimY, div;  // F+0x54, F+0x8c, F+0x68
   {
@@ -1361,7 +1361,7 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
         ++row;
         rowBase += 21;
       } while (rowBase <= 0x1a4);
-      // (pumpInput483bd0: the message pump runs here in the original; UI, dropped, U-0881)
+      // (doAllTasks: the message pump runs here in the original; UI, dropped, U-0881)
       if (alive > 4 && tol > 16 && add32(mul32(mul32(alive, trials), 3), trialsRun) > 0xfa) {
         tol /= 2;
         continue;
@@ -1465,7 +1465,7 @@ void scan_shot_area(Ctx &ctx, int32_t slot) {
 // A straddler (re/port/scope_straddlers.tsv) assigned to 3.4. Kept: every write to simulation state (the snapshot
 // records 152 / 153, the hole flags, the skill reward and its RNG draws, the golfer fields, f_w_4c2e00[2], the text
 // buffer) and the calls that write state (buildGolferName, appendHoleName, appendClubName, postEvent, startMessage,
-// rateTile, emitGolferThought, worldToScreen's result; startMessage through start_message). Dropped (UI / audio, no simulation state, U-0883): the two flight
+// golferShotReach, emitGolferThought, worldToScreen's result; startMessage through start_message). Dropped (UI / audio, no simulation state, U-0883): the two flight
 // lines (setLinePoint / lineTo), drawWindow, fillWindowRect, Widget_fillRect, drawCenteredText, drawTextSurface,
 // playSound, Window::refreshFull, the modal pumpAndRedraw(0) and saveBmp. The no-frame exit returns playSound's eax in
 // the original; the port returns 0 there (the only caller, scanShotArea, ignores the result).
@@ -1728,7 +1728,7 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
                 if (W.sw(kShotKind) == 3 && (W.b(kSkillMask) & 0x80)) pick = 0x80;
                 break;
               case 7:
-                if (yards > f_rateTile(ctx, {who}) && (W.b(kSkillMask) & 1)) pick = 1;
+                if (yards > f_golferShotReach(ctx, {who}) && (W.b(kSkillMask) & 1)) pick = 1;
                 break;
               case 8:
                 if (W.sb(kClub) >= 3 && W.sb(kClub) < 0xb) pick = 8;

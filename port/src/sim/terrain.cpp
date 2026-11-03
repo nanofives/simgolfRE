@@ -30,18 +30,18 @@ namespace {
 //   propagateType11          1 = recursion into every unblocked neighbour
 //   rebuildTileCoverage      1 = types >= 0x11 not marked, 2 = g_difficulty ignored (BLIND: no vector with difficulty 0
 //                              reaches a type 6..0x10 record)
-//   relaxTile42f630          1 = minimum not followed (each neighbour compared with the start height)
+//   propagateMinTileLevel    1 = minimum not followed (each neighbour compared with the start height)
 //   raiseFromNeighbours      1 = sameByte ignored
 //   spreadShade              1 = divisor approxDistance + 1
 //   heightBlend              1 = lower clamp bound 2 + (difficulty != 0)
-//   rateTile                 1 = toward_zero36 clamped to 2
+//   golferShotReach          1 = toward_zero36 clamped to 2
 //   markTileKind11           1 = variant 1 instead of 2
 //   spreadAllShade           1 = total capped at 0x6d5
 //   genNoise                 1 = Random::range(0xf)
 //   cornerRange              1 = the maximum never widens        cornerHeights 1 = corner 3 takes corner 5's blend
-//   tileQuery449310          1 = flag 0 (cache skipped)          slopeY 1 = half-tile bound 0x1ff
+//   cornerHeightAt           1 = flag 0 (cache skipped)          slopeY 1 = half-tile bound 0x1ff
 //   slopeX                   1 = left half reversed              slopeMix 1 = p and q swapped
-//   relaxEdges42f530         1 = second corner pair not tested   heightAt42fa30 1 = x weight 0x3ff
+//   calcTileWallMask         1 = second corner pair not tested   heightAt42fa30 1 = x weight 0x3ff
 //   rebuildHeightfield       1 = flag 4 does not seed the level
 //   scanTileLine             1 = the y + 1 neighbour not scored, 2 = one straight-line point on 0xd is enough
 int g_negctl_scan_tile_line = 0;
@@ -55,7 +55,7 @@ int g_negctl_relax_edges = 0;
 int g_negctl_height_at = 0;
 int g_negctl_rebuild_heightfield = 0;
 int g_negctl_height_blend = 0;
-int g_negctl_rate_tile = 0;
+int g_negctl_golfer_shot_reach = 0;
 int g_negctl_mark_kind11 = 0;
 int g_negctl_spread_all_shade = 0;
 int g_negctl_gen_noise = 0;
@@ -445,7 +445,7 @@ int32_t height_blend(Ctx &ctx, int32_t x, int32_t y) {
   return clamp(add32(div32(h, d), 1), lo, 15);
 }
 
-int32_t rate_tile(Ctx &ctx, int32_t i) {
+int32_t golfer_shot_reach(Ctx &ctx, int32_t i) {
   const Ptr<Golfer> gp = state_arr(ctx, &GameState::g_golfers) + i;
   const bool flag1 = (gp.field(&Golfer::prefs).get() & 1) != 0;
   int32_t v = (flag1 ? 50 : 0) + 150;
@@ -462,7 +462,7 @@ int32_t rate_tile(Ctx &ctx, int32_t i) {
     if ((ce & 2) && !k) v += (sk[1] - 5) * 6;
   }
   const int8_t ee = gp.field(&Golfer::toward_zero36).get();
-  if (ee > 0) v += clamp(ee, 0, SG_NEGCTL(g_negctl_rate_tile) == 1 ? 2 : 3) * v / 24;
+  if (ee > 0) v += clamp(ee, 0, SG_NEGCTL(g_negctl_golfer_shot_reach) == 1 ? 2 : 3) * v / 24;
   if (flag1) v = add32(v, mul32(ctx.gs().g_activeObjectLevel[10], 15));
   const int8_t m2 = walk_of(ctx, k);
   if (m2 > 0) v = sub32(v, mul32(clamp(m2, 0, 3), v) / 8);
@@ -652,7 +652,7 @@ int32_t corner_heights(Ctx &ctx, int32_t x, int32_t y, int32_t corner, int32_t f
   }
 }
 
-int32_t tile_query449310(Ctx &ctx, int32_t a, int32_t b, int32_t c) {
+int32_t corner_height_at(Ctx &ctx, int32_t a, int32_t b, int32_t c) {
   return corner_heights(ctx, a, b, c, SG_NEGCTL(g_negctl_tile_query) == 1 ? 0 : 1);
 }
 
@@ -808,7 +808,7 @@ void a_relax_tile(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(relax_tile(c, S
 void a_raise_from_nb(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(raise_from_neighbours(c, S(a, 0), S(a, 1), S(a, 2))); }
 void a_spread_shade(Ctx &c, const uint32_t *a, Ret &) { spread_shade(c, S(a, 0), S(a, 1), S(a, 2)); }
 void a_height_blend(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(height_blend(c, S(a, 0), S(a, 1))); }
-void a_rate_tile(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(rate_tile(c, S(a, 0))); }
+void a_golfer_shot_reach(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(golfer_shot_reach(c, S(a, 0))); }
 void a_mark_kind11(Ctx &c, const uint32_t *, Ret &) { mark_tile_kind11(c); }
 void a_spread_all_shade(Ctx &c, const uint32_t *, Ret &) { spread_all_shade(c); }
 void a_gen_noise(Ctx &c, const uint32_t *, Ret &) { gen_noise(c); }
@@ -816,7 +816,7 @@ void a_corner_range(Ctx &c, const uint32_t *a, Ret &) {
   corner_range_mem(c, S(a, 0), S(a, 1), Ptr<int32_t>(c.mem, a[2]), Ptr<int32_t>(c.mem, a[3]));
 }
 void a_corner_heights(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(corner_heights(c, S(a, 0), S(a, 1), S(a, 2), S(a, 3))); }
-void a_tile_query(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(tile_query449310(c, S(a, 0), S(a, 1), S(a, 2))); }
+void a_tile_query(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(corner_height_at(c, S(a, 0), S(a, 1), S(a, 2))); }
 void a_slope_y(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(slope_y(c, S(a, 0), S(a, 1))); }
 void a_slope_x(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(slope_x(c, S(a, 0), S(a, 1))); }
 void a_slope_mix(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(slope_mix(c, S(a, 0), S(a, 1), S(a, 2))); }
@@ -843,21 +843,21 @@ const FuncDef kFuncs[] = {
     {"sampleHeight", "default", "int", 2, 0, a_sample_height, &g_negctl_sample_height},
     {"propagateType11", "default", "void", 2, 0, a_propagate11, &g_negctl_propagate11},
     {"rebuildTileCoverage", "default", "void", 1, 0, a_rebuild_coverage, &g_negctl_rebuild_coverage},
-    {"relaxTile42f630", "default", "int", 2, 0, a_relax_tile, &g_negctl_relax_tile},
+    {"propagateMinTileLevel", "default", "int", 2, 0, a_relax_tile, &g_negctl_relax_tile},
     {"raiseFromNeighbours", "default", "int", 3, 0, a_raise_from_nb, &g_negctl_raise_from_nb},
     {"spreadShade", "default", "void", 3, 0, a_spread_shade, &g_negctl_spread_shade},
     {"heightBlend", "default", "int", 2, 0, a_height_blend, &g_negctl_height_blend},
-    {"rateTile", "default", "int", 1, 0, a_rate_tile, &g_negctl_rate_tile},
+    {"golferShotReach", "default", "int", 1, 0, a_golfer_shot_reach, &g_negctl_golfer_shot_reach},
     {"markTileKind11", "default", "void", 0, 0, a_mark_kind11, &g_negctl_mark_kind11},
     {"spreadAllShade", "default", "void", 0, 0, a_spread_all_shade, &g_negctl_spread_all_shade},
     {"genNoise", "default", "void", 0, 0x027F, a_gen_noise, &g_negctl_gen_noise},
     {"cornerRange", "default", "void", 4, 0, a_corner_range, &g_negctl_corner_range},
     {"cornerHeights", "default", "int", 4, 0, a_corner_heights, &g_negctl_corner_heights},
-    {"tileQuery449310", "default", "int", 3, 0, a_tile_query, &g_negctl_tile_query},
+    {"cornerHeightAt", "default", "int", 3, 0, a_tile_query, &g_negctl_tile_query},
     {"slopeY", "default", "int", 2, 0, a_slope_y, &g_negctl_slope_y},
     {"slopeX", "default", "int", 2, 0, a_slope_x, &g_negctl_slope_x},
     {"slopeMix", "default", "int", 3, 0, a_slope_mix, &g_negctl_slope_mix},
-    {"relaxEdges42f530", "default", "void", 2, 0, a_relax_edges, &g_negctl_relax_edges},
+    {"calcTileWallMask", "default", "void", 2, 0, a_relax_edges, &g_negctl_relax_edges},
     {"heightAt42fa30", "default", "int", 2, 0, a_height_at, &g_negctl_height_at},
     {"rebuildHeightfield", "default", "void", 0, 0, a_rebuild_heightfield, &g_negctl_rebuild_heightfield},
     {"scanTileLine", "default", "int", 7, 0x027F, a_scan_tile_line, &g_negctl_scan_tile_line},

@@ -662,7 +662,7 @@ int __cdecl ResetAllPanels_re() {
 
 // =====================================================================================================================
 // 0x0040aa80  hireEmployee (cdecl, no arguments)
-// k = showHireEmployeeDialog 0x00459400 () (0x0040aa82), m = enterModal483d30 0x00483d30 () (0x0040aa89); k outside 0..11
+// k = showHireEmployeeDialog 0x00459400 () (0x0040aa82), m = flushInput 0x00483d30 () (0x0040aa89); k outside 0..11
 // (0x0040aa90 / 0x0040aa99) returns m. With bucketValue 0x0044faf0 ([0x005685f0] - 1) < 1 (0x0040aab1) and k % 3 == 2
 // (0x0040aac0): playSound 0x004481b0 (0x18, 0x64, 0, 0, 0) (0x0040aacc), strcpy(text, 0x004c5228), startMessage
 // 0x0040cb00 (0x80006000, 1, -1) (0x0040aaff), whose result is returned. Otherwise canAfford 0x00406c30 (0) == 0

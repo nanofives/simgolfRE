@@ -503,7 +503,7 @@ static unsigned bufLen() {                       // the inline `repne scasb` ove
 //   tail after the last 0x0a is measured too (0x0046d79f). The box is inner = (widest - 1) | 0xf (0x0046d7b6 /
 //   0x0046d7b7), width = inner + 0x31 (0x0046d7c0) and height = (lines * 3 + 3) * 8 (0x0046d7ba / 0x0046d7c3).
 //   The three colour components of [0x00519cd4] at (x, y) come from pixelRed / pixelGreen / pixelBlue (0x0046d7dd,
-//   0x0046d7f4, 0x0046d80b), the selection starts at -1 (0x0046d7d5) and enterModal483d30 runs once (0x0046d819).
+//   0x0046d7f4, 0x0046d80b), the selection starts at -1 (0x0046d7d5) and flushInput runs once (0x0046d819).
 //   Each pass (0x0046d82c):
 //     half = width / 2 and left = x - half (0x0046d83a / 0x0046d864). An even y draws drawPanelS2(left, y, width,
 //     height, 1) (0x0046d854); an odd y draws fillWindowRect(0x00519a60, left, y, width, height, 0x80006318)
@@ -513,9 +513,9 @@ static unsigned bufLen() {                       // the inline `repne scasb` ove
 //     0) (0x0046d8fe).
 //     Line pass (0x0046d90b..0x0046db00), y of the first line = y + 0xc (0x0046d915): an option line takes the index of
 //     the first option as its base (0x0046d988..0x0046d997, which also records that line's y) and bit = 1 << its index
-//     (0x0046d9a9..0x0046d9b2). A bit set in `disabled` draws drawText4049d0(line, left + 0x24, lineY + 8, 0x80006318)
+//     (0x0046d9a9..0x0046d9b2). A bit set in `disabled` draws drawTextWithColor(line, left + 0x24, lineY + 8, 0x80006318)
 //     (0x0046d9c6). Otherwise the selected line is drawn with drawTextSurface at lineY + 7 (0x0046d9f4 / 0x0046da17)
-//     and every other with drawText4049d0 at lineY + 8 (0x0046da45), in 0x80007fff when the bit is set in the working
+//     and every other with drawTextWithColor at lineY + 8 (0x0046da45), in 0x80007fff when the bit is set in the working
 //     mask and in (odd ? 0x1ef8 : 0) + 0x80000210 when it is not; then flag4 == 0 draws
 //     Surface_drawScaled(0x00561260 + 0x2c * (set ? 1 : 2), [0x004c1570], left + 8, lineY, 1, 1, 1, 0) (0x0046dab1) and
 //     flag4 != 0 Surface_stretchBlit(0x005678b8 + 0x2c * (set ? 0 : 2), 0x56a7b8, [0x004c1570], left + 0xc, lineY + 4,
@@ -526,7 +526,7 @@ static unsigned bufLen() {                       // the inline `repne scasb` ove
 //     Window::refreshFull(0x00519a60, 0) (0x0046db17), waitTicks(0xa, 0) (0x0046db20), pumpMessages (0x0046db28).
 //     flag4 != 0 (0x0046db2d / 0x0046db33): flushRedraw (0x0046db39) returning non-zero reads the key with
 //     setDirtyFlagA (0x0046db42) and switches on key - 0xd through the byte table 0x0046dda8 and the jump table
-//     0x0046dd94 (0x0046db47..0x0046db57): 0x0d and 0x20 run enterModal483d30 and return the selection (0x0046dced);
+//     0x0046dd94 (0x0046db47..0x0046db57): 0x0d and 0x20 run flushInput and return the selection (0x0046dced);
 //     0x1b runs it and returns -1 (0x0046dcfe); 0x26 decrements the selection when it is above 0 (0x0046db74..
 //     0x0046db85); 0x28 increments it below count - 1 (0x0046db5e..0x0046db72); both set the keyboard latch
 //     (0x0046db67 / 0x0046db78); every other key does nothing. Then the working mask becomes 1 << selection
@@ -745,7 +745,7 @@ const C5_t kShowPopup = reinterpret_cast<C5_t>(0x0046d6e0);
 // body's frame), `ret` with no immediate. The ten skill names are the pointer table 0x004c2c3c..0x004c2c64, the ten
 // skill values the bytes at 0x005a5a04, and the result word is 0x004c2c9c.
 //   The entry copies 32 bytes of 0x005a5a04 into the frame (0x0045f116..0x0045f124): the - arrow of a row may not take
-//   that row below the value it had on entry (0x0045f7c9). points > 0 runs enterModal483d30 once (0x0045f13d), and
+//   that row below the value it had on entry (0x0045f7c9). points > 0 runs flushInput once (0x0045f13d), and
 //   `left` starts at points (0x0045f142).
 //   Each pass (0x0045f146):
 //     drawFrameR3(xbase + 0x2e, 0x32, 0x140, 0x13c, 1) for xbase >= 0 and (xbase + 0x4e, 0x32, 0xd0, 0x13c, 1) for a
@@ -766,15 +766,15 @@ const C5_t kShowPopup = reinterpret_cast<C5_t>(0x0046d6e0);
 //     (y + 0xc, y + 0x18] highlights the - arrow with 0x005a5948 and records i + 10 (0x0045f3c0 / 0x0045f3c8).
 //     A non-zero value builds the text 0x0051a068 from the string at 0x004c5340 (0x004e9a84 from ten up, 0x0045f3db),
 //     itoa(value * 10, 0x00824134, 10) (0x0045f418) and the string at 0x004c60c4, and draws it with
-//     drawText4049d0(0x0051a068, xbase + 0x57, y + 7, 0x80000000) (0x0045f48e). Every row draws its name with
-//     drawText4049d0(name, xbase + 0x8a, y + 7, value != 0 ? 0x80000000 : 0x80004210) (0x0045f4c3).
+//     drawTextWithColor(0x0051a068, xbase + 0x57, y + 7, 0x80000000) (0x0045f48e). Every row draws its name with
+//     drawTextWithColor(name, xbase + 0x8a, y + 7, value != 0 ? 0x80000000 : 0x80004210) (0x0045f4c3).
 //     points > 0 then builds the counter from the string at 0x004d3c4c, itoa(left, 0x00824134, 10) and the string at
 //     0x004d3c3c and draws drawCenteredText2(0x0051a068, xbase + 0xd2, 0x50, used > points ? 0x80007d08 : 0x80007fff)
 //     (0x0045f5a1).
 //     points == -1 returns -1 at once (0x0045f5b0 / 0x0045f82f).
 //     Window::refreshFull(0x00519a60, 0) (0x0045f5c0), waitTicks(5, 0) (0x0045f5c9), pumpMessages (0x0045f5d1); the
 //     pass repeats while [0x00822d68] is 0 and flushRedraw returns 0 (0x0045f5d6..0x0045f5e6). Then waitTicks(5, 0)
-//     (0x0045f5f0) and enterModal483d30 (0x0045f5f8).
+//     (0x0045f5f0) and flushInput (0x0045f5f8).
 //     A button with the click [0x00822d60] / [0x00822d64] within 0x14 of (xbase + 0x15e, 0x14e) (0x0045f60b..
 //     0x0045f63e) is the OK button: with used at or above points it returns the result word (0x0045f644 / 0x0045f844);
 //     otherwise it builds an 800x600 Image on the frame (0x0045f652 / 0x0045f678), copies the screen into it
@@ -985,7 +985,7 @@ const C0_t kPumpInput483bd0 = reinterpret_cast<C0_t>(0x00483bd0);
 //     appendDate(date) (0x0046ebca) build the line; [0x0059bf90] is put back (0x0046ebcf).
 //     x = ((count & 1) ? 0x203 : 0) + 0x14 + (0x23 * index) % 0x32 (0x0046ebd5..0x0046ebe6), the date global is put
 //     back (0x0046ebec), Surface_stretchBlit(0x005402f4, 0x5a3aa4, [0x004c1570], x - 7, y - 0xad, 0) (0x0046ec24) and
-//     drawText4049d0(0x0051a068, x, y, 0x80002108) (0x0046ec35) draw the line.
+//     drawTextWithColor(0x0051a068, x, y, 0x80002108) (0x0046ec35) draw the line.
 //     The photo file name is the string at 0x004e3e7c + itoa(the record index) + the string at 0x004c4e40
 //     (0x0046ec3a..0x0046eccd), loadBmpSurface(photo, 0x0051a068) (0x0046ecd6) loads it, and it is blitted with
 //     Surface_blitThunk(photo, 0x00519cd4, 0, 0, x, y - 0xa6, 0xc8, 0xa0) (0x0046ed1b) and framed with
@@ -993,9 +993,9 @@ const C0_t kPumpInput483bd0 = reinterpret_cast<C0_t>(0x00483bd0);
 //   Three sprites of the first three empty records (0x0046ed75..0x0046edef; with [0x00822c88] below 2 the indices 0, 1
 //   and 4 are drawn as 0x1d, 0x1e and 0x1f), their y stepping by the short at 0x004c2d9e + 2 * index minus 4, then six
 //   fixed sprites and the list of the listed events in reverse order (0x0046ee91..0x0046efdd), and two more sprites.
-//   Window::refreshFull(0x00519a60, 0) (0x0046f000), waitTicks(0x3c, 0) (0x0046f008), enterModal483d30 (0x0046f010),
-//   then a loop of Window::refreshFull, waitTicks(0x1e, 0) and pumpInput483bd0 until [0x00822d68] is non-zero or
-//   flushRedraw returns non-zero (0x0046f015..0x0046f03f), and enterModal483d30 again (0x0046f041).
+//   Window::refreshFull(0x00519a60, 0) (0x0046f000), waitTicks(0x3c, 0) (0x0046f008), flushInput (0x0046f010),
+//   then a loop of Window::refreshFull, waitTicks(0x1e, 0) and doAllTasks until [0x00822d68] is non-zero or
+//   flushRedraw returns non-zero (0x0046f015..0x0046f03f), and flushInput again (0x0046f041).
 //   [0x00822d68] = 0 (0x0046f04d). With a non-zero word [0x004c2c9c] and [0x004e3db8] != 0x63 (0x0046f046..0x0046f060):
 //   Surface_drawSprite(0x00821040, 0x00519cd4, 0, 0, 0x3ecccccd, 0, 1) (0x0046f084), the ten skill bytes at 0x005a5a04
 //   are summed into a value no instruction reads (0x0046f08d..0x0046f09a), the string at 0x004e3e28 goes into the text
@@ -1003,7 +1003,7 @@ const C0_t kPumpInput483bd0 = reinterpret_cast<C0_t>(0x00483bd0);
 //   [0x0058316e] = 0 and [0x00583170] = the signed byte [0x004d60a9] (0x0046f0f9 / 0x0046f103), and
 //   skillPointDialog(0x004d6098, the sign-extended word [0x004c2c9c], that word != 0 ? 3 : 0xd, 0x9c, 0xc8)
 //   (0x0046f117) writes its result back into [0x004c2c9c] (0x0046f11f).
-//   [0x004e3db8] = -1 (0x0046f128), enterModal483d30 (0x0046f12e), [0x00822d68] = 0 (0x0046f13a) and the two Images are
+//   [0x004e3db8] = -1 (0x0046f128), flushInput (0x0046f12e), [0x00822d68] = 0 (0x0046f13a) and the two Images are
 //   destroyed (0x0046f148 / 0x0046f15b).
 //   The original wraps the two Images in an SEH frame (0x0046e810..0x0046e81e, handler 0x004b7a86); no path of this
 //   reimplementation throws and the handler chain is not part of the compared state.

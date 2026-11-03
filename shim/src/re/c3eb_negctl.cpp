@@ -2,7 +2,7 @@
 // shim/re_batches.txt: 310 bodies are DELIBERATELY WRONG in one detail each (while a c3eb key runs).
 // Built INSTEAD of c3eb.cpp through log/c3/c3eb_negctl_batches.txt (CSVs in log/c3/alt/c3eb_negctl, never log/diff).
 // C3 batch c3eb (simulation plan phase 3, 2026-10-11) of golf_clean.exe: the movement functions pathStep 0x0042e7e0,
-// updateWalkers 0x00402a40 and placeAnimal 0x004017d0. Fixtures: re/frida/js/fixtures.d/c3eb.js. Registry:
+// updateWalkers 0x00402a40 and updateVipResident 0x004017d0. Fixtures: re/frida/js/fixtures.d/c3eb.js. Registry:
 // re/frida/registry.d/c3eb.py. Purposes and per-jcc tables: log/c3/c3eb_purpose.md.
 //
 // Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list) and cites
@@ -723,10 +723,10 @@ C0_t UpdateWalkers_orig;
 SG_HOOK("golf_clean.exe", 0x00402a40, updateWalkers, UpdateWalkers_re, UpdateWalkers_orig);
 
 // ====================================================================================================================
-// placeAnimal
+// updateVipResident
 // ====================================================================================================================
 
-// 0x004017d0  placeAnimal(idx): cdecl, `ret`, one stack argument; the result register is not read by its only caller (tickAnimals
+// 0x004017d0  updateVipResident(idx): cdecl, `ret`, one stack argument; the result register is not read by its only caller (updateVipResidents
 // 0x00401c10 pops the argument and loops). Animal records are 0x3c bytes from 0x0056d1d8 (0x004017da..0x004017e8): +0 type
 // (short), +2 map (short), +6 / +8 tile x / y (shorts), +0xa wait (short), +0xc sprite state (short), +0x10 / +0x14 sub-tile
 // x / y (ints), +0x18 heading (byte), +0x19 step counter (byte), +0x1a frame (byte). It draws the animal when worldToScreen

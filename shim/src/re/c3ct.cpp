@@ -482,7 +482,7 @@ int __fastcall SetSelection_re(void* s, void*, int index, int notify) {
     return vslot<Vfn0_t>(w, 0x120)(w, 0);                               // 0x0048a10d
 }
 
-// 0x0048aa00  ListBox::onNavKey(T, x, y): `ret 8`; the callers (the thunk 0x0048ccb0 and viewDispatchSlot30
+// 0x0048aa00  ListBox::onNavKey(T, x, y): `ret 8`; the callers (the thunk 0x0048ccb0 and viewDispatchOnLeftDown
 // 0x004a0b90) do not read eax. A click on row selection with Ctrl / Shift handling:
 //  1. 0x0083ab2c = the parent T + vbt[1] + 0xd8 (0x0048aa06..0x0048aa13). Nothing more with an empty list (count
 //     T + vbt[2] + 0x78, 0x0048aa19..0x0048aa25).
@@ -824,7 +824,7 @@ int __fastcall OptionDialogSlot28_re(void* X, void*, int, int) {
     void* w = B(X) - 0x1c + (*reinterpret_cast<int**>(B(X) - 0x1c))[1];   // 0x0049fe31..0x0049fe3b
     return vslot<Vfn0_t>(w, 0x120)(w, 0);                               // 0x0049fe3f
 }
-// 0x0049fc30  optionDialogSlot38(X, a, b): `ret 8`, both unused. 0x0083ab2c = the dword at X + vbt[1] + 0x114
+// 0x0049fc30  optionDialogOnLeftDoubleClick(X, a, b): `ret 8`, both unused. 0x0083ab2c = the dword at X + vbt[1] + 0x114
 // (0x0049fc30..0x0049fc3d). When the cdecl callback at X-0x10 is set (0x0049fc42..0x0049fc47) it gets the mask
 // X + vbt[2] + 0xd4 (0x0049fc49..0x0049fc57) and eax is its result; otherwise eax is 0 (the slot just read).
 Two_t OptionDialogSlot38_orig;
@@ -861,7 +861,7 @@ Two_t OptionDialogSlot28Vd_orig;
 int __fastcall OptionDialogSlot28Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<Two_t>(0x0049fe20)(VtordispThis(p), 0, a, b);
 }
-// 0x0049fff0  optionDialogSlot38_vtordisp: 0x0049fff0 sub, 0x0049fff3 jmp 0x0049fc30 (slot 38 of 0x004bbeb0). The
+// 0x0049fff0  optionDialogOnLeftDoubleClick_vtordisp: 0x0049fff0 sub, 0x0049fff3 jmp 0x0049fc30 (slot 38 of 0x004bbeb0). The
 // body (`ret 8`) stores the dword at X + vbt[1] + 0x114 to 0x0083ab2c and, when the cdecl callback at X-0x10 is set,
 // passes it the mask X + vbt[2] + 0xd4 (0x0049fc30..0x0049fc59).
 Two_t OptionDialogSlot38Vd_orig;

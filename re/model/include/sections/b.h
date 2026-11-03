@@ -604,7 +604,7 @@ SGB_STATIC_ASSERT(sizeof(SkillMaskBlock) == 0x12, SkillMaskBlock_size);
 
 /* ---- forced-event request bits (g_forcedEventBits) -------------------------------------------------- */
 #define SGB_FORCE_EV_GOLFER_THOUGHT  0x01    /* consumed by addGolferToTable */
-#define SGB_FORCE_EV_MAGAZINE        0x02    /* consumed by holeMagazineEvent */
+#define SGB_FORCE_EV_MAGAZINE        0x02    /* consumed by rateCourseHoles */
 #define SGB_FORCE_EV_STORY_STEP      0x04    /* mainLoop: advanceStory + golfer flag 0x200000, then cleared */
 #define SGB_FORCE_EV_MOOD_DROP       0x08    /* mainLoop: nearest golfer mood -1 + thought 8, then cleared */
 #define SGB_FORCE_EV_NARRATE         0x10    /* consumed by scanShotArea */

@@ -20,7 +20,7 @@ VP<char> kNumBuf = vp<char>(GS(g_textBuf));  // shared itoa scratch
 #define kAppendCourseTitle(...) cc("appendCourseTitle", ##__VA_ARGS__)// appendCourseTitle
 #define kRateLot(...) cc("rateLot", ##__VA_ARGS__)// rateLot
 #define kPointsPopup(...) cc("pointsPopup", ##__VA_ARGS__)// pointsPopup
-#define kFreeRecordAtPos(...) cc("freeRecordAtPos", ##__VA_ARGS__)// freeRecordAtPos
+#define kFreeRecordAtPos(...) cc("removeVipResidentAt", ##__VA_ARGS__)// removeVipResidentAt
 #define kRebuildHeightfield(...) cc("rebuildHeightfield", ##__VA_ARGS__)// rebuildHeightfield
 #define kBuildGolferName(...) cc("buildGolferName", ##__VA_ARGS__)// buildGolferName
 #define kStartMessage(...) cc("startMessage", ##__VA_ARGS__)// startMessage

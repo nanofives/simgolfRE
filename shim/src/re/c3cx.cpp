@@ -17,7 +17,7 @@
 //     the A/B thread's 53-bit precision control (log/c3/c3cx_purpose.md records the measured control word);
 //   - MultiSound flag/forwarding slots over channel functions already at C3 (Channel_stopVoices,
 //     Channel_findStreamNode, Channel_broadcastVoiceBit1, Channel_applyFlags);
-//   - Channel_allocAndInitVoice, getDeviceCaps, getNodeByIndex, Ctrl5b19c_ctor;
+//   - Channel_allocAndInitVoice, getDeviceCaps, getNodeByIndex, NoteMap::ctor_1001bee0;
 //   - CRT: ostreamResetVtable (virtual-base vtable store) and two routines of the old (V5) small-block heap,
 //     sbhResizeBlock and sbhPageFree. The running sound.dll selects the system heap: crtHeapSelect 0x10045bc8 returns
 //     1 at 0x10045c03 when GetVersionExA reports platform 2 with major version >= 5, crtHeapInit stores it at
@@ -687,10 +687,10 @@ void* __fastcall InitSoundVoice_re(void* self, void*) {
 }
 
 // =====================================================================================================================
-// Ctrl5b19c_ctor
+// NoteMap::ctor_1001bee0
 // =====================================================================================================================
 
-// 0x0001bee0  Ctrl5b19c_ctor (VA 0x1001bee0)
+// 0x0001bee0  NoteMap::ctor_1001bee0 (VA 0x1001bee0)
 // __thiscall with thirteen stack arguments (`ret 0x34` at 0x1001c004): twelve whose low bytes are stored and a
 // dword. Called by five dynInit stubs (0x1001b510, 0x1001b6b0, 0x1001b710, 0x1001b770, 0x1001b7d0). Returns this
 // (0x1001bff6). The SEH frame it sets up (0x1001bee0..0x1001beee, unlinked at 0x1001bffa) only matters if a callee

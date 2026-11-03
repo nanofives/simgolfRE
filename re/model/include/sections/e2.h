@@ -307,7 +307,7 @@ typedef struct Snd {
     int32_t pan;                       /* +0x008 -0x40..0x3f (Snd::setPan 0x004847f0) */
     uint32_t unk_0c[9];                /* +0x00c [U-0462] */
     uint32_t loop;                     /* +0x030 read by Snd::flags 0x00485001 / Snd::start 0x00484edc (D: nonzero = looping) */
-    int32_t field_34;                  /* +0x034 Snd::setField34 0x004846b4, forwarded to Sound slot 19 */
+    int32_t field_34;                  /* +0x034 Snd::setDelay 0x004846b4, forwarded to Sound slot 19 */
     int32_t rate;                      /* +0x038 default 1000 (Snd::setField38), forwarded to Sound slot 1 */
     uint32_t group;                    /* +0x03c 0x10 = none (Snd::ctorDerived 0x00484857) [U-0486] */
     uint32_t sound;                    /* +0x040 ptr sound.dll object from create_sound (kind 1 MultiSound, kind 2 Sound5b6a8); the Snd::fwdVoiceNN slots forward through it */

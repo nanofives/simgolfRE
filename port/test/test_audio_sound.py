@@ -3,7 +3,7 @@ port/test/sound_replay.py (`--step S4.7`; S4.7's own runner log/roadmap/S4/7_run
 the fixture VM with a constant WINMM clock (sound_replay CLOCK_FUNCTIONS, U-1462).
 
 Default runs replay the recorded bundles (port/corpus/audio, local) and check the golden digests and x87 exit states pinned from the
-emulator (port/test/golden_audio_sound.json), x64 and Win32: since S4.2b Sound5b6a8_ctor's caller-word keys (x87 control word 0x0f7f)
+emulator (port/test/golden_audio_sound.json), x64 and Win32: since S4.2b Seq::ctor_1001f4a0's caller-word keys (x87 control word 0x0f7f)
 run on the core's x87 unit on both backends. SG_EMU_ORACLE=1 runs the live oracle in three layouts, and the controls against it.
 
     ~/bin/py -3.12 -m pytest port/test/test_audio_sound.py
@@ -27,10 +27,10 @@ from port.test import lib as L  # noqa: E402,F401
 from port.test import sound_replay as R  # noqa: E402
 
 pytestmark = pytest.mark.port
-STEP, MODULE, ROWS, PROBE = "S4.7", "audio_sound", 66, "snd.Sound5b6a8_ctor"
+STEP, MODULE, ROWS, PROBE = "S4.7", "audio_sound", 66, "snd.Seq::ctor_1001f4a0"
 ORACLE = os.environ.get("SG_EMU_ORACLE") == "1"
 KEYS = R.keys_for(STEP)
-X87 = ("Sound5b6a8_ctor",)
+X87 = ("Seq::ctor_1001f4a0",)
 
 
 def _functions():
@@ -154,7 +154,7 @@ def test_negctl_red_against_golden(sndlib, golden, fn):
 
 @pytest.mark.parametrize("fn", X87)
 def test_wrong_x87_port_is_an_equivalent_mutant_on_these_vectors(sndlib, golden, fn):
-    """Mode 2 (plain doubles) of Sound5b6a8_ctor is BLIND on the C3 vectors at both words (U-1461): the constructor computes its
+    """Mode 2 (plain doubles) of Seq::ctor_1001f4a0 is BLIND on the C3 vectors at both words (U-1461): the constructor computes its
     tempo seed from constants on freshly cleared fields, so no vector input reaches the arithmetic. The correct body and the
     mutant both equal the goldens; if a vector that separates them is ever added the assertion fails and the control is live."""
     keys = _functions()["snd." + fn]

@@ -23,8 +23,8 @@ BLOCK = 0x10000000          # where the tests map their own blocks (outside the 
 
 # (function, mode, what): wrong bodies the vectors must see (RED)
 NEGCTL_RED = [
-    ("freeRecordAtPos", 1, "frees only the first match"), ("freeRecordAtPos", 2, "y compared with x"),
-    ("initRecords", 1, "99 animal slots"), ("initRecords", 2, "placeRecord type 0"),
+    ("removeVipResidentAt", 1, "frees only the first match"), ("removeVipResidentAt", 2, "y compared with x"),
+    ("initHomeLayouts", 1, "99 animal slots"), ("initHomeLayouts", 2, "placeHomeLayoutPart type 0"),
     ("clearMatching", 2, "stores -1"),
     ("appendString", 1, "offset -1 not tested"),
     ("landmarkName", 1, "long / short swapped"), ("landmarkName", 2, "types 17 / 18 swapped"),
@@ -47,7 +47,7 @@ NEGCTL_BLIND = [
     ("listEraseRange", 1, "size not decremented: the 2 reproduced vectors erase an empty range (state test reads it)"),
     ("listEraseRange", 2, "*out = first: the 2 reproduced vectors have first == last (state test reads it)"),
 ]
-COURSE = ["freeRecordAtPos", "initRecords", "clearMatching", "staticInit_820f04", "setPendingCourseInfo",
+COURSE = ["removeVipResidentAt", "initHomeLayouts", "clearMatching", "staticInit_820f04", "setPendingCourseInfo",
           "clearBuffers", "appendString", "landmarkName", "buildGolferName", "buildStatusText", "appendHoleName",
           "appendCourseTitle", "nearestHole", "holeQuadrants", "sceneryLabel", "fileExists", "lookupThemeText",
           "listEraseRange", "loadThemeFile", "loadThemes", "switchToCourse", "seedCourseTable", "buildScenarioIntro"]

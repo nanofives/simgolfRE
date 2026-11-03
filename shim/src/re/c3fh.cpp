@@ -617,7 +617,7 @@ unsigned __cdecl AddStereo16_re(double* o, unsigned* pp, unsigned n, char* r, in
 // =====================================================================================================================
 // C. The x87 helpers that run under the CALLER's control word (no fninit / fldcw of their own): Seq_setTempo,
 //    DsBuffer::setVolume, Channel_recomputeVoiceGains / setReverseRate / setRate, Voice_resetDefaults,
-//    Channel_stepVolumeFade, Sound5b6a8_ctor (its callee MidiReader_init is c3fg's hook). On a thread where a mixer ran
+//    Channel_stepVolumeFade, Seq::ctor_1001f4a0 (its callee MidiReader_init is c3fg's hook). On a thread where a mixer ran
 //    they compute at 64 bits toward zero (0x0f7f, the mixers never restore it), elsewhere at the thread's word (the A/B
 //    thread's is 0x027f); the X80 helpers below execute the same instructions, so the body inherits the same word. The
 //    registry runs every function under both words.
@@ -1089,8 +1089,8 @@ unsigned __fastcall StepFade_re(char* self, void*) {
     return 0;
 }
 
-// 0x0001f4a0  Sound5b6a8_ctor (VA 0x1001f4a0). __thiscall, no argument, plain `ret` (0x1001f649), returns this (0x1001f634).
-// Callees through their incremental-link thunks: Ch5be88_ctor 0x100015f5 (this), MidiReader_init 0x10001b1d (this + 0x60),
+// 0x0001f4a0  Seq::ctor_1001f4a0 (VA 0x1001f4a0). __thiscall, no argument, plain `ret` (0x1001f649), returns this (0x1001f634).
+// Callees through their incremental-link thunks: Midi::ctor 0x100015f5 (this), MidiReader_init 0x10001b1d (this + 0x60),
 // the eh vector constructor iterator 0x10042902 (__stdcall, 5 arguments: `ret 0x14` 0x10042969) and Sound_setSourceType
 // 0x100018a2 (this, 2). The C++ EH frame (0x1001f4a0-0x1001f4ae, state byte at [esp+0x1c]) only unwinds a throwing callee.
 typedef void(__stdcall* VecCtor_t)(void*, unsigned, unsigned, void*, void*);

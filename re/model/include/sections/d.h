@@ -83,7 +83,7 @@ typedef struct SgSnd {
     int32_t pan;            /* +0x08 -0x40..0x3f (Snd::setPan clamps) */
     uint32_t unk_0c[9];     /* +0x0c..+0x2f zeroed by the base ctor, never read by a Snd method [U-0320] */
     uint32_t loop;          /* +0x30 nonzero = looping; mapped to bit 1 by Snd::flags */
-    int32_t field_34;       /* +0x34 stored by Snd::setField34, passed to the voice slot +0x4c [U-0320] */
+    int32_t field_34;       /* +0x34 stored by Snd::setDelay, passed to the voice slot +0x4c [U-0320] */
     int32_t field_38;       /* +0x38 default 1000, nonzero only (Snd::setField38), passed to voice slot +0x04 [U-0320] */
     uint32_t group;         /* +0x3c 0..15 = index into SgSndGroupDevice.groups, 0x10 = none (default) */
     uint32_t voice;         /* +0x40 device voice object created by sound.dll entry 1, 0 = not open */
@@ -163,14 +163,14 @@ typedef struct SgSkyActor {
 } SgSkyActor;
 SG_STATIC_ASSERT(sizeof(SgSkyActor) == 0x10, SgSkyActor_size);
 
-/* Placement bank (placeRecord / resetRecordBank / drawRecords): 16 placed objects over a 6 x 6 occupancy grid. */
-typedef struct SgRecordBank {
+/* Placement bank (placeHomeLayoutPart / resetHomeLayout / drawHomeLayout): 16 placed objects over a 6 x 6 occupancy grid. */
+typedef struct SgHomeLayout {
     int16_t id[16];         /* +0x00 object type, -1 = free slot */
     int8_t x[16];           /* +0x20 column of the object's footprint origin */
     int8_t y[16];           /* +0x30 row */
     int8_t anim[16];        /* +0x40 animation step, -1 = none */
     int8_t occupancy[36];   /* +0x50 [row * 6 + column] = slot index, -1 = free */
-} SgRecordBank;
-SG_STATIC_ASSERT(sizeof(SgRecordBank) == 0x74, SgRecordBank_size);
+} SgHomeLayout;
+SG_STATIC_ASSERT(sizeof(SgHomeLayout) == 0x74, SgHomeLayout_size);
 
 #endif /* SIMGOLF_MODEL_SECTION_D_H */

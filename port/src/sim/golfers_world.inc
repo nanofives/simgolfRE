@@ -2,19 +2,19 @@
 // re/analysis/sim/004017d0_placeAnimal.md, 00401c00_tickAnimals.md, 00405e30_placeHabitat.md, re/analysis/backend/worldToScreen
 // (the hook source's comment) and the vector corpus.
 
-void place_animal(Ctx &ctx, int32_t idx) {
+void update_vip_resident(Ctx &ctx, int32_t idx) {
   GameState &gs = ctx.gs();
-  const Ptr<Animal> a = state_arr(ctx, &GameState::g_animalRecords) + idx;
-  const auto type = a.field(&Animal::type);
-  const auto kind = a.field(&Animal::kind);
-  const auto tx = a.field(&Animal::x), ty = a.field(&Animal::y);
-  const auto wait = a.field(&Animal::countdown), st = a.field(&Animal::sprite_base);
-  const auto subx = a.field(&Animal::sub_x), suby = a.field(&Animal::sub_y);
-  const auto heading = a.field(&Animal::heading).as<uint8_t>();
-  const auto steps = a.field(&Animal::walk_steps);
-  const auto frame = a.field(&Animal::frame);
+  const Ptr<VipResident> a = state_arr(ctx, &GameState::g_vipResidents) + idx;
+  const auto type = a.field(&VipResident::type);
+  const auto kind = a.field(&VipResident::kind);
+  const auto tx = a.field(&VipResident::x), ty = a.field(&VipResident::y);
+  const auto wait = a.field(&VipResident::countdown), st = a.field(&VipResident::sprite_base);
+  const auto subx = a.field(&VipResident::sub_x), suby = a.field(&VipResident::sub_y);
+  const auto heading = a.field(&VipResident::heading).as<uint8_t>();
+  const auto steps = a.field(&VipResident::walk_steps);
+  const auto frame = a.field(&VipResident::frame);
   const bool paused = (gs.g_flags & 4u) != 0;
-  const int mode = SG_NEGCTL(g_negctl_place_animal);
+  const int mode = SG_NEGCTL(g_negctl_update_vip_resident);
   const int32_t wx = add32(shl32(tx.get(), 10), subx.get());
   const int32_t wy = add32(shl32(ty.get(), 10), suby.get());
   const int32_t sprite = type.get() + st.get();
@@ -36,7 +36,7 @@ void place_animal(Ctx &ctx, int32_t idx) {
       frame.set(fr);
       const int32_t cell = gl::cell_at(ctx, sprite, fr, dir);
       gs.g_animalCell = cell;                 // drawing state
-      // placeAnimal queue entry: enqueueSprite(sx, sy, sy, 0x1e, 0x28, cell, 4, (n + 0x9c) | 0x100), the animal's standing figure
+      // updateVipResident queue entry: enqueueSprite(sx, sy, sy, 0x1e, 0x28, cell, 4, (n + 0x9c) | 0x100), the animal's standing figure
       // (a golfer-palette entry past the golfer table); queued only for an attached graphics backend, so the vectors that
       // judge the simulation (and every run without a backend) see no sprite queue write
       if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gl::registered("enqueueSprite"))
@@ -80,7 +80,7 @@ void place_animal(Ctx &ctx, int32_t idx) {
           frame.set(0);
         }
       } else {
-        const Ptr<int8_t> map = (state_arr(ctx, &GameState::g_recordBanks) + kind.get()).field(&SgRecordBank::occupancy);
+        const Ptr<int8_t> map = (state_arr(ctx, &GameState::g_homeLayouts) + kind.get()).field(&SgHomeLayout::occupancy);
         if (static_cast<uint8_t>(map[add32(mul32(nx, 6), ny)]) == 0xff) steps.set(0x10);
       }
     }
@@ -95,11 +95,11 @@ void place_animal(Ctx &ctx, int32_t idx) {
   if (!(left > 0)) st.set(0x140);
 }
 
-void tick_animals(Ctx &ctx) {
-  const Ptr<Animal> a = state_arr(ctx, &GameState::g_animalRecords);
-  const int32_t n = SG_NEGCTL(g_negctl_tick_animals) == 1 ? kAnimals - 1 : kAnimals;
+void update_vip_residents(Ctx &ctx) {
+  const Ptr<VipResident> a = state_arr(ctx, &GameState::g_vipResidents);
+  const int32_t n = SG_NEGCTL(g_negctl_update_vip_residents) == 1 ? kAnimals - 1 : kAnimals;
   for (int32_t i = 0; i < n; ++i)
-    if ((a + i).field(&Animal::type).as<uint16_t>().get() != 0xffff) place_animal(ctx, i);
+    if ((a + i).field(&VipResident::type).as<uint16_t>().get() != 0xffff) update_vip_resident(ctx, i);
 }
 
 uint32_t place_habitat(Ctx &ctx, int32_t x, int32_t y, int32_t type) {

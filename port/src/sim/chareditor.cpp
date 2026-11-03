@@ -631,7 +631,7 @@ struct EdDraw {
   void image(uint32_t s, int32_t x, int32_t y, uint32_t pal = 0) const { gx("Image_draw", {s, root, u32(x), u32(y), pal}); }
   void centred(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText", {t, u32(x), u32(y), c}); }
   void centred2(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText2", {t, u32(x), u32(y), c}); }
-  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawText4049d0", {t, u32(x), u32(y), c}); }
+  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawTextWithColor", {t, u32(x), u32(y), c}); }
   void fill(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t c) const {
     gx("fillWindowRect", {win, u32(x), u32(y), u32(w), u32(h), c});
   }

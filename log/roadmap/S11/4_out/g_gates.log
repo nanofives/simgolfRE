@@ -1,0 +1,8 @@
+[1/2] build_x64 rc=0 1539 s :: 
+[2/2] build_w32 rc=0 1234 s :: 
+[1/6] static rc=0 383 s :: 6 passed in 3.61s
+[2/6] model_header rc=0 196 s :: 14 passed in 54.11s
+[3/6] segs_x64 rc=0 1145 s :: {"backend": "x64", "counts": {"PASS": 205}, "wall_s": 422.6}
+[4/6] boot_x64 rc=0 3410 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2, "FAIL": 1}}
+[5/6] segs_win32 rc=0 1021 s :: {"backend": "win32", "counts": {"PASS": 205}, "wall_s": 213.5}
+[6/6] boot_win32 rc=0 2958 s :: {"counts": {"PASS": 66, "KNOWN": 2, "NO_FRAMES": 2, "FAIL": 1}}

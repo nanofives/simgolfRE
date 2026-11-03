@@ -387,7 +387,7 @@ int __cdecl BuildGolferBioText_re() {
     G<int>(0x0059ae7c) = 0;                                                      // 0x00431b8f
     G<int>(0x004c2e28) = -1;                                                     // 0x00431b97
     G<int>(0x005a59f8) = -1;                                                     // 0x00431b9c
-    return reinterpret_cast<C0_t>(0x00401750)();                                 // 0x00431ba1 initRecords; eax is its result
+    return reinterpret_cast<C0_t>(0x00401750)();                                 // 0x00431ba1 initHomeLayouts; eax is its result
 }
 // 0x004315e0
 SG_HOOK("golf_clean.exe", 0x004315e0, buildGolferBioText, BuildGolferBioText_re, BuildGolferBioText_orig);

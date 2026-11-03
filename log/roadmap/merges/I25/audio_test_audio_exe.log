@@ -1,0 +1,25 @@
+F....................................................................... [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 70%]
+........................................................................ [ 93%]
+.....sssss.........                                                      [100%]
+================================== FAILURES ===================================
+_______________________ test_every_audio_row_registered _______________________
+
+lib = <port.test.lib.Lib object at 0x00000271FFB4FC50>
+
+    def test_every_audio_row_registered(lib):
+        """every C3 / C4 backend-audio row of the exe that this step owns is a registered port function"""
+        fns = lib.functions()
+        rows = [r for r in AS.audio_rows() if r["level"] in ("C3", "C4") and r["name"] not in AS.OTHER_OWNERS]
+        assert rows
+        missing = sorted(r["name"] for r in rows if r["name"] not in fns)
+>       assert not missing, missing
+E       AssertionError: ['Snd::queryDevice4845d0', 'Snd::setField34', 'createSound4840e0']
+E       assert not ['Snd::queryDevice4845d0', 'Snd::setField34', 'createSound4840e0']
+
+port\test\test_audio_exe.py:73: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [5] port\test\test_audio_exe.py:128: SG_EMU_ORACLE=1 runs the emulated original
+FAILED port/test/test_audio_exe.py::test_every_audio_row_registered - Asserti...
+1 failed, 301 passed, 5 skipped in 76.71s (0:01:16)

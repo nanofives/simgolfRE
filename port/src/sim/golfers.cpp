@@ -25,12 +25,12 @@ namespace {
 //   typeBit7Clear        1 = tests bit 6
 //   appendEndearment     1 = phrases 1 and 2 swapped
 //   appendWalkerName     1 = the two table strings in the other order, 2 = flag bit 2 instead of bit 3
-//   spawnObject          1 = row and column swapped, 2 = sprite base 0x14d, 3 = (cellSearchBound off) gives up with one free cell
+//   spawnVipResident     1 = row and column swapped, 2 = sprite base 0x14d, 3 = (cellSearchBound off) gives up with one free cell
 //   spawnWalker          1 = direction without the -2, 2 = start offset 0x400
 //   addHabitatSlot       1 = state -10, 2 = link 0
-//   placeAnimal          1 = on screen the frame never wraps, 2 = the wait is not counted down,
+//   updateVipResident    1 = on screen the frame never wraps, 2 = the wait is not counted down,
 //                        3 = (zeroFrameCount off) returns for a frame count of 1 too
-//   tickAnimals          1 = the last record skipped
+//   updateVipResidents   1 = the last record skipped
 //   placeHabitat         1 = only flag bit 0x20 cleared (mask 0xdf), 2 = (clusterLoopBound off) skips the loop for slot 126 too
 //   updateWalkers        1 = a sale adds 3 to the cash, 2 = a leaving walker moves at speed 4,
 //                        3 = the walking sequence wraps after 9
@@ -46,11 +46,11 @@ int g_negctl_golfer_age = 0;
 int g_negctl_type_bit7_clear = 0;
 int g_negctl_append_endearment = 0;
 int g_negctl_append_walker_name = 0;
-int g_negctl_spawn_object = 0;
+int g_negctl_spawn_vip_resident = 0;
 int g_negctl_spawn_walker = 0;
 int g_negctl_add_habitat_slot = 0;
-int g_negctl_place_animal = 0;
-int g_negctl_tick_animals = 0;
+int g_negctl_update_vip_resident = 0;
+int g_negctl_update_vip_residents = 0;
 int g_negctl_place_habitat = 0;
 int g_negctl_update_walkers = 0;
 int g_negctl_init_golfer_state = 0;
@@ -72,7 +72,7 @@ uint32_t &rng(Ctx &c) { return state_obj(c, &GameState::g_rng).field(&Random::st
 uint32_t text_va(Ctx &c) { return state_va(c, &GameState::g_textBuffer); }
 
 constexpr int32_t kTracks = static_cast<int32_t>(sizeof(GameState::g_storyPairs) / sizeof(ShotTrack));
-constexpr int32_t kAnimals = static_cast<int32_t>(sizeof(GameState::g_animalRecords) / sizeof(Animal));
+constexpr int32_t kAnimals = static_cast<int32_t>(sizeof(GameState::g_vipResidents) / sizeof(VipResident));
 constexpr int32_t kHabitats = static_cast<int32_t>(sizeof(GameState::g_habitatSlots) / sizeof(HabitatSlot));
 constexpr int32_t kDedications =
     static_cast<int32_t>(sizeof(GameState::g_scenicDedications) / sizeof(ScenicDedication));
@@ -174,39 +174,39 @@ void append_walker_name(Ctx &ctx, int32_t index) {
 }
 
 // ------------------------------------------------------------------------------------------------ spawning
-void spawn_object(Ctx &ctx, int32_t lot, int32_t kind, int32_t a, int32_t b) {
-  const Ptr<Animal> animals = state_arr(ctx, &GameState::g_animalRecords);
+void spawn_vip_resident(Ctx &ctx, int32_t lot, int32_t kind, int32_t a, int32_t b) {
+  const Ptr<VipResident> animals = state_arr(ctx, &GameState::g_vipResidents);
   int32_t idx = 0;
-  while ((animals + idx).field(&Animal::type).get() != -1)
+  while ((animals + idx).field(&VipResident::type).get() != -1)
     if (++idx >= kAnimals) return;
-  const Ptr<Animal> r = animals + idx;
+  const Ptr<VipResident> r = animals + idx;
   if (!SG_DEFECT(g_defect_cell_search_bound)) {  // D41: no free cell in the 4 x 4 corner, give up before claiming the record
-    const Ptr<int8_t> m0 = (state_arr(ctx, &GameState::g_recordBanks) + lot).field(&SgRecordBank::occupancy);
+    const Ptr<int8_t> m0 = (state_arr(ctx, &GameState::g_homeLayouts) + lot).field(&SgHomeLayout::occupancy);
     int32_t free_cells = 0;
     for (int32_t i = 0; i < 4; ++i)
       for (int32_t j = 0; j < 4; ++j) free_cells += static_cast<uint8_t>(m0[i * 6 + j]) == 0xff;
-    if (free_cells < (SG_NEGCTL(g_negctl_spawn_object) == 3 ? 2 : 1)) return;
+    if (free_cells < (SG_NEGCTL(g_negctl_spawn_vip_resident) == 3 ? 2 : 1)) return;
   }
   const int8_t cat = (state_arr(ctx, &GameState::g_celebrities) + kind).field(&CelebrityRecord::category).get();
-  r.field(&Animal::u00).set(0);
-  r.field(&Animal::kind).set(static_cast<int16_t>(lot));
-  r.field(&Animal::type).set(static_cast<int16_t>(cat));
-  r.field(&Animal::x).set(static_cast<int16_t>(a));
-  r.field(&Animal::y).set(static_cast<int16_t>(b));
-  r.field(&Animal::sprite_base).set(SG_NEGCTL(g_negctl_spawn_object) == 2 ? 0x14d : 0x140);
-  const Ptr<int8_t> map = (state_arr(ctx, &GameState::g_recordBanks) + lot).field(&SgRecordBank::occupancy);
+  r.field(&VipResident::u00).set(0);
+  r.field(&VipResident::kind).set(static_cast<int16_t>(lot));
+  r.field(&VipResident::type).set(static_cast<int16_t>(cat));
+  r.field(&VipResident::x).set(static_cast<int16_t>(a));
+  r.field(&VipResident::y).set(static_cast<int16_t>(b));
+  r.field(&VipResident::sprite_base).set(SG_NEGCTL(g_negctl_spawn_vip_resident) == 2 ? 0x14d : 0x140);
+  const Ptr<int8_t> map = (state_arr(ctx, &GameState::g_homeLayouts) + lot).field(&SgHomeLayout::occupancy);
   bool any = false;
   for (int32_t i = 0; i < 4 && !any; ++i)
     for (int32_t j = 0; j < 4 && !any; ++j) any = static_cast<uint8_t>(map[i * 6 + j]) == 0xff;
-  if (!any) throw NoReturn{"spawnObject"};
+  if (!any) throw NoReturn{"spawnVipResident"};
   int32_t row, col;
   do {
     row = i32(random_range(rng(ctx), 4) & 0xffffu);
     col = i32(random_range(rng(ctx), 4) & 0xffffu);
   } while (static_cast<uint8_t>(map[row * 6 + col]) != 0xff);
-  if (SG_NEGCTL(g_negctl_spawn_object) == 1) std::swap(row, col);
-  r.field(&Animal::sub_x).set(((row << 10) + 0x200) / 2);
-  r.field(&Animal::sub_y).set(((col << 10) + 0x200) / 2);
+  if (SG_NEGCTL(g_negctl_spawn_vip_resident) == 1) std::swap(row, col);
+  r.field(&VipResident::sub_x).set(((row << 10) + 0x200) / 2);
+  r.field(&VipResident::sub_y).set(((col << 10) + 0x200) / 2);
 }
 
 int32_t spawn_walker(Ctx &ctx, int32_t kind) {
@@ -263,11 +263,11 @@ void a_golfer_age(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(golfer_age(c, S
 void a_type_bit7_clear(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(type_bit7_clear(c, S(a, 0))); }
 void a_append_endearment(Ctx &c, const uint32_t *a, Ret &) { append_endearment(c, S(a, 0)); }
 void a_append_walker_name(Ctx &c, const uint32_t *a, Ret &) { append_walker_name(c, S(a, 0)); }
-void a_spawn_object(Ctx &c, const uint32_t *a, Ret &) { spawn_object(c, S(a, 0), S(a, 1), S(a, 2), S(a, 3)); }
+void a_spawn_vip_resident(Ctx &c, const uint32_t *a, Ret &) { spawn_vip_resident(c, S(a, 0), S(a, 1), S(a, 2), S(a, 3)); }
 void a_spawn_walker(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(spawn_walker(c, S(a, 0))); }
 void a_add_habitat_slot(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(add_habitat_slot(c, S(a, 0), S(a, 1), S(a, 2))); }
-void a_place_animal(Ctx &c, const uint32_t *a, Ret &) { place_animal(c, S(a, 0)); }
-void a_tick_animals(Ctx &c, const uint32_t *, Ret &) { tick_animals(c); }
+void a_update_vip_resident(Ctx &c, const uint32_t *a, Ret &) { update_vip_resident(c, S(a, 0)); }
+void a_update_vip_residents(Ctx &c, const uint32_t *, Ret &) { update_vip_residents(c); }
 void a_place_habitat(Ctx &c, const uint32_t *a, Ret &r) { r.set_u32(place_habitat(c, S(a, 0), S(a, 1), S(a, 2))); }
 // updateWalkers and initGolferState take no argument; their corpus keys declare one int slot (ignored)
 void a_update_walkers(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(update_walkers(c)); }
@@ -285,11 +285,11 @@ const FuncDef kFuncs[] = {
     {"typeBit7Clear", "default", "int", 1, 0, a_type_bit7_clear, &g_negctl_type_bit7_clear},
     {"appendEndearment", "default", "void", 1, 0, a_append_endearment, &g_negctl_append_endearment},
     {"appendWalkerName", "default", "void", 1, 0, a_append_walker_name, &g_negctl_append_walker_name},
-    {"spawnObject", "default", "void", 4, 0x027F, a_spawn_object, &g_negctl_spawn_object},
+    {"spawnVipResident", "default", "void", 4, 0x027F, a_spawn_vip_resident, &g_negctl_spawn_vip_resident},
     {"spawnWalker", "default", "int", 1, 0x027F, a_spawn_walker, &g_negctl_spawn_walker},
     {"addHabitatSlot", "default", "int", 3, 0x027F, a_add_habitat_slot, &g_negctl_add_habitat_slot},
-    {"placeAnimal", "default", "void", 1, 0x027F, a_place_animal, &g_negctl_place_animal},
-    {"tickAnimals", "default", "void", 0, 0x027F, a_tick_animals, &g_negctl_tick_animals},
+    {"updateVipResident", "default", "void", 1, 0x027F, a_update_vip_resident, &g_negctl_update_vip_resident},
+    {"updateVipResidents", "default", "void", 0, 0x027F, a_update_vip_residents, &g_negctl_update_vip_residents},
     {"placeHabitat", "default", "uint32", 3, 0x027F, a_place_habitat, &g_negctl_place_habitat},
     {"updateWalkers", "default", "int", 1, 0x027F, a_update_walkers, &g_negctl_update_walkers},
     {"initGolferState", "default", "void", 1, 0x027F, a_init_golfer_state, &g_negctl_init_golfer_state},

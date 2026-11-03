@@ -97,11 +97,11 @@ int __fastcall ViewDispatchSlot28_re(void* V, void*, int a, int b) {
     }
 }
 
-// viewDispatchSlot30 0x004a0b50 (`ret 8`, a, b), slot 30. Arms (jump table 0x004a0bc8), same shape:
+// viewDispatchOnLeftDown 0x004a0b50 (`ret 8`, a, b), slot 30. Arms (jump table 0x004a0bc8), same shape:
 //   tag 1 optionDialogUpdate 0x0049f9a0 on V-0x168 (0x004a0b98..0x004a0ba8), tag 2 ListBox::onNavKey 0x0048aa00 on V-0x1a0
 //   (0x004a0b80..0x004a0b90), tag 8 0x004a43f0 on V-0x8c (0x004a0bb0..0x004a0bc0), tag 0x10 listPanelOnScroll 0x0049e230
 //   on V-0x180 (0x004a0b68..0x004a0b78); tag 4 and every other tag `ret 8` with eax = tag - 1 (0x004a0bc5).
-// 0x004a0b50  viewDispatchSlot30
+// 0x004a0b50  viewDispatchOnLeftDown
 F2_t ViewDispatchSlot30_orig;
 int __fastcall ViewDispatchSlot30_re(void* V, void*, int a, int b) {
     int tag = I(V, -8);                                                  // 0x004a0b50
@@ -115,12 +115,12 @@ int __fastcall ViewDispatchSlot30_re(void* V, void*, int a, int b) {
     }
 }
 
-// viewDispatchSlot36 0x004a0bf0 (`ret 4`, one argument a), slot 36. Arms (jump table 0x004a0c5c) are `mov eax|edx, [esp+4];
+// viewDispatchOnKeyDown 0x004a0bf0 (`ret 4`, one argument a), slot 36. Arms (jump table 0x004a0c5c) are `mov eax|edx, [esp+4];
 // add ecx, k; push; call target; ret 4`: tag 1 optionDialogOnKey 0x0049fa90 on V-0x168 (0x004a0c2e..0x004a0c38, eax = a),
 // tag 2 0x0048aea0 on V-0x1a0 (0x004a0c1b..0x004a0c25, edx = a), tag 8 0x004a4680 on V-0x8c (0x004a0c41..0x004a0c4b, edx =
 // a), tag 0x10 listPanelRefresh 0x0049e450 on V-0x180 (0x004a0c08..0x004a0c13, eax = a). Tag 4 and every other tag: `xor
 // eax, eax; ret 4` (0x004a0c54).
-// 0x004a0bf0  viewDispatchSlot36
+// 0x004a0bf0  viewDispatchOnKeyDown
 F1_t ViewDispatchSlot36_orig;
 int __fastcall ViewDispatchSlot36_re(void* V, void*, int a) {
     int tag = I(V, -8);                                                  // 0x004a0bf0
@@ -268,10 +268,10 @@ int __fastcall ViewDispatchDrawVd_re(void* p, void*) { return reinterpret_cast<F
 // 0x00491990 viewDispatchSlot28_vtordisp -> 0x004a0a10
 F2_t ViewDispatchSlot28Vd_orig;
 int __fastcall ViewDispatchSlot28Vd_re(void* p, void*, int a, int b) { return reinterpret_cast<F2_t>(0x004a0a10)(VtordispThis(p), 0, a, b); }
-// 0x004919b0 viewDispatchSlot30_vtordisp -> 0x004a0b50
+// 0x004919b0 viewDispatchOnLeftDown_vtordisp -> 0x004a0b50
 F2_t ViewDispatchSlot30Vd_orig;
 int __fastcall ViewDispatchSlot30Vd_re(void* p, void*, int a, int b) { return reinterpret_cast<F2_t>(0x004a0b50)(VtordispThis(p), 0, a, b); }
-// 0x00491a00 viewDispatchSlot36_vtordisp -> 0x004a0bf0
+// 0x00491a00 viewDispatchOnKeyDown_vtordisp -> 0x004a0bf0
 F1_t ViewDispatchSlot36Vd_orig;
 int __fastcall ViewDispatchSlot36Vd_re(void* p, void*, int a) { return reinterpret_cast<F1_t>(0x004a0bf0)(VtordispThis(p), 0, a); }
 // 0x00491a30 viewDispatchOnScroll_vtordisp57 -> 0x004a0ed0 (slot 57 of 0x004bb8d0)

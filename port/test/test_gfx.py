@@ -144,7 +144,7 @@ ROOT_W, ROOT_H = 0x320, 0x258
 SELFTEST_NEGCTL = [(1, "fillRoot leaves the rectangle's last column unfilled"), (2, "loadCopy copies to (x + 1, y)")]
 # kNotDrawing (gfx.cpp): drops that draw nothing, never reported unsupported (S0 recommendation 1; framegate.py NOT_DRAWING)
 NOT_DRAWING = ("waitTicks", "startSoundSlot", "playSound", "Snd::status", "capsLockOff", "emptyFunc_4a0890", "saveCourseJpg",
-               "enterModal483d30")
+               "flushInput")
 
 
 @pytest.fixture(scope="module")

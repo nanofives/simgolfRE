@@ -23,13 +23,14 @@ from port.test import lib as L  # noqa: E402
 from port.test.lib32 import RunnerUnavailable  # noqa: E402
 from port.test import segments as S  # noqa: E402
 from port.test import vectors as V  # noqa: E402
+from port.test import renames as RN  # noqa: E402
 
 
 def manifest_ok_counts() -> dict[str, int]:
     out = collections.Counter()
     with V.MANIFEST_TSV.open(newline="") as f:
         for r in csv.DictReader(f, delimiter="\t"):
-            out[r["function"]] += int(r["ok_vectors"] or 0)
+            out[RN.port_name(r["function"])] += int(r["ok_vectors"] or 0)
     return out
 
 

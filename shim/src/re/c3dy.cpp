@@ -30,7 +30,7 @@ const C0_t kPumpMessages = reinterpret_cast<C0_t>(0x0045c030);     // pumpMessag
 const C0_t kFlushRedraw = reinterpret_cast<C0_t>(0x0045ae70);      // flushRedraw
 const C0_t kSetDirtyFlagA = reinterpret_cast<C0_t>(0x0045ae30);    // setDirtyFlagA
 const C0_t kSetDirtyFlagB = reinterpret_cast<C0_t>(0x0045ae50);    // setDirtyFlagB
-const C0_t kEnterModal = reinterpret_cast<C0_t>(0x00483d30);       // enterModal483d30
+const C0_t kEnterModal = reinterpret_cast<C0_t>(0x00483d30);       // flushInput
 const C0_t kPumpInput483c30 = reinterpret_cast<C0_t>(0x00483c30);  // pumpInput483c30
 const C0_t kDrainAndRedraw = reinterpret_cast<C0_t>(0x0045af00);   // drainAndRedraw
 const C0_t kWaitRedrawReady = reinterpret_cast<C0_t>(0x0045aed0);  // waitRedrawReady
@@ -84,7 +84,7 @@ SG_HOOK("golf_clean.exe", 0x0045bf80, waitTicks, WaitTicks_re, WaitTicks_orig);
 // or a non-zero [0x0083afcc] (0x0045c0f9..0x0045c100) leaves the loop; limit == 0 repeats (0x0045c104); now - start (signed)
 // below limit repeats (0x0045c106..0x0045c10a). After the loop [0x00822d94] = [0x00822b9c] and [0x00822d7c] = [0x00822b98]
 // (reads 0x0045c10c / 0x0045c111, stores 0x0045c117 / 0x0045c11c); flushRedraw again (0x0045c122); a non-zero result sets
-// [0x00822d94] = setDirtyFlagB() and [0x00822d7c] = setDirtyFlagA() (0x0045c12f..0x0045c13e); enterModal483d30 (0x0045c143).
+// [0x00822d94] = setDirtyFlagB() and [0x00822d7c] = setDirtyFlagA() (0x0045c12f..0x0045c13e); flushInput (0x0045c143).
 int __cdecl PumpAndRedraw_re(int limit) {
     TimeGetTime_t tg = Imp<TimeGetTime_t>(kIatTimeGetTime);                 // 0x0045c0c1
     unsigned start = tg();                                                  // 0x0045c0ca
@@ -127,7 +127,7 @@ const T0_t kSndPlay = reinterpret_cast<T0_t>(0x00484940);       // Snd::play
 const T1_t kSndSetPitch = reinterpret_cast<T1_t>(0x00484f40);   // Snd::setPitch
 const T1_t kSndSetVolume = reinterpret_cast<T1_t>(0x00485140);  // Snd::setVolume
 const T1_t kSndSetPan = reinterpret_cast<T1_t>(0x004847f0);     // Snd::setPan
-const T1_t kSndSetField34 = reinterpret_cast<T1_t>(0x004846b0); // Snd::setField34
+const T1_t kSndSetField34 = reinterpret_cast<T1_t>(0x004846b0); // Snd::setDelay
 const C5_t kPlaySound = reinterpret_cast<C5_t>(0x004481b0);     // playSound
 typedef int(__cdecl* WorldToScreen_t)(int wx, int wy, int* sx, int* sy, int margin);
 const WorldToScreen_t kWorldToScreen = reinterpret_cast<WorldToScreen_t>(0x0042fb90);
@@ -180,7 +180,7 @@ SG_HOOK("golf_clean.exe", 0x00484940, Snd_play, SndPlay_re, SndPlay_orig);
 // 0x004481b0  playSound(idx, volume, pan, pitch, field34): cdecl, plain `ret`. idx == -1 (cmp 0x004481b4, je 0x004481b7) returns
 // eax = idx = -1 (0x004481ff). Otherwise the Snd object is 0x0080d840 + idx * 108 (lea x3, x9, x4 + 0x80d840 at 0x004481b9..0x004481c0,
 // 32-bit wrap) and, in this order: Snd::setPitch(pitch) (0x004481ce), Snd::setVolume(volume) (0x004481da), Snd::setPan(pan)
-// (0x004481e6), Snd::setField34(field34) (0x004481f2), then Snd::play (0x004481f9) whose eax is the return value.
+// (0x004481e6), Snd::setDelay(field34) (0x004481f2), then Snd::play (0x004481f9) whose eax is the return value.
 int __cdecl PlaySound_re(int idx, int volume, int pan, int pitch, int field34) {
     if (idx == -1) return -1;                                               // 0x004481b4 / 0x004481b7
     void* snd = reinterpret_cast<void*>(0x0080d840u + static_cast<unsigned>(idx) * 108u);   // 0x004481b9..0x004481c0

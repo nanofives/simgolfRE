@@ -1,0 +1,5 @@
+rows 1881 (3_cache has 1881); verdict/dead_ok changes: 4
+('Terrain.dll|00019b80', ('dead', True), ('none', False), ['not the PE entry point or a TLS callback (0x10019b80 PE entry point)'])
+('golf_clean.exe|004a682f', ('dead', True), ('none', False), ['not the PE entry point or a TLS callback (0x004a682f PE entry point)'])
+('jgld.dll|00082770', ('dead', True), ('none', False), ['not the PE entry point or a TLS callback (0x10082770 PE entry point)'])
+('sound.dll|000430fe', ('dead', True), ('none', False), ['not the PE entry point or a TLS callback (0x100430fe PE entry point)'])

@@ -45,16 +45,16 @@ NEGCTL_RED = [
     ("findNearestTargetTile", 1, "distance bias 0x100"),
     ("sampleHeight", 1, "coarse weight 5"),
     ("rebuildTileCoverage", 1, "types >= 0x11 not marked"),
-    ("relaxTile42f630", 1, "minimum not followed"),
+    ("propagateMinTileLevel", 1, "minimum not followed"),
     ("raiseFromNeighbours", 1, "sameByte ignored"),
     ("spreadShade", 1, "divisor + 1"),
     ("decorationName", 1, "category 0x12 takes 0x13's string"), ("decorationName", 2, "variant % 4"),
     ("buildToolLabel", 1, "0x8000 test skipped"), ("buildToolLabel", 2, "kind 0x10 takes kind 1's string"),
-    ("heightBlend", 1, "lower clamp 2"), ("rateTile", 1, "toward_zero36 clamped to 2"),
+    ("heightBlend", 1, "lower clamp 2"), ("golferShotReach", 1, "toward_zero36 clamped to 2"),
     ("markTileKind11", 1, "variant 1"), ("spreadAllShade", 1, "total cap 0x6d5"), ("genNoise", 1, "range 0xf"),
     ("cornerRange", 1, "max never widens"), ("cornerHeights", 1, "corner 3 = corner 5"),
-    ("tileQuery449310", 1, "cache skipped"), ("slopeY", 1, "half bound 0x1ff"), ("slopeX", 1, "left half reversed"),
-    ("slopeMix", 1, "p / q swapped"), ("relaxEdges42f530", 1, "second corner pair untested"),
+    ("cornerHeightAt", 1, "cache skipped"), ("slopeY", 1, "half bound 0x1ff"), ("slopeX", 1, "left half reversed"),
+    ("slopeMix", 1, "p / q swapped"), ("calcTileWallMask", 1, "second corner pair untested"),
     ("heightAt42fa30", 1, "x weight 0x3ff"), ("rebuildHeightfield", 1, "flag 4 does not seed"),
 ]
 # wrong bodies the vectors CANNOT see (recorded blind spots; the state tests or segments cover them)
@@ -369,7 +369,7 @@ def oracle_cases(portlib):
         ("nearestPlaced", 0x0040DDB0, "int", [[i % 20, _r(i, 0, 51200), _r(i, 0, 51200, 1)] for i in range(40)], None),
         ("sampleHeight", 0x0042DBA0, "int", [[_r(i, -4000, 9000), _r(i, -4000, 9000, 1)] for i in range(60)], None),
         ("heightBlend", 0x0040C170, "int", [[_r(i, -1, 51), _r(i, -1, 51, 1)] for i in range(80)], g),
-        ("rateTile", 0x00422530, "int", [[_r(i, 0, 156)] for i in range(60)], g),
+        ("golferShotReach", 0x00422530, "int", [[_r(i, 0, 156)] for i in range(60)], g),
         ("markTileKind11", 0x0042F2C0, "void", [[] for _ in range(10)], None),
         ("spreadAllShade", 0x004616F0, "void", [[] for _ in range(10)], g),
         ("cornerHeights", 0x0040BFE0, "int",
@@ -393,7 +393,7 @@ def oracle_cases(portlib):
 
 ORACLE_IDS = ["raiseCornerLevelsAround", "lowerCornerLevelsAround", "propagateType11", "freeAtTile", "evalPlacementArea",
               "rebuildTileCoverage", "spreadShade", "canStep", "findNearestTargetTile", "nearestPlaced", "sampleHeight",
-              "heightBlend", "rateTile", "markTileKind11", "spreadAllShade", "cornerHeights", "slopeX", "slopeY",
+              "heightBlend", "golferShotReach", "markTileKind11", "spreadAllShade", "cornerHeights", "slopeX", "slopeY",
               "heightAt42fa30", "rebuildHeightfield", "scanTileLine", "pathStep", "buildToolLabel", "decorationName"]
 
 

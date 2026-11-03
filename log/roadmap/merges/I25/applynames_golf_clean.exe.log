@@ -1,0 +1,99 @@
+INFO  Using log config file: jar:file:/C:/Users/maria/Desktop/Proyectos/TD5RE/ghidra/ghidra_12.0.3_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: C:\Users\maria\AppData\Roaming\ghidra\ghidra_12.0.3_PUBLIC\application.log (LoggingInitialization)  
+INFO  Loading user preferences: C:\Users\maria\AppData\Roaming\ghidra\ghidra_12.0.3_PUBLIC\preferences (Preferences)  
+INFO  Loading previous preferences: C:\Users\maria\AppData\Roaming\ghidra\ghidra_12.1.2_PUBLIC\preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (1269 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Headless startup complete (4381 ms) (AnalyzeHeadless)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+INFO  HEADLESS Script Paths:
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Opening existing project: C:\Users\maria\Desktop\Proyectos\SimGolf\.\SimGolf (HeadlessAnalyzer)  
+INFO  Opening project: C:\Users\maria\Desktop\Proyectos\SimGolf\.\SimGolf (HeadlessProject)  
+INFO  REPORT: Processing project file: /golf_clean.exe (HeadlessAnalyzer)  
+INFO  REPORT: Execute script: ApplyNames.java 'log/roadmap/S11/4_apply_names' 'overwrite'  (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ApplyNames.java (HeadlessAnalyzer)  
+INFO  ApplyNames.java> RENAME 00401040 placeHomeLayoutPart (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004011e0 spawnVipResident (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004012d0 drawHomeLayout (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00401750 initHomeLayouts (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004017d0 updateVipResident (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00401c00 updateVipResidents (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004038f0 drawWalkers (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004049d0 drawTextWithColor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 0040e720 openHole (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00422530 golferShotReach (GhidraScript)  
+INFO  ApplyNames.java> RENAME 0042dea0 rateCourseHoles (GhidraScript)  
+INFO  ApplyNames.java> RELABEL 004e6d20 g_recordBanks -> g_homeLayouts (GhidraScript)  
+INFO  ApplyNames.java> RENAME 0042f530 calcTileWallMask (GhidraScript)  
+INFO  ApplyNames.java> RENAME 0042f630 propagateMinTileLevel (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00449310 cornerHeightAt (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483bd0 doAllTasks (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483c90 doAllKeys (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483cd0 doMouse (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483cf0 doAllMouse (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483d30 flushInput (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483d40 flushKeyboard (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00483d60 flushMouse (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004840e0 createSound (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004845d0 Snd::isPlaying_4845d0 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004846b0 Snd::setDelay (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00401000 resetHomeLayout (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004011b0 removeVipResidentAt (GhidraScript)  
+INFO  ApplyNames.java> RENAME 0049fc30 optionDialogOnLeftDoubleClick (GhidraScript)  
+INFO  ApplyNames.java> RELABEL 0056d1b8 g_animalRecords -> g_vipResidents (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004845b0 Snd::play_4845b0 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004847d0 Snd::isLooping (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004847e0 Snd::getTime_4847e0 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00484870 Snd::isLoaded (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00484b00 Snd::isHwbuffer (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00485040 Snd::getTime_485040 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00485390 VoiceRx::getNbuffers (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00485570 VoiceRx::getBufferSize (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004919a0 viewDispatchOnLeftClick_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004919b0 viewDispatchOnLeftDown_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004919c0 viewDispatchOnLeftUp_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004919d0 viewDispatchOnRightClick_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004919e0 viewDispatchOnRightDown_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004919f0 viewDispatchOnRightUp_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00491a00 viewDispatchOnKeyDown_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 00491a20 viewDispatchOnRightDoubleClick_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 0049fff0 optionDialogOnLeftDoubleClick_vtordisp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0b50 viewDispatchOnLeftDown (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0bf0 viewDispatchOnKeyDown (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0db0 viewDispatchOnLeftClick (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0e20 viewDispatchOnRightDown (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0e40 viewDispatchOnRightDoubleClick (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0e60 viewDispatchOnLeftUp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0e90 viewDispatchOnRightUp (GhidraScript)  
+INFO  ApplyNames.java> RENAME 004a0eb0 viewDispatchOnRightClick (GhidraScript)  
+INFO  ApplyNames.java> APPLYNAMES golf_clean.exe renamed=52 labeled=2 kept=914 missing=0 reset=0 (GhidraScript)  
+INFO  REPORT: Save succeeded for processed file: /golf_clean.exe (HeadlessAnalyzer)  

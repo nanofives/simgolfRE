@@ -146,16 +146,16 @@ golf_clean.exe	0x00483b10	clearPrimarySurface	render	match re/match/golf_raw_11.
 golf_clean.exe	0x00483b90	FontRef::dtor	render	match re/match/golf_raw_03.cpp; G1 2026-10-18: renamed from Surface::ctorVtbl483b90 (stores FontRef's vtable 0x004ba468 and calls FontRef::release (row evidence), the destructor shape of PaletteCache::dtor)	sets the surface vtable PTR_004ba468 and calls releaseBacking to zero its state
 golf_clean.exe	0x00483ba0	screenFlip	render	match re/match/golf_raw_03.cpp	calls the screen manager g_83ad50 present/flip (vtable f73)
 golf_clean.exe	0x00483bb0	showScreen	ui	match re/match/golf_small17.cpp	brings the screen online: pre49c8e0, flushes queues A/B and shows the screen object g_screen83a
-golf_clean.exe	0x00483bd0	pumpInput483bd0	ui	match re/match/golf_small5.cpp	sets input phase g_83ad4c=0x3f and pumps events (f483bb0) until drained, then phase 0 and f497b00
+golf_clean.exe	0x00483bd0	doAllTasks	ui	match re/match/golf_small5.cpp	sets input phase g_83ad4c=0x3f and pumps events (f483bb0) until drained, then phase 0 and f497b00
 golf_clean.exe	0x00483c10	hideScreen	ui	match re/match/golf_small17.cpp	takes the screen offline: pre49c8e0, flushes queues B/A and hides the screen object g_screen83a
 golf_clean.exe	0x00483c30	pumpInput483c30	ui	match re/match/golf_small6.cpp	input-pump variant setting phase g_83ad4c and draining the event queue
 golf_clean.exe	0x00483c70	redrawAll	ui	match re/match/golf_small16.cpp	full redraw: pre49c8e0, pre497b20 and screen redraw g_screen83a->redraw
-golf_clean.exe	0x00483c90	pumpInput483c90	ui	match re/match/golf_hand_01.cpp	sets phase g_83ad4c=2, pumps poll483c70 until drained, returns finish497b00
-golf_clean.exe	0x00483cd0	frameTick483cd0	ui	match re/match/golf_raw_03.cpp	runs one display tick: pre49c8e0, pre497b20 and screen manager g_83ad50 vtable f79
-golf_clean.exe	0x00483cf0	pumpInput483cf0	ui	match re/match/golf_hand_01.cpp	sets phase g_83ad4c=8, pumps poll483cd0 until drained, returns finish497b00
-golf_clean.exe	0x00483d30	enterModal483d30	ui	match re/match/golf_raw_03.cpp	enters a modal input state: modalPush (f483d40) and modalFocusClear (f483d60) then finish497b20
-golf_clean.exe	0x00483d40	modalPush483d40	ui	match re/match/golf_raw_03.cpp	pushes a modal input layer on the screen manager g_83ad50 (vtable f82) and finish497b20
-golf_clean.exe	0x00483d60	modalFocusClear483d60	ui	match re/match/golf_raw_03.cpp	clears focus (g_83ab40/44=0) via screen manager g_83ad50 vtable f83 and finish497b20
+golf_clean.exe	0x00483c90	doAllKeys	ui	match re/match/golf_hand_01.cpp	sets phase g_83ad4c=2, pumps poll483c70 until drained, returns finish497b00
+golf_clean.exe	0x00483cd0	doMouse	ui	match re/match/golf_raw_03.cpp	runs one display tick: pre49c8e0, pre497b20 and screen manager g_83ad50 vtable f79
+golf_clean.exe	0x00483cf0	doAllMouse	ui	match re/match/golf_hand_01.cpp	sets phase g_83ad4c=8, pumps poll483cd0 until drained, returns finish497b00
+golf_clean.exe	0x00483d30	flushInput	ui	match re/match/golf_raw_03.cpp	enters a modal input state: modalPush (f483d40) and modalFocusClear (f483d60) then finish497b20
+golf_clean.exe	0x00483d40	flushKeyboard	ui	match re/match/golf_raw_03.cpp	pushes a modal input layer on the screen manager g_83ad50 (vtable f82) and finish497b20
+golf_clean.exe	0x00483d60	flushMouse	ui	match re/match/golf_raw_03.cpp	clears focus (g_83ab40/44=0) via screen manager g_83ad50 vtable f83 and finish497b20
 golf_clean.exe	0x00483d80	leaveModal483d80	ui	match re/match/golf_raw_03.cpp	leaves the modal input state: finish497b20 then screen manager g_83ad50 vtable f72
 golf_clean.exe	0x00483de0	staticInit_g83ad80	crt	match re/match/golf_raw_03.cpp	static-object constructor for the sound device singleton g_83ad80 (FUN_00487280)
 golf_clean.exe	0x00483df0	atexit_483e00	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00483e00 with _atexit
@@ -169,7 +169,7 @@ golf_clean.exe	0x00483fc0	soundVersionCheck	audio	string 0x004bac50;string 0x004
 golf_clean.exe	0x00484060	freeSoundLib	audio	match re/match/golf_raw_11.cpp;import FreeLibrary	clears the init flag g_83afc4, FreeLibrary(sound.dll handle g_83afc0) and zeroes the function-pointer table (clearSoundPtrs)
 golf_clean.exe	0x00484090	callSoundHook74	audio	match re/match/golf_small18.cpp	calls the sound.dll hook g_fn83af74(a,b) when the library is loaded (g_hook83afc0), else returns 4
 golf_clean.exe	0x004840c0	callSoundHook94	audio	match re/match/golf_hand_00.cpp	calls the sound.dll hook g_83af94() when installed (g_83afc0), else 0
-golf_clean.exe	0x004840e0	createSound4840e0	audio	Ghidra decompilation of 0x004840e0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	creates a sound object via the sound.dll factory hook g_83af6c(a,b,c); returns 1 when sound is not initialized (g_83afc4)
+golf_clean.exe	0x004840e0	createSound	audio	Ghidra decompilation of 0x004840e0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	creates a sound object via the sound.dll factory hook g_83af6c(a,b,c); returns 1 when sound is not initialized (g_83afc4)
 golf_clean.exe	0x00484110	releaseSoundObj	audio	match re/match/golf_hand_00.cpp	calls the sound.dll release hook g_83af70(obj) when installed (g_83afc4), else returns 1
 golf_clean.exe	0x00484130	clearSoundPtrs	audio	match re/match/golf_raw_03.cpp	zeroes the 11-entry sound.dll function-pointer table starting at g_83af6c
 golf_clean.exe	0x00484150	Snd::ctorBase	audio	match re/match/golf_hand_r3.cpp	base sound-object constructor: nulls the device/name pointers, zeroes frame state and sets the default rate 1000 (setRate)
@@ -180,9 +180,9 @@ golf_clean.exe	0x004842f0	SndMusic::setFile	audio	match re/match/golf_hand_07_48
 golf_clean.exe	0x004843e0	unlinkSound	audio	match re/match/golf_raw_03.cpp	removes a sound object from the active list (head g_83af68 / tail g_83af64) by relinking its m_48/m_4c neighbours
 golf_clean.exe	0x004844e0	Snd::unlinkFromList	audio	match re/match/golf_hand_02.cpp	unlinks a sound object from the active list (head g_83af68 / tail g_83af64) by relinking m_prev/m_next, clearing flag bit1
 golf_clean.exe	0x00484550	Snd::stop484550	audio	match re/match/golf_hand_01.cpp	stops a sound: m_40 stop (v5), v32, clears the device m_40 and state bit0
-golf_clean.exe	0x004845d0	Snd::queryDevice4845d0	audio	match re/match/golf_raw_03.cpp	forwards to the device object m_40 vtable f23, returning 0 when no device
+golf_clean.exe	0x004845d0	Snd::isPlaying_4845d0	audio	match re/match/golf_raw_03.cpp	forwards to the device object m_40 vtable f23, returning 0 when no device
 golf_clean.exe	0x004845e0	Snd::status	audio	match re/match/golf_hand_00.cpp	returns the device status via m_40 vtable v8, or the default 0x14 when no device
-golf_clean.exe	0x004846b0	Snd::setField34	audio	match re/match/golf_raw_03.cpp	stores a value in m_34 and forwards it to the device object m_40 (vtable f19)
+golf_clean.exe	0x004846b0	Snd::setDelay	audio	match re/match/golf_raw_03.cpp	stores a value in m_34 and forwards it to the device object m_40 (vtable f19)
 golf_clean.exe	0x004846d0	Snd::setField38	audio	match re/match/golf_raw_03.cpp	stores a nonzero value in m_38 and forwards it to the device m_40 (vtable f1), returning 10 on zero
 golf_clean.exe	0x00484750	Snd::applyField484750	audio	match re/match/golf_raw_03.cpp	sets a field on the device (vtable f1) and, if it returned 0, calls vtable f10
 golf_clean.exe	0x004847b0	Snd::applyField4847b0	audio	match re/match/golf_raw_03.cpp	sets a field on the device (vtable f21) and, if it returned 0, calls vtable f10

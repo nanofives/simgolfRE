@@ -4864,7 +4864,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Sound5b6a8_ctor",
+  "name": "snd.Seq::ctor_1001f4a0",
   "regions": [
    [
     805335376,
@@ -4897,7 +4897,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Sound5b6a8_ctor",
+  "name": "snd.Seq::ctor_1001f4a0",
   "regions": [
    [
     805335376,
@@ -4930,7 +4930,7 @@
   "fpcw": [
    3967
   ],
-  "name": "snd.Sound5b6a8_ctor",
+  "name": "snd.Seq::ctor_1001f4a0",
   "regions": [
    [
     805335376,
@@ -4972,7 +4972,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Sound5b6a8_dtor",
+  "name": "snd.Seq::dtor",
   "regions": [
    [
     805338768,
@@ -5446,7 +5446,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Sound5c450_ctor",
+  "name": "snd.CVoiceRxMgr::ctor",
   "regions": [
    [
     805335376,
@@ -5694,7 +5694,7 @@
     ]
    }
   ],
-  "name": "snd.Sound5c450_dtor",
+  "name": "snd.CVoiceRxMgr::dtor",
   "regions": [
    [
     805338864,

@@ -29,7 +29,7 @@
 //     (must_deliver), where the dispatch is recorded with one CURSOR record in front of it that the next cursor read of the
 //     port fills (the replay's refusal at the first call, the `stuck` delivery at the second). A paced loop (pumpAndRedraw,
 //     the credits) may decline pass after pass;
-//   - Drain pumps of a modal loop (pumpLight, pumpInput483bd0 outside the frame body) never take a dispatch: the host is
+//   - Drain pumps of a modal loop (pumpLight, doAllTasks outside the frame body) never take a dispatch: the host is
 //     not asked.
 // A delivery the replay would place at another pump call is still applied and counted in LiveResult::violations (its
 // recording no longer replays to the same state from there).

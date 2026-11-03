@@ -2,7 +2,7 @@
 // TOURNAMENT RESULTS strip of showTournamentResults (c3eo.cpp ShowTournamentResults_re, the port's tick_panels.inc) needs
 // beyond the bodies other families own. Its scorecard layout draws through Surface_drawSprite (g_spriteRef_821040, drawAlpha's
 // quarter band: the reports family), Surface_stretchBlit (the bands of g_spriteRef_821cb8 over their masks: the core),
-// setDrawTarget, drawCenteredText, drawText4049d0, Widget_setQuad (prim_text), Image_draw (the close button
+// setDrawTarget, drawCenteredText, drawTextWithColor, Widget_setQuad (prim_text), Image_draw (the close button
 // g_spriteRef_820f40: the core), drawStringRightAt (the text family's body since roadmap S3.13: the original's drawRichText(text,
 // x - drawMarkupRun(text, n), y, n), gfx_text.cpp; S2.11's body here measured the run with the provider's plain glyph widths
 // and drew through prim_text's drawText path; its control 1 is the text family's 15) and this:

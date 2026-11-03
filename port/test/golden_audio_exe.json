@@ -1472,7 +1472,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::queryDevice4845d0",
+  "name": "Snd::isPlaying_4845d0",
   "regions": [
    [
     805336464,
@@ -1959,7 +1959,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::setField34",
+  "name": "Snd::setDelay",
   "regions": [
    [
     805336464,
@@ -2000,7 +2000,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::setField34",
+  "name": "Snd::setDelay",
   "regions": [
    [
     805337616,
@@ -4797,7 +4797,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "createSound4840e0",
+  "name": "createSound",
   "regions": [
    [
     805336464,
@@ -4830,7 +4830,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "createSound4840e0",
+  "name": "createSound",
   "regions": [
    [
     805336464,
@@ -6200,7 +6200,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::fwdVoice18",
+  "name": "Snd::play_4845b0",
   "regions": [
    [
     805337296,
@@ -6479,7 +6479,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::fwdVoice58",
+  "name": "Snd::isLooping",
   "regions": [
    [
     805337296,
@@ -6536,7 +6536,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::fwdVoice60",
+  "name": "Snd::isLoaded",
   "regions": [
    [
     805337296,
@@ -6593,7 +6593,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::fwdVoice74",
+  "name": "Snd::getTime_4847e0",
   "regions": [
    [
     805337296,
@@ -6764,7 +6764,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::fwdVoiceB8",
+  "name": "Snd::getTime_485040",
   "regions": [
    [
     805337296,
@@ -6878,7 +6878,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "Snd::fwdVoiceCC",
+  "name": "Snd::isHwbuffer",
   "regions": [
    [
     805337296,
@@ -8095,7 +8095,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "VoiceRx::fwdDev36",
+  "name": "VoiceRx::getBufferSize",
   "regions": [
    [
     805337296,
@@ -8152,7 +8152,7 @@
   ],
   "exe_fallbacks": 0,
   "fallback_names": "",
-  "name": "VoiceRx::fwdDev37",
+  "name": "VoiceRx::getNbuffers",
   "regions": [
    [
     805337296,

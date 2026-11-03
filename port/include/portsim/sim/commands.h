@@ -3,7 +3,7 @@
 // (port/src/sim/commands*.cpp), tests port/test/test_commands.py.
 //
 // THE INTERFACE WITH THE FRAME STEP (3.7a, tickFrame). The original consumes input in H1 of mainLoop's frame
-// (re/analysis/sim/time_model.md section 7): pumpMessages -> frameTick483cd0 runs jgld's pumps, the
+// (re/analysis/sim/time_model.md section 7): pumpMessages -> doMouse runs jgld's pumps, the
 // window procedure calls the ROOT WINDOW HANDLERS (vtable slots 29..39), which store the click /
 // key into the input globals (g_rootInput, gDirtyFlagA / B, g_char83821c ...); then H1's
 // key switch (takeKey / takeCode) and H2's mouse action read those globals and call the straddlers (clickGolferPanel,
@@ -22,7 +22,7 @@
 //
 // MODAL BLOCKS. Several straddlers wait inside for input (pumpAndRedraw(0) and the screens' own loops):
 // clickSlotPanel, clickBuildTool433d30, pickBuilding, clickAmenityPanel, the report screens, showBulletinBoard ... Every
-// such loop calls pumpMessages, whose dispatch point (frameTick483cd0) delivers the messages that have arrived
+// such loop calls pumpMessages, whose dispatch point (doMouse) delivers the messages that have arrived
 // to the same root handlers. The port asks the context's InputSource for one BATCH (the commands one dispatch delivers) per
 // pump call, saying what kind of pump it is:
 //   PumpKind::Blocking  a loop that only ends on input (pumpAndRedraw(0), the screens' click-or-key loops): the source
@@ -107,7 +107,7 @@ int32_t apply_command(Ctx &ctx, const Command &cmd);
 void apply_commands(Ctx &ctx, const std::vector<Command> &cmds);
 
 // What kind of pump asks (see MODAL BLOCKS).
-//   PumpKind::Load      loadFlic's pumpInput483bd0 (U-1051): a Drain that also takes the one dispatch a trace puts before
+//   PumpKind::Load      loadFlic's doAllTasks (U-1051): a Drain that also takes the one dispatch a trace puts before
 //                       a world load's first palette QPC read (a message posted before the load began)
 enum class PumpKind : uint32_t { Blocking = 1, Drain = 2, Load = 3 };
 

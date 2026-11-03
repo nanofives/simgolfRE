@@ -75,7 +75,7 @@
 #define kScanShotArea(...) cc("scanShotArea", ##__VA_ARGS__)// scanShotArea(slot)
 #define kAddGolferToTable(...) cc("addGolferToTable", ##__VA_ARGS__)// addGolferToTable(g)
 #define kAddGolferPair(...) cc("addGolferPair", ##__VA_ARGS__)// addGolferPair(g)
-#define kRateTile(...) cc("rateTile", ##__VA_ARGS__)// rateTile(g)
+#define kRateTile(...) cc("golferShotReach", ##__VA_ARGS__)// golferShotReach(g)
 
 int Rand(int n) { return kRandomRange((u32)(GS(g_rng)), 0, n); }
 int Dx8(int d) { return G<int>(GS(f_tab_dirDx_4c2878) + 4 * static_cast<unsigned>(d)); }

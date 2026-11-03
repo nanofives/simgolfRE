@@ -25,6 +25,7 @@ if str(ROOT) not in sys.path:
 sys.path.insert(0, str(ROOT / "port" / "test"))
 sys.path.insert(0, str(ROOT / "re" / "tools"))
 import sound_emu as E  # noqa: E402
+import renames  # noqa: E402  (S11.4 name aliases)
 
 EXE = ROOT / "original" / "golf_clean.exe"
 EXE_BASE = 0x00400000
@@ -48,7 +49,8 @@ def audio_rows() -> list[dict]:
                 continue
             a = int(r["addr"], 16)
             h = lv.get(a, {})
-            out.append({"addr": a, "name": r["name"], "size": int(r["size"]), "level": h.get("confidence", r["hooks_level"]),
+            # scope.tsv keeps the pre-S11.4 spellings (re/port tables); the registry uses the port names
+            out.append({"addr": a, "name": renames.port_name(r["name"]), "size": int(r["size"]), "level": h.get("confidence", r["hooks_level"]),
                         "file": h.get("file", "")})
     return out
 

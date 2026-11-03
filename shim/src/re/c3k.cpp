@@ -81,7 +81,7 @@ unsigned __fastcall SetDrawTarget_re(void* self, void*, unsigned surf, unsigned 
     return 0;
 }
 
-// 0x00401040  placeRecord(bank, type, row, col): the first loop (0x00401077..0x004010e7) only computes a flag that
+// 0x00401040  placeHomeLayoutPart(bank, type, row, col): the first loop (0x00401077..0x004010e7) only computes a flag that
 // 0x004010e9 discards (it jumps past every read of it), so placement is unconditional. Scans the bank's 16 id words
 // (0x004e6d20 + bank*0x74, 0x00401100) for the first free one (== -1); returns 0 when none is free (0x00401112).
 // Otherwise it writes the id (type) word there (0x00401133), the row and col bytes and 0xff into

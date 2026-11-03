@@ -50,7 +50,7 @@ FLIC_OPEN_STREAM, FILE_EXISTS, SHOW_LOADING, SCROLL_TEXT = 0x00404120, 0x004378A
 # waitTicks, Window::refreshFull, the cell surface release
 DROPS = [0x00475840, 0x00473BF0, 0x00473C60, 0x00474AE0, 0x00474C40, 0x00474DD0, 0x00478AF0, 0x00473E60, 0x00404090,
          0x004041C0, 0x0045BF80, 0x00480C80, 0x00473AE0]
-TAIL_HELPERS = [0x00483BD0]          # pumpInput483bd0: no argument (cmdemu's tail helpers)
+TAIL_HELPERS = [0x00483BD0]          # doAllTasks: no argument (cmdemu's tail helpers)
 MASK = ["g_flicFrameImage",          # pointer class: the dropped flicNextFrame / flicOpenStream results the original stores
         # the palette cut geometry: the port stores what cropSprite writes into each cut SpriteRef (phase 4), but here the
         # original's Surface_blit is a drop (DROPS), so its cut fields keep the previous values; the live original's are

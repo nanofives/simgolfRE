@@ -76,13 +76,59 @@ def _real_source(m, src, target):
         ins.op_str.startswith("0x") and int(ins.op_str, 16) == target
 
 
+_EXP, _LDR = {}, {}
+
+
 def _exports(m):
+    if m.name not in _EXP:
+        _EXP[m.name] = _exports_uncached(m)
+    return _EXP[m.name]
+
+
+def _exports_uncached(m):
     import pefile
     pe = pefile.PE(str(ROOT / "original" / m.name), fast_load=True)
     pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_EXPORT"]])
     if not hasattr(pe, "DIRECTORY_ENTRY_EXPORT"):
         return set()
     return {m.base + s.address for s in pe.DIRECTORY_ENTRY_EXPORT.symbols}
+
+
+def _loader_entries(m):
+    if m.name not in _LDR:
+        _LDR[m.name] = _loader_entries_uncached(m)
+    return _LDR[m.name]
+
+
+def _loader_entries_uncached(m):
+    """{va: label} the PE loader calls without a call instruction in the image: AddressOfEntryPoint and every TLS
+    callback (IMAGE_TLS_DIRECTORY.AddressOfCallBacks: a null-terminated array of absolute VAs)."""
+    import pefile
+    pe = pefile.PE(str(ROOT / "original" / m.name), fast_load=True)
+    pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_TLS"]])
+    out = {m.base + pe.OPTIONAL_HEADER.AddressOfEntryPoint: "PE entry point"}
+    tls = getattr(pe, "DIRECTORY_ENTRY_TLS", None)
+    cb = tls.struct.AddressOfCallBacks if tls else 0
+    n = 0
+    while cb:
+        v = m.dword(cb + 4 * n)
+        if not v:
+            break
+        out[v] = f"TLS callback {n}"
+        n += 1
+    return out
+
+
+def _container(m, va):
+    """Entry of the function whose ranges contain `va` (a body or one of its thunks), else va itself."""
+    return m.function_at(va) or va
+
+
+def has_tls(module):
+    import pefile
+    pe = pefile.PE(str(ROOT / "original" / pc.mod(module).name), fast_load=True)
+    pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_TLS"]])
+    return hasattr(pe, "DIRECTORY_ENTRY_TLS")
 
 
 def dead_checks(module, addr):
@@ -99,10 +145,16 @@ def dead_checks(module, addr):
             direct.append(t)
     refs = pc.references(m, va)
     exp = sorted(t for t in targets if t in _exports(m))
+    # a function CONTAINING an export or the loader's entries is reached from outside the image (S11.5, U-2020)
+    exps = _exports(m)
+    exp += sorted(e for e in exps if _container(m, e) == va and e not in exp)
+    ldr = [f"0x{e:08x} {lab}" for e, lab in sorted(_loader_entries(m).items())
+           if _container(m, e) == va or e in targets]
     return [
         ("no direct call/jmp/jcc lands on the body or a thunk", not direct, ", ".join(f"0x{t:08x}" for t in direct)),
         ("no stored pointer to the body or a thunk", not refs, f"{len(refs)} reference(s)" if refs else ""),
         ("not exported", not exp, ", ".join(f"0x{t:08x}" for t in exp)),
+        ("not the PE entry point or a TLS callback", not ldr, ", ".join(ldr)),
     ]
 
 

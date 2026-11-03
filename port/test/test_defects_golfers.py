@@ -113,11 +113,11 @@ def test_place_habitat_wrong_guard_reads_red(portlib):
     assert base != bad
 
 
-# ------------------------------------------------------------------------------------------- spawnObject (D41)
+# ------------------------------------------------------------------------------------------- spawnVipResident (D41)
 def _spawn(lib, free_cells, defect, mode=0):
     lib.defect("spawnObject.cellSearchBound", defect)
-    lib.negctl("spawnObject", mode)
-    an, rb = TG.off(lib, "g_animalRecords"), TG.off(lib, "g_recordBanks")
+    lib.negctl("spawnVipResident", mode)
+    an, rb = TG.off(lib, "g_vipResidents"), TG.off(lib, "g_homeLayouts")
     with lib.state() as st:
         st.set_data_base(VL.DATA_VA)
         st.write(an + 0x20, struct.pack("<h", -1))
@@ -127,7 +127,7 @@ def _spawn(lib, free_cells, defect, mode=0):
         st.write(rb + 2 * 0x74 + 0x50, bytes(cells))
         st.write(TG.off(lib, "g_rng"), struct.pack("<I", 12345))
         try:
-            st.call("spawnObject", [2, 0, 1, 1])
+            st.call("spawnVipResident", [2, 0, 1, 1])
             res = "ok"
         except L.SgError as e:
             res = e.code
@@ -139,14 +139,14 @@ def test_spawn_object_full_bank(portlib):
     res, h = _spawn(portlib, [], 0)
     assert res == "ok"
     # nothing claimed, nothing drawn: identical to a state where no animal record was free
-    an = TG.off(portlib, "g_animalRecords")
+    an = TG.off(portlib, "g_vipResidents")
     portlib.defect("spawnObject.cellSearchBound", 0)
     with portlib.state() as st:
         st.set_data_base(VL.DATA_VA)
         st.write(an + 0x20, struct.pack("<h", -1))
-        rb = TG.off(portlib, "g_recordBanks")
+        rb = TG.off(portlib, "g_homeLayouts")
         st.write(rb + 2 * 0x74 + 0x50, b"\x01" * 36)
-        st.call("spawnObject", [2, 0, 1, 1])
+        st.call("spawnVipResident", [2, 0, 1, 1])
         assert struct.unpack("<h", st.read(an + 0x20, 2))[0] == -1   # record 0 still free
         assert struct.unpack("<I", st.read(TG.off(portlib, "g_rng"), 4))[0] == 0   # no draw
 
@@ -215,15 +215,15 @@ def test_load_golf_pro_wrong_guard_reads_red(portlib):
     assert _pro(portlib, 3, FULL, 0, mode=2) != good
 
 
-# ------------------------------------------------------------------------------------------- placeAnimal (D43)
+# ------------------------------------------------------------------------------------------- updateVipResident (D43)
 def _animal(lib, cols, defect, mode=0, frame=1):
     lib.defect("placeAnimal.zeroFrameCount", defect)
-    lib.negctl("placeAnimal", mode)
+    lib.negctl("updateVipResident", mode)
     with lib.state() as st:
         st.set_data_base(VL.DATA_VA)
         TG._animal_on_screen(S(lib, st), frame, cols)
         try:
-            st.call("placeAnimal", [0])
+            st.call("updateVipResident", [0])
             res = "ok"
         except L.SgError as e:
             res = e.code

@@ -28,7 +28,7 @@ typedef int(__fastcall* RandomRange_t)(void* self, void* edx, int n);
 const Void1_t kAppendCourseTitle = reinterpret_cast<Void1_t>(0x0040DAA0);  // appendCourseTitle
 const Int2_t kRateLot = reinterpret_cast<Int2_t>(0x0042EF40);              // rateLot
 const Void4_t kPointsPopup = reinterpret_cast<Void4_t>(0x0040C890);        // pointsPopup
-const Void2_t kFreeRecordAtPos = reinterpret_cast<Void2_t>(0x004011B0);    // freeRecordAtPos
+const Void2_t kFreeRecordAtPos = reinterpret_cast<Void2_t>(0x004011B0);    // removeVipResidentAt
 const Void_t kRebuildHeightfield = reinterpret_cast<Void_t>(0x0042F7A0);   // rebuildHeightfield
 const Void2_t kBuildGolferName = reinterpret_cast<Void2_t>(0x004676E0);    // buildGolferName
 const Int3_t kStartMessage = reinterpret_cast<Int3_t>(0x0040CB00);         // startMessage
@@ -297,9 +297,9 @@ void __cdecl MembershipReport_re(unsigned golfer) {
     }
 }
 
-// ---------------------------------------------------------------------- 0x0040e720 announceBuilding
+// ---------------------------------------------------------------------- 0x0040e720 openHole
 
-// 0x0040e720  announceBuilding(): closes the hole currently being built (its index is the dword 0x005685f0),
+// 0x0040e720  openHole(): closes the hole currently being built (its index is the dword 0x005685f0),
 // derives its length and par, builds the "hole is now open" notice and, when a new building has become
 // available, its description; then renumbers the hole counter. __cdecl, no arguments, void.
 typedef void(__cdecl* Void0_t)();

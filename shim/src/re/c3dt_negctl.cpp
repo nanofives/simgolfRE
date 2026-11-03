@@ -260,10 +260,10 @@ C3DT_DELDTOR(SoundDel, 0x00002446, "")
 C3DT_DELDTOR(WaveDevDel, 0x000017da, "")
 // 0x0001c530  CtrlObject_scalarDtorA (VA 0x1001c530): thunk 0x10001019 (0x1001c560) at 0x1001c533, test 0x1001c538 / 0x1001c53d, operator delete at 0x1001c540.
 C3DT_DELDTOR(CtrlDelA, 0x00001019, "")
-// 0x0001f6c0  Sound5b6a8_scalarDtor (VA 0x1001f6c0): thunk 0x10001893 (Sound5b6a8_dtor 0x1001ff50) at 0x1001f6c3, test 0x1001f6c8 / 0x1001f6cd,
+// 0x0001f6c0  Sound5b6a8_scalarDtor (VA 0x1001f6c0): thunk 0x10001893 (Seq::dtor 0x1001ff50) at 0x1001f6c3, test 0x1001f6c8 / 0x1001f6cd,
 // operator delete at 0x1001f6d0.
 C3DT_DELDTOR(S5b6a8Del, 0x00001893, "")
-// 0x00030150  Sound5c450_scalarDtor (VA 0x10030150): thunk 0x100019c4 (Sound5c450_dtor 0x10030180) at 0x10030153, test 0x10030158 / 0x1003015d,
+// 0x00030150  Sound5c450_scalarDtor (VA 0x10030150): thunk 0x100019c4 (CVoiceRxMgr::dtor 0x10030180) at 0x10030153, test 0x10030158 / 0x1003015d,
 // operator delete at 0x10030160.
 C3DT_DELDTOR(S5c450Del, 0x000019c4, "")
 // 0x00031270  StreamReader_scalarDtor (VA 0x10031270): thunk 0x1000108c (streamReaderDtor 0x100312a0) at 0x10031273, test 0x10031278 / 0x1003127d,

@@ -47,12 +47,12 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg);
 void build_golfer_comment(Ctx &ctx, int32_t kind, int32_t arg, int32_t place, int32_t g);
 // announceHoleType(hole, kind): the hole-type notice text for `kind` (1..7) in g_textBuffer; kinds 3, 5, 6, 7 also post an event.
 void announce_hole_type(Ctx &ctx, int32_t hole, int32_t kind);
-// holeMagazineEvent: the per-tick pass over the 18 holes (ratings, notices and the two magazine events).
-void hole_magazine_event(Ctx &ctx);
+// rateCourseHoles: the per-tick pass over the 18 holes (ratings, notices and the two magazine events).
+void rate_course_holes(Ctx &ctx);
 // patronEvent(g): a patron's request or refusal for golfer g (CEO, commissioner, heiress) and the golfer's departure fields.
 void patron_event(Ctx &ctx, int32_t g);
-// announceBuilding: the construction-unlock pass (new buildings and amenities offered as the course grows).
-void announce_building(Ctx &ctx);
+// openHole: the construction-unlock pass (new buildings and amenities offered as the course grows).
+void open_hole(Ctx &ctx);
 // pairGolfersWithStory(p1, p2): pairs two golfers, draws their story and may turn p2 into a VIP.
 int32_t pair_golfers_with_story(Ctx &ctx, int32_t p1, int32_t p2);
 // announceLandmark: marks one landmark type of golfer g's neighbourhood as unlocked and appends its notice.

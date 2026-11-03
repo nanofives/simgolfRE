@@ -9,6 +9,7 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G30, after the roadmap: diverge from the original with fixes, 2026-11-03.** I25 (S11 wave 2) runs with fast gates only (no full suites, census or slow suite). Fixes go into a new profile `play` (= `fixed` + gameplay fixes, the app default; `fixed` stays hangs and faults only; `original` stays every switch at 1 and the oracle). First batch: the five existing switches (sinScaled.readPastTable, shotPower.cacheIgnoresPutt, chooseShotTarget.strictFlagSticky, prepareShot.hazardCellTransposed, narrateShot.maskNotRestored), money and reports (D23, D24), golfers and stories (D19, D26, D48b, D44, D17), memory overruns (D11, D12, D47b, D48a, D49a, D5, D6, D21). Save files may change format (no need to stay loadable by the original). Testing light: build, the fast regression gates under `original`, a play check.
 - **G26, fillSpan C4 evidence (U-2000), 2026-11-02: not evidence.** An SMSG body that is one inline `__asm` block inside a compiled C
   frame matches by construction (only the frame could fail), as round 36's naked-asm rule: fillSpanDown 0x00493000 / fillSpanUp
   0x00493080 stay C3 held until scenario evidence (S11 wave 2 rewords their c3_hold.tsv reason).

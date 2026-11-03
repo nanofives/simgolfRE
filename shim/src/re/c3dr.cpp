@@ -15,9 +15,9 @@
 // Hooked callees of other batches (re-run these keys with SIMGOLF_HOOKS_OFF so the original arm uses original callees):
 //   Part 1: Image_ctor 0x00474ae0 (C3), EditBox::ctor 0x00486070 (C3), ctorGlobalObj49c020 0x0049c020 (C3),
 //           C4837f0::ctor 0x004837f0 (C3), Surface_ctor 0x00473ab0 (C3), and what they call.
-//   Part 2: viewDispatchSlot6 0x004a1130, viewDispatchScrollBy 0x004a13c0, viewDispatchSlot29 0x004a0db0,
-//           viewDispatchSlot31 0x004a0e60, viewDispatchSlot32 0x004a0eb0, viewDispatchSlot33 0x004a0e20,
-//           viewDispatchSlot34 0x004a0e90, viewDispatchSlot39 0x004a0e40, viewDispatchSelectChanged 0x004a0c90,
+//   Part 2: viewDispatchSlot6 0x004a1130, viewDispatchScrollBy 0x004a13c0, viewDispatchOnLeftClick 0x004a0db0,
+//           viewDispatchOnLeftUp 0x004a0e60, viewDispatchOnRightClick 0x004a0eb0, viewDispatchOnRightDown 0x004a0e20,
+//           viewDispatchOnRightUp 0x004a0e90, viewDispatchOnRightDoubleClick 0x004a0e40, viewDispatchSelectChanged 0x004a0c90,
 //           viewDispatchSlot60 0x004a0ff0, viewDispatchCycleSelection 0x004a1090 (all C3, c3cu).
 //   Part 3: Random::range 0x0045c1e0 / Random::next 0x0045c1a0 and sign 0x00467150 (wobble), Buf_ctor 0x004747a0
 //           (KeyTable::ctor), Surface_ctor 0x00473ab0 (Flic::ctorBase482b60), and inside this batch
@@ -65,35 +65,35 @@ int __fastcall ViewScrollByVd_re(void* p, void*, int a, int b, int c) {
 SG_HOOK("golf_clean.exe", 0x00491970, viewDispatchScrollBy_vtordisp, ViewScrollByVd_re, ViewScrollByVd_orig);
 SG_HOOK("golf_clean.exe", 0x00491940, viewDispatchSlot6_vtordisp, ViewSlot6Vd_re, ViewSlot6Vd_orig);
 
-// 0x004919a0  viewDispatchSlot29_vtordisp: 0x004919a0 sub, 0x004919a3 jmp 0x004a0db0 (viewDispatchSlot29, ret 8).
+// 0x004919a0  viewDispatchOnLeftClick_vtordisp: 0x004919a0 sub, 0x004919a3 jmp 0x004a0db0 (viewDispatchOnLeftClick, ret 8).
 M2_t ViewSlot29Vd_orig;
 int __fastcall ViewSlot29Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<M2_t>(0x004a0db0)(vtordispThis(p), 0, a, b);
 }
 SG_HOOK("golf_clean.exe", 0x004919a0, viewDispatchSlot29_vtordisp, ViewSlot29Vd_re, ViewSlot29Vd_orig);
 
-// 0x004919c0  viewDispatchSlot31_vtordisp: 0x004919c0 sub, 0x004919c3 jmp 0x004a0e60 (viewDispatchSlot31, ret 8).
+// 0x004919c0  viewDispatchOnLeftUp_vtordisp: 0x004919c0 sub, 0x004919c3 jmp 0x004a0e60 (viewDispatchOnLeftUp, ret 8).
 M2_t ViewSlot31Vd_orig;
 int __fastcall ViewSlot31Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<M2_t>(0x004a0e60)(vtordispThis(p), 0, a, b);
 }
 SG_HOOK("golf_clean.exe", 0x004919c0, viewDispatchSlot31_vtordisp, ViewSlot31Vd_re, ViewSlot31Vd_orig);
 
-// 0x004919d0  viewDispatchSlot32_vtordisp: 0x004919d0 sub, 0x004919d3 jmp 0x004a0eb0 (viewDispatchSlot32, ret 8).
+// 0x004919d0  viewDispatchOnRightClick_vtordisp: 0x004919d0 sub, 0x004919d3 jmp 0x004a0eb0 (viewDispatchOnRightClick, ret 8).
 M2_t ViewSlot32Vd_orig;
 int __fastcall ViewSlot32Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<M2_t>(0x004a0eb0)(vtordispThis(p), 0, a, b);
 }
 SG_HOOK("golf_clean.exe", 0x004919d0, viewDispatchSlot32_vtordisp, ViewSlot32Vd_re, ViewSlot32Vd_orig);
 
-// 0x004919e0  viewDispatchSlot33_vtordisp: 0x004919e0 sub, 0x004919e3 jmp 0x004a0e20 (viewDispatchSlot33, ret 8).
+// 0x004919e0  viewDispatchOnRightDown_vtordisp: 0x004919e0 sub, 0x004919e3 jmp 0x004a0e20 (viewDispatchOnRightDown, ret 8).
 M2_t ViewSlot33Vd_orig;
 int __fastcall ViewSlot33Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<M2_t>(0x004a0e20)(vtordispThis(p), 0, a, b);
 }
 SG_HOOK("golf_clean.exe", 0x004919e0, viewDispatchSlot33_vtordisp, ViewSlot33Vd_re, ViewSlot33Vd_orig);
 
-// 0x004919f0  viewDispatchSlot34_vtordisp: 0x004919f0 sub, 0x004919f3 jmp 0x004a0e90 (viewDispatchSlot34, ret 8).
+// 0x004919f0  viewDispatchOnRightUp_vtordisp: 0x004919f0 sub, 0x004919f3 jmp 0x004a0e90 (viewDispatchOnRightUp, ret 8).
 M2_t ViewSlot34Vd_orig;
 int __fastcall ViewSlot34Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<M2_t>(0x004a0e90)(vtordispThis(p), 0, a, b);
@@ -107,7 +107,7 @@ int __fastcall ViewSelectChangedVd_re(void* p, void*, int a, int b) {
 }
 SG_HOOK("golf_clean.exe", 0x00491a10, viewDispatchSelectChanged_vtordisp, ViewSelectChangedVd_re, ViewSelectChangedVd_orig);
 
-// 0x00491a20  viewDispatchSlot39_vtordisp: 0x00491a20 sub, 0x00491a23 jmp 0x004a0e40 (viewDispatchSlot39, ret 8).
+// 0x00491a20  viewDispatchOnRightDoubleClick_vtordisp: 0x00491a20 sub, 0x00491a23 jmp 0x004a0e40 (viewDispatchOnRightDoubleClick, ret 8).
 M2_t ViewSlot39Vd_orig;
 int __fastcall ViewSlot39Vd_re(void* p, void*, int a, int b) {
     return reinterpret_cast<M2_t>(0x004a0e40)(vtordispThis(p), 0, a, b);

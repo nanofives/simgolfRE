@@ -5,8 +5,8 @@
 //
 //   screen / modal family (display object g_graphicsDevice 0x0083ad50, slots read from the instructions):
 //     showScreen 0x00483bb0 (+0x128), hideScreen 0x00483c10 (+0x12c), redrawAll 0x00483c70 (+0x134),
-//     frameTick483cd0 0x00483cd0 (+0x13c), leaveModal483d80 0x00483d80 (+0x120), modalPush483d40 0x00483d40 (+0x148),
-//     modalFocusClear483d60 0x00483d60 (+0x14c), enterModal483d30 0x00483d30, screenTick47d010 0x0047d010 (+8)
+//     doMouse 0x00483cd0 (+0x13c), leaveModal483d80 0x00483d80 (+0x120), flushKeyboard 0x00483d40 (+0x148),
+//     flushMouse 0x00483d60 (+0x14c), flushInput 0x00483d30, screenTick47d010 0x0047d010 (+8)
 //   forwarders and lifetime: freeGfxGlobal_840710 0x0049d280, Surface::ctorVtbl483b90 0x00483b90
 //
 // Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list)
@@ -44,8 +44,8 @@ void** const kDisplay = reinterpret_cast<void**>(0x0083ad50);   // g_graphicsDev
 const C0_t kServiceMovie = reinterpret_cast<C0_t>(0x0049c8e0);  // serviceMovie (C2, no hook here)
 const C0_t kGfxFlushA = reinterpret_cast<C0_t>(0x00497b00);     // gfxFlushA
 const C0_t kGfxFlushB = reinterpret_cast<C0_t>(0x00497b20);     // gfxFlushB
-const C0_t kModalPush = reinterpret_cast<C0_t>(0x00483d40);     // modalPush483d40
-const C0_t kModalFocusClear = reinterpret_cast<C0_t>(0x00483d60);  // modalFocusClear483d60
+const C0_t kModalPush = reinterpret_cast<C0_t>(0x00483d40);     // flushKeyboard
+const C0_t kModalFocusClear = reinterpret_cast<C0_t>(0x00483d60);  // flushMouse
 const This0_t kSurfaceFree = reinterpret_cast<This0_t>(0x00473ae0);   // Surface_free
 const This0_t kReleaseBacking = reinterpret_cast<This0_t>(0x004838b0);  // Surface::releaseBacking
 const This0i_t kNetServiceControl = reinterpret_cast<This0i_t>(0x0049ab40);  // netServiceControl
@@ -186,7 +186,7 @@ int __cdecl RedrawAll_re() {
 }
 C0_t RedrawAll_orig;
 
-// 0x00483cd0  frameTick483cd0: the same shape as redrawAll with display slot +0x13c (0x00483ce2 jmp [eax + 0x13c]).
+// 0x00483cd0  doMouse: the same shape as redrawAll with display slot +0x13c (0x00483ce2 jmp [eax + 0x13c]).
 int __cdecl FrameTick_re() {
     kServiceMovie();
     kGfxFlushB();
@@ -201,14 +201,14 @@ int __cdecl LeaveModal_re() {
 }
 C0_t LeaveModal_orig;
 
-// 0x00483d40  modalPush483d40: `call [eax + 0x148]` on the display (0x00483d40..0x00483d48), then jmp gfxFlushB
+// 0x00483d40  flushKeyboard: `call [eax + 0x148]` on the display (0x00483d40..0x00483d48), then jmp gfxFlushB
 // (0x00483d4e) with eax = the slot's result.
 int __cdecl ModalPush_re() {
     return flushBTail(dispCall(NEG(0x148, 0x14c)));
 }
 C0_t ModalPush_orig;
 
-// 0x00483d60  modalFocusClear483d60: `call [eax + 0x14c]` on the display (0x00483d60..0x00483d68), then
+// 0x00483d60  flushMouse: `call [eax + 0x14c]` on the display (0x00483d60..0x00483d68), then
 // [0x0083ab40] = [0x0083ab44] = 0 (xor eax, eax at 0x00483d6e; stores 0x00483d70 / 0x00483d75) and jmp gfxFlushB
 // (0x00483d7a) with eax = 0.
 int __cdecl ModalFocusClear_re() {
@@ -219,7 +219,7 @@ int __cdecl ModalFocusClear_re() {
 }
 C0_t ModalFocusClear_orig;
 
-// 0x00483d30  enterModal483d30: call modalPush483d40 (0x00483d30), call modalFocusClear483d60 (0x00483d35), then jmp
+// 0x00483d30  flushInput: call flushKeyboard (0x00483d30), call flushMouse (0x00483d35), then jmp
 // gfxFlushB (0x00483d3a) with eax = modalFocusClear's result.
 int __cdecl EnterModal_re() {
     if (!NEG_ON) kModalPush();
@@ -964,7 +964,7 @@ int __cdecl DrawCenteredText2_re(const char* text, int x, int y, int colour) {
 }
 C0_t DrawCenteredText2_orig;
 
-// 0x004049d0  drawText4049d0(text, x, y, colour): setQuad(target, colour, -1, 2, 2) (0x004049d0..0x004049e1); text NULL
+// 0x004049d0  drawTextWithColor(text, x, y, colour): setQuad(target, colour, -1, 2, 2) (0x004049d0..0x004049e1); text NULL
 // -> 2 (0x004049ea / 0x004049ec); else drawText 0x00477c30(target, text, x, y, strlen(text)) (0x004049f1..0x00404a0d).
 int __cdecl DrawText4049d0_re(const char* text, int x, int y, int colour) {
     void* t = *kTextTarget;

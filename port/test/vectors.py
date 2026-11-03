@@ -37,6 +37,7 @@ for p in (ROOT, ROOT / "re" / "tools"):
         sys.path.insert(0, str(p))
 import vector_lib as VL  # noqa: E402
 from port.test import lib as L  # noqa: E402
+from port.test import renames as RN  # noqa: E402  (roadmap S11.4: corpus names -> port names)
 
 COVERAGE_TSV = ROOT / "re" / "port" / "vectors_coverage.tsv"
 MANIFEST_TSV = ROOT / "re" / "port" / "vectors_manifest.tsv"
@@ -45,14 +46,14 @@ MIN_VECTORS = 10          # the C3 leaf discipline (>= 10 vectors)
 
 
 def vec_path(function: str) -> pathlib.Path:
-    return VL.VEC_DIR / f"{function.replace('::', '_')}.vec"
+    return VL.VEC_DIR / f"{RN.corpus_name(function).replace('::', '_')}.vec"
 
 
 def coverage_table() -> dict[str, dict]:
     if not COVERAGE_TSV.exists():
         return {}
     with COVERAGE_TSV.open(newline="") as f:
-        return {r["function"]: r for r in csv.DictReader(f, delimiter="\t")}
+        return {RN.port_name(r["function"]): r for r in csv.DictReader(f, delimiter="\t")}
 
 
 def block_bases(sizes: list[int]) -> list[int]:
@@ -262,9 +263,9 @@ class VectorRunner:
 
     def run_doc(self, doc: dict, name: str | None = None) -> FunctionResult:
         """Run every key of a .vec document (also an in-memory, e.g. corrupted, copy) against port function `name`."""
-        fn = name or doc["function"]
+        fn = name or RN.port_name(doc["function"])
         res = FunctionResult(fn, fn in self.funcs, vec_file=True, keys=len(doc["keys"]))
-        cov = self.cov.get(doc["function"], {})
+        cov = self.cov.get(RN.port_name(doc["function"]), {})
         res.coverage = cov.get("verdict", "-")
         if cov.get("distinct_results", "").isdigit():
             res.distinct_corpus = int(cov["distinct_results"])
@@ -398,6 +399,6 @@ def manifest_functions() -> list[str]:
     with MANIFEST_TSV.open(newline="") as f:
         seen = []
         for r in csv.DictReader(f, delimiter="\t"):
-            if r["function"] not in seen:
-                seen.append(r["function"])
+            if RN.port_name(r["function"]) not in seen:
+                seen.append(RN.port_name(r["function"]))
     return seen

@@ -88,10 +88,10 @@ FULL_SCREEN_MODALS = {"showCreditsScreen"}
 H1_WAIT_READS = 11
 # Drops gfx.log counts as unsupported although they draw nothing, by their reason in tick.cpp's kDrops table: playSound /
 # startSoundSlot "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty
-# function", waitTicks "wait loop (pacing)", saveCourseJpg "screenshot file", enterModal483d30 "modal stack push and focus clear of
+# function", waitTicks "wait loop (pacing)", saveCourseJpg "screenshot file", flushInput "modal stack push and focus clear of
 # the window tree". They are listed but never make a row UNSUPPORTED. Widget_readPixel has a body since roadmap S3.26.
 NOT_DRAWING = {"playSound", "startSoundSlot", "Snd::status", "capsLockOff", "emptyFunc_4a0890", "waitTicks", "saveCourseJpg",
-               "enterModal483d30"}
+               "flushInput"}
 
 # ------------------------------------------------------------------------------------------------ regions per screen kind
 # rectangles (x, y, w, h); anchors from the frame code, extents measured on the reference named in the comment

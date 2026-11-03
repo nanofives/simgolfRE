@@ -55,7 +55,7 @@ void __cdecl PostEvent_re(int id, int a, int b) {
     ref<int>(0x008392a4) = b;
 }
 
-// 0x0042f630  relaxTile42f630(x, y): lowers tile (x, y)'s signed height byte (0x00543018 + x*50 + y) to the lowest of
+// 0x0042f630  propagateMinTileLevel(x, y): lowers tile (x, y)'s signed height byte (0x00543018 + x*50 + y) to the lowest of
 // its four orthogonal neighbours that qualify, and returns 1 when it lowered it, else 0 (flag at [esp+0x14], set at
 // 0x0042f6b8, returned at 0x0042f6d0). The neighbours are directions 0, 2, 4, 6 of the direction tables (byte offsets
 // 0, 8, 16, 24 at 0x0042f668 / 0x0042f66e, loop step 8 below 0x20 at 0x0042f6c4..0x0042f6ce), visited in that order.
@@ -82,7 +82,7 @@ int __cdecl RelaxTile_re(int x, int y) {
     return lowered;
 }
 
-// 0x004011b0  freeRecordAtPos(x, y): walks the 100 records of 0x3c bytes at 0x0056d1d8 (pointer p = record + 8 runs
+// 0x004011b0  removeVipResidentAt(x, y): walks the 100 records of 0x3c bytes at 0x0056d1d8 (pointer p = record + 8 runs
 // from 0x0056d1e0 while below 0x0056e950, 0x004011b9 / 0x004011d3..0x004011db) and, for every record whose signed
 // word at +6 equals x (0x004011be / 0x004011c4) and signed word at +8 equals y (0x004011c6 / 0x004011cb), stores
 // 0xffff in the word at +0 (0x004011cd). No return value.

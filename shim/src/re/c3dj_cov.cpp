@@ -181,7 +181,7 @@ void* __fastcall CtrlObject2_ctor_re(void* self, void*) {
     return self;                                                              // 0x1001bcd2
 }
 
-// 0x0001cbf0  Ctrl5b668_ctor (VA 0x1001cbf0). The CtrlObject::ctor stores (+0x14 / +0x20 / +0x24 = -1 at 0x1001cbf5 / 0x1001cbf8 /
+// 0x0001cbf0  TrackCtrl::ctor (VA 0x1001cbf0). The CtrlObject::ctor stores (+0x14 / +0x20 / +0x24 = -1 at 0x1001cbf5 / 0x1001cbf8 /
 // 0x1001cbfb, +4 = 0x6c727463 at 0x1001cc05, the word at +0x18 = 0 at 0x1001cc0c, +0xc = 0x18 at 0x1001cc0f, +0x10 = 0x44444444
 // at 0x1001cc16) with the vtable 0x1005b668 (relocated, 0x1001cc1d), +0x2c = 0 and +0x30 = 0 (0x1001cc23 / 0x1001cc26),
 // +0x1c = 1 (0x1001cc29) and +8 = 0x34 (0x1001cc30). Returns this.
@@ -357,8 +357,8 @@ void* __fastcall MemBlockDtor_re(void* self, void*, unsigned flags) {
 }
 
 // =====================================================================================================================
-// D. The channel/voice destructor family: SubChannel_dtor, Ch5bb90_dtor, destroyMixerVoices, Mixer_dtor, Ch5be88_dtorA/B,
-//    Ch5c178_dtor, Ch5c234_dtor, Ch5c2ec_dtor, unlinkFromActiveList and their scalar-deleting wrappers
+// D. The channel/voice destructor family: SubChannel_dtor, Wave::dtor, destroyMixerVoices, Mixer_dtor, Midi::dtor/B,
+//    AviSound::dtor, VoiceRx::dtor, VoiceTx::dtor, unlinkFromActiveList and their scalar-deleting wrappers
 // =====================================================================================================================
 // Shared layout (every body reads the same fields): +0x40 a sound object released by delete_sound 0x100097d0 through the thunk
 // 0x10001a87 (cdecl, one stack argument, `push eax; call 0x10001a87; add esp, 4`); +0x44 a flag dword whose bit 1 says the object is
@@ -418,7 +418,7 @@ void __fastcall SubChannelDtor_re(void* self, void*) {
     fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002ac98
 }
 
-// 0x0002b620  Ch5bb90_dtor (VA 0x1002b620). First stage (vtable 0x1005bb90, 0x1002b63e): the buffer at +0x50 (0x1002b644) non-NULL is
+// 0x0002b620  Wave::dtor (VA 0x1002b620). First stage (vtable 0x1005bb90, 0x1002b63e): the buffer at +0x50 (0x1002b644) non-NULL is
 // released with operator delete (0x1002b652); the flag byte at +0x44 is read (0x1002b65a), +0x50 is cleared whether or not there was a
 // buffer (0x1002b65d), and bit 1 of the byte read -> the unlink block (0x1002b664-0x1002b69f). Second stage (vtable 0x1005bae0,
 // 0x1002b6a2): +0x50 is zero here, so 0x1002b6b5 is never taken; the sound object at +0x40 (0x1002b6c3) non-NULL is released with
@@ -488,7 +488,7 @@ void __fastcall MixerDtor_re(void* self, void*) {
     fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002cbc7
 }
 
-// 0x0002d560  Ch5be88_dtorA and 0x0002e660 Ch5be88_dtorB (VAs 0x1002d560 / 0x1002e660; the same body 0x1100 bytes apart, only the
+// 0x0002d560  Midi::dtor and 0x0002e660 Ch5be88_dtorB (VAs 0x1002d560 / 0x1002e660; the same body 0x1100 bytes apart, only the
 // exception-table pointer differs). Vtable 0x1005be88 (0x1002d57e). +0x50 non-NULL (0x1002d584) -> operator delete (0x1002d592);
 // +0x40 is read (0x1002d59a) and +0x50 = 0 is stored whether or not there was a buffer (0x1002d59d); a non-NULL +0x40 -> delete_sound
 // (0x1002d5a5); +0x40 = 0 (0x1002d5ad) and +0x5c = 0 (0x1002d5b0) unconditionally. Vtable 0x1005bae0 (0x1002d5b3); +0x50 and +0x40 are
@@ -511,7 +511,7 @@ void __fastcall MixerDtor_re(void* self, void*) {
 C3DJ_BE88_DTOR(Ch5be88_dtorA)
 C3DJ_BE88_DTOR(Ch5be88_dtorB)
 
-// 0x0002ea30  Ch5c178_dtor (VA 0x1002ea30). Vtable 0x1005c178 (0x1002ea4e). The object at +0x40 (0x1002ea54) non-NULL: its first
+// 0x0002ea30  AviSound::dtor (VA 0x1002ea30). Vtable 0x1005c178 (0x1002ea4e). The object at +0x40 (0x1002ea54) non-NULL: its first
 // vtable slot is CALLED with it in ecx and the argument 1 (`mov eax, [ecx]; push 1; call [eax]` 0x1002ea61-0x1002ea65: a deleting
 // destructor) and +0x40 = 0 (0x1002ea67). Vtable 0x1005bae0 (0x1002ea6a); +0x50 non-NULL (0x1002ea70) -> operator delete (0x1002ea80)
 // and +0x50 = 0 (0x1002ea88); +0x40 is zero here (the delete_sound test at 0x1002ea8e is dead); bit 1 of the byte at +0x44
@@ -532,7 +532,7 @@ void __fastcall Ch5c178Dtor_re(void* self, void*) {
     fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002eae6
 }
 
-// 0x0002ef40  Ch5c234_dtor (VA 0x1002ef40). Vtable 0x1005c234 (0x1002ef5e). The object at +0x40 (0x1002ef64) non-NULL: its first vtable
+// 0x0002ef40  VoiceRx::dtor (VA 0x1002ef40). Vtable 0x1005c234 (0x1002ef5e). The object at +0x40 (0x1002ef64) non-NULL: its first vtable
 // slot is called with it in ecx and the argument 1 (0x1002ef71-0x1002ef75) and +0x40 = 0 (0x1002ef77). +0x50 non-NULL (0x1002ef7a) ->
 // operator delete (0x1002ef82) and +0x50 = 0 (0x1002ef8a). Vtable 0x1005bae0 (0x1002ef8d); +0x50 is zero (0x1002ef93, dead 0x1002ef9e);
 // +0x40 is zero (0x1002efae, dead 0x1002efb3: the delete_sound call); bit 1 of the byte at +0x44 (0x1002efc1) -> the unlink block
@@ -551,7 +551,7 @@ void __fastcall Ch5c234Dtor_re(void* self, void*) {
     fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002f009
 }
 
-// 0x0002f3f0  Ch5c2ec_dtor (VA 0x1002f3f0). Vtable 0x1005c2ec (0x1002f40e). +0x40 (0x1002f414) non-NULL -> delete_sound (0x1002f422);
+// 0x0002f3f0  VoiceTx::dtor (VA 0x1002f3f0). Vtable 0x1005c2ec (0x1002f40e). +0x40 (0x1002f414) non-NULL -> delete_sound (0x1002f422);
 // +0x50 is read (0x1002f42a) and +0x40 = 0 is stored whether or not there was a sound object (0x1002f42d); +0x50 non-NULL ->
 // operator delete (0x1002f435) and +0x50 = 0 (0x1002f43d). Vtable 0x1005bae0 (0x1002f440); +0x50 and +0x40 are zero (0x1002f446 /
 // 0x1002f461: the tests at 0x1002f451 / 0x1002f464 are dead); bit 1 of the byte at +0x44 (0x1002f474) -> the unlink block
@@ -570,14 +570,14 @@ void __fastcall Ch5c2ecDtor_re(void* self, void*) {
 
 // The 30-byte scalar-deleting wrappers of this family (see the C3DJ_SCALAR comment above): thunk -> destructor body.
 C3DJ_SCALAR(SubChannel_scalarDtor, 0x00001eb5)           // 0x1002abd3: thunk 0x10001eb5 -> SubChannel_dtor 0x1002ac00
-C3DJ_SCALAR(Ch5bb90_scalarDtor, 0x00002108)              // 0x1002b5f3: thunk 0x10002108 -> Ch5bb90_dtor 0x1002b620
+C3DJ_SCALAR(Ch5bb90_scalarDtor, 0x00002108)              // 0x1002b5f3: thunk 0x10002108 -> Wave::dtor 0x1002b620
 C3DJ_SCALAR(MixerVoiceArray_scalarDtor, 0x00001f1e)      // 0x1002c5b3: thunk 0x10001f1e -> destroyMixerVoices 0x1002c5e0
 C3DJ_SCALAR(Mixer_scalarDtor, 0x00001e92)                // 0x1002cad3: thunk 0x10001e92 -> Mixer_dtor 0x1002cb00
-C3DJ_SCALAR(Ch5be88_scalarDtorA, 0x00001cc1)             // 0x1002d533: thunk 0x10001cc1 -> Ch5be88_dtorA 0x1002d560
+C3DJ_SCALAR(Ch5be88_scalarDtorA, 0x00001cc1)             // 0x1002d533: thunk 0x10001cc1 -> Midi::dtor 0x1002d560
 C3DJ_SCALAR(Ch5be88_scalarDtorB, 0x00001c94)             // 0x1002e633: thunk 0x10001c94 -> Ch5be88_dtorB 0x1002e660
-C3DJ_SCALAR(Ch5c178_scalarDtor, 0x00001a78)              // 0x1002ea03: thunk 0x10001a78 -> Ch5c178_dtor 0x1002ea30
-C3DJ_SCALAR(Ch5c234_scalarDtor, 0x00001cc6)              // 0x1002ef13: thunk 0x10001cc6 -> Ch5c234_dtor 0x1002ef40
-C3DJ_SCALAR(Ch5c2ec_scalarDtor, 0x00002612)              // 0x1002f3c3: thunk 0x10002612 -> Ch5c2ec_dtor 0x1002f3f0
+C3DJ_SCALAR(Ch5c178_scalarDtor, 0x00001a78)              // 0x1002ea03: thunk 0x10001a78 -> AviSound::dtor 0x1002ea30
+C3DJ_SCALAR(Ch5c234_scalarDtor, 0x00001cc6)              // 0x1002ef13: thunk 0x10001cc6 -> VoiceRx::dtor 0x1002ef40
+C3DJ_SCALAR(Ch5c2ec_scalarDtor, 0x00002612)              // 0x1002f3c3: thunk 0x10002612 -> VoiceTx::dtor 0x1002f3f0
 
 // =====================================================================================================================
 // E. DsBuffer / Ds3DBuffer: thin methods over the COM-shaped interfaces they hold (+0x60 the buffer, +0x64 the 3D buffer,
@@ -1259,8 +1259,8 @@ C3DJ_SCALAR(MidiDevice_scalarDtor, 0x000019e2)           // 0x10009c83: thunk 0x
 // =====================================================================================================================
 // L. Constructors of the channel / voice / device-base objects
 // =====================================================================================================================
-// The channel constructors SubChannel_ctor 0x0002b4e0, Ch5bb90_ctor 0x0002c490, Mixer_ctor 0x0002c9f0, Ch5be88_ctor 0x0002d450 and
-// Ch5c178_ctor 0x0002e930 (VAs 0x1002b4e0 / 0x1002c490 / 0x1002c9f0 / 0x1002d450 / 0x1002e930) open with the same base initialisation (the
+// The channel constructors SubChannel_ctor 0x0002b4e0, MpegStream::ctor 0x0002c490, Mixer_ctor 0x0002c9f0, Midi::ctor 0x0002d450 and
+// AviSound::ctor 0x0002e930 (VAs 0x1002b4e0 / 0x1002c490 / 0x1002c9f0 / 0x1002d450 / 0x1002e930) open with the same base initialisation (the
 // addresses below are SubChannel_ctor's; the others are the same instructions): +4 = 0x7f (0x1002b507), +8 = 0 (0x1002b50e), the nine dwords
 // +0xc..+0x2f cleared by `rep stosd` (ecx = 9, eax = 0, edi = this+0xc: 0x1002b4fd-0x1002b511), +0x30 = 0 (0x1002b517), the transient vtable
 // 0x1005bae0 (0x1002b51c), +0x48, +0x4c, +0x40 and +0x50 = 0 (0x1002b522-0x1002b52b), +0x44 = 0 stored twice (0x1002b531 / 0x1002b534, the
@@ -1303,7 +1303,7 @@ void* __fastcall SubChannelCtor_re(void* self, void*) {
     return self;                                                               // 0x1002b58e
 }
 
-// 0x0002c490  Ch5bb90_ctor (VA 0x1002c490): the same instructions as SubChannel_ctor up to Sound_setSourceType(1) (0x1002c4b2-0x1002c51e), then
+// 0x0002c490  MpegStream::ctor (VA 0x1002c490): the same instructions as SubChannel_ctor up to Sound_setSourceType(1) (0x1002c4b2-0x1002c51e), then
 // +0x6c.. cleared by `rep stosd` over 0x28 dwords (ecx = 0x28, edi = this+0x6c: 0x1002c523-0x1002c54a), +0x5c = 0 (0x1002c52d), +0x60 = 0x3f800000
 // (0x1002c530), +0x3c = 0x10 (0x1002c537), +0x64 and +0x68 = 0 (0x1002c53e / 0x1002c541), the vtable 0x1005bcb4 (0x1002c544) and +0x10c = 0
 // (0x1002c550). Returns this (0x1002c556).
@@ -1341,7 +1341,7 @@ void* __fastcall MixerCtor_re(void* self, void*) {
     return self;                                                               // 0x1002ca85
 }
 
-// 0x0002d450  Ch5be88_ctor (VA 0x1002d450): the base initialisation, then +0x54 = 0 (0x1002d4c3), the vtable 0x1005be88 (0x1002d4c6), the BYTE at
+// 0x0002d450  Midi::ctor (VA 0x1002d450): the base initialisation, then +0x54 = 0 (0x1002d4c3), the vtable 0x1005be88 (0x1002d4c6), the BYTE at
 // +0x58 = 0 (0x1002d4cc) and then 1 (`or cl, 1` 0x1002d4d7, byte store 0x1002d4dc: the upper three bytes of that dword are not touched), +0x5c = 0
 // (0x1002d4d4), bit 3 of the low byte of +0x44 set (`or al, 8` 0x1002d4da, dword store 0x1002d4e3). Returns this (0x1002d4e6).
 Th0p_t Ch5be88Ctor_orig;
@@ -1359,7 +1359,7 @@ void* __fastcall Ch5be88Ctor_re(void* self, void*) {
     return self;                                                               // 0x1002d4e6
 }
 
-// 0x0002e930  Ch5c178_ctor (VA 0x1002e930): the base initialisation, then +0x54 = 0 (0x1002e9a7), the vtable 0x1005c178 (0x1002e9aa) and
+// 0x0002e930  AviSound::ctor (VA 0x1002e930): the base initialisation, then +0x54 = 0 (0x1002e9a7), the vtable 0x1005c178 (0x1002e9aa) and
 // Sound_setSourceType (call at 0x1002e9b0) with the argument 4 (push at 0x1002e9a3). Returns this (0x1002e9b9).
 Th0p_t Ch5c178Ctor_orig;
 void* __fastcall Ch5c178Ctor_re(void* self, void*) {
@@ -1371,7 +1371,7 @@ void* __fastcall Ch5c178Ctor_re(void* self, void*) {
     return self;                                                               // 0x1002e9b9
 }
 
-// 0x0002f740  Ch5c3a4_ctor (VA 0x1002f740): Mixer_ctor 0x1002c9f0 (thunk 0x1000183e, call at 0x1002f75d) on this, then the vtable 0x1005c3a4
+// 0x0002f740  dllSoundList::ctor (VA 0x1002f740): Mixer_ctor 0x1002c9f0 (thunk 0x1000183e, call at 0x1002f75d) on this, then the vtable 0x1005c3a4
 // (0x1002f76c), +0xf8, +0xfc, +0x100 and +0x104 = 0 (0x1002f772-0x1002f784), +0x108 = 0x7f (0x1002f78a) and Sound_setSourceType (call at
 // 0x1002f794) with the argument 8 (push at 0x1002f764). Returns this (0x1002f79d).
 Th0p_t Ch5c3a4Ctor_orig;
@@ -1388,7 +1388,7 @@ void* __fastcall Ch5c3a4Ctor_re(void* self, void*) {
     return self;                                                               // 0x1002f79d
 }
 
-// 0x0001bd90  Ctrl5b5c0_ctor (VA 0x1001bd90): +0xc, +0x10, +0x14 and +0x18 = 0 (0x1001bd9a-0x1001bda3), +4 = 0x18 (0x1001bda9), +8 = 0x44444444 (0x1001bdb0),
+// 0x0001bd90  NoteMap::ctor_1001bd90 (VA 0x1001bd90): +0xc, +0x10, +0x14 and +0x18 = 0 (0x1001bd9a-0x1001bda3), +4 = 0x18 (0x1001bda9), +8 = 0x44444444 (0x1001bdb0),
 // +0x28 = 0 (0x1001bdb3), +0x1c = 0xc (0x1001bdb6), +0x20 = 0x44444444 (0x1001bdbd), +0x40, +0x4c and +0x50 = -1 (0x1001bdc0-0x1001bdc6), the WORD at
 // +0x44 = 0 (0x1001bdda), the tag 0x6c727463 at +0x30 (0x1001bdd3), +0x38 = 0x18 (0x1001bddd), +0x3c = 0x44444444 (0x1001bde4), the vtables 0x1005b5c0
 // at +0 (0x1001bde7) and 0x1005b59c at +0x2c (0x1001bded; 0x1005b19c stored there first, 0x1001bdcc); the 0x80 bytes at +0x5c become 0, 1, 2 .. 0x7f
@@ -1511,7 +1511,7 @@ SG_HOOK("sound.dll", 0x00008890, CommandQueue_clear, CmdClear_re, CmdClear_orig)
 SG_HOOK("sound.dll", 0x0001bc50, CtrlObject_ctor, CtrlObject_ctor_re, CtrlObject_ctor_orig);
 // 0x0001bca0  CtrlObject2_ctor
 SG_HOOK("sound.dll", 0x0001bca0, CtrlObject2_ctor, CtrlObject2_ctor_re, CtrlObject2_ctor_orig);
-// 0x0001cbf0  Ctrl5b668_ctor
+// 0x0001cbf0  TrackCtrl::ctor
 SG_HOOK("sound.dll", 0x0001cbf0, Ctrl5b668_ctor, Ctrl5b668_ctor_re, Ctrl5b668_ctor_orig);
 // 0x0001caf0  CtrlObject3_ctor
 SG_HOOK("sound.dll", 0x0001caf0, CtrlObject3_ctor, CtrlObject3_ctor_re, CtrlObject3_ctor_orig);
@@ -1551,21 +1551,21 @@ SG_HOOK("sound.dll", 0x00038ae0, MemBlock_deleteDtor, MemBlockDtor_re, MemBlockD
 SG_HOOK("sound.dll", 0x0002b090, unlinkFromActiveList, UnlinkActive_re, UnlinkActive_orig);
 // 0x0002ac00  SubChannel_dtor
 SG_HOOK("sound.dll", 0x0002ac00, SubChannel_dtor, SubChannelDtor_re, SubChannelDtor_orig);
-// 0x0002b620  Ch5bb90_dtor
+// 0x0002b620  Wave::dtor
 SG_HOOK("sound.dll", 0x0002b620, Ch5bb90_dtor, Ch5bb90Dtor_re, Ch5bb90Dtor_orig);
 // 0x0002c5e0  destroyMixerVoices
 SG_HOOK("sound.dll", 0x0002c5e0, destroyMixerVoices, MixerVoicesDtor_re, MixerVoicesDtor_orig);
 // 0x0002cb00  Mixer_dtor
 SG_HOOK("sound.dll", 0x0002cb00, Mixer_dtor, MixerDtor_re, MixerDtor_orig);
-// 0x0002d560  Ch5be88_dtorA
+// 0x0002d560  Midi::dtor
 SG_HOOK("sound.dll", 0x0002d560, Ch5be88_dtorA, Ch5be88_dtorA_re, Ch5be88_dtorA_orig);
 // 0x0002e660  Ch5be88_dtorB
 SG_HOOK("sound.dll", 0x0002e660, Ch5be88_dtorB, Ch5be88_dtorB_re, Ch5be88_dtorB_orig);
-// 0x0002ea30  Ch5c178_dtor
+// 0x0002ea30  AviSound::dtor
 SG_HOOK("sound.dll", 0x0002ea30, Ch5c178_dtor, Ch5c178Dtor_re, Ch5c178Dtor_orig);
-// 0x0002ef40  Ch5c234_dtor
+// 0x0002ef40  VoiceRx::dtor
 SG_HOOK("sound.dll", 0x0002ef40, Ch5c234_dtor, Ch5c234Dtor_re, Ch5c234Dtor_orig);
-// 0x0002f3f0  Ch5c2ec_dtor
+// 0x0002f3f0  VoiceTx::dtor
 SG_HOOK("sound.dll", 0x0002f3f0, Ch5c2ec_dtor, Ch5c2ecDtor_re, Ch5c2ecDtor_orig);
 // 0x0002abd0  SubChannel_scalarDtor
 SG_HOOK("sound.dll", 0x0002abd0, SubChannel_scalarDtor, SubChannel_scalarDtor_re, SubChannel_scalarDtor_orig);
@@ -1667,17 +1667,17 @@ SG_HOOK("sound.dll", 0x00029140, VoiceBase_scalarDtor, VoiceBase_scalarDtor2_re,
 SG_HOOK("sound.dll", 0x00009c80, Midi_Device_scalarDeletingDtor, MidiDevice_scalarDtor_re, MidiDevice_scalarDtor_orig);
 // 0x0002b4e0  SubChannel_ctor
 SG_HOOK("sound.dll", 0x0002b4e0, SubChannel_ctor, SubChannelCtor_re, SubChannelCtor_orig);
-// 0x0002c490  Ch5bb90_ctor
+// 0x0002c490  MpegStream::ctor
 SG_HOOK("sound.dll", 0x0002c490, Ch5bb90_ctor, Ch5bb90Ctor_re, Ch5bb90Ctor_orig);
 // 0x0002c9f0  Mixer_ctor
 SG_HOOK("sound.dll", 0x0002c9f0, Mixer_ctor, MixerCtor_re, MixerCtor_orig);
-// 0x0002d450  Ch5be88_ctor
+// 0x0002d450  Midi::ctor
 SG_HOOK("sound.dll", 0x0002d450, Ch5be88_ctor, Ch5be88Ctor_re, Ch5be88Ctor_orig);
-// 0x0002e930  Ch5c178_ctor
+// 0x0002e930  AviSound::ctor
 SG_HOOK("sound.dll", 0x0002e930, Ch5c178_ctor, Ch5c178Ctor_re, Ch5c178Ctor_orig);
-// 0x0002f740  Ch5c3a4_ctor
+// 0x0002f740  dllSoundList::ctor
 SG_HOOK("sound.dll", 0x0002f740, Ch5c3a4_ctor, Ch5c3a4Ctor_re, Ch5c3a4Ctor_orig);
-// 0x0001bd90  Ctrl5b5c0_ctor
+// 0x0001bd90  NoteMap::ctor_1001bd90
 SG_HOOK("sound.dll", 0x0001bd90, Ctrl5b5c0_ctor, Ctrl5b5c0Ctor_re, Ctrl5b5c0Ctor_orig);
 // 0x00029e70  MidiDeviceBase_ctor
 SG_HOOK("sound.dll", 0x00029e70, MidiDeviceBase_ctor, MidiBaseCtor_re, MidiBaseCtor_orig);

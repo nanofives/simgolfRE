@@ -50,7 +50,7 @@
 //   10 Image_draw ignores its mask (the sprite's own palette word)
 //   11 the composeGolferSprite body composes nothing
 //   12 the addSprite body draws nothing
-//   13 an entry past the golfer table (palette flags & 0x1ff >= 0x19c: placeAnimal's standing figure) draws nothing
+//   13 an entry past the golfer table (palette flags & 0x1ff >= 0x19c: updateVipResident's standing figure) draws nothing
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif

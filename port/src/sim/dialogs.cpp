@@ -135,7 +135,7 @@ void draw_log(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
   std::string &s = it->second.second;
   s += name;
   for (uint32_t v : a) s += " " + std::to_string(v);
-  static const char *const kText[] = {"drawCenteredText", "drawCenteredText2", "drawText4049d0", "drawTextSurface"};
+  static const char *const kText[] = {"drawCenteredText", "drawCenteredText2", "drawTextWithColor", "drawTextSurface"};
   for (const char *k : kText)
     if (std::strcmp(name, k) == 0 && a.size() > 0) {
       s += "|";
@@ -161,7 +161,7 @@ struct SkDraw {
   }
   void stretch(uint32_t s, uint32_t mask, int32_t x, int32_t y) const { gx("Surface_stretchBlit", {s, mask, root, u32(x), u32(y), 0}); }
   void scaled(uint32_t s, int32_t x, int32_t y) const { gx("Surface_drawScaled", {s, root, u32(x), u32(y), 1, 1, 1, 0}); }
-  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawText4049d0", {t, u32(x), u32(y), c}); }
+  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawTextWithColor", {t, u32(x), u32(y), c}); }
   void centred2(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText2", {t, u32(x), u32(y), c}); }
 };
 
@@ -991,7 +991,7 @@ int32_t scroll_text_window(Ctx &ctx, uint32_t text, int32_t x, int32_t y) {
 
 // ------------------------------------------------------------------------------------------------ showBulletinBoard
 namespace {
-// pumpInput483bd0 as a modal wait: the display's showScreen loop dispatches what has arrived (Blocking: the board waits
+// doAllTasks as a modal wait: the display's showScreen loop dispatches what has arrived (Blocking: the board waits
 // for a click or a key); its input-phase word ends 0
 void pump_input_blocking(Ctx &ctx, const char *where) {
   ctx.gs().g_inputPhase = 0x3f;
@@ -1010,7 +1010,7 @@ void pump_input_blocking(Ctx &ctx, const char *where) {
 // position cleared. The board waits until g_bulletinAnimTick reaches 0x14. Then, for the dated event records in date
 // order, the line text (appendCourseTitle and appendDate with g_date / g_courseIndex set from the record and put back
 // after it: appendDate leaves g_year at the event's year; the month through __itoa into g_scoreSummaryBuf) and the photo
-// file name (__itoa of the record index; the photo is drawing); the board waits for a click or a key (pumpInput483bd0);
+// file name (__itoa of the record index; the photo is drawing); the board waits for a click or a key (doAllTasks);
 // then the button word is cleared and, with a skill award (mask word != 0) and a real photo (index != 0x63), the award
 // text is laid out (scrollTextWindow with the no-wait flag set), the scratch golfer record 156's type and status words
 // are set and skillPointDialog(golfer type 0's name, mask, 3, 156, 0xc8) stores its result in the mask word. The photo
@@ -1083,7 +1083,7 @@ void show_bulletin_board(Ctx &ctx) {
     gs.g_date = saved_date;
     const int32_t draw_x = ((drawn & 1) != 0 ? 0x203 : 0) + 0x14 + draw_xoff % 0x32;
     draw.gx("showBulletinBoard.event", {u32(draw_x), u32(draw_y)});
-    draw.gx("drawText4049d0", {tb, u32(draw_x), u32(draw_y), 0x80002108u});
+    draw.gx("drawTextWithColor", {tb, u32(draw_x), u32(draw_y), 0x80002108u});
     cpy(ctx, tb, GS(f_strpool_4e3e7c));   // the photo's file name (loadBmpSurface: drawing)
     cat(ctx, tb, itoa10(ctx, e, numbuf));
     cat(ctx, tb, GS(f_strpool_4c4970) + 0x4d0);

@@ -1,0 +1,4 @@
+ssssssssssssssssssssssssss.........                                      [100%]
+=========================== short test summary info ===========================
+SKIPPED [26] port\test\test_browser.py:271: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn
+9 passed, 26 skipped in 24.00s

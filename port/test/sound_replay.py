@@ -206,7 +206,7 @@ NEGCTL_MODES = {
     # S4.3: one `fstp dword` spill kept as a double (3 functions; the drivers' keys judge them through --callee, U-1425)
     **{f: (2,) for f in ("codecHighPassFilter", "lpcSynthesize", "codecRemoveMean")},
     "Seq_setTempo": (2,),                      # S4.5: plain doubles (RED at 0x0f7f)
-    "Sound5b6a8_ctor": (2,),                   # S4.7: plain doubles (BLIND at acceptance, U-1461)
+    "Seq::ctor_1001f4a0": (2,),                   # S4.7: plain doubles (BLIND at acceptance, U-1461)
     # S4.9: import-level controls judged by sinklog (wrong mmioClose flags; waveInReset skipped)
     "closeMmioHandle": (2,), "WaveInDevice_reset": (2,),
     "loadSoundFile": tuple(range(2, 11)),      # S4.9b: modes 2..10 (audio_soundfile.cpp kNeg*)

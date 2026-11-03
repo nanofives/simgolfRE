@@ -125,10 +125,33 @@ def write_vec(path: pathlib.Path, doc: dict) -> None:
     tmp.replace(path)
 
 
+def _corpus_symbols() -> dict:
+    """GameState symbols renamed after the corpus was recorded (roadmap S11.4, re/port/corpus_aliases.tsv): old -> new."""
+    p = ROOT / "re" / "port" / "corpus_aliases.tsv"
+    if not p.exists():
+        return {}
+    rows = [l.split("\t") for l in p.read_text(encoding="utf-8").splitlines()[1:] if l]
+    return {r[3]: r[4] for r in rows if r[0] == "global"}
+
+
+def _rename_syms(o, m: dict):
+    if isinstance(o, dict):
+        if isinstance(o.get("sym"), str) and o["sym"] in m:
+            o["sym"] = m[o["sym"]]
+        for v in o.values():
+            _rename_syms(v, m)
+    elif isinstance(o, list):
+        for v in o:
+            _rename_syms(v, m)
+
+
 def read_vec(path: pathlib.Path) -> dict:
     with gzip.open(path, "rb") as f:
         doc = json.loads(f.read())
     validate_doc(doc)
+    m = _corpus_symbols()
+    if m:
+        _rename_syms(doc, m)
     return doc
 
 

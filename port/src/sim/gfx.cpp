@@ -18,7 +18,7 @@
 //   4 Window::refreshFull does not copy the root surface into the back buffer
 //   5 Surface_stretchBlit (blitPair1) ignores the mask's blend bytes (every pixel the colour sprite's word)
 //   6 drawG16's shade byte 0xf8 drawn as a palette colour instead of shading the destination through the table
-//   7 drawCenteredText / drawText4049d0 leave the target's Widget_setQuad words alone (roadmap S2.10, U-1293)
+//   7 drawCenteredText / drawTextWithColor leave the target's Widget_setQuad words alone (roadmap S2.10, U-1293)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -412,7 +412,7 @@ static void b_set_draw_target(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // SetTextColor from a direct colour word (bit 31: r = (c >> 7) & 0xf8, g = (c >> 2) & 0xf8, b = (c << 3) & 0xff) and TextOutA
 // per tab-separated run with '_' drawn as a space. drawCenteredText(text, x, y, colour) (c3dq.cpp): setQuad(Root, colour, -1,
 // 2, 2), then drawCentered2(Root, text, x, y, 0, strlen) (c3df.cpp): x + (0 - width) / 2 with width = drawMarkupRun's (one
-// measure of the whole text in the base font when the text holds no markup token). drawText4049d0(text, x, y, colour)
+// measure of the whole text in the base font when the text holds no markup token). drawTextWithColor(text, x, y, colour)
 // (c3dq.cpp): the same setQuad, then drawText (c3ek.cpp: no font or a font whose +4 is 0 draws nothing) -> drawRichText at x.
 // Modelled: text without a markup or tab character, a direct colour, no shadow (setQuad's -1).
 void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x0, int32_t y0, uint32_t colour, bool centre,
@@ -469,7 +469,7 @@ static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   set_quad_root(g, ctx, a[3], 0xffffffffu, 2, 2);
-  draw_text(g, ctx, a, false, "drawText4049d0");
+  draw_text(g, ctx, a, false, "drawTextWithColor");
 }
 
 // drawPanelBackdrop(x, y) (c3dw.cpp DrawPanelBackdrop_re): setDrawTarget(Root, g_fontRef_519fd8, 0, 0, 0); w = 3 * strlen of
@@ -771,7 +771,7 @@ static int32_t widget_value(Gfx &g, Ctx &ctx) {
 // drawMessageBuffer(cols, x, y, colour) (c3dv.cpp DrawValueWidget_re) over the text buffer: per character the width of that
 // one character (Text_put of " " with its first byte replaced) accumulates; ' ', newline and '^' mark the break; a newline or
 // '^', or a width above cols * 8, draws the line from its start to the break (drawTextSurface when the line height H =
-// Widget_value - 4, at least 10, is above 16 and the colour is white, else drawText4049d0), y += H, and the scan resumes
+// Widget_value - 4, at least 10, is above 16 and the colour is white, else drawTextWithColor), y += H, and the scan resumes
 // after the break; y > 0x248 stops. A pending line is drawn at the end. drawTextSurface's shadow (setQuad's 1, 0, 1: palette
 // colour 1 one pixel down) is the run palette's entry 1 as prim_text2 measured it (U-1230; U-1072 before roadmap S2.11).
 void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
@@ -835,7 +835,7 @@ const GfxBodyDef kBodies[] = {
     {"showTitleScreen", b_show_title_screen},     {"loadImage", b_load_image},
     {"Surface_blit", b_surface_blit},             {"Surface_blit3", b_surface_blit3},
     {"Image_draw", b_image_draw},                 {"setDrawTarget", b_set_draw_target},
-    {"drawCenteredText", b_draw_centered_text},   {"drawText4049d0", b_draw_text_4049d0},
+    {"drawCenteredText", b_draw_centered_text},   {"drawTextWithColor", b_draw_text_4049d0},
     {"Window::refreshFull", b_refresh_full},      {"Surface_fillRegion", b_fill_region},
     {"Surface_stretchBlit", b_stretch_blit},      {"courseActionMenu.setup", b_cam_setup},
     {"drawPanelBackdrop", b_panel_backdrop},
@@ -844,10 +844,10 @@ const GfxBodyDef kBodies[] = {
 // Drops that draw nothing (pacing, audio, input, files, the window tree's modal stack): not reported as unsupported drawing.
 // Each one's reason in tick.cpp's kDrops table says it does not draw: waitTicks "wait loop (pacing)", startSoundSlot / playSound
 // "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty function",
-// saveCourseJpg "screenshot file", enterModal483d30 "modal stack push and focus clear of the window tree" (port/test/framegate.py
+// saveCourseJpg "screenshot file", flushInput "modal stack push and focus clear of the window tree" (port/test/framegate.py
 // NOT_DRAWING holds the same names). Widget_readPixel has a body since roadmap S3.26 (gfx_pixel.cpp: it hands the pixel back).
 const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot", "playSound",     "Snd::status",     "capsLockOff",
-                                   "emptyFunc_4a0890", "saveCourseJpg", "enterModal483d30"};
+                                   "emptyFunc_4a0890", "saveCourseJpg", "flushInput"};
 
 }  // namespace gfxb
 

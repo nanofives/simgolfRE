@@ -1,0 +1,4 @@
+id	addr	module	status	text
+U-2040		all	open	No module has a TLS directory (pefile DIRECTORY_ENTRY_TLS absent in golf_clean.exe, jgld.dll, sound.dll, Terrain.dll), so the TLS-callback loop of _loader_entries runs on no real input; the entry-point half is judged on the four real entries, the TLS half only by reading the code. A synthetic TLS PE would judge it.
+U-2041		all	open	The export check now refuses a function whose ranges contain an export address; no open C2 row changed by it (5_rerun.log), so it is untested on real data. Export-only entries inside a function but not at its start do not occur in the four modules' tables.
+U-2042		all	open	Other loader-called code (DllMain via the entry point only; resource/COM callbacks, exports forwarded by ordinal from outside) is not covered; the byte scan still misses calls through registered window procedures stored at runtime.

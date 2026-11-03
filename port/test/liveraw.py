@@ -32,6 +32,7 @@ import vector_capture as VC  # noqa: E402
 import vector_lib as VL  # noqa: E402
 from port.test import lib as L  # noqa: E402
 from port.test.vectors import exe_sections  # noqa: E402
+from port.test import renames as RN  # noqa: E402
 
 RAW_DIR = VL.VEC_DIR / "raw"
 STRICT_CLASSES = ("sim", "hidden")      # a live change here the port did not make is a failure, not noise
@@ -213,6 +214,7 @@ def keys_of(function: str) -> list[str]:
     if not RAW_DIR.exists():
         return []
     out = []
+    function = RN.corpus_name(function)
     for p in sorted(RAW_DIR.glob(f"{function}*.raw.gz")):
         stem = p.name[:-len(".raw.gz")]
         if stem == function or stem.startswith(function + "_") or stem.startswith(function + "+"):

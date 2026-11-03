@@ -10,7 +10,7 @@
 //
 // Negative controls (sg_negctl_set(<name>, mode)): mode 1 of every function is a wrong result: the value it returns is changed
 // (`neg_u32`) or, for a function that returns nothing, the dword at the field the adapter names is changed after the body
-// (`neg_mem`). Mode 2 of Sound5b6a8_ctor is the classic wrong x87 port (plain double arithmetic, control word ignored).
+// (`neg_mem`). Mode 2 of Seq::ctor_1001f4a0 is the classic wrong x87 port (plain double arithmetic, control word ignored).
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -511,7 +511,7 @@ int32_t create_sound_body(Ctx &ctx, u32 out, u32 name, uint32_t type) {
         if (!ld<uint32_t>(ctx, snd_obj(ctx, &SoundState::g_midiDevice).va())) return 3;  // 0x94d5-0x94de
         {
             u32 o = snd_new(ctx, 0x948);  // 0x94f3-0x94f8
-            if (o) snd_call(ctx, 0x00002513, SndAbi::Thiscall, {o});  // 0x9510-0x9512 Sound5b6a8_ctor
+            if (o) snd_call(ctx, 0x00002513, SndAbi::Thiscall, {o});  // 0x9510-0x9512 Seq::ctor_1001f4a0
             st<u32>(ctx, out, o);  // 0x952a
             snd_call(ctx, 0x0000105f, SndAbi::Thiscall, {o, name});  // 0x952c Sound_assignName
             return 0;  // 0x9531
@@ -533,7 +533,7 @@ int32_t create_sound_body(Ctx &ctx, u32 out, u32 name, uint32_t type) {
         }
     case 5: {  // 0x95e1 Sound5c450, 0xe8
         u32 o = snd_new(ctx, 0xe8);  // 0x95e1-0x95e6
-        if (o) snd_call(ctx, 0x000018c5, SndAbi::Thiscall, {o});  // 0x9604 Sound5c450_ctor
+        if (o) snd_call(ctx, 0x000018c5, SndAbi::Thiscall, {o});  // 0x9604 CVoiceRxMgr::ctor
         st<u32>(ctx, out, o);  // 0x960d
         return 0;  // 0x960f
     }
@@ -545,7 +545,7 @@ int32_t create_sound_body(Ctx &ctx, u32 out, u32 name, uint32_t type) {
     }
     case 7: {  // 0x9675 Ch5c3a4, 0x10c
         u32 o = snd_new(ctx, 0x10c);  // 0x9675-0x967a
-        if (o) snd_call(ctx, 0x0000237e, SndAbi::Thiscall, {o});  // 0x9694 Ch5c3a4_ctor
+        if (o) snd_call(ctx, 0x0000237e, SndAbi::Thiscall, {o});  // 0x9694 dllSoundList::ctor
         st<u32>(ctx, out, o);  // 0x969d
         return 0;  // 0x969f
     }
@@ -659,9 +659,9 @@ uint32_t Sound_setAltName_body(Ctx &ctx, u32 self, u32 name) {
 int g_negctl_Sound_setAltName = 0;
 void a_Sound_setAltName(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Sound_setAltName), Sound_setAltName_body(ctx, a[0], a[1]))); }
 
-// ---- Sound5b6a8_ctor (rva 0x1f4a0): converted from c3fh.cpp Snd5b6a8Ctor_re
+// ---- Seq::ctor_1001f4a0 (rva 0x1f4a0): converted from c3fh.cpp Snd5b6a8Ctor_re
 // the tempo seed of Seq_setTempo with tempo 0x78 on the fresh fields: x87 arithmetic under the caller's control word (port/CORE.md section 7)
-uint32_t Sound5b6a8_ctor_body(Ctx &ctx, u32 self) {
+uint32_t Seq_ctor_1001f4a0_body(Ctx &ctx, u32 self) {
     snd_call(ctx, 0x000015f5, SndAbi::Thiscall, {self});  // 0x1f4c1
     snd_call(ctx, 0x00001b1d, SndAbi::Thiscall, {self + 0x60});  // 0x1f4c8 / 0x1f4cf
     for (int off = 0x218; off <= 0x234; off += 4) st<uint32_t>(ctx, self + off, 0);  // 0x1f4d4-0x1f4fe
@@ -706,10 +706,10 @@ uint32_t Sound5b6a8_ctor_body(Ctx &ctx, u32 self) {
     x_st(ctx, self + 0x720, r);  // 0x1f637
     return self;
 }
-int g_negctl_Sound5b6a8_ctor = 0;
-void a_Sound5b6a8_ctor(Ctx &ctx, const uint32_t *a, Ret &r) {
-  PlainDoubles plain(NEG(Sound5b6a8_ctor) == 2);
-  r.set_u32(neg_u32(NEG(Sound5b6a8_ctor), Sound5b6a8_ctor_body(ctx, a[0]))); }
+int g_negctl_Seq_ctor_1001f4a0 = 0;
+void a_Seq_ctor_1001f4a0(Ctx &ctx, const uint32_t *a, Ret &r) {
+  PlainDoubles plain(NEG(Seq_ctor_1001f4a0) == 2);
+  r.set_u32(neg_u32(NEG(Seq_ctor_1001f4a0), Seq_ctor_1001f4a0_body(ctx, a[0]))); }
 
 // ---- Sound5b6a8_scalarDtor (rva 0x1f6c0): converted from c3dt.cpp S5b6a8Del_re
 uint32_t Sound5b6a8_scalarDtor_body(Ctx &ctx, u32 self, uint32_t flags) {
@@ -720,7 +720,7 @@ return self;
 int g_negctl_Sound5b6a8_scalarDtor = 0;
 void a_Sound5b6a8_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Sound5b6a8_scalarDtor), Sound5b6a8_scalarDtor_body(ctx, a[0], a[1]))); }
 
-// ---- Sound5b6a8_dtor (rva 0x1ff50): converted from c3fk.cpp S5b6a8Dtor_re
+// ---- Seq::dtor (rva 0x1ff50): converted from c3fk.cpp S5b6a8Dtor_re
 // Node {+0 previous, +4 next, +8 payload}; a list header {head, tail, cursor, count} at a fixed offset. Pop the head node:
 // the successor's +0 = 0 and it becomes the head; with no successor tail and head become 0. Returns the node (not freed).
 u32 c3fk_popHead(Ctx &ctx, u32 head, u32 tail) {
@@ -735,7 +735,7 @@ u32 c3fk_popHead(Ctx &ctx, u32 head, u32 tail) {
     }
     return n;
 }
-// 0x0001ff50  Sound5b6a8_dtor (VA 0x1ff50). __thiscall, no stack argument, plain `ret` (0x1ffcf). vtable 0x5b6a8 at +0
+// 0x0001ff50  Seq::dtor (VA 0x1ff50). __thiscall, no stack argument, plain `ret` (0x1ffcf). vtable 0x5b6a8 at +0
 // (0x1ff72). Bit 0 of +0xac (0x1ff86) runs Midi_Device::closeFile on this+0x60 through the thunk 0x1014 (0x1ff8d).
 // The 0x7f channel records at +0x744 .. +0x93c (counter 0x7f 0x1ff98, `jne` 0x1ffcb): each non-NULL one gets +0x30 = 0,
 // ChanRecord_freeBuffers through 0x2004, operator delete, and its slot 0 (0x1ffa5-0x1ffbc). The list {+0x218 head,
@@ -744,7 +744,7 @@ u32 c3fk_popHead(Ctx &ctx, u32 head, u32 tail) {
 // vector destructor ??_M 0x4280e (__stdcall, four arguments) destroys the 0x10 elements of 0x4c bytes at +0x250 with the
 // destructor thunk 0x166d (0x20066-0x2007b). The list {+0x228, +0x22c, +0x234 count} is popped the same way freeing
 // only the nodes (0x20080-0x2010b), then the first list again, nodes only (0x2010d-0x20198). Seq_dtor runs on
-// this+0x60 through 0x14d8 (0x201a2-0x201a9; this is never NULL here) and Ch5be88_dtorA on this through 0x1cc1
+// this+0x60 through 0x14d8 (0x201a2-0x201a9; this is never NULL here) and Midi::dtor on this through 0x1cc1
 // (0x201b8). Callers discard eax (Sound5b6a8_scalarDtor 0x1f6c0, Sound::dtor 0x4000): void.
 void c3fk_drainNodes(Ctx &ctx, u32 self, int32_t head, int32_t tail, int32_t count, uint8_t freePayload) {
     while (ld<u32>(ctx, self + head)) {
@@ -756,7 +756,7 @@ void c3fk_drainNodes(Ctx &ctx, u32 self, int32_t head, int32_t tail, int32_t cou
         if (freePayload) snd_delete(ctx, pl);
     }
 }
-void Sound5b6a8_dtor_body(Ctx &ctx, u32 self) {
+void Seq_dtor_body(Ctx &ctx, u32 self) {
     st<u32>(ctx, self, snd_va(ctx, snd_rva::vt_Sound5b6a8));  // 0x1ff72
     if (ld<uint8_t>(ctx, self + 0xac) & 1)  // 0x1ff78 / 0x1ff86
         snd_call(ctx, 0x00001014, SndAbi::Thiscall, {(self + 0x60)}).eax;  // 0x1ff8d
@@ -776,8 +776,8 @@ void Sound5b6a8_dtor_body(Ctx &ctx, u32 self) {
     snd_call(ctx, 0x000014d8, SndAbi::Thiscall, {(self + 0x60)}).eax;  // 0x201a2-0x201a9
     snd_call(ctx, 0x00001cc1, SndAbi::Thiscall, {self}).eax;  // 0x201b8
 }
-int g_negctl_Sound5b6a8_dtor = 0;
-void a_Sound5b6a8_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Sound5b6a8_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Sound5b6a8_dtor), a[0] + 0x214); }
+int g_negctl_Seq_dtor = 0;
+void a_Seq_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Seq_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Seq_dtor), a[0] + 0x214); }
 
 // ---- Sound_reapIdle (rva 0x204e0): converted from c3dt.cpp Reap_re
 uint32_t Sound_reapIdle_body(Ctx &ctx) {
@@ -1076,8 +1076,8 @@ uint32_t Sound_assignName_body(Ctx &ctx, u32 self, u32 name) {
 int g_negctl_Sound_assignName = 0;
 void a_Sound_assignName(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Sound_assignName), Sound_assignName_body(ctx, a[0], a[1]))); }
 
-// ---- Sound5c450_ctor (rva 0x30080): converted from c3do.cpp Sound5c450Ctor_re
-u32 Sound5c450_ctor_body(Ctx &ctx, u32 self) {
+// ---- CVoiceRxMgr::ctor (rva 0x30080): converted from c3do.cpp Sound5c450Ctor_re
+u32 CVoiceRxMgr_ctor_body(Ctx &ctx, u32 self) {
     snd_call(ctx, 0x0002ed50, SndAbi::Thiscall, {self}).eax;  // 0x3009f -> 0x2ed50
     st<uint32_t>(ctx, self + 0x5c, 0);  // 0x300aa
     st<uint32_t>(ctx, self + 0x60, 0);  // 0x300ad
@@ -1095,8 +1095,8 @@ u32 Sound5c450_ctor_body(Ctx &ctx, u32 self) {
     st<uint32_t>(ctx, self + 0xe0, 0);  // 0x300fd
     return self;  // 0x30103
 }
-int g_negctl_Sound5c450_ctor = 0;
-void a_Sound5c450_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Sound5c450_ctor), Sound5c450_ctor_body(ctx, a[0]))); }
+int g_negctl_CVoiceRxMgr_ctor = 0;
+void a_CVoiceRxMgr_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(CVoiceRxMgr_ctor), CVoiceRxMgr_ctor_body(ctx, a[0]))); }
 
 // ---- Sound5c450_scalarDtor (rva 0x30150): converted from c3dt.cpp S5c450Del_re
 uint32_t Sound5c450_scalarDtor_body(Ctx &ctx, u32 self, uint32_t flags) {
@@ -1107,13 +1107,13 @@ return self;
 int g_negctl_Sound5c450_scalarDtor = 0;
 void a_Sound5c450_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Sound5c450_scalarDtor), Sound5c450_scalarDtor_body(ctx, a[0], a[1]))); }
 
-// ---- Sound5c450_dtor (rva 0x30180): converted from c3fk.cpp S5c450Dtor_re
+// ---- CVoiceRxMgr::dtor (rva 0x30180): converted from c3fk.cpp S5c450Dtor_re
 constexpr uint32_t kIatMmioClose = 0xb8670;  // c3fk.cpp
 constexpr uint32_t kMmioClose = kIatMmioClose;  // c3fg.cpp names the same slot
 constexpr uint32_t kMmioCursor = 0xb49d0;  // c3fk.cpp
 constexpr uint32_t kMmioHead = 0xb49c8;  // c3fk.cpp
 constexpr uint32_t kMmioTail = 0xb49cc;  // c3fk.cpp
-void Sound5c450_dtor_body(Ctx &ctx, u32 self) {
+void CVoiceRxMgr_dtor_body(Ctx &ctx, u32 self) {
     st<u32>(ctx, self, snd_va(ctx, snd_rva::vt_Sound5c450));  // 0x301a0
     while (ld<u32>(ctx, self + 0x5c)) {  // 0x301a6-0x301b5, 0x30283-0x30288
         u32 n = c3fk_popHead(ctx, (self + 0x5c), (self + 0x60));  // 0x301bb-0x301cc
@@ -1148,8 +1148,8 @@ void Sound5c450_dtor_body(Ctx &ctx, u32 self) {
     c3fk_drainNodes(ctx, self, 0x5c, 0x60, 0x68, false);  // 0x302b9-0x3031f
     snd_call(ctx, 0x00001cc6, SndAbi::Thiscall, {self}).eax;  // 0x3032b
 }
-int g_negctl_Sound5c450_dtor = 0;
-void a_Sound5c450_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Sound5c450_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Sound5c450_dtor), a[0] + 0x58); }
+int g_negctl_CVoiceRxMgr_dtor = 0;
+void a_CVoiceRxMgr_dtor(Ctx &ctx, const uint32_t *a, Ret &) { CVoiceRxMgr_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(CVoiceRxMgr_dtor), a[0] + 0x58); }
 
 // ---- Sound_stop (rva 0x303f0): converted from c3dh.cpp SoundStop_re
 // Pops the front node of a node list embedded in an object (front pointer at self+frontOff, back at +backOff, count at +countOff;
@@ -1779,9 +1779,9 @@ const FuncDef kFuncs[] = {
     {"snd.Sound_anyChannelActive", "thiscall", "uint8", 1, 0, a_Sound_anyChannelActive, &g_negctl_Sound_anyChannelActive},
     {"snd.Sound_setName", "thiscall", "void", 2, 0, a_Sound_setName, &g_negctl_Sound_setName},
     {"snd.Sound_setAltName", "thiscall", "uint32", 2, 0, a_Sound_setAltName, &g_negctl_Sound_setAltName},
-    {"snd.Sound5b6a8_ctor", "thiscall", "pointer", 1, 0x027f, a_Sound5b6a8_ctor, &g_negctl_Sound5b6a8_ctor},
+    {"snd.Seq::ctor_1001f4a0", "thiscall", "pointer", 1, 0x027f, a_Seq_ctor_1001f4a0, &g_negctl_Seq_ctor_1001f4a0},
     {"snd.Sound5b6a8_scalarDtor", "thiscall", "uint32", 2, 0, a_Sound5b6a8_scalarDtor, &g_negctl_Sound5b6a8_scalarDtor},
-    {"snd.Sound5b6a8_dtor", "thiscall", "void", 1, 0, a_Sound5b6a8_dtor, &g_negctl_Sound5b6a8_dtor},
+    {"snd.Seq::dtor", "thiscall", "void", 1, 0, a_Seq_dtor, &g_negctl_Seq_dtor},
     {"snd.Sound_reapIdle", "default", "uint32", 0, 0, a_Sound_reapIdle, &g_negctl_Sound_reapIdle},
     {"snd.Sound_findByName", "stdcall", "uint8", 1, 0, a_Sound_findByName, &g_negctl_Sound_findByName},
     {"snd.Sound_lookupOrCreate", "thiscall", "uint32", 2, 0, a_Sound_lookupOrCreate, &g_negctl_Sound_lookupOrCreate},
@@ -1791,9 +1791,9 @@ const FuncDef kFuncs[] = {
     {"snd.Engine_playSound", "thiscall", "uint32", 2, 0, a_Engine_playSound, &g_negctl_Engine_playSound},
     {"snd.getPlaybackTime", "thiscall", "int", 1, 0, a_getPlaybackTime, &g_negctl_getPlaybackTime},
     {"snd.Sound_assignName", "thiscall", "uint32", 2, 0, a_Sound_assignName, &g_negctl_Sound_assignName},
-    {"snd.Sound5c450_ctor", "thiscall", "pointer", 1, 0, a_Sound5c450_ctor, &g_negctl_Sound5c450_ctor},
+    {"snd.CVoiceRxMgr::ctor", "thiscall", "pointer", 1, 0, a_CVoiceRxMgr_ctor, &g_negctl_CVoiceRxMgr_ctor},
     {"snd.Sound5c450_scalarDtor", "thiscall", "uint32", 2, 0, a_Sound5c450_scalarDtor, &g_negctl_Sound5c450_scalarDtor},
-    {"snd.Sound5c450_dtor", "thiscall", "void", 1, 0, a_Sound5c450_dtor, &g_negctl_Sound5c450_dtor},
+    {"snd.CVoiceRxMgr::dtor", "thiscall", "void", 1, 0, a_CVoiceRxMgr_dtor, &g_negctl_CVoiceRxMgr_dtor},
     {"snd.Sound_stop", "thiscall", "uint32", 1, 0, a_Sound_stop, &g_negctl_Sound_stop},
     {"snd.Sound_freeBufferList", "thiscall", "uint32", 1, 0, a_Sound_freeBufferList, &g_negctl_Sound_freeBufferList},
     {"snd.Sound_resetBuffers", "thiscall", "uint32", 1, 0, a_Sound_resetBuffers, &g_negctl_Sound_resetBuffers},

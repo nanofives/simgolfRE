@@ -41,13 +41,13 @@ NEGCTL_BLIND = [
 ]
 # callees owned by other stage B children, called through the registry (MissingResource until registered)
 FOREIGN = {
-    "trialShot": ["heightAt42fa30", "slopeMix", "appendPairTrackPoint", "rateTile", "heightBlend"],
-    "prepareShot": ["rateTile", "heightBlend", "emitGolferThought", "thoughtFlag", "typeBit7Clear",
+    "trialShot": ["heightAt42fa30", "slopeMix", "appendPairTrackPoint", "golferShotReach", "heightBlend"],
+    "prepareShot": ["golferShotReach", "heightBlend", "emitGolferThought", "thoughtFlag", "typeBit7Clear",
                     "heightAt42fa30", "slopeMix", "scanTileLine"],
-    "chooseShotTarget": ["rateTile", "scanTileLine", "heightAt42fa30", "slopeMix", "heightBlend",
+    "chooseShotTarget": ["golferShotReach", "scanTileLine", "heightAt42fa30", "slopeMix", "heightBlend",
                          "appendPairTrackPoint"],
     "scanShotArea": ["holeQuadrants"],   # its vectors that reach narrateShot stop before narrateShot's callees
-    "narrateShot": ["buildGolferName", "appendHoleName", "typeBit7Clear", "postEvent", "rateTile",
+    "narrateShot": ["buildGolferName", "appendHoleName", "typeBit7Clear", "postEvent", "golferShotReach",
                     "emitGolferThought"],
 }
 
@@ -199,7 +199,7 @@ def test_defect_narrate_mask_not_restored(portlib, on):
     """narrateShot.maskNotRestored (model_defects#39), on a constructed missed shot of the followed golfer whose
     skills are all 0: the pick loop finds nothing in the empty reward mask, so the call takes one of the two early
     returns. The original leaves the named golfer's mask word +0x16 at the temporary 0; fixed, it is restored."""
-    if any(f not in portlib.functions() for f in ("buildGolferName", "appendHoleName", "rateTile")):
+    if any(f not in portlib.functions() for f in ("buildGolferName", "appendHoleName", "golferShotReach")):
         pytest.skip("narrateShot's callees are not registered yet")
     g = 5
     with portlib.state() as st:

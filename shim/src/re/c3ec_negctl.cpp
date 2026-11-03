@@ -97,7 +97,7 @@ const C4_t kInRange = reinterpret_cast<C4_t>(0x004070b0);            // inRange(
 const C1_t kScanShotArea = reinterpret_cast<C1_t>(0x00409620);       // scanShotArea(slot)
 const C1_t kAddGolferToTable = reinterpret_cast<C1_t>(0x00409a90);   // addGolferToTable(g)
 const C1_t kAddGolferPair = reinterpret_cast<C1_t>(0x004099f0);      // addGolferPair(g)
-const C1_t kRateTile = reinterpret_cast<C1_t>(0x00422530);           // rateTile(g)
+const C1_t kRateTile = reinterpret_cast<C1_t>(0x00422530);           // golferShotReach(g)
 
 static inline int Rand(int n) { return kRandomRange(reinterpret_cast<void*>(0x00822d9c), 0, n); }
 static inline int Dx8(int d) { return G<int>(0x004c2878 + 4 * static_cast<unsigned>(d)); }

@@ -198,7 +198,7 @@ void announce_hole_type(Ctx &ctx, int32_t hole, int32_t kind) {
 }
 
 
-void hole_magazine_event(Ctx &ctx) {
+void rate_course_holes(Ctx &ctx) {
     const uint32_t buf = text_va(ctx);
     (void)buf;
     int members = 0;
@@ -256,7 +256,7 @@ void hole_magazine_event(Ctx &ctx) {
             int minDelta = 100;
             int minSkillBit = 0;
             fld<unsigned>(ctx, (GS(g_holes) + 512), hole) = f1 & 0xFFFFF8FF;
-            const int notableThresh = (G<int>(ctx, GS(g_difficulty)) != 0) ? (SG_NEGCTL(g_negctl_hole_magazine_event) == 1 ? 0x31 : 0x32) : 0x19;
+            const int notableThresh = (G<int>(ctx, GS(g_difficulty)) != 0) ? (SG_NEGCTL(g_negctl_rate_course_holes) == 1 ? 0x31 : 0x32) : 0x19;
             if (col40[7] != 0) {
                 if (col40[6] != 0) {
                     const int delta = (col20[6] * 100) / col40[6] - (col20[7] * 100) / col40[7];
@@ -380,7 +380,7 @@ void hole_magazine_event(Ctx &ctx) {
 }
 
 
-void announce_building(Ctx &ctx) {
+void open_hole(Ctx &ctx) {
     const uint32_t buf = text_va(ctx);
     (void)buf;
     const int hole = G<int>(ctx, GS(g_holesPlusOne));
@@ -410,7 +410,7 @@ void announce_building(Ctx &ctx) {
     if ((G<unsigned char>(ctx, (GS(g_holes) + 512) + rec) & 0x60) != 0 && yards > 250) yards += 25;
     if (yards > 300) yards -= 25 * G<int>(ctx, (GS(g_objectTypeLevel) + 40));
     G<unsigned char>(ctx, GS(g_holes) + rec) = 3;
-    if (yards <= (SG_NEGCTL(g_negctl_announce_building) == 1 ? 0x31 : 0x32)) G<unsigned char>(ctx, GS(g_holes) + rec) = 2;
+    if (yards <= (SG_NEGCTL(g_negctl_open_hole) == 1 ? 0x31 : 0x32)) G<unsigned char>(ctx, GS(g_holes) + rec) = 2;
     if (yards >= 0xfa) G<unsigned char>(ctx, GS(g_holes) + rec) = 4;
     if (yards >= 0x1db) G<unsigned char>(ctx, GS(g_holes) + rec) = 5;
     if (yards > 0x271) G<unsigned char>(ctx, GS(g_holes) + rec) = 6;
@@ -443,7 +443,7 @@ void announce_building(Ctx &ctx) {
     for (int i = 0; i < 0x20; ++i) G<int>(ctx, (GS(g_holes) + 216) + rec + i * 4) = 0;
     const int ang = kAngleFixed(G<int>(ctx, (GS(g_holes) + 24) + rec) - G<int>(ctx, (GS(g_holes) + 16) + rec),
                                 G<int>(ctx, (GS(g_holes) + 28) + rec) - G<int>(ctx, (GS(g_holes) + 20) + rec));
-    G<unsigned char>(ctx, (GS(g_holes) + 2) + rec) = static_cast<unsigned char>(((((ang >> 0x1c) & 0xf) + (SG_NEGCTL(g_negctl_announce_building) == 2 ? 0 : 1)) >> 1) & 7);
+    G<unsigned char>(ctx, (GS(g_holes) + 2) + rec) = static_cast<unsigned char>(((((ang >> 0x1c) & 0xf) + (SG_NEGCTL(g_negctl_open_hole) == 2 ? 0 : 1)) >> 1) & 7);
     const int cell = G<int>(ctx, (GS(g_holes) + 12) + rec) + G<int>(ctx, (GS(g_holes) + 8) + rec) * 50;
     G<unsigned char>(ctx, (GS(g_tileFlags) + 1) + cell * 2) |= 0x40;
     G<unsigned char>(ctx, GS(tile_anim_frame) + cell) = 0;

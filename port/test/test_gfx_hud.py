@@ -232,7 +232,7 @@ def _emu_panel_calls(emu, img: bytes, which: str, x: int, y: int, cover=None):
     add(0x00473E60, 4, rec("Image_draw", lambda a, c: [c, a[1], a[2]]))
     add(0x00473CB0, 7, rec("Surface_drawScaled", lambda a, c: [c, a[1], a[2]]))
     add(0x004762D0, 4, rec("setDrawTarget", lambda a, c: [a[0]]))
-    add(0x004049D0, 4, rec("drawText4049d0", lambda a, c: a[1:4], text_arg=0))
+    add(0x004049D0, 4, rec("drawTextWithColor", lambda a, c: a[1:4], text_arg=0))
     add(0x00404B70, 4, rec("drawCenteredText", lambda a, c: a[1:4], text_arg=0))
     add(0x00480B00, 5, rec("fillWindowRect", lambda a, c: a[0:5]))
     add(0x004628D0, 8, rec("addSprite", lambda a, c: a[0:8]))

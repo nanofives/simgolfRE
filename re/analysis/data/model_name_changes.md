@@ -195,3 +195,84 @@ The map takes the label at an object's start (names files are the one naming sou
   Factory::destroyPalette / destroySurface (U-0454 open), HashTable::remove 0x4876c0 (not reported by a stream).
 
 Stream G3 (2026-10-18) renames and new labels: re/analysis/data/model_corrections.md section 8.
+
+## Roadmap S11.4 (2026-11-01): the S10 renames that waited for the port (decision D1 `P` rows)
+
+Sources: log/roadmap/S10/8_merge.md sections 2 / 2b, 10_renames.tsv, 9_renames_sound.tsv (evidence there); applied to
+re/names by log/roadmap/S11/4_names.py, to the port, shim comments and the model by log/roadmap/S11/4_assemble.py. Types:
+Animal -> VipResident (g_vipResidents), SgRecordBank -> SgHomeLayout (g_homeLayouts). Registry keys, fixtures, SG_HOOK
+name strings and the defect switch ids spawnObject.cellSearchBound / placeAnimal.zeroFrameCount keep the old spellings;
+the corpus keeps its recorded names and re/port/corpus_aliases.tsv maps them (log/roadmap/S11/4_notes.md).
+
+| module | addr | old | new | source |
+|---|---|---|---|---|
+| golf_clean.exe | 0x004038f0 | drawFlyingBall | drawWalkers | 8_merge.2 |
+| golf_clean.exe | 0x0040e720 | announceBuilding | openHole | 8_merge.2 |
+| golf_clean.exe | 0x0042dea0 | holeMagazineEvent | rateCourseHoles | 8_merge.2 |
+| golf_clean.exe | 0x00422530 | rateTile | golferShotReach | 8_merge.2 |
+| golf_clean.exe | 0x0056d1b8 | g_animalRecords | g_vipResidents | 8_merge.2b |
+| golf_clean.exe | 0x004011e0 | spawnObject | spawnVipResident | 8_merge.2b |
+| golf_clean.exe | 0x004011b0 | freeRecordAtPos | removeVipResidentAt | 8_merge.2b |
+| golf_clean.exe | 0x004017d0 | placeAnimal | updateVipResident | 8_merge.2b |
+| golf_clean.exe | 0x00401c00 | tickAnimals | updateVipResidents | 8_merge.2b |
+| golf_clean.exe | 0x00401000 | resetRecordBank | resetHomeLayout | 8_merge.2b |
+| golf_clean.exe | 0x00401040 | placeRecord | placeHomeLayoutPart | 8_merge.2b |
+| golf_clean.exe | 0x00401750 | initRecords | initHomeLayouts | 8_merge.2b |
+| golf_clean.exe | 0x004012d0 | drawRecords | drawHomeLayout | 8_merge.2b |
+| golf_clean.exe | 0x004e6d20 | g_recordBanks | g_homeLayouts | 8_merge.2b |
+| golf_clean.exe | 0x004049d0 | drawText4049d0 | drawTextWithColor | 10_renames |
+| golf_clean.exe | 0x0042f530 | relaxEdges42f530 | calcTileWallMask | 10_renames |
+| golf_clean.exe | 0x0042f630 | relaxTile42f630 | propagateMinTileLevel | 10_renames |
+| golf_clean.exe | 0x00449310 | tileQuery449310 | cornerHeightAt | 10_renames |
+| golf_clean.exe | 0x00483bd0 | pumpInput483bd0 | doAllTasks | 10_renames |
+| golf_clean.exe | 0x00483c90 | pumpInput483c90 | doAllKeys | 10_renames |
+| golf_clean.exe | 0x00483cd0 | frameTick483cd0 | doMouse | 10_renames |
+| golf_clean.exe | 0x00483cf0 | pumpInput483cf0 | doAllMouse | 10_renames |
+| golf_clean.exe | 0x00483d30 | enterModal483d30 | flushInput | 10_renames |
+| golf_clean.exe | 0x00483d40 | modalPush483d40 | flushKeyboard | 10_renames |
+| golf_clean.exe | 0x00483d60 | modalFocusClear483d60 | flushMouse | 10_renames |
+| golf_clean.exe | 0x004840e0 | createSound4840e0 | createSound | 10_renames |
+| golf_clean.exe | 0x004845b0 | Snd::fwdVoice18 | Snd::play_4845b0 | 10_renames |
+| golf_clean.exe | 0x004845d0 | Snd::queryDevice4845d0 | Snd::isPlaying_4845d0 | 10_renames |
+| golf_clean.exe | 0x004846b0 | Snd::setField34 | Snd::setDelay | 10_renames |
+| golf_clean.exe | 0x004847d0 | Snd::fwdVoice58 | Snd::isLooping | 10_renames |
+| golf_clean.exe | 0x004847e0 | Snd::fwdVoice74 | Snd::getTime_4847e0 | 10_renames |
+| golf_clean.exe | 0x00484870 | Snd::fwdVoice60 | Snd::isLoaded | 10_renames |
+| golf_clean.exe | 0x00484b00 | Snd::fwdVoiceCC | Snd::isHwbuffer | 10_renames |
+| golf_clean.exe | 0x00485040 | Snd::fwdVoiceB8 | Snd::getTime_485040 | 10_renames |
+| golf_clean.exe | 0x00485390 | VoiceRx::fwdDev37 | VoiceRx::getNbuffers | 10_renames |
+| golf_clean.exe | 0x00485570 | VoiceRx::fwdDev36 | VoiceRx::getBufferSize | 10_renames |
+| golf_clean.exe | 0x004919a0 | viewDispatchSlot29_vtordisp | viewDispatchOnLeftClick_vtordisp | 10_renames |
+| golf_clean.exe | 0x004919b0 | viewDispatchSlot30_vtordisp | viewDispatchOnLeftDown_vtordisp | 10_renames |
+| golf_clean.exe | 0x004919c0 | viewDispatchSlot31_vtordisp | viewDispatchOnLeftUp_vtordisp | 10_renames |
+| golf_clean.exe | 0x004919d0 | viewDispatchSlot32_vtordisp | viewDispatchOnRightClick_vtordisp | 10_renames |
+| golf_clean.exe | 0x004919e0 | viewDispatchSlot33_vtordisp | viewDispatchOnRightDown_vtordisp | 10_renames |
+| golf_clean.exe | 0x004919f0 | viewDispatchSlot34_vtordisp | viewDispatchOnRightUp_vtordisp | 10_renames |
+| golf_clean.exe | 0x00491a00 | viewDispatchSlot36_vtordisp | viewDispatchOnKeyDown_vtordisp | 10_renames |
+| golf_clean.exe | 0x00491a20 | viewDispatchSlot39_vtordisp | viewDispatchOnRightDoubleClick_vtordisp | 10_renames |
+| golf_clean.exe | 0x0049fc30 | optionDialogSlot38 | optionDialogOnLeftDoubleClick | 10_renames |
+| golf_clean.exe | 0x0049fff0 | optionDialogSlot38_vtordisp | optionDialogOnLeftDoubleClick_vtordisp | 10_renames |
+| golf_clean.exe | 0x004a0b50 | viewDispatchSlot30 | viewDispatchOnLeftDown | 10_renames |
+| golf_clean.exe | 0x004a0bf0 | viewDispatchSlot36 | viewDispatchOnKeyDown | 10_renames |
+| golf_clean.exe | 0x004a0db0 | viewDispatchSlot29 | viewDispatchOnLeftClick | 10_renames |
+| golf_clean.exe | 0x004a0e20 | viewDispatchSlot33 | viewDispatchOnRightDown | 10_renames |
+| golf_clean.exe | 0x004a0e40 | viewDispatchSlot39 | viewDispatchOnRightDoubleClick | 10_renames |
+| golf_clean.exe | 0x004a0e60 | viewDispatchSlot31 | viewDispatchOnLeftUp | 10_renames |
+| golf_clean.exe | 0x004a0e90 | viewDispatchSlot34 | viewDispatchOnRightUp | 10_renames |
+| golf_clean.exe | 0x004a0eb0 | viewDispatchSlot32 | viewDispatchOnRightClick | 10_renames |
+| sound.dll | 0x1001f4a0 | Sound5b6a8_ctor | Seq::ctor_1001f4a0 | 9_renames_sound |
+| sound.dll | 0x1001ff50 | Sound5b6a8_dtor | Seq::dtor | 9_renames_sound |
+| sound.dll | 0x10030180 | Sound5c450_dtor | CVoiceRxMgr::dtor | 9_renames_sound |
+| sound.dll | 0x10030080 | Sound5c450_ctor | CVoiceRxMgr::ctor | 9_renames_sound |
+| sound.dll | 0x1001bd90 | Ctrl5b5c0_ctor | NoteMap::ctor_1001bd90 | 9_renames_sound |
+| sound.dll | 0x1001cbf0 | Ctrl5b668_ctor | TrackCtrl::ctor | 9_renames_sound |
+| sound.dll | 0x1001bee0 | Ctrl5b19c_ctor | NoteMap::ctor_1001bee0 | 9_renames_sound |
+| sound.dll | 0x1002b620 | Ch5bb90_dtor | Wave::dtor | 9_renames_sound |
+| sound.dll | 0x1002c490 | Ch5bb90_ctor | MpegStream::ctor | 9_renames_sound |
+| sound.dll | 0x1002e930 | Ch5c178_ctor | AviSound::ctor | 9_renames_sound |
+| sound.dll | 0x1002ea30 | Ch5c178_dtor | AviSound::dtor | 9_renames_sound |
+| sound.dll | 0x1002ef40 | Ch5c234_dtor | VoiceRx::dtor | 9_renames_sound |
+| sound.dll | 0x1002f3f0 | Ch5c2ec_dtor | VoiceTx::dtor | 9_renames_sound |
+| sound.dll | 0x1002d560 | Ch5be88_dtorA | Midi::dtor | 9_renames_sound |
+| sound.dll | 0x1002d450 | Ch5be88_ctor | Midi::ctor | 9_renames_sound |
+| sound.dll | 0x1002f740 | Ch5c3a4_ctor | dllSoundList::ctor | 9_renames_sound |

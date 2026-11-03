@@ -26,11 +26,11 @@ DEV_NEG(get_sound_version) DEV_NEG(release_sound) DEV_NEG(delete_sound) DEV_NEG(
 DEV_NEG(Midi_delete_device) DEV_NEG(Device_serviceVoices) DEV_NEG(stubReturn2fA) DEV_NEG(stubReturn2fB)
 DEV_NEG(registerTimerClient) DEV_NEG(CommandQueue_push) DEV_NEG(postNotification) DEV_NEG(dynInit_ctrl100b4b50)
 DEV_NEG(dynInit_ctrl100b4c38) DEV_NEG(dynInit_ctrl100b4d20) DEV_NEG(dynInit_ctrl100b4a68) DEV_NEG(dynInit_ctrl100b4e08)
-DEV_NEG(Ctrl_appendIfAccepted) DEV_NEG(CtrlObject_ctor) DEV_NEG(CtrlObject2_ctor) DEV_NEG(Ctrl5b5c0_ctor)
-DEV_NEG(Ctrl5b19c_ctor) DEV_NEG(Ctrl5b58c_dtor) DEV_NEG(Ctrl5b5c0_transposeTable) DEV_NEG(CtrlBase_resetElements)
+DEV_NEG(Ctrl_appendIfAccepted) DEV_NEG(CtrlObject_ctor) DEV_NEG(CtrlObject2_ctor) DEV_NEG(NoteMap_ctor_1001bd90)
+DEV_NEG(NoteMap_ctor_1001bee0) DEV_NEG(Ctrl5b58c_dtor) DEV_NEG(Ctrl5b5c0_transposeTable) DEV_NEG(CtrlBase_resetElements)
 DEV_NEG(CtrlBase_flushElements) DEV_NEG(Ctrl5b5c0_mapValue) DEV_NEG(CtrlObject_scalarDtorA) DEV_NEG(CtrlObject_dtorA)
 DEV_NEG(CtrlObject_scalarDtorB) DEV_NEG(CtrlObject_dtorB) DEV_NEG(Ctrl5b58c_scalarDtor) DEV_NEG(Ctrl5b58c_dtorEmbedded)
-DEV_NEG(CtrlObject3_ctor) DEV_NEG(CtrlObject_scalarDtorC) DEV_NEG(CtrlObject_dtorC) DEV_NEG(Ctrl5b668_ctor)
+DEV_NEG(CtrlObject3_ctor) DEV_NEG(CtrlObject_scalarDtorC) DEV_NEG(CtrlObject_dtorC) DEV_NEG(TrackCtrl_ctor)
 DEV_NEG(CtrlObject_scalarDtorD) DEV_NEG(CtrlObject_dtorD) DEV_NEG(postMidiNotification) DEV_NEG(destroySoundWindowObj)
 DEV_NEG(pumpWaveMessages) DEV_NEG(soundWindowProc) DEV_NEG(soundWindowSubclassProc) DEV_NEG(DeviceBase_scalarDtor)
 DEV_NEG(DeviceBase_dtorA) DEV_NEG(DeviceBase_dtorB) DEV_NEG(DeviceBase_dtorC) DEV_NEG(stopSoundThreadFull)
@@ -88,7 +88,7 @@ constexpr u32 kListNode3Init = 0x87f0;         // listNode3Init (called directly
 constexpr u32 kTimerRegisterClient = 0x88e0;   // SoundTimer::registerClient (called directly)
 constexpr u32 kTimerStart = 0x8ce0;            // SoundTimer::start (called directly)
 constexpr u32 kAtexitDtorStub = 0x91f0;        // atexitDtor_100b49b8 (pushed for _atexit)
-constexpr u32 kCtrl5b19cCtor = 0x1bee0;        // Ctrl5b19c_ctor (called directly by the dynamic initializers)
+constexpr u32 kCtrl5b19cCtor = 0x1bee0;        // NoteMap::ctor_1001bee0 (called directly by the dynamic initializers)
 constexpr u32 kTransposeTable = 0x1c1e0;       // Ctrl5b5c0_transposeTable (called directly)
 constexpr u32 kCtrl5b58cDtorEmbedded = 0x1c990;  // Ctrl5b58c_dtorEmbedded (called directly)
 constexpr u32 kPtrListInit = 0x1d130;          // PtrList_init (called directly)
@@ -179,7 +179,7 @@ void a_CtrlObject2_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   st<u32>(c, s + 0x20, 0x44444444u);
   r.set_u32(s);
 }
-// The CtrlObject2 base and embedded CtrlObject shared by Ctrl5b5c0_ctor (0x1bd9a-0x1bde4) and Ctrl5b19c_ctor (0x1bf10-0x1bf54).
+// The CtrlObject2 base and embedded CtrlObject shared by NoteMap::ctor_1001bd90 (0x1bd9a-0x1bde4) and NoteMap::ctor_1001bee0 (0x1bf10-0x1bf54).
 void ctrl5b5c0_base(Ctx &c, u32 o) {
   st<u32>(c, o + 4, 0x18);
   st<u32>(c, o + 8, 0x44444444u);
@@ -194,17 +194,17 @@ void ctrl5b5c0_base(Ctx &c, u32 o) {
   st<u32>(c, o + 0x38, 0x18);
   st<u32>(c, o + 0x3c, 0x44444444u);
 }
-// Ctrl5b5c0_ctor (rva 0x1bd90, c3dj): the list header +0xc..+0x18 cleared, the base, vtables 0x5b5c0 / 0x5b59c, the 0x80-byte
+// NoteMap::ctor_1001bd90 (rva 0x1bd90, c3dj): the list header +0xc..+0x18 cleared, the base, vtables 0x5b5c0 / 0x5b59c, the 0x80-byte
 // identity table at +0x5c, +0x48 = 3, byte +0x44 = 1, +0xe0 = 0, +0x34 = 0xe4, +0x58 = 0x44444444, +0x54 = 0x8c; this.
 // neg 1: the table's last byte is 0.
-void a_Ctrl5b5c0_ctor(Ctx &c, const uint32_t *a, Ret &r) {
+void a_NoteMap_ctor_1001bd90(Ctx &c, const uint32_t *a, Ret &r) {
   const u32 o = a[0];
   for (u32 off : {0xcu, 0x10u, 0x14u, 0x18u}) st<u32>(c, o + off, 0);
   ctrl5b5c0_base(c, o);
   st<u32>(c, o, snd_va(c, snd_rva::vt_Ctrl5b5c0));
   st<u32>(c, o + 0x2c, snd_va(c, snd_rva::vt_Ctrl5b59c));
   for (u32 i = 0; i < 0x80; ++i)
-    st<uint8_t>(c, o + 0x5c + i, static_cast<uint8_t>(NEG(Ctrl5b5c0_ctor) == 1 && i == 0x7f ? 0 : i));
+    st<uint8_t>(c, o + 0x5c + i, static_cast<uint8_t>(NEG(NoteMap_ctor_1001bd90) == 1 && i == 0x7f ? 0 : i));
   st<u32>(c, o + 0x48, 3);
   st<uint8_t>(c, o + 0x44, 1);
   st<u32>(c, o + 0xe0, 0);
@@ -213,10 +213,10 @@ void a_Ctrl5b5c0_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   st<u32>(c, o + 0x54, 0x8c);
   r.set_u32(o);
 }
-// Ctrl5b19c_ctor (rva 0x1bee0, c3cx CtrlCtor_re), thiscall (12 table bytes, a13): PtrList_init on +0xc, the base, the 12
+// NoteMap::ctor_1001bee0 (rva 0x1bee0, c3cx CtrlCtor_re), thiscall (12 table bytes, a13): PtrList_init on +0xc, the base, the 12
 // bytes at +0x5c, vtables 0x5b5c0 / 0x5b59c, Ctrl5b5c0_transposeTable(0), +0x48 = 3, +0xe0 = 0, +0x34 = 0xe4, +0xdc = a13,
 // +0x58 = 0x44444444, +0x54 = 0x8c; returns this. neg 1: +0xdc not stored.
-void a_Ctrl5b19c_ctor(Ctx &c, const uint32_t *a, Ret &r) {
+void a_NoteMap_ctor_1001bee0(Ctx &c, const uint32_t *a, Ret &r) {
   const u32 p = a[0];
   th(c, kPtrListInit, {p + 0xc});
   ctrl5b5c0_base(c, p);
@@ -227,12 +227,12 @@ void a_Ctrl5b19c_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   st<u32>(c, p + 0x48, 3);
   st<u32>(c, p + 0xe0, 0);
   st<u32>(c, p + 0x34, 0xe4);
-  if (NEG(Ctrl5b19c_ctor) != 1) st<u32>(c, p + 0xdc, a[13]);
+  if (NEG(NoteMap_ctor_1001bee0) != 1) st<u32>(c, p + 0xdc, a[13]);
   st<u32>(c, p + 0x58, 0x44444444u);
   st<u32>(c, p + 0x54, 0x8c);
   r.set_u32(p);
 }
-// CtrlObject3_ctor (rva 0x1caf0, c3dj) and Ctrl5b668_ctor (rva 0x1cbf0, c3dj): the CtrlObject fields, their vtable, the extra
+// CtrlObject3_ctor (rva 0x1caf0, c3dj) and TrackCtrl::ctor (rva 0x1cbf0, c3dj): the CtrlObject fields, their vtable, the extra
 // fields cleared, +0x1c = 2 / 1, +8 = 0x38 / 0x34. neg 1: +0x1c = 0.
 void a_CtrlObject3_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   const u32 s = a[0];
@@ -249,7 +249,7 @@ void a_CtrlObject3_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   st<u32>(c, s + 8, 0x38);
   r.set_u32(s);
 }
-void a_Ctrl5b668_ctor(Ctx &c, const uint32_t *a, Ret &r) {
+void a_TrackCtrl_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   const u32 s = a[0];
   st<u32>(c, s + 0x14, 0xffffffffu);
   st<u32>(c, s + 0x20, 0xffffffffu);
@@ -261,7 +261,7 @@ void a_Ctrl5b668_ctor(Ctx &c, const uint32_t *a, Ret &r) {
   st<u32>(c, s, snd_va(c, snd_rva::vt_Ctrl5b668));
   st<u32>(c, s + 0x2c, 0);
   st<u32>(c, s + 0x30, 0);
-  st<u32>(c, s + 0x1c, NEG(Ctrl5b668_ctor) == 1 ? 0u : 1u);
+  st<u32>(c, s + 0x1c, NEG(TrackCtrl_ctor) == 1 ? 0u : 1u);
   st<u32>(c, s + 8, 0x34);
   r.set_u32(s);
 }
@@ -402,7 +402,7 @@ void a_Ctrl_appendIfAccepted(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_u32(0);
 }
 
-// The five Ctrl dynamic initializers (rvas 0x1b510 / 0x1b6b0 / 0x1b710 / 0x1b770 / 0x1b7d0, c3do): Ctrl5b19c_ctor on the
+// The five Ctrl dynamic initializers (rvas 0x1b510 / 0x1b6b0 / 0x1b710 / 0x1b770 / 0x1b7d0, c3do): NoteMap::ctor_1001bee0 on the
 // global object with its twelve table bytes and the selector, then _atexit with the object's destructor stub; _atexit's eax.
 // neg 1: the selector argument + 1.
 void dyn_ctrl(Ctx &c, Ret &r, u32 obj, std::initializer_list<uint32_t> bytes, u32 sel, u32 stub, int neg) {
@@ -1034,8 +1034,8 @@ const FuncDef kFuncs[] = {
     {"snd.Ctrl_appendIfAccepted", "thiscall", "uint32", 2, 0, a_Ctrl_appendIfAccepted, G(Ctrl_appendIfAccepted)},
     {"snd.CtrlObject::ctor", "thiscall", "pointer", 1, 0, a_CtrlObject_ctor, G(CtrlObject_ctor)},
     {"snd.CtrlObject2_ctor", "thiscall", "pointer", 1, 0, a_CtrlObject2_ctor, G(CtrlObject2_ctor)},
-    {"snd.Ctrl5b5c0_ctor", "thiscall", "pointer", 1, 0, a_Ctrl5b5c0_ctor, G(Ctrl5b5c0_ctor)},
-    {"snd.Ctrl5b19c_ctor", "thiscall", "uint32", 14, 0, a_Ctrl5b19c_ctor, G(Ctrl5b19c_ctor)},
+    {"snd.NoteMap::ctor_1001bd90", "thiscall", "pointer", 1, 0, a_NoteMap_ctor_1001bd90, G(NoteMap_ctor_1001bd90)},
+    {"snd.NoteMap::ctor_1001bee0", "thiscall", "uint32", 14, 0, a_NoteMap_ctor_1001bee0, G(NoteMap_ctor_1001bee0)},
     {"snd.Ctrl5b58c_dtor", "thiscall", "void", 1, 0, a_Ctrl5b58c_dtor, G(Ctrl5b58c_dtor)},
     {"snd.Ctrl5b5c0_transposeTable", "thiscall", "uint32", 2, 0, a_Ctrl5b5c0_transposeTable, G(Ctrl5b5c0_transposeTable)},
     {"snd.CtrlBase_resetElements", "thiscall", "void", 1, 0, a_CtrlBase_resetElements, G(CtrlBase_resetElements)},
@@ -1050,7 +1050,7 @@ const FuncDef kFuncs[] = {
     {"snd.CtrlObject3_ctor", "thiscall", "pointer", 1, 0, a_CtrlObject3_ctor, G(CtrlObject3_ctor)},
     {"snd.CtrlObject_scalarDtorC", "thiscall", "pointer", 2, 0, a_CtrlObject_scalarDtorC, G(CtrlObject_scalarDtorC)},
     {"snd.CtrlObject_dtorC", "thiscall", "void", 1, 0, a_CtrlObject_dtorC, G(CtrlObject_dtorC)},
-    {"snd.Ctrl5b668_ctor", "thiscall", "pointer", 1, 0, a_Ctrl5b668_ctor, G(Ctrl5b668_ctor)},
+    {"snd.TrackCtrl::ctor", "thiscall", "pointer", 1, 0, a_TrackCtrl_ctor, G(TrackCtrl_ctor)},
     {"snd.CtrlObject_scalarDtorD", "thiscall", "pointer", 2, 0, a_CtrlObject_scalarDtorD, G(CtrlObject_scalarDtorD)},
     {"snd.CtrlObject_dtorD", "thiscall", "void", 1, 0, a_CtrlObject_dtorD, G(CtrlObject_dtorD)},
     {"snd.postMidiNotification", "thiscall", "uint32", 1, 0, a_postMidiNotification, G(postMidiNotification)},

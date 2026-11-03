@@ -6,7 +6,7 @@
 // WHAT IS KEPT. The screen draws a page and then loops, redrawing the whole page whenever the page index
 // (timeGetTime() >> 10) % (rounds != 0 ? 5 : 3) changes, until a click (the button word) or a key (flushRedraw). The
 // drawing is dropped (Surface_drawSprite, Surface_stretchBlit, Widget_setQuad, drawStringAt, Widget_draw, Image_draw,
-// Window::refreshFull, waitTicks, enterModal483d30: log/p3/p37a_simwrites.py finds no simulation write and no simulation
+// Window::refreshFull, waitTicks, flushInput: log/p3/p37a_simwrites.py finds no simulation write and no simulation
 // address taken in any of their call closures). Every page build is kept: the text the page assembles in g_textBuffer
 // and the itoa scratch g_ui_821c50, the peers appendHoleName / appendCents / appendRatingLabel (appendCents formats into
 // the hashed g_textBuf) and, for the five most frequent comments, buildGolferComment(kind, word, hole * 11, 0x98),
@@ -345,7 +345,7 @@ struct HoleStats {
     d.gx("reports.begin", {});
     d.gx("Surface_drawSprite", {GS(g_spriteRef_821040), root, 0, 0, 0x3e800000u, 0, 1});
     for (;;) {
-      const int32_t rounds = build(page);  // after the first build: waitTicks(10, 0) and enterModal483d30 (dropped)
+      const int32_t rounds = build(page);  // after the first build: waitTicks(10, 0) and flushInput (dropped)
       const int32_t div2 = rounds != 0 ? 5 : 3;
       cursor_read();  // waitTicks(1, 0) (dropped), View_toLocal
       bool redraw = false;

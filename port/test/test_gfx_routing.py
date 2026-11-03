@@ -428,7 +428,7 @@ def test_screens_bodies_handled(route_run, keys_run):
     for name in ("loadInfoScreenArt.images", "drawRoutingPoly.diamond", "Display::setScale", "fillWindowRect", "Image_draw",
                  "drawCenteredText", "Window::refreshFull"):
         assert f"handled\t{name}\t" in route_run.log, name
-    for name in ("Surface_blitThunk", "Surface_blit", "loadImage", "drawText4049d0", "drawCenteredText2"):
+    for name in ("Surface_blitThunk", "Surface_blit", "loadImage", "drawTextWithColor", "drawCenteredText2"):
         assert f"handled\t{name}\t" in keys_run.log, name
     for bad in ("fillWindowRect:", "drawRoutingPoly", "Image_draw: a display scale", "loadInfoScreenArt"):
         assert not any(l.startswith("unsupported\t" + bad) for l in route_run.log.splitlines()), bad

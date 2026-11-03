@@ -132,7 +132,7 @@ every negative-control mode in NEGCTL_RED reads RED. Coverage per re/port/vector
 | text | appendClubName | 18 | 15 | full | no |
 | text | sanitizeFileName | 10 | 5 | **one_sided** | yes |
 
-Not taken by 3.0, left to their stage B owners: cellAt (backend-gfx in re/port/scope.tsv), tileQuery449310 and
+Not taken by 3.0, left to their stage B owners: cellAt (backend-gfx in re/port/scope.tsv), cornerHeightAt and
 sampleHeight (they call cornerHeights / bilinearSample: 3.1a), slopeMix and cornerRange (3.1a), listEraseRange (heap
 list, thin coverage), fileExists (KERNEL32 FindFirstFile: a GameFiles question for 3.1b / phase 4).
 

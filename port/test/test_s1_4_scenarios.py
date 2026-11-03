@@ -91,7 +91,7 @@ def test_scenarios_are_pinned():
     assert m["cov_r_flic_input"]["checkpoints"] == ["menu", "location", "hud", "end"]
 
 
-# U-1051: a message posted before a world load is dispatched by loadFlic's pumpInput483bd0 (+0x54). The port takes it with
+# U-1051: a message posted before a world load is dispatched by loadFlic's doAllTasks (+0x54). The port takes it with
 # PumpKind::Load (tick.cpp TraceInput, roadmap S1.4). Without it the boot run reads RED at record 1 (g_cachedCameraTileX:
 # the original's first frame takes the 'z' and zooms), which tick.frame 8 reproduces.
 FLIC = "cov_r_flic_input"

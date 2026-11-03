@@ -168,7 +168,7 @@ int g_negctl_loadMultiChannel = 0;
 // on the HMMIO +0xa48 (0x5474): a dword tag, a dword size n, then n bytes into the CtrlObject's +0x10 (0x5488-0x54ab). The frame holds
 // 0x18 bytes there: the CtrlObject's +0x28 is the SEH record's link that 0x55e6 / 0x55ed reload into fs:[0], so an n above 0x18
 // replaces the thread's exception chain head with file bytes at the return; the port has no exception chain and keeps the bytes it
-// writes inside the frame (U-1480). When the dword at +0x1c (the read's +0xc) is 3 (0x54ad): operator new 0xe4 (0x54be), Ctrl5b5c0_ctor
+// writes inside the frame (U-1480). When the dword at +0x1c (the read's +0xc) is 3 (0x54ad): operator new 0xe4 (0x54be), NoteMap::ctor_1001bd90
 // (thunk 0x25b3), then three (size, bytes) pairs read into the new object's +0x20, +8 and +0x58 (0x54fa-0x5550); its embedded record
 // +0x2c gets the CtrlObject's dwords +4..+0x24 (the word at +0x18) at the same offsets (0x5552-0x5592); a 0xc-byte node {0, 0, record}
 // (operator new 0x5595) is appended to the list +0xa4c (head) / +0xa50 (tail) and +0xa58 counts it (0x55b6-0x55e0). eax at the `ret`: the

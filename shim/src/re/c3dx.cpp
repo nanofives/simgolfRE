@@ -606,7 +606,7 @@ int __fastcall SendCommand_re(void* self, void*, int a, int b) {
 }
 
 // ================================================================================================================
-// snapshotTables, initRecords
+// snapshotTables, initHomeLayouts
 // ================================================================================================================
 
 // 0x00462800  snapshotTables(): ten block copies of 0x400 dwords (0x1000 bytes) between the history tables, in this order
@@ -638,10 +638,10 @@ int __cdecl SnapshotTables_re() {
     return keep;                                                        // eax from 0x00462811
 }
 
-// 0x00401750  initRecords(): every 0x3c-byte slot of the position-record table 0x0056d1d8 .. 0x0056e948 gets the word
+// 0x00401750  initHomeLayouts(): every 0x3c-byte slot of the position-record table 0x0056d1d8 .. 0x0056e948 gets the word
 // 0xffff (0x00401750..0x00401762, signed compare with the end), then for the banks 0, 1, 2 (0x0040176c.. 0x004017a1) and
-// 3, 4, 5 (the loop 0x004017a9..0x004017c1) resetRecordBank 0x00401000(bank) runs and placeRecord 0x00401040 is called with
-// (bank, bank, 0, 0). eax is the last placeRecord result (bank 5).
+// 3, 4, 5 (the loop 0x004017a9..0x004017c1) resetHomeLayout 0x00401000(bank) runs and placeHomeLayoutPart 0x00401040 is called with
+// (bank, bank, 0, 0). eax is the last placeHomeLayoutPart result (bank 5).
 typedef void(__cdecl* ResetBank_t)(int bank);
 typedef int(__cdecl* PlaceRecord_t)(int a, int b, int c, int d);
 typedef int(__cdecl* InitRecords_t)();
@@ -1003,7 +1003,7 @@ typedef int(__cdecl* CreateSound_t)(void* slot, int name, int flag);
 const CreateSound_t kCreateSound = reinterpret_cast<CreateSound_t>(0x004840e0);        // cdecl, 3 arguments (C3, c3dm)
 
 // 0x00484e70  Snd::start(this): returns 8 when the name dword this+0x50 is 0 (0x00484e77..0x00484e7c, 0x00484ef4). The
-// sound object pointer is the dword at this+0x40 (0x00484e7e); when it is NULL createSound4840e0 0x004840e0 runs with
+// sound object pointer is the dword at this+0x40 (0x00484e7e); when it is NULL createSound 0x004840e0 runs with
 // (this+0x40, this+0x50, 1) (0x00484e88..0x00484e8c) and a non-zero result is returned as it is (0x00484e96, 0x00484efb).
 // Then bit 0 of the byte this+0x58 (0x00484e98) and the result of slot +0x58 of this (0x00484ea7; non-zero or's in 2,
 // 0x00484eae) form the mask handed to slot +0x6c of the sound object (0x00484eb6). Slot +0x84 of the sound object is
@@ -1039,7 +1039,7 @@ int __fastcall SndStart_re(void* self, void*) {
 }
 
 // 0x00484c20  SndStream::open484c20(this, name): `ret 4`. A sound object already at this+0x40 returns 0xc
-// (0x00484c2b..0x00484c2d, 0x00484c69). Otherwise createSound4840e0 runs with (this+0x40, name, 1) (0x00484c2f..0x00484c37)
+// (0x00484c2b..0x00484c2d, 0x00484c69). Otherwise createSound runs with (this+0x40, name, 1) (0x00484c2f..0x00484c37)
 // and a non-zero result is returned (0x00484c43, 0x00484c72). The vtable of the new object is read first (0x00484c4a),
 // slot +0x70 of this gives a value (0x00484c4e) that is passed to that vtable's slot +0x6c with ecx = the object
 // (0x00484c51..0x00484c54), then slot +0x7c of this runs (0x00484c5b); the result is 0.
@@ -1061,7 +1061,7 @@ int __fastcall SndOpen484c20_re(void* self, void*, int name) {
 
 // 0x004842f0  SndMusic::setFile(this, name): `ret 4`. Without the sound library (the dword 0x0083afc4 is 0, 0x004842f1 /
 // 0x004842f9) it returns 1. The sound object pointer is the dword this+0x40 (0x0048430b): when it is NULL
-// createSound4840e0 runs with (this+0x40, name, 1) and a non-zero result is returned (0x00484319..0x00484329); otherwise
+// createSound runs with (this+0x40, name, 1) and a non-zero result is returned (0x00484319..0x00484329); otherwise
 // slot +0x60 of the object is called and a non-zero result returns 0xf (0x00484330..0x0048433b). Slot +0x10 of the object
 // then runs with name (0x00484345..0x0048434a) and its result r is kept. r == 0: with bit 0 of this+0x44 clear the bit is set,
 // slot +0x7c of this runs and, when this+0x30 is non-zero, slot +0x48 of the sound object runs with 1 (0x00484358..0x00484378);
@@ -1144,7 +1144,7 @@ void __fastcall SndConfigure_re(void* self, void*, const char* name, unsigned fl
     if (flags & 0x400) st |= 0x40;                                      // 0x00484ae3 / 0x00484ae6 / 0x00484aea
 }
 
-// 0x00484c80  Snd::open(this, name): `ret 4`. A NULL sound object at this+0x40 runs createSound4840e0 with (this+0x40, name, 1)
+// 0x00484c80  Snd::open(this, name): `ret 4`. A NULL sound object at this+0x40 runs createSound with (this+0x40, name, 1)
 // and returns a non-zero result (0x00484c92..0x00484ca4, 0x00484d4b). The mask for slot +0x6c of the sound object is built from
 // the state dword this+0x58: bit 1 -> 1 (0x00484caa..0x00484cb0), a non-zero slot +0x58 of this -> 2 (0x00484cb5..0x00484cc0),
 // state bit 8 -> 0x40, bit 0x10 -> 0x80, bit 0x40 -> 0x400, bit 2 -> 4 (0x00484cc3..0x00484ce2); the slot runs with it
@@ -1190,7 +1190,7 @@ int __fastcall SndOpen_re(void* self, void*, const char* name) {
 }
 
 // 0x00484d60  Snd::reopen(this): no stack argument, the name is the dword this+0x50: NULL returns 8 (0x00484d65..0x00484d6d,
-// 0x00484e22). A NULL sound object at this+0x40 runs createSound4840e0 and returns a non-zero result (0x00484d73..0x00484d8b,
+// 0x00484e22). A NULL sound object at this+0x40 runs createSound and returns a non-zero result (0x00484d73..0x00484d8b,
 // 0x00484e29). The mask for slot +0x6c: state bit 1 -> 1 (0x00484d91..0x00484d97), a non-zero slot +0x58 of this -> 2
 // (0x00484d9c..0x00484da7), state bit 4 -> 0x11 (0x00484daa..0x00484db1), bit 8 -> 0x40 and also 1 when bit 0x20 is clear
 // (0x00484db4..0x00484dbf), bit 0x10 -> 0x80, bit 0x20 -> 0x100, bit 0x40 -> 0x400 (0x00484dc2..0x00484dda); the slot runs

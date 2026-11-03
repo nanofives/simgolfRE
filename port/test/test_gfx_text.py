@@ -3,7 +3,7 @@ the message window drawWindow (the ticker), drawWindowFrame and the HUD panels' 
 log/roadmap/S3/7_notes.md.
 
 ORACLES
-  text calls   (opt-in SG_EMU_ORACLE=1) the ORIGINAL drawText4049d0 / drawTextSurface / drawCenteredText / drawCenteredText2 /
+  text calls   (opt-in SG_EMU_ORACLE=1) the ORIGINAL drawTextWithColor / drawTextSurface / drawCenteredText / drawCenteredText2 /
                drawMessageBuffer / Text_put under the emulator (port/test/cmdemu.py), run down to the jgld surface: a fake surface
                whose vtable slots record setFont / the colour calls / the text draws / end, fake fonts with a scripted width
                rule, a fake run palette and display; the port's record mode (gfx_text.test op 1) logs the same calls from its
@@ -44,7 +44,7 @@ emu_oracle = pytest.mark.skipif(os.environ.get("SG_EMU_ORACLE") not in ("1", "up
                                 reason="opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn")
 
 # the original functions (golf_clean.exe)
-F_DRAW_TEXT = 0x004049D0        # drawText4049d0(text, x, y, colour), cdecl
+F_DRAW_TEXT = 0x004049D0        # drawTextWithColor(text, x, y, colour), cdecl
 F_TEXT_SURFACE = 0x00404AD0     # drawTextSurface
 F_CENTRED = 0x00404B70          # drawCenteredText
 F_CENTRED2 = 0x00404BC0         # drawCenteredText2
@@ -474,7 +474,7 @@ TIP_STUBS = {           # recorded drawing callees of the panels (address: name,
     0x00480B00: ("fillWindowRect", 6, True, lambda a, c: [c] + a[:6]),
     0x004628D0: ("addSprite", 8, False, lambda a, c: a[:8]),
     0x00407C60: ("drawCircle", 4, False, lambda a, c: a[:4]),
-    0x004049D0: ("drawText4049d0", 4, False, lambda a, c: a[1:4]),
+    0x004049D0: ("drawTextWithColor", 4, False, lambda a, c: a[1:4]),
 }
 
 

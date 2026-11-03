@@ -549,7 +549,7 @@ def test_cells_without_sprite_are_empty(slib, scenario):
 
 
 # ------------------------------------------------------------------------------------------------ the standing figure (S3.5b)
-# placeAnimal's queue entry (enqueueSprite(sx, sy, sy, 0x1e, 0x28, cell, 4, (n + 0x9c) | 0x100), placeAnimal+0x4018dc): the
+# updateVipResident's queue entry (enqueueSprite(sx, sy, sy, 0x1e, 0x28, cell, 4, (n + 0x9c) | 0x100), updateVipResident+0x4018dc): the
 # standing figure of a live animal record, drawn with the golfer palette past the golfer table. The exact oracle is the original's
 # root surface at renderSpriteQueue's return (port/corpus/scene/<scenario>/<checkpoint>.z, log/roadmap/S3/5_tools/scene_rec.py).
 # Before the entry was queued the figure was missing: cov_k1_animals bought / menu2 187 and 216 px beyond one level in the box

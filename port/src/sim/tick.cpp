@@ -63,7 +63,7 @@ int g_negctl_sprite_queue = 0;
 int g_negctl_snapshot_tables = 0;
 int g_negctl_build_scene_sprites = 0;
 int g_negctl_draw_world_objects = 0;
-int g_negctl_draw_flying_ball = 0;
+int g_negctl_draw_walkers = 0;
 int g_negctl_flush_course_info = 0;   // 1 = the path is not cleared, 2 = the info file says Holes = g_holesPlusOne
 int g_negctl_start_message = 0;
 int g_negctl_append_cents = 0;
@@ -81,7 +81,7 @@ int g_negctl_match_update = 0;
 int g_negctl_membership_report = 0;
 int g_negctl_can_afford = 0;
 int g_negctl_rank_value = 0;
-int g_negctl_draw_records = 0;
+int g_negctl_draw_home_layout = 0;
 int g_negctl_play_habitat_sound = 0;
 int g_negctl_add_score = 0;
 int g_negctl_hire_employee = 0;
@@ -127,7 +127,7 @@ const Drop kDrops[] = {
     {"Window::refreshFull", "window repaint"},
     {"drawCenteredText", "text rendering"},
     {"drawCenteredText2", "text rendering"},
-    {"drawText4049d0", "text rendering"},
+    {"drawTextWithColor", "text rendering"},
     {"drawTextSurface", "text rendering"},
     {"drawCircle", "circle drawing"},
     {"drawFrameR3", "frame drawing"},
@@ -150,7 +150,7 @@ const Drop kDrops[] = {
     {"Widget_setQuad", "text colour setup (renderer)"},
     // phase 3.7a, the COMMAND segments: census 0 sim writes and no sim address in the closure (log/p3/p37a_simwrites.py)
     {"drawTerrainToolbar", "toolbar drawing (3.7b write audit: its hover words are read only by drawing; result unused)"},
-    {"enterModal483d30", "modal stack push and focus clear of the window tree (UI)"},
+    {"flushInput", "modal stack push and focus clear of the window tree (UI)"},
     {"Widget_readPixel", "a pixel read of the root surface; its only use gates a dropped sprite draw (P5's zoom, ML+0x95d3)"},
 };
 
@@ -636,7 +636,7 @@ struct FallbackReg {
     fallbacks()["nearestMenuSpot"] = fb_nearest_menu_spot;
   }
 } g_fallback_reg;
-// drawFlyingBall: walker sprites and labels of P4 (converted from c3fs.cpp)
+// drawWalkers: walker sprites and labels of P4 (converted from c3fs.cpp)
 struct Ball : TkBase {
   using TkBase::TkBase;
 #include "tick_ball.inc"
@@ -904,15 +904,15 @@ bool in_handler_code(int32_t site) {
 // One recorded dispatch: the root-handler calls one pump call made (consecutive HANDLER records with no clock read between
 // them but the handlers' own), the clock ordinal before it, the number of the frame's cursor reads before it, and the kind
 // of pump that made it, from the clock site of the last read before it: the frame head or the palette QPC = a pump of the
-// frame body (P6's pumpInput483bd0 or H1's pumpMessages); any other site (pumpAndRedraw, waitTicks) = a modal loop. The
+// frame body (P6's doAllTasks or H1's pumpMessages); any other site (pumpAndRedraw, waitTicks) = a modal loop. The
 // cursor count says WHICH pump: the frame body reads the cursor in P6's status bar (then capsLockOff), after P6's
-// pumpInput483bd0, and in H1 after its pumpMessages and key takes (course_season/03 frame 1: CURSOR, KBSTATE, the dispatch,
+// doAllTasks, and in H1 after its pumpMessages and key takes (course_season/03 frame 1: CURSOR, KBSTATE, the dispatch,
 // CURSOR, TAKE, TAKE, CURSOR), and a screen's loop reads it once per pass; the port makes the same reads in the same order.
 struct TBatch {
   uint32_t pos = 0, cursors = 0;
   bool body = false;
   // U-1051: the next clock read after the dispatch's handlers is jgld's Palette::update QPC although the pump before it was
-  // not one of the frame body's (the last clock site was a wait loop's): a pumpInput483bd0 of a world load
+  // not one of the frame body's (the last clock site was a wait loop's): a doAllTasks of a world load
   // (loadFlic +0x54: the 15th of the load in cov_r_flic_input) took it, a message posted before the load started; the harness's
   // polls ride on timeGetTime reads and the load makes none
   bool load = false;
@@ -1444,7 +1444,7 @@ class TraceInput : public InputSource {
   mutable size_t idle_mark_ = SIZE_MAX;
 };
 
-// The dispatch point of a pump of the frame body (frameTick483cd0 / pumpInput483bd0's showScreen loop, where jgld's pumps
+// The dispatch point of a pump of the frame body (doMouse / doAllTasks's showScreen loop, where jgld's pumps
 // call the root handlers): the frame's H1 commands when the driver passed them, else the context's InputSource.
 void dispatch(TkBase &t, PumpKind kind, const char *where) {
   if (t.io.pump_site == kPumpSiteH1 && t.io.h1_commands) {
@@ -1460,9 +1460,9 @@ void dispatch(TkBase &t, PumpKind kind, const char *where) {
 }
 
 // pumpMessages (the c3dw.cpp hook): a zero click word [g_rootInput+0x1c] clears the button word [g_rootInput+0x10]; the
-// PeekMessage loop removes only WM_MOUSEMOVE; frameTick483cd0 dispatches (above); the click word is cleared. In H1 a pump
+// PeekMessage loop removes only WM_MOUSEMOVE; doMouse dispatches (above); the click word is cleared. In H1 a pump
 // that returns at once (Drain); in a modal loop of this module's bodies (showTournamentResults' close button) the loop ends
-// only on input, so a Blocking pump. The result (frameTick483cd0's) is read by no caller in this module.
+// only on input, so a Blocking pump. The result (doMouse's) is read by no caller in this module.
 int lc_pump_messages(TkBase &t, const uint32_t *, int) {
   Ctx &ctx = t.ctx;
   const uint32_t ri = GS(g_rootInput);
@@ -1471,16 +1471,16 @@ int lc_pump_messages(TkBase &t, const uint32_t *, int) {
   t.G32(ri + 0x1c) = 0;
   return 0;
 }
-// pumpInput483bd0 (the c3dw.cpp hook): the input phase word, the display's showScreen loop (which dispatches what has
+// doAllTasks (the c3dw.cpp hook): the input phase word, the display's showScreen loop (which dispatches what has
 // arrived), gfxFlushA: only the dispatch reaches simulation state; the rest is the renderer's
 int lc_pump_input_483bd0(TkBase &t, const uint32_t *, int) {
-  dispatch(t, PumpKind::Drain, "pumpInput483bd0");
+  dispatch(t, PumpKind::Drain, "doAllTasks");
   return 0;
 }
 struct LocalReg {
   LocalReg() {
     locals()["pumpMessages"] = lc_pump_messages;
-    locals()["pumpInput483bd0"] = lc_pump_input_483bd0;
+    locals()["doAllTasks"] = lc_pump_input_483bd0;
   }
 } g_local_reg;
 
@@ -1860,9 +1860,9 @@ void a_build_scene_sprites(Ctx &c, const uint32_t *a, Ret &) {
   tk::Scene(c).buildSceneSprites(S(a, 0), S(a, 1), S(a, 2), S(a, 3), S(a, 4), S(a, 5), S(a, 6));
 }
 void a_draw_world_objects(Ctx &c, const uint32_t *, Ret &) { tk::World(c).drawWorldObjects(); }
-void a_draw_flying_ball(Ctx &c, const uint32_t *, Ret &) {
-  if (SG_NEGCTL(g_negctl_draw_flying_ball) == 1) return;  // nothing runs (the walkers' screen points stay)
-  tk::Ball(c).drawFlyingBall();
+void a_draw_walkers(Ctx &c, const uint32_t *, Ret &) {
+  if (SG_NEGCTL(g_negctl_draw_walkers) == 1) return;  // nothing runs (the walkers' screen points stay)
+  tk::Ball(c).drawWalkers();
 }
 void a_flush_course_info(Ctx &c, const uint32_t *, Ret &) { Rend(c).flushCourseInfo(); }
 using tk::Leaves;
@@ -1893,9 +1893,9 @@ void a_membership_report(Ctx &c, const uint32_t *a, Ret &) {
 }
 void a_can_afford(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(Leaves(c).canAfford(S(a, 0))); }
 void a_rank_value(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(Leaves(c).rankValue(S(a, 0))); }
-void a_draw_records(Ctx &c, const uint32_t *a, Ret &) {
-  if (SG_NEGCTL(g_negctl_draw_records) == 1) return;  // nothing runs (no record sprites, cells or animation bytes)
-  tk::Panels(c).drawRecords(S(a, 0), S(a, 1), S(a, 2));
+void a_draw_home_layout(Ctx &c, const uint32_t *a, Ret &) {
+  if (SG_NEGCTL(g_negctl_draw_home_layout) == 1) return;  // nothing runs (no record sprites, cells or animation bytes)
+  tk::Panels(c).drawHomeLayout(S(a, 0), S(a, 1), S(a, 2));
 }
 void a_play_habitat_sound(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(Leaves(c).playHabitatSound(S(a, 0), S(a, 1), S(a, 2))); }
 void a_add_score(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(Leaves(c).addScore()); }
@@ -1915,7 +1915,7 @@ const FuncDef kFuncs[] = {
     {"screenToTile", "default", "void", 5, 0, a_screen_to_tile, &g_negctl_screen_to_tile},
     {"buildSceneSprites", "default", "void", 7, 0, a_build_scene_sprites, &g_negctl_build_scene_sprites},
     {"drawWorldObjects", "default", "void", 0, 0, a_draw_world_objects, &g_negctl_draw_world_objects},
-    {"drawFlyingBall", "default", "void", 0, 0, a_draw_flying_ball, &g_negctl_draw_flying_ball},
+    {"drawWalkers", "default", "void", 0, 0, a_draw_walkers, &g_negctl_draw_walkers},
     {"flushCourseInfo", "default", "void", 0, 0, a_flush_course_info, &g_negctl_flush_course_info},
     {"startMessage", "default", "int", 3, 0, a_start_message, &g_negctl_start_message},
     {"showTutorialText", "default", "void", 0, 0, a_show_tutorial_text, &g_negctl_show_tutorial_text},
@@ -1933,7 +1933,7 @@ const FuncDef kFuncs[] = {
     {"membershipReport", "default", "void", 1, 0, a_membership_report, &g_negctl_membership_report},
     {"canAfford", "default", "int", 1, 0, a_can_afford, &g_negctl_can_afford},
     {"rankValue", "default", "int", 1, 0, a_rank_value, &g_negctl_rank_value},
-    {"drawRecords", "default", "void", 3, 0, a_draw_records, &g_negctl_draw_records},
+    {"drawHomeLayout", "default", "void", 3, 0, a_draw_home_layout, &g_negctl_draw_home_layout},
     {"playHabitatSound", "default", "int", 3, 0, a_play_habitat_sound, &g_negctl_play_habitat_sound},
     {"addScore", "default", "int", 0, 0, a_add_score, &g_negctl_add_score},
     {"hireEmployee", "default", "int", 0, 0, a_hire_employee, &g_negctl_hire_employee},

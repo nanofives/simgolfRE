@@ -172,7 +172,7 @@ struct StopAtWait {};
 struct FrameIoStats {
   uint64_t cursor_over = 0, cursor_under = 0, async_over = 0, async_under = 0;
 };
-// pump call sites (FrameIo::pump_site): a modal loop (the default), P6's pumpInput483bd0, H1's pumpMessages
+// pump call sites (FrameIo::pump_site): a modal loop (the default), P6's doAllTasks, H1's pumpMessages
 enum { kPumpSiteModal = 0, kPumpSiteP6 = 1, kPumpSiteH1 = 2 };
 
 // The FrameIo of the frame running on this thread (a default one outside a frame: clock 0, no key down).

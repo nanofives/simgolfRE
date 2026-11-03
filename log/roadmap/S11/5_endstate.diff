@@ -1,0 +1,61 @@
+28c28
+< ROOT = pathlib.Path(__file__).resolve().parents[2]
+---
+> ROOT = pathlib.Path(__file__).resolve().parents[3]   # S11.5 copy: log/roadmap/S11/ (re/tools/ uses parents[2])
+78a79,81
+> _EXP, _LDR = {}, {}
+> 
+> 
+79a83,88
+>     if m.name not in _EXP:
+>         _EXP[m.name] = _exports_uncached(m)
+>     return _EXP[m.name]
+> 
+> 
+> def _exports_uncached(m):
+87a97,133
+> def _loader_entries(m):
+>     if m.name not in _LDR:
+>         _LDR[m.name] = _loader_entries_uncached(m)
+>     return _LDR[m.name]
+> 
+> 
+> def _loader_entries_uncached(m):
+>     """{va: label} the PE loader calls without a call instruction in the image: AddressOfEntryPoint and every TLS
+>     callback (IMAGE_TLS_DIRECTORY.AddressOfCallBacks: a null-terminated array of absolute VAs)."""
+>     import pefile
+>     pe = pefile.PE(str(ROOT / "original" / m.name), fast_load=True)
+>     pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_TLS"]])
+>     out = {m.base + pe.OPTIONAL_HEADER.AddressOfEntryPoint: "PE entry point"}
+>     tls = getattr(pe, "DIRECTORY_ENTRY_TLS", None)
+>     cb = tls.struct.AddressOfCallBacks if tls else 0
+>     n = 0
+>     while cb:
+>         v = m.dword(cb + 4 * n)
+>         if not v:
+>             break
+>         out[v] = f"TLS callback {n}"
+>         n += 1
+>     return out
+> 
+> 
+> def _container(m, va):
+>     """Entry of the function whose ranges contain `va` (a body or one of its thunks), else va itself."""
+>     return m.function_at(va) or va
+> 
+> 
+> def has_tls(module):
+>     import pefile
+>     pe = pefile.PE(str(ROOT / "original" / pc.mod(module).name), fast_load=True)
+>     pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_TLS"]])
+>     return hasattr(pe, "DIRECTORY_ENTRY_TLS")
+> 
+> 
+101a148,152
+>     # a function CONTAINING an export or the loader's entries is reached from outside the image (S11.5, U-2020)
+>     exps = _exports(m)
+>     exp += sorted(e for e in exps if _container(m, e) == va and e not in exp)
+>     ldr = [f"0x{e:08x} {lab}" for e, lab in sorted(_loader_entries(m).items())
+>            if _container(m, e) == va or e in targets]
+105a157
+>         ("not the PE entry point or a TLS callback", not ldr, ", ".join(ldr)),

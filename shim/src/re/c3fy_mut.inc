@@ -358,7 +358,7 @@ menu_top:  // 0x00420e35
     GU32(0x834170) = 0;              // g_date = 0                     0x00420e4a
     GU32(0x59E7B8) = 0x40000000;     //                               0x00420e50
     CC(0x4315E0);                    // buildGolferBioText()           0x00420e5a (no pushed args)
-    MS(154) CC(0x401750);                    // initRecords()                  0x00420e5f
+    MS(154) CC(0x401750);                    // initHomeLayouts()                  0x00420e5f
     for (int i = 0; i < 8; i++) GU32(0x5A5A04 + 4 * i) = 0;  // 0x00420e71 rep stosd
     for (int i = 0; i < 8; i++) GU32(0x542F00 + 4 * i) = 0;  // 0x00420e7d rep stosd
     // setDrawTarget(Root, 0x51a028, 0, 0, 0)                         0x00420e8c
@@ -397,7 +397,7 @@ menu_top:  // 0x00420e35
     // --- hover / click loop (0x00421025..0x0042127a) ---
 hover_loop:  // 0x00421025
     CC(0x45BF80, 1, 0);              // waitTicks(1, 0)                0x00421029
-    if (MI(153)) { CC(0x45C030); CC(0x483BD0); } else { CC(0x483BD0);                    // pumpInput483bd0()              0x00421031 (no pushed args)
+    if (MI(153)) { CC(0x45C030); CC(0x483BD0); } else { CC(0x483BD0);                    // doAllTasks()              0x00421031 (no pushed args)
     CC(0x45C030); }                    // pumpMessages()                 0x00421036 (no pushed args)
     // View_toLocal(0x519a60, &F[0x1e4], &F[0x1d8])                   0x00421050
     TC(0x47AB50, 0x519A60, FA(0x1E4), FA(0x1D8));
@@ -3051,7 +3051,7 @@ stk[--sp] = (int)(esi); // 0x413f38  push esi
 eax = (eax) & (1); // 0x413f39  and eax, 1
 stk[--sp] = (int)(edi); // 0x413f3c  push edi
 stk[--sp] = (int)(eax); // 0x413f3d  push eax
-eax = CC(0x4012d0, stk[sp+0], stk[sp+1], stk[sp+2]); // drawRecords  0x413f3e
+eax = CC(0x4012d0, stk[sp+0], stk[sp+1], stk[sp+2]); // drawHomeLayout  0x413f3e
 sp += 3; // 0x413f43  add esp, 0xc  (caller stack cleanup)
 La_413f46:;
 eax = (eax & ~0xffffu) | ((GU16(ebp*2 + 0x53caf0)) & 0xffff); // 0x413f46  mov ax, word ptr [ebp*2 + 0x53caf0]
@@ -5017,11 +5017,11 @@ static void P4_records5736b8(u8* F) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// 0x0041596e..0x004159f7: drawFlyingBall, then the counter [0x004c2e28]: while it is not -1 and below
+// 0x0041596e..0x004159f7: drawWalkers, then the counter [0x004c2e28]: while it is not -1 and below
 // [0x0053f7c8] it queues cell (0xf8, counter, 0) as a sprite at the projection of (0x005787fc, 0x00578800)
 // (stored to 0x005a9cc8) and steps; at the limit it becomes -1.
 static void P4_flyingBall(u8* F) {
-    CC(0x004038F0);                                                           // drawFlyingBall 0x0041596e (pushes nothing)
+    CC(0x004038F0);                                                           // drawWalkers 0x0041596e (pushes nothing)
     int esi = G32(0x004C2E28);                                                // 0x00415973
     if (esi == -1) return;                                                    // 0x0041597c je 0x004159f7
     if (esi < G32(0x0053F7C8)) {                                              // 0x00415984 jge 0x004159ed
@@ -5065,13 +5065,13 @@ static void P4_markerCircle(u8* F) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// 0x00415a77..0x00415b6d: tickAnimals; with [0x005a59f8] == -1 and bit 0x200000 of [0x0059e7b8] clear, six
+// 0x00415a77..0x00415b6d: updateVipResidents; with [0x005a59f8] == -1 and bit 0x200000 of [0x0059e7b8] clear, six
 // fields of golfer record 0x99 are set; in mode [0x00567afc] == 3 the golfer [0x005a59f8] with x > 0 gets the
 // image 0x0059b050 + 44 * clamp(byte +0x2e + 2, 0, 4), drawn when that byte is below 3 or when the date has
 // bit 4 (|byte| == 3) or bit 2 (otherwise) set.
 static void P4_animalsAndImage(u8* F) {
     (void)F;
-    CC(0x00401C00);                                                           // tickAnimals 0x00415a77
+    CC(0x00401C00);                                                           // updateVipResidents 0x00415a77
     int esi = G32(0x005A59F8);                                                // 0x00415a7c
     if (esi == -1 && (G32(0x0059E7B8) & 0x200000) == 0) {                     // 0x00415a85 / 0x00415a91
         short ax = (short)G8(0x004D60A9);                                     // 0x00415a93 movsx ax
@@ -5994,7 +5994,7 @@ static int P5_dateTick(u8* F) {
                         CC(0x004481B0, 0x33, 0x64, 0, 0, 0);   // 0x00417be5 playSound
                         G32(0x004C284C) = G32(0x004C284C) + 1;  // 0x00417bea / 0x00417bf3 / 0x00417bfb
                         const int r6 = Rnd(6) & 0xffff;    // 0x00417c01 / 0x00417c0f
-                        CC(0x004011E0, r6, who, (int)G16(ebx - 0xa), (int)G16(ebx - 8));   // 0x00417c17 spawnObject
+                        CC(0x004011E0, r6, who, (int)G16(ebx - 0xa), (int)G16(ebx - 8));   // 0x00417c17 spawnVipResident
                     }
                 }
             }
@@ -6427,14 +6427,14 @@ static void P6_Census(u8* F) {
 }
 
 // icon + count text: Image_draw of the icon at (ix, y), kBuf = 0x004c61e4 (one letter) + __itoa([cnt]) with [cnt]
-// read after Image_draw as the original does, drawText4049d0 of kBuf at (tx, y). The original repeats this sequence
+// read after Image_draw as the original does, drawTextWithColor of kBuf at (tx, y). The original repeats this sequence
 // five times; each caller cites its call sites.
 static void P6_IconCount(u32 img, int ix, int y, u32 cnt, int tx) {
     TC(0x00473E60, static_cast<int>(img), Root(), ix, y, 0);   // Image_draw
     StrCpy(kBuf, 0x004C61E4);
     int r = Itoa(G32(cnt), 0x0058A528, 10);     // __itoa
     StrCat(kBuf, static_cast<u32>(r));
-    CC(0x004049D0, static_cast<int>(kBuf), tx, y, 0x80007FFFu);   // drawText4049d0
+    CC(0x004049D0, static_cast<int>(kBuf), tx, y, 0x80007FFFu);   // drawTextWithColor
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -6593,7 +6593,7 @@ static void P6_Hud(u8* F) {
 // (drawScaledSprite421b90 then Surface_stretchBlit each); [0x0056a520] = 0; kBuf = 0x004c61e0 + appendNumber(cash * 100)
 // (+ 0x004c61dc when bit 0x20000000 of [0x0059e7b8]), drawn at (0x2c4, 0x23) in 0x800023e8 when cash >= 0, else in
 // 0x80007d08 only while bit 2 of [0x00834170] is set; nothing of it when bit 0x1000000 of [0x0059e7b8]. Then
-// __itoa([0x0059ae78]) at (0x2d2, 0x4e), holeMagazineEvent, appendCents([0x00541cd8]) at (0x2dc, 0x79); kBuf is left
+// __itoa([0x0059ae78]) at (0x2d2, 0x4e), rateCourseHoles, appendCents([0x00541cd8]) at (0x2dc, 0x79); kBuf is left
 // holding 0x004c61ac + appendNumber([0x0056d1b0]) (not drawn in this range). View_toLocal into F+0xb8 / F+0xb0,
 // capsLockOff, display slot +0x9c.
 static void P6_StatusBar(u8* F) {
@@ -6628,7 +6628,7 @@ static void P6_StatusBar(u8* F) {
         StrCat(kBuf, static_cast<u32>(r));      // 0x0041963d..0x00419674
         CC(0x00404BC0, static_cast<int>(kBuf), MV(237, 0x2d2, (0x2d2) + 1), 0x4e, 0x80007FF0u);   // 0x00419676 drawCenteredText2
     }
-    CC(0x0042DEA0);                             // 0x0041967e holeMagazineEvent
+    CC(0x0042DEA0);                             // 0x0041967e rateCourseHoles
     {
         int v = G32(0x00822C74);                // 0x00419683
         TC(0x00421B90, 0x00520614, Root(), 0x2bb, 0x63, v, 1, 1, 0);   // 0x004196a1 drawScaledSprite421b90
@@ -6739,7 +6739,7 @@ static void P6_PauseLabel(u8* F) {
 }
 
 // ------------------------------------------------------------------------------------------------------------------
-// 0x004199b4..0x00419c17  setDrawTarget 0x00519948, kBuf centred at (0x190, 0xa); pumpInput483bd0; View_toLocal into
+// 0x004199b4..0x00419c17  setDrawTarget 0x00519948, kBuf centred at (0x190, 0xa); doAllTasks; View_toLocal into
 // F+0x68 / F+0x58; [0x005a9cc0] = [0x005a9cbc]; screenToTile(F+0x68, F+0x58) into 0x00543d08 / 0x00543d0c. When
 // F+0x58 < 0x1f4, ([0x004c2848] == -1 and [0x004c2854] == -1, or mode [0x00567afc] 2 or 5) and [0x00822d8c] != -1:
 // q = distance(F+0x68 - [0x00822d8c], (F+0x58 - [0x00822d90]) * 32 / 20) * 25 / (11 * [0x004c2844]); when q > 25 four
@@ -6748,7 +6748,7 @@ static void P6_PauseLabel(u8* F) {
 static int P6_Cursor(u8* F) {
     TC(0x004762D0, Root(), 0x00519948, 0, 0, 0);   // 0x004199c2 setDrawTarget
     CC(0x00404BC0, static_cast<int>(kBuf), 0x190, 0xa, 0x80007FFFu);   // 0x004199d8 drawCenteredText2
-    CC(0x00483BD0);                             // 0x004199e0 pumpInput483bd0
+    CC(0x00483BD0);                             // 0x004199e0 doAllTasks
     TC(0x0047AB50, 0x00519A60, FA(0x68), FA(0x58));   // 0x004199f4 View_toLocal
     {
         int vy = FD(0x58);                      // 0x004199f9
@@ -7444,7 +7444,7 @@ L41b358:
         G32(rec + 0x57957c) = ecx;                      // 0x0041b3a0
         G32(rec + 0x579580) = edx;                      // 0x0041b3ad
     }
-    esi = CC(0x422530, G32(0x5a59f8));                  // 0x0041b3b3 rateTile (esi = drag length / quality)
+    esi = CC(0x422530, G32(0x5a59f8));                  // 0x0041b3b3 golferShotReach (esi = drag length / quality)
     {
         int mode = G32(0x58f330);                       // 0x0041b3ba
         if (mode == 3) {                                // 0x0041b3c2/0x0041b3c5
@@ -7612,7 +7612,7 @@ L41b8d7:    // per-club-stat row loop (10 rows); [F+0xc]=index, [F+0x20]=label t
         }
         // bit == 0x10 or 0x200: esi stays 0
         int col = ((esi != 0) ? 0x3def : 0) + 0x80004210;  // 0x0041baad..0x0041babb
-        CC(0x4049d0, 0x51a068, FD(0x2c), FD(0x10), col);   // 0x0041bacd drawText4049d0
+        CC(0x4049d0, 0x51a068, FD(0x2c), FD(0x10), col);   // 0x0041bacd drawTextWithColor
         int y = FD(0x10) + 0xc;                         // 0x0041bad2
         FD(0x10) = y;                                   // 0x0041bade
         if (y >= 0x258) {                               // 0x0041bad8 (signed)
@@ -8054,7 +8054,7 @@ a41c6d9:  // key 0x68
     G32(0x0058F330) = edx;                    // 0x0041c6de  (=3)
     goto a41de11;                             // 0x0041c6e4
 a41c6e9:
-    CC(0x0040E720);                           // 0x0041c6e9 announceBuilding
+    CC(0x0040E720);                           // 0x0041c6e9 openHole
     goto a41de11;                             // 0x0041c6ee
 a41c6f3:  // key 0x64
     G32(0x0058F330) = ebx;                    // 0x0041c6f3  (=1)
@@ -8408,7 +8408,7 @@ a41d223:
 a41d270:
     {
         int color = edx;                                // edx = [F+ebx*4+0x290] color (push at 0x41d273)
-        CC(0x004049D0, (int)kBuf, 0x128, 0x90 - ebx * 20, color);  // 0x0041d289 drawText4049d0
+        CC(0x004049D0, (int)kBuf, 0x128, 0x90 - ebx * 20, color);  // 0x0041d289 drawTextWithColor
     }
     ecx = G32(0x00543D08);                              // 0x0041d28e
     esi = G32(0x00543D0C);                              // 0x0041d294
@@ -8576,7 +8576,7 @@ a41d893:
     if (esi != 0xB) goto a41d8eb;                        // 0x0041d89f cmp esi,0xb; 0x0041d8a2 jne
     CC(0x0045C0C0, 0);                                  // 0x0041d8a6 pumpAndRedraw (push 0)
     TC(0x00475D00, FA(0x624), Root(), 0, 0, 0x320, 0x258, 0, 0, 0x320, 0x258);  // 0x0041d8d7 Surface_blit3
-    CC(0x00483D30);                                     // 0x0041d8dc enterModal483d30
+    CC(0x00483D30);                                     // 0x0041d8dc flushInput
     G32(0x00822D68) = 0;                                // 0x0041d8e1
 a41d8eb:
     esi++;                                              // 0x0041d8eb
@@ -9005,7 +9005,7 @@ a41e290:
     if (!(G8(0x00567A1C) & 1)) goto a41e366;           // 0x0041e2a0 test byte,1; je
     CC(0x004481B0, 0x38, 0x64, ebp, ebp, ebp);         // 0x0041e2b4 playSound
     CC(0x0045BF80, 0x5A, ebp);                         // 0x0041e2bc waitTicks (push ebp; push 0x5a)
-    CC(0x00483D30);                                    // 0x0041e2c1 enterModal483d30
+    CC(0x00483D30);                                    // 0x0041e2c1 flushInput
     StrCpy(kBuf, 0x004C5D74);                          // 0x0041e2c6..0x0041e2f3 (push ebp,ebx,ebx,0xa0)
     StrCat(kBuf, 0x004C5D48);                          // 0x0041e2f5..0x0041e323 (push 0x1c2)
     eax = CC(0x0046D6E0, 0x1C2, 0xA0, ebx, ebx, ebp);  // 0x0041e325 showPopup
@@ -9513,7 +9513,7 @@ static int H2_Select(u8* F, int ebp) {
                 int h = w & 0x1f;                     // 0x0041ed7a
                 MSKIP(131, G32(0x0053DF54), -h);                 // 0x0041ed86
                 if (GU8(0x00575AB0u + H2_hole(h)) != 0) return kFrame;   // 0x0041ed95 / 0x0041ed98
-                CC(0x0040E720);                       // 0x0041ed9e announceBuilding
+                CC(0x0040E720);                       // 0x0041ed9e openHole
                 G32(0x0053DF54) = 0;                  // 0x0041eda3
                 return kFrame;                        // 0x0041edad
             }

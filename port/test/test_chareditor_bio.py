@@ -404,7 +404,7 @@ def bio_emu(lib, img, args, items, groups, cursors, rule, salt):
 
     def pump(uc, a, ecx):
         """pumpMessages (cdecl, no arguments): a clear click word clears the button word; then the dispatch (the scripted
-        group of messages, through a trampoline run in place of frameTick483cd0's jgld pumps); then the click word is
+        group of messages, through a trampoline run in place of doMouse's jgld pumps); then the click word is
         cleared. Its callers are told apart by its return address ([esp] on entry), the drains returning at once."""
         esp = uc.reg_read(X.UC_X86_REG_ESP)
         ret = struct.unpack("<I", uc.mem_read(esp, 4))[0]

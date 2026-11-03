@@ -1,7 +1,7 @@
 // New-course setup routines of the terrain module (see portsim/sim/terrain.h): buildGolferBioText and
 // customizeCharacter. Phase 3.1a, written from the specification (re/analysis/golfer/004315e0_buildGolferBioText.md,
 // re/analysis/frontend/0040f190_customizeCharacter.md, the C3 hook sources as reading reference, the vector corpus).
-// Callees other children own (clearBuffers, initRecords, loadThemeFile: 3.1b; resetGolfer: 3.3; updateMembership: 3.2)
+// Callees other children own (clearBuffers, initHomeLayouts, loadThemeFile: 3.1b; resetGolfer: 3.3; updateMembership: 3.2)
 // are called through the registry by their hooks.csv names. Strings are (pool member, byte offset) pairs.
 #include <initializer_list>
 
@@ -153,7 +153,7 @@ int32_t build_golfer_bio_text(Ctx &ctx) {
   g.g_nextGolferSlot = 0;
   g.g_landingAnimFrame = -1;
   g.g_playerGolfer = -1;
-  return i32(call_peer(ctx, "initRecords", {}).eax);
+  return i32(call_peer(ctx, "initHomeLayouts", {}).eax);
 }
 
 int32_t customize_character(Ctx &ctx, int32_t with_pro) {

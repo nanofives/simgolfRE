@@ -1,0 +1,37 @@
+== static start 2026-11-03 06:07:39 free=19GB
+.....................................s.........s........................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 26%]
+........................................................................ [ 34%]
+........................................................................ [ 43%]
+........................................................................ [ 52%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+.....................................................s...........F...... [ 78%]
+........................................................................ [ 87%]
+........................................................................ [ 96%]
+...............................                                          [100%]
+================================== FAILURES ===================================
+___________________ test_sim_objects_of_sim_core_are_listed ___________________
+
+    def test_sim_objects_of_sim_core_are_listed():
+        meta = (ROOT / "port" / "include" / "gamestate_meta.inc").read_text()
+        simsyms = set(re.findall(r"SG_OBJECT\((\w+), 0x[0-9a-f]+, 0x[0-9a-f]+, sim,", meta))
+        scope = rows("scope.tsv")
+        order = {r["addr"]: r for r in rows("simcore_order.tsv")}
+        for r in scope:
+            listed = [s for s in r["sim_objects"].split(";") if s]
+            assert len(listed) == int(r["touches_sim_objects"])
+>           assert set(listed) <= simsyms
+E           AssertionError: assert {'g_animalRecords'} <= {'f_w_4c2848'...ctLevel', ...}
+E             
+E             Extra items in the left set:
+E             'g_animalRecords'
+
+tests\test_port_scope.py:93: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_endstate_entry.py:104: re/tools/endstate.py is already patched; the disabled-check control above covers it
+SKIPPED [1] tests\test_failure_tools.py:55: run re/tools/invariants.py TerrainDll_tileAt
+SKIPPED [1] tests\test_patches.py:33: got empty parameter set for (path)
+FAILED tests/test_port_scope.py::test_sim_objects_of_sim_core_are_listed - As...
+1 failed, 819 passed, 3 skipped, 46 deselected in 336.51s (0:05:36)

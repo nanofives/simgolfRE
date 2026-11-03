@@ -746,14 +746,14 @@ ScrollbarDraw_t ScrollbarDraw_orig;
 SG_HOOK("golf_clean.exe", 0x00496fc0, scrollbarDraw, ScrollbarDraw_re, ScrollbarDraw_orig);
 
 // ====================================================================================================================
-// drawRecords
+// drawHomeLayout
 // ====================================================================================================================
 namespace {
 const C5_t kWorldToScreen = reinterpret_cast<C5_t>(0x0042fb90);         // worldToScreen(x, y, &sx, &sy, 0), cdecl
 const C8_t kEnqueueSprite = reinterpret_cast<C8_t>(0x00462a30);         // enqueueSprite(a1..a8), cdecl
 }  // namespace
 
-// 0x004012d0  drawRecords(p1, p2, p3): cdecl, three stack arguments (p1 = [esp + 0x34], p2 = [esp + 0x38], p3 = [esp + 0x3c] after
+// 0x004012d0  drawHomeLayout(p1, p2, p3): cdecl, three stack arguments (p1 = [esp + 0x34], p2 = [esp + 0x38], p3 = [esp + 0x3c] after
 // `sub esp, 0x20` and four pushes). The slots of p2 and p3 are reused as the two outputs of worldToScreen 0x0042fb90 (sx at
 // [esp + 0x38], sy at [esp + 0x3c], 0x00401330 / 0x0040133d). X0 = p2 << 10, Y0 = p3 << 10 (0x004012e3 / 0x004012e6). Grid: for the
 // outer round (a = 0.., c = 6 * a, d = 5 - a, e = 0x400 + 0x800 * a while e < 0x2400, 0x00401519) and the inner round (j = 0.., ebp = 5 - j,

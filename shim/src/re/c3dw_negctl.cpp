@@ -36,8 +36,8 @@ typedef int(__fastcall* T7_t)(void* ecx, void* edx, int a, int b, int c, int d, 
 const C0_t kRedrawAll = reinterpret_cast<C0_t>(0x00483c70);        // redrawAll
 const C0_t kShowScreen = reinterpret_cast<C0_t>(0x00483bb0);       // showScreen
 const C0_t kHideScreen = reinterpret_cast<C0_t>(0x00483c10);       // hideScreen
-const C0_t kEnterModal = reinterpret_cast<C0_t>(0x00483d30);       // enterModal483d30
-const C0_t kFrameTick = reinterpret_cast<C0_t>(0x00483cd0);        // frameTick483cd0
+const C0_t kEnterModal = reinterpret_cast<C0_t>(0x00483d30);       // flushInput
+const C0_t kFrameTick = reinterpret_cast<C0_t>(0x00483cd0);        // doMouse
 
 // gfxFlushA 0x00497b00 / gfxFlushB 0x00497b20 inlined at the tail jumps (c3dq's method): eaxIn is the eax the caller holds at
 // the call or jmp. ecx = [0x008400b8]; zero returns eaxIn untouched (0x00497b06/0x00497b08, 0x00497b26/0x00497b28); then
@@ -77,7 +77,7 @@ const unsigned kIatTranslateMessage = 0x004ba1e0;
 // Message / redraw pumps
 // ====================================================================================================================
 
-// 0x00465560  resetScrollText: enterModal483d30 0x00483d30 (call 0x00465560), then [0x00822d68], [0x00822b9c],
+// 0x00465560  resetScrollText: flushInput 0x00483d30 (call 0x00465560), then [0x00822d68], [0x00822b9c],
 // [0x00822b98] = 0 (xor eax, eax 0x00465565; stores 0x00465567, 0x0046556c, 0x00465571). eax = 0 at the ret (0x00465576).
 int __cdecl ResetScrollText_re() {
     kEnterModal();                                                          // 0x00465560
@@ -147,7 +147,7 @@ C0_t FlushRedraw_orig;
 // 0x0045ae70
 SG_HOOK("golf_clean.exe", 0x0045ae70, flushRedraw, FlushRedraw_re, FlushRedraw_orig);
 
-// 0x00483bd0  pumpInput483bd0: [0x0083ad4c] = 0x3f (0x00483bd0); showScreen 0x00483bb0 (0x00483bda); a zero result jumps to
+// 0x00483bd0  doAllTasks: [0x0083ad4c] = 0x3f (0x00483bd0); showScreen 0x00483bb0 (0x00483bda); a zero result jumps to
 // 0x00483bf6. A non-zero result loops: [0x0083ad4c] = 0x3f (0x00483be3), showScreen (0x00483bed) while non-zero
 // (0x00483bf2/0x00483bf4). [0x0083ad4c] = 0 (0x00483bf6), then a tail jmp to gfxFlushA 0x00497b00 (0x00483c00) with eax = 0.
 int __cdecl PumpInput483bd0_re() {
@@ -182,7 +182,7 @@ C0_t PumpInput483c30_orig;
 // 0x00483c30
 SG_HOOK("golf_clean.exe", 0x00483c30, pumpInput483c30, PumpInput483c30_re, PumpInput483c30_orig);
 
-// 0x0045c150  pumpLight: [0x00822d68] = 0 (0x0045c150). Loop: pumpInput483bd0 (0x0045c15a), pumpMessages 0x0045c030
+// 0x0045c150  pumpLight: [0x00822d68] = 0 (0x0045c150). Loop: doAllTasks (0x0045c15a), pumpMessages 0x0045c030
 // (0x0045c15f); a non-zero [0x00822d68] repeats (0x0045c164..0x0045c16b); flushRedraw 0x0045ae70 (0x0045c16d); a non-zero
 // result repeats (0x0045c172/0x0045c174). eax = 0 at the ret (0x0045c176).
 int __cdecl PumpLight_re() {
@@ -202,7 +202,7 @@ SG_HOOK("golf_clean.exe", 0x0045c150, pumpLight, PumpLight_re, PumpLight_orig);
 // 0x0045c030  pumpMessages: PeekMessageA [0x4ba1d8] (msg, 0, 0x200, 0x200, 1) (pushes 0x0045c03e..0x0045c04d); while it
 // returns non-zero (0x0045c04f/0x0045c051, loop test 0x0045c084/0x0045c086) TranslateMessage [0x4ba1e0] (call 0x0045c066)
 // and DispatchMessageA [0x4ba1dc] (call 0x0045c06d) on the message, then Peek again (0x0045c082). Then a zero [0x00822d74]
-// (0x0045c08a..0x0045c092) clears [0x00822d68] (0x0045c094); frameTick483cd0 0x00483cd0 (0x0045c09e); [0x00822d74] = 0
+// (0x0045c08a..0x0045c092) clears [0x00822d68] (0x0045c094); doMouse 0x00483cd0 (0x0045c09e); [0x00822d74] = 0
 // (0x0045c0a3); eax = frameTick's result (ret 0x0045c0b0).
 int __cdecl PumpMessages_re() {
     char msg[0x1c];                                                         // sub esp, 0x1c (0x0045c030)

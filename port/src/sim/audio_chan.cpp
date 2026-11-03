@@ -538,8 +538,8 @@ void a_SubChannel_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(ne
 
 // ---- SubChannel_dtor (rva 0x2ac00): converted from c3dj.cpp SubChannelDtor_re
 // =====================================================================================================================
-// D. The channel/voice destructor family: SubChannel_dtor, Ch5bb90_dtor, destroyMixerVoices, Mixer_dtor, Ch5be88_dtorA/B,
-//    Ch5c178_dtor, Ch5c234_dtor, Ch5c2ec_dtor, unlinkFromActiveList and their scalar-deleting wrappers
+// D. The channel/voice destructor family: SubChannel_dtor, Wave::dtor, destroyMixerVoices, Mixer_dtor, Midi::dtor, Ch5be88_dtorB,
+//    AviSound::dtor, VoiceRx::dtor, VoiceTx::dtor, unlinkFromActiveList and their scalar-deleting wrappers
 // =====================================================================================================================
 // Shared layout (every body reads the same fields): +0x40 a sound object released by delete_sound 0x97d0 through the thunk
 // 0x1a87 (cdecl, one stack argument, `push eax; call 0x1a87; add esp, 4`); +0x44 a flag dword whose bit 1 says the object is
@@ -584,8 +584,8 @@ void a_SubChannel_dtor(Ctx &ctx, const uint32_t *a, Ret &) { SubChannel_dtor_bod
 // =====================================================================================================================
 // L. Constructors of the channel / voice / device-base objects
 // =====================================================================================================================
-// The channel constructors SubChannel_ctor 0x0002b4e0, Ch5bb90_ctor 0x0002c490, Mixer_ctor 0x0002c9f0, Ch5be88_ctor 0x0002d450 and
-// Ch5c178_ctor 0x0002e930 (VAs 0x2b4e0 / 0x2c490 / 0x2c9f0 / 0x2d450 / 0x2e930) open with the same base initialisation (the
+// The channel constructors SubChannel_ctor 0x0002b4e0, MpegStream::ctor 0x0002c490, Mixer_ctor 0x0002c9f0, Midi::ctor 0x0002d450 and
+// AviSound::ctor 0x0002e930 (VAs 0x2b4e0 / 0x2c490 / 0x2c9f0 / 0x2d450 / 0x2e930) open with the same base initialisation (the
 // addresses below are SubChannel_ctor's; the others are the same instructions): +4 = 0x7f (0x2b507), +8 = 0 (0x2b50e), the nine dwords
 // +0xc..+0x2f cleared by `rep stosd` (ecx = 9, eax = 0, edi = this+0xc: 0x2b4fd-0x2b511), +0x30 = 0 (0x2b517), the transient vtable
 // 0x5bae0 (0x2b51c), +0x48, +0x4c, +0x40 and +0x50 = 0 (0x2b522-0x2b52b), +0x44 = 0 stored twice (0x2b531 / 0x2b534, the
@@ -633,8 +633,8 @@ return self;
 int g_negctl_Ch5bb90_scalarDtor = 0;
 void a_Ch5bb90_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5bb90_scalarDtor), Ch5bb90_scalarDtor_body(ctx, a[0], a[1]))); }
 
-// ---- Ch5bb90_dtor (rva 0x2b620): converted from c3dj.cpp Ch5bb90Dtor_re
-void Ch5bb90_dtor_body(Ctx &ctx, u32 self) {
+// ---- Wave::dtor (rva 0x2b620): converted from c3dj.cpp Ch5bb90Dtor_re
+void Wave_dtor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     u32 p = ld<u32>(ctx, o + 0x50);  // 0x2b644
     if (p != 0) snd_delete(ctx, p);  // 0x2b649 / 0x2b652
@@ -648,8 +648,8 @@ void Ch5bb90_dtor_body(Ctx &ctx, u32 self) {
     if (ld<uint8_t>(ctx, o + 0x44) & 2) c3dj_unlinkActive(ctx, o);  // 0x2b6d6 / 0x2b6da (dead after the first block)
     st<u32>(ctx, o, snd_va(ctx, 0x5bb80));  // 0x2b71e
 }
-int g_negctl_Ch5bb90_dtor = 0;
-void a_Ch5bb90_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Ch5bb90_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Ch5bb90_dtor), a[0] + 0x0); }
+int g_negctl_Wave_dtor = 0;
+void a_Wave_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Wave_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Wave_dtor), a[0] + 0x0); }
 
 // ---- startDevicePlayback (rva 0x2b7c0): hand-fixed conversion of c3ex.cpp StartDevPlay_re
 constexpr uint32_t kIatTimeGetTime = 0xb8654;  // c3ex.cpp
@@ -809,8 +809,8 @@ uint32_t Voice_setName_body(Ctx &ctx, u32 self, u32 name) {
 int g_negctl_Voice_setName = 0;
 void a_Voice_setName(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Voice_setName), Voice_setName_body(ctx, a[0], a[1]))); }
 
-// ---- Ch5be88_ctor (rva 0x2d450): converted from c3dj.cpp Ch5be88Ctor_re
-u32 Ch5be88_ctor_body(Ctx &ctx, u32 self) {
+// ---- Midi::ctor (rva 0x2d450): converted from c3dj.cpp Ch5be88Ctor_re
+u32 Midi_ctor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     c3dj_channelBase(ctx, o);
     st<uint32_t>(ctx, o + 0x54, 0);  // 0x2d4c3
@@ -823,8 +823,8 @@ u32 Ch5be88_ctor_body(Ctx &ctx, u32 self) {
     st<uint32_t>(ctx, o + 0x44, f);  // 0x2d4e3
     return self;  // 0x2d4e6
 }
-int g_negctl_Ch5be88_ctor = 0;
-void a_Ch5be88_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5be88_ctor), Ch5be88_ctor_body(ctx, a[0]))); }
+int g_negctl_Midi_ctor = 0;
+void a_Midi_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Midi_ctor), Midi_ctor_body(ctx, a[0]))); }
 
 // ---- Ch5be88_scalarDtorA (rva 0x2d530): converted from c3dj.cpp Ch5be88_scalarDtorA_re
 u32 Ch5be88_scalarDtorA_body(Ctx &ctx, u32 self, uint32_t flags) {
@@ -835,8 +835,8 @@ return self;
 int g_negctl_Ch5be88_scalarDtorA = 0;
 void a_Ch5be88_scalarDtorA(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5be88_scalarDtorA), Ch5be88_scalarDtorA_body(ctx, a[0], a[1]))); }
 
-// ---- Ch5be88_dtorA (rva 0x2d560): converted from c3dj.cpp Ch5be88_dtorA_re
-void Ch5be88_dtorA_body(Ctx &ctx, u32 self) {
+// ---- Midi::dtor (rva 0x2d560): converted from c3dj.cpp Ch5be88_dtorA_re
+void Midi_dtor_body(Ctx &ctx, u32 self) {
     u32 o = self;
 u32 p = ld<u32>(ctx, o + 0x50);
 if (p != 0) snd_delete(ctx, p);
@@ -848,8 +848,8 @@ st<uint32_t>(ctx, o + 0x5c, 0);
 if (ld<uint8_t>(ctx, o + 0x44) & 2) c3dj_unlinkActive(ctx, o);
 st<u32>(ctx, o, snd_va(ctx, 0x5bb80));
 }
-int g_negctl_Ch5be88_dtorA = 0;
-void a_Ch5be88_dtorA(Ctx &ctx, const uint32_t *a, Ret &) { Ch5be88_dtorA_body(ctx, a[0]); neg_mem(ctx, NEG(Ch5be88_dtorA), a[0] + 0x0); }
+int g_negctl_Midi_dtor = 0;
+void a_Midi_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Midi_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Midi_dtor), a[0] + 0x0); }
 
 // ---- SubChannel_openSourceType2 (rva 0x2deb0): hand-fixed conversion of c3ex.cpp OpenSrc2_re
 uint32_t c3ex_create(Ctx &ctx, u32 out, uint32_t a, uint32_t type) { return snd_call(ctx, 0x0000137a, SndAbi::Cdecl, {out, a, type}).eax; }
@@ -921,8 +921,8 @@ st<u32>(ctx, o, snd_va(ctx, 0x5bb80));
 int g_negctl_Ch5be88_dtorB = 0;
 void a_Ch5be88_dtorB(Ctx &ctx, const uint32_t *a, Ret &) { Ch5be88_dtorB_body(ctx, a[0]); neg_mem(ctx, NEG(Ch5be88_dtorB), a[0] + 0x0); }
 
-// ---- Ch5c178_ctor (rva 0x2e930): converted from c3dj.cpp Ch5c178Ctor_re
-u32 Ch5c178_ctor_body(Ctx &ctx, u32 self) {
+// ---- AviSound::ctor (rva 0x2e930): converted from c3dj.cpp Ch5c178Ctor_re
+u32 AviSound_ctor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     c3dj_channelBase(ctx, o);
     st<uint32_t>(ctx, o + 0x54, 0);  // 0x2e9a7
@@ -930,8 +930,8 @@ u32 Ch5c178_ctor_body(Ctx &ctx, u32 self) {
     c3dj_setSourceType(ctx, o, 4);  // 0x2e9b0
     return self;  // 0x2e9b9
 }
-int g_negctl_Ch5c178_ctor = 0;
-void a_Ch5c178_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5c178_ctor), Ch5c178_ctor_body(ctx, a[0]))); }
+int g_negctl_AviSound_ctor = 0;
+void a_AviSound_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(AviSound_ctor), AviSound_ctor_body(ctx, a[0]))); }
 
 // ---- Ch5c178_scalarDtor (rva 0x2ea00): converted from c3dj.cpp Ch5c178_scalarDtor_re
 u32 Ch5c178_scalarDtor_body(Ctx &ctx, u32 self, uint32_t flags) {
@@ -942,8 +942,8 @@ return self;
 int g_negctl_Ch5c178_scalarDtor = 0;
 void a_Ch5c178_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5c178_scalarDtor), Ch5c178_scalarDtor_body(ctx, a[0], a[1]))); }
 
-// ---- Ch5c178_dtor (rva 0x2ea30): hand-fixed conversion of c3dj.cpp Ch5c178Dtor_re
-void Ch5c178_dtor_body(Ctx &ctx, u32 self) {
+// ---- AviSound::dtor (rva 0x2ea30): hand-fixed conversion of c3dj.cpp Ch5c178Dtor_re
+void AviSound_dtor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     u32 sub = ld<u32>(ctx, o + 0x40);  // 0x2ea54
     if (sub != 0) {  // 0x2ea59 / 0x2ea5f
@@ -957,8 +957,8 @@ void Ch5c178_dtor_body(Ctx &ctx, u32 self) {
     if (ld<uint8_t>(ctx, o + 0x44) & 2) c3dj_unlinkActive(ctx, o);  // 0x2ea9e / 0x2eaa2
     st<u32>(ctx, o, snd_va(ctx, 0x5bb80));  // 0x2eae6
 }
-int g_negctl_Ch5c178_dtor = 0;
-void a_Ch5c178_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Ch5c178_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Ch5c178_dtor), a[0] + 0x0); }
+int g_negctl_AviSound_dtor = 0;
+void a_AviSound_dtor(Ctx &ctx, const uint32_t *a, Ret &) { AviSound_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(AviSound_dtor), a[0] + 0x0); }
 
 // ---- openSourceType4 (rva 0x2eb40): hand-fixed conversion of c3ex.cpp OpenSrc4_re
 uint32_t openSourceType4_body(Ctx &ctx, u32 self, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4) {
@@ -1016,8 +1016,8 @@ return self;
 int g_negctl_Ch5c234_scalarDtor = 0;
 void a_Ch5c234_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5c234_scalarDtor), Ch5c234_scalarDtor_body(ctx, a[0], a[1]))); }
 
-// ---- Ch5c234_dtor (rva 0x2ef40): hand-fixed conversion of c3dj.cpp Ch5c234Dtor_re
-void Ch5c234_dtor_body(Ctx &ctx, u32 self) {
+// ---- VoiceRx::dtor (rva 0x2ef40): hand-fixed conversion of c3dj.cpp Ch5c234Dtor_re
+void VoiceRx_dtor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     u32 sub = ld<u32>(ctx, o + 0x40);  // 0x2ef64
     if (sub != 0) {  // 0x2ef69 / 0x2ef6f
@@ -1029,8 +1029,8 @@ void Ch5c234_dtor_body(Ctx &ctx, u32 self) {
     if (ld<uint8_t>(ctx, o + 0x44) & 2) c3dj_unlinkActive(ctx, o);  // 0x2efc1 / 0x2efc5
     st<u32>(ctx, o, snd_va(ctx, 0x5bb80));  // 0x2f009
 }
-int g_negctl_Ch5c234_dtor = 0;
-void a_Ch5c234_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Ch5c234_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Ch5c234_dtor), a[0] + 0x0); }
+int g_negctl_VoiceRx_dtor = 0;
+void a_VoiceRx_dtor(Ctx &ctx, const uint32_t *a, Ret &) { VoiceRx_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(VoiceRx_dtor), a[0] + 0x0); }
 
 // ---- openSourceType6 (rva 0x2f060): hand-fixed conversion of c3ex.cpp OpenSrc6_re
 uint32_t openSourceType6_body(Ctx &ctx, u32 self, uint32_t a1, uint32_t a2, uint32_t a3) {
@@ -1092,8 +1092,8 @@ return self;
 int g_negctl_Ch5c2ec_scalarDtor = 0;
 void a_Ch5c2ec_scalarDtor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5c2ec_scalarDtor), Ch5c2ec_scalarDtor_body(ctx, a[0], a[1]))); }
 
-// ---- Ch5c2ec_dtor (rva 0x2f3f0): converted from c3dj.cpp Ch5c2ecDtor_re
-void Ch5c2ec_dtor_body(Ctx &ctx, u32 self) {
+// ---- VoiceTx::dtor (rva 0x2f3f0): converted from c3dj.cpp Ch5c2ecDtor_re
+void VoiceTx_dtor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     u32 q = ld<u32>(ctx, o + 0x40);  // 0x2f414
     if (q != 0) c3dj_deleteSound(ctx, q);  // 0x2f419 / 0x2f41f / 0x2f422
@@ -1103,8 +1103,8 @@ void Ch5c2ec_dtor_body(Ctx &ctx, u32 self) {
     if (ld<uint8_t>(ctx, o + 0x44) & 2) c3dj_unlinkActive(ctx, o);  // 0x2f474 / 0x2f478
     st<u32>(ctx, o, snd_va(ctx, 0x5bb80));  // 0x2f4bc
 }
-int g_negctl_Ch5c2ec_dtor = 0;
-void a_Ch5c2ec_dtor(Ctx &ctx, const uint32_t *a, Ret &) { Ch5c2ec_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(Ch5c2ec_dtor), a[0] + 0x0); }
+int g_negctl_VoiceTx_dtor = 0;
+void a_VoiceTx_dtor(Ctx &ctx, const uint32_t *a, Ret &) { VoiceTx_dtor_body(ctx, a[0]); neg_mem(ctx, NEG(VoiceTx_dtor), a[0] + 0x0); }
 
 // ---- openSourceType7 (rva 0x2f5e0): hand-fixed conversion of c3ex.cpp OpenSrc7_re
 uint32_t openSourceType7_body(Ctx &ctx, u32 self, uint32_t a1, uint32_t a2, uint32_t a3) {
@@ -1136,8 +1136,8 @@ uint32_t Ch5c2ec_forwardSlot37_body(Ctx &ctx, u32 self) {
 int g_negctl_Ch5c2ec_forwardSlot37 = 0;
 void a_Ch5c2ec_forwardSlot37(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5c2ec_forwardSlot37), Ch5c2ec_forwardSlot37_body(ctx, a[0]))); }
 
-// ---- Ch5c3a4_ctor (rva 0x2f740): converted from c3dj.cpp Ch5c3a4Ctor_re
-u32 Ch5c3a4_ctor_body(Ctx &ctx, u32 self) {
+// ---- dllSoundList::ctor (rva 0x2f740): converted from c3dj.cpp Ch5c3a4Ctor_re
+u32 dllSoundList_ctor_body(Ctx &ctx, u32 self) {
     u32 o = self;
     snd_call(ctx, 0x0000183e, SndAbi::Thiscall, {o}).eax;  // 0x2f75d -> Mixer_ctor 0x2c9f0
     st<u32>(ctx, o, snd_va(ctx, snd_rva::vtbl_Ch5c3a4));  // 0x2f76c
@@ -1149,8 +1149,8 @@ u32 Ch5c3a4_ctor_body(Ctx &ctx, u32 self) {
     c3dj_setSourceType(ctx, o, 8);  // 0x2f794
     return self;  // 0x2f79d
 }
-int g_negctl_Ch5c3a4_ctor = 0;
-void a_Ch5c3a4_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(Ch5c3a4_ctor), Ch5c3a4_ctor_body(ctx, a[0]))); }
+int g_negctl_dllSoundList_ctor = 0;
+void a_dllSoundList_ctor(Ctx &ctx, const uint32_t *a, Ret &r) { r.set_u32(neg_u32(NEG(dllSoundList_ctor), dllSoundList_ctor_body(ctx, a[0]))); }
 
 // ---- Channel_setFormat (rva 0x30fb0): converted from c3dh.cpp SetFormat_re
 uint32_t Channel_setFormat_body(Ctx &ctx, u32 self, uint32_t a1, uint32_t a2, uint32_t a3) {
@@ -2711,7 +2711,7 @@ const FuncDef kFuncs[] = {
     {"snd.SubChannel_dtor", "thiscall", "void", 1, 0, a_SubChannel_dtor, &g_negctl_SubChannel_dtor},
     {"snd.SubChannel_ctor", "thiscall", "pointer", 1, 0, a_SubChannel_ctor, &g_negctl_SubChannel_ctor},
     {"snd.Ch5bb90_scalarDtor", "thiscall", "pointer", 2, 0, a_Ch5bb90_scalarDtor, &g_negctl_Ch5bb90_scalarDtor},
-    {"snd.Ch5bb90_dtor", "thiscall", "void", 1, 0, a_Ch5bb90_dtor, &g_negctl_Ch5bb90_dtor},
+    {"snd.Wave::dtor", "thiscall", "void", 1, 0, a_Wave_dtor, &g_negctl_Wave_dtor},
     {"snd.startDevicePlayback", "thiscall", "uint32", 1, 0, a_startDevicePlayback, &g_negctl_startDevicePlayback},
     {"snd.Channel_setField5cClamped1200", "thiscall", "int", 2, 0, a_Channel_setField5cClamped1200, &g_negctl_Channel_setField5cClamped1200},
     {"snd.Channel_applyFlags", "thiscall", "int", 2, 0, a_Channel_applyFlags, &g_negctl_Channel_applyFlags},
@@ -2720,27 +2720,27 @@ const FuncDef kFuncs[] = {
     {"snd.VoiceSlot_init", "thiscall", "pointer", 1, 0, a_VoiceSlot_init, &g_negctl_VoiceSlot_init},
     {"snd.allocVoiceSlot", "thiscall", "uint32", 2, 0, a_allocVoiceSlot, &g_negctl_allocVoiceSlot},
     {"snd.Voice_setName", "thiscall", "uint32", 2, 0, a_Voice_setName, &g_negctl_Voice_setName},
-    {"snd.Ch5be88_ctor", "thiscall", "pointer", 1, 0, a_Ch5be88_ctor, &g_negctl_Ch5be88_ctor},
+    {"snd.Midi::ctor", "thiscall", "pointer", 1, 0, a_Midi_ctor, &g_negctl_Midi_ctor},
     {"snd.Ch5be88_scalarDtorA", "thiscall", "pointer", 2, 0, a_Ch5be88_scalarDtorA, &g_negctl_Ch5be88_scalarDtorA},
-    {"snd.Ch5be88_dtorA", "thiscall", "void", 1, 0, a_Ch5be88_dtorA, &g_negctl_Ch5be88_dtorA},
+    {"snd.Midi::dtor", "thiscall", "void", 1, 0, a_Midi_dtor, &g_negctl_Midi_dtor},
     {"snd.SubChannel_openSourceType2", "thiscall", "uint32", 2, 0, a_SubChannel_openSourceType2, &g_negctl_SubChannel_openSourceType2},
     {"snd.Channel_releaseSound", "thiscall", "uint32", 1, 0, a_Channel_releaseSound, &g_negctl_Channel_releaseSound},
     {"snd.Ch5be88_scalarDtorB", "thiscall", "pointer", 2, 0, a_Ch5be88_scalarDtorB, &g_negctl_Ch5be88_scalarDtorB},
     {"snd.Ch5be88_dtorB", "thiscall", "void", 1, 0, a_Ch5be88_dtorB, &g_negctl_Ch5be88_dtorB},
-    {"snd.Ch5c178_ctor", "thiscall", "pointer", 1, 0, a_Ch5c178_ctor, &g_negctl_Ch5c178_ctor},
+    {"snd.AviSound::ctor", "thiscall", "pointer", 1, 0, a_AviSound_ctor, &g_negctl_AviSound_ctor},
     {"snd.Ch5c178_scalarDtor", "thiscall", "pointer", 2, 0, a_Ch5c178_scalarDtor, &g_negctl_Ch5c178_scalarDtor},
-    {"snd.Ch5c178_dtor", "thiscall", "void", 1, 0, a_Ch5c178_dtor, &g_negctl_Ch5c178_dtor},
+    {"snd.AviSound::dtor", "thiscall", "void", 1, 0, a_AviSound_dtor, &g_negctl_AviSound_dtor},
     {"snd.openSourceType4", "thiscall", "uint32", 5, 0, a_openSourceType4, &g_negctl_openSourceType4},
     {"snd.buildVoiceRxName", "thiscall", "uint32", 1, 0, a_buildVoiceRxName, &g_negctl_buildVoiceRxName},
     {"snd.Ch5c234_scalarDtor", "thiscall", "pointer", 2, 0, a_Ch5c234_scalarDtor, &g_negctl_Ch5c234_scalarDtor},
-    {"snd.Ch5c234_dtor", "thiscall", "void", 1, 0, a_Ch5c234_dtor, &g_negctl_Ch5c234_dtor},
+    {"snd.VoiceRx::dtor", "thiscall", "void", 1, 0, a_VoiceRx_dtor, &g_negctl_VoiceRx_dtor},
     {"snd.openSourceType6", "thiscall", "uint32", 4, 0, a_openSourceType6, &g_negctl_openSourceType6},
     {"snd.buildVoiceTxName", "thiscall", "uint32", 1, 0, a_buildVoiceTxName, &g_negctl_buildVoiceTxName},
     {"snd.Ch5c2ec_scalarDtor", "thiscall", "pointer", 2, 0, a_Ch5c2ec_scalarDtor, &g_negctl_Ch5c2ec_scalarDtor},
-    {"snd.Ch5c2ec_dtor", "thiscall", "void", 1, 0, a_Ch5c2ec_dtor, &g_negctl_Ch5c2ec_dtor},
+    {"snd.VoiceTx::dtor", "thiscall", "void", 1, 0, a_VoiceTx_dtor, &g_negctl_VoiceTx_dtor},
     {"snd.openSourceType7", "thiscall", "uint32", 4, 0, a_openSourceType7, &g_negctl_openSourceType7},
     {"snd.Ch5c2ec_forwardSlot37", "thiscall", "uint32", 1, 0, a_Ch5c2ec_forwardSlot37, &g_negctl_Ch5c2ec_forwardSlot37},
-    {"snd.Ch5c3a4_ctor", "thiscall", "pointer", 1, 0, a_Ch5c3a4_ctor, &g_negctl_Ch5c3a4_ctor},
+    {"snd.dllSoundList::ctor", "thiscall", "pointer", 1, 0, a_dllSoundList_ctor, &g_negctl_dllSoundList_ctor},
     {"snd.Channel_setFormat", "thiscall", "uint32", 4, 0, a_Channel_setFormat, &g_negctl_Channel_setFormat},
     {"snd.Channel_start", "thiscall", "uint32", 1, 0, a_Channel_start, &g_negctl_Channel_start},
     {"snd.updateVoiceRate", "thiscall", "uint32", 1, 0, a_updateVoiceRate, &g_negctl_updateVoiceRate},

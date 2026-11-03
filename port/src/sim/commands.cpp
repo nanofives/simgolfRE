@@ -303,7 +303,7 @@ int32_t take_code(Ctx &ctx) {
 void pump_messages(Ctx &ctx, PumpKind kind, const char *where) {
   GameState &gs = ctx.gs();
   if (gs.g_rootInput[kClicked] == 0) gs.g_rootInput[kButton] = 0;
-  // frameTick483cd0: jgld's pumps deliver the messages that have arrived
+  // doMouse: jgld's pumps deliver the messages that have arrived
   InputSource *src = input_source(ctx);
   if (kind == PumpKind::Blocking && (!src || src->exhausted())) throw NeedInput{{where}};
   std::vector<Command> batch;
@@ -312,7 +312,7 @@ void pump_messages(Ctx &ctx, PumpKind kind, const char *where) {
   gs.g_rootInput[kClicked] = 0;
 }
 
-// pumpInput483bd0 in loadFlic (+0x54): the display's showScreen loop dispatches what has arrived; no click / button words
+// doAllTasks in loadFlic (+0x54): the display's showScreen loop dispatches what has arrived; no click / button words
 // are touched (pumpMessages' are not this pump's)
 void pump_load(Ctx &ctx) {
   InputSource *src = input_source(ctx);
@@ -325,7 +325,7 @@ void pump_light(Ctx &ctx, const char *where) {
   GameState &gs = ctx.gs();
   gs.g_rootInput[kButton] = 0;
   do {
-    pump_messages(ctx, PumpKind::Drain, where);  // pumpInput483bd0 before it dispatches nothing in the port
+    pump_messages(ctx, PumpKind::Drain, where);  // doAllTasks before it dispatches nothing in the port
   } while (gs.g_rootInput[kButton] != 0 || flush_redraw(ctx) != 0);
 }
 

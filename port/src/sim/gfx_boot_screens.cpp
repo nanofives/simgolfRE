@@ -5,7 +5,7 @@
 // ShowLoadingScreen_re, c3en.cpp SelectDifficultyScreen_re, c3fw.cpp ShowThemePackSelect_re / PickAProScreen_re, c3dv.cpp
 // DrawValueWidget_re (drawMessageBuffer), c3dq.cpp DrawTextSurface_re, c3dw.cpp DrawPanelBackdrop_re, c3df.cpp
 // SurfaceDrawScaled_re; instruction addresses are in those sources. Each body draws through the core and family primitives
-// (gfxb::find_body): loadImage, Surface_blit, Image_draw, Surface_blitThunk, setDrawTarget, drawCenteredText, drawText4049d0,
+// (gfxb::find_body): loadImage, Surface_blit, Image_draw, Surface_blitThunk, setDrawTarget, drawCenteredText, drawTextWithColor,
 // fillWindowRect, blitPanel, drawCenteredText2, Window::refreshFull, the frame-object lifetimes.
 //
 // A frame object of the original (a Surface or Image on the screen function's stack) is a gfx_local_key: S2.7 uses the
@@ -21,7 +21,7 @@
 //       0x191, v, 0x16, 0x80007b20), drawCenteredText(`Loading...`, 0x190, 0x194, black); then the frame objects are freed.
 //       drawMessageBuffer as the original runs it: lines broken at ' ', newline and '^' when the summed one-character widths
 //       pass cols * 8, each drawn with drawTextSurface when the line height (Widget_value - 4, at least 10) is above 0x10 and
-//       the colour is 0x80007fff, else drawText4049d0. drawTextSurface = setQuad(target, colour, 1, 0, 1) + drawText: a
+//       the colour is 0x80007fff, else drawTextWithColor. drawTextSurface = setQuad(target, colour, 1, 0, 1) + drawText: a
 //       shadow run in run-palette colour 1 at (x, y + 1) under the main run (the colour U-1230 measured for that entry, as
 //       gfx_prim_text2.cpp draws it).
 //   selectDifficultyScreen.setup / .redraw(sel) / .tip / .teardown
@@ -39,7 +39,7 @@
 //       f_strpool_4e4130) give one flag byte (bits 1, 2, 4, 8, 0x20, 0x40; the first probe stores, the others OR); eight
 //       Surfaces A and four B, the Image loads the highlight sheet (f_strpool_4e40a0 + 0x70) and A's eight rectangles are cut,
 //       then the screen (+0x54) and B's four. redraw: setDrawTarget(Root, g_font51a028), the Image whole, the title (+0x40)
-//       drawText4049d0 at (0x4e, 0x22), setDrawTarget(Root, g_font51b360), the five column titles (+0x38, +0x2c, +0x20,
+//       drawTextWithColor at (0x4e, 0x22), setDrawTarget(Root, g_font51b360), the five column titles (+0x38, +0x2c, +0x20,
 //       +0x14, +0xc) centred at x 0x15a, 0x1b4, 0x20e, 0x268, 0x2c2 and y 0x3e / 0x25 alternating, setDrawTarget(Root,
 //       g_font51a028); per theme row (pen y 0x5c + 0x20 i): the current theme (its name equal to g_theme) gets A[7] at x
 //       0x48 and its name in black at (0x49, y + 0xb), the others the name in 0x80004210; then for column b = 0..5 a set flag
@@ -151,7 +151,7 @@ void draw_message(Gfx &g, Ctx &ctx, uint32_t src, int32_t cols, int32_t x, int32
       if (mode() != 2) gfxb::draw_text_string(g, ctx, s, 0, x, add32(yy, 1), kRunPalette1, false, "drawTextSurface (shadow)");
       gfxb::draw_text_string(g, ctx, s, 0, x, yy, kWhite, false, "drawTextSurface");
     } else {
-      gfxb::draw_text_string(g, ctx, s, 0, x, yy, colour, false, "drawText4049d0");
+      gfxb::draw_text_string(g, ctx, s, 0, x, yy, colour, false, "drawTextWithColor");
     }
   };
   uint32_t st = 0, e = 0, i = 0;
@@ -329,7 +329,7 @@ void b_tp_redraw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const uint32_t f_main = state_va(ctx, &GameState::g_font51a028), f_cols = state_va(ctx, &GameState::g_font51b360);
   font(g, ctx, f_main);
   blit_whole(g, ctx, tp_img());
-  call(g, ctx, "drawText4049d0", {pool + 0x40, 0x4e, 0x22, kBlack});
+  call(g, ctx, "drawTextWithColor", {pool + 0x40, 0x4e, 0x22, kBlack});
   font(g, ctx, mode() == 5 ? f_main : f_cols);
   static const struct { uint32_t off; int32_t x, y; } kCol[5] = {
       {0x38, 0x15a, 0x3e}, {0x2c, 0x1b4, 0x25}, {0x20, 0x20e, 0x3e}, {0x14, 0x268, 0x25}, {0x0c, 0x2c2, 0x3e}};
@@ -346,9 +346,9 @@ void b_tp_redraw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     const bool cur = gfxb::vstring(m, nm) == theme;
     if (cur) {
       image_draw(g, ctx, tp_a(7), 0x48, y);
-      call(g, ctx, "drawText4049d0", {nm, 0x49, u32(add32(y, 0xb)), kBlack});
+      call(g, ctx, "drawTextWithColor", {nm, 0x49, u32(add32(y, 0xb)), kBlack});
     } else {
-      call(g, ctx, "drawText4049d0", {nm, 0x49, u32(add32(y, 0xb)), kGrey});
+      call(g, ctx, "drawTextWithColor", {nm, 0x49, u32(add32(y, 0xb)), kGrey});
     }
     const int32_t fl = static_cast<int8_t>(static_cast<size_t>(i) < ts.flags.size() ? ts.flags[static_cast<size_t>(i)] : 0);
     for (int b = 0; b < 6; ++b) {

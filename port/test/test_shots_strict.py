@@ -21,7 +21,7 @@ result. The evidence, in three layers:
 
 What the oracle leaves out, both sides alike (U-1160, U-1161): the original's frame word starts at 0 (the emulated stack
 is zero-filled; in the live game it is whatever an earlier frame left, the port starts it at 0, U-0880) and the message
-pump the original calls at the end of every pruning step (pumpInput483bd0) is replaced by a `ret`, as the port drops it
+pump the original calls at the end of every pruning step (doAllTasks) is replaced by a `ret`, as the port drops it
 (drawing and input, U-0881): with no display object in the state the real pump dereferences a null display.
 """
 from __future__ import annotations
@@ -51,7 +51,7 @@ DEFECT = "chooseShotTarget.strictFlagSticky"
 FUNCTION = "chooseShotTarget"
 G = 5                       # the golfer the search runs for
 ENTRY = 0x00422FB0          # chooseShotTarget
-PUMP = 0x00483BD0           # pumpInput483bd0 (UI): replaced by `ret` in the emulated original, dropped by the port
+PUMP = 0x00483BD0           # doAllTasks (UI): replaced by `ret` in the emulated original, dropped by the port
 STRICT_STORE = 0x00423B0E   # mov dword [esp + 0xb4], 1   (the only write of the strict flag)
 STRICT_READ = 0x00423B20    # mov edx, [esp + 0xb4]       (feeds scanTileLine's seventh argument)
 FRAME_STRICT = 0xB4
@@ -183,7 +183,7 @@ def run_original(image: bytes, watch: dict[int, str] | None = None):
     """The ORIGINAL chooseShotTarget(G) over `image` (the GameState at its original data base) in Unicorn.
 
     Returns (eax, error or None, image after, events). `watch` maps instruction addresses to event names; the hook
-    records (name, dword at [esp + FRAME_STRICT] when the name is 'read'). pumpInput483bd0 is replaced by a `ret`."""
+    records (name, dword at [esp + FRAME_STRICT] when the name is 'read'). doAllTasks is replaced by a `ret`."""
     import vector_emu as VE
     from unicorn import (UC_ARCH_X86, UC_HOOK_CODE, UC_HOOK_MEM_FETCH_UNMAPPED, UC_HOOK_MEM_READ_UNMAPPED,
                          UC_HOOK_MEM_WRITE_UNMAPPED, UC_MODE_32, Uc, UcError)

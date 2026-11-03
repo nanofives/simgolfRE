@@ -2374,8 +2374,8 @@ cell); sound strcpy 0x1004a010 by library-object identity with SP5 LIBCMT.LIB st
 drawAmenitiesPanel 0x00434cf0 (SMSG Toolbar.cpp 99.9% under 8168, one reload pair after the second tooltip call 0x00432620 in the
 other order, 100% only under SP5's front end, U-1910 / U-2001; route: scenario_ab.py over cov_a_build / cov_k3_build) and
 fillSpanDown 0x00493000 / fillSpanUp 0x00493080, which SMSG PolyFill.cpp matches 100% (41/41, 40/40) as compiled C functions whose
-whole body is one inline __asm block: whether that counts under the round-36 inline-asm rule is Mariano's (U-2000; CSVs parked in
-log/roadmap/S11/1_ev/, not log/diff). S11.2: the Ghidra master already carried every re/names row (5,222 function rows, 1,091
+whole body is one inline __asm block: which G26 (Mariano, 2026-11-02) ruled is not C4 match evidence: they need scenario evidence
+(U-2000 resolved; CSVs parked in log/roadmap/S11/1_ev/, not log/diff). S11.2: the Ghidra master already carried every re/names row (5,222 function rows, 1,091
 globals rows) except the four IMPORTED `entry` names of the smsg_*_lib CRT startups (kept: the loader's symbol) and five withdrawn
 labels: ApplyNames skipped withdrawn `label <name>` rows at data addresses (G1's g_animals, g_typeAttr, g_recordOccupancy,
 gTextBuffer2Index) and round 17's g_golferRoster 0x0058587a had no withdrawn row; all five were removed (backup
@@ -2387,6 +2387,30 @@ pointer installers, reach (called 1,015, pointer-installed 657, pointer-no-insta
 line (exe 295, sound 289, jgld 22, Terrain 0); generator log/roadmap/S11/3_triage.py. 220 rows passed endstate.py and were marked
 (dead 188, trivial 32), open C2 1,881 -> 1,661. endstate.py passes the four PE entry points as dead (U-2020; excluded by hand). 280
 of the exe's 296 pointer-installed open rows already have a 100% match but no C3 (vtable / callback bodies): the largest group left.
+Roadmap S11.4, the S10 renames that waited for the port (2026-11-01, notes log/roadmap/S11/4_notes.md, merge 4_merge.md, U-2030..U-2032):
+the 70 `P` rows of S10 (8_merge.md sections 2 / 2b, 10_renames.tsv, 9_renames_sound.tsv minus three already applied) are applied by
+log/roadmap/S11/4_assemble.py --root <dir> [--names]: re/names + hooks.csv retag (4_names.py), 936 anchored edits in 190 files of port/,
+shim/src (comments only: 84 files, code and strings identical by lexer), re/model (addresses.tsv rows, the stream rows' types, the section
+headers) and two new files, then the generated headers rebuilt (simgolf_model.h, model_ctypes.py, gamestate.h / _meta.inc /
+_addresses.inc, soundstate.h) and model_merge checked to reproduce addresses.tsv. g_animalRecords -> g_vipResidents (type VipResident),
+g_recordBanks -> g_homeLayouts (type SgHomeLayout), spawnObject -> spawnVipResident, placeAnimal -> updateVipResident, tickAnimals ->
+updateVipResidents, drawFlyingBall -> drawWalkers, announceBuilding -> openHole, holeMagazineEvent -> rateCourseHoles, rateTile ->
+golferShotReach, pumpInput483bd0 -> doAllTasks, frameTick483cd0 -> doMouse, enterModal483d30 -> flushInput, drawText4049d0 ->
+drawTextWithColor, the sound placeholders Ch5* / Ctrl5* / Sound5* -> their class names, and the rest of 4_renames.tsv. Keep the old
+spellings: registry keys, fixtures, SG_HOOK name tokens (the shim log and scenario CSV stems), pytest ids, the defect switch ids
+spawnObject.cellSearchBound / placeAnimal.zeroFrameCount (U-2032) and every corpus file. The corpus is never rewritten:
+re/port/corpus_aliases.tsv + port/test/renames.py translate at the readers (vec stems, raw capture keys, the manifest and coverage
+tables, a .vec document's `sym` locations in re/tools/vector_lib.read_vec, segment frames.json / checkpoints.json, the captures'
+framehash.json); without them every boot row ERRORs and every segment fails its load check. Merged by I25 on cdeb2609 (log/roadmap/merges/I25.md, fast gates by
+G30): builds x64 / Win32 rc 0, static 820 passed (tests/test_port_scope.py and port/test/audio_stream.py read re/port/scope.tsv's
+old names through port/test/renames.py), segments 205 / 205 x64 and Win32 with 0 digests changed, boot 67 / 2 / 2 on both, app
+replay 3 / 3, gfx.check 0 duplicates, the 8 golden files, test_tick 250, test_golfers 60 and the audio files. Golden digests that hash a renamed callee name (commands.recordPeer logs FNV-1a of the
+name) are re-pinned through SG_EMU_ORACLE=update after the oracle is GREEN.
+S11.5 (2026-11-01, log/roadmap/S11/5_notes.md, U-2020 resolved, U-2040..U-2042): re/tools/endstate.py's dead checks refuse a function
+containing the module's AddressOfEntryPoint or a TLS callback (`not the PE entry point or a TLS callback`; none of the four modules has a
+TLS directory) and count an export inside a function's range, not only at its entry; before, the four CRT startups passed as dead (S11.3
+left them out of its marks by hand). tests/test_endstate_entry.py: the entry points refused, every hooks.csv dead / trivial row still
+passing, stubbed TLS / export cases, controls RED.
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

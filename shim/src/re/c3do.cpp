@@ -13,7 +13,7 @@
 //
 // Groups:
 //   A. list-owning destructor bodies (ChainObject_dtor, Ctrl5b58c_dtor, Ctrl5b58c_dtorEmbedded, MidiReader_freeContent) and wrappers
-//   B. constructors (Sound5c450_ctor, StreamReader_ctor, WaveStream::ctor, DsBuffer::ctor) and Channel_propagateFlag0
+//   B. constructors (CVoiceRxMgr::ctor, StreamReader_ctor, WaveStream::ctor, DsBuffer::ctor) and Channel_propagateFlag0
 #include "hooks.h"
 #include <stdint.h>
 
@@ -167,7 +167,7 @@ unsigned __fastcall ChanPropFlag_re(void* self, void*, unsigned v) {
     return 0;                                                                    // 0x1002ddd2
 }
 
-// 0x00030080  Sound5c450_ctor (VA 0x10030080). Base constructor buildVoiceRxName 0x1002ed50 (thunk 0x10001230, call 0x1003009f) on
+// 0x00030080  CVoiceRxMgr::ctor (VA 0x10030080). Base constructor buildVoiceRxName 0x1002ed50 (thunk 0x10001230, call 0x1003009f) on
 // this; then +0x5c, +0x60, +0x64, +0x68 = 0 (0x100300aa-0x100300b3); the vtable 0x1005c450 at +0 (0x100300b9); +0xb8 = 0 and +0xb4 = 0
 // (0x100300bf / 0x100300c5); +0x58 = 0 (0x100300b6 / 0x100300cb); 0x12 zero dwords from +0x6c (rep stosd 0x100300cd-0x100300d7);
 // Sound_setSourceType 0x1002ad10 (thunk 0x100018a2) with the argument 6 (0x100300d9-0x100300e2); +0xd4, +0xe4, +0xd8, +0xe0 = 0
@@ -214,7 +214,7 @@ void* __fastcall StreamReaderCtor_re(void* self, void*) {
     return self;                                                                 // 0x10031245
 }
 
-// 0x00006020  WaveStream::ctor (VA 0x10006020). Base constructor Ch5c178_ctor 0x1002e930 (thunk 0x1000125d, call 0x1000603f) on this;
+// 0x00006020  WaveStream::ctor (VA 0x10006020). Base constructor AviSound::ctor 0x1002e930 (thunk 0x1000125d, call 0x1000603f) on this;
 // +0x5c, +0x60, +0x64, +0x68 = 0 (0x1000604a-0x10006053); the vtable 0x1005b1c0 at +0 (0x10006059); +0xc8 = 0 (0x1000605f); +0x58 = 0
 // (0x10006056 / 0x1000606a); 0x12 zero dwords from +0x6c (rep stosd 0x1000606e-0x10006083); +0xb8, +0xbc, +0xb4 = 0 (0x10006071 /
 // 0x10006077 / 0x1000607d); +0xc4 and +0xc0 = 0 (0x1000608e / 0x10006094); Sound_setSourceType 0x1002ad10 (thunk 0x100018a2) with the
@@ -509,7 +509,7 @@ int __stdcall AppendNamedNode_re(const void* guid, const char* desc, const char*
 // 0x0001b510 / 0x0001b6b0 / 0x0001b710 / 0x0001b770 / 0x0001b7d0  dynInit_ctrl100b4b50 / ..4c38 / ..4d20 / ..4a68 / ..4e08 (VAs the same plus
 // 0x10000000): static-initializer stubs. Each pushes 13 constants (the first is the last argument pushed: 0x1001b51c etc.), loads the object
 // address (0x100b4b50 / 0x100b4c38 / 0x100b4d20 / 0x100b4a68 / 0x100b4e08, `mov ecx, imm` 0x1001b52a / 0x1001b6ca / 0x1001b72a / 0x1001b78a /
-// 0x1001b7ea) and calls Ctrl5b19c_ctor 0x1001bee0 (thunk 0x1000123f, `ret 0x34`: call 0x1001b52f etc.), then registers the destructor stub (pushed
+// 0x1001b7ea) and calls NoteMap::ctor_1001bee0 0x1001bee0 (thunk 0x1000123f, `ret 0x34`: call 0x1001b52f etc.), then registers the destructor stub (pushed
 // 0x1001b534 / 0x1001b6d4 / 0x1001b734 / 0x1001b794 / 0x1001b7f4: 0x1001b550 / 0x1001b6f0 / 0x1001b750 / 0x1001b7b0 / 0x1001b810) with _atexit
 // 0x10042647 (call 0x1001b539 etc., cdecl, `pop ecx`) whose result (0 or -1) is the stub's. The five objects are 0xe8 bytes apart in .data and
 // no instruction of the DLL addresses them besides these stubs and the destructor stubs (the log/c3/alt/c3dh_globrefs.py scan).
@@ -1636,7 +1636,7 @@ SG_HOOK("sound.dll", 0x0001c950, Ctrl5b58c_scalarDtor, Ctrl5b58c_scalarDtor_re, 
 SG_HOOK("sound.dll", 0x0001e7d0, MidiReader_dtor, MidiReader_dtor_re, MidiReader_dtor_orig);
 // 0x0002ddb0  Channel_propagateFlag0
 SG_HOOK("sound.dll", 0x0002ddb0, Channel_propagateFlag0, ChanPropFlag_re, ChanPropFlag_orig);
-// 0x00030080  Sound5c450_ctor
+// 0x00030080  CVoiceRxMgr::ctor
 SG_HOOK("sound.dll", 0x00030080, Sound5c450_ctor, Sound5c450Ctor_re, Sound5c450Ctor_orig);
 // 0x00031200  StreamReader_ctor
 SG_HOOK("sound.dll", 0x00031200, StreamReader_ctor, StreamReaderCtor_re, StreamReaderCtor_orig);

@@ -75,7 +75,7 @@ int __cdecl TypeAtPos_re(int px, int py) {
     return at<signed char>(0x005722E8 + x * 50 + y);
 }
 
-// 0x00449310  tileQuery449310(a, b, c): cornerHeights(a, b, c, 1) (0x0040bfe0), the 4th argument fixed to 1
+// 0x00449310  cornerHeightAt(a, b, c): cornerHeights(a, b, c, 1) (0x0040bfe0), the 4th argument fixed to 1
 // (push 1 at 0x0044931c).
 Int3_t TileQuery449310_orig;
 int __cdecl TileQuery449310_re(int a, int b, int c) {
@@ -146,7 +146,7 @@ int __cdecl RaiseFromNeighbours_re(int x, int y, int sameByte) {
     return changed;
 }
 
-// 0x0042f530  relaxEdges42f530(x, y): clears the wall-mask byte at 0x005619a0 (cell x*50+y, 0x0042f568) after a
+// 0x0042f530  calcTileWallMask(x, y): clears the wall-mask byte at 0x005619a0 (cell x*50+y, 0x0042f568) after a
 // cornerRange call (0x0042f4b0) whose outputs are discarded, then for each orthogonal neighbour (kDirX/kDirY indices
 // 0,2,4,6) that is not blocked (0x0040bf60) sets bit k when cornerHeights(x, y, k-1, 0) < cornerHeights(nx, ny, k+5, 0)
 // or cornerHeights(x, y, k+1, 0) < cornerHeights(nx, ny, k+3, 0) (all 0x0040bfe0).

@@ -245,9 +245,9 @@ int __fastcall RootWinOnKey_re(void*, void*, int a, int code) {
 }
 
 // =====================================================================================================================
-// 0x00401c00  tickAnimals: walks the 0x3c-byte records from 0x0056d1d8 (0x00401c04) to 0x0056e948 (0x00401c1c, 100
+// 0x00401c00  updateVipResidents: walks the 0x3c-byte records from 0x0056d1d8 (0x00401c04) to 0x0056e948 (0x00401c1c, 100
 // records) with an index from 0 (0x00401c02, 0x00401c1b); for every record whose first word is not 0xffff (0x00401c09)
-// it calls placeAnimal 0x004017d0 (cdecl) with the index (0x00401c0f..0x00401c15). No result (eax is placeAnimal's last
+// it calls updateVipResident 0x004017d0 (cdecl) with the index (0x00401c0f..0x00401c15). No result (eax is updateVipResident's last
 // value or the caller's: void).
 // =====================================================================================================================
 typedef void(__cdecl* PlaceAnimal_t)(int i);

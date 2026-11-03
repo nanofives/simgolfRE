@@ -9,13 +9,13 @@
 //   spreadShade    -> tileBlocked 0x0040bf60 (C3, golf_math.cpp), approxDistance 0x00467170 (C3, golf_math.cpp)
 //                     and clamp 0x00467130 (C3, c3f.cpp)
 //   spreadAllShade -> spreadShade 0x004615f0 (IN THIS BATCH: re-run with its hook off)
-//   spawnObject    -> Random::range 0x0045c1e0 (C3, c3f.cpp); both arms advance the same restored seed
+//   spawnVipResident  -> Random::range 0x0045c1e0 (C3, c3f.cpp); both arms advance the same restored seed
 //   pass_startup   -> cinfo->marker->write_frame_header / write_scan_header (fixture callbacks)
 //   finish_pass    -> cinfo->entropy->finish_pass (a fixture callback)
 //   Surface::blitRLE -> the locked surface's vtable slots +0x20 and +0x24 (fixture callbacks)
 //
 //   pass_startup     0x004b5ca0   finish_pass      0x004b5cd0   spreadShade   0x004615f0
-//   spreadAllShade   0x004616f0   Surface::blitRLE 0x00482990   spawnObject   0x004011e0
+//   spreadAllShade   0x004616f0   Surface::blitRLE 0x00482990   spawnVipResident  0x004011e0
 //   pickGolferName   0x00467600
 #include "hooks.h"
 
@@ -240,7 +240,7 @@ int __fastcall BlitRLE_re(void* self, void*, unsigned char* chunk, int, void* di
 }
 
 // ---- sim ---------------------------------------------------------------------------------------------------
-// 0x004011e0  spawnObject(lot, kind, a, b): fill the first free record of the 100-entry table at 0x0056d1b8
+// 0x004011e0  spawnVipResident(lot, kind, a, b): fill the first free record of the 100-entry table at 0x0056d1b8
 // (stride 0x3c) and drop it on a free cell of the lot's 19x6 cell map.
 // A record is free when its 16-bit type field at +0x20 is -1; the search walks those fields from 0x0056d1d8
 // and stops at 0x0056e948 (0x004011e7 / 0x004011f1 / 0x004011f7), returning with nothing written when every
@@ -334,7 +334,7 @@ SG_HOOK("golf_clean.exe", 0x004615f0, spreadShade, SpreadShade_re, SpreadShade_o
 SG_HOOK("golf_clean.exe", 0x004616f0, spreadAllShade, SpreadAllShade_re, SpreadAllShade_orig);
 // 0x00482990  Surface::blitRLE
 SG_HOOK("golf_clean.exe", 0x00482990, Surface_blitRLE, BlitRLE_re, BlitRLE_orig);
-// 0x004011e0  spawnObject
+// 0x004011e0  spawnVipResident
 SG_HOOK("golf_clean.exe", 0x004011e0, spawnObject, SpawnObject_re, SpawnObject_orig);
 // 0x00467600  pickGolferName
 SG_HOOK("golf_clean.exe", 0x00467600, pickGolferName, PickGolferName_re, PickGolferName_orig);

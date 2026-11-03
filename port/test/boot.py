@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 from port.test import lib as L  # noqa: E402
 from port.test import segment_files  # noqa: E402
 from port.test import segments as SG  # noqa: E402
+from port.test import renames as RN  # noqa: E402
 
 TRACES = ROOT / "port" / "corpus" / "traces"
 CAPTURES = ROOT / "log" / "p2" / "p24"
@@ -63,7 +64,7 @@ def expected_records(scenario: str):
     raw = fb.read_bytes()
     rec = 8 + 8 * n
     out = [(struct.unpack_from("<I", raw, i)[0], list(struct.unpack_from("<%dQ" % n, raw, i + 8))) for i in range(0, len(raw), rec)]
-    return meta["symbols"], out
+    return RN.symbols(meta["symbols"]), out
 
 
 def scenarios() -> list[str]:

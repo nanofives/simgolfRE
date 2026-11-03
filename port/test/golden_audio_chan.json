@@ -18,7 +18,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5bb90_dtor",
+  "name": "snd.Wave::dtor",
   "regions": [
    [
     805335376,
@@ -312,7 +312,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5be88_ctor",
+  "name": "snd.Midi::ctor",
   "regions": [
    [
     805335376,
@@ -399,7 +399,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5be88_dtorA",
+  "name": "snd.Midi::dtor",
   "regions": [
    [
     805335376,
@@ -987,7 +987,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5c178_ctor",
+  "name": "snd.AviSound::ctor",
   "regions": [
    [
     805335376,
@@ -1074,7 +1074,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5c178_dtor",
+  "name": "snd.AviSound::dtor",
   "regions": [
    [
     805335376,
@@ -1416,7 +1416,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5c234_dtor",
+  "name": "snd.VoiceRx::dtor",
   "regions": [
    [
     805335376,
@@ -1758,7 +1758,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5c2ec_dtor",
+  "name": "snd.VoiceTx::dtor",
   "regions": [
    [
     805335376,
@@ -2191,7 +2191,7 @@
   "fpcw": [
    639
   ],
-  "name": "snd.Ch5c3a4_ctor",
+  "name": "snd.dllSoundList::ctor",
   "regions": [
    [
     805335376,

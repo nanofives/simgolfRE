@@ -470,7 +470,7 @@ unsigned __fastcall SvcVoices_re(void* self, void*) {
 }
 
 // 0x00003f30  Sound::ctor (VA 0x10003f30). __thiscall, plain `ret`, wrapped in a C++ EH frame (0x10003f30-0x10003f3e, state byte
-// 0x10003f8b) that no path of the body unwinds. `call 0x10002513` (thunk to Sound5b6a8_ctor 0x1001f4a0) with ecx = this
+// 0x10003f8b) that no path of the body unwinds. `call 0x10002513` (thunk to Seq::ctor_1001f4a0 0x1001f4a0) with ecx = this
 // (0x10003f4f); then the dwords this+0xa4c, +0xa50, +0xa54, +0xa58 are cleared (0x10003f5a-0x10003f66), the vtable 0x1005b000 is
 // stored at this+0 (0x10003f7f), 0x40 dwords from this+0x948 are zeroed (`rep stosd` 0x10003f72-0x10003f85), `call 0x100018a2`
 // (thunk to Sound_setSourceType 0x1002ad10) runs with ecx = this and 5 (0x10003f87-0x10003f90), this+0xa48 is cleared

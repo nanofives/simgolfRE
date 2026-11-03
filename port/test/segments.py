@@ -28,6 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from port.test import lib as L  # noqa: E402
+from port.test import renames as RN  # noqa: E402  (roadmap S11.4: corpus symbols -> GameState symbols)
 from port.test import segment_files  # noqa: E402  (the files a recording's install held beyond original/, 3.8 stream 38b)
 
 SEG_DIR = ROOT / "port" / "corpus" / "segments"
@@ -87,11 +88,12 @@ def read_frames(path: pathlib.Path, n: int) -> list:
 def load_segment(d: pathlib.Path) -> Segment:
     d = pathlib.Path(d)
     fj = json.loads((d / "frames.json").read_text())
-    syms = fj["symbols"]
+    syms = RN.symbols(fj["symbols"])
     return Segment(scenario=d.parent.name, index=int(d.name), dir=d, start=(d / "start.data.bin").read_bytes(),
                    noise=(d / "noise.bin").read_bytes(), symbols=syms,
                    records=read_frames(d / "frames.bin", len(syms)),
-                   checkpoints=json.loads((d / "checkpoints.json").read_text()),
+                   checkpoints={k: dict(v, hashes=RN.hashes(v["hashes"])) if isinstance(v, dict) and "hashes" in v else v
+                                for k, v in json.loads((d / "checkpoints.json").read_text()).items()},
                    start_json=json.loads((d / "start.json").read_text()), trace=(d / "trace.trace").read_bytes())
 
 

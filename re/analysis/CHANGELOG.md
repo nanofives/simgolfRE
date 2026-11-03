@@ -4,6 +4,74 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-11-03  004a0eb0  viewDispatchOnRightClick  name viewDispatchSlot32->viewDispatchOnRightClick  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0e90  viewDispatchOnRightUp  name viewDispatchSlot34->viewDispatchOnRightUp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0e60  viewDispatchOnLeftUp  name viewDispatchSlot31->viewDispatchOnLeftUp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0e40  viewDispatchOnRightDoubleClick  name viewDispatchSlot39->viewDispatchOnRightDoubleClick  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0e20  viewDispatchOnRightDown  name viewDispatchSlot33->viewDispatchOnRightDown  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0db0  viewDispatchOnLeftClick  name viewDispatchSlot29->viewDispatchOnLeftClick  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0bf0  viewDispatchOnKeyDown  name viewDispatchSlot36->viewDispatchOnKeyDown  log/roadmap/S11/4_retag.tsv
+2026-11-03  004a0b50  viewDispatchOnLeftDown  name viewDispatchSlot30->viewDispatchOnLeftDown  log/roadmap/S11/4_retag.tsv
+2026-11-03  0049fff0  optionDialogOnLeftDoubleClick_vtordisp  name optionDialogSlot38_vtordisp->optionDialogOnLeftDoubleClick_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  00491a20  viewDispatchOnRightDoubleClick_vtordisp  name viewDispatchSlot39_vtordisp->viewDispatchOnRightDoubleClick_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  00491a00  viewDispatchOnKeyDown_vtordisp  name viewDispatchSlot36_vtordisp->viewDispatchOnKeyDown_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004919f0  viewDispatchOnRightUp_vtordisp  name viewDispatchSlot34_vtordisp->viewDispatchOnRightUp_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004919e0  viewDispatchOnRightDown_vtordisp  name viewDispatchSlot33_vtordisp->viewDispatchOnRightDown_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004919d0  viewDispatchOnRightClick_vtordisp  name viewDispatchSlot32_vtordisp->viewDispatchOnRightClick_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004919c0  viewDispatchOnLeftUp_vtordisp  name viewDispatchSlot31_vtordisp->viewDispatchOnLeftUp_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004919b0  viewDispatchOnLeftDown_vtordisp  name viewDispatchSlot30_vtordisp->viewDispatchOnLeftDown_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  004919a0  viewDispatchOnLeftClick_vtordisp  name viewDispatchSlot29_vtordisp->viewDispatchOnLeftClick_vtordisp  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002f740  dllSoundList::ctor  name Ch5c3a4_ctor->dllSoundList::ctor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002d450  Midi::ctor  name Ch5be88_ctor->Midi::ctor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002d560  Midi::dtor  name Ch5be88_dtorA->Midi::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002f3f0  VoiceTx::dtor  name Ch5c2ec_dtor->VoiceTx::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002ef40  VoiceRx::dtor  name Ch5c234_dtor->VoiceRx::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002ea30  AviSound::dtor  name Ch5c178_dtor->AviSound::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002e930  AviSound::ctor  name Ch5c178_ctor->AviSound::ctor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002c490  MpegStream::ctor  name Ch5bb90_ctor->MpegStream::ctor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0002b620  Wave::dtor  name Ch5bb90_dtor->Wave::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0001bee0  NoteMap::ctor_1001bee0  name Ctrl5b19c_ctor->NoteMap::ctor_1001bee0  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0001cbf0  TrackCtrl::ctor  name Ctrl5b668_ctor->TrackCtrl::ctor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0001bd90  NoteMap::ctor_1001bd90  name Ctrl5b5c0_ctor->NoteMap::ctor_1001bd90  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:00030080  CVoiceRxMgr::ctor  name Sound5c450_ctor->CVoiceRxMgr::ctor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:00030180  CVoiceRxMgr::dtor  name Sound5c450_dtor->CVoiceRxMgr::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0001ff50  Seq::dtor  name Sound5b6a8_dtor->Seq::dtor  log/roadmap/S11/4_retag.tsv
+2026-11-03  sound.dll:0001f4a0  Seq::ctor_1001f4a0  name Sound5b6a8_ctor->Seq::ctor_1001f4a0  log/roadmap/S11/4_retag.tsv
+2026-11-03  00485570  VoiceRx::getBufferSize  name VoiceRx::fwdDev36->VoiceRx::getBufferSize  log/roadmap/S11/4_retag.tsv
+2026-11-03  00485390  VoiceRx::getNbuffers  name VoiceRx::fwdDev37->VoiceRx::getNbuffers  log/roadmap/S11/4_retag.tsv
+2026-11-03  00485040  Snd::getTime_485040  name Snd::fwdVoiceB8->Snd::getTime_485040  log/roadmap/S11/4_retag.tsv
+2026-11-03  00484b00  Snd::isHwbuffer  name Snd::fwdVoiceCC->Snd::isHwbuffer  log/roadmap/S11/4_retag.tsv
+2026-11-03  00484870  Snd::isLoaded  name Snd::fwdVoice60->Snd::isLoaded  log/roadmap/S11/4_retag.tsv
+2026-11-03  004847e0  Snd::getTime_4847e0  name Snd::fwdVoice74->Snd::getTime_4847e0  log/roadmap/S11/4_retag.tsv
+2026-11-03  004847d0  Snd::isLooping  name Snd::fwdVoice58->Snd::isLooping  log/roadmap/S11/4_retag.tsv
+2026-11-03  004845b0  Snd::play_4845b0  name Snd::fwdVoice18->Snd::play_4845b0  log/roadmap/S11/4_retag.tsv
+2026-11-03  0049fc30  optionDialogOnLeftDoubleClick  name optionDialogSlot38->optionDialogOnLeftDoubleClick  log/roadmap/S11/4_retag.tsv
+2026-11-03  00401000  resetHomeLayout  name resetRecordBank->resetHomeLayout  log/roadmap/S11/4_retag.tsv
+2026-11-03  004011b0  removeVipResidentAt  name freeRecordAtPos->removeVipResidentAt  log/roadmap/S11/4_retag.tsv
+2026-11-03  004846b0  Snd::setDelay  name Snd::setField34->Snd::setDelay  log/roadmap/S11/4_retag.tsv
+2026-11-03  004845d0  Snd::isPlaying_4845d0  name Snd::queryDevice4845d0->Snd::isPlaying_4845d0  log/roadmap/S11/4_retag.tsv
+2026-11-03  004840e0  createSound  name createSound4840e0->createSound  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483d60  flushMouse  name modalFocusClear483d60->flushMouse  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483d40  flushKeyboard  name modalPush483d40->flushKeyboard  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483d30  flushInput  name enterModal483d30->flushInput  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483cf0  doAllMouse  name pumpInput483cf0->doAllMouse  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483cd0  doMouse  name frameTick483cd0->doMouse  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483c90  doAllKeys  name pumpInput483c90->doAllKeys  log/roadmap/S11/4_retag.tsv
+2026-11-03  00483bd0  doAllTasks  name pumpInput483bd0->doAllTasks  log/roadmap/S11/4_retag.tsv
+2026-11-03  00449310  cornerHeightAt  name tileQuery449310->cornerHeightAt  log/roadmap/S11/4_retag.tsv
+2026-11-03  0042f630  propagateMinTileLevel  name relaxTile42f630->propagateMinTileLevel  log/roadmap/S11/4_retag.tsv
+2026-11-03  0042f530  calcTileWallMask  name relaxEdges42f530->calcTileWallMask  log/roadmap/S11/4_retag.tsv
+2026-11-03  004049d0  drawTextWithColor  name drawText4049d0->drawTextWithColor  log/roadmap/S11/4_retag.tsv
+2026-11-03  004012d0  drawHomeLayout  name drawRecords->drawHomeLayout  log/roadmap/S11/4_retag.tsv
+2026-11-03  00401750  initHomeLayouts  name initRecords->initHomeLayouts  log/roadmap/S11/4_retag.tsv
+2026-11-03  00401040  placeHomeLayoutPart  name placeRecord->placeHomeLayoutPart  log/roadmap/S11/4_retag.tsv
+2026-11-03  00401c00  updateVipResidents  name tickAnimals->updateVipResidents  log/roadmap/S11/4_retag.tsv
+2026-11-03  004017d0  updateVipResident  name placeAnimal->updateVipResident  log/roadmap/S11/4_retag.tsv
+2026-11-03  004011e0  spawnVipResident  name spawnObject->spawnVipResident  log/roadmap/S11/4_retag.tsv
+2026-11-03  00422530  golferShotReach  name rateTile->golferShotReach  log/roadmap/S11/4_retag.tsv
+2026-11-03  0042dea0  rateCourseHoles  name holeMagazineEvent->rateCourseHoles  log/roadmap/S11/4_retag.tsv
+2026-11-03  0040e720  openHole  name announceBuilding->openHole  log/roadmap/S11/4_retag.tsv
+2026-11-03  004038f0  drawWalkers  name drawFlyingBall->drawWalkers  log/roadmap/S11/4_retag.tsv
 2026-11-01  sound.dll:0004ed06  ___init_collate  C2 status transcribed->trivial  TRIVIAL: body <= 64 bytes in one range; no call except __chkesp; no memory write outside the stack frame; eax at ret is an immediate or unset; only frame, stack, immediate and return instructions (no branch, FPU, I/O) (re/tools/endstate.py)
 2026-11-01  sound.dll:0004cd03  ___init_dummy  C2 status transcribed->trivial  TRIVIAL: body <= 64 bytes in one range; no call except __chkesp; no memory write outside the stack frame; eax at ret is an immediate or unset; only frame, stack, immediate and return instructions (no branch, FPU, I/O) (re/tools/endstate.py)
 2026-11-01  sound.dll:0004becb  __matherr  C2 status transcribed->trivial  TRIVIAL: body <= 64 bytes in one range; no call except __chkesp; no memory write outside the stack frame; eax at ret is an immediate or unset; only frame, stack, immediate and return instructions (no branch, FPU, I/O) (re/tools/endstate.py)

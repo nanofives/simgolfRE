@@ -86,7 +86,7 @@ int __cdecl MatchInputCode_re(int codePtr, int len) {
     return 0;
 }
 
-// 0x00401000  resetRecordBank(p): fills 8 dwords at 0x004e6d20 + p*0x74 and 9 dwords at 0x004e6d70 + p*0x74 with
+// 0x00401000  resetHomeLayout(p): fills 8 dwords at 0x004e6d20 + p*0x74 and 9 dwords at 0x004e6d70 + p*0x74 with
 // -1 (the two `rep stosd` at 0x00401022/0x00401032; p*0x74 is 29*p<<2, 0x00401005..0x00401016). Frees record bank p.
 Void1_t ResetRecordBank_orig;
 void __cdecl ResetRecordBank_re(int p) {

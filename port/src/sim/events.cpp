@@ -4,7 +4,7 @@
 //   events_calls.inc  the callee wrappers (generator, message ticker, number formatter, audio requests)
 //   events_story.inc  the story file reader, the reply chapter, storyText, substituteStoryNames, advanceStory
 //   events_think.inc  emitGolferThought and buildGolferComment
-//   events_news.inc   announceLandmark, patronEvent, announceHoleType, holeMagazineEvent, announceBuilding
+//   events_news.inc   announceLandmark, patronEvent, announceHoleType, rateCourseHoles, openHole
 //   events_pair.inc   pairGolfersWithStory
 // Phase 3.5, written from the specification (analysis notes, hook sources as reading reference, vector corpus); no original
 // address, code or text: literals are (pool member, byte offset) pairs. The long bodies were converted mechanically from the
@@ -31,9 +31,9 @@ namespace {
 //   buildGolferComment 1 = kind 1 mirrors the type bits, 2 = own and other names swapped, 3 = g == 0x98 clears nothing
 //   announceLandmark   1 = landmark 'A' maps to the next id, 2 = the neighbour step draws Random::range(2)
 //   patronEvent        1 = the CEO's payment is 4000 instead of 5000
-//   holeMagazineEvent  (none reads RED: see log/p3/p35_notes.txt)
+//   rateCourseHoles    (none reads RED: see log/p3/p35_notes.txt)
 //   announceHoleType   1 = kind 3 posts event 1
-//   announceBuilding   1 = a hole of 0x32 yards is a par 3, 2 = the facing octant rounds down
+//   openHole           1 = a hole of 0x32 yards is a par 3, 2 = the facing octant rounds down
 // (the story functions' and pairGolfersWithStory's modes are listed in events_story.inc / events_pair.inc)
 int g_negctl_append_upgrade_text = 0;
 int g_negctl_replace_in_text = 0;
@@ -53,9 +53,9 @@ int g_negctl_emit_golfer_thought = 0;
 int g_negctl_build_golfer_comment = 0;
 int g_negctl_announce_landmark = 0;
 int g_negctl_patron_event = 0;
-int g_negctl_hole_magazine_event = 0;
+int g_negctl_rate_course_holes = 0;
 int g_negctl_announce_hole_type = 0;
-int g_negctl_announce_building = 0;
+int g_negctl_open_hole = 0;
 
 // byte offsets in f_strpool_4e28e0 of the opinion phrases: ratings 0..5
 constexpr uint32_t kOpinionFixed[6] = {404, 372, 340, 308, 272, 244};
@@ -253,9 +253,9 @@ void a_build_golfer_comment(Ctx &c, const uint32_t *a, Ret &) {
 }
 void a_announce_landmark(Ctx &c, const uint32_t *a, Ret &) { announce_landmark(c, i32(a[0]), i32(a[1])); }
 void a_patron_event(Ctx &c, const uint32_t *a, Ret &) { patron_event(c, i32(a[0])); }
-void a_hole_magazine_event(Ctx &c, const uint32_t *, Ret &) { hole_magazine_event(c); }
+void a_rate_course_holes(Ctx &c, const uint32_t *, Ret &) { rate_course_holes(c); }
 void a_announce_hole_type(Ctx &c, const uint32_t *a, Ret &) { announce_hole_type(c, i32(a[0]), i32(a[1])); }
-void a_announce_building(Ctx &c, const uint32_t *, Ret &) { announce_building(c); }
+void a_open_hole(Ctx &c, const uint32_t *, Ret &) { open_hole(c); }
 void a_pair_golfers(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(pair_golfers_with_story(c, i32(a[0]), i32(a[1]))); }
 
 const DefectDef kDefects[] = {
@@ -281,9 +281,9 @@ const FuncDef kFuncs[] = {
     {"buildGolferComment", "default", "void", 4, 0, a_build_golfer_comment, &g_negctl_build_golfer_comment},
     {"announceLandmark", "default", "void", 2, 0x027F, a_announce_landmark, &g_negctl_announce_landmark},
     {"patronEvent", "default", "void", 1, 0x027F, a_patron_event, &g_negctl_patron_event},
-    {"holeMagazineEvent", "default", "void", 0, 0x027F, a_hole_magazine_event, &g_negctl_hole_magazine_event},
+    {"rateCourseHoles", "default", "void", 0, 0x027F, a_rate_course_holes, &g_negctl_rate_course_holes},
     {"announceHoleType", "default", "void", 2, 0, a_announce_hole_type, &g_negctl_announce_hole_type},
-    {"announceBuilding", "default", "void", 0, 0x027F, a_announce_building, &g_negctl_announce_building},
+    {"openHole", "default", "void", 0, 0x027F, a_open_hole, &g_negctl_open_hole},
     {"pairGolfersWithStory", "default", "int", 2, 0, a_pair_golfers, &g_negctl_pair_golfers},
 };
 }  // namespace

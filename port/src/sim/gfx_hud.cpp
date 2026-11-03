@@ -1547,7 +1547,7 @@ void with_scratch_buffer(Ctx &ctx, const std::string &s, const std::function<voi
 // + 0x30 at (0x145, 0x20a / 0x215), 0x20 without: + 0x24 at (0x14e, 0x20a) and f_strpool_4c61dc + 4, appendNumber(2000
 // g_challengeLevel), + 0x1c at (0x140, 0x215), else + 0x10 / + 0x08 at (0x14e, 0x20a / 0x215), all in 0x80000000; then two
 // rows (y 0x228, 0x23d), cur = who then its partner (word +0xa2): buildGolferName(cur, 0) (+ f_strpool_4d558c for who), in
-// g_fontRef_519fd8 when its Text_put width in g_font51b360 is above 0x73, drawText4049d0 at (0x140, y) in 0x80000000; per
+// g_fontRef_519fd8 when its Text_put width in g_font51b360 is above 0x73, drawTextWithColor at (0x140, y) in 0x80000000; per
 // hole column col (x = 0x1aa + 0x12 col below 0x300, hole record g_holes + 0x208 col) with a non-zero par byte: for who the
 // column number and par centred at (x, y - 0x22) / (x, y - 0x13) in 0x80006318; the golfer's hole byte +0x21 h: h < col
 // nothing, h == col the stroke byte +0x22 in 0x80004210, h > col the score byte +0x23 + col in the colour by score against
@@ -1807,12 +1807,12 @@ void dwell(Gfx &g, Ctx &ctx, int32_t hover, const char *tip, const std::function
 // the scroll offset g_ui_5aa6b8[4]. Columns start at x1 0x136 with the name x d 0x145, b 0x146, pips c 0x156, face a 0x19c,
 // rows at y 0x1f2. g_zoomScale < 4 (compact): 6 rows of 14 px, columns 0x3c apart (a column change past d 0x2f3 skips that
 // golfer); the mood face (g_sprites59b778 + 0x2c clamp(word +0xa4 + 2, 1, 10)) Surface_drawScaled at (x1, y), the name
-// (buildGolferName(g, 0)) drawText4049d0 at (d, y + 1) in the golfer's colour. Else (wide): 4 rows of 21 px, columns 0x79
+// (buildGolferName(g, 0)) drawTextWithColor at (d, y + 1) in the golfer's colour. Else (wide): 4 rows of 21 px, columns 0x79
 // apart (past d 0x2b7 skipped); setDrawTarget(g_fontRef_519fd8); for odd g the hole badge g_sprites59b778 + 0 at (x1, y)
 // with the decimal of the signed byte +0x21 (f_strpool_4c61dc + 8 when it is 0x13; the partner's +0x21 when it is <= 0)
-// drawText4049d0 at (x1 + 5 for >= 10 else + 8, y + 0xf) in 0x80000000, and with word +0xb0 != -1 four pips g_sprites59b778
+// drawTextWithColor at (x1 + 5 for >= 10 else + 8, y + 0xf) in 0x80000000, and with word +0xb0 != -1 four pips g_sprites59b778
 // + 0x2c0 then word +0xb2 pips + 0x23c at (c + 10 k, y + 0x11); setDrawTarget(g_font51b360); on the course: the name
-// drawText4049d0 at (b, y + 5) in the colour and the face at (a, y + 2). The colour: 0x80000000, 0x80004210 for word +0xaa
+// drawTextWithColor at (b, y + 5) in the colour and the face at (a, y + 2). The colour: 0x80000000, 0x80004210 for word +0xaa
 // above 0xa0, 0x80000018 for +0xa8 above 0x10, 0x80006000 for +0xa6 above 0x10, 0x80007d08 for bit 29 of dword +0x10
 // (signed compares, the last that holds wins). With a count n: the scroll bar fillWindowRect(g_rootWindow, top + 0x15f,
 // 0x24e, bottom - top - 1, 6, 0x8000739f), top = clamp(s 400 / n, 0, 0x18f), bottom = clamp((s + page) 400 / n, 1, 0x190),
@@ -1837,7 +1837,7 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     draw_scaled(g, ctx, b, 1, 1, 1, 0, "drawEmployeeViewPanel");
   };
   auto text = [&](const std::string &s, int32_t x, int32_t y, uint32_t c) {
-    prec(g, "drawText4049d0", {static_cast<uint32_t>(x), static_cast<uint32_t>(y), c}, &s);
+    prec(g, "drawTextWithColor", {static_cast<uint32_t>(x), static_cast<uint32_t>(y), c}, &s);
     gfxb::draw_text_string(g, ctx, s, 0, x, y, c, false, "drawEmployeeViewPanel");
   };
   const uint32_t pics = va(ctx, GSO(g_sprites59b778, 0));

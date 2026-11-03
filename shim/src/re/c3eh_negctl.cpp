@@ -669,7 +669,7 @@ const C5i_t kDrawFrameS2 = reinterpret_cast<C5i_t>(0x0040d0b0);        // drawFr
 const C5i_t kDrawRectScaled = reinterpret_cast<C5i_t>(0x0046e710);     // drawRectScaled (5 stack arguments)
 const Strchr_t kStrchr = reinterpret_cast<Strchr_t>(0x004a6170);       // strchr
 typedef int(__cdecl* DrawTextAt_t)(const char* text, int x, int y, int colour);
-const DrawTextAt_t kDrawText4049d0 = reinterpret_cast<DrawTextAt_t>(0x004049d0);       // drawText4049d0
+const DrawTextAt_t kDrawText4049d0 = reinterpret_cast<DrawTextAt_t>(0x004049d0);       // drawTextWithColor
 const DrawTextAt_t kDrawTextScaled = reinterpret_cast<DrawTextAt_t>(0x00404a20);       // drawTextScaled
 const V1_t kRefreshFull = reinterpret_cast<V1_t>(0x00480c80);          // Window::refreshFull, thiscall one argument
 static int scrollColour(int cur) {
@@ -692,7 +692,7 @@ static int scrollColour(int cur) {
 // (0x0046e42f..0x0046e436) and [0x00838f7c] = the mark count (0x0046e441). [0x00839264] even (test bl, 1; 0x0046e43e): drawFrameS2(
 // scaleX([0x00839260] - 8), scaleX([0x00839264] - 6), scaleX(right - [0x00839260] + 0x10), scaleX(bottom - [0x00839264] + 0xc), 1)
 // (0x0046e449..0x0046e499); odd: drawRectScaled([0x00839260], [0x00839264], right - [0x00839260], bottom - [0x00839264] + 4,
-// 0x80007fff) and [0x00838f80] = 1 (0x0046e4a3..0x0046e4bb). [0x00839274] set: drawText4049d0(0x004e3db0, right - 0x11, bottom - 8,
+// 0x80007fff) and [0x00838f80] = 1 (0x0046e4a3..0x0046e4bb). [0x00839274] set: drawTextWithColor(0x004e3db0, right - 0x11, bottom - 8,
 // 0x800003ff) and drawRectScaled(right - 0x14, bottom - 0xa, 0x14, 0xa, 0x800003ff) (0x0046e4d0..0x0046e50f). cur = 0 when the text
 // starts with ' ' or '_', else -1 (0x0046e517..0x0046e529). Pass 3, for each of [0x00838f78] lines j: the newline before the next
 // line start becomes NUL (0x0046e548), strchr(line, '|') (call 0x0046e553); a bar becomes NUL and the right part is measured:
@@ -824,7 +824,7 @@ static void sbSetTarget(unsigned surf) {
 }  // namespace
 
 // 0x00461110  drawMatchScoreboard(who), cdecl (ret 0x004615e9): draws the two-player score table. setDrawTarget(0x00519fd8) on
-// the target [0x004c1570] (0x00461123..0x00461128); drawText4049d0(0x004c88a8, 0x19a, 0x207, 0x80007fff) (0x0046115a) and
+// the target [0x004c1570] (0x00461123..0x00461128); drawTextWithColor(0x004c88a8, 0x19a, 0x207, 0x80007fff) (0x0046115a) and
 // (0x004c88f8, 0x19e, 0x216, 0x80007fff) (0x00461173); setDrawTarget(0x0051b360) (0x0046118c). The header: the opponent record
 // (who ^ 1) << 8 + 0x005794d0, mask 0xe0 (0x00461193..0x0046119f): == 0x20 (0x004611a2/0x004611a5): [0x0059e7b8] bit 0x200000 set
 // draws (0x004d55c8, 0x145, 0x20a) and (0x004d55bc, 0x145, 0x215) in colour 0x80000000 (0x004611c1..0x004611e4); clear draws
@@ -834,7 +834,7 @@ static void sbSetTarget(unsigned surf) {
 // (0x00461287..0x004612b4). Then two rounds (row y = 0x228, += 0x15 while < 0x24e; 0x004615c4..0x004615dc), cur = who first: the
 // buffer is cleared (0x004612c9), buildGolferName(cur, 0) (call 0x004612d0) fills it, cur == who appends 0x004d558c
 // (0x004612d8..0x00461307), setDrawTarget(0x0051b360) (0x0046131a), Text_put of the buffer (call 0x0046132a) above 0x73 selects
-// setDrawTarget(0x00519fd8) (0x0046132f..0x00461345), drawText4049d0(buffer, 0x140, y, 0x80000000) (0x0046135a), setDrawTarget(0x0051b360)
+// setDrawTarget(0x00519fd8) (0x0046132f..0x00461345), drawTextWithColor(buffer, 0x140, y, 0x80000000) (0x0046135a), setDrawTarget(0x0051b360)
 // (0x00461373). Columns col = 0.. (x = 0x1aa, += 0x12 while < 0x300; row pointer 0x00575ab0 += 0x208; 0x00461594..0x004615b3) whose row
 // byte is non-zero (0x00461394): with cur == who the column number and the row byte are drawn through _itoa and drawCenteredText at
 // (x, y - 0x22) and (x, y - 0x13) in colour 0x80006318 (0x004613ad..0x00461460). Record byte +9 (0x005794d9, signed) below col skips

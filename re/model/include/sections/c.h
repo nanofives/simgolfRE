@@ -160,7 +160,7 @@ typedef struct HoleRecord {           /* 0x208 bytes */
     int32_t  money;                   /* +0x1f0 pointsPopup subtracts its amount */
     int32_t  u1f4;                    /* +0x1f4 compared with 200 and 400 */
     int32_t  ticks;                   /* +0x1f8 counted while par != 0 */
-    int32_t  magazine_score;          /* +0x1fc holeMagazineEvent */
+    int32_t  magazine_score;          /* +0x1fc rateCourseHoles */
     uint32_t flags;                   /* +0x200 */
     uint8_t  pad204[4];               /* +0x204 no access */
 } HoleRecord;
@@ -187,7 +187,7 @@ SGC_STATIC_ASSERT(sizeof(PlacedObject) == 0x10, placed_object_size);
 #define SGC_ANIMALS 100
 #define SGC_ANIMAL_FREE (-1)
 
-typedef struct Animal {               /* 0x3c bytes */
+typedef struct VipResident {               /* 0x3c bytes */
     int32_t  u00;                     /* +0x00 written 0 on spawn, never read */
     uint8_t  u04[28];                 /* +0x04 no access outside the save [U-0203] */
     int16_t  type;                    /* +0x20 -1 = free slot; flic id base from the species byte (stream B) */
@@ -204,8 +204,8 @@ typedef struct Animal {               /* 0x3c bytes */
     uint8_t  walk_steps;              /* +0x39 0x10 when a walk starts, -1 per step, idle again at <= 0 (stream B, merged by G1) */
     int8_t   frame;                   /* +0x3a */
     uint8_t  pad3b;                   /* +0x3b no access */
-} Animal;
-SGC_STATIC_ASSERT(sizeof(Animal) == 0x3c, animal_size);
+} VipResident;
+SGC_STATIC_ASSERT(sizeof(VipResident) == 0x3c, animal_size);
 
 /* ------------------------------------------------------------------------------- Terrain.dll boundary (heap)
  * The exe holds one pointer to this object; Terrain.dll allocates it (getInstance, `new Terrain(50, 50)`) and the

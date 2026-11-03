@@ -59,7 +59,7 @@ MovieHost &movie_host(Ctx &ctx);                 // the attached host or the def
 // playAudioFile(path, immediate): a path the files do not hold returns 0 at once. Otherwise the deadline word
 // g_audio5aa774 = the clock + 7000 for immediate 0 (the intro: the timeGetTime read playAudioFile makes, taken from the
 // context's InputSource), 0 for any other immediate (the closing movie); g_bink.target = the host's window; one input pump
-// (pumpInput483bd0: g_inputPhase 0x3f, a Drain dispatch, g_inputPhase 0); the root repaint (drawing, not done);
+// (doAllTasks: g_inputPhase 0x3f, a Drain dispatch, g_inputPhase 0); the root repaint (drawing, not done);
 // BinkPlayer::play(path, 0, 0, sound); BinkPlayer::close; the deadline word 0. Returns BinkPlayer::close's result.
 int32_t play_audio_file(Ctx &ctx, uint32_t path, int32_t immediate);
 // BinkPlayer::play (this, path, x, y, sound): 7 without a target, 1 when the host cannot open the movie or its buffer, 0 after

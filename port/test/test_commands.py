@@ -187,9 +187,9 @@ DROPPED = [
     (0x00480C80, 1, True, 0),    # Window::refreshFull (thiscall)
     (0x00483C70, 0, False, 0),   # redrawAll
     (0x00483C30, 0, False, 0),   # pumpInput483c30 (no dispatch in the port model)
-    (0x00483D30, 0, False, 0),   # enterModal483d30
+    (0x00483D30, 0, False, 0),   # flushInput
     (0x004481B0, 5, False, 0),   # playSound (audio backend; no simulation effect while unregistered)
-    (0x00483BD0, 0, False, 0),   # pumpInput483bd0 (pumpLight's jgld pump: no dispatch in the port model)
+    (0x00483BD0, 0, False, 0),   # doAllTasks (pumpLight's jgld pump: no dispatch in the port model)
 ]
 # peers the port calls by name that are not ported yet: the oracle stubs them too and the port must report
 # SG_E_NO_RESOURCE on exactly those paths (documented gaps)
@@ -911,7 +911,7 @@ def emu_widget(name, img, args, inputs, cur, rule, cover=None):
     emu = CE.Emu()
     for a in WIDGET_DROPPED:
         emu.drop(a)
-    for a in (0x00483D30, 0x00483C30, 0x00483C70, 0x00483BD0):   # enterModal483d30, pumpInput483c30, redrawAll, pumpInput483bd0
+    for a in (0x00483D30, 0x00483C30, 0x00483C70, 0x00483BD0):   # flushInput, pumpInput483c30, redrawAll, doAllTasks
         emu.stub(a, 0, 0, False)
     emu.stub(TEXT_PUT, 1, ("width",) + tuple(rule), True)
     emu.stub(VIEW_TO_LOCAL, 2, ("cursor", cur), True)

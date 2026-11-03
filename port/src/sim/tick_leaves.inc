@@ -236,7 +236,7 @@ struct Leaves : TkBase {
   // with a random side) facing its entry tile, mechanics flagged, its hire day the current game month
   int hireEmployee() {
     const int k = cc("showHireEmployeeDialog");
-    const int m = 0;  // enterModal483d30's eax (a pump reset; no caller reads hireEmployee's result)
+    const int m = 0;  // flushInput's eax (a pump reset; no caller reads hireEmployee's result)
     if (k < 0 || k >= 12) return m;
     const int b = cc("bucketValue", G32(GS(g_holesPlusOne)) - 1);
     if (b < 1 && k % 3 == 2) {

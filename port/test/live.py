@@ -341,7 +341,7 @@ idle 1
 wait_frames 40
 """,
     # roadmap S7.7 (U-1604): input during a world load. Title -> Sandbox, then the Monterey click: its release starts the
-    # world load (loadWorldAssets' loadFlic calls, whose pumpInput483bd0 is PumpKind::Load); `wait_load` gives the next
+    # world load (loadWorldAssets' loadFlic calls, whose doAllTasks is PumpKind::Load); `wait_load` gives the next
     # step at the first Load call the core lets deliver: 'z' (zoom in) as WM_CHAR alone (cov_r_flic_input's key, the root's
     # onKey 7 with a1 0), which mainLoop's first frame takes and which changes the camera cache; a second `wait_load` gives
     # 'x' (zoom out) at a later Load call of the same world load (two load dispatches in one load, U-1664)

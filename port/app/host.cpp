@@ -383,7 +383,7 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
   // button word between pumps; the script host's click / key chunks, live.cpp). Press: onPoint 2, onPoint2 5, onChar 8;
   // release: onPress1 1, onPress2 4, onChar0 9.
   uint32_t body_call = 0;
-  if (p.body) {  // S7.4: the ordinal of this body pump call in its frame (0 = P6's pumpInput483bd0, 1 = H1's pumpMessages)
+  if (p.body) {  // S7.4: the ordinal of this body pump call in its frame (0 = P6's doAllTasks, 1 = H1's pumpMessages)
     if (p.frame != body_calls_seen_frame_) {
       if (body_calls_frame_) body_call_counts_.push_back({body_calls_seen_frame_, body_calls_frame_});
       body_calls_seen_frame_ = p.frame;
@@ -393,8 +393,8 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
   }
   // H1's pumpMessages (body call 1) takes at most ONE mouse-class message per frame and never a key (roadmap S7.4, found by
   // the cross-check against the original): it drains WM_MOUSEMOVE only (PeekMessage 0x200..0x200, 0x0045c03e..0x0045c04d),
-  // then frameTick483cd0 jumps to the display's slot +0x13c (0x00483ce2), jgld 0x1006b7e0: ONE PeekMessage(0x200..0x20a,
-  // PM_REMOVE) at 0x1006b7ff..0x1006b811, dispatched. P6's pumpInput483bd0 loops 0x00483bb0 -> slot +0x128, jgld 0x1006b0f0
+  // then doMouse jumps to the display's slot +0x13c (0x00483ce2), jgld 0x1006b7e0: ONE PeekMessage(0x200..0x20a,
+  // PM_REMOVE) at 0x1006b7ff..0x1006b811, dispatched. P6's doAllTasks loops 0x00483bb0 -> slot +0x128, jgld 0x1006b0f0
   // (PeekMessage(0, 0), any message) until the queue is empty. A key or a second button message waits for the next P6.
   const bool h1 = p.body && body_call == 1;
   auto msg_of = [&](uint32_t seq) -> uint32_t {

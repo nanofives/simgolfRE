@@ -129,7 +129,7 @@ const ExeFn kExeFns[] = {
     {0x84060, "freeSoundLib"},
     {0x84090, "callSoundHook74"},
     {0x840c0, "callSoundHook94"},
-    {0x840e0, "createSound4840e0"},
+    {0x840e0, "createSound"},
     {0x84110, "releaseSoundObj"},
     {0x84130, "clearSoundPtrs"},
     {0x84150, "Snd::ctorBase"},
@@ -147,13 +147,13 @@ const ExeFn kExeFns[] = {
     {0x84540, "returnB_484540"},
     {0x84550, "Snd::stop484550"},
     {0x84590, "Snd::fwdVoice1c"},
-    {0x845b0, "Snd::fwdVoice18"},
-    {0x845d0, "Snd::queryDevice4845d0"},
+    {0x845b0, "Snd::play_4845b0"},
+    {0x845d0, "Snd::isPlaying_4845d0"},
     {0x845e0, "Snd::status"},
     {0x84600, "Snd::fwdVoice38"},
     {0x84620, "Snd::setVolumeBase"},
     {0x84690, "Snd::setLoop"},
-    {0x846b0, "Snd::setField34"},
+    {0x846b0, "Snd::setDelay"},
     {0x846d0, "Snd::setField38"},
     {0x84700, "Snd::setField38Voice54"},
     {0x84730, "Snd::applyField38Voice28"},
@@ -161,11 +161,11 @@ const ExeFn kExeFns[] = {
     {0x84770, "Snd::applyField38Voice30"},
     {0x84790, "Snd::fwdVoice34"},
     {0x847b0, "Snd::applyField4847b0"},
-    {0x847d0, "Snd::fwdVoice58"},
-    {0x847e0, "Snd::fwdVoice74"},
+    {0x847d0, "Snd::isLooping"},
+    {0x847e0, "Snd::getTime_4847e0"},
     {0x847f0, "Snd::setPan"},
     {0x84820, "Snd::ctorDerived"},
-    {0x84870, "Snd::fwdVoice60"},
+    {0x84870, "Snd::isLoaded"},
     {0x84880, "SndMusic::scalarDtor"},
     {0x848a0, "SndMusic::dtor"},
     {0x84920, "Snd::fwdVoice98"},
@@ -174,7 +174,7 @@ const ExeFn kExeFns[] = {
     {0x84a00, "Snd::fwdVoiceD0"},
     {0x84a20, "Snd::fwdVoiceD4"},
     {0x84a40, "Snd::configure"},
-    {0x84b00, "Snd::fwdVoiceCC"},
+    {0x84b00, "Snd::isHwbuffer"},
     {0x84b20, "Snd::getLengthMs"},
     {0x84b30, "Snd::busy"},
     {0x84b80, "Snd::setName"},
@@ -188,7 +188,7 @@ const ExeFn kExeFns[] = {
     {0x84f40, "Snd::setPitch"},
     {0x84f80, "Snd::setFlags"},
     {0x84ff0, "Snd::flags"},
-    {0x85040, "Snd::fwdVoiceB8"},
+    {0x85040, "Snd::getTime_485040"},
     {0x85060, "Snd::fwdVoiceBC"},
     {0x85080, "Snd::fwdVoice3c"},
     {0x85090, "Snd::fwdDev48"},
@@ -208,13 +208,13 @@ const ExeFn kExeFns[] = {
     {0x852d0, "Snd::setVtbl4852d0"},
     {0x852e0, "VoiceRx::ctor"},
     {0x85380, "returnBPop4_485380"},
-    {0x85390, "VoiceRx::fwdDev37"},
+    {0x85390, "VoiceRx::getNbuffers"},
     {0x85450, "VoiceRx::start"},
     {0x85500, "VoiceRx::callDev34"},
     {0x85520, "VoiceRx::callDev8"},
     {0x85530, "VoiceRx::fwdDev5"},
     {0x85550, "VoiceRx::fwdDev35"},
-    {0x85570, "VoiceRx::fwdDev36"},
+    {0x85570, "VoiceRx::getBufferSize"},
     {0x873f0, "openHookA"},
     {0x87500, "NodeList::playChildSuspendingSounds"},
     {0x879b0, "openHookB"},
@@ -384,7 +384,7 @@ U4 get_proc_address(Ctx &c, U4 module, U4 name_or_ord) {
 NEG(playSound) NEG(startSoundSlot) NEG(loadSoundTable) NEG(shutdownSoundSystem) NEG(initSound) NEG(shutdownSound)
 NEG(soundVersionCheck) NEG(freeSoundLib) NEG(callSoundHook74) NEG(callSoundHook94) NEG(createSound) NEG(releaseSoundObj)
 NEG(clearSoundPtrs) NEG(ctorBase) NEG(scalarDtor4841c0) NEG(sndDtor) NEG(setMode) NEG(musicSetFile) NEG(unlinkSound)
-NEG(unlinkFromList) NEG(stop484550) NEG(queryDevice) NEG(status) NEG(setField34) NEG(setField38) NEG(applyField484750)
+NEG(unlinkFromList) NEG(stop484550) NEG(queryDevice) NEG(status) NEG(setDelay) NEG(setField38) NEG(applyField484750)
 NEG(applyField4847b0) NEG(setPan) NEG(ctorDerived) NEG(musicScalarDtor) NEG(musicDtor) NEG(play) NEG(configure) NEG(busy)
 NEG(setName) NEG(streamOpen) NEG(open) NEG(reopen) NEG(applyMode) NEG(start) NEG(stop484f00) NEG(setPitch) NEG(flags)
 NEG(setVolume) NEG(ctor485260) NEG(scalarDtor4852b0) NEG(setVtbl) NEG(voiceRxCtor) NEG(openHookA) NEG(openHookB)
@@ -790,7 +790,7 @@ U4 call_sound_hook94(Ctx &c) {
   if (L32(c, GSV(c, &GameState::g_soundDll)) == 0) return NG(callSoundHook94) == 1 ? 1 : 0;
   return exe_call_va(c, sound_fn(c, 10), kC, {}).eax;
 }
-// createSound4840e0(a, b, c): g_soundReady 0 returns 1; else g_soundFns[0](a, b, c) (cdecl)
+// createSound(a, b, c): g_soundReady 0 returns 1; else g_soundFns[0](a, b, c) (cdecl)
 U4 create_sound(Ctx &c, U4 a, U4 b, U4 d) {
   if (sound_ready(c) == 0) return NG(createSound) == 1 ? 2 : 1;
   return exe_call_va(c, sound_fn(c, 0), kC, {a, b, d}).eax;
@@ -989,7 +989,7 @@ U4 snd_stop484550(Ctx &c, U4 t) {
   S32(c, t + 0x44, (fl & ~0xffu) | (fl & (NG(stop484550) == 1 ? 0xffu : 0xfeu) & 0xffu));
   return r;
 }
-// Snd::queryDevice4845d0(): device slot 0x5c (tail jump) or 0
+// Snd::isPlaying_4845d0(): device slot 0x5c (tail jump) or 0
 U4 query_device(Ctx &c, U4 t) {
   const U4 dev = L32(c, t + 0x40);
   if (dev == 0) return NG(queryDevice) == 1 ? 1 : 0;
@@ -1001,9 +1001,9 @@ U4 snd_status(Ctx &c, U4 t) {
   if (dev == 0) return NG(status) == 1 ? 0x13 : 0x14;
   return dv(c, dev, 0x20, {}).eax;
 }
-// Snd::setField34(v): +0x34 = v; device slot 0x4c(v)'s eax, else v
-U4 set_field34(Ctx &c, U4 t, U4 v) {
-  S32(c, t + 0x34, NG(setField34) == 1 ? v + 1 : v);
+// Snd::setDelay(v): +0x34 = v; device slot 0x4c(v)'s eax, else v
+U4 set_delay(Ctx &c, U4 t, U4 v) {
+  S32(c, t + 0x34, NG(setDelay) == 1 ? v + 1 : v);
   const U4 dev = L32(c, t + 0x40);
   if (dev != 0) return dv(c, dev, 0x4c, {v}).eax;
   return v;
@@ -1336,7 +1336,7 @@ U4 voice_rx_ctor(Ctx &c, U4 t) {
   for (U4 i = 0; i < n; ++i) S<uint8_t>(c, p + i, name[i]);
   return t;
 }
-// VoiceRx::start(a, b, d) (C2): a NULL +0x40 runs createSound4840e0(this + 0x40, 0, 6) and a non-zero result returns it;
+// VoiceRx::start(a, b, d) (C2): a NULL +0x40 runs createSound(this + 0x40, 0, 6) and a non-zero result returns it;
 // with an object its slot 0x84(a, b, d): non-zero releases it (releaseSoundObj, +0x40 = 0); own slot 0x7c; eax = the
 // slot's result. A NULL object after a zero create returns the create's 0.
 U4 voice_rx_start(Ctx &c, U4 t, U4 a, U4 b, U4 d) {
@@ -1524,7 +1524,7 @@ AD(a_sound_version_check) { REQ("soundVersionCheck", 0); r.set_u32(sound_version
 AD(a_free_sound_lib) { REQ("freeSoundLib", 0); r.set_u32(free_sound_lib(c)); }
 AD(a_call_sound_hook74) { REQ("callSoundHook74", 2); r.set_u32(call_sound_hook74(c, a[0], a[1])); }
 AD(a_call_sound_hook94) { REQ("callSoundHook94", 0); r.set_u32(call_sound_hook94(c)); }
-AD(a_create_sound) { REQ("createSound4840e0", 3); r.set_u32(create_sound(c, a[0], a[1], a[2])); }
+AD(a_create_sound) { REQ("createSound", 3); r.set_u32(create_sound(c, a[0], a[1], a[2])); }
 AD(a_release_sound_obj) { REQ("releaseSoundObj", 1); r.set_u32(release_sound_obj(c, a[0])); }
 AD(a_clear_sound_ptrs) { REQ("clearSoundPtrs", 0); clear_sound_ptrs(c); }
 AD(a_ctor_base) { REQ("Snd::ctorBase", 1); r.set_u32(snd_ctor_base(c, a[0])); }
@@ -1549,11 +1549,11 @@ AD(a_unlink_from_list) { REQ("Snd::unlinkFromList", 1); r.set_u32(unlink_from_li
 AD(a_ret_b_pop4) { (void)c; (void)a; r.set_u32(NG(c2) == 1 ? 0xcu : 0xbu); }
 AD(a_ret_b) { (void)c; (void)a; r.set_u32(NG(c2) == 1 ? 0xcu : 0xbu); }
 AD(a_stop484550) { REQ("Snd::stop484550", 1); r.set_u32(snd_stop484550(c, a[0])); }
-AD(a_query_device) { REQ("Snd::queryDevice4845d0", 1); r.set_u32(query_device(c, a[0])); }
+AD(a_query_device) { REQ("Snd::isPlaying_4845d0", 1); r.set_u32(query_device(c, a[0])); }
 AD(a_status) {
   if (ectx(c).stub_requests) return r.set_u32(0);
   REQ("Snd::status", 1); r.set_u32(snd_status(c, a[0])); }
-AD(a_set_field34) { REQ("Snd::setField34", 2); r.set_u32(set_field34(c, a[0], a[1])); }
+AD(a_set_delay) { REQ("Snd::setDelay", 2); r.set_u32(set_delay(c, a[0], a[1])); }
 AD(a_set_field38) { REQ("Snd::setField38", 2); r.set_u32(set_field38(c, a[0], a[1])); }
 AD(a_base_set_field38) { REQ("SndBase::setField38", 2); r.set_u32(base_set_field38(c, a[0], a[1])); }
 AD(a_set_field38_voice54) { REQ("Snd::setField38Voice54", 2); r.set_u32(set_field38_voice54(c, a[0], a[1])); }
@@ -1640,20 +1640,20 @@ struct Fwd {
   bool al_only;     // the NULL path clears only al (fwdDev58)
 };
 const Fwd kFwds[] = {
-    {"Snd::fwdVoice1c", 0x1c, 0, 0x14, false, false, false}, {"Snd::fwdVoice18", 0x18, 1, 0x14, false, false, false},
+    {"Snd::fwdVoice1c", 0x1c, 0, 0x14, false, false, false}, {"Snd::play_4845b0", 0x18, 1, 0x14, false, false, false},
     {"Snd::fwdVoice38", 0x38, 0, 0x14, false, false, false}, {"Snd::fwdVoice34", 0x34, 3, 0, true, false, false},
-    {"Snd::fwdVoice58", 0x58, 0, 0, false, false, false},    {"Snd::fwdVoice74", 0x74, 0, 0, false, false, false},
-    {"Snd::fwdVoice60", 0x60, 0, 0, false, false, false},    {"Snd::fwdVoice98", 0x98, 1, 0x14, false, false, false},
+    {"Snd::isLooping", 0x58, 0, 0, false, false, false},    {"Snd::getTime_4847e0", 0x74, 0, 0, false, false, false},
+    {"Snd::isLoaded", 0x60, 0, 0, false, false, false},    {"Snd::fwdVoice98", 0x98, 1, 0x14, false, false, false},
     {"Snd::fwdVoice94", 0x94, 1, 0x14, false, false, false}, {"Snd::fwdVoiceD0", 0xd0, 1, 0, true, false, false},
-    {"Snd::fwdVoiceD4", 0xd4, 1, 0, true, false, false},     {"Snd::fwdVoiceCC", 0xcc, 0, 0, false, false, false},
-    {"Snd::fwdVoiceF0", 0xf0, 2, 0x13, false, true, false},  {"Snd::fwdVoiceB8", 0xb8, 1, 0, false, false, false},
+    {"Snd::fwdVoiceD4", 0xd4, 1, 0, true, false, false},     {"Snd::isHwbuffer", 0xcc, 0, 0, false, false, false},
+    {"Snd::fwdVoiceF0", 0xf0, 2, 0x13, false, true, false},  {"Snd::getTime_485040", 0xb8, 1, 0, false, false, false},
     {"Snd::fwdVoiceBC", 0xbc, 0, 0xffffffffu, false, false, false}, {"Snd::fwdVoice3c", 0x3c, 0, 0, false, false, false},
     {"Snd::fwdDev48", 0xc0, 0, 0, false, false, false},      {"Snd::fwdDev54", 0xd8, 3, 0x14, false, false, false},
     {"Snd::fwdDev55", 0xdc, 1, 0x14, false, false, false},   {"Snd::fwdDev56", 0xe0, 1, 0x14, false, false, false},
     {"Snd::fwdDev57", 0xe4, 1, 0x14, false, false, false},   {"Snd::fwdDev58", 0xe8, 0, 0, false, false, true},
-    {"VoiceRx::fwdDev37", 0x94, 0, 0, false, false, false},  {"VoiceRx::callDev34", 0x88, 0, 0, false, true, false},
+    {"VoiceRx::getNbuffers", 0x94, 0, 0, false, false, false},  {"VoiceRx::callDev34", 0x88, 0, 0, false, true, false},
     {"VoiceRx::callDev8", 0x20, 0, 0, false, true, false},   {"VoiceRx::fwdDev5", 0x14, 0, 0x13, false, false, false},
-    {"VoiceRx::fwdDev35", 0x8c, 1, 0x13, false, false, false}, {"VoiceRx::fwdDev36", 0x90, 0, 0, false, false, false},
+    {"VoiceRx::fwdDev35", 0x8c, 1, 0x13, false, false, false}, {"VoiceRx::getBufferSize", 0x90, 0, 0, false, false, false},
 };
 template <int K> void a_fwd(Ctx &c, const uint32_t *a, Ret &r) {
   const Fwd &f = kFwds[K];
@@ -2830,7 +2830,7 @@ const FuncDef kFuncs[] = {
     {"freeSoundLib", "mscdecl", "int", 0, 0, a_free_sound_lib, &g_neg_freeSoundLib},
     {"callSoundHook74", "mscdecl", "int", 2, 0, a_call_sound_hook74, &g_neg_callSoundHook74},
     {"callSoundHook94", "mscdecl", "int", 0, 0, a_call_sound_hook94, &g_neg_callSoundHook94},
-    {"createSound4840e0", "default", "int", 3, 0, a_create_sound, &g_neg_createSound},
+    {"createSound", "default", "int", 3, 0, a_create_sound, &g_neg_createSound},
     {"releaseSoundObj", "default", "int", 1, 0, a_release_sound_obj, &g_neg_releaseSoundObj},
     {"clearSoundPtrs", "default", "void", 0, 0, a_clear_sound_ptrs, &g_neg_clearSoundPtrs},
     {"Snd::ctorBase", "thiscall", "pointer", 1, 0, a_ctor_base, &g_neg_ctorBase},
@@ -2841,9 +2841,9 @@ const FuncDef kFuncs[] = {
     {"unlinkSound", "default", "uint32", 1, 0, a_unlink_sound, &g_neg_unlinkSound},
     {"Snd::unlinkFromList", "thiscall", "int", 1, 0, a_unlink_from_list, &g_neg_unlinkFromList},
     {"Snd::stop484550", "thiscall", "int", 1, 0, a_stop484550, &g_neg_stop484550},
-    {"Snd::queryDevice4845d0", "thiscall", "int", 1, 0, a_query_device, &g_neg_queryDevice},
+    {"Snd::isPlaying_4845d0", "thiscall", "int", 1, 0, a_query_device, &g_neg_queryDevice},
     {"Snd::status", "thiscall", "int", 1, 0, a_status, &g_neg_status},
-    {"Snd::setField34", "thiscall", "int", 2, 0, a_set_field34, &g_neg_setField34},
+    {"Snd::setDelay", "thiscall", "int", 2, 0, a_set_delay, &g_neg_setDelay},
     {"Snd::setField38", "thiscall", "int", 2, 0, a_set_field38, &g_neg_setField38},
     {"Snd::applyField484750", "thiscall", "int", 2, 0, a_apply_field484750, &g_neg_applyField484750},
     {"Snd::applyField4847b0", "thiscall", "int", 2, 0, a_apply_field4847b0, &g_neg_applyField4847b0},
@@ -2900,19 +2900,19 @@ const FuncDef kFuncs[] = {
     {"VoiceRx::start", "thiscall", "int", 4, 0, a_voice_rx_start, &g_neg_voiceRxStart},
     {"NodeList::playChildSuspendingSounds", "thiscall", "int", 2, 0, a_play_child, &g_neg_playChild},
     {"Snd::fwdVoice1c", "thiscall", "int", 1, 0, a_fwd<0>, &g_neg_c2},
-    {"Snd::fwdVoice18", "thiscall", "int", 2, 0, a_fwd<1>, &g_neg_c2},
+    {"Snd::play_4845b0", "thiscall", "int", 2, 0, a_fwd<1>, &g_neg_c2},
     {"Snd::fwdVoice38", "thiscall", "int", 1, 0, a_fwd<2>, &g_neg_c2},
     {"Snd::fwdVoice34", "thiscall", "int", 4, 0, a_fwd<3>, &g_neg_c2},
-    {"Snd::fwdVoice58", "thiscall", "int", 1, 0, a_fwd<4>, &g_neg_c2},
-    {"Snd::fwdVoice74", "thiscall", "int", 1, 0, a_fwd<5>, &g_neg_c2},
-    {"Snd::fwdVoice60", "thiscall", "int", 1, 0, a_fwd<6>, &g_neg_c2},
+    {"Snd::isLooping", "thiscall", "int", 1, 0, a_fwd<4>, &g_neg_c2},
+    {"Snd::getTime_4847e0", "thiscall", "int", 1, 0, a_fwd<5>, &g_neg_c2},
+    {"Snd::isLoaded", "thiscall", "int", 1, 0, a_fwd<6>, &g_neg_c2},
     {"Snd::fwdVoice98", "thiscall", "int", 2, 0, a_fwd<7>, &g_neg_c2},
     {"Snd::fwdVoice94", "thiscall", "int", 2, 0, a_fwd<8>, &g_neg_c2},
     {"Snd::fwdVoiceD0", "thiscall", "int", 2, 0, a_fwd<9>, &g_neg_c2},
     {"Snd::fwdVoiceD4", "thiscall", "int", 2, 0, a_fwd<10>, &g_neg_c2},
-    {"Snd::fwdVoiceCC", "thiscall", "int", 1, 0, a_fwd<11>, &g_neg_c2},
+    {"Snd::isHwbuffer", "thiscall", "int", 1, 0, a_fwd<11>, &g_neg_c2},
     {"Snd::fwdVoiceF0", "thiscall", "int", 3, 0, a_fwd<12>, &g_neg_c2},
-    {"Snd::fwdVoiceB8", "thiscall", "int", 2, 0, a_fwd<13>, &g_neg_c2},
+    {"Snd::getTime_485040", "thiscall", "int", 2, 0, a_fwd<13>, &g_neg_c2},
     {"Snd::fwdVoiceBC", "thiscall", "int", 1, 0, a_fwd<14>, &g_neg_c2},
     {"Snd::fwdVoice3c", "thiscall", "int", 1, 0, a_fwd<15>, &g_neg_c2},
     {"Snd::fwdDev48", "thiscall", "int", 1, 0, a_fwd<16>, &g_neg_c2},
@@ -2921,12 +2921,12 @@ const FuncDef kFuncs[] = {
     {"Snd::fwdDev56", "thiscall", "int", 2, 0, a_fwd<19>, &g_neg_c2},
     {"Snd::fwdDev57", "thiscall", "int", 2, 0, a_fwd<20>, &g_neg_c2},
     {"Snd::fwdDev58", "thiscall", "int", 1, 0, a_fwd<21>, &g_neg_c2},
-    {"VoiceRx::fwdDev37", "thiscall", "int", 1, 0, a_fwd<22>, &g_neg_c2},
+    {"VoiceRx::getNbuffers", "thiscall", "int", 1, 0, a_fwd<22>, &g_neg_c2},
     {"VoiceRx::callDev34", "thiscall", "int", 1, 0, a_fwd<23>, &g_neg_c2},
     {"VoiceRx::callDev8", "thiscall", "int", 1, 0, a_fwd<24>, &g_neg_c2},
     {"VoiceRx::fwdDev5", "thiscall", "int", 1, 0, a_fwd<25>, &g_neg_c2},
     {"VoiceRx::fwdDev35", "thiscall", "int", 2, 0, a_fwd<26>, &g_neg_c2},
-    {"VoiceRx::fwdDev36", "thiscall", "int", 1, 0, a_fwd<27>, &g_neg_c2},
+    {"VoiceRx::getBufferSize", "thiscall", "int", 1, 0, a_fwd<27>, &g_neg_c2},
     // the device-holder helpers
     {"SndGroup_isDisabled", "thiscall", "uint8", 2, 0, a_is_disabled, &g_neg_isDisabled},  // al (registry c3r.py: uint8)
     {"SndGroup_isMuted", "thiscall", "uint8", 2, 0, a_is_muted, &g_neg_isMuted},  // al (registry c3r.py: uint8)

@@ -4,7 +4,7 @@ log/roadmap/S3/16_notes.md).
 EMULATOR CALL ORACLE (opt-in SG_EMU_ORACLE=1, port/test/cmdemu.py, like test_gfx_hud.py's for the employee panels): the
 ORIGINAL drawGolferInfoPanel runs under Unicorn on test_dialogs.py's panel cases (the same image, arguments, cursor, Text_put
 rule and scripted peers) with every drawing callee replaced by a recorder (its own `ret N` convention): Surface_blit2,
-Surface_stretchBlit, Image_draw, Surface_drawScaled, Win_fillRect, setDrawTarget, drawCenteredText / 2, drawText4049d0,
+Surface_stretchBlit, Image_draw, Surface_drawScaled, Win_fillRect, setDrawTarget, drawCenteredText / 2, drawTextWithColor,
 drawTextSurface, fillWindowRect, Widget_fillRect, drawPanelBackdrop; drawThoughtBubble runs for real (its drawing callees are
 recorded). The port runs with a graphics backend attached and logs every call SkDraw hands over (dialogs.recordDraw). The
 two sequences must be equal: callee, its object and arguments, and the text of a text call. skillPointDialog's drawing pass
@@ -40,11 +40,11 @@ RECORDED = [
     (0x00478B80, "Widget_fillRect", 5, True),
     (0x00404B70, "drawCenteredText", 4, False),
     (0x00404BC0, "drawCenteredText2", 4, False),
-    (0x004049D0, "drawText4049d0", 4, False),
+    (0x004049D0, "drawTextWithColor", 4, False),
     (0x00404AD0, "drawTextSurface", 4, False),
     (0x00432620, "drawPanelBackdrop", 2, False),
 ]
-TEXT_CALLS = {"drawCenteredText", "drawCenteredText2", "drawText4049d0", "drawTextSurface"}
+TEXT_CALLS = {"drawCenteredText", "drawCenteredText2", "drawTextWithColor", "drawTextSurface"}
 
 
 @pytest.fixture(scope="module")
@@ -168,7 +168,7 @@ def test_info_panel_calls_equal_the_original(plib):
 
 
 GOLDEN_N = 120
-GOLDEN = "299d474290a0d26a"   # sha256 of the port's logs over panel_cases(GOLDEN_N, 0x3516b), pinned after the oracle was GREEN
+GOLDEN = "2e59300991f7ec7c"   # sha256 of the port's logs over panel_cases(GOLDEN_N, 0x3516b), pinned after the oracle was GREEN
 
 
 def _digest(lib, negctl=0) -> str:

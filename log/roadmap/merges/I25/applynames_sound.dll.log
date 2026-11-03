@@ -1,0 +1,61 @@
+INFO  Using log config file: jar:file:/C:/Users/maria/Desktop/Proyectos/TD5RE/ghidra/ghidra_12.0.3_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: C:\Users\maria\AppData\Roaming\ghidra\ghidra_12.0.3_PUBLIC\application.log (LoggingInitialization)  
+INFO  Loading user preferences: C:\Users\maria\AppData\Roaming\ghidra\ghidra_12.0.3_PUBLIC\preferences (Preferences)  
+INFO  Loading previous preferences: C:\Users\maria\AppData\Roaming\ghidra\ghidra_12.1.2_PUBLIC\preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (964 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: SHA1PRNG (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Headless startup complete (2664 ms) (AnalyzeHeadless)  
+INFO  Class searcher loaded 58 extension points (18 false positives) (ClassSearcher)  
+INFO  HEADLESS Script Paths:
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\GnuDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\VersionTracking\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger-rmi-trace\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SwiftDemangler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\JVM\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BytePatterns\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\WildcardAssembler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PyGhidra\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Decompiler\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\PIC\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\PDB\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\MicrosoftCodeAnalyzer\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\DATA\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\DecompilerDependent\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Debug\Debugger\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Jython\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\SystemEmulation\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FunctionID\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\FileFormats\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\8051\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\BSim\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Processors\Atmel\ghidra_scripts
+    C:\Users\maria\Desktop\Proyectos\TD5RE\ghidra\ghidra_12.0.3_PUBLIC\Ghidra\Features\Base\ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Opening existing project: C:\Users\maria\Desktop\Proyectos\SimGolf\.\SimGolf (HeadlessAnalyzer)  
+INFO  Opening project: C:\Users\maria\Desktop\Proyectos\SimGolf\.\SimGolf (HeadlessProject)  
+INFO  REPORT: Processing project file: /sound.dll (HeadlessAnalyzer)  
+INFO  REPORT: Execute script: ApplyNames.java 'log/roadmap/S11/4_apply_names' 'overwrite'  (HeadlessAnalyzer)  
+INFO  SCRIPT: C:\Users\maria\Desktop\Proyectos\SimGolf\ghidra\scripts\ApplyNames.java (HeadlessAnalyzer)  
+INFO  ApplyNames.java> RENAME 1001f4a0 Seq::ctor_1001f4a0 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001ff50 Seq::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10030180 CVoiceRxMgr::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 10030080 CVoiceRxMgr::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001bd90 NoteMap::ctor_1001bd90 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001cbf0 TrackCtrl::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1001bee0 NoteMap::ctor_1001bee0 (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002b620 Wave::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002c490 MpegStream::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002e930 AviSound::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002ea30 AviSound::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002ef40 VoiceRx::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002f3f0 VoiceTx::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002d560 Midi::dtor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002d450 Midi::ctor (GhidraScript)  
+INFO  ApplyNames.java> RENAME 1002f740 dllSoundList::ctor (GhidraScript)  
+INFO  ApplyNames.java> APPLYNAMES sound.dll renamed=16 labeled=0 kept=258 missing=0 reset=0 (GhidraScript)  
+INFO  REPORT: Save succeeded for processed file: /sound.dll (HeadlessAnalyzer)  

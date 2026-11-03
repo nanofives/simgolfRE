@@ -1,7 +1,7 @@
 // Footprint stamping of the terrain module (see portsim/sim/terrain.h): stampCourseTiles and clearObjectFootprint.
 // Phase 3.1a, written from the specification (re/analysis/terrain/0040e000_stampCourseTiles.md,
 // re/analysis/course/0040e400_clearObjectFootprint.md, the C3 hook sources as reading reference, the vector corpus).
-// rateLot (3.2) and freeRecordAtPos (3.1b) are called through the registry; pointsPopup (a ui straddler of phase 3.7
+// rateLot (3.2) and removeVipResidentAt (3.1b) are called through the registry; pointsPopup (a ui straddler of phase 3.7
 // that changes simulation state) is the registered function when there is one, else the local copy below (the pattern
 // of golfers_glue.inc).
 #include <initializer_list>
@@ -162,7 +162,7 @@ uint32_t clear_object_footprint(Ctx &ctx, int32_t index) {
       const Ptr<int16_t> fy = (state_arr(ctx, &GameState::g_financeYears) + g.g_year % 100).field(&FinanceYear::home_sites);
       fy.set(static_cast<int16_t>(fy.get() - static_cast<int16_t>(refund)));
     }
-    if (value != 0) call_peer(ctx, "freeRecordAtPos", {u32(x), u32(y)});
+    if (value != 0) call_peer(ctx, "removeVipResidentAt", {u32(x), u32(y)});
   }
   rec.field(&PlacedObject::type).set(-1);
   if (type == 0xF) g.g_flags |= 0x800u;

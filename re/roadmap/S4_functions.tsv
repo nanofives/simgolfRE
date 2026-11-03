@@ -46,7 +46,7 @@ step	family	rva	name	level	status	path1_csvs	oracle	hook_source
 -	dev~	0x2a7c0	initSignalQueue	C2	dead	0	dead	
 -	dev~	0x2a810	stopSignalThread	C2	dead	0	dead	
 -	dev	0x2bbe0	Device_createAndStart	C2	dead	0	dead	
--	chan	0x2c490	Ch5bb90_ctor	C2	dead	1	dead	
+-	chan	0x2c490	MpegStream::ctor	C2	dead	1	dead	
 -	sound	0x2ce60	MultiSound_freeSlots	C2	dead	0	dead	
 -	chan	0x2e550	Ambience::ctor	C2	dead	0	dead	
 -	sound~	0x2ffa0	markSoundTime	C2	dead	0	dead	
@@ -385,7 +385,7 @@ S4.6	chan	0x2abd0	SubChannel_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2ac00	SubChannel_dtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2b4e0	SubChannel_ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2b5f0	Ch5bb90_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2b620	Ch5bb90_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2b620	Wave::dtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2b7c0	startDevicePlayback	C4	verified	1	path1+emu	c3ex.cpp
 S4.6	chan	0x2bff0	Channel_setField5cClamped1200	C4	verified	1	path1+emu	c3cx.cpp
 S4.6	chan	0x2c040	Channel_applyFlags	C4	verified	1	path1+emu	c3cl.cpp
@@ -394,28 +394,28 @@ S4.6	chan	0x2c370	Channel_setField4Masked7f	C4	verified	1	path1+emu	c3cx.cpp
 S4.6	chan	0x2ceb0	VoiceSlot_init	C4	verified	1	path1+emu	c3an.cpp
 S4.6	chan	0x2d100	allocVoiceSlot	C3	impl	1	path1+emu	c3dh.cpp
 S4.6	chan	0x2d240	Voice_setName	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2d450	Ch5be88_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2d450	Midi::ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2d530	Ch5be88_scalarDtorA	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2d560	Ch5be88_dtorA	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2d560	Midi::dtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2ddb0	Channel_propagateFlag0	C2	transcribed	1	emu-only	
 S4.6	chan	0x2deb0	SubChannel_openSourceType2	C4	verified	1	path1+emu	c3ex.cpp
 S4.6	chan	0x2dff0	Channel_releaseSound	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2e630	Ch5be88_scalarDtorB	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2e660	Ch5be88_dtorB	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2e930	Ch5c178_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2e930	AviSound::ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2ea00	Ch5c178_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2ea30	Ch5c178_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ea30	AviSound::dtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2eb40	openSourceType4	C4	verified	1	path1+emu	c3ex.cpp
 S4.6	chan	0x2ed50	buildVoiceRxName	C4	verified	1	path1+emu	c3dh.cpp
 S4.6	chan	0x2ef10	Ch5c234_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2ef40	Ch5c234_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2ef40	VoiceRx::dtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2f060	openSourceType6	C4	verified	1	path1+emu	c3ex.cpp
 S4.6	chan	0x2f220	buildVoiceTxName	C3	impl	1	path1+emu	c3fd.cpp
 S4.6	chan	0x2f3c0	Ch5c2ec_scalarDtor	C4	verified	1	path1+emu	c3dj.cpp
-S4.6	chan	0x2f3f0	Ch5c2ec_dtor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2f3f0	VoiceTx::dtor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x2f5e0	openSourceType7	C4	verified	1	path1+emu	c3ex.cpp
 S4.6	chan	0x2f680	Ch5c2ec_forwardSlot37	C4	verified	1	path1+emu	c3ex.cpp
-S4.6	chan	0x2f740	Ch5c3a4_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.6	chan	0x2f740	dllSoundList::ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.6	chan	0x30fb0	Channel_setFormat	C4	verified	2	path1+emu	c3dh.cpp
 S4.6	chan	0x31080	Channel_start	C4	verified	3	path1+emu	c3ex.cpp
 S4.6	chan	0x31be0	Channel_ctorB	C3	impl	1	path1+emu	c3fk.cpp
@@ -480,9 +480,9 @@ S4.7	sound	0x1ab60	Sound_initEntry	C4	verified	1	path1+emu	c3ar.cpp
 S4.7	sound	0x1ad30	Sound_anyChannelActive	C4	verified	1	path1+emu	c3dj.cpp
 S4.7	sound	0x1ced0	Sound_setName	C4	verified	1	path1+emu	c3dh.cpp
 S4.7	sound	0x1d0a0	Sound_setAltName	C4	verified	2	path1+emu	c3dj.cpp
-S4.7	sound	0x1f4a0	Sound5b6a8_ctor	C3	impl	3	path1+emu	c3fh.cpp
+S4.7	sound	0x1f4a0	Seq::ctor_1001f4a0	C3	impl	3	path1+emu	c3fh.cpp
 S4.7	sound	0x1f6c0	Sound5b6a8_scalarDtor	C4	verified	1	path1+emu	c3dt.cpp
-S4.7	sound	0x1ff50	Sound5b6a8_dtor	C4	verified	1	path1+emu	c3fk.cpp
+S4.7	sound	0x1ff50	Seq::dtor	C4	verified	1	path1+emu	c3fk.cpp
 S4.7	sound	0x204e0	Sound_reapIdle	C4	verified	14	path1+emu	c3dt.cpp
 S4.7	sound	0x21240	Sound_findByName	C4	verified	5	path1+emu	c3dh.cpp
 S4.7	sound	0x22320	Sound_lookupOrCreate	C3	impl	3	path1+emu	c3fk.cpp
@@ -495,9 +495,9 @@ S4.7	sound	0x2add0	Engine_playSound	C4	verified	2	path1+emu	c3fd.cpp
 S4.7	sound	0x2baa0	getPlaybackTime	C4	verified	1	path1+emu	c3cl.cpp
 S4.7	sound	0x2ddf0	Sound_assignName	C4	verified	1	path1+emu	c3dj.cpp
 S4.7	sound	0x2f8d0	MultiSound_setSlotSource	C3	impl	1	path1+emu	c3fd.cpp
-S4.7	sound	0x30080	Sound5c450_ctor	C4	verified	1	path1+emu	c3do.cpp
+S4.7	sound	0x30080	CVoiceRxMgr::ctor	C4	verified	1	path1+emu	c3do.cpp
 S4.7	sound	0x30150	Sound5c450_scalarDtor	C4	verified	1	path1+emu	c3dt.cpp
-S4.7	sound	0x30180	Sound5c450_dtor	C4	verified	1	path1+emu	c3fk.cpp
+S4.7	sound	0x30180	CVoiceRxMgr::dtor	C4	verified	1	path1+emu	c3fk.cpp
 S4.7	sound	0x303f0	Sound_stop	C4	verified	2	path1+emu	c3dh.cpp
 S4.7	sound	0x30570	Sound_freeBufferList	C4	verified	2	path1+emu	c3dh.cpp
 S4.7	sound	0x32020	Sound_resetBuffers	C4	verified	3	path1+emu	c3fg.cpp
@@ -605,8 +605,8 @@ S4.8	dev	0x1b7d0	dynInit_ctrl100b4e08	C4	verified	2	path1+emu	c3do.cpp
 S4.8	dev	0x1b9a0	Ctrl_appendIfAccepted	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1bc50	CtrlObject::ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1bca0	CtrlObject2_ctor	C3	impl	1	path1+emu	c3dj.cpp
-S4.8	dev	0x1bd90	Ctrl5b5c0_ctor	C4	verified	1	path1+emu	c3dj.cpp
-S4.8	dev	0x1bee0	Ctrl5b19c_ctor	C3	impl	1	path1+emu	c3cx.cpp
+S4.8	dev	0x1bd90	NoteMap::ctor_1001bd90	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1bee0	NoteMap::ctor_1001bee0	C3	impl	1	path1+emu	c3cx.cpp
 S4.8	dev	0x1c080	Ctrl5b58c_dtor	C4	verified	1	path1+emu	c3do.cpp
 S4.8	dev	0x1c1e0	Ctrl5b5c0_transposeTable	C3	impl	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1c2a0	CtrlBase_resetElements	C4	verified	1	path1+emu	c3cf.cpp
@@ -621,7 +621,7 @@ S4.8	dev	0x1c990	Ctrl5b58c_dtorEmbedded	C4	verified	1	path1+emu	c3do.cpp
 S4.8	dev	0x1caf0	CtrlObject3_ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1cba0	CtrlObject_scalarDtorC	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1cbd0	CtrlObject_dtorC	C4	verified	1	path1+emu	c3dj.cpp
-S4.8	dev	0x1cbf0	Ctrl5b668_ctor	C4	verified	1	path1+emu	c3dj.cpp
+S4.8	dev	0x1cbf0	TrackCtrl::ctor	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1cca0	CtrlObject_scalarDtorD	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x1ccd0	CtrlObject_dtorD	C4	verified	1	path1+emu	c3dj.cpp
 S4.8	dev	0x20b60	postMidiNotification	C4	verified	1	path1+emu	c3dh.cpp

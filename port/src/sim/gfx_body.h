@@ -140,7 +140,7 @@ const std::array<uint16_t, 0x8000> &shade_lut();
 // the text drawers' common path (drawRichText's run drawer): plain text, a direct colour, through the context's TextMetrics
 void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x0, int32_t y0, uint32_t colour, bool centre,
                       const char *who);
-// drawCenteredText / drawText4049d0 over a[0] = text, a[1] = x, a[2] = y, a[3] = colour
+// drawCenteredText / drawTextWithColor over a[0] = text, a[1] = x, a[2] = y, a[3] = colour
 void draw_text(Gfx &g, Ctx &ctx, const uint32_t *a, bool centre, const char *who);
 // drawFrameR3(x, y, w, h, 1): the shaded panel and its blended border
 void draw_frame_r3(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h);

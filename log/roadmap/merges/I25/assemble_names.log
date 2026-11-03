@@ -1,0 +1,39 @@
++ C:\Users\maria\Desktop\Proyectos\SimGolf\log\roadmap\S11\4_names.py --root C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I25
+retag: 68 changed, 0 not in hooks.csv
+re/names: 70 renamed, 0 already renamed, files ['exe_0.tsv', 'exe_0_globals.tsv', 'exe_1.tsv', 'exe_3.tsv', 'exe_6.tsv', 'exe_9.tsv', 'model_c_globals.tsv', 'model_h2.tsv', 'model_h3.tsv', 'sound_3.tsv', 'sound_4.tsv', 'sound_6.tsv', 'undisc2_exe.tsv']
+names_validate: 0 ['re/names/undisc2_exe_globals.tsv: missing', 'bad 0', 'cross-file duplicates 0']
+edits 936: to apply 936, already applied 0, missing 0, ambiguous 0; new files 2, existing 0
+wrote 190 files, created 2
++ re/tools/model_merge.py header
+wrote C:\Users\maria\Desktop\Proyectos\SimGolf\port\build\I25\re\model\include\simgolf_model.h (2479 lines)
++ re/tools/model_ctypes_gen.py
+structs 105, array typedefs 6, static asserts 274, offset comments 1094, symbols typed 1120, rows not typed 3
+wrote re\model\model_ctypes.py (3225 lines)
++ re/tools/model_state_gen.py
+wrote port\include\gamestate.h (2857 lines)
+wrote port\include\gamestate_meta.inc (1446 lines)
+wrote port\include\gamestate_addresses.inc (1001 lines)
+  sim         203 objects   518,308 bytes
+  hidden       18 objects    14,594 bytes
+  ui          122 objects    13,093 bytes
+  render       67 objects   120,424 bytes
+  audio        13 objects    33,028 bytes
+  pointer     186 objects 2,821,872 bytes
+  engine       51 objects    11,065 bytes
+  const       329 objects    90,789 bytes
+  unmodeled   425 objects    51,311 bytes
+  pointer words 12; hidden-state rows not matched to an object: 0
+  note g_maskSpriteTable: type `struct {int16 flic; int16 variant}` not in the header: bytes
++ re/tools/soundstate_gen.py
+wrote port\include\portsim\sim\soundstate.h
++ re/tools/model_merge.py header --check
+simgolf_model.h is current
++ re/tools/model_ctypes_gen.py --check
+structs 105, array typedefs 6, static asserts 274, offset comments 1094, symbols typed 1120, rows not typed 3
+model_ctypes.py current
++ re/tools/model_state_gen.py --check
++ re/tools/soundstate_gen.py --check
+soundstate.h is current
++ re/tools/model_merge.py merge --out C:\Users\maria\AppData\Local\Temp\tmp19ccne1v\addresses.tsv
+rows 1123 (dropped duplicates 1), nested 17, overlaps 0, duplicate symbols 0, struct size disagreements 0
+model_merge merge reproduces re/model/addresses.tsv: True

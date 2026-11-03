@@ -7,8 +7,8 @@
 //   panelRow (table 0x004bc0a8): widgetShow 0x004a2fa0, panelRowCycleSelection 0x004a2ff0 and their thunks
 //     0x004a30a0 / 0x004a30b0
 //   the view class's tag dispatchers (viewCtor4a0740's table 0x004bb8d0): viewDispatchSelectChanged 0x004a0c90,
-//     viewDispatchSlot29 0x004a0db0, viewDispatchSlot33 0x004a0e20, viewDispatchSlot39 0x004a0e40,
-//     viewDispatchSlot31 0x004a0e60, viewDispatchSlot34 0x004a0e90, viewDispatchSlot32 0x004a0eb0,
+//     viewDispatchOnLeftClick 0x004a0db0, viewDispatchOnRightDown 0x004a0e20, viewDispatchOnRightDoubleClick 0x004a0e40,
+//     viewDispatchOnLeftUp 0x004a0e60, viewDispatchOnRightUp 0x004a0e90, viewDispatchOnRightClick 0x004a0eb0,
 //     viewDispatchSlot60 0x004a0ff0, viewDispatchCycleSelection 0x004a1090, viewDispatchSlot6 0x004a1130,
 //     viewDispatchScrollBy 0x004a13c0
 //   the destructors of seven file-scope Surface aggregates (atexit routines, render): gSurfaceDtor_44ae00,
@@ -19,10 +19,10 @@
 // and cites the address of each instruction it reproduces. __thiscall is emulated with __fastcall (ecx = this,
 // edx unused). Callees run through their original addresses:
 //   hotHitCb0..6           -> HotList::hitTest 0x00492a90 (C3, c3d)
-//   viewDispatchSlot29     -> ListBox::forwardClick 0x0048c610 (C3, c3cr), panelOnPick 0x004a4350 (C2)
+//   viewDispatchOnLeftClick  -> ListBox::forwardClick 0x0048c610 (C3, c3cr), panelOnPick 0x004a4350 (C2)
 //   viewDispatchSelectChanged -> 0x0049fc30 (no row), ListBox::fireSelectChanged 0x0048c560 (C3, c3cr),
 //                             hotHitCb5 (this batch), listSelectionChanged 0x0049e640 (C2)
-//   viewDispatchSlot31..39 -> hotHitCb1/2/3/4/6 (this batch)
+//   viewDispatchOnLeftUp..39 -> hotHitCb1/2/3/4/6 (this batch)
 //   viewDispatchSlot60     -> 0x0049fd80, 0x00487af0, widgetShow (this batch), 0x004a4870, 0x0049e7b0 (no rows)
 //   viewDispatchCycleSelection -> Container::cycleSelection 0x0047af60 (C3, c3cr), panelRowCycleSelection (this batch)
 //   viewDispatchScrollBy   -> ListBox::scrollBy 0x0048caf0 (C3, c3cr)
@@ -245,7 +245,7 @@ int __fastcall SelectChanged_re(void* self, void*, int a, int b) {
     }
 }
 
-// 0x004a0db0  viewDispatchSlot29(this, a, b) (`ret 8`): byte map 0x004a0e08, jump table 0x004a0df8. Tag 2 ->
+// 0x004a0db0  viewDispatchOnLeftClick(this, a, b) (`ret 8`): byte map 0x004a0e08, jump table 0x004a0df8. Tag 2 ->
 // 0x004a0dc8: ListBox::forwardClick on D-0x1a0 (0x004a0dd2 / 0x004a0dd8); tag 8 -> 0x004a0de0: panelOnPick on
 // D-0x8c (0x004a0dea / 0x004a0df0); every other tag (map entries 0 and 3 both point at the `ret 8` 0x004a0df5)
 // returns tag - 1 (0x004a0db3).
@@ -257,7 +257,7 @@ int __fastcall Slot29_re(void* self, void*, int a, int b) {
     return tag - 1;                                                     // 0x004a0db3, ret at 0x004a0df5
 }
 
-// 0x004a0e60  viewDispatchSlot31(this, a, b) (`ret 8`): eax = tag (0x004a0e60); tag 4 returns it (0x004a0e63 /
+// 0x004a0e60  viewDispatchOnLeftUp(this, a, b) (`ret 8`): eax = tag (0x004a0e60); tag 4 returns it (0x004a0e63 /
 // 0x004a0e66), any tag other than 8 returns it (0x004a0e68 / 0x004a0e6b), tag 8 calls hotHitCb1 on D-0x8c with
 // (a, b) (0x004a0e6d..0x004a0e7d) and returns its eax.
 M2_t Slot31_orig;
@@ -271,22 +271,22 @@ int __fastcall Slot31_re(void* self, void*, int a, int b) {
 // The four `cmp dword ptr [ecx-8], 8; jne <ret 8>` dispatchers. Their other path leaves eax as the caller left it,
 // so they are modelled (and A/B'd) as returning nothing; the tag-8 path calls the slot's hotHitCb on D-0x8c with
 // (a, b).
-// 0x004a0eb0  viewDispatchSlot32: 0x004a0eb0 / 0x004a0eb4, hotHitCb2 at 0x004a0ec0 / 0x004a0ec6.
+// 0x004a0eb0  viewDispatchOnRightClick: 0x004a0eb0 / 0x004a0eb4, hotHitCb2 at 0x004a0ec0 / 0x004a0ec6.
 M2v_t Slot32_orig;
 void __fastcall Slot32_re(void* self, void*, int a, int b) {
     if (tagOf(self) == 8) kHotHitCb2(B(self) - 0x8c, 0, a, b);
 }
-// 0x004a0e20  viewDispatchSlot33: 0x004a0e20 / 0x004a0e24, hotHitCb3 at 0x004a0e30 / 0x004a0e36.
+// 0x004a0e20  viewDispatchOnRightDown: 0x004a0e20 / 0x004a0e24, hotHitCb3 at 0x004a0e30 / 0x004a0e36.
 M2v_t Slot33_orig;
 void __fastcall Slot33_re(void* self, void*, int a, int b) {
     if (tagOf(self) == 8) kHotHitCb3(B(self) - 0x8c, 0, a, b);
 }
-// 0x004a0e90  viewDispatchSlot34: 0x004a0e90 / 0x004a0e94, hotHitCb4 at 0x004a0ea0 / 0x004a0ea6.
+// 0x004a0e90  viewDispatchOnRightUp: 0x004a0e90 / 0x004a0e94, hotHitCb4 at 0x004a0ea0 / 0x004a0ea6.
 M2v_t Slot34_orig;
 void __fastcall Slot34_re(void* self, void*, int a, int b) {
     if (tagOf(self) == 8) kHotHitCb4(B(self) - 0x8c, 0, a, b);
 }
-// 0x004a0e40  viewDispatchSlot39: 0x004a0e40 / 0x004a0e44, hotHitCb6 at 0x004a0e50 / 0x004a0e56.
+// 0x004a0e40  viewDispatchOnRightDoubleClick: 0x004a0e40 / 0x004a0e44, hotHitCb6 at 0x004a0e50 / 0x004a0e56.
 M2v_t Slot39_orig;
 void __fastcall Slot39_re(void* self, void*, int a, int b) {
     if (tagOf(self) == 8) kHotHitCb6(B(self) - 0x8c, 0, a, b);
@@ -481,17 +481,17 @@ SG_HOOK("golf_clean.exe", 0x004a30b0, panelRowCycleSelection_vtordisp, PanelRowC
         PanelRowCycleSelectionVd_orig);
 // 0x004a0c90  viewDispatchSelectChanged
 SG_HOOK("golf_clean.exe", 0x004a0c90, viewDispatchSelectChanged, SelectChanged_re, SelectChanged_orig);
-// 0x004a0db0  viewDispatchSlot29
+// 0x004a0db0  viewDispatchOnLeftClick
 SG_HOOK("golf_clean.exe", 0x004a0db0, viewDispatchSlot29, Slot29_re, Slot29_orig);
-// 0x004a0e60  viewDispatchSlot31
+// 0x004a0e60  viewDispatchOnLeftUp
 SG_HOOK("golf_clean.exe", 0x004a0e60, viewDispatchSlot31, Slot31_re, Slot31_orig);
-// 0x004a0eb0  viewDispatchSlot32
+// 0x004a0eb0  viewDispatchOnRightClick
 SG_HOOK("golf_clean.exe", 0x004a0eb0, viewDispatchSlot32, Slot32_re, Slot32_orig);
-// 0x004a0e20  viewDispatchSlot33
+// 0x004a0e20  viewDispatchOnRightDown
 SG_HOOK("golf_clean.exe", 0x004a0e20, viewDispatchSlot33, Slot33_re, Slot33_orig);
-// 0x004a0e90  viewDispatchSlot34
+// 0x004a0e90  viewDispatchOnRightUp
 SG_HOOK("golf_clean.exe", 0x004a0e90, viewDispatchSlot34, Slot34_re, Slot34_orig);
-// 0x004a0e40  viewDispatchSlot39
+// 0x004a0e40  viewDispatchOnRightDoubleClick
 SG_HOOK("golf_clean.exe", 0x004a0e40, viewDispatchSlot39, Slot39_re, Slot39_orig);
 // 0x004a0ff0  viewDispatchSlot60
 SG_HOOK("golf_clean.exe", 0x004a0ff0, viewDispatchSlot60, Slot60_re, Slot60_orig);

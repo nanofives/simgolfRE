@@ -120,7 +120,7 @@ NEGCTL_RED_SEGMENTS = [
     ("drawQueuedSprite", 2, "enqueued entries not linked", "cov_a_flags/05"),
     ("buildSceneSprites", 1, "nothing runs", "cov_l_bridge/00"),
     ("drawWorldObjects", 1, "no spawn roll for flyer kind 0", "cov_a_build/05"),
-    ("drawFlyingBall", 1, "nothing runs", "cov_a_build/05"),
+    ("drawWalkers", 1, "nothing runs", "cov_a_build/05"),
     ("updateGolfers", 1, "no golfer ticks", "cov_a_build/05"),
     ("View_toLocal", 1, "cursor x / y swapped", "sandbox_basic/00"),
     ("View::fromParent", 1, "x off by one", "cov_k3_build/05"),
@@ -166,7 +166,7 @@ NEGCTL_BLIND = {
     ("snapshotTables", 1): "writes render-class arrays only (the sprite snapshot): no simulation object can see it",
     ("tick.frame", 2): "the bulletin-board fallback's counter: no TIME-FORWARD start image has a pending photo",
     ("hireEmployee", 1): "needs the hire dialog's choice (showHireEmployeeDialog, phase 3.7b): no segment or vector",
-    ("drawRecords", 1): "its own writes are render-class objects (g_recordBanks, g_animalCell, the sprite queue: "
+    ("drawHomeLayout", 1): "its own writes are render-class objects (g_homeLayouts, g_animalCell, the sprite queue: "
                         "gamestate_meta.inc); blind on every PASSing COMMAND segment and cov_k1_animals/00's 57 frames",
 }
 

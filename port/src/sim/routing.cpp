@@ -108,7 +108,7 @@ struct MapDraw {
   void image(uint32_t off, int32_t x, int32_t y) const { gx("Image_draw", {refs + off, root, u32(x), u32(y), 0}); }
   void font(uint32_t f) const { gx("setDrawTarget", {root, f, 0, 0, 0}); }
   void centred(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawCenteredText", {s, u32(x), u32(y), c}); }
-  void left(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawText4049d0", {s, u32(x), u32(y), c}); }
+  void left(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawTextWithColor", {s, u32(x), u32(y), c}); }
   // a text the original builds in the text buffer: built there, drawn by `draw`, and the buffer's bytes put back
   template <class F>
   void with_text(const std::string &s, F draw) const {

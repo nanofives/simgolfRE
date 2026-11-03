@@ -5,7 +5,7 @@ Evidence per function (see log/p3/p35_notes.txt):
   * the LIVE observations of the raw captures (port/test/liveraw.py) for the functions the emulation could not run or ran
     thinly (story file reader, story chain, hole / building / patron builders),
   * unit tests below for what neither reaches (replaceInText, appendOpinion's ranges, loadStoryStrings on a synthetic file,
-    announceBuilding's thresholds, runBulletinBoardWithSound),
+    openHole's thresholds, runBulletinBoardWithSound),
   * a negative control (wrong body) per function: every mode must read RED under one of the three, or is recorded in
     NEGCTL_BLIND with the reason.
 """
@@ -43,14 +43,14 @@ LIVE = {
     "computeStoryReply": [("computeStoryReply+unstub", (), 40), ("computeStoryReply_chain+unstub", (), 40)],
     "storyText": [("storyText+unstub", (), 19)],
     "advanceStory": [("advanceStory+unstub", (), 61)],
-    "announceBuilding": [(k, (), 1) for k in (
+    "openHole": [(k, (), 1) for k in (
         "announceBuilding", "announceBuilding_bi0", "announceBuilding_bi15", "announceBuilding_bi4",
         "announceBuilding_flag60short", "announceBuilding_h1", "announceBuilding_h10", "announceBuilding_h18",
         "announceBuilding_h6", "announceBuilding_h9", "announceBuilding_p2", "announceBuilding_p3long",
         "announceBuilding_p3short", "announceBuilding_p4long", "announceBuilding_p4short", "announceBuilding_p5",
         "announceBuilding_p5long", "announceBuilding_p5short", "announceBuilding_rej_pin", "announceBuilding_rej_tee",
         "announceBuilding_rej_third", "announceBuilding_skipbi")],
-    "holeMagazineEvent": [(k, (), 1) for k in (
+    "rateCourseHoles": [(k, (), 1) for k in (
         "holeMagazineEvent", "holeMagazineEvent_busy", "holeMagazineEvent_diff2", "holeMagazineEvent_force",
         "holeMagazineEvent_mag2")],
     "announceLandmark": [("LandmarkAvailableNotice", (), 22), ("LandmarkAvailableNotice_busy", (), 22)],
@@ -82,14 +82,14 @@ NEGCTL = [
     ("announceLandmark", 1, "'A' maps to 0x16b", "vec"),
     ("patronEvent", 1, "CEO amount 4000", "live"),
     ("announceHoleType", 1, "kind 3 posts event 1", "vec"),
-    ("announceBuilding", 1, "yards <= 0x31 gives par 2", "unit"), ("announceBuilding", 2, "facing rounds down", "live"),
+    ("openHole", 1, "yards <= 0x31 gives par 2", "unit"), ("openHole", 2, "facing rounds down", "live"),
     ("pairGolfersWithStory", 1, "compat counts 4 bits", "live"),
 ]
 # wrong bodies no oracle reaches (recorded on purpose: the segments must cover them once sg_run_frames exists)
 NEGCTL_BLIND = [
     ("advanceStory", 1, "live", "a partner one stage behind plays the other sound: the audio call has no state effect"),
     ("announceLandmark", 2, "live", "Random::range(2) for the neighbour step: only the retry path, no captured vector retries"),
-    ("holeMagazineEvent", 1, "live", "notable threshold 0x31: no captured hole has a skill delta of exactly 0x31"),
+    ("rateCourseHoles", 1, "live", "notable threshold 0x31: no captured hole has a skill delta of exactly 0x31"),
     ("pairGolfersWithStory", 2, "live", "reset threshold roll > 7: no captured roll equals 7"),
 ]
 
@@ -202,8 +202,8 @@ def test_every_function_has_a_negctl(portlib):
 
 MINE = ["appendUpgradeText", "replaceInText", "thoughtBalance", "thoughtFlag", "appendOpinion", "postEvent",
         "runBulletinBoardWithSound", "loadStoryStrings", "computeStoryReply", "storyText", "substituteStoryNames",
-        "advanceStory", "emitGolferThought", "buildGolferComment", "announceLandmark", "patronEvent", "holeMagazineEvent",
-        "announceHoleType", "announceBuilding", "pairGolfersWithStory"]
+        "advanceStory", "emitGolferThought", "buildGolferComment", "announceLandmark", "patronEvent", "rateCourseHoles",
+        "announceHoleType", "openHole", "pairGolfersWithStory"]
 
 
 @pytest.mark.port
@@ -371,7 +371,7 @@ def test_load_story_strings_cache_and_missing_file(portlib):
 def test_announce_building_par_thresholds(portlib, mode):
     """A hole of exactly 50 yards is a par 2 (yards <= 0x32)."""
     lib = portlib
-    lib.negctl("announceBuilding", mode)
+    lib.negctl("openHole", mode)
     with _new_state(lib) as st:
         holes = _off(lib, "g_holes")
         st.write(_off(lib, "g_holesPlusOne"), struct.pack("<i", 1))
@@ -379,7 +379,7 @@ def test_announce_building_par_thresholds(portlib, mode):
         st.write(rec + 8, struct.pack("<i", 5))        # tee x
         st.write(rec + 24, struct.pack("<i", 9))       # pin x
         st.write(rec + 4, struct.pack("<h", 0x32))     # yards
-        st.call("announceBuilding", [])
+        st.call("openHole", [])
         par = st.read(rec, 1)[0]
     assert par == (2 if mode == 0 else 3)
     lib.negctl_reset()

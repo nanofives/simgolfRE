@@ -2,7 +2,7 @@
 // walker / animal / habitat spawning and their per-frame updates.
 // Specifications: re/analysis/golfer/<addr>_<name>.md and re/analysis/sim/<addr>_<name>.md of each function,
 // re/analysis/data/golfer_record.md and record_tables.md, the hook sources (reading reference) and the vector corpus.
-// Records: g_golfers 156 x 0x100, g_walkers 64 x 0x4c, g_animalRecords 100 x 0x3c, g_habitatSlots 128 x 0x14,
+// Records: g_golfers 156 x 0x100, g_walkers 64 x 0x4c, g_vipResidents 100 x 0x3c, g_habitatSlots 128 x 0x14,
 // g_storyPairs (the shot-track table) 16 x 0x388. Indices are NOT bound-checked unless stated (as in the original).
 #ifndef PORTSIM_SIM_GOLFERS_H
 #define PORTSIM_SIM_GOLFERS_H
@@ -32,10 +32,10 @@ void append_endearment(Ctx &ctx, int32_t n);
 // appendWalkerName: strcat of walker `index`'s rename text, or (empty) the default name: kind -6 the player's name
 // (golfer type 0's name), any other kind the two table strings of slot ((flags >> 3) & 1) - (2 * kind + 4).
 void append_walker_name(Ctx &ctx, int32_t index);
-// spawnObject: fills the first free animal record (type -1; none: nothing) and draws (row, col) = Random::range(4) x 2
+// spawnVipResident: fills the first free animal record (type -1; none: nothing) and draws (row, col) = Random::range(4) x 2
 // until the occupancy cell row * 6 + col of record bank `lot` is free (0xff). Throws NoReturn when no cell of rows and
 // columns 0..3 is free (the original spins forever).
-void spawn_object(Ctx &ctx, int32_t lot, int32_t kind, int32_t a, int32_t b);
+void spawn_vip_resident(Ctx &ctx, int32_t lot, int32_t kind, int32_t a, int32_t b);
 // spawnWalker: claims the first walker slot whose flags byte is 0 (no bound: model_defects#11), zeroes it and starts
 // it at placed object 0 + (1.5, 1.5) tiles; returns the slot index.
 int32_t spawn_walker(Ctx &ctx, int32_t kind);
@@ -43,12 +43,12 @@ int32_t spawn_walker(Ctx &ctx, int32_t kind);
 // direction Random::range(4), link -1; returns its index.
 int32_t add_habitat_slot(Ctx &ctx, int32_t x, int32_t y, int32_t kind);
 
-// placeAnimal: one frame of animal idx: on screen (worldToScreen) its frame cycles and g_textBuffer gets "x/y" of its
+// updateVipResident: one frame of animal idx: on screen (worldToScreen) its frame cycles and g_textBuffer gets "x/y" of its
 // sub-tile position; off screen and not paused a 1-in-500 roll sets wait 500; a wait counts down; idle animals turn and
 // walk 16 steps inside their 4 x 4 lot, or play their sound when the turn points out of it. A frame count 0 faults (idiv).
-void place_animal(Ctx &ctx, int32_t idx);
-// tickAnimals: placeAnimal for every animal record whose type word is not 0xffff.
-void tick_animals(Ctx &ctx);
+void update_vip_resident(Ctx &ctx, int32_t idx);
+// updateVipResidents: updateVipResident for every animal record whose type word is not 0xffff.
+void update_vip_residents(Ctx &ctx);
 // placeHabitat: sets the tile type of (x, y), clears flag bits 0x2100, then (1 in 8, a free random habitat slot, the
 // habitat preference bit) tries up to 9 animal kinds for the neighbour tile (x2, y2) and seeds a habitat cluster there
 // with its sound and message. Returns the original's eax (the last Random::range result or playHabitatSound's).
