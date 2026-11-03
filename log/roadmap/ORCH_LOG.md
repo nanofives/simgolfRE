@@ -380,3 +380,4 @@
 2026-11-03 05:57 LAN release 6818c86e published at Mariano's request (release_due said NOT_DUE: 1 round, 19.2 h): 1 of 5,659 files sent (4.2 MB), 0 pruned; manifest verified through nginx
 2026-11-03 07:09 I25 done (fast gates by G30): S11.4 renames + S11.5 endstate on cdeb2609, Ghidra 52+2 exe / 16 sound renames; segments 205 x2, boot 67/2/2 x2, app replay, gfx_check, static (test_port_scope and audio_stream fixed to read scope.tsv through renames), 4 golden files re-pinned through a GREEN oracle. Committed (merges/I25.md). G30 recorded: profile play + four fix groups (P4).
 2026-11-03 07:42 P4 merged (G30): profile play = fixed + 17 switches (5 existing, 12 new from workers P4A / P4B, both closed), app default; D48b kept out, D5/D6 deferred; segments 205 x2 with 0 digests changed. LAN release next.
+2026-11-03 07:44 LAN release 70c2e89c published (P4: profile play as the app default): 1 of 5,659 files sent, manifest verified through nginx
