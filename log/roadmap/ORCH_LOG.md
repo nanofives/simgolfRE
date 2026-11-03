@@ -391,3 +391,4 @@
 2026-11-03 16:31 P6 + P7 committed 649b6a5e; LAN release 649b6a5e published (1 of 5,659 files sent, manifest verified)
 2026-11-03 16:39 feedback round 3 (log/roadmap/P8/BRIEF.md): P8A (sonnet: loading banner in the game's own banner style; standing rule: every port UI uses the game's fonts / art) and P8B (opus: widescreen stage 2 + world rendered at the window's native resolution) spawned on claude2, trees port/build/P8A / P8B from b786c29a.
 2026-11-03 17:16 P8A merged (loading banner in the game's style); G32 recorded and sent to P8B. Commit + LAN release next.
+2026-11-03 17:19 P8A committed 559680f4; LAN release 559680f4 published
