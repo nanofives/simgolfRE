@@ -435,9 +435,27 @@ struct AlphaOp {
   const uint16_t *pal;
   const AProgram *prog;
   bool flag;
+  // P9D (gfx.h gfx_set_hud_modal): with `rec` (the quarter member draw16_1002ed60 on the root surface while the modal capture runs)
+  // each written pixel is recorded as a kind-4 layer pixel; n / one_src / src0 tell a dim of every root pixel with one source word
+  Gfx *rec = nullptr;
+  size_t n = 0;
+  bool one_src = true;
+  uint16_t src0 = 0;
   void operator()(uint8_t c, uint16_t &w) {
     if (c >= 0xff) return;
     if (flag && c >= 0xf8) return;
+    const uint16_t before = w;
+    struct Note {
+      AlphaOp &o;
+      uint16_t &w;
+      uint16_t before, src;
+      ~Note() {
+        if (!o.rec) return;
+        o.rec->note_blend(static_cast<size_t>(&w - o.rec->root.px.data()), before, w, 4, src, 0);
+        if (o.n++ == 0) o.src0 = src;
+        else if (src != o.src0) o.one_src = false;
+      }
+    } note{*this, w, before, pal[c]};
     uint32_t r[5] = {0, 0, 0, 0, 0};
     for (size_t k = 0; k < prog->n; ++k) {
       const AStep &s = prog->steps[k];
@@ -583,7 +601,12 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
   // root surface, drawn with the flag-set members [15, 30); mode 9 takes the flag-cleared member instead.
   const int member = mode() == 9 ? 0 : 15;
   AlphaOp op{pal, &kAlphaPrograms[body + member], static_cast<uint8_t>(flag) != 0};
+  // P9D: the quarter member's pixels recorded for the modal capture (gfx_reports.cpp records the same blend at scale 1)
+  const bool quarter = !std::strcmp(op.prog->body, "draw16_1002ed60") && mode() != 7;
+  if (quarter && g.hud.any && g.hud.modal && dst == g.root_va(ctx)) op.rec = &g;
   blit16(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, op);
+  // every root pixel blended once with one word (the sprite covers the root at this scale): a whole-frame dim
+  if (op.rec && op.one_src && op.n == g.root.px.size()) g.note_dim(op.src0);
 }
 
 // ------------------------------------------------------------------------------------------------ composeGolferSprite

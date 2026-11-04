@@ -1,0 +1,797 @@
+diff --git a/port/include/portsim/sim/gfx.h b/port/include/portsim/sim/gfx.h
+index 662ab60..d9f1fba 100644
+--- a/port/include/portsim/sim/gfx.h
++++ b/port/include/portsim/sim/gfx.h
+@@ -76,7 +76,8 @@ enum GfxLayerId : int32_t {
+ };
+ // one layer pixel: kind 0 not drawn by the layer (transparent), 1 opaque word `px`, 2 the mask blend of jgld blitPair1 with source
+ // word `src` and weight `k` (per 5-bit channel c: ((dst8 * k) >> 8) + src8) >> 3 with x8 = c << 3), 3 the destination through the
+-// shade table `k` (gfx_shade_table)
++// shade table `k` (gfx_shade_table), 4 (P9D) the quarter blend of Surface_drawSprite's drawAlpha member draw16_1002ed60 with source
++// word `src` (gfx_layer_quarter: floor((src + 3 dst) / 4) per 5-bit channel), the dim the report screens draw over the frame
+ struct GfxLayerPx {
+   uint16_t px = 0, src = 0;
+   uint8_t kind = 0, k = 0;
+@@ -86,6 +87,11 @@ struct GfxHudLayer {
+   int8_t anchor = 0;  // -1 left edge, 0 centred, +1 right edge
+   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // bounding box in 800-space, half-open
+   std::vector<GfxLayerPx> px;               // (x1 - x0) * (y1 - y0), rows top-down
++  // P9D: the layer's segment dimmed the whole frame (one Surface_drawSprite quarter blend over every root pixel with one source
++  // word): a presenter dims everything composed before it in the whole window with dim_src (the panels at their anchors, the world,
++  // the side bands), and its kind-4 pixels are then that dim (already applied)
++  uint8_t dim = 0;
++  uint16_t dim_src = 0;
+   const GfxLayerPx *at(int32_t x, int32_t y) const {
+     if (x < x0 || x >= x1 || y < y0 || y >= y1) return nullptr;
+     const GfxLayerPx &p = px[static_cast<size_t>(y - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(x - x0)];
+@@ -97,10 +103,30 @@ struct GfxHudFrame {
+   std::vector<uint16_t> back;  // the back buffer the layers were published with (a present checks it is the frame it shows)
+   std::vector<GfxHudLayer> layers;  // in draw order
+   uint64_t serial = 0;
++  // P9D: why the publish made no layers (0 = it made them; 1 = no layer opened since the last publish; 2 = inside an open layer)
++  int8_t none = 0;
++  // P9D: the frame of a modal screen drawn over the last layered frame (its base and layers carried, the screen's drawing since
++  // then in a centred layer after them): gfx_set_hud_modal
++  uint8_t carried = 0;
+   bool empty() const { return base.empty(); }
+ };
+ int8_t gfx_layer_anchor(int32_t id);
+ void gfx_set_hud_capture(Ctx &ctx, bool on);  // the app's host only
++// P9D: the modal screens over the HUD (log/roadmap/P9/P9D_notes.md), set by the app's host after gfx_set_hud_capture. With it on:
++// - the report screens' dim (Surface_drawSprite's quarter blend) is recorded as layer pixels of kind 4, and a dim of the whole
++//   frame marks its layer (GfxHudLayer::dim);
++// - after every layered publish the capture is CARRIED: until the next frame starts (a terrain pass, its restore, a window paint
++//   or the next layer), what is drawn over the root goes into a centred layer after the published layers, so a modal screen that
++//   refreshes outside the frame's layers (the popups, the System menu, hole stats, best scores, end of year, ...) is published
++//   with the panels it was drawn over, at their anchors; a carried publish keeps the carry (the screen's later passes are
++//   measured from the same frame); a publish after a 2D write covering the whole root publishes no layers;
++// - a screen's first drawing call (reports.begin / dialogs.begin) inside an open panel layer closes that layer there, so the
++//   screen's drawing is a centred layer of the frame and its refreshFull publishes the frame's layers (the hire dialog).
++// Off (the default, and --hud-modal off): P9B's capture.
++void gfx_set_hud_modal(Ctx &ctx, bool on);
++bool gfx_hud_modal(Ctx &ctx);
++// P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
++uint16_t gfx_layer_quarter(uint16_t src, uint16_t dst);
+ bool gfx_hud_capture(Ctx &ctx);
+ // the layers published at the last Window::refreshFull (false when capture is off or nothing was published)
+ bool gfx_hud_frame(Ctx &ctx, GfxHudFrame &out);
+diff --git a/port/src/sim/gfx_body.h b/port/src/sim/gfx_body.h
+index afff9e5..a874be5 100644
+--- a/port/src/sim/gfx_body.h
++++ b/port/src/sim/gfx_body.h
+@@ -101,6 +101,14 @@ class Gfx {
+     GfxHudFrame published;
+     uint64_t serial = 0;
+     int64_t seg = 0;          // P9C: the segment counter (a layer, or the centred gap between two), advanced at every boundary
++    // P9D (gfx.h gfx_set_hud_modal): the modal screens over the HUD
++    bool modal = false;       // the feature is on (the app's host)
++    bool carry = false;       // the capture continues the last layered frame: base and layers are its, mark its root
++    int64_t carry_seg = -1;   // the carried centred gap's segment (its text runs keep it across the carried publishes)
++    std::vector<GfxHudLayer> carry_layers;  // the last layered frame's layers without its child-window composition
++    uint32_t dim_gen = 0;     // a whole-frame dim was drawn in the segment of blend generation dim_gen (dim_set), source dim_src
++    bool dim_set = false;
++    uint16_t dim_src = 0;
+   } hud;
+   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
+   struct TextCapture {
+@@ -116,6 +124,9 @@ class Gfx {
+     GfxTextFrame published, banner;
+     GfxTextStats stats;
+     std::vector<GfxTextLayerPatch> patches_pending;  // the layer patches this frame's closed segments made
++    // P9D: the runs (layer >= 0) and patches of the last layered publish's carried layers, published again with a carried frame
++    std::vector<GfxTextRun> carry_runs;
++    std::vector<GfxTextLayerPatch> carry_patches;
+     // the wide scene (G32, gfx_scene.cpp on_wide): while `wide` is set, runs drawn on the swapped root are the scene's, kept in
+     // wide_runs with their boxes moved by wide_ox (scene -> frame columns); at the queue's end they are peeled off the scene and
+     // the ones not inside the frame's columns are published with each frame as world runs (GfxTextRun::target 2, layer -3)
+@@ -144,6 +155,12 @@ class Gfx {
+     r.px = res;
+     hud.rec_gen[i] = hud.gen;
+   }
++  // P9D (gfx.cpp, gfx.h gfx_set_hud_modal): the carried capture after a layered publish, its end at the next frame's start, a
++  // modal screen's first call inside an open panel layer, the whole-frame dim
++  void hud_carry_arm(bool again);
++  void hud_carry_drop();
++  void hud_modal_mark();
++  void note_dim(uint16_t src);
+   // a case the backend does not model (counted; the first occurrence of a reason is appended to `notes`)
+   void unsup(const std::string &why);
+   // the root surface, made at its first use (Window::create's size scaleX(0x140) x scaleX(0xf0))
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+index b0427d9..4f281f9 100644
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -731,6 +731,14 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
+   } else {
+     f.patches.clear();
+   }
++  // P9D: a carried frame (gfx.h gfx_set_hud_modal): its carried layers' runs and patches as the frame they were peeled in published
++  // them; the runs of its centred gap stay in that segment (the next carried publish peels them again)
++  const bool carried = layered && hud->carried;
++  const int64_t cseg = carried ? g.hud.carry_seg : -2;
++  if (carried) {
++    f.patches.insert(f.patches.begin(), c.carry_patches.begin(), c.carry_patches.end());
++    f.runs.insert(f.runs.end(), c.carry_runs.begin(), c.carry_runs.end());
++  }
+   std::vector<Gfx::TextCapture::Run> next;
+   for (size_t k = 0; k < live.size(); ++k) {
+     // the layered path shows a run of this frame's layers (peeled at its segment) even when a later layer covers its place
+@@ -742,15 +750,26 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
+     }
+     if (!keep[k]) std::fill(live[k].info.vis.begin(), live[k].info.vis.end(), 0);
+     f.runs.push_back(live[k].info);
+-    if (keep[k]) next.push_back(std::move(live[k]));
++    if (keep[k] || (live[k].seg == cseg && in_layer)) next.push_back(std::move(live[k]));
+     else ++c.stats.dropped;
+   }
+   for (Gfx::TextCapture::Run &r : next) {  // the next frame: everything kept is under its first layer (the base)
++    if (r.seg == cseg) continue;  // P9D: the carried gap's
+     r.seg = -1;
+     r.info.layer = -2;
+     r.info.vis_layer.clear();
+   }
+   live = std::move(next);
++  // P9D: a layered publish that the capture carries next: its carried layers' runs and patches (gfxb::hud_publish set carry_layers)
++  if (layered && !carried && g.hud.modal) {
++    const int32_t n = static_cast<int32_t>(g.hud.carry_layers.size());
++    c.carry_runs.clear();
++    c.carry_patches.clear();
++    for (const GfxTextRun &r : f.runs)
++      if (r.layer >= 0 && r.layer < n && r.target == 0) c.carry_runs.push_back(r);
++    for (const GfxTextLayerPatch &q : f.patches)
++      if (q.layer >= 0 && q.layer < n) c.carry_patches.push_back(q);
++  }
+   // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
+   if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
+   c.stats.published = f.runs.size();
+@@ -845,6 +864,11 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
+   out.y0 = y0;
+   out.x1 = x1 + 1;
+   out.y1 = y1 + 1;
++  // P9D: a centred segment that dimmed the whole frame (gfx_reports.cpp Surface_drawSprite, Gfx::note_dim)
++  if (id == kGfxLayerCentred && use_rec && g.hud.dim_set && g.hud.dim_gen == g.hud.gen) {
++    out.dim = 1;
++    out.dim_src = g.hud.dim_src;
++  }
+   const int32_t bw = out.x1 - out.x0;
+   out.px.assign(static_cast<size_t>(bw) * static_cast<size_t>(out.y1 - out.y0), GfxLayerPx{});
+   const bool rec = use_rec && g.hud.rec_gen.size() == now.size();
+@@ -870,32 +894,126 @@ void hud_gap(Gfx &g) {  // the root's changes since the last boundary, outside e
+ }  // namespace
+ 
+ // Window::refreshFull: the layers since the last publish, plus the changes since the last layer closed and the back buffer's own
+-// composition (child windows) as centred layers; a refreshFull inside an open layer publishes none (a modal screen's frames)
++// composition (child windows) as centred layers; a refreshFull inside an open layer publishes none (a modal screen's frames).
++// P9D (gfx_set_hud_modal): a refreshFull inside an open layer that a screen's first call closed (hud_modal_mark) publishes like one
++// outside it; a carried capture publishes the last layered frame's base and layers with the screen's drawing since that frame as
++// the centred layer after them (nothing when a 2D write has covered the whole root since: no terrain under it); after every
++// layered publish the capture is carried (hud_carry_arm) until the next frame starts.
+ static void hud_publish(Gfx &g) {
+   Gfx::HudCapture &c = g.hud;
+   if (!c.on) return;
+   GfxHudFrame f;
+   f.serial = ++c.serial;
+-  if (c.any && c.depth == 0) {
++  const bool split = c.modal && c.depth > 0 && c.any && c.cur < 0 && !c.aborted;
++  const bool carried = c.modal && c.carry;
++  if (carried && !g.root_terrain) {
++    g.hud_carry_drop();
++    f.none = 1;
++  } else if (c.any && (c.depth == 0 || split || carried)) {
+     const size_t before = c.layers.size();
+     hud_gap(g);
+     text_close_segment(g, c.seg, c.layers.size() > before ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);  // P9C
+-    ++c.seg;
++    if (!carried) ++c.seg;  // P9D: a carried gap keeps its segment (its runs are peeled again at the next carried publish)
++    const size_t own = c.layers.size();
+     GfxHudLayer l;
+     if (hud_diff(g, g.root.px, g.back.px, kGfxLayerCentred, false, l)) c.layers.push_back(std::move(l));
+     f.base = c.base;
+     f.back = g.back.px;
+-    f.layers = std::move(c.layers);
++    if (c.modal) {
++      if (!carried) c.carry_layers.assign(c.layers.begin(), c.layers.begin() + static_cast<std::ptrdiff_t>(own));
++      f.layers = c.layers;
++    } else {
++      f.layers = std::move(c.layers);
++    }
++    f.carried = carried ? 1 : 0;
++  } else {
++    f.none = c.depth > 0 ? 2 : 1;
+   }
+   if (c.depth > 0) c.aborted = true;
+   c.layers.clear();
+   c.any = false;
+   c.cur = -1;
++  const bool arm = c.modal && !f.empty();
+   c.published = std::move(f);
++  if (arm) g.hud_carry_arm(carried);
+ }
+ 
+ }  // namespace gfxb
+ 
++// P9D: the carry (gfx.h gfx_set_hud_modal). arm: the capture continues the frame just published, its base and layers (without the
++// child-window composition) kept, everything drawn on the root from now on a centred gap of the carried segment; `again` = the
++// publish was itself carried: the gap stays measured from the same root, segment and blend generation (the screen's drawing
++// accumulates over the same frame)
++void Gfx::hud_carry_arm(bool again) {
++  HudCapture &c = hud;
++  c.carry = true;
++  c.any = true;
++  c.cur = -1;
++  c.layers = c.carry_layers;
++  if (!again) {
++    c.mark = root.px;
++    c.carry_seg = c.seg;
++    ++c.gen;
++    c.dim_set = false;
++  }
++}
++// drop: the next frame starts (gfx_terrain.cpp: a terrain pass, its restore, a window paint; gfx_layer_begin: the next layer); the
++// carried gap's runs become the next frame's base runs, as every kept run does at a publish
++void Gfx::hud_carry_drop() {
++  HudCapture &c = hud;
++  if (!c.carry) return;
++  c.carry = false;
++  c.any = false;
++  c.cur = -1;
++  c.layers.clear();
++  for (TextCapture::Run &r : text.live)
++    if (r.seg == c.carry_seg && c.carry_seg >= 0) {
++      r.seg = -1;
++      r.info.layer = -2;
++      r.info.vis_layer.clear();
++    }
++  text.patches_pending.clear();
++  c.carry_seg = -1;
++}
++// a screen's first drawing call (reports.begin, dialogs.begin) inside an open panel layer: the layer is closed here as gfx_layer_end
++// closes it, and the rest of the scope is a centred gap of the frame (its refreshFull then publishes the frame's layers)
++void Gfx::hud_modal_mark() {
++  HudCapture &c = hud;
++  if (!c.on || !c.modal || c.depth == 0 || !c.any || c.aborted || c.cur < 0) return;
++  GfxHudLayer l;
++  const bool made = gfxb::hud_diff(*this, c.mark, root.px, c.cur, true, l);
++  if (made) c.layers.push_back(std::move(l));
++  gfxb::text_close_segment(*this, c.seg, made ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);
++  ++c.seg;
++  c.mark = root.px;
++  ++c.gen;
++  c.cur = -1;
++}
++// the report screens' dim covered every root pixel with one source word (gfx_reports.cpp Surface_drawSprite)
++void Gfx::note_dim(uint16_t src) {
++  if (!hud.any || !hud.modal) return;
++  hud.dim_set = true;
++  hud.dim_gen = hud.gen;
++  hud.dim_src = src;
++}
++void gfx_set_hud_modal(Ctx &ctx, bool on) {
++  Gfx *g = gfx(ctx);
++  if (!g) return;
++  if (!on) g->hud_carry_drop();
++  g->hud.modal = on && g->hud.on;
++}
++bool gfx_hud_modal(Ctx &ctx) {
++  Gfx *g = gfx(ctx);
++  return g && g->hud.on && g->hud.modal;
++}
++uint16_t gfx_layer_quarter(uint16_t p, uint16_t d) {  // gfx_reports.cpp quarter_blend with its two halvings
++  const uint32_t P = static_cast<uint32_t>(p) << 4, D = static_cast<uint32_t>(d) << 4;
++  uint32_t e = ((P & 0x7c1f0u) + (D & 0x7c1f0u)) >> 1, f = ((P & 0x3e00u) + (D & 0x3e00u)) >> 1;
++  e = (e + (D & 0x7c1f0u)) >> 1;
++  f = (f + (D & 0x3e00u)) >> 1;
++  return static_cast<uint16_t>((((e & 0x7c1f0u) + (f & 0x3e00u)) >> 4) & 0xffffu);
++}
++
+ int8_t gfx_layer_anchor(int32_t id) {
+   switch (id) {
+     case kGfxLayerTitle: case kGfxLayerBottom: return -1;
+@@ -988,6 +1106,7 @@ void gfx_layer_begin(Ctx &ctx, int32_t id) {
+   Gfx::HudCapture &c = g->hud;
+   if (c.depth++ > 0) return;
+   g->ensure_root(ctx);
++  g->hud_carry_drop();  // P9D: the next frame's first layer ends a carried capture
+   c.aborted = false;
+   if (!c.any) {
+     c.base = g->root.px;
+diff --git a/port/src/sim/gfx_reports.cpp b/port/src/sim/gfx_reports.cpp
+index b6e19ec..3dd8627 100644
+--- a/port/src/sim/gfx_reports.cpp
++++ b/port/src/sim/gfx_reports.cpp
+@@ -160,13 +160,26 @@ void b_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   int32_t cl, ct, cr, cb;
+   clip_of(g, cl, ct, cr, cb);
+   const int32_t l = std::max(x, cl), t = std::max(y, ct), r = std::min(x + s.w, cr), b = std::min(y + s.h, cb);
++  // P9D (gfx.h gfx_set_hud_modal): with the modal capture each blended pixel is recorded as a kind-4 layer pixel, and a blend of
++  // every root pixel with one source word marks the segment as a whole-frame dim
++  const bool rec = g.hud.any && g.hud.modal;
++  size_t n = 0;
++  bool one_src = true;
++  uint16_t src0 = 0;
+   for (int32_t yy = t; yy < b; ++yy)
+     for (int32_t xx = l; xx < r; ++xx) {
+       const uint8_t c = s.px[static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x)];
+       if (c >= 0xff || (flag && c >= 0xf8)) continue;
+-      uint16_t &w = g.root.px[static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx)];
++      const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx);
++      uint16_t &w = g.root.px[i];
++      const uint16_t before = w;
+       w = quarter_blend(s.pal[c], w);
++      if (!rec) continue;
++      g.note_blend(i, before, w, 4, s.pal[c], 0);
++      if (n++ == 0) src0 = s.pal[c];
++      else if (s.pal[c] != src0) one_src = false;
+     }
++  if (rec && one_src && n == static_cast<size_t>(g.root.w) * static_cast<size_t>(g.root.h) && mode() != 1) g.note_dim(src0);
+ }
+ 
+ // ------------------------------------------------------------------------------------------------ aligned text
+@@ -403,6 +416,7 @@ void b_widget_fill_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+ // ------------------------------------------------------------------------------------------------ the underlay (tests)
+ void b_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   g.ensure_root(ctx);
++  g.hud_modal_mark();  // P9D: a screen opened inside an open panel layer closes that layer here (gfx.h gfx_set_hud_modal)
+   const int m = mode();
+   if (m < 101 || m > 103) return;
+   static const uint16_t kFill[3] = {0x0000, 0x7fff, 0x2a55};
+diff --git a/port/src/sim/gfx_dialogs.cpp b/port/src/sim/gfx_dialogs.cpp
+index 252e8c4..8aee237 100644
+--- a/port/src/sim/gfx_dialogs.cpp
++++ b/port/src/sim/gfx_dialogs.cpp
+@@ -274,6 +274,7 @@ std::map<std::string, uint64_t> call_counts(const Gfx &g) {
+ }
+ void b_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   DState &s = st(g);
++  g.hud_modal_mark();  // P9D: a dialog opened inside an open panel layer closes that layer here (gfx.h gfx_set_hud_modal)
+   if (s.depth++ != 0) return;
+   if (s.mark != std::numeric_limits<uint64_t>::max() && drawing_calls(g) == s.mark) return;   // the same stack goes on
+   if (mode() >= 0x10000) {
+diff --git a/port/src/sim/gfx_scene.cpp b/port/src/sim/gfx_scene.cpp
+index 4fe091c..4b6021c 100644
+--- a/port/src/sim/gfx_scene.cpp
++++ b/port/src/sim/gfx_scene.cpp
+@@ -435,9 +435,27 @@ struct AlphaOp {
+   const uint16_t *pal;
+   const AProgram *prog;
+   bool flag;
++  // P9D (gfx.h gfx_set_hud_modal): with `rec` (the quarter member draw16_1002ed60 on the root surface while the modal capture runs)
++  // each written pixel is recorded as a kind-4 layer pixel; n / one_src / src0 tell a dim of every root pixel with one source word
++  Gfx *rec = nullptr;
++  size_t n = 0;
++  bool one_src = true;
++  uint16_t src0 = 0;
+   void operator()(uint8_t c, uint16_t &w) {
+     if (c >= 0xff) return;
+     if (flag && c >= 0xf8) return;
++    const uint16_t before = w;
++    struct Note {
++      AlphaOp &o;
++      uint16_t &w;
++      uint16_t before, src;
++      ~Note() {
++        if (!o.rec) return;
++        o.rec->note_blend(static_cast<size_t>(&w - o.rec->root.px.data()), before, w, 4, src, 0);
++        if (o.n++ == 0) o.src0 = src;
++        else if (src != o.src0) o.one_src = false;
++      }
++    } note{*this, w, before, pal[c]};
+     uint32_t r[5] = {0, 0, 0, 0, 0};
+     for (size_t k = 0; k < prog->n; ++k) {
+       const AStep &s = prog->steps[k];
+@@ -583,7 +601,12 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
+   // root surface, drawn with the flag-set members [15, 30); mode 9 takes the flag-cleared member instead.
+   const int member = mode() == 9 ? 0 : 15;
+   AlphaOp op{pal, &kAlphaPrograms[body + member], static_cast<uint8_t>(flag) != 0};
++  // P9D: the quarter member's pixels recorded for the modal capture (gfx_reports.cpp records the same blend at scale 1)
++  const bool quarter = !std::strcmp(op.prog->body, "draw16_1002ed60") && mode() != 7;
++  if (quarter && g.hud.any && g.hud.modal && dst == g.root_va(ctx)) op.rec = &g;
+   blit16(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, op);
++  // every root pixel blended once with one word (the sprite covers the root at this scale): a whole-frame dim
++  if (op.rec && op.one_src && op.n == g.root.px.size()) g.note_dim(op.src0);
+ }
+ 
+ // ------------------------------------------------------------------------------------------------ composeGolferSprite
+diff --git a/port/src/sim/gfx_terrain.cpp b/port/src/sim/gfx_terrain.cpp
+index 32e2080..194ecf5 100644
+--- a/port/src/sim/gfx_terrain.cpp
++++ b/port/src/sim/gfx_terrain.cpp
+@@ -207,6 +207,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   if (SG_NEGCTL(g_negctl_gfx_terrain) == 5) return;
+   std::fill(g.root.px.begin(), g.root.px.end(), static_cast<uint16_t>(0));
+   g.root_terrain = 0;
++  g.hud_carry_drop();  // P9D: a new frame's picture ends a carried HUD capture (gfx.h gfx_set_hud_modal)
+   if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
+     std::vector<uint16_t> &px = w->raster->pixels();
+     std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+@@ -281,6 +282,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+     g.root.px = r.pixels();
+   }
+   g.root_terrain = 1;
++  g.hud_carry_drop();  // P9D: a terrain pass starts a new frame's picture
+   if (world && SG_NEGCTL(g_negctl_gfx_terrain) != 3) world_pass(g, ctx, *lt, *world, a, world_before);   // P8B
+   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_post").c_str(), g.root);
+ }
+@@ -312,6 +314,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   }
+   copy16(v.back_surface, v.back_w, v.back_h, g.root.px, g.root.w, g.root.h, sx, sy, tx, ty, w, h);
+   g.root_terrain = (g.root_terrain || v.back_terrain) ? 1 : 0;
++  g.hud_carry_drop();  // P9D: the saved terrain picture restored starts a new frame's picture
+   if (world) {
+     if (world->strip_full) world->strip_full = false;
+     else world->raster->pixels() = world->back;
+diff --git a/port/app/present.h b/port/app/present.h
+index e8e1c2c..69d1e64 100644
+--- a/port/app/present.h
++++ b/port/app/present.h
+@@ -33,6 +33,7 @@ enum class PresentDefect : uint8_t {
+   HudUnmoved = 4,        // G32: the HUD compositor off (panels stay centred, no remap)
+   LayerBlendOpaque = 5,  // P9B: a layer's blended pixels drawn as the words they had in the frame (no re-blend at the new place)
+   LayerRectMove = 6,     // P9B: the layers ignored, P8B's rectangle compositor used although the frame has layers
++  DimLocal = 7,          // P9D: a whole-frame dim layer composed per pixel at its own place only (the window not dimmed under it)
+ };
+ 
+ // The content rectangle for a client area of cw x ch.
+@@ -126,6 +127,9 @@ struct WorldImage {
+   // P9B: the frame's HUD pixel layers (empty = none: P8B's path). When set, `mask` was taken over hud.base (host.h
+   // make_world_image) and the presenter shows hud.base, the world where the mask says, then every layer in draw order.
+   portsim::GfxHudFrame hud;
++  // P9D: the frame was published by the modal capture (gfx.h gfx_set_hud_modal) without layers: no panel of it is a layer (a
++  // screen drawn before this frame's HUD, the end-of-year screen), so it is shown unmoved instead of by G32's rectangles
++  bool hud_none = false;
+   // P9C: the frame's text runs (the host fills it with --text-res native, published with this back buffer; the presenter takes it
+   // with Presenter::set_text whether or not the frame has a world layer)
+   portsim::GfxTextFrame text;
+diff --git a/port/app/present.cpp b/port/app/present.cpp
+index 8611cd8..677117b 100644
+--- a/port/app/present.cpp
++++ b/port/app/present.cpp
+@@ -245,7 +245,8 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
+   raster_->set_defect(text_defect_);
+   raster_->set_aa(text_aa_);
+   // G32's rectangle compositor (no layers): a run inside a moved panel rectangle moves with it
+-  const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
++  const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved &&
++                    !world_.hud_none;  // P9D
+   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+   for (const portsim::GfxTextRun &r : text_.runs) {
+     if (layered_path && r.layer != layer) continue;
+@@ -271,7 +272,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
+   // G32: the HUD compositor. The frame's image as drawn (frame_img), the mask with every moved panel's 2D pixels vacated (they show
+   // the world), then each panel's 2D pixels pasted at their anchored place
+   const bool layers = layered();  // P9B: the panels are layers composed after the world (compose_layers), not rectangles
+-  const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
++  const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved && !w.hud_none;  // P9D: hud_none
+   // P9C: with the runs drawn, the mask taken over the picture without their glyphs (a label over the course shows the world)
+   const bool wtext = text_now(vp) && w.mask_text.size() == w.mask.size() && w.px_text.size() == w.px.size();
+   const std::vector<uint8_t> &wmask = wtext ? w.mask_text : w.mask;
+@@ -428,6 +429,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+       const uint16_t bb = chn((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u);
+       return rgb555_to_bgra(static_cast<uint16_t>((rr | gg | bb) & 0x7fff));
+     }
++    if (p.kind == 4) return rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(p.src, w) & 0x7fff));  // P9D: drawAlpha's quarter blend
+     size_t n = 0;
+     const uint16_t *t = portsim::gfx_shade_table(p.k, n);
+     if (!t || w >= n) return rgb555_to_bgra(p.px);
+@@ -469,6 +471,16 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+         if (on) p.draw_runs(out, cw, ch, vp, true, li, dx);
+       }
+     } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx};
++    // P9D: a whole-frame dim (the report screens' black quarter blend over every root pixel): everything composed so far is dimmed
++    // in the whole window, as the original dims its whole frame (the panels at their anchors, the world, the side bands); the
++    // layer's own dim pixels (kind 4) are that dim, already applied
++    const bool wdim = l.dim != 0 && defect_ != PresentDefect::DimLocal && !opaque_blends;
++    if (wdim)
++      for (uint32_t &d : out) d = rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(l.dim_src, to555(d)) & 0x7fff)) | 0xff000000u;
++    auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
++      const portsim::GfxLayerPx *p = l.at(x, y);
++      return p && wdim && p->kind == 4 ? nullptr : p;
++    };
+     if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
+     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
+@@ -484,12 +496,12 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+         const int64_t sx = lpos(x - dx, vp.origin_x, vp.client_w, kLogicalW);
+         const int32_t lx0 = floor256(sx);
+         if (nearest) {
+-          if (const portsim::GfxLayerPx *p = l.at(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
++          if (const portsim::GfxLayerPx *p = tap(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
+           continue;
+         }
+         const uint32_t fx = static_cast<uint32_t>(sx - static_cast<int64_t>(lx0) * 256);
+-        const portsim::GfxLayerPx *p00 = l.at(lx0, ly0), *p10 = l.at(lx0 + 1, ly0), *p01 = l.at(lx0, ly0 + 1),
+-                                  *p11 = l.at(lx0 + 1, ly0 + 1);
++        const portsim::GfxLayerPx *p00 = tap(lx0, ly0), *p10 = tap(lx0 + 1, ly0), *p01 = tap(lx0, ly0 + 1),
++                                  *p11 = tap(lx0 + 1, ly0 + 1);
+         if (!p00 && !p10 && !p01 && !p11) continue;
+         const uint32_t d = dst[x];
+         const uint32_t c00 = p00 ? over(*p00, d) : d, c10 = p10 ? over(*p10, d) : d, c01 = p01 ? over(*p01, d) : d,
+diff --git a/port/app/host.cpp b/port/app/host.cpp
+index 564f5a4..a4b8450 100644
+--- a/port/app/host.cpp
++++ b/port/app/host.cpp
+@@ -496,6 +496,7 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
+     }
+     wi.hud = std::move(f);
+   }
++  wi.hud_none = layered && !use && portsim::gfx_hud_modal(ctx);  // P9D
+   return true;
+ }
+ 
+diff --git a/port/app/main.cpp b/port/app/main.cpp
+index 55d3fd9..3eb4ee5 100644
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -25,6 +25,11 @@
+ //   simgolf_port.exe --selftest-p9b                  P9B: the layered HUD compositor (controls --negctl p9b-blend-opaque | p9b-rect-move)
+ //   simgolf_port.exe --selftest-p9c                  P9C: text at the window's resolution (controls --negctl p9c-unremoved |
+ //                    p9c-wrong-scale | p9c-wrong-colour)
++//   simgolf_port.exe --selftest-p9d                  P9D: the modal screens over the HUD layers (control --negctl p9d-dim-local)
++//   P9D: --hud-modal on|off (default on with the HUD layers; SG_APP_P9D=off: off) the modal screens over the HUD: the report
++//   screens' dim recorded as a dim of the whole window, and the frames of a modal screen published with the panels it was drawn
++//   over (gfx.h gfx_set_hud_modal); off = P9B's capture. Development: SG_P9D_LAYER_DUMP=1 (live-trace world shots write
++//   layers_<present>.tsv / .bmp).
+ //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
+ //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
+ //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
+@@ -279,6 +284,7 @@ struct Options {
+   bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false, selftest_p9a = false;
+   bool selftest_p9b = false;  // P9B
+   bool selftest_p9c = false;  // P9C
++  bool selftest_p9d = false;  // P9D
+   std::string text_res = "native";  // P9C: --text-res native|frame (SG_APP_P9C=off: frame)
+   std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
+   bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
+@@ -305,6 +311,7 @@ struct Options {
+   std::string render_scale = "auto";  // --render-scale auto|1|native|<pw>x<ph> (G32: auto = native with --wide, none without)
+   bool wide_edge = true;           // --wide-edge on|off (with --wide and a world layer)
+   bool hud_anchor = true;          // G32: --hud-anchor on|off (with --wide: the HUD panels at the wide view's edges)
++  bool hud_modal = true;           // P9D: --hud-modal on|off (SG_APP_P9D=off: off)
+   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
+   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
+   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
+@@ -384,6 +391,59 @@ void world_size(Options &o, int32_t cw, int32_t ch) {
+ 
+ bool write_bmp(const fs::path &path, const std::vector<uint32_t> &px, int cw, int ch);  // P8B (below)
+ 
++// P9D development (SG_P9D_LAYER_DUMP=1, live-trace --world-shots): layers_<present>.tsv (one row per layer: index, id, anchor,
++// box, pixels per kind) and layers_<present>.bmp (800 x 600 per layer side by side in rows of 4: the base first, then each layer
++// with its pixels' words, magenta where the layer did not draw, kind 2..4 tinted by their result word)
++void dump_layers(const fs::path &rec, uint32_t index, const portsim::GfxHudFrame &f, int none, bool same_back, uint64_t serial) {
++  std::FILE *t = std::fopen((rec / ("layers_" + std::to_string(index) + ".tsv")).string().c_str(), "wb");
++  if (!t) return;
++  std::fprintf(t, "k\tid\tanchor\tbox\tk1\tk2\tk3\tk4\tdim\tdup\tcarried\n");
++  if (f.empty()) {
++    std::fprintf(t, "none\treason %d\tsame_back %d\tserial %llu\n", none, same_back ? 1 : 0, static_cast<unsigned long long>(serial));
++    std::fclose(t);
++    return;
++  }
++  const int n = static_cast<int>(f.layers.size()) + 1, cols = 4, rows = (n + cols - 1) / cols;
++  const int W = kLogicalW * cols, H = kLogicalH * rows;
++  std::vector<uint32_t> img(static_cast<size_t>(W) * H, 0xff404040u);
++  auto put = [&](int slot, int x, int y, uint32_t c) {
++    img[static_cast<size_t>((slot / cols) * kLogicalH + y) * W + static_cast<size_t>((slot % cols) * kLogicalW + x)] = c;
++  };
++  for (int y = 0; y < kLogicalH; ++y)
++    for (int x = 0; x < kLogicalW; ++x) put(0, x, y, rgb555_to_bgra(f.base[static_cast<size_t>(y) * kLogicalW + x]));
++  for (size_t k = 0; k < f.layers.size(); ++k) {
++    const portsim::GfxHudLayer &l = f.layers[k];
++    size_t c[5] = {0, 0, 0, 0, 0};
++    for (int y = 0; y < kLogicalH; ++y)
++      for (int x = 0; x < kLogicalW; ++x) {
++        const portsim::GfxLayerPx *p = l.at(x, y);
++        put(static_cast<int>(k) + 1, x, y, p ? rgb555_to_bgra(p->px) : 0xffff00ffu);
++        if (p && p->kind < 5) ++c[p->kind];
++      }
++    // dup: opaque pixels of a centred layer that hold a panel pixel of an earlier layer at the same place, dimmed by the quarter
++    // rule with source 0 (the report screens' black dim): a dimmed copy of the panel left at its 800-space place
++    size_t dup = 0;
++    if (l.anchor == 0)
++      for (int y = l.y0; y < l.y1; ++y)
++        for (int x = l.x0; x < l.x1; ++x) {
++          const portsim::GfxLayerPx *p = l.at(x, y);
++          if (!p || p->kind != 1) continue;
++          for (size_t e = 0; e < k; ++e) {
++            if (f.layers[e].anchor == 0) continue;
++            const portsim::GfxLayerPx *u = f.layers[e].at(x, y);
++            if (u && u->kind == 1 && u->px != 0 && p->px == portsim::gfx_layer_quarter(0, u->px)) {
++              ++dup;
++              break;
++            }
++          }
++        }
++    std::fprintf(t, "%zu\t%d\t%d\t%d,%d-%d,%d\t%zu\t%zu\t%zu\t%zu\t%d:%04x\t%zu\t%d\n", k, l.id, l.anchor, l.x0, l.y0, l.x1, l.y1, c[1],
++                 c[2], c[3], c[4], l.dim, l.dim_src, dup, f.carried);
++  }
++  std::fclose(t);
++  write_bmp(rec / ("layers_" + std::to_string(index) + ".bmp"), img, W, H);
++}
++
+ // P7: --wide / --wide-fill
+ WideFill wide_fill(const Options &o) {
+   if (!o.wide) return WideFill::Off;
+@@ -858,6 +918,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+       for (int64_t s : o.snapshot_list) ok = ok && reg_call(*ctx, "gfx.snapshotAt", {static_cast<uint32_t>(s)}, &why);
+       if (!ok) err = why;
+       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
++      if (ok && hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D
+       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
+     }
+     if (err.empty()) {
+@@ -909,9 +970,15 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+               }
+             }
+             make_world_image(*terrain.live, c, px, hud_layers_on(o), wi, text ? &tf : nullptr);  // P8B; P9B: with the HUD layers
+-            const int cw = o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
++            if (std::getenv("SG_P9D_LAYER_DUMP")) {  // development (P9D): the shot's layers (or why there are none)
++              portsim::GfxHudFrame hf;
++              const bool got = portsim::gfx_hud_frame(c, hf);
++              dump_layers(rec, index, wi.hud, got ? hf.none : -1, got && hf.back == px, got ? hf.serial : 0);
++            }
++            const int cw =o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
+             Presenter p(o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B controls
+                         : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove
++                        : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal  // P9D
+                                                       : PresentDefect::None,
+                         scale_mode(o.scale));
+             p.set_wide(wide_fill(o));
+@@ -1098,6 +1165,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const
+     return lo;
+   }
+   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
++  if (hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D: the modal screens over them (gfx.h)
+   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
+   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
+   int *rec_mode = nullptr;
+@@ -1168,6 +1236,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
+                      : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
+                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
++                     : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
+                                                   : PresentDefect::None;
+   Presenter presenter(pd, scale_mode(o.scale));
+   presenter.set_wide(wide_fill(o));  // P7
+@@ -1955,6 +2024,96 @@ int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bm
+   return 0;
+ }
+ 
++// P9D (--selftest-p9d): the modal screens over the HUD layers (present.cpp compose_layers: GfxLayerPx kind 4, GfxHudLayer::dim)
++// on a synthetic frame at render scale 1 (1067 x 600, origin 133, right band 134): a world, a left-anchored panel pixel, a
++// right-anchored panel pixel, then a centred layer that dimmed the whole frame (kind 4 everywhere, source word 0x0421) with one
++// opaque report pixel drawn after the dim. Control --negctl p9d-dim-local (PresentDefect::DimLocal: the dim composed per pixel at
++// its own place) reads the rows of the pixels outside the dim layer's place RED (the moved panels and the side band).
++void selftest_p9d(Tests &t, PresentDefect pd) {
++  const int cw = 1067, ch = 600;
++  // the test's own quarter rule: floor((src + 3 dst) / 4) per 5-bit channel (gfx_reports.cpp quarter_blend, draw16_1002ed60)
++  auto q = [](uint16_t s, uint16_t d) {
++    uint32_t o = 0;
++    for (int sh : {10, 5, 0}) o |= ((((s >> sh) & 31u) + 3u * ((d >> sh) & 31u)) / 4u) << sh;
++    return static_cast<uint16_t>(o);
++  };
++  bool rule = true;
++  for (uint32_t s = 0; s < 0x8000; s += 0x0123)
++    for (uint32_t d = 0; d < 0x8000; d += 0x0211)
++      rule = rule && portsim::gfx_layer_quarter(static_cast<uint16_t>(s), static_cast<uint16_t>(d)) ==
++                         q(static_cast<uint16_t>(s), static_cast<uint16_t>(d));
++  t.add("p9d.quarter_rule_per_channel", rule);
++  const uint16_t P = 0x0421, A = 0x03e0, B = 0x001f, C = 0x7fff;
++  auto lp = [](uint8_t kind, uint16_t px, uint16_t src) {
++    portsim::GfxLayerPx p;
++    p.kind = kind;
++    p.px = px;
++    p.src = src;
++    return p;
++  };
++  std::vector<uint16_t> base(static_cast<size_t>(kLogicalW) * kLogicalH);
++  for (int y = 0; y < kLogicalH; ++y)
++    for (int x = 0; x < kLogicalW; ++x) base[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>((x * 7 + y * 131) & 0x7fff);
++  portsim::GfxHudLayer l1;  // the bottom band (left): one opaque pixel at (100, 500)
++  l1.id = portsim::kGfxLayerBottom;
++  l1.anchor = -1;
++  l1.x0 = 100, l1.y0 = 500, l1.x1 = 101, l1.y1 = 501;
++  l1.px.assign(1, lp(1, A, 0));
++  portsim::GfxHudLayer l2;  // the meters (right): one opaque pixel at (700, 40)
++  l2.id = portsim::kGfxLayerMeters;
++  l2.anchor = 1;
++  l2.x0 = 700, l2.y0 = 40, l2.x1 = 701, l2.y1 = 41;
++  l2.px.assign(1, lp(1, B, 0));
++  portsim::GfxHudLayer l3;  // the report: the whole-frame dim, then the report pixel at (400, 300)
++  l3.id = portsim::kGfxLayerCentred;
++  l3.anchor = 0;
++  l3.x0 = 0, l3.y0 = 0, l3.x1 = kLogicalW, l3.y1 = kLogicalH;
++  l3.dim = 1;
++  l3.dim_src = P;
++  l3.px.assign(static_cast<size_t>(kLogicalW) * kLogicalH, lp(4, 0, P));
++  std::vector<uint16_t> back = base;  // the frame in place: the panels, the dim, the report pixel
++  back[static_cast<size_t>(500) * kLogicalW + 100] = A;
++  back[static_cast<size_t>(40) * kLogicalW + 700] = B;
++  for (size_t i = 0; i < back.size(); ++i) {
++    back[i] = q(P, back[i]);
++    l3.px[i].px = back[i];
++  }
++  back[static_cast<size_t>(300) * kLogicalW + 400] = C;
++  l3.px[static_cast<size_t>(300) * kLogicalW + 400] = lp(1, C, 0);
++  auto wpx = [](int x, int y) { return static_cast<uint16_t>((x * 13 + y * 29 + 5) & 0x7fff); };
++  WorldImage w;
++  w.pw = cw;
++  w.ph = ch;
++  w.fw = 800;
++  w.ox = 133;
++  w.px.resize(static_cast<size_t>(cw) * ch);
++  for (int y = 0; y < ch; ++y)
++    for (int x = 0; x < cw; ++x) w.px[static_cast<size_t>(y) * cw + x] = wpx(x, y);
++  w.mask.assign(static_cast<size_t>(kLogicalW) * kLogicalH, 1);
++  w.hud.base = base;
++  w.hud.back = back;
++  w.hud.layers = {l1, l2, l3};
++  w.hud.serial = 1;
++  PanelRemap rm;
++  std::vector<uint32_t> o;
++  Presenter p(pd, ScaleMode::Nearest);
++  p.set_hud_anchor(true);
++  p.set_remap(&rm);
++  p.set_frame_world(back, BandFill::Black, std::move(w));
++  p.render(cw, ch, o);
++  auto at = [&](int x, int y) { return o[static_cast<size_t>(y) * cw + x]; };
++  t.add("p9d.left_panel_dimmed_at_its_anchor", at(100, 500) == rgb555_to_bgra(q(P, A)));
++  t.add("p9d.right_panel_dimmed_at_its_anchor", at(967, 40) == rgb555_to_bgra(q(P, B)));
++  t.add("p9d.side_band_world_dimmed", at(10, 10) == rgb555_to_bgra(q(P, wpx(10, 10))));
++  t.add("p9d.vacated_place_shows_the_dimmed_world_once", at(233, 500) == rgb555_to_bgra(q(P, wpx(233, 500))));
++  t.add("p9d.report_drawn_after_the_dim", at(533, 300) == rgb555_to_bgra(C));
++  int32_t x1 = 100, y1 = 500, x2 = 533, y2 = 300;
++  rm.map(x1, y1);
++  rm.map(x2, y2);
++  // the moved panel's pixel at its anchor still maps to its 800-space place (233 = 133 + 100); the report pixel stays centred
++  t.add("p9d.remap_under_the_dim", x1 == 233 && y1 == 500 && x2 == 533 && y2 == 300);
++}
++
+ // P9C (--selftest-p9c): text at the window's resolution (textres.h, Presenter::set_text / draw_runs, portsim::gfx_text_peel) on a
+ // synthetic frame: two runs drawn with GDI's TextOutA in Arial (a system face) onto a 16-bit DIB as jgld draws the game's text, an
+ // opaque rectangle drawn over half of the second run afterwards, and a third run inside a left-anchored HUD layer. Rows: the peel
+@@ -2205,6 +2364,10 @@ int run_selftest(const Options &o) {
+                                                    : PresentDefect::None);
+     return t.print();
+   }
++  if (o.selftest_p9d) {  // P9D
++    selftest_p9d(t, o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal : PresentDefect::None);
++    return t.print();
++  }
+   if (o.selftest_p9c) {  // P9C
+     selftest_p9c(t, o.negctl == "p9c-unremoved"      ? TextDefect::Unremoved
+                     : o.negctl == "p9c-wrong-scale"  ? TextDefect::WrongScale
+@@ -2384,6 +2547,7 @@ bool parse(int argc, char **argv, Options &o) {
+     else if (a == "--selftest-p8b") o.selftest = o.selftest_p8b = true;  // P8B
+     else if (a == "--selftest-p9b") o.selftest = o.selftest_p9b = true;  // P9B
+     else if (a == "--selftest-p9c") o.selftest = o.selftest_p9c = true;  // P9C
++    else if (a == "--selftest-p9d") o.selftest = o.selftest_p9d = true;  // P9D
+     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
+       o.wide = true;
+       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
+@@ -2413,6 +2577,10 @@ bool parse(int argc, char **argv, Options &o) {
+       if (!val(v) || (v != "on" && v != "off")) return false;
+       o.hud_layers = v == "on";
+     }
++    else if (a == "--hud-modal") {  // P9D
++      if (!val(v) || (v != "on" && v != "off")) return false;
++      o.hud_modal = v == "on";
++    }
+     else if (a == "--text-res") {  // P9C
+       if (!val(v) || (v != "native" && v != "frame")) return false;
+       o.text_res = v;
+@@ -2501,6 +2669,8 @@ int main(int argc, char **argv) {
+     if (!std::strcmp(ep, "off")) o.wide_fill = "soft";
+   if (const char *ep = std::getenv("SG_APP_P9C"))  // P9C: the frame's text scaled with the picture (port/test/conftest.py); flags win
+     if (!std::strcmp(ep, "off")) o.text_res = "frame";
++  if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
++    if (!std::strcmp(ep, "off")) o.hud_modal = false;
+   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
+   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
+   // argument parser runs (its messages go there too), with the --data value read ahead.
+@@ -2561,6 +2731,7 @@ int main(int argc, char **argv) {
+                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
+                      : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
+                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
++                     : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
+                                                   : PresentDefect::None;
+   Presenter presenter(pd);
+   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes

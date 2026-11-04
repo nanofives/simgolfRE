@@ -245,7 +245,8 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
   raster_->set_defect(text_defect_);
   raster_->set_aa(text_aa_);
   // G32's rectangle compositor (no layers): a run inside a moved panel rectangle moves with it
-  const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved &&
+                    !world_.hud_none;  // P9D
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
   for (const portsim::GfxTextRun &r : text_.runs) {
     if (layered_path && r.layer != layer) continue;
@@ -271,7 +272,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   // G32: the HUD compositor. The frame's image as drawn (frame_img), the mask with every moved panel's 2D pixels vacated (they show
   // the world), then each panel's 2D pixels pasted at their anchored place
   const bool layers = layered();  // P9B: the panels are layers composed after the world (compose_layers), not rectangles
-  const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved && !w.hud_none;  // P9D: hud_none
   // P9C: with the runs drawn, the mask taken over the picture without their glyphs (a label over the course shows the world)
   const bool wtext = text_now(vp) && w.mask_text.size() == w.mask.size() && w.px_text.size() == w.px.size();
   const std::vector<uint8_t> &wmask = wtext ? w.mask_text : w.mask;
@@ -428,6 +429,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       const uint16_t bb = chn((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u);
       return rgb555_to_bgra(static_cast<uint16_t>((rr | gg | bb) & 0x7fff));
     }
+    if (p.kind == 4) return rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(p.src, w) & 0x7fff));  // P9D: drawAlpha's quarter blend
     size_t n = 0;
     const uint16_t *t = portsim::gfx_shade_table(p.k, n);
     if (!t || w >= n) return rgb555_to_bgra(p.px);
@@ -469,6 +471,16 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
         if (on) p.draw_runs(out, cw, ch, vp, true, li, dx);
       }
     } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx};
+    // P9D: a whole-frame dim (the report screens' black quarter blend over every root pixel): everything composed so far is dimmed
+    // in the whole window, as the original dims its whole frame (the panels at their anchors, the world, the side bands); the
+    // layer's own dim pixels (kind 4) are that dim, already applied
+    const bool wdim = l.dim != 0 && defect_ != PresentDefect::DimLocal && !opaque_blends;
+    if (wdim)
+      for (uint32_t &d : out) d = rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(l.dim_src, to555(d)) & 0x7fff)) | 0xff000000u;
+    auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
+      const portsim::GfxLayerPx *p = l.at(x, y);
+      return p && wdim && p->kind == 4 ? nullptr : p;
+    };
     if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
@@ -484,12 +496,12 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
         const int64_t sx = lpos(x - dx, vp.origin_x, vp.client_w, kLogicalW);
         const int32_t lx0 = floor256(sx);
         if (nearest) {
-          if (const portsim::GfxLayerPx *p = l.at(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
+          if (const portsim::GfxLayerPx *p = tap(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
           continue;
         }
         const uint32_t fx = static_cast<uint32_t>(sx - static_cast<int64_t>(lx0) * 256);
-        const portsim::GfxLayerPx *p00 = l.at(lx0, ly0), *p10 = l.at(lx0 + 1, ly0), *p01 = l.at(lx0, ly0 + 1),
-                                  *p11 = l.at(lx0 + 1, ly0 + 1);
+        const portsim::GfxLayerPx *p00 = tap(lx0, ly0), *p10 = tap(lx0 + 1, ly0), *p01 = tap(lx0, ly0 + 1),
+                                  *p11 = tap(lx0 + 1, ly0 + 1);
         if (!p00 && !p10 && !p01 && !p11) continue;
         const uint32_t d = dst[x];
         const uint32_t c00 = p00 ? over(*p00, d) : d, c10 = p10 ? over(*p10, d) : d, c01 = p01 ? over(*p01, d) : d,

@@ -76,7 +76,8 @@ enum GfxLayerId : int32_t {
 };
 // one layer pixel: kind 0 not drawn by the layer (transparent), 1 opaque word `px`, 2 the mask blend of jgld blitPair1 with source
 // word `src` and weight `k` (per 5-bit channel c: ((dst8 * k) >> 8) + src8) >> 3 with x8 = c << 3), 3 the destination through the
-// shade table `k` (gfx_shade_table)
+// shade table `k` (gfx_shade_table), 4 (P9D) the quarter blend of Surface_drawSprite's drawAlpha member draw16_1002ed60 with source
+// word `src` (gfx_layer_quarter: floor((src + 3 dst) / 4) per 5-bit channel), the dim the report screens draw over the frame
 struct GfxLayerPx {
   uint16_t px = 0, src = 0;
   uint8_t kind = 0, k = 0;
@@ -86,6 +87,11 @@ struct GfxHudLayer {
   int8_t anchor = 0;  // -1 left edge, 0 centred, +1 right edge
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // bounding box in 800-space, half-open
   std::vector<GfxLayerPx> px;               // (x1 - x0) * (y1 - y0), rows top-down
+  // P9D: the layer's segment dimmed the whole frame (one Surface_drawSprite quarter blend over every root pixel with one source
+  // word): a presenter dims everything composed before it in the whole window with dim_src (the panels at their anchors, the world,
+  // the side bands), and its kind-4 pixels are then that dim (already applied)
+  uint8_t dim = 0;
+  uint16_t dim_src = 0;
   const GfxLayerPx *at(int32_t x, int32_t y) const {
     if (x < x0 || x >= x1 || y < y0 || y >= y1) return nullptr;
     const GfxLayerPx &p = px[static_cast<size_t>(y - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(x - x0)];
@@ -97,10 +103,30 @@ struct GfxHudFrame {
   std::vector<uint16_t> back;  // the back buffer the layers were published with (a present checks it is the frame it shows)
   std::vector<GfxHudLayer> layers;  // in draw order
   uint64_t serial = 0;
+  // P9D: why the publish made no layers (0 = it made them; 1 = no layer opened since the last publish; 2 = inside an open layer)
+  int8_t none = 0;
+  // P9D: the frame of a modal screen drawn over the last layered frame (its base and layers carried, the screen's drawing since
+  // then in a centred layer after them): gfx_set_hud_modal
+  uint8_t carried = 0;
   bool empty() const { return base.empty(); }
 };
 int8_t gfx_layer_anchor(int32_t id);
 void gfx_set_hud_capture(Ctx &ctx, bool on);  // the app's host only
+// P9D: the modal screens over the HUD (log/roadmap/P9/P9D_notes.md), set by the app's host after gfx_set_hud_capture. With it on:
+// - the report screens' dim (Surface_drawSprite's quarter blend) is recorded as layer pixels of kind 4, and a dim of the whole
+//   frame marks its layer (GfxHudLayer::dim);
+// - after every layered publish the capture is CARRIED: until the next frame starts (a terrain pass, its restore, a window paint
+//   or the next layer), what is drawn over the root goes into a centred layer after the published layers, so a modal screen that
+//   refreshes outside the frame's layers (the popups, the System menu, hole stats, best scores, end of year, ...) is published
+//   with the panels it was drawn over, at their anchors; a carried publish keeps the carry (the screen's later passes are
+//   measured from the same frame); a publish after a 2D write covering the whole root publishes no layers;
+// - a screen's first drawing call (reports.begin / dialogs.begin) inside an open panel layer closes that layer there, so the
+//   screen's drawing is a centred layer of the frame and its refreshFull publishes the frame's layers (the hire dialog).
+// Off (the default, and --hud-modal off): P9B's capture.
+void gfx_set_hud_modal(Ctx &ctx, bool on);
+bool gfx_hud_modal(Ctx &ctx);
+// P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
+uint16_t gfx_layer_quarter(uint16_t src, uint16_t dst);
 bool gfx_hud_capture(Ctx &ctx);
 // the layers published at the last Window::refreshFull (false when capture is off or nothing was published)
 bool gfx_hud_frame(Ctx &ctx, GfxHudFrame &out);

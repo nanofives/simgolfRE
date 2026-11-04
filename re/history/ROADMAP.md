@@ -1008,3 +1008,11 @@ controls RED; only netNameOf (20 rows) and netPump's address-free rows are CSV-e
 net path-1 CSVs hash fixture blocks that hold the run's own heap addresses, so the rest are judged by instruction-level
 assertions on rebuilt session objects with the host call log checked call by call; uiIdleNetPoll, netMarkRecordCb,
 netService, netSendMessages have no path-1 rows and stay host calls; netHandleControl.slot15Stays default 1; U-1770..U-1774).
+P9D (2026-11-04, brief log/roadmap/P9/P9D_BRIEF.md, notes P9D_notes.md, light testing at Mariano's request): the HUD drawn twice in modal
+frames. Reports run after the frame's panel layers and their full-screen dim (a 0.25-alpha sprite blend) was not recorded as a blend, so it
+became an opaque centred layer holding dimmed copies of the panels (present 396: 89,185 px); other modal screens published no layers and fell
+back to P8B's rectangle cut (the hire dialog in three pieces). Now the dim is a recorded blend applied to the whole window, a modal screen reuses
+the last frame's base and layers with its own drawing as one centred layer, a modal opened from inside a panel closes that panel's layer, and a
+layer-less modal frame is shown unmoved. `--hud-modal on|off` (default on, SG_APP_P9D=off). The palette tip already rode in the palette's layer
+(P9C's tip_top_7 picture was the palette's right end, not a centred tip). Builds x64 + Win32, segments x64 205 / 205 = I25, --selftest-p9d 7 / 7.
+Left: popups (System menu) stay at their 800-space place; the frame closing the hire dialog can show panels at their 800-space places.

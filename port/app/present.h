@@ -33,6 +33,7 @@ enum class PresentDefect : uint8_t {
   HudUnmoved = 4,        // G32: the HUD compositor off (panels stay centred, no remap)
   LayerBlendOpaque = 5,  // P9B: a layer's blended pixels drawn as the words they had in the frame (no re-blend at the new place)
   LayerRectMove = 6,     // P9B: the layers ignored, P8B's rectangle compositor used although the frame has layers
+  DimLocal = 7,          // P9D: a whole-frame dim layer composed per pixel at its own place only (the window not dimmed under it)
 };
 
 // The content rectangle for a client area of cw x ch.
@@ -126,6 +127,9 @@ struct WorldImage {
   // P9B: the frame's HUD pixel layers (empty = none: P8B's path). When set, `mask` was taken over hud.base (host.h
   // make_world_image) and the presenter shows hud.base, the world where the mask says, then every layer in draw order.
   portsim::GfxHudFrame hud;
+  // P9D: the frame was published by the modal capture (gfx.h gfx_set_hud_modal) without layers: no panel of it is a layer (a
+  // screen drawn before this frame's HUD, the end-of-year screen), so it is shown unmoved instead of by G32's rectangles
+  bool hud_none = false;
   // P9C: the frame's text runs (the host fills it with --text-res native, published with this back buffer; the presenter takes it
   // with Presenter::set_text whether or not the frame has a world layer)
   portsim::GfxTextFrame text;

@@ -101,6 +101,14 @@ class Gfx {
     GfxHudFrame published;
     uint64_t serial = 0;
     int64_t seg = 0;          // P9C: the segment counter (a layer, or the centred gap between two), advanced at every boundary
+    // P9D (gfx.h gfx_set_hud_modal): the modal screens over the HUD
+    bool modal = false;       // the feature is on (the app's host)
+    bool carry = false;       // the capture continues the last layered frame: base and layers are its, mark its root
+    int64_t carry_seg = -1;   // the carried centred gap's segment (its text runs keep it across the carried publishes)
+    std::vector<GfxHudLayer> carry_layers;  // the last layered frame's layers without its child-window composition
+    uint32_t dim_gen = 0;     // a whole-frame dim was drawn in the segment of blend generation dim_gen (dim_set), source dim_src
+    bool dim_set = false;
+    uint16_t dim_src = 0;
   } hud;
   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
   struct TextCapture {
@@ -116,6 +124,9 @@ class Gfx {
     GfxTextFrame published, banner;
     GfxTextStats stats;
     std::vector<GfxTextLayerPatch> patches_pending;  // the layer patches this frame's closed segments made
+    // P9D: the runs (layer >= 0) and patches of the last layered publish's carried layers, published again with a carried frame
+    std::vector<GfxTextRun> carry_runs;
+    std::vector<GfxTextLayerPatch> carry_patches;
     // the wide scene (G32, gfx_scene.cpp on_wide): while `wide` is set, runs drawn on the swapped root are the scene's, kept in
     // wide_runs with their boxes moved by wide_ox (scene -> frame columns); at the queue's end they are peeled off the scene and
     // the ones not inside the frame's columns are published with each frame as world runs (GfxTextRun::target 2, layer -3)
@@ -144,6 +155,12 @@ class Gfx {
     r.px = res;
     hud.rec_gen[i] = hud.gen;
   }
+  // P9D (gfx.cpp, gfx.h gfx_set_hud_modal): the carried capture after a layered publish, its end at the next frame's start, a
+  // modal screen's first call inside an open panel layer, the whole-frame dim
+  void hud_carry_arm(bool again);
+  void hud_carry_drop();
+  void hud_modal_mark();
+  void note_dim(uint16_t src);
   // a case the backend does not model (counted; the first occurrence of a reason is appended to `notes`)
   void unsup(const std::string &why);
   // the root surface, made at its first use (Window::create's size scaleX(0x140) x scaleX(0xf0))

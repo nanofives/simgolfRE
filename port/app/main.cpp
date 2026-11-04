@@ -25,6 +25,11 @@
 //   simgolf_port.exe --selftest-p9b                  P9B: the layered HUD compositor (controls --negctl p9b-blend-opaque | p9b-rect-move)
 //   simgolf_port.exe --selftest-p9c                  P9C: text at the window's resolution (controls --negctl p9c-unremoved |
 //                    p9c-wrong-scale | p9c-wrong-colour)
+//   simgolf_port.exe --selftest-p9d                  P9D: the modal screens over the HUD layers (control --negctl p9d-dim-local)
+//   P9D: --hud-modal on|off (default on with the HUD layers; SG_APP_P9D=off: off) the modal screens over the HUD: the report
+//   screens' dim recorded as a dim of the whole window, and the frames of a modal screen published with the panels it was drawn
+//   over (gfx.h gfx_set_hud_modal); off = P9B's capture. Development: SG_P9D_LAYER_DUMP=1 (live-trace world shots write
+//   layers_<present>.tsv / .bmp).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -279,6 +284,7 @@ struct Options {
   bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false, selftest_p9a = false;
   bool selftest_p9b = false;  // P9B
   bool selftest_p9c = false;  // P9C
+  bool selftest_p9d = false;  // P9D
   std::string text_res = "native";  // P9C: --text-res native|frame (SG_APP_P9C=off: frame)
   std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
   bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
@@ -305,6 +311,7 @@ struct Options {
   std::string render_scale = "auto";  // --render-scale auto|1|native|<pw>x<ph> (G32: auto = native with --wide, none without)
   bool wide_edge = true;           // --wide-edge on|off (with --wide and a world layer)
   bool hud_anchor = true;          // G32: --hud-anchor on|off (with --wide: the HUD panels at the wide view's edges)
+  bool hud_modal = true;           // P9D: --hud-modal on|off (SG_APP_P9D=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -383,6 +390,59 @@ void world_size(Options &o, int32_t cw, int32_t ch) {
 }
 
 bool write_bmp(const fs::path &path, const std::vector<uint32_t> &px, int cw, int ch);  // P8B (below)
+
+// P9D development (SG_P9D_LAYER_DUMP=1, live-trace --world-shots): layers_<present>.tsv (one row per layer: index, id, anchor,
+// box, pixels per kind) and layers_<present>.bmp (800 x 600 per layer side by side in rows of 4: the base first, then each layer
+// with its pixels' words, magenta where the layer did not draw, kind 2..4 tinted by their result word)
+void dump_layers(const fs::path &rec, uint32_t index, const portsim::GfxHudFrame &f, int none, bool same_back, uint64_t serial) {
+  std::FILE *t = std::fopen((rec / ("layers_" + std::to_string(index) + ".tsv")).string().c_str(), "wb");
+  if (!t) return;
+  std::fprintf(t, "k\tid\tanchor\tbox\tk1\tk2\tk3\tk4\tdim\tdup\tcarried\n");
+  if (f.empty()) {
+    std::fprintf(t, "none\treason %d\tsame_back %d\tserial %llu\n", none, same_back ? 1 : 0, static_cast<unsigned long long>(serial));
+    std::fclose(t);
+    return;
+  }
+  const int n = static_cast<int>(f.layers.size()) + 1, cols = 4, rows = (n + cols - 1) / cols;
+  const int W = kLogicalW * cols, H = kLogicalH * rows;
+  std::vector<uint32_t> img(static_cast<size_t>(W) * H, 0xff404040u);
+  auto put = [&](int slot, int x, int y, uint32_t c) {
+    img[static_cast<size_t>((slot / cols) * kLogicalH + y) * W + static_cast<size_t>((slot % cols) * kLogicalW + x)] = c;
+  };
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x) put(0, x, y, rgb555_to_bgra(f.base[static_cast<size_t>(y) * kLogicalW + x]));
+  for (size_t k = 0; k < f.layers.size(); ++k) {
+    const portsim::GfxHudLayer &l = f.layers[k];
+    size_t c[5] = {0, 0, 0, 0, 0};
+    for (int y = 0; y < kLogicalH; ++y)
+      for (int x = 0; x < kLogicalW; ++x) {
+        const portsim::GfxLayerPx *p = l.at(x, y);
+        put(static_cast<int>(k) + 1, x, y, p ? rgb555_to_bgra(p->px) : 0xffff00ffu);
+        if (p && p->kind < 5) ++c[p->kind];
+      }
+    // dup: opaque pixels of a centred layer that hold a panel pixel of an earlier layer at the same place, dimmed by the quarter
+    // rule with source 0 (the report screens' black dim): a dimmed copy of the panel left at its 800-space place
+    size_t dup = 0;
+    if (l.anchor == 0)
+      for (int y = l.y0; y < l.y1; ++y)
+        for (int x = l.x0; x < l.x1; ++x) {
+          const portsim::GfxLayerPx *p = l.at(x, y);
+          if (!p || p->kind != 1) continue;
+          for (size_t e = 0; e < k; ++e) {
+            if (f.layers[e].anchor == 0) continue;
+            const portsim::GfxLayerPx *u = f.layers[e].at(x, y);
+            if (u && u->kind == 1 && u->px != 0 && p->px == portsim::gfx_layer_quarter(0, u->px)) {
+              ++dup;
+              break;
+            }
+          }
+        }
+    std::fprintf(t, "%zu\t%d\t%d\t%d,%d-%d,%d\t%zu\t%zu\t%zu\t%zu\t%d:%04x\t%zu\t%d\n", k, l.id, l.anchor, l.x0, l.y0, l.x1, l.y1, c[1],
+                 c[2], c[3], c[4], l.dim, l.dim_src, dup, f.carried);
+  }
+  std::fclose(t);
+  write_bmp(rec / ("layers_" + std::to_string(index) + ".bmp"), img, W, H);
+}
 
 // P7: --wide / --wide-fill
 WideFill wide_fill(const Options &o) {
@@ -858,6 +918,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       for (int64_t s : o.snapshot_list) ok = ok && reg_call(*ctx, "gfx.snapshotAt", {static_cast<uint32_t>(s)}, &why);
       if (!ok) err = why;
       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
+      if (ok && hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
     if (err.empty()) {
@@ -909,9 +970,15 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
               }
             }
             make_world_image(*terrain.live, c, px, hud_layers_on(o), wi, text ? &tf : nullptr);  // P8B; P9B: with the HUD layers
-            const int cw = o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
+            if (std::getenv("SG_P9D_LAYER_DUMP")) {  // development (P9D): the shot's layers (or why there are none)
+              portsim::GfxHudFrame hf;
+              const bool got = portsim::gfx_hud_frame(c, hf);
+              dump_layers(rec, index, wi.hud, got ? hf.none : -1, got && hf.back == px, got ? hf.serial : 0);
+            }
+            const int cw =o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
             Presenter p(o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B controls
                         : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove
+                        : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal  // P9D
                                                       : PresentDefect::None,
                         scale_mode(o.scale));
             p.set_wide(wide_fill(o));
@@ -1098,6 +1165,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
     return lo;
   }
   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
+  if (hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D: the modal screens over them (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
   int *rec_mode = nullptr;
@@ -1168,6 +1236,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
                      : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
+                     : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_wide(wide_fill(o));  // P7
@@ -1955,6 +2024,96 @@ int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bm
   return 0;
 }
 
+// P9D (--selftest-p9d): the modal screens over the HUD layers (present.cpp compose_layers: GfxLayerPx kind 4, GfxHudLayer::dim)
+// on a synthetic frame at render scale 1 (1067 x 600, origin 133, right band 134): a world, a left-anchored panel pixel, a
+// right-anchored panel pixel, then a centred layer that dimmed the whole frame (kind 4 everywhere, source word 0x0421) with one
+// opaque report pixel drawn after the dim. Control --negctl p9d-dim-local (PresentDefect::DimLocal: the dim composed per pixel at
+// its own place) reads the rows of the pixels outside the dim layer's place RED (the moved panels and the side band).
+void selftest_p9d(Tests &t, PresentDefect pd) {
+  const int cw = 1067, ch = 600;
+  // the test's own quarter rule: floor((src + 3 dst) / 4) per 5-bit channel (gfx_reports.cpp quarter_blend, draw16_1002ed60)
+  auto q = [](uint16_t s, uint16_t d) {
+    uint32_t o = 0;
+    for (int sh : {10, 5, 0}) o |= ((((s >> sh) & 31u) + 3u * ((d >> sh) & 31u)) / 4u) << sh;
+    return static_cast<uint16_t>(o);
+  };
+  bool rule = true;
+  for (uint32_t s = 0; s < 0x8000; s += 0x0123)
+    for (uint32_t d = 0; d < 0x8000; d += 0x0211)
+      rule = rule && portsim::gfx_layer_quarter(static_cast<uint16_t>(s), static_cast<uint16_t>(d)) ==
+                         q(static_cast<uint16_t>(s), static_cast<uint16_t>(d));
+  t.add("p9d.quarter_rule_per_channel", rule);
+  const uint16_t P = 0x0421, A = 0x03e0, B = 0x001f, C = 0x7fff;
+  auto lp = [](uint8_t kind, uint16_t px, uint16_t src) {
+    portsim::GfxLayerPx p;
+    p.kind = kind;
+    p.px = px;
+    p.src = src;
+    return p;
+  };
+  std::vector<uint16_t> base(static_cast<size_t>(kLogicalW) * kLogicalH);
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x) base[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>((x * 7 + y * 131) & 0x7fff);
+  portsim::GfxHudLayer l1;  // the bottom band (left): one opaque pixel at (100, 500)
+  l1.id = portsim::kGfxLayerBottom;
+  l1.anchor = -1;
+  l1.x0 = 100, l1.y0 = 500, l1.x1 = 101, l1.y1 = 501;
+  l1.px.assign(1, lp(1, A, 0));
+  portsim::GfxHudLayer l2;  // the meters (right): one opaque pixel at (700, 40)
+  l2.id = portsim::kGfxLayerMeters;
+  l2.anchor = 1;
+  l2.x0 = 700, l2.y0 = 40, l2.x1 = 701, l2.y1 = 41;
+  l2.px.assign(1, lp(1, B, 0));
+  portsim::GfxHudLayer l3;  // the report: the whole-frame dim, then the report pixel at (400, 300)
+  l3.id = portsim::kGfxLayerCentred;
+  l3.anchor = 0;
+  l3.x0 = 0, l3.y0 = 0, l3.x1 = kLogicalW, l3.y1 = kLogicalH;
+  l3.dim = 1;
+  l3.dim_src = P;
+  l3.px.assign(static_cast<size_t>(kLogicalW) * kLogicalH, lp(4, 0, P));
+  std::vector<uint16_t> back = base;  // the frame in place: the panels, the dim, the report pixel
+  back[static_cast<size_t>(500) * kLogicalW + 100] = A;
+  back[static_cast<size_t>(40) * kLogicalW + 700] = B;
+  for (size_t i = 0; i < back.size(); ++i) {
+    back[i] = q(P, back[i]);
+    l3.px[i].px = back[i];
+  }
+  back[static_cast<size_t>(300) * kLogicalW + 400] = C;
+  l3.px[static_cast<size_t>(300) * kLogicalW + 400] = lp(1, C, 0);
+  auto wpx = [](int x, int y) { return static_cast<uint16_t>((x * 13 + y * 29 + 5) & 0x7fff); };
+  WorldImage w;
+  w.pw = cw;
+  w.ph = ch;
+  w.fw = 800;
+  w.ox = 133;
+  w.px.resize(static_cast<size_t>(cw) * ch);
+  for (int y = 0; y < ch; ++y)
+    for (int x = 0; x < cw; ++x) w.px[static_cast<size_t>(y) * cw + x] = wpx(x, y);
+  w.mask.assign(static_cast<size_t>(kLogicalW) * kLogicalH, 1);
+  w.hud.base = base;
+  w.hud.back = back;
+  w.hud.layers = {l1, l2, l3};
+  w.hud.serial = 1;
+  PanelRemap rm;
+  std::vector<uint32_t> o;
+  Presenter p(pd, ScaleMode::Nearest);
+  p.set_hud_anchor(true);
+  p.set_remap(&rm);
+  p.set_frame_world(back, BandFill::Black, std::move(w));
+  p.render(cw, ch, o);
+  auto at = [&](int x, int y) { return o[static_cast<size_t>(y) * cw + x]; };
+  t.add("p9d.left_panel_dimmed_at_its_anchor", at(100, 500) == rgb555_to_bgra(q(P, A)));
+  t.add("p9d.right_panel_dimmed_at_its_anchor", at(967, 40) == rgb555_to_bgra(q(P, B)));
+  t.add("p9d.side_band_world_dimmed", at(10, 10) == rgb555_to_bgra(q(P, wpx(10, 10))));
+  t.add("p9d.vacated_place_shows_the_dimmed_world_once", at(233, 500) == rgb555_to_bgra(q(P, wpx(233, 500))));
+  t.add("p9d.report_drawn_after_the_dim", at(533, 300) == rgb555_to_bgra(C));
+  int32_t x1 = 100, y1 = 500, x2 = 533, y2 = 300;
+  rm.map(x1, y1);
+  rm.map(x2, y2);
+  // the moved panel's pixel at its anchor still maps to its 800-space place (233 = 133 + 100); the report pixel stays centred
+  t.add("p9d.remap_under_the_dim", x1 == 233 && y1 == 500 && x2 == 533 && y2 == 300);
+}
+
 // P9C (--selftest-p9c): text at the window's resolution (textres.h, Presenter::set_text / draw_runs, portsim::gfx_text_peel) on a
 // synthetic frame: two runs drawn with GDI's TextOutA in Arial (a system face) onto a 16-bit DIB as jgld draws the game's text, an
 // opaque rectangle drawn over half of the second run afterwards, and a third run inside a left-anchored HUD layer. Rows: the peel
@@ -2205,6 +2364,10 @@ int run_selftest(const Options &o) {
                                                    : PresentDefect::None);
     return t.print();
   }
+  if (o.selftest_p9d) {  // P9D
+    selftest_p9d(t, o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal : PresentDefect::None);
+    return t.print();
+  }
   if (o.selftest_p9c) {  // P9C
     selftest_p9c(t, o.negctl == "p9c-unremoved"      ? TextDefect::Unremoved
                     : o.negctl == "p9c-wrong-scale"  ? TextDefect::WrongScale
@@ -2384,6 +2547,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--selftest-p8b") o.selftest = o.selftest_p8b = true;  // P8B
     else if (a == "--selftest-p9b") o.selftest = o.selftest_p9b = true;  // P9B
     else if (a == "--selftest-p9c") o.selftest = o.selftest_p9c = true;  // P9C
+    else if (a == "--selftest-p9d") o.selftest = o.selftest_p9d = true;  // P9D
     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
       o.wide = true;
       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
@@ -2412,6 +2576,10 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--hud-layers") {  // P9B
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_layers = v == "on";
+    }
+    else if (a == "--hud-modal") {  // P9D
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_modal = v == "on";
     }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
@@ -2501,6 +2669,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.wide_fill = "soft";
   if (const char *ep = std::getenv("SG_APP_P9C"))  // P9C: the frame's text scaled with the picture (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.text_res = "frame";
+  if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
+    if (!std::strcmp(ep, "off")) o.hud_modal = false;
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.
@@ -2561,6 +2731,7 @@ int main(int argc, char **argv) {
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
                      : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
+                     : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
                                                   : PresentDefect::None;
   Presenter presenter(pd);
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes

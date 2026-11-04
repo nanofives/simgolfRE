@@ -1,0 +1,12 @@
+M	port/include/portsim/sim/gfx.h	+/- 27 1
+M	port/src/sim/gfx_body.h	+/- 17 0
+M	port/src/sim/gfx.cpp	+/- 124 5
+M	port/src/sim/gfx_reports.cpp	+/- 15 1
+M	port/src/sim/gfx_dialogs.cpp	+/- 1 0
+M	port/src/sim/gfx_scene.cpp	+/- 23 0
+M	port/src/sim/gfx_terrain.cpp	+/- 3 0
+M	port/app/present.h	+/- 4 0
+M	port/app/present.cpp	+/- 17 5
+M	port/app/host.cpp	+/- 1 0
+M	port/app/main.cpp	+/- 172 1
+patch applies to 0ab75c1c: yes

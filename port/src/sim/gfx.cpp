@@ -731,6 +731,14 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
   } else {
     f.patches.clear();
   }
+  // P9D: a carried frame (gfx.h gfx_set_hud_modal): its carried layers' runs and patches as the frame they were peeled in published
+  // them; the runs of its centred gap stay in that segment (the next carried publish peels them again)
+  const bool carried = layered && hud->carried;
+  const int64_t cseg = carried ? g.hud.carry_seg : -2;
+  if (carried) {
+    f.patches.insert(f.patches.begin(), c.carry_patches.begin(), c.carry_patches.end());
+    f.runs.insert(f.runs.end(), c.carry_runs.begin(), c.carry_runs.end());
+  }
   std::vector<Gfx::TextCapture::Run> next;
   for (size_t k = 0; k < live.size(); ++k) {
     // the layered path shows a run of this frame's layers (peeled at its segment) even when a later layer covers its place
@@ -742,15 +750,26 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
     }
     if (!keep[k]) std::fill(live[k].info.vis.begin(), live[k].info.vis.end(), 0);
     f.runs.push_back(live[k].info);
-    if (keep[k]) next.push_back(std::move(live[k]));
+    if (keep[k] || (live[k].seg == cseg && in_layer)) next.push_back(std::move(live[k]));
     else ++c.stats.dropped;
   }
   for (Gfx::TextCapture::Run &r : next) {  // the next frame: everything kept is under its first layer (the base)
+    if (r.seg == cseg) continue;  // P9D: the carried gap's
     r.seg = -1;
     r.info.layer = -2;
     r.info.vis_layer.clear();
   }
   live = std::move(next);
+  // P9D: a layered publish that the capture carries next: its carried layers' runs and patches (gfxb::hud_publish set carry_layers)
+  if (layered && !carried && g.hud.modal) {
+    const int32_t n = static_cast<int32_t>(g.hud.carry_layers.size());
+    c.carry_runs.clear();
+    c.carry_patches.clear();
+    for (const GfxTextRun &r : f.runs)
+      if (r.layer >= 0 && r.layer < n && r.target == 0) c.carry_runs.push_back(r);
+    for (const GfxTextLayerPatch &q : f.patches)
+      if (q.layer >= 0 && q.layer < n) c.carry_patches.push_back(q);
+  }
   // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
   if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
   c.stats.published = f.runs.size();
@@ -845,6 +864,11 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
   out.y0 = y0;
   out.x1 = x1 + 1;
   out.y1 = y1 + 1;
+  // P9D: a centred segment that dimmed the whole frame (gfx_reports.cpp Surface_drawSprite, Gfx::note_dim)
+  if (id == kGfxLayerCentred && use_rec && g.hud.dim_set && g.hud.dim_gen == g.hud.gen) {
+    out.dim = 1;
+    out.dim_src = g.hud.dim_src;
+  }
   const int32_t bw = out.x1 - out.x0;
   out.px.assign(static_cast<size_t>(bw) * static_cast<size_t>(out.y1 - out.y0), GfxLayerPx{});
   const bool rec = use_rec && g.hud.rec_gen.size() == now.size();
@@ -870,31 +894,125 @@ void hud_gap(Gfx &g) {  // the root's changes since the last boundary, outside e
 }  // namespace
 
 // Window::refreshFull: the layers since the last publish, plus the changes since the last layer closed and the back buffer's own
-// composition (child windows) as centred layers; a refreshFull inside an open layer publishes none (a modal screen's frames)
+// composition (child windows) as centred layers; a refreshFull inside an open layer publishes none (a modal screen's frames).
+// P9D (gfx_set_hud_modal): a refreshFull inside an open layer that a screen's first call closed (hud_modal_mark) publishes like one
+// outside it; a carried capture publishes the last layered frame's base and layers with the screen's drawing since that frame as
+// the centred layer after them (nothing when a 2D write has covered the whole root since: no terrain under it); after every
+// layered publish the capture is carried (hud_carry_arm) until the next frame starts.
 static void hud_publish(Gfx &g) {
   Gfx::HudCapture &c = g.hud;
   if (!c.on) return;
   GfxHudFrame f;
   f.serial = ++c.serial;
-  if (c.any && c.depth == 0) {
+  const bool split = c.modal && c.depth > 0 && c.any && c.cur < 0 && !c.aborted;
+  const bool carried = c.modal && c.carry;
+  if (carried && !g.root_terrain) {
+    g.hud_carry_drop();
+    f.none = 1;
+  } else if (c.any && (c.depth == 0 || split || carried)) {
     const size_t before = c.layers.size();
     hud_gap(g);
     text_close_segment(g, c.seg, c.layers.size() > before ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);  // P9C
-    ++c.seg;
+    if (!carried) ++c.seg;  // P9D: a carried gap keeps its segment (its runs are peeled again at the next carried publish)
+    const size_t own = c.layers.size();
     GfxHudLayer l;
     if (hud_diff(g, g.root.px, g.back.px, kGfxLayerCentred, false, l)) c.layers.push_back(std::move(l));
     f.base = c.base;
     f.back = g.back.px;
-    f.layers = std::move(c.layers);
+    if (c.modal) {
+      if (!carried) c.carry_layers.assign(c.layers.begin(), c.layers.begin() + static_cast<std::ptrdiff_t>(own));
+      f.layers = c.layers;
+    } else {
+      f.layers = std::move(c.layers);
+    }
+    f.carried = carried ? 1 : 0;
+  } else {
+    f.none = c.depth > 0 ? 2 : 1;
   }
   if (c.depth > 0) c.aborted = true;
   c.layers.clear();
   c.any = false;
   c.cur = -1;
+  const bool arm = c.modal && !f.empty();
   c.published = std::move(f);
+  if (arm) g.hud_carry_arm(carried);
 }
 
 }  // namespace gfxb
+
+// P9D: the carry (gfx.h gfx_set_hud_modal). arm: the capture continues the frame just published, its base and layers (without the
+// child-window composition) kept, everything drawn on the root from now on a centred gap of the carried segment; `again` = the
+// publish was itself carried: the gap stays measured from the same root, segment and blend generation (the screen's drawing
+// accumulates over the same frame)
+void Gfx::hud_carry_arm(bool again) {
+  HudCapture &c = hud;
+  c.carry = true;
+  c.any = true;
+  c.cur = -1;
+  c.layers = c.carry_layers;
+  if (!again) {
+    c.mark = root.px;
+    c.carry_seg = c.seg;
+    ++c.gen;
+    c.dim_set = false;
+  }
+}
+// drop: the next frame starts (gfx_terrain.cpp: a terrain pass, its restore, a window paint; gfx_layer_begin: the next layer); the
+// carried gap's runs become the next frame's base runs, as every kept run does at a publish
+void Gfx::hud_carry_drop() {
+  HudCapture &c = hud;
+  if (!c.carry) return;
+  c.carry = false;
+  c.any = false;
+  c.cur = -1;
+  c.layers.clear();
+  for (TextCapture::Run &r : text.live)
+    if (r.seg == c.carry_seg && c.carry_seg >= 0) {
+      r.seg = -1;
+      r.info.layer = -2;
+      r.info.vis_layer.clear();
+    }
+  text.patches_pending.clear();
+  c.carry_seg = -1;
+}
+// a screen's first drawing call (reports.begin, dialogs.begin) inside an open panel layer: the layer is closed here as gfx_layer_end
+// closes it, and the rest of the scope is a centred gap of the frame (its refreshFull then publishes the frame's layers)
+void Gfx::hud_modal_mark() {
+  HudCapture &c = hud;
+  if (!c.on || !c.modal || c.depth == 0 || !c.any || c.aborted || c.cur < 0) return;
+  GfxHudLayer l;
+  const bool made = gfxb::hud_diff(*this, c.mark, root.px, c.cur, true, l);
+  if (made) c.layers.push_back(std::move(l));
+  gfxb::text_close_segment(*this, c.seg, made ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);
+  ++c.seg;
+  c.mark = root.px;
+  ++c.gen;
+  c.cur = -1;
+}
+// the report screens' dim covered every root pixel with one source word (gfx_reports.cpp Surface_drawSprite)
+void Gfx::note_dim(uint16_t src) {
+  if (!hud.any || !hud.modal) return;
+  hud.dim_set = true;
+  hud.dim_gen = hud.gen;
+  hud.dim_src = src;
+}
+void gfx_set_hud_modal(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  if (!on) g->hud_carry_drop();
+  g->hud.modal = on && g->hud.on;
+}
+bool gfx_hud_modal(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  return g && g->hud.on && g->hud.modal;
+}
+uint16_t gfx_layer_quarter(uint16_t p, uint16_t d) {  // gfx_reports.cpp quarter_blend with its two halvings
+  const uint32_t P = static_cast<uint32_t>(p) << 4, D = static_cast<uint32_t>(d) << 4;
+  uint32_t e = ((P & 0x7c1f0u) + (D & 0x7c1f0u)) >> 1, f = ((P & 0x3e00u) + (D & 0x3e00u)) >> 1;
+  e = (e + (D & 0x7c1f0u)) >> 1;
+  f = (f + (D & 0x3e00u)) >> 1;
+  return static_cast<uint16_t>((((e & 0x7c1f0u) + (f & 0x3e00u)) >> 4) & 0xffffu);
+}
 
 int8_t gfx_layer_anchor(int32_t id) {
   switch (id) {
@@ -988,6 +1106,7 @@ void gfx_layer_begin(Ctx &ctx, int32_t id) {
   Gfx::HudCapture &c = g->hud;
   if (c.depth++ > 0) return;
   g->ensure_root(ctx);
+  g->hud_carry_drop();  // P9D: the next frame's first layer ends a carried capture
   c.aborted = false;
   if (!c.any) {
     c.base = g->root.px;

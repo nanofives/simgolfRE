@@ -496,6 +496,7 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
     }
     wi.hud = std::move(f);
   }
+  wi.hud_none = layered && !use && portsim::gfx_hud_modal(ctx);  // P9D
   return true;
 }
 

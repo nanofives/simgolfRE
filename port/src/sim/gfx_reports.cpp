@@ -160,13 +160,26 @@ void b_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   int32_t cl, ct, cr, cb;
   clip_of(g, cl, ct, cr, cb);
   const int32_t l = std::max(x, cl), t = std::max(y, ct), r = std::min(x + s.w, cr), b = std::min(y + s.h, cb);
+  // P9D (gfx.h gfx_set_hud_modal): with the modal capture each blended pixel is recorded as a kind-4 layer pixel, and a blend of
+  // every root pixel with one source word marks the segment as a whole-frame dim
+  const bool rec = g.hud.any && g.hud.modal;
+  size_t n = 0;
+  bool one_src = true;
+  uint16_t src0 = 0;
   for (int32_t yy = t; yy < b; ++yy)
     for (int32_t xx = l; xx < r; ++xx) {
       const uint8_t c = s.px[static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x)];
       if (c >= 0xff || (flag && c >= 0xf8)) continue;
-      uint16_t &w = g.root.px[static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx)];
+      const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx);
+      uint16_t &w = g.root.px[i];
+      const uint16_t before = w;
       w = quarter_blend(s.pal[c], w);
+      if (!rec) continue;
+      g.note_blend(i, before, w, 4, s.pal[c], 0);
+      if (n++ == 0) src0 = s.pal[c];
+      else if (s.pal[c] != src0) one_src = false;
     }
+  if (rec && one_src && n == static_cast<size_t>(g.root.w) * static_cast<size_t>(g.root.h) && mode() != 1) g.note_dim(src0);
 }
 
 // ------------------------------------------------------------------------------------------------ aligned text
@@ -403,6 +416,7 @@ void b_widget_fill_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // ------------------------------------------------------------------------------------------------ the underlay (tests)
 void b_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
+  g.hud_modal_mark();  // P9D: a screen opened inside an open panel layer closes that layer here (gfx.h gfx_set_hud_modal)
   const int m = mode();
   if (m < 101 || m > 103) return;
   static const uint16_t kFill[3] = {0x0000, 0x7fff, 0x2a55};

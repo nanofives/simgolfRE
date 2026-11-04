@@ -274,6 +274,7 @@ std::map<std::string, uint64_t> call_counts(const Gfx &g) {
 }
 void b_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   DState &s = st(g);
+  g.hud_modal_mark();  // P9D: a dialog opened inside an open panel layer closes that layer here (gfx.h gfx_set_hud_modal)
   if (s.depth++ != 0) return;
   if (s.mark != std::numeric_limits<uint64_t>::max() && drawing_calls(g) == s.mark) return;   // the same stack goes on
   if (mode() >= 0x10000) {
