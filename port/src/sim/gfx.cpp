@@ -748,7 +748,7 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
       ++c.stats.dropped;
       continue;
     }
-    if (!keep[k]) std::fill(live[k].info.vis.begin(), live[k].info.vis.end(), 0);
+    if (!keep[k]) std::fill(live[k].info.vis.begin(), live[k].info.vis.end(), uint8_t(0));
     f.runs.push_back(live[k].info);
     if (keep[k] || (live[k].seg == cseg && in_layer)) next.push_back(std::move(live[k]));
     else ++c.stats.dropped;
