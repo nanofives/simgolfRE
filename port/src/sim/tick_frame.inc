@@ -8392,6 +8392,9 @@ a41e3c7:
     G32(GS(g_zoomScale)) = G32(GS(g_zoomScale)) / 2;             // ML+0xee31 cdq;sub;sar1 (signed /2)
 a41e400:
     ecx = G32((GS(g_rootInput) + 12));                             // ML+0xee40
+    // P9E fix (mainLoop.vacatedPanelClick = 0): a press the host marked as made in a moved panel's vacated place takes the
+    // world path, as one above y 0x1b8 does (ecx is the press's y, as there)
+    if (!SG_DEFECT(g_defect_vacated_click) && view_click_vacated(ctx)) goto a41e4b8;
     if (ecx <= 0x1B8) goto a41e4b8;                    // ML+0xee46 cmp ecx,0x1b8; jle (signed)
     eax = G32((GS(g_rootInput) + 8));                             // ML+0xee52
     if (eax >= 0xC8) goto a41e459;                      // ML+0xee57 cmp eax,0xc8; jge (signed)

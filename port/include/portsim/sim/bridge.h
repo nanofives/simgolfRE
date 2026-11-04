@@ -57,6 +57,12 @@ void points_popup(Ctx &ctx, int32_t pts, int32_t x, int32_t y, int32_t who);
 constexpr uint32_t kPortViewVa = 0xFDF00000u;
 constexpr uint32_t kPortViewSize = 0x10000u;
 constexpr uint32_t kPortViewWidthVa = kPortViewVa;
+// P9E fix 3: word +4 is 1 while the last press the host delivered was made in a moved HUD panel's VACATED place (the client
+// point shows the course, but its 800-space point lies in a panel's place there, so the game's own tests would see the panel);
+// 0 for every other press. Written by a live host at the delivery of each press, as a recorded harness write (DELIVER w32), so a
+// replay applies it at the same point. Read only by the `play` switch mainLoop.vacatedPanelClick.
+constexpr uint32_t kPortViewVacatedVa = kPortViewVa + 4u;
+bool view_click_vacated(Ctx &ctx);
 // maps the block (width 800) when the context has none; true when it is mapped afterwards
 bool view_map(Ctx &ctx);
 // the logical view width: 800 when the block is not mapped or holds less than 800

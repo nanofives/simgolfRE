@@ -74,6 +74,11 @@ void PanelRemap::set_layers(bool on, const Viewport &vp, int32_t cw, std::vector
   layers_ = std::move(layers);
 }
 void PanelRemap::map(int32_t &x, int32_t &y) const {
+  bool v = false;
+  map(x, y, v);
+}
+void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const {
+  vacated = false;
   std::lock_guard<std::mutex> lk(mu_);
   if (!on_ || vp_.client_w <= 0 || vp_.client_h <= 0) return;
   const int32_t dxl = -vp_.origin_x, dxr = cw_ - vp_.origin_x - vp_.client_w;
@@ -91,8 +96,21 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
       if (dx != 0) {
         x = sx;
         ++remapped_;
+        return;
       }
-      return;
+      break;  // a centred layer's pixel: the point stays (P9E fix 3: and may still be a vacated place, below)
+    }
+    // P9E fix 3: no moved layer under the point; a moved panel layer's box holding its 800-space point makes it a vacated place
+    // (a centred pixel there, a golfer's label, was over the panel in the 800-space frame and is over the course now)
+    if (x >= vp_.origin_x && x < vp_.origin_x + vp_.client_w) {
+      const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp_.origin_x) * kLogicalW / vp_.client_w);
+      for (const RemapLayer &l : layers_) {
+        const int32_t dx = l.fixed ? 0 : l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
+        if (dx != 0 && lx >= l.x0 && lx < l.x1 && ly >= l.y0 && ly < l.y1) {
+          vacated = true;
+          break;
+        }
+      }
     }
     return;
   }
@@ -106,6 +124,13 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
     x = sx;
     ++remapped_;
     return;
+  }
+  // P9E fix 3: not remapped, and its 800-space point inside a moved panel rectangle: a vacated place
+  if (x >= vp_.origin_x && x < vp_.origin_x + vp_.client_w && y >= vp_.origin_y && y < vp_.origin_y + vp_.client_h) {
+    const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp_.origin_x) * kLogicalW / vp_.client_w);
+    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
+    for (const HudPanel &p : kHudPanels)
+      if (lx >= p.x0 && lx < p.x1 && ly >= p.y0 && ly < p.y1) vacated = true;
   }
 }
 

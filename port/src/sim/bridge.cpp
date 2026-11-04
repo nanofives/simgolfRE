@@ -77,6 +77,7 @@ int32_t view_width(Ctx &ctx) {
   const int32_t w = ctx.mem.load<int32_t>(kPortViewWidthVa);
   return w < 800 ? 800 : w;
 }
+bool view_click_vacated(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPortViewVacatedVa) != 0; }  // P9E fix 3
 int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 

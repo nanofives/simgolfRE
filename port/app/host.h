@@ -157,6 +157,10 @@ struct HostOptions {
   const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
   bool text_native = false;  // P9C: presents carry the frame's text runs (gfx.h GfxTextFrame) in WorldImage::text
   bool hud_layers = false;  // P9B: presents carry the frame's HUD pixel layers (gfx.h GfxHudFrame; with `world` and `remap`)
+  // P9E fix 3: at the delivery of each press (onPress1 / onPress2) the view block's word +4 (bridge.h kPortViewVacatedVa) is set
+  // to 1 when the press's message was made in a moved panel's vacated place (InputEvent::vacated), else 0, as a recorded
+  // harness write when it changes (the play switch mainLoop.vacatedPanelClick reads it)
+  bool vacated_clicks = false;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -341,6 +345,8 @@ class LiveSession : public portsim::LiveHost {
   };
   std::vector<EventRow> event_rows_;
   std::deque<uint32_t> queue_seq_;      // the event of each queued command (parallel to queue_)
+  std::vector<uint32_t> vacated_seq_;  // P9E fix 3: the queued events marked vacated (InputEvent::vacated)
+  uint64_t vacated_writes_ = 0;        // P9E fix 3: view block word +4 writes
   struct DispatchRow {
     uint32_t index, frame, body, body_call, kind, calls, cursor_reads, may, must, ncmds, first_seq, last_seq;
   };

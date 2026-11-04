@@ -1,0 +1,13 @@
+M	port/include/portsim/sim/bridge.h	+/- 6 0
+M	port/src/sim/bridge.cpp	+/- 1 0
+M	port/src/sim/tick.cpp	+/- 13 0
+M	port/src/sim/tick_frame.inc	+/- 3 0
+M	re/port/play_profile.tsv	+/- 1 0
+M	port/app/present.h	+/- 4 0
+M	port/app/present.cpp	+/- 26 1
+M	port/app/window.h	+/- 1 0
+M	port/app/window.cpp	+/- 3 1
+M	port/app/host.h	+/- 6 0
+M	port/app/host.cpp	+/- 20 0
+M	port/app/main.cpp	+/- 11 1
+P9E_1 .. P9E_3 apply to cde8b72d: yes

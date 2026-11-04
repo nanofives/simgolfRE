@@ -1025,3 +1025,8 @@ carry and took the dimmed root (panels at their 800-space places) as base; now t
 panel scope (gfx_set_hud_close, `--hud-close on|off`). Not reproduced: no recording reaches a hire opened inside the detail panel
 (cov_r_s2_screens' hire is mainLoop's, outside every layer); inert on cov_r_s2_screens / cov_b_holes18 (present logs identical on / off).
 Dev log SG_P9E_PRESENT_LOG. Segments x64 205 / 205 = I25.
+P9E fix 3: a click where a moved panel used to be (its 800-space box, no moved layer pixel under the window point) no longer reaches that
+panel: PanelRemap::map(x, y, vacated) marks the press, the live session writes view block word +4 (kPortViewVacatedVa) at delivery as a
+recorded harness write, and play switch mainLoop.vacatedPanelClick (0 in `play`) sends a marked press down the world path in the click
+dispatch; the hit tests are untouched (an app-only remap would pick another tile: the world point IS the 800-space point). `--hud-vacated
+on|off`. Builds x64 + Win32, segments x64 205 / 205 = I25, test_profiles 21.

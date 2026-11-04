@@ -109,6 +109,10 @@ class PanelRemap {
   void clear();
   // the client point the game sees for client point p: p - dx when p lies over a moved panel's 2D pixel, else p
   void map(int32_t &x, int32_t &y) const;
+  // P9E fix 3: the same, and `vacated` = the point was left as it is (no moved layer has a pixel under it) while its 800-space
+  // point lies inside a moved layer's box (or, without layers, a moved kHudPanels rectangle): the client shows the course
+  // there, but the game's own hit tests would see that panel at the point
+  void map(int32_t &x, int32_t &y, bool &vacated) const;
   uint64_t remapped() const;
 
  private:

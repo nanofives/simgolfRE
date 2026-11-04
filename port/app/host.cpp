@@ -292,6 +292,7 @@ void LiveSession::on_input(const InputEvent &e) {
       queue_.push_back(c);
       queue_seq_.push_back(e.seq);
     }
+    if (e.vacated && !e.commands.empty()) vacated_seq_.push_back(e.seq);  // P9E fix 3
     event_rows_.push_back({e.seq, e.msg, e.wp, e.lp, frame_now_.load(), static_cast<uint32_t>(e.commands.size()), -1});
     if (e.msg >= kWmMouseMove && e.msg <= 0x20e) msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
     ++events_;
@@ -829,6 +830,23 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
       if (h == 2 || h == 5 || h == 8) pressed = true;
     }
     out.assign(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(n));
+    // P9E fix 3: the view block's vacated word follows the batch's last press (a recorded write, before the batch is applied)
+    if (opt_.vacated_clicks) {
+      int32_t v = -1;
+      for (size_t k = 0; k < n; ++k)
+        if (queue_[k].handler == 1 || queue_[k].handler == 4)
+          v = std::find(vacated_seq_.begin(), vacated_seq_.end(), queue_seq_[k]) != vacated_seq_.end() ? 1 : 0;
+      if (v >= 0 && portsim::view_map(ctx) && ctx.mem.load<int32_t>(portsim::kPortViewVacatedVa) != v) {
+        ctx.mem.store<int32_t>(portsim::kPortViewVacatedVa, v);
+        if (writes) writes->wrote(portsim::kPortViewVacatedVa, static_cast<uint32_t>(v));
+        ++vacated_writes_;
+      }
+      if (n > 0) {
+        const uint32_t last = queue_seq_[n - 1];
+        vacated_seq_.erase(std::remove_if(vacated_seq_.begin(), vacated_seq_.end(), [&](uint32_t s) { return s <= last; }),
+                           vacated_seq_.end());
+      }
+    }
     queue_.erase(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(n));
     // S7.4: the dispatch log (which input messages this dispatch carries, and the pump call that took it)
     const uint32_t di = static_cast<uint32_t>(dispatch_rows_.size());
@@ -1064,6 +1082,8 @@ std::string LiveSession::summary_json(const Result &r) const {
        std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32
   s += ",\"p9c\":{\"text_native\":" + std::to_string(opt_.text_native ? 1 : 0) + ",\"presents_text\":" +
        std::to_string(presents_text_) + ",\"runs\":" + std::to_string(text_runs_) + "}";  // P9C
+  s += ",\"p9e\":{\"vacated_clicks\":" + std::to_string(opt_.vacated_clicks ? 1 : 0) + ",\"vacated_writes\":" +
+       std::to_string(vacated_writes_) + "}";  // P9E fix 3
   s += ",\"memory\":" + memory.json();
   if (tlog_calls_ >= 0)
     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +

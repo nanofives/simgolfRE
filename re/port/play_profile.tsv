@@ -35,3 +35,4 @@ showCharacterEditor.escIgnored	0	G30,P9A	Esc in the character editor acts as a p
 pickCharEditor.escIgnored	0	G30,P9A	Esc in the editor's look picker acts as its cancel (a right click: 0x0043857d)
 showPopup.escIgnoredNoKeys	0	G30,P9A	Esc on a popup without key handling (flag4 0: Preferences, the tournament par list; 0x0046db31 skips the key block) acts as its close button (0x0046dcdf -> 0x0046dd86)
 skillPointDialog.escIgnored	0	G30,P9A	Esc in the skill point dialog acts as a click on OK (0x0045f644; the points-left popup when points remain)
+mainLoop.vacatedPanelClick	0	P9E	a press the widescreen host marked as made where a moved HUD panel used to be (the course shows there; view block word +4) takes the frame's world path (0x0041e4b8) instead of the System menu / panel tests (0x0041e400..0x0041e4b2)

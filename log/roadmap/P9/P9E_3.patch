@@ -1,0 +1,305 @@
+diff --git a/port/include/portsim/sim/bridge.h b/port/include/portsim/sim/bridge.h
+index 96aeeee..f964c4e 100644
+--- a/port/include/portsim/sim/bridge.h
++++ b/port/include/portsim/sim/bridge.h
+@@ -57,6 +57,12 @@ void points_popup(Ctx &ctx, int32_t pts, int32_t x, int32_t y, int32_t who);
+ constexpr uint32_t kPortViewVa = 0xFDF00000u;
+ constexpr uint32_t kPortViewSize = 0x10000u;
+ constexpr uint32_t kPortViewWidthVa = kPortViewVa;
++// P9E fix 3: word +4 is 1 while the last press the host delivered was made in a moved HUD panel's VACATED place (the client
++// point shows the course, but its 800-space point lies in a panel's place there, so the game's own tests would see the panel);
++// 0 for every other press. Written by a live host at the delivery of each press, as a recorded harness write (DELIVER w32), so a
++// replay applies it at the same point. Read only by the `play` switch mainLoop.vacatedPanelClick.
++constexpr uint32_t kPortViewVacatedVa = kPortViewVa + 4u;
++bool view_click_vacated(Ctx &ctx);
+ // maps the block (width 800) when the context has none; true when it is mapped afterwards
+ bool view_map(Ctx &ctx);
+ // the logical view width: 800 when the block is not mapped or holds less than 800
+diff --git a/port/src/sim/bridge.cpp b/port/src/sim/bridge.cpp
+index 35c8c04..818ba8a 100644
+--- a/port/src/sim/bridge.cpp
++++ b/port/src/sim/bridge.cpp
+@@ -77,6 +77,7 @@ int32_t view_width(Ctx &ctx) {
+   const int32_t w = ctx.mem.load<int32_t>(kPortViewWidthVa);
+   return w < 800 ? 800 : w;
+ }
++bool view_click_vacated(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPortViewVacatedVa) != 0; }  // P9E fix 3
+ int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
+ int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
+ 
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+index f19ee5e..6a2126a 100644
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -83,6 +83,14 @@ int g_defect_title_default_item = 1;
+ // rectangles showTitleScreen+0x2e4..showTitleScreen+0x3b9, which the menu draws at the item's position F+0x150 / F+0x152); among boxes holding the
+ // cursor the original's distance decides. The exit icon (hotspot 5) is mainLoop.titleExitHotspotWide's.
+ int g_defect_title_hotspot_range = 1;
++// mainLoop.vacatedPanelClick (P9E fix 3, the widescreen HUD of G32 / P9B: "a click where a moved panel used to be still reaches
++// that panel"): the frame's click dispatch sends a press below y 0x1b8 to the System menu (x < 0xc8: showSystemMenu's
++// nearestMenuSpot) or, below y 0x1e0, to the panel handlers of g_panelListMode (ML+0xee40..ML+0xeec5); every other press takes
++// the world path (ML+0xeef8, screenToTile's tile of ML+0xee20). With the HUD moved to the window's edges the course shows in
++// the panels' 800-space places, but those tests still see the panels there. Fixed (0): a press the host marked as made in a
++// vacated place (bridge.h view_click_vacated, view block word +4) takes the world path; with the word 0 (the original's window,
++// every replay without it) nothing changes.
++int g_defect_vacated_click = 1;
+ // mainLoop.cameraFollowOffGrid (P6A, 2026-11-03, Mariano's play-test): the camera tile pair gCameraTileX / gCameraTileY is
+ // clamped to 0..0x31 only by the key and edge-pan cases of H1 (ML+0xe971..ML+0xea73, ML+0xec6b..ML+0xec89); the writers that
+ // copy a golfer's, walker's, ball's or photo's world position >> 10 (P7 ML+0xbf38, H2 ML+0xf17c / ML+0xf994, updateGolfers'
+@@ -2020,6 +2028,11 @@ const DefectDef kDefects[] = {
+      "a labelled title-menu item is chosen within distance 0xa0 of its text centre (about 0x140 px wide, mostly outside its art); "
+      "fixed: only inside the item's button art box",
+      &g_defect_title_hotspot_range},
++    {"mainLoop.vacatedPanelClick", "P9E",
++     "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "
++     "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "
++     "world path",
++     &g_defect_vacated_click},
+     {"mainLoop.cameraFollowOffGrid", "P6A",
+      "the camera writers that follow a golfer, walker, ball or photo position (and the hole / object offsets) store no grid bound, "
+      "so the view leaves the map; fixed: each clamps the camera tile pair to 0..0x31 like H1's key and edge-pan cases",
+diff --git a/port/src/sim/tick_frame.inc b/port/src/sim/tick_frame.inc
+index 3698481..16dc903 100644
+--- a/port/src/sim/tick_frame.inc
++++ b/port/src/sim/tick_frame.inc
+@@ -8392,6 +8392,9 @@ a41e3c7:
+     G32(GS(g_zoomScale)) = G32(GS(g_zoomScale)) / 2;             // ML+0xee31 cdq;sub;sar1 (signed /2)
+ a41e400:
+     ecx = G32((GS(g_rootInput) + 12));                             // ML+0xee40
++    // P9E fix (mainLoop.vacatedPanelClick = 0): a press the host marked as made in a moved panel's vacated place takes the
++    // world path, as one above y 0x1b8 does (ecx is the press's y, as there)
++    if (!SG_DEFECT(g_defect_vacated_click) && view_click_vacated(ctx)) goto a41e4b8;
+     if (ecx <= 0x1B8) goto a41e4b8;                    // ML+0xee46 cmp ecx,0x1b8; jle (signed)
+     eax = G32((GS(g_rootInput) + 8));                             // ML+0xee52
+     if (eax >= 0xC8) goto a41e459;                      // ML+0xee57 cmp eax,0xc8; jge (signed)
+diff --git a/re/port/play_profile.tsv b/re/port/play_profile.tsv
+index 469e4ef..53bedd6 100644
+--- a/re/port/play_profile.tsv
++++ b/re/port/play_profile.tsv
+@@ -35,3 +35,4 @@ showCharacterEditor.escIgnored	0	G30,P9A	Esc in the character editor acts as a p
+ pickCharEditor.escIgnored	0	G30,P9A	Esc in the editor's look picker acts as its cancel (a right click: 0x0043857d)
+ showPopup.escIgnoredNoKeys	0	G30,P9A	Esc on a popup without key handling (flag4 0: Preferences, the tournament par list; 0x0046db31 skips the key block) acts as its close button (0x0046dcdf -> 0x0046dd86)
+ skillPointDialog.escIgnored	0	G30,P9A	Esc in the skill point dialog acts as a click on OK (0x0045f644; the points-left popup when points remain)
++mainLoop.vacatedPanelClick	0	P9E	a press the widescreen host marked as made where a moved HUD panel used to be (the course shows there; view block word +4) takes the frame's world path (0x0041e4b8) instead of the System menu / panel tests (0x0041e400..0x0041e4b2)
+diff --git a/port/app/present.h b/port/app/present.h
+index 9e01768..11ba714 100644
+--- a/port/app/present.h
++++ b/port/app/present.h
+@@ -109,6 +109,10 @@ class PanelRemap {
+   void clear();
+   // the client point the game sees for client point p: p - dx when p lies over a moved panel's 2D pixel, else p
+   void map(int32_t &x, int32_t &y) const;
++  // P9E fix 3: the same, and `vacated` = the point was left as it is (no moved layer has a pixel under it) while its 800-space
++  // point lies inside a moved layer's box (or, without layers, a moved kHudPanels rectangle): the client shows the course
++  // there, but the game's own hit tests would see that panel at the point
++  void map(int32_t &x, int32_t &y, bool &vacated) const;
+   uint64_t remapped() const;
+ 
+  private:
+diff --git a/port/app/present.cpp b/port/app/present.cpp
+index 3e2b665..f9318e2 100644
+--- a/port/app/present.cpp
++++ b/port/app/present.cpp
+@@ -74,6 +74,11 @@ void PanelRemap::set_layers(bool on, const Viewport &vp, int32_t cw, std::vector
+   layers_ = std::move(layers);
+ }
+ void PanelRemap::map(int32_t &x, int32_t &y) const {
++  bool v = false;
++  map(x, y, v);
++}
++void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const {
++  vacated = false;
+   std::lock_guard<std::mutex> lk(mu_);
+   if (!on_ || vp_.client_w <= 0 || vp_.client_h <= 0) return;
+   const int32_t dxl = -vp_.origin_x, dxr = cw_ - vp_.origin_x - vp_.client_w;
+@@ -91,8 +96,21 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
+       if (dx != 0) {
+         x = sx;
+         ++remapped_;
++        return;
++      }
++      break;  // a centred layer's pixel: the point stays (P9E fix 3: and may still be a vacated place, below)
++    }
++    // P9E fix 3: no moved layer under the point; a moved panel layer's box holding its 800-space point makes it a vacated place
++    // (a centred pixel there, a golfer's label, was over the panel in the 800-space frame and is over the course now)
++    if (x >= vp_.origin_x && x < vp_.origin_x + vp_.client_w) {
++      const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp_.origin_x) * kLogicalW / vp_.client_w);
++      for (const RemapLayer &l : layers_) {
++        const int32_t dx = l.fixed ? 0 : l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
++        if (dx != 0 && lx >= l.x0 && lx < l.x1 && ly >= l.y0 && ly < l.y1) {
++          vacated = true;
++          break;
++        }
+       }
+-      return;
+     }
+     return;
+   }
+@@ -107,6 +125,13 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
+     ++remapped_;
+     return;
+   }
++  // P9E fix 3: not remapped, and its 800-space point inside a moved panel rectangle: a vacated place
++  if (x >= vp_.origin_x && x < vp_.origin_x + vp_.client_w && y >= vp_.origin_y && y < vp_.origin_y + vp_.client_h) {
++    const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp_.origin_x) * kLogicalW / vp_.client_w);
++    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
++    for (const HudPanel &p : kHudPanels)
++      if (lx >= p.x0 && lx < p.x1 && ly >= p.y0 && ly < p.y1) vacated = true;
++  }
+ }
+ 
+ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
+diff --git a/port/app/window.h b/port/app/window.h
+index 27591aa..58a14ae 100644
+--- a/port/app/window.h
++++ b/port/app/window.h
+@@ -41,6 +41,7 @@ struct InputEvent {
+   std::vector<HostAnswer> answers;
+   std::vector<Step> steps;
+   std::vector<portsim::Command> commands;  // the steps' calls, as RootHandler commands
++  bool vacated = false;  // P9E fix 3: a mouse button message whose point is a moved HUD panel's vacated place (PanelRemap::map)
+ };
+ 
+ // Step (a Call) -> portsim::Command (RootHandler): handler, a0, a1, async_ctrl, async_shift, t (S7.2 notes section 4).
+diff --git a/port/app/window.cpp b/port/app/window.cpp
+index 8183d70..93aa2fb 100644
+--- a/port/app/window.cpp
++++ b/port/app/window.cpp
+@@ -275,7 +275,9 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
+   if (opt_.before_translate) opt_.before_translate(msg, wp);
+   if (opt_.remap && msg >= kWmMouseMove && msg <= 0x20a) {  // G32: a point over a moved HUD panel goes to its 800-space place
+     int32_t x = static_cast<int16_t>(lp & 0xffff), y = static_cast<int16_t>(lp >> 16);
+-    opt_.remap->map(x, y);
++    bool vacated = false;
++    opt_.remap->map(x, y, vacated);
++    e.vacated = vacated && msg != kWmMouseMove;  // P9E fix 3
+     lp = (static_cast<uint32_t>(static_cast<uint16_t>(y)) << 16) | static_cast<uint16_t>(x);
+     e.lp = lp;  // P9B: the event carries the point the game got (LiveSession's --cursor message answers read e.lp)
+   }
+diff --git a/port/app/host.h b/port/app/host.h
+index 9d5fb91..0ca2d51 100644
+--- a/port/app/host.h
++++ b/port/app/host.h
+@@ -157,6 +157,10 @@ struct HostOptions {
+   const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
+   bool text_native = false;  // P9C: presents carry the frame's text runs (gfx.h GfxTextFrame) in WorldImage::text
+   bool hud_layers = false;  // P9B: presents carry the frame's HUD pixel layers (gfx.h GfxHudFrame; with `world` and `remap`)
++  // P9E fix 3: at the delivery of each press (onPress1 / onPress2) the view block's word +4 (bridge.h kPortViewVacatedVa) is set
++  // to 1 when the press's message was made in a moved panel's vacated place (InputEvent::vacated), else 0, as a recorded
++  // harness write when it changes (the play switch mainLoop.vacatedPanelClick reads it)
++  bool vacated_clicks = false;
+ };
+ 
+ class LiveSession : public portsim::LiveHost {
+@@ -341,6 +345,8 @@ class LiveSession : public portsim::LiveHost {
+   };
+   std::vector<EventRow> event_rows_;
+   std::deque<uint32_t> queue_seq_;      // the event of each queued command (parallel to queue_)
++  std::vector<uint32_t> vacated_seq_;  // P9E fix 3: the queued events marked vacated (InputEvent::vacated)
++  uint64_t vacated_writes_ = 0;        // P9E fix 3: view block word +4 writes
+   struct DispatchRow {
+     uint32_t index, frame, body, body_call, kind, calls, cursor_reads, may, must, ncmds, first_seq, last_seq;
+   };
+diff --git a/port/app/host.cpp b/port/app/host.cpp
+index a4b8450..b9bc71f 100644
+--- a/port/app/host.cpp
++++ b/port/app/host.cpp
+@@ -292,6 +292,7 @@ void LiveSession::on_input(const InputEvent &e) {
+       queue_.push_back(c);
+       queue_seq_.push_back(e.seq);
+     }
++    if (e.vacated && !e.commands.empty()) vacated_seq_.push_back(e.seq);  // P9E fix 3
+     event_rows_.push_back({e.seq, e.msg, e.wp, e.lp, frame_now_.load(), static_cast<uint32_t>(e.commands.size()), -1});
+     if (e.msg >= kWmMouseMove && e.msg <= 0x20e) msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
+     ++events_;
+@@ -829,6 +830,23 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump
+       if (h == 2 || h == 5 || h == 8) pressed = true;
+     }
+     out.assign(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(n));
++    // P9E fix 3: the view block's vacated word follows the batch's last press (a recorded write, before the batch is applied)
++    if (opt_.vacated_clicks) {
++      int32_t v = -1;
++      for (size_t k = 0; k < n; ++k)
++        if (queue_[k].handler == 1 || queue_[k].handler == 4)
++          v = std::find(vacated_seq_.begin(), vacated_seq_.end(), queue_seq_[k]) != vacated_seq_.end() ? 1 : 0;
++      if (v >= 0 && portsim::view_map(ctx) && ctx.mem.load<int32_t>(portsim::kPortViewVacatedVa) != v) {
++        ctx.mem.store<int32_t>(portsim::kPortViewVacatedVa, v);
++        if (writes) writes->wrote(portsim::kPortViewVacatedVa, static_cast<uint32_t>(v));
++        ++vacated_writes_;
++      }
++      if (n > 0) {
++        const uint32_t last = queue_seq_[n - 1];
++        vacated_seq_.erase(std::remove_if(vacated_seq_.begin(), vacated_seq_.end(), [&](uint32_t s) { return s <= last; }),
++                           vacated_seq_.end());
++      }
++    }
+     queue_.erase(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(n));
+     // S7.4: the dispatch log (which input messages this dispatch carries, and the pump call that took it)
+     const uint32_t di = static_cast<uint32_t>(dispatch_rows_.size());
+@@ -1064,6 +1082,8 @@ std::string LiveSession::summary_json(const Result &r) const {
+        std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32
+   s += ",\"p9c\":{\"text_native\":" + std::to_string(opt_.text_native ? 1 : 0) + ",\"presents_text\":" +
+        std::to_string(presents_text_) + ",\"runs\":" + std::to_string(text_runs_) + "}";  // P9C
++  s += ",\"p9e\":{\"vacated_clicks\":" + std::to_string(opt_.vacated_clicks ? 1 : 0) + ",\"vacated_writes\":" +
++       std::to_string(vacated_writes_) + "}";  // P9E fix 3
+   s += ",\"memory\":" + memory.json();
+   if (tlog_calls_ >= 0)
+     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +
+diff --git a/port/app/main.cpp b/port/app/main.cpp
+index 3c83970..151ff62 100644
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -35,6 +35,9 @@
+ //   panel's anchor (gfx.h gfx_set_hud_popups); off = P9D's centred popups.
+ //   P9E fix 2: --hud-close on|off (default on with --hud-modal; SG_APP_P9E=off: off) the frame that closes a modal screen opened
+ //   inside a panel layer (the hire dialog) composes like the screen's frames (gfx.h gfx_set_hud_close); off = P9D.
++//   P9E fix 3: --hud-vacated on|off (default on with the HUD compositor; SG_APP_P9E=off: off) a press where a moved HUD panel
++//   used to be (the course shows there) is marked in the view block (bridge.h kPortViewVacatedVa) at its delivery; with the play
++//   profile's mainLoop.vacatedPanelClick = 0 it acts on the course instead of the panel the game's tests see there.
+ //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
+ //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
+ //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
+@@ -319,6 +322,7 @@ struct Options {
+   bool hud_modal = true;           // P9D: --hud-modal on|off (SG_APP_P9D=off: off)
+   bool hud_popups = true;          // P9E: --hud-popups on|off (SG_APP_P9E=off: off)
+   bool hud_close = true;           // P9E fix 2: --hud-close on|off (SG_APP_P9E=off: off)
++  bool hud_vacated = true;         // P9E fix 3: --hud-vacated on|off (SG_APP_P9E=off: off)
+   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
+   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
+   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
+@@ -533,6 +537,7 @@ const ProfileMember kPlayProfile[] = {
+     {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
+     {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
+     {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
++    {"mainLoop.vacatedPanelClick", 0},              // P9E fix 3 (a press where a moved panel used to be acts on the course)
+     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
+     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
+     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
+@@ -1246,6 +1251,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+   static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
+   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
+   ho.hud_layers = hud_layers_on(o);                    // P9B
++  ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
+   ho.text_native = text_native_on(o);                  // P9C
+   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
+   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
+@@ -2611,6 +2617,10 @@ bool parse(int argc, char **argv, Options &o) {
+       if (!val(v) || (v != "on" && v != "off")) return false;
+       o.hud_close = v == "on";
+     }
++    else if (a == "--hud-vacated") {  // P9E fix 3
++      if (!val(v) || (v != "on" && v != "off")) return false;
++      o.hud_vacated = v == "on";
++    }
+     else if (a == "--text-res") {  // P9C
+       if (!val(v) || (v != "native" && v != "frame")) return false;
+       o.text_res = v;
+@@ -2702,7 +2712,7 @@ int main(int argc, char **argv) {
+   if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
+     if (!std::strcmp(ep, "off")) o.hud_modal = false;
+   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
+-    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = false;
++    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = false;
+   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
+   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
+   // argument parser runs (its messages go there too), with the --data value read ahead.

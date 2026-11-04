@@ -55,3 +55,35 @@ hire, one hole built first) opened the employees panel, but its slot click opene
 with --hud-close on and off are identical on cov_r_s2_screens (1,802 presents) and cov_b_holes18 (4,764), and the 1920 x 1080
 shots of presents 1055 / 1056 are pixel-identical (P9E_shots/fix2_r1920x1080_cov_r_s2_screens_105{5,6}_pair.png).
 Checks (P9E_2_gates.log): build x64 and Win32 0 errors 0 warnings; segments x64 205 / 205 PASS, 0 rows differ from I25.
+
+## Fix 3: a click where a moved panel used to be acts on the course
+Cause: with the HUD moved to the window's edges, the course shows in the panels' 800-space places. A press there reaches the game
+at that 800-space point (no layer covers it, so the remap leaves it), and mainLoop's click dispatch tests rectangles of the 800 x 600
+frame: below y 0x1b8 a press at x < 0xc8 is the System menu / radial menu (showSystemMenu's nearestMenuSpot), below y 0x1e0 it goes
+to the panel handlers of g_panelListMode (ML+0xee40..ML+0xeec5). So it acted on the panel that is no longer there (live, 1920 x
+1080: a click on the course at the Buildings button's old place opened the Buildings palette).
+Why not app-only: the world point under such a click IS its 800-space point (the world layer is aligned with the frame), so sending
+the press anywhere else moves it to another tile. The sim alone cannot tell it either: a remapped press onto the panel's real place
+and a vacated one arrive at the same 800-space point. So the app marks it, and one `play` switch in the dispatch reads the mark.
+That is the smallest correct change. The hit tests themselves (nearestMenuSpot, hitTestSlot432f90, ...) are untouched and see
+only real panel presses.
+Fix (default on; `--hud-vacated off` or SG_APP_P9E=off = P9D; the sim side is the play switch mainLoop.vacatedPanelClick, 1 = the
+original, 0 in kPlayProfile and re/port/play_profile.tsv, so `fixed` and every test are unaffected):
+- app (present.h / present.cpp PanelRemap::map(x, y, vacated), window.h / window.cpp InputEvent::vacated, host.h / host.cpp): a
+  mouse button message is VACATED when no moved layer has a pixel under its client point (a centred pixel there, a golfer's label,
+  counts as vacated too: in the 800-space frame it was over the panel) and its 800-space point lies in a moved panel layer's box
+  (without layers: a moved kHudPanels rectangle). When the live session delivers a press (onPress1 / onPress2) it writes the view
+  block's word +4 (bridge.h kPortViewVacatedVa) = 1 for a vacated press, 0 for any other, as a recorded harness write (DELIVER
+  w32) only when it changes, before the batch is applied, so a replay applies it at the same point. session.json `p9e`
+  {vacated_clicks, vacated_writes}.
+- sim (bridge.h / bridge.cpp view_click_vacated, tick.cpp, tick_frame.inc at ML+0xee40): with the switch at 0 and the word set,
+  the press takes the world path a41e4b8 (ML+0xeef8), as a press above y 0x1b8 does; screenToTile's tile (ML+0xee20) is the
+  press's own. The word is 0 in every recording made before (the view block is zero-filled), so nothing changes there.
+Checks (P9E_3_gates.log): build x64 and Win32 0 errors 0 warnings; segments x64 205 / 205 PASS, 0 rows differ from I25;
+port/test/test_profiles.py 21 passed (the new profile row; P9E_3_test_profiles.log). Smoke (P9E_drive.py --seq vacated, the live app,
+1920 x 1080, `--profile play`, Hawaii; off = --hud-vacated off): with the radial menu at the left edge (client 0..360) its old
+place (240..600) shows the course; a press at the Buildings button's centred point (800-space (118, 495), client (452, 891))
+opened the Buildings palette before and does nothing to the HUD after; the People button's old place likewise; the Buildings
+button at its anchored place still opens the palette (vacated_writes 2: 1 at the first vacated press, 0 at the anchored one).
+Screenshot: P9E_live/vacated_1920x1080_buildings_pair.png (top before: the palette opened by a click on the course; bottom after:
+no palette), the step shots vacated_1920x1080_{off,on}_*.png.

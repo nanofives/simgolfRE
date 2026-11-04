@@ -35,6 +35,9 @@
 //   panel's anchor (gfx.h gfx_set_hud_popups); off = P9D's centred popups.
 //   P9E fix 2: --hud-close on|off (default on with --hud-modal; SG_APP_P9E=off: off) the frame that closes a modal screen opened
 //   inside a panel layer (the hire dialog) composes like the screen's frames (gfx.h gfx_set_hud_close); off = P9D.
+//   P9E fix 3: --hud-vacated on|off (default on with the HUD compositor; SG_APP_P9E=off: off) a press where a moved HUD panel
+//   used to be (the course shows there) is marked in the view block (bridge.h kPortViewVacatedVa) at its delivery; with the play
+//   profile's mainLoop.vacatedPanelClick = 0 it acts on the course instead of the panel the game's tests see there.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -319,6 +322,7 @@ struct Options {
   bool hud_modal = true;           // P9D: --hud-modal on|off (SG_APP_P9D=off: off)
   bool hud_popups = true;          // P9E: --hud-popups on|off (SG_APP_P9E=off: off)
   bool hud_close = true;           // P9E fix 2: --hud-close on|off (SG_APP_P9E=off: off)
+  bool hud_vacated = true;         // P9E fix 3: --hud-vacated on|off (SG_APP_P9E=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -533,6 +537,7 @@ const ProfileMember kPlayProfile[] = {
     {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
     {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
     {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
+    {"mainLoop.vacatedPanelClick", 0},              // P9E fix 3 (a press where a moved panel used to be acts on the course)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
@@ -1246,6 +1251,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
   ho.hud_layers = hud_layers_on(o);                    // P9B
+  ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
   ho.text_native = text_native_on(o);                  // P9C
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
@@ -2611,6 +2617,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_close = v == "on";
     }
+    else if (a == "--hud-vacated") {  // P9E fix 3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_vacated = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2702,7 +2712,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
     if (!std::strcmp(ep, "off")) o.hud_modal = false;
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
-    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = false;
+    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = false;
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

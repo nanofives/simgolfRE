@@ -83,6 +83,14 @@ int g_defect_title_default_item = 1;
 // rectangles showTitleScreen+0x2e4..showTitleScreen+0x3b9, which the menu draws at the item's position F+0x150 / F+0x152); among boxes holding the
 // cursor the original's distance decides. The exit icon (hotspot 5) is mainLoop.titleExitHotspotWide's.
 int g_defect_title_hotspot_range = 1;
+// mainLoop.vacatedPanelClick (P9E fix 3, the widescreen HUD of G32 / P9B: "a click where a moved panel used to be still reaches
+// that panel"): the frame's click dispatch sends a press below y 0x1b8 to the System menu (x < 0xc8: showSystemMenu's
+// nearestMenuSpot) or, below y 0x1e0, to the panel handlers of g_panelListMode (ML+0xee40..ML+0xeec5); every other press takes
+// the world path (ML+0xeef8, screenToTile's tile of ML+0xee20). With the HUD moved to the window's edges the course shows in
+// the panels' 800-space places, but those tests still see the panels there. Fixed (0): a press the host marked as made in a
+// vacated place (bridge.h view_click_vacated, view block word +4) takes the world path; with the word 0 (the original's window,
+// every replay without it) nothing changes.
+int g_defect_vacated_click = 1;
 // mainLoop.cameraFollowOffGrid (P6A, 2026-11-03, Mariano's play-test): the camera tile pair gCameraTileX / gCameraTileY is
 // clamped to 0..0x31 only by the key and edge-pan cases of H1 (ML+0xe971..ML+0xea73, ML+0xec6b..ML+0xec89); the writers that
 // copy a golfer's, walker's, ball's or photo's world position >> 10 (P7 ML+0xbf38, H2 ML+0xf17c / ML+0xf994, updateGolfers'
@@ -2020,6 +2028,11 @@ const DefectDef kDefects[] = {
      "a labelled title-menu item is chosen within distance 0xa0 of its text centre (about 0x140 px wide, mostly outside its art); "
      "fixed: only inside the item's button art box",
      &g_defect_title_hotspot_range},
+    {"mainLoop.vacatedPanelClick", "P9E",
+     "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "
+     "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "
+     "world path",
+     &g_defect_vacated_click},
     {"mainLoop.cameraFollowOffGrid", "P6A",
      "the camera writers that follow a golfer, walker, ball or photo position (and the hole / object offsets) store no grid bound, "
      "so the view leaves the map; fixed: each clamps the camera tile pair to 0..0x31 like H1's key and edge-pan cases",
