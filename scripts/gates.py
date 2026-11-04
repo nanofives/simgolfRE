@@ -18,7 +18,7 @@ Options:
   --compare <dir>  an earlier run's out dir: every TSV gate is compared row by row (key = first column(s), compared columns
                    status / digest / records): the summary line gets `same` or `N rows changed`, details in <gate>.cmp.txt.
   --lock <step>    take log/roadmap/S3/w8_lock.py's heavy-run lock around each gate (add --lock-priority for the lead).
-  --min-free-gb N  wait for N GB of free commit charge before each gate (default 16, 0 = no wait).
+  --min-free-gb N  wait for N GB of free commit charge before each gate (default 8, 0 = no wait; at most 10 min, then it starts anyway).
   --keep-going     run the remaining gates after a FAIL (default: yes for tiers and lists; --stop-on-fail stops).
 
 stdout carries only one `[N/M] gate STATUS seconds :: summary` line per gate (the Happy progress-bar format) and the
@@ -162,10 +162,20 @@ def free_commit_gb() -> float:
     return m.apf / 2**30
 
 
+MEM_WAIT_MAX = 600
+
+
 def wait_memory(need: float) -> None:
+    # Same policy as the test slot: wait at most 10 min, then start anyway (the slot's Job Object caps the run).
+    # A fixed threshold can exceed what the machine ever frees: LIVING-PC's commit limit was 23.9 GB on 2026-11-04
+    # with 10-12 GB free at rest, and the old default of 16 GB waited forever.
     if need <= 0:
         return
+    deadline = time.time() + MEM_WAIT_MAX
     while (f := free_commit_gb()) < need:
+        if time.time() >= deadline:
+            print(f"  (free commit {f:.1f} GB < {need} after {MEM_WAIT_MAX // 60} min, starting anyway)", flush=True)
+            return
         print(f"  (free commit {f:.1f} GB < {need}, waiting)", flush=True)
         time.sleep(60)
 
@@ -290,7 +300,7 @@ def main(argv=None) -> int:
     ap.add_argument("--compare")
     ap.add_argument("--lock")
     ap.add_argument("--lock-priority", action="store_true")
-    ap.add_argument("--min-free-gb", type=float, default=16)
+    ap.add_argument("--min-free-gb", type=float, default=8)
     ap.add_argument("--stop-on-fail", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="print the plan (commands) and exit")
     a = ap.parse_args(argv)
