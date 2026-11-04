@@ -23,6 +23,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -68,6 +69,20 @@ int g_defect_cash_low_word = 1;
 // wide and 0x50 tall around the icon's corner, most of it outside the icon. Fixed (0): the exit hotspot is taken only with the
 // cursor inside its icon (x 0x2d1 .. 0x30a, y 0x210 .. 0x248), where it wins; the five labelled hotspots keep their test.
 int g_defect_title_exit_hotspot = 1;
+// mainLoop.titleDefaultItem1 (P9A, 2026-11-03, Mariano's play-test 3: "on the first frame the clickable areas are not working
+// properly"): each pass of the title menu's hover loop starts its selection at ebx = (F+0x2c != 0) ? -1 : 1 (ML+0x11a95
+// mov ebx, [esp+0x30]; neg; sbb; and 0xfffffffe; inc), and F+0x2c is cleared on entry (ML+0x11a46) and set only when a hotspot
+// comes within range (ML+0x11ae1). So from the menu's first frame until the cursor first nears an item, item 1 (Start New Game)
+// is drawn highlighted and a click anywhere (ML+0x11cb1 / ML+0x11cba test only the button word and ebx != -1) starts a new
+// game. Fixed (0): the pass starts with no item (-1); the hotspot search is unchanged.
+int g_defect_title_default_item = 1;
+// mainLoop.titleHotspotRange (P9A, the same report: "near a button (but not over) and it would be detected as a hover"): a
+// labelled item is chosen when distance(x - hx, (y - hy) * 4 - 0x18) < 0xa0 (ML+0x11aaf..ML+0x11ae1) around its text centre,
+// an area about 0x140 px wide, mostly outside the button art (Sandbox Mode lights with the cursor 0x9f px to the right of its
+// text, inside the golf ball). Fixed (0): an item is chosen only inside its button art's box (showTitleScreen's source
+// rectangles showTitleScreen+0x2e4..showTitleScreen+0x3b9, which the menu draws at the item's position F+0x150 / F+0x152); among boxes holding the
+// cursor the original's distance decides. The exit icon (hotspot 5) is mainLoop.titleExitHotspotWide's.
+int g_defect_title_hotspot_range = 1;
 // mainLoop.cameraFollowOffGrid (P6A, 2026-11-03, Mariano's play-test): the camera tile pair gCameraTileX / gCameraTileY is
 // clamped to 0..0x31 only by the key and edge-pan cases of H1 (ML+0xe971..ML+0xea73, ML+0xec6b..ML+0xec89); the writers that
 // copy a golfer's, walker's, ball's or photo's world position >> 10 (P7 ML+0xbf38, H2 ML+0xf17c / ML+0xf994, updateGolfers'
@@ -321,6 +336,8 @@ int TkBase::call(const char *name, const uint32_t *a, int n) {
       if (std::uncaught_exceptions() > 0 && t_stop_path.size() < 12) t_stop_path.push_back(n);
     }
   } path{name};
+  // P9B: a callee that draws one HUD panel opens that panel's pixel layer around the call (gfx.h; inert without the app's capture)
+  GfxLayerScope hud_layer(ctx, g_gfx_hud_capture.load(std::memory_order_relaxed) != 0 ? gfx_layer_of_callee(name) : -1);
   switch (e.kind) {
     case 1:
       // phase 5: an attached graphics backend draws what the drop drew; the frame keeps the drop's result
@@ -1995,6 +2012,14 @@ const DefectDef kDefects[] = {
      "the title menu's exit hotspot is the nearest-point test around the exit icon's top-left corner (about 0x140 x 0x50 px); "
      "fixed: only the icon's own 0x3a x 0x39 rectangle selects it",
      &g_defect_title_exit_hotspot},
+    {"mainLoop.titleDefaultItem1", "P9A",
+     "until the cursor first comes near a title-menu item, each pass starts with item 1 (Start New Game) selected: it is drawn "
+     "highlighted and a click anywhere starts a new game; fixed: the pass starts with no item",
+     &g_defect_title_default_item},
+    {"mainLoop.titleHotspotRange", "P9A",
+     "a labelled title-menu item is chosen within distance 0xa0 of its text centre (about 0x140 px wide, mostly outside its art); "
+     "fixed: only inside the item's button art box",
+     &g_defect_title_hotspot_range},
     {"mainLoop.cameraFollowOffGrid", "P6A",
      "the camera writers that follow a golfer, walker, ball or photo position (and the hole / object offsets) store no grid bound, "
      "so the view leaves the map; fixed: each clamps the camera tile pair to 0..0x31 like H1's key and edge-pan cases",

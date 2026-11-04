@@ -496,6 +496,178 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   draw_text(g, ctx, args, true, "drawPanelBackdrop");
 }
 
+// ---- P9B: the HUD layer capture (gfx.h GfxHudFrame, gfx_body.h Gfx::HudCapture)
+namespace {
+// the root pixels that differ from `ref` as one layer (bounding box, kind 1 = the root's word, or the open layer's blend record
+// where it is still the pixel's word), comparing `now` (the root, or the back buffer for its child-window composition) with `ref`
+bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16_t> &now, int32_t id, bool use_rec,
+              GfxHudLayer &out) {
+  const int32_t w = g.root.w, h = g.root.h;
+  if (ref.size() != now.size() || now.size() != static_cast<size_t>(w) * static_cast<size_t>(h)) return false;
+  int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (int32_t y = 0; y < h; ++y) {
+    const uint16_t *a = ref.data() + static_cast<size_t>(y) * w, *b = now.data() + static_cast<size_t>(y) * w;
+    if (std::memcmp(a, b, static_cast<size_t>(w) * 2) == 0) continue;
+    for (int32_t x = 0; x < w; ++x)
+      if (a[x] != b[x]) {
+        x0 = std::min(x0, x);
+        x1 = std::max(x1, x);
+      }
+    y0 = std::min(y0, y);
+    y1 = y;
+  }
+  if (x1 < 0) return false;
+  out = GfxHudLayer{};
+  out.id = id;
+  out.anchor = gfx_layer_anchor(id);
+  out.x0 = x0;
+  out.y0 = y0;
+  out.x1 = x1 + 1;
+  out.y1 = y1 + 1;
+  const int32_t bw = out.x1 - out.x0;
+  out.px.assign(static_cast<size_t>(bw) * static_cast<size_t>(out.y1 - out.y0), GfxLayerPx{});
+  const bool rec = use_rec && g.hud.rec_gen.size() == now.size();
+  for (int32_t y = out.y0; y < out.y1; ++y)
+    for (int32_t x = out.x0; x < out.x1; ++x) {
+      const size_t i = static_cast<size_t>(y) * w + static_cast<size_t>(x);
+      if (ref[i] == now[i]) continue;
+      GfxLayerPx &p = out.px[static_cast<size_t>(y - out.y0) * bw + static_cast<size_t>(x - out.x0)];
+      p.kind = 1;
+      p.px = now[i];
+      if (rec && g.hud.rec_gen[i] == g.hud.gen && g.hud.rec[i].px == now[i] && g.hud.rec[i].kind >= 2) {
+        p.kind = g.hud.rec[i].kind;
+        p.src = g.hud.rec[i].src;
+        p.k = g.hud.rec[i].k;
+      }
+    }
+  return true;
+}
+void hud_gap(Gfx &g) {  // the root's changes since the last boundary, outside every layer: a centred layer
+  GfxHudLayer l;
+  if (hud_diff(g, g.hud.mark, g.root.px, kGfxLayerCentred, true, l)) g.hud.layers.push_back(std::move(l));
+}
+}  // namespace
+
+// Window::refreshFull: the layers since the last publish, plus the changes since the last layer closed and the back buffer's own
+// composition (child windows) as centred layers; a refreshFull inside an open layer publishes none (a modal screen's frames)
+static void hud_publish(Gfx &g) {
+  Gfx::HudCapture &c = g.hud;
+  if (!c.on) return;
+  GfxHudFrame f;
+  f.serial = ++c.serial;
+  if (c.any && c.depth == 0) {
+    hud_gap(g);
+    GfxHudLayer l;
+    if (hud_diff(g, g.root.px, g.back.px, kGfxLayerCentred, false, l)) c.layers.push_back(std::move(l));
+    f.base = c.base;
+    f.back = g.back.px;
+    f.layers = std::move(c.layers);
+  }
+  if (c.depth > 0) c.aborted = true;
+  c.layers.clear();
+  c.any = false;
+  c.cur = -1;
+  c.published = std::move(f);
+}
+
+}  // namespace gfxb
+
+int8_t gfx_layer_anchor(int32_t id) {
+  switch (id) {
+    case kGfxLayerTitle: case kGfxLayerBottom: return -1;
+    case kGfxLayerMeters: case kGfxLayerPanel: return 1;
+    default: return 0;
+  }
+}
+std::atomic<int> g_gfx_hud_capture{0};
+void gfx_set_hud_capture(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g || g->hud.on == on) return;
+  g->hud = Gfx::HudCapture{};
+  g->hud.on = on;
+  g_gfx_hud_capture.fetch_add(on ? 1 : -1);
+}
+bool gfx_hud_capture(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  return g && g->hud.on;
+}
+bool gfx_hud_frame(Ctx &ctx, GfxHudFrame &out) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.on || g->hud.published.serial == 0) return false;
+  out = g->hud.published;
+  return true;
+}
+const uint16_t *gfx_shade_table(uint8_t id, size_t &n) {
+  if (id == 0) {
+    n = gfxb::shade_lut().size();
+    return gfxb::shade_lut().data();
+  }
+  if (id == 1) {
+    n = gfxh::half_bright_table().size();
+    return gfxh::half_bright_table().data();
+  }
+  n = 0;
+  return nullptr;
+}
+void gfx_layer_begin(Ctx &ctx, int32_t id) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.on) return;
+  Gfx::HudCapture &c = g->hud;
+  if (c.depth++ > 0) return;
+  g->ensure_root(ctx);
+  c.aborted = false;
+  if (!c.any) {
+    c.base = g->root.px;
+    c.mark = g->root.px;
+    c.any = true;
+  } else {
+    gfxb::hud_gap(*g);
+    c.mark = g->root.px;
+  }
+  c.cur = id;
+  ++c.gen;  // the layer's blend records
+}
+void gfx_layer_end(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.on || g->hud.depth == 0) return;
+  Gfx::HudCapture &c = g->hud;
+  if (--c.depth > 0) return;
+  if (c.any && !c.aborted && c.cur >= 0) {
+    GfxHudLayer l;
+    if (gfxb::hud_diff(*g, c.mark, g->root.px, c.cur, true, l)) c.layers.push_back(std::move(l));
+    c.mark = g->root.px;
+    ++c.gen;  // the centred gap's blend records
+  }
+  c.aborted = false;
+  c.cur = -1;
+}
+// the frame-code callees that draw one HUD panel (tick.cpp opens the layer around the call; the inline passes of P6 open theirs in
+// tick_frame.inc)
+int32_t gfx_layer_of_callee(const char *n) {
+  if (!n) return -1;
+  switch (n[0]) {
+    case 's':
+      if (!std::strcmp(n, "showMainRadialMenu") || !std::strcmp(n, "showInfoCursorPanel")) return kGfxLayerBottom;
+      // the tournament leader board is drawn in the title strip's place (its frame at (0, 8)); its scorecard mode dims the whole
+      // frame, which leaves no world layer, so no layer is composed there
+      if (!std::strcmp(n, "showTournamentResults")) return kGfxLayerTitle;
+      break;
+    case 'd':
+      if (!std::strcmp(n, "drawBuildingPanel") || !std::strcmp(n, "drawTerrainToolbar") || !std::strcmp(n, "drawAmenitiesPanel"))
+        return kGfxLayerBottom;
+      // drawGolferInfoPanel is not one: its popup is drawn at the top of the frame, over the view (it stays centred)
+      if (!std::strcmp(n, "drawEmployeeViewPanel") || !std::strcmp(n, "drawEmployeeDetailPanel") ||
+          !std::strcmp(n, "drawGolferActionPanel"))
+        return kGfxLayerPanel;
+      break;
+    default:
+      break;
+  }
+  return -1;
+}
+
+namespace gfxb {
+
 // Window::refreshFull(this, 0): redrawDrawList -> Window::blitToTarget copies the root window's surface into the screen
 // image that Display::present shows (the window tree's other members and the tooltip are not modelled: none is drawn in
 // the title menu or the location screen)
@@ -508,6 +680,7 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (SG_NEGCTL(g_negctl_gfx) == 4) return;
   g.back.px = g.root.px;
   gfxe::compose(g, ctx);   // roadmap S3.19: Window::blitToTarget of every shown child window over the root's copy
+  hud_publish(g);          // P9B: the frame's HUD layers (inert with capture off)
   gfxh::after_present(g, ctx);
   g.back_terrain = g.root_terrain;
   std::pair<GfxRefreshHook, void *> h{nullptr, nullptr};
@@ -572,6 +745,7 @@ static void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
         w = sw;
         continue;
       }
+      const uint16_t before = w;  // P9B: the blend's destination (gfx_body.h note_blend)
       auto ch = [&](uint32_t dv, uint32_t sv) {
         return static_cast<uint16_t>(static_cast<uint16_t>(((dv * k) >> 8) + sv) >> 3);
       };
@@ -579,6 +753,7 @@ static void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       const uint16_t gg = static_cast<uint16_t>(ch((w >> 2) & 0xf8u, (sw >> 2) & 0xf8u) << 5);
       const uint16_t bb = ch((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u);
       w = static_cast<uint16_t>(rr | gg | bb);
+      if (g.hud.any) g.note_blend(static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx), before, w, 2, sw, k);
     }
 }
 
@@ -682,7 +857,12 @@ void draw_g16_lut(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, 
           g.unsup("blitPanel: a destination word above the RGB555 range");
           continue;
         }
+        const uint16_t before = w;
         w = lut[w];
+        if (g.hud.any && &d == &g.root) {  // P9B: a shade over the layer's background (gfx_body.h note_blend)
+          const uint8_t id = lut == shade_lut().data() ? 0 : lut == gfxh::half_bright_table().data() ? 1 : 0xff;
+          if (id != 0xff) g.note_blend(static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx), before, w, 3, 0, id);
+        }
       } else {
         w = s.pal[c];
       }

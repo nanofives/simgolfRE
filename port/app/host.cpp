@@ -1,6 +1,8 @@
 // The live session of the Windows host (host.h, roadmap S7.6).
 #include "host.h"
 
+#include <cstdlib>  // P9B: getenv (SG_P9B_LAYER_LOG)
+
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -442,6 +444,39 @@ void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
     in_game_ = true;
 }
 
+bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi) {
+  const portsim::LiveTerrainWorld *w = live.world();
+  if (!w) return false;
+  const bool terrain = portsim::gfx_back_terrain(ctx);
+  // P9B: the frame's HUD layers, when they were published with exactly this back buffer
+  portsim::GfxHudFrame f;
+  const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
+  if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask)) return false;
+  wi.pw = w->pw;
+  wi.ph = w->ph;
+  wi.fw = w->fw;
+  wi.ox = w->ox;
+  if (use) {
+    // development: SG_P9B_LAYER_LOG=<file> appends one line per present with layers: serial, then id:anchor:box:pixels per layer
+    static std::FILE *lf = std::getenv("SG_P9B_LAYER_LOG") ? std::fopen(std::getenv("SG_P9B_LAYER_LOG"), "a") : nullptr;
+    if (lf) {
+      std::fprintf(lf, "%llu", static_cast<unsigned long long>(f.serial));
+      for (const portsim::GfxHudLayer &l : f.layers) {
+        size_t n = 0, b = 0;
+        for (const portsim::GfxLayerPx &q : l.px) {
+          n += q.kind ? 1 : 0;
+          b += q.kind >= 2 ? 1 : 0;
+        }
+        std::fprintf(lf, " %d:%d:%d,%d-%d,%d:%zu/%zu", l.id, l.anchor, l.x0, l.y0, l.x1, l.y1, n, b);
+      }
+      std::fputc('\n', lf);
+      std::fflush(lf);
+    }
+    wi.hud = std::move(f);
+  }
+  return true;
+}
+
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
   std::lock_guard<std::mutex> lk(frame_mu_);
   if (!frame_waiting_) return false;
@@ -512,16 +547,11 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   const uint32_t index = static_cast<uint32_t>(presents_.size());
   presents_.push_back({index, mark, frame_, records_, kind, frame_hash(px)});
   WorldImage wi;  // P8B: the world layer under this frame (none without HostOptions::world or before the first terrain pass)
-  if (opt_.world && terrain_log && terrain_log->live) {
-    if (const portsim::LiveTerrainWorld *w = terrain_log->live->world())
-      if (terrain_log->live->world_frame(px, portsim::gfx_back_terrain(ctx), wi.px, wi.mask)) {
-        wi.pw = w->pw;
-        wi.ph = w->ph;
-        wi.fw = w->fw;
-        wi.ox = w->ox;
-        ++presents_world_;
-      }
-  }
+  if (opt_.world && terrain_log && terrain_log->live)
+    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi)) {
+      ++presents_world_;
+      if (!wi.hud.empty()) ++presents_layered_;  // P9B
+    }
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
     frame_world_ = std::move(wi);
@@ -997,7 +1027,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
   s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + "}";  // P7
   s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
-       ",\"presents_world\":" + std::to_string(presents_world_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
+       ",\"presents_world\":" + std::to_string(presents_world_) + ",\"presents_layered\":" + std::to_string(presents_layered_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
        ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
        ",\"view_writes\":" + std::to_string(view_writes_) + ",\"world_resizes\":" + std::to_string(world_resizes_) +
        ",\"view_width\":" + std::to_string(applied_w_) + ",\"hud_remapped\":" +

@@ -1,0 +1,33 @@
+file	scenario	present_or_capture	client	before	after	shows
+live_1280x720_hawaii_hover_buildings_pair.png	hawaii sandbox (P9B_drive.py)	hover_buildings	1280x720	../P9B_live/hover_buildings_1280x720_layersoff.png	../P9B_live/hover_buildings_1280x720_layerson.png	item 8: radial Buildings button hovered
+live_1280x720_hawaii_ingame_pair.png	hawaii sandbox (P9B_drive.py)	ingame	1280x720	../P9B_live/ingame_1280x720_layersoff.png	../P9B_live/ingame_1280x720_layerson.png	item 7: translucent title / meter boxes
+live_1280x720_hawaii_tip_bottom_right_pair.png	hawaii sandbox (P9B_drive.py)	tip_bottom_right	1280x720	../P9B_live/tip_bottom_right_1280x720_layersoff.png	../P9B_live/tip_bottom_right_1280x720_layerson.png	fb_4 / item 8: the Palm tree tip
+live_1280x720_hawaii_tip_top_7_pair.png	hawaii sandbox (P9B_drive.py)	tip_top_7	1280x720	../P9B_live/tip_top_7_1280x720_layersoff.png	../P9B_live/tip_top_7_1280x720_layerson.png	fb_4: the Tropical bush tip at the palette right end (tropical theme)
+live_1280x720_hawaii_tip_top_right_pair.png	hawaii sandbox (P9B_drive.py)	tip_top_right	1280x720	../P9B_live/tip_top_right_1280x720_layersoff.png	../P9B_live/tip_top_right_1280x720_layerson.png	fb_3: the hovered bush icon (no slot there)
+live_1280x720_hawaii_welcome_pair.png	hawaii sandbox (P9B_drive.py)	welcome	1280x720	../P9B_live/welcome_1280x720_layersoff.png	../P9B_live/welcome_1280x720_layerson.png	Hawaii start (no message on screen at the capture)
+live_1920x1080_hawaii_hover_buildings_pair.png	hawaii sandbox (P9B_drive.py)	hover_buildings	1920x1080	../P9B_live/hover_buildings_1920x1080_layersoff.png	../P9B_live/hover_buildings_1920x1080_layerson.png	item 8: radial Buildings button hovered
+live_1920x1080_hawaii_ingame_pair.png	hawaii sandbox (P9B_drive.py)	ingame	1920x1080	../P9B_live/ingame_1920x1080_layersoff.png	../P9B_live/ingame_1920x1080_layerson.png	item 7: translucent title / meter boxes
+live_1920x1080_hawaii_tip_bottom_right_pair.png	hawaii sandbox (P9B_drive.py)	tip_bottom_right	1920x1080	../P9B_live/tip_bottom_right_1920x1080_layersoff.png	../P9B_live/tip_bottom_right_1920x1080_layerson.png	fb_4 / item 8: the Palm tree tip
+live_1920x1080_hawaii_tip_top_7_pair.png	hawaii sandbox (P9B_drive.py)	tip_top_7	1920x1080	../P9B_live/tip_top_7_1920x1080_layersoff.png	../P9B_live/tip_top_7_1920x1080_layerson.png	fb_4: the Tropical bush tip at the palette right end (tropical theme)
+live_1920x1080_hawaii_tip_top_right_pair.png	hawaii sandbox (P9B_drive.py)	tip_top_right	1920x1080	../P9B_live/tip_top_right_1920x1080_layersoff.png	../P9B_live/tip_top_right_1920x1080_layerson.png	fb_3: the hovered bush icon (no slot there)
+live_1920x1080_hawaii_welcome_pair.png	hawaii sandbox (P9B_drive.py)	welcome	1920x1080	../P9B_live/welcome_1920x1080_layersoff.png	../P9B_live/welcome_1920x1080_layerson.png	Hawaii start (no message on screen at the capture)
+r1280x720_championship_300_pair.png	championship	300	1280x720	r1280x720_championship_300_before.png	r1280x720_championship_300_after.png	right-edge golfer action panel, leader board at the left
+r1280x720_championship_690_pair.png	championship	690	1280x720	r1280x720_championship_690_before.png	r1280x720_championship_690_after.png	right-edge shot panel with its texts
+r1280x720_championship_720_pair.png	championship	720	1280x720	r1280x720_championship_720_before.png	r1280x720_championship_720_after.png	portrait message in a championship
+r1280x720_cov_b_career_1200_pair.png	cov_b_career	1200	1280x720	r1280x720_cov_b_career_1200_before.png	r1280x720_cov_b_career_1200_after.png	fb_2: a portrait message over the title and meters rectangles
+r1280x720_cov_b_career_150_pair.png	cov_b_career	150	1280x720	r1280x720_cov_b_career_150_before.png	r1280x720_cov_b_career_150_after.png	item 6: golfer thought / name labels beside the open palette
+r1280x720_cov_b_career_225_pair.png	cov_b_career	225	1280x720	r1280x720_cov_b_career_225_before.png	r1280x720_cov_b_career_225_after.png	item 6: palette open, labels
+r1280x720_cov_b_career_75_pair.png	cov_b_career	75	1280x720	r1280x720_cov_b_career_75_before.png	r1280x720_cov_b_career_75_after.png	fb_2: the welcome window over the meters rectangle
+r1280x720_cov_b_career_950_pair.png	cov_b_career	950	1280x720	r1280x720_cov_b_career_950_before.png	r1280x720_cov_b_career_950_after.png	a portrait message at the top
+r1280x720_cov_r_s2_screens_334_pair.png	cov_r_s2_screens	334	1280x720	r1280x720_cov_r_s2_screens_334_before.png	r1280x720_cov_r_s2_screens_334_after.png	item 8: radial hover label, golfer name label
+r1280x720_cov_r_s2_screens_336_pair.png	cov_r_s2_screens	336	1280x720	r1280x720_cov_r_s2_screens_336_before.png	r1280x720_cov_r_s2_screens_336_after.png	item 8: radial hover label (radial_hover checkpoint frame)
+r1920x1080_championship_300_pair.png	championship	300	1920x1080	r1920x1080_championship_300_before.png	r1920x1080_championship_300_after.png	right-edge golfer action panel, leader board at the left
+r1920x1080_championship_690_pair.png	championship	690	1920x1080	r1920x1080_championship_690_before.png	r1920x1080_championship_690_after.png	right-edge shot panel with its texts
+r1920x1080_championship_720_pair.png	championship	720	1920x1080	r1920x1080_championship_720_before.png	r1920x1080_championship_720_after.png	portrait message in a championship
+r1920x1080_cov_b_career_1200_pair.png	cov_b_career	1200	1920x1080	r1920x1080_cov_b_career_1200_before.png	r1920x1080_cov_b_career_1200_after.png	fb_2: a portrait message over the title and meters rectangles
+r1920x1080_cov_b_career_150_pair.png	cov_b_career	150	1920x1080	r1920x1080_cov_b_career_150_before.png	r1920x1080_cov_b_career_150_after.png	item 6: golfer thought / name labels beside the open palette
+r1920x1080_cov_b_career_225_pair.png	cov_b_career	225	1920x1080	r1920x1080_cov_b_career_225_before.png	r1920x1080_cov_b_career_225_after.png	item 6: palette open, labels
+r1920x1080_cov_b_career_75_pair.png	cov_b_career	75	1920x1080	r1920x1080_cov_b_career_75_before.png	r1920x1080_cov_b_career_75_after.png	fb_2: the welcome window over the meters rectangle
+r1920x1080_cov_b_career_950_pair.png	cov_b_career	950	1920x1080	r1920x1080_cov_b_career_950_before.png	r1920x1080_cov_b_career_950_after.png	a portrait message at the top
+r1920x1080_cov_r_s2_screens_334_pair.png	cov_r_s2_screens	334	1920x1080	r1920x1080_cov_r_s2_screens_334_before.png	r1920x1080_cov_r_s2_screens_334_after.png	item 8: radial hover label, golfer name label
+r1920x1080_cov_r_s2_screens_336_pair.png	cov_r_s2_screens	336	1920x1080	r1920x1080_cov_r_s2_screens_336_before.png	r1920x1080_cov_r_s2_screens_336_after.png	item 8: radial hover label (radial_hover checkpoint frame)

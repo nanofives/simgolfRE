@@ -1063,6 +1063,10 @@ int32_t course_action_menu(Ctx &ctx) {
     // host may run the passes with no input (the nearest site's plate drawn on the next pass, the pin blink, the tips)
     if (InputSource *s2 = input_source(ctx)) s2->timed_pass(50);
     cm::pump_messages(ctx, PumpKind::Blocking, "courseActionMenu");
+    if (cm::esc_pressed(ctx, g_defect_esc_course_action)) {  // P9A item 2: Esc = the Back button (hot 3 below)
+      result = -1;
+      break;
+    }
     const int32_t btn = gs.g_rootInput[kRootButton];
     if (btn == 0) continue;
     if (hot == 0) {

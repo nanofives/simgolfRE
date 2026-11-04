@@ -155,6 +155,7 @@ struct HostOptions {
   bool wide = false;
   int world_mode = 0;
   const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
+  bool hud_layers = false;  // P9B: presents carry the frame's HUD pixel layers (gfx.h GfxHudFrame; with `world` and `remap`)
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -313,6 +314,7 @@ class LiveSession : public portsim::LiveHost {
   void update_view_target();   // under mu_
   void apply_view(portsim::Ctx &ctx);
   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
+  uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers
   bool frame_waiting_ = false;
   std::vector<Present> presents_;
   uint32_t last_dump_ms_ = 0;
@@ -398,6 +400,10 @@ class LiveTracePresenter : public portsim::LiveHost {
   std::vector<Present> presents_;
   bool view_written_ = false;
 };
+
+// P9B: the world image of a present (P8B's world layer plus, with `layered`, the frame's HUD pixel layers: the world mask is then
+// taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
+bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi);
 
 }  // namespace portapp
 

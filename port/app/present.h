@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "input_map.h"
+#include "portsim/sim/gfx.h"  // P9B: GfxHudFrame (the frame's HUD pixel layers)
 
 namespace portapp {
 
@@ -28,6 +29,8 @@ enum class PresentDefect : uint8_t {
   ByteSwap = 2,   // each RGB555 word's two bytes exchanged before conversion
   WorldMaskIgnored = 3,  // P8B: the world layer shows over the whole content rectangle (the frame's mask not read)
   HudUnmoved = 4,        // G32: the HUD compositor off (panels stay centred, no remap)
+  LayerBlendOpaque = 5,  // P9B: a layer's blended pixels drawn as the words they had in the frame (no re-blend at the new place)
+  LayerRectMove = 6,     // P9B: the layers ignored, P8B's rectangle compositor used although the frame has layers
 };
 
 // The content rectangle for a client area of cw x ch.
@@ -54,8 +57,15 @@ enum class ScaleMode : uint8_t { Nearest = 0, Smooth = 1, Auto = 2 };
 // colour (the mean of its outer 4 logical columns, per row) blurred vertically by a radius that grows with the distance from
 // the frame (d / 2 client pixels, at most 48 logical rows), Clamp = the frame's outermost column repeated, no blur.
 // Rows of a letterbox (a client taller than 4:3) stay black.
+// P9A item 5 (log/roadmap/P9/P9A_notes.md; the play-test: a shape cut by the frame's edge, the Jamaica plate's pin shadow, was
+// carried across the whole band as a streak): Edge = Soft's edge colour (the per-row mean of the outer 4 logical columns,
+// blurred vertically by d / 2) only over the band's first 24 logical columns, faded (smoothstep) into the screen's BACKGROUND:
+// per row the per-channel median of the outer 64 logical columns, blurred vertically over +-150 logical rows. A shape narrower
+// than half of those columns (a pin, a shadow, a label cut by the edge) is not in the background, so nothing is carried farther
+// than the fade. Mirror = the frame's outer columns mirrored into the band, blurred vertically by d / 3 and darkened towards the
+// band's outer edge (to 40 %). The default since P9A is Edge (--wide-fill edge; SG_APP_P9=off gives P7's Soft).
 enum class BandFill : uint8_t { Black = 0, Extend = 1 };
-enum class WideFill : uint8_t { Off = 0, Soft = 1, Clamp = 2 };
+enum class WideFill : uint8_t { Off = 0, Soft = 1, Clamp = 2, Edge = 3, Mirror = 4 };
 
 // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): the world layer of a frame (portsim::LiveTerrain::world_frame). px holds
 // pw x ph RGB555 words (rows top-down); the 800 x 600 frame covers world columns ox .. ox + fw - 1 (fw = ph * 800 / 600) and every
@@ -79,9 +89,18 @@ constexpr HudPanel kHudPanels[] = {
 
 // G32: the client-to-client point remap of the moved panels, shared by the window thread (Presenter::set_frame_world updates it;
 // AppWindow remaps mouse messages) and the sim thread (LiveSession's cursor answers)
+// P9B: with the frame's HUD layers the remap goes by layer coverage: the topmost layer that has a pixel under the client point
+// (each layer at its own place: a moved panel's layer at its anchor, a centred layer at the frame's) decides; a moved layer maps
+// the point back to the 800-space place its pixel came from, a centred layer leaves it as it is.
+struct RemapLayer {
+  int8_t anchor = 0;
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  std::vector<uint8_t> cover;  // (x1 - x0) * (y1 - y0): 1 where the layer drew
+};
 class PanelRemap {
  public:
   void set(bool on, const Viewport &vp, int32_t cw, const std::vector<uint8_t> &mask);
+  void set_layers(bool on, const Viewport &vp, int32_t cw, std::vector<RemapLayer> &&layers);  // P9B
   void clear();
   // the client point the game sees for client point p: p - dx when p lies over a moved panel's 2D pixel, else p
   void map(int32_t &x, int32_t &y) const;
@@ -94,12 +113,17 @@ class PanelRemap {
   int32_t cw_ = 0;
   std::vector<uint8_t> mask_;
   mutable uint64_t remapped_ = 0;
+  bool layered_ = false;               // P9B
+  std::vector<RemapLayer> layers_;     // P9B, in draw order
 };
 
 struct WorldImage {
   std::vector<uint16_t> px;
   std::vector<uint8_t> mask;
   int32_t pw = 0, ph = 0, fw = 0, ox = 0;
+  // P9B: the frame's HUD pixel layers (empty = none: P8B's path). When set, `mask` was taken over hud.base (host.h
+  // make_world_image) and the presenter shows hud.base, the world where the mask says, then every layer in draw order.
+  portsim::GfxHudFrame hud;
   bool empty() const { return px.empty(); }
 };
 
@@ -143,10 +167,13 @@ class Presenter {
   WideFill wide_ = WideFill::Off;  // P7
   BandFill band_ = BandFill::Black;
   void fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P7
+  void fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9A item 5
   WorldImage world_;                                                                                  // P8B
   bool hud_anchor_ = false;                                                                           // G32
   PanelRemap *remap_ = nullptr;                                                                       // G32
   void compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P8B
+  bool layered() const;                                                                                // P9B
+  void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9B
   mutable std::vector<uint32_t> scratch_;
 };
 

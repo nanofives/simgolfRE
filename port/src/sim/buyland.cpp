@@ -331,6 +331,7 @@ struct BuyLand {
   }
 
   int32_t run() {
+    cm::drop_stale_esc(ctx, g_defect_esc_buy_land);  // P9A item 2
     bool redraw = true;
     int32_t sel = -1, hit = 0;
     InputSource *src = input_source(ctx);
@@ -352,6 +353,7 @@ struct BuyLand {
           break;
         }
         cm::pump_messages(ctx, PumpKind::Blocking, "showBuyLandScreen");
+        if (cm::esc_pressed(ctx, g_defect_esc_buy_land)) return 0;  // P9A item 2: Esc = Done (the s == -2 return below)
         if (gs.g_rootInput[kButton] != 0) break;
       }
       if (changed) {

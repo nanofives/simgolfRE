@@ -1,0 +1,18 @@
+# P9B changed files (tree port/build/P9B, base 2fd3553c); counts = changed lines (diff --strip-trailing-cr against the base)
+port/include/portsim/sim/gfx.h        71   HUD layer API: GfxLayerId, GfxLayerPx, GfxHudLayer, GfxHudFrame, capture on/off, layer begin/end, GfxLayerScope
+port/src/sim/gfx_body.h               35   Gfx::HudCapture (capture state, blend records), Gfx::note_blend
+port/src/sim/gfx.cpp                 180   blend records in Surface_stretchBlit / drawG16, hud_diff / hud_gap / hud_publish (Window::refreshFull), API bodies, gfx_layer_of_callee
+port/src/sim/tick.cpp                  3   TkBase::call opens the callee's layer (GfxLayerScope); <optional>
+port/src/sim/tick_frame.inc            9   P6_Hud: golfer strip = bottom band, title passes = title layer; P6_StatusBar = meters layer; P7 shot texts ML+0xc0b4..ML+0xc54d = panel layer
+port/app/present.h                    19   WorldImage::hud, RemapLayer, PanelRemap::set_layers, PresentDefect LayerBlendOpaque / LayerRectMove, compose_layers
+port/app/present.cpp                 152   render from the layers' base, compose_layers, PanelRemap layered map
+port/app/host.h                        6   HostOptions::hud_layers, make_world_image, presents_layered_
+port/app/host.cpp                     52   make_world_image (world mask over the base, layers attached), SG_P9B_LAYER_LOG, presents_layered in session.json
+port/app/main.cpp                    177   --hud-layers, capture on in live run / live-trace, world-shots through make_world_image, --selftest-p9b + controls
+port/app/window.cpp                    1   AppWindow::input: e.lp = the remapped lp (the --cursor message answers read e.lp) [P9A owns window.*: one line, see notes 1]
+
+# deliverables (log/roadmap/P9/)
+P9B_notes.md P9B_files.txt P9B_final.sh P9B_final.out P9B_build_x64.log P9B_build_Win32.log P9B_gates.sh P9B_gates.log P9B_selftest*.log P9B_segs_x64.tsv
+P9B_segs_x64.log P9B_framegate.tsv P9B_framegate.log P9B_simeq.sh P9B_simeq.tsv P9B_t_*.log P9B_drive.py P9B_drive_*.log P9B_lt.py
+P9B_shots.py P9B_sheet.py P9B_shots/ (index.tsv, *_pair.png) P9B_live/ (live captures, recordings without trace.trace)
+P9B_runs/ (working runs; not needed for review)

@@ -272,6 +272,7 @@ int32_t char_editor_zone(Ctx &ctx, int32_t x, int32_t y) {
 // offset; the offset is then clamped to the row's count g_loopCounter59b76c[row] - 10 and to 0, and a new pass starts.
 int32_t pick_char_editor(Ctx &ctx, int32_t row) {
   GameState &gs = ctx.gs();
+  cm::drop_stale_esc(ctx, g_defect_esc_char_picker);  // P9A item 2
   const Memory &m = ctx.mem;
   const int neg = SG_NEGCTL(g_negctl_pick);
   Scratch xy(ctx, 8);
@@ -281,6 +282,7 @@ int32_t pick_char_editor(Ctx &ctx, int32_t row) {
     const int32_t x = m.load<int32_t>(xy.va), y = m.load<int32_t>(xy.va + 4);
     const int32_t zone = char_editor_zone(ctx, x, y);
     pump_pass(ctx, "pickCharEditor");
+    if (cm::esc_pressed(ctx, g_defect_esc_char_picker)) return -1;  // P9A item 2: Esc = the picker's cancel
     const int32_t button = gs.g_rootInput[kButton];
     if (button == 0) continue;
     if (button == 2) return neg == 1 ? 0 : -1;
@@ -659,6 +661,7 @@ struct EdDraw {
 // with a type, the pro record of its name index gets the looks.
 int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
   GameState &gs = ctx.gs();
+  cm::drop_stale_esc(ctx, g_defect_esc_char_editor);  // P9A item 2
   const Memory &m = ctx.mem;
   const int neg = SG_NEGCTL(g_negctl_editor);
   const uint32_t tb = GS(g_textBuffer);
@@ -915,6 +918,10 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
     d.gx("Window::refreshFull", {d.win, 0});
     pump_pass(ctx, "showCharacterEditor");
     int32_t btn = gs.g_rootInput[kButton];
+    if (cm::esc_pressed(ctx, g_defect_esc_char_editor)) {  // P9A item 2: Esc = a press on Exit (case 19)
+      ctl = 19;
+      btn = 1;
+    }
     if (btn == 0) continue;
 
     // ---- a press

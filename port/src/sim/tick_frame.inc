@@ -5773,6 +5773,8 @@ void P6_Hud(u32 F) {
     tc("setDrawTarget", root, GS(g_font51b360), 0, 0, 0);  // ML+0x9734 setDrawTarget
     if (GU32(GS(g_flags)) & 0x200000) return;    // ML+0x9739 / ML+0x9743 -> ML+0x9ef5
 
+    std::optional<GfxLayerScope> hud_layer;     // P9B: the golfer strip is a pixel layer of the bottom band (gfx.h; inert
+    hud_layer.emplace(ctx, kGfxLayerBottom);    // without the app's capture)
     root = Root();                              // ML+0x9749
     int ebp = 0xcc;                             // ML+0x975a
     tc("setDrawTarget", root, GS(g_fontRef_519fd8), 0, 0, 0);  // ML+0x975f setDrawTarget
@@ -5827,6 +5829,8 @@ void P6_Hud(u32 F) {
     } while (edi < 0x98);                       // ML+0x9919 / ML+0x9923
 
     // ML+0x9929: title strip, frame and the course-type image
+    hud_layer.reset();                          // P9B: the title strip, course title, date and counts rows: the title layer
+    hud_layer.emplace(ctx, kGfxLayerTitle);
     {
         int v = G32(GS(g_halfBrightLut));                // ML+0x9929
         tc("Surface_drawScaled2", GS(g_sprites520590), Root(), 0x30, 5, v, 1, 1, 1, 0);   // ML+0x9947 Surface_drawScaled2
@@ -5915,6 +5919,7 @@ void P6_Hud(u32 F) {
 // holding f_strpool_4c615c+0x50 + appendNumber([g_ui_56d1a8+0x8]) (not drawn in this range). View_toLocal into F+0xb8 / F+0xb0,
 // capsLockOff, display slot +0x9c.
 void P6_StatusBar(u32 F) {
+    GfxLayerScope meters_layer(ctx, kGfxLayerMeters);   // P9B: the three status boxes are the meters layer (gfx.h)
     tc("setDrawTarget", Root(), GS(g_font51b360), 0, 0, 0);   // ML+0x9f05 setDrawTarget (ebp = 0 at ML+0x9efb)
     {
         int v = G32(GS(g_halfBrightLut));                // ML+0x9f0a
@@ -6854,6 +6859,9 @@ L41b44a:
         cc("appendClubName", power);                            // ML+0xc09b appendClubName -> kBuf
     }
     // === flag / club label text ===
+    // P9B: the shot panel's texts (club, distance, lie, %, the club-stat rows) are drawn here, in the golfer action panel's place:
+    // a pixel layer of that panel (gfx.h; inert without the app's capture; no exit between here and ML+0xc54d)
+    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) gfx_layer_begin(ctx, kGfxLayerPanel);
     tc("setDrawTarget", Root(), GS(g_font51b360), 0, 0, 0);            // ML+0xc0b4 setDrawTarget
     cc("drawCenteredText", GS(g_textBuffer), 0x196, 0x22c, 0x80000018);   // ML+0xc0cd drawCenteredText (club name)
     StrCpy(kBuf, (GS(f_strpool_4c60c8) + 100));                             // ML+0xc0d2..ML+0xc101
@@ -6951,6 +6959,7 @@ L41baf4:
     FD(0x20) = FD(0x20) + 4;                            // ML+0xc534/ML+0xc549
     FD(0xc) = FD(0xc) + 1;                              // ML+0xc53c/ML+0xc545
     if (FD(0x20) < (GS(f_ptrtab_4c2c3c) + 40)) goto L41b8d7;              // ML+0xc540/ML+0xc54d (signed)
+    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) gfx_layer_end(ctx);   // P9B
 
     // === swing-arc box: 6 line segments around the drag, with foldRange/absDiff fixed-point ===
     { int x0 = FD(0x5c), y0 = FD(0x54); cc("setLinePoint", x0, y0); FD(0x20) = x0; FD(0x10) = y0; }  // ML+0xc553..ML+0xc565 setLinePoint

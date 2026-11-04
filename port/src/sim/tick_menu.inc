@@ -102,6 +102,7 @@ hover_loop:  // ML+0x11a65
 
     // nearest menu hotspot over the 6 hotspots (ML+0x11a95..ML+0x11af0)
     ebx = (FD(0x2C) != 0) ? -1 : 1;  //                               ML+0x11a95..ML+0x11aad
+    if (!SG_DEFECT(g_defect_title_default_item)) ebx = -1;  // P9A fix (mainLoop.titleDefaultItem1 = 0): no item until hovered
     {
         int bestDist = 0xA0;         // ebp
         for (int esi = 0; esi < 6; esi++) {                        // ML+0x11aaf / ML+0x11aed
@@ -110,6 +111,15 @@ hover_loop:  // ML+0x11a65
             int d = cc("distance",
                        FD(0x1E4) - (int)FW(0xF4 + esi * 4),
                        (FD(0x1D8) - (int)FW(0xF6 + esi * 4)) * 4 - 0x18);
+            if (esi < 5 && !SG_DEFECT(g_defect_title_hotspot_range)) {
+                // P9A fix (mainLoop.titleHotspotRange = 0): a labelled item only inside its button art's box (showTitleScreen's
+                // source rectangle showTitleScreen+0x2e4..showTitleScreen+0x3b9, drawn at the item's own position F+0x150 / F+0x152); among boxes
+                // holding the cursor the original's distance still decides (the boxes of items 3 and 4 overlap by 13 x 23 px)
+                static const short kArtW[5] = {0x144, 0x16B, 0x10F, 0x120, 0x11F}, kArtH[5] = {0x79, 0x8D, 0x6F, 0x73, 0x73};
+                const int bx = FD(0x1E4) - (int)FW(0x150 + esi * 4), by = FD(0x1D8) - (int)FW(0x152 + esi * 4);
+                const bool in = bx >= 0 && bx < kArtW[esi] && by >= 0 && by < kArtH[esi];
+                d = in ? (d < bestDist ? d : bestDist - 1) : bestDist;
+            }
             if (esi == 5 && !SG_DEFECT(g_defect_title_exit_hotspot)) {
                 // P5A fix (mainLoop.titleExitHotspotWide = 0): the exit icon's own rectangle (its point is the icon's corner)
                 const int px = FD(0x1E4) - (int)FW(0xF4 + esi * 4), py = FD(0x1D8) - (int)FW(0xF6 + esi * 4);

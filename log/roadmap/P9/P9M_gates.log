@@ -1,0 +1,25 @@
+build_x64 rc=0
+build_Win32 rc=0
+selftest x64 rc=0 selftest 37 passed 0 failed
+selftest-p5b x64 rc=0 selftest 6 passed 0 failed
+selftest-p7 x64 rc=0 selftest 9 passed 0 failed
+selftest-p8b x64 rc=0 selftest 11 passed 0 failed
+selftest-p9a x64 rc=0 selftest 5 passed 0 failed
+selftest-p9b x64 rc=0 selftest 10 passed 0 failed
+selftest Win32 rc=0 selftest 37 passed 0 failed
+selftest-p5b Win32 rc=0 selftest 6 passed 0 failed
+selftest-p7 Win32 rc=0 selftest 9 passed 0 failed
+selftest-p8b Win32 rc=0 selftest 11 passed 0 failed
+selftest-p9a Win32 rc=0 selftest 5 passed 0 failed
+selftest-p9b Win32 rc=0 selftest 10 passed 0 failed
+segments rc=0
+compare rc=0 205 rows in both, 0 differ 
+[test_static] 6 passed in 1.71s
+[test_profiles] 21 passed in 5.92s
+[test_app_shell] 18 passed in 179.47s (0:02:59)
+[test_app_input] 16 passed in 34.54s
+[test_app_replay] 14 passed in 14.41s
+[test_app_ingame] 14 passed in 501.88s (0:08:21)
+[test_app_present] 3 passed, 4 deselected in 140.03s (0:02:20)
+[test_app_live] 13 passed in 256.60s (0:04:16)
+done

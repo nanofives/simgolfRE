@@ -14,6 +14,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <vector>
 
 #include "portsim/registry.h"
 
@@ -53,6 +54,76 @@ bool gfx_back_terrain(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
 }
+
+// ------------------------------------------------------------------------------------------------ P9B: HUD layers
+// The layered 2D compositor (log/roadmap/P9/P9B_notes.md). With capture on (gfx_set_hud_capture, set only by the app's host), the
+// backend records, between two Window::refreshFull bodies, which drawing calls belong to which HUD panel: the frame code opens a
+// layer around a panel's drawing (GfxLayerScope; tick.cpp around the panel functions it calls by name, tick_frame.inc around the
+// inline title / meters / golfer-strip passes), and every root-surface pixel the calls inside it change becomes a pixel of that
+// layer, with the blend the pixel was drawn with when the backend's blend primitives drew it over a pixel the layer had not drawn
+// (Surface_stretchBlit's mask blend, Sprite::drawG's shade byte). Pixels changed outside every layer form centred layers in draw
+// order. Window::refreshFull publishes the frame's layers with the root as it was before the first layer opened (the base) and a
+// copy of the back buffer they compose to. Nothing is written into the GameState, the back buffer or the root surface: the 800 x 600
+// frame every gate sees is the same with capture on or off.
+enum GfxLayerId : int32_t {
+  kGfxLayerCentred = 0,  // drawn outside every panel (labels, the message ticker, previews, dialogs): stays centred
+  kGfxLayerTitle = 1,    // P6's title strip: logo, course name, difficulty, date, counts row (left edge)
+  kGfxLayerMeters = 2,   // P6's status boxes: money, fun, skill (right edge)
+  kGfxLayerBottom = 3,   // the golfer strip, the radial menu, the palette and building panels (left edge)
+  kGfxLayerPanel = 4,    // the employee view / detail and golfer action panels drawn in the palette's place (right edge)
+  kGfxLayerCount = 5,
+};
+// one layer pixel: kind 0 not drawn by the layer (transparent), 1 opaque word `px`, 2 the mask blend of jgld blitPair1 with source
+// word `src` and weight `k` (per 5-bit channel c: ((dst8 * k) >> 8) + src8) >> 3 with x8 = c << 3), 3 the destination through the
+// shade table `k` (gfx_shade_table)
+struct GfxLayerPx {
+  uint16_t px = 0, src = 0;
+  uint8_t kind = 0, k = 0;
+};
+struct GfxHudLayer {
+  int32_t id = kGfxLayerCentred;
+  int8_t anchor = 0;  // -1 left edge, 0 centred, +1 right edge
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // bounding box in 800-space, half-open
+  std::vector<GfxLayerPx> px;               // (x1 - x0) * (y1 - y0), rows top-down
+  const GfxLayerPx *at(int32_t x, int32_t y) const {
+    if (x < x0 || x >= x1 || y < y0 || y >= y1) return nullptr;
+    const GfxLayerPx &p = px[static_cast<size_t>(y - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(x - x0)];
+    return p.kind ? &p : nullptr;
+  }
+};
+struct GfxHudFrame {
+  std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
+  std::vector<uint16_t> back;  // the back buffer the layers were published with (a present checks it is the frame it shows)
+  std::vector<GfxHudLayer> layers;  // in draw order
+  uint64_t serial = 0;
+  bool empty() const { return base.empty(); }
+};
+int8_t gfx_layer_anchor(int32_t id);
+void gfx_set_hud_capture(Ctx &ctx, bool on);  // the app's host only
+bool gfx_hud_capture(Ctx &ctx);
+// the layers published at the last Window::refreshFull (false when capture is off or nothing was published)
+bool gfx_hud_frame(Ctx &ctx, GfxHudFrame &out);
+// the shade tables of GfxLayerPx kind 3: 0 = build16BitColorTable's block 1 (g_color16Lut), 1 = g_halfBrightLut's table
+const uint16_t *gfx_shade_table(uint8_t id, size_t &n);
+void gfx_layer_begin(Ctx &ctx, int32_t id);
+void gfx_layer_end(Ctx &ctx);
+// the layer a frame-code callee draws into (tick.cpp), -1 for none
+int32_t gfx_layer_of_callee(const char *name);
+extern std::atomic<int> g_gfx_hud_capture;  // contexts with capture on (the frame code's fast test)
+struct GfxLayerScope {
+  Ctx *ctx = nullptr;
+  GfxLayerScope(Ctx &c, int32_t id) {
+    if (id >= 0 && g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) {
+      ctx = &c;
+      gfx_layer_begin(c, id);
+    }
+  }
+  ~GfxLayerScope() {
+    if (ctx) gfx_layer_end(*ctx);
+  }
+  GfxLayerScope(const GfxLayerScope &) = delete;
+  GfxLayerScope &operator=(const GfxLayerScope &) = delete;
+};
 
 }  // namespace portsim
 

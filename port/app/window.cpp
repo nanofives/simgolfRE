@@ -277,6 +277,7 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
     int32_t x = static_cast<int16_t>(lp & 0xffff), y = static_cast<int16_t>(lp >> 16);
     opt_.remap->map(x, y);
     lp = (static_cast<uint32_t>(static_cast<uint16_t>(y)) << 16) | static_cast<uint16_t>(x);
+    e.lp = lp;  // P9B: the event carries the point the game got (LiveSession's --cursor message answers read e.lp)
   }
   if (opt_.input_defect == InputDefect::Bypass) {
     // the wrong path: client coordinates straight into a click, no reads

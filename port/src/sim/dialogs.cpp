@@ -226,6 +226,7 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
   (void)title;  // drawn only
   (void)mask;   // its OR into a frame copy is never read
   GameState &gs = ctx.gs();
+  cm::drop_stale_esc(ctx, g_defect_esc_skill_points);  // P9A item 2
   const Memory &m = ctx.mem;
   const int mode = SG_NEGCTL(g_negctl_skill_dialog);
   const uint32_t skills = GS(g_playerSkills);
@@ -298,10 +299,12 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
     cm::pump_messages(ctx, PumpKind::Blocking, "skillPointDialog");
     if (gs.g_rootInput[kButton] == 0 && cm::flush_redraw(ctx) == 0) continue;
     const int32_t button = gs.g_rootInput[kButton];
-    if (button != 0) {
+    // P9A item 2: Esc = a click on OK (the key already passed flushRedraw above, which left the words set for this pass)
+    const bool esc = button == 0 && cm::esc_pressed(ctx, g_defect_esc_skill_points);
+    if (button != 0 || esc) {
       const int32_t dx = abs32(sub32(sub32(gs.g_rootInput[kClickX], xbase), 0x15e));
       const int32_t dy = abs32(sub32(gs.g_rootInput[kClickY], 0x14e));
-      if (dx < 0x14 && dy < 0x14) {
+      if (esc || (dx < 0x14 && dy < 0x14)) {
         if (points <= (mode == 3 ? used + 1 : used)) return m.load<int16_t>(mword);
         cpy(ctx, tb, GS(f_strpool_4d3b5c) + 0x98);   // the Image the original saves the screen in is drawing
         cat(ctx, tb, GS(f_strpool_4d3b5c) + 0x58);

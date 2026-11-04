@@ -1,0 +1,8 @@
+mainLoop.titleDefaultItem1	0	G30,P9A	the title menu starts each pass with no item selected, not item 1 (Start New Game), until the cursor nears an item (ML+0x11a95..ML+0x11aad): no item is lit on the first frame and a click away from every item starts nothing
+mainLoop.titleHotspotRange	0	G30,P9A	a labelled title-menu item is chosen only with the cursor inside its button art box (showTitleScreen 0x0043d054..0x0043d129), not within distance 0xa0 of its text centre (ML+0x11aaf..ML+0x11ae1)
+courseActionMenu.escIgnored	0	G30,P9A	Esc on the world map acts as its Back button (hot 3: 0x00470634); the original never reads the key words there
+showBuyLandScreen.escIgnored	0	G30,P9A	Esc on the buy-land screen acts as Done (0x004592e7); the original never reads the key words there
+showCharacterEditor.escIgnored	0	G30,P9A	Esc in the character editor acts as a press on Exit (case 19, 0x00439d8f..0x00439dba); the original never reads the key words there
+pickCharEditor.escIgnored	0	G30,P9A	Esc in the editor's look picker acts as its cancel (a right click: 0x0043857d)
+showPopup.escIgnoredNoKeys	0	G30,P9A	Esc on a popup without key handling (flag4 0: Preferences, the tournament par list; 0x0046db31 skips the key block) acts as its close button (0x0046dcdf -> 0x0046dd86)
+skillPointDialog.escIgnored	0	G30,P9A	Esc in the skill point dialog acts as a click on OK (0x0045f644; the points-left popup when points remain)

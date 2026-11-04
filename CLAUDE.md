@@ -2449,6 +2449,15 @@ the world (terrain via GlRaster::resize_frame, scene sprites incl. side-column s
 (`--render-scale auto`); the HUD compositor (present.h kHudPanels) moves the title panel left, the meters right and the bottom band left, scaled
 with window height, and PanelRemap maps clicks back to 800-space. `play` switches worldToScreen / tileToScreen.wideViewVisibility widen the sim's
 visibility and scenery windows to the wide view. SG_APP_P8B=off (conftest) or `--wide off` gives the pre-P8B app.
+P9 (2026-11-04, merge log/roadmap/P9/MERGE.md, notes P9A_notes.md / P9B_notes.md): simgolf_port.exe is a WIN32-subsystem app (output in
+<data>/simgolf_port.log, and the console when launched from one); simgolf_port_console.exe is the console build. Esc goes back on six screens
+that ignore it in the original (play switches, P9A_esc_survey.md); the title menu's false hover is the original's (Start New Game lit from the
+first frame, 160 px hover radius): play switches mainLoop.titleDefaultItem1 / titleHotspotRange. Band fill `--wide-fill edge` (default) fades
+the edge colour into the screen's background. The HUD is now LAYERED (P9B): the gfx backend captures each panel's drawing as its own RGBA layer
+where the game draws it (TkBase::call's GfxLayerScope by callee, the shot panel's texts by mainLoop range), the presenter composes world,
+centred 2D and the layers at their anchors with their blends redone, and clicks are remapped by layer coverage; golfer action / employee
+panels go to the right edge. `--hud-layers off` = P8B's rectangles. SG_APP_P9=off (conftest) restores P9A's defaults. Text at the window's
+resolution is P9C (interface in P9B_notes.md section 5).
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

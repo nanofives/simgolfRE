@@ -22,6 +22,7 @@
 //   simgolf_port.exe --selftest                      pacing, saves overlay and presenter unit tests ("[k/n] name PASS")
 //   simgolf_port.exe --selftest-p5b | --selftest-p7  the P5B scale modes / the P7 wide side bands
 //   simgolf_port.exe --selftest-p8b                  P8B: the world layer under the frame (control --negctl p8b-mask-ignored)
+//   simgolf_port.exe --selftest-p9b                  P9B: the layered HUD compositor (controls --negctl p9b-blend-opaque | p9b-rect-move)
 //   simgolf_port.exe --compose <in.555> <cw> <ch> <out.bmp> [--wide --wide-fill soft|clamp|black] [--scale m]
 //                    [--compose-band extend|black]   P7: the presenter's client image of one 800x600 frame, as a BMP
 //   P7 (widescreen stage 1, default off): --wide [on|off] (or SG_APP_WIDE=on) opens the window at --wide-width (1067) x 600
@@ -109,6 +110,7 @@
 #include "pacing.h"
 #include "present.h"
 #include "saves.h"
+#include "stdio_log.h"
 #include "window.h"
 
 #include "portsim/arith.h"
@@ -268,7 +270,8 @@ struct Options {
   bool in_memory = false;                // S7.8: --in-memory (S7.5's way: records held until the end)
   int32_t mem_every = 1000;             // S7.8: --mem-every (memory.tsv sampling period in live frames)
   uint32_t dpi = 0, exit_after = 0;
-  bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false;
+  bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false, selftest_p9a = false;
+  bool selftest_p9b = false;  // P9B
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -287,11 +290,12 @@ struct Options {
   // at wide_width x 600 logical pixels and the full-screen 2D screens' side bands show their edge colours (present.h WideFill)
   bool wide = true;                // --wide (or --wide on|off); G32: on by default (SG_APP_P8B=off: off, the tests' default)
   int32_t wide_width = 1067;       // --wide-width <800..2400> (1067 = 16:9 at 600 rows)
-  std::string wide_fill = "soft";  // --wide-fill soft|clamp|black
+  std::string wide_fill = "edge";  // --wide-fill edge|mirror|soft|clamp|black (P9A item 5: edge; SG_APP_P9=off: soft)
   // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md; default off: render scale 1 and no --wide = no world layer)
   std::string render_scale = "auto";  // --render-scale auto|1|native|<pw>x<ph> (G32: auto = native with --wide, none without)
   bool wide_edge = true;           // --wide-edge on|off (with --wide and a world layer)
   bool hud_anchor = true;          // G32: --hud-anchor on|off (with --wide: the HUD panels at the wide view's edges)
+  bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
   int32_t shot_w = 0, shot_h = 0;      // --shot-size
@@ -319,6 +323,10 @@ struct Options {
   std::string op;  // cat / write / remove / list
   std::vector<std::string> op_args;
 };
+
+// P9B: the layered HUD compositor is on with --wide, --hud-anchor on and --hud-layers on (the defaults); --negctl p9b-rect-move
+// keeps G32's rectangle compositor with capture on (the control)
+static bool hud_layers_on(const Options &o) { return o.wide && o.hud_anchor && o.hud_layers; }
 
 // P5B item 4: --scale
 ScaleMode scale_mode(const std::string &s) {
@@ -358,6 +366,8 @@ bool write_bmp(const fs::path &path, const std::vector<uint32_t> &px, int cw, in
 // P7: --wide / --wide-fill
 WideFill wide_fill(const Options &o) {
   if (!o.wide) return WideFill::Off;
+  if (o.wide_fill == "edge") return WideFill::Edge;      // P9A item 5 (the default)
+  if (o.wide_fill == "mirror") return WideFill::Mirror;  // P9A item 5 (the alternative judged on the screenshots)
   return o.wide_fill == "clamp" ? WideFill::Clamp : o.wide_fill == "black" ? WideFill::Off : WideFill::Soft;
 }
 
@@ -433,6 +443,14 @@ const ProfileMember kPlayProfile[] = {
     {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)
     {"worldToScreen.wideViewVisibility", 0},        // P8B (G32: the on-screen test over the wide view)
     {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
+    {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
+    {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
+    {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
+    {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
+    {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
+    {"pickCharEditor.escIgnored", 0},               // P9A item 2: Esc = the look picker's cancel
+    {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
+    {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -815,6 +833,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       bool ok = reg_call(*ctx, "gditext.attach", {}, &why) && reg_call(*ctx, "gfx.attach", {}, &why);
       for (int64_t s : o.snapshot_list) ok = ok && reg_call(*ctx, "gfx.snapshotAt", {static_cast<uint32_t>(s)}, &why);
       if (!ok) err = why;
+      if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
     }
     if (err.empty()) {
       TerrainGuard terrain;
@@ -848,14 +867,12 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
             if (std::find(o.world_shots.begin(), o.world_shots.end(), static_cast<int64_t>(index)) == o.world_shots.end()) return;
             const portsim::LiveTerrainWorld *w = terrain.live->world();
             WorldImage wi;
-            if (w && terrain.live->world_frame(px, portsim::gfx_back_terrain(c), wi.px, wi.mask)) {
-              wi.pw = w->pw;
-              wi.ph = w->ph;
-              wi.fw = w->fw;
-              wi.ox = w->ox;
-            }
+            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi);  // P8B; P9B: with the frame's HUD layers
             const int cw = o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
-            Presenter p(PresentDefect::None, scale_mode(o.scale));
+            Presenter p(o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B controls
+                        : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove
+                                                      : PresentDefect::None,
+                        scale_mode(o.scale));
             p.set_wide(wide_fill(o));
             std::vector<uint32_t> img;
             p.set_frame(px, BandFill::Black);
@@ -1018,6 +1035,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
     lo.error = why;
     return lo;
   }
+  if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
   int *rec_mode = nullptr;
   if (o.negctl.rfind("recorder:", 0) == 0) {
@@ -1074,6 +1092,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.wide = o.wide;                                    // G32: W follows the window
   static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
+  ho.hud_layers = hud_layers_on(o);                    // P9B
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
@@ -1083,6 +1102,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
+                     : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
+                     : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_wide(wide_fill(o));  // P7
@@ -1505,6 +1526,48 @@ void selftest_p7(Tests &t, bool wrong) {
 // --negctl p8b-mask-ignored (PresentDefect::WorldMaskIgnored): the world shows over the whole content rectangle, so the rows that
 // need the frame's own pixels read RED. Control --negctl p8b-hud-unmoved (PresentDefect::HudUnmoved, G32): the HUD compositor off,
 // so the three hud rows read RED.
+// P9A item 5 (--selftest-p9a): the Edge band fill (present.h WideFill::Edge). Control --negctl p9a-band-soft renders P7's Soft
+// in Edge's place: the cut-shape row reads RED.
+void selftest_p9a(Tests &t, bool wrong) {
+  const int cw = 1920, ch = 1080;
+  auto render = [&](WideFill w, const std::vector<uint16_t> &fr, Viewport *vp = nullptr) {
+    Presenter p(PresentDefect::None, ScaleMode::Smooth);
+    p.set_wide(wrong && w == WideFill::Edge ? WideFill::Soft : w);
+    p.set_frame(fr, BandFill::Extend);
+    std::vector<uint32_t> out;
+    p.render(cw, ch, out, vp);
+    return out;
+  };
+  // a light background with a dark 6-row shape cut by the frame's right edge (the last 3 logical columns), as the Jamaica pin
+  std::vector<uint16_t> bg(static_cast<size_t>(kLogicalW) * kLogicalH, static_cast<uint16_t>((26 << 10) | (26 << 5) | 30));
+  std::vector<uint16_t> cut = bg;
+  for (int y = 300; y < 306; ++y)
+    for (int x = kLogicalW - 3; x < kLogicalW; ++x) cut[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>(4 << 5);
+  Viewport vp;
+  const auto a = render(WideFill::Edge, bg, &vp), b = render(WideFill::Edge, cut);
+  const int32_t right = vp.origin_x + vp.client_w, fade = vp.client_w * 24 / kLogicalW;
+  bool uniform = true, far_same = true, near_differs = false;
+  for (int y = 0; y < ch; ++y)
+    for (int x = right; x < cw; ++x) {
+      const size_t i = static_cast<size_t>(y) * cw + x;
+      if (a[i] != a[static_cast<size_t>(vp.origin_y) * cw + right]) uniform = false;
+      if (x >= right + fade && a[i] != b[i]) far_same = false;
+      if (x < right + fade / 2 && a[i] != b[i]) near_differs = true;
+    }
+  t.add("p9a.edge_uniform_frame_fills_uniform", uniform);
+  t.add("p9a.edge_cut_shape_not_carried_past_the_fade", far_same);
+  t.add("p9a.edge_cut_shape_shown_near_the_frame", near_differs);
+  // the content rectangle is the same pixels under every band mode
+  const auto off = render(WideFill::Off, cut);
+  bool content = true;
+  for (int y = 0; y < ch; ++y)
+    for (int x = vp.origin_x; x < right; ++x)
+      if (off[static_cast<size_t>(y) * cw + x] != b[static_cast<size_t>(y) * cw + x]) content = false;
+  t.add("p9a.content_unchanged_by_the_band", content);
+  Options d;
+  t.add("p9a.default_wide_fill_is_edge", wide_fill(d) == WideFill::Edge);
+}
+
 void selftest_p8b(Tests &t, bool wrong, bool hud_wrong = false) {
   const PresentDefect pd = hud_wrong ? PresentDefect::HudUnmoved : wrong ? PresentDefect::WorldMaskIgnored : PresentDefect::None;
   std::vector<uint16_t> f(static_cast<size_t>(kLogicalW) * kLogicalH);
@@ -1609,6 +1672,146 @@ void selftest_p8b(Tests &t, bool wrong, bool hud_wrong = false) {
   }
 }
 
+// P9B (--selftest-p9b): the layered HUD compositor (present.h WorldImage::hud, Presenter::compose_layers, PanelRemap::set_layers)
+// on a synthetic frame: a base, a world, a left-anchored layer with opaque, mask-blend and shade pixels, a right-anchored layer and
+// a centred layer drawn after them. Controls: --negctl p9b-blend-opaque (PresentDefect::LayerBlendOpaque: blended pixels keep the
+// words they had in the frame) reads the two blend rows RED; --negctl p9b-rect-move (PresentDefect::LayerRectMove: G32's rectangle
+// compositor although the frame has layers) reads the layer rows RED.
+void selftest_p9b(Tests &t, PresentDefect pd) {
+  const int cw = 1067, ch = 600;  // render scale 1: origin 133, right band 134
+  std::vector<uint16_t> base(static_cast<size_t>(kLogicalW) * kLogicalH);
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x) base[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>((x * 7 + y * 131) & 0x7fff);
+  // the test's own copies of the two blend rules (gfx.cpp b_stretch_blit's channel rule, the shade table lookup)
+  auto blend = [](uint16_t w, uint16_t sw, uint32_t k) {
+    auto chn = [&](uint32_t dv, uint32_t sv) { return static_cast<uint16_t>(static_cast<uint16_t>(((dv * k) >> 8) + sv) >> 3); };
+    const uint16_t rr = static_cast<uint16_t>(chn((w >> 7) & 0xf8u, (sw >> 7) & 0xf8u) << 10);
+    const uint16_t gg = static_cast<uint16_t>(chn((w >> 2) & 0xf8u, (sw >> 2) & 0xf8u) << 5);
+    const uint16_t bb = chn((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u);
+    return static_cast<uint16_t>((rr | gg | bb) & 0x7fff);
+  };
+  size_t lut_n = 0;
+  const uint16_t *lut = portsim::gfx_shade_table(0, lut_n);
+  auto shade = [&](uint16_t w) { return static_cast<uint16_t>(lut && w < lut_n ? lut[w] & 0x7fff : w); };
+  auto px_of = [](uint8_t kind, uint16_t px, uint16_t src = 0, uint8_t k = 0) {
+    portsim::GfxLayerPx p;
+    p.kind = kind;
+    p.px = px;
+    p.src = src;
+    p.k = k;
+    return p;
+  };
+  // layer 1 (bottom band, left): opaque 3 x 3 at (100..102, 499..501), a mask blend at (104, 500), a shade at (105, 500)
+  portsim::GfxHudLayer l1;
+  l1.id = portsim::kGfxLayerBottom;
+  l1.anchor = -1;
+  l1.x0 = 100, l1.y0 = 499, l1.x1 = 106, l1.y1 = 502;
+  l1.px.assign(6 * 3, portsim::GfxLayerPx{});
+  for (int y = 0; y < 3; ++y)
+    for (int x = 0; x < 3; ++x) l1.px[static_cast<size_t>(y) * 6 + x] = px_of(1, 0x03e0);
+  l1.px[static_cast<size_t>(1) * 6 + 4] = px_of(2, 0, 0x7c00, 0x80);
+  l1.px[static_cast<size_t>(1) * 6 + 5] = px_of(3, 0, 0, 0);
+  // layer 2 (meters, right): one opaque pixel at (700, 40)
+  portsim::GfxHudLayer l2;
+  l2.id = portsim::kGfxLayerMeters;
+  l2.anchor = 1;
+  l2.x0 = 700, l2.y0 = 40, l2.x1 = 701, l2.y1 = 41;
+  l2.px.assign(1, px_of(1, 0x001f));
+  // layer 3 (centred, drawn after): one opaque pixel at (100, 500), over layer 1's place in the frame
+  portsim::GfxHudLayer l3;
+  l3.id = portsim::kGfxLayerCentred;
+  l3.anchor = 0;
+  l3.x0 = 100, l3.y0 = 500, l3.x1 = 101, l3.y1 = 501;
+  l3.px.assign(1, px_of(1, 0x7fff));
+  // the frame the layers compose to in place (the back buffer): base, then each layer over it
+  std::vector<uint16_t> back = base;
+  for (const portsim::GfxHudLayer *l : {&l1, &l2, &l3})
+    for (int y = l->y0; y < l->y1; ++y)
+      for (int x = l->x0; x < l->x1; ++x) {
+        const portsim::GfxLayerPx *p = l->at(x, y);
+        if (!p) continue;
+        uint16_t &d = back[static_cast<size_t>(y) * kLogicalW + x];
+        d = p->kind == 1 ? p->px : p->kind == 2 ? blend(d, p->src, p->k) : shade(d);
+      }
+  // l1's blended pixels in the frame hold their in-place words (what a capture records)
+  l1.px[static_cast<size_t>(1) * 6 + 4].px = back[static_cast<size_t>(500) * kLogicalW + 104];
+  l1.px[static_cast<size_t>(1) * 6 + 5].px = back[static_cast<size_t>(500) * kLogicalW + 105];
+  auto world_of = [&](uint8_t m) {
+    WorldImage w;
+    w.pw = cw;
+    w.ph = ch;
+    w.fw = 800;
+    w.ox = 133;
+    w.px.resize(static_cast<size_t>(cw) * ch);
+    for (int y = 0; y < ch; ++y)
+      for (int x = 0; x < cw; ++x) w.px[static_cast<size_t>(y) * cw + x] = static_cast<uint16_t>((x * 13 + y * 29 + 5) & 0x7fff);
+    w.mask.assign(static_cast<size_t>(kLogicalW) * kLogicalH, m);
+    w.hud.base = base;
+    w.hud.back = back;
+    w.hud.layers = {l1, l2, l3};
+    w.hud.serial = 1;
+    return w;
+  };
+  auto wpx = [&](int x, int y) { return static_cast<uint16_t>((x * 13 + y * 29 + 5) & 0x7fff); };
+  PanelRemap rm;
+  std::vector<uint32_t> o;
+  {
+    Presenter p(pd, ScaleMode::Nearest);
+    p.set_hud_anchor(true);
+    p.set_remap(&rm);
+    WorldImage w = world_of(1);
+    p.set_frame_world(back, BandFill::Black, std::move(w));
+    p.render(cw, ch, o);
+  }
+  auto at = [&](int x, int y) { return o[static_cast<size_t>(y) * cw + x]; };
+  // client x of logical x moved left: 133 + x - 133 = x; right: x + 133 + 134
+  t.add("p9b.left_layer_at_its_anchor", at(100, 500) == rgb555_to_bgra(0x03e0) && at(102, 501) == rgb555_to_bgra(0x03e0));
+  t.add("p9b.right_layer_at_its_anchor", at(967, 40) == rgb555_to_bgra(0x001f));
+  t.add("p9b.vacated_place_shows_the_world", at(234, 500) == rgb555_to_bgra(wpx(234, 500)));
+  t.add("p9b.transparent_layer_pixel_shows_what_is_under", at(103, 500) == rgb555_to_bgra(wpx(103, 500)));
+  t.add("p9b.blend_over_the_new_place", at(104, 500) == rgb555_to_bgra(blend(wpx(104, 500), 0x7c00, 0x80)));
+  t.add("p9b.shade_over_the_new_place", at(105, 500) == rgb555_to_bgra(shade(wpx(105, 500))));
+  t.add("p9b.centred_layer_stays_in_the_frame", at(233, 500) == rgb555_to_bgra(0x7fff));
+  {
+    int32_t x1 = 100, y1 = 500, x2 = 103, y2 = 500, x3 = 967, y3 = 40, x4 = 233, y4 = 500;
+    rm.map(x1, y1);
+    rm.map(x2, y2);
+    rm.map(x3, y3);
+    rm.map(x4, y4);
+    t.add("p9b.remap_by_layer_coverage", x1 == 233 && x2 == 103 && x3 == 833 && x4 == 233);
+  }
+  {  // anchor off, world mask 0: the layers over their base rebuild the frame exactly
+    Presenter p(pd, ScaleMode::Nearest);
+    p.set_hud_anchor(false);
+    WorldImage w = world_of(0);
+    p.set_frame_world(back, BandFill::Black, std::move(w));
+    std::vector<uint32_t> a;
+    p.render(cw, ch, a);
+    bool ok = true;
+    for (int y = 0; y < ch && ok; ++y)
+      for (int x = 133; x < 933; ++x) ok = ok && a[static_cast<size_t>(y) * cw + x] == rgb555_to_bgra(back[static_cast<size_t>(y) * kLogicalW + x - 133]);
+    t.add("p9b.layers_in_place_rebuild_the_frame", ok);
+  }
+  {  // smooth at 1920 x 1080 (scale 1.8): the layer's opaque block gets a blended edge (a value between it and what is under)
+    Presenter p(pd, ScaleMode::Smooth);
+    p.set_hud_anchor(true);
+    WorldImage w = world_of(1);
+    w.pw = 1920, w.ph = 1080, w.fw = 1440, w.ox = 240;
+    w.px.assign(static_cast<size_t>(1920) * 1080, 0);  // a black world
+    p.set_frame_world(back, BandFill::Black, std::move(w));
+    std::vector<uint32_t> a;
+    p.render(1920, 1080, a);
+    // logical (100, 500) moved left by 240: client x = 100 * 1.8 = 180; the left edge of the block lies near x 180
+    bool mid = false;
+    const uint32_t g = rgb555_to_bgra(0x03e0) & 0xffffff;
+    for (int x = 170; x < 190; ++x) {
+      const uint32_t v = a[static_cast<size_t>(900) * 1920 + x] & 0xffffff;
+      mid = mid || (v != 0 && v != g);
+    }
+    t.add("p9b.smooth_layer_edges", mid);
+  }
+}
+
 // P8B: a client image (BGRA words, rows top-down) as a 24-bit BMP
 bool write_bmp(const fs::path &path, const std::vector<uint32_t> &px, int cw, int ch) {
   if (cw <= 0 || ch <= 0 || px.size() != static_cast<size_t>(cw) * static_cast<size_t>(ch)) return false;
@@ -1689,8 +1892,18 @@ int run_selftest(const Options &o) {
     selftest_p7(t, o.negctl == "p7-band-black");
     return t.print();
   }
+  if (o.selftest_p9a) {  // P9A item 5
+    selftest_p9a(t, o.negctl == "p9a-band-soft");
+    return t.print();
+  }
   if (o.selftest_p8b) {  // P8B
     selftest_p8b(t, o.negctl == "p8b-mask-ignored", o.negctl == "p8b-hud-unmoved");
+    return t.print();
+  }
+  if (o.selftest_p9b) {  // P9B
+    selftest_p9b(t, o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque
+                    : o.negctl == "p9b-rect-move"  ? PresentDefect::LayerRectMove
+                                                   : PresentDefect::None);
     return t.print();
   }
   PresentDefect pd = PresentDefect::None;
@@ -1861,7 +2074,9 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--selftest") o.selftest = true;
     else if (a == "--selftest-p5b") o.selftest = o.selftest_p5b = true;  // P5B
     else if (a == "--selftest-p7") o.selftest = o.selftest_p7 = true;    // P7
+    else if (a == "--selftest-p9a") o.selftest = o.selftest_p9a = true;  // P9A item 5
     else if (a == "--selftest-p8b") o.selftest = o.selftest_p8b = true;  // P8B
+    else if (a == "--selftest-p9b") o.selftest = o.selftest_p9b = true;  // P9B
     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
       o.wide = true;
       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
@@ -1887,6 +2102,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_anchor = v == "on";
     }
+    else if (a == "--hud-layers") {  // P9B
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_layers = v == "on";
+    }
     else if (a == "--ui-union") o.ui_union = true;        // G32 development
     else if (a == "--view-width") {  // G32
       if (!val(v)) return false;
@@ -1908,7 +2127,7 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || std::sscanf(v.c_str(), "%dx%d", &o.shot_w, &o.shot_h) != 2 || o.shot_w <= 0 || o.shot_h <= 0) return false;
     }
     else if (a == "--wide-fill") {
-      if (!val(o.wide_fill) || (o.wide_fill != "soft" && o.wide_fill != "clamp" && o.wide_fill != "black")) return false;
+      if (!val(o.wide_fill) || (o.wide_fill != "soft" && o.wide_fill != "clamp" && o.wide_fill != "black" && o.wide_fill != "edge" && o.wide_fill != "mirror")) return false;
     }
     else if (a == "--compose") {
       if (i + 4 >= argc) return false;
@@ -1962,6 +2181,17 @@ int main(int argc, char **argv) {
     o.wide = !std::strcmp(ep, "on") || !std::strcmp(ep, "1");
   if (const char *ep = std::getenv("SG_APP_P6B"))  // P6B: the loading overlay off for the app tests (window pixels)
     if (!std::strcmp(ep, "off")) o.loading_overlay = false;
+  if (const char *ep = std::getenv("SG_APP_P9"))  // P9A: P7's soft band fill (port/test/conftest.py sets it); flags still win
+    if (!std::strcmp(ep, "off")) o.wide_fill = "soft";
+  // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
+  // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
+  // argument parser runs (its messages go there too), with the --data value read ahead.
+  {
+    std::string data;
+    for (int i = 1; i + 1 < argc; ++i)
+      if (!std::strcmp(argv[i], "--data")) data = argv[i + 1];
+    setup_stdio_log(data.empty() ? AppFiles::default_data_dir() : data);
+  }
   if (!parse(argc, argv, o)) {
     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");
     return 2;
@@ -2011,6 +2241,8 @@ int main(int argc, char **argv) {
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap
+                     : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
+                     : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                                                   : PresentDefect::None;
   Presenter presenter(pd);
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes

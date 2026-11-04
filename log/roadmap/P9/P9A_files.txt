@@ -1,0 +1,20 @@
+# P9A: files changed in port/build/P9A against HEAD 2fd3553c (A = added, M = modified)
+M port/app/CMakeLists.txt        item 1: simgolf_port (WIN32 subsystem, /ENTRY:mainCRTStartup) + simgolf_port_console from one OBJECT library
+A port/app/stdio_log.h           item 1: stdout / stderr to <data>/simgolf_port.log and the console when not redirected
+A port/app/stdio_log.cpp         item 1
+M port/app/main.cpp              items 1, 2, 3, 5: setup_stdio_log, --wide-fill edge|mirror (default edge), SG_APP_P9=off, --selftest-p9a, kPlayProfile rows
+M port/app/present.h             item 5: WideFill::Edge / Mirror, fill_bands_p9
+M port/app/present.cpp           item 5: fill_bands_p9 (the P7 band fill function only)
+M port/src/sim/tick.cpp          item 3: switches mainLoop.titleDefaultItem1, mainLoop.titleHotspotRange
+M port/src/sim/tick_menu.inc     item 3: their two arms in the title menu's hover loop
+M port/src/sim/commands.cpp      item 2: the six Esc switches, esc_pressed / drop_stale_esc
+M port/src/sim/commands_internal.h  item 2: their declarations
+M port/src/sim/commands_popup.inc   item 2: showPopup.escIgnoredNoKeys
+M port/src/sim/saveload.cpp      item 2: courseActionMenu.escIgnored
+M port/src/sim/buyland.cpp       item 2: showBuyLandScreen.escIgnored
+M port/src/sim/chareditor.cpp    item 2: showCharacterEditor.escIgnored, pickCharEditor.escIgnored
+M port/src/sim/dialogs.cpp       item 2: skillPointDialog.escIgnored
+M re/port/play_profile.tsv       items 2, 3: 8 rows (P9A_profile.tsv)
+M port/test/conftest.py          SG_APP_P9=off for the app tests
+# tools / evidence (log/roadmap/P9, not port code)
+A log/roadmap/P9/P9A_stdio_check.py, P9A_hover_drive.py, P9A_band_shots.py, P9A_esc_survey.md

@@ -51,6 +51,7 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
 // ---- G32: PanelRemap
 void PanelRemap::set(bool on, const Viewport &vp, int32_t cw, const std::vector<uint8_t> &mask) {
   std::lock_guard<std::mutex> lk(mu_);
+  layered_ = false;  // P9B
   on_ = on && vp.origin_x > 0 && mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
   vp_ = vp;
   cw_ = cw;
@@ -64,10 +65,37 @@ uint64_t PanelRemap::remapped() const {
   std::lock_guard<std::mutex> lk(mu_);
   return remapped_;
 }
+void PanelRemap::set_layers(bool on, const Viewport &vp, int32_t cw, std::vector<RemapLayer> &&layers) {
+  std::lock_guard<std::mutex> lk(mu_);
+  on_ = on && vp.origin_x > 0;
+  vp_ = vp;
+  cw_ = cw;
+  layered_ = true;
+  layers_ = std::move(layers);
+}
 void PanelRemap::map(int32_t &x, int32_t &y) const {
   std::lock_guard<std::mutex> lk(mu_);
   if (!on_ || vp_.client_w <= 0 || vp_.client_h <= 0) return;
   const int32_t dxl = -vp_.origin_x, dxr = cw_ - vp_.origin_x - vp_.client_w;
+  if (layered_) {  // P9B: the topmost layer with a pixel under the point decides
+    if (y < vp_.origin_y || y >= vp_.origin_y + vp_.client_h) return;
+    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
+    for (size_t k = layers_.size(); k-- > 0;) {
+      const RemapLayer &l = layers_[k];
+      const int32_t dx = l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
+      const int32_t sx = x - dx;
+      if (sx < vp_.origin_x || sx >= vp_.origin_x + vp_.client_w) continue;
+      const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(sx - vp_.origin_x) * kLogicalW / vp_.client_w);
+      if (lx < l.x0 || lx >= l.x1 || ly < l.y0 || ly >= l.y1) continue;
+      if (!l.cover[static_cast<size_t>(ly - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(lx - l.x0)]) continue;
+      if (dx != 0) {
+        x = sx;
+        ++remapped_;
+      }
+      return;
+    }
+    return;
+  }
   for (const HudPanel &p : kHudPanels) {
     const int32_t sx = x - (p.anchor < 0 ? dxl : dxr);
     if (sx < vp_.origin_x || sx >= vp_.origin_x + vp_.client_w || y < vp_.origin_y || y >= vp_.origin_y + vp_.client_h) continue;
@@ -104,10 +132,13 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
   if (vpo) *vpo = vp;
   out.assign(static_cast<size_t>(cw > 0 ? cw : 0) * static_cast<size_t>(ch > 0 ? ch : 0), 0xff000000u);
   if (frame_.empty() || cw <= 0 || ch <= 0) return;
+  // P9B: with the frame's HUD layers the scaled image is the layers' base (the root before the first panel drew); the layers
+  // are composed over it in compose_layers
+  const std::vector<uint16_t> &fsrc = layered() ? world_.hud.base : frame_;
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
-    std::vector<uint32_t> src(frame_.size());
-    for (size_t i = 0; i < frame_.size(); ++i) src[i] = rgb555_to_bgra(frame_[i]);
+    std::vector<uint32_t> src(fsrc.size());
+    for (size_t i = 0; i < fsrc.size(); ++i) src[i] = rgb555_to_bgra(fsrc[i]);
     struct Tap {
       int32_t i0, i1;
       uint32_t f;  // weight of i1, 0..256
@@ -154,7 +185,7 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
     col[static_cast<size_t>(x)] = static_cast<int32_t>(static_cast<int64_t>(x) * kLogicalW / vp.client_w);
   for (int32_t y = 0; y < vp.client_h; ++y) {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h);
-    const uint16_t *src = frame_.data() + static_cast<size_t>(ly) * kLogicalW;
+    const uint16_t *src = fsrc.data() + static_cast<size_t>(ly) * kLogicalW;
     uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
     for (int32_t x = 0; x < vp.client_w; ++x) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
   }
@@ -171,8 +202,9 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   if (vp.client_w <= 0 || vp.client_h <= 0 || cw <= 0 || ch <= 0) return;
   // G32: the HUD compositor. The frame's image as drawn (frame_img), the mask with every moved panel's 2D pixels vacated (they show
   // the world), then each panel's 2D pixels pasted at their anchored place
-  const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
-  if (remap_) remap_->set(anchor, vp, cw, w.mask);
+  const bool layers = layered();  // P9B: the panels are layers composed after the world (compose_layers), not rectangles
+  const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  if (remap_ && !layers) remap_->set(anchor, vp, cw, w.mask);
   std::vector<uint32_t> frame_img;
   std::vector<uint8_t> mask_moved;
   const uint8_t *maskp = w.mask.data();
@@ -245,6 +277,10 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
       }
     }
   }
+  if (layers) {
+    compose_layers(out, cw, ch, vp);
+    return;
+  }
   if (!anchor) return;
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
   for (const HudPanel &p : kHudPanels) {
@@ -268,11 +304,121 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   }
 }
 
+// ---- P9B: the layered compositor
+bool Presenter::layered() const {
+  return defect_ != PresentDefect::LayerRectMove && !world_.empty() && !world_.hud.empty() &&
+         world_.hud.base.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+}
+
+// Every layer of the frame in draw order over what is already composed (the base and the world). A layer moved to an edge is
+// drawn at its anchor: left = -origin_x client pixels, right = + the right band's width, centred = 0, at the frame's scale (window
+// height / 600). Client pixel (x, y) of a layer at offset dx shows the layer's 800-space pixel under (x - dx, y): nearest takes the
+// one pixel, smooth the four around the client pixel's centre with bilinear weights, each of them composed over the client pixel
+// already there (d): not drawn = d, opaque = its word, mask blend = jgld blitPair1's channel rule over d's 5-bit channels with the
+// layer's source and weight, shade = the shade table at d's RGB555 word. The weighted sum of the four gives smooth panel edges with
+// no world pixel chosen inside a panel by a mask, and a blended pixel (frame borders, half-bright strips) shows what is under it at
+// the panel's new place.
+void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+  const portsim::GfxHudFrame &f = world_.hud;
+  const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+  if (remap_) {
+    std::vector<RemapLayer> rl;
+    rl.reserve(f.layers.size());
+    for (const portsim::GfxHudLayer &l : f.layers) {
+      RemapLayer r;
+      r.anchor = anchor ? l.anchor : 0;
+      r.x0 = l.x0;
+      r.y0 = l.y0;
+      r.x1 = l.x1;
+      r.y1 = l.y1;
+      r.cover.resize(l.px.size());
+      for (size_t i = 0; i < l.px.size(); ++i) r.cover[i] = l.px[i].kind ? 1 : 0;
+      rl.push_back(std::move(r));
+    }
+    remap_->set_layers(anchor, vp, cw, std::move(rl));
+  }
+  const bool nearest = effective_scale(vp.client_w, vp.client_h) == ScaleMode::Nearest;
+  const bool opaque_blends = defect_ == PresentDefect::LayerBlendOpaque;
+  auto to555 = [](uint32_t c) -> uint16_t {
+    return static_cast<uint16_t>((((c >> 19) & 31) << 10) | (((c >> 11) & 31) << 5) | ((c >> 3) & 31));
+  };
+  auto over = [&](const portsim::GfxLayerPx &p, uint32_t d) -> uint32_t {  // one layer pixel composed over client pixel d
+    if (p.kind == 1 || opaque_blends) return rgb555_to_bgra(p.px);
+    const uint16_t w = to555(d);
+    if (p.kind == 2) {  // jgld blitPair1 (gfx.cpp b_stretch_blit): ((dst8 * k) >> 8) + src8, >> 3, per channel, words as the original
+      const uint32_t k = p.k, sw = p.src;
+      auto chn = [&](uint32_t dv, uint32_t sv) { return static_cast<uint16_t>(static_cast<uint16_t>(((dv * k) >> 8) + sv) >> 3); };
+      const uint16_t rr = static_cast<uint16_t>(chn((w >> 7) & 0xf8u, (sw >> 7) & 0xf8u) << 10);
+      const uint16_t gg = static_cast<uint16_t>(chn((w >> 2) & 0xf8u, (sw >> 2) & 0xf8u) << 5);
+      const uint16_t bb = chn((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u);
+      return rgb555_to_bgra(static_cast<uint16_t>((rr | gg | bb) & 0x7fff));
+    }
+    size_t n = 0;
+    const uint16_t *t = portsim::gfx_shade_table(p.k, n);
+    if (!t || w >= n) return rgb555_to_bgra(p.px);
+    return rgb555_to_bgra(static_cast<uint16_t>(t[w] & 0x7fff));
+  };
+  auto mix = [](uint32_t a, uint32_t b, uint32_t fr) {
+    const uint32_t g = 256 - fr;
+    const uint32_t rb = (((a & 0x00ff00ffu) * g + (b & 0x00ff00ffu) * fr) >> 8) & 0x00ff00ffu;
+    const uint32_t ag = ((((a >> 8) & 0x00ff00ffu) * g + ((b >> 8) & 0x00ff00ffu) * fr) >> 8) & 0x00ff00ffu;
+    return rb | (ag << 8);
+  };
+  // the 800-space position of client column / row k: nearest = floor((k - origin) * n / client) * 256, smooth = the pixel centre
+  // in 1/256, ((k - origin + 0.5) * n / client - 0.5) * 256 (may be negative near the frame's edge)
+  auto lpos = [nearest](int32_t k, int32_t origin, int32_t n_client, int32_t n_log) -> int64_t {
+    const int64_t d = static_cast<int64_t>(k) - origin;
+    if (nearest) {
+      const int64_t num = d * n_log;
+      return (num >= 0 ? num / n_client : -((-num + n_client - 1) / n_client)) * 256;
+    }
+    const int64_t num = (2 * d + 1) * n_log * 128;
+    return (num >= 0 ? num / n_client : -((-num + n_client - 1) / n_client)) - 128;
+  };
+  auto floor256 = [](int64_t v) -> int32_t { return static_cast<int32_t>(v >= 0 ? v / 256 : -((-v + 255) / 256)); };
+  for (const portsim::GfxHudLayer &l : f.layers) {
+    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+    const int32_t dx = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
+    // the client box that can show the layer (one logical pixel of margin for the smooth taps)
+    const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
+    const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
+    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(l.y0 - 1) * vp.client_h / kLogicalH) - 1);
+    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(l.y1 + 1) * vp.client_h / kLogicalH) + 1);
+    for (int32_t y = cy0; y < cy1; ++y) {
+      const int64_t sy = lpos(y, vp.origin_y, vp.client_h, kLogicalH);
+      const int32_t ly0 = floor256(sy);
+      const uint32_t fy = static_cast<uint32_t>(sy - static_cast<int64_t>(ly0) * 256);
+      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+      for (int32_t x = cx0; x < cx1; ++x) {
+        const int64_t sx = lpos(x - dx, vp.origin_x, vp.client_w, kLogicalW);
+        const int32_t lx0 = floor256(sx);
+        if (nearest) {
+          if (const portsim::GfxLayerPx *p = l.at(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
+          continue;
+        }
+        const uint32_t fx = static_cast<uint32_t>(sx - static_cast<int64_t>(lx0) * 256);
+        const portsim::GfxLayerPx *p00 = l.at(lx0, ly0), *p10 = l.at(lx0 + 1, ly0), *p01 = l.at(lx0, ly0 + 1),
+                                  *p11 = l.at(lx0 + 1, ly0 + 1);
+        if (!p00 && !p10 && !p01 && !p11) continue;
+        const uint32_t d = dst[x];
+        const uint32_t c00 = p00 ? over(*p00, d) : d, c10 = p10 ? over(*p10, d) : d, c01 = p01 ? over(*p01, d) : d,
+                       c11 = p11 ? over(*p11, d) : d;
+        dst[x] = mix(mix(c00, c10, fx), mix(c01, c11, fx), fy) | 0xff000000u;
+      }
+    }
+  }
+}
+
 // P7 (present.h WideFill): the side bands from the content rectangle's own edge columns, in client pixels. The content is
 // already drawn, so the bands follow the scaled image exactly (nearest or smooth) and the content's pixels are not touched.
 void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
   const int32_t ox = vp.origin_x, oy = vp.origin_y, w = vp.client_w, h = vp.client_h;
   if (w <= 0 || h <= 0 || cw <= 0 || ch <= 0 || oy + h > ch || ox + w > cw) return;
+  if (wide_ == WideFill::Edge || wide_ == WideFill::Mirror) {
+    fill_bands_p9(out, cw, ch, vp);
+    return;
+  }
   const bool clamp = wide_ == WideFill::Clamp;
   // client columns averaged at each edge (the frame's outer 4 logical columns) and the largest blur radius (48 logical rows)
   const int32_t k = clamp ? 1 : std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(w) * 4 / kLogicalW));
@@ -307,6 +453,87 @@ void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, c
           c8[c] = static_cast<uint32_t>((sum + n / 2) / n);
         }
         out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + x] = 0xff000000u | (c8[0] << 16) | (c8[1] << 8) | c8[2];
+      }
+    }
+  }
+}
+
+// P9A item 5 (present.h WideFill::Edge / Mirror). Channels are 8-bit client colours (the content is already drawn and scaled).
+void Presenter::fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+  (void)ch;  // fill_bands checked the content rectangle against the client
+  const int32_t ox = vp.origin_x, oy = vp.origin_y, w = vp.client_w, h = vp.client_h;
+  auto lg = [](int32_t logical, int32_t span, int32_t of) {  // logical px -> client px, at least 1
+    return std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(span) * logical / of));
+  };
+  auto at = [&](int32_t x, int32_t y) -> uint32_t & { return out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + x]; };
+  auto chan = [](uint32_t v, int c) { return static_cast<int32_t>((v >> (16 - 8 * c)) & 255); };
+  auto pack = [](const int32_t *c) {
+    return 0xff000000u | (static_cast<uint32_t>(c[0]) << 16) | (static_cast<uint32_t>(c[1]) << 8) | static_cast<uint32_t>(c[2]);
+  };
+  // a vertical box blur of a per-row signal (3 channels, scaled by 256): prefix sums, then the mean over [y - r, y + r]
+  auto prefix = [&](const std::vector<int64_t> &sig, std::vector<int64_t> &pre) {
+    pre.assign(static_cast<size_t>(h) * 3 + 3, 0);
+    for (int32_t y = 0; y < h; ++y)
+      for (int c = 0; c < 3; ++c)
+        pre[(static_cast<size_t>(y) + 1) * 3 + c] = pre[static_cast<size_t>(y) * 3 + c] + sig[static_cast<size_t>(y) * 3 + c];
+  };
+  auto mean = [&](const std::vector<int64_t> &pre, int32_t y, int32_t r, int c) {
+    const int32_t lo = std::max(0, y - r), hi = std::min(h - 1, y + r);
+    const int64_t n = static_cast<int64_t>(hi - lo + 1) * 256;
+    return static_cast<int32_t>((pre[(static_cast<size_t>(hi) + 1) * 3 + c] - pre[static_cast<size_t>(lo) * 3 + c] + n / 2) / n);
+  };
+  const int32_t k_edge = lg(4, w, kLogicalW), k_bg = lg(64, w, kLogicalW), fade = lg(24, w, kLogicalW);
+  const int32_t r_edge_max = lg(48, h, kLogicalH), r_bg = lg(150, h, kLogicalH);
+  std::vector<int64_t> edge_sig(static_cast<size_t>(h) * 3), bg_sig(static_cast<size_t>(h) * 3), edge_pre, bg_pre;
+  std::vector<int32_t> col(static_cast<size_t>(k_bg));
+  for (int side = 0; side < 2; ++side) {
+    const int32_t band = side == 0 ? ox : cw - (ox + w);
+    if (band <= 0) continue;
+    auto content_x = [&](int32_t j) { return side == 0 ? ox + j : ox + w - 1 - j; };  // the j-th content column from the edge
+    if (wide_ == WideFill::Mirror) {
+      for (int32_t d = 1; d <= band; ++d) {  // band column d shows content column d - 1, blurred by d / 3, darkened outwards
+        const int32_t j = std::min(d - 1, w - 1), r = d / 3;
+        for (int32_t y = 0; y < h; ++y) {
+          const uint32_t v = at(content_x(j), y);
+          for (int c = 0; c < 3; ++c) edge_sig[static_cast<size_t>(y) * 3 + c] = static_cast<int64_t>(chan(v, c)) * 256;
+        }
+        prefix(edge_sig, edge_pre);
+        const int32_t dark = 256 - static_cast<int32_t>(static_cast<int64_t>(154) * d / band);  // 256 .. 102 (40 %)
+        const int32_t x = side == 0 ? ox - d : ox + w - 1 + d;
+        for (int32_t y = 0; y < h; ++y) {
+          int32_t c8[3];
+          for (int c = 0; c < 3; ++c) c8[c] = mean(edge_pre, y, r, c) * dark / 256;
+          at(x, y) = pack(c8);
+        }
+      }
+      continue;
+    }
+    for (int32_t y = 0; y < h; ++y) {
+      int64_t s[3] = {0, 0, 0};
+      for (int32_t j = 0; j < k_edge; ++j)
+        for (int c = 0; c < 3; ++c) s[c] += chan(at(content_x(j), y), c);
+      for (int c = 0; c < 3; ++c) {
+        edge_sig[static_cast<size_t>(y) * 3 + c] = (s[c] * 256 + k_edge / 2) / k_edge;
+        for (int32_t j = 0; j < k_bg; ++j) col[static_cast<size_t>(j)] = chan(at(content_x(j), y), c);
+        std::nth_element(col.begin(), col.begin() + k_bg / 2, col.end());
+        bg_sig[static_cast<size_t>(y) * 3 + c] = static_cast<int64_t>(col[static_cast<size_t>(k_bg / 2)]) * 256;
+      }
+    }
+    prefix(edge_sig, edge_pre);
+    prefix(bg_sig, bg_pre);
+    for (int32_t d = 1; d <= band; ++d) {
+      const int32_t x = side == 0 ? ox - d : ox + w - 1 + d;
+      // the background's smoothstep weight: 0 at the frame's edge, 256 from `fade` client columns on
+      const int64_t t = std::min<int64_t>(256, static_cast<int64_t>(d) * 256 / fade);
+      const int32_t wb = static_cast<int32_t>(t * t * (3 * 256 - 2 * t) / (256 * 256));
+      const int32_t r = std::min(d / 2, r_edge_max);
+      for (int32_t y = 0; y < h; ++y) {
+        int32_t c8[3];
+        for (int c = 0; c < 3; ++c) {
+          const int32_t bg = mean(bg_pre, y, r_bg, c);
+          c8[c] = wb >= 256 ? bg : (mean(edge_pre, y, r, c) * (256 - wb) + bg * wb + 128) / 256;
+        }
+        at(x, y) = pack(c8);
       }
     }
   }

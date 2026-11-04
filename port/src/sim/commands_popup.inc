@@ -95,6 +95,7 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
   GameState &gs = ctx.gs();
   const Memory &m = ctx.mem;
   if (!text_metrics(ctx)) throw MissingResource{"Text_put"};   // every call measures (the tail at least): before any write
+  if (flag4 == 0) drop_stale_esc(ctx, g_defect_esc_popup_close);  // P9A item 2
   const int mode = SG_NEGCTL(g_negctl_popup);
   const uint32_t buf = GS(g_textBuffer);
   const uint32_t font = GS(g_font519928);
@@ -143,6 +144,7 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
     const int32_t count = sub32(line_idx, first);
     draw_popup_pass(ctx, x, y, box_w, box_h, inner, flag4, mask, disabled, sel);
     pump_messages(ctx, PumpKind::Blocking, "showPopup");
+    if (flag4 == 0 && esc_pressed(ctx, g_defect_esc_popup_close)) return mask;  // P9A item 2: Esc = the close button
     if (flag4 != 0) {
       if (flush_redraw(ctx) != 0) {
         const uint32_t t = u32(take_code(ctx)) - 0xd;

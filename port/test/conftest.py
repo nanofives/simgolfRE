@@ -33,6 +33,9 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P6B", "off")
     # P8B / G32: --wide (the wide course view, its world layer and HUD compositor) is the app's default; off for the app tests
     os.environ.setdefault("SG_APP_P8B", "off")
+    # P9A: the edge band fill (--wide-fill edge) is off for the app tests too (it acts only with --wide, which SG_APP_P8B=off
+    # already turns off)
+    os.environ.setdefault("SG_APP_P9", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

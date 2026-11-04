@@ -79,6 +79,20 @@ int g_negctl_reports = 0;
 //                            stores the int16 sum into entry 8 (+0x10) of that row, so opening the
 //                            report changes the saved ledger. Fixed (0): the sum is drawn and not stored.
 int g_defect_finance_sum_write_back = 1;
+}  // namespace
+// P9A item 2 (Mariano's play-test 3: "ESC on a menu should go back"): the screens whose loop has a back / cancel / done control
+// and never reads the key words (log/roadmap/P9/P9A_esc_survey.md has the screens that already take Esc, with addresses).
+// Each switch at 0 makes an Esc (the char word gDirtyFlagB = 0x1b after the loop's pump) act as that control's click:
+//   courseActionMenu.escIgnored  the world map's Back (hot 3: courseActionMenu+0x10e4 cmp eax, 3; je courseActionMenu+0x134e): returns -1
+//   showBuyLandScreen.escIgnored  Done (showBuyLandScreen+0xb47 cmp eax, -2; je showBuyLandScreen+0xc49): returns 0
+//   showCharacterEditor.escIgnored  Exit (case 19, showCharacterEditor+0x17bf..showCharacterEditor+0x17ea, done at showCharacterEditor+0x17cd), then the release wait
+//   pickCharEditor.escIgnored  the picker's cancel (a right click / a press above y 0x102: pickCharEditor+0x1ed): returns -1
+//   showPopup.escIgnoredNoKeys  a popup without key handling (flag4 0: showPopup skips its key block at showPopup+0x451; the
+//                  Preferences menu and the tournament par list): the close button (showPopup+0x5ff -> showPopup+0x6a6), returns the mask
+//   skillPointDialog.escIgnored  OK (skillPointDialog+0x554 cmp esi, [esp + 0x10]; jle skillPointDialog+0x754, else the points-left popup skillPointDialog+0x55e)
+int g_defect_esc_course_action = 1, g_defect_esc_buy_land = 1, g_defect_esc_char_editor = 1, g_defect_esc_char_picker = 1,
+    g_defect_esc_popup_close = 1, g_defect_esc_skill_points = 1;
+namespace {
 int g_negctl_hire_dialog = 0;
 int g_negctl_credits = 0;
 int g_negctl_difficulty = 0;
@@ -304,6 +318,20 @@ int32_t take_code(Ctx &ctx) {
   const int32_t v = ctx.gs().gDirtyFlagA;
   ctx.gs().gDirtyFlagA = 0;
   return v;
+}
+
+bool esc_pressed(Ctx &ctx, int sw) {
+  if (sw != 0 || ctx.gs().gDirtyFlagB != 0x1b) return false;
+  take_key(ctx);
+  take_code(ctx);
+  return true;
+}
+
+void drop_stale_esc(Ctx &ctx, int sw) {
+  if (sw == 0 && ctx.gs().gDirtyFlagB == 0x1b) {
+    take_key(ctx);
+    take_code(ctx);
+  }
 }
 
 void pump_messages(Ctx &ctx, PumpKind kind, const char *where) {
@@ -703,6 +731,19 @@ const FuncDef kFuncs[] = {
 const DefectDef kDefects[] = {
     {"showFinancialReport.sumWriteBack", "model_defects#24",
      "the report writes each drawn year row's column sum back into the row's entry 8 (+0x10)", &g_defect_finance_sum_write_back},
+    {"courseActionMenu.escIgnored", "P9A", "the world map ignores Esc; fixed: Esc acts as its Back button",
+     &g_defect_esc_course_action},
+    {"showBuyLandScreen.escIgnored", "P9A", "the buy-land screen ignores Esc; fixed: Esc acts as its Done button",
+     &g_defect_esc_buy_land},
+    {"showCharacterEditor.escIgnored", "P9A", "the character editor ignores Esc; fixed: Esc acts as its Exit button",
+     &g_defect_esc_char_editor},
+    {"pickCharEditor.escIgnored", "P9A", "the character editor's look picker ignores Esc; fixed: Esc cancels it (as a right click)",
+     &g_defect_esc_char_picker},
+    {"showPopup.escIgnoredNoKeys", "P9A",
+     "a popup without key handling (Preferences, the tournament par list) ignores Esc; fixed: Esc acts as its close button",
+     &g_defect_esc_popup_close},
+    {"skillPointDialog.escIgnored", "P9A", "the skill point dialog ignores Esc; fixed: Esc acts as its OK button",
+     &g_defect_esc_skill_points},
 };
 }  // namespace
 

@@ -86,6 +86,41 @@ class Gfx {
     return *static_cast<T *>(p.get());
   }
 
+  // P9B: the HUD layer capture (gfx.h GfxHudFrame; gfx.cpp gfx_layer_begin / end, published at Window::refreshFull)
+  struct HudCapture {
+    bool on = false;
+    int depth = 0;            // nested scopes: only the outermost opens and closes a layer
+    int32_t cur = -1;         // the open layer's id, -1 between layers
+    bool any = false;         // a layer opened since the last publish (base and mark are valid)
+    bool aborted = false;     // a Window::refreshFull ran inside a layer: its close makes no layer
+    std::vector<uint16_t> base, mark;  // the root before the first layer; the root at the last layer boundary
+    uint32_t gen = 0;         // blend records of the open layer: valid where rec_gen == gen
+    std::vector<uint32_t> rec_gen;
+    std::vector<GfxLayerPx> rec;   // kind 2 / 3 with px = the word the blend wrote
+    std::vector<GfxHudLayer> layers;
+    GfxHudFrame published;
+    uint64_t serial = 0;
+  } hud;
+  // P9B: a blend primitive wrote word `res` at root pixel i: kind 2 (mask blend: src, k) or 3 (shade table k). Recorded only
+  // from the first layer of a frame to its publish (in a layer or in the centred gap after one) while the pixel still holds
+  // the segment's background (an earlier write of the same layer makes it opaque)
+  void note_blend(size_t i, uint16_t before, uint16_t res, uint8_t kind, uint16_t src, uint8_t k) {
+    if (!hud.any || i >= hud.mark.size()) return;  // a layer or a centred gap between two layers
+    if (hud.rec_gen.size() != hud.mark.size()) {
+      hud.rec_gen.assign(hud.mark.size(), 0);
+      hud.rec.assign(hud.mark.size(), GfxLayerPx{});
+    }
+    GfxLayerPx &r = hud.rec[i];
+    if (before != hud.mark[i]) {  // over the layer's own pixel: the result is the layer's (opaque)
+      r.kind = 1;
+    } else {
+      r.kind = kind;
+      r.src = src;
+      r.k = k;
+    }
+    r.px = res;
+    hud.rec_gen[i] = hud.gen;
+  }
   // a case the backend does not model (counted; the first occurrence of a reason is appended to `notes`)
   void unsup(const std::string &why);
   // the root surface, made at its first use (Window::create's size scaleX(0x140) x scaleX(0xf0))
