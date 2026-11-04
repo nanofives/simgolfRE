@@ -289,8 +289,18 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
   // the glyphs go to the root, or to a window target through a scratch copy of its surface of which only the clip rectangle
   // is kept (roadmap S3.19: the target's handle clips its text, setClip's region)
   auto put_glyphs = [&](const std::string &seg, int32_t px, int32_t py, uint32_t ref) {
-    if (!t_target) return tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h);
+    gfxb::TextRunScope ts;  // P9C: the run (inert with text capture off)
+    if (!t_target) {
+      gfxb::text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
+      const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h);
+      const int32_t clip[4] = {0, 0, g.root.w, g.root.h};
+      gfxb::text_run_end(g, ctx, ts, g.root.px.data(), g.root.w, g.root.h, 0, 0, clip, font, seg, px, py, ref, 0);
+      return ok;
+    }
     Surface16 &d = *t_target->s;
+    int32_t wx = 0, wy = 0;
+    const bool placed = gfxe::window_origin(g, &d, wx, wy);
+    if (placed) gfxb::text_run_begin(g, d.px.data(), d.w, d.h, ts);
     std::vector<uint16_t> tmp = d.px;
     const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, tmp.data(), d.w, d.h);
     const int32_t *c = t_target->clip;
@@ -299,6 +309,7 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
         const size_t k = static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx);
         d.px[k] = tmp[k];
       }
+    if (placed) gfxb::text_run_end(g, ctx, ts, d.px.data(), d.w, d.h, wx, wy, c, font, seg, px, py, ref, 1);
     return ok;
   };
   auto glyphs = [&](const std::string &seg, int32_t px, int32_t py, uint32_t colour) {
@@ -1348,6 +1359,7 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   Surface16 saved = std::move(g.root);
   const int saved_terrain = g.root_terrain;
   g.root = g.back;
+  gfxb::text_banner_begin(g);  // P9C: the banner's runs, published with its picture
   const int32_t x = (g.root.w - 0x1a0) / 2 + 8, y = g.root.h * 5 / 12;
   const uint32_t root = g.root_va(ctx);
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
@@ -1364,6 +1376,7 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       g.root.px[static_cast<size_t>(ty + yy) * g.root.w + (tx + xx)] = edge ? 0x7fff : fill ? 0x7fe7 : 0x2108;
     }
   gfxb::put_file(ctx, "$gfx/banner.555", gfxb::surface_bytes(g.root));
+  gfxb::text_banner_end(g, g.root.px);  // P9C
   g.root = std::move(saved);
   g.root_terrain = saved_terrain;
 }

@@ -100,7 +100,30 @@ class Gfx {
     std::vector<GfxHudLayer> layers;
     GfxHudFrame published;
     uint64_t serial = 0;
+    int64_t seg = 0;          // P9C: the segment counter (a layer, or the centred gap between two), advanced at every boundary
   } hud;
+  // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
+  struct TextCapture {
+    bool on = false;
+    struct Run {
+      GfxTextRun info;                     // box in back-buffer coordinates
+      std::vector<uint16_t> before, after;  // the box's words before / after the call
+      int64_t seg = -1;                    // the HUD segment it was drawn in, -1 = the base (before the frame's first layer)
+    };
+    std::vector<Run> live;                 // on the root and the window targets, oldest first
+    std::vector<Run> *sink = nullptr;      // where new runs go (live, or the banner's own list while loading.banner runs)
+    uint64_t serial = 0;
+    GfxTextFrame published, banner;
+    GfxTextStats stats;
+    std::vector<GfxTextLayerPatch> patches_pending;  // the layer patches this frame's closed segments made
+    // the wide scene (G32, gfx_scene.cpp on_wide): while `wide` is set, runs drawn on the swapped root are the scene's, kept in
+    // wide_runs with their boxes moved by wide_ox (scene -> frame columns); at the queue's end they are peeled off the scene and
+    // the ones not inside the frame's columns are published with each frame as world runs (GfxTextRun::target 2, layer -3)
+    bool wide = false;
+    int32_t wide_ox = 0;
+    std::vector<Run> wide_runs;
+    std::vector<GfxTextRun> wide_published;
+  } text;
   // P9B: a blend primitive wrote word `res` at root pixel i: kind 2 (mask blend: src, k) or 3 (shade table k). Recorded only
   // from the first layer of a frame to its publish (in a layer or in the centred gap after one) while the pixel still holds
   // the segment's background (an earlier write of the same layer makes it opaque)
@@ -181,6 +204,30 @@ void draw_text(Gfx &g, Ctx &ctx, const uint32_t *a, bool centre, const char *who
 void draw_frame_r3(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h);
 // drawMessageBuffer(cols, x, y, colour) over the text buffer
 void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour);
+
+// P9C: a TextMetrics::draw_glyphs call on a surface (px, w x h words), kept as a text run when text capture is on. `ox, oy` is
+// where the surface lands in the back buffer (0, 0 for the root; a window's position), `clip` the target's clip rectangle in the
+// surface's coordinates (x0, y0, x1, y1). begin snapshots the surface, end diffs it and records the run.
+struct TextRunScope {
+  std::vector<uint16_t> snap;
+  bool on = false;
+};
+void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s);
+void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
+                  const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
+                  uint8_t target);
+// the banner's runs (text family's loading.banner): new runs go to a list of their own until text_banner_end publishes them
+// over the banner picture `img`
+void text_banner_begin(Gfx &g);
+// the wide scene's runs (gfx_scene.cpp, G32): forgotten at the queue's start, peeled off the scene at its end (gfx.cpp)
+void text_wide_begin(Gfx &g);
+void text_wide_end(Gfx &g, const std::vector<uint16_t> &scene, int32_t scene_w, int32_t scene_e, std::vector<uint16_t> &scene_text);
+}  // namespace gfxb
+namespace gfxe {
+bool window_origin(Gfx &g, const Surface16 *surf, int32_t &x, int32_t &y);  // gfx_editbox.cpp (P9C)
+}
+namespace gfxb {
+void text_banner_end(Gfx &g, const std::vector<uint16_t> &img);
 
 // the body registered under `name` (core table or a family), or nullptr; `family` gets the owner ("gfx" for the core table)
 GfxBody find_body(const char *name, const char **family = nullptr);

@@ -1,0 +1,11 @@
+sandbox_basic	trace.trace	af96ba979f03ca52	af96ba979f03ca52	af96ba979f03ca52	IDENTICAL
+sandbox_basic	trace.trace	control gditext=9	af96ba979f03ca52	af96ba979f03ca52	SAME_AS_NATIVE
+sandbox_basic	framehash.bin	b6545fc6c40874be	b6545fc6c40874be	b6545fc6c40874be	IDENTICAL
+sandbox_basic	framehash.bin	control gditext=9	b6545fc6c40874be	b6545fc6c40874be	SAME_AS_NATIVE
+sandbox_basic records 439 presents 448 p9c {'text_res': 'native', 'text_aa': 'system', 'captured': 5641, 'published_last': 7, 'dropped': 445, 'no_font': 0, 'frames': 795, 'merged': 5189, 'shot_runs': 40, 'shot_clipped_runs': 0, 'shot_clipped_px': 0, 'shot_failed': 0, 'shot_render_us': 77735}
+course_season	trace.trace	37f5c90470fd50bd	37f5c90470fd50bd	37f5c90470fd50bd	IDENTICAL
+course_season	framehash.bin	549da51fc6ff9cce	549da51fc6ff9cce	549da51fc6ff9cce	IDENTICAL
+course_season records 6296 presents 6305 p9c {'text_res': 'native', 'text_aa': 'system', 'captured': 111566, 'published_last': 13, 'dropped': 47772, 'no_font': 0, 'frames': 6643, 'merged': 46570, 'shot_runs': 58, 'shot_clipped_runs': 0, 'shot_clipped_px': 0, 'shot_failed': 0, 'shot_render_us': 98537}
+championship	trace.trace	dbe81e451a352783	dbe81e451a352783	dbe81e451a352783	IDENTICAL
+championship	framehash.bin	febeb40bdbca80e8	febeb40bdbca80e8	febeb40bdbca80e8	IDENTICAL
+championship records 2305 presents 2334 p9c {'text_res': 'native', 'text_aa': 'system', 'captured': 58665, 'published_last': 12, 'dropped': 3942, 'no_font': 0, 'frames': 2980, 'merged': 51697, 'shot_runs': 186, 'shot_clipped_runs': 0, 'shot_clipped_px': 0, 'shot_failed': 0, 'shot_render_us': 101381}

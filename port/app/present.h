@@ -14,11 +14,13 @@
 #define PORTAPP_PRESENT_H
 
 #include <cstdint>
+#include <memory>
 #include <mutex>
 #include <vector>
 
 #include "input_map.h"
 #include "portsim/sim/gfx.h"  // P9B: GfxHudFrame (the frame's HUD pixel layers)
+#include "textres.h"           // P9C: TextRaster (the frame's text runs at the window's resolution)
 
 namespace portapp {
 
@@ -124,6 +126,11 @@ struct WorldImage {
   // P9B: the frame's HUD pixel layers (empty = none: P8B's path). When set, `mask` was taken over hud.base (host.h
   // make_world_image) and the presenter shows hud.base, the world where the mask says, then every layer in draw order.
   portsim::GfxHudFrame hud;
+  // P9C: the frame's text runs (the host fills it with --text-res native, published with this back buffer; the presenter takes it
+  // with Presenter::set_text whether or not the frame has a world layer)
+  portsim::GfxTextFrame text;
+  std::vector<uint8_t> mask_text;  // P9C: `mask` taken over the picture without the runs' glyphs (empty = none)
+  std::vector<uint16_t> px_text;   // P9C: `px` with the wide scene's text glyphs removed (LiveTerrain::world_frame text = true)
   bool empty() const { return px.empty(); }
 };
 
@@ -144,6 +151,17 @@ class Presenter {
   // G32: the HUD compositor (kHudPanels; off = P8B stage 2: the frame's 2D pixels stay centred) and the remap it keeps current
   void set_hud_anchor(bool on) { hud_anchor_ = on; }
   void set_remap(PanelRemap *r) { remap_ = r; }
+  // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
+  // (each clears the runs): the frame must have been published with the same back buffer (the host checks). With layers, the layers'
+  // base and pixels are replaced by the run-free ones it carries. At a content rectangle of exactly 800 x 600 nothing changes (the
+  // frame's text is already at the window's resolution) unless set_text_unit_redraw (a measurement: the same path at scale 1).
+  void set_text_res(bool native) { text_native_ = native; }
+  void set_text_defect(TextDefect d) { text_defect_ = d; }
+  void set_text_aa(TextAa a) { text_aa_ = a; }
+  void set_text_unit_redraw(bool on) { text_unit_redraw_ = on; }
+  void set_text(portsim::GfxTextFrame &&tf);
+  bool has_text() const { return text_ok_; }
+  const TextResStats *text_stats() const { return raster_ ? &raster_->stats : nullptr; }
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }
   WideFill wide() const { return wide_; }
@@ -175,6 +193,17 @@ class Presenter {
   bool layered() const;                                                                                // P9B
   void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9B
   mutable std::vector<uint32_t> scratch_;
+  // P9C
+  bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;
+  TextDefect text_defect_ = TextDefect::None;
+  TextAa text_aa_ = TextAa::System;
+  portsim::GfxTextFrame text_;
+  portsim::GfxHudFrame hud_text_;  // world_.hud with the base and layer pixels of text_ (the runs' glyphs removed)
+  mutable std::unique_ptr<TextRaster> raster_;
+  const portsim::GfxHudFrame &hud_for(bool text) const;
+  bool text_now(const Viewport &vp) const;  // the runs are drawn for this content rectangle
+  void draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered, int32_t layer,
+                 int32_t dx) const;
 };
 
 }  // namespace portapp

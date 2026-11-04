@@ -17,6 +17,9 @@
 //   7 the TextMetrics interface call ignores its font argument (the context's own +0x5c is measured)
 //   8 P2 fix off: an existing temporary directory is accepted and the fonts are registered session-wide (the old
 //     behaviour; read RED by port/test/test_gditext_tempdir.py)
+//   9 P9C: Font::textWidth measures with the font made at 9 / 5 of its size (a width taken from the window-resolution font
+//     at 1920 x 1080: what --text-res native must never feed the simulation; read RED by the live-trace sim equality,
+//     log/roadmap/P9/P9C_notes.md)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -388,7 +391,13 @@ int32_t MarkupTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t 
 // extent's cx returned. The SIZE starts as the debug build's 0xcccccccc fill, which a failed call (a negative count) leaves.
 int32_t GdiTextMetrics::font_extent(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n) {
 #ifdef _WIN32
-  Impl::Font &f = resolve(*impl_, ctx, fontref);
+  Impl::Font *fp = &resolve(*impl_, ctx, fontref);
+  if (SG_NEGCTL(g_negctl_gditext) == 9) {  // P9C control: the scaled font's width
+    LOGFONTA lf = logfont_of(ctx, spec_of(ctx, fontref));
+    lf.lfHeight = lf.lfHeight * 9 / 5;
+    fp = &impl_->font(lf);
+  }
+  Impl::Font &f = *fp;
   const std::vector<uint8_t> b = vbytes(ctx.mem, s, n > 0 ? u32(n) : 0u);
   HDC d = impl_->the_dc();
   SelectObject(d, f.h);

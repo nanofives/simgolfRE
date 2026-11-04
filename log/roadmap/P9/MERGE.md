@@ -29,3 +29,8 @@ What changed for the player:
 
 Left: a click where a panel used to be still reaches that panel (needs play switches in the game's hit tests); a tool preview drawn
 at the cursor over a moved panel shows at the panel's old place; the hire dialog / title-menu Esc decisions.
+
+## P9C merge (2026-11-04): text at the window's resolution
+P9C.patch (made on c5e66b59) applied to 0bc71594, whose port/ equals c5e66b59's (the two commits between touch only CLAUDE.md,
+re/history/ and scripts/gates.py). Every patched file equals port/build/P9C's except for line endings, so the worker's gates
+(P9C_gates.log, P9C_notes.md section 4) are the merged tree's. Write-up: re/history/ROADMAP.md, P9C paragraph.

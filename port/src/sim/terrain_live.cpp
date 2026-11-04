@@ -165,7 +165,7 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
 }
 
 bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
-                              std::vector<uint8_t> &mask) const {
+                              std::vector<uint8_t> &mask, bool text) const {
   if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
   if (back800.size() != world_->terrain800.size()) return false;
   px = world_->raster->pixels();
@@ -185,7 +185,8 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
   }
   for (int32_t y = 0; y < w.ph; ++y) {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
-    const uint16_t *sr = w.scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    const std::vector<uint16_t> &scene = text && w.scene_text.size() == w.scene.size() ? w.scene_text : w.scene;  // P9C
+    const uint16_t *sr = scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
     const uint16_t *br = w.scene_base.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
     uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
     for (int32_t x = 0; x < w.pw; ++x) {

@@ -73,6 +73,9 @@ struct LiveTerrainWorld {
   // s0[p] (a pixel the queue drew); the rest (2D drawn before the queue in the frame, such as walker labels, and the HUD after it)
   // stays the frame's
   std::vector<uint16_t> scene, scene_base, s0, s1;   // s0 = the root surface at the queue's start
+  // P9C: the scene with the glyphs of the text runs drawn into it (the golfer labels' second draw) put back, made at the queue's
+  // end while text capture is on (empty = none); world_frame(..., text = true) lays it in place of `scene`
+  std::vector<uint16_t> scene_text;
   int32_t scene_w = 0, scene_e = 0;
   bool scene_valid = false;
   int64_t scene_passes = 0;
@@ -175,7 +178,8 @@ class LiveTerrain : public TerrainApi {
   // The world layer for a presented frame: px = its pixels (pw * ph), mask[p] = 1 where the frame's pixel p (800 x 600) shows the
   // world (it equals the terrain picture T there). False (nothing written) without a world layer, before its first pass, or when
   // the frame holds no terrain (back_terrain 0: the 2D screens and full-screen overlays are shown as before).
-  bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask) const;
+  bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask,
+                   bool text = false) const;  // P9C: text = the scene without its text runs' glyphs (scene_text)
   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
   void frame_begin();
   void frame_end();

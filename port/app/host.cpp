@@ -358,8 +358,11 @@ void LiveSession::post_loading(portsim::Ctx &ctx, uint32_t done) {
     ctx.files().read("$gfx/banner.555", 0, px.data(), static_cast<uint64_t>(n));
     banner_shown_ = true;
   }
+  WorldImage banner_text;  // P9C: the banner's own runs (a frame put back after the load has none)
+  if (opt_.text_native && done != 0) take_text_frame(ctx, px, banner_text.text, true);
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
+    frame_world_ = std::move(banner_text);
     frame_slot_ = std::move(px);
     frame_index_ = kBannerIndex;
     frame_band_ = BandFill::Extend;
@@ -444,7 +447,15 @@ void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
     in_game_ = true;
 }
 
-bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi) {
+bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner) {
+  const bool got = banner ? portsim::gfx_text_banner(ctx, tf) : portsim::gfx_text_frame(ctx, tf);
+  if (got && tf.back == px && !tf.empty()) return true;
+  tf = portsim::GfxTextFrame{};
+  return false;
+}
+
+bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
+                      const portsim::GfxTextFrame *text) {
   const portsim::LiveTerrainWorld *w = live.world();
   if (!w) return false;
   const bool terrain = portsim::gfx_back_terrain(ctx);
@@ -452,6 +463,17 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   portsim::GfxHudFrame f;
   const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
   if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask)) return false;
+  // P9C: with the frame's text runs, also the mask over the picture without their glyphs (a label over the course shows the
+  // world under its window-resolution glyphs); the presenter takes it when it draws the runs
+  if (text && !text->empty()) {
+    const std::vector<uint16_t> *src = nullptr;
+    if (use && text->hud_serial == f.serial && text->base_clean.size() == f.base.size()) src = &text->base_clean;
+    else if (!use && text->clean.size() == px.size()) src = &text->clean;
+    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true)) {
+      wi.px_text.clear();
+      wi.mask_text.clear();
+    }
+  }
   wi.pw = w->pw;
   wi.ph = w->ph;
   wi.fw = w->fw;
@@ -547,11 +569,18 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   const uint32_t index = static_cast<uint32_t>(presents_.size());
   presents_.push_back({index, mark, frame_, records_, kind, frame_hash(px)});
   WorldImage wi;  // P8B: the world layer under this frame (none without HostOptions::world or before the first terrain pass)
+  portsim::GfxTextFrame tf;  // P9C
+  const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
   if (opt_.world && terrain_log && terrain_log->live)
-    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi)) {
+    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr)) {
       ++presents_world_;
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
+  if (text) {
+    ++presents_text_;
+    text_runs_ += tf.runs.size();
+    wi.text = std::move(tf);
+  }
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
     frame_world_ = std::move(wi);
@@ -1032,6 +1061,8 @@ std::string LiveSession::summary_json(const Result &r) const {
        ",\"view_writes\":" + std::to_string(view_writes_) + ",\"world_resizes\":" + std::to_string(world_resizes_) +
        ",\"view_width\":" + std::to_string(applied_w_) + ",\"hud_remapped\":" +
        std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32
+  s += ",\"p9c\":{\"text_native\":" + std::to_string(opt_.text_native ? 1 : 0) + ",\"presents_text\":" +
+       std::to_string(presents_text_) + ",\"runs\":" + std::to_string(text_runs_) + "}";  // P9C
   s += ",\"memory\":" + memory.json();
   if (tlog_calls_ >= 0)
     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +

@@ -1,0 +1,1904 @@
+diff --git a/port/include/portsim/sim/gfx.h b/port/include/portsim/sim/gfx.h
+index 805a5e4..662ab60 100644
+--- a/port/include/portsim/sim/gfx.h
++++ b/port/include/portsim/sim/gfx.h
+@@ -14,6 +14,7 @@
+ 
+ #include <atomic>
+ #include <cstdint>
++#include <string>
+ #include <vector>
+ 
+ #include "portsim/registry.h"
+@@ -125,6 +126,83 @@ struct GfxLayerScope {
+   GfxLayerScope &operator=(const GfxLayerScope &) = delete;
+ };
+ 
++// ------------------------------------------------------------------------------------------------ P9C: text runs
++// Text at the window's resolution (log/roadmap/P9/P9C_notes.md). Every text the backend draws reaches the screen through one
++// call, the provider's TextMetrics::draw_glyphs (jgld's TextOutA: draw_text_string, the text family's run drawer for the root
++// and for a window target). With text capture on (gfx_set_text_capture, set only by the app's host for --text-res native) each
++// such call is kept as a RUN: Font::create's arguments of its FontRef, the COLORREF, the TextOutA origin, the bytes, and the
++// pixels of the box it changed before and after the call. Runs live on their surface until a later write covers every glyph
++// pixel they left. At each Window::refreshFull the runs are PEELED newest first over the back buffer: a box pixel still holding
++// the run's own `after` word shows the run (vis), and a visible glyph pixel is put back to the run's `before` word, so `clean` is
++// the back buffer without the visible low-resolution glyphs and a presenter can draw the same strings at another size over it,
++// limited to each run's visible pixels. With the HUD layers of P9B the same peel is made per layer segment (the layer's pixels
++// patched to what the layer held under the glyph: transparent where it had not drawn) and over the layers' base. Nothing is
++// written into the GameState, the root surface or the back buffer, and the widths the frame code reads are the providers'
++// 800-space ones: the frame every gate sees is the same with capture on or off.
++struct GfxTextRun {
++  uint32_t fontref = 0;                   // the FontRef object (gditext's font table key)
++  std::string face;                       // Font::create's face, size (lfHeight = -size) and style bits (gditext.h GameFont)
++  int32_t size = 0;
++  uint32_t style = 0;
++  uint32_t colorref = 0;                  // SetTextColor's COLORREF (r | g << 8 | b << 16)
++  int32_t x = 0, y = 0;                   // TextOutA's origin (TA_BASELINE), back-buffer 800-space
++  std::string text;                       // the bytes TextOutA drew
++  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the box: the pixels the call changed plus a margin (a third of the size, at least 3), in the clip, half-open
++  int32_t layer = -2;                     // layered path: -1 the base, k >= 0 GfxHudFrame::layers[k], -2 not shown there,
++                                          // -3 a world run (target 2)
++  uint8_t target = 0;                     // 0 the root surface, 1 a window-tree child's surface (composed at its position),
++                                          // 2 G32's wide scene beside the frame (a world run: layer -3, drawn over the world)
++  std::vector<uint8_t> vis;               // (x1 - x0) * (y1 - y0): 1 where the run shows in the back buffer (non-layered path)
++  std::vector<uint8_t> vis_layer;         // the same in its layer or the base (layered path; empty unless layer >= -1)
++  uint8_t visible(int32_t px, int32_t py, bool layered) const {
++    if (px < x0 || px >= x1 || py < y0 || py >= y1) return 0;
++    const std::vector<uint8_t> &v = layered ? vis_layer : vis;
++    const size_t i = static_cast<size_t>(py - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(px - x0);
++    return i < v.size() ? v[i] : 0;
++  }
++};
++// a layer pixel the peel changed: index into the layer's px, and what the layer holds without the glyph
++struct GfxTextLayerPatch {
++  int32_t layer = 0;
++  std::vector<uint32_t> idx;
++  std::vector<GfxLayerPx> px;
++};
++struct GfxTextFrame {
++  uint64_t serial = 0;
++  uint64_t hud_serial = 0;           // the GfxHudFrame published at the same Window::refreshFull (0 = none)
++  std::vector<uint16_t> back;        // the back buffer the runs were published with
++  std::vector<uint16_t> clean;       // back with every visible glyph pixel put back
++  std::vector<uint16_t> base_clean;  // layered: the HUD frame's base the same way (empty = no layers this frame)
++  std::vector<GfxTextLayerPatch> patches;  // layered: the layer pixels the peel changed
++  std::vector<GfxTextRun> runs;      // draw order (the root's, then the window targets')
++  bool empty() const { return runs.empty(); }
++};
++// the patched-transparent marker of GfxTextLayerPatch (kind 0, k 0xff): the layer drew there (a glyph), so a click there is the
++// layer's (PanelRemap coverage), but nothing of it shows once the glyph is removed
++constexpr uint8_t kGfxTextCoverMark = 0xff;
++// The peel over an image (w x h words, rows top-down): for runs newest first, every box pixel holding the run's `after` word is
++// visible (vis[k]) and a visible pixel whose before differs from after is put back to before. before / after are the runs' box
++// words in the image's coordinates.
++struct GfxTextPeelRun {
++  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
++  const uint16_t *before = nullptr, *after = nullptr;
++};
++void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::vector<GfxTextPeelRun> &runs,
++                   std::vector<std::vector<uint8_t>> &vis);
++void gfx_set_text_capture(Ctx &ctx, bool on);  // the app's host only
++bool gfx_text_capture(Ctx &ctx);
++// the runs published at the last Window::refreshFull (false when capture is off or nothing was published)
++bool gfx_text_frame(Ctx &ctx, GfxTextFrame &out);
++// the runs of the last loading.banner picture ($gfx/banner.555; P8A)
++bool gfx_text_banner(Ctx &ctx, GfxTextFrame &out);
++// counters: runs captured, runs published at the last refresh, runs dropped (no visible pixel left), runs whose font the
++// provider's table does not hold (left in 800-space)
++struct GfxTextStats {
++  uint64_t captured = 0, published = 0, dropped = 0, no_font = 0, frames = 0, merged = 0;  // merged: repeats (gfx.cpp)
++};
++GfxTextStats gfx_text_stats(Ctx &ctx);
++extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on
++
+ }  // namespace portsim
+ 
+ #endif
+diff --git a/port/src/sim/gfx_body.h b/port/src/sim/gfx_body.h
+index 645ed00..afff9e5 100644
+--- a/port/src/sim/gfx_body.h
++++ b/port/src/sim/gfx_body.h
+@@ -100,7 +100,30 @@ class Gfx {
+     std::vector<GfxHudLayer> layers;
+     GfxHudFrame published;
+     uint64_t serial = 0;
++    int64_t seg = 0;          // P9C: the segment counter (a layer, or the centred gap between two), advanced at every boundary
+   } hud;
++  // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
++  struct TextCapture {
++    bool on = false;
++    struct Run {
++      GfxTextRun info;                     // box in back-buffer coordinates
++      std::vector<uint16_t> before, after;  // the box's words before / after the call
++      int64_t seg = -1;                    // the HUD segment it was drawn in, -1 = the base (before the frame's first layer)
++    };
++    std::vector<Run> live;                 // on the root and the window targets, oldest first
++    std::vector<Run> *sink = nullptr;      // where new runs go (live, or the banner's own list while loading.banner runs)
++    uint64_t serial = 0;
++    GfxTextFrame published, banner;
++    GfxTextStats stats;
++    std::vector<GfxTextLayerPatch> patches_pending;  // the layer patches this frame's closed segments made
++    // the wide scene (G32, gfx_scene.cpp on_wide): while `wide` is set, runs drawn on the swapped root are the scene's, kept in
++    // wide_runs with their boxes moved by wide_ox (scene -> frame columns); at the queue's end they are peeled off the scene and
++    // the ones not inside the frame's columns are published with each frame as world runs (GfxTextRun::target 2, layer -3)
++    bool wide = false;
++    int32_t wide_ox = 0;
++    std::vector<Run> wide_runs;
++    std::vector<GfxTextRun> wide_published;
++  } text;
+   // P9B: a blend primitive wrote word `res` at root pixel i: kind 2 (mask blend: src, k) or 3 (shade table k). Recorded only
+   // from the first layer of a frame to its publish (in a layer or in the centred gap after one) while the pixel still holds
+   // the segment's background (an earlier write of the same layer makes it opaque)
+@@ -182,6 +205,30 @@ void draw_frame_r3(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h)
+ // drawMessageBuffer(cols, x, y, colour) over the text buffer
+ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour);
+ 
++// P9C: a TextMetrics::draw_glyphs call on a surface (px, w x h words), kept as a text run when text capture is on. `ox, oy` is
++// where the surface lands in the back buffer (0, 0 for the root; a window's position), `clip` the target's clip rectangle in the
++// surface's coordinates (x0, y0, x1, y1). begin snapshots the surface, end diffs it and records the run.
++struct TextRunScope {
++  std::vector<uint16_t> snap;
++  bool on = false;
++};
++void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s);
++void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
++                  const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
++                  uint8_t target);
++// the banner's runs (text family's loading.banner): new runs go to a list of their own until text_banner_end publishes them
++// over the banner picture `img`
++void text_banner_begin(Gfx &g);
++// the wide scene's runs (gfx_scene.cpp, G32): forgotten at the queue's start, peeled off the scene at its end (gfx.cpp)
++void text_wide_begin(Gfx &g);
++void text_wide_end(Gfx &g, const std::vector<uint16_t> &scene, int32_t scene_w, int32_t scene_e, std::vector<uint16_t> &scene_text);
++}  // namespace gfxb
++namespace gfxe {
++bool window_origin(Gfx &g, const Surface16 *surf, int32_t &x, int32_t &y);  // gfx_editbox.cpp (P9C)
++}
++namespace gfxb {
++void text_banner_end(Gfx &g, const std::vector<uint16_t> &img);
++
+ // the body registered under `name` (core table or a family), or nullptr; `family` gets the owner ("gfx" for the core table)
+ GfxBody find_body(const char *name, const char **family = nullptr);
+ 
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+index 5b930ef..b0427d9 100644
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -40,6 +40,7 @@
+ #include "portsim/gamefiles.h"
+ #include "portsim/ptr.h"
+ #include "portsim/sim/commands.h"
++#include "portsim/sim/gditext.h"  // P9C: GameFont of a run
+ #include "portsim/sim/gfx_hud.h"
+ #include "portsim/sim/gfx_scene.h"
+ #include "portsim/sim/gfx_text.h"
+@@ -448,8 +449,13 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
+   const int32_t x = centre ? add32(x0, (0 - width) / 2) : x0;
+   const int32_t y = add32(y0, ascent);
+   const uint32_t r = (colour >> 7) & 0xf8, gr = (colour >> 2) & 0xf8, b = (colour << 3) & 0xff;
+-  if (!tm->draw_glyphs(ctx, font, text, x, y, r | (gr << 8) | (b << 16), g.root.px.data(), g.root.w, g.root.h))
++  const uint32_t ref = r | (gr << 8) | (b << 16);
++  TextRunScope ts;  // P9C: the run (inert with text capture off)
++  text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
++  if (!tm->draw_glyphs(ctx, font, text, x, y, ref, g.root.px.data(), g.root.w, g.root.h))
+     g.unsup(std::string(who) + ": the provider cannot draw");
++  const int32_t clip[4] = {0, 0, g.root.w, g.root.h};
++  text_run_end(g, ctx, ts, g.root.px.data(), g.root.w, g.root.h, 0, 0, clip, font, text, x, y, ref, 0);
+ }
+ void draw_text(Gfx &g, Ctx &ctx, const uint32_t *a, bool centre, const char *who) {
+   if (a[0] == 0) return;
+@@ -496,6 +502,321 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   draw_text(g, ctx, args, true, "drawPanelBackdrop");
+ }
+ 
++// ---- P9C: text runs (gfx.h GfxTextRun, gfx_body.h Gfx::TextCapture)
++void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s) {
++  s.on = g.text.on && w > 0 && h > 0;
++  if (s.on) s.snap.assign(px, px + static_cast<size_t>(w) * static_cast<size_t>(h));
++}
++void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
++                  const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
++                  uint8_t target) {
++  if (!s.on || !g.text.on || s.snap.size() != static_cast<size_t>(w) * static_cast<size_t>(h)) return;
++  int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
++  for (int32_t yy = 0; yy < h; ++yy) {
++    const uint16_t *a = s.snap.data() + static_cast<size_t>(yy) * w, *b = px + static_cast<size_t>(yy) * w;
++    if (std::memcmp(a, b, static_cast<size_t>(w) * 2) == 0) continue;
++    for (int32_t xx = 0; xx < w; ++xx)
++      if (a[xx] != b[xx]) {
++        x0 = std::min(x0, xx);
++        x1 = std::max(x1, xx);
++      }
++    y0 = std::min(y0, yy);
++    y1 = yy;
++  }
++  if (x1 < 0) return;  // the call changed no pixel: nothing to redraw
++  ++g.text.stats.captured;
++  GameFont gf;
++  try {
++    gf = game_font(ctx, fontref);
++  } catch (const MissingResource &) {
++    ++g.text.stats.no_font;  // a font the provider's table does not hold: the run stays in 800-space
++    return;
++  }
++  // the box: the changed pixels plus a margin, inside the clip
++  // (a margin of a third of the font size, at least 3: at another size the ink of the same string reaches past the 800-space one,
++  // the dots of an i above it at 1280 x 720; the margin is only drawn where it still shows the run's own after words)
++  const int32_t kMargin = std::max<int32_t>(3, gf.size / 3);
++  const int32_t cx0 = std::max(clip[0], 0), cy0 = std::max(clip[1], 0), cx1 = std::min(clip[2], w), cy1 = std::min(clip[3], h);
++  x0 = std::max(x0 - kMargin, cx0);
++  y0 = std::max(y0 - kMargin, cy0);
++  x1 = std::min(x1 + 1 + kMargin, cx1);
++  y1 = std::min(y1 + 1 + kMargin, cy1);
++  if (x1 <= x0 || y1 <= y0) return;
++  Gfx::TextCapture::Run r;
++  r.info.fontref = fontref;
++  r.info.face = gf.face;
++  r.info.size = gf.size;
++  r.info.style = gf.style;
++  r.info.colorref = colorref;
++  if (g.text.wide && target == 0) {  // the wide scene's copy of a frame text (gfx_scene.cpp on_wide)
++    ox += g.text.wide_ox;
++    target = 2;
++  }
++  r.info.x = add32(x, ox);
++  r.info.y = add32(y, oy);
++  r.info.text = text;
++  r.info.target = target;
++  r.info.x0 = x0 + ox;
++  r.info.y0 = y0 + oy;
++  r.info.x1 = x1 + ox;
++  r.info.y1 = y1 + oy;
++  const size_t bw = static_cast<size_t>(x1 - x0);
++  r.before.resize(bw * static_cast<size_t>(y1 - y0));
++  r.after.resize(r.before.size());
++  for (int32_t yy = y0; yy < y1; ++yy)
++    for (int32_t xx = x0; xx < x1; ++xx) {
++      const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(w) + static_cast<size_t>(xx);
++      const size_t j = static_cast<size_t>(yy - y0) * bw + static_cast<size_t>(xx - x0);
++      r.before[j] = s.snap[i];
++      r.after[j] = px[i];
++    }
++  // the HUD segment it belongs to (P9B's layers are made on the root only)
++  r.seg = target == 0 && g.hud.on && g.hud.any ? g.hud.seg : -1;
++  std::vector<Gfx::TextCapture::Run> &sink = target == 2 ? g.text.wide_runs : g.text.sink ? *g.text.sink : g.text.live;
++  // A repeat: a text the game draws again over its own last copy each frame (the status meters, a label in a box nothing
++  // repaints) leaves, once the blend has settled, a run equal to an earlier one in every word of before and after. The earlier
++  // copy is removed and the new one kept at the end (its draw position and segment): the peel chain is unchanged (the copy
++  // before it ends in the same words) and the list stays bounded.
++  for (size_t k = sink.size(); k-- > 0;) {
++    const Gfx::TextCapture::Run &e = sink[k];
++    if (e.info.x0 == r.info.x0 && e.info.y0 == r.info.y0 && e.info.x1 == r.info.x1 && e.info.y1 == r.info.y1 &&
++        e.info.x == r.info.x && e.info.y == r.info.y && e.info.colorref == r.info.colorref && e.info.fontref == r.info.fontref &&
++        e.info.target == r.info.target && e.info.text == r.info.text && e.before == r.before && e.after == r.after) {
++      sink.erase(sink.begin() + static_cast<std::ptrdiff_t>(k));
++      ++g.text.stats.merged;
++      break;
++    }
++  }
++  sink.push_back(std::move(r));
++  constexpr size_t kMaxLive = 4096;  // a screen that draws text forever without covering it: the oldest go first
++  if (sink.size() > kMaxLive) {
++    g.text.stats.dropped += sink.size() - kMaxLive;
++    sink.erase(sink.begin(), sink.begin() + static_cast<std::ptrdiff_t>(sink.size() - kMaxLive));
++  }
++}
++
++namespace {
++std::vector<GfxTextPeelRun> peel_runs(const std::vector<Gfx::TextCapture::Run> &rs, const std::vector<size_t> &order) {
++  std::vector<GfxTextPeelRun> out;
++  out.reserve(order.size());
++  for (size_t k : order) {
++    const Gfx::TextCapture::Run &r = rs[k];
++    GfxTextPeelRun p;
++    p.x0 = r.info.x0;
++    p.y0 = r.info.y0;
++    p.x1 = r.info.x1;
++    p.y1 = r.info.y1;
++    p.before = r.before.data();
++    p.after = r.after.data();
++    out.push_back(p);
++  }
++  return out;
++}
++// A segment of the HUD capture closed (a layer, or the centred gap before / after one): its runs are peeled over the root as it
++// is now. `layer` is the index of the layer the segment made in g.hud.layers (-1 = none: its runs are not shown on the layered
++// path), `ref` the root at the segment's start (a pixel equal to it without the glyph was not drawn by the layer: transparent).
++void text_close_segment(Gfx &g, int64_t seg, int32_t layer, const std::vector<uint16_t> &ref) {
++  if (!g.text.on) return;
++  std::vector<Gfx::TextCapture::Run> &live = g.text.live;
++  std::vector<size_t> order;
++  for (size_t k = 0; k < live.size(); ++k)
++    if (live[k].seg == seg && live[k].info.target == 0) order.push_back(k);
++  if (order.empty()) return;
++  if (layer < 0 || static_cast<size_t>(layer) >= g.hud.layers.size()) {
++    for (size_t k : order) {
++      live[k].info.layer = -2;
++      live[k].info.vis_layer.clear();
++    }
++    return;
++  }
++  const GfxHudLayer &L = g.hud.layers[static_cast<size_t>(layer)];
++  std::vector<uint16_t> cur = g.root.px;
++  std::vector<std::vector<uint8_t>> vis;
++  gfx_text_peel(cur, g.root.w, g.root.h, peel_runs(live, order), vis);
++  for (size_t n = 0; n < order.size(); ++n) {
++    live[order[n]].info.layer = layer;
++    live[order[n]].info.vis_layer = std::move(vis[n]);
++  }
++  GfxTextLayerPatch patch;
++  patch.layer = layer;
++  const int32_t bw = L.x1 - L.x0;
++  const bool rec = g.hud.rec_gen.size() == g.root.px.size();
++  for (int32_t y = L.y0; y < L.y1; ++y)
++    for (int32_t x = L.x0; x < L.x1; ++x) {
++      const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
++      if (cur[i] == g.root.px[i]) continue;
++      GfxLayerPx p;
++      if (i < ref.size() && cur[i] == ref[i]) {
++        p.kind = 0;
++        p.k = kGfxTextCoverMark;
++      } else if (rec && g.hud.rec_gen[i] == g.hud.gen && g.hud.rec[i].kind >= 2 && g.hud.rec[i].px == cur[i]) {
++        p = g.hud.rec[i];  // the blend the layer drew there before the glyph
++      } else {
++        p.kind = 1;
++        p.px = cur[i];
++      }
++      patch.idx.push_back(static_cast<uint32_t>(static_cast<size_t>(y - L.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - L.x0)));
++      patch.px.push_back(p);
++    }
++  if (!patch.idx.empty()) g.text.patches_pending.push_back(std::move(patch));  // collected for this frame's publish
++}
++// whether a visibility mask shows any of the run's glyph pixels (before != after)
++bool shows_any(const Gfx::TextCapture::Run &r, const std::vector<uint8_t> &v) {
++  for (size_t j = 0; j < v.size() && j < r.before.size(); ++j)
++    if (v[j] && r.before[j] != r.after[j]) return true;
++  return false;
++}
++// The peel over img with the runs of `order`, keeping only a run of which at least a quarter of the glyph pixels still show: a
++// run the screen has drawn over keeps a few pixels whose new word equals its `after` by chance (white text under a white globe),
++// and a window-resolution string drawn through those would leave dots. The others are peeled again without the dropped ones.
++// keep[k] = 1 for the kept runs; their vis (or vis_layer with `layer_vis`) is set, the dropped ones' is cleared.
++void peel_kept(std::vector<uint16_t> &img, int32_t w, int32_t h, std::vector<Gfx::TextCapture::Run> &live,
++               const std::vector<size_t> &order, std::vector<uint8_t> &keep, bool layer_vis) {
++  std::vector<uint16_t> work = img;
++  std::vector<std::vector<uint8_t>> vis;
++  gfx_text_peel(work, w, h, peel_runs(live, order), vis);
++  std::vector<size_t> ok;
++  for (size_t n = 0; n < order.size(); ++n) {
++    const Gfx::TextCapture::Run &r = live[order[n]];
++    size_t glyph = 0, shown = 0;
++    for (size_t j = 0; j < r.before.size(); ++j)
++      if (r.before[j] != r.after[j]) {
++        ++glyph;
++        if (j < vis[n].size() && vis[n][j]) ++shown;
++      }
++    if (shown > 0 && shown * 4 >= glyph) ok.push_back(order[n]);
++  }
++  if (ok.size() != order.size()) {  // again without the dropped runs
++    work = img;
++    gfx_text_peel(work, w, h, peel_runs(live, ok), vis);
++  }
++  img = std::move(work);
++  for (size_t k : order) (layer_vis ? live[k].info.vis_layer : live[k].info.vis).clear();
++  for (size_t n = 0; n < ok.size(); ++n) {
++    (layer_vis ? live[ok[n]].info.vis_layer : live[ok[n]].info.vis) = std::move(vis[n]);
++    keep[ok[n]] = 1;
++  }
++}
++}  // namespace
++
++// Window::refreshFull: the runs over the back buffer (and, with layers this frame, over the base), published with it
++static void text_publish(Gfx &g, const GfxHudFrame *hud) {
++  Gfx::TextCapture &c = g.text;
++  if (!c.on) return;
++  std::vector<Gfx::TextCapture::Run> &live = c.live;
++  GfxTextFrame f;
++  f.serial = ++c.serial;
++  f.patches = std::move(c.patches_pending);  // the layer patches the segments of this frame collected
++  c.patches_pending.clear();
++  // the back path: the root's runs in draw order, then the window targets' (composed over the root)
++  std::vector<size_t> order;
++  for (int t = 0; t < 2; ++t)
++    for (size_t k = 0; k < live.size(); ++k)
++      if (live[k].info.target == t) order.push_back(k);
++  f.back = g.back.px;
++  f.clean = g.back.px;
++  std::vector<uint8_t> keep(live.size(), 0);
++  peel_kept(f.clean, g.back.w, g.back.h, live, order, keep, false);
++  bool layered = false;
++  if (hud && !hud->empty()) {  // the layered path: the base's runs (drawn before the frame's first layer, or kept from before)
++    layered = true;
++    f.hud_serial = hud->serial;
++    std::vector<size_t> base_order;
++    for (size_t k = 0; k < live.size(); ++k)
++      if (live[k].seg == -1 && live[k].info.target == 0) base_order.push_back(k);
++    f.base_clean = hud->base;
++    std::vector<uint8_t> base_keep(live.size(), 0);
++    peel_kept(f.base_clean, g.root.w, g.root.h, live, base_order, base_keep, true);
++    for (size_t k : base_order) live[k].info.layer = base_keep[k] ? -1 : -2;
++  } else {
++    f.patches.clear();
++  }
++  std::vector<Gfx::TextCapture::Run> next;
++  for (size_t k = 0; k < live.size(); ++k) {
++    // the layered path shows a run of this frame's layers (peeled at its segment) even when a later layer covers its place
++    // in the back buffer: that layer may be composed elsewhere
++    const bool in_layer = layered && live[k].info.layer >= -1 && shows_any(live[k], live[k].info.vis_layer);
++    if (!keep[k] && !in_layer) {
++      ++c.stats.dropped;
++      continue;
++    }
++    if (!keep[k]) std::fill(live[k].info.vis.begin(), live[k].info.vis.end(), 0);
++    f.runs.push_back(live[k].info);
++    if (keep[k]) next.push_back(std::move(live[k]));
++    else ++c.stats.dropped;
++  }
++  for (Gfx::TextCapture::Run &r : next) {  // the next frame: everything kept is under its first layer (the base)
++    r.seg = -1;
++    r.info.layer = -2;
++    r.info.vis_layer.clear();
++  }
++  live = std::move(next);
++  // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
++  if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
++  c.stats.published = f.runs.size();
++  ++c.stats.frames;
++  c.published = std::move(f);
++}
++
++// gfx_scene.cpp (G32's wide scene): the queue's start forgets the scene's runs; its end peels them off `scene` into `scene_text`
++// (a copy) and keeps those not inside the frame's columns [0, 800) as world runs
++void text_wide_begin(Gfx &g) {
++  g.text.wide_runs.clear();
++  g.text.wide_published.clear();
++}
++void text_wide_end(Gfx &g, const std::vector<uint16_t> &scene, int32_t scene_w, int32_t scene_e, std::vector<uint16_t> &scene_text) {
++  scene_text.clear();
++  if (!g.text.on || g.text.wide_runs.empty() || scene.size() != static_cast<size_t>(scene_w) * 600) return;
++  scene_text = scene;
++  std::vector<GfxTextPeelRun> pr;
++  for (const Gfx::TextCapture::Run &r : g.text.wide_runs) {
++    GfxTextPeelRun p;
++    p.x0 = r.info.x0 + scene_e;
++    p.y0 = r.info.y0;
++    p.x1 = r.info.x1 + scene_e;
++    p.y1 = r.info.y1;
++    p.before = r.before.data();
++    p.after = r.after.data();
++    pr.push_back(p);
++  }
++  std::vector<std::vector<uint8_t>> vis;
++  gfx_text_peel(scene_text, scene_w, 600, pr, vis);
++  for (size_t k = 0; k < g.text.wide_runs.size(); ++k) {
++    GfxTextRun r = g.text.wide_runs[k].info;
++    if (r.x0 >= 0 && r.x1 <= 800) continue;  // inside the frame: the frame's own run of the same text is drawn
++    r.vis = vis[k];
++    r.vis_layer = vis[k];
++    r.layer = -3;
++    g.text.wide_published.push_back(std::move(r));
++  }
++}
++
++void text_banner_begin(Gfx &g) {
++  if (!g.text.on) return;
++  static thread_local std::vector<Gfx::TextCapture::Run> banner_runs;
++  banner_runs.clear();
++  g.text.sink = &banner_runs;
++}
++void text_banner_end(Gfx &g, const std::vector<uint16_t> &img) {
++  if (!g.text.on || !g.text.sink || g.text.sink == &g.text.live) return;
++  std::vector<Gfx::TextCapture::Run> &rs = *g.text.sink;
++  g.text.sink = &g.text.live;
++  GfxTextFrame f;
++  f.serial = ++g.text.serial;
++  f.back = img;
++  f.clean = img;
++  std::vector<size_t> order;
++  for (size_t k = 0; k < rs.size(); ++k) order.push_back(k);
++  std::vector<std::vector<uint8_t>> vis;
++  gfx_text_peel(f.clean, g.root.w, g.root.h, peel_runs(rs, order), vis);
++  for (size_t k = 0; k < rs.size(); ++k) {
++    rs[k].info.vis = std::move(vis[k]);
++    f.runs.push_back(std::move(rs[k].info));
++  }
++  rs.clear();
++  g.text.banner = std::move(f);
++}
++
+ // ---- P9B: the HUD layer capture (gfx.h GfxHudFrame, gfx_body.h Gfx::HudCapture)
+ namespace {
+ // the root pixels that differ from `ref` as one layer (bounding box, kind 1 = the root's word, or the open layer's blend record
+@@ -556,7 +877,10 @@ static void hud_publish(Gfx &g) {
+   GfxHudFrame f;
+   f.serial = ++c.serial;
+   if (c.any && c.depth == 0) {
++    const size_t before = c.layers.size();
+     hud_gap(g);
++    text_close_segment(g, c.seg, c.layers.size() > before ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);  // P9C
++    ++c.seg;
+     GfxHudLayer l;
+     if (hud_diff(g, g.root.px, g.back.px, kGfxLayerCentred, false, l)) c.layers.push_back(std::move(l));
+     f.base = c.base;
+@@ -597,6 +921,55 @@ bool gfx_hud_frame(Ctx &ctx, GfxHudFrame &out) {
+   out = g->hud.published;
+   return true;
+ }
++// ---- P9C
++std::atomic<int> g_gfx_text_capture{0};
++void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::vector<GfxTextPeelRun> &runs,
++                   std::vector<std::vector<uint8_t>> &vis) {
++  vis.assign(runs.size(), {});
++  for (size_t k = runs.size(); k-- > 0;) {
++    const GfxTextPeelRun &r = runs[k];
++    if (r.x1 <= r.x0 || r.y1 <= r.y0) continue;
++    const size_t bw = static_cast<size_t>(r.x1 - r.x0);
++    std::vector<uint8_t> &v = vis[k];
++    v.assign(bw * static_cast<size_t>(r.y1 - r.y0), 0);
++    for (int32_t y = std::max(r.y0, 0); y < std::min(r.y1, h); ++y)
++      for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, w); ++x) {
++        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
++        const size_t j = static_cast<size_t>(y - r.y0) * bw + static_cast<size_t>(x - r.x0);
++        if (i >= img.size() || img[i] != r.after[j]) continue;  // covered by a later write
++        v[j] = 1;
++        img[i] = r.before[j];
++      }
++  }
++}
++void gfx_set_text_capture(Ctx &ctx, bool on) {
++  Gfx *g = gfx(ctx);
++  if (!g || g->text.on == on) return;
++  g->text = Gfx::TextCapture{};
++  g->text.on = on;
++  g->text.sink = &g->text.live;
++  g_gfx_text_capture.fetch_add(on ? 1 : -1);
++}
++bool gfx_text_capture(Ctx &ctx) {
++  Gfx *g = gfx(ctx);
++  return g && g->text.on;
++}
++bool gfx_text_frame(Ctx &ctx, GfxTextFrame &out) {
++  Gfx *g = gfx(ctx);
++  if (!g || !g->text.on || g->text.published.serial == 0) return false;
++  out = g->text.published;
++  return true;
++}
++bool gfx_text_banner(Ctx &ctx, GfxTextFrame &out) {
++  Gfx *g = gfx(ctx);
++  if (!g || !g->text.on || g->text.banner.serial == 0) return false;
++  out = g->text.banner;
++  return true;
++}
++GfxTextStats gfx_text_stats(Ctx &ctx) {
++  Gfx *g = gfx(ctx);
++  return g ? g->text.stats : GfxTextStats{};
++}
+ const uint16_t *gfx_shade_table(uint8_t id, size_t &n) {
+   if (id == 0) {
+     n = gfxb::shade_lut().size();
+@@ -621,9 +994,12 @@ void gfx_layer_begin(Ctx &ctx, int32_t id) {
+     c.mark = g->root.px;
+     c.any = true;
+   } else {
++    const size_t before = c.layers.size();
+     gfxb::hud_gap(*g);
++    gfxb::text_close_segment(*g, c.seg, c.layers.size() > before ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);  // P9C
+     c.mark = g->root.px;
+   }
++  ++c.seg;  // P9C: the layer's segment
+   c.cur = id;
+   ++c.gen;  // the layer's blend records
+ }
+@@ -634,7 +1010,10 @@ void gfx_layer_end(Ctx &ctx) {
+   if (--c.depth > 0) return;
+   if (c.any && !c.aborted && c.cur >= 0) {
+     GfxHudLayer l;
+-    if (gfxb::hud_diff(*g, c.mark, g->root.px, c.cur, true, l)) c.layers.push_back(std::move(l));
++    const bool made = gfxb::hud_diff(*g, c.mark, g->root.px, c.cur, true, l);
++    if (made) c.layers.push_back(std::move(l));
++    gfxb::text_close_segment(*g, c.seg, made ? static_cast<int32_t>(c.layers.size() - 1) : -1, c.mark);  // P9C
++    ++c.seg;  // P9C: the centred gap after it
+     c.mark = g->root.px;
+     ++c.gen;  // the centred gap's blend records
+   }
+@@ -681,6 +1060,7 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   g.back.px = g.root.px;
+   gfxe::compose(g, ctx);   // roadmap S3.19: Window::blitToTarget of every shown child window over the root's copy
+   hud_publish(g);          // P9B: the frame's HUD layers (inert with capture off)
++  text_publish(g, g.hud.on ? &g.hud.published : nullptr);  // P9C: the frame's text runs (inert with capture off)
+   gfxh::after_present(g, ctx);
+   g.back_terrain = g.root_terrain;
+   std::pair<GfxRefreshHook, void *> h{nullptr, nullptr};
+diff --git a/port/src/sim/gfx_text.cpp b/port/src/sim/gfx_text.cpp
+index e07c8ac..84d9e86 100644
+--- a/port/src/sim/gfx_text.cpp
++++ b/port/src/sim/gfx_text.cpp
+@@ -289,8 +289,18 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
+   // the glyphs go to the root, or to a window target through a scratch copy of its surface of which only the clip rectangle
+   // is kept (roadmap S3.19: the target's handle clips its text, setClip's region)
+   auto put_glyphs = [&](const std::string &seg, int32_t px, int32_t py, uint32_t ref) {
+-    if (!t_target) return tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h);
++    gfxb::TextRunScope ts;  // P9C: the run (inert with text capture off)
++    if (!t_target) {
++      gfxb::text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
++      const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h);
++      const int32_t clip[4] = {0, 0, g.root.w, g.root.h};
++      gfxb::text_run_end(g, ctx, ts, g.root.px.data(), g.root.w, g.root.h, 0, 0, clip, font, seg, px, py, ref, 0);
++      return ok;
++    }
+     Surface16 &d = *t_target->s;
++    int32_t wx = 0, wy = 0;
++    const bool placed = gfxe::window_origin(g, &d, wx, wy);
++    if (placed) gfxb::text_run_begin(g, d.px.data(), d.w, d.h, ts);
+     std::vector<uint16_t> tmp = d.px;
+     const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, tmp.data(), d.w, d.h);
+     const int32_t *c = t_target->clip;
+@@ -299,6 +309,7 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
+         const size_t k = static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx);
+         d.px[k] = tmp[k];
+       }
++    if (placed) gfxb::text_run_end(g, ctx, ts, d.px.data(), d.w, d.h, wx, wy, c, font, seg, px, py, ref, 1);
+     return ok;
+   };
+   auto glyphs = [&](const std::string &seg, int32_t px, int32_t py, uint32_t colour) {
+@@ -1348,6 +1359,7 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   Surface16 saved = std::move(g.root);
+   const int saved_terrain = g.root_terrain;
+   g.root = g.back;
++  gfxb::text_banner_begin(g);  // P9C: the banner's runs, published with its picture
+   const int32_t x = (g.root.w - 0x1a0) / 2 + 8, y = g.root.h * 5 / 12;
+   const uint32_t root = g.root_va(ctx);
+   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+@@ -1364,6 +1376,7 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+       g.root.px[static_cast<size_t>(ty + yy) * g.root.w + (tx + xx)] = edge ? 0x7fff : fill ? 0x7fe7 : 0x2108;
+     }
+   gfxb::put_file(ctx, "$gfx/banner.555", gfxb::surface_bytes(g.root));
++  gfxb::text_banner_end(g, g.root.px);  // P9C
+   g.root = std::move(saved);
+   g.root_terrain = saved_terrain;
+ }
+diff --git a/port/src/sim/gfx_editbox.cpp b/port/src/sim/gfx_editbox.cpp
+index 246a1ea..a084bc0 100644
+--- a/port/src/sim/gfx_editbox.cpp
++++ b/port/src/sim/gfx_editbox.cpp
+@@ -552,6 +552,19 @@ void compose(Gfx &g, Ctx &) {
+     }
+   }
+ }
++// P9C: where a window surface lands in the back buffer (its position), false when it is not one of the composed windows
++bool window_origin(Gfx &g, const Surface16 *surf, int32_t &x, int32_t &y) {
++  auto p = g.family_state.find("editbox");
++  if (p == g.family_state.end() || !p->second || !surf) return false;
++  const EbState &s = *static_cast<const EbState *>(p->second.get());
++  for (const auto &kv : s.win)
++    if (&kv.second.s == surf) {
++      x = kv.second.x;
++      y = kv.second.y + (mode() == 5 ? 1 : 0);
++      return true;
++    }
++  return false;
++}
+ }  // namespace gfxe
+ 
+ extern const GfxFamily kGfxFamily_editbox = {"editbox", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
+diff --git a/port/src/sim/gfx_scene.cpp b/port/src/sim/gfx_scene.cpp
+index d818ade..4fe091c 100644
+--- a/port/src/sim/gfx_scene.cpp
++++ b/port/src/sim/gfx_scene.cpp
+@@ -1080,7 +1080,10 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
+   wide.px.swap(w.scene);
+   std::swap(g.root, wide);
+   const int rt = g.root_terrain;
++  g.text.wide = true;  // P9C: a text drawn here is the scene's (gfx.cpp text_run_end)
++  g.text.wide_ox = -w.scene_e;
+   f();
++  g.text.wide = false;
+   g.root_terrain = rt;
+   std::swap(g.root, wide);
+   wide.px.swap(w.scene);
+@@ -1118,6 +1121,8 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   }
+   w->scene = w->scene_base;
+   w->s0 = g.root.px;
++  w->scene_text.clear();
++  gfxb::text_wide_begin(g);  // P9C
+ }
+ 
+ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+@@ -1346,6 +1351,7 @@ void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+     g.ensure_root(ctx);
+     w->s1 = g.root.px;
+     w->scene_valid = true;
++    gfxb::text_wide_end(g, w->scene, w->scene_w, w->scene_e, w->scene_text);  // P9C: the scene without its runs' glyphs
+     ++w->scene_passes;
+     // development switch SG_WIDE_SCENE_DUMP=<prefix>: the wide scene, its base and s1 of every queue pass go to <prefix>_<pass>.*
+     if (const char *dp = std::getenv("SG_WIDE_SCENE_DUMP")) {
+diff --git a/port/src/sim/gditext.cpp b/port/src/sim/gditext.cpp
+index 68a80ea..43c1752 100644
+--- a/port/src/sim/gditext.cpp
++++ b/port/src/sim/gditext.cpp
+@@ -17,6 +17,9 @@
+ //   7 the TextMetrics interface call ignores its font argument (the context's own +0x5c is measured)
+ //   8 P2 fix off: an existing temporary directory is accepted and the fonts are registered session-wide (the old
+ //     behaviour; read RED by port/test/test_gditext_tempdir.py)
++//   9 P9C: Font::textWidth measures with the font made at 9 / 5 of its size (a width taken from the window-resolution font
++//     at 1920 x 1080: what --text-res native must never feed the simulation; read RED by the live-trace sim equality,
++//     log/roadmap/P9/P9C_notes.md)
+ #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+ #define _CRT_SECURE_NO_WARNINGS
+ #endif
+@@ -388,7 +391,13 @@ int32_t MarkupTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t
+ // extent's cx returned. The SIZE starts as the debug build's 0xcccccccc fill, which a failed call (a negative count) leaves.
+ int32_t GdiTextMetrics::font_extent(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n) {
+ #ifdef _WIN32
+-  Impl::Font &f = resolve(*impl_, ctx, fontref);
++  Impl::Font *fp = &resolve(*impl_, ctx, fontref);
++  if (SG_NEGCTL(g_negctl_gditext) == 9) {  // P9C control: the scaled font's width
++    LOGFONTA lf = logfont_of(ctx, spec_of(ctx, fontref));
++    lf.lfHeight = lf.lfHeight * 9 / 5;
++    fp = &impl_->font(lf);
++  }
++  Impl::Font &f = *fp;
+   const std::vector<uint8_t> b = vbytes(ctx.mem, s, n > 0 ? u32(n) : 0u);
+   HDC d = impl_->the_dc();
+   SelectObject(d, f.h);
+diff --git a/port/include/portsim/sim/terrain_live.h b/port/include/portsim/sim/terrain_live.h
+index 209f122..941341c 100644
+--- a/port/include/portsim/sim/terrain_live.h
++++ b/port/include/portsim/sim/terrain_live.h
+@@ -73,6 +73,9 @@ struct LiveTerrainWorld {
+   // s0[p] (a pixel the queue drew); the rest (2D drawn before the queue in the frame, such as walker labels, and the HUD after it)
+   // stays the frame's
+   std::vector<uint16_t> scene, scene_base, s0, s1;   // s0 = the root surface at the queue's start
++  // P9C: the scene with the glyphs of the text runs drawn into it (the golfer labels' second draw) put back, made at the queue's
++  // end while text capture is on (empty = none); world_frame(..., text = true) lays it in place of `scene`
++  std::vector<uint16_t> scene_text;
+   int32_t scene_w = 0, scene_e = 0;
+   bool scene_valid = false;
+   int64_t scene_passes = 0;
+@@ -175,7 +178,8 @@ class LiveTerrain : public TerrainApi {
+   // The world layer for a presented frame: px = its pixels (pw * ph), mask[p] = 1 where the frame's pixel p (800 x 600) shows the
+   // world (it equals the terrain picture T there). False (nothing written) without a world layer, before its first pass, or when
+   // the frame holds no terrain (back_terrain 0: the 2D screens and full-screen overlays are shown as before).
+-  bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask) const;
++  bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask,
++                   bool text = false) const;  // P9C: text = the scene without its text runs' glyphs (scene_text)
+   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
+   void frame_begin();
+   void frame_end();
+diff --git a/port/src/sim/terrain_live.cpp b/port/src/sim/terrain_live.cpp
+index 436efa5..af57982 100644
+--- a/port/src/sim/terrain_live.cpp
++++ b/port/src/sim/terrain_live.cpp
+@@ -165,7 +165,7 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
+ }
+ 
+ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
+-                              std::vector<uint8_t> &mask) const {
++                              std::vector<uint8_t> &mask, bool text) const {
+   if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
+   if (back800.size() != world_->terrain800.size()) return false;
+   px = world_->raster->pixels();
+@@ -185,7 +185,8 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
+   }
+   for (int32_t y = 0; y < w.ph; ++y) {
+     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
+-    const uint16_t *sr = w.scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
++    const std::vector<uint16_t> &scene = text && w.scene_text.size() == w.scene.size() ? w.scene_text : w.scene;  // P9C
++    const uint16_t *sr = scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+     const uint16_t *br = w.scene_base.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+     uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+     for (int32_t x = 0; x < w.pw; ++x) {
+diff --git a/port/app/present.h b/port/app/present.h
+index 37a92f7..e8e1c2c 100644
+--- a/port/app/present.h
++++ b/port/app/present.h
+@@ -14,11 +14,13 @@
+ #define PORTAPP_PRESENT_H
+ 
+ #include <cstdint>
++#include <memory>
+ #include <mutex>
+ #include <vector>
+ 
+ #include "input_map.h"
+ #include "portsim/sim/gfx.h"  // P9B: GfxHudFrame (the frame's HUD pixel layers)
++#include "textres.h"           // P9C: TextRaster (the frame's text runs at the window's resolution)
+ 
+ namespace portapp {
+ 
+@@ -124,6 +126,11 @@ struct WorldImage {
+   // P9B: the frame's HUD pixel layers (empty = none: P8B's path). When set, `mask` was taken over hud.base (host.h
+   // make_world_image) and the presenter shows hud.base, the world where the mask says, then every layer in draw order.
+   portsim::GfxHudFrame hud;
++  // P9C: the frame's text runs (the host fills it with --text-res native, published with this back buffer; the presenter takes it
++  // with Presenter::set_text whether or not the frame has a world layer)
++  portsim::GfxTextFrame text;
++  std::vector<uint8_t> mask_text;  // P9C: `mask` taken over the picture without the runs' glyphs (empty = none)
++  std::vector<uint16_t> px_text;   // P9C: `px` with the wide scene's text glyphs removed (LiveTerrain::world_frame text = true)
+   bool empty() const { return px.empty(); }
+ };
+ 
+@@ -144,6 +151,17 @@ class Presenter {
+   // G32: the HUD compositor (kHudPanels; off = P8B stage 2: the frame's 2D pixels stay centred) and the remap it keeps current
+   void set_hud_anchor(bool on) { hud_anchor_ = on; }
+   void set_remap(PanelRemap *r) { remap_ = r; }
++  // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
++  // (each clears the runs): the frame must have been published with the same back buffer (the host checks). With layers, the layers'
++  // base and pixels are replaced by the run-free ones it carries. At a content rectangle of exactly 800 x 600 nothing changes (the
++  // frame's text is already at the window's resolution) unless set_text_unit_redraw (a measurement: the same path at scale 1).
++  void set_text_res(bool native) { text_native_ = native; }
++  void set_text_defect(TextDefect d) { text_defect_ = d; }
++  void set_text_aa(TextAa a) { text_aa_ = a; }
++  void set_text_unit_redraw(bool on) { text_unit_redraw_ = on; }
++  void set_text(portsim::GfxTextFrame &&tf);
++  bool has_text() const { return text_ok_; }
++  const TextResStats *text_stats() const { return raster_ ? &raster_->stats : nullptr; }
+   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
+   void set_wide(WideFill w) { wide_ = w; }
+   WideFill wide() const { return wide_; }
+@@ -175,6 +193,17 @@ class Presenter {
+   bool layered() const;                                                                                // P9B
+   void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9B
+   mutable std::vector<uint32_t> scratch_;
++  // P9C
++  bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;
++  TextDefect text_defect_ = TextDefect::None;
++  TextAa text_aa_ = TextAa::System;
++  portsim::GfxTextFrame text_;
++  portsim::GfxHudFrame hud_text_;  // world_.hud with the base and layer pixels of text_ (the runs' glyphs removed)
++  mutable std::unique_ptr<TextRaster> raster_;
++  const portsim::GfxHudFrame &hud_for(bool text) const;
++  bool text_now(const Viewport &vp) const;  // the runs are drawn for this content rectangle
++  void draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered, int32_t layer,
++                 int32_t dx) const;
+ };
+ 
+ }  // namespace portapp
+diff --git a/port/app/present.cpp b/port/app/present.cpp
+index 45963ca..8611cd8 100644
+--- a/port/app/present.cpp
++++ b/port/app/present.cpp
+@@ -134,7 +134,10 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
+   if (frame_.empty() || cw <= 0 || ch <= 0) return;
+   // P9B: with the frame's HUD layers the scaled image is the layers' base (the root before the first panel drew); the layers
+   // are composed over it in compose_layers
+-  const std::vector<uint16_t> &fsrc = layered() ? world_.hud.base : frame_;
++  // P9C: with the frame's text runs, the picture without their low-resolution glyphs (the runs are drawn after the scaling)
++  const bool text = text_now(vp);
++  const std::vector<uint16_t> &fsrc = layered() ? hud_for(text).base
++                                      : text && text_defect_ != TextDefect::Unremoved ? text_.clean : frame_;
+   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
+     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
+     std::vector<uint32_t> src(fsrc.size());
+@@ -177,7 +180,8 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
+       }
+     }
+     if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
+-    else if (wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
++    if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
++    if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+     return;
+   }
+   std::vector<int32_t> col(static_cast<size_t>(vp.client_w));
+@@ -190,7 +194,71 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
+     for (int32_t x = 0; x < vp.client_w; ++x) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
+   }
+   if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
+-  else if (wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
++  if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
++  if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
++}
++
++// ---- P9C: the text runs (textres.h)
++void Presenter::set_text(portsim::GfxTextFrame &&tf) {
++  text_ok_ = text_layered_ok_ = false;
++  text_ = portsim::GfxTextFrame{};
++  hud_text_ = portsim::GfxHudFrame{};
++  if (!text_native_ || tf.empty() || tf.back.size() != frame_.size() || tf.clean.size() != frame_.size()) return;
++  if (defect_ == PresentDefect::Stale && frames_set_ > 1) return;
++  text_ = std::move(tf);
++  text_ok_ = true;
++  // the layered path: the base and the layers without the runs' glyphs, when they belong to the frame's HUD layers
++  if (!world_.empty() && !world_.hud.empty() && text_.hud_serial == world_.hud.serial &&
++      text_.base_clean.size() == world_.hud.base.size()) {
++    text_layered_ok_ = true;
++    hud_text_ = world_.hud;  // the layers without the runs' glyphs (world_.hud stays: the picture at 800 x 600)
++    if (text_defect_ != TextDefect::Unremoved) {
++      hud_text_.base = text_.base_clean;
++      for (const portsim::GfxTextLayerPatch &p : text_.patches) {
++        if (p.layer < 0 || static_cast<size_t>(p.layer) >= hud_text_.layers.size()) continue;
++        std::vector<portsim::GfxLayerPx> &lp = hud_text_.layers[static_cast<size_t>(p.layer)].px;
++        for (size_t k = 0; k < p.idx.size() && k < p.px.size(); ++k)
++          if (p.idx[k] < lp.size()) lp[p.idx[k]] = p.px[k];
++      }
++    }
++    text_.base_clean.clear();
++    text_.patches.clear();
++  }
++  text_.back.clear();  // checked; not needed any more
++}
++
++const portsim::GfxHudFrame &Presenter::hud_for(bool text) const {
++  return text && text_layered_ok_ ? hud_text_ : world_.hud;
++}
++
++bool Presenter::text_now(const Viewport &vp) const {
++  if (!text_ok_ || vp.client_w <= 0 || vp.client_h <= 0) return false;
++  if (layered() && !text_layered_ok_) return false;
++  const bool unit = vp.client_w == kLogicalW && vp.client_h == kLogicalH;
++  return !unit || text_unit_redraw_;
++}
++
++// the runs of one layer (layered: -1 the base, k the layer; flat: every run) at dx client pixels
++void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered_path, int32_t layer,
++                          int32_t dx) const {
++  if (!raster_) raster_.reset(new TextRaster());
++  raster_->set_defect(text_defect_);
++  raster_->set_aa(text_aa_);
++  // G32's rectangle compositor (no layers): a run inside a moved panel rectangle moves with it
++  const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
++  const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
++  for (const portsim::GfxTextRun &r : text_.runs) {
++    if (layered_path && r.layer != layer) continue;
++    if (r.target == 2 && world_.empty()) continue;  // a world run with no world under it
++    int32_t d = dx;
++    if (rect)
++      for (const HudPanel &p : kHudPanels)
++        if (r.x0 >= p.x0 && r.x1 <= p.x1 && r.y0 >= p.y0 && r.y1 <= p.y1) {
++          d = p.anchor < 0 ? dxl : dxr;
++          break;
++        }
++    raster_->draw(r, layered_path, vp, d, out, cw, ch);
++  }
+ }
+ 
+ // P8B: the world layer under the frame. Client pixel (x, y) maps to world (ox + (x - vp.origin_x) * fw / vp.client_w,
+@@ -204,13 +272,17 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
+   // the world), then each panel's 2D pixels pasted at their anchored place
+   const bool layers = layered();  // P9B: the panels are layers composed after the world (compose_layers), not rectangles
+   const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
++  // P9C: with the runs drawn, the mask taken over the picture without their glyphs (a label over the course shows the world)
++  const bool wtext = text_now(vp) && w.mask_text.size() == w.mask.size() && w.px_text.size() == w.px.size();
++  const std::vector<uint8_t> &wmask = wtext ? w.mask_text : w.mask;
++  const std::vector<uint16_t> &wpx = wtext ? w.px_text : w.px;
+   if (remap_ && !layers) remap_->set(anchor, vp, cw, w.mask);
+   std::vector<uint32_t> frame_img;
+   std::vector<uint8_t> mask_moved;
+-  const uint8_t *maskp = w.mask.data();
++  const uint8_t *maskp = wmask.data();
+   if (anchor) {
+     frame_img = out;
+-    mask_moved = w.mask;
++    mask_moved = wmask;
+     for (const HudPanel &p : kHudPanels)
+       for (int32_t y = p.y0; y < p.y1; ++y)
+         for (int32_t x = p.x0; x < p.x1; ++x) mask_moved[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)] = 1;
+@@ -250,7 +322,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
+     if (yy < 0) yy = 0;
+     if (xx >= w.pw) xx = w.pw - 1;
+     if (yy >= w.ph) yy = w.ph - 1;
+-    return pal[w.px[static_cast<size_t>(yy) * static_cast<size_t>(w.pw) + static_cast<size_t>(xx)] & 0x7fff];
++    return pal[wpx[static_cast<size_t>(yy) * static_cast<size_t>(w.pw) + static_cast<size_t>(xx)] & 0x7fff];
+   };
+   for (int32_t y = 0; y < ch; ++y) {
+     const int64_t sy = wy[static_cast<size_t>(y)];
+@@ -294,7 +366,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
+       for (int32_t x = std::max(cx0, 0); x < std::min(cx1, cw); ++x) {
+         const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp.origin_x) * kLogicalW / vp.client_w);
+         if (lx < p.x0 || lx >= p.x1 || ly < p.y0 || ly >= p.y1) continue;
+-        if (w.mask[static_cast<size_t>(ly) * kLogicalW + static_cast<size_t>(lx)]) continue;  // not a 2D pixel of the frame
++        if (wmask[static_cast<size_t>(ly) * kLogicalW + static_cast<size_t>(lx)]) continue;  // not a 2D pixel of the frame
+         const int32_t tx = x + dx;
+         if (tx < 0 || tx >= cw) continue;
+         out[static_cast<size_t>(y) * static_cast<size_t>(cw) + static_cast<size_t>(tx)] =
+@@ -319,7 +391,8 @@ bool Presenter::layered() const {
+ // no world pixel chosen inside a panel by a mask, and a blended pixel (frame borders, half-bright strips) shows what is under it at
+ // the panel's new place.
+ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+-  const portsim::GfxHudFrame &f = world_.hud;
++  const bool text = text_now(vp);  // P9C: the layers without the runs' glyphs when the runs are drawn
++  const portsim::GfxHudFrame &f = hud_for(text);
+   const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+   if (remap_) {
+@@ -333,7 +406,8 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+       r.x1 = l.x1;
+       r.y1 = l.y1;
+       r.cover.resize(l.px.size());
+-      for (size_t i = 0; i < l.px.size(); ++i) r.cover[i] = l.px[i].kind ? 1 : 0;
++      for (size_t i = 0; i < l.px.size(); ++i)
++        r.cover[i] = l.px[i].kind || l.px[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
+       rl.push_back(std::move(r));
+     }
+     remap_->set_layers(anchor, vp, cw, std::move(rl));
+@@ -377,9 +451,25 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+     return (num >= 0 ? num / n_client : -((-num + n_client - 1) / n_client)) - 128;
+   };
+   auto floor256 = [](int64_t v) -> int32_t { return static_cast<int32_t>(v >= 0 ? v / 256 : -((-v + 255) / 256)); };
+-  for (const portsim::GfxHudLayer &l : f.layers) {
+-    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
++  if (text) {
++    draw_runs(out, cw, ch, vp, true, -3, 0);  // the wide scene's world runs (beside the frame's columns)
++    draw_runs(out, cw, ch, vp, true, -1, 0);  // the base's
++  }
++  for (size_t li = 0; li < f.layers.size(); ++li) {
++    const portsim::GfxHudLayer &l = f.layers[li];
+     const int32_t dx = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
++    struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
++      const Presenter &p;
++      std::vector<uint32_t> &out;
++      int32_t cw, ch;
++      const Viewport &vp;
++      bool on;
++      int32_t li, dx;
++      ~RunsAfter() {
++        if (on) p.draw_runs(out, cw, ch, vp, true, li, dx);
++      }
++    } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx};
++    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
+     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
+     const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
+diff --git b/port/app/textres.h b/port/app/textres.h
+new file mode 100644
+index 0000000..bd26a38
+--- /dev/null
++++ b/port/app/textres.h
+@@ -0,0 +1,71 @@
++// P9C: the game's text drawn at the window's resolution (log/roadmap/P9/P9C_notes.md).
++//
++// The graphics backend keeps every TextOutA it draws as a run (portsim/sim/gfx.h GfxTextRun: the FontRef's Font::create
++// arguments, the COLORREF, the TA_BASELINE origin, the bytes, the 800-space box and the pixels of it where the run still shows)
++// and publishes, with each back buffer, the back buffer without the runs' visible low-resolution glyphs (GfxTextFrame::clean, and
++// per HUD layer the same). The presenter scales that picture as before and then TextRaster draws each run again, with the same
++// LOGFONTA at lfHeight -round(size * window height / 600), at its 800-space origin scaled into the content rectangle (plus the
++// run's layer offset), onto a 16-bit RGB555 DIB that holds the client pixels under it, as jgld's TextOutA draws onto the game's
++// 16-bit surface. Only client pixels whose 800-space pixel (the presenter's floor mapping) is visible in the run are written:
++// what the game drew over the run later stays over it, and the string is clipped to its scaled box (it is never reflowed). The
++// font file is the one the context's GDI text provider registered (process-private), so the face resolves as the sim's does.
++//
++// At 800 x 600 (scale 1) the font, origin and DIB words are the game's own, so the run's pixels come out as the frame's (the
++// selftest --selftest-p9c and the live-trace shots prove it pixel for pixel).
++#ifndef PORTAPP_TEXTRES_H
++#define PORTAPP_TEXTRES_H
++
++#include <cstdint>
++#include <memory>
++#include <vector>
++
++#include "input_map.h"
++#include "portsim/sim/gfx.h"
++
++namespace portapp {
++
++// Deliberately wrong bodies for the controls (`--negctl p9c-*`)
++enum class TextDefect : uint8_t {
++  None = 0,
++  Unremoved = 1,    // the low-resolution glyphs are not removed (the picture is the frame's): the text shows twice
++  WrongScale = 2,   // the font is made at its 800-space size whatever the window
++  WrongColour = 3,  // the COLORREF's red and blue exchanged
++};
++// Antialiasing of a run drawn at a scale other than 1 (scale 1 always takes the game's own lfQuality 0)
++enum class TextAa : uint8_t {
++  System = 0,     // lfQuality 0 (DEFAULT_QUALITY): what the host's font smoothing setting gives, as the game's own text
++  ClearType = 1,  // CLEARTYPE_QUALITY
++  Grey = 2,       // ANTIALIASED_QUALITY (greyscale)
++};
++
++struct TextResStats {
++  uint64_t runs = 0;          // runs drawn
++  uint64_t clipped_runs = 0;  // runs whose window-resolution ink reached past their scaled box (clipped, not reflowed)
++  uint64_t clipped_px = 0;    // the client pixels of that ink
++  uint64_t failed = 0;        // runs the host could not draw (no font, no DIB)
++};
++
++class TextRaster {
++ public:
++  TextRaster();
++  ~TextRaster();
++  TextRaster(const TextRaster &) = delete;
++  TextRaster &operator=(const TextRaster &) = delete;
++  void set_defect(TextDefect d) { defect_ = d; }
++  void set_aa(TextAa a) { aa_ = a; }
++  // run `r` into `out` (cw x ch BGRA words, rows top-down) through the content rectangle vp, shifted right by dx client pixels;
++  // `layered` reads the run's layer visibility (GfxTextRun::vis_layer) instead of the back buffer's (vis)
++  void draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out, int32_t cw,
++            int32_t ch);
++  TextResStats stats;
++
++ private:
++  struct Impl;
++  std::unique_ptr<Impl> impl_;
++  TextDefect defect_ = TextDefect::None;
++  TextAa aa_ = TextAa::System;
++};
++
++}  // namespace portapp
++
++#endif
+diff --git b/port/app/textres.cpp b/port/app/textres.cpp
+new file mode 100644
+index 0000000..b968c9c
+--- /dev/null
++++ b/port/app/textres.cpp
+@@ -0,0 +1,174 @@
++// P9C: the game's text at the window's resolution (textres.h).
++#include "textres.h"
++
++#include <algorithm>
++#include <cmath>
++#include <cstring>
++#include <map>
++#include <string>
++#include <tuple>
++
++#ifdef _WIN32
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#ifndef NOMINMAX
++#define NOMINMAX
++#endif
++#include <windows.h>
++#endif
++
++#include "present.h"  // rgb555_to_bgra
++
++namespace portapp {
++
++namespace {
++uint16_t to555(uint32_t c) {
++  return static_cast<uint16_t>((((c >> 19) & 31) << 10) | (((c >> 11) & 31) << 5) | ((c >> 3) & 31));
++}
++// the first client column (row) whose 800-space column (row) under the presenter's floor mapping is >= l
++int32_t first_client(int32_t l, int32_t n_client, int32_t n_log) {
++  const int64_t num = static_cast<int64_t>(l) * n_client;
++  return static_cast<int32_t>(num >= 0 ? (num + n_log - 1) / n_log : -((-num) / n_log));
++}
++int32_t floor_div(int64_t a, int64_t b) { return static_cast<int32_t>(a >= 0 ? a / b : -((-a + b - 1) / b)); }
++}  // namespace
++
++#ifdef _WIN32
++struct TextRaster::Impl {
++  HDC dc = nullptr;
++  HBITMAP bmp = nullptr;
++  void *bits = nullptr;
++  int32_t w = 0, h = 0;
++  std::map<std::tuple<std::string, int32_t, uint32_t, int>, HFONT> fonts;
++  ~Impl() {
++    for (auto &f : fonts)
++      if (f.second) DeleteObject(f.second);
++    if (bmp) DeleteObject(bmp);
++    if (dc) DeleteDC(dc);
++  }
++  // Font::create's LOGFONTA (gditext.cpp logfont_of) at lfHeight -height and the given quality
++  HFONT font(const std::string &face, int32_t height, uint32_t style, int quality) {
++    const auto key = std::make_tuple(face, height, style, quality);
++    auto it = fonts.find(key);
++    if (it != fonts.end()) return it->second;
++    LOGFONTA lf;
++    std::memset(&lf, 0, sizeof(lf));
++    lf.lfHeight = -height;
++    lf.lfWeight = (style & 1u) ? 700 : 0;
++    lf.lfItalic = (style & 2u) ? 1 : 0;
++    lf.lfUnderline = (style & 4u) ? 1 : 0;
++    lf.lfOutPrecision = 7;  // OUT_TT_ONLY_PRECIS
++    lf.lfQuality = static_cast<BYTE>(quality);
++    std::memcpy(lf.lfFaceName, face.data(), std::min(face.size(), sizeof(lf.lfFaceName) - 1));
++    HFONT f = CreateFontIndirectA(&lf);
++    fonts[key] = f;
++    return f;
++  }
++  // a 16-bit top-down BI_RGB DIB section (RGB555) of at least nw x nh, selected into the DC
++  bool dib(int32_t nw, int32_t nh) {
++    if (!dc) {
++      dc = CreateCompatibleDC(nullptr);
++      if (!dc) return false;
++      SetBkMode(dc, TRANSPARENT);
++      SetTextAlign(dc, TA_BASELINE);
++    }
++    if (bmp && nw <= w && nh <= h) return true;
++    if (bmp) DeleteObject(bmp);
++    bmp = nullptr;
++    w = std::max(nw, w);
++    h = std::max(nh, h);
++    BITMAPINFO bi;
++    std::memset(&bi, 0, sizeof(bi));
++    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
++    bi.bmiHeader.biWidth = w;
++    bi.bmiHeader.biHeight = -h;
++    bi.bmiHeader.biPlanes = 1;
++    bi.bmiHeader.biBitCount = 16;
++    bi.bmiHeader.biCompression = BI_RGB;
++    bmp = CreateDIBSection(dc, &bi, DIB_RGB_COLORS, &bits, nullptr, 0);
++    if (!bmp) {
++      w = h = 0;
++      return false;
++    }
++    SelectObject(dc, bmp);
++    return true;
++  }
++};
++#else
++struct TextRaster::Impl {};
++#endif
++
++TextRaster::TextRaster() : impl_(new Impl) {}
++TextRaster::~TextRaster() = default;
++
++void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out,
++                      int32_t cw, int32_t ch) {
++#ifdef _WIN32
++  if (vp.client_w <= 0 || vp.client_h <= 0 || r.text.empty() || r.x1 <= r.x0 || r.y1 <= r.y0) return;
++  const bool unit = vp.client_w == kLogicalW && vp.client_h == kLogicalH;
++  const double sx = static_cast<double>(vp.client_w) / kLogicalW, sy = static_cast<double>(vp.client_h) / kLogicalH;
++  int32_t height = static_cast<int32_t>(std::lround(r.size * sy));
++  if (defect_ == TextDefect::WrongScale) height = r.size;
++  if (height < 1) height = 1;
++  // the run's box in client pixels (the presenter's floor mapping inverted), and a margin around it for ink that reaches past it
++  const int32_t bx0 = vp.origin_x + dx + first_client(r.x0, vp.client_w, kLogicalW);
++  const int32_t bx1 = vp.origin_x + dx + first_client(r.x1, vp.client_w, kLogicalW);
++  const int32_t by0 = vp.origin_y + first_client(r.y0, vp.client_h, kLogicalH);
++  const int32_t by1 = vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH);
++  const int32_t m = std::max<int32_t>(4, height);
++  const int32_t dx0 = std::max(0, bx0 - m), dx1 = std::min(cw, bx1 + m), dy0 = std::max(0, by0 - m), dy1 = std::min(ch, by1 + m);
++  if (dx1 <= dx0 || dy1 <= dy0) return;
++  const int32_t w = dx1 - dx0, h = dy1 - dy0;
++  const int quality = unit ? 0 : aa_ == TextAa::ClearType ? 5 /* CLEARTYPE_QUALITY */ : aa_ == TextAa::Grey ? 4 /* ANTIALIASED */ : 0;
++  HFONT f = impl_->font(r.face, height, r.style, quality);
++  if (!f || !impl_->dib(w, h)) {
++    ++stats.failed;
++    return;
++  }
++  const size_t pitch = static_cast<size_t>((impl_->w + 1) & ~1);  // words per DIB row (rows of 4-byte multiples)
++  uint16_t *bits = static_cast<uint16_t *>(impl_->bits);
++  GdiFlush();
++  std::vector<uint16_t> in(static_cast<size_t>(w) * static_cast<size_t>(h));
++  for (int32_t y = 0; y < h; ++y)
++    for (int32_t x = 0; x < w; ++x) {
++      const uint16_t v = to555(out[static_cast<size_t>(dy0 + y) * static_cast<size_t>(cw) + static_cast<size_t>(dx0 + x)]);
++      in[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)] = v;
++      bits[pitch * static_cast<size_t>(y) + static_cast<size_t>(x)] = v;
++    }
++  uint32_t ref = r.colorref;
++  if (defect_ == TextDefect::WrongColour) ref = ((ref & 0xffu) << 16) | (ref & 0xff00u) | ((ref >> 16) & 0xffu);
++  // the origin: the 800-space TA_BASELINE point scaled (the identity at scale 1)
++  const int32_t ox = vp.origin_x + dx + (unit ? r.x : static_cast<int32_t>(std::lround(r.x * sx))) - dx0;
++  const int32_t oy = vp.origin_y + (unit ? r.y : static_cast<int32_t>(std::lround(r.y * sy))) - dy0;
++  SelectObject(impl_->dc, f);
++  SetTextColor(impl_->dc, ref);
++  TextOutA(impl_->dc, ox, oy, r.text.data(), static_cast<int>(r.text.size()));
++  SelectObject(impl_->dc, GetStockObject(SYSTEM_FONT));
++  GdiFlush();
++  bool clipped = false;
++  for (int32_t y = 0; y < h; ++y) {
++    const int32_t cy = dy0 + y;
++    const int32_t ly = floor_div(static_cast<int64_t>(cy - vp.origin_y) * kLogicalH, vp.client_h);
++    for (int32_t x = 0; x < w; ++x) {
++      const uint16_t v = bits[pitch * static_cast<size_t>(y) + static_cast<size_t>(x)];
++      if (v == in[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)]) continue;
++      const int32_t cx = dx0 + x;
++      const int32_t lx = floor_div(static_cast<int64_t>(cx - vp.origin_x - dx) * kLogicalW, vp.client_w);
++      if (cx < bx0 || cx >= bx1 || cy < by0 || cy >= by1) {
++        ++stats.clipped_px;  // ink outside the run's scaled box: clipped
++        clipped = true;
++        continue;
++      }
++      if (!r.visible(lx, ly, layered)) continue;  // drawn over by the game after the run
++      out[static_cast<size_t>(cy) * static_cast<size_t>(cw) + static_cast<size_t>(cx)] = rgb555_to_bgra(v);
++    }
++  }
++  ++stats.runs;
++  if (clipped) ++stats.clipped_runs;
++#else
++  (void)r; (void)layered; (void)vp; (void)dx; (void)out; (void)cw; (void)ch;
++#endif
++}
++
++}  // namespace portapp
+diff --git a/port/app/host.h b/port/app/host.h
+index 767cca6..9d5fb91 100644
+--- a/port/app/host.h
++++ b/port/app/host.h
+@@ -155,6 +155,7 @@ struct HostOptions {
+   bool wide = false;
+   int world_mode = 0;
+   const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
++  bool text_native = false;  // P9C: presents carry the frame's text runs (gfx.h GfxTextFrame) in WorldImage::text
+   bool hud_layers = false;  // P9B: presents carry the frame's HUD pixel layers (gfx.h GfxHudFrame; with `world` and `remap`)
+ };
+ 
+@@ -315,6 +316,7 @@ class LiveSession : public portsim::LiveHost {
+   void apply_view(portsim::Ctx &ctx);
+   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
+   uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers
++  uint64_t presents_text_ = 0, text_runs_ = 0;  // P9C: presents with the frame's text runs, and the runs they carried
+   bool frame_waiting_ = false;
+   std::vector<Present> presents_;
+   uint32_t last_dump_ms_ = 0;
+@@ -403,7 +405,10 @@ class LiveTracePresenter : public portsim::LiveHost {
+ 
+ // P9B: the world image of a present (P8B's world layer plus, with `layered`, the frame's HUD pixel layers: the world mask is then
+ // taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
+-bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi);
++bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
++                      const portsim::GfxTextFrame *text = nullptr);
++// P9C: the text runs published with exactly this back buffer (false when there are none)
++bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner = false);
+ 
+ }  // namespace portapp
+ 
+diff --git a/port/app/host.cpp b/port/app/host.cpp
+index 8082c5f..564f5a4 100644
+--- a/port/app/host.cpp
++++ b/port/app/host.cpp
+@@ -358,8 +358,11 @@ void LiveSession::post_loading(portsim::Ctx &ctx, uint32_t done) {
+     ctx.files().read("$gfx/banner.555", 0, px.data(), static_cast<uint64_t>(n));
+     banner_shown_ = true;
+   }
++  WorldImage banner_text;  // P9C: the banner's own runs (a frame put back after the load has none)
++  if (opt_.text_native && done != 0) take_text_frame(ctx, px, banner_text.text, true);
+   {
+     std::lock_guard<std::mutex> lk(frame_mu_);
++    frame_world_ = std::move(banner_text);
+     frame_slot_ = std::move(px);
+     frame_index_ = kBannerIndex;
+     frame_band_ = BandFill::Extend;
+@@ -444,7 +447,15 @@ void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
+     in_game_ = true;
+ }
+ 
+-bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi) {
++bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner) {
++  const bool got = banner ? portsim::gfx_text_banner(ctx, tf) : portsim::gfx_text_frame(ctx, tf);
++  if (got && tf.back == px && !tf.empty()) return true;
++  tf = portsim::GfxTextFrame{};
++  return false;
++}
++
++bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
++                      const portsim::GfxTextFrame *text) {
+   const portsim::LiveTerrainWorld *w = live.world();
+   if (!w) return false;
+   const bool terrain = portsim::gfx_back_terrain(ctx);
+@@ -452,6 +463,17 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
+   portsim::GfxHudFrame f;
+   const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
+   if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask)) return false;
++  // P9C: with the frame's text runs, also the mask over the picture without their glyphs (a label over the course shows the
++  // world under its window-resolution glyphs); the presenter takes it when it draws the runs
++  if (text && !text->empty()) {
++    const std::vector<uint16_t> *src = nullptr;
++    if (use && text->hud_serial == f.serial && text->base_clean.size() == f.base.size()) src = &text->base_clean;
++    else if (!use && text->clean.size() == px.size()) src = &text->clean;
++    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true)) {
++      wi.px_text.clear();
++      wi.mask_text.clear();
++    }
++  }
+   wi.pw = w->pw;
+   wi.ph = w->ph;
+   wi.fw = w->fw;
+@@ -547,11 +569,18 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
+   const uint32_t index = static_cast<uint32_t>(presents_.size());
+   presents_.push_back({index, mark, frame_, records_, kind, frame_hash(px)});
+   WorldImage wi;  // P8B: the world layer under this frame (none without HostOptions::world or before the first terrain pass)
++  portsim::GfxTextFrame tf;  // P9C
++  const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
+   if (opt_.world && terrain_log && terrain_log->live)
+-    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi)) {
++    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr)) {
+       ++presents_world_;
+       if (!wi.hud.empty()) ++presents_layered_;  // P9B
+     }
++  if (text) {
++    ++presents_text_;
++    text_runs_ += tf.runs.size();
++    wi.text = std::move(tf);
++  }
+   {
+     std::lock_guard<std::mutex> lk(frame_mu_);
+     frame_world_ = std::move(wi);
+@@ -1032,6 +1061,8 @@ std::string LiveSession::summary_json(const Result &r) const {
+        ",\"view_writes\":" + std::to_string(view_writes_) + ",\"world_resizes\":" + std::to_string(world_resizes_) +
+        ",\"view_width\":" + std::to_string(applied_w_) + ",\"hud_remapped\":" +
+        std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32
++  s += ",\"p9c\":{\"text_native\":" + std::to_string(opt_.text_native ? 1 : 0) + ",\"presents_text\":" +
++       std::to_string(presents_text_) + ",\"runs\":" + std::to_string(text_runs_) + "}";  // P9C
+   s += ",\"memory\":" + memory.json();
+   if (tlog_calls_ >= 0)
+     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +
+diff --git a/port/app/main.cpp b/port/app/main.cpp
+index 898936f..55d3fd9 100644
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -23,6 +23,12 @@
+ //   simgolf_port.exe --selftest-p5b | --selftest-p7  the P5B scale modes / the P7 wide side bands
+ //   simgolf_port.exe --selftest-p8b                  P8B: the world layer under the frame (control --negctl p8b-mask-ignored)
+ //   simgolf_port.exe --selftest-p9b                  P9B: the layered HUD compositor (controls --negctl p9b-blend-opaque | p9b-rect-move)
++//   simgolf_port.exe --selftest-p9c                  P9C: text at the window's resolution (controls --negctl p9c-unremoved |
++//                    p9c-wrong-scale | p9c-wrong-colour)
++//   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
++//   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
++//   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
++//   (a measurement: the redraw also at an 800 x 600 content rectangle).
+ //   simgolf_port.exe --compose <in.555> <cw> <ch> <out.bmp> [--wide --wide-fill soft|clamp|black] [--scale m]
+ //                    [--compose-band extend|black]   P7: the presenter's client image of one 800x600 frame, as a BMP
+ //   P7 (widescreen stage 1, default off): --wide [on|off] (or SG_APP_WIDE=on) opens the window at --wide-width (1067) x 600
+@@ -272,6 +278,10 @@ struct Options {
+   uint32_t dpi = 0, exit_after = 0;
+   bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false, selftest_p9a = false;
+   bool selftest_p9b = false;  // P9B
++  bool selftest_p9c = false;  // P9C
++  std::string text_res = "native";  // P9C: --text-res native|frame (SG_APP_P9C=off: frame)
++  std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
++  bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
+   // S7.6 live sessions
+   uint32_t idle_ms = 200, pass_ms = 10;
+   bool timed_passes = true;  // P5A (--no-timed-passes)
+@@ -327,6 +337,17 @@ struct Options {
+ // P9B: the layered HUD compositor is on with --wide, --hud-anchor on and --hud-layers on (the defaults); --negctl p9b-rect-move
+ // keeps G32's rectangle compositor with capture on (the control)
+ static bool hud_layers_on(const Options &o) { return o.wide && o.hud_anchor && o.hud_layers; }
++// P9C: the presenter's text options
++static bool text_native_on(const Options &o) { return o.text_res == "native"; }
++static void setup_text(Presenter &p, const Options &o) {
++  p.set_text_res(text_native_on(o));
++  p.set_text_aa(o.text_aa == "cleartype" ? TextAa::ClearType : o.text_aa == "grey" ? TextAa::Grey : TextAa::System);
++  p.set_text_defect(o.negctl == "p9c-unremoved"      ? TextDefect::Unremoved
++                    : o.negctl == "p9c-wrong-scale"  ? TextDefect::WrongScale
++                    : o.negctl == "p9c-wrong-colour" ? TextDefect::WrongColour
++                                                     : TextDefect::None);
++  p.set_text_unit_redraw(o.text_unit_redraw);
++}
+ 
+ // P5B item 4: --scale
+ ScaleMode scale_mode(const std::string &s) {
+@@ -822,6 +843,9 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+   bool streamed = false;
+   std::string world_json = "null";  // P8B
+   uint32_t world_shots_made = 0;
++  TextResStats shot_text;               // P9C: the world shots' text runs
++  int64_t shot_render_us = 0;           // P9C: the world shots' Presenter::render time
++  portsim::GfxTextStats text_cap;       // P9C: the backend's text capture
+   int64_t terrain_us = 0;
+   if (err.empty()) {
+     auto ctx = std::make_unique<portsim::Ctx>();
+@@ -834,6 +858,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+       for (int64_t s : o.snapshot_list) ok = ok && reg_call(*ctx, "gfx.snapshotAt", {static_cast<uint32_t>(s)}, &why);
+       if (!ok) err = why;
+       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
++      if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
+     }
+     if (err.empty()) {
+       TerrainGuard terrain;
+@@ -867,21 +892,51 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+             if (std::find(o.world_shots.begin(), o.world_shots.end(), static_cast<int64_t>(index)) == o.world_shots.end()) return;
+             const portsim::LiveTerrainWorld *w = terrain.live->world();
+             WorldImage wi;
+-            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi);  // P8B; P9B: with the frame's HUD layers
++            portsim::GfxTextFrame tf;  // P9C: the frame's text runs
++            const bool text = text_native_on(o) && take_text_frame(c, px, tf);
++            if (text && std::getenv("SG_P9C_RUN_LOG")) {  // development: the shot's runs (one line each)
++              std::FILE *rl = std::fopen((rec / ("runs_" + std::to_string(index) + ".tsv")).string().c_str(), "wb");
++              if (rl) {
++                std::fprintf(rl, "x\ty\tbox\tlayer\tvis\tvis_layer\tface\tsize\tcolour\ttext\n");
++                for (const portsim::GfxTextRun &r : tf.runs) {
++                  size_t v = 0, vl = 0;
++                  for (uint8_t b : r.vis) v += b;
++                  for (uint8_t b : r.vis_layer) vl += b;
++                  std::fprintf(rl, "%d\t%d\t%d,%d-%d,%d\t%d\t%zu\t%zu\t%s\t%d\t%06x\t%s\n", r.x, r.y, r.x0, r.y0, r.x1, r.y1, r.layer, v, vl,
++                               r.face.c_str(), r.size, r.colorref, r.text.c_str());
++                }
++                std::fclose(rl);
++              }
++            }
++            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi, text ? &tf : nullptr);  // P8B; P9B: with the HUD layers
+             const int cw = o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
+             Presenter p(o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B controls
+                         : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove
+                                                       : PresentDefect::None,
+                         scale_mode(o.scale));
+             p.set_wide(wide_fill(o));
++            setup_text(p, o);  // P9C
+             std::vector<uint32_t> img;
+             p.set_frame(px, BandFill::Black);
++            if (text) {
++              portsim::GfxTextFrame t2 = tf;
++              p.set_text(std::move(t2));
++            }
+             p.render(cw, ch, img);
+             write_bmp(rec / ("frame_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
+             p.set_hud_anchor(o.wide && o.hud_anchor);  // G32
+             p.set_frame_world(px, BandFill::Black, std::move(wi));
++            p.set_text(std::move(tf));  // P9C
++            const auto rt0 = std::chrono::steady_clock::now();
+             p.render(cw, ch, img);
++            shot_render_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - rt0).count();
+             write_bmp(rec / ("world_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
++            if (const TextResStats *ts = p.text_stats()) {  // P9C: the world shot's runs (accumulated for session.json)
++              shot_text.runs += ts->runs;
++              shot_text.clipped_runs += ts->clipped_runs;
++              shot_text.clipped_px += ts->clipped_px;
++              shot_text.failed += ts->failed;
++            }
+             if (o.world_check && w) {  // the raw layers for the render-scale-1 gate: world root, T, the frame
+               const std::vector<uint16_t> &wp = terrain.live->world()->raster->pixels();
+               write_file(rec / ("world_" + std::to_string(index) + ".555"), wp.data(), wp.size() * 2);
+@@ -949,6 +1004,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+         write_file(rec / ("snapshot_" + std::to_string(k) + ".555"), b.data(), b.size());
+         ++snaps_taken;
+       }
++      text_cap = portsim::gfx_text_stats(*ctx);  // P9C
+       reg_call(*ctx, "gfx.log", {}, &why);
+       std::vector<uint8_t> log(static_cast<size_t>(std::max<int64_t>(0, files.size("$gfx/log.txt"))));
+       if (!log.empty()) files.read("$gfx/log.txt", 0, log.data(), log.size());
+@@ -980,6 +1036,12 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+   s += ",\"terrain_passes\":" + std::to_string(tpasses) + ",\"terrain_pixels\":" + std::to_string(tpixels);
+   s += ",\"terrain_calls\":" + std::to_string(tcalls);
+   s += ",\"world\":" + world_json + ",\"render_scale\":\"" + jesc(o.render_scale) + "\"";  // P8B
++  s += ",\"p9c\":{\"text_res\":\"" + o.text_res + "\",\"text_aa\":\"" + o.text_aa + "\",\"captured\":" +  // P9C
++       std::to_string(text_cap.captured) + ",\"published_last\":" + std::to_string(text_cap.published) + ",\"dropped\":" +
++       std::to_string(text_cap.dropped) + ",\"no_font\":" + std::to_string(text_cap.no_font) + ",\"frames\":" +
++       std::to_string(text_cap.frames) + ",\"merged\":" + std::to_string(text_cap.merged) + ",\"shot_runs\":" + std::to_string(shot_text.runs) + ",\"shot_clipped_runs\":" +
++       std::to_string(shot_text.clipped_runs) + ",\"shot_clipped_px\":" + std::to_string(shot_text.clipped_px) +
++       ",\"shot_failed\":" + std::to_string(shot_text.failed) + ",\"shot_render_us\":" + std::to_string(shot_render_us) + "}";
+   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made[0]) + ",\"w\":" + std::to_string(made[1]) + ",\"m\":" +
+        std::to_string(made[2]) + ",\"p\":" + std::to_string(made[3]) + "},\"r_superseded\":" + std::to_string(r_superseded);
+   s += ",\"terrain_log_max\":" + std::to_string(tlog_max) + ",\"terrain_log_end\":" + std::to_string(tlog_end);
+@@ -1036,6 +1098,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const
+     return lo;
+   }
+   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
++  if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
+   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
+   int *rec_mode = nullptr;
+   if (o.negctl.rfind("recorder:", 0) == 0) {
+@@ -1093,6 +1156,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+   static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
+   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
+   ho.hud_layers = hud_layers_on(o);                    // P9B
++  ho.text_native = text_native_on(o);                  // P9C
+   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
+   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
+   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
+@@ -1107,6 +1171,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+                                                   : PresentDefect::None;
+   Presenter presenter(pd, scale_mode(o.scale));
+   presenter.set_wide(wide_fill(o));  // P7
++  setup_text(presenter, o);          // P9C
+   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes
+   if (ho.remap) {  // G32: the HUD compositor
+     presenter.set_hud_anchor(true);
+@@ -1169,8 +1234,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+       BandFill band = BandFill::Black;
+       WorldImage wi;  // P8B
+       if (session.take_frame(px, index, &band, &wi)) {
++        portsim::GfxTextFrame tf = std::move(wi.text);  // P9C: the frame's text runs (empty without --text-res native)
+         if (ho.world) presenter.set_frame_world(px, band, std::move(wi));  // P8B: with its world layer (none = as before)
+         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
++        presenter.set_text(std::move(tf));    // P9C
+         win.invalidate();
+         if (shown && index != LiveSession::kBannerIndex) {
+           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
+@@ -1209,6 +1276,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+   s += ",\"p8b\":{\"render_scale\":\"" + jesc(o.render_scale) + "\",\"world_pw\":" + std::to_string(ow.world_pw) +
+        ",\"world_ph\":" + std::to_string(ow.world_ph) + ",\"wide_edge\":" + std::to_string(ho.wide_edge ? 1 : 0) + "}";  // P8B
+   s += ",\"p6b\":{\"loading_overlay\":" + std::to_string(o.loading_overlay ? 1 : 0) + "}";  // P6B
++  {  // P9C: the window's text runs
++    const TextResStats *ts = presenter.text_stats();
++    s += ",\"p9c\":{\"text_res\":\"" + o.text_res + "\",\"text_aa\":\"" + o.text_aa + "\",\"runs_drawn\":" +
++         std::to_string(ts ? ts->runs : 0) + ",\"clipped_runs\":" + std::to_string(ts ? ts->clipped_runs : 0) +
++         ",\"clipped_px\":" + std::to_string(ts ? ts->clipped_px : 0) + ",\"failed\":" + std::to_string(ts ? ts->failed : 0) + "}";
++  }
+   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
+   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
+   s += ",\"saves_refused\":" + std::to_string(files.refused());
+@@ -1882,6 +1955,232 @@ int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bm
+   return 0;
+ }
+ 
++// P9C (--selftest-p9c): text at the window's resolution (textres.h, Presenter::set_text / draw_runs, portsim::gfx_text_peel) on a
++// synthetic frame: two runs drawn with GDI's TextOutA in Arial (a system face) onto a 16-bit DIB as jgld draws the game's text, an
++// opaque rectangle drawn over half of the second run afterwards, and a third run inside a left-anchored HUD layer. Rows: the peel
++// gives the background without any glyph; at 800 x 600 the redraw (forced, as --text-unit-redraw) and the plain native picture
++// both equal the frame mode's in every pixel; at 1600 x 1200 the picture equals the background scaled with the strings drawn
++// there directly at twice the size (and the rectangle kept over the second); the ink is twice as tall and has the run's colour;
++// the layer's run moves with its layer. Controls: --negctl p9c-unremoved (double text), p9c-wrong-scale, p9c-wrong-colour.
++namespace p9c {
++// TextOutA of `text` onto a w x h RGB555 buffer (a full-size 16-bit top-down DIB), the given LOGFONTA height and quality
++void gdi_text(std::vector<uint16_t> &buf, int32_t w, int32_t h, const char *face, int32_t height, uint32_t colorref, int32_t x,
++              int32_t y, const std::string &text, int quality = 0) {
++  HDC dc = CreateCompatibleDC(nullptr);
++  BITMAPINFO bi = {};
++  bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
++  bi.bmiHeader.biWidth = w;
++  bi.bmiHeader.biHeight = -h;
++  bi.bmiHeader.biPlanes = 1;
++  bi.bmiHeader.biBitCount = 16;
++  bi.bmiHeader.biCompression = BI_RGB;
++  void *bits = nullptr;
++  HBITMAP bmp = CreateDIBSection(dc, &bi, DIB_RGB_COLORS, &bits, nullptr, 0);
++  HGDIOBJ old = SelectObject(dc, bmp);
++  const size_t pitch = static_cast<size_t>((w + 1) & ~1);
++  uint16_t *b = static_cast<uint16_t *>(bits);
++  for (int32_t r = 0; r < h; ++r) std::memcpy(b + pitch * r, buf.data() + static_cast<size_t>(w) * r, 2u * w);
++  LOGFONTA lf = {};
++  lf.lfHeight = -height;
++  lf.lfOutPrecision = 7;
++  lf.lfQuality = static_cast<BYTE>(quality);
++  std::strcpy(lf.lfFaceName, face);
++  HFONT f = CreateFontIndirectA(&lf);
++  HGDIOBJ of = SelectObject(dc, f);
++  SetBkMode(dc, TRANSPARENT);
++  SetTextAlign(dc, TA_BASELINE);
++  SetTextColor(dc, colorref);
++  TextOutA(dc, x, y, text.data(), static_cast<int>(text.size()));
++  GdiFlush();
++  for (int32_t r = 0; r < h; ++r) std::memcpy(buf.data() + static_cast<size_t>(w) * r, b + pitch * r, 2u * w);
++  SelectObject(dc, of);
++  SelectObject(dc, old);
++  DeleteObject(f);
++  DeleteObject(bmp);
++  DeleteDC(dc);
++}
++struct Cap {  // one captured run: box (changed pixels + 2), before / after
++  portsim::GfxTextRun r;
++  std::vector<uint16_t> before, after;
++};
++Cap draw_run(std::vector<uint16_t> &img, const char *text, int32_t x, int32_t y, int32_t size, uint32_t colorref) {
++  const std::vector<uint16_t> snap = img;
++  gdi_text(img, kLogicalW, kLogicalH, "Arial", size, colorref, x, y, text);
++  Cap c;
++  int32_t x0 = kLogicalW, y0 = kLogicalH, x1 = -1, y1 = -1;
++  for (int32_t yy = 0; yy < kLogicalH; ++yy)
++    for (int32_t xx = 0; xx < kLogicalW; ++xx)
++      if (snap[static_cast<size_t>(yy) * kLogicalW + xx] != img[static_cast<size_t>(yy) * kLogicalW + xx]) {
++        x0 = std::min(x0, xx), y0 = std::min(y0, yy), x1 = std::max(x1, xx), y1 = std::max(y1, yy);
++      }
++  c.r.face = "Arial";
++  c.r.size = size;
++  c.r.colorref = colorref;
++  c.r.x = x;
++  c.r.y = y;
++  c.r.text = text;
++  c.r.x0 = std::max(0, x0 - 2), c.r.y0 = std::max(0, y0 - 2), c.r.x1 = std::min(kLogicalW, x1 + 3), c.r.y1 = std::min(kLogicalH, y1 + 3);
++  for (int32_t yy = c.r.y0; yy < c.r.y1; ++yy)
++    for (int32_t xx = c.r.x0; xx < c.r.x1; ++xx) {
++      c.before.push_back(snap[static_cast<size_t>(yy) * kLogicalW + xx]);
++      c.after.push_back(img[static_cast<size_t>(yy) * kLogicalW + xx]);
++    }
++  return c;
++}
++portsim::GfxTextPeelRun peel_of(const Cap &c) {
++  portsim::GfxTextPeelRun p;
++  p.x0 = c.r.x0, p.y0 = c.r.y0, p.x1 = c.r.x1, p.y1 = c.r.y1;
++  p.before = c.before.data();
++  p.after = c.after.data();
++  return p;
++}
++}  // namespace p9c
++
++void selftest_p9c(Tests &t, TextDefect td) {
++  using namespace p9c;
++  std::vector<uint16_t> bg(static_cast<size_t>(kLogicalW) * kLogicalH);
++  for (int y = 0; y < kLogicalH; ++y)
++    for (int x = 0; x < kLogicalW; ++x)
++      bg[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>(((x / 40) & 1 ? 0x0108 : 0x0c63) + ((y / 30) & 3));
++  const uint32_t white = 0x00f8f8f8u, gold = 0x0038f8f8u, yellow = 0x0000f8f8u;  // COLORREFs (r | g << 8 | b << 16), 5-bit exact
++  const uint16_t occ = 0x7c00;                             // the rectangle drawn over the second run (pure red)
++  std::vector<uint16_t> img = bg;
++  Cap a = draw_run(img, "Sandbox Golf Course", 100, 200, 16, yellow);
++  Cap b = draw_run(img, "Membership 42", 300, 300, 14, gold);
++  // the occluder: the right half of b's box, drawn after b (it stays over b's window-resolution glyphs)
++  const int32_t ox0 = (b.r.x0 + b.r.x1) / 2, ox1 = b.r.x1 + 4, oy0 = b.r.y0 - 3, oy1 = b.r.y1 + 3;
++  std::vector<uint16_t> expect_clean = bg;
++  for (int y = oy0; y < oy1; ++y)
++    for (int x = ox0; x < ox1; ++x) {
++      img[static_cast<size_t>(y) * kLogicalW + x] = occ;
++      expect_clean[static_cast<size_t>(y) * kLogicalW + x] = occ;
++    }
++  // the peel, as the backend makes it at Window::refreshFull
++  portsim::GfxTextFrame tf;
++  tf.serial = 1;
++  tf.back = img;
++  tf.clean = img;
++  std::vector<std::vector<uint8_t>> vis;
++  portsim::gfx_text_peel(tf.clean, kLogicalW, kLogicalH, {peel_of(a), peel_of(b)}, vis);
++  a.r.vis = vis[0];
++  b.r.vis = vis[1];
++  tf.runs = {a.r, b.r};
++  t.add("p9c.peel_leaves_no_glyph", tf.clean == expect_clean);
++  size_t bvis = 0, bcov = 0;
++  for (size_t i = 0; i < b.r.vis.size(); ++i) (b.r.vis[i] ? bvis : bcov) += 1;
++  t.add("p9c.peel_covered_part_not_visible", bvis > 0 && bcov > 0);
++  auto render = [&](bool native, bool unit_redraw, int32_t cw, int32_t ch, ScaleMode m) {
++    Presenter p(PresentDefect::None, m);
++    p.set_text_res(native);
++    p.set_text_defect(td);
++    p.set_text_unit_redraw(unit_redraw);
++    p.set_frame(img, BandFill::Black);
++    portsim::GfxTextFrame c = tf;
++    p.set_text(std::move(c));
++    std::vector<uint32_t> o;
++    p.render(cw, ch, o);
++    return o;
++  };
++  const std::vector<uint32_t> frame1 = render(false, false, 800, 600, ScaleMode::Nearest);
++  t.add("p9c.native_at_1x_equals_frame", render(true, false, 800, 600, ScaleMode::Nearest) == frame1);
++  t.add("p9c.redraw_at_1x_equals_frame", render(true, true, 800, 600, ScaleMode::Nearest) == frame1);
++  t.add("p9c.redraw_at_1x_equals_frame_smooth", render(true, true, 800, 600, ScaleMode::Smooth) == render(false, false, 800, 600, ScaleMode::Smooth));
++  // 2x: the expected picture = the background scaled, the two strings drawn at twice the size at twice the origin, then the
++  // occluder scaled over the second
++  const int32_t W = 1600, H = 1200;
++  std::vector<uint16_t> e(static_cast<size_t>(W) * H);
++  for (int y = 0; y < H; ++y)
++    for (int x = 0; x < W; ++x) e[static_cast<size_t>(y) * W + x] = bg[static_cast<size_t>(y / 2) * kLogicalW + x / 2];
++  gdi_text(e, W, H, "Arial", 32, yellow, 200, 400, a.r.text);
++  gdi_text(e, W, H, "Arial", 28, gold, 600, 600, b.r.text);
++  for (int y = oy0 * 2; y < oy1 * 2; ++y)
++    for (int x = ox0 * 2; x < ox1 * 2; ++x) e[static_cast<size_t>(y) * W + x] = occ;
++  const std::vector<uint32_t> n2 = render(true, false, W, H, ScaleMode::Nearest);
++  size_t diff = 0;
++  for (size_t i = 0; i < e.size(); ++i) diff += n2[i] != rgb555_to_bgra(e[i]) ? 1 : 0;
++  std::printf("p9c: 2x picture differs from the direct draw in %zu px\n", diff);
++  t.add("p9c.scaled_equals_direct_draw", diff == 0);
++  // the ink of the first run (pixels that differ from the scaled background): twice the 800-space height, the run's colour
++  int32_t ytop = H, ybot = -1, ytop1 = kLogicalH, ybot1 = -1;
++  std::map<uint32_t, size_t> colours;
++  for (int y = a.r.y0 * 2; y < a.r.y1 * 2; ++y)
++    for (int x = a.r.x0 * 2; x < a.r.x1 * 2; ++x) {
++      const uint32_t v = n2[static_cast<size_t>(y) * W + x];
++      if (v == rgb555_to_bgra(bg[static_cast<size_t>(y / 2) * kLogicalW + x / 2])) continue;
++      ytop = std::min(ytop, y), ybot = std::max(ybot, y);
++      ++colours[v];
++    }
++  for (int y = a.r.y0; y < a.r.y1; ++y)
++    for (int x = a.r.x0; x < a.r.x1; ++x)
++      if (a.after[static_cast<size_t>(y - a.r.y0) * (a.r.x1 - a.r.x0) + (x - a.r.x0)] != a.before[static_cast<size_t>(y - a.r.y0) * (a.r.x1 - a.r.x0) + (x - a.r.x0)])
++        ytop1 = std::min(ytop1, y), ybot1 = std::max(ybot1, y);
++  const int32_t h2 = ybot - ytop + 1, h1 = ybot1 - ytop1 + 1;
++  std::printf("p9c: ink height 800-space %d, at 2x %d\n", h1, h2);
++  t.add("p9c.ink_twice_as_tall", h1 > 0 && h2 >= 2 * h1 - 3 && h2 <= 2 * h1 + 3);
++  uint32_t top = 0;
++  size_t topn = 0;
++  for (const auto &kv : colours)
++    if (kv.second > topn) top = kv.first, topn = kv.second;
++  t.add("p9c.ink_in_the_run_colour", (top & 0xffffffu) == 0x00ffff00u);  // yellow: RGB555 0x7fe0 -> BGRA 0xffff00
++  size_t occ_bad = 0;
++  for (int y = oy0 * 2; y < oy1 * 2; ++y)
++    for (int x = ox0 * 2; x < ox1 * 2; ++x) occ_bad += n2[static_cast<size_t>(y) * W + x] != rgb555_to_bgra(occ) ? 1 : 0;
++  t.add("p9c.later_draw_stays_over_the_run", occ_bad == 0);
++  // a run inside a left-anchored layer (a panel at 20..220 x 470..520 with a label) moves with the layer
++  {
++    std::vector<uint16_t> base = bg, back = bg;
++    portsim::GfxHudLayer l;
++    l.id = portsim::kGfxLayerBottom;
++    l.anchor = -1;
++    l.x0 = 20, l.y0 = 470, l.x1 = 220, l.y1 = 520;
++    l.px.assign(static_cast<size_t>(200) * 50, portsim::GfxLayerPx{});
++    for (int y = l.y0; y < l.y1; ++y)
++      for (int x = l.x0; x < l.x1; ++x) back[static_cast<size_t>(y) * kLogicalW + x] = 0x0010;
++    for (auto &p : l.px) p.kind = 1, p.px = 0x0010;
++    Cap c = draw_run(back, "Build Course", 40, 500, 16, white);
++    std::vector<uint16_t> lay = back;
++    std::vector<std::vector<uint8_t>> lv;
++    portsim::gfx_text_peel(lay, kLogicalW, kLogicalH, {peel_of(c)}, lv);
++    c.r.vis = lv[0];
++    c.r.vis_layer = lv[0];
++    c.r.layer = 0;
++    WorldImage w;
++    w.pw = 1600, w.ph = 900, w.fw = 1200, w.ox = 200;
++    w.px.assign(static_cast<size_t>(w.pw) * w.ph, 0x0200);
++    w.mask.assign(static_cast<size_t>(kLogicalW) * kLogicalH, 0);  // the world shows nowhere inside the frame
++    w.hud.base = base;
++    w.hud.back = back;
++    w.hud.layers = {l};
++    w.hud.serial = 7;
++    portsim::GfxTextFrame lt;
++    lt.serial = 2;
++    lt.hud_serial = 7;
++    lt.back = back;
++    lt.clean = lay;
++    lt.base_clean = base;
++    lt.runs = {c.r};
++    Presenter p(PresentDefect::None, ScaleMode::Nearest);
++    p.set_text_res(true);
++    p.set_text_defect(td);
++    p.set_hud_anchor(true);
++    p.set_frame_world(back, BandFill::Black, std::move(w));
++    p.set_text(std::move(lt));
++    std::vector<uint32_t> o;
++    Viewport vp;
++    p.render(1600, 900, o, &vp);  // content 1200 x 900 at origin 200: the layer moves 200 client px left
++    auto ink = [&](int32_t dx) {  // client pixels of the label's box that hold the run's white
++      size_t n = 0;
++      for (int y = vp.origin_y + c.r.y0 * 3 / 2; y < vp.origin_y + c.r.y1 * 3 / 2; ++y)
++        for (int x = vp.origin_x + dx + c.r.x0 * 3 / 2; x < vp.origin_x + dx + c.r.x1 * 3 / 2; ++x)
++          if (x >= 0 && x < 1600 && (o[static_cast<size_t>(y) * 1600 + x] & 0xffffffu) == 0x00ffffffu) ++n;
++      return n;
++    };
++    const size_t moved = ink(-vp.origin_x), centred = ink(0);
++    std::printf("p9c: layer run white px at the anchor %zu, at the centred place %zu\n", moved, centred);
++    t.add("p9c.layer_run_moves_with_its_layer", moved > 50 && centred == 0);
++  }
++}
++
+ int run_selftest(const Options &o) {
+   Tests t;
+   if (o.selftest_p5b) {
+@@ -1906,6 +2205,13 @@ int run_selftest(const Options &o) {
+                                                    : PresentDefect::None);
+     return t.print();
+   }
++  if (o.selftest_p9c) {  // P9C
++    selftest_p9c(t, o.negctl == "p9c-unremoved"      ? TextDefect::Unremoved
++                    : o.negctl == "p9c-wrong-scale"  ? TextDefect::WrongScale
++                    : o.negctl == "p9c-wrong-colour" ? TextDefect::WrongColour
++                                                     : TextDefect::None);
++    return t.print();
++  }
+   PresentDefect pd = PresentDefect::None;
+   SavesDefect sd = SavesDefect::None;
+   if (o.negctl == "present-stale") pd = PresentDefect::Stale;
+@@ -2077,6 +2383,7 @@ bool parse(int argc, char **argv, Options &o) {
+     else if (a == "--selftest-p9a") o.selftest = o.selftest_p9a = true;  // P9A item 5
+     else if (a == "--selftest-p8b") o.selftest = o.selftest_p8b = true;  // P8B
+     else if (a == "--selftest-p9b") o.selftest = o.selftest_p9b = true;  // P9B
++    else if (a == "--selftest-p9c") o.selftest = o.selftest_p9c = true;  // P9C
+     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
+       o.wide = true;
+       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
+@@ -2106,6 +2413,15 @@ bool parse(int argc, char **argv, Options &o) {
+       if (!val(v) || (v != "on" && v != "off")) return false;
+       o.hud_layers = v == "on";
+     }
++    else if (a == "--text-res") {  // P9C
++      if (!val(v) || (v != "native" && v != "frame")) return false;
++      o.text_res = v;
++    }
++    else if (a == "--text-aa") {  // P9C
++      if (!val(v) || (v != "system" && v != "cleartype" && v != "grey")) return false;
++      o.text_aa = v;
++    }
++    else if (a == "--text-unit-redraw") o.text_unit_redraw = true;  // P9C (measurement)
+     else if (a == "--ui-union") o.ui_union = true;        // G32 development
+     else if (a == "--view-width") {  // G32
+       if (!val(v)) return false;
+@@ -2183,6 +2499,8 @@ int main(int argc, char **argv) {
+     if (!std::strcmp(ep, "off")) o.loading_overlay = false;
+   if (const char *ep = std::getenv("SG_APP_P9"))  // P9A: P7's soft band fill (port/test/conftest.py sets it); flags still win
+     if (!std::strcmp(ep, "off")) o.wide_fill = "soft";
++  if (const char *ep = std::getenv("SG_APP_P9C"))  // P9C: the frame's text scaled with the picture (port/test/conftest.py); flags win
++    if (!std::strcmp(ep, "off")) o.text_res = "frame";
+   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
+   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
+   // argument parser runs (its messages go there too), with the --data value read ahead.
+diff --git a/port/app/CMakeLists.txt b/port/app/CMakeLists.txt
+index 182a218..610a16a 100644
+--- a/port/app/CMakeLists.txt
++++ b/port/app/CMakeLists.txt
+@@ -52,7 +52,7 @@ if(PORTAPP_SHELL AND WIN32 AND TARGET portsim)
+   # P9A item 1: the player's simgolf_port.exe is a WIN32-subsystem program (no console window; main() stays the entry
+   # through mainCRTStartup; stdout / stderr: stdio_log.h). simgolf_port_console.exe is the same objects linked for the
+   # console subsystem (a terminal that wants to wait for it). Both are built by the `simgolf_port` target.
+-  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp)
++  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp)
+   target_link_libraries(simgolf_port_objs PRIVATE portapp_input portapp_audio portsim)
+   target_compile_definitions(simgolf_port_objs PRIVATE UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
+   add_executable(simgolf_port WIN32 $<TARGET_OBJECTS:simgolf_port_objs>)
+diff --git a/port/test/conftest.py b/port/test/conftest.py
+index f0bd3a3..b49de8c 100644
+--- a/port/test/conftest.py
++++ b/port/test/conftest.py
+@@ -36,6 +36,9 @@ def pytest_configure(config):
+     # P9A: the edge band fill (--wide-fill edge) is off for the app tests too (it acts only with --wide, which SG_APP_P8B=off
+     # already turns off)
+     os.environ.setdefault("SG_APP_P9", "off")
++    # P9C: the text redraw at the window's resolution (--text-res native) is off for the app tests: they compare the client
++    # image with the frame's own pixels at sizes other than 800 x 600 (at 800 x 600 native and frame are the same picture)
++    os.environ.setdefault("SG_APP_P9C", "off")
+     if config.getoption("--backend"):
+         os.environ["SG_BACKEND"] = config.getoption("--backend")
+     for m in ("static", "port", "x87"):

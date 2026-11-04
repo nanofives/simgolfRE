@@ -23,6 +23,12 @@
 //   simgolf_port.exe --selftest-p5b | --selftest-p7  the P5B scale modes / the P7 wide side bands
 //   simgolf_port.exe --selftest-p8b                  P8B: the world layer under the frame (control --negctl p8b-mask-ignored)
 //   simgolf_port.exe --selftest-p9b                  P9B: the layered HUD compositor (controls --negctl p9b-blend-opaque | p9b-rect-move)
+//   simgolf_port.exe --selftest-p9c                  P9C: text at the window's resolution (controls --negctl p9c-unremoved |
+//                    p9c-wrong-scale | p9c-wrong-colour)
+//   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
+//   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
+//   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
+//   (a measurement: the redraw also at an 800 x 600 content rectangle).
 //   simgolf_port.exe --compose <in.555> <cw> <ch> <out.bmp> [--wide --wide-fill soft|clamp|black] [--scale m]
 //                    [--compose-band extend|black]   P7: the presenter's client image of one 800x600 frame, as a BMP
 //   P7 (widescreen stage 1, default off): --wide [on|off] (or SG_APP_WIDE=on) opens the window at --wide-width (1067) x 600
@@ -272,6 +278,10 @@ struct Options {
   uint32_t dpi = 0, exit_after = 0;
   bool activate = true, window = true, selftest = false, selftest_p5b = false, selftest_p7 = false, selftest_p8b = false, selftest_p9a = false;
   bool selftest_p9b = false;  // P9B
+  bool selftest_p9c = false;  // P9C
+  std::string text_res = "native";  // P9C: --text-res native|frame (SG_APP_P9C=off: frame)
+  std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
+  bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -327,6 +337,17 @@ struct Options {
 // P9B: the layered HUD compositor is on with --wide, --hud-anchor on and --hud-layers on (the defaults); --negctl p9b-rect-move
 // keeps G32's rectangle compositor with capture on (the control)
 static bool hud_layers_on(const Options &o) { return o.wide && o.hud_anchor && o.hud_layers; }
+// P9C: the presenter's text options
+static bool text_native_on(const Options &o) { return o.text_res == "native"; }
+static void setup_text(Presenter &p, const Options &o) {
+  p.set_text_res(text_native_on(o));
+  p.set_text_aa(o.text_aa == "cleartype" ? TextAa::ClearType : o.text_aa == "grey" ? TextAa::Grey : TextAa::System);
+  p.set_text_defect(o.negctl == "p9c-unremoved"      ? TextDefect::Unremoved
+                    : o.negctl == "p9c-wrong-scale"  ? TextDefect::WrongScale
+                    : o.negctl == "p9c-wrong-colour" ? TextDefect::WrongColour
+                                                     : TextDefect::None);
+  p.set_text_unit_redraw(o.text_unit_redraw);
+}
 
 // P5B item 4: --scale
 ScaleMode scale_mode(const std::string &s) {
@@ -822,6 +843,9 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
   bool streamed = false;
   std::string world_json = "null";  // P8B
   uint32_t world_shots_made = 0;
+  TextResStats shot_text;               // P9C: the world shots' text runs
+  int64_t shot_render_us = 0;           // P9C: the world shots' Presenter::render time
+  portsim::GfxTextStats text_cap;       // P9C: the backend's text capture
   int64_t terrain_us = 0;
   if (err.empty()) {
     auto ctx = std::make_unique<portsim::Ctx>();
@@ -834,6 +858,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       for (int64_t s : o.snapshot_list) ok = ok && reg_call(*ctx, "gfx.snapshotAt", {static_cast<uint32_t>(s)}, &why);
       if (!ok) err = why;
       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
+      if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
     if (err.empty()) {
       TerrainGuard terrain;
@@ -867,21 +892,51 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
             if (std::find(o.world_shots.begin(), o.world_shots.end(), static_cast<int64_t>(index)) == o.world_shots.end()) return;
             const portsim::LiveTerrainWorld *w = terrain.live->world();
             WorldImage wi;
-            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi);  // P8B; P9B: with the frame's HUD layers
+            portsim::GfxTextFrame tf;  // P9C: the frame's text runs
+            const bool text = text_native_on(o) && take_text_frame(c, px, tf);
+            if (text && std::getenv("SG_P9C_RUN_LOG")) {  // development: the shot's runs (one line each)
+              std::FILE *rl = std::fopen((rec / ("runs_" + std::to_string(index) + ".tsv")).string().c_str(), "wb");
+              if (rl) {
+                std::fprintf(rl, "x\ty\tbox\tlayer\tvis\tvis_layer\tface\tsize\tcolour\ttext\n");
+                for (const portsim::GfxTextRun &r : tf.runs) {
+                  size_t v = 0, vl = 0;
+                  for (uint8_t b : r.vis) v += b;
+                  for (uint8_t b : r.vis_layer) vl += b;
+                  std::fprintf(rl, "%d\t%d\t%d,%d-%d,%d\t%d\t%zu\t%zu\t%s\t%d\t%06x\t%s\n", r.x, r.y, r.x0, r.y0, r.x1, r.y1, r.layer, v, vl,
+                               r.face.c_str(), r.size, r.colorref, r.text.c_str());
+                }
+                std::fclose(rl);
+              }
+            }
+            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi, text ? &tf : nullptr);  // P8B; P9B: with the HUD layers
             const int cw = o.shot_w > 0 ? o.shot_w : (w ? w->pw : 800), ch = o.shot_h > 0 ? o.shot_h : (w ? w->ph : 600);
             Presenter p(o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B controls
                         : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove
                                                       : PresentDefect::None,
                         scale_mode(o.scale));
             p.set_wide(wide_fill(o));
+            setup_text(p, o);  // P9C
             std::vector<uint32_t> img;
             p.set_frame(px, BandFill::Black);
+            if (text) {
+              portsim::GfxTextFrame t2 = tf;
+              p.set_text(std::move(t2));
+            }
             p.render(cw, ch, img);
             write_bmp(rec / ("frame_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
             p.set_hud_anchor(o.wide && o.hud_anchor);  // G32
             p.set_frame_world(px, BandFill::Black, std::move(wi));
+            p.set_text(std::move(tf));  // P9C
+            const auto rt0 = std::chrono::steady_clock::now();
             p.render(cw, ch, img);
+            shot_render_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - rt0).count();
             write_bmp(rec / ("world_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
+            if (const TextResStats *ts = p.text_stats()) {  // P9C: the world shot's runs (accumulated for session.json)
+              shot_text.runs += ts->runs;
+              shot_text.clipped_runs += ts->clipped_runs;
+              shot_text.clipped_px += ts->clipped_px;
+              shot_text.failed += ts->failed;
+            }
             if (o.world_check && w) {  // the raw layers for the render-scale-1 gate: world root, T, the frame
               const std::vector<uint16_t> &wp = terrain.live->world()->raster->pixels();
               write_file(rec / ("world_" + std::to_string(index) + ".555"), wp.data(), wp.size() * 2);
@@ -949,6 +1004,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
         write_file(rec / ("snapshot_" + std::to_string(k) + ".555"), b.data(), b.size());
         ++snaps_taken;
       }
+      text_cap = portsim::gfx_text_stats(*ctx);  // P9C
       reg_call(*ctx, "gfx.log", {}, &why);
       std::vector<uint8_t> log(static_cast<size_t>(std::max<int64_t>(0, files.size("$gfx/log.txt"))));
       if (!log.empty()) files.read("$gfx/log.txt", 0, log.data(), log.size());
@@ -980,6 +1036,12 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
   s += ",\"terrain_passes\":" + std::to_string(tpasses) + ",\"terrain_pixels\":" + std::to_string(tpixels);
   s += ",\"terrain_calls\":" + std::to_string(tcalls);
   s += ",\"world\":" + world_json + ",\"render_scale\":\"" + jesc(o.render_scale) + "\"";  // P8B
+  s += ",\"p9c\":{\"text_res\":\"" + o.text_res + "\",\"text_aa\":\"" + o.text_aa + "\",\"captured\":" +  // P9C
+       std::to_string(text_cap.captured) + ",\"published_last\":" + std::to_string(text_cap.published) + ",\"dropped\":" +
+       std::to_string(text_cap.dropped) + ",\"no_font\":" + std::to_string(text_cap.no_font) + ",\"frames\":" +
+       std::to_string(text_cap.frames) + ",\"merged\":" + std::to_string(text_cap.merged) + ",\"shot_runs\":" + std::to_string(shot_text.runs) + ",\"shot_clipped_runs\":" +
+       std::to_string(shot_text.clipped_runs) + ",\"shot_clipped_px\":" + std::to_string(shot_text.clipped_px) +
+       ",\"shot_failed\":" + std::to_string(shot_text.failed) + ",\"shot_render_us\":" + std::to_string(shot_render_us) + "}";
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made[0]) + ",\"w\":" + std::to_string(made[1]) + ",\"m\":" +
        std::to_string(made[2]) + ",\"p\":" + std::to_string(made[3]) + "},\"r_superseded\":" + std::to_string(r_superseded);
   s += ",\"terrain_log_max\":" + std::to_string(tlog_max) + ",\"terrain_log_end\":" + std::to_string(tlog_end);
@@ -1036,6 +1098,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
     return lo;
   }
   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
+  if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
   int *rec_mode = nullptr;
   if (o.negctl.rfind("recorder:", 0) == 0) {
@@ -1093,6 +1156,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
   ho.hud_layers = hud_layers_on(o);                    // P9B
+  ho.text_native = text_native_on(o);                  // P9C
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
@@ -1107,6 +1171,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_wide(wide_fill(o));  // P7
+  setup_text(presenter, o);          // P9C
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes
   if (ho.remap) {  // G32: the HUD compositor
     presenter.set_hud_anchor(true);
@@ -1169,8 +1234,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       BandFill band = BandFill::Black;
       WorldImage wi;  // P8B
       if (session.take_frame(px, index, &band, &wi)) {
+        portsim::GfxTextFrame tf = std::move(wi.text);  // P9C: the frame's text runs (empty without --text-res native)
         if (ho.world) presenter.set_frame_world(px, band, std::move(wi));  // P8B: with its world layer (none = as before)
         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
+        presenter.set_text(std::move(tf));    // P9C
         win.invalidate();
         if (shown && index != LiveSession::kBannerIndex) {
           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
@@ -1209,6 +1276,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p8b\":{\"render_scale\":\"" + jesc(o.render_scale) + "\",\"world_pw\":" + std::to_string(ow.world_pw) +
        ",\"world_ph\":" + std::to_string(ow.world_ph) + ",\"wide_edge\":" + std::to_string(ho.wide_edge ? 1 : 0) + "}";  // P8B
   s += ",\"p6b\":{\"loading_overlay\":" + std::to_string(o.loading_overlay ? 1 : 0) + "}";  // P6B
+  {  // P9C: the window's text runs
+    const TextResStats *ts = presenter.text_stats();
+    s += ",\"p9c\":{\"text_res\":\"" + o.text_res + "\",\"text_aa\":\"" + o.text_aa + "\",\"runs_drawn\":" +
+         std::to_string(ts ? ts->runs : 0) + ",\"clipped_runs\":" + std::to_string(ts ? ts->clipped_runs : 0) +
+         ",\"clipped_px\":" + std::to_string(ts ? ts->clipped_px : 0) + ",\"failed\":" + std::to_string(ts ? ts->failed : 0) + "}";
+  }
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
@@ -1882,6 +1955,232 @@ int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bm
   return 0;
 }
 
+// P9C (--selftest-p9c): text at the window's resolution (textres.h, Presenter::set_text / draw_runs, portsim::gfx_text_peel) on a
+// synthetic frame: two runs drawn with GDI's TextOutA in Arial (a system face) onto a 16-bit DIB as jgld draws the game's text, an
+// opaque rectangle drawn over half of the second run afterwards, and a third run inside a left-anchored HUD layer. Rows: the peel
+// gives the background without any glyph; at 800 x 600 the redraw (forced, as --text-unit-redraw) and the plain native picture
+// both equal the frame mode's in every pixel; at 1600 x 1200 the picture equals the background scaled with the strings drawn
+// there directly at twice the size (and the rectangle kept over the second); the ink is twice as tall and has the run's colour;
+// the layer's run moves with its layer. Controls: --negctl p9c-unremoved (double text), p9c-wrong-scale, p9c-wrong-colour.
+namespace p9c {
+// TextOutA of `text` onto a w x h RGB555 buffer (a full-size 16-bit top-down DIB), the given LOGFONTA height and quality
+void gdi_text(std::vector<uint16_t> &buf, int32_t w, int32_t h, const char *face, int32_t height, uint32_t colorref, int32_t x,
+              int32_t y, const std::string &text, int quality = 0) {
+  HDC dc = CreateCompatibleDC(nullptr);
+  BITMAPINFO bi = {};
+  bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+  bi.bmiHeader.biWidth = w;
+  bi.bmiHeader.biHeight = -h;
+  bi.bmiHeader.biPlanes = 1;
+  bi.bmiHeader.biBitCount = 16;
+  bi.bmiHeader.biCompression = BI_RGB;
+  void *bits = nullptr;
+  HBITMAP bmp = CreateDIBSection(dc, &bi, DIB_RGB_COLORS, &bits, nullptr, 0);
+  HGDIOBJ old = SelectObject(dc, bmp);
+  const size_t pitch = static_cast<size_t>((w + 1) & ~1);
+  uint16_t *b = static_cast<uint16_t *>(bits);
+  for (int32_t r = 0; r < h; ++r) std::memcpy(b + pitch * r, buf.data() + static_cast<size_t>(w) * r, 2u * w);
+  LOGFONTA lf = {};
+  lf.lfHeight = -height;
+  lf.lfOutPrecision = 7;
+  lf.lfQuality = static_cast<BYTE>(quality);
+  std::strcpy(lf.lfFaceName, face);
+  HFONT f = CreateFontIndirectA(&lf);
+  HGDIOBJ of = SelectObject(dc, f);
+  SetBkMode(dc, TRANSPARENT);
+  SetTextAlign(dc, TA_BASELINE);
+  SetTextColor(dc, colorref);
+  TextOutA(dc, x, y, text.data(), static_cast<int>(text.size()));
+  GdiFlush();
+  for (int32_t r = 0; r < h; ++r) std::memcpy(buf.data() + static_cast<size_t>(w) * r, b + pitch * r, 2u * w);
+  SelectObject(dc, of);
+  SelectObject(dc, old);
+  DeleteObject(f);
+  DeleteObject(bmp);
+  DeleteDC(dc);
+}
+struct Cap {  // one captured run: box (changed pixels + 2), before / after
+  portsim::GfxTextRun r;
+  std::vector<uint16_t> before, after;
+};
+Cap draw_run(std::vector<uint16_t> &img, const char *text, int32_t x, int32_t y, int32_t size, uint32_t colorref) {
+  const std::vector<uint16_t> snap = img;
+  gdi_text(img, kLogicalW, kLogicalH, "Arial", size, colorref, x, y, text);
+  Cap c;
+  int32_t x0 = kLogicalW, y0 = kLogicalH, x1 = -1, y1 = -1;
+  for (int32_t yy = 0; yy < kLogicalH; ++yy)
+    for (int32_t xx = 0; xx < kLogicalW; ++xx)
+      if (snap[static_cast<size_t>(yy) * kLogicalW + xx] != img[static_cast<size_t>(yy) * kLogicalW + xx]) {
+        x0 = std::min(x0, xx), y0 = std::min(y0, yy), x1 = std::max(x1, xx), y1 = std::max(y1, yy);
+      }
+  c.r.face = "Arial";
+  c.r.size = size;
+  c.r.colorref = colorref;
+  c.r.x = x;
+  c.r.y = y;
+  c.r.text = text;
+  c.r.x0 = std::max(0, x0 - 2), c.r.y0 = std::max(0, y0 - 2), c.r.x1 = std::min(kLogicalW, x1 + 3), c.r.y1 = std::min(kLogicalH, y1 + 3);
+  for (int32_t yy = c.r.y0; yy < c.r.y1; ++yy)
+    for (int32_t xx = c.r.x0; xx < c.r.x1; ++xx) {
+      c.before.push_back(snap[static_cast<size_t>(yy) * kLogicalW + xx]);
+      c.after.push_back(img[static_cast<size_t>(yy) * kLogicalW + xx]);
+    }
+  return c;
+}
+portsim::GfxTextPeelRun peel_of(const Cap &c) {
+  portsim::GfxTextPeelRun p;
+  p.x0 = c.r.x0, p.y0 = c.r.y0, p.x1 = c.r.x1, p.y1 = c.r.y1;
+  p.before = c.before.data();
+  p.after = c.after.data();
+  return p;
+}
+}  // namespace p9c
+
+void selftest_p9c(Tests &t, TextDefect td) {
+  using namespace p9c;
+  std::vector<uint16_t> bg(static_cast<size_t>(kLogicalW) * kLogicalH);
+  for (int y = 0; y < kLogicalH; ++y)
+    for (int x = 0; x < kLogicalW; ++x)
+      bg[static_cast<size_t>(y) * kLogicalW + x] = static_cast<uint16_t>(((x / 40) & 1 ? 0x0108 : 0x0c63) + ((y / 30) & 3));
+  const uint32_t white = 0x00f8f8f8u, gold = 0x0038f8f8u, yellow = 0x0000f8f8u;  // COLORREFs (r | g << 8 | b << 16), 5-bit exact
+  const uint16_t occ = 0x7c00;                             // the rectangle drawn over the second run (pure red)
+  std::vector<uint16_t> img = bg;
+  Cap a = draw_run(img, "Sandbox Golf Course", 100, 200, 16, yellow);
+  Cap b = draw_run(img, "Membership 42", 300, 300, 14, gold);
+  // the occluder: the right half of b's box, drawn after b (it stays over b's window-resolution glyphs)
+  const int32_t ox0 = (b.r.x0 + b.r.x1) / 2, ox1 = b.r.x1 + 4, oy0 = b.r.y0 - 3, oy1 = b.r.y1 + 3;
+  std::vector<uint16_t> expect_clean = bg;
+  for (int y = oy0; y < oy1; ++y)
+    for (int x = ox0; x < ox1; ++x) {
+      img[static_cast<size_t>(y) * kLogicalW + x] = occ;
+      expect_clean[static_cast<size_t>(y) * kLogicalW + x] = occ;
+    }
+  // the peel, as the backend makes it at Window::refreshFull
+  portsim::GfxTextFrame tf;
+  tf.serial = 1;
+  tf.back = img;
+  tf.clean = img;
+  std::vector<std::vector<uint8_t>> vis;
+  portsim::gfx_text_peel(tf.clean, kLogicalW, kLogicalH, {peel_of(a), peel_of(b)}, vis);
+  a.r.vis = vis[0];
+  b.r.vis = vis[1];
+  tf.runs = {a.r, b.r};
+  t.add("p9c.peel_leaves_no_glyph", tf.clean == expect_clean);
+  size_t bvis = 0, bcov = 0;
+  for (size_t i = 0; i < b.r.vis.size(); ++i) (b.r.vis[i] ? bvis : bcov) += 1;
+  t.add("p9c.peel_covered_part_not_visible", bvis > 0 && bcov > 0);
+  auto render = [&](bool native, bool unit_redraw, int32_t cw, int32_t ch, ScaleMode m) {
+    Presenter p(PresentDefect::None, m);
+    p.set_text_res(native);
+    p.set_text_defect(td);
+    p.set_text_unit_redraw(unit_redraw);
+    p.set_frame(img, BandFill::Black);
+    portsim::GfxTextFrame c = tf;
+    p.set_text(std::move(c));
+    std::vector<uint32_t> o;
+    p.render(cw, ch, o);
+    return o;
+  };
+  const std::vector<uint32_t> frame1 = render(false, false, 800, 600, ScaleMode::Nearest);
+  t.add("p9c.native_at_1x_equals_frame", render(true, false, 800, 600, ScaleMode::Nearest) == frame1);
+  t.add("p9c.redraw_at_1x_equals_frame", render(true, true, 800, 600, ScaleMode::Nearest) == frame1);
+  t.add("p9c.redraw_at_1x_equals_frame_smooth", render(true, true, 800, 600, ScaleMode::Smooth) == render(false, false, 800, 600, ScaleMode::Smooth));
+  // 2x: the expected picture = the background scaled, the two strings drawn at twice the size at twice the origin, then the
+  // occluder scaled over the second
+  const int32_t W = 1600, H = 1200;
+  std::vector<uint16_t> e(static_cast<size_t>(W) * H);
+  for (int y = 0; y < H; ++y)
+    for (int x = 0; x < W; ++x) e[static_cast<size_t>(y) * W + x] = bg[static_cast<size_t>(y / 2) * kLogicalW + x / 2];
+  gdi_text(e, W, H, "Arial", 32, yellow, 200, 400, a.r.text);
+  gdi_text(e, W, H, "Arial", 28, gold, 600, 600, b.r.text);
+  for (int y = oy0 * 2; y < oy1 * 2; ++y)
+    for (int x = ox0 * 2; x < ox1 * 2; ++x) e[static_cast<size_t>(y) * W + x] = occ;
+  const std::vector<uint32_t> n2 = render(true, false, W, H, ScaleMode::Nearest);
+  size_t diff = 0;
+  for (size_t i = 0; i < e.size(); ++i) diff += n2[i] != rgb555_to_bgra(e[i]) ? 1 : 0;
+  std::printf("p9c: 2x picture differs from the direct draw in %zu px\n", diff);
+  t.add("p9c.scaled_equals_direct_draw", diff == 0);
+  // the ink of the first run (pixels that differ from the scaled background): twice the 800-space height, the run's colour
+  int32_t ytop = H, ybot = -1, ytop1 = kLogicalH, ybot1 = -1;
+  std::map<uint32_t, size_t> colours;
+  for (int y = a.r.y0 * 2; y < a.r.y1 * 2; ++y)
+    for (int x = a.r.x0 * 2; x < a.r.x1 * 2; ++x) {
+      const uint32_t v = n2[static_cast<size_t>(y) * W + x];
+      if (v == rgb555_to_bgra(bg[static_cast<size_t>(y / 2) * kLogicalW + x / 2])) continue;
+      ytop = std::min(ytop, y), ybot = std::max(ybot, y);
+      ++colours[v];
+    }
+  for (int y = a.r.y0; y < a.r.y1; ++y)
+    for (int x = a.r.x0; x < a.r.x1; ++x)
+      if (a.after[static_cast<size_t>(y - a.r.y0) * (a.r.x1 - a.r.x0) + (x - a.r.x0)] != a.before[static_cast<size_t>(y - a.r.y0) * (a.r.x1 - a.r.x0) + (x - a.r.x0)])
+        ytop1 = std::min(ytop1, y), ybot1 = std::max(ybot1, y);
+  const int32_t h2 = ybot - ytop + 1, h1 = ybot1 - ytop1 + 1;
+  std::printf("p9c: ink height 800-space %d, at 2x %d\n", h1, h2);
+  t.add("p9c.ink_twice_as_tall", h1 > 0 && h2 >= 2 * h1 - 3 && h2 <= 2 * h1 + 3);
+  uint32_t top = 0;
+  size_t topn = 0;
+  for (const auto &kv : colours)
+    if (kv.second > topn) top = kv.first, topn = kv.second;
+  t.add("p9c.ink_in_the_run_colour", (top & 0xffffffu) == 0x00ffff00u);  // yellow: RGB555 0x7fe0 -> BGRA 0xffff00
+  size_t occ_bad = 0;
+  for (int y = oy0 * 2; y < oy1 * 2; ++y)
+    for (int x = ox0 * 2; x < ox1 * 2; ++x) occ_bad += n2[static_cast<size_t>(y) * W + x] != rgb555_to_bgra(occ) ? 1 : 0;
+  t.add("p9c.later_draw_stays_over_the_run", occ_bad == 0);
+  // a run inside a left-anchored layer (a panel at 20..220 x 470..520 with a label) moves with the layer
+  {
+    std::vector<uint16_t> base = bg, back = bg;
+    portsim::GfxHudLayer l;
+    l.id = portsim::kGfxLayerBottom;
+    l.anchor = -1;
+    l.x0 = 20, l.y0 = 470, l.x1 = 220, l.y1 = 520;
+    l.px.assign(static_cast<size_t>(200) * 50, portsim::GfxLayerPx{});
+    for (int y = l.y0; y < l.y1; ++y)
+      for (int x = l.x0; x < l.x1; ++x) back[static_cast<size_t>(y) * kLogicalW + x] = 0x0010;
+    for (auto &p : l.px) p.kind = 1, p.px = 0x0010;
+    Cap c = draw_run(back, "Build Course", 40, 500, 16, white);
+    std::vector<uint16_t> lay = back;
+    std::vector<std::vector<uint8_t>> lv;
+    portsim::gfx_text_peel(lay, kLogicalW, kLogicalH, {peel_of(c)}, lv);
+    c.r.vis = lv[0];
+    c.r.vis_layer = lv[0];
+    c.r.layer = 0;
+    WorldImage w;
+    w.pw = 1600, w.ph = 900, w.fw = 1200, w.ox = 200;
+    w.px.assign(static_cast<size_t>(w.pw) * w.ph, 0x0200);
+    w.mask.assign(static_cast<size_t>(kLogicalW) * kLogicalH, 0);  // the world shows nowhere inside the frame
+    w.hud.base = base;
+    w.hud.back = back;
+    w.hud.layers = {l};
+    w.hud.serial = 7;
+    portsim::GfxTextFrame lt;
+    lt.serial = 2;
+    lt.hud_serial = 7;
+    lt.back = back;
+    lt.clean = lay;
+    lt.base_clean = base;
+    lt.runs = {c.r};
+    Presenter p(PresentDefect::None, ScaleMode::Nearest);
+    p.set_text_res(true);
+    p.set_text_defect(td);
+    p.set_hud_anchor(true);
+    p.set_frame_world(back, BandFill::Black, std::move(w));
+    p.set_text(std::move(lt));
+    std::vector<uint32_t> o;
+    Viewport vp;
+    p.render(1600, 900, o, &vp);  // content 1200 x 900 at origin 200: the layer moves 200 client px left
+    auto ink = [&](int32_t dx) {  // client pixels of the label's box that hold the run's white
+      size_t n = 0;
+      for (int y = vp.origin_y + c.r.y0 * 3 / 2; y < vp.origin_y + c.r.y1 * 3 / 2; ++y)
+        for (int x = vp.origin_x + dx + c.r.x0 * 3 / 2; x < vp.origin_x + dx + c.r.x1 * 3 / 2; ++x)
+          if (x >= 0 && x < 1600 && (o[static_cast<size_t>(y) * 1600 + x] & 0xffffffu) == 0x00ffffffu) ++n;
+      return n;
+    };
+    const size_t moved = ink(-vp.origin_x), centred = ink(0);
+    std::printf("p9c: layer run white px at the anchor %zu, at the centred place %zu\n", moved, centred);
+    t.add("p9c.layer_run_moves_with_its_layer", moved > 50 && centred == 0);
+  }
+}
+
 int run_selftest(const Options &o) {
   Tests t;
   if (o.selftest_p5b) {
@@ -1904,6 +2203,13 @@ int run_selftest(const Options &o) {
     selftest_p9b(t, o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque
                     : o.negctl == "p9b-rect-move"  ? PresentDefect::LayerRectMove
                                                    : PresentDefect::None);
+    return t.print();
+  }
+  if (o.selftest_p9c) {  // P9C
+    selftest_p9c(t, o.negctl == "p9c-unremoved"      ? TextDefect::Unremoved
+                    : o.negctl == "p9c-wrong-scale"  ? TextDefect::WrongScale
+                    : o.negctl == "p9c-wrong-colour" ? TextDefect::WrongColour
+                                                     : TextDefect::None);
     return t.print();
   }
   PresentDefect pd = PresentDefect::None;
@@ -2077,6 +2383,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--selftest-p9a") o.selftest = o.selftest_p9a = true;  // P9A item 5
     else if (a == "--selftest-p8b") o.selftest = o.selftest_p8b = true;  // P8B
     else if (a == "--selftest-p9b") o.selftest = o.selftest_p9b = true;  // P9B
+    else if (a == "--selftest-p9c") o.selftest = o.selftest_p9c = true;  // P9C
     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
       o.wide = true;
       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
@@ -2106,6 +2413,15 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_layers = v == "on";
     }
+    else if (a == "--text-res") {  // P9C
+      if (!val(v) || (v != "native" && v != "frame")) return false;
+      o.text_res = v;
+    }
+    else if (a == "--text-aa") {  // P9C
+      if (!val(v) || (v != "system" && v != "cleartype" && v != "grey")) return false;
+      o.text_aa = v;
+    }
+    else if (a == "--text-unit-redraw") o.text_unit_redraw = true;  // P9C (measurement)
     else if (a == "--ui-union") o.ui_union = true;        // G32 development
     else if (a == "--view-width") {  // G32
       if (!val(v)) return false;
@@ -2183,6 +2499,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.loading_overlay = false;
   if (const char *ep = std::getenv("SG_APP_P9"))  // P9A: P7's soft band fill (port/test/conftest.py sets it); flags still win
     if (!std::strcmp(ep, "off")) o.wide_fill = "soft";
+  if (const char *ep = std::getenv("SG_APP_P9C"))  // P9C: the frame's text scaled with the picture (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.text_res = "frame";
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

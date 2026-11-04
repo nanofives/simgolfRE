@@ -1,0 +1,7 @@
+cov_r_quit	frame	1fcfd539fbed936c	8e726c8e8ba9dce0	{"rc": 0, "seconds": 30.3, "records": 301, "stop": "quit", "code": 0, "presents"
+cov_r_quit	native	1fcfd539fbed936c	8e726c8e8ba9dce0	{"rc": 0, "seconds": 32.9, "records": 301, "stop": "quit", "code": 0, "presents"
+cov_r_quit	ctl9	1fcfd539fbed936c	8e726c8e8ba9dce0	{"rc": 0, "seconds": 31.8, "records": 301, "stop": "quit", "code": 0, "presents"
+cov_r_quit	frame	presents_hash_of_hashes	231e0e7c2a8ffc09	presents	735
+cov_r_quit	native	presents_hash_of_hashes	231e0e7c2a8ffc09	presents	735
+cov_r_quit	ctl9	presents_hash_of_hashes	1fd2c974a4ff37cc	presents	738
+cov_r_quit	ctl9 vs native	presents differing (by index)	738	first differing index	0

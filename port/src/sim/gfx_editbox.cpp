@@ -552,6 +552,19 @@ void compose(Gfx &g, Ctx &) {
     }
   }
 }
+// P9C: where a window surface lands in the back buffer (its position), false when it is not one of the composed windows
+bool window_origin(Gfx &g, const Surface16 *surf, int32_t &x, int32_t &y) {
+  auto p = g.family_state.find("editbox");
+  if (p == g.family_state.end() || !p->second || !surf) return false;
+  const EbState &s = *static_cast<const EbState *>(p->second.get());
+  for (const auto &kv : s.win)
+    if (&kv.second.s == surf) {
+      x = kv.second.x;
+      y = kv.second.y + (mode() == 5 ? 1 : 0);
+      return true;
+    }
+  return false;
+}
 }  // namespace gfxe
 
 extern const GfxFamily kGfxFamily_editbox = {"editbox", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};

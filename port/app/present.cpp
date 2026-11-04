@@ -134,7 +134,10 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
   if (frame_.empty() || cw <= 0 || ch <= 0) return;
   // P9B: with the frame's HUD layers the scaled image is the layers' base (the root before the first panel drew); the layers
   // are composed over it in compose_layers
-  const std::vector<uint16_t> &fsrc = layered() ? world_.hud.base : frame_;
+  // P9C: with the frame's text runs, the picture without their low-resolution glyphs (the runs are drawn after the scaling)
+  const bool text = text_now(vp);
+  const std::vector<uint16_t> &fsrc = layered() ? hud_for(text).base
+                                      : text && text_defect_ != TextDefect::Unremoved ? text_.clean : frame_;
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
     std::vector<uint32_t> src(fsrc.size());
@@ -177,7 +180,8 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
       }
     }
     if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
-    else if (wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+    if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
+    if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
     return;
   }
   std::vector<int32_t> col(static_cast<size_t>(vp.client_w));
@@ -190,7 +194,71 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
     for (int32_t x = 0; x < vp.client_w; ++x) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
   }
   if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
-  else if (wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+  if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
+  if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+}
+
+// ---- P9C: the text runs (textres.h)
+void Presenter::set_text(portsim::GfxTextFrame &&tf) {
+  text_ok_ = text_layered_ok_ = false;
+  text_ = portsim::GfxTextFrame{};
+  hud_text_ = portsim::GfxHudFrame{};
+  if (!text_native_ || tf.empty() || tf.back.size() != frame_.size() || tf.clean.size() != frame_.size()) return;
+  if (defect_ == PresentDefect::Stale && frames_set_ > 1) return;
+  text_ = std::move(tf);
+  text_ok_ = true;
+  // the layered path: the base and the layers without the runs' glyphs, when they belong to the frame's HUD layers
+  if (!world_.empty() && !world_.hud.empty() && text_.hud_serial == world_.hud.serial &&
+      text_.base_clean.size() == world_.hud.base.size()) {
+    text_layered_ok_ = true;
+    hud_text_ = world_.hud;  // the layers without the runs' glyphs (world_.hud stays: the picture at 800 x 600)
+    if (text_defect_ != TextDefect::Unremoved) {
+      hud_text_.base = text_.base_clean;
+      for (const portsim::GfxTextLayerPatch &p : text_.patches) {
+        if (p.layer < 0 || static_cast<size_t>(p.layer) >= hud_text_.layers.size()) continue;
+        std::vector<portsim::GfxLayerPx> &lp = hud_text_.layers[static_cast<size_t>(p.layer)].px;
+        for (size_t k = 0; k < p.idx.size() && k < p.px.size(); ++k)
+          if (p.idx[k] < lp.size()) lp[p.idx[k]] = p.px[k];
+      }
+    }
+    text_.base_clean.clear();
+    text_.patches.clear();
+  }
+  text_.back.clear();  // checked; not needed any more
+}
+
+const portsim::GfxHudFrame &Presenter::hud_for(bool text) const {
+  return text && text_layered_ok_ ? hud_text_ : world_.hud;
+}
+
+bool Presenter::text_now(const Viewport &vp) const {
+  if (!text_ok_ || vp.client_w <= 0 || vp.client_h <= 0) return false;
+  if (layered() && !text_layered_ok_) return false;
+  const bool unit = vp.client_w == kLogicalW && vp.client_h == kLogicalH;
+  return !unit || text_unit_redraw_;
+}
+
+// the runs of one layer (layered: -1 the base, k the layer; flat: every run) at dx client pixels
+void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered_path, int32_t layer,
+                          int32_t dx) const {
+  if (!raster_) raster_.reset(new TextRaster());
+  raster_->set_defect(text_defect_);
+  raster_->set_aa(text_aa_);
+  // G32's rectangle compositor (no layers): a run inside a moved panel rectangle moves with it
+  const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+  for (const portsim::GfxTextRun &r : text_.runs) {
+    if (layered_path && r.layer != layer) continue;
+    if (r.target == 2 && world_.empty()) continue;  // a world run with no world under it
+    int32_t d = dx;
+    if (rect)
+      for (const HudPanel &p : kHudPanels)
+        if (r.x0 >= p.x0 && r.x1 <= p.x1 && r.y0 >= p.y0 && r.y1 <= p.y1) {
+          d = p.anchor < 0 ? dxl : dxr;
+          break;
+        }
+    raster_->draw(r, layered_path, vp, d, out, cw, ch);
+  }
 }
 
 // P8B: the world layer under the frame. Client pixel (x, y) maps to world (ox + (x - vp.origin_x) * fw / vp.client_w,
@@ -204,13 +272,17 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   // the world), then each panel's 2D pixels pasted at their anchored place
   const bool layers = layered();  // P9B: the panels are layers composed after the world (compose_layers), not rectangles
   const bool anchor = !layers && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  // P9C: with the runs drawn, the mask taken over the picture without their glyphs (a label over the course shows the world)
+  const bool wtext = text_now(vp) && w.mask_text.size() == w.mask.size() && w.px_text.size() == w.px.size();
+  const std::vector<uint8_t> &wmask = wtext ? w.mask_text : w.mask;
+  const std::vector<uint16_t> &wpx = wtext ? w.px_text : w.px;
   if (remap_ && !layers) remap_->set(anchor, vp, cw, w.mask);
   std::vector<uint32_t> frame_img;
   std::vector<uint8_t> mask_moved;
-  const uint8_t *maskp = w.mask.data();
+  const uint8_t *maskp = wmask.data();
   if (anchor) {
     frame_img = out;
-    mask_moved = w.mask;
+    mask_moved = wmask;
     for (const HudPanel &p : kHudPanels)
       for (int32_t y = p.y0; y < p.y1; ++y)
         for (int32_t x = p.x0; x < p.x1; ++x) mask_moved[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)] = 1;
@@ -250,7 +322,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
     if (yy < 0) yy = 0;
     if (xx >= w.pw) xx = w.pw - 1;
     if (yy >= w.ph) yy = w.ph - 1;
-    return pal[w.px[static_cast<size_t>(yy) * static_cast<size_t>(w.pw) + static_cast<size_t>(xx)] & 0x7fff];
+    return pal[wpx[static_cast<size_t>(yy) * static_cast<size_t>(w.pw) + static_cast<size_t>(xx)] & 0x7fff];
   };
   for (int32_t y = 0; y < ch; ++y) {
     const int64_t sy = wy[static_cast<size_t>(y)];
@@ -294,7 +366,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
       for (int32_t x = std::max(cx0, 0); x < std::min(cx1, cw); ++x) {
         const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp.origin_x) * kLogicalW / vp.client_w);
         if (lx < p.x0 || lx >= p.x1 || ly < p.y0 || ly >= p.y1) continue;
-        if (w.mask[static_cast<size_t>(ly) * kLogicalW + static_cast<size_t>(lx)]) continue;  // not a 2D pixel of the frame
+        if (wmask[static_cast<size_t>(ly) * kLogicalW + static_cast<size_t>(lx)]) continue;  // not a 2D pixel of the frame
         const int32_t tx = x + dx;
         if (tx < 0 || tx >= cw) continue;
         out[static_cast<size_t>(y) * static_cast<size_t>(cw) + static_cast<size_t>(tx)] =
@@ -319,7 +391,8 @@ bool Presenter::layered() const {
 // no world pixel chosen inside a panel by a mask, and a blended pixel (frame borders, half-bright strips) shows what is under it at
 // the panel's new place.
 void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
-  const portsim::GfxHudFrame &f = world_.hud;
+  const bool text = text_now(vp);  // P9C: the layers without the runs' glyphs when the runs are drawn
+  const portsim::GfxHudFrame &f = hud_for(text);
   const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
   if (remap_) {
@@ -333,7 +406,8 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       r.x1 = l.x1;
       r.y1 = l.y1;
       r.cover.resize(l.px.size());
-      for (size_t i = 0; i < l.px.size(); ++i) r.cover[i] = l.px[i].kind ? 1 : 0;
+      for (size_t i = 0; i < l.px.size(); ++i)
+        r.cover[i] = l.px[i].kind || l.px[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
       rl.push_back(std::move(r));
     }
     remap_->set_layers(anchor, vp, cw, std::move(rl));
@@ -377,9 +451,25 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     return (num >= 0 ? num / n_client : -((-num + n_client - 1) / n_client)) - 128;
   };
   auto floor256 = [](int64_t v) -> int32_t { return static_cast<int32_t>(v >= 0 ? v / 256 : -((-v + 255) / 256)); };
-  for (const portsim::GfxHudLayer &l : f.layers) {
-    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+  if (text) {
+    draw_runs(out, cw, ch, vp, true, -3, 0);  // the wide scene's world runs (beside the frame's columns)
+    draw_runs(out, cw, ch, vp, true, -1, 0);  // the base's
+  }
+  for (size_t li = 0; li < f.layers.size(); ++li) {
+    const portsim::GfxHudLayer &l = f.layers[li];
     const int32_t dx = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
+    struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
+      const Presenter &p;
+      std::vector<uint32_t> &out;
+      int32_t cw, ch;
+      const Viewport &vp;
+      bool on;
+      int32_t li, dx;
+      ~RunsAfter() {
+        if (on) p.draw_runs(out, cw, ch, vp, true, li, dx);
+      }
+    } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx};
+    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
     const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);

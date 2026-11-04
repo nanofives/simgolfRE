@@ -1,0 +1,11 @@
+run	captured	merged	dropped	no_font	shot_runs	clipped_runs	clipped_px	failed	render_us_per_shot
+shots_r1280x720_championship_after	58665	51697	3942	0	30	0	0	0	16023 (frame: 18330)
+shots_r1280x720_cov_b_career_after	46251	35877	6895	0	154	0	0	0	17439 (frame: 18871)
+shots_r1280x720_cov_r_quit_after	22878	19714	2955	0	54	0	0	0	15612 (frame: 16543)
+shots_r1280x720_cov_r_s2_screens_after	58543	47418	8666	0	426	4	128	0	19835 (frame: 19573)
+shots_r1280x720_sandbox_basic_after	5641	5189	445	0	102	0	0	0	9976 (frame: 10800)
+shots_r1920x1080_championship_after	58665	51697	3942	0	30	0	0	0	38405 (frame: 41982)
+shots_r1920x1080_cov_b_career_after	46251	35877	6895	0	154	0	0	0	34941 (frame: 34159)
+shots_r1920x1080_cov_r_quit_after	22878	19714	2955	0	54	0	0	0	32389 (frame: 32416)
+shots_r1920x1080_cov_r_s2_screens_after	58543	47418	8666	0	426	0	0	0	45999 (frame: 48781)
+shots_r1920x1080_sandbox_basic_after	5641	5189	445	0	102	0	0	0	17785 (frame: 16730)

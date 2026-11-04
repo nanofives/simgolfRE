@@ -1080,7 +1080,10 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
   wide.px.swap(w.scene);
   std::swap(g.root, wide);
   const int rt = g.root_terrain;
+  g.text.wide = true;  // P9C: a text drawn here is the scene's (gfx.cpp text_run_end)
+  g.text.wide_ox = -w.scene_e;
   f();
+  g.text.wide = false;
   g.root_terrain = rt;
   std::swap(g.root, wide);
   wide.px.swap(w.scene);
@@ -1118,6 +1121,8 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   }
   w->scene = w->scene_base;
   w->s0 = g.root.px;
+  w->scene_text.clear();
+  gfxb::text_wide_begin(g);  // P9C
 }
 
 void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -1346,6 +1351,7 @@ void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
     g.ensure_root(ctx);
     w->s1 = g.root.px;
     w->scene_valid = true;
+    gfxb::text_wide_end(g, w->scene, w->scene_w, w->scene_e, w->scene_text);  // P9C: the scene without its runs' glyphs
     ++w->scene_passes;
     // development switch SG_WIDE_SCENE_DUMP=<prefix>: the wide scene, its base and s1 of every queue pass go to <prefix>_<pass>.*
     if (const char *dp = std::getenv("SG_WIDE_SCENE_DUMP")) {

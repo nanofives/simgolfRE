@@ -1,0 +1,44 @@
+final tree Wed Nov  4 15:07:16     2026
+build_x64 rc=0 (before this script, P9C_build_x64.log); segments x64: rows 205 205 cols ['status', 'digest'] differ 0 [] PASS 205 
+build_Win32 rc=0 0 errors
+selftest x64 rc=0 selftest 37 passed 0 failed
+selftest-p5b x64 rc=0 selftest 6 passed 0 failed
+selftest-p7 x64 rc=0 selftest 9 passed 0 failed
+selftest-p8b x64 rc=0 selftest 11 passed 0 failed
+selftest-p9a x64 rc=0 selftest 5 passed 0 failed
+selftest-p9b x64 rc=0 selftest 10 passed 0 failed
+selftest-p9c x64 rc=0 selftest 10 passed 0 failed
+selftest-p9c --negctl p9c-unremoved x64 rc=1 RED rows: 3 [4/10] p9c.redraw_at_1x_equals_frame FAIL [5/10] p9c.redraw_at_1x_equals_frame_smooth FAIL [6/10] p9c.scaled_equals_direct_draw FAIL 
+selftest-p9c --negctl p9c-wrong-scale x64 rc=1 RED rows: 2 [6/10] p9c.scaled_equals_direct_draw FAIL [7/10] p9c.ink_twice_as_tall FAIL 
+selftest-p9c --negctl p9c-wrong-colour x64 rc=1 RED rows: 4 [4/10] p9c.redraw_at_1x_equals_frame FAIL [5/10] p9c.redraw_at_1x_equals_frame_smooth FAIL [6/10] p9c.scaled_equals_direct_draw FAIL [8/10] p9c.ink_in_the_run_colour FAIL 
+selftest Win32 rc=0 selftest 37 passed 0 failed
+selftest-p5b Win32 rc=0 selftest 6 passed 0 failed
+selftest-p7 Win32 rc=0 selftest 9 passed 0 failed
+selftest-p8b Win32 rc=0 selftest 11 passed 0 failed
+selftest-p9a Win32 rc=0 selftest 5 passed 0 failed
+selftest-p9b Win32 rc=0 selftest 10 passed 0 failed
+selftest-p9c Win32 rc=0 selftest 10 passed 0 failed
+selftest-p9c --negctl p9c-unremoved Win32 rc=1 RED rows: 3 [4/10] p9c.redraw_at_1x_equals_frame FAIL [5/10] p9c.redraw_at_1x_equals_frame_smooth FAIL [6/10] p9c.scaled_equals_direct_draw FAIL 
+selftest-p9c --negctl p9c-wrong-scale Win32 rc=1 RED rows: 2 [6/10] p9c.scaled_equals_direct_draw FAIL [7/10] p9c.ink_twice_as_tall FAIL 
+selftest-p9c --negctl p9c-wrong-colour Win32 rc=1 RED rows: 4 [4/10] p9c.redraw_at_1x_equals_frame FAIL [5/10] p9c.redraw_at_1x_equals_frame_smooth FAIL [6/10] p9c.scaled_equals_direct_draw FAIL [8/10] p9c.ink_in_the_run_colour FAIL 
+done selftest Wed Nov  4 15:08:23     2026
+framegate {"rows": 15, "counts": {"PASS": 6, "FAIL": 9}}
+done framegate Wed Nov  4 15:08:36     2026
+simeq 6 IDENTICAL / 6, control 0 RED / 2
+done simeq Wed Nov  4 15:17:58     2026
+shots 20 runs rc 0 of 20
+unit 800x600: 26 presents, native differing 0, redraw differing 1
+drive 1920x1080 native rc=0 gate "status":"PASS",
+drive 1920x1080 frame rc=0 gate "status":"PASS",
+drive 1280x720 native rc=0 gate "status":"PASS",
+drive 1280x720 frame rc=0 gate "status":"PASS",
+test_static: 6 passed in 1.47s
+test_profiles: 21 passed in 5.47s
+test_app_shell: 18 passed in 175.64s (0:02:55)
+test_app_input: 16 passed in 31.09s
+test_app_replay: 14 passed in 13.88s
+test_app_ingame: 14 passed in 601.14s (0:10:01)
+test_app_present: 3 passed, 4 deselected in 139.40s (0:02:19)
+test_app_live: 13 passed in 262.13s (0:04:22)
+done pytest Wed Nov  4 16:07:24     2026
+FINAL_DONE

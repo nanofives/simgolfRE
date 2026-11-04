@@ -1,0 +1,25 @@
+M	port/include/portsim/sim/gfx.h	+/- 78 0
+M	port/src/sim/gfx_body.h	+/- 47 0
+M	port/src/sim/gfx.cpp	+/- 382 2
+M	port/src/sim/gfx_text.cpp	+/- 14 1
+M	port/src/sim/gfx_editbox.cpp	+/- 13 0
+M	port/src/sim/gfx_scene.cpp	+/- 6 0
+M	port/src/sim/gditext.cpp	+/- 10 1
+M	port/include/portsim/sim/terrain_live.h	+/- 5 1
+M	port/src/sim/terrain_live.cpp	+/- 3 2
+M	port/app/present.h	+/- 29 0
+M	port/app/present.cpp	+/- 101 11
+A	port/app/textres.h	+/- 71 0
+A	port/app/textres.cpp	+/- 174 0
+M	port/app/host.h	+/- 6 1
+M	port/app/host.cpp	+/- 33 2
+M	port/app/main.cpp	+/- 319 1
+M	port/app/CMakeLists.txt	+/- 1 1
+M	port/test/conftest.py	+/- 3 0
+patch applies to c5e66b59: yes
+
+Deliverables under log/roadmap/P9/ (P9C_*): P9C_notes.md, P9C.patch, P9C_files.txt, P9C_build_{x64,Win32}.log, P9C_gates.log,
+P9C_selftest*_{x64,Win32}.log, P9C_segs_x64.{tsv,log}, P9C_segs_compare.log, P9C_framegate.{tsv,log}, P9C_framegate_compare.log,
+P9C_simeq.tsv, P9C_ctl9.tsv, P9C_unit.tsv, P9C_clip.tsv, P9C_t_*.log, P9C_shots/ (pairs, index.tsv, aa_compare), P9C_live/,
+P9C_runs/ (live-trace runs), P9C_lan_publish.log; scripts P9C_build.sh, P9C_run.sh, P9C_lt.py, P9C_shots.py, P9C_shots_all.sh,
+P9C_find.py, P9C_unit.py, P9C_drive.py, P9C_simeq.sh, P9C_ctl9.sh, P9C_gates.sh, P9C_final.sh, P9C_patch.sh.

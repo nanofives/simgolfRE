@@ -972,6 +972,21 @@ where the game draws it (TkBase::call's GfxLayerScope by callee, the shot panel'
 centred 2D and the layers at their anchors with their blends redone, and clicks are remapped by layer coverage; golfer action / employee
 panels go to the right edge. `--hud-layers off` = P8B's rectangles. SG_APP_P9=off (conftest) restores P9A's defaults. Text at the window's
 resolution is P9C (interface in P9B_notes.md section 5).
+P9C (2026-11-04, item 4 of P9's feedback, brief log/roadmap/P9/P9C_BRIEF.md, notes P9C_notes.md, patch P9C.patch on c5e66b59): text at the
+window's resolution. Every text reaches a surface through TextMetrics::draw_glyphs (gfx.cpp draw_text_string, gfx_text.cpp put_glyphs root
+and window-target branches); with capture on (`gfx_set_text_capture`, app only) each call is kept as a GfxTextRun (FontRef, Font::create's
+LOGFONT, colour, TextOutA origin, bytes, box with before / after words). At each Window::refreshFull the visible runs are peeled off a copy
+of the back buffer (per P9B layer segment too, with layer patches), and the app's presenter (port/app/textres.*) redraws each run with the
+same GDI font at height * window height / 600, clipped to its scaled box, never reflowed. Rules found on frames: repeats of the same run
+merged (meters: 884 runs per frame before), a run kept only while a quarter of its glyph pixels show, golfer labels the wide scene draws
+again peeled off the world image. Widths the sim reads stay the 800-space ones. Options `--text-res native|frame` (default native;
+SG_APP_P9C=off in conftest = frame), `--text-aa system|cleartype|grey` (default system = ClearType here), `--selftest-p9c`, controls
+`--negctl p9c-unremoved|p9c-wrong-scale|p9c-wrong-colour` and gditext 9 (scaled widths: changes every cov_r_quit 800 x 600 present).
+Evidence on port/build/P9C: builds x64 / Win32 0 errors, selftests both incl. p9c 10 / 10, segments x64 205 / 205 = I25, framegate 15 rows
+= P9B, trace and framehash byte-identical off / frame / native (sandbox_basic, course_season, championship), 800 x 600 native == frame on 26
+presents, live replays 4 / 4, the 8 app test files pass. Clipped runs 0 at 1920 x 1080, 4 / 1,978 and 10 / 3,383 at 1280 x 720. Left:
+FreeType not used for the redraw; Manual SSi Bold's i dot merges at 24 px (Windows' rendering); P9B's HUD drawn twice in modal report frames
+and the palette tooltip staying centred; the scale-1 measurement mode differs by 25 px on one frame (two golfer labels touching sprites).
 Roadmap S9.1, the network survey (2026-10-29, re/analysis/net/NET_MODEL.md, tables re/port/net_functions.tsv /
 net_messages.tsv / net_state.tsv, tool re/tools/net_survey.py, tests tests/test_net_survey.py, U-1750..U-1754, U-1760..U-1763):
 the Jackal network layer is linked but never active in v1.03 or v1.00. g_netSession 0x008400b8 is .bss with no store in the

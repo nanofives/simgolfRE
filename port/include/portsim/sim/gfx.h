@@ -14,6 +14,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <string>
 #include <vector>
 
 #include "portsim/registry.h"
@@ -124,6 +125,83 @@ struct GfxLayerScope {
   GfxLayerScope(const GfxLayerScope &) = delete;
   GfxLayerScope &operator=(const GfxLayerScope &) = delete;
 };
+
+// ------------------------------------------------------------------------------------------------ P9C: text runs
+// Text at the window's resolution (log/roadmap/P9/P9C_notes.md). Every text the backend draws reaches the screen through one
+// call, the provider's TextMetrics::draw_glyphs (jgld's TextOutA: draw_text_string, the text family's run drawer for the root
+// and for a window target). With text capture on (gfx_set_text_capture, set only by the app's host for --text-res native) each
+// such call is kept as a RUN: Font::create's arguments of its FontRef, the COLORREF, the TextOutA origin, the bytes, and the
+// pixels of the box it changed before and after the call. Runs live on their surface until a later write covers every glyph
+// pixel they left. At each Window::refreshFull the runs are PEELED newest first over the back buffer: a box pixel still holding
+// the run's own `after` word shows the run (vis), and a visible glyph pixel is put back to the run's `before` word, so `clean` is
+// the back buffer without the visible low-resolution glyphs and a presenter can draw the same strings at another size over it,
+// limited to each run's visible pixels. With the HUD layers of P9B the same peel is made per layer segment (the layer's pixels
+// patched to what the layer held under the glyph: transparent where it had not drawn) and over the layers' base. Nothing is
+// written into the GameState, the root surface or the back buffer, and the widths the frame code reads are the providers'
+// 800-space ones: the frame every gate sees is the same with capture on or off.
+struct GfxTextRun {
+  uint32_t fontref = 0;                   // the FontRef object (gditext's font table key)
+  std::string face;                       // Font::create's face, size (lfHeight = -size) and style bits (gditext.h GameFont)
+  int32_t size = 0;
+  uint32_t style = 0;
+  uint32_t colorref = 0;                  // SetTextColor's COLORREF (r | g << 8 | b << 16)
+  int32_t x = 0, y = 0;                   // TextOutA's origin (TA_BASELINE), back-buffer 800-space
+  std::string text;                       // the bytes TextOutA drew
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the box: the pixels the call changed plus a margin (a third of the size, at least 3), in the clip, half-open
+  int32_t layer = -2;                     // layered path: -1 the base, k >= 0 GfxHudFrame::layers[k], -2 not shown there,
+                                          // -3 a world run (target 2)
+  uint8_t target = 0;                     // 0 the root surface, 1 a window-tree child's surface (composed at its position),
+                                          // 2 G32's wide scene beside the frame (a world run: layer -3, drawn over the world)
+  std::vector<uint8_t> vis;               // (x1 - x0) * (y1 - y0): 1 where the run shows in the back buffer (non-layered path)
+  std::vector<uint8_t> vis_layer;         // the same in its layer or the base (layered path; empty unless layer >= -1)
+  uint8_t visible(int32_t px, int32_t py, bool layered) const {
+    if (px < x0 || px >= x1 || py < y0 || py >= y1) return 0;
+    const std::vector<uint8_t> &v = layered ? vis_layer : vis;
+    const size_t i = static_cast<size_t>(py - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(px - x0);
+    return i < v.size() ? v[i] : 0;
+  }
+};
+// a layer pixel the peel changed: index into the layer's px, and what the layer holds without the glyph
+struct GfxTextLayerPatch {
+  int32_t layer = 0;
+  std::vector<uint32_t> idx;
+  std::vector<GfxLayerPx> px;
+};
+struct GfxTextFrame {
+  uint64_t serial = 0;
+  uint64_t hud_serial = 0;           // the GfxHudFrame published at the same Window::refreshFull (0 = none)
+  std::vector<uint16_t> back;        // the back buffer the runs were published with
+  std::vector<uint16_t> clean;       // back with every visible glyph pixel put back
+  std::vector<uint16_t> base_clean;  // layered: the HUD frame's base the same way (empty = no layers this frame)
+  std::vector<GfxTextLayerPatch> patches;  // layered: the layer pixels the peel changed
+  std::vector<GfxTextRun> runs;      // draw order (the root's, then the window targets')
+  bool empty() const { return runs.empty(); }
+};
+// the patched-transparent marker of GfxTextLayerPatch (kind 0, k 0xff): the layer drew there (a glyph), so a click there is the
+// layer's (PanelRemap coverage), but nothing of it shows once the glyph is removed
+constexpr uint8_t kGfxTextCoverMark = 0xff;
+// The peel over an image (w x h words, rows top-down): for runs newest first, every box pixel holding the run's `after` word is
+// visible (vis[k]) and a visible pixel whose before differs from after is put back to before. before / after are the runs' box
+// words in the image's coordinates.
+struct GfxTextPeelRun {
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  const uint16_t *before = nullptr, *after = nullptr;
+};
+void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::vector<GfxTextPeelRun> &runs,
+                   std::vector<std::vector<uint8_t>> &vis);
+void gfx_set_text_capture(Ctx &ctx, bool on);  // the app's host only
+bool gfx_text_capture(Ctx &ctx);
+// the runs published at the last Window::refreshFull (false when capture is off or nothing was published)
+bool gfx_text_frame(Ctx &ctx, GfxTextFrame &out);
+// the runs of the last loading.banner picture ($gfx/banner.555; P8A)
+bool gfx_text_banner(Ctx &ctx, GfxTextFrame &out);
+// counters: runs captured, runs published at the last refresh, runs dropped (no visible pixel left), runs whose font the
+// provider's table does not hold (left in 800-space)
+struct GfxTextStats {
+  uint64_t captured = 0, published = 0, dropped = 0, no_font = 0, frames = 0, merged = 0;  // merged: repeats (gfx.cpp)
+};
+GfxTextStats gfx_text_stats(Ctx &ctx);
+extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on
 
 }  // namespace portsim
 
