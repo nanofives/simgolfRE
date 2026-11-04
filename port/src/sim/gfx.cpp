@@ -889,7 +889,41 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
 }
 void hud_gap(Gfx &g) {  // the root's changes since the last boundary, outside every layer: a centred layer
   GfxHudLayer l;
-  if (hud_diff(g, g.hud.mark, g.root.px, kGfxLayerCentred, true, l)) g.hud.layers.push_back(std::move(l));
+  if (hud_diff(g, g.hud.mark, g.root.px, kGfxLayerCentred, true, l)) {
+    l.popups = g.hud.popups && !g.hud.pieces.empty() ? 1 : 0;  // P9E
+    g.hud.layers.push_back(std::move(l));
+  }
+}
+// P9E: the frame's popups for a publish: each piece's box over the owner plane; nothing when no piece has an opener panel
+void hud_pieces_publish(Gfx &g, GfxHudFrame &f) {
+  Gfx::HudCapture &c = g.hud;
+  if (!c.popups || c.pieces.empty()) return;
+  g.hud_own_sync();
+  bool any = false;
+  for (const GfxHudPiece &p : c.pieces) any = any || p.opener != kGfxLayerCentred;
+  if (!any || c.owner.size() != g.root.px.size()) return;
+  f.pieces = c.pieces;
+  for (GfxHudPiece &p : f.pieces) p.x0 = p.y0 = p.x1 = p.y1 = 0;
+  std::vector<uint8_t> seen(f.pieces.size(), 0);
+  const int32_t w = g.root.w, h = g.root.h;
+  for (int32_t y = 0; y < h; ++y)
+    for (int32_t x = 0; x < w; ++x) {
+      const uint8_t o = c.owner[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)];
+      if (o == 0 || o > f.pieces.size()) continue;
+      GfxHudPiece &p = f.pieces[o - 1u];
+      if (!seen[o - 1u]) {
+        seen[o - 1u] = 1;
+        p.x0 = x;
+        p.y0 = y;
+        p.x1 = x + 1;
+        p.y1 = y + 1;
+        continue;
+      }
+      p.x0 = std::min(p.x0, x);
+      p.x1 = std::max(p.x1, x + 1);
+      p.y1 = y + 1;
+    }
+  f.owner = c.owner;
 }
 }  // namespace
 
@@ -926,6 +960,7 @@ static void hud_publish(Gfx &g) {
       f.layers = std::move(c.layers);
     }
     f.carried = carried ? 1 : 0;
+    hud_pieces_publish(g, f);  // P9E
   } else {
     f.none = c.depth > 0 ? 2 : 1;
   }
@@ -1005,6 +1040,86 @@ void gfx_set_hud_modal(Ctx &ctx, bool on) {
 bool gfx_hud_modal(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   return g && g->hud.on && g->hud.modal;
+}
+// ---- P9E: the popups' place (gfx.h gfx_set_hud_popups)
+void Gfx::hud_own_sync() {
+  HudCapture &c = hud;
+  const size_t n = root.px.size();
+  if (c.owner.size() != n || c.own_mark.size() != n) {
+    c.owner.assign(n, 0);
+    c.own_mark = root.px;
+    return;
+  }
+  const uint8_t o = c.open.empty() || c.open.back() < 0 ? 0 : static_cast<uint8_t>(std::min<int32_t>(c.open.back() + 1, 255));
+  const uint16_t *a = c.own_mark.data(), *b = root.px.data();
+  for (size_t i = 0; i < n; ++i)
+    if (a[i] != b[i]) c.owner[i] = o;
+  c.own_mark = root.px;
+}
+void Gfx::hud_pieces_reset() {
+  HudCapture &c = hud;
+  if (!c.popups || (c.pieces.empty() && c.open.empty())) return;
+  // the open popups stay pieces (renumbered from 0, their openers kept); every pixel belongs to nobody again
+  std::vector<GfxHudPiece> keep;
+  for (int32_t &k : c.open) {
+    if (k < 0) continue;
+    keep.push_back(c.pieces[static_cast<size_t>(k)]);
+    k = static_cast<int32_t>(keep.size() - 1);
+  }
+  c.pieces = std::move(keep);
+  c.owner.assign(root.px.size(), 0);
+  c.own_mark = root.px;
+}
+void gfx_set_hud_popups(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  Gfx::HudCapture &c = g->hud;
+  c.popups = on && c.on;
+  c.pieces.clear();
+  c.open.clear();
+  c.owner.clear();
+  c.own_mark.clear();
+}
+// the opener: the open panel layer (a popup a panel's own code opens); else, for a click, the popup piece that owns the clicked
+// pixel (its opener: a popup opened from a popup stays with it), nothing when the clicked pixel was drawn since the last boundary
+// outside every popup (a modal screen's own drawing, a label), else the topmost panel layer with a pixel at the click
+void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.on || !g->hud.popups) return;
+  Gfx::HudCapture &c = g->hud;
+  g->ensure_root(ctx);
+  g->hud_own_sync();
+  if (c.pieces.size() >= 250) {  // the owner plane holds 254 pieces; a frame never opens that many: this one owns nothing
+    c.open.push_back(-1);
+    return;
+  }
+  GfxHudPiece p;
+  const int32_t w = g->root.w, h = g->root.h;
+  const bool in = cx >= 0 && cy >= 0 && cx < w && cy < h;
+  const size_t i = in ? static_cast<size_t>(cy) * static_cast<size_t>(w) + static_cast<size_t>(cx) : 0;
+  if (c.depth > 0 && c.cur > kGfxLayerCentred && !c.aborted) {
+    p.opener = c.cur;
+  } else if (click && in) {
+    const uint8_t o = i < c.owner.size() ? c.owner[i] : 0;
+    if (o != 0 && o <= c.pieces.size()) {
+      p.opener = c.pieces[o - 1u].opener;
+    } else if (!(c.any && c.mark.size() == g->root.px.size() && c.mark[i] != g->root.px[i])) {
+      const std::vector<GfxHudLayer> &ls = !c.layers.empty() ? c.layers : c.published.layers;
+      for (size_t k = ls.size(); k-- > 0;)
+        if (ls[k].id != kGfxLayerCentred && ls[k].at(cx, cy)) {
+          p.opener = ls[k].id;
+          break;
+        }
+    }
+  }
+  c.pieces.push_back(p);
+  c.open.push_back(static_cast<int32_t>(c.pieces.size() - 1));
+}
+void gfx_hud_popup_end(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.on || !g->hud.popups || g->hud.open.empty()) return;
+  g->hud_own_sync();
+  g->hud.open.pop_back();
 }
 uint16_t gfx_layer_quarter(uint16_t p, uint16_t d) {  // gfx_reports.cpp quarter_blend with its two halvings
   const uint32_t P = static_cast<uint32_t>(p) << 4, D = static_cast<uint32_t>(d) << 4;

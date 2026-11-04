@@ -39,6 +39,9 @@ def pytest_configure(config):
     # P9C: the text redraw at the window's resolution (--text-res native) is off for the app tests: they compare the client
     # image with the frame's own pixels at sizes other than 800 x 600 (at 800 x 600 native and frame are the same picture)
     os.environ.setdefault("SG_APP_P9C", "off")
+    # P9E: the layer-compositor fixes (popups at their panel's place, ...) are off for the app tests too (they act only with
+    # --wide, which SG_APP_P8B=off already turns off)
+    os.environ.setdefault("SG_APP_P9E", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

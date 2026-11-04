@@ -208,6 +208,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   std::fill(g.root.px.begin(), g.root.px.end(), static_cast<uint16_t>(0));
   g.root_terrain = 0;
   g.hud_carry_drop();  // P9D: a new frame's picture ends a carried HUD capture (gfx.h gfx_set_hud_modal)
+  g.hud_pieces_reset();  // P9E: and its popups
   if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
     std::vector<uint16_t> &px = w->raster->pixels();
     std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
@@ -283,6 +284,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   g.root_terrain = 1;
   g.hud_carry_drop();  // P9D: a terrain pass starts a new frame's picture
+  g.hud_pieces_reset();  // P9E: and its popups
   if (world && SG_NEGCTL(g_negctl_gfx_terrain) != 3) world_pass(g, ctx, *lt, *world, a, world_before);   // P8B
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_post").c_str(), g.root);
 }
@@ -315,6 +317,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   copy16(v.back_surface, v.back_w, v.back_h, g.root.px, g.root.w, g.root.h, sx, sy, tx, ty, w, h);
   g.root_terrain = (g.root_terrain || v.back_terrain) ? 1 : 0;
   g.hud_carry_drop();  // P9D: the saved terrain picture restored starts a new frame's picture
+  g.hud_pieces_reset();  // P9E: and its popups
   if (world) {
     if (world->strip_full) world->strip_full = false;
     else world->raster->pixels() = world->back;

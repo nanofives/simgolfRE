@@ -109,6 +109,12 @@ class Gfx {
     uint32_t dim_gen = 0;     // a whole-frame dim was drawn in the segment of blend generation dim_gen (dim_set), source dim_src
     bool dim_set = false;
     uint16_t dim_src = 0;
+    // P9E (gfx.h gfx_set_hud_popups): the popups since the frame's picture started
+    bool popups = false;              // the feature is on (the app's host)
+    std::vector<GfxHudPiece> pieces;  // box filled at a publish
+    std::vector<int32_t> open;        // the open popups' piece indices (nested: innermost last)
+    std::vector<uint8_t> owner;       // per root pixel: piece index + 1 of the popup open at its last observed change
+    std::vector<uint16_t> own_mark;   // the root at the last ownership boundary
   } hud;
   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
   struct TextCapture {
@@ -161,6 +167,8 @@ class Gfx {
   void hud_carry_drop();
   void hud_modal_mark();
   void note_dim(uint16_t src);
+  void hud_own_sync();     // P9E: the root's changes since own_mark become the open popup's (or nobody's)
+  void hud_pieces_reset();  // P9E: a new frame picture: no popup pixels left (an open popup stays, owning nothing yet)
   // a case the backend does not model (counted; the first occurrence of a reason is appended to `notes`)
   void unsup(const std::string &why);
   // the root surface, made at its first use (Window::create's size scaleX(0x140) x scaleX(0xf0))

@@ -1,0 +1,538 @@
+diff --git a/port/include/portsim/sim/gfx.h b/port/include/portsim/sim/gfx.h
+index d9f1fba..1ed044c 100644
+--- a/port/include/portsim/sim/gfx.h
++++ b/port/include/portsim/sim/gfx.h
+@@ -92,12 +92,22 @@ struct GfxHudLayer {
+   // the side bands), and its kind-4 pixels are then that dim (already applied)
+   uint8_t dim = 0;
+   uint16_t dim_src = 0;
++  // P9E: a centred gap made while popups were recorded (gfx_set_hud_popups): its pixels whose GfxHudFrame::owner names a piece are
++  // that popup's and are composed at the piece's opener panel's place
++  uint8_t popups = 0;
+   const GfxLayerPx *at(int32_t x, int32_t y) const {
+     if (x < x0 || x >= x1 || y < y0 || y >= y1) return nullptr;
+     const GfxLayerPx &p = px[static_cast<size_t>(y - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(x - x0)];
+     return p.kind ? &p : nullptr;
+   }
+ };
++// P9E: one popup of the frame (gfx_hud_popup_begin): the panel layer it was opened from (kGfxLayerTitle .. kGfxLayerPanel; the open
++// panel layer, else the panel layer under the opening click, else the opener of an earlier popup under the click; kGfxLayerCentred
++// = none: it stays centred) and the 800-space box of the root pixels it owns (half-open; empty when it owns none)
++struct GfxHudPiece {
++  int32_t opener = kGfxLayerCentred;
++  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
++};
+ struct GfxHudFrame {
+   std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
+   std::vector<uint16_t> back;  // the back buffer the layers were published with (a present checks it is the frame it shows)
+@@ -108,6 +118,10 @@ struct GfxHudFrame {
+   // P9D: the frame of a modal screen drawn over the last layered frame (its base and layers carried, the screen's drawing since
+   // then in a centred layer after them): gfx_set_hud_modal
+   uint8_t carried = 0;
++  // P9E: the popups (showPopup / textInputBox) drawn since the frame's picture started, and per root pixel (800 x 600) the piece
++  // index + 1 whose popup was open when the pixel last changed (0 = none). Empty unless a piece has an opener panel.
++  std::vector<GfxHudPiece> pieces;
++  std::vector<uint8_t> owner;
+   bool empty() const { return base.empty(); }
+ };
+ int8_t gfx_layer_anchor(int32_t id);
+@@ -125,6 +139,14 @@ void gfx_set_hud_capture(Ctx &ctx, bool on);  // the app's host only
+ // Off (the default, and --hud-modal off): P9B's capture.
+ void gfx_set_hud_modal(Ctx &ctx, bool on);
+ bool gfx_hud_modal(Ctx &ctx);
++// P9E: the popups' place (log/roadmap/P9/P9E_notes.md fix 1), set by the app's host after gfx_set_hud_modal. With it on, showPopup and
++// textInputBox (commands_popup.inc DialogMark) call gfx_hud_popup_begin / _end around their body with the input's click point
++// (`click` = a mouse button was down, g_rootInput's button word): every root pixel changed while the popup is open is the popup's
++// (GfxHudFrame::owner), and the frame publishes the pieces with their opener panel. Records only: nothing is drawn or written into
++// the GameState, the root or the back buffer. Off (the default, --hud-popups off): nothing recorded.
++void gfx_set_hud_popups(Ctx &ctx, bool on);
++void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);
++void gfx_hud_popup_end(Ctx &ctx);
+ // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
+ uint16_t gfx_layer_quarter(uint16_t src, uint16_t dst);
+ bool gfx_hud_capture(Ctx &ctx);
+diff --git a/port/src/sim/gfx_body.h b/port/src/sim/gfx_body.h
+index a874be5..732a952 100644
+--- a/port/src/sim/gfx_body.h
++++ b/port/src/sim/gfx_body.h
+@@ -109,6 +109,12 @@ class Gfx {
+     uint32_t dim_gen = 0;     // a whole-frame dim was drawn in the segment of blend generation dim_gen (dim_set), source dim_src
+     bool dim_set = false;
+     uint16_t dim_src = 0;
++    // P9E (gfx.h gfx_set_hud_popups): the popups since the frame's picture started
++    bool popups = false;              // the feature is on (the app's host)
++    std::vector<GfxHudPiece> pieces;  // box filled at a publish
++    std::vector<int32_t> open;        // the open popups' piece indices (nested: innermost last)
++    std::vector<uint8_t> owner;       // per root pixel: piece index + 1 of the popup open at its last observed change
++    std::vector<uint16_t> own_mark;   // the root at the last ownership boundary
+   } hud;
+   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
+   struct TextCapture {
+@@ -161,6 +167,8 @@ class Gfx {
+   void hud_carry_drop();
+   void hud_modal_mark();
+   void note_dim(uint16_t src);
++  void hud_own_sync();     // P9E: the root's changes since own_mark become the open popup's (or nobody's)
++  void hud_pieces_reset();  // P9E: a new frame picture: no popup pixels left (an open popup stays, owning nothing yet)
+   // a case the backend does not model (counted; the first occurrence of a reason is appended to `notes`)
+   void unsup(const std::string &why);
+   // the root surface, made at its first use (Window::create's size scaleX(0x140) x scaleX(0xf0))
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+index 4f281f9..253309b 100644
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -889,7 +889,41 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
+ }
+ void hud_gap(Gfx &g) {  // the root's changes since the last boundary, outside every layer: a centred layer
+   GfxHudLayer l;
+-  if (hud_diff(g, g.hud.mark, g.root.px, kGfxLayerCentred, true, l)) g.hud.layers.push_back(std::move(l));
++  if (hud_diff(g, g.hud.mark, g.root.px, kGfxLayerCentred, true, l)) {
++    l.popups = g.hud.popups && !g.hud.pieces.empty() ? 1 : 0;  // P9E
++    g.hud.layers.push_back(std::move(l));
++  }
++}
++// P9E: the frame's popups for a publish: each piece's box over the owner plane; nothing when no piece has an opener panel
++void hud_pieces_publish(Gfx &g, GfxHudFrame &f) {
++  Gfx::HudCapture &c = g.hud;
++  if (!c.popups || c.pieces.empty()) return;
++  g.hud_own_sync();
++  bool any = false;
++  for (const GfxHudPiece &p : c.pieces) any = any || p.opener != kGfxLayerCentred;
++  if (!any || c.owner.size() != g.root.px.size()) return;
++  f.pieces = c.pieces;
++  for (GfxHudPiece &p : f.pieces) p.x0 = p.y0 = p.x1 = p.y1 = 0;
++  std::vector<uint8_t> seen(f.pieces.size(), 0);
++  const int32_t w = g.root.w, h = g.root.h;
++  for (int32_t y = 0; y < h; ++y)
++    for (int32_t x = 0; x < w; ++x) {
++      const uint8_t o = c.owner[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)];
++      if (o == 0 || o > f.pieces.size()) continue;
++      GfxHudPiece &p = f.pieces[o - 1u];
++      if (!seen[o - 1u]) {
++        seen[o - 1u] = 1;
++        p.x0 = x;
++        p.y0 = y;
++        p.x1 = x + 1;
++        p.y1 = y + 1;
++        continue;
++      }
++      p.x0 = std::min(p.x0, x);
++      p.x1 = std::max(p.x1, x + 1);
++      p.y1 = y + 1;
++    }
++  f.owner = c.owner;
+ }
+ }  // namespace
+ 
+@@ -926,6 +960,7 @@ static void hud_publish(Gfx &g) {
+       f.layers = std::move(c.layers);
+     }
+     f.carried = carried ? 1 : 0;
++    hud_pieces_publish(g, f);  // P9E
+   } else {
+     f.none = c.depth > 0 ? 2 : 1;
+   }
+@@ -1006,6 +1041,86 @@ bool gfx_hud_modal(Ctx &ctx) {
+   Gfx *g = gfx(ctx);
+   return g && g->hud.on && g->hud.modal;
+ }
++// ---- P9E: the popups' place (gfx.h gfx_set_hud_popups)
++void Gfx::hud_own_sync() {
++  HudCapture &c = hud;
++  const size_t n = root.px.size();
++  if (c.owner.size() != n || c.own_mark.size() != n) {
++    c.owner.assign(n, 0);
++    c.own_mark = root.px;
++    return;
++  }
++  const uint8_t o = c.open.empty() || c.open.back() < 0 ? 0 : static_cast<uint8_t>(std::min<int32_t>(c.open.back() + 1, 255));
++  const uint16_t *a = c.own_mark.data(), *b = root.px.data();
++  for (size_t i = 0; i < n; ++i)
++    if (a[i] != b[i]) c.owner[i] = o;
++  c.own_mark = root.px;
++}
++void Gfx::hud_pieces_reset() {
++  HudCapture &c = hud;
++  if (!c.popups || (c.pieces.empty() && c.open.empty())) return;
++  // the open popups stay pieces (renumbered from 0, their openers kept); every pixel belongs to nobody again
++  std::vector<GfxHudPiece> keep;
++  for (int32_t &k : c.open) {
++    if (k < 0) continue;
++    keep.push_back(c.pieces[static_cast<size_t>(k)]);
++    k = static_cast<int32_t>(keep.size() - 1);
++  }
++  c.pieces = std::move(keep);
++  c.owner.assign(root.px.size(), 0);
++  c.own_mark = root.px;
++}
++void gfx_set_hud_popups(Ctx &ctx, bool on) {
++  Gfx *g = gfx(ctx);
++  if (!g) return;
++  Gfx::HudCapture &c = g->hud;
++  c.popups = on && c.on;
++  c.pieces.clear();
++  c.open.clear();
++  c.owner.clear();
++  c.own_mark.clear();
++}
++// the opener: the open panel layer (a popup a panel's own code opens); else, for a click, the popup piece that owns the clicked
++// pixel (its opener: a popup opened from a popup stays with it), nothing when the clicked pixel was drawn since the last boundary
++// outside every popup (a modal screen's own drawing, a label), else the topmost panel layer with a pixel at the click
++void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click) {
++  Gfx *g = gfx(ctx);
++  if (!g || !g->hud.on || !g->hud.popups) return;
++  Gfx::HudCapture &c = g->hud;
++  g->ensure_root(ctx);
++  g->hud_own_sync();
++  if (c.pieces.size() >= 250) {  // the owner plane holds 254 pieces; a frame never opens that many: this one owns nothing
++    c.open.push_back(-1);
++    return;
++  }
++  GfxHudPiece p;
++  const int32_t w = g->root.w, h = g->root.h;
++  const bool in = cx >= 0 && cy >= 0 && cx < w && cy < h;
++  const size_t i = in ? static_cast<size_t>(cy) * static_cast<size_t>(w) + static_cast<size_t>(cx) : 0;
++  if (c.depth > 0 && c.cur > kGfxLayerCentred && !c.aborted) {
++    p.opener = c.cur;
++  } else if (click && in) {
++    const uint8_t o = i < c.owner.size() ? c.owner[i] : 0;
++    if (o != 0 && o <= c.pieces.size()) {
++      p.opener = c.pieces[o - 1u].opener;
++    } else if (!(c.any && c.mark.size() == g->root.px.size() && c.mark[i] != g->root.px[i])) {
++      const std::vector<GfxHudLayer> &ls = !c.layers.empty() ? c.layers : c.published.layers;
++      for (size_t k = ls.size(); k-- > 0;)
++        if (ls[k].id != kGfxLayerCentred && ls[k].at(cx, cy)) {
++          p.opener = ls[k].id;
++          break;
++        }
++    }
++  }
++  c.pieces.push_back(p);
++  c.open.push_back(static_cast<int32_t>(c.pieces.size() - 1));
++}
++void gfx_hud_popup_end(Ctx &ctx) {
++  Gfx *g = gfx(ctx);
++  if (!g || !g->hud.on || !g->hud.popups || g->hud.open.empty()) return;
++  g->hud_own_sync();
++  g->hud.open.pop_back();
++}
+ uint16_t gfx_layer_quarter(uint16_t p, uint16_t d) {  // gfx_reports.cpp quarter_blend with its two halvings
+   const uint32_t P = static_cast<uint32_t>(p) << 4, D = static_cast<uint32_t>(d) << 4;
+   uint32_t e = ((P & 0x7c1f0u) + (D & 0x7c1f0u)) >> 1, f = ((P & 0x3e00u) + (D & 0x3e00u)) >> 1;
+diff --git a/port/src/sim/gfx_terrain.cpp b/port/src/sim/gfx_terrain.cpp
+index 194ecf5..80ffd32 100644
+--- a/port/src/sim/gfx_terrain.cpp
++++ b/port/src/sim/gfx_terrain.cpp
+@@ -208,6 +208,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   std::fill(g.root.px.begin(), g.root.px.end(), static_cast<uint16_t>(0));
+   g.root_terrain = 0;
+   g.hud_carry_drop();  // P9D: a new frame's picture ends a carried HUD capture (gfx.h gfx_set_hud_modal)
++  g.hud_pieces_reset();  // P9E: and its popups
+   if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
+     std::vector<uint16_t> &px = w->raster->pixels();
+     std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+@@ -283,6 +284,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   }
+   g.root_terrain = 1;
+   g.hud_carry_drop();  // P9D: a terrain pass starts a new frame's picture
++  g.hud_pieces_reset();  // P9E: and its popups
+   if (world && SG_NEGCTL(g_negctl_gfx_terrain) != 3) world_pass(g, ctx, *lt, *world, a, world_before);   // P8B
+   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_post").c_str(), g.root);
+ }
+@@ -315,6 +317,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   copy16(v.back_surface, v.back_w, v.back_h, g.root.px, g.root.w, g.root.h, sx, sy, tx, ty, w, h);
+   g.root_terrain = (g.root_terrain || v.back_terrain) ? 1 : 0;
+   g.hud_carry_drop();  // P9D: the saved terrain picture restored starts a new frame's picture
++  g.hud_pieces_reset();  // P9E: and its popups
+   if (world) {
+     if (world->strip_full) world->strip_full = false;
+     else world->raster->pixels() = world->back;
+diff --git a/port/src/sim/commands_popup.inc b/port/src/sim/commands_popup.inc
+index 7866c59..f581d36 100644
+--- a/port/src/sim/commands_popup.inc
++++ b/port/src/sim/commands_popup.inc
+@@ -20,10 +20,22 @@ void popup_gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
+   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+ }
+ // dialogs.begin / dialogs.end around a dialog (the backend's held-pixel probe reads them; they draw nothing)
++// P9E: with the HUD capture on, the popup's piece around them (gfx.h gfx_hud_popup_begin: records only), with the input's click
+ struct DialogMark {
+   Ctx &ctx;
+-  explicit DialogMark(Ctx &c) : ctx(c) { popup_gx(ctx, "dialogs.begin", {}); }
+-  ~DialogMark() { popup_gx(ctx, "dialogs.end", {}); }
++  bool piece = false;
++  explicit DialogMark(Ctx &c) : ctx(c) {
++    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0 && popup_gfx_on(ctx)) {
++      const GameState &gs = ctx.gs();
++      gfx_hud_popup_begin(ctx, gs.g_rootInput[kClickX], gs.g_rootInput[kClickY], gs.g_rootInput[kButton] != 0);
++      piece = true;
++    }
++    popup_gx(ctx, "dialogs.begin", {});
++  }
++  ~DialogMark() {
++    popup_gx(ctx, "dialogs.end", {});
++    if (piece) gfx_hud_popup_end(ctx);
++  }
+   DialogMark(const DialogMark &) = delete;
+   DialogMark &operator=(const DialogMark &) = delete;
+ };
+diff --git a/port/app/present.h b/port/app/present.h
+index 69d1e64..9e01768 100644
+--- a/port/app/present.h
++++ b/port/app/present.h
+@@ -97,6 +97,8 @@ constexpr HudPanel kHudPanels[] = {
+ // the point back to the 800-space place its pixel came from, a centred layer leaves it as it is.
+ struct RemapLayer {
+   int8_t anchor = 0;
++  bool fixed = false;  // P9E: the layer (a popup's pixels) sits at `dx` client pixels instead of its anchor's offset
++  int32_t dx = 0;
+   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+   std::vector<uint8_t> cover;  // (x1 - x0) * (y1 - y0): 1 where the layer drew
+ };
+@@ -155,6 +157,8 @@ class Presenter {
+   // G32: the HUD compositor (kHudPanels; off = P8B stage 2: the frame's 2D pixels stay centred) and the remap it keeps current
+   void set_hud_anchor(bool on) { hud_anchor_ = on; }
+   void set_remap(PanelRemap *r) { remap_ = r; }
++  // P9E: popups opened from a HUD panel composed at that panel's place (GfxHudFrame::pieces; off = centred, P9D)
++  void set_popups(bool on) { popups_on_ = on; }
+   // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
+   // (each clears the runs): the frame must have been published with the same back buffer (the host checks). With layers, the layers'
+   // base and pixels are replaced by the run-free ones it carries. At a content rectangle of exactly 800 x 600 nothing changes (the
+@@ -208,6 +212,12 @@ class Presenter {
+   bool text_now(const Viewport &vp) const;  // the runs are drawn for this content rectangle
+   void draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered, int32_t layer,
+                  int32_t dx) const;
++  // P9E: the popups of the frame being composed (GfxHudFrame::pieces): each piece's client offset (0 = it stays centred), set by
++  // compose_layers for the layers that carry popup pixels; draw_runs moves a run of such a layer with the piece that owns it
++  bool popups_on_ = true;
++  mutable std::vector<int32_t> piece_dx_;
++  mutable const portsim::GfxHudFrame *piece_frame_ = nullptr;
++  static int32_t piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y);  // piece index at an 800-space pixel, -1 none
+ };
+ 
+ }  // namespace portapp
+diff --git a/port/app/present.cpp b/port/app/present.cpp
+index 677117b..3e2b665 100644
+--- a/port/app/present.cpp
++++ b/port/app/present.cpp
+@@ -82,7 +82,7 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
+     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
+     for (size_t k = layers_.size(); k-- > 0;) {
+       const RemapLayer &l = layers_[k];
+-      const int32_t dx = l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
++      const int32_t dx = l.fixed ? l.dx : l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;  // P9E: fixed
+       const int32_t sx = x - dx;
+       if (sx < vp_.origin_x || sx >= vp_.origin_x + vp_.client_w) continue;
+       const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(sx - vp_.origin_x) * kLogicalW / vp_.client_w);
+@@ -238,6 +238,13 @@ bool Presenter::text_now(const Viewport &vp) const {
+   return !unit || text_unit_redraw_;
+ }
+ 
++// P9E: the popup piece that owns 800-space pixel (x, y) (GfxHudFrame::owner), -1 for none
++int32_t Presenter::piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y) {
++  if (x < 0 || y < 0 || x >= kLogicalW || y >= kLogicalH || f.owner.size() != static_cast<size_t>(kLogicalW) * kLogicalH) return -1;
++  const uint8_t o = f.owner[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
++  return o != 0 && o <= f.pieces.size() ? static_cast<int32_t>(o) - 1 : -1;
++}
++
+ // the runs of one layer (layered: -1 the base, k the layer; flat: every run) at dx client pixels
+ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered_path, int32_t layer,
+                           int32_t dx) const {
+@@ -252,6 +259,13 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
+     if (layered_path && r.layer != layer) continue;
+     if (r.target == 2 && world_.empty()) continue;  // a world run with no world under it
+     int32_t d = dx;
++    // P9E: a run of a layer with popup pixels moves with the popup that owns its box's centre
++    if (layered_path && layer >= 0 && piece_frame_ && static_cast<size_t>(layer) < piece_frame_->layers.size() &&
++        piece_frame_->layers[static_cast<size_t>(layer)].popups) {
++      const int32_t k = piece_of(*piece_frame_, (r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2);
++      if (k >= 0 && static_cast<size_t>(k) < piece_dx_.size() && piece_dx_[static_cast<size_t>(k)] != 0)
++        d = piece_dx_[static_cast<size_t>(k)];
++    }
+     if (rect)
+       for (const HudPanel &p : kHudPanels)
+         if (r.x0 >= p.x0 && r.x1 <= p.x1 && r.y0 >= p.y0 && r.y1 <= p.y1) {
+@@ -396,6 +410,30 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+   const portsim::GfxHudFrame &f = hud_for(text);
+   const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
++  // P9E: each popup piece's client offset: its opener panel's anchor offset, clamped so the piece's box stays inside the window
++  piece_dx_.assign(f.pieces.size(), 0);
++  piece_frame_ = nullptr;
++  const bool pieces = anchor && popups_on_ && !f.pieces.empty() && f.owner.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
++  if (pieces) {
++    piece_frame_ = &f;
++    for (size_t k = 0; k < f.pieces.size(); ++k) {
++      const portsim::GfxHudPiece &p = f.pieces[k];
++      const int8_t a = portsim::gfx_layer_anchor(p.opener);
++      if (a == 0 || p.x1 <= p.x0) continue;
++      int32_t d = a < 0 ? dxl : dxr;
++      const int32_t left = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(p.x0) * vp.client_w / kLogicalW);
++      const int32_t right = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(p.x1) * vp.client_w / kLogicalW);
++      if (right + d > cw) d = cw - right;
++      if (left + d < 0) d = -left;
++      piece_dx_[k] = d;
++    }
++  }
++  // the moved piece (index) of a layer pixel, -1 when it stays at the layer's own place
++  auto moved_piece = [&](const portsim::GfxHudLayer &l, int32_t x, int32_t y) -> int32_t {
++    if (!pieces || !l.popups) return -1;
++    const int32_t k = piece_of(f, x, y);
++    return k >= 0 && piece_dx_[static_cast<size_t>(k)] != 0 ? k : -1;
++  };
+   if (remap_) {
+     std::vector<RemapLayer> rl;
+     rl.reserve(f.layers.size());
+@@ -409,7 +447,36 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+       r.cover.resize(l.px.size());
+       for (size_t i = 0; i < l.px.size(); ++i)
+         r.cover[i] = l.px[i].kind || l.px[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
++      // P9E: each moved popup piece's pixels are a layer of their own at the piece's offset, above the rest of this layer
++      std::vector<RemapLayer> moved;
++      if (pieces && l.popups) {
++        std::vector<int32_t> slot(f.pieces.size(), -1);
++        for (size_t k = 0; k < f.pieces.size(); ++k) {
++          if (piece_dx_[k] == 0) continue;
++          slot[k] = static_cast<int32_t>(moved.size());
++          RemapLayer m;
++          m.fixed = true;
++          m.dx = piece_dx_[k];
++          m.x0 = r.x0;
++          m.y0 = r.y0;
++          m.x1 = r.x1;
++          m.y1 = r.y1;
++          m.cover.assign(r.cover.size(), 0);
++          moved.push_back(std::move(m));
++        }
++        const int32_t bw = l.x1 - l.x0;
++        for (int32_t y = l.y0; y < l.y1; ++y)
++          for (int32_t x = l.x0; x < l.x1; ++x) {
++            const size_t i = static_cast<size_t>(y - l.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - l.x0);
++            if (!r.cover[i]) continue;
++            const int32_t k = moved_piece(l, x, y);
++            if (k < 0) continue;
++            moved[static_cast<size_t>(slot[static_cast<size_t>(k)])].cover[i] = 1;
++            r.cover[i] = 0;
++          }
++      }
+       rl.push_back(std::move(r));
++      for (RemapLayer &m : moved) rl.push_back(std::move(m));
+     }
+     remap_->set_layers(anchor, vp, cw, std::move(rl));
+   }
+@@ -459,7 +526,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+   }
+   for (size_t li = 0; li < f.layers.size(); ++li) {
+     const portsim::GfxHudLayer &l = f.layers[li];
+-    const int32_t dx = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
++    const int32_t dx0 = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
+     struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
+       const Presenter &p;
+       std::vector<uint32_t> &out;
+@@ -470,18 +537,24 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+       ~RunsAfter() {
+         if (on) p.draw_runs(out, cw, ch, vp, true, li, dx);
+       }
+-    } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx};
++    } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx0};
+     // P9D: a whole-frame dim (the report screens' black quarter blend over every root pixel): everything composed so far is dimmed
+     // in the whole window, as the original dims its whole frame (the panels at their anchors, the world, the side bands); the
+     // layer's own dim pixels (kind 4) are that dim, already applied
+     const bool wdim = l.dim != 0 && defect_ != PresentDefect::DimLocal && !opaque_blends;
+     if (wdim)
+       for (uint32_t &d : out) d = rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(l.dim_src, to555(d)) & 0x7fff)) | 0xff000000u;
++    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
++    // P9E: pass -1 = the layer's pixels at its own place (without its moved popup pieces), then each moved piece at its offset
++    const bool split = pieces && l.popups;
++    for (int32_t pass = -1; pass < (split ? static_cast<int32_t>(f.pieces.size()) : 0); ++pass) {
++    if (pass >= 0 && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
++    const int32_t dx = pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
+     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
+       const portsim::GfxLayerPx *p = l.at(x, y);
++      if (p && split && moved_piece(l, x, y) != pass) return nullptr;
+       return p && wdim && p->kind == 4 ? nullptr : p;
+     };
+-    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
+     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
+     const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
+@@ -509,6 +582,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+         dst[x] = mix(mix(c00, c10, fx), mix(c01, c11, fx), fy) | 0xff000000u;
+       }
+     }
++    }  // P9E: the pass loop
+   }
+ }
+ 
+diff --git a/port/app/main.cpp b/port/app/main.cpp
+index 3eb4ee5..46e0393 100644
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -30,6 +30,9 @@
+ //   screens' dim recorded as a dim of the whole window, and the frames of a modal screen published with the panels it was drawn
+ //   over (gfx.h gfx_set_hud_modal); off = P9B's capture. Development: SG_P9D_LAYER_DUMP=1 (live-trace world shots write
+ //   layers_<present>.tsv / .bmp).
++//   P9E: --hud-popups on|off (default on with --hud-modal; SG_APP_P9E=off: off) a popup (showPopup, textInputBox, the System menu)
++//   opened from a HUD panel keeps its place relative to that panel: its pixels are composed and their clicks remapped at the
++//   panel's anchor (gfx.h gfx_set_hud_popups); off = P9D's centred popups.
+ //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
+ //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
+ //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
+@@ -312,6 +315,7 @@ struct Options {
+   bool wide_edge = true;           // --wide-edge on|off (with --wide and a world layer)
+   bool hud_anchor = true;          // G32: --hud-anchor on|off (with --wide: the HUD panels at the wide view's edges)
+   bool hud_modal = true;           // P9D: --hud-modal on|off (SG_APP_P9D=off: off)
++  bool hud_popups = true;          // P9E: --hud-popups on|off (SG_APP_P9E=off: off)
+   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
+   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
+   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
+@@ -919,6 +923,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+       if (!ok) err = why;
+       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
+       if (ok && hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D
++      if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
+       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
+     }
+     if (err.empty()) {
+@@ -1166,6 +1171,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const
+   }
+   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
+   if (hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D: the modal screens over them (gfx.h)
++  if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
+   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
+   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
+   int *rec_mode = nullptr;
+@@ -2581,6 +2587,10 @@ bool parse(int argc, char **argv, Options &o) {
+       if (!val(v) || (v != "on" && v != "off")) return false;
+       o.hud_modal = v == "on";
+     }
++    else if (a == "--hud-popups") {  // P9E
++      if (!val(v) || (v != "on" && v != "off")) return false;
++      o.hud_popups = v == "on";
++    }
+     else if (a == "--text-res") {  // P9C
+       if (!val(v) || (v != "native" && v != "frame")) return false;
+       o.text_res = v;
+@@ -2671,6 +2681,8 @@ int main(int argc, char **argv) {
+     if (!std::strcmp(ep, "off")) o.text_res = "frame";
+   if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
+     if (!std::strcmp(ep, "off")) o.hud_modal = false;
++  if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
++    if (!std::strcmp(ep, "off")) o.hud_popups = false;
+   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
+   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
+   // argument parser runs (its messages go there too), with the --data value read ahead.
+diff --git a/port/test/conftest.py b/port/test/conftest.py
+index b49de8c..10fe616 100644
+--- a/port/test/conftest.py
++++ b/port/test/conftest.py
+@@ -39,6 +39,9 @@ def pytest_configure(config):
+     # P9C: the text redraw at the window's resolution (--text-res native) is off for the app tests: they compare the client
+     # image with the frame's own pixels at sizes other than 800 x 600 (at 800 x 600 native and frame are the same picture)
+     os.environ.setdefault("SG_APP_P9C", "off")
++    # P9E: the layer-compositor fixes (popups at their panel's place, ...) are off for the app tests too (they act only with
++    # --wide, which SG_APP_P8B=off already turns off)
++    os.environ.setdefault("SG_APP_P9E", "off")
+     if config.getoption("--backend"):
+         os.environ["SG_BACKEND"] = config.getoption("--backend")
+     for m in ("static", "port", "x87"):

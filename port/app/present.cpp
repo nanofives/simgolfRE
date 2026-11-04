@@ -82,7 +82,7 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
     for (size_t k = layers_.size(); k-- > 0;) {
       const RemapLayer &l = layers_[k];
-      const int32_t dx = l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
+      const int32_t dx = l.fixed ? l.dx : l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;  // P9E: fixed
       const int32_t sx = x - dx;
       if (sx < vp_.origin_x || sx >= vp_.origin_x + vp_.client_w) continue;
       const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(sx - vp_.origin_x) * kLogicalW / vp_.client_w);
@@ -238,6 +238,13 @@ bool Presenter::text_now(const Viewport &vp) const {
   return !unit || text_unit_redraw_;
 }
 
+// P9E: the popup piece that owns 800-space pixel (x, y) (GfxHudFrame::owner), -1 for none
+int32_t Presenter::piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y) {
+  if (x < 0 || y < 0 || x >= kLogicalW || y >= kLogicalH || f.owner.size() != static_cast<size_t>(kLogicalW) * kLogicalH) return -1;
+  const uint8_t o = f.owner[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
+  return o != 0 && o <= f.pieces.size() ? static_cast<int32_t>(o) - 1 : -1;
+}
+
 // the runs of one layer (layered: -1 the base, k the layer; flat: every run) at dx client pixels
 void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered_path, int32_t layer,
                           int32_t dx) const {
@@ -252,6 +259,13 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
     if (layered_path && r.layer != layer) continue;
     if (r.target == 2 && world_.empty()) continue;  // a world run with no world under it
     int32_t d = dx;
+    // P9E: a run of a layer with popup pixels moves with the popup that owns its box's centre
+    if (layered_path && layer >= 0 && piece_frame_ && static_cast<size_t>(layer) < piece_frame_->layers.size() &&
+        piece_frame_->layers[static_cast<size_t>(layer)].popups) {
+      const int32_t k = piece_of(*piece_frame_, (r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2);
+      if (k >= 0 && static_cast<size_t>(k) < piece_dx_.size() && piece_dx_[static_cast<size_t>(k)] != 0)
+        d = piece_dx_[static_cast<size_t>(k)];
+    }
     if (rect)
       for (const HudPanel &p : kHudPanels)
         if (r.x0 >= p.x0 && r.x1 <= p.x1 && r.y0 >= p.y0 && r.y1 <= p.y1) {
@@ -396,6 +410,30 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   const portsim::GfxHudFrame &f = hud_for(text);
   const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+  // P9E: each popup piece's client offset: its opener panel's anchor offset, clamped so the piece's box stays inside the window
+  piece_dx_.assign(f.pieces.size(), 0);
+  piece_frame_ = nullptr;
+  const bool pieces = anchor && popups_on_ && !f.pieces.empty() && f.owner.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+  if (pieces) {
+    piece_frame_ = &f;
+    for (size_t k = 0; k < f.pieces.size(); ++k) {
+      const portsim::GfxHudPiece &p = f.pieces[k];
+      const int8_t a = portsim::gfx_layer_anchor(p.opener);
+      if (a == 0 || p.x1 <= p.x0) continue;
+      int32_t d = a < 0 ? dxl : dxr;
+      const int32_t left = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(p.x0) * vp.client_w / kLogicalW);
+      const int32_t right = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(p.x1) * vp.client_w / kLogicalW);
+      if (right + d > cw) d = cw - right;
+      if (left + d < 0) d = -left;
+      piece_dx_[k] = d;
+    }
+  }
+  // the moved piece (index) of a layer pixel, -1 when it stays at the layer's own place
+  auto moved_piece = [&](const portsim::GfxHudLayer &l, int32_t x, int32_t y) -> int32_t {
+    if (!pieces || !l.popups) return -1;
+    const int32_t k = piece_of(f, x, y);
+    return k >= 0 && piece_dx_[static_cast<size_t>(k)] != 0 ? k : -1;
+  };
   if (remap_) {
     std::vector<RemapLayer> rl;
     rl.reserve(f.layers.size());
@@ -409,7 +447,36 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       r.cover.resize(l.px.size());
       for (size_t i = 0; i < l.px.size(); ++i)
         r.cover[i] = l.px[i].kind || l.px[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
+      // P9E: each moved popup piece's pixels are a layer of their own at the piece's offset, above the rest of this layer
+      std::vector<RemapLayer> moved;
+      if (pieces && l.popups) {
+        std::vector<int32_t> slot(f.pieces.size(), -1);
+        for (size_t k = 0; k < f.pieces.size(); ++k) {
+          if (piece_dx_[k] == 0) continue;
+          slot[k] = static_cast<int32_t>(moved.size());
+          RemapLayer m;
+          m.fixed = true;
+          m.dx = piece_dx_[k];
+          m.x0 = r.x0;
+          m.y0 = r.y0;
+          m.x1 = r.x1;
+          m.y1 = r.y1;
+          m.cover.assign(r.cover.size(), 0);
+          moved.push_back(std::move(m));
+        }
+        const int32_t bw = l.x1 - l.x0;
+        for (int32_t y = l.y0; y < l.y1; ++y)
+          for (int32_t x = l.x0; x < l.x1; ++x) {
+            const size_t i = static_cast<size_t>(y - l.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - l.x0);
+            if (!r.cover[i]) continue;
+            const int32_t k = moved_piece(l, x, y);
+            if (k < 0) continue;
+            moved[static_cast<size_t>(slot[static_cast<size_t>(k)])].cover[i] = 1;
+            r.cover[i] = 0;
+          }
+      }
       rl.push_back(std::move(r));
+      for (RemapLayer &m : moved) rl.push_back(std::move(m));
     }
     remap_->set_layers(anchor, vp, cw, std::move(rl));
   }
@@ -459,7 +526,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   }
   for (size_t li = 0; li < f.layers.size(); ++li) {
     const portsim::GfxHudLayer &l = f.layers[li];
-    const int32_t dx = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
+    const int32_t dx0 = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
     struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
       const Presenter &p;
       std::vector<uint32_t> &out;
@@ -470,18 +537,24 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       ~RunsAfter() {
         if (on) p.draw_runs(out, cw, ch, vp, true, li, dx);
       }
-    } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx};
+    } runs_after{*this, out, cw, ch, vp, text, static_cast<int32_t>(li), dx0};
     // P9D: a whole-frame dim (the report screens' black quarter blend over every root pixel): everything composed so far is dimmed
     // in the whole window, as the original dims its whole frame (the panels at their anchors, the world, the side bands); the
     // layer's own dim pixels (kind 4) are that dim, already applied
     const bool wdim = l.dim != 0 && defect_ != PresentDefect::DimLocal && !opaque_blends;
     if (wdim)
       for (uint32_t &d : out) d = rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(l.dim_src, to555(d)) & 0x7fff)) | 0xff000000u;
+    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+    // P9E: pass -1 = the layer's pixels at its own place (without its moved popup pieces), then each moved piece at its offset
+    const bool split = pieces && l.popups;
+    for (int32_t pass = -1; pass < (split ? static_cast<int32_t>(f.pieces.size()) : 0); ++pass) {
+    if (pass >= 0 && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
+    const int32_t dx = pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
       const portsim::GfxLayerPx *p = l.at(x, y);
+      if (p && split && moved_piece(l, x, y) != pass) return nullptr;
       return p && wdim && p->kind == 4 ? nullptr : p;
     };
-    if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
     const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
@@ -509,6 +582,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
         dst[x] = mix(mix(c00, c10, fx), mix(c01, c11, fx), fy) | 0xff000000u;
       }
     }
+    }  // P9E: the pass loop
   }
 }
 

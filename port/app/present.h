@@ -97,6 +97,8 @@ constexpr HudPanel kHudPanels[] = {
 // the point back to the 800-space place its pixel came from, a centred layer leaves it as it is.
 struct RemapLayer {
   int8_t anchor = 0;
+  bool fixed = false;  // P9E: the layer (a popup's pixels) sits at `dx` client pixels instead of its anchor's offset
+  int32_t dx = 0;
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   std::vector<uint8_t> cover;  // (x1 - x0) * (y1 - y0): 1 where the layer drew
 };
@@ -155,6 +157,8 @@ class Presenter {
   // G32: the HUD compositor (kHudPanels; off = P8B stage 2: the frame's 2D pixels stay centred) and the remap it keeps current
   void set_hud_anchor(bool on) { hud_anchor_ = on; }
   void set_remap(PanelRemap *r) { remap_ = r; }
+  // P9E: popups opened from a HUD panel composed at that panel's place (GfxHudFrame::pieces; off = centred, P9D)
+  void set_popups(bool on) { popups_on_ = on; }
   // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
   // (each clears the runs): the frame must have been published with the same back buffer (the host checks). With layers, the layers'
   // base and pixels are replaced by the run-free ones it carries. At a content rectangle of exactly 800 x 600 nothing changes (the
@@ -208,6 +212,12 @@ class Presenter {
   bool text_now(const Viewport &vp) const;  // the runs are drawn for this content rectangle
   void draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered, int32_t layer,
                  int32_t dx) const;
+  // P9E: the popups of the frame being composed (GfxHudFrame::pieces): each piece's client offset (0 = it stays centred), set by
+  // compose_layers for the layers that carry popup pixels; draw_runs moves a run of such a layer with the piece that owns it
+  bool popups_on_ = true;
+  mutable std::vector<int32_t> piece_dx_;
+  mutable const portsim::GfxHudFrame *piece_frame_ = nullptr;
+  static int32_t piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y);  // piece index at an 800-space pixel, -1 none
 };
 
 }  // namespace portapp

@@ -1,0 +1,10 @@
+M	port/include/portsim/sim/gfx.h	+/- 22 0
+M	port/src/sim/gfx_body.h	+/- 8 0
+M	port/src/sim/gfx.cpp	+/- 116 1
+M	port/src/sim/gfx_terrain.cpp	+/- 3 0
+M	port/src/sim/commands_popup.inc	+/- 14 2
+M	port/app/present.h	+/- 10 0
+M	port/app/present.cpp	+/- 78 4
+M	port/app/main.cpp	+/- 12 0
+M	port/test/conftest.py	+/- 3 0
+P9E_1 .. P9E_1 apply to cde8b72d: yes

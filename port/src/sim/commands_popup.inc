@@ -20,10 +20,22 @@ void popup_gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
 }
 // dialogs.begin / dialogs.end around a dialog (the backend's held-pixel probe reads them; they draw nothing)
+// P9E: with the HUD capture on, the popup's piece around them (gfx.h gfx_hud_popup_begin: records only), with the input's click
 struct DialogMark {
   Ctx &ctx;
-  explicit DialogMark(Ctx &c) : ctx(c) { popup_gx(ctx, "dialogs.begin", {}); }
-  ~DialogMark() { popup_gx(ctx, "dialogs.end", {}); }
+  bool piece = false;
+  explicit DialogMark(Ctx &c) : ctx(c) {
+    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0 && popup_gfx_on(ctx)) {
+      const GameState &gs = ctx.gs();
+      gfx_hud_popup_begin(ctx, gs.g_rootInput[kClickX], gs.g_rootInput[kClickY], gs.g_rootInput[kButton] != 0);
+      piece = true;
+    }
+    popup_gx(ctx, "dialogs.begin", {});
+  }
+  ~DialogMark() {
+    popup_gx(ctx, "dialogs.end", {});
+    if (piece) gfx_hud_popup_end(ctx);
+  }
   DialogMark(const DialogMark &) = delete;
   DialogMark &operator=(const DialogMark &) = delete;
 };

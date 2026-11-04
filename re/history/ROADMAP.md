@@ -1016,3 +1016,7 @@ the last frame's base and layers with its own drawing as one centred layer, a mo
 layer-less modal frame is shown unmoved. `--hud-modal on|off` (default on, SG_APP_P9D=off). The palette tip already rode in the palette's layer
 (P9C's tip_top_7 picture was the palette's right end, not a centred tip). Builds x64 + Win32, segments x64 205 / 205 = I25, --selftest-p9d 7 / 7.
 Left: popups (System menu) stay at their 800-space place; the frame closing the hire dialog can show panels at their 800-space places.
+P9E (2026-11-04, brief log/roadmap/P9/P9E_BRIEF.md, notes P9E_notes.md, one fix per commit, light testing). Fix 1: showPopup / textInputBox
+popups (the System menu) opened from a HUD panel are composed and remapped at that panel's anchor (opener = the open panel layer, else the
+panel under the opening click); key-opened popups stay centred. Sim side records only (gfx_set_hud_popups, owner plane); `--hud-popups
+on|off`, SG_APP_P9E=off. Builds x64 + Win32, segments x64 205 / 205 = I25.

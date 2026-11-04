@@ -92,11 +92,21 @@ struct GfxHudLayer {
   // the side bands), and its kind-4 pixels are then that dim (already applied)
   uint8_t dim = 0;
   uint16_t dim_src = 0;
+  // P9E: a centred gap made while popups were recorded (gfx_set_hud_popups): its pixels whose GfxHudFrame::owner names a piece are
+  // that popup's and are composed at the piece's opener panel's place
+  uint8_t popups = 0;
   const GfxLayerPx *at(int32_t x, int32_t y) const {
     if (x < x0 || x >= x1 || y < y0 || y >= y1) return nullptr;
     const GfxLayerPx &p = px[static_cast<size_t>(y - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(x - x0)];
     return p.kind ? &p : nullptr;
   }
+};
+// P9E: one popup of the frame (gfx_hud_popup_begin): the panel layer it was opened from (kGfxLayerTitle .. kGfxLayerPanel; the open
+// panel layer, else the panel layer under the opening click, else the opener of an earlier popup under the click; kGfxLayerCentred
+// = none: it stays centred) and the 800-space box of the root pixels it owns (half-open; empty when it owns none)
+struct GfxHudPiece {
+  int32_t opener = kGfxLayerCentred;
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 };
 struct GfxHudFrame {
   std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
@@ -108,6 +118,10 @@ struct GfxHudFrame {
   // P9D: the frame of a modal screen drawn over the last layered frame (its base and layers carried, the screen's drawing since
   // then in a centred layer after them): gfx_set_hud_modal
   uint8_t carried = 0;
+  // P9E: the popups (showPopup / textInputBox) drawn since the frame's picture started, and per root pixel (800 x 600) the piece
+  // index + 1 whose popup was open when the pixel last changed (0 = none). Empty unless a piece has an opener panel.
+  std::vector<GfxHudPiece> pieces;
+  std::vector<uint8_t> owner;
   bool empty() const { return base.empty(); }
 };
 int8_t gfx_layer_anchor(int32_t id);
@@ -125,6 +139,14 @@ void gfx_set_hud_capture(Ctx &ctx, bool on);  // the app's host only
 // Off (the default, and --hud-modal off): P9B's capture.
 void gfx_set_hud_modal(Ctx &ctx, bool on);
 bool gfx_hud_modal(Ctx &ctx);
+// P9E: the popups' place (log/roadmap/P9/P9E_notes.md fix 1), set by the app's host after gfx_set_hud_modal. With it on, showPopup and
+// textInputBox (commands_popup.inc DialogMark) call gfx_hud_popup_begin / _end around their body with the input's click point
+// (`click` = a mouse button was down, g_rootInput's button word): every root pixel changed while the popup is open is the popup's
+// (GfxHudFrame::owner), and the frame publishes the pieces with their opener panel. Records only: nothing is drawn or written into
+// the GameState, the root or the back buffer. Off (the default, --hud-popups off): nothing recorded.
+void gfx_set_hud_popups(Ctx &ctx, bool on);
+void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);
+void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
 uint16_t gfx_layer_quarter(uint16_t src, uint16_t dst);
 bool gfx_hud_capture(Ctx &ctx);
