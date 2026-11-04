@@ -276,7 +276,9 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
   if (opt_.remap && msg >= kWmMouseMove && msg <= 0x20a) {  // G32: a point over a moved HUD panel goes to its 800-space place
     int32_t x = static_cast<int16_t>(lp & 0xffff), y = static_cast<int16_t>(lp >> 16);
     bool vacated = false;
+    const int32_t x_in = x;
     opt_.remap->map(x, y, vacated);
+    e.remap_dx = x_in - x;  // P9E fix 4
     e.vacated = vacated && msg != kWmMouseMove;  // P9E fix 3
     lp = (static_cast<uint32_t>(static_cast<uint16_t>(y)) << 16) | static_cast<uint16_t>(x);
     e.lp = lp;  // P9B: the event carries the point the game got (LiveSession's --cursor message answers read e.lp)

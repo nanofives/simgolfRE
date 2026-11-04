@@ -161,6 +161,9 @@ struct HostOptions {
   // to 1 when the press's message was made in a moved panel's vacated place (InputEvent::vacated), else 0, as a recorded
   // harness write when it changes (the play switch mainLoop.vacatedPanelClick reads it)
   bool vacated_clicks = false;
+  // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
+  // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
+  bool cursor_previews = false;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -267,6 +270,7 @@ class LiveSession : public portsim::LiveHost {
   uint64_t events_seen_ = 0;         // events_ when the last modal pass began: a newer one is a reason for the next pass
   Viewport vp_;
   Point msg_cursor_{0, 0};           // CursorSource::Message: the last mouse message's logical point
+  int32_t msg_cursor_dx_ = 0;        // P9E fix 4: the remap's client offset of that message (InputEvent::remap_dx)
   std::atomic<bool> stop_{false};
   // P5B
   std::atomic<bool> body_mode_{false};
@@ -412,7 +416,8 @@ class LiveTracePresenter : public portsim::LiveHost {
 // P9B: the world image of a present (P8B's world layer plus, with `layered`, the frame's HUD pixel layers: the world mask is then
 // taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
-                      const portsim::GfxTextFrame *text = nullptr);
+                      const portsim::GfxTextFrame *text = nullptr,
+                      bool cursor = false);
 // P9C: the text runs published with exactly this back buffer (false when there are none)
 bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner = false);
 

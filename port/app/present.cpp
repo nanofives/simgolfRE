@@ -61,6 +61,16 @@ void PanelRemap::clear() {
   std::lock_guard<std::mutex> lk(mu_);
   on_ = false;
 }
+void PanelRemap::set_cursor_answer(int32_t dx, int32_t lx, int32_t ly) const {  // P9E fix 4
+  std::lock_guard<std::mutex> lk(mu_);
+  cursor_dx_ = dx;
+  cursor_lx_ = lx;
+  cursor_ly_ = ly;
+}
+int32_t PanelRemap::cursor_dx() const {
+  std::lock_guard<std::mutex> lk(mu_);
+  return on_ && layered_ ? cursor_dx_ : 0;
+}
 uint64_t PanelRemap::remapped() const {
   std::lock_guard<std::mutex> lk(mu_);
   return remapped_;
@@ -507,6 +517,52 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   }
   const bool nearest = effective_scale(vp.client_w, vp.client_h) == ScaleMode::Nearest;
   const bool opaque_blends = defect_ == PresentDefect::LayerBlendOpaque;
+  // P9E fix 4: the tool previews at the cursor (WorldImage::cur_*): drawn at the offset of the layer the last cursor answer was
+  // moved by, in the frame's draw order where its copy of them is (the first centred layer holding one of their pixels, else
+  // after every layer); that copy is left out of the centred layers (the world under it shows)
+  const WorldImage &W = world_;
+  const bool cur = W.cur_mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH && W.cur_px.size() == W.px.size() &&
+                   W.cur_cov.size() == W.px.size() && W.cur_box[2] > W.cur_box[0];
+  const bool c2 = f.cursor2d.size() == static_cast<size_t>(kLogicalW) * kLogicalH;  // the frame's own 2D preview pixels
+  const int32_t cdx = (cur || c2) && anchor && remap_ ? remap_->cursor_dx() : 0;
+  auto c2_at = [&](int32_t x, int32_t y) {
+    return c2 && cdx != 0 && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH &&
+           f.cursor2d[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
+  };
+  auto cur_at = [&](int32_t x, int32_t y) {
+    return cur && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH && W.cur_mask[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
+  };
+  size_t cur_layer = f.layers.size();
+  for (size_t li = 0; cur && li < f.layers.size() && cur_layer == f.layers.size(); ++li) {
+    const portsim::GfxHudLayer &l = f.layers[li];
+    if (l.id != portsim::kGfxLayerCentred) continue;
+    for (int32_t y = l.y0; y < l.y1 && cur_layer == f.layers.size(); ++y)
+      for (int32_t x = l.x0; x < l.x1; ++x)
+        if (cur_at(x, y) && l.at(x, y)) {
+          cur_layer = li;
+          break;
+        }
+  }
+  auto draw_cursor = [&]() {  // nearest world pixels, the plane's box only
+    if (!cur || vp.client_w <= 0 || vp.client_h <= 0 || W.fw <= 0 || W.ph <= 0) return;
+    const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + cdx + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
+    const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + cdx + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
+    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
+    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 2);
+    for (int32_t y = cy0; y < cy1; ++y) {
+      const int64_t dy = static_cast<int64_t>(y - vp.origin_y) * W.ph;
+      const int32_t wy = static_cast<int32_t>(dy >= 0 ? dy / vp.client_h : -((-dy + vp.client_h - 1) / vp.client_h));
+      if (wy < 0 || wy >= W.ph) continue;
+      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+      for (int32_t x = cx0; x < cx1; ++x) {
+        const int64_t dxw = static_cast<int64_t>(x - cdx - vp.origin_x) * W.fw;
+        const int32_t wx = W.ox + static_cast<int32_t>(dxw >= 0 ? dxw / vp.client_w : -((-dxw + vp.client_w - 1) / vp.client_w));
+        if (wx < 0 || wx >= W.pw) continue;
+        const size_t j = static_cast<size_t>(wy) * static_cast<size_t>(W.pw) + static_cast<size_t>(wx);
+        if (W.cur_cov[j]) dst[x] = rgb555_to_bgra(W.cur_px[j]);
+      }
+    }
+  };
   auto to555 = [](uint32_t c) -> uint16_t {
     return static_cast<uint16_t>((((c >> 19) & 31) << 10) | (((c >> 11) & 31) << 5) | ((c >> 3) & 31));
   };
@@ -551,6 +607,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   }
   for (size_t li = 0; li < f.layers.size(); ++li) {
     const portsim::GfxHudLayer &l = f.layers[li];
+    if (li == cur_layer) draw_cursor();  // P9E fix 4
     const int32_t dx0 = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
     struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
       const Presenter &p;
@@ -572,12 +629,18 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
     // P9E: pass -1 = the layer's pixels at its own place (without its moved popup pieces), then each moved piece at its offset
     const bool split = pieces && l.popups;
-    for (int32_t pass = -1; pass < (split ? static_cast<int32_t>(f.pieces.size()) : 0); ++pass) {
-    if (pass >= 0 && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
-    const int32_t dx = pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
+    // P9E fix 4: a last pass (cpass) draws a centred layer's 2D preview pixels (f.cursor2d) at the cursor's offset
+    const int32_t npass = split ? static_cast<int32_t>(f.pieces.size()) : 0;
+    const bool cmove = c2 && cdx != 0 && l.id == portsim::kGfxLayerCentred;
+    const int32_t cpass = cmove ? npass : -2;
+    for (int32_t pass = -1; pass < npass + (cmove ? 1 : 0); ++pass) {
+    if (pass >= 0 && pass != cpass && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
+    const int32_t dx = pass == cpass ? cdx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
       const portsim::GfxLayerPx *p = l.at(x, y);
-      if (p && split && moved_piece(l, x, y) != pass) return nullptr;
+      if (p && split && moved_piece(l, x, y) != (pass == cpass ? -1 : pass)) return nullptr;
+      if (p && l.id == portsim::kGfxLayerCentred && cur_at(x, y)) return nullptr;  // P9E fix 4: drawn as the cursor's previews
+      if (p && cmove && (c2_at(x, y) != (pass == cpass))) return nullptr;  // P9E fix 4: the 2D preview only in its own pass
       return p && wdim && p->kind == 4 ? nullptr : p;
     };
     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
@@ -609,6 +672,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     }
     }  // P9E: the pass loop
   }
+  if (cur_layer == f.layers.size()) draw_cursor();  // P9E fix 4: after every layer
 }
 
 // P7 (present.h WideFill): the side bands from the content rectangle's own edge columns, in client pixels. The content is

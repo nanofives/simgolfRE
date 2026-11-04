@@ -1,0 +1,17 @@
+M	port/include/portsim/sim/gfx.h	+/- 28 0
+M	port/src/sim/gfx_body.h	+/- 3 0
+M	port/src/sim/gfx.cpp	+/- 15 0
+M	port/src/sim/gfx_scene.cpp	+/- 26 0
+M	port/include/portsim/sim/terrain_live.h	+/- 8 1
+M	port/src/sim/terrain_live.cpp	+/- 44 3
+M	port/src/sim/tick_frame.inc	+/- 1 0
+M	port/src/sim/tick.cpp	+/- 4 1
+M	port/app/present.h	+/- 11 0
+M	port/app/present.cpp	+/- 68 4
+M	port/app/window.h	+/- 1 0
+M	port/app/window.cpp	+/- 2 0
+M	port/app/host.h	+/- 6 1
+M	port/app/host.cpp	+/- 35 5
+M	port/app/main.cpp	+/- 13 2
+P9E_1 .. P9E_4 apply to cde8b72d: yes
+P9E_4.patch applies to 94c204dc: yes

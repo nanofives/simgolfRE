@@ -165,7 +165,7 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
 }
 
 bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
-                              std::vector<uint8_t> &mask, bool text) const {
+                              std::vector<uint8_t> &mask, bool text, bool cursor_apart) const {
   if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
   if (back800.size() != world_->terrain800.size()) return false;
   px = world_->raster->pixels();
@@ -185,19 +185,60 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
   }
   for (int32_t y = 0; y < w.ph; ++y) {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
-    const std::vector<uint16_t> &scene = text && w.scene_text.size() == w.scene.size() ? w.scene_text : w.scene;  // P9C
+    const bool use_text = text && w.scene_text.size() == w.scene.size();
+    const std::vector<uint16_t> &scene = use_text ? w.scene_text : w.scene;  // P9C
     const uint16_t *sr = scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    // P9E fix 4: the cursor passes' previews left out (scene_text was made at the queue's end, before them)
+    const bool apart = cursor_apart && !use_text && w.scene_pre.size() == w.scene.size() && w.scene_cur.size() == w.scene.size();
+    const uint16_t *pr = apart ? w.scene_pre.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w) : nullptr;
+    const uint16_t *cr = apart ? w.scene_cur.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w) : nullptr;
     const uint16_t *br = w.scene_base.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
     uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
     for (int32_t x = 0; x < w.pw; ++x) {
       const int32_t lx = col[static_cast<size_t>(x)];
-      if (lx >= 0 && lx < w.scene_w && sr[lx] != br[lx]) dst[x] = sr[lx];
+      if (lx < 0 || lx >= w.scene_w) continue;
+      const uint16_t v = apart && cr[lx] != pr[lx] ? pr[lx] : sr[lx];
+      if (v != br[lx]) dst[x] = v;
     }
   }
   const bool s0_ok = w.s0.size() == back800.size();
   for (size_t i = 0; i < back800.size(); ++i)
     mask[i] = back800[i] == w.terrain800[i] || (back800[i] == w.s1[i] && (!s0_ok || w.s1[i] != w.s0[i])) ? 1 : 0;
   return true;
+}
+
+bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800) const {
+  if (!world_ || world_->names_differ || !world_->valid) return false;
+  const LiveTerrainWorld &w = *world_;
+  const size_t n = static_cast<size_t>(w.scene_w) * 600;
+  if (!w.scene_valid || w.scene_w <= 0 || w.scene_pre.size() != n || w.scene_cur.size() != n) return false;
+  mask800.assign(static_cast<size_t>(800) * 600, 0);
+  bool any = false;
+  for (int32_t y = 0; y < 600; ++y)
+    for (int32_t x = 0; x < 800; ++x) {
+      const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w.scene_w) + static_cast<size_t>(x + w.scene_e);
+      if (w.scene_cur[i] != w.scene_pre[i]) {
+        mask800[static_cast<size_t>(y) * 800 + static_cast<size_t>(x)] = 1;
+        any = true;
+      }
+    }
+  px.assign(static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph), 0);
+  cov.assign(px.size(), 0);
+  for (int32_t y = 0; y < w.ph; ++y) {
+    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
+    const uint16_t *pr = w.scene_pre.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    const uint16_t *cr = w.scene_cur.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    for (int32_t x = 0; x < w.pw; ++x) {
+      const int64_t d = static_cast<int64_t>(x - w.ox) * 800;
+      const int32_t lx = static_cast<int32_t>(d >= 0 ? d / w.fw : -((-d + w.fw - 1) / w.fw)) + w.scene_e;
+      if (lx < 0 || lx >= w.scene_w || cr[lx] == pr[lx]) continue;
+      const size_t j = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x);
+      px[j] = cr[lx];
+      cov[j] = 1;
+      any = true;
+    }
+  }
+  return any;
 }
 
 LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after)

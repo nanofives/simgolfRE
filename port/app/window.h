@@ -42,6 +42,7 @@ struct InputEvent {
   std::vector<Step> steps;
   std::vector<portsim::Command> commands;  // the steps' calls, as RootHandler commands
   bool vacated = false;  // P9E fix 3: a mouse button message whose point is a moved HUD panel's vacated place (PanelRemap::map)
+  int32_t remap_dx = 0;  // P9E fix 4: the client offset the remap moved the message's point by (0 = not over a moved layer)
 };
 
 // Step (a Call) -> portsim::Command (RootHandler): handler, a0, a1, async_ctrl, async_shift, t (S7.2 notes section 4).

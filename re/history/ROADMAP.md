@@ -1030,3 +1030,10 @@ panel: PanelRemap::map(x, y, vacated) marks the press, the live session writes v
 recorded harness write, and play switch mainLoop.vacatedPanelClick (0 in `play`) sends a marked press down the world path in the click
 dispatch; the hit tests are untouched (an app-only remap would pick another tile: the world point IS the 800-space point). `--hud-vacated
 on|off`. Builds x64 + Win32, segments x64 205 / 205 = I25, test_profiles 21.
+P9E fix 4 (option B, Mariano): the tool preview drawn at the 800-space cursor point (P7's flag / green sprites and the placement box, plus their
+copy in G32's wide scene) follows the panel the cursor is over. tick.cpp brackets P6_ToolLabel and P7 with GfxCursorScope; the backend keeps the
+wide scene before / after those passes and publishes a mask of the root pixels the preview changed; LiveTerrain::world_frame can build the world
+without it and world_cursor returns the preview alone. The app gets each cursor answer with its remap offset, leaves the frame's preview out of
+the centred layers and draws it at that offset. Over the palette nothing changes: the original draws no preview at 800-space y >= 0x1e0
+(ML+0xa774). The tee-to-cursor line and distance label stay (moving them would pull the line off its tee). `--hud-cursor on|off`. Builds x64 +
+Win32, segments x64 205 / 205 = I25.

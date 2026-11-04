@@ -960,6 +960,7 @@ static void hud_publish(Gfx &g) {
       f.layers = std::move(c.layers);
     }
     f.carried = carried ? 1 : 0;
+    if (!c.cursor2d.empty()) f.cursor2d = c.cursor2d;  // P9E fix 4
     hud_pieces_publish(g, f);  // P9E
   } else {
     f.none = c.depth > 0 ? 2 : 1;
@@ -1744,10 +1745,24 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
     ++g->handled[name];
     uint32_t args[12] = {};
     for (int i = 0; i < n && i < 12; ++i) args[i] = a[i];
+    // P9E fix 4: a sprite draw of a cursor pass (gfx.h gfx_set_hud_cursor): the root pixels it changes are the tool preview's
+    const bool cur2d = g->hud.cursor_sprites && g->hud.cursor_depth > 0 &&
+                       (!std::strcmp(name, "Surface_drawSprite") || !std::strcmp(name, "drawQueuedSprite.draw"));
+    std::vector<uint16_t> before;
+    if (cur2d) {
+      g->ensure_root(ctx);
+      before = g->root.px;
+    }
     try {
       body(*g, ctx, args, n);
     } catch (...) {
       g->unsup(std::string(name) + ": the body failed (an exception)");
+    }
+    if (cur2d && before.size() == g->root.px.size()) {
+      std::vector<uint8_t> &m = g->hud.cursor2d;
+      if (m.size() != before.size()) m.assign(before.size(), 0);
+      for (size_t i = 0; i < before.size(); ++i)
+        if (before[i] != g->root.px[i]) m[i] = 1;
     }
     return true;
   }

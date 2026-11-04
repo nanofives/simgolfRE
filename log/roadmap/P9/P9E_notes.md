@@ -5,6 +5,12 @@ fix n - 1 (P9E_1 against cde8b72d), made by P9E_patch.sh (files list and an appl
 Light testing (the brief): builds, one smoke run with a 1920 x 1080 screenshot per fix, segments x64 when sim code changed
 (P9E_gates.sh -> P9E_<n>_gates.log). Nothing committed or published.
 
+Status: fix 1 done (P9E_1.patch), fix 2 done from the code path, not reproduced live (P9E_2.patch), fix 3 done (P9E_3.patch),
+fix 4: Mariano chose option B (after fixes 1-3 merged at 94c204dc); done in P9E_4.patch against 94c204dc's port/ (section
+"Fix 4, option B" at the end). P9E_4_draft.patch is the earlier, discarded draft.
+Options added (all off with SG_APP_P9E=off, set in port/test/conftest.py): --hud-popups, --hud-close, --hud-vacated, --hud-cursor; play switch
+mainLoop.vacatedPanelClick (0 in kPlayProfile and re/port/play_profile.tsv). The tree port/build/P9E is at fix 4, built x64 + Win32.
+
 ## Fix 1: popups at their panel's place
 Cause: showPopup / textInputBox (the System menu is showSystemMenu's showPopup(0xfa, 0x154), commands_menus.inc system_popup) draw
 into the root at 800-space places. With P9D's carry their drawing is the centred gap layer of the carried frame, composed at the
@@ -80,10 +86,77 @@ original, 0 in kPlayProfile and re/port/play_profile.tsv, so `fixed` and every t
   the press takes the world path a41e4b8 (ML+0xeef8), as a press above y 0x1b8 does; screenToTile's tile (ML+0xee20) is the
   press's own. The word is 0 in every recording made before (the view block is zero-filled), so nothing changes there.
 Checks (P9E_3_gates.log): build x64 and Win32 0 errors 0 warnings; segments x64 205 / 205 PASS, 0 rows differ from I25;
-port/test/test_profiles.py 21 passed (the new profile row; P9E_3_test_profiles.log). Smoke (P9E_drive.py --seq vacated, the live app,
+port/test/test_profiles.py 21 passed (the new profile row; P9E_3_test_profiles.log).
+Replay: both live recordings (on / off) replay through sg_run_boot (app_replay.gate_one, P9E_gate_rec.py) PASS 151 / 151
+under `play` (P9E_3_replay.log): the vacated word is a recorded write the replay applies at the same point. Smoke (P9E_drive.py --seq vacated, the live app,
 1920 x 1080, `--profile play`, Hawaii; off = --hud-vacated off): with the radial menu at the left edge (client 0..360) its old
 place (240..600) shows the course; a press at the Buildings button's centred point (800-space (118, 495), client (452, 891))
 opened the Buildings palette before and does nothing to the HUD after; the People button's old place likewise; the Buildings
 button at its anchored place still opens the palette (vacated_writes 2: 1 at the first vacated press, 0 at the anchored one).
 Screenshot: P9E_live/vacated_1920x1080_buildings_pair.png (top before: the palette opened by a click on the course; bottom after:
 no palette), the step shots vacated_1920x1080_{off,on}_*.png.
+
+## Fix 4: the tool preview at a moved panel's old place (NOT FIXED: needs a decision, options below)
+What shows there (live app, 1920 x 1080, P9E_drive.py --seq cursor, Hawaii, `fixed`): with a build tool held and the cursor over a
+moved panel, the game takes the remapped 800-space point (the panel's own place) as the cursor and draws the tool's preview at the
+tile under it, so the preview sits at the panel's OLD place. Shots: P9E_live/cursor_1920x1080_palm_off_05_over_title.png (the grey
+placement tile at the title's old place, cursor over the title at the left edge) and cursor_1920x1080_green_{off,on}_07_over_title
+.png / _08_over_meters.png (with a tee placed and the green tool: the green and flag preview at the title's / meters' old place, the
+line to the tee and its "340 yards" label). Over the palette (y >= 0x1e0) nothing is drawn: P7 already skips its previews when the
+cursor's y is at or below 0x1e0 (ML+0xa774 placement box, ML+0xb3d0 hovered-cell tooltip; edi = 0x1e0).
+Why the brief's fix does not reach it: P9B section 6 took these previews for centred 2D layers. They are WORLD sprites. P7 queues
+them with addSprite (placement box, object sprites, the flag preview) and the terrain pass draws them into the world picture, so
+they are part of the world layer under the frame, not a layer the compositor can move. I built the brief's version (a "cursor
+piece": the 2D pixels drawn by P6_ToolLabel and P7 outside every panel layer, recorded with fix 1's owner plane, composed at the
+offset of the layer of the last cursor answer, only the clusters joined to the cursor's 800-space point). In every case above it
+changed nothing: on and off gave the same picture. It is NOT in the tree and NOT in any P9E_<n>.patch. It is kept as
+P9E_4_draft.patch (against the fix 3 tree, applies cleanly), P9E_edit4.py.
+Options for Mariano:
+A. (recommended, small) Treat "cursor over a moved panel" as "cursor over the HUD", the original's own rule for the bottom band.
+   The host writes the view block's word +8 = 1 at each frame head while the last cursor answer was remapped by a moved panel
+   layer, as a recorded harness write like G32's width (PanelRemap already knows it). A `play` switch (1 = original, 0 in
+   kPlayProfile) makes P7's two "inside the course" tests (ML+0xa774, ML+0xb3d0) fail then, so no preview is drawn while the
+   cursor is over a panel, as over the palette. Effect: the preview disappears instead of sitting at the old place. Sim + app, like
+   fix 3. Over the translucent title strip the original shows the preview faintly through the strip; with A it is gone.
+B. (large) Move the preview with the panel. Tag the sprites P7 / P6_ToolLabel queue (addSprite between their start and end) in the
+   backend's sprite queue, have the terrain pass record their pixels as their own layer (and the world under them without them),
+   and compose that layer at the offset of the cursor's layer. That is the brief's "anchor to the cursor's layer" for world sprites.
+   It touches the terrain renderer and P8B's world_frame. The preview would then sit under the moved panel, mostly hidden by it, as in
+   the original.
+C. Leave it: the preview at the old place shows which tile the game takes as the cursor tile, which is where the click would build
+   if it went to the world (it does not: the press goes to the panel).
+
+## Fix 4, option B (Mariano's choice, 2026-11-04): the tool preview moves with the panel the cursor is over
+What was measured first (live app, 1920 x 1080, P9E_drive.py --seq cursor --tee --tool 365,527: a tee placed, the green tool held;
+replay with layer dumps in P9E_runs/green_lt): P7 draws its previews right after the sprite queue, through addSprite ->
+drawQueuedSprite.draw (the flag / green sprites) and Surface_drawSprite (the translucent placement box), so they exist twice: in the
+800 frame as pixels of a centred gap layer (layer 4 of present 186, box 303,94-800,256, with the line to the tee and its "340
+yards" label), and, for the sprites, in G32's wide scene, from which the world picture is made. With the cursor over a moved panel's
+pixel (the title) the remap answers the panel's 800-space point, so both copies sit at the panel's old place. Over a transparent
+pixel of a panel (the meters' gaps, the radial menu's edge) the point is not remapped and the preview is already at the cursor.
+Over the palette itself (800-space y >= 0x1e0) P7 draws no preview (ML+0xa774, ML+0xb3d0), so there is nothing to move there.
+Why the earlier draft changed nothing: it took the last moved answer from every PanelRemap::map call, and the translator's own
+cursor reads (window.cpp LiveHost::cursor, the real system cursor) reset it; it also left the world copy in place.
+Fix (`--hud-cursor on`, the default with the HUD layers; off = P9E fix 3's picture; SG_APP_P9E=off). Records only on the sim side;
+the frame, the root, the back buffer and the GameState are unchanged, so segments are unaffected:
+- sim (gfx.h gfx_set_hud_cursor / GfxCursorScope, gfx_body.h, gfx.cpp gfx_drop, gfx_scene.cpp, terrain_live.h / .cpp, tick.cpp,
+  tick_frame.inc): tick.cpp brackets P6_ToolLabel and P7 with GfxCursorScope. Inside it the backend keeps the wide scene at the
+  first pass's start and the last pass's end (LiveTerrainWorld::scene_pre / scene_cur; cleared at the queue's start), and marks
+  the root pixels changed by each Surface_drawSprite / drawQueuedSprite.draw call (HudCapture::cursor2d, published as
+  GfxHudFrame::cursor2d). LiveTerrain::world_frame(..., cursor_apart) lays the scene without those sprites (scene_pre where the two
+  differ), and LiveTerrain::world_cursor gives the sprites alone at world resolution plus their 800 x 600 mask.
+- app (host.cpp / host.h, window.cpp / window.h, present.cpp / present.h, main.cpp): LiveSession hands every cursor answer the
+  sim gets to the remap (PanelRemap::set_cursor_answer: the client offset the remap moved it by, from the system cursor or from
+  the mouse message's InputEvent::remap_dx). make_world_image takes the previews out of the world picture (WorldImage::cur_*). The
+  presenter leaves the frame's copy of them out of the centred layers. It draws the world-resolution sprites, and the frame's 2D
+  sprite pixels (cursor2d), at the offset of the cursor answer's layer, in the frame's draw order (where its copy of them was). With
+  the cursor over the course the offset is 0 and the picture is the same as before, with the sprites at world resolution.
+Not moved: the line from the tee to the cursor and its distance label (lineTo / drawCenteredText, 2D). A rigid move would take
+the line's tee end off its tee, so they stay where the frame draws them.
+Checks (P9E_4_gates.log): build x64 and Win32 0 errors 0 warnings; segments x64 205 / 205 PASS, 0 rows differ from I25
+(P9E_4_segs_compare.log). P9E_4.patch applies to a clean export of
+94c204dc and gives the tree (P9E_4_files.txt).
+Smoke (live app, 1920 x 1080, `fixed`, Hawaii; before = --hud-cursor off): P9E_live/cursor_1920x1080_07_over_title_pair.png.
+Before: the green and flag preview at the title's old place (client ~540, 60). After: they sit on the title panel at the cursor and
+the old place shows the course; the tee line still ends at the old place. cursor_1920x1080_10_over_palette_top_pair.png: the
+cursor over the palette's top edge, where it is not over a palette pixel. The preview is at the cursor before and after.

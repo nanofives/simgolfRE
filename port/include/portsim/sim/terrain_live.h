@@ -76,6 +76,9 @@ struct LiveTerrainWorld {
   // P9C: the scene with the glyphs of the text runs drawn into it (the golfer labels' second draw) put back, made at the queue's
   // end while text capture is on (empty = none); world_frame(..., text = true) lays it in place of `scene`
   std::vector<uint16_t> scene_text;
+  // P9E fix 4 (gfx.h gfx_set_hud_cursor): the scene before the frame code's cursor passes (the first one's start) and after them
+  // (the last one's end), cleared at the queue's start; where they differ the scene holds a tool preview drawn at the cursor
+  std::vector<uint16_t> scene_pre, scene_cur;
   int32_t scene_w = 0, scene_e = 0;
   bool scene_valid = false;
   int64_t scene_passes = 0;
@@ -179,7 +182,11 @@ class LiveTerrain : public TerrainApi {
   // world (it equals the terrain picture T there). False (nothing written) without a world layer, before its first pass, or when
   // the frame holds no terrain (back_terrain 0: the 2D screens and full-screen overlays are shown as before).
   bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask,
-                   bool text = false) const;  // P9C: text = the scene without its text runs' glyphs (scene_text)
+                   bool text = false,  // P9C: text = the scene without its text runs' glyphs (scene_text)
+                   bool cursor_apart = false) const;  // P9E fix 4: the scene without the cursor passes' previews (scene_pre there)
+  // P9E fix 4: the cursor passes' previews alone: px / cov (pw x ph) the world pixels they show (nearest, as world_frame lays the
+  // scene), mask800 (800 x 600) the frame's pixels they drew (the scene's frame columns). False when the last queue pass kept none.
+  bool world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800) const;
   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
   void frame_begin();
   void frame_end();

@@ -1114,6 +1114,7 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
 // renderSpriteQueue's start: the wide surface's base
 void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
+  g.hud.cursor2d.clear();  // P9E fix 4: the cursor passes come after the queue
   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
   LiveTerrainWorld *w = lt ? lt->world() : nullptr;
   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
@@ -1144,6 +1145,8 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   }
   w->scene = w->scene_base;
   w->s0 = g.root.px;
+  w->scene_pre.clear();  // P9E fix 4: the cursor passes come after the queue
+  w->scene_cur.clear();
   w->scene_text.clear();
   gfxb::text_wide_begin(g);  // P9C
 }
@@ -1517,6 +1520,29 @@ void add_sprite(Gfx &g, Ctx &ctx, const int32_t a[8]) {
 }
 
 }  // namespace gfxs
+
+// ---- P9E fix 4 (gfx.h gfx_set_hud_cursor): the wide scene around the frame code's cursor passes
+void gfx_set_hud_cursor(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.cursor_sprites = on && g->hud.on;
+}
+void gfx_cursor_sprites_begin(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.cursor_sprites) return;
+  ++g->hud.cursor_depth;
+  LiveTerrainWorld *w = wide_world(ctx);
+  if (!w || !w->scene_valid) return;
+  if (w->scene_pre.size() != w->scene.size()) w->scene_pre = w->scene;  // the first pass's start (P6_ToolLabel, then P7)
+}
+void gfx_cursor_sprites_end(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->hud.cursor_sprites) return;
+  if (g->hud.cursor_depth > 0) --g->hud.cursor_depth;
+  LiveTerrainWorld *w = wide_world(ctx);
+  if (!w || !w->scene_valid || w->scene_pre.size() != w->scene.size()) return;
+  w->scene_cur = w->scene;
+}
 
 extern const GfxFamily kGfxFamily_scene = {"scene", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
 

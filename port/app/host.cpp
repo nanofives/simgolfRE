@@ -294,7 +294,10 @@ void LiveSession::on_input(const InputEvent &e) {
     }
     if (e.vacated && !e.commands.empty()) vacated_seq_.push_back(e.seq);  // P9E fix 3
     event_rows_.push_back({e.seq, e.msg, e.wp, e.lp, frame_now_.load(), static_cast<uint32_t>(e.commands.size()), -1});
-    if (e.msg >= kWmMouseMove && e.msg <= 0x20e) msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
+    if (e.msg >= kWmMouseMove && e.msg <= 0x20e) {
+      msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
+      msg_cursor_dx_ = e.remap_dx;  // P9E fix 4
+    }
     ++events_;
   }
   cv_.notify_all();
@@ -456,21 +459,44 @@ bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim
 }
 
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
-                      const portsim::GfxTextFrame *text) {
+                      const portsim::GfxTextFrame *text, bool cursor) {
   const portsim::LiveTerrainWorld *w = live.world();
   if (!w) return false;
   const bool terrain = portsim::gfx_back_terrain(ctx);
   // P9B: the frame's HUD layers, when they were published with exactly this back buffer
   portsim::GfxHudFrame f;
   const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
-  if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask)) return false;
+  // P9E fix 4: with the HUD layers, the tool previews at the cursor apart from the world (WorldImage::cur_*)
+  const bool apart = cursor && use && live.world_cursor(wi.cur_px, wi.cur_cov, wi.cur_mask);
+  if (!apart) {
+    wi.cur_px.clear();
+    wi.cur_cov.clear();
+    wi.cur_mask.clear();
+  }
+  if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask, false, apart)) return false;
+  if (apart && live.world()) {
+    const int32_t pw = live.world()->pw, ph = live.world()->ph;
+    int32_t x0 = pw, y0 = ph, x1 = 0, y1 = 0;
+    for (int32_t y = 0; y < ph; ++y)
+      for (int32_t x = 0; x < pw; ++x)
+        if (wi.cur_cov[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x)]) {
+          x0 = std::min(x0, x);
+          y0 = std::min(y0, y);
+          x1 = std::max(x1, x + 1);
+          y1 = std::max(y1, y + 1);
+        }
+    wi.cur_box[0] = x0;
+    wi.cur_box[1] = y0;
+    wi.cur_box[2] = x1;
+    wi.cur_box[3] = y1;
+  }
   // P9C: with the frame's text runs, also the mask over the picture without their glyphs (a label over the course shows the
   // world under its window-resolution glyphs); the presenter takes it when it draws the runs
   if (text && !text->empty()) {
     const std::vector<uint16_t> *src = nullptr;
     if (use && text->hud_serial == f.serial && text->base_clean.size() == f.base.size()) src = &text->base_clean;
     else if (!use && text->clean.size() == px.size()) src = &text->clean;
-    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true)) {
+    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true, apart)) {
       wi.px_text.clear();
       wi.mask_text.clear();
     }
@@ -574,7 +600,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   portsim::GfxTextFrame tf;  // P9C
   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
   if (opt_.world && terrain_log && terrain_log->live)
-    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr)) {
+    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews)) {
       ++presents_world_;
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
@@ -653,19 +679,23 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   if (opt_.cursor == CursorSource::Message) {
     x = msg_cursor_.x;
     y = msg_cursor_.y;
+    if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(msg_cursor_dx_, x, y);  // P9E fix 4
     return;
   }
   POINT p = {0, 0};
   GetCursorPos(&p);
   const POINT screen = p;
   if (hwnd_) ScreenToClient(static_cast<HWND>(hwnd_), &p);
+  int32_t answer_dx = 0;  // P9E fix 4
   if (opt_.remap) {  // G32: a point over a moved HUD panel answers its 800-space place
     int32_t rx = p.x, ry = p.y;
     opt_.remap->map(rx, ry);
+    answer_dx = p.x - rx;
     p.x = rx;
     p.y = ry;
   }
   const Point l = Translator(vp_).to_logical(Point{p.x, p.y});
+  if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(answer_dx, l.x, l.y);  // P9E fix 4
   if (opt_.edge_guard && hwnd_) {
     // P5B item 1: the original reads GetCursorPos + ScreenToClient unclamped, so a cursor left of the window gives x < 0 and
     // H1 (ML+0xebb4..ML+0xebe3) scrolls the course. Only a cursor inside the client area of the foreground window counts;

@@ -122,6 +122,9 @@ struct GfxHudFrame {
   // index + 1 whose popup was open when the pixel last changed (0 = none). Empty unless a piece has an opener panel.
   std::vector<GfxHudPiece> pieces;
   std::vector<uint8_t> owner;
+  // P9E fix 4: 1 where a sprite draw of the frame code's cursor passes (gfx_set_hud_cursor: Surface_drawSprite, the root part
+  // of drawQueuedSprite.draw) changed the root (800 x 600; empty = none): the tool preview's own pixels in the centred layers
+  std::vector<uint8_t> cursor2d;
   bool empty() const { return base.empty(); }
 };
 int8_t gfx_layer_anchor(int32_t id);
@@ -152,6 +155,16 @@ void gfx_set_hud_popups(Ctx &ctx, bool on);
 // capture: the frame's base, its layers before the screen, the screen's drawing as a centred layer, then the frame's later layers,
 // as the screen's own frames compose. Records only. Off (the default, --hud-close off): P9D.
 void gfx_set_hud_close(Ctx &ctx, bool on);
+// P9E fix 4 (option B): the tool previews at the cursor. The frame code draws them (P6_ToolLabel's tool label pass and P7's
+// placement box, object and flag previews: addSprite -> drawQueuedSprite.draw) after the sprite queue, onto the 800 root and,
+// with G32's wide scene, a second time onto the scene the world picture is made from. With this on, tick.cpp brackets those
+// two passes (GfxCursorScope) and the backend keeps the wide scene before and after them (LiveTerrainWorld::scene_pre /
+// scene_cur), so a presenter can take the previews out of the world picture and draw them where the cursor is
+// (LiveTerrain::world_frame cursor_apart, world_cursor). Records only: nothing is drawn, and the frame, the root, the back
+// buffer and the GameState are unchanged. Set by the app's host after gfx_set_hud_capture; off (the default): nothing kept.
+void gfx_set_hud_cursor(Ctx &ctx, bool on);
+void gfx_cursor_sprites_begin(Ctx &ctx);
+void gfx_cursor_sprites_end(Ctx &ctx);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
@@ -179,6 +192,21 @@ struct GfxLayerScope {
   }
   GfxLayerScope(const GfxLayerScope &) = delete;
   GfxLayerScope &operator=(const GfxLayerScope &) = delete;
+};
+// P9E fix 4: the frame-code passes that draw at the cursor tile (inert without the capture)
+struct GfxCursorScope {
+  Ctx *ctx = nullptr;
+  explicit GfxCursorScope(Ctx &c) {
+    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) {
+      ctx = &c;
+      gfx_cursor_sprites_begin(c);
+    }
+  }
+  ~GfxCursorScope() {
+    if (ctx) gfx_cursor_sprites_end(*ctx);
+  }
+  GfxCursorScope(const GfxCursorScope &) = delete;
+  GfxCursorScope &operator=(const GfxCursorScope &) = delete;
 };
 
 // ------------------------------------------------------------------------------------------------ P9C: text runs

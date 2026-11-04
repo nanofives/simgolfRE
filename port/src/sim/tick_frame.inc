@@ -6156,6 +6156,7 @@ int Ph_00418bc7(u32 F) {
     P6_Panels(F);       // ML+0xa1ba..ML+0xa37e
     P6_PauseLabel(F);   // ML+0xa37e..ML+0xa3f4
     int eax = P6_Cursor(F);         // ML+0xa3f4..ML+0xa657
+    GfxCursorScope cursor_scope(ctx);  // P9E fix 4: the tool label pass draws at the cursor tile (records only, gfx.h)
     return P6_ToolLabel(F, eax);    // ML+0xa657..ML+0xa746
 }
 

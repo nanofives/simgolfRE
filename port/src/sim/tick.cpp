@@ -513,7 +513,10 @@ struct Frame : TkBase {
     Ph_00415847(F);
     Ph_004175f2(F);
     const int r6 = Ph_00418bc7(F);
-    Ph_00419d06(F, r6);
+    {
+      GfxCursorScope cursor_scope(ctx);  // P9E fix 4: P7's tool previews are drawn at the cursor tile (records only, gfx.h)
+      Ph_00419d06(F, r6);
+    }
     int h2in[6] = {0, 0, 0, 0, 0, 0};
     int d = Ph_0041c0c5(F, h2in);
     if (d == kNext) d = Ph_0041ecbb(F, h2in);

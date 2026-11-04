@@ -118,6 +118,9 @@ class Gfx {
     // P9E fix 2 (gfx.h gfx_set_hud_close): the carry was armed by a publish inside an open panel scope (a modal screen the panel's
     // own code opened, the hire dialog): the next layer of the same frame continues the carried capture instead of ending it
     bool close_keep = false;
+    bool cursor_sprites = false;      // P9E fix 4 (gfx.h gfx_set_hud_cursor): the wide scene around the cursor passes is kept
+    int cursor_depth = 0;             // P9E fix 4: open cursor passes
+    std::vector<uint8_t> cursor2d;    // P9E fix 4: the root pixels their sprite draws changed (cleared at the queue's start)
     bool carry_split = false;
   } hud;
   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)

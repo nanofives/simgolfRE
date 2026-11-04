@@ -114,6 +114,10 @@ class PanelRemap {
   // there, but the game's own hit tests would see that panel at the point
   void map(int32_t &x, int32_t &y, bool &vacated) const;
   uint64_t remapped() const;
+  // P9E fix 4: the cursor answer the sim got last (LiveSession: the system cursor's or the last mouse message's point): the
+  // client offset the remap moved it by (0 = not over a moved layer) and its 800-space point
+  void set_cursor_answer(int32_t dx, int32_t lx, int32_t ly) const;
+  int32_t cursor_dx() const;
 
  private:
   mutable std::mutex mu_;
@@ -122,6 +126,7 @@ class PanelRemap {
   int32_t cw_ = 0;
   std::vector<uint8_t> mask_;
   mutable uint64_t remapped_ = 0;
+  mutable int32_t cursor_dx_ = 0, cursor_lx_ = 0, cursor_ly_ = 0;  // P9E fix 4
   bool layered_ = false;               // P9B
   std::vector<RemapLayer> layers_;     // P9B, in draw order
 };
@@ -141,6 +146,12 @@ struct WorldImage {
   portsim::GfxTextFrame text;
   std::vector<uint8_t> mask_text;  // P9C: `mask` taken over the picture without the runs' glyphs (empty = none)
   std::vector<uint16_t> px_text;   // P9C: `px` with the wide scene's text glyphs removed (LiveTerrain::world_frame text = true)
+  // P9E fix 4: the tool previews drawn at the cursor tile, taken out of px / px_text (LiveTerrain::world_cursor): cur_px / cur_cov
+  // in world pixels, cur_box their box (x0, y0, x1, y1), cur_mask the frame's pixels they drew (800 x 600). The presenter leaves
+  // the frame's copy of them out of its centred layers and draws them at the offset of the layer the cursor answer was moved by.
+  std::vector<uint16_t> cur_px;
+  std::vector<uint8_t> cur_cov, cur_mask;
+  int32_t cur_box[4] = {0, 0, 0, 0};
   bool empty() const { return px.empty(); }
 };
 

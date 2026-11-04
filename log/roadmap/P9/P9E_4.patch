@@ -1,0 +1,667 @@
+diff --git a/port/include/portsim/sim/gfx.h b/port/include/portsim/sim/gfx.h
+index c0a7142..331e93d 100644
+--- a/port/include/portsim/sim/gfx.h
++++ b/port/include/portsim/sim/gfx.h
+@@ -122,6 +122,9 @@ struct GfxHudFrame {
+   // index + 1 whose popup was open when the pixel last changed (0 = none). Empty unless a piece has an opener panel.
+   std::vector<GfxHudPiece> pieces;
+   std::vector<uint8_t> owner;
++  // P9E fix 4: 1 where a sprite draw of the frame code's cursor passes (gfx_set_hud_cursor: Surface_drawSprite, the root part
++  // of drawQueuedSprite.draw) changed the root (800 x 600; empty = none): the tool preview's own pixels in the centred layers
++  std::vector<uint8_t> cursor2d;
+   bool empty() const { return base.empty(); }
+ };
+ int8_t gfx_layer_anchor(int32_t id);
+@@ -152,6 +155,16 @@ void gfx_set_hud_popups(Ctx &ctx, bool on);
+ // capture: the frame's base, its layers before the screen, the screen's drawing as a centred layer, then the frame's later layers,
+ // as the screen's own frames compose. Records only. Off (the default, --hud-close off): P9D.
+ void gfx_set_hud_close(Ctx &ctx, bool on);
++// P9E fix 4 (option B): the tool previews at the cursor. The frame code draws them (P6_ToolLabel's tool label pass and P7's
++// placement box, object and flag previews: addSprite -> drawQueuedSprite.draw) after the sprite queue, onto the 800 root and,
++// with G32's wide scene, a second time onto the scene the world picture is made from. With this on, tick.cpp brackets those
++// two passes (GfxCursorScope) and the backend keeps the wide scene before and after them (LiveTerrainWorld::scene_pre /
++// scene_cur), so a presenter can take the previews out of the world picture and draw them where the cursor is
++// (LiveTerrain::world_frame cursor_apart, world_cursor). Records only: nothing is drawn, and the frame, the root, the back
++// buffer and the GameState are unchanged. Set by the app's host after gfx_set_hud_capture; off (the default): nothing kept.
++void gfx_set_hud_cursor(Ctx &ctx, bool on);
++void gfx_cursor_sprites_begin(Ctx &ctx);
++void gfx_cursor_sprites_end(Ctx &ctx);
+ void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);
+ void gfx_hud_popup_end(Ctx &ctx);
+ // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
+@@ -180,6 +193,21 @@ struct GfxLayerScope {
+   GfxLayerScope(const GfxLayerScope &) = delete;
+   GfxLayerScope &operator=(const GfxLayerScope &) = delete;
+ };
++// P9E fix 4: the frame-code passes that draw at the cursor tile (inert without the capture)
++struct GfxCursorScope {
++  Ctx *ctx = nullptr;
++  explicit GfxCursorScope(Ctx &c) {
++    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) {
++      ctx = &c;
++      gfx_cursor_sprites_begin(c);
++    }
++  }
++  ~GfxCursorScope() {
++    if (ctx) gfx_cursor_sprites_end(*ctx);
++  }
++  GfxCursorScope(const GfxCursorScope &) = delete;
++  GfxCursorScope &operator=(const GfxCursorScope &) = delete;
++};
+ 
+ // ------------------------------------------------------------------------------------------------ P9C: text runs
+ // Text at the window's resolution (log/roadmap/P9/P9C_notes.md). Every text the backend draws reaches the screen through one
+diff --git a/port/src/sim/gfx_body.h b/port/src/sim/gfx_body.h
+index a3d257a..7285a6e 100644
+--- a/port/src/sim/gfx_body.h
++++ b/port/src/sim/gfx_body.h
+@@ -118,6 +118,9 @@ class Gfx {
+     // P9E fix 2 (gfx.h gfx_set_hud_close): the carry was armed by a publish inside an open panel scope (a modal screen the panel's
+     // own code opened, the hire dialog): the next layer of the same frame continues the carried capture instead of ending it
+     bool close_keep = false;
++    bool cursor_sprites = false;      // P9E fix 4 (gfx.h gfx_set_hud_cursor): the wide scene around the cursor passes is kept
++    int cursor_depth = 0;             // P9E fix 4: open cursor passes
++    std::vector<uint8_t> cursor2d;    // P9E fix 4: the root pixels their sprite draws changed (cleared at the queue's start)
+     bool carry_split = false;
+   } hud;
+   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+index 35e0352..3603355 100644
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -960,6 +960,7 @@ static void hud_publish(Gfx &g) {
+       f.layers = std::move(c.layers);
+     }
+     f.carried = carried ? 1 : 0;
++    if (!c.cursor2d.empty()) f.cursor2d = c.cursor2d;  // P9E fix 4
+     hud_pieces_publish(g, f);  // P9E
+   } else {
+     f.none = c.depth > 0 ? 2 : 1;
+@@ -1744,11 +1745,25 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
+     ++g->handled[name];
+     uint32_t args[12] = {};
+     for (int i = 0; i < n && i < 12; ++i) args[i] = a[i];
++    // P9E fix 4: a sprite draw of a cursor pass (gfx.h gfx_set_hud_cursor): the root pixels it changes are the tool preview's
++    const bool cur2d = g->hud.cursor_sprites && g->hud.cursor_depth > 0 &&
++                       (!std::strcmp(name, "Surface_drawSprite") || !std::strcmp(name, "drawQueuedSprite.draw"));
++    std::vector<uint16_t> before;
++    if (cur2d) {
++      g->ensure_root(ctx);
++      before = g->root.px;
++    }
+     try {
+       body(*g, ctx, args, n);
+     } catch (...) {
+       g->unsup(std::string(name) + ": the body failed (an exception)");
+     }
++    if (cur2d && before.size() == g->root.px.size()) {
++      std::vector<uint8_t> &m = g->hud.cursor2d;
++      if (m.size() != before.size()) m.assign(before.size(), 0);
++      for (size_t i = 0; i < before.size(); ++i)
++        if (before[i] != g->root.px[i]) m[i] = 1;
++    }
+     return true;
+   }
+   if (body_index().not_drawing.count(name)) return false;
+diff --git a/port/src/sim/gfx_scene.cpp b/port/src/sim/gfx_scene.cpp
+index 4b6021c..d615416 100644
+--- a/port/src/sim/gfx_scene.cpp
++++ b/port/src/sim/gfx_scene.cpp
+@@ -1114,6 +1114,7 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
+ // renderSpriteQueue's start: the wide surface's base
+ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   g.ensure_root(ctx);
++  g.hud.cursor2d.clear();  // P9E fix 4: the cursor passes come after the queue
+   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+   LiveTerrainWorld *w = lt ? lt->world() : nullptr;
+   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
+@@ -1144,6 +1145,8 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+   }
+   w->scene = w->scene_base;
+   w->s0 = g.root.px;
++  w->scene_pre.clear();  // P9E fix 4: the cursor passes come after the queue
++  w->scene_cur.clear();
+   w->scene_text.clear();
+   gfxb::text_wide_begin(g);  // P9C
+ }
+@@ -1518,6 +1521,29 @@ void add_sprite(Gfx &g, Ctx &ctx, const int32_t a[8]) {
+ 
+ }  // namespace gfxs
+ 
++// ---- P9E fix 4 (gfx.h gfx_set_hud_cursor): the wide scene around the frame code's cursor passes
++void gfx_set_hud_cursor(Ctx &ctx, bool on) {
++  Gfx *g = gfx(ctx);
++  if (!g) return;
++  g->hud.cursor_sprites = on && g->hud.on;
++}
++void gfx_cursor_sprites_begin(Ctx &ctx) {
++  Gfx *g = gfx(ctx);
++  if (!g || !g->hud.cursor_sprites) return;
++  ++g->hud.cursor_depth;
++  LiveTerrainWorld *w = wide_world(ctx);
++  if (!w || !w->scene_valid) return;
++  if (w->scene_pre.size() != w->scene.size()) w->scene_pre = w->scene;  // the first pass's start (P6_ToolLabel, then P7)
++}
++void gfx_cursor_sprites_end(Ctx &ctx) {
++  Gfx *g = gfx(ctx);
++  if (!g || !g->hud.cursor_sprites) return;
++  if (g->hud.cursor_depth > 0) --g->hud.cursor_depth;
++  LiveTerrainWorld *w = wide_world(ctx);
++  if (!w || !w->scene_valid || w->scene_pre.size() != w->scene.size()) return;
++  w->scene_cur = w->scene;
++}
++
+ extern const GfxFamily kGfxFamily_scene = {"scene", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
+ 
+ }  // namespace portsim
+diff --git a/port/include/portsim/sim/terrain_live.h b/port/include/portsim/sim/terrain_live.h
+index 941341c..da068ba 100644
+--- a/port/include/portsim/sim/terrain_live.h
++++ b/port/include/portsim/sim/terrain_live.h
+@@ -76,6 +76,9 @@ struct LiveTerrainWorld {
+   // P9C: the scene with the glyphs of the text runs drawn into it (the golfer labels' second draw) put back, made at the queue's
+   // end while text capture is on (empty = none); world_frame(..., text = true) lays it in place of `scene`
+   std::vector<uint16_t> scene_text;
++  // P9E fix 4 (gfx.h gfx_set_hud_cursor): the scene before the frame code's cursor passes (the first one's start) and after them
++  // (the last one's end), cleared at the queue's start; where they differ the scene holds a tool preview drawn at the cursor
++  std::vector<uint16_t> scene_pre, scene_cur;
+   int32_t scene_w = 0, scene_e = 0;
+   bool scene_valid = false;
+   int64_t scene_passes = 0;
+@@ -179,7 +182,11 @@ class LiveTerrain : public TerrainApi {
+   // world (it equals the terrain picture T there). False (nothing written) without a world layer, before its first pass, or when
+   // the frame holds no terrain (back_terrain 0: the 2D screens and full-screen overlays are shown as before).
+   bool world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px, std::vector<uint8_t> &mask,
+-                   bool text = false) const;  // P9C: text = the scene without its text runs' glyphs (scene_text)
++                   bool text = false,  // P9C: text = the scene without its text runs' glyphs (scene_text)
++                   bool cursor_apart = false) const;  // P9E fix 4: the scene without the cursor passes' previews (scene_pre there)
++  // P9E fix 4: the cursor passes' previews alone: px / cov (pw x ph) the world pixels they show (nearest, as world_frame lays the
++  // scene), mask800 (800 x 600) the frame's pixels they drew (the scene's frame columns). False when the last queue pass kept none.
++  bool world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800) const;
+   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
+   void frame_begin();
+   void frame_end();
+diff --git a/port/src/sim/terrain_live.cpp b/port/src/sim/terrain_live.cpp
+index af57982..bd01f8f 100644
+--- a/port/src/sim/terrain_live.cpp
++++ b/port/src/sim/terrain_live.cpp
+@@ -165,7 +165,7 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
+ }
+ 
+ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
+-                              std::vector<uint8_t> &mask, bool text) const {
++                              std::vector<uint8_t> &mask, bool text, bool cursor_apart) const {
+   if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
+   if (back800.size() != world_->terrain800.size()) return false;
+   px = world_->raster->pixels();
+@@ -185,13 +185,20 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
+   }
+   for (int32_t y = 0; y < w.ph; ++y) {
+     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
+-    const std::vector<uint16_t> &scene = text && w.scene_text.size() == w.scene.size() ? w.scene_text : w.scene;  // P9C
++    const bool use_text = text && w.scene_text.size() == w.scene.size();
++    const std::vector<uint16_t> &scene = use_text ? w.scene_text : w.scene;  // P9C
+     const uint16_t *sr = scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
++    // P9E fix 4: the cursor passes' previews left out (scene_text was made at the queue's end, before them)
++    const bool apart = cursor_apart && !use_text && w.scene_pre.size() == w.scene.size() && w.scene_cur.size() == w.scene.size();
++    const uint16_t *pr = apart ? w.scene_pre.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w) : nullptr;
++    const uint16_t *cr = apart ? w.scene_cur.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w) : nullptr;
+     const uint16_t *br = w.scene_base.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+     uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+     for (int32_t x = 0; x < w.pw; ++x) {
+       const int32_t lx = col[static_cast<size_t>(x)];
+-      if (lx >= 0 && lx < w.scene_w && sr[lx] != br[lx]) dst[x] = sr[lx];
++      if (lx < 0 || lx >= w.scene_w) continue;
++      const uint16_t v = apart && cr[lx] != pr[lx] ? pr[lx] : sr[lx];
++      if (v != br[lx]) dst[x] = v;
+     }
+   }
+   const bool s0_ok = w.s0.size() == back800.size();
+@@ -200,6 +207,40 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
+   return true;
+ }
+ 
++bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800) const {
++  if (!world_ || world_->names_differ || !world_->valid) return false;
++  const LiveTerrainWorld &w = *world_;
++  const size_t n = static_cast<size_t>(w.scene_w) * 600;
++  if (!w.scene_valid || w.scene_w <= 0 || w.scene_pre.size() != n || w.scene_cur.size() != n) return false;
++  mask800.assign(static_cast<size_t>(800) * 600, 0);
++  bool any = false;
++  for (int32_t y = 0; y < 600; ++y)
++    for (int32_t x = 0; x < 800; ++x) {
++      const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w.scene_w) + static_cast<size_t>(x + w.scene_e);
++      if (w.scene_cur[i] != w.scene_pre[i]) {
++        mask800[static_cast<size_t>(y) * 800 + static_cast<size_t>(x)] = 1;
++        any = true;
++      }
++    }
++  px.assign(static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph), 0);
++  cov.assign(px.size(), 0);
++  for (int32_t y = 0; y < w.ph; ++y) {
++    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
++    const uint16_t *pr = w.scene_pre.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
++    const uint16_t *cr = w.scene_cur.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
++    for (int32_t x = 0; x < w.pw; ++x) {
++      const int64_t d = static_cast<int64_t>(x - w.ox) * 800;
++      const int32_t lx = static_cast<int32_t>(d >= 0 ? d / w.fw : -((-d + w.fw - 1) / w.fw)) + w.scene_e;
++      if (lx < 0 || lx >= w.scene_w || cr[lx] == pr[lx]) continue;
++      const size_t j = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x);
++      px[j] = cr[lx];
++      cov[j] = 1;
++      any = true;
++    }
++  }
++  return any;
++}
++
+ LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after)
+     : ctx_(ctx), engine_(make_headless_terrain(ctx)), snap_after_(std::move(snap_after)) {
+   dll_.terrain = va;
+diff --git a/port/src/sim/tick_frame.inc b/port/src/sim/tick_frame.inc
+index 16dc903..9defd09 100644
+--- a/port/src/sim/tick_frame.inc
++++ b/port/src/sim/tick_frame.inc
+@@ -6156,6 +6156,7 @@ int Ph_00418bc7(u32 F) {
+     P6_Panels(F);       // ML+0xa1ba..ML+0xa37e
+     P6_PauseLabel(F);   // ML+0xa37e..ML+0xa3f4
+     int eax = P6_Cursor(F);         // ML+0xa3f4..ML+0xa657
++    GfxCursorScope cursor_scope(ctx);  // P9E fix 4: the tool label pass draws at the cursor tile (records only, gfx.h)
+     return P6_ToolLabel(F, eax);    // ML+0xa657..ML+0xa746
+ }
+ 
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+index 6a2126a..498a0bd 100644
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -513,7 +513,10 @@ struct Frame : TkBase {
+     Ph_00415847(F);
+     Ph_004175f2(F);
+     const int r6 = Ph_00418bc7(F);
+-    Ph_00419d06(F, r6);
++    {
++      GfxCursorScope cursor_scope(ctx);  // P9E fix 4: P7's tool previews are drawn at the cursor tile (records only, gfx.h)
++      Ph_00419d06(F, r6);
++    }
+     int h2in[6] = {0, 0, 0, 0, 0, 0};
+     int d = Ph_0041c0c5(F, h2in);
+     if (d == kNext) d = Ph_0041ecbb(F, h2in);
+diff --git a/port/app/present.h b/port/app/present.h
+index 11ba714..a08b18e 100644
+--- a/port/app/present.h
++++ b/port/app/present.h
+@@ -114,6 +114,10 @@ class PanelRemap {
+   // there, but the game's own hit tests would see that panel at the point
+   void map(int32_t &x, int32_t &y, bool &vacated) const;
+   uint64_t remapped() const;
++  // P9E fix 4: the cursor answer the sim got last (LiveSession: the system cursor's or the last mouse message's point): the
++  // client offset the remap moved it by (0 = not over a moved layer) and its 800-space point
++  void set_cursor_answer(int32_t dx, int32_t lx, int32_t ly) const;
++  int32_t cursor_dx() const;
+ 
+  private:
+   mutable std::mutex mu_;
+@@ -122,6 +126,7 @@ class PanelRemap {
+   int32_t cw_ = 0;
+   std::vector<uint8_t> mask_;
+   mutable uint64_t remapped_ = 0;
++  mutable int32_t cursor_dx_ = 0, cursor_lx_ = 0, cursor_ly_ = 0;  // P9E fix 4
+   bool layered_ = false;               // P9B
+   std::vector<RemapLayer> layers_;     // P9B, in draw order
+ };
+@@ -141,6 +146,12 @@ struct WorldImage {
+   portsim::GfxTextFrame text;
+   std::vector<uint8_t> mask_text;  // P9C: `mask` taken over the picture without the runs' glyphs (empty = none)
+   std::vector<uint16_t> px_text;   // P9C: `px` with the wide scene's text glyphs removed (LiveTerrain::world_frame text = true)
++  // P9E fix 4: the tool previews drawn at the cursor tile, taken out of px / px_text (LiveTerrain::world_cursor): cur_px / cur_cov
++  // in world pixels, cur_box their box (x0, y0, x1, y1), cur_mask the frame's pixels they drew (800 x 600). The presenter leaves
++  // the frame's copy of them out of its centred layers and draws them at the offset of the layer the cursor answer was moved by.
++  std::vector<uint16_t> cur_px;
++  std::vector<uint8_t> cur_cov, cur_mask;
++  int32_t cur_box[4] = {0, 0, 0, 0};
+   bool empty() const { return px.empty(); }
+ };
+ 
+diff --git a/port/app/present.cpp b/port/app/present.cpp
+index f9318e2..2d92ae9 100644
+--- a/port/app/present.cpp
++++ b/port/app/present.cpp
+@@ -61,6 +61,16 @@ void PanelRemap::clear() {
+   std::lock_guard<std::mutex> lk(mu_);
+   on_ = false;
+ }
++void PanelRemap::set_cursor_answer(int32_t dx, int32_t lx, int32_t ly) const {  // P9E fix 4
++  std::lock_guard<std::mutex> lk(mu_);
++  cursor_dx_ = dx;
++  cursor_lx_ = lx;
++  cursor_ly_ = ly;
++}
++int32_t PanelRemap::cursor_dx() const {
++  std::lock_guard<std::mutex> lk(mu_);
++  return on_ && layered_ ? cursor_dx_ : 0;
++}
+ uint64_t PanelRemap::remapped() const {
+   std::lock_guard<std::mutex> lk(mu_);
+   return remapped_;
+@@ -507,6 +517,52 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+   }
+   const bool nearest = effective_scale(vp.client_w, vp.client_h) == ScaleMode::Nearest;
+   const bool opaque_blends = defect_ == PresentDefect::LayerBlendOpaque;
++  // P9E fix 4: the tool previews at the cursor (WorldImage::cur_*): drawn at the offset of the layer the last cursor answer was
++  // moved by, in the frame's draw order where its copy of them is (the first centred layer holding one of their pixels, else
++  // after every layer); that copy is left out of the centred layers (the world under it shows)
++  const WorldImage &W = world_;
++  const bool cur = W.cur_mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH && W.cur_px.size() == W.px.size() &&
++                   W.cur_cov.size() == W.px.size() && W.cur_box[2] > W.cur_box[0];
++  const bool c2 = f.cursor2d.size() == static_cast<size_t>(kLogicalW) * kLogicalH;  // the frame's own 2D preview pixels
++  const int32_t cdx = (cur || c2) && anchor && remap_ ? remap_->cursor_dx() : 0;
++  auto c2_at = [&](int32_t x, int32_t y) {
++    return c2 && cdx != 0 && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH &&
++           f.cursor2d[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
++  };
++  auto cur_at = [&](int32_t x, int32_t y) {
++    return cur && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH && W.cur_mask[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
++  };
++  size_t cur_layer = f.layers.size();
++  for (size_t li = 0; cur && li < f.layers.size() && cur_layer == f.layers.size(); ++li) {
++    const portsim::GfxHudLayer &l = f.layers[li];
++    if (l.id != portsim::kGfxLayerCentred) continue;
++    for (int32_t y = l.y0; y < l.y1 && cur_layer == f.layers.size(); ++y)
++      for (int32_t x = l.x0; x < l.x1; ++x)
++        if (cur_at(x, y) && l.at(x, y)) {
++          cur_layer = li;
++          break;
++        }
++  }
++  auto draw_cursor = [&]() {  // nearest world pixels, the plane's box only
++    if (!cur || vp.client_w <= 0 || vp.client_h <= 0 || W.fw <= 0 || W.ph <= 0) return;
++    const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + cdx + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
++    const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + cdx + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
++    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
++    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 2);
++    for (int32_t y = cy0; y < cy1; ++y) {
++      const int64_t dy = static_cast<int64_t>(y - vp.origin_y) * W.ph;
++      const int32_t wy = static_cast<int32_t>(dy >= 0 ? dy / vp.client_h : -((-dy + vp.client_h - 1) / vp.client_h));
++      if (wy < 0 || wy >= W.ph) continue;
++      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
++      for (int32_t x = cx0; x < cx1; ++x) {
++        const int64_t dxw = static_cast<int64_t>(x - cdx - vp.origin_x) * W.fw;
++        const int32_t wx = W.ox + static_cast<int32_t>(dxw >= 0 ? dxw / vp.client_w : -((-dxw + vp.client_w - 1) / vp.client_w));
++        if (wx < 0 || wx >= W.pw) continue;
++        const size_t j = static_cast<size_t>(wy) * static_cast<size_t>(W.pw) + static_cast<size_t>(wx);
++        if (W.cur_cov[j]) dst[x] = rgb555_to_bgra(W.cur_px[j]);
++      }
++    }
++  };
+   auto to555 = [](uint32_t c) -> uint16_t {
+     return static_cast<uint16_t>((((c >> 19) & 31) << 10) | (((c >> 11) & 31) << 5) | ((c >> 3) & 31));
+   };
+@@ -551,6 +607,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+   }
+   for (size_t li = 0; li < f.layers.size(); ++li) {
+     const portsim::GfxHudLayer &l = f.layers[li];
++    if (li == cur_layer) draw_cursor();  // P9E fix 4
+     const int32_t dx0 = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
+     struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
+       const Presenter &p;
+@@ -572,12 +629,18 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+     if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
+     // P9E: pass -1 = the layer's pixels at its own place (without its moved popup pieces), then each moved piece at its offset
+     const bool split = pieces && l.popups;
+-    for (int32_t pass = -1; pass < (split ? static_cast<int32_t>(f.pieces.size()) : 0); ++pass) {
+-    if (pass >= 0 && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
+-    const int32_t dx = pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
++    // P9E fix 4: a last pass (cpass) draws a centred layer's 2D preview pixels (f.cursor2d) at the cursor's offset
++    const int32_t npass = split ? static_cast<int32_t>(f.pieces.size()) : 0;
++    const bool cmove = c2 && cdx != 0 && l.id == portsim::kGfxLayerCentred;
++    const int32_t cpass = cmove ? npass : -2;
++    for (int32_t pass = -1; pass < npass + (cmove ? 1 : 0); ++pass) {
++    if (pass >= 0 && pass != cpass && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
++    const int32_t dx = pass == cpass ? cdx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
+     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
+       const portsim::GfxLayerPx *p = l.at(x, y);
+-      if (p && split && moved_piece(l, x, y) != pass) return nullptr;
++      if (p && split && moved_piece(l, x, y) != (pass == cpass ? -1 : pass)) return nullptr;
++      if (p && l.id == portsim::kGfxLayerCentred && cur_at(x, y)) return nullptr;  // P9E fix 4: drawn as the cursor's previews
++      if (p && cmove && (c2_at(x, y) != (pass == cpass))) return nullptr;  // P9E fix 4: the 2D preview only in its own pass
+       return p && wdim && p->kind == 4 ? nullptr : p;
+     };
+     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
+@@ -609,6 +672,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
+     }
+     }  // P9E: the pass loop
+   }
++  if (cur_layer == f.layers.size()) draw_cursor();  // P9E fix 4: after every layer
+ }
+ 
+ // P7 (present.h WideFill): the side bands from the content rectangle's own edge columns, in client pixels. The content is
+diff --git a/port/app/window.h b/port/app/window.h
+index 58a14ae..af79993 100644
+--- a/port/app/window.h
++++ b/port/app/window.h
+@@ -42,6 +42,7 @@ struct InputEvent {
+   std::vector<Step> steps;
+   std::vector<portsim::Command> commands;  // the steps' calls, as RootHandler commands
+   bool vacated = false;  // P9E fix 3: a mouse button message whose point is a moved HUD panel's vacated place (PanelRemap::map)
++  int32_t remap_dx = 0;  // P9E fix 4: the client offset the remap moved the message's point by (0 = not over a moved layer)
+ };
+ 
+ // Step (a Call) -> portsim::Command (RootHandler): handler, a0, a1, async_ctrl, async_shift, t (S7.2 notes section 4).
+diff --git a/port/app/window.cpp b/port/app/window.cpp
+index 93aa2fb..49136ca 100644
+--- a/port/app/window.cpp
++++ b/port/app/window.cpp
+@@ -276,7 +276,9 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
+   if (opt_.remap && msg >= kWmMouseMove && msg <= 0x20a) {  // G32: a point over a moved HUD panel goes to its 800-space place
+     int32_t x = static_cast<int16_t>(lp & 0xffff), y = static_cast<int16_t>(lp >> 16);
+     bool vacated = false;
++    const int32_t x_in = x;
+     opt_.remap->map(x, y, vacated);
++    e.remap_dx = x_in - x;  // P9E fix 4
+     e.vacated = vacated && msg != kWmMouseMove;  // P9E fix 3
+     lp = (static_cast<uint32_t>(static_cast<uint16_t>(y)) << 16) | static_cast<uint16_t>(x);
+     e.lp = lp;  // P9B: the event carries the point the game got (LiveSession's --cursor message answers read e.lp)
+diff --git a/port/app/host.h b/port/app/host.h
+index 0ca2d51..061945b 100644
+--- a/port/app/host.h
++++ b/port/app/host.h
+@@ -161,6 +161,9 @@ struct HostOptions {
+   // to 1 when the press's message was made in a moved panel's vacated place (InputEvent::vacated), else 0, as a recorded
+   // harness write when it changes (the play switch mainLoop.vacatedPanelClick reads it)
+   bool vacated_clicks = false;
++  // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
++  // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
++  bool cursor_previews = false;
+ };
+ 
+ class LiveSession : public portsim::LiveHost {
+@@ -267,6 +270,7 @@ class LiveSession : public portsim::LiveHost {
+   uint64_t events_seen_ = 0;         // events_ when the last modal pass began: a newer one is a reason for the next pass
+   Viewport vp_;
+   Point msg_cursor_{0, 0};           // CursorSource::Message: the last mouse message's logical point
++  int32_t msg_cursor_dx_ = 0;        // P9E fix 4: the remap's client offset of that message (InputEvent::remap_dx)
+   std::atomic<bool> stop_{false};
+   // P5B
+   std::atomic<bool> body_mode_{false};
+@@ -412,7 +416,8 @@ class LiveTracePresenter : public portsim::LiveHost {
+ // P9B: the world image of a present (P8B's world layer plus, with `layered`, the frame's HUD pixel layers: the world mask is then
+ // taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
+ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
+-                      const portsim::GfxTextFrame *text = nullptr);
++                      const portsim::GfxTextFrame *text = nullptr,
++                      bool cursor = false);
+ // P9C: the text runs published with exactly this back buffer (false when there are none)
+ bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner = false);
+ 
+diff --git a/port/app/host.cpp b/port/app/host.cpp
+index b9bc71f..9124f90 100644
+--- a/port/app/host.cpp
++++ b/port/app/host.cpp
+@@ -294,7 +294,10 @@ void LiveSession::on_input(const InputEvent &e) {
+     }
+     if (e.vacated && !e.commands.empty()) vacated_seq_.push_back(e.seq);  // P9E fix 3
+     event_rows_.push_back({e.seq, e.msg, e.wp, e.lp, frame_now_.load(), static_cast<uint32_t>(e.commands.size()), -1});
+-    if (e.msg >= kWmMouseMove && e.msg <= 0x20e) msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
++    if (e.msg >= kWmMouseMove && e.msg <= 0x20e) {
++      msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
++      msg_cursor_dx_ = e.remap_dx;  // P9E fix 4
++    }
+     ++events_;
+   }
+   cv_.notify_all();
+@@ -456,21 +459,44 @@ bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim
+ }
+ 
+ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
+-                      const portsim::GfxTextFrame *text) {
++                      const portsim::GfxTextFrame *text, bool cursor) {
+   const portsim::LiveTerrainWorld *w = live.world();
+   if (!w) return false;
+   const bool terrain = portsim::gfx_back_terrain(ctx);
+   // P9B: the frame's HUD layers, when they were published with exactly this back buffer
+   portsim::GfxHudFrame f;
+   const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
+-  if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask)) return false;
++  // P9E fix 4: with the HUD layers, the tool previews at the cursor apart from the world (WorldImage::cur_*)
++  const bool apart = cursor && use && live.world_cursor(wi.cur_px, wi.cur_cov, wi.cur_mask);
++  if (!apart) {
++    wi.cur_px.clear();
++    wi.cur_cov.clear();
++    wi.cur_mask.clear();
++  }
++  if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask, false, apart)) return false;
++  if (apart && live.world()) {
++    const int32_t pw = live.world()->pw, ph = live.world()->ph;
++    int32_t x0 = pw, y0 = ph, x1 = 0, y1 = 0;
++    for (int32_t y = 0; y < ph; ++y)
++      for (int32_t x = 0; x < pw; ++x)
++        if (wi.cur_cov[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x)]) {
++          x0 = std::min(x0, x);
++          y0 = std::min(y0, y);
++          x1 = std::max(x1, x + 1);
++          y1 = std::max(y1, y + 1);
++        }
++    wi.cur_box[0] = x0;
++    wi.cur_box[1] = y0;
++    wi.cur_box[2] = x1;
++    wi.cur_box[3] = y1;
++  }
+   // P9C: with the frame's text runs, also the mask over the picture without their glyphs (a label over the course shows the
+   // world under its window-resolution glyphs); the presenter takes it when it draws the runs
+   if (text && !text->empty()) {
+     const std::vector<uint16_t> *src = nullptr;
+     if (use && text->hud_serial == f.serial && text->base_clean.size() == f.base.size()) src = &text->base_clean;
+     else if (!use && text->clean.size() == px.size()) src = &text->clean;
+-    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true)) {
++    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true, apart)) {
+       wi.px_text.clear();
+       wi.mask_text.clear();
+     }
+@@ -574,7 +600,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
+   portsim::GfxTextFrame tf;  // P9C
+   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
+   if (opt_.world && terrain_log && terrain_log->live)
+-    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr)) {
++    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews)) {
+       ++presents_world_;
+       if (!wi.hud.empty()) ++presents_layered_;  // P9B
+     }
+@@ -653,19 +679,23 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y)
+   if (opt_.cursor == CursorSource::Message) {
+     x = msg_cursor_.x;
+     y = msg_cursor_.y;
++    if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(msg_cursor_dx_, x, y);  // P9E fix 4
+     return;
+   }
+   POINT p = {0, 0};
+   GetCursorPos(&p);
+   const POINT screen = p;
+   if (hwnd_) ScreenToClient(static_cast<HWND>(hwnd_), &p);
++  int32_t answer_dx = 0;  // P9E fix 4
+   if (opt_.remap) {  // G32: a point over a moved HUD panel answers its 800-space place
+     int32_t rx = p.x, ry = p.y;
+     opt_.remap->map(rx, ry);
++    answer_dx = p.x - rx;
+     p.x = rx;
+     p.y = ry;
+   }
+   const Point l = Translator(vp_).to_logical(Point{p.x, p.y});
++  if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(answer_dx, l.x, l.y);  // P9E fix 4
+   if (opt_.edge_guard && hwnd_) {
+     // P5B item 1: the original reads GetCursorPos + ScreenToClient unclamped, so a cursor left of the window gives x < 0 and
+     // H1 (ML+0xebb4..ML+0xebe3) scrolls the course. Only a cursor inside the client area of the foreground window counts;
+diff --git a/port/app/main.cpp b/port/app/main.cpp
+index 151ff62..50f50e8 100644
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -38,6 +38,8 @@
+ //   P9E fix 3: --hud-vacated on|off (default on with the HUD compositor; SG_APP_P9E=off: off) a press where a moved HUD panel
+ //   used to be (the course shows there) is marked in the view block (bridge.h kPortViewVacatedVa) at its delivery; with the play
+ //   profile's mainLoop.vacatedPanelClick = 0 it acts on the course instead of the panel the game's tests see there.
++//   P9E fix 4: --hud-cursor on|off (default on with the HUD layers; SG_APP_P9E=off: off) the tool previews the frame draws at the
++//   cursor tile (gfx.h gfx_set_hud_cursor) are taken out of the world picture and drawn with the panel the cursor is over.
+ //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
+ //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
+ //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
+@@ -323,6 +325,7 @@ struct Options {
+   bool hud_popups = true;          // P9E: --hud-popups on|off (SG_APP_P9E=off: off)
+   bool hud_close = true;           // P9E fix 2: --hud-close on|off (SG_APP_P9E=off: off)
+   bool hud_vacated = true;         // P9E fix 3: --hud-vacated on|off (SG_APP_P9E=off: off)
++  bool hud_cursor = true;          // P9E fix 4: --hud-cursor on|off (SG_APP_P9E=off: off)
+   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
+   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
+   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
+@@ -933,6 +936,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+       if (ok && hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D
+       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
+       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
++      if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
+       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
+     }
+     if (err.empty()) {
+@@ -994,7 +998,8 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
+                 std::fclose(rl);
+               }
+             }
+-            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi, text ? &tf : nullptr);  // P8B; P9B: with the HUD layers
++            make_world_image(*terrain.live, c, px, hud_layers_on(o), wi, text ? &tf : nullptr,
++                             hud_layers_on(o) && o.hud_cursor);  // P8B; P9B: with the HUD layers; P9E fix 4: the cursor's previews
+             if (std::getenv("SG_P9D_LAYER_DUMP")) {  // development (P9D): the shot's layers (or why there are none)
+               portsim::GfxHudFrame hf;
+               const bool got = portsim::gfx_hud_frame(c, hf);
+@@ -1193,6 +1198,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const
+   if (hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D: the modal screens over them (gfx.h)
+   if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
+   if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
++  if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
+   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
+   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
+   int *rec_mode = nullptr;
+@@ -1252,6 +1258,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
+   ho.hud_layers = hud_layers_on(o);                    // P9B
+   ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
++  ho.cursor_previews = ho.remap && hud_layers_on(o) && o.hud_cursor;  // P9E fix 4
+   ho.text_native = text_native_on(o);                  // P9C
+   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
+   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
+@@ -2621,6 +2628,10 @@ bool parse(int argc, char **argv, Options &o) {
+       if (!val(v) || (v != "on" && v != "off")) return false;
+       o.hud_vacated = v == "on";
+     }
++    else if (a == "--hud-cursor") {  // P9E fix 4
++      if (!val(v) || (v != "on" && v != "off")) return false;
++      o.hud_cursor = v == "on";
++    }
+     else if (a == "--text-res") {  // P9C
+       if (!val(v) || (v != "native" && v != "frame")) return false;
+       o.text_res = v;
+@@ -2712,7 +2723,7 @@ int main(int argc, char **argv) {
+   if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
+     if (!std::strcmp(ep, "off")) o.hud_modal = false;
+   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
+-    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = false;
++    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
+   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
+   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
+   // argument parser runs (its messages go there too), with the --data value read ahead.
