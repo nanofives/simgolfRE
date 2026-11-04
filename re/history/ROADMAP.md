@@ -1020,3 +1020,8 @@ P9E (2026-11-04, brief log/roadmap/P9/P9E_BRIEF.md, notes P9E_notes.md, one fix 
 popups (the System menu) opened from a HUD panel are composed and remapped at that panel's anchor (opener = the open panel layer, else the
 panel under the opening click); key-opened popups stay centred. Sim side records only (gfx_set_hud_popups, owner plane); `--hud-popups
 on|off`, SG_APP_P9E=off. Builds x64 + Win32, segments x64 205 / 205 = I25.
+P9E fix 2: when the employee detail panel's own drawing opens the hire dialog inside its layer, the next layer of the same frame ended P9D's
+carry and took the dimmed root (panels at their 800-space places) as base; now the capture continues after a publish made inside an open
+panel scope (gfx_set_hud_close, `--hud-close on|off`). Not reproduced: no recording reaches a hire opened inside the detail panel
+(cov_r_s2_screens' hire is mainLoop's, outside every layer); inert on cov_r_s2_screens / cov_b_holes18 (present logs identical on / off).
+Dev log SG_P9E_PRESENT_LOG. Segments x64 205 / 205 = I25.

@@ -145,6 +145,13 @@ bool gfx_hud_modal(Ctx &ctx);
 // (GfxHudFrame::owner), and the frame publishes the pieces with their opener panel. Records only: nothing is drawn or written into
 // the GameState, the root or the back buffer. Off (the default, --hud-popups off): nothing recorded.
 void gfx_set_hud_popups(Ctx &ctx, bool on);
+// P9E fix 2: the frame that closes a modal screen opened inside a panel layer (the hire dialog, drawEmployeeDetailPanel's
+// hireEmployee), set by the app's host after gfx_set_hud_modal. Its publishes inside the panel's scope arm the carry; when the
+// same frame opens another layer after the screen closed, P9D ended the carry there and took the root (dimmed, the dialog over it,
+// the panels drawn before it at their 800-space places) as the frame's base. With it on, that layer continues the carried
+// capture: the frame's base, its layers before the screen, the screen's drawing as a centred layer, then the frame's later layers,
+// as the screen's own frames compose. Records only. Off (the default, --hud-close off): P9D.
+void gfx_set_hud_close(Ctx &ctx, bool on);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)

@@ -1,0 +1,5 @@
+M	port/include/portsim/sim/gfx.h	+/- 7 0
+M	port/src/sim/gfx_body.h	+/- 4 0
+M	port/src/sim/gfx.cpp	+/- 11 1
+M	port/app/main.cpp	+/- 21 1
+P9E_1 .. P9E_2 apply to cde8b72d: yes

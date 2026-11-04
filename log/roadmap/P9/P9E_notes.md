@@ -31,3 +31,27 @@ log/roadmap/merges/I25/segs_x64.tsv (P9E_1_segs_compare.log). Smoke: live-trace 
 Screenshot: P9E_shots/r1920x1080_cov_r_quit_248_after.png (the System popup next to the radial menu at the left edge, as in the
 original's frame, its text redrawn with it; the quit popup above it, key-opened, centred), _pair.png = before / after.
 _389: the save-name box opened from the quit popup stays centred, the System popup's leftover stays with the radial menu.
+
+## Fix 2: the frame that closes the hire dialog
+Cause (code path; gfx.cpp hud_publish / gfx_layer_begin, commands_layout.inc draw_employee_detail_panel): the employee detail
+panel's own drawing calls hireEmployee (once per opening, g_ui_59ca54 == 0: its action 0 / 1 clears it, commands_panels.inc
+employee_action), so the hire dialog runs INSIDE the panel layer's scope. P9D closes that layer at the screen's first call and
+publishes the dialog's frames over the frame's layers (split, then carried). After the dialog returns, the same frame goes on, and
+the next panel layer it opens ended the carry (P9D: "the next frame's first layer ends a carried capture") and took the root as the
+frame's base: the dimmed root with the dialog over it and the panels drawn before the dialog at their 800-space places. That
+frame's present showed those panels once more at their old places.
+Fix (`--hud-close on`, the default with --hud-modal; off = P9D; SG_APP_P9E=off): gfx.h gfx_set_hud_close. A publish made inside an
+open panel scope that arms the carry marks it (HudCapture::carry_split); the next gfx_layer_begin of that frame continues the carried
+capture instead of ending it: the gap since the screen's last publish is closed as a centred layer and the frame's later layers are
+added after it, so the close frame is published like the screen's own frames (the frame's base, its layers before the dialog at
+their anchors, the dialog's drawing centred, the later layers at their anchors). The next frame's picture (terrain pass, restore,
+paint) or a publish outside every scope ends it as before. Records only; files gfx.h, gfx_body.h, gfx.cpp, main.cpp.
+Dev aid: SG_P9E_PRESENT_LOG=<file> (main.cpp, live-trace) writes one line per present: index, HUD serial, carried, none, published
+with this back buffer, id:anchor:dim per layer.
+Not reproduced live: no recording I ran reaches the split hire. cov_r_s2_screens' hire (presents 1034..1055) is opened by mainLoop
+(ML+0xa373, g_msgState53df54 on a type 0xff walker), outside every layer, so it is carried and its close frame 1056 already composes
+like 1058. cov_b_holes18, cov_b_people and cov_a_career show no dim frame. A live drive on the Hawaii sandbox (P9E_drive.py --seq
+hire, one hole built first) opened the employees panel, but its slot click opened no hire dialog there. Inert check: present logs
+with --hud-close on and off are identical on cov_r_s2_screens (1,802 presents) and cov_b_holes18 (4,764), and the 1920 x 1080
+shots of presents 1055 / 1056 are pixel-identical (P9E_shots/fix2_r1920x1080_cov_r_s2_screens_105{5,6}_pair.png).
+Checks (P9E_2_gates.log): build x64 and Win32 0 errors 0 warnings; segments x64 205 / 205 PASS, 0 rows differ from I25.

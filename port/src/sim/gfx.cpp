@@ -971,6 +971,7 @@ static void hud_publish(Gfx &g) {
   const bool arm = c.modal && !f.empty();
   c.published = std::move(f);
   if (arm) g.hud_carry_arm(carried);
+  c.carry_split = arm && c.depth > 0;  // P9E fix 2: armed inside an open panel scope (a modal screen the panel opened)
 }
 
 }  // namespace gfxb
@@ -1069,6 +1070,12 @@ void Gfx::hud_pieces_reset() {
   c.pieces = std::move(keep);
   c.owner.assign(root.px.size(), 0);
   c.own_mark = root.px;
+}
+void gfx_set_hud_close(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.close_keep = on && g->hud.on;
+  g->hud.carry_split = false;
 }
 void gfx_set_hud_popups(Ctx &ctx, bool on) {
   Gfx *g = gfx(ctx);
@@ -1221,7 +1228,10 @@ void gfx_layer_begin(Ctx &ctx, int32_t id) {
   Gfx::HudCapture &c = g->hud;
   if (c.depth++ > 0) return;
   g->ensure_root(ctx);
-  g->hud_carry_drop();  // P9D: the next frame's first layer ends a carried capture
+  // P9D: the next frame's first layer ends a carried capture. P9E fix 2: not a layer of the frame that closed a modal screen opened
+  // inside a panel's scope (the carry continues: the gap since the screen's last publish is closed below as a centred layer)
+  if (c.close_keep && c.carry && c.carry_split) c.carry_split = false;
+  else g->hud_carry_drop();
   c.aborted = false;
   if (!c.any) {
     c.base = g->root.px;

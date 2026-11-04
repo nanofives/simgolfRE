@@ -115,6 +115,10 @@ class Gfx {
     std::vector<int32_t> open;        // the open popups' piece indices (nested: innermost last)
     std::vector<uint8_t> owner;       // per root pixel: piece index + 1 of the popup open at its last observed change
     std::vector<uint16_t> own_mark;   // the root at the last ownership boundary
+    // P9E fix 2 (gfx.h gfx_set_hud_close): the carry was armed by a publish inside an open panel scope (a modal screen the panel's
+    // own code opened, the hire dialog): the next layer of the same frame continues the carried capture instead of ending it
+    bool close_keep = false;
+    bool carry_split = false;
   } hud;
   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
   struct TextCapture {

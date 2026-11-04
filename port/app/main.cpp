@@ -33,6 +33,8 @@
 //   P9E: --hud-popups on|off (default on with --hud-modal; SG_APP_P9E=off: off) a popup (showPopup, textInputBox, the System menu)
 //   opened from a HUD panel keeps its place relative to that panel: its pixels are composed and their clicks remapped at the
 //   panel's anchor (gfx.h gfx_set_hud_popups); off = P9D's centred popups.
+//   P9E fix 2: --hud-close on|off (default on with --hud-modal; SG_APP_P9E=off: off) the frame that closes a modal screen opened
+//   inside a panel layer (the hire dialog) composes like the screen's frames (gfx.h gfx_set_hud_close); off = P9D.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -316,6 +318,7 @@ struct Options {
   bool hud_anchor = true;          // G32: --hud-anchor on|off (with --wide: the HUD panels at the wide view's edges)
   bool hud_modal = true;           // P9D: --hud-modal on|off (SG_APP_P9D=off: off)
   bool hud_popups = true;          // P9E: --hud-popups on|off (SG_APP_P9E=off: off)
+  bool hud_close = true;           // P9E fix 2: --hud-close on|off (SG_APP_P9E=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -924,6 +927,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
       if (ok && hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
+      if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
     if (err.empty()) {
@@ -955,6 +959,17 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
         }
         if (!o.world_shots.empty() && terrain.live) {  // P8B: --world-shots
           host.on_present = [&](portsim::Ctx &c, uint32_t index, const std::vector<uint16_t> &px) {
+            // development (P9E): SG_P9E_PRESENT_LOG=<file>, one line per present: index, the HUD frame's serial, carried, none,
+            // published with this back buffer, then id:anchor:dim per layer
+            static std::FILE *pl = std::getenv("SG_P9E_PRESENT_LOG") ? std::fopen(std::getenv("SG_P9E_PRESENT_LOG"), "w") : nullptr;
+            if (pl) {
+              portsim::GfxHudFrame hf;
+              const bool got = portsim::gfx_hud_frame(c, hf);
+              std::fprintf(pl, "%u\t%llu\t%d\t%d\t%d\t", index, static_cast<unsigned long long>(got ? hf.serial : 0), got ? hf.carried : -1,
+                           got ? hf.none : -1, got && hf.back == px ? 1 : 0);
+              for (const portsim::GfxHudLayer &l : hf.layers) std::fprintf(pl, " %d:%d:%d", l.id, l.anchor, l.dim);
+              std::fputc('\n', pl);
+            }
             if (std::find(o.world_shots.begin(), o.world_shots.end(), static_cast<int64_t>(index)) == o.world_shots.end()) return;
             const portsim::LiveTerrainWorld *w = terrain.live->world();
             WorldImage wi;
@@ -1172,6 +1187,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
   if (hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D: the modal screens over them (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
+  if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
   int *rec_mode = nullptr;
@@ -2591,6 +2607,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_popups = v == "on";
     }
+    else if (a == "--hud-close") {  // P9E fix 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_close = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2682,7 +2702,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P9D"))  // P9D: P9B's capture of the modal screens; flags win
     if (!std::strcmp(ep, "off")) o.hud_modal = false;
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
-    if (!std::strcmp(ep, "off")) o.hud_popups = false;
+    if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = false;
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.
