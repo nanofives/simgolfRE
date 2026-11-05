@@ -1072,3 +1072,5 @@ for tile edits and placed objects in one history, full refund (Mariano's choice)
 scaled right at 8. SG_APP_P11=off turns the app parts off. Open: zooms 1 / 2 still force 4 with a tool; text keeps its zoom-4 size
 at 8; arrow keys move 4 tiles at 8; an object's cash refund in a money game not measured (career buildings locked in the tutorial).
 Worker trees deleted with log/roadmap/P10/P10_cleanup.py; merge helper log/roadmap/P10/union_conflicts.py.
+P11F (ae58a978): arrow keys move 2 tiles per press at zoom 8 (mainLoop.cameraStepFixed4); edge-scroll left at 1 tile per frame at
+every zoom (Mariano, 2026-11-05).
