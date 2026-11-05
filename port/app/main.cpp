@@ -620,6 +620,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.courseUndo", 0},                     // P11D (Mariano's play-test 5 item 4: Ctrl+Z undoes course edits)
     {"mainLoop.treesHiddenFarZoom", 0},             // P11A fix 1 (trees at the furthest zoom)
     {"mainLoop.zoomInStopsAt4", 0},                 // P11A fix 2 (one zoom level closer: 8)
+    {"mainLoop.toolForcesZoom4", 0},                // P11E (the build tools keep zoom 8)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit

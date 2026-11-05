@@ -1195,6 +1195,16 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
   }
   const uint16_t *pal = sprite_palette(g, ctx, key, *s, pal_obj, false, who);
   if (!pal) return;
+  // P11E: Sprite::drawAlpha adds the sprite's offsets (this +0x20 / +0x24) unscaled, where every other body here takes them at the
+  // display scale in force (trim). At scale 1 the two agree, and the original draws its translucent previews (the hole pin, the
+  // tree and object previews: queue flag 0x200, mainLoop ML+0xb5ba / ML+0xb8da / ML+0xab98..ML+0xae87) only at zoom 4, where the
+  // sprite queue leaves scale 1. At g_zoomScale 8 (reached only with mainLoop.zoomInStopsAt4 = 0) the scale is 2 and the unscaled
+  // offsets put those sprites off their tile (a pin 37 px left of its green), so there the offsets are taken at the scale too.
+  // Zooms 1, 2 and 4 keep the original's rule.
+  const bool z8 = ctx.gs().g_zoomScale == 8;
+  const Scale sc0 = cur_scale(g);
+  const int32_t ox = z8 ? trim(s->left, sc0.nx, sc0.den) : s->left;
+  const int32_t oy = z8 ? trim(s->top, sc0.ny, sc0.den) : s->top;
   // the member of the window's pair: Sprite::drawAlpha sets its flag byte to 1 and clears it only when the destination's
   // format word +4 is 1, and calls the first member of each pair with the flag set (roadmap S2.13 read the arms; the quarter
   // band's first member draw16_1002ed60 is the one S2.8 measured on the reference frames). The only destination here is the
@@ -1219,13 +1229,13 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
     if (LiveTerrainWorld *w = wide_world(ctx))
       if (!w->hr_open && w->hr_valid && w->scene.size() == static_cast<size_t>(w->scene_w) * 600) bw = w;
   if (!bw) {
-    blit16(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, op);
+    blit16(g, *s, g.root, add32(ox, x), add32(oy, y), cur_scale(g), who, op);
   } else {
     if (bw->box800.size() != g.root.px.size()) bw->box800.assign(g.root.px.size(), 0);
     if (bw->box_word.size() != g.root.px.size()) bw->box_word.assign(g.root.px.size(), 0);
     MarkOp<AlphaOp> mo{op, bw->box800.data(), bw->box_word.data(), g.root.px.data(), g.root.px.size(), op.flag};
-    blit16_core(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, mo);   // blit16 without an hr pass
-    hr_box_now(*bw, *s, add32(add32(s->left, x), bw->scene_e), add32(s->top, y), cur_scale(g), op);
+    blit16_core(g, *s, g.root, add32(ox, x), add32(oy, y), cur_scale(g), who, mo);   // blit16 without an hr pass
+    hr_box_now(*bw, *s, add32(add32(ox, x), bw->scene_e), add32(oy, y), cur_scale(g), op);
   }
   // every root pixel blended once with one word (the sprite covers the root at this scale): a whole-frame dim
   if (op.rec && op.one_src && op.n == g.root.px.size()) g.note_dim(op.src0);

@@ -4490,7 +4490,8 @@ L_415bbe:
 L_415bcb:
     G32(GS(g_flags)) = G32(GS(g_flags)) & 0xF7FFFFFF;                           // ML+0x660b..ML+0x661a
     if (eax != -1 || ecx != eax)                                              // ML+0x6620 / ML+0x6624
-        G32(GS(g_zoomScale)) = 4;                                                  // ML+0x6626
+        if (SG_DEFECT(g_defect_tool_zoom4) || G32(GS(g_zoomScale)) != 8)           // P11E: a held tool keeps zoom 8
+            G32(GS(g_zoomScale)) = 4;                                              // ML+0x6626
 L_415bf0:
     if (G32(GS(g_holesPlusOne)) >= 0x13 && ecx == esi)                                // ML+0x6637 / ML+0x663b
         G32(GS(f_w_4c2848)) = -1;                                                 // ML+0x663d
@@ -5706,6 +5707,20 @@ void P6_DisplaySlot9c() {
     }
 }
 
+// P11E: P7's translucent tile box (Surface_drawSprite at ML+0xb53b / ML+0xb6ae) is drawn at the display scale in force, which is
+// whatever the last draw before it set: P6_DisplaySlot9c and the panels' frames set (1, 1, 1), a queued-sprite draw leaves
+// (z, z, 4) (gfx_scene.cpp draw_entry). At zoom 4, where the original draws the box, every one of those is scale 1. At zoom 8
+// (reached only with mainLoop.zoomInStopsAt4 = 0) they give 1 or 2 by what was drawn last (measured: the green tool's box at twice
+// its art, the palm tool's at its art's size, half its tile), so at zoom 8 the box is drawn at (8, 8, 4), the zoom's scale.
+// Drawing only; nothing at other zooms.
+void P11E_BoxScale() {
+    if (G32(GS(g_zoomScale)) != 8) return;
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+      const uint32_t a[3] = {8, 8, 4};
+      gfx_drop(ctx, "Display::setScale", a, 3);
+    }
+}
+
 // showInfoCursorPanel showInfoCursorPanel (cdecl, 2 arguments, `add esp, 8` at ML+0xa22f). re/c3_hold.tsv records that it
 // returns with the caller's esi changed; mainLoop never reads esi after ML+0xa225 before writing it (notes), so the
 // original's esi is dead there. The call saves and restores ebx / esi / edi / ebp around the callee so that a changed
@@ -6566,6 +6581,7 @@ L41aa8f:    // object/amenity placement preview sprites
         if (!draw && GU8((eax + eax * 2) * 0x10 + (GS(g_tileTypeAttrs) + 38)) == 0xd && esi == 7) draw = true;  // ML+0xb4e9..ML+0xb4fb
         if (draw) {
             int self = GS(g_surfaces59ca58) + 44 * (esi + 20 * (int)G8(GS(g_courseType)));  // ML+0xb521..ML+0xb534
+            P11E_BoxScale();                                // P11E: zoom 8 only
             tc("Surface_drawSprite", self, Root(), FD(0x68) - G32(GS(g_tileStep4c2840)), FD(0x58) - edi, 0x3f000000, 0, 1);  // ML+0xb53b
             eax = G32(GS(f_w_4c2848));                        // ML+0xb540
         }
@@ -6597,6 +6613,7 @@ L41ab87:    // tool/object 7: hole flag + pin preview (4-direction nib byte tabl
         } else {
             self = (GS(g_surfaces59ca58) + 88) + 880 * (int)G8(GS(g_courseType));  // ML+0xb639..ML+0xb656
         }
+        P11E_BoxScale();                                    // P11E: zoom 8 only
         tc("Surface_drawSprite", self, Root(), FD(0x68) - G32(GS(g_tileStep4c2840)), FD(0x58) - FD(0x40), 0x3f000000, 0, 1);  // ML+0xb6ae
     }
     // fall to L41ac73
@@ -7464,6 +7481,9 @@ a41c8e7:  // key 0x78
     goto a41de11;                             // ML+0xd33b
 a41c900:
     eax = G32(GS(g_zoomScale));                    // ML+0xd340
+    {
+    // P11E (mainLoop.toolForcesZoom4 = 0): zooming out from 8 lands on 4, a zoom the tools work at, so the held tool stays
+    const bool keepTool = !SG_DEFECT(g_defect_tool_zoom4) && eax == 8;
     if (eax > ebx) {                          // ML+0xd345 cmp eax,ebx; jle skip
         eax = eax / 2;                        // ML+0xd349 cdq; sub eax,edx; sar eax,1 (signed /2)
         G32(GS(g_zoomScale)) = eax;                // ML+0xd34e
@@ -7471,8 +7491,11 @@ a41c900:
     eax <<= 3;                                // ML+0xd353 shl eax,3
     G32(GS(g_tileStep4c2840)) = eax;                    // ML+0xd356
     eax = -1;                                 // ML+0xd35b or eax,ffffffff
+    if (!keepTool) {
     G32(GS(f_w_4c2848)) = eax;                    // ML+0xd35e
     G32((GS(f_w_4c2848) + 12)) = eax;                    // ML+0xd363
+    }
+    }
     goto a41de11;                             // ML+0xd368
 a41c92d:  // key 0x7a
     eax = G32(GS(g_zoomScale));                    // ML+0xd36d
