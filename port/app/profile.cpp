@@ -80,6 +80,7 @@ bool Profiler::open_csv(const std::string &path) {
   if (!csv_) return false;
   std::fprintf(csv_, "t_s,secs,frames,shown,paints,fps,sim_fps,frame_ms,frame_max_ms,work_ms,paint_ms,paint_max_ms");
   for (int i = 0; i < kPhases; ++i) std::fprintf(csv_, ",%s_ms", kNames[i]);
+  std::fprintf(csv_, ",cursor_paints");  // P10E
   std::fputc('\n', csv_);
   std::fflush(csv_);
   return true;
@@ -126,7 +127,7 @@ void Profiler::frame_head() {
   roll(now);
 }
 
-void Profiler::painted(bool new_frame, int64_t ns) {
+void Profiler::painted(bool new_frame, int64_t ns, bool cursor) {
   if (!g_on.load(std::memory_order_relaxed)) return;
   const int64_t now = portsim::perf_now_ns();
   std::lock_guard<std::mutex> lk(mu_);
@@ -137,6 +138,7 @@ void Profiler::painted(bool new_frame, int64_t ns) {
   }
   ++paints_;
   if (new_frame) ++shown_;
+  if (cursor) ++cursor_;  // P10E
   paint_sum_ += ns * 1e-6;
   paint_max_ = std::max(paint_max_, ns * 1e-6);
   roll(now);
@@ -152,6 +154,7 @@ void Profiler::roll(int64_t now) {
   l.frames = frames_;
   l.shown = shown_;
   l.paints = paints_;
+  l.cursor = cursor_;  // P10E
   l.fps = shown_ / l.secs;
   l.sim_fps = frames_ / l.secs;
   l.frame_ms = frames_ ? frame_sum_ / frames_ : 0;
@@ -171,16 +174,19 @@ void Profiler::roll(int64_t now) {
     tot_sim_fps_ += l.sim_fps;
     tot_frame_ += l.frame_ms;
     tot_paint_ += l.paint_ms;
+    tot_paints_ += paints_ / l.secs;  // P10E
+    tot_cursor_ += cursor_ / l.secs;
     for (int i = 0; i < kPhases; ++i) tot_ms_[i] += l.ms[i];
   }
   if (csv_) {
     std::fprintf(csv_, "%.3f,%.3f,%u,%u,%u,%.2f,%.2f,%.3f,%.3f,%.3f,%.3f,%.3f", l.t_s, l.secs, l.frames, l.shown, l.paints, l.fps,
                  l.sim_fps, l.frame_ms, l.frame_max_ms, l.work_ms, l.paint_ms, l.paint_max_ms);
     for (int i = 0; i < kPhases; ++i) std::fprintf(csv_, ",%.3f", l.ms[i]);
+    std::fprintf(csv_, ",%u", l.cursor);  // P10E
     std::fputc('\n', csv_);
     std::fflush(csv_);
   }
-  frames_ = shown_ = paints_ = 0;
+  frames_ = shown_ = paints_ = cursor_ = 0;
   for (double &v : sum_) v = 0;
   frame_sum_ = frame_max_ = work_sum_ = paint_sum_ = paint_max_ = 0;
   line_t0_ = now;
@@ -216,6 +222,8 @@ std::string Profiler::summary_json() const {
   std::snprintf(b, sizeof b, "{\"on\":%d,\"lines\":%llu,\"fps\":%.2f,\"sim_fps\":%.2f,\"frame_ms\":%.2f,\"paint_ms\":%.2f", on_ ? 1 : 0,
                 static_cast<unsigned long long>(sum_lines_), tot_fps_ / n, tot_sim_fps_ / n, tot_frame_ / n, tot_paint_ / n);
   std::string s = b;
+  std::snprintf(b, sizeof b, ",\"paints_per_s\":%.2f,\"cursor_paints_per_s\":%.2f", tot_paints_ / n, tot_cursor_ / n);  // P10E
+  s += b;
   for (int i = 0; i < kPhases; ++i) {
     std::snprintf(b, sizeof b, ",\"%s_ms\":%.2f", kNames[i], tot_ms_[i] / n);
     s += b;
@@ -231,7 +239,8 @@ std::string overlay_text(const ProfLine &l, int mode) {
   }
   auto m = [&](Phase p) { return l.ms[static_cast<int>(p)]; };
   std::string s;
-  std::snprintf(b, sizeof b, "%.1f fps   game %.1f/s   frame %.0f ms (max %.0f)\n", l.fps, l.sim_fps, l.frame_ms, l.frame_max_ms);
+  std::snprintf(b, sizeof b, "%.1f fps   game %.1f/s   frame %.0f ms (max %.0f)   paints %.0f/s  cursor %.0f/s\n", l.fps,
+                l.sim_fps, l.frame_ms, l.frame_max_ms, l.secs > 0 ? l.paints / l.secs : 0.0, l.secs > 0 ? l.cursor / l.secs : 0.0);
   s += b;
   std::snprintf(b, sizeof b, "sim %.1f  gfx %.1f  terrain %.1f  capture %.1f  wait %.1f\n", m(Phase::Sim), m(Phase::Gfx),
                 m(Phase::Terrain), m(Phase::Capture), m(Phase::Wait));

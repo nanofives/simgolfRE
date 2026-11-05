@@ -166,6 +166,9 @@ struct HostOptions {
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
+  // P10E: presents with those previews also carry the projection snapshot (WorldImage::proj) that lets the window move them to
+  // the cursor's tile between game frames (--paint-rate display)
+  bool cursor_live = false;
   // P10C fix 1: when the title menu reports its first pass after a session, the frame it presented with the in-game band hint
   // (BandFill::Black: the title's first refreshFull runs before title_menu() clears in_game_) is posted again with Extend
   bool title_bands = false;
@@ -196,6 +199,16 @@ class LiveSession : public portsim::LiveHost {
   // first pass does the same, so the app closes instead of showing the title menu. Off the title menu's loop (the boot, the
   // location / difficulty screens) the session stops when no title pass came within 0.5 s, as before.
   void request_close();
+  // P10E: the cursor answer the sim's next cursor read would get (LiveSession::cursor's point, the same remap and logical
+  // mapping), with nothing recorded or counted; false when that read would not take the live point (the edge guard's outside /
+  // not-foreground answer). dx = the remap's client offset of the point.
+  bool live_cursor(int32_t &x, int32_t &y, int32_t &dx);
+  // P10E (SG_P10E_LOG): the point of the sim's last cursor read that was not H1's edge-scroll read (site 0: P6_Cursor's
+  // View_toLocal among them)
+  Point plain_answer() {
+    std::lock_guard<std::mutex> lk(mu_);
+    return plain_answer_;
+  }
   // P5B item 2: whether the game is in its frame body (the last pump call was P6 / H1), where + and - may be read as the
   // zoom keys; false in every modal loop (text entry, popups, reports, the title menu)
   bool in_frame_body() const { return body_mode_.load(); }
@@ -312,6 +325,8 @@ class LiveSession : public portsim::LiveHost {
   bool banner_shown_ = false;  // P8A: the window shows the banner frame, not the last present
   portsim::GfxTextFrame last_text_;  // P10B fix 1: the text runs published with last_presented_ (empty = none)
   Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
+  bool edge_read_ = false;            // P10E: cursor() runs for cursor_at's edge-scroll read (sim thread)
+  Point plain_answer_{0, 0};          // P10E: plain_answer()
   // P7: whether a game's frame loop has run since the title menu (sim thread only): set at a frame head or a body pump with
   // g_difficulty != -1, cleared at any pump that reads g_difficulty == -1 (the title menu stores -1 there, 0x0040f8ab)
   bool in_game_ = false;
@@ -430,7 +445,7 @@ class LiveTracePresenter : public portsim::LiveHost {
 // taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
                       const portsim::GfxTextFrame *text = nullptr,
-                      bool cursor = false);
+                      bool cursor = false, bool proj = false);  // P10E: proj = WorldImage::proj with the cursor's previews
 // P9C: the text runs published with exactly this back buffer (false when there are none)
 bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner = false);
 // P10B fix 1: the text frame of a picture `px` made over the frame `under.back` (the loading banner over a copy of the back

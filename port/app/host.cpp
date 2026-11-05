@@ -31,6 +31,7 @@
 #include "portsim/sim/gditext.h"  // P10A: the overlay's font (game_font)
 #include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P8B: gfx_back_terrain  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
+#include "portsim/sim/util.h"  // P10E: distance (proj_tile)
 #include "portsim/state_hash.h"
 
 namespace fs = std::filesystem;
@@ -548,8 +549,120 @@ bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim
   return false;
 }
 
+// P10E (present.h CursorProj): the snapshot, read from the GameState at the frame's present on the sim thread. Nothing is written:
+// tileToScreen's cache hits are copied, its misses are worldToScreen (bridge.h world_to_screen, which reads only) of the tile's
+// centre ((t << 10) + 0x200) with tileToScreen's window test (x in [-0x40 - E, W + 0x40 + E), y in [-0x2a, H + 0x2a), E =
+// wide_view_margin_t2s), the values the frame's next screenToTile would see while the state stays as it is.
+static void take_proj(portsim::Ctx &ctx, CursorProj &p) {
+  p.ok = false;
+  const portsim::GameState &g = ctx.gs();
+  // P6_Cursor copies unk_005a9cbc into unk_005a9cc0 before its screenToTile (ML+0xa454): with it set, screenToTile halves the point
+  // and worldToScreen doubles its result, and the cache holds those points; not replicated (the preview keeps the frame's place)
+  if (g.unk_005a9cbc != 0 || g.unk_005a9cc0 != 0) return;
+  if (g.g_cameraRot != 0 && g.g_cameraRot != 2 && g.g_cameraRot != 4 && g.g_cameraRot != 6) return;
+  if (g.g_tileStep4c2840 == 0) return;
+  if (g.g_cursorTileX < 0 || g.g_cursorTileX >= 50 || g.g_cursorTileY < 0 || g.g_cursorTileY >= 50) return;
+  p.tile_x = g.g_cursorTileX;
+  p.tile_y = g.g_cursorTileY;
+  p.sw = g.g_screenWidth;
+  p.sh = g.g_screenHeight;
+  p.rot = g.g_cameraRot;
+  p.cam_x = g.gCameraTileX;
+  p.cam_y = g.gCameraTileY;
+  p.step = g.g_tileStep4c2840;
+  for (int k = 0; k < 8; ++k) {
+    p.dir_dx[k] = g.f_tab_dirDx_4c2878[k];
+    p.dir_dy[k] = g.f_tab_dirDy_4c2898[k];
+  }
+  p.sx.assign(2500, 0);
+  p.sy.assign(2500, 0);
+  p.on.assign(2500, 0);
+  const int32_t E = portsim::wide_view_margin_t2s(ctx);
+  for (int32_t tx = 0; tx < 50; ++tx)
+    for (int32_t ty = 0; ty < 50; ++ty) {
+      const size_t cell = static_cast<size_t>(tx * 50 + ty);
+      const int16_t c = g.g_tileScreenX[cell];
+      if (c != 0) {
+        if (c == -99) continue;
+        p.sx[cell] = c;
+        p.sy[cell] = g.g_tileScreenY[cell];
+        p.on[cell] = 1;
+        continue;
+      }
+      int32_t x = 0, y = 0;
+      portsim::world_to_screen(ctx, (tx << 10) + 0x200, (ty << 10) + 0x200, x, y, 0);
+      if (x >= -0x40 - E && x < g.g_screenWidth + 0x40 + E && y >= -0x2a && y < g.g_screenHeight + 0x2a) {
+        p.sx[cell] = x;
+        p.sy[cell] = y;
+        p.on[cell] = 1;
+      }
+    }
+  p.ok = p.on[static_cast<size_t>(p.tile_x * 50 + p.tile_y)] != 0;
+}
+
+// P10E: screenToTile (tick_render.inc Rend::screenToTile) with useWorld 0 on the snapshot. As the original, the point of the last
+// tileToScreen that answered is kept for the distance when a tile has none.
+bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t &ty) {
+  using namespace portsim;
+  if (!p.ok || p.step == 0 || p.on.size() != 2500) return false;
+  int32_t cx = px - p.sw / 2 - 0x40;
+  int32_t cy = py - p.sh / 2;
+  if (p.rot == 2) {
+    cx += 0x20;
+    cy += 0x14;
+  } else if (p.rot == 4) {
+    cx += 0x40;
+  } else if (p.rot == 6) {
+    cx += 0x20;
+    cy -= 0x14;
+  }
+  const int32_t s = shl32(cy, 5) / 40;
+  const int32_t q = p.step, camX = p.cam_x, camY = p.cam_y;
+  if (p.rot == 0) {
+    tx = div32(div32(mul32(camX * 2 + 1, q) - s * 2 + cx, q), 2);
+    ty = div32(div32(q + (mul32(camY, q) + s) * 2 + cx, q), 2);
+  } else if (p.rot == 2) {
+    tx = div32(div32(mul32(camX * 2 + 1, q) - s * 2 - cx, q), 2);
+    ty = div32(div32(mul32(camY * 2 + 1, q) - s * 2 + cx, q), 2);
+  } else if (p.rot == 4) {
+    tx = div32(div32((mul32(q, camX) + s) * 2 - cx + q, q), 2);
+    ty = div32(div32(mul32(camY * 2 + 1, q) - s * 2 - cx, q), 2);
+  } else {
+    tx = div32(div32(q + (mul32(q, camX) + s) * 2 + cx, q), 2);
+    ty = div32(div32((mul32(camY, q) + s) * 2 - cx + q, q), 2);
+  }
+  int32_t a = 0, b = 0;
+  bool have = false;
+  auto t2s = [&](int32_t x, int32_t y) {
+    if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
+    const size_t cell = static_cast<size_t>(x * 50 + y);
+    if (!p.on[cell]) return;
+    a = p.sx[cell];
+    b = p.sy[cell];
+    have = true;
+  };
+  for (int iter = 0; iter < 256; ++iter) {
+    const int32_t t = tx, u = ty;
+    t2s(t, u);
+    if (!have) return false;  // the original's locals hold no projection yet
+    int32_t best = distance(px - a, (py - b) * 2);
+    for (int k = 0; k < 8; ++k) {
+      const int32_t nx = t + p.dir_dx[k], ny = u + p.dir_dy[k];
+      t2s(nx, ny);
+      const int32_t d = distance(px - a, (py - b) * 2);
+      if (d < best) {
+        best = d;
+        tx = nx;
+        ty = ny;
+      }
+    }
+    if (tx == t && ty == u) return true;
+  }
+  return false;
+}
+
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
-                      const portsim::GfxTextFrame *text, bool cursor) {
+                      const portsim::GfxTextFrame *text, bool cursor, bool proj) {
   const portsim::LiveTerrainWorld *w = live.world();
   if (!w) return false;
   const bool terrain = portsim::gfx_back_terrain(ctx);
@@ -599,6 +712,8 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   wi.ph = w->ph;
   wi.fw = w->fw;
   wi.ox = w->ox;
+  wi.proj.ok = false;  // P10E: the projection only with previews at the cursor (world sprites or the frame's 2D sprite pixels)
+  if (proj && use && (apart || !f.cursor2d.empty())) take_proj(ctx, wi.proj);
   if (use) {
     // development: SG_P9B_LAYER_LOG=<file> appends one line per present with layers: serial, then id:anchor:box:pixels per layer
     static std::FILE *lf = std::getenv("SG_P9B_LAYER_LOG") ? std::fopen(std::getenv("SG_P9B_LAYER_LOG"), "a") : nullptr;
@@ -635,6 +750,7 @@ static void world_reset(WorldImage &w) {
   w.hud_none = false;
   w.text = portsim::GfxTextFrame{};
   for (int32_t &b : w.cur_box) b = 0;
+  w.proj.ok = false;  // P10E (its tables keep their capacity)
 }
 
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
@@ -727,7 +843,8 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   portsim::GfxTextFrame tf;  // P9C
   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
   if (opt_.world && terrain_log && terrain_log->live)
-    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews)) {
+    if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews,
+                         opt_.cursor_previews && opt_.cursor_live)) {  // P10E
       ++presents_world_;
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
@@ -814,6 +931,7 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
     x = msg_cursor_.x;
     y = msg_cursor_.y;
     if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(msg_cursor_dx_, x, y);  // P9E fix 4
+    if (!edge_read_) plain_answer_ = Point{x, y};  // P10E
     return;
   }
   POINT p = {0, 0};
@@ -830,6 +948,7 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   }
   const Point l = Translator(vp_).to_logical(Point{p.x, p.y});
   if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(answer_dx, l.x, l.y);  // P9E fix 4
+  if (!edge_read_) plain_answer_ = l;  // P10E
   if (opt_.edge_guard && hwnd_) {
     // P5B item 1: the original reads GetCursorPos + ScreenToClient unclamped, so a cursor left of the window gives x < 0 and
     // H1 (ML+0xebb4..ML+0xebe3) scrolls the course. Only a cursor inside the client area of the foreground window counts;
@@ -851,12 +970,49 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   y = l.y;
 }
 
+// P10E (host.h live_cursor): LiveSession::cursor's point without its effects (no remap answer handed on, no last_inside_, no counts)
+bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx) {
+  std::lock_guard<std::mutex> lk(mu_);  // (the title menu's exit click, sim-thread state, has no tool preview to move)
+  if (opt_.cursor == CursorSource::Message) {
+    x = msg_cursor_.x;
+    y = msg_cursor_.y;
+    dx = msg_cursor_dx_;
+    return true;
+  }
+  if (!hwnd_) return false;
+  POINT p = {0, 0};
+  GetCursorPos(&p);
+  const POINT screen = p;
+  ScreenToClient(static_cast<HWND>(hwnd_), &p);
+  dx = 0;
+  if (opt_.remap) {
+    int32_t rx = p.x, ry = p.y;
+    opt_.remap->peek(rx, ry);
+    dx = p.x - rx;
+    p.x = rx;
+    p.y = ry;
+  }
+  if (opt_.edge_guard) {
+    HWND h = static_cast<HWND>(hwnd_);
+    RECT c;
+    GetClientRect(h, &c);
+    const bool inside = p.x >= c.left && p.x < c.right && p.y >= c.top && p.y < c.bottom;
+    if (!inside || GetForegroundWindow() != h || WindowFromPoint(screen) != h) return false;
+  }
+  const Point l = Translator(vp_).to_logical(Point{p.x, p.y});
+  x = l.x;
+  y = l.y;
+  return true;
+}
+
 // P8B (HostOptions::wide_edge): H1's edge-scroll read. The cursor answer is the logical point (cursor() above); on a client wider
 // than the 4:3 content rectangle the side columns give x < 0 or x > 799, which H1 (ML+0xebc4..ML+0xebe3: x <= 0, x >= 0x31f)
 // would take as the edge. Here x is 0 / 0x31f only when the point is at or beyond the client's own left / right edge, else it is
 // clamped to 1..0x31e; y is unchanged (the content rectangle has the client's full height in a wide window).
 void LiveSession::cursor_at(portsim::Ctx &ctx, bool modal, int32_t site, int32_t &x, int32_t &y) {
+  edge_read_ = site == portsim::kCursorSiteEdgeScroll;  // P10E
   cursor(ctx, modal, x, y);
+  edge_read_ = false;
   if (!opt_.wide_edge || site != portsim::kCursorSiteEdgeScroll) return;
   Viewport vp;
   int32_t cw = 0;

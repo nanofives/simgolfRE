@@ -113,13 +113,17 @@ class PanelRemap {
   // point lies inside a moved layer's box (or, without layers, a moved kHudPanels rectangle): the client shows the course
   // there, but the game's own hit tests would see that panel at the point
   void map(int32_t &x, int32_t &y, bool &vacated) const;
+  // P10E: map without counting it in remapped() (the window thread's cursor reads between game frames)
+  void peek(int32_t &x, int32_t &y) const;
   uint64_t remapped() const;
   // P9E fix 4: the cursor answer the sim got last (LiveSession: the system cursor's or the last mouse message's point): the
   // client offset the remap moved it by (0 = not over a moved layer) and its 800-space point
   void set_cursor_answer(int32_t dx, int32_t lx, int32_t ly) const;
   int32_t cursor_dx() const;
+  void cursor_answer(int32_t &lx, int32_t &ly) const;  // P10E: that answer's 800-space point (the SG_P10E_LOG check)
 
  private:
+  void map_impl(int32_t &x, int32_t &y, bool &vacated, bool count) const;  // P10E
   mutable std::mutex mu_;
   bool on_ = false;
   Viewport vp_;
@@ -130,6 +134,24 @@ class PanelRemap {
   bool layered_ = false;               // P9B
   std::vector<RemapLayer> layers_;     // P9B, in draw order
 };
+
+// P10E (log/roadmap/P10/P10E_notes.md): what the window thread needs to find the tile under a cursor point between game frames
+// the way the frame did (P6_Cursor: screenToTile of the cursor answer into g_cursorTileX / Y, useWorld 0), read from the
+// GameState at the frame's present: screenToTile's inputs and tileToScreen's answer for every tile of the 50 x 50 grid (the
+// cache g_tileScreenX / Y where it holds a point, else worldToScreen of the tile's centre and tileToScreen's window test; nothing
+// is written to the state). ok = taken (the frame has tool previews at the cursor, unk_005a9cbc / unk_005a9cc0 are 0 and the
+// frame's cursor tile is on screen).
+struct CursorProj {
+  bool ok = false;
+  int32_t tile_x = 0, tile_y = 0;  // the frame's g_cursorTileX / Y
+  int32_t sw = 0, sh = 0, rot = 0, cam_x = 0, cam_y = 0, step = 0;  // g_screenWidth / Height, g_cameraRot, gCameraTileX / Y, g_tileStep4c2840
+  int32_t dir_dx[8] = {}, dir_dy[8] = {};                           // f_tab_dirDx_4c2878 / f_tab_dirDy_4c2898
+  std::vector<int32_t> sx, sy;  // tileToScreen's point per tile (cell tx * 50 + ty)
+  std::vector<uint8_t> on;      // tileToScreen's result per tile (1 = on screen, the point written)
+};
+// screenToTile(px, py, useWorld 0) on the snapshot: the rotation's inverse, then the descent over the 8 neighbours by
+// distance(px - sx, (py - sy) * 2). False when the descent starts on a tile tileToScreen gives no point for, or does not settle.
+bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t &ty);
 
 struct WorldImage {
   std::vector<uint16_t> px;
@@ -152,6 +174,7 @@ struct WorldImage {
   std::vector<uint16_t> cur_px;
   std::vector<uint8_t> cur_cov, cur_mask;
   int32_t cur_box[4] = {0, 0, 0, 0};
+  CursorProj proj;  // P10E
   bool empty() const { return px.empty(); }
 };
 
@@ -195,6 +218,18 @@ class Presenter {
   void set_overlay(int mode) { overlay_mode_ = mode < 0 ? 0 : mode > 2 ? 2 : mode; }
   int overlay() const { return overlay_mode_; }
   void draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch) const;
+  // P10E: the live cursor preview between game frames (--paint-rate display). Active: the frame's tool previews at the cursor
+  // (WorldImage::cur_* and the frame's cursor2d pixels) are drawn moved by (sx, sy) 800-space pixels, at the client offset dx
+  // instead of the sim's last cursor answer's (PanelRemap::cursor_dx). set_frame / set_frame_world clear it (a new frame draws
+  // its previews at its own cursor tile).
+  struct CursorLive {
+    bool active = false;
+    int32_t sx = 0, sy = 0, dx = 0;
+    bool operator==(const CursorLive &o) const { return active == o.active && sx == o.sx && sy == o.sy && dx == o.dx; }
+    bool operator!=(const CursorLive &o) const { return !(*this == o); }
+  };
+  void set_cursor_live(const CursorLive &c) { live_ = c; }
+  const CursorLive &cursor_live() const { return live_; }
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }
   WideFill wide() const { return wide_; }
@@ -232,6 +267,8 @@ class Presenter {
   int overlay_mode_ = 0;                                   // P10A
   mutable std::unique_ptr<TextRaster> overlay_raster_;     // P10A
   mutable uint32_t painted_set_ = 0;                       // P10A: frames_set_ at the last paint
+  CursorLive live_;                                        // P10E
+  mutable CursorLive painted_live_;                        // P10E: live_ at the last paint
   // P9C
   bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;
   TextDefect text_defect_ = TextDefect::None;

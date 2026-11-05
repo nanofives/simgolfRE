@@ -44,6 +44,10 @@
 //   font (profile.h; F12 cycles on -> detail -> off; detail adds the frame's phases in ms). --profile-csv <file>: one row per
 //   second of the profiler's line (fps, game frames per second, sim / gfx / terrain / capture / wait ms per game frame, base /
 //   world / layers / text / bands / overlay / blit ms per paint). session.json gets the means (`p10a`).
+//   P10E: --paint-rate display|game (default display with the HUD cursor previews; SG_APP_P10=off: game) the game keeps its own
+//   pace (10.7 frames per second); between its frames the window, ticked at the display's refresh rate, moves the frame's tool
+//   preview to the tile under the current cursor (present.h CursorProj / CursorLive) and repaints only when that place changed.
+//   The preview's colour, height, the tee line and its yards label are the frame's until the next frame. game = repaint per frame.
 //   P10C fix 1: --title-bands on|off (default on with --wide; SG_APP_P10=off: off) back from a session, the title menu's first
 //   frame is posted again with the title's band hint, so its side bands show the edge fill instead of black (host.h title_bands).
 //   P10C fix 2: --hud-writes on|off (default on with the HUD layers; SG_APP_P10=off: off) a HUD panel layer keeps every pixel its
@@ -353,6 +357,7 @@ struct Options {
   bool hud_cursor = true;          // P9E fix 4: --hud-cursor on|off (SG_APP_P9E=off: off)
   std::string fps = "on";          // P10A: --fps on|detail|off (SG_APP_P10=off: off)
   std::string profile_csv;         // P10A: --profile-csv <file>
+  std::string paint_rate = "display";  // P10E: --paint-rate display|game (SG_APP_P10=off: game)
   bool title_bands = true;         // P10C fix 1: --title-bands on|off (SG_APP_P10=off: off)
   bool hud_writes = true;          // P10C fix 2: --hud-writes on|off (SG_APP_P10=off: off)
   bool photo_dir = true;           // P10C fix 3: --photo-dir on|off (SG_APP_P10=off: off)
@@ -1294,6 +1299,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.hud_layers = hud_layers_on(o);                    // P9B
   ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
   ho.cursor_previews = ho.remap && hud_layers_on(o) && o.hud_cursor;  // P9E fix 4
+  ho.cursor_live = ho.cursor_previews && o.paint_rate == "display";   // P10E
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
@@ -1376,10 +1382,68 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
               win.client_w(), win.client_h(), win.dpi(), rec.string().c_str());
   std::fflush(stdout);
   if (o.exit_after) SetTimer(hwnd, 1, o.exit_after, nullptr);
+  // P10E (--paint-rate display): a pacer thread posts kMsgCursorTick at the display's refresh rate (GetDeviceCaps VREFRESH; 60
+  // when it reports 0 / 1 or a value outside 30..360), at most one waiting at a time, so a paint longer than a refresh period
+  // only skips ticks; the sim thread never waits on the window. Each tick moves the frame's preview to the cursor's tile.
+  constexpr UINT kMsgCursorTick = WM_APP + 4;
+  std::atomic<bool> tick_pending{false}, pacer_stop{false};
+  uint64_t ticks = 0, live_moves = 0;
+  std::thread pacer;
+  int pace_hz = 0;
+  if (ho.cursor_live) {
+    HDC dc = GetDC(hwnd);
+    pace_hz = dc ? GetDeviceCaps(dc, VREFRESH) : 0;
+    if (dc) ReleaseDC(hwnd, dc);
+    if (pace_hz < 30 || pace_hz > 360) pace_hz = 60;
+    pacer = std::thread([&tick_pending, &pacer_stop, hwnd, pace_hz]() {
+#ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
+#define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
+#endif
+      HANDLE t = CreateWaitableTimerExW(nullptr, nullptr, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+      if (!t) t = CreateWaitableTimerW(nullptr, FALSE, nullptr);
+      LARGE_INTEGER due;
+      due.QuadPart = -(10000000LL / pace_hz);  // one refresh period, in 100 ns units, relative
+      while (!pacer_stop.load()) {
+        if (t && SetWaitableTimer(t, &due, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
+        else Sleep(1000 / pace_hz);
+        if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+      }
+      if (t) CloseHandle(t);
+    });
+  }
+  auto cursor_tick = [&]() {
+    const CursorProj &P = presenter.world().proj;
+    if (!P.ok) return;
+    int32_t lx = 0, ly = 0, dx = 0, tx = 0, ty = 0;
+    if (!session.live_cursor(lx, ly, dx)) return;  // the sim's read would not take this point: the preview stays where it is
+    // P7 draws no placement preview with the cursor's y at or below 0x1e0 (ML+0xa774, ML+0xb3d0): the preview stays where the
+    // cursor left the course until the next frame removes it
+    if (ly >= 0x1e0) return;
+    if (!proj_tile(P, lx, ly, tx, ty) || tx < 0 || tx >= 50 || ty < 0 || ty >= 50) return;
+    const size_t a = static_cast<size_t>(P.tile_x * 50 + P.tile_y), b = static_cast<size_t>(tx * 50 + ty);
+    if (!P.on[b]) return;
+    Presenter::CursorLive c;
+    c.sx = P.sx[b] - P.sx[a];
+    c.sy = P.sy[b] - P.sy[a];
+    c.dx = dx;
+    c.active = c.sx != 0 || c.sy != 0 || (ho.remap && dx != ho.remap->cursor_dx());
+    if (!c.active) c = Presenter::CursorLive{};
+    if (c != presenter.cursor_live()) {
+      presenter.set_cursor_live(c);
+      win.invalidate();
+      ++live_moves;
+    }
+  };
   Viewport vp = win.viewport();
   MSG m;
   std::vector<uint16_t> px;
   while (GetMessageW(&m, nullptr, 0, 0) > 0) {
+    if (m.hwnd == hwnd && m.message == kMsgCursorTick) {  // P10E
+      tick_pending.store(false);
+      ++ticks;
+      cursor_tick();
+      continue;
+    }
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgPresent) {
       uint32_t index = 0;
       BandFill band = BandFill::Black;
@@ -1393,6 +1457,25 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
         presenter.set_text(std::move(tf));    // P9C
         win.invalidate();
+        if (ho.cursor_live) cursor_tick();     // P10E: the new frame's preview, at once at the cursor's current tile
+        // development (P10E): SG_P10E_LOG=<file>, one line per present with a projection: index, the frame's tile, the sim's last
+        // cursor answer, the window's live point and the tile proj_tile gives for that answer (equal to the frame's tile when the
+        // answer was P6_Cursor's point)
+        static std::FILE *plog = std::getenv("SG_P10E_LOG") ? std::fopen(std::getenv("SG_P10E_LOG"), "w") : nullptr;
+        if (plog && ho.cursor_live && presenter.world().proj.ok && ho.remap) {
+          const CursorProj &P = presenter.world().proj;
+          int32_t ax = 0, ay = 0, lx = 0, ly = 0, ldx = 0, tx = -1, ty = -1;
+          ho.remap->cursor_answer(ax, ay);
+          const Point pa = session.plain_answer();  // the last site-0 read (P6_Cursor's among them)
+          int32_t px2 = -1, py2 = -1;
+          const bool ok2 = proj_tile(P, pa.x, pa.y, px2, py2);
+          const bool lv = session.live_cursor(lx, ly, ldx);
+          const bool ok = proj_tile(P, ax, ay, tx, ty);
+          std::fprintf(plog, "%u\t%d,%d\t%d,%d\t%d\t%d,%d\t%d\t%d,%d\t%s\t%d,%d\t%d,%d\t%s\n", index, P.tile_x, P.tile_y, ax, ay,
+                       lv ? 1 : 0, lx, ly, ok ? 1 : 0, tx, ty, ok && tx == P.tile_x && ty == P.tile_y ? "same" : "differs", pa.x,
+                       pa.y, px2, py2, ok2 && px2 == P.tile_x && py2 == P.tile_y ? "plain_same" : "plain_differs");
+          std::fflush(plog);
+        }
         if (shown && index != LiveSession::kBannerIndex) {
           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
           std::fflush(shown);
@@ -1412,6 +1495,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       session.set_viewport(vp);
     }
   }
+  pacer_stop.store(true);  // P10E
+  if (pacer.joinable()) pacer.join();
   session.request_stop();
   sim.join();
   if (log) std::fclose(log);
@@ -1438,6 +1523,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   s += ",\"p10a\":{\"fps\":\"" + o.fps + "\",\"overlay\":" + std::to_string(presenter.overlay()) +  // P10A
        ",\"profile_csv\":\"" + jesc(o.profile_csv) + "\",\"profiler\":" + Profiler::get().summary_json() + "}";
+  s += ",\"p10e\":{\"paint_rate\":\"" + o.paint_rate + "\",\"live\":" + std::to_string(ho.cursor_live ? 1 : 0) +  // P10E
+       ",\"hz\":" + std::to_string(pace_hz) + ",\"ticks\":" + std::to_string(ticks) + ",\"moves\":" + std::to_string(live_moves) + "}";
   Profiler::get().close_csv();
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
@@ -2685,6 +2772,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off" && v != "detail")) return false;
       o.fps = v;
     }
+    else if (a == "--paint-rate") {  // P10E
+      if (!val(v) || (v != "display" && v != "game")) return false;
+      o.paint_rate = v;
+    }
     else if (a == "--profile-csv") {  // P10A
       if (!val(o.profile_csv)) return false;
     }
@@ -2818,6 +2909,7 @@ int main(int argc, char **argv) {
       o.fps = "off";
       o.text_peel = "plain";
       o.title_bands = o.hud_writes = o.photo_dir = o.hud_textbox = false;
+      o.paint_rate = "game";  // P10E
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

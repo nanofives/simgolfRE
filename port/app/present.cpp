@@ -172,6 +172,11 @@ int32_t PanelRemap::cursor_dx() const {
   std::lock_guard<std::mutex> lk(mu_);
   return on_ && layered_ ? cursor_dx_ : 0;
 }
+void PanelRemap::cursor_answer(int32_t &lx, int32_t &ly) const {  // P10E
+  std::lock_guard<std::mutex> lk(mu_);
+  lx = cursor_lx_;
+  ly = cursor_ly_;
+}
 uint64_t PanelRemap::remapped() const {
   std::lock_guard<std::mutex> lk(mu_);
   return remapped_;
@@ -188,7 +193,12 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
   bool v = false;
   map(x, y, v);
 }
-void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const {
+void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const { map_impl(x, y, vacated, true); }
+void PanelRemap::peek(int32_t &x, int32_t &y) const {  // P10E
+  bool v = false;
+  map_impl(x, y, v, false);
+}
+void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count) const {
   vacated = false;
   std::lock_guard<std::mutex> lk(mu_);
   if (!on_ || vp_.client_w <= 0 || vp_.client_h <= 0) return;
@@ -206,7 +216,7 @@ void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const {
       if (!l.cover[static_cast<size_t>(ly - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(lx - l.x0)]) continue;
       if (dx != 0) {
         x = sx;
-        ++remapped_;
+        if (count) ++remapped_;
         return;
       }
       break;  // a centred layer's pixel: the point stays (P9E fix 3: and may still be a vacated place, below)
@@ -233,7 +243,7 @@ void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const {
     if (lx < p.x0 || lx >= p.x1 || ly < p.y0 || ly >= p.y1) continue;
     if (mask_[static_cast<size_t>(ly) * kLogicalW + static_cast<size_t>(lx)]) continue;  // the world shows there
     x = sx;
-    ++remapped_;
+    if (count) ++remapped_;
     return;
   }
   // P9E fix 3: not remapped, and its 800-space point inside a moved panel rectangle: a vacated place
@@ -252,6 +262,7 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   frame_ = px;
   band_ = band;
   world_ = WorldImage{};  // P8B: a frame set without its world layer has none
+  live_ = CursorLive{};  // P10E: the new frame's previews are at its own cursor tile
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
   return true;
@@ -684,9 +695,19 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   const bool cur = W.cur_mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH && W.cur_px.size() == W.px.size() &&
                    W.cur_cov.size() == W.px.size() && W.cur_box[2] > W.cur_box[0];
   const bool c2 = f.cursor2d.size() == static_cast<size_t>(kLogicalW) * kLogicalH;  // the frame's own 2D preview pixels
-  const int32_t cdx = (cur || c2) && anchor && remap_ ? remap_->cursor_dx() : 0;
+  // P10E: between game frames the previews follow the cursor's tile (present.h CursorLive): the live answer's client offset
+  // replaces the sim's last one, and (shx, shy) client pixels move them by the tile's 800-space step
+  const bool live = live_.active && (cur || c2);
+  const int32_t cdx = (cur || c2) && anchor && remap_ ? (live ? live_.dx : remap_->cursor_dx()) : 0;
+  auto scale_round = [](int32_t v, int32_t n, int32_t d) {
+    const int64_t p = static_cast<int64_t>(v) * n;
+    return static_cast<int32_t>(p >= 0 ? (p + d / 2) / d : -((-p + d / 2) / d));
+  };
+  const int32_t shx = live ? scale_round(live_.sx, vp.client_w, kLogicalW) : 0;
+  const int32_t shy = live ? scale_round(live_.sy, vp.client_h, kLogicalH) : 0;
+  const bool c2move = c2 && (cdx != 0 || shx != 0 || shy != 0);  // the 2D preview pixels drawn apart (their own pass)
   auto c2_at = [&](int32_t x, int32_t y) {
-    return c2 && cdx != 0 && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH &&
+    return c2move && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH &&
            f.cursor2d[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
   };
   auto cur_at = [&](int32_t x, int32_t y) {
@@ -705,17 +726,18 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   }
   auto draw_cursor = [&]() {  // nearest world pixels, the plane's box only
     if (!cur || vp.client_w <= 0 || vp.client_h <= 0 || W.fw <= 0 || W.ph <= 0) return;
-    const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + cdx + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
-    const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + cdx + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
-    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
-    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 2);
+    const int32_t cox = vp.origin_x + cdx + shx, coy = vp.origin_y + shy;  // P10E: (shx, shy) = 0 outside a live move
+    const int32_t cx0 = std::max<int32_t>(0, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
+    const int32_t cx1 = std::min<int32_t>(cw, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
+    const int32_t cy0 = std::max<int32_t>(0, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
+    const int32_t cy1 = std::min<int32_t>(ch, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 2);
     for (int32_t y = cy0; y < cy1; ++y) {
-      const int64_t dy = static_cast<int64_t>(y - vp.origin_y) * W.ph;
+      const int64_t dy = static_cast<int64_t>(y - coy) * W.ph;
       const int32_t wy = static_cast<int32_t>(dy >= 0 ? dy / vp.client_h : -((-dy + vp.client_h - 1) / vp.client_h));
       if (wy < 0 || wy >= W.ph) continue;
       uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
       for (int32_t x = cx0; x < cx1; ++x) {
-        const int64_t dxw = static_cast<int64_t>(x - cdx - vp.origin_x) * W.fw;
+        const int64_t dxw = static_cast<int64_t>(x - cox) * W.fw;
         const int32_t wx = W.ox + static_cast<int32_t>(dxw >= 0 ? dxw / vp.client_w : -((-dxw + vp.client_w - 1) / vp.client_w));
         if (wx < 0 || wx >= W.pw) continue;
         const size_t j = static_cast<size_t>(wy) * static_cast<size_t>(W.pw) + static_cast<size_t>(wx);
@@ -791,11 +813,12 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     const bool split = pieces && l.popups;
     // P9E fix 4: a last pass (cpass) draws a centred layer's 2D preview pixels (f.cursor2d) at the cursor's offset
     const int32_t npass = split ? static_cast<int32_t>(f.pieces.size()) : 0;
-    const bool cmove = c2 && cdx != 0 && l.id == portsim::kGfxLayerCentred;
+    const bool cmove = c2move && l.id == portsim::kGfxLayerCentred;  // P10E: also when only the live move shifts them
     const int32_t cpass = cmove ? npass : -2;
     for (int32_t pass = -1; pass < npass + (cmove ? 1 : 0); ++pass) {
     if (pass >= 0 && pass != cpass && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
-    const int32_t dx = pass == cpass ? cdx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
+    const int32_t dx = pass == cpass ? cdx + shx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
+    const int32_t dyp = pass == cpass ? shy : 0;  // P10E: the live move's rows
     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
       const portsim::GfxLayerPx *p = l.at(x, y);
       if (p && split && moved_piece(l, x, y) != (pass == cpass ? -1 : pass)) return nullptr;
@@ -806,8 +829,8 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
     const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
     const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
-    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(l.y0 - 1) * vp.client_h / kLogicalH) - 1);
-    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(l.y1 + 1) * vp.client_h / kLogicalH) + 1);
+    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + dyp + static_cast<int32_t>(static_cast<int64_t>(l.y0 - 1) * vp.client_h / kLogicalH) - 1);
+    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + dyp + static_cast<int32_t>(static_cast<int64_t>(l.y1 + 1) * vp.client_h / kLogicalH) + 1);
     // P10A: each column's 800-space position (lpos, floor256) once per pass instead of per pixel
     std::vector<int32_t> &cl = cl_tab_;
     cl.resize(static_cast<size_t>(std::max<int32_t>(0, cx1 - cx0)) * 2);
@@ -819,7 +842,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     }
     RowPool::get().run(cy0, cy1, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
       for (int32_t y = ya; y < yb; ++y) {
-        const int64_t sy = lpos(y, vp.origin_y, vp.client_h, kLogicalH);
+        const int64_t sy = lpos(y - dyp, vp.origin_y, vp.client_h, kLogicalH);
         const int32_t ly0 = floor256(sy);
         const uint32_t fy = static_cast<uint32_t>(sy - static_cast<int64_t>(ly0) * 256);
         uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
@@ -1085,8 +1108,11 @@ void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
     SetDIBitsToDevice(static_cast<HDC>(hdc), 0, 0, static_cast<DWORD>(cw), static_cast<DWORD>(ch), 0, 0, 0,
                       static_cast<UINT>(ch), scratch_.data(), &bi, DIB_RGB_COLORS);
   }
-  Profiler::get().painted(frames_set_ != painted_set_, portsim::perf_now_ns() - t0);  // P10A
+  // P10E: a paint that showed the live preview at a new place (no new frame) counts as a cursor paint
+  const bool fresh = frames_set_ != painted_set_;
+  Profiler::get().painted(fresh, portsim::perf_now_ns() - t0, !fresh && live_ != painted_live_ && live_.active);  // P10A
   painted_set_ = frames_set_;
+  painted_live_ = live_;
 }
 #endif
 

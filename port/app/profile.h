@@ -38,6 +38,7 @@ struct ProfLine {
   uint32_t frames = 0;      // game frames (frame heads)
   uint32_t shown = 0;       // paints that showed a new frame
   uint32_t paints = 0;      // paints
+  uint32_t cursor = 0;      // P10E: paints that moved the tool preview to the cursor's tile between game frames
   double fps = 0, sim_fps = 0;
   double frame_ms = 0, frame_max_ms = 0;  // game frame length (head to head): mean, max
   double work_ms = 0;                     // game frame length without the wait: mean
@@ -67,8 +68,9 @@ class Profiler {
   void close_csv();
   // sim thread: a frame head (closes the previous game frame)
   void frame_head();
-  // window thread: a paint ended (new_frame: it showed a frame the previous paint did not), its length
-  void painted(bool new_frame, int64_t ns);
+  // window thread: a paint ended (new_frame: it showed a frame the previous paint did not), its length; P10E: cursor = it showed
+  // the live tool preview at a new place without a new frame
+  void painted(bool new_frame, int64_t ns, bool cursor = false);
   ProfLine last() const;
   uint64_t lines() const;
   // the overlay's font (the game's own face, taken by the host once the game created its fonts; empty until then)
@@ -88,7 +90,7 @@ class Profiler {
   int64_t perf_prev_[4] = {};
   int64_t phase_prev_[kPhases] = {};
   // the open line
-  uint32_t frames_ = 0, shown_ = 0, paints_ = 0;
+  uint32_t frames_ = 0, shown_ = 0, paints_ = 0, cursor_ = 0;  // P10E: cursor_
   double sum_[kPhases] = {};
   double frame_sum_ = 0, frame_max_ = 0, work_sum_ = 0, paint_sum_ = 0, paint_max_ = 0;
   ProfLine last_;
@@ -96,6 +98,7 @@ class Profiler {
   // the summary
   uint64_t sum_lines_ = 0;
   double tot_fps_ = 0, tot_sim_fps_ = 0, tot_frame_ = 0, tot_paint_ = 0, tot_ms_[kPhases] = {};
+  double tot_paints_ = 0, tot_cursor_ = 0;  // P10E: paints and cursor paints per second
   std::string face_;
   uint32_t style_ = 0;
 };
