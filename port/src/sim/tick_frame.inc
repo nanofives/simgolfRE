@@ -8840,7 +8840,10 @@ int H2_Snd18() { return cc("playSound", 0x18, 0x64, 0, 0, 0); }   // playSound(0
 // tool, [f_w_4c2848+0xc] = -1) and the button word [g_rootInput+0x10] = 1. So the price is today's, canAfford may refuse it, and
 // the build is journalled again (with the step's press, the redo list kept). A kRetile exit runs rebuildTileCoverage as the
 // frame dispatcher's ML+0x664 does. The frame block, the tool words and the button word are put back afterwards, so the rest of
-// this frame runs as it would have.
+// this frame runs as it would have. Fix 3: an edit made with an object tool ([f_w_4c2848+0xc] != -1: the placed objects and the
+// tile tools H2_Build handles, whose setGrids codes are 0x80 + tool) is redone through H2_Build then H2_Remove, as the world
+// dispatch runs a click with that tool (ML+0xfd9e..ML+0x10902), with the variant [unk_0056a514] it was made with; a redone object
+// gets the orientation it had (stampCourseTiles takes [g_ui_5a34e4+0xc] & 3).
 void P11_Redo(u32 F) {
     std::vector<CourseRedoItem> items;
     uint32_t press = 0;
@@ -8850,17 +8853,27 @@ void P11_Redo(u32 F) {
     std::memcpy(saved.data(), ctx.mem.at(F, kSlots), kSlots);
     const int tool0 = G32(GS(f_w_4c2848)), tool3 = G32((GS(f_w_4c2848) + 12)), button = G32((GS(g_rootInput) + 16));
     course_redo_begin(ctx, press);
+    const int variant = G32(GS(unk_0056a514));
     for (const CourseRedoItem &it : items) {
         FD(0x1c) = it.x;
         FD(0x24) = it.y;
         G32(GS(f_w_4c2848)) = it.tool;
-        G32((GS(f_w_4c2848) + 12)) = -1;
+        G32((GS(f_w_4c2848) + 12)) = it.tool3;
+        G32(GS(unk_0056a514)) = it.variant;
         G32((GS(g_rootInput) + 16)) = 1;
-        if (H2_Terrain(F) == kRetile) cc("rebuildTileCoverage");
+        course_redo_orientation(ctx, it.orientation);
+        if (it.tool3 == -1) {
+            if (H2_Terrain(F) == kRetile) cc("rebuildTileCoverage");
+        } else {  // fix 3: an object tool's click, as the world dispatch runs it (ML+0xfd9e..ML+0x10902)
+            H2_Build(F, it.tool3);
+            G32((GS(g_rootInput) + 16)) = 1;
+            H2_Remove(F);
+        }
     }
     course_redo_end(ctx);
     G32(GS(f_w_4c2848)) = tool0;
     G32((GS(f_w_4c2848) + 12)) = tool3;
+    G32(GS(unk_0056a514)) = variant;
     G32((GS(g_rootInput) + 16)) = button;
     std::memcpy(ctx.mem.at(F, kSlots), saved.data(), kSlots);
 }
@@ -9022,6 +9035,9 @@ void H2_Build(u32 F, int eax) {
     const int ebp = -1;                               // ML+0xfd93
     int ebx, esi, edi, ecx, rec, x, y;
     u32 i;
+    // P11D fix 3 (mainLoop.courseUndo = 0): what the journal keeps of a placed object (read only by course_undo_object)
+    int p11_rec = -1, p11_ledger = 0;
+    bool p11_free = false, p11_replaced = false;
     if (eax == 4 && G32(GS(unk_0056a514)) == ebp) {         // ML+0xfd9e / ML+0xfda3
         G32((GS(f_w_4c2848) + 12)) = ebp;                        // ML+0xfdab
         return;                                       // ML+0xfdb1 -> ML+0x106bc
@@ -9168,6 +9184,8 @@ void H2_Build(u32 F, int eax) {
     }
     case 3: {   // ML+0x102cf (t == 15)
         int r = cc("stampCourseTiles", FD(0x1c), FD(0x24), 0xf, 0x60);   // ML+0x102dd stampCourseTiles
+        p11_rec = r;
+        p11_replaced = true;  // P11D: the clubhouse is never undone (removing it sets g_flags 0x800, the no-clubhouse state)
         u32 a = ((u32)r << 4) + (GS(g_placed_objects) + 7);          // ML+0x102e2 / ML+0x102ee
         GU8(a) = (u8)(GU8(a) | 0x40);                 // ML+0x102e8..ML+0x102f7
         G32(GS(g_flags)) = (int)(GU32(GS(g_flags)) & ~0x800u);   // ML+0x102f9..ML+0x10301
@@ -9190,11 +9208,13 @@ void H2_Build(u32 F, int eax) {
             for (u32 p = GS(g_placed_objects); p < GS(g_sprites58ccb8); p += 0x10, k++) {   // ML+0x10373..ML+0x10398
                 if ((int)G16(p) == edi) {             // ML+0x10378 / ML+0x1037b
                     cc("clearObjectFootprint", k);                // ML+0x10380 clearObjectFootprint
+                    p11_replaced = true;  // P11D: an undo could not bring the removed one back
                     edi = G32((GS(f_w_4c2848) + 12));            // ML+0x10385
                 }
             }
         }
         rec = cc("stampCourseTiles", FD(0x1c), FD(0x24), edi, 0);   // ML+0x103a7 stampCourseTiles (ebp = result)
+        p11_rec = rec;
         cc("pushTripleEntry", FD(0x1c), FD(0x24), (int)(GU32((GS(f_w_4c2848) + 12)) | 0x100u));   // ML+0x103b6..ML+0x103c1 pushTripleEntry
         edi = G32((GS(f_w_4c2848) + 12));                        // ML+0x103c6
         if (edi == 2) {                               // ML+0x103cf
@@ -9217,6 +9237,7 @@ void H2_Build(u32 F, int eax) {
             u32 bit = 1u << ((u32)ecx & 31u);         // ML+0x10470 / ML+0x10475
             u32 m = GU32(GS(g_freeUnlockMask));                 // ML+0x10477
             if (bit & m) {                            // ML+0x1047f / ML+0x10481
+                p11_free = true;
                 ebx = 0;                              // ML+0x10489
                 G32(GS(g_freeUnlockMask)) = (int)(m & ~bit);    // ML+0x10487 / ML+0x1048b / ML+0x1048d
             }
@@ -9259,6 +9280,7 @@ L_faea:
     i = H2_cell(esi, FD(0x24));
     H2_TWH(i) = (u8)(H2_TWH(i) & 0xe7);               // ML+0x10587
 L_fb4f:
+    p11_ledger = ebx;
     G32((GS(g_holes) + 10376)) = G32((GS(g_holes) + 10376)) + ebx;          // ML+0x1058f..ML+0x105a3
     {
         int rem = H2_Rem100();                        // ML+0x1059a / ML+0x105a9 / ML+0x105aa
@@ -9276,6 +9298,8 @@ L_fb4f:
         esi = FD(0x1c);                               // ML+0x1060f
     }
     G32(GS(g_cash_div100)) = G32(GS(g_cash_div100)) - ebx;          // ML+0x10613..ML+0x1061e
+    if (!SG_DEFECT(g_defect_course_undo) && p11_rec >= 0)   // P11D fix 3: the object and what its placement charged
+        course_undo_object(ctx, FD(0x1c), FD(0x24), p11_rec, ebx, p11_ledger, p11_free, !p11_replaced);
     if (edi <= 4) {                                   // ML+0x1061b / ML+0x10624
         int h = cc("nearestHole", esi, FD(0x24));        // ML+0x1062c nearestHole
         cc("pointsPopup", H2_neg(ebx), H2_W(FD(0x1c)), H2_W(FD(0x24)), h);   // ML+0x10650 pointsPopup

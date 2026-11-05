@@ -77,18 +77,28 @@ void course_undo_note(Ctx &ctx, int32_t x, int32_t y, int32_t old_code, int32_t 
                       int32_t new_refund);
 // a paint the original keeps no undo record of (mainLoop ML+0x111da: the old type was a tee or a green): an entry that refuses
 void course_undo_unrecorded(Ctx &ctx, int32_t x, int32_t y);
+// fix 3: H2_Build placed object record `rec` at (x, y) and charged `price` to the cash and `ledger` to the facilities row and the
+// total dword (free_unlock: it used a free unlock bit); undoable false: the entry refuses (the clubhouse, a placement that
+// removed earlier objects of its type). A redone object gets the orientation it had (course_redo_orientation)
+void course_undo_object(Ctx &ctx, int32_t x, int32_t y, int32_t rec, int32_t price, int32_t ledger, bool free_unlock,
+                        bool undoable);
 void course_undo_press(Ctx &ctx);  // onPoint (a left press): the next edits form a new undo step
 void course_undo_reset(Ctx &ctx);  // a course was set up or loaded: the journal and the redo list are emptied
 // the frame body's click point: takes a pending request (switch 0 only). 0 none, 1 an undo (run here), 2 a redo: the caller
 // runs the game's build path on course_redo_take's tiles between course_redo_begin and course_redo_end (P11D fix 2)
 int32_t course_undo_step(Ctx &ctx);
 struct CourseRedoItem {
-  int32_t x, y, tool;  // the tile and the terrain tool [f_w_4c2848] its edit was made with
+  int32_t x, y;
+  int32_t tool;         // the terrain tool [f_w_4c2848] the edit was made with
+  int32_t tool3;        // the object tool [f_w_4c2848 + 0xc] (-1: a terrain edit, H2_Terrain; else H2_Build)
+  int32_t variant;      // [unk_0056a514] then
+  int32_t orientation;  // a placed object's orientation (-1: a tile edit)
 };
 // the newest undone step's tiles that still hold what the undo left there, in the order they were built; the step leaves the
 // redo list. false (and the refusal sound) when the list is empty; the refusal sound also when a tile was skipped
 bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &press);
 void course_redo_begin(Ctx &ctx, uint32_t press);  // the journal entries the redo makes keep the step's press, the redo list stays
+void course_redo_orientation(Ctx &ctx, int32_t orientation);  // the next object the redo places gets it (-1 none)
 void course_redo_end(Ctx &ctx);
 // maps the block (width 800) when the context has none; true when it is mapped afterwards
 bool view_map(Ctx &ctx);

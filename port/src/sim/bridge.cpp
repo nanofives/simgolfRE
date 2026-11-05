@@ -84,35 +84,46 @@ bool view_click_vacated(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPo
 // puts the previous content back and refunds the price. mainLoop.courseUndo = 0 orders those records: every setGrids call is
 // journalled (with the code / refund it overwrote), the edits of one left press form a step, and an undo request runs
 // demolishObject on each tile of the newest step (newest first), then gives the tile the code / refund it had before that edit,
-// so an older step (or the game's own right-click undo) finds its record again. Journal and redo list: view block +0x100..
+// so an older step (or the game's own right-click undo) finds its record again. Fix 3: a placed object (H2_Build's
+// stampCourseTiles record) is journalled with what its placement charged; its undo removes it as the bulldozer does
+// (clearObjectFootprint, no popup) and gives back exactly that charge. Journal and redo list: view block +0x100..
 int g_defect_course_undo = 1;
 namespace {
-// +0 journal entries, +4 redo entries, +8 the left-press counter, +12 1 while a redo builds, +16 the redone step's press
+// +0 journal entries, +4 redo entries, +8 the left-press counter, +12 1 while a redo builds, +16 the redone step's press,
+// +20 the orientation a redone object gets (-1: the placement's own)
 constexpr uint32_t kUndoHead = kPortViewVa + 0x100u;
 constexpr uint32_t kUndoJournal = kPortViewVa + 0x200u;
 constexpr uint32_t kUndoRedo = kPortViewVa + 0x8000u;
-constexpr uint32_t kUndoCap = 2000u;  // 16 bytes each: 0x200 + 0x7d00 < 0x8000, 0x8000 + 0x7d00 < kPortViewSize
-// entry: +0 x, +1 y, +2 old code, +3 new code, +4 old refund, +5 new refund, +6 the tile type after the edit, +7 kind
-// (0 an edit setGrids recorded, 1 a paint the original kept no record of), +8 the terrain tool [f_w_4c2848], +12 the press
+constexpr uint32_t kUndoCap = 1000u;  // 32 bytes each: 0x200 + 0x7d00 < 0x8000, 0x8000 + 0x7d00 < kPortViewSize
+// kinds: a tile edit setGrids recorded, a paint the original keeps no record of (refused), a placed object, an object placement
+// that cannot be undone (refused: the clubhouse, a placement that removed earlier objects of its type, a failed record)
+enum : uint8_t { kTileEdit = 0, kTileUnrecorded = 1, kObject = 2, kObjectRefused = 3 };
+// tile edit: code_old / code_new / refund_old / refund_new the grids before / after, type_new the tile type after the edit.
+// object: code_new the g_placed_objects record, code_old its orientation (set by the undo), refund_old 1 when the placement used
+// a free unlock (g_freeUnlockMask bit `variant`), price the cash it charged, ledger its facilities / total charge.
 struct UndoEntry {
   uint8_t x, y, code_old, code_new;
   int8_t refund_old, refund_new, type_new;
   uint8_t kind;
-  int32_t tool;
+  int32_t tool;     // [f_w_4c2848] (terrain tool)
   uint32_t press;
+  int32_t tool3;    // [f_w_4c2848 + 0xc] (object tool, -1 none)
+  int32_t variant;  // [unk_0056a514] (the selected variant several tools read)
+  int32_t price;
+  int32_t ledger;
 };
-static_assert(sizeof(UndoEntry) == 16, "UndoEntry");
+static_assert(sizeof(UndoEntry) == 32, "UndoEntry");
 uint32_t undo_word(Ctx &ctx, uint32_t off) { return ctx.mem.load<uint32_t>(kUndoHead + off); }
 void set_undo_word(Ctx &ctx, uint32_t off, uint32_t v) { ctx.mem.store<uint32_t>(kUndoHead + off, v); }
 UndoEntry undo_entry(Ctx &ctx, uint32_t base, uint32_t i) {
   UndoEntry e;
   uint8_t *p = reinterpret_cast<uint8_t *>(&e);
-  for (uint32_t k = 0; k < sizeof e; ++k) p[k] = ctx.mem.load<uint8_t>(base + i * 16u + k);
+  for (uint32_t k = 0; k < sizeof e; ++k) p[k] = ctx.mem.load<uint8_t>(base + i * 32u + k);
   return e;
 }
 void set_undo_entry(Ctx &ctx, uint32_t base, uint32_t i, const UndoEntry &e) {
   const uint8_t *p = reinterpret_cast<const uint8_t *>(&e);
-  for (uint32_t k = 0; k < sizeof e; ++k) ctx.mem.store<uint8_t>(base + i * 16u + k, p[k]);
+  for (uint32_t k = 0; k < sizeof e; ++k) ctx.mem.store<uint8_t>(base + i * 32u + k, p[k]);
 }
 // appends to a list of up to kUndoCap entries (count word `off`); a full list loses its oldest entry
 void undo_push(Ctx &ctx, uint32_t base, uint32_t off, const UndoEntry &e) {
@@ -126,33 +137,74 @@ void undo_push(Ctx &ctx, uint32_t base, uint32_t off, const UndoEntry &e) {
   set_undo_word(ctx, off, n + 1);
 }
 bool undo_on(Ctx &ctx) { return !SG_DEFECT(g_defect_course_undo) && view_map(ctx); }
-void undo_note(Ctx &ctx, int32_t x, int32_t y, uint8_t kind, int32_t oc, int32_t orf, int32_t nc, int32_t nrf) {
-  if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
-  GameState &gs = ctx.gs();
+UndoEntry undo_base(Ctx &ctx, int32_t x, int32_t y, uint8_t kind) {
+  const GameState &gs = ctx.gs();
   UndoEntry e{};
   e.x = static_cast<uint8_t>(x);
   e.y = static_cast<uint8_t>(y);
-  e.code_old = static_cast<uint8_t>(oc);
-  e.code_new = static_cast<uint8_t>(nc);
-  e.refund_old = static_cast<int8_t>(orf);
-  e.refund_new = static_cast<int8_t>(nrf);
-  e.type_new = gs.g_tileType[x * 50 + y];
   e.kind = kind;
+  e.type_new = gs.g_tileType[x * 50 + y];
   e.tool = gs.f_w_4c2848[0];
+  e.tool3 = gs.f_w_4c2848[3];
+  e.variant = gs.unk_0056a514;
+  return e;
+}
+void undo_append(Ctx &ctx, UndoEntry e) {
   const bool redo = undo_word(ctx, 12) != 0;
   e.press = redo ? undo_word(ctx, 16) : undo_word(ctx, 8);
   undo_push(ctx, kUndoJournal, 0, e);
   if (!redo) set_undo_word(ctx, 4, 0);  // a new edit ends the redo list (a redo's own edits keep it)
 }
+void undo_note(Ctx &ctx, int32_t x, int32_t y, uint8_t kind, int32_t oc, int32_t orf, int32_t nc, int32_t nrf) {
+  if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
+  UndoEntry e = undo_base(ctx, x, y, kind);
+  e.code_old = static_cast<uint8_t>(oc);
+  e.code_new = static_cast<uint8_t>(nc);
+  e.refund_old = static_cast<int8_t>(orf);
+  e.refund_new = static_cast<int8_t>(nrf);
+  undo_append(ctx, e);
+}
+bool tile_free_of_objects(Ctx &ctx, int32_t x, int32_t y) {
+  const GameState &gs = ctx.gs();
+  if (gs.g_tileFlags[x * 50 + y] & ((1u << 10) | (1u << 15))) return false;
+  return call_peer(ctx, "tileBlocked", {u32(x), u32(y)}).eax == 0;
+}
 // the tile still holds what the entry's edit left there: same code, refund and type, no placed object (demolishObject would
 // ask to demolish the object instead), not the refusal bit 0x8000, not blocked
 bool undo_entry_live(Ctx &ctx, const UndoEntry &e) {
-  if (e.kind != 0) return false;
   const GameState &gs = ctx.gs();
   const int32_t i = e.x * 50 + e.y;
   if (gs.g_tileBuildCode[i] != e.code_new || gs.g_tileRefund[i] != e.refund_new || gs.g_tileType[i] != e.type_new) return false;
-  if (gs.g_tileFlags[i] & ((1u << 10) | (1u << 15))) return false;
-  return call_peer(ctx, "tileBlocked", {u32(e.x), u32(e.y)}).eax == 0;
+  return tile_free_of_objects(ctx, e.x, e.y);
+}
+// the object the entry placed is still its record: same type at the same tile
+bool undo_object_live(Ctx &ctx, const UndoEntry &e) {
+  if (e.code_new == 0) return false;  // record 0: H2_Remove never removes it either (ML+0x10732)
+  const PlacedObject &o = ctx.gs().g_placed_objects[e.code_new];
+  return o.type == e.tool3 && o.x == e.x && o.y == e.y;
+}
+// fix 3: the object's removal with the exact charge back. clearObjectFootprint is the bulldozer's removal (H2_Remove ML+0x108f0);
+// its own lot refund (value / 50 + rateLot / 2 into the cash and the home-sites row) is taken back, then the placement's charge is
+// reversed: the cash gets `price` (what H2_Build's ML+0x10613 took), the facilities row and the total dword g_holes+0x2888 the
+// `ledger` charge (ML+0x1058f / ML+0x105af), and a lot's home-sites row loses what ML+0x10607 added (ledger - price: the two rateLot
+// calls ML+0x105c2 / ML+0x105f0 read the same tile with nothing written between them but that row)
+void undo_object(Ctx &ctx, UndoEntry &e) {
+  GameState &gs = ctx.gs();
+  const int32_t row = gs.g_year % 100;
+  const int32_t cash0 = gs.g_cash_div100;
+  const int16_t home0 = gs.g_financeYears[row].home_sites;
+  e.code_old = gs.g_placed_objects[e.code_new].orientation;
+  call_peer(ctx, "clearObjectFootprint", {u32(e.code_new)});
+  gs.g_cash_div100 = add32(cash0, e.price);
+  gs.g_financeYears[row].home_sites = home0;
+  gs.g_financeYears[row].facilities = static_cast<int16_t>(gs.g_financeYears[row].facilities + e.ledger);
+  if (e.tool3 == 5) gs.g_financeYears[row].home_sites = static_cast<int16_t>(home0 - (e.ledger - e.price));
+  const uint32_t total = state_va(ctx, &GameState::g_holes) + 0x2888u;
+  ctx.mem.store<int32_t>(total, sub32(ctx.mem.load<int32_t>(total), e.ledger));
+  if (e.refund_old) gs.g_freeUnlockMask |= 1u << (static_cast<uint32_t>(e.variant) & 31u);
+  points_popup(ctx, e.price, add32(shl32(e.x, 10), 0x200), add32(shl32(e.y, 10), 0x200), -1);
+  call_peer(ctx, "rebuildTileCoverage", {});  // H2_Remove's ending (ML+0x108f8 / ML+0x108fd)
+  call_peer(ctx, "rebuildHeightfield", {});
 }
 void course_undo(Ctx &ctx) {
   uint32_t n = undo_word(ctx, 0);
@@ -164,11 +216,16 @@ void course_undo(Ctx &ctx) {
   const uint32_t press = undo_entry(ctx, kUndoJournal, n - 1).press;
   bool refused = false;
   while (n > 0) {
-    const UndoEntry e = undo_entry(ctx, kUndoJournal, n - 1);
+    UndoEntry e = undo_entry(ctx, kUndoJournal, n - 1);
     if (e.press != press) break;
     --n;
     set_undo_word(ctx, 0, n);
-    if (!undo_entry_live(ctx, e)) {
+    if (e.kind == kObject && undo_object_live(ctx, e)) {
+      undo_object(ctx, e);
+      undo_push(ctx, kUndoRedo, 4, e);
+      continue;
+    }
+    if (e.kind != kTileEdit || !undo_entry_live(ctx, e)) {
       refused = true;
       continue;
     }
@@ -177,9 +234,8 @@ void course_undo(Ctx &ctx) {
     const int32_t i = e.x * 50 + e.y;
     gs.g_tileBuildCode[i] = e.code_old;
     gs.g_tileRefund[i] = e.refund_old;
-    UndoEntry r = e;
-    r.type_new = gs.g_tileType[i];  // the redo list keeps the type the undo left
-    undo_push(ctx, kUndoRedo, 4, r);
+    e.type_new = gs.g_tileType[i];  // the redo list keeps the type the undo left
+    undo_push(ctx, kUndoRedo, 4, e);
   }
   if (refused) play_sound(ctx, 0x18, 100, 0, 0, 0);
 }
@@ -187,14 +243,28 @@ void course_undo(Ctx &ctx) {
 
 void course_undo_note(Ctx &ctx, int32_t x, int32_t y, int32_t old_code, int32_t old_refund, int32_t new_code,
                       int32_t new_refund) {
-  if (undo_on(ctx)) undo_note(ctx, x, y, 0, old_code, old_refund, new_code, new_refund);
+  if (undo_on(ctx)) undo_note(ctx, x, y, kTileEdit, old_code, old_refund, new_code, new_refund);
 }
 void course_undo_unrecorded(Ctx &ctx, int32_t x, int32_t y) {
   if (!undo_on(ctx)) return;
-  const int32_t i = x * 50 + y;
   if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
+  const int32_t i = x * 50 + y;
   const GameState &gs = ctx.gs();
-  undo_note(ctx, x, y, 1, gs.g_tileBuildCode[i], gs.g_tileRefund[i], gs.g_tileBuildCode[i], gs.g_tileRefund[i]);
+  undo_note(ctx, x, y, kTileUnrecorded, gs.g_tileBuildCode[i], gs.g_tileRefund[i], gs.g_tileBuildCode[i], gs.g_tileRefund[i]);
+}
+void course_undo_object(Ctx &ctx, int32_t x, int32_t y, int32_t rec, int32_t price, int32_t ledger, bool free_unlock,
+                        bool undoable) {
+  if (!undo_on(ctx)) return;
+  if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
+  UndoEntry e = undo_base(ctx, x, y, undoable && rec > 0 && rec < 256 ? kObject : kObjectRefused);
+  e.code_new = static_cast<uint8_t>(rec);
+  e.refund_old = free_unlock ? 1 : 0;
+  e.price = price;
+  e.ledger = ledger;
+  const int32_t orient = static_cast<int32_t>(undo_word(ctx, 20));
+  if (undo_word(ctx, 12) != 0 && orient >= 0 && e.kind == kObject)  // a redone object gets the orientation it had (fix 3)
+    ctx.gs().g_placed_objects[rec].orientation = static_cast<uint8_t>(orient);
+  undo_append(ctx, e);
 }
 void course_undo_press(Ctx &ctx) {
   if (undo_on(ctx)) set_undo_word(ctx, 8, undo_word(ctx, 8) + 1);
@@ -214,7 +284,8 @@ int32_t course_undo_step(Ctx &ctx) {
 }
 // P11D fix 2: the redo list's newest step. The undo pushed a step's entries newest first, so popping gives them in build order.
 // A tile is redone only when it still holds what the undo left: the edit's old code / refund (course_undo restored them), the
-// type the undo left (kept in type_new), no object, no 0x8000 bit, not blocked
+// type the undo left (kept in type_new), no object, no 0x8000 bit, not blocked. An object is placed again wherever the game's
+// own placement test (evalPlacementArea in H2_Build) allows it.
 bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &press) {
   out.clear();
   if (!undo_on(ctx)) return false;
@@ -233,14 +304,15 @@ bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &pres
     set_undo_word(ctx, 4, n);
     const GameState &gs = ctx.gs();
     const int32_t i = e.x * 50 + e.y;
-    const bool live = e.kind == 0 && gs.g_tileBuildCode[i] == e.code_old && gs.g_tileRefund[i] == e.refund_old &&
-                      gs.g_tileType[i] == e.type_new && !(gs.g_tileFlags[i] & ((1u << 10) | (1u << 15))) &&
-                      call_peer(ctx, "tileBlocked", {u32(e.x), u32(e.y)}).eax == 0;
+    bool live = true;
+    if (e.kind == kTileEdit)
+      live = gs.g_tileBuildCode[i] == e.code_old && gs.g_tileRefund[i] == e.refund_old && gs.g_tileType[i] == e.type_new &&
+             tile_free_of_objects(ctx, e.x, e.y);
     if (!live) {
       refused = true;
       continue;
     }
-    out.push_back({e.x, e.y, e.tool});
+    out.push_back({e.x, e.y, e.tool, e.tool3, e.variant, e.kind == kObject ? e.code_old : -1});
   }
   if (refused) play_sound(ctx, 0x18, 100, 0, 0, 0);
   return true;
@@ -248,8 +320,13 @@ bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &pres
 void course_redo_begin(Ctx &ctx, uint32_t press) {
   set_undo_word(ctx, 12, 1);
   set_undo_word(ctx, 16, press);
+  set_undo_word(ctx, 20, 0xFFFFFFFFu);
 }
-void course_redo_end(Ctx &ctx) { set_undo_word(ctx, 12, 0); }
+void course_redo_orientation(Ctx &ctx, int32_t orientation) { set_undo_word(ctx, 20, static_cast<uint32_t>(orientation)); }
+void course_redo_end(Ctx &ctx) {
+  set_undo_word(ctx, 12, 0);
+  set_undo_word(ctx, 20, 0xFFFFFFFFu);
+}
 
 int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
@@ -503,7 +580,8 @@ const DefectDef kDefects[] = {
      "and refunds its price); fixed: every setGrids edit is journalled with what it overwrote, the edits of one left press form a "
      "step, and the host's undo request (view block word +8, Ctrl+Z) runs demolishObject on the newest step's tiles, newest "
      "first, then gives each tile its earlier record back; a redo request (word +8 = 2, Ctrl+Y) builds the newest undone step "
-     "again through the game's terrain-tool click path (H2_Terrain) at today's price",
+     "again through the game's terrain-tool click path (H2_Terrain) at today's price; a placed object (H2_Build) is undone as the "
+     "bulldozer removes it (clearObjectFootprint, no popup) with exactly its placement charge back, and redone through H2_Build",
      &g_defect_course_undo},
 };
 extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

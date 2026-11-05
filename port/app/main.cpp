@@ -80,7 +80,8 @@
 //   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
 //   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
 //   P11D fix 2: Ctrl+Y (same option) builds the newest undone step again through the game's terrain-tool click path at today's
-//   price; a new edit empties the redo list.
+//   price; a new edit empties the redo list. P11D fix 3: placed objects share the history: Ctrl+Z removes the newest one as the
+//   bulldozer does (no popup) and gives back exactly what its placement charged; Ctrl+Y places it again at today's price.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
