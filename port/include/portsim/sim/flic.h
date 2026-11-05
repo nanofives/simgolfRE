@@ -93,6 +93,13 @@ Result load(const GameFiles &files, const Names &names, const Load &args);
 // spelling at 0; every other name is returned unchanged.
 std::string resolve_name(const GameFiles &files, const std::string &name);
 
+// The file a palette load opens (P10G, log/roadmap/P10/P10G_notes.md): loadWorldAssets' tropical palettes name the folders
+// `Tree Cerc`, `Tree Drac` and `tree tall palm` with spaces, the install spells them `Tree_Cerc`, `Tree_Drac`, `Tree_Tall_Palm`.
+// At switch flic.treeAliasNames = 0, a name (plus `ext`, the extension the load appends) whose file is missing and whose
+// underscore spelling exists is returned with that spelling; at 1, and for every other name, it is returned unchanged (the
+// original's loadImage fails there and leaves the palette object as it was; nothing faults).
+std::string resolve_palette_name(const GameFiles &files, const std::string &name, const std::string &ext);
+
 // The hook-up for menu.cpp's load_flic (log/roadmap/S3/4_merge.md section 2): with a gfx backend attached to the context,
 // decodes the load (path = the loadFlic path argument's address, the exe's string; the file-name parts are the exe's
 // strings menu.cpp already builds the names from) and puts each cell into the backend's sprites under its SpriteRef

@@ -75,6 +75,7 @@
 #include "gfx_body.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/flic.h"
 #include "portsim/sim/golfers.h"
 #include "portsim/sim/gfx_hud.h"
 #include "portsim/sim/terrain_api.h"
@@ -1540,10 +1541,15 @@ const PalLoad kPalTallOther = {GSO(f_strpool_4c95f4, 0x1ec), GSO(g_images, 0x123
 // END GENERATED loadWorldAssets palette loads
 #undef GSO
 
+// P10G: the path goes through flic::resolve_palette_name, so at flic.treeAliasNames = 0 the tropical palettes the exe names
+// with spaces (PalCerc, PalDrac, paltallpalm) are read from the install's underscore folders; before, those five palette
+// objects stayed empty and every palm / tropical tree drawn with them was skipped as a sprite with no palette
 void pal_load(Gfx &g, Ctx &ctx, const PalLoad &l) {
   const uint32_t base = ctx.mem.data_base();
   Image8 img;
-  if (gfxb::load_image(g, ctx, base + l.path, base + l.pal, 0, 0x100, 0, img) != 0) return;
+  const std::string ext = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::f_strpool_4e4218) + 0x1c);   // ".pcx"
+  const std::string name = flic::resolve_palette_name(ctx.files(), gfxb::vstring(ctx.mem, base + l.path), ext);
+  if (gfxb::load_image_named(g, ctx, name, base + l.pal, 0, 0x100, 0, img) != 0) return;
   *gfxh::palette_of(g, base + l.pal, true) = img.pal;
 }
 template <size_t N> void pal_run(Gfx &g, Ctx &ctx, const PalLoad (&t)[N]) {

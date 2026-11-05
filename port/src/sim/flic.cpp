@@ -432,6 +432,25 @@ std::string resolve_name(const GameFiles &files, const std::string &name) {
   return files.exists(alt) ? alt : name;
 }
 
+// P10G: the palette loads' spelling. The three tropical tree folders, matched case-insensitively (the exe writes
+// `flics\trees\tropic\tree tall palm\paltallpalm` in lower case), each space of the match turned into an underscore.
+std::string resolve_palette_name(const GameFiles &files, const std::string &name, const std::string &ext) {
+  if (SG_DEFECT(g_defect_tree_alias)) return name;
+  if (files.exists(name + ext)) return name;
+  std::string low = name;
+  for (char &ch : low) ch = static_cast<char>(ch >= 'A' && ch <= 'Z' ? ch - 'A' + 'a' : ch);
+  std::string alt = name;
+  bool hit = false;
+  for (const char *n : {"tree cerc", "tree drac", "tree tall palm"}) {
+    const size_t at = low.find(n);
+    if (at == std::string::npos) continue;
+    for (size_t k = at; k < at + std::strlen(n); ++k)
+      if (alt[k] == ' ') alt[k] = '_';
+    hit = true;
+  }
+  return hit && files.exists(alt + ext) ? alt : name;
+}
+
 Result load(const GameFiles &files, const Names &names, const Load &args) {
   Result res;
   Stream main, shadow;
@@ -653,7 +672,8 @@ const FuncDef kFuncs[] = {
 const DefectDef kDefects[] = {
     {"flic.treeAliasNames", "S3.4b (U-1331, D5)",
      "a load of `Tree Cerc` / `Tree Drac` (tropical courses) whose file is missing faults like the original's NULL open; at 0 the "
-     "install's Tree_Cerc / Tree_Drac files are loaded",
+     "install's Tree_Cerc / Tree_Drac files are loaded, and loadWorldAssets' palettes in Tree Cerc / Tree Drac / tree tall palm "
+     "come from the install's underscore folders (P10G)",
      &g_defect_tree_alias},
 };
 }  // namespace
