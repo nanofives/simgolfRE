@@ -48,6 +48,8 @@
 //   frame is posted again with the title's band hint, so its side bands show the edge fill instead of black (host.h title_bands).
 //   P10C fix 2: --hud-writes on|off (default on with the HUD layers; SG_APP_P10=off: off) a HUD panel layer keeps every pixel its
 //   drawing wrote, also where the word equals the course's under it (gfx.h gfx_set_hud_writes); off = P9B's diff (icon holes).
+//   P10C fix 3: --photo-dir on|off (default on; SG_APP_P10=off: off) the live game makes <data>/files/snapshots, the folder the
+//   bulletin board's accomplishment photos are written to and read from (without it the photo frames stay empty).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -351,6 +353,7 @@ struct Options {
   std::string profile_csv;         // P10A: --profile-csv <file>
   bool title_bands = true;         // P10C fix 1: --title-bands on|off (SG_APP_P10=off: off)
   bool hud_writes = true;          // P10C fix 2: --hud-writes on|off (SG_APP_P10=off: off)
+  bool photo_dir = true;           // P10C fix 3: --photo-dir on|off (SG_APP_P10=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -2705,6 +2708,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_writes = v == "on";
     }
+    else if (a == "--photo-dir") {  // P10C fix 3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.photo_dir = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2799,10 +2806,10 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
   if (const char *ep = std::getenv("SG_APP_P10"))  // P10: the fourth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) {
-      o.text_banner = o.text_fit = o.title_bands = false;
+      o.text_banner = o.text_fit = false;
       o.fps = "off";
       o.text_peel = "plain";
-      o.title_bands = o.hud_writes = false;
+      o.title_bands = o.hud_writes = o.photo_dir = false;
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
@@ -2859,6 +2866,10 @@ int main(int argc, char **argv) {
   std::error_code ec;
   fs::create_directories(rec, ec);
   if (!o.live_trace.empty()) return run_live_trace(o, files, rec);       // S7.5: the live path over a corpus trace
+  // P10C fix 3: the accomplishment photos (gfx_bulletin.cpp showBulletinBoard.capture) are written only when the game's files
+  // hold a `snapshots` directory, as the original's saveBmp fopen fails without one; the installer's directory table lists it, the
+  // extracted install has none, so the board's photos stayed empty. The live game makes it in the data directory's files
+  if (o.trace.empty() && o.window && o.photo_dir) fs::create_directories(fs::path(files.data_root()) / "files" / "snapshots", ec);
   if (o.trace.empty() && o.window) return run_live_window(o, files, rec);  // S7.6: the game
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
