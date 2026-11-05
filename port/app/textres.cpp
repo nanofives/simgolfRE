@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstring>
 #include <map>
+#include <vector>
 #include <string>
 #include <tuple>
 
@@ -41,7 +42,80 @@ struct TextRaster::Impl {
   void *bits = nullptr;
   int32_t w = 0, h = 0;
   std::map<std::tuple<std::string, int32_t, uint32_t, int>, HFONT> fonts;
+  // P10B fix 2: the ink rows of a string in a font, relative to the baseline (top <= bottom, half-open: [top, bottom)); key = the
+  // font's key and the string. Measured on a 32-bit scratch DIB (white on black), cleared above 4096 entries.
+  struct Ink {
+    int32_t top = 0, bottom = 0;
+    bool ok = false;
+  };
+  std::map<std::tuple<std::string, int32_t, uint32_t, int, std::string>, Ink> inks;
+  HDC mdc = nullptr;
+  HBITMAP mbmp = nullptr;
+  void *mbits = nullptr;
+  int32_t mw = 0, mh = 0;
+  Ink ink(const std::string &face, int32_t height, uint32_t style, int quality, const std::string &text, const INT *adv) {
+    const auto key = std::make_tuple(face, height, style, quality, text);
+    auto it = inks.find(key);
+    if (it != inks.end()) return it->second;
+    if (inks.size() > 4096) inks.clear();
+    Ink k;
+    HFONT f = font(face, height, style, quality);
+    const int32_t iw = height * (static_cast<int32_t>(text.size()) + 2), ih = height * 3;
+    if (f && iw > 0 && ih > 0) {
+      if (!mdc) mdc = CreateCompatibleDC(nullptr);
+      if (mdc && (!mbmp || iw > mw || ih > mh)) {
+        if (mbmp) DeleteObject(mbmp);
+        mw = std::max(iw, mw);
+        mh = std::max(ih, mh);
+        BITMAPINFO bi;
+        std::memset(&bi, 0, sizeof(bi));
+        bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        bi.bmiHeader.biWidth = mw;
+        bi.bmiHeader.biHeight = -mh;
+        bi.bmiHeader.biPlanes = 1;
+        bi.bmiHeader.biBitCount = 32;
+        bi.bmiHeader.biCompression = BI_RGB;
+        mbmp = CreateDIBSection(mdc, &bi, DIB_RGB_COLORS, &mbits, nullptr, 0);
+        if (mbmp) SelectObject(mdc, mbmp);
+        else mw = mh = 0;
+      }
+      if (mbmp) {
+        GdiFlush();
+        std::memset(mbits, 0, static_cast<size_t>(mw) * static_cast<size_t>(mh) * 4);
+        SetBkMode(mdc, TRANSPARENT);
+        SetTextAlign(mdc, TA_BASELINE);
+        SetTextColor(mdc, RGB(255, 255, 255));
+        SelectObject(mdc, f);
+        const int32_t base = height * 2;
+        if (adv)
+          ExtTextOutA(mdc, height, base, 0, nullptr, text.data(), static_cast<UINT>(text.size()), adv);
+        else
+          TextOutA(mdc, height, base, text.data(), static_cast<int>(text.size()));
+        SelectObject(mdc, GetStockObject(SYSTEM_FONT));
+        GdiFlush();
+        const uint32_t *p = static_cast<const uint32_t *>(mbits);
+        int32_t t = -1, b = -1;
+        for (int32_t y = 0; y < ih; ++y) {
+          bool any = false;
+          for (int32_t x = 0; x < iw && !any; ++x) any = (p[static_cast<size_t>(y) * mw + static_cast<size_t>(x)] & 0xffffffu) != 0;
+          if (any) {
+            if (t < 0) t = y;
+            b = y + 1;
+          }
+        }
+        if (t >= 0) {
+          k.top = t - base;
+          k.bottom = b - base;
+          k.ok = true;
+        }
+      }
+    }
+    inks[key] = k;
+    return k;
+  }
   ~Impl() {
+    if (mbmp) DeleteObject(mbmp);
+    if (mdc) DeleteDC(mdc);
     for (auto &f : fonts)
       if (f.second) DeleteObject(f.second);
     if (bmp) DeleteObject(bmp);
@@ -140,10 +214,45 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
   if (defect_ == TextDefect::WrongColour) ref = ((ref & 0xffu) << 16) | (ref & 0xff00u) | ((ref >> 16) & 0xffu);
   // the origin: the 800-space TA_BASELINE point scaled (the identity at scale 1)
   const int32_t ox = vp.origin_x + dx + (unit ? r.x : static_cast<int32_t>(std::lround(r.x * sx))) - dx0;
-  const int32_t oy = vp.origin_y + (unit ? r.y : static_cast<int32_t>(std::lround(r.y * sy))) - dy0;
+  int32_t oy = vp.origin_y + (unit ? r.y : static_cast<int32_t>(std::lround(r.y * sy))) - dy0;
+  const int n = static_cast<int>(r.text.size());
+  // P10B fix 2: the 800-space layout scaled (textres.h set_fit). The game's font at its own size (lfQuality 0, as gditext makes
+  // it) gives the string's 800-space advance; the window-resolution font's own pen positions are stretched evenly to that advance
+  // scaled, so a label's box keeps no blank space after the string and a string is not cut by its box, with the glyphs spaced as
+  // the larger font spaces them (the 800-space positions themselves, hinted at the game's small sizes, gave uneven gaps). The
+  // baseline is then moved so that the ink's vertical middle lands on the 800-space ink's middle scaled (the game's hinted small
+  // sizes put the ink lower in its line than the larger font does).
+  std::vector<INT> adv;
+  if (!unit && fit_ && n > 0) {
+    HFONT lo = impl_->font(r.face, r.size, r.style, 0);
+    std::vector<INT> cum(static_cast<size_t>(n), 0), cum_hi(static_cast<size_t>(n), 0);
+    SIZE sz;
+    if (lo && SelectObject(impl_->dc, lo) && GetTextExtentExPointA(impl_->dc, r.text.data(), n, 0, nullptr, cum.data(), &sz) &&
+        SelectObject(impl_->dc, f) && GetTextExtentExPointA(impl_->dc, r.text.data(), n, 0, nullptr, cum_hi.data(), &sz) &&
+        cum_hi[static_cast<size_t>(n - 1)] > 0) {
+      adv.resize(static_cast<size_t>(n));
+      const double k = cum[static_cast<size_t>(n - 1)] * sx / cum_hi[static_cast<size_t>(n - 1)];
+      int32_t prev = 0;
+      for (int i = 0; i < n; ++i) {
+        const int32_t at = static_cast<int32_t>(std::lround(cum_hi[static_cast<size_t>(i)] * k));
+        adv[static_cast<size_t>(i)] = at - prev;
+        prev = at;
+      }
+      const Impl::Ink il = impl_->ink(r.face, r.size, r.style, 0, r.text, nullptr);
+      const Impl::Ink ih = impl_->ink(r.face, height, r.style, quality, r.text, adv.data());
+      if (il.ok && ih.ok) {
+        const double mid_lo = (il.top + il.bottom) * 0.5 * sy, mid_hi = (ih.top + ih.bottom) * 0.5;
+        oy = vp.origin_y + static_cast<int32_t>(std::lround(r.y * sy + mid_lo - mid_hi)) - dy0;
+      }
+      ++stats.fitted;
+    }
+  }
   SelectObject(impl_->dc, f);
   SetTextColor(impl_->dc, ref);
-  TextOutA(impl_->dc, ox, oy, r.text.data(), static_cast<int>(r.text.size()));
+  if (!adv.empty())
+    ExtTextOutA(impl_->dc, ox, oy, 0, nullptr, r.text.data(), static_cast<UINT>(n), adv.data());
+  else
+    TextOutA(impl_->dc, ox, oy, r.text.data(), n);
   SelectObject(impl_->dc, GetStockObject(SYSTEM_FONT));
   GdiFlush();
   bool clipped = false;

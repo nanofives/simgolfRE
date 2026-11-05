@@ -182,6 +182,7 @@ class Presenter {
   void set_text_defect(TextDefect d) { text_defect_ = d; }
   void set_text_aa(TextAa a) { text_aa_ = a; }
   void set_text_unit_redraw(bool on) { text_unit_redraw_ = on; }
+  void set_text_fit(bool on) { text_fit_ = on; }  // P10B fix 2 (TextRaster::set_fit)
   void set_text(portsim::GfxTextFrame &&tf);
   bool has_text() const { return text_ok_; }
   const TextResStats *text_stats() const { return raster_ ? &raster_->stats : nullptr; }
@@ -228,6 +229,7 @@ class Presenter {
   bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;
   TextDefect text_defect_ = TextDefect::None;
   TextAa text_aa_ = TextAa::System;
+  bool text_fit_ = false;  // P10B fix 2
   portsim::GfxTextFrame text_;
   portsim::GfxHudFrame hud_text_;  // world_.hud with the base and layer pixels of text_ (the runs' glyphs removed)
   mutable std::unique_ptr<TextRaster> raster_;

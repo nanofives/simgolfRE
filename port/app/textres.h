@@ -43,6 +43,7 @@ struct TextResStats {
   uint64_t clipped_runs = 0;  // runs whose window-resolution ink reached past their scaled box (clipped, not reflowed)
   uint64_t clipped_px = 0;    // the client pixels of that ink
   uint64_t failed = 0;        // runs the host could not draw (no font, no DIB)
+  uint64_t fitted = 0;        // P10B fix 2: runs drawn with the 800-space layout scaled (set_fit)
 };
 
 class TextRaster {
@@ -53,6 +54,12 @@ class TextRaster {
   TextRaster &operator=(const TextRaster &) = delete;
   void set_defect(TextDefect d) { defect_ = d; }
   void set_aa(TextAa a) { aa_ = a; }
+  // P10B fix 2 (--text-fit): at a scale other than 1, the 800-space layout scaled. Every byte is drawn at its 800-space pen
+  // position scaled: the advances come from the game's font at its own size (GetTextExtentExPointA), so the string is exactly as
+  // wide as the box the game measured for it. The ink's vertical middle is put on the 800-space ink's middle scaled (each font's
+  // ink rows measured once per string: Impl::ink). Off = P9C: TextOutA at the scaled origin with the window-resolution font's
+  // own advances and baseline (the string up to a few percent narrower or wider than its box, its ink 1-2 px higher).
+  void set_fit(bool on) { fit_ = on; }
   // run `r` into `out` (cw x ch BGRA words, rows top-down) through the content rectangle vp, shifted right by dx client pixels;
   // `layered` reads the run's layer visibility (GfxTextRun::vis_layer) instead of the back buffer's (vis)
   void draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out, int32_t cw,
@@ -64,6 +71,7 @@ class TextRaster {
   std::unique_ptr<Impl> impl_;
   TextDefect defect_ = TextDefect::None;
   TextAa aa_ = TextAa::System;
+  bool fit_ = false;
 };
 
 }  // namespace portapp

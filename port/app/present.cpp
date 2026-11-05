@@ -294,6 +294,7 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
   if (!raster_) raster_.reset(new TextRaster());
   raster_->set_defect(text_defect_);
   raster_->set_aa(text_aa_);
+  raster_->set_fit(text_fit_);  // P10B fix 2
   // G32's rectangle compositor (no layers): a run inside a moved panel rectangle moves with it
   const bool rect = !layered_path && !world_.empty() && hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved &&
                     !world_.hud_none;  // P9D

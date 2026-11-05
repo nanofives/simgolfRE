@@ -50,6 +50,9 @@
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
 //   (a measurement: the redraw also at an 800 x 600 content rectangle).
+//   P10B fix 2: --text-fit on|off (default on; SG_APP_P10=off: off) a run drawn at the window's resolution keeps the 800-space
+//   layout scaled: each byte at its 800-space pen position scaled, the ink's vertical middle on the 800-space ink's middle scaled
+//   (textres.h TextRaster::set_fit); off = P9C's TextOutA with the window-resolution font's own advances and baseline.
 //   P10B fix 1: --text-banner on|off (default on with --text-res native; SG_APP_P10=off: off) the P8A loading banner and the frame
 //   put back after the load carry the text runs of the frame under them (host.cpp banner_text), so that frame's text stays at the
 //   window's resolution during a world load instead of the 800 x 600 frame's text scaled.
@@ -309,6 +312,7 @@ struct Options {
   std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
   bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
   bool text_banner = true;          // P10B fix 1: --text-banner on|off (SG_APP_P10=off: off)
+  bool text_fit = true;             // P10B fix 2: --text-fit on|off (SG_APP_P10=off: off)
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -382,6 +386,7 @@ static void setup_text(Presenter &p, const Options &o) {
                     : o.negctl == "p9c-wrong-colour" ? TextDefect::WrongColour
                                                      : TextDefect::None);
   p.set_text_unit_redraw(o.text_unit_redraw);
+  p.set_text_fit(o.text_fit);  // P10B fix 2
 }
 
 // P5B item 4: --scale
@@ -2668,6 +2673,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_cursor = v == "on";
     }
+    else if (a == "--text-fit") {  // P10B fix 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.text_fit = v == "on";
+    }
     else if (a == "--text-banner") {  // P10B fix 1
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.text_banner = v == "on";
@@ -2769,7 +2778,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
     if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
   if (const char *ep = std::getenv("SG_APP_P10"))  // P10: the fourth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) { o.text_banner = false; o.fps = "off"; o.title_bands = false; }
+    if (!std::strcmp(ep, "off")) { o.text_banner = false; o.fps = "off"; o.title_bands = false; o.text_fit = false; }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.
