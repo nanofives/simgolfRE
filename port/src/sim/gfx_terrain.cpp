@@ -78,6 +78,7 @@
 #include "portsim/sim/gl_raster.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
+#include "portsim/sim/perf.h"  // P10A
 #include "portsim/sim/terrain_overlay.h"
 #include "portsim/sim/terrain_render.h"
 
@@ -154,6 +155,7 @@ void world_check(LiveTerrainWorld &w) {
   w.diff_px += d;
 }
 void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const uint32_t *a, const std::vector<uint16_t> &before) {
+  const PerfScope perf_scope(kPerfTerrainWorld);  // P10A (perf.h)
   if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
     for (size_t i = 0; i < before.size(); ++i)
       if (g.root.px[i] != before[i]) w.terrain800[i] = g.root.px[i];
@@ -233,6 +235,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const bool keep_pass = numbered && j < 8;
   if (keep_pass) keep(g, ctx, *lt, ("p" + std::to_string(j) + "_pre").c_str(), g.root);
   LiveTerrainWorld *const world = lt->world();   // P8B
+  std::unique_ptr<PerfScope> perf_800(new PerfScope(kPerfTerrain800));  // P10A (perf.h): the 800 x 600 pass
   std::vector<uint16_t> world_before;
   if (world) world_before = g.root.px;
   if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
@@ -282,6 +285,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     ++v.passes;
     g.root.px = r.pixels();
   }
+  perf_800.reset();  // P10A
   g.root_terrain = 1;
   g.hud_carry_drop();  // P9D: a terrain pass starts a new frame's picture
   g.hud_pieces_reset();  // P9E: and its popups

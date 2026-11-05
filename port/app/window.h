@@ -101,6 +101,9 @@ struct WindowOptions {
   // P7 (widescreen stage 1): the logical width the client opens at (its height stays 600 logical pixels; both scaled by the
   // dpi). kLogicalW = the 800x600 window; `--wide` gives 1067 (16:9). The 4:3 content stays fitted (full height, centred).
   int32_t logical_w = kLogicalW;
+  // P10A: F12 (key-down without repeat) calls this and repaints; F12's messages are then never handed to the game. Null = F12
+  // goes to the game as before.
+  std::function<void()> on_overlay_key;
 };
 
 class AppWindow {

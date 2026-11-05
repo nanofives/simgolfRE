@@ -40,6 +40,10 @@
 //   profile's mainLoop.vacatedPanelClick = 0 it acts on the course instead of the panel the game's tests see there.
 //   P9E fix 4: --hud-cursor on|off (default on with the HUD layers; SG_APP_P9E=off: off) the tool previews the frame draws at the
 //   cursor tile (gfx.h gfx_set_hud_cursor) are taken out of the world picture and drawn with the panel the cursor is over.
+//   P10A: --fps on|detail|off (default on; SG_APP_P10=off: off) the frame rate at the window's bottom right, in the game's own
+//   font (profile.h; F12 cycles on -> detail -> off; detail adds the frame's phases in ms). --profile-csv <file>: one row per
+//   second of the profiler's line (fps, game frames per second, sim / gfx / terrain / capture / wait ms per game frame, base /
+//   world / layers / text / bands / overlay / blit ms per paint). session.json gets the means (`p10a`).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -133,6 +137,7 @@
 #include "input_map.h"
 #include "pacing.h"
 #include "present.h"
+#include "profile.h"  // P10A
 #include "saves.h"
 #include "stdio_log.h"
 #include "window.h"
@@ -330,6 +335,8 @@ struct Options {
   bool hud_close = true;           // P9E fix 2: --hud-close on|off (SG_APP_P9E=off: off)
   bool hud_vacated = true;         // P9E fix 3: --hud-vacated on|off (SG_APP_P9E=off: off)
   bool hud_cursor = true;          // P9E fix 4: --hud-cursor on|off (SG_APP_P9E=off: off)
+  std::string fps = "on";          // P10A: --fps on|detail|off (SG_APP_P10=off: off)
+  std::string profile_csv;         // P10A: --profile-csv <file>
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1282,6 +1289,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   presenter.set_wide(wide_fill(o));  // P7
   setup_text(presenter, o);          // P9C
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes
+  // P10A: the profiler (on with the overlay or a CSV; F12 turns it on when it cycles the overlay on) and the overlay
+  presenter.set_overlay(o.fps == "detail" ? 2 : o.fps == "on" ? 1 : 0);
+  if (o.fps != "off" || !o.profile_csv.empty()) Profiler::get().set_enabled(true);
+  if (!o.profile_csv.empty() && !Profiler::get().open_csv(o.profile_csv))
+    std::fprintf(stderr, "profile: cannot write %s\n", o.profile_csv.c_str());
   if (ho.remap) {  // G32: the HUD compositor
     presenter.set_hud_anchor(true);
     presenter.set_remap(const_cast<PanelRemap *>(ho.remap));
@@ -1299,6 +1311,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   wo.focus_child_takes = [&session](uint32_t msg, uint32_t wp) { return session.focus_child_takes(msg, wp); };  // U-1616
   wo.before_translate = [&session](uint32_t msg, uint32_t wp) { session.before_translate(msg, wp); };  // S7.4
   wo.key_state = [&session](uint32_t vk, bool async) { return session.key_state(vk, async); };
+  wo.on_overlay_key = [&presenter]() {  // P10A: F12 cycles on -> detail -> off
+    const int m = presenter.overlay() == 1 ? 2 : presenter.overlay() == 2 ? 0 : 1;
+    presenter.set_overlay(m);
+    if (m) Profiler::get().set_enabled(true);
+  };
   AppWindow win(presenter, wo);
   if (!win.create()) {
     std::fprintf(stderr, "%s\n", win.error().c_str());
@@ -1391,6 +1408,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(ts ? ts->runs : 0) + ",\"clipped_runs\":" + std::to_string(ts ? ts->clipped_runs : 0) +
          ",\"clipped_px\":" + std::to_string(ts ? ts->clipped_px : 0) + ",\"failed\":" + std::to_string(ts ? ts->failed : 0) + "}";
   }
+  s += ",\"p10a\":{\"fps\":\"" + o.fps + "\",\"overlay\":" + std::to_string(presenter.overlay()) +  // P10A
+       ",\"profile_csv\":\"" + jesc(o.profile_csv) + "\",\"profiler\":" + Profiler::get().summary_json() + "}";
+  Profiler::get().close_csv();
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
@@ -2633,6 +2653,13 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_vacated = v == "on";
     }
+    else if (a == "--fps") {  // P10A
+      if (!val(v) || (v != "on" && v != "off" && v != "detail")) return false;
+      o.fps = v;
+    }
+    else if (a == "--profile-csv") {  // P10A
+      if (!val(o.profile_csv)) return false;
+    }
     else if (a == "--hud-cursor") {  // P9E fix 4
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_cursor = v == "on";
@@ -2733,8 +2760,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.hud_modal = false;
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
     if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
-  if (const char *ep = std::getenv("SG_APP_P10"))  // P10B: the P10 text fixes off (P9E's behaviour); flags win
-    if (!std::strcmp(ep, "off")) o.text_banner = false;
+  if (const char *ep = std::getenv("SG_APP_P10"))  // P10A / P10B: no FPS overlay, P10 text fixes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) { o.text_banner = false; o.fps = "off"; }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

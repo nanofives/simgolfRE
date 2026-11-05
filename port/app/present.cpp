@@ -14,6 +14,12 @@
 #endif
 
 #include <algorithm>  // P6B item 2 (std::min / max in paint)
+#include <cmath>    // P10A: lround (the overlay)
+#include <cstring>  // P10A: memcpy (the overlay)
+#include <string>
+
+#include "portsim/sim/perf.h"  // P10A: perf_now_ns
+#include "profile.h"           // P10A
 
 namespace portapp {
 
@@ -163,6 +169,7 @@ ScaleMode Presenter::effective_scale(int32_t w, int32_t h) const {
 }
 
 void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vpo) const {
+  const ProfScope prof(Phase::Base);  // P10A
   const Viewport vp = fit_viewport(cw, ch);
   if (vpo) *vpo = vp;
   out.assign(static_cast<size_t>(cw > 0 ? cw : 0) * static_cast<size_t>(ch > 0 ? ch : 0), 0xff000000u);
@@ -283,6 +290,7 @@ int32_t Presenter::piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y)
 // the runs of one layer (layered: -1 the base, k the layer; flat: every run) at dx client pixels
 void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered_path, int32_t layer,
                           int32_t dx) const {
+  const ProfScope prof(Phase::Text);  // P10A
   if (!raster_) raster_.reset(new TextRaster());
   raster_->set_defect(text_defect_);
   raster_->set_aa(text_aa_);
@@ -316,6 +324,7 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
 // the frame's pixel stays where the mask of its logical pixel (floor((x - origin) * 800 / client_w), likewise y) is 0. The world
 // is sampled at the nearest pixel when the mapping is 1:1 or the scale mode resolves to Nearest, else bilinear (8-bit weights).
 void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+  const ProfScope prof(Phase::World);  // P10A
   const WorldImage &w = world_;
   if (vp.client_w <= 0 || vp.client_h <= 0 || cw <= 0 || ch <= 0) return;
   // G32: the HUD compositor. The frame's image as drawn (frame_img), the mask with every moved panel's 2D pixels vacated (they show
@@ -441,6 +450,7 @@ bool Presenter::layered() const {
 // no world pixel chosen inside a panel by a mask, and a blended pixel (frame borders, half-bright strips) shows what is under it at
 // the panel's new place.
 void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+  const ProfScope prof(Phase::Layers);  // P10A
   const bool text = text_now(vp);  // P9C: the layers without the runs' glyphs when the runs are drawn
   const portsim::GfxHudFrame &f = hud_for(text);
   const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
@@ -678,6 +688,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
 // P7 (present.h WideFill): the side bands from the content rectangle's own edge columns, in client pixels. The content is
 // already drawn, so the bands follow the scaled image exactly (nearest or smooth) and the content's pixels are not touched.
 void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+  const ProfScope prof(Phase::Bands);  // P10A
   const int32_t ox = vp.origin_x, oy = vp.origin_y, w = vp.client_w, h = vp.client_h;
   if (w <= 0 || h <= 0 || cw <= 0 || ch <= 0 || oy + h > ch || ox + w > cw) return;
   if (wide_ == WideFill::Edge || wide_ == WideFill::Mirror) {
@@ -804,10 +815,104 @@ void Presenter::fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   }
 }
 
+// P10A: the FPS overlay (present.h set_overlay). Each line of overlay_text is a text run of the game's font (Profiler::font: the
+// face and style of gameMain's font call 3) at 800-space size 12 (the fps) or 9 (the phases), drawn by the P9C text path
+// (TextRaster) right-aligned at the window's right edge (the run's box at the 800 frame's right edge, moved by the right band's
+// width), the lines stacked up from the bottom, over the client pixels darkened to half.
+void Presenter::draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch) const {
+#ifdef _WIN32
+  if (!overlay_mode_ || cw <= 0 || ch <= 0) return;
+  std::string face;
+  uint32_t style = 0;
+  if (!Profiler::get().font(face, style)) return;  // before the game made its fonts
+  const Viewport vp = fit_viewport(cw, ch);
+  if (vp.client_w <= 0 || vp.client_h <= 0) return;
+  const ProfLine pl = Profiler::get().last();
+  const std::string text = overlay_text(pl, overlay_mode_);
+  std::vector<std::string> lines;
+  for (size_t a = 0;;) {
+    const size_t b = text.find('\n', a);
+    lines.push_back(text.substr(a, b == std::string::npos ? std::string::npos : b - a));
+    if (b == std::string::npos) break;
+    a = b + 1;
+  }
+  const int32_t size = overlay_mode_ == 1 ? 12 : 9;
+  const int32_t height = std::max<int32_t>(1, static_cast<int32_t>(std::lround(size * static_cast<double>(vp.client_h) / kLogicalH)));
+  const int32_t dxr = cw - vp.origin_x - vp.client_w;  // the right band's width: the 800 frame's right edge -> the window's
+  // the lines' widths in client pixels, with TextRaster's LOGFONTA (grey antialiasing)
+  std::vector<int32_t> wpx(lines.size(), 0);
+  {
+    HDC dc = CreateCompatibleDC(nullptr);
+    LOGFONTA lf;
+    std::memset(&lf, 0, sizeof(lf));
+    lf.lfHeight = -height;
+    lf.lfWeight = (style & 1u) ? 700 : 0;
+    lf.lfItalic = (style & 2u) ? 1 : 0;
+    lf.lfUnderline = (style & 4u) ? 1 : 0;
+    lf.lfOutPrecision = 7;  // OUT_TT_ONLY_PRECIS
+    lf.lfQuality = 4;       // ANTIALIASED_QUALITY (TextAa::Grey)
+    std::memcpy(lf.lfFaceName, face.data(), std::min(face.size(), sizeof(lf.lfFaceName) - 1));
+    HFONT f = CreateFontIndirectA(&lf);
+    if (dc && f) {
+      HGDIOBJ old = SelectObject(dc, f);
+      for (size_t i = 0; i < lines.size(); ++i) {
+        SIZE sz = {0, 0};
+        if (GetTextExtentPoint32A(dc, lines[i].data(), static_cast<int>(lines[i].size()), &sz)) wpx[i] = sz.cx;
+      }
+      SelectObject(dc, old);
+    }
+    if (f) DeleteObject(f);
+    if (dc) DeleteDC(dc);
+  }
+  if (!overlay_raster_) overlay_raster_.reset(new TextRaster());
+  overlay_raster_->set_aa(TextAa::Grey);
+  const int32_t step = size + 3, n = static_cast<int32_t>(lines.size());
+  std::vector<portsim::GfxTextRun> runs;
+  int32_t bx0 = cw;  // the darkened box's left edge, client pixels
+  for (int32_t i = 0; i < n; ++i) {
+    portsim::GfxTextRun r;
+    r.face = face;
+    r.size = size;
+    r.style = style;
+    r.colorref = 0x00a0f0ffu;  // r 255, g 240, b 160
+    const int64_t wl = static_cast<int64_t>(wpx[static_cast<size_t>(i)]);
+    const int32_t w800 = static_cast<int32_t>((wl * kLogicalW + vp.client_w - 1) / vp.client_w);
+    r.x1 = kLogicalW - 2;
+    r.x0 = std::max<int32_t>(0, r.x1 - w800 - 3);
+    r.x = r.x0 + 1;
+    r.y = kLogicalH - 4 - (n - 1 - i) * step;
+    r.y0 = r.y - size - 2;
+    r.y1 = std::min<int32_t>(kLogicalH, r.y + size / 3 + 2);
+    r.text = lines[static_cast<size_t>(i)];
+    r.vis.assign(static_cast<size_t>(r.x1 - r.x0) * static_cast<size_t>(r.y1 - r.y0), 1);
+    bx0 = std::min<int32_t>(bx0, vp.origin_x + dxr + static_cast<int32_t>(static_cast<int64_t>(r.x0) * vp.client_w / kLogicalW));
+    runs.push_back(std::move(r));
+  }
+  if (runs.empty()) return;
+  const int32_t by0 = std::max<int32_t>(
+      0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(runs.front().y0) * vp.client_h / kLogicalH));
+  const int32_t by1 = std::min<int32_t>(
+      ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(runs.back().y1) * vp.client_h / kLogicalH));
+  for (int32_t y = by0; y < by1; ++y)
+    for (int32_t x = std::max<int32_t>(0, bx0 - 2); x < cw; ++x) {
+      uint32_t &d = out[static_cast<size_t>(y) * static_cast<size_t>(cw) + static_cast<size_t>(x)];
+      d = ((d >> 1) & 0x007f7f7fu) | 0xff000000u;
+    }
+  for (const portsim::GfxTextRun &r : runs) overlay_raster_->draw(r, false, vp, dxr, out, cw, ch);
+#else
+  (void)out; (void)cw; (void)ch;
+#endif
+}
+
 #ifdef _WIN32
 void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   if (cw <= 0 || ch <= 0) return;
+  const int64_t t0 = portsim::perf_now_ns();  // P10A
   render(cw, ch, scratch_);
+  if (overlay_mode_) {
+    const ProfScope prof(Phase::Overlay);  // P10A
+    draw_overlay(scratch_, cw, ch);
+  }
   BITMAPINFO bi = {};
   bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
   bi.bmiHeader.biWidth = cw;
@@ -815,8 +920,13 @@ void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   bi.bmiHeader.biPlanes = 1;
   bi.bmiHeader.biBitCount = 32;
   bi.bmiHeader.biCompression = BI_RGB;
-  SetDIBitsToDevice(static_cast<HDC>(hdc), 0, 0, static_cast<DWORD>(cw), static_cast<DWORD>(ch), 0, 0, 0,
-                    static_cast<UINT>(ch), scratch_.data(), &bi, DIB_RGB_COLORS);
+  {
+    const ProfScope prof(Phase::Blit);  // P10A
+    SetDIBitsToDevice(static_cast<HDC>(hdc), 0, 0, static_cast<DWORD>(cw), static_cast<DWORD>(ch), 0, 0, 0,
+                      static_cast<UINT>(ch), scratch_.data(), &bi, DIB_RGB_COLORS);
+  }
+  Profiler::get().painted(frames_set_ != painted_set_, portsim::perf_now_ns() - t0);  // P10A
+  painted_set_ = frames_set_;
 }
 #endif
 

@@ -42,6 +42,8 @@ def pytest_configure(config):
     # P9E: the layer-compositor fixes (popups at their panel's place, ...) are off for the app tests too (they act only with
     # --wide, which SG_APP_P8B=off already turns off)
     os.environ.setdefault("SG_APP_P9E", "off")
+    # P10A: no FPS overlay in the app tests' window pixels (the profiler stays off with it)
+    os.environ.setdefault("SG_APP_P10", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

@@ -306,6 +306,15 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
 
 intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
   HWND h = static_cast<HWND>(hwnd_);
+  // P10A: F12 cycles the FPS overlay (WindowOptions::on_overlay_key). H1's key dispatch (tick.cpp, mainLoop ML+0xcfec) takes
+  // key codes 9 .. 0x7a; VK_F12 is 0x7b
+  if (opt_.on_overlay_key && (msg == WM_KEYDOWN || msg == WM_KEYUP) && wp == VK_F12) {
+    if (msg == WM_KEYDOWN && !(lp & (1 << 30))) {
+      opt_.on_overlay_key();
+      InvalidateRect(h, nullptr, FALSE);
+    }
+    return 0;
+  }
   if (is_input(msg)) {
     input(msg, static_cast<uint32_t>(wp), static_cast<uint32_t>(lp));
     if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) return DefWindowProcW(h, msg, wp, lp);  // Alt+F4

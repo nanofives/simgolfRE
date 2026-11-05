@@ -185,6 +185,11 @@ class Presenter {
   void set_text(portsim::GfxTextFrame &&tf);
   bool has_text() const { return text_ok_; }
   const TextResStats *text_stats() const { return raster_ ? &raster_->stats : nullptr; }
+  // P10A: the FPS overlay at the window's bottom right (profile.h; 0 off, 1 the fps, 2 the fps and the phases), drawn by paint
+  // after render in the game's font (Profiler::font) through the P9C text path; render alone never draws it
+  void set_overlay(int mode) { overlay_mode_ = mode < 0 ? 0 : mode > 2 ? 2 : mode; }
+  int overlay() const { return overlay_mode_; }
+  void draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch) const;
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }
   WideFill wide() const { return wide_; }
@@ -216,6 +221,9 @@ class Presenter {
   bool layered() const;                                                                                // P9B
   void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9B
   mutable std::vector<uint32_t> scratch_;
+  int overlay_mode_ = 0;                                   // P10A
+  mutable std::unique_ptr<TextRaster> overlay_raster_;     // P10A
+  mutable uint32_t painted_set_ = 0;                       // P10A: frames_set_ at the last paint
   // P9C
   bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;
   TextDefect text_defect_ = TextDefect::None;

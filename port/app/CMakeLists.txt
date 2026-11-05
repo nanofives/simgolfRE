@@ -52,7 +52,7 @@ if(PORTAPP_SHELL AND WIN32 AND TARGET portsim)
   # P9A item 1: the player's simgolf_port.exe is a WIN32-subsystem program (no console window; main() stays the entry
   # through mainCRTStartup; stdout / stderr: stdio_log.h). simgolf_port_console.exe is the same objects linked for the
   # console subsystem (a terminal that wants to wait for it). Both are built by the `simgolf_port` target.
-  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp)
+  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp profile.cpp)
   target_link_libraries(simgolf_port_objs PRIVATE portapp_input portapp_audio portsim)
   target_compile_definitions(simgolf_port_objs PRIVATE UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
   add_executable(simgolf_port WIN32 $<TARGET_OBJECTS:simgolf_port_objs>)

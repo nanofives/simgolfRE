@@ -343,6 +343,7 @@ class LiveSession : public portsim::LiveHost {
   // S7.4: the clock origin (clock_origin), the message-key table and the dispatch log (input_dispatch.tsv, dispatches.tsv)
   uint32_t now();
   bool clk_set_ = false;
+  bool overlay_font_ = false;  // P10A: the overlay's font was handed to the profiler
   uint32_t clk_off_ = 0;
   std::atomic<uint8_t> keys_[256] = {};
   std::atomic<uint32_t> frame_now_{0};  // frame_ for the window thread (an event's arrival frame)

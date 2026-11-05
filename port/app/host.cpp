@@ -20,6 +20,7 @@
 #include <fstream>
 
 #include "pacing.h"
+#include "profile.h"  // P10A
 
 #include "portsim/arith.h"
 #include "portsim/gamefiles.h"
@@ -27,6 +28,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/bridge.h"  // G32: the view block
 #include "portsim/sim/flic.h"
+#include "portsim/sim/gditext.h"  // P10A: the overlay's font (game_font)
 #include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P8B: gfx_back_terrain  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/state_hash.h"
@@ -634,6 +636,17 @@ uint32_t LiveSession::now() {
 static int kind_index(char kind) { return kind == 'r' ? 0 : kind == 'w' ? 1 : kind == 'm' ? 2 : 3; }
 
 void LiveSession::present(portsim::Ctx &ctx, char kind) {
+  const ProfScope prof(Phase::Capture);  // P10A
+  if (Profiler::get().enabled() && !overlay_font_) {  // P10A: the overlay's font, the game's own (gameMain font call 3) once created
+    try {
+      const portsim::GameFont gf = portsim::game_font(ctx, portsim::game_font_ref(ctx, 3));
+      if (!gf.face.empty()) {
+        Profiler::get().set_font(gf.face, gf.style);
+        overlay_font_ = true;
+      }
+    } catch (...) {
+    }
+  }
   const int ki = kind_index(kind);
   ++opportunities_[ki];
   const bool was_pending = r_pending_;
@@ -694,6 +707,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
 
 bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   if (stopping()) return false;
+  Profiler::get().frame_head();  // P10A: closes the previous game frame
   head_t_ = timeGetTime();  // pacing runs on the real clock; the core gets now() (clock_origin)
   t = now();
   frame_ = frame;
@@ -1033,7 +1047,11 @@ void LiveSession::wait_point(portsim::Ctx &ctx) {
   if (opt_.defect == HostDefect::PacingOff) return;  // negative control: no frame wait
   WaitClock clk(mu_, cv_, stop_);
   const uint32_t flags = ctx.mem.load<uint32_t>(portsim::state_va(ctx, &portsim::GameState::g_flags));
-  const WaitStats ws = frame_wait(clk, head_t_, flags, nullptr);
+  WaitStats ws;
+  {
+    const ProfScope prof(Phase::Wait);  // P10A
+    ws = frame_wait(clk, head_t_, flags, nullptr);
+  }
   if (waits_log_) {  // live frame, work ms, the wait's first read and its last read relative to the head, waitTicks steps, target,
                      // and (S7.5) the LiveTerrain's cumulative terrain passes and pixels drawn (0 0 with headless terrain)
     const long long tp = terrain_view ? static_cast<long long>(terrain_view->passes) : 0;

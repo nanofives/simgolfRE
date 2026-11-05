@@ -44,6 +44,7 @@
 #include "portsim/sim/gfx_hud.h"
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
+#include "portsim/sim/perf.h"  // P10A: the drawing's wall time for the host's profiler
 
 namespace portsim {
 
@@ -1742,6 +1743,7 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
   Gfx *g = gfx(ctx);
   if (!g) return false;
   if (GfxBody body = gfxb::find_body(name)) {
+    const PerfGfxScope perf_scope;  // P10A (perf.h kPerfGfx)
     ++g->handled[name];
     uint32_t args[12] = {};
     for (int i = 0; i < n && i < 12; ++i) args[i] = a[i];
