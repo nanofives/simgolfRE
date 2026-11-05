@@ -2010,6 +2010,7 @@ const FuncDef kFuncs[] = {
 
 extern int g_defect_themepack_col5;  // gfx_boot_screens.cpp
 extern int g_defect_tip_dwell;       // gfx_hud.cpp (P6B)
+extern int g_defect_tip_box;         // gfx_text.cpp (P11B fix 2)
 namespace {
 const DefectDef kDefects[] = {
     {"showThemePackSelect.column5StackWord", "P5A",
@@ -2021,6 +2022,11 @@ const DefectDef kDefects[] = {
      "+0x76f, drawTerrainToolbar+0x140, drawBuildingPanel+0x55, drawAmenitiesPanel+0x4fd, drawEmployeeViewPanel+0x6ca, "
      "drawGolferActionPanel+0x635); fixed: more than 3 frames (about 0.37 s)",
      &g_defect_tip_dwell},
+    {"infoCursorTip.fixedBox", "P11B",
+     "the Build palette's tool tip is a fixed drawFrameR3 box (0xa0 x 0x70 at row 0x192) with its horizontal meter at row 0x1ea, "
+     "drawn before the palette, so the palette covers the box from row 0x1e2 down and the meter with it; fixed: the box ends 8 "
+     "rows under the meter, which sits 8 rows under the description or the vertical meter, moved up to stay above row 0x1e2",
+     &g_defect_tip_box},
 };
 }  // namespace
 

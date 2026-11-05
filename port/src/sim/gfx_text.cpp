@@ -69,6 +69,16 @@ namespace portsim {
 
 int g_negctl_gfx_text = 0;
 int32_t hover_tip_dwell();  // gfx_hud.cpp: the HUD tips' dwell (P6B hoverTip.tenFrameDwell)
+// infoCursorTip.fixedBox (P11B fix 2, 2026-11-05, Mariano's play-test 5: `trim the blank area on the hover of the items ... the UI
+// wraps below the bottom bar`): showInfoCursorPanel's tool tip is a fixed box, drawFrameR3(X - 0x50, 0x192, 0xa0, 0x70, 1)
+// (0x70 at showInfoCursorPanel+0xf0, 0x192 at showInfoCursorPanel+0xfa), so it spans 800-space rows 402..514 whatever the description's
+// length, and its horizontal meter is drawn at row 0x1ea (showInfoCursorPanel+0x4be, +0x4cb; its marker at 0x1e2, +0x4f0) under the
+// vertical meter (0x1a9 .. 0x1d2, showInfoCursorPanel+0x42a / +0x417). The tip is drawn before the palette (the backdrop at (0xd8, 0x1e2)),
+// so the palette covers its rows from 0x1e2 down, the horizontal meter included. Default 1 = the original's box. play (0): the
+// description is measured first (the same wrap, nothing drawn), the horizontal meter goes 8 rows under the lower of the text's
+// end and the vertical meter's base, the box ends 8 rows under it (height rounded up to 16, as drawFrameR3 rounds), and a box
+// that would pass row 0x1e2 moves up with everything in it.
+int g_defect_tip_box = 1;
 
 namespace gfxs {   // gfx_simfoto.cpp: the held-pixel probe of drawWindow's golfer arm (roadmap S2.11; a measurement)
 void window_probe(Gfx &g, Ctx &ctx, int32_t fx, int32_t fy, int32_t fh, int32_t bx, int32_t by);
@@ -796,19 +806,26 @@ void text_surface(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t 
 // mark the break e; a newline or '^', or a width above cols * 8, draws buf[st, e) at (x, y) through drawTextSurface when
 // H > 16 and colour is 0x80007fff, else drawTextWithColor (setQuad(colour, -1, 2, 2)), y += H, st = e + 1 (e + 2 after a '^'),
 // i = e; y > 0x248 stops. A pending line (acc > 0, y <= 0x248) is drawn the same way at the end. Returns y.
-int32_t message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
+// P11B fix 2: draw = false measures only (the end y of the same wrap; nothing drawn, the text object's markup state put back)
+int32_t message_buffer_impl(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour, bool draw) {
   const std::string buf = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer));
   if (!text_metrics(ctx) && !rec().on) {
-    g.unsup("drawMessageBuffer: no text provider");
+    if (draw) g.unsup("drawMessageBuffer: no text provider");
     return y;
   }
   int32_t H = sub32(widget_value(g, ctx), 4);
   if (H < 10) H = 10;
   if (buf.empty()) return y;
   const bool shadowed = H > 0x10 && colour == 0x80007fffu;
+  struct ObjBack {  // measure-only: the root text object as it was (text_put moves its markup words)
+    TextObj *o;
+    TextObj saved;
+    ~ObjBack() { if (o) *o = saved; }
+  } back{draw ? nullptr : &root_obj(g, ctx), draw ? TextObj{} : root_obj(g, ctx)};
   // the line is buf + st with the byte at e cut to NUL: up to e when e >= st, else up to the text's end (a break index left
   // behind st: the original then draws the rest of the buffer, once per pass until y passes 0x248)
   auto line = [&](size_t st, size_t e) {
+    if (!draw) return;
     const std::string s = st < buf.size() ? buf.substr(st, e >= st ? e - st : std::string::npos) : std::string();
     if (shadowed) text_surface(g, ctx, s, x, y, colour);
     else draw_text_q(g, ctx, s, x, y, colour, 0xffffffffu, 2, 2, "drawTextWithColor");
@@ -835,6 +852,9 @@ int32_t message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uin
     y = add32(y, H);
   }
   return y;
+}
+int32_t message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
+  return message_buffer_impl(g, ctx, cols, x, y, colour, true);
 }
 
 // drawWindowFrame(x, y, w, h, flag) (c3eh.cpp DrawWindowFrame_re): the display scale (1, 1, 1); w and x, h and y 16-rounded
@@ -1005,27 +1025,12 @@ void info_panel_tool_tip(Gfx &g, Ctx &ctx, int32_t sel) {
   int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
   if (sel >= 13 && sel <= 15) px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_rec24_4c7a2c, -4)) + u(24 * ct + 8 * (sel - 13)));
   const int32_t X = static_cast<int32_t>(cm::call_peer(ctx, "clamp", {u(add32(px, 0x20)), 0x50, 0x2d0}).eax);
-  call(g, ctx, "drawFrameR3", {u(sub32(X, mode() == 8 ? 0x4f : 0x50)), 0x192, 0xa0, 0x70, 1});
-  const uint32_t sp = va(ctx, GSO(g_sprites5a53c8, 0x318)), mk = va(ctx, GSO(g_sprites58b680, 0x318));
-  call(g, ctx, "Surface_stretchBlit", {sp, mk, root, u(sub32(X, 0x5c)), 0x185, 0});
-  for (int32_t i = 0; i <= 7; ++i) {
-    const uint32_t k = i == 7 ? 2u : 1u;
-    call(g, ctx, "Surface_stretchBlit", {sp + 0x2cu * k, mk + 0x2cu * k, root, u(add32(sub32(X, 0x4c), 16 * i)), 0x185, 0});
-  }
   const int32_t t = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, sel))));
   const uint32_t rec = va(ctx, GSO(g_tileTypeAttrs, 0)) + 0x30u * u(t);
   const std::string name = gfxb::vstring(ctx.mem, rec);
-  std::string title = name + gfxb::vstring(ctx.mem, va(ctx, GSO(f_strpool_4c7f1c, 0xc0))) +
-                      std::to_string(mul32(static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x23)), 100));
-  title[0] = static_cast<char>(static_cast<uint8_t>(title[0]) + 0xe0);
-  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
-  draw_string(g, ctx, title, sub32(X, 0xc), 0x18a, 0x80000000u, true, "showInfoCursorPanel tip");
-  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});
-  const int32_t rate = static_cast<int32_t>(
-      cm::call_peer(ctx, "clamp", {u(mul32(sub32(4, static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x22))), 2)), 1, 0xa}).eax);
-  call(g, ctx, "Surface_drawScaled", {va(ctx, GSO(g_sprites59b778, 0)) + 0x2cu * u(rate), root, u(sub32(X, 0x5a)), 0x187, 1, 1, 1, 0});
   static const uint32_t kTheme[4] = {0xa8, 0x7c, 0x64, 0x94};
-  with_saved_state(ctx, [&]() {
+  // the description into g_textBuffer (the caller holds the state saved)
+  auto fill = [&](bool report) {
     const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
     const std::string key = gfxb::vstring(ctx.mem, va(ctx, GSO(f_strpool_4c61dc, 0))) + name;
     put_str(ctx, buf + 0x800, key);
@@ -1035,25 +1040,58 @@ void info_panel_tool_tip(Gfx &g, Ctx &ctx, int32_t sel) {
         cm::call_peer(ctx, "lookupThemeText", {va(ctx, GSO(f_strpool_4c7f1c, kTheme[ct])), buf + 0x800});
       } catch (...) {
         put_str(ctx, buf, "");
-        g.unsup("showInfoCursorPanel tip: lookupThemeText failed (no theme file)");
+        if (report) g.unsup("showInfoCursorPanel tip: lookupThemeText failed (no theme file)");
       }
     }
-    message_buffer(g, ctx, 0x10, sub32(X, 0x46), 0x19a, 0x80007fffu);
+  };
+  // the box's height, the horizontal meter's row and the shift up: the original's 0x70 / 0x1ea / 0 (see g_defect_tip_box)
+  int32_t box_h = 0x70, bar_y = 0x1ea, dy = 0;
+  if (!SG_DEFECT(g_defect_tip_box)) {
+    call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});  // the description's font
+    int32_t text_end = 0x19a;
+    with_saved_state(ctx, [&]() {
+      fill(false);
+      text_end = message_buffer_impl(g, ctx, 0x10, sub32(X, 0x46), 0x19a, 0x80007fffu, false);
+    });
+    bar_y = add32(std::max(text_end, 0x1d2), 8);
+    box_h = (sub32(add32(bar_y, 8), 0x192) + 15) & ~15;
+    dy = std::max(0, sub32(add32(0x192, box_h), 0x1e2));
+  }
+  call(g, ctx, "drawFrameR3", {u(sub32(X, mode() == 8 ? 0x4f : 0x50)), u(sub32(0x192, dy)), 0xa0, u(box_h), 1});
+  const uint32_t sp = va(ctx, GSO(g_sprites5a53c8, 0x318)), mk = va(ctx, GSO(g_sprites58b680, 0x318));
+  call(g, ctx, "Surface_stretchBlit", {sp, mk, root, u(sub32(X, 0x5c)), u(sub32(0x185, dy)), 0});
+  for (int32_t i = 0; i <= 7; ++i) {
+    const uint32_t k = i == 7 ? 2u : 1u;
+    call(g, ctx, "Surface_stretchBlit", {sp + 0x2cu * k, mk + 0x2cu * k, root, u(add32(sub32(X, 0x4c), 16 * i)), u(sub32(0x185, dy)), 0});
+  }
+  std::string title = name + gfxb::vstring(ctx.mem, va(ctx, GSO(f_strpool_4c7f1c, 0xc0))) +
+                      std::to_string(mul32(static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x23)), 100));
+  title[0] = static_cast<char>(static_cast<uint8_t>(title[0]) + 0xe0);
+  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  draw_string(g, ctx, title, sub32(X, 0xc), sub32(0x18a, dy), 0x80000000u, true, "showInfoCursorPanel tip");
+  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});
+  const int32_t rate = static_cast<int32_t>(
+      cm::call_peer(ctx, "clamp", {u(mul32(sub32(4, static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x22))), 2)), 1, 0xa}).eax);
+  call(g, ctx, "Surface_drawScaled",
+       {va(ctx, GSO(g_sprites59b778, 0)) + 0x2cu * u(rate), root, u(sub32(X, 0x5a)), u(sub32(0x187, dy)), 1, 1, 1, 0});
+  with_saved_state(ctx, [&]() {
+    fill(true);
+    message_buffer(g, ctx, 0x10, sub32(X, 0x46), sub32(0x19a, dy), 0x80007fffu);
   });
   const int32_t b = static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x20));
   const uint32_t win = state_va(ctx, &GameState::g_rootWindow) + 0x274u;
   auto line = [&](int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t c) {
-    call(g, ctx, "Widget_fillRect", {win, u(x1), u(y1), u(x2), u(y2), c});
+    call(g, ctx, "Widget_fillRect", {win, u(x1), u(sub32(y1, dy)), u(x2), u(sub32(y2, dy)), c});
   };
   line(add32(X, 0x40), 0x1a9, add32(X, 0x40), 0x1d2, 0x80006318u);
   line(add32(X, 0x40), sub32(0x1d2, mul32(6, b)), add32(X, 0x40), 0x1d2, 0x80004210u);
   line(add32(X, 0x3c), 0x1d2, add32(X, 0x44), 0x1d2, 0x80001284u);
   const uint32_t marker = va(ctx, GSO(g_surfaces59b050, 0x23c));
-  call(g, ctx, "Image_draw", {marker, root, u(add32(X, 0x3c)), u(sub32(0x1cd, mul32(6, b))), 0});
+  call(g, ctx, "Image_draw", {marker, root, u(add32(X, 0x3c)), u(sub32(sub32(0x1cd, mul32(6, b)), dy)), 0});
   const uint32_t c = ctx.mem.load<uint8_t>(rec + 0x21);
   const int32_t bar = static_cast<int32_t>(6u << (c & 31));
-  if (c != 0) line(sub32(X, 0x48), 0x1ea, add32(sub32(X, 0x48), bar), 0x1ea, 0x80004210u);
-  call(g, ctx, "Image_draw", {marker, root, u(add32(sub32(X, 0x4a), bar)), 0x1e2, 0});
+  if (c != 0) line(sub32(X, 0x48), bar_y, add32(sub32(X, 0x48), bar), bar_y, 0x80004210u);
+  call(g, ctx, "Image_draw", {marker, root, u(add32(sub32(X, 0x4a), bar)), u(sub32(sub32(bar_y, 8), dy)), 0});
   (void)gs;
 }
 

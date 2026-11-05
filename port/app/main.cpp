@@ -610,6 +610,7 @@ const ProfileMember kPlayProfile[] = {
     {"updateGolfers.walkOffGrid", 0},               // P6A
     {"mainLoop.cameraFollowOffGrid", 0},            // P6A
     {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)
+    {"infoCursorTip.fixedBox", 0},                  // P11B fix 2 (the palette tool tip box fitted to its text, above the palette)
     {"worldToScreen.wideViewVisibility", 0},        // P8B (G32: the on-screen test over the wide view)
     {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
     {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
