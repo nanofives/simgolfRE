@@ -1060,3 +1060,15 @@ P10I (711fd068, f32f7394): the tee-to-cursor line recorded as a primitive and dr
 highlights swapped at the display rate from looks learned per control (--hover-rate; palette 11/16 immediate, dwell tips not covered).
 Final smoke of the published f32f7394 build (play, Hawaii, 1920x1080, green tool): 10.48-10.72 fps, close rc 0
 (log/roadmap/P10/P10_final/). Worker trees port/build/P10* and instances/p10g deleted junction-safely (log/roadmap/P10/P10_cleanup.py).
+
+## P11: fifth play-test feedback (2026-11-05)
+Brief log/roadmap/P11/BRIEF.md (five items), workers P11A..P11E, each fix merged and published (LAN + GitHub) as it landed.
+P11A: trees at the furthest zoom (the original skips them by design; play switch mainLoop.treesHiddenFarZoom), zoom level 8 closer
+than the original's 4 (mainLoop.zoomInStopsAt4). P11B: the people panel anchored left (--hud-panel), the palette tool tip trimmed to
+its content (infoCursorTip.fixedBox). P11C: hover help lines for terrain items, the tile under the cursor and the amenities / Undo /
+Improvements slots, built from the tile-type records and the code (P11C_notes.md facts tables; --hover-help). P11D: Ctrl+Z / Ctrl+Y
+for tile edits and placed objects in one history, full refund (Mariano's choice), recorded as frame-head writes so traces replay
+(mainLoop.courseUndo, --undo-keys). P11E: build tools keep zoom 8 (mainLoop.toolForcesZoom4), translucent previews and the tile box
+scaled right at 8. SG_APP_P11=off turns the app parts off. Open: zooms 1 / 2 still force 4 with a tool; text keeps its zoom-4 size
+at 8; arrow keys move 4 tiles at 8; an object's cash refund in a money game not measured (career buildings locked in the tutorial).
+Worker trees deleted with log/roadmap/P10/P10_cleanup.py; merge helper log/roadmap/P10/union_conflicts.py.
