@@ -610,6 +610,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
     {"mainLoop.vacatedPanelClick", 0},              // P9E fix 3 (a press where a moved panel used to be acts on the course)
     {"mainLoop.courseUndo", 0},                     // P11D (Mariano's play-test 5 item 4: Ctrl+Z undoes course edits)
+    {"mainLoop.treesHiddenFarZoom", 0},             // P11A fix 1 (trees at the furthest zoom)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit

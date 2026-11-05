@@ -102,6 +102,15 @@ int g_defect_camera_follow_offgrid = 1;
 // the reversal turn (updateGolfers+0x29cf..updateGolfers+0x29e6) and the step overshoot can take a golfer past the edge
 // (log/c3/c3fyl/audit123.md, U1). Fixed (0): the golfer's world position is clamped to 0..0xc7ff after the step.
 int g_defect_golfer_walk_offgrid = 1;
+// mainLoop.treesHiddenFarZoom (P11A fix 1, Mariano's play-test 5: "furthest zoom is not rendering trees"): the tile pass of
+// mainLoop P3 queues the sprite of a tile whose type class byte (g_tileTypeAttrs + 0x26 of its 48-byte row) is 0xd (the
+// forest trees, tropical trees and palms) only while g_zoomScale > 1 (ML+0x4aba cmp / ML+0x4ac1 jle past the whole block), so
+// at the furthest zoom (1) those tiles show their ground alone. Fixed (0): the block also runs at zoom 1 (the same sheets, at the
+// display scale shade * zoom, a quarter of zoom 4's size), and a tree enters the sprite queue there only while the queue holds
+// fewer than kFarTreeQueueLimit entries, so the golfers, animals and balls queued after the tile pass (ML+0x5fb7 onwards) keep
+// their places under enqueueSprite's 0x3ff cap. At zoom 2 and 4 nothing changes.
+int g_defect_far_zoom_trees = 1;
+constexpr int kFarTreeQueueLimit = 0x280;
 int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
@@ -2043,6 +2052,11 @@ const DefectDef kDefects[] = {
     {"updateGolfers.walkOffGrid", "P6A",
      "a golfer's walking step has no grid test (reversal turn, step overshoot); fixed: the position is clamped to the grid after the step",
      &g_defect_golfer_walk_offgrid},
+    {"mainLoop.treesHiddenFarZoom", "P11A",
+     "at the furthest zoom (g_zoomScale 1) the tile pass queues no tree, tropical tree or palm sprite (type class 0xd): forests "
+     "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "
+     "for the golfers queued after them",
+     &g_defect_far_zoom_trees},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

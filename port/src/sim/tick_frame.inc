@@ -1645,6 +1645,13 @@ void Ph_0041353d(u32 F) {
     int eax = 0, ebx = 0, ecx = 0, edx = 0, esi = 0, edi = 0, ebp = 0;
     int stk[400];
     int sp = 256;
+    // P11A mainLoop.treesHiddenFarZoom = 0: the tile pass's tree block also runs at zoom 1, where a tree is queued only while
+    // the queue has room for what the frame queues after the tile pass (tick.cpp g_defect_far_zoom_trees)
+    const bool farTrees = !SG_DEFECT(g_defect_far_zoom_trees) && (int)G32(GS(g_zoomScale)) == 1;
+    auto treeEnqueue = [&](int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7) -> int {
+        if (farTrees && ctx.gs().g_spriteQueueCount >= kFarTreeQueueLimit) return 0;  // enqueueSprite is void
+        return cc("enqueueSprite", a0, a1, a2, a3, a4, a5, a6, a7);
+    };
     (void)eax; (void)ebx; (void)ecx; (void)edx; (void)esi; (void)edi; (void)ebp; (void)stk; (void)sp;
 
 ebx = G32(GS(g_holesPlusOne)); // ML+0x3f7d  mov ebx, dword ptr [g_holesPlusOne]
@@ -2485,7 +2492,7 @@ FD(0x10) = eax; // ML+0x4aa9  mov dword ptr [F+0x10], eax
 // ML+0x4aad  cmp byte ptr [eax + g_tileTypeAttrs+0x26], 0xd
 if (((GU8(eax + (GS(g_tileTypeAttrs) + 38)))&0xff) != ((0xd)&0xff)) goto La_414931; // ML+0x4ab4  jne ML+0x5371
 // ML+0x4aba  cmp dword ptr [g_zoomScale], 1
-if ((int)(G32(GS(g_zoomScale))) <= (int)(1)) goto La_414931; // ML+0x4ac1  jle ML+0x5371
+if ((int)(G32(GS(g_zoomScale))) <= (int)(1) && !farTrees) goto La_414931; // ML+0x4ac1  jle ML+0x5371 (P11A: not at zoom 1 when farTrees)
 eax = G32(GS(g_flags)); // ML+0x4ac7  mov eax, dword ptr [g_flags]
 // ML+0x4acc  test ah, 4
 if ((((((((eax>>8)&0xff)) & (4)))&0xff)) != 0) goto La_414931; // ML+0x4acf  jne ML+0x5371
@@ -2703,7 +2710,7 @@ edx = (edx) - (2); // ML+0x4d84  sub edx, 2
 edx = (edx) * (G32(GS(g_zoomScale))); // ML+0x4d87  imul edx, dword ptr [g_zoomScale]
 edx = (edx) + (ebx); // ML+0x4d8e  add edx, ebx
 stk[--sp] = (int)(edx); // ML+0x4d90  push edx
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x4d91
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x4d91 (P11A: budget at zoom 1)
 sp += 8; // ML+0x4d96  add esp, 0x20  (caller stack cleanup)
 La_414359:;
 edx = FD(0x14); // ML+0x4d99  mov edx, dword ptr [F+0x14]
@@ -2762,7 +2769,7 @@ stk[--sp] = (int)(edx); // ML+0x4e55  push edx
 edx = FD(0x7c); // ML+0x4e56  mov edx, dword ptr [F+0x7c]
 stk[--sp] = (int)(eax); // ML+0x4e5d  push eax
 stk[--sp] = (int)(edx); // ML+0x4e5e  push edx
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x4e5f
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x4e5f (P11A: budget at zoom 1)
 sp += 11; // ML+0x4e64  add esp, 0x2c  (caller stack cleanup)
 goto La_414359; // ML+0x4e67  jmp ML+0x4d99
 La_41442c:;
@@ -2943,7 +2950,7 @@ ecx = (ecx) + (5); // ML+0x5055  add ecx, 5
 { idiv64(edx, eax, (ecx)); } // ML+0x5058  idiv ecx
 eax = (eax) + (FD(0x7c)); // ML+0x505a  add eax, dword ptr [F+0x7c]
 stk[--sp] = (int)(eax); // ML+0x5061  push eax
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5062
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5062 (P11A: budget at zoom 1)
 eax = FD(0x20); // ML+0x5067  mov eax, dword ptr [F+0x20]
 edx = esi; // ML+0x506b  mov edx, esi
 edx = ~(edx); // ML+0x506d  not edx
@@ -2982,7 +2989,7 @@ ecx = (ecx) + (5); // ML+0x50bc  add ecx, 5
 edx = FD(0x7c); // ML+0x50c1  mov edx, dword ptr [F+0x7c]
 edx = (edx) - (eax); // ML+0x50c8  sub edx, eax
 stk[--sp] = (int)(edx); // ML+0x50ca  push edx
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x50cb
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x50cb (P11A: budget at zoom 1)
 sp += 16; // ML+0x50d0  add esp, 0x40  (caller stack cleanup)
 goto La_4146e1; // ML+0x50d3  jmp ML+0x5121
 La_414695:;
@@ -3009,7 +3016,7 @@ edx = (edx) - (2); // ML+0x510c  sub edx, 2
 edx = (edx) * (G32(GS(g_zoomScale))); // ML+0x510f  imul edx, dword ptr [g_zoomScale]
 edx = (edx) + (ebx); // ML+0x5116  add edx, ebx
 stk[--sp] = (int)(edx); // ML+0x5118  push edx
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5119
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5119 (P11A: budget at zoom 1)
 sp += 8; // ML+0x511e  add esp, 0x20  (caller stack cleanup)
 La_4146e1:;
 edx = FD(0x14); // ML+0x5121  mov edx, dword ptr [F+0x14]
@@ -3140,7 +3147,7 @@ ecx = (ecx) + (5); // ML+0x5290  add ecx, 5
 { idiv64(edx, eax, (ecx)); } // ML+0x5293  idiv ecx
 eax = (eax) + (FD(0x7c)); // ML+0x5295  add eax, dword ptr [F+0x7c]
 stk[--sp] = (int)(eax); // ML+0x529c  push eax
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x529d
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x529d (P11A: budget at zoom 1)
 edx = esi; // ML+0x52a2  mov edx, esi
 eax = G32(GS(unk_005a9cc8)); // ML+0x52a4  mov eax, dword ptr [unk_005a9cc8]
 edx = ~(edx); // ML+0x52a9  not edx
@@ -3179,7 +3186,7 @@ ecx = (ecx) + (5); // ML+0x52f7  add ecx, 5
 edx = FD(0x7c); // ML+0x52fc  mov edx, dword ptr [F+0x7c]
 edx = (edx) - (eax); // ML+0x5303  sub edx, eax
 stk[--sp] = (int)(edx); // ML+0x5305  push edx
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5306
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5306 (P11A: budget at zoom 1)
 sp += 16; // ML+0x530b  add esp, 0x40  (caller stack cleanup)
 goto La_41491d; // ML+0x530e  jmp ML+0x535d
 La_4148d0:;
@@ -3206,7 +3213,7 @@ edx = (edx) - (2); // ML+0x5348  sub edx, 2
 edx = (edx) * (G32(GS(g_zoomScale))); // ML+0x534b  imul edx, dword ptr [g_zoomScale]
 edx = (edx) + (ebx); // ML+0x5352  add edx, ebx
 stk[--sp] = (int)(edx); // ML+0x5354  push edx
-eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5355
+eax = treeEnqueue(stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5355 (P11A: budget at zoom 1)
 sp += 8; // ML+0x535a  add esp, 0x20  (caller stack cleanup)
 La_41491d:;
 eax = FD(0x30); // ML+0x535d  mov eax, dword ptr [F+0x30]
