@@ -402,10 +402,36 @@ void LiveSession::end_load(portsim::Ctx &ctx) {
 }
 
 // P6B item 1 (host.h request_close)
-void LiveSession::title_menu(portsim::Ctx &) {
+void LiveSession::title_menu(portsim::Ctx &ctx) {
   title_seen_.store(true);
   title_ever_ = true;  // P6B item 2: loads after this are world loads (no game loading screen)
   at_menu_.store(true);
+  // P10C fix 1 (HostOptions::title_bands): back from a session, the title menu's first refreshFull (tick_menu.inc hover loop)
+  // presented while in_game_ was still set, so its frame carries the in-game hint (black side bands); the next passes draw the
+  // same picture, which present() does not post again, so the bands stayed black until a hover changed it. Post it once more
+  // with the title menu's own hint (the frame and its text runs as they are; the title has no world layer)
+  if (opt_.title_bands && in_game_ && last_band_ == BandFill::Black && !last_presented_.empty() && !banner_shown_) {
+    in_game_ = false;
+    WorldImage wi;
+    portsim::GfxTextFrame tf;
+    if (opt_.text_native && take_text_frame(ctx, last_presented_, tf)) wi.text = std::move(tf);
+    {
+      std::lock_guard<std::mutex> lk(frame_mu_);
+      frame_world_ = std::move(wi);
+      frame_slot_ = last_presented_;
+      frame_index_ = last_index_;
+      frame_band_ = BandFill::Extend;
+      frame_waiting_ = true;
+      last_band_ = BandFill::Extend;
+    }
+    ++title_reposts_;
+    void *h;
+    {
+      std::lock_guard<std::mutex> lk(mu_);
+      h = hwnd_;
+    }
+    if (h) PostMessageW(static_cast<HWND>(h), kMsgPresent, 0, 0);
+  }
   if (exiting_ || exit_arm_) return;
   // a close press on the title menu, or the in-game prompt's quit: its quit save (H2_QuitSave) came back here. Stage 2
   // counts too: with g_debtYears >= 3 and flag 0x1000000 set, H1's quit goes to the quit save with no prompt (ML+0x11585)
@@ -696,6 +722,8 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     frame_band_ = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
     ++(in_game_ ? presents_black_ : presents_extend_);
     frame_waiting_ = true;
+    last_band_ = frame_band_;  // P10C fix 1
+    last_index_ = index;
   }
   void *h;
   {
@@ -1198,6 +1226,8 @@ std::string LiveSession::summary_json(const Result &r) const {
        std::to_string(presents_text_) + ",\"runs\":" + std::to_string(text_runs_) + "}";  // P9C
   s += ",\"p9e\":{\"vacated_clicks\":" + std::to_string(opt_.vacated_clicks ? 1 : 0) + ",\"vacated_writes\":" +
        std::to_string(vacated_writes_) + "}";  // P9E fix 3
+  s += ",\"p10c\":{\"title_bands\":" + std::to_string(opt_.title_bands ? 1 : 0) + ",\"title_reposts\":" +
+       std::to_string(title_reposts_) + "}";  // P10C fix 1
   s += ",\"memory\":" + memory.json();
   if (tlog_calls_ >= 0)
     s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +

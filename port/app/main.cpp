@@ -44,6 +44,8 @@
 //   font (profile.h; F12 cycles on -> detail -> off; detail adds the frame's phases in ms). --profile-csv <file>: one row per
 //   second of the profiler's line (fps, game frames per second, sim / gfx / terrain / capture / wait ms per game frame, base /
 //   world / layers / text / bands / overlay / blit ms per paint). session.json gets the means (`p10a`).
+//   P10C fix 1: --title-bands on|off (default on with --wide; SG_APP_P10=off: off) back from a session, the title menu's first
+//   frame is posted again with the title's band hint, so its side bands show the edge fill instead of black (host.h title_bands).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -337,6 +339,7 @@ struct Options {
   bool hud_cursor = true;          // P9E fix 4: --hud-cursor on|off (SG_APP_P9E=off: off)
   std::string fps = "on";          // P10A: --fps on|detail|off (SG_APP_P10=off: off)
   std::string profile_csv;         // P10A: --profile-csv <file>
+  bool title_bands = true;         // P10C fix 1: --title-bands on|off (SG_APP_P10=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1270,6 +1273,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.hud_layers = hud_layers_on(o);                    // P9B
   ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
   ho.cursor_previews = ho.remap && hud_layers_on(o) && o.hud_cursor;  // P9E fix 4
+  ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
@@ -2668,6 +2672,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.text_banner = v == "on";
     }
+    else if (a == "--title-bands") {  // P10C fix 1
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.title_bands = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2760,8 +2768,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.hud_modal = false;
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
     if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
-  if (const char *ep = std::getenv("SG_APP_P10"))  // P10A / P10B: no FPS overlay, P10 text fixes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) { o.text_banner = false; o.fps = "off"; }
+  if (const char *ep = std::getenv("SG_APP_P10"))  // P10: the fourth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) { o.text_banner = false; o.fps = "off"; o.title_bands = false; }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

@@ -166,6 +166,9 @@ struct HostOptions {
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
+  // P10C fix 1: when the title menu reports its first pass after a session, the frame it presented with the in-game band hint
+  // (BandFill::Black: the title's first refreshFull runs before title_menu() clears in_game_) is posted again with Extend
+  bool title_bands = false;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -312,6 +315,9 @@ class LiveSession : public portsim::LiveHost {
   bool in_game_ = false;
   void track_screen(portsim::Ctx &ctx, bool frame_loop);
   uint64_t presents_extend_ = 0, presents_black_ = 0;  // presents by band hint (summary_json)
+  BandFill last_band_ = BandFill::Black;  // P10C fix 1: the band hint and index of last_presented_ (sim thread)
+  uint32_t last_index_ = 0;
+  uint64_t title_reposts_ = 0;
   uint64_t guarded_reads_ = 0;        // cursor reads answered with last_inside_
   // presents
   std::mutex frame_mu_;
