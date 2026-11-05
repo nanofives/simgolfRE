@@ -1054,3 +1054,9 @@ P10F (7cdc92a7): the translucent placement box drawn at the window's resolution 
 shift (the tee-to-cursor line stays 800-space). P10G (8b1ef44e): U-P10C-01 answered: the original plants and draws a palm on one
 click; the port's pal_load opened the spaced palette paths while the install has underscore folders, so palms and tropical trees
 were never drawn on tropical courses (41,028 skipped draws on Hawaii), which was item 5 for tree tiles. flic::resolve_palette_name.
+P10H (7e633f9d): Hawaii measured at the original's 10.7 fps in every mode (P10G's 2 fps shots were taken under other workers' builds);
+--sprite-filter sharp (default): each art pixel a crisp block, coverage-mixed at straddling window pixels, outlines bilinear.
+P10I (711fd068, f32f7394): the tee-to-cursor line recorded as a primitive and drawn at the window's resolution (--line-res); HUD hover
+highlights swapped at the display rate from looks learned per control (--hover-rate; palette 11/16 immediate, dwell tips not covered).
+Final smoke of the published f32f7394 build (play, Hawaii, 1920x1080, green tool): 10.48-10.72 fps, close rc 0
+(log/roadmap/P10/P10_final/). Worker trees port/build/P10* and instances/p10g deleted junction-safely (log/roadmap/P10/P10_cleanup.py).
