@@ -24,10 +24,10 @@ void popup_gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
 struct DialogMark {
   Ctx &ctx;
   bool piece = false;
-  explicit DialogMark(Ctx &c) : ctx(c) {
+  explicit DialogMark(Ctx &c, bool text_box = false) : ctx(c) {  // P10C fix 4: text_box = textInputBox's piece
     if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0 && popup_gfx_on(ctx)) {
       const GameState &gs = ctx.gs();
-      gfx_hud_popup_begin(ctx, gs.g_rootInput[kClickX], gs.g_rootInput[kClickY], gs.g_rootInput[kButton] != 0);
+      gfx_hud_popup_begin(ctx, gs.g_rootInput[kClickX], gs.g_rootInput[kClickY], gs.g_rootInput[kButton] != 0, text_box);
       piece = true;
     }
     popup_gx(ctx, "dialogs.begin", {});
@@ -245,7 +245,7 @@ int32_t text_input_box(Ctx &ctx, uint32_t title, int32_t x, int32_t y, int32_t m
   int32_t len = i32(vstrlen(m, tb));
   int32_t cur = len;
   const int32_t width = mul32(max_len, 12);
-  DialogMark dialog_mark(ctx);
+  DialogMark dialog_mark(ctx, true);
   const uint32_t root = gs.f_stateptr_4c1570[0];
   for (;;) {
     // the box (c3el.cpp TextInputBox_re, the draw at the top of every pass): three frames, the title, the white field,

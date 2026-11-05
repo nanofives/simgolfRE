@@ -50,6 +50,8 @@
 //   drawing wrote, also where the word equals the course's under it (gfx.h gfx_set_hud_writes); off = P9B's diff (icon holes).
 //   P10C fix 3: --photo-dir on|off (default on; SG_APP_P10=off: off) the live game makes <data>/files/snapshots, the folder the
 //   bulletin board's accomplishment photos are written to and read from (without it the photo frames stay empty).
+//   P10C fix 4: --hud-textbox on|off (default on with the HUD popups; SG_APP_P10=off: off) a textInputBox opened from no panel
+//   (saveGameDialog's SAVE GAME box after the quit prompt) is composed centred in the window, its clicks remapped with it.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -354,6 +356,7 @@ struct Options {
   bool title_bands = true;         // P10C fix 1: --title-bands on|off (SG_APP_P10=off: off)
   bool hud_writes = true;          // P10C fix 2: --hud-writes on|off (SG_APP_P10=off: off)
   bool photo_dir = true;           // P10C fix 3: --photo-dir on|off (SG_APP_P10=off: off)
+  bool hud_textbox = true;         // P10C fix 4: --hud-textbox on|off (SG_APP_P10=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -397,6 +400,7 @@ static void setup_text(Presenter &p, const Options &o) {
                                                      : TextDefect::None);
   p.set_text_unit_redraw(o.text_unit_redraw);
   p.set_text_fit(o.text_fit);  // P10B fix 2
+  p.set_text_boxes(o.hud_textbox);  // P10C fix 4 (the presenter's popup pieces)
 }
 
 // P5B item 4: --scale
@@ -2712,6 +2716,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.photo_dir = v == "on";
     }
+    else if (a == "--hud-textbox") {  // P10C fix 4
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_textbox = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2809,7 +2817,7 @@ int main(int argc, char **argv) {
       o.text_banner = o.text_fit = false;
       o.fps = "off";
       o.text_peel = "plain";
-      o.title_bands = o.hud_writes = o.photo_dir = false;
+      o.title_bands = o.hud_writes = o.photo_dir = o.hud_textbox = false;
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

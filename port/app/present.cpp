@@ -599,16 +599,28 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   const bool pieces = anchor && popups_on_ && !f.pieces.empty() && f.owner.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
   if (pieces) {
     piece_frame_ = &f;
+    std::vector<uint8_t> centred(f.pieces.size(), 0);  // P10C fix 4: pieces moved by the text-box centring
     for (size_t k = 0; k < f.pieces.size(); ++k) {
       const portsim::GfxHudPiece &p = f.pieces[k];
       const int8_t a = portsim::gfx_layer_anchor(p.opener);
-      if (a == 0 || p.x1 <= p.x0) continue;
-      int32_t d = a < 0 ? dxl : dxr;
+      // P10C fix 4: a piece drawn inside a centred dialog (its textInputBox, the overwrite question) moves with that dialog
+      if (text_boxes_ && a == 0 && p.parent >= 0 && static_cast<size_t>(p.parent) < k && centred[static_cast<size_t>(p.parent)]) {
+        piece_dx_[k] = piece_dx_[static_cast<size_t>(p.parent)];
+        centred[k] = 1;
+        continue;
+      }
+      // P10C fix 4: a text input dialog no panel opened (the SAVE GAME box: saveGameDialog's panel, x 0x36 .. 0x2aa) is centred:
+      // its box's centre to the frame's centre, in client pixels
+      const bool centre = text_boxes_ && a == 0 && p.text && p.opener == portsim::kGfxLayerCentred;
+      if ((a == 0 && !centre) || p.x1 <= p.x0) continue;
+      int32_t d = centre ? static_cast<int32_t>(static_cast<int64_t>(kLogicalW - p.x0 - p.x1) * vp.client_w / (2 * kLogicalW))
+                  : a < 0 ? dxl : dxr;
       const int32_t left = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(p.x0) * vp.client_w / kLogicalW);
       const int32_t right = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(p.x1) * vp.client_w / kLogicalW);
       if (right + d > cw) d = cw - right;
       if (left + d < 0) d = -left;
       piece_dx_[k] = d;
+      centred[k] = centre ? 1 : 0;
     }
   }
   // the moved piece (index) of a layer pixel, -1 when it stays at the layer's own place

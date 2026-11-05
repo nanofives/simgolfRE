@@ -356,8 +356,20 @@ int32_t save_game_dialog(Ctx &ctx) {
   };
   struct Mark {
     Ctx &c;
-    explicit Mark(Ctx &x) : c(x) { gfx_drop(c, "dialogs.begin", nullptr, 0); }
-    ~Mark() { gfx_drop(c, "dialogs.end", nullptr, 0); }
+    bool piece = false;
+    explicit Mark(Ctx &x) : c(x) {
+      // P10C fix 4: with the HUD capture on, the dialog (its panel, heading and the textInputBox inside it) is one text piece
+      // (gfx.h gfx_hud_popup_begin: records only; no click, so no opener panel unless one is open)
+      if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0 && g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+        gfx_hud_popup_begin(c, 0, 0, false, true);
+        piece = true;
+      }
+      gfx_drop(c, "dialogs.begin", nullptr, 0);
+    }
+    ~Mark() {
+      gfx_drop(c, "dialogs.end", nullptr, 0);
+      if (piece) gfx_hud_popup_end(c);
+    }
   } mark(ctx);
   draw("drawPanelS2", {0x36, 0x50, 0x274, 0x50});
   draw("setDrawTarget", {gs.f_stateptr_4c1570[0], state_va(ctx, &GameState::g_font51b360), 0, 0, 0});

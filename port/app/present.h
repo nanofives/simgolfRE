@@ -175,6 +175,9 @@ class Presenter {
   void set_remap(PanelRemap *r) { remap_ = r; }
   // P9E: popups opened from a HUD panel composed at that panel's place (GfxHudFrame::pieces; off = centred, P9D)
   void set_popups(bool on) { popups_on_ = on; }
+  // P10C fix 4: a textInputBox piece with no opener panel (GfxHudPiece::text, opener kGfxLayerCentred) is moved so its box is
+  // centred on the content rectangle's centre (the frame's x 400), like P9E's moved pieces: its pixels, runs and clicks
+  void set_text_boxes(bool on) { text_boxes_ = on; }
   // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
   // (each clears the runs): the frame must have been published with the same back buffer (the host checks). With layers, the layers'
   // base and pixels are replaced by the run-free ones it carries. At a content rectangle of exactly 800 x 600 nothing changes (the
@@ -244,6 +247,7 @@ class Presenter {
   // P9E: the popups of the frame being composed (GfxHudFrame::pieces): each piece's client offset (0 = it stays centred), set by
   // compose_layers for the layers that carry popup pixels; draw_runs moves a run of such a layer with the piece that owns it
   bool popups_on_ = true;
+  bool text_boxes_ = false;  // P10C fix 4
   mutable std::vector<int32_t> piece_dx_;
   mutable const portsim::GfxHudFrame *piece_frame_ = nullptr;
   static int32_t piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y);  // piece index at an 800-space pixel, -1 none

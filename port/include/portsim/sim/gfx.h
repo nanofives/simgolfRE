@@ -107,6 +107,8 @@ struct GfxHudLayer {
 struct GfxHudPiece {
   int32_t opener = kGfxLayerCentred;
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  uint8_t text = 0;  // P10C fix 4: 1 = a text input dialog (gfx_hud_popup_begin's text_box: textInputBox, saveGameDialog), 0 = a showPopup
+  int32_t parent = -1;  // P10C fix 4: the piece open when this one began (a popup drawn inside another dialog), -1 = none
 };
 struct GfxHudFrame {
   std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
@@ -169,7 +171,7 @@ void gfx_set_hud_cursor(Ctx &ctx, bool on);
 void gfx_set_hud_writes(Ctx &ctx, bool on);
 void gfx_cursor_sprites_begin(Ctx &ctx);
 void gfx_cursor_sprites_end(Ctx &ctx);
-void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);
+void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box = false);  // P10C fix 4: text_box
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
 uint16_t gfx_layer_quarter(uint16_t src, uint16_t dst);

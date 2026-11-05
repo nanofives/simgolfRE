@@ -1135,7 +1135,7 @@ void gfx_set_hud_popups(Ctx &ctx, bool on) {
 // the opener: the open panel layer (a popup a panel's own code opens); else, for a click, the popup piece that owns the clicked
 // pixel (its opener: a popup opened from a popup stays with it), nothing when the clicked pixel was drawn since the last boundary
 // outside every popup (a modal screen's own drawing, a label), else the topmost panel layer with a pixel at the click
-void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click) {
+void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.on || !g->hud.popups) return;
   Gfx::HudCapture &c = g->hud;
@@ -1146,6 +1146,8 @@ void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click) {
     return;
   }
   GfxHudPiece p;
+  p.text = text_box ? 1 : 0;  // P10C fix 4
+  p.parent = c.open.empty() ? -1 : c.open.back();
   const int32_t w = g->root.w, h = g->root.h;
   const bool in = cx >= 0 && cy >= 0 && cx < w && cy < h;
   const size_t i = in ? static_cast<size_t>(cy) * static_cast<size_t>(w) + static_cast<size_t>(cx) : 0;
