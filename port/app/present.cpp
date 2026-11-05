@@ -44,6 +44,7 @@ Viewport fit_viewport(int32_t cw, int32_t ch) {
 
 bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, WorldImage &&world) {
   const bool stale = defect_ == PresentDefect::Stale && !frame_.empty();
+  WorldImage old = std::move(world_);  // P10A: handed back in `world` below (set_frame clears world_)
   const bool ok = set_frame(px, band);
   if (ok && !stale) {
     const bool sane = !world.empty() && world.pw > 0 && world.ph > 0 &&
@@ -51,6 +52,8 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
                       world.mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH && world.fw > 0;
     world_ = sane ? std::move(world) : WorldImage{};
   }
+  if (!stale) world = std::move(old);  // P10A: the previous world image's buffers go back to the caller
+  else world_ = std::move(old);
   return ok;
 }
 

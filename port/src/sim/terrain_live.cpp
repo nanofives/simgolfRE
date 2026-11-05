@@ -4,6 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS  // the development switch SG_LIVE_GETTERS uses getenv
 #include "portsim/sim/terrain_live.h"
 
+#include <algorithm>  // P10A: std::equal / std::fill (world_frame, world_cursor)
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -164,6 +165,32 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
   return true;
 }
 
+// P10A fix 2: the world image of a present in work proportional to the scene's sprite pixels. world_frame and world_cursor give
+// the same pixels as before (P8B / G32 / P9C / P9E fix 4, the loops kept in the comments below); what changed is the order of the
+// work. The scene is in logical pixels (scene_w x 600) and world column x shows scene column col(x) = floor((x - ox) * 800 / fw) +
+// scene_e, which never decreases as x grows: scene column l covers the world columns [first[l], last[l]) (none when first[l] < 0).
+// So each logical row's differing scene columns are found once (scene_w compares) and only their world columns are written, for
+// every world row that shows that logical row (floor(y * 600 / ph)); before, every world pixel was visited (pw x ph, 2.07 M at
+// 1920 x 1080) and world_cursor allocated and scanned its planes even when no preview was kept.
+namespace {
+struct SceneCols {
+  std::vector<int32_t> first, last;
+};
+SceneCols scene_cols(const LiveTerrainWorld &w) {
+  SceneCols c;
+  c.first.assign(static_cast<size_t>(w.scene_w), -1);
+  c.last.assign(static_cast<size_t>(w.scene_w), -1);
+  for (int32_t x = 0; x < w.pw; ++x) {
+    const int64_t d = static_cast<int64_t>(x - w.ox) * 800;
+    const int32_t lx = static_cast<int32_t>(d >= 0 ? d / w.fw : -((-d + w.fw - 1) / w.fw)) + w.scene_e;
+    if (lx < 0 || lx >= w.scene_w) continue;
+    if (c.first[static_cast<size_t>(lx)] < 0) c.first[static_cast<size_t>(lx)] = x;
+    c.last[static_cast<size_t>(lx)] = x + 1;
+  }
+  return c;
+}
+}  // namespace
+
 bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
                               std::vector<uint8_t> &mask, bool text, bool cursor_apart) const {
   if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
@@ -175,31 +202,35 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
     for (size_t i = 0; i < back800.size(); ++i) mask[i] = back800[i] == w.terrain800[i] ? 1 : 0;
     return true;
   }
-  // G32: the wide scene's sprite pixels over the world (nearest: world pixel (x, y) shows scene pixel
-  // (floor((x - ox) * 800 / fw) + scene_e, floor(y * 600 / ph)))
-  std::vector<int32_t> col(static_cast<size_t>(w.pw));
-  for (int32_t x = 0; x < w.pw; ++x) {
-    const int64_t d = static_cast<int64_t>(x - w.ox) * 800;
-    const int64_t q = d >= 0 ? d / w.fw : -((-d + w.fw - 1) / w.fw);
-    col[static_cast<size_t>(x)] = static_cast<int32_t>(q) + w.scene_e;
-  }
+  // G32: the wide scene's sprite pixels over the world (nearest: world pixel (x, y) shows scene pixel (col(x), floor(y * 600 / ph)))
+  // where the scene's pixel differs from scene_base. P9C: text = scene_text in place of the scene. P9E fix 4: cursor_apart = the
+  // cursor passes' previews left out (scene_pre where scene_cur differs from it; not with scene_text, made before them).
+  const bool use_text = text && w.scene_text.size() == w.scene.size();
+  const std::vector<uint16_t> &scene = use_text ? w.scene_text : w.scene;
+  const bool apart = cursor_apart && !use_text && w.scene_pre.size() == w.scene.size() && w.scene_cur.size() == w.scene.size();
+  const SceneCols c = scene_cols(w);
+  struct Run {
+    int32_t x0, x1;
+    uint16_t v;
+  };
+  std::vector<Run> runs;
+  int32_t row_ly = -1;
   for (int32_t y = 0; y < w.ph; ++y) {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
-    const bool use_text = text && w.scene_text.size() == w.scene.size();
-    const std::vector<uint16_t> &scene = use_text ? w.scene_text : w.scene;  // P9C
-    const uint16_t *sr = scene.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
-    // P9E fix 4: the cursor passes' previews left out (scene_text was made at the queue's end, before them)
-    const bool apart = cursor_apart && !use_text && w.scene_pre.size() == w.scene.size() && w.scene_cur.size() == w.scene.size();
-    const uint16_t *pr = apart ? w.scene_pre.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w) : nullptr;
-    const uint16_t *cr = apart ? w.scene_cur.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w) : nullptr;
-    const uint16_t *br = w.scene_base.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
-    uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
-    for (int32_t x = 0; x < w.pw; ++x) {
-      const int32_t lx = col[static_cast<size_t>(x)];
-      if (lx < 0 || lx >= w.scene_w) continue;
-      const uint16_t v = apart && cr[lx] != pr[lx] ? pr[lx] : sr[lx];
-      if (v != br[lx]) dst[x] = v;
+    if (ly != row_ly) {  // the logical row's differing scene columns (consecutive world rows share it)
+      row_ly = ly;
+      runs.clear();
+      const size_t r0 = static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+      const uint16_t *sr = scene.data() + r0, *br = w.scene_base.data() + r0;
+      const uint16_t *pr = apart ? w.scene_pre.data() + r0 : nullptr, *cr = apart ? w.scene_cur.data() + r0 : nullptr;
+      for (int32_t lx = 0; lx < w.scene_w; ++lx) {
+        const uint16_t v = apart && cr[lx] != pr[lx] ? pr[lx] : sr[lx];
+        if (v == br[lx] || c.first[static_cast<size_t>(lx)] < 0) continue;
+        runs.push_back({c.first[static_cast<size_t>(lx)], c.last[static_cast<size_t>(lx)], v});
+      }
     }
+    uint16_t *dst = px.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+    for (const Run &r : runs) std::fill(dst + r.x0, dst + r.x1, r.v);
   }
   const bool s0_ok = w.s0.size() == back800.size();
   for (size_t i = 0; i < back800.size(); ++i)
@@ -212,10 +243,31 @@ bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &
   const LiveTerrainWorld &w = *world_;
   const size_t n = static_cast<size_t>(w.scene_w) * 600;
   if (!w.scene_valid || w.scene_w <= 0 || w.scene_pre.size() != n || w.scene_cur.size() != n) return false;
+  // the logical rows / columns holding a preview pixel (scene_cur != scene_pre); none = nothing to give
+  int32_t ly0 = 600, ly1 = -1, lx0 = w.scene_w, lx1 = -1;
+  for (int32_t ly = 0; ly < 600; ++ly) {
+    const size_t r0 = static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    if (std::equal(w.scene_cur.begin() + static_cast<std::ptrdiff_t>(r0), w.scene_cur.begin() + static_cast<std::ptrdiff_t>(r0 + w.scene_w),
+                   w.scene_pre.begin() + static_cast<std::ptrdiff_t>(r0)))
+      continue;
+    ly0 = std::min(ly0, ly);
+    ly1 = ly;
+    for (int32_t lx = 0; lx < w.scene_w; ++lx)
+      if (w.scene_cur[r0 + static_cast<size_t>(lx)] != w.scene_pre[r0 + static_cast<size_t>(lx)]) {
+        lx0 = std::min(lx0, lx);
+        lx1 = std::max(lx1, lx);
+      }
+  }
+  if (ly1 < 0) {  // P10A: the planes are not made (the caller drops them on false)
+    px.clear();
+    cov.clear();
+    mask800.clear();
+    return false;
+  }
   mask800.assign(static_cast<size_t>(800) * 600, 0);
   bool any = false;
-  for (int32_t y = 0; y < 600; ++y)
-    for (int32_t x = 0; x < 800; ++x) {
+  for (int32_t y = ly0; y <= ly1; ++y)
+    for (int32_t x = std::max(0, lx0 - w.scene_e); x < 800 && x + w.scene_e <= lx1; ++x) {
       const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w.scene_w) + static_cast<size_t>(x + w.scene_e);
       if (w.scene_cur[i] != w.scene_pre[i]) {
         mask800[static_cast<size_t>(y) * 800 + static_cast<size_t>(x)] = 1;
@@ -224,18 +276,20 @@ bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &
     }
   px.assign(static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph), 0);
   cov.assign(px.size(), 0);
+  const SceneCols c = scene_cols(w);
   for (int32_t y = 0; y < w.ph; ++y) {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
+    if (ly < ly0 || ly > ly1) continue;
     const uint16_t *pr = w.scene_pre.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
     const uint16_t *cr = w.scene_cur.data() + static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
-    for (int32_t x = 0; x < w.pw; ++x) {
-      const int64_t d = static_cast<int64_t>(x - w.ox) * 800;
-      const int32_t lx = static_cast<int32_t>(d >= 0 ? d / w.fw : -((-d + w.fw - 1) / w.fw)) + w.scene_e;
-      if (lx < 0 || lx >= w.scene_w || cr[lx] == pr[lx]) continue;
-      const size_t j = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x);
-      px[j] = cr[lx];
-      cov[j] = 1;
-      any = true;
+    for (int32_t lx = lx0; lx <= lx1; ++lx) {
+      if (c.first[static_cast<size_t>(lx)] < 0 || cr[lx] == pr[lx]) continue;
+      for (int32_t x = c.first[static_cast<size_t>(lx)]; x < c.last[static_cast<size_t>(lx)]; ++x) {
+        const size_t j = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x);
+        px[j] = cr[lx];
+        cov[j] = 1;
+        any = true;
+      }
     }
   }
   return any;

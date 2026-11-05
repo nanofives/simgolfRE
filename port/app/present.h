@@ -167,6 +167,7 @@ class Presenter {
   bool set_frame(const std::vector<uint16_t> &px, BandFill band = BandFill::Black);
   // P8B: the same with the frame's world layer (moved in; an empty one = none). With a world layer the client image is the world
   // wherever the frame does not cover it or its mask says the world shows, and the frame's own pixel elsewhere (section above)
+  // P10A: `world` gets the presenter's previous world image back (its buffers, for LiveSession::recycle_world)
   bool set_frame_world(const std::vector<uint16_t> &px, BandFill band, WorldImage &&world);
   const WorldImage &world() const { return world_; }
   // G32: the HUD compositor (kHudPanels; off = P8B stage 2: the frame's 2D pixels stay centred) and the remap it keeps current

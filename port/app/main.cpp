@@ -1370,7 +1370,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       WorldImage wi;  // P8B
       if (session.take_frame(px, index, &band, &wi)) {
         portsim::GfxTextFrame tf = std::move(wi.text);  // P9C: the frame's text runs (empty without --text-res native)
-        if (ho.world) presenter.set_frame_world(px, band, std::move(wi));  // P8B: with its world layer (none = as before)
+        if (ho.world) {
+          presenter.set_frame_world(px, band, std::move(wi));  // P8B: with its world layer (none = as before)
+          session.recycle_world(std::move(wi));                // P10A: the previous image's buffers
+        }
         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
         presenter.set_text(std::move(tf));    // P9C
         win.invalidate();

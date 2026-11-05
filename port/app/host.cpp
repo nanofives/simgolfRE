@@ -567,14 +567,18 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   if (apart && live.world()) {
     const int32_t pw = live.world()->pw, ph = live.world()->ph;
     int32_t x0 = pw, y0 = ph, x1 = 0, y1 = 0;
-    for (int32_t y = 0; y < ph; ++y)
-      for (int32_t x = 0; x < pw; ++x)
-        if (wi.cur_cov[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x)]) {
-          x0 = std::min(x0, x);
-          y0 = std::min(y0, y);
-          x1 = std::max(x1, x + 1);
-          y1 = std::max(y1, y + 1);
-        }
+    for (int32_t y = 0; y < ph; ++y) {  // P10A: a row's first covered pixel by memchr (cur_cov holds 0 / 1), its last from the end
+      const uint8_t *r = wi.cur_cov.data() + static_cast<size_t>(y) * static_cast<size_t>(pw);
+      const void *hit = std::memchr(r, 1, static_cast<size_t>(pw));
+      if (!hit) continue;
+      const int32_t a = static_cast<int32_t>(static_cast<const uint8_t *>(hit) - r);
+      int32_t b = pw;
+      while (b > a && !r[b - 1]) --b;
+      x0 = std::min(x0, a);
+      y0 = std::min(y0, y);
+      x1 = std::max(x1, b);
+      y1 = std::max(y1, y + 1);
+    }
     wi.cur_box[0] = x0;
     wi.cur_box[1] = y0;
     wi.cur_box[2] = x1;
@@ -615,6 +619,22 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   }
   wi.hud_none = layered && !use && portsim::gfx_hud_modal(ctx);  // P9D
   return true;
+}
+
+void LiveSession::recycle_world(WorldImage &&w) {  // P10A
+  std::lock_guard<std::mutex> lk(frame_mu_);
+  if (w.px.capacity() > spare_world_.px.capacity()) spare_world_ = std::move(w);
+}
+
+// P10A: an image whose vectors keep their capacity, every field as a new WorldImage has it
+static void world_reset(WorldImage &w) {
+  for (std::vector<uint16_t> *v : {&w.px, &w.px_text, &w.cur_px}) v->clear();
+  for (std::vector<uint8_t> *v : {&w.mask, &w.mask_text, &w.cur_cov, &w.cur_mask}) v->clear();
+  w.pw = w.ph = w.fw = w.ox = 0;
+  w.hud = portsim::GfxHudFrame{};
+  w.hud_none = false;
+  w.text = portsim::GfxTextFrame{};
+  for (int32_t &b : w.cur_box) b = 0;
 }
 
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
@@ -698,6 +718,12 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   const uint32_t index = static_cast<uint32_t>(presents_.size());
   presents_.push_back({index, mark, frame_, records_, kind, frame_hash(px)});
   WorldImage wi;  // P8B: the world layer under this frame (none without HostOptions::world or before the first terrain pass)
+  {  // P10A: the buffers of a world image the window is done with (new pages for 2 to 4 MB planes cost more than filling them)
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    wi = std::move(spare_world_);
+    spare_world_ = WorldImage{};
+  }
+  world_reset(wi);
   portsim::GfxTextFrame tf;  // P9C
   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
   if (opt_.world && terrain_log && terrain_log->live)

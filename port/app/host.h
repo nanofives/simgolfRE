@@ -203,6 +203,8 @@ class LiveSession : public portsim::LiveHost {
   // 2D screen shown before a game's frame loop runs (boot loading screens, title menu, its sub-screens, the location screen,
   // the world-load screens), Black once the frame loop runs (the course view, and every report or dialog over it)
   bool take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band = nullptr, WorldImage *world = nullptr);
+  // P10A: a world image the window is done with, whose buffers the next present fills again (one is kept)
+  void recycle_world(WorldImage &&w);
   bool focus_child_takes(uint32_t msg, uint32_t wp);  // U-1616, U-1650
   // S7.4: every input message before the translator reads anything for it (the message-key table), and the key state the
   // translator and async_key read in keys_from_messages mode (-1: ask Windows)
@@ -325,6 +327,7 @@ class LiveSession : public portsim::LiveHost {
   uint32_t frame_index_ = 0;
   BandFill frame_band_ = BandFill::Black;  // P7: the band hint of frame_slot_
   WorldImage frame_world_;                 // P8B: the world layer of frame_slot_ (HostOptions::world)
+  WorldImage spare_world_;                 // P10A: recycle_world's image (under frame_mu_)
   // G32: the view the window asks for (window thread, under mu_) and the one applied at a frame head (sim thread)
   int32_t want_w_ = 800, want_pw_ = 0, want_ph_ = 0;
   int32_t applied_w_ = -1, applied_pw_ = 0, applied_ph_ = 0;
