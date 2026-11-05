@@ -1018,45 +1018,66 @@ namespace gfxt {
 // (X + 0x3c, 0x1d2) to (X + 0x44, 0x1d2) in 0x80001284, the marker Image_draw of g_surfaces59b050 + 0x23c at (X + 0x3c,
 // 0x1cd - 6 b); c = the byte r + 0x21: c != 0 the bar (X - 0x48, 0x1ea) to (X - 0x48 + (6 << c), 0x1ea) in 0x80004210, and the
 // marker at (X - 0x4a + (6 << c), 0x1e2). The texts the original builds in g_textBuffer are built there under a saved state.
-void info_panel_tool_tip(Gfx &g, Ctx &ctx, int32_t sel) {
-  GameState &gs = ctx.gs();
-  const uint32_t root = g.root_va(ctx);
-  const int32_t ct = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_courseType)));
-  int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
-  if (sel >= 13 && sel <= 15) px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_rec24_4c7a2c, -4)) + u(24 * ct + 8 * (sel - 13)));
-  const int32_t X = static_cast<int32_t>(cm::call_peer(ctx, "clamp", {u(add32(px, 0x20)), 0x50, 0x2d0}).eax);
-  const int32_t t = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, sel))));
-  const uint32_t rec = va(ctx, GSO(g_tileTypeAttrs, 0)) + 0x30u * u(t);
-  const std::string name = gfxb::vstring(ctx.mem, rec);
+namespace {
+// the tool tip's description into g_textBuffer (the caller holds the state saved): lookupThemeText of the course type's theme
+// table and the key f_strpool_4c61dc + the type's name
+void tool_tip_desc(Gfx &g, Ctx &ctx, int32_t ct, const std::string &name, bool report) {
   static const uint32_t kTheme[4] = {0xa8, 0x7c, 0x64, 0x94};
-  // the description into g_textBuffer (the caller holds the state saved)
-  auto fill = [&](bool report) {
-    const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
-    const std::string key = gfxb::vstring(ctx.mem, va(ctx, GSO(f_strpool_4c61dc, 0))) + name;
-    put_str(ctx, buf + 0x800, key);
-    put_str(ctx, buf, "");
-    if (ct >= 0 && ct <= 3) {
-      try {   // the theme file through the context's GameFiles; without one the description stays empty (reported)
-        cm::call_peer(ctx, "lookupThemeText", {va(ctx, GSO(f_strpool_4c7f1c, kTheme[ct])), buf + 0x800});
-      } catch (...) {
-        put_str(ctx, buf, "");
-        if (report) g.unsup("showInfoCursorPanel tip: lookupThemeText failed (no theme file)");
-      }
+  const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+  const std::string key = gfxb::vstring(ctx.mem, va(ctx, GSO(f_strpool_4c61dc, 0))) + name;
+  put_str(ctx, buf + 0x800, key);
+  put_str(ctx, buf, "");
+  if (ct >= 0 && ct <= 3) {
+    try {   // the theme file through the context's GameFiles; without one the description stays empty (reported)
+      cm::call_peer(ctx, "lookupThemeText", {va(ctx, GSO(f_strpool_4c7f1c, kTheme[ct])), buf + 0x800});
+    } catch (...) {
+      put_str(ctx, buf, "");
+      if (report) g.unsup("showInfoCursorPanel tip: lookupThemeText failed (no theme file)");
     }
-  };
-  // the box's height, the horizontal meter's row and the shift up: the original's 0x70 / 0x1ea / 0 (see g_defect_tip_box)
-  int32_t box_h = 0x70, bar_y = 0x1ea, dy = 0;
+  }
+}
+// the tool tip's place (P11B fix 2): X, the box's height, the horizontal meter's row and the shift up dy: the original's 0x70 /
+// 0x1ea / 0 (see g_defect_tip_box), else measured from the description (P11B_notes.md)
+struct ToolTipLayout {
+  int32_t ct = 0, X = 0, t = 0, box_h = 0x70, bar_y = 0x1ea, dy = 0;
+  uint32_t rec = 0;
+  std::string name;
+};
+ToolTipLayout tool_tip_layout(Gfx &g, Ctx &ctx, int32_t sel) {
+  ToolTipLayout L;
+  const uint32_t root = g.root_va(ctx);
+  L.ct = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_courseType)));
+  int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
+  if (sel >= 13 && sel <= 15) px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_rec24_4c7a2c, -4)) + u(24 * L.ct + 8 * (sel - 13)));
+  L.X = static_cast<int32_t>(cm::call_peer(ctx, "clamp", {u(add32(px, 0x20)), 0x50, 0x2d0}).eax);
+  L.t = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, sel))));
+  L.rec = va(ctx, GSO(g_tileTypeAttrs, 0)) + 0x30u * u(L.t);
+  L.name = gfxb::vstring(ctx.mem, L.rec);
   if (!SG_DEFECT(g_defect_tip_box)) {
     call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});  // the description's font
     int32_t text_end = 0x19a;
     with_saved_state(ctx, [&]() {
-      fill(false);
-      text_end = message_buffer_impl(g, ctx, 0x10, sub32(X, 0x46), 0x19a, 0x80007fffu, false);
+      tool_tip_desc(g, ctx, L.ct, L.name, false);
+      text_end = message_buffer_impl(g, ctx, 0x10, sub32(L.X, 0x46), 0x19a, 0x80007fffu, false);
     });
-    bar_y = add32(std::max(text_end, 0x1d2), 8);
-    box_h = (sub32(add32(bar_y, 8), 0x192) + 15) & ~15;
-    dy = std::max(0, sub32(add32(0x192, box_h), 0x1e2));
+    L.bar_y = add32(std::max(text_end, 0x1d2), 8);
+    L.box_h = (sub32(add32(L.bar_y, 8), 0x192) + 15) & ~15;
+    L.dy = std::max(0, sub32(add32(0x192, L.box_h), 0x1e2));
   }
+  return L;
+}
+}  // namespace
+
+int32_t info_panel_tool_tip_dy(Gfx &g, Ctx &ctx, int32_t sel) { return tool_tip_layout(g, ctx, sel).dy; }
+
+void info_panel_tool_tip(Gfx &g, Ctx &ctx, int32_t sel) {
+  GameState &gs = ctx.gs();
+  const uint32_t root = g.root_va(ctx);
+  const ToolTipLayout lay = tool_tip_layout(g, ctx, sel);
+  const int32_t ct = lay.ct, X = lay.X, box_h = lay.box_h, bar_y = lay.bar_y, dy = lay.dy;
+  const uint32_t rec = lay.rec;
+  const std::string &name = lay.name;
+  auto fill = [&](bool report) { tool_tip_desc(g, ctx, ct, name, report); };
   call(g, ctx, "drawFrameR3", {u(sub32(X, mode() == 8 ? 0x4f : 0x50)), u(sub32(0x192, dy)), 0xa0, u(box_h), 1});
   const uint32_t sp = va(ctx, GSO(g_sprites5a53c8, 0x318)), mk = va(ctx, GSO(g_sprites58b680, 0x318));
   call(g, ctx, "Surface_stretchBlit", {sp, mk, root, u(sub32(X, 0x5c)), u(sub32(0x185, dy)), 0});
@@ -1164,6 +1185,9 @@ void terrain_toolbar_tip(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b) {
 namespace {
 constexpr int kHoverWords = 8;
 constexpr int32_t kHoverToolY = 0x17b;  // the tool line's bar centre: its band (y - 5 .. y + 5) ends above the title strip 0x185
+                                        // (P11B fix 2: the strip is at 0x185 - dy, info_panel_tool_tip_dy; the line follows it)
+constexpr int32_t kHoverSlotRise = 0xc;   // fix 2: a slot line's bar centre above the slot point (the slot tip's text starts at y - 4)
+constexpr int32_t kHoverAmenityRise = 2;  // fix 2: an amenity line's bar centre above the item point (amenities_tip's text starts at y + 5)
 int words(const std::string &s) {
   int n = 0;
   bool in = false;
@@ -1219,17 +1243,85 @@ std::string hover_help_line(Ctx &ctx, int32_t t) {
 }
 
 // the palette tool sel's line, drawn the way the game's one-line tips are (drawPanelBackdrop: the dark bar and the centred text
-// in g_fontRef_519fd8), centred on showInfoCursorPanel's tip X and just above its title strip (y 0x185)
+// in g_fontRef_519fd8), centred on showInfoCursorPanel's tip X and just above its title strip (y 0x185 - dy, P11B fix 2)
 void hover_help_tool(Gfx &g, Ctx &ctx, int32_t sel) {
   if (sel < 0 || sel >= 0x14) return;
   const int32_t t = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, sel))));
   const std::string text = hover_help_line(ctx, t);
   if (text.empty()) return;
-  const int32_t ct = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_courseType)));
-  int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
-  if (sel >= 13 && sel <= 15) px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_rec24_4c7a2c, -4)) + u(24 * ct + 8 * (sel - 13)));
-  const int32_t X = std::min<int32_t>(std::max<int32_t>(add32(px, 0x20), 0x50), 0x2d0);
-  backdrop(g, ctx, text, X, kHoverToolY);
+  const ToolTipLayout lay = tool_tip_layout(g, ctx, sel);  // the tip's X and P11B's shift up dy
+  backdrop(g, ctx, text, lay.X, sub32(kHoverToolY, lay.dy));
+}
+
+// ---- P11C fix 2: the lines of the items that show only a name (log/roadmap/P11/P11C_notes.md section 3). Fixed texts, each one
+// the effect section 3 cites; the item's name is the original's own tip text (amenities_tip / info_panel_slot_tip), which this
+// line follows with ": ".
+// showInfoCursorPanel's slots (slot_action): 0x14 Info Cursor clears the tool, 0x15 Undo opens the help window about the right-
+// click undo, 0x16 Improvements opens the amenities palette (g_buildPanelSlot = 1)
+std::string hover_help_slot_text(int32_t sel) {
+  switch (sel) {
+    case 0x14: return "drops the tool; tiles show what they do";
+    case 0x15: return "right click the map to undo an edit";
+    case 0x16: return "paths, benches, trees, landmarks and more";
+    default: return std::string();
+  }
+}
+// what amenity item L changes (section 3's table; "" = no line)
+// (L 6, Scenic Trees, places the elm tree tile type 16: its clauses are that record's, hover_help_line)
+std::string amenity_effect(Ctx &ctx, int32_t L) {
+  switch (L) {
+    case 0: return "cleaned balls curve less on the next shot";  // ball washer: flag 0x4000000, prepareShot spin -= spin / 3
+    case 1: return "golfers walk faster and tire less";              // updateGolfers: step 6 on a path, energy + 1 (else +0x25)
+    case 2: return "earns cash; worth more near good holes";         // home site: rateLot / 4 on placing, value grows by rateLot
+    case 3: return "tired golfers rest here and recover energy";     // benches: energy counter +0xaa back to 0
+    case 4: return "golfers walking by are pleased";                 // landmark id < 0x10 beside a golfer: thought 0xb, +1
+    case 5: return "golfers walking by are pleased";                 // flower bed beside a golfer: thought 0xb, +1
+    case 6: {
+      const std::string l = hover_help_line(ctx, 16);
+      const size_t k = l.find(": ");
+      return k == std::string::npos ? std::string() : l.substr(k + 2);
+    }
+    case 9: return "golfers walk over water; crossing pleases them";  // bridge: path over type 0x11, thought 7, +1
+    default: return std::string();
+  }
+}
+// drawAmenitiesPanel's items L (amenities_tip's names: -2 Course Terrain, 0 Ballwasher, 1 Pathway, 2 Building Lot, 3 Benches,
+// 4 Landmarks, 5 Flower Bed, 6 Scenic Trees, 7 / 8 Undo, 9 Scenic Bridge)
+std::string hover_help_amenity_text(Ctx &ctx, int32_t L) {
+  switch (L) {
+    case -2: return "back to the terrain tools";
+    case 7:
+    case 8: return "right click the map to undo an edit";
+    default: return amenity_effect(ctx, L);
+  }
+}
+
+// the slot sel's line above showInfoCursorPanel's slot tip (that tip's bar is at the slot point's y + 1, its text at y - 4)
+void hover_help_slot(Gfx &g, Ctx &ctx, int32_t sel) {
+  static const uint32_t kName[3] = {0x18, 0x10, 0};  // info_panel_slot_tip's names (f_strpool_4c7f1c)
+  const std::string effect = hover_help_slot_text(sel);
+  if (effect.empty()) return;
+  const std::string text = pool(ctx, GSO(f_strpool_4c7f1c, kName[sel - 0x14])) + ": " + effect;
+  const int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
+  const int32_t py = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel + 2)));
+  backdrop(g, ctx, text, add32(px, 0x14), sub32(py, kHoverSlotRise));
+}
+// the amenity item L's line above amenities_tip (that tip's bar is at the item point's y + 0xa, at the cursor (a, b) for L -2)
+void hover_help_amenity(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b) {
+  const std::string effect = hover_help_amenity_text(ctx, L);
+  if (effect.empty()) return;
+  // amenities_tip's names: f_strpool_4c80d0 offsets by L + 2 (L 7 / 8: f_strpool_4c7f1c + 0x10)
+  static const int32_t kName[12] = {0x1a0, -1, 0x194, 0x18c, 0x17c, 0x174, 0x168, 0x15c, 0x14c, -1, -1, 0x13c};
+  const uint32_t ci = u(add32(L, 2));
+  if (ci > 11) return;
+  const std::string name = kName[ci] >= 0 ? pool(ctx, GSO(f_strpool_4c80d0, kName[ci])) : pool(ctx, GSO(f_strpool_4c7f1c, 0x10));
+  const std::string text = name + ": " + effect;
+  int32_t x = a, y = b;
+  if (L >= 0) {
+    x = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c7a88, 0x10 + 4 * L)));
+    y = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c7a88, 0x12 + 4 * L)));
+  }
+  backdrop(g, ctx, text, add32(x, 0x14), sub32(y, kHoverAmenityRise));
 }
 
 // the tile under the cursor (cx, cy) with no tool: after the game's own dwell (the frames the HUD tips wait, hover_tip_dwell)

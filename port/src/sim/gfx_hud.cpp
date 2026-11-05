@@ -1462,7 +1462,10 @@ void amenities_panel(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
     return;
   }
   ++ip.count;
-  if (L != -1 && ip.count > hover_tip_dwell()) gfxt::amenities_tip(g, ctx, L, a, b);   // roadmap S3.7
+  if (L != -1 && ip.count > hover_tip_dwell()) {
+    gfxt::amenities_tip(g, ctx, L, a, b);   // roadmap S3.7
+    if (g.hover_help) gfxt::hover_help_amenity(g, ctx, L, a, b);   // P11C fix 2 (gfx.h gfx_set_hover_help)
+  }
 }
 
 void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -1528,7 +1531,10 @@ void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (sel == ip.prev) {
     ++ip.count;
-    if (sel >= 0x14 && ip.count > hover_tip_dwell()) gfxt::info_panel_slot_tip(g, ctx, sel);   // roadmap S3.7
+    if (sel >= 0x14 && ip.count > hover_tip_dwell()) {
+      gfxt::info_panel_slot_tip(g, ctx, sel);   // roadmap S3.7
+      if (g.hover_help) gfxt::hover_help_slot(g, ctx, sel);   // P11C fix 2 (gfx.h gfx_set_hover_help)
+    }
   } else {
     ip.count = 0;
     ip.prev = sel;

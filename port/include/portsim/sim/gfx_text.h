@@ -34,6 +34,8 @@ int32_t text_put(Gfx &g, Ctx &ctx, const std::string &text);
 // The hover tips of the HUD panels (gfx_hud.cpp hands them over where S3.6 reported them; roadmap S3.7, U-1353)
 // showInfoCursorPanel's tip of tool `sel` (0..0x13) and of a slot (sel >= 0x14) after ten frames of dwell
 void info_panel_tool_tip(Gfx &g, Ctx &ctx, int32_t sel);
+// P11B fix 2's shift up of that tip (0 with the original's fixed box): its title strip is at row 0x185 - dy (P11C fix 2)
+int32_t info_panel_tool_tip_dy(Gfx &g, Ctx &ctx, int32_t sel);
 void info_panel_slot_tip(Gfx &g, Ctx &ctx, int32_t sel);
 // drawTerrainToolbar's tip of `sel` at the cursor (a, b)
 void terrain_toolbar_tip(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b);
@@ -52,6 +54,10 @@ void amenities_row_tip(Gfx &g, Ctx &ctx, int32_t r, int32_t a, int32_t b);
 std::string hover_help_line(Ctx &ctx, int32_t t);
 void hover_help_tool(Gfx &g, Ctx &ctx, int32_t sel);
 void hover_help_terrain(Gfx &g, Ctx &ctx, int32_t cx, int32_t cy);
+// fix 2: the line of showInfoCursorPanel's slot sel (0x14..0x16) above its slot tip, of drawAmenitiesPanel's item L above
+// amenities_tip (at the cursor (a, b) for L -2)
+void hover_help_slot(Gfx &g, Ctx &ctx, int32_t sel);
+void hover_help_amenity(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);
 
 }  // namespace gfxt
 }  // namespace portsim
