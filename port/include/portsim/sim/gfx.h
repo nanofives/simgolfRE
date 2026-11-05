@@ -52,6 +52,12 @@ void gfx_set_refresh_hook(Ctx &ctx, GfxRefreshHook fn, void *arg);
 // P8B: whether the back buffer holds a terrain picture (Gfx::back_terrain: set by a terrain pass or restore, cleared by a 2D
 // write covering the whole root surface, copied at Window::refreshFull); false without a backend
 bool gfx_back_terrain(Ctx &ctx);
+// P11C (log/roadmap/P11/P11C_notes.md): the hover help, set by the app's host (--hover-help on, the default; SG_APP_P11=off: off).
+// With it on, showInfoCursorPanel's tool tip gets one more line above it (gfx_text.h hover_help_tool) and the frame code's
+// hover.terrain call (P6, after the cursor's View_toLocal) draws the line of the tile under the cursor after the HUD tips' dwell,
+// both the game's one-line tip (drawPanelBackdrop). Drawing only: the GameState is never written. Off (the default): nothing.
+void gfx_set_hover_help(Ctx &ctx, bool on);
+bool gfx_hover_help(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
 }

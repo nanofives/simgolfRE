@@ -110,6 +110,7 @@ class Gfx {
   // a value a body computed for the frame code (roadmap S3.7: Text_put's width), taken once by gfx_take_value
   bool has_value = false;
   int32_t value = 0;
+  bool hover_help = false;  // P11C (gfx.h gfx_set_hover_help): the hover help lines are drawn
   std::vector<int> snap_terrain;
   // a 2D write of the rectangle (x, y, w, h) onto the root surface: clears root_terrain when it covers the whole surface
   void note_root_write(int32_t x, int32_t y, int32_t w, int32_t h) {

@@ -49,6 +49,7 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P10", "off")
     # P11: the fifth play-test's app changes off for the app tests (P11B fix 1: the people panels at the left edge act only with
     # the HUD layers, which SG_APP_P8B=off already turns off)
+    # P11: the fifth play-test's app changes (P11C: the hover help lines drawn into the frames) are off for the app tests too
     os.environ.setdefault("SG_APP_P11", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

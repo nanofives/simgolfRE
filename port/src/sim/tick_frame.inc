@@ -6163,6 +6163,10 @@ int Ph_00418bc7(u32 F) {
     P6_Panels(F);       // ML+0xa1ba..ML+0xa37e
     P6_PauseLabel(F);   // ML+0xa37e..ML+0xa3f4
     int eax = P6_Cursor(F);         // ML+0xa3f4..ML+0xa657
+    if (gfx_hover_help(ctx)) {      // P11C (gfx.h gfx_set_hover_help): the app's hover help, drawing only; inert without it
+        const uint32_t hp[2] = {static_cast<uint32_t>(FD(0x68)), static_cast<uint32_t>(FD(0x58))};
+        gfx_drop(ctx, "hover.terrain", hp, 2);
+    }
     GfxCursorScope cursor_scope(ctx);  // P9E fix 4: the tool label pass draws at the cursor tile (records only, gfx.h)
     return P6_ToolLabel(F, eax);    // ML+0xa657..ML+0xa746
 }

@@ -66,6 +66,9 @@
 //   / tee tool draws from the tee (or green) to the cursor (P7's drawMinimapSegment) drawn again at the window's resolution in the
 //   cursor previews' place, its cursor end following P10E's live move (gfx.h gfx_set_hud_lines, present.h set_line_native); frame
 //   = the 800 x 600 frame's line pixels scaled with the picture.
+//   P11C: --hover-help on|off (default on; SG_APP_P11=off: off) one short line of what a terrain does, in the game's one-line tip
+//   (drawPanelBackdrop): above the Build palette's tool tip, and over the course for the tile under the cursor with no tool after
+//   the HUD tips' dwell (gfx.h gfx_set_hover_help; log/roadmap/P11/P11C_notes.md). Drawing only.
 //   P10I fix 2: --hover-rate display|game (default display; SG_APP_P10=off: game) the HUD's hover highlights follow the cursor at the
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
@@ -390,6 +393,7 @@ struct Options {
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
+  bool hover_help = true;          // P11C: --hover-help on|off (SG_APP_P11=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1012,6 +1016,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
       if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
+      if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1281,6 +1286,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
   if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
+  if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -2861,6 +2867,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
     }
+    else if (a == "--hover-help") {  // P11C
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hover_help = v == "on";
+    }
     else if (a == "--line-res") {  // P10I fix 1
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.line_native = v == "native";
@@ -3020,6 +3030,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.panel_left = false;
       o.undo_keys = false;
+      o.hover_help = false;
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

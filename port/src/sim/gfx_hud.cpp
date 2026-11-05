@@ -1481,7 +1481,10 @@ void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   auto tid = [&](int32_t i) { return static_cast<int32_t>(static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, i))))); };
   const int32_t sel = static_cast<int32_t>(cm::call_peer(ctx, "hitTestSlot432f90", {a[0], a[1]}).eax);
   InfoPanelState &ip = info_panel_state(g, ctx);
-  if (sel == ip.prev && sel != -1 && sel < 0x14 && ip.count > hover_tip_dwell()) gfxt::info_panel_tool_tip(g, ctx, sel);   // roadmap S3.7
+  if (sel == ip.prev && sel != -1 && sel < 0x14 && ip.count > hover_tip_dwell()) {
+    gfxt::info_panel_tool_tip(g, ctx, sel);   // roadmap S3.7
+    if (g.hover_help) gfxt::hover_help_tool(g, ctx, sel);   // P11C (gfx.h gfx_set_hover_help)
+  }
   auto stretch = [&](uint32_t s, uint32_t m, int32_t x, int32_t y) {
     call(g, ctx, "Surface_stretchBlit", {s, m, root, static_cast<uint32_t>(x), static_cast<uint32_t>(y), 0});
   };

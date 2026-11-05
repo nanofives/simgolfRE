@@ -45,6 +45,14 @@ void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);
 void amenities_row_tip(Gfx &g, Ctx &ctx, int32_t r, int32_t a, int32_t b);
 
+// P11C (log/roadmap/P11/P11C_notes.md): the hover help. hover_help_line(t) = tile type t's name and short clauses from its live
+// g_tileTypeAttrs record ("" for no type); hover_help_tool = palette tool sel's line above showInfoCursorPanel's tip;
+// hover_help_terrain = the line of the tile under the cursor (cx, cy) after the HUD tips' dwell. Drawing only (gfx.h
+// gfx_set_hover_help); the GameState is read, never written.
+std::string hover_help_line(Ctx &ctx, int32_t t);
+void hover_help_tool(Gfx &g, Ctx &ctx, int32_t sel);
+void hover_help_terrain(Gfx &g, Ctx &ctx, int32_t cx, int32_t cy);
+
 }  // namespace gfxt
 }  // namespace portsim
 

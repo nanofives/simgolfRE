@@ -1841,6 +1841,16 @@ bool gfx_back_terrain(Ctx &ctx) {
   return g != nullptr && g->back_terrain != 0;
 }
 
+// P11C (gfx.h gfx_set_hover_help)
+void gfx_set_hover_help(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->hover_help = on;
+}
+bool gfx_hover_help(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->hover_help;
+}
+
 bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);

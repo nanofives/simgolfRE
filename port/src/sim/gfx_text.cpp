@@ -68,6 +68,7 @@
 namespace portsim {
 
 int g_negctl_gfx_text = 0;
+int32_t hover_tip_dwell();  // gfx_hud.cpp: the HUD tips' dwell (P6B hoverTip.tenFrameDwell)
 
 namespace gfxs {   // gfx_simfoto.cpp: the held-pixel probe of drawWindow's golfer arm (roadmap S2.11; a measurement)
 void window_probe(Gfx &g, Ctx &ctx, int32_t fx, int32_t fy, int32_t fh, int32_t bx, int32_t by);
@@ -1114,6 +1115,132 @@ void terrain_toolbar_tip(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b) {
   backdrop(g, ctx, text, a, sub32(b, mode() == 10 ? 4 : 5));
 }
 
+// ---- P11C (log/roadmap/P11/P11C_notes.md, Mariano's item 3: "a hover indicator over the terrain saying if it does something")
+// The help line of tile type t: its record's name (first letter upper case, as showInfoCursorPanel's tip) and short clauses
+// read from the LIVE record of g_tileTypeAttrs (loadWorldAssets renames records and patches the rough's lie per course type), in
+// this order while they fit kHoverWords words: what the type is for (tees, green, water, out of bounds, the trees' class 13),
+// the lie (+0x22: prepareShot turns a shot from lie > 0 by Random * lie, so <= 0 clean, 1 harder, 2..3 hard, more very hard),
+// the golfers (updateGolfers: a landing on lie > 0 is thought 2 / 3, mood -1; a good landing on lie <= 0 is thought 1, +1), the
+// ball (+0x21 roll: trialShot's ground loss (speed >> roll) / 2, 4 and up long, 2 less, 0..1 stops fast; +0x20 bounce: 5 and
+// up high), the clearing price (+0x24: mainLoop's paint price adds it, 0x32 and up the warning sound). Numbers are never shown.
+namespace {
+constexpr int kHoverWords = 8;
+constexpr int32_t kHoverToolY = 0x17b;  // the tool line's bar centre: its band (y - 5 .. y + 5) ends above the title strip 0x185
+int words(const std::string &s) {
+  int n = 0;
+  bool in = false;
+  for (char c : s) {
+    const bool sp = c == ' ';
+    if (!sp && !in) ++n;
+    in = !sp;
+  }
+  return n;
+}
+}  // namespace
+
+std::string hover_help_line(Ctx &ctx, int32_t t) {
+  if (t < 0 || t > 22) return std::string();
+  const uint32_t rec = va(ctx, GSO(g_tileTypeAttrs, 0)) + 0x30u * u(t);
+  std::string name = gfxb::vstring(ctx.mem, rec);
+  if (name.empty()) return std::string();
+  if (name[0] >= 'a' && name[0] <= 'z') name[0] = static_cast<char>(name[0] - 0x20);
+  auto sb = [&](uint32_t off) { return static_cast<int32_t>(static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + off))); };
+  const int32_t bounce = sb(0x20), roll = sb(0x21), lie = sb(0x22), clear = sb(0x24);
+  const int32_t cls = static_cast<int32_t>(ctx.mem.load<uint8_t>(rec + 0x26));
+  const bool penalty = t == 0x11 || t == 20;
+  std::vector<std::string> c;
+  if (t == 0) c.push_back("a hole starts here");
+  if (t == 1) c.push_back("the cup goes here");
+  if (t == 0x11) c.push_back("penalty stroke and a drop");
+  if (t == 20) c.push_back("penalty stroke, shot replayed");
+  if (cls == 13) c.push_back("balls can hit it");
+  if (!penalty) {
+    if (lie < 0) c.push_back("putting surface");
+    else if (lie == 0) c.push_back("clean lie");
+    else if (lie == 1) c.push_back("harder shots");
+    else if (lie <= 3) c.push_back("hard shots");
+    else c.push_back("very hard shots");
+    if (lie > 0) c.push_back("upsets golfers");
+    else if (t != 0 && t != 1) c.push_back("pleases golfers");
+    if (roll >= 4) c.push_back("long roll");
+    else if (roll == 2) c.push_back("less roll");
+    else if (roll <= 1) c.push_back("ball stops fast");
+    if (bounce >= 5) c.push_back("high bounce");
+  }
+  if (clear >= 0x32) c.push_back("very costly to clear");
+  else if (clear > 0) c.push_back("costly to clear");
+  std::string out;
+  int n = 0;
+  for (const std::string &s : c) {
+    const int w = words(s);
+    if (n + w > kHoverWords) continue;
+    out += out.empty() ? s : ", " + s;
+    n += w;
+  }
+  return out.empty() ? name : name + ": " + out;
+}
+
+// the palette tool sel's line, drawn the way the game's one-line tips are (drawPanelBackdrop: the dark bar and the centred text
+// in g_fontRef_519fd8), centred on showInfoCursorPanel's tip X and just above its title strip (y 0x185)
+void hover_help_tool(Gfx &g, Ctx &ctx, int32_t sel) {
+  if (sel < 0 || sel >= 0x14) return;
+  const int32_t t = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(f_tab_bytes_4c79a0, sel))));
+  const std::string text = hover_help_line(ctx, t);
+  if (text.empty()) return;
+  const int32_t ct = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_courseType)));
+  int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
+  if (sel >= 13 && sel <= 15) px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_rec24_4c7a2c, -4)) + u(24 * ct + 8 * (sel - 13)));
+  const int32_t X = std::min<int32_t>(std::max<int32_t>(add32(px, 0x20), 0x50), 0x2d0);
+  backdrop(g, ctx, text, X, kHoverToolY);
+}
+
+// the tile under the cursor (cx, cy) with no tool: after the game's own dwell (the frames the HUD tips wait, hover_tip_dwell)
+// on one tile, its line above the cursor (below it near the top edge). The no-tool rule is P6_Cursor's (its distance line: no
+// tool and no object tool, or g_panelListMode 2 / 5; here also 0, the Build palette open without a tool) and nothing shows
+// while that line is drawn (a drag: g_rootInput word 13 != -1), with the cursor over the bottom HUD (y >= 0x1e0, the original's
+// cursor labels' rule) or over a pixel of a HUD panel layer of the last published frame (with the app's layers), a build panel
+// up, the original's own label shown (g_flags bit 27, P6_ToolLabel), or a building or placed object under it (their labels).
+static bool over_hud_layer(const Gfx &g, int32_t x, int32_t y) {
+  for (const GfxHudLayer &l : g.hud.published.layers) {
+    if (l.id == kGfxLayerCentred || x < l.x0 || x >= l.x1 || y < l.y0 || y >= l.y1) continue;
+    const size_t i = static_cast<size_t>(y - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(x - l.x0);
+    if (i < l.px.size() && l.px[i].kind != 0) return true;
+  }
+  return false;
+}
+void hover_help_terrain(Gfx &g, Ctx &ctx, int32_t cx, int32_t cy) {
+  struct Dwell {
+    int32_t x = -1, y = -1, count = 0;
+  };
+  Dwell &d = g.state_of<Dwell>("text.hoverHelp");
+  GameState &gs = ctx.gs();
+  const int32_t tx = gs.g_cursorTileX, ty = gs.g_cursorTileY, mode = gs.g_panelListMode;
+  const bool open = cy < 0x1e0 && cy >= 0 && gs.f_w_4c2848[0] == -1 && gs.f_w_4c2848[3] == -1 && gs.g_buildPanelSlot == 0 &&
+                    (mode == 0 || mode == 2 || mode == 5) && gs.g_rootInput[13] == -1 && (gs.g_flags & (1u << 27)) == 0 &&
+                    !over_hud_layer(g, cx, cy);
+  if (!open) {
+    d = Dwell{};
+    return;
+  }
+  if (tx != d.x || ty != d.y) {
+    d.x = tx;
+    d.y = ty;
+    d.count = 0;
+    return;
+  }
+  if (++d.count <= hover_tip_dwell()) return;
+  int32_t t = 20;
+  if (cm::call_peer(ctx, "tileBlocked", {u(tx), u(ty)}).eax == 0) {
+    const uint32_t cell = u(add32(mul32(tx, 50), ty));
+    t = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_tileType) + cell));
+    const uint16_t fl = ctx.mem.load<uint16_t>(state_va(ctx, &GameState::g_tileFlags) + 2u * cell);
+    if (t == 0x15 || t == 0x16 || (fl & (1u << 10)) != 0) return;
+  }
+  const std::string text = hover_help_line(ctx, t);
+  if (text.empty()) return;
+  backdrop(g, ctx, text, cx, cy < 0x30 ? add32(cy, 0x24) : sub32(cy, 0x12));
+}
+
 // drawGolferActionPanel's tip (c3fb.cpp DrawGolferActionPanel_re): by hit - 1 the text f_strpool_4c80d0 + 0x29c, + 0x294
 // followed by the challenger pro's name (g_golfPros + 0x38 g_proChallenger) or + 0x288 when there is none, + 0x274, + 0x264,
 // + 0x250, + 0x23c, + 0x228, + 0x218, f_strpool_4c5d20 + 0xa8, f_strpool_4c80d0 + 0x208; drawPanelBackdrop(x, y - 5)
@@ -1381,8 +1508,17 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.root_terrain = saved_terrain;
 }
 
+// hover.terrain(cx, cy) (P11C, gfx.h gfx_set_hover_help): the frame code's call with the cursor point View_toLocal gave (P6's
+// frame words +0x68 / +0x58); draws only with the help on (the app's host), never writes the GameState
+void b_hover_terrain(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (!g.hover_help) return;
+  g.ensure_root(ctx);
+  gfxt::hover_help_terrain(g, ctx, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
+}
+
 const GfxBodyDef kBodies[] = {
     {"loading.banner", b_loading_banner},
+    {"hover.terrain", b_hover_terrain},
     {"Widget_setQuad70", b_set_quad70},
     {"Widget_setQuad74", b_set_quad74},
     {"Widget_setQuad78", b_set_quad78},
