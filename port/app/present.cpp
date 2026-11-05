@@ -143,6 +143,9 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
                       world.px.size() == static_cast<size_t>(world.pw) * static_cast<size_t>(world.ph) &&
                       world.mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH && world.fw > 0;
     world_ = sane ? std::move(world) : WorldImage{};
+    // P11B fix 1: the panel layer at the chosen edge (every reader below, the remap, the runs and the hover swaps take l.anchor)
+    for (portsim::GfxHudLayer &l : world_.hud.layers)
+      if (l.id == portsim::kGfxLayerPanel) l.anchor = panel_anchor_;
   }
   if (!stale) world = std::move(old);  // P10A: the previous world image's buffers go back to the caller
   else world_ = std::move(old);
@@ -614,7 +617,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     std::vector<uint8_t> centred(f.pieces.size(), 0);  // P10C fix 4: pieces moved by the text-box centring
     for (size_t k = 0; k < f.pieces.size(); ++k) {
       const portsim::GfxHudPiece &p = f.pieces[k];
-      const int8_t a = portsim::gfx_layer_anchor(p.opener);
+      const int8_t a = layer_anchor(p.opener);  // P11B fix 1
       // P10C fix 4: a piece drawn inside a centred dialog (its textInputBox, the overwrite question) moves with that dialog
       if (text_boxes_ && a == 0 && p.parent >= 0 && static_cast<size_t>(p.parent) < k && centred[static_cast<size_t>(p.parent)]) {
         piece_dx_[k] = piece_dx_[static_cast<size_t>(p.parent)];

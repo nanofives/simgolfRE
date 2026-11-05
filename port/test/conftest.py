@@ -47,6 +47,9 @@ def pytest_configure(config):
     # P10: the fourth play-test's changes (P10D: --sprite-res native, the sprites at the world layer's resolution) are off for
     # the app tests too (they act only with a world layer, which SG_APP_P8B=off already turns off)
     os.environ.setdefault("SG_APP_P10", "off")
+    # P11: the fifth play-test's app changes off for the app tests (P11B fix 1: the people panels at the left edge act only with
+    # the HUD layers, which SG_APP_P8B=off already turns off)
+    os.environ.setdefault("SG_APP_P11", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

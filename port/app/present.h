@@ -208,6 +208,13 @@ class Presenter {
   // P10C fix 4: a textInputBox piece with no opener panel (GfxHudPiece::text, opener kGfxLayerCentred) is moved so its box is
   // centred on the content rectangle's centre (the frame's x 400), like P9E's moved pieces: its pixels, runs and clicks
   void set_text_boxes(bool on) { text_boxes_ = on; }
+  // P11B fix 1: the edge the panel layer (kGfxLayerPanel: the employee view / detail and golfer action panels opened from the
+  // radial menu's people buttons, plus the shot texts drawn in their place) is anchored to: -1 left (beside the radial menu, as in
+  // the 800-space frame), +1 right (P9B's gfx_layer_anchor). Popups those panels open follow it.
+  void set_panel_anchor(int8_t a) { panel_anchor_ = a < 0 ? -1 : 1; }
+  int8_t layer_anchor(int32_t id) const {
+    return id == portsim::kGfxLayerPanel ? panel_anchor_ : portsim::gfx_layer_anchor(id);
+  }
   // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
   // (each clears the runs): the frame must have been published with the same back buffer (the host checks). With layers, the layers'
   // base and pixels are replaced by the run-free ones it carries. At a content rectangle of exactly 800 x 600 nothing changes (the
@@ -313,6 +320,7 @@ class Presenter {
   // compose_layers for the layers that carry popup pixels; draw_runs moves a run of such a layer with the piece that owns it
   bool popups_on_ = true;
   bool text_boxes_ = false;  // P10C fix 4
+  int8_t panel_anchor_ = 1;  // P11B fix 1 (set_panel_anchor)
   mutable std::vector<int32_t> piece_dx_;
   mutable const portsim::GfxHudFrame *piece_frame_ = nullptr;
   static int32_t piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y);  // piece index at an 800-space pixel, -1 none

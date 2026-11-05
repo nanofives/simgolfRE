@@ -70,6 +70,9 @@
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
 //   game = a highlight changes only when the game draws its next frame.
+//   P11B fix 1: --hud-panel left|right (default left; SG_APP_P11=off: right) the edge the panels opened from the radial menu's
+//   people buttons (employee view / detail, golfer action, with the shot texts in their place) are anchored to: left = beside the
+//   radial menu as in the 800-space frame, clicks remapped with them (present.h set_panel_anchor); right = P9B's right edge.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -380,6 +383,7 @@ struct Options {
   int sprite_filter = 1;           // P10H: --sprite-filter sharp (1) | smooth (0) | sharp-area (2) (SG_APP_P10=off: smooth)
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
+  bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -426,6 +430,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_text_unit_redraw(o.text_unit_redraw);
   p.set_text_fit(o.text_fit);  // P10B fix 2
   p.set_text_boxes(o.hud_textbox);  // P10C fix 4 (the presenter's popup pieces)
+  p.set_panel_anchor(o.panel_left ? -1 : 1);  // P11B fix 1
   p.set_line_native(line_res_on(o));  // P10I fix 1
 }
 
@@ -1574,6 +1579,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        ",\"hz\":" + std::to_string(pace_hz) + ",\"ticks\":" + std::to_string(ticks) + ",\"moves\":" + std::to_string(live_moves) + "}";
   {  // P10I fix 2
     const HoverStats hs = presenter.hover_stats();
+    s += ",\"p11b\":{\"hud_panel\":\"" + std::string(o.panel_left ? "left" : "right") + "\"}";  // P11B fix 1
     s += ",\"p10i\":{\"hover_rate\":\"" + o.hover_rate + "\",\"line_res\":\"" + std::string(o.line_native ? "native" : "frame") +
          "\",\"frames\":" + std::to_string(hs.frames) + ",\"controls\":" + std::to_string(hs.controls) + ",\"made\":" +
          std::to_string(hs.controls_made) + ",\"resets\":" + std::to_string(hs.resets) + ",\"mispredicts\":" +
@@ -2827,6 +2833,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.sprite_native = v == "native";
     }
+    else if (a == "--hud-panel") {  // P11B fix 1
+      if (!val(v) || (v != "left" && v != "right")) return false;
+      o.panel_left = v == "left";
+    }
     else if (a == "--hover-rate") {  // P10I fix 2
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
@@ -2986,6 +2996,8 @@ int main(int argc, char **argv) {
       o.line_native = false;    // P10I fix 1
       o.hover_rate = "game";    // P10I fix 2
     }
+  if (const char *ep = std::getenv("SG_APP_P11"))  // P11: the fifth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.panel_left = false;  // P11B fix 1
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.
