@@ -50,6 +50,9 @@
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
 //   (a measurement: the redraw also at an 800 x 600 content rectangle).
+//   P10B fix 3: --text-peel witness|plain (default witness; SG_APP_P10=off: plain) a captured run counts as visible at a pixel only
+//   near a pixel of it that differs from its neighbour and still shows (gfx.h gfx_set_text_peel_witness): a one-colour cover over
+//   a run (the white save-name field over a white message line) no longer leaves the run's ghost; plain = P9C's per-pixel test.
 //   P10B fix 2: --text-fit on|off (default on; SG_APP_P10=off: off) a run drawn at the window's resolution keeps the 800-space
 //   layout scaled: each byte at its 800-space pen position scaled, the ink's vertical middle on the 800-space ink's middle scaled
 //   (textres.h TextRaster::set_fit); off = P9C's TextOutA with the window-resolution font's own advances and baseline.
@@ -313,6 +316,7 @@ struct Options {
   bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
   bool text_banner = true;          // P10B fix 1: --text-banner on|off (SG_APP_P10=off: off)
   bool text_fit = true;             // P10B fix 2: --text-fit on|off (SG_APP_P10=off: off)
+  std::string text_peel = "witness";  // P10B fix 3: --text-peel witness|plain (SG_APP_P10=off: plain)
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -2676,6 +2680,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_cursor = v == "on";
     }
+    else if (a == "--text-peel") {  // P10B fix 3
+      if (!val(v) || (v != "witness" && v != "plain")) return false;
+      o.text_peel = v;
+    }
     else if (a == "--text-fit") {  // P10B fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.text_fit = v == "on";
@@ -2781,7 +2789,11 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
     if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
   if (const char *ep = std::getenv("SG_APP_P10"))  // P10: the fourth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) { o.text_banner = false; o.fps = "off"; o.title_bands = false; o.text_fit = false; }
+    if (!std::strcmp(ep, "off")) {
+      o.text_banner = o.text_fit = o.title_bands = false;
+      o.fps = "off";
+      o.text_peel = "plain";
+    }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.
@@ -2795,6 +2807,7 @@ int main(int argc, char **argv) {
     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");
     return 2;
   }
+  portsim::gfx_set_text_peel_witness(o.text_peel == "witness");  // P10B fix 3
   if (o.selftest) return run_selftest(o);
   if (!o.compose.empty()) return run_compose(o);  // P7
   if (!o.translate_in.empty()) return run_translate(o);

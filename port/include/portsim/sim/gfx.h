@@ -270,8 +270,15 @@ struct GfxTextPeelRun {
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   const uint16_t *before = nullptr, *after = nullptr;
 };
+// P10B fix 3 (gfx_set_text_peel_witness, on by default): a box pixel holding the run's `after` word counts as visible only when it is
+// within kGfxTextPeelSpread steps (8-connected, through such pixels) of a WITNESS: one of them with a 4-neighbour of them whose
+// `after` word differs. A cover drawn over a run in one colour (the white save-name field over a white message line) holds the
+// after word of the run's glyph cores by chance; those pixels touch no differing after word that also still shows, so they are
+// not peeled (no ghost of the run's background inside the cover) and the run is not drawn there. Off = P9C's per-pixel test.
+constexpr int kGfxTextPeelSpread = 3;
 void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::vector<GfxTextPeelRun> &runs,
                    std::vector<std::vector<uint8_t>> &vis);
+void gfx_set_text_peel_witness(bool on);  // process-wide; the app's main only
 void gfx_set_text_capture(Ctx &ctx, bool on);  // the app's host only
 bool gfx_text_capture(Ctx &ctx);
 // the runs published at the last Window::refreshFull (false when capture is off or nothing was published)

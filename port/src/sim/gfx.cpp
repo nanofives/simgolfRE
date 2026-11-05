@@ -1165,22 +1165,64 @@ bool gfx_hud_frame(Ctx &ctx, GfxHudFrame &out) {
 }
 // ---- P9C
 std::atomic<int> g_gfx_text_capture{0};
+static std::atomic<int> g_text_peel_witness{1};  // P10B fix 3 (gfx.h gfx_set_text_peel_witness)
+void gfx_set_text_peel_witness(bool on) { g_text_peel_witness.store(on ? 1 : 0); }
 void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::vector<GfxTextPeelRun> &runs,
                    std::vector<std::vector<uint8_t>> &vis) {
   vis.assign(runs.size(), {});
+  const bool witness = g_text_peel_witness.load() != 0;
+  std::vector<uint8_t> dist;
+  std::vector<int32_t> queue;
   for (size_t k = runs.size(); k-- > 0;) {
     const GfxTextPeelRun &r = runs[k];
     if (r.x1 <= r.x0 || r.y1 <= r.y0) continue;
-    const size_t bw = static_cast<size_t>(r.x1 - r.x0);
+    const int32_t bw = r.x1 - r.x0, bh = r.y1 - r.y0;
     std::vector<uint8_t> &v = vis[k];
-    v.assign(bw * static_cast<size_t>(r.y1 - r.y0), 0);
+    v.assign(static_cast<size_t>(bw) * static_cast<size_t>(bh), 0);
+    // v = 1 where the box pixel still holds the run's after word (P9C: a later write breaks the chain there)
     for (int32_t y = std::max(r.y0, 0); y < std::min(r.y1, h); ++y)
       for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, w); ++x) {
         const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
-        const size_t j = static_cast<size_t>(y - r.y0) * bw + static_cast<size_t>(x - r.x0);
-        if (i >= img.size() || img[i] != r.after[j]) continue;  // covered by a later write
-        v[j] = 1;
-        img[i] = r.before[j];
+        const size_t j = static_cast<size_t>(y - r.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - r.x0);
+        if (i < img.size() && img[i] == r.after[j]) v[j] = 1;
+      }
+    if (witness) {  // P10B fix 3: keep only the pixels near a witness (gfx.h kGfxTextPeelSpread)
+      dist.assign(v.size(), 0xff);
+      queue.clear();
+      for (int32_t y = 0; y < bh; ++y)
+        for (int32_t x = 0; x < bw; ++x) {
+          const int32_t j = y * bw + x;
+          if (!v[static_cast<size_t>(j)]) continue;
+          const uint16_t a = r.after[j];
+          const bool seen = (x > 0 && v[static_cast<size_t>(j - 1)] && r.after[j - 1] != a) ||
+                            (x + 1 < bw && v[static_cast<size_t>(j + 1)] && r.after[j + 1] != a) ||
+                            (y > 0 && v[static_cast<size_t>(j - bw)] && r.after[j - bw] != a) ||
+                            (y + 1 < bh && v[static_cast<size_t>(j + bw)] && r.after[j + bw] != a);
+          if (seen) {
+            dist[static_cast<size_t>(j)] = 0;
+            queue.push_back(j);
+          }
+        }
+      for (size_t q = 0; q < queue.size(); ++q) {
+        const int32_t j = queue[q], x = j % bw, y = j / bw;
+        const uint8_t d = dist[static_cast<size_t>(j)];
+        if (d >= kGfxTextPeelSpread) continue;
+        for (int32_t yy = std::max(y - 1, 0); yy <= std::min(y + 1, bh - 1); ++yy)
+          for (int32_t xx = std::max(x - 1, 0); xx <= std::min(x + 1, bw - 1); ++xx) {
+            const int32_t n = yy * bw + xx;
+            if (!v[static_cast<size_t>(n)] || dist[static_cast<size_t>(n)] != 0xff) continue;
+            dist[static_cast<size_t>(n)] = static_cast<uint8_t>(d + 1);
+            queue.push_back(n);
+          }
+      }
+      for (size_t j = 0; j < v.size(); ++j)
+        if (dist[j] == 0xff) v[j] = 0;
+    }
+    for (int32_t y = std::max(r.y0, 0); y < std::min(r.y1, h); ++y)
+      for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, w); ++x) {
+        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
+        const size_t j = static_cast<size_t>(y - r.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - r.x0);
+        if (v[j]) img[i] = r.before[j];
       }
   }
 }
