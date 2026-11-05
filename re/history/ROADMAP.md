@@ -1050,3 +1050,7 @@ P10E: repaint at the display rate with the tool preview moved to the cursor's ti
 option C1). SG_APP_P10=off turns every one off (conftest). Open: item 5 ("placing at the edge makes them invisible") not reproduced
 (P10C_notes.md, U-P10C-01: a single-click palm tile leaves no tree, also in the 800 frame); the translucent placement box is still
 800-space (P10D_notes.md options). Merge helper: log/roadmap/P10/union_conflicts.py.
+P10F (7cdc92a7): the translucent placement box drawn at the window's resolution into the cursor plane, sliding with P10E's 60 Hz
+shift (the tee-to-cursor line stays 800-space). P10G (8b1ef44e): U-P10C-01 answered: the original plants and draws a palm on one
+click; the port's pal_load opened the spaced palette paths while the install has underscore folders, so palms and tropical trees
+were never drawn on tropical courses (41,028 skipped draws on Hawaii), which was item 5 for tree tiles. flic::resolve_palette_name.
