@@ -8373,7 +8373,7 @@ a41e366:
 a41e36c:
     // P11D (mainLoop.courseUndo = 0): a Ctrl+Z the host wrote into the view block runs here, where the original's own
     // right-click undo (Ph_0041ecbb's demolishObject) would run in this frame
-    if (!SG_DEFECT(g_defect_course_undo)) course_undo_step(ctx);
+    if (!SG_DEFECT(g_defect_course_undo) && course_undo_step(ctx) == 2) P11_Redo(F);
     // ---- ML+0xedac  pointer / click handling, frame wait ----
     eax = G32((GS(g_rootInput) + 16));                             // ML+0xedac
     if (eax == ebp) goto a41e381;                      // ML+0xedb1 cmp eax,ebp; je
@@ -8827,6 +8827,38 @@ int H2_KeyHi(u32 slot, int vk) {   // GetAsyncKeyState through the IAT value rea
     return (int)(u8)((u16)key_async(vk) >> 8);
 }
 int H2_Snd18() { return cc("playSound", 0x18, 0x64, 0, 0, 0); }   // playSound(0x18, 100, 0, 0, 0)
+
+// ---------------------------------------------------------------------------------------------------------------------
+// P11D fix 2 (mainLoop.courseUndo = 0): Ctrl+Y. Each tile of the newest undone step is built again through the game's own
+// world-click path for a terrain tool (H2_Terrain, ML+0x10907..ML+0x113b9, which hands tools >= 0x80 to H2_TerrainSpecial), as
+// a left click on that tile with the step's tool held: the tile (F+0x1c / F+0x24), the tool [f_w_4c2848] (and no object
+// tool, [f_w_4c2848+0xc] = -1) and the button word [g_rootInput+0x10] = 1. So the price is today's, canAfford may refuse it, and
+// the build is journalled again (with the step's press, the redo list kept). A kRetile exit runs rebuildTileCoverage as the
+// frame dispatcher's ML+0x664 does. The frame block, the tool words and the button word are put back afterwards, so the rest of
+// this frame runs as it would have.
+void P11_Redo(u32 F) {
+    std::vector<CourseRedoItem> items;
+    uint32_t press = 0;
+    if (!course_redo_take(ctx, items, press) || items.empty()) return;
+    constexpr uint32_t kSlots = 0x1400;               // mainLoop's frame F + 0 .. F + 0x1250 and margin (tick.cpp kFrameSlots)
+    std::vector<uint8_t> saved(kSlots);
+    std::memcpy(saved.data(), ctx.mem.at(F, kSlots), kSlots);
+    const int tool0 = G32(GS(f_w_4c2848)), tool3 = G32((GS(f_w_4c2848) + 12)), button = G32((GS(g_rootInput) + 16));
+    course_redo_begin(ctx, press);
+    for (const CourseRedoItem &it : items) {
+        FD(0x1c) = it.x;
+        FD(0x24) = it.y;
+        G32(GS(f_w_4c2848)) = it.tool;
+        G32((GS(f_w_4c2848) + 12)) = -1;
+        G32((GS(g_rootInput) + 16)) = 1;
+        if (H2_Terrain(F) == kRetile) cc("rebuildTileCoverage");
+    }
+    course_redo_end(ctx);
+    G32(GS(f_w_4c2848)) = tool0;
+    G32((GS(f_w_4c2848) + 12)) = tool3;
+    G32((GS(g_rootInput) + 16)) = button;
+    std::memcpy(ctx.mem.at(F, kSlots), saved.data(), kSlots);
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // ML+0x114df: rebuild after an edit: markTileKind11, rebuildTileCoverage, [f_w_4c2e00+0x4] / [g_lastEditTileY] = x / y,

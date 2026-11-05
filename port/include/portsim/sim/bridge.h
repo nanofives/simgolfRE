@@ -16,6 +16,8 @@
 
 #include "portsim/registry.h"
 
+#include <vector>
+
 namespace portsim {
 
 // worldToScreen: projects world (wx, wy) (1024 units per tile) with the camera tile, zoom and screen size for rotation
@@ -77,7 +79,17 @@ void course_undo_note(Ctx &ctx, int32_t x, int32_t y, int32_t old_code, int32_t 
 void course_undo_unrecorded(Ctx &ctx, int32_t x, int32_t y);
 void course_undo_press(Ctx &ctx);  // onPoint (a left press): the next edits form a new undo step
 void course_undo_reset(Ctx &ctx);  // a course was set up or loaded: the journal and the redo list are emptied
-void course_undo_step(Ctx &ctx);   // the frame body's click point: runs a pending request (switch 0 only)
+// the frame body's click point: takes a pending request (switch 0 only). 0 none, 1 an undo (run here), 2 a redo: the caller
+// runs the game's build path on course_redo_take's tiles between course_redo_begin and course_redo_end (P11D fix 2)
+int32_t course_undo_step(Ctx &ctx);
+struct CourseRedoItem {
+  int32_t x, y, tool;  // the tile and the terrain tool [f_w_4c2848] its edit was made with
+};
+// the newest undone step's tiles that still hold what the undo left there, in the order they were built; the step leaves the
+// redo list. false (and the refusal sound) when the list is empty; the refusal sound also when a tile was skipped
+bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &press);
+void course_redo_begin(Ctx &ctx, uint32_t press);  // the journal entries the redo makes keep the step's press, the redo list stays
+void course_redo_end(Ctx &ctx);
 // maps the block (width 800) when the context has none; true when it is mapped afterwards
 bool view_map(Ctx &ctx);
 // the logical view width: 800 when the block is not mapped or holds less than 800

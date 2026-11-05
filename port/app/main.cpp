@@ -76,6 +76,8 @@
 //   P11D: --undo-keys on|off (default on; SG_APP_P11=off: off) Ctrl+Z undoes the newest course edit step (the edits of one left
 //   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
 //   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
+//   P11D fix 2: Ctrl+Y (same option) builds the newest undone step again through the game's terrain-tool click path at today's
+//   price; a new edit empties the redo list.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw

@@ -87,7 +87,8 @@ bool view_click_vacated(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPo
 // so an older step (or the game's own right-click undo) finds its record again. Journal and redo list: view block +0x100..
 int g_defect_course_undo = 1;
 namespace {
-constexpr uint32_t kUndoHead = kPortViewVa + 0x100u;  // +0 journal entries, +4 redo entries, +8 the left-press counter
+// +0 journal entries, +4 redo entries, +8 the left-press counter, +12 1 while a redo builds, +16 the redone step's press
+constexpr uint32_t kUndoHead = kPortViewVa + 0x100u;
 constexpr uint32_t kUndoJournal = kPortViewVa + 0x200u;
 constexpr uint32_t kUndoRedo = kPortViewVa + 0x8000u;
 constexpr uint32_t kUndoCap = 2000u;  // 16 bytes each: 0x200 + 0x7d00 < 0x8000, 0x8000 + 0x7d00 < kPortViewSize
@@ -138,9 +139,10 @@ void undo_note(Ctx &ctx, int32_t x, int32_t y, uint8_t kind, int32_t oc, int32_t
   e.type_new = gs.g_tileType[x * 50 + y];
   e.kind = kind;
   e.tool = gs.f_w_4c2848[0];
-  e.press = undo_word(ctx, 8);
+  const bool redo = undo_word(ctx, 12) != 0;
+  e.press = redo ? undo_word(ctx, 16) : undo_word(ctx, 8);
   undo_push(ctx, kUndoJournal, 0, e);
-  set_undo_word(ctx, 4, 0);  // a new edit ends the redo list
+  if (!redo) set_undo_word(ctx, 4, 0);  // a new edit ends the redo list (a redo's own edits keep it)
 }
 // the tile still holds what the entry's edit left there: same code, refund and type, no placed object (demolishObject would
 // ask to demolish the object instead), not the refusal bit 0x8000, not blocked
@@ -202,13 +204,52 @@ void course_undo_reset(Ctx &ctx) {
   set_undo_word(ctx, 0, 0);
   set_undo_word(ctx, 4, 0);
 }
-void course_undo_step(Ctx &ctx) {
-  if (SG_DEFECT(g_defect_course_undo) || !ctx.view) return;
+int32_t course_undo_step(Ctx &ctx) {
+  if (SG_DEFECT(g_defect_course_undo) || !ctx.view) return 0;
   const int32_t req = ctx.mem.load<int32_t>(kPortViewUndoVa);
-  if (req == 0) return;
+  if (req == 0) return 0;
   ctx.mem.store<int32_t>(kPortViewUndoVa, 0);
   if (req == 1) course_undo(ctx);
+  return req == 1 || req == 2 ? req : 0;
 }
+// P11D fix 2: the redo list's newest step. The undo pushed a step's entries newest first, so popping gives them in build order.
+// A tile is redone only when it still holds what the undo left: the edit's old code / refund (course_undo restored them), the
+// type the undo left (kept in type_new), no object, no 0x8000 bit, not blocked
+bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &press) {
+  out.clear();
+  if (!undo_on(ctx)) return false;
+  uint32_t n = undo_word(ctx, 4);
+  if (n > kUndoCap) n = kUndoCap;
+  if (n == 0) {
+    play_sound(ctx, 0x18, 100, 0, 0, 0);
+    return false;
+  }
+  press = undo_entry(ctx, kUndoRedo, n - 1).press;
+  bool refused = false;
+  while (n > 0) {
+    const UndoEntry e = undo_entry(ctx, kUndoRedo, n - 1);
+    if (e.press != press) break;
+    --n;
+    set_undo_word(ctx, 4, n);
+    const GameState &gs = ctx.gs();
+    const int32_t i = e.x * 50 + e.y;
+    const bool live = e.kind == 0 && gs.g_tileBuildCode[i] == e.code_old && gs.g_tileRefund[i] == e.refund_old &&
+                      gs.g_tileType[i] == e.type_new && !(gs.g_tileFlags[i] & ((1u << 10) | (1u << 15))) &&
+                      call_peer(ctx, "tileBlocked", {u32(e.x), u32(e.y)}).eax == 0;
+    if (!live) {
+      refused = true;
+      continue;
+    }
+    out.push_back({e.x, e.y, e.tool});
+  }
+  if (refused) play_sound(ctx, 0x18, 100, 0, 0, 0);
+  return true;
+}
+void course_redo_begin(Ctx &ctx, uint32_t press) {
+  set_undo_word(ctx, 12, 1);
+  set_undo_word(ctx, 16, press);
+}
+void course_redo_end(Ctx &ctx) { set_undo_word(ctx, 12, 0); }
 
 int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
@@ -461,7 +502,8 @@ const DefectDef kDefects[] = {
      "the only undo is the original's one level per tile (right click twice: demolishObject restores the tile's previous content "
      "and refunds its price); fixed: every setGrids edit is journalled with what it overwrote, the edits of one left press form a "
      "step, and the host's undo request (view block word +8, Ctrl+Z) runs demolishObject on the newest step's tiles, newest "
-     "first, then gives each tile its earlier record back",
+     "first, then gives each tile its earlier record back; a redo request (word +8 = 2, Ctrl+Y) builds the newest undone step "
+     "again through the game's terrain-tool click path (H2_Terrain) at today's price",
      &g_defect_course_undo},
 };
 extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
