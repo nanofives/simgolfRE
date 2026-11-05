@@ -300,12 +300,15 @@ void push_tile(Ctx &ctx, uint32_t tile) {
 }  // namespace
 
 void rebuild_tile_data(Ctx &ctx, int32_t x0, int32_t y0) {
-  const int32_t d = div32(4, ctx.gs().g_zoomScale) * 13;
+  // P11A: zoom 8 (mainLoop.zoomInStopsAt4 = 0, the only way it arrives) takes zoom 4's 13: 4 / 8 = 0 would start at the camera's
+  // own row and column and leave the tiles above and left of it out
+  const int32_t zq = ctx.gs().g_zoomScale > 4 ? 4 : ctx.gs().g_zoomScale;
+  const int32_t d = div32(4, zq) * 13;
   int32_t x = sub32(x0, d);
   if (x >= 50) return;
   for (;;) {
     if (x < 0) x = 0;
-    int32_t y = sub32(y0, div32(4, ctx.gs().g_zoomScale) * 13);
+    int32_t y = sub32(y0, div32(4, zq) * 13);
     if (!(y >= 50)) {
       for (;;) {
         if (y < 0) y = 0;
@@ -431,7 +434,9 @@ int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom,
     return i32(api().blit_full());
   }
   api().window_paint();
-  if (add32(abs32(dy), abs32(dx)) > 2)
+  // P11A: zoom 8 (mainLoop.zoomInStopsAt4 = 0, the only way it arrives) renders every camera move whole: renderTerrainStrip's
+  // windows and shifted copies are sized for the zoom shifts of levels 1 / 2 / 4
+  if (add32(abs32(dy), abs32(dx)) > 2 || zoom > 4)
     api().render(self, tile_at_va(ctx, x, y), rot_angle(rot));
   else
     api().render_strip(x, y, dx, dy, rot, zoom);

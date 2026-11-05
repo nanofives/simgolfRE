@@ -384,6 +384,14 @@ void terrain_gl_set_zoom_level(gl::GlSink &gl, TerrainGlState &st, int32_t level
       h *= 4.0f;
       st.zoom = 2;
       break;
+    case 8:
+      // P11A (mainLoop.zoomInStopsAt4 = 0, the only way level 8 arrives): half of level 4's window into the projection matrix, as
+      // levels 2 and 1 do with their multiples (level 4's resize leaves the modelview matrix current, so its own projection is
+      // resize's ortho), and level 4's zoom shift (the strip, path and cull windows of level 4 cover the smaller zoom-8 view)
+      w *= 0.5f;
+      h *= 0.5f;
+      st.zoom = 0;
+      break;
     default: break;
   }
   if (st.flip_y) gl.ortho(static_cast<double>(-w * 0.5f), static_cast<double>(w * 0.5f), static_cast<double>(h * 0.5f), static_cast<double>(-h * 0.5f), 5000.0, -5000.0);

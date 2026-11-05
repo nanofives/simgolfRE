@@ -4195,7 +4195,7 @@ edx = G32(GS(g_zoomScale)); // ML+0x60e5  mov edx, dword ptr [g_zoomScale]
 eax = (eax) ^ (eax); // ML+0x60eb  xor eax, eax
 { int cmpA = edx; // ML+0x60ed  cmp edx, 4: edx = [g_zoomScale] (ML+0x60e5); the setle at ML+0x60f7 reads THIS compare
 edx = FD(0x88); // ML+0x60f0  mov edx, dword ptr [F+0x88] (moves never touch the flags)
-eax = (eax & ~0xffu) | ((((int)(cmpA) <= (int)(4)) ? 1 : 0) & 0xff); } // ML+0x60f7  setle al  (c3fy2 fix: was F+0x88)
+eax = (eax & ~0xffu) | ((((int)(cmpA) <= (int)(SG_DEFECT(g_defect_zoom_in_max4) ? 4 : 8)) ? 1 : 0) & 0xff); } // ML+0x60f7  setle al  (c3fy2 fix: was F+0x88; P11A: shade 4 at zoom 8 too)
 eax = (eax) - 1; // ML+0x60fa  dec eax
 stk[--sp] = (int)(-1); // ML+0x60fb  push -1
 eax = (eax & ~0xffu) | ((((eax & 0xff)) & (0xfe)) & 0xff); // ML+0x60fd  and al, 0xfe
@@ -4528,10 +4528,11 @@ void P4_objectLabel(u32 F) {
     if (ebp == 5 && (n = G32(FU(0xc) + 8)) > 0) {                             // ML+0x66f0 / ML+0x66f6..ML+0x66ff
         StrCpy(kBuf, (u32)(n * 37 + (GS(g_golferPhrases) + 104963)));                             // ML+0x6705..ML+0x672d
         StrCat(kBuf, GS(f_strpool_4c68dc));                                             // ML+0x672f..ML+0x6760
-        if (G32(GS(g_zoomScale)) != 4) return;                                     // ML+0x6753 / ML+0x6762
+        const bool z8 = !SG_DEFECT(g_defect_zoom_in_max4) && G32(GS(g_zoomScale)) == 8;   // P11A: zoom 8 draws it as zoom 4 does
+        if (G32(GS(g_zoomScale)) != 4 && !z8) return;                              // ML+0x6753 / ML+0x6762
         if (((FD(0x28) + G32(GS(g_date))) & 0x30) != 0) return;               // ML+0x6768..ML+0x6776
         cc("drawCenteredText2", (int)kBuf, FD(0x148), FD(0x124) - 0xc, (int)0x80007E9F);   // drawCenteredText2 ML+0x6799
-        int z = G32(GS(g_zoomScale));                                              // ML+0x679e
+        int z = z8 ? 4 : G32(GS(g_zoomScale));                                     // ML+0x679e
         int d = 4 - z;                                                        // ML+0x67ab / ML+0x67b5
         cc("drawCenteredText2", (GS(f_strpool_4c64a8) + 1068), FD(0x148), FD(0x124) + d * 2 + d, (int)0x80007E9F);   // drawCenteredText2 ML+0x67ca
         return;                                                               // ML+0x67d2
@@ -7475,7 +7476,7 @@ a41c900:
     goto a41de11;                             // ML+0xd368
 a41c92d:  // key 0x7a
     eax = G32(GS(g_zoomScale));                    // ML+0xd36d
-    if (eax >= 4) goto a41de11;               // ML+0xd372 cmp eax,4; jge (signed)
+    if (eax >= (SG_DEFECT(g_defect_zoom_in_max4) ? 4 : 8)) goto a41de11;   // ML+0xd372 cmp eax,4; jge (signed) (P11A: 8 when mainLoop.zoomInStopsAt4 = 0)
     eax += eax;                               // ML+0xd37b
     G32(GS(g_zoomScale)) = eax;                    // ML+0xd37d
     ecx = eax * 8;                            // ML+0xd382 lea ecx,[eax*8]

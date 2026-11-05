@@ -111,6 +111,17 @@ int g_defect_golfer_walk_offgrid = 1;
 // their places under enqueueSprite's 0x3ff cap. At zoom 2 and 4 nothing changes.
 int g_defect_far_zoom_trees = 1;
 constexpr int kFarTreeQueueLimit = 0x280;
+// mainLoop.zoomInStopsAt4 (P11A fix 2, Mariano's play-test 5: "another level of zoom closer"): key 0x7a ('z', and the radial menu's
+// zoom-in button, which posts it) doubles g_zoomScale only while it is below 4 (ML+0xd372), so 4 is the closest of the three levels
+// 1 / 2 / 4. Fixed (0): it doubles up to 8, one level closer (key 0x78 halves 8 back to 4). The projection (worldToScreen, screenToTile,
+// g_tileStep4c2840 = zoom * 8), the sprite scale (shade * zoom) and the labels are linear in the zoom; the places that assume 4 is the
+// largest value take zoom 8 like this (each reached only at zoom 8, so at 1 nothing changes):
+//   - the golfer sprite's shade (ML+0x60e5..ML+0x60ff: 4 at zoom <= 4, else 2) stays 4, so golfers grow with the course;
+//   - P4_objectLabel's object phrase (drawn at zoom 4 only, ML+0x6753) is drawn at zoom 8 too, its second line at zoom 4's offset;
+//   - updateTerrainRender (terrain_dll.cpp): at zoom 8 a camera move renders the whole terrain (the strip renderer's windows have no
+//     zoom-8 size); Terrain::setZoomLevel(8) (terrain_gl_setup.cpp) halves level 4's ortho window and keeps level 4's zoom shift
+//     (strip / path / cull windows: a superset of the zoom-8 view); rebuildTileData's start row / column 4 / zoom * 13 uses zoom 4's 13.
+int g_defect_zoom_in_max4 = 1;
 int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
@@ -2057,6 +2068,10 @@ const DefectDef kDefects[] = {
      "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "
      "for the golfers queued after them",
      &g_defect_far_zoom_trees},
+    {"mainLoop.zoomInStopsAt4", "P11A",
+     "zooming in stops at g_zoomScale 4 (three levels 1 / 2 / 4); fixed: one level closer, 8 (the course, objects and golfers at "
+     "twice zoom 4's size)",
+     &g_defect_zoom_in_max4},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
