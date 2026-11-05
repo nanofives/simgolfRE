@@ -59,6 +59,9 @@
 //   P10D: --sprite-res native|frame (default native with a world layer; SG_APP_P10=off: frame) the sprite queue (trees, water
 //   life, golfers, every course object) drawn a second time at the world layer's resolution from the sprites' own art
 //   (terrain_live.h LiveTerrainWorld::hr); frame = the 800 x 600 scene's sprites scaled with the picture (G32).
+//   P10H fix 1: --sprite-filter sharp|smooth|sharp-area (default sharp; SG_APP_P10=off: smooth) the filter of those sprites and of
+//   the placement box: sharp = every art pixel a crisp block with one-window-pixel area-weighted steps, the object outlines smooth;
+//   smooth = P10D's bilinear; sharp-area = sharp with the outlines area-weighted too (gfx_scene.cpp hr_blit_rows).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -366,6 +369,7 @@ struct Options {
   bool photo_dir = true;           // P10C fix 3: --photo-dir on|off (SG_APP_P10=off: off)
   bool hud_textbox = true;         // P10C fix 4: --hud-textbox on|off (SG_APP_P10=off: off)
   bool sprite_native = true;       // P10D: --sprite-res native|frame (SG_APP_P10=off: frame)
+  int sprite_filter = 1;           // P10H: --sprite-filter sharp (1) | smooth (0) | sharp-area (2) (SG_APP_P10=off: smooth)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -686,6 +690,7 @@ struct TerrainGuard {
       write_file(rec / "world_layer.json", wj.data(), wj.size());
       if (won && o.world_check) live->world()->check_central = true;
       if (won && o.sprite_native) live->world()->hr_on = true;  // P10D: the sprites at the world's resolution
+      if (won) live->world()->hr_filter = o.sprite_filter;        // P10H: their filter
     }
     portsim::set_terrain_api(c, live.get());
   }
@@ -1123,6 +1128,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
                        ",\"checks\":" + std::to_string(w.checks) + ",\"checks_differing\":" + std::to_string(w.checks_differing) +
                        ",\"diff_px\":" + std::to_string(w.diff_px) + ",\"shots\":" + std::to_string(world_shots_made) +
                        ",\"view_us\":" + std::to_string(terrain_us) + ",\"hr\":{\"on\":" + (w.hr_on ? "true" : "false") +
+                       ",\"filter\":" + std::to_string(w.hr_filter) +
                        ",\"draws\":" + std::to_string(w.hr_draws) + ",\"queues\":" + std::to_string(w.hr_queues) + ",\"prep_us\":" +
                        std::to_string(w.hr_prep_us) + ",\"queue_us\":" + std::to_string(w.hr_queue_us) + ",\"label_us\":" +
                        std::to_string(w.hr_label_us) + ",\"flush_us\":" + std::to_string(w.hr_flush_us) + ",\"tiles\":" +
@@ -2781,6 +2787,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.sprite_native = v == "native";
     }
+    else if (a == "--sprite-filter") {  // P10H
+      if (!val(v) || (v != "sharp" && v != "smooth" && v != "sharp-area")) return false;
+      o.sprite_filter = v == "sharp" ? 1 : v == "smooth" ? 0 : 2;
+    }
     else if (a == "--fps") {  // P10A
       if (!val(v) || (v != "on" && v != "off" && v != "detail")) return false;
       o.fps = v;
@@ -2924,6 +2934,7 @@ int main(int argc, char **argv) {
       o.title_bands = o.hud_writes = o.photo_dir = o.hud_textbox = false;
       o.paint_rate = "game";  // P10E
       o.sprite_native = false;  // P10D
+      o.sprite_filter = 0;      // P10H
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

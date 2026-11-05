@@ -381,6 +381,18 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
   struct Col {
     int32_t c0, c1;   // texel columns i0, i0 + 1 (-1: outside the art)
     uint32_t w1;      // the weight of i0 + 1 (i0 gets 256 - w1)
+    uint32_t s1;      // P10H: the sharp filter's weight of i0 + 1
+  };
+  // P10H fix 1: the sharp filter. A sample at texel fraction t between texels i0 and i0 + 1 (bilinear weight t) gets the weight
+  // clamp((t - 0.5) * k + 0.5, 0, 1) instead, k = the sample's world pixels per texel (at least 1): the share of the sample's own
+  // footprint (1 / k texel wide, centred at t) lying on texel i0 + 1. Every texel is then a flat block and the step between two
+  // texels is one window pixel wide whatever the scale (no uneven block widths, no shimmer at a non-integer scale); k = 1 is
+  // bilinear. Filter 1 keeps the bilinear weights' total over the texels that draw (the outline's coverage) and spreads it over
+  // them by the sharp weights, so the colours are sharp and the object's edge over what is under it is the smooth one.
+  const int filter = w.hr_filter;
+  const auto sharp_w = [](double t, double k) {
+    const double s = std::min(1.0, std::max(0.0, (t - 0.5) * k + 0.5));
+    return static_cast<uint32_t>(std::floor(s * 256.0 + 0.5));
   };
   Col cu[64 * 4];   // the clip rectangles are at most 64 columns wide (hr_flush's spans are cut to that)
   const int32_t nx = X1 - X0;
@@ -389,6 +401,7 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
     hr_blit_rows(w, plane, cover, s, gm, op, box, X0 + 64, Y0, X1, Y1);
     return;
   }
+  const double ksx = std::max(1.0, nsx / du), ksy = std::max(1.0, nsy / dv);   // P10H: samples per texel, per axis
   for (int32_t X = X0; X < X1; ++X)
     for (int si = 0; si < nsx; ++si) {
       const double uu = (((X + (si + 0.5) / nsx) - w.ox) / kx + w.scene_e - rx) / fx - 0.5;
@@ -396,7 +409,7 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
       const int32_t i0 = static_cast<int32_t>(uf);
       cu[static_cast<size_t>(X - X0) * static_cast<size_t>(nsx) + static_cast<size_t>(si)] =
           Col{i0 >= 0 && i0 < s.w ? i0 : -1, i0 + 1 >= 0 && i0 + 1 < s.w ? i0 + 1 : -1,
-              static_cast<uint32_t>(std::floor((uu - uf) * 256.0 + 0.5))};
+              static_cast<uint32_t>(std::floor((uu - uf) * 256.0 + 0.5)), filter ? sharp_w(uu - uf, ksx) : 0u};
     }
   const uint8_t *art = s.px.data();
   const size_t sw = static_cast<size_t>(s.w);
@@ -405,7 +418,7 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
   for (int32_t Y = Y0; Y < Y1; ++Y) {
     // the rows of every vertical sample (nullptr: outside the art) and their weights
     const uint8_t *r0[4], *r1[4];
-    uint32_t wv[4];
+    uint32_t wv[4], sv[4];
     bool rows = false;
     for (int sj = 0; sj < nsy; ++sj) {
       const double v = ((Y + (sj + 0.5) / nsy) / ky - ry) / fy - 0.5;
@@ -414,6 +427,7 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
       r0[sj] = j0 >= 0 && j0 < s.h ? art + static_cast<size_t>(j0) * sw : nullptr;
       r1[sj] = j0 + 1 >= 0 && j0 + 1 < s.h ? art + static_cast<size_t>(j0 + 1) * sw : nullptr;
       wv[sj] = static_cast<uint32_t>(std::floor((v - vf) * 256.0 + 0.5));
+      sv[sj] = filter ? sharp_w(v - vf, ksy) : 0u;
       rows = rows || r0[sj] || r1[sj];
     }
     if (!rows) continue;
@@ -423,6 +437,7 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
       const Col *tu = &cu[static_cast<size_t>(X - X0) * static_cast<size_t>(nsx)];
       const uint16_t d = hrow[X];
       uint32_t r = 0, gg = 0, b = 0;   // sums of weight (1 / 65536) * channel, at most 16 samples * 65536 * 31
+      double rs = 0, gs = 0, bs = 0;   // P10H: the sharp filter's sums (same unit)
       bool any = false;
       for (int sj = 0; sj < nsy; ++sj) {
         const uint32_t bv = wv[sj];
@@ -443,6 +458,39 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
             continue;
           }
           const uint32_t wt[4] = {(256 - bu) * (256 - bv), bu * (256 - bv), (256 - bu) * bv, bu * bv};
+          if (filter) {  // P10H fix 1: the sharp weights (see sharp_w above)
+            const uint32_t su = cl.s1, sb = sv[sj];
+            const uint32_t ws[4] = {(256 - su) * (256 - sb), su * (256 - sb), (256 - su) * sb, su * sb};
+            uint16_t res[4];
+            uint32_t cov = 0, sws = 0;   // over the texels that draw: bilinear and sharp weight
+            for (int k = 0; k < 4; ++k) {
+              res[k] = d;
+              if (c[k] != 0xff) {
+                op(c[k], res[k]);
+                if (res[k] != d) any = true;
+                cov += wt[k];
+                sws += ws[k];
+              }
+            }
+            // the drawing texels' weights: filter 1 = the bilinear coverage cov spread by the sharp weights (by the bilinear ones
+            // when no drawing texel has a sharp weight: the sample sits on the outline's transparent side); filter 2 = the sharp
+            // weights as they are (the outline area-weighted too). The rest of the sample keeps the pixel under it.
+            const uint32_t *cw = filter == 1 && sws == 0 ? wt : ws;
+            const double kk = filter == 2 ? 1.0 : static_cast<double>(cov) / static_cast<double>(sws ? sws : cov ? cov : 1u);
+            double rest = 65536.0;
+            for (int k = 0; k < 4; ++k) {
+              if (c[k] == 0xff) continue;
+              const double e = kk * cw[k];
+              rest -= e;
+              rs += e * ((res[k] >> 10) & 31u);
+              gs += e * ((res[k] >> 5) & 31u);
+              bs += e * (res[k] & 31u);
+            }
+            rs += rest * ((d >> 10) & 31u);
+            gs += rest * ((d >> 5) & 31u);
+            bs += rest * (d & 31u);
+            continue;
+          }
           for (int k = 0; k < 4; ++k) {
             uint16_t res = d;
             if (c[k] != 0xff && wt[k] != 0) {
@@ -456,6 +504,12 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
         }
       }
       if (!any) continue;
+      if (filter) {  // P10H: the sharp sums (the samples of the uniform fast path above added to r / gg / b)
+        const auto chs = [inv](double c) { return std::min<uint32_t>(31u, static_cast<uint32_t>(c * inv + 0.5)); };
+        hrow[X] = static_cast<uint16_t>((chs(r + rs) << 10) | (chs(gg + gs) << 5) | chs(b + bs));
+        crow[X] = 1;
+        continue;
+      }
       const auto ch = [inv](uint32_t c) { return std::min<uint32_t>(31u, static_cast<uint32_t>(c * inv + 0.5)); };
       hrow[X] = static_cast<uint16_t>((ch(r) << 10) | (ch(gg) << 5) | ch(b));
       crow[X] = 1;

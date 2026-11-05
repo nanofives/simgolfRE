@@ -90,6 +90,11 @@ struct LiveTerrainWorld {
   // pass (P9E fix 4's scene_pre). world_frame then lays hr where hr_cov and the scene's pixels only where tag is 0. Drawing only:
   // nothing a pass, the root or the GameState holds changes.
   bool hr_on = false;
+  // P10H fix 1 (log/roadmap/P10/P10H_notes.md): the resampling filter of hr / hrc / hrb (gfx_scene.cpp hr_blit_rows). 0 = smooth
+  // (P10D's bilinear), 1 = sharp (each art pixel a flat block at the window's scale with area-weighted edges one window pixel wide;
+  // the object's outline against what is under it keeps the bilinear coverage), 2 = sharp-area (the outline area-weighted too; a
+  // development comparison). Set once with hr_on (app --sprite-filter).
+  int hr_filter = 0;
   bool hr_open = false;    // between renderSpriteQueue.begin and .end
   bool hr_valid = false;   // hr holds the last queue's sprites
   std::vector<uint16_t> hr;
