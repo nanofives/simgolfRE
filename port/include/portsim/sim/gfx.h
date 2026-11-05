@@ -163,6 +163,10 @@ void gfx_set_hud_close(Ctx &ctx, bool on);
 // (LiveTerrain::world_frame cursor_apart, world_cursor). Records only: nothing is drawn, and the frame, the root, the back
 // buffer and the GameState are unchanged. Set by the app's host after gfx_set_hud_capture; off (the default): nothing kept.
 void gfx_set_hud_cursor(Ctx &ctx, bool on);
+// P10C fix 2: with the HUD capture on, a panel layer's pixels are also the root pixels its drawing primitives wrote, even with the
+// word the root already held there (P9B's diff alone left those transparent: a tree icon over the course's own tree sprites had
+// holes showing the world at the panel's moved place). On by default with the capture; off = P9B's diff only. Records only.
+void gfx_set_hud_writes(Ctx &ctx, bool on);
 void gfx_cursor_sprites_begin(Ctx &ctx);
 void gfx_cursor_sprites_end(Ctx &ctx);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click);

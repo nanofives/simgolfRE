@@ -163,8 +163,9 @@ bool surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a) {
       const int64_t step = mode() == 2 && scaled ? c + 1 : c;
       const int32_t sx = add32(x, static_cast<int32_t>((step * w) / w2));
       if (dx < 0 || dx >= dst->w || sx < 0 || sx >= tmp.w) continue;
-      dst->px[static_cast<size_t>(dy) * static_cast<size_t>(dst->w) + static_cast<size_t>(dx)] =
-          tmp.px[static_cast<size_t>(sy) * static_cast<size_t>(tmp.w) + static_cast<size_t>(sx)];
+      uint16_t &o = dst->px[static_cast<size_t>(dy) * static_cast<size_t>(dst->w) + static_cast<size_t>(dx)];
+      o = tmp.px[static_cast<size_t>(sy) * static_cast<size_t>(tmp.w) + static_cast<size_t>(sx)];
+      hud_mark(&o);  // P10C fix 2
     }
   }
   return true;
@@ -1064,7 +1065,11 @@ void draw_b16(Gfx &g, const Sprite8 &s, int32_t x, int32_t y, int32_t nx, int32_
         return;
       }
       const uint8_t b = s.px[static_cast<size_t>(sr) * static_cast<size_t>(s.w) + static_cast<size_t>(sc)];
-      if (b < 0xfe) g.root.px[static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx)] = s.pal[b];
+      if (b < 0xfe) {
+        uint16_t &o = g.root.px[static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx)];
+        o = s.pal[b];
+        hud_mark(&o);  // P10C fix 2
+      }
     }
   }
 }

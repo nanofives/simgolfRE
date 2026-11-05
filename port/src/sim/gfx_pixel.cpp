@@ -47,7 +47,9 @@ namespace gfxpx {
 
 bool write_pixel(Surface16 &d, int32_t x, int32_t y, uint32_t colour) {
   if (x < 0 || y < 0 || x >= d.w || y >= d.h) return false;
-  d.px[static_cast<size_t>(y) * static_cast<size_t>(d.w) + static_cast<size_t>(x)] = static_cast<uint16_t>(colour);
+  uint16_t &o = d.px[static_cast<size_t>(y) * static_cast<size_t>(d.w) + static_cast<size_t>(x)];
+  o = static_cast<uint16_t>(colour);
+  hud_mark(&o);  // P10C fix 2
   return true;
 }
 

@@ -276,7 +276,10 @@ void draw16(const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
     const uint8_t *sp = s.px.data() + static_cast<size_t>(yy - y) * s.w + (l - x);
     uint16_t *dp = d.px.data() + static_cast<size_t>(yy) * d.w + l;
     for (int32_t xx = l; xx < r; ++xx, ++sp, ++dp)
-      if (*sp < key) *dp = s.pal[*sp];
+      if (*sp < key) {
+        *dp = s.pal[*sp];
+        hud_mark(dp);  // P10C fix 2
+      }
   }
 }
 
@@ -343,8 +346,9 @@ void copy8(const Image8 &s, Surface16 &d, int32_t x, int32_t y, int32_t w, int32
     for (int32_t c = 0; c < w; ++c) {
       const int32_t sx = x + c, dx = x2 + c;
       if (sx < 0 || sx >= s.w || dx < 0 || dx >= d.w) continue;
-      d.px[static_cast<size_t>(dy) * static_cast<size_t>(d.w) + static_cast<size_t>(dx)] =
-          s.pal[s.px[static_cast<size_t>(sy) * static_cast<size_t>(s.pitch) + static_cast<size_t>(sx)]];
+      uint16_t &o = d.px[static_cast<size_t>(dy) * static_cast<size_t>(d.w) + static_cast<size_t>(dx)];
+      o = s.pal[s.px[static_cast<size_t>(sy) * static_cast<size_t>(s.pitch) + static_cast<size_t>(sx)]];
+      hud_mark(&o);  // P10C fix 2
     }
   }
 }
@@ -642,12 +646,15 @@ void text_close_segment(Gfx &g, int64_t seg, int32_t layer, const std::vector<ui
   patch.layer = layer;
   const int32_t bw = L.x1 - L.x0;
   const bool rec = g.hud.rec_gen.size() == g.root.px.size();
+  // P10C fix 2: a pixel the panel's primitives wrote before the glyph is the panel's even when its word equals the mark (the tool
+  // names drawn over the palette's tree icons left transparent spots there)
+  const bool wr = L.id != kGfxLayerCentred && g.hud.wr_on && g.hud.wr_gen.size() == g.root.px.size();
   for (int32_t y = L.y0; y < L.y1; ++y)
     for (int32_t x = L.x0; x < L.x1; ++x) {
       const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
       if (cur[i] == g.root.px[i]) continue;
       GfxLayerPx p;
-      if (i < ref.size() && cur[i] == ref[i]) {
+      if (i < ref.size() && cur[i] == ref[i] && !(wr && g.hud.wr_gen[i] == g.hud.gen)) {
         p.kind = 0;
         p.k = kGfxTextCoverMark;
       } else if (rec && g.hud.rec_gen[i] == g.hud.gen && g.hud.rec[i].kind >= 2 && g.hud.rec[i].px == cur[i]) {
@@ -839,6 +846,32 @@ void text_banner_end(Gfx &g, const std::vector<uint16_t> &img) {
 
 // ---- P9B: the HUD layer capture (gfx.h GfxHudFrame, gfx_body.h Gfx::HudCapture)
 namespace {
+// P10C fix 2 (gfx_body.h HudWriteMark): marking on for the panel layer gfx_layer_begin just opened, off at its close
+void hud_writes_arm(Gfx &g) {
+  Gfx::HudCapture &c = g.hud;
+  HudWriteMark &m = g_hud_wm;
+  m = HudWriteMark{};
+  c.wr_box[0] = c.wr_box[1] = 0;
+  c.wr_box[2] = c.wr_box[3] = -1;
+  if (!c.wr_on || c.cur <= kGfxLayerCentred || g.root.px.empty()) return;
+  if (c.wr_gen.size() != g.root.px.size()) c.wr_gen.assign(g.root.px.size(), 0);
+  m.lo = reinterpret_cast<uintptr_t>(g.root.px.data());
+  m.hi = m.lo + g.root.px.size() * sizeof(uint16_t);
+  m.gen = c.wr_gen.data();
+  m.cur = c.gen;
+  m.w = g.root.w;
+}
+void hud_writes_disarm(Gfx &g) {
+  Gfx::HudCapture &c = g.hud;
+  HudWriteMark &m = g_hud_wm;
+  if (m.lo != 0 && m.x1 >= 0 && m.cur == c.gen) {
+    c.wr_box[0] = m.x0;
+    c.wr_box[1] = m.y0;
+    c.wr_box[2] = m.x1;
+    c.wr_box[3] = m.y1;
+  }
+  m = HudWriteMark{};
+}
 // the root pixels that differ from `ref` as one layer (bounding box, kind 1 = the root's word, or the open layer's blend record
 // where it is still the pixel's word), comparing `now` (the root, or the back buffer for its child-window composition) with `ref`
 bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16_t> &now, int32_t id, bool use_rec,
@@ -846,6 +879,9 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
   const int32_t w = g.root.w, h = g.root.h;
   if (ref.size() != now.size() || now.size() != static_cast<size_t>(w) * static_cast<size_t>(h)) return false;
   int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
+  // P10C fix 2: a panel layer's pixels are also the ones its primitives wrote (gfx_body.h HudWriteMark), whatever the word
+  const Gfx::HudCapture &hc = g.hud;
+  const bool wr = use_rec && id != kGfxLayerCentred && hc.wr_on && hc.wr_gen.size() == now.size() && hc.wr_box[2] >= 0;
   for (int32_t y = 0; y < h; ++y) {
     const uint16_t *a = ref.data() + static_cast<size_t>(y) * w, *b = now.data() + static_cast<size_t>(y) * w;
     if (std::memcmp(a, b, static_cast<size_t>(w) * 2) == 0) continue;
@@ -856,6 +892,12 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
       }
     y0 = std::min(y0, y);
     y1 = y;
+  }
+  if (wr) {
+    x0 = std::min(x0, hc.wr_box[0]);
+    y0 = std::min(y0, hc.wr_box[1]);
+    x1 = std::max(x1, hc.wr_box[2]);
+    y1 = std::max(y1, hc.wr_box[3]);
   }
   if (x1 < 0) return false;
   out = GfxHudLayer{};
@@ -876,7 +918,7 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
   for (int32_t y = out.y0; y < out.y1; ++y)
     for (int32_t x = out.x0; x < out.x1; ++x) {
       const size_t i = static_cast<size_t>(y) * w + static_cast<size_t>(x);
-      if (ref[i] == now[i]) continue;
+      if (ref[i] == now[i] && !(wr && hc.wr_gen[i] == hc.gen)) continue;
       GfxLayerPx &p = out.px[static_cast<size_t>(y - out.y0) * bw + static_cast<size_t>(x - out.x0)];
       p.kind = 1;
       p.px = now[i];
@@ -1018,6 +1060,7 @@ void Gfx::hud_carry_drop() {
 void Gfx::hud_modal_mark() {
   HudCapture &c = hud;
   if (!c.on || !c.modal || c.depth == 0 || !c.any || c.aborted || c.cur < 0) return;
+  gfxb::hud_writes_disarm(*this);  // P10C fix 2
   GfxHudLayer l;
   const bool made = gfxb::hud_diff(*this, c.mark, root.px, c.cur, true, l);
   if (made) c.layers.push_back(std::move(l));
@@ -1146,6 +1189,13 @@ int8_t gfx_layer_anchor(int32_t id) {
   }
 }
 std::atomic<int> g_gfx_hud_capture{0};
+thread_local HudWriteMark g_hud_wm;  // P10C fix 2 (gfx_body.h)
+void gfx_set_hud_writes(Ctx &ctx, bool on) {  // P10C fix 2
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.wr_on = on;
+  if (!on) g_hud_wm = HudWriteMark{};
+}
 void gfx_set_hud_capture(Ctx &ctx, bool on) {
   Gfx *g = gfx(ctx);
   if (!g || g->hud.on == on) return;
@@ -1290,12 +1340,14 @@ void gfx_layer_begin(Ctx &ctx, int32_t id) {
   ++c.seg;  // P9C: the layer's segment
   c.cur = id;
   ++c.gen;  // the layer's blend records
+  gfxb::hud_writes_arm(*g);  // P10C fix 2
 }
 void gfx_layer_end(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.on || g->hud.depth == 0) return;
   Gfx::HudCapture &c = g->hud;
   if (--c.depth > 0) return;
+  gfxb::hud_writes_disarm(*g);  // P10C fix 2: the marked box into wr_box
   if (c.any && !c.aborted && c.cur >= 0) {
     GfxHudLayer l;
     const bool made = gfxb::hud_diff(*g, c.mark, g->root.px, c.cur, true, l);
@@ -1409,6 +1461,7 @@ static void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       if (c >= 0xff || k >= 0xff) continue;
       uint16_t &w = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
       const uint16_t sw = s.pal[c];
+      hud_mark(&w);  // P10C fix 2
       if (k == 0 || wrong) {
         w = sw;
         continue;
@@ -1520,6 +1573,7 @@ void draw_g16_lut(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, 
       const uint8_t c = s.px[static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x)];
       uint16_t &w = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
       if (c >= 0xff) continue;
+      hud_mark(&w);  // P10C fix 2
       if (c == 0xf8 && SG_NEGCTL(g_negctl_gfx) != 6) {
         if (w >= lut_n) {
           g.unsup("blitPanel: a destination word above the RGB555 range");

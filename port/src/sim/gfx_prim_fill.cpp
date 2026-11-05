@@ -66,8 +66,10 @@ void fill_rect16(Surface16 &d, int32_t l, int32_t t, int32_t r, int32_t b, uint1
   r = std::min(r, d.w);
   b = std::min(b, d.h);
   if (l >= r || t >= b) return;   // IntersectRect: an empty intersection fills nothing
-  for (int32_t y = t; y < b; ++y)
+  for (int32_t y = t; y < b; ++y) {
     std::fill(d.px.begin() + static_cast<ptrdiff_t>(y) * d.w + l, d.px.begin() + static_cast<ptrdiff_t>(y) * d.w + r, c);
+    hud_mark_span(d.px.data() + static_cast<size_t>(y) * static_cast<size_t>(d.w) + static_cast<size_t>(l), static_cast<size_t>(r - l));  // P10C fix 2
+  }
 }
 
 // fillConvexPoly16 on `d` (clip = the whole surface): pts = n {x, y} pairs
@@ -146,6 +148,7 @@ void fill_convex_poly16(Surface16 &d, const int32_t *pts, int n, uint16_t c) {
     if (x1 <= x0) return;
     if (row < 0 || row >= d.h) return;
     std::fill(d.px.begin() + static_cast<ptrdiff_t>(row) * d.w + x0, d.px.begin() + static_cast<ptrdiff_t>(row) * d.w + x1, c);
+    hud_mark_span(d.px.data() + static_cast<size_t>(row) * static_cast<size_t>(d.w) + static_cast<size_t>(x0), static_cast<size_t>(x1 - x0));  // P10C fix 2
   };
   int32_t row = min_y;
   Edge e1, e2;

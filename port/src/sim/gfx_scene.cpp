@@ -120,7 +120,10 @@ void dlog(const std::string &s) {
 }
 uint32_t u(int32_t v) { return static_cast<uint32_t>(v); }
 // every pixel a scene body writes; TEST-ONLY mode 7 (the sprite-pixel gate's mask run, not a control) stores it inverted
-inline void put(uint16_t &w, uint32_t v) { w = static_cast<uint16_t>(mode() == 7 ? v ^ 0x7fffu : v); }
+inline void put(uint16_t &w, uint32_t v) {
+  w = static_cast<uint16_t>(mode() == 7 ? v ^ 0x7fffu : v);
+  hud_mark(&w);  // P10C fix 2
+}
 
 struct SceneState {
   std::map<uint32_t, uint32_t> sprite_pal;  // sprite key -> the palette object its jgld Sprite's +0x10 word names

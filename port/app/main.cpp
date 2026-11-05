@@ -46,6 +46,8 @@
 //   world / layers / text / bands / overlay / blit ms per paint). session.json gets the means (`p10a`).
 //   P10C fix 1: --title-bands on|off (default on with --wide; SG_APP_P10=off: off) back from a session, the title menu's first
 //   frame is posted again with the title's band hint, so its side bands show the edge fill instead of black (host.h title_bands).
+//   P10C fix 2: --hud-writes on|off (default on with the HUD layers; SG_APP_P10=off: off) a HUD panel layer keeps every pixel its
+//   drawing wrote, also where the word equals the course's under it (gfx.h gfx_set_hud_writes); off = P9B's diff (icon holes).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -348,6 +350,7 @@ struct Options {
   std::string fps = "on";          // P10A: --fps on|detail|off (SG_APP_P10=off: off)
   std::string profile_csv;         // P10A: --profile-csv <file>
   bool title_bands = true;         // P10C fix 1: --title-bands on|off (SG_APP_P10=off: off)
+  bool hud_writes = true;          // P10C fix 2: --hud-writes on|off (SG_APP_P10=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -960,6 +963,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
+      if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
     if (err.empty()) {
@@ -1222,6 +1226,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
+  if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
   int *rec_mode = nullptr;
@@ -2696,6 +2701,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.title_bands = v == "on";
     }
+    else if (a == "--hud-writes") {  // P10C fix 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hud_writes = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2793,6 +2802,7 @@ int main(int argc, char **argv) {
       o.text_banner = o.text_fit = o.title_bands = false;
       o.fps = "off";
       o.text_peel = "plain";
+      o.title_bands = o.hud_writes = false;
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

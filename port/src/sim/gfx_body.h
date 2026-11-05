@@ -54,6 +54,44 @@ struct Surface16 {
   }
 };
 
+// P10C fix 2 (log/roadmap/P10/P10C_notes.md): the root pixels a drawing primitive WRITES while a HUD panel layer is open
+// (gfx.cpp gfx_layer_begin / gfx_layer_end). P9B took a layer's pixels from a diff with the root at the layer's open, so a pixel
+// the panel drew with the word the terrain already had there (a tree icon over the course's own tree sprites) was transparent
+// and showed the world at the panel's moved place. The primitives (draw16, copy8, draw_g16_lut, Surface_stretchBlit, the scaled
+// drawB, the scene family's put) call hud_mark for each word they store; outside a panel layer `lo` is null and nothing is
+// marked. A plain thread-local (the sim runs one context per thread): one compare per stored word, no state of the frame read.
+struct HudWriteMark {
+  uintptr_t lo = 0, hi = 0;  // the root surface's words [lo, hi) while a panel layer is open
+  uint32_t *gen = nullptr;   // Gfx::HudCapture::wr_gen
+  uint32_t cur = 0;          // the open layer's blend generation
+  int32_t w = 0;
+  int32_t x0 = 0, y0 = 0, x1 = -1, y1 = -1;  // the marked box (inclusive)
+};
+extern thread_local HudWriteMark g_hud_wm;
+inline void hud_mark(const uint16_t *p) {
+  HudWriteMark &m = g_hud_wm;
+  const uintptr_t a = reinterpret_cast<uintptr_t>(p);
+  if (a < m.lo || a >= m.hi) return;
+  const size_t i = static_cast<size_t>((a - m.lo) / sizeof(uint16_t));
+  m.gen[i] = m.cur;
+  const int32_t x = static_cast<int32_t>(i % static_cast<size_t>(m.w)), y = static_cast<int32_t>(i / static_cast<size_t>(m.w));
+  if (m.x1 < 0) {
+    m.x0 = m.x1 = x;
+    m.y0 = m.y1 = y;
+    return;
+  }
+  if (x < m.x0) m.x0 = x;
+  if (x > m.x1) m.x1 = x;
+  if (y < m.y0) m.y0 = y;
+  if (y > m.y1) m.y1 = y;
+}
+inline void hud_mark_span(const uint16_t *p, size_t n) {  // n stored words from p (a fill's row)
+  if (n == 0) return;
+  const uintptr_t a = reinterpret_cast<uintptr_t>(p);
+  if (a + n * sizeof(uint16_t) <= g_hud_wm.lo || a >= g_hud_wm.hi) return;
+  for (size_t k = 0; k < n; ++k) hud_mark(p + k);
+}
+
 class Gfx {
  public:
   std::map<uint32_t, Image8> images;    // exe Image objects (loadImage)
@@ -122,6 +160,11 @@ class Gfx {
     int cursor_depth = 0;             // P9E fix 4: open cursor passes
     std::vector<uint8_t> cursor2d;    // P9E fix 4: the root pixels their sprite draws changed (cleared at the queue's start)
     bool carry_split = false;
+    // P10C fix 2 (HudWriteMark): per root pixel the blend generation of the last panel layer that wrote it, and that layer's
+    // marked box (inclusive; x1 < 0 = none); hud_diff keeps a written pixel as the layer's even when its word did not change
+    std::vector<uint32_t> wr_gen;
+    int32_t wr_box[4] = {0, 0, -1, -1};
+    bool wr_on = true;                // the marking (gfx.h gfx_set_hud_writes; off = P9B's diff only)
   } hud;
   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
   struct TextCapture {
