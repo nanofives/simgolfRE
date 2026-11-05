@@ -1037,3 +1037,16 @@ without it and world_cursor returns the preview alone. The app gets each cursor 
 the centred layers and draws it at that offset. Over the palette nothing changes: the original draws no preview at 800-space y >= 0x1e0
 (ML+0xa774). The tee-to-cursor line and distance label stay (moving them would pull the line off its tee). `--hud-cursor on|off`. Builds x64 +
 Win32, segments x64 205 / 205 = I25.
+
+## P10: fourth play-test feedback (2026-11-05)
+Brief log/roadmap/P10/BRIEF.md (nine items, screenshots fb_1..4), workers P10A..P10E on claude2, each fix merged and published to the
+LAN + GitHub as it landed (light testing). P10A: profiler + FPS overlay (--fps, F12, --profile-csv; the game runs at the original's
+10.7 frames/s), capture 29.9 -> 13.5 ms and paint 35-45 -> 14-15 ms at 1920x1080, pixel-identical. P10B: sharp text during the load
+banner (--text-banner), text fitted to the game's 800-space metrics (--text-fit), no ghost glyphs in the save-name field
+(--text-peel witness). P10C: title side bands after a game (--title-bands), HUD write marks so icon pixels the course's colour stay
+the panel's (--hud-writes), the snapshots folder for accomplishment photos (--photo-dir), the SAVE GAME box centred on screen
+(--hud-textbox, Mariano's option C). P10D: sprite-queue objects drawn at the window's resolution with tile reuse (--sprite-res).
+P10E: repaint at the display rate with the tool preview moved to the cursor's tile between game frames (--paint-rate, Mariano's
+option C1). SG_APP_P10=off turns every one off (conftest). Open: item 5 ("placing at the edge makes them invisible") not reproduced
+(P10C_notes.md, U-P10C-01: a single-click palm tile leaves no tree, also in the 800 frame); the translucent placement box is still
+800-space (P10D_notes.md options). Merge helper: log/roadmap/P10/union_conflicts.py.
