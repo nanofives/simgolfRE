@@ -171,7 +171,9 @@ struct WorldImage {
   // P9E fix 4: the tool previews drawn at the cursor tile, taken out of px / px_text (LiveTerrain::world_cursor): cur_px / cur_cov
   // in world pixels, cur_box their box (x0, y0, x1, y1), cur_mask the frame's pixels they drew (800 x 600). The presenter leaves
   // the frame's copy of them out of its centred layers and draws them at the offset of the layer the cursor answer was moved by.
-  std::vector<uint16_t> cur_px;
+  // P10F: cur_cov 2 = a pixel of P7's translucent placement box alone: cur_px is the box over a black word and cur_hi over a white
+  // one, and the presenter blends it over the client pixel under it (so the box stays translucent where P10E moves it)
+  std::vector<uint16_t> cur_px, cur_hi;
   std::vector<uint8_t> cur_cov, cur_mask;
   int32_t cur_box[4] = {0, 0, 0, 0};
   CursorProj proj;  // P10E

@@ -724,6 +724,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
           break;
         }
   }
+  const bool box = W.cur_hi.size() == W.px.size();  // P10F: the placement box's blend pair (cur_cov 2)
   auto draw_cursor = [&]() {  // nearest world pixels, the plane's box only
     if (!cur || vp.client_w <= 0 || vp.client_h <= 0 || W.fw <= 0 || W.ph <= 0) return;
     const int32_t cox = vp.origin_x + cdx + shx, coy = vp.origin_y + shy;  // P10E: (shx, shy) = 0 outside a live move
@@ -741,7 +742,18 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
         const int32_t wx = W.ox + static_cast<int32_t>(dxw >= 0 ? dxw / vp.client_w : -((-dxw + vp.client_w - 1) / vp.client_w));
         if (wx < 0 || wx >= W.pw) continue;
         const size_t j = static_cast<size_t>(wy) * static_cast<size_t>(W.pw) + static_cast<size_t>(wx);
-        if (W.cur_cov[j]) dst[x] = rgb555_to_bgra(W.cur_px[j]);
+        if (W.cur_cov[j] == 1) {
+          dst[x] = rgb555_to_bgra(W.cur_px[j]);
+        } else if (W.cur_cov[j] == 2 && box) {  // P10F: the box alone, blended over the pixel under it: lo + (hi - lo) * d / 255
+          const uint32_t lo = rgb555_to_bgra(W.cur_px[j]), hi = rgb555_to_bgra(W.cur_hi[j]), d = dst[x];
+          uint32_t o = 0xff000000u;
+          for (int sh = 0; sh < 24; sh += 8) {
+            const int32_t l = static_cast<int32_t>((lo >> sh) & 0xffu), h = static_cast<int32_t>((hi >> sh) & 0xffu);
+            const int32_t v = l + ((h - l) * static_cast<int32_t>((d >> sh) & 0xffu) + 127) / 255;
+            o |= static_cast<uint32_t>(std::clamp(v, 0, 255)) << sh;
+          }
+          dst[x] = o;
+        }
       }
     }
   };

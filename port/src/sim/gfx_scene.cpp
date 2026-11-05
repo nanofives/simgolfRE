@@ -710,6 +710,79 @@ void hr_flush(LiveTerrainWorld &w) {
   q.w = nullptr;
 }
 
+// P10D fix 2 (P10F: also the placement box, draw_alpha): a draw after the queue's end, at once on the calling thread, at scene
+// position (x, y): with `cur` into hrc (a copy of hr made at the first such draw, hrc_cov = 1 where it drew), else into hr
+template <class Op>
+void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op, bool cur) {
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
+  if (cur && !w.hrc_valid) {
+    w.hrc = w.hr;
+    w.hrc_cov.assign(np, 0);
+    w.hrc_valid = true;
+  }
+  const HrGeom gm = hr_geom(x, y, sc, s);
+  if (!gm.ok) return;
+  Op local = op;
+  hr_no_rec(local, 0);
+  const HrPass keep = g_hr_pass;
+  g_hr_pass.tag = nullptr;   // the planes' words are not the scene's
+  const HrBox box = hr_box(w, s, gm);
+  hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), s, gm, local, box, 0, 0, w.pw, w.ph);
+  if (!cur) g_hr_queue.post_boxes.push_back(box);   // fix 3: the next queue draws these tiles again
+  g_hr_pass = keep;
+  ++w.hr_draws;
+}
+
+// P10F (terrain_live.h LiveTerrainWorld::hrb_*): P7's placement box at scene position (x, y), at once on the calling thread, into
+// hrc (covering hrb_cov, not hrc_cov) and into the blend pair hrb_lo / hrb_hi (the box over 0 and over 0x7fff words)
+template <class Op>
+void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op) {
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
+  if (!w.hrc_valid) {
+    w.hrc = w.hr;
+    w.hrc_cov.assign(np, 0);
+    w.hrc_valid = true;
+  }
+  if (!w.hrb_valid) {
+    if (w.hrb_lo.size() != np || w.hrb_hi.size() != np || w.hrb_cov.size() != np) {
+      w.hrb_lo.assign(np, 0);
+      w.hrb_hi.assign(np, 0x7fff);
+      w.hrb_cov.assign(np, 0);
+    } else {
+      for (int32_t Y = w.hrb_area[1]; Y < w.hrb_area[3]; ++Y) {   // the last boxes' rectangle only
+        const size_t r = static_cast<size_t>(Y) * static_cast<size_t>(w.pw);
+        const size_t a = r + static_cast<size_t>(w.hrb_area[0]), b = r + static_cast<size_t>(w.hrb_area[2]);
+        std::fill(w.hrb_lo.begin() + static_cast<std::ptrdiff_t>(a), w.hrb_lo.begin() + static_cast<std::ptrdiff_t>(b), uint16_t(0));
+        std::fill(w.hrb_hi.begin() + static_cast<std::ptrdiff_t>(a), w.hrb_hi.begin() + static_cast<std::ptrdiff_t>(b), uint16_t(0x7fff));
+        std::fill(w.hrb_cov.begin() + static_cast<std::ptrdiff_t>(a), w.hrb_cov.begin() + static_cast<std::ptrdiff_t>(b), uint8_t(0));
+      }
+    }
+    w.hrb_area[0] = w.hrb_area[1] = w.hrb_area[2] = w.hrb_area[3] = 0;
+    w.hrb_valid = true;
+  }
+  const HrGeom gm = hr_geom(x, y, sc, s);
+  if (!gm.ok) return;
+  const HrBox box = hr_box(w, s, gm);
+  if (box.empty()) return;
+  const HrPass keep = g_hr_pass;
+  g_hr_pass.tag = nullptr;   // the planes' words are not the scene's
+  for (uint16_t *plane : {w.hrc.data(), w.hrb_lo.data(), w.hrb_hi.data()}) {
+    Op local = op;
+    hr_no_rec(local, 0);
+    hr_blit_rows(w, plane, w.hrb_cov.data(), s, gm, local, box, 0, 0, w.pw, w.ph);
+  }
+  g_hr_pass = keep;
+  int32_t *A = w.hrb_area;
+  if (A[0] >= A[2] || A[1] >= A[3]) {
+    A[0] = box.x0, A[1] = box.y0, A[2] = box.x1, A[3] = box.y1;
+  } else {
+    A[0] = std::min(A[0], box.x0), A[1] = std::min(A[1], box.y0), A[2] = std::max(A[2], box.x1), A[3] = std::max(A[3], box.y1);
+  }
+  ++w.hr_draws;
+}
+
 template <class Op>
 void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale sc, const char *who, Op &op) {
   blit16_core(g, s, d, x, y, sc, who, op);
@@ -719,26 +792,7 @@ void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale 
       return;
     }
     // P10D fix 2: a draw after the queue's end, at once on this thread (the cursor passes draw a few entries)
-    LiveTerrainWorld &w = *g_hr_pass.hr;
-    const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
-    const bool cur = g_hr_pass.plane == 2;
-    if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
-    if (cur && !w.hrc_valid) {
-      w.hrc = w.hr;
-      w.hrc_cov.assign(np, 0);
-      w.hrc_valid = true;
-    }
-    const HrGeom gm = hr_geom(x, y, sc, s);
-    if (!gm.ok) return;
-    Op local = op;
-    hr_no_rec(local, 0);
-    const HrPass keep = g_hr_pass;
-    g_hr_pass.tag = nullptr;   // the planes' words are not the scene's
-    const HrBox box = hr_box(w, s, gm);
-    hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), s, gm, local, box, 0, 0, w.pw, w.ph);
-    if (!cur) g_hr_queue.post_boxes.push_back(box);   // fix 3: the next queue draws these tiles again
-    g_hr_pass = keep;
-    ++w.hr_draws;
+    hr_now(*g_hr_pass.hr, s, x, y, sc, op, g_hr_pass.plane == 2);
   }
 }
 
@@ -942,6 +996,26 @@ struct AlphaOp {
     put(w, r[0]);
   }
 };
+// P10F: an op that also marks (mark[i] = 1) every root pixel i the wrapped op writes (AlphaOp's own skips: payload 0xff, and
+// 0xf8..0xfe with the flag)
+template <class Op>
+struct MarkOp {
+  Op &in;
+  uint8_t *mark;
+  uint16_t *word;   // the word the op left there
+  const uint16_t *base;
+  size_t n;
+  bool flag;
+  void operator()(uint8_t c, uint16_t &w) {
+    in(c, w);
+    if (c >= 0xff || (flag && c >= 0xf8)) return;
+    const size_t i = static_cast<size_t>(&w - base);
+    if (i >= n) return;
+    mark[i] = 1;
+    word[i] = w;
+  }
+};
+LiveTerrainWorld *wide_world(Ctx &ctx);   // G32 (below)
 
 // draw16_10024140 (Sprite::blt16c's body): payload 0xf8..0xff transparent; the palette word P reduced to one brightness
 // byte k = (((P & 0x7c00) >> 7) + ((P & 0x3e0) >> 1) + ((P & 0x1f) << 3)) >> 2 (16-bit adds), and each 5-bit field f of the
@@ -1075,7 +1149,29 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
   // P9D: the quarter member's pixels recorded for the modal capture (gfx_reports.cpp records the same blend at scale 1)
   const bool quarter = !std::strcmp(op.prog->body, "draw16_1002ed60") && mode() != 7;
   if (quarter && g.hud.any && g.hud.modal && dst == g.root_va(ctx)) op.rec = &g;
-  blit16(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, op);
+  // P10F: a draw of a cursor pass kept apart onto the 800 root while the hr plane holds the queue's sprites (P7's translucent
+  // placement box at the cursor tile, mainLoop ML+0xb53b / ML+0xb6ae at alpha 0.5): the same art also at the window's resolution
+  // (hr_box_now: hrc and the blend pair hrb_lo / hrb_hi; scene position = root position + scene_e), and the root pixels it wrote
+  // marked in box800, so the cursor previews (world_cursor's mask800) take them out of the frame's own pixels. Outside a scene
+  // draw only (on_wide swaps the scene into the root: scene is then empty).
+  LiveTerrainWorld *bw = nullptr;
+  static const bool box_on = [] {  // development: SG_P10F_BOX=0 = the frame's 800-space box (P10D)
+    const char *e = std::getenv("SG_P10F_BOX");
+    return !(e && e[0] == '0');
+  }();
+  if (box_on && !g_hr_pass.hr && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && dst == g.root_va(ctx) && g.root.w == 800 &&
+      g.root.h == 600 && mode() == 0)
+    if (LiveTerrainWorld *w = wide_world(ctx))
+      if (!w->hr_open && w->hr_valid && w->scene.size() == static_cast<size_t>(w->scene_w) * 600) bw = w;
+  if (!bw) {
+    blit16(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, op);
+  } else {
+    if (bw->box800.size() != g.root.px.size()) bw->box800.assign(g.root.px.size(), 0);
+    if (bw->box_word.size() != g.root.px.size()) bw->box_word.assign(g.root.px.size(), 0);
+    MarkOp<AlphaOp> mo{op, bw->box800.data(), bw->box_word.data(), g.root.px.data(), g.root.px.size(), op.flag};
+    blit16_core(g, *s, g.root, add32(s->left, x), add32(s->top, y), cur_scale(g), who, mo);   // blit16 without an hr pass
+    hr_box_now(*bw, *s, add32(add32(s->left, x), bw->scene_e), add32(s->top, y), cur_scale(g), op);
+  }
   // every root pixel blended once with one word (the sprite covers the root at this scale): a whole-frame dim
   if (op.rec && op.one_src && op.n == g.root.px.size()) g.note_dim(op.src0);
 }
@@ -1624,6 +1720,8 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   const auto hr_t0 = std::chrono::steady_clock::now();
   w->hr_valid = false;
   w->hrc_valid = false;  // P10D fix 2
+  w->box800.clear();     // P10F
+  w->hrb_valid = false;  // P10F
   g_hr_queue.cmds.clear();
   g_hr_queue.w = nullptr;
   w->hr_open = w->hr_on && mode() == 0 && wp.size() == static_cast<size_t>(w->pw) * static_cast<size_t>(w->ph);

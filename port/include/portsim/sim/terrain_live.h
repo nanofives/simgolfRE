@@ -101,6 +101,20 @@ struct LiveTerrainWorld {
   std::vector<uint16_t> hrc;
   std::vector<uint8_t> hrc_cov;
   bool hrc_valid = false;
+  // P10F (log/roadmap/P10/P10F_notes.md): P7's translucent placement box (a cursor pass's Surface_drawSprite at alpha 0.5, outside
+  // the queue) at the world's resolution (gfx_scene.cpp draw_alpha). It is drawn into hrc (under the cursor sprites drawn after it;
+  // hrc_cov is left to them) and into the blend pair hrb_lo / hrb_hi, the same box over black (0) and over white (0x7fff) words,
+  // hrb_cov = 1 where it drew: world_cursor gives a box-only pixel as that pair, which the presenter blends over the pixel under it
+  // wherever P10E moves the preview, so the box stays translucent away from the place it was drawn at. box800 = the 800 x 600 root
+  // pixels it wrote and box_word the word it left there (world_cursor adds to mask800 those the published back buffer still holds
+  // with that word, so the frame's 800-space box is left out but a line or text drawn over it later is not). All cleared at the queue's start
+  // (hrb_valid false; the planes are kept and only hrb_area, the box's world rectangle since their last reset, is reset).
+  std::vector<uint8_t> box800;
+  std::vector<uint16_t> box_word;
+  std::vector<uint16_t> hrb_lo, hrb_hi;
+  std::vector<uint8_t> hrb_cov;
+  bool hrb_valid = false;
+  int32_t hrb_area[4] = {0, 0, 0, 0};
   int64_t hr_draws = 0;
   int64_t hr_queues = 0, hr_prep_us = 0, hr_queue_us = 0, hr_label_us = 0, hr_flush_us = 0;   // P10D: costs (session.json)
   int64_t hr_tiles = 0, hr_tiles_dirty = 0;   // P10D fix 3: 32 x 32 tiles flushed, and of them drawn again (session.json)
@@ -209,7 +223,11 @@ class LiveTerrain : public TerrainApi {
                    bool cursor_apart = false) const;  // P9E fix 4: the scene without the cursor passes' previews (scene_pre there)
   // P9E fix 4: the cursor passes' previews alone: px / cov (pw x ph) the world pixels they show (nearest, as world_frame lays the
   // scene), mask800 (800 x 600) the frame's pixels they drew (the scene's frame columns). False when the last queue pass kept none.
-  bool world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800) const;
+  // P10F: with `hi`, a pixel of the placement box alone has cov 2, px = the box over a black word and (*hi)[j] = over a white one
+  // (LiveTerrainWorld::hrb_lo / hrb_hi); without `hi` such a pixel is hrc's (the box over the world it was drawn on), cov 1.
+  // With `back800` (the published 800 x 600 back buffer) a box pixel joins mask800 only where it still holds the box's word.
+  bool world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
+                    std::vector<uint16_t> *hi = nullptr, const std::vector<uint16_t> *back800 = nullptr) const;
   // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
   void frame_begin();
   void frame_end();

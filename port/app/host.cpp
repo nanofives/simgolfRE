@@ -670,9 +670,10 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   portsim::GfxHudFrame f;
   const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
   // P9E fix 4: with the HUD layers, the tool previews at the cursor apart from the world (WorldImage::cur_*)
-  const bool apart = cursor && use && live.world_cursor(wi.cur_px, wi.cur_cov, wi.cur_mask);
+  const bool apart = cursor && use && live.world_cursor(wi.cur_px, wi.cur_cov, wi.cur_mask, &wi.cur_hi, &px);  // P10F: cur_hi, the back buffer
   if (!apart) {
     wi.cur_px.clear();
+    wi.cur_hi.clear();
     wi.cur_cov.clear();
     wi.cur_mask.clear();
   }
@@ -680,9 +681,11 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   if (apart && live.world()) {
     const int32_t pw = live.world()->pw, ph = live.world()->ph;
     int32_t x0 = pw, y0 = ph, x1 = 0, y1 = 0;
-    for (int32_t y = 0; y < ph; ++y) {  // P10A: a row's first covered pixel by memchr (cur_cov holds 0 / 1), its last from the end
+    for (int32_t y = 0; y < ph; ++y) {  // P10A: a row's first covered pixel by memchr, its last from the end
       const uint8_t *r = wi.cur_cov.data() + static_cast<size_t>(y) * static_cast<size_t>(pw);
       const void *hit = std::memchr(r, 1, static_cast<size_t>(pw));
+      const void *hit2 = wi.cur_hi.empty() ? nullptr : std::memchr(r, 2, static_cast<size_t>(pw));  // P10F: cur_cov 2 (the box)
+      if (!hit || (hit2 && hit2 < hit)) hit = hit2;
       if (!hit) continue;
       const int32_t a = static_cast<int32_t>(static_cast<const uint8_t *>(hit) - r);
       int32_t b = pw;
@@ -743,7 +746,7 @@ void LiveSession::recycle_world(WorldImage &&w) {  // P10A
 
 // P10A: an image whose vectors keep their capacity, every field as a new WorldImage has it
 static void world_reset(WorldImage &w) {
-  for (std::vector<uint16_t> *v : {&w.px, &w.px_text, &w.cur_px}) v->clear();
+  for (std::vector<uint16_t> *v : {&w.px, &w.px_text, &w.cur_px, &w.cur_hi}) v->clear();
   for (std::vector<uint8_t> *v : {&w.mask, &w.mask_text, &w.cur_cov, &w.cur_mask}) v->clear();
   w.pw = w.ph = w.fw = w.ox = 0;
   w.hud = portsim::GfxHudFrame{};

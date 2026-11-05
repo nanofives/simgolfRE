@@ -261,7 +261,9 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
   return true;
 }
 
-bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800) const {
+bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
+                               std::vector<uint16_t> *hi, const std::vector<uint16_t> *back800) const {
+  if (hi) hi->clear();
   if (!world_ || world_->names_differ || !world_->valid) return false;
   const LiveTerrainWorld &w = *world_;
   const size_t n = static_cast<size_t>(w.scene_w) * 600;
@@ -281,7 +283,12 @@ bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &
         lx1 = std::max(lx1, lx);
       }
   }
-  if (ly1 < 0) {  // P10A: the planes are not made (the caller drops them on false)
+  // P10F: the placement box drawn at the world's resolution (box800, hrb_*), which the scene does not hold (the palm tool's only
+  // preview)
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  const bool box = w.hr_valid && w.hrc_valid && w.hrb_valid && w.box800.size() == static_cast<size_t>(800) * 600 &&
+                   w.hrc.size() == np && w.hrb_lo.size() == np && w.hrb_hi.size() == np && w.hrb_cov.size() == np;
+  if (ly1 < 0 && !box) {  // P10A: the planes are not made (the caller drops them on false)
     px.clear();
     cov.clear();
     mask800.clear();
@@ -297,6 +304,11 @@ bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &
         any = true;
       }
     }
+  if (box) {
+    const bool chk = back800 && back800->size() == w.box800.size() && w.box_word.size() == w.box800.size();
+    for (size_t i = 0; i < w.box800.size(); ++i)
+      if (w.box800[i] && (!chk || (*back800)[i] == w.box_word[i])) mask800[i] = 1;
+  }
   px.assign(static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph), 0);
   cov.assign(px.size(), 0);
   // P10D fix 2: the previews at the world's resolution (hrc where hrc_cov)
@@ -307,6 +319,18 @@ bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &
         cov[j] = 1;
         any = true;
       }
+    if (box) {  // P10F: the box's pixels without a cursor sprite over them: the blend pair (with hi), else hrc's
+      if (hi) hi->assign(px.size(), 0);
+      for (int32_t Y = w.hrb_area[1]; Y < w.hrb_area[3]; ++Y)
+        for (int32_t X = w.hrb_area[0]; X < w.hrb_area[2]; ++X) {
+          const size_t j = static_cast<size_t>(Y) * static_cast<size_t>(w.pw) + static_cast<size_t>(X);
+          if (!w.hrb_cov[j] || cov[j]) continue;
+          px[j] = hi ? w.hrb_lo[j] : w.hrc[j];
+          if (hi) (*hi)[j] = w.hrb_hi[j];
+          cov[j] = hi ? 2 : 1;
+          any = true;
+        }
+    }
     return any;
   }
   const SceneCols c = scene_cols(w);
