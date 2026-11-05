@@ -132,6 +132,9 @@ int g_defect_zoom_in_max4 = 1;
 // apart at zoom 8 (both reached only there): the translucent tile box takes (8, 8, 4) (tick_frame.inc P11E_BoxScale) and the
 // translucent sprites take their offsets at the display scale (gfx_scene.cpp draw_alpha).
 int g_defect_tool_zoom4 = 1;
+// mainLoop.cameraStepFixed4 (P11F): the arrow keys (ML+0xe971..ML+0xea73) step the camera 4 tiles at every zoom; fixed (0): 2 tiles
+// at zoom 8 (the screen distance 4 tiles cover at zoom 4). The edge scroll (ML+0xebb4..ML+0xec89, 1 tile per frame) is unchanged.
+int g_defect_camera_step4 = 1;
 int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
@@ -2086,6 +2089,9 @@ const DefectDef kDefects[] = {
      "while a build tool or selection is held the zoom is set to 4 every frame, and zooming out drops the tool; fixed: a held tool "
      "keeps zoom 8 and zooming out from 8 to 4 keeps it (zooms 1 and 2 still go to 4, zooming out from 4 still drops it)",
      &g_defect_tool_zoom4},
+    {"mainLoop.cameraStepFixed4", "P11F",
+     "an arrow key moves the camera 4 tiles at every zoom; fixed: 2 tiles at zoom 8 (the same screen distance as 4 tiles at zoom 4)",
+     &g_defect_camera_step4},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

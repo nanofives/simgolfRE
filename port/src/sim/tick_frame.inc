@@ -7125,6 +7125,7 @@ L41baf4:
 
 int Ph_0041c0c5(u32 F, int* h2in) {
     int eax, ebx = 0, ecx, edx = 0, esi = 0, edi, ebp = 0;
+    int camStep = 4;                          // P11F: the arrow keys' step (set at the key cases)
 
     // ---- ML+0xcb05  per-frame input fetch ----
     edi = 0;                                  // ML+0xcb05 xor edi,edi
@@ -8272,6 +8273,9 @@ a41df03: eax = 2; goto a41df16;                        // ML+0xe943 key 0x27
 a41df0a: eax = 4; goto a41df16;                        // ML+0xe94a key 0x28
 a41df11: eax = 6;                                      // ML+0xe951 key 0x25
 a41df16:
+    // P11F (mainLoop.cameraStepFixed4 = 0): at zoom 8 an arrow press moves 2 tiles, the screen distance 4 tiles cover at zoom 4
+    // (the original moves 4 at every zoom, a third of the zoom-8 view).
+    camStep = (!SG_DEFECT(g_defect_camera_step4) && G32(GS(g_zoomScale)) == 8) ? 2 : 4;
     eax = (eax + G32(GS(g_cameraRot))) & 7;                 // ML+0xe956..ML+0xe95e
     if ((u32)eax > 6) goto a41e070;                    // ML+0xe961 cmp eax,6; ja
     switch (eax) {                                     // ML+0xe96a jmp [eax*4+ML+0x12490]
@@ -8280,20 +8284,20 @@ a41df16:
         default: goto a41e070;                         // cases 1,3,5
     }
 a41df31:  // rotate to dir 0 -> step camera +x, -y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + 4, ebp, 0x31);  // ML+0xe971..ML+0xe991
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - 4, ebp, 0x31);  // ML+0xe996..ML+0xe9a5
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + camStep, ebp, 0x31);  // ML+0xe971..ML+0xe991
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - camStep, ebp, 0x31);  // ML+0xe996..ML+0xe9a5
     goto a41e070;                                      // ML+0xe9b2
 a41df77:  // dir 2 -> +x, +y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + 4, ebp, 0x31);  // ML+0xe9b7..ML+0xe9d7
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + 4, ebp, 0x31);  // ML+0xe9dc..ML+0xe9ea
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + camStep, ebp, 0x31);  // ML+0xe9b7..ML+0xe9d7
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + camStep, ebp, 0x31);  // ML+0xe9dc..ML+0xe9ea
     goto a41e070;                                      // ML+0xe9f7
 a41dfbc:  // dir 4 -> -x, +y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - 4, ebp, 0x31);  // ML+0xe9fc..ML+0xea1c
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + 4, ebp, 0x31);  // ML+0xea21..ML+0xea2f
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - camStep, ebp, 0x31);  // ML+0xe9fc..ML+0xea1c
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + camStep, ebp, 0x31);  // ML+0xea21..ML+0xea2f
     goto a41e070;                                      // ML+0xea3d
 a41dfff:  // dir 6 -> -x, -y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - 4, ebp, 0x31);  // ML+0xea3f..ML+0xea5f
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - 4, ebp, 0x31);  // ML+0xea64..ML+0xea73
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - camStep, ebp, 0x31);  // ML+0xea3f..ML+0xea5f
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - camStep, ebp, 0x31);  // ML+0xea64..ML+0xea73
     goto a41e070;                                      // ML+0xea80
 a41e042:  // key 0x21: rotate +2
     G32(GS(g_cameraRot)) = (G32(GS(g_cameraRot)) + 2) & 7;       // ML+0xea82..ML+0xea8d
