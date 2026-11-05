@@ -81,6 +81,29 @@ struct LiveTerrainWorld {
   std::vector<uint16_t> scene_pre, scene_cur;
   int32_t scene_w = 0, scene_e = 0;
   bool scene_valid = false;
+  // P10D fix 1 (log/roadmap/P10/P10D_notes.md): the sprite queue at the world layer's resolution. With hr_on (the app's host,
+  // --sprite-res native) every queue entry the wide scene draws between renderSpriteQueue's begin and end is drawn a third time
+  // into hr (pw x ph, started from the world layer's pixels), each covered world pixel sampled from the sprite's own art
+  // (bilinear, supersampled where the art is drawn smaller than one texel per world pixel) through the same pixel rule (palette,
+  // plane / shade tables, alpha bodies); hr_cov = 1 where it drew. tag (scene_w x 600) = 1 where the scene's pixel was last
+  // written by such a draw, 0 where by anything else (the golfer labels, the cursor passes); tag_pre = tag at the first cursor
+  // pass (P9E fix 4's scene_pre). world_frame then lays hr where hr_cov and the scene's pixels only where tag is 0. Drawing only:
+  // nothing a pass, the root or the GameState holds changes.
+  bool hr_on = false;
+  bool hr_open = false;    // between renderSpriteQueue.begin and .end
+  bool hr_valid = false;   // hr holds the last queue's sprites
+  std::vector<uint16_t> hr;
+  std::vector<uint8_t> hr_cov, tag, tag_pre;
+  // P10D fix 2: queue entries drawn after renderSpriteQueue's end (the frame code's cursor passes: the tool previews of P6_ToolLabel
+  // and P7) are drawn at once at the world's resolution: inside a cursor pass kept apart (gfx.h gfx_set_hud_cursor) into hrc, a
+  // copy of hr made at the first such draw (hrc_cov = 1 where they drew; tag 2 in the scene), any other into hr itself (tag 1).
+  // world_cursor gives hrc's pixels for the presenter's cursor previews; world_frame without cursor_apart lays hrc over hr.
+  std::vector<uint16_t> hrc;
+  std::vector<uint8_t> hrc_cov;
+  bool hrc_valid = false;
+  int64_t hr_draws = 0;
+  int64_t hr_queues = 0, hr_prep_us = 0, hr_queue_us = 0, hr_label_us = 0, hr_flush_us = 0;   // P10D: costs (session.json)
+  int64_t hr_tiles = 0, hr_tiles_dirty = 0;   // P10D fix 3: 32 x 32 tiles flushed, and of them drawn again (session.json)
   int64_t scene_passes = 0;
   int64_t passes = 0, pixels = 0, us = 0;
   // gate (sg_call terrainLive.worldCheck(1)): after every terrain operation of a world whose frame is 800 x 600 world pixels (render

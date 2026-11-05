@@ -44,6 +44,8 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P9E", "off")
     # P10: the fourth play-test's app fixes are off for the app tests (no FPS overlay in the window pixels; P10C fix 3 makes the
     # live game's `snapshots` folder, so the bulletin board would draw photos the original's recordings, made without it, do not have)
+    # P10: the fourth play-test's changes (P10D: --sprite-res native, the sprites at the world layer's resolution) are off for
+    # the app tests too (they act only with a world layer, which SG_APP_P8B=off already turns off)
     os.environ.setdefault("SG_APP_P10", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

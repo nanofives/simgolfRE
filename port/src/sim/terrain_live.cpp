@@ -209,6 +209,21 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
   const std::vector<uint16_t> &scene = use_text ? w.scene_text : w.scene;
   const bool apart = cursor_apart && !use_text && w.scene_pre.size() == w.scene.size() && w.scene_cur.size() == w.scene.size();
   const SceneCols c = scene_cols(w);
+  // P10D fix 1: the queue's sprites at the world's resolution (hr where hr_cov); the scene then gives only the pixels its tag
+  // plane says something other than a queue sprite drew (labels, cursor passes)
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  const bool hr = w.hr_valid && w.hr.size() == np && w.hr_cov.size() == np && w.tag.size() == w.scene.size() && px.size() == np;
+  if (hr)
+    for (size_t i = 0; i < np; ++i)
+      if (w.hr_cov[i]) px[i] = w.hr[i];
+  const bool hr_pre = hr && w.tag_pre.size() == w.scene.size();
+  // P10D fix 2: the cursor passes' previews (hrc, a copy of hr with them drawn) over it, unless they are taken apart (or the
+  // picture is the one without the text runs, whose scene_text was made before the cursor passes)
+  const bool hrc = hr && w.hrc_valid && w.hrc.size() == np && w.hrc_cov.size() == np;
+  if (hrc && !cursor_apart && !text)
+    for (size_t i = 0; i < np; ++i)
+      if (w.hrc_cov[i]) px[i] = w.hrc[i];
+  const bool pre_tags = cursor_apart || text;   // tag 2 (a cursor pass's sprite) reads the tag before the cursor passes
   struct Run {
     int32_t x0, x1;
     uint16_t v;
@@ -224,8 +239,16 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
       const uint16_t *sr = scene.data() + r0, *br = w.scene_base.data() + r0;
       const uint16_t *pr = apart ? w.scene_pre.data() + r0 : nullptr, *cr = apart ? w.scene_cur.data() + r0 : nullptr;
       for (int32_t lx = 0; lx < w.scene_w; ++lx) {
-        const uint16_t v = apart && cr[lx] != pr[lx] ? pr[lx] : sr[lx];
+        const bool from_pre = apart && cr[lx] != pr[lx];
+        const uint16_t v = from_pre ? pr[lx] : sr[lx];
         if (v == br[lx] || c.first[static_cast<size_t>(lx)] < 0) continue;
+        if (hr) {   // P10D fix 1
+          const size_t si = r0 + static_cast<size_t>(lx);
+          uint8_t t = from_pre ? (hr_pre ? w.tag_pre[si] : 0) : w.tag[si];
+          if (t == 2 && pre_tags) t = hr_pre ? w.tag_pre[si] : 0;   // fix 2: the pixel as it was before the cursor passes
+          if (t != 0) continue;   // a queue sprite's pixel (1) or a cursor pass's sprite in hrc (2): the hr planes have it
+          if (use_text && !from_pre && w.scene_text[si] != w.scene[si]) continue;   // a peeled glyph (P9C redraws it)
+        }
         runs.push_back({c.first[static_cast<size_t>(lx)], c.last[static_cast<size_t>(lx)], v});
       }
     }
@@ -276,6 +299,16 @@ bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &
     }
   px.assign(static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph), 0);
   cov.assign(px.size(), 0);
+  // P10D fix 2: the previews at the world's resolution (hrc where hrc_cov)
+  if (w.hr_valid && w.hrc_valid && w.hrc.size() == px.size() && w.hrc_cov.size() == px.size()) {
+    for (size_t j = 0; j < px.size(); ++j)
+      if (w.hrc_cov[j]) {
+        px[j] = w.hrc[j];
+        cov[j] = 1;
+        any = true;
+      }
+    return any;
+  }
   const SceneCols c = scene_cols(w);
   for (int32_t y = 0; y < w.ph; ++y) {
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);

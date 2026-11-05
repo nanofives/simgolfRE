@@ -56,6 +56,9 @@
 //   bulletin board's accomplishment photos are written to and read from (without it the photo frames stay empty).
 //   P10C fix 4: --hud-textbox on|off (default on with the HUD popups; SG_APP_P10=off: off) a textInputBox opened from no panel
 //   (saveGameDialog's SAVE GAME box after the quit prompt) is composed centred in the window, its clicks remapped with it.
+//   P10D: --sprite-res native|frame (default native with a world layer; SG_APP_P10=off: frame) the sprite queue (trees, water
+//   life, golfers, every course object) drawn a second time at the world layer's resolution from the sprites' own art
+//   (terrain_live.h LiveTerrainWorld::hr); frame = the 800 x 600 scene's sprites scaled with the picture (G32).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -362,6 +365,7 @@ struct Options {
   bool hud_writes = true;          // P10C fix 2: --hud-writes on|off (SG_APP_P10=off: off)
   bool photo_dir = true;           // P10C fix 3: --photo-dir on|off (SG_APP_P10=off: off)
   bool hud_textbox = true;         // P10C fix 4: --hud-textbox on|off (SG_APP_P10=off: off)
+  bool sprite_native = true;       // P10D: --sprite-res native|frame (SG_APP_P10=off: frame)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -681,6 +685,7 @@ struct TerrainGuard {
                              (won ? "true" : "false") + ",\"why\":\"" + esc(wwhy) + "\"}\n";
       write_file(rec / "world_layer.json", wj.data(), wj.size());
       if (won && o.world_check) live->world()->check_central = true;
+      if (won && o.sprite_native) live->world()->hr_on = true;  // P10D: the sprites at the world's resolution
     }
     portsim::set_terrain_api(c, live.get());
   }
@@ -1117,7 +1122,11 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
                        std::to_string(w.passes) + ",\"pixels\":" + std::to_string(w.pixels) + ",\"us\":" + std::to_string(w.us) +
                        ",\"checks\":" + std::to_string(w.checks) + ",\"checks_differing\":" + std::to_string(w.checks_differing) +
                        ",\"diff_px\":" + std::to_string(w.diff_px) + ",\"shots\":" + std::to_string(world_shots_made) +
-                       ",\"view_us\":" + std::to_string(terrain_us) + "}";
+                       ",\"view_us\":" + std::to_string(terrain_us) + ",\"hr\":{\"on\":" + (w.hr_on ? "true" : "false") +
+                       ",\"draws\":" + std::to_string(w.hr_draws) + ",\"queues\":" + std::to_string(w.hr_queues) + ",\"prep_us\":" +
+                       std::to_string(w.hr_prep_us) + ",\"queue_us\":" + std::to_string(w.hr_queue_us) + ",\"label_us\":" +
+                       std::to_string(w.hr_label_us) + ",\"flush_us\":" + std::to_string(w.hr_flush_us) + ",\"tiles\":" +
+                       std::to_string(w.hr_tiles) + ",\"tiles_dirty\":" + std::to_string(w.hr_tiles_dirty) + "}}";  // P10D
         }
         if (terrain.live) {
           tpasses = terrain.live->view().passes;
@@ -2768,6 +2777,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_vacated = v == "on";
     }
+    else if (a == "--sprite-res") {  // P10D
+      if (!val(v) || (v != "native" && v != "frame")) return false;
+      o.sprite_native = v == "native";
+    }
     else if (a == "--fps") {  // P10A
       if (!val(v) || (v != "on" && v != "off" && v != "detail")) return false;
       o.fps = v;
@@ -2910,6 +2923,7 @@ int main(int argc, char **argv) {
       o.text_peel = "plain";
       o.title_bands = o.hud_writes = o.photo_dir = o.hud_textbox = false;
       o.paint_rate = "game";  // P10E
+      o.sprite_native = false;  // P10D
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

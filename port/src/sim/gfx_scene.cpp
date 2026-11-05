@@ -57,13 +57,19 @@
 #include "portsim/sim/gfx_scene.h"
 
 #include <algorithm>
+#include <array>
+#include <chrono>
+#include <cmath>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstddef>
 #include <cstring>
 #include <initializer_list>
 #include <map>
+#include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "gfx_body.h"
@@ -119,10 +125,27 @@ void dlog(const std::string &s) {
   std::fflush(fh);
 }
 uint32_t u(int32_t v) { return static_cast<uint32_t>(v); }
+// P10D fix 1 (terrain_live.h LiveTerrainWorld::hr): while a queue entry is drawn on the wide scene, `tag` names the scene's
+// words and every word a scene body writes there gets `val` in the tag plane; `hr` is the world whose hr plane the blitter
+// skeleton draws the same sprite into (null outside the queue's wide draws)
+struct HrPass {
+  uintptr_t base = 0;   // the scene's first word (the swapped root's pixels)
+  size_t n = 0;
+  uint8_t *tag = nullptr;
+  uint8_t val = 0;
+  LiveTerrainWorld *hr = nullptr;
+  int plane = 0;   // P10D fix 2: 0 = queued for hr_flush, 1 = drawn at once into hr, 2 = drawn at once into hrc
+};
+thread_local HrPass g_hr_pass;
 // every pixel a scene body writes; TEST-ONLY mode 7 (the sprite-pixel gate's mask run, not a control) stores it inverted
 inline void put(uint16_t &w, uint32_t v) {
   w = static_cast<uint16_t>(mode() == 7 ? v ^ 0x7fffu : v);
   hud_mark(&w);  // P10C fix 2
+  if (g_hr_pass.tag) {
+    const uintptr_t p = reinterpret_cast<uintptr_t>(&w);
+    if (p >= g_hr_pass.base && (p - g_hr_pass.base) / sizeof(uint16_t) < g_hr_pass.n)
+      g_hr_pass.tag[(p - g_hr_pass.base) / sizeof(uint16_t)] = g_hr_pass.val;
+  }
 }
 
 struct SceneState {
@@ -224,7 +247,7 @@ const uint16_t *sprite_palette(Gfx &g, Ctx &ctx, uint32_t key, const Sprite8 &s,
 // ------------------------------------------------------------------------------------------------ the blitter skeleton
 // One covered destination pixel: op(payload byte, destination word).
 template <class Op>
-void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale sc, const char *who, Op &op) {
+void blit16_core(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale sc, const char *who, Op &op) {
   if (sc.den == 0) {
     g.unsup(std::string(who) + ": a display scale with denominator 0");
     return;
@@ -279,11 +302,452 @@ void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale 
   if (outside) g.unsup(std::string(who) + ": a scaled read past the sprite's pixels");
 }
 
+// ---- P10D fix 1: the same sprite into the world layer's hr plane (terrain_live.h LiveTerrainWorld::hr)
+// An op that records layer pixels (AlphaOp::rec) records nothing for the hr plane
+template <class Op>
+auto hr_no_rec(Op &o, int) -> decltype(o.rec = nullptr, void()) { o.rec = nullptr; }
+template <class Op>
+void hr_no_rec(Op &, long) {}
+// The scene rectangle the skeleton above covers is the rectangle (rx, ry) + (w, h) * (fx, fy): unscaled (rx, ry) = (x, y) and
+// f = 1; scaled (rx, ry) = (x + (int)fx, y + (int)fy) with fx = (float)|nx| / den (the skeleton's placement). Scene pixel
+// (sx, sy) maps to world pixel ((sx - scene_e) * fw / 800 + ox, sy * ph / 600), so world pixel (X, Y)'s centre reads the
+// sprite's art at u = ((X + 0.5 - ox) * 800 / fw + scene_e - rx) / fx, v = ((Y + 0.5) * 600 / ph - ry) / fy. Each sample is
+// bilinear over the four texels around (u - 0.5, v - 0.5); where one world pixel covers more than one texel (the art drawn
+// smaller), n x n samples spread over the pixel (n = the texels per pixel rounded up, at most 4) are averaged. A texel is
+// drawn through the entry's own pixel rule over the hr pixel (payload 0xff and texels outside the art leave it), and the
+// results are mixed per 5-bit channel by the sample weights, so the art's edges and the plane / shade / alpha payloads blend
+// with what is under them at the window's resolution.
+//
+// The draws are queued while the frame code runs (HrCmd: the art, the placement, the op with its own copy of the palette, since
+// composeGolferSprite rewrites g_images[0]'s words between two golfer entries) and run at renderSpriteQueue's end (hr_flush) on
+// several threads, each over its own band of world rows (the rows Y = t mod n, so the bands share the sprites evenly) and every
+// command in queue order, so the painter's order is kept.
+struct HrGeom {
+  double rx = 0, ry = 0, fx = 1, fy = 1;
+  bool ok = false;
+};
+HrGeom hr_geom(int32_t x, int32_t y, Scale sc, const Sprite8 &s) {
+  HrGeom r;
+  if (sc.den == 0 || sc.nx < 0 || sc.ny < 0 || s.w <= 0 || s.h <= 0) return r;   // the skeleton draws nothing for these
+  const int32_t ax = abs32(sc.nx), ay = abs32(sc.ny), ad = abs32(sc.den);
+  r.rx = x;
+  r.ry = y;
+  if (!(ax == ad && ay == ad)) {
+    if (ax == 0 || ay == 0) return r;
+    const float ffx = static_cast<float>(static_cast<double>(ax) / static_cast<double>(sc.den));
+    const float ffy = static_cast<float>(static_cast<double>(ay) / static_cast<double>(sc.den));
+    r.rx = static_cast<double>(add32(x, static_cast<int32_t>(ffx)));
+    r.ry = static_cast<double>(add32(y, static_cast<int32_t>(ffy)));
+    r.fx = ffx;
+    r.fy = ffy;
+  }
+  r.ok = r.fx > 0.0 && r.fy > 0.0;
+  return r;
+}
+// the world pixels a command can change: its art's rectangle mapped to the world, one pixel more on every side (the bilinear
+// taps), clipped to the world; x0 >= x1 or y0 >= y1 = none
+struct HrBox {
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  bool operator==(const HrBox &o) const { return x0 == o.x0 && y0 == o.y0 && x1 == o.x1 && y1 == o.y1; }
+  bool empty() const { return x0 >= x1 || y0 >= y1; }
+};
+HrBox hr_box(const LiveTerrainWorld &w, const Sprite8 &s, const HrGeom &gm) {
+  const double kx = static_cast<double>(w.fw) / 800.0, ky = static_cast<double>(w.ph) / 600.0;
+  const double wx0 = (gm.rx - w.scene_e) * kx + w.ox, wx1 = (gm.rx + s.w * gm.fx - w.scene_e) * kx + w.ox;
+  const double wy0 = gm.ry * ky, wy1 = (gm.ry + s.h * gm.fy) * ky;
+  HrBox b;
+  b.x0 = static_cast<int32_t>(std::max(0.0, std::floor(wx0) - 1));
+  b.x1 = static_cast<int32_t>(std::min(static_cast<double>(w.pw), std::ceil(wx1) + 1));
+  b.y0 = static_cast<int32_t>(std::max(0.0, std::floor(wy0) - 1));
+  b.y1 = static_cast<int32_t>(std::min(static_cast<double>(w.ph), std::ceil(wy1) + 1));
+  return b;
+}
+
+// one command over the world pixels of its box inside the clip rectangle [cx0, cx1) x [cy0, cy1), into plane / cover (pw x ph)
+template <class Op>
+void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, const Sprite8 &s, const HrGeom &gm, Op &op,
+                  const HrBox &box, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1) {
+  const double rx = gm.rx, ry = gm.ry, fx = gm.fx, fy = gm.fy;
+  const double kx = static_cast<double>(w.fw) / 800.0, ky = static_cast<double>(w.ph) / 600.0;
+  const int32_t X0 = std::max(box.x0, cx0), X1 = std::min(box.x1, cx1);
+  const int32_t Y0 = std::max(box.y0, cy0), Y1 = std::min(box.y1, cy1);
+  if (X0 >= X1 || Y0 >= Y1) return;
+  // texels per world pixel (u per X, v per Y) and the samples per axis
+  const double du = 1.0 / (kx * fx), dv = 1.0 / (ky * fy);
+  const int nsx = std::min(4, std::max(1, static_cast<int>(std::ceil(du - 1e-6))));
+  const int nsy = std::min(4, std::max(1, static_cast<int>(std::ceil(dv - 1e-6))));
+  // the samples' texel columns and their weights in 1 / 256 per (X, si); a column outside the art is -1
+  struct Col {
+    int32_t c0, c1;   // texel columns i0, i0 + 1 (-1: outside the art)
+    uint32_t w1;      // the weight of i0 + 1 (i0 gets 256 - w1)
+  };
+  Col cu[64 * 4];   // the clip rectangles are at most 64 columns wide (hr_flush's spans are cut to that)
+  const int32_t nx = X1 - X0;
+  if (nx > 64) {
+    hr_blit_rows(w, plane, cover, s, gm, op, box, X0, Y0, X0 + 64, Y1);
+    hr_blit_rows(w, plane, cover, s, gm, op, box, X0 + 64, Y0, X1, Y1);
+    return;
+  }
+  for (int32_t X = X0; X < X1; ++X)
+    for (int si = 0; si < nsx; ++si) {
+      const double uu = (((X + (si + 0.5) / nsx) - w.ox) / kx + w.scene_e - rx) / fx - 0.5;
+      const double uf = std::floor(uu);
+      const int32_t i0 = static_cast<int32_t>(uf);
+      cu[static_cast<size_t>(X - X0) * static_cast<size_t>(nsx) + static_cast<size_t>(si)] =
+          Col{i0 >= 0 && i0 < s.w ? i0 : -1, i0 + 1 >= 0 && i0 + 1 < s.w ? i0 + 1 : -1,
+              static_cast<uint32_t>(std::floor((uu - uf) * 256.0 + 0.5))};
+    }
+  const uint8_t *art = s.px.data();
+  const size_t sw = static_cast<size_t>(s.w);
+  const int ns = nsx * nsy;
+  const double inv = 1.0 / (65536.0 * ns);
+  for (int32_t Y = Y0; Y < Y1; ++Y) {
+    // the rows of every vertical sample (nullptr: outside the art) and their weights
+    const uint8_t *r0[4], *r1[4];
+    uint32_t wv[4];
+    bool rows = false;
+    for (int sj = 0; sj < nsy; ++sj) {
+      const double v = ((Y + (sj + 0.5) / nsy) / ky - ry) / fy - 0.5;
+      const double vf = std::floor(v);
+      const int32_t j0 = static_cast<int32_t>(vf);
+      r0[sj] = j0 >= 0 && j0 < s.h ? art + static_cast<size_t>(j0) * sw : nullptr;
+      r1[sj] = j0 + 1 >= 0 && j0 + 1 < s.h ? art + static_cast<size_t>(j0 + 1) * sw : nullptr;
+      wv[sj] = static_cast<uint32_t>(std::floor((v - vf) * 256.0 + 0.5));
+      rows = rows || r0[sj] || r1[sj];
+    }
+    if (!rows) continue;
+    uint16_t *hrow = plane + static_cast<size_t>(Y) * static_cast<size_t>(w.pw);
+    uint8_t *crow = cover + static_cast<size_t>(Y) * static_cast<size_t>(w.pw);
+    for (int32_t X = X0; X < X1; ++X) {
+      const Col *tu = &cu[static_cast<size_t>(X - X0) * static_cast<size_t>(nsx)];
+      const uint16_t d = hrow[X];
+      uint32_t r = 0, gg = 0, b = 0;   // sums of weight (1 / 65536) * channel, at most 16 samples * 65536 * 31
+      bool any = false;
+      for (int sj = 0; sj < nsy; ++sj) {
+        const uint32_t bv = wv[sj];
+        for (int si = 0; si < nsx; ++si) {
+          const Col &cl = tu[si];
+          const uint32_t bu = cl.w1;
+          const uint8_t c[4] = {r0[sj] && cl.c0 >= 0 ? r0[sj][cl.c0] : uint8_t(0xff), r0[sj] && cl.c1 >= 0 ? r0[sj][cl.c1] : uint8_t(0xff),
+                                r1[sj] && cl.c0 >= 0 ? r1[sj][cl.c0] : uint8_t(0xff), r1[sj] && cl.c1 >= 0 ? r1[sj][cl.c1] : uint8_t(0xff)};
+          if (c[0] == c[1] && c[0] == c[2] && c[0] == c[3]) {
+            uint16_t res = d;
+            if (c[0] != 0xff) {
+              op(c[0], res);
+              if (res != d) any = true;
+            }
+            r += 65536u * ((res >> 10) & 31u);
+            gg += 65536u * ((res >> 5) & 31u);
+            b += 65536u * (res & 31u);
+            continue;
+          }
+          const uint32_t wt[4] = {(256 - bu) * (256 - bv), bu * (256 - bv), (256 - bu) * bv, bu * bv};
+          for (int k = 0; k < 4; ++k) {
+            uint16_t res = d;
+            if (c[k] != 0xff && wt[k] != 0) {
+              op(c[k], res);
+              if (res != d) any = true;
+            }
+            r += wt[k] * ((res >> 10) & 31u);
+            gg += wt[k] * ((res >> 5) & 31u);
+            b += wt[k] * (res & 31u);
+          }
+        }
+      }
+      if (!any) continue;
+      const auto ch = [inv](uint32_t c) { return std::min<uint32_t>(31u, static_cast<uint32_t>(c * inv + 0.5)); };
+      hrow[X] = static_cast<uint16_t>((ch(r) << 10) | (ch(gg) << 5) | ch(b));
+      crow[X] = 1;
+    }
+  }
+}
+
+// FNV-1a over bytes, 64 bits
+uint64_t hr_hash(uint64_t h, const void *p, size_t n) {
+  const uint8_t *b = static_cast<const uint8_t *>(p);
+  for (size_t i = 0; i < n; ++i) {
+    h ^= b[i];
+    h *= 0x100000001b3ull;
+  }
+  return h;
+}
+
+struct HrCmd {
+  Sprite8 s;                         // the art (w, h, px)
+  HrGeom gm;
+  HrBox box;
+  std::array<uint16_t, 256> pal{};   // the op's palette words at the draw
+  uint64_t sig = 0;                  // art, palette, op parameters, placement (hr_flush compares it with the last queue's)
+  virtual ~HrCmd() = default;
+  virtual void run(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1) = 0;
+};
+template <class Op>
+struct HrCmdT final : HrCmd {
+  Op op;
+  explicit HrCmdT(const Op &o) : op(o) {}
+  void run(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1) override {
+    Op local = op;   // each thread its own copy (an op's report flags)
+    hr_blit_rows(w, plane, cover, s, gm, local, box, cx0, cy0, cx1, cy1);
+  }
+};
+// P10D fix 3: the queue's draws and what the last flush left. A queue whose terrain base and commands equal the last one's in a
+// 32 x 32 tile is not drawn again there: the tile keeps the last flush's pixels.
+struct HrQueue {
+  LiveTerrainWorld *w = nullptr;
+  std::vector<std::unique_ptr<HrCmd>> cmds;
+  // the world's hr / hr_cov planes are kept between queues: they hold the last flush's sprites (and the draws made at once into hr
+  // after it, whose boxes post_boxes keeps for the next queue to draw again)
+  bool last_ok = false;
+  const LiveTerrainWorld *last_w = nullptr;
+  int32_t last_pw = 0, last_ph = 0;
+  std::vector<uint16_t> last_base;     // the world layer's pixels at the queue's start (updated in place at each start)
+  std::vector<uint64_t> last_sig;
+  std::vector<HrBox> last_box;
+  std::vector<HrBox> post_boxes;
+  std::vector<uint8_t> dirty;          // this queue's dirty tiles (tx x ty), from its start
+  int32_t tx = 0, ty = 0;
+};
+thread_local HrQueue g_hr_queue;
+constexpr int32_t kHrTile = 32;
+
+template <class Op>
+void hr_blit(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op0) {
+  const auto t0 = std::chrono::steady_clock::now();
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (g_hr_queue.last_base.size() != np || w.fw <= 0 || w.ph <= 0) return;
+  const HrGeom gm = hr_geom(x, y, sc, s);
+  if (!gm.ok) return;
+  auto c = std::make_unique<HrCmdT<Op>>(op0);
+  hr_no_rec(c->op, 0);
+  c->s.w = s.w;
+  c->s.h = s.h;
+  c->s.px = s.px;
+  c->gm = gm;
+  c->box = hr_box(w, s, gm);
+  if (c->op.pal) {
+    std::copy(c->op.pal, c->op.pal + 256, c->pal.begin());
+    c->op.pal = c->pal.data();
+  }
+  uint64_t h = 0xcbf29ce484222325ull;
+  const uint64_t ext = c->op.sig();
+  h = hr_hash(h, &ext, sizeof(ext));
+  h = hr_hash(h, &gm.rx, sizeof(gm.rx));
+  h = hr_hash(h, &gm.ry, sizeof(gm.ry));
+  h = hr_hash(h, &gm.fx, sizeof(gm.fx));
+  h = hr_hash(h, &gm.fy, sizeof(gm.fy));
+  h = hr_hash(h, &s.w, sizeof(s.w));
+  h = hr_hash(h, &s.h, sizeof(s.h));
+  h = hr_hash(h, c->pal.data(), sizeof(uint16_t) * c->pal.size());
+  h = hr_hash(h, s.px.data(), s.px.size());
+  c->sig = h;
+  if (g_hr_queue.w != &w) g_hr_queue.cmds.clear();
+  g_hr_queue.w = &w;
+  g_hr_queue.cmds.push_back(std::move(c));
+  ++w.hr_draws;
+  w.hr_queue_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+}
+// renderSpriteQueue's start with an hr plane: the base (the world layer's pixels wp) compared with the last queue's row by row; a
+// differing row's span is copied into last_base and marks its tiles dirty, as do the boxes of the last frame's draws made at once
+// into hr. Nothing kept (the first queue, a new size, SG_P10D_HR_REUSE=0): every tile dirty, the planes made new.
+bool hr_reuse_on() {
+  static const bool on = [] {
+    const char *e = std::getenv("SG_P10D_HR_REUSE");
+    return !(e && !std::strcmp(e, "0"));
+  }();
+  return on;
+}
+void hr_queue_begin(LiveTerrainWorld &w, const std::vector<uint16_t> &wp) {
+  HrQueue &q = g_hr_queue;
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  q.cmds.clear();
+  q.w = nullptr;
+  q.tx = (w.pw + kHrTile - 1) / kHrTile;
+  q.ty = (w.ph + kHrTile - 1) / kHrTile;
+  q.dirty.assign(static_cast<size_t>(q.tx) * static_cast<size_t>(q.ty), 0);
+  auto mark = [&](const HrBox &b) {
+    if (b.empty()) return;
+    for (int32_t j = b.y0 / kHrTile; j <= (b.y1 - 1) / kHrTile; ++j)
+      for (int32_t i = b.x0 / kHrTile; i <= (b.x1 - 1) / kHrTile; ++i)
+        q.dirty[static_cast<size_t>(j) * static_cast<size_t>(q.tx) + static_cast<size_t>(i)] = 1;
+  };
+  const bool reuse = hr_reuse_on() && q.last_ok && q.last_w == &w && q.last_pw == w.pw && q.last_ph == w.ph &&
+                     q.last_base.size() == np && w.hr.size() == np && w.hr_cov.size() == np && wp.size() == np;
+  if (!reuse) {
+    q.last_ok = false;
+    q.last_base = wp;
+    w.hr.assign(np, 0);
+    w.hr_cov.assign(np, 0);
+    std::fill(q.dirty.begin(), q.dirty.end(), uint8_t(1));
+  } else {
+    for (int32_t y = 0; y < w.ph; ++y) {
+      const uint16_t *a = wp.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+      uint16_t *b = q.last_base.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+      if (!std::memcmp(a, b, sizeof(uint16_t) * static_cast<size_t>(w.pw))) continue;
+      int32_t x0 = 0, x1 = w.pw;
+      while (x0 < w.pw && a[x0] == b[x0]) ++x0;
+      while (x1 > x0 && a[x1 - 1] == b[x1 - 1]) --x1;
+      std::copy(a + x0, a + x1, b + x0);
+      mark(HrBox{x0, y, x1, y + 1});
+    }
+    for (const HrBox &b : q.post_boxes) mark(b);
+  }
+  q.post_boxes.clear();
+}
+
+// the queued commands over the hr plane (renderSpriteQueue's end). The plane is the last flush's except in the DIRTY tiles: where
+// the terrain base differs from the last queue's, and the boxes of the commands that differ from the last queue's command at the
+// same index (both boxes); every tile when nothing is kept (the first queue, a new size). A dirty tile is reset to the base and
+// every command whose box meets it is drawn there again in queue order, so the painter's order is kept and no pixel is blended
+// twice. Tile rows go to up to 8 threads (row r to thread r mod n, one thread per 24 dirty tiles; SG_P10D_HR_THREADS=<n> sets
+// the most, 1 = the frame thread); SG_P10D_HR_REUSE=0 makes every tile dirty (hr_queue_begin).
+void hr_flush(LiveTerrainWorld &w) {
+  const auto t0 = std::chrono::steady_clock::now();
+  struct Done {
+    LiveTerrainWorld &w;
+    std::chrono::steady_clock::time_point t0;
+    ~Done() {
+      w.hr_flush_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+      ++w.hr_queues;
+    }
+  } done{w, t0};
+  HrQueue &q = g_hr_queue;
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (q.last_base.size() != np || w.hr.size() != np || w.hr_cov.size() != np ||
+      q.dirty.size() != static_cast<size_t>(q.tx) * static_cast<size_t>(q.ty)) {
+    q.cmds.clear();
+    q.last_ok = false;
+    w.hr_valid = false;
+    return;
+  }
+  if (q.w != &w) q.cmds.clear();
+  static const int want = [] {
+    const char *e = std::getenv("SG_P10D_HR_THREADS");
+    const int n = e ? std::atoi(e) : static_cast<int>(std::thread::hardware_concurrency());
+    return std::max(1, std::min(8, n));
+  }();
+  const int32_t tx = q.tx, ty = q.ty;
+  std::vector<uint8_t> &dirty = q.dirty;
+  auto mark = [&](const HrBox &b) {
+    if (b.empty()) return;
+    for (int32_t j = b.y0 / kHrTile; j <= (b.y1 - 1) / kHrTile; ++j)
+      for (int32_t i = b.x0 / kHrTile; i <= (b.x1 - 1) / kHrTile; ++i)
+        dirty[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)] = 1;
+  };
+  if (q.last_ok) {   // the commands that differ from the last queue's command at the same index: both boxes
+    const size_t n = std::max(q.cmds.size(), q.last_sig.size());
+    for (size_t i = 0; i < n; ++i) {
+      const bool have_new = i < q.cmds.size(), have_old = i < q.last_sig.size();
+      if (have_new && have_old && q.cmds[i]->sig == q.last_sig[i] && q.cmds[i]->box == q.last_box[i]) continue;
+      if (have_new) mark(q.cmds[i]->box);
+      if (have_old) mark(q.last_box[i]);
+    }
+  }
+  int64_t nd = 0;
+  for (uint8_t d : dirty) nd += d;
+  w.hr_tiles += static_cast<int64_t>(dirty.size());
+  w.hr_tiles_dirty += nd;
+  // a dirty tile starts from the base
+  for (int32_t j = 0; j < ty; ++j)
+    for (int32_t i = 0; i < tx; ++i) {
+      if (!dirty[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) continue;
+      const int32_t x0 = i * kHrTile, x1 = std::min(w.pw, x0 + kHrTile);
+      for (int32_t y = j * kHrTile; y < std::min(w.ph, (j + 1) * kHrTile); ++y) {
+        const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x0);
+        std::copy(q.last_base.begin() + static_cast<std::ptrdiff_t>(o),
+                  q.last_base.begin() + static_cast<std::ptrdiff_t>(o + static_cast<size_t>(x1 - x0)), w.hr.begin() + static_cast<std::ptrdiff_t>(o));
+        std::fill(w.hr_cov.begin() + static_cast<std::ptrdiff_t>(o), w.hr_cov.begin() + static_cast<std::ptrdiff_t>(o + static_cast<size_t>(x1 - x0)),
+                  uint8_t(0));
+      }
+    }
+  if (nd > 0 && !q.cmds.empty()) {
+    const int nt = std::max(1, std::min(std::min(want, static_cast<int>(ty)), static_cast<int>(std::max<int64_t>(1, nd / 24))));
+    uint16_t *plane = w.hr.data();
+    uint8_t *cover = w.hr_cov.data();
+    auto band = [&](int t) {
+      for (const auto &c : q.cmds) {
+        const HrBox &b = c->box;
+        if (b.empty()) continue;
+        for (int32_t j = b.y0 / kHrTile; j <= (b.y1 - 1) / kHrTile; ++j) {
+          if (j % nt != t) continue;
+          // the runs of dirty tiles of tile row j inside the box (each at most 2 tiles wide: hr_blit_rows' column table)
+          int32_t i = b.x0 / kHrTile;
+          const int32_t ie = (b.x1 - 1) / kHrTile;
+          while (i <= ie) {
+            if (!dirty[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) {
+              ++i;
+              continue;
+            }
+            int32_t k = i + 1;
+            while (k <= ie && k < i + 2 && dirty[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(k)]) ++k;
+            c->run(w, plane, cover, i * kHrTile, j * kHrTile, std::min(w.pw, k * kHrTile), std::min(w.ph, (j + 1) * kHrTile));
+            i = k;
+          }
+        }
+      }
+    };
+    if (nt == 1) {
+      band(0);
+    } else {
+      std::vector<std::thread> th;
+      th.reserve(static_cast<size_t>(nt - 1));
+      for (int t = 1; t < nt; ++t) th.emplace_back(band, t);
+      band(0);
+      for (std::thread &t : th) t.join();
+    }
+  }
+  w.hr_valid = true;
+  q.last_sig.clear();
+  q.last_box.clear();
+  for (const auto &c : q.cmds) {
+    q.last_sig.push_back(c->sig);
+    q.last_box.push_back(c->box);
+  }
+  q.last_ok = true;
+  q.last_w = &w;
+  q.last_pw = w.pw;
+  q.last_ph = w.ph;
+  q.cmds.clear();
+  q.w = nullptr;
+}
+
+template <class Op>
+void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale sc, const char *who, Op &op) {
+  blit16_core(g, s, d, x, y, sc, who, op);
+  if (g_hr_pass.hr && &d == &g.root) {
+    if (g_hr_pass.plane == 0) {
+      hr_blit(*g_hr_pass.hr, s, x, y, sc, op);
+      return;
+    }
+    // P10D fix 2: a draw after the queue's end, at once on this thread (the cursor passes draw a few entries)
+    LiveTerrainWorld &w = *g_hr_pass.hr;
+    const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+    const bool cur = g_hr_pass.plane == 2;
+    if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
+    if (cur && !w.hrc_valid) {
+      w.hrc = w.hr;
+      w.hrc_cov.assign(np, 0);
+      w.hrc_valid = true;
+    }
+    const HrGeom gm = hr_geom(x, y, sc, s);
+    if (!gm.ok) return;
+    Op local = op;
+    hr_no_rec(local, 0);
+    const HrPass keep = g_hr_pass;
+    g_hr_pass.tag = nullptr;   // the planes' words are not the scene's
+    const HrBox box = hr_box(w, s, gm);
+    hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), s, gm, local, box, 0, 0, w.pw, w.ph);
+    if (!cur) g_hr_queue.post_boxes.push_back(box);   // fix 3: the next queue draws these tiles again
+    g_hr_pass = keep;
+    ++w.hr_draws;
+  }
+}
+
 // draw16_100298b0 (Sprite::blt16a's body)
 struct PlaneOp {
   Gfx &g;
   const uint16_t *pal;
   bool bad = false;
+  uint64_t sig() const { return 1; }   // P10D fix 3: the op's parameters besides its palette
   void operator()(uint8_t c, uint16_t &w) {
     if (c >= 0xff) return;
     if (c < 0xf8) {
@@ -306,6 +770,7 @@ struct ShadeOp {
   const uint16_t *lut;
   size_t lut_n;
   bool bad = false;
+  uint64_t sig() const { return 2 ^ (static_cast<uint64_t>(reinterpret_cast<uintptr_t>(lut)) << 4) ^ (static_cast<uint64_t>(lut_n) << 40); }
   void operator()(uint8_t c, uint16_t &w) {
     if (c >= 0xff) return;
     if (c == 0xf8) {
@@ -438,6 +903,7 @@ struct AlphaOp {
   const uint16_t *pal;
   const AProgram *prog;
   bool flag;
+  uint64_t sig() const { return 3 ^ (static_cast<uint64_t>(reinterpret_cast<uintptr_t>(prog)) << 4) ^ (flag ? 1ull << 62 : 0); }
   // P9D (gfx.h gfx_set_hud_modal): with `rec` (the quarter member draw16_1002ed60 on the root surface while the modal capture runs)
   // each written pixel is recorded as a kind-4 layer pixel; n / one_src / src0 tell a dim of every root pixel with one source word
   Gfx *rec = nullptr;
@@ -483,6 +949,7 @@ struct AlphaOp {
 struct ColourOp {
   const uint16_t *pal;
   uint16_t colour;
+  uint64_t sig() const { return 4 ^ (static_cast<uint64_t>(colour) << 8); }
   void operator()(uint8_t c, uint16_t &w) {
     if (c >= 0xf8) return;
     const uint32_t p = pal[c];
@@ -496,6 +963,7 @@ struct ColourOp {
 // draw16_1001bc40 (Sprite::drawB's 8-to-16 body): payload 0xfe and 0xff transparent, the others the palette's word
 struct DrawBOp {
   const uint16_t *pal;
+  uint64_t sig() const { return 5; }
   void operator()(uint8_t c, uint16_t &w) {
     if (c >= 0xfe) return;
     put(w, pal[c]);
@@ -1152,6 +1620,42 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   w->scene_cur.clear();
   w->scene_text.clear();
   gfxb::text_wide_begin(g);  // P9C
+  // P10D fix 1: the hr plane starts from the world layer's pixels (the wide scene's base outside the frame's columns), no tag
+  const auto hr_t0 = std::chrono::steady_clock::now();
+  w->hr_valid = false;
+  w->hrc_valid = false;  // P10D fix 2
+  g_hr_queue.cmds.clear();
+  g_hr_queue.w = nullptr;
+  w->hr_open = w->hr_on && mode() == 0 && wp.size() == static_cast<size_t>(w->pw) * static_cast<size_t>(w->ph);
+  if (w->hr_open) {
+    hr_queue_begin(*w, wp);   // fix 3: the tiles to draw again
+    w->tag.assign(w->scene.size(), 0);
+  } else {
+    g_hr_queue.last_ok = false;
+    w->hr.clear();
+    w->hr_cov.clear();
+    w->tag.clear();
+  }
+  w->tag_pre.clear();
+  w->hr_prep_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hr_t0).count();
+}
+// P10D fix 1: f() draws on the wide scene (inside on_wide) with every word it writes tagged `val`; with `hr` the blitter
+// skeleton also draws into that world's hr plane
+template <class F>
+void tagged(Gfx &g, LiveTerrainWorld &w, uint8_t val, bool hr, F f, int plane = 0) {
+  if (w.tag.size() != g.root.px.size()) {
+    f();
+    return;
+  }
+  const HrPass keep = g_hr_pass;
+  g_hr_pass.base = reinterpret_cast<uintptr_t>(g.root.px.data());
+  g_hr_pass.n = g.root.px.size();
+  g_hr_pass.tag = w.tag.data();
+  g_hr_pass.val = val;
+  g_hr_pass.hr = hr ? &w : nullptr;
+  g_hr_pass.plane = plane;
+  f();
+  g_hr_pass = keep;
 }
 
 void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -1166,8 +1670,15 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
              gs.g_spriteObj[k]);
   if (LiveTerrainWorld *w = wide_world(ctx))   // G32: the same entry on the wide scene
     on_wide(g, *w, [&] {
-      draw_entry(g, ctx, add32(gs.g_spriteX[k], w->scene_e), gs.g_spriteY[k], gs.g_spriteShade[k],
-                 static_cast<int32_t>(gs.g_spriteFlags[k]), gs.g_spriteObj[k]);
+      // P10D fix 1: a queue entry's words tagged 1 and drawn into the hr plane too (queued for hr_flush). Fix 2: an entry drawn
+      // after the queue's end while the hr plane holds it (the cursor passes) drawn at once: inside a cursor pass kept apart
+      // into hrc (tag 2), else into hr (tag 1). Without an hr plane (frame mode) tag 0: its scene pixels stay over the world.
+      const bool post = !w->hr_open && w->hr_valid && mode() == 0;
+      const bool cur = post && g.hud.cursor_sprites && g.hud.cursor_depth > 0;
+      tagged(g, *w, w->hr_open ? 1 : post ? (cur ? 2 : 1) : 0, w->hr_open || post, [&] {
+        draw_entry(g, ctx, add32(gs.g_spriteX[k], w->scene_e), gs.g_spriteY[k], gs.g_spriteShade[k],
+                   static_cast<int32_t>(gs.g_spriteFlags[k]), gs.g_spriteObj[k]);
+      }, w->hr_open ? 0 : cur ? 2 : 1);
     });
 }
 
@@ -1175,7 +1686,42 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff);
 void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   queue_label(g, ctx, a, 0);
-  if (LiveTerrainWorld *w = wide_world(ctx)) on_wide(g, *w, [&] { queue_label(g, ctx, a, w->scene_e); });   // G32
+  if (LiveTerrainWorld *w = wide_world(ctx))   // G32
+    on_wide(g, *w, [&] {
+      // P10D fix 1: the label (text and bars, other families' bodies) is not a sprite: the scene words it changed in the band
+      // around its anchor get tag 0, so the label stays over the hr plane
+      const int32_t i = static_cast<int32_t>(a[0]);
+      // only a golfer entry has a label (queue_label's first returns: shade 0, flags -1 or without bit 8, golfer 0xff or past 0x97)
+      bool band = w->tag.size() == g.root.px.size() && i >= 0 && i < 1024;
+      if (band) {
+        const GameState &gs = ctx.gs();
+        const int32_t a8 = static_cast<int32_t>(gs.g_spriteFlags[static_cast<size_t>(i)]);
+        band = gs.g_spriteShade[static_cast<size_t>(i)] != 0 && a8 != -1 && (a8 & 0x100) && (a8 & 0xff) != 0xff && (a8 & 0xff) < 0x98;
+      }
+      const auto lt0 = std::chrono::steady_clock::now();
+      int32_t bx0 = 0, bx1 = 0, by0 = 0, by1 = 0;
+      std::vector<uint16_t> before;
+      if (band) {
+        const int32_t ax = add32(ctx.gs().g_spriteAnchorX[static_cast<size_t>(i)], w->scene_e);
+        const int32_t ay = ctx.gs().g_spriteAnchorY[static_cast<size_t>(i)];
+        bx0 = std::max(0, ax - 320), bx1 = std::min(g.root.w, ax + 320);
+        by0 = std::max(0, ay - 48), by1 = std::min(g.root.h, ay + 24);
+        for (int32_t y = by0; y < by1 && bx0 < bx1; ++y) {
+          const uint16_t *row = g.root.px.data() + static_cast<size_t>(y) * static_cast<size_t>(g.root.w);
+          before.insert(before.end(), row + bx0, row + bx1);
+        }
+      }
+      queue_label(g, ctx, a, w->scene_e);
+      if (band) {
+        size_t n = 0;
+        for (int32_t y = by0; y < by1; ++y)
+          for (int32_t x = bx0; x < bx1; ++x, ++n) {
+            const size_t p = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+            if (g.root.px[p] != before[n]) w->tag[p] = 0;
+          }
+      }
+      w->hr_label_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - lt0).count();
+    });
 }
 // the label of queue entry a[0], its x moved by xoff (G32: the wide scene)
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
@@ -1380,6 +1926,9 @@ void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
     g.ensure_root(ctx);
     w->s1 = g.root.px;
     w->scene_valid = true;
+    if (w->hr_open) hr_flush(*w);  // P10D fix 1: the queued hr draws, then the hr plane holds this queue's sprites
+    w->hr_valid = w->hr_open && w->hr_valid;  // P10D fix 1: the hr plane holds this queue's sprites (hr_flush sets it)
+    w->hr_open = false;
     gfxb::text_wide_end(g, w->scene, w->scene_w, w->scene_e, w->scene_text);  // P9C: the scene without its runs' glyphs
     ++w->scene_passes;
     // development switch SG_WIDE_SCENE_DUMP=<prefix>: the wide scene, its base and s1 of every queue pass go to <prefix>_<pass>.*
@@ -1536,7 +2085,10 @@ void gfx_cursor_sprites_begin(Ctx &ctx) {
   ++g->hud.cursor_depth;
   LiveTerrainWorld *w = wide_world(ctx);
   if (!w || !w->scene_valid) return;
-  if (w->scene_pre.size() != w->scene.size()) w->scene_pre = w->scene;  // the first pass's start (P6_ToolLabel, then P7)
+  if (w->scene_pre.size() != w->scene.size()) {
+    w->scene_pre = w->scene;  // the first pass's start (P6_ToolLabel, then P7)
+    w->tag_pre = w->tag;      // P10D fix 1: the tags of scene_pre
+  }
 }
 void gfx_cursor_sprites_end(Ctx &ctx) {
   Gfx *g = gfx(ctx);
