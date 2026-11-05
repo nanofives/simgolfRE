@@ -205,6 +205,9 @@ class LiveSession : public portsim::LiveHost {
   bool live_cursor(int32_t &x, int32_t &y, int32_t &dx);
   // P10E (SG_P10E_LOG): the point of the sim's last cursor read that was not H1's edge-scroll read (site 0: P6_Cursor's
   // View_toLocal among them)
+  // P10I fix 2: the 800-space point of the sim's first cursor read since the present before the frame last taken by take_frame
+  // (the frame's hover tests read it; its last read when none came; (-1, -1) before any read). Window thread, after take_frame.
+  Point frame_cursor() const { return taken_cursor_; }
   Point plain_answer() {
     std::lock_guard<std::mutex> lk(mu_);
     return plain_answer_;
@@ -327,6 +330,14 @@ class LiveSession : public portsim::LiveHost {
   Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
   bool edge_read_ = false;            // P10E: cursor() runs for cursor_at's edge-scroll read (sim thread)
   Point plain_answer_{0, 0};          // P10E: plain_answer()
+  // P10I fix 2 (under mu_): the points the sim's last cursor read and its first read since the last present got
+  Point last_answer_{-1, -1}, first_answer_{-1, -1};
+  bool first_set_ = false;
+  void note_answer(const Point &p) {
+    last_answer_ = p;
+    if (!first_set_) first_answer_ = p;
+    first_set_ = true;
+  }
   // P7: whether a game's frame loop has run since the title menu (sim thread only): set at a frame head or a body pump with
   // g_difficulty != -1, cleared at any pump that reads g_difficulty == -1 (the title menu stores -1 there, 0x0040f8ab)
   bool in_game_ = false;
@@ -341,6 +352,7 @@ class LiveSession : public portsim::LiveHost {
   std::vector<uint16_t> frame_slot_, last_presented_, previous_;
   uint32_t frame_index_ = 0;
   BandFill frame_band_ = BandFill::Black;  // P7: the band hint of frame_slot_
+  Point frame_cursor_{-1, -1}, taken_cursor_{-1, -1};  // P10I fix 2: frame_cursor() (under frame_mu_; taken_ on the window thread)
   WorldImage frame_world_;                 // P8B: the world layer of frame_slot_ (HostOptions::world)
   WorldImage spare_world_;                 // P10A: recycle_world's image (under frame_mu_)
   // G32: the view the window asks for (window thread, under mu_) and the one applied at a frame head (sim thread)

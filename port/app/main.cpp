@@ -66,6 +66,10 @@
 //   / tee tool draws from the tee (or green) to the cursor (P7's drawMinimapSegment) drawn again at the window's resolution in the
 //   cursor previews' place, its cursor end following P10E's live move (gfx.h gfx_set_hud_lines, present.h set_line_native); frame
 //   = the 800 x 600 frame's line pixels scaled with the picture.
+//   P10I fix 2: --hover-rate display|game (default display; SG_APP_P10=off: game) the HUD's hover highlights follow the cursor at the
+//   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
+//   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
+//   game = a highlight changes only when the game draws its next frame.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -375,6 +379,7 @@ struct Options {
   bool sprite_native = true;       // P10D: --sprite-res native|frame (SG_APP_P10=off: frame)
   int sprite_filter = 1;           // P10H: --sprite-filter sharp (1) | smooth (0) | sharp-area (2) (SG_APP_P10=off: smooth)
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
+  std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1350,6 +1355,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   if (o.fps != "off" || !o.profile_csv.empty()) Profiler::get().set_enabled(true);
   if (!o.profile_csv.empty() && !Profiler::get().open_csv(o.profile_csv))
     std::fprintf(stderr, "profile: cannot write %s\n", o.profile_csv.c_str());
+  presenter.set_hover(o.hover_rate == "display");  // P10I fix 2
   if (ho.remap) {  // G32: the HUD compositor
     presenter.set_hud_anchor(true);
     presenter.set_remap(const_cast<PanelRemap *>(ho.remap));
@@ -1415,7 +1421,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   uint64_t ticks = 0, live_moves = 0;
   std::thread pacer;
   int pace_hz = 0;
-  if (ho.cursor_live) {
+  if (ho.cursor_live || presenter.hover()) {  // P10I fix 2: the hover highlights take the same ticks
     HDC dc = GetDC(hwnd);
     pace_hz = dc ? GetDeviceCaps(dc, VREFRESH) : 0;
     if (dc) ReleaseDC(hwnd, dc);
@@ -1460,13 +1466,24 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     }
   };
   Viewport vp = win.viewport();
+  uint64_t hover_paints = 0;  // P10I fix 2
+  auto hover_tick = [&]() {   // P10I fix 2: the hover looks at the live cursor point (the sim's next read would get it)
+    if (!presenter.hover()) return;
+    int32_t lx = 0, ly = 0, dx = 0;
+    if (!session.live_cursor(lx, ly, dx)) return;
+    if (presenter.hover_tick(lx, ly, vp)) {
+      win.invalidate();
+      ++hover_paints;
+    }
+  };
   MSG m;
   std::vector<uint16_t> px;
   while (GetMessageW(&m, nullptr, 0, 0) > 0) {
     if (m.hwnd == hwnd && m.message == kMsgCursorTick) {  // P10E
       tick_pending.store(false);
       ++ticks;
-      cursor_tick();
+      if (ho.cursor_live) cursor_tick();
+      hover_tick();  // P10I fix 2
       continue;
     }
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgPresent) {
@@ -1483,6 +1500,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         presenter.set_text(std::move(tf));    // P9C
         win.invalidate();
         if (ho.cursor_live) cursor_tick();     // P10E: the new frame's preview, at once at the cursor's current tile
+        if (presenter.hover()) {               // P10I fix 2: learn from the new frame, then show the live cursor's looks
+          const Point fc = session.frame_cursor();
+          presenter.hover_observe(fc.x, fc.y, vp);
+          hover_tick();
+        }
         // development (P10E): SG_P10E_LOG=<file>, one line per present with a projection: index, the frame's tile, the sim's last
         // cursor answer, the window's live point and the tile proj_tile gives for that answer (equal to the frame's tile when the
         // answer was P6_Cursor's point)
@@ -1550,6 +1572,14 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        ",\"profile_csv\":\"" + jesc(o.profile_csv) + "\",\"profiler\":" + Profiler::get().summary_json() + "}";
   s += ",\"p10e\":{\"paint_rate\":\"" + o.paint_rate + "\",\"live\":" + std::to_string(ho.cursor_live ? 1 : 0) +  // P10E
        ",\"hz\":" + std::to_string(pace_hz) + ",\"ticks\":" + std::to_string(ticks) + ",\"moves\":" + std::to_string(live_moves) + "}";
+  {  // P10I fix 2
+    const HoverStats hs = presenter.hover_stats();
+    s += ",\"p10i\":{\"hover_rate\":\"" + o.hover_rate + "\",\"line_res\":\"" + std::string(o.line_native ? "native" : "frame") +
+         "\",\"frames\":" + std::to_string(hs.frames) + ",\"controls\":" + std::to_string(hs.controls) + ",\"made\":" +
+         std::to_string(hs.controls_made) + ",\"resets\":" + std::to_string(hs.resets) + ",\"mispredicts\":" +
+         std::to_string(hs.mispredicts) + ",\"ticks\":" + std::to_string(hs.ticks) + ",\"swaps\":" + std::to_string(hs.swaps) +
+         ",\"paints\":" + std::to_string(hover_paints) + "}";
+  }
   Profiler::get().close_csv();
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
@@ -2797,6 +2827,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.sprite_native = v == "native";
     }
+    else if (a == "--hover-rate") {  // P10I fix 2
+      if (!val(v) || (v != "display" && v != "game")) return false;
+      o.hover_rate = v;
+    }
     else if (a == "--line-res") {  // P10I fix 1
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.line_native = v == "native";
@@ -2950,6 +2984,7 @@ int main(int argc, char **argv) {
       o.sprite_native = false;  // P10D
       o.sprite_filter = 0;      // P10H
       o.line_native = false;    // P10I fix 1
+      o.hover_rate = "game";    // P10I fix 2
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

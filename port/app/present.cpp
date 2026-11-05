@@ -263,6 +263,7 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   band_ = band;
   world_ = WorldImage{};  // P8B: a frame set without its world layer has none
   live_ = CursorLive{};  // P10E: the new frame's previews are at its own cursor tile
+  hover_pristine_.clear();  // P10I fix 2: the new frame's own looks
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
   return true;
@@ -644,6 +645,10 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     std::vector<RemapLayer> rl;
     rl.reserve(f.layers.size());
     for (const portsim::GfxHudLayer &l : f.layers) {
+      // P10I fix 2: a layer a hover swap changed keeps the frame's own coverage (clicks are unchanged)
+      const size_t lix = static_cast<size_t>(&l - f.layers.data());
+      const std::vector<portsim::GfxLayerPx> &lpx =
+          lix < hover_pristine_.size() && hover_pristine_[lix].size() == l.px.size() ? hover_pristine_[lix] : l.px;
       RemapLayer r;
       r.anchor = anchor ? l.anchor : 0;
       r.x0 = l.x0;
@@ -652,7 +657,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       r.y1 = l.y1;
       r.cover.resize(l.px.size());
       for (size_t i = 0; i < l.px.size(); ++i)
-        r.cover[i] = l.px[i].kind || l.px[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
+        r.cover[i] = lpx[i].kind || lpx[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
       // P9E: each moved popup piece's pixels are a layer of their own at the piece's offset, above the rest of this layer
       std::vector<RemapLayer> moved;
       if (pieces && l.popups) {

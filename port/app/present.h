@@ -180,6 +180,11 @@ struct WorldImage {
   bool empty() const { return px.empty(); }
 };
 
+struct HoverModel;  // P10I fix 2 (hover.cpp)
+struct HoverStats {  // P10I fix 2: session.json p10i
+  uint64_t frames = 0, controls_made = 0, resets = 0, mispredicts = 0, ticks = 0, swaps = 0, paints = 0;
+  uint32_t controls = 0;
+};
 class Presenter {
  public:
   explicit Presenter(PresentDefect d = PresentDefect::None, ScaleMode s = ScaleMode::Nearest) : defect_(d), scale_(s) {}
@@ -236,6 +241,17 @@ class Presenter {
   // previews' place in the draw order, the second end moved with them by P10E's live shift; their 800-space pixels are left out of
   // the centred layers (--line-res native; off = the frame's line pixels scaled with the layer)
   void set_line_native(bool on) { line_native_ = on; }
+  // P10I fix 2 (hover.cpp): the HUD's hover highlights between game frames (--hover-rate display). hover_observe after each new frame
+  // (set_frame / set_frame_world and set_text) with the 800-space cursor point the sim's hover tests read for it (LiveSession::
+  // frame_cursor) learns, per surface (each HUD panel layer, or the whole frame of a screen without layers), the boxes of the controls
+  // whose look changed when the cursor moved, each look (the surface's pixels over the box and the text runs over it) and the cursor
+  // points it was seen at. hover_tick with the live cursor point swaps a box to the look the nearest observation gives (only inside
+  // the box of the points that look was seen at), and back; true = the picture changed. A new frame shows its own looks again.
+  void set_hover(bool on) { hover_on_ = on; }
+  bool hover() const { return hover_on_; }
+  void hover_observe(int32_t cx, int32_t cy, const Viewport &vp);
+  bool hover_tick(int32_t cx, int32_t cy, const Viewport &vp);
+  HoverStats hover_stats() const;
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }
   WideFill wide() const { return wide_; }
@@ -275,6 +291,11 @@ class Presenter {
   mutable uint32_t painted_set_ = 0;                       // P10A: frames_set_ at the last paint
   CursorLive live_;                                        // P10E
   bool line_native_ = false;                               // P10I fix 1
+  bool hover_on_ = false;                                  // P10I fix 2
+  std::shared_ptr<HoverModel> hover_;                      // P10I fix 2 (hover.cpp)
+  // P10I fix 2: the frame's own layer pixels of the layers a hover swap changed (by layer index; empty = unchanged), so the click
+  // remap's coverage stays the frame's
+  std::vector<std::vector<portsim::GfxLayerPx>> hover_pristine_;
   mutable CursorLive painted_live_;                        // P10E: live_ at the last paint
   // P9C
   bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;

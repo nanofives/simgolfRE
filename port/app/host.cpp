@@ -763,6 +763,7 @@ bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFil
   index = frame_index_;
   if (band) *band = frame_band_;
   if (world) *world = std::move(frame_world_);  // P8B
+  taken_cursor_ = frame_cursor_;  // P10I fix 2
   frame_world_ = WorldImage{};
   frame_waiting_ = false;
   return true;
@@ -811,6 +812,14 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       }
     } catch (...) {
     }
+  }
+  // P10I fix 2: the point of the first cursor read since the last present (the frame's hover tests: P6_Panels' View_toLocal
+  // ML+0xa198 comes before P6_Cursor's and H1's reads), the last read's when none came; taken at every present, shown or not
+  Point fc;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    fc = first_set_ ? first_answer_ : last_answer_;
+    first_set_ = false;
   }
   const int ki = kind_index(kind);
   ++opportunities_[ki];
@@ -865,6 +874,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     frame_world_ = std::move(wi);
     frame_slot_ = std::move(show);
     frame_index_ = index;
+    frame_cursor_ = fc;  // P10I fix 2
     frame_band_ = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
     ++(in_game_ ? presents_black_ : presents_extend_);
     frame_waiting_ = true;
@@ -935,6 +945,7 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
     y = msg_cursor_.y;
     if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(msg_cursor_dx_, x, y);  // P9E fix 4
     if (!edge_read_) plain_answer_ = Point{x, y};  // P10E
+    note_answer(Point{x, y});  // P10I fix 2
     return;
   }
   POINT p = {0, 0};
@@ -965,12 +976,14 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
       ++guarded_reads_;
       x = std::min(std::max(last_inside_.x, 1), kLogicalW - 2);
       y = std::min(std::max(last_inside_.y, 1), kLogicalH - 2);
+      note_answer(Point{x, y});  // P10I fix 2
       return;
     }
     last_inside_ = l;
   }
   x = l.x;
   y = l.y;
+  note_answer(l);  // P10I fix 2
 }
 
 // P10E (host.h live_cursor): LiveSession::cursor's point without its effects (no remap answer handed on, no last_inside_, no counts)
