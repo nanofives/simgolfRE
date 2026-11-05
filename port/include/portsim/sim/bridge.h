@@ -63,6 +63,21 @@ constexpr uint32_t kPortViewWidthVa = kPortViewVa;
 // replay applies it at the same point. Read only by the `play` switch mainLoop.vacatedPanelClick.
 constexpr uint32_t kPortViewVacatedVa = kPortViewVa + 4u;
 bool view_click_vacated(Ctx &ctx);
+// P11D (Mariano's play-test 5, item 4: Ctrl+Z / Ctrl+Y for course edits; log/roadmap/P11/P11D_notes.md). Word +8 is the
+// undo request a live host writes at a frame head as a recorded harness write (DELIVER w32): 1 undo, 2 redo. The `play` switch
+// mainLoop.courseUndo (0) consumes it at the frame body's click point (mainLoop ML+0xedac) and clears it; at 1 (the original)
+// nothing reads it. The words from +0x100 on (the edit journal, the redo list, the press counter) are written by sim code only,
+// so a replay rebuilds them from the same input.
+constexpr uint32_t kPortViewUndoVa = kPortViewVa + 8u;
+extern int g_defect_course_undo;  // mainLoop.courseUndo: 1 = the original (no journal, the request word ignored)
+// setGrids's journal entry (called by setGrids before it stores, with the tile's previous code / refund and the new ones)
+void course_undo_note(Ctx &ctx, int32_t x, int32_t y, int32_t old_code, int32_t old_refund, int32_t new_code,
+                      int32_t new_refund);
+// a paint the original keeps no undo record of (mainLoop ML+0x111da: the old type was a tee or a green): an entry that refuses
+void course_undo_unrecorded(Ctx &ctx, int32_t x, int32_t y);
+void course_undo_press(Ctx &ctx);  // onPoint (a left press): the next edits form a new undo step
+void course_undo_reset(Ctx &ctx);  // a course was set up or loaded: the journal and the redo list are emptied
+void course_undo_step(Ctx &ctx);   // the frame body's click point: runs a pending request (switch 0 only)
 // maps the block (width 800) when the context has none; true when it is mapped afterwards
 bool view_map(Ctx &ctx);
 // the logical view width: 800 when the block is not mapped or holds less than 800

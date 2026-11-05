@@ -199,6 +199,10 @@ class LiveSession : public portsim::LiveHost {
   // first pass does the same, so the app closes instead of showing the title menu. Off the title menu's loop (the boot, the
   // location / difficulty screens) the session stops when no title pass came within 0.5 s, as before.
   void request_close();
+  // P11D (Mariano's play-test 5 item 4): Ctrl+Z (op 1) / Ctrl+Y (op 2). The op is written into the view block's word +8
+  // (bridge.h kPortViewUndoVa) at the next frame head, as a recorded harness write (DELIVER w32), so a replay runs the same undo
+  // at the same frame; the sim's play switch mainLoop.courseUndo consumes it at the frame body's click point and clears it.
+  void request_undo(int op);
   // P10E: the cursor answer the sim's next cursor read would get (LiveSession::cursor's point, the same remap and logical
   // mapping), with nothing recorded or counted; false when that read would not take the live point (the edge guard's outside /
   // not-foreground answer). dx = the remap's client offset of the point.
@@ -302,6 +306,8 @@ class LiveSession : public portsim::LiveHost {
   bool quit_written_ = false;         // unk_0059b734 = 1 written for a close request, not consumed by H1 yet
   bool quit_armed_ = false;           // the prompt consumed it: close at the title menu, unless a frame body runs first
   uint32_t close_written_ = 0, close_direct_ = 0, close_cancelled_ = 0;
+  std::atomic<int> undo_req_{0};     // P11D: the undo / redo op the next frame head writes (0 none)
+  uint32_t undo_writes_ = 0;         // P11D: undo / redo requests written
   bool close_check(portsim::Ctx &ctx, bool at_head, bool body);  // sim thread: true = stop the session now (item 3)
   // P6B item 1 (request_close): title_seen_ the title menu's loop ran since the last frame head; exit_req_ a close press there
   // (window thread), exiting_ the menu took its exit (sim thread); exit_esc_ Esc keys posted to end the credits
@@ -361,6 +367,7 @@ class LiveSession : public portsim::LiveHost {
   uint64_t view_writes_ = 0, world_resizes_ = 0;
   void update_view_target();   // under mu_
   void apply_view(portsim::Ctx &ctx);
+  void apply_undo(portsim::Ctx &ctx);  // P11D
   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
   uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers
   uint64_t presents_text_ = 0, text_runs_ = 0;  // P9C: presents with the frame's text runs, and the runs they carried

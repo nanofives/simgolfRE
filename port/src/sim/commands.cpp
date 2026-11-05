@@ -20,6 +20,7 @@
 #include "portsim/sim/semantic.h"
 #include "portsim/sim/tick.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/bridge.h"  // P11D: course_undo_press
 
 namespace portsim {
 
@@ -185,6 +186,7 @@ int32_t root_handler(Ctx &ctx, const Command &c) {
     case 2:                           // onPoint (WM_LBUTTONDOWN)
       root(ctx, kPointX) = c.a0;
       root(ctx, kPointY) = c.a1;
+      course_undo_press(ctx);  // P11D: the edits from this press on form one undo step (mainLoop.courseUndo = 0 only)
       return point_tail(ctx, c.t);
     case 3:  // onUnpoint (WM_LBUTTONUP, after onPress1)
       root(ctx, kPointX) = mode == 4 ? 0 : -1;

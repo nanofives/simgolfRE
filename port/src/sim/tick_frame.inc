@@ -8364,6 +8364,9 @@ a41e366:
     G32(GS(g_eventFlags567a1c)) = ebp;                             // ML+0xeda6
     // falls into a41e36c
 a41e36c:
+    // P11D (mainLoop.courseUndo = 0): a Ctrl+Z the host wrote into the view block runs here, where the original's own
+    // right-click undo (Ph_0041ecbb's demolishObject) would run in this frame
+    if (!SG_DEFECT(g_defect_course_undo)) course_undo_step(ctx);
     // ---- ML+0xedac  pointer / click handling, frame wait ----
     eax = G32((GS(g_rootInput) + 16));                             // ML+0xedac
     if (eax == ebp) goto a41e381;                      // ML+0xedb1 cmp eax,ebp; je
@@ -9625,6 +9628,8 @@ L_561:
             ecx = FD(0x1c);                           // ML+0x111fe
         } else {
             ebp = G32(GS(g_holesPlusOne));                    // ML+0x1124e
+            // P11D (mainLoop.courseUndo = 0): the original keeps no record of a paint over a tee or a green
+            if (!SG_DEFECT(g_defect_course_undo)) course_undo_unrecorded(ctx, ecx, esi);
         }
     }
 L_814:

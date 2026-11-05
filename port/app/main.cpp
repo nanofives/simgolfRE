@@ -73,6 +73,9 @@
 //   P11B fix 1: --hud-panel left|right (default left; SG_APP_P11=off: right) the edge the panels opened from the radial menu's
 //   people buttons (employee view / detail, golfer action, with the shot texts in their place) are anchored to: left = beside the
 //   radial menu as in the 800-space frame, clicks remapped with them (present.h set_panel_anchor); right = P9B's right edge.
+//   P11D: --undo-keys on|off (default on; SG_APP_P11=off: off) Ctrl+Z undoes the newest course edit step (the edits of one left
+//   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
+//   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -384,6 +387,7 @@ struct Options {
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
+  bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -605,6 +609,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
     {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
     {"mainLoop.vacatedPanelClick", 0},              // P9E fix 3 (a press where a moved panel used to be acts on the course)
+    {"mainLoop.courseUndo", 0},                     // P11D (Mariano's play-test 5 item 4: Ctrl+Z undoes course edits)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
@@ -1374,6 +1379,13 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   wo.resizable = o.resizable;  // P5B item 4
   wo.zoom_keys = static_cast<uint8_t>(o.zoom_keys == "all" ? 2 : o.zoom_keys == "numpad" ? 1 : 0);  // P5B item 2
   wo.zoom_context = [&session]() { return session.in_frame_body(); };
+  {  // P11D: Ctrl+Z / Ctrl+Y only when the profile turns the sim's play switch mainLoop.courseUndo on (0)
+    const int d = portsim::defect_find("mainLoop.courseUndo");
+    if (o.undo_keys && d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0) {
+      wo.on_undo_key = [&session](int op) { session.request_undo(op); };
+      wo.undo_context = [&session]() { return session.in_frame_body(); };
+    }
+  }
   if (o.close_prompt) wo.on_close_button = [&session]() { session.request_close(); };  // P5B item 3
   wo.focus_child_takes = [&session](uint32_t msg, uint32_t wp) { return session.focus_child_takes(msg, wp); };  // U-1616
   wo.before_translate = [&session](uint32_t msg, uint32_t wp) { session.before_translate(msg, wp); };  // S7.4
@@ -1586,6 +1598,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(hs.mispredicts) + ",\"ticks\":" + std::to_string(hs.ticks) + ",\"swaps\":" + std::to_string(hs.swaps) +
          ",\"paints\":" + std::to_string(hover_paints) + "}";
   }
+  s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
   Profiler::get().close_csv();
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
@@ -2837,6 +2850,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "left" && v != "right")) return false;
       o.panel_left = v == "left";
     }
+    else if (a == "--undo-keys") {  // P11D
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.undo_keys = v == "on";
+    }
     else if (a == "--hover-rate") {  // P10I fix 2
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
@@ -2996,8 +3013,11 @@ int main(int argc, char **argv) {
       o.line_native = false;    // P10I fix 1
       o.hover_rate = "game";    // P10I fix 2
     }
-  if (const char *ep = std::getenv("SG_APP_P11"))  // P11: the fifth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.panel_left = false;  // P11B fix 1
+  if (const char *ep = std::getenv("SG_APP_P11"))  // P11: this play-test round's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) {
+      o.panel_left = false;
+      o.undo_keys = false;
+    }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

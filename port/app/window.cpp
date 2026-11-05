@@ -315,6 +315,27 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
     }
     return 0;
   }
+  // P11D: Ctrl+Z / Ctrl+Y (WindowOptions::on_undo_key). The game's keys Z / Y are H1 keys (zoom 'z' 0x7a), so the key-down,
+  // its control character (0x1a / 0x19) and the key-up are all kept from the game
+  if (opt_.on_undo_key) {
+    // the key state the session answers the game with (--keys message: from the messages received), else Windows'
+    const auto down = [this](int vk) {
+      const int32_t s = opt_.key_state ? opt_.key_state(static_cast<uint32_t>(vk), false) : -1;
+      return s >= 0 ? (s & 0x8000) != 0 : (GetKeyState(vk) & 0x8000) != 0;
+    };
+    if (msg == WM_KEYDOWN && (wp == 'Z' || wp == 'Y') && down(VK_CONTROL) && !down(VK_MENU) &&
+        (!opt_.undo_context || opt_.undo_context())) {
+      undo_vk_ = static_cast<uint32_t>(wp);
+      if (!(lp & (1 << 30))) opt_.on_undo_key(wp == 'Z' ? 1 : 2);  // auto-repeat does nothing more
+      return 0;
+    }
+    // its character: the control character, or the plain letter when the Ctrl state came from posted messages
+    if (undo_vk_ && msg == WM_CHAR && (wp == 0x1a || wp == 0x19 || ((wp | 0x20) == (undo_vk_ | 0x20)))) return 0;
+    if (undo_vk_ && msg == WM_KEYUP && wp == undo_vk_) {
+      undo_vk_ = 0;
+      return 0;
+    }
+  }
   if (is_input(msg)) {
     input(msg, static_cast<uint32_t>(wp), static_cast<uint32_t>(lp));
     if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) return DefWindowProcW(h, msg, wp, lp);  // Alt+F4

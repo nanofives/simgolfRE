@@ -104,6 +104,10 @@ struct WindowOptions {
   // P10A: F12 (key-down without repeat) calls this and repaints; F12's messages are then never handed to the game. Null = F12
   // goes to the game as before.
   std::function<void()> on_overlay_key;
+  // P11D: Ctrl+Z calls this with 1 and Ctrl+Y with 2 while undo_context() says the game is in its frame body; their key-down,
+  // character and key-up messages are then never handed to the game. Null = both go to the game as before.
+  std::function<void(int op)> on_undo_key;
+  std::function<bool()> undo_context;
 };
 
 class AppWindow {
@@ -135,6 +139,7 @@ class AppWindow {
   void size_for_dpi(uint32_t dpi, const void *suggested_rect);
   void input(uint32_t msg, uint32_t wp, uint32_t lp);
   void client_changed();       // P5B item 4: re-read the client size, refit the viewport
+  uint32_t undo_vk_ = 0;       // P11D: the Z / Y key whose character and key-up are being kept from the game (0: none)
   uint32_t zoom_char_ = 0;     // P5B item 2: the character the next WM_CHAR becomes (0: none)
   uint32_t zoom_remaps_ = 0;
 

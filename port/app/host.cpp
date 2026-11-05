@@ -287,6 +287,19 @@ void LiveSession::apply_view(portsim::Ctx &ctx) {
   }
 }
 
+// P11D: at a frame head (one of the frame's head writes, so a replay applies it before the same frame body): the pending
+// undo / redo op into the view block's word +8
+void LiveSession::request_undo(int op) {
+  if (op == 1 || op == 2) undo_req_.store(op);
+}
+void LiveSession::apply_undo(portsim::Ctx &ctx) {
+  const int op = undo_req_.exchange(0);
+  if (op == 0 || !portsim::view_map(ctx)) return;
+  ctx.mem.store<int32_t>(portsim::kPortViewUndoVa, op);
+  if (writes) writes->wrote(portsim::kPortViewUndoVa, static_cast<uint32_t>(op));
+  ++undo_writes_;
+}
+
 void LiveSession::on_input(const InputEvent &e) {
   last_input_ms_.store(timeGetTime());  // P6B item 2
   {
@@ -908,6 +921,7 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
     if (writes) writes->wrote(va, flags);
   }
   apply_view(ctx);                // G32: the window's view width and world size (recorded write, before the frame body)
+  apply_undo(ctx);                // P11D: Ctrl+Z / Ctrl+Y (recorded write, before the frame body)
   track_screen(ctx, true);        // P7: a frame head is the frame loop
   title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
   end_load(ctx);                  // P6B item 2
@@ -1396,6 +1410,7 @@ std::string LiveSession::summary_json(const Result &r) const {
        ",\"close_at_menu\":" + std::to_string(close_direct_) + ",\"close_cancelled\":" + std::to_string(close_cancelled_) +
        ",\"close_exit\":{\"title_exits\":" + std::to_string(exit_title_) + ",\"esc_posted\":" + std::to_string(exit_esc_) +
        ",\"fallback_stops\":" + std::to_string(exit_fallback_) + "}";
+  s += ",\"undo_writes\":" + std::to_string(undo_writes_);  // P11D
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
   s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";
   for (size_t i = 0; i < loads_.size(); ++i) {

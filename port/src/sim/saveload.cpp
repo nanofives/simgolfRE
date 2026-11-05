@@ -22,6 +22,7 @@
 #include "portsim/sim/loaders.h"
 #include "portsim/sim/text.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/bridge.h"  // P11D: course_undo_reset
 
 namespace portsim {
 
@@ -261,6 +262,7 @@ int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, 
   if (header_only != 0 && mode != 3) return f.close(ctx);
   serialize_course(ctx, f, mode == 8 ? 0 : 1);
   f.close(ctx);
+  course_undo_reset(ctx);  // P11D: the loaded course's tiles are not the journal's (mainLoop.courseUndo = 0 only)
   gs.g_flags = (((gs.g_flags & 0xFFFFFFF3u) | (mode == 1 ? 0u : (flags0 & 4u))) | (mode == 2 ? 0u : 0x40000000u));
   gs.g_panelListMode = 0;
   gs.f_w_4c2848[3] = -1;
@@ -296,6 +298,7 @@ int32_t load_course(Ctx &ctx, int32_t mode) {
   f.read(ctx, text, 0x64);
   if (mode == 3 && neg != 1) return f.close(ctx);
   deserialize_course(ctx, f, 1);
+  course_undo_reset(ctx);  // P11D (mainLoop.courseUndo = 0 only)
   // eight trailing bytes are read over the frame's path slot and the position asked (_tell): no state
   f.pos = std::min(f.pos + 8, f.data.size());
   int32_t r = f.close(ctx);

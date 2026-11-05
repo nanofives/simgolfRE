@@ -9,6 +9,7 @@
 #include "portsim/ptr.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/bridge.h"  // P11D: course_undo_note
 
 namespace portsim {
 
@@ -148,6 +149,9 @@ void push_triple_entry(Ctx &ctx, int32_t a, int32_t b, int32_t c) {
 
 void set_grids(Ctx &ctx, int32_t x, int32_t y, int32_t a, int32_t b) {
   const int32_t cell = add32(mul32(x, kGridW), y);
+  if (!SG_DEFECT(g_defect_course_undo))  // P11D (mainLoop.courseUndo = 0): the journal keeps what this edit overwrites
+    course_undo_note(ctx, x, y, (state_arr(ctx, &GameState::g_tileBuildCode) + cell).get(),
+                     (state_arr(ctx, &GameState::g_tileRefund) + cell).get(), a & 0xff, static_cast<int8_t>(b));
   (state_arr(ctx, &GameState::g_tileBuildCode) + cell).set(static_cast<uint8_t>(a));
   (state_arr(ctx, &GameState::g_tileRefund) + cell).set(static_cast<int8_t>(b));
   if (SG_NEGCTL(g_negctl_set_grids) == 1) (state_arr(ctx, &GameState::g_tileBuildCode) + add32(cell, 1)).set(static_cast<uint8_t>(b));
