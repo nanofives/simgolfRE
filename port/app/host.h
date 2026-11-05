@@ -156,6 +156,8 @@ struct HostOptions {
   int world_mode = 0;
   const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
   bool text_native = false;  // P9C: presents carry the frame's text runs (gfx.h GfxTextFrame) in WorldImage::text
+  // P10B fix 1: the loading banner frame and the frame put back after the load carry the runs of the last present (banner_text)
+  bool text_banner = false;
   bool hud_layers = false;  // P9B: presents carry the frame's HUD pixel layers (gfx.h GfxHudFrame; with `world` and `remap`)
   // P9E fix 3: at the delivery of each press (onPress1 / onPress2) the view block's word +4 (bridge.h kPortViewVacatedVa) is set
   // to 1 when the press's message was made in a moved panel's vacated place (InputEvent::vacated), else 0, as a recorded
@@ -303,6 +305,7 @@ class LiveSession : public portsim::LiveHost {
   void post_loading(portsim::Ctx &ctx, uint32_t done);
   void end_load(portsim::Ctx &ctx);
   bool banner_shown_ = false;  // P8A: the window shows the banner frame, not the last present
+  portsim::GfxTextFrame last_text_;  // P10B fix 1: the text runs published with last_presented_ (empty = none)
   Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
   // P7: whether a game's frame loop has run since the title menu (sim thread only): set at a frame head or a body pump with
   // g_difficulty != -1, cleared at any pump that reads g_difficulty == -1 (the title menu stores -1 there, 0x0040f8ab)
@@ -420,6 +423,11 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
                       bool cursor = false);
 // P9C: the text runs published with exactly this back buffer (false when there are none)
 bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner = false);
+// P10B fix 1: the text frame of a picture `px` made over the frame `under.back` (the loading banner over a copy of the back
+// buffer): the picture without `own`'s glyphs (own = the banner's runs over px, may be empty) and, where px still holds under's
+// back buffer word, without under's glyphs; under's runs (visible only there) and then own's. False when under does not fit.
+bool banner_text(const portsim::GfxTextFrame &under, const portsim::GfxTextFrame &own, const std::vector<uint16_t> &px,
+                 portsim::GfxTextFrame &out);
 
 }  // namespace portapp
 

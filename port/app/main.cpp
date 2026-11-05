@@ -44,6 +44,9 @@
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
 //   (a measurement: the redraw also at an 800 x 600 content rectangle).
+//   P10B fix 1: --text-banner on|off (default on with --text-res native; SG_APP_P10=off: off) the P8A loading banner and the frame
+//   put back after the load carry the text runs of the frame under them (host.cpp banner_text), so that frame's text stays at the
+//   window's resolution during a world load instead of the 800 x 600 frame's text scaled.
 //   simgolf_port.exe --compose <in.555> <cw> <ch> <out.bmp> [--wide --wide-fill soft|clamp|black] [--scale m]
 //                    [--compose-band extend|black]   P7: the presenter's client image of one 800x600 frame, as a BMP
 //   P7 (widescreen stage 1, default off): --wide [on|off] (or SG_APP_WIDE=on) opens the window at --wide-width (1067) x 600
@@ -298,6 +301,7 @@ struct Options {
   std::string text_res = "native";  // P9C: --text-res native|frame (SG_APP_P9C=off: frame)
   std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
   bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
+  bool text_banner = true;          // P10B fix 1: --text-banner on|off (SG_APP_P10=off: off)
   // S7.6 live sessions
   uint32_t idle_ms = 200, pass_ms = 10;
   bool timed_passes = true;  // P5A (--no-timed-passes)
@@ -1260,6 +1264,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
   ho.cursor_previews = ho.remap && hud_layers_on(o) && o.hud_cursor;  // P9E fix 4
   ho.text_native = text_native_on(o);                  // P9C
+  ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
@@ -2632,6 +2637,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hud_cursor = v == "on";
     }
+    else if (a == "--text-banner") {  // P10B fix 1
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.text_banner = v == "on";
+    }
     else if (a == "--text-res") {  // P9C
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.text_res = v;
@@ -2724,6 +2733,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.hud_modal = false;
   if (const char *ep = std::getenv("SG_APP_P9E"))  // P9E: the layer-compositor fixes of P9E off (P9D's behaviour); flags win
     if (!std::strcmp(ep, "off")) o.hud_popups = o.hud_close = o.hud_vacated = o.hud_cursor = false;
+  if (const char *ep = std::getenv("SG_APP_P10"))  // P10B: the P10 text fixes off (P9E's behaviour); flags win
+    if (!std::strcmp(ep, "off")) o.text_banner = false;
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

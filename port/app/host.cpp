@@ -362,11 +362,17 @@ void LiveSession::post_loading(portsim::Ctx &ctx, uint32_t done) {
     ctx.files().read("$gfx/banner.555", 0, px.data(), static_cast<uint64_t>(n));
     banner_shown_ = true;
   }
-  WorldImage banner_text;  // P9C: the banner's own runs (a frame put back after the load has none)
-  if (opt_.text_native && done != 0) take_text_frame(ctx, px, banner_text.text, true);
+  WorldImage banner_img;  // P9C: the banner's own runs (a frame put back after the load has none)
+  if (opt_.text_native && done != 0) take_text_frame(ctx, px, banner_img.text, true);
+  // P10B fix 1: and the runs of the frame under the banner (the world map's labels), or the put-back frame's own runs; without
+  // them that frame's text was the 800 x 600 frame's scaled (blurred) for the whole load
+  if (opt_.text_banner && !last_text_.empty()) {
+    portsim::GfxTextFrame merged;
+    if (banner_text(last_text_, banner_img.text, px, merged)) banner_img.text = std::move(merged);
+  }
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
-    frame_world_ = std::move(banner_text);
+    frame_world_ = std::move(banner_img);
     frame_slot_ = std::move(px);
     frame_index_ = kBannerIndex;
     frame_band_ = BandFill::Extend;
@@ -449,6 +455,62 @@ void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
     in_game_ = false;
   else if (frame_loop)
     in_game_ = true;
+}
+
+bool banner_text(const portsim::GfxTextFrame &under, const portsim::GfxTextFrame &own, const std::vector<uint16_t> &px,
+                 portsim::GfxTextFrame &out) {
+  const size_t n = static_cast<size_t>(kLogicalW) * kLogicalH;
+  if (px.size() != n || under.back.size() != n || under.clean.size() != n) return false;
+  const bool has_own = own.back.size() == n && own.clean.size() == n;
+  out = portsim::GfxTextFrame{};
+  out.serial = has_own ? own.serial : under.serial;
+  out.back = px;
+  out.clean = px;
+  // same[i]: px shows under's back buffer word there and own's peel left it alone. keep[i]: every pixel within 2 of i is `same`
+  // (a pixel of the banner's translucent panel can equal the word under it by chance; such isolated pixels would put the old
+  // frame's background back inside the panel and draw specks of its text there), so under's run (if any) still shows at i
+  std::vector<uint8_t> same(n, 0), keep(n, 0), row(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    if (has_own && own.clean[i] != px[i]) out.clean[i] = own.clean[i];  // one of the banner's glyphs
+    else if (px[i] == under.back[i]) same[i] = 1;
+  }
+  constexpr int32_t kR = 2;
+  for (int32_t y = 0; y < kLogicalH; ++y)  // the erosion: rows, then columns (the window's edge does not erode)
+    for (int32_t x = 0; x < kLogicalW; ++x) {
+      uint8_t v = 1;
+      for (int32_t xx = std::max(x - kR, 0); xx <= std::min(x + kR, kLogicalW - 1) && v; ++xx)
+        v = same[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(xx)];
+      row[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)] = v;
+    }
+  for (int32_t y = 0; y < kLogicalH; ++y)
+    for (int32_t x = 0; x < kLogicalW; ++x) {
+      uint8_t v = 1;
+      for (int32_t yy = std::max(y - kR, 0); yy <= std::min(y + kR, kLogicalH - 1) && v; ++yy)
+        v = row[static_cast<size_t>(yy) * kLogicalW + static_cast<size_t>(x)];
+      const size_t i = static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x);
+      keep[i] = v;
+      if (v) out.clean[i] = under.clean[i];
+    }
+  for (const portsim::GfxTextRun &r : under.runs) {
+    if (r.target == 2 || r.x1 <= r.x0 || r.y1 <= r.y0) continue;  // a world run: the banner frame has no world under it
+    portsim::GfxTextRun c = r;
+    c.layer = -2;
+    c.vis_layer.clear();
+    bool any = false;
+    const int32_t bw = c.x1 - c.x0;
+    for (int32_t y = c.y0; y < c.y1; ++y)
+      for (int32_t x = c.x0; x < c.x1; ++x) {
+        const size_t j = static_cast<size_t>(y - c.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - c.x0);
+        if (j >= c.vis.size() || !c.vis[j]) continue;
+        if (x < 0 || y < 0 || x >= kLogicalW || y >= kLogicalH || !keep[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)])
+          c.vis[j] = 0;
+        else
+          any = true;
+      }
+    if (any) out.runs.push_back(std::move(c));
+  }
+  if (has_own) out.runs.insert(out.runs.end(), own.runs.begin(), own.runs.end());
+  return !out.runs.empty();
 }
 
 bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner) {
@@ -604,6 +666,10 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       ++presents_world_;
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
+  if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
+    if (text) last_text_ = tf;
+    else last_text_ = portsim::GfxTextFrame{};
+  }
   if (text) {
     ++presents_text_;
     text_runs_ += tf.runs.size();
