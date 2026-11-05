@@ -322,7 +322,34 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
     return;
   }
   log_call(g, who, x1, y1, x2, y2, colour, width, alpha, gl.context);
+  // P10I fix 1 (gfx.h gfx_set_hud_lines): P7's tee-to-cursor line (ML+0xb9b1) and the tee tool's green-to-cursor arm (ML+0xbb2a),
+  // drawMinimapSegment(.., 0x80007fff, 2, 7) inside a cursor pass, are recorded with the root pixels they change. Records only.
+  const bool rec = g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && !std::strcmp(who, "drawMinimapSegment") &&
+                   width == 2 && alpha == 7 && colour == 0x80007fffu && g.root.w == 800 && g.root.h == 600;
+  std::vector<uint16_t> before;
+  if (rec) before = g.root.px;
   draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha);
+  if (rec && before.size() == g.root.px.size()) {
+    Gfx::HudCapture &c = g.hud;
+    if (c.line800.size() != before.size()) {
+      c.line800.assign(before.size(), 0);
+      c.line_word.assign(before.size(), 0);
+    }
+    for (size_t i = 0; i < before.size(); ++i)
+      if (before[i] != g.root.px[i]) {
+        c.line800[i] = 1;
+        c.line_word[i] = g.root.px[i];
+      }
+    GfxHudLine l;
+    l.x1 = x1;
+    l.y1 = y1;
+    l.x2 = x2;
+    l.y2 = y2;
+    l.colour = colour;
+    l.width = gl.line_width;
+    l.alpha = alpha;
+    c.lines.push_back(l);
+  }
   ws.width = gl.line_width;
   if (gl.context || mode() == 9) apply_state(r, colour, alpha);
 }

@@ -110,6 +110,15 @@ struct GfxHudPiece {
   uint8_t text = 0;  // P10C fix 4: 1 = a text input dialog (gfx_hud_popup_begin's text_box: textInputBox, saveGameDialog), 0 = a showPopup
   int32_t parent = -1;  // P10C fix 4: the piece open when this one began (a popup drawn inside another dialog), -1 = none
 };
+// P10I fix 1 (gfx.h gfx_set_hud_lines): one line from the tee to the cursor (or from the green, the tee tool's arm) a cursor pass
+// drew: Terrain::drawLine's arguments as drawMinimapSegment passed them (800-space ends, the first the tee / green, the second the
+// cursor tile's screen point), the GL line width after the call and the alpha argument (tenths)
+struct GfxHudLine {
+  int32_t x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+  uint32_t colour = 0;
+  float width = 1.0f;
+  int32_t alpha = 10;
+};
 struct GfxHudFrame {
   std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
   std::vector<uint16_t> back;  // the back buffer the layers were published with (a present checks it is the frame it shows)
@@ -127,6 +136,11 @@ struct GfxHudFrame {
   // P9E fix 4: 1 where a sprite draw of the frame code's cursor passes (gfx_set_hud_cursor: Surface_drawSprite, the root part
   // of drawQueuedSprite.draw) changed the root (800 x 600; empty = none): the tool preview's own pixels in the centred layers
   std::vector<uint8_t> cursor2d;
+  // P10I fix 1: the tee lines of the cursor passes (gfx_set_hud_lines), and per root pixel (800 x 600; empty = none) 1 where one
+  // of them changed the root, with line_word the word it left there (a later draw over it, the yards label, leaves another word)
+  std::vector<GfxHudLine> lines;
+  std::vector<uint8_t> line800;
+  std::vector<uint16_t> line_word;
   bool empty() const { return base.empty(); }
 };
 int8_t gfx_layer_anchor(int32_t id);
@@ -165,6 +179,13 @@ void gfx_set_hud_close(Ctx &ctx, bool on);
 // (LiveTerrain::world_frame cursor_apart, world_cursor). Records only: nothing is drawn, and the frame, the root, the back
 // buffer and the GameState are unchanged. Set by the app's host after gfx_set_hud_capture; off (the default): nothing kept.
 void gfx_set_hud_cursor(Ctx &ctx, bool on);
+// P10I fix 1: the line from the tee to the cursor at the window's resolution. With this on (and gfx_set_hud_cursor's passes kept),
+// the two drawMinimapSegment calls of P7's hole preview (ML+0xb9b1: the green tool's tee-to-cursor line; ML+0xbb2a: the tee tool's
+// green-to-cursor arm; both colour 0x80007fff, width 2, alpha 7, the only width-2 drawMinimapSegment calls inside a cursor pass)
+// are recorded with the root pixels they changed (GfxHudFrame::lines / line800 / line_word), so a presenter can draw the line at
+// its own resolution instead of the frame's pixels. Records only: the line is still drawn into the root, and the frame, the back
+// buffer and the GameState are unchanged. Set by the app's host after gfx_set_hud_cursor; off (the default): nothing recorded.
+void gfx_set_hud_lines(Ctx &ctx, bool on);
 // P10C fix 2: with the HUD capture on, a panel layer's pixels are also the root pixels its drawing primitives wrote, even with the
 // word the root already held there (P9B's diff alone left those transparent: a tree icon over the course's own tree sprites had
 // holes showing the world at the panel's moved place). On by default with the capture; off = P9B's diff only. Records only.

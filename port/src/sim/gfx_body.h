@@ -159,6 +159,10 @@ class Gfx {
     bool cursor_sprites = false;      // P9E fix 4 (gfx.h gfx_set_hud_cursor): the wide scene around the cursor passes is kept
     int cursor_depth = 0;             // P9E fix 4: open cursor passes
     std::vector<uint8_t> cursor2d;    // P9E fix 4: the root pixels their sprite draws changed (cleared at the queue's start)
+    bool lines_on = false;            // P10I fix 1 (gfx.h gfx_set_hud_lines): the tee lines of the cursor passes are recorded
+    std::vector<GfxHudLine> lines;    // P10I fix 1: those lines (cleared at the queue's start, as cursor2d)
+    std::vector<uint8_t> line800;     // P10I fix 1: the root pixels they changed
+    std::vector<uint16_t> line_word;  // P10I fix 1: the word each left there
     bool carry_split = false;
     // P10C fix 2 (HudWriteMark): per root pixel the blend generation of the last panel layer that wrote it, and that layer's
     // marked box (inclusive; x1 < 0 = none); hud_diff keeps a written pixel as the layer's even when its word did not change

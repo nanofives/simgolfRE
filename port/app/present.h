@@ -232,6 +232,10 @@ class Presenter {
   };
   void set_cursor_live(const CursorLive &c) { live_ = c; }
   const CursorLive &cursor_live() const { return live_; }
+  // P10I fix 1: the frame's tee lines (GfxHudFrame::lines, gfx.h gfx_set_hud_lines) drawn at the window's resolution in the cursor
+  // previews' place in the draw order, the second end moved with them by P10E's live shift; their 800-space pixels are left out of
+  // the centred layers (--line-res native; off = the frame's line pixels scaled with the layer)
+  void set_line_native(bool on) { line_native_ = on; }
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }
   WideFill wide() const { return wide_; }
@@ -270,6 +274,7 @@ class Presenter {
   mutable std::unique_ptr<TextRaster> overlay_raster_;     // P10A
   mutable uint32_t painted_set_ = 0;                       // P10A: frames_set_ at the last paint
   CursorLive live_;                                        // P10E
+  bool line_native_ = false;                               // P10I fix 1
   mutable CursorLive painted_live_;                        // P10E: live_ at the last paint
   // P9C
   bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;

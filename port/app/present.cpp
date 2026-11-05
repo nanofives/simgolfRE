@@ -757,6 +757,82 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       }
     }
   };
+  // P10I fix 1: the frame's tee lines (GfxHudFrame::lines) at the window's resolution. Their 800-space pixels (line800, where the
+  // layer pixel still holds the word the line left: the yards label drawn over it keeps its own) are left out of the centred
+  // layers, and each line is drawn again as Terrain::drawLine draws it (terrain_overlay.h): glColor4f(((c >> 7) & 0xf8) / 255,
+  // ((c >> 2) & 0xf8) / 255, ((c << 3) & 0xf8) / 255, alpha / 10), the GL width clamped to 10 scaled to client pixels, coverage
+  // clamp(w / 2 + 0.5 - |n|) * clamp(t + 0.5) * clamp(L - t + 0.5) at each pixel centre, blended over the client pixel. The first
+  // end (the tee, or the green for the tee tool) stays; the second (the cursor tile's screen point, P7's F+0x68 / F+0x58) moves
+  // with the cursor previews (cdx + shx, shy). Drawn where the frame draws it: after the cursor previews (P7 draws the box and the
+  // green / pin before the line), before the layer that holds its pixels (and so under the yards label that layer's runs redraw).
+  const bool lines = line_native_ && !f.lines.empty() && f.line800.size() == static_cast<size_t>(kLogicalW) * kLogicalH &&
+                     f.line_word.size() == f.line800.size();
+  auto line_at = [&](int32_t x, int32_t y, const portsim::GfxLayerPx &p) {
+    if (!lines || x < 0 || y < 0 || x >= kLogicalW || y >= kLogicalH) return false;
+    const size_t i = static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x);
+    return f.line800[i] != 0 && p.kind == 1 && p.px == f.line_word[i];
+  };
+  size_t line_layer = f.layers.size();
+  for (size_t li = 0; lines && li < f.layers.size() && line_layer == f.layers.size(); ++li) {
+    const portsim::GfxHudLayer &l = f.layers[li];
+    if (l.id != portsim::kGfxLayerCentred) continue;
+    for (int32_t y = l.y0; y < l.y1 && line_layer == f.layers.size(); ++y) {
+      const uint8_t *m = f.line800.data() + static_cast<size_t>(y) * kLogicalW;
+      for (int32_t x = l.x0; x < l.x1; ++x)
+        if (m[x]) {
+          const portsim::GfxLayerPx *p = l.at(x, y);
+          if (p && line_at(x, y, *p)) {
+            line_layer = li;
+            break;
+          }
+        }
+    }
+  }
+  if (cur && line_layer < cur_layer) line_layer = cur_layer;  // the previews first, as P7 draws them
+  auto draw_lines = [&]() {
+    if (!lines || vp.client_w <= 0 || vp.client_h <= 0) return;
+    const double sx = static_cast<double>(vp.client_w) / kLogicalW, sy = static_cast<double>(vp.client_h) / kLogicalH;
+    for (const portsim::GfxHudLine &ln : f.lines) {
+      const double cr = static_cast<double>((ln.colour >> 7) & 0xf8u), cg = static_cast<double>((ln.colour >> 2) & 0xf8u),
+                   cb = static_cast<double>((ln.colour << 3) & 0xf8u);
+      const double ca = std::clamp(static_cast<double>(ln.alpha) / 10.0, 0.0, 1.0);
+      if (ca <= 0.0) continue;
+      const double half = std::min(static_cast<double>(ln.width), 10.0) * (sx + sy) / 4.0;
+      const double ax = vp.origin_x + ln.x1 * sx, ay = vp.origin_y + ln.y1 * sy;
+      const double bx = vp.origin_x + cdx + shx + ln.x2 * sx, by = vp.origin_y + shy + ln.y2 * sy;
+      const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
+      if (!(len > 0.0)) continue;
+      const double ux = dx / len, uy = dy / len, reach = half + 1.5;
+      const int32_t x0 = std::max<int32_t>(0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
+      const int32_t x1 = std::min<int32_t>(cw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
+      const int32_t y0 = std::max<int32_t>(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
+      const int32_t y1 = std::min<int32_t>(ch - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+      for (int32_t y = y0; y <= y1; ++y) {
+        const double py = y + 0.5 - ay;
+        int32_t xa = x0, xb = x1;
+        if (std::fabs(uy) > 1e-9) {  // the columns whose centre lies within reach of the line: n = -px * uy + py * ux
+          const double c0 = (py * ux - reach) / uy, c1 = (py * ux + reach) / uy;
+          xa = std::max(xa, static_cast<int32_t>(std::floor(std::min(c0, c1) + ax - 0.5)));
+          xb = std::min(xb, static_cast<int32_t>(std::ceil(std::max(c0, c1) + ax - 0.5)));
+        }
+        uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+        for (int32_t x = xa; x <= xb; ++x) {
+          const double px = x + 0.5 - ax;
+          const double t = px * ux + py * uy, n = -px * uy + py * ux;
+          const double cov = std::clamp(half + 0.5 - std::fabs(n), 0.0, 1.0) * std::clamp(t + 0.5, 0.0, 1.0) *
+                             std::clamp(len - t + 0.5, 0.0, 1.0);
+          if (cov <= 0.0) continue;
+          const double al = ca * cov;
+          const uint32_t d = dst[x];
+          const double dr = (d >> 16) & 0xffu, dg = (d >> 8) & 0xffu, db = d & 0xffu;
+          const uint32_t r8 = static_cast<uint32_t>(std::lround(cr * al + dr * (1.0 - al)));
+          const uint32_t g8 = static_cast<uint32_t>(std::lround(cg * al + dg * (1.0 - al)));
+          const uint32_t b8 = static_cast<uint32_t>(std::lround(cb * al + db * (1.0 - al)));
+          dst[x] = 0xff000000u | (std::min(r8, 255u) << 16) | (std::min(g8, 255u) << 8) | std::min(b8, 255u);
+        }
+      }
+    }
+  };
   auto to555 = [](uint32_t c) -> uint16_t {
     return static_cast<uint16_t>((((c >> 19) & 31) << 10) | (((c >> 11) & 31) << 5) | ((c >> 3) & 31));
   };
@@ -802,6 +878,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   for (size_t li = 0; li < f.layers.size(); ++li) {
     const portsim::GfxHudLayer &l = f.layers[li];
     if (li == cur_layer) draw_cursor();  // P9E fix 4
+    if (li == line_layer) draw_lines();  // P10I fix 1
     const int32_t dx0 = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
     struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
       const Presenter &p;
@@ -835,6 +912,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       const portsim::GfxLayerPx *p = l.at(x, y);
       if (p && split && moved_piece(l, x, y) != (pass == cpass ? -1 : pass)) return nullptr;
       if (p && l.id == portsim::kGfxLayerCentred && cur_at(x, y)) return nullptr;  // P9E fix 4: drawn as the cursor's previews
+      if (p && l.id == portsim::kGfxLayerCentred && line_at(x, y, *p)) return nullptr;  // P10I fix 1: drawn by draw_lines
       if (p && cmove && (c2_at(x, y) != (pass == cpass))) return nullptr;  // P9E fix 4: the 2D preview only in its own pass
       return p && wdim && p->kind == 4 ? nullptr : p;
     };
@@ -878,6 +956,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     }  // P9E: the pass loop
   }
   if (cur_layer == f.layers.size()) draw_cursor();  // P9E fix 4: after every layer
+  if (line_layer == f.layers.size()) draw_lines();  // P10I fix 1
 }
 
 // P7 (present.h WideFill): the side bands from the content rectangle's own edge columns, in client pixels. The content is

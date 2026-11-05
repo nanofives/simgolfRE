@@ -62,6 +62,10 @@
 //   P10H fix 1: --sprite-filter sharp|smooth|sharp-area (default sharp; SG_APP_P10=off: smooth) the filter of those sprites and of
 //   the placement box: sharp = every art pixel a crisp block with one-window-pixel area-weighted steps, the object outlines smooth;
 //   smooth = P10D's bilinear; sharp-area = sharp with the outlines area-weighted too (gfx_scene.cpp hr_blit_rows).
+//   P10I fix 1: --line-res native|frame (default native with the HUD cursor previews; SG_APP_P10=off: frame) the line a held green
+//   / tee tool draws from the tee (or green) to the cursor (P7's drawMinimapSegment) drawn again at the window's resolution in the
+//   cursor previews' place, its cursor end following P10E's live move (gfx.h gfx_set_hud_lines, present.h set_line_native); frame
+//   = the 800 x 600 frame's line pixels scaled with the picture.
 //   P9C: --text-res native|frame (default native; SG_APP_P9C=off: frame) draws the game's text again at the window's resolution
 //   (textres.h); frame = the 800 x 600 frame's text scaled with the picture. --text-aa system|cleartype|grey: the antialiasing of
 //   text drawn at a scale other than 1 (default system = lfQuality 0, as the game's own text). live-trace: --text-unit-redraw
@@ -370,6 +374,7 @@ struct Options {
   bool hud_textbox = true;         // P10C fix 4: --hud-textbox on|off (SG_APP_P10=off: off)
   bool sprite_native = true;       // P10D: --sprite-res native|frame (SG_APP_P10=off: frame)
   int sprite_filter = 1;           // P10H: --sprite-filter sharp (1) | smooth (0) | sharp-area (2) (SG_APP_P10=off: smooth)
+  bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -404,6 +409,8 @@ struct Options {
 static bool hud_layers_on(const Options &o) { return o.wide && o.hud_anchor && o.hud_layers; }
 // P9C: the presenter's text options
 static bool text_native_on(const Options &o) { return o.text_res == "native"; }
+// P10I fix 1: the tee lines at the window's resolution need the cursor passes kept (P9E fix 4)
+static bool line_res_on(const Options &o) { return hud_layers_on(o) && o.hud_cursor && o.line_native; }
 static void setup_text(Presenter &p, const Options &o) {
   p.set_text_res(text_native_on(o));
   p.set_text_aa(o.text_aa == "cleartype" ? TextAa::ClearType : o.text_aa == "grey" ? TextAa::Grey : TextAa::System);
@@ -414,6 +421,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_text_unit_redraw(o.text_unit_redraw);
   p.set_text_fit(o.text_fit);  // P10B fix 2
   p.set_text_boxes(o.hud_textbox);  // P10C fix 4 (the presenter's popup pieces)
+  p.set_line_native(line_res_on(o));  // P10I fix 1
 }
 
 // P5B item 4: --scale
@@ -985,6 +993,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
+      if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1253,6 +1262,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
+  if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -2787,6 +2797,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.sprite_native = v == "native";
     }
+    else if (a == "--line-res") {  // P10I fix 1
+      if (!val(v) || (v != "native" && v != "frame")) return false;
+      o.line_native = v == "native";
+    }
     else if (a == "--sprite-filter") {  // P10H
       if (!val(v) || (v != "sharp" && v != "smooth" && v != "sharp-area")) return false;
       o.sprite_filter = v == "sharp" ? 1 : v == "smooth" ? 0 : 2;
@@ -2935,6 +2949,7 @@ int main(int argc, char **argv) {
       o.paint_rate = "game";  // P10E
       o.sprite_native = false;  // P10D
       o.sprite_filter = 0;      // P10H
+      o.line_native = false;    // P10I fix 1
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

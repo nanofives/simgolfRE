@@ -1004,6 +1004,11 @@ static void hud_publish(Gfx &g) {
     }
     f.carried = carried ? 1 : 0;
     if (!c.cursor2d.empty()) f.cursor2d = c.cursor2d;  // P9E fix 4
+    if (!c.lines.empty() && c.line800.size() == g.root.px.size()) {  // P10I fix 1
+      f.lines = c.lines;
+      f.line800 = c.line800;
+      f.line_word = c.line_word;
+    }
     hud_pieces_publish(g, f);  // P9E
   } else {
     f.none = c.depth > 0 ? 2 : 1;
