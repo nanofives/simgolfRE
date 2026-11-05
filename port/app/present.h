@@ -223,6 +223,9 @@ class Presenter {
   bool layered() const;                                                                                // P9B
   void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9B
   mutable std::vector<uint32_t> scratch_;
+  mutable std::vector<uint32_t> base_bgra_;  // P10A: render's BGRA copy of the base (smooth path)
+  mutable std::vector<int32_t> base_lx_, cw_tab_, cl_tab_;  // P10A: render / compose_world / compose_layers column tables
+  const uint8_t *base_hidden(const Viewport &vp, bool text) const;  // P10A
   int overlay_mode_ = 0;                                   // P10A
   mutable std::unique_ptr<TextRaster> overlay_raster_;     // P10A
   mutable uint32_t painted_set_ = 0;                       // P10A: frames_set_ at the last paint

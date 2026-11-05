@@ -20,8 +20,100 @@
 
 #include "portsim/sim/perf.h"  // P10A: perf_now_ns
 #include "profile.h"           // P10A
+#include <atomic>              // P10A: RowPool
+#include <condition_variable>
+#include <cstdlib>
+#include <functional>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 namespace portapp {
+
+// P10A: the rows of one compose loop split over worker threads. The loops it runs (render's base scale, compose_world's world
+// pass, each compose_layers pass) read the frame's planes and the presenter's tables and write each client row from that row's own
+// pixels only, so a row's result does not depend on which thread ran it or in what order: the image is the same as one thread's.
+// Workers: min(4, hardware threads / 2) - 1 plus the calling (window) thread; SG_PAINT_THREADS=<n> sets the total (1 = no workers).
+namespace {
+class RowPool {
+ public:
+  static RowPool &get() {
+    static RowPool p;
+    return p;
+  }
+  // fn(ya, yb) over [y0, y1) in chunks; returns when every chunk ran
+  void run(int32_t y0, int32_t y1, const std::function<void(int32_t, int32_t)> &fn) {
+    const int32_t n = y1 - y0;
+    const int32_t parts = std::min<int32_t>(static_cast<int32_t>(workers_.size()) + 1, n / 32);
+    if (parts <= 1) {
+      if (n > 0) fn(y0, y1);
+      return;
+    }
+    {
+      std::lock_guard<std::mutex> lk(mu_);
+      fn_ = &fn;
+      y0_ = y0;
+      n_ = n;
+      parts_ = parts;
+      next_.store(0);
+      pending_ = parts;
+      ++gen_;
+    }
+    cv_.notify_all();
+    work();
+    std::unique_lock<std::mutex> lk(mu_);
+    done_.wait(lk, [&] { return pending_ == 0; });
+    fn_ = nullptr;
+  }
+  ~RowPool() {
+    {
+      std::lock_guard<std::mutex> lk(mu_);
+      stop_ = true;
+    }
+    cv_.notify_all();
+    for (std::thread &t : workers_) t.join();
+  }
+
+ private:
+  RowPool() {
+    int total = 0;
+    if (const char *e = std::getenv("SG_PAINT_THREADS")) total = std::atoi(e);
+    if (total <= 0) total = std::min(4, std::max(1, static_cast<int>(std::thread::hardware_concurrency()) / 2));
+    for (int i = 1; i < total; ++i) workers_.emplace_back([this] { loop(); });
+  }
+  void work() {  // takes chunks until none is left
+    for (;;) {
+      const int32_t k = next_.fetch_add(1);
+      if (k >= parts_) return;
+      const int32_t a = y0_ + static_cast<int32_t>(static_cast<int64_t>(n_) * k / parts_);
+      const int32_t b = y0_ + static_cast<int32_t>(static_cast<int64_t>(n_) * (k + 1) / parts_);
+      (*fn_)(a, b);
+      std::lock_guard<std::mutex> lk(mu_);
+      if (--pending_ == 0) done_.notify_all();
+    }
+  }
+  void loop() {
+    uint64_t seen = 0;
+    for (;;) {
+      {
+        std::unique_lock<std::mutex> lk(mu_);
+        cv_.wait(lk, [&] { return stop_ || gen_ != seen; });
+        if (stop_) return;
+        seen = gen_;
+      }
+      work();
+    }
+  }
+  std::vector<std::thread> workers_;
+  std::mutex mu_;
+  std::condition_variable cv_, done_;
+  const std::function<void(int32_t, int32_t)> *fn_ = nullptr;
+  int32_t y0_ = 0, n_ = 0, parts_ = 0, pending_ = 0;
+  std::atomic<int32_t> next_{0};
+  uint64_t gen_ = 0;
+  bool stop_ = false;
+};
+}  // namespace
 
 Viewport fit_viewport(int32_t cw, int32_t ch) {
   Viewport v;
@@ -171,6 +263,20 @@ ScaleMode Presenter::effective_scale(int32_t w, int32_t h) const {
   return integer ? ScaleMode::Nearest : ScaleMode::Smooth;
 }
 
+// P10A: the logical mask under which compose_world writes the world over every content-rectangle pixel of this paint (the base's
+// pixels there are never seen, so render does not compute them), or null. compose_world's `wmask` (mask_text when the runs are
+// drawn), its mask test (lx, ly by the floor mapping) and its range tests: a content pixel's world position lies inside the world
+// (x in [ox - 1, ox + fw), y in [-1, ph)) when 0 <= ox and ox + fw <= pw. The anchor path's frame_img copy is read only where that
+// mask is 0. Null with the mask-ignored control or a world whose geometry is not that.
+const uint8_t *Presenter::base_hidden(const Viewport &vp, bool text) const {
+  const WorldImage &w = world_;
+  if (w.empty() || defect_ == PresentDefect::WorldMaskIgnored || vp.client_w <= 0 || vp.client_h <= 0) return nullptr;
+  if (w.ox < 0 || w.fw <= 0 || w.ox + w.fw > w.pw || w.ph <= 0) return nullptr;
+  const bool wtext = text && w.mask_text.size() == w.mask.size() && w.px_text.size() == w.px.size();
+  const std::vector<uint8_t> &m = wtext ? w.mask_text : w.mask;
+  return m.size() == static_cast<size_t>(kLogicalW) * kLogicalH ? m.data() : nullptr;
+}
+
 void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vpo) const {
   const ProfScope prof(Phase::Base);  // P10A
   const Viewport vp = fit_viewport(cw, ch);
@@ -185,8 +291,15 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
                                       : text && text_defect_ != TextDefect::Unremoved ? text_.clean : frame_;
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
-    std::vector<uint32_t> src(fsrc.size());
+    std::vector<uint32_t> &src = base_bgra_;  // P10A: kept between paints
+    src.resize(fsrc.size());
     for (size_t i = 0; i < fsrc.size(); ++i) src[i] = rgb555_to_bgra(fsrc[i]);
+    const uint8_t *hidden = base_hidden(vp, text);  // P10A
+    std::vector<int32_t> &hlx = base_lx_;
+    if (hidden) {
+      hlx.resize(static_cast<size_t>(vp.client_w));
+      for (int32_t x = 0; x < vp.client_w; ++x) hlx[static_cast<size_t>(x)] = static_cast<int32_t>(static_cast<int64_t>(x) * kLogicalW / vp.client_w);
+    }
     struct Tap {
       int32_t i0, i1;
       uint32_t f;  // weight of i1, 0..256
@@ -213,17 +326,21 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
       const uint32_t ag = ((((a >> 8) & 0x00ff00ffu) * g + ((b >> 8) & 0x00ff00ffu) * f) >> 8) & 0x00ff00ffu;
       return rb | (ag << 8);
     };
-    for (int32_t y = 0; y < vp.client_h; ++y) {
-      const Tap &v = ty[static_cast<size_t>(y)];
-      const uint32_t *s0 = src.data() + static_cast<size_t>(v.i0) * kLogicalW;
-      const uint32_t *s1 = src.data() + static_cast<size_t>(v.i1) * kLogicalW;
-      uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
-      for (int32_t x = 0; x < vp.client_w; ++x) {
-        const Tap &u = tx[static_cast<size_t>(x)];
-        const uint32_t a = mix(s0[u.i0], s0[u.i1], u.f), b = mix(s1[u.i0], s1[u.i1], u.f);
-        dst[x] = mix(a, b, v.f) | 0xff000000u;
+    RowPool::get().run(0, vp.client_h, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+      for (int32_t y = ya; y < yb; ++y) {
+        const Tap &v = ty[static_cast<size_t>(y)];
+        const uint32_t *s0 = src.data() + static_cast<size_t>(v.i0) * kLogicalW;
+        const uint32_t *s1 = src.data() + static_cast<size_t>(v.i1) * kLogicalW;
+        uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
+        const uint8_t *hrow = hidden ? hidden + static_cast<size_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h) * kLogicalW : nullptr;
+        for (int32_t x = 0; x < vp.client_w; ++x) {
+          if (hrow && hrow[hlx[static_cast<size_t>(x)]]) continue;  // P10A: the world covers it
+          const Tap &u = tx[static_cast<size_t>(x)];
+          const uint32_t a = mix(s0[u.i0], s0[u.i1], u.f), b = mix(s1[u.i0], s1[u.i1], u.f);
+          dst[x] = mix(a, b, v.f) | 0xff000000u;
+        }
       }
-    }
+    });
     if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
     if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
     if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
@@ -232,12 +349,17 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
   std::vector<int32_t> col(static_cast<size_t>(vp.client_w));
   for (int32_t x = 0; x < vp.client_w; ++x)
     col[static_cast<size_t>(x)] = static_cast<int32_t>(static_cast<int64_t>(x) * kLogicalW / vp.client_w);
-  for (int32_t y = 0; y < vp.client_h; ++y) {
-    const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h);
-    const uint16_t *src = fsrc.data() + static_cast<size_t>(ly) * kLogicalW;
-    uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
-    for (int32_t x = 0; x < vp.client_w; ++x) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
-  }
+  const uint8_t *hidden = base_hidden(vp, text);  // P10A
+  RowPool::get().run(0, vp.client_h, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+    for (int32_t y = ya; y < yb; ++y) {
+      const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h);
+      const uint16_t *src = fsrc.data() + static_cast<size_t>(ly) * kLogicalW;
+      uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
+      const uint8_t *hrow = hidden ? hidden + static_cast<size_t>(ly) * kLogicalW : nullptr;  // P10A: the world covers those
+      for (int32_t x = 0; x < vp.client_w; ++x)
+        if (!hrow || !hrow[col[static_cast<size_t>(x)]]) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
+    }
+  });
   if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
   if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
   if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
@@ -380,38 +502,50 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
     const uint32_t ag = ((((a >> 8) & 0x00ff00ffu) * g + ((b >> 8) & 0x00ff00ffu) * f) >> 8) & 0x00ff00ffu;
     return rb | (ag << 8);
   };
-  auto at = [&](int64_t xx, int64_t yy) -> uint32_t {
-    if (xx < 0) xx = 0;
-    if (yy < 0) yy = 0;
-    if (xx >= w.pw) xx = w.pw - 1;
-    if (yy >= w.ph) yy = w.ph - 1;
-    return pal[wpx[static_cast<size_t>(yy) * static_cast<size_t>(w.pw) + static_cast<size_t>(xx)] & 0x7fff];
-  };
-  for (int32_t y = 0; y < ch; ++y) {
-    const int64_t sy = wy[static_cast<size_t>(y)];
-    const int64_t y0 = sy >> 8;
-    if (y0 < -2 || y0 >= w.ph + 2) continue;  // rows outside the world stay as they are (within 2: the edge row, `at`)
-    const bool row_in = y >= vp.origin_y && y < vp.origin_y + vp.client_h;
-    const int32_t ly = row_in ? static_cast<int32_t>(static_cast<int64_t>(y - vp.origin_y) * kLogicalH / vp.client_h) : 0;
-    uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
-    for (int32_t x = 0; x < cw; ++x) {
-      if (row_in && x >= vp.origin_x && x < vp.origin_x + vp.client_w) {
-        const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp.origin_x) * kLogicalW / vp.client_w);
-        if (defect_ != PresentDefect::WorldMaskIgnored && !maskp[static_cast<size_t>(ly) * kLogicalW + static_cast<size_t>(lx)])
-          continue;  // the frame's own pixel
-      }
-      const int64_t sx = wx[static_cast<size_t>(x)];
-      const int64_t x0 = sx >> 8;
-      if (x0 < -2 || x0 >= w.pw + 2) continue;  // columns outside the world stay as they are (within 2: the edge column, `at`)
-      if (nearest) {
-        dst[x] = at(x0, y0);
-      } else {
-        const uint32_t fx = static_cast<uint32_t>(sx & 255), fy = static_cast<uint32_t>(sy & 255);
-        const uint32_t a = mix(at(x0, y0), at(x0 + 1, y0), fx), b = mix(at(x0, y0 + 1), at(x0 + 1, y0 + 1), fx);
-        dst[x] = mix(a, b, fy) | 0xff000000u;
+  // P10A: per column and per row once: the world pixel index of the tap and of its right / lower neighbour clamped into the world
+  // (as `at` clamped them), the weight, whether the column / row is outside the world, and the column's logical x (-1 outside the
+  // content rectangle); then the pixel loop does no division and no clamp
+  std::vector<int32_t> &ct = cw_tab_;
+  ct.resize(static_cast<size_t>(cw) * 4);
+  auto clampi = [](int64_t v, int32_t n) { return static_cast<int32_t>(v < 0 ? 0 : v >= n ? n - 1 : v); };
+  for (int32_t x = 0; x < cw; ++x) {
+    const int64_t sx = wx[static_cast<size_t>(x)];
+    const int64_t x0 = sx >> 8;
+    int32_t *c = ct.data() + static_cast<size_t>(x) * 4;
+    c[0] = x0 < -2 || x0 >= w.pw + 2 ? -1 : clampi(x0, w.pw);  // -1: outside the world (stays as it is)
+    c[1] = clampi(x0 + 1, w.pw);
+    c[2] = static_cast<int32_t>(sx & 255);
+    c[3] = x >= vp.origin_x && x < vp.origin_x + vp.client_w
+               ? static_cast<int32_t>(static_cast<int64_t>(x - vp.origin_x) * kLogicalW / vp.client_w)
+               : -1;
+  }
+  const bool mask_on = defect_ != PresentDefect::WorldMaskIgnored;
+  RowPool::get().run(0, ch, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+    for (int32_t y = ya; y < yb; ++y) {
+      const int64_t sy = wy[static_cast<size_t>(y)];
+      const int64_t y0 = sy >> 8;
+      if (y0 < -2 || y0 >= w.ph + 2) continue;  // rows outside the world stay as they are (within 2: the edge row, clamped)
+      const bool row_in = y >= vp.origin_y && y < vp.origin_y + vp.client_h;
+      const int32_t ly = row_in ? static_cast<int32_t>(static_cast<int64_t>(y - vp.origin_y) * kLogicalH / vp.client_h) : 0;
+      const uint8_t *mrow = maskp + static_cast<size_t>(ly) * kLogicalW;
+      const uint16_t *r0 = wpx.data() + static_cast<size_t>(clampi(y0, w.ph)) * static_cast<size_t>(w.pw);
+      const uint16_t *r1 = wpx.data() + static_cast<size_t>(clampi(y0 + 1, w.ph)) * static_cast<size_t>(w.pw);
+      const uint32_t fy = static_cast<uint32_t>(sy & 255);
+      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+      for (int32_t x = 0; x < cw; ++x) {
+        const int32_t *c = ct.data() + static_cast<size_t>(x) * 4;
+        if (row_in && c[3] >= 0 && mask_on && !mrow[c[3]]) continue;  // the frame's own pixel
+        if (c[0] < 0) continue;  // columns outside the world stay as they are (within 2: the edge column, clamped)
+        if (nearest) {
+          dst[x] = pal[r0[c[0]] & 0x7fff];
+        } else {
+          const uint32_t fx = static_cast<uint32_t>(c[2]);
+          const uint32_t a = mix(pal[r0[c[0]] & 0x7fff], pal[r0[c[1]] & 0x7fff], fx), b = mix(pal[r1[c[0]] & 0x7fff], pal[r1[c[1]] & 0x7fff], fx);
+          dst[x] = mix(a, b, fy) | 0xff000000u;
+        }
       }
     }
-  }
+  });
   if (layers) {
     compose_layers(out, cw, ch, vp);
     return;
@@ -662,28 +796,38 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
     const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(l.y0 - 1) * vp.client_h / kLogicalH) - 1);
     const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(l.y1 + 1) * vp.client_h / kLogicalH) + 1);
-    for (int32_t y = cy0; y < cy1; ++y) {
-      const int64_t sy = lpos(y, vp.origin_y, vp.client_h, kLogicalH);
-      const int32_t ly0 = floor256(sy);
-      const uint32_t fy = static_cast<uint32_t>(sy - static_cast<int64_t>(ly0) * 256);
-      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
-      for (int32_t x = cx0; x < cx1; ++x) {
-        const int64_t sx = lpos(x - dx, vp.origin_x, vp.client_w, kLogicalW);
-        const int32_t lx0 = floor256(sx);
-        if (nearest) {
-          if (const portsim::GfxLayerPx *p = tap(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
-          continue;
-        }
-        const uint32_t fx = static_cast<uint32_t>(sx - static_cast<int64_t>(lx0) * 256);
-        const portsim::GfxLayerPx *p00 = tap(lx0, ly0), *p10 = tap(lx0 + 1, ly0), *p01 = tap(lx0, ly0 + 1),
-                                  *p11 = tap(lx0 + 1, ly0 + 1);
-        if (!p00 && !p10 && !p01 && !p11) continue;
-        const uint32_t d = dst[x];
-        const uint32_t c00 = p00 ? over(*p00, d) : d, c10 = p10 ? over(*p10, d) : d, c01 = p01 ? over(*p01, d) : d,
-                       c11 = p11 ? over(*p11, d) : d;
-        dst[x] = mix(mix(c00, c10, fx), mix(c01, c11, fx), fy) | 0xff000000u;
-      }
+    // P10A: each column's 800-space position (lpos, floor256) once per pass instead of per pixel
+    std::vector<int32_t> &cl = cl_tab_;
+    cl.resize(static_cast<size_t>(std::max<int32_t>(0, cx1 - cx0)) * 2);
+    for (int32_t x = cx0; x < cx1; ++x) {
+      const int64_t sx = lpos(x - dx, vp.origin_x, vp.client_w, kLogicalW);
+      const int32_t lx0 = floor256(sx);
+      cl[static_cast<size_t>(x - cx0) * 2] = lx0;
+      cl[static_cast<size_t>(x - cx0) * 2 + 1] = static_cast<int32_t>(sx - static_cast<int64_t>(lx0) * 256);
     }
+    RowPool::get().run(cy0, cy1, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+      for (int32_t y = ya; y < yb; ++y) {
+        const int64_t sy = lpos(y, vp.origin_y, vp.client_h, kLogicalH);
+        const int32_t ly0 = floor256(sy);
+        const uint32_t fy = static_cast<uint32_t>(sy - static_cast<int64_t>(ly0) * 256);
+        uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+        for (int32_t x = cx0; x < cx1; ++x) {
+          const int32_t lx0 = cl[static_cast<size_t>(x - cx0) * 2];
+          if (nearest) {
+            if (const portsim::GfxLayerPx *p = tap(lx0, ly0)) dst[x] = over(*p, dst[x]) | 0xff000000u;
+            continue;
+          }
+          const uint32_t fx = static_cast<uint32_t>(cl[static_cast<size_t>(x - cx0) * 2 + 1]);
+          const portsim::GfxLayerPx *p00 = tap(lx0, ly0), *p10 = tap(lx0 + 1, ly0), *p01 = tap(lx0, ly0 + 1),
+                                    *p11 = tap(lx0 + 1, ly0 + 1);
+          if (!p00 && !p10 && !p01 && !p11) continue;
+          const uint32_t d = dst[x];
+          const uint32_t c00 = p00 ? over(*p00, d) : d, c10 = p10 ? over(*p10, d) : d, c01 = p01 ? over(*p01, d) : d,
+                         c11 = p11 ? over(*p11, d) : d;
+          dst[x] = mix(mix(c00, c10, fx), mix(c01, c11, fx), fy) | 0xff000000u;
+        }
+      }
+    });
     }  // P9E: the pass loop
   }
   if (cur_layer == f.layers.size()) draw_cursor();  // P9E fix 4: after every layer
