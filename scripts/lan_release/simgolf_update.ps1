@@ -8,8 +8,9 @@
     game locks its exe and DLLs.
 
     Saves and recordings are not in this folder (they live in %LOCALAPPDATA%\SimGolfPort) and are never touched.
-    Files under game\ that the server no longer ships (an older build's) are deleted; -NoPrune keeps them.
-    Nothing outside game\ is ever deleted.
+    Files in this folder that the server no longer ships (an older build's leftovers) are deleted; -NoPrune keeps
+    them. Saved games (*.sve, "Saved Games" folders), settings (*.ini, *.cfg, *.json) and shortcuts (*.lnk) are
+    always kept. Nothing outside this folder is ever deleted.
 
 .USAGE
     Double-click update.bat, or:
@@ -139,29 +140,38 @@ foreach ($f in $toGet) {
     }
 }
 
-# --- 4. prune (default): files under game\ the server no longer ships; nothing else is ever touched --------------
+# --- 4. prune (default): every file in this folder the server no longer ships, except saves and settings ----------
+# Kept (2026-11-05): saved games (*.sve, anything under a "Saved Games" folder), settings (*.ini, *.cfg, *.json),
+# and the shortcut this script makes (*.lnk). Leftover *.dl_tmp files from a failed download are deleted. Saves and
+# settings the port writes live in %LOCALAPPDATA%\SimGolfPort, which this script never touches.
+function Test-KeepLocal([System.IO.FileInfo]$fi) {
+    $rel = $fi.FullName.Substring($InstallRoot.Length + 1).ToLower()
+    if ($rel -match '(^|\\)saved games\\') { return $true }
+    return @('.sve', '.ini', '.cfg', '.json', '.lnk') -contains $fi.Extension.ToLower()
+}
 $pruned = 0
 if (-not $NoPrune) {
     $keep = New-Object System.Collections.Generic.HashSet[string]
     foreach ($f in $files) { [void]$keep.Add((Join-Path $InstallRoot ($f.path -replace '/', '\')).ToLower()) }
-    $gameDir = Join-Path $InstallRoot 'game'
-    if (Test-Path -LiteralPath $gameDir) {
-        $all = @(Get-ChildItem -LiteralPath $gameDir -Recurse -File)
-        $stale = @($all | Where-Object { -not $keep.Contains($_.FullName.ToLower()) })
-        # a broken manifest must not empty the folder: above half of game\ needs an explicit -Prune
-        if ($stale.Count * 2 -gt $all.Count -and -not $Prune) {
-            Write-Host ("  ! prune skipped: {0} of {1} files under game\ are not in the manifest (run with -Prune to delete them)" -f $stale.Count, $all.Count) -ForegroundColor Red
-        } else {
-            foreach ($f in $stale) {
+    $all = @(Get-ChildItem -LiteralPath $InstallRoot -Recurse -File -Force)
+    $stale = @($all | Where-Object { -not $keep.Contains($_.FullName.ToLower()) -and -not (Test-KeepLocal $_) })
+    # a broken manifest must not empty the folder: above half of it needs an explicit -Prune
+    if ($stale.Count * 2 -gt $all.Count -and -not $Prune) {
+        Write-Host ("  ! prune skipped: {0} of {1} files in this folder are not in the manifest (run with -Prune to delete them)" -f $stale.Count, $all.Count) -ForegroundColor Red
+    } else {
+        foreach ($f in $stale) {
+            try {
                 Remove-Item -LiteralPath $f.FullName -Force
                 Write-Host ("  - pruned {0}" -f $f.FullName.Substring($InstallRoot.Length + 1)) -ForegroundColor DarkYellow
                 $pruned++
+            } catch {
+                Write-Host ("      ! could not delete {0}: {1}" -f $f.FullName, $_.Exception.Message) -ForegroundColor Red
             }
-            # folders the old files leave empty, deepest first
-            Get-ChildItem -LiteralPath $gameDir -Recurse -Directory | Sort-Object { $_.FullName.Length } -Descending |
-                Where-Object { -not (Get-ChildItem -LiteralPath $_.FullName -Force) } |
-                ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
         }
+        # folders the old files leave empty, deepest first (never the install folder itself)
+        Get-ChildItem -LiteralPath $InstallRoot -Recurse -Directory -Force | Sort-Object { $_.FullName.Length } -Descending |
+            Where-Object { -not (Get-ChildItem -LiteralPath $_.FullName -Force) } |
+            ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
     }
 }
 
