@@ -372,7 +372,10 @@ bool Presenter::objects_tick(int64_t now_ns) {
   const double T = period_ns_ > 0 ? period_ns_ : 93e6;
   const double t = std::min(1.0, std::max(0.0, static_cast<double>(now_ns - objects_t0_) / T));
   // P12A fix 3: the repaint cap (the last place of a frame, t = 1, is drawn whenever it is due)
-  if (object_min_ns_ > 0 && t < 1.0 && static_cast<double>(now_ns - object_last_ns_) < object_min_ns_) return false;
+  // P14A fix 2: --object-rate auto decides the cap from the path and the client size of the last paint
+  const int auto_hz = object_auto_ ? object_rate_now() : 0;
+  const double min_ns = object_auto_ ? (auto_hz > 0 ? 1e9 / auto_hz : 0.0) : object_min_ns_;
+  if (min_ns > 0 && t < 1.0 && static_cast<double>(now_ns - object_last_ns_) < min_ns) return false;
   const double kx = static_cast<double>(world_.fw) / kLogicalW, ky = static_cast<double>(ph) / kLogicalH;
   // the offsets now, to a quarter of a world pixel; nothing to draw when none changed
   bool changed = false;
@@ -445,6 +448,11 @@ bool Presenter::objects_tick(int64_t now_ns) {
   object_stats_.redraw_ns += portsim::perf_now_ns() - t0;
   changed_pending_ = true;
   return true;
+}
+
+int Presenter::object_rate_now() const {  // P14A fix 2
+  if (!object_auto_) return object_min_ns_ > 0 ? static_cast<int>(std::lround(1e9 / object_min_ns_)) : 0;
+  return gpu_on() && painted_px_ > 0 && painted_px_ <= kObjectAutoPx ? 0 : kObjectAutoHz;
 }
 
 void Presenter::frame_objects(int32_t tagged[8], int32_t moving[8]) const {
@@ -1870,6 +1878,7 @@ void Presenter::draw_overlay_rect(std::vector<uint32_t> &out, int32_t cw, int32_
 #ifdef _WIN32
 void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   if (cw <= 0 || ch <= 0) return;
+  painted_px_ = static_cast<int64_t>(cw) * ch;  // P14A fix 2 (object_rate_now)
   if (gpu_ && gpu_->ok()) {  // P14A: the GPU path (gpu.cpp)
     paint_gpu(cw, ch);
     return;

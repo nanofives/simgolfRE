@@ -483,6 +483,13 @@ struct GpuCompositor::Impl {
   int32_t gin[4] = {0, 0, 0, 0};  // fill_gap's world rectangle at this paint's slide (x0, x1, y0, y1)
   uint64_t prev_fetch_gen = ~0ull;
   uint64_t prev_fetches = 0;
+  // fix 2: what changed under the final patches since their last build
+  std::vector<std::array<int32_t, 4>> wdirty;  // world rectangles uploaded (upload_world)
+  bool wdirty_all = false;                    // the whole world image was uploaded
+  std::vector<Rect> cchanged;                 // client rectangles: the mover labels' course patches before and after a rebuild
+  int32_t f_slx = 0, f_sly = 0, f_cdx = 0, f_shx = 0, f_shy = 0;  // the offsets of the last build
+  int32_t c2_box[4] = {0, 0, 0, 0};           // the frame's cursor2d pixels' 800-space box (upload_frame; empty when none)
+  uint64_t final_dep_renders = 0, final_dep_kept = 0;
   // the profile's GPU time: timestamp query sets in a ring, read one paint late
   struct Ts {
     ID3D11Query *dis = nullptr, *a = nullptr, *b = nullptr;
@@ -860,7 +867,9 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
               wpx.data() + static_cast<size_t>(y0) * static_cast<size_t>(W.pw) + static_cast<size_t>(x0), static_cast<uint32_t>(W.pw) * 2u);
     }
     ++d.world_rect_uploads;
+    d.wdirty.insert(d.wdirty.end(), P.world_dirty_.begin(), P.world_dirty_.end());
   } else {
+    d.wdirty_all = true;
     if (!make_tex(d.dev, d.world, W.pw, W.ph, DXGI_FORMAT_R16_UINT, false)) return;
     put_tex(d.ctx, d.world, 0, 0, W.pw, W.ph, wpx.data(), static_cast<uint32_t>(W.pw) * 2u);
     ++d.world_uploads;
@@ -982,13 +991,19 @@ void GpuCompositor::upload_frame(const Presenter &P, const Viewport &vp, bool te
   // the per-pixel tables: owner piece, cursor2d, cur_mask, line800, line_word
   std::vector<uint32_t> tabs(static_cast<size_t>(LW) * LH, 0);
   const bool own = f.owner.size() == tabs.size(), c2 = f.cursor2d.size() == tabs.size(), cm = W.cur_mask.size() == tabs.size();
-  d.c2_any = c2 && std::find(f.cursor2d.begin(), f.cursor2d.end(), static_cast<uint8_t>(1)) != f.cursor2d.end();
-  if (c2 && !d.c2_any)
-    for (uint8_t v : f.cursor2d)
-      if (v) {
-        d.c2_any = true;
-        break;
-      }
+  d.c2_any = false;
+  d.c2_box[0] = d.c2_box[1] = LW;
+  d.c2_box[2] = d.c2_box[3] = 0;
+  if (c2)
+    for (int32_t y = 0; y < LH; ++y)
+      for (int32_t x = 0; x < LW; ++x)
+        if (f.cursor2d[static_cast<size_t>(y) * LW + static_cast<size_t>(x)]) {
+          d.c2_any = true;
+          d.c2_box[0] = std::min(d.c2_box[0], x);
+          d.c2_box[1] = std::min(d.c2_box[1], y);
+          d.c2_box[2] = std::max(d.c2_box[2], x + 1);
+          d.c2_box[3] = std::max(d.c2_box[3], y + 1);
+        }
   const bool lm = f.line800.size() == tabs.size() && f.line_word.size() == tabs.size();
   for (size_t i = 0; i < tabs.size(); ++i) {
     uint32_t t = own ? f.owner[i] : 0u;
@@ -1330,9 +1345,51 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
     }
     d.fbuf.assign(static_cast<size_t>(d.atlas_fw) * static_cast<size_t>(std::max(1, d.fstat_h)), 0);
     for (const Impl::FRect &fr : d.fstat) render_into(fr.r, fr.ax, fr.ay, false);
-  } else if (new_dyn) {  // the dependent static rectangles again
-    for (const Impl::FRect &fr : d.fstat)
-      if (fr.dep) render_into(fr.r, fr.ax, fr.ay, false);
+  } else if (new_dyn) {  // the dependent static rectangles again, where the picture under them changed (fix 2)
+    const bool all = slx != d.f_slx || sly != d.f_sly || d.wdirty_all;  // the course moved: every one
+    std::vector<Rect> changed = d.cchanged;
+    const WorldImage &W = P.world_;
+    if (!all && W.fw > 0 && W.ph > 0) {
+      auto lo = [](int64_t a, int64_t b) { return static_cast<int32_t>(a >= 0 ? a / b : -((-a + b - 1) / b)); };
+      for (const std::array<int32_t, 4> &r : d.wdirty)  // world pixels -> client (compose_world's mapping inverted), 3 px margin
+        changed.push_back(Rect{vp.origin_x + slx + lo(static_cast<int64_t>(r[0] - W.ox) * vp.client_w, W.fw) - 3,
+                               vp.origin_y + sly + lo(static_cast<int64_t>(r[1]) * vp.client_h, W.ph) - 3,
+                               vp.origin_x + slx + lo(static_cast<int64_t>(r[2] - W.ox) * vp.client_w + W.fw - 1, W.fw) + 3,
+                               vp.origin_y + sly + lo(static_cast<int64_t>(r[3]) * vp.client_h + W.ph - 1, W.ph) + 3});
+      // the tool previews at the last build's and this build's offsets (draw_cursor's box; the 2D preview pixels' box)
+      auto previews = [&](int32_t pdx, int32_t psx, int32_t psy) {
+        if (d.cur_on) {
+          const int32_t cox = vp.origin_x + pdx + psx + slx, coy = vp.origin_y + psy + sly;
+          changed.push_back(Rect{cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 2,
+                                 coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 2,
+                                 cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 3,
+                                 coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 3});
+        }
+        if (d.c2_any) {
+          const int32_t ox = vp.origin_x + pdx + psx + slx, oy = vp.origin_y + psy + sly;
+          changed.push_back(Rect{ox + d.c2_box[0] * vp.client_w / kLogicalW - 3, oy + d.c2_box[1] * vp.client_h / kLogicalH - 3,
+                                 ox + d.c2_box[2] * vp.client_w / kLogicalW + 4, oy + d.c2_box[3] * vp.client_h / kLogicalH + 4});
+        }
+      };
+      if (cdx != d.f_cdx || shx != d.f_shx || shy != d.f_shy) {
+        previews(d.f_cdx, d.f_shx, d.f_shy);
+        previews(cdx, shx, shy);
+      }
+    }
+    auto meets = [&](const Rect &a) {
+      for (const Rect &b : changed)
+        if (a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1) return true;
+      return false;
+    };
+    for (const Impl::FRect &fr : d.fstat) {
+      if (!fr.dep) continue;
+      if (all || meets(fr.r)) {
+        render_into(fr.r, fr.ax, fr.ay, false);
+        ++d.final_dep_renders;
+      } else {
+        ++d.final_dep_kept;
+      }
+    }
   }
   // the dynamic set and the overlay after the static rows (re-packed at every change)
   std::vector<Rect> rest = drects;
@@ -1365,6 +1422,14 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
   d.fstat_key = sk;
   d.fdyn_key = dk;
   d.fov_ok = true;
+  d.f_slx = slx;
+  d.f_sly = sly;
+  d.f_cdx = cdx;
+  d.f_shx = shx;
+  d.f_shy = shy;
+  d.wdirty.clear();
+  d.wdirty_all = false;
+  d.cchanged.clear();
 }
 
 // ---- a paint
@@ -1418,7 +1483,10 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
                         static_cast<uint64_t>(ch);
     if (ck != d.course_key) {
       const int64_t t0 = portsim::perf_now_ns();
+      // fix 2: the final patches over the course patches' old and new places see a changed course picture
+      for (const QuadRec &q : d.qc) d.cchanged.push_back(Rect{q.dx + slx, q.dy + sly, q.dx + q.w + slx, q.dy + q.h + sly});
       build_course_patches(P, vp, text);
+      for (const QuadRec &q : d.qc) d.cchanged.push_back(Rect{q.dx + slx, q.dy + sly, q.dx + q.w + slx, q.dy + q.h + sly});
       d.course_key = ck;
       d.ns_course += portsim::perf_now_ns() - t0;
     }
@@ -1861,7 +1929,8 @@ std::string GpuCompositor::json() const {
                 "\"verify_max_px\":%llu,\"verify_first\":\"%s\",\"shots\":%llu,\"world_rect_uploads\":%llu,\"ms_frame_uploads\":%.1f,"
                 "\"ms_world_uploads\":%.1f,\"ms_course_patches\":%.1f,\"ms_final_patches\":%.1f,\"ms_draw_calls\":%.1f,"
                 "\"final_static_rects\":%llu,\"final_dep_rects\":%llu,\"final_rect_renders\":%llu,\"final_overflow\":%llu,"
-                "\"prev_fetches\":%llu,\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f}",
+                "\"prev_fetches\":%llu,\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f,"
+                "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu}",
                 d.ok ? 1 : 0, esc(d.why).c_str(), static_cast<unsigned long long>(d.paints_layered),
                 static_cast<unsigned long long>(d.paints_full), static_cast<unsigned long long>(d.frame_uploads),
                 static_cast<unsigned long long>(d.world_uploads), static_cast<unsigned long long>(d.course_builds),
@@ -1877,7 +1946,8 @@ std::string GpuCompositor::json() const {
                 static_cast<unsigned long long>(d.final_static_rects), static_cast<unsigned long long>(d.final_dep_rects),
                 static_cast<unsigned long long>(d.final_rect_renders), static_cast<unsigned long long>(d.final_overflow),
                 static_cast<unsigned long long>(d.prev_fetches), d.shade_mono, static_cast<unsigned long long>(d.classify_off), d.latency,
-                static_cast<double>(d.ns_wait) / 1e6, static_cast<double>(d.ns_present) / 1e6);
+                static_cast<double>(d.ns_wait) / 1e6, static_cast<double>(d.ns_present) / 1e6,
+                static_cast<unsigned long long>(d.final_dep_renders), static_cast<unsigned long long>(d.final_dep_kept));
   return b;
 }
 

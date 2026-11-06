@@ -99,7 +99,8 @@
 //   golfers, staff, animals, flyers and residents are drawn between two game frames at the blend of their two places (one frame
 //   late), the ball in flight and its shadow ahead by their last step (present.h Presenter::objects_tick; the frame code tags its
 //   queue entries render-only: gfx.h gfx_mover_source). P12A fix 3: --object-rate <hz> (default 30; 0 = every pacer tick) the most
-//   object redraws per second (a camera slide still paints at the pacer's rate).
+//   object redraws per second (a camera slide still paints at the pacer's rate). P14A fix 2: --object-rate auto (the default) = every
+//   pacer tick while the GPU path paints a client of at most 1920 x 1200 pixels, else 30 (P14A_notes.md section 4).
 //   P14A: --gpu on|off (default on; SG_APP_P14=off: off) the window's picture composed and presented by the GPU (gpu.h: Direct3D 11,
 //   a flip-model swap chain, vsync): the same pixels as the CPU path (Presenter::render), drawn at the display's refresh without the
 //   CPU paint's cost. off (or no D3D11 device / d3dcompiler_47.dll) = the CPU path (SetDIBitsToDevice). stdout says `GPU on|off ...`.
@@ -432,7 +433,7 @@ struct Options {
   bool smooth_camera = true;       // P12A fix 1: --smooth-camera on|off (SG_APP_P12=off: off)
   bool hover_help_course = false;  // P13A: --hover-help course, the course line with no tool too (SG_APP_P13=off: on)
   bool smooth_objects = true;      // P12A fix 2: --smooth-objects on|off (SG_APP_P12=off: off)
-  int object_rate = 30;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick)
+  int object_rate = -1;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick); P14A fix 2: -1 = auto (the default)
   bool gpu = true;                 // P14A: --gpu on|off (SG_APP_P14=off: off)
   bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
@@ -1448,7 +1449,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   const bool smooth_camera = ho.smooth_camera;  // P12A fix 1
   presenter.set_smooth_camera(smooth_camera);
   presenter.set_smooth_objects(ho.smooth_objects);  // P12A fix 2
-  presenter.set_object_rate(o.object_rate);         // P12A fix 3
+  if (o.object_rate < 0) presenter.set_object_rate_auto();  // P14A fix 2
+  else presenter.set_object_rate(o.object_rate);         // P12A fix 3
   Profiler::get().set_fps_changed(smooth_camera || ho.smooth_objects);
   WindowOptions wo;
   wo.remap = ho.remap;  // G32
@@ -1782,7 +1784,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(os.moved_kind[7]) + "}";
     int64_t pub_ns = 0, pub_n = 0;  // P12A fix 3: the sim thread's own cost of the published scenes
     portsim::gfx_hr_scene_cost(pub_ns, pub_n);
-    s += ",\"object_rate\":" + std::to_string(o.object_rate) + ",\"publish_ms_per_frame\":" +
+    s += ",\"object_rate\":" + std::string(o.object_rate < 0 ? "\"auto\"" : std::to_string(o.object_rate)) +
+         ",\"object_rate_now\":" + std::to_string(presenter.object_rate_now()) + ",\"publish_ms_per_frame\":" +
          std::to_string(pub_n ? pub_ns / 1e6 / static_cast<double>(pub_n) : 0.0) + ",\"publishes\":" + std::to_string(pub_n) + "}";
   }
   Profiler::get().close_csv();
@@ -3059,8 +3062,8 @@ bool parse(int argc, char **argv, Options &o) {
     }
     else if (a == "--object-rate") {  // P12A fix 3
       if (!val(v)) return false;
-      o.object_rate = std::atoi(v.c_str());
-      if (o.object_rate < 0 || o.object_rate > 1000) return false;
+      o.object_rate = v == "auto" ? -1 : std::atoi(v.c_str());  // P14A fix 2: auto
+      if (v != "auto" && (o.object_rate < 0 || o.object_rate > 1000)) return false;
     }
     else if (a == "--hover-rate") {  // P10I fix 2
       if (!val(v) || (v != "display" && v != "game")) return false;

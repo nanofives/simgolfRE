@@ -368,7 +368,18 @@ class Presenter {
   bool smooth_objects() const { return objects_on_; }
   bool objects_tick(int64_t now_ns);  // true = the picture changed (the window repaints)
   // P12A fix 3: at most `hz` object redraws per second (0 = every tick that changes an offset; --object-rate)
-  void set_object_rate(int hz) { object_min_ns_ = hz > 0 ? 1e9 / hz : 0.0; }
+  void set_object_rate(int hz) {
+    object_min_ns_ = hz > 0 ? 1e9 / hz : 0.0;
+    object_auto_ = false;
+  }
+  // P14A fix 2 (--object-rate auto): every pacer tick while the GPU path paints a client of at most kObjectAutoPx pixels, else
+  // kObjectAutoHz per second (P14A_notes.md section 4: at 1920 x 1080 the game's own rate did not drop with every tick, at 3840 x 2108
+  // it did; the CPU path's paints cost too much to repaint at every tick)
+  static constexpr int64_t kObjectAutoPx = 1920LL * 1200LL;
+  static constexpr int kObjectAutoHz = 30;
+  void set_object_rate_auto() { object_auto_ = true; }
+  bool object_rate_auto() const { return object_auto_; }
+  int object_rate_now() const;  // the rate objects_tick uses now (0 = every tick)
   const ObjectStats &object_stats() const { return object_stats_; }
   // this frame's tagged draws per GfxMoverKind (in the scene) and of them the ones moving (SG_P12_LOG objects lines)
   void frame_objects(int32_t tagged[8], int32_t moving[8]) const;
@@ -489,6 +500,8 @@ class Presenter {
   CameraSnap prev_cam_;
   int64_t objects_t0_ = 0;
   double object_min_ns_ = 0;      // P12A fix 3 (set_object_rate)
+  bool object_auto_ = false;      // P14A fix 2
+  mutable int64_t painted_px_ = 0;  // P14A fix 2: the client pixels of the last paint
   int64_t object_last_ns_ = 0;    // the last objects_tick that drew
   std::vector<uint16_t> px_orig_, pxt_orig_;  // the frame's world pixels before any object was moved
   std::vector<std::array<int32_t, 4>> patched_;  // the world rectangles the last objects_tick wrote
