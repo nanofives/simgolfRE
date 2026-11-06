@@ -22,6 +22,8 @@
 
 namespace portsim {
 
+extern int g_defect_fairway_stripes_fixed;  // tick.cpp Tile::render.fairwayStripesFixed (P13A item 8)
+
 namespace {
 
 // Negative controls (deliberately wrong bodies, switched with terrain_render_negctl; 0 = the correct body):
@@ -497,6 +499,20 @@ class Renderer {
     uint32_t last = 0xCCCCCCCCu;   // the original's uninitialised cache local: the debug build's stack fill
     const int32_t n = i32(t + kTileFaceCount);
     const int32_t view = g_.view_index;
+    // P13A (Tile::render.fairwayStripesFixed = 0): a fairway / firm fairway tile (types 2 / 3) whose rotation (setType's third
+    // argument: the exe's g_tileVariant byte, 12 + orientation % 12 for a tile the paint tool laid, mainLoop's H2_Terrain) has an
+    // odd orientation takes the texture coordinates of the next view (Terrain.dll's table turns every (u, v) 90 degrees about the
+    // centre from one view to the next) on its faces, so its mowing stripes turn 90 degrees; Tab steps the orientation. The
+    // pieces' borders (FairwayA / FirmFairwayA 0001..0009: piece p is file p + 1) are the same on all four sides for pieces 0, 1,
+    // 3, 4 and 5..8, so those turn whole. Piece 2 has its border on two opposite sides only, which a turn would move to the other
+    // two; on a turned tile a piece-2 face draws piece 0's texture (plain) turned instead, so its stripes match the tile's and it
+    // has no border of its own (measured: kept unturned the tile showed stripes both ways, and piece 1 put a border inside the
+    // turned area; log/roadmap/P13/P13A_notes.md fix 6).
+    int32_t uv_turn = view;
+    if (!SG_DEFECT(g_defect_fairway_stripes_fixed) && (tile_type(t) == 2 || tile_type(t) == 3)) {
+      const int32_t r = i32(t + kTileRotation);
+      if (r >= 12 && r < 24 && ((r - 12) & 1) != 0) uv_turn = (view + 1) & 3;
+    }
     for (int32_t i = 0; i < n; ++i) {
       const uint32_t f = face(t, i);
       uint32_t tex;
@@ -509,13 +525,15 @@ class Renderer {
       } else {
         tex = u32v(f + kFaceTexture);
       }
+      if (uv_turn != view && u8(f + kFaceSlot) == 2)   // P13A: a turned tile's two-sided border piece (see above)
+        tex = texture(static_cast<uint32_t>(tile_type(t)), static_cast<uint32_t>(i32(t + kTileVariation)), 0u);
       if (tex != last || g_negctl_terrain_render == 2) {
         gl_.bind_texture(gl::kTexture2D, tex);
         last = tex;
       }
       gl_.begin(gl::kTriangles);
       for (uint32_t k = 0; k < 3; ++k) {
-        gl_.tex_coord2fv(tex_coord(i32(f + kFaceUv + 8 * k), i32(f + kFaceUv + 8 * k + 4), view));
+        gl_.tex_coord2fv(tex_coord(i32(f + kFaceUv + 8 * k), i32(f + kFaceUv + 8 * k + 4), uv_turn));
         gl_.array_element(i32(f + kFaceVertex + 4 * k));
       }
       gl_.end();

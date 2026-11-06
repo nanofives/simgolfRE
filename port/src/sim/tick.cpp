@@ -139,6 +139,31 @@ int g_defect_camera_step4 = 1;
 // by `g_zoomScale > 4` (the golfer label queue_label ML+0x7518 / ML+0x7aa8 callers, P4_ballLabelDraw ML+0x71b7..ML+0x71c1): zoom 8
 // (P11A, unreachable in the original) took g_font51b360 where zoom 4 takes g_fontRef_519fd8. Fixed (0): the choice uses min(zoom, 4).
 int g_defect_zoom8_font = 1;
+// mainLoop.rightClickKeepsTool (P13A, Mariano's play-test 6 item 11 "right click to deselect"): a right click on the course
+// (Ph_0041ecbb, button word 2, ML+0xfbac) drops an object tool (f_w_4c2848[3] = -1, ML+0xfbe3) but leaves a terrain tool
+// (f_w_4c2848[0]) held and goes on to the right-click undo: the first click marks the tile (buildToolLabel, queueMessage), a
+// second on the same tile runs demolishObject. Fixed (0): with a terrain tool held, a right click on a tile demolishObject has
+// nothing to act on (tick_frame.inc P13A_UndoTarget: blocked, a 0x8000 tile, or no placed object and build code 0xff) drops the
+// tool and does nothing else; on any other tile, and with no tool held, the original's mark / undo runs.
+int g_defect_rclick_keeps_tool = 1;
+// mainLoop.hKeyShotStyleFirst (P13A, Mariano's play-test 6 item 9 "H to open hole is not working (at least on sandbox mode), or
+// maybe not working reliably"): H1's key 0x68 ('h', ML+0xd119) opens the hole (openHole) unless g_panelListMode is 3, the mode
+// updateGolfers sets while the player's golfer waits for its shot (updateGolfers+0x35c2); there 'h' sets g_playerShotStyle = 3
+// and the hole stays shut. Fixed (0): in mode 3 'h' opens the hole when openHole would open it (tick_frame.inc P13A_HoleReady),
+// else it sets the shot style as before.
+int g_defect_h_shot_style = 1;
+// Tile::render.fairwayStripesFixed (P13A, Mariano's play-test 6 item 8 "tab on fairway should rotate it as well"): Tab (H1 key 9,
+// ML+0xd42a) adds 1 to the orientation word g_ui_5a34e4[3] and the terrain paint stores 12 + orientation % 12 into each painted tile's
+// g_tileVariant (H2_Terrain, ML+0x10fdd / ML+0x1108b), which syncTiles hands to Terrain::setType as the tile's rotation. Terrain.dll
+// reads that rotation for the sand trap (four rake textures by rotation % 4), the green (bit 0x80) and water, never for the fairway
+// (types 2 / 3: one texture set, vertical mowing stripes), so Tab does nothing visible on a fairway. Fixed (0): Tile::render
+// (terrain_render.cpp) draws a fairway tile whose orientation is odd with its plain faces' stripes turned 90 degrees.
+int g_defect_fairway_stripes_fixed = 1;
+// mainLoop.undoButtonHelpOnly (P13A item 12, Mariano's option C): the palettes' Undo button (the bulldozer) only shows the right-click
+// undo help; fixed (0): it toggles the game's dormant bulldoze mode (g_flags bit 27: a left click runs demolishObject on the cursor
+// tile), a right click on the course clears it (tick_frame.inc Ph_0041ecbb), and the tips call the button "Bulldoze"
+// (gfx_text.cpp undo_name; commands_panels.inc undo_button).
+int g_defect_undo_button_help = 1;
 int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
@@ -2100,6 +2125,23 @@ const DefectDef kDefects[] = {
     {"mainLoop.cameraStepFixed4", "P11F",
      "an arrow key moves the camera 4 tiles at every zoom; fixed: 2 tiles at zoom 8 (the same screen distance as 4 tiles at zoom 4)",
      &g_defect_camera_step4},
+    {"mainLoop.rightClickKeepsTool", "P13A",
+     "a right click on the course with a terrain tool held keeps the tool and marks the tile for the right-click undo; fixed: on a "
+     "tile the undo has nothing to act on (no recorded edit, no placed object) it drops the tool instead",
+     &g_defect_rclick_keeps_tool},
+    {"mainLoop.hKeyShotStyleFirst", "P13A",
+     "while the player's golfer waits for its shot (panel mode 3) the 'h' key picks a shot style and never opens the hole being "
+     "built; fixed: there it opens that hole when it has its tee and green and is not open yet, else it picks the shot style",
+     &g_defect_h_shot_style},
+    {"Tile::render.fairwayStripesFixed", "P13A",
+     "a fairway's mowing stripes run one way whatever the paint tool's orientation (Tab turns sand rakes and green stripes only); "
+     "fixed: a fairway tile painted at an odd orientation has its stripes turned 90 degrees, so Tab turns them",
+     &g_defect_fairway_stripes_fixed},
+    {"mainLoop.undoButtonHelpOnly", "P13A",
+     "the Build palettes' Undo button (the bulldozer) only shows a help window about the right-click undo; fixed: it arms the "
+     "game's bulldoze mode (each left click on the map removes that tile's last edit with its refund, or asks before demolishing a "
+     "building), a second click, a right click, Esc or a new tool drops it, and its tip reads Bulldoze",
+     &g_defect_undo_button_help},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

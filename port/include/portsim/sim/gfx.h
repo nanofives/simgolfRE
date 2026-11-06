@@ -58,6 +58,10 @@ bool gfx_back_terrain(Ctx &ctx);
 // both the game's one-line tip (drawPanelBackdrop). Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_hover_help(Ctx &ctx, bool on);
 bool gfx_hover_help(Ctx &ctx);
+// P13A (log/roadmap/P13/P13A_notes.md item 2): whether the hover help includes hover.terrain's course line (the tile under the
+// cursor with no tool held). On by default (P11C's rule); the app's host sets it off unless --hover-help course or SG_APP_P13=off,
+// so the Build palette's, its slots' and the amenities' lines stay and nothing is drawn over the course while nothing is selected.
+void gfx_set_hover_help_course(Ctx &ctx, bool on);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
 }

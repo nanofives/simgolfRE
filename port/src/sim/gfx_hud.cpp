@@ -55,6 +55,14 @@
 
 namespace portsim {
 
+extern int g_defect_undo_button_help;  // tick.cpp mainLoop.undoButtonHelpOnly (P13A item 12)
+namespace {
+// P13A: the bulldoze mode the bulldozer armed (g_flags bit 27, commands_panels.inc undo_button): the Build palette (slot 0x15)
+// draws the button lit, with the art of its own hover, while it is set (drawTerrainToolbar, which pickBuilding's -3 shares, already
+// does: its own art at (0xfd, 0x222); the amenities palette's items 7 / 8 are not lit)
+bool p13a_bulldoze_on(const GameState &gs) { return !SG_DEFECT(g_defect_undo_button_help) && (gs.g_flags & (1u << 27)) != 0; }
+}  // namespace
+
 int g_negctl_gfx_hud = 0;
 
 // hoverTip.tenFrameDwell (P6B, 2026-11-03, Mariano's play-test: `the build palette's popup should come sooner`): every HUD panel
@@ -1497,8 +1505,8 @@ void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   };
   const uint32_t spr = va(ctx, GSO(g_sprites570cb8, 0));
   stretch(va(ctx, GSO(g_sprites541a18, 0x2c)), va(ctx, GSO(g_sprites58b390, 0x2c)), 0xd8, 0x1e2);
-  if (sel == 0x15) scaled(spr + 0xe70, 0xf6, 0x232);
-  else if (sel == 0x16) scaled(spr + 0xf20, 0xdc, 0x1fe);
+  if (sel == 0x15 || p13a_bulldoze_on(gs)) scaled(spr + 0xe70, 0xf6, 0x232);  // P13A: lit while bulldoze is armed
+  if (sel == 0x16) scaled(spr + 0xf20, 0xdc, 0x1fe);
   const int32_t tool = gs.f_w_4c2848[0];
   for (int32_t i = 0; i < 16; ++i) {
     uint32_t k = sel == i ? 1 : 0;

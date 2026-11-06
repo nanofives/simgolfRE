@@ -24,6 +24,8 @@
 
 namespace portsim {
 
+extern int g_defect_undo_button_help;  // tick.cpp mainLoop.undoButtonHelpOnly (P13A; commands_panels.inc undo_button)
+
 namespace {
 // Negative controls: mode 0 is the correct body.
 //   commands.rootHandler  1 = onPress1 stores the button word 2, 2 = the press handlers' scaled x is x / scale (not 2x),

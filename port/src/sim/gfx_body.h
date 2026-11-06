@@ -111,6 +111,7 @@ class Gfx {
   bool has_value = false;
   int32_t value = 0;
   bool hover_help = false;  // P11C (gfx.h gfx_set_hover_help): the hover help lines are drawn
+  bool hover_help_course = true;  // P13A (gfx.h gfx_set_hover_help_course): and the course line with no tool among them
   std::vector<int> snap_terrain;
   // a 2D write of the rectangle (x, y, w, h) onto the root surface: clears root_terrain when it covers the whole surface
   void note_root_write(int32_t x, int32_t y, int32_t w, int32_t h) {

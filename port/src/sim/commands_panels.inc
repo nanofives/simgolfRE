@@ -284,6 +284,23 @@ int32_t help_window(Ctx &ctx, const char *where) {
   return pump_and_redraw(ctx, 0, where);
 }
 
+// P13A (mainLoop.undoButtonHelpOnly = 0, Mariano's play-test 6 item 12 "buldoze button is not undo", his option C): the palettes'
+// Undo button (the bulldozer: clickSlotPanel slot 0x15, the terrain toolbar's and the building palette's -3, the amenities' items
+// 7 / 8) shows only the help window f_strpool_4c7ec4 ("To UNDO a previous action, right click on the map ..."). With the switch at
+// 0 it toggles the game's own bulldoze mode instead, bit 27 of g_flags, which nothing in the original sets: while it is set
+// P6_ToolLabel draws the bulldoze cursor and buildToolLabel of the cursor tile, a left click on the map runs demolishObject on the
+// cursor tile (Ph_0041ecbb, ML+0xf6fb), the terrain toolbar lights the button (drawTerrainToolbar), and Esc / Enter or a held tool
+// clear it (ML+0xd41b, ML+0x660b). Arming drops a held tool (a tool would clear the bit in the same frame). The rest of each path
+// runs as in the original.
+bool undo_button(Ctx &ctx) {
+  if (SG_DEFECT(g_defect_undo_button_help)) return false;
+  GameState &gs = ctx.gs();
+  gs.g_flags ^= 1u << 27;
+  gs.f_w_4c2848[0] = -1;
+  gs.f_w_4c2848[3] = -1;
+  return true;
+}
+
 // clickBuildTool433d30 (x, y): the terrain tool palette. -2 closes it, -3 shows the help window (then waits for a click),
 // a tool index selects it (flag bit 1) and returns the flag word; -1 is returned unchanged.
 int32_t build_tool_action(Ctx &ctx, int32_t r) {
@@ -296,6 +313,7 @@ int32_t build_tool_action(Ctx &ctx, int32_t r) {
     return -1;
   }
   if (r == -3) {
+    if (undo_button(ctx)) return -1;  // P13A
     cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
     gs.f_w_4c2e00[2] = -0x16;
     cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
@@ -322,6 +340,7 @@ int32_t building_action(Ctx &ctx, int32_t r) {
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_pick_building);
   if (r == -3) {
+    if (undo_button(ctx)) return 0;  // P13A
     cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
     gs.f_w_4c2e00[2] = -0x16;
     cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
@@ -393,6 +412,7 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
     }
     case 7:
     case 8:
+      if (undo_button(ctx)) return gs.g_panelState[5];  // P13A
       cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
       gs.f_w_4c2e00[2] = -0x16;
       cat(ctx, GS(g_textBuffer), GS(f_strpool_4c7de0) + 0x9c);
@@ -426,6 +446,8 @@ int32_t slot_action(Ctx &ctx, int32_t r) {
       gs.f_w_4c2848[0] = static_cast<int8_t>(*(state_arr(ctx, &GameState::f_tab_bytes_4c79a0) + (mode == 1 ? r + 1 : r)));
     } else if (r == 0x14) {
       gs.f_w_4c2848[0] = -1;
+    } else if (r == 0x15 && undo_button(ctx)) {
+      // P13A: the bulldoze mode toggled, no help window
     } else if (r == 0x15) {
       cpy(ctx, GS(g_textBuffer), GS(f_strpool_4c7ec4));
       gs.f_w_4c2e00[2] = -0x16;

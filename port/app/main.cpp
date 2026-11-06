@@ -73,9 +73,11 @@
 //   / tee tool draws from the tee (or green) to the cursor (P7's drawMinimapSegment) drawn again at the window's resolution in the
 //   cursor previews' place, its cursor end following P10E's live move (gfx.h gfx_set_hud_lines, present.h set_line_native); frame
 //   = the 800 x 600 frame's line pixels scaled with the picture.
-//   P11C: --hover-help on|off (default on; SG_APP_P11=off: off) one short line of what a terrain does, in the game's one-line tip
+//   P11C: --hover-help on|course|off (default on; SG_APP_P11=off: off) one short line of what a terrain does, in the game's one-line tip
 //   (drawPanelBackdrop): above the Build palette's tool tip, and over the course for the tile under the cursor with no tool after
 //   the HUD tips' dwell (gfx.h gfx_set_hover_help; log/roadmap/P11/P11C_notes.md). Drawing only.
+//   P13A item 2 (Mariano: "hovering on grass or elements while nothing is selected should not happen"): `on` draws the palette's,
+//   slots' and amenities' lines only, `course` (SG_APP_P13=off) also P11C's course line (gfx.h gfx_set_hover_help_course).
 //   P10I fix 2: --hover-rate display|game (default display; SG_APP_P10=off: game) the HUD's hover highlights follow the cursor at the
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
@@ -408,9 +410,10 @@ struct Options {
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
-  bool hover_help = true;          // P11C: --hover-help on|off (SG_APP_P11=off: off)
+  bool hover_help = true;          // P11C: --hover-help on|course|off (SG_APP_P11=off: off)
   int terrain_filter = 2;          // P13D item 4: --terrain-filter sharp (2) | linear (1) | nearest (0) (SG_APP_P13=off: nearest)
   bool smooth_camera = true;       // P12A fix 1: --smooth-camera on|off (SG_APP_P12=off: off)
+  bool hover_help_course = false;  // P13A: --hover-help course, the course line with no tool too (SG_APP_P13=off: on)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -640,6 +643,10 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
     {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)
     {"updateTerrainRender.syncTilesAfterEdit", 0},  // P13D item 5 (the terrain synced once at load: the first placement changes only its tiles)
+    {"mainLoop.rightClickKeepsTool", 0},            // P13A (a right click with nothing to undo drops the tool)
+    {"mainLoop.hKeyShotStyleFirst", 0},             // P13A ('h' opens a ready hole during the player's shot too)
+    {"Tile::render.fairwayStripesFixed", 0},        // P13A (Tab turns a fairway's mowing stripes)
+    {"mainLoop.undoButtonHelpOnly", 0},             // P13A (the bulldozer button arms the game's bulldoze mode)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
@@ -1043,6 +1050,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
       if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
       if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
+      if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1314,6 +1322,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
   if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
   if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
+  if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -2969,9 +2978,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
     }
-    else if (a == "--hover-help") {  // P11C
-      if (!val(v) || (v != "on" && v != "off")) return false;
-      o.hover_help = v == "on";
+    else if (a == "--hover-help") {  // P11C (P13A: course)
+      if (!val(v) || (v != "on" && v != "course" && v != "off")) return false;
+      o.hover_help = v != "off";
+      o.hover_help_course = v == "course";
     }
     else if (a == "--line-res") {  // P10I fix 1
       if (!val(v) || (v != "native" && v != "frame")) return false;
@@ -3142,6 +3152,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.terrain_filter = 0;  // P13D item 4
       if (o.sprite_filter == 3) o.sprite_filter = 1;  // P13D fix 5: sharp (P10H's default)
+      o.hover_help_course = true;  // P13A item 2: P11C's course line back
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = false;  // P12A fix 1

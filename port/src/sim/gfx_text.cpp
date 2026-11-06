@@ -67,6 +67,13 @@
 
 namespace portsim {
 
+extern int g_defect_undo_button_help;  // tick.cpp mainLoop.undoButtonHelpOnly (P13A item 12)
+namespace {
+// P13A: the name the tips give the palettes' Undo button (the bulldozer): the original's f_strpool_4c7f1c + 0x10, or with
+// mainLoop.undoButtonHelpOnly = 0 (the button arms the bulldoze mode, commands_panels.inc undo_button) "Bulldoze"
+bool p13a_bulldoze() { return !SG_DEFECT(g_defect_undo_button_help); }
+}  // namespace
+
 int g_negctl_gfx_text = 0;
 int32_t hover_tip_dwell();  // gfx_hud.cpp: the HUD tips' dwell (P6B hoverTip.tenFrameDwell)
 // infoCursorTip.fixedBox (P11B fix 2, 2026-11-05, Mariano's play-test 5: `trim the blank area on the hover of the items ... the UI
@@ -1156,7 +1163,7 @@ void info_panel_slot_tip(Gfx &g, Ctx &ctx, int32_t sel) {
   std::string text = upper_first(gfxb::vstring(ctx.mem, rec)) + pool(ctx, GSO(f_strpool_4c7f1c, 0x24)) +
                      std::to_string(mul32(static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x23)), 100));
   if (sel == 0x14) text = pool(ctx, GSO(f_strpool_4c7f1c, 0x18));
-  else if (sel == 0x15) text = pool(ctx, GSO(f_strpool_4c7f1c, 0x10));
+  else if (sel == 0x15) text = p13a_bulldoze() ? std::string("Bulldoze") : pool(ctx, GSO(f_strpool_4c7f1c, 0x10));  // P13A
   else if (sel == 0x16) text = pool(ctx, GSO(f_strpool_4c7f1c, 0));
   const int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
   const int32_t py = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel + 2)));
@@ -1170,7 +1177,8 @@ void info_panel_slot_tip(Gfx &g, Ctx &ctx, int32_t sel) {
 void terrain_toolbar_tip(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b) {
   static const int32_t kOff[7] = {0x10, 0x114, -1, 0x100, 0xec, 0xd8, 0xc4};
   const uint32_t k = u(add32(sel, 3));
-  const std::string text = k <= 6 && kOff[k] >= 0 ? pool(ctx, GSO(f_strpool_4c7f1c, kOff[k])) : std::string();
+  std::string text = k <= 6 && kOff[k] >= 0 ? pool(ctx, GSO(f_strpool_4c7f1c, kOff[k])) : std::string();
+  if (k == 0 && p13a_bulldoze()) text = "Bulldoze";  // P13A: -3 is the bulldozer
   backdrop(g, ctx, text, a, sub32(b, mode() == 10 ? 4 : 5));
 }
 
@@ -1261,7 +1269,7 @@ void hover_help_tool(Gfx &g, Ctx &ctx, int32_t sel) {
 std::string hover_help_slot_text(int32_t sel) {
   switch (sel) {
     case 0x14: return "drops the tool; tiles show what they do";
-    case 0x15: return "right click the map to undo an edit";
+    case 0x15: return p13a_bulldoze() ? "removes the last edit or building you click" : "right click the map to undo an edit";
     case 0x16: return "paths, benches, trees, landmarks and more";
     default: return std::string();
   }
@@ -1291,7 +1299,7 @@ std::string hover_help_amenity_text(Ctx &ctx, int32_t L) {
   switch (L) {
     case -2: return "back to the terrain tools";
     case 7:
-    case 8: return "right click the map to undo an edit";
+    case 8: return p13a_bulldoze() ? "removes the last edit or building you click" : "right click the map to undo an edit";
     default: return amenity_effect(ctx, L);
   }
 }
@@ -1301,7 +1309,8 @@ void hover_help_slot(Gfx &g, Ctx &ctx, int32_t sel) {
   static const uint32_t kName[3] = {0x18, 0x10, 0};  // info_panel_slot_tip's names (f_strpool_4c7f1c)
   const std::string effect = hover_help_slot_text(sel);
   if (effect.empty()) return;
-  const std::string text = pool(ctx, GSO(f_strpool_4c7f1c, kName[sel - 0x14])) + ": " + effect;
+  const std::string name = sel == 0x15 && p13a_bulldoze() ? std::string("Bulldoze") : pool(ctx, GSO(f_strpool_4c7f1c, kName[sel - 0x14]));  // P13A
+  const std::string text = name + ": " + effect;
   const int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
   const int32_t py = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel + 2)));
   backdrop(g, ctx, text, add32(px, 0x14), sub32(py, kHoverSlotRise));
@@ -1314,7 +1323,8 @@ void hover_help_amenity(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b) {
   static const int32_t kName[12] = {0x1a0, -1, 0x194, 0x18c, 0x17c, 0x174, 0x168, 0x15c, 0x14c, -1, -1, 0x13c};
   const uint32_t ci = u(add32(L, 2));
   if (ci > 11) return;
-  const std::string name = kName[ci] >= 0 ? pool(ctx, GSO(f_strpool_4c80d0, kName[ci])) : pool(ctx, GSO(f_strpool_4c7f1c, 0x10));
+  std::string name = kName[ci] >= 0 ? pool(ctx, GSO(f_strpool_4c80d0, kName[ci])) : pool(ctx, GSO(f_strpool_4c7f1c, 0x10));
+  if ((ci == 9 || ci == 10) && p13a_bulldoze()) name = "Bulldoze";  // P13A
   const std::string text = name + ": " + effect;
   int32_t x = a, y = b;
   if (L >= 0) {
@@ -1457,6 +1467,7 @@ void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b) {
     }
     if (c.str >= 0) text = pool(ctx, GSO(f_strpool_4c80d0, c.str));
     else if (c.str <= -0x100) text = pool(ctx, GSO(f_strpool_4c7f1c, -0x100 - c.str));
+    if (c.str == -0x110 && p13a_bulldoze()) text = "Bulldoze";  // P13A: items 7 / 8 are the bulldozer
     if (c.src >= 0) v = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_buildItems_4c26b0, c.src)));
     else if (c.src == -2) v = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(g_tileTypeAttrs, 0x323))));
   }
@@ -1641,7 +1652,7 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // hover.terrain(cx, cy) (P11C, gfx.h gfx_set_hover_help): the frame code's call with the cursor point View_toLocal gave (P6's
 // frame words +0x68 / +0x58); draws only with the help on (the app's host), never writes the GameState
 void b_hover_terrain(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
-  if (!g.hover_help) return;
+  if (!g.hover_help || !g.hover_help_course) return;  // P13A: the course line is its own option
   g.ensure_root(ctx);
   gfxt::hover_help_terrain(g, ctx, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
 }

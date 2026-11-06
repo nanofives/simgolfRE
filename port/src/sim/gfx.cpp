@@ -1899,6 +1899,10 @@ bool gfx_back_terrain(Ctx &ctx) {
 void gfx_set_hover_help(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->hover_help = on;
 }
+// P13A (gfx.h gfx_set_hover_help_course)
+void gfx_set_hover_help_course(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->hover_help_course = on;
+}
 bool gfx_hover_help(Ctx &ctx) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);

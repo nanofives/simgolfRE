@@ -5723,6 +5723,18 @@ void P11E_BoxScale() {
     }
 }
 
+// P13A: would openHole (events_news.inc open_hole) open hole [g_holesPlusOne] now? Its own refusal test (the tee dword +0x8 and the
+// green dword +0x18 of the 0x208-byte record set, and the second tee +0x10 when bit 6 of g_flags' low byte is set), the hole below
+// 0x13, and its par byte +0 still 0 (not open: openHole sets it to 2..6, H2_Select's hole-marker click tests the same byte).
+bool P13A_HoleReady() {
+    const int h = G32(GS(g_holesPlusOne));
+    if (h < 0 || h >= 0x13) return false;
+    const u32 rec = (u32)h * 0x208u;
+    if (G32((GS(g_holes) + 8) + rec) == 0 || G32((GS(g_holes) + 24) + rec) == 0) return false;
+    if ((GU8(GS(g_flags)) & 0x40) != 0 && G32((GS(g_holes) + 16) + rec) == 0) return false;
+    return GU8(GS(g_holes) + rec) == 0;
+}
+
 // showInfoCursorPanel showInfoCursorPanel (cdecl, 2 arguments, `add esp, 8` at ML+0xa22f). re/c3_hold.tsv records that it
 // returns with the caller's esi changed; mainLoop never reads esi after ML+0xa225 before writing it (notes), so the
 // original's esi is dead there. The call saves and restores ebx / esi / edi / ebp around the callee so that a changed
@@ -7418,6 +7430,9 @@ a41c6bd:  // key 0x76
     cc("panelListSelect", 0xA, ebx);                 // ML+0xd10c (push ebx; push 0xa)
     goto a41de11;                             // ML+0xd114
 a41c6d9:  // key 0x68
+    // P13A (mainLoop.hKeyShotStyleFirst = 0): with the player's shot pending (mode 3) 'h' opens the hole being built when openHole
+    // would open it (a tee and a green, a second tee when g_flags bit 6 asks for one, not yet open), else it picks the shot style
+    if (edx == 3 && !SG_DEFECT(g_defect_h_shot_style) && P13A_HoleReady()) goto a41c6e9;
     if (edx != 3) goto a41c6e9;               // ML+0xd119 cmp edx,3; jne
     G32(GS(g_playerShotStyle)) = edx;                    // ML+0xd11e  (=3)
     goto a41de11;                             // ML+0xd124
@@ -9791,6 +9806,18 @@ L_814:
 // click on it) or marks the tile (clearMatching of the old mark, buildToolLabel, queueMessage); speed 3 in mode 1 with
 // [g_ui_5a34e4] <= 0 and the cursor above y 0x1e0 switches to speed 4 and copies the selected golfer's +0xc4/+0xc8 into
 // +0xcc/+0xd0. A blocked tile or a click near the top message (g_ui_569498 set, cursor x within 200 of 400) ends the frame.
+// P13A: does the right-click undo have something to act on at tile (x, y)? demolishObject's own tests (terrain_course.cpp
+// demolish_object): not on a blocked tile, not on a 0x8000 tile (the refusal sound), a placed object (bit 0x400 and objectAt
+// != -1: the demolish prompt) or a recorded build code (g_tileBuildCode != 0xff: the tile's last edit undone).
+bool P13A_UndoTarget(int x, int y) {
+    if (cc("tileBlocked", x, y) != 0) return false;
+    u32 i = H2_cell(x, y);
+    u16 w = H2_TW(i);
+    if (w & 0x8000) return false;
+    if ((w & 0x400) && cc("objectAt", x, y) != -1) return true;
+    return GU8(GS(g_tileBuildCode) + i) != 0xff;
+}
+
 int Ph_0041ecbb(u32 F, const int* in) {
     int eax = in[0], ebp = in[1], ebx = in[2], ecx = in[3], edx = in[4], esi = in[5];
     int f = eax & 0x8000000;                          // ML+0xf6fb
@@ -9805,6 +9832,13 @@ int Ph_0041ecbb(u32 F, const int* in) {
         return H2_Select(F, ebp);                     // ML+0xf764
     // ML+0xfba9
     if (eax == 2) {                                   // ML+0xfbac
+        // P13A (mainLoop.undoButtonHelpOnly = 0): a right click drops the bulldoze mode (g_flags bit 27) the bulldozer armed, and
+        // does nothing else
+        if (!SG_DEFECT(g_defect_undo_button_help) && (GU32(GS(g_flags)) & (1u << 27)) != 0) {
+            G32(GS(g_flags)) = (int)(GU32(GS(g_flags)) & ~(1u << 27));
+            G32((GS(g_rootInput) + 16)) = 0;
+            return kFrame;
+        }
         if (G32((GS(f_w_4c2848) + 12)) != esi || GU8(GS(g_ui_569498)) != 0 || G32(GS(g_msgState53df54)) != ebp ||
             G32((GS(f_w_4c2e00) + 16)) != esi) {                 // ML+0xfbb2..ML+0xfbd1
             eax = 0;                                  // ML+0xfbd3
@@ -9815,6 +9849,13 @@ int Ph_0041ecbb(u32 F, const int* in) {
         G32(GS(g_msgState53df54)) = ebp;                        // ML+0xfbe9
         G8(GS(g_ui_569498)) = 0;                           // ML+0xfbef
         if (eax == 2) {                               // ML+0xfbda / ML+0xfbf6
+            // P13A (mainLoop.rightClickKeepsTool = 0): a right click with a terrain tool held on a tile the right-click undo has
+            // nothing to act on drops the tool, as a right click already drops an object tool (ML+0xfbe3); a tile it can act on
+            // is marked / undone as in the original
+            if (!SG_DEFECT(g_defect_rclick_keeps_tool) && G32(GS(f_w_4c2848)) != -1 && !P13A_UndoTarget(FD(0x1c), FD(0x24))) {
+                G32(GS(f_w_4c2848)) = -1;
+                return kFrame;
+            }
             int c = G32(GS(g_demolishConfirmX));                  // ML+0xfbfc
             int s = FD(0x1c);                         // ML+0xfc02
             int a = G32(GS(g_demolishPendingY));                  // ML+0xfc06
