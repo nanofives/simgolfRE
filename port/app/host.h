@@ -170,6 +170,7 @@ struct HostOptions {
   // the cursor's tile between game frames (--paint-rate display)
   bool cursor_live = false;
   bool smooth_camera = false;  // P12A fix 1 (--smooth-camera on): the projection snapshot in the picture's coordinates
+  bool smooth_objects = false;  // P12A fix 2 (--smooth-objects on): presents carry the queue's draws (WorldImage::hr_scene)
   // P10C fix 1: when the title menu reports its first pass after a session, the frame it presented with the in-game band hint
   // (BandFill::Black: the title's first refreshFull runs before title_menu() clears in_game_) is posted again with Extend
   bool title_bands = false;

@@ -143,6 +143,7 @@ void drawWalkers() {
                 *vp<short>(R + 0x1e) = 0xb;                              // drawWalkers+0x325
             const int cell = kCellAt(id, fr, dir);                                      // drawWalkers+0x32e
             G<int>(GS(g_flyBall4e9a9c)) = cell;                                                  // drawWalkers+0x33c
+            gfx_mover_source(kGfxMoverWalker, k, *vp<int>(R), *vp<int>(R + 4));  // P12A fix 2 (render-only)
             if (!BR(0, static_cast<signed char>(R[0x13]) == -6))               // re-read drawWalkers+0x333
                 kEnqueueSprite(FI(0x1c), FI(0x18), FI(0x18), 0x1e, 0x28, cell, 4, FI(0x10));   // drawWalkers+0x35a
             else

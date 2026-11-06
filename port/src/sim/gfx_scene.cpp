@@ -609,8 +609,13 @@ struct HrCmd {
   HrBox box;
   std::array<uint16_t, 256> pal{};   // the op's palette words at the draw
   uint64_t sig = 0;                  // art, palette, op parameters, placement (hr_flush compares it with the last queue's)
+  GfxMoverSrc src;                   // P12A fix 2: the queue entry's source (render-only; not in sig)
+  int32_t trim_x = 0, trim_y = 0;    // P12A fix 2: the art's trim offsets at the draw's scale (sprite_draw adds them to x / y)
   virtual ~HrCmd() = default;
   virtual void run(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1) = 0;
+  // P12A fix 2: the same draw at another placement (gfx_hr_scene_redraw); const: any thread
+  virtual void run_at(const LiveTerrainWorld &w, const HrGeom &g, const HrBox &b, uint16_t *plane, uint8_t *cover, int32_t cx0,
+                      int32_t cy0, int32_t cx1, int32_t cy1) const = 0;
 };
 template <class Op>
 struct HrCmdT final : HrCmd {
@@ -620,12 +625,42 @@ struct HrCmdT final : HrCmd {
     Op local = op;   // each thread its own copy (an op's report flags)
     hr_blit_rows(w, plane, cover, up ? *up : s, gm, local, box, cx0, cy0, cx1, cy1);
   }
+  void run_at(const LiveTerrainWorld &w, const HrGeom &g, const HrBox &b, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0,
+              int32_t cx1, int32_t cy1) const override {
+    Op local = op;
+    hr_blit_rows(w, plane, cover, s, g, local, b, cx0, cy0, cx1, cy1);
+  }
 };
 // P10D fix 3: the queue's draws and what the last flush left. A queue whose terrain base and commands equal the last one's in a
 // 32 x 32 tile is not drawn again there: the tile keeps the last flush's pixels.
+}  // namespace (P12A fix 2: GfxHrScene is declared in gfx.h, outside it)
+struct GfxHrScene {
+  std::shared_ptr<LiveTerrainWorld> w;            // the world's geometry for hr_blit_rows (pw, ph, fw, ox, scene_e, hr_filter only)
+  // the world layer's pixels at the queue's start, only in the 32 x 32 tiles of base_tile (P12A fix 3: the tiles the boxes of the
+  // tagged draws meet once widened by the largest step an object may be drawn away from its place, kGfxMoverMaxStep; each tile is
+  // copied once; a plane of pw x ph words whose other words are never written nor read, so a queue costs the copy of those tiles
+  // instead of the whole base)
+  std::unique_ptr<uint16_t[]> base;
+  size_t base_n = 0;
+  std::vector<uint8_t> base_tile;  // tx * ty, 1 = copied
+  int32_t base_tx = 0, base_ty = 0;
+  std::vector<std::shared_ptr<const HrCmd>> cmds;  // the queue's draws in order, then the draws made at once into hr after it
+  std::vector<GfxHrDraw> draws;
+};
+namespace {
+std::atomic<bool> g_hr_scene_on{false};  // P12A fix 2 (gfx_set_hr_scene): the app wants the published scenes
+std::atomic<int64_t> g_hr_pub_ns{0};      // P12A fix 3: the publications' time and count (gfx_hr_scene_cost)
+std::atomic<int64_t> g_hr_pub_n{0};
+thread_local GfxMoverSrc g_draw_src;      // P12A fix 2: the source of the queue entry b_queue_draw is drawing (hr_blit copies it)
+thread_local GfxMoverSrc g_label_src;     // P12A fix 2: the source of the queue entry b_queue_label is drawing the label of
+// P12A fix 2: the queue's render-only side table (gfx.h gfx_mover_source): entry n's source, and the one named for the next entry
+thread_local std::array<GfxMoverSrc, 1024> g_mover_tab;
+thread_local GfxMoverSrc g_mover_next;
 struct HrQueue {
   LiveTerrainWorld *w = nullptr;
-  std::vector<std::unique_ptr<HrCmd>> cmds;
+  std::vector<std::shared_ptr<HrCmd>> cmds;   // P12A fix 2: shared (the published scene keeps them)
+  std::shared_ptr<GfxHrScene> pub;            // P12A fix 2: the last flush's scene (the draws made at once after it are added)
+  bool pub_taken = false;                     // P12A fix 2: handed to a present (no more additions)
   // the world's hr / hr_cov planes are kept between queues: they hold the last flush's sprites (and the draws made at once into hr
   // after it, whose boxes post_boxes keeps for the next queue to draw again)
   bool last_ok = false;
@@ -674,6 +709,11 @@ void hr_blit(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale 
   h = hr_hash(h, c->pal.data(), sizeof(uint16_t) * c->pal.size());
   h = hr_hash(h, s.px.data(), s.px.size());
   c->sig = h;
+  c->src = g_draw_src;  // P12A fix 2 (not in sig: the tile reuse is unchanged)
+  if (sc.den != 0) {    // P12A fix 2: sprite_draw's trim (left / top scaled), so the entry's own placement is x - trim_x
+    c->trim_x = div32(mul32(s.left, sc.nx), sc.den);
+    c->trim_y = div32(mul32(s.top, sc.ny), sc.den);
+  }
   if (g_hr_queue.w != &w) g_hr_queue.cmds.clear();
   g_hr_queue.w = &w;
   g_hr_queue.cmds.push_back(std::move(c));
@@ -840,6 +880,72 @@ void hr_flush(LiveTerrainWorld &w) {
   q.last_w = &w;
   q.last_pw = w.pw;
   q.last_ph = w.ph;
+  // P12A fix 2: the queue as the app redraws it between game frames (its base, its draws in order); the draws made at once into
+  // hr after the queue's end are added by hr_now until a present takes it (gfx_hr_scene)
+  q.pub.reset();
+  q.pub_taken = false;
+  if (g_hr_scene_on.load(std::memory_order_relaxed)) {
+    struct PubTime {  // P12A fix 3: the publication's own cost on this thread (gfx_hr_scene_cost)
+      std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
+      ~PubTime() {
+        g_hr_pub_ns.fetch_add(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
+        g_hr_pub_n.fetch_add(1);
+      }
+    } pub_time;
+    auto sc = std::make_shared<GfxHrScene>();
+    sc->w = std::make_shared<LiveTerrainWorld>();
+    sc->w->pw = w.pw;
+    sc->w->ph = w.ph;
+    sc->w->fw = w.fw;
+    sc->w->ox = w.ox;
+    sc->w->scene_e = w.scene_e;
+    sc->w->hr_filter = w.hr_filter;
+    // P12A fix 3: the base only around the tagged draws (no copy of the whole plane on this thread)
+    const size_t nb = q.last_base.size();
+    sc->base.reset(new uint16_t[nb]);  // uninitialised: only base_rects are written and read
+    sc->base_n = nb;
+    const double kmax = std::max(static_cast<double>(w.fw) / 800.0, static_cast<double>(w.ph) / 600.0);
+    const int32_t grow = static_cast<int32_t>(std::ceil(kGfxMoverMaxStep * kmax)) + 4;
+    sc->base_tx = (w.pw + kHrTile - 1) / kHrTile;
+    sc->base_ty = (w.ph + kHrTile - 1) / kHrTile;
+    sc->base_tile.assign(static_cast<size_t>(sc->base_tx) * static_cast<size_t>(sc->base_ty), 0);
+    for (const auto &c : q.cmds) {
+      if (c->src.kind == kGfxMoverNone || c->box.empty()) continue;
+      const int32_t x0 = std::max(0, c->box.x0 - grow), y0 = std::max(0, c->box.y0 - grow), x1 = std::min(w.pw, c->box.x1 + grow),
+                    y1 = std::min(w.ph, c->box.y1 + grow);
+      if (x1 <= x0 || y1 <= y0) continue;
+      for (int32_t j = y0 / kHrTile; j <= (y1 - 1) / kHrTile; ++j)
+        for (int32_t i = x0 / kHrTile; i <= (x1 - 1) / kHrTile; ++i) {
+          uint8_t &t = sc->base_tile[static_cast<size_t>(j) * static_cast<size_t>(sc->base_tx) + static_cast<size_t>(i)];
+          if (t) continue;
+          t = 1;
+          const int32_t tx0 = i * kHrTile, tx1 = std::min(w.pw, tx0 + kHrTile);
+          for (int32_t y = j * kHrTile; y < std::min(w.ph, (j + 1) * kHrTile); ++y) {
+            const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(tx0);
+            std::memcpy(sc->base.get() + o, q.last_base.data() + o, sizeof(uint16_t) * static_cast<size_t>(tx1 - tx0));
+          }
+        }
+    }
+    sc->cmds.reserve(q.cmds.size());
+    sc->draws.reserve(q.cmds.size());
+    for (const auto &c : q.cmds) {
+      sc->cmds.push_back(c);
+      GfxHrDraw d;
+      d.src = c->src;
+      d.box[0] = c->box.x0;
+      d.box[1] = c->box.y0;
+      d.box[2] = c->box.x1;
+      d.box[3] = c->box.y1;
+      d.art_w = c->s.w;
+      d.art_h = c->s.h;
+      d.rx = c->gm.rx;
+      d.ry = c->gm.ry;
+      d.ex = c->gm.rx - c->trim_x;
+      d.ey = c->gm.ry - c->trim_y;
+      sc->draws.push_back(d);
+    }
+    q.pub = std::move(sc);
+  }
   q.cmds.clear();
   q.w = nullptr;
 }
@@ -869,6 +975,33 @@ void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale s
   if (!cur) g_hr_queue.post_boxes.push_back(box);   // fix 3: the next queue draws these tiles again
   g_hr_pass = keep;
   ++w.hr_draws;
+  HrQueue &q = g_hr_queue;
+  if (!cur && q.pub && !q.pub_taken) {  // P12A fix 2: the published scene redraws it too (in this order, over the queue's draws)
+    auto c = std::make_shared<HrCmdT<Op>>(op);
+    hr_no_rec(c->op, 0);
+    c->s.w = s.w;
+    c->s.h = s.h;
+    c->s.px = s.px;
+    c->gm = gm;
+    c->box = box;
+    if (c->op.pal) {
+      std::copy(c->op.pal, c->op.pal + 256, c->pal.begin());
+      c->op.pal = c->pal.data();
+    }
+    GfxHrDraw d;
+    d.box[0] = box.x0;
+    d.box[1] = box.y0;
+    d.box[2] = box.x1;
+    d.box[3] = box.y1;
+    d.art_w = s.w;
+    d.art_h = s.h;
+    d.rx = gm.rx;
+    d.ry = gm.ry;
+    d.ex = gm.rx;
+    d.ey = gm.ry;
+    q.pub->cmds.push_back(std::move(c));
+    q.pub->draws.push_back(d);
+  }
 }
 
 // P10F (terrain_live.h LiveTerrainWorld::hrb_*): P7's placement box at scene position (x, y), at once on the calling thread, into
@@ -1927,6 +2060,10 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const size_t k = static_cast<size_t>(i);
   draw_entry(g, ctx, gs.g_spriteX[k], gs.g_spriteY[k], gs.g_spriteShade[k], static_cast<int32_t>(gs.g_spriteFlags[k]),
              gs.g_spriteObj[k]);
+  struct SrcScope {  // P12A fix 2: the entry's source for the hr draws (HrCmd::src)
+    explicit SrcScope(int32_t i) { g_draw_src = gfx_mover_of(i); }
+    ~SrcScope() { g_draw_src = GfxMoverSrc{}; }
+  } src_scope(i);
   if (LiveTerrainWorld *w = wide_world(ctx))   // G32: the same entry on the wide scene
     on_wide(g, *w, [&] {
       // P10D fix 1: a queue entry's words tagged 1 and drawn into the hr plane too (queued for hr_flush). Fix 2: an entry drawn
@@ -1944,6 +2081,10 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // drawQueuedSprite's golfer label: after the simulation part built the name in g_textBuffer
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff);
 void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  struct LabelScope {  // P12A fix 2: the text runs of this label carry the entry's source (gfx.cpp capture: GfxTextRun::mover)
+    explicit LabelScope(int32_t i) { g_label_src = gfx_mover_of(i); }
+    ~LabelScope() { g_label_src = GfxMoverSrc{}; }
+  } label_scope(static_cast<int32_t>(a[0]));
   queue_label(g, ctx, a, 0);
   if (LiveTerrainWorld *w = wide_world(ctx))   // G32
     on_wide(g, *w, [&] {
@@ -2258,6 +2399,97 @@ const GfxBodyDef kBodies[] = {
 };
 
 }  // namespace
+
+// ---- P12A fix 2 (gfx.h): the queue entries' sources and the published hr scene
+void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy) {
+  GfxMoverSrc s;
+  s.kind = kind;
+  s.index = index;
+  s.wx = wx;
+  s.wy = wy;
+  g_mover_next = s;
+}
+void gfx_mover_queued(int32_t n) {
+  if (n >= 0 && n < static_cast<int32_t>(g_mover_tab.size())) g_mover_tab[static_cast<size_t>(n)] = g_mover_next;
+  g_mover_next = GfxMoverSrc{};
+}
+void gfx_mover_reset() {
+  g_mover_tab.fill(GfxMoverSrc{});
+  g_mover_next = GfxMoverSrc{};
+}
+GfxMoverSrc gfx_mover_of(int32_t n) {
+  return n >= 0 && n < static_cast<int32_t>(g_mover_tab.size()) ? g_mover_tab[static_cast<size_t>(n)] : GfxMoverSrc{};
+}
+GfxMoverSrc gfx_mover_label() { return g_label_src; }
+void gfx_set_hr_scene(bool on) { g_hr_scene_on.store(on, std::memory_order_relaxed); }
+void gfx_hr_scene_cost(int64_t &ns, int64_t &n) {
+  ns = g_hr_pub_ns.load();
+  n = g_hr_pub_n.load();
+}
+std::shared_ptr<const GfxHrScene> gfx_hr_scene(Ctx &) {
+  HrQueue &q = g_hr_queue;  // the sim thread's (a present runs on the thread that flushed)
+  q.pub_taken = true;
+  return q.pub;
+}
+const std::vector<GfxHrDraw> &gfx_hr_scene_draws(const GfxHrScene &s) { return s.draws; }
+int32_t gfx_hr_scene_pw(const GfxHrScene &s) { return s.w ? s.w->pw : 0; }
+int32_t gfx_hr_scene_ph(const GfxHrScene &s) { return s.w ? s.w->ph : 0; }
+void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
+                         const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov) {
+  out.clear();
+  cov.clear();
+  if (!s.w) return;
+  const LiveTerrainWorld &w = *s.w;
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (!s.base || s.base_n != np) return;
+  x0 = std::max(x0, 0);
+  y0 = std::max(y0, 0);
+  x1 = std::min(x1, w.pw);
+  y1 = std::min(y1, w.ph);
+  if (x1 <= x0 || y1 <= y0) return;
+  // P12A fix 3: every tile the rectangle meets must have been copied (nothing else of the base was)
+  if (s.base_tile.size() != static_cast<size_t>(s.base_tx) * static_cast<size_t>(s.base_ty)) return;
+  for (int32_t j = y0 / kHrTile; j <= (y1 - 1) / kHrTile; ++j)
+    for (int32_t i = x0 / kHrTile; i <= (x1 - 1) / kHrTile; ++i)
+      if (!s.base_tile[static_cast<size_t>(j) * static_cast<size_t>(s.base_tx) + static_cast<size_t>(i)]) return;
+  thread_local std::vector<uint16_t> plane;  // whole-world scratch planes (hr_blit_rows indexes them by world pixel)
+  thread_local std::vector<uint8_t> cover;
+  if (plane.size() != np) {
+    plane.assign(np, 0);
+    cover.assign(np, 0);
+  }
+  for (int32_t y = y0; y < y1; ++y) {
+    const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x0);
+    std::copy(s.base.get() + o, s.base.get() + o + static_cast<size_t>(x1 - x0), plane.begin() + static_cast<std::ptrdiff_t>(o));
+    std::fill(cover.begin() + static_cast<std::ptrdiff_t>(o), cover.begin() + static_cast<std::ptrdiff_t>(o + static_cast<size_t>(x1 - x0)),
+              uint8_t(0));
+  }
+  const HrPass keep = g_hr_pass;
+  g_hr_pass = HrPass{};  // no scene tags on this thread
+  for (size_t k = 0; k < s.cmds.size(); ++k) {
+    const HrCmd &c = *s.cmds[k];
+    HrGeom g = c.gm;
+    HrBox b = c.box;
+    const double mx = k < dx.size() ? dx[k] : 0.0, my = k < dy.size() ? dy[k] : 0.0;
+    if (mx != 0.0 || my != 0.0) {
+      g.rx += mx;
+      g.ry += my;
+      b = hr_box(w, c.s, g);
+    }
+    if (b.empty() || b.x1 <= x0 || b.x0 >= x1 || b.y1 <= y0 || b.y0 >= y1) continue;
+    c.run_at(w, g, b, plane.data(), cover.data(), x0, y0, x1, y1);
+  }
+  g_hr_pass = keep;
+  const size_t rw = static_cast<size_t>(x1 - x0);
+  out.resize(rw * static_cast<size_t>(y1 - y0));
+  cov.resize(out.size());
+  for (int32_t y = y0; y < y1; ++y) {
+    const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x0);
+    const size_t r = static_cast<size_t>(y - y0) * rw;
+    std::copy(plane.begin() + static_cast<std::ptrdiff_t>(o), plane.begin() + static_cast<std::ptrdiff_t>(o + rw), out.begin() + static_cast<std::ptrdiff_t>(r));
+    std::copy(cover.begin() + static_cast<std::ptrdiff_t>(o), cover.begin() + static_cast<std::ptrdiff_t>(o + rw), cov.begin() + static_cast<std::ptrdiff_t>(r));
+  }
+}
 
 namespace gfxs {
 

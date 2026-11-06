@@ -16,6 +16,8 @@
 #include <algorithm>  // P6B item 2 (std::min / max in paint)
 #include <cmath>    // P10A: lround (the overlay)
 #include <cstring>  // P10A: memcpy (the overlay)
+#include <map>      // P12A fix 2
+#include <tuple>
 #include <string>
 
 #include "portsim/sim/perf.h"  // P10A: perf_now_ns
@@ -147,6 +149,7 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
     for (portsim::GfxHudLayer &l : world_.hud.layers)
       if (l.id == portsim::kGfxLayerPanel) l.anchor = panel_anchor_;
     slide_start(world_);  // P12A fix 1
+    objects_start(old);   // P12A fix 2
   }
   if (!stale) world = std::move(old);  // P10A: the previous world image's buffers go back to the caller
   else world_ = std::move(old);
@@ -289,6 +292,170 @@ bool Presenter::slide_tick(int64_t now_ns, const Viewport &vp) {
   }
   if (changed) ++slide_stats_.moves;
   return changed;
+}
+
+// ---- P12A fix 2: the moving objects between two game frames (present.h objects_tick)
+void Presenter::objects_start(const WorldImage &prev) {
+  movers_.clear();
+  patched_.clear();
+  objects_t0_ = portsim::perf_now_ns();
+  if (!objects_on_) return;
+  ++object_stats_.frames;
+  const std::shared_ptr<const portsim::GfxHrScene> &ns = world_.hr_scene, &ps = prev.hr_scene;
+  if (!ns || !ps || ns == ps) return;  // no queue, or the same queue presented again (nothing moved)
+  if (portsim::gfx_hr_scene_pw(*ns) != portsim::gfx_hr_scene_pw(*ps) || portsim::gfx_hr_scene_ph(*ns) != portsim::gfx_hr_scene_ph(*ps) ||
+      world_.px.size() != static_cast<size_t>(portsim::gfx_hr_scene_pw(*ns)) * static_cast<size_t>(portsim::gfx_hr_scene_ph(*ns)))
+    return;
+  int32_t cdx = 0, cdy = 0;  // the camera's shift between the two pictures (800-space)
+  if (!camera_shift(prev.cam, world_.cam, cdx, cdy)) return;
+  const std::vector<portsim::GfxHrDraw> &nd = portsim::gfx_hr_scene_draws(*ns), &pd = portsim::gfx_hr_scene_draws(*ps);
+  // the previous frame's tagged draws by (kind, record, occurrence)
+  std::map<std::tuple<int, int32_t, int32_t>, size_t> pm;
+  std::map<std::pair<int, int32_t>, int32_t> cnt;
+  for (size_t i = 0; i < pd.size(); ++i) {
+    const portsim::GfxMoverSrc &s = pd[i].src;
+    if (s.kind == portsim::kGfxMoverNone) continue;
+    const int32_t o = cnt[{s.kind, s.index}]++;
+    pm[{s.kind, s.index, o}] = i;
+  }
+  cnt.clear();
+  for (size_t k = 0; k < nd.size(); ++k) {
+    const portsim::GfxMoverSrc &s = nd[k].src;
+    if (s.kind == portsim::kGfxMoverNone) continue;
+    const int32_t o = cnt[{s.kind, s.index}]++;
+    const auto it = pm.find({s.kind, s.index, o});
+    if (it == pm.end()) continue;  // new this frame: drawn where the frame has it
+    const portsim::GfxHrDraw &a = pd[it->second], &b = nd[k];
+    // the step from the entries' own placements (GfxHrDraw::ex / ey: the same for every animation cel, whose art and trim differ;
+    // the cel itself is the frame's, drawn at the blended place)
+    if (a.art_w != b.art_w || a.art_h != b.art_h) ++object_stats_.rejected_art;  // (counted: a cel change, still matched)
+    const bool ball = s.kind == portsim::kGfxMoverBall || s.kind == portsim::kGfxMoverShadow;
+    const int64_t lim = ball ? kMoverMaxWorldBall : kMoverMaxWorld;
+    const double dx = a.ex + cdx - b.ex, dy = a.ey + cdy - b.ey;
+    if (std::llabs(static_cast<int64_t>(a.src.wx) - b.src.wx) > lim || std::llabs(static_cast<int64_t>(a.src.wy) - b.src.wy) > lim ||
+        std::fabs(dx) > kMoverMaxStep || std::fabs(dy) > kMoverMaxStep) {
+      ++object_stats_.rejected_far;  // a teleport (the next tee, a new ball): drawn where the frame has it
+      continue;
+    }
+    ++object_stats_.matched;
+    if (dx == 0.0 && dy == 0.0) continue;
+    Mover m;
+    m.k = k;
+    m.dx = dx;
+    m.dy = dy;
+    m.extrap = ball;
+    m.src = s;
+    m.ox = ball ? 0.0 : dx;  // the place drawn at the frame's arrival
+    m.oy = ball ? 0.0 : dy;
+    movers_.push_back(m);
+    if (s.kind > 0 && s.kind < 8) ++object_stats_.moved_kind[static_cast<size_t>(s.kind)];
+  }
+  if (movers_.empty()) return;
+  ++object_stats_.moved;
+  px_orig_ = world_.px;
+  pxt_orig_ = world_.px_text;
+  for (Mover &m : movers_) m.ox = m.oy = 1e9;  // objects_tick draws the first place
+}
+
+bool Presenter::objects_tick(int64_t now_ns) {
+  ++object_stats_.ticks;
+  if (movers_.empty() || !world_.hr_scene) return false;
+  const portsim::GfxHrScene &sc = *world_.hr_scene;
+  const int32_t pw = portsim::gfx_hr_scene_pw(sc), ph = portsim::gfx_hr_scene_ph(sc);
+  if (world_.px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph) || px_orig_.size() != world_.px.size() || world_.fw <= 0)
+    return false;
+  const double T = period_ns_ > 0 ? period_ns_ : 93e6;
+  const double t = std::min(1.0, std::max(0.0, static_cast<double>(now_ns - objects_t0_) / T));
+  // P12A fix 3: the repaint cap (the last place of a frame, t = 1, is drawn whenever it is due)
+  if (object_min_ns_ > 0 && t < 1.0 && static_cast<double>(now_ns - object_last_ns_) < object_min_ns_) return false;
+  const double kx = static_cast<double>(world_.fw) / kLogicalW, ky = static_cast<double>(ph) / kLogicalH;
+  // the offsets now, to a quarter of a world pixel; nothing to draw when none changed
+  bool changed = false;
+  for (Mover &m : movers_) {
+    const double ox = m.extrap ? -m.dx * t : m.dx * (1.0 - t), oy = m.extrap ? -m.dy * t : m.dy * (1.0 - t);
+    const double qx = std::round(ox * kx * 4) / (kx * 4), qy = std::round(oy * ky * 4) / (ky * 4);
+    if (qx != m.ox || qy != m.oy) changed = true;
+    m.ox = qx;
+    m.oy = qy;
+  }
+  if (!changed) return false;
+  object_last_ns_ = now_ns;
+  const int64_t t0 = portsim::perf_now_ns();
+  const bool text = pxt_orig_.size() == px_orig_.size() && world_.px_text.size() == world_.px.size();
+  auto restore = [&](const std::array<int32_t, 4> &r) {
+    for (int32_t y = r[1]; y < r[3]; ++y) {
+      const size_t o = static_cast<size_t>(y) * static_cast<size_t>(pw);
+      std::copy(px_orig_.begin() + static_cast<std::ptrdiff_t>(o + r[0]), px_orig_.begin() + static_cast<std::ptrdiff_t>(o + r[2]),
+                world_.px.begin() + static_cast<std::ptrdiff_t>(o + r[0]));
+      if (text)
+        std::copy(pxt_orig_.begin() + static_cast<std::ptrdiff_t>(o + r[0]), pxt_orig_.begin() + static_cast<std::ptrdiff_t>(o + r[2]),
+                  world_.px_text.begin() + static_cast<std::ptrdiff_t>(o + r[0]));
+    }
+  };
+  for (const auto &r : patched_) restore(r);
+  patched_.clear();
+  // the rectangles: each moved object's box at the frame's place and at the place drawn now (2 world pixels of margin), merged
+  const std::vector<portsim::GfxHrDraw> &dr = portsim::gfx_hr_scene_draws(sc);
+  std::vector<std::array<int32_t, 4>> regs;
+  std::vector<double> dxv(dr.size(), 0.0), dyv(dr.size(), 0.0);
+  for (const Mover &m : movers_) {
+    if (m.k >= dr.size()) continue;
+    dxv[m.k] = m.ox;
+    dyv[m.k] = m.oy;
+    if (m.ox == 0.0 && m.oy == 0.0) continue;
+    const int32_t *b = dr[m.k].box;
+    const double sx = m.ox * kx, sy = m.oy * ky;
+    std::array<int32_t, 4> r = {std::min(b[0], static_cast<int32_t>(std::floor(b[0] + sx))) - 2,
+                                std::min(b[1], static_cast<int32_t>(std::floor(b[1] + sy))) - 2,
+                                std::max(b[2], static_cast<int32_t>(std::ceil(b[2] + sx))) + 2,
+                                std::max(b[3], static_cast<int32_t>(std::ceil(b[3] + sy))) + 2};
+    r = {std::max(0, r[0]), std::max(0, r[1]), std::min(pw, r[2]), std::min(ph, r[3])};
+    if (r[2] > r[0] && r[3] > r[1]) regs.push_back(r);
+  }
+  // (P12A fix 3: the rectangles are not merged: each lies inside its object's base rectangle of the scene, gfx.h kGfxMoverMaxStep;
+  // where two overlap, both redraws hold every moved draw, so the pixels they share are the same)
+  std::vector<uint16_t> out, out0;
+  std::vector<uint8_t> cov, cov0;
+  const std::vector<double> none;
+  for (const auto &r : regs) {
+    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], dxv, dyv, out, cov);
+    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], none, none, out0, cov0);  // where the frame's draws covered
+    if (out.size() != static_cast<size_t>(r[2] - r[0]) * static_cast<size_t>(r[3] - r[1]) || out0.size() != out.size()) continue;
+    const size_t rw = static_cast<size_t>(r[2] - r[0]);
+    for (int32_t y = r[1]; y < r[3]; ++y)
+      for (int32_t x = r[0]; x < r[2]; ++x) {
+        const size_t i = static_cast<size_t>(y - r[1]) * rw + static_cast<size_t>(x - r[0]);
+        if (!cov[i] && !cov0[i]) continue;  // no draw there before or after: the frame's own pixel (labels' bars, the terrain)
+        const size_t j = static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x);
+        world_.px[j] = out[i];
+        if (text) world_.px_text[j] = out[i];
+      }
+    object_stats_.redraw_px += static_cast<uint64_t>(out.size());
+    patched_.push_back(r);
+  }
+  ++object_stats_.redraws;
+  object_stats_.redraw_ns += portsim::perf_now_ns() - t0;
+  changed_pending_ = true;
+  return true;
+}
+
+void Presenter::frame_objects(int32_t tagged[8], int32_t moving[8]) const {
+  for (int k = 0; k < 8; ++k) tagged[k] = moving[k] = 0;
+  if (world_.hr_scene)
+    for (const portsim::GfxHrDraw &d : portsim::gfx_hr_scene_draws(*world_.hr_scene))
+      if (d.src.kind > 0 && d.src.kind < 8) ++tagged[d.src.kind];
+  for (const Mover &m : movers_)
+    if (m.src.kind > 0 && m.src.kind < 8) ++moving[m.src.kind];
+}
+
+void Presenter::mover_offset(const portsim::GfxMoverSrc &src, const Viewport &vp, int32_t &dx, int32_t &dy) const {
+  dx = dy = 0;
+  for (const Mover &m : movers_)
+    if (m.src == src && m.ox < 1e8) {
+      dx = static_cast<int32_t>(std::lround(m.ox * vp.client_w / kLogicalW));
+      dy = static_cast<int32_t>(std::lround(m.oy * vp.client_h / kLogicalH));
+      return;
+    }
 }
 
 // the client pixels the slid course picture does not cover (outside the world layer's place at the slid viewport `vs`) from the
@@ -499,6 +666,8 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   slide_on_ = false;     // P12A fix 1: a frame without a slide start (set_frame_world's slide_start may begin one) is unmoved
   cur_x_ = cur_y_ = 0;
   nd_x_ = nd_y_ = 0;
+  movers_.clear();  // P12A fix 2 (objects_start may find new ones)
+  patched_.clear();
   hover_pristine_.clear();  // P10I fix 2: the new frame's own looks
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
@@ -725,6 +894,15 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
           d = p.anchor < 0 ? dxl : dxr;
           break;
         }
+    if (objects_on_ && r.mover.kind != portsim::kGfxMoverNone && !movers_.empty()) {  // P12A fix 2: a label moves with its object
+      int32_t mx = 0, my = 0;
+      mover_offset(r.mover, vp, mx, my);
+      Viewport vr = vp;
+      vr.origin_x += mx;
+      vr.origin_y += my;
+      raster_->draw(r, layered_path, vr, d, out, cw, ch);
+      continue;
+    }
     raster_->draw(r, layered_path, vp, d, out, cw, ch);
   }
 }

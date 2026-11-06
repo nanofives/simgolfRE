@@ -587,6 +587,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   r.info.y0 = y0 + oy;
   r.info.x1 = x1 + ox;
   r.info.y1 = y1 + oy;
+  r.info.mover = gfx_mover_label();  // P12A fix 2: a golfer name label moves with its figure between game frames
   const size_t bw = static_cast<size_t>(x1 - x0);
   r.before.resize(bw * static_cast<size_t>(y1 - y0));
   r.after.resize(r.before.size());

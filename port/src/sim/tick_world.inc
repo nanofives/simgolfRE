@@ -166,6 +166,7 @@ struct World : TkBase {
           a.flags() += 1;
           if (a.flags() == 0) cc("playHabitatSound", a.kind().get(), a.x().get(), a.y().get());
         } else {
+          gfx_mover_source(kGfxMoverAnimal, i, a.x().get(), a.y().get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx.get(), sy.get(), sy.get(), 0x1E, 0x28, cell, mode, a.kind() + 0x78);
         }
         if (FlagsByte() & 0x20) {  // the debug index label: the text is built, its drawing is dropped
@@ -196,9 +197,11 @@ struct World : TkBase {
         if (cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 && Kind(X, Y) != 0x14) {
           int c = cc("cellAt", 0xF1, 0, (Date() / 1000) & 3);
           G32(GS(unk_005a9cc8)) = c;
+          gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx + V / 2 - 0x16, sy - V / 2, sy - 1, 0x8C, 0x8C, c, 4, 0x54);
           c = cc("cellAt", 0xF0, 0, sar32(Y, 10) & 3);
           G32(GS(unk_005a9cc8)) = c;
+          gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx.get(), sy - V + 0x16, sy.get(), 0x8C, 0x8C, c, 4, 0x54);
         }
         if (FlagsByte() & 4) continue;
@@ -286,6 +289,7 @@ struct World : TkBase {
                                                      : (sar32(cam - static_cast<uint8_t>(D.get()) - 2, 1) & 3);
           const int c = cc("cellAt", 0x1A1, mod32(Date() / 2, Sheet(0x1A1)), view);
           G32(GS(unk_005a9cc8)) = c;
+          gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx.get(), sy.get(), sy.get(), 0x50, 0x50, c, 4, 0x53);
           if ((GU8(GS(g_date)) & 0x7F) == 0) cc("playSoundAt", 0xD1, X.get(), Y.get(), 0);
         } else if ((Range(200) & 0xFFFF) == 0) {
@@ -303,10 +307,12 @@ struct World : TkBase {
         if (cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 && Kind(X, Y) != 0x14) {
           int c = cc("cellAt", 0xF3, 0, (G32(GS(g_cameraRot)) / 2 - 2) & 3);
           G32(GS(unk_005a9cc8)) = c;
+          gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx - 0x2C, sy.get(), sy - 1, 0xF0, 0xF0, c, 4, 0x3A);
           c = cc("cellAt", 0xF2, 0, (G32(GS(g_cameraRot)) / 2 - 2) & 3);
           G32(GS(unk_005a9cc8)) = c;
           const int lift = mul32(V - 0x20, G32(GS(g_zoomScale))) / 4;
+          gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx.get(), sy - lift, sy.get(), 0xF0, 0xF0, c, 4, 0x3A);
         }
         if (FlagsByte() & 4) continue;
@@ -337,6 +343,7 @@ struct World : TkBase {
           }
           const int c = cc("cellAt", id, fr, (G32(GS(g_cameraRot)) / 2 - D / 2 - 1) & 3);
           G32(GS(unk_005a9cc8)) = c;
+          gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx.get(), sy.get(), G32(GS(g_tileStep4c2840)) + sy, 0x8C, 0x8C, c, 4, 0x3C);
         }
         if (FlagsByte() & 4) continue;

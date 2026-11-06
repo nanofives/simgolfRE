@@ -21,6 +21,7 @@ struct Rend : TkBase {
     G32(GS(g_spriteSnapAux)) = 0;
     gs().g_spriteQueueHead = -1;
     G32(GS(g_spriteSnapHead)) = -1;
+    gfx_mover_reset();  // P12A fix 2: the entries' render-only sources (gfx.h; no GameState word)
     return 0;
   }
   GameState &gs() { return ctx.gs(); }
@@ -55,6 +56,7 @@ struct Rend : TkBase {
   // enqueueSprite (c3df.cpp): appends entry n (when n < 0x3ff) and links it into the list sorted by key a3
   void enqueueSprite(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
     const int n = gs().g_spriteQueueCount;
+    gfx_mover_queued(n < 0x3ff ? n : -1);  // P12A fix 2: entry n takes the source the frame code named (render-only)
     if (n >= 0x3ff) return;
     int x, y;
     spritePos(p1, p2, p4, p5, p7, p8, x, y);

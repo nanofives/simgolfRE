@@ -4108,6 +4108,7 @@ stk[--sp] = (int)(eax); // ML+0x5fad  push eax
 stk[--sp] = (int)(eax); // ML+0x5fae  push eax
 eax = FD(0x88); // ML+0x5faf  mov eax, dword ptr [F+0x88]
 stk[--sp] = (int)(eax); // ML+0x5fb6  push eax
+gfx_mover_source(kGfxMoverGolfer, FD(0x14), G32(GS(g_golfers) + 0x100 * FD(0x14)), G32(GS(g_golfers) + 0x100 * FD(0x14) + 4));  // P12A fix 2 (render-only)
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x5fb7
 sp += 8; // ML+0x5fbc  add esp, 0x20  (caller stack cleanup)
 La_41557f:;
@@ -4210,6 +4211,7 @@ eax = (eax) + 1; // ML+0x6113  inc eax
 stk[--sp] = (int)(ecx); // ML+0x6114  push ecx
 stk[--sp] = (int)(eax); // ML+0x6115  push eax
 stk[--sp] = (int)(edx); // ML+0x6116  push edx
+gfx_mover_source(kGfxMoverShadow, FD(0x14), G32(ebp + (GS(g_golfers) + 0xd4)), G32(ebp + (GS(g_golfers) + 0xd8)));  // P12A fix 2 (render-only)
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x6117
 eax = G32(ebp + (GS(g_golfers) + 220)); // ML+0x611c  mov eax, dword ptr [ebp + g_golfers+0xdc]
 sp += 8; // ML+0x6122  add esp, 0x20  (caller stack cleanup)
@@ -4257,6 +4259,7 @@ eax = ((int)(eax)) >> (4); // ML+0x61a2  sar eax, 4
 esi = (esi) - (eax); // ML+0x61a5  sub esi, eax
 stk[--sp] = (int)(esi); // ML+0x61a7  push esi
 stk[--sp] = (int)(edx); // ML+0x61a8  push edx
+gfx_mover_source(kGfxMoverBall, FD(0x14), G32(ebp + (GS(g_golfers) + 0xd4)), G32(ebp + (GS(g_golfers) + 0xd8)));  // P12A fix 2 (render-only)
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x61a9
 esi = G32(GS(f_w_4c2e00)); // ML+0x61ae  mov esi, dword ptr [f_w_4c2e00]
 eax = 0x66666667; // ML+0x61b4  mov eax, 66666667

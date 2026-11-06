@@ -808,6 +808,7 @@ static void world_reset(WorldImage &w) {
   for (int32_t &b : w.cur_box) b = 0;
   w.proj.ok = false;  // P10E (its tables keep their capacity)
   w.cam = CameraSnap{};  // P12A fix 1
+  w.hr_scene.reset();    // P12A fix 2
 }
 
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
@@ -915,6 +916,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
   wi.cam.t_ns = portsim::perf_now_ns();  // P12A fix 1: the present's time (the presenter's game frame period)
+  if (opt_.smooth_objects && !wi.empty()) wi.hr_scene = portsim::gfx_hr_scene(ctx);  // P12A fix 2: the queue's draws
   if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
     if (text) last_text_ = tf;
     else last_text_ = portsim::GfxTextFrame{};

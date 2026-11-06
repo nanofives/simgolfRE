@@ -13,6 +13,7 @@
 #ifndef PORTAPP_PRESENT_H
 #define PORTAPP_PRESENT_H
 
+#include <array>  // P12A fix 2
 #include <cstdint>
 #include <memory>
 #include <mutex>
@@ -218,6 +219,9 @@ struct WorldImage {
   int32_t cur_box[4] = {0, 0, 0, 0};
   CursorProj proj;  // P10E
   CameraSnap cam;   // P12A fix 1
+  // P12A fix 2: the frame's window-resolution sprite queue (gfx.h GfxHrScene: its base and every draw with its source), for the
+  // moving objects drawn between two game frames (null: none, or --smooth-objects off)
+  std::shared_ptr<const portsim::GfxHrScene> hr_scene;
   bool empty() const { return px.empty(); }
 };
 
@@ -324,6 +328,36 @@ class Presenter {
   // P12A fix 1: the window changed the picture without a new frame or a preview / slide move (a hover swap): the next paint counts
   // as a changed picture for the FPS overlay
   void mark_changed() const { changed_pending_ = true; }
+  // P12A fix 2 (log/roadmap/P12/P12A_notes.md): the moving objects between two game frames (--smooth-objects on). set_frame_world
+  // matches the new frame's tagged queue draws (WorldImage::hr_scene, gfx.h GfxMoverSrc) with the previous frame's: the same source
+  // (kind and record index), the same occurrence among that source's draws (any animation cel: the step is taken from the
+  // entries' own placements, GfxHrDraw::ex / ey), and a plausible step (world
+  // distance and 800-space distance within kMover*); the previous placement is moved by the camera's shift between the two
+  // pictures. objects_tick draws each matched object at its blended place: characters (golfers, walkers, animals, flyers,
+  // residents) from the previous frame's place to the new one over the frame period (shown one frame late), the ball and its
+  // shadow from the new place on by the last step (extrapolated: not late; a bounce or a stop is corrected by the next frame). Only
+  // the rectangles the objects leave and enter are redrawn (gfx_hr_scene_redraw: every draw of the queue over its base, in queue
+  // order, so the frame's sort order is kept), into the world image's pixels where a draw covered them before or after the move.
+  // Their name labels (text runs with GfxTextRun::mover) move with them.
+  struct ObjectStats {
+    uint64_t frames = 0, matched = 0, moved = 0, rejected_far = 0, rejected_art = 0, ticks = 0, redraws = 0, paints = 0;  // rejected_art: matched draws whose art size changed (a cel change)
+    uint64_t redraw_px = 0;
+    uint64_t moved_kind[8] = {0, 0, 0, 0, 0, 0, 0, 0};  // moving draws per GfxMoverKind (over all frames)
+    int64_t redraw_ns = 0;
+  };
+  static constexpr int32_t kMoverMaxStep = portsim::kGfxMoverMaxStep;  // 800-space pixels per game frame (gfx.h)
+  static constexpr int32_t kMoverMaxWorld = 2048;       // world units (1024 per tile) per game frame, characters
+  static constexpr int32_t kMoverMaxWorldBall = 8192;   // the ball and its shadow
+  void set_smooth_objects(bool on) { objects_on_ = on; }
+  bool smooth_objects() const { return objects_on_; }
+  bool objects_tick(int64_t now_ns);  // true = the picture changed (the window repaints)
+  // P12A fix 3: at most `hz` object redraws per second (0 = every tick that changes an offset; --object-rate)
+  void set_object_rate(int hz) { object_min_ns_ = hz > 0 ? 1e9 / hz : 0.0; }
+  const ObjectStats &object_stats() const { return object_stats_; }
+  // this frame's tagged draws per GfxMoverKind (in the scene) and of them the ones moving (SG_P12_LOG objects lines)
+  void frame_objects(int32_t tagged[8], int32_t moving[8]) const;
+  // the client offset of a name label's object now (0, 0 when it is not moving)
+  void mover_offset(const portsim::GfxMoverSrc &src, const Viewport &vp, int32_t &dx, int32_t &dy) const;
   // P10I fix 1: the frame's tee lines (GfxHudFrame::lines, gfx.h gfx_set_hud_lines) drawn at the window's resolution in the cursor
   // previews' place in the draw order, the second end moved with them by P10E's live shift; their 800-space pixels are left out of
   // the centred layers (--line-res native; off = the frame's line pixels scaled with the layer)
@@ -406,6 +440,25 @@ class Presenter {
   mutable bool scene_ok_ = false, prev_ok_ = false;
   mutable int32_t painted_cur_x_ = 0, painted_cur_y_ = 0;  // the offset at the last paint (the profiler's slide paints)
   mutable bool changed_pending_ = false;
+  // P12A fix 2
+  struct Mover {
+    size_t k = 0;            // the draw (GfxHrScene draws index)
+    double dx = 0, dy = 0;   // previous place - new place (800-space)
+    bool extrap = false;     // the ball / shadow: drawn ahead by the last step instead of behind
+    portsim::GfxMoverSrc src;
+    double ox = 0, oy = 0;   // the offset drawn now (800-space)
+  };
+  bool objects_on_ = false;
+  std::vector<Mover> movers_;
+  std::shared_ptr<const portsim::GfxHrScene> prev_scene_;
+  CameraSnap prev_cam_;
+  int64_t objects_t0_ = 0;
+  double object_min_ns_ = 0;      // P12A fix 3 (set_object_rate)
+  int64_t object_last_ns_ = 0;    // the last objects_tick that drew
+  std::vector<uint16_t> px_orig_, pxt_orig_;  // the frame's world pixels before any object was moved
+  std::vector<std::array<int32_t, 4>> patched_;  // the world rectangles the last objects_tick wrote
+  ObjectStats object_stats_;
+  void objects_start(const WorldImage &prev);  // set_frame_world
   void slide_start(const WorldImage &w);  // set_frame_world
   void fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vs, int32_t slx, int32_t sly) const;
   // P9C

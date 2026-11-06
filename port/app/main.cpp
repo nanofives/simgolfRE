@@ -92,6 +92,11 @@
 //   once with its course picture moved from where the shown picture was to its own place over one game frame period; the HUD stays
 //   (present.h Presenter::slide_tick, log/roadmap/P12/P12A_notes.md). The game keeps its 10.7 frames/s. SG_P12_LOG=<file>: one
 //   line per frame (development).
+//   P12A fix 2: --smooth-objects on|off (default on with --sprite-res native and the world layer; SG_APP_P12=off: off) walking
+//   golfers, staff, animals, flyers and residents are drawn between two game frames at the blend of their two places (one frame
+//   late), the ball in flight and its shadow ahead by their last step (present.h Presenter::objects_tick; the frame code tags its
+//   queue entries render-only: gfx.h gfx_mover_source). P12A fix 3: --object-rate <hz> (default 30; 0 = every pacer tick) the most
+//   object redraws per second (a camera slide still paints at the pacer's rate).
 //   P11D: --undo-keys on|off (default on; SG_APP_P11=off: off) Ctrl+Z undoes the newest course edit step (the edits of one left
 //   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
 //   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
@@ -417,6 +422,8 @@ struct Options {
   int terrain_filter = 2;          // P13D item 4: --terrain-filter sharp (2) | linear (1) | nearest (0) (SG_APP_P13=off: nearest)
   bool smooth_camera = true;       // P12A fix 1: --smooth-camera on|off (SG_APP_P12=off: off)
   bool hover_help_course = false;  // P13A: --hover-help course, the course line with no tool too (SG_APP_P13=off: on)
+  bool smooth_objects = true;      // P12A fix 2: --smooth-objects on|off (SG_APP_P12=off: off)
+  int object_rate = 30;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1392,6 +1399,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   // P12A fix 1: the camera slide needs the HUD layers (the course picture apart from the HUD), the remap (clicks follow the slide)
   // and the world layer
   ho.smooth_camera = o.smooth_camera && ho.remap && ho.hud_layers && ho.world;
+  // P12A fix 2: the moving objects need the window-resolution sprite queue (--sprite-res native) and the world layer
+  ho.smooth_objects = o.smooth_objects && o.sprite_native && ho.world;
+  portsim::gfx_set_hr_scene(ho.smooth_objects);
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
@@ -1415,7 +1425,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   // P10A: the profiler (on with the overlay or a CSV; F12 turns it on when it cycles the overlay on) and the overlay
   presenter.set_overlay(o.fps == "detail" ? 2 : o.fps == "on" ? 1 : 0);
   if (o.fps != "off" || !o.profile_csv.empty()) Profiler::get().set_enabled(true);
-  Profiler::get().set_fps_changed(ho.smooth_camera);  // P12A fix 1 (before the CSV header: its columns follow it)
+  Profiler::get().set_fps_changed(ho.smooth_camera || ho.smooth_objects);  // P12A fixes 1 and 2 (before the CSV header: its columns follow it)
   if (!o.profile_csv.empty() && !Profiler::get().open_csv(o.profile_csv))
     std::fprintf(stderr, "profile: cannot write %s\n", o.profile_csv.c_str());
   presenter.set_hover(o.hover_rate == "display");  // P10I fix 2
@@ -1425,7 +1435,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   const bool smooth_camera = ho.smooth_camera;  // P12A fix 1
   presenter.set_smooth_camera(smooth_camera);
-  Profiler::get().set_fps_changed(smooth_camera);
+  presenter.set_smooth_objects(ho.smooth_objects);  // P12A fix 2
+  presenter.set_object_rate(o.object_rate);         // P12A fix 3
+  Profiler::get().set_fps_changed(smooth_camera || ho.smooth_objects);
   WindowOptions wo;
   wo.remap = ho.remap;  // G32
   wo.dpi = o.dpi;
@@ -1513,7 +1525,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   uint64_t ticks = 0, live_moves = 0;
   std::thread pacer;
   int pace_hz = 0;
-  if (ho.cursor_live || presenter.hover() || smooth_camera) {  // P10I fix 2: the hover highlights take the same ticks; P12A: the slide
+  if (ho.cursor_live || presenter.hover() || smooth_camera || ho.smooth_objects) {  // P10I fix 2: the hover highlights take the same ticks; P12A: the slide
     HDC dc = GetDC(hwnd);
     pace_hz = dc ? GetDeviceCaps(dc, VREFRESH) : 0;
     if (dc) ReleaseDC(hwnd, dc);
@@ -1569,8 +1581,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       presenter.mark_changed();  // P12A fix 1: the FPS overlay counts the swap's paint
     }
   };
-  uint64_t slide_paints = 0;  // P12A fix 1: ticks that moved the camera slide (each asks for a paint)
+  uint64_t slide_paints = 0, object_paints = 0;  // P12A fix 1: ticks that moved the camera slide (each asks for a paint)
   auto slide_tick = [&]() {   // P12A fix 1: the slide's offset for now (set before the preview's tile is found: it reads the slid point)
+    if (ho.smooth_objects && presenter.objects_tick(portsim::perf_now_ns())) {  // P12A fix 2: the objects between game frames
+      win.invalidate();
+      ++object_paints;
+    }
     if (!smooth_camera) return;
     const int64_t now = portsim::perf_now_ns();
     if (presenter.slide_tick(now, vp)) {
@@ -1620,6 +1636,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
           std::fprintf(slog, "frame\t%u\t%u\t%d\t%d,%d\t%d\t%d\t%d\t%d,%d\t%.1f,%.1f\t%.1f\t%d,%d\t%d,%d\n", index, presenter.frames_set(),
                        c.ok ? 1 : 0, c.cam_x, c.cam_y, c.zoom, c.rot, st.reason, st.dx, st.dy, st.s0x, st.s0y, st.period_ms, st.ndx,
                        st.ndy, P.ok ? P.tile_x : -1, P.ok ? P.tile_y : -1);
+          if (ho.smooth_objects) {  // P12A fix 2: tagged / moving draws per kind (golfer ball shadow walker animal sky resident)
+            int32_t t[8], mv[8];
+            presenter.frame_objects(t, mv);
+            std::fprintf(slog, "objects\t%u\t%d/%d %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d\n", index, t[1], mv[1], t[2], mv[2], t[3], mv[3],
+                         t[4], mv[4], t[5], mv[5], t[6], mv[6], t[7], mv[7]);
+          }
           std::fflush(slog);
         }
         if (ho.cursor_live) cursor_tick();     // P10E: the new frame's preview, at once at the cursor's current tile
@@ -1717,6 +1739,20 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(ss.snaps_view) + ",\"snaps_far\":" + std::to_string(ss.snaps_far) + ",\"snaps_screen\":" +
          std::to_string(ss.snaps_screen) + ",\"period_ms\":" + std::to_string(ss.period_ms) + ",\"slid_points\":" +
          std::to_string(ho.remap ? ho.remap->slid() : 0) + ",\"max_step\":{" + mx + "}}";
+    const Presenter::ObjectStats &os = presenter.object_stats();  // P12A fix 2
+    s += ",\"p12a_objects\":{\"smooth_objects\":" + std::to_string(ho.smooth_objects ? 1 : 0) + ",\"frames\":" +
+         std::to_string(os.frames) + ",\"moved_frames\":" + std::to_string(os.moved) + ",\"matched\":" + std::to_string(os.matched) +
+         ",\"rejected_far\":" + std::to_string(os.rejected_far) + ",\"rejected_art\":" + std::to_string(os.rejected_art) +
+         ",\"redraws\":" + std::to_string(os.redraws) + ",\"redraw_px\":" + std::to_string(os.redraw_px) + ",\"redraw_ms\":" +
+         std::to_string(os.redraw_ns / 1e6) + ",\"paints\":" + std::to_string(object_paints) + ",\"moved_by_kind\":{\"golfer\":" +
+         std::to_string(os.moved_kind[1]) + ",\"ball\":" + std::to_string(os.moved_kind[2]) + ",\"shadow\":" +
+         std::to_string(os.moved_kind[3]) + ",\"walker\":" + std::to_string(os.moved_kind[4]) + ",\"animal\":" +
+         std::to_string(os.moved_kind[5]) + ",\"sky\":" + std::to_string(os.moved_kind[6]) + ",\"resident\":" +
+         std::to_string(os.moved_kind[7]) + "}";
+    int64_t pub_ns = 0, pub_n = 0;  // P12A fix 3: the sim thread's own cost of the published scenes
+    portsim::gfx_hr_scene_cost(pub_ns, pub_n);
+    s += ",\"object_rate\":" + std::to_string(o.object_rate) + ",\"publish_ms_per_frame\":" +
+         std::to_string(pub_n ? pub_ns / 1e6 / static_cast<double>(pub_n) : 0.0) + ",\"publishes\":" + std::to_string(pub_n) + "}";
   }
   Profiler::get().close_csv();
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
@@ -2981,6 +3017,15 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.smooth_camera = v == "on";
     }
+    else if (a == "--smooth-objects") {  // P12A fix 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.smooth_objects = v == "on";
+    }
+    else if (a == "--object-rate") {  // P12A fix 3
+      if (!val(v)) return false;
+      o.object_rate = std::atoi(v.c_str());
+      if (o.object_rate < 0 || o.object_rate > 1000) return false;
+    }
     else if (a == "--hover-rate") {  // P10I fix 2
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
@@ -3163,7 +3208,7 @@ int main(int argc, char **argv) {
       o.strip_right = false;  // P13C item 10
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.smooth_camera = false;  // P12A fix 1
+    if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

@@ -14,6 +14,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <memory>  // P12A fix 2: GfxHrScene
 #include <string>
 #include <vector>
 
@@ -260,6 +261,23 @@ struct GfxCursorScope {
 // patched to what the layer held under the glyph: transparent where it had not drawn) and over the layers' base. Nothing is
 // written into the GameState, the root surface or the back buffer, and the widths the frame code reads are the providers'
 // 800-space ones: the frame every gate sees is the same with capture on or off.
+// P12A fix 2: the source of a sprite-queue entry (render-only; the functions are at the end of this file)
+enum GfxMoverKind : int8_t {
+  kGfxMoverNone = 0,
+  kGfxMoverGolfer = 1,    // the golfer loop's figure (index: the golfer record)
+  kGfxMoverBall = 2,      // a golfer record's ball in the air (index: the golfer record)
+  kGfxMoverShadow = 3,    // that ball's shadow
+  kGfxMoverWalker = 4,    // drawWalkers' staff / player figure (index: the walker record)
+  kGfxMoverAnimal = 5,    // drawWorldObjects' habitat animal (index: the habitat slot)
+  kGfxMoverSky = 6,       // drawWorldObjects' flyers (index: the sky actor record)
+  kGfxMoverResident = 7,  // updateVipResident's figure (index: the resident record)
+};
+struct GfxMoverSrc {
+  int8_t kind = kGfxMoverNone;
+  int32_t index = -1;
+  int32_t wx = 0, wy = 0;  // the object's world position at the draw (1024 per tile), for the plausibility of a move
+  bool operator==(const GfxMoverSrc &o) const { return kind == o.kind && index == o.index; }
+};
 struct GfxTextRun {
   uint32_t fontref = 0;                   // the FontRef object (gditext's font table key)
   std::string face;                       // Font::create's face, size (lfHeight = -size) and style bits (gditext.h GameFont)
@@ -275,6 +293,7 @@ struct GfxTextRun {
                                           // 2 G32's wide scene beside the frame (a world run: layer -3, drawn over the world)
   std::vector<uint8_t> vis;               // (x1 - x0) * (y1 - y0): 1 where the run shows in the back buffer (non-layered path)
   std::vector<uint8_t> vis_layer;         // the same in its layer or the base (layered path; empty unless layer >= -1)
+  GfxMoverSrc mover;                      // P12A fix 2: a golfer name label drawn with queue entry k: that entry's source
   uint8_t visible(int32_t px, int32_t py, bool layered) const {
     if (px < x0 || px >= x1 || py < y0 || py >= y1) return 0;
     const std::vector<uint8_t> &v = layered ? vis_layer : vis;
@@ -330,6 +349,43 @@ struct GfxTextStats {
 };
 GfxTextStats gfx_text_stats(Ctx &ctx);
 extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on
+
+// ---- P12A fix 2 (log/roadmap/P12/P12A_notes.md): the moving objects of the sprite queue, drawn between two game frames by the app.
+// RENDER-ONLY: a thread-local side table of the queue's 1024 entries (not GameState), written by enqueueSprite with the source the
+// frame code named right before the call (gfx_mover_source), cleared by resetSpriteQueue. Nothing the simulation reads changes.
+void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy);  // the next enqueueSprite's source (this thread)
+void gfx_mover_queued(int32_t n);   // enqueueSprite: entry n takes the pending source (none when none was named); clears it
+void gfx_mover_reset();             // resetSpriteQueue
+GfxMoverSrc gfx_mover_of(int32_t n);
+GfxMoverSrc gfx_mover_label();      // the source of the queue entry whose label is being drawn (none outside drawQueuedSprite.label)
+
+// The window-resolution sprite picture of one queue (the world layer's hr plane, gfx_scene.cpp hr_flush) as the app needs it to
+// draw the moving objects elsewhere: the base (the world layer's pixels at the queue's start) and every draw of the queue in its
+// order, each with its box in world pixels and its source. Immutable once published; shared with the window thread.
+struct GfxHrScene;
+// P12A fix 3: the farthest an object is drawn from its frame's place (800-space pixels per game frame): the presenter matches no
+// larger step, and the published scene holds the base only that far around each tagged draw
+constexpr int32_t kGfxMoverMaxStep = 96;
+struct GfxHrDraw {
+  GfxMoverSrc src;
+  int32_t box[4] = {0, 0, 0, 0};   // x0, y0, x1, y1 (world pixels, half-open)
+  int32_t art_w = 0, art_h = 0;    // the art's size (an object whose art size changes is the same art family only when equal)
+  double rx = 0, ry = 0;           // the placement (scene pixels: the logical position plus the wide scene's offset)
+  double ex = 0, ey = 0;           // the queue entry's own placement (rx / ry minus the art's scaled trim: the same for every cel)
+};
+void gfx_set_hr_scene(bool on);  // process-wide; the app's main only (off: no scene is kept, the flush is P10D's)
+void gfx_hr_scene_cost(int64_t &ns, int64_t &n);  // P12A fix 3: the publications so far (hr_flush's sim-thread time, count)
+// the last flushed queue of the context's world layer (null: none, or the hr plane is off); the draws made at once into hr after
+// the queue are in it up to this call (a present)
+std::shared_ptr<const GfxHrScene> gfx_hr_scene(Ctx &ctx);
+const std::vector<GfxHrDraw> &gfx_hr_scene_draws(const GfxHrScene &s);
+int32_t gfx_hr_scene_pw(const GfxHrScene &s);
+int32_t gfx_hr_scene_ph(const GfxHrScene &s);
+// the pixels of the world-pixel rectangle (x0, y0, x1, y1) as the queue drew them over its base, with draw k moved by (dx[k], dy[k])
+// 800-space pixels (its placement rx / ry; dx / dy: one per draw, or empty = none moved): out / cov (w * h, rows of x1 - x0) receive
+// the hr word and 1 where a draw covered it. Any thread.
+void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
+                         const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov);
 
 }  // namespace portsim
 
