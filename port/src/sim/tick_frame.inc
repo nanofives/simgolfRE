@@ -4679,7 +4679,7 @@ void P4_ballLabelDraw(u32 F) {
     if (GU8(GS(g_textBuffer)) == 0) return;                                         // ML+0x71a0 / ML+0x71a7
     int z = G32(GS(g_zoomScale));                                                  // ML+0x71ad
     int esi = z * 10;                                                         // ML+0x71b2 / ML+0x71b5
-    u32 tgt = (z > 4) ? GS(g_font51b360) : GS(g_fontRef_519fd8);                            // ML+0x71b7..ML+0x71c1
+    u32 tgt = (z > 4 && SG_DEFECT(g_defect_zoom8_font)) ? GS(g_font51b360) : GS(g_fontRef_519fd8);                            // ML+0x71b7..ML+0x71c1
     tc("setDrawTarget", Root(), (int)tgt, 0, 0, 0);                                // setDrawTarget ML+0x71d3
     int w = tc("Text_put", Root(), (int)kBuf);                                // Text_put ML+0x71e3
     int ecx = FD(0x130) - esi;                                                // ML+0x71e8 / ML+0x71f3
@@ -4856,7 +4856,7 @@ void P4_golferOne(u32 F, u32 esi) {
         }
     }
     {
-        u32 tgt = (G32(GS(g_zoomScale)) > 4) ? GS(g_font51b360) : GS(g_fontRef_519fd8);          // ML+0x7518..ML+0x7527
+        u32 tgt = (G32(GS(g_zoomScale)) > 4 && SG_DEFECT(g_defect_zoom8_font)) ? GS(g_font51b360) : GS(g_fontRef_519fd8);          // ML+0x7518..ML+0x7527
         tc("setDrawTarget", Root(), (int)tgt, 0, 0, 0);                            // setDrawTarget ML+0x7539
     }
     int w = tc("Text_put", Root(), (int)kBuf);                                // Text_put ML+0x7549
@@ -5038,7 +5038,7 @@ void P4_walkerOne(u32 F, u32 ebx, int ebp) {
     }
     // ML+0x7aa8
     {
-        u32 tgt = (G32(GS(g_zoomScale)) > 4) ? GS(g_font51b360) : GS(g_fontRef_519fd8);          // ML+0x7aa8..ML+0x7ab7
+        u32 tgt = (G32(GS(g_zoomScale)) > 4 && SG_DEFECT(g_defect_zoom8_font)) ? GS(g_font51b360) : GS(g_fontRef_519fd8);          // ML+0x7aa8..ML+0x7ab7
         tc("setDrawTarget", Root(), (int)tgt, 0, 0, 0);                            // setDrawTarget ML+0x7ac9
     }
     tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x20, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7b09

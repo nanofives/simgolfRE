@@ -82,6 +82,7 @@
 #include "portsim/sim/terrain_live.h"   // G32: the wide scene
 
 namespace portsim {
+extern int g_defect_zoom8_font;  // tick.cpp mainLoop.zoom8Font (P13C)
 
 int g_negctl_gfx_scene = 0;
 
@@ -1908,7 +1909,7 @@ void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
   Memory &m = ctx.mem;
   const uint32_t rec = state_va(ctx, &GameState::g_golfers) + (u(gi) << 8);
   const int32_t zoom = gs.g_zoomScale;
-  const uint32_t font = zoom > 4 ? state_va(ctx, &GameState::g_font51b360) : state_va(ctx, &GameState::g_fontRef_519fd8);
+  const uint32_t font = (zoom > 4 && SG_DEFECT(g_defect_zoom8_font)) ? state_va(ctx, &GameState::g_font51b360) : state_va(ctx, &GameState::g_fontRef_519fd8);
   const uint32_t root = g.root_va(ctx);
   call_body(g, ctx, "setDrawTarget", {root, font, 0, 0, 0});
   bool label = false;
