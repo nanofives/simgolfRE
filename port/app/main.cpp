@@ -80,6 +80,11 @@
 //   P11B fix 1: --hud-panel left|right (default left; SG_APP_P11=off: right) the edge the panels opened from the radial menu's
 //   people buttons (employee view / detail, golfer action, with the shot texts in their place) are anchored to: left = beside the
 //   radial menu as in the 800-space frame, clicks remapped with them (present.h set_panel_anchor); right = P9B's right edge.
+//   P12A fix 1: --smooth-camera on|off (default on with the HUD layers and the HUD compositor; SG_APP_P12=off: off) a camera move
+//   (arrows, edge scroll, every other camera writer) slides the course at the display's rate: the newest game frame is shown at
+//   once with its course picture moved from where the shown picture was to its own place over one game frame period; the HUD stays
+//   (present.h Presenter::slide_tick, log/roadmap/P12/P12A_notes.md). The game keeps its 10.7 frames/s. SG_P12_LOG=<file>: one
+//   line per frame (development).
 //   P11D: --undo-keys on|off (default on; SG_APP_P11=off: off) Ctrl+Z undoes the newest course edit step (the edits of one left
 //   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
 //   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
@@ -197,6 +202,7 @@
 #include "portsim/state_hash.h"
 #include "portsim/sim/gfx.h"  // P8B: gfx_back_terrain
 #include "portsim/sim/live.h"
+#include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (the camera slide's clock)
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/tick.h"
@@ -400,6 +406,7 @@ struct Options {
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
   bool hover_help = true;          // P11C: --hover-help on|off (SG_APP_P11=off: off)
   int terrain_filter = 2;          // P13D item 4: --terrain-filter sharp (2) | linear (1) | nearest (0) (SG_APP_P13=off: nearest)
+  bool smooth_camera = true;       // P12A fix 1: --smooth-camera on|off (SG_APP_P12=off: off)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1115,6 +1122,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
             p.render(cw, ch, img);
             write_bmp(rec / ("frame_shot_" + std::to_string(index) + ".bmp"), img, cw, ch);
             p.set_hud_anchor(o.wide && o.hud_anchor);  // G32
+            p.set_smooth_camera(o.smooth_camera && hud_layers_on(o));  // P12A fix 1: a single frame (no slide; its picture kept)
             p.set_frame_world(px, BandFill::Black, std::move(wi));
             p.set_text(std::move(tf));  // P9C
             const auto rt0 = std::chrono::steady_clock::now();
@@ -1361,6 +1369,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.vacated_clicks = ho.remap && o.hud_vacated;       // P9E fix 3 (the play switch mainLoop.vacatedPanelClick acts on it)
   ho.cursor_previews = ho.remap && hud_layers_on(o) && o.hud_cursor;  // P9E fix 4
   ho.cursor_live = ho.cursor_previews && o.paint_rate == "display";   // P10E
+  // P12A fix 1: the camera slide needs the HUD layers (the course picture apart from the HUD), the remap (clicks follow the slide)
+  // and the world layer
+  ho.smooth_camera = o.smooth_camera && ho.remap && ho.hud_layers && ho.world;
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
@@ -1384,6 +1395,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   // P10A: the profiler (on with the overlay or a CSV; F12 turns it on when it cycles the overlay on) and the overlay
   presenter.set_overlay(o.fps == "detail" ? 2 : o.fps == "on" ? 1 : 0);
   if (o.fps != "off" || !o.profile_csv.empty()) Profiler::get().set_enabled(true);
+  Profiler::get().set_fps_changed(ho.smooth_camera);  // P12A fix 1 (before the CSV header: its columns follow it)
   if (!o.profile_csv.empty() && !Profiler::get().open_csv(o.profile_csv))
     std::fprintf(stderr, "profile: cannot write %s\n", o.profile_csv.c_str());
   presenter.set_hover(o.hover_rate == "display");  // P10I fix 2
@@ -1391,6 +1403,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     presenter.set_hud_anchor(true);
     presenter.set_remap(const_cast<PanelRemap *>(ho.remap));
   }
+  const bool smooth_camera = ho.smooth_camera;  // P12A fix 1
+  presenter.set_smooth_camera(smooth_camera);
+  Profiler::get().set_fps_changed(smooth_camera);
   WindowOptions wo;
   wo.remap = ho.remap;  // G32
   wo.dpi = o.dpi;
@@ -1430,11 +1445,30 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   std::FILE *shown = std::fopen((rec / "shown.tsv").string().c_str(), "wb");
   if (shown) std::fprintf(shown, "index\thash\n");
   uint32_t events = 0;
+  // development (P12A): SG_P12_LOG=<file>, one line per frame with a world layer: index, the camera snapshot (ok, x, y, zoom, rot),
+  // the slide start (reason 0 slid / 1 no snapshot / 2 zoom or rotation / 3 too far / 4 screen / 5 no move, D x / y in 800-space,
+  // start offset x / y in client pixels, period ms, the next camera's shift x / y), and one `click` line per left button press: the
+  // client point, the slide offset shown (client pixels), the point the game gets (logical), the shown point in the frame's own
+  // coordinates and the tile proj_tile gives there (the tile under the cursor in the shown picture), the tile of the unslid point
+  static std::FILE *slog = std::getenv("SG_P12_LOG") ? std::fopen(std::getenv("SG_P12_LOG"), "w") : nullptr;
   win.set_sink([&](const InputEvent &e) {
     ++events;
     if (log) {
       std::fprintf(log, "%s\n", event_json(e).c_str());
       std::fflush(log);
+    }
+    if (slog && e.msg == 0x201 && e.has_lp_edge) {  // WM_LBUTTONDOWN
+      const CursorProj &P = presenter.world().proj;
+      int32_t ox = 0, oy = 0;
+      presenter.slide_offset(ox, oy);
+      const int32_t cx = static_cast<int16_t>(e.lp_edge & 0xffff), cy = static_cast<int16_t>(e.lp_edge >> 16);
+      const Translator t(e.vp);
+      const Point game = t.lparam_point(e.lp), shown = t.to_logical(Point{cx - ox, cy - oy}), raw = t.to_logical(Point{cx, cy});
+      int32_t sx = -1, sy = -1, rx = -1, ry = -1;
+      const bool ok1 = P.ok && proj_tile(P, shown.x, shown.y, sx, sy), ok2 = P.ok && proj_tile(P, raw.x, raw.y, rx, ry);
+      std::fprintf(slog, "click\t%u\t%d,%d\t%d,%d\t%d,%d\t%d,%d\t%d\t%d,%d\t%d,%d\n", presenter.frames_set(), cx, cy, ox, oy, game.x, game.y,
+                   shown.x, shown.y, ok1 ? 1 : 0, sx, sy, ok2 ? rx : -1, ok2 ? ry : -1);
+      std::fflush(slog);
     }
     session.on_input(e);
   });
@@ -1459,7 +1493,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   uint64_t ticks = 0, live_moves = 0;
   std::thread pacer;
   int pace_hz = 0;
-  if (ho.cursor_live || presenter.hover()) {  // P10I fix 2: the hover highlights take the same ticks
+  if (ho.cursor_live || presenter.hover() || smooth_camera) {  // P10I fix 2: the hover highlights take the same ticks; P12A: the slide
     HDC dc = GetDC(hwnd);
     pace_hz = dc ? GetDeviceCaps(dc, VREFRESH) : 0;
     if (dc) ReleaseDC(hwnd, dc);
@@ -1512,14 +1546,35 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     if (presenter.hover_tick(lx, ly, vp)) {
       win.invalidate();
       ++hover_paints;
+      presenter.mark_changed();  // P12A fix 1: the FPS overlay counts the swap's paint
     }
   };
+  uint64_t slide_paints = 0;  // P12A fix 1: ticks that moved the camera slide (each asks for a paint)
+  auto slide_tick = [&]() {   // P12A fix 1: the slide's offset for now (set before the preview's tile is found: it reads the slid point)
+    if (!smooth_camera) return;
+    const int64_t now = portsim::perf_now_ns();
+    if (presenter.slide_tick(now, vp)) {
+      win.invalidate();
+      ++slide_paints;
+      if (slog) {  // development: the offset each slide step asks to paint
+        int32_t ox = 0, oy = 0;
+        presenter.slide_offset(ox, oy);
+        // and the tile under the cursor in the picture this step shows (proj_tile of the live point; -1 without a projection)
+        int32_t lx = 0, ly = 0, ldx = 0, tx = -1, ty = -1;
+        const CursorProj &P = presenter.world().proj;
+        if (!(P.ok && session.live_cursor(lx, ly, ldx) && proj_tile(P, lx, ly, tx, ty))) tx = ty = -1;
+        std::fprintf(slog, "step\t%lld\t%u\t%d,%d\t%d,%d\n", static_cast<long long>(now / 1000), presenter.frames_set(), ox, oy, tx, ty);
+      }
+    }
+  };
+  // (SG_P12_LOG: slog, opened above the input sink)
   MSG m;
   std::vector<uint16_t> px;
   while (GetMessageW(&m, nullptr, 0, 0) > 0) {
     if (m.hwnd == hwnd && m.message == kMsgCursorTick) {  // P10E
       tick_pending.store(false);
       ++ticks;
+      slide_tick();  // P12A fix 1
       if (ho.cursor_live) cursor_tick();
       hover_tick();  // P10I fix 2
       continue;
@@ -1537,6 +1592,16 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
         presenter.set_text(std::move(tf));    // P9C
         win.invalidate();
+        slide_tick();                          // P12A fix 1: the new frame's slide offset (and the remap's) at once
+        if (slog && !presenter.world().empty()) {
+          const CameraSnap &c = presenter.world().cam;
+          const Presenter::SlideStart &st = presenter.slide_start();
+          const CursorProj &P = presenter.world().proj;
+          std::fprintf(slog, "frame\t%u\t%u\t%d\t%d,%d\t%d\t%d\t%d\t%d,%d\t%.1f,%.1f\t%.1f\t%d,%d\t%d,%d\n", index, presenter.frames_set(),
+                       c.ok ? 1 : 0, c.cam_x, c.cam_y, c.zoom, c.rot, st.reason, st.dx, st.dy, st.s0x, st.s0y, st.period_ms, st.ndx,
+                       st.ndy, P.ok ? P.tile_x : -1, P.ok ? P.tile_y : -1);
+          std::fflush(slog);
+        }
         if (ho.cursor_live) cursor_tick();     // P10E: the new frame's preview, at once at the cursor's current tile
         if (presenter.hover()) {               // P10I fix 2: learn from the new frame, then show the live cursor's looks
           const Point fc = session.frame_cursor();
@@ -1621,6 +1686,19 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          ",\"paints\":" + std::to_string(hover_paints) + "}";
   }
   s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
+  {  // P12A fix 1
+    const Presenter::SlideStats &ss = presenter.slide_stats();
+    std::string mx;
+    for (int z = 0; z < 4; ++z)
+      mx += (z ? "," : "") + std::string("\"") + std::to_string(1 << z) + "\":[" + std::to_string(ss.max_dx[z]) + "," +
+            std::to_string(ss.max_dy[z]) + "]";
+    s += ",\"p12a\":{\"smooth_camera\":" + std::to_string(smooth_camera ? 1 : 0) + ",\"frames\":" + std::to_string(ss.frames) +
+         ",\"slides\":" + std::to_string(ss.slides) + ",\"moves\":" + std::to_string(ss.moves) + ",\"slide_paints\":" +
+         std::to_string(slide_paints) + ",\"snaps_cam\":" + std::to_string(ss.snaps_cam) + ",\"snaps_view\":" +
+         std::to_string(ss.snaps_view) + ",\"snaps_far\":" + std::to_string(ss.snaps_far) + ",\"snaps_screen\":" +
+         std::to_string(ss.snaps_screen) + ",\"period_ms\":" + std::to_string(ss.period_ms) + ",\"slid_points\":" +
+         std::to_string(ho.remap ? ho.remap->slid() : 0) + ",\"max_step\":{" + mx + "}}";
+  }
   Profiler::get().close_csv();
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
@@ -2876,6 +2954,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.undo_keys = v == "on";
     }
+    else if (a == "--smooth-camera") {  // P12A fix 1
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.smooth_camera = v == "on";
+    }
     else if (a == "--hover-rate") {  // P10I fix 2
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
@@ -3053,6 +3135,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.terrain_filter = 0;  // P13D item 4
     }
+  if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.smooth_camera = false;  // P12A fix 1
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

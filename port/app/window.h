@@ -43,6 +43,11 @@ struct InputEvent {
   std::vector<portsim::Command> commands;  // the steps' calls, as RootHandler commands
   bool vacated = false;  // P9E fix 3: a mouse button message whose point is a moved HUD panel's vacated place (PanelRemap::map)
   int32_t remap_dx = 0;  // P9E fix 4: the client offset the remap moved the message's point by (0 = not over a moved layer)
+  // P12A fix 1: lp without the camera slide's move (PanelRemap::set_slide): H1's edge-scroll read under --cursor message takes it;
+  // with no remap it stays lp (set below with lp)
+  uint32_t lp_edge = 0;
+  bool has_lp_edge = false;
+  uint32_t lp_raw = 0;  // P12A fix 1: the message's own client point (before the remap): the window's live preview reads it
 };
 
 // Step (a Call) -> portsim::Command (RootHandler): handler, a0, a1, async_ctrl, async_shift, t (S7.2 notes section 4).

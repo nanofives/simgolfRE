@@ -169,6 +169,7 @@ struct HostOptions {
   // P10E: presents with those previews also carry the projection snapshot (WorldImage::proj) that lets the window move them to
   // the cursor's tile between game frames (--paint-rate display)
   bool cursor_live = false;
+  bool smooth_camera = false;  // P12A fix 1 (--smooth-camera on): the projection snapshot in the picture's coordinates
   // P10C fix 1: when the title menu reports its first pass after a session, the frame it presented with the in-game band hint
   // (BandFill::Black: the title's first refreshFull runs before title_menu() clears in_game_) is posted again with Extend
   bool title_bands = false;
@@ -298,6 +299,9 @@ class LiveSession : public portsim::LiveHost {
   Viewport vp_;
   Point msg_cursor_{0, 0};           // CursorSource::Message: the last mouse message's logical point
   int32_t msg_cursor_dx_ = 0;        // P9E fix 4: the remap's client offset of that message (InputEvent::remap_dx)
+  Point msg_cursor_edge_{0, 0};      // P12A fix 1: that point without the camera slide's move (InputEvent::lp_edge)
+  Point msg_raw_{0, 0};              // P12A fix 1: the message's client point (InputEvent::lp_raw)
+  bool msg_raw_ok_ = false;
   std::atomic<bool> stop_{false};
   // P5B
   std::atomic<bool> body_mode_{false};
@@ -464,7 +468,8 @@ class LiveTracePresenter : public portsim::LiveHost {
 // taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
                       const portsim::GfxTextFrame *text = nullptr,
-                      bool cursor = false, bool proj = false);  // P10E: proj = WorldImage::proj with the cursor's previews
+                      bool cursor = false, bool proj = false,  // P10E: proj = WorldImage::proj with the cursor's previews
+                      bool pic = false);  // P12A fix 1: proj in the picture's coordinates (take_proj)
 // P9C: the text runs published with exactly this back buffer (false when there are none)
 bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim::GfxTextFrame &tf, bool banner = false);
 // P10B fix 1: the text frame of a picture `px` made over the frame `under.back` (the loading banner over a copy of the back

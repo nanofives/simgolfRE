@@ -32,6 +32,7 @@
 #include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P8B: gfx_back_terrain  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/util.h"  // P10E: distance (proj_tile)
+#include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (CameraSnap::t_ns)
 #include "portsim/state_hash.h"
 
 namespace fs = std::filesystem;
@@ -313,6 +314,9 @@ void LiveSession::on_input(const InputEvent &e) {
     if (e.msg >= kWmMouseMove && e.msg <= 0x20e) {
       msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
       msg_cursor_dx_ = e.remap_dx;  // P9E fix 4
+      msg_cursor_edge_ = e.has_lp_edge ? Translator(e.vp).lparam_point(e.lp_edge) : msg_cursor_;  // P12A fix 1
+      msg_raw_ok_ = e.has_lp_edge;
+      msg_raw_ = Point{static_cast<int16_t>(e.lp_raw & 0xffff), static_cast<int16_t>(e.lp_raw >> 16)};
     }
     ++events_;
   }
@@ -566,7 +570,7 @@ bool take_text_frame(portsim::Ctx &ctx, const std::vector<uint16_t> &px, portsim
 // tileToScreen's cache hits are copied, its misses are worldToScreen (bridge.h world_to_screen, which reads only) of the tile's
 // centre ((t << 10) + 0x200) with tileToScreen's window test (x in [-0x40 - E, W + 0x40 + E), y in [-0x2a, H + 0x2a), E =
 // wide_view_margin_t2s), the values the frame's next screenToTile would see while the state stays as it is.
-static void take_proj(portsim::Ctx &ctx, CursorProj &p) {
+static void take_proj(portsim::Ctx &ctx, CursorProj &p, bool pic) {
   p.ok = false;
   const portsim::GameState &g = ctx.gs();
   // P6_Cursor copies unk_005a9cbc into unk_005a9cc0 before its screenToTile (ML+0xa454): with it set, screenToTile halves the point
@@ -575,13 +579,31 @@ static void take_proj(portsim::Ctx &ctx, CursorProj &p) {
   if (g.g_cameraRot != 0 && g.g_cameraRot != 2 && g.g_cameraRot != 4 && g.g_cameraRot != 6) return;
   if (g.g_tileStep4c2840 == 0) return;
   if (g.g_cursorTileX < 0 || g.g_cursorTileX >= 50 || g.g_cursorTileY < 0 || g.g_cursorTileY >= 50) return;
+  // P12A fix 1: the snapshot is in the coordinates of the frame's own picture. The key cases and edge scroll move the camera after
+  // the picture was drawn and before the present (present.h CameraSnap), so the camera is the one updateTerrainRender drew with
+  // (g_terrainLastCamX / Y, equal to gCameraTileX / Y when the camera did not move), and worldToScreen's answers (which read
+  // gCameraTileX / Y) are moved back by camera_shift (exact: present.h). A pending zoom or rotation change: not taken.
+  // With `pic` false (--smooth-camera off) the snapshot is P10E's (gCameraTileX / Y, worldToScreen as it answers).
+  if (pic && (g.g_terrainLastZoom != g.g_zoomScale || g.g_terrain820f30[2] != g.g_cameraRot)) return;
+  int32_t nd_x = 0, nd_y = 0;  // the next camera's shift of every world point (800-space)
+  if (pic) {
+    CameraSnap a, b;
+    a.ok = b.ok = true;
+    a.cam_x = g.g_terrainLastCamX;
+    a.cam_y = g.g_terrainLastCamY;
+    b.cam_x = g.gCameraTileX;
+    b.cam_y = g.gCameraTileY;
+    a.zoom = b.zoom = g.g_zoomScale;
+    a.rot = b.rot = g.g_cameraRot;
+    if (!camera_shift(a, b, nd_x, nd_y)) return;
+  }
   p.tile_x = g.g_cursorTileX;
   p.tile_y = g.g_cursorTileY;
   p.sw = g.g_screenWidth;
   p.sh = g.g_screenHeight;
   p.rot = g.g_cameraRot;
-  p.cam_x = g.gCameraTileX;
-  p.cam_y = g.gCameraTileY;
+  p.cam_x = pic ? g.g_terrainLastCamX : g.gCameraTileX;  // P12A fix 1: the picture's camera (equal while the camera stays)
+  p.cam_y = pic ? g.g_terrainLastCamY : g.gCameraTileY;
   p.step = g.g_tileStep4c2840;
   for (int k = 0; k < 8; ++k) {
     p.dir_dx[k] = g.f_tab_dirDx_4c2878[k];
@@ -603,7 +625,11 @@ static void take_proj(portsim::Ctx &ctx, CursorProj &p) {
         continue;
       }
       int32_t x = 0, y = 0;
-      portsim::world_to_screen(ctx, (tx << 10) + 0x200, (ty << 10) + 0x200, x, y, 0);
+      // P12A fix 1: with a pending camera move, a margin wide enough that worldToScreen adds the tile's height to every point,
+      // then the point moved back into the picture's coordinates
+      portsim::world_to_screen(ctx, (tx << 10) + 0x200, (ty << 10) + 0x200, x, y, nd_x != 0 || nd_y != 0 ? 0x800 : 0);
+      x -= nd_x;
+      y -= nd_y;
       if (x >= -0x40 - E && x < g.g_screenWidth + 0x40 + E && y >= -0x2a && y < g.g_screenHeight + 0x2a) {
         p.sx[cell] = x;
         p.sy[cell] = y;
@@ -675,7 +701,7 @@ bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t
 }
 
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
-                      const portsim::GfxTextFrame *text, bool cursor, bool proj) {
+                      const portsim::GfxTextFrame *text, bool cursor, bool proj, bool pic) {
   const portsim::LiveTerrainWorld *w = live.world();
   if (!w) return false;
   const bool terrain = portsim::gfx_back_terrain(ctx);
@@ -729,7 +755,21 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
   wi.fw = w->fw;
   wi.ox = w->ox;
   wi.proj.ok = false;  // P10E: the projection only with previews at the cursor (world sprites or the frame's 2D sprite pixels)
-  if (proj && use && (apart || !f.cursor2d.empty())) take_proj(ctx, wi.proj);
+  if (proj && use && (apart || !f.cursor2d.empty())) take_proj(ctx, wi.proj, pic);
+  {  // P12A fix 1 (present.h CameraSnap): the camera updateTerrainRender drew this picture with (read only)
+    const portsim::GameState &g = ctx.gs();
+    CameraSnap &c = wi.cam;
+    c.cam_x = g.g_terrainLastCamX;
+    c.cam_y = g.g_terrainLastCamY;
+    c.zoom = g.g_terrainLastZoom;
+    c.rot = g.g_terrain820f30[2];
+    c.ok = use && (c.rot == 0 || c.rot == 2 || c.rot == 4 || c.rot == 6) && c.rot == g.g_cameraRot && g.g_screenWidth == kLogicalW &&
+           g.unk_005a9cbc == 0 && g.unk_005a9cc0 == 0 && c.zoom > 0;
+    c.next_x = g.gCameraTileX;
+    c.next_y = g.gCameraTileY;
+    c.next_zoom = g.g_zoomScale;
+    c.next_rot = g.g_cameraRot;
+  }
   if (use) {
     // development: SG_P9B_LAYER_LOG=<file> appends one line per present with layers: serial, then id:anchor:box:pixels per layer
     static std::FILE *lf = std::getenv("SG_P9B_LAYER_LOG") ? std::fopen(std::getenv("SG_P9B_LAYER_LOG"), "a") : nullptr;
@@ -767,6 +807,7 @@ static void world_reset(WorldImage &w) {
   w.text = portsim::GfxTextFrame{};
   for (int32_t &b : w.cur_box) b = 0;
   w.proj.ok = false;  // P10E (its tables keep their capacity)
+  w.cam = CameraSnap{};  // P12A fix 1
 }
 
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
@@ -869,10 +910,11 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
   if (opt_.world && terrain_log && terrain_log->live)
     if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews,
-                         opt_.cursor_previews && opt_.cursor_live)) {  // P10E
+                         opt_.cursor_previews && opt_.cursor_live, opt_.smooth_camera)) {  // P10E; P12A
       ++presents_world_;
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
+  wi.cam.t_ns = portsim::perf_now_ns();  // P12A fix 1: the present's time (the presenter's game frame period)
   if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
     if (text) last_text_ = tf;
     else last_text_ = portsim::GfxTextFrame{};
@@ -939,6 +981,22 @@ bool LiveSession::clock(portsim::Ctx &, int32_t, bool body, uint32_t &t) {
   return true;
 }
 
+// development (P12A): SG_P12_LOG=<file> also writes <file>.reads, one line per game cursor read the camera slide applies to (not H1's
+// edge-scroll read): the index the frame being built will present at, the read's client point, the game offset the remap applied,
+// the picture offset (PanelRemap::peek on the same point), the logical point answered
+static void p12_read_log(const PanelRemap *r, uint32_t next_present, int32_t cx, int32_t cy, int32_t gx, int32_t gy, int32_t lx,
+                         int32_t ly) {
+  static std::FILE *f = [] {
+    const char *e = std::getenv("SG_P12_LOG");
+    return e ? std::fopen((std::string(e) + ".reads").c_str(), "w") : nullptr;
+  }();
+  if (!f || !r) return;
+  int32_t px = cx, py = cy, sx = 0, sy = 0;
+  r->peek(px, py, sx, sy);
+  std::fprintf(f, "read\t%u\t%d,%d\t%d,%d\t%d,%d\t%d,%d\n", next_present, cx, cy, gx, gy, sx, sy, lx, ly);
+  std::fflush(f);
+}
+
 void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) {
   if (modal) w_check_ = true;  // S7.8
   if (exit_arm_) {  // P6B item 1 (host.h request_close): the title menu's exit icon, clicked at the next cursor read (the
@@ -955,9 +1013,23 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   }
   std::lock_guard<std::mutex> lk(mu_);
   if (opt_.cursor == CursorSource::Message) {
-    x = msg_cursor_.x;
-    y = msg_cursor_.y;
-    if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(msg_cursor_dx_, x, y);  // P9E fix 4
+    // P12A fix 1: H1's edge-scroll read takes the message's point without the camera slide's move (the window's own edges); any
+    // other read takes the last message's client point through the remap at the read (as the system cursor's reads do), so a
+    // cursor left still over the course follows the slid picture
+    x = edge_read_ ? msg_cursor_edge_.x : msg_cursor_.x;
+    y = edge_read_ ? msg_cursor_edge_.y : msg_cursor_.y;
+    int32_t adx = msg_cursor_dx_;
+    if (!edge_read_ && opt_.smooth_camera && opt_.remap && msg_raw_ok_) {
+      int32_t rx = msg_raw_.x, ry = msg_raw_.y, slx = 0, sly = 0;
+      bool vac = false;
+      opt_.remap->map(rx, ry, vac, slx, sly);
+      adx = msg_raw_.x - rx - slx;
+      const Point l = Translator(vp_).to_logical(Point{rx, ry});
+      x = l.x;
+      y = l.y;
+      p12_read_log(opt_.remap, static_cast<uint32_t>(presents_.size()), msg_raw_.x, msg_raw_.y, slx, sly, x, y);  // P12A (development)
+    }
+    if (opt_.remap && opt_.cursor_previews) opt_.remap->set_cursor_answer(adx, x, y);  // P9E fix 4
     if (!edge_read_) plain_answer_ = Point{x, y};  // P10E
     note_answer(Point{x, y});  // P10I fix 2
     return;
@@ -968,9 +1040,16 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   if (hwnd_) ScreenToClient(static_cast<HWND>(hwnd_), &p);
   int32_t answer_dx = 0;  // P9E fix 4
   if (opt_.remap) {  // G32: a point over a moved HUD panel answers its 800-space place
-    int32_t rx = p.x, ry = p.y;
-    opt_.remap->map(rx, ry);
-    answer_dx = p.x - rx;
+    int32_t rx = p.x, ry = p.y, slx = 0, sly = 0;
+    bool vac = false;
+    // P12A fix 1: a point over the course is moved by the camera slide (PanelRemap::set_slide), except for H1's edge-scroll read
+    if (edge_read_) opt_.remap->map_noslide(rx, ry);
+    else opt_.remap->map(rx, ry, vac, slx, sly);
+    answer_dx = p.x - rx - slx;  // the remap's own move only
+    if (!edge_read_ && opt_.smooth_camera) {  // P12A (development): SG_P12_LOG's read lines
+      const Point lr = Translator(vp_).to_logical(Point{rx, ry});
+      p12_read_log(opt_.remap, static_cast<uint32_t>(presents_.size()), p.x, p.y, slx, sly, lr.x, lr.y);
+    }
     p.x = rx;
     p.y = ry;
   }
@@ -1003,6 +1082,16 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
 // P10E (host.h live_cursor): LiveSession::cursor's point without its effects (no remap answer handed on, no last_inside_, no counts)
 bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx) {
   std::lock_guard<std::mutex> lk(mu_);  // (the title menu's exit click, sim-thread state, has no tool preview to move)
+  if (opt_.cursor == CursorSource::Message && opt_.smooth_camera && opt_.remap && msg_raw_ok_) {
+    // P12A fix 1: the last message's client point through the remap now (the slide moves the picture under a still cursor)
+    int32_t rx = msg_raw_.x, ry = msg_raw_.y, slx = 0, sly = 0;
+    opt_.remap->peek(rx, ry, slx, sly);
+    dx = msg_raw_.x - rx - slx;
+    const Point l = Translator(vp_).to_logical(Point{rx, ry});
+    x = l.x;
+    y = l.y;
+    return true;
+  }
   if (opt_.cursor == CursorSource::Message) {
     x = msg_cursor_.x;
     y = msg_cursor_.y;
@@ -1016,9 +1105,9 @@ bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx) {
   ScreenToClient(static_cast<HWND>(hwnd_), &p);
   dx = 0;
   if (opt_.remap) {
-    int32_t rx = p.x, ry = p.y;
-    opt_.remap->peek(rx, ry);
-    dx = p.x - rx;
+    int32_t rx = p.x, ry = p.y, slx = 0, sly = 0;
+    opt_.remap->peek(rx, ry, slx, sly);  // P12A fix 1: the camera slide's move is not the remap's offset
+    dx = p.x - rx - slx;
     p.x = rx;
     p.y = ry;
   }

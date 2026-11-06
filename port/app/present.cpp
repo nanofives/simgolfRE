@@ -146,10 +146,183 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
     // P11B fix 1: the panel layer at the chosen edge (every reader below, the remap, the runs and the hover swaps take l.anchor)
     for (portsim::GfxHudLayer &l : world_.hud.layers)
       if (l.id == portsim::kGfxLayerPanel) l.anchor = panel_anchor_;
+    slide_start(world_);  // P12A fix 1
   }
   if (!stale) world = std::move(old);  // P10A: the previous world image's buffers go back to the caller
   else world_ = std::move(old);
   return ok;
+}
+
+// ---- P12A fix 1: the camera slide (present.h)
+bool camera_shift(const CameraSnap &a, const CameraSnap &b, int32_t &dx, int32_t &dy) {
+  dx = dy = 0;
+  if (!a.ok || !b.ok || a.zoom != b.zoom || a.rot != b.rot) return false;
+  const int64_t X = static_cast<int64_t>(b.cam_x) - a.cam_x, Y = static_cast<int64_t>(b.cam_y) - a.cam_y, Z = b.zoom;
+  int64_t sx = 0, sy = 0;
+  switch (b.rot) {
+    case 0: sx = -8 * Z * (X + Y); sy = 5 * Z * (X - Y); break;
+    case 2: sx = 8 * Z * (X - Y); sy = 5 * Z * (X + Y); break;
+    case 4: sx = 8 * Z * (X + Y); sy = 5 * Z * (Y - X); break;
+    case 6: sx = 8 * Z * (Y - X); sy = -5 * Z * (X + Y); break;
+    default: return false;
+  }
+  if (sx < INT32_MIN || sx > INT32_MAX || sy < INT32_MIN || sy > INT32_MAX) return false;
+  dx = static_cast<int32_t>(sx);
+  dy = static_cast<int32_t>(sy);
+  return true;
+}
+
+void Presenter::slide_start(const WorldImage &w) {
+  SlideStart st;
+  ++slide_stats_.frames;
+  // the game frame period: the mean interval of the sim thread's presents (40..200 ms intervals only: a paused game or a modal
+  // screen's burst does not count)
+  if (w.cam.t_ns > 0 && last_present_ns_ > 0) {
+    const double d = static_cast<double>(w.cam.t_ns - last_present_ns_);
+    if (d >= 40e6 && d <= 200e6) period_ns_ = period_ns_ > 0 ? period_ns_ * 0.75 + d * 0.25 : d;
+  }
+  if (w.cam.t_ns > 0) last_present_ns_ = w.cam.t_ns;
+  if (period_ns_ <= 0) period_ns_ = 93e6;  // the original's 87 ms + one waitTicks quantum (P10A_notes.md)
+  st.period_ms = period_ns_ / 1e6;
+  slide_stats_.period_ms = st.period_ms;
+  const int64_t now = portsim::perf_now_ns();
+  const bool was_on = slide_on_;
+  const int64_t end_prev = t0_ns_ + static_cast<int64_t>(slide_ns_);
+  slide_on_ = false;
+  cur_x_ = cur_y_ = 0;
+  nd_x_ = nd_y_ = 0;
+  if (!smooth_) return;
+  bool dim = false;
+  for (const portsim::GfxHudLayer &l : w.hud.layers) dim = dim || l.dim != 0;
+  int32_t dx = 0, dy = 0;
+  int reason = 0;
+  if (layered() && !w.hud_none && !dim && w.cam.ok) {  // the next frame's cursor reads project with CameraSnap::next_*
+    CameraSnap n = w.cam;
+    n.cam_x = w.cam.next_x;
+    n.cam_y = w.cam.next_y;
+    n.zoom = w.cam.next_zoom;
+    n.rot = w.cam.next_rot;
+    if (!camera_shift(w.cam, n, nd_x_, nd_y_) || std::abs(nd_x_) > kSlideMaxX || std::abs(nd_y_) > kSlideMaxY) nd_x_ = nd_y_ = 0;
+  }
+  st.ndx = nd_x_;
+  st.ndy = nd_y_;
+  if (!layered() || w.hud_none || dim) reason = 4;
+  else if (!w.cam.ok || !painted_cam_.ok || !(scene_ok_ || prev_ok_)) reason = 1;
+  else if (!camera_shift(painted_cam_, w.cam, dx, dy)) reason = 2;
+  else if (std::abs(dx) > kSlideMaxX || std::abs(dy) > kSlideMaxY) reason = 3;
+  st.dx = dx;
+  st.dy = dy;
+  const int zi = w.cam.zoom == 1 ? 0 : w.cam.zoom == 2 ? 1 : w.cam.zoom == 4 ? 2 : w.cam.zoom == 8 ? 3 : -1;
+  if (zi >= 0 && reason == 0) {
+    slide_stats_.max_dx[zi] = std::max(slide_stats_.max_dx[zi], std::abs(dx));
+    slide_stats_.max_dy[zi] = std::max(slide_stats_.max_dy[zi], std::abs(dy));
+  }
+  double s0x = 0, s0y = 0;
+  if (reason == 0) {
+    // the scale of the last paint's content rectangle (the client the slide's pixels are counted in)
+    const Viewport pv = fit_viewport(scene_ok_ ? scene_w_ : prev_w_, scene_ok_ ? scene_h_ : prev_h_);
+    s0x = painted_x_ - static_cast<double>(dx) * pv.client_w / kLogicalW;
+    s0y = painted_y_ - static_cast<double>(dy) * pv.client_h / kLogicalH;
+    const int32_t pw = scene_ok_ ? scene_w_ : prev_w_, ph = scene_ok_ ? scene_h_ : prev_h_;
+    if (std::fabs(s0x) >= 0.6 * pw || std::fabs(s0y) >= 0.6 * ph) reason = 3;
+    else if (std::fabs(s0x) < 0.5 && std::fabs(s0y) < 0.5) reason = 5;
+  }
+  st.reason = reason;
+  st.s0x = s0x;
+  st.s0y = s0y;
+  slide_start_ = st;
+  if (reason == 1) ++slide_stats_.snaps_cam;
+  if (reason == 2) ++slide_stats_.snaps_view;
+  if (reason == 3) ++slide_stats_.snaps_far;
+  if (reason == 4) ++slide_stats_.snaps_screen;
+  if (reason != 0) {
+    if (reason != 5) prev_ok_ = false;
+    return;
+  }
+  // the uncovered pixels show the course picture of the last paint (if no paint came since the last frame, the one before it is
+  // still what the window shows and stays the underlay)
+  if (scene_ok_) {
+    scene_prev_.swap(scene_last_);
+    prev_w_ = scene_w_;
+    prev_h_ = scene_h_;
+    scene_ok_ = false;
+    prev_ok_ = true;
+  }
+  ++slide_stats_.slides;
+  slide_on_ = true;
+  s0x_ = s0x;
+  s0y_ = s0y;
+  s0x_i_ = static_cast<int32_t>(std::lround(s0x));
+  s0y_i_ = static_cast<int32_t>(std::lround(s0y));
+  t0_ns_ = now;
+  // a camera move slides until one game frame period after the frame's present on the sim thread (CameraSnap::t_ns: so the window's
+  // late or early taking of a frame does not stretch or squeeze the slide, and consecutive slides end where the next frame is due);
+  // a frame with no move inside a slide finishes the remaining offset by the time the running slide would have ended (one display
+  // period at least)
+  const double end_new = static_cast<double>(w.cam.t_ns > 0 ? w.cam.t_ns : now) + period_ns_;
+  slide_ns_ = (dx != 0 || dy != 0 || !was_on) ? std::max<double>(end_new - static_cast<double>(now), 16e6)
+                                               : std::max<double>(static_cast<double>(end_prev - now), 16e6);
+  cur_x_ = s0x_i_;
+  cur_y_ = s0y_i_;
+}
+
+bool Presenter::slide_tick(int64_t now_ns, const Viewport &vp) {
+  ++slide_stats_.ticks;
+  int32_t x = 0, y = 0;
+  if (slide_on_) {
+    const double f = slide_ns_ > 0 ? static_cast<double>(now_ns - t0_ns_) / slide_ns_ : 1.0;
+    if (f >= 1.0) {
+      slide_on_ = false;
+    } else {
+      const double g = 1.0 - std::max(0.0, f);
+      x = static_cast<int32_t>(std::lround(s0x_ * g));
+      y = static_cast<int32_t>(std::lround(s0y_ * g));
+    }
+  }
+  const bool changed = x != cur_x_ || y != cur_y_;
+  cur_x_ = x;
+  cur_y_ = y;
+  if (remap_) {  // the game's offset: the slide's minus the next camera's shift in client pixels
+    const int32_t gx = vp.client_w > 0 ? static_cast<int32_t>(std::lround(static_cast<double>(nd_x_) * vp.client_w / kLogicalW)) : 0;
+    const int32_t gy = vp.client_h > 0 ? static_cast<int32_t>(std::lround(static_cast<double>(nd_y_) * vp.client_h / kLogicalH)) : 0;
+    remap_->set_slide(x, y, x - gx, y - gy);
+  }
+  if (changed) ++slide_stats_.moves;
+  return changed;
+}
+
+// the client pixels the slid course picture does not cover (outside the world layer's place at the slid viewport `vs`) from the
+// last paint's course picture, moved with the slide: client pixel p shows scene_prev_ at p - (offset - start offset)
+void Presenter::fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vs, int32_t slx, int32_t sly) const {
+  if (prev_w_ != cw || prev_h_ != ch || scene_prev_.size() != static_cast<size_t>(cw) * static_cast<size_t>(ch)) return;
+  const WorldImage &w = world_;
+  auto fdiv = [](int64_t a, int64_t b) { return a >= 0 ? a / b : -((-a + b - 1) / b); };
+  int32_t rx0 = vs.origin_x, rx1 = vs.origin_x + vs.client_w;
+  const int32_t ry0 = std::max(0, vs.origin_y), ry1 = std::min(ch, vs.origin_y + vs.client_h);
+  if (w.fw > 0) {
+    rx0 = std::min<int32_t>(rx0, vs.origin_x + static_cast<int32_t>(fdiv(static_cast<int64_t>(-w.ox) * vs.client_w, w.fw)));
+    rx1 = std::max<int32_t>(rx1, vs.origin_x - static_cast<int32_t>(fdiv(-static_cast<int64_t>(w.pw - w.ox) * vs.client_w, w.fw)));
+  }
+  rx0 = std::max(0, rx0);
+  rx1 = std::min(cw, rx1);
+  const int32_t ux = slx - s0x_i_, uy = sly - s0y_i_;
+  RowPool::get().run(0, ch, [&](int32_t ya, int32_t yb) {
+    for (int32_t y = ya; y < yb; ++y) {
+      const int32_t sy = std::min(std::max(y - uy, 0), ch - 1);
+      const uint32_t *src = scene_prev_.data() + static_cast<size_t>(sy) * static_cast<size_t>(cw);
+      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+      const bool inside = y >= ry0 && y < ry1 && rx1 > rx0;
+      auto span = [&](int32_t a, int32_t b) {
+        for (int32_t x = a; x < b; ++x) dst[x] = src[std::min(std::max(x - ux, 0), cw - 1)];
+      };
+      if (!inside) {
+        span(0, cw);
+      } else {
+        span(0, rx0);
+        span(rx1, cw);
+      }
+    }
+  });
 }
 
 // ---- G32: PanelRemap
@@ -196,12 +369,36 @@ void PanelRemap::map(int32_t &x, int32_t &y) const {
   bool v = false;
   map(x, y, v);
 }
-void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const { map_impl(x, y, vacated, true); }
+void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated) const { map_impl(x, y, vacated, true, 1); }
+void PanelRemap::map(int32_t &x, int32_t &y, bool &vacated, int32_t &slid_x, int32_t &slid_y) const {  // P12A fix 1
+  slid_x = slid_y = 0;
+  map_impl(x, y, vacated, true, 1, &slid_x, &slid_y);
+}
+void PanelRemap::map_noslide(int32_t &x, int32_t &y) const {  // P12A fix 1
+  bool v = false;
+  map_impl(x, y, v, true, 0);
+}
 void PanelRemap::peek(int32_t &x, int32_t &y) const {  // P10E
   bool v = false;
-  map_impl(x, y, v, false);
+  map_impl(x, y, v, false, 2);
 }
-void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count) const {
+void PanelRemap::peek(int32_t &x, int32_t &y, int32_t &slid_x, int32_t &slid_y) const {  // P12A fix 1
+  bool v = false;
+  slid_x = slid_y = 0;
+  map_impl(x, y, v, false, 2, &slid_x, &slid_y);
+}
+void PanelRemap::set_slide(int32_t pic_dx, int32_t pic_dy, int32_t game_dx, int32_t game_dy) const {  // P12A fix 1
+  std::lock_guard<std::mutex> lk(mu_);
+  slide_dx_ = pic_dx;
+  slide_dy_ = pic_dy;
+  game_dx_ = game_dx;
+  game_dy_ = game_dy;
+}
+uint64_t PanelRemap::slid() const {  // P12A fix 1
+  std::lock_guard<std::mutex> lk(mu_);
+  return slid_;
+}
+void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count, int slide, int32_t *slx, int32_t *sly) const {
   vacated = false;
   std::lock_guard<std::mutex> lk(mu_);
   if (!on_ || vp_.client_w <= 0 || vp_.client_h <= 0) return;
@@ -209,6 +406,7 @@ void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count) con
   if (layered_) {  // P9B: the topmost layer with a pixel under the point decides
     if (y < vp_.origin_y || y >= vp_.origin_y + vp_.client_h) return;
     const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
+    bool course = true;  // P12A fix 1: the point lies over the course picture (no layer pixel, or a centred pixel the slide moves)
     for (size_t k = layers_.size(); k-- > 0;) {
       const RemapLayer &l = layers_[k];
       const int32_t dx = l.fixed ? l.dx : l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;  // P9E: fixed
@@ -216,14 +414,36 @@ void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count) con
       if (sx < vp_.origin_x || sx >= vp_.origin_x + vp_.client_w) continue;
       const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(sx - vp_.origin_x) * kLogicalW / vp_.client_w);
       if (lx < l.x0 || lx >= l.x1 || ly < l.y0 || ly >= l.y1) continue;
-      if (!l.cover[static_cast<size_t>(ly - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(lx - l.x0)]) continue;
+      const size_t i = static_cast<size_t>(ly - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(lx - l.x0);
+      if (!l.cover[i]) continue;
       if (dx != 0) {
         x = sx;
         if (count) ++remapped_;
         return;
       }
+      course = i < l.slides.size() && l.slides[i] != 0;  // P12A fix 1
       break;  // a centred layer's pixel: the point stays (P9E fix 3: and may still be a vacated place, below)
     }
+    // P12A fix 1: a point over the course while the camera slide moves the shown picture (or the next frame's camera differs from
+    // the picture's): `map` gives the game the place the shown picture has under the point, `peek` that place in the shown frame's
+    // coordinates (applied after the vacated test below, which keeps the window's own point)
+    const int32_t odx = slide == 1 ? game_dx_ : slide == 2 ? slide_dx_ : 0, ody = slide == 1 ? game_dy_ : slide == 2 ? slide_dy_ : 0;
+    struct SlideAfter {
+      const PanelRemap &r;
+      int32_t &x, &y;
+      bool on;
+      bool count;
+      int32_t dx, dy;
+      int32_t *ox, *oy;
+      ~SlideAfter() {
+        if (!on) return;
+        x -= dx;
+        y -= dy;
+        if (ox) *ox = dx;
+        if (oy) *oy = dy;
+        if (count) ++r.slid_;
+      }
+    } slide_after{*this, x, y, course && (odx != 0 || ody != 0), count, odx, ody, slx, sly};
     // P9E fix 3: no moved layer under the point; a moved panel layer's box holding its 800-space point makes it a vacated place
     // (a centred pixel there, a golfer's label, was over the panel in the 800-space frame and is over the course now)
     if (x >= vp_.origin_x && x < vp_.origin_x + vp_.client_w) {
@@ -266,6 +486,9 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   band_ = band;
   world_ = WorldImage{};  // P8B: a frame set without its world layer has none
   live_ = CursorLive{};  // P10E: the new frame's previews are at its own cursor tile
+  slide_on_ = false;     // P12A fix 1: a frame without a slide start (set_frame_world's slide_start may begin one) is unmoved
+  cur_x_ = cur_y_ = 0;
+  nd_x_ = nd_y_ = 0;
   hover_pristine_.clear();  // P10I fix 2: the new frame's own looks
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
@@ -304,6 +527,46 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
   const bool text = text_now(vp);
   const std::vector<uint16_t> &fsrc = layered() ? hud_for(text).base
                                       : text && text_defect_ != TextDefect::Unremoved ? text_.clean : frame_;
+  // P12A fix 1: the camera slide moves the course picture (the base, the world, their runs) by (slx, sly) client pixels: `vs` is the
+  // content rectangle it is drawn into; the HUD layers keep `vp`. The rows / columns of vs outside the client are not drawn.
+  const bool keep = smooth_ && layered();  // the course picture is kept for the next frame's slide
+  if (!keep) {  // a screen without the course picture: the next in-game frame starts unmoved
+    scene_ok_ = prev_ok_ = false;
+    painted_cam_ = CameraSnap{};
+  }
+  int32_t slx = 0, sly = 0;
+  if (keep && slide_on_ && prev_ok_ && prev_w_ == cw && prev_h_ == ch) {
+    slx = cur_x_;
+    sly = cur_y_;
+  }
+  Viewport vs = vp;
+  vs.origin_x += slx;
+  vs.origin_y += sly;
+  const int32_t ya0 = std::max(0, -vs.origin_y), ya1 = std::min(vs.client_h, ch - vs.origin_y);
+  const int32_t xa0 = std::max(0, -vs.origin_x), xa1 = std::min(vs.client_w, cw - vs.origin_x);
+  auto tail = [&]() {  // the world, then (layered) the uncovered pixels, the course runs, the kept picture and the HUD layers
+    if (!world_.empty()) compose_world(out, cw, ch, vs);  // P8B
+    if (layered()) {
+      if (slx != 0 || sly != 0) fill_gap(out, cw, ch, vs, slx, sly);
+      if (text) {  // P9C (moved here from compose_layers by P12A: the same calls, before every layer)
+        draw_runs(out, cw, ch, vs, true, -3, 0);  // the wide scene's world runs (beside the frame's columns)
+        draw_runs(out, cw, ch, vs, true, -1, 0);  // the base's
+      }
+      if (keep) {
+        scene_last_.resize(out.size());
+        std::memcpy(scene_last_.data(), out.data(), out.size() * sizeof(uint32_t));
+        scene_w_ = cw;
+        scene_h_ = ch;
+        painted_x_ = slx;
+        painted_y_ = sly;
+        painted_cam_ = world_.cam;
+        scene_ok_ = true;
+      }
+      compose_layers(out, cw, ch, vp, slx, sly);
+    }
+    if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them above)
+    if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+  };
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
     std::vector<uint32_t> &src = base_bgra_;  // P10A: kept between paints
@@ -341,14 +604,14 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
       const uint32_t ag = ((((a >> 8) & 0x00ff00ffu) * g + ((b >> 8) & 0x00ff00ffu) * f) >> 8) & 0x00ff00ffu;
       return rb | (ag << 8);
     };
-    RowPool::get().run(0, vp.client_h, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+    RowPool::get().run(ya0, ya1, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads; P12A: vs, clipped
       for (int32_t y = ya; y < yb; ++y) {
         const Tap &v = ty[static_cast<size_t>(y)];
         const uint32_t *s0 = src.data() + static_cast<size_t>(v.i0) * kLogicalW;
         const uint32_t *s1 = src.data() + static_cast<size_t>(v.i1) * kLogicalW;
-        uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
+        uint32_t *dst = out.data() + static_cast<size_t>(y + vs.origin_y) * static_cast<size_t>(cw) + vs.origin_x;
         const uint8_t *hrow = hidden ? hidden + static_cast<size_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h) * kLogicalW : nullptr;
-        for (int32_t x = 0; x < vp.client_w; ++x) {
+        for (int32_t x = xa0; x < xa1; ++x) {
           if (hrow && hrow[hlx[static_cast<size_t>(x)]]) continue;  // P10A: the world covers it
           const Tap &u = tx[static_cast<size_t>(x)];
           const uint32_t a = mix(s0[u.i0], s0[u.i1], u.f), b = mix(s1[u.i0], s1[u.i1], u.f);
@@ -356,28 +619,24 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
         }
       }
     });
-    if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
-    if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
-    if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+    tail();  // P12A (the calls that followed here, in the same order)
     return;
   }
   std::vector<int32_t> col(static_cast<size_t>(vp.client_w));
   for (int32_t x = 0; x < vp.client_w; ++x)
     col[static_cast<size_t>(x)] = static_cast<int32_t>(static_cast<int64_t>(x) * kLogicalW / vp.client_w);
   const uint8_t *hidden = base_hidden(vp, text);  // P10A
-  RowPool::get().run(0, vp.client_h, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+  RowPool::get().run(ya0, ya1, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads; P12A: vs, clipped
     for (int32_t y = ya; y < yb; ++y) {
       const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h);
       const uint16_t *src = fsrc.data() + static_cast<size_t>(ly) * kLogicalW;
-      uint32_t *dst = out.data() + static_cast<size_t>(y + vp.origin_y) * static_cast<size_t>(cw) + vp.origin_x;
+      uint32_t *dst = out.data() + static_cast<size_t>(y + vs.origin_y) * static_cast<size_t>(cw) + vs.origin_x;
       const uint8_t *hrow = hidden ? hidden + static_cast<size_t>(ly) * kLogicalW : nullptr;  // P10A: the world covers those
-      for (int32_t x = 0; x < vp.client_w; ++x)
+      for (int32_t x = xa0; x < xa1; ++x)
         if (!hrow || !hrow[col[static_cast<size_t>(x)]]) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
     }
   });
-  if (!world_.empty()) compose_world(out, cw, ch, vp);  // P8B
-  if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them in compose_layers)
-  if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+  tail();  // P12A (the calls that followed here, in the same order)
 }
 
 // ---- P9C: the text runs (textres.h)
@@ -561,10 +820,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
       }
     }
   });
-  if (layers) {
-    compose_layers(out, cw, ch, vp);
-    return;
-  }
+  if (layers) return;  // P9B: render composes the layers next (P12A: after the course runs, with the unslid viewport)
   if (!anchor) return;
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
   for (const HudPanel &p : kHudPanels) {
@@ -602,7 +858,8 @@ bool Presenter::layered() const {
 // layer's source and weight, shade = the shade table at d's RGB555 word. The weighted sum of the four gives smooth panel edges with
 // no world pixel chosen inside a panel by a mask, and a blended pixel (frame borders, half-bright strips) shows what is under it at
 // the panel's new place.
-void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const {
+void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, int32_t slx,
+                               int32_t sly) const {
   const ProfScope prof(Phase::Layers);  // P10A
   const bool text = text_now(vp);  // P9C: the layers without the runs' glyphs when the runs are drawn
   const portsim::GfxHudFrame &f = hud_for(text);
@@ -661,6 +918,25 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       r.cover.resize(l.px.size());
       for (size_t i = 0; i < l.px.size(); ++i)
         r.cover[i] = lpx[i].kind || lpx[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
+      // P12A fix 1: with the camera slide on, a centred layer's tool preview / tee line pixels move with the course picture: a point
+      // over them is a point over the course (PanelRemap::map_impl). Made at every paint, also at offset 0, so the first tick of a
+      // new slide (which sets the remap's offset before the next paint) already finds them
+      if (smooth_ && l.id == portsim::kGfxLayerCentred) {
+        const WorldImage &Wc = world_;
+        const bool cm = Wc.cur_mask.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+        const bool c2m = f.cursor2d.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+        const bool lm = f.line800.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+        if (cm || c2m || lm) {
+          r.slides.assign(r.cover.size(), 0);
+          const int32_t bw = l.x1 - l.x0;
+          for (int32_t y = l.y0; y < l.y1; ++y)
+            for (int32_t x = l.x0; x < l.x1; ++x) {
+              const size_t i = static_cast<size_t>(y - l.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - l.x0);
+              const size_t j = static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x);
+              if (r.cover[i] && ((cm && Wc.cur_mask[j]) || (c2m && f.cursor2d[j]) || (lm && f.line800[j]))) r.slides[i] = 1;
+            }
+        }
+      }
       // P9E: each moved popup piece's pixels are a layer of their own at the piece's offset, above the rest of this layer
       std::vector<RemapLayer> moved;
       if (pieces && l.popups) {
@@ -713,7 +989,8 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   };
   const int32_t shx = live ? scale_round(live_.sx, vp.client_w, kLogicalW) : 0;
   const int32_t shy = live ? scale_round(live_.sy, vp.client_h, kLogicalH) : 0;
-  const bool c2move = c2 && (cdx != 0 || shx != 0 || shy != 0);  // the 2D preview pixels drawn apart (their own pass)
+  // P12A fix 1: the camera slide moves the previews with the course picture
+  const bool c2move = c2 && (cdx != 0 || shx != 0 || shy != 0 || slx != 0 || sly != 0);  // the 2D preview pixels drawn apart (their own pass)
   auto c2_at = [&](int32_t x, int32_t y) {
     return c2move && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH &&
            f.cursor2d[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
@@ -735,7 +1012,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   const bool box = W.cur_hi.size() == W.px.size();  // P10F: the placement box's blend pair (cur_cov 2)
   auto draw_cursor = [&]() {  // nearest world pixels, the plane's box only
     if (!cur || vp.client_w <= 0 || vp.client_h <= 0 || W.fw <= 0 || W.ph <= 0) return;
-    const int32_t cox = vp.origin_x + cdx + shx, coy = vp.origin_y + shy;  // P10E: (shx, shy) = 0 outside a live move
+    const int32_t cox = vp.origin_x + cdx + shx + slx, coy = vp.origin_y + shy + sly;  // P10E: (shx, shy) = 0 outside a live move; P12A: the slide
     const int32_t cx0 = std::max<int32_t>(0, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
     const int32_t cx1 = std::min<int32_t>(cw, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
     const int32_t cy0 = std::max<int32_t>(0, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
@@ -806,8 +1083,8 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       const double ca = std::clamp(static_cast<double>(ln.alpha) / 10.0, 0.0, 1.0);
       if (ca <= 0.0) continue;
       const double half = std::min(static_cast<double>(ln.width), 10.0) * (sx + sy) / 4.0;
-      const double ax = vp.origin_x + ln.x1 * sx, ay = vp.origin_y + ln.y1 * sy;
-      const double bx = vp.origin_x + cdx + shx + ln.x2 * sx, by = vp.origin_y + shy + ln.y2 * sy;
+      const double ax = vp.origin_x + slx + ln.x1 * sx, ay = vp.origin_y + sly + ln.y1 * sy;  // P12A: + the slide
+      const double bx = vp.origin_x + cdx + shx + slx + ln.x2 * sx, by = vp.origin_y + shy + sly + ln.y2 * sy;
       const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
       if (!(len > 0.0)) continue;
       const double ux = dx / len, uy = dy / len, reach = half + 1.5;
@@ -879,10 +1156,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     return (num >= 0 ? num / n_client : -((-num + n_client - 1) / n_client)) - 128;
   };
   auto floor256 = [](int64_t v) -> int32_t { return static_cast<int32_t>(v >= 0 ? v / 256 : -((-v + 255) / 256)); };
-  if (text) {
-    draw_runs(out, cw, ch, vp, true, -3, 0);  // the wide scene's world runs (beside the frame's columns)
-    draw_runs(out, cw, ch, vp, true, -1, 0);  // the base's
-  }
+  // (the base / world runs, -3 and -1, are drawn by render before this call since P12A)
   for (size_t li = 0; li < f.layers.size(); ++li) {
     const portsim::GfxHudLayer &l = f.layers[li];
     if (li == cur_layer) draw_cursor();  // P9E fix 4
@@ -914,8 +1188,8 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     const int32_t cpass = cmove ? npass : -2;
     for (int32_t pass = -1; pass < npass + (cmove ? 1 : 0); ++pass) {
     if (pass >= 0 && pass != cpass && piece_dx_[static_cast<size_t>(pass)] == 0) continue;
-    const int32_t dx = pass == cpass ? cdx + shx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;
-    const int32_t dyp = pass == cpass ? shy : 0;  // P10E: the live move's rows
+    const int32_t dx = pass == cpass ? cdx + shx + slx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;  // P12A: slx
+    const int32_t dyp = pass == cpass ? shy + sly : 0;  // P10E: the live move's rows; P12A: the slide's
     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
       const portsim::GfxLayerPx *p = l.at(x, y);
       if (p && split && moved_piece(l, x, y) != (pass == cpass ? -1 : pass)) return nullptr;
@@ -1209,9 +1483,16 @@ void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   }
   // P10E: a paint that showed the live preview at a new place (no new frame) counts as a cursor paint
   const bool fresh = frames_set_ != painted_set_;
-  Profiler::get().painted(fresh, portsim::perf_now_ns() - t0, !fresh && live_ != painted_live_ && live_.active);  // P10A
+  // P12A fix 1: a paint that showed the camera slide at a new offset (no new frame); the FPS overlay counts every paint whose
+  // picture changed (a new frame, a preview move, a slide step, a hover swap: mark_changed)
+  const bool cursor = !fresh && live_ != painted_live_ && live_.active;
+  const bool slide = !fresh && (cur_x_ != painted_cur_x_ || cur_y_ != painted_cur_y_);
+  Profiler::get().painted(fresh, portsim::perf_now_ns() - t0, cursor, slide, fresh || cursor || slide || changed_pending_);  // P10A
   painted_set_ = frames_set_;
   painted_live_ = live_;
+  painted_cur_x_ = cur_x_;
+  painted_cur_y_ = cur_y_;
+  changed_pending_ = false;
 }
 #endif
 

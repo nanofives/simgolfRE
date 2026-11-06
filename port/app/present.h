@@ -101,6 +101,9 @@ struct RemapLayer {
   int32_t dx = 0;
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   std::vector<uint8_t> cover;  // (x1 - x0) * (y1 - y0): 1 where the layer drew
+  // P12A fix 1: 1 where a centred layer's pixel is part of the course picture the camera slide moves (the tool previews at the
+  // cursor tile and the tee line: Presenter::compose_layers draws them at the slide's offset); empty = none
+  std::vector<uint8_t> slides;
 };
 class PanelRemap {
  public:
@@ -121,9 +124,24 @@ class PanelRemap {
   void set_cursor_answer(int32_t dx, int32_t lx, int32_t ly) const;
   int32_t cursor_dx() const;
   void cursor_answer(int32_t &lx, int32_t &ly) const;  // P10E: that answer's 800-space point (the SG_P10E_LOG check)
+  // P12A fix 1 (Presenter::slide_tick), client pixels. (pic_dx, pic_dy): the camera slide's offset of the course picture the window
+  // shows now. (game_dx, game_dy): that offset minus the shift of the camera the game's next cursor reads project with
+  // (CameraSnap::next_*, after this frame's key / edge-scroll move) against the picture's camera. A point the layered remap leaves
+  // over the course (no layer pixel under it, or a centred pixel the slide moves: RemapLayer::slides) is moved by minus the game
+  // offset in `map` (so the game's screenToTile gives the tile the shown picture has under the point) and by minus the picture
+  // offset in `peek` (the shown frame's own coordinates: P10E's live preview); `map_noslide` (H1's edge-scroll read: the window's
+  // own edges) moves nothing. `slid_*` receive the move applied.
+  void set_slide(int32_t pic_dx, int32_t pic_dy, int32_t game_dx, int32_t game_dy) const;
+  void map(int32_t &x, int32_t &y, bool &vacated, int32_t &slid_x, int32_t &slid_y) const;
+  void map_noslide(int32_t &x, int32_t &y) const;
+  void peek(int32_t &x, int32_t &y, int32_t &slid_x, int32_t &slid_y) const;
+  uint64_t slid() const;  // points moved by `map` (session.json)
 
  private:
-  void map_impl(int32_t &x, int32_t &y, bool &vacated, bool count) const;  // P10E
+  // P10E; P12A: slide 0 = none, 1 = the game offset, 2 = the picture offset
+  void map_impl(int32_t &x, int32_t &y, bool &vacated, bool count, int slide = 0, int32_t *sx = nullptr, int32_t *sy = nullptr) const;
+  mutable int32_t slide_dx_ = 0, slide_dy_ = 0, game_dx_ = 0, game_dy_ = 0;  // P12A fix 1
+  mutable uint64_t slid_ = 0;                    // P12A fix 1
   mutable std::mutex mu_;
   bool on_ = false;
   Viewport vp_;
@@ -153,6 +171,28 @@ struct CursorProj {
 // distance(px - sx, (py - sy) * 2). False when the descent starts on a tile tileToScreen gives no point for, or does not settle.
 bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t &ty);
 
+// P12A fix 1 (log/roadmap/P12/P12A_notes.md): the camera the frame's course picture was drawn with, read from the GameState at the
+// present (sim thread, read only). updateTerrainRender (terrain_dll.cpp) leaves the camera tile it drew in g_terrainLastCamX / Y,
+// the zoom in g_terrainLastZoom and the rotation in g_terrain820f30[2]; the frame's sprites are projected with the same camera
+// (mainLoop writes the camera only after renderSpriteQueue, the keys and edge scroll right before the present). ok = the frame has a
+// world layer and HUD layers, the rotation is 0 / 2 / 4 / 6 and equals g_cameraRot, g_screenWidth is 800 and the doubling words
+// unk_005a9cbc / unk_005a9cc0 are 0. t_ns: the present's time (perf_now_ns), for the game frame period.
+// next_*: gCameraTileX / Y, g_zoomScale, g_cameraRot at the present, the camera the next frame body's cursor reads (P6_Cursor's
+// screenToTile, ML+0xa45a) project with: mainLoop's key cases (ML+0xe971..ML+0xea73) and edge scroll (ML+0xec4f..ML+0xec89) move the
+// camera after this frame's picture was drawn and before its present (Window::refreshFull ML+0xecdb).
+struct CameraSnap {
+  bool ok = false;
+  int32_t cam_x = 0, cam_y = 0, zoom = 0, rot = 0;
+  int32_t next_x = 0, next_y = 0, next_zoom = 0, next_rot = 0;
+  int64_t t_ns = 0;
+};
+// The 800-space screen vector by which a camera move from `a` to `b` translates the course picture (new place - old place of a
+// world point): worldToScreen (bridge.cpp world_to_screen) is linear in (wx - (cam << 10)) scaled by zoom / 128, so a move of
+// (dX, dY) tiles moves every point by, for rotation 0: (-8Z (dX + dY), 5Z (dX - dY)); 2: (8Z (dX - dY), 5Z (dX + dY));
+// 4: (8Z (dX + dY), 5Z (dY - dX)); 6: (8Z (dY - dX), -5Z (dX + dY)), Z = the zoom (exact: 1024 * Z / 128 = 8Z, 8Z * 20 / 32 = 5Z).
+// False when either snapshot is not ok or the zoom or rotation differ.
+bool camera_shift(const CameraSnap &a, const CameraSnap &b, int32_t &dx, int32_t &dy);
+
 struct WorldImage {
   std::vector<uint16_t> px;
   std::vector<uint8_t> mask;
@@ -177,6 +217,7 @@ struct WorldImage {
   std::vector<uint8_t> cur_cov, cur_mask;
   int32_t cur_box[4] = {0, 0, 0, 0};
   CursorProj proj;  // P10E
+  CameraSnap cam;   // P12A fix 1
   bool empty() const { return px.empty(); }
 };
 
@@ -244,6 +285,41 @@ class Presenter {
   };
   void set_cursor_live(const CursorLive &c) { live_ = c; }
   const CursorLive &cursor_live() const { return live_; }
+  // P12A fix 1 (log/roadmap/P12/P12A_notes.md): the camera slide (--smooth-camera on). set_frame_world compares the new frame's
+  // CameraSnap with the camera of the picture the window painted last: a camera move translates the course picture by D
+  // (camera_shift, 800-space). The newest frame is shown at once, its course picture (the base and the world, the base / world text
+  // runs, the tool previews at the cursor and the tee line) at an offset that starts where the painted picture was (its offset minus
+  // D, client pixels) and goes linearly to 0 over one game-frame period (the mean present interval of the sim thread); the HUD
+  // layers do not move. Client pixels the shifted picture does not cover show the course picture of the last paint before the frame
+  // came (scene_prev_), moved with it. Snap (offset 0, no slide): no snapshot in either frame, a zoom or rotation change, |D| beyond
+  // kSlideMax*, a new client size, a frame without HUD layers (title, modal screens: hud_none) or with a whole-frame dim layer.
+  struct SlideStats {
+    uint64_t frames = 0, slides = 0, moves = 0, snaps_cam = 0, snaps_view = 0, snaps_far = 0, snaps_screen = 0, ticks = 0;
+    int32_t max_dx[4] = {0, 0, 0, 0}, max_dy[4] = {0, 0, 0, 0};  // largest |D| per zoom 1 / 2 / 4 / 8 (800-space)
+    double period_ms = 0;
+  };
+  static constexpr int32_t kSlideMaxX = 400, kSlideMaxY = 300;  // 800-space; a larger move is a jump (a map click)
+  void set_smooth_camera(bool on) { smooth_ = on; }
+  bool smooth_camera() const { return smooth_; }
+  // the offset for `now_ns` (perf_now_ns), set on the presenter and the remap; true = it changed (the window repaints)
+  bool slide_tick(int64_t now_ns, const Viewport &vp);
+  bool sliding() const { return slide_on_; }
+  void slide_offset(int32_t &x, int32_t &y) const {
+    x = cur_x_;
+    y = cur_y_;
+  }
+  const SlideStats &slide_stats() const { return slide_stats_; }
+  // the last frame's slide start (SG_P12_LOG): D (800-space), the start offset (client pixels), the period, the snap reason
+  // (0 slid, 1 no snapshot, 2 zoom / rotation, 3 too far, 4 screen, 5 no move)
+  struct SlideStart {
+    int32_t dx = 0, dy = 0, reason = 0;
+    int32_t ndx = 0, ndy = 0;  // the next camera's shift (800-space)
+    double s0x = 0, s0y = 0, period_ms = 0;
+  };
+  const SlideStart &slide_start() const { return slide_start_; }
+  // P12A fix 1: the window changed the picture without a new frame or a preview / slide move (a hover swap): the next paint counts
+  // as a changed picture for the FPS overlay
+  void mark_changed() const { changed_pending_ = true; }
   // P10I fix 1: the frame's tee lines (GfxHudFrame::lines, gfx.h gfx_set_hud_lines) drawn at the window's resolution in the cursor
   // previews' place in the draw order, the second end moved with them by P10E's live shift; their 800-space pixels are left out of
   // the centred layers (--line-res native; off = the frame's line pixels scaled with the layer)
@@ -288,7 +364,9 @@ class Presenter {
   PanelRemap *remap_ = nullptr;                                                                       // G32
   void compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P8B
   bool layered() const;                                                                                // P9B
-  void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9B
+  // P9B; P12A: (slx, sly) = the camera slide's offset of the course picture (client pixels): the tool previews and the tee line
+  // move with it; the base / world runs are drawn by render before it (with the slid viewport)
+  void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, int32_t slx = 0, int32_t sly = 0) const;
   mutable std::vector<uint32_t> scratch_;
   mutable std::vector<uint32_t> base_bgra_;  // P10A: render's BGRA copy of the base (smooth path)
   mutable std::vector<int32_t> base_lx_, cw_tab_, cl_tab_;  // P10A: render / compose_world / compose_layers column tables
@@ -304,6 +382,28 @@ class Presenter {
   // remap's coverage stays the frame's
   std::vector<std::vector<portsim::GfxLayerPx>> hover_pristine_;
   mutable CursorLive painted_live_;                        // P10E: live_ at the last paint
+  // P12A fix 1: the camera slide
+  bool smooth_ = false;
+  bool slide_on_ = false;
+  double s0x_ = 0, s0y_ = 0, period_ns_ = 0;  // the start offset (client pixels), the game frame period (mean present interval)
+  double slide_ns_ = 0;                        // this slide's length
+  int32_t s0x_i_ = 0, s0y_i_ = 0;             // the start offset rounded (the underlay's place at the start)
+  int64_t t0_ns_ = 0, last_present_ns_ = 0;
+  int32_t cur_x_ = 0, cur_y_ = 0;             // the offset the next paint draws
+  int32_t nd_x_ = 0, nd_y_ = 0;               // the shown frame's next-camera shift (CameraSnap::next_*, 800-space; 0 = none)
+  SlideStats slide_stats_;
+  SlideStart slide_start_;
+  // the course picture of the last paint (before the HUD layers), its size, offset and camera; scene_prev_: the one the slide's
+  // uncovered pixels show
+  mutable std::vector<uint32_t> scene_last_, scene_prev_;
+  mutable int32_t scene_w_ = 0, scene_h_ = 0, prev_w_ = 0, prev_h_ = 0;
+  mutable int32_t painted_x_ = 0, painted_y_ = 0;
+  mutable CameraSnap painted_cam_;
+  mutable bool scene_ok_ = false, prev_ok_ = false;
+  mutable int32_t painted_cur_x_ = 0, painted_cur_y_ = 0;  // the offset at the last paint (the profiler's slide paints)
+  mutable bool changed_pending_ = false;
+  void slide_start(const WorldImage &w);  // set_frame_world
+  void fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vs, int32_t slx, int32_t sly) const;
   // P9C
   bool text_native_ = false, text_ok_ = false, text_layered_ok_ = false, text_unit_redraw_ = false;
   TextDefect text_defect_ = TextDefect::None;

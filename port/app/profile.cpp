@@ -81,6 +81,7 @@ bool Profiler::open_csv(const std::string &path) {
   std::fprintf(csv_, "t_s,secs,frames,shown,paints,fps,sim_fps,frame_ms,frame_max_ms,work_ms,paint_ms,paint_max_ms");
   for (int i = 0; i < kPhases; ++i) std::fprintf(csv_, ",%s_ms", kNames[i]);
   std::fprintf(csv_, ",cursor_paints");  // P10E
+  if (fps_changed_) std::fprintf(csv_, ",slide_paints,changed_paints");  // P12A fix 1
   std::fputc('\n', csv_);
   std::fflush(csv_);
   return true;
@@ -127,7 +128,7 @@ void Profiler::frame_head() {
   roll(now);
 }
 
-void Profiler::painted(bool new_frame, int64_t ns, bool cursor) {
+void Profiler::painted(bool new_frame, int64_t ns, bool cursor, bool slide, bool changed) {
   if (!g_on.load(std::memory_order_relaxed)) return;
   const int64_t now = portsim::perf_now_ns();
   std::lock_guard<std::mutex> lk(mu_);
@@ -139,6 +140,8 @@ void Profiler::painted(bool new_frame, int64_t ns, bool cursor) {
   ++paints_;
   if (new_frame) ++shown_;
   if (cursor) ++cursor_;  // P10E
+  if (slide) ++slide_;      // P12A fix 1
+  if (changed) ++changed_;
   paint_sum_ += ns * 1e-6;
   paint_max_ = std::max(paint_max_, ns * 1e-6);
   roll(now);
@@ -155,7 +158,11 @@ void Profiler::roll(int64_t now) {
   l.shown = shown_;
   l.paints = paints_;
   l.cursor = cursor_;  // P10E
-  l.fps = shown_ / l.secs;
+  l.slide = slide_;    // P12A fix 1
+  l.changed = changed_;
+  l.slide_line = fps_changed_;
+  // P12A fix 1: with fps_changed_ the paints whose picture changed (a slide's steps count), else the frames shown (P10A)
+  l.fps = (fps_changed_ ? changed_ : shown_) / l.secs;
   l.sim_fps = frames_ / l.secs;
   l.frame_ms = frames_ ? frame_sum_ / frames_ : 0;
   l.frame_max_ms = frame_max_;
@@ -176,6 +183,8 @@ void Profiler::roll(int64_t now) {
     tot_paint_ += l.paint_ms;
     tot_paints_ += paints_ / l.secs;  // P10E
     tot_cursor_ += cursor_ / l.secs;
+    tot_slide_ += slide_ / l.secs;  // P12A fix 1
+    tot_shown_ += shown_ / l.secs;
     for (int i = 0; i < kPhases; ++i) tot_ms_[i] += l.ms[i];
   }
   if (csv_) {
@@ -183,10 +192,11 @@ void Profiler::roll(int64_t now) {
                  l.sim_fps, l.frame_ms, l.frame_max_ms, l.work_ms, l.paint_ms, l.paint_max_ms);
     for (int i = 0; i < kPhases; ++i) std::fprintf(csv_, ",%.3f", l.ms[i]);
     std::fprintf(csv_, ",%u", l.cursor);  // P10E
+    if (fps_changed_) std::fprintf(csv_, ",%u,%u", l.slide, l.changed);  // P12A fix 1
     std::fputc('\n', csv_);
     std::fflush(csv_);
   }
-  frames_ = shown_ = paints_ = cursor_ = 0;
+  frames_ = shown_ = paints_ = cursor_ = slide_ = changed_ = 0;
   for (double &v : sum_) v = 0;
   frame_sum_ = frame_max_ = work_sum_ = paint_sum_ = paint_max_ = 0;
   line_t0_ = now;
@@ -224,6 +234,10 @@ std::string Profiler::summary_json() const {
   std::string s = b;
   std::snprintf(b, sizeof b, ",\"paints_per_s\":%.2f,\"cursor_paints_per_s\":%.2f", tot_paints_ / n, tot_cursor_ / n);  // P10E
   s += b;
+  if (fps_changed_) {  // P12A fix 1
+    std::snprintf(b, sizeof b, ",\"slide_paints_per_s\":%.2f,\"frames_shown_per_s\":%.2f", tot_slide_ / n, tot_shown_ / n);
+    s += b;
+  }
   for (int i = 0; i < kPhases; ++i) {
     std::snprintf(b, sizeof b, ",\"%s_ms\":%.2f", kNames[i], tot_ms_[i] / n);
     s += b;
@@ -232,15 +246,20 @@ std::string Profiler::summary_json() const {
 }
 
 std::string overlay_text(const ProfLine &l, int mode) {
-  char b[200];
+  char b[240];
   if (mode <= 1) {
     std::snprintf(b, sizeof b, "%.1f fps", l.fps);
     return b;
   }
   auto m = [&](Phase p) { return l.ms[static_cast<int>(p)]; };
   std::string s;
-  std::snprintf(b, sizeof b, "%.1f fps   game %.1f/s   frame %.0f ms (max %.0f)   paints %.0f/s  cursor %.0f/s\n", l.fps,
-                l.sim_fps, l.frame_ms, l.frame_max_ms, l.secs > 0 ? l.paints / l.secs : 0.0, l.secs > 0 ? l.cursor / l.secs : 0.0);
+  if (l.slide_line)  // P12A fix 1: the slide's paints too
+    std::snprintf(b, sizeof b, "%.1f fps   game %.1f/s   frame %.0f ms (max %.0f)   paints %.0f/s  cursor %.0f/s  slide %.0f/s\n",
+                  l.fps, l.sim_fps, l.frame_ms, l.frame_max_ms, l.secs > 0 ? l.paints / l.secs : 0.0,
+                  l.secs > 0 ? l.cursor / l.secs : 0.0, l.secs > 0 ? l.slide / l.secs : 0.0);
+  else
+    std::snprintf(b, sizeof b, "%.1f fps   game %.1f/s   frame %.0f ms (max %.0f)   paints %.0f/s  cursor %.0f/s\n", l.fps,
+                  l.sim_fps, l.frame_ms, l.frame_max_ms, l.secs > 0 ? l.paints / l.secs : 0.0, l.secs > 0 ? l.cursor / l.secs : 0.0);
   s += b;
   std::snprintf(b, sizeof b, "sim %.1f  gfx %.1f  terrain %.1f  capture %.1f  wait %.1f\n", m(Phase::Sim), m(Phase::Gfx),
                 m(Phase::Terrain), m(Phase::Capture), m(Phase::Wait));

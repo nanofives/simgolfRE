@@ -53,6 +53,8 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P11", "off")
     # P13: the sixth play-test's app changes off for the app tests (P13D item 4: --terrain-filter acts only on the world layer)
     os.environ.setdefault("SG_APP_P13", "off")
+    # P12: motion at the display's rate (P12A fix 1: the camera slide) is off for the app tests too
+    os.environ.setdefault("SG_APP_P12", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

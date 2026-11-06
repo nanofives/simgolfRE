@@ -16,7 +16,8 @@
 //   overlay  this overlay
 //   blit     SetDIBitsToDevice
 // Each phase is timed exclusively on its thread (ProfScope: an inner scope's time is not its outer scope's). Every second the
-// profiler closes a line: fps = distinct frames the window showed per second, sim_fps = game frames per second, the sim phases in
+// profiler closes a line: fps = distinct frames the window showed per second (P12A fix 1, --smooth-camera on: paints whose picture
+// changed per second, so the camera slide shows its own rate; the game's frames per second stay in the detail line), sim_fps = game frames per second, the sim phases in
 // ms per game frame, the window phases in ms per paint. The line feeds the overlay and, with --profile-csv <file>, one CSV row.
 #ifndef PORTAPP_PROFILE_H
 #define PORTAPP_PROFILE_H
@@ -39,6 +40,9 @@ struct ProfLine {
   uint32_t shown = 0;       // paints that showed a new frame
   uint32_t paints = 0;      // paints
   uint32_t cursor = 0;      // P10E: paints that moved the tool preview to the cursor's tile between game frames
+  uint32_t slide = 0;       // P12A fix 1: paints that showed the camera slide at a new offset between game frames
+  uint32_t changed = 0;     // P12A fix 1: paints whose picture changed (a new frame, a preview move, a slide step, a hover swap)
+  bool slide_line = false;  // P12A fix 1: fps counts `changed` (Profiler::set_fps_changed)
   double fps = 0, sim_fps = 0;
   double frame_ms = 0, frame_max_ms = 0;  // game frame length (head to head): mean, max
   double work_ms = 0;                     // game frame length without the wait: mean
@@ -70,7 +74,11 @@ class Profiler {
   void frame_head();
   // window thread: a paint ended (new_frame: it showed a frame the previous paint did not), its length; P10E: cursor = it showed
   // the live tool preview at a new place without a new frame
-  void painted(bool new_frame, int64_t ns, bool cursor = false);
+  // P12A fix 1: slide = it showed the camera slide at a new offset without a new frame; changed = its picture changed
+  void painted(bool new_frame, int64_t ns, bool cursor = false, bool slide = false, bool changed = false);
+  // P12A fix 1 (--smooth-camera on): fps = paints whose picture changed per second (a slide shows its real rate), the CSV and the
+  // summary gain slide / changed paints; off = P10A's fps (distinct frames shown)
+  void set_fps_changed(bool on) { fps_changed_ = on; }
   ProfLine last() const;
   uint64_t lines() const;
   // the overlay's font (the game's own face, taken by the host once the game created its fonts; empty until then)
@@ -91,6 +99,8 @@ class Profiler {
   int64_t phase_prev_[kPhases] = {};
   // the open line
   uint32_t frames_ = 0, shown_ = 0, paints_ = 0, cursor_ = 0;  // P10E: cursor_
+  uint32_t slide_ = 0, changed_ = 0;                            // P12A fix 1
+  bool fps_changed_ = false;                                    // P12A fix 1
   double sum_[kPhases] = {};
   double frame_sum_ = 0, frame_max_ = 0, work_sum_ = 0, paint_sum_ = 0, paint_max_ = 0;
   ProfLine last_;
@@ -99,6 +109,7 @@ class Profiler {
   uint64_t sum_lines_ = 0;
   double tot_fps_ = 0, tot_sim_fps_ = 0, tot_frame_ = 0, tot_paint_ = 0, tot_ms_[kPhases] = {};
   double tot_paints_ = 0, tot_cursor_ = 0;  // P10E: paints and cursor paints per second
+  double tot_slide_ = 0, tot_shown_ = 0;    // P12A fix 1
   std::string face_;
   uint32_t style_ = 0;
 };
