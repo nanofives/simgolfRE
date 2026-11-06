@@ -75,6 +75,11 @@ const GfxBodyDef kBodies[] = {
 
 }  // namespace
 
+namespace gfxb {
+// P13B item 13: the character editor is open (its background Image is held from showCharacterEditor.setup to .teardown)
+bool chareditor_open(const Gfx &g) { return g.images.find(kImage) != g.images.end(); }
+}  // namespace gfxb
+
 extern const GfxFamily kGfxFamily_chareditor = {"chareditor", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
 
 }  // namespace portsim

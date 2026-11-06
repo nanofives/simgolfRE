@@ -80,6 +80,7 @@ void gfx_set_refresh_hook(Ctx &ctx, GfxRefreshHook fn, void *arg) {
 
 namespace gfxf {
 const int32_t *blit_scale(Gfx &g);   // gfx_prim_fill.cpp (roadmap S2.4): Display::setScale's three words
+void fill_rect16(Surface16 &d, int32_t l, int32_t t, int32_t r, int32_t b, uint16_t c);   // gfx_prim_fill.cpp
 }
 namespace gfxe {
 void compose(Gfx &g, Ctx &ctx);   // gfx_editbox.cpp (roadmap S3.19): the window tree's shown child surfaces onto the back buffer
@@ -483,6 +484,9 @@ static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   draw_text(g, ctx, a, false, "drawTextWithColor");
 }
 
+// P13B item 13: drawPanelBackdrop.barOnTerrainOnly (1 = the original: the bar is the terrain view's line only)
+int g_defect_backdrop_gl_only = 1;
+bool chareditor_open(const Gfx &g);   // gfx_chareditor.cpp (this file's gfxb namespace is open here)
 // drawPanelBackdrop(x, y) (c3dw.cpp DrawPanelBackdrop_re): setDrawTarget(Root, g_fontRef_519fd8, 0, 0, 0); w = 3 * strlen of
 // the text buffer; half = x raised to w and lowered to 0x320 - w (signed); drawMapLine(half - w, y, half + w, y, 0x80000000,
 // 0xa, 5) = Terrain::drawLine, an OpenGL line in the terrain view's GL context (re/match/terrain_drawline.cpp), which is not
@@ -501,6 +505,24 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (GfxBody bar = gfxb::find_body("drawMapLine")) {
     const uint32_t la[7] = {static_cast<uint32_t>(sub32(half, w)), a[1], static_cast<uint32_t>(add32(half, w)), a[1], 0x80000000u, 0xau, 5u};
     bar(g, ctx, la, 7);
+  }
+  // P13B item 13 (drawPanelBackdrop.barOnTerrainOnly = 0): while the character editor is open, the bar the call asks for
+  // (colour 0x80000000, the text's row) is also filled into the 2D target, so the editor's white tips read over its light art,
+  // where the terrain view's line never shows (in game the line shows: the HUD tips are left as they are); it covers the
+  // measured text with 4 pixels each side, at least the call's half - w .. half + w, and the rows from 2 above the text's top
+  // (y - 5) to 2 under its descenders (a third of the ascent below the baseline)
+  if (g_defect_backdrop_gl_only == 0 && gfxb::chareditor_open(g)) {
+    g.ensure_root(ctx);
+    int32_t asc = 0, tw = 0;
+    TextMetrics *tm = text_metrics(ctx);
+    const uint32_t f = g.fonts[0];
+    const int32_t n = static_cast<int32_t>(vstrlen(ctx.mem, text));
+    if (tm && f && n > 0 && tm->glyph_ascent(ctx, f, asc) && tm->glyph_width(ctx, f, text, n, tw)) {
+      const int32_t hw = std::max(w, add32(tw / 2, 4));
+      const int32_t top = sub32(static_cast<int32_t>(a[1]), 7);
+      const int32_t bot = add32(add32(sub32(static_cast<int32_t>(a[1]), 5), add32(asc, asc / 3)), 2);
+      gfxf::fill_rect16(g.root, sub32(half, hw), top, add32(half, hw), bot, 0);
+    }
   }
   const uint32_t args[4] = {text, static_cast<uint32_t>(half), static_cast<uint32_t>(sub32(static_cast<int32_t>(a[1]), 5)),
                             0x80007fffu};
@@ -2059,6 +2081,11 @@ const DefectDef kDefects[] = {
      "drawn before the palette, so the palette covers the box from row 0x1e2 down and the meter with it; fixed: the box ends 8 "
      "rows under the meter, which sits 8 rows under the description or the vertical meter, moved up to stay above row 0x1e2",
      &g_defect_tip_box},
+    {"drawPanelBackdrop.barOnTerrainOnly", "P13B",
+     "drawPanelBackdrop draws its tip's dark bar only as a terrain-view line (drawMapLine), which a 2D screen never shows, so the "
+     "white tip text of the character editor stands on the editor's own light art; fixed: while the editor is open the bar is "
+     "also filled into the 2D target under the text",
+     &gfxb::g_defect_backdrop_gl_only},
 };
 }  // namespace
 

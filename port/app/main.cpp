@@ -640,6 +640,7 @@ const ProfileMember kPlayProfile[] = {
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
     {"showCharacterEditor.cancelStaysOpen", 0},     // P13B item 14: Cancel puts back every edit and closes the editor
+    {"drawPanelBackdrop.barOnTerrainOnly", 0},      // P13B item 13: the tip bar filled under the text on 2D screens
     {"pickCharEditor.escIgnored", 0},               // P9A item 2: Esc = the look picker's cancel
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK

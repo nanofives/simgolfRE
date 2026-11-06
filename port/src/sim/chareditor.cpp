@@ -931,6 +931,10 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
       }
     }
     d.gx("Window::refreshFull", {d.win, 0});
+    // P13B item 13: the original passes every 100 ms with no input (waitTicks(5, 0) before and after pumpMessages, 50 ms each,
+    // showCharacterEditor+0x11e2 / +0x11f0), so a playing host runs the passes at that period (the hover tip after 10 passes,
+    // about 1.1 s) instead of its 200 ms idle passes (P5A's courseActionMenu hint)
+    if (InputSource *s = input_source(ctx)) s->timed_pass(100);
     pump_pass(ctx, "showCharacterEditor");
     int32_t btn = gs.g_rootInput[kButton];
     if (cm::esc_pressed(ctx, g_defect_esc_char_editor)) {  // P9A item 2: Esc = a press on Exit (case 19)
