@@ -142,9 +142,14 @@ class AppWindow {
   uint32_t undo_vk_ = 0;       // P11D: the Z / Y key whose character and key-up are being kept from the game (0: none)
   uint32_t zoom_char_ = 0;     // P5B item 2: the character the next WM_CHAR becomes (0: none)
   uint32_t zoom_remaps_ = 0;
+  // P13B item 1: the mouse buttons (bit 0 left, bit 1 right) whose last press went to the frame (title bar, maximize button) and
+  // not to the client; that button's next client button-up is the end of a title-bar double-click or a frame click, not a click
+  uint32_t nc_press_ = 0;
+  uint32_t nc_ups_dropped_ = 0;
 
  public:
   uint32_t zoom_remaps() const { return zoom_remaps_; }
+  uint32_t nc_ups_dropped() const { return nc_ups_dropped_; }
 
  private:
   Presenter &presenter_;

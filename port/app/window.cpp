@@ -336,6 +336,26 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
       return 0;
     }
   }
+  // P13B item 1: a double-click on the title bar maximizes (or restores) the window on its second press (WM_NCLBUTTONDBLCLK ->
+  // SC_MAXIMIZE); the window then lies under the cursor, so that press's release arrives as a client WM_LBUTTONUP, which the
+  // translator turns into the game's press handler: a click on whatever title-menu item was now under the cursor. A button-up
+  // whose press went to the frame is dropped before the game (and the recording) sees it; the next client press clears it.
+  switch (msg) {
+    case WM_NCLBUTTONDOWN: case WM_NCLBUTTONDBLCLK: nc_press_ |= 1u; break;
+    case WM_NCRBUTTONDOWN: case WM_NCRBUTTONDBLCLK: nc_press_ |= 2u; break;
+    case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK: nc_press_ &= ~1u; break;
+    case WM_RBUTTONDOWN: case WM_RBUTTONDBLCLK: nc_press_ &= ~2u; break;
+    case WM_LBUTTONUP: case WM_RBUTTONUP: {
+      const uint32_t b = msg == WM_LBUTTONUP ? 1u : 2u;
+      if (nc_press_ & b) {
+        nc_press_ &= ~b;
+        ++nc_ups_dropped_;
+        return 0;
+      }
+      break;
+    }
+    default: break;
+  }
   if (is_input(msg)) {
     input(msg, static_cast<uint32_t>(wp), static_cast<uint32_t>(lp));
     if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) return DefWindowProcW(h, msg, wp, lp);  // Alt+F4

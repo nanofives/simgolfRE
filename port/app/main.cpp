@@ -1587,7 +1587,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"keys\":\"" + o.keys + "\",\"clock_origin\":" + std::to_string(o.clock_origin);
   s += ",\"p5b\":{\"edge_guard\":" + std::to_string(o.edge_guard ? 1 : 0) + ",\"zoom_keys\":\"" + o.zoom_keys +  // P5B
        "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
-       ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
+       ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"" +
+       ",\"nc_ups_dropped\":" + std::to_string(win.nc_ups_dropped()) + "}";  // P13B item 1
   s += ",\"p7\":{\"wide\":" + std::to_string(o.wide ? 1 : 0) + ",\"wide_width\":" + std::to_string(o.wide_width) +
        ",\"wide_fill\":\"" + o.wide_fill + "\"}";  // P7
   s += ",\"p8b\":{\"render_scale\":\"" + jesc(o.render_scale) + "\",\"world_pw\":" + std::to_string(ow.world_pw) +
