@@ -622,7 +622,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.zoomInStopsAt4", 0},                 // P11A fix 2 (one zoom level closer: 8)
     {"mainLoop.zoom8Font", 0},                      // P13C (zoom 8 labels keep zoom 4's font)
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
-    {"mainLoop.toolForcesZoom4", 0},                // P11E (the build tools keep zoom 8)
+    {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit

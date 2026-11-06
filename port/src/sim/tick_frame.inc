@@ -4490,7 +4490,7 @@ L_415bbe:
 L_415bcb:
     G32(GS(g_flags)) = G32(GS(g_flags)) & 0xF7FFFFFF;                           // ML+0x660b..ML+0x661a
     if (eax != -1 || ecx != eax)                                              // ML+0x6620 / ML+0x6624
-        if (SG_DEFECT(g_defect_tool_zoom4) || G32(GS(g_zoomScale)) != 8)           // P11E: a held tool keeps zoom 8
+        if (SG_DEFECT(g_defect_tool_zoom4))                                        // P11E / P13A: a held tool keeps every zoom
             G32(GS(g_zoomScale)) = 4;                                              // ML+0x6626
 L_415bf0:
     if (G32(GS(g_holesPlusOne)) >= 0x13 && ecx == esi)                                // ML+0x6637 / ML+0x663b
@@ -5712,11 +5712,13 @@ void P6_DisplaySlot9c() {
 // (z, z, 4) (gfx_scene.cpp draw_entry). At zoom 4, where the original draws the box, every one of those is scale 1. At zoom 8
 // (reached only with mainLoop.zoomInStopsAt4 = 0) they give 1 or 2 by what was drawn last (measured: the green tool's box at twice
 // its art, the palm tool's at its art's size, half its tile), so at zoom 8 the box is drawn at (8, 8, 4), the zoom's scale.
-// Drawing only; nothing at other zooms.
+// P13A: with mainLoop.toolForcesZoom4 = 0 a tool is also held at zooms 1 and 2, where the box is drawn at (z, z, 4) the same way.
+// Drawing only; zoom 4, and zooms 1 and 2 with the switch at 1, are untouched.
 void P11E_BoxScale() {
-    if (G32(GS(g_zoomScale)) != 8) return;
+    const int z = G32(GS(g_zoomScale));
+    if (z == 4 || (z != 8 && SG_DEFECT(g_defect_tool_zoom4))) return;
     if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
-      const uint32_t a[3] = {8, 8, 4};
+      const uint32_t a[3] = {(uint32_t)z, (uint32_t)z, 4};
       gfx_drop(ctx, "Display::setScale", a, 3);
     }
 }
@@ -7483,8 +7485,8 @@ a41c8e7:  // key 0x78
 a41c900:
     eax = G32(GS(g_zoomScale));                    // ML+0xd340
     {
-    // P11E (mainLoop.toolForcesZoom4 = 0): zooming out from 8 lands on 4, a zoom the tools work at, so the held tool stays
-    const bool keepTool = !SG_DEFECT(g_defect_tool_zoom4) && eax == 8;
+    // P11E / P13A (mainLoop.toolForcesZoom4 = 0): the tools work at every zoom, so zooming out keeps the held tool
+    const bool keepTool = !SG_DEFECT(g_defect_tool_zoom4);
     if (eax > ebx) {                          // ML+0xd345 cmp eax,ebx; jle skip
         eax = eax / 2;                        // ML+0xd349 cdq; sub eax,edx; sar eax,1 (signed /2)
         G32(GS(g_zoomScale)) = eax;                // ML+0xd34e

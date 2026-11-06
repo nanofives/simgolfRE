@@ -125,12 +125,12 @@ int g_defect_zoom_in_max4 = 1;
 // mainLoop.toolForcesZoom4 (P11E, Mariano 2026-11-05: the build tools at P11A's zoom 8 too): while a build tool or a selection is
 // held, P4_queueAndSelection stores g_zoomScale = 4 every frame (ML+0x6620 / ML+0x6626), so picking a tool at another zoom returns
 // to 4 and 'z' has no lasting effect while it is held; key 0x78 ('x', zoom out) drops the held tool (ML+0xd35e / ML+0xd363).
-// Fixed (0): a held tool keeps zoom 8 (the only zoom above 4, reached only with mainLoop.zoomInStopsAt4 = 0), and 'x' from 8 to 4
-// keeps the tool (4 is a tool zoom); at 1 and 2 the original's forcing to 4 stays, and 'x' from 4 still drops the tool. The build
+// Fixed (0): a held tool keeps every zoom (P11E: 8, reached only with mainLoop.zoomInStopsAt4 = 0; P13A, Mariano's play-test 6
+// item 6 "changing zoom deselects what's currently selected": 1 and 2 too) and 'x' never drops the tool. The build
 // paths at zoom 8: the clicks and the cursor tile go through screenToTile, the placement rectangle, markers, tee line and
 // footprints through worldToScreen / tileToScreen / addSprite, all linear in the zoom. Two drawing rules of zoom 4 are kept
-// apart at zoom 8 (both reached only there): the translucent tile box takes (8, 8, 4) (tick_frame.inc P11E_BoxScale) and the
-// translucent sprites take their offsets at the display scale (gfx_scene.cpp draw_alpha).
+// apart at zooms 8, 2 and 1 (with a tool held reached only at 0): the translucent tile box takes (z, z, 4) (tick_frame.inc
+// P11E_BoxScale) and the translucent sprites take their offsets at the display scale (gfx_scene.cpp draw_alpha).
 int g_defect_tool_zoom4 = 1;
 // mainLoop.cameraStepFixed4 (P11F): the arrow keys (ML+0xe971..ML+0xea73) step the camera 4 tiles at every zoom; fixed (0): 2 tiles
 // at zoom 8 (the screen distance 4 tiles cover at zoom 4). The edge scroll (ML+0xebb4..ML+0xec89, 1 tile per frame) is unchanged.
@@ -2091,7 +2091,7 @@ const DefectDef kDefects[] = {
      &g_defect_zoom_in_max4},
     {"mainLoop.toolForcesZoom4", "P11E",
      "while a build tool or selection is held the zoom is set to 4 every frame, and zooming out drops the tool; fixed: a held tool "
-     "keeps zoom 8 and zooming out from 8 to 4 keeps it (zooms 1 and 2 still go to 4, zooming out from 4 still drops it)",
+     "keeps every zoom (1, 2, 4, 8) and zooming out never drops it",
      &g_defect_tool_zoom4},
     {"mainLoop.zoom8Font", "P13C",
      "the golfer / ball labels pick their font by g_zoomScale > 4, so the closest zoom 8 (P11A) draws them in the larger "

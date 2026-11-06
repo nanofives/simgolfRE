@@ -85,6 +85,7 @@ namespace portsim {
 extern int g_defect_zoom8_font;  // tick.cpp mainLoop.zoom8Font (P13C)
 
 int g_negctl_gfx_scene = 0;
+extern int g_defect_tool_zoom4;  // tick.cpp mainLoop.toolForcesZoom4 (P11E / P13A: draw_alpha's offsets at zooms 1 and 2)
 
 namespace gfxf {
 const int32_t *blit_scale(Gfx &g);  // gfx_prim_fill.cpp (roadmap S2.4): Display::setScale's three words
@@ -1201,8 +1202,10 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
   // tree and object previews: queue flag 0x200, mainLoop ML+0xb5ba / ML+0xb8da / ML+0xab98..ML+0xae87) only at zoom 4, where the
   // sprite queue leaves scale 1. At g_zoomScale 8 (reached only with mainLoop.zoomInStopsAt4 = 0) the scale is 2 and the unscaled
   // offsets put those sprites off their tile (a pin 37 px left of its green), so there the offsets are taken at the scale too.
-  // Zooms 1, 2 and 4 keep the original's rule.
-  const bool z8 = ctx.gs().g_zoomScale == 8;
+  // Zooms 1, 2 and 4 keep the original's rule. P13A: with mainLoop.toolForcesZoom4 = 0 the previews are drawn at zooms 1 and 2
+  // too (a tool is held at every zoom), at scale 1/2 and 1/4, so there the offsets are taken at the scale as well.
+  const int32_t zs = ctx.gs().g_zoomScale;
+  const bool z8 = zs == 8 || (zs != 4 && !SG_DEFECT(g_defect_tool_zoom4));
   const Scale sc0 = cur_scale(g);
   const int32_t ox = z8 ? trim(s->left, sc0.nx, sc0.den) : s->left;
   const int32_t oy = z8 ? trim(s->top, sc0.ny, sc0.den) : s->top;
