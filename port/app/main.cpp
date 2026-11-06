@@ -82,6 +82,8 @@
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
 //   game = a highlight changes only when the game draws its next frame.
+//   P13C item 10: --hud-strip right|left (default right; SG_APP_P13=off: left) the golfer strip's faces right of the Build palette
+//   (present.h set_strip_right, kGfxLayerStrip), clicks remapped with them.
 //   P11B fix 1: --hud-panel left|right (default left; SG_APP_P11=off: right) the edge the panels opened from the radial menu's
 //   people buttons (employee view / detail, golfer action, with the shot texts in their place) are anchored to: left = beside the
 //   radial menu as in the 800-space frame, clicks remapped with them (present.h set_panel_anchor); right = P9B's right edge.
@@ -408,6 +410,7 @@ struct Options {
                                    // (SG_APP_P13=off: sharp; SG_APP_P10=off: smooth)
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
+  bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
   bool hover_help = true;          // P11C: --hover-help on|course|off (SG_APP_P11=off: off)
@@ -461,6 +464,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_text_fit(o.text_fit);  // P10B fix 2
   p.set_text_boxes(o.hud_textbox);  // P10C fix 4 (the presenter's popup pieces)
   p.set_panel_anchor(o.panel_left ? -1 : 1);  // P11B fix 1
+  p.set_strip_right(o.strip_right);           // P13C item 10
   p.set_line_native(line_res_on(o));  // P10I fix 1
 }
 
@@ -1675,8 +1679,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"keys\":\"" + o.keys + "\",\"clock_origin\":" + std::to_string(o.clock_origin);
   s += ",\"p5b\":{\"edge_guard\":" + std::to_string(o.edge_guard ? 1 : 0) + ",\"zoom_keys\":\"" + o.zoom_keys +  // P5B
        "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
-       ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"" +
-       ",\"nc_ups_dropped\":" + std::to_string(win.nc_ups_dropped()) + "}";  // P13B item 1
+       ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
   s += ",\"p7\":{\"wide\":" + std::to_string(o.wide ? 1 : 0) + ",\"wide_width\":" + std::to_string(o.wide_width) +
        ",\"wide_fill\":\"" + o.wide_fill + "\"}";  // P7
   s += ",\"p8b\":{\"render_scale\":\"" + jesc(o.render_scale) + "\",\"world_pw\":" + std::to_string(ow.world_pw) +
@@ -2962,6 +2965,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.sprite_native = v == "native";
     }
+    else if (a == "--hud-strip") {  // P13C item 10
+      if (!val(v) || (v != "left" && v != "right")) return false;
+      o.strip_right = v == "right";
+    }
     else if (a == "--hud-panel") {  // P11B fix 1
       if (!val(v) || (v != "left" && v != "right")) return false;
       o.panel_left = v == "left";
@@ -3153,6 +3160,7 @@ int main(int argc, char **argv) {
       o.terrain_filter = 0;  // P13D item 4
       if (o.sprite_filter == 3) o.sprite_filter = 1;  // P13D fix 5: sharp (P10H's default)
       o.hover_help_course = true;  // P13A item 2: P11C's course line back
+      o.strip_right = false;  // P13C item 10
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = false;  // P12A fix 1

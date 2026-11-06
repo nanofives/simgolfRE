@@ -1244,7 +1244,7 @@ uint16_t gfx_layer_quarter(uint16_t p, uint16_t d) {  // gfx_reports.cpp quarter
 
 int8_t gfx_layer_anchor(int32_t id) {
   switch (id) {
-    case kGfxLayerTitle: case kGfxLayerBottom: return -1;
+    case kGfxLayerTitle: case kGfxLayerBottom: case kGfxLayerStrip: return -1;
     case kGfxLayerMeters: case kGfxLayerPanel: return 1;
     default: return 0;
   }

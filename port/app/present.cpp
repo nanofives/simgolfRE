@@ -325,6 +325,16 @@ void Presenter::fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, con
   });
 }
 
+int32_t Presenter::layer_dx(const portsim::GfxHudLayer &l, const Viewport &vp, int32_t dxl, int32_t dxr) const {
+  if (l.id == portsim::kGfxLayerStrip && strip_right_ && l.x1 > l.x0 && vp.client_w > 0) {
+    // the palette ends at the content rectangle's right edge once moved left (client x = client_w); the strip's first face
+    // starts there: its own 800-space left edge x0 maps to origin_x + x0 * scale before the move
+    const int32_t at = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(l.x0) * vp.client_w / kLogicalW);
+    return vp.client_w - at;
+  }
+  return l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
+}
+
 // ---- G32: PanelRemap
 void PanelRemap::set(bool on, const Viewport &vp, int32_t cw, const std::vector<uint8_t> &mask) {
   std::lock_guard<std::mutex> lk(mu_);
@@ -911,6 +921,10 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
           lix < hover_pristine_.size() && hover_pristine_[lix].size() == l.px.size() ? hover_pristine_[lix] : l.px;
       RemapLayer r;
       r.anchor = anchor ? l.anchor : 0;
+      if (anchor && l.id == portsim::kGfxLayerStrip && strip_right_) {  // P13C item 10: the strip at its own place
+        r.fixed = true;
+        r.dx = layer_dx(l, vp, dxl, dxr);
+      }
       r.x0 = l.x0;
       r.y0 = l.y0;
       r.x1 = l.x1;
@@ -1161,7 +1175,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     const portsim::GfxHudLayer &l = f.layers[li];
     if (li == cur_layer) draw_cursor();  // P9E fix 4
     if (li == line_layer) draw_lines();  // P10I fix 1
-    const int32_t dx0 = anchor ? (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) : 0;
+    const int32_t dx0 = anchor ? layer_dx(l, vp, dxl, dxr) : 0;
     struct RunsAfter {  // P9C: the layer's runs once its pixels are composed (also when the layer has no box)
       const Presenter &p;
       std::vector<uint32_t> &out;

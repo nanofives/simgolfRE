@@ -52,7 +52,7 @@ def pytest_configure(config):
     # P11: the fifth play-test's app changes (P11C: the hover help lines drawn into the frames) are off for the app tests too
     os.environ.setdefault("SG_APP_P11", "off")
     # P13: the sixth play-test's app changes off for the app tests (P13D item 4: --terrain-filter acts only on the world layer;
-    # P13A item 2: --hover-help draws P11C's course line again)
+    # P13A item 2: --hover-help draws P11C's course line again; P13C item 10: --hud-strip left)
     os.environ.setdefault("SG_APP_P13", "off")
     # P12: motion at the display's rate (P12A fix 1: the camera slide) is off for the app tests too
     os.environ.setdefault("SG_APP_P12", "off")

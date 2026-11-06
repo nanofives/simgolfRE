@@ -5811,7 +5811,7 @@ void P6_Hud(u32 F) {
     if (GU32(GS(g_flags)) & 0x200000) return;    // ML+0x9739 / ML+0x9743 -> ML+0x9ef5
 
     std::optional<GfxLayerScope> hud_layer;     // P9B: the golfer strip is a pixel layer of the bottom band (gfx.h; inert
-    hud_layer.emplace(ctx, kGfxLayerBottom);    // without the app's capture)
+    hud_layer.emplace(ctx, kGfxLayerStrip);     // without the app's capture; P13C: its own layer (was kGfxLayerBottom)
     root = Root();                              // ML+0x9749
     int ebp = 0xcc;                             // ML+0x975a
     tc("setDrawTarget", root, GS(g_fontRef_519fd8), 0, 0, 0);  // ML+0x975f setDrawTarget

@@ -253,7 +253,11 @@ class Presenter {
   // radial menu's people buttons, plus the shot texts drawn in their place) is anchored to: -1 left (beside the radial menu, as in
   // the 800-space frame), +1 right (P9B's gfx_layer_anchor). Popups those panels open follow it.
   void set_panel_anchor(int8_t a) { panel_anchor_ = a < 0 ? -1 : 1; }
+  // P13C item 10: the golfer strip's faces (kGfxLayerStrip) at the right of the Build palette (the palette's right end is the
+  // content rectangle's right edge once the bottom band is moved to the left edge) instead of under it
+  void set_strip_right(bool on) { strip_right_ = on; }
   int8_t layer_anchor(int32_t id) const {
+    if (id == portsim::kGfxLayerStrip && strip_right_) return 0;  // P13C: popups its faces open stay centred
     return id == portsim::kGfxLayerPanel ? panel_anchor_ : portsim::gfx_layer_anchor(id);
   }
   // P9C: the frame's text runs drawn at the window's resolution (--text-res native). set_text after set_frame / set_frame_world
@@ -421,6 +425,9 @@ class Presenter {
   bool popups_on_ = true;
   bool text_boxes_ = false;  // P10C fix 4
   int8_t panel_anchor_ = 1;  // P11B fix 1 (set_panel_anchor)
+  bool strip_right_ = false;  // P13C item 10 (set_strip_right)
+  // P13C: a layer's client offset (the anchor's, or the strip's own place right of the palette)
+  int32_t layer_dx(const portsim::GfxHudLayer &l, const Viewport &vp, int32_t dxl, int32_t dxr) const;
   mutable std::vector<int32_t> piece_dx_;
   mutable const portsim::GfxHudFrame *piece_frame_ = nullptr;
   static int32_t piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y);  // piece index at an 800-space pixel, -1 none

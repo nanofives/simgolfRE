@@ -82,7 +82,8 @@ enum GfxLayerId : int32_t {
   kGfxLayerMeters = 2,   // P6's status boxes: money, fun, skill (right edge)
   kGfxLayerBottom = 3,   // the golfer strip, the radial menu, the palette and building panels (left edge)
   kGfxLayerPanel = 4,    // the employee view / detail and golfer action panels drawn in the palette's place (right edge)
-  kGfxLayerCount = 5,
+  kGfxLayerStrip = 5,    // P13C: the golfer strip's smiley faces (left edge in the 800-space frame; the app can place it right of the palette)
+  kGfxLayerCount = 6,
 };
 // one layer pixel: kind 0 not drawn by the layer (transparent), 1 opaque word `px`, 2 the mask blend of jgld blitPair1 with source
 // word `src` and weight `k` (per 5-bit channel c: ((dst8 * k) >> 8) + src8) >> 3 with x8 = c << 3), 3 the destination through the
