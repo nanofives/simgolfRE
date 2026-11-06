@@ -1761,6 +1761,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.hud.line_word.clear();
   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
   LiveTerrainWorld *w = lt ? lt->world() : nullptr;
+  if (w) w->lines_open = false;  // P13D item 7: the overlay lines drawn before the queue went on the world layer too
   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
     if (w) w->scene_w = 0;
     return;

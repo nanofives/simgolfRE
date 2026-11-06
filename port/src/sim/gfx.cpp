@@ -648,7 +648,7 @@ void text_close_segment(Gfx &g, int64_t seg, int32_t layer, const std::vector<ui
   const bool rec = g.hud.rec_gen.size() == g.root.px.size();
   // P10C fix 2: a pixel the panel's primitives wrote before the glyph is the panel's even when its word equals the mark (the tool
   // names drawn over the palette's tree icons left transparent spots there)
-  const bool wr = L.id != kGfxLayerCentred && g.hud.wr_on && g.hud.wr_gen.size() == g.root.px.size();
+  const bool wr = (L.id != kGfxLayerCentred || g.hud.wr_gap) && g.hud.wr_on && g.hud.wr_gen.size() == g.root.px.size();  // P13D item 17
   for (int32_t y = L.y0; y < L.y1; ++y)
     for (int32_t x = L.x0; x < L.x1; ++x) {
       const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
@@ -851,6 +851,7 @@ void hud_writes_arm(Gfx &g) {
   Gfx::HudCapture &c = g.hud;
   HudWriteMark &m = g_hud_wm;
   m = HudWriteMark{};
+  c.wr_gap = false;  // P13D item 17: a panel layer's own marking ends a gap's
   c.wr_box[0] = c.wr_box[1] = 0;
   c.wr_box[2] = c.wr_box[3] = -1;
   if (!c.wr_on || c.cur <= kGfxLayerCentred || g.root.px.empty()) return;
@@ -860,6 +861,22 @@ void hud_writes_arm(Gfx &g) {
   m.gen = c.wr_gen.data();
   m.cur = c.gen;
   m.w = g.root.w;
+}
+// P13D item 17: the marking over a modal screen's centred gap (blend generation c.gen, the gap's), until the next layer opens or
+// the carried capture ends (gfx_body.h HudCapture::wr_gap)
+void hud_writes_arm_gap(Gfx &g) {
+  Gfx::HudCapture &c = g.hud;
+  HudWriteMark &m = g_hud_wm;
+  m = HudWriteMark{};
+  c.wr_gap = false;
+  if (!c.wr_on || g.root.px.empty()) return;
+  if (c.wr_gen.size() != g.root.px.size()) c.wr_gen.assign(g.root.px.size(), 0);
+  m.lo = reinterpret_cast<uintptr_t>(g.root.px.data());
+  m.hi = m.lo + g.root.px.size() * sizeof(uint16_t);
+  m.gen = c.wr_gen.data();
+  m.cur = c.gen;
+  m.w = g.root.w;
+  c.wr_gap = true;
 }
 void hud_writes_disarm(Gfx &g) {
   Gfx::HudCapture &c = g.hud;
@@ -881,7 +898,14 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
   int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
   // P10C fix 2: a panel layer's pixels are also the ones its primitives wrote (gfx_body.h HudWriteMark), whatever the word
   const Gfx::HudCapture &hc = g.hud;
-  const bool wr = use_rec && id != kGfxLayerCentred && hc.wr_on && hc.wr_gen.size() == now.size() && hc.wr_box[2] >= 0;
+  const bool wr_panel = use_rec && id != kGfxLayerCentred && hc.wr_on && hc.wr_gen.size() == now.size() && hc.wr_box[2] >= 0;
+  // P13D item 17: a modal screen's centred gap keeps the pixels its drawing wrote (the marking is still running: its box from it)
+  const HudWriteMark &gm = g_hud_wm;
+  const bool wr_gap = use_rec && id == kGfxLayerCentred && hc.wr_on && hc.wr_gap && gm.lo != 0 && gm.cur == hc.gen && gm.x1 >= 0 &&
+                      hc.wr_gen.size() == now.size();
+  const bool wr = wr_panel || wr_gap;
+  const int32_t wb[4] = {wr_gap ? gm.x0 : hc.wr_box[0], wr_gap ? gm.y0 : hc.wr_box[1], wr_gap ? gm.x1 : hc.wr_box[2],
+                         wr_gap ? gm.y1 : hc.wr_box[3]};
   for (int32_t y = 0; y < h; ++y) {
     const uint16_t *a = ref.data() + static_cast<size_t>(y) * w, *b = now.data() + static_cast<size_t>(y) * w;
     if (std::memcmp(a, b, static_cast<size_t>(w) * 2) == 0) continue;
@@ -894,10 +918,10 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
     y1 = y;
   }
   if (wr) {
-    x0 = std::min(x0, hc.wr_box[0]);
-    y0 = std::min(y0, hc.wr_box[1]);
-    x1 = std::max(x1, hc.wr_box[2]);
-    y1 = std::max(y1, hc.wr_box[3]);
+    x0 = std::min(x0, wb[0]);
+    y0 = std::min(y0, wb[1]);
+    x1 = std::max(x1, wb[2]);
+    y1 = std::max(y1, wb[3]);
   }
   if (x1 < 0) return false;
   out = GfxHudLayer{};
@@ -1040,12 +1064,17 @@ void Gfx::hud_carry_arm(bool again) {
     c.carry_seg = c.seg;
     ++c.gen;
     c.dim_set = false;
+    gfxb::hud_writes_arm_gap(*this);  // P13D item 17: the screen's drawing over the carried frame is marked
   }
 }
 // drop: the next frame starts (gfx_terrain.cpp: a terrain pass, its restore, a window paint; gfx_layer_begin: the next layer); the
 // carried gap's runs become the next frame's base runs, as every kept run does at a publish
 void Gfx::hud_carry_drop() {
   HudCapture &c = hud;
+  if (c.wr_gap) {  // P13D item 17: the gap's marking ends with the carry
+    g_hud_wm = HudWriteMark{};
+    c.wr_gap = false;
+  }
   if (!c.carry) return;
   c.carry = false;
   c.any = false;
@@ -1064,6 +1093,8 @@ void Gfx::hud_carry_drop() {
 // closes it, and the rest of the scope is a centred gap of the frame (its refreshFull then publishes the frame's layers)
 void Gfx::hud_modal_mark() {
   HudCapture &c = hud;
+  // P13D item 17: a screen drawn in the frame's centred gap (outside every panel layer): its writes are marked from here on
+  if (c.on && c.modal && c.any && !c.aborted && c.cur < 0 && !c.wr_gap) gfxb::hud_writes_arm_gap(*this);
   if (!c.on || !c.modal || c.depth == 0 || !c.any || c.aborted || c.cur < 0) return;
   gfxb::hud_writes_disarm(*this);  // P10C fix 2
   GfxHudLayer l;
@@ -1074,6 +1105,7 @@ void Gfx::hud_modal_mark() {
   c.mark = root.px;
   ++c.gen;
   c.cur = -1;
+  gfxb::hud_writes_arm_gap(*this);  // P13D item 17: the screen's drawing in the rest of the scope is marked
 }
 // the report screens' dim covered every root pixel with one source word (gfx_reports.cpp Surface_drawSprite)
 void Gfx::note_dim(uint16_t src) {

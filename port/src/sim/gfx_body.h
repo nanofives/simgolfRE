@@ -170,6 +170,11 @@ class Gfx {
     std::vector<uint32_t> wr_gen;
     int32_t wr_box[4] = {0, 0, -1, -1};
     bool wr_on = true;                // the marking (gfx.h gfx_set_hud_writes; off = P9B's diff only)
+    // P13D item 17 (log/roadmap/P13/P13D_notes.md): the marking also runs over a modal screen's centred gap (hud_carry_arm, a screen's
+    // first call inside a panel), so a pixel the screen's art wrote with the word already under it stays the screen's: before, such
+    // pixels were left out of the centred layer and the window showed what is beneath at that place (the panels at their moved
+    // places, the course at the window's resolution): dark specks and arcs on the reports (the histograph's axis column)
+    bool wr_gap = false;
   } hud;
   // P9C: the text runs (gfx.h GfxTextRun; gfx.cpp text_run_begin / end, peeled at Window::refreshFull)
   struct TextCapture {

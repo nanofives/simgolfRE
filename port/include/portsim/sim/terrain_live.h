@@ -58,6 +58,10 @@ struct LiveTerrainWorld {
   std::vector<uint16_t> terrain800;       // T: the 800 frame's terrain picture (the root surface after each terrain operation;
                                           // a pass updates only the pixels it changed)
   bool valid = false;          // a pass has drawn
+  // P13D fix (item 7, log/roadmap/P13/P13D_notes.md): between a frame's terrain picture (a pass, windowPaint, the back surface put
+  // back) and renderSpriteQueue's start the overlay lines (drawMapLine / lineTo / drawCircle: the hole's shot lines) are drawn a
+  // second time on the world layer, at its resolution, so they go on past the 800 frame's columns (terrain_overlay.cpp)
+  bool lines_open = false;
   bool strip_full = false;     // a strip pass was drawn as a full render: the next shifted copy of the back surface is skipped
   bool names_differ = false;   // a texture name of the world's rasteriser differed from the primary's (the layer is then off)
   // G32 (dynamic view): after resize_world the world is redrawn whole at the next updateTerrainRender return, from the pivot and
@@ -95,6 +99,12 @@ struct LiveTerrainWorld {
   // the object's outline against what is under it keeps the bilinear coverage), 2 = sharp-area (the outline area-weighted too; a
   // development comparison). Set once with hr_on (app --sprite-filter).
   int hr_filter = 0;
+  // P13D item 4 (log/roadmap/P13/P13D_notes.md): the world rasteriser's magnification filter of the terrain's .bmp textures. The
+  // original's textureLoad sets GL_NEAREST magnification on them (GL_LINEAR on the .tga path textures); at the window's resolution
+  // a 64 x 64 tile texture is magnified up to 3.6 times (zoom 8 at 1080 rows), so every texel shows as a block. 0 = as the original,
+  // 1 = GL_LINEAR on the world layer (the 800 frame keeps NEAREST), 2 = GL_LINEAR over the world's copy of each 2D texture scaled
+  // 2 x 2 with the Catmull-Rom cubic (terrain_live.cpp upscale2_cubic). Set before the first Terrain call (app --terrain-filter).
+  int tex_mag = 0;
   bool hr_open = false;    // between renderSpriteQueue.begin and .end
   bool hr_valid = false;   // hr holds the last queue's sprites
   std::vector<uint16_t> hr;

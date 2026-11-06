@@ -51,6 +51,8 @@ def pytest_configure(config):
     # the HUD layers, which SG_APP_P8B=off already turns off)
     # P11: the fifth play-test's app changes (P11C: the hover help lines drawn into the frames) are off for the app tests too
     os.environ.setdefault("SG_APP_P11", "off")
+    # P13: the sixth play-test's app changes off for the app tests (P13D item 4: --terrain-filter acts only on the world layer)
+    os.environ.setdefault("SG_APP_P13", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

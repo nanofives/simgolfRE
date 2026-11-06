@@ -92,7 +92,8 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 // (the end ramps at the unclipped ends), 4 the flip byte inverted, 5 no fixed-point snap of the ends, 6 lineTo keeps the old line
 // point, 7 drawCircle's segments 3 wide instead of 2, 8 the width not clamped at 10, 9 drawn without a GL context, 10 the gfx bodies draw nothing (the baseline of the frame tests),
 // 11 S3.8's footprint (no span rule: the rule before roadmap S3.24), 12 the double snap of the ends under line rules 8 / 9 (the
-// vertex stage before roadmap S3.31), 13 no second-vertex holes under line rule 9
+// vertex stage before roadmap S3.31), 13 no second-vertex holes under line rule 9, 14 the lines before the sprite queue are not drawn on
+// the world layer (P13D item 7: they stop at the 800 frame's edges in a wide window)
 extern int g_negctl_terrain_overlay;
 
 }  // namespace portsim

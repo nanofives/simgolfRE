@@ -62,6 +62,10 @@
 //   P10H fix 1: --sprite-filter sharp|smooth|sharp-area (default sharp; SG_APP_P10=off: smooth) the filter of those sprites and of
 //   the placement box: sharp = every art pixel a crisp block with one-window-pixel area-weighted steps, the object outlines smooth;
 //   smooth = P10D's bilinear; sharp-area = sharp with the outlines area-weighted too (gfx_scene.cpp hr_blit_rows).
+//   P13D item 4: --terrain-filter sharp|linear|nearest (default sharp; SG_APP_P13=off: nearest) the terrain textures on the world
+//   layer (the course at the window's resolution): the original magnifies its .bmp textures with GL_NEAREST (a block per texel at
+//   zoom 8 and large windows); linear = GL_LINEAR (the filter it uses for the path textures: soft), sharp = GL_LINEAR over the
+//   texture scaled 2 x 2 with the Catmull-Rom cubic (terrain_live.cpp upscale2_cubic). The 800 frame is unchanged.
 //   P10I fix 1: --line-res native|frame (default native with the HUD cursor previews; SG_APP_P10=off: frame) the line a held green
 //   / tee tool draws from the tee (or green) to the cursor (P7's drawMinimapSegment) drawn again at the window's resolution in the
 //   cursor previews' place, its cursor end following P10E's live move (gfx.h gfx_set_hud_lines, present.h set_line_native); frame
@@ -395,6 +399,7 @@ struct Options {
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
   bool hover_help = true;          // P11C: --hover-help on|off (SG_APP_P11=off: off)
+  int terrain_filter = 2;          // P13D item 4: --terrain-filter sharp (2) | linear (1) | nearest (0) (SG_APP_P13=off: nearest)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -727,6 +732,7 @@ struct TerrainGuard {
       if (won && o.world_check) live->world()->check_central = true;
       if (won && o.sprite_native) live->world()->hr_on = true;  // P10D: the sprites at the world's resolution
       if (won) live->world()->hr_filter = o.sprite_filter;        // P10H: their filter
+      if (won) live->world()->tex_mag = o.terrain_filter;         // P13D item 4: the terrain textures' magnification
     }
     portsim::set_terrain_api(c, live.get());
   }
@@ -2882,6 +2888,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "native" && v != "frame")) return false;
       o.line_native = v == "native";
     }
+    else if (a == "--terrain-filter") {  // P13D item 4
+      if (!val(v) || (v != "sharp" && v != "linear" && v != "nearest")) return false;
+      o.terrain_filter = v == "sharp" ? 2 : v == "linear" ? 1 : 0;
+    }
     else if (a == "--sprite-filter") {  // P10H
       if (!val(v) || (v != "sharp" && v != "smooth" && v != "sharp-area")) return false;
       o.sprite_filter = v == "sharp" ? 1 : v == "smooth" ? 0 : 2;
@@ -3038,6 +3048,10 @@ int main(int argc, char **argv) {
       o.panel_left = false;
       o.undo_keys = false;
       o.hover_help = false;
+    }
+  if (const char *ep = std::getenv("SG_APP_P13"))  // P13: the sixth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) {
+      o.terrain_filter = 0;  // P13D item 4
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the

@@ -201,6 +201,7 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
   }
   ++w.passes;
   w.valid = true;
+  w.lines_open = true;  // P13D item 7: the overlay lines until the sprite queue (terrain_live.h)
   world_check(w);
 }
 
@@ -215,6 +216,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
     std::vector<uint16_t> &px = w->raster->pixels();
     std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
     w->terrain800 = g.root.px;
+    w->lines_open = true;  // P13D item 7
     world_check(*w);
   }
 }
@@ -326,6 +328,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     if (world->strip_full) world->strip_full = false;
     else world->raster->pixels() = world->back;
     world->terrain800 = g.root.px;
+    world->lines_open = true;  // P13D item 7
     world_check(*world);
   }
 }

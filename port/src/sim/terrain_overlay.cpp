@@ -284,6 +284,52 @@ void log_call(Gfx &g, const char *who, int32_t x1, int32_t y1, int32_t x2, int32
   cl.text += line;
 }
 
+// P13D item 7 (log/roadmap/P13/P13D_notes.md): the same line on the world layer (terrain_live.h LiveTerrainWorld), drawn while
+// lines_open (after the frame's terrain picture, before renderSpriteQueue: the hole's shot lines, mainLoop's drawMapLine pair after
+// worldToScreen and tileToScreen). The world layer is the window-sized course picture the app shows beside the 800 frame's columns
+// and, where the frame's pixel is terrain (back == T), inside them; before, these lines were drawn only into the 800 x 600 root, so in
+// a wide window they stopped at the frame's left and right edges. Here the 800-space ends map to world pixels as the terrain does
+// (x -> ox + x * fw / 800, y -> y * ph / 600, the root's row order), the width scales by ph / 600, and the line is the same
+// antialiased footprint as draw_line's (coverage * alpha / 10 over the pixel, the same dither). The 800 root's pixels the line
+// changed are then put into T, so inside the frame's columns the window shows the world's line too (one line, one resolution).
+// Drawing only: the root, the GameState and the address space are unchanged.
+void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
+                       int32_t alpha, const std::vector<uint16_t> &before) {
+  std::vector<uint16_t> &px = w.raster->pixels();
+  if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
+  const double s = static_cast<double>(w.ph) / 600.0, kx = static_cast<double>(w.fw) / 800.0;
+  auto wy = [&](int32_t y) { return (gl.flip_y ? static_cast<double>(y) : static_cast<double>(gl.screen_h - y)) * s; };
+  const double ax = w.ox + x1 * kx, ay = wy(y1), bx = w.ox + x2 * kx, by = wy(y2);
+  const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
+  if (len == 0.0) return;
+  const double wd = std::min(static_cast<double>(gl.line_width), 10.0) * s;
+  const double ux = dx / len, uy = dy / len, half = wd / 2.0, reach = half + 1.5;
+  const double cr = clamp01(channel((colour >> 7) & 0xf8u)), cg = clamp01(channel((colour >> 2) & 0xf8u)),
+               cb = clamp01(channel((colour << 3) & 0xf8u));
+  const double ca = clamp01(static_cast<float>(alpha) / 10.0f);
+  const int32_t x0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
+  const int32_t xe = std::min(w.pw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
+  const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
+  const int32_t ye = std::min(w.ph - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+  for (int32_t y = y0; y <= ye; ++y)
+    for (int32_t x = x0; x <= xe; ++x) {
+      const double qx = x + 0.5 - ax, qy = y + 0.5 - ay;
+      const double t = qx * ux + qy * uy, n = -qx * uy + qy * ux;
+      const double cov = clamp01(half + 0.5 - std::fabs(n)) * clamp01(t + 0.5) * clamp01(len - t + 0.5);
+      if (cov <= 0.0) continue;
+      const double al = ca * cov;
+      uint16_t &d = px[static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x)];
+      const int dr = (d >> 10) & 31, dg = (d >> 5) & 31, db = d & 31;
+      const double vr = cr * 255.0 * al + dr * 255.0 / 31.0 * (1.0 - al);
+      const double vg = cg * 255.0 * al + dg * 255.0 / 31.0 * (1.0 - al);
+      const double vb = cb * 255.0 * al + db * 255.0 / 31.0 * (1.0 - al);
+      d = static_cast<uint16_t>((quantize(vr, x, y) << 10) | (quantize(vg, x, y) << 5) | quantize(vb, x, y));
+    }
+  if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
+    for (size_t i = 0; i < before.size(); ++i)
+      if (before[i] != g.root.px[i] && before[i] == w.terrain800[i]) w.terrain800[i] = g.root.px[i];
+}
+
 // Terrain::drawLine into the backend's root surface
 void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
                        int32_t width, int32_t alpha) {
@@ -327,8 +373,13 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   const bool rec = g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && !std::strcmp(who, "drawMinimapSegment") &&
                    width == 2 && alpha == 7 && colour == 0x80007fffu && g.root.w == 800 && g.root.h == 600;
   std::vector<uint16_t> before;
-  if (rec) before = g.root.px;
+  // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
+  LiveTerrainWorld *const world = lt->world();
+  const bool mirror = !rec && world && world->valid && world->lines_open && world->raster && g.hud.cursor_depth == 0 &&
+                      (gl.context || mode() == 9) && mode() != 14;
+  if (rec || mirror) before = g.root.px;
   draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha);
+  if (mirror) mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before);   // gl.line_width: this call's
   if (rec && before.size() == g.root.px.size()) {
     Gfx::HudCapture &c = g.hud;
     if (c.line800.size() != before.size()) {

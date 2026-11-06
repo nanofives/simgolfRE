@@ -5,9 +5,11 @@
 #include "portsim/sim/terrain_live.h"
 
 #include <algorithm>  // P10A: std::equal / std::fill (world_frame, world_cursor)
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 
 #include "portsim/arith.h"
 #include "portsim/gamefiles.h"
@@ -30,6 +32,60 @@ std::string hex(uint32_t v) {
   char b[16];
   std::snprintf(b, sizeof b, "0x%x", v);
   return b;
+}
+
+// P13D item 4 (terrain_live.h LiveTerrainWorld::tex_mag 2): a 2D RGB / RGBA texture image scaled 2 x 2 with the Catmull-Rom cubic
+// (a = -0.5), the texture's own repeat wrap at its edges (the terrain sets GL_REPEAT), each channel rounded and clamped to 0..255.
+// Sampled with GL_LINEAR at the window's resolution this keeps a texel's detail sharper than GL_LINEAR on the 64 x 64 image (soft)
+// without GL_NEAREST's blocks. Output texel (X, Y) sits at source position ((X + 0.5) / 2 - 0.5, (Y + 0.5) / 2 - 0.5): the even and
+// odd outputs are a quarter texel before / after each source texel, so the weights are two fixed sets.
+std::vector<uint8_t> upscale2_cubic(const uint8_t *d, int32_t w, int32_t h, int bpp) {
+  // weights of source texels i - 2 .. i + 1 for the output at i - 0.25 (even) and of i - 1 .. i + 2 for i + 0.25 (odd)
+  auto cr = [](double t) {   // Catmull-Rom kernel, a = -0.5
+    t = t < 0 ? -t : t;
+    if (t < 1.0) return 1.5 * t * t * t - 2.5 * t * t + 1.0;
+    if (t < 2.0) return -0.5 * t * t * t + 2.5 * t * t - 4.0 * t + 2.0;
+    return 0.0;
+  };
+  double we[4], wo[4];
+  for (int k = 0; k < 4; ++k) {
+    we[k] = cr(-0.25 - (k - 2));   // source i - 2 + k, position i - 0.25
+    wo[k] = cr(0.25 - (k - 1));    // source i - 1 + k, position i + 0.25
+  }
+  auto wrap = [](int32_t v, int32_t n) { return ((v % n) + n) % n; };
+  const int32_t W = w * 2, H = h * 2;
+  // pass 1: horizontal (w -> W) into doubles; pass 2: vertical (h -> H)
+  std::vector<double> mid(static_cast<size_t>(W) * static_cast<size_t>(h) * static_cast<size_t>(bpp));
+  for (int32_t y = 0; y < h; ++y)
+    for (int32_t X = 0; X < W; ++X) {
+      const int32_t i = X / 2;
+      const bool odd = (X & 1) != 0;
+      const double *wt = odd ? wo : we;
+      const int32_t first = odd ? i - 1 : i - 2;
+      for (int c = 0; c < bpp; ++c) {
+        double acc = 0.0;
+        for (int k = 0; k < 4; ++k)
+          acc += wt[k] * d[(static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(wrap(first + k, w))) * bpp + c];
+        mid[(static_cast<size_t>(y) * static_cast<size_t>(W) + static_cast<size_t>(X)) * bpp + c] = acc;
+      }
+    }
+  std::vector<uint8_t> out(static_cast<size_t>(W) * static_cast<size_t>(H) * static_cast<size_t>(bpp));
+  for (int32_t Y = 0; Y < H; ++Y) {
+    const int32_t j = Y / 2;
+    const bool odd = (Y & 1) != 0;
+    const double *wt = odd ? wo : we;
+    const int32_t first = odd ? j - 1 : j - 2;
+    for (int32_t X = 0; X < W; ++X)
+      for (int c = 0; c < bpp; ++c) {
+        double acc = 0.0;
+        for (int k = 0; k < 4; ++k)
+          acc += wt[k] * mid[(static_cast<size_t>(wrap(first + k, h)) * static_cast<size_t>(W) + static_cast<size_t>(X)) * bpp + c];
+        const long v = std::lround(acc);
+        out[(static_cast<size_t>(Y) * static_cast<size_t>(W) + static_cast<size_t>(X)) * bpp + c] =
+            static_cast<uint8_t>(v < 0 ? 0 : (v > 255 ? 255 : v));
+      }
+  }
+  return out;
 }
 
 // P8B: the GL setup's fan to the primary sink (the 800 x 600 rasteriser, or SetupPair with the host's OpenGL) and the world layer's
@@ -97,12 +153,23 @@ class WorldFan : public gl::GlSink {
     return r;
   }
   void delete_textures(int32_t n, const uint32_t *names) override { a_->delete_textures(n, names); b_->delete_textures(n, names); }
-  void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override { a_->tex_parameteri(t, p, v); b_->tex_parameteri(t, p, v); }
+  void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override {
+    a_->tex_parameteri(t, p, v);
+    // P13D item 4: GL_TEXTURE_MAG_FILTER GL_NEAREST -> GL_LINEAR on the world layer only (LiveTerrainWorld::tex_mag)
+    b_->tex_parameteri(t, p, w_.tex_mag >= 1 && p == 0x2800 && v == 0x2600 ? 0x2601 : v);
+  }
   void tex_parameterf(uint32_t t, uint32_t p, float v) override { a_->tex_parameterf(t, p, v); b_->tex_parameterf(t, p, v); }
   void tex_envi(uint32_t t, uint32_t p, int32_t v) override { a_->tex_envi(t, p, v); b_->tex_envi(t, p, v); }
   void tex_image2d(uint32_t t, int32_t l, int32_t i, int32_t w, int32_t h, int32_t bo, uint32_t f, uint32_t ty,
                    const uint8_t *d) override {
     a_->tex_image2d(t, l, i, w, h, bo, f, ty, d);
+    // P13D item 4: with tex_mag 2 the world's copy of a 2D RGB / RGBA byte image is uploaded 2 x 2 (upscale2_cubic)
+    const int bpp = f == 0x1907 ? 3 : f == 0x1908 ? 4 : 0;   // GL_RGB / GL_RGBA
+    if (w_.tex_mag == 2 && t == 0x0de1 && l == 0 && ty == 0x1401 && bpp != 0 && d && w > 1 && h > 1 && w <= 1024 && h <= 1024) {
+      const std::vector<uint8_t> up = upscale2_cubic(d, w, h, bpp);
+      b_->tex_image2d(t, l, i, w * 2, h * 2, bo, f, ty, up.data());
+      return;
+    }
     b_->tex_image2d(t, l, i, w, h, bo, f, ty, d);
   }
   void vertex_pointer(int32_t s, uint32_t t, int32_t st) override { a_->vertex_pointer(s, t, st); b_->vertex_pointer(s, t, st); }
