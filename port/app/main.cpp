@@ -100,6 +100,12 @@
 //   late), the ball in flight and its shadow ahead by their last step (present.h Presenter::objects_tick; the frame code tags its
 //   queue entries render-only: gfx.h gfx_mover_source). P12A fix 3: --object-rate <hz> (default 30; 0 = every pacer tick) the most
 //   object redraws per second (a camera slide still paints at the pacer's rate).
+//   P14A: --gpu on|off (default on; SG_APP_P14=off: off) the window's picture composed and presented by the GPU (gpu.h: Direct3D 11,
+//   a flip-model swap chain, vsync): the same pixels as the CPU path (Presenter::render), drawn at the display's refresh without the
+//   CPU paint's cost. off (or no D3D11 device / d3dcompiler_47.dll) = the CPU path (SetDIBitsToDevice). stdout says `GPU on|off ...`.
+//   SG_P14_VERIFY=<n>: every n-th paint also runs the CPU path and compares (session.json p14; SG_P14_VERIFY_DIR=<dir> keeps the first
+//   differing pictures). SG_P14_SHOT=<dir>: the registered message `SimGolfPort.P14Shot` (wParam n) writes the next presented
+//   picture to <dir>/shot_<n>.bmp (a flip-model window's picture is not in its window DC).
 //   P11D: --undo-keys on|off (default on; SG_APP_P11=off: off) Ctrl+Z undoes the newest course edit step (the edits of one left
 //   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
 //   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
@@ -427,6 +433,7 @@ struct Options {
   bool hover_help_course = false;  // P13A: --hover-help course, the course line with no tool too (SG_APP_P13=off: on)
   bool smooth_objects = true;      // P12A fix 2: --smooth-objects on|off (SG_APP_P12=off: off)
   int object_rate = 30;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick)
+  bool gpu = true;                 // P14A: --gpu on|off (SG_APP_P14=off: off)
   bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
@@ -1474,6 +1481,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     return 4;
   }
   HWND hwnd = static_cast<HWND>(win.hwnd());
+  {  // P14A: the GPU path (gpu.h); the CPU path stays when it cannot start
+    std::string why = "--gpu off";
+    const bool on = o.gpu && presenter.gpu_start(hwnd, why);
+    std::printf("GPU %s %s\n", on ? "on" : "off", why.c_str());
+    std::fflush(stdout);
+  }
   session.set_window(hwnd, win.viewport());
   Options ow = o;  // P8B: the world layer's size from the window's client at the session's start (render_scale native), the
                    // wide width (render scale 1 with --wide) or the explicit size
@@ -1535,7 +1548,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     pace_hz = dc ? GetDeviceCaps(dc, VREFRESH) : 0;
     if (dc) ReleaseDC(hwnd, dc);
     if (pace_hz < 30 || pace_hz > 360) pace_hz = 60;
-    pacer = std::thread([&tick_pending, &pacer_stop, hwnd, pace_hz]() {
+    pacer = std::thread([&tick_pending, &pacer_stop, &presenter, hwnd, pace_hz]() {
 #ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
 #define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
 #endif
@@ -1544,7 +1557,13 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       LARGE_INTEGER due;
       due.QuadPart = -(10000000LL / pace_hz);  // one refresh period, in 100 ns units, relative
       while (!pacer_stop.load()) {
-        if (t && SetWaitableTimer(t, &due, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
+        // P14A: with the GPU path, the tick comes right after the monitor's vertical blank (IDXGIOutput::WaitForVBlank), so the paint
+        // composes and presents for the next refresh without waiting inside the paint; a wait that returns at once (an output that
+        // reports no vblank) falls back to the timer
+        const int64_t v0 = portsim::perf_now_ns();
+        const bool vb = presenter.gpu_wait_vblank() && portsim::perf_now_ns() - v0 > 1000000;
+        if (vb) {
+        } else if (t && SetWaitableTimer(t, &due, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
         else Sleep(1000 / pace_hz);
         if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
       }
@@ -1611,7 +1630,14 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   // (SG_P12_LOG: slog, opened above the input sink)
   MSG m;
   std::vector<uint16_t> px;
+  const UINT msg_shot = RegisterWindowMessageW(L"SimGolfPort.P14Shot");  // P14A: the harness's capture of the GPU picture
+  const char *shot_dir = std::getenv("SG_P14_SHOT");
   while (GetMessageW(&m, nullptr, 0, 0) > 0) {
+    if (m.hwnd == hwnd && msg_shot && m.message == msg_shot) {  // P14A
+      if (shot_dir) presenter.gpu_shot(std::string(shot_dir) + "/shot_" + std::to_string(m.wParam) + ".bmp");
+      win.invalidate();
+      continue;
+    }
     if (m.hwnd == hwnd && m.message == kMsgCursorTick) {  // P10E
       tick_pending.store(false);
       ++ticks;
@@ -1760,6 +1786,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(pub_n ? pub_ns / 1e6 / static_cast<double>(pub_n) : 0.0) + ",\"publishes\":" + std::to_string(pub_n) + "}";
   }
   Profiler::get().close_csv();
+  s += ",\"p14\":" + presenter.gpu_json();  // P14A
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
@@ -3026,6 +3053,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.smooth_objects = v == "on";
     }
+    else if (a == "--gpu") {  // P14A
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.gpu = v == "on";
+    }
     else if (a == "--object-rate") {  // P12A fix 3
       if (!val(v)) return false;
       o.object_rate = std::atoi(v.c_str());
@@ -3219,6 +3250,8 @@ int main(int argc, char **argv) {
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
+  if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.gpu = false;  // P14A
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

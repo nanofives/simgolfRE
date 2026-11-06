@@ -26,10 +26,16 @@ struct Stack {
 thread_local Stack t_stack;
 
 const char *const kNames[kPhases] = {"sim", "gfx", "terrain", "capture", "wait", "base", "world", "layers", "text", "bands",
-                                     "overlay", "blit"};
+                                     "overlay", "blit", "upload", "patch", "gpu", "present"};  // P14A: the last four
+std::atomic<bool> g_gpu_line{false};  // P14A
 }  // namespace
 
 const char *phase_name(Phase p) { return static_cast<int>(p) < kPhases ? kNames[static_cast<int>(p)] : "?"; }
+
+void prof_add(Phase p, int64_t ns) {  // P14A
+  if (g_on.load(std::memory_order_relaxed)) g_phase_ns[static_cast<int>(p)].fetch_add(ns, std::memory_order_relaxed);
+}
+void prof_set_gpu(bool on) { g_gpu_line.store(on); }  // P14A
 
 ProfScope::ProfScope(Phase p) : on_(g_on.load(std::memory_order_relaxed)) {
   if (!on_) return;
@@ -267,6 +273,11 @@ std::string overlay_text(const ProfLine &l, int mode) {
   std::snprintf(b, sizeof b, "paint %.1f  base %.1f  world %.1f  layers %.1f  text %.1f  bands %.1f  blit %.1f", l.paint_ms,
                 m(Phase::Base), m(Phase::World), m(Phase::Layers), m(Phase::Text), m(Phase::Bands), m(Phase::Blit));
   s += b;
+  if (g_gpu_line.load()) {  // P14A: the GPU path's phases
+    std::snprintf(b, sizeof b, "  upload %.1f  patch %.1f  gpu %.1f  present %.1f", m(Phase::Upload), m(Phase::Patch), m(Phase::Gpu),
+                  m(Phase::Present));
+    s += b;
+  }
   return s;
 }
 

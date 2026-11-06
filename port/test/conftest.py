@@ -57,6 +57,9 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P13", "off")
     # P12: motion at the display's rate (P12A fix 1: the camera slide) is off for the app tests too
     os.environ.setdefault("SG_APP_P12", "off")
+    # P14: the GPU path (P14A: the window's picture by Direct3D 11) is off for the app tests: their window-DC shots read the CPU
+    # path's GDI picture (a flip-model swap chain's picture is not in the window DC)
+    os.environ.setdefault("SG_APP_P14", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

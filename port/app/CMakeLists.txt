@@ -52,13 +52,14 @@ if(PORTAPP_SHELL AND WIN32 AND TARGET portsim)
   # P9A item 1: the player's simgolf_port.exe is a WIN32-subsystem program (no console window; main() stays the entry
   # through mainCRTStartup; stdout / stderr: stdio_log.h). simgolf_port_console.exe is the same objects linked for the
   # console subsystem (a terminal that wants to wait for it). Both are built by the `simgolf_port` target.
-  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp profile.cpp hover.cpp)
+  # P14A: gpu.cpp, the GPU compositor (Direct3D 11 + DXGI, OS libraries; d3dcompiler_47.dll is loaded at run time)
+  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp profile.cpp hover.cpp gpu.cpp)
   target_link_libraries(simgolf_port_objs PRIVATE portapp_input portapp_audio portsim)
   target_compile_definitions(simgolf_port_objs PRIVATE UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
   add_executable(simgolf_port WIN32 $<TARGET_OBJECTS:simgolf_port_objs>)
-  target_link_libraries(simgolf_port PRIVATE portapp_input portapp_audio portsim winmm)
+  target_link_libraries(simgolf_port PRIVATE portapp_input portapp_audio portsim winmm d3d11)
   add_executable(simgolf_port_console $<TARGET_OBJECTS:simgolf_port_objs>)
-  target_link_libraries(simgolf_port_console PRIVATE portapp_input portapp_audio portsim winmm)
+  target_link_libraries(simgolf_port_console PRIVATE portapp_input portapp_audio portsim winmm d3d11)
   add_dependencies(simgolf_port simgolf_port_console)
   if(MSVC)
     target_link_options(simgolf_port PRIVATE /ENTRY:mainCRTStartup)

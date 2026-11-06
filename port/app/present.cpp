@@ -20,6 +20,7 @@
 #include <tuple>
 #include <string>
 
+#include "gpu.h"               // P14A
 #include "portsim/sim/perf.h"  // P10A: perf_now_ns
 #include "profile.h"           // P10A
 #include <atomic>              // P10A: RowPool
@@ -116,6 +117,9 @@ class RowPool {
   bool stop_ = false;
 };
 }  // namespace
+
+Presenter::Presenter(PresentDefect d, ScaleMode s) : defect_(d), scale_(s) {}
+Presenter::~Presenter() = default;  // P14A: GpuCompositor is complete here
 
 Viewport fit_viewport(int32_t cw, int32_t ch) {
   Viewport v;
@@ -246,6 +250,7 @@ void Presenter::slide_start(const WorldImage &w) {
   // still what the window shows and stays the underlay)
   if (scene_ok_) {
     scene_prev_.swap(scene_last_);
+    ++swap_gen_;  // P14A: the GPU path swaps its course targets the same way
     prev_w_ = scene_w_;
     prev_h_ = scene_h_;
     scene_ok_ = false;
@@ -393,6 +398,7 @@ bool Presenter::objects_tick(int64_t now_ns) {
     }
   };
   for (const auto &r : patched_) restore(r);
+  world_dirty_.insert(world_dirty_.end(), patched_.begin(), patched_.end());  // P14A: the GPU path uploads these rectangles
   patched_.clear();
   // the rectangles: each moved object's box at the frame's place and at the place drawn now (2 world pixels of margin), merged
   const std::vector<portsim::GfxHrDraw> &dr = portsim::gfx_hr_scene_draws(sc);
@@ -432,8 +438,10 @@ bool Presenter::objects_tick(int64_t now_ns) {
       }
     object_stats_.redraw_px += static_cast<uint64_t>(out.size());
     patched_.push_back(r);
+    world_dirty_.push_back(r);  // P14A
   }
   ++object_stats_.redraws;
+  ++world_gen_;  // P14A
   object_stats_.redraw_ns += portsim::perf_now_ns() - t0;
   changed_pending_ = true;
   return true;
@@ -473,14 +481,18 @@ void Presenter::fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, con
   rx0 = std::max(0, rx0);
   rx1 = std::min(cw, rx1);
   const int32_t ux = slx - s0x_i_, uy = sly - s0y_i_;
-  RowPool::get().run(0, ch, [&](int32_t ya, int32_t yb) {
+  const Canvas C = cv_;  // P14A: the canvas's rows / columns inside the client
+  const int32_t cy0 = std::max(0, C.y0), cy1 = std::min(ch, C.y0 + C.h), cx0 = std::max(0, C.x0), cx1 = std::min(cw, C.x0 + C.w);
+  RowPool::get().run(cy0, cy1, [&](int32_t ya, int32_t yb) {
     for (int32_t y = ya; y < yb; ++y) {
       const int32_t sy = std::min(std::max(y - uy, 0), ch - 1);
       const uint32_t *src = scene_prev_.data() + static_cast<size_t>(sy) * static_cast<size_t>(cw);
-      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+      uint32_t *dst = out.data() + static_cast<size_t>(y - C.y0) * static_cast<size_t>(C.w);
       const bool inside = y >= ry0 && y < ry1 && rx1 > rx0;
       auto span = [&](int32_t a, int32_t b) {
-        for (int32_t x = a; x < b; ++x) dst[x] = src[std::min(std::max(x - ux, 0), cw - 1)];
+        a = std::max(a, cx0);
+        b = std::min(b, cx1);
+        for (int32_t x = a; x < b; ++x) dst[x - C.x0] = src[std::min(std::max(x - ux, 0), cw - 1)];
       };
       if (!inside) {
         span(0, cw);
@@ -658,6 +670,7 @@ void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count, int
 bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   if (px.size() != static_cast<size_t>(kLogicalW) * kLogicalH) return false;
   ++frames_set_;
+  ++content_gen_;  // P14A
   if (defect_ == PresentDefect::Stale && !frame_.empty()) return true;
   frame_ = px;
   band_ = band;
@@ -668,6 +681,7 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   nd_x_ = nd_y_ = 0;
   movers_.clear();  // P12A fix 2 (objects_start may find new ones)
   patched_.clear();
+  world_dirty_.clear();  // P14A: a new world image is uploaded whole
   hover_pristine_.clear();  // P10I fix 2: the new frame's own looks
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
@@ -695,11 +709,32 @@ const uint8_t *Presenter::base_hidden(const Viewport &vp, bool text) const {
 }
 
 void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vpo) const {
+  cv_ = Canvas{0, 0, cw > 0 ? cw : 0, ch > 0 ? ch : 0, true};  // P14A: the whole client
+  render_impl(cw, ch, out, vpo);
+}
+
+// P14A: render over a rectangle of the client (present.h render_rect)
+void Presenter::render_rect(int32_t cw, int32_t ch, int32_t x0, int32_t y0, int32_t w, int32_t h, bool course,
+                            std::vector<uint32_t> &out) const {
+  const Canvas was = cv_;
+  const bool q = quiet_;
+  quiet_ = true;
+  force_slide0_ = course_only_ = course;
+  cv_ = Canvas{x0, y0, w > 0 ? w : 0, h > 0 ? h : 0, false};
+  render_impl(cw, ch, out, nullptr);
+  quiet_ = q;
+  force_slide0_ = course_only_ = false;
+  cv_ = was;
+}
+
+void Presenter::render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vpo) const {
   const ProfScope prof(Phase::Base);  // P10A
   const Viewport vp = fit_viewport(cw, ch);
   if (vpo) *vpo = vp;
-  out.assign(static_cast<size_t>(cw > 0 ? cw : 0) * static_cast<size_t>(ch > 0 ? ch : 0), 0xff000000u);
-  if (frame_.empty() || cw <= 0 || ch <= 0) return;
+  const Canvas C = cv_;  // P14A: client pixel (x, y) is out[(y - C.y0) * C.w + x - C.x0]
+  out.assign(static_cast<size_t>(C.w) * static_cast<size_t>(C.h), 0xff000000u);
+  if (frame_.empty() || cw <= 0 || ch <= 0 || C.w <= 0 || C.h <= 0) return;
+  const bool side = C.full && !quiet_;  // P14A: the scene kept for the slide and the remap only from a paint of the whole client
   // P9B: with the frame's HUD layers the scaled image is the layers' base (the root before the first panel drew); the layers
   // are composed over it in compose_layers
   // P9C: with the frame's text runs, the picture without their low-resolution glyphs (the runs are drawn after the scaling)
@@ -709,20 +744,27 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
   // P12A fix 1: the camera slide moves the course picture (the base, the world, their runs) by (slx, sly) client pixels: `vs` is the
   // content rectangle it is drawn into; the HUD layers keep `vp`. The rows / columns of vs outside the client are not drawn.
   const bool keep = smooth_ && layered();  // the course picture is kept for the next frame's slide
-  if (!keep) {  // a screen without the course picture: the next in-game frame starts unmoved
+  if (!keep && side) {  // a screen without the course picture: the next in-game frame starts unmoved
     scene_ok_ = prev_ok_ = false;
     painted_cam_ = CameraSnap{};
   }
   int32_t slx = 0, sly = 0;
-  if (keep && slide_on_ && prev_ok_ && prev_w_ == cw && prev_h_ == ch) {
+  if (keep && !force_slide0_ && slide_on_ && prev_ok_ && prev_w_ == cw && prev_h_ == ch) {
     slx = cur_x_;
     sly = cur_y_;
   }
   Viewport vs = vp;
   vs.origin_x += slx;
   vs.origin_y += sly;
-  const int32_t ya0 = std::max(0, -vs.origin_y), ya1 = std::min(vs.client_h, ch - vs.origin_y);
-  const int32_t xa0 = std::max(0, -vs.origin_x), xa1 = std::min(vs.client_w, cw - vs.origin_x);
+  // (P14A: the canvas's rows / columns; the whole client for paint)
+  const int32_t ya0 = std::max(0, C.y0 - vs.origin_y), ya1 = std::min(vs.client_h, C.y0 + C.h - vs.origin_y);
+  const int32_t xa0 = std::max(0, C.x0 - vs.origin_x), xa1 = std::min(vs.client_w, C.x0 + C.w - vs.origin_x);
+  const int32_t off_x = vs.origin_x - C.x0;  // P14A: a vs column's index in a canvas row
+  if (probe_ != 0) {  // P14A: the HUD layers over a one-word course picture (present.h probe_)
+    std::fill(out.begin(), out.end(), probe_);
+    if (layered()) compose_layers(out, cw, ch, vp, slx, sly);
+    return;
+  }
   auto tail = [&]() {  // the world, then (layered) the uncovered pixels, the course runs, the kept picture and the HUD layers
     if (!world_.empty()) compose_world(out, cw, ch, vs);  // P8B
     if (layered()) {
@@ -731,7 +773,7 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
         draw_runs(out, cw, ch, vs, true, -3, 0);  // the wide scene's world runs (beside the frame's columns)
         draw_runs(out, cw, ch, vs, true, -1, 0);  // the base's
       }
-      if (keep) {
+      if (keep && side) {
         scene_last_.resize(out.size());
         std::memcpy(scene_last_.data(), out.data(), out.size() * sizeof(uint32_t));
         scene_w_ = cw;
@@ -741,16 +783,21 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
         painted_cam_ = world_.cam;
         scene_ok_ = true;
       }
-      compose_layers(out, cw, ch, vp, slx, sly);
+      if (!course_only_) compose_layers(out, cw, ch, vp, slx, sly);  // P14A: course_only_ = render_rect's course picture
     }
-    if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them above)
-    if (world_.empty() && wide_ != WideFill::Off && band_ != BandFill::Black) fill_bands(out, cw, ch, vp);  // P7 (P13B: ExtendClamp too)
+    if (text && !layered() && !course_only_) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them above)
+    if (world_.empty() && wide_ != WideFill::Off && band_ != BandFill::Black && C.full)
+      fill_bands(out, cw, ch, vp);  // P7 (P13B: ExtendClamp too); P14A: on the whole client only
   };
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
     std::vector<uint32_t> &src = base_bgra_;  // P10A: kept between paints
-    src.resize(fsrc.size());
-    for (size_t i = 0; i < fsrc.size(); ++i) src[i] = rgb555_to_bgra(fsrc[i]);
+    if (src.size() != fsrc.size() || base_bgra_src_ != fsrc.data() || base_bgra_gen_ != content_gen_) {  // P14A: once per content
+      src.resize(fsrc.size());
+      for (size_t i = 0; i < fsrc.size(); ++i) src[i] = rgb555_to_bgra(fsrc[i]);
+      base_bgra_src_ = fsrc.data();
+      base_bgra_gen_ = content_gen_;
+    }
     const uint8_t *hidden = base_hidden(vp, text);  // P10A
     std::vector<int32_t> &hlx = base_lx_;
     if (hidden) {
@@ -788,13 +835,13 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
         const Tap &v = ty[static_cast<size_t>(y)];
         const uint32_t *s0 = src.data() + static_cast<size_t>(v.i0) * kLogicalW;
         const uint32_t *s1 = src.data() + static_cast<size_t>(v.i1) * kLogicalW;
-        uint32_t *dst = out.data() + static_cast<size_t>(y + vs.origin_y) * static_cast<size_t>(cw) + vs.origin_x;
+        uint32_t *dst = out.data() + static_cast<size_t>(y + vs.origin_y - C.y0) * static_cast<size_t>(C.w);  // P14A: canvas row
         const uint8_t *hrow = hidden ? hidden + static_cast<size_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h) * kLogicalW : nullptr;
         for (int32_t x = xa0; x < xa1; ++x) {
           if (hrow && hrow[hlx[static_cast<size_t>(x)]]) continue;  // P10A: the world covers it
           const Tap &u = tx[static_cast<size_t>(x)];
           const uint32_t a = mix(s0[u.i0], s0[u.i1], u.f), b = mix(s1[u.i0], s1[u.i1], u.f);
-          dst[x] = mix(a, b, v.f) | 0xff000000u;
+          dst[off_x + x] = mix(a, b, v.f) | 0xff000000u;
         }
       }
     });
@@ -809,10 +856,10 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
     for (int32_t y = ya; y < yb; ++y) {
       const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y) * kLogicalH / vp.client_h);
       const uint16_t *src = fsrc.data() + static_cast<size_t>(ly) * kLogicalW;
-      uint32_t *dst = out.data() + static_cast<size_t>(y + vs.origin_y) * static_cast<size_t>(cw) + vs.origin_x;
+      uint32_t *dst = out.data() + static_cast<size_t>(y + vs.origin_y - C.y0) * static_cast<size_t>(C.w);  // P14A: canvas row
       const uint8_t *hrow = hidden ? hidden + static_cast<size_t>(ly) * kLogicalW : nullptr;  // P10A: the world covers those
       for (int32_t x = xa0; x < xa1; ++x)
-        if (!hrow || !hrow[col[static_cast<size_t>(x)]]) dst[x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
+        if (!hrow || !hrow[col[static_cast<size_t>(x)]]) dst[off_x + x] = rgb555_to_bgra(src[col[static_cast<size_t>(x)]]);
     }
   });
   tail();  // P12A (the calls that followed here, in the same order)
@@ -820,6 +867,7 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
 
 // ---- P9C: the text runs (textres.h)
 void Presenter::set_text(portsim::GfxTextFrame &&tf) {
+  ++content_gen_;  // P14A
   text_ok_ = text_layered_ok_ = false;
   text_ = portsim::GfxTextFrame{};
   hud_text_ = portsim::GfxHudFrame{};
@@ -869,6 +917,8 @@ int32_t Presenter::piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y)
 void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered_path, int32_t layer,
                           int32_t dx) const {
   const ProfScope prof(Phase::Text);  // P10A
+  (void)ch;  // P14A: the runs are drawn into the canvas (cv_), whose size bounds them
+  if (probe_ != 0) return;  // P14A: the probes compose the layers alone
   if (!raster_) raster_.reset(new TextRaster());
   raster_->set_defect(text_defect_);
   raster_->set_aa(text_aa_);
@@ -894,16 +944,20 @@ void Presenter::draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, co
           d = p.anchor < 0 ? dxl : dxr;
           break;
         }
+    // P14A: the canvas's own coordinates (the whole client for paint): the viewport moved by its origin
+    Viewport vc = vp;
+    vc.origin_x -= cv_.x0;
+    vc.origin_y -= cv_.y0;
     if (objects_on_ && r.mover.kind != portsim::kGfxMoverNone && !movers_.empty()) {  // P12A fix 2: a label moves with its object
       int32_t mx = 0, my = 0;
       mover_offset(r.mover, vp, mx, my);
-      Viewport vr = vp;
+      Viewport vr = vc;
       vr.origin_x += mx;
       vr.origin_y += my;
-      raster_->draw(r, layered_path, vr, d, out, cw, ch);
+      raster_->draw(r, layered_path, vr, d, out, cv_.w, cv_.h);
       continue;
     }
-    raster_->draw(r, layered_path, vp, d, out, cw, ch);
+    raster_->draw(r, layered_path, vc, d, out, cv_.w, cv_.h);
   }
 }
 
@@ -923,7 +977,8 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   const bool wtext = text_now(vp) && w.mask_text.size() == w.mask.size() && w.px_text.size() == w.px.size();
   const std::vector<uint8_t> &wmask = wtext ? w.mask_text : w.mask;
   const std::vector<uint16_t> &wpx = wtext ? w.px_text : w.px;
-  if (remap_ && !layers) remap_->set(anchor, vp, cw, w.mask);
+  if (remap_ && !layers && !quiet_) remap_->set(anchor, vp, cw, w.mask);  // P14A: not from render_rect
+  const Canvas C = cv_;  // P14A: the columns / rows of the canvas
   std::vector<uint32_t> frame_img;
   std::vector<uint8_t> mask_moved;
   const uint8_t *maskp = wmask.data();
@@ -955,9 +1010,10 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
     const int64_t q = num >= 0 ? num / n_client : -((-num + n_client - 1) / n_client);
     return q - 128 + static_cast<int64_t>(world_origin) * 256;
   };
-  std::vector<int64_t> wx(static_cast<size_t>(cw)), wy(static_cast<size_t>(ch));
-  for (int32_t x = 0; x < cw; ++x) wx[static_cast<size_t>(x)] = pos(x, vp.origin_x, vp.client_w, w.fw, w.ox);
-  for (int32_t y = 0; y < ch; ++y) wy[static_cast<size_t>(y)] = pos(y, vp.origin_y, vp.client_h, w.ph, 0);
+  // (P14A: indexed by x - C.x0 / y - C.y0)
+  std::vector<int64_t> wx(static_cast<size_t>(C.w)), wy(static_cast<size_t>(C.h));
+  for (int32_t x = C.x0; x < C.x0 + C.w; ++x) wx[static_cast<size_t>(x - C.x0)] = pos(x, vp.origin_x, vp.client_w, w.fw, w.ox);
+  for (int32_t y = C.y0; y < C.y0 + C.h; ++y) wy[static_cast<size_t>(y - C.y0)] = pos(y, vp.origin_y, vp.client_h, w.ph, 0);
   auto mix = [](uint32_t a, uint32_t b, uint32_t f) {
     const uint32_t g = 256 - f;
     const uint32_t rb = (((a & 0x00ff00ffu) * g + (b & 0x00ff00ffu) * f) >> 8) & 0x00ff00ffu;
@@ -968,12 +1024,12 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   // (as `at` clamped them), the weight, whether the column / row is outside the world, and the column's logical x (-1 outside the
   // content rectangle); then the pixel loop does no division and no clamp
   std::vector<int32_t> &ct = cw_tab_;
-  ct.resize(static_cast<size_t>(cw) * 4);
+  ct.resize(static_cast<size_t>(C.w) * 4);
   auto clampi = [](int64_t v, int32_t n) { return static_cast<int32_t>(v < 0 ? 0 : v >= n ? n - 1 : v); };
-  for (int32_t x = 0; x < cw; ++x) {
-    const int64_t sx = wx[static_cast<size_t>(x)];
+  for (int32_t x = C.x0; x < C.x0 + C.w; ++x) {
+    const int64_t sx = wx[static_cast<size_t>(x - C.x0)];
     const int64_t x0 = sx >> 8;
-    int32_t *c = ct.data() + static_cast<size_t>(x) * 4;
+    int32_t *c = ct.data() + static_cast<size_t>(x - C.x0) * 4;
     c[0] = x0 < -2 || x0 >= w.pw + 2 ? -1 : clampi(x0, w.pw);  // -1: outside the world (stays as it is)
     c[1] = clampi(x0 + 1, w.pw);
     c[2] = static_cast<int32_t>(sx & 255);
@@ -982,9 +1038,9 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
                : -1;
   }
   const bool mask_on = defect_ != PresentDefect::WorldMaskIgnored;
-  RowPool::get().run(0, ch, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
+  RowPool::get().run(C.y0, C.y0 + C.h, [&](int32_t ya, int32_t yb) {  // P10A: rows over the paint threads
     for (int32_t y = ya; y < yb; ++y) {
-      const int64_t sy = wy[static_cast<size_t>(y)];
+      const int64_t sy = wy[static_cast<size_t>(y - C.y0)];
       const int64_t y0 = sy >> 8;
       if (y0 < -2 || y0 >= w.ph + 2) continue;  // rows outside the world stay as they are (within 2: the edge row, clamped)
       const bool row_in = y >= vp.origin_y && y < vp.origin_y + vp.client_h;
@@ -993,8 +1049,8 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
       const uint16_t *r0 = wpx.data() + static_cast<size_t>(clampi(y0, w.ph)) * static_cast<size_t>(w.pw);
       const uint16_t *r1 = wpx.data() + static_cast<size_t>(clampi(y0 + 1, w.ph)) * static_cast<size_t>(w.pw);
       const uint32_t fy = static_cast<uint32_t>(sy & 255);
-      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
-      for (int32_t x = 0; x < cw; ++x) {
+      uint32_t *dst = out.data() + static_cast<size_t>(y - C.y0) * static_cast<size_t>(C.w);  // P14A: canvas row, column x - C.x0
+      for (int32_t x = 0; x < C.w; ++x) {
         const int32_t *c = ct.data() + static_cast<size_t>(x) * 4;
         if (row_in && c[3] >= 0 && mask_on && !mrow[c[3]]) continue;  // the frame's own pixel
         if (c[0] < 0) continue;  // columns outside the world stay as they are (within 2: the edge column, clamped)
@@ -1009,7 +1065,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
     }
   });
   if (layers) return;  // P9B: render composes the layers next (P12A: after the course runs, with the unslid viewport)
-  if (!anchor) return;
+  if (!anchor || !C.full) return;  // P14A: G32's rectangles on the whole client only (the canvas is the client there)
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
   for (const HudPanel &p : kHudPanels) {
     const int32_t dx = p.anchor < 0 ? dxl : dxr;
@@ -1046,17 +1102,18 @@ bool Presenter::layered() const {
 // layer's source and weight, shade = the shade table at d's RGB555 word. The weighted sum of the four gives smooth panel edges with
 // no world pixel chosen inside a panel by a mask, and a blended pixel (frame borders, half-bright strips) shows what is under it at
 // the panel's new place.
-void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, int32_t slx,
-                               int32_t sly) const {
-  const ProfScope prof(Phase::Layers);  // P10A
-  const bool text = text_now(vp);  // P9C: the layers without the runs' glyphs when the runs are drawn
-  const portsim::GfxHudFrame &f = hud_for(text);
+// P14A: compose_layers' P9E piece offsets (factored out of it, the same body)
+bool Presenter::pieces_on(const portsim::GfxHudFrame &f, const Viewport &vp) const {
   const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  return anchor && popups_on_ && !f.pieces.empty() && f.owner.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+}
+
+void Presenter::layer_pieces(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const {
   const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
   // P9E: each popup piece's client offset: its opener panel's anchor offset, clamped so the piece's box stays inside the window
   piece_dx_.assign(f.pieces.size(), 0);
   piece_frame_ = nullptr;
-  const bool pieces = anchor && popups_on_ && !f.pieces.empty() && f.owner.size() == static_cast<size_t>(kLogicalW) * kLogicalH;
+  const bool pieces = pieces_on(f, vp);
   if (pieces) {
     piece_frame_ = &f;
     std::vector<uint8_t> centred(f.pieces.size(), 0);  // P10C fix 4: pieces moved by the text-box centring
@@ -1083,13 +1140,73 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       centred[k] = centre ? 1 : 0;
     }
   }
-  // the moved piece (index) of a layer pixel, -1 when it stays at the layer's own place
+}
+
+// P14A: compose_layers' searches for the draw-order places of the tool previews (P9E fix 4: the first centred layer holding one of
+// their pixels, else after every layer) and of the tee lines (P10I fix 1: the first centred layer holding a line pixel, not before the
+// previews), the same loops, run once per frame / content generation instead of at every paint
+void Presenter::draw_order(const portsim::GfxHudFrame &f, bool cur, bool lines, size_t &cur_layer, size_t &line_layer) const {
+  const uint64_t key = content_gen_ * 4 + (cur ? 2 : 0) + (lines ? 1 : 0);
+  if (order_key_ == &f && order_gen_ == key && cur_layer_c_ <= f.layers.size() && line_layer_c_ <= f.layers.size()) {
+    cur_layer = cur_layer_c_;
+    line_layer = line_layer_c_;
+    return;
+  }
+  const WorldImage &W = world_;
+  auto cur_at = [&](int32_t x, int32_t y) {
+    return cur && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH && W.cur_mask[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
+  };
+  auto line_at = [&](int32_t x, int32_t y, const portsim::GfxLayerPx &p) {
+    if (!lines || x < 0 || y < 0 || x >= kLogicalW || y >= kLogicalH) return false;
+    const size_t i = static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x);
+    return f.line800[i] != 0 && p.kind == 1 && p.px == f.line_word[i];
+  };
+  cur_layer = f.layers.size();
+  for (size_t li = 0; cur && li < f.layers.size() && cur_layer == f.layers.size(); ++li) {
+    const portsim::GfxHudLayer &l = f.layers[li];
+    if (l.id != portsim::kGfxLayerCentred) continue;
+    for (int32_t y = l.y0; y < l.y1 && cur_layer == f.layers.size(); ++y)
+      for (int32_t x = l.x0; x < l.x1; ++x)
+        if (cur_at(x, y) && l.at(x, y)) {
+          cur_layer = li;
+          break;
+        }
+  }
+  line_layer = f.layers.size();
+  for (size_t li = 0; lines && li < f.layers.size() && line_layer == f.layers.size(); ++li) {
+    const portsim::GfxHudLayer &l = f.layers[li];
+    if (l.id != portsim::kGfxLayerCentred) continue;
+    for (int32_t y = l.y0; y < l.y1 && line_layer == f.layers.size(); ++y) {
+      const uint8_t *m = f.line800.data() + static_cast<size_t>(y) * kLogicalW;
+      for (int32_t x = l.x0; x < l.x1; ++x)
+        if (m[x]) {
+          const portsim::GfxLayerPx *p = l.at(x, y);
+          if (p && line_at(x, y, *p)) {
+            line_layer = li;
+            break;
+          }
+        }
+    }
+  }
+  if (cur && line_layer < cur_layer) line_layer = cur_layer;  // the previews first, as P7 draws them
+  order_key_ = &f;
+  order_gen_ = key;
+  cur_layer_c_ = cur_layer;
+  line_layer_c_ = line_layer;
+}
+
+// P14A: compose_layers' P9B click remap (factored out of it, the same body)
+void Presenter::layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const {
+  if (!remap_ || quiet_) return;
+  const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+  const bool pieces = pieces_on(f, vp);
   auto moved_piece = [&](const portsim::GfxHudLayer &l, int32_t x, int32_t y) -> int32_t {
     if (!pieces || !l.popups) return -1;
     const int32_t k = piece_of(f, x, y);
     return k >= 0 && piece_dx_[static_cast<size_t>(k)] != 0 ? k : -1;
   };
-  if (remap_) {
+  {
     std::vector<RemapLayer> rl;
     rl.reserve(f.layers.size());
     for (const portsim::GfxHudLayer &l : f.layers) {
@@ -1162,6 +1279,29 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     }
     remap_->set_layers(anchor, vp, cw, std::move(rl));
   }
+}
+
+void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, int32_t slx,
+                               int32_t sly) const {
+  const ProfScope prof(Phase::Layers);  // P10A
+  const bool text = text_now(vp);  // P9C: the layers without the runs' glyphs when the runs are drawn
+  const portsim::GfxHudFrame &f = hud_for(text);
+  const bool anchor = hud_anchor_ && vp.origin_x > 0 && defect_ != PresentDefect::HudUnmoved;
+  const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+  const Canvas C = cv_;  // P14A: the canvas (the whole client for paint)
+  const int32_t kx0 = std::max(0, C.x0), kx1 = std::min(cw, C.x0 + C.w), ky0 = std::max(0, C.y0), ky1 = std::min(ch, C.y0 + C.h);
+  auto px_at = [&](int32_t x, int32_t y) -> uint32_t & {  // P14A: client pixel (x, y) of the canvas
+    return out[static_cast<size_t>(y - C.y0) * static_cast<size_t>(C.w) + static_cast<size_t>(x - C.x0)];
+  };
+  layer_pieces(f, vp, cw);  // P9E (P14A: factored out, the same body)
+  const bool pieces = pieces_on(f, vp);
+  // the moved piece (index) of a layer pixel, -1 when it stays at the layer's own place
+  auto moved_piece = [&](const portsim::GfxHudLayer &l, int32_t x, int32_t y) -> int32_t {
+    if (!pieces || !l.popups) return -1;
+    const int32_t k = piece_of(f, x, y);
+    return k >= 0 && piece_dx_[static_cast<size_t>(k)] != 0 ? k : -1;
+  };
+  layer_remap(f, vp, cw);  // P9B (P14A: factored out, the same body; not from render_rect)
   const bool nearest = effective_scale(vp.client_w, vp.client_h) == ScaleMode::Nearest;
   const bool opaque_blends = defect_ == PresentDefect::LayerBlendOpaque;
   // P9E fix 4: the tool previews at the cursor (WorldImage::cur_*): drawn at the offset of the layer the last cursor answer was
@@ -1190,30 +1330,20 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
   auto cur_at = [&](int32_t x, int32_t y) {
     return cur && x >= 0 && y >= 0 && x < kLogicalW && y < kLogicalH && W.cur_mask[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)];
   };
-  size_t cur_layer = f.layers.size();
-  for (size_t li = 0; cur && li < f.layers.size() && cur_layer == f.layers.size(); ++li) {
-    const portsim::GfxHudLayer &l = f.layers[li];
-    if (l.id != portsim::kGfxLayerCentred) continue;
-    for (int32_t y = l.y0; y < l.y1 && cur_layer == f.layers.size(); ++y)
-      for (int32_t x = l.x0; x < l.x1; ++x)
-        if (cur_at(x, y) && l.at(x, y)) {
-          cur_layer = li;
-          break;
-        }
-  }
   const bool box = W.cur_hi.size() == W.px.size();  // P10F: the placement box's blend pair (cur_cov 2)
   auto draw_cursor = [&]() {  // nearest world pixels, the plane's box only
     if (!cur || vp.client_w <= 0 || vp.client_h <= 0 || W.fw <= 0 || W.ph <= 0) return;
     const int32_t cox = vp.origin_x + cdx + shx + slx, coy = vp.origin_y + shy + sly;  // P10E: (shx, shy) = 0 outside a live move; P12A: the slide
-    const int32_t cx0 = std::max<int32_t>(0, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
-    const int32_t cx1 = std::min<int32_t>(cw, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
-    const int32_t cy0 = std::max<int32_t>(0, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
-    const int32_t cy1 = std::min<int32_t>(ch, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 2);
+    // (P14A: clipped to the canvas, kx0 .. ky1: the client for paint)
+    const int32_t cx0 = std::max<int32_t>(kx0, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[0] - W.ox) * vp.client_w / W.fw) - 1);
+    const int32_t cx1 = std::min<int32_t>(kx1, cox + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[2] - W.ox) * vp.client_w / W.fw) + 2);
+    const int32_t cy0 = std::max<int32_t>(ky0, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[1]) * vp.client_h / W.ph) - 1);
+    const int32_t cy1 = std::min<int32_t>(ky1, coy + static_cast<int32_t>(static_cast<int64_t>(W.cur_box[3]) * vp.client_h / W.ph) + 2);
     for (int32_t y = cy0; y < cy1; ++y) {
       const int64_t dy = static_cast<int64_t>(y - coy) * W.ph;
       const int32_t wy = static_cast<int32_t>(dy >= 0 ? dy / vp.client_h : -((-dy + vp.client_h - 1) / vp.client_h));
       if (wy < 0 || wy >= W.ph) continue;
-      uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+      uint32_t *dst = &px_at(cx0, y) - cx0;  // P14A: indexed by the client column
       for (int32_t x = cx0; x < cx1; ++x) {
         const int64_t dxw = static_cast<int64_t>(x - cox) * W.fw;
         const int32_t wx = W.ox + static_cast<int32_t>(dxw >= 0 ? dxw / vp.client_w : -((-dxw + vp.client_w - 1) / vp.client_w));
@@ -1249,23 +1379,9 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     const size_t i = static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x);
     return f.line800[i] != 0 && p.kind == 1 && p.px == f.line_word[i];
   };
-  size_t line_layer = f.layers.size();
-  for (size_t li = 0; lines && li < f.layers.size() && line_layer == f.layers.size(); ++li) {
-    const portsim::GfxHudLayer &l = f.layers[li];
-    if (l.id != portsim::kGfxLayerCentred) continue;
-    for (int32_t y = l.y0; y < l.y1 && line_layer == f.layers.size(); ++y) {
-      const uint8_t *m = f.line800.data() + static_cast<size_t>(y) * kLogicalW;
-      for (int32_t x = l.x0; x < l.x1; ++x)
-        if (m[x]) {
-          const portsim::GfxLayerPx *p = l.at(x, y);
-          if (p && line_at(x, y, *p)) {
-            line_layer = li;
-            break;
-          }
-        }
-    }
-  }
-  if (cur && line_layer < cur_layer) line_layer = cur_layer;  // the previews first, as P7 draws them
+  // P14A: the previews' and the lines' places in the draw order, once per frame / content (draw_order: the same searches)
+  size_t cur_layer = f.layers.size(), line_layer = f.layers.size();
+  draw_order(f, cur, lines, cur_layer, line_layer);
   auto draw_lines = [&]() {
     if (!lines || vp.client_w <= 0 || vp.client_h <= 0) return;
     const double sx = static_cast<double>(vp.client_w) / kLogicalW, sy = static_cast<double>(vp.client_h) / kLogicalH;
@@ -1280,10 +1396,12 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
       if (!(len > 0.0)) continue;
       const double ux = dx / len, uy = dy / len, reach = half + 1.5;
-      const int32_t x0 = std::max<int32_t>(0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
-      const int32_t x1 = std::min<int32_t>(cw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
-      const int32_t y0 = std::max<int32_t>(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
-      const int32_t y1 = std::min<int32_t>(ch - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+      // (P14A: clipped to the canvas)
+      const int32_t x0 = std::max<int32_t>(kx0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
+      const int32_t x1 = std::min<int32_t>(kx1 - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
+      const int32_t y0 = std::max<int32_t>(ky0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
+      const int32_t y1 = std::min<int32_t>(ky1 - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+      if (x1 < x0) continue;
       for (int32_t y = y0; y <= y1; ++y) {
         const double py = y + 0.5 - ay;
         int32_t xa = x0, xb = x1;
@@ -1292,7 +1410,10 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
           xa = std::max(xa, static_cast<int32_t>(std::floor(std::min(c0, c1) + ax - 0.5)));
           xb = std::min(xb, static_cast<int32_t>(std::ceil(std::max(c0, c1) + ax - 0.5)));
         }
-        uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+        xa = std::max(xa, x0);  // P14A: the canvas (x0 .. x1 were clipped to it; xa / xb follow)
+        xb = std::min(xb, x1);
+        if (xb < xa) continue;
+        uint32_t *dst = &px_at(xa, y) - xa;  // P14A: indexed by the client column
         for (int32_t x = xa; x <= xb; ++x) {
           const double px = x + 0.5 - ax;
           const double t = px * ux + py * uy, n = -px * uy + py * ux;
@@ -1369,7 +1490,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     // in the whole window, as the original dims its whole frame (the panels at their anchors, the world, the side bands); the
     // layer's own dim pixels (kind 4) are that dim, already applied
     const bool wdim = l.dim != 0 && defect_ != PresentDefect::DimLocal && !opaque_blends;
-    if (wdim)
+    if (wdim)  // (P14A: the canvas's pixels)
       for (uint32_t &d : out) d = rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(l.dim_src, to555(d)) & 0x7fff)) | 0xff000000u;
     if (l.x1 <= l.x0 || l.y1 <= l.y0) continue;
     // P9E: pass -1 = the layer's pixels at its own place (without its moved popup pieces), then each moved piece at its offset
@@ -1391,10 +1512,12 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       return p && wdim && p->kind == 4 ? nullptr : p;
     };
     // the client box that can show the layer (one logical pixel of margin for the smooth taps)
-    const int32_t cx0 = std::max<int32_t>(0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
-    const int32_t cx1 = std::min<int32_t>(cw, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
-    const int32_t cy0 = std::max<int32_t>(0, vp.origin_y + dyp + static_cast<int32_t>(static_cast<int64_t>(l.y0 - 1) * vp.client_h / kLogicalH) - 1);
-    const int32_t cy1 = std::min<int32_t>(ch, vp.origin_y + dyp + static_cast<int32_t>(static_cast<int64_t>(l.y1 + 1) * vp.client_h / kLogicalH) + 1);
+    // (P14A: clipped to the canvas, kx0 .. ky1: the client for paint)
+    const int32_t cx0 = std::max<int32_t>(kx0, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x0 - 1) * vp.client_w / kLogicalW) - 1);
+    const int32_t cx1 = std::min<int32_t>(kx1, vp.origin_x + dx + static_cast<int32_t>(static_cast<int64_t>(l.x1 + 1) * vp.client_w / kLogicalW) + 1);
+    const int32_t cy0 = std::max<int32_t>(ky0, vp.origin_y + dyp + static_cast<int32_t>(static_cast<int64_t>(l.y0 - 1) * vp.client_h / kLogicalH) - 1);
+    const int32_t cy1 = std::min<int32_t>(ky1, vp.origin_y + dyp + static_cast<int32_t>(static_cast<int64_t>(l.y1 + 1) * vp.client_h / kLogicalH) + 1);
+    if (cx1 <= cx0) continue;
     // P10A: each column's 800-space position (lpos, floor256) once per pass instead of per pixel
     std::vector<int32_t> &cl = cl_tab_;
     cl.resize(static_cast<size_t>(std::max<int32_t>(0, cx1 - cx0)) * 2);
@@ -1409,7 +1532,7 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
         const int64_t sy = lpos(y - dyp, vp.origin_y, vp.client_h, kLogicalH);
         const int32_t ly0 = floor256(sy);
         const uint32_t fy = static_cast<uint32_t>(sy - static_cast<int64_t>(ly0) * 256);
-        uint32_t *dst = out.data() + static_cast<size_t>(y) * static_cast<size_t>(cw);
+        uint32_t *dst = &px_at(cx0, y) - cx0;  // P14A: indexed by the client column
         for (int32_t x = cx0; x < cx1; ++x) {
           const int32_t lx0 = cl[static_cast<size_t>(x - cx0) * 2];
           if (nearest) {
@@ -1617,15 +1740,29 @@ void Presenter::fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch
 // (TextRaster) right-aligned at the window's right edge (the run's box at the 800 frame's right edge, moved by the right band's
 // width), the lines stacked up from the bottom, over the client pixels darkened to half.
 void Presenter::draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch) const {
+  draw_overlay_rect(out, cw, ch, 0, 0, cw, ch);
+}
+
+// P14A: the overlay's layout (draw_overlay's body up to the drawing, factored out): the runs and the darkened box (bx0, by0, by1;
+// the box reaches the window's right edge)
+namespace {
+struct OverlayLayout {
+  std::vector<portsim::GfxTextRun> runs;
+  int32_t bx0 = 0, by0 = 0, by1 = 0, dxr = 0;
+  Viewport vp;
+};
+}  // namespace
+
+static bool overlay_layout(int mode, int32_t cw, int32_t ch, OverlayLayout &L, const ProfLine *frozen) {
 #ifdef _WIN32
-  if (!overlay_mode_ || cw <= 0 || ch <= 0) return;
+  if (!mode || cw <= 0 || ch <= 0) return false;
   std::string face;
   uint32_t style = 0;
-  if (!Profiler::get().font(face, style)) return;  // before the game made its fonts
+  if (!Profiler::get().font(face, style)) return false;  // before the game made its fonts
   const Viewport vp = fit_viewport(cw, ch);
-  if (vp.client_w <= 0 || vp.client_h <= 0) return;
-  const ProfLine pl = Profiler::get().last();
-  const std::string text = overlay_text(pl, overlay_mode_);
+  if (vp.client_w <= 0 || vp.client_h <= 0) return false;
+  const ProfLine pl = frozen ? *frozen : Profiler::get().last();  // P14A: one paint shows one line (Presenter::overlay_freeze)
+  const std::string text = overlay_text(pl, mode);
   std::vector<std::string> lines;
   for (size_t a = 0;;) {
     const size_t b = text.find('\n', a);
@@ -1633,7 +1770,7 @@ void Presenter::draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch)
     if (b == std::string::npos) break;
     a = b + 1;
   }
-  const int32_t size = overlay_mode_ == 1 ? 12 : 9;
+  const int32_t size = mode == 1 ? 12 : 9;
   const int32_t height = std::max<int32_t>(1, static_cast<int32_t>(std::lround(size * static_cast<double>(vp.client_h) / kLogicalH)));
   const int32_t dxr = cw - vp.origin_x - vp.client_w;  // the right band's width: the 800 frame's right edge -> the window's
   // the lines' widths in client pixels, with TextRaster's LOGFONTA (grey antialiasing)
@@ -1661,10 +1798,8 @@ void Presenter::draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch)
     if (f) DeleteObject(f);
     if (dc) DeleteDC(dc);
   }
-  if (!overlay_raster_) overlay_raster_.reset(new TextRaster());
-  overlay_raster_->set_aa(TextAa::Grey);
   const int32_t step = size + 3, n = static_cast<int32_t>(lines.size());
-  std::vector<portsim::GfxTextRun> runs;
+  L.runs.clear();
   int32_t bx0 = cw;  // the darkened box's left edge, client pixels
   for (int32_t i = 0; i < n; ++i) {
     portsim::GfxTextRun r;
@@ -1683,27 +1818,62 @@ void Presenter::draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch)
     r.text = lines[static_cast<size_t>(i)];
     r.vis.assign(static_cast<size_t>(r.x1 - r.x0) * static_cast<size_t>(r.y1 - r.y0), 1);
     bx0 = std::min<int32_t>(bx0, vp.origin_x + dxr + static_cast<int32_t>(static_cast<int64_t>(r.x0) * vp.client_w / kLogicalW));
-    runs.push_back(std::move(r));
+    L.runs.push_back(std::move(r));
   }
-  if (runs.empty()) return;
-  const int32_t by0 = std::max<int32_t>(
-      0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(runs.front().y0) * vp.client_h / kLogicalH));
-  const int32_t by1 = std::min<int32_t>(
-      ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(runs.back().y1) * vp.client_h / kLogicalH));
-  for (int32_t y = by0; y < by1; ++y)
-    for (int32_t x = std::max<int32_t>(0, bx0 - 2); x < cw; ++x) {
-      uint32_t &d = out[static_cast<size_t>(y) * static_cast<size_t>(cw) + static_cast<size_t>(x)];
+  if (L.runs.empty()) return false;
+  L.bx0 = bx0;
+  L.by0 = std::max<int32_t>(0, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(L.runs.front().y0) * vp.client_h / kLogicalH));
+  L.by1 = std::min<int32_t>(ch, vp.origin_y + static_cast<int32_t>(static_cast<int64_t>(L.runs.back().y1) * vp.client_h / kLogicalH));
+  L.dxr = dxr;
+  L.vp = vp;
+  return true;
+#else
+  (void)mode; (void)cw; (void)ch; (void)L; (void)frozen;
+  return false;
+#endif
+}
+
+bool Presenter::overlay_box(int32_t cw, int32_t ch, int32_t box[4]) const {  // P14A
+  OverlayLayout L;
+  if (!overlay_layout(overlay_mode_, cw, ch, L, overlay_frozen_ ? &overlay_line_ : nullptr)) return false;
+  box[0] = std::max<int32_t>(0, L.bx0 - 2);
+  box[1] = L.by0;
+  box[2] = cw;
+  box[3] = L.by1;
+  return box[2] > box[0] && box[3] > box[1];
+}
+
+// the overlay over the canvas (x0, y0, w, h) of the client: the box darkened to half, then the runs (P14A: draw_overlay's drawing
+// on a canvas; the whole client = draw_overlay)
+void Presenter::draw_overlay_rect(std::vector<uint32_t> &out, int32_t cw, int32_t ch, int32_t x0, int32_t y0, int32_t w,
+                                  int32_t h) const {
+#ifdef _WIN32
+  OverlayLayout L;
+  if (!overlay_layout(overlay_mode_, cw, ch, L, overlay_frozen_ ? &overlay_line_ : nullptr)) return;
+  if (out.size() != static_cast<size_t>(w) * static_cast<size_t>(h)) return;
+  if (!overlay_raster_) overlay_raster_.reset(new TextRaster());
+  overlay_raster_->set_aa(TextAa::Grey);
+  for (int32_t y = std::max(L.by0, y0); y < std::min(L.by1, y0 + h); ++y)
+    for (int32_t x = std::max<int32_t>({0, L.bx0 - 2, x0}); x < std::min(cw, x0 + w); ++x) {
+      uint32_t &d = out[static_cast<size_t>(y - y0) * static_cast<size_t>(w) + static_cast<size_t>(x - x0)];
       d = ((d >> 1) & 0x007f7f7fu) | 0xff000000u;
     }
-  for (const portsim::GfxTextRun &r : runs) overlay_raster_->draw(r, false, vp, dxr, out, cw, ch);
+  Viewport vc = L.vp;
+  vc.origin_x -= x0;
+  vc.origin_y -= y0;
+  for (const portsim::GfxTextRun &r : L.runs) overlay_raster_->draw(r, false, vc, L.dxr, out, w, h);
 #else
-  (void)out; (void)cw; (void)ch;
+  (void)out; (void)cw; (void)ch; (void)x0; (void)y0; (void)w; (void)h;
 #endif
 }
 
 #ifdef _WIN32
 void Presenter::paint(void *hdc, int32_t cw, int32_t ch) const {
   if (cw <= 0 || ch <= 0) return;
+  if (gpu_ && gpu_->ok()) {  // P14A: the GPU path (gpu.cpp)
+    paint_gpu(cw, ch);
+    return;
+  }
   const int64_t t0 = portsim::perf_now_ns();  // P10A
   render(cw, ch, scratch_);
   if (overlay_mode_) {

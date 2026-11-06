@@ -236,6 +236,7 @@ int32_t surf_key(const portsim::GfxHudFrame &F, size_t i) {
 
 void Presenter::hover_observe(int32_t cx, int32_t cy, const Viewport &vp) {
   if (!hover_on_) return;
+  ++content_gen_;  // P14A
   if (!hover_) hover_ = std::make_shared<HoverModel>();
   HoverModel &M = *hover_;
   ++M.st.frames;
@@ -580,6 +581,7 @@ bool Presenter::hover_tick(int32_t cx, int32_t cy, const Viewport &vp) {
                              c.b.x0, c.b.y0, c.b.x1, c.b.y1, cx, cy, want, c.cur);
   }
   if (changed) ++M.st.paints;
+  if (changed) ++content_gen_;  // P14A: the GPU path uploads the swapped pixels / runs again
   return changed;
 }
 

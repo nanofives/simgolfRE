@@ -17,9 +17,11 @@
 #include <cstdint>
 #include <memory>
 #include <mutex>
+#include <string>  // P14A
 #include <vector>
 
 #include "input_map.h"
+#include "profile.h"  // P14A: ProfLine (overlay_freeze)
 #include "portsim/sim/gfx.h"  // P9B: GfxHudFrame (the frame's HUD pixel layers)
 #include "textres.h"           // P9C: TextRaster (the frame's text runs at the window's resolution)
 
@@ -227,13 +229,15 @@ struct WorldImage {
 };
 
 struct HoverModel;  // P10I fix 2 (hover.cpp)
+class GpuCompositor;  // P14A (gpu.cpp)
 struct HoverStats {  // P10I fix 2: session.json p10i
   uint64_t frames = 0, controls_made = 0, resets = 0, mispredicts = 0, ticks = 0, swaps = 0, paints = 0;
   uint32_t controls = 0;
 };
 class Presenter {
  public:
-  explicit Presenter(PresentDefect d = PresentDefect::None, ScaleMode s = ScaleMode::Nearest) : defect_(d), scale_(s) {}
+  explicit Presenter(PresentDefect d = PresentDefect::None, ScaleMode s = ScaleMode::Nearest);
+  ~Presenter();
   void set_scale(ScaleMode s) { scale_ = s; }
   ScaleMode scale() const { return scale_; }
   // the mode a content rectangle of w x h is drawn with (Auto resolved)
@@ -282,6 +286,14 @@ class Presenter {
   void set_overlay(int mode) { overlay_mode_ = mode < 0 ? 0 : mode > 2 ? 2 : mode; }
   int overlay() const { return overlay_mode_; }
   void draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch) const;
+  // P14A: the overlay's client box (x0, y0, x1, y1; false = nothing drawn), and the overlay drawn into a canvas (render_rect's)
+  bool overlay_box(int32_t cw, int32_t ch, int32_t box[4]) const;
+  // P14A: the overlay drawn from one profiler line until unfrozen (a GPU paint's patches and its A/B check read the same line)
+  void overlay_freeze(bool on) const {
+    overlay_frozen_ = on;
+    if (on) overlay_line_ = Profiler::get().last();
+  }
+  void draw_overlay_rect(std::vector<uint32_t> &out, int32_t cw, int32_t ch, int32_t x0, int32_t y0, int32_t w, int32_t h) const;
   // P10E: the live cursor preview between game frames (--paint-rate display). Active: the frame's tool previews at the cursor
   // (WorldImage::cur_* and the frame's cursor2d pixels) are drawn moved by (sx, sy) 800-space pixels, at the client offset dx
   // instead of the sim's last cursor answer's (PanelRemap::cursor_dx). set_frame / set_frame_world clear it (a new frame draws
@@ -328,7 +340,10 @@ class Presenter {
   const SlideStart &slide_start() const { return slide_start_; }
   // P12A fix 1: the window changed the picture without a new frame or a preview / slide move (a hover swap): the next paint counts
   // as a changed picture for the FPS overlay
-  void mark_changed() const { changed_pending_ = true; }
+  void mark_changed() const {
+    changed_pending_ = true;
+    ++content_gen_;  // P14A: a hover swap changed layer pixels / runs (the GPU path uploads them again)
+  }
   // P12A fix 2 (log/roadmap/P12/P12A_notes.md): the moving objects between two game frames (--smooth-objects on). set_frame_world
   // matches the new frame's tagged queue draws (WorldImage::hr_scene, gfx.h GfxMoverSrc) with the previous frame's: the same source
   // (kind and record index), the same occurrence among that source's draws (any animation cel: the step is taken from the
@@ -385,11 +400,27 @@ class Presenter {
   void render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vp = nullptr) const;
 
 #ifdef _WIN32
-  // Draws the client image into `hdc` (a window DC or a paint DC) at (0, 0).
+  // Draws the client image into `hdc` (a window DC or a paint DC) at (0, 0). P14A: with the GPU path started, composes and presents
+  // through it instead (hdc unused).
   void paint(void *hdc, int32_t cw, int32_t ch) const;
 #endif
+  // P14A (log/roadmap/P14/P14A_notes.md): the window's picture composed and presented by the GPU (D3D11, a flip-model swap chain on
+  // `hwnd`). gpu_start: false = the CPU path stays (`why` says why). The GPU path draws what Presenter::render would draw at the same
+  // state: the integer pixel rules on the GPU, GDI text / tee lines / the overlay as CPU patches (render restricted to rectangles).
+  bool gpu_start(void *hwnd, std::string &why);
+  bool gpu_on() const;
+  void gpu_stop();
+  std::string gpu_json() const;  // session.json p14
+  void gpu_shot(const std::string &path);
+  // P14A: blocks until the next vertical blank of the GPU path's monitor (the pacer's clock with the GPU on); false = not available
+  bool gpu_wait_vblank() const;  // the next GPU paint's picture as a BMP (the harness's capture; no-op on the CPU path)
+  // P14A: render restricted to client rectangle (x0, y0, w, h) (may lie outside the client; rows / columns outside it are not
+  // computed): `out` receives w x h words. course = the course picture alone (no HUD layers / runs, no overlay), at slide offset 0.
+  // No side effect on the presenter's state (the scene kept for the slide, the click remap).
+  void render_rect(int32_t cw, int32_t ch, int32_t x0, int32_t y0, int32_t w, int32_t h, bool course, std::vector<uint32_t> &out) const;
 
  private:
+  friend class GpuCompositor;  // P14A
   PresentDefect defect_;
   ScaleMode scale_;
   std::vector<uint16_t> frame_;
@@ -409,6 +440,8 @@ class Presenter {
   void compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, int32_t slx = 0, int32_t sly = 0) const;
   mutable std::vector<uint32_t> scratch_;
   mutable std::vector<uint32_t> base_bgra_;  // P10A: render's BGRA copy of the base (smooth path)
+  mutable const void *base_bgra_src_ = nullptr;  // P14A: the copy's source and content generation
+  mutable uint64_t base_bgra_gen_ = ~0ull;
   mutable std::vector<int32_t> base_lx_, cw_tab_, cl_tab_;  // P10A: render / compose_world / compose_layers column tables
   const uint8_t *base_hidden(const Viewport &vp, bool text) const;  // P10A
   int overlay_mode_ = 0;                                   // P10A
@@ -486,6 +519,40 @@ class Presenter {
   mutable std::vector<int32_t> piece_dx_;
   mutable const portsim::GfxHudFrame *piece_frame_ = nullptr;
   static int32_t piece_of(const portsim::GfxHudFrame &f, int32_t x, int32_t y);  // piece index at an 800-space pixel, -1 none
+  // ---- P14A
+  // the buffer the compose functions write: client pixel (x, y) is out[(y - y0) * w + (x - x0)]; render sets it (the whole client
+  // for paint, a rectangle for render_rect)
+  struct Canvas {
+    int32_t x0 = 0, y0 = 0, w = 0, h = 0;
+    bool full = true;  // the whole client (render's side effects allowed)
+  };
+  mutable Canvas cv_;
+  mutable bool quiet_ = false;     // render_rect / the A/B check: no side effect (scene keep, remap)
+  mutable bool force_slide0_ = false;  // render_rect(course): the course picture at offset 0
+  mutable bool course_only_ = false;   // render_rect(course): stop before the HUD layers
+  // P14A: non-zero = render_impl draws the HUD layers alone (no text runs) over a course picture of this one word (the GPU path's
+  // classification of its patches: equal results over black and white = the course does not show through)
+  mutable uint32_t probe_ = 0;
+  void render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vp) const;
+  // P9E's piece offsets and P9B's click remap, as compose_layers sets them (factored out; remap only when not quiet)
+  void layer_pieces(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const;
+  void layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const;
+  bool pieces_on(const portsim::GfxHudFrame &f, const Viewport &vp) const;
+  // compose_layers' draw-order places of the previews and the tee lines (cached per frame / content generation)
+  mutable const void *order_key_ = nullptr;
+  mutable uint64_t order_gen_ = ~0ull;
+  mutable size_t cur_layer_c_ = 0, line_layer_c_ = 0;
+  void draw_order(const portsim::GfxHudFrame &f, bool cur, bool lines, size_t &cur_layer, size_t &line_layer) const;
+  mutable uint64_t content_gen_ = 0;  // bumped by a new frame, a hover swap, set_text (the GPU path re-uploads)
+  mutable uint64_t world_gen_ = 0;    // bumped by objects_tick when it rewrote world pixels
+  mutable std::vector<std::array<int32_t, 4>> world_dirty_;  // the world rectangles objects_tick rewrote since the GPU's upload
+  mutable uint64_t swap_gen_ = 0;     // bumped where slide_start swaps scene_prev_ / scene_last_
+  mutable bool overlay_frozen_ = false;  // overlay_freeze
+  mutable ProfLine overlay_line_;
+  std::unique_ptr<GpuCompositor> gpu_;
+#ifdef _WIN32
+  void paint_gpu(int32_t cw, int32_t ch) const;
+#endif
 };
 
 }  // namespace portapp

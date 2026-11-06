@@ -15,6 +15,11 @@
 //   bands    the side bands (P7 / P9A)
 //   overlay  this overlay
 //   blit     SetDIBitsToDevice
+// P14A (GPU path, gpu.cpp; appended so the earlier CSV columns keep their places):
+//   upload   the frame's textures and the patches written to the GPU
+//   patch    the CPU patches (text runs, tee lines, the overlay: the existing code clipped to their rectangles)
+//   gpu      the GPU's own time for the paint (D3D11 timestamp queries, read one paint late; not CPU time)
+//   present  waiting for the swap chain's latency object and Present
 // Each phase is timed exclusively on its thread (ProfScope: an inner scope's time is not its outer scope's). Every second the
 // profiler closes a line: fps = distinct frames the window showed per second (P12A fix 1, --smooth-camera on: paints whose picture
 // changed per second, so the camera slide shows its own rate; the game's frames per second stay in the detail line), sim_fps = game frames per second, the sim phases in
@@ -29,9 +34,13 @@
 
 namespace portapp {
 
-enum class Phase : uint8_t { Sim, Gfx, Terrain, Capture, Wait, Base, World, Layers, Text, Bands, Overlay, Blit, Count };
+enum class Phase : uint8_t { Sim, Gfx, Terrain, Capture, Wait, Base, World, Layers, Text, Bands, Overlay, Blit, Upload, Patch, Gpu, Present, Count };
 constexpr int kPhases = static_cast<int>(Phase::Count);
 const char *phase_name(Phase p);
+// P14A: adds ns to phase p outside a ProfScope (the GPU's timestamp time), when the profiler is on
+void prof_add(Phase p, int64_t ns);
+// P14A: the overlay's detail line shows the GPU phases
+void prof_set_gpu(bool on);
 
 struct ProfLine {
   double t_s = 0;           // seconds since the profiler started, at the line's end
