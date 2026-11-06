@@ -1074,3 +1074,24 @@ at 8; arrow keys move 4 tiles at 8; an object's cash refund in a money game not 
 Worker trees deleted with log/roadmap/P10/P10_cleanup.py; merge helper log/roadmap/P10/union_conflicts.py.
 P11F (ae58a978): arrow keys move 2 tiles per press at zoom 8 (mainLoop.cameraStepFixed4); edge-scroll left at 1 tile per frame at
 every zoom (Mariano, 2026-11-05).
+
+## P12: motion at the monitor's refresh rate (2026-11-06)
+Brief log/roadmap/P12/BRIEF.md, worker P12A (notes P12A_notes.md). The simulation keeps the original's 10.7 frames/s; the picture moves
+at the display rate. Fix 1 (d357974b): the camera slide: the newest frame is shown at once and its course picture slides from the painted
+camera to its own over one game-frame period, clicks remapped to the shown picture (--smooth-camera). Fixes 2-3 (a4b58031): golfers,
+walkers, animals interpolated one frame late (~90 ms), ball and shadow extrapolated, from render-only tags on the sprite queue; the sim
+thread copies the base only around the movers, repaints capped at --object-rate 30 (--smooth-objects, default on by Mariano's choice:
+arrows at zoom 2 lose ~0.33 frames/s, zoom 4 and idle none). SG_APP_P12=off turns both off.
+
+## P13: sixth play-test feedback (2026-11-06)
+Brief log/roadmap/P13/BRIEF.md (18 items), workers P13A..P13D, every fix merged and published as it landed. P13A (ac140bf7, 0ef07ad3):
+tools kept on every zoom, right click deselects (mainLoop.rightClickKeepsTool), no course hover with nothing held (--hover-help), H opens
+the hole in a round (mainLoop.hKeyShotStyleFirst, not measured inside a round), Tab turns the fairway, the bulldozer arms the game's own
+bulldoze mode (mainLoop.undoButtonHelpOnly, option C; not in the Ctrl+Z history). P13B (9e1977ba, 47153908, 1199dd1d, aa0f66f5): no
+click from a maximize, character editor Cancel cancels, editor tooltips readable, world map side bands repeat its edges (--map-bands
+clamp; the full wide map estimated at 2-3 days in P13B_notes.md), showGolferPairSelect ported (the session used to end). P13C
+(bf2a088d, 2886777b): zoom 8 keeps zoom 4's fonts, the golfer strip right of the Build palette (--hud-strip). P13D (34044635,
+416ec362, 8d9fb8f1): trajectory lines whole, report graph specks gone, --terrain-filter sharp, the first placement no longer changes
+the whole picture (updateTerrainRender.syncTilesAfterEdit), --sprite-filter edge (Scale2x / EPX). Dropped by Mariano: 15 (cut thought
+label, not reproduced) and 16 (P13B's finding kept in its notes). SG_APP_P13=off turns the app parts off. Combined gates on main:
+log/roadmap/P13/P13Z_gates.log.
