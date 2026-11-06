@@ -422,6 +422,7 @@ void LiveSession::end_load(portsim::Ctx &ctx) {
 // P6B item 1 (host.h request_close)
 void LiveSession::title_menu(portsim::Ctx &ctx) {
   title_seen_.store(true);
+  world_map_ = false;  // P13B item 18
   title_ever_ = true;  // P6B item 2: loads after this are world loads (no game loading screen)
   at_menu_.store(true);
   // P10C fix 1 (HostOptions::title_bands): back from a session, the title menu's first refreshFull (tick_menu.inc hover loop)
@@ -933,6 +934,10 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     frame_index_ = index;
     frame_cursor_ = fc;  // P10I fix 2
     frame_band_ = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
+    if (!in_game_ && world_map_ && opt_.map_bands) {  // P13B item 18
+      frame_band_ = BandFill::ExtendClamp;
+      ++presents_map_;
+    }
     ++(in_game_ ? presents_black_ : presents_extend_);
     frame_waiting_ = true;
     last_band_ = frame_band_;  // P10C fix 1
@@ -967,6 +972,7 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   apply_view(ctx);                // G32: the window's view width and world size (recorded write, before the frame body)
   apply_undo(ctx);                // P11D: Ctrl+Z / Ctrl+Y (recorded write, before the frame body)
   track_screen(ctx, true);        // P7: a frame head is the frame loop
+  world_map_ = false;             // P13B item 18
   title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
   end_load(ctx);                  // P6B item 2
   close_check(ctx, true, false);  // P5B item 3: a close request becomes the system menu's Exit flag here
@@ -1174,6 +1180,11 @@ uint16_t LiveSession::async_key(portsim::Ctx &, int vk) {
 portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump &p, std::vector<portsim::Command> &out) {
   if (stopping()) return portsim::LiveReply::Stop;
   track_screen(ctx, p.body);  // P7: the side-band hint of the next presents
+  // P13B item 18: courseActionMenu's pass hint (saveload.cpp course_action_menu: InputSource::timed_pass(50), the only 50 ms
+  // one) marks the world map; a body pump or a world load's pump ends it (track_screen's frame heads and title_menu() too)
+  constexpr uint32_t kWorldMapPassMs = 50;
+  if (!p.body && p.timed_pass_ms == kWorldMapPassMs) world_map_ = true;
+  else if (p.body || p.kind == portsim::PumpKind::Load) world_map_ = false;
   if (close_check(ctx, false, p.body)) {  // P5B item 3: the close button on the title menu (or after the quit prompt)
     stop_.store(true);
     return portsim::LiveReply::Stop;
@@ -1519,7 +1530,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"present_points\":{\"r\":" + std::to_string(opportunities_[0]) + ",\"w\":" + std::to_string(opportunities_[1]) +
        ",\"m\":" + std::to_string(opportunities_[2]) + ",\"p\":" + std::to_string(opportunities_[3]) + "}";
   s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
-  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + "}";  // P7
+  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + "}";  // P7, P13B item 18
   s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
        ",\"presents_world\":" + std::to_string(presents_world_) + ",\"presents_layered\":" + std::to_string(presents_layered_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
        ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +

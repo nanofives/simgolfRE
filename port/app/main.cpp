@@ -73,6 +73,9 @@
 //   / tee tool draws from the tee (or green) to the cursor (P7's drawMinimapSegment) drawn again at the window's resolution in the
 //   cursor previews' place, its cursor end following P10E's live move (gfx.h gfx_set_hud_lines, present.h set_line_native); frame
 //   = the 800 x 600 frame's line pixels scaled with the picture.
+//   P13B item 18: --map-bands clamp|same (default clamp; SG_APP_P13=off: same) the world map shown before a session (courseActionMenu:
+//   the only loop that hands the host a 50 ms timed pass) gets side bands that repeat its outermost column, cleaned by a vertical
+//   median over +-33 logical rows (present.cpp fill_bands_map), instead of the --wide-fill bands; every other screen keeps them.
 //   P11C: --hover-help on|course|off (default on; SG_APP_P11=off: off) one short line of what a terrain does, in the game's one-line tip
 //   (drawPanelBackdrop): above the Build palette's tool tip, and over the course for the tile under the cursor with no tool after
 //   the HUD tips' dwell (gfx.h gfx_set_hover_help; log/roadmap/P11/P11C_notes.md). Drawing only.
@@ -424,6 +427,7 @@ struct Options {
   bool hover_help_course = false;  // P13A: --hover-help course, the course line with no tool too (SG_APP_P13=off: on)
   bool smooth_objects = true;      // P12A fix 2: --smooth-objects on|off (SG_APP_P12=off: off)
   int object_rate = 30;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick)
+  bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
   std::vector<int64_t> world_shots;    // --world-shots (live-trace)
@@ -1403,6 +1407,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.smooth_objects = o.smooth_objects && o.sprite_native && ho.world;
   portsim::gfx_set_hr_scene(ho.smooth_objects);
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
+  ho.map_bands = o.wide && o.map_bands;               // P13B item 18 (the world map's bands repeat its edge columns)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
@@ -2398,7 +2403,7 @@ int run_compose(const Options &o) {  // P7: --compose <in.555> <cw> <ch> <out.bm
   std::memcpy(px.data(), raw.data(), raw.size());
   Presenter p(PresentDefect::None, scale_mode(o.scale));
   p.set_wide(wide_fill(o));
-  p.set_frame(px, o.compose_band == "black" ? BandFill::Black : BandFill::Extend);
+  p.set_frame(px, o.compose_band == "black" ? BandFill::Black : o.compose_band == "map" ? BandFill::ExtendClamp : BandFill::Extend);  // P13B: map
   std::vector<uint32_t> out;
   p.render(cw, ch, out);
   const uint32_t stride = (static_cast<uint32_t>(cw) * 3 + 3) & ~3u, img = stride * static_cast<uint32_t>(ch);
@@ -3030,6 +3035,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "display" && v != "game")) return false;
       o.hover_rate = v;
     }
+    else if (a == "--map-bands") {  // P13B item 18
+      if (!val(v) || (v != "clamp" && v != "same")) return false;
+      o.map_bands = v == "clamp";
+    }
     else if (a == "--hover-help") {  // P11C (P13A: course)
       if (!val(v) || (v != "on" && v != "course" && v != "off")) return false;
       o.hover_help = v != "off";
@@ -3128,7 +3137,7 @@ bool parse(int argc, char **argv, Options &o) {
       i += 4;
     }
     else if (a == "--compose-band") {
-      if (!val(o.compose_band) || (o.compose_band != "extend" && o.compose_band != "black")) return false;
+      if (!val(o.compose_band) || (o.compose_band != "extend" && o.compose_band != "black" && o.compose_band != "map")) return false;
     }
     else if (a == "--translate") { if (!val(o.translate_in)) return false; }
     else if (a == "--out") { if (!val(o.translate_out)) return false; }
@@ -3206,6 +3215,7 @@ int main(int argc, char **argv) {
       if (o.sprite_filter == 3) o.sprite_filter = 1;  // P13D fix 5: sharp (P10H's default)
       o.hover_help_course = true;  // P13A item 2: P11C's course line back
       o.strip_right = false;  // P13C item 10
+      o.map_bands = false;  // P13B item 18
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

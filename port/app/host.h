@@ -174,6 +174,9 @@ struct HostOptions {
   // P10C fix 1: when the title menu reports its first pass after a session, the frame it presented with the in-game band hint
   // (BandFill::Black: the title's first refreshFull runs before title_menu() clears in_game_) is posted again with Extend
   bool title_bands = false;
+  // P13B item 18: the world map shown before a session (courseActionMenu) presents with BandFill::ExtendClamp (its own edge
+  // columns repeated) instead of Extend
+  bool map_bands = false;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -354,6 +357,10 @@ class LiveSession : public portsim::LiveHost {
   bool in_game_ = false;
   void track_screen(portsim::Ctx &ctx, bool frame_loop);
   uint64_t presents_extend_ = 0, presents_black_ = 0;  // presents by band hint (summary_json)
+  // P13B item 18: set at a modal pump of courseActionMenu (the only loop that hands the host a 50 ms timed pass,
+  // kWorldMapPassMs), kept through the popups it opens, cleared at a frame head, a world load's pump and the title menu
+  bool world_map_ = false;
+  uint64_t presents_map_ = 0;
   BandFill last_band_ = BandFill::Black;  // P10C fix 1: the band hint and index of last_presented_ (sim thread)
   uint32_t last_index_ = 0;
   uint64_t title_reposts_ = 0;

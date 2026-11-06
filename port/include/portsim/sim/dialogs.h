@@ -28,6 +28,8 @@ int32_t draw_scroll_text(Ctx &ctx, uint32_t text, int32_t sel);
 int32_t run_scroll_text(Ctx &ctx, uint32_t text);
 int32_t scroll_text_window(Ctx &ctx, uint32_t text, int32_t x, int32_t y);
 void show_bulletin_board(Ctx &ctx);
+// showGolferPairSelect (): the select-the-next-pair-of-golfers screen (P13B; dialogs.cpp has the rule); returns its eax
+int32_t show_golfer_pair_select(Ctx &ctx);
 
 }  // namespace portsim
 

@@ -744,7 +744,7 @@ void Presenter::render(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewp
       compose_layers(out, cw, ch, vp, slx, sly);
     }
     if (text && !layered()) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them above)
-    if (world_.empty() && wide_ != WideFill::Off && band_ == BandFill::Extend) fill_bands(out, cw, ch, vp);  // P7
+    if (world_.empty() && wide_ != WideFill::Off && band_ != BandFill::Black) fill_bands(out, cw, ch, vp);  // P7 (P13B: ExtendClamp too)
   };
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
@@ -1439,6 +1439,12 @@ void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, c
   const ProfScope prof(Phase::Bands);  // P10A
   const int32_t ox = vp.origin_x, oy = vp.origin_y, w = vp.client_w, h = vp.client_h;
   if (w <= 0 || h <= 0 || cw <= 0 || ch <= 0 || oy + h > ch || ox + w > cw) return;
+  // P13B item 18: the world map's hint repeats its edge column whatever --wide-fill says (fill_bands_map)
+  const bool map = band_ == BandFill::ExtendClamp;
+  if (map) {
+    fill_bands_map(out, cw, vp);
+    return;
+  }
   if (wide_ == WideFill::Edge || wide_ == WideFill::Mirror) {
     fill_bands_p9(out, cw, ch, vp);
     return;
@@ -1478,6 +1484,49 @@ void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, c
         }
         out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + x] = 0xff000000u | (c8[0] << 16) | (c8[1] << 8) | c8[2];
       }
+    }
+  }
+}
+
+// P13B item 18 (BandFill::ExtendClamp, the world map): every band column repeats the content's outermost client column, cleaned
+// per row by a vertical median over +-33 logical rows (it drops what crosses the edge for fewer rows than that: the site plates'
+// outlines and the swirl's 1-pixel line, which a plain clamp carries out as streaks) and smoothed by a box mean over +-2 logical
+// rows. The art's own vertical gradient (the right edge) and flat colour (the left edge) are kept.
+void Presenter::fill_bands_map(std::vector<uint32_t> &out, int32_t cw, const Viewport &vp) const {
+  const int32_t ox = vp.origin_x, oy = vp.origin_y, w = vp.client_w, h = vp.client_h;
+  const int32_t rm = std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(h) * 33 / kLogicalH));
+  const int32_t rb = std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(h) * 2 / kLogicalH));
+  std::vector<uint8_t> sig(static_cast<size_t>(h) * 3), med(static_cast<size_t>(h) * 3), win;
+  std::vector<uint32_t> col(static_cast<size_t>(h));
+  for (int side = 0; side < 2; ++side) {
+    const int32_t band = side == 0 ? ox : cw - (ox + w);
+    if (band <= 0) continue;
+    const int32_t cx = side == 0 ? ox : ox + w - 1;
+    for (int32_t y = 0; y < h; ++y) {
+      const uint32_t v = out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + cx];
+      for (int c = 0; c < 3; ++c) sig[static_cast<size_t>(y) * 3 + c] = static_cast<uint8_t>((v >> (16 - 8 * c)) & 255);
+    }
+    for (int32_t y = 0; y < h; ++y) {
+      const int32_t lo = std::max(0, y - rm), hi = std::min(h - 1, y + rm);
+      for (int c = 0; c < 3; ++c) {
+        win.clear();
+        for (int32_t j = lo; j <= hi; ++j) win.push_back(sig[static_cast<size_t>(j) * 3 + c]);
+        std::nth_element(win.begin(), win.begin() + static_cast<ptrdiff_t>(win.size() / 2), win.end());
+        med[static_cast<size_t>(y) * 3 + c] = win[win.size() / 2];
+      }
+    }
+    for (int32_t y = 0; y < h; ++y) {
+      const int32_t lo = std::max(0, y - rb), hi = std::min(h - 1, y + rb);
+      uint32_t s[3] = {0, 0, 0};
+      for (int32_t j = lo; j <= hi; ++j)
+        for (int c = 0; c < 3; ++c) s[c] += med[static_cast<size_t>(j) * 3 + c];
+      const uint32_t n = static_cast<uint32_t>(hi - lo + 1);
+      col[static_cast<size_t>(y)] = 0xff000000u | (((s[0] + n / 2) / n) << 16) | (((s[1] + n / 2) / n) << 8) | ((s[2] + n / 2) / n);
+    }
+    for (int32_t y = 0; y < h; ++y) {
+      uint32_t *row = out.data() + static_cast<size_t>(oy + y) * static_cast<size_t>(cw);
+      if (side == 0) std::fill(row, row + ox, col[static_cast<size_t>(y)]);
+      else std::fill(row + ox + w, row + cw, col[static_cast<size_t>(y)]);
     }
   }
 }

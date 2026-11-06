@@ -32,7 +32,7 @@ emu_oracle = pytest.mark.skipif(os.environ.get("SG_EMU_ORACLE") not in ("1", "up
 
 ENTRY = {"skillPointDialog": 0x0045F0F0, "showCharacterIntro": 0x004065C0, "drawGolferInfoPanel": 0x0045C560,
          "drawScrollText": 0x0046E260, "runScrollText": 0x0046DEA0, "scrollTextWindow": 0x0046DE70,
-         "showBulletinBoard": 0x0046E810}
+         "showBulletinBoard": 0x0046E810, "showGolferPairSelect": 0x00459850}
 TEXT_VA = 0x30200000   # a writable text block (the scroll text functions write NULs into the text and put them back)
 CURSOR_VA = 0x30100000
 PEER_LOG_VA, PEER_LOG_CAP = 0x32000000, 4096
@@ -53,6 +53,7 @@ DROPPED = sorted((set(WIDGET_DROPPED) | {
     0x0040D0B0, 0x0046E710, 0x00404A20,   # drawFrameS2, drawRectScaled, drawTextScaled
     0x00477580,   # Widget_value (runScrollText ignores its result)
     0x00475580, 0x00475840, 0x00475C90, 0x00475210, 0x00474440,   # saveBmp, loadImage, fillRegion, loadBmpSurface, drawSprite
+    0x00474380,   # Surface_draw (P13B: showGolferPairSelect's unselected heads)
 }) - {TEXT_PUT})
 SHOW_SCREEN, GFX_FLUSH_A, PUMP_INPUT_BD0 = 0x00483BB0, 0x00497B00, 0x00483BD0
 NORET = (0x00483D30, 0x00483C30, 0x00483C70, 0x00483BD0)   # flushInput, pumpInput483c30, redrawAll, doAllTasks
@@ -172,7 +173,7 @@ def compare(lib, name, case) -> str:
         return "" if pe is None and code in (L.SG_E_FAULT, L.SG_E_DIVIDE) else f"original error {r.err}, port {pe} {code}"
     elif pe is None:
         return f"port error {code}, original eax {r.eax:#x}"
-    elif name not in ("drawGolferInfoPanel", "showBulletinBoard") and (pe & 0xFFFFFFFF) != r.eax:
+    elif name not in ("drawGolferInfoPanel", "showBulletinBoard", "showGolferPairSelect") and (pe & 0xFFFFFFFF) != r.eax:
         return f"eax port {pe & 0xFFFFFFFF:#x} original {r.eax:#x}"
     if used != r.consumed:
         return f"input consumed port {used} original {r.consumed}"
@@ -285,6 +286,9 @@ def cases(lib, name, n, seed):
             continue
         elif name == "showBulletinBoard":
             out.append(_bulletin_case(lib, rng, rule))
+            continue
+        elif name == "showGolferPairSelect":
+            out.append(_pair_case(lib, rng, rule))
             continue
         else:
             raise KeyError(name)
@@ -453,8 +457,39 @@ def _bulletin_case(lib, rng, rule):
     return (bytes(img), [], inputs + more, [(0, 0)] + cursors, rule, rng.getrandbits(32), None)
 
 
+# P13B: showGolferPairSelect (0x00459850). The golfers waiting at the first tee (+0x21 = 0xff) are a random subset, the list
+# start g_lastAllocatedGolfer, the hit box bound (the word at g_infoSprites821120 + 0x44) and the flag words vary; the script
+# moves onto a slot with one idle pass (the original only redraws on a new hover) and clicks it, sometimes past the drawn
+# slots or on a third golfer (refused), and leaves by a click outside the slots or a key
+def _pair_case(lib, rng, rule):
+    from port.test import cmdemu as CE
+    img = _dialog_image(lib, rng, -1)
+    o = objs(lib)
+    goff = o["g_golfers"][0]
+    waiting = rng.sample(range(0x98), rng.choice([0, 1, 2, 3, 5, 8, 12]))
+    for g in range(0x98):
+        img[goff + 0x100 * g + 0x21] = 0xFF if g in waiting else rng.choice([0, 1, 5, 0x13])
+        struct.pack_into("<H", img, goff + 0x100 * g + 0xB8, rng.choice([0, 0, 0x08, 0x10, 0x28, 0x40, 0x78, rng.getrandbits(16)]))
+    put32(lib, img, "g_lastAllocatedGolfer", rng.choice([rng.randrange(0x98), 0, 0x97, rng.randrange(0x98)]))
+    put32(lib, img, "g_infoSprites821120", rng.choice([0x14E, 0x29C, 0x200, 0x60, 0]), 0x44)
+    inputs, cursors = [], []
+    slots = [(6 + 0x14E * (s & 1) + rng.randrange(1, 0x140), 0x32 + 0x88 * (s // 2) + rng.randrange(1, 0x80)) for s in range(8)]
+    for _ in range(rng.choice([0, 1, 2, 3, 4, 6])):
+        pt = rng.choice(slots[:max(1, len(waiting) + 1)] + [slots[rng.randrange(8)]])
+        cursors += [pt, pt]
+        inputs += [CE.Raw(8, 0, 0)] + CE.click(*pt)
+    if rng.random() < 0.6:   # out by a click past the slots (a new hover first: one idle pass)
+        pt = rng.choice([(0x2F0, 0x240), (3, 0x20), (0x300, 0x250)])
+        cursors += [pt, pt]
+        inputs += [CE.Raw(8, 0, 0)] + CE.click(*pt)
+    else:
+        cursors += [cursors[-1] if cursors else (0, 0)]
+        inputs += CE.key(0x1B, 0x1B)
+    return (bytes(img), [], inputs, cursors, rule, rng.getrandbits(32), None)
+
+
 SCROLL = ["drawScrollText", "runScrollText", "scrollTextWindow", "showBulletinBoard"]
-DIALOGS = ["skillPointDialog", "showCharacterIntro", "drawGolferInfoPanel"] + SCROLL
+DIALOGS = ["skillPointDialog", "showCharacterIntro", "drawGolferInfoPanel"] + SCROLL + ["showGolferPairSelect"]
 ORACLE_N = {"drawGolferInfoPanel": 400, "drawScrollText": 300, "runScrollText": 200, "showBulletinBoard": 200}
 
 
@@ -472,7 +507,7 @@ def test_dialog_equals_emulated_original(portlib, name):
 
 # ------------------------------------------------------------------------------------------------ golden digests
 GOLDEN_N = {"skillPointDialog": 120, "showCharacterIntro": 60, "drawGolferInfoPanel": 200, "drawScrollText": 100,
-            "runScrollText": 120, "scrollTextWindow": 60, "showBulletinBoard": 120}
+            "runScrollText": 120, "scrollTextWindow": 60, "showBulletinBoard": 120, "showGolferPairSelect": 120}
 
 
 def _golden_cases(lib, name):
@@ -524,7 +559,7 @@ def test_golden_digests(portlib, name):
 
 # ------------------------------------------------------------------------------------------------ negative controls
 NEGCTL_RED = [("skillPointDialog", m) for m in (1, 2, 3, 4)] + [("showCharacterIntro", m) for m in (1, 2)] + \
-             [("drawGolferInfoPanel", m) for m in (1, 2, 3, 4, 5)] +              [("drawScrollText", 1), ("drawScrollText", 2), ("runScrollText", 3), ("scrollTextWindow", 1)] +              [("showBulletinBoard", 1), ("showBulletinBoard", 2)]
+             [("drawGolferInfoPanel", m) for m in (1, 2, 3, 4, 5)] +              [("drawScrollText", 1), ("drawScrollText", 2), ("runScrollText", 3), ("scrollTextWindow", 1)] +              [("showBulletinBoard", 1), ("showBulletinBoard", 2)] +              [("showGolferPairSelect", 1), ("showGolferPairSelect", 2)]
 
 
 @need_exe

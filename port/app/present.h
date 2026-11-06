@@ -68,7 +68,8 @@ enum class ScaleMode : uint8_t { Nearest = 0, Smooth = 1, Auto = 2 };
 // than half of those columns (a pin, a shadow, a label cut by the edge) is not in the background, so nothing is carried farther
 // than the fade. Mirror = the frame's outer columns mirrored into the band, blurred vertically by d / 3 and darkened towards the
 // band's outer edge (to 40 %). The default since P9A is Edge (--wide-fill edge; SG_APP_P9=off gives P7's Soft).
-enum class BandFill : uint8_t { Black = 0, Extend = 1 };
+// P13B item 18: ExtendClamp = Extend with the world map's own rule (its edge columns repeated: fill_bands' map clamp)
+enum class BandFill : uint8_t { Black = 0, Extend = 1, ExtendClamp = 2 };
 enum class WideFill : uint8_t { Off = 0, Soft = 1, Clamp = 2, Edge = 3, Mirror = 4 };
 
 // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): the world layer of a frame (portsim::LiveTerrain::world_frame). px holds
@@ -397,6 +398,7 @@ class Presenter {
   BandFill band_ = BandFill::Black;
   void fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P7
   void fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;  // P9A item 5
+  void fill_bands_map(std::vector<uint32_t> &out, int32_t cw, const Viewport &vp) const;  // P13B item 18
   WorldImage world_;                                                                                  // P8B
   bool hud_anchor_ = false;                                                                           // G32
   PanelRemap *remap_ = nullptr;                                                                       // G32

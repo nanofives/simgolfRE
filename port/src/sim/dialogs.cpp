@@ -41,6 +41,7 @@ int g_negctl_char_intro = 0;
 int g_negctl_info_panel = 0;
 int g_negctl_scroll_text = 0;
 int g_negctl_bulletin = 0;
+int g_negctl_pair_select = 0;  // P13B: showGolferPairSelect (1 the list starts one golfer later, 2 the second swap into lastGolfer)
 int g_negctl_none = 0;
 
 using cm::call_peer;
@@ -1121,6 +1122,169 @@ void show_bulletin_board(Ctx &ctx) {
   gs.g_rootInput[kButton] = 0;
 }
 
+// ------------------------------------------------------------------------------------------------ showGolferPairSelect
+// P13B (the click on the first tee's tile, mainLoop's H2 ML+0xfb33, and the report selector 7 ML+0xeafe; it was missing, so the
+// live session ended there): the select-the-next-pair-of-golfers screen, from the C3 transcription (shim c3et.cpp
+// ShowGolferPairSelect_re, every address there). No arguments. Entry: the screen dimmed (Surface_drawSprite of
+// g_spriteRef_821040 at alpha 0.25). Each redraw: the backdrop (g_infoSprites821120 cell 0) and the title (f_strpool_4d3740 + 0xc
+// in g_fontRef_821020, centred at (0x152, 0xe)); the pair's rating (1, or with exactly two selected the count of the five
+// personality bits their types share: under 2 -> 2, over 3 -> 0: the head cell drawn for a selected golfer); then the golfers
+// whose record byte +0x21 is 0xff (waiting at the first tee), from g_lastAllocatedGolfer downwards, wrapping at 0x98, two per row
+// (x 6 / 0x14f, rows of 0x88 from y 0x32): the slot frame (g_infoSprites821120 cell 1 + state: 0 plain, 1 hovered, 2 selected;
+// a hovered unselected slot is drawn one row higher), the head (selected: g_sprites5628e8 cell 3 * look + rating, scaled;
+// else the 0.7 Surface_draw of g_sprites5628e8 cell 1 + 3 * look), the name (buildGolferName, g_fontRef_821f08), the type name,
+// the status line (the highest of the flag word +0xb8's bits 3..6, else the type name again), the age (golferAge + the years
+// text, g_ui_821c50 for the number) and the personality lines (g_fontRef_821ee8; f_ptrtab_4c2858[3 + c] for each set bit c,
+// centred on the missing ones). Window::refreshFull; then the input loop: View_toLocal before every pump; the slot under the
+// cursor (inside the box whose right and bottom both come from the word at g_infoSprites821120 + 0x44); a changed hover redraws;
+// a press on a slot toggles it (at most two selected; a refused toggle or a press past the drawn slots plays the refusal sound)
+// and redraws; any other press or key leaves: nothing selected returns the button word, a count other than two plays the
+// refusal sound, exactly two moves them into the record pair (lastGolfer, lastGolfer ^ 1) with swapTableEntry, sets bit 17 of
+// both dwords +0x10 and returns pairGolfersWithStory(a, b). waitTicks and flushInput are timing / window tree only (dropped).
+int32_t show_golfer_pair_select(Ctx &ctx) {
+  GameState &gs = ctx.gs();
+  const Memory &m = ctx.mem;
+  const int neg = SG_NEGCTL(g_negctl_pair_select);
+  const SkDraw d(ctx);
+  const uint32_t tb = GS(g_textBuffer);
+  const uint32_t win = GS(g_rootWindow);
+  auto type_of = [&](int32_t g) { return GS(g_golferTypes) + u32(mul32(m.load<int16_t>(rec(ctx, g) + 0xb6), 0x230)); };
+  uint32_t mask = 0;
+  int32_t count = 0, listed[0x98] = {}, last = 0, hover = -1;
+  d.gx("Surface_drawSprite", {GS(g_spriteRef_821040), d.root, 0, 0, 0x3e800000u, 0, 1});
+  for (;;) {
+    d.gx("Image_draw", {GS(g_infoSprites821120), d.root, 0, 0, 0});
+    d.gx("setDrawTarget", {d.root, GS(g_fontRef_821020), 0, 0, 0});
+    d.gx("drawCenteredText", {GS(f_strpool_4d3740) + 0xc, 0x152, 0xe, 0x80000000u});
+    int32_t rating = 1;
+    if (count == 2) {
+      int32_t first = -1, second = 0;
+      for (int32_t c = 0; c < 16; ++c)
+        if (mask & (1u << c)) {
+          if (first == -1) first = listed[c];
+          else second = listed[c];
+        }
+      const int32_t diff = m.load<int8_t>(type_of(second) + 0x20) ^ m.load<int8_t>(type_of(first) + 0x20);
+      int32_t same = 5;
+      for (int32_t c = 0; c < 5; ++c)
+        if (diff & (1 << c)) --same;
+      if (same < 2) rating = 2;
+      if (same > 3) rating = 0;
+    }
+    int32_t k = 0;
+    for (int32_t i = 0; i < 0x98; ++i) {
+      const int32_t g = mod32(add32(sub32(add32(gs.g_lastAllocatedGolfer, neg == 1 ? 1 : 0), i), 0x98), 0x98);
+      const uint32_t R = rec(ctx, g);
+      if (m.load<uint8_t>(R + 0x21) != 0xff) continue;
+      const int32_t colX = (k & 1) ? 0x14f : 6;
+      int32_t rowY = add32(mul32(div32(k, 2), 0x88), 0x32);
+      last = g;
+      const uint32_t sel = (1u << (k & 31)) & mask;
+      const int32_t state = sel != 0 ? 2 : (hover == k ? 1 : 0);
+      d.gx("Image_draw", {GS(g_infoSprites821120) + 0x2cu * u32(1 + state), d.root, u32(colX), u32(rowY), 0});
+      if (hover == k && sel == 0) --rowY;
+      const uint32_t T = type_of(g);
+      const int32_t tb7 = i32(call_peer(ctx, "typeBit7Clear", {u32(g)}).eax);
+      const int32_t column = add32(m.load<int8_t>(T + 0x22), mul32(72, tb7));
+      if (sel != 0)
+        d.scaled(GS(g_sprites5628e8) + 0x2cu * u32(add32(mul32(3, column), rating)), colX - 6, rowY + 4);
+      else
+        d.gx("Surface_draw", {GS(g_sprites5628e8) + 0x2cu + 0x84u * u32(column), d.root, u32(colX - 6), u32(rowY + 4),
+                              0x3f333333u, 1, 1, 1, 0, 1});
+      listed[k] = g;
+      ++k;
+      d.gx("setDrawTarget", {d.root, GS(g_fontRef_821f08), 0, 0, 0});
+      m.store<uint8_t>(tb, 0);
+      call_peer(ctx, "buildGolferName", {u32(g), 0});
+      d.gx("drawCenteredText", {tb, u32(colX + 0xd0), u32(rowY + 9), 0x80000000u});
+      d.gx("setDrawTarget", {d.root, GS(g_fontRef_821ee8), 0, 0, 0});
+      cpy(ctx, tb, T);
+      d.gx("drawCenteredText", {tb, u32(colX + 0x100), u32(rowY + 0x28), 0x80000000u});
+      const uint16_t fl = m.load<uint16_t>(R + 0xb8);
+      if (fl & 0x08) cpy(ctx, tb, GS(f_strpool_4c84e8) + 0x1ec);
+      if (fl & 0x10) cpy(ctx, tb, GS(f_strpool_4c84e8) + 0x1e4);
+      if (fl & 0x20) cpy(ctx, tb, GS(f_strpool_4c84e8) + 0x1d8);
+      if (fl & 0x40) cpy(ctx, tb, GS(f_strpool_4c84e8) + 0x1d0);
+      d.gx("drawCenteredText", {tb, u32(colX + 0x100), u32(rowY + 0x68), 0x80000000u});
+      d.gx("setDrawTarget", {d.root, GS(g_fontRef_821ee8), 0, 0, 0});
+      m.store<uint8_t>(tb, 0);
+      cat(ctx, tb, itoa10(ctx, i32(call_peer(ctx, "golferAge", {u32(g)}).eax), GS(g_ui_821c50)));
+      cat(ctx, tb, GS(f_strpool_4d3740));
+      d.gx("drawCenteredText", {tb, u32(colX + 0x100), u32(rowY + 0x48), 0x80000000u});
+      d.gx("setDrawTarget", {d.root, GS(g_fontRef_821ee8), 0, 0, 0});
+      int32_t traits = m.load<int8_t>(T + 0x20), set = 0;
+      for (int32_t c = 0; c < 5; ++c)
+        if (traits & (1 << c)) ++set;
+      int32_t y = add32(add32(rowY, mul32(9, 5 - set)), 0x24);
+      for (int32_t c = 0; c < 5; ++c) {
+        if ((traits & (1 << c)) == 0) continue;
+        traits -= 1 << c;
+        cpy(ctx, tb, m.load<uint32_t>(GS(f_ptrtab_4c2858) + 4u * u32(3 + c)));
+        d.text(tb, colX + 0x8c, y, 0x80000000u);
+        y += 0x12;
+      }
+    }
+    d.gx("Window::refreshFull", {win, 0});
+    for (bool redraw = false; !redraw;) {
+      const int32_t prev = hover;
+      int32_t px = 0, py = 0;
+      read_cursor(ctx, px, py, "showGolferPairSelect");
+      const int32_t bound = m.load<int32_t>(GS(g_infoSprites821120) + 0x44);
+      if (px >= 6 && py >= 0x32 && px < add32(bound, 0x14f) && py < add32(bound, 0x1ca))
+        hover = add32(mul32(div32(sub32(py, 0x32), 0x88), 2), div32(sub32(px, 6), 0x14e));
+      else
+        hover = -1;
+      cm::pump_messages(ctx, PumpKind::Blocking, "showGolferPairSelect");
+      const int32_t button = gs.g_rootInput[kButton];
+      if (button == 0 && cm::flush_redraw(ctx) == 0) {
+        if (hover != prev) redraw = true;
+        continue;
+      }
+      if (hover != prev) {
+        redraw = true;
+        continue;
+      }
+      if (gs.g_rootInput[kButton] != 0 && hover != -1) {
+        const uint32_t bit = 1u << (hover & 31);
+        if (hover < k && (count < 2 || (mask & bit) != 0)) {
+          mask ^= bit;
+          if (mask & bit) ++count;
+          else --count;
+        } else {
+          cm::call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0});
+        }
+        redraw = true;
+        continue;
+      }
+      if (mask == 0) return gs.g_rootInput[kButton];
+      int32_t n = 0;
+      for (int32_t c = 0; c < 16; ++c)
+        if (mask & (1u << c)) ++n;
+      if (n != 2) return i32(cm::call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0}).eax);
+      int32_t first = -1, second = last;
+      for (int32_t c = 0; c < 16; ++c)
+        if (mask & (1u << c)) {
+          if (first == -1) first = listed[c];
+          else second = listed[c];
+        }
+      int32_t a, b;
+      if (second == last) {
+        call_peer(ctx, "swapTableEntry", {u32(first), u32(last ^ 1)});
+        a = last ^ 1;
+        b = second;
+      } else {
+        call_peer(ctx, "swapTableEntry", {u32(first), u32(last)});
+        call_peer(ctx, "swapTableEntry", {u32(second), u32(last ^ (neg == 2 ? 0 : 1))});
+        a = last;
+        b = last ^ 1;
+      }
+      m.store<uint32_t>(rec(ctx, a) + 0x10, m.load<uint32_t>(rec(ctx, a) + 0x10) | 0x20000u);
+      m.store<uint32_t>(rec(ctx, b) + 0x10, m.load<uint32_t>(rec(ctx, b) + 0x10) | 0x20000u);
+      return i32(call_peer(ctx, "pairGolfersWithStory", {u32(a), u32(b)}).eax);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------------------------------ test entries
 namespace {
 // a scripted InputSource (tests): the QueueInput rule for batches (a Blocking pump takes every command up to and
@@ -1237,6 +1401,9 @@ const FuncDef kFuncs[] = {
      &g_negctl_scroll_text},
     {"showBulletinBoard", "default", "void", 0, 0, [](Ctx &c, const uint32_t *, Ret &) { show_bulletin_board(c); },
      &g_negctl_bulletin},
+    {"showGolferPairSelect", "default", "int", 0, 0,
+     [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(show_golfer_pair_select(c)); },
+     &g_negctl_pair_select},
 };
 }  // namespace
 
