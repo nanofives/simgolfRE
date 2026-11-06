@@ -299,16 +299,35 @@ void push_tile(Ctx &ctx, uint32_t tile) {
 }
 }  // namespace
 
-void rebuild_tile_data(Ctx &ctx, int32_t x0, int32_t y0) {
+// P13D item 5 (log/roadmap/P13/P13D_notes.md): updateTerrainRender.syncTilesAfterEdit. The Terrain object's tiles (type and
+// variation, corner heights, walls, paths) are brought in line with the course grids only by rebuildTileData, which the unmoved-camera
+// path of updateTerrainRender runs while bit 1 of g_tileWallMask[0] is clear; rebuildHeightfield (which recomputes the height grid
+// g_tileLevel from the tile types) clears it at every course edit. A loaded course keeps the grid it was loaded with until its first
+// edit, so the first placement recomputes the heights and re-syncs every tile from 4 / zoom * 13 columns and rows before the camera
+// to the map's far edges, and the picture changes far from the placed object (Monterey's river banks and ponds: measured in the
+// original too, P13D_notes.md). Fixed (0): the first unmoved-camera frame after the terrain is initialised or repainted from scratch
+// runs rebuildHeightfield and then rebuildTileData over the whole map (rows and columns from 0) once and, when tiles changed, draws
+// one full render in place of their local renders, so the course shows its edited look from the start and the first edit changes
+// only what it touches. At 1 nothing changes.
+int g_defect_terrain_sync_after_edit = 1;
+namespace {
+thread_local bool t_sync_pending = false;   // a fresh terrain picture is waiting for its whole-map sync (switch at 0 only)
+void rebuild_tile_data_impl(Ctx &ctx, int32_t x0, int32_t y0, bool whole);
+}  // namespace
+
+void rebuild_tile_data(Ctx &ctx, int32_t x0, int32_t y0) { rebuild_tile_data_impl(ctx, x0, y0, false); }
+
+namespace {
+void rebuild_tile_data_impl(Ctx &ctx, int32_t x0, int32_t y0, bool whole) {
   // P11A: zoom 8 (mainLoop.zoomInStopsAt4 = 0, the only way it arrives) takes zoom 4's 13: 4 / 8 = 0 would start at the camera's
   // own row and column and leave the tiles above and left of it out
   const int32_t zq = ctx.gs().g_zoomScale > 4 ? 4 : ctx.gs().g_zoomScale;
-  const int32_t d = div32(4, zq) * 13;
+  const int32_t d = whole ? 50 : div32(4, zq) * 13;   // P13D item 5: whole = from row and column 0
   int32_t x = sub32(x0, d);
   if (x >= 50) return;
   for (;;) {
     if (x < 0) x = 0;
-    int32_t y = sub32(y0, div32(4, zq) * 13);
+    int32_t y = sub32(y0, whole ? 50 : div32(4, zq) * 13);
     if (!(y >= 50)) {
       for (;;) {
         if (y < 0) y = 0;
@@ -327,6 +346,7 @@ void rebuild_tile_data(Ctx &ctx, int32_t x0, int32_t y0) {
     if (!(++x < 50)) break;
   }
 }
+}  // namespace
 
 int32_t init_terrain(Ctx &ctx, int32_t w, int32_t h) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
@@ -370,6 +390,7 @@ int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom,
     api().render(self, tile_at_va(ctx, x, y), rot_angle(rot));
     g.g_terrain820f2a[0] = 0;
     g.g_terrainInitPending = 0;
+    t_sync_pending = !SG_DEFECT(g_defect_terrain_sync_after_edit);   // P13D item 5
     g.g_terrainLastCamX = x;
     g.g_terrainLastCamY = y;
     return i32(api().blit_full());
@@ -395,12 +416,37 @@ int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom,
   }
   if (dy == 0 && dx == 0) {
     api().blit_screen(g.g_terrain820f30[0], g.g_terrain820f30[1]);
-    if (!(g.g_tileWallMask[0] & 2) && SG_NEGCTL(g_negctl_update_terrain_render) != 1) {
-      rebuild_tile_data(ctx, x, y);
+    // P13D item 5 (updateTerrainRender.syncTilesAfterEdit = 0): the whole map once after a fresh terrain picture
+    const bool whole = t_sync_pending && !SG_DEFECT(g_defect_terrain_sync_after_edit);
+    t_sync_pending = false;
+    if (whole || (!(g.g_tileWallMask[0] & 2) && SG_NEGCTL(g_negctl_update_terrain_render) != 1)) {
+      if (whole) rebuild_heightfield(ctx);   // the height grid as every course edit recomputes it (terrain.cpp)
+      rebuild_tile_data_impl(ctx, x, y, whole);
       g.g_tileWallMask[0] = static_cast<int8_t>(g.g_tileWallMask[0] | 2);
     }
     const uint32_t list = state_va(ctx, &GameState::gTileBuffer);
     if (ctx.mem.load<int32_t>(list + 8) == 0) return 0;
+    if (whole) {   // one full render of the synced terrain (as the repaint-from-scratch path draws it) instead of a local render per tile
+      if (need_normals(ctx).get() != 0) {
+        api().calc_all_normals(self, tile_at_va(ctx, x, y));
+        need_normals(ctx).set(0);
+      }
+      const Memory &m = ctx.mem;
+      const uint32_t head = m.load<uint32_t>(list + 4);
+      for (uint32_t node = m.load<uint32_t>(head); node != head;) {   // the list emptied as below
+        const uint32_t cur = node;
+        node = m.load<uint32_t>(cur);
+        const uint32_t next = m.load<uint32_t>(cur), prev = m.load<uint32_t>(cur + 4);
+        m.store<uint32_t>(prev, next);
+        m.store<uint32_t>(next + 4, prev);
+        m.store<int32_t>(list + 8, sub32(m.load<int32_t>(list + 8), 1));
+      }
+      g.g_terrainListCursor = head;
+      need_path_render(ctx).set(0);
+      api().window_paint();
+      api().render(self, tile_at_va(ctx, x, y), rot_angle(rot));
+      return i32(api().blit_full());
+    }
     if (need_normals(ctx).get() != 0) {
       api().calc_all_normals(self, tile_at_va(ctx, x, y));
       need_normals(ctx).set(0);
@@ -474,8 +520,17 @@ const FuncDef kFuncs[] = {
     {"applyTileVariation", "default", "int", 3, 0, a_apply_tile_variation, &g_negctl_apply_tile_variation},
     {"applyTileWalls", "default", "uint8", 3, 0, a_apply_tile_walls, &g_negctl_apply_tile_walls},
 };
+// P13D item 5: the module's play switch (re/port/play_profile.tsv)
+const DefectDef kDefects[] = {
+    {"updateTerrainRender.syncTilesAfterEdit", "P13D",
+     "the Terrain tiles (types, heights, walls, paths) are synced with the course grids only after a course edit, so the first "
+     "placement changes the terrain far from it (river banks, ponds); fixed: the whole map is synced once when the terrain is "
+     "initialised or repainted from scratch, then one full render",
+     &g_defect_terrain_sync_after_edit},
+};
 }  // namespace
 
-extern const ModuleDef kModule_terrain_dll = {"terrain_dll", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_terrain_dll = {"terrain_dll", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                              sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim
