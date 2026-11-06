@@ -57,6 +57,7 @@
 #include "portsim/sim/gfx_scene.h"
 
 #include <algorithm>
+#include <unordered_map>
 #include <array>
 #include <chrono>
 #include <cmath>
@@ -366,6 +367,78 @@ HrBox hr_box(const LiveTerrainWorld &w, const Sprite8 &s, const HrGeom &gm) {
   return b;
 }
 
+// P13D fix 5 (Mariano's play-test 6 item 4, option C; log/roadmap/P13/P13D_notes.md): --sprite-filter edge (hr_filter 3). Before
+// the sharp sampling (filter 1) the art is scaled up by Scale2x (EPX), on its 8-bit payloads: each texel P becomes four, a corner
+// taking its two edge neighbours' payload where those two are equal and differ from the other two (top left: left == up, left !=
+// down, up != right), P elsewhere; a neighbour outside the art is 0xff (no draw). No new payload appears, so the entry's pixel rule
+// (palette, plane / shade tables, alpha bodies, the 0xff skip) is unchanged, and the staircase of a diagonal edge or outline turns
+// into a finer one with its corners cut. Applied once where a texel covers 1.5 world pixels or more, twice (4 x) from 3; below 1.5
+// the art is used as it is. The scaled art replaces the command's art, and its texels are 1 / 2 (1 / 4) as wide (fx, fy divided):
+// the rectangle and so hr_box are the same. The scaled payloads are cached per art (FNV-1a of the payloads and size, plus the
+// level), cleared past 4096 entries or 64 MB.
+uint64_t hr_hash(uint64_t h, const void *p, size_t n);   // below
+std::vector<uint8_t> scale2x(const std::vector<uint8_t> &a, int32_t w, int32_t h) {
+  std::vector<uint8_t> o(static_cast<size_t>(w) * static_cast<size_t>(h) * 4);
+  const size_t W = static_cast<size_t>(w) * 2;
+  auto at = [&](int32_t x, int32_t y) -> uint8_t {
+    return x < 0 || y < 0 || x >= w || y >= h ? uint8_t(0xff) : a[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)];
+  };
+  for (int32_t y = 0; y < h; ++y)
+    for (int32_t x = 0; x < w; ++x) {
+      const uint8_t P = at(x, y), A = at(x, y - 1), B = at(x + 1, y), C = at(x - 1, y), D = at(x, y + 1);
+      uint8_t *r0 = &o[static_cast<size_t>(2 * y) * W + static_cast<size_t>(2 * x)], *r1 = r0 + W;
+      r0[0] = (C == A && C != D && A != B) ? A : P;
+      r0[1] = (A == B && A != C && B != D) ? B : P;
+      r1[0] = (D == C && D != B && C != A) ? C : P;
+      r1[1] = (B == D && B != A && D != C) ? D : P;
+    }
+  return o;
+}
+struct HrEdgeCache {
+  std::unordered_map<uint64_t, std::shared_ptr<const Sprite8>> art;
+  size_t bytes = 0;
+  int64_t hits = 0, misses = 0;
+};
+thread_local HrEdgeCache g_hr_edge;
+// the art the hr planes sample for `s` at placement gm: with filter 3 and a texel of 1.5+ world pixels the cached Scale2x art (gm's
+// texel size divided), else null (sample `s` itself). The commands share the cached art (no copy per draw).
+std::shared_ptr<const Sprite8> hr_art(const LiveTerrainWorld &w, const Sprite8 &s, HrGeom &gm) {
+  if (w.hr_filter != 3 || s.w <= 0 || s.h <= 0 || s.px.size() != static_cast<size_t>(s.w) * static_cast<size_t>(s.h)) return nullptr;
+  const double mag = std::min(static_cast<double>(w.fw) / 800.0 * gm.fx, static_cast<double>(w.ph) / 600.0 * gm.fy);
+  const int lv = mag >= 3.0 ? 2 : mag >= 1.5 ? 1 : 0;
+  if (lv == 0 || static_cast<int64_t>(s.w) * s.h > 512 * 512) return nullptr;
+  uint64_t key = 0xcbf29ce484222325ull;
+  key = hr_hash(key, &s.w, sizeof(s.w));
+  key = hr_hash(key, &s.h, sizeof(s.h));
+  key = hr_hash(key, &lv, sizeof(lv));
+  key = hr_hash(key, s.px.data(), s.px.size());
+  HrEdgeCache &c = g_hr_edge;
+  const int32_t f = 1 << lv;
+  auto it = c.art.find(key);
+  std::shared_ptr<const Sprite8> up;
+  if (it != c.art.end()) {
+    up = it->second;
+    ++c.hits;
+  } else {
+    auto a = std::make_shared<Sprite8>();
+    a->w = s.w * f;
+    a->h = s.h * f;
+    a->px = scale2x(s.px, s.w, s.h);
+    if (lv == 2) a->px = scale2x(a->px, s.w * 2, s.h * 2);
+    if (c.art.size() >= 4096 || c.bytes > (64u << 20)) {
+      c.art.clear();
+      c.bytes = 0;
+    }
+    c.bytes += a->px.size();
+    up = a;
+    c.art.emplace(key, up);
+    ++c.misses;
+  }
+  gm.fx /= f;
+  gm.fy /= f;
+  return up;
+}
+
 // one command over the world pixels of its box inside the clip rectangle [cx0, cx1) x [cy0, cy1), into plane / cover (pw x ph)
 template <class Op>
 void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, const Sprite8 &s, const HrGeom &gm, Op &op,
@@ -391,7 +464,7 @@ void hr_blit_rows(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, co
   // texels is one window pixel wide whatever the scale (no uneven block widths, no shimmer at a non-integer scale); k = 1 is
   // bilinear. Filter 1 keeps the bilinear weights' total over the texels that draw (the outline's coverage) and spreads it over
   // them by the sharp weights, so the colours are sharp and the object's edge over what is under it is the smooth one.
-  const int filter = w.hr_filter;
+  const int filter = w.hr_filter == 3 ? 1 : w.hr_filter;   // P13D fix 5: the edge filter samples its scaled art as sharp does
   const auto sharp_w = [](double t, double k) {
     const double s = std::min(1.0, std::max(0.0, (t - 0.5) * k + 0.5));
     return static_cast<uint32_t>(std::floor(s * 256.0 + 0.5));
@@ -531,6 +604,7 @@ uint64_t hr_hash(uint64_t h, const void *p, size_t n) {
 
 struct HrCmd {
   Sprite8 s;                         // the art (w, h, px)
+  std::shared_ptr<const Sprite8> up;   // P13D fix 5: the edge filter's scaled art (sampled in place of s when set)
   HrGeom gm;
   HrBox box;
   std::array<uint16_t, 256> pal{};   // the op's palette words at the draw
@@ -544,7 +618,7 @@ struct HrCmdT final : HrCmd {
   explicit HrCmdT(const Op &o) : op(o) {}
   void run(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1) override {
     Op local = op;   // each thread its own copy (an op's report flags)
-    hr_blit_rows(w, plane, cover, s, gm, local, box, cx0, cy0, cx1, cy1);
+    hr_blit_rows(w, plane, cover, up ? *up : s, gm, local, box, cx0, cy0, cx1, cy1);
   }
 };
 // P10D fix 3: the queue's draws and what the last flush left. A queue whose terrain base and commands equal the last one's in a
@@ -576,11 +650,14 @@ void hr_blit(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale 
   if (!gm.ok) return;
   auto c = std::make_unique<HrCmdT<Op>>(op0);
   hr_no_rec(c->op, 0);
-  c->s.w = s.w;
-  c->s.h = s.h;
-  c->s.px = s.px;
   c->gm = gm;
   c->box = hr_box(w, s, gm);
+  c->up = hr_art(w, s, c->gm);   // P13D fix 5: the edge filter's scaled art (the box is the unscaled art's: the same rectangle)
+  if (!c->up) {
+    c->s.w = s.w;
+    c->s.h = s.h;
+    c->s.px = s.px;
+  }
   if (c->op.pal) {
     std::copy(c->op.pal, c->op.pal + 256, c->pal.begin());
     c->op.pal = c->pal.data();
@@ -785,7 +862,10 @@ void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale s
   const HrPass keep = g_hr_pass;
   g_hr_pass.tag = nullptr;   // the planes' words are not the scene's
   const HrBox box = hr_box(w, s, gm);
-  hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), s, gm, local, box, 0, 0, w.pw, w.ph);
+  HrGeom ga = gm;   // P13D fix 5: the edge filter's scaled art
+  const std::shared_ptr<const Sprite8> up = hr_art(w, s, ga);
+  const Sprite8 &a = up ? *up : s;
+  hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), a, ga, local, box, 0, 0, w.pw, w.ph);
   if (!cur) g_hr_queue.post_boxes.push_back(box);   // fix 3: the next queue draws these tiles again
   g_hr_pass = keep;
   ++w.hr_draws;
@@ -825,10 +905,13 @@ void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Sca
   if (box.empty()) return;
   const HrPass keep = g_hr_pass;
   g_hr_pass.tag = nullptr;   // the planes' words are not the scene's
+  HrGeom ga = gm;   // P13D fix 5: the edge filter's scaled art
+  const std::shared_ptr<const Sprite8> up = hr_art(w, s, ga);
+  const Sprite8 &a = up ? *up : s;
   for (uint16_t *plane : {w.hrc.data(), w.hrb_lo.data(), w.hrb_hi.data()}) {
     Op local = op;
     hr_no_rec(local, 0);
-    hr_blit_rows(w, plane, w.hrb_cov.data(), s, gm, local, box, 0, 0, w.pw, w.ph);
+    hr_blit_rows(w, plane, w.hrb_cov.data(), a, ga, local, box, 0, 0, w.pw, w.ph);
   }
   g_hr_pass = keep;
   int32_t *A = w.hrb_area;

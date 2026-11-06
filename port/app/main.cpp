@@ -62,6 +62,9 @@
 //   P10H fix 1: --sprite-filter sharp|smooth|sharp-area (default sharp; SG_APP_P10=off: smooth) the filter of those sprites and of
 //   the placement box: sharp = every art pixel a crisp block with one-window-pixel area-weighted steps, the object outlines smooth;
 //   smooth = P10D's bilinear; sharp-area = sharp with the outlines area-weighted too (gfx_scene.cpp hr_blit_rows).
+//   P13D fix 5: --sprite-filter edge (the default; SG_APP_P13=off: sharp) = sharp over the art first scaled up by Scale2x / EPX on its
+//   payloads (once from 1.5 world pixels per texel, twice from 3: gfx_scene.cpp hr_art), so edges and outlines lose their staircase;
+//   the queue sprites, the cursor previews and the placement box.
 //   P13D item 4: --terrain-filter sharp|linear|nearest (default sharp; SG_APP_P13=off: nearest) the terrain textures on the world
 //   layer (the course at the window's resolution): the original magnifies its .bmp textures with GL_NEAREST (a block per texel at
 //   zoom 8 and large windows); linear = GL_LINEAR (the filter it uses for the path textures: soft), sharp = GL_LINEAR over the
@@ -399,7 +402,8 @@ struct Options {
   bool photo_dir = true;           // P10C fix 3: --photo-dir on|off (SG_APP_P10=off: off)
   bool hud_textbox = true;         // P10C fix 4: --hud-textbox on|off (SG_APP_P10=off: off)
   bool sprite_native = true;       // P10D: --sprite-res native|frame (SG_APP_P10=off: frame)
-  int sprite_filter = 1;           // P10H: --sprite-filter sharp (1) | smooth (0) | sharp-area (2) (SG_APP_P10=off: smooth)
+  int sprite_filter = 3;           // P10H: --sprite-filter sharp (1) | smooth (0) | sharp-area (2); P13D fix 5: edge (3), the default
+                                   // (SG_APP_P13=off: sharp; SG_APP_P10=off: smooth)
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
@@ -2978,8 +2982,8 @@ bool parse(int argc, char **argv, Options &o) {
       o.terrain_filter = v == "sharp" ? 2 : v == "linear" ? 1 : 0;
     }
     else if (a == "--sprite-filter") {  // P10H
-      if (!val(v) || (v != "sharp" && v != "smooth" && v != "sharp-area")) return false;
-      o.sprite_filter = v == "sharp" ? 1 : v == "smooth" ? 0 : 2;
+      if (!val(v) || (v != "edge" && v != "sharp" && v != "smooth" && v != "sharp-area")) return false;
+      o.sprite_filter = v == "edge" ? 3 : v == "sharp" ? 1 : v == "smooth" ? 0 : 2;  // P13D fix 5: edge
     }
     else if (a == "--fps") {  // P10A
       if (!val(v) || (v != "on" && v != "off" && v != "detail")) return false;
@@ -3137,6 +3141,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P13"))  // P13: the sixth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) {
       o.terrain_filter = 0;  // P13D item 4
+      if (o.sprite_filter == 3) o.sprite_filter = 1;  // P13D fix 5: sharp (P10H's default)
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = false;  // P12A fix 1

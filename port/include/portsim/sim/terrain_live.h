@@ -97,7 +97,8 @@ struct LiveTerrainWorld {
   // P10H fix 1 (log/roadmap/P10/P10H_notes.md): the resampling filter of hr / hrc / hrb (gfx_scene.cpp hr_blit_rows). 0 = smooth
   // (P10D's bilinear), 1 = sharp (each art pixel a flat block at the window's scale with area-weighted edges one window pixel wide;
   // the object's outline against what is under it keeps the bilinear coverage), 2 = sharp-area (the outline area-weighted too; a
-  // development comparison). Set once with hr_on (app --sprite-filter).
+  // development comparison), 3 = edge (P13D fix 5: sharp over the art scaled up by Scale2x, gfx_scene.cpp hr_art). Set once with hr_on
+  // (app --sprite-filter).
   int hr_filter = 0;
   // P13D item 4 (log/roadmap/P13/P13D_notes.md): the world rasteriser's magnification filter of the terrain's .bmp textures. The
   // original's textureLoad sets GL_NEAREST magnification on them (GL_LINEAR on the .tga path textures); at the window's resolution
