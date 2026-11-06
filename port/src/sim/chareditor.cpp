@@ -654,7 +654,8 @@ struct EdDraw {
 // 3..7 the personality bits, 8 loads a character file (listMatchingFiles, scrollTextWindow, loadThemeFile), 9 saves one
 // (promptAndSaveFile, showPopup), 10 the hair style from a counter that starts at 0 (the original's is an uninitialised
 // frame slot), 11 toggles custom bit 3, 12 the body / outfit picker (pickCharEditor) and its preset's looks, 13..16 step
-// looks 0x24 / 0x25 / 0x28 / 0x27, 17 the gender, 18 Cancel (restores the record, the editor stays open), 19 Exit (the
+// looks 0x24 / 0x25 / 0x28 / 0x27, 17 the gender, 18 Cancel (restores the record, the editor stays open; P13B: with
+// showCharacterEditor.cancelStaysOpen = 0 it puts back every edit and leaves), 19 Exit (the
 // preview preferences go to the golfer and to custom bits 0..2), 20 the bio (not ported); a press on no control edits the
 // name / title (textInputBox), steps the demographics bit fields, edits a comment line (textInputBox), and steps a member's
 // skill byte (0..10, the refusal sound at the ends). Each press is followed by the release wait. After Exit: for a member
@@ -682,6 +683,20 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
   int32_t done = 0;
   gs.g_ui_5aa55c = 0;
   copy(backup, R1, 0x230);
+  // P13B item 14 (showCharacterEditor.cancelStaysOpen = 0): what else the editor writes in place before Exit, kept on the host
+  // for Cancel: the type's phrase lines (comment lines, loadThemeFile), the golfer's skill bytes (skill bars; loadThemeFile's
+  // 16-byte record), the player's skills and the portrait slot counters (loadThemeFile)
+  const bool cancel_closes = g_defect_editor_cancel_stays == 0;
+  const uint32_t phrases = GS(g_golferPhrases) + u32(mul32(character, 0x4e2));
+  std::vector<uint8_t> keep_phrases, keep_skills;
+  int32_t keep_slots[2] = {};
+  int8_t keep_player[16] = {};
+  if (cancel_closes) {
+    for (uint32_t i = 0; i < 0x4e2; ++i) keep_phrases.push_back(B(phrases + i));
+    for (uint32_t i = 0; i < 16; ++i) keep_skills.push_back(B(Gr + 0xf0 + i));
+    std::memcpy(keep_slots, gs.g_loopCounter59b76c, sizeof keep_slots);
+    std::memcpy(keep_player, gs.g_playerSkills, sizeof keep_player);
+  }
   cm::call_optional(ctx, "startSoundSlot", {0x2d});
   cm::call_optional(ctx, "playSound", {(B(R1 + 0x21) & 0x80) ? 0x7du : 0x80u, 0x64, 0, 0, 0});
   m.store<int16_t>(P + 0xb6, static_cast<int16_t>(character));
@@ -1020,6 +1035,13 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
           break;
         case 18:  // Cancel: the entry copy back, the editor stays open
           if (neg != 3) copy(R1, backup, 0x230);
+          if (cancel_closes) {  // P13B item 14: every edit put back, then the exit path without Exit's preference writes
+            for (uint32_t i = 0; i < 0x4e2; ++i) SB(phrases + i, keep_phrases[i]);
+            for (uint32_t i = 0; i < 16; ++i) SB(Gr + 0xf0 + i, keep_skills[i]);
+            std::memcpy(gs.g_loopCounter59b76c, keep_slots, sizeof keep_slots);
+            std::memcpy(gs.g_playerSkills, keep_player, sizeof keep_player);
+            done = 1;
+          }
           break;
         case 19:  // Exit
           done = 1;

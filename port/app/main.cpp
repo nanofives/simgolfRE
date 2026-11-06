@@ -638,6 +638,7 @@ const ProfileMember kPlayProfile[] = {
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
+    {"showCharacterEditor.cancelStaysOpen", 0},     // P13B item 14: Cancel puts back every edit and closes the editor
     {"pickCharEditor.escIgnored", 0},               // P9A item 2: Esc = the look picker's cancel
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK

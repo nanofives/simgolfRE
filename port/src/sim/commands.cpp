@@ -93,6 +93,13 @@ int g_defect_finance_sum_write_back = 1;
 //   skillPointDialog.escIgnored  OK (skillPointDialog+0x554 cmp esi, [esp + 0x10]; jle skillPointDialog+0x754, else the points-left popup skillPointDialog+0x55e)
 int g_defect_esc_course_action = 1, g_defect_esc_buy_land = 1, g_defect_esc_char_editor = 1, g_defect_esc_char_picker = 1,
     g_defect_esc_popup_close = 1, g_defect_esc_skill_points = 1;
+// P13B item 14 (Mariano's play-test 6: "cancel button on customizing does nothing"): the character editor's Cancel (control 18,
+// showCharacterEditor+0x17a4..showCharacterEditor+0x17ba) copies the entry copy of the type record back (0x8c dwords) and goes
+// to the release wait with the done word unset, so the editor stays open; with no edit made the press changes nothing.
+//   showCharacterEditor.cancelStaysOpen  fixed (0): Cancel puts back everything the editor changed since it opened (the type
+//                  record, its phrase lines, the golfer's skill bytes, the player's skills and the portrait slot counters a loaded
+//                  character file wrote) and leaves the editor without Exit's preference writes, then the exit path as Exit's
+int g_defect_editor_cancel_stays = 1;
 namespace {
 int g_negctl_hire_dialog = 0;
 int g_negctl_credits = 0;
@@ -746,6 +753,9 @@ const DefectDef kDefects[] = {
      &g_defect_esc_popup_close},
     {"skillPointDialog.escIgnored", "P9A", "the skill point dialog ignores Esc; fixed: Esc acts as its OK button",
      &g_defect_esc_skill_points},
+    {"showCharacterEditor.cancelStaysOpen", "P13B",
+     "the character editor's Cancel restores the type record and stays open; fixed: Cancel restores every edit and closes the editor",
+     &g_defect_editor_cancel_stays},
 };
 }  // namespace
 
