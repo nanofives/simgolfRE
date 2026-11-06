@@ -395,3 +395,5 @@
 2026-11-03 19:27 P8B merged over P8A (widescreen stages 2 + 3, native-resolution world, G32); segments x64 205/205 = I25, selftests 37/6/9/11, app files pass; banner checked under wide. Commit + LAN release next.
 2026-11-03 19:32 P8B committed b83d8213; LAN release b83d8213 published
 2026-11-03 19:43 GitHub releases (Mariano): pushed main to origin (79 commits since 2026-10-20), release port-2026-11-03-b83d8213 created (port zip only, no game files); publish.sh now pushes and releases after every LAN publish (scripts/lan_release/github_release.py).
+2026-11-06 03:31 P12 (Mariano: motion at the monitor's refresh rate; sim stays at 10.7 fps): brief log/roadmap/P12/BRIEF.md, worker P12A (claude2, opus 5.5, high) in port/build/P12A from 84ef5395: fix 1 smooth camera scroll, fix 2 objects between frames
+2026-11-06 03:51 P13 feedback round 6 (18 items, log/roadmap/P13/BRIEF.md): P13A (opus: 2 6 8 9 11 12 tools/keys/selection), P13B (opus: 1 13 14 16 18 shell/menus/world map), P13C (sonnet: 3 10 15 fonts/panel/label), P13D (opus: 4 5 7 17 rendering) spawned on claude2 from 84ef5395; P12A still running
