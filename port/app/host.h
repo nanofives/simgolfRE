@@ -44,6 +44,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "input_map.h"
@@ -52,6 +53,7 @@
 #include "portsim/registry.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/live.h"
+#include "portsim/sim/terrain_live.h"  // P15A: LiveTerrainWorld (WorldJob, the world thread)
 
 namespace portsim {
 struct LiveTerrainView;
@@ -177,6 +179,38 @@ struct HostOptions {
   // P13B item 18: the world map shown before a session (courseActionMenu) presents with BandFill::ExtendClamp (its own edge
   // columns repeated) instead of Extend
   bool map_bands = false;
+  // P15A (log/roadmap/P15/P15A_notes.md): the world thread. The world image of a present (the hr planes' queue start, flush and
+  // post-queue draws, world_cursor, both world_frame calls) is made on a thread of its own from a job the sim thread hands over at
+  // the present (portsim gfx.h gfx_set_hr_defer), and the window gets the frame with its own world image when the job is done.
+  // The sim thread never waits for it: a job not yet started when the next one comes is merged into it (gfx_hr_job_merge; only the
+  // newer present's picture is made). Off (SG_APP_P15=off, --world-thread off): the world image is made at the present, as before.
+  bool world_thread = false;
+};
+
+// P15A: a present's world work for the world thread (LiveSession::submit_world): the hr ops since the last present, then (capture)
+// make_world_image's inputs taken at the present: the HUD frame, the text frame, the projection and camera snapshots, the world
+// root and the world's frame-scale planes (scene, its base, s0, s1, tags, T, the box marks), and the frame the window shows with it
+struct WorldJob {
+  std::shared_ptr<portsim::GfxHrJob> hr;
+  bool capture = false;
+  uint64_t seq = 0;  // the present's publication number (LiveSession::present_seq_)
+  std::vector<uint16_t> px, show;
+  uint32_t index = 0;
+  int32_t fc_x = -1, fc_y = -1;
+  BandFill band = BandFill::Black;
+  bool terrain = false, use = false, cursor = false, layered = false, hud_none = false, smooth_objects = false;
+  portsim::GfxHudFrame f;
+  bool text = false;
+  portsim::GfxTextFrame tf;
+  bool proj_taken = false;
+  CursorProj proj;
+  CameraSnap cam;
+  int64_t t_ns = 0;
+  std::shared_ptr<const std::vector<uint16_t>> root;
+  portsim::LiveTerrainWorld planes;  // the frame-scale planes and the geometry (no rasteriser, no hr planes)
+  std::shared_ptr<std::shared_ptr<const portsim::GfxHrScene>> scene_slot;  // the hr scene, taken by an op of `hr` (P12A fix 2)
+  bool check = false;         // SG_P15_CHECK: check_digest = the image make_world_image gave at the present (host.cpp wi_digest)
+  uint64_t check_digest = 0;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -235,6 +269,8 @@ class LiveSession : public portsim::LiveHost {
   // translator and async_key read in keys_from_messages mode (-1: ask Windows)
   void before_translate(uint32_t msg, uint32_t wp);
   int32_t key_state(uint32_t vk, bool async) const;
+  // P15A: the world thread's counters (session.json p15)
+  std::string world_thread_json() const;
 
   // ---- sim thread: the whole session (boot, title menu, frames) until the window stops it or the game quits
   struct Result {
@@ -373,6 +409,28 @@ class LiveSession : public portsim::LiveHost {
   Point frame_cursor_{-1, -1}, taken_cursor_{-1, -1};  // P10I fix 2: frame_cursor() (under frame_mu_; taken_ on the window thread)
   WorldImage frame_world_;                 // P8B: the world layer of frame_slot_ (HostOptions::world)
   WorldImage spare_world_;                 // P10A: recycle_world's image (under frame_mu_)
+  // P15A: the world thread (HostOptions::world_thread). present_seq_ numbers every publication the sim thread makes or hands to
+  // the world thread; shown_seq_ is the newest one in frame_slot_ (both under frame_mu_), so a job finishing after a newer frame
+  // was published is not shown. wq_*: the job not yet started (under wq_mu_).
+  uint64_t present_seq_ = 0, shown_seq_ = 0;
+  std::thread world_thr_;
+  std::mutex wq_mu_;
+  std::condition_variable wq_cv_;
+  std::shared_ptr<WorldJob> wq_pending_;
+  bool wq_stop_ = false, wq_busy_ = false;
+  std::unique_ptr<portsim::LiveTerrainWorld> w2_;  // the world thread's world: its hr planes, the job's planes moved in
+  std::shared_ptr<const std::vector<uint16_t>> last_root_;  // sim thread: the last root copy and its change count
+  uint64_t last_root_gen_ = ~0ull;
+  struct WorldThreadStats {
+    uint64_t jobs = 0, captures = 0, published = 0, stale = 0, merged = 0, merged_captures = 0, root_copies = 0, root_reused = 0;
+    int64_t job_ns = 0, job_max_ns = 0, submit_ns = 0;
+    uint64_t check_frames = 0, check_diff = 0;  // SG_P15_CHECK
+  } wts_;  // jobs .. job_max_ns: world thread; merged, root_*, submit_ns: sim thread (read after the thread stopped)
+  void world_start();
+  void world_stop();
+  void world_loop();
+  void run_world_job(WorldJob &j);
+  void submit_world(std::shared_ptr<WorldJob> j);
   // G32: the view the window asks for (window thread, under mu_) and the one applied at a frame head (sim thread)
   int32_t want_w_ = 800, want_pw_ = 0, want_ph_ = 0;
   int32_t applied_w_ = -1, applied_pw_ = 0, applied_ph_ = 0;
@@ -474,6 +532,13 @@ class LiveTracePresenter : public portsim::LiveHost {
 
 // P9B: the world image of a present (P8B's world layer plus, with `layered`, the frame's HUD pixel layers: the world mask is then
 // taken over the layers' base, the root before the first panel drew). False when the terrain has no world layer for the frame.
+// P15A: make_world_image's world part over a given world and root (the world thread's): world_cursor, world_frame, the preview box,
+// the text runs' world_frame and the geometry; `apart` = the previews were taken apart. False when world_frame gave nothing.
+bool world_image_part(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> &root, const std::vector<uint16_t> &px, bool terrain,
+                      bool use, const portsim::GfxHudFrame &f, const portsim::GfxTextFrame *text, bool cursor, WorldImage &wi, bool &apart);
+// P15A: the frame-scale planes and geometry world_frame / world_cursor read, copied from src (the sim's world) into dst
+void copy_world_planes(const portsim::LiveTerrainWorld &src, portsim::LiveTerrainWorld &dst);
+void move_world_planes(portsim::LiveTerrainWorld &src, portsim::LiveTerrainWorld &dst);
 bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
                       const portsim::GfxTextFrame *text = nullptr,
                       bool cursor = false, bool proj = false,  // P10E: proj = WorldImage::proj with the cursor's previews

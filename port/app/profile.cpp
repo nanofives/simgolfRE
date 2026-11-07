@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <cstdlib>
 
 #include "portsim/sim/perf.h"
 
@@ -99,6 +100,35 @@ void Profiler::close_csv() {
   csv_ = nullptr;
 }
 
+// P15A (log/roadmap/P15/P15A_notes.md): development switch SG_P15_FRAMELOG=<file>, one line per game frame on the sim thread, in
+// microseconds: the frame (head to head), the wait, the capture, the gfx drops (inclusive: the terrain passes and nested host work
+// inside), the 800 terrain passes, the world passes, the nested host work, then every perf.h detail counter (PerfDetail order)
+void Profiler::frame_log(int64_t total, int64_t wait, int64_t cap, int64_t gfx_all, int64_t d800, int64_t dworld, int64_t dnest) {
+  static std::FILE *f = [] {
+    const char *e = std::getenv("SG_P15_FRAMELOG");
+    std::FILE *h = e ? std::fopen(e, "wb") : nullptr;
+    if (h) {
+      std::fprintf(h, "frame_us wait_us capture_us gfx_all_us t800_us tworld_us nested_us");
+      static const char *const kD[portsim::kPdCount] = {"world_render", "world_t", "world_copy", "queue_begin", "hr_flush", "hr_pub",
+                                                        "hr_enqueue", "hr_now", "lines", "queue_end", "cap_dump", "cap_text",
+                                                        "cap_cursor", "cap_world", "cap_world_text", "cap_hr_scene"};
+      for (int i = 0; i < portsim::kPdCount; ++i) std::fprintf(h, " %s_us", kD[i]);
+      std::fputc('\n', h);
+    }
+    return h;
+  }();
+  if (!f) return;
+  int64_t d[portsim::kPdCount];
+  for (int i = 0; i < portsim::kPdCount; ++i) d[i] = portsim::perf_detail_read(static_cast<portsim::PerfDetail>(i));
+  std::fprintf(f, "%lld %lld %lld %lld %lld %lld %lld", static_cast<long long>(total / 1000), static_cast<long long>(wait / 1000),
+               static_cast<long long>(cap / 1000), static_cast<long long>(gfx_all / 1000), static_cast<long long>(d800 / 1000),
+               static_cast<long long>(dworld / 1000), static_cast<long long>(dnest / 1000));
+  for (int i = 0; i < portsim::kPdCount; ++i) std::fprintf(f, " %lld", static_cast<long long>((d[i] - detail_prev_[i]) / 1000));
+  std::fputc('\n', f);
+  std::fflush(f);
+  for (int i = 0; i < portsim::kPdCount; ++i) detail_prev_[i] = d[i];
+}
+
 void Profiler::frame_head() {
   if (!g_on.load(std::memory_order_relaxed)) return;
   const int64_t now = portsim::perf_now_ns();
@@ -127,6 +157,7 @@ void Profiler::frame_head() {
     frame_max_ = std::max(frame_max_, total * ms);
     work_sum_ += (total - wait) * ms;
     ++frames_;
+    frame_log(total, wait, cap, perf[portsim::kPerfGfx] - perf_prev_[portsim::kPerfGfx], d800, dworld, dnest);  // P15A
   }
   head_ = now;
   for (int i = 0; i < 4; ++i) perf_prev_[i] = perf[i];

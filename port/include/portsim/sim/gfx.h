@@ -387,6 +387,35 @@ int32_t gfx_hr_scene_ph(const GfxHrScene &s);
 void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
                          const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov);
 
+// P15A (log/roadmap/P15/P15A_notes.md): the world thread. With gfx_set_hr_defer(true) (process-wide; the app's LiveSession only)
+// the hr work is recorded on the frame thread instead of run there: renderSpriteQueue's start (hr_queue_begin over a copy of the
+// world root, or the reset of a queue without an hr plane), its end (hr_flush of the queue's commands) and the draws after it
+// (hr_now / hr_box_now, each with its own copy of the art, the palette and the op) become ops of a GfxHrJob, in their order. The
+// frame thread keeps the flags those ops would set (hr_valid, hrc_valid, hrb_valid), which its drawing reads; the hr planes are
+// the world thread's. gfx_hr_take_job (frame thread) hands over the ops recorded since the last take; gfx_hr_job_run (one other
+// thread, always the same) runs them on that thread's LiveTerrainWorld, whose hr planes and tile reuse they keep, and
+// gfx_hr_scene_take gives that thread's publication. gfx_hr_job_merge appends `next` to `into` and drops every op before the last
+// queue start: a queue start and its flush give every hr pixel from the start's base and the queue's commands (hr_flush's tile
+// reuse compares with the last queue the thread ran, and the post-queue draws it ran mark their tiles), so a job whose ops were
+// dropped leaves the planes as running them would have before the next start's flush.
+struct GfxHrJob;
+struct LiveTerrainWorld;
+void gfx_set_hr_defer(bool on);
+// the A/B check (SG_P15_CHECK, development): the frame thread records the ops AND runs them on its own world as without the world
+// thread, so the host can compare the two world images of each present
+void gfx_set_hr_defer_check(bool on);
+bool gfx_hr_check_on();
+bool gfx_hr_defer();
+std::shared_ptr<GfxHrJob> gfx_hr_take_job();  // never null
+void gfx_hr_job_merge(std::shared_ptr<GfxHrJob> &into, const std::shared_ptr<GfxHrJob> &next);
+void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w);
+size_t gfx_hr_job_ops(const GfxHrJob &j);
+// the world root copied at the job's last queue start (null: none) and the root's change count then (LiveTerrainWorld::gen)
+std::shared_ptr<const std::vector<uint16_t>> gfx_hr_job_root(const GfxHrJob &j, uint64_t &gen);
+std::shared_ptr<const GfxHrScene> gfx_hr_scene_take();  // gfx_hr_scene of the calling thread, without a Ctx
+// an op appended to j: gfx_hr_scene_take into *slot (a present's take, in the ops' order)
+void gfx_hr_job_add_take(GfxHrJob &j, std::shared_ptr<std::shared_ptr<const GfxHrScene>> slot);
+
 }  // namespace portsim
 
 #endif

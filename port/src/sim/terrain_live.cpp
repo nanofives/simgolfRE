@@ -223,6 +223,7 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
   if (!world_ || ph < 600 / 4 || pw < static_cast<int32_t>(static_cast<int64_t>(ph) * 800 / 600)) return false;
   if (pw == world_->pw && ph == world_->ph) return true;
   world_->raster->resize_frame(pw, ph);
+  ++world_->gen;  // P15A
   world_geometry(*world_, pw, ph);
   if (world_fan_) static_cast<WorldFan *>(world_fan_.get())->remap();
   world_->valid = false;
@@ -260,11 +261,17 @@ SceneCols scene_cols(const LiveTerrainWorld &w) {
 
 bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_terrain, std::vector<uint16_t> &px,
                               std::vector<uint8_t> &mask, bool text, bool cursor_apart) const {
-  if (!world_ || world_->names_differ || !world_->valid || !back_terrain) return false;
-  if (back800.size() != world_->terrain800.size()) return false;
-  px = world_->raster->pixels();
+  if (!world_) return false;
+  return world_frame_of(world_.get(), world_->raster->pixels(), back800, back_terrain, px, mask, text, cursor_apart);
+}
+
+bool world_frame_of(const LiveTerrainWorld *wp, const std::vector<uint16_t> &root, const std::vector<uint16_t> &back800, bool back_terrain,
+                    std::vector<uint16_t> &px, std::vector<uint8_t> &mask, bool text, bool cursor_apart) {
+  if (!wp || wp->names_differ || !wp->valid || !back_terrain) return false;
+  if (back800.size() != wp->terrain800.size()) return false;
+  px = root;
   mask.resize(back800.size());
-  const LiveTerrainWorld &w = *world_;
+  const LiveTerrainWorld &w = *wp;
   if (!w.scene_valid || w.s1.size() != back800.size() || w.scene.size() != static_cast<size_t>(w.scene_w) * 600) {
     for (size_t i = 0; i < back800.size(); ++i) mask[i] = back800[i] == w.terrain800[i] ? 1 : 0;
     return true;
@@ -330,9 +337,14 @@ bool LiveTerrain::world_frame(const std::vector<uint16_t> &back800, bool back_te
 
 bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
                                std::vector<uint16_t> *hi, const std::vector<uint16_t> *back800) const {
+  return world_cursor_of(world_.get(), px, cov, mask800, hi, back800);
+}
+
+bool world_cursor_of(const LiveTerrainWorld *wp, std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
+                     std::vector<uint16_t> *hi, const std::vector<uint16_t> *back800) {
   if (hi) hi->clear();
-  if (!world_ || world_->names_differ || !world_->valid) return false;
-  const LiveTerrainWorld &w = *world_;
+  if (!wp || wp->names_differ || !wp->valid) return false;
+  const LiveTerrainWorld &w = *wp;
   const size_t n = static_cast<size_t>(w.scene_w) * 600;
   if (!w.scene_valid || w.scene_w <= 0 || w.scene_pre.size() != n || w.scene_cur.size() != n) return false;
   // the logical rows / columns holding a preview pixel (scene_cur != scene_pre); none = nothing to give

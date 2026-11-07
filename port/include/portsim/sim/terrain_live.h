@@ -136,11 +136,22 @@ struct LiveTerrainWorld {
   int64_t hr_tiles = 0, hr_tiles_dirty = 0;   // P10D fix 3: 32 x 32 tiles flushed, and of them drawn again (session.json)
   int64_t scene_passes = 0;
   int64_t passes = 0, pixels = 0, us = 0;
+  // P15A (log/roadmap/P15/P15A_notes.md): counts every change of the world root's pixels (a world pass, windowPaint's fill, the back
+  // surface put back, a mirrored overlay line, a resize or its redraw), so a copy of the root taken at a count is known current
+  uint64_t gen = 0;
   // gate (sg_call terrainLive.worldCheck(1)): after every terrain operation of a world whose frame is 800 x 600 world pixels (render
   // scale 1), the world root's central 800 columns compared with T: operations checked, operations with a difference, pixels
   bool check_central = false;
   int64_t checks = 0, checks_differing = 0, diff_px = 0;
 };
+
+// P15A (log/roadmap/P15/P15A_notes.md): LiveTerrain::world_frame / world_cursor over a given world and a given copy of its root
+// (the world thread's: the hr planes of its own LiveTerrainWorld, the root and the scene planes copied at the present). The same
+// bodies; the LiveTerrain members call them with world() and the world rasteriser's pixels.
+bool world_frame_of(const LiveTerrainWorld *w, const std::vector<uint16_t> &root, const std::vector<uint16_t> &back800, bool back_terrain,
+                    std::vector<uint16_t> &px, std::vector<uint8_t> &mask, bool text, bool cursor_apart);
+bool world_cursor_of(const LiveTerrainWorld *w, std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
+                     std::vector<uint16_t> *hi, const std::vector<uint16_t> *back800);
 
 class LiveTerrain : public TerrainApi {
  public:

@@ -156,9 +156,13 @@ void world_check(LiveTerrainWorld &w) {
 }
 void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const uint32_t *a, const std::vector<uint16_t> &before) {
   const PerfScope perf_scope(kPerfTerrainWorld);  // P10A (perf.h)
-  if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
-    for (size_t i = 0; i < before.size(); ++i)
-      if (g.root.px[i] != before[i]) w.terrain800[i] = g.root.px[i];
+  {
+    const PerfDetailScope pd(kPdWorldT);  // P15A
+    if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
+      for (size_t i = 0; i < before.size(); ++i)
+        if (g.root.px[i] != before[i]) w.terrain800[i] = g.root.px[i];
+  }
+  PerfDetailScope pd_render(kPdWorldRender);  // P15A
   gl::GlRaster &r = *w.raster;
   if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
   TerrainGlobals &tg = lt.globals();
@@ -185,6 +189,7 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
   }
   terrain_render_set_cull_margin(0);
   r.finish();
+  pd_render.stop();  // P15A
   tg.view_index = view;
   const long long us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
   w.us += us;
@@ -200,6 +205,7 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
     }
   }
   ++w.passes;
+  ++w.gen;  // P15A
   w.valid = true;
   w.lines_open = true;  // P13D item 7: the overlay lines until the sprite queue (terrain_live.h)
   world_check(w);
@@ -213,8 +219,10 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.hud_carry_drop();  // P9D: a new frame's picture ends a carried HUD capture (gfx.h gfx_set_hud_modal)
   g.hud_pieces_reset();  // P9E: and its popups
   if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
+    const PerfDetailScope pd(kPdWorldCopy);  // P15A
     std::vector<uint16_t> &px = w->raster->pixels();
     std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+    ++w->gen;  // P15A
     w->terrain800 = g.root.px;
     w->lines_open = true;  // P13D item 7
     world_check(*w);
@@ -239,7 +247,10 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   LiveTerrainWorld *const world = lt->world();   // P8B
   std::unique_ptr<PerfScope> perf_800(new PerfScope(kPerfTerrain800));  // P10A (perf.h): the 800 x 600 pass
   std::vector<uint16_t> world_before;
-  if (world) world_before = g.root.px;
+  if (world) {
+    const PerfDetailScope pd(kPdWorldT);  // P15A
+    world_before = g.root.px;
+  }
   if (SG_NEGCTL(g_negctl_gfx_terrain) != 3 && lt->host_gl()) {
     // roadmap S3.15 (U-1810): the host's own OpenGL draws the pass into its DIB, which holds the root surface's pixels around it
     gl::WglSink &w = *lt->host_gl();
@@ -313,7 +324,10 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (a[0] == 1) {
     copy16(g.root.px, g.root.w, g.root.h, v.back_surface, v.back_w, v.back_h, sx, sy, tx, ty, w, h);
     v.back_terrain = g.root_terrain;
-    if (world) world->back = world->raster->pixels();
+    if (world) {
+      const PerfDetailScope pd(kPdWorldCopy);  // P15A
+      world->back = world->raster->pixels();
+    }
     return;
   }
   if (SG_NEGCTL(g_negctl_gfx_terrain) == 4) {
@@ -325,8 +339,10 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.hud_carry_drop();  // P9D: the saved terrain picture restored starts a new frame's picture
   g.hud_pieces_reset();  // P9E: and its popups
   if (world) {
+    const PerfDetailScope pd(kPdWorldCopy);  // P15A
     if (world->strip_full) world->strip_full = false;
     else world->raster->pixels() = world->back;
+    ++world->gen;  // P15A
     world->terrain800 = g.root.px;
     world->lines_open = true;  // P13D item 7
     world_check(*world);
@@ -346,6 +362,7 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   // back copy taken), as updateTerrainRender's repaint path draws the 800 frame
   LiveTerrainWorld *w = lt->world();
   if (!w || !w->dirty || !w->has_last) return;
+  const PerfDetailScope pd(kPdWorldCopy);  // P15A
   gl::GlRaster &r = *w->raster;
   if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
   TerrainGlobals &tg = lt->globals();
@@ -359,6 +376,7 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   r.finish();
   tg.view_index = view;
   w->back = r.pixels();
+  ++w->gen;  // P15A
   w->dirty = false;
   w->valid = true;
   ++w->redraws;

@@ -54,11 +54,22 @@
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>   // P15A: hr_flush's bands take the world thread's priority
+#endif
 #include "portsim/sim/gfx_scene.h"
 
 #include <algorithm>
 #include <unordered_map>
 #include <array>
+#include <atomic>
+#include <functional>
 #include <chrono>
 #include <cmath>
 #include <cstdint>
@@ -81,6 +92,7 @@
 #include "portsim/sim/gfx_hud.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"   // G32: the wide scene
+#include "portsim/sim/perf.h"   // P15A: detail counters
 
 namespace portsim {
 extern int g_defect_zoom8_font;  // tick.cpp mainLoop.zoom8Font (P13C)
@@ -672,15 +684,60 @@ struct HrQueue {
   std::vector<HrBox> post_boxes;
   std::vector<uint8_t> dirty;          // this queue's dirty tiles (tx x ty), from its start
   int32_t tx = 0, ty = 0;
+  size_t defer_np = 0;                 // P15A: the frame thread's queue start recorded with an hr plane of this size (0: none)
 };
 thread_local HrQueue g_hr_queue;
 constexpr int32_t kHrTile = 32;
 
+// P15A (gfx.h gfx_set_hr_defer; log/roadmap/P15/P15A_notes.md): the hr work recorded on the frame thread and run on the world thread
+std::atomic<bool> g_hr_defer{false};
+std::atomic<bool> g_hr_check{false};     // gfx_set_hr_defer_check: the frame thread records AND runs (the A/B check)
+thread_local bool t_hr_runner = false;   // this thread runs a GfxHrJob (gfx_hr_job_run): the hr functions run, not record
+bool hr_recording() { return g_hr_defer.load(std::memory_order_relaxed) && !t_hr_runner; }
+bool hr_checking() { return g_hr_check.load(std::memory_order_relaxed); }
+// the world geometry an hr op runs with (the frame thread's at the op), put on the world thread's LiveTerrainWorld first
+struct HrGeo {
+  int32_t pw = 0, ph = 0, fw = 0, ox = 0, scene_e = 0;
+  int hr_filter = 0;
+  void put(LiveTerrainWorld &w) const {
+    w.pw = pw;
+    w.ph = ph;
+    w.fw = fw;
+    w.ox = ox;
+    w.scene_e = scene_e;
+    w.hr_filter = hr_filter;
+  }
+};
+HrGeo hr_geo(const LiveTerrainWorld &w) { return HrGeo{w.pw, w.ph, w.fw, w.ox, w.scene_e, w.hr_filter}; }
+}  // namespace (GfxHrJob is declared in gfx.h)
+struct GfxHrJob {
+  std::vector<std::function<void(LiveTerrainWorld &)>> ops;
+  std::shared_ptr<const std::vector<uint16_t>> root;   // the world root copied at the last queue start (null: none)
+  uint64_t root_gen = 0;
+  bool has_start = false;   // a queue start is among the ops (it is the first: hr_job_start drops what came before)
+};
+namespace {
+thread_local std::shared_ptr<GfxHrJob> g_hr_job;   // the frame thread's ops since the last gfx_hr_take_job
+GfxHrJob &hr_job() {
+  if (!g_hr_job) g_hr_job = std::make_shared<GfxHrJob>();
+  return *g_hr_job;
+}
+// a queue start: the ops before it are dropped (gfx.h gfx_hr_job_merge)
+void hr_job_start(std::function<void(LiveTerrainWorld &)> op, std::shared_ptr<const std::vector<uint16_t>> root, uint64_t gen) {
+  GfxHrJob &j = hr_job();
+  j.ops.clear();
+  j.ops.push_back(std::move(op));
+  j.root = std::move(root);
+  j.root_gen = gen;
+  j.has_start = true;
+}
+
 template <class Op>
 void hr_blit(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op0) {
+  const PerfDetailScope pd(kPdHrEnqueue);  // P15A
   const auto t0 = std::chrono::steady_clock::now();
   const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
-  if (g_hr_queue.last_base.size() != np || w.fw <= 0 || w.ph <= 0) return;
+  if ((hr_recording() ? g_hr_queue.defer_np : g_hr_queue.last_base.size()) != np || w.fw <= 0 || w.ph <= 0) return;   // P15A
   const HrGeom gm = hr_geom(x, y, sc, s);
   if (!gm.ok) return;
   auto c = std::make_unique<HrCmdT<Op>>(op0);
@@ -775,6 +832,7 @@ void hr_queue_begin(LiveTerrainWorld &w, const std::vector<uint16_t> &wp) {
 // twice. Tile rows go to up to 8 threads (row r to thread r mod n, one thread per 24 dirty tiles; SG_P10D_HR_THREADS=<n> sets
 // the most, 1 = the frame thread); SG_P10D_HR_REUSE=0 makes every tile dirty (hr_queue_begin).
 void hr_flush(LiveTerrainWorld &w) {
+  PerfDetailScope pd(kPdHrFlush);  // P15A
   const auto t0 = std::chrono::steady_clock::now();
   struct Done {
     LiveTerrainWorld &w;
@@ -865,6 +923,13 @@ void hr_flush(LiveTerrainWorld &w) {
       std::vector<std::thread> th;
       th.reserve(static_cast<size_t>(nt - 1));
       for (int t = 1; t < nt; ++t) th.emplace_back(band, t);
+#ifdef _WIN32
+      if (t_hr_runner) {  // P15A: on the world thread the bands take its (lower) priority
+        const int prio = GetThreadPriority(GetCurrentThread());
+        if (prio != THREAD_PRIORITY_ERROR_RETURN)
+          for (std::thread &x : th) SetThreadPriority(x.native_handle(), prio);
+      }
+#endif
       band(0);
       for (std::thread &t : th) t.join();
     }
@@ -884,7 +949,9 @@ void hr_flush(LiveTerrainWorld &w) {
   // hr after the queue's end are added by hr_now until a present takes it (gfx_hr_scene)
   q.pub.reset();
   q.pub_taken = false;
+  pd.stop();  // P15A
   if (g_hr_scene_on.load(std::memory_order_relaxed)) {
+    const PerfDetailScope pd_pub(kPdHrPub);  // P15A
     struct PubTime {  // P12A fix 3: the publication's own cost on this thread (gfx_hr_scene_cost)
       std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
       ~PubTime() {
@@ -950,11 +1017,59 @@ void hr_flush(LiveTerrainWorld &w) {
   q.w = nullptr;
 }
 
+template <class Op>
+void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op, bool cur);
+template <class Op>
+void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op);
+// P15A: a post-queue draw recorded with copies of its art, its op and the op's palette (composeGolferSprite rewrites g_images[0]'s
+// words between two golfer entries, as hr_blit's HrCmd copy notes); the op's other pointers are static tables
+template <class Op>
+struct HrNowRec {
+  Sprite8 s;
+  Op op;
+  std::array<uint16_t, 256> pal{};
+  int32_t x = 0, y = 0;
+  Scale sc{};
+  bool cur = false, box = false;
+  HrGeo geo;
+  explicit HrNowRec(const Op &o) : op(o) {}
+};
+template <class Op>
+void hr_record_now(const LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op, bool cur, bool box) {
+  auto r = std::make_shared<HrNowRec<Op>>(op);
+  r->s = s;
+  if (r->op.pal) {
+    std::copy(r->op.pal, r->op.pal + 256, r->pal.begin());
+    r->op.pal = r->pal.data();
+  }
+  r->x = x;
+  r->y = y;
+  r->sc = sc;
+  r->cur = cur;
+  r->box = box;
+  r->geo = hr_geo(w);
+  hr_job().ops.push_back([r](LiveTerrainWorld &W) {
+    r->geo.put(W);
+    if (r->box) hr_box_now(W, r->s, r->x, r->y, r->sc, r->op);
+    else hr_now(W, r->s, r->x, r->y, r->sc, r->op, r->cur);
+  });
+}
+
 // P10D fix 2 (P10F: also the placement box, draw_alpha): a draw after the queue's end, at once on the calling thread, at scene
 // position (x, y): with `cur` into hrc (a copy of hr made at the first such draw, hrc_cov = 1 where it drew), else into hr
 template <class Op>
 void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op, bool cur) {
+  const PerfDetailScope pd(kPdHrNow);  // P15A
   const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (hr_recording()) {  // P15A: the flags this draw sets, then the draw recorded (own art, op and palette) for the world thread
+    if (!w.hr_valid || g_hr_queue.defer_np != np || w.fw <= 0) return;
+    if (!hr_checking()) {
+      if (cur) w.hrc_valid = true;
+      hr_record_now(w, s, x, y, sc, op, cur, false);
+      return;
+    }
+    hr_record_now(w, s, x, y, sc, op, cur, false);   // the check: recorded, then run here too
+  }
   if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
   if (cur && !w.hrc_valid) {
     w.hrc = w.hr;
@@ -1008,7 +1123,18 @@ void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale s
 // hrc (covering hrb_cov, not hrc_cov) and into the blend pair hrb_lo / hrb_hi (the box over 0 and over 0x7fff words)
 template <class Op>
 void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale sc, const Op &op) {
+  const PerfDetailScope pd(kPdHrNow);  // P15A
   const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  if (hr_recording()) {  // P15A (as hr_now above)
+    if (!w.hr_valid || g_hr_queue.defer_np != np || w.fw <= 0) return;
+    if (!hr_checking()) {
+      w.hrc_valid = true;
+      w.hrb_valid = true;
+      hr_record_now(w, s, x, y, sc, op, false, true);
+      return;
+    }
+    hr_record_now(w, s, x, y, sc, op, false, true);
+  }
   if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
   if (!w.hrc_valid) {
     w.hrc = w.hr;
@@ -1986,6 +2112,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   const int32_t W = 800 + 2 * E;
   w->scene_e = E;
   w->scene_w = W;
+  const PerfDetailScope pd(kPdQueueBegin);  // P15A
   w->scene_base.assign(static_cast<size_t>(W) * 600, 0);
   const std::vector<uint16_t> &wp = w->raster->pixels();
   for (int32_t y = 0; y < 600; ++y) {
@@ -2019,14 +2146,47 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g_hr_queue.cmds.clear();
   g_hr_queue.w = nullptr;
   w->hr_open = w->hr_on && mode() == 0 && wp.size() == static_cast<size_t>(w->pw) * static_cast<size_t>(w->ph);
-  if (w->hr_open) {
-    hr_queue_begin(*w, wp);   // fix 3: the tiles to draw again
-    w->tag.assign(w->scene.size(), 0);
-  } else {
-    g_hr_queue.last_ok = false;
-    w->hr.clear();
-    w->hr_cov.clear();
-    w->tag.clear();
+  if (hr_recording()) {  // P15A: the start recorded (with a copy of the world root), the planes are the world thread's
+    const HrGeo geo = hr_geo(*w);
+    if (w->hr_open) {
+      auto root = std::make_shared<const std::vector<uint16_t>>(wp);
+      g_hr_queue.defer_np = wp.size();
+      hr_job_start([geo, root](LiveTerrainWorld &W) {
+        geo.put(W);
+        W.hr_valid = false;
+        W.hrc_valid = false;
+        W.hrb_valid = false;
+        g_hr_queue.cmds.clear();
+        g_hr_queue.w = nullptr;
+        hr_queue_begin(W, *root);
+      }, root, w->gen);
+      w->tag.assign(w->scene.size(), 0);
+    } else {
+      g_hr_queue.defer_np = 0;
+      hr_job_start([geo](LiveTerrainWorld &W) {
+        geo.put(W);
+        W.hr_valid = false;
+        W.hrc_valid = false;
+        W.hrb_valid = false;
+        g_hr_queue.cmds.clear();
+        g_hr_queue.w = nullptr;
+        g_hr_queue.last_ok = false;
+        W.hr.clear();
+        W.hr_cov.clear();
+      }, nullptr, 0);
+      w->tag.clear();
+    }
+  }
+  if (!hr_recording() || hr_checking()) {  // P15A: run here (as before), unless only recorded
+    if (w->hr_open) {
+      hr_queue_begin(*w, wp);   // fix 3: the tiles to draw again
+      w->tag.assign(w->scene.size(), 0);
+    } else {
+      g_hr_queue.last_ok = false;
+      w->hr.clear();
+      w->hr_cov.clear();
+      w->tag.clear();
+    }
   }
   w->tag_pre.clear();
   w->hr_prep_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hr_t0).count();
@@ -2324,12 +2484,38 @@ void b_blit_test(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (LiveTerrainWorld *w = wide_world(ctx)) {   // G32: the frame at the queue's end
     g.ensure_root(ctx);
+    PerfDetailScope pd(kPdQueueEnd);  // P15A
     w->s1 = g.root.px;
     w->scene_valid = true;
-    if (w->hr_open) hr_flush(*w);  // P10D fix 1: the queued hr draws, then the hr plane holds this queue's sprites
+    pd.stop();
+    if (w->hr_open && hr_recording()) {  // P15A: the flush recorded with the queue's commands; hr_valid as hr_flush sets it
+      auto cmds = std::make_shared<std::vector<std::shared_ptr<HrCmd>>>();
+      if (hr_checking()) {
+        if (g_hr_queue.w == w) *cmds = g_hr_queue.cmds;   // the check: the synchronous flush below takes them too
+      } else {
+        if (g_hr_queue.w == w) cmds->swap(g_hr_queue.cmds);
+        g_hr_queue.cmds.clear();
+        g_hr_queue.w = nullptr;
+      }
+      const HrGeo geo = hr_geo(*w);
+      hr_job().ops.push_back([geo, cmds](LiveTerrainWorld &W) {
+        geo.put(W);
+        g_hr_queue.cmds = *cmds;
+        g_hr_queue.w = &W;
+        hr_flush(W);
+      });
+      w->hr_valid = g_hr_queue.defer_np == static_cast<size_t>(w->pw) * static_cast<size_t>(w->ph);
+    }
+    if (w->hr_open && (!hr_recording() || hr_checking())) {
+      w->hr_valid = false;   // as before the recorded flush set it: hr_flush sets it
+      hr_flush(*w);  // P10D fix 1: the queued hr draws, then the hr plane holds this queue's sprites
+    }
     w->hr_valid = w->hr_open && w->hr_valid;  // P10D fix 1: the hr plane holds this queue's sprites (hr_flush sets it)
     w->hr_open = false;
-    gfxb::text_wide_end(g, w->scene, w->scene_w, w->scene_e, w->scene_text);  // P9C: the scene without its runs' glyphs
+    {
+      const PerfDetailScope pd2(kPdQueueEnd);  // P15A
+      gfxb::text_wide_end(g, w->scene, w->scene_w, w->scene_e, w->scene_text);  // P9C: the scene without its runs' glyphs
+    }
     ++w->scene_passes;
     // development switch SG_WIDE_SCENE_DUMP=<prefix>: the wide scene, its base and s1 of every queue pass go to <prefix>_<pass>.*
     if (const char *dp = std::getenv("SG_WIDE_SCENE_DUMP")) {
@@ -2430,6 +2616,43 @@ std::shared_ptr<const GfxHrScene> gfx_hr_scene(Ctx &) {
   HrQueue &q = g_hr_queue;  // the sim thread's (a present runs on the thread that flushed)
   q.pub_taken = true;
   return q.pub;
+}
+// P15A (gfx.h): the world thread
+void gfx_set_hr_defer(bool on) { g_hr_defer.store(on, std::memory_order_relaxed); }
+void gfx_set_hr_defer_check(bool on) { g_hr_check.store(on, std::memory_order_relaxed); }
+bool gfx_hr_check_on() { return g_hr_check.load(std::memory_order_relaxed) && g_hr_defer.load(std::memory_order_relaxed); }
+bool gfx_hr_defer() { return g_hr_defer.load(std::memory_order_relaxed); }
+std::shared_ptr<GfxHrJob> gfx_hr_take_job() {
+  std::shared_ptr<GfxHrJob> j = std::move(g_hr_job);
+  g_hr_job.reset();
+  if (!j) j = std::make_shared<GfxHrJob>();
+  return j;
+}
+void gfx_hr_job_merge(std::shared_ptr<GfxHrJob> &into, const std::shared_ptr<GfxHrJob> &next) {
+  if (!next) return;
+  if (!into || next->has_start) {  // the ops before next's start are dropped
+    into = next;
+    return;
+  }
+  for (auto &op : next->ops) into->ops.push_back(op);
+}
+void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w) {
+  t_hr_runner = true;
+  for (auto &op : j.ops) op(w);
+  t_hr_runner = false;
+}
+size_t gfx_hr_job_ops(const GfxHrJob &j) { return j.ops.size(); }
+std::shared_ptr<const std::vector<uint16_t>> gfx_hr_job_root(const GfxHrJob &j, uint64_t &gen) {
+  gen = j.root_gen;
+  return j.root;
+}
+std::shared_ptr<const GfxHrScene> gfx_hr_scene_take() {
+  HrQueue &q = g_hr_queue;
+  q.pub_taken = true;
+  return q.pub;
+}
+void gfx_hr_job_add_take(GfxHrJob &j, std::shared_ptr<std::shared_ptr<const GfxHrScene>> slot) {
+  j.ops.push_back([slot](LiveTerrainWorld &) { *slot = gfx_hr_scene_take(); });
 }
 const std::vector<GfxHrDraw> &gfx_hr_scene_draws(const GfxHrScene &s) { return s.draws; }
 int32_t gfx_hr_scene_pw(const GfxHrScene &s) { return s.w ? s.w->pw : 0; }

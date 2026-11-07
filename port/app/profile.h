@@ -32,6 +32,8 @@
 #include <mutex>
 #include <string>
 
+#include "portsim/sim/perf.h"  // P15A: kPdCount
+
 namespace portapp {
 
 enum class Phase : uint8_t { Sim, Gfx, Terrain, Capture, Wait, Base, World, Layers, Text, Bands, Overlay, Blit, Upload, Patch, Gpu, Present, Count };
@@ -105,6 +107,8 @@ class Profiler {
   int64_t t0_ = 0, line_t0_ = 0;
   int64_t head_ = 0;  // the last frame head
   int64_t perf_prev_[4] = {};
+  int64_t detail_prev_[portsim::kPdCount] = {};  // P15A (frame_log)
+  void frame_log(int64_t total, int64_t wait, int64_t cap, int64_t gfx_all, int64_t d800, int64_t dworld, int64_t dnest);
   int64_t phase_prev_[kPhases] = {};
   // the open line
   uint32_t frames_ = 0, shown_ = 0, paints_ = 0, cursor_ = 0;  // P10E: cursor_

@@ -101,6 +101,9 @@
 //   queue entries render-only: gfx.h gfx_mover_source). P12A fix 3: --object-rate <hz> (default 30; 0 = every pacer tick) the most
 //   object redraws per second (a camera slide still paints at the pacer's rate). P14A fix 2: --object-rate auto (the default) = every
 //   pacer tick while the GPU path paints a client of at most 1920 x 1200 pixels, else 30 (P14A_notes.md section 4).
+//   P15A: --world-thread on|off (default on; SG_APP_P15=off: off) the world image of a present (the window-resolution sprites'
+//   flush, the post-queue draws, world_cursor / world_frame) made on a thread of its own, so the sim thread's frame does not grow
+//   with the client size (host.h HostOptions::world_thread, log/roadmap/P15/P15A_notes.md); session.json p15.
 //   P14A: --gpu on|off (default on; SG_APP_P14=off: off) the window's picture composed and presented by the GPU (gpu.h: Direct3D 11,
 //   a flip-model swap chain, vsync): the same pixels as the CPU path (Presenter::render), drawn at the display's refresh without the
 //   CPU paint's cost. off (or no D3D11 device / d3dcompiler_47.dll) = the CPU path (SetDIBitsToDevice). stdout says `GPU on|off ...`.
@@ -435,6 +438,7 @@ struct Options {
   bool smooth_objects = true;      // P12A fix 2: --smooth-objects on|off (SG_APP_P12=off: off)
   int object_rate = -1;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick); P14A fix 2: -1 = auto (the default)
   bool gpu = true;                 // P14A: --gpu on|off (SG_APP_P14=off: off)
+  bool world_thread = true;        // P15A: --world-thread on|off (SG_APP_P15=off: off)
   bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
@@ -1414,6 +1418,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   // P12A fix 2: the moving objects need the window-resolution sprite queue (--sprite-res native) and the world layer
   ho.smooth_objects = o.smooth_objects && o.sprite_native && ho.world;
   portsim::gfx_set_hr_scene(ho.smooth_objects);
+  ho.world_thread = o.world_thread && ho.world;  // P15A (the hr work recorded for it only with a world layer)
+  portsim::gfx_set_hr_defer(ho.world_thread);
+  portsim::gfx_set_hr_defer_check(ho.world_thread && std::getenv("SG_P15_CHECK") && std::getenv("SG_P15_CHECK")[0] == '1');  // P15A
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.map_bands = o.wide && o.map_bands;               // P13B item 18 (the world map's bands repeat its edge columns)
   ho.text_native = text_native_on(o);                  // P9C
@@ -1790,6 +1797,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   Profiler::get().close_csv();
   s += ",\"p14\":" + presenter.gpu_json();  // P14A
+  s += ",\"p15\":" + session.world_thread_json();  // P15A
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
@@ -3060,6 +3068,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.gpu = v == "on";
     }
+    else if (a == "--world-thread") {  // P15A
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.world_thread = v == "on";
+    }
     else if (a == "--object-rate") {  // P12A fix 3
       if (!val(v)) return false;
       o.object_rate = v == "auto" ? -1 : std::atoi(v.c_str());  // P14A fix 2: auto
@@ -3255,6 +3267,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.gpu = false;  // P14A
+  if (const char *ep = std::getenv("SG_APP_P15"))  // P15: the world thread off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.world_thread = false;  // P15A
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

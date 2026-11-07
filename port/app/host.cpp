@@ -219,6 +219,7 @@ LiveSession::LiveSession(HostOptions opt, const std::string &record_dir) : opt_(
 }
 
 LiveSession::~LiveSession() {
+  world_stop();  // P15A
   if (frames_log_) std::fclose(frames_log_);
   if (waits_log_) std::fclose(waits_log_);
 }
@@ -701,25 +702,82 @@ bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t
   return false;
 }
 
-bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
-                      const portsim::GfxTextFrame *text, bool cursor, bool proj, bool pic) {
-  const portsim::LiveTerrainWorld *w = live.world();
-  if (!w) return false;
-  const bool terrain = portsim::gfx_back_terrain(ctx);
-  // P9B: the frame's HUD layers, when they were published with exactly this back buffer
-  portsim::GfxHudFrame f;
-  const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
+static void world_reset(WorldImage &w);  // P15A (below)
+
+// P15A (SG_P15_CHECK): FNV-1a over everything of a world image the world thread makes (the pictures, masks, previews, geometry, the
+// projection and camera snapshots but the present's time, the HUD frame's serial and layer count, the hr scene's draws)
+static uint64_t wi_digest(const WorldImage &wi) {
+  uint64_t h = 0xcbf29ce484222325ull;
+  auto add = [&h](const void *p, size_t n) {
+    const uint8_t *b = static_cast<const uint8_t *>(p);
+    for (size_t i = 0; i < n; ++i) {
+      h ^= b[i];
+      h *= 0x100000001b3ull;
+    }
+  };
+  auto addv = [&](const auto &v) {
+    const uint64_t n = v.size();
+    add(&n, sizeof n);
+    if (n) add(v.data(), v.size() * sizeof(v[0]));
+  };
+  addv(wi.px);
+  addv(wi.mask);
+  addv(wi.px_text);
+  addv(wi.mask_text);
+  addv(wi.cur_px);
+  addv(wi.cur_hi);
+  addv(wi.cur_cov);
+  addv(wi.cur_mask);
+  add(wi.cur_box, sizeof wi.cur_box);
+  const int32_t geo[4] = {wi.pw, wi.ph, wi.fw, wi.ox};
+  add(geo, sizeof geo);
+  const uint8_t flags[2] = {static_cast<uint8_t>(wi.proj.ok), static_cast<uint8_t>(wi.hud_none)};
+  add(flags, sizeof flags);
+  if (wi.proj.ok) {
+    const int32_t pv[7] = {wi.proj.tile_x, wi.proj.tile_y, wi.proj.sw, wi.proj.sh, wi.proj.rot, wi.proj.cam_x, wi.proj.cam_y};
+    add(pv, sizeof pv);
+    addv(wi.proj.sx);
+    addv(wi.proj.sy);
+    addv(wi.proj.on);
+  }
+  const int32_t cam[9] = {wi.cam.ok ? 1 : 0, wi.cam.cam_x, wi.cam.cam_y, wi.cam.zoom, wi.cam.rot, wi.cam.next_x, wi.cam.next_y,
+                          wi.cam.next_zoom, wi.cam.next_rot};
+  add(cam, sizeof cam);
+  const uint64_t hud[2] = {wi.hud.serial, wi.hud.layers.size()};
+  add(hud, sizeof hud);
+  if (wi.hr_scene) {
+    const int32_t sz[2] = {portsim::gfx_hr_scene_pw(*wi.hr_scene), portsim::gfx_hr_scene_ph(*wi.hr_scene)};
+    add(sz, sizeof sz);
+    for (const portsim::GfxHrDraw &d : portsim::gfx_hr_scene_draws(*wi.hr_scene)) {
+      add(d.box, sizeof d.box);
+      const double pl[4] = {d.rx, d.ry, d.ex, d.ey};
+      add(pl, sizeof pl);
+      const int32_t k[3] = {d.src.kind, d.art_w, d.art_h};
+      add(k, sizeof k);
+    }
+  }
+  return h;
+}
+
+bool world_image_part(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> &root, const std::vector<uint16_t> &px, bool terrain,
+                      bool use, const portsim::GfxHudFrame &f, const portsim::GfxTextFrame *text, bool cursor, WorldImage &wi, bool &apart) {
   // P9E fix 4: with the HUD layers, the tool previews at the cursor apart from the world (WorldImage::cur_*)
-  const bool apart = cursor && use && live.world_cursor(wi.cur_px, wi.cur_cov, wi.cur_mask, &wi.cur_hi, &px);  // P10F: cur_hi, the back buffer
+  portsim::PerfDetailScope pd_cur(portsim::kPdCapCursor);  // P15A
+  apart = cursor && use && portsim::world_cursor_of(&w, wi.cur_px, wi.cur_cov, wi.cur_mask, &wi.cur_hi, &px);  // P10F: cur_hi, the back buffer
+  pd_cur.stop();
   if (!apart) {
     wi.cur_px.clear();
     wi.cur_hi.clear();
     wi.cur_cov.clear();
     wi.cur_mask.clear();
   }
-  if (!live.world_frame(use ? f.base : px, terrain, wi.px, wi.mask, false, apart)) return false;
-  if (apart && live.world()) {
-    const int32_t pw = live.world()->pw, ph = live.world()->ph;
+  {
+    const portsim::PerfDetailScope pd(portsim::kPdCapWorld);  // P15A
+    if (!portsim::world_frame_of(&w, root, use ? f.base : px, terrain, wi.px, wi.mask, false, apart)) return false;
+  }
+  if (apart) {
+    const portsim::PerfDetailScope pd(portsim::kPdCapCursor);  // P15A
+    const int32_t pw = w.pw, ph = w.ph;
     int32_t x0 = pw, y0 = ph, x1 = 0, y1 = 0;
     for (int32_t y = 0; y < ph; ++y) {  // P10A: a row's first covered pixel by memchr, its last from the end
       const uint8_t *r = wi.cur_cov.data() + static_cast<size_t>(y) * static_cast<size_t>(pw);
@@ -746,51 +804,260 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
     const std::vector<uint16_t> *src = nullptr;
     if (use && text->hud_serial == f.serial && text->base_clean.size() == f.base.size()) src = &text->base_clean;
     else if (!use && text->clean.size() == px.size()) src = &text->clean;
-    if (src && !live.world_frame(*src, terrain, wi.px_text, wi.mask_text, true, apart)) {
+    const portsim::PerfDetailScope pd(portsim::kPdCapWorldText);  // P15A
+    if (src && !portsim::world_frame_of(&w, root, *src, terrain, wi.px_text, wi.mask_text, true, apart)) {
       wi.px_text.clear();
       wi.mask_text.clear();
     }
   }
-  wi.pw = w->pw;
-  wi.ph = w->ph;
-  wi.fw = w->fw;
-  wi.ox = w->ox;
+  wi.pw = w.pw;
+  wi.ph = w.ph;
+  wi.fw = w.fw;
+  wi.ox = w.ox;
+  return true;
+}
+
+// P12A fix 1 (present.h CameraSnap): the camera updateTerrainRender drew this picture with (read only)
+static CameraSnap take_cam(portsim::Ctx &ctx, bool use) {
+  const portsim::GameState &g = ctx.gs();
+  CameraSnap c;
+  c.cam_x = g.g_terrainLastCamX;
+  c.cam_y = g.g_terrainLastCamY;
+  c.zoom = g.g_terrainLastZoom;
+  c.rot = g.g_terrain820f30[2];
+  c.ok = use && (c.rot == 0 || c.rot == 2 || c.rot == 4 || c.rot == 6) && c.rot == g.g_cameraRot && g.g_screenWidth == kLogicalW &&
+         g.unk_005a9cbc == 0 && g.unk_005a9cc0 == 0 && c.zoom > 0;
+  c.next_x = g.gCameraTileX;
+  c.next_y = g.gCameraTileY;
+  c.next_zoom = g.g_zoomScale;
+  c.next_rot = g.g_cameraRot;
+  return c;
+}
+
+// development: SG_P9B_LAYER_LOG=<file> appends one line per present with layers: serial, then id:anchor:box:pixels per layer
+static void layer_log(const portsim::GfxHudFrame &f) {
+  static std::FILE *lf = std::getenv("SG_P9B_LAYER_LOG") ? std::fopen(std::getenv("SG_P9B_LAYER_LOG"), "a") : nullptr;
+  if (!lf) return;
+  std::fprintf(lf, "%llu", static_cast<unsigned long long>(f.serial));
+  for (const portsim::GfxHudLayer &l : f.layers) {
+    size_t n = 0, b = 0;
+    for (const portsim::GfxLayerPx &q : l.px) {
+      n += q.kind ? 1 : 0;
+      b += q.kind >= 2 ? 1 : 0;
+    }
+    std::fprintf(lf, " %d:%d:%d,%d-%d,%d:%zu/%zu", l.id, l.anchor, l.x0, l.y0, l.x1, l.y1, n, b);
+  }
+  std::fputc('\n', lf);
+  std::fflush(lf);
+}
+
+bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::vector<uint16_t> &px, bool layered, WorldImage &wi,
+                      const portsim::GfxTextFrame *text, bool cursor, bool proj, bool pic) {
+  const portsim::LiveTerrainWorld *w = live.world();
+  if (!w) return false;
+  const bool terrain = portsim::gfx_back_terrain(ctx);
+  // P9B: the frame's HUD layers, when they were published with exactly this back buffer
+  portsim::GfxHudFrame f;
+  const bool use = layered && portsim::gfx_hud_frame(ctx, f) && !f.empty() && f.back == px;
+  bool apart = false;
+  if (!world_image_part(*w, w->raster->pixels(), px, terrain, use, f, text, cursor, wi, apart)) return false;  // P15A: the world part
   wi.proj.ok = false;  // P10E: the projection only with previews at the cursor (world sprites or the frame's 2D sprite pixels)
   if (proj && use && (apart || !f.cursor2d.empty())) take_proj(ctx, wi.proj, pic);
-  {  // P12A fix 1 (present.h CameraSnap): the camera updateTerrainRender drew this picture with (read only)
-    const portsim::GameState &g = ctx.gs();
-    CameraSnap &c = wi.cam;
-    c.cam_x = g.g_terrainLastCamX;
-    c.cam_y = g.g_terrainLastCamY;
-    c.zoom = g.g_terrainLastZoom;
-    c.rot = g.g_terrain820f30[2];
-    c.ok = use && (c.rot == 0 || c.rot == 2 || c.rot == 4 || c.rot == 6) && c.rot == g.g_cameraRot && g.g_screenWidth == kLogicalW &&
-           g.unk_005a9cbc == 0 && g.unk_005a9cc0 == 0 && c.zoom > 0;
-    c.next_x = g.gCameraTileX;
-    c.next_y = g.gCameraTileY;
-    c.next_zoom = g.g_zoomScale;
-    c.next_rot = g.g_cameraRot;
-  }
+  wi.cam = take_cam(ctx, use);
   if (use) {
-    // development: SG_P9B_LAYER_LOG=<file> appends one line per present with layers: serial, then id:anchor:box:pixels per layer
-    static std::FILE *lf = std::getenv("SG_P9B_LAYER_LOG") ? std::fopen(std::getenv("SG_P9B_LAYER_LOG"), "a") : nullptr;
-    if (lf) {
-      std::fprintf(lf, "%llu", static_cast<unsigned long long>(f.serial));
-      for (const portsim::GfxHudLayer &l : f.layers) {
-        size_t n = 0, b = 0;
-        for (const portsim::GfxLayerPx &q : l.px) {
-          n += q.kind ? 1 : 0;
-          b += q.kind >= 2 ? 1 : 0;
-        }
-        std::fprintf(lf, " %d:%d:%d,%d-%d,%d:%zu/%zu", l.id, l.anchor, l.x0, l.y0, l.x1, l.y1, n, b);
-      }
-      std::fputc('\n', lf);
-      std::fflush(lf);
-    }
+    layer_log(f);
     wi.hud = std::move(f);
   }
   wi.hud_none = layered && !use && portsim::gfx_hud_modal(ctx);  // P9D
   return true;
+}
+
+// P15A: the planes world_frame_of / world_cursor_of and the hr ops read besides the hr planes (terrain_live.h)
+void copy_world_planes(const portsim::LiveTerrainWorld &s, portsim::LiveTerrainWorld &d) {
+  d.pw = s.pw;
+  d.ph = s.ph;
+  d.fw = s.fw;
+  d.ox = s.ox;
+  d.scene_w = s.scene_w;
+  d.scene_e = s.scene_e;
+  d.hr_filter = s.hr_filter;
+  d.names_differ = s.names_differ;
+  d.valid = s.valid;
+  d.scene_valid = s.scene_valid;
+  d.terrain800 = s.terrain800;
+  d.scene = s.scene;
+  d.scene_base = s.scene_base;
+  d.s0 = s.s0;
+  d.s1 = s.s1;
+  d.scene_text = s.scene_text;
+  d.scene_pre = s.scene_pre;
+  d.scene_cur = s.scene_cur;
+  d.tag = s.tag;
+  d.tag_pre = s.tag_pre;
+  d.box800 = s.box800;
+  d.box_word = s.box_word;
+}
+void move_world_planes(portsim::LiveTerrainWorld &s, portsim::LiveTerrainWorld &d) {
+  d.pw = s.pw;
+  d.ph = s.ph;
+  d.fw = s.fw;
+  d.ox = s.ox;
+  d.scene_w = s.scene_w;
+  d.scene_e = s.scene_e;
+  d.hr_filter = s.hr_filter;
+  d.names_differ = s.names_differ;
+  d.valid = s.valid;
+  d.scene_valid = s.scene_valid;
+  d.terrain800.swap(s.terrain800);
+  d.scene.swap(s.scene);
+  d.scene_base.swap(s.scene_base);
+  d.s0.swap(s.s0);
+  d.s1.swap(s.s1);
+  d.scene_text.swap(s.scene_text);
+  d.scene_pre.swap(s.scene_pre);
+  d.scene_cur.swap(s.scene_cur);
+  d.tag.swap(s.tag);
+  d.tag_pre.swap(s.tag_pre);
+  d.box800.swap(s.box800);
+  d.box_word.swap(s.box_word);
+}
+
+// ---- P15A: the world thread
+void LiveSession::world_start() {
+  if (world_thr_.joinable()) return;
+  wq_stop_ = false;
+  world_thr_ = std::thread([this] { world_loop(); });
+}
+
+void LiveSession::world_stop() {
+  if (!world_thr_.joinable()) return;
+  {
+    std::lock_guard<std::mutex> lk(wq_mu_);
+    wq_stop_ = true;
+  }
+  wq_cv_.notify_all();
+  world_thr_.join();
+}
+
+void LiveSession::world_loop() {
+  // the world thread yields to the sim thread and the window (the game's rate first; a late world image is a skipped picture)
+  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+  for (;;) {
+    std::shared_ptr<WorldJob> j;
+    {
+      std::unique_lock<std::mutex> lk(wq_mu_);
+      wq_cv_.wait(lk, [&] { return wq_stop_ || wq_pending_; });
+      if (!wq_pending_) return;  // stopping, nothing left
+      j = std::move(wq_pending_);
+      wq_pending_.reset();
+      wq_busy_ = true;
+    }
+    // development (the check of merged jobs): SG_P15_WORLD_DELAY_MS=<n> holds every job n ms first, so jobs pile up and merge
+    static const int delay = std::getenv("SG_P15_WORLD_DELAY_MS") ? std::atoi(std::getenv("SG_P15_WORLD_DELAY_MS")) : 0;
+    if (delay > 0) Sleep(static_cast<DWORD>(delay));
+    const int64_t t0 = portsim::perf_now_ns();
+    run_world_job(*j);
+    const int64_t dt = portsim::perf_now_ns() - t0;
+    {
+      std::lock_guard<std::mutex> lk(wq_mu_);
+      wq_busy_ = false;
+      ++wts_.jobs;
+      wts_.job_ns += dt;
+      wts_.job_max_ns = std::max(wts_.job_max_ns, dt);
+    }
+    wq_cv_.notify_all();
+  }
+}
+
+// sim thread: hands a job over; a job not yet started takes this one's ops after its own (or is replaced from this one's queue
+// start on), and this one's picture replaces its picture
+void LiveSession::submit_world(std::shared_ptr<WorldJob> j) {
+  std::lock_guard<std::mutex> lk(wq_mu_);
+  if (wq_pending_) {
+    ++wts_.merged;
+    if (wq_pending_->capture) ++wts_.merged_captures;
+    std::shared_ptr<portsim::GfxHrJob> ops = wq_pending_->hr;
+    portsim::gfx_hr_job_merge(ops, j->hr);
+    j->hr = std::move(ops);
+  }
+  wq_pending_ = std::move(j);
+  wq_cv_.notify_all();
+}
+
+void LiveSession::run_world_job(WorldJob &j) {
+  if (!w2_) w2_ = std::make_unique<portsim::LiveTerrainWorld>();
+  if (j.hr) portsim::gfx_hr_job_run(*j.hr, *w2_);
+  if (!j.capture) return;
+  ++wts_.captures;
+  {
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    if (j.seq <= shown_seq_) {  // a newer frame was published meanwhile
+      ++wts_.stale;
+      return;
+    }
+  }
+  move_world_planes(j.planes, *w2_);
+  WorldImage wi;
+  {
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    wi = std::move(spare_world_);
+    spare_world_ = WorldImage{};
+  }
+  world_reset(wi);
+  bool apart = false;
+  static const std::vector<uint16_t> kNoRoot;
+  if (world_image_part(*w2_, j.root ? *j.root : kNoRoot, j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart)) {
+    ++presents_world_;
+    wi.proj.ok = false;
+    if (j.proj_taken && (apart || !j.f.cursor2d.empty())) wi.proj = std::move(j.proj);
+    wi.cam = j.cam;
+    if (j.use) wi.hud = std::move(j.f);
+    wi.hud_none = j.hud_none;
+    if (!wi.hud.empty()) ++presents_layered_;  // P9B
+  }
+  wi.cam.t_ns = j.t_ns;  // P12A fix 1: the present's time
+  if (j.smooth_objects && !wi.empty() && j.scene_slot) wi.hr_scene = *j.scene_slot;  // P12A fix 2: the queue's draws (taken by its op)
+  if (j.check) {  // SG_P15_CHECK: the same present's image made at the present as without the world thread
+    const uint64_t d = wi_digest(wi);
+    ++wts_.check_frames;
+    if (d != j.check_digest) {
+      if (!wts_.check_diff) std::fprintf(stderr, "P15A check: present %u differs\n", j.index);
+      ++wts_.check_diff;
+    }
+  }
+  if (j.text) wi.text = std::move(j.tf);
+  {
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    if (j.seq <= shown_seq_) {
+      ++wts_.stale;
+      return;
+    }
+    shown_seq_ = j.seq;
+    frame_world_ = std::move(wi);
+    frame_slot_ = std::move(j.show);
+    frame_index_ = j.index;
+    frame_cursor_ = Point{j.fc_x, j.fc_y};
+    frame_band_ = j.band;
+    frame_waiting_ = true;
+    ++wts_.published;
+  }
+  void *h;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    h = hwnd_;
+  }
+  if (h) PostMessageW(static_cast<HWND>(h), kMsgPresent, 0, 0);
+}
+
+std::string LiveSession::world_thread_json() const {
+  const WorldThreadStats &s = wts_;
+  return "{\"on\":" + std::string(opt_.world_thread ? "true" : "false") + ",\"jobs\":" + std::to_string(s.jobs) +
+         ",\"captures\":" + std::to_string(s.captures) + ",\"published\":" + std::to_string(s.published) + ",\"stale\":" +
+         std::to_string(s.stale) + ",\"merged\":" + std::to_string(s.merged) + ",\"merged_captures\":" + std::to_string(s.merged_captures) +
+         ",\"root_copies\":" + std::to_string(s.root_copies) + ",\"root_reused\":" + std::to_string(s.root_reused) +
+         ",\"job_ms_mean\":" + std::to_string(s.jobs ? s.job_ns / 1e6 / static_cast<double>(s.jobs) : 0.0) +
+         ",\"job_ms_max\":" + std::to_string(s.job_max_ns / 1e6) + ",\"submit_ms_total\":" + std::to_string(s.submit_ns / 1e6) +
+         ",\"check_frames\":" + std::to_string(s.check_frames) + ",\"check_diff\":" + std::to_string(s.check_diff) + "}";
 }
 
 void LiveSession::recycle_world(WorldImage &&w) {  // P10A
@@ -881,11 +1148,13 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   ++opportunities_[ki];
   const bool was_pending = r_pending_;
   if (kind != 'r') r_pending_ = false;
+  portsim::PerfDetailScope pd_dump(portsim::kPdCapDump);  // P15A
   if (!reg_call(ctx, "gfx.dump", 0)) return;
   const int64_t n = ctx.files_ptr ? ctx.files().size("$gfx/back.555") : -1;
   if (n != static_cast<int64_t>(kLogicalW) * kLogicalH * 2) return;
   std::vector<uint16_t> px(static_cast<size_t>(n / 2));
   ctx.files().read("$gfx/back.555", 0, px.data(), static_cast<uint64_t>(n));
+  pd_dump.stop();  // P15A
   if (px == last_presented_) return;
   ++made_[ki];
   if (kind == 'r') {
@@ -901,6 +1170,120 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   last_presented_ = px;
   const uint32_t index = static_cast<uint32_t>(presents_.size());
   presents_.push_back({index, mark, frame_, records_, kind, frame_hash(px)});
+  if (opt_.world_thread && world_thr_.joinable()) {  // P15A: the world image made on the world thread (HostOptions::world_thread)
+    const int64_t s0 = portsim::perf_now_ns();
+    auto j = std::make_shared<WorldJob>();
+    j->hr = portsim::gfx_hr_take_job();
+    portsim::GfxTextFrame tf;  // P9C
+    const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
+    portsim::LiveTerrain *live = opt_.world && terrain_log ? terrain_log->live : nullptr;
+    const portsim::LiveTerrainWorld *w = live ? live->world() : nullptr;
+    if (w && portsim::gfx_hr_check_on()) {  // SG_P15_CHECK: the image as the present made it before (the frame thread ran the hr ops too)
+      WorldImage ck;
+      make_world_image(*live, ctx, px, opt_.hud_layers, ck, text ? &tf : nullptr, opt_.cursor_previews,
+                       opt_.cursor_previews && opt_.cursor_live, opt_.smooth_camera);
+      if (opt_.smooth_objects && !ck.empty()) ck.hr_scene = portsim::gfx_hr_scene(ctx);
+      j->check = true;
+      j->check_digest = wi_digest(ck);
+    }
+    if (w) {  // make_world_image's inputs from the GameState and the gfx backend, read here (sim thread)
+      j->capture = true;
+      j->terrain = portsim::gfx_back_terrain(ctx);
+      j->layered = opt_.hud_layers;
+      j->use = opt_.hud_layers && portsim::gfx_hud_frame(ctx, j->f) && !j->f.empty() && j->f.back == px;
+      if (!j->use) j->f = portsim::GfxHudFrame{};
+      j->cursor = opt_.cursor_previews;
+      const bool proj = opt_.cursor_previews && opt_.cursor_live;
+      if (proj && j->use) {  // taken whenever it may be attached (the world thread attaches it as make_world_image would)
+        take_proj(ctx, j->proj, opt_.smooth_camera);
+        j->proj_taken = true;
+      }
+      j->cam = take_cam(ctx, j->use);
+      if (j->use) layer_log(j->f);
+      j->hud_none = opt_.hud_layers && !j->use && portsim::gfx_hud_modal(ctx);  // P9D
+      j->smooth_objects = opt_.smooth_objects;
+      uint64_t gen = 0;
+      std::shared_ptr<const std::vector<uint16_t>> r = portsim::gfx_hr_job_root(*j->hr, gen);
+      if (r && gen == w->gen) {
+        j->root = std::move(r);
+        ++wts_.root_reused;
+      } else if (last_root_ && last_root_gen_ == w->gen) {
+        j->root = last_root_;
+        ++wts_.root_reused;
+      } else {
+        j->root = std::make_shared<const std::vector<uint16_t>>(w->raster->pixels());
+        ++wts_.root_copies;
+      }
+      last_root_ = j->root;
+      last_root_gen_ = w->gen;
+      copy_world_planes(*w, j->planes);
+      j->px = px;
+      // the hr scene is taken where make_world_image's present would take it (world_frame gives a picture: the same tests), as an
+      // op in the job's order, so a merged job takes it too and the draws after it are not added (gfx_hr_scene's pub_taken)
+      if (opt_.smooth_objects && !w->names_differ && w->valid && j->terrain &&
+          (j->use ? j->f.base.size() : px.size()) == w->terrain800.size()) {
+        j->scene_slot = std::make_shared<std::shared_ptr<const portsim::GfxHrScene>>();
+        portsim::gfx_hr_job_add_take(*j->hr, j->scene_slot);
+      }
+    }
+    j->t_ns = portsim::perf_now_ns();
+    if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
+      if (text) last_text_ = tf;
+      else last_text_ = portsim::GfxTextFrame{};
+    }
+    if (text) {
+      ++presents_text_;
+      text_runs_ += tf.runs.size();
+    }
+    BandFill band = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
+    if (!in_game_ && world_map_ && opt_.map_bands) {  // P13B item 18
+      band = BandFill::ExtendClamp;
+      ++presents_map_;
+    }
+    ++(in_game_ ? presents_black_ : presents_extend_);
+    bool direct = false;
+    {
+      std::lock_guard<std::mutex> lk(frame_mu_);
+      j->seq = ++present_seq_;
+      last_band_ = band;  // P10C fix 1
+      last_index_ = index;
+      if (!j->capture) {  // no world layer: published here, as before
+        WorldImage wi = std::move(spare_world_);
+        spare_world_ = WorldImage{};
+        world_reset(wi);
+        wi.cam.t_ns = j->t_ns;
+        if (text) wi.text = std::move(tf);
+        frame_world_ = std::move(wi);
+        frame_slot_ = std::move(show);
+        frame_index_ = index;
+        frame_cursor_ = fc;  // P10I fix 2
+        frame_band_ = band;
+        frame_waiting_ = true;
+        shown_seq_ = j->seq;
+        direct = true;
+      }
+    }
+    if (j->capture) {
+      j->text = text;
+      j->tf = std::move(tf);
+      j->show = std::move(show);
+      j->index = index;
+      j->fc_x = fc.x;
+      j->fc_y = fc.y;
+      j->band = band;
+    }
+    submit_world(std::move(j));
+    wts_.submit_ns += portsim::perf_now_ns() - s0;
+    if (direct) {
+      void *h;
+      {
+        std::lock_guard<std::mutex> lk(mu_);
+        h = hwnd_;
+      }
+      if (h) PostMessageW(static_cast<HWND>(h), kMsgPresent, 0, 0);
+    }
+    return;
+  }
   WorldImage wi;  // P8B: the world layer under this frame (none without HostOptions::world or before the first terrain pass)
   {  // P10A: the buffers of a world image the window is done with (new pages for 2 to 4 MB planes cost more than filling them)
     std::lock_guard<std::mutex> lk(frame_mu_);
@@ -909,7 +1292,9 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   }
   world_reset(wi);
   portsim::GfxTextFrame tf;  // P9C
+  portsim::PerfDetailScope pd_text(portsim::kPdCapText);  // P15A
   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
+  pd_text.stop();
   if (opt_.world && terrain_log && terrain_log->live)
     if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews,
                          opt_.cursor_previews && opt_.cursor_live, opt_.smooth_camera)) {  // P10E; P12A
@@ -917,7 +1302,10 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
   wi.cam.t_ns = portsim::perf_now_ns();  // P12A fix 1: the present's time (the presenter's game frame period)
-  if (opt_.smooth_objects && !wi.empty()) wi.hr_scene = portsim::gfx_hr_scene(ctx);  // P12A fix 2: the queue's draws
+  if (opt_.smooth_objects && !wi.empty()) {
+    const portsim::PerfDetailScope pd(portsim::kPdCapHrScene);  // P15A
+    wi.hr_scene = portsim::gfx_hr_scene(ctx);  // P12A fix 2: the queue's draws
+  }
   if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
     if (text) last_text_ = tf;
     else last_text_ = portsim::GfxTextFrame{};
@@ -1420,7 +1808,9 @@ LiveSession::Result LiveSession::run(portsim::Ctx &ctx) {
   RecordStreams streams;  // S7.8 (U-1643)
   if (!opt_.in_memory) streams.open(rec_, o);
   memory.sample(0, terrain_log ? terrain_log->length() : 0);
+  if (opt_.world_thread) world_start();  // P15A
   r.code = run_guarded(&ctx, this, &o, &r.live, &r.detail);
+  world_stop();  // P15A: the last job done (its picture may still be posted)
   memory.sample(frame_, terrain_log ? terrain_log->length() : 0);
   if (terrain_log) {
     tlog_calls_ = static_cast<int64_t>(terrain_log->calls());

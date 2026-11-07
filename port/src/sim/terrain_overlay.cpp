@@ -17,6 +17,7 @@
 
 #include "gfx_body.h"
 #include "portsim/arith.h"
+#include "portsim/sim/perf.h"  // P15A: detail counters
 #include "portsim/ptr.h"
 #include "portsim/sim/bridge.h"
 #include "portsim/sim/gl_raster.h"
@@ -297,6 +298,7 @@ void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1
                        int32_t alpha, const std::vector<uint16_t> &before) {
   std::vector<uint16_t> &px = w.raster->pixels();
   if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
+  ++w.gen;  // P15A
   const double s = static_cast<double>(w.ph) / 600.0, kx = static_cast<double>(w.fw) / 800.0;
   auto wy = [&](int32_t y) { return (gl.flip_y ? static_cast<double>(y) : static_cast<double>(gl.screen_h - y)) * s; };
   const double ax = w.ox + x1 * kx, ay = wy(y1), bx = w.ox + x2 * kx, by = wy(y2);
@@ -379,7 +381,10 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
                       (gl.context || mode() == 9) && mode() != 14;
   if (rec || mirror) before = g.root.px;
   draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha);
-  if (mirror) mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before);   // gl.line_width: this call's
+  if (mirror) {
+    const PerfDetailScope pd(kPdLines);  // P15A
+    mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before);   // gl.line_width: this call's
+  }
   if (rec && before.size() == g.root.px.size()) {
     Gfx::HudCapture &c = g.hud;
     if (c.line800.size() != before.size()) {
