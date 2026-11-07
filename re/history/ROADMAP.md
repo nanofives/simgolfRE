@@ -1108,3 +1108,18 @@ at a client <= 1920x1200, else 30). Fix 3 (9eda579b): edge band fill on the pain
 4K 52.9, was 74); a GPU path for flat 2D screens is pixel-exact but costs more CPU, kept off (SG_P14_FLAT=1). Open: object
 redraw and half-bright strip text are still CPU work, GPU draw time 2-6 ms unexplained (U-P14A-01), the 4K scroll sim cost
 (4-8 frames/s, both paths) is on the sim thread.
+
+## P15: the frame-rate work after P14 (2026-11-07)
+Brief log/roadmap/P15/BRIEF.md, three parallel workers (Mariano: items 1-3 in parallel), notes log/roadmap/P15/P15{A,B,C}_notes.md.
+All app-side changes off with SG_APP_P15=off (port/test/conftest.py). Measured with the 4K display at 60 Hz (it was 120 Hz for P14).
+P15B (439f79f2, cff17148): GDI's glyph blend depends on each channel under it alone (probe: 2700 cases, 0 of 11.8 M ink pixels
+mispredicted), so HUD text runs and the FPS overlay are drawn once per level (TextRaster::table) and blended in the GPU's HUD pass; a
+slide paint does no GDI text work (final-patch CPU 2.6 -> 0.13 ms at 1080, 6.5 -> 0.63 at 4K). P15A (8842d954, 7bbcf3dd, 12987362):
+a world thread builds the window's world image from one job per present (the sim never waits; latest job wins); the world rasteriser
+on the hardware threads; equal-surface copies skipped; then (Mariano chose option B) the world raster pass itself recorded and
+replayed on the world thread, the sim keeping a row-masked rasteriser for the wide scene's side columns (--world-raster-thread).
+4K edge scroll game frames/s 4.25-5.74 -> 10.8-11.0 at every zoom; world pictures/s at 4K edge 6-8 (z2 / z4), 8-9 (z8). P15C
+(9e8dcfba, 1c910737): the moving objects drawn by a GPU compute pass (render-only sim export gfx_hr_scene_tables / gpu_op), objects
+every refresh at any size with --object-rate auto (4K paints/s idle 33 -> 60); two defects fixed (edge-filtered movers never moved
+between frames; still labels' course patches kept stale pixels). Every fix: A/B 0 differing pixels, segments x64 = I25 where the sim
+side changed. Open: 120 Hz numbers, U-P15C-01 (GPU double precision confirmed only on the RTX 3070), U-P14A-01.
