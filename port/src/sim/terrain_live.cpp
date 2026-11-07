@@ -194,7 +194,7 @@ void world_geometry(LiveTerrainWorld &w, int32_t pw, int32_t ph) {
   w.raster->set_clip_x(static_cast<float>(static_cast<double>(pw) / static_cast<double>(w.fw)));
   // the dither phase of the frame's own columns (window x - ox): exact at render scale 1; any scale keeps a 4x4 matrix
   w.raster->set_dither_dx(-w.ox);
-  w.back.assign(static_cast<size_t>(pw) * static_cast<size_t>(ph), 0);
+  w.back = std::make_shared<const std::vector<uint16_t>>(static_cast<size_t>(pw) * static_cast<size_t>(ph), uint16_t{0});
 }
 }  // namespace
 

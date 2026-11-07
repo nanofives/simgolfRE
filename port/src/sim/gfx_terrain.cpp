@@ -69,6 +69,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>  // P15A fix 2: strcmp
 #include <string>
 #include <thread>
 #include <vector>
@@ -125,6 +126,30 @@ int raster_threads() {
   }();
   return n;
 }
+// P15A fix 2 (log/roadmap/P15/P15A_notes.md): the world layer's rasteriser (the window's pixels: 8 M at 3840 x 2108) gets every
+// hardware thread but two while the frame thread waits for its pass: SG_WORLD_RASTER_THREADS=<n> to choose, else
+// max(raster_threads(), hardware threads - 2), at most 16. The frame is the same for every count (gl_raster.h set_threads).
+// P15A fix 2: a skipped world copy counted, and with SG_P15_SKIP_CHECK=1 (development) its two surfaces compared
+void skip_note(LiveTerrainWorld &w) {
+  ++w.copies_skipped;
+  static const bool chk = std::getenv("SG_P15_SKIP_CHECK") && std::getenv("SG_P15_SKIP_CHECK")[0] == '1';
+  if (!chk) return;
+  ++w.skip_checked;
+  if (!w.back || *w.back != w.raster->pixels()) ++w.skip_differing;
+}
+// SG_WORLD_RASTER_PRIO=feeder (development): the world rasteriser's workers at the frame thread's priority as before, not normal
+bool world_raster_normal() {
+  static const bool on = !(std::getenv("SG_WORLD_RASTER_PRIO") && !std::strcmp(std::getenv("SG_WORLD_RASTER_PRIO"), "feeder"));
+  return on;
+}
+int world_raster_threads() {
+  static const int n = [] {
+    if (const char *e = std::getenv("SG_WORLD_RASTER_THREADS")) return std::atoi(e) > 1 ? std::atoi(e) : 1;
+    const int hw = static_cast<int>(std::thread::hardware_concurrency()) - 2;
+    return std::max(raster_threads(), std::min(16, hw));
+  }();
+  return n;
+}
 
 // ---- P8B: the world layer (terrain_live.h LiveTerrainWorld; log/roadmap/P8/P8B_notes.md). Each terrain operation of the 800 x 600
 // root surface is mirrored on the world's surfaces, and T (the frame's terrain picture) follows the root surface:
@@ -164,7 +189,10 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
   }
   PerfDetailScope pd_render(kPdWorldRender);  // P15A
   gl::GlRaster &r = *w.raster;
-  if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+  if (const int nt = world_raster_threads(); r.threads() != nt) {  // P15A fix 2
+    r.set_workers_normal(world_raster_normal());
+    r.set_threads(nt);
+  }
   TerrainGlobals &tg = lt.globals();
   const int32_t view = tg.view_index;
   r.set_arrays(tg.vertices.data(), tg.vertices.size() / 3, tg.normals.data(), tg.normals.size() / 3);
@@ -326,7 +354,12 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     v.back_terrain = g.root_terrain;
     if (world) {
       const PerfDetailScope pd(kPdWorldCopy);  // P15A
-      world->back = world->raster->pixels();
+      // P15A fix 2: no copy when back already equals the root (no root change since they were made equal)
+      if (world->back_gen != world->gen || !world->back || world->back->size() != world->raster->pixels().size())
+        world->back = std::make_shared<const std::vector<uint16_t>>(world->raster->pixels());
+      else
+        skip_note(*world);
+      world->back_gen = world->gen;
     }
     return;
   }
@@ -340,9 +373,15 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.hud_pieces_reset();  // P9E: and its popups
   if (world) {
     const PerfDetailScope pd(kPdWorldCopy);  // P15A
-    if (world->strip_full) world->strip_full = false;
-    else world->raster->pixels() = world->back;
-    ++world->gen;  // P15A
+    if (world->strip_full) {
+      world->strip_full = false;
+    } else if (world->back_gen != world->gen || !world->back || world->back->size() != world->raster->pixels().size()) {  // P15A fix 2: else equal
+      if (world->back) world->raster->pixels() = *world->back;
+      ++world->gen;  // P15A
+      world->back_gen = world->gen;
+    } else {
+      skip_note(*world);
+    }
     world->terrain800 = g.root.px;
     world->lines_open = true;  // P13D item 7
     world_check(*world);
@@ -364,7 +403,10 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (!w || !w->dirty || !w->has_last) return;
   const PerfDetailScope pd(kPdWorldCopy);  // P15A
   gl::GlRaster &r = *w->raster;
-  if (const int nt = raster_threads(); r.threads() != nt) r.set_threads(nt);
+  if (const int nt = world_raster_threads(); r.threads() != nt) {  // P15A fix 2
+    r.set_workers_normal(world_raster_normal());
+    r.set_threads(nt);
+  }
   TerrainGlobals &tg = lt->globals();
   const int32_t view = tg.view_index;
   r.set_arrays(tg.vertices.data(), tg.vertices.size() / 3, tg.normals.data(), tg.normals.size() / 3);
@@ -375,8 +417,9 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   terrain_render_set_cull_margin(0);
   r.finish();
   tg.view_index = view;
-  w->back = r.pixels();
+  w->back = std::make_shared<const std::vector<uint16_t>>(r.pixels());
   ++w->gen;  // P15A
+  w->back_gen = w->gen;  // P15A fix 2
   w->dirty = false;
   w->valid = true;
   ++w->redraws;

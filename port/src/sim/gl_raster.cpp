@@ -1139,7 +1139,8 @@ void GlRaster::set_threads(int n) {
   for (int k = 0; k < n; ++k) p.done[k].store(0);
   p.counters.assign(static_cast<size_t>(n), {0, 0, 0});
 #ifdef _WIN32
-  const int prio = GetThreadPriority(GetCurrentThread());   // the workers run at the priority of the thread that feeds them
+  // the workers run at the priority of the thread that feeds them (P15A fix 2: or normal, set_workers_normal)
+  const int prio = workers_normal_ ? THREAD_PRIORITY_NORMAL : GetThreadPriority(GetCurrentThread());
 #endif
   for (int k = 0; k < n; ++k) {
     p.threads.emplace_back([&p, k] { p.work(k); });

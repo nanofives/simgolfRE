@@ -54,7 +54,9 @@ struct LiveTerrainWorld {
   int32_t fw = 0, ox = 0;      // the 800 x 600 frame's width (= ph * 800 / 600) and left edge in world pixels
   int32_t margin = 0;          // isCulled's side margin in the frame's logical pixels
   std::unique_ptr<gl::GlRaster> raster;   // its pixels() are the world's root surface
-  std::vector<uint16_t> back;             // the world's copy of the exe's back surface
+  // the world's copy of the exe's back surface (P15A fix 2: shared and never written in place, so a copy of the root taken while
+  // the root equals it is this buffer: b_queue_begin's root for the world thread)
+  std::shared_ptr<const std::vector<uint16_t>> back;
   std::vector<uint16_t> terrain800;       // T: the 800 frame's terrain picture (the root surface after each terrain operation;
                                           // a pass updates only the pixels it changed)
   bool valid = false;          // a pass has drawn
@@ -139,6 +141,9 @@ struct LiveTerrainWorld {
   // P15A (log/roadmap/P15/P15A_notes.md): counts every change of the world root's pixels (a world pass, windowPaint's fill, the back
   // surface put back, a mirrored overlay line, a resize or its redraw), so a copy of the root taken at a count is known current
   uint64_t gen = 0;
+  // P15A fix 2: `back` equals the root since the root's count was back_gen (blit 1 / 0 copy only when it changed since)
+  uint64_t back_gen = ~0ull;
+  int64_t copies_skipped = 0, skip_checked = 0, skip_differing = 0;   // fix 2 (session.json world p15a; SG_P15_SKIP_CHECK=1 compares)
   // gate (sg_call terrainLive.worldCheck(1)): after every terrain operation of a world whose frame is 800 x 600 world pixels (render
   // scale 1), the world root's central 800 columns compared with T: operations checked, operations with a difference, pixels
   bool check_central = false;

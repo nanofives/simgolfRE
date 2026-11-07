@@ -38,6 +38,9 @@ class GlRaster : public GlSink {
   // `#threads <n>`.
   void set_threads(int n);
   int threads() const;
+  // P15A fix 2: workers started by later set_threads calls run at normal priority instead of the feeder's (the world layer's
+  // rasteriser: its many workers leave the window's paint threads their share; the pixels do not depend on it)
+  void set_workers_normal(bool on) { workers_normal_ = on; }
   void finish();
 
   int width() const { return w_; }
@@ -202,6 +205,7 @@ class GlRaster : public GlSink {
   int32_t vp_x_ = 0, vp_y_ = 0, vp_w_ = 0, vp_h_ = 0;
   float clip_kx_ = 1.0f;   // P8B: set_clip_x
   int dither_dx_ = 0;      // P8B: set_dither_dx
+  bool workers_normal_ = false;  // P15A fix 2: set_workers_normal
   // state
   bool texture2d_ = false, cull_ = false, blend_ = false, lighting_ = false, light0_ = false;
   uint32_t front_ = 0x0901;              // GL_CCW

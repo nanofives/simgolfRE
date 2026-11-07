@@ -425,6 +425,7 @@ class LiveSession : public portsim::LiveHost {
     uint64_t jobs = 0, captures = 0, published = 0, stale = 0, merged = 0, merged_captures = 0, root_copies = 0, root_reused = 0;
     int64_t job_ns = 0, job_max_ns = 0, submit_ns = 0;
     uint64_t check_frames = 0, check_diff = 0;  // SG_P15_CHECK
+    int64_t copies_skipped = 0, skip_checked = 0, skip_differing = 0;  // fix 2 (the sim's world, at the session's end)
   } wts_;  // jobs .. job_max_ns: world thread; merged, root_*, submit_ns: sim thread (read after the thread stopped)
   void world_start();
   void world_stop();

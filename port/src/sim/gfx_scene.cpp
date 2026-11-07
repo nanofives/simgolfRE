@@ -2149,7 +2149,17 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (hr_recording()) {  // P15A: the start recorded (with a copy of the world root), the planes are the world thread's
     const HrGeo geo = hr_geo(*w);
     if (w->hr_open) {
-      auto root = std::make_shared<const std::vector<uint16_t>>(wp);
+      // P15A fix 2: the last copy again while the root has not changed since (LiveTerrainWorld::gen)
+      static thread_local std::shared_ptr<const std::vector<uint16_t>> last_root;
+      static thread_local uint64_t last_gen = ~0ull;
+      static thread_local const LiveTerrainWorld *last_w = nullptr;
+      if (w->back && w->back_gen == w->gen && w->back->size() == wp.size())
+        last_root = w->back;   // the root equals back: no copy
+      else if (!last_root || last_gen != w->gen || last_w != w || last_root->size() != wp.size())
+        last_root = std::make_shared<const std::vector<uint16_t>>(wp);
+      last_gen = w->gen;
+      last_w = w;
+      auto root = last_root;
       g_hr_queue.defer_np = wp.size();
       hr_job_start([geo, root](LiveTerrainWorld &W) {
         geo.put(W);

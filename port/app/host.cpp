@@ -1057,7 +1057,9 @@ std::string LiveSession::world_thread_json() const {
          ",\"root_copies\":" + std::to_string(s.root_copies) + ",\"root_reused\":" + std::to_string(s.root_reused) +
          ",\"job_ms_mean\":" + std::to_string(s.jobs ? s.job_ns / 1e6 / static_cast<double>(s.jobs) : 0.0) +
          ",\"job_ms_max\":" + std::to_string(s.job_max_ns / 1e6) + ",\"submit_ms_total\":" + std::to_string(s.submit_ns / 1e6) +
-         ",\"check_frames\":" + std::to_string(s.check_frames) + ",\"check_diff\":" + std::to_string(s.check_diff) + "}";
+         ",\"check_frames\":" + std::to_string(s.check_frames) + ",\"check_diff\":" + std::to_string(s.check_diff) +
+         ",\"copies_skipped\":" + std::to_string(s.copies_skipped) + ",\"skip_checked\":" + std::to_string(s.skip_checked) +
+         ",\"skip_differing\":" + std::to_string(s.skip_differing) + "}";
 }
 
 void LiveSession::recycle_world(WorldImage &&w) {  // P10A
@@ -1811,6 +1813,12 @@ LiveSession::Result LiveSession::run(portsim::Ctx &ctx) {
   if (opt_.world_thread) world_start();  // P15A
   r.code = run_guarded(&ctx, this, &o, &r.live, &r.detail);
   world_stop();  // P15A: the last job done (its picture may still be posted)
+  if (terrain_log && terrain_log->live && terrain_log->live->world()) {  // P15A fix 2: the world copies skipped
+    const portsim::LiveTerrainWorld &w = *terrain_log->live->world();
+    wts_.copies_skipped = w.copies_skipped;
+    wts_.skip_checked = w.skip_checked;
+    wts_.skip_differing = w.skip_differing;
+  }
   memory.sample(frame_, terrain_log ? terrain_log->length() : 0);
   if (terrain_log) {
     tlog_calls_ = static_cast<int64_t>(terrain_log->calls());
