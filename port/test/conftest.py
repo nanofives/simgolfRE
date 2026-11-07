@@ -61,7 +61,7 @@ def pytest_configure(config):
     # path's GDI picture (a flip-model swap chain's picture is not in the window DC)
     os.environ.setdefault("SG_APP_P14", "off")
     # P15: the frame-rate work after P14 is off for the app tests too (P15B: the HUD text runs as tables on the GPU path;
-    # P15A: the world thread, the world image made off the sim thread)
+    # P15A: the world thread, the world image made off the sim thread; P15C: the moving objects drawn by the GPU)
     os.environ.setdefault("SG_APP_P15", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

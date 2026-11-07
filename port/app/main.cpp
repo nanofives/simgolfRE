@@ -110,6 +110,9 @@
 //   SG_P14_VERIFY=<n>: every n-th paint also runs the CPU path and compares (session.json p14; SG_P14_VERIFY_DIR=<dir> keeps the first
 //   differing pictures). SG_P14_SHOT=<dir>: the registered message `SimGolfPort.P14Shot` (wParam n) writes the next presented
 //   picture to <dir>/shot_<n>.bmp (a flip-model window's picture is not in its window DC).
+//   P15C: --gpu-objects on|off (default on; SG_APP_P15=off: off) with the GPU path, the moving objects between game frames are drawn by
+//   the GPU (a compute pass running gfx_hr_scene_redraw's per-pixel rules; present.h set_gpu_objects); the CPU world image gets them
+//   only where a CPU render reads it. off (or a GPU without the extended double-precision shader ops) = P12A's CPU redraw.
 //   P11D: --undo-keys on|off (default on; SG_APP_P11=off: off) Ctrl+Z undoes the newest course edit step (the edits of one left
 //   press) through the game's own right-click undo (demolishObject: the previous content back, the price refunded); taken only
 //   with the profile's play switch mainLoop.courseUndo = 0 (`play`), written as a recorded harness write (host.h request_undo).
@@ -438,6 +441,7 @@ struct Options {
   bool smooth_objects = true;      // P12A fix 2: --smooth-objects on|off (SG_APP_P12=off: off)
   int object_rate = -1;            // P12A fix 3: --object-rate <hz> (0 = every pacer tick); P14A fix 2: -1 = auto (the default)
   bool gpu = true;                 // P14A: --gpu on|off (SG_APP_P14=off: off)
+  bool gpu_objects = true;         // P15C: --gpu-objects on|off (SG_APP_P15=off: off)
   bool world_thread = true;        // P15A: --world-thread on|off (SG_APP_P15=off: off)
   bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
@@ -1458,6 +1462,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   presenter.set_smooth_objects(ho.smooth_objects);  // P12A fix 2
   if (o.object_rate < 0) presenter.set_object_rate_auto();  // P14A fix 2
   else presenter.set_object_rate(o.object_rate);         // P12A fix 3
+  presenter.set_gpu_objects(o.gpu_objects);               // P15C
   Profiler::get().set_fps_changed(smooth_camera || ho.smooth_objects);
   WindowOptions wo;
   wo.remap = ho.remap;  // G32
@@ -1797,6 +1802,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   Profiler::get().close_csv();
   s += ",\"p14\":" + presenter.gpu_json();  // P14A
+  s += ",\"p15c_objects\":" + presenter.objects_json();  // P15C
   s += ",\"p15\":" + session.world_thread_json();  // P15A
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
@@ -3068,6 +3074,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.gpu = v == "on";
     }
+    else if (a == "--gpu-objects") {  // P15C
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.gpu_objects = v == "on";
+    }
     else if (a == "--world-thread") {  // P15A
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.world_thread = v == "on";
@@ -3267,8 +3277,11 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.gpu = false;  // P14A
-  if (const char *ep = std::getenv("SG_APP_P15"))  // P15: the world thread off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.world_thread = false;  // P15A
+  if (const char *ep = std::getenv("SG_APP_P15"))  // P15: the world thread and the GPU's moving objects off (port/test/conftest.py)
+    if (!std::strcmp(ep, "off")) {
+      o.world_thread = false;  // P15A
+      o.gpu_objects = false;   // P15C
+    }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

@@ -364,6 +364,226 @@ float4 PSQuadF(QV i) : SV_Target {
 }
 )HLSL";
 
+const char kHlslObj[] = R"HLSL(
+// ---- P15C (log/roadmap/P15/P15C_notes.md): the moving objects, gfx_hr_scene_redraw's per-pixel work (gfx_scene.cpp hr_blit_rows and
+// the five ops' bodies) on the tick's rectangles. The sample placement (texel columns / rows and their weights, double arithmetic) comes
+// from gfx_hr_scene_tables on the CPU; what is done here per pixel is the ops' integer arithmetic and hr_blit_rows' sums in the same
+// order: the bilinear sums in uint, the sharp sums in double (precise: no reordering, no fused multiply-add), the final scale
+// c * inv + 0.5 truncated as static_cast<uint32_t> does.
+struct OOp { uint kind; uint art_off; uint art_w; uint pal_off; uint lut_off; uint lut_n; uint plane_k; uint flag; uint colour; uint steps_off; uint nsteps; uint pad; };
+struct ORec { uint op; int nsx; int nsy; int filter; uint inv_lo; uint inv_hi; int x0; int y0; int x1; int y1; uint col_off; uint row_off; };
+struct OReg { int x0; int y0; int x1; int y1; uint m_off; uint m_n; uint s_off; uint s_n; };
+StructuredBuffer<OReg> oregs : register(t0);
+StructuredBuffer<ORec> orecs : register(t1);
+StructuredBuffer<OOp> oops : register(t2);
+StructuredBuffer<int4> ocols : register(t3);
+StructuredBuffer<int4> orows : register(t4);
+StructuredBuffer<uint> olist : register(t5);
+Buffer<uint> oart : register(t6);
+Buffer<uint> opal : register(t7);
+Buffer<uint> olut : register(t8);
+Buffer<uint> oplanes : register(t9);
+StructuredBuffer<uint4> osteps : register(t10);
+Texture2D<uint> obase : register(t11);
+Texture2D<uint> oworld0 : register(t12);
+RWTexture2D<uint> oworld : register(u0);
+
+// one op over word w with payload c (put: the low 16 bits)
+uint op_apply(OOp o, uint c, uint w) {
+  if (o.kind == 1u) {  // PlaneOp (draw16_100298b0)
+    if (c >= 0xffu) return w;
+    if (c < 0xf8u) return opal[o.pal_off + c] & 0xffffu;
+    uint k = (c - 0xf8u) + o.plane_k;
+    uint idx = (k << 15) | w;
+    if (idx >= 5u * 0x8000u) return w;
+    return oplanes[idx] & 0xffffu;
+  }
+  if (o.kind == 2u) {  // ShadeOp (draw16_10028630)
+    if (c >= 0xffu) return w;
+    if (c == 0xf8u) {
+      if (w >= o.lut_n) return w;
+      return olut[o.lut_off + w] & 0xffffu;
+    }
+    return opal[o.pal_off + c] & 0xffffu;
+  }
+  if (o.kind == 3u) {  // AlphaOp: the body's program over P (palette word) and D (destination word)
+    if (c >= 0xffu) return w;
+    if (o.flag != 0u && c >= 0xf8u) return w;
+    uint P = opal[o.pal_off + c];
+    uint r[5] = {0u, 0u, 0u, 0u, 0u};
+    for (uint k = 0u; k < o.nsteps; ++k) {
+      uint4 st = osteps[o.steps_off + k];
+      uint v = st.w;
+      if (st.z == 0u) v = r[min(st.w, 4u)];
+      else if (st.z == 2u) v = P;
+      else if (st.z == 3u) v = w;
+      uint dst = min(st.y, 4u);
+      uint dv = r[dst];
+      if (st.x == 0u) dv = v;
+      else if (st.x == 1u) dv = dv << (v & 31u);
+      else if (st.x == 2u) dv = dv >> (v & 31u);
+      else if (st.x == 3u) dv = dv & v;
+      else if (st.x == 4u) dv = dv + v;
+      else dv = dv - v;
+      r[dst] = dv;
+    }
+    return r[0] & 0xffffu;
+  }
+  if (o.kind == 4u) {  // ColourOp (draw16_10024140)
+    if (c >= 0xf8u) return w;
+    uint p = opal[o.pal_off + c];
+    uint k = (((((p & 0x7c00u) >> 7) + ((p & 0x3e0u) >> 1) + ((p & 0x1fu) << 3)) & 0xffffu) >> 2) & 0xffu;
+    uint cb = ((o.colour & 0x1fu) * k) >> 8, cg = (((o.colour & 0x3e0u) >> 5) * k) >> 8, cr = (((o.colour & 0x7c00u) >> 10) * k) >> 8;
+    return (cb | (cg << 5) | (cr << 10)) & 0xffffu;
+  }
+  if (o.kind == 5u) {  // DrawBOp (draw16_1001bc40)
+    if (c >= 0xfeu) return w;
+    return opal[o.pal_off + c] & 0xffffu;
+  }
+  return w;
+}
+uint texel(OOp o, int row, int col) {
+  if (row < 0 || col < 0) return 0xffu;
+  return oart[o.art_off + (uint)row * o.art_w + (uint)col] & 0xffu;
+}
+uint chan(uint v, uint sh) { return (v >> sh) & 31u; }
+uint fin(double c, double inv) {  // min(31, static_cast<uint32_t>(c * inv + 0.5))
+  precise double m = c * inv;
+  precise double v = m + 0.5;
+  return min(31u, (uint)v);
+}
+// hr_blit_rows for one pixel (X, Y) of draw R over word d; true = written (the cover)
+bool blit(ORec R, int X, int Y, inout uint d) {
+  OOp o = oops[R.op];
+  int nsx = R.nsx, nsy = R.nsy;
+  int4 rw[4];
+  bool rows = false;
+  [loop] for (int sj0 = 0; sj0 < nsy; ++sj0) {
+    rw[sj0] = orows[R.row_off + (uint)((Y - R.y0) * nsy + sj0)];
+    rows = rows || rw[sj0].x >= 0 || rw[sj0].y >= 0;
+  }
+  if (!rows) return false;
+  uint dd = d;
+  uint r = 0u, gg = 0u, b = 0u;
+  precise double rs = 0.0, gs = 0.0, bs = 0.0;
+  bool any = false;
+  [loop] for (int sj = 0; sj < nsy; ++sj) {
+    uint bv = (uint)rw[sj].z;
+    [loop] for (int si = 0; si < nsx; ++si) {
+      int4 cl = ocols[R.col_off + (uint)((X - R.x0) * nsx + si)];
+      uint bu = (uint)cl.z;
+      uint c[4];
+      c[0] = texel(o, rw[sj].x, cl.x);
+      c[1] = texel(o, rw[sj].x, cl.y);
+      c[2] = texel(o, rw[sj].y, cl.x);
+      c[3] = texel(o, rw[sj].y, cl.y);
+      if (c[0] == c[1] && c[0] == c[2] && c[0] == c[3]) {
+        uint res = dd;
+        if (c[0] != 0xffu) {
+          res = op_apply(o, c[0], dd);
+          if (res != dd) any = true;
+        }
+        r += 65536u * chan(res, 10u);
+        gg += 65536u * chan(res, 5u);
+        b += 65536u * chan(res, 0u);
+        continue;
+      }
+      uint wt[4] = {(256u - bu) * (256u - bv), bu * (256u - bv), (256u - bu) * bv, bu * bv};
+      if (R.filter != 0) {
+        uint su = (uint)cl.w, sb = (uint)rw[sj].w;
+        uint ws[4] = {(256u - su) * (256u - sb), su * (256u - sb), (256u - su) * sb, su * sb};
+        uint res4[4];
+        uint cov = 0u, sws = 0u;
+        [unroll] for (int k = 0; k < 4; ++k) {
+          res4[k] = dd;
+          if (c[k] != 0xffu) {
+            res4[k] = op_apply(o, c[k], dd);
+            if (res4[k] != dd) any = true;
+            cov += wt[k];
+            sws += ws[k];
+          }
+        }
+        bool usewt = R.filter == 1 && sws == 0u;
+        precise double kk = 1.0;
+        if (R.filter != 2) {
+          uint den = sws != 0u ? sws : (cov != 0u ? cov : 1u);
+          kk = (double)cov / (double)den;
+        }
+        precise double rest = 65536.0;
+        [unroll] for (int k2 = 0; k2 < 4; ++k2) {
+          if (c[k2] == 0xffu) continue;
+          precise double e = kk * (double)(usewt ? wt[k2] : ws[k2]);
+          rest = rest - e;
+          rs = rs + e * (double)chan(res4[k2], 10u);
+          gs = gs + e * (double)chan(res4[k2], 5u);
+          bs = bs + e * (double)chan(res4[k2], 0u);
+        }
+        rs = rs + rest * (double)chan(dd, 10u);
+        gs = gs + rest * (double)chan(dd, 5u);
+        bs = bs + rest * (double)chan(dd, 0u);
+        continue;
+      }
+      [unroll] for (int k3 = 0; k3 < 4; ++k3) {
+        uint res = dd;
+        if (c[k3] != 0xffu && wt[k3] != 0u) {
+          res = op_apply(o, c[k3], dd);
+          if (res != dd) any = true;
+        }
+        r += wt[k3] * chan(res, 10u);
+        gg += wt[k3] * chan(res, 5u);
+        b += wt[k3] * chan(res, 0u);
+      }
+    }
+  }
+  if (!any) return false;
+  precise double inv = asdouble(R.inv_lo, R.inv_hi);
+  if (R.filter != 0) {
+    precise double tr = (double)r + rs;
+    precise double tg = (double)gg + gs;
+    precise double tb = (double)b + bs;
+    d = (fin(tr, inv) << 10) | (fin(tg, inv) << 5) | fin(tb, inv);
+  } else {
+    d = (fin((double)r, inv) << 10) | (fin((double)gg, inv) << 5) | fin((double)b, inv);
+  }
+  return true;
+}
+// one thread per pixel of region gid.z: the moved pass (the tick's offsets) and the frame's pass (where the frame's draws covered);
+// objects_tick's rule: no draw before or after keeps the frame's pixel
+[numthreads(8, 8, 1)]
+void CSObj(uint3 gid : SV_GroupID, uint3 tid : SV_GroupThreadID) {
+  OReg g = oregs[gid.z];
+  int X = g.x0 + (int)(gid.x * 8u + tid.x), Y = g.y0 + (int)(gid.y * 8u + tid.y);
+  if (X >= g.x1 || Y >= g.y1) return;
+  uint d = obase.Load(int3(X, Y, 0)) & 0xffffu, d0 = d;
+  bool cm = false, cs = false;
+  [loop] for (uint i = 0u; i < g.m_n; ++i) {
+    ORec R = orecs[olist[g.m_off + i]];
+    if (X < R.x0 || X >= R.x1 || Y < R.y0 || Y >= R.y1) continue;
+    if (blit(R, X, Y, d)) cm = true;
+  }
+  [loop] for (uint j = 0u; j < g.s_n; ++j) {
+    ORec R = orecs[olist[g.s_off + j]];
+    if (X < R.x0 || X >= R.x1 || Y < R.y0 || Y >= R.y1) continue;
+    if (blit(R, X, Y, d0)) cs = true;
+  }
+  oworld[int2(X, Y)] = (cm || cs) ? d : (oworld0.Load(int3(X, Y, 0)) & 0xffffu);
+}
+)HLSL";
+struct OOpRec {  // kHlslObj OOp
+  uint32_t kind, art_off, art_w, pal_off, lut_off, lut_n, plane_k, flag, colour, steps_off, nsteps, pad;
+};
+struct ORecRec {  // kHlslObj ORec
+  uint32_t op;
+  int32_t nsx, nsy, filter;
+  uint32_t inv_lo, inv_hi;
+  int32_t x0, y0, x1, y1;
+  uint32_t col_off, row_off;
+};
+struct ORegRec {  // kHlslObj OReg
+  int32_t x0, y0, x1, y1;
+  uint32_t m_off, m_n, s_off, s_n;
+};
+
 // the constant buffers (the HLSL's order; 16-byte rows)
 struct GpuCB {
   int32_t cw, ch, vpx, vpy;
@@ -447,6 +667,17 @@ struct Tex {
     rel(srv);
     rel(t);
     w = h = 0;
+  }
+};
+// P15C: a typed buffer (Buffer<uint> over R8_UINT / R16_UINT elements), grown by appending
+struct TBuf {
+  ID3D11Buffer *b = nullptr;
+  ID3D11ShaderResourceView *srv = nullptr;
+  uint32_t cap = 0, n = 0;  // elements: the buffer's, uploaded
+  void reset() {
+    rel(srv);
+    rel(b);
+    cap = n = 0;
   }
 };
 struct SBuf {
@@ -568,6 +799,40 @@ struct GpuCompositor::Impl {
   IDXGIOutput *out = nullptr;  // the swap chain's monitor (wait_vblank)
   std::mutex out_mu;
   uint64_t world_rect_uploads = 0;
+  // P15C: the moving objects (run_objects)
+  bool obj_ok = false;      // doubles with the extended instructions, typed UAV stores of R16_UINT, CSObj compiled
+  std::string obj_why;
+  ID3D11ComputeShader *cs_obj = nullptr;
+  Tex wlive;                // the world image with the objects (the course pass's world when obj_live); world = the frame's
+  ID3D11UnorderedAccessView *wlive_uav = nullptr;
+  Tex obase;                // the scene's base (its copied tiles)
+  TBuf oart, opal, olut, oplanes;
+  SBuf oops, osteps, orecs, ocols, orows, olist, oregs;
+  const void *obj_scene = nullptr;
+  uint64_t obj_world = ~0ull, obj_gen = ~0ull;  // the world upload / the presenter's mover_gen_ the GPU's copy is for
+  uint64_t world_serial = 0;                     // upload_world's count (a new world image under wlive)
+  bool obj_live = false;
+  std::vector<int32_t> op_slot;                  // per draw: its OOp, -1 none yet
+  std::vector<OOpRec> ops_cpu;
+  std::vector<uint8_t> art_cpu;
+  std::vector<uint16_t> pal_cpu, lut_cpu;
+  std::vector<uint32_t> steps_cpu;
+  std::vector<std::pair<const void *, uint32_t>> art_at, lut_at;  // shared art / shade tables (pointer -> offset)
+  size_t ops_up = 0, steps_up = 0;
+  std::vector<int8_t> stab_ok;                   // per draw: its frame-place tables (-1 not made, 0 none, 1 made)
+  std::vector<portsim::GfxHrTables> stab;
+  std::vector<std::array<int32_t, 4>> oprev;     // the rectangles the last pass wrote (the frame's pixels first)
+  uint64_t obj_passes = 0, obj_regions = 0, obj_regions_skipped = 0, obj_recs = 0, obj_px = 0, obj_frames = 0, obj_lists = 0;
+  int64_t ns_obj = 0;
+  bool world_text = false;           // upload_world: the world texture holds px_text (else px)
+  int obj_check = 0;                 // SG_P15_OBJCHECK=<n>: every n-th pass, wlive read back and compared with the CPU's redraw
+  uint64_t obj_checked = 0, obj_check_bad = 0, obj_check_badpx = 0;
+  ID3D11Texture2D *stage_w = nullptr;
+  int32_t v_slx = 0, v_sly = 0;      // the last layered paint's slide offset (the A/B line names the patch of the first pixel)
+  // the world rectangles rewritten since the course patches were built (objects: CPU uploads or GPU passes); a course patch they meet
+  // is built again (P14A rebuilt them per tick only for mover labels: a still label over a moving object kept the last tick's pixels)
+  std::vector<std::array<int32_t, 4>> cdirty;
+  uint64_t course_obj_rebuilds = 0;
   // P15B: the HUD text runs as tables (build_text_tables). SG_APP_P15=off: P14A's final patches for them
   bool p15 = true;
   std::unique_ptr<TextRaster> traster;
@@ -675,6 +940,19 @@ void GpuCompositor::stop() {
   for (SBuf *s : {&d.layers, &d.lpx, &d.shade, &d.pdx, &d.quads_c, &d.quads_f, &d.lcol, &d.lrow, &d.bcol, &d.brow, &d.wcol, &d.wrow})
     s->reset();
   d.tables_key.clear();
+  // P15C
+  rel(d.wlive_uav);
+  d.wlive.reset();
+  d.obase.reset();
+  for (TBuf *t : {&d.oart, &d.opal, &d.olut, &d.oplanes}) t->reset();
+  for (SBuf *b : {&d.oops, &d.osteps, &d.orecs, &d.ocols, &d.orows, &d.olist, &d.oregs}) b->reset();
+  rel(d.cs_obj);
+  rel(d.stage_w);
+  d.obj_ok = false;
+  d.obj_scene = nullptr;
+  d.obj_world = d.obj_gen = ~0ull;
+  d.obj_live = false;
+  d.oprev.clear();
   for (SBuf *s : {&d.tlay, &d.truns, &d.tidx, &d.tlut}) s->reset();  // P15B (the table cache is CPU data: kept)
   d.tset_key.clear();
   d.tbound = false;
@@ -724,6 +1002,7 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   d.hwnd = static_cast<HWND>(hwnd);
   if (const char *e = std::getenv("SG_P14_VERIFY")) d.verify_every = std::max(0, std::atoi(e));
   if (const char *e = std::getenv("SG_P14_VERIFY_DIR")) d.verify_dir = e;
+  if (const char *e = std::getenv("SG_P15_OBJCHECK")) d.obj_check = std::max(0, std::atoi(e));  // P15C
   auto fail = [&](const std::string &w) {
     why = w;
     d.why = w;
@@ -864,6 +1143,35 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
     d.dev->CreateQuery(&q, &t.a);
     d.dev->CreateQuery(&q, &t.b);
   }
+  // P15C: the moving objects' compute pass (CSObj): double arithmetic with ddiv / conversions (the extended doubles) and typed UAV
+  // stores of R16_UINT; without them, or if it does not compile, the presenter keeps the CPU redraw (obj_why says why)
+  {
+    D3D11_FEATURE_DATA_DOUBLES fd = {};
+    D3D11_FEATURE_DATA_D3D11_OPTIONS fo = {};
+    UINT fs = 0;
+    const bool dbl = SUCCEEDED(d.dev->CheckFeatureSupport(D3D11_FEATURE_DOUBLES, &fd, sizeof fd)) && fd.DoublePrecisionFloatShaderOps;
+    const bool ext = SUCCEEDED(d.dev->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fo, sizeof fo)) && fo.ExtendedDoublesShaderInstructions;
+    const bool uav = SUCCEEDED(d.dev->CheckFormatSupport(DXGI_FORMAT_R16_UINT, &fs)) && (fs & D3D11_FORMAT_SUPPORT_TYPED_UNORDERED_ACCESS_VIEW);
+    if (!dbl || !ext) {
+      d.obj_why = "no extended double-precision shader ops";
+    } else if (!uav) {
+      d.obj_why = "no typed UAV of R16_UINT";
+    } else {
+      ID3DBlob *b = nullptr, *err = nullptr;
+      const HRESULT h = compile(kHlslObj, sizeof(kHlslObj) - 1, "p15c.hlsl", nullptr, nullptr, "CSObj", "cs_5_0",
+                                D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
+      if (FAILED(h) || !b) {
+        d.obj_why = std::string("CSObj failed") + (err ? std::string(": ") + static_cast<const char *>(err->GetBufferPointer()) : "");
+      } else if (FAILED(d.dev->CreateComputeShader(b->GetBufferPointer(), b->GetBufferSize(), nullptr, &d.cs_obj))) {
+        d.obj_why = "CreateComputeShader CSObj";
+      } else {
+        d.obj_ok = true;
+        d.obj_why = "on";
+      }
+      rel(b);
+      rel(err);
+    }
+  }
   // the first frame waits on the latency object too (DXGI: wait before the first Present)
   if (d.wait) WaitForSingleObjectEx(d.wait, 100, FALSE);
   d.ok = true;
@@ -941,6 +1249,7 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
   const bool wtext = text && W.mask_text.size() == W.mask.size() && W.px_text.size() == W.px.size();
   (void)vp;
   const std::vector<uint16_t> &wpx = wtext ? W.px_text : W.px;
+  d.world_text = wtext;  // P15C
   const int64_t t0 = portsim::perf_now_ns();
   const bool same = d.world.t && d.world.w == W.pw && d.world.h == W.ph && d.world_gen != ~0ull;
   if (same && !P.world_dirty_.empty() && P.world_dirty_.size() < 256) {  // only the rectangles objects_tick rewrote
@@ -952,6 +1261,7 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
     }
     ++d.world_rect_uploads;
     d.wdirty.insert(d.wdirty.end(), P.world_dirty_.begin(), P.world_dirty_.end());
+    d.cdirty.insert(d.cdirty.end(), P.world_dirty_.begin(), P.world_dirty_.end());  // P15C
   } else {
     d.wdirty_all = true;
     if (!make_tex(d.dev, d.world, W.pw, W.ph, DXGI_FORMAT_R16_UINT, false)) return;
@@ -959,8 +1269,364 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
     ++d.world_uploads;
   }
   P.world_dirty_.clear();
-  d.world_gen = P.world_gen_;
+  d.world_gen = P.world_px_gen_;  // P15C: world_px_gen_ (a GPU objects tick bumps world_gen_ only)
+  ++d.world_serial;
   d.ns_world += portsim::perf_now_ns() - t0;
+}
+
+// ---- P15C: the moving objects (log/roadmap/P15/P15C_notes.md)
+namespace {
+// typed buffer `t` (format fmt, esz bytes per element) holding data[0, count): only the elements past those uploaded are sent, unless
+// the buffer had to grow (then all)
+bool tbuf_put(ID3D11Device *dev, ID3D11DeviceContext *ctx, TBuf &t, DXGI_FORMAT fmt, uint32_t esz, const void *data, uint32_t count) {
+  if (!t.b || t.cap < count) {
+    t.reset();
+    const uint32_t cap = std::max<uint32_t>(4096, count + count / 2);
+    D3D11_BUFFER_DESC bd = {};
+    bd.ByteWidth = ((cap * esz + 15u) / 16u) * 16u;
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    if (FAILED(dev->CreateBuffer(&bd, nullptr, &t.b))) return false;
+    D3D11_SHADER_RESOURCE_VIEW_DESC sd = {};
+    sd.Format = fmt;
+    sd.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    sd.Buffer.FirstElement = 0;
+    sd.Buffer.NumElements = cap;
+    if (FAILED(dev->CreateShaderResourceView(t.b, &sd, &t.srv))) return false;
+    t.cap = cap;
+  }
+  if (count > t.n && data) {
+    D3D11_BOX b = {t.n * esz, 0, 0, count * esz, 1, 1};
+    ctx->UpdateSubresource(t.b, 0, &b, static_cast<const uint8_t *>(data) + static_cast<size_t>(t.n) * esz, 0, 0);
+  }
+  t.n = count;
+  return true;
+}
+}  // namespace
+
+bool GpuCompositor::objects_ok() const { return d_ && d_->ok && d_->obj_ok; }
+
+// The presenter's GPU-mode objects tick left the rectangles (mregs_) and every draw's offset (mdx_ / mdy_). Here, for each rectangle
+// whose base tiles the scene holds (gfx_hr_scene_redraw's own test), the draws whose box meets it at the tick's place (moved pass)
+// and at the frame's place (frame pass) are listed in queue order, each with its op (uploaded once per frame) and its sample tables
+// (gfx_hr_scene_tables: the frame's place cached per frame, the moved place per tick); CSObj draws every pixel of the rectangles into
+// wlive. The last pass's rectangles are given the frame's pixels back first (a copy from `world`).
+void GpuCompositor::run_objects(const Presenter &P) {
+  Impl &d = *d_;
+  const WorldImage &W = P.world_;
+  if (!d.obj_ok || !P.movers_gpu_ || !W.hr_scene || !d.world.t) {
+    d.obj_live = false;
+    return;
+  }
+  const int64_t t0 = portsim::perf_now_ns();
+  const portsim::GfxHrScene &sc = *W.hr_scene;
+  const int32_t pw = portsim::gfx_hr_scene_pw(sc), ph = portsim::gfx_hr_scene_ph(sc);
+  if (pw != d.world.w || ph != d.world.h) {
+    d.obj_live = false;
+    return;
+  }
+  const std::vector<portsim::GfxHrDraw> &dr = portsim::gfx_hr_scene_draws(sc);
+  const uint8_t *tiles = nullptr;
+  int32_t tx = 0, ty = 0;
+  const uint16_t *base = portsim::gfx_hr_scene_base(sc, tiles, tx, ty);
+  // a new frame (scene) or a new world image under it: the per-frame data again, wlive = the frame's world
+  if (d.obj_scene != &sc || d.obj_world != d.world_serial || !d.wlive.t) {
+    d.obj_live = false;
+    d.obj_scene = &sc;
+    d.obj_world = d.world_serial;
+    d.obj_gen = ~0ull;
+    d.oprev.clear();
+    ++d.obj_frames;
+    if (!d.wlive.t || d.wlive.w != pw || d.wlive.h != ph) {
+      rel(d.wlive_uav);
+      d.wlive.reset();
+      D3D11_TEXTURE2D_DESC td = {};
+      td.Width = static_cast<UINT>(pw);
+      td.Height = static_cast<UINT>(ph);
+      td.MipLevels = 1;
+      td.ArraySize = 1;
+      td.Format = DXGI_FORMAT_R16_UINT;
+      td.SampleDesc.Count = 1;
+      td.Usage = D3D11_USAGE_DEFAULT;
+      td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+      if (FAILED(d.dev->CreateTexture2D(&td, nullptr, &d.wlive.t)) || FAILED(d.dev->CreateShaderResourceView(d.wlive.t, nullptr, &d.wlive.srv)) ||
+          FAILED(d.dev->CreateUnorderedAccessView(d.wlive.t, nullptr, &d.wlive_uav))) {
+        rel(d.wlive_uav);
+        d.wlive.reset();
+        d.obj_ok = false;
+        d.obj_why = "wlive texture";
+        return;
+      }
+      d.wlive.w = pw;
+      d.wlive.h = ph;
+      d.wlive.fmt = DXGI_FORMAT_R16_UINT;
+    }
+    d.ctx->CopyResource(d.wlive.t, d.world.t);
+    // the base's copied tiles (runs of adjacent tiles in a tile row)
+    make_tex(d.dev, d.obase, pw, ph, DXGI_FORMAT_R16_UINT, false);
+    if (base && tiles)
+      for (int32_t j = 0; j < ty; ++j)
+        for (int32_t i = 0; i < tx;) {
+          if (!tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) {
+            ++i;
+            continue;
+          }
+          int32_t k = i + 1;
+          while (k < tx && tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(k)]) ++k;
+          const int32_t x0 = i * portsim::kGfxHrTile, x1 = std::min(pw, k * portsim::kGfxHrTile);
+          const int32_t y0 = j * portsim::kGfxHrTile, y1 = std::min(ph, (j + 1) * portsim::kGfxHrTile);
+          put_tex(d.ctx, d.obase, x0, y0, x1 - x0, y1 - y0, base + static_cast<size_t>(y0) * static_cast<size_t>(pw) + static_cast<size_t>(x0),
+                  static_cast<uint32_t>(pw) * 2u);
+          i = k;
+        }
+    // the per-frame op data start empty (filled as draws are needed)
+    d.op_slot.assign(dr.size(), -1);
+    d.ops_cpu.clear();
+    d.art_cpu.clear();
+    d.pal_cpu.clear();
+    d.lut_cpu.clear();
+    d.steps_cpu.clear();
+    d.art_at.clear();
+    d.lut_at.clear();
+    d.ops_up = d.steps_up = 0;
+    d.oart.n = d.opal.n = d.olut.n = 0;
+    d.stab_ok.assign(dr.size(), -1);
+    d.stab.assign(dr.size(), portsim::GfxHrTables{});
+    if (!d.oplanes.b) {
+      size_t n = 0;
+      const uint16_t *t = portsim::gfx_hr_plane_table(n);
+      tbuf_put(d.dev, d.ctx, d.oplanes, DXGI_FORMAT_R16_UINT, 2, t, static_cast<uint32_t>(n));
+    }
+    d.obj_live = true;
+  }
+  if (d.obj_gen == P.mover_gen_) {
+    d.ns_obj += portsim::perf_now_ns() - t0;
+    return;
+  }
+  d.obj_gen = P.mover_gen_;
+  // the final patches see the rectangles left and entered (fix 2's dependence test)
+  d.wdirty.insert(d.wdirty.end(), P.mover_dirty_.begin(), P.mover_dirty_.end());
+  d.cdirty.insert(d.cdirty.end(), P.mover_dirty_.begin(), P.mover_dirty_.end());
+  P.mover_dirty_.clear();
+  // the frame's pixels back where the last pass drew
+  for (const std::array<int32_t, 4> &r : d.oprev) {
+    D3D11_BOX b = {static_cast<UINT>(r[0]), static_cast<UINT>(r[1]), 0, static_cast<UINT>(r[2]), static_cast<UINT>(r[3]), 1};
+    d.ctx->CopySubresourceRegion(d.wlive.t, 0, static_cast<UINT>(r[0]), static_cast<UINT>(r[1]), 0, d.world.t, 0, &b);
+  }
+  d.oprev.clear();
+  // the rectangles gfx_hr_scene_redraw would draw (every tile they meet copied)
+  std::vector<std::array<int32_t, 4>> regs;
+  for (const std::array<int32_t, 4> &r : P.mregs_) {
+    bool ok = base && tiles && r[2] > r[0] && r[3] > r[1];
+    for (int32_t j = r[1] / portsim::kGfxHrTile; ok && j <= (r[3] - 1) / portsim::kGfxHrTile; ++j)
+      for (int32_t i = r[0] / portsim::kGfxHrTile; ok && i <= (r[2] - 1) / portsim::kGfxHrTile; ++i)
+        ok = j < ty && i < tx && tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)] != 0;
+    if (ok) regs.push_back(r);
+    else ++d.obj_regions_skipped;
+  }
+  if (regs.empty()) {
+    d.ns_obj += portsim::perf_now_ns() - t0;
+    return;
+  }
+  // a draw's op (once per frame)
+  auto op_of = [&](size_t k) -> int32_t {
+    if (d.op_slot[k] >= 0) return d.op_slot[k];
+    portsim::GfxHrGpuOp o;
+    if (!portsim::gfx_hr_scene_gpu_op(sc, k, o)) return -1;
+    OOpRec r = {};
+    r.kind = static_cast<uint32_t>(o.kind);
+    uint32_t at = ~0u;
+    for (const auto &a : d.art_at)
+      if (a.first == o.art) at = a.second;
+    if (at == ~0u) {
+      at = static_cast<uint32_t>(d.art_cpu.size());
+      d.art_cpu.insert(d.art_cpu.end(), o.art, o.art + static_cast<size_t>(o.art_w) * static_cast<size_t>(o.art_h));
+      d.art_at.emplace_back(o.art, at);
+    }
+    r.art_off = at;
+    r.art_w = static_cast<uint32_t>(o.art_w);
+    r.pal_off = static_cast<uint32_t>(d.pal_cpu.size());
+    d.pal_cpu.insert(d.pal_cpu.end(), o.pal, o.pal + 256);
+    if (o.kind == 2 && o.lut && o.lut_n) {
+      uint32_t lt = ~0u;
+      for (const auto &a : d.lut_at)
+        if (a.first == o.lut) lt = a.second;
+      if (lt == ~0u) {
+        lt = static_cast<uint32_t>(d.lut_cpu.size());
+        d.lut_cpu.insert(d.lut_cpu.end(), o.lut, o.lut + o.lut_n);
+        d.lut_at.emplace_back(o.lut, lt);
+      }
+      r.lut_off = lt;
+    }
+    r.lut_n = o.kind == 2 ? o.lut_n : 0u;
+    r.plane_k = o.plane_k;
+    r.flag = o.flag;
+    r.colour = o.colour;
+    r.steps_off = static_cast<uint32_t>(d.steps_cpu.size() / 4);
+    r.nsteps = static_cast<uint32_t>(o.steps.size() / 4);
+    d.steps_cpu.insert(d.steps_cpu.end(), o.steps.begin(), o.steps.end());
+    d.op_slot[k] = static_cast<int32_t>(d.ops_cpu.size());
+    d.ops_cpu.push_back(r);
+    return d.op_slot[k];
+  };
+  std::vector<ORecRec> recs;
+  std::vector<int32_t> cols, rows;
+  auto add_rec = [&](size_t k, const portsim::GfxHrTables &t) -> int32_t {
+    const int32_t op = op_of(k);
+    if (op < 0) return -1;
+    ORecRec r = {};
+    r.op = static_cast<uint32_t>(op);
+    r.nsx = t.nsx;
+    r.nsy = t.nsy;
+    r.filter = t.filter;
+    uint64_t bits = 0;
+    std::memcpy(&bits, &t.inv, sizeof bits);
+    r.inv_lo = static_cast<uint32_t>(bits & 0xffffffffull);
+    r.inv_hi = static_cast<uint32_t>(bits >> 32);
+    r.x0 = t.x0;
+    r.y0 = t.y0;
+    r.x1 = t.x1;
+    r.y1 = t.y1;
+    r.col_off = static_cast<uint32_t>(cols.size() / 4);
+    r.row_off = static_cast<uint32_t>(rows.size() / 4);
+    cols.insert(cols.end(), t.cols.begin(), t.cols.end());
+    rows.insert(rows.end(), t.rows.begin(), t.rows.end());
+    recs.push_back(r);
+    return static_cast<int32_t>(recs.size() - 1);
+  };
+  const size_t nd = dr.size();
+  std::vector<int32_t> rec_s(nd, -2), rec_m(nd, -2);  // -2 not made, -1 nothing to draw
+  std::vector<std::array<int32_t, 4>> mbox(nd);
+  std::vector<uint8_t> moved(nd, 0);
+  for (size_t k = 0; k < nd; ++k) {
+    const double mx = k < P.mdx_.size() ? P.mdx_[k] : 0.0, my = k < P.mdy_.size() ? P.mdy_[k] : 0.0;
+    if (mx != 0.0 || my != 0.0) {
+      moved[k] = 1;
+      portsim::gfx_hr_scene_box(sc, k, mx, my, mbox[k].data());
+    }
+  }
+  auto meets = [](const int32_t *b, const std::array<int32_t, 4> &r) {
+    return b[0] < b[2] && b[1] < b[3] && b[2] > r[0] && b[0] < r[2] && b[3] > r[1] && b[1] < r[3];
+  };
+  auto stat_rec = [&](size_t k) -> int32_t {
+    if (rec_s[k] != -2) return rec_s[k];
+    if (d.stab_ok[k] < 0) d.stab_ok[k] = portsim::gfx_hr_scene_tables(sc, k, 0.0, 0.0, 0, 0, pw, ph, d.stab[k]) ? 1 : 0;
+    rec_s[k] = d.stab_ok[k] ? add_rec(k, d.stab[k]) : -1;
+    return rec_s[k];
+  };
+  portsim::GfxHrTables mt;
+  auto move_rec = [&](size_t k) -> int32_t {
+    if (rec_m[k] != -2) return rec_m[k];
+    const double mx = P.mdx_[k], my = P.mdy_[k];
+    rec_m[k] = portsim::gfx_hr_scene_tables(sc, k, mx, my, 0, 0, pw, ph, mt) ? add_rec(k, mt) : -1;
+    return rec_m[k];
+  };
+  std::vector<uint32_t> list;
+  std::vector<ORegRec> oregs;
+  int32_t mw = 0, mh = 0;
+  for (const std::array<int32_t, 4> &r : regs) {
+    ORegRec g = {r[0], r[1], r[2], r[3], static_cast<uint32_t>(list.size()), 0, 0, 0};
+    for (size_t k = 0; k < nd; ++k) {  // the moved pass: the tick's places
+      const int32_t *b = moved[k] ? mbox[k].data() : dr[k].box;
+      if (!meets(b, r)) continue;
+      const int32_t i = moved[k] ? move_rec(k) : stat_rec(k);
+      if (i >= 0) list.push_back(static_cast<uint32_t>(i));
+    }
+    g.m_n = static_cast<uint32_t>(list.size()) - g.m_off;
+    g.s_off = static_cast<uint32_t>(list.size());
+    for (size_t k = 0; k < nd; ++k) {  // the frame's pass: the frame's places
+      if (!meets(dr[k].box, r)) continue;
+      const int32_t i = stat_rec(k);
+      if (i >= 0) list.push_back(static_cast<uint32_t>(i));
+    }
+    g.s_n = static_cast<uint32_t>(list.size()) - g.s_off;
+    oregs.push_back(g);
+    mw = std::max(mw, r[2] - r[0]);
+    mh = std::max(mh, r[3] - r[1]);
+    d.obj_px += static_cast<uint64_t>(r[2] - r[0]) * static_cast<uint64_t>(r[3] - r[1]);
+  }
+  // uploads: the frame's op data past what was sent, the tick's records, tables, lists and rectangles
+  bool ok = true;
+  if (d.ops_cpu.size() != d.ops_up) {
+    ok = ok && make_sbuf(d.dev, d.ctx, d.oops, sizeof(OOpRec), static_cast<uint32_t>(d.ops_cpu.size()), d.ops_cpu.data());
+    d.ops_up = d.ops_cpu.size();
+  }
+  if (d.steps_cpu.size() != d.steps_up || !d.osteps.b) {
+    ok = ok && make_sbuf(d.dev, d.ctx, d.osteps, 16, static_cast<uint32_t>(d.steps_cpu.size() / 4), d.steps_cpu.data());
+    d.steps_up = d.steps_cpu.size();
+  }
+  ok = ok && tbuf_put(d.dev, d.ctx, d.oart, DXGI_FORMAT_R8_UINT, 1, d.art_cpu.data(), static_cast<uint32_t>(d.art_cpu.size()));
+  ok = ok && tbuf_put(d.dev, d.ctx, d.opal, DXGI_FORMAT_R16_UINT, 2, d.pal_cpu.data(), static_cast<uint32_t>(d.pal_cpu.size()));
+  ok = ok && tbuf_put(d.dev, d.ctx, d.olut, DXGI_FORMAT_R16_UINT, 2, d.lut_cpu.data(), static_cast<uint32_t>(d.lut_cpu.size()));
+  ok = ok && make_sbuf(d.dev, d.ctx, d.orecs, sizeof(ORecRec), static_cast<uint32_t>(recs.size()), recs.data());
+  ok = ok && make_sbuf(d.dev, d.ctx, d.ocols, 16, static_cast<uint32_t>(cols.size() / 4), cols.data());
+  ok = ok && make_sbuf(d.dev, d.ctx, d.orows, 16, static_cast<uint32_t>(rows.size() / 4), rows.data());
+  ok = ok && make_sbuf(d.dev, d.ctx, d.olist, 4, static_cast<uint32_t>(list.size()), list.data());
+  ok = ok && make_sbuf(d.dev, d.ctx, d.oregs, sizeof(ORegRec), static_cast<uint32_t>(oregs.size()), oregs.data());
+  if (!ok) {
+    d.obj_ok = false;
+    d.obj_why = "objects buffers";
+    d.obj_live = false;
+    return;
+  }
+  ID3D11DeviceContext *x = d.ctx;
+  ID3D11ShaderResourceView *srv[13] = {d.oregs.srv, d.orecs.srv, d.oops.srv, d.ocols.srv, d.orows.srv, d.olist.srv, d.oart.srv,
+                                       d.opal.srv, d.olut.srv, d.oplanes.srv, d.osteps.srv, d.obase.srv, d.world.srv};
+  // (the course / HUD passes may hold wlive as a pixel shader resource from the last paint)
+  ID3D11ShaderResourceView *nps[2] = {nullptr, nullptr};
+  x->PSSetShaderResources(0, 2, nps);
+  x->CSSetShader(d.cs_obj, nullptr, 0);
+  x->CSSetShaderResources(0, 13, srv);
+  x->CSSetUnorderedAccessViews(0, 1, &d.wlive_uav, nullptr);
+  x->Dispatch(static_cast<UINT>((mw + 7) / 8), static_cast<UINT>((mh + 7) / 8), static_cast<UINT>(oregs.size()));
+  ID3D11UnorderedAccessView *nu[1] = {nullptr};
+  ID3D11ShaderResourceView *ns[13] = {};
+  x->CSSetUnorderedAccessViews(0, 1, nu, nullptr);
+  x->CSSetShaderResources(0, 13, ns);
+  x->CSSetShader(nullptr, nullptr, 0);
+  d.oprev = regs;
+  ++d.obj_passes;
+  if (d.obj_check > 0 && d.obj_passes % static_cast<uint64_t>(d.obj_check) == 0) {  // development: the pass against the CPU's redraw
+    for (const std::array<int32_t, 4> &r : regs) P.objects_sync(r[0], r[1], r[2], r[3]);
+    const std::vector<uint16_t> &cpu = d.world_text ? W.px_text : W.px;
+    if (!d.stage_w) {
+      D3D11_TEXTURE2D_DESC td = {};
+      d.wlive.t->GetDesc(&td);
+      td.Usage = D3D11_USAGE_STAGING;
+      td.BindFlags = 0;
+      td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+      d.dev->CreateTexture2D(&td, nullptr, &d.stage_w);
+    }
+    D3D11_MAPPED_SUBRESOURCE m = {};
+    if (d.stage_w) {
+      d.ctx->CopyResource(d.stage_w, d.wlive.t);
+      if (SUCCEEDED(d.ctx->Map(d.stage_w, 0, D3D11_MAP_READ, 0, &m))) {
+        uint64_t bad = 0;
+        int shown = 0;
+        for (const std::array<int32_t, 4> &r : regs)
+          for (int32_t y = r[1]; y < r[3]; ++y)
+            for (int32_t xx = r[0]; xx < r[2]; ++xx) {
+              const uint16_t g = reinterpret_cast<const uint16_t *>(static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch)[xx];
+              const uint16_t c = cpu[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(xx)];
+              if (g == c) continue;
+              ++bad;
+              if (shown++ < 4) std::fprintf(stderr, "P15 OBJCHECK pass %llu (%d, %d) gpu %04x cpu %04x\n", static_cast<unsigned long long>(d.obj_passes), xx, y, g, c);
+            }
+        d.ctx->Unmap(d.stage_w, 0);
+        ++d.obj_checked;
+        if (bad) {
+          ++d.obj_check_bad;
+          d.obj_check_badpx += bad;
+          std::fprintf(stderr, "P15 OBJCHECK pass %llu: %llu px differ over %zu rectangles\n", static_cast<unsigned long long>(d.obj_passes),
+                       static_cast<unsigned long long>(bad), regs.size());
+        }
+      }
+    }
+  }
+  d.obj_regions += regs.size();
+  d.obj_recs += recs.size();
+  d.obj_lists += list.size();
+  d.ns_obj += portsim::perf_now_ns() - t0;
 }
 
 void GpuCompositor::upload_frame(const Presenter &P, const Viewport &vp, bool text) {
@@ -1717,6 +2383,8 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   const bool text = P.text_now(vp);
   const portsim::GfxHudFrame &f = P.hud_for(text);
   ++d.paints_layered;
+  d.v_slx = slx;  // P15C
+  d.v_sly = sly;
   // compose_layers' per-paint state: the piece offsets, the remap (rebuilt only when the frame or the client changed: it depends on
   // nothing else), the previews' offsets
   P.layer_pieces(f, vp, cw);
@@ -1730,8 +2398,9 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
     const ProfScope prof(Phase::Upload);
     if (d.frame_gen != P.content_gen_ || d.frame_f != &f || d.frame_w != cw || d.frame_h != ch || d.frame_text != text)
       upload_frame(P, vp, text);
-    else if (d.world_gen != P.world_gen_)
+    else if (d.world_gen != P.world_px_gen_)  // P15C: world_px_gen_
       upload_world(P, text);
+    run_objects(P);  // P15C: the moving objects into wlive
   }
   const WorldImage &W = P.world_;
   const bool anchor = P.hud_anchor_ && vp.origin_x > 0 && P.defect_ != PresentDefect::HudUnmoved;
@@ -1759,11 +2428,29 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
         if ((r.layer == -1 || r.layer == -3) && r.mover.kind != portsim::kGfxMoverNone) mover_runs = true;
     const uint64_t ck = P.content_gen_ * 1000003ull + (mover_runs ? P.world_gen_ * 7919ull : 0ull) + static_cast<uint64_t>(cw) * 31ull +
                         static_cast<uint64_t>(ch);
+    if (ck == d.course_key && !d.cdirty.empty() && !d.qc.empty() && W.fw > 0 && W.ph > 0) {  // P15C: a course patch over moved pixels
+      auto lo = [](int64_t a, int64_t b) { return static_cast<int32_t>(a >= 0 ? a / b : -((-a + b - 1) / b)); };
+      bool meet = false;
+      for (const std::array<int32_t, 4> &r : d.cdirty) {  // world pixels -> client at offset 0 (compose_world's mapping inverted), 3 px margin
+        const int32_t x0 = vp.origin_x + lo(static_cast<int64_t>(r[0] - W.ox) * vp.client_w, W.fw) - 3;
+        const int32_t y0 = vp.origin_y + lo(static_cast<int64_t>(r[1]) * vp.client_h, W.ph) - 3;
+        const int32_t x1 = vp.origin_x + lo(static_cast<int64_t>(r[2] - W.ox) * vp.client_w + W.fw - 1, W.fw) + 3;
+        const int32_t y1 = vp.origin_y + lo(static_cast<int64_t>(r[3]) * vp.client_h + W.ph - 1, W.ph) + 3;
+        for (const QuadRec &q : d.qc)
+          if (q.dx < x1 && x0 < q.dx + q.w && q.dy < y1 && y0 < q.dy + q.h) meet = true;
+        if (meet) break;
+      }
+      if (meet) {
+        d.course_key = ~0ull;
+        ++d.course_obj_rebuilds;
+      }
+    }
     if (ck != d.course_key) {
       const int64_t t0 = portsim::perf_now_ns();
       // fix 2: the final patches over the course patches' old and new places see a changed course picture
       for (const QuadRec &q : d.qc) d.cchanged.push_back(Rect{q.dx + slx, q.dy + sly, q.dx + q.w + slx, q.dy + q.h + sly});
       build_course_patches(P, vp, text);
+      d.cdirty.clear();  // P15C
       for (const QuadRec &q : d.qc) d.cchanged.push_back(Rect{q.dx + slx, q.dy + sly, q.dx + q.w + slx, q.dy + q.h + sly});
       d.course_key = ck;
       d.ns_course += portsim::perf_now_ns() - t0;
@@ -1883,7 +2570,8 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   x->PSSetShaderResources(14, 6, tabs);
   x->PSSetShaderResources(20, 1, &d.occ_srv);
   x->OMSetRenderTargets(1, &d.course.rtv, nullptr);
-  ID3D11ShaderResourceView *s1[4] = {d.base.srv, d.world.srv, d.wmask.srv, d.prev_valid ? d.prev.srv : d.dummy_u.srv};
+  ID3D11ShaderResourceView *wsrv = d.obj_live && d.wlive.srv ? d.wlive.srv : d.world.srv;  // P15C: the world with the objects
+  ID3D11ShaderResourceView *s1[4] = {d.base.srv, wsrv, d.wmask.srv, d.prev_valid ? d.prev.srv : d.dummy_u.srv};
   x->PSSetShaderResources(0, 4, s1);
   x->PSSetShader(d.ps_course, nullptr, 0);
   x->Draw(3, 0);
@@ -1901,7 +2589,7 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   }
   // 3. the HUD layers into the back buffer
   x->OMSetRenderTargets(1, &d.bb_rtv, nullptr);
-  ID3D11ShaderResourceView *s3[11] = {d.base.srv, d.world.srv, d.wmask.srv, d.dummy_u.srv, d.course.srv, d.layers.srv, d.lpx.srv,
+  ID3D11ShaderResourceView *s3[11] = {d.base.srv, wsrv, d.wmask.srv, d.dummy_u.srv, d.course.srv, d.layers.srv, d.lpx.srv,
                                       d.tabs.srv, cur ? d.cur.srv : d.dummy_u2.srv, d.shade.srv, d.pdx.srv};
   x->PSSetShaderResources(0, 11, s3);
   {  // P15B: the text tables (null views read 0: no run in any layer)
@@ -2205,7 +2893,22 @@ void GpuCompositor::verify(const Presenter &P, int32_t cw, int32_t ch, bool laye
     std::snprintf(b, sizeof b, "paint %llu %s: %llu px differ, first (%d, %d) gpu %08x cpu %08x",
                   static_cast<unsigned long long>(d.paints_layered + d.paints_full), layered ? "layered" : "full",
                   static_cast<unsigned long long>(bad), fx, fy, gpu[i], cpu[i]);
-    std::fprintf(stderr, "P14 VERIFY %s\n", b);
+    {  // P15C: the patch holding the first differing pixel (course k at the slide's offset / final k / none)
+      std::string where = "none";
+      for (size_t k = 0; k < d.qc.size(); ++k) {
+        const QuadRec &qq = d.qc[k];
+        if (layered && fx >= qq.dx + d.v_slx && fx < qq.dx + d.v_slx + qq.w && fy >= qq.dy + d.v_sly && fy < qq.dy + d.v_sly + qq.h)
+          where = "course " + std::to_string(k) + " (" + std::to_string(qq.dx) + "," + std::to_string(qq.dy) + " " + std::to_string(qq.w) + "x" +
+                  std::to_string(qq.h) + ")";
+      }
+      for (size_t k = 0; k < d.qf.size(); ++k) {
+        const QuadRec &qq = d.qf[k];
+        if (layered && fx >= qq.dx && fx < qq.dx + qq.w && fy >= qq.dy && fy < qq.dy + qq.h)
+          where += " final " + std::to_string(k) + " (" + std::to_string(qq.dx) + "," + std::to_string(qq.dy) + " " + std::to_string(qq.w) + "x" +
+                   std::to_string(qq.h) + ")";
+      }
+      std::fprintf(stderr, "P14 VERIFY %s in %s\n", b, where.c_str());
+    }
     if (d.verify_first.empty()) d.verify_first = b;
     if (!d.verify_dir.empty() && d.verify_saved < 3) {
       const std::string base = d.verify_dir + "/verify_" + std::to_string(d.verify_saved);
@@ -2369,7 +3072,23 @@ std::string GpuCompositor::json() const {
                 static_cast<unsigned long long>(d.text_entries), static_cast<double>(d.ns_text) / 1e6, d.tcache.size(),
                 static_cast<unsigned long long>(d.ov_builds), static_cast<unsigned long long>(d.ov_patch_paints),
                 static_cast<unsigned long long>(d.oraster ? d.oraster->table_draws : 0ull));
-  return b;
+  std::string j = b;
+  if (!j.empty() && j.back() == '}') {  // P15C
+    char e[768];
+    std::snprintf(e, sizeof e,
+                  ",\"p15c\":{\"obj_ok\":%d,\"obj_why\":\"%s\",\"frames\":%llu,\"passes\":%llu,\"regions\":%llu,\"regions_skipped\":%llu,"
+                  "\"recs\":%llu,\"px\":%llu,\"ms_objects\":%.1f,\"ops\":%zu,\"art_bytes\":%zu,\"checked\":%llu,\"check_bad\":%llu,"
+                  "\"check_badpx\":%llu}}",
+                  d.obj_ok ? 1 : 0, esc(d.obj_why).c_str(), static_cast<unsigned long long>(d.obj_frames),
+                  static_cast<unsigned long long>(d.obj_passes), static_cast<unsigned long long>(d.obj_regions),
+                  static_cast<unsigned long long>(d.obj_regions_skipped), static_cast<unsigned long long>(d.obj_recs),
+                  static_cast<unsigned long long>(d.obj_px), static_cast<double>(d.ns_obj) / 1e6, d.ops_cpu.size(), d.art_cpu.size(),
+                  static_cast<unsigned long long>(d.obj_checked), static_cast<unsigned long long>(d.obj_check_bad),
+                  static_cast<unsigned long long>(d.obj_check_badpx));
+    j.pop_back();
+    j += e;
+  }
+  return j;
 }
 
 // ---- the presenter's side (present.h)
@@ -2432,6 +3151,8 @@ bool GpuCompositor::start(void *, std::string &why) {
 }
 void GpuCompositor::paint(const Presenter &, int32_t, int32_t, int32_t, int32_t) {}
 std::string GpuCompositor::json() const { return "{\"on\":0}"; }
+bool GpuCompositor::objects_ok() const { return false; }  // P15C
+void GpuCompositor::run_objects(const Presenter &) {}
 void GpuCompositor::request_shot(const std::string &) {}
 bool GpuCompositor::wait_vblank() { return false; }
 bool Presenter::gpu_wait_vblank() const { return false; }

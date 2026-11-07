@@ -623,12 +623,20 @@ struct HrCmd {
   uint64_t sig = 0;                  // art, palette, op parameters, placement (hr_flush compares it with the last queue's)
   GfxMoverSrc src;                   // P12A fix 2: the queue entry's source (render-only; not in sig)
   int32_t trim_x = 0, trim_y = 0;    // P12A fix 2: the art's trim offsets at the draw's scale (sprite_draw adds them to x / y)
+  int32_t art_w0 = 0, art_h0 = 0;    // P15C: the art's own size (s is left empty where the edge filter's scaled art `up` is used)
+  const Sprite8 &art() const { return up ? *up : s; }  // P15C: the payloads the draw samples (as run does)
   virtual ~HrCmd() = default;
   virtual void run(const LiveTerrainWorld &w, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1) = 0;
   // P12A fix 2: the same draw at another placement (gfx_hr_scene_redraw); const: any thread
   virtual void run_at(const LiveTerrainWorld &w, const HrGeom &g, const HrBox &b, uint16_t *plane, uint8_t *cover, int32_t cx0,
                       int32_t cy0, int32_t cx1, int32_t cy1) const = 0;
+  virtual bool gpu(GfxHrGpuOp &o) const = 0;  // P15C: the op's parameters for the app's GPU path (false: not one it draws)
 };
+// P15C: an op the GPU path does not know (the ops it draws have their own overloads below their definitions)
+template <class Op>
+bool hr_gpu_op(const Op &, GfxHrGpuOp &) {
+  return false;
+}
 template <class Op>
 struct HrCmdT final : HrCmd {
   Op op;
@@ -640,8 +648,9 @@ struct HrCmdT final : HrCmd {
   void run_at(const LiveTerrainWorld &w, const HrGeom &g, const HrBox &b, uint16_t *plane, uint8_t *cover, int32_t cx0, int32_t cy0,
               int32_t cx1, int32_t cy1) const override {
     Op local = op;
-    hr_blit_rows(w, plane, cover, s, g, local, b, cx0, cy0, cx1, cy1);
+    hr_blit_rows(w, plane, cover, art(), g, local, b, cx0, cy0, cx1, cy1);  // P15C: art(), not s (empty under the edge filter)
   }
+  bool gpu(GfxHrGpuOp &o) const override { return hr_gpu_op(op, o); }
 };
 // P10D fix 3: the queue's draws and what the last flush left. A queue whose terrain base and commands equal the last one's in a
 // 32 x 32 tile is not drawn again there: the tile keeps the last flush's pixels.
@@ -688,6 +697,7 @@ struct HrQueue {
 };
 thread_local HrQueue g_hr_queue;
 constexpr int32_t kHrTile = 32;
+static_assert(kHrTile == kGfxHrTile, "P15C: the app reads the base tiles with gfx.h kGfxHrTile");
 
 // P15A (gfx.h gfx_set_hr_defer; log/roadmap/P15/P15A_notes.md): the hr work recorded on the frame thread and run on the world thread
 std::atomic<bool> g_hr_defer{false};
@@ -745,6 +755,8 @@ void hr_blit(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale 
   c->gm = gm;
   c->box = hr_box(w, s, gm);
   c->up = hr_art(w, s, c->gm);   // P13D fix 5: the edge filter's scaled art (the box is the unscaled art's: the same rectangle)
+  c->art_w0 = s.w;               // P15C
+  c->art_h0 = s.h;
   if (!c->up) {
     c->s.w = s.w;
     c->s.h = s.h;
@@ -1003,8 +1015,8 @@ void hr_flush(LiveTerrainWorld &w) {
       d.box[1] = c->box.y0;
       d.box[2] = c->box.x1;
       d.box[3] = c->box.y1;
-      d.art_w = c->s.w;
-      d.art_h = c->s.h;
+      d.art_w = c->art_w0;  // P15C: c->s.w is 0 where the edge filter's art is used
+      d.art_h = c->art_h0;
       d.rx = c->gm.rx;
       d.ry = c->gm.ry;
       d.ex = c->gm.rx - c->trim_x;
@@ -1097,7 +1109,10 @@ void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale s
     c->s.w = s.w;
     c->s.h = s.h;
     c->s.px = s.px;
-    c->gm = gm;
+    c->gm = ga;   // P15C: as drawn above (the edge filter's art and its divided texel size; ga = gm without it)
+    c->up = up;
+    c->art_w0 = s.w;
+    c->art_h0 = s.h;
     c->box = box;
     if (c->op.pal) {
       std::copy(c->op.pal, c->op.pal + 256, c->pal.begin());
@@ -1442,6 +1457,44 @@ struct DrawBOp {
     put(w, pal[c]);
   }
 };
+
+// P15C (gfx.h GfxHrGpuOp): the ops' parameters for the app's GPU path; each body above is transcribed there
+bool hr_gpu_op(const PlaneOp &o, GfxHrGpuOp &r) {
+  r.kind = 1;
+  r.pal = o.pal;
+  r.plane_k = mode() == 1 ? 1u : 0u;
+  return o.pal != nullptr;
+}
+bool hr_gpu_op(const ShadeOp &o, GfxHrGpuOp &r) {
+  r.kind = 2;
+  r.pal = o.pal;
+  r.lut = o.lut;
+  r.lut_n = static_cast<uint32_t>(o.lut_n);
+  return o.pal != nullptr && (o.lut != nullptr || o.lut_n == 0) && o.lut_n <= (1u << 20);
+}
+bool hr_gpu_op(const AlphaOp &o, GfxHrGpuOp &r) {
+  if (!o.pal || !o.prog || o.rec) return false;
+  r.kind = 3;
+  r.pal = o.pal;
+  r.flag = o.flag ? 1u : 0u;
+  r.steps.clear();
+  for (size_t k = 0; k < o.prog->n; ++k) {
+    const AStep &a = o.prog->steps[k];
+    r.steps.insert(r.steps.end(), {a.op, a.dst, a.kind, a.src});
+  }
+  return true;
+}
+bool hr_gpu_op(const ColourOp &o, GfxHrGpuOp &r) {
+  r.kind = 4;
+  r.pal = o.pal;
+  r.colour = o.colour;
+  return o.pal != nullptr;
+}
+bool hr_gpu_op(const DrawBOp &o, GfxHrGpuOp &r) {
+  r.kind = 5;
+  r.pal = o.pal;
+  return o.pal != nullptr;
+}
 
 // ------------------------------------------------------------------------------------------------ the exe wrappers
 // the sprite behind a SpriteRef key and the root destination; nullptr: nothing drawn (a NULL handle returns 7 in the
@@ -2707,7 +2760,7 @@ void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1
     if (mx != 0.0 || my != 0.0) {
       g.rx += mx;
       g.ry += my;
-      b = hr_box(w, c.s, g);
+      b = hr_box(w, c.art(), g);  // P15C: the art run samples (its rectangle is the unscaled art's: the same box)
     }
     if (b.empty() || b.x1 <= x0 || b.x0 >= x1 || b.y1 <= y0 || b.y0 >= y1) continue;
     c.run_at(w, g, b, plane.data(), cover.data(), x0, y0, x1, y1);
@@ -2722,6 +2775,122 @@ void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1
     std::copy(plane.begin() + static_cast<std::ptrdiff_t>(o), plane.begin() + static_cast<std::ptrdiff_t>(o + rw), out.begin() + static_cast<std::ptrdiff_t>(r));
     std::copy(cover.begin() + static_cast<std::ptrdiff_t>(o), cover.begin() + static_cast<std::ptrdiff_t>(o + rw), cov.begin() + static_cast<std::ptrdiff_t>(r));
   }
+}
+
+// ---- P15C (gfx.h): gfx_hr_scene_redraw on the app's GPU
+bool gfx_hr_scene_gpu_op(const GfxHrScene &s, size_t k, GfxHrGpuOp &out) {
+  out = GfxHrGpuOp{};
+  if (k >= s.cmds.size() || mode() != 0) return false;  // (put's test-only mode 7 and the controls stay on the CPU)
+  const HrCmd &c = *s.cmds[k];
+  if (!c.gpu(out)) return false;
+  const Sprite8 &a = c.art();
+  if (a.w < 0 || a.h < 0 || a.px.size() != static_cast<size_t>(a.w) * static_cast<size_t>(a.h)) return false;
+  out.art = a.px.data();
+  out.art_w = a.w;
+  out.art_h = a.h;
+  return true;
+}
+
+void gfx_hr_scene_box(const GfxHrScene &s, size_t k, double dx, double dy, int32_t box[4]) {
+  box[0] = box[1] = box[2] = box[3] = 0;
+  if (k >= s.cmds.size() || !s.w) return;
+  const HrCmd &c = *s.cmds[k];
+  HrBox b = c.box;
+  if (dx != 0.0 || dy != 0.0) {  // gfx_hr_scene_redraw's own test and box
+    HrGeom g = c.gm;
+    g.rx += dx;
+    g.ry += dy;
+    b = hr_box(*s.w, c.art(), g);
+  }
+  box[0] = b.x0;
+  box[1] = b.y0;
+  box[2] = b.x1;
+  box[3] = b.y1;
+}
+
+// hr_blit_rows' placement of the samples, its expressions unchanged (the per-pixel loop is the GPU's)
+bool gfx_hr_scene_tables(const GfxHrScene &s, size_t k, double dx, double dy, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1,
+                         GfxHrTables &out) {
+  out.cols.clear();
+  out.rows.clear();
+  if (k >= s.cmds.size() || !s.w) return false;
+  const LiveTerrainWorld &w = *s.w;
+  const HrCmd &c = *s.cmds[k];
+  HrGeom gm = c.gm;
+  HrBox box = c.box;
+  if (dx != 0.0 || dy != 0.0) {
+    gm.rx += dx;
+    gm.ry += dy;
+    box = hr_box(w, c.art(), gm);
+  }
+  out.box[0] = box.x0;
+  out.box[1] = box.y0;
+  out.box[2] = box.x1;
+  out.box[3] = box.y1;
+  if (box.empty()) return false;
+  const Sprite8 &a = c.art();
+  const double rx = gm.rx, ry = gm.ry, fx = gm.fx, fy = gm.fy;
+  const double kx = static_cast<double>(w.fw) / 800.0, ky = static_cast<double>(w.ph) / 600.0;
+  const int32_t X0 = std::max(box.x0, cx0), X1 = std::min(box.x1, cx1);
+  const int32_t Y0 = std::max(box.y0, cy0), Y1 = std::min(box.y1, cy1);
+  if (X0 >= X1 || Y0 >= Y1) return false;
+  const double du = 1.0 / (kx * fx), dv = 1.0 / (ky * fy);
+  const int nsx = std::min(4, std::max(1, static_cast<int>(std::ceil(du - 1e-6))));
+  const int nsy = std::min(4, std::max(1, static_cast<int>(std::ceil(dv - 1e-6))));
+  const int filter = w.hr_filter == 3 ? 1 : w.hr_filter;
+  const auto sharp_w = [](double t, double k) {
+    const double s = std::min(1.0, std::max(0.0, (t - 0.5) * k + 0.5));
+    return static_cast<uint32_t>(std::floor(s * 256.0 + 0.5));
+  };
+  const double ksx = std::max(1.0, nsx / du), ksy = std::max(1.0, nsy / dv);
+  out.x0 = X0;
+  out.y0 = Y0;
+  out.x1 = X1;
+  out.y1 = Y1;
+  out.nsx = nsx;
+  out.nsy = nsy;
+  out.filter = filter;
+  const int ns = nsx * nsy;
+  out.inv = 1.0 / (65536.0 * ns);
+  out.cols.resize(static_cast<size_t>(X1 - X0) * static_cast<size_t>(nsx) * 4u);
+  for (int32_t X = X0; X < X1; ++X)
+    for (int si = 0; si < nsx; ++si) {
+      const double uu = (((X + (si + 0.5) / nsx) - w.ox) / kx + w.scene_e - rx) / fx - 0.5;
+      const double uf = std::floor(uu);
+      const int32_t i0 = static_cast<int32_t>(uf);
+      int32_t *e = &out.cols[(static_cast<size_t>(X - X0) * static_cast<size_t>(nsx) + static_cast<size_t>(si)) * 4u];
+      e[0] = i0 >= 0 && i0 < a.w ? i0 : -1;
+      e[1] = i0 + 1 >= 0 && i0 + 1 < a.w ? i0 + 1 : -1;
+      e[2] = static_cast<int32_t>(static_cast<uint32_t>(std::floor((uu - uf) * 256.0 + 0.5)));
+      e[3] = static_cast<int32_t>(filter ? sharp_w(uu - uf, ksx) : 0u);
+    }
+  out.rows.resize(static_cast<size_t>(Y1 - Y0) * static_cast<size_t>(nsy) * 4u);
+  for (int32_t Y = Y0; Y < Y1; ++Y)
+    for (int sj = 0; sj < nsy; ++sj) {
+      const double v = ((Y + (sj + 0.5) / nsy) / ky - ry) / fy - 0.5;
+      const double vf = std::floor(v);
+      const int32_t j0 = static_cast<int32_t>(vf);
+      int32_t *e = &out.rows[(static_cast<size_t>(Y - Y0) * static_cast<size_t>(nsy) + static_cast<size_t>(sj)) * 4u];
+      e[0] = j0 >= 0 && j0 < a.h ? j0 : -1;
+      e[1] = j0 + 1 >= 0 && j0 + 1 < a.h ? j0 + 1 : -1;
+      e[2] = static_cast<int32_t>(static_cast<uint32_t>(std::floor((v - vf) * 256.0 + 0.5)));
+      e[3] = static_cast<int32_t>(filter ? sharp_w(v - vf, ksy) : 0u);
+    }
+  return true;
+}
+
+const uint16_t *gfx_hr_scene_base(const GfxHrScene &s, const uint8_t *&tiles, int32_t &tx, int32_t &ty) {
+  tiles = s.base_tile.empty() ? nullptr : s.base_tile.data();
+  tx = s.base_tx;
+  ty = s.base_ty;
+  const size_t np = s.w ? static_cast<size_t>(s.w->pw) * static_cast<size_t>(s.w->ph) : 0;
+  return s.base && s.base_n == np && np > 0 ? s.base.get() : nullptr;
+}
+
+const uint16_t *gfx_hr_plane_table(size_t &n) {
+  const auto &t = gfxs::color16_planes();
+  n = t.size();
+  return t.data();
 }
 
 namespace gfxs {

@@ -387,6 +387,45 @@ int32_t gfx_hr_scene_ph(const GfxHrScene &s);
 void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
                          const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov);
 
+// ---- P15C (log/roadmap/P15/P15C_notes.md): the same redraw on the app's GPU. RENDER-ONLY, any thread, the scene unchanged.
+// gfx_hr_scene_redraw's per-pixel work split in two: what the GPU cannot do exactly (the double arithmetic that places the samples:
+// hr_blit_rows' column / row tables) is computed here with hr_blit_rows' own expressions; the per-pixel mixing (the ops over the
+// pixel under them, the bilinear / sharp sums) is integer and double arithmetic on these values, transcribed to the GPU.
+struct GfxHrGpuOp {
+  int32_t kind = 0;          // 1 PlaneOp (blt16a), 2 ShadeOp (drawG), 3 AlphaOp (drawAlpha), 4 ColourOp (blt16c), 5 DrawBOp (drawB)
+  const uint16_t *pal = nullptr;  // 256 words (the draw's own copy)
+  const uint16_t *lut = nullptr;  // ShadeOp: the shade table and its size
+  uint32_t lut_n = 0;
+  uint32_t plane_k = 0;      // PlaneOp: added to (payload - 0xf8) (1 under the gfx_scene control's mode 1, else 0)
+  uint32_t flag = 0;         // AlphaOp: payloads 0xf8..0xfe skipped too
+  uint32_t colour = 0;       // ColourOp
+  std::vector<uint32_t> steps;  // AlphaOp: its program, 4 words per step (op, dst, src kind, src)
+  const uint8_t *art = nullptr;  // the payloads the draw samples (the edge filter's scaled art where it applies), art_w x art_h
+  int32_t art_w = 0, art_h = 0;
+};
+// false: draw k is not one the GPU path can draw (an op it does not know, a test-only control mode on)
+bool gfx_hr_scene_gpu_op(const GfxHrScene &s, size_t k, GfxHrGpuOp &out);
+// draw k moved by (dx, dy) 800-space pixels, clipped to [cx0, cx1) x [cy0, cy1): its box (world pixels; the part inside the clip in
+// x0..y1), the samples per axis, the final scale (1 / (65536 * samples), the double hr_blit_rows rounds with), the filter (0
+// bilinear, 1 sharp, 2 sharp-area), and per column X in [x0, x1) and sample si the texel columns c0, c1 (-1 outside the art) and the
+// weights w1, s1 of c1 (cols[4 * ((X - x0) * nsx + si) + 0..3]); per row Y in [y0, y1) and sample sj the art rows j0, j1 (-1 outside)
+// and the weights wv, sv (rows[4 * ((Y - y0) * nsy + sj) + 0..3]). false: nothing to draw there.
+struct GfxHrTables {
+  int32_t box[4] = {0, 0, 0, 0};  // the moved box (hr_box)
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  int32_t nsx = 1, nsy = 1, filter = 0;
+  double inv = 0;
+  std::vector<int32_t> cols, rows;
+};
+bool gfx_hr_scene_tables(const GfxHrScene &s, size_t k, double dx, double dy, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1,
+                         GfxHrTables &out);
+// the box draw k has when moved by (dx, dy) (hr_box; the frame's box when both are 0)
+void gfx_hr_scene_box(const GfxHrScene &s, size_t k, double dx, double dy, int32_t box[4]);
+// the base plane (pw x ph words, only the 32 x 32 tiles whose flag is 1 hold data; tiles tx x ty)
+const uint16_t *gfx_hr_scene_base(const GfxHrScene &s, const uint8_t *&tiles, int32_t &tx, int32_t &ty);
+constexpr int32_t kGfxHrTile = 32;
+// PlaneOp's table (5 * 0x8000 words: index (k << 15) | word, k = payload - 0xf8 + plane_k; an index past it leaves the word)
+const uint16_t *gfx_hr_plane_table(size_t &n);
 // P15A (log/roadmap/P15/P15A_notes.md): the world thread. With gfx_set_hr_defer(true) (process-wide; the app's LiveSession only)
 // the hr work is recorded on the frame thread instead of run there: renderSpriteQueue's start (hr_queue_begin over a copy of the
 // world root, or the reset of a queue without an hr plane), its end (hr_flush of the queue's commands) and the draws after it

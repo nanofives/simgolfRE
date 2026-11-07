@@ -15,6 +15,7 @@
 
 #include <algorithm>  // P6B item 2 (std::min / max in paint)
 #include <cmath>    // P10A: lround (the overlay)
+#include <cstdio>   // P15C: snprintf (objects_json)
 #include <cstring>  // P10A: memcpy (the overlay)
 #include <map>      // P12A fix 2
 #include <tuple>
@@ -357,9 +358,24 @@ void Presenter::objects_start(const WorldImage &prev) {
   }
   if (movers_.empty()) return;
   ++object_stats_.moved;
+  for (Mover &m : movers_) m.ox = m.oy = 1e9;  // objects_tick draws the first place
+  // P15C: the GPU draws them when it is on and able to, and every draw of the queue is one it draws (else the CPU, as before)
+  movers_gpu_ = false;
+  if (gpu_objects_ && gpu_on() && gpu_->objects_ok()) {
+    bool all = true;
+    portsim::GfxHrGpuOp op;
+    for (size_t k = 0; all && k < nd.size(); ++k) all = portsim::gfx_hr_scene_gpu_op(*ns, k, op);
+    movers_gpu_ = all;
+    if (!all) ++gpu_refused_;
+  }
+  if (movers_gpu_) {
+    ++gpu_frames_;
+    px_orig_.clear();
+    pxt_orig_.clear();
+    return;
+  }
   px_orig_ = world_.px;
   pxt_orig_ = world_.px_text;
-  for (Mover &m : movers_) m.ox = m.oy = 1e9;  // objects_tick draws the first place
 }
 
 bool Presenter::objects_tick(int64_t now_ns) {
@@ -367,7 +383,8 @@ bool Presenter::objects_tick(int64_t now_ns) {
   if (movers_.empty() || !world_.hr_scene) return false;
   const portsim::GfxHrScene &sc = *world_.hr_scene;
   const int32_t pw = portsim::gfx_hr_scene_pw(sc), ph = portsim::gfx_hr_scene_ph(sc);
-  if (world_.px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph) || px_orig_.size() != world_.px.size() || world_.fw <= 0)
+  if (world_.px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph) || (!movers_gpu_ && px_orig_.size() != world_.px.size()) ||
+      world_.fw <= 0)  // P15C: no copy of the frame's pixels on the GPU path
     return false;
   const double T = period_ns_ > 0 ? period_ns_ : 93e6;
   const double t = std::min(1.0, std::max(0.0, static_cast<double>(now_ns - objects_t0_) / T));
@@ -389,6 +406,38 @@ bool Presenter::objects_tick(int64_t now_ns) {
   if (!changed) return false;
   object_last_ns_ = now_ns;
   const int64_t t0 = portsim::perf_now_ns();
+  if (movers_gpu_) {  // P15C: the rectangles and offsets only (the same as below); the GPU path draws them at the next paint
+    objects_undo();
+    const std::vector<portsim::GfxHrDraw> &dr = portsim::gfx_hr_scene_draws(sc);
+    std::vector<std::array<int32_t, 4>> regs;
+    std::vector<double> dxv(dr.size(), 0.0), dyv(dr.size(), 0.0);
+    for (const Mover &m : movers_) {
+      if (m.k >= dr.size()) continue;
+      dxv[m.k] = m.ox;
+      dyv[m.k] = m.oy;
+      if (m.ox == 0.0 && m.oy == 0.0) continue;
+      const int32_t *b = dr[m.k].box;
+      const double sx = m.ox * kx, sy = m.oy * ky;
+      std::array<int32_t, 4> r = {std::min(b[0], static_cast<int32_t>(std::floor(b[0] + sx))) - 2,
+                                  std::min(b[1], static_cast<int32_t>(std::floor(b[1] + sy))) - 2,
+                                  std::max(b[2], static_cast<int32_t>(std::ceil(b[2] + sx))) + 2,
+                                  std::max(b[3], static_cast<int32_t>(std::ceil(b[3] + sy))) + 2};
+      r = {std::max(0, r[0]), std::max(0, r[1]), std::min(pw, r[2]), std::min(ph, r[3])};
+      if (r[2] > r[0] && r[3] > r[1]) regs.push_back(r);
+    }
+    mover_dirty_.insert(mover_dirty_.end(), mregs_.begin(), mregs_.end());
+    mover_dirty_.insert(mover_dirty_.end(), regs.begin(), regs.end());
+    mregs_ = std::move(regs);
+    mdx_ = std::move(dxv);
+    mdy_ = std::move(dyv);
+    ++mover_gen_;
+    ++gpu_ticks_;
+    ++object_stats_.redraws;
+    ++world_gen_;
+    tick_ns_ += portsim::perf_now_ns() - t0;
+    changed_pending_ = true;
+    return true;
+  }
   const bool text = pxt_orig_.size() == px_orig_.size() && world_.px_text.size() == world_.px.size();
   auto restore = [&](const std::array<int32_t, 4> &r) {
     for (int32_t y = r[1]; y < r[3]; ++y) {
@@ -445,9 +494,106 @@ bool Presenter::objects_tick(int64_t now_ns) {
   }
   ++object_stats_.redraws;
   ++world_gen_;  // P14A
+  ++world_px_gen_;  // P15C
   object_stats_.redraw_ns += portsim::perf_now_ns() - t0;
   changed_pending_ = true;
   return true;
+}
+
+// P15C: the GPU path's objects in the CPU world image over world rectangle (x0, y0, x1, y1): objects_tick's CPU redraw (the same
+// gfx_hr_scene_redraw pair and the same cover rule) over each of the tick's rectangles clipped to it. A pixel's result does not depend
+// on the rectangle it is drawn in (hr_blit_rows computes each column and row from its own index), so a clipped redraw writes the
+// pixels the whole one would. The replaced pixels are kept and put back by objects_undo (the next tick, before the next redraw).
+void Presenter::objects_sync(int32_t x0, int32_t y0, int32_t x1, int32_t y1) const {
+  if (!movers_gpu_ || mregs_.empty() || !world_.hr_scene) return;
+  const portsim::GfxHrScene &sc = *world_.hr_scene;
+  const int32_t pw = portsim::gfx_hr_scene_pw(sc), ph = portsim::gfx_hr_scene_ph(sc);
+  if (world_.px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph)) return;
+  WorldImage &wm = const_cast<WorldImage &>(world_);  // (a const method: the GPU path calls it through const; the object is not const)
+  const bool text = world_.px_text.size() == world_.px.size();
+  const int64_t t0 = portsim::perf_now_ns();
+  std::vector<uint16_t> out, out0;
+  std::vector<uint8_t> cov, cov0;
+  const std::vector<double> none;
+  for (const std::array<int32_t, 4> &g : mregs_) {
+    const std::array<int32_t, 4> r = {std::max(g[0], x0), std::max(g[1], y0), std::min(g[2], x1), std::min(g[3], y1)};
+    if (r[2] <= r[0] || r[3] <= r[1]) continue;
+    bool done = false;
+    for (const std::array<int32_t, 4> &d : synced_)
+      if (r[0] >= d[0] && r[1] >= d[1] && r[2] <= d[2] && r[3] <= d[3]) done = true;
+    if (done) continue;
+    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], mdx_, mdy_, out, cov);
+    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], none, none, out0, cov0);
+    if (out.size() != static_cast<size_t>(r[2] - r[0]) * static_cast<size_t>(r[3] - r[1]) || out0.size() != out.size()) continue;
+    SyncUndo u;
+    u.r = r;
+    const size_t rw = static_cast<size_t>(r[2] - r[0]);
+    u.px.resize(out.size());
+    if (text) u.pxt.resize(out.size());
+    for (int32_t y = r[1]; y < r[3]; ++y) {
+      const size_t o = static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(r[0]);
+      const size_t i0 = static_cast<size_t>(y - r[1]) * rw;
+      std::copy(world_.px.begin() + static_cast<std::ptrdiff_t>(o), world_.px.begin() + static_cast<std::ptrdiff_t>(o + rw),
+                u.px.begin() + static_cast<std::ptrdiff_t>(i0));
+      if (text)
+        std::copy(world_.px_text.begin() + static_cast<std::ptrdiff_t>(o), world_.px_text.begin() + static_cast<std::ptrdiff_t>(o + rw),
+                  u.pxt.begin() + static_cast<std::ptrdiff_t>(i0));
+      for (size_t i = 0; i < rw; ++i) {
+        if (!cov[i0 + i] && !cov0[i0 + i]) continue;  // (objects_tick's rule: no draw there before or after keeps the frame's pixel)
+        wm.px[o + i] = out[i0 + i];
+        if (text) wm.px_text[o + i] = out[i0 + i];
+      }
+    }
+    sync_undo_.push_back(std::move(u));
+    synced_.push_back(r);
+    ++sync_calls_;
+    sync_px_ += out.size();
+  }
+  sync_ns_ += portsim::perf_now_ns() - t0;
+}
+
+void Presenter::objects_undo() const {
+  WorldImage &wm = const_cast<WorldImage &>(world_);  // (as objects_sync)
+  const size_t pw = static_cast<size_t>(world_.pw);
+  for (auto it = sync_undo_.rbegin(); it != sync_undo_.rend(); ++it) {
+    const std::array<int32_t, 4> &r = it->r;
+    const size_t rw = static_cast<size_t>(r[2] - r[0]);
+    if (static_cast<size_t>(r[3]) * pw > world_.px.size()) continue;
+    for (int32_t y = r[1]; y < r[3]; ++y) {
+      const size_t o = static_cast<size_t>(y) * pw + static_cast<size_t>(r[0]), i0 = static_cast<size_t>(y - r[1]) * rw;
+      std::copy(it->px.begin() + static_cast<std::ptrdiff_t>(i0), it->px.begin() + static_cast<std::ptrdiff_t>(i0 + rw),
+                wm.px.begin() + static_cast<std::ptrdiff_t>(o));
+      if (!it->pxt.empty() && wm.px_text.size() == wm.px.size())
+        std::copy(it->pxt.begin() + static_cast<std::ptrdiff_t>(i0), it->pxt.begin() + static_cast<std::ptrdiff_t>(i0 + rw),
+                  wm.px_text.begin() + static_cast<std::ptrdiff_t>(o));
+    }
+  }
+  sync_undo_.clear();
+  synced_.clear();
+}
+
+// compose_world's world pixels for the canvas at viewport vs: client column x reads world columns around ox + (x - origin) * fw /
+// client_w (the bilinear taps one more on each side); 2 world pixels of margin
+void Presenter::objects_sync_view(const Viewport &vs) const {
+  if (!movers_gpu_ || mregs_.empty() || vs.client_w <= 0 || vs.client_h <= 0 || world_.fw <= 0 || world_.ph <= 0) return;
+  const Canvas C = cv_;
+  auto lo = [](int64_t a, int64_t b) { return static_cast<int32_t>(a >= 0 ? a / b : -((-a + b - 1) / b)); };
+  const int32_t x0 = world_.ox + lo(static_cast<int64_t>(C.x0 - vs.origin_x) * world_.fw, vs.client_w) - 2;
+  const int32_t x1 = world_.ox + lo(static_cast<int64_t>(C.x0 + C.w - vs.origin_x) * world_.fw + vs.client_w - 1, vs.client_w) + 2;
+  const int32_t y0 = lo(static_cast<int64_t>(C.y0 - vs.origin_y) * world_.ph, vs.client_h) - 2;
+  const int32_t y1 = lo(static_cast<int64_t>(C.y0 + C.h - vs.origin_y) * world_.ph + vs.client_h - 1, vs.client_h) + 2;
+  objects_sync(std::max(0, x0), std::max(0, y0), std::min(world_.pw, x1), std::min(world_.ph, y1));
+}
+
+std::string Presenter::objects_json() const {  // P15C
+  char b[512];
+  std::snprintf(b, sizeof b,
+                "{\"gpu_objects\":%d,\"gpu_frames\":%llu,\"gpu_refused\":%llu,\"gpu_ticks\":%llu,\"tick_ms\":%.1f,\"sync_calls\":%llu,"
+                "\"sync_px\":%llu,\"sync_ms\":%.1f}",
+                gpu_objects_ ? 1 : 0, static_cast<unsigned long long>(gpu_frames_), static_cast<unsigned long long>(gpu_refused_),
+                static_cast<unsigned long long>(gpu_ticks_), static_cast<double>(tick_ns_) / 1e6, static_cast<unsigned long long>(sync_calls_),
+                static_cast<unsigned long long>(sync_px_), static_cast<double>(sync_ns_) / 1e6);
+  return b;
 }
 
 int Presenter::object_rate_now() const {  // P14A fix 2
@@ -690,6 +836,12 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   movers_.clear();  // P12A fix 2 (objects_start may find new ones)
   patched_.clear();
   world_dirty_.clear();  // P14A: a new world image is uploaded whole
+  sync_undo_.clear();    // P15C: the world they were taken from is gone
+  synced_.clear();
+  mregs_.clear();
+  mover_dirty_.clear();
+  movers_gpu_ = false;
+  ++world_px_gen_;
   hover_pristine_.clear();  // P10I fix 2: the new frame's own looks
   if (defect_ == PresentDefect::ByteSwap)
     for (uint16_t &v : frame_) v = static_cast<uint16_t>((v >> 8) | (v << 8));
@@ -977,6 +1129,7 @@ void Presenter::compose_world(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   const ProfScope prof(Phase::World);  // P10A
   const WorldImage &w = world_;
   if (vp.client_w <= 0 || vp.client_h <= 0 || cw <= 0 || ch <= 0) return;
+  objects_sync_view(vp);  // P15C: the GPU path's moving objects where this canvas reads the world (no-op otherwise)
   // G32: the HUD compositor. The frame's image as drawn (frame_img), the mask with every moved panel's 2D pixels vacated (they show
   // the world), then each panel's 2D pixels pasted at their anchored place
   const bool layers = layered();  // P9B: the panels are layers composed after the world (compose_layers), not rectangles

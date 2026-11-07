@@ -381,6 +381,14 @@ class Presenter {
   static constexpr int64_t kObjectAutoPx = 1920LL * 1200LL;
   static constexpr int kObjectAutoHz = 30;
   void set_object_rate_auto() { object_auto_ = true; }
+  // P15C (log/roadmap/P15/P15C_notes.md): with the GPU path the moving objects are drawn by the GPU (GpuCompositor: the same redraw,
+  // gfx.h gfx_hr_scene_tables / gfx_hr_scene_gpu_op, transcribed to a compute pass); objects_tick then only finds the offsets and the
+  // rectangles. The CPU world image gets the objects only where a CPU render reads it (objects_sync: the patches, the A/B check),
+  // undone at the next tick. Off (SG_APP_P15=off, set_gpu_objects(false)), or a frame the GPU cannot draw: the CPU redraw as before.
+  void set_gpu_objects(bool on) { gpu_objects_ = on; }
+  bool gpu_objects() const { return gpu_objects_; }
+  bool objects_on_gpu() const { return movers_gpu_; }
+  std::string objects_json() const;  // session.json p15c_objects
   bool object_rate_auto() const { return object_auto_; }
   int object_rate_now() const;  // the rate objects_tick uses now (0 = every tick)
   const ObjectStats &object_stats() const { return object_stats_; }
@@ -509,6 +517,24 @@ class Presenter {
   std::vector<uint16_t> px_orig_, pxt_orig_;  // the frame's world pixels before any object was moved
   std::vector<std::array<int32_t, 4>> patched_;  // the world rectangles the last objects_tick wrote
   ObjectStats object_stats_;
+  // P15C (set_gpu_objects)
+  bool gpu_objects_ = true;
+  bool movers_gpu_ = false;                      // this frame's objects are drawn by the GPU (objects_start decides)
+  std::vector<std::array<int32_t, 4>> mregs_;    // the last tick's rectangles (world pixels), as objects_tick finds them
+  std::vector<double> mdx_, mdy_;                // and each draw's offset (800-space)
+  mutable uint64_t mover_gen_ = 0;               // bumped by each tick that moved an object on the GPU path
+  mutable std::vector<std::array<int32_t, 4>> mover_dirty_;  // the rectangles left and entered since the GPU took them
+  struct SyncUndo {
+    std::array<int32_t, 4> r;
+    std::vector<uint16_t> px, pxt;
+  };
+  mutable std::vector<SyncUndo> sync_undo_;       // the CPU world pixels objects_sync replaced this tick (undone in reverse)
+  mutable std::vector<std::array<int32_t, 4>> synced_;  // the world rectangles objects_sync drew this tick
+  mutable uint64_t sync_calls_ = 0, sync_px_ = 0, gpu_ticks_ = 0, gpu_frames_ = 0, gpu_refused_ = 0;
+  mutable int64_t sync_ns_ = 0, tick_ns_ = 0;
+  void objects_sync(int32_t x0, int32_t y0, int32_t x1, int32_t y1) const;  // world rectangle
+  void objects_sync_view(const Viewport &vs) const;  // compose_world: the world pixels the canvas reads at viewport vs
+  void objects_undo() const;
   void objects_start(const WorldImage &prev);  // set_frame_world
   void slide_start(const WorldImage &w);  // set_frame_world
   void fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vs, int32_t slx, int32_t sly) const;
@@ -561,6 +587,7 @@ class Presenter {
   void draw_order(const portsim::GfxHudFrame &f, bool cur, bool lines, size_t &cur_layer, size_t &line_layer) const;
   mutable uint64_t content_gen_ = 0;  // bumped by a new frame, a hover swap, set_text (the GPU path re-uploads)
   mutable uint64_t world_gen_ = 0;    // bumped by objects_tick when it rewrote world pixels
+  mutable uint64_t world_px_gen_ = 0;  // P15C: bumped when the CPU world image the GPU uploads changed (not by a GPU objects tick)
   mutable std::vector<std::array<int32_t, 4>> world_dirty_;  // the world rectangles objects_tick rewrote since the GPU's upload
   mutable uint64_t swap_gen_ = 0;     // bumped where slide_start swaps scene_prev_ / scene_last_
   mutable bool overlay_frozen_ = false;  // overlay_freeze

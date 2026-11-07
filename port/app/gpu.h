@@ -49,6 +49,8 @@ class GpuCompositor {
   void request_shot(const std::string &path);
   // the next vertical blank of the swap chain's monitor (any thread); false = none
   bool wait_vblank();
+  // P15C: the moving objects' compute pass is available (the presenter's GPU objects path; false = its CPU redraw)
+  bool objects_ok() const;
 
  private:
   struct Impl;
@@ -57,6 +59,7 @@ class GpuCompositor {
   void lose(const char *where, long hr);
   void upload_frame(const Presenter &p, const Viewport &vp, bool text);
   void upload_world(const Presenter &p, bool text);
+  void run_objects(const Presenter &p);  // P15C
   void build_course_patches(const Presenter &p, const Viewport &vp, bool text);
   void build_final_patches(const Presenter &p, const Viewport &vp, bool text, int32_t slx, int32_t sly, int32_t cdx, int32_t shx,
                            int32_t shy, bool moving_tools);
