@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstring>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <tuple>
@@ -329,7 +330,7 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
 // from w, inside the box, visible; per channel that result is lut[level of w's channel]'s channel, so the pixels kept are the box's
 // visible pixels where some level's result differs from the level.
 bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch,
-                       TextTable &t) {
+                       TextTable &t, uint32_t levels) {
   t = TextTable();
 #ifdef _WIN32
   Prep p;
@@ -352,6 +353,11 @@ bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewpor
   std::vector<uint16_t> res(static_cast<size_t>(32) * vis.size());
   for (uint32_t L = 0; L < 32; ++L) {
     const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
+    uint16_t *dst = res.data() + static_cast<size_t>(L) * vis.size();
+    if (L >= levels) {  // a level the caller never looks up: the word itself (no ink)
+      std::fill(dst, dst + vis.size(), g);
+      continue;
+    }
     GdiFlush();
     for (int32_t y = 0; y < p.h; ++y) {
       uint16_t *row = bits + pitch * static_cast<size_t>(y);
@@ -359,33 +365,40 @@ bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewpor
     }
     gdi(r, p);
     ++table_draws;
-    uint16_t *dst = res.data() + static_cast<size_t>(L) * vis.size();
     for (int32_t y = y0; y < y1; ++y) {
       const uint16_t *row = bits + pitch * static_cast<size_t>(y - p.dy0) + static_cast<size_t>(x0 - p.dx0);
       std::memcpy(dst + static_cast<size_t>(y - y0) * static_cast<size_t>(bw), row, static_cast<size_t>(bw) * 2u);
     }
   }
-  // the entries (one per distinct 32-word column), and the ink's box
-  std::map<std::vector<uint16_t>, uint32_t> ids;
+  // the entries (one per distinct 32-word column), and the ink's box. First the pixels with ink (some level's word differs from
+  // the level), level by level over the box; then each ink pixel's column, found again by its hash (the words compared)
+  std::vector<uint16_t> diff(vis.size(), 0);
+  for (uint32_t L = 0; L < 32; ++L) {
+    const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
+    const uint16_t *src = res.data() + static_cast<size_t>(L) * vis.size();
+    for (size_t i = 0; i < vis.size(); ++i) diff[i] |= static_cast<uint16_t>(src[i] ^ g);
+  }
+  std::unordered_multimap<uint64_t, uint32_t> ids;
   std::vector<uint32_t> idx(vis.size(), 0);
   int32_t ix0 = bw, ix1 = -1, iy0 = bh, iy1 = -1;
-  std::vector<uint16_t> e(32);
+  uint16_t e[32];
   for (size_t i = 0; i < vis.size(); ++i) {
-    if (!vis[i]) continue;
-    bool ink = false;
+    if (!vis[i] || diff[i] == 0) continue;
+    uint64_t hsh = 1469598103934665603ull;  // FNV-1a over the 32 words
     for (uint32_t L = 0; L < 32; ++L) {
       e[L] = res[static_cast<size_t>(L) * vis.size() + i];
-      if (e[L] != static_cast<uint16_t>(L | (L << 5) | (L << 10))) ink = true;
+      hsh = (hsh ^ e[L]) * 1099511628211ull;
     }
-    if (!ink) continue;
-    auto it = ids.find(e);
-    uint32_t k;
-    if (it == ids.end()) {
-      k = static_cast<uint32_t>(ids.size());
-      ids.emplace(e, k);
-      t.lut.insert(t.lut.end(), e.begin(), e.end());
-    } else {
-      k = it->second;
+    uint32_t k = ~0u;
+    for (auto r2 = ids.equal_range(hsh); r2.first != r2.second; ++r2.first)
+      if (std::memcmp(t.lut.data() + static_cast<size_t>(r2.first->second) * 32u, e, sizeof e) == 0) {
+        k = r2.first->second;
+        break;
+      }
+    if (k == ~0u) {
+      k = static_cast<uint32_t>(t.lut.size() / 32);
+      ids.emplace(hsh, k);
+      t.lut.insert(t.lut.end(), e, e + 32);
     }
     idx[i] = k + 1;
     const int32_t xx = static_cast<int32_t>(i % static_cast<size_t>(bw)), yy = static_cast<int32_t>(i / static_cast<size_t>(bw));

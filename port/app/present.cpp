@@ -1888,6 +1888,20 @@ bool Presenter::overlay_box(int32_t cw, int32_t ch, int32_t box[4]) const {  // 
   return box[2] > box[0] && box[3] > box[1];
 }
 
+bool Presenter::overlay_runs(int32_t cw, int32_t ch, std::vector<portsim::GfxTextRun> &runs, Viewport &vp, int32_t &dxr,
+                             int32_t box[4]) const {  // P15B
+  OverlayLayout L;
+  if (!overlay_layout(overlay_mode_, cw, ch, L, overlay_frozen_ ? &overlay_line_ : nullptr)) return false;
+  box[0] = std::max<int32_t>(0, L.bx0 - 2);
+  box[1] = L.by0;
+  box[2] = cw;
+  box[3] = L.by1;
+  runs = std::move(L.runs);
+  vp = L.vp;
+  dxr = L.dxr;
+  return box[2] > box[0] && box[3] > box[1];
+}
+
 // the overlay over the canvas (x0, y0, w, h) of the client: the box darkened to half, then the runs (P14A: draw_overlay's drawing
 // on a canvas; the whole client = draw_overlay)
 void Presenter::draw_overlay_rect(std::vector<uint32_t> &out, int32_t cw, int32_t ch, int32_t x0, int32_t y0, int32_t w,

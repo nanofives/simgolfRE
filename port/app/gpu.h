@@ -14,8 +14,8 @@
 //                overlay), drawn over it.
 //   P15B         the HUD text runs that do not move with an object are no final patches: each run's GDI result per pixel as a
 //                function of the word under it (textres.h TextTable, 32 GDI draws per run, cached while the run is unchanged) is
-//                applied by the HUD pass right after the run's layer, as compose_layers' draw_runs does (SG_APP_P15=off: P14A's
-//                patches).
+//                applied by the HUD pass right after the run's layer, as compose_layers' draw_runs does; the FPS overlay (its box
+//                darkened to half, then its runs' tables) at the end of the HUD pass (SG_APP_P15=off: P14A's patches).
 // Every pixel rule on the GPU is integer arithmetic on the stored words, transcribed from present.cpp; GDI text and the lines'
 // double arithmetic stay on the CPU (patches hold the final pixels of their rectangles). Frames the GPU path does not take (screens
 // without the layered course view, the negative controls) are rendered by Presenter::render and uploaded whole.
@@ -61,6 +61,8 @@ class GpuCompositor {
   void build_final_patches(const Presenter &p, const Viewport &vp, bool text, int32_t slx, int32_t sly, int32_t cdx, int32_t shx,
                            int32_t shy, bool moving_tools);
   void build_text_tables(const Presenter &p, const Viewport &vp, bool text);  // P15B
+  void build_overlay_tables(const Presenter &p, int32_t cw, int32_t ch);      // P15B fix 2
+  void upload_text_tables(int32_t cw, int32_t ch);                            // P15B
   void paint_layered(const Presenter &p, int32_t cw, int32_t ch, int32_t slx, int32_t sly);
   void paint_full(const Presenter &p, int32_t cw, int32_t ch);
   void paint_flat(const Presenter &p, int32_t cw, int32_t ch);

@@ -76,8 +76,11 @@ class TextRaster {
   // `layered` reads the run's layer visibility (GfxTextRun::vis_layer) instead of the back buffer's (vis)
   void draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out, int32_t cw,
             int32_t ch);
-  // P15B: the run's TextTable for the same arguments as draw (false: nothing drawable, or the host could not draw)
-  bool table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, TextTable &t);
+  // P15B: the run's TextTable for the same arguments as draw (false: nothing drawable, or the host could not draw). Only levels
+  // below `levels` are drawn (the others hold the level's own word: no ink); a caller whose words never have a channel at or
+  // above it (the FPS overlay's box, darkened to half: every channel <= 127, level <= 15) passes 16
+  bool table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, TextTable &t,
+             uint32_t levels = 32);
   TextResStats stats;
   uint64_t table_draws = 0;  // P15B: GDI draws made for tables
 

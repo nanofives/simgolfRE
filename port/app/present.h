@@ -288,6 +288,9 @@ class Presenter {
   void draw_overlay(std::vector<uint32_t> &out, int32_t cw, int32_t ch) const;
   // P14A: the overlay's client box (x0, y0, x1, y1; false = nothing drawn), and the overlay drawn into a canvas (render_rect's)
   bool overlay_box(int32_t cw, int32_t ch, int32_t box[4]) const;
+  // P15B: the overlay's runs as draw_overlay_rect draws them (layout viewport vp, right offset dxr; grey antialiasing, no fit) and its
+  // darkened box (overlay_box's); false = nothing drawn
+  bool overlay_runs(int32_t cw, int32_t ch, std::vector<portsim::GfxTextRun> &runs, Viewport &vp, int32_t &dxr, int32_t box[4]) const;
   // P14A: the overlay drawn from one profiler line until unfrozen (a GPU paint's patches and its A/B check read the same line)
   void overlay_freeze(bool on) const {
     overlay_frozen_ = on;
