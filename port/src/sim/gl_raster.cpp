@@ -434,6 +434,46 @@ void GlRaster::set_arrays(const float *v, size_t nv, const float *n, size_t nn) 
   narr_.assign(n, n + nn * 3);
 }
 void GlRaster::flush() { finish(); }
+// P15A fix 3 (gl_raster.h)
+void GlRaster::set_mask(std::vector<uint8_t> rows, int cx0, int cx1) {
+  finish();   // queued jobs read the mask through a pointer
+  if (!rows.empty()) rows.resize(static_cast<size_t>(h_), 0);
+  mask_rows_ = std::move(rows);
+  mask_cx0_ = cx0;
+  mask_cx1_ = cx1;
+  mask_pre_.assign(mask_rows_.size() + 1, 0);
+  for (size_t y = 0; y < mask_rows_.size(); ++y) mask_pre_[y + 1] = mask_pre_[y] + (mask_rows_[y] ? 1 : 0);
+}
+void GlRaster::fill_masked(uint16_t v) {
+  finish();
+  if (mask_rows_.empty()) {
+    std::fill(fb_.begin(), fb_.end(), v);
+    return;
+  }
+  const int a = std::min(std::max(mask_cx0_, 0), w_), b = std::min(std::max(mask_cx1_, a), w_);
+  for (int y = 0; y < h_; ++y) {
+    if (!mask_rows_[static_cast<size_t>(y)]) continue;
+    uint16_t *row = fb_.data() + static_cast<size_t>(y) * static_cast<size_t>(w_);
+    std::fill(row, row + a, v);
+    std::fill(row + b, row + w_, v);
+  }
+}
+void GlRaster::copy_masked(const std::vector<uint16_t> &src, std::vector<uint16_t> &dst) const {
+  if (mask_rows_.empty() || src.size() != static_cast<size_t>(w_) * static_cast<size_t>(h_)) {
+    dst = src;
+    return;
+  }
+  if (dst.size() != src.size()) dst.assign(src.size(), 0);
+  const int a = std::min(std::max(mask_cx0_, 0), w_), b = std::min(std::max(mask_cx1_, a), w_);
+  for (int y = 0; y < h_; ++y) {
+    if (!mask_rows_[static_cast<size_t>(y)]) continue;
+    const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w_);
+    std::copy(src.begin() + static_cast<std::ptrdiff_t>(o), src.begin() + static_cast<std::ptrdiff_t>(o + a),
+              dst.begin() + static_cast<std::ptrdiff_t>(o));
+    std::copy(src.begin() + static_cast<std::ptrdiff_t>(o + b), src.begin() + static_cast<std::ptrdiff_t>(o + w_),
+              dst.begin() + static_cast<std::ptrdiff_t>(o + b));
+  }
+}
 void GlRaster::tex_coord2fv(const float *v) { cur_s_ = v[0]; cur_t_ = v[1]; }
 void GlRaster::tex_coord2f(float s, float t) { cur_s_ = s; cur_t_ = t; }
 void GlRaster::normal3fv(const float *v) { cur_n_[0] = v[0]; cur_n_[1] = v[1]; cur_n_[2] = v[2]; }
@@ -459,6 +499,7 @@ double GlRaster::spec_lookup_(double nh, double shininess) {
 }
 
 void GlRaster::emit(double x, double y, double z, const float *normal) {
+  if (discard_) return;   // P15A fix 3: set_discard
   // object -> eye -> clip (orthographic here, but the divide is done) -> window
   const double *m = mv_.m, *p = proj_.m;
   const bool g32 = (tune[5] & 2) != 0;   // experiment: float32 geometry (every intermediate rounded to single precision)
@@ -680,6 +721,10 @@ void GlRaster::vertex3fv(const float *v) { emit(v[0], v[1], v[2], cur_n_); }
 void GlRaster::vertex3f(float x, float y, float z) { emit(x, y, z, cur_n_); }
 void GlRaster::end() {
   in_begin_ = false;
+  if (discard_) {   // P15A fix 3: set_discard (no vertex was kept)
+    verts_.clear();
+    return;
+  }
   if (prim_ == kTriangles) {
     for (size_t i = 0; i + 2 < verts_.size(); i += 3) triangle(verts_[i], verts_[i + 1], verts_[i + 2]);
   } else if (prim_ == kTriangleFan) {
@@ -727,6 +772,14 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
   const int maxx = std::min(w_ - 1, static_cast<int>(std::ceil(std::max({v0->x, v1->x, v2->x}))));
   const int miny = std::max(0, static_cast<int>(std::floor(std::min({v0->y, v1->y, v2->y}))));
   const int maxy = std::min(h_ - 1, static_cast<int>(std::ceil(std::max({v0->y, v1->y, v2->y}))));
+  if (!mask_rows_.empty()) {   // P15A fix 3: a box that meets no pixel of the mask writes none of them
+    const bool rows = miny <= maxy && mask_pre_[static_cast<size_t>(maxy) + 1] > mask_pre_[static_cast<size_t>(miny)];
+    const bool cols = minx <= maxx && (minx < mask_cx0_ || maxx >= mask_cx1_);
+    if (!rows || !cols) {
+      ++stats.mask_skipped;
+      return;
+    }
+  }
   const int bpp = tex.fmt == kGlRgba ? 4 : 3;
   // tie-break (U-1300): an edge (counter-clockwise order, window y = memory row) owns the pixel centres exactly on it when it points
   // to +y, or to +x on a horizontal edge; as spans, rows with ymin <= y + 0.5 < ymax and columns with xl < x + 0.5 <= xr. Measured
@@ -871,11 +924,14 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
       prev_ix = ix;
     }
   }
+  const bool gmask = !mask_rows_.empty();   // P15A fix 3: set_mask (the walk's sums are carried over a skipped column below)
   for (int y = miny; y <= maxy; ++y) {
+    if (gmask && !mask_rows_[static_cast<size_t>(y)]) continue;
     const int32_t wix = walk ? walk->ix[static_cast<size_t>(y - walk->miny)] : INT32_MIN;
     float wacc[5] = {};
     int wx = INT32_MIN;
     for (int x = minx; x <= maxx; ++x) {
+      if (gmask && x >= mask_cx0_ && x < mask_cx1_) continue;
       const double px = x + 0.5, py = y + 0.5;
       const double w0 = edge(c1->x, c1->y, c2->x, c2->y, px, py);
       const double w1 = edge(c2->x, c2->y, c0->x, c0->y, px, py);
@@ -1076,6 +1132,8 @@ struct GlRaster::FastJob {
   bool wctl;   // worker_ctl (negative control)
   std::shared_ptr<const GlRaster::TexWalk> walk;   // the textured walk (tune 32), else empty
   bool wfinal;   // the walk's float32 final stage (tune 32 with tune 35 = 0 and tune 11 = 0)
+  const uint8_t *rmask;   // P15A fix 3: GlRaster::set_mask's rows (null: none) and central columns [cx0, cx1)
+  int cx0, cx1;
 };
 
 // The pixel-loop workers (set_threads): a ring of jobs written in order by the thread that sets the triangles up; worker k
@@ -1372,6 +1430,9 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
   j.wctl = worker_ctl == 1;
   j.walk = std::move(walk);
   j.wfinal = tune[35] == 0 && ctl == 0;
+  j.rmask = mask_rows_.empty() ? nullptr : mask_rows_.data();   // P15A fix 3 (set_mask runs the queue first: the pointer stays valid)
+  j.cx0 = mask_cx0_;
+  j.cx1 = mask_cx1_;
   bool approx = (fast_mode == 1 || fast_mode == 3 || fast_mode == 4) && j.div_st > 0 && j.div_st < 1e300 && j.arA > 0 &&
                 j.arA < 1e300;
   for (const Vtx *p : {v0, v1, v2})
@@ -1412,6 +1473,7 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
   int64_t drawn = 0, blended = 0, fastn = 0;
   for (int y = j.miny; y <= j.maxy; ++y) {
     if (parts > 1 && ((y >> 2) % parts) != part) continue;
+    if (j.rmask && !j.rmask[y]) continue;   // P15A fix 3: a row outside the mask
     const int64_t PY = 256 * static_cast<int64_t>(y) + 128;
     int64_t xl = j.minx, xr = j.maxx, K[3];
     for (int i = 0; i < 3; ++i) {
@@ -1438,7 +1500,18 @@ void GlRaster::fast_rows_(const FastJob &j, int part, int parts, int64_t *c) {
       for (int k = 0; k < 5; ++k) wacc[k] = st0[k];
       wx = wix;
     }
+    // P15A fix 3: the mask's central columns [cx0, cx1) are jumped (the edge values moved by the same integer steps; the walk's
+    // sums below are carried over the jumped columns one pixel at a time, as before)
+    const int jump = j.rmask ? std::max(static_cast<int>(xl), j.cx0) : INT32_MAX;
     for (int x = static_cast<int>(xl); x <= static_cast<int>(xr); ++x, w0 -= d0, w1 -= d1, w2 -= d2) {
+      if (x == jump && x < j.cx1) {
+        const int64_t n = static_cast<int64_t>(j.cx1) - x;
+        w0 -= d0 * n;
+        w1 -= d1 * n;
+        w2 -= d2 * n;
+        x = j.cx1;
+        if (x > static_cast<int>(xr)) break;
+      }
       const double a0 = static_cast<double>(w0) * kUnit, a1 = static_cast<double>(w1) * kUnit, a2 = static_cast<double>(w2) * kUnit;
       const bool wpx = wix != INT32_MIN;
       if (wpx) {
@@ -1671,6 +1744,306 @@ bool GlRaster::exec_line(const std::string &line) {
   else if (name == "glFlush") flush();
   else return false;
   return true;
+}
+
+// ------------------------------------------------------------------------------------------------ P15A fix 3: GlRecord, gl_replay
+namespace {
+enum RecOp : uint32_t {
+  kRLoadIdentity = 1, kRPush, kRPop, kRRotated, kRRotatef, kRTranslatef, kRBind, kRBegin, kREnd, kRTex2fv, kRTex2f, kRArrayElement,
+  kRNormal3fv, kRVertex3fv, kRVertex3f, kREnable, kRDisable, kRBlendFunc, kRFlush, kRContext, kRHint, kREnableClient, kRFrontFace,
+  kRViewport, kRMatrixMode, kROrtho, kRLight, kRMaterial, kRShininess, kRGenTextures, kRDeleteTextures, kRTexParami, kRTexParamf,
+  kRTexEnvi, kRTexImage, kRVertexPointer, kRNormalPointer, kRSetArrays
+};
+uint32_t fbits(float f) {
+  uint32_t b;
+  std::memcpy(&b, &f, 4);
+  return b;
+}
+float bitsf(uint32_t b) {
+  float f;
+  std::memcpy(&f, &b, 4);
+  return f;
+}
+void put_d(std::vector<uint32_t> &w, double d) {
+  uint64_t b;
+  std::memcpy(&b, &d, 8);
+  w.push_back(static_cast<uint32_t>(b));
+  w.push_back(static_cast<uint32_t>(b >> 32));
+}
+double get_d(const uint32_t *p) {
+  const uint64_t b = static_cast<uint64_t>(p[0]) | (static_cast<uint64_t>(p[1]) << 32);
+  double d;
+  std::memcpy(&d, &b, 8);
+  return d;
+}
+void put_f(std::vector<uint32_t> &w, const float *v, int n) {
+  for (int i = 0; i < n; ++i) w.push_back(fbits(v[i]));
+}
+}  // namespace
+
+void GlRecord::load_identity() { c().w.push_back(kRLoadIdentity); }
+void GlRecord::push_matrix() { c().w.push_back(kRPush); }
+void GlRecord::pop_matrix() { c().w.push_back(kRPop); }
+void GlRecord::rotated(double a, double x, double y, double z) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRRotated);
+  put_d(w, a); put_d(w, x); put_d(w, y); put_d(w, z);
+}
+void GlRecord::rotatef(float a, float x, float y, float z) {
+  std::vector<uint32_t> &w = c().w;
+  const float v[4] = {a, x, y, z};
+  w.push_back(kRRotatef);
+  put_f(w, v, 4);
+}
+void GlRecord::translatef(float x, float y, float z) {
+  std::vector<uint32_t> &w = c().w;
+  const float v[3] = {x, y, z};
+  w.push_back(kRTranslatef);
+  put_f(w, v, 3);
+}
+void GlRecord::bind_texture(uint32_t t, uint32_t id) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRBind); w.push_back(t); w.push_back(id);
+}
+void GlRecord::begin(uint32_t m) {
+  GlRec &r = c();
+  r.draws = true;
+  r.w.push_back(kRBegin);
+  r.w.push_back(m);
+}
+void GlRecord::end() { c().w.push_back(kREnd); }
+void GlRecord::tex_coord2fv(const float *v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRTex2fv);
+  put_f(w, v, 2);
+}
+void GlRecord::tex_coord2f(float s, float t) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRTex2f); w.push_back(fbits(s)); w.push_back(fbits(t));
+}
+void GlRecord::array_element(int32_t i) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRArrayElement); w.push_back(static_cast<uint32_t>(i));
+}
+void GlRecord::normal3fv(const float *v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRNormal3fv);
+  put_f(w, v, 3);
+}
+void GlRecord::vertex3fv(const float *v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRVertex3fv);
+  put_f(w, v, 3);
+}
+void GlRecord::vertex3f(float x, float y, float z) {
+  std::vector<uint32_t> &w = c().w;
+  const float v[3] = {x, y, z};
+  w.push_back(kRVertex3f);
+  put_f(w, v, 3);
+}
+void GlRecord::enable(uint32_t cap) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kREnable); w.push_back(cap);
+}
+void GlRecord::disable(uint32_t cap) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRDisable); w.push_back(cap);
+}
+void GlRecord::blend_func(uint32_t s, uint32_t d) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRBlendFunc); w.push_back(s); w.push_back(d);
+}
+void GlRecord::flush() { c().w.push_back(kRFlush); }
+void GlRecord::context_create() { c().w.push_back(kRContext); }
+void GlRecord::hint(uint32_t t, uint32_t m) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRHint); w.push_back(t); w.push_back(m);
+}
+void GlRecord::enable_client_state(uint32_t a) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kREnableClient); w.push_back(a);
+}
+void GlRecord::front_face(uint32_t m) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRFrontFace); w.push_back(m);
+}
+void GlRecord::viewport(int32_t x, int32_t y, int32_t vw, int32_t vh) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRViewport);
+  w.push_back(static_cast<uint32_t>(x)); w.push_back(static_cast<uint32_t>(y));
+  w.push_back(static_cast<uint32_t>(vw)); w.push_back(static_cast<uint32_t>(vh));
+}
+void GlRecord::matrix_mode(uint32_t m) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRMatrixMode); w.push_back(m);
+}
+void GlRecord::ortho(double l, double r, double b, double t, double n, double f) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kROrtho);
+  put_d(w, l); put_d(w, r); put_d(w, b); put_d(w, t); put_d(w, n); put_d(w, f);
+}
+void GlRecord::light(uint32_t l, uint32_t p, const float *v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRLight); w.push_back(l); w.push_back(p);
+  put_f(w, v, 4);
+}
+void GlRecord::material(uint32_t f, uint32_t p, const float *v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRMaterial); w.push_back(f); w.push_back(p);
+  put_f(w, v, 4);
+}
+void GlRecord::material_shininess(uint32_t f, int32_t s) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRShininess); w.push_back(f); w.push_back(static_cast<uint32_t>(s));
+}
+bool GlRecord::gen_textures(int32_t n, uint32_t *) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRGenTextures); w.push_back(static_cast<uint32_t>(n));
+  return false;
+}
+void GlRecord::delete_textures(int32_t n, const uint32_t *names) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRDeleteTextures);
+  w.push_back(static_cast<uint32_t>(n < 0 ? 0 : n));
+  for (int32_t i = 0; i < n; ++i) w.push_back(names[i]);
+}
+void GlRecord::tex_parameteri(uint32_t t, uint32_t p, int32_t v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRTexParami); w.push_back(t); w.push_back(p); w.push_back(static_cast<uint32_t>(v));
+}
+void GlRecord::tex_parameterf(uint32_t t, uint32_t p, float v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRTexParamf); w.push_back(t); w.push_back(p); w.push_back(fbits(v));
+}
+void GlRecord::tex_envi(uint32_t t, uint32_t p, int32_t v) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRTexEnvi); w.push_back(t); w.push_back(p); w.push_back(static_cast<uint32_t>(v));
+}
+void GlRecord::tex_image2d(uint32_t target, int32_t level, int32_t internal, int32_t tw, int32_t th, int32_t border, uint32_t format,
+                           uint32_t type, const uint8_t *data) {
+  GlRec &r = c();
+  // the bytes GlRaster::tex_image2d reads (GL_RGBA 4 per texel, else 3), none when it reads none
+  const int bpp = format == kGlRgba ? 4 : 3;
+  uint32_t blob = 0xffffffffu;
+  if (data && tw > 0 && th > 0) {
+    const size_t n = static_cast<size_t>(tw) * static_cast<size_t>(th) * static_cast<size_t>(bpp);
+    r.blobs.push_back(std::make_shared<const std::vector<uint8_t>>(data, data + n));
+    blob = static_cast<uint32_t>(r.blobs.size() - 1);
+  }
+  r.w.push_back(kRTexImage);
+  r.w.push_back(target); r.w.push_back(static_cast<uint32_t>(level)); r.w.push_back(static_cast<uint32_t>(internal));
+  r.w.push_back(static_cast<uint32_t>(tw)); r.w.push_back(static_cast<uint32_t>(th)); r.w.push_back(static_cast<uint32_t>(border));
+  r.w.push_back(format); r.w.push_back(type); r.w.push_back(blob);
+}
+void GlRecord::vertex_pointer(int32_t s, uint32_t t, int32_t st) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRVertexPointer); w.push_back(static_cast<uint32_t>(s)); w.push_back(t); w.push_back(static_cast<uint32_t>(st));
+}
+void GlRecord::normal_pointer(uint32_t t, int32_t st) {
+  std::vector<uint32_t> &w = c().w;
+  w.push_back(kRNormalPointer); w.push_back(t); w.push_back(static_cast<uint32_t>(st));
+}
+void GlRecord::set_arrays(const float *v, size_t nv, const float *n, size_t nn) {
+  auto same = [](const std::shared_ptr<const std::vector<float>> &a, const float *p, size_t k) {
+    return a && a->size() == k && (k == 0 || std::memcmp(a->data(), p, k * sizeof(float)) == 0);
+  };
+  if (!same(last_v_, v, nv * 3)) {
+    last_v_ = std::make_shared<const std::vector<float>>(v, v + nv * 3);
+    ++array_copies;
+  }
+  if (!same(last_n_, n, nn * 3)) {
+    last_n_ = std::make_shared<const std::vector<float>>(n, n + nn * 3);
+    ++array_copies;
+  }
+  GlRec &r = c();
+  r.arrays.push_back(last_v_);
+  r.arrays.push_back(last_n_);
+  r.w.push_back(kRSetArrays);
+  r.w.push_back(static_cast<uint32_t>(r.arrays.size() - 2));
+}
+
+void gl_replay(const GlRec &r, GlRaster &g) {
+  const uint32_t *p = r.w.data(), *e = p + r.w.size();
+  float v[4];
+  std::vector<uint32_t> names;
+  while (p < e) {
+    const uint32_t op = *p++;
+    switch (op) {
+      case kRLoadIdentity: g.load_identity(); break;
+      case kRPush: g.push_matrix(); break;
+      case kRPop: g.pop_matrix(); break;
+      case kRRotated: g.rotated(get_d(p), get_d(p + 2), get_d(p + 4), get_d(p + 6)); p += 8; break;
+      case kRRotatef: g.rotatef(bitsf(p[0]), bitsf(p[1]), bitsf(p[2]), bitsf(p[3])); p += 4; break;
+      case kRTranslatef: g.translatef(bitsf(p[0]), bitsf(p[1]), bitsf(p[2])); p += 3; break;
+      case kRBind: g.bind_texture(p[0], p[1]); p += 2; break;
+      case kRBegin: g.begin(p[0]); p += 1; break;
+      case kREnd: g.end(); break;
+      case kRTex2fv: v[0] = bitsf(p[0]); v[1] = bitsf(p[1]); g.tex_coord2fv(v); p += 2; break;
+      case kRTex2f: g.tex_coord2f(bitsf(p[0]), bitsf(p[1])); p += 2; break;
+      case kRArrayElement: g.array_element(static_cast<int32_t>(p[0])); p += 1; break;
+      case kRNormal3fv: v[0] = bitsf(p[0]); v[1] = bitsf(p[1]); v[2] = bitsf(p[2]); g.normal3fv(v); p += 3; break;
+      case kRVertex3fv: v[0] = bitsf(p[0]); v[1] = bitsf(p[1]); v[2] = bitsf(p[2]); g.vertex3fv(v); p += 3; break;
+      case kRVertex3f: g.vertex3f(bitsf(p[0]), bitsf(p[1]), bitsf(p[2])); p += 3; break;
+      case kREnable: g.enable(p[0]); p += 1; break;
+      case kRDisable: g.disable(p[0]); p += 1; break;
+      case kRBlendFunc: g.blend_func(p[0], p[1]); p += 2; break;
+      case kRFlush: g.flush(); break;
+      case kRContext: g.context_create(); break;
+      case kRHint: g.hint(p[0], p[1]); p += 2; break;
+      case kREnableClient: g.enable_client_state(p[0]); p += 1; break;
+      case kRFrontFace: g.front_face(p[0]); p += 1; break;
+      case kRViewport:
+        g.viewport(static_cast<int32_t>(p[0]), static_cast<int32_t>(p[1]), static_cast<int32_t>(p[2]), static_cast<int32_t>(p[3]));
+        p += 4;
+        break;
+      case kRMatrixMode: g.matrix_mode(p[0]); p += 1; break;
+      case kROrtho: g.ortho(get_d(p), get_d(p + 2), get_d(p + 4), get_d(p + 6), get_d(p + 8), get_d(p + 10)); p += 12; break;
+      case kRLight:
+        for (int i = 0; i < 4; ++i) v[i] = bitsf(p[2 + i]);
+        g.light(p[0], p[1], v);
+        p += 6;
+        break;
+      case kRMaterial:
+        for (int i = 0; i < 4; ++i) v[i] = bitsf(p[2 + i]);
+        g.material(p[0], p[1], v);
+        p += 6;
+        break;
+      case kRShininess: g.material_shininess(p[0], static_cast<int32_t>(p[1])); p += 2; break;
+      case kRGenTextures: {
+        const int32_t n = static_cast<int32_t>(p[0]);
+        names.assign(static_cast<size_t>(n > 0 ? n : 0) + 1, 0);
+        g.gen_textures(n, names.data());
+        p += 1;
+        break;
+      }
+      case kRDeleteTextures: {
+        const uint32_t n = p[0];
+        g.delete_textures(static_cast<int32_t>(n), p + 1);
+        p += 1 + n;
+        break;
+      }
+      case kRTexParami: g.tex_parameteri(p[0], p[1], static_cast<int32_t>(p[2])); p += 3; break;
+      case kRTexParamf: g.tex_parameterf(p[0], p[1], bitsf(p[2])); p += 3; break;
+      case kRTexEnvi: g.tex_envi(p[0], p[1], static_cast<int32_t>(p[2])); p += 3; break;
+      case kRTexImage: {
+        const uint8_t *d = p[8] == 0xffffffffu ? nullptr : r.blobs[p[8]]->data();
+        g.tex_image2d(p[0], static_cast<int32_t>(p[1]), static_cast<int32_t>(p[2]), static_cast<int32_t>(p[3]), static_cast<int32_t>(p[4]),
+                      static_cast<int32_t>(p[5]), p[6], p[7], d);
+        p += 9;
+        break;
+      }
+      case kRVertexPointer: g.vertex_pointer(static_cast<int32_t>(p[0]), p[1], static_cast<int32_t>(p[2])); p += 3; break;
+      case kRNormalPointer: g.normal_pointer(p[0], static_cast<int32_t>(p[1])); p += 2; break;
+      case kRSetArrays: {
+        const std::vector<float> &va = *r.arrays[p[0]], &na = *r.arrays[p[0] + 1];
+        g.set_arrays(va.data(), va.size() / 3, na.data(), na.size() / 3);
+        p += 1;
+        break;
+      }
+      default:
+        return;   // not a recorded opcode (cannot happen: every writer is above)
+    }
+  }
 }
 
 }  // namespace gl

@@ -721,7 +721,14 @@ struct HrGeo {
 HrGeo hr_geo(const LiveTerrainWorld &w) { return HrGeo{w.pw, w.ph, w.fw, w.ox, w.scene_e, w.hr_filter}; }
 }  // namespace (GfxHrJob is declared in gfx.h)
 struct GfxHrJob {
-  std::vector<std::function<void(LiveTerrainWorld &)>> ops;
+  struct Op {  // P15A fix 3: each op's kind (gfx.h GfxWorldOp); a kGwGl op holds its GL stream instead of a function
+    std::function<void(LiveTerrainWorld &)> f;
+    GfxWorldOp kind = kGwHr;
+    std::shared_ptr<gl::GlRec> gl;
+    Op() = default;
+    Op(std::function<void(LiveTerrainWorld &)> fn, GfxWorldOp k = kGwHr) : f(std::move(fn)), kind(k) {}
+  };
+  std::vector<Op> ops;
   std::shared_ptr<const std::vector<uint16_t>> root;   // the world root copied at the last queue start (null: none)
   uint64_t root_gen = 0;
   bool has_start = false;   // a queue start is among the ops (it is the first: hr_job_start drops what came before)
@@ -732,11 +739,13 @@ GfxHrJob &hr_job() {
   if (!g_hr_job) g_hr_job = std::make_shared<GfxHrJob>();
   return *g_hr_job;
 }
-// a queue start: the ops before it are dropped (gfx.h gfx_hr_job_merge)
+// P15A fix 3: an hr op (dropped at a later queue start), not a world surface op
+bool hr_kind(GfxWorldOp k) { return k == kGwHr || k == kGwStart; }
+// a queue start: the hr ops before it are dropped (gfx.h gfx_hr_job_merge; P15A fix 3: the world ops stay, in their order)
 void hr_job_start(std::function<void(LiveTerrainWorld &)> op, std::shared_ptr<const std::vector<uint16_t>> root, uint64_t gen) {
   GfxHrJob &j = hr_job();
-  j.ops.clear();
-  j.ops.push_back(std::move(op));
+  j.ops.erase(std::remove_if(j.ops.begin(), j.ops.end(), [](const GfxHrJob::Op &o) { return hr_kind(o.kind); }), j.ops.end());
+  j.ops.emplace_back(std::move(op), kGwStart);
   j.root = std::move(root);
   j.root_gen = gen;
   j.has_start = true;
@@ -1060,7 +1069,7 @@ void hr_record_now(const LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32
   r->cur = cur;
   r->box = box;
   r->geo = hr_geo(w);
-  hr_job().ops.push_back([r](LiveTerrainWorld &W) {
+  hr_job().ops.emplace_back([r](LiveTerrainWorld &W) {
     r->geo.put(W);
     if (r->box) hr_box_now(W, r->s, r->x, r->y, r->sc, r->op);
     else hr_now(W, r->s, r->x, r->y, r->sc, r->op, r->cur);
@@ -2184,6 +2193,30 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
       row[x] = wp[static_cast<size_t>(wy) * static_cast<size_t>(w->pw) + static_cast<size_t>(wx)];
     }
   }
+  if (w->sample) {  // P15A fix 3, the check (SG_P15_CHECK): the masked raster's samples against the full raster's
+    const std::vector<uint16_t> &sp = w->sample->pixels();
+    int64_t d = 0;
+    if (sp.size() == wp.size()) {
+      for (int32_t y = 0; y < 600; ++y) {
+        int32_t wy = static_cast<int32_t>(static_cast<int64_t>(y) * w->ph / 600);
+        if (wy >= w->ph) wy = w->ph - 1;
+        for (int32_t x = 0; x < W; ++x) {
+          const int32_t fx = x - E;
+          if (fx >= 0 && fx < 800) continue;
+          int64_t wx = w->ox + static_cast<int64_t>(fx) * w->fw / 800;
+          if (wx < 0) wx = 0;
+          if (wx >= w->pw) wx = w->pw - 1;
+          const size_t k = static_cast<size_t>(wy) * static_cast<size_t>(w->pw) + static_cast<size_t>(wx);
+          if (sp[k] != wp[k]) ++d;
+        }
+      }
+    } else {
+      d = 1;
+    }
+    ++w->mask_checks;
+    if (d) ++w->mask_differing;
+    w->mask_px_differing += d;
+  }
   w->scene = w->scene_base;
   w->s0 = g.root.px;
   w->scene_pre.clear();  // P9E fix 4: the cursor passes come after the queue
@@ -2201,7 +2234,21 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   w->hr_open = w->hr_on && mode() == 0 && wp.size() == static_cast<size_t>(w->pw) * static_cast<size_t>(w->ph);
   if (hr_recording()) {  // P15A: the start recorded (with a copy of the world root), the planes are the world thread's
     const HrGeo geo = hr_geo(*w);
-    if (w->hr_open) {
+    if (w->hr_open && w->rec) {
+      // P15A fix 3: the world thread's own raster is the root at this op (the frame thread's may be masked): no copy
+      g_hr_queue.defer_np = wp.size();
+      hr_job_start([geo](LiveTerrainWorld &W) {
+        geo.put(W);
+        W.hr_valid = false;
+        W.hrc_valid = false;
+        W.hrb_valid = false;
+        g_hr_queue.cmds.clear();
+        g_hr_queue.w = nullptr;
+        static const std::vector<uint16_t> kNone;
+        hr_queue_begin(W, W.raster ? W.raster->pixels() : kNone);
+      }, nullptr, 0);
+      w->tag.assign(w->scene.size(), 0);
+    } else if (w->hr_open) {
       // P15A fix 2: the last copy again while the root has not changed since (LiveTerrainWorld::gen)
       static thread_local std::shared_ptr<const std::vector<uint16_t>> last_root;
       static thread_local uint64_t last_gen = ~0ull;
@@ -2561,7 +2608,7 @@ void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
         g_hr_queue.w = nullptr;
       }
       const HrGeo geo = hr_geo(*w);
-      hr_job().ops.push_back([geo, cmds](LiveTerrainWorld &W) {
+      hr_job().ops.emplace_back([geo, cmds](LiveTerrainWorld &W) {
         geo.put(W);
         g_hr_queue.cmds = *cmds;
         g_hr_queue.w = &W;
@@ -2693,17 +2740,105 @@ std::shared_ptr<GfxHrJob> gfx_hr_take_job() {
 }
 void gfx_hr_job_merge(std::shared_ptr<GfxHrJob> &into, const std::shared_ptr<GfxHrJob> &next) {
   if (!next) return;
-  if (!into || next->has_start) {  // the ops before next's start are dropped
+  if (!into) {
     into = next;
+    return;
+  }
+  if (next->has_start) {  // the hr ops before next's start are dropped (P15A fix 3: into's world ops kept, before next's ops)
+    std::vector<GfxHrJob::Op> ops;
+    for (auto &op : into->ops)
+      if (!hr_kind(op.kind)) ops.push_back(std::move(op));
+    for (auto &op : next->ops) ops.push_back(op);
+    into->ops = std::move(ops);
+    into->root = next->root;
+    into->root_gen = next->root_gen;
+    into->has_start = true;
     return;
   }
   for (auto &op : next->ops) into->ops.push_back(op);
 }
+namespace {
+GfxWorldRun g_world_run;   // P15A fix 3: gfx_world_run_stats (the job thread's)
+}  // namespace
 void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w) {
   t_hr_runner = true;
-  for (auto &op : j.ops) op(w);
+  // P15A fix 3 (gfx.h): which world ops' surface work a later op reads, walking back from the job's end (both read there)
+  const size_t n = j.ops.size();
+  std::vector<uint8_t> live(n, 1);
+  bool need_root = true, need_back = true;
+  for (size_t i = n; i-- > 0;) {
+    const GfxHrJob::Op &op = j.ops[i];
+    switch (op.kind) {
+      case kGwStart: need_root = true; break;   // hr_queue_begin reads the root
+      case kGwGl: if (op.gl && op.gl->draws && !need_root) live[i] = 0; break;   // draws over the root (reads it where it blends)
+      case kGwFill: live[i] = need_root ? 1 : 0; need_root = false; break;
+      case kGwBlit1:   // back = root
+        if (need_back) { need_root = true; need_back = false; } else { live[i] = 0; }
+        break;
+      case kGwBlit0:   // root = back
+        if (need_root) { need_back = true; need_root = false; } else { live[i] = 0; }
+        break;
+      case kGwLines: live[i] = need_root ? 1 : 0; break;   // blends over the root
+      case kGwReset: need_root = need_back = false; break;
+      default: break;
+    }
+  }
+  GfxWorldRun &st = g_world_run;
+  for (size_t i = 0; i < n; ++i) {
+    GfxHrJob::Op &op = j.ops[i];
+    if (op.kind == kGwGl) {
+      if (!op.gl) continue;
+      if (!w.raster) {
+        ++st.no_raster;
+        continue;
+      }
+      gl::GlRaster &r = *w.raster;
+      const bool discard = !live[i];
+      const auto t0 = std::chrono::steady_clock::now();
+      r.set_discard(discard);
+      gl::gl_replay(*op.gl, r);
+      r.set_discard(false);
+      if (!discard && op.gl->draws) {
+        r.finish();
+        st.gl_live_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count();
+      }
+      ++(discard ? st.gl_discarded : op.gl->draws ? st.gl_live : st.gl_state);
+      continue;
+    }
+    if (!live[i]) {
+      ++(op.kind == kGwFill ? st.fills_skipped : op.kind == kGwLines ? st.lines_skipped : st.blits_skipped);
+      continue;
+    }
+    switch (op.kind) {
+      case kGwFill: ++st.fills; break;
+      case kGwBlit1: case kGwBlit0: ++st.blits; break;
+      case kGwLines: ++st.lines; break;
+      case kGwReset: ++st.resets; break;
+      case kGwState: ++st.states; break;
+      default: break;
+    }
+    if (op.f) op.f(w);
+  }
   t_hr_runner = false;
 }
+// P15A fix 3 (gfx.h)
+namespace {
+std::atomic<bool> g_world_raster_defer{false};
+}  // namespace
+void gfx_set_world_raster_defer(bool on) { g_world_raster_defer.store(on, std::memory_order_relaxed); }
+bool gfx_world_raster_defer() { return g_world_raster_defer.load(std::memory_order_relaxed); }
+void gfx_world_op(GfxWorldOp kind, std::function<void(LiveTerrainWorld &)> f) { hr_job().ops.emplace_back(std::move(f), kind); }
+gl::GlRec *gfx_world_gl_chunk() {
+  GfxHrJob &j = hr_job();
+  if (j.ops.empty() || j.ops.back().kind != kGwGl) {
+    GfxHrJob::Op op;
+    op.kind = kGwGl;
+    op.gl = std::make_shared<gl::GlRec>();
+    j.ops.push_back(std::move(op));
+  }
+  return j.ops.back().gl.get();
+}
+const GfxWorldRun &gfx_world_run_stats() { return g_world_run; }
 size_t gfx_hr_job_ops(const GfxHrJob &j) { return j.ops.size(); }
 std::shared_ptr<const std::vector<uint16_t>> gfx_hr_job_root(const GfxHrJob &j, uint64_t &gen) {
   gen = j.root_gen;
@@ -2715,7 +2850,7 @@ std::shared_ptr<const GfxHrScene> gfx_hr_scene_take() {
   return q.pub;
 }
 void gfx_hr_job_add_take(GfxHrJob &j, std::shared_ptr<std::shared_ptr<const GfxHrScene>> slot) {
-  j.ops.push_back([slot](LiveTerrainWorld &) { *slot = gfx_hr_scene_take(); });
+  j.ops.emplace_back([slot](LiveTerrainWorld &) { *slot = gfx_hr_scene_take(); });
 }
 const std::vector<GfxHrDraw> &gfx_hr_scene_draws(const GfxHrScene &s) { return s.draws; }
 int32_t gfx_hr_scene_pw(const GfxHrScene &s) { return s.w ? s.w->pw : 0; }

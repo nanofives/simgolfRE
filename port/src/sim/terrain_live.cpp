@@ -94,7 +94,7 @@ std::vector<uint8_t> upscale2_cubic(const uint8_t *d, int32_t w, int32_t h, int 
 // rasterisers start empty and hand out the lowest free name, gl_raster.h; a difference turns the world layer off).
 class WorldFan : public gl::GlSink {
  public:
-  WorldFan(gl::GlSink *a, LiveTerrainWorld &w) : a_(a), w_(w), b_(w.raster.get()) {}
+  WorldFan(gl::GlSink *a, LiveTerrainWorld &w) : a_(a), w_(w), b_(&w.sink()) {}   // P15A fix 3: the world's sink (tee or raster)
   void load_identity() override { a_->load_identity(); b_->load_identity(); }
   void push_matrix() override { a_->push_matrix(); b_->push_matrix(); }
   void pop_matrix() override { a_->pop_matrix(); b_->pop_matrix(); }
@@ -178,10 +178,104 @@ class WorldFan : public gl::GlSink {
  private:
   gl::GlSink *a_;
   LiveTerrainWorld &w_;
-  gl::GlRaster *b_;
+  gl::GlSink *b_;
   int32_t vp_[4] = {0, 0, 0, 0};
   bool has_vp_ = false;
 };
+
+// P15A fix 3 (terrain_live.h LiveTerrainWorld::rec): the world's GL calls to its raster, the check's masked raster and the recorder,
+// in that order; texture names are the raster's
+class WorldTee : public gl::GlSink {
+ public:
+  WorldTee(gl::GlRaster *r, gl::GlRaster *s, gl::GlRecord *rec) : r_(r), s_(s), c_(rec) {}
+  template <class F>
+  void all(F f) {
+    f(static_cast<gl::GlSink &>(*r_));
+    if (s_) f(static_cast<gl::GlSink &>(*s_));
+    if (c_) f(static_cast<gl::GlSink &>(*c_));
+  }
+  void load_identity() override { all([](gl::GlSink &g) { g.load_identity(); }); }
+  void push_matrix() override { all([](gl::GlSink &g) { g.push_matrix(); }); }
+  void pop_matrix() override { all([](gl::GlSink &g) { g.pop_matrix(); }); }
+  void rotated(double an, double x, double y, double z) override { all([&](gl::GlSink &g) { g.rotated(an, x, y, z); }); }
+  void rotatef(float an, float x, float y, float z) override { all([&](gl::GlSink &g) { g.rotatef(an, x, y, z); }); }
+  void translatef(float x, float y, float z) override { all([&](gl::GlSink &g) { g.translatef(x, y, z); }); }
+  void bind_texture(uint32_t t, uint32_t id) override { all([&](gl::GlSink &g) { g.bind_texture(t, id); }); }
+  void begin(uint32_t m) override { all([&](gl::GlSink &g) { g.begin(m); }); }
+  void end() override { all([](gl::GlSink &g) { g.end(); }); }
+  void tex_coord2fv(const float *v) override { all([&](gl::GlSink &g) { g.tex_coord2fv(v); }); }
+  void tex_coord2f(float s, float t) override { all([&](gl::GlSink &g) { g.tex_coord2f(s, t); }); }
+  void array_element(int32_t i) override { all([&](gl::GlSink &g) { g.array_element(i); }); }
+  void normal3fv(const float *v) override { all([&](gl::GlSink &g) { g.normal3fv(v); }); }
+  void vertex3fv(const float *v) override { all([&](gl::GlSink &g) { g.vertex3fv(v); }); }
+  void vertex3f(float x, float y, float z) override { all([&](gl::GlSink &g) { g.vertex3f(x, y, z); }); }
+  void enable(uint32_t c) override { all([&](gl::GlSink &g) { g.enable(c); }); }
+  void disable(uint32_t c) override { all([&](gl::GlSink &g) { g.disable(c); }); }
+  void blend_func(uint32_t s, uint32_t d) override { all([&](gl::GlSink &g) { g.blend_func(s, d); }); }
+  void flush() override { all([](gl::GlSink &g) { g.flush(); }); }
+  void context_create() override { all([](gl::GlSink &g) { g.context_create(); }); }
+  void hint(uint32_t t, uint32_t m) override { all([&](gl::GlSink &g) { g.hint(t, m); }); }
+  void enable_client_state(uint32_t a) override { all([&](gl::GlSink &g) { g.enable_client_state(a); }); }
+  void front_face(uint32_t m) override { all([&](gl::GlSink &g) { g.front_face(m); }); }
+  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override { all([&](gl::GlSink &g) { g.viewport(x, y, w, h); }); }
+  void matrix_mode(uint32_t m) override { all([&](gl::GlSink &g) { g.matrix_mode(m); }); }
+  void ortho(double l, double r, double bo, double t, double n, double f) override {
+    all([&](gl::GlSink &g) { g.ortho(l, r, bo, t, n, f); });
+  }
+  void light(uint32_t l, uint32_t p, const float *v) override { all([&](gl::GlSink &g) { g.light(l, p, v); }); }
+  void material(uint32_t f, uint32_t p, const float *v) override { all([&](gl::GlSink &g) { g.material(f, p, v); }); }
+  void material_shininess(uint32_t f, int32_t s) override { all([&](gl::GlSink &g) { g.material_shininess(f, s); }); }
+  bool gen_textures(int32_t n, uint32_t *names) override {
+    const bool r = r_->gen_textures(n, names);
+    if (n > 0 && s_) {
+      std::vector<uint32_t> mine(static_cast<size_t>(n), 0);
+      s_->gen_textures(n, mine.data());
+    }
+    if (c_) c_->gen_textures(n, names);
+    return r;
+  }
+  void delete_textures(int32_t n, const uint32_t *names) override { all([&](gl::GlSink &g) { g.delete_textures(n, names); }); }
+  void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override { all([&](gl::GlSink &g) { g.tex_parameteri(t, p, v); }); }
+  void tex_parameterf(uint32_t t, uint32_t p, float v) override { all([&](gl::GlSink &g) { g.tex_parameterf(t, p, v); }); }
+  void tex_envi(uint32_t t, uint32_t p, int32_t v) override { all([&](gl::GlSink &g) { g.tex_envi(t, p, v); }); }
+  void tex_image2d(uint32_t t, int32_t l, int32_t i, int32_t w, int32_t h, int32_t bo, uint32_t f, uint32_t ty,
+                   const uint8_t *d) override {
+    all([&](gl::GlSink &g) { g.tex_image2d(t, l, i, w, h, bo, f, ty, d); });
+  }
+  void vertex_pointer(int32_t s, uint32_t t, int32_t st) override { all([&](gl::GlSink &g) { g.vertex_pointer(s, t, st); }); }
+  void normal_pointer(uint32_t t, int32_t st) override { all([&](gl::GlSink &g) { g.normal_pointer(t, st); }); }
+
+ private:
+  gl::GlRaster *r_, *s_;
+  gl::GlRecord *c_;
+};
+
+// P15A fix 3: the mask of the pixels b_queue_begin samples from a pw x ph world (rows y * ph / 600 of the 600 logical rows; the
+// columns of the logical side columns: left of mask_cx0 and from mask_cx1 on); set on raster (mask_on) and on the check's sample
+void world_mask(LiveTerrainWorld &w) {
+  if (!w.mask_on && !w.sample) return;
+  w.mask_rows.assign(static_cast<size_t>(std::max<int32_t>(w.ph, 0)), 0);
+  for (int32_t y = 0; y < 600; ++y) {
+    int32_t wy = static_cast<int32_t>(static_cast<int64_t>(y) * w.ph / 600);
+    if (wy >= w.ph) wy = w.ph - 1;
+    if (wy >= 0) w.mask_rows[static_cast<size_t>(wy)] = 1;
+  }
+  // b_queue_begin's E and its world column of logical column fx (clamped to the world)
+  const int32_t E = w.ox > 0 ? static_cast<int32_t>((static_cast<int64_t>(w.ox) * 800 + w.fw - 1) / w.fw) : 0;
+  auto col = [&](int32_t fx) {
+    int64_t wx = w.ox + static_cast<int64_t>(fx) * w.fw / 800;
+    if (wx < 0) wx = 0;
+    if (wx >= w.pw) wx = w.pw - 1;
+    return static_cast<int32_t>(wx);
+  };
+  int32_t cx0 = 0, cx1 = w.pw;
+  for (int32_t fx = -E; fx < 0; ++fx) cx0 = std::max(cx0, col(fx) + 1);
+  for (int32_t fx = 800; fx < 800 + E; ++fx) cx1 = std::min(cx1, col(fx));
+  w.mask_cx0 = cx0;
+  w.mask_cx1 = std::max(cx0, cx1);
+  if (w.mask_on) w.raster->set_mask(w.mask_rows, w.mask_cx0, w.mask_cx1);
+  if (w.sample) w.sample->set_mask(w.mask_rows, w.mask_cx0, w.mask_cx1);
+}
 
 // the size-dependent parts of a world layer (set_world_view, resize_world)
 void world_geometry(LiveTerrainWorld &w, int32_t pw, int32_t ph) {
@@ -195,8 +289,37 @@ void world_geometry(LiveTerrainWorld &w, int32_t pw, int32_t ph) {
   // the dither phase of the frame's own columns (window x - ox): exact at render scale 1; any scale keeps a 4x4 matrix
   w.raster->set_dither_dx(-w.ox);
   w.back = std::make_shared<const std::vector<uint16_t>>(static_cast<size_t>(pw) * static_cast<size_t>(ph), uint16_t{0});
+  if (w.rec) {  // P15A fix 3: the masked back surfaces, and the check's raster
+    w.back_m.assign(static_cast<size_t>(pw) * static_cast<size_t>(ph), 0);
+    if (w.sample) {
+      terrain_world_raster_geometry(*w.sample, pw, ph);
+      w.sample_back.assign(w.back_m.size(), 0);
+    }
+  }
+  world_mask(w);
+}
+// P15A fix 3: the world thread's raster made new at pw x ph (kGwReset), as set_world_view made this one
+void record_reset(int32_t pw, int32_t ph, bool resize) {
+  gfx_world_op(kGwReset, [pw, ph, resize](LiveTerrainWorld &W) {
+    if (resize && W.raster) {
+      W.raster->resize_frame(pw, ph);
+    } else {
+      W.raster = std::make_unique<gl::GlRaster>(pw, ph);
+      W.raster->no_context();
+      W.raster->set_workers_normal(false);   // at the world thread's priority (the frame thread's work first)
+      W.raster->set_threads(terrain_world_raster_threads());
+    }
+    terrain_world_raster_geometry(*W.raster, pw, ph);
+    W.back_m.assign(static_cast<size_t>(pw) * static_cast<size_t>(ph), 0);
+  });
 }
 }  // namespace
+
+void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph) {
+  const int32_t fw = static_cast<int32_t>(static_cast<int64_t>(ph) * 800 / 600);
+  r.set_clip_x(static_cast<float>(static_cast<double>(pw) / static_cast<double>(fw)));
+  r.set_dither_dx(-((pw - fw) / 2));
+}
 
 bool LiveTerrain::set_world_view(int32_t pw, int32_t ph, std::string *why) {
   auto fail = [why](const char *t) {
@@ -210,6 +333,17 @@ bool LiveTerrain::set_world_view(int32_t pw, int32_t ph, std::string *why) {
   auto w = std::make_unique<LiveTerrainWorld>();
   w->raster = std::make_unique<gl::GlRaster>(pw, ph);
   w->raster->no_context();
+  if (gfx_world_raster_defer()) {  // P15A fix 3 (terrain_live.h LiveTerrainWorld::rec)
+    w->rec = true;
+    w->mask_on = !gfx_hr_check_on();
+    if (!w->mask_on) {
+      w->sample = std::make_unique<gl::GlRaster>(pw, ph);
+      w->sample->no_context();
+    }
+    w->recorder = std::make_unique<gl::GlRecord>([] { return gfx_world_gl_chunk(); });
+    w->tee = std::make_unique<WorldTee>(w->raster.get(), w->sample.get(), w->recorder.get());
+    record_reset(pw, ph, false);
+  }
   world_geometry(*w, pw, ph);
   w->terrain800.assign(static_cast<size_t>(800) * 600, 0);
   world_ = std::move(w);
@@ -224,6 +358,8 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
   if (pw == world_->pw && ph == world_->ph) return true;
   world_->raster->resize_frame(pw, ph);
   ++world_->gen;  // P15A
+  if (world_->sample) world_->sample->resize_frame(pw, ph);  // P15A fix 3
+  if (world_->rec) record_reset(pw, ph, true);
   world_geometry(*world_, pw, ph);
   if (world_fan_) static_cast<WorldFan *>(world_fan_.get())->remap();
   world_->valid = false;

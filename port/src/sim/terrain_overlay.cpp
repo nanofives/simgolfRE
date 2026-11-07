@@ -18,6 +18,7 @@
 #include "gfx_body.h"
 #include "portsim/arith.h"
 #include "portsim/sim/perf.h"  // P15A: detail counters
+#include "portsim/sim/gfx.h"   // P15A fix 3: gfx_world_op
 #include "portsim/ptr.h"
 #include "portsim/sim/bridge.h"
 #include "portsim/sim/gl_raster.h"
@@ -294,25 +295,25 @@ void log_call(Gfx &g, const char *who, int32_t x1, int32_t y1, int32_t x2, int32
 // antialiased footprint as draw_line's (coverage * alpha / 10 over the pixel, the same dither). The 800 root's pixels the line
 // changed are then put into T, so inside the frame's columns the window shows the world's line too (one line, one resolution).
 // Drawing only: the root, the GameState and the address space are unchanged.
-void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
-                       int32_t alpha, const std::vector<uint16_t> &before) {
-  std::vector<uint16_t> &px = w.raster->pixels();
-  if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
-  ++w.gen;  // P15A
-  const double s = static_cast<double>(w.ph) / 600.0, kx = static_cast<double>(w.fw) / 800.0;
+// P15A fix 3: the line's pixels on a world surface px of pw x ph (frame width fw, left edge ox); the body of mirror_line_world, also
+// run on the world thread's raster (gfx.h kGwLines)
+bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, int32_t x1, int32_t y1,
+                    int32_t x2, int32_t y2, uint32_t colour, int32_t alpha) {
+  if (px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph)) return false;
+  const double s = static_cast<double>(ph) / 600.0, kx = static_cast<double>(fw) / 800.0;
   auto wy = [&](int32_t y) { return (gl.flip_y ? static_cast<double>(y) : static_cast<double>(gl.screen_h - y)) * s; };
-  const double ax = w.ox + x1 * kx, ay = wy(y1), bx = w.ox + x2 * kx, by = wy(y2);
+  const double ax = ox + x1 * kx, ay = wy(y1), bx = ox + x2 * kx, by = wy(y2);
   const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
-  if (len == 0.0) return;
+  if (len == 0.0) return false;
   const double wd = std::min(static_cast<double>(gl.line_width), 10.0) * s;
   const double ux = dx / len, uy = dy / len, half = wd / 2.0, reach = half + 1.5;
   const double cr = clamp01(channel((colour >> 7) & 0xf8u)), cg = clamp01(channel((colour >> 2) & 0xf8u)),
                cb = clamp01(channel((colour << 3) & 0xf8u));
   const double ca = clamp01(static_cast<float>(alpha) / 10.0f);
   const int32_t x0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
-  const int32_t xe = std::min(w.pw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
+  const int32_t xe = std::min(pw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
   const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
-  const int32_t ye = std::min(w.ph - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+  const int32_t ye = std::min(ph - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
   for (int32_t y = y0; y <= ye; ++y)
     for (int32_t x = x0; x <= xe; ++x) {
       const double qx = x + 0.5 - ax, qy = y + 0.5 - ay;
@@ -320,13 +321,28 @@ void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1
       const double cov = clamp01(half + 0.5 - std::fabs(n)) * clamp01(t + 0.5) * clamp01(len - t + 0.5);
       if (cov <= 0.0) continue;
       const double al = ca * cov;
-      uint16_t &d = px[static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x)];
+      uint16_t &d = px[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x)];
       const int dr = (d >> 10) & 31, dg = (d >> 5) & 31, db = d & 31;
       const double vr = cr * 255.0 * al + dr * 255.0 / 31.0 * (1.0 - al);
       const double vg = cg * 255.0 * al + dg * 255.0 / 31.0 * (1.0 - al);
       const double vb = cb * 255.0 * al + db * 255.0 / 31.0 * (1.0 - al);
       d = static_cast<uint16_t>((quantize(vr, x, y) << 10) | (quantize(vg, x, y) << 5) | quantize(vb, x, y));
     }
+  return true;
+}
+void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
+                       int32_t alpha, const std::vector<uint16_t> &before) {
+  std::vector<uint16_t> &px = w.raster->pixels();
+  if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
+  ++w.gen;  // P15A
+  if (!mirror_line_px(px, w.pw, w.ph, w.fw, w.ox, gl, x1, y1, x2, y2, colour, alpha)) return;   // a line of length 0
+  if (w.rec) {  // P15A fix 3: on the check's sample and on the world thread's raster too
+    if (w.sample) mirror_line_px(w.sample->pixels(), w.pw, w.ph, w.fw, w.ox, gl, x1, y1, x2, y2, colour, alpha);
+    const int32_t pw = w.pw, ph = w.ph, fw = w.fw, ox = w.ox;
+    gfx_world_op(kGwLines, [=](LiveTerrainWorld &W) {
+      if (W.raster) mirror_line_px(W.raster->pixels(), pw, ph, fw, ox, gl, x1, y1, x2, y2, colour, alpha);
+    });
+  }
   if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
     for (size_t i = 0; i < before.size(); ++i)
       if (before[i] != g.root.px[i] && before[i] == w.terrain800[i]) w.terrain800[i] = g.root.px[i];

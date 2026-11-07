@@ -105,6 +105,9 @@
 //   P15A: --world-thread on|off (default on; SG_APP_P15=off: off) the world image of a present (the window-resolution sprites'
 //   flush, the post-queue draws, world_cursor / world_frame) made on a thread of its own, so the sim thread's frame does not grow
 //   with the client size (host.h HostOptions::world_thread, log/roadmap/P15/P15A_notes.md); session.json p15.
+//   P15A fix 3: --world-raster-thread on|off (default on; SG_APP_P15=off: off; needs the world thread, never with --world-check) the
+//   world layer's terrain passes drawn on the world thread too: the sim thread draws only the world pixels its wide scene samples
+//   (host.h HostOptions::world_raster_thread); session.json p15 raster_thread.
 //   P14A: --gpu on|off (default on; SG_APP_P14=off: off) the window's picture composed and presented by the GPU (gpu.h: Direct3D 11,
 //   a flip-model swap chain, vsync): the same pixels as the CPU path (Presenter::render), drawn at the display's refresh without the
 //   CPU paint's cost. off (or no D3D11 device / d3dcompiler_47.dll) = the CPU path (SetDIBitsToDevice). stdout says `GPU on|off ...`.
@@ -444,6 +447,7 @@ struct Options {
   bool gpu = true;                 // P14A: --gpu on|off (SG_APP_P14=off: off)
   bool gpu_objects = true;         // P15C: --gpu-objects on|off (SG_APP_P15=off: off)
   bool world_thread = true;        // P15A: --world-thread on|off (SG_APP_P15=off: off)
+  bool world_raster_thread = true; // P15A fix 3: --world-raster-thread on|off (SG_APP_P15=off: off)
   bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
@@ -1425,6 +1429,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   portsim::gfx_set_hr_scene(ho.smooth_objects);
   ho.world_thread = o.world_thread && ho.world;  // P15A (the hr work recorded for it only with a world layer)
   portsim::gfx_set_hr_defer(ho.world_thread);
+  // P15A fix 3: the world raster on the world thread (not with the render-scale-1 gate, which reads the sim's whole world root)
+  ho.world_raster_thread = ho.world_thread && o.world_raster_thread && !o.world_check;
+  portsim::gfx_set_world_raster_defer(ho.world_raster_thread);
   portsim::gfx_set_hr_defer_check(ho.world_thread && std::getenv("SG_P15_CHECK") && std::getenv("SG_P15_CHECK")[0] == '1');  // P15A
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.map_bands = o.wide && o.map_bands;               // P13B item 18 (the world map's bands repeat its edge columns)
@@ -3083,6 +3090,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.world_thread = v == "on";
     }
+    else if (a == "--world-raster-thread") {  // P15A fix 3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.world_raster_thread = v == "on";
+    }
     else if (a == "--object-rate") {  // P12A fix 3
       if (!val(v)) return false;
       o.object_rate = v == "auto" ? -1 : std::atoi(v.c_str());  // P14A fix 2: auto
@@ -3281,6 +3292,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P15"))  // P15: the world thread and the GPU's moving objects off (port/test/conftest.py)
     if (!std::strcmp(ep, "off")) {
       o.world_thread = false;  // P15A
+      o.world_raster_thread = false;  // P15A fix 3
       o.gpu_objects = false;   // P15C
     }
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to

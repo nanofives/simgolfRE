@@ -14,6 +14,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <functional>  // P15A fix 3: gfx_world_op
 #include <memory>  // P12A fix 2: GfxHrScene
 #include <string>
 #include <vector>
@@ -454,6 +455,31 @@ std::shared_ptr<const std::vector<uint16_t>> gfx_hr_job_root(const GfxHrJob &j, 
 std::shared_ptr<const GfxHrScene> gfx_hr_scene_take();  // gfx_hr_scene of the calling thread, without a Ctx
 // an op appended to j: gfx_hr_scene_take into *slot (a present's take, in the ops' order)
 void gfx_hr_job_add_take(GfxHrJob &j, std::shared_ptr<std::shared_ptr<const GfxHrScene>> slot);
+// P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5): THE WORLD RASTER ON THE WORLD THREAD. With gfx_set_world_raster_defer(true)
+// (process-wide, set before the world layer is made; the app's LiveSession with the world thread only) the world layer's surface
+// work is recorded too, as ops of the same job in their order with the hr ops: the GL stream of the world's setup and passes
+// (kGwGl: a gl::GlRec, gl_raster.h), the root filled with 0 (kGwFill), the back made from the root (kGwBlit1) and the root from the
+// back (kGwBlit0), an overlay line (kGwLines), a new rasteriser or size (kGwReset: root and back made new), the rest (kGwState).
+// The world thread replays them on its LiveTerrainWorld's raster and back, the whole surfaces; a queue start (kGwStart) there reads
+// that raster's pixels. The frame thread's own raster draws only what b_queue_begin samples (terrain_live.h). A queue start drops
+// only the hr ops before it (kGwHr, kGwStart); gfx_hr_job_merge likewise keeps every world op of `into`. gfx_hr_job_run runs every
+// op except surface work no later op reads: walking back from the job's end, where the root and the back are both read (the
+// present's world image, the next job), a fill, a copy or a line whose target is overwritten before it is read is skipped, and a
+// GL stream that draws while the root is not read afterwards is replayed with GlRaster::set_discard (its state calls kept). What
+// is skipped is never read, so the root and the back each op leaves for a reader are the ones running every op gives.
+enum GfxWorldOp : uint8_t { kGwHr = 0, kGwStart, kGwGl, kGwFill, kGwBlit1, kGwBlit0, kGwLines, kGwReset, kGwState };
+void gfx_set_world_raster_defer(bool on);
+bool gfx_world_raster_defer();
+// frame thread: an op appended to the job being recorded
+void gfx_world_op(GfxWorldOp kind, std::function<void(LiveTerrainWorld &)> f);
+// (gfx_world_gl_chunk, the GL stream at the job's end, is declared in terrain_live.h: gfx.h names no gl:: type)
+// the counters of gfx_hr_job_run's world ops (the thread that runs the jobs writes them; read them after it stopped)
+struct GfxWorldRun {
+  int64_t gl_live = 0, gl_discarded = 0, gl_state = 0, fills = 0, fills_skipped = 0, blits = 0, blits_skipped = 0, lines = 0,
+          lines_skipped = 0, resets = 0, states = 0, no_raster = 0;
+  int64_t gl_live_ns = 0;   // the live GL streams' replays, their pixel work included (GlRaster::finish)
+};
+const GfxWorldRun &gfx_world_run_stats();
 
 }  // namespace portsim
 

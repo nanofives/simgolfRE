@@ -704,6 +704,18 @@ bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t
 
 static void world_reset(WorldImage &w);  // P15A (below)
 
+// P15A fix 3 (SG_P15_CHECK): FNV-1a of a world root's words
+static uint64_t px_digest(const std::vector<uint16_t> &v) {
+  uint64_t h = 0xcbf29ce484222325ull;
+  const uint8_t *b = reinterpret_cast<const uint8_t *>(v.data());
+  const size_t n = v.size() * sizeof(v[0]);
+  for (size_t i = 0; i < n; ++i) {
+    h ^= b[i];
+    h *= 0x100000001b3ull;
+  }
+  return h ^ v.size();
+}
+
 // P15A (SG_P15_CHECK): FNV-1a over everything of a world image the world thread makes (the pictures, masks, previews, geometry, the
 // projection and camera snapshots but the present's time, the HUD frame's serial and layer count, the hr scene's draws)
 static uint64_t wi_digest(const WorldImage &wi) {
@@ -987,6 +999,16 @@ void LiveSession::submit_world(std::shared_ptr<WorldJob> j) {
 void LiveSession::run_world_job(WorldJob &j) {
   if (!w2_) w2_ = std::make_unique<portsim::LiveTerrainWorld>();
   if (j.hr) portsim::gfx_hr_job_run(*j.hr, *w2_);
+  static const std::vector<uint16_t> kNoRoot;
+  // P15A fix 3: the world root of this present: the world thread's own raster after the job's ops (the sim's copy before)
+  const std::vector<uint16_t> &root = j.world_raster ? (w2_->raster ? w2_->raster->pixels() : kNoRoot) : (j.root ? *j.root : kNoRoot);
+  if (j.check_root) {  // SG_P15_CHECK: the replayed root against the sim thread's whole root at the present
+    ++wts_.root_checks;
+    if (px_digest(root) != j.root_digest) {
+      if (!wts_.root_diff) std::fprintf(stderr, "P15A check: the world root of present %u differs\n", j.index);
+      ++wts_.root_diff;
+    }
+  }
   if (!j.capture) return;
   ++wts_.captures;
   {
@@ -1005,8 +1027,7 @@ void LiveSession::run_world_job(WorldJob &j) {
   }
   world_reset(wi);
   bool apart = false;
-  static const std::vector<uint16_t> kNoRoot;
-  if (world_image_part(*w2_, j.root ? *j.root : kNoRoot, j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart)) {
+  if (world_image_part(*w2_, root, j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart)) {
     ++presents_world_;
     wi.proj.ok = false;
     if (j.proj_taken && (apart || !j.f.cursor2d.empty())) wi.proj = std::move(j.proj);
@@ -1059,7 +1080,18 @@ std::string LiveSession::world_thread_json() const {
          ",\"job_ms_max\":" + std::to_string(s.job_max_ns / 1e6) + ",\"submit_ms_total\":" + std::to_string(s.submit_ns / 1e6) +
          ",\"check_frames\":" + std::to_string(s.check_frames) + ",\"check_diff\":" + std::to_string(s.check_diff) +
          ",\"copies_skipped\":" + std::to_string(s.copies_skipped) + ",\"skip_checked\":" + std::to_string(s.skip_checked) +
-         ",\"skip_differing\":" + std::to_string(s.skip_differing) + "}";
+         ",\"skip_differing\":" + std::to_string(s.skip_differing) + ",\"raster_thread\":" +
+         std::string(opt_.world_raster_thread ? "true" : "false") + ",\"root_checks\":" + std::to_string(s.root_checks) +
+         ",\"root_diff\":" + std::to_string(s.root_diff) + ",\"mask_checks\":" + std::to_string(s.mask_checks) +
+         ",\"mask_differing\":" + std::to_string(s.mask_differing) + ",\"mask_px_differing\":" + std::to_string(s.mask_px_differing) +
+         ",\"rec_calls\":" + std::to_string(s.rec_calls) + ",\"rec_array_copies\":" + std::to_string(s.rec_array_copies) +
+         ",\"mask_skipped\":" + std::to_string(s.mask_skipped) + ",\"gl_live\":" + std::to_string(s.run.gl_live) +
+         ",\"gl_discarded\":" + std::to_string(s.run.gl_discarded) + ",\"gl_state\":" + std::to_string(s.run.gl_state) +
+         ",\"fills\":" + std::to_string(s.run.fills) + ",\"fills_skipped\":" + std::to_string(s.run.fills_skipped) +
+         ",\"blits\":" + std::to_string(s.run.blits) + ",\"blits_skipped\":" + std::to_string(s.run.blits_skipped) +
+         ",\"lines\":" + std::to_string(s.run.lines) + ",\"lines_skipped\":" + std::to_string(s.run.lines_skipped) +
+         ",\"resets\":" + std::to_string(s.run.resets) + ",\"no_raster\":" + std::to_string(s.run.no_raster) +
+         ",\"gl_live_ms_mean\":" + std::to_string(s.run.gl_live ? s.run.gl_live_ns / 1e6 / static_cast<double>(s.run.gl_live) : 0.0) + "}";
 }
 
 void LiveSession::recycle_world(WorldImage &&w) {  // P10A
@@ -1206,7 +1238,13 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       j->smooth_objects = opt_.smooth_objects;
       uint64_t gen = 0;
       std::shared_ptr<const std::vector<uint16_t>> r = portsim::gfx_hr_job_root(*j->hr, gen);
-      if (r && gen == w->gen) {
+      if (w->rec) {  // P15A fix 3: the world thread's raster after the job's ops is the root (no copy here)
+        j->world_raster = true;
+        if (j->check && !w->mask_on) {  // the check: this thread's whole root, for the world thread to compare
+          j->check_root = true;
+          j->root_digest = px_digest(w->raster->pixels());
+        }
+      } else if (r && gen == w->gen) {
         j->root = std::move(r);
         ++wts_.root_reused;
       } else if (last_root_ && last_root_gen_ == w->gen) {
@@ -1216,8 +1254,10 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
         j->root = std::make_shared<const std::vector<uint16_t>>(w->raster->pixels());
         ++wts_.root_copies;
       }
-      last_root_ = j->root;
-      last_root_gen_ = w->gen;
+      if (!w->rec) {
+        last_root_ = j->root;
+        last_root_gen_ = w->gen;
+      }
       copy_world_planes(*w, j->planes);
       j->px = px;
       // the hr scene is taken where make_world_image's present would take it (world_frame gives a picture: the same tests), as an
@@ -1818,7 +1858,16 @@ LiveSession::Result LiveSession::run(portsim::Ctx &ctx) {
     wts_.copies_skipped = w.copies_skipped;
     wts_.skip_checked = w.skip_checked;
     wts_.skip_differing = w.skip_differing;
+    wts_.mask_checks = w.mask_checks;  // P15A fix 3
+    wts_.mask_differing = w.mask_differing;
+    wts_.mask_px_differing = w.mask_px_differing;
+    if (w.recorder) {
+      wts_.rec_calls = w.recorder->calls;
+      wts_.rec_array_copies = w.recorder->array_copies;
+    }
+    if (w.raster) wts_.mask_skipped = w.raster->stats.mask_skipped;
   }
+  wts_.run = portsim::gfx_world_run_stats();  // P15A fix 3 (the world thread stopped above)
   memory.sample(frame_, terrain_log ? terrain_log->length() : 0);
   if (terrain_log) {
     tlog_calls_ = static_cast<int64_t>(terrain_log->calls());

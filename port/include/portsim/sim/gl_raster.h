@@ -12,6 +12,7 @@
 #define PORTSIM_SIM_GL_RASTER_H
 
 #include <cstdint>
+#include <functional>  // P15A fix 3: GlRecord's chunk source
 #include <map>
 #include <memory>
 #include <string>
@@ -42,6 +43,21 @@ class GlRaster : public GlSink {
   // rasteriser: its many workers leave the window's paint threads their share; the pixels do not depend on it)
   void set_workers_normal(bool on) { workers_normal_ = on; }
   void finish();
+  // P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5): THE MASK. With rows non-empty only the pixels of the rows y with
+  // rows[y] != 0, and in them the columns x < cx0 or x >= cx1, are written; every other pixel keeps what it held. Each pixel's value
+  // depends only on the writes to that pixel (both pixel loops compute a pixel from its own coverage, attributes and destination;
+  // the textured walk's row starts are computed per row by tex_walk_ and its sums along a span are carried over the skipped
+  // columns), so the masked pixels are the unmasked rasteriser's. A triangle whose box meets no masked pixel is dropped before its
+  // set-up (stats.mask_skipped). Empty rows: no mask (the default).
+  void set_mask(std::vector<uint8_t> rows, int cx0, int cx1);
+  bool masked() const { return !mask_rows_.empty(); }
+  // the mask's words of the framebuffer set to v (every word without a mask)
+  void fill_masked(uint16_t v);
+  // the mask's words of src copied into dst (resized to src's size first, new words 0); without a mask dst = src
+  void copy_masked(const std::vector<uint16_t> &src, std::vector<uint16_t> &dst) const;
+  // P15A fix 3: DISCARD. Primitives are dropped (no vertex is transformed, no pixel written) while every state call (matrices,
+  // textures, lights, enables, viewport) still applies: a recorded pass whose pixels a later operation overwrites is replayed so
+  void set_discard(bool on) { discard_ = on; }
 
   int width() const { return w_; }
   int height() const { return h_; }
@@ -166,6 +182,7 @@ class GlRaster : public GlSink {
   struct Stats {
     int64_t triangles = 0, culled = 0, drawn_px = 0, blended_px = 0, bad_texture = 0;
     int64_t fast_px = 0;   // pixels the checked reciprocal path wrote (the rest of drawn_px took the exact expressions)
+    int64_t mask_skipped = 0;   // P15A fix 3: triangles whose box met no pixel of the mask
   } stats;
 
  private:
@@ -206,6 +223,11 @@ class GlRaster : public GlSink {
   float clip_kx_ = 1.0f;   // P8B: set_clip_x
   int dither_dx_ = 0;      // P8B: set_dither_dx
   bool workers_normal_ = false;  // P15A fix 2: set_workers_normal
+  // P15A fix 3: set_mask (mask_pre_[y] = masked rows above y), set_discard
+  std::vector<uint8_t> mask_rows_;
+  std::vector<int32_t> mask_pre_;
+  int mask_cx0_ = 0, mask_cx1_ = 0;
+  bool discard_ = false;
   // state
   bool texture2d_ = false, cull_ = false, blend_ = false, lighting_ = false, light0_ = false;
   uint32_t front_ = 0x0901;              // GL_CCW
@@ -270,6 +292,70 @@ class GlRaster : public GlSink {
   void queue_(const FastJob &j);
   static void fast_rows_(const FastJob &j, int part, int parts, int64_t *counters);
 };
+
+// P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5): a RECORDED GL STREAM. GlRecord writes every GlSink call (and set_arrays) as
+// words, with copies of the texture images and the vertex / normal arrays; gl_replay makes the same calls, in the same order and
+// with the same bits, on a GlRaster. The world layer's rasteriser on the world thread is fed this way (terrain_live.h
+// LiveTerrainWorld::recorder).
+struct GlRec {
+  std::vector<uint32_t> w;                                         // opcode, then its argument words
+  std::vector<std::shared_ptr<const std::vector<uint8_t>>> blobs;  // texture images (tex_image2d)
+  std::vector<std::shared_ptr<const std::vector<float>>> arrays;   // set_arrays: the vertices and normals
+  bool draws = false;                                              // a primitive was begun (the replay writes pixels)
+};
+class GlRecord : public GlSink {
+ public:
+  // chunk(): the stream the next call is appended to (asked at every call: the caller may start a new one between calls)
+  explicit GlRecord(std::function<GlRec *()> chunk) : chunk_(std::move(chunk)) {}
+  void load_identity() override;
+  void push_matrix() override;
+  void pop_matrix() override;
+  void rotated(double angle, double x, double y, double z) override;
+  void rotatef(float angle, float x, float y, float z) override;
+  void translatef(float x, float y, float z) override;
+  void bind_texture(uint32_t target, uint32_t id) override;
+  void begin(uint32_t mode) override;
+  void end() override;
+  void tex_coord2fv(const float *v) override;
+  void tex_coord2f(float s, float t) override;
+  void array_element(int32_t i) override;
+  void normal3fv(const float *v) override;
+  void vertex3fv(const float *v) override;
+  void vertex3f(float x, float y, float z) override;
+  void enable(uint32_t cap) override;
+  void disable(uint32_t cap) override;
+  void blend_func(uint32_t src, uint32_t dst) override;
+  void flush() override;
+  void context_create() override;
+  void hint(uint32_t target, uint32_t mode) override;
+  void enable_client_state(uint32_t array) override;
+  void front_face(uint32_t mode) override;
+  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override;
+  void matrix_mode(uint32_t mode) override;
+  void ortho(double l, double r, double b, double t, double n, double f) override;
+  void light(uint32_t light, uint32_t pname, const float *v4) override;
+  void material(uint32_t face, uint32_t pname, const float *v4) override;
+  void material_shininess(uint32_t face, int32_t s) override;
+  bool gen_textures(int32_t n, uint32_t *names) override;   // recorded; writes no name (the caller's sink hands them out)
+  void delete_textures(int32_t n, const uint32_t *names) override;
+  void tex_parameteri(uint32_t target, uint32_t pname, int32_t v) override;
+  void tex_parameterf(uint32_t target, uint32_t pname, float v) override;
+  void tex_envi(uint32_t target, uint32_t pname, int32_t v) override;
+  void tex_image2d(uint32_t target, int32_t level, int32_t internal, int32_t w, int32_t h, int32_t border, uint32_t format, uint32_t type,
+                   const uint8_t *data) override;
+  void vertex_pointer(int32_t size, uint32_t type, int32_t stride) override;
+  void normal_pointer(uint32_t type, int32_t stride) override;
+  // GlRaster::set_arrays: the arrays copied when they differ from the last recorded ones (else those are named again)
+  void set_arrays(const float *vertices, size_t n_vertices, const float *normals, size_t n_normals);
+  int64_t calls = 0, array_copies = 0;
+
+ private:
+  std::function<GlRec *()> chunk_;
+  std::shared_ptr<const std::vector<float>> last_v_, last_n_;
+  GlRec &c() { ++calls; return *chunk_(); }
+};
+// the calls of r on g (GlRaster::set_arrays for the recorded arrays); gen_textures' names go to a scratch array
+void gl_replay(const GlRec &r, GlRaster &g);
 
 }  // namespace gl
 }  // namespace portsim

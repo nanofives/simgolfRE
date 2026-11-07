@@ -144,11 +144,36 @@ struct LiveTerrainWorld {
   // P15A fix 2: `back` equals the root since the root's count was back_gen (blit 1 / 0 copy only when it changed since)
   uint64_t back_gen = ~0ull;
   int64_t copies_skipped = 0, skip_checked = 0, skip_differing = 0;   // fix 2 (session.json world p15a; SG_P15_SKIP_CHECK=1 compares)
+  // P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5; gfx.h gfx_set_world_raster_defer): THE WORLD RASTER ON THE WORLD THREAD.
+  // With rec every surface operation of this world is also recorded into the frame thread's job: the setup's and the passes' GL
+  // calls through `recorder` (a gl::GlRecord behind `tee`), the fills, copies, lines and sizes as gfx_world_op ops. The world
+  // thread's own LiveTerrainWorld holds the full raster (made by the recorded kGwReset) and back_m (its back surface, written in
+  // place). With mask_on this raster draws only the rows and side columns b_queue_begin samples (GlRaster::set_mask; mask_rows /
+  // mask_cx0 / mask_cx1), so its other pixels, and back_m's (the masked back surface that replaces `back`), are not the world's.
+  // The check (SG_P15_CHECK=1): raster stays whole and `sample` is a second raster, masked, fed the same operations (sample_back its
+  // back); b_queue_begin compares their samples (mask_checks, mask_differing, mask_px_differing).
+  bool rec = false, mask_on = false;
+  std::unique_ptr<gl::GlRecord> recorder;
+  std::unique_ptr<gl::GlSink> tee;   // raster + sample + recorder: the sink the world's setup and passes draw through
+  std::unique_ptr<gl::GlRaster> sample;
+  std::vector<uint16_t> back_m, sample_back;
+  std::vector<uint8_t> mask_rows;
+  int32_t mask_cx0 = 0, mask_cx1 = 0;
+  int64_t mask_checks = 0, mask_differing = 0, mask_px_differing = 0;
+  gl::GlSink &sink() { return tee ? *tee : static_cast<gl::GlSink &>(*raster); }
   // gate (sg_call terrainLive.worldCheck(1)): after every terrain operation of a world whose frame is 800 x 600 world pixels (render
   // scale 1), the world root's central 800 columns compared with T: operations checked, operations with a difference, pixels
   bool check_central = false;
   int64_t checks = 0, checks_differing = 0, diff_px = 0;
 };
+
+// P15A fix 3: the world rasteriser's pixel-loop workers (gfx_terrain.cpp; the frame thread's and the world thread's rasterisers)
+int terrain_world_raster_threads();
+// P15A fix 3 (gfx.h GfxWorldOp, gfx_scene.cpp): frame thread: the GL stream at the end of the job being recorded (a new kGwGl op when
+// the last op is another kind)
+gl::GlRec *gfx_world_gl_chunk();
+// P15A fix 3: a world rasteriser's size-dependent state (the x clip planes and the dither phase of a pw x ph world)
+void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph);
 
 // P15A (log/roadmap/P15/P15A_notes.md): LiveTerrain::world_frame / world_cursor over a given world and a given copy of its root
 // (the world thread's: the hr planes of its own LiveTerrainWorld, the root and the scene planes copied at the present). The same

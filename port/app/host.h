@@ -185,6 +185,11 @@ struct HostOptions {
   // The sim thread never waits for it: a job not yet started when the next one comes is merged into it (gfx_hr_job_merge; only the
   // newer present's picture is made). Off (SG_APP_P15=off, --world-thread off): the world image is made at the present, as before.
   bool world_thread = false;
+  // P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5): with the world thread, the world layer's raster passes are drawn there too
+  // (portsim gfx.h gfx_set_world_raster_defer): the sim thread draws only the world pixels its wide scene samples and the world
+  // thread replays the recorded GL stream into the whole world surface. Off (SG_APP_P15=off, --world-raster-thread off): the sim
+  // thread draws the whole world surface, as with fix 2.
+  bool world_raster_thread = false;
 };
 
 // P15A: a present's world work for the world thread (LiveSession::submit_world): the hr ops since the last present, then (capture)
@@ -211,6 +216,11 @@ struct WorldJob {
   std::shared_ptr<std::shared_ptr<const portsim::GfxHrScene>> scene_slot;  // the hr scene, taken by an op of `hr` (P12A fix 2)
   bool check = false;         // SG_P15_CHECK: check_digest = the image make_world_image gave at the present (host.cpp wi_digest)
   uint64_t check_digest = 0;
+  // P15A fix 3: the root is the world thread's own raster after the job's ops (HostOptions::world_raster_thread); with the check
+  // root_digest = the sim thread's whole root at the present (FNV-1a of its words)
+  bool world_raster = false;
+  bool check_root = false;
+  uint64_t root_digest = 0;
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -426,6 +436,11 @@ class LiveSession : public portsim::LiveHost {
     int64_t job_ns = 0, job_max_ns = 0, submit_ns = 0;
     uint64_t check_frames = 0, check_diff = 0;  // SG_P15_CHECK
     int64_t copies_skipped = 0, skip_checked = 0, skip_differing = 0;  // fix 2 (the sim's world, at the session's end)
+    // fix 3: the root check (world thread), the sim's world at the session's end (mask check, recorder, masked triangles) and the
+    // world thread's op counters (gfx_world_run_stats)
+    uint64_t root_checks = 0, root_diff = 0;
+    int64_t mask_checks = 0, mask_differing = 0, mask_px_differing = 0, rec_calls = 0, rec_array_copies = 0, mask_skipped = 0;
+    portsim::GfxWorldRun run;
   } wts_;  // jobs .. job_max_ns: world thread; merged, root_*, submit_ns: sim thread (read after the thread stopped)
   void world_start();
   void world_stop();
