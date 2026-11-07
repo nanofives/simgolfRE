@@ -1095,3 +1095,16 @@ clamp; the full wide map estimated at 2-3 days in P13B_notes.md), showGolferPair
 the whole picture (updateTerrainRender.syncTilesAfterEdit), --sprite-filter edge (Scale2x / EPX). Dropped by Mariano: 15 (cut thought
 label, not reproduced) and 16 (P13B's finding kept in its notes). SG_APP_P13=off turns the app parts off. Combined gates on main:
 log/roadmap/P13/P13Z_gates.log.
+
+## P14: GPU composition of the window (2026-11-06)
+Brief log/roadmap/P14/BRIEF.md, worker P14A (notes log/roadmap/P14/P14A_notes.md). D3D11 + DXGI flip-model swap chain
+(port/app/gpu.cpp) transcribing present.cpp's integer pixel rules; GDI text runs, tee lines and the FPS overlay stay CPU
+patches; falls back to the CPU path on --gpu off, SG_APP_P14=off, no device, no d3dcompiler_47 or 3 device losses.
+SG_P14_VERIFY=n compares GPU readback against Presenter::render (0 differing pixels in every run). Capture is the app's own
+readback (SG_P14_SHOT + message SimGolfPort.P14Shot): window-DC BitBlt cannot see a flip-model swap chain. Fix 1 (bca1f909):
+course view on the GPU, paint CPU 1080 ~4 ms (was 10-11), 4K 8-10 (was 35-48), slide 93-104 paints/s at 1080 (was 65-80) on a
+120 Hz monitor. Fix 2 (8a30f407): object ticks upload only rewritten rectangles, --object-rate auto (every tick on the GPU path
+at a client <= 1920x1200, else 30). Fix 3 (9eda579b): edge band fill on the paint threads (menu paint 1080 14.0 ms, was 20;
+4K 52.9, was 74); a GPU path for flat 2D screens is pixel-exact but costs more CPU, kept off (SG_P14_FLAT=1). Open: object
+redraw and half-bright strip text are still CPU work, GPU draw time 2-6 ms unexplained (U-P14A-01), the 4K scroll sim cost
+(4-8 frames/s, both paths) is on the sim thread.
