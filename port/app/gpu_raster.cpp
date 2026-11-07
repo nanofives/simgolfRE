@@ -13,6 +13,8 @@
 #include <windows.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <intrin.h>
+#include <smmintrin.h>
 #endif
 
 #include <algorithm>
@@ -46,6 +48,8 @@ struct Stats {
   int64_t bin_ns = 0, gpu_ns = 0, wait_ns = 0, read_ns = 0, upload_ns = 0, draw_ns = 0, max_draw_ns = 0, max_gpu_ns = 0;
   int64_t gpu_timed = 0;
   int64_t parts = 0, part_ns = 0, join_ns = 0, map_ns = 0, copy_ns = 0, span_ns = 0;   // P17A (D3DRaster::end_)
+  int64_t streamed = 0;   // P17A fix 2: readbacks copied by streaming loads
+  int64_t sub_rows = 0, pass_rows = 0;   // P17A fix 2: the submissions' row extents summed, and the passes' rows
   int slice = 0;
   bool force_exact = false;
   int mode = 0;            // P16B fix 2: 0 off, 1 on, 2 auto
@@ -97,6 +101,9 @@ const char kHlslRaster[] = R"HLSL(
 #ifndef FORCE_EXACT
 #define FORCE_EXACT 0
 #endif
+#ifndef PAIRS_NEGCTL
+#define PAIRS_NEGCTL 0
+#endif
 cbuffer CB : register(b0) {
   int W, H, tilesX, tileBase;
   uint listCap, cb1, cb2, cb3;
@@ -107,6 +114,8 @@ struct Tri {
   float cf[9];                  // r0 r1 r2 g0 g1 g2 b0 b1 b2 as floats
   float inv_af;                 // float(1 / arA)
   uint2 d[19];                  // s0 s1 s2 t0 t1 t2 r0 r1 r2 g0 g1 g2 b0 b1 b2 div_st arA 1/div_st 1/arA (the CPU's doubles)
+  uint2 K[3];                   // P17A: per edge B * XP - A * YP (double, exact: below 2^47), for CSPairs
+  int minx, maxx, miny, maxy;   // P17A: the box (frame pixels), for CSPairs
 };
 struct Pair {
   uint tri, box;                // box: the triangle's box in tile pixels, x0 | x1 << 8 | y0 << 16 | y1 << 24
@@ -115,7 +124,7 @@ struct Pair {
   uint2 W0[3];                  // w at the tile's first pixel (double, exact)
 };
 StructuredBuffer<Tri> tris : register(t0);
-StructuredBuffer<uint2> tileRange : register(t1);   // per tile: first pair, count
+StructuredBuffer<uint2> tileRange : register(t1);   // per tile from tile cb2 on: first pair, count
 StructuredBuffer<Pair> pairs : register(t2);
 StructuredBuffer<uint> tileList : register(t3);     // the tiles with pairs
 ByteAddressBuffer texels : register(t4);
@@ -127,6 +136,8 @@ RWByteAddressBuffer cnt : register(u1);             // [0] pixel writes of pass 
 RWStructuredBuffer<uint2> lst : register(u2);       // pass 2's pixels: x | y << 16, the pair index << 15 | the pixel's value
 RWByteAddressBuffer args : register(u3);            // pass 2's DispatchIndirect arguments
 RWByteAddressBuffer acc : register(u4);             // P17A: the pass's counters summed over its parts (CSAcc)
+RWStructuredBuffer<Pair> pairsOut : register(u5);   // P17A: the pairs CSPairs fills in (then read as pairs, t2)
+StructuredBuffer<uint2> cpairs : register(t8);      // P17A: per pair the triangle and the tile (the CPU's binning)
 groupshared uint g_cov;
 
 double D(uint2 v) { return asdouble(v.x, v.y); }
@@ -341,7 +352,7 @@ void CSRaster(uint3 gid : SV_GroupID, uint3 lt : SV_GroupThreadID, uint li : SV_
   int dx = (int)lt.x, dy = (int)lt.y;
   bool inside = x < W && y < H;
   uint px = inside ? src[int2(x, y)] : 0u;
-  uint2 rg = tileRange[tile];
+  uint2 rg = tileRange[tile - cb2];   // P17A: the table starts at the submission's first tile row (cb2)
   uint ncov = 0u;
   for (uint k = 0u; inside && k < rg.y; ++k) {
     Pair P = pairs[rg.x + k];
@@ -384,7 +395,7 @@ void CSResume(uint3 tid : SV_DispatchThreadID) {
   uint k0 = e.y >> 15, px = e.y & 0x7fffu;
   uint tile = (uint)(y >> 4) * (uint)tilesX + (uint)(x >> 4);
   int dx = x & 15, dy = y & 15;
-  uint2 rg = tileRange[tile];
+  uint2 rg = tileRange[tile - cb2];   // P17A: the table starts at the submission's first tile row (cb2)
   for (uint k = k0; k < rg.y; ++k) {
     Pair P = pairs[rg.x + k];
     double a0, a1, a2;
@@ -396,6 +407,51 @@ void CSResume(uint3 tid : SV_DispatchThreadID) {
     if (!done) px = exactpx(P.tri, a0, a1, a2, x, y, px);
   }
   dst[int2(x, y)] = px;
+}
+
+)HLSL"   // P17A: two literals (MSVC limits one to 16 KB; adjacent literals are joined)
+                           R"HLSL(
+// P17A: THE PAIRS BUILT ON THE GPU. The CPU bins (which tiles, in triangle order) and uploads per pair only (triangle, tile); a thread per
+// pair fills in what P16B's CPU binning computed: the triangle's box in tile pixels and per edge W0 = A * (PY0 - YP) + B * XP - B * PX0
+// = A * PY0 - B * PX0 + K (K = B * XP - A * YP from the CPU; every term an integer below 2^48, so each double operation is exact and W0
+// is the CPU's int64 value) and Tc = ceil((t - W0) / 256) clamped to +-2^30 ((t - W0) * 2^-8 is exact; clamping before the ceiling gives
+// the same integer). cb1 = the pair count.
+[numthreads(64, 1, 1)]
+void CSPairs(uint3 tid : SV_DispatchThreadID) {
+  if (tid.x >= cb1) return;
+  uint2 cp = cpairs[tid.x];
+  uint ti = cp.x;
+  int x0 = (int)((cp.y % (uint)tilesX) * 16u), y0 = (int)((cp.y / (uint)tilesX) * 16u);
+  Pair P;
+  P.tri = ti;
+  uint bx0 = (uint)max(tris[ti].minx - x0, 0), bx1 = (uint)min(tris[ti].maxx - x0, 15);
+  uint by0 = (uint)max(tris[ti].miny - y0, 0), by1 = (uint)min(tris[ti].maxy - y0, 15);
+  P.box = bx0 | (bx1 << 8) | (by0 << 16) | (by1 << 24);
+  P.pad = 0u;
+  double PX0 = (double)(256 * x0 + 128), PY0 = (double)(256 * y0 + 128);
+  double u8 = asdouble(0u, 0x3F700000u);   // 2^-8
+  int tc[3];
+  [unroll] for (int e = 0; e < 3; ++e) {
+    int A = e == 0 ? tris[ti].A0 : (e == 1 ? tris[ti].A1 : tris[ti].A2);
+    int B = e == 0 ? tris[ti].B0 : (e == 1 ? tris[ti].B1 : tris[ti].B2);
+    precise double ay = (double)A * PY0;
+    precise double bx = (double)B * PX0;
+    precise double d0 = ay - bx;
+    precise double w0 = d0 + D(tris[ti].K[e]);
+    double t = ((tris[ti].flags >> (uint)e) & 1u) != 0u ? 0.0 : 1.0;
+    precise double n = t - w0;
+    precise double q = n * u8;
+    q = clamp(q, -1073741824.0, 1073741824.0);
+    int i = (int)q;
+    tc[e] = ((double)i < q) ? i + 1 : i;
+    uint lo, hi;
+    asuint(w0, lo, hi);
+    P.W0[e] = uint2(lo, hi);
+  }
+  P.Tc0 = tc[0] + PAIRS_NEGCTL;   // SG_P17_PAIRS_NEGCTL=1 (development): edge 0's threshold one too high (the checks must read RED)
+  P.Tc1 = tc[1];
+  P.Tc2 = tc[2];
+  pairsOut[tid.x] = P;
 }
 
 // P17A: one part's counters added to the pass's (pixel writes and handed pixels summed, the overflow flag kept)
@@ -412,8 +468,10 @@ struct TriG {
   float cf[9];
   float inv_af;
   uint32_t d[38];
+  uint32_t K[6];        // P17A: per edge B * XP - A * YP as a double (CSPairs)
+  int32_t box[4];       // P17A: minx, maxx, miny, maxy
 };
-static_assert(sizeof(TriG) == 240, "TriG layout");
+static_assert(sizeof(TriG) == 280, "TriG layout");
 struct PairG {
   uint32_t tri, box;
   int32_t Tc[3];
@@ -551,7 +609,7 @@ struct Dev {
   std::string why = "not started";
   ID3D11Device *dev = nullptr;
   ID3D11DeviceContext *ctx = nullptr;
-  ID3D11ComputeShader *cs = nullptr, *cs_args = nullptr, *cs_resume = nullptr, *cs_acc = nullptr;
+  ID3D11ComputeShader *cs = nullptr, *cs_args = nullptr, *cs_resume = nullptr, *cs_acc = nullptr, *cs_pairs = nullptr;
   ID3D11Buffer *args = nullptr;
   ID3D11UnorderedAccessView *args_uav = nullptr;
   ID3D11Buffer *cb = nullptr;
@@ -566,7 +624,7 @@ struct Dev {
   ~Dev() {
     worker.reset();
     copier.reset();
-    rel(acc_uav); rel(acc); rel(cs_acc);
+    rel(acc_uav); rel(acc); rel(cs_acc); rel(cs_pairs);
     rel(args_uav); rel(args); rel(cs_resume); rel(cs_args);
     rel(ta); rel(tb); rel(dis); rel(cnt_uav); rel(cnt_rd); rel(cnt); rel(kcf_srv); rel(kcf); rel(kc_srv); rel(kc); rel(cb); rel(cs);
     rel(ctx); rel(dev);
@@ -593,10 +651,12 @@ struct Dev {
       return fail("no typed UAV of R16_UINT");
     const char *fe = std::getenv("SG_P16_EXACT");
     force_exact = fe && fe[0] == '1';
-    const D3D_SHADER_MACRO defs[] = {{"FORCE_EXACT", force_exact ? "1" : "0"}, {nullptr, nullptr}};
-    const char *entry[4] = {"CSRaster", "CSArgs", "CSResume", "CSAcc"};
-    ID3D11ComputeShader **out[4] = {&cs, &cs_args, &cs_resume, &cs_acc};
-    for (int i = 0; i < 4; ++i) {
+    const char *pn = std::getenv("SG_P17_PAIRS_NEGCTL");
+    const bool pairs_negctl = pn && pn[0] == '1';
+    const D3D_SHADER_MACRO defs[] = {{"FORCE_EXACT", force_exact ? "1" : "0"}, {"PAIRS_NEGCTL", pairs_negctl ? "1" : "0"}, {nullptr, nullptr}};
+    const char *entry[5] = {"CSRaster", "CSArgs", "CSResume", "CSAcc", "CSPairs"};
+    ID3D11ComputeShader **out[5] = {&cs, &cs_args, &cs_resume, &cs_acc, &cs_pairs};
+    for (int i = 0; i < 5; ++i) {
       ID3DBlob *b = nullptr, *err = nullptr;
       hr = compile(kHlslRaster, sizeof(kHlslRaster) - 1, "p16b.hlsl", defs, nullptr, entry[i], "cs_5_0",
                    D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
@@ -734,7 +794,34 @@ struct DynBuf {
   }
 };
 
-constexpr int kDefaultPart = 512, kDefaultReadThreads = 4, kSelftestPart = 96;   // P17A (the notes' measurements)
+constexpr int kDefaultPart = 1024, kDefaultReadThreads = 4, kSelftestPart = 96;   // P17A (the notes' measurements; fix 2: parts of 1024)
+
+// P17A: a structured buffer the GPU writes (UAV) and then reads (SRV), grown as needed (CSPairs' pairs)
+struct RwBuf {
+  ID3D11Buffer *buf = nullptr;
+  ID3D11ShaderResourceView *srv = nullptr;
+  ID3D11UnorderedAccessView *uav = nullptr;
+  size_t cap = 0;
+  ~RwBuf() { rel(uav); rel(srv); rel(buf); }
+  bool ensure(ID3D11Device *dev, size_t n, size_t stride) {
+    if (n <= cap && buf) return true;
+    rel(uav);
+    rel(srv);
+    rel(buf);
+    const size_t c = std::max<size_t>(n + n / 2, 1024);
+    D3D11_BUFFER_DESC bd = {};
+    bd.ByteWidth = static_cast<UINT>(c * stride);
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+    bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    bd.StructureByteStride = static_cast<UINT>(stride);
+    if (FAILED(dev->CreateBuffer(&bd, nullptr, &buf)) || FAILED(dev->CreateShaderResourceView(buf, nullptr, &srv)) ||
+        FAILED(dev->CreateUnorderedAccessView(buf, nullptr, &uav)))
+      return false;
+    cap = c;
+    return true;
+  }
+};
 
 int64_t ns_since(std::chrono::steady_clock::time_point t0) {
   return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count();
@@ -750,6 +837,38 @@ int part_setting() {
   if (p17_off()) return 0;
   const char *e = std::getenv("SG_P17_PART");
   return e ? std::max(0, std::atoi(e)) : kDefaultPart;
+}
+bool gpu_pairs_setting() {   // SG_P17_GPU_PAIRS=0: the pairs built on the CPU (P16B)
+  if (p17_off()) return false;
+  const char *e = std::getenv("SG_P17_GPU_PAIRS");
+  return !(e && e[0] == '0');
+}
+// SG_P17_STREAM=0: the readback rows copied with memcpy (P16B). Otherwise, with SSE4.1, by streaming loads (MOVNTDQA), the read made
+// for write-combined memory; the bytes copied are the same either way.
+bool stream_setting() {
+  if (p17_off()) return false;
+  const char *e = std::getenv("SG_P17_STREAM");
+  if (e && e[0] == '0') return false;
+  int r[4] = {0, 0, 0, 0};
+  __cpuid(r, 1);
+  return ((r[2] >> 19) & 1) != 0;   // CPUID.1:ECX bit 19 = SSE4.1
+}
+// one row of n bytes from s (16-byte aligned) to d by streaming loads
+void stream_row(uint8_t *d, const uint8_t *s, size_t n) {
+  size_t k = 0;
+  for (; k + 64 <= n; k += 64) {
+    const __m128i a = _mm_stream_load_si128(reinterpret_cast<__m128i *>(const_cast<uint8_t *>(s + k)));
+    const __m128i b = _mm_stream_load_si128(reinterpret_cast<__m128i *>(const_cast<uint8_t *>(s + k + 16)));
+    const __m128i c = _mm_stream_load_si128(reinterpret_cast<__m128i *>(const_cast<uint8_t *>(s + k + 32)));
+    const __m128i e = _mm_stream_load_si128(reinterpret_cast<__m128i *>(const_cast<uint8_t *>(s + k + 48)));
+    _mm_storeu_si128(reinterpret_cast<__m128i *>(d + k), a);
+    _mm_storeu_si128(reinterpret_cast<__m128i *>(d + k + 16), b);
+    _mm_storeu_si128(reinterpret_cast<__m128i *>(d + k + 32), c);
+    _mm_storeu_si128(reinterpret_cast<__m128i *>(d + k + 48), e);
+  }
+  for (; k + 16 <= n; k += 16)
+    _mm_storeu_si128(reinterpret_cast<__m128i *>(d + k), _mm_stream_load_si128(reinterpret_cast<__m128i *>(const_cast<uint8_t *>(s + k))));
+  if (k < n) std::memcpy(d + k, s + k, n - k);
 }
 int read_threads() {
   if (p17_off()) return 1;
@@ -937,7 +1056,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     const int tx = (w + 15) / 16, ty = (h + 15) / 16;
     const size_t ntile = static_cast<size_t>(tx) * static_cast<size_t>(ty);
     tg_.resize(tris.size());
-    count_.assign(ntile + 1, 0);
+    if (count_.size() != ntile + 1) count_.assign(ntile + 1, 0);   // P17A: zero outside the part's tile rows between submissions
     int ymin = h, ymax = -1;
     for (size_t i = 0; i < tris.size(); ++i) {
       const portsim::gl::GlGpuTri &s = tris[i];
@@ -966,24 +1085,50 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       }
       g.fast = fast ? 1u : 0u;
       g.inv_af = static_cast<float>(inv_a);
+      for (int e = 0; e < 3; ++e) {   // P17A: CSPairs' K (|B XP - A YP| < 2^46: exact as a double)
+        const int p = (e + 1) % 3;
+        const double K = static_cast<double>(static_cast<int64_t>(g.B[e]) * s.X[p] - static_cast<int64_t>(g.A[e]) * s.Y[p]);
+        std::memcpy(&g.K[e * 2], &K, sizeof K);
+      }
+      g.box[0] = s.minx;
+      g.box[1] = s.maxx;
+      g.box[2] = s.miny;
+      g.box[3] = s.maxy;
       if (s.minx > s.maxx || s.miny > s.maxy) continue;
       ymin = std::min(ymin, s.miny);
       ymax = std::max(ymax, s.maxy);
       for (int yy = s.miny >> 4; yy <= (s.maxy >> 4); ++yy)
         for (int xx = s.minx >> 4; xx <= (s.maxx >> 4); ++xx) ++count_[static_cast<size_t>(yy) * tx + xx];
     }
-    range_.resize(ntile * 2);
+    // P17A: the tile table over the submission's tile rows only (tiles t0 .. t1 - 1; the shaders index it from t0, cb2)
+    const size_t t0 = ymax >= ymin ? static_cast<size_t>(ymin >> 4) * static_cast<size_t>(tx) : 0;
+    const size_t t1 = ymax >= ymin ? static_cast<size_t>((ymax >> 4) + 1) * static_cast<size_t>(tx) : 0;
+    range_.resize((t1 - t0) * 2);
     tiles_.clear();
     uint32_t acc = 0;
-    for (size_t t = 0; t < ntile; ++t) {
-      range_[t * 2] = acc;
-      range_[t * 2 + 1] = count_[t];
+    for (size_t t = t0; t < t1; ++t) {
+      range_[(t - t0) * 2] = acc;
+      range_[(t - t0) * 2 + 1] = count_[t];
       if (count_[t]) tiles_.push_back(static_cast<uint32_t>(t));
       acc += count_[t];
-      count_[t] = range_[t * 2];   // the next free slot
+      count_[t] = range_[(t - t0) * 2];   // the next free slot
     }
-    pairs_.resize(acc);
-    for (size_t i = 0; i < tris.size(); ++i) {
+    if (gpu_pairs_) {   // P17A: per pair only (triangle, tile); CSPairs computes the rest
+      cpairs_.resize(static_cast<size_t>(acc) * 2);
+      for (size_t i = 0; i < tris.size(); ++i) {
+        const portsim::gl::GlGpuTri &s = tris[i];
+        if (s.minx > s.maxx || s.miny > s.maxy) continue;
+        for (int yy = s.miny >> 4; yy <= (s.maxy >> 4); ++yy)
+          for (int xx = s.minx >> 4; xx <= (s.maxx >> 4); ++xx) {
+            const size_t t = static_cast<size_t>(yy) * tx + xx;
+            uint32_t *c = &cpairs_[static_cast<size_t>(count_[t]++) * 2];
+            c[0] = static_cast<uint32_t>(i);
+            c[1] = static_cast<uint32_t>(t);
+          }
+      }
+    }
+    pairs_.resize(gpu_pairs_ ? 0 : acc);
+    for (size_t i = 0; i < tris.size() && !gpu_pairs_; ++i) {
       const portsim::gl::GlGpuTri &s = tris[i];
       if (s.minx > s.maxx || s.miny > s.maxy) continue;
       const TriG &g = tg_[i];
@@ -1009,18 +1154,21 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
           }
         }
     }
+    std::fill(count_.begin() + static_cast<std::ptrdiff_t>(t0), count_.begin() + static_cast<std::ptrdiff_t>(t1), 0u);   // P17A
     if (!tribuf_.fill(dev, ctx, tg_.data(), tg_.size() * sizeof(TriG), sizeof(TriG), false) ||
         !rangebuf_.fill(dev, ctx, range_.data(), range_.size() * 4, 8, false) ||
-        !pairbuf_.fill(dev, ctx, pairs_.data(), pairs_.size() * sizeof(PairG), sizeof(PairG), false) ||
+        (!gpu_pairs_ && !pairbuf_.fill(dev, ctx, pairs_.data(), pairs_.size() * sizeof(PairG), sizeof(PairG), false)) ||
+        (gpu_pairs_ && (!cpairbuf_.fill(dev, ctx, cpairs_.data(), cpairs_.size() * 4, 8, false) || !pairrw_.ensure(dev, acc, sizeof(PairG)))) ||
         !tilebuf_.fill(dev, ctx, tiles_.data(), tiles_.size() * 4, 4, false))
       return die("triangle buffers");
     pass_.bin_ns += ns_since(tb);
     pass_.tris += static_cast<int64_t>(tris.size());
-    pass_.pairs += static_cast<int64_t>(pairs_.size());
+    pass_.pairs += static_cast<int64_t>(acc);
     pass_.groups += static_cast<int64_t>(tiles_.size());
     if (ymax >= ymin) {
       pass_.ymin = std::min(pass_.ymin, ymin);
       pass_.ymax = std::max(pass_.ymax, ymax);
+      pass_.sub_rows += ymax - ymin + 1;   // P17A fix 2: how far the submissions' rows overlap (against the pass's rows)
     }
     if (tiles_.empty()) return true;
     // the pass: the source rows the tiles read (every pixel of a tile with pairs is read: the whole tile rows), then the tiles in slices
@@ -1032,8 +1180,27 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       D3D11_BOX box = {0, r0, 0, static_cast<UINT>(w), r1, 1};
       ctx->CopySubresourceRegion(stex_, 0, 0, r0, 0, mtex_, 0, &box);
     }
+    if (gpu_pairs_) {   // P17A: the pairs filled in on the GPU (CSPairs), before pass 1 reads them
+      D3D11_MAPPED_SUBRESOURCE m;
+      if (FAILED(ctx->Map(d_->cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return die("constant buffer map");
+      const CBData c = {w, h, tx, 0, list_cap_, acc, static_cast<uint32_t>(t0), 0};
+      std::memcpy(m.pData, &c, sizeof c);
+      ctx->Unmap(d_->cb, 0);
+      ctx->CSSetConstantBuffers(0, 1, &d_->cb);
+      ctx->CSSetShader(d_->cs_pairs, nullptr, 0);
+      ctx->CSSetShaderResources(0, 1, &tribuf_.srv);
+      ctx->CSSetShaderResources(8, 1, &cpairbuf_.srv);
+      ctx->CSSetUnorderedAccessViews(5, 1, &pairrw_.uav, nullptr);
+      ctx->Dispatch((acc + 63u) / 64u, 1, 1);
+      ++pass_.dispatches;
+      ID3D11UnorderedAccessView *nu = nullptr;
+      ID3D11ShaderResourceView *ns = nullptr;
+      ctx->CSSetUnorderedAccessViews(5, 1, &nu, nullptr);
+      ctx->CSSetShaderResources(8, 1, &ns);
+    }
     ctx->CSSetShader(d_->cs, nullptr, 0);
-    ID3D11ShaderResourceView *srvs[8] = {tribuf_.srv, rangebuf_.srv, pairbuf_.srv, tilebuf_.srv, tsrv_, d_->kc_srv, ssrv_, d_->kcf_srv};
+    ID3D11ShaderResourceView *srvs[8] = {tribuf_.srv, rangebuf_.srv, gpu_pairs_ ? pairrw_.srv : pairbuf_.srv, tilebuf_.srv, tsrv_,
+                                         d_->kc_srv, ssrv_, d_->kcf_srv};
     ctx->CSSetShaderResources(0, 8, srvs);
     ID3D11UnorderedAccessView *uavs[3] = {muav_, d_->cnt_uav, luav_};
     ctx->CSSetUnorderedAccessViews(0, 3, uavs, nullptr);
@@ -1042,7 +1209,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       const size_t n = std::min(per, tiles_.size() - base);
       D3D11_MAPPED_SUBRESOURCE m;
       if (FAILED(ctx->Map(d_->cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return die("constant buffer map");
-      const CBData c = {w, h, tx, static_cast<int32_t>(base), list_cap_, 0, 0, 0};
+      const CBData c = {w, h, tx, static_cast<int32_t>(base), list_cap_, 0, static_cast<uint32_t>(t0), 0};
       std::memcpy(m.pData, &c, sizeof c);
       ctx->Unmap(d_->cb, 0);
       ctx->CSSetConstantBuffers(0, 1, &d_->cb);
@@ -1112,13 +1279,17 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       if (!d_->copier) d_->copier = std::make_unique<Copier>(read_threads());
       const uint8_t *base = static_cast<const uint8_t *>(m.pData);
       const size_t pitch = m.RowPitch, rows = static_cast<size_t>(ymax - ymin + 1);
+      const bool stream = stream_ && ((reinterpret_cast<uintptr_t>(base) | pitch) & 15u) == 0;   // P17A: streaming loads need 16-byte rows
       d_->copier->run([&](int k, int n) {   // rows split into n bands
         const size_t a = rows * static_cast<size_t>(k) / static_cast<size_t>(n), b = rows * static_cast<size_t>(k + 1) / static_cast<size_t>(n);
         for (size_t r = a; r < b; ++r) {
           const size_t yy = static_cast<size_t>(ymin) + r;
-          std::memcpy(fb + yy * static_cast<size_t>(w), base + yy * pitch, static_cast<size_t>(w) * 2u);
+          uint8_t *dst = reinterpret_cast<uint8_t *>(fb + yy * static_cast<size_t>(w));
+          if (stream) stream_row(dst, base + yy * pitch, static_cast<size_t>(w) * 2u);
+          else std::memcpy(dst, base + yy * pitch, static_cast<size_t>(w) * 2u);
         }
       });
+      if (stream) ++pass_streamed_;
       copy_ns = ns_since(tc);
       ctx->Unmap(rtex_, 0);
       if (corrupt_) fb[static_cast<size_t>(ymin) * static_cast<size_t>(w) + static_cast<size_t>(w / 2)] ^= 1u;   // the forced mismatch
@@ -1174,6 +1345,10 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     g_st.join_ns += join_ns;
     g_st.part_ns += part_ns;
     g_st.parts += parts;
+    g_st.streamed += pass_streamed_;
+    g_st.sub_rows += pass_.sub_rows;
+    g_st.pass_rows += ymax >= ymin ? ymax - ymin + 1 : 0;
+    pass_streamed_ = 0;
     g_st.draw_ns += draw_ns;
     g_st.max_draw_ns = std::max(g_st.max_draw_ns, draw_ns);
     if (gpu_ns >= 0) {
@@ -1234,7 +1409,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   }
   // what one pass (a batch: its parts and its draw) did, summed into p16b at its end
   struct Pass {
-    int64_t up_ns = 0, bin_ns = 0, tris = 0, pairs = 0, groups = 0, dispatches = 0, subs = 0, tex_bytes = 0, tex_count = 0;
+    int64_t up_ns = 0, bin_ns = 0, tris = 0, pairs = 0, groups = 0, dispatches = 0, subs = 0, tex_bytes = 0, tex_count = 0, sub_rows = 0;
     bool full = false, clear = false, tex_up = false, timed = false;
     int ymin = 0, ymax = -1;
   };
@@ -1256,6 +1431,12 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   ID3D11ShaderResourceView *ssrv_ = nullptr;
   std::vector<ID3D11Query *> stamps_;   // P17A: a timestamp pair per submission of the pass
   DynBuf tribuf_, rangebuf_, pairbuf_, tilebuf_;
+  DynBuf cpairbuf_;   // P17A: per pair (triangle, tile), the CPU's binning
+  RwBuf pairrw_;      // P17A: the pairs CSPairs fills in
+  bool gpu_pairs_ = gpu_pairs_setting();
+  bool stream_ = stream_setting();
+  int64_t pass_streamed_ = 0;   // readbacks copied by streaming loads
+  std::vector<uint32_t> cpairs_;
   ID3D11Buffer *tbuf_ = nullptr;   // the texture images (raw); tex_off_: byte offset of each image by serial
   ID3D11ShaderResourceView *tsrv_ = nullptr;
   std::map<uint64_t, uint32_t> tex_off_;
@@ -1311,6 +1492,25 @@ void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
     }
     r.end();
   }
+  // P17A fix 2: a mesh of squares cut on a diagonal whose vertices are pixel centres, so the edges pass through pixel centres (an edge
+  // function exactly 0, or within one step of the coverage threshold): every such centre is drawn by the one triangle that owns it. The
+  // random stream above almost never puts a centre there (SG_P17_PAIRS_NEGCTL=1, a threshold one too high, passed it).
+  r.disable(0x0BE2);
+  const int cell = 23;
+  auto cx_ = [W](int x) { return (static_cast<float>(x) + 0.5f) * 2.0f / static_cast<float>(W) - 1.0f; };
+  auto cy_ = [H](int y) { return (static_cast<float>(y) + 0.5f) * 2.0f / static_cast<float>(H) - 1.0f; };
+  for (int gy = 1; gy + cell < H; gy += cell)
+    for (int gx = 1; gx + cell < W; gx += cell) {
+      r.bind_texture(kTex2d, names[(gx / cell + gy / cell) % 2]);
+      const int qx[6] = {gx, gx + cell, gx + cell, gx, gx + cell, gx}, qy[6] = {gy, gy, gy + cell, gy, gy + cell, gy + cell};
+      r.begin(4);
+      for (int v = 0; v < 6; ++v) {
+        r.color4f(uf(0.0f, 1.0f), uf(0.0f, 1.0f), uf(0.0f, 1.0f), 1.0f);
+        r.tex_coord2f(uf(-1.5f, 2.5f), uf(-1.5f, 2.5f));
+        r.vertex3f(cx_(qx[v]), cy_(qy[v]), 0.0f);
+      }
+      r.end();
+    }
   r.flush();
 }
 void selftest(const std::shared_ptr<Dev> &d) {
@@ -1369,7 +1569,7 @@ void selftest(const std::shared_ptr<Dev> &d) {
   g_st.st_differing = differing;
   g_st.st_covered = covered;
   g_st.st_pass2 = pass2;
-  g_st.st_tris = 400;
+  g_st.st_tris = 400 + 2 * 11 * 8;   // P17A fix 2: the random stream and the mesh (11 x 8 squares)
   g_st.st_device_ms = dev_ms;
   g_st.st_test_ms = test_ms;
   if (!pass) g_st.state = "self-test: " + result;
@@ -1474,6 +1674,13 @@ std::string gpu_raster_json() {
   std::lock_guard<std::mutex> lk(g_mu);
   const Stats &s = g_st;
   const double nb = s.batches ? static_cast<double>(s.batches) : 1.0;
+#ifdef _WIN32
+  const std::string p17 = ",\"part_tris\":" + std::to_string(part_setting()) + ",\"read_threads\":" + std::to_string(read_threads()) +
+                          ",\"gpu_pairs\":" + std::string(gpu_pairs_setting() ? "true" : "false") +
+                          ",\"stream\":" + std::string(stream_setting() ? "true" : "false");
+#else
+  const std::string p17;
+#endif
   std::string o = "{\"enabled\":" + std::string(s.enabled ? "true" : "false") + ",\"state\":\"";
   for (char c : s.state) o += (c == '"' || c == '\\' || c < 0x20) ? ' ' : c;
   std::string st;
@@ -1494,7 +1701,8 @@ std::string gpu_raster_json() {
        ",\"upload_ms_mean\":" + num(s.upload_ns / 1e6 / nb) + ",\"wait_ms_mean\":" + num(s.wait_ns / 1e6 / nb) +
        ",\"read_ms_mean\":" + num(s.read_ns / 1e6 / nb) + ",\"draw_ms_mean\":" + num(s.draw_ns / 1e6 / nb) +
        ",\"draw_ms_max\":" + num(s.max_draw_ns / 1e6) +
-       ",\"part_tris\":" + std::to_string(part_setting()) + ",\"read_threads\":" + std::to_string(read_threads()) +
+       p17 + ",\"streamed\":" + std::to_string(s.streamed) + ",\"sub_rows_per_pass\":" + num(s.sub_rows / nb) +
+       ",\"rows_per_pass\":" + num(s.pass_rows / nb) +
        ",\"parts\":" + std::to_string(s.parts) + ",\"parts_per_batch\":" + num(s.parts / nb) +
        ",\"part_ms_mean\":" + num(s.part_ns / 1e6 / nb) + ",\"join_ms_mean\":" + num(s.join_ns / 1e6 / nb) +
        ",\"map_ms_mean\":" + num(s.map_ns / 1e6 / nb) + ",\"copy_ms_mean\":" + num(s.copy_ns / 1e6 / nb) +
