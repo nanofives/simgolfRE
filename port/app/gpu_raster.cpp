@@ -16,8 +16,12 @@
 #endif
 
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cmath>
+#include <condition_variable>
+#include <deque>
+#include <functional>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -26,6 +30,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 
 namespace portapp {
@@ -40,6 +45,7 @@ struct Stats {
   int64_t covered = 0, exact = 0, tex_bytes = 0, tex_count = 0;   // pixel writes, and those the exact path made (the rest: the checked path)
   int64_t bin_ns = 0, gpu_ns = 0, wait_ns = 0, read_ns = 0, upload_ns = 0, draw_ns = 0, max_draw_ns = 0, max_gpu_ns = 0;
   int64_t gpu_timed = 0;
+  int64_t parts = 0, part_ns = 0, join_ns = 0, map_ns = 0, copy_ns = 0, span_ns = 0;   // P17A (D3DRaster::end_)
   int slice = 0;
   bool force_exact = false;
   int mode = 0;            // P16B fix 2: 0 off, 1 on, 2 auto
@@ -120,6 +126,7 @@ RWTexture2D<uint> dst : register(u0);
 RWByteAddressBuffer cnt : register(u1);             // [0] pixel writes of pass 1, [4] pixels handed to pass 2, [8] list overflow
 RWStructuredBuffer<uint2> lst : register(u2);       // pass 2's pixels: x | y << 16, the pair index << 15 | the pixel's value
 RWByteAddressBuffer args : register(u3);            // pass 2's DispatchIndirect arguments
+RWByteAddressBuffer acc : register(u4);             // P17A: the pass's counters summed over its parts (CSAcc)
 groupshared uint g_cov;
 
 double D(uint2 v) { return asdouble(v.x, v.y); }
@@ -390,6 +397,12 @@ void CSResume(uint3 tid : SV_DispatchThreadID) {
   }
   dst[int2(x, y)] = px;
 }
+
+// P17A: one part's counters added to the pass's (pixel writes and handed pixels summed, the overflow flag kept)
+[numthreads(1, 1, 1)]
+void CSAcc() {
+  acc.Store3(0, uint3(acc.Load(0) + cnt.Load(0), acc.Load(4) + cnt.Load(4), acc.Load(8) | cnt.Load(8)));
+}
 )HLSL";
 
 // the GPU's copy of one triangle and one (tile, triangle) pair (kHlslRaster's Tri and Pair)
@@ -419,23 +432,141 @@ int64_t ceil_div(int64_t a, int64_t b) {
   return (a % b != 0 && a > 0) ? q + 1 : q;
 }
 
+// P17A: THE SUBMIT THREAD. The parts of a batch (GlPixelGpu::part) are binned and dispatched here while the drawing thread (the world
+// thread) goes on with the set-up; the draw waits for it to be idle and then uses the device's context itself, so the context is only
+// ever used by one thread at a time (the wait orders them). It runs at the priority of the thread that made it.
+struct Worker {
+  std::thread th;
+  std::mutex m;
+  std::condition_variable cv, idle;
+  std::deque<std::function<void()>> q;
+  bool busy = false, stop = false;
+  Worker() {
+#ifdef _WIN32
+    const int prio = GetThreadPriority(GetCurrentThread());
+#endif
+    th = std::thread([this] {
+      for (;;) {
+        std::function<void()> f;
+        {
+          std::unique_lock<std::mutex> lk(m);
+          cv.wait(lk, [this] { return stop || !q.empty(); });
+          if (q.empty()) return;
+          f = std::move(q.front());
+          q.pop_front();
+          busy = true;
+        }
+        f();
+        std::lock_guard<std::mutex> lk(m);
+        busy = false;
+        if (q.empty()) idle.notify_all();
+      }
+    });
+#ifdef _WIN32
+    if (prio != THREAD_PRIORITY_ERROR_RETURN) SetThreadPriority(th.native_handle(), prio);
+#endif
+  }
+  ~Worker() {
+    {
+      std::lock_guard<std::mutex> lk(m);
+      stop = true;
+    }
+    cv.notify_all();
+    th.join();   // the queue is run to its end first
+  }
+  void post(std::function<void()> f) {
+    std::lock_guard<std::mutex> lk(m);
+    q.push_back(std::move(f));
+    cv.notify_one();
+  }
+  void wait() {
+    std::unique_lock<std::mutex> lk(m);
+    idle.wait(lk, [this] { return q.empty() && !busy; });
+  }
+};
+// P17A: THE READBACK COPY on n threads (the caller is part 0): fn(k, n) for k = 0..n-1, returning when every part is done
+struct Copier {
+  std::vector<std::thread> th;
+  std::mutex m;
+  std::condition_variable cv, done;
+  std::function<void(int, int)> fn;
+  uint64_t gen = 0;
+  int pending = 0, n = 1;
+  bool stop = false;
+  explicit Copier(int threads) : n(std::max(1, threads)) {
+#ifdef _WIN32
+    const int prio = GetThreadPriority(GetCurrentThread());
+#endif
+    for (int k = 1; k < n; ++k) {
+      th.emplace_back([this, k] {
+        uint64_t seen = 0;
+        for (;;) {
+          std::function<void(int, int)> f;
+          {
+            std::unique_lock<std::mutex> lk(m);
+            cv.wait(lk, [&] { return stop || gen != seen; });
+            if (stop) return;
+            seen = gen;
+            f = fn;
+          }
+          f(k, n);
+          std::lock_guard<std::mutex> lk(m);
+          if (--pending == 0) done.notify_all();
+        }
+      });
+#ifdef _WIN32
+      if (prio != THREAD_PRIORITY_ERROR_RETURN) SetThreadPriority(th.back().native_handle(), prio);
+#endif
+    }
+  }
+  ~Copier() {
+    {
+      std::lock_guard<std::mutex> lk(m);
+      stop = true;
+    }
+    cv.notify_all();
+    for (std::thread &t : th) t.join();
+  }
+  void run(const std::function<void(int, int)> &f) {
+    if (n == 1) {
+      f(0, 1);
+      return;
+    }
+    {
+      std::lock_guard<std::mutex> lk(m);
+      fn = f;
+      pending = n - 1;
+      ++gen;
+    }
+    cv.notify_all();
+    f(0, n);
+    std::unique_lock<std::mutex> lk(m);
+    done.wait(lk, [this] { return pending == 0; });
+  }
+};
+
 // the device every backend of the process shares (made by the first draw; one thread draws: the world thread)
 struct Dev {
   bool tried = false, ok = false;
   std::string why = "not started";
   ID3D11Device *dev = nullptr;
   ID3D11DeviceContext *ctx = nullptr;
-  ID3D11ComputeShader *cs = nullptr, *cs_args = nullptr, *cs_resume = nullptr;
+  ID3D11ComputeShader *cs = nullptr, *cs_args = nullptr, *cs_resume = nullptr, *cs_acc = nullptr;
   ID3D11Buffer *args = nullptr;
   ID3D11UnorderedAccessView *args_uav = nullptr;
   ID3D11Buffer *cb = nullptr;
   ID3D11Buffer *kc = nullptr, *kcf = nullptr;
   ID3D11ShaderResourceView *kc_srv = nullptr, *kcf_srv = nullptr;
-  ID3D11Buffer *cnt = nullptr, *cnt_rd = nullptr;
-  ID3D11UnorderedAccessView *cnt_uav = nullptr;
+  ID3D11Buffer *cnt = nullptr, *cnt_rd = nullptr, *acc = nullptr;
+  ID3D11UnorderedAccessView *cnt_uav = nullptr, *acc_uav = nullptr;
   ID3D11Query *dis = nullptr, *ta = nullptr, *tb = nullptr;
   bool force_exact = false;
+  std::unique_ptr<Worker> worker;   // P17A: made by the first part, by the drawing thread
+  std::unique_ptr<Copier> copier;   // P17A: made by the first readback
   ~Dev() {
+    worker.reset();
+    copier.reset();
+    rel(acc_uav); rel(acc); rel(cs_acc);
     rel(args_uav); rel(args); rel(cs_resume); rel(cs_args);
     rel(ta); rel(tb); rel(dis); rel(cnt_uav); rel(cnt_rd); rel(cnt); rel(kcf_srv); rel(kcf); rel(kc_srv); rel(kc); rel(cb); rel(cs);
     rel(ctx); rel(dev);
@@ -463,9 +594,9 @@ struct Dev {
     const char *fe = std::getenv("SG_P16_EXACT");
     force_exact = fe && fe[0] == '1';
     const D3D_SHADER_MACRO defs[] = {{"FORCE_EXACT", force_exact ? "1" : "0"}, {nullptr, nullptr}};
-    const char *entry[3] = {"CSRaster", "CSArgs", "CSResume"};
-    ID3D11ComputeShader **out[3] = {&cs, &cs_args, &cs_resume};
-    for (int i = 0; i < 3; ++i) {
+    const char *entry[4] = {"CSRaster", "CSArgs", "CSResume", "CSAcc"};
+    ID3D11ComputeShader **out[4] = {&cs, &cs_args, &cs_resume, &cs_acc};
+    for (int i = 0; i < 4; ++i) {
       ID3DBlob *b = nullptr, *err = nullptr;
       hr = compile(kHlslRaster, sizeof(kHlslRaster) - 1, "p16b.hlsl", defs, nullptr, entry[i], "cs_5_0",
                    D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
@@ -534,6 +665,7 @@ struct Dev {
     ud.Buffer.NumElements = 4;
     ud.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
     if (FAILED(dev->CreateUnorderedAccessView(cnt, &ud, &cnt_uav))) return fail("counters");
+    if (FAILED(dev->CreateBuffer(&cd, nullptr, &acc)) || FAILED(dev->CreateUnorderedAccessView(acc, &ud, &acc_uav))) return fail("counters");
     cd.Usage = D3D11_USAGE_STAGING;
     cd.BindFlags = 0;
     cd.MiscFlags = 0;
@@ -602,15 +734,39 @@ struct DynBuf {
   }
 };
 
+constexpr int kDefaultPart = 512, kDefaultReadThreads = 4, kSelftestPart = 96;   // P17A (the notes' measurements)
+
 int64_t ns_since(std::chrono::steady_clock::time_point t0) {
   return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count();
 }
 
+// P17A: the settings. SG_P17_PART=<triangles per part> (0 = no parts: one submission per batch, as P16B), SG_P17_READ_THREADS=<n>
+// (the readback copy's threads; 1 = as P16B); SG_APP_P17=off sets both to P16B's.
+bool p17_off() {
+  const char *e = std::getenv("SG_APP_P17");
+  return e && std::strcmp(e, "off") == 0;
+}
+int part_setting() {
+  if (p17_off()) return 0;
+  const char *e = std::getenv("SG_P17_PART");
+  return e ? std::max(0, std::atoi(e)) : kDefaultPart;
+}
+int read_threads() {
+  if (p17_off()) return 1;
+  const char *e = std::getenv("SG_P17_READ_THREADS");
+  return std::min(16, e ? std::max(1, std::atoi(e)) : kDefaultReadThreads);
+}
+
+// P17A (log/roadmap/P17/P17A_notes.md): a batch is ONE PASS made of parts. The first submission of a pass (a part or the draw) brings
+// the backend's copy up to date (the mirror); every submission (chunk_) uploads its new texture images, bins its triangles, copies the
+// source rows its tiles read and dispatches pass 1, pass 2 and CSAcc; the draw ends the pass (end_: the summed counters and the rows any
+// part wrote read back into fb, the copy split over the Copier's threads). Parts run on the device's Worker while the drawing thread
+// sets up the next triangles; the draw waits for the Worker first. Without parts (part_tris 0) a batch is one draw, as in P16B.
 class D3DRaster : public portsim::gl::GlPixelGpu {
  public:
   // selftest: the start-up self-test's backend (its batches are not counted in p16b; SG_P16_SELFTEST_CORRUPT=1 flips one word of its
-  // result: the forced mismatch)
-  explicit D3DRaster(std::shared_ptr<Dev> d, bool selftest = false) : d_(std::move(d)), selftest_(selftest) {
+  // result: the forced mismatch). part: triangles per part (0 = none).
+  D3DRaster(std::shared_ptr<Dev> d, bool selftest, int part) : d_(std::move(d)), selftest_(selftest), part_(std::max(0, part)) {
     if (const char *e = std::getenv("SG_P16_SLICE")) slice_ = std::max(0, std::atoi(e));
     const char *c = std::getenv("SG_P16_SELFTEST_CORRUPT");
     corrupt_ = selftest && c && c[0] == '1';
@@ -619,19 +775,60 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   }
   int64_t covered = 0, pass2 = 0;   // the pixel writes of the last batch, and those pass 2 made
   ~D3DRaster() override {
+    if (d_->worker) d_->worker->wait();   // a part still queued names this backend
     free_frame();
     rel(tsrv_);
     rel(tbuf_);
   }
   const char *why() const override { return why_.c_str(); }
+  int part_tris() const override { return part_; }
+
+  void part(int w, int h, const uint16_t *fb, const portsim::gl::GlMirror &m, const std::vector<portsim::gl::GlGpuTri> &tris,
+            const std::vector<portsim::gl::GlGpuTex> &texs) override {
+    if (dead_.load()) return;
+    if (!d_->worker) d_->worker = std::make_unique<Worker>();
+    ++pass_parts_;
+    auto job = std::make_shared<Job>(Job{w, h, fb, m, tris, texs});
+    d_->worker->post([this, job] {
+      const auto t0 = std::chrono::steady_clock::now();
+      if (!dead_.load() && (pass_open_ || begin_(job->w, job->h, job->fb, job->m))) chunk_(job->tris, job->texs, true);
+      part_ns_ += ns_since(t0);
+    });
+  }
 
   bool draw(int w, int h, uint16_t *fb, const portsim::gl::GlMirror &mm, const std::vector<portsim::gl::GlGpuTri> &tris,
             const std::vector<portsim::gl::GlGpuTex> &texs) override {
-    portsim::gl::GlMirror mirror = mm;
     const auto t0 = std::chrono::steady_clock::now();
-    if (dead_) return false;
+    if (d_->worker) d_->worker->wait();   // the pass's parts are dispatched (or failed)
+    const int64_t join_ns = ns_since(t0);
+    const int64_t parts = pass_parts_;
+    pass_parts_ = 0;
+    if (dead_.load()) {
+      pass_open_ = false;
+      return false;
+    }
+    if (!pass_open_ && !begin_(w, h, fb, mm)) return false;
+    if (!tris.empty() && !chunk_(tris, texs, false)) {
+      pass_open_ = false;
+      return false;
+    }
+    const bool ok = end_(fb, t0, join_ns, parts);
+    pass_open_ = false;
+    return ok;
+  }
+
+ private:
+  struct Job {
+    int w, h;
+    const uint16_t *fb;
+    portsim::gl::GlMirror m;
+    std::vector<portsim::gl::GlGpuTri> tris;
+    std::vector<portsim::gl::GlGpuTex> texs;
+  };
+  // the pass's first submission: the device, the frame textures, the mirror, the counters and the GPU timer
+  bool begin_(int w, int h, const uint16_t *fb, const portsim::gl::GlMirror &mm) {
+    portsim::gl::GlMirror mirror = mm;
     if (!d_->start()) return die(d_->why);
-    ID3D11Device *dev = d_->dev;
     ID3D11DeviceContext *ctx = d_->ctx;
     if (w <= 0 || h <= 0 || w > 4096 * 4 || h > 4096 * 4) return die("frame size");
     if (w != fw_ || h != fh_) {
@@ -654,10 +851,37 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
         ctx->UpdateSubresource(mtex_, 0, &box, fb + static_cast<size_t>(y0) * static_cast<size_t>(w), static_cast<UINT>(w) * 2u, 0);
       }
     }
-    const int64_t up_ns = ns_since(tu);
+    pass_ = Pass{};
+    pass_.up_ns = ns_since(tu);
+    pass_.full = mirror.full;
+    pass_.clear = !mirror.full && mirror.clear;
+    pass_.ymin = fh_;
+    pass_.ymax = -1;
+    const UINT zero[4] = {0, 0, 0, 0};
+    ctx->ClearUnorderedAccessViewUint(d_->acc_uav, zero);
+    pass_.timed = d_->dis != nullptr;
+    if (pass_.timed) ctx->Begin(d_->dis);
+    pass_open_ = true;
+    return true;
+  }
+  // a timestamp query pair per submission (made as needed)
+  bool stamp_(size_t k, bool end) {
+    while (stamps_.size() <= k * 2 + 1) {
+      ID3D11Query *q = nullptr;
+      D3D11_QUERY_DESC qd = {D3D11_QUERY_TIMESTAMP, 0};
+      if (FAILED(d_->dev->CreateQuery(&qd, &q)) || !q) return false;
+      stamps_.push_back(q);
+    }
+    d_->ctx->End(stamps_[k * 2 + (end ? 1 : 0)]);
+    return true;
+  }
+  // one submission: textures, binning, the source rows, pass 1, pass 2, CSAcc (as P16B's draw between the mirror and the readback)
+  bool chunk_(const std::vector<portsim::gl::GlGpuTri> &tris, const std::vector<portsim::gl::GlGpuTex> &texs, bool flush) {
+    ID3D11Device *dev = d_->dev;
+    ID3D11DeviceContext *ctx = d_->ctx;
+    const int w = fw_, h = fh_;
     // textures: every image the backend has seen keeps its place in one raw buffer; a new image is appended, and only when the buffer
-    // is full is it made again from the batch's images (twice their size when they do not fit)
-    bool tex_up = false;
+    // is full is it made again from the submission's images (twice their size when they do not fit)
     int64_t tex_bytes = 0;
     auto tsize = [](const portsim::gl::GlGpuTex &t) { return (static_cast<size_t>(t.w) * t.h * t.bpp + 3) & ~static_cast<size_t>(3); };
     size_t need = 0, batch = 0;
@@ -666,7 +890,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       if (!tex_off_.count(t.serial)) need += tsize(t);
     }
     if (batch + 8 >= 0x7fffffffu) return die("textures too large");
-    if (need && (!tbuf_ || tex_tail_ + need + 8 > tex_cap_)) {   // made again
+    if (need && (!tbuf_ || tex_tail_ + need + 8 > tex_cap_)) {   // made again (a part already queued keeps the old buffer alive)
       rel(tsrv_);
       rel(tbuf_);
       tex_off_.clear();
@@ -702,8 +926,10 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       tex_off_[t.serial] = static_cast<uint32_t>(tex_tail_);
       tex_tail_ += sz;
       tex_bytes += static_cast<int64_t>(sz);
-      tex_up = true;
     }
+    pass_.tex_bytes += tex_bytes;
+    pass_.tex_up = pass_.tex_up || tex_bytes != 0;
+    pass_.tex_count += static_cast<int64_t>(texs.size());
     // the triangles, and per 16 x 16 tile the (tile, triangle) pairs in triangle order with their coverage thresholds
     const auto tb = std::chrono::steady_clock::now();
     const int tx = (w + 15) / 16, ty = (h + 15) / 16;
@@ -786,62 +1012,76 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
         !pairbuf_.fill(dev, ctx, pairs_.data(), pairs_.size() * sizeof(PairG), sizeof(PairG), false) ||
         !tilebuf_.fill(dev, ctx, tiles_.data(), tiles_.size() * 4, 4, false))
       return die("triangle buffers");
-    const int64_t bin_ns = ns_since(tb);
-    // the pass: the mirror copied as the source, then the tiles in slices (each its own submission)
-    int64_t dispatches = 0;
-    const bool timed = d_->dis && d_->ta && d_->tb;
-    if (timed) {
-      ctx->Begin(d_->dis);
-      ctx->End(d_->ta);
+    pass_.bin_ns += ns_since(tb);
+    pass_.tris += static_cast<int64_t>(tris.size());
+    pass_.pairs += static_cast<int64_t>(pairs_.size());
+    pass_.groups += static_cast<int64_t>(tiles_.size());
+    if (ymax >= ymin) {
+      pass_.ymin = std::min(pass_.ymin, ymin);
+      pass_.ymax = std::max(pass_.ymax, ymax);
     }
+    if (tiles_.empty()) return true;
+    // the pass: the source rows the tiles read (every pixel of a tile with pairs is read: the whole tile rows), then the tiles in slices
+    const bool timed = pass_.timed && stamp_(static_cast<size_t>(pass_.subs), false);
     const UINT zero[4] = {0, 0, 0, 0};
     ctx->ClearUnorderedAccessViewUint(d_->cnt_uav, zero);
-    if (!tiles_.empty()) {
-      ctx->CopyResource(stex_, mtex_);
-      ctx->CSSetShader(d_->cs, nullptr, 0);
-      ID3D11ShaderResourceView *srvs[8] = {tribuf_.srv, rangebuf_.srv, pairbuf_.srv, tilebuf_.srv, tsrv_, d_->kc_srv, ssrv_, d_->kcf_srv};
-      ctx->CSSetShaderResources(0, 8, srvs);
-      ID3D11UnorderedAccessView *uavs[3] = {muav_, d_->cnt_uav, luav_};
-      ctx->CSSetUnorderedAccessViews(0, 3, uavs, nullptr);
-      const size_t per = slice_ > 0 ? static_cast<size_t>(slice_) : tiles_.size();
-      for (size_t base = 0; base < tiles_.size(); base += per) {
-        const size_t n = std::min(per, tiles_.size() - base);
-        D3D11_MAPPED_SUBRESOURCE m;
-        if (FAILED(ctx->Map(d_->cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return die("constant buffer map");
-        const CBData c = {w, h, tx, static_cast<int32_t>(base), list_cap_, 0, 0, 0};
-        std::memcpy(m.pData, &c, sizeof c);
-        ctx->Unmap(d_->cb, 0);
-        ctx->CSSetConstantBuffers(0, 1, &d_->cb);
-        ctx->Dispatch(static_cast<UINT>(n), 1, 1);
-        ++dispatches;
-        if (base + n < tiles_.size()) ctx->Flush();
-      }
-      // pass 2: its size from pass 1's count, then the handed pixels
-      ID3D11UnorderedAccessView *au[4] = {muav_, d_->cnt_uav, luav_, d_->args_uav};
-      ctx->CSSetUnorderedAccessViews(0, 4, au, nullptr);
-      ctx->CSSetShader(d_->cs_args, nullptr, 0);
-      ctx->Dispatch(1, 1, 1);
-      ID3D11UnorderedAccessView *noargs = nullptr;
-      ctx->CSSetUnorderedAccessViews(3, 1, &noargs, nullptr);   // the arguments buffer is read by DispatchIndirect, not bound
-      ctx->CSSetShader(d_->cs_resume, nullptr, 0);
-      ctx->DispatchIndirect(d_->args, 0);
-      ++dispatches;
-      ID3D11ShaderResourceView *none[8] = {};
-      ID3D11UnorderedAccessView *nouav[4] = {};
-      ctx->CSSetShaderResources(0, 8, none);
-      ctx->CSSetUnorderedAccessViews(0, 4, nouav, nullptr);
+    {
+      const UINT r0 = static_cast<UINT>((ymin >> 4) * 16), r1 = static_cast<UINT>(std::min(h, ((ymax >> 4) + 1) * 16));
+      D3D11_BOX box = {0, r0, 0, static_cast<UINT>(w), r1, 1};
+      ctx->CopySubresourceRegion(stex_, 0, 0, r0, 0, mtex_, 0, &box);
     }
-    if (timed) {
-      ctx->End(d_->tb);
-      ctx->End(d_->dis);
+    ctx->CSSetShader(d_->cs, nullptr, 0);
+    ID3D11ShaderResourceView *srvs[8] = {tribuf_.srv, rangebuf_.srv, pairbuf_.srv, tilebuf_.srv, tsrv_, d_->kc_srv, ssrv_, d_->kcf_srv};
+    ctx->CSSetShaderResources(0, 8, srvs);
+    ID3D11UnorderedAccessView *uavs[3] = {muav_, d_->cnt_uav, luav_};
+    ctx->CSSetUnorderedAccessViews(0, 3, uavs, nullptr);
+    const size_t per = slice_ > 0 ? static_cast<size_t>(slice_) : tiles_.size();
+    for (size_t base = 0; base < tiles_.size(); base += per) {
+      const size_t n = std::min(per, tiles_.size() - base);
+      D3D11_MAPPED_SUBRESOURCE m;
+      if (FAILED(ctx->Map(d_->cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return die("constant buffer map");
+      const CBData c = {w, h, tx, static_cast<int32_t>(base), list_cap_, 0, 0, 0};
+      std::memcpy(m.pData, &c, sizeof c);
+      ctx->Unmap(d_->cb, 0);
+      ctx->CSSetConstantBuffers(0, 1, &d_->cb);
+      ctx->Dispatch(static_cast<UINT>(n), 1, 1);
+      ++pass_.dispatches;
+      if (base + n < tiles_.size()) ctx->Flush();
     }
-    // the copies back: the counters and the rows the batch can have written (with an upload or a fill the mirror's other rows already
-    // equal fb), both queued before the wait
-    ctx->CopyResource(d_->cnt_rd, d_->cnt);
+    // pass 2: its size from pass 1's count, then the handed pixels; then this submission's counters added to the pass's
+    ID3D11UnorderedAccessView *au[4] = {muav_, d_->cnt_uav, luav_, d_->args_uav};
+    ctx->CSSetUnorderedAccessViews(0, 4, au, nullptr);
+    ctx->CSSetShader(d_->cs_args, nullptr, 0);
+    ctx->Dispatch(1, 1, 1);
+    ID3D11UnorderedAccessView *noargs = nullptr;
+    ctx->CSSetUnorderedAccessViews(3, 1, &noargs, nullptr);   // the arguments buffer is read by DispatchIndirect, not bound
+    ctx->CSSetShader(d_->cs_resume, nullptr, 0);
+    ctx->DispatchIndirect(d_->args, 0);
+    ++pass_.dispatches;
+    ctx->CSSetUnorderedAccessViews(4, 1, &d_->acc_uav, nullptr);
+    ctx->CSSetShader(d_->cs_acc, nullptr, 0);
+    ctx->Dispatch(1, 1, 1);
+    ID3D11ShaderResourceView *none[8] = {};
+    ID3D11UnorderedAccessView *nouav[5] = {};
+    ctx->CSSetShaderResources(0, 8, none);
+    ctx->CSSetUnorderedAccessViews(0, 5, nouav, nullptr);
+    if (timed) stamp_(static_cast<size_t>(pass_.subs), true);
+    ++pass_.subs;
+    if (flush) ctx->Flush();   // a part: the GPU starts on it now
+    return true;
+  }
+  // the pass's end: the summed counters and the rows written copied back, both queued before the wait; then the rows into fb
+  bool end_(uint16_t *fb, std::chrono::steady_clock::time_point t0, int64_t join_ns, int64_t parts) {
+    ID3D11Device *dev = d_->dev;
+    ID3D11DeviceContext *ctx = d_->ctx;
+    const int w = fw_;
+    const int ymin = pass_.ymin, ymax = pass_.ymax;
+    ctx->CopyResource(d_->cnt_rd, d_->acc);
     if (ymax >= ymin) {
       D3D11_BOX box = {0, static_cast<UINT>(ymin), 0, static_cast<UINT>(w), static_cast<UINT>(ymax + 1), 1};
       ctx->CopySubresourceRegion(rtex_, 0, 0, static_cast<UINT>(ymin), 0, mtex_, 0, &box);
     }
+    if (pass_.timed) ctx->End(d_->dis);
     // the counters first (this waits for the pass): a pixel pass 2 could not take (list full, or 2^17 pairs or more in its tile;
     // neither happens with one list entry per pixel and real tiles) was not finished, and fb is still untouched here
     const auto tr = std::chrono::steady_clock::now();
@@ -855,7 +1095,9 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     const int64_t wait_ns = ns_since(tr);
     if (counts[2] != 0) return die("pass 2 list overflow");
     if (FAILED(dev->GetDeviceRemovedReason())) return die("device removed");
+    int64_t map_ns = 0, copy_ns = 0;
     if (ymax >= ymin) {
+      const auto tm = std::chrono::steady_clock::now();
       D3D11_MAPPED_SUBRESOURCE m;
       const HRESULT hr = ctx->Map(rtex_, 0, D3D11_MAP_READ, 0, &m);
       if (FAILED(hr)) {
@@ -863,46 +1105,78 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
         std::snprintf(b, sizeof b, "readback map 0x%08lx", static_cast<unsigned long>(hr));
         return die(b);
       }
-      for (int yy = ymin; yy <= ymax; ++yy)
-        std::memcpy(fb + static_cast<size_t>(yy) * static_cast<size_t>(w),
-                    static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(yy) * m.RowPitch, static_cast<size_t>(w) * 2u);
+      map_ns = ns_since(tm);
+      const auto tc = std::chrono::steady_clock::now();
+      if (!d_->copier) d_->copier = std::make_unique<Copier>(read_threads());
+      const uint8_t *base = static_cast<const uint8_t *>(m.pData);
+      const size_t pitch = m.RowPitch, rows = static_cast<size_t>(ymax - ymin + 1);
+      d_->copier->run([&](int k, int n) {   // rows split into n bands
+        const size_t a = rows * static_cast<size_t>(k) / static_cast<size_t>(n), b = rows * static_cast<size_t>(k + 1) / static_cast<size_t>(n);
+        for (size_t r = a; r < b; ++r) {
+          const size_t yy = static_cast<size_t>(ymin) + r;
+          std::memcpy(fb + yy * static_cast<size_t>(w), base + yy * pitch, static_cast<size_t>(w) * 2u);
+        }
+      });
+      copy_ns = ns_since(tc);
       ctx->Unmap(rtex_, 0);
       if (corrupt_) fb[static_cast<size_t>(ymin) * static_cast<size_t>(w) + static_cast<size_t>(w / 2)] ^= 1u;   // the forced mismatch
     }
     const int64_t read_ns = ns_since(tr);
     covered = counts[0];
     pass2 = counts[1];
-    int64_t gpu_ns = -1;
-    if (timed) {
+    int64_t gpu_ns = -1, span_ns = -1;
+    if (pass_.timed) {
       D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dj = {};
-      UINT64 a = 0, b = 0;
-      if (ctx->GetData(d_->dis, &dj, sizeof dj, 0) == S_OK && !dj.Disjoint && dj.Frequency &&
-          ctx->GetData(d_->ta, &a, sizeof a, 0) == S_OK && ctx->GetData(d_->tb, &b, sizeof b, 0) == S_OK && b >= a)
-        gpu_ns = static_cast<int64_t>(static_cast<double>(b - a) * 1e9 / static_cast<double>(dj.Frequency));
+      if (ctx->GetData(d_->dis, &dj, sizeof dj, 0) == S_OK && !dj.Disjoint && dj.Frequency) {
+        UINT64 sum = 0, first = 0, last = 0;
+        bool good = true;
+        for (int64_t k = 0; k < pass_.subs && good; ++k) {
+          UINT64 a = 0, b = 0;
+          good = ctx->GetData(stamps_[static_cast<size_t>(k) * 2], &a, sizeof a, 0) == S_OK &&
+                 ctx->GetData(stamps_[static_cast<size_t>(k) * 2 + 1], &b, sizeof b, 0) == S_OK && b >= a;
+          if (good) {
+            sum += b - a;
+            if (k == 0) first = a;
+            last = b;
+          }
+        }
+        if (good) {
+          gpu_ns = static_cast<int64_t>(static_cast<double>(sum) * 1e9 / static_cast<double>(dj.Frequency));
+          span_ns = pass_.subs ? static_cast<int64_t>(static_cast<double>(last - first) * 1e9 / static_cast<double>(dj.Frequency)) : 0;
+        }
+      }
     }
     const int64_t draw_ns = ns_since(t0);
+    const int64_t part_ns = part_ns_;
+    part_ns_ = 0;
     if (selftest_) return true;
     std::lock_guard<std::mutex> lk(g_mu);
     ++g_st.batches;
-    g_st.tris += static_cast<int64_t>(tris.size());
-    g_st.pairs += static_cast<int64_t>(pairs_.size());
-    g_st.groups += static_cast<int64_t>(tiles_.size());
-    g_st.dispatches += dispatches;
-    g_st.uploads += mirror.full ? 1 : 0;
-    g_st.clears += !mirror.full && mirror.clear ? 1 : 0;
-    g_st.tex_uploads += tex_up ? 1 : 0;
-    g_st.tex_bytes += tex_bytes;
-    g_st.tex_count += static_cast<int64_t>(texs.size());
+    g_st.tris += pass_.tris;
+    g_st.pairs += pass_.pairs;
+    g_st.groups += pass_.groups;
+    g_st.dispatches += pass_.dispatches;
+    g_st.uploads += pass_.full ? 1 : 0;
+    g_st.clears += pass_.clear ? 1 : 0;
+    g_st.tex_uploads += pass_.tex_up ? 1 : 0;
+    g_st.tex_bytes += pass_.tex_bytes;
+    g_st.tex_count += pass_.tex_count;
     g_st.covered += counts[0];
     g_st.exact += counts[1];
-    g_st.bin_ns += bin_ns;
-    g_st.upload_ns += up_ns;
+    g_st.bin_ns += pass_.bin_ns;
+    g_st.upload_ns += pass_.up_ns;
     g_st.wait_ns += wait_ns;
     g_st.read_ns += read_ns;
+    g_st.map_ns += map_ns;
+    g_st.copy_ns += copy_ns;
+    g_st.join_ns += join_ns;
+    g_st.part_ns += part_ns;
+    g_st.parts += parts;
     g_st.draw_ns += draw_ns;
     g_st.max_draw_ns = std::max(g_st.max_draw_ns, draw_ns);
     if (gpu_ns >= 0) {
       g_st.gpu_ns += gpu_ns;
+      g_st.span_ns += span_ns;
       ++g_st.gpu_timed;
       g_st.max_gpu_ns = std::max(g_st.max_gpu_ns, gpu_ns);
     }
@@ -910,8 +1184,6 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     g_st.state = "on";
     return true;
   }
-
- private:
   bool die(const std::string &w) {
     dead_ = true;
     why_ = w;
@@ -954,18 +1226,33 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   }
   void free_frame() {
     rel(muav_); rel(mtex_); rel(ssrv_); rel(stex_); rel(rtex_); rel(luav_); rel(lbuf_);
+    for (ID3D11Query *&q : stamps_) rel(q);
+    stamps_.clear();
     fw_ = fh_ = 0;
   }
+  // what one pass (a batch: its parts and its draw) did, summed into p16b at its end
+  struct Pass {
+    int64_t up_ns = 0, bin_ns = 0, tris = 0, pairs = 0, groups = 0, dispatches = 0, subs = 0, tex_bytes = 0, tex_count = 0;
+    bool full = false, clear = false, tex_up = false, timed = false;
+    int ymin = 0, ymax = -1;
+  };
   std::shared_ptr<Dev> d_;
-  bool dead_ = false, force_exact_ = false, selftest_ = false, corrupt_ = false;
+  std::atomic<bool> dead_{false};
+  bool force_exact_ = false, selftest_ = false, corrupt_ = false;
+  bool pass_open_ = false;   // a pass begun by a part (Worker) or the draw; the draw's wait orders the two threads
+  Pass pass_;
+  int64_t pass_parts_ = 0;   // parts handed over in the current pass (the drawing thread)
+  int64_t part_ns_ = 0;      // the Worker's time on the current pass's parts
   std::string why_ = "on";
   int slice_ = 0;   // SG_P16_SLICE: tiles per dispatch (0 = pass 1 in one dispatch; slices showed no effect on the paints, P16B_notes.md)
+  int part_ = 0;    // P17A: triangles per part (0 = none)
   int fw_ = 0, fh_ = 0;
   ID3D11Texture2D *mtex_ = nullptr, *stex_ = nullptr, *rtex_ = nullptr;
   ID3D11UnorderedAccessView *muav_ = nullptr, *luav_ = nullptr;
   ID3D11Buffer *lbuf_ = nullptr;
   uint32_t list_cap_ = 0;
   ID3D11ShaderResourceView *ssrv_ = nullptr;
+  std::vector<ID3D11Query *> stamps_;   // P17A: a timestamp pair per submission of the pass
   DynBuf tribuf_, rangebuf_, pairbuf_, tilebuf_;
   ID3D11Buffer *tbuf_ = nullptr;   // the texture images (raw); tex_off_: byte offset of each image by serial
   ID3D11ShaderResourceView *tsrv_ = nullptr;
@@ -1038,7 +1325,7 @@ void selftest(const std::shared_ptr<Dev> &d) {
   } else {
     constexpr int W = 256, H = 192;
     portsim::gl::GlRaster cpu(W, H), gpu(W, H);
-    auto be = std::make_shared<D3DRaster>(d, true);
+    auto be = std::make_shared<D3DRaster>(d, true, kSelftestPart);   // P17A: the self-test draws its stream in parts
     gpu.set_gpu(be);
     selftest_feed(cpu, W, H, 1);
     selftest_feed(gpu, W, H, 1);
@@ -1128,7 +1415,7 @@ void gpu_raster_enable(int mode) {
         if (!g_st.st_pass) return nullptr;   // a device that failed, or a self-test difference: the CPU raster
         ++g_st.auto_on;
       }
-      return std::make_shared<D3DRaster>(d);
+      return std::make_shared<D3DRaster>(d, false, part_setting());
     });
     return;
   }
@@ -1161,6 +1448,11 @@ std::string gpu_raster_json() {
        ",\"upload_ms_mean\":" + num(s.upload_ns / 1e6 / nb) + ",\"wait_ms_mean\":" + num(s.wait_ns / 1e6 / nb) +
        ",\"read_ms_mean\":" + num(s.read_ns / 1e6 / nb) + ",\"draw_ms_mean\":" + num(s.draw_ns / 1e6 / nb) +
        ",\"draw_ms_max\":" + num(s.max_draw_ns / 1e6) +
+       ",\"part_tris\":" + std::to_string(part_setting()) + ",\"read_threads\":" + std::to_string(read_threads()) +
+       ",\"parts\":" + std::to_string(s.parts) + ",\"parts_per_batch\":" + num(s.parts / nb) +
+       ",\"part_ms_mean\":" + num(s.part_ns / 1e6 / nb) + ",\"join_ms_mean\":" + num(s.join_ns / 1e6 / nb) +
+       ",\"map_ms_mean\":" + num(s.map_ns / 1e6 / nb) + ",\"copy_ms_mean\":" + num(s.copy_ns / 1e6 / nb) +
+       ",\"gpu_span_ms_mean\":" + num(s.gpu_timed ? s.span_ns / 1e6 / static_cast<double>(s.gpu_timed) : 0.0) +
        ",\"gpu_ms_mean\":" + num(s.gpu_timed ? s.gpu_ns / 1e6 / static_cast<double>(s.gpu_timed) : 0.0) +
        ",\"gpu_ms_max\":" + num(s.max_gpu_ns / 1e6) +
        ",\"raster\":{\"batches\":" + std::to_string(r.batches) + ",\"tris\":" + std::to_string(r.tris) +
@@ -1170,6 +1462,7 @@ std::string gpu_raster_json() {
        ",\"uploads\":" + std::to_string(r.uploads) + ",\"row_uploads\":" + std::to_string(r.row_uploads) + ",\"clears\":" + std::to_string(r.clears) +
        ",\"failures\":" + std::to_string(r.failures) + ",\"fallback_tris\":" + std::to_string(r.fallback_tris) +
        ",\"submit_ms_mean\":" + num(r.batches ? r.submit_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
+       ",\"parts\":" + std::to_string(r.parts) + ",\"part_ms_mean\":" + num(r.batches ? r.part_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
        ",\"check\":{\"passes\":" + std::to_string(r.checked) + ",\"bad\":" + std::to_string(r.check_bad) +
        ",\"bad_px\":" + std::to_string(r.check_badpx) + "}}}";
   return o;

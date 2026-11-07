@@ -57,6 +57,16 @@ class GlPixelGpu {
   virtual bool draw(int w, int h, uint16_t *fb, const GlMirror &m, const std::vector<GlGpuTri> &tris,
                     const std::vector<GlGpuTex> &texs) = 0;
   virtual const char *why() const = 0;
+  // P17A (log/roadmap/P17/P17A_notes.md): PARTS. The batch's first triangles handed over before the batch ends, so the backend
+  // works on them while GlRaster sets up the rest. fb is not written and only read for the mirror (m, carried by the batch's first
+  // part); the next part or the draw carries the following triangles with an empty mirror, and the draw ends the batch (its result
+  // covers every part). part_tris(): the triangles a part holds (0 = the backend takes no parts). A failed part makes the draw
+  // return false (fb untouched: the caller draws the whole batch on the CPU).
+  virtual int part_tris() const { return 0; }
+  virtual void part(int w, int h, const uint16_t *fb, const GlMirror &m, const std::vector<GlGpuTri> &tris,
+                    const std::vector<GlGpuTex> &texs) {
+    (void)w; (void)h; (void)fb; (void)m; (void)tris; (void)texs;
+  }
 };
 // the process-wide maker of pixel backends (the app registers one; null = none) and its use, for a w x h frame (P16B fix 2: the
 // maker may decline by size, --gpu-terrain auto)
@@ -70,6 +80,7 @@ struct GlGpuStats {
   // draw, the batch goes on)
   int64_t not_kind = 0, not_area = 0, not_range = 0, not_colour = 0, dropped = 0;
   int64_t submit_ns = 0;   // GlRaster::gpu_submit_ wall time (building the batch, the backend's draw incl. the readback)
+  int64_t parts = 0, part_ns = 0;   // P17A: parts handed over before the batch's end, and GlRaster::gpu_part_'s wall time
   // SG_P16_RASTERCHECK=<n> (development): every n-th batch is also drawn by the CPU loops on a copy of the frame and compared word by
   // word (stderr `P16 RASTERCHECK` on a difference)
   int64_t checked = 0, check_bad = 0, check_badpx = 0;
@@ -113,7 +124,12 @@ class GlRaster : public GlSink {
   // P16B: the pixel backend (null: the CPU loops). With one, the default pipeline's triangles are drawn by it at finish(); any other
   // triangle (general loop, textured walk, negative controls, a mask, attributes outside the backend's range) first submits the
   // pending batch and is drawn on the CPU. The frame is the same either way (gl_raster.cpp gpu_ok_).
-  void set_gpu(std::shared_ptr<GlPixelGpu> g) { finish(); gpu_ = std::move(g); gpu_stale_(); }
+  void set_gpu(std::shared_ptr<GlPixelGpu> g) {
+    finish();
+    gpu_ = std::move(g);
+    gpart_ = gpu_ ? static_cast<size_t>(gpu_->part_tris() > 0 ? gpu_->part_tris() : 0) : 0;
+    gpu_stale_();
+  }
   bool has_gpu() const { return gpu_ != nullptr; }
 
   int width() const { return w_; }
@@ -356,6 +372,7 @@ class GlRaster : public GlSink {
   std::shared_ptr<GlPixelGpu> gpu_;
   std::vector<FastJob> gbatch_;
   GlMirror gm_;
+  size_t gpart_ = 0, gsent_ = 0;   // P17A: triangles per part (0: no parts), and the batch's triangles already handed over in parts
   void gpu_stale_() { gm_ = GlMirror{}; }
   void gpu_dirty_(int y0, int y1) {   // rows written on the CPU (a full upload covers them already)
     if (gm_.full) return;
@@ -367,6 +384,9 @@ class GlRaster : public GlSink {
   static bool covers_(const FastJob &j);
   void pool_wait_();
   void gpu_submit_();
+  void gpu_part_();
+  // P17A: the GPU's copy of gbatch_[from..] (GlGpuTri) and the texture list they name
+  void gpu_tris_(size_t from, std::vector<GlGpuTri> &tris, std::vector<GlGpuTex> &texs) const;
   void cpu_job_(const FastJob &j);
 };
 

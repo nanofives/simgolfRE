@@ -180,6 +180,7 @@ inline int quantize_d(double c, double d) {
 }  // namespace
 
 void pixel_gpu_note_island(int why, bool dropped);   // P16B (below)
+void pixel_gpu_note_part(int64_t ns);   // P17A
 void pixel_gpu_note_check(int64_t bad);
 void pixel_gpu_note_batch(int64_t tris, bool ok, const GlMirror &mirror, int64_t ns);
 
@@ -1476,6 +1477,7 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
     const int why = gpu_ok_(j);
     if (why == 0) {
       gbatch_.push_back(std::move(j));
+      if (gpart_ && gbatch_.size() - gsent_ >= gpart_) gpu_part_();   // P17A: the backend starts on these while the set-up goes on
       return true;
     }
     if (!covers_(j)) {   // no pixel to write: nothing to draw, on either side
@@ -1540,15 +1542,12 @@ bool GlRaster::covers_(const FastJob &j) {
   }
   return false;
 }
-void GlRaster::gpu_submit_() {
-  if (gbatch_.empty()) return;
-  pool_wait_();   // every job queued to the workers (islands) precedes the batch: fb_ must hold them before it is uploaded or written
-  const auto t0 = std::chrono::steady_clock::now();
-  std::vector<GlGpuTri> tris(gbatch_.size());
-  std::vector<GlGpuTex> texs;
-  for (size_t i = 0; i < gbatch_.size(); ++i) {
+void GlRaster::gpu_tris_(size_t from, std::vector<GlGpuTri> &tris, std::vector<GlGpuTex> &texs) const {
+  tris.resize(gbatch_.size() - from);
+  texs.clear();
+  for (size_t i = from; i < gbatch_.size(); ++i) {
     const FastJob &j = gbatch_[i];
-    GlGpuTri &t = tris[i];
+    GlGpuTri &t = tris[i - from];
     for (int k = 0; k < 3; ++k) {
       t.X[k] = static_cast<int32_t>(j.X[k]);
       t.Y[k] = static_cast<int32_t>(j.Y[k]);
@@ -1566,7 +1565,34 @@ void GlRaster::gpu_submit_() {
     t.div_st = j.div_st;
     t.arA = j.arA;
   }
-  const GlMirror mirror = gm_;
+}
+// P17A: the batch's triangles queued since the last part handed to the backend (the first part carries the mirror). fb_ is not written
+// until the batch's draw: every CPU write of fb_ (islands, the general loop, fills, pixels()) submits the batch first.
+void GlRaster::gpu_part_() {
+  const auto t0 = std::chrono::steady_clock::now();
+  if (gsent_ == 0) pool_wait_();   // the islands queued to the workers are in fb_ before the mirror's rows are read
+  std::vector<GlGpuTri> tris;
+  std::vector<GlGpuTex> texs;
+  gpu_tris_(gsent_, tris, texs);
+  GlMirror m;
+  if (gsent_ == 0) m = gm_;
+  else m.full = false;   // the backend's copy holds the earlier parts
+  gpu_->part(w_, h_, fb_.data(), m, tris, texs);
+  gsent_ = gbatch_.size();
+  pixel_gpu_note_part(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
+}
+void GlRaster::gpu_submit_() {
+  if (gbatch_.empty()) return;
+  pool_wait_();   // every job queued to the workers (islands) precedes the batch: fb_ must hold them before it is uploaded or written
+  const auto t0 = std::chrono::steady_clock::now();
+  std::vector<GlGpuTri> tris;
+  std::vector<GlGpuTex> texs;
+  gpu_tris_(gsent_, tris, texs);   // P17A: the triangles after the last part (all of them without parts)
+  GlMirror mirror = gm_;
+  if (gsent_ != 0) {   // P17A: the first part carried the mirror
+    mirror = GlMirror{};
+    mirror.full = false;
+  }
   static const int check_every = [] {
     const char *e = std::getenv("SG_P16_RASTERCHECK");
     return e ? std::max(0, std::atoi(e)) : 0;
@@ -1618,6 +1644,7 @@ void GlRaster::gpu_submit_() {
   pixel_gpu_note_batch(static_cast<int64_t>(gbatch_.size()), ok, mirror,
                        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
   gbatch_.clear();
+  gsent_ = 0;
 }
 namespace {
 std::mutex g_gpu_mu;
@@ -1644,6 +1671,11 @@ void pixel_gpu_note_island(int why, bool dropped) {
   std::lock_guard<std::mutex> lk(g_gpu_mu);
   ++(why == 1 ? g_gpu_stats.not_kind : why == 2 ? g_gpu_stats.not_area : why == 3 ? g_gpu_stats.not_range : g_gpu_stats.not_colour);
   ++(dropped ? g_gpu_stats.dropped : g_gpu_stats.islands);
+}
+void pixel_gpu_note_part(int64_t ns) {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  ++g_gpu_stats.parts;
+  g_gpu_stats.part_ns += ns;
 }
 void pixel_gpu_note_check(int64_t bad) {
   std::lock_guard<std::mutex> lk(g_gpu_mu);
