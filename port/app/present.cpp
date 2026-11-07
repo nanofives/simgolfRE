@@ -794,8 +794,8 @@ void Presenter::render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, 
       if (!course_only_) compose_layers(out, cw, ch, vp, slx, sly);  // P14A: course_only_ = render_rect's course picture
     }
     if (text && !layered() && !course_only_) draw_runs(out, cw, ch, vp, false, 0, 0);  // P9C (the layered path draws them above)
-    if (world_.empty() && wide_ != WideFill::Off && band_ != BandFill::Black && C.full)
-      fill_bands(out, cw, ch, vp);  // P7 (P13B: ExtendClamp too); P14A: on the whole client only
+    if (world_.empty() && wide_ != WideFill::Off && band_ != BandFill::Black)
+      fill_bands(out, cw, ch, vp);  // P7 (P13B: ExtendClamp too); P14A fix 3: the sides the canvas holds (fill_bands' side_in)
   };
   if (effective_scale(vp.client_w, vp.client_h) == ScaleMode::Smooth && vp.client_w > 0 && vp.client_h > 0) {
     // P5B item 4: bilinear. The frame converted to BGRA once, then per client pixel four neighbours with 8-bit weights.
@@ -1586,15 +1586,24 @@ void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, c
   const int32_t rmax = clamp ? 0 : std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(h) * 48 / kLogicalH));
   std::vector<uint64_t> pre[3];
   for (auto &v : pre) v.assign(static_cast<size_t>(h) + 1, 0);
+  // P14A fix 3: client pixel (x, Y) of the canvas (the whole client for paint); a side is drawn only when the canvas holds its
+  // band and `need` content columns beside it, and every content row
+  auto P = [&](int32_t x, int32_t Y) -> uint32_t & {
+    return out[static_cast<size_t>(Y - cv_.y0) * static_cast<size_t>(cv_.w) + static_cast<size_t>(x - cv_.x0)];
+  };
+  auto side_in = [&](int side, int32_t need) {
+    if (cv_.y0 > oy || cv_.y0 + cv_.h < oy + h) return false;
+    return side == 0 ? cv_.x0 <= 0 && cv_.x0 + cv_.w >= std::min(ox + w, ox + need)
+                     : cv_.x0 <= std::max(ox, ox + w - need) && cv_.x0 + cv_.w >= cw;
+  };
   for (int side = 0; side < 2; ++side) {
     const int32_t band = side == 0 ? ox : cw - (ox + w);
-    if (band <= 0) continue;
+    if (band <= 0 || !side_in(side, k)) continue;
     // per row: the mean of the k edge columns (channels scaled by 256 to keep the fraction), as prefix sums over the rows
     for (int32_t y = 0; y < h; ++y) {
-      const uint32_t *row = out.data() + static_cast<size_t>(oy + y) * static_cast<size_t>(cw);
       uint32_t s[3] = {0, 0, 0};
       for (int32_t j = 0; j < k; ++j) {
-        const uint32_t v = row[side == 0 ? ox + j : ox + w - 1 - j];
+        const uint32_t v = P(side == 0 ? ox + j : ox + w - 1 - j, oy + y);
         s[0] += (v >> 16) & 255;
         s[1] += (v >> 8) & 255;
         s[2] += v & 255;
@@ -1613,7 +1622,7 @@ void Presenter::fill_bands(std::vector<uint32_t> &out, int32_t cw, int32_t ch, c
           const uint64_t sum = pre[c][static_cast<size_t>(hi) + 1] - pre[c][static_cast<size_t>(lo)];
           c8[c] = static_cast<uint32_t>((sum + n / 2) / n);
         }
-        out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + x] = 0xff000000u | (c8[0] << 16) | (c8[1] << 8) | c8[2];
+        P(x, oy + y) = 0xff000000u | (c8[0] << 16) | (c8[1] << 8) | c8[2];
       }
     }
   }
@@ -1629,12 +1638,22 @@ void Presenter::fill_bands_map(std::vector<uint32_t> &out, int32_t cw, const Vie
   const int32_t rb = std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(h) * 2 / kLogicalH));
   std::vector<uint8_t> sig(static_cast<size_t>(h) * 3), med(static_cast<size_t>(h) * 3), win;
   std::vector<uint32_t> col(static_cast<size_t>(h));
+  // P14A fix 3: client pixel (x, Y) of the canvas (the whole client for paint); a side is drawn only when the canvas holds its
+  // band and `need` content columns beside it, and every content row
+  auto P = [&](int32_t x, int32_t Y) -> uint32_t & {
+    return out[static_cast<size_t>(Y - cv_.y0) * static_cast<size_t>(cv_.w) + static_cast<size_t>(x - cv_.x0)];
+  };
+  auto side_in = [&](int side, int32_t need) {
+    if (cv_.y0 > oy || cv_.y0 + cv_.h < oy + h) return false;
+    return side == 0 ? cv_.x0 <= 0 && cv_.x0 + cv_.w >= std::min(ox + w, ox + need)
+                     : cv_.x0 <= std::max(ox, ox + w - need) && cv_.x0 + cv_.w >= cw;
+  };
   for (int side = 0; side < 2; ++side) {
     const int32_t band = side == 0 ? ox : cw - (ox + w);
-    if (band <= 0) continue;
+    if (band <= 0 || !side_in(side, 1)) continue;
     const int32_t cx = side == 0 ? ox : ox + w - 1;
     for (int32_t y = 0; y < h; ++y) {
-      const uint32_t v = out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + cx];
+      const uint32_t v = P(cx, oy + y);
       for (int c = 0; c < 3; ++c) sig[static_cast<size_t>(y) * 3 + c] = static_cast<uint8_t>((v >> (16 - 8 * c)) & 255);
     }
     for (int32_t y = 0; y < h; ++y) {
@@ -1655,9 +1674,8 @@ void Presenter::fill_bands_map(std::vector<uint32_t> &out, int32_t cw, const Vie
       col[static_cast<size_t>(y)] = 0xff000000u | (((s[0] + n / 2) / n) << 16) | (((s[1] + n / 2) / n) << 8) | ((s[2] + n / 2) / n);
     }
     for (int32_t y = 0; y < h; ++y) {
-      uint32_t *row = out.data() + static_cast<size_t>(oy + y) * static_cast<size_t>(cw);
-      if (side == 0) std::fill(row, row + ox, col[static_cast<size_t>(y)]);
-      else std::fill(row + ox + w, row + cw, col[static_cast<size_t>(y)]);
+      uint32_t *row = &P(side == 0 ? 0 : ox + w, oy + y);
+      std::fill(row, row + (side == 0 ? ox : cw - ox - w), col[static_cast<size_t>(y)]);
     }
   }
 }
@@ -1669,7 +1687,17 @@ void Presenter::fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   auto lg = [](int32_t logical, int32_t span, int32_t of) {  // logical px -> client px, at least 1
     return std::max<int32_t>(1, static_cast<int32_t>(static_cast<int64_t>(span) * logical / of));
   };
-  auto at = [&](int32_t x, int32_t y) -> uint32_t & { return out[static_cast<size_t>(oy + y) * static_cast<size_t>(cw) + x]; };
+  // P14A fix 3: client pixel (x, Y) of the canvas (the whole client for paint); a side is drawn only when the canvas holds its
+  // band and `need` content columns beside it, and every content row
+  auto P = [&](int32_t x, int32_t Y) -> uint32_t & {
+    return out[static_cast<size_t>(Y - cv_.y0) * static_cast<size_t>(cv_.w) + static_cast<size_t>(x - cv_.x0)];
+  };
+  auto side_in = [&](int side, int32_t need) {
+    if (cv_.y0 > oy || cv_.y0 + cv_.h < oy + h) return false;
+    return side == 0 ? cv_.x0 <= 0 && cv_.x0 + cv_.w >= std::min(ox + w, ox + need)
+                     : cv_.x0 <= std::max(ox, ox + w - need) && cv_.x0 + cv_.w >= cw;
+  };
+  auto at = [&](int32_t x, int32_t y) -> uint32_t & { return P(x, oy + y); };
   auto chan = [](uint32_t v, int c) { return static_cast<int32_t>((v >> (16 - 8 * c)) & 255); };
   auto pack = [](const int32_t *c) {
     return 0xff000000u | (static_cast<uint32_t>(c[0]) << 16) | (static_cast<uint32_t>(c[1]) << 8) | static_cast<uint32_t>(c[2]);
@@ -1689,10 +1717,9 @@ void Presenter::fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   const int32_t k_edge = lg(4, w, kLogicalW), k_bg = lg(64, w, kLogicalW), fade = lg(24, w, kLogicalW);
   const int32_t r_edge_max = lg(48, h, kLogicalH), r_bg = lg(150, h, kLogicalH);
   std::vector<int64_t> edge_sig(static_cast<size_t>(h) * 3), bg_sig(static_cast<size_t>(h) * 3), edge_pre, bg_pre;
-  std::vector<int32_t> col(static_cast<size_t>(k_bg));
   for (int side = 0; side < 2; ++side) {
     const int32_t band = side == 0 ? ox : cw - (ox + w);
-    if (band <= 0) continue;
+    if (band <= 0 || !side_in(side, std::max(k_bg, band))) continue;
     auto content_x = [&](int32_t j) { return side == 0 ? ox + j : ox + w - 1 - j; };  // the j-th content column from the edge
     if (wide_ == WideFill::Mirror) {
       for (int32_t d = 1; d <= band; ++d) {  // band column d shows content column d - 1, blurred by d / 3, darkened outwards
@@ -1712,34 +1739,44 @@ void Presenter::fill_bands_p9(std::vector<uint32_t> &out, int32_t cw, int32_t ch
       }
       continue;
     }
-    for (int32_t y = 0; y < h; ++y) {
-      int64_t s[3] = {0, 0, 0};
-      for (int32_t j = 0; j < k_edge; ++j)
-        for (int c = 0; c < 3; ++c) s[c] += chan(at(content_x(j), y), c);
-      for (int c = 0; c < 3; ++c) {
-        edge_sig[static_cast<size_t>(y) * 3 + c] = (s[c] * 256 + k_edge / 2) / k_edge;
-        for (int32_t j = 0; j < k_bg; ++j) col[static_cast<size_t>(j)] = chan(at(content_x(j), y), c);
-        std::nth_element(col.begin(), col.begin() + k_bg / 2, col.end());
-        bg_sig[static_cast<size_t>(y) * 3 + c] = static_cast<int64_t>(col[static_cast<size_t>(k_bg / 2)]) * 256;
+    // (P14A fix 3: both row loops over the paint threads; each row's values are its own)
+    RowPool::get().run(0, h, [&](int32_t ya, int32_t yb) {
+      std::vector<int32_t> colr(static_cast<size_t>(k_bg));
+      for (int32_t y = ya; y < yb; ++y) {
+        int64_t s[3] = {0, 0, 0};
+        for (int32_t j = 0; j < k_edge; ++j)
+          for (int c = 0; c < 3; ++c) s[c] += chan(at(content_x(j), y), c);
+        for (int c = 0; c < 3; ++c) {
+          edge_sig[static_cast<size_t>(y) * 3 + c] = (s[c] * 256 + k_edge / 2) / k_edge;
+          for (int32_t j = 0; j < k_bg; ++j) colr[static_cast<size_t>(j)] = chan(at(content_x(j), y), c);
+          std::nth_element(colr.begin(), colr.begin() + k_bg / 2, colr.end());
+          bg_sig[static_cast<size_t>(y) * 3 + c] = static_cast<int64_t>(colr[static_cast<size_t>(k_bg / 2)]) * 256;
+        }
       }
-    }
+    });
     prefix(edge_sig, edge_pre);
     prefix(bg_sig, bg_pre);
+    // the band columns' weights and radii (per column d), then the rows
+    std::vector<int32_t> wbs(static_cast<size_t>(band) + 1), rs(static_cast<size_t>(band) + 1);
     for (int32_t d = 1; d <= band; ++d) {
-      const int32_t x = side == 0 ? ox - d : ox + w - 1 + d;
       // the background's smoothstep weight: 0 at the frame's edge, 256 from `fade` client columns on
       const int64_t t = std::min<int64_t>(256, static_cast<int64_t>(d) * 256 / fade);
-      const int32_t wb = static_cast<int32_t>(t * t * (3 * 256 - 2 * t) / (256 * 256));
-      const int32_t r = std::min(d / 2, r_edge_max);
-      for (int32_t y = 0; y < h; ++y) {
-        int32_t c8[3];
-        for (int c = 0; c < 3; ++c) {
-          const int32_t bg = mean(bg_pre, y, r_bg, c);
-          c8[c] = wb >= 256 ? bg : (mean(edge_pre, y, r, c) * (256 - wb) + bg * wb + 128) / 256;
-        }
-        at(x, y) = pack(c8);
-      }
+      wbs[static_cast<size_t>(d)] = static_cast<int32_t>(t * t * (3 * 256 - 2 * t) / (256 * 256));
+      rs[static_cast<size_t>(d)] = std::min(d / 2, r_edge_max);
     }
+    RowPool::get().run(0, h, [&](int32_t ya, int32_t yb) {
+      for (int32_t y = ya; y < yb; ++y) {
+        int32_t bg[3];
+        for (int c = 0; c < 3; ++c) bg[c] = mean(bg_pre, y, r_bg, c);
+        for (int32_t d = 1; d <= band; ++d) {
+          const int32_t x = side == 0 ? ox - d : ox + w - 1 + d;
+          const int32_t wb = wbs[static_cast<size_t>(d)], r = rs[static_cast<size_t>(d)];
+          int32_t c8[3];
+          for (int c = 0; c < 3; ++c) c8[c] = wb >= 256 ? bg[c] : (mean(edge_pre, y, r, c) * (256 - wb) + bg[c] * wb + 128) / 256;
+          at(x, y) = pack(c8);
+        }
+      }
+    });
   }
 }
 

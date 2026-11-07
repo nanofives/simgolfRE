@@ -58,6 +58,7 @@ class GpuCompositor {
                            int32_t shy, bool moving_tools);
   void paint_layered(const Presenter &p, int32_t cw, int32_t ch, int32_t slx, int32_t sly);
   void paint_full(const Presenter &p, int32_t cw, int32_t ch);
+  void paint_flat(const Presenter &p, int32_t cw, int32_t ch);
   void verify(const Presenter &p, int32_t cw, int32_t ch, bool layered);
   void fetch_prev(const Presenter &p);
   void shot_if_asked(int32_t cw, int32_t ch);

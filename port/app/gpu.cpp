@@ -490,6 +490,13 @@ struct GpuCompositor::Impl {
   int32_t f_slx = 0, f_sly = 0, f_cdx = 0, f_shx = 0, f_shy = 0;  // the offsets of the last build
   int32_t c2_box[4] = {0, 0, 0, 0};           // the frame's cursor2d pixels' 800-space box (upload_frame; empty when none)
   uint64_t final_dep_renders = 0, final_dep_kept = 0;
+  // fix 3: the flat path's base upload
+  uint64_t flat_gen = ~0ull;
+  const void *flat_src = nullptr;
+  uint64_t paints_flat = 0;
+  // fix 3: off by default (P14A_notes.md section 5: on the title menu its band patches, full-height strips merged with the runs'
+  // rectangles, cost more CPU than the whole-frame render it replaces: 73 against 51 ms per paint at 3840 x 2108); SG_P14_FLAT=1 on
+  bool no_flat = true;
   // the profile's GPU time: timestamp query sets in a ring, read one paint late
   struct Ts {
     ID3D11Query *dis = nullptr, *a = nullptr, *b = nullptr;
@@ -636,6 +643,7 @@ void GpuCompositor::stop() {
   d.fov_ok = false;
   d.prev_fetch_gen = ~0ull;
   d.course_valid = d.prev_valid = false;
+  d.flat_gen = ~0ull;
 }
 
 bool GpuCompositor::start(void *hwnd, std::string &why) {
@@ -691,6 +699,7 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   if (const char *e = std::getenv("SG_P14_LATENCY")) lat = std::min(3, std::max(1, std::atoi(e)));
   d.latency = lat;
   if (const char *e = std::getenv("SG_P14_WAIT")) d.no_wait = std::atoi(e) == 0;
+  if (const char *e = std::getenv("SG_P14_FLAT")) d.no_flat = std::atoi(e) == 0;
   if (const char *e = std::getenv("SG_P14_SYNC")) d.sync_interval = static_cast<UINT>(std::max(0, std::min(4, std::atoi(e))));
   sd.BufferCount = static_cast<UINT>(lat + 1);
   sd.Scaling = DXGI_SCALING_NONE;
@@ -1644,6 +1653,120 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   d.course_valid = true;
 }
 
+// fix 3: a screen without a world layer (the title, menus, reports, the world map): render's flat path. The base (the frame, or its
+// text-clean copy with the runs drawn) scaled by the course pass with no world; the text runs, the side bands (fill_bands: each side
+// rendered with the content columns its rule reads) and the overlay as final patches, made again when the frame or the overlay
+// changes (nothing on these screens moves between frames).
+void GpuCompositor::paint_flat(const Presenter &P, int32_t cw, int32_t ch) {
+  Impl &d = *d_;
+  ++d.paints_flat;
+  const Viewport vp = fit_viewport(cw, ch);
+  const bool text = P.text_now(vp);
+  const std::vector<uint16_t> &fsrc = text && P.text_defect_ != TextDefect::Unremoved ? P.text_.clean : P.frame_;
+  const bool near_ = P.effective_scale(vp.client_w, vp.client_h) == ScaleMode::Nearest;
+  {
+    const ProfScope prof(Phase::Upload);
+    if (d.flat_gen != P.content_gen_ || d.flat_src != fsrc.data() || !d.base.t) {
+      make_tex(d.dev, d.base, kLogicalW, kLogicalH, DXGI_FORMAT_R16_UINT, false);
+      put_tex(d.ctx, d.base, 0, 0, kLogicalW, kLogicalH, fsrc.data(), kLogicalW * 2u);
+      d.flat_gen = P.content_gen_;
+      d.flat_src = fsrc.data();
+      d.frame_gen = ~0ull;  // the layered path uploads its own base again
+    }
+    upload_tables(vp, near_, near_, 0, 0, 0, 0);
+  }
+  {
+    const ProfScope prof(Phase::Patch);
+    char k[200];
+    std::snprintf(k, sizeof k, "flat/%llu/%d,%d/%d/%llu/%d/%d/%d", static_cast<unsigned long long>(P.content_gen_), cw, ch, text ? 1 : 0,
+                  static_cast<unsigned long long>(P.overlay_line_.t_s * 1000.0), P.overlay_mode_, static_cast<int>(P.wide_),
+                  static_cast<int>(P.band_));
+    if (d.final_key != k) {
+      const int64_t t0 = portsim::perf_now_ns();
+      std::vector<Rect> rects;
+      auto add = [&](Rect b) {
+        b = Rect{std::max(b.x0, 0), std::max(b.y0, 0), std::min(b.x1, cw), std::min(b.y1, ch)};
+        if (b.x1 > b.x0 && b.y1 > b.y0) rects.push_back(b);
+      };
+      if (text)  // draw_runs' flat path: every run at its own place (no world: no world run, no moved panel, no mover)
+        for (const portsim::GfxTextRun &r : P.text_.runs)
+          if (r.target != 2) add(run_box(r, vp, 0, 0));
+      if (P.wide_ != WideFill::Off && P.band_ != BandFill::Black) {  // the bands with the content columns fill_bands reads
+        const int32_t ox = vp.origin_x, w = vp.client_w, kbg = std::max<int32_t>(1, w * 64 / kLogicalW) + 1;
+        const int32_t bl = ox, br = cw - ox - w;
+        if (bl > 0) add(Rect{0, 0, std::min(ox + w, ox + std::max(bl, kbg) + 1), ch});
+        if (br > 0) add(Rect{std::max(ox, ox + w - std::max(br, kbg) - 1), 0, cw, ch});
+      }
+      int32_t ob[4] = {0, 0, 0, 0};
+      const bool ov = P.overlay_mode_ && P.overlay_box(cw, ch, ob);
+      if (ov) add(Rect{ob[0], ob[1], ob[2], ob[3]});
+      merge_rects(rects, 4);
+      ++d.final_builds;
+      if (!pack_patches(d.dev, d.ctx, P, cw, ch, rects, false, d.atlas_f, d.atlas_buf, d.tmp, d.qf, d.final_px, ov ? ob : nullptr))
+        d.qf.clear();
+      make_sbuf(d.dev, d.ctx, d.quads_f, sizeof(QuadRec), static_cast<uint32_t>(d.qf.size()), d.qf.data());
+      d.final_key = k;
+      d.fstat_key.clear();  // the layered path's atlas is rebuilt when it runs again
+      d.ns_final += portsim::perf_now_ns() - t0;
+    }
+  }
+  GpuCB c = {};
+  c.cw = cw;
+  c.ch = ch;
+  c.vpx = vp.origin_x;
+  c.vpy = vp.origin_y;
+  c.vpw = vp.client_w;
+  c.vph = vp.client_h;
+  c.base_near = c.world_near = c.layer_near = near_ ? 1 : 0;
+  c.mask_on = 1;
+  c.cur_layer = 0;
+  c.toff_x = 2 * cw;
+  c.toff_y = 2 * ch;
+  c.tn_x = 5 * cw;
+  c.tn_y = 5 * ch;
+  d.ctx->UpdateSubresource(d.cb, 0, nullptr, &c, 0, 0);
+  const int64_t td0 = portsim::perf_now_ns();
+  ts_begin();
+  ID3D11DeviceContext *x = d.ctx;
+  D3D11_VIEWPORT v = {0, 0, static_cast<float>(cw), static_cast<float>(ch), 0, 1};
+  x->RSSetViewports(1, &v);
+  x->RSSetState(d.rs);
+  x->IASetInputLayout(nullptr);
+  x->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  x->VSSetShader(d.vs_full, nullptr, 0);
+  x->PSSetConstantBuffers(0, 1, &d.cb);
+  ID3D11ShaderResourceView *none[21] = {};
+  ID3D11ShaderResourceView *tabs[6] = {d.lcol.srv, d.lrow.srv, d.bcol.srv, d.brow.srv, d.wcol.srv, d.wrow.srv};
+  x->PSSetShaderResources(0, 21, none);
+  x->PSSetShaderResources(14, 6, tabs);
+  x->OMSetRenderTargets(1, &d.course.rtv, nullptr);
+  ID3D11ShaderResourceView *s1[4] = {d.base.srv, d.dummy_u.srv, d.dummy_u.srv, d.dummy_u.srv};
+  x->PSSetShaderResources(0, 4, s1);
+  x->PSSetShader(d.ps_course, nullptr, 0);
+  x->Draw(3, 0);
+  x->OMSetRenderTargets(1, &d.bb_rtv, nullptr);
+  ID3D11ShaderResourceView *s3[5] = {d.base.srv, d.dummy_u.srv, d.dummy_u.srv, d.dummy_u.srv, d.course.srv};
+  x->PSSetShaderResources(0, 5, s3);
+  x->PSSetShader(d.ps_hud, nullptr, 0);
+  x->Draw(3, 0);
+  if (!d.qf.empty()) {
+    QuadCB q = {0, 0, cw, ch};
+    x->UpdateSubresource(d.qcb, 0, nullptr, &q, 0, 0);
+    x->VSSetShader(d.vs_quad, nullptr, 0);
+    x->VSSetConstantBuffers(1, 1, &d.qcb);
+    x->VSSetShaderResources(12, 1, &d.quads_f.srv);
+    x->PSSetShaderResources(11, 1, &d.atlas_f.srv);
+    x->PSSetShader(d.ps_quad_f, nullptr, 0);
+    x->DrawInstanced(6, static_cast<UINT>(d.qf.size()), 0, 0);
+  }
+  x->PSSetShaderResources(0, 21, none);
+  ID3D11ShaderResourceView *nv[1] = {nullptr};
+  x->VSSetShaderResources(12, 1, nv);
+  ts_end();
+  d.ns_draw += portsim::perf_now_ns() - td0;
+  d.course_valid = false;  // the course target holds a flat screen
+}
+
 void GpuCompositor::paint_full(const Presenter &P, int32_t cw, int32_t ch) {
   Impl &d = *d_;
   ++d.paints_full;
@@ -1875,7 +1998,11 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
   const bool layered = P.layered() && P.defect_ == PresentDefect::None && cw <= 4096 && ch <= 4096 && W.pw > 0 && W.ph > 0 &&
                        W.fw > 0 && W.pw <= 8192 && W.ph <= 8192;
   P.overlay_freeze(true);  // the paint's overlay patch and its A/B check show the same profiler line
+  // fix 3: a screen without a world layer through the GPU path too (render's flat path)
+  const bool flat = !layered && W.empty() && !P.frame_.empty() && !P.layered() && P.defect_ == PresentDefect::None && cw <= 4096 &&
+                    ch <= 4096 && !d.no_flat;
   if (layered) paint_layered(P, cw, ch, slx, sly);
+  else if (flat) paint_flat(P, cw, ch);
   else paint_full(P, cw, ch);
   if (d.verify_every > 0 && (d.verify_n++ % static_cast<uint64_t>(d.verify_every)) == 0) verify(P, cw, ch, layered);
   shot_if_asked(cw, ch);
@@ -1930,7 +2057,7 @@ std::string GpuCompositor::json() const {
                 "\"ms_world_uploads\":%.1f,\"ms_course_patches\":%.1f,\"ms_final_patches\":%.1f,\"ms_draw_calls\":%.1f,"
                 "\"final_static_rects\":%llu,\"final_dep_rects\":%llu,\"final_rect_renders\":%llu,\"final_overflow\":%llu,"
                 "\"prev_fetches\":%llu,\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f,"
-                "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu}",
+                "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu,\"paints_flat\":%llu}",
                 d.ok ? 1 : 0, esc(d.why).c_str(), static_cast<unsigned long long>(d.paints_layered),
                 static_cast<unsigned long long>(d.paints_full), static_cast<unsigned long long>(d.frame_uploads),
                 static_cast<unsigned long long>(d.world_uploads), static_cast<unsigned long long>(d.course_builds),
@@ -1947,7 +2074,8 @@ std::string GpuCompositor::json() const {
                 static_cast<unsigned long long>(d.final_rect_renders), static_cast<unsigned long long>(d.final_overflow),
                 static_cast<unsigned long long>(d.prev_fetches), d.shade_mono, static_cast<unsigned long long>(d.classify_off), d.latency,
                 static_cast<double>(d.ns_wait) / 1e6, static_cast<double>(d.ns_present) / 1e6,
-                static_cast<unsigned long long>(d.final_dep_renders), static_cast<unsigned long long>(d.final_dep_kept));
+                static_cast<unsigned long long>(d.final_dep_renders), static_cast<unsigned long long>(d.final_dep_kept),
+                static_cast<unsigned long long>(d.paints_flat));
   return b;
 }
 
