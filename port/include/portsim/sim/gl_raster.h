@@ -131,6 +131,13 @@ class GlRaster : public GlSink {
     gpu_stale_();
   }
   bool has_gpu() const { return gpu_ != nullptr; }
+  // P17B (log/roadmap/P17/P17B_notes.md): the backend, and whether its copy of the frame equals the frame (after the pending batch:
+  // the world thread's hr planes then take the root from the backend's copy instead of an upload)
+  const GlPixelGpu *gpu_backend() const { return gpu_.get(); }
+  bool gpu_current() const {
+    const_cast<GlRaster *>(this)->finish();
+    return gpu_ && !gm_.full && !gm_.clear && gm_.y0 > gm_.y1;
+  }
 
   int width() const { return w_; }
   int height() const { return h_; }

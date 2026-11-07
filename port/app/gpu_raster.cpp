@@ -782,6 +782,8 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   }
   const char *why() const override { return why_.c_str(); }
   int part_tris() const override { return part_; }
+  // P17B (gpu_raster_frame): the backend's copy of the frame (equal to the raster's frame when GlRaster says so)
+  ID3D11Texture2D *frame_texture(int w, int h) const { return !dead_.load() && fw_ == w && fh_ == h ? mtex_ : nullptr; }
 
   void part(int w, int h, const uint16_t *fb, const portsim::gl::GlMirror &m, const std::vector<portsim::gl::GlGpuTri> &tris,
             const std::vector<portsim::gl::GlGpuTex> &texs) override {
@@ -1421,6 +1423,50 @@ void gpu_raster_enable(int mode) {
   }
 #endif
   portsim::gl::set_pixel_gpu_factory(nullptr);
+}
+
+// ---- P17B (gpu_raster.h)
+bool gpu_raster_device(void **dev, void **ctx, std::string &why) {
+#ifdef _WIN32
+  std::shared_ptr<Dev> d;
+  {
+    std::lock_guard<std::mutex> lk(g_mu);
+    if (!g_dev) g_dev = std::make_shared<Dev>();
+    d = g_dev;
+  }
+  if (!d->start()) {
+    why = d->why;
+    return false;
+  }
+  *dev = d->dev;
+  *ctx = d->ctx;
+  return true;
+#else
+  (void)dev;
+  (void)ctx;
+  why = "not Windows";
+  return false;
+#endif
+}
+void gpu_raster_context_wait() {
+#ifdef _WIN32
+  std::shared_ptr<Dev> d;
+  {
+    std::lock_guard<std::mutex> lk(g_mu);
+    d = g_dev;
+  }
+  if (d && d->worker) d->worker->wait();
+#endif
+}
+void *gpu_raster_frame(const portsim::gl::GlRaster &r) {
+#ifdef _WIN32
+  const D3DRaster *b = dynamic_cast<const D3DRaster *>(r.gpu_backend());
+  if (!b || !r.gpu_current()) return nullptr;
+  return b->frame_texture(r.width(), r.height());
+#else
+  (void)r;
+  return nullptr;
+#endif
 }
 
 std::string gpu_raster_json() {

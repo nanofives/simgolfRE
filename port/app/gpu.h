@@ -32,6 +32,10 @@ namespace portapp {
 class Presenter;
 struct Viewport;
 
+// P17B (log/roadmap/P17/P17B_notes.md): P15C's objects pass HLSL (hr_blit_rows' per-pixel work and the five ops' bodies) as text, for
+// the world thread's hr planes (gpu_world.cpp): one transcription for both
+const char *gpu_objects_hlsl(size_t &n);
+
 class GpuCompositor {
  public:
   GpuCompositor();

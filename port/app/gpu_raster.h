@@ -7,6 +7,12 @@
 
 #include <string>
 
+namespace portsim {
+namespace gl {
+class GlRaster;
+}
+}  // namespace portsim
+
 namespace portapp {
 
 // the backend factory for the world rasters made (or resized) after the call (terrain_live.cpp record_reset): mode 0 none (off), 1 every
@@ -17,6 +23,15 @@ namespace portapp {
 void gpu_raster_enable(int mode);
 // session.json p16b: the switch, the device state and the per-batch costs
 std::string gpu_raster_json();
+// P17B (log/roadmap/P17/P17B_notes.md; the pass unchanged): the device every backend of the process shares (made and started on the
+// calling thread if not yet: the world thread), as ID3D11Device * / ID3D11DeviceContext *; false = none (why)
+bool gpu_raster_device(void **dev, void **ctx, std::string &why);
+// P17B: r's frame on that device (an ID3D11Texture2D *, R16_UINT, r's size) when r's backend is this file's and its copy equals r's
+// frame; null otherwise
+void *gpu_raster_frame(const portsim::gl::GlRaster &r);
+// P17B: P17A's submit thread idle (it and the drawing thread share the context one at a time; the world thread's hr planes use it
+// between passes, after this wait)
+void gpu_raster_context_wait();
 
 }  // namespace portapp
 

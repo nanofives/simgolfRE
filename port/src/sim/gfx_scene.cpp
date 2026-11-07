@@ -694,6 +694,7 @@ struct HrQueue {
   std::vector<uint8_t> dirty;          // this queue's dirty tiles (tx x ty), from its start
   int32_t tx = 0, ty = 0;
   size_t defer_np = 0;                 // P15A: the frame thread's queue start recorded with an hr plane of this size (0: none)
+  bool gpu = false;                    // P17B: the planes (hr, hr_cov, hrc, hrb) live in the thread's GPU backend (gfx.h GfxHrGpu)
 };
 thread_local HrQueue g_hr_queue;
 constexpr int32_t kHrTile = 32;
@@ -719,6 +720,150 @@ struct HrGeo {
   }
 };
 HrGeo hr_geo(const LiveTerrainWorld &w) { return HrGeo{w.pw, w.ph, w.fw, w.ox, w.scene_e, w.hr_filter}; }
+
+// ---- P17B (gfx.h GfxHrGpu; log/roadmap/P17/P17B_notes.md): the job thread's GPU backend for the hr planes
+thread_local GfxHrGpu *t_hr_gpu = nullptr;
+thread_local bool t_hr_gpu_dead = false;
+GfxHrGpuCheck g_hr_gpu_st;   // the job thread's counters (one thread runs the jobs; read after it stopped)
+int hr_gpu_check_every() {
+  static const int n = [] {
+    const char *e = std::getenv("SG_P17_WORLDCHECK");
+    return e ? std::max(0, std::atoi(e)) : 0;
+  }();
+  return n;
+}
+// the backend when this thread runs jobs (or the self-test) and it has not failed
+GfxHrGpu *hr_gpu_alive() { return t_hr_runner && t_hr_gpu && !t_hr_gpu_dead ? t_hr_gpu : nullptr; }
+// a backend call failed: it is not used again on this thread. With the CPU planes kept beside it (SG_P17_WORLDCHECK) they carry on;
+// otherwise the planes hold nothing: no reuse at the next queue start (every tile drawn again on the CPU from last_base, which the CPU
+// always keeps), the flags off until then, and hr_lost tells the host that this job's picture is not to be published
+void hr_gpu_failed(LiveTerrainWorld &w, const char *why) {
+  if (t_hr_gpu && !t_hr_gpu_dead) t_hr_gpu->dead(why);
+  t_hr_gpu_dead = true;
+  ++g_hr_gpu_st.failures;
+  HrQueue &q = g_hr_queue;
+  const bool cpu = hr_gpu_check_every() > 0;
+  q.gpu = false;
+  w.hr_gpu = false;
+  if (cpu) return;
+  q.last_ok = false;
+  w.hr_valid = false;
+  w.hrc_valid = false;
+  w.hrb_valid = false;
+  w.hr_lost = true;
+}
+// the check (SG_P17_WORLDCHECK): the backend's planes against the CPU's (both kept)
+void hr_gpu_compare(const LiveTerrainWorld &w, int64_t &serial, bool hr, bool hrc, bool box, const char *what) {
+  const int every = hr_gpu_check_every();
+  GfxHrGpu *G = hr_gpu_alive();
+  if (every <= 0 || !G || (serial++ % every) != 0) return;
+  std::vector<uint16_t> a, c, lo, hi;
+  std::vector<uint8_t> b, d, bc;
+  if (!G->read(hr ? &a : nullptr, hr ? &b : nullptr, hrc ? &c : nullptr, hrc ? &d : nullptr, box ? &lo : nullptr, box ? &hi : nullptr,
+               box ? &bc : nullptr))
+    return;
+  int64_t bad = 0;
+  size_t first = 0;
+  auto cmp = [&](const auto &g, const auto &cpu) {
+    if (g.size() != cpu.size()) {
+      if (!bad) first = 0;
+      bad += static_cast<int64_t>(std::max(g.size(), cpu.size()));
+      return;
+    }
+    for (size_t i = 0; i < g.size(); ++i)
+      if (g[i] != cpu[i]) {
+        if (!bad) first = i;
+        ++bad;
+      }
+  };
+  if (hr) {
+    cmp(a, w.hr);
+    cmp(b, w.hr_cov);
+  }
+  if (hrc) {
+    cmp(c, w.hrc);
+    cmp(d, w.hrc_cov);
+  }
+  if (box) {
+    cmp(lo, w.hrb_lo);
+    cmp(hi, w.hrb_hi);
+    cmp(bc, w.hrb_cov);
+  }
+  ++g_hr_gpu_st.compared;
+  if (bad) {
+    if (!g_hr_gpu_st.differing)
+      std::fprintf(stderr, "P17 WORLDCHECK: %s: %lld words differ, first at (%d, %d)\n", what, static_cast<long long>(bad),
+                   w.pw > 0 ? static_cast<int>(first % static_cast<size_t>(w.pw)) : 0, w.pw > 0 ? static_cast<int>(first / static_cast<size_t>(w.pw)) : 0);
+    ++g_hr_gpu_st.differing;
+    g_hr_gpu_st.differing_words += bad;
+  }
+}
+// one command as the backend draws it: its op (gpu) and hr_blit_rows' sample tables over the whole box (the expressions below are
+// hr_blit_rows' own; a column's / row's values do not depend on the clip rectangle hr_blit_rows is called with). false: the backend
+// does not draw this command (an op it does not know, a control mode, an art whose size does not match its payloads)
+bool hr_gpu_rec(const LiveTerrainWorld &w, GfxHrGpuOp &op, const Sprite8 &s, const HrGeom &gm, const HrBox &box, GfxHrGpuBatch &b) {
+  if (mode() != 0) return false;
+  if (s.w < 0 || s.h < 0 || s.px.size() != static_cast<size_t>(s.w) * static_cast<size_t>(s.h)) return false;
+  op.art = s.px.data();
+  op.art_w = s.w;
+  op.art_h = s.h;
+  const double rx = gm.rx, ry = gm.ry, fx = gm.fx, fy = gm.fy;
+  const double kx = static_cast<double>(w.fw) / 800.0, ky = static_cast<double>(w.ph) / 600.0;
+  const int32_t X0 = std::max(box.x0, 0), X1 = std::min(box.x1, w.pw);
+  const int32_t Y0 = std::max(box.y0, 0), Y1 = std::min(box.y1, w.ph);
+  if (X0 >= X1 || Y0 >= Y1) return true;   // nothing to draw (the caller adds no record)
+  const double du = 1.0 / (kx * fx), dv = 1.0 / (ky * fy);
+  const int nsx = std::min(4, std::max(1, static_cast<int>(std::ceil(du - 1e-6))));
+  const int nsy = std::min(4, std::max(1, static_cast<int>(std::ceil(dv - 1e-6))));
+  const int filter = w.hr_filter == 3 ? 1 : w.hr_filter;
+  const auto sharp_w = [](double t, double k) {
+    const double sv = std::min(1.0, std::max(0.0, (t - 0.5) * k + 0.5));
+    return static_cast<uint32_t>(std::floor(sv * 256.0 + 0.5));
+  };
+  const double ksx = std::max(1.0, nsx / du), ksy = std::max(1.0, nsy / dv);
+  GfxHrGpuRec r;
+  r.op = static_cast<int32_t>(b.ops.size());
+  r.nsx = nsx;
+  r.nsy = nsy;
+  r.filter = filter;
+  const int ns = nsx * nsy;
+  r.inv = 1.0 / (65536.0 * ns);
+  r.x0 = X0;
+  r.y0 = Y0;
+  r.x1 = X1;
+  r.y1 = Y1;
+  r.col_off = static_cast<uint32_t>(b.cols.size() / 4);
+  r.row_off = static_cast<uint32_t>(b.rows.size() / 4);
+  b.cols.resize(b.cols.size() + static_cast<size_t>(X1 - X0) * static_cast<size_t>(nsx) * 4u);
+  int32_t *e = b.cols.data() + static_cast<size_t>(r.col_off) * 4u;
+  for (int32_t X = X0; X < X1; ++X)
+    for (int si = 0; si < nsx; ++si, e += 4) {
+      const double uu = (((X + (si + 0.5) / nsx) - w.ox) / kx + w.scene_e - rx) / fx - 0.5;
+      const double uf = std::floor(uu);
+      const int32_t i0 = static_cast<int32_t>(uf);
+      e[0] = i0 >= 0 && i0 < s.w ? i0 : -1;
+      e[1] = i0 + 1 >= 0 && i0 + 1 < s.w ? i0 + 1 : -1;
+      e[2] = static_cast<int32_t>(static_cast<uint32_t>(std::floor((uu - uf) * 256.0 + 0.5)));
+      e[3] = static_cast<int32_t>(filter ? sharp_w(uu - uf, ksx) : 0u);
+    }
+  b.rows.resize(b.rows.size() + static_cast<size_t>(Y1 - Y0) * static_cast<size_t>(nsy) * 4u);
+  e = b.rows.data() + static_cast<size_t>(r.row_off) * 4u;
+  for (int32_t Y = Y0; Y < Y1; ++Y)
+    for (int sj = 0; sj < nsy; ++sj, e += 4) {
+      const double v = ((Y + (sj + 0.5) / nsy) / ky - ry) / fy - 0.5;
+      const double vf = std::floor(v);
+      const int32_t j0 = static_cast<int32_t>(vf);
+      e[0] = j0 >= 0 && j0 < s.h ? j0 : -1;
+      e[1] = j0 + 1 >= 0 && j0 + 1 < s.h ? j0 + 1 : -1;
+      e[2] = static_cast<int32_t>(static_cast<uint32_t>(std::floor((v - vf) * 256.0 + 0.5)));
+      e[3] = static_cast<int32_t>(filter ? sharp_w(v - vf, ksy) : 0u);
+    }
+  b.ops.push_back(std::move(op));
+  b.recs.push_back(r);
+  g_hr_gpu_st.table_entries += static_cast<int64_t>(X1 - X0) * nsx + static_cast<int64_t>(Y1 - Y0) * nsy;
+  return true;
+}
+thread_local GfxHrGpuBatch t_hr_batch;   // reused (its vectors keep their capacity)
 }  // namespace (GfxHrJob is declared in gfx.h)
 struct GfxHrJob {
   struct Op {  // P15A fix 3: each op's kind (gfx.h GfxWorldOp); a kGwGl op holds its GL stream instead of a function
@@ -822,13 +967,30 @@ void hr_queue_begin(LiveTerrainWorld &w, const std::vector<uint16_t> &wp) {
       for (int32_t i = b.x0 / kHrTile; i <= (b.x1 - 1) / kHrTile; ++i)
         q.dirty[static_cast<size_t>(j) * static_cast<size_t>(q.tx) + static_cast<size_t>(i)] = 1;
   };
+  // P17B: the planes in the GPU backend when it wants this size (the CPU's beside them under SG_P17_WORLDCHECK); a change of home is
+  // a start without reuse
+  GfxHrGpu *G = hr_gpu_alive();
+  if (G && (wp.size() != np || !G->want(w.pw, w.ph))) G = nullptr;
+  const bool cpu = !G || hr_gpu_check_every() > 0;
+  const bool planes = (!cpu || (w.hr.size() == np && w.hr_cov.size() == np)) && (G ? q.gpu && G->planes(w.pw, w.ph) : !q.gpu);
   const bool reuse = hr_reuse_on() && q.last_ok && q.last_w == &w && q.last_pw == w.pw && q.last_ph == w.ph &&
-                     q.last_base.size() == np && w.hr.size() == np && w.hr_cov.size() == np && wp.size() == np;
+                     q.last_base.size() == np && planes && wp.size() == np;
+  std::vector<int32_t> spans;   // P17B: the row spans copied into last_base (y, x0, x1)
   if (!reuse) {
     q.last_ok = false;
     q.last_base = wp;
-    w.hr.assign(np, 0);
-    w.hr_cov.assign(np, 0);
+    if (cpu) {
+      w.hr.assign(np, 0);
+      w.hr_cov.assign(np, 0);
+    } else {   // P17B: the CPU planes are not kept
+      std::vector<uint16_t>().swap(w.hr);
+      std::vector<uint8_t>().swap(w.hr_cov);
+      std::vector<uint16_t>().swap(w.hrc);
+      std::vector<uint8_t>().swap(w.hrc_cov);
+      std::vector<uint16_t>().swap(w.hrb_lo);
+      std::vector<uint16_t>().swap(w.hrb_hi);
+      std::vector<uint8_t>().swap(w.hrb_cov);
+    }
     std::fill(q.dirty.begin(), q.dirty.end(), uint8_t(1));
   } else {
     for (int32_t y = 0; y < w.ph; ++y) {
@@ -840,10 +1002,30 @@ void hr_queue_begin(LiveTerrainWorld &w, const std::vector<uint16_t> &wp) {
       while (x1 > x0 && a[x1 - 1] == b[x1 - 1]) --x1;
       std::copy(a + x0, a + x1, b + x0);
       mark(HrBox{x0, y, x1, y + 1});
+      if (G) spans.insert(spans.end(), {y, x0, x1});
     }
     for (const HrBox &b : q.post_boxes) mark(b);
   }
   q.post_boxes.clear();
+  if (G) {   // P17B: the backend's planes and base (= last_base)
+    ++(reuse ? g_hr_gpu_st.base_spans : g_hr_gpu_st.base_all);
+    if ((!reuse && !G->reset(w.pw, w.ph)) || !G->base(w, wp, spans, !reuse)) {
+      hr_gpu_failed(w, "queue start");   // a start: the CPU planes are made here (no reuse), nothing is lost
+      w.hr_lost = false;
+      if (!cpu) {
+        w.hr.assign(np, 0);
+        w.hr_cov.assign(np, 0);
+      }
+      q.last_ok = false;
+      std::fill(q.dirty.begin(), q.dirty.end(), uint8_t(1));
+      return;
+    }
+    q.gpu = true;
+    w.hr_gpu = true;
+  } else {
+    q.gpu = false;
+    w.hr_gpu = false;
+  }
 }
 
 // the queued commands over the hr plane (renderSpriteQueue's end). The plane is the last flush's except in the DIRTY tiles: where
@@ -865,7 +1047,10 @@ void hr_flush(LiveTerrainWorld &w) {
   } done{w, t0};
   HrQueue &q = g_hr_queue;
   const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
-  if (q.last_base.size() != np || w.hr.size() != np || w.hr_cov.size() != np ||
+  // P17B: the planes in the GPU backend (q.gpu), the CPU's too under SG_P17_WORLDCHECK
+  GfxHrGpu *const G = q.gpu ? hr_gpu_alive() : nullptr;
+  const bool cpu = !q.gpu || hr_gpu_check_every() > 0;
+  if (q.last_base.size() != np || (cpu && (w.hr.size() != np || w.hr_cov.size() != np)) || (q.gpu && (!G || !G->planes(w.pw, w.ph))) ||
       q.dirty.size() != static_cast<size_t>(q.tx) * static_cast<size_t>(q.ty)) {
     q.cmds.clear();
     q.last_ok = false;
@@ -899,6 +1084,44 @@ void hr_flush(LiveTerrainWorld &w) {
   for (uint8_t d : dirty) nd += d;
   w.hr_tiles += static_cast<int64_t>(dirty.size());
   w.hr_tiles_dirty += nd;
+  if (G) {  // P17B: the dirty tiles drawn by the backend: the commands whose box meets one, in queue order
+    const int64_t tp = perf_now_ns();
+    GfxHrGpuBatch &b = t_hr_batch;
+    b.clear();
+    bool ok = true;
+    for (const auto &c : q.cmds) {
+      const HrBox &bx = c->box;
+      if (bx.empty()) continue;
+      bool meets = false;
+      for (int32_t j = bx.y0 / kHrTile; !meets && j <= (bx.y1 - 1) / kHrTile; ++j)
+        for (int32_t i = bx.x0 / kHrTile; i <= (bx.x1 - 1) / kHrTile; ++i)
+          if (dirty[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) {
+            meets = true;
+            break;
+          }
+      if (!meets) continue;
+      GfxHrGpuOp op;
+      if (!c->gpu(op) || !hr_gpu_rec(w, op, c->art(), c->gm, bx, b)) {
+        ok = false;
+        break;
+      }
+    }
+    g_hr_gpu_st.prep_ns += perf_now_ns() - tp;
+    ++g_hr_gpu_st.flushes;
+    g_hr_gpu_st.batch_cmds += static_cast<int64_t>(b.recs.size());
+    g_hr_gpu_st.dirty_tiles += nd;
+    if (!ok || !G->flush(dirty, tx, ty, b)) {
+      hr_gpu_failed(w, ok ? "flush" : "a command the backend does not draw");
+      if (!cpu) {
+        q.cmds.clear();
+        q.w = nullptr;
+        return;
+      }
+    }
+  }
+  if (!cpu) {
+    w.hr_lost = false;
+  } else {
   // a dirty tile starts from the base
   for (int32_t j = 0; j < ty; ++j)
     for (int32_t i = 0; i < tx; ++i) {
@@ -955,6 +1178,12 @@ void hr_flush(LiveTerrainWorld &w) {
       for (std::thread &t : th) t.join();
     }
   }
+  w.hr_lost = false;
+  if (q.gpu) {  // P17B: SG_P17_WORLDCHECK
+    static int64_t serial = 0;
+    hr_gpu_compare(w, serial, true, false, false, "hr_flush");
+  }
+  }  // P17B: the CPU planes
   w.hr_valid = true;
   q.last_sig.clear();
   q.last_box.clear();
@@ -1091,10 +1320,20 @@ void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale s
     }
     hr_record_now(w, s, x, y, sc, op, cur, false);   // the check: recorded, then run here too
   }
-  if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
+  // P17B: the planes in the GPU backend (the CPU's too under SG_P17_WORLDCHECK)
+  const bool gq = g_hr_queue.gpu;
+  GfxHrGpu *const G = gq ? hr_gpu_alive() : nullptr;
+  const bool cpu = !gq || hr_gpu_check_every() > 0;
+  if (!w.hr_valid || (cpu && (w.hr.size() != np || w.hr_cov.size() != np)) || (gq && (!G || !G->planes(w.pw, w.ph))) || w.fw <= 0) return;
   if (cur && !w.hrc_valid) {
-    w.hrc = w.hr;
-    w.hrc_cov.assign(np, 0);
+    if (cpu) {
+      w.hrc = w.hr;
+      w.hrc_cov.assign(np, 0);
+    }
+    if (G && !G->make_hrc()) {
+      hr_gpu_failed(w, "hrc");
+      if (!cpu) return;
+    }
     w.hrc_valid = true;
   }
   const HrGeom gm = hr_geom(x, y, sc, s);
@@ -1107,7 +1346,26 @@ void hr_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Scale s
   HrGeom ga = gm;   // P13D fix 5: the edge filter's scaled art
   const std::shared_ptr<const Sprite8> up = hr_art(w, s, ga);
   const Sprite8 &a = up ? *up : s;
-  hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), a, ga, local, box, 0, 0, w.pw, w.ph);
+  if (cpu) hr_blit_rows(w, cur ? w.hrc.data() : w.hr.data(), cur ? w.hrc_cov.data() : w.hr_cov.data(), a, ga, local, box, 0, 0, w.pw, w.ph);
+  if (G && g_hr_queue.gpu && !box.empty()) {  // P17B: the same draw by the backend
+    const int64_t tp = perf_now_ns();
+    GfxHrGpuBatch &b = t_hr_batch;
+    b.clear();
+    GfxHrGpuOp gop;
+    const bool ok = hr_gpu_op(local, gop) && hr_gpu_rec(w, gop, a, ga, box, b);
+    g_hr_gpu_st.prep_ns += perf_now_ns() - tp;
+    ++g_hr_gpu_st.nows;
+    if (!ok || (!b.recs.empty() && !G->now(cur ? kHrPlaneHrc : kHrPlaneHr, b))) {
+      hr_gpu_failed(w, ok ? "now" : "a draw the backend does not draw");
+      if (!cpu) {
+        g_hr_pass = keep;
+        return;
+      }
+    } else if (cpu) {
+      static int64_t serial = 0;
+      hr_gpu_compare(w, serial, !cur, cur, false, "hr_now");
+    }
+  }
   if (!cur) g_hr_queue.post_boxes.push_back(box);   // fix 3: the next queue draws these tiles again
   g_hr_pass = keep;
   ++w.hr_draws;
@@ -1159,11 +1417,31 @@ void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Sca
     }
     hr_record_now(w, s, x, y, sc, op, false, true);
   }
-  if (!w.hr_valid || w.hr.size() != np || w.hr_cov.size() != np || w.fw <= 0) return;
+  // P17B: the planes in the GPU backend (the CPU's too under SG_P17_WORLDCHECK)
+  const bool gq = g_hr_queue.gpu;
+  GfxHrGpu *const G = gq ? hr_gpu_alive() : nullptr;
+  const bool cpu = !gq || hr_gpu_check_every() > 0;
+  if (!w.hr_valid || (cpu && (w.hr.size() != np || w.hr_cov.size() != np)) || (gq && (!G || !G->planes(w.pw, w.ph))) || w.fw <= 0) return;
   if (!w.hrc_valid) {
-    w.hrc = w.hr;
-    w.hrc_cov.assign(np, 0);
+    if (cpu) {
+      w.hrc = w.hr;
+      w.hrc_cov.assign(np, 0);
+    }
+    if (G && !G->make_hrc()) {
+      hr_gpu_failed(w, "hrc");
+      if (!cpu) return;
+    }
     w.hrc_valid = true;
+  }
+  if (!w.hrb_valid && G && g_hr_queue.gpu) {  // P17B: the backend's box planes (made, or the last boxes' rectangle reset)
+    if (!G->reset_box(false, w.hrb_area)) {
+      hr_gpu_failed(w, "box planes");
+      if (!cpu) return;
+    }
+    if (!cpu) {
+      w.hrb_area[0] = w.hrb_area[1] = w.hrb_area[2] = w.hrb_area[3] = 0;
+      w.hrb_valid = true;
+    }
   }
   if (!w.hrb_valid) {
     if (w.hrb_lo.size() != np || w.hrb_hi.size() != np || w.hrb_cov.size() != np) {
@@ -1191,10 +1469,32 @@ void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Sca
   HrGeom ga = gm;   // P13D fix 5: the edge filter's scaled art
   const std::shared_ptr<const Sprite8> up = hr_art(w, s, ga);
   const Sprite8 &a = up ? *up : s;
-  for (uint16_t *plane : {w.hrc.data(), w.hrb_lo.data(), w.hrb_hi.data()}) {
+  if (cpu)
+    for (uint16_t *plane : {w.hrc.data(), w.hrb_lo.data(), w.hrb_hi.data()}) {
+      Op local = op;
+      hr_no_rec(local, 0);
+      hr_blit_rows(w, plane, w.hrb_cov.data(), a, ga, local, box, 0, 0, w.pw, w.ph);
+    }
+  if (G && g_hr_queue.gpu) {  // P17B: the same three draws by the backend
+    const int64_t tp = perf_now_ns();
+    GfxHrGpuBatch &b = t_hr_batch;
+    b.clear();
     Op local = op;
     hr_no_rec(local, 0);
-    hr_blit_rows(w, plane, w.hrb_cov.data(), a, ga, local, box, 0, 0, w.pw, w.ph);
+    GfxHrGpuOp gop;
+    const bool ok = hr_gpu_op(local, gop) && hr_gpu_rec(w, gop, a, ga, box, b);
+    g_hr_gpu_st.prep_ns += perf_now_ns() - tp;
+    ++g_hr_gpu_st.nows;
+    if (!ok || (!b.recs.empty() && !G->now(kHrPlaneBox, b))) {
+      hr_gpu_failed(w, ok ? "box" : "a box the backend does not draw");
+      if (!cpu) {
+        g_hr_pass = keep;
+        return;
+      }
+    } else if (cpu) {
+      static int64_t serial = 0;
+      hr_gpu_compare(w, serial, false, true, true, "hr_box_now");
+    }
   }
   g_hr_pass = keep;
   int32_t *A = w.hrb_area;
@@ -2839,6 +3139,188 @@ gl::GlRec *gfx_world_gl_chunk() {
   return j.ops.back().gl.get();
 }
 const GfxWorldRun &gfx_world_run_stats() { return g_world_run; }
+
+// ---- P17B (gfx.h GfxHrGpu)
+void gfx_set_hr_gpu(GfxHrGpu *g) {
+  t_hr_gpu = g;
+  t_hr_gpu_dead = false;
+}
+GfxHrGpu *gfx_hr_gpu() { return t_hr_gpu_dead ? nullptr : t_hr_gpu; }
+const GfxHrGpuCheck &gfx_hr_gpu_stats() { return g_hr_gpu_st; }
+
+namespace {
+// THE SELF-TEST's stream: a 256 x 192 world (fw 256: a texel of art drawn unscaled covers 0.32 world pixels, so the samples per axis
+// reach 4; scales 3, 5, 10 and 7 / 2 reach 1, the sharp weights and Scale2x at 1.5 and 3 world pixels per texel), each op kind but
+// PlaneOp (its struct holds the Gfx; its body is P15C's, checked in the app by SG_P17_WORLDCHECK), two queues per filter (the second
+// with a changed root band, moved and changed commands and the first queue's hr draw: the tile reuse), hr_now into hr and hrc, a box
+uint32_t st_rnd(uint32_t &s) {
+  s = s * 1664525u + 1013904223u;
+  return s >> 8;
+}
+Sprite8 st_art(uint32_t &seed, int32_t w, int32_t h) {
+  Sprite8 a;
+  a.w = w;
+  a.h = h;
+  a.px.resize(static_cast<size_t>(w) * static_cast<size_t>(h));
+  // blocks of one payload (the uniform fast path), transparent 0xff borders, the 0xf8..0xfe range (the shade / alpha skips)
+  const uint8_t pick[8] = {0x10, 0x20, 0x33, 0xf8, 0xfa, 0xfe, 0xff, 0x07};
+  for (int32_t y = 0; y < h; ++y)
+    for (int32_t x = 0; x < w; ++x) {
+      const uint32_t r = st_rnd(seed);
+      uint8_t v = (x / 3 + y / 2) % 5 == 0 ? pick[r % 8] : static_cast<uint8_t>(0x10 + (x / 4) * 7 + (y / 4) * 3);
+      if (x == 0 || y == 0 || x == w - 1 || y == h - 1) v = (r & 3) ? 0xff : v;
+      a.px[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)] = v;
+    }
+  return a;
+}
+struct StPlanes {
+  std::vector<uint16_t> hr, hrc, lo, hi;
+  std::vector<uint8_t> cov, hrc_cov, bcov;
+};
+// one run of the stream on world W; snaps: the planes after each queue (read from W's vectors, or from g when given)
+bool st_run(LiveTerrainWorld &W, GfxHrGpu *g, std::vector<StPlanes> &snaps) {
+  static std::vector<uint16_t> lut;
+  if (lut.empty()) {
+    uint32_t s = 77;
+    lut.resize(0x8000);
+    for (uint16_t &v : lut) v = static_cast<uint16_t>(st_rnd(s) & 0x7fff);
+  }
+  std::array<uint16_t, 256> pal{};
+  {
+    uint32_t s = 5;
+    for (uint16_t &v : pal) v = static_cast<uint16_t>(st_rnd(s) & 0x7fff);
+  }
+  const int32_t pw = 256, ph = 192;
+  W.pw = pw;
+  W.ph = ph;
+  W.fw = 256;
+  W.ox = 0;
+  W.scene_e = 0;
+  uint32_t seed = 0x1357u;
+  std::vector<uint16_t> root(static_cast<size_t>(pw) * ph);
+  for (uint16_t &v : root) v = static_cast<uint16_t>(st_rnd(seed) & 0x7fff);
+  const Scale scales[5] = {{1, 1, 1}, {3, 3, 1}, {5, 5, 1}, {10, 10, 1}, {7, 7, 2}};
+  for (int f = 0; f <= 3; ++f) {
+    W.hr_filter = f;
+    for (int qn = 0; qn < 2; ++qn) {
+      if (qn == 1)
+        for (int32_t y = 40; y < 52; ++y)
+          for (int32_t x = 10 + y; x < 120 + y; ++x) root[static_cast<size_t>(y) * pw + static_cast<size_t>(x)] ^= 0x0421;
+      W.hr_valid = false;
+      W.hrc_valid = false;
+      W.hrb_valid = false;
+      g_hr_queue.cmds.clear();
+      g_hr_queue.w = nullptr;
+      hr_queue_begin(W, root);
+      uint32_t cs = 0x2468u + static_cast<uint32_t>(f) * 31u;
+      for (int k = 0; k < 18; ++k) {
+        const Sprite8 a = st_art(cs, 6 + static_cast<int32_t>(st_rnd(cs) % 30), 5 + static_cast<int32_t>(st_rnd(cs) % 26));
+        int32_t x = static_cast<int32_t>(st_rnd(cs) % 760), y = static_cast<int32_t>(st_rnd(cs) % 560);
+        if (qn == 1 && k % 4 == 1) x += 3;   // moved: its old and new boxes dirty
+        const Scale sc = scales[static_cast<size_t>(k) % 5];
+        switch (k % 4) {
+          case 0: hr_blit(W, a, x, y, sc, ShadeOp{pal.data(), lut.data(), lut.size()}); break;
+          case 1: hr_blit(W, a, x, y, sc, AlphaOp{pal.data(), &kAlphaPrograms[static_cast<size_t>(k) % 30], (k & 4) != 0}); break;
+          case 2: hr_blit(W, a, x, y, sc, ColourOp{pal.data(), static_cast<uint16_t>(qn == 1 && k == 6 ? 0x5ad6 : 0x3def)}); break;
+          default: hr_blit(W, a, x, y, sc, DrawBOp{pal.data()}); break;
+        }
+      }
+      hr_flush(W);
+      if (!W.hr_valid) return false;
+      Sprite8 a = st_art(cs, 20, 14);
+      hr_now(W, a, 300, 200, scales[1], DrawBOp{pal.data()}, false);
+      hr_now(W, a, 320 + qn, 260, scales[4], ColourOp{pal.data(), 0x7c1f}, true);
+      hr_box_now(W, a, 500, 100 + qn, scales[2], AlphaOp{pal.data(), &kAlphaPrograms[0], false});
+      StPlanes p;
+      if (g) {
+        if (!g->read(&p.hr, &p.cov, &p.hrc, &p.hrc_cov, &p.lo, &p.hi, &p.bcov)) return false;
+      } else {
+        p.hr = W.hr;
+        p.cov = W.hr_cov;
+        p.hrc = W.hrc;
+        p.hrc_cov = W.hrc_cov;
+        p.lo = W.hrb_lo;
+        p.hi = W.hrb_hi;
+        p.bcov = W.hrb_cov;
+      }
+      snaps.push_back(std::move(p));
+    }
+  }
+  return true;
+}
+}  // namespace
+
+bool gfx_hr_gpu_selftest(GfxHrGpu &g, std::string &result, int64_t &words, int64_t &differing) {
+  words = differing = 0;
+  if (mode() != 0) {
+    result = "not run: a gfx_scene control mode is on";
+    return false;
+  }
+  HrQueue keep;
+  std::swap(keep, g_hr_queue);
+  const bool runner = t_hr_runner, dead = t_hr_gpu_dead;
+  GfxHrGpu *const prev = t_hr_gpu;
+  const HrPass pass = g_hr_pass;
+  g_hr_pass = HrPass{};
+  const bool scene_on = g_hr_scene_on.exchange(false);
+  const GfxHrGpuCheck saved = g_hr_gpu_st;   // the stream's counters are not the session's
+  t_hr_runner = true;
+  std::vector<StPlanes> cpu, gpu;
+  t_hr_gpu = nullptr;
+  t_hr_gpu_dead = false;
+  LiveTerrainWorld a, b;
+  const bool ok_cpu = st_run(a, nullptr, cpu);
+  g_hr_queue = HrQueue{};
+  t_hr_gpu = &g;
+  t_hr_gpu_dead = false;
+  const bool ok_gpu = st_run(b, &g, gpu) && !t_hr_gpu_dead;
+  g_hr_gpu_st = saved;
+  g_hr_queue = HrQueue{};
+  std::swap(keep, g_hr_queue);
+  t_hr_runner = runner;
+  t_hr_gpu = prev;
+  t_hr_gpu_dead = dead;
+  g_hr_pass = pass;
+  g_hr_scene_on.store(scene_on);
+  if (!ok_cpu || !ok_gpu || cpu.size() != gpu.size()) {
+    result = !ok_cpu ? "FAIL: the CPU run drew no plane" : "FAIL: the backend failed during the stream";
+    return false;
+  }
+  std::string first;
+  auto cmp = [&](const auto &x, const auto &y, const char *name, size_t q) {
+    words += static_cast<int64_t>(std::max(x.size(), y.size()));
+    if (x.size() != y.size()) {
+      differing += static_cast<int64_t>(std::max(x.size(), y.size()));
+      if (first.empty()) first = std::string(name) + " size of queue " + std::to_string(q);
+      return;
+    }
+    for (size_t i = 0; i < x.size(); ++i)
+      if (x[i] != y[i]) {
+        if (first.empty()) {
+          char buf[160];
+          std::snprintf(buf, sizeof buf, "%s of queue %zu at (%zu, %zu) gpu 0x%x cpu 0x%x", name, q, i % 256, i / 256,
+                        static_cast<unsigned>(y[i]), static_cast<unsigned>(x[i]));
+          first = buf;
+        }
+        ++differing;
+      }
+  };
+  for (size_t q = 0; q < cpu.size(); ++q) {
+    cmp(cpu[q].hr, gpu[q].hr, "hr", q);
+    cmp(cpu[q].cov, gpu[q].cov, "hr_cov", q);
+    cmp(cpu[q].hrc, gpu[q].hrc, "hrc", q);
+    cmp(cpu[q].hrc_cov, gpu[q].hrc_cov, "hrc_cov", q);
+    cmp(cpu[q].lo, gpu[q].lo, "hrb_lo", q);
+    cmp(cpu[q].hi, gpu[q].hi, "hrb_hi", q);
+    cmp(cpu[q].bcov, gpu[q].bcov, "hrb_cov", q);
+  }
+  if (differing) {
+    result = "FAIL: " + std::to_string(differing) + " of " + std::to_string(words) + " words differ, first: " + first;
+    return false;
+  }
+  result = "pass: " + std::to_string(words) + " words in " + std::to_string(cpu.size()) + " queues, 0 differing";
+  return true;
+}
 size_t gfx_hr_job_ops(const GfxHrJob &j) { return j.ops.size(); }
 std::shared_ptr<const std::vector<uint16_t>> gfx_hr_job_root(const GfxHrJob &j, uint64_t &gen) {
   gen = j.root_gen;

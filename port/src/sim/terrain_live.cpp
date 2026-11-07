@@ -473,6 +473,68 @@ bool world_frame_of(const LiveTerrainWorld *wp, const std::vector<uint16_t> &roo
   return true;
 }
 
+// P17B (terrain_live.h): world_frame_of above with the per-pixel copies left to the caller's GPU; every test and loop is the one above
+bool world_frame_plan_of(const LiveTerrainWorld *wp, size_t root_n, size_t hr_n, size_t hrc_n, const std::vector<uint16_t> &back800,
+                         bool back_terrain, bool text, bool cursor_apart, WorldFramePlan &plan, std::vector<uint8_t> &mask) {
+  plan.lay_hr = plan.lay_hrc = false;
+  plan.runs.clear();
+  plan.colmap.clear();
+  plan.rowmap.clear();
+  plan.scene_w = 0;
+  if (!wp || wp->names_differ || !wp->valid || !back_terrain) return false;
+  if (back800.size() != wp->terrain800.size()) return false;
+  mask.resize(back800.size());
+  const LiveTerrainWorld &w = *wp;
+  plan.pw = w.pw;
+  plan.ph = w.ph;
+  if (!w.scene_valid || w.s1.size() != back800.size() || w.scene.size() != static_cast<size_t>(w.scene_w) * 600) {
+    for (size_t i = 0; i < back800.size(); ++i) mask[i] = back800[i] == w.terrain800[i] ? 1 : 0;
+    return true;
+  }
+  const bool use_text = text && w.scene_text.size() == w.scene.size();
+  const std::vector<uint16_t> &scene = use_text ? w.scene_text : w.scene;
+  const bool apart = cursor_apart && !use_text && w.scene_pre.size() == w.scene.size() && w.scene_cur.size() == w.scene.size();
+  const SceneCols c = scene_cols(w);
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  const bool hr = w.hr_valid && hr_n == np && w.tag.size() == w.scene.size() && root_n == np;
+  plan.lay_hr = hr;
+  const bool hr_pre = hr && w.tag_pre.size() == w.scene.size();
+  const bool hrc = hr && w.hrc_valid && hrc_n == np;
+  plan.lay_hrc = hrc && !cursor_apart && !text;
+  const bool pre_tags = cursor_apart || text;
+  plan.scene_w = w.scene_w;
+  plan.runs.assign(static_cast<size_t>(w.scene_w) * 600, 0u);
+  plan.colmap.assign(static_cast<size_t>(w.pw), -1);
+  for (int32_t lx = 0; lx < w.scene_w; ++lx)
+    if (c.first[static_cast<size_t>(lx)] >= 0)
+      for (int32_t x = c.first[static_cast<size_t>(lx)]; x < c.last[static_cast<size_t>(lx)]; ++x) plan.colmap[static_cast<size_t>(x)] = lx;
+  plan.rowmap.resize(static_cast<size_t>(w.ph));
+  for (int32_t y = 0; y < w.ph; ++y) plan.rowmap[static_cast<size_t>(y)] = static_cast<int32_t>(static_cast<int64_t>(y) * 600 / w.ph);
+  for (int32_t ly = 0; ly < 600; ++ly) {   // world_frame_of's logical row loop (its runs, per logical pixel)
+    const size_t r0 = static_cast<size_t>(ly) * static_cast<size_t>(w.scene_w);
+    const uint16_t *sr = scene.data() + r0, *br = w.scene_base.data() + r0;
+    const uint16_t *pr = apart ? w.scene_pre.data() + r0 : nullptr, *cr = apart ? w.scene_cur.data() + r0 : nullptr;
+    uint32_t *out = plan.runs.data() + r0;
+    for (int32_t lx = 0; lx < w.scene_w; ++lx) {
+      const bool from_pre = apart && cr[lx] != pr[lx];
+      const uint16_t v = from_pre ? pr[lx] : sr[lx];
+      if (v == br[lx] || c.first[static_cast<size_t>(lx)] < 0) continue;
+      if (hr) {
+        const size_t si = r0 + static_cast<size_t>(lx);
+        uint8_t t = from_pre ? (hr_pre ? w.tag_pre[si] : 0) : w.tag[si];
+        if (t == 2 && pre_tags) t = hr_pre ? w.tag_pre[si] : 0;
+        if (t != 0) continue;
+        if (use_text && !from_pre && w.scene_text[si] != w.scene[si]) continue;
+      }
+      out[lx] = 0x10000u | v;
+    }
+  }
+  const bool s0_ok = w.s0.size() == back800.size();
+  for (size_t i = 0; i < back800.size(); ++i)
+    mask[i] = back800[i] == w.terrain800[i] || (back800[i] == w.s1[i] && (!s0_ok || w.s1[i] != w.s0[i])) ? 1 : 0;
+  return true;
+}
+
 bool LiveTerrain::world_cursor(std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
                                std::vector<uint16_t> *hi, const std::vector<uint16_t> *back800) const {
   return world_cursor_of(world_.get(), px, cov, mask800, hi, back800);

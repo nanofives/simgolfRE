@@ -66,6 +66,8 @@ def pytest_configure(config):
     # P16 (log/roadmap/P16/BRIEF.md): P16A window thread priority, the latency-aware camera slide, the previews uploaded over their box;
     # P16B: the world thread's terrain raster drawn by the GPU
     os.environ.setdefault("SG_APP_P16", "off")
+    # P17B: the world thread's sprite planes and world image drawn by the GPU
+    os.environ.setdefault("SG_APP_P17", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

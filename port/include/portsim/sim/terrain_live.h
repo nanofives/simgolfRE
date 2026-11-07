@@ -133,6 +133,11 @@ struct LiveTerrainWorld {
   std::vector<uint8_t> hrb_cov;
   bool hrb_valid = false;
   int32_t hrb_area[4] = {0, 0, 0, 0};
+  // P17B (gfx.h GfxHrGpu): hr, hr_cov, hrc, hrc_cov and the hrb planes live in the thread's GPU backend (the vectors above are then
+  // not kept, except beside it under SG_P17_WORLDCHECK); hr_lost: a backend failure left no picture in the planes (until the next
+  // queue's flush on the CPU)
+  bool hr_gpu = false;
+  bool hr_lost = false;
   int64_t hr_draws = 0;
   int64_t hr_queues = 0, hr_prep_us = 0, hr_queue_us = 0, hr_label_us = 0, hr_flush_us = 0;   // P10D: costs (session.json)
   int64_t hr_tiles = 0, hr_tiles_dirty = 0;   // P10D fix 3: 32 x 32 tiles flushed, and of them drawn again (session.json)
@@ -182,6 +187,20 @@ bool world_frame_of(const LiveTerrainWorld *w, const std::vector<uint16_t> &root
                     std::vector<uint16_t> &px, std::vector<uint8_t> &mask, bool text, bool cursor_apart);
 bool world_cursor_of(const LiveTerrainWorld *w, std::vector<uint16_t> &px, std::vector<uint8_t> &cov, std::vector<uint8_t> &mask800,
                      std::vector<uint16_t> *hi, const std::vector<uint16_t> *back800);
+// P17B (log/roadmap/P17/P17B_notes.md): world_frame_of's work split for a GPU that holds the root and the hr planes (gfx.h GfxHrGpu).
+// The same tests and loops, run up to the per-pixel copies: the mask (as world_frame_of writes it), whether hr / hrc are laid, and the
+// runs as a table, so that px(x, y) = runs[ly * scene_w + lx] (bit 16 set: the low 16 bits) with ly = rowmap[y], lx = colmap[x] (-1:
+// none), else hrc where lay_hrc and hrc_cov, else hr where lay_hr and hr_cov, else root, is world_frame_of's px. hr_n / hrc_n: the size
+// of those planes (pw x ph when they exist), root_n the root's. false where world_frame_of returns false.
+struct WorldFramePlan {
+  bool lay_hr = false, lay_hrc = false;
+  int32_t pw = 0, ph = 0, scene_w = 0;
+  std::vector<uint32_t> runs;     // scene_w x 600, or empty (no runs: px = the laid planes over the root)
+  std::vector<int32_t> colmap;    // pw
+  std::vector<int32_t> rowmap;    // ph
+};
+bool world_frame_plan_of(const LiveTerrainWorld *w, size_t root_n, size_t hr_n, size_t hrc_n, const std::vector<uint16_t> &back800,
+                         bool back_terrain, bool text, bool cursor_apart, WorldFramePlan &plan, std::vector<uint8_t> &mask);
 
 class LiveTerrain : public TerrainApi {
  public:

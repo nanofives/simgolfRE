@@ -481,6 +481,77 @@ struct GfxWorldRun {
 };
 const GfxWorldRun &gfx_world_run_stats();
 
+// ---- P17B (log/roadmap/P17/P17B_notes.md): the world thread's hr planes on the app's GPU. RENDER-ONLY. With a backend installed on
+// the thread that runs the jobs (gfx_set_hr_gpu), hr_queue_begin / hr_flush / hr_now / hr_box_now keep hr, hr_cov, hrc, hrc_cov,
+// hrb_lo, hrb_hi and hrb_cov in the backend instead of the LiveTerrainWorld's vectors (LiveTerrainWorld::hr_gpu says where they are);
+// everything that decides WHICH pixels are drawn (the compare with the last queue's base, the dirty tiles, the commands' boxes, the
+// sample tables of hr_blit_rows' double arithmetic) stays here, and the backend runs hr_blit_rows' per-pixel work (the ops and the sums,
+// as P15C's GfxHrGpuOp). A backend call that fails drops it for the thread: the planes are made again on the CPU at the next queue
+// start (no reuse), and LiveTerrainWorld::hr_lost says the planes hold no picture until that queue's flush.
+// One command as the backend draws it: hr_blit_rows' sample tables over its whole box (GfxHrTables' layout: cols / rows hold 4 words per
+// entry, from col_off / row_off of the batch's arrays), its op and art.
+struct GfxHrGpuRec {
+  int32_t op = 0;                   // index into the batch's ops
+  int32_t nsx = 1, nsy = 1, filter = 0;
+  double inv = 0;
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;   // the box (world pixels, half-open, inside the world)
+  uint32_t col_off = 0, row_off = 0;        // in int4 entries
+};
+struct GfxHrGpuBatch {
+  std::vector<GfxHrGpuOp> ops;
+  std::vector<GfxHrGpuRec> recs;
+  std::vector<int32_t> cols, rows;
+  void clear() {
+    ops.clear();
+    recs.clear();
+    cols.clear();
+    rows.clear();
+  }
+};
+enum GfxHrPlane : int { kHrPlaneHr = 0, kHrPlaneHrc = 1, kHrPlaneBox = 2 };
+class GfxHrGpu {
+ public:
+  virtual ~GfxHrGpu() = default;
+  // the backend wants planes of pw x ph (--gpu-world auto: the size limit)
+  virtual bool want(int32_t pw, int32_t ph) = 0;
+  // planes of pw x ph exist
+  virtual bool planes(int32_t pw, int32_t ph) const = 0;
+  // hr = 0, hr_cov = 0 over pw x ph (made new); hrc / hrb dropped
+  virtual bool reset(int32_t pw, int32_t ph) = 0;
+  // the base (the queue start's root = hr_queue_begin's last_base): `all` = every word of root, else the row spans (y, x0, x1) triples
+  // copied into last_base; w = the thread's world (its raster may hold the root as a GPU resource)
+  virtual bool base(const LiveTerrainWorld &w, const std::vector<uint16_t> &root, const std::vector<int32_t> &spans, bool all) = 0;
+  // hr_flush's drawing: every dirty tile (tx x ty flags, kGfxHrTile) reset to the base (hr) and 0 (hr_cov), then the batch's commands
+  // in order over the tile's pixels inside each command's box
+  virtual bool flush(const std::vector<uint8_t> &dirty, int32_t tx, int32_t ty, const GfxHrGpuBatch &b) = 0;
+  // hrc = hr, hrc_cov = 0 (hr_now's first cursor-pass draw)
+  virtual bool make_hrc() = 0;
+  // the box planes: make = hrb_lo 0, hrb_hi 0x7fff, hrb_cov 0 over pw x ph; else only the rectangle area (x0, y0, x1, y1)
+  virtual bool reset_box(bool make, const int32_t area[4]) = 0;
+  // one command (b.recs[0]) over its box: plane kHrPlaneHr (cover hr_cov), kHrPlaneHrc (hrc_cov) or kHrPlaneBox (hrc, hrb_lo, hrb_hi
+  // in that order, cover hrb_cov)
+  virtual bool now(int plane, const GfxHrGpuBatch &b) = 0;
+  // the planes read back (pw x ph each; a null pointer = not read)
+  virtual bool read(std::vector<uint16_t> *hr, std::vector<uint8_t> *hr_cov, std::vector<uint16_t> *hrc, std::vector<uint8_t> *hrc_cov,
+                    std::vector<uint16_t> *hrb_lo, std::vector<uint16_t> *hrb_hi, std::vector<uint8_t> *hrb_cov) = 0;
+  virtual void dead(const char *why) = 0;   // a failure seen by the caller (the backend is not used again)
+};
+// the calling thread's backend (null: none; the world thread's host installs it before gfx_hr_job_run)
+void gfx_set_hr_gpu(GfxHrGpu *g);
+GfxHrGpu *gfx_hr_gpu();
+// SG_P17_WORLDCHECK=<n> (development): the CPU planes are kept beside the backend's on the job thread, and every n-th flush / now-draw
+// the backend's planes are read back and compared word by word (counts below; stderr `P17 WORLDCHECK` at the first difference)
+struct GfxHrGpuCheck {
+  int64_t flushes = 0, nows = 0, compared = 0, differing = 0, differing_words = 0;
+  int64_t failures = 0, lost_jobs = 0, batch_cmds = 0, table_entries = 0, base_all = 0, base_spans = 0, dirty_tiles = 0;
+  int64_t prep_ns = 0;   // the commands' tables and ops on the CPU (flush and now)
+};
+const GfxHrGpuCheck &gfx_hr_gpu_stats();
+// the START-UP SELF-TEST: a fixed synthetic world (256 x 192) drawn with and without `g` (two queues with the five ops, the filters,
+// shrunk and Scale2x art, a changed root and moved commands for the tile reuse, draws into hr and hrc, a placement box), every plane
+// compared word by word. Runs on the calling thread (its queue state is kept aside and put back). result: a one-line verdict.
+bool gfx_hr_gpu_selftest(GfxHrGpu &g, std::string &result, int64_t &words, int64_t &differing);
+
 }  // namespace portsim
 
 #endif

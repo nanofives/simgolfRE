@@ -1314,6 +1314,12 @@ bool tbuf_put(ID3D11Device *dev, ID3D11DeviceContext *ctx, TBuf &t, DXGI_FORMAT 
 
 bool GpuCompositor::objects_ok() const { return d_ && d_->ok && d_->obj_ok; }
 
+// P17B (gpu.h): the CSObj text, for the world thread's hr pass (gpu_world.cpp compiles it with its own entry points)
+const char *gpu_objects_hlsl(size_t &n) {
+  n = sizeof(kHlslObj) - 1;
+  return kHlslObj;
+}
+
 // The presenter's GPU-mode objects tick left the rectangles (mregs_) and every draw's offset (mdx_ / mdy_). Here, for each rectangle
 // whose base tiles the scene holds (gfx_hr_scene_redraw's own test), the draws whose box meets it at the tick's place (moved pass)
 // and at the frame's place (frame pass) are listed in queue order, each with its op (uploaded once per frame) and its sample tables
