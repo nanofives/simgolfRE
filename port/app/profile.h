@@ -146,6 +146,9 @@ uint64_t winlog_cycles();                      // this thread's cycles so far
 void winlog_paint_flags(bool fresh, bool changed);
 void winlog_paint_gpu(int64_t wait_ns, int64_t present_ns, uint32_t last_present, uint32_t st_present, uint32_t st_refresh,
                       uint32_t st_sync_refresh, int64_t st_sync_qpc);
+// the GPU path's cumulative stage times (ns: frame upload, world upload, course, final patches, draws, text, objects); the P event
+// keeps this paint's share
+void winlog_paint_stages(const int64_t *cum, int n);
 void winlog_close();
 
 }  // namespace portapp

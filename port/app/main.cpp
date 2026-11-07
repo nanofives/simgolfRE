@@ -1874,7 +1874,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(slide_paints) + ",\"snaps_cam\":" + std::to_string(ss.snaps_cam) + ",\"snaps_view\":" +
          std::to_string(ss.snaps_view) + ",\"snaps_far\":" + std::to_string(ss.snaps_far) + ",\"snaps_screen\":" +
          std::to_string(ss.snaps_screen) + ",\"period_ms\":" + std::to_string(ss.period_ms) + ",\"lat_ms\":" + std::to_string(ss.lat_ms) +
-         ",\"lat_slides\":" + std::to_string(ss.lat_slides) + ",\"slid_points\":" +
+         ",\"lat_slides\":" + std::to_string(ss.lat_slides) + ",\"arr_q_ms\":" + std::to_string(ss.arr_q_ms) +
+         ",\"arr_slides\":" + std::to_string(ss.arr_slides) + ",\"slid_points\":" +
          std::to_string(ho.remap ? ho.remap->slid() : 0) + ",\"max_step\":{" + mx + "}}";
     const Presenter::ObjectStats &os = presenter.object_stats();  // P12A fix 2
     s += ",\"p12a_objects\":{\"smooth_objects\":" + std::to_string(ho.smooth_objects ? 1 : 0) + ",\"frames\":" +

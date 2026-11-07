@@ -323,6 +323,8 @@ class Presenter {
     double period_ms = 0;
     double lat_ms = 0;  // P16A: the mean latency from the sim thread's present to the window taking the picture (slide_start)
     uint64_t lat_slides = 0;  // P16A: slides whose end includes it
+    double arr_q_ms = 0;      // P16A fix 2: the arrival interval quantile the last slide used
+    uint64_t arr_slides = 0;  // P16A fix 2: slides that it made longer
   };
   static constexpr int32_t kSlideMaxX = 400, kSlideMaxY = 300;  // 800-space; a larger move is a jump (a map click)
   void set_smooth_camera(bool on) { smooth_ = on; }
@@ -489,6 +491,9 @@ class Presenter {
   int32_t s0x_i_ = 0, s0y_i_ = 0;             // the start offset rounded (the underlay's place at the start)
   int64_t t0_ns_ = 0, last_present_ns_ = 0;
   double lat_ns_ = 0;                          // P16A: mean present-to-arrival latency (slide_start)
+  std::array<double, 16> arr_iv_{};            // P16A fix 2: the last picture arrival intervals (ns, a ring)
+  int arr_n_ = 0, arr_i_ = 0;
+  int64_t last_arrival_ns_ = 0;
   int32_t cur_x_ = 0, cur_y_ = 0;             // the offset the next paint draws
   int32_t nd_x_ = 0, nd_y_ = 0;               // the shown frame's next-camera shift (CameraSnap::next_*, 800-space; 0 = none)
   SlideStats slide_stats_;

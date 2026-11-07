@@ -329,6 +329,7 @@ struct WinEv {
   int64_t t0, t1;
   uint64_t cyc;  // the thread's cycles inside the event
   int64_t a[8];
+  int64_t st[7];  // the GPU stages in this paint (winlog_paint_stages)
 };
 struct WinLog {
   std::atomic<bool> on{false};
@@ -341,6 +342,7 @@ struct WinLog {
   bool gpu_set = false;
   int64_t open_ns = 0;
   uint64_t open_tsc = 0;
+  int64_t st_prev[7] = {}, st_cur[7] = {};
 };
 WinLog g_wl;
 }  // namespace
@@ -394,6 +396,11 @@ void winlog_paint_gpu(int64_t wait_ns, int64_t present_ns, uint32_t last_present
   g_wl.gpu_set = true;
 }
 
+void winlog_paint_stages(const int64_t *cum, int n) {
+  if (!winlog_on()) return;
+  for (int i = 0; i < 7 && i < n; ++i) g_wl.st_cur[i] = cum[i];
+}
+
 void winlog_event(char kind, int64_t t0, uint64_t cyc0) {
   if (!winlog_on()) return;
   WinEv e{};
@@ -406,6 +413,10 @@ void winlog_event(char kind, int64_t t0, uint64_t cyc0) {
     e.a[1] = (g_wl.fresh ? 1 : 0) | (g_wl.changed ? 2 : 0) | (g_wl.gpu_set ? 4 : 0);
     for (int i = 0; i < 6; ++i) e.a[2 + i] = g_wl.gpu_set ? g_wl.gpu[i] : -1;
     g_wl.fresh = g_wl.changed = g_wl.gpu_set = false;
+    for (int i = 0; i < 7; ++i) {
+      e.st[i] = g_wl.st_cur[i] - g_wl.st_prev[i];
+      g_wl.st_prev[i] = g_wl.st_cur[i];
+    }
   }
   if (g_wl.ev.size() < g_wl.ev.capacity()) g_wl.ev.push_back(e);
 }
@@ -424,13 +435,16 @@ void winlog_close() {
   QueryPerformanceFrequency(&qf);
   std::fprintf(f, "# tsc_hz %.0f qpc_hz %lld\n", tsc_hz, static_cast<long long>(qf.QuadPart));
 #endif
-  std::fprintf(f, "# kind t0_ns t1_ns cycles last_vblank_ns flags wait_ns present_ns last_present st_present st_refresh st_sync_refresh\n");
+  std::fprintf(f, "# kind t0_ns t1_ns cycles last_vblank_ns flags wait_ns present_ns last_present st_present st_refresh st_sync_refresh"
+                  " frame_ns world_ns course_ns final_ns draw_ns text_ns obj_ns\n");
   for (int64_t v : g_wl.vb) std::fprintf(f, "V %lld\n", static_cast<long long>(v));
   for (const WinEv &e : g_wl.ev) {
     std::fprintf(f, "%c %lld %lld %llu %lld", e.kind, static_cast<long long>(e.t0), static_cast<long long>(e.t1),
                  static_cast<unsigned long long>(e.cyc), static_cast<long long>(e.a[0]));
-    if (e.kind == 'P')
+    if (e.kind == 'P') {
       for (int i = 1; i < 8; ++i) std::fprintf(f, " %lld", static_cast<long long>(e.a[i]));
+      for (int i = 0; i < 7; ++i) std::fprintf(f, " %lld", static_cast<long long>(e.st[i]));
+    }
     std::fputc('\n', f);
   }
   std::fclose(f);

@@ -3054,6 +3054,8 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
     d.ns_present += wl_present;
   }
   if (winlog_on()) {  // P16A: the swap chain's frame statistics after this Present (development log only)
+    const int64_t cum[7] = {d.ns_frame, d.ns_world, d.ns_course, d.ns_final, d.ns_draw, d.ns_text, d.ns_obj};
+    winlog_paint_stages(cum, 7);
     UINT last = 0;
     DXGI_FRAME_STATISTICS st{};
     d.sc->GetLastPresentCount(&last);

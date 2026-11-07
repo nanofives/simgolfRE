@@ -206,6 +206,27 @@ void Presenter::slide_start(const WorldImage &w) {
     if (l >= 0 && l <= 400e6) lat_ns_ = lat_ns_ > 0 ? lat_ns_ * 0.75 + l * 0.25 : l;
     slide_stats_.lat_ms = lat_ns_ / 1e6;
   }
+  // P16A fix 2: the pictures arrive irregularly at 3840 x 2108 (the world thread merges jobs: arrival intervals p10 57, p50 93, p90
+  // 177 ms), so a slide sized by the mean still ends before about half the next pictures and the window holds. A slide that ends
+  // late is harmless: the next picture's slide starts from the offset on screen (s0 below is the painted offset minus the camera's
+  // shift), so nothing jumps. So a slide lasts at least the SG_P16_SLIDE_Q quantile (default 0.9; 0 = off) of the last 16 arrival
+  // intervals (20-500 ms) counted from this arrival. Off with SG_APP_P16=off.
+  static const double arr_q = [] {
+    const char *e = std::getenv("SG_P16_SLIDE_Q");
+    const double q = e ? std::atof(e) : 0.9;
+    return q < 0 ? 0.0 : (q > 1 ? 1.0 : q);
+  }();
+  if (lat_on && arr_q > 0) {
+    if (last_arrival_ns_ > 0) {
+      const double iv = static_cast<double>(now - last_arrival_ns_);
+      if (iv >= 20e6 && iv <= 500e6) {
+        arr_iv_[static_cast<size_t>(arr_i_)] = iv;
+        arr_i_ = (arr_i_ + 1) % static_cast<int>(arr_iv_.size());
+        arr_n_ = std::min(arr_n_ + 1, static_cast<int>(arr_iv_.size()));
+      }
+    }
+    last_arrival_ns_ = now;
+  }
   const bool was_on = slide_on_;
   const int64_t end_prev = t0_ns_ + static_cast<int64_t>(slide_ns_);
   slide_on_ = false;
@@ -280,8 +301,18 @@ void Presenter::slide_start(const WorldImage &w) {
   // late or early taking of a frame does not stretch or squeeze the slide, and consecutive slides end where the next frame is due);
   // a frame with no move inside a slide finishes the remaining offset by the time the running slide would have ended (one display
   // period at least)
-  const double end_new = static_cast<double>(w.cam.t_ns > 0 ? w.cam.t_ns : now) + period_ns_ + (lat_on && w.cam.t_ns > 0 ? lat_ns_ : 0.0);
+  double end_new = static_cast<double>(w.cam.t_ns > 0 ? w.cam.t_ns : now) + period_ns_ + (lat_on && w.cam.t_ns > 0 ? lat_ns_ : 0.0);
   if (lat_on && w.cam.t_ns > 0) ++slide_stats_.lat_slides;
+  if (lat_on && arr_q > 0 && arr_n_ >= 4) {  // P16A fix 2
+    std::array<double, 16> s = arr_iv_;
+    std::sort(s.begin(), s.begin() + arr_n_);
+    const double q = s[static_cast<size_t>(std::min(arr_n_ - 1, static_cast<int>(arr_q * (arr_n_ - 1) + 0.5)))];
+    slide_stats_.arr_q_ms = q / 1e6;
+    if (static_cast<double>(now) + q > end_new) {
+      end_new = static_cast<double>(now) + q;
+      ++slide_stats_.arr_slides;
+    }
+  }
   slide_ns_ = (dx != 0 || dy != 0 || !was_on) ? std::max<double>(end_new - static_cast<double>(now), 16e6)
                                                : std::max<double>(static_cast<double>(end_prev - now), 16e6);
   cur_x_ = s0x_i_;
