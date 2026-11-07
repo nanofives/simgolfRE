@@ -58,9 +58,10 @@ class GlPixelGpu {
                     const std::vector<GlGpuTex> &texs) = 0;
   virtual const char *why() const = 0;
 };
-// the process-wide maker of pixel backends (the app registers one; null = none) and its use
-void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>()> f);
-std::shared_ptr<GlPixelGpu> make_pixel_gpu();
+// the process-wide maker of pixel backends (the app registers one; null = none) and its use, for a w x h frame (P16B fix 2: the
+// maker may decline by size, --gpu-terrain auto)
+void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>(int, int)> f);
+std::shared_ptr<GlPixelGpu> make_pixel_gpu(int w, int h);
 // P16B: what the backends of the process did (summed over rasters; counters only)
 struct GlGpuStats {
   int64_t batches = 0, tris = 0, islands = 0, uploads = 0, clears = 0, failures = 0, fallback_tris = 0;

@@ -303,12 +303,13 @@ void record_reset(int32_t pw, int32_t ph, bool resize) {
   gfx_world_op(kGwReset, [pw, ph, resize](LiveTerrainWorld &W) {
     if (resize && W.raster) {
       W.raster->resize_frame(pw, ph);
+      W.raster->set_gpu(gl::make_pixel_gpu(pw, ph));   // P16B fix 2: the backend chosen again for the new size (--gpu-terrain auto)
     } else {
       W.raster = std::make_unique<gl::GlRaster>(pw, ph);
       W.raster->no_context();
       W.raster->set_workers_normal(false);   // at the world thread's priority (the frame thread's work first)
       W.raster->set_threads(terrain_world_raster_threads());
-      W.raster->set_gpu(gl::make_pixel_gpu());   // P16B: the app's pixel backend when one is registered (--gpu-terrain), else none
+      W.raster->set_gpu(gl::make_pixel_gpu(pw, ph));   // P16B: the app's pixel backend when one is registered (--gpu-terrain), else none
     }
     terrain_world_raster_geometry(*W.raster, pw, ph);
     W.back_m.assign(static_cast<size_t>(pw) * static_cast<size_t>(ph), 0);

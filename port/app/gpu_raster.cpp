@@ -42,6 +42,14 @@ struct Stats {
   int64_t gpu_timed = 0;
   int slice = 0;
   bool force_exact = false;
+  int mode = 0;            // P16B fix 2: 0 off, 1 on, 2 auto
+  int64_t auto_off = 0;    // rasters the auto rule left on the CPU (1920 x 1200 pixels or fewer)
+  int64_t auto_on = 0;     // rasters given a backend
+  // the start-up self-test (selftest below)
+  bool st_done = false, st_pass = false, st_corrupt = false;
+  std::string st_result = "not run";
+  int64_t st_words = 0, st_differing = 0, st_covered = 0, st_pass2 = 0, st_tris = 0;
+  double st_device_ms = 0, st_test_ms = 0;
 };
 std::mutex g_mu;
 Stats g_st;
@@ -600,11 +608,16 @@ int64_t ns_since(std::chrono::steady_clock::time_point t0) {
 
 class D3DRaster : public portsim::gl::GlPixelGpu {
  public:
-  explicit D3DRaster(std::shared_ptr<Dev> d) : d_(std::move(d)) {
+  // selftest: the start-up self-test's backend (its batches are not counted in p16b; SG_P16_SELFTEST_CORRUPT=1 flips one word of its
+  // result: the forced mismatch)
+  explicit D3DRaster(std::shared_ptr<Dev> d, bool selftest = false) : d_(std::move(d)), selftest_(selftest) {
     if (const char *e = std::getenv("SG_P16_SLICE")) slice_ = std::max(0, std::atoi(e));
+    const char *c = std::getenv("SG_P16_SELFTEST_CORRUPT");
+    corrupt_ = selftest && c && c[0] == '1';
     std::lock_guard<std::mutex> lk(g_mu);
     g_st.slice = slice_;
   }
+  int64_t covered = 0, pass2 = 0;   // the pixel writes of the last batch, and those pass 2 made
   ~D3DRaster() override {
     free_frame();
     rel(tsrv_);
@@ -854,8 +867,11 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
         std::memcpy(fb + static_cast<size_t>(yy) * static_cast<size_t>(w),
                     static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(yy) * m.RowPitch, static_cast<size_t>(w) * 2u);
       ctx->Unmap(rtex_, 0);
+      if (corrupt_) fb[static_cast<size_t>(ymin) * static_cast<size_t>(w) + static_cast<size_t>(w / 2)] ^= 1u;   // the forced mismatch
     }
     const int64_t read_ns = ns_since(tr);
+    covered = counts[0];
+    pass2 = counts[1];
     int64_t gpu_ns = -1;
     if (timed) {
       D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dj = {};
@@ -865,6 +881,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
         gpu_ns = static_cast<int64_t>(static_cast<double>(b - a) * 1e9 / static_cast<double>(dj.Frequency));
     }
     const int64_t draw_ns = ns_since(t0);
+    if (selftest_) return true;
     std::lock_guard<std::mutex> lk(g_mu);
     ++g_st.batches;
     g_st.tris += static_cast<int64_t>(tris.size());
@@ -940,7 +957,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     fw_ = fh_ = 0;
   }
   std::shared_ptr<Dev> d_;
-  bool dead_ = false, force_exact_ = false;
+  bool dead_ = false, force_exact_ = false, selftest_ = false, corrupt_ = false;
   std::string why_ = "on";
   int slice_ = 0;   // SG_P16_SLICE: tiles per dispatch (0 = pass 1 in one dispatch; slices showed no effect on the paints, P16B_notes.md)
   int fw_ = 0, fh_ = 0;
@@ -959,6 +976,115 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   std::vector<PairG> pairs_;
   std::vector<uint32_t> count_, range_, tiles_;
 };
+
+// ---- THE START-UP SELF-TEST (P16B fix 2; P16B_notes.md section 1.3). Before the device's first backend, a fixed GL stream (an LCG) is
+// drawn into two 256 x 192 rasterisers, one with this backend and one with the CPU loops (fast_rows_), and the frames compared word by
+// word. The stream reaches what the world raster uses: GL_LINEAR on an RGBA texture and GL_NEAREST on an RGB one, GL_MODULATE with
+// vertex colours, blended and unblended triangles, every dither column phase (set_dither_dx), small triangles and frame-wide ones that
+// the clipper cuts, and degenerate ones; the GPU's counters say how many pixel writes pass 1's checked path and pass 2's exact path
+// made (st_covered / st_pass2). A difference, or a backend that fails, keeps the CPU raster for the session.
+void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
+  uint32_t seed = 0x2468ace1u;
+  auto rnd = [&seed]() {
+    seed = seed * 1664525u + 1013904223u;
+    return seed;
+  };
+  auto uf = [&rnd](float a, float b) { return a + (b - a) * static_cast<float>(rnd() >> 8) / 16777216.0f; };
+  r.set_dither_dx(ddx);
+  r.viewport(0, 0, W, H);
+  uint32_t names[2] = {0, 0};
+  r.gen_textures(2, names);
+  const uint32_t kTex2d = 0x0DE1, kMin = 0x2801, kMag = 0x2800;
+  const int tw[2] = {64, 16}, th[2] = {32, 16}, bpp[2] = {4, 3};
+  const int filt[2] = {0x2601, 0x2600};   // GL_LINEAR, GL_NEAREST
+  for (int t = 0; t < 2; ++t) {
+    std::vector<uint8_t> img(static_cast<size_t>(tw[t]) * th[t] * bpp[t]);
+    for (uint8_t &b : img) b = static_cast<uint8_t>(rnd() >> 24);
+    r.bind_texture(kTex2d, names[t]);
+    r.tex_parameteri(kTex2d, kMin, filt[t]);
+    r.tex_parameteri(kTex2d, kMag, filt[t]);
+    r.tex_image2d(kTex2d, 0, bpp[t] == 4 ? 0x1908 : 0x1907, tw[t], th[t], 0, bpp[t] == 4 ? 0x1908 : 0x1907, 0x1401, img.data());
+  }
+  r.enable(kTex2d);
+  r.blend_func(0x0302, 0x0303);
+  for (int i = 0; i < 400; ++i) {
+    r.bind_texture(kTex2d, names[i % 3 == 2 ? 1 : 0]);
+    if (i % 4 == 1) r.enable(0x0BE2);
+    else r.disable(0x0BE2);
+    const bool big = i % 50 == 7, flat = i % 97 == 13;
+    const float cx = uf(-1.0f, 1.0f), cy = uf(-1.0f, 1.0f), k = big ? 1.3f : 0.35f;
+    r.begin(4);   // GL_TRIANGLES
+    for (int v = 0; v < 3; ++v) {
+      r.color4f(uf(0.0f, 1.0f), uf(0.0f, 1.0f), uf(0.0f, 1.0f), 1.0f);
+      r.tex_coord2f(uf(-1.5f, 2.5f), uf(-1.5f, 2.5f));
+      const float x = big ? uf(-k, k) : cx + uf(-k, k), y = big ? uf(-k, k) : cy + uf(-k, k);
+      r.vertex3f(flat ? cx + 0.1f * static_cast<float>(v) : x, flat ? cy + 0.05f * static_cast<float>(v) : y, 0.0f);   // flat: collinear
+    }
+    r.end();
+  }
+  r.flush();
+}
+void selftest(const std::shared_ptr<Dev> &d) {
+  const auto t0 = std::chrono::steady_clock::now();
+  const bool started = d->start();
+  const double dev_ms = static_cast<double>(ns_since(t0)) / 1e6;
+  std::string result;
+  bool pass = false;
+  int64_t words = 0, differing = 0, covered = 0, pass2 = 0;
+  bool corrupt = false;
+  const auto t1 = std::chrono::steady_clock::now();
+  if (!started) {
+    result = "device: " + d->why;
+  } else {
+    constexpr int W = 256, H = 192;
+    portsim::gl::GlRaster cpu(W, H), gpu(W, H);
+    auto be = std::make_shared<D3DRaster>(d, true);
+    gpu.set_gpu(be);
+    selftest_feed(cpu, W, H, 1);
+    selftest_feed(gpu, W, H, 1);
+    const std::vector<uint16_t> &a = gpu.cpixels(), &b = cpu.cpixels();
+    covered = be->covered;
+    pass2 = be->pass2;
+    corrupt = std::getenv("SG_P16_SELFTEST_CORRUPT") && std::getenv("SG_P16_SELFTEST_CORRUPT")[0] == '1';
+    if (!gpu.has_gpu()) {
+      result = std::string("backend failed: ") + be->why();
+    } else {
+      words = static_cast<int64_t>(a.size());
+      size_t first = 0;
+      for (size_t i = 0; i < a.size() && i < b.size(); ++i)
+        if (a[i] != b[i]) {
+          if (!differing) first = i;
+          ++differing;
+        }
+      if (differing || a.size() != b.size()) {
+        char m[160];
+        std::snprintf(m, sizeof m, "FAIL: %lld of %lld words differ, first (%d, %d) gpu 0x%04x cpu 0x%04x", static_cast<long long>(differing),
+                      static_cast<long long>(words), static_cast<int>(first % W), static_cast<int>(first / W), a[first], b[first]);
+        result = m;
+      } else {
+        pass = true;
+        result = "pass";
+      }
+    }
+  }
+  const double test_ms = static_cast<double>(ns_since(t1)) / 1e6;
+  std::fprintf(stderr, "P16 GPU RASTER self-test: %s (pixel writes %lld, by pass 2 %lld; device %.1f ms, test %.1f ms)%s\n", result.c_str(),
+               static_cast<long long>(covered), static_cast<long long>(pass2), dev_ms, test_ms,
+               pass ? "" : ": the CPU raster for this session");
+  std::lock_guard<std::mutex> lk(g_mu);
+  g_st.st_done = true;
+  g_st.st_pass = pass;
+  g_st.st_corrupt = corrupt;
+  g_st.st_result = result;
+  g_st.st_words = words;
+  g_st.st_differing = differing;
+  g_st.st_covered = covered;
+  g_st.st_pass2 = pass2;
+  g_st.st_tris = 400;
+  g_st.st_device_ms = dev_ms;
+  g_st.st_test_ms = test_ms;
+  if (!pass) g_st.state = "self-test: " + result;
+}
 #endif  // _WIN32
 
 std::string num(double v) {
@@ -969,22 +1095,39 @@ std::string num(double v) {
 
 }  // namespace
 
-void gpu_raster_enable(bool on) {
+void gpu_raster_enable(int mode) {
+  const bool on = mode == 1 || mode == 2;
   {
     std::lock_guard<std::mutex> lk(g_mu);
     g_st.enabled = on;
+    g_st.mode = on ? mode : 0;
     g_st.state = on ? "not started" : "off";
   }
 #ifdef _WIN32
   if (on) {
-    portsim::gl::set_pixel_gpu_factory([]() -> std::shared_ptr<portsim::gl::GlPixelGpu> {
+    portsim::gl::set_pixel_gpu_factory([mode](int w, int h) -> std::shared_ptr<portsim::gl::GlPixelGpu> {
+      // auto: the GPU raster only above 1920 x 1200 pixels (P15C's --object-rate auto limit): at 1920 x 1080 the CPU workers are at
+      // least as fast with the GPU at idle clocks, at 4K the GPU gives back 2-3 cores (P16B_notes.md section 2)
+      if (mode == 2 && static_cast<int64_t>(w) * h <= int64_t{1920} * 1200) {
+        std::lock_guard<std::mutex> lk(g_mu);
+        ++g_st.auto_off;
+        if (!g_st.st_done) g_st.state = "auto: CPU raster at this size";
+        return nullptr;
+      }
       std::shared_ptr<Dev> d;
+      bool test = false;
       {
         std::lock_guard<std::mutex> lk(g_mu);
         if (!g_dev) g_dev = std::make_shared<Dev>();
         d = g_dev;
+        test = !g_st.st_done;
       }
-      if (d->tried && !d->ok) return nullptr;   // a device that failed once is not tried again
+      if (test) selftest(d);   // once, before the first backend (one thread makes them: the world thread)
+      {
+        std::lock_guard<std::mutex> lk(g_mu);
+        if (!g_st.st_pass) return nullptr;   // a device that failed, or a self-test difference: the CPU raster
+        ++g_st.auto_on;
+      }
       return std::make_shared<D3DRaster>(d);
     });
     return;
@@ -1000,7 +1143,15 @@ std::string gpu_raster_json() {
   const double nb = s.batches ? static_cast<double>(s.batches) : 1.0;
   std::string o = "{\"enabled\":" + std::string(s.enabled ? "true" : "false") + ",\"state\":\"";
   for (char c : s.state) o += (c == '"' || c == '\\' || c < 0x20) ? ' ' : c;
-  o += "\",\"force_exact\":" + std::string(s.force_exact ? "true" : "false") + ",\"batches\":" + std::to_string(s.batches) +
+  std::string st;
+  for (char c : s.st_result) st += (c == '"' || c == '\\' || c < 0x20) ? ' ' : c;
+  o += "\",\"mode\":\"" + std::string(s.mode == 2 ? "auto" : s.mode == 1 ? "on" : "off") + "\",\"auto_off\":" + std::to_string(s.auto_off) +
+       ",\"backends\":" + std::to_string(s.auto_on) + ",\"selftest\":{\"done\":" + std::string(s.st_done ? "true" : "false") +
+       ",\"pass\":" + std::string(s.st_pass ? "true" : "false") + ",\"result\":\"" + st + "\",\"corrupt_switch\":" +
+       std::string(s.st_corrupt ? "true" : "false") + ",\"triangles\":" + std::to_string(s.st_tris) + ",\"words\":" + std::to_string(s.st_words) +
+       ",\"differing\":" + std::to_string(s.st_differing) + ",\"pixel_writes\":" + std::to_string(s.st_covered) +
+       ",\"pass2_writes\":" + std::to_string(s.st_pass2) + ",\"device_ms\":" + num(s.st_device_ms) + ",\"test_ms\":" + num(s.st_test_ms) + "}";
+  o += ",\"force_exact\":" + std::string(s.force_exact ? "true" : "false") + ",\"batches\":" + std::to_string(s.batches) +
        ",\"tris\":" + std::to_string(s.tris) + ",\"pairs\":" + std::to_string(s.pairs) + ",\"groups\":" + std::to_string(s.groups) +
        ",\"dispatches\":" + std::to_string(s.dispatches) + ",\"slice\":" + std::to_string(s.slice) +
        ",\"covered_px\":" + std::to_string(s.covered) + ",\"exact_px\":" + std::to_string(s.exact) +

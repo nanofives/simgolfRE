@@ -1621,20 +1621,20 @@ void GlRaster::gpu_submit_() {
 }
 namespace {
 std::mutex g_gpu_mu;
-std::function<std::shared_ptr<GlPixelGpu>()> g_gpu_factory;
+std::function<std::shared_ptr<GlPixelGpu>(int, int)> g_gpu_factory;
 GlGpuStats g_gpu_stats;
 }  // namespace
-void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>()> f) {
+void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>(int, int)> f) {
   std::lock_guard<std::mutex> lk(g_gpu_mu);
   g_gpu_factory = std::move(f);
 }
-std::shared_ptr<GlPixelGpu> make_pixel_gpu() {
-  std::function<std::shared_ptr<GlPixelGpu>()> f;
+std::shared_ptr<GlPixelGpu> make_pixel_gpu(int w, int h) {
+  std::function<std::shared_ptr<GlPixelGpu>(int, int)> f;
   {
     std::lock_guard<std::mutex> lk(g_gpu_mu);
     f = g_gpu_factory;
   }
-  return f ? f() : nullptr;
+  return f ? f(w, h) : nullptr;
 }
 GlGpuStats pixel_gpu_stats() {
   std::lock_guard<std::mutex> lk(g_gpu_mu);

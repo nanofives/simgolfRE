@@ -108,8 +108,9 @@
 //   P15A fix 3: --world-raster-thread on|off (default on; SG_APP_P15=off: off; needs the world thread, never with --world-check) the
 //   world layer's terrain passes drawn on the world thread too: the sim thread draws only the world pixels its wide scene samples
 //   (host.h HostOptions::world_raster_thread); session.json p15 raster_thread.
-//   P16B: --gpu-terrain on|off (default on; SG_APP_P16=off: off; needs --world-raster-thread and --gpu) the world thread's terrain
-//   passes drawn by the GPU: GlRaster's pixel loop as a compute pass on a Direct3D 11 device of the world thread's own, the same
+//   P16B: --gpu-terrain auto|on|off (default auto = on for a world raster above 1920 x 1200 pixels, P16B fix 2; SG_APP_P16=off: off;
+//   needs --world-raster-thread and --gpu) the world thread's terrain passes drawn by the GPU, after a start-up self-test against the
+//   CPU loops (a difference keeps the CPU raster for the session): GlRaster's pixel loop as a compute pass on a Direct3D 11 device of the world thread's own, the same
 //   words as the CPU loops (gpu_raster.h, log/roadmap/P16/P16B_notes.md); any failure hands the pass back to the CPU. session.json
 //   p16b. SG_P16_RASTERCHECK=<n>: every n-th pass also drawn by the CPU and compared (stderr `P16 RASTERCHECK`, p16b.raster.check).
 //   P14A: --gpu on|off (default on; SG_APP_P14=off: off) the window's picture composed and presented by the GPU (gpu.h: Direct3D 11,
@@ -453,7 +454,7 @@ struct Options {
   bool gpu_objects = true;         // P15C: --gpu-objects on|off (SG_APP_P15=off: off)
   bool world_thread = true;        // P15A: --world-thread on|off (SG_APP_P15=off: off)
   bool world_raster_thread = true; // P15A fix 3: --world-raster-thread on|off (SG_APP_P15=off: off)
-  bool gpu_terrain = true;          // P16B: --gpu-terrain on|off (SG_APP_P16=off: off)
+  int gpu_terrain = 2;              // P16B: --gpu-terrain auto|on|off = 2 / 1 / 0 (SG_APP_P16=off: off)
   bool map_bands = true;           // P13B item 18: --map-bands clamp|same (SG_APP_P13=off: same)
   bool hud_layers = true;          // P9B: --hud-layers on|off (with --hud-anchor: panels moved as pixel layers; off = G32's rectangles)
   int32_t world_pw = 0, world_ph = 0;  // the world layer's size (0 = none), set from the options and the window
@@ -1439,7 +1440,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.world_raster_thread = ho.world_thread && o.world_raster_thread && !o.world_check;
   portsim::gfx_set_world_raster_defer(ho.world_raster_thread);
   // P16B: the world thread's raster draws its pixels on the GPU (a device of its own; gpu_raster.h) with the GPU path on
-  portapp::gpu_raster_enable(ho.world_raster_thread && o.gpu && o.gpu_terrain);
+  portapp::gpu_raster_enable(ho.world_raster_thread && o.gpu ? o.gpu_terrain : 0);
   portsim::gfx_set_hr_defer_check(ho.world_thread && std::getenv("SG_P15_CHECK") && std::getenv("SG_P15_CHECK")[0] == '1');  // P15A
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.map_bands = o.wide && o.map_bands;               // P13B item 18 (the world map's bands repeat its edge columns)
@@ -3188,9 +3189,9 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.world_raster_thread = v == "on";
     }
-    else if (a == "--gpu-terrain") {  // P16B
-      if (!val(v) || (v != "on" && v != "off")) return false;
-      o.gpu_terrain = v == "on";
+    else if (a == "--gpu-terrain") {  // P16B (fix 2: auto, the default)
+      if (!val(v) || (v != "on" && v != "off" && v != "auto")) return false;
+      o.gpu_terrain = v == "on" ? 1 : v == "auto" ? 2 : 0;
     }
     else if (a == "--object-rate") {  // P12A fix 3
       if (!val(v)) return false;
@@ -3394,7 +3395,7 @@ int main(int argc, char **argv) {
       o.gpu_objects = false;   // P15C
     }
   if (const char *ep = std::getenv("SG_APP_P16"))  // P16: the window's claim on the CPU and the GPU terrain off (port/test/conftest.py)
-    if (!std::strcmp(ep, "off")) o.gpu_terrain = false;  // P16B
+    if (!std::strcmp(ep, "off")) o.gpu_terrain = 0;  // P16B
   // P9A item 1: the player's build has no console; without a redirection stdout / stderr go to <data>/simgolf_port.log and to
   // the console when there is one (stdio_log.h). Tests and tools pass pipes, which are kept as they are. Set up before the
   // argument parser runs (its messages go there too), with the --data value read ahead.

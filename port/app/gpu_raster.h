@@ -9,8 +9,12 @@
 
 namespace portapp {
 
-// registers (on) or removes (off) the backend factory for the world rasters made after the call (terrain_live.cpp record_reset)
-void gpu_raster_enable(bool on);
+// the backend factory for the world rasters made (or resized) after the call (terrain_live.cpp record_reset): mode 0 none (off), 1 every
+// raster (on), 2 rasters above 1920 x 1200 pixels (auto, P16B fix 2). Before the first backend the device runs the START-UP SELF-TEST
+// (gpu_raster.cpp selftest): a fixed GL stream drawn by the GPU and by the CPU loops and compared word by word; on a difference, or a
+// device that does not start, the factory gives no backend for the rest of the session (the CPU raster). SG_P16_SELFTEST_CORRUPT=1
+// (development) flips one word of the self-test's GPU result (the forced mismatch).
+void gpu_raster_enable(int mode);
 // session.json p16b: the switch, the device state and the per-batch costs
 std::string gpu_raster_json();
 
