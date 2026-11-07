@@ -1123,3 +1123,24 @@ replayed on the world thread, the sim keeping a row-masked rasteriser for the wi
 every refresh at any size with --object-rate auto (4K paints/s idle 33 -> 60); two defects fixed (edge-filtered movers never moved
 between frames; still labels' course patches kept stale pixels). Every fix: A/B 0 differing pixels, segments x64 = I25 where the sim
 side changed. Open: 120 Hz numbers, U-P15C-01 (GPU double precision confirmed only on the RTX 3070), U-P14A-01.
+
+## P16: the window at every refresh while scrolling (2026-11-07)
+Brief log/roadmap/P16/BRIEF.md (Mariano: "Do steps 1 and 2, then step 3 (terrain on the GPU)"), workers P16A and P16B, notes
+log/roadmap/P16/P16{A,B}_notes.md. App-side changes off with SG_APP_P16=off (port/test/conftest.py). LIVING-PC's monitor was asleep
+for the whole step (DWM throttled presents to 6-14/s; a wake brought it back at 60 Hz and a remote change to 120 Hz was refused), so
+every number is "display off, timer-paced": SG_P16_PACE_HZ=120 (dev pacer on absolute 8.33 ms deadlines) + SG_P14_SYNC=0.
+P16A (49db959a, 84f547e8): the window thread was not starved (paints 93-98 % on the CPU, start delay p99 under 0.65 ms); misses came
+from the camera slide ending before the world thread's picture arrived, the tee tool's preview planes uploaded whole (64 MB at 4K)
+and each new frame's own window work. Fixes: the slide lasts to where the next picture is due (mean latency, then the 0.9 quantile of
+recent arrival intervals, SG_P16_SLIDE_Q), the previews uploaded over cur_box only, the window thread ABOVE_NORMAL and the pacer
+HIGHEST. 4K edge scroll paints/s 30-55 -> 111-114, interval p95 105-159 -> 19-21 ms, p99 155-173 -> 26-29; 1080 p99 51-85 -> 15-18;
+cost: at 4K the camera eases to a stop up to about 70 ms later. Dev instrument SG_P16_PAINTLOG. P16B (722ea437, 6d4ac864): the world
+thread's full-size raster replay drawn by a D3D11 compute pass of its own device (port/app/gpu_raster.cpp), exact against GlRaster:
+integer coverage, a float32 checked path kept only outside its written error bound, undecided pixels (0.16-0.18 %) on the exact
+double path (precise, IEEE strictness, DDIV), rows read back into fb_; a start-up self-test (400 triangles, both paths) keeps the CPU
+raster on a mismatch (the device and shaders cost 0.4-1.7 s once on the world thread, the test 17-25 ms); --gpu-terrain auto = on
+above 1920 x 1200. 4K CPU per world picture 38.2 -> 27.3 ms, process cores at 4K edge
+6.0-6.6 -> 2.9-4.4; world pictures/s at 4K still about 7-10, now bound by the rest of the world job (hr flush and world image, about
+30 ms). SG_P16_RASTERCHECK=n compares GPU passes word by word (0 differing in every run). Open: the real 120 Hz before / after
+(P16A_work/ab.sh, P16B_work/f1v.sh, keep the monitor awake), U-P16B-01 (GPU exactness measured on the RTX 3070 only; the self-test
+guards other GPUs with one fixed batch).
