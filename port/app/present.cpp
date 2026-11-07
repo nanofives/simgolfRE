@@ -598,7 +598,7 @@ std::string Presenter::objects_json() const {  // P15C
 
 int Presenter::object_rate_now() const {  // P14A fix 2
   if (!object_auto_) return object_min_ns_ > 0 ? static_cast<int>(std::lround(1e9 / object_min_ns_)) : 0;
-  return gpu_on() && painted_px_ > 0 && painted_px_ <= kObjectAutoPx ? 0 : kObjectAutoHz;
+  return gpu_on() && painted_px_ > 0 && (movers_gpu_ || painted_px_ <= kObjectAutoPx) ? 0 : kObjectAutoHz;  // P15C fix 2: movers_gpu_
 }
 
 void Presenter::frame_objects(int32_t tagged[8], int32_t moving[8]) const {

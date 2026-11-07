@@ -377,7 +377,9 @@ class Presenter {
   }
   // P14A fix 2 (--object-rate auto): every pacer tick while the GPU path paints a client of at most kObjectAutoPx pixels, else
   // kObjectAutoHz per second (P14A_notes.md section 4: at 1920 x 1080 the game's own rate did not drop with every tick, at 3840 x 2108
-  // it did; the CPU path's paints cost too much to repaint at every tick)
+  // it did; the CPU path's paints cost too much to repaint at every tick). P15C fix 2 (log/roadmap/P15/P15C_notes.md section 4):
+  // every pacer tick at any client size while the frame's objects are drawn by the GPU (objects_on_gpu); the size limit stays for the
+  // CPU redraw (SG_APP_P15=off, --gpu-objects off, a frame the GPU does not draw)
   static constexpr int64_t kObjectAutoPx = 1920LL * 1200LL;
   static constexpr int kObjectAutoHz = 30;
   void set_object_rate_auto() { object_auto_ = true; }

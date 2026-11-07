@@ -101,6 +101,7 @@
 //   queue entries render-only: gfx.h gfx_mover_source). P12A fix 3: --object-rate <hz> (default 30; 0 = every pacer tick) the most
 //   object redraws per second (a camera slide still paints at the pacer's rate). P14A fix 2: --object-rate auto (the default) = every
 //   pacer tick while the GPU path paints a client of at most 1920 x 1200 pixels, else 30 (P14A_notes.md section 4).
+//   P15C fix 2: every pacer tick at any client size while the GPU draws the frame's moving objects (--gpu-objects on).
 //   P15A: --world-thread on|off (default on; SG_APP_P15=off: off) the world image of a present (the window-resolution sprites'
 //   flush, the post-queue draws, world_cursor / world_frame) made on a thread of its own, so the sim thread's frame does not grow
 //   with the client size (host.h HostOptions::world_thread, log/roadmap/P15/P15A_notes.md); session.json p15.
