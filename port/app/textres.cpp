@@ -176,59 +176,71 @@ struct TextRaster::Impl {};
 TextRaster::TextRaster() : impl_(new Impl) {}
 TextRaster::~TextRaster() = default;
 
-void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out,
-                      int32_t cw, int32_t ch) {
+// P15B: what draw and table share: the font, the DIB, the run's client box and draw rectangle, the colour, the origin and (fit)
+// the advances. Moved out of draw unchanged; the fit measurements (GetTextExtentExPointA on the DIB's DC, the ink rows on their own
+// scratch DIB) now run before the DIB is filled, which writes no pixel of it.
+struct TextRaster::Prep {
 #ifdef _WIN32
-  if (vp.client_w <= 0 || vp.client_h <= 0 || r.text.empty() || r.x1 <= r.x0 || r.y1 <= r.y0) return;
+  HFONT f = nullptr;
+#endif
+  int32_t bx0 = 0, bx1 = 0, by0 = 0, by1 = 0;  // the run's box in client pixels
+  int32_t dx0 = 0, dx1 = 0, dy0 = 0, dy1 = 0, w = 0, h = 0;  // the DIB's rectangle (the box and a margin, in the client)
+  int32_t ox = 0, oy = 0, n = 0;
+  uint32_t ref = 0;
+  bool fitted = false;
+  std::vector<int> adv;
+};
+
+bool TextRaster::prep(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, Prep &p) {
+#ifdef _WIN32
+  if (vp.client_w <= 0 || vp.client_h <= 0 || r.text.empty() || r.x1 <= r.x0 || r.y1 <= r.y0) return false;
   const bool unit = vp.client_w == kLogicalW && vp.client_h == kLogicalH;
   const double sx = static_cast<double>(vp.client_w) / kLogicalW, sy = static_cast<double>(vp.client_h) / kLogicalH;
   int32_t height = static_cast<int32_t>(std::lround(r.size * sy));
   if (defect_ == TextDefect::WrongScale) height = r.size;
   if (height < 1) height = 1;
   // the run's box in client pixels (the presenter's floor mapping inverted), and a margin around it for ink that reaches past it
-  const int32_t bx0 = vp.origin_x + dx + first_client(r.x0, vp.client_w, kLogicalW);
-  const int32_t bx1 = vp.origin_x + dx + first_client(r.x1, vp.client_w, kLogicalW);
-  const int32_t by0 = vp.origin_y + first_client(r.y0, vp.client_h, kLogicalH);
-  const int32_t by1 = vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH);
+  p.bx0 = vp.origin_x + dx + first_client(r.x0, vp.client_w, kLogicalW);
+  p.bx1 = vp.origin_x + dx + first_client(r.x1, vp.client_w, kLogicalW);
+  p.by0 = vp.origin_y + first_client(r.y0, vp.client_h, kLogicalH);
+  p.by1 = vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH);
   const int32_t m = std::max<int32_t>(4, height);
-  const int32_t dx0 = std::max(0, bx0 - m), dx1 = std::min(cw, bx1 + m), dy0 = std::max(0, by0 - m), dy1 = std::min(ch, by1 + m);
-  if (dx1 <= dx0 || dy1 <= dy0) return;
-  const int32_t w = dx1 - dx0, h = dy1 - dy0;
+  p.dx0 = std::max(0, p.bx0 - m);
+  p.dx1 = std::min(cw, p.bx1 + m);
+  p.dy0 = std::max(0, p.by0 - m);
+  p.dy1 = std::min(ch, p.by1 + m);
+  if (p.dx1 <= p.dx0 || p.dy1 <= p.dy0) return false;
+  p.w = p.dx1 - p.dx0;
+  p.h = p.dy1 - p.dy0;
   const int quality = unit ? 0 : aa_ == TextAa::ClearType ? 5 /* CLEARTYPE_QUALITY */ : aa_ == TextAa::Grey ? 4 /* ANTIALIASED */ : 0;
-  HFONT f = impl_->font(r.face, height, r.style, quality);
-  if (!f || !impl_->dib(w, h)) {
+  p.f = impl_->font(r.face, height, r.style, quality);
+  if (!p.f || !impl_->dib(p.w, p.h)) {
     ++stats.failed;
-    return;
+    return false;
   }
-  const size_t pitch = static_cast<size_t>((impl_->w + 1) & ~1);  // words per DIB row (rows of 4-byte multiples)
-  uint16_t *bits = static_cast<uint16_t *>(impl_->bits);
-  GdiFlush();
-  std::vector<uint16_t> in(static_cast<size_t>(w) * static_cast<size_t>(h));
-  for (int32_t y = 0; y < h; ++y)
-    for (int32_t x = 0; x < w; ++x) {
-      const uint16_t v = to555(out[static_cast<size_t>(dy0 + y) * static_cast<size_t>(cw) + static_cast<size_t>(dx0 + x)]);
-      in[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)] = v;
-      bits[pitch * static_cast<size_t>(y) + static_cast<size_t>(x)] = v;
-    }
   uint32_t ref = r.colorref;
   if (defect_ == TextDefect::WrongColour) ref = ((ref & 0xffu) << 16) | (ref & 0xff00u) | ((ref >> 16) & 0xffu);
+  p.ref = ref;
   // the origin: the 800-space TA_BASELINE point scaled (the identity at scale 1)
-  const int32_t ox = vp.origin_x + dx + (unit ? r.x : static_cast<int32_t>(std::lround(r.x * sx))) - dx0;
-  int32_t oy = vp.origin_y + (unit ? r.y : static_cast<int32_t>(std::lround(r.y * sy))) - dy0;
+  p.ox = vp.origin_x + dx + (unit ? r.x : static_cast<int32_t>(std::lround(r.x * sx))) - p.dx0;
+  p.oy = vp.origin_y + (unit ? r.y : static_cast<int32_t>(std::lround(r.y * sy))) - p.dy0;
   const int n = static_cast<int>(r.text.size());
+  p.n = n;
   // P10B fix 2: the 800-space layout scaled (textres.h set_fit). The game's font at its own size (lfQuality 0, as gditext makes
   // it) gives the string's 800-space advance; the window-resolution font's own pen positions are stretched evenly to that advance
   // scaled, so a label's box keeps no blank space after the string and a string is not cut by its box, with the glyphs spaced as
   // the larger font spaces them (the 800-space positions themselves, hinted at the game's small sizes, gave uneven gaps). The
   // baseline is then moved so that the ink's vertical middle lands on the 800-space ink's middle scaled (the game's hinted small
   // sizes put the ink lower in its line than the larger font does).
-  std::vector<INT> adv;
+  std::vector<INT> &adv = p.adv;
+  adv.clear();
+  p.fitted = false;
   if (!unit && fit_ && n > 0) {
     HFONT lo = impl_->font(r.face, r.size, r.style, 0);
     std::vector<INT> cum(static_cast<size_t>(n), 0), cum_hi(static_cast<size_t>(n), 0);
     SIZE sz;
     if (lo && SelectObject(impl_->dc, lo) && GetTextExtentExPointA(impl_->dc, r.text.data(), n, 0, nullptr, cum.data(), &sz) &&
-        SelectObject(impl_->dc, f) && GetTextExtentExPointA(impl_->dc, r.text.data(), n, 0, nullptr, cum_hi.data(), &sz) &&
+        SelectObject(impl_->dc, p.f) && GetTextExtentExPointA(impl_->dc, r.text.data(), n, 0, nullptr, cum_hi.data(), &sz) &&
         cum_hi[static_cast<size_t>(n - 1)] > 0) {
       adv.resize(static_cast<size_t>(n));
       const double k = cum[static_cast<size_t>(n - 1)] * sx / cum_hi[static_cast<size_t>(n - 1)];
@@ -242,19 +254,52 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
       const Impl::Ink ih = impl_->ink(r.face, height, r.style, quality, r.text, adv.data());
       if (il.ok && ih.ok) {
         const double mid_lo = (il.top + il.bottom) * 0.5 * sy, mid_hi = (ih.top + ih.bottom) * 0.5;
-        oy = vp.origin_y + static_cast<int32_t>(std::lround(r.y * sy + mid_lo - mid_hi)) - dy0;
+        p.oy = vp.origin_y + static_cast<int32_t>(std::lround(r.y * sy + mid_lo - mid_hi)) - p.dy0;
       }
-      ++stats.fitted;
+      p.fitted = true;
     }
   }
-  SelectObject(impl_->dc, f);
-  SetTextColor(impl_->dc, ref);
-  if (!adv.empty())
-    ExtTextOutA(impl_->dc, ox, oy, 0, nullptr, r.text.data(), static_cast<UINT>(n), adv.data());
+  return true;
+#else
+  (void)r; (void)vp; (void)dx; (void)cw; (void)ch; (void)p;
+  return false;
+#endif
+}
+
+// the run drawn by GDI onto the DIB as it stands
+void TextRaster::gdi(const portsim::GfxTextRun &r, const Prep &p) {
+#ifdef _WIN32
+  SelectObject(impl_->dc, p.f);
+  SetTextColor(impl_->dc, p.ref);
+  if (!p.adv.empty())
+    ExtTextOutA(impl_->dc, p.ox, p.oy, 0, nullptr, r.text.data(), static_cast<UINT>(p.n), p.adv.data());
   else
-    TextOutA(impl_->dc, ox, oy, r.text.data(), n);
+    TextOutA(impl_->dc, p.ox, p.oy, r.text.data(), p.n);
   SelectObject(impl_->dc, GetStockObject(SYSTEM_FONT));
   GdiFlush();
+#else
+  (void)r; (void)p;
+#endif
+}
+
+void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out,
+                      int32_t cw, int32_t ch) {
+#ifdef _WIN32
+  Prep p;
+  if (!prep(r, vp, dx, cw, ch, p)) return;
+  if (p.fitted) ++stats.fitted;
+  const int32_t w = p.w, h = p.h, dx0 = p.dx0, dy0 = p.dy0;
+  const size_t pitch = static_cast<size_t>((impl_->w + 1) & ~1);  // words per DIB row (rows of 4-byte multiples)
+  uint16_t *bits = static_cast<uint16_t *>(impl_->bits);
+  GdiFlush();
+  std::vector<uint16_t> in(static_cast<size_t>(w) * static_cast<size_t>(h));
+  for (int32_t y = 0; y < h; ++y)
+    for (int32_t x = 0; x < w; ++x) {
+      const uint16_t v = to555(out[static_cast<size_t>(dy0 + y) * static_cast<size_t>(cw) + static_cast<size_t>(dx0 + x)]);
+      in[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)] = v;
+      bits[pitch * static_cast<size_t>(y) + static_cast<size_t>(x)] = v;
+    }
+  gdi(r, p);
   bool clipped = false;
   for (int32_t y = 0; y < h; ++y) {
     const int32_t cy = dy0 + y;
@@ -264,7 +309,7 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
       if (v == in[static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)]) continue;
       const int32_t cx = dx0 + x;
       const int32_t lx = floor_div(static_cast<int64_t>(cx - vp.origin_x - dx) * kLogicalW, vp.client_w);
-      if (cx < bx0 || cx >= bx1 || cy < by0 || cy >= by1) {
+      if (cx < p.bx0 || cx >= p.bx1 || cy < p.by0 || cy >= p.by1) {
         ++stats.clipped_px;  // ink outside the run's scaled box: clipped
         clipped = true;
         continue;
@@ -279,5 +324,92 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
   (void)r; (void)layered; (void)vp; (void)dx; (void)out; (void)cw; (void)ch;
 #endif
 }
+
+// P15B: the run over each grey level (textres.h TextTable). A pixel draw would write over word w is one whose GDI result differs
+// from w, inside the box, visible; per channel that result is lut[level of w's channel]'s channel, so the pixels kept are the box's
+// visible pixels where some level's result differs from the level.
+bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch,
+                       TextTable &t) {
+  t = TextTable();
+#ifdef _WIN32
+  Prep p;
+  if (!prep(r, vp, dx, cw, ch, p)) return false;
+  // the pixels draw may write: inside the box (and the DIB's rectangle, which lies in the client) and visible in the layer
+  const int32_t x0 = std::max(p.bx0, p.dx0), x1 = std::min(p.bx1, p.dx1), y0 = std::max(p.by0, p.dy0), y1 = std::min(p.by1, p.dy1);
+  if (x1 <= x0 || y1 <= y0) return true;
+  const int32_t bw = x1 - x0, bh = y1 - y0;
+  std::vector<uint8_t> vis(static_cast<size_t>(bw) * static_cast<size_t>(bh), 0);
+  for (int32_t y = y0; y < y1; ++y) {
+    const int32_t ly = floor_div(static_cast<int64_t>(y - vp.origin_y) * kLogicalH, vp.client_h);
+    for (int32_t x = x0; x < x1; ++x) {
+      const int32_t lx = floor_div(static_cast<int64_t>(x - vp.origin_x - dx) * kLogicalW, vp.client_w);
+      vis[static_cast<size_t>(y - y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - x0)] = r.visible(lx, ly, layered) ? 1 : 0;
+    }
+  }
+  const size_t pitch = static_cast<size_t>((impl_->w + 1) & ~1);
+  uint16_t *bits = static_cast<uint16_t *>(impl_->bits);
+  // res[L][box pixel]: GDI's word over level L
+  std::vector<uint16_t> res(static_cast<size_t>(32) * vis.size());
+  for (uint32_t L = 0; L < 32; ++L) {
+    const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
+    GdiFlush();
+    for (int32_t y = 0; y < p.h; ++y) {
+      uint16_t *row = bits + pitch * static_cast<size_t>(y);
+      for (int32_t x = 0; x < p.w; ++x) row[x] = g;
+    }
+    gdi(r, p);
+    ++table_draws;
+    uint16_t *dst = res.data() + static_cast<size_t>(L) * vis.size();
+    for (int32_t y = y0; y < y1; ++y) {
+      const uint16_t *row = bits + pitch * static_cast<size_t>(y - p.dy0) + static_cast<size_t>(x0 - p.dx0);
+      std::memcpy(dst + static_cast<size_t>(y - y0) * static_cast<size_t>(bw), row, static_cast<size_t>(bw) * 2u);
+    }
+  }
+  // the entries (one per distinct 32-word column), and the ink's box
+  std::map<std::vector<uint16_t>, uint32_t> ids;
+  std::vector<uint32_t> idx(vis.size(), 0);
+  int32_t ix0 = bw, ix1 = -1, iy0 = bh, iy1 = -1;
+  std::vector<uint16_t> e(32);
+  for (size_t i = 0; i < vis.size(); ++i) {
+    if (!vis[i]) continue;
+    bool ink = false;
+    for (uint32_t L = 0; L < 32; ++L) {
+      e[L] = res[static_cast<size_t>(L) * vis.size() + i];
+      if (e[L] != static_cast<uint16_t>(L | (L << 5) | (L << 10))) ink = true;
+    }
+    if (!ink) continue;
+    auto it = ids.find(e);
+    uint32_t k;
+    if (it == ids.end()) {
+      k = static_cast<uint32_t>(ids.size());
+      ids.emplace(e, k);
+      t.lut.insert(t.lut.end(), e.begin(), e.end());
+    } else {
+      k = it->second;
+    }
+    idx[i] = k + 1;
+    const int32_t xx = static_cast<int32_t>(i % static_cast<size_t>(bw)), yy = static_cast<int32_t>(i / static_cast<size_t>(bw));
+    ix0 = std::min(ix0, xx);
+    ix1 = std::max(ix1, xx + 1);
+    iy0 = std::min(iy0, yy);
+    iy1 = std::max(iy1, yy + 1);
+  }
+  if (ix1 <= ix0) return true;  // no ink: nothing to write
+  t.x0 = x0 + ix0;
+  t.x1 = x0 + ix1;
+  t.y0 = y0 + iy0;
+  t.y1 = y0 + iy1;
+  const int32_t tw = ix1 - ix0;
+  t.idx.resize(static_cast<size_t>(tw) * static_cast<size_t>(iy1 - iy0));
+  for (int32_t y = iy0; y < iy1; ++y)
+    std::memcpy(t.idx.data() + static_cast<size_t>(y - iy0) * static_cast<size_t>(tw),
+                idx.data() + static_cast<size_t>(y) * static_cast<size_t>(bw) + static_cast<size_t>(ix0), static_cast<size_t>(tw) * 4u);
+  return true;
+#else
+  (void)r; (void)layered; (void)vp; (void)dx; (void)cw; (void)ch;
+  return false;
+#endif
+}
+
 
 }  // namespace portapp

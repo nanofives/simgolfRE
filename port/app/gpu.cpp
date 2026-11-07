@@ -20,6 +20,8 @@
 
 #include <algorithm>
 #include <array>
+#include <map>
+#include <memory>
 #include <mutex>
 #include <cmath>
 #include <cstdio>
@@ -86,6 +88,14 @@ StructuredBuffer<int> wrow : register(t19);
 // per layer, 1 where an 8 x 8 block of 800-space pixels holds a tap that can reach a drawn pixel (the block of each drawn pixel
 // and of its left / upper / upper-left neighbour): a pass whose first tap's block is 0 draws nothing at this client pixel
 Texture2DArray<uint> tocc : register(t20);
+// P15B: the HUD text runs as tables (textres.h TextTable): per layer the range of its runs and their union box, per run its client
+// box and the base of its pixels' entry indices, the indices (0 none, k + 1 entry k), the entries (32 words: 2 per uint)
+struct TLay { int first, n, x0, y0, x1, y1, pad0, pad1; };
+struct TRun { int x0, y0, x1, y1, ibase, pad0, pad1, pad2; };
+StructuredBuffer<TLay> tlay : register(t21);
+StructuredBuffer<TRun> truns : register(t22);
+StructuredBuffer<uint> tidx : register(t23);
+StructuredBuffer<uint> tlut : register(t24);
 
 // present.h rgb555_to_bgra
 uint bgra(uint v) {
@@ -235,6 +245,23 @@ uint over(uint2 v, uint d) {  // one layer pixel over client word d
   if (n == 0 || w >= n) return bgra(px);
   return bgra(shade[off + w] & 0x7fffu);
 }
+// P15B: compose_layers' draw_runs for layer li at client pixel (X, Y) over word d: TextRaster::draw writes bgra(v) where GDI's word
+// v differs from to555(d); v per channel from the run's entry at that channel's level of to555(d). Runs in draw order.
+uint lutw(uint e, uint L) { uint w = tlut[e * 16u + (L >> 1)]; return (L & 1u) != 0 ? (w >> 16) : (w & 0xffffu); }
+uint text_runs(int li, int X, int Y, uint d) {
+  TLay T = tlay[li];
+  if (T.n == 0 || X < T.x0 || X >= T.x1 || Y < T.y0 || Y >= T.y1) return d;
+  [loop] for (int i = T.first; i < T.first + T.n; ++i) {
+    TRun R = truns[i];
+    if (X < R.x0 || X >= R.x1 || Y < R.y0 || Y >= R.y1) continue;
+    uint e = tidx[R.ibase + (Y - R.y0) * (R.x1 - R.x0) + (X - R.x0)];
+    if (e == 0) continue;
+    uint w = to555(d);
+    uint v = (lutw(e - 1u, (w >> 10) & 31u) & 0x7c00u) | (lutw(e - 1u, (w >> 5) & 31u) & 0x03e0u) | (lutw(e - 1u, w & 31u) & 0x001fu);
+    if (v != w) d = bgra(v);
+  }
+  return d;
+}
 int lpos(int k, int origin, int ncl, int nlog, bool nearl) {
   int d = k - origin;
   if (nearl) return fdiv(d * nlog, ncl) * 256;
@@ -271,7 +298,10 @@ uint hud(int X, int Y) {
     Layer L = layers[li];
     bool wdim = L.dim != 0;
     if (wdim) d = bgra(quarter((uint)L.dim_src, to555(d)) & 0x7fffu) | 0xff000000u;
-    if (L.x1 <= L.x0 || L.y1 <= L.y0) continue;
+    if (L.x1 <= L.x0 || L.y1 <= L.y0) {
+      d = text_runs(li, X, Y, d);  // P15B: the layer's runs (draw_runs also runs for a layer with no box)
+      continue;
+    }
     bool split = pieces_on != 0 && L.popups != 0;
     int npass = split ? npieces : 0;
     bool cmove = c2move != 0 && L.centred != 0;
@@ -300,6 +330,7 @@ uint hud(int X, int Y) {
       uint c00 = p00 ? over(v00, d) : d, c10 = p10 ? over(v10, d) : d, c01 = p01 ? over(v01, d) : d, c11 = p11 ? over(v11, d) : d;
       d = mixw(mixw(c00, c10, fx), mixw(c01, c11, fx), fy) | 0xff000000u;
     }
+    d = text_runs(li, X, Y, d);  // P15B: the layer's runs once its pixels are composed (compose_layers' RunsAfter)
   }
   if (cur_layer == nlayers) d = draw_cursor(X, Y, d);
   return d;
@@ -528,6 +559,21 @@ struct GpuCompositor::Impl {
   IDXGIOutput *out = nullptr;  // the swap chain's monitor (wait_vblank)
   std::mutex out_mu;
   uint64_t world_rect_uploads = 0;
+  // P15B: the HUD text runs as tables (build_text_tables). SG_APP_P15=off: P14A's final patches for them
+  bool p15 = true;
+  std::unique_ptr<TextRaster> traster;
+  struct TCache {
+    TextTable t;
+    uint64_t used = 0;
+  };
+  std::map<std::string, TCache> tcache;  // key: everything TextRaster::table reads (run_key)
+  uint64_t tbuild = 0;                   // builds of the set (the cache's clock)
+  std::string tset_key;                  // the set's key: what decides each run's place and table
+  std::vector<uint8_t> tabled;           // per run of the text frame: drawn by its table (no final patch)
+  bool tbound = false;                   // the buffers hold at least one run
+  SBuf tlay, truns, tidx, tlut;
+  uint64_t text_sets = 0, text_tables_made = 0, text_tables_reused = 0, text_runs_tabled = 0, text_entries = 0;
+  int64_t ns_text = 0;
 };
 
 namespace {
@@ -609,6 +655,9 @@ void GpuCompositor::stop() {
   for (SBuf *s : {&d.layers, &d.lpx, &d.shade, &d.pdx, &d.quads_c, &d.quads_f, &d.lcol, &d.lrow, &d.bcol, &d.brow, &d.wcol, &d.wrow})
     s->reset();
   d.tables_key.clear();
+  for (SBuf *s : {&d.tlay, &d.truns, &d.tidx, &d.tlut}) s->reset();  // P15B (the table cache is CPU data: kept)
+  d.tset_key.clear();
+  d.tbound = false;
   rel(d.stage_bb);
   rel(d.stage_u);
   rel(d.occ_srv);
@@ -700,6 +749,7 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   d.latency = lat;
   if (const char *e = std::getenv("SG_P14_WAIT")) d.no_wait = std::atoi(e) == 0;
   if (const char *e = std::getenv("SG_P14_FLAT")) d.no_flat = std::atoi(e) == 0;
+  if (const char *e = std::getenv("SG_APP_P15")) d.p15 = std::strcmp(e, "off") != 0;  // P15B
   if (const char *e = std::getenv("SG_P14_SYNC")) d.sync_interval = static_cast<UINT>(std::max(0, std::min(4, std::atoi(e))));
   sd.BufferCount = static_cast<UINT>(lat + 1);
   sd.Scaling = DXGI_SCALING_NONE;
@@ -1220,7 +1270,7 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
                 moving_tools ? 1 : 0, d.classify_ok ? 1 : 0, movers ? 1 : 0);
   std::snprintf(dk, sizeof dk, "%d,%d/%llu/%d,%d,%d/%d,%d,%d,%d", slx, sly, static_cast<unsigned long long>(P.world_gen_), cdx, shx, shy,
                 P.live_.active ? 1 : 0, P.live_.sx, P.live_.sy, P.live_.dx);
-  const bool new_static = d.fstat_key != sk;
+  const bool new_static = d.fstat_key != std::string(sk) + "|" + d.tset_key;  // P15B: + the tabled runs' set
   const bool new_dyn = new_static || d.fdyn_key != dk;
   // the runs: static (no moving object) and dynamic (a label that moves with its object)
   std::vector<Rect> srects, drects;
@@ -1230,6 +1280,10 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
     for (const portsim::GfxTextRun &r : P.text_.runs) {
       if (r.layer < 0 || static_cast<size_t>(r.layer) >= f.layers.size()) continue;
       if (movers && r.mover.kind != portsim::kGfxMoverNone) continue;  // the dynamic set
+      {  // P15B: a run drawn by its table in the HUD pass
+        const size_t ri = static_cast<size_t>(&r - P.text_.runs.data());
+        if (ri < d.tabled.size() && d.tabled[ri]) continue;
+      }
       const portsim::GfxHudLayer &l = f.layers[static_cast<size_t>(r.layer)];
       int32_t dd = anchor ? P.layer_dx(l, vp, dxl, dxr) : 0;
       if (P.piece_frame_ && l.popups) {
@@ -1428,7 +1482,7 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
   for (size_t i = 0; i < rest.size(); ++i)
     d.qf.push_back(QuadRec{rest[i].x0, rest[i].y0, rest[i].x1 - rest[i].x0, rest[i].y1 - rest[i].y0, at[i].first, at[i].second, 0, 0});
   make_sbuf(d.dev, d.ctx, d.quads_f, sizeof(QuadRec), static_cast<uint32_t>(d.qf.size()), d.qf.data());
-  d.fstat_key = sk;
+  d.fstat_key = std::string(sk) + "|" + d.tset_key;  // P15B
   d.fdyn_key = dk;
   d.fov_ok = true;
   d.f_slx = slx;
@@ -1439,6 +1493,140 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
   d.wdirty.clear();
   d.wdirty_all = false;
   d.cchanged.clear();
+}
+
+// P15B: the HUD layers' text runs that do not move with an object, as tables (textres.h TextTable) the HUD pass applies after each
+// run's layer (text_runs in the shader). A run's place is draw_runs' (the layer's anchor offset, or the offset of the popup piece
+// that owns its box's centre); its table is made again only when something TextRaster::table reads changed (the cache key), so a
+// frame whose runs are unchanged makes no GDI draw, and a paint makes none. The runs left out (movers, SG_APP_P15=off) stay final
+// patches (build_final_patches skips the tabled ones).
+namespace {
+struct TLayRec {
+  int32_t first, n, x0, y0, x1, y1, pad0, pad1;
+};
+struct TRunRec {
+  int32_t x0, y0, x1, y1, ibase, pad0, pad1, pad2;
+};
+}  // namespace
+
+void GpuCompositor::build_text_tables(const Presenter &P, const Viewport &vp, bool text) {
+  Impl &d = *d_;
+  const int32_t cw = d.w, ch = d.h;
+  const portsim::GfxHudFrame &f = P.hud_for(text);
+  const bool movers = P.objects_on_ && !P.movers_.empty();
+  std::string sk;
+  {
+    char b[256];
+    std::snprintf(b, sizeof b, "%llu/%d,%d/%d/%d/%d,%d,%d,%d/%zu/%p/%d,%d,%d/", static_cast<unsigned long long>(P.content_gen_), cw, ch,
+                  text ? 1 : 0, movers ? 1 : 0, vp.origin_x, vp.origin_y, vp.client_w, vp.client_h, f.layers.size(),
+                  static_cast<const void *>(&f), static_cast<int>(P.text_aa_), P.text_fit_ ? 1 : 0, static_cast<int>(P.text_defect_));
+    sk = b;
+    for (int32_t v : P.piece_dx_) sk += std::to_string(v) + ",";
+  }
+  if (sk == d.tset_key) return;
+  const int64_t t0 = portsim::perf_now_ns();
+  d.tset_key = sk;
+  ++d.tbuild;
+  ++d.text_sets;
+  d.tabled.assign(P.text_.runs.size(), 0);
+  if (!d.traster) d.traster.reset(new TextRaster());
+  d.traster->set_defect(P.text_defect_);
+  d.traster->set_aa(P.text_aa_);
+  d.traster->set_fit(P.text_fit_);
+  std::vector<std::vector<const TextTable *>> per(f.layers.size());
+  if (text && d.p15) {
+    const bool anchor = P.hud_anchor_ && vp.origin_x > 0 && P.defect_ != PresentDefect::HudUnmoved;
+    const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
+    std::string key;
+    auto put = [&key](int64_t v) { key.append(reinterpret_cast<const char *>(&v), sizeof v); };
+    for (size_t i = 0; i < P.text_.runs.size(); ++i) {
+      const portsim::GfxTextRun &r = P.text_.runs[i];
+      if (r.layer < 0 || static_cast<size_t>(r.layer) >= f.layers.size()) continue;
+      if (movers && r.mover.kind != portsim::kGfxMoverNone) continue;  // moves with its object: a final patch
+      if (r.target == 2 && P.world_.empty()) {  // draw_runs skips it: nothing to draw
+        d.tabled[i] = 1;
+        continue;
+      }
+      // draw_runs' offset (compose_layers' dx0, or the popup piece's)
+      const portsim::GfxHudLayer &l = f.layers[static_cast<size_t>(r.layer)];
+      int32_t dd = anchor ? P.layer_dx(l, vp, dxl, dxr) : 0;
+      if (P.piece_frame_ && static_cast<size_t>(r.layer) < P.piece_frame_->layers.size() &&
+          P.piece_frame_->layers[static_cast<size_t>(r.layer)].popups) {
+        const int32_t k = Presenter::piece_of(*P.piece_frame_, (r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2);
+        if (k >= 0 && static_cast<size_t>(k) < P.piece_dx_.size() && P.piece_dx_[static_cast<size_t>(k)] != 0)
+          dd = P.piece_dx_[static_cast<size_t>(k)];
+      }
+      // the cache key: every input of TextRaster::table
+      key.clear();
+      key += r.face;
+      key += '\0';
+      key += r.text;
+      key += '\0';
+      for (int64_t v : {static_cast<int64_t>(r.size), static_cast<int64_t>(r.style), static_cast<int64_t>(r.colorref),
+                        static_cast<int64_t>(r.x), static_cast<int64_t>(r.y), static_cast<int64_t>(r.x0), static_cast<int64_t>(r.y0),
+                        static_cast<int64_t>(r.x1), static_cast<int64_t>(r.y1), static_cast<int64_t>(vp.origin_x),
+                        static_cast<int64_t>(vp.origin_y), static_cast<int64_t>(vp.client_w), static_cast<int64_t>(vp.client_h),
+                        static_cast<int64_t>(dd), static_cast<int64_t>(cw), static_cast<int64_t>(ch),
+                        static_cast<int64_t>(P.text_aa_), static_cast<int64_t>(P.text_fit_ ? 1 : 0),
+                        static_cast<int64_t>(P.text_defect_), static_cast<int64_t>(r.vis_layer.size())})
+        put(v);
+      key.append(reinterpret_cast<const char *>(r.vis_layer.data()), r.vis_layer.size());
+      auto it = d.tcache.find(key);
+      if (it == d.tcache.end()) {
+        Impl::TCache c;
+        d.traster->table(r, true, vp, dd, cw, ch, c.t);  // false = draw draws nothing either (an empty table)
+        it = d.tcache.emplace(key, std::move(c)).first;
+        ++d.text_tables_made;
+      } else {
+        ++d.text_tables_reused;
+      }
+      it->second.used = d.tbuild;
+      d.tabled[i] = 1;
+      ++d.text_runs_tabled;
+      if (!it->second.t.idx.empty()) per[static_cast<size_t>(r.layer)].push_back(&it->second.t);
+    }
+  }
+  // the buffers: a record per layer (at least 64, zero past the frame's layers: the shader reads tlay[li] for every layer)
+  std::vector<TLayRec> lay(std::max<size_t>(64, f.layers.size()), TLayRec{0, 0, 0, 0, 0, 0, 0, 0});
+  std::vector<TRunRec> runs;
+  std::vector<uint32_t> idx, lut;
+  for (size_t li = 0; li < per.size(); ++li) {
+    TLayRec &L = lay[li];
+    L.first = static_cast<int32_t>(runs.size());
+    L.x0 = cw;
+    L.y0 = ch;
+    for (const TextTable *t : per[li]) {
+      runs.push_back(TRunRec{t->x0, t->y0, t->x1, t->y1, static_cast<int32_t>(idx.size()), 0, 0, 0});
+      const uint32_t off = static_cast<uint32_t>(lut.size() / 16);
+      for (uint32_t v : t->idx) idx.push_back(v ? v + off : 0u);
+      for (size_t k = 0; k + 1 < t->lut.size(); k += 2)
+        lut.push_back(static_cast<uint32_t>(t->lut[k]) | (static_cast<uint32_t>(t->lut[k + 1]) << 16));
+      L.x0 = std::min(L.x0, t->x0);
+      L.y0 = std::min(L.y0, t->y0);
+      L.x1 = std::max(L.x1, t->x1);
+      L.y1 = std::max(L.y1, t->y1);
+    }
+    L.n = static_cast<int32_t>(runs.size()) - L.first;
+    if (L.n == 0) L.x0 = L.y0 = L.x1 = L.y1 = 0;
+  }
+  d.text_entries += lut.size() / 16;
+  d.tbound = !runs.empty();
+  if (d.tbound) {
+    const ProfScope prof(Phase::Upload);
+    const bool ok = make_sbuf(d.dev, d.ctx, d.tlay, sizeof(TLayRec), static_cast<uint32_t>(lay.size()), lay.data()) &&
+                    make_sbuf(d.dev, d.ctx, d.truns, sizeof(TRunRec), static_cast<uint32_t>(runs.size()), runs.data()) &&
+                    make_sbuf(d.dev, d.ctx, d.tidx, 4, static_cast<uint32_t>(idx.size()), idx.data()) &&
+                    make_sbuf(d.dev, d.ctx, d.tlut, 4, static_cast<uint32_t>(lut.size()), lut.data());
+    if (!ok) {  // no buffers: every run back to a final patch
+      d.tbound = false;
+      std::fill(d.tabled.begin(), d.tabled.end(), static_cast<uint8_t>(0));
+    }
+  }
+  // the cache keeps the tables of the last builds (a run that comes back, the date / money that alternate)
+  if (d.tcache.size() > 512)
+    for (auto it = d.tcache.begin(); it != d.tcache.end();)
+      it = it->second.used + 8 < d.tbuild ? d.tcache.erase(it) : std::next(it);
+  d.ns_text += portsim::perf_now_ns() - t0;
 }
 
 // ---- a paint
@@ -1518,6 +1706,7 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
         d.gin[2] = std::max(0, oy0);
         d.gin[3] = std::min(ch, oy0 + vp.client_h);
       }
+      build_text_tables(P, vp, text);  // P15B: before the final patches (which skip the tabled runs)
       // (the previews / the 2D preview pixels / the tee lines move with the slide and the live cursor: no rectangle is kept then)
       build_final_patches(P, vp, text, slx, sly, cdx, shx, shy, cur || d.c2_any || lines);
       d.final_key = k;
@@ -1632,6 +1821,11 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   ID3D11ShaderResourceView *s3[11] = {d.base.srv, d.world.srv, d.wmask.srv, d.dummy_u.srv, d.course.srv, d.layers.srv, d.lpx.srv,
                                       d.tabs.srv, cur ? d.cur.srv : d.dummy_u2.srv, d.shade.srv, d.pdx.srv};
   x->PSSetShaderResources(0, 11, s3);
+  {  // P15B: the text tables (null views read 0: no run in any layer)
+    ID3D11ShaderResourceView *st[4] = {d.tbound ? d.tlay.srv : nullptr, d.tbound ? d.truns.srv : nullptr,
+                                       d.tbound ? d.tidx.srv : nullptr, d.tbound ? d.tlut.srv : nullptr};
+    x->PSSetShaderResources(21, 4, st);
+  }
   x->PSSetShader(d.ps_hud, nullptr, 0);
   x->Draw(3, 0);
   // 4. the final patches
@@ -2048,7 +2242,7 @@ std::string GpuCompositor::json() const {
     }
     return o;
   };
-  char b[2048];
+  char b[4096];
   std::snprintf(b, sizeof b,
                 "{\"on\":%d,\"why\":\"%s\",\"paints_layered\":%llu,\"paints_full\":%llu,\"frame_uploads\":%llu,\"world_uploads\":%llu,"
                 "\"course_builds\":%llu,\"course_px\":%llu,\"final_builds\":%llu,\"final_px\":%llu,\"gpu_ms_mean\":%.3f,"
@@ -2057,7 +2251,9 @@ std::string GpuCompositor::json() const {
                 "\"ms_world_uploads\":%.1f,\"ms_course_patches\":%.1f,\"ms_final_patches\":%.1f,\"ms_draw_calls\":%.1f,"
                 "\"final_static_rects\":%llu,\"final_dep_rects\":%llu,\"final_rect_renders\":%llu,\"final_overflow\":%llu,"
                 "\"prev_fetches\":%llu,\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f,"
-                "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu,\"paints_flat\":%llu}",
+                "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu,\"paints_flat\":%llu,"
+                "\"p15_text\":%d,\"text_sets\":%llu,\"text_tables_made\":%llu,\"text_tables_reused\":%llu,\"text_runs_tabled\":%llu,"
+                "\"text_table_draws\":%llu,\"text_entries\":%llu,\"ms_text_tables\":%.1f,\"text_cache\":%zu}",
                 d.ok ? 1 : 0, esc(d.why).c_str(), static_cast<unsigned long long>(d.paints_layered),
                 static_cast<unsigned long long>(d.paints_full), static_cast<unsigned long long>(d.frame_uploads),
                 static_cast<unsigned long long>(d.world_uploads), static_cast<unsigned long long>(d.course_builds),
@@ -2075,7 +2271,11 @@ std::string GpuCompositor::json() const {
                 static_cast<unsigned long long>(d.prev_fetches), d.shade_mono, static_cast<unsigned long long>(d.classify_off), d.latency,
                 static_cast<double>(d.ns_wait) / 1e6, static_cast<double>(d.ns_present) / 1e6,
                 static_cast<unsigned long long>(d.final_dep_renders), static_cast<unsigned long long>(d.final_dep_kept),
-                static_cast<unsigned long long>(d.paints_flat));
+                static_cast<unsigned long long>(d.paints_flat), d.p15 ? 1 : 0, static_cast<unsigned long long>(d.text_sets),
+                static_cast<unsigned long long>(d.text_tables_made), static_cast<unsigned long long>(d.text_tables_reused),
+                static_cast<unsigned long long>(d.text_runs_tabled),
+                static_cast<unsigned long long>(d.traster ? d.traster->table_draws : 0ull),
+                static_cast<unsigned long long>(d.text_entries), static_cast<double>(d.ns_text) / 1e6, d.tcache.size());
   return b;
 }
 

@@ -38,6 +38,18 @@ enum class TextAa : uint8_t {
   Grey = 2,       // ANTIALIASED_QUALITY (greyscale)
 };
 
+// P15B (log/roadmap/P15/P15B_notes.md): a run's GDI result as a function of the word under each pixel. GDI's blend of a glyph
+// pixel on the 16-bit DIB gives each 5-bit channel as a function of that channel alone (measured: P15B_notes.md section 1), so
+// the run drawn over the 32 grey levels L (the word L | L << 5 | L << 10) gives, per pixel, the result over any word w:
+// red of lut[w's red level], green of lut[w's green level], blue of lut[w's blue level]. Only pixels TextRaster::draw may write
+// are kept (inside the run's scaled box and the client, visible in the run's layer); a pixel GDI left unchanged at every level
+// has no entry (idx 0).
+struct TextTable {
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // client box of the pixels with an entry (half-open; empty = no ink)
+  std::vector<uint32_t> idx;               // (x1 - x0) * (y1 - y0): 0 none, k + 1 entry k
+  std::vector<uint16_t> lut;               // 32 words per entry: GDI's word over grey level L
+};
+
 struct TextResStats {
   uint64_t runs = 0;          // runs drawn
   uint64_t clipped_runs = 0;  // runs whose window-resolution ink reached past their scaled box (clipped, not reflowed)
@@ -64,9 +76,15 @@ class TextRaster {
   // `layered` reads the run's layer visibility (GfxTextRun::vis_layer) instead of the back buffer's (vis)
   void draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out, int32_t cw,
             int32_t ch);
+  // P15B: the run's TextTable for the same arguments as draw (false: nothing drawable, or the host could not draw)
+  bool table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, TextTable &t);
   TextResStats stats;
+  uint64_t table_draws = 0;  // P15B: GDI draws made for tables
 
  private:
+  struct Prep;
+  bool prep(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, Prep &p);
+  void gdi(const portsim::GfxTextRun &r, const Prep &p);
   struct Impl;
   std::unique_ptr<Impl> impl_;
   TextDefect defect_ = TextDefect::None;
