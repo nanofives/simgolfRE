@@ -4,6 +4,15 @@
 #include <algorithm>
 #include <atomic>
 #include <cstdlib>
+#include <string>
+#include <vector>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#include <intrin.h>
+#endif
 
 #include "portsim/sim/perf.h"
 
@@ -166,6 +175,7 @@ void Profiler::frame_head() {
 }
 
 void Profiler::painted(bool new_frame, int64_t ns, bool cursor, bool slide, bool changed) {
+  winlog_paint_flags(new_frame, new_frame || cursor || slide || changed);  // P16A
   if (!g_on.load(std::memory_order_relaxed)) return;
   const int64_t now = portsim::perf_now_ns();
   std::lock_guard<std::mutex> lk(mu_);
@@ -310,6 +320,120 @@ std::string overlay_text(const ProfLine &l, int mode) {
     s += b;
   }
   return s;
+}
+
+// P16A: SG_P16_PAINTLOG (profile.h)
+namespace {
+struct WinEv {
+  char kind;
+  int64_t t0, t1;
+  uint64_t cyc;  // the thread's cycles inside the event
+  int64_t a[8];
+};
+struct WinLog {
+  std::atomic<bool> on{false};
+  std::string path;
+  std::vector<WinEv> ev;      // window thread
+  std::vector<int64_t> vb;    // pacer thread
+  std::atomic<int64_t> last_vb{0};
+  bool fresh = false, changed = false;
+  int64_t gpu[7] = {};
+  bool gpu_set = false;
+  int64_t open_ns = 0;
+  uint64_t open_tsc = 0;
+};
+WinLog g_wl;
+}  // namespace
+
+bool winlog_on() { return g_wl.on.load(std::memory_order_relaxed); }
+
+void winlog_open_env() {
+  const char *p = std::getenv("SG_P16_PAINTLOG");
+  if (!p || !*p) return;
+  g_wl.path = p;
+  g_wl.ev.reserve(1u << 20);
+  g_wl.vb.reserve(1u << 20);
+  g_wl.open_ns = portsim::perf_now_ns();
+#ifdef _WIN32
+  g_wl.open_tsc = __rdtsc();
+#endif
+  g_wl.on.store(true);
+}
+
+uint64_t winlog_cycles() {
+#ifdef _WIN32
+  ULONG64 c = 0;
+  QueryThreadCycleTime(GetCurrentThread(), &c);
+  return c;
+#else
+  return 0;
+#endif
+}
+
+void winlog_vblank(int64_t ns) {
+  if (!winlog_on()) return;
+  g_wl.last_vb.store(ns, std::memory_order_relaxed);
+  if (g_wl.vb.size() < g_wl.vb.capacity()) g_wl.vb.push_back(ns);
+}
+
+void winlog_paint_flags(bool fresh, bool changed) {
+  g_wl.fresh = fresh;
+  g_wl.changed = changed;
+}
+
+void winlog_paint_gpu(int64_t wait_ns, int64_t present_ns, uint32_t last_present, uint32_t st_present, uint32_t st_refresh,
+                      uint32_t st_sync_refresh, int64_t st_sync_qpc) {
+  if (!winlog_on()) return;
+  g_wl.gpu[0] = wait_ns;
+  g_wl.gpu[1] = present_ns;
+  g_wl.gpu[2] = last_present;
+  g_wl.gpu[3] = st_present;
+  g_wl.gpu[4] = st_refresh;
+  g_wl.gpu[5] = st_sync_refresh;
+  g_wl.gpu[6] = st_sync_qpc;
+  g_wl.gpu_set = true;
+}
+
+void winlog_event(char kind, int64_t t0, uint64_t cyc0) {
+  if (!winlog_on()) return;
+  WinEv e{};
+  e.kind = kind;
+  e.t0 = t0;
+  e.t1 = portsim::perf_now_ns();
+  e.cyc = winlog_cycles() - cyc0;
+  e.a[0] = g_wl.last_vb.load(std::memory_order_relaxed);
+  if (kind == 'P') {
+    e.a[1] = (g_wl.fresh ? 1 : 0) | (g_wl.changed ? 2 : 0) | (g_wl.gpu_set ? 4 : 0);
+    for (int i = 0; i < 6; ++i) e.a[2 + i] = g_wl.gpu_set ? g_wl.gpu[i] : -1;
+    g_wl.fresh = g_wl.changed = g_wl.gpu_set = false;
+  }
+  if (g_wl.ev.size() < g_wl.ev.capacity()) g_wl.ev.push_back(e);
+}
+
+void winlog_close() {
+  if (!winlog_on()) return;
+  g_wl.on.store(false);
+  std::FILE *f = std::fopen(g_wl.path.c_str(), "wb");
+  if (!f) return;
+  const int64_t ns = portsim::perf_now_ns();
+  double tsc_hz = 0;
+#ifdef _WIN32
+  const uint64_t tsc = __rdtsc();
+  if (ns > g_wl.open_ns) tsc_hz = static_cast<double>(tsc - g_wl.open_tsc) * 1e9 / static_cast<double>(ns - g_wl.open_ns);
+  LARGE_INTEGER qf;
+  QueryPerformanceFrequency(&qf);
+  std::fprintf(f, "# tsc_hz %.0f qpc_hz %lld\n", tsc_hz, static_cast<long long>(qf.QuadPart));
+#endif
+  std::fprintf(f, "# kind t0_ns t1_ns cycles last_vblank_ns flags wait_ns present_ns last_present st_present st_refresh st_sync_refresh\n");
+  for (int64_t v : g_wl.vb) std::fprintf(f, "V %lld\n", static_cast<long long>(v));
+  for (const WinEv &e : g_wl.ev) {
+    std::fprintf(f, "%c %lld %lld %llu %lld", e.kind, static_cast<long long>(e.t0), static_cast<long long>(e.t1),
+                 static_cast<unsigned long long>(e.cyc), static_cast<long long>(e.a[0]));
+    if (e.kind == 'P')
+      for (int i = 1; i < 8; ++i) std::fprintf(f, " %lld", static_cast<long long>(e.a[i]));
+    std::fputc('\n', f);
+  }
+  std::fclose(f);
 }
 
 }  // namespace portapp

@@ -194,6 +194,18 @@ void Presenter::slide_start(const WorldImage &w) {
   st.period_ms = period_ns_ / 1e6;
   slide_stats_.period_ms = st.period_ms;
   const int64_t now = portsim::perf_now_ns();
+  // P16A (log/roadmap/P16/P16A_notes.md): since the world thread (P15A) a picture reaches the window 20-70 ms after the sim thread's
+  // present, so a slide that ends one period after that present stops early and the window holds a still picture until the next
+  // one arrives (measured: 371 of 397 long paint gaps at 3840 x 2108 ended with a new frame's paint). The slide ends one period
+  // after the present plus the mean present-to-arrival latency instead, where the next picture is due to arrive. Only the
+  // intermediate offsets change: the slide still ends on the frame's own picture. SG_APP_P16=off or SG_P16_SLIDE=0: as before.
+  static const bool lat_on = !(std::getenv("SG_APP_P16") && !std::strcmp(std::getenv("SG_APP_P16"), "off")) &&
+                             !(std::getenv("SG_P16_SLIDE") && std::atoi(std::getenv("SG_P16_SLIDE")) == 0);
+  if (lat_on && w.cam.t_ns > 0) {
+    const double l = static_cast<double>(now - w.cam.t_ns);
+    if (l >= 0 && l <= 400e6) lat_ns_ = lat_ns_ > 0 ? lat_ns_ * 0.75 + l * 0.25 : l;
+    slide_stats_.lat_ms = lat_ns_ / 1e6;
+  }
   const bool was_on = slide_on_;
   const int64_t end_prev = t0_ns_ + static_cast<int64_t>(slide_ns_);
   slide_on_ = false;
@@ -268,7 +280,8 @@ void Presenter::slide_start(const WorldImage &w) {
   // late or early taking of a frame does not stretch or squeeze the slide, and consecutive slides end where the next frame is due);
   // a frame with no move inside a slide finishes the remaining offset by the time the running slide would have ended (one display
   // period at least)
-  const double end_new = static_cast<double>(w.cam.t_ns > 0 ? w.cam.t_ns : now) + period_ns_;
+  const double end_new = static_cast<double>(w.cam.t_ns > 0 ? w.cam.t_ns : now) + period_ns_ + (lat_on && w.cam.t_ns > 0 ? lat_ns_ : 0.0);
+  if (lat_on && w.cam.t_ns > 0) ++slide_stats_.lat_slides;
   slide_ns_ = (dx != 0 || dy != 0 || !was_on) ? std::max<double>(end_new - static_cast<double>(now), 16e6)
                                                : std::max<double>(static_cast<double>(end_prev - now), 16e6);
   cur_x_ = s0x_i_;

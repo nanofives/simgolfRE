@@ -835,6 +835,12 @@ struct GpuCompositor::Impl {
   uint64_t course_obj_rebuilds = 0;
   // P15B: the HUD text runs as tables (build_text_tables). SG_APP_P15=off: P14A's final patches for them
   bool p15 = true;
+  // P16A (log/roadmap/P16/P16A_notes.md): the previews' world planes uploaded over their box only (cur_box), the last box's texels
+  // zeroed; SG_APP_P16=off or SG_P16_CURBOX=0 uploads the whole planes as before
+  bool cur_boxed = true;
+  int32_t cur_prev[4] = {0, 0, 0, 0};  // the box the cur texture holds non-zero texels in (empty: none)
+  ID3D11Texture2D *cur_made = nullptr;  // the texture cur_prev belongs to (a new texture starts all zero)
+  uint64_t cur_box_uploads = 0, cur_box_px = 0;
   std::unique_ptr<TextRaster> traster;
   struct TCache {
     TextTable t;
@@ -1052,6 +1058,8 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   if (const char *e = std::getenv("SG_P14_WAIT")) d.no_wait = std::atoi(e) == 0;
   if (const char *e = std::getenv("SG_P14_FLAT")) d.no_flat = std::atoi(e) == 0;
   if (const char *e = std::getenv("SG_APP_P15")) d.p15 = std::strcmp(e, "off") != 0;  // P15B
+  if (const char *e = std::getenv("SG_APP_P16")) d.cur_boxed = d.cur_boxed && std::strcmp(e, "off") != 0;  // P16A
+  if (const char *e = std::getenv("SG_P16_CURBOX")) d.cur_boxed = d.cur_boxed && std::atoi(e) != 0;
   if (const char *e = std::getenv("SG_P14_SYNC")) d.sync_interval = static_cast<UINT>(std::max(0, std::min(4, std::atoi(e))));
   sd.BufferCount = static_cast<UINT>(lat + 1);
   sd.Scaling = DXGI_SCALING_NONE;
@@ -1769,7 +1777,47 @@ void GpuCompositor::upload_frame(const Presenter &P, const Viewport &vp, bool te
   d.cur_on = W.cur_mask.size() == tabs.size() && W.cur_px.size() == W.px.size() && W.cur_cov.size() == W.px.size() &&
              W.cur_box[2] > W.cur_box[0];
   d.box_on = W.cur_hi.size() == W.px.size();
-  if (d.cur_on) {
+  if (d.cur_on && d.cur_boxed) {
+    // P16A: the shader (draw_cursor) uses a texel only when its coverage word is 1 or 2, and every such texel is inside cur_box
+    // (world_image_part: the box of cur_cov 1 / 2); every other texel acts the same whatever it holds as long as its coverage is
+    // neither. So the box is written as before, the last box's texels are zeroed first, and a new texture is zeroed once: the
+    // texture then differs from the whole upload only in texels the shader treats alike.
+    const int32_t pw = W.pw, ph = W.ph;
+    const bool fresh = !d.cur.t || d.cur.t != d.cur_made || d.cur.w != pw || d.cur.h != ph || d.cur.fmt != DXGI_FORMAT_R32G32_UINT;
+    make_tex(d.dev, d.cur, pw, ph, DXGI_FORMAT_R32G32_UINT, false);
+    if (fresh && d.cur.t) {
+      std::vector<uint32_t> z(static_cast<size_t>(pw) * static_cast<size_t>(ph) * 2, 0u);
+      put_tex(d.ctx, d.cur, 0, 0, pw, ph, z.data(), static_cast<uint32_t>(pw) * 8u);
+      d.cur_made = d.cur.t;
+      for (int32_t &v : d.cur_prev) v = 0;
+    }
+    const int32_t *pb = d.cur_prev;
+    if (pb[2] > pb[0] && pb[3] > pb[1]) {
+      std::vector<uint32_t> z(static_cast<size_t>(pb[2] - pb[0]) * static_cast<size_t>(pb[3] - pb[1]) * 2, 0u);
+      put_tex(d.ctx, d.cur, pb[0], pb[1], pb[2] - pb[0], pb[3] - pb[1], z.data(), static_cast<uint32_t>(pb[2] - pb[0]) * 8u);
+    }
+    const int32_t x0 = std::max(0, W.cur_box[0]), y0 = std::max(0, W.cur_box[1]);
+    const int32_t x1 = std::min(pw, W.cur_box[2]), y1 = std::min(ph, W.cur_box[3]);
+    for (int32_t &v : d.cur_prev) v = 0;
+    if (x1 > x0 && y1 > y0) {
+      const size_t bw = static_cast<size_t>(x1 - x0);
+      std::vector<uint32_t> cp(bw * static_cast<size_t>(y1 - y0) * 2);
+      for (int32_t y = y0; y < y1; ++y)
+        for (int32_t x = x0; x < x1; ++x) {
+          const size_t i = static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x);
+          const size_t o = (static_cast<size_t>(y - y0) * bw + static_cast<size_t>(x - x0)) * 2;
+          cp[o] = static_cast<uint32_t>(W.cur_px[i]) | (d.box_on ? static_cast<uint32_t>(W.cur_hi[i]) << 16 : 0u);
+          cp[o + 1] = W.cur_cov[i];
+        }
+      put_tex(d.ctx, d.cur, x0, y0, x1 - x0, y1 - y0, cp.data(), static_cast<uint32_t>(bw) * 8u);
+      d.cur_prev[0] = x0;
+      d.cur_prev[1] = y0;
+      d.cur_prev[2] = x1;
+      d.cur_prev[3] = y1;
+      ++d.cur_box_uploads;
+      d.cur_box_px += bw * static_cast<size_t>(y1 - y0);
+    }
+  } else if (d.cur_on) {
     std::vector<uint32_t> cp(W.px.size() * 2);
     for (size_t i = 0; i < W.px.size(); ++i) {
       cp[i * 2] = static_cast<uint32_t>(W.cur_px[i]) | (d.box_on ? static_cast<uint32_t>(W.cur_hi[i]) << 16 : 0u);
@@ -1777,6 +1825,7 @@ void GpuCompositor::upload_frame(const Presenter &P, const Viewport &vp, bool te
     }
     make_tex(d.dev, d.cur, W.pw, W.ph, DXGI_FORMAT_R32G32_UINT, false);
     put_tex(d.ctx, d.cur, 0, 0, W.pw, W.ph, cp.data(), static_cast<uint32_t>(W.pw) * 8u);
+    d.cur_made = nullptr;  // P16A: a later boxed upload starts from a zeroed texture
   }
   // the shade tables (gfx_shade_table 0 and 1), once
   if (!d.shade.b) {
@@ -2966,11 +3015,13 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
   if (!d.ok || cw <= 0 || ch <= 0) return;
   if (!ensure_size(cw, ch)) return;
   if (!d.ok) return;
+  int64_t wl_wait = 0, wl_present = 0;  // P16A (SG_P16_PAINTLOG)
   {
     const ProfScope prof(Phase::Present);  // the latency object: the paint starts after the last present left the queue
     const int64_t w0 = portsim::perf_now_ns();
     if (d.wait && !d.no_wait) WaitForSingleObjectEx(d.wait, 50, FALSE);
-    d.ns_wait += portsim::perf_now_ns() - w0;
+    wl_wait = portsim::perf_now_ns() - w0;  // P16A
+    d.ns_wait += wl_wait;
   }
   // slide_start swapped scene_prev_ / scene_last_ since the last paint: the course targets swap the same way
   if (P.swap_gen_ != d.swap_gen) {
@@ -2999,7 +3050,17 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
     const ProfScope prof(Phase::Present);
     const int64_t p0 = portsim::perf_now_ns();
     hr = d.sc->Present(d.sync_interval, 0);
-    d.ns_present += portsim::perf_now_ns() - p0;
+    wl_present = portsim::perf_now_ns() - p0;  // P16A
+    d.ns_present += wl_present;
+  }
+  if (winlog_on()) {  // P16A: the swap chain's frame statistics after this Present (development log only)
+    UINT last = 0;
+    DXGI_FRAME_STATISTICS st{};
+    d.sc->GetLastPresentCount(&last);
+    if (SUCCEEDED(d.sc->GetFrameStatistics(&st)))
+      winlog_paint_gpu(wl_wait, wl_present, last, st.PresentCount, st.PresentRefreshCount, st.SyncRefreshCount, st.SyncQPCTime.QuadPart);
+    else
+      winlog_paint_gpu(wl_wait, wl_present, last, 0, 0, 0, 0);
   }
   if (FAILED(hr)) {
     ++d.present_fail;
@@ -3085,6 +3146,13 @@ std::string GpuCompositor::json() const {
                   static_cast<unsigned long long>(d.obj_px), static_cast<double>(d.ns_obj) / 1e6, d.ops_cpu.size(), d.art_cpu.size(),
                   static_cast<unsigned long long>(d.obj_checked), static_cast<unsigned long long>(d.obj_check_bad),
                   static_cast<unsigned long long>(d.obj_check_badpx));
+    j.pop_back();
+    j += e;
+  }
+  if (!j.empty() && j.back() == '}') {  // P16A
+    char e[160];
+    std::snprintf(e, sizeof e, ",\"p16a\":{\"cur_boxed\":%d,\"cur_box_uploads\":%llu,\"cur_box_px\":%llu}}", d.cur_boxed ? 1 : 0,
+                  static_cast<unsigned long long>(d.cur_box_uploads), static_cast<unsigned long long>(d.cur_box_px));
     j.pop_back();
     j += e;
   }

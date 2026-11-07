@@ -1552,6 +1552,13 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   if (o.audio != "off" && o.negctl != "audio-close-late")
     g_close_prev = reinterpret_cast<WNDPROC>(
         SetWindowLongPtrW(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&audio_close_proc)));
+  winlog_open_env();  // P16A (SG_P16_PAINTLOG)
+  // P16A (log/roadmap/P16/P16A_notes.md): the window thread ahead of the rasteriser workers (normal) and the world thread (below
+  // normal), level with the sim thread (above normal), and the pacer above it, so a due paint is not queued behind them on a busy
+  // machine. Nothing the game computes depends on it. SG_APP_P16=off or SG_P16_PRIO=0: both at normal as before.
+  const bool p16_prio = !(std::getenv("SG_APP_P16") && !std::strcmp(std::getenv("SG_APP_P16"), "off")) &&
+                        !(std::getenv("SG_P16_PRIO") && std::atoi(std::getenv("SG_P16_PRIO")) == 0);
+  if (p16_prio) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
   std::thread sim([&]() { lo = live_run(oa, files, session, rec); });
   std::printf("READY hwnd=0x%llx client=%dx%d dpi=%u record=%s\n", static_cast<unsigned long long>(reinterpret_cast<uintptr_t>(hwnd)),
               win.client_w(), win.client_h(), win.dpi(), rec.string().c_str());
@@ -1570,7 +1577,15 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     pace_hz = dc ? GetDeviceCaps(dc, VREFRESH) : 0;
     if (dc) ReleaseDC(hwnd, dc);
     if (pace_hz < 30 || pace_hz > 360) pace_hz = 60;
-    pacer = std::thread([&tick_pending, &pacer_stop, &presenter, hwnd, pace_hz]() {
+    // development (P16A, log/roadmap/P16/P16A_notes.md): SG_P16_PACE_HZ=<n> ticks from the timer alone at n per second on absolute
+    // deadlines (no WaitForVBlank), to measure the window thread's share of the CPU with the display out of the loop (a monitor in
+    // its power-off reports no vertical blanks); with SG_P14_SYNC=0 the Present does not wait for DWM either
+    int force_hz = 0;
+    if (const char *e = std::getenv("SG_P16_PACE_HZ")) force_hz = std::atoi(e);
+    if (force_hz >= 30 && force_hz <= 1000) pace_hz = force_hz;
+    else force_hz = 0;
+    pacer = std::thread([&tick_pending, &pacer_stop, &presenter, hwnd, pace_hz, force_hz, p16_prio]() {
+      if (p16_prio) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);  // P16A
 #ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
 #define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
 #endif
@@ -1578,13 +1593,31 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       if (!t) t = CreateWaitableTimerW(nullptr, FALSE, nullptr);
       LARGE_INTEGER due;
       due.QuadPart = -(10000000LL / pace_hz);  // one refresh period, in 100 ns units, relative
+      const int64_t period_ns = 1000000000LL / pace_hz;
+      int64_t next_ns = portsim::perf_now_ns() + period_ns;  // P16A: SG_P16_PACE_HZ's absolute deadlines
       while (!pacer_stop.load()) {
+        if (force_hz) {  // P16A (development)
+          const int64_t left = next_ns - portsim::perf_now_ns();
+          if (left > 0) {
+            LARGE_INTEGER dl;
+            dl.QuadPart = -(left / 100);
+            if (t && SetWaitableTimer(t, &dl, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
+            else Sleep(static_cast<DWORD>(left / 1000000));
+          }
+          next_ns += period_ns;
+          const int64_t now = portsim::perf_now_ns();
+          if (next_ns < now) next_ns = now + period_ns;  // late by more than a period: the missed ticks are not made up
+          winlog_vblank(now);
+          if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+          continue;
+        }
         // P14A: with the GPU path, the tick comes right after the monitor's vertical blank (IDXGIOutput::WaitForVBlank), so the paint
         // composes and presents for the next refresh without waiting inside the paint; a wait that returns at once (an output that
         // reports no vblank) falls back to the timer
         const int64_t v0 = portsim::perf_now_ns();
         const bool vb = presenter.gpu_wait_vblank() && portsim::perf_now_ns() - v0 > 1000000;
         if (vb) {
+          winlog_vblank(portsim::perf_now_ns());  // P16A (SG_P16_PAINTLOG)
         } else if (t && SetWaitableTimer(t, &due, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
         else Sleep(1000 / pace_hz);
         if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
@@ -1661,27 +1694,60 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       continue;
     }
     if (m.hwnd == hwnd && m.message == kMsgCursorTick) {  // P10E
+      const bool wl = winlog_on();  // P16A (SG_P16_PAINTLOG)
+      const int64_t wl_t0 = wl ? portsim::perf_now_ns() : 0;
+      const uint64_t wl_c0 = wl ? winlog_cycles() : 0;
       tick_pending.store(false);
       ++ticks;
       slide_tick();  // P12A fix 1
       if (ho.cursor_live) cursor_tick();
       hover_tick();  // P10I fix 2
+      if (wl) winlog_event('T', wl_t0, wl_c0);
       continue;
     }
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgPresent) {
+      struct WlScope {  // P16A (SG_P16_PAINTLOG): the frame's hand-over on the window thread
+        bool on = winlog_on();
+        int64_t t0 = on ? portsim::perf_now_ns() : 0;
+        uint64_t c0 = on ? winlog_cycles() : 0;
+        ~WlScope() {
+          if (on) winlog_event('F', t0, c0);
+        }
+      } wl_scope;
       uint32_t index = 0;
       BandFill band = BandFill::Black;
       WorldImage wi;  // P8B
+      const int64_t wl_k0 = wl_scope.on ? portsim::perf_now_ns() : 0;  // P16A: the parts of F (K take, S set, R recycle, C cursor)
+      uint64_t wl_kc = wl_scope.on ? winlog_cycles() : 0;
       if (session.take_frame(px, index, &band, &wi)) {
+        if (wl_scope.on) winlog_event('K', wl_k0, wl_kc);
         portsim::GfxTextFrame tf = std::move(wi.text);  // P9C: the frame's text runs (empty without --text-res native)
         if (ho.world) {
+          int64_t wl_s0 = wl_scope.on ? portsim::perf_now_ns() : 0;
+          wl_kc = wl_scope.on ? winlog_cycles() : 0;
           presenter.set_frame_world(px, band, std::move(wi));  // P8B: with its world layer (none = as before)
+          if (wl_scope.on) {
+            winlog_event('S', wl_s0, wl_kc);
+            wl_s0 = portsim::perf_now_ns();
+            wl_kc = winlog_cycles();
+          }
           session.recycle_world(std::move(wi));                // P10A: the previous image's buffers
+          if (wl_scope.on) winlog_event('R', wl_s0, wl_kc);
         }
         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
-        presenter.set_text(std::move(tf));    // P9C
+        {
+          const int64_t wl_x0 = wl_scope.on ? portsim::perf_now_ns() : 0;  // P16A: X text, L slide
+          const uint64_t wl_xc = wl_scope.on ? winlog_cycles() : 0;
+          presenter.set_text(std::move(tf));    // P9C
+          if (wl_scope.on) winlog_event('X', wl_x0, wl_xc);
+        }
         win.invalidate();
-        slide_tick();                          // P12A fix 1: the new frame's slide offset (and the remap's) at once
+        {
+          const int64_t wl_l0 = wl_scope.on ? portsim::perf_now_ns() : 0;
+          const uint64_t wl_lc = wl_scope.on ? winlog_cycles() : 0;
+          slide_tick();                          // P12A fix 1: the new frame's slide offset (and the remap's) at once
+          if (wl_scope.on) winlog_event('L', wl_l0, wl_lc);
+        }
         if (slog && !presenter.world().empty()) {
           const CameraSnap &c = presenter.world().cam;
           const Presenter::SlideStart &st = presenter.slide_start();
@@ -1697,11 +1763,19 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
           }
           std::fflush(slog);
         }
-        if (ho.cursor_live) cursor_tick();     // P10E: the new frame's preview, at once at the cursor's current tile
+        {
+          const int64_t wl_c0 = wl_scope.on ? portsim::perf_now_ns() : 0;
+          const uint64_t wl_cc = wl_scope.on ? winlog_cycles() : 0;
+          if (ho.cursor_live) cursor_tick();     // P10E: the new frame's preview, at once at the cursor's current tile
+          if (wl_scope.on) winlog_event('C', wl_c0, wl_cc);
+        }
         if (presenter.hover()) {               // P10I fix 2: learn from the new frame, then show the live cursor's looks
+          const int64_t wl_h0 = wl_scope.on ? portsim::perf_now_ns() : 0;  // P16A: H hover
+          const uint64_t wl_hc = wl_scope.on ? winlog_cycles() : 0;
           const Point fc = session.frame_cursor();
           presenter.hover_observe(fc.x, fc.y, vp);
           hover_tick();
+          if (wl_scope.on) winlog_event('H', wl_h0, wl_hc);
         }
         // development (P10E): SG_P10E_LOG=<file>, one line per present with a projection: index, the frame's tile, the sim's last
         // cursor answer, the window's live point and the tile proj_tile gives for that answer (equal to the frame's tile when the
@@ -1725,6 +1799,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
           std::fprintf(shown, "%u\t%016llx\n", index, static_cast<unsigned long long>(frame_hash(presenter.frame())));
           std::fflush(shown);
         }
+        if (wl_scope.on) {  // P16A: D the previous world image's buffers freed (what recycle_world did not keep)
+          const int64_t wl_d0 = portsim::perf_now_ns();
+          const uint64_t wl_dc = winlog_cycles();
+          { WorldImage gone = std::move(wi); }
+          winlog_event('D', wl_d0, wl_dc);
+        }
       }
       continue;
     }
@@ -1742,6 +1822,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   pacer_stop.store(true);  // P10E
   if (pacer.joinable()) pacer.join();
+  winlog_close();  // P16A
   session.request_stop();
   sim.join();
   if (log) std::fclose(log);
@@ -1780,6 +1861,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          ",\"paints\":" + std::to_string(hover_paints) + "}";
   }
   s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
+  s += ",\"p16a\":{\"prio\":" + std::to_string(p16_prio ? 1 : 0) + ",\"pace_forced_hz\":" +  // P16A
+       std::to_string(std::getenv("SG_P16_PACE_HZ") ? std::atoi(std::getenv("SG_P16_PACE_HZ")) : 0) + "}";
   {  // P12A fix 1
     const Presenter::SlideStats &ss = presenter.slide_stats();
     std::string mx;
@@ -1790,7 +1873,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          ",\"slides\":" + std::to_string(ss.slides) + ",\"moves\":" + std::to_string(ss.moves) + ",\"slide_paints\":" +
          std::to_string(slide_paints) + ",\"snaps_cam\":" + std::to_string(ss.snaps_cam) + ",\"snaps_view\":" +
          std::to_string(ss.snaps_view) + ",\"snaps_far\":" + std::to_string(ss.snaps_far) + ",\"snaps_screen\":" +
-         std::to_string(ss.snaps_screen) + ",\"period_ms\":" + std::to_string(ss.period_ms) + ",\"slid_points\":" +
+         std::to_string(ss.snaps_screen) + ",\"period_ms\":" + std::to_string(ss.period_ms) + ",\"lat_ms\":" + std::to_string(ss.lat_ms) +
+         ",\"lat_slides\":" + std::to_string(ss.lat_slides) + ",\"slid_points\":" +
          std::to_string(ho.remap ? ho.remap->slid() : 0) + ",\"max_step\":{" + mx + "}}";
     const Presenter::ObjectStats &os = presenter.object_stats();  // P12A fix 2
     s += ",\"p12a_objects\":{\"smooth_objects\":" + std::to_string(ho.smooth_objects ? 1 : 0) + ",\"frames\":" +

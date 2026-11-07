@@ -130,6 +130,24 @@ class Profiler {
 // the overlay text for a line: mode 1 = the fps, mode 2 = the fps and the phases (three lines)
 std::string overlay_text(const ProfLine &l, int mode);
 
+// P16A (log/roadmap/P16/P16A_notes.md): development switch SG_P16_PAINTLOG=<file>, the window thread's timeline. Every event is
+// kept in memory by the thread that makes it and written once at the end (winlog_close), so the log costs no file I/O while it
+// runs. Kinds: V a vertical blank the pacer saw (pacer thread), T a pacer tick handled, F a game frame taken (kMsgPresent), P a
+// paint (WM_PAINT: its wall time, the window thread's own cycles in it, the swap chain's latency wait and Present, the picture's
+// flags, the swap chain's frame statistics after the Present). Clock: portsim::perf_now_ns (steady_clock = QueryPerformanceCounter
+// in ns, the same clock as Python's time.perf_counter_ns); cycles: QueryThreadCycleTime, with the TSC rate in the header.
+// Nothing in the game or the picture reads any of it.
+bool winlog_on();
+void winlog_open_env();
+void winlog_vblank(int64_t ns);                // pacer thread: a vertical blank returned at ns (also kept as the latest)
+void winlog_event(char kind, int64_t t0, uint64_t cyc0);  // window thread: an event that started at t0 / cyc0 ends now
+uint64_t winlog_cycles();                      // this thread's cycles so far
+// the paint's details, set by the paint itself before its P event is written
+void winlog_paint_flags(bool fresh, bool changed);
+void winlog_paint_gpu(int64_t wait_ns, int64_t present_ns, uint32_t last_present, uint32_t st_present, uint32_t st_refresh,
+                      uint32_t st_sync_refresh, int64_t st_sync_qpc);
+void winlog_close();
+
 }  // namespace portapp
 
 #endif

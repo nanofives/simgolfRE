@@ -63,6 +63,8 @@ def pytest_configure(config):
     # P15: the frame-rate work after P14 is off for the app tests too (P15B: the HUD text runs as tables on the GPU path;
     # P15A: the world thread, the world image made off the sim thread; P15C: the moving objects drawn by the GPU)
     os.environ.setdefault("SG_APP_P15", "off")
+    # P16 (log/roadmap/P16/BRIEF.md): P16A window thread priority, the latency-aware camera slide, the previews uploaded over their box
+    os.environ.setdefault("SG_APP_P16", "off")
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

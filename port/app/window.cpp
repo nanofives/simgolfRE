@@ -1,5 +1,7 @@
 // The app's window (window.h).
 #include "window.h"
+#include "profile.h"  // P16A
+#include "portsim/sim/perf.h"
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -367,11 +369,15 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
   }
   switch (msg) {
     case WM_PAINT: {
+      const bool wl = winlog_on();  // P16A (SG_P16_PAINTLOG)
+      const int64_t wl_t0 = wl ? portsim::perf_now_ns() : 0;
+      const uint64_t wl_c0 = wl ? winlog_cycles() : 0;
       PAINTSTRUCT ps;
       HDC dc = BeginPaint(h, &ps);
       presenter_.paint(dc, cw_, ch_);
       EndPaint(h, &ps);
       ++paints_;
+      if (wl) winlog_event('P', wl_t0, wl_c0);
       return 0;
     }
     case WM_ERASEBKGND:
