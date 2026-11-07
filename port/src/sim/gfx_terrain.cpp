@@ -197,7 +197,7 @@ void world_back_take(LiveTerrainWorld &w) {
   w.raster->copy_masked(w.raster->pixels(), w.back_m);
   if (w.sample) w.sample->copy_masked(w.sample->pixels(), w.sample_back);
   gfx_world_op(kGwBlit1, [](LiveTerrainWorld &W) {
-    if (W.raster) W.back_m = W.raster->pixels();
+    if (W.raster) W.back_m = W.raster->cpixels();   // P16B: a reader (the pixel backend's copy stays current)
   });
 }
 // blit 0: the root made from the back

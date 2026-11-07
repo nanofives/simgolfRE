@@ -1,0 +1,1027 @@
+// P16B: the world terrain rasteriser's pixel loop on the GPU (gpu_raster.h; log/roadmap/P16/P16B_notes.md section 1).
+#include "gpu_raster.h"
+
+#include "portsim/sim/gl_raster.h"
+
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#endif
+
+#include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
+
+namespace portapp {
+
+namespace {
+
+// what the backends did (session.json p16b)
+struct Stats {
+  bool enabled = false;
+  std::string state = "off";   // off / not started / on / the failure
+  int64_t batches = 0, tris = 0, pairs = 0, groups = 0, dispatches = 0, uploads = 0, clears = 0, tex_uploads = 0, failures = 0;
+  int64_t covered = 0, exact = 0, tex_bytes = 0, tex_count = 0;   // pixel writes, and those the exact path made (the rest: the checked path)
+  int64_t bin_ns = 0, gpu_ns = 0, wait_ns = 0, read_ns = 0, upload_ns = 0, draw_ns = 0, max_draw_ns = 0, max_gpu_ns = 0;
+  int64_t gpu_timed = 0;
+  int slice = 0;
+  bool force_exact = false;
+};
+std::mutex g_mu;
+Stats g_st;
+
+#ifdef _WIN32
+template <class T>
+void rel(T *&p) {
+  if (p) {
+    p->Release();
+    p = nullptr;
+  }
+}
+
+// ---- the pixel loop: GlRaster::fast_rows_ (gl_raster.cpp) per pixel, one thread group per 16 x 16 tile, one thread per pixel walking
+// the tile's triangles in their order, so every pixel gets GlRaster's writes in GlRaster's order.
+// COVERAGE (exact, integers): fast_rows_'s edge function w = K - B * PX (int64, units of 2^-16) at pixel (x0 + dx, y0 + dy) of the tile
+// whose first pixel is (x0, y0) is W0 + 256 * (A * dy - B * dx), W0 = w at (x0, y0). The CPU computes per (tile, triangle) pair and
+// edge W0 and Tc = ceil((t - W0) / 256), t = 0 on an owning edge, else 1; then w >= t <=> D = A * dy - B * dx >= Tc (D below 2^28 in
+// magnitude: int32; Tc clamped to +-2^30, beyond which the answer is the same). The weights a = w * 2^-16 = W0 * 2^-16 + D * 2^-8 are
+// exact doubles (fast_rows_'s a0..a2).
+// THE EXACT PATH (exactpx): fast_rows_'s exact branch, every double operation in the CPU's order as a separately rounded `precise
+// double` (D3DCOMPILE_IEEE_STRICTNESS: no fused multiply-add, no reassociation), division = DDIV (accurate to 0.5 ULP: correctly
+// rounded, as the CPU's divsd).
+// THE CHECKED PATH (fastpx; GlRaster's checked reciprocal path carried into float32): a pixel is written from it only when every
+// rounding decision is farther from its boundary than the two computations can differ; any other pixel takes the exact path.
+//   - texture coordinates: double, the divisions by the area replaced by products with the CPU's reciprocal; with |u|, |v| < 2^16 they
+//     differ from the CPU's by less than 1e-10 (fast_triangle_'s argument), so the texel indices are equal when the fractions are
+//     farther than 1e-9 from 0 and 1 (GlRaster's kTexEps), and ax, ay differ by less than 1e-10;
+//   - the filter, the colour, modulate, blend and the quantiser value q = c * 31 / 255 + d in float32. Bound of |q_float - q_cpu|,
+//     every float operation counted at 1 ulp (2^-23 relative; fused or not), the CPU's double rounding below 1e-12: filter weights
+//     4.8e-7, filtered channel 7.0e-4, colour (vertex colours in [0, 1], the CPU's own condition) 1.5e-6, modulated channel 1.11e-3,
+//     blend alpha 3.0e-6 and blended channel 2.77e-3, q 1.44e-4 unblended / 3.5e-4 blended. The pixel is kept when every channel's q
+//     is farther than kEq = 3e-4 / kEqB = 7e-4 (about twice the bound) from an integer: floor(q) is then the CPU's.
+// TWO PASSES: pass 1 (CSRaster) runs the checked path only (no double division, few registers); a pixel with a write it cannot
+// decide is handed to pass 2 (CSResume, a thread per handed pixel) with the pair index and its value there, and pass 2 finishes that
+// pixel in order with the exact path where needed. Every pixel still gets every write in triangle order.
+// SG_P16_EXACT=1 (development) hands every covered pixel to pass 2 at its first write (the exact path everywhere).
+const char kHlslRaster[] = R"HLSL(
+#ifndef FORCE_EXACT
+#define FORCE_EXACT 0
+#endif
+cbuffer CB : register(b0) {
+  int W, H, tilesX, tileBase;
+  uint listCap, cb1, cb2, cb3;
+};
+struct Tri {
+  int A0, A1, A2, B0, B1, B2;   // edge i (P = (i + 1) % 3 to Q = (i + 2) % 3): A = XQ - XP, B = YQ - YP (units of 2^-8)
+  uint flags, texoff, tw, th, bpp, fast;   // fast: the checked path may be tried (colours in [0, 1], finite areas)
+  float cf[9];                  // r0 r1 r2 g0 g1 g2 b0 b1 b2 as floats
+  float inv_af;                 // float(1 / arA)
+  uint2 d[19];                  // s0 s1 s2 t0 t1 t2 r0 r1 r2 g0 g1 g2 b0 b1 b2 div_st arA 1/div_st 1/arA (the CPU's doubles)
+};
+struct Pair {
+  uint tri, box;                // box: the triangle's box in tile pixels, x0 | x1 << 8 | y0 << 16 | y1 << 24
+  int Tc0, Tc1, Tc2;
+  uint pad;
+  uint2 W0[3];                  // w at the tile's first pixel (double, exact)
+};
+StructuredBuffer<Tri> tris : register(t0);
+StructuredBuffer<uint2> tileRange : register(t1);   // per tile: first pair, count
+StructuredBuffer<Pair> pairs : register(t2);
+StructuredBuffer<uint> tileList : register(t3);     // the tiles with pairs
+ByteAddressBuffer texels : register(t4);
+StructuredBuffer<uint2> kc : register(t5);          // [0..31] d * 255.0 / 31.0, [32..47] the dither offsets (double)
+Texture2D<uint> src : register(t6);
+StructuredBuffer<float> kcf : register(t7);         // the same as floats
+RWTexture2D<uint> dst : register(u0);
+RWByteAddressBuffer cnt : register(u1);             // [0] pixel writes of pass 1, [4] pixels handed to pass 2, [8] list overflow
+RWStructuredBuffer<uint2> lst : register(u2);       // pass 2's pixels: x | y << 16, the pair index << 15 | the pixel's value
+RWByteAddressBuffer args : register(u3);            // pass 2's DispatchIndirect arguments
+groupshared uint g_cov;
+
+double D(uint2 v) { return asdouble(v.x, v.y); }
+double TD(uint ti, uint k) { return asdouble(tris[ti].d[k].x, tris[ti].d[k].y); }
+// static_cast<int>(std::floor(v)) for |v| < 2^31 (the CPU's set-up guard keeps every value here inside it)
+int floor_i(double v) {
+  int i = (int)v;
+  return (v < (double)i) ? i - 1 : i;
+}
+// gl_raster.cpp wrap_repeat / wrap_fast
+uint wrapi(int i, uint n) {
+  if (i >= 0) return ((uint)i < n) ? (uint)i : (uint)i % n;
+  uint m = ((uint)(-i)) % n;
+  return m == 0u ? 0u : n - m;
+}
+// the texel's bytes at byte offset o (r, g, b, a; a = byte o + 3, read only for 4-byte texels): one 8-byte load
+uint4 texel(uint o) {
+  uint2 w = texels.Load2(o & ~3u);
+  uint sh = (o & 3u) * 8u;
+  uint lo = sh == 0u ? w.x : ((w.x >> sh) | (w.y << (32u - sh)));
+  return uint4(lo & 0xffu, (lo >> 8) & 0xffu, (lo >> 16) & 0xffu, lo >> 24);
+}
+double lin3(double a0, double a1, double a2, double v0, double v1, double v2) {
+  precise double p0 = a0 * v0;
+  precise double p1 = a1 * v1;
+  precise double p2 = a2 * v2;
+  precise double s = p0 + p1;
+  precise double r = s + p2;
+  return r;
+}
+uint quant(double c, double d) {   // quantize_d: floor(c * 31.0 / 255.0 + d), clamped to 0..31
+  precise double m = c * 31.0;
+  precise double q = m / 255.0;
+  precise double v = q + d;
+  int o = floor_i(v);
+  return (uint)clamp(o, 0, 31);
+}
+double bil(double w00, double w01, double w10, double w11, uint p00, uint p01, uint p10, uint p11) {
+  precise double acc = w00 * (double)p00;
+  precise double q1 = w01 * (double)p01;
+  acc = acc + q1;
+  precise double q2 = w10 * (double)p10;
+  acc = acc + q2;
+  precise double q3 = w11 * (double)p11;
+  acc = acc + q3;
+  return acc;
+}
+// the weights a0..a2 of pair P's triangle at tile pixel (dx, dy) (exact: W0 * 2^-16 + D * 2^-8); false when not covered
+bool cover(Pair P, int dx, int dy, out double a0, out double a1, out double a2) {
+  a0 = 0; a1 = 0; a2 = 0;
+  int bx0 = (int)(P.box & 255u), bx1 = (int)((P.box >> 8) & 255u), by0 = (int)((P.box >> 16) & 255u), by1 = (int)(P.box >> 24);
+  if (dx < bx0 || dx > bx1 || dy < by0 || dy > by1) return false;
+  uint ti = P.tri;
+  int D0 = tris[ti].A0 * dy - tris[ti].B0 * dx, D1 = tris[ti].A1 * dy - tris[ti].B1 * dx, D2 = tris[ti].A2 * dy - tris[ti].B2 * dx;
+  if (D0 < P.Tc0 || D1 < P.Tc1 || D2 < P.Tc2) return false;
+  double u16 = asdouble(0u, 0x3EF00000u);   // 2^-16
+  double u8 = asdouble(0u, 0x3F700000u);    // 2^-8
+  precise double h0 = D(P.W0[0]) * u16;
+  precise double l0 = (double)D0 * u8;
+  a0 = h0 + l0;
+  precise double h1 = D(P.W0[1]) * u16;
+  precise double l1 = (double)D1 * u8;
+  a1 = h1 + l1;
+  precise double h2 = D(P.W0[2]) * u16;
+  precise double l2 = (double)D2 * u8;
+  a2 = h2 + l2;
+  return true;
+}
+// fast_rows_'s exact branch for one pixel
+uint exactpx(uint ti, double a0, double a1, double a2, int x, int y, uint px) {
+  uint flags = tris[ti].flags, texoff = tris[ti].texoff, tw = tris[ti].tw, th = tris[ti].th, bpp = tris[ti].bpp;
+  double div_st = TD(ti, 15), arA = TD(ti, 16);
+  precise double sn = lin3(a0, a1, a2, TD(ti, 0), TD(ti, 1), TD(ti, 2));
+  precise double s = sn / div_st;
+  precise double tn = lin3(a0, a1, a2, TD(ti, 3), TD(ti, 4), TD(ti, 5));
+  precise double t = tn / div_st;
+  precise double u = s * (double)tw;
+  precise double v = t * (double)th;
+  double r, g, bl, al = 255.0;
+  if ((flags & 8u) == 0u) {   // GL_NEAREST
+    uint iu = wrapi(floor_i(u), tw), iv = wrapi(floor_i(v), th);
+    uint4 p = texel(texoff + (iv * tw + iu) * bpp);
+    r = (double)p.x; g = (double)p.y; bl = (double)p.z;
+    if (bpp == 4u) al = (double)p.w;
+  } else {   // GL_LINEAR
+    precise double fu = u - 0.5;
+    precise double fv = v - 0.5;
+    int i0 = floor_i(fu), j0 = floor_i(fv);
+    precise double ax = fu - (double)i0;
+    precise double ay = fv - (double)j0;
+    uint x0 = wrapi(i0, tw), x1 = wrapi(i0 + 1, tw);
+    uint ry0 = wrapi(j0, th) * tw, ry1 = wrapi(j0 + 1, th) * tw;
+    precise double omx = 1.0 - ax;
+    precise double omy = 1.0 - ay;
+    precise double w00 = omx * omy;
+    precise double w01 = ax * omy;
+    precise double w10 = omx * ay;
+    precise double w11 = ax * ay;
+    uint4 p00 = texel(texoff + (ry0 + x0) * bpp), p01 = texel(texoff + (ry0 + x1) * bpp);
+    uint4 p10 = texel(texoff + (ry1 + x0) * bpp), p11 = texel(texoff + (ry1 + x1) * bpp);
+    r = bil(w00, w01, w10, w11, p00.x, p01.x, p10.x, p11.x);
+    g = bil(w00, w01, w10, w11, p00.y, p01.y, p10.y, p11.y);
+    bl = bil(w00, w01, w10, w11, p00.z, p01.z, p10.z, p11.z);
+    if (bpp == 4u) al = bil(w00, w01, w10, w11, p00.w, p01.w, p10.w, p11.w);
+  }
+  if ((flags & 16u) != 0u) {   // GL_MODULATE
+    precise double crn = lin3(a0, a1, a2, TD(ti, 6), TD(ti, 7), TD(ti, 8));
+    precise double cgn = lin3(a0, a1, a2, TD(ti, 9), TD(ti, 10), TD(ti, 11));
+    precise double cbn = lin3(a0, a1, a2, TD(ti, 12), TD(ti, 13), TD(ti, 14));
+    precise double cr = crn / arA;
+    precise double cg = cgn / arA;
+    precise double cb = cbn / arA;
+    precise double mr = r * cr;
+    precise double mg = g * cg;
+    precise double mb = bl * cb;
+    r = mr; g = mg; bl = mb;
+  }
+  if ((flags & 32u) != 0u) {   // GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA over the 5-bit destination
+    precise double alpha = al / 255.0;
+    precise double oma = 1.0 - alpha;
+    precise double pr = r * alpha;
+    precise double er = D(kc[(px >> 10) & 31u]) * oma;
+    precise double ro = pr + er;
+    precise double pg = g * alpha;
+    precise double eg = D(kc[(px >> 5) & 31u]) * oma;
+    precise double go = pg + eg;
+    precise double pb = bl * alpha;
+    precise double eb = D(kc[px & 31u]) * oma;
+    precise double bo = pb + eb;
+    r = ro; g = go; bl = bo;
+  }
+  double dd = D(kc[32u + (uint)((y & 3) * 4 + ((x + (int)((flags >> 8) & 3u)) & 3))]);
+  return (quant(r, dd) << 10) | (quant(g, dd) << 5) | quant(bl, dd);
+}
+// floor(q) when q is farther than e from an integer (else -1000: undecided)
+int qdecide(float q, float e) {
+  float f = floor(q);
+  float fr = q - f;
+  return (fr > e && fr < 1.0f - e) ? clamp((int)f, 0, 31) : -1000;
+}
+// the checked path: true when px was written with the exact path's value (bounds in the comment above kHlslRaster)
+bool fastpx(uint ti, double a0, double a1, double a2, int x, int y, inout uint px) {
+  uint flags = tris[ti].flags, texoff = tris[ti].texoff, tw = tris[ti].tw, th = tris[ti].th, bpp = tris[ti].bpp;
+  if (tris[ti].fast == 0u) return false;
+  double inv_st = TD(ti, 17);
+  precise double sn = lin3(a0, a1, a2, TD(ti, 0), TD(ti, 1), TD(ti, 2));
+  precise double s = sn * inv_st;
+  precise double tn = lin3(a0, a1, a2, TD(ti, 3), TD(ti, 4), TD(ti, 5));
+  precise double t = tn * inv_st;
+  precise double u = s * (double)tw;
+  precise double v = t * (double)th;
+  if (!(u < 65536.0 && u > -65536.0 && v < 65536.0 && v > -65536.0)) return false;
+  float r, g, bl, al = 255.0f;
+  double fr_u, fr_v;
+  if ((flags & 8u) == 0u) {   // GL_NEAREST
+    int iu0 = floor_i(u), iv0 = floor_i(v);
+    fr_u = u - (double)iu0;
+    fr_v = v - (double)iv0;
+    uint4 p = texel(texoff + (wrapi(iv0, th) * tw + wrapi(iu0, tw)) * bpp);
+    r = (float)p.x; g = (float)p.y; bl = (float)p.z;
+    if (bpp == 4u) al = (float)p.w;
+  } else {   // GL_LINEAR
+    double fu = u - 0.5, fv = v - 0.5;
+    int i0 = floor_i(fu), j0 = floor_i(fv);
+    double ax = fu - (double)i0, ay = fv - (double)j0;
+    fr_u = ax;
+    fr_v = ay;
+    uint x0 = wrapi(i0, tw), x1 = wrapi(i0 + 1, tw);
+    uint ry0 = wrapi(j0, th) * tw, ry1 = wrapi(j0 + 1, th) * tw;
+    float axf = (float)ax, ayf = (float)ay;
+    float omx = 1.0f - axf, omy = 1.0f - ayf;
+    float w00 = omx * omy, w01 = axf * omy, w10 = omx * ayf, w11 = axf * ayf;
+    float4 p00 = (float4)texel(texoff + (ry0 + x0) * bpp), p01 = (float4)texel(texoff + (ry0 + x1) * bpp);
+    float4 p10 = (float4)texel(texoff + (ry1 + x0) * bpp), p11 = (float4)texel(texoff + (ry1 + x1) * bpp);
+    float4 c = w00 * p00 + w01 * p01 + w10 * p10 + w11 * p11;
+    r = c.x; g = c.y; bl = c.z;
+    if (bpp == 4u) al = c.w;
+  }
+  if (!(fr_u > 1e-9 && fr_u < 1.0 - 1e-9 && fr_v > 1e-9 && fr_v < 1.0 - 1e-9)) return false;
+  if ((flags & 16u) != 0u) {   // GL_MODULATE
+    float ia = tris[ti].inv_af;
+    float b0 = (float)a0 * ia, b1 = (float)a1 * ia, b2 = (float)a2 * ia;
+    r *= b0 * tris[ti].cf[0] + b1 * tris[ti].cf[1] + b2 * tris[ti].cf[2];
+    g *= b0 * tris[ti].cf[3] + b1 * tris[ti].cf[4] + b2 * tris[ti].cf[5];
+    bl *= b0 * tris[ti].cf[6] + b1 * tris[ti].cf[7] + b2 * tris[ti].cf[8];
+  }
+  bool blend = (flags & 32u) != 0u;
+  if (blend) {
+    float alpha = al * (1.0f / 255.0f), oma = 1.0f - alpha;
+    r = r * alpha + kcf[(px >> 10) & 31u] * oma;
+    g = g * alpha + kcf[(px >> 5) & 31u] * oma;
+    bl = bl * alpha + kcf[px & 31u] * oma;
+  }
+  float d = kcf[32u + (uint)((y & 3) * 4 + ((x + (int)((flags >> 8) & 3u)) & 3))];
+  float e = blend ? 7e-4f : 3e-4f;
+  const float k31 = 31.0f / 255.0f;
+  int orr = qdecide(r * k31 + d, e), og = qdecide(g * k31 + d, e), ob = qdecide(bl * k31 + d, e);
+  if (orr < 0 || og < 0 || ob < 0) return false;
+  px = ((uint)orr << 10) | ((uint)og << 5) | (uint)ob;
+  return true;
+}
+
+// PASS 1: every pixel of a tile with pairs; the checked path only. A pixel whose write the checked path cannot decide is handed to
+// pass 2 with the pair index and its value at that point, and pass 1 stops on it.
+[numthreads(16, 16, 1)]
+void CSRaster(uint3 gid : SV_GroupID, uint3 lt : SV_GroupThreadID, uint li : SV_GroupIndex) {
+  if (li == 0u) g_cov = 0u;
+  GroupMemoryBarrierWithGroupSync();
+  uint tile = tileList[(uint)tileBase + gid.x];
+  int x = (int)((tile % (uint)tilesX) * 16u + lt.x);
+  int y = (int)((tile / (uint)tilesX) * 16u + lt.y);
+  int dx = (int)lt.x, dy = (int)lt.y;
+  bool inside = x < W && y < H;
+  uint px = inside ? src[int2(x, y)] : 0u;
+  uint2 rg = tileRange[tile];
+  uint ncov = 0u;
+  for (uint k = 0u; inside && k < rg.y; ++k) {
+    Pair P = pairs[rg.x + k];
+    double a0, a1, a2;
+    if (!cover(P, dx, dy, a0, a1, a2)) continue;
+    ++ncov;
+    bool done = false;
+#if !FORCE_EXACT
+    done = fastpx(P.tri, a0, a1, a2, x, y, px);
+#endif
+    if (!done) {
+      uint i;
+      cnt.InterlockedAdd(4, 1u, i);
+      if (i < listCap && k < 131072u) lst[i] = uint2((uint)x | ((uint)y << 16), (k << 15) | px);
+      else cnt.InterlockedOr(8, 1u);
+      break;
+    }
+  }
+  if (inside) dst[int2(x, y)] = px;
+  if (ncov != 0u) InterlockedAdd(g_cov, ncov);
+  GroupMemoryBarrierWithGroupSync();
+  if (li == 0u && g_cov != 0u) cnt.InterlockedAdd(0, g_cov);
+}
+
+// pass 2's dispatch size from pass 1's count (64 pixels per group)
+[numthreads(1, 1, 1)]
+void CSArgs() {
+  uint n = min(cnt.Load(4), listCap);
+  args.Store3(0, uint3((n + 63u) / 64u, 1u, 1u));
+}
+
+// PASS 2: each handed pixel resumes at its pair (that write by the exact path), then the rest of its tile's pairs as pass 1 does,
+// with the exact path wherever the checked path cannot decide
+[numthreads(64, 1, 1)]
+void CSResume(uint3 tid : SV_DispatchThreadID) {
+  uint n = min(cnt.Load(4), listCap);
+  if (tid.x >= n) return;
+  uint2 e = lst[tid.x];
+  int x = (int)(e.x & 0xffffu), y = (int)(e.x >> 16);
+  uint k0 = e.y >> 15, px = e.y & 0x7fffu;
+  uint tile = (uint)(y >> 4) * (uint)tilesX + (uint)(x >> 4);
+  int dx = x & 15, dy = y & 15;
+  uint2 rg = tileRange[tile];
+  for (uint k = k0; k < rg.y; ++k) {
+    Pair P = pairs[rg.x + k];
+    double a0, a1, a2;
+    if (!cover(P, dx, dy, a0, a1, a2)) continue;
+    bool done = false;
+#if !FORCE_EXACT
+    if (k != k0) done = fastpx(P.tri, a0, a1, a2, x, y, px);
+#endif
+    if (!done) px = exactpx(P.tri, a0, a1, a2, x, y, px);
+  }
+  dst[int2(x, y)] = px;
+}
+)HLSL";
+
+// the GPU's copy of one triangle and one (tile, triangle) pair (kHlslRaster's Tri and Pair)
+struct TriG {
+  int32_t A[3], B[3];
+  uint32_t flags, texoff, tw, th, bpp, fast;
+  float cf[9];
+  float inv_af;
+  uint32_t d[38];
+};
+static_assert(sizeof(TriG) == 240, "TriG layout");
+struct PairG {
+  uint32_t tri, box;
+  int32_t Tc[3];
+  uint32_t pad;
+  double W0[3];
+};
+static_assert(sizeof(PairG) == 48, "PairG layout");
+struct CBData {
+  int32_t W, H, tilesX, tileBase;
+  uint32_t listCap, cb1, cb2, cb3;
+};
+
+// floor(a / b) / ceil(a / b) for b > 0 (gl_raster.cpp floor_div / ceil_div)
+int64_t ceil_div(int64_t a, int64_t b) {
+  const int64_t q = a / b;
+  return (a % b != 0 && a > 0) ? q + 1 : q;
+}
+
+// the device every backend of the process shares (made by the first draw; one thread draws: the world thread)
+struct Dev {
+  bool tried = false, ok = false;
+  std::string why = "not started";
+  ID3D11Device *dev = nullptr;
+  ID3D11DeviceContext *ctx = nullptr;
+  ID3D11ComputeShader *cs = nullptr, *cs_args = nullptr, *cs_resume = nullptr;
+  ID3D11Buffer *args = nullptr;
+  ID3D11UnorderedAccessView *args_uav = nullptr;
+  ID3D11Buffer *cb = nullptr;
+  ID3D11Buffer *kc = nullptr, *kcf = nullptr;
+  ID3D11ShaderResourceView *kc_srv = nullptr, *kcf_srv = nullptr;
+  ID3D11Buffer *cnt = nullptr, *cnt_rd = nullptr;
+  ID3D11UnorderedAccessView *cnt_uav = nullptr;
+  ID3D11Query *dis = nullptr, *ta = nullptr, *tb = nullptr;
+  bool force_exact = false;
+  ~Dev() {
+    rel(args_uav); rel(args); rel(cs_resume); rel(cs_args);
+    rel(ta); rel(tb); rel(dis); rel(cnt_uav); rel(cnt_rd); rel(cnt); rel(kcf_srv); rel(kcf); rel(kc_srv); rel(kc); rel(cb); rel(cs);
+    rel(ctx); rel(dev);
+  }
+  bool start() {
+    if (tried) return ok;
+    tried = true;
+    HMODULE dc = LoadLibraryW(L"d3dcompiler_47.dll");
+    if (!dc) return fail("no d3dcompiler_47.dll");
+    auto compile = reinterpret_cast<pD3DCompile>(reinterpret_cast<void *>(GetProcAddress(dc, "D3DCompile")));
+    if (!compile) return fail("no D3DCompile");
+    const D3D_FEATURE_LEVEL want[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0};
+    D3D_FEATURE_LEVEL got = D3D_FEATURE_LEVEL_10_0;
+    HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, want, 2, D3D11_SDK_VERSION, &dev, &got, &ctx);
+    if (FAILED(hr)) hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, want + 1, 1, D3D11_SDK_VERSION, &dev, &got, &ctx);
+    if (FAILED(hr) || !dev) return fail("no D3D11 hardware device at feature level 11");
+    D3D11_FEATURE_DATA_DOUBLES fd = {};
+    D3D11_FEATURE_DATA_D3D11_OPTIONS fo = {};
+    UINT fs = 0;
+    if (!(SUCCEEDED(dev->CheckFeatureSupport(D3D11_FEATURE_DOUBLES, &fd, sizeof fd)) && fd.DoublePrecisionFloatShaderOps) ||
+        !(SUCCEEDED(dev->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fo, sizeof fo)) && fo.ExtendedDoublesShaderInstructions))
+      return fail("no extended double-precision shader ops");
+    if (!(SUCCEEDED(dev->CheckFormatSupport(DXGI_FORMAT_R16_UINT, &fs)) && (fs & D3D11_FORMAT_SUPPORT_TYPED_UNORDERED_ACCESS_VIEW)))
+      return fail("no typed UAV of R16_UINT");
+    const char *fe = std::getenv("SG_P16_EXACT");
+    force_exact = fe && fe[0] == '1';
+    const D3D_SHADER_MACRO defs[] = {{"FORCE_EXACT", force_exact ? "1" : "0"}, {nullptr, nullptr}};
+    const char *entry[3] = {"CSRaster", "CSArgs", "CSResume"};
+    ID3D11ComputeShader **out[3] = {&cs, &cs_args, &cs_resume};
+    for (int i = 0; i < 3; ++i) {
+      ID3DBlob *b = nullptr, *err = nullptr;
+      hr = compile(kHlslRaster, sizeof(kHlslRaster) - 1, "p16b.hlsl", defs, nullptr, entry[i], "cs_5_0",
+                   D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
+      if (FAILED(hr) || !b) {
+        std::string w = std::string(entry[i]) + " failed" + (err ? std::string(": ") + static_cast<const char *>(err->GetBufferPointer()) : "");
+        rel(b);
+        rel(err);
+        return fail(w);
+      }
+      rel(err);
+      hr = dev->CreateComputeShader(b->GetBufferPointer(), b->GetBufferSize(), nullptr, out[i]);
+      rel(b);
+      if (FAILED(hr)) return fail(std::string("CreateComputeShader ") + entry[i]);
+    }
+    {  // pass 2's DispatchIndirect arguments (written by CSArgs)
+      D3D11_BUFFER_DESC ad = {};
+      ad.ByteWidth = 16;
+      ad.Usage = D3D11_USAGE_DEFAULT;
+      ad.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
+      ad.MiscFlags = D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS | D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+      if (FAILED(dev->CreateBuffer(&ad, nullptr, &args))) return fail("indirect arguments");
+      D3D11_UNORDERED_ACCESS_VIEW_DESC au = {};
+      au.Format = DXGI_FORMAT_R32_TYPELESS;
+      au.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+      au.Buffer.NumElements = 4;
+      au.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
+      if (FAILED(dev->CreateUnorderedAccessView(args, &au, &args_uav))) return fail("indirect arguments");
+    }
+    D3D11_BUFFER_DESC bd = {};
+    bd.ByteWidth = sizeof(CBData);
+    bd.Usage = D3D11_USAGE_DYNAMIC;
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    if (FAILED(dev->CreateBuffer(&bd, nullptr, &cb))) return fail("constant buffer");
+    // the constants the CPU computes by expression, as its own bits: dst * 255.0 / 31.0 (FastTables::expand5) and the dither
+    // offsets (kDither[y][x] + 0.5) / 16.0 (FastTables::dither[0]); and the same as floats for the checked path
+    static const int kD[4][4] = {{15, 7, 13, 5}, {3, 11, 1, 9}, {12, 4, 14, 6}, {0, 8, 2, 10}};
+    double kv[48];
+    float kf[48];
+    for (int d = 0; d < 32; ++d) kv[d] = d * 255.0 / 31.0;
+    for (int yy = 0; yy < 4; ++yy)
+      for (int xx = 0; xx < 4; ++xx) kv[32 + yy * 4 + xx] = (kD[yy][xx] + 0.5) / 16.0;
+    for (int i = 0; i < 48; ++i) kf[i] = static_cast<float>(kv[i]);
+    D3D11_BUFFER_DESC kd = {};
+    kd.ByteWidth = sizeof kv;
+    kd.Usage = D3D11_USAGE_IMMUTABLE;
+    kd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    kd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    kd.StructureByteStride = 8;
+    D3D11_SUBRESOURCE_DATA init = {kv, 0, 0};
+    if (FAILED(dev->CreateBuffer(&kd, &init, &kc)) || FAILED(dev->CreateShaderResourceView(kc, nullptr, &kc_srv))) return fail("constants");
+    kd.ByteWidth = sizeof kf;
+    kd.StructureByteStride = 4;
+    init.pSysMem = kf;
+    if (FAILED(dev->CreateBuffer(&kd, &init, &kcf)) || FAILED(dev->CreateShaderResourceView(kcf, nullptr, &kcf_srv))) return fail("constants");
+    // the pixel counters (raw UAV) and their readback copy
+    D3D11_BUFFER_DESC cd = {};
+    cd.ByteWidth = 16;
+    cd.Usage = D3D11_USAGE_DEFAULT;
+    cd.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
+    cd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+    if (FAILED(dev->CreateBuffer(&cd, nullptr, &cnt))) return fail("counters");
+    D3D11_UNORDERED_ACCESS_VIEW_DESC ud = {};
+    ud.Format = DXGI_FORMAT_R32_TYPELESS;
+    ud.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    ud.Buffer.NumElements = 4;
+    ud.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
+    if (FAILED(dev->CreateUnorderedAccessView(cnt, &ud, &cnt_uav))) return fail("counters");
+    cd.Usage = D3D11_USAGE_STAGING;
+    cd.BindFlags = 0;
+    cd.MiscFlags = 0;
+    cd.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    if (FAILED(dev->CreateBuffer(&cd, nullptr, &cnt_rd))) return fail("counters");
+    D3D11_QUERY_DESC q = {D3D11_QUERY_TIMESTAMP_DISJOINT, 0};
+    dev->CreateQuery(&q, &dis);
+    q.Query = D3D11_QUERY_TIMESTAMP;
+    dev->CreateQuery(&q, &ta);
+    dev->CreateQuery(&q, &tb);
+    ok = true;
+    why = "on";
+    return true;
+  }
+  bool fail(const std::string &w) {
+    ok = false;
+    why = w;
+    return false;
+  }
+};
+std::shared_ptr<Dev> g_dev;   // guarded by g_mu for its creation
+
+// a dynamic structured / raw buffer with its view, grown as needed
+struct DynBuf {
+  ID3D11Buffer *buf = nullptr;
+  ID3D11ShaderResourceView *srv = nullptr;
+  size_t cap = 0;
+  ~DynBuf() { rel(srv); rel(buf); }
+  bool fill(ID3D11Device *dev, ID3D11DeviceContext *ctx, const void *data, size_t bytes, size_t stride, bool raw) {
+    const size_t need = std::max<size_t>(bytes, 16);
+    if (need > cap) {
+      rel(srv);
+      rel(buf);
+      size_t c = std::max<size_t>(need + need / 2, 4096);
+      const size_t unit = raw ? 16 : stride;   // a structured buffer's size is a multiple of its stride
+      c = (c + unit - 1) / unit * unit;
+      D3D11_BUFFER_DESC bd = {};
+      bd.ByteWidth = static_cast<UINT>(c);
+      bd.Usage = D3D11_USAGE_DYNAMIC;
+      bd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+      bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+      bd.MiscFlags = raw ? D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS : D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+      bd.StructureByteStride = raw ? 0 : static_cast<UINT>(stride);
+      if (FAILED(dev->CreateBuffer(&bd, nullptr, &buf))) return false;
+      D3D11_SHADER_RESOURCE_VIEW_DESC sd = {};
+      if (raw) {
+        sd.Format = DXGI_FORMAT_R32_TYPELESS;
+        sd.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+        sd.BufferEx.FirstElement = 0;
+        sd.BufferEx.NumElements = static_cast<UINT>(c / 4);
+        sd.BufferEx.Flags = D3D11_BUFFEREX_SRV_FLAG_RAW;
+      } else {
+        sd.Format = DXGI_FORMAT_UNKNOWN;
+        sd.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+        sd.Buffer.FirstElement = 0;
+        sd.Buffer.NumElements = static_cast<UINT>(c / stride);
+      }
+      if (FAILED(dev->CreateShaderResourceView(buf, &sd, &srv))) return false;
+      cap = c;
+    }
+    D3D11_MAPPED_SUBRESOURCE m;
+    if (FAILED(ctx->Map(buf, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return false;
+    if (bytes) std::memcpy(m.pData, data, bytes);
+    ctx->Unmap(buf, 0);
+    return true;
+  }
+};
+
+int64_t ns_since(std::chrono::steady_clock::time_point t0) {
+  return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count();
+}
+
+class D3DRaster : public portsim::gl::GlPixelGpu {
+ public:
+  explicit D3DRaster(std::shared_ptr<Dev> d) : d_(std::move(d)) {
+    if (const char *e = std::getenv("SG_P16_SLICE")) slice_ = std::max(0, std::atoi(e));
+    std::lock_guard<std::mutex> lk(g_mu);
+    g_st.slice = slice_;
+  }
+  ~D3DRaster() override {
+    free_frame();
+    rel(tsrv_);
+    rel(tbuf_);
+  }
+  const char *why() const override { return why_.c_str(); }
+
+  bool draw(int w, int h, uint16_t *fb, const portsim::gl::GlMirror &mm, const std::vector<portsim::gl::GlGpuTri> &tris,
+            const std::vector<portsim::gl::GlGpuTex> &texs) override {
+    portsim::gl::GlMirror mirror = mm;
+    const auto t0 = std::chrono::steady_clock::now();
+    if (dead_) return false;
+    if (!d_->start()) return die(d_->why);
+    ID3D11Device *dev = d_->dev;
+    ID3D11DeviceContext *ctx = d_->ctx;
+    if (w <= 0 || h <= 0 || w > 4096 * 4 || h > 4096 * 4) return die("frame size");
+    if (w != fw_ || h != fh_) {
+      free_frame();
+      if (!make_frame(w, h)) return die("frame textures");
+      mirror.full = true;
+    }
+    // the mirror: all of fb uploaded, or filled and then the rows drawn on the CPU since uploaded
+    const auto tu = std::chrono::steady_clock::now();
+    if (mirror.full) {
+      ctx->UpdateSubresource(mtex_, 0, nullptr, fb, static_cast<UINT>(w) * 2u, 0);
+    } else {
+      if (mirror.clear) {
+        const UINT v[4] = {mirror.value, mirror.value, mirror.value, mirror.value};
+        ctx->ClearUnorderedAccessViewUint(muav_, v);
+      }
+      const int y0 = std::max(0, static_cast<int>(mirror.y0)), y1 = std::min(h - 1, static_cast<int>(mirror.y1));
+      if (y0 <= y1) {
+        D3D11_BOX box = {0, static_cast<UINT>(y0), 0, static_cast<UINT>(w), static_cast<UINT>(y1 + 1), 1};
+        ctx->UpdateSubresource(mtex_, 0, &box, fb + static_cast<size_t>(y0) * static_cast<size_t>(w), static_cast<UINT>(w) * 2u, 0);
+      }
+    }
+    const int64_t up_ns = ns_since(tu);
+    // textures: every image the backend has seen keeps its place in one raw buffer; a new image is appended, and only when the buffer
+    // is full is it made again from the batch's images (twice their size when they do not fit)
+    bool tex_up = false;
+    int64_t tex_bytes = 0;
+    auto tsize = [](const portsim::gl::GlGpuTex &t) { return (static_cast<size_t>(t.w) * t.h * t.bpp + 3) & ~static_cast<size_t>(3); };
+    size_t need = 0, batch = 0;
+    for (const portsim::gl::GlGpuTex &t : texs) {
+      batch += tsize(t);
+      if (!tex_off_.count(t.serial)) need += tsize(t);
+    }
+    if (batch + 8 >= 0x7fffffffu) return die("textures too large");
+    if (need && (!tbuf_ || tex_tail_ + need + 8 > tex_cap_)) {   // made again
+      rel(tsrv_);
+      rel(tbuf_);
+      tex_off_.clear();
+      tex_tail_ = 0;
+      tex_cap_ = std::max<size_t>(std::max<size_t>(batch * 2 + 8, 32u << 20), tex_cap_);
+      tex_cap_ = std::min<size_t>(tex_cap_, 0x7ffffff0u);
+      D3D11_BUFFER_DESC bd = {};
+      bd.ByteWidth = static_cast<UINT>((tex_cap_ + 15) & ~static_cast<size_t>(15));
+      bd.Usage = D3D11_USAGE_DEFAULT;
+      bd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+      bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+      if (FAILED(dev->CreateBuffer(&bd, nullptr, &tbuf_))) return die("texture buffer");
+      D3D11_SHADER_RESOURCE_VIEW_DESC sd = {};
+      sd.Format = DXGI_FORMAT_R32_TYPELESS;
+      sd.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+      sd.BufferEx.NumElements = bd.ByteWidth / 4;
+      sd.BufferEx.Flags = D3D11_BUFFEREX_SRV_FLAG_RAW;
+      if (FAILED(dev->CreateShaderResourceView(tbuf_, &sd, &tsrv_))) return die("texture buffer view");
+      ++tex_rebuilds_;
+    }
+    for (const portsim::gl::GlGpuTex &t : texs) {
+      if (tex_off_.count(t.serial)) continue;
+      const size_t n = static_cast<size_t>(t.w) * t.h * t.bpp, sz = tsize(t);
+      std::vector<uint8_t> tmp;
+      const uint8_t *src = t.data;
+      if (sz != n) {   // the box is whole words: the image padded with zeros
+        tmp.assign(t.data, t.data + n);
+        tmp.resize(sz, 0);
+        src = tmp.data();
+      }
+      D3D11_BOX box = {static_cast<UINT>(tex_tail_), 0, 0, static_cast<UINT>(tex_tail_ + sz), 1, 1};
+      ctx->UpdateSubresource(tbuf_, 0, &box, src, 0, 0);
+      tex_off_[t.serial] = static_cast<uint32_t>(tex_tail_);
+      tex_tail_ += sz;
+      tex_bytes += static_cast<int64_t>(sz);
+      tex_up = true;
+    }
+    // the triangles, and per 16 x 16 tile the (tile, triangle) pairs in triangle order with their coverage thresholds
+    const auto tb = std::chrono::steady_clock::now();
+    const int tx = (w + 15) / 16, ty = (h + 15) / 16;
+    const size_t ntile = static_cast<size_t>(tx) * static_cast<size_t>(ty);
+    tg_.resize(tris.size());
+    count_.assign(ntile + 1, 0);
+    int ymin = h, ymax = -1;
+    for (size_t i = 0; i < tris.size(); ++i) {
+      const portsim::gl::GlGpuTri &s = tris[i];
+      TriG &g = tg_[i];
+      for (int e = 0; e < 3; ++e) {
+        const int p = (e + 1) % 3, q = (e + 2) % 3;
+        g.A[e] = s.X[q] - s.X[p];
+        g.B[e] = s.Y[q] - s.Y[p];
+      }
+      g.flags = s.flags;
+      g.texoff = tex_off_[texs[s.tex].serial];
+      g.tw = texs[s.tex].w;
+      g.th = texs[s.tex].h;
+      g.bpp = texs[s.tex].bpp;
+      const double inv_st = 1.0 / s.div_st, inv_a = 1.0 / s.arA;   // fast_triangle_'s reciprocals
+      const double dv[19] = {s.s[0], s.s[1], s.s[2], s.t[0], s.t[1], s.t[2], s.r[0], s.r[1], s.r[2], s.g[0],
+                             s.g[1], s.g[2], s.b[0], s.b[1], s.b[2], s.div_st, s.arA, inv_st, inv_a};
+      std::memcpy(g.d, dv, sizeof dv);
+      bool fast = !force_exact_ && s.div_st > 0 && s.div_st < 1e300 && s.arA > 0 && s.arA < 1e300;
+      for (int k = 0; k < 3; ++k) {
+        const double c3[3] = {s.r[k], s.g[k], s.b[k]};
+        for (int c = 0; c < 3; ++c) fast = fast && c3[c] >= 0 && c3[c] <= 1;
+        g.cf[k] = static_cast<float>(s.r[k]);
+        g.cf[3 + k] = static_cast<float>(s.g[k]);
+        g.cf[6 + k] = static_cast<float>(s.b[k]);
+      }
+      g.fast = fast ? 1u : 0u;
+      g.inv_af = static_cast<float>(inv_a);
+      if (s.minx > s.maxx || s.miny > s.maxy) continue;
+      ymin = std::min(ymin, s.miny);
+      ymax = std::max(ymax, s.maxy);
+      for (int yy = s.miny >> 4; yy <= (s.maxy >> 4); ++yy)
+        for (int xx = s.minx >> 4; xx <= (s.maxx >> 4); ++xx) ++count_[static_cast<size_t>(yy) * tx + xx];
+    }
+    range_.resize(ntile * 2);
+    tiles_.clear();
+    uint32_t acc = 0;
+    for (size_t t = 0; t < ntile; ++t) {
+      range_[t * 2] = acc;
+      range_[t * 2 + 1] = count_[t];
+      if (count_[t]) tiles_.push_back(static_cast<uint32_t>(t));
+      acc += count_[t];
+      count_[t] = range_[t * 2];   // the next free slot
+    }
+    pairs_.resize(acc);
+    for (size_t i = 0; i < tris.size(); ++i) {
+      const portsim::gl::GlGpuTri &s = tris[i];
+      if (s.minx > s.maxx || s.miny > s.maxy) continue;
+      const TriG &g = tg_[i];
+      for (int yy = s.miny >> 4; yy <= (s.maxy >> 4); ++yy)
+        for (int xx = s.minx >> 4; xx <= (s.maxx >> 4); ++xx) {
+          PairG &pr = pairs_[count_[static_cast<size_t>(yy) * tx + xx]++];
+          const int x0 = xx * 16, y0 = yy * 16;
+          pr.tri = static_cast<uint32_t>(i);
+          const uint32_t bx0 = static_cast<uint32_t>(std::max(s.minx - x0, 0)), bx1 = static_cast<uint32_t>(std::min(s.maxx - x0, 15));
+          const uint32_t by0 = static_cast<uint32_t>(std::max(s.miny - y0, 0)), by1 = static_cast<uint32_t>(std::min(s.maxy - y0, 15));
+          pr.box = bx0 | (bx1 << 8) | (by0 << 16) | (by1 << 24);
+          pr.pad = 0;
+          const int64_t PX0 = 256 * static_cast<int64_t>(x0) + 128, PY0 = 256 * static_cast<int64_t>(y0) + 128;
+          for (int e = 0; e < 3; ++e) {
+            const int p = (e + 1) % 3;
+            const int64_t A = g.A[e], B = g.B[e];
+            const int64_t W0 = A * (PY0 - s.Y[p]) + B * s.X[p] - B * PX0;   // fast_rows_'s K - B * PX at the tile's first pixel
+            const int64_t t = (s.flags & (portsim::gl::kGtInc0 << e)) ? 0 : 1;
+            int64_t tc = ceil_div(t - W0, 256);
+            tc = std::min<int64_t>(std::max<int64_t>(tc, -(int64_t{1} << 30)), int64_t{1} << 30);
+            pr.Tc[e] = static_cast<int32_t>(tc);
+            pr.W0[e] = static_cast<double>(W0);   // exact: |W0| < 2^48
+          }
+        }
+    }
+    if (!tribuf_.fill(dev, ctx, tg_.data(), tg_.size() * sizeof(TriG), sizeof(TriG), false) ||
+        !rangebuf_.fill(dev, ctx, range_.data(), range_.size() * 4, 8, false) ||
+        !pairbuf_.fill(dev, ctx, pairs_.data(), pairs_.size() * sizeof(PairG), sizeof(PairG), false) ||
+        !tilebuf_.fill(dev, ctx, tiles_.data(), tiles_.size() * 4, 4, false))
+      return die("triangle buffers");
+    const int64_t bin_ns = ns_since(tb);
+    // the pass: the mirror copied as the source, then the tiles in slices (each its own submission)
+    int64_t dispatches = 0;
+    const bool timed = d_->dis && d_->ta && d_->tb;
+    if (timed) {
+      ctx->Begin(d_->dis);
+      ctx->End(d_->ta);
+    }
+    const UINT zero[4] = {0, 0, 0, 0};
+    ctx->ClearUnorderedAccessViewUint(d_->cnt_uav, zero);
+    if (!tiles_.empty()) {
+      ctx->CopyResource(stex_, mtex_);
+      ctx->CSSetShader(d_->cs, nullptr, 0);
+      ID3D11ShaderResourceView *srvs[8] = {tribuf_.srv, rangebuf_.srv, pairbuf_.srv, tilebuf_.srv, tsrv_, d_->kc_srv, ssrv_, d_->kcf_srv};
+      ctx->CSSetShaderResources(0, 8, srvs);
+      ID3D11UnorderedAccessView *uavs[3] = {muav_, d_->cnt_uav, luav_};
+      ctx->CSSetUnorderedAccessViews(0, 3, uavs, nullptr);
+      const size_t per = slice_ > 0 ? static_cast<size_t>(slice_) : tiles_.size();
+      for (size_t base = 0; base < tiles_.size(); base += per) {
+        const size_t n = std::min(per, tiles_.size() - base);
+        D3D11_MAPPED_SUBRESOURCE m;
+        if (FAILED(ctx->Map(d_->cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return die("constant buffer map");
+        const CBData c = {w, h, tx, static_cast<int32_t>(base), list_cap_, 0, 0, 0};
+        std::memcpy(m.pData, &c, sizeof c);
+        ctx->Unmap(d_->cb, 0);
+        ctx->CSSetConstantBuffers(0, 1, &d_->cb);
+        ctx->Dispatch(static_cast<UINT>(n), 1, 1);
+        ++dispatches;
+        if (base + n < tiles_.size()) ctx->Flush();
+      }
+      // pass 2: its size from pass 1's count, then the handed pixels
+      ID3D11UnorderedAccessView *au[4] = {muav_, d_->cnt_uav, luav_, d_->args_uav};
+      ctx->CSSetUnorderedAccessViews(0, 4, au, nullptr);
+      ctx->CSSetShader(d_->cs_args, nullptr, 0);
+      ctx->Dispatch(1, 1, 1);
+      ID3D11UnorderedAccessView *noargs = nullptr;
+      ctx->CSSetUnorderedAccessViews(3, 1, &noargs, nullptr);   // the arguments buffer is read by DispatchIndirect, not bound
+      ctx->CSSetShader(d_->cs_resume, nullptr, 0);
+      ctx->DispatchIndirect(d_->args, 0);
+      ++dispatches;
+      ID3D11ShaderResourceView *none[8] = {};
+      ID3D11UnorderedAccessView *nouav[4] = {};
+      ctx->CSSetShaderResources(0, 8, none);
+      ctx->CSSetUnorderedAccessViews(0, 4, nouav, nullptr);
+    }
+    if (timed) {
+      ctx->End(d_->tb);
+      ctx->End(d_->dis);
+    }
+    // the copies back: the counters and the rows the batch can have written (with an upload or a fill the mirror's other rows already
+    // equal fb), both queued before the wait
+    ctx->CopyResource(d_->cnt_rd, d_->cnt);
+    if (ymax >= ymin) {
+      D3D11_BOX box = {0, static_cast<UINT>(ymin), 0, static_cast<UINT>(w), static_cast<UINT>(ymax + 1), 1};
+      ctx->CopySubresourceRegion(rtex_, 0, 0, static_cast<UINT>(ymin), 0, mtex_, 0, &box);
+    }
+    // the counters first (this waits for the pass): a pixel pass 2 could not take (list full, or 2^17 pairs or more in its tile;
+    // neither happens with one list entry per pixel and real tiles) was not finished, and fb is still untouched here
+    const auto tr = std::chrono::steady_clock::now();
+    uint32_t counts[4] = {0, 0, 0, 0};
+    {
+      D3D11_MAPPED_SUBRESOURCE m;
+      if (FAILED(ctx->Map(d_->cnt_rd, 0, D3D11_MAP_READ, 0, &m))) return die("counter readback");
+      std::memcpy(counts, m.pData, sizeof counts);
+      ctx->Unmap(d_->cnt_rd, 0);
+    }
+    const int64_t wait_ns = ns_since(tr);
+    if (counts[2] != 0) return die("pass 2 list overflow");
+    if (FAILED(dev->GetDeviceRemovedReason())) return die("device removed");
+    if (ymax >= ymin) {
+      D3D11_MAPPED_SUBRESOURCE m;
+      const HRESULT hr = ctx->Map(rtex_, 0, D3D11_MAP_READ, 0, &m);
+      if (FAILED(hr)) {
+        char b[64];
+        std::snprintf(b, sizeof b, "readback map 0x%08lx", static_cast<unsigned long>(hr));
+        return die(b);
+      }
+      for (int yy = ymin; yy <= ymax; ++yy)
+        std::memcpy(fb + static_cast<size_t>(yy) * static_cast<size_t>(w),
+                    static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(yy) * m.RowPitch, static_cast<size_t>(w) * 2u);
+      ctx->Unmap(rtex_, 0);
+    }
+    const int64_t read_ns = ns_since(tr);
+    int64_t gpu_ns = -1;
+    if (timed) {
+      D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dj = {};
+      UINT64 a = 0, b = 0;
+      if (ctx->GetData(d_->dis, &dj, sizeof dj, 0) == S_OK && !dj.Disjoint && dj.Frequency &&
+          ctx->GetData(d_->ta, &a, sizeof a, 0) == S_OK && ctx->GetData(d_->tb, &b, sizeof b, 0) == S_OK && b >= a)
+        gpu_ns = static_cast<int64_t>(static_cast<double>(b - a) * 1e9 / static_cast<double>(dj.Frequency));
+    }
+    const int64_t draw_ns = ns_since(t0);
+    std::lock_guard<std::mutex> lk(g_mu);
+    ++g_st.batches;
+    g_st.tris += static_cast<int64_t>(tris.size());
+    g_st.pairs += static_cast<int64_t>(pairs_.size());
+    g_st.groups += static_cast<int64_t>(tiles_.size());
+    g_st.dispatches += dispatches;
+    g_st.uploads += mirror.full ? 1 : 0;
+    g_st.clears += !mirror.full && mirror.clear ? 1 : 0;
+    g_st.tex_uploads += tex_up ? 1 : 0;
+    g_st.tex_bytes += tex_bytes;
+    g_st.tex_count += static_cast<int64_t>(texs.size());
+    g_st.covered += counts[0];
+    g_st.exact += counts[1];
+    g_st.bin_ns += bin_ns;
+    g_st.upload_ns += up_ns;
+    g_st.wait_ns += wait_ns;
+    g_st.read_ns += read_ns;
+    g_st.draw_ns += draw_ns;
+    g_st.max_draw_ns = std::max(g_st.max_draw_ns, draw_ns);
+    if (gpu_ns >= 0) {
+      g_st.gpu_ns += gpu_ns;
+      ++g_st.gpu_timed;
+      g_st.max_gpu_ns = std::max(g_st.max_gpu_ns, gpu_ns);
+    }
+    g_st.force_exact = force_exact_;
+    g_st.state = "on";
+    return true;
+  }
+
+ private:
+  bool die(const std::string &w) {
+    dead_ = true;
+    why_ = w;
+    std::fprintf(stderr, "P16 GPU RASTER off: %s\n", w.c_str());
+    std::lock_guard<std::mutex> lk(g_mu);
+    ++g_st.failures;
+    g_st.state = w;
+    return false;
+  }
+  bool make_frame(int w, int h) {
+    ID3D11Device *dev = d_->dev;
+    force_exact_ = d_->force_exact;
+    D3D11_TEXTURE2D_DESC td = {};
+    td.Width = static_cast<UINT>(w);
+    td.Height = static_cast<UINT>(h);
+    td.MipLevels = 1;
+    td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_R16_UINT;
+    td.SampleDesc.Count = 1;
+    td.Usage = D3D11_USAGE_DEFAULT;
+    td.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
+    if (FAILED(dev->CreateTexture2D(&td, nullptr, &mtex_)) || FAILED(dev->CreateUnorderedAccessView(mtex_, nullptr, &muav_))) return false;
+    td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    if (FAILED(dev->CreateTexture2D(&td, nullptr, &stex_)) || FAILED(dev->CreateShaderResourceView(stex_, nullptr, &ssrv_))) return false;
+    td.BindFlags = 0;
+    td.Usage = D3D11_USAGE_STAGING;
+    td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    if (FAILED(dev->CreateTexture2D(&td, nullptr, &rtex_))) return false;
+    list_cap_ = static_cast<uint32_t>(w) * static_cast<uint32_t>(h);   // one entry per pixel at most
+    D3D11_BUFFER_DESC ld = {};
+    ld.ByteWidth = list_cap_ * 8u;
+    ld.Usage = D3D11_USAGE_DEFAULT;
+    ld.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
+    ld.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    ld.StructureByteStride = 8;
+    if (FAILED(dev->CreateBuffer(&ld, nullptr, &lbuf_)) || FAILED(dev->CreateUnorderedAccessView(lbuf_, nullptr, &luav_))) return false;
+    fw_ = w;
+    fh_ = h;
+    return true;
+  }
+  void free_frame() {
+    rel(muav_); rel(mtex_); rel(ssrv_); rel(stex_); rel(rtex_); rel(luav_); rel(lbuf_);
+    fw_ = fh_ = 0;
+  }
+  std::shared_ptr<Dev> d_;
+  bool dead_ = false, force_exact_ = false;
+  std::string why_ = "on";
+  int slice_ = 0;   // SG_P16_SLICE: tiles per dispatch (0 = pass 1 in one dispatch; slices showed no effect on the paints, P16B_notes.md)
+  int fw_ = 0, fh_ = 0;
+  ID3D11Texture2D *mtex_ = nullptr, *stex_ = nullptr, *rtex_ = nullptr;
+  ID3D11UnorderedAccessView *muav_ = nullptr, *luav_ = nullptr;
+  ID3D11Buffer *lbuf_ = nullptr;
+  uint32_t list_cap_ = 0;
+  ID3D11ShaderResourceView *ssrv_ = nullptr;
+  DynBuf tribuf_, rangebuf_, pairbuf_, tilebuf_;
+  ID3D11Buffer *tbuf_ = nullptr;   // the texture images (raw); tex_off_: byte offset of each image by serial
+  ID3D11ShaderResourceView *tsrv_ = nullptr;
+  std::map<uint64_t, uint32_t> tex_off_;
+  size_t tex_tail_ = 0, tex_cap_ = 0;
+  int64_t tex_rebuilds_ = 0;
+  std::vector<TriG> tg_;
+  std::vector<PairG> pairs_;
+  std::vector<uint32_t> count_, range_, tiles_;
+};
+#endif  // _WIN32
+
+std::string num(double v) {
+  char b[64];
+  std::snprintf(b, sizeof b, "%.3f", v);
+  return b;
+}
+
+}  // namespace
+
+void gpu_raster_enable(bool on) {
+  {
+    std::lock_guard<std::mutex> lk(g_mu);
+    g_st.enabled = on;
+    g_st.state = on ? "not started" : "off";
+  }
+#ifdef _WIN32
+  if (on) {
+    portsim::gl::set_pixel_gpu_factory([]() -> std::shared_ptr<portsim::gl::GlPixelGpu> {
+      std::shared_ptr<Dev> d;
+      {
+        std::lock_guard<std::mutex> lk(g_mu);
+        if (!g_dev) g_dev = std::make_shared<Dev>();
+        d = g_dev;
+      }
+      if (d->tried && !d->ok) return nullptr;   // a device that failed once is not tried again
+      return std::make_shared<D3DRaster>(d);
+    });
+    return;
+  }
+#endif
+  portsim::gl::set_pixel_gpu_factory(nullptr);
+}
+
+std::string gpu_raster_json() {
+  const portsim::gl::GlGpuStats r = portsim::gl::pixel_gpu_stats();
+  std::lock_guard<std::mutex> lk(g_mu);
+  const Stats &s = g_st;
+  const double nb = s.batches ? static_cast<double>(s.batches) : 1.0;
+  std::string o = "{\"enabled\":" + std::string(s.enabled ? "true" : "false") + ",\"state\":\"";
+  for (char c : s.state) o += (c == '"' || c == '\\' || c < 0x20) ? ' ' : c;
+  o += "\",\"force_exact\":" + std::string(s.force_exact ? "true" : "false") + ",\"batches\":" + std::to_string(s.batches) +
+       ",\"tris\":" + std::to_string(s.tris) + ",\"pairs\":" + std::to_string(s.pairs) + ",\"groups\":" + std::to_string(s.groups) +
+       ",\"dispatches\":" + std::to_string(s.dispatches) + ",\"slice\":" + std::to_string(s.slice) +
+       ",\"covered_px\":" + std::to_string(s.covered) + ",\"exact_px\":" + std::to_string(s.exact) +
+       ",\"uploads\":" + std::to_string(s.uploads) + ",\"clears\":" + std::to_string(s.clears) + ",\"tex_uploads\":" + std::to_string(s.tex_uploads) +
+       ",\"tex_mb\":" + num(s.tex_bytes / 1e6) + ",\"tex_per_batch\":" + num(s.tex_count / nb) +
+       ",\"failures\":" + std::to_string(s.failures) + ",\"bin_ms_mean\":" + num(s.bin_ns / 1e6 / nb) +
+       ",\"upload_ms_mean\":" + num(s.upload_ns / 1e6 / nb) + ",\"wait_ms_mean\":" + num(s.wait_ns / 1e6 / nb) +
+       ",\"read_ms_mean\":" + num(s.read_ns / 1e6 / nb) + ",\"draw_ms_mean\":" + num(s.draw_ns / 1e6 / nb) +
+       ",\"draw_ms_max\":" + num(s.max_draw_ns / 1e6) +
+       ",\"gpu_ms_mean\":" + num(s.gpu_timed ? s.gpu_ns / 1e6 / static_cast<double>(s.gpu_timed) : 0.0) +
+       ",\"gpu_ms_max\":" + num(s.max_gpu_ns / 1e6) +
+       ",\"raster\":{\"batches\":" + std::to_string(r.batches) + ",\"tris\":" + std::to_string(r.tris) +
+       ",\"islands\":" + std::to_string(r.islands) + ",\"dropped\":" + std::to_string(r.dropped) +
+       ",\"not\":{\"kind\":" + std::to_string(r.not_kind) + ",\"area\":" + std::to_string(r.not_area) + ",\"range\":" + std::to_string(r.not_range) +
+       ",\"colour\":" + std::to_string(r.not_colour) + "}" +
+       ",\"uploads\":" + std::to_string(r.uploads) + ",\"row_uploads\":" + std::to_string(r.row_uploads) + ",\"clears\":" + std::to_string(r.clears) +
+       ",\"failures\":" + std::to_string(r.failures) + ",\"fallback_tris\":" + std::to_string(r.fallback_tris) +
+       ",\"submit_ms_mean\":" + num(r.batches ? r.submit_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
+       ",\"check\":{\"passes\":" + std::to_string(r.checked) + ",\"bad\":" + std::to_string(r.check_bad) +
+       ",\"bad_px\":" + std::to_string(r.check_badpx) + "}}}";
+  return o;
+}
+
+}  // namespace portapp

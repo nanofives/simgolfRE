@@ -6,8 +6,10 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <chrono>
 #include <cmath>
 #include <condition_variable>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <memory>
@@ -161,6 +163,11 @@ struct FastTables {
     for (int d = 0; d < 32; ++d) expand5[d] = d * 255.0 / 31.0;
   }
 };
+// P16B: texture image serials (1 = the white stand-in of GlRaster::triangle)
+uint64_t next_tex_serial() {
+  static std::atomic<uint64_t> n{16};
+  return n.fetch_add(1);
+}
 const FastTables &fast_tables() {
   static const FastTables t;
   return t;
@@ -171,6 +178,10 @@ inline int quantize_d(double c, double d) {
   return o < 0 ? 0 : (o > 31 ? 31 : o);
 }
 }  // namespace
+
+void pixel_gpu_note_island(int why, bool dropped);   // P16B (below)
+void pixel_gpu_note_check(int64_t bad);
+void pixel_gpu_note_batch(int64_t tris, bool ok, const GlMirror &mirror, int64_t ns);
 
 GlRaster::GlRaster(int width, int height) : w_(width), h_(height), fb_(static_cast<size_t>(width) * height, 0) {
   std::memset(mv_.m, 0, sizeof mv_.m);
@@ -415,6 +426,7 @@ void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t 
   t.w = width;
   t.h = height;
   t.fmt = format;
+  t.serial = next_tex_serial();   // P16B
   const size_t n = static_cast<size_t>(width) * height * (format == kGlRgba ? 4 : 3);
   t.data.assign(data, data + n);
 }
@@ -448,8 +460,15 @@ void GlRaster::fill_masked(uint16_t v) {
   finish();
   if (mask_rows_.empty()) {
     std::fill(fb_.begin(), fb_.end(), v);
+    if (gpu_) {   // P16B: the backend fills its copy instead of an upload
+      gm_ = GlMirror{};
+      gm_.full = false;
+      gm_.clear = true;
+      gm_.value = v;
+    }
     return;
   }
+  gpu_stale_();
   const int a = std::min(std::max(mask_cx0_, 0), w_), b = std::min(std::max(mask_cx1_, a), w_);
   for (int y = 0; y < h_; ++y) {
     if (!mask_rows_[static_cast<size_t>(y)]) continue;
@@ -749,6 +768,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     t.fmt = kGlRgb;
     t.data = {255, 255, 255};
     t.mag = t.min = kNearest;
+    t.serial = 1;   // P16B
     return t;
   }();
   const bool textured = texture2d_ && tit != textures_.end() && tit->second.w != 0;
@@ -855,6 +875,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     if (fast_triangle_(v0, v1, v2, ar, tex, linear, minx, maxx, miny, maxy, inc, walk)) return;
   }
   finish();   // the general loop writes after every queued triangle
+  gpu_dirty_(miny, maxy);   // P16B: rows written on the CPU
   const int32_t tri_id = keep_float_ ? static_cast<int32_t>(tris_.size() / 12) : -1;
   if (keep_float_) {
     for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->x); tris_.push_back(q->y); }
@@ -1134,6 +1155,7 @@ struct GlRaster::FastJob {
   bool wfinal;   // the walk's float32 final stage (tune 32 with tune 35 = 0 and tune 11 = 0)
   const uint8_t *rmask;   // P15A fix 3: GlRaster::set_mask's rows (null: none) and central columns [cx0, cx1)
   int cx0, cx1;
+  uint64_t tser;          // P16B: the texture image's serial
 };
 
 // The pixel-loop workers (set_threads): a ring of jobs written in order by the thread that sets the triangles up; worker k
@@ -1211,6 +1233,10 @@ void GlRaster::set_threads(int n) {
 int GlRaster::threads() const { return pool_ ? pool_->parts : 1; }
 
 void GlRaster::finish() {
+  pool_wait_();
+  if (!gbatch_.empty()) gpu_submit_();   // P16B (every job queued to the workers precedes the batch)
+}
+void GlRaster::pool_wait_() {
   if (!pool_) return;
   Pool &p = *pool_;
   const uint64_t n = p.published.load();
@@ -1419,6 +1445,7 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
   j.linear = linear;
   j.bpp = tex.fmt == kGlRgba ? 4 : 3;
   j.td = tex.data.data();
+  j.tser = tex.serial;
   j.tw = tex.w;
   j.th = tex.h;
   j.twd = static_cast<double>(tex.w);
@@ -1445,6 +1472,24 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
     j.inv_st = static_cast<float>(j.inv_st);
     j.inv_a = static_cast<float>(j.inv_a);
   }
+  if (gpu_) {   // P16B: the pixel backend draws it at finish(), or the pending batch goes first and this one is drawn on the CPU
+    const int why = gpu_ok_(j);
+    if (why == 0) {
+      gbatch_.push_back(std::move(j));
+      return true;
+    }
+    if (!covers_(j)) {   // no pixel to write: nothing to draw, on either side
+      pixel_gpu_note_island(why, true);
+      return true;
+    }
+    gpu_submit_();
+    gpu_dirty_(j.miny, j.maxy);
+    pixel_gpu_note_island(why, false);
+  }
+  cpu_job_(j);
+  return true;
+}
+void GlRaster::cpu_job_(const FastJob &j) {
   if (pool_) {
     queue_(j);
   } else {
@@ -1454,7 +1499,170 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
     stats.blended_px += c[1];
     stats.fast_px += c[2];
   }
-  return true;
+}
+
+// ---- P16B: the pixel backend (gl_raster.h GlPixelGpu; log/roadmap/P16/P16B_notes.md section 1)
+// A triangle goes to the backend when the backend computes exactly fast_rows_'s exact branch for it: the default pipeline's job (no
+// textured walk, no negative control, no mask, fast_mode 1 or 2) whose attributes keep every floor the backend takes inside +-2^29:
+// a covered pixel's s is (a0 s0 + a1 s1 + a2 s2) / div_st with a_i >= 0 summing to arA, so |u| <= max |s_i| * tw * arA / div_st (the
+// same for t); colours below 2^20 keep the quantiser's value below 2^31.
+int GlRaster::gpu_ok_(const FastJob &j) const {
+  if (j.walk || j.dith != 0 || j.white || j.sloppy || j.wctl || j.rmask || !(fast_mode == 1 || fast_mode == 2)) return 1;
+  if (!(std::isfinite(j.arA) && j.arA > 0 && std::isfinite(j.div_st) && j.div_st > 0)) return 2;
+  const double k = j.arA / j.div_st;
+  if (!std::isfinite(k)) return 2;
+  constexpr double kLim = 536870912.0;   // 2^29
+  const double s[3] = {j.s0, j.s1, j.s2}, t[3] = {j.t0, j.t1, j.t2};
+  const double c[9] = {j.r0, j.r1, j.r2, j.g0, j.g1, j.g2, j.b0, j.b1, j.b2};
+  for (int i = 0; i < 3; ++i) {
+    if (!(std::isfinite(s[i]) && std::isfinite(t[i]))) return 3;
+    if (!(std::fabs(s[i]) * j.twd * k < kLim && std::fabs(t[i]) * j.thd * k < kLim)) return 3;
+  }
+  for (double v : c)
+    if (!(std::isfinite(v) && std::fabs(v) < 1048576.0)) return 4;
+  return 0;
+}
+// whether fast_rows_ writes any pixel of j: its rows' spans, computed as there (a masked job is taken as covering)
+bool GlRaster::covers_(const FastJob &j) {
+  if (j.rmask) return true;
+  for (int y = j.miny; y <= j.maxy; ++y) {
+    const int64_t PY = 256 * static_cast<int64_t>(y) + 128;
+    int64_t xl = j.minx, xr = j.maxx;
+    for (int i = 0; i < 3; ++i) {
+      const int p = (i + 1) % 3;
+      const int64_t K = j.A[i] * (PY - j.Y[p]) + j.B[i] * j.X[p];
+      const int64_t R = K - (j.inc[i] ? 0 : 1);
+      if (j.B[i] > 0) xr = std::min(xr, floor_div(floor_div(R, j.B[i]) - 128, 256));
+      else if (j.B[i] < 0) xl = std::max(xl, ceil_div(ceil_div(-R, -j.B[i]) - 128, 256));
+      else if (R < 0) xr = xl - 1;
+    }
+    if (xl <= xr) return true;
+  }
+  return false;
+}
+void GlRaster::gpu_submit_() {
+  if (gbatch_.empty()) return;
+  pool_wait_();   // every job queued to the workers (islands) precedes the batch: fb_ must hold them before it is uploaded or written
+  const auto t0 = std::chrono::steady_clock::now();
+  std::vector<GlGpuTri> tris(gbatch_.size());
+  std::vector<GlGpuTex> texs;
+  for (size_t i = 0; i < gbatch_.size(); ++i) {
+    const FastJob &j = gbatch_[i];
+    GlGpuTri &t = tris[i];
+    for (int k = 0; k < 3; ++k) {
+      t.X[k] = static_cast<int32_t>(j.X[k]);
+      t.Y[k] = static_cast<int32_t>(j.Y[k]);
+    }
+    t.minx = j.minx; t.maxx = j.maxx; t.miny = j.miny; t.maxy = j.maxy;
+    t.flags = (j.inc[0] ? kGtInc0 : 0u) | (j.inc[1] ? kGtInc0 << 1 : 0u) | (j.inc[2] ? kGtInc0 << 2 : 0u) | (j.linear ? kGtLinear : 0u) |
+              (j.modulate ? kGtModulate : 0u) | (j.blend ? kGtBlend : 0u) | (j.bpp == 4 ? kGtRgba : 0u) |
+              (static_cast<uint32_t>(j.ddx & 3) << 8);
+    uint32_t ti = 0;
+    while (ti < texs.size() && texs[ti].serial != j.tser) ++ti;
+    if (ti == texs.size()) texs.push_back(GlGpuTex{j.tser, j.tw, j.th, static_cast<uint32_t>(j.bpp), j.td});
+    t.tex = ti;
+    t.s[0] = j.s0; t.s[1] = j.s1; t.s[2] = j.s2; t.t[0] = j.t0; t.t[1] = j.t1; t.t[2] = j.t2;
+    t.r[0] = j.r0; t.r[1] = j.r1; t.r[2] = j.r2; t.g[0] = j.g0; t.g[1] = j.g1; t.g[2] = j.g2; t.b[0] = j.b0; t.b[1] = j.b1; t.b[2] = j.b2;
+    t.div_st = j.div_st;
+    t.arA = j.arA;
+  }
+  const GlMirror mirror = gm_;
+  static const int check_every = [] {
+    const char *e = std::getenv("SG_P16_RASTERCHECK");
+    return e ? std::max(0, std::atoi(e)) : 0;
+  }();
+  static std::atomic<int64_t> check_n{0};
+  std::vector<uint16_t> ref;
+  if (check_every > 0 && (check_n.fetch_add(1) % check_every) == 0) ref = fb_;
+  const bool ok = gpu_ && gpu_->draw(w_, h_, fb_.data(), mirror, tris, texs);
+  if (ok) {
+    gm_ = GlMirror{};
+    gm_.full = false;   // the copy equals fb_
+    if (!ref.empty()) {   // the same jobs on the CPU loops over the copy, rows split over threads as set_threads does
+      const int parts = std::max(1, std::min(16, static_cast<int>(std::thread::hardware_concurrency())));
+      std::vector<std::thread> th;
+      for (int p = 0; p < parts; ++p)
+        th.emplace_back([this, &ref, p, parts] {
+          int64_t c[3] = {0, 0, 0};
+          for (const FastJob &j : gbatch_) {
+            FastJob jj = j;
+            jj.fb = ref.data();
+            fast_rows_(jj, p, parts, c);
+          }
+        });
+      for (std::thread &t : th) t.join();
+      int64_t bad = 0;
+      size_t first = 0;
+      for (size_t i = 0; i < ref.size(); ++i)
+        if (ref[i] != fb_[i]) {
+          if (!bad) first = i;
+          ++bad;
+        }
+      pixel_gpu_note_check(bad);
+      if (bad)
+        std::fprintf(stderr, "P16 RASTERCHECK %dx%d tris %zu: %lld words differ, first (%d, %d) gpu 0x%04x cpu 0x%04x\n", w_, h_,
+                     gbatch_.size(), static_cast<long long>(bad), static_cast<int>(first % static_cast<size_t>(w_)),
+                     static_cast<int>(first / static_cast<size_t>(w_)), fb_[first], ref[first]);
+    }
+  } else {   // fb_ untouched: the batch drawn on the CPU, in order (exact), and the backend dropped
+    gpu_.reset();
+    gpu_stale_();
+    for (const FastJob &j : gbatch_) {
+      int64_t c[3] = {0, 0, 0};
+      fast_rows_(j, 0, 1, c);
+      stats.drawn_px += c[0];
+      stats.blended_px += c[1];
+      stats.fast_px += c[2];
+    }
+  }
+  pixel_gpu_note_batch(static_cast<int64_t>(gbatch_.size()), ok, mirror,
+                       std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
+  gbatch_.clear();
+}
+namespace {
+std::mutex g_gpu_mu;
+std::function<std::shared_ptr<GlPixelGpu>()> g_gpu_factory;
+GlGpuStats g_gpu_stats;
+}  // namespace
+void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>()> f) {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  g_gpu_factory = std::move(f);
+}
+std::shared_ptr<GlPixelGpu> make_pixel_gpu() {
+  std::function<std::shared_ptr<GlPixelGpu>()> f;
+  {
+    std::lock_guard<std::mutex> lk(g_gpu_mu);
+    f = g_gpu_factory;
+  }
+  return f ? f() : nullptr;
+}
+GlGpuStats pixel_gpu_stats() {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  return g_gpu_stats;
+}
+void pixel_gpu_note_island(int why, bool dropped) {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  ++(why == 1 ? g_gpu_stats.not_kind : why == 2 ? g_gpu_stats.not_area : why == 3 ? g_gpu_stats.not_range : g_gpu_stats.not_colour);
+  ++(dropped ? g_gpu_stats.dropped : g_gpu_stats.islands);
+}
+void pixel_gpu_note_check(int64_t bad) {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  ++g_gpu_stats.checked;
+  if (bad) ++g_gpu_stats.check_bad;
+  g_gpu_stats.check_badpx += bad;
+}
+void pixel_gpu_note_batch(int64_t tris, bool ok, const GlMirror &mirror, int64_t ns) {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  ++g_gpu_stats.batches;
+  g_gpu_stats.tris += tris;
+  g_gpu_stats.submit_ns += ns;
+  if (mirror.full) ++g_gpu_stats.uploads;
+  if (!mirror.full && mirror.clear) ++g_gpu_stats.clears;
+  if (!mirror.full && mirror.y0 <= mirror.y1) ++g_gpu_stats.row_uploads;
+  if (!ok) {
+    ++g_gpu_stats.failures;
+    g_gpu_stats.fallback_tris += tris;
+  }
 }
 
 // the rows y of job j with (y >> 2) % parts == part; c: drawn, blended and reciprocal-path pixel counts

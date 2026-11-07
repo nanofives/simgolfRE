@@ -24,6 +24,57 @@
 namespace portsim {
 namespace gl {
 
+// P16B (log/roadmap/P16/P16B_notes.md): A PIXEL BACKEND. The default pipeline's pixel loop (GlRaster::fast_rows_'s exact branch) run
+// elsewhere (the app's GPU compute pass, port/app/gpu_raster.cpp) on the triangles GlRaster set up, in their order. GlGpuTri is one
+// triangle as fast_rows_ reads it; the doubles are the CPU's own values (bits), the texture is named by its serial.
+struct GlGpuTri {
+  int32_t X[3], Y[3];               // the set-up vertices in units of 2^-8 (|v| < 2^22)
+  int32_t minx, maxx, miny, maxy;   // the box (clipped to the frame)
+  uint32_t flags;                   // kGtInc0 << i: edge i owns its centres; kGtLinear, kGtModulate, kGtBlend, kGtRgba; ddx << 8
+  uint32_t tex;                     // index into the batch's texture list
+  double s[3], t[3], r[3], g[3], b[3], div_st, arA;
+};
+constexpr uint32_t kGtInc0 = 1u, kGtLinear = 1u << 3, kGtModulate = 1u << 4, kGtBlend = 1u << 5, kGtRgba = 1u << 6;
+struct GlGpuTex {
+  uint64_t serial;       // GlRaster's texture image serial (a new one for every glTexImage2D; 1 = the white stand-in)
+  uint32_t w, h, bpp;
+  const uint8_t *data;   // w * h * bpp bytes, valid during the call
+};
+// what the backend's copy of the frame needs before a batch: all of fb (full), or the fill `value` (clear: fb holds that fill) and then
+// fb's rows y0..y1 (drawn on the CPU since; none when y0 > y1)
+struct GlMirror {
+  bool full = true;
+  bool clear = false;
+  uint16_t value = 0;
+  int32_t y0 = 0, y1 = -1;
+};
+class GlPixelGpu {
+ public:
+  virtual ~GlPixelGpu() = default;
+  // The triangles drawn in order over the w x h frame fb (RGB555 words), the backend's copy brought up to date first (m). On true
+  // fb holds the result and the backend's copy equals it; on false fb is untouched (the caller draws the batch on the CPU) and the
+  // backend is not used again. why(): the reason of the last failure.
+  virtual bool draw(int w, int h, uint16_t *fb, const GlMirror &m, const std::vector<GlGpuTri> &tris,
+                    const std::vector<GlGpuTex> &texs) = 0;
+  virtual const char *why() const = 0;
+};
+// the process-wide maker of pixel backends (the app registers one; null = none) and its use
+void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>()> f);
+std::shared_ptr<GlPixelGpu> make_pixel_gpu();
+// P16B: what the backends of the process did (summed over rasters; counters only)
+struct GlGpuStats {
+  int64_t batches = 0, tris = 0, islands = 0, uploads = 0, clears = 0, failures = 0, fallback_tris = 0;
+  int64_t row_uploads = 0;   // batches that uploaded only the rows drawn on the CPU since the last one
+  // triangles the backend does not take, by reason (gl_raster.cpp gpu_ok_), and those of them that cover no pixel (dropped: nothing to
+  // draw, the batch goes on)
+  int64_t not_kind = 0, not_area = 0, not_range = 0, not_colour = 0, dropped = 0;
+  int64_t submit_ns = 0;   // GlRaster::gpu_submit_ wall time (building the batch, the backend's draw incl. the readback)
+  // SG_P16_RASTERCHECK=<n> (development): every n-th batch is also drawn by the CPU loops on a copy of the frame and compared word by
+  // word (stderr `P16 RASTERCHECK` on a difference)
+  int64_t checked = 0, check_bad = 0, check_badpx = 0;
+};
+GlGpuStats pixel_gpu_stats();
+
 class GlRaster : public GlSink {
  public:
   // width x height pixels, 16 bits each (RGB555), row 0 = window y 0
@@ -58,6 +109,11 @@ class GlRaster : public GlSink {
   // P15A fix 3: DISCARD. Primitives are dropped (no vertex is transformed, no pixel written) while every state call (matrices,
   // textures, lights, enables, viewport) still applies: a recorded pass whose pixels a later operation overwrites is replayed so
   void set_discard(bool on) { discard_ = on; }
+  // P16B: the pixel backend (null: the CPU loops). With one, the default pipeline's triangles are drawn by it at finish(); any other
+  // triangle (general loop, textured walk, negative controls, a mask, attributes outside the backend's range) first submits the
+  // pending batch and is drawn on the CPU. The frame is the same either way (gl_raster.cpp gpu_ok_).
+  void set_gpu(std::shared_ptr<GlPixelGpu> g) { finish(); gpu_ = std::move(g); gpu_stale_(); }
+  bool has_gpu() const { return gpu_ != nullptr; }
 
   int width() const { return w_; }
   int height() const { return h_; }
@@ -76,8 +132,11 @@ class GlRaster : public GlSink {
     w_ = w;
     h_ = h;
     fb_.assign(static_cast<size_t>(w) * static_cast<size_t>(h), 0);
+    gpu_stale_();
   }
-  std::vector<uint16_t> &pixels() { finish(); return fb_; }
+  // the frame for writing (P16B: the backend's copy is then stale); a reader uses the const accessor (cpixels)
+  std::vector<uint16_t> &pixels() { finish(); gpu_stale_(); return fb_; }
+  const std::vector<uint16_t> &cpixels() const { const_cast<GlRaster *>(this)->finish(); return fb_; }
   // diagnostics: the colour of every written pixel before it is quantised to 5 bits (0..255 per channel, 3 floats a pixel)
   void keep_float(bool on) {
     finish();
@@ -188,6 +247,7 @@ class GlRaster : public GlSink {
  private:
   struct Tex {
     uint32_t w = 0, h = 0, fmt = 0;
+    uint64_t serial = 0;                         // P16B: a new value for every image (GlGpuTex::serial)
     std::vector<uint8_t> data;                   // RGB or RGBA
     uint32_t mag = 0x2601, min = 0x2702, wrap_s = 0x2901, wrap_t = 0x2901;   // GL defaults
   };
@@ -291,6 +351,22 @@ class GlRaster : public GlSink {
   std::unique_ptr<Pool> pool_;
   void queue_(const FastJob &j);
   static void fast_rows_(const FastJob &j, int part, int parts, int64_t *counters);
+  // P16B: the pixel backend, the triangles queued for it and what its copy of the frame needs (GlMirror)
+  std::shared_ptr<GlPixelGpu> gpu_;
+  std::vector<FastJob> gbatch_;
+  GlMirror gm_;
+  void gpu_stale_() { gm_ = GlMirror{}; }
+  void gpu_dirty_(int y0, int y1) {   // rows written on the CPU (a full upload covers them already)
+    if (gm_.full) return;
+    if (gm_.y0 > gm_.y1) { gm_.y0 = y0; gm_.y1 = y1; return; }
+    gm_.y0 = y0 < gm_.y0 ? y0 : gm_.y0;
+    gm_.y1 = y1 > gm_.y1 ? y1 : gm_.y1;
+  }
+  int gpu_ok_(const FastJob &j) const;   // 0: the backend takes it, else the reason (GlGpuStats not_*)
+  static bool covers_(const FastJob &j);
+  void pool_wait_();
+  void gpu_submit_();
+  void cpu_job_(const FastJob &j);
 };
 
 // P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5): a RECORDED GL STREAM. GlRecord writes every GlSink call (and set_arrays) as

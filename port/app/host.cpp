@@ -1001,7 +1001,7 @@ void LiveSession::run_world_job(WorldJob &j) {
   if (j.hr) portsim::gfx_hr_job_run(*j.hr, *w2_);
   static const std::vector<uint16_t> kNoRoot;
   // P15A fix 3: the world root of this present: the world thread's own raster after the job's ops (the sim's copy before)
-  const std::vector<uint16_t> &root = j.world_raster ? (w2_->raster ? w2_->raster->pixels() : kNoRoot) : (j.root ? *j.root : kNoRoot);
+  const std::vector<uint16_t> &root = j.world_raster ? (w2_->raster ? w2_->raster->cpixels() : kNoRoot) : (j.root ? *j.root : kNoRoot);
   if (j.check_root) {  // SG_P15_CHECK: the replayed root against the sim thread's whole root at the present
     ++wts_.root_checks;
     if (px_digest(root) != j.root_digest) {

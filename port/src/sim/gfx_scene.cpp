@@ -2245,7 +2245,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
         g_hr_queue.cmds.clear();
         g_hr_queue.w = nullptr;
         static const std::vector<uint16_t> kNone;
-        hr_queue_begin(W, W.raster ? W.raster->pixels() : kNone);
+        hr_queue_begin(W, W.raster ? W.raster->cpixels() : kNone);
       }, nullptr, 0);
       w->tag.assign(w->scene.size(), 0);
     } else if (w->hr_open) {
