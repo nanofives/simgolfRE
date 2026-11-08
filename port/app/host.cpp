@@ -1012,6 +1012,34 @@ void move_world_planes(portsim::LiveTerrainWorld &s, portsim::LiveTerrainWorld &
   d.box_word.swap(s.box_word);
 }
 
+// ---- P17B (development): SG_P17_JOBLOG=<file>: the world thread's jobs, written at world_stop. Lines (times in perf_now_ns):
+//   S <t> <index> <seq> <capture> <merged: 1 = a pending job not yet started took this one's ops, its picture dropped> <pending index>
+//     <pending capture>
+//   J <index> <seq> <capture> <submit> <start> <end> <merged_in> <outcome> <overwrote> <compare_ns> <base_ns> <wait_ns> <read_ns>
+//     <compose_ns> <flush_ns>
+//   T <t> <index>   (the window took a published frame: take_frame)
+namespace {
+struct JobLog {
+  std::mutex m;
+  std::vector<std::string> lines;
+  bool on = std::getenv("SG_P17_JOBLOG") != nullptr;
+  void add(std::string s) {
+    if (!on) return;
+    std::lock_guard<std::mutex> lk(m);
+    if (lines.size() < 200000) lines.push_back(std::move(s));
+  }
+  void dump() {
+    if (!on) return;
+    std::lock_guard<std::mutex> lk(m);
+    if (std::FILE *f = std::fopen(std::getenv("SG_P17_JOBLOG"), "w")) {
+      for (const std::string &l : lines) std::fprintf(f, "%s\n", l.c_str());
+      std::fclose(f);
+    }
+  }
+};
+JobLog g_joblog;
+}  // namespace
+
 // ---- P15A: the world thread
 void LiveSession::world_start() {
   if (world_thr_.joinable()) return;
@@ -1027,6 +1055,7 @@ void LiveSession::world_stop() {
   }
   wq_cv_.notify_all();
   world_thr_.join();
+  g_joblog.dump();  // P17B
 }
 
 void LiveSession::world_loop() {
@@ -1048,6 +1077,15 @@ void LiveSession::world_loop() {
     const int64_t t0 = portsim::perf_now_ns();
     run_world_job(*j);
     const int64_t dt = portsim::perf_now_ns() - t0;
+    if (g_joblog.on) {  // P17B
+      int64_t parts[6] = {0, 0, 0, 0, 0, 0};
+      portapp::gpu_world_take_parts(parts);
+      g_joblog.add("J " + std::to_string(j->index) + " " + std::to_string(j->seq) + " " + std::to_string(j->capture ? 1 : 0) + " " +
+                   std::to_string(j->submit_ns) + " " + std::to_string(t0) + " " + std::to_string(t0 + dt) + " " + std::to_string(j->merged_in) +
+                   " " + std::to_string(j->outcome) + " " + std::to_string(j->overwrote ? 1 : 0) + " " + std::to_string(parts[0]) + " " +
+                   std::to_string(parts[1]) + " " + std::to_string(parts[2]) + " " + std::to_string(parts[3]) + " " + std::to_string(parts[4]) +
+                   " " + std::to_string(parts[5]));
+    }
     {
       std::lock_guard<std::mutex> lk(wq_mu_);
       wq_busy_ = false;
@@ -1063,7 +1101,14 @@ void LiveSession::world_loop() {
 // start on), and this one's picture replaces its picture
 void LiveSession::submit_world(std::shared_ptr<WorldJob> j) {
   std::lock_guard<std::mutex> lk(wq_mu_);
+  j->submit_ns = portsim::perf_now_ns();  // P17B
+  if (g_joblog.on)
+    g_joblog.add("S " + std::to_string(j->submit_ns) + " " + std::to_string(j->index) + " " + std::to_string(j->seq) + " " +
+                 std::to_string(j->capture ? 1 : 0) + " " + std::to_string(wq_pending_ ? 1 : 0) + " " +
+                 std::to_string(wq_pending_ ? static_cast<long long>(wq_pending_->index) : -1LL) + " " +
+                 std::to_string(wq_pending_ && wq_pending_->capture ? 1 : 0));
   if (wq_pending_) {
+    j->merged_in = wq_pending_->merged_in + 1;  // P17B
     ++wts_.merged;
     if (wq_pending_->capture) ++wts_.merged_captures;
     std::shared_ptr<portsim::GfxHrJob> ops = wq_pending_->hr;
@@ -1107,14 +1152,17 @@ void LiveSession::run_world_job(WorldJob &j) {
   }
   if (!j.capture) return;
   ++wts_.captures;
+  j.outcome = 5;  // P17B: no picture unless one of the outcomes below
   if (w2_->hr_lost) {  // P17B: a GPU failure left no picture in the hr planes (the next queue start redraws them on the CPU)
     note.lost = true;
+    j.outcome = 4;  // P17B
     return;
   }
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
     if (j.seq <= shown_seq_) {  // a newer frame was published meanwhile
       ++wts_.stale;
+      j.outcome = 2;  // P17B
       return;
     }
   }
@@ -1194,8 +1242,11 @@ void LiveSession::run_world_job(WorldJob &j) {
     std::lock_guard<std::mutex> lk(frame_mu_);
     if (j.seq <= shown_seq_) {
       ++wts_.stale;
+      j.outcome = 3;  // P17B
       return;
     }
+    j.outcome = 1;  // P17B
+    j.overwrote = frame_waiting_;
     shown_seq_ = j.seq;
     frame_world_ = std::move(wi);
     frame_slot_ = std::move(j.show);
@@ -1261,6 +1312,7 @@ static void world_reset(WorldImage &w) {
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
   std::lock_guard<std::mutex> lk(frame_mu_);
   if (!frame_waiting_) return false;
+  if (g_joblog.on) g_joblog.add("T " + std::to_string(portsim::perf_now_ns()) + " " + std::to_string(frame_index_));  // P17B
   px = frame_slot_;
   index = frame_index_;
   if (band) *band = frame_band_;

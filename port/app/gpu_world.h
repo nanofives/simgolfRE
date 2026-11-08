@@ -54,6 +54,9 @@ void gpu_world_share(bool on);
 bool gpu_world_read_cursor(portsim::LiveTerrainWorld &w);
 // session.json p17b
 std::string gpu_world_json();
+// SG_P17_JOBLOG (development): the calling thread's GPU parts since the last call (ns): the start's compare, the base tiles' read, the
+// composition's wait and row copy, the whole composition, the flush; reset
+void gpu_world_take_parts(int64_t out[6]);
 // host.cpp: one world job's parts (ns): the hr ops, the composition with its readback, the whole job
 void gpu_world_job(int64_t ops_ns, int64_t image_ns, int64_t job_ns, bool gpu, bool lost);
 

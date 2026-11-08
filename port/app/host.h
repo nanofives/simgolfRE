@@ -221,6 +221,13 @@ struct WorldJob {
   bool world_raster = false;
   bool check_root = false;
   uint64_t root_digest = 0;
+  // P17B (SG_P17_JOBLOG, development): the submit time, the jobs merged into this one (their pictures dropped), what became of it
+  // (0 no capture, 1 published, 2 stale before the image, 3 stale at the publication, 4 no picture: hr planes lost, 5 no picture: the
+  // image part failed or gave none), and whether its publication replaced a picture the window had not taken
+  int64_t submit_ns = 0;
+  int32_t merged_in = 0;
+  int32_t outcome = 0;
+  bool overwrote = false;
 };
 
 class LiveSession : public portsim::LiveHost {

@@ -59,6 +59,7 @@ struct Stats {
 };
 std::mutex g_mu;
 Stats g_st;
+thread_local int64_t t_parts[6] = {0, 0, 0, 0, 0, 0};   // gpu_world_take_parts
 
 #ifdef _WIN32
 template <class T>
@@ -499,6 +500,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
     ++g_st.flushes;
     g_st.flush_recs += static_cast<int64_t>(b.recs.size());
     g_st.flush_ns += portsim::perf_now_ns() - t0;
+    t_parts[5] += portsim::perf_now_ns() - t0;
     return true;
   }
   bool make_hrc() override {
@@ -702,6 +704,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
       std::lock_guard<std::mutex> lk(g_mu);
       ++g_st.compares;
       g_st.compare_ns += portsim::perf_now_ns() - t0;
+      t_parts[0] += portsim::perf_now_ns() - t0;
       g_st.compare_rows += static_cast<int64_t>(spans.size() / 3);
     }
     return 1;
@@ -746,6 +749,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
       std::lock_guard<std::mutex> lk(g_mu);
       ++g_st.base_reads;
       g_st.base_read_ns += portsim::perf_now_ns() - t0;
+      t_parts[1] += portsim::perf_now_ns() - t0;
       g_st.base_read_px += n;
     }
     return true;
@@ -861,6 +865,9 @@ class D3DWorld final : public portsim::GfxHrGpu {
     g_st.wait_ns += wait;
     g_st.read_ns += portsim::perf_now_ns() - tw - wait;
     g_st.compose_ns += portsim::perf_now_ns() - t0;
+    t_parts[2] += wait;
+    t_parts[3] += portsim::perf_now_ns() - tw - wait;
+    t_parts[4] += portsim::perf_now_ns() - t0;
     return true;
   }
   bool read_cursor(portsim::LiveTerrainWorld &w) {
@@ -1303,6 +1310,13 @@ portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
   (void)ph;
   return nullptr;
 #endif
+}
+
+void gpu_world_take_parts(int64_t out[6]) {
+  for (int k = 0; k < 6; ++k) {
+    out[k] = t_parts[k];
+    t_parts[k] = 0;
+  }
 }
 
 void gpu_world_image_check(int64_t differing) {
