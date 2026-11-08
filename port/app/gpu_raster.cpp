@@ -50,6 +50,10 @@ struct Stats {
   int64_t parts = 0, part_ns = 0, join_ns = 0, map_ns = 0, copy_ns = 0, span_ns = 0;   // P17A (D3DRaster::end_)
   int64_t streamed = 0;   // P17A fix 2: readbacks copied by streaming loads
   int64_t sub_rows = 0, pass_rows = 0;   // P17A fix 2: the submissions' row extents summed, and the passes' rows
+  // P17A fix 3: deferred passes and the late read of their counters; frames read on a reader's first touch (time, Map, copy); the back
+  // surface's GPU copies and reads
+  int64_t lazy_passes = 0, late_wait_ns = 0, lazy_reads = 0, lazy_read_ns = 0, lazy_map_ns = 0, lazy_copy_ns = 0;
+  int64_t back_saves = 0, back_loads = 0, back_reads = 0, back_read_ns = 0;
   int slice = 0;
   bool force_exact = false;
   int mode = 0;            // P16B fix 2: 0 off, 1 on, 2 auto
@@ -838,6 +842,19 @@ int part_setting() {
   const char *e = std::getenv("SG_P17_PART");
   return e ? std::max(0, std::atoi(e)) : kDefaultPart;
 }
+// P17A fix 3: SG_P17_LAZY=0 = the eager readback after every pass (as fix 2); SG_APP_P17=off too. g_lazy: P17B's world backend is on
+// (gpu_raster_lazy, gpu_world.cpp)
+std::atomic<bool> g_lazy{false};
+bool lazy_setting() {
+  if (p17_off()) return false;
+  const char *e = std::getenv("SG_P17_LAZY");
+  return !(e && e[0] == '0');
+}
+// SG_P17_LAZY_NEGCTL=1 (development): every lazy readback of a world raster flips one word (SG_P15_CHECK must read RED)
+bool lazy_negctl() {
+  static const bool on = std::getenv("SG_P17_LAZY_NEGCTL") && std::getenv("SG_P17_LAZY_NEGCTL")[0] == '1';
+  return on;
+}
 bool gpu_pairs_setting() {   // SG_P17_GPU_PAIRS=0: the pairs built on the CPU (P16B)
   if (p17_off()) return false;
   const char *e = std::getenv("SG_P17_GPU_PAIRS");
@@ -933,13 +950,68 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
       pass_open_ = false;
       return false;
     }
-    const bool ok = end_(fb, t0, join_ns, parts);
+    const bool ok = end_(fb, t0, join_ns, parts, defer_);
     pass_open_ = false;
     return ok;
   }
+  // P17A fix 3: THE LAZY FRAME (gl_raster.h GlPixelGpu::lazy). lazy(): SG_P17_LAZY is not 0 and P17B's world backend is on
+  // (gpu_raster_lazy), or this is the self-test's backend (which checks the lazy path at start-up whenever the setting allows it)
+  bool lazy() const override { return !dead_.load() && lazy_setting() && (selftest_ || g_lazy.load()); }
+  bool draw_lazy(int w, int h, uint16_t *fb, const portsim::gl::GlMirror &mm, const std::vector<portsim::gl::GlGpuTri> &tris,
+                 const std::vector<portsim::gl::GlGpuTex> &texs) override {
+    defer_ = true;
+    const bool ok = draw(w, h, fb, mm, tris, texs);
+    defer_ = false;
+    return ok;
+  }
+  bool read(int w, int h, uint16_t *fb) override {
+    if (d_->worker) d_->worker->wait();
+    if (dead_.load() || w != fw_ || h != fh_ || !collect_()) return false;
+    const auto t0 = std::chrono::steady_clock::now();
+    d_->ctx->CopyResource(rtex_, mtex_);
+    int64_t map_ns = 0, copy_ns = 0;
+    if (!rows_(rtex_, fb, 0, h - 1, map_ns, copy_ns)) return false;
+    if (corrupt_ || (lazy_negctl() && !selftest_)) fb[static_cast<size_t>(w / 2)] ^= 1u;   // the forced mismatch (the self-test; SG_P17_LAZY_NEGCTL=1)
+    bump_(&Stats::lazy_reads, 1);
+    bump_(&Stats::lazy_read_ns, ns_since(t0));
+    bump_(&Stats::lazy_map_ns, map_ns);
+    bump_(&Stats::lazy_copy_ns, copy_ns);
+    return true;
+  }
+  bool save_back() override {
+    if (d_->worker) d_->worker->wait();
+    if (dead_.load() || !btex_) return false;
+    d_->ctx->CopyResource(btex_, mtex_);
+    bump_(&Stats::back_saves, 1);
+    return true;
+  }
+  bool load_back() override {
+    if (d_->worker) d_->worker->wait();
+    if (dead_.load() || !btex_) return false;
+    d_->ctx->CopyResource(mtex_, btex_);
+    bump_(&Stats::back_loads, 1);
+    return true;
+  }
+  bool read_back(int w, int h, uint16_t *dst) override {
+    if (d_->worker) d_->worker->wait();
+    if (dead_.load() || !btex_ || w != fw_ || h != fh_ || !collect_()) return false;
+    const auto t0 = std::chrono::steady_clock::now();
+    d_->ctx->CopyResource(rtex_, btex_);
+    int64_t map_ns = 0, copy_ns = 0;
+    if (!rows_(rtex_, dst, 0, h - 1, map_ns, copy_ns)) return false;
+    bump_(&Stats::back_reads, 1);
+    bump_(&Stats::back_read_ns, ns_since(t0));
+    return true;
+  }
 
  private:
-  struct Job {
+  // what one pass (a batch: its parts and its draw) did, summed into p16b at its end
+  struct Pass {
+    int64_t up_ns = 0, bin_ns = 0, tris = 0, pairs = 0, groups = 0, dispatches = 0, subs = 0, tex_bytes = 0, tex_count = 0, sub_rows = 0;
+    int64_t max_tile_pairs = 0;   // P17A fix 3: the most pairs one tile had in one submission
+    bool full = false, clear = false, tex_up = false, timed = false;
+    int ymin = 0, ymax = -1;
+  };  struct Job {
     int w, h;
     const uint16_t *fb;
     portsim::gl::GlMirror m;
@@ -950,6 +1022,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   bool begin_(int w, int h, const uint16_t *fb, const portsim::gl::GlMirror &mm) {
     portsim::gl::GlMirror mirror = mm;
     if (!d_->start()) return die(d_->why);
+    if (!collect_()) return false;   // P17A fix 3: a deferred pass's counters and timer before they are used again
     ID3D11DeviceContext *ctx = d_->ctx;
     if (w <= 0 || h <= 0 || w > 4096 * 4 || h > 4096 * 4) return die("frame size");
     if (w != fw_ || h != fh_) {
@@ -1107,6 +1180,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     tiles_.clear();
     uint32_t acc = 0;
     for (size_t t = t0; t < t1; ++t) {
+      pass_.max_tile_pairs = std::max<int64_t>(pass_.max_tile_pairs, count_[t]);   // P17A fix 3 (end_'s defer rule)
       range_[(t - t0) * 2] = acc;
       range_[(t - t0) * 2 + 1] = count_[t];
       if (count_[t]) tiles_.push_back(static_cast<uint32_t>(t));
@@ -1239,15 +1313,30 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     if (flush) ctx->Flush();   // a part: the GPU starts on it now
     return true;
   }
-  // the pass's end: the summed counters and the rows written copied back, both queued before the wait; then the rows into fb
-  bool end_(uint16_t *fb, std::chrono::steady_clock::time_point t0, int64_t join_ns, int64_t parts) {
+  // the pass's end. Eager: the summed counters and the rows written copied back, both queued before the wait, then the rows into fb.
+  // P17A fix 3, defer (draw_lazy): the counters copied and the pass flushed, nothing waited for; its counters and GPU times are taken
+  // by collect_ (the next pass's begin_, or a read). Deferring needs the counters' only failure ruled out on the CPU: pass 2's list
+  // holds one entry per pixel and a submission hands a pixel at most once, so it overflows only through a tile of 2^17 pairs or more
+  // in one submission (CSRaster's `k < 131072`); such a pass is ended eagerly.
+  bool end_(uint16_t *fb, std::chrono::steady_clock::time_point t0, int64_t join_ns, int64_t parts, bool defer) {
     ID3D11Device *dev = d_->dev;
     ID3D11DeviceContext *ctx = d_->ctx;
-    const int w = fw_;
     const int ymin = pass_.ymin, ymax = pass_.ymax;
     ctx->CopyResource(d_->cnt_rd, d_->acc);
+    if (defer && pass_.max_tile_pairs < 131072) {
+      if (pass_.timed) ctx->End(d_->dis);
+      ctx->Flush();
+      pend_ = true;
+      pend_pass_ = pass_;
+      pend_join_ns_ = join_ns;
+      pend_parts_ = parts;
+      pend_part_ns_ = part_ns_;
+      part_ns_ = 0;
+      pend_draw_ns_ = ns_since(t0);
+      return true;
+    }
     if (ymax >= ymin) {
-      D3D11_BOX box = {0, static_cast<UINT>(ymin), 0, static_cast<UINT>(w), static_cast<UINT>(ymax + 1), 1};
+      D3D11_BOX box = {0, static_cast<UINT>(ymin), 0, static_cast<UINT>(fw_), static_cast<UINT>(ymax + 1), 1};
       ctx->CopySubresourceRegion(rtex_, 0, 0, static_cast<UINT>(ymin), 0, mtex_, 0, &box);
     }
     if (pass_.timed) ctx->End(d_->dis);
@@ -1255,90 +1344,125 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     // neither happens with one list entry per pixel and real tiles) was not finished, and fb is still untouched here
     const auto tr = std::chrono::steady_clock::now();
     uint32_t counts[4] = {0, 0, 0, 0};
-    {
-      D3D11_MAPPED_SUBRESOURCE m;
-      if (FAILED(ctx->Map(d_->cnt_rd, 0, D3D11_MAP_READ, 0, &m))) return die("counter readback");
-      std::memcpy(counts, m.pData, sizeof counts);
-      ctx->Unmap(d_->cnt_rd, 0);
-    }
+    if (!counters_(counts)) return false;
     const int64_t wait_ns = ns_since(tr);
-    if (counts[2] != 0) return die("pass 2 list overflow");
-    if (FAILED(dev->GetDeviceRemovedReason())) return die("device removed");
     int64_t map_ns = 0, copy_ns = 0;
     if (ymax >= ymin) {
-      const auto tm = std::chrono::steady_clock::now();
-      D3D11_MAPPED_SUBRESOURCE m;
-      const HRESULT hr = ctx->Map(rtex_, 0, D3D11_MAP_READ, 0, &m);
-      if (FAILED(hr)) {
-        char b[64];
-        std::snprintf(b, sizeof b, "readback map 0x%08lx", static_cast<unsigned long>(hr));
-        return die(b);
-      }
-      map_ns = ns_since(tm);
-      const auto tc = std::chrono::steady_clock::now();
-      if (!d_->copier) d_->copier = std::make_unique<Copier>(read_threads());
-      const uint8_t *base = static_cast<const uint8_t *>(m.pData);
-      const size_t pitch = m.RowPitch, rows = static_cast<size_t>(ymax - ymin + 1);
-      const bool stream = stream_ && ((reinterpret_cast<uintptr_t>(base) | pitch) & 15u) == 0;   // P17A: streaming loads need 16-byte rows
-      d_->copier->run([&](int k, int n) {   // rows split into n bands
-        const size_t a = rows * static_cast<size_t>(k) / static_cast<size_t>(n), b = rows * static_cast<size_t>(k + 1) / static_cast<size_t>(n);
-        for (size_t r = a; r < b; ++r) {
-          const size_t yy = static_cast<size_t>(ymin) + r;
-          uint8_t *dst = reinterpret_cast<uint8_t *>(fb + yy * static_cast<size_t>(w));
-          if (stream) stream_row(dst, base + yy * pitch, static_cast<size_t>(w) * 2u);
-          else std::memcpy(dst, base + yy * pitch, static_cast<size_t>(w) * 2u);
-        }
-      });
-      if (stream) ++pass_streamed_;
-      copy_ns = ns_since(tc);
-      ctx->Unmap(rtex_, 0);
-      if (corrupt_) fb[static_cast<size_t>(ymin) * static_cast<size_t>(w) + static_cast<size_t>(w / 2)] ^= 1u;   // the forced mismatch
+      if (!rows_(rtex_, fb, ymin, ymax, map_ns, copy_ns)) return false;
+      if (corrupt_) fb[static_cast<size_t>(ymin) * static_cast<size_t>(fw_) + static_cast<size_t>(fw_ / 2)] ^= 1u;   // the forced mismatch
     }
     const int64_t read_ns = ns_since(tr);
-    covered = counts[0];
-    pass2 = counts[1];
     int64_t gpu_ns = -1, span_ns = -1;
-    if (pass_.timed) {
-      D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dj = {};
-      if (ctx->GetData(d_->dis, &dj, sizeof dj, 0) == S_OK && !dj.Disjoint && dj.Frequency) {
-        UINT64 sum = 0, first = 0, last = 0;
-        bool good = true;
-        for (int64_t k = 0; k < pass_.subs && good; ++k) {
-          UINT64 a = 0, b = 0;
-          good = ctx->GetData(stamps_[static_cast<size_t>(k) * 2], &a, sizeof a, 0) == S_OK &&
-                 ctx->GetData(stamps_[static_cast<size_t>(k) * 2 + 1], &b, sizeof b, 0) == S_OK && b >= a;
-          if (good) {
-            sum += b - a;
-            if (k == 0) first = a;
-            last = b;
-          }
-        }
-        if (good) {
-          gpu_ns = static_cast<int64_t>(static_cast<double>(sum) * 1e9 / static_cast<double>(dj.Frequency));
-          span_ns = pass_.subs ? static_cast<int64_t>(static_cast<double>(last - first) * 1e9 / static_cast<double>(dj.Frequency)) : 0;
-        }
-      }
-    }
-    const int64_t draw_ns = ns_since(t0);
+    gpu_times_(pass_, gpu_ns, span_ns);
     const int64_t part_ns = part_ns_;
     part_ns_ = 0;
-    if (selftest_) return true;
+    commit_(pass_, counts, wait_ns, read_ns, map_ns, copy_ns, join_ns, part_ns, parts, ns_since(t0), gpu_ns, span_ns, false);
+    (void)dev;
+    return true;
+  }
+  // the pass's counters (acc, copied into cnt_rd) read, waiting for the GPU; the overflow flag and the device checked
+  bool counters_(uint32_t counts[4]) {
+    ID3D11DeviceContext *ctx = d_->ctx;
+    D3D11_MAPPED_SUBRESOURCE m;
+    if (FAILED(ctx->Map(d_->cnt_rd, 0, D3D11_MAP_READ, 0, &m))) return die("counter readback");
+    std::memcpy(counts, m.pData, sizeof(uint32_t) * 4);
+    ctx->Unmap(d_->cnt_rd, 0);
+    if (counts[2] != 0) return die("pass 2 list overflow");
+    if (FAILED(d_->dev->GetDeviceRemovedReason())) return die("device removed");
+    return true;
+  }
+  // rows y0..y1 of the staging texture st (already copied into) into dst (fw_ words a row), on the Copier's threads
+  bool rows_(ID3D11Texture2D *st, uint16_t *dst, int y0, int y1, int64_t &map_ns, int64_t &copy_ns) {
+    ID3D11DeviceContext *ctx = d_->ctx;
+    const int w = fw_;
+    const auto tm = std::chrono::steady_clock::now();
+    D3D11_MAPPED_SUBRESOURCE m;
+    const HRESULT hr = ctx->Map(st, 0, D3D11_MAP_READ, 0, &m);
+    if (FAILED(hr)) {
+      char b[64];
+      std::snprintf(b, sizeof b, "readback map 0x%08lx", static_cast<unsigned long>(hr));
+      return die(b);
+    }
+    map_ns = ns_since(tm);
+    const auto tc = std::chrono::steady_clock::now();
+    if (!d_->copier) d_->copier = std::make_unique<Copier>(read_threads());
+    const uint8_t *base = static_cast<const uint8_t *>(m.pData);
+    const size_t pitch = m.RowPitch, rows = static_cast<size_t>(y1 - y0 + 1);
+    const bool stream = stream_ && ((reinterpret_cast<uintptr_t>(base) | pitch) & 15u) == 0;   // P17A: streaming loads need 16-byte rows
+    d_->copier->run([&](int k, int n) {   // rows split into n bands
+      const size_t a = rows * static_cast<size_t>(k) / static_cast<size_t>(n), b = rows * static_cast<size_t>(k + 1) / static_cast<size_t>(n);
+      for (size_t r = a; r < b; ++r) {
+        const size_t yy = static_cast<size_t>(y0) + r;
+        uint8_t *d = reinterpret_cast<uint8_t *>(dst + yy * static_cast<size_t>(w));
+        if (stream) stream_row(d, base + yy * pitch, static_cast<size_t>(w) * 2u);
+        else std::memcpy(d, base + yy * pitch, static_cast<size_t>(w) * 2u);
+      }
+    });
+    if (stream) ++pass_streamed_;
+    copy_ns = ns_since(tc);
+    ctx->Unmap(st, 0);
+    return true;
+  }
+  // the pass's GPU time (its submissions summed) and span (first start to last end), when the timer worked
+  void gpu_times_(const Pass &ps, int64_t &gpu_ns, int64_t &span_ns) {
+    ID3D11DeviceContext *ctx = d_->ctx;
+    gpu_ns = span_ns = -1;
+    if (!ps.timed) return;
+    D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dj = {};
+    if (ctx->GetData(d_->dis, &dj, sizeof dj, 0) != S_OK || dj.Disjoint || !dj.Frequency) return;
+    UINT64 sum = 0, first = 0, last = 0;
+    for (int64_t k = 0; k < ps.subs; ++k) {
+      UINT64 a = 0, b = 0;
+      if (!(ctx->GetData(stamps_[static_cast<size_t>(k) * 2], &a, sizeof a, 0) == S_OK &&
+            ctx->GetData(stamps_[static_cast<size_t>(k) * 2 + 1], &b, sizeof b, 0) == S_OK && b >= a))
+        return;
+      sum += b - a;
+      if (k == 0) first = a;
+      last = b;
+    }
+    gpu_ns = static_cast<int64_t>(static_cast<double>(sum) * 1e9 / static_cast<double>(dj.Frequency));
+    span_ns = ps.subs ? static_cast<int64_t>(static_cast<double>(last - first) * 1e9 / static_cast<double>(dj.Frequency)) : 0;
+  }
+  // P17A fix 3: a deferred pass's counters and GPU times, before the timer and the counters are used again (begin_) or the frame is
+  // read; false: the pass failed (the backend is dead; the frame's recipe redraws it)
+  bool collect_() {
+    if (!pend_) return !dead_.load();
+    pend_ = false;
+    const auto tr = std::chrono::steady_clock::now();
+    uint32_t counts[4] = {0, 0, 0, 0};
+    if (!counters_(counts)) return false;
+    const int64_t wait_ns = ns_since(tr);
+    int64_t gpu_ns = -1, span_ns = -1;
+    gpu_times_(pend_pass_, gpu_ns, span_ns);
+    commit_(pend_pass_, counts, wait_ns, 0, 0, 0, pend_join_ns_, pend_part_ns_, pend_parts_, pend_draw_ns_, gpu_ns, span_ns, true);
+    return true;
+  }
+  void commit_(const Pass &ps, const uint32_t counts[4], int64_t wait_ns, int64_t read_ns, int64_t map_ns, int64_t copy_ns, int64_t join_ns,
+               int64_t part_ns, int64_t parts, int64_t draw_ns, int64_t gpu_ns, int64_t span_ns, bool lazy) {
+    covered = counts[0];
+    pass2 = counts[1];
+    if (selftest_) return;
     std::lock_guard<std::mutex> lk(g_mu);
     ++g_st.batches;
-    g_st.tris += pass_.tris;
-    g_st.pairs += pass_.pairs;
-    g_st.groups += pass_.groups;
-    g_st.dispatches += pass_.dispatches;
-    g_st.uploads += pass_.full ? 1 : 0;
-    g_st.clears += pass_.clear ? 1 : 0;
-    g_st.tex_uploads += pass_.tex_up ? 1 : 0;
-    g_st.tex_bytes += pass_.tex_bytes;
-    g_st.tex_count += pass_.tex_count;
+    if (lazy) {
+      ++g_st.lazy_passes;
+      g_st.late_wait_ns += wait_ns;   // the deferred pass's counters read later (not on the pass's wall time)
+    } else {
+      g_st.wait_ns += wait_ns;
+    }
+    g_st.tris += ps.tris;
+    g_st.pairs += ps.pairs;
+    g_st.groups += ps.groups;
+    g_st.dispatches += ps.dispatches;
+    g_st.uploads += ps.full ? 1 : 0;
+    g_st.clears += ps.clear ? 1 : 0;
+    g_st.tex_uploads += ps.tex_up ? 1 : 0;
+    g_st.tex_bytes += ps.tex_bytes;
+    g_st.tex_count += ps.tex_count;
     g_st.covered += counts[0];
     g_st.exact += counts[1];
-    g_st.bin_ns += pass_.bin_ns;
-    g_st.upload_ns += pass_.up_ns;
-    g_st.wait_ns += wait_ns;
+    g_st.bin_ns += ps.bin_ns;
+    g_st.upload_ns += ps.up_ns;
     g_st.read_ns += read_ns;
     g_st.map_ns += map_ns;
     g_st.copy_ns += copy_ns;
@@ -1346,8 +1470,8 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     g_st.part_ns += part_ns;
     g_st.parts += parts;
     g_st.streamed += pass_streamed_;
-    g_st.sub_rows += pass_.sub_rows;
-    g_st.pass_rows += ymax >= ymin ? ymax - ymin + 1 : 0;
+    g_st.sub_rows += ps.sub_rows;
+    g_st.pass_rows += ps.ymax >= ps.ymin ? ps.ymax - ps.ymin + 1 : 0;
     pass_streamed_ = 0;
     g_st.draw_ns += draw_ns;
     g_st.max_draw_ns = std::max(g_st.max_draw_ns, draw_ns);
@@ -1359,7 +1483,11 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     }
     g_st.force_exact = force_exact_;
     g_st.state = "on";
-    return true;
+  }
+  void bump_(int64_t Stats::*f, int64_t v) {
+    if (selftest_) return;
+    std::lock_guard<std::mutex> lk(g_mu);
+    g_st.*f += v;
   }
   bool die(const std::string &w) {
     dead_ = true;
@@ -1385,6 +1513,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     if (FAILED(dev->CreateTexture2D(&td, nullptr, &mtex_)) || FAILED(dev->CreateUnorderedAccessView(mtex_, nullptr, &muav_))) return false;
     td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     if (FAILED(dev->CreateTexture2D(&td, nullptr, &stex_)) || FAILED(dev->CreateShaderResourceView(stex_, nullptr, &ssrv_))) return false;
+    if (FAILED(dev->CreateTexture2D(&td, nullptr, &btex_))) return false;   // P17A fix 3: the back surface
     td.BindFlags = 0;
     td.Usage = D3D11_USAGE_STAGING;
     td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
@@ -1402,17 +1531,13 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     return true;
   }
   void free_frame() {
-    rel(muav_); rel(mtex_); rel(ssrv_); rel(stex_); rel(rtex_); rel(luav_); rel(lbuf_);
+    rel(muav_); rel(mtex_); rel(ssrv_); rel(stex_); rel(rtex_); rel(luav_); rel(lbuf_); rel(btex_);
+    pend_ = false;
     for (ID3D11Query *&q : stamps_) rel(q);
     stamps_.clear();
     fw_ = fh_ = 0;
   }
-  // what one pass (a batch: its parts and its draw) did, summed into p16b at its end
-  struct Pass {
-    int64_t up_ns = 0, bin_ns = 0, tris = 0, pairs = 0, groups = 0, dispatches = 0, subs = 0, tex_bytes = 0, tex_count = 0, sub_rows = 0;
-    bool full = false, clear = false, tex_up = false, timed = false;
-    int ymin = 0, ymax = -1;
-  };
+
   std::shared_ptr<Dev> d_;
   std::atomic<bool> dead_{false};
   bool force_exact_ = false, selftest_ = false, corrupt_ = false;
@@ -1424,7 +1549,11 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   int slice_ = 0;   // SG_P16_SLICE: tiles per dispatch (0 = pass 1 in one dispatch; slices showed no effect on the paints, P16B_notes.md)
   int part_ = 0;    // P17A: triangles per part (0 = none)
   int fw_ = 0, fh_ = 0;
-  ID3D11Texture2D *mtex_ = nullptr, *stex_ = nullptr, *rtex_ = nullptr;
+  ID3D11Texture2D *mtex_ = nullptr, *stex_ = nullptr, *rtex_ = nullptr, *btex_ = nullptr;   // btex_: P17A fix 3, the back surface
+  // P17A fix 3: the deferred pass (draw_lazy) whose counters and GPU times collect_ takes
+  bool defer_ = false, pend_ = false;
+  Pass pend_pass_;
+  int64_t pend_join_ns_ = 0, pend_parts_ = 0, pend_part_ns_ = 0, pend_draw_ns_ = 0;
   ID3D11UnorderedAccessView *muav_ = nullptr, *luav_ = nullptr;
   ID3D11Buffer *lbuf_ = nullptr;
   uint32_t list_cap_ = 0;
@@ -1453,7 +1582,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
 // vertex colours, blended and unblended triangles, every dither column phase (set_dither_dx), small triangles and frame-wide ones that
 // the clipper cuts, and degenerate ones; the GPU's counters say how many pixel writes pass 1's checked path and pass 2's exact path
 // made (st_covered / st_pass2). A difference, or a backend that fails, keeps the CPU raster for the session.
-void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
+void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx, std::vector<uint16_t> &back) {
   uint32_t seed = 0x2468ace1u;
   auto rnd = [&seed]() {
     seed = seed * 1664525u + 1013904223u;
@@ -1462,6 +1591,7 @@ void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
   auto uf = [&rnd](float a, float b) { return a + (b - a) * static_cast<float>(rnd() >> 8) / 16777216.0f; };
   r.set_dither_dx(ddx);
   r.viewport(0, 0, W, H);
+  r.fill_masked(0);   // P17A fix 3: a pass that starts on a fill (the GPU raster's lazy frame)
   uint32_t names[2] = {0, 0};
   r.gen_textures(2, names);
   const uint32_t kTex2d = 0x0DE1, kMin = 0x2801, kMag = 0x2800;
@@ -1492,6 +1622,9 @@ void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
     }
     r.end();
   }
+  // P17A fix 3: the back surface taken here (blit 1: on the GPU for the GPU raster), and put back after the mesh (blit 0), then the
+  // mesh drawn again over it: the frame and the back are compared
+  if (!r.gpu_save_back(back)) back = r.cpixels();
   // P17A fix 2: a mesh of squares cut on a diagonal whose vertices are pixel centres, so the edges pass through pixel centres (an edge
   // function exactly 0, or within one step of the coverage threshold): every such centre is drawn by the one triangle that owns it. The
   // random stream above almost never puts a centre there (SG_P17_PAIRS_NEGCTL=1, a threshold one too high, passed it).
@@ -1499,6 +1632,11 @@ void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
   const int cell = 23;
   auto cx_ = [W](int x) { return (static_cast<float>(x) + 0.5f) * 2.0f / static_cast<float>(W) - 1.0f; };
   auto cy_ = [H](int y) { return (static_cast<float>(y) + 0.5f) * 2.0f / static_cast<float>(H) - 1.0f; };
+  for (int round = 0; round < 2; ++round) {
+  if (round == 1 && !r.gpu_load_back()) {
+    r.back_sync(back);
+    r.set_frame(back);
+  }
   for (int gy = 1; gy + cell < H; gy += cell)
     for (int gx = 1; gx + cell < W; gx += cell) {
       r.bind_texture(kTex2d, names[(gx / cell + gy / cell) % 2]);
@@ -1512,6 +1650,8 @@ void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx) {
       r.end();
     }
   r.flush();
+  }
+  r.back_sync(back);
 }
 void selftest(const std::shared_ptr<Dev> &d) {
   const auto t0 = std::chrono::steady_clock::now();
@@ -1529,9 +1669,12 @@ void selftest(const std::shared_ptr<Dev> &d) {
     portsim::gl::GlRaster cpu(W, H), gpu(W, H);
     auto be = std::make_shared<D3DRaster>(d, true, kSelftestPart);   // P17A: the self-test draws its stream in parts
     gpu.set_gpu(be);
-    selftest_feed(cpu, W, H, 1);
-    selftest_feed(gpu, W, H, 1);
-    const std::vector<uint16_t> &a = gpu.cpixels(), &b = cpu.cpixels();
+    std::vector<uint16_t> cback, gback;
+    selftest_feed(cpu, W, H, 1, cback);
+    selftest_feed(gpu, W, H, 1, gback);
+    std::vector<uint16_t> a = gpu.cpixels(), b = cpu.cpixels();
+    a.insert(a.end(), gback.begin(), gback.end());   // P17A fix 3: the back surfaces compared too
+    b.insert(b.end(), cback.begin(), cback.end());
     covered = be->covered;
     pass2 = be->pass2;
     corrupt = std::getenv("SG_P16_SELFTEST_CORRUPT") && std::getenv("SG_P16_SELFTEST_CORRUPT")[0] == '1';
@@ -1569,7 +1712,7 @@ void selftest(const std::shared_ptr<Dev> &d) {
   g_st.st_differing = differing;
   g_st.st_covered = covered;
   g_st.st_pass2 = pass2;
-  g_st.st_tris = 400 + 2 * 11 * 8;   // P17A fix 2: the random stream and the mesh (11 x 8 squares)
+  g_st.st_tris = 400 + 2 * 2 * 11 * 8;   // P17A fix 2 / 3: the random stream and the mesh (11 x 8 squares) twice
   g_st.st_device_ms = dev_ms;
   g_st.st_test_ms = test_ms;
   if (!pass) g_st.state = "self-test: " + result;
@@ -1583,6 +1726,14 @@ std::string num(double v) {
 }
 
 }  // namespace
+
+void gpu_raster_lazy(bool on) {
+#ifdef _WIN32
+  g_lazy.store(on);
+#else
+  (void)on;
+#endif
+}
 
 void gpu_raster_enable(int mode) {
   const bool on = mode == 1 || mode == 2;
@@ -1669,6 +1820,16 @@ void *gpu_raster_frame(const portsim::gl::GlRaster &r) {
 #endif
 }
 
+namespace {
+bool g_lazy_json() {
+#ifdef _WIN32
+  return g_lazy.load() && lazy_setting();
+#else
+  return false;
+#endif
+}
+}  // namespace
+
 std::string gpu_raster_json() {
   const portsim::gl::GlGpuStats r = portsim::gl::pixel_gpu_stats();
   std::lock_guard<std::mutex> lk(g_mu);
@@ -1701,7 +1862,15 @@ std::string gpu_raster_json() {
        ",\"upload_ms_mean\":" + num(s.upload_ns / 1e6 / nb) + ",\"wait_ms_mean\":" + num(s.wait_ns / 1e6 / nb) +
        ",\"read_ms_mean\":" + num(s.read_ns / 1e6 / nb) + ",\"draw_ms_mean\":" + num(s.draw_ns / 1e6 / nb) +
        ",\"draw_ms_max\":" + num(s.max_draw_ns / 1e6) +
-       p17 + ",\"streamed\":" + std::to_string(s.streamed) + ",\"sub_rows_per_pass\":" + num(s.sub_rows / nb) +
+       p17 + ",\"streamed\":" + std::to_string(s.streamed) + ",\"lazy_passes\":" + std::to_string(s.lazy_passes) +
+       ",\"late_wait_ms_mean\":" + num(s.lazy_passes ? s.late_wait_ns / 1e6 / static_cast<double>(s.lazy_passes) : 0.0) +
+       ",\"lazy_reads\":" + std::to_string(s.lazy_reads) +
+       ",\"lazy_read_ms_mean\":" + num(s.lazy_reads ? s.lazy_read_ns / 1e6 / static_cast<double>(s.lazy_reads) : 0.0) +
+       ",\"lazy_map_ms_mean\":" + num(s.lazy_reads ? s.lazy_map_ns / 1e6 / static_cast<double>(s.lazy_reads) : 0.0) +
+       ",\"lazy_copy_ms_mean\":" + num(s.lazy_reads ? s.lazy_copy_ns / 1e6 / static_cast<double>(s.lazy_reads) : 0.0) +
+       ",\"back_saves\":" + std::to_string(s.back_saves) + ",\"back_loads\":" + std::to_string(s.back_loads) +
+       ",\"back_reads\":" + std::to_string(s.back_reads) +
+       ",\"back_read_ms_mean\":" + num(s.back_reads ? s.back_read_ns / 1e6 / static_cast<double>(s.back_reads) : 0.0) + ",\"sub_rows_per_pass\":" + num(s.sub_rows / nb) +
        ",\"rows_per_pass\":" + num(s.pass_rows / nb) +
        ",\"parts\":" + std::to_string(s.parts) + ",\"parts_per_batch\":" + num(s.parts / nb) +
        ",\"part_ms_mean\":" + num(s.part_ns / 1e6 / nb) + ",\"join_ms_mean\":" + num(s.join_ns / 1e6 / nb) +
@@ -1717,6 +1886,13 @@ std::string gpu_raster_json() {
        ",\"failures\":" + std::to_string(r.failures) + ",\"fallback_tris\":" + std::to_string(r.fallback_tris) +
        ",\"submit_ms_mean\":" + num(r.batches ? r.submit_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
        ",\"parts\":" + std::to_string(r.parts) + ",\"part_ms_mean\":" + num(r.batches ? r.part_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
+       ",\"lazy\":{\"draws\":" + std::to_string(r.lazy_draws) + ",\"fills\":" + std::to_string(r.lazy_fills) +
+       ",\"syncs\":" + std::to_string(r.syncs) + ",\"sync_ms_mean\":" + num(r.syncs ? r.sync_ns / 1e6 / static_cast<double>(r.syncs) : 0.0) +
+       ",\"replays\":" + std::to_string(r.replays) + ",\"tex_syncs\":" + std::to_string(r.tex_syncs) +
+       ",\"back_saves\":" + std::to_string(r.back_saves) + ",\"back_loads\":" + std::to_string(r.back_loads) +
+       ",\"back_syncs\":" + std::to_string(r.back_syncs) +
+       ",\"back_sync_ms_mean\":" + num(r.back_syncs ? r.back_sync_ns / 1e6 / static_cast<double>(r.back_syncs) : 0.0) +
+       ",\"back_replays\":" + std::to_string(r.back_replays) + ",\"lazy_on\":" + std::string(g_lazy_json() ? "true" : "false") + "}" +
        ",\"check\":{\"passes\":" + std::to_string(r.checked) + ",\"bad\":" + std::to_string(r.check_bad) +
        ",\"bad_px\":" + std::to_string(r.check_badpx) + "}}}";
   return o;

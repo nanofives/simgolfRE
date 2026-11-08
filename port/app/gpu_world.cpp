@@ -701,6 +701,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
     if (!dead_) {
       dead_ = true;
       if (!selftest_) {
+        gpu_raster_lazy(false);   // P17A fix 3: the CPU path reads the raster's frame: the readback after every pass again
         std::fprintf(stderr, "P17 GPU WORLD off: %s\n", w.c_str());
         std::lock_guard<std::mutex> lk(g_mu);
         ++g_st.failures;
@@ -946,6 +947,7 @@ portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
     g_st.state = "on";
   }
   g_be = std::move(be);
+  gpu_raster_lazy(true);   // P17A fix 3: the raster's frame stays on the GPU (this backend reads it there)
   return g_be.get();
 #else
   (void)pw;

@@ -67,6 +67,19 @@ class GlPixelGpu {
                     const std::vector<GlGpuTex> &texs) {
     (void)w; (void)h; (void)fb; (void)m; (void)tris; (void)texs;
   }
+  // P17A fix 3: THE LAZY FRAME. lazy(): the backend may keep a batch's result in its copy only (draw_lazy: fb untouched, no wait for
+  // the GPU; false = failed, fb untouched, the backend is not used again); read() copies its copy into fb when a CPU reader needs it
+  // (false = failed). The back surface: save_back() its copy into a second surface of its own, load_back() that surface into its copy,
+  // read_back() that surface into dst (false = not done / failed). Defaults: none (draw_lazy draws eagerly).
+  virtual bool lazy() const { return false; }
+  virtual bool draw_lazy(int w, int h, uint16_t *fb, const GlMirror &m, const std::vector<GlGpuTri> &tris,
+                         const std::vector<GlGpuTex> &texs) {
+    return draw(w, h, fb, m, tris, texs);
+  }
+  virtual bool read(int w, int h, uint16_t *fb) { (void)w; (void)h; (void)fb; return false; }
+  virtual bool save_back() { return false; }
+  virtual bool load_back() { return false; }
+  virtual bool read_back(int w, int h, uint16_t *dst) { (void)w; (void)h; (void)dst; return false; }
 };
 // the process-wide maker of pixel backends (the app registers one; null = none) and its use, for a w x h frame (P16B fix 2: the
 // maker may decline by size, --gpu-terrain auto)
@@ -81,6 +94,11 @@ struct GlGpuStats {
   int64_t not_kind = 0, not_area = 0, not_range = 0, not_colour = 0, dropped = 0;
   int64_t submit_ns = 0;   // GlRaster::gpu_submit_ wall time (building the batch, the backend's draw incl. the readback)
   int64_t parts = 0, part_ns = 0;   // P17A: parts handed over before the batch's end, and GlRaster::gpu_part_'s wall time
+  // P17A fix 3: batches left in the backend's copy (lazy), fills left pending, frames read back on a CPU reader's first touch (syncs,
+  // their wall time), frames redrawn on the CPU because a read failed (replays), the back surface's GPU copies (saves: back = frame,
+  // loads: frame = back), its reads (back_syncs) and replays, and syncs forced by a texture change (tex_syncs)
+  int64_t lazy_draws = 0, lazy_fills = 0, syncs = 0, sync_ns = 0, replays = 0;
+  int64_t back_saves = 0, back_loads = 0, back_syncs = 0, back_sync_ns = 0, back_replays = 0, tex_syncs = 0;
   // SG_P16_RASTERCHECK=<n> (development): every n-th batch is also drawn by the CPU loops on a copy of the frame and compared word by
   // word (stderr `P16 RASTERCHECK` on a difference)
   int64_t checked = 0, check_bad = 0, check_badpx = 0;
@@ -126,6 +144,8 @@ class GlRaster : public GlSink {
   // pending batch and is drawn on the CPU. The frame is the same either way (gl_raster.cpp gpu_ok_).
   void set_gpu(std::shared_ptr<GlPixelGpu> g) {
     finish();
+    fb_sync_();     // P17A fix 3: the frame and the back surface out of the old backend first
+    back_sync_();
     gpu_ = std::move(g);
     gpart_ = gpu_ ? static_cast<size_t>(gpu_->part_tris() > 0 ? gpu_->part_tris() : 0) : 0;
     gpu_stale_();
@@ -138,6 +158,23 @@ class GlRaster : public GlSink {
     const_cast<GlRaster *>(this)->finish();
     return gpu_ && !gm_.full && !gm_.clear && gm_.y0 > gm_.y1;
   }
+  // P17A fix 3 (log/roadmap/P17/P17A_notes.md section 3): THE LAZY FRAME. With a backend whose lazy() is true, a batch that starts on
+  // a pending fill is left in the backend's copy (fb_ is not written) and fill_masked without a mask is left pending; every reader of
+  // fb_ (pixels(), cpixels(), the const pixels()) and every CPU write (islands, the general loop, masked fills, texture changes, a new
+  // backend) first brings fb_ up to date (fb_sync_: the backend's copy read back, or on a failed read the fill and the batches since
+  // redrawn by the CPU loops, exact). frame_synced(): fb_ holds the frame now (no read needed).
+  bool frame_synced() const { return fb_cpu_; }
+  // P17A fix 3: THE BACK SURFACE on the backend (the world thread's back_m, gfx_terrain.cpp blit 1 / blit 0). gpu_save_back(back):
+  // back = the frame on the GPU, when the frame is the backend's (not read back) and lazy; then `back` is not written (its size is
+  // kept) until back_sync(back) is called by its reader. false: nothing done (the caller copies on the CPU; the GPU back is dropped).
+  // gpu_load_back(): the frame = the GPU back (false: not done; the caller calls back_sync and copies). back_sync(back): `back`
+  // brought up to date from the GPU back (read, or its fill and batches redrawn on a failed read); nothing when it is current.
+  bool gpu_save_back(std::vector<uint16_t> &back);
+  bool gpu_load_back();
+  void back_sync(std::vector<uint16_t> &back);
+  bool back_on_gpu() const { return back_gpu_; }
+  // P17A fix 3: the frame replaced by px (px.size() words; else nothing): no read of the old frame first
+  void set_frame(const std::vector<uint16_t> &px);
 
   int width() const { return w_; }
   int height() const { return h_; }
@@ -156,14 +193,16 @@ class GlRaster : public GlSink {
     w_ = w;
     h_ = h;
     fb_.assign(static_cast<size_t>(w) * static_cast<size_t>(h), 0);
+    lazy_reset_();   // P17A fix 3: the new frame is fb_ (0); the GPU back is dropped (the caller makes its back surface new)
     gpu_stale_();
   }
   // the frame for writing (P16B: the backend's copy is then stale); a reader uses the const accessor (cpixels)
-  std::vector<uint16_t> &pixels() { finish(); gpu_stale_(); return fb_; }
-  const std::vector<uint16_t> &cpixels() const { const_cast<GlRaster *>(this)->finish(); return fb_; }
+  std::vector<uint16_t> &pixels() { finish(); fb_sync_(); gpu_stale_(); return fb_; }
+  const std::vector<uint16_t> &cpixels() const { const_cast<GlRaster *>(this)->finish(); fb_sync_(); return fb_; }
   // diagnostics: the colour of every written pixel before it is quantised to 5 bits (0..255 per channel, 3 floats a pixel)
   void keep_float(bool on) {
     finish();
+    fb_sync_();
     keep_float_ = on;
     if (on) { ffb_.assign(fb_.size() * 3, -1.0f); sfb_.assign(fb_.size() * 8, -1.0f); rfb_.assign(fb_.size(), -1.0f); tid_.assign(fb_.size(), -1); tris_.clear(); }
   }
@@ -177,7 +216,7 @@ class GlRaster : public GlSink {
   // three vertices in the counter-clockwise order the rasteriser uses, then their s, t
   const std::vector<int32_t> &triangle_ids() const { return tid_; }
   const std::vector<double> &triangles() const { return tris_; }
-  const std::vector<uint16_t> &pixels() const { const_cast<GlRaster *>(this)->finish(); return fb_; }
+  const std::vector<uint16_t> &pixels() const { const_cast<GlRaster *>(this)->finish(); fb_sync_(); return fb_; }
 
   // ---- the GlSink calls of the render path ----
   void load_identity() override;
@@ -380,6 +419,23 @@ class GlRaster : public GlSink {
   std::vector<FastJob> gbatch_;
   GlMirror gm_;
   size_t gpart_ = 0, gsent_ = 0;   // P17A: triangles per part (0: no parts), and the batch's triangles already handed over in parts
+  // P17A fix 3: the lazy frame. fb_cpu_: fb_ holds the frame; else the frame is rec_ (its fill, then its batches in order), which the
+  // backend's copy holds unless no batch was drawn since the fill (rec_.segs empty: fb_ is only to be filled). The GPU back surface:
+  // back_gpu_ with its recipe back_rec_ and the vector its reader keeps (back_dst_, brought up to date before a texture change).
+  struct Recipe {
+    uint16_t fill = 0;
+    std::vector<std::shared_ptr<const std::vector<FastJob>>> segs;
+  };
+  mutable bool fb_cpu_ = true;
+  mutable Recipe rec_;
+  bool back_gpu_ = false;
+  Recipe back_rec_;
+  std::vector<uint16_t> *back_dst_ = nullptr;
+  void fb_sync_() const;
+  void back_sync_() { if (back_gpu_ && back_dst_) back_sync(*back_dst_); }
+  void tex_sync_();
+  void lazy_reset_() { fb_cpu_ = true; rec_ = Recipe{}; back_gpu_ = false; back_rec_ = Recipe{}; back_dst_ = nullptr; }
+  static void replay_(const Recipe &r, std::vector<uint16_t> &dst);
   void gpu_stale_() { gm_ = GlMirror{}; }
   void gpu_dirty_(int y0, int y1) {   // rows written on the CPU (a full upload covers them already)
     if (gm_.full) return;

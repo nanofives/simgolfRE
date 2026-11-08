@@ -197,7 +197,8 @@ void world_back_take(LiveTerrainWorld &w) {
   w.raster->copy_masked(w.raster->pixels(), w.back_m);
   if (w.sample) w.sample->copy_masked(w.sample->pixels(), w.sample_back);
   gfx_world_op(kGwBlit1, [](LiveTerrainWorld &W) {
-    if (W.raster) W.back_m = W.raster->cpixels();   // P16B: a reader (the pixel backend's copy stays current)
+    // P17A fix 3: on the GPU when the frame is there (gl_raster.h gpu_save_back); else a reader (P16B: the backend's copy stays current)
+    if (W.raster && !W.raster->gpu_save_back(W.back_m)) W.back_m = W.raster->cpixels();
   });
 }
 // blit 0: the root made from the back
@@ -209,7 +210,12 @@ void world_back_put(LiveTerrainWorld &w) {
   if (w.back_m.size() == w.raster->pixels().size()) w.raster->copy_masked(w.back_m, w.raster->pixels());
   if (w.sample && w.sample_back.size() == w.sample->pixels().size()) w.sample->copy_masked(w.sample_back, w.sample->pixels());
   gfx_world_op(kGwBlit0, [](LiveTerrainWorld &W) {
-    if (W.raster && W.back_m.size() == W.raster->pixels().size()) W.raster->pixels() = W.back_m;
+    // P17A fix 3: on the GPU when the back is there (gpu_load_back); else back_m brought up to date and copied without reading the frame
+    if (W.raster && W.back_m.size() == static_cast<size_t>(W.raster->width()) * static_cast<size_t>(W.raster->height()) &&
+        !W.raster->gpu_load_back()) {
+      W.raster->back_sync(W.back_m);
+      W.raster->set_frame(W.back_m);
+    }
   });
 }
 

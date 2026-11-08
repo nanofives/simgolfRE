@@ -181,6 +181,7 @@ inline int quantize_d(double c, double d) {
 
 void pixel_gpu_note_island(int why, bool dropped);   // P16B (below)
 void pixel_gpu_note_part(int64_t ns);   // P17A
+void pixel_gpu_count(int64_t GlGpuStats::*f, int64_t v);   // P17A fix 3
 void pixel_gpu_note_check(int64_t bad);
 void pixel_gpu_note_batch(int64_t tris, bool ok, const GlMirror &mirror, int64_t ns);
 
@@ -421,6 +422,7 @@ void GlRaster::color4f(float r, float g, float b, float a) { cur_c_[0] = r; cur_
 void GlRaster::normal3f(float x, float y, float z) { cur_n_[0] = x; cur_n_[1] = y; cur_n_[2] = z; }
 void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t h, int32_t, uint32_t format, uint32_t, const uint8_t *data) {
   finish();   // queued triangles read the texel bytes this may replace
+  tex_sync_();   // P17A fix 3: so do the lazy frame's and the GPU back's batches
   if (!ctx_ || level != 0 || w <= 0 || h <= 0 || !data) return;
   const uint32_t width = static_cast<uint32_t>(w), height = static_cast<uint32_t>(h);
   Tex &t = textures_[bound_];
@@ -433,6 +435,7 @@ void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t 
 }
 void GlRaster::delete_textures(int32_t n, const uint32_t *ids) {
   finish();
+  tex_sync_();   // P17A fix 3
   if (!ctx_) return;
   for (int i = 0; i < n; ++i) {
     textures_.erase(ids[i]);
@@ -459,7 +462,20 @@ void GlRaster::set_mask(std::vector<uint8_t> rows, int cx0, int cx1) {
 }
 void GlRaster::fill_masked(uint16_t v) {
   finish();
-  if (mask_rows_.empty()) {
+  if (mask_rows_.empty() && gpu_ && gpu_->lazy()) {   // P17A fix 3: the fill left pending (fb_ written only if a reader needs it)
+    fb_cpu_ = false;
+    rec_ = Recipe{};
+    rec_.fill = v;
+    gm_ = GlMirror{};
+    gm_.full = false;
+    gm_.clear = true;
+    gm_.value = v;
+    pixel_gpu_count(&GlGpuStats::lazy_fills, 1);
+    return;
+  }
+  if (mask_rows_.empty()) {   // P17A fix 3: every word overwritten: no read of a lazy frame first
+    fb_cpu_ = true;
+    rec_ = Recipe{};
     std::fill(fb_.begin(), fb_.end(), v);
     if (gpu_) {   // P16B: the backend fills its copy instead of an upload
       gm_ = GlMirror{};
@@ -469,6 +485,7 @@ void GlRaster::fill_masked(uint16_t v) {
     }
     return;
   }
+  fb_sync_();   // P17A fix 3: a masked fill keeps the other words
   gpu_stale_();
   const int a = std::min(std::max(mask_cx0_, 0), w_), b = std::min(std::max(mask_cx1_, a), w_);
   for (int y = 0; y < h_; ++y) {
@@ -876,6 +893,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     if (fast_triangle_(v0, v1, v2, ar, tex, linear, minx, maxx, miny, maxy, inc, walk)) return;
   }
   finish();   // the general loop writes after every queued triangle
+  fb_sync_();   // P17A fix 3: over the frame
   gpu_dirty_(miny, maxy);   // P16B: rows written on the CPU
   const int32_t tri_id = keep_float_ ? static_cast<int32_t>(tris_.size() / 12) : -1;
   if (keep_float_) {
@@ -1485,6 +1503,7 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
       return true;
     }
     gpu_submit_();
+    fb_sync_();   // P17A fix 3: the island is drawn over the frame
     gpu_dirty_(j.miny, j.maxy);
     pixel_gpu_note_island(why, false);
   }
@@ -1598,10 +1617,23 @@ void GlRaster::gpu_submit_() {
     return e ? std::max(0, std::atoi(e)) : 0;
   }();
   static std::atomic<int64_t> check_n{0};
+  const bool check = check_every > 0 && (check_n.fetch_add(1) % check_every) == 0;
+  // P17A fix 3: LAZY when the backend is and the frame is not in fb_ (a pending fill, or lazy batches since it): the result stays in
+  // the backend's copy and the batch joins the frame's recipe. A checked batch is drawn eagerly over the frame read back first (the
+  // check needs both). An eager batch over a lazy frame reads the frame back first (fb_sync_).
+  const bool lazy = gpu_ && gpu_->lazy() && !fb_cpu_ && !check && rec_.segs.size() < 64;
+  if (!lazy) fb_sync_();
   std::vector<uint16_t> ref;
-  if (check_every > 0 && (check_n.fetch_add(1) % check_every) == 0) ref = fb_;
-  const bool ok = gpu_ && gpu_->draw(w_, h_, fb_.data(), mirror, tris, texs);
-  if (ok) {
+  if (check) ref = fb_;
+  const size_t nbatch = gbatch_.size();
+  const bool ok = gpu_ && (lazy ? gpu_->draw_lazy(w_, h_, fb_.data(), mirror, tris, texs) : gpu_->draw(w_, h_, fb_.data(), mirror, tris, texs));
+  if (ok && lazy) {
+    gm_ = GlMirror{};
+    gm_.full = false;   // the copy is the frame
+    rec_.segs.push_back(std::make_shared<const std::vector<FastJob>>(std::move(gbatch_)));
+    gbatch_ = std::vector<FastJob>{};
+    pixel_gpu_count(&GlGpuStats::lazy_draws, 1);
+  } else if (ok) {
     gm_ = GlMirror{};
     gm_.full = false;   // the copy equals fb_
     if (!ref.empty()) {   // the same jobs on the CPU loops over the copy, rows split over threads as set_threads does
@@ -1633,6 +1665,7 @@ void GlRaster::gpu_submit_() {
   } else {   // fb_ untouched: the batch drawn on the CPU, in order (exact), and the backend dropped
     gpu_.reset();
     gpu_stale_();
+    fb_sync_();   // P17A fix 3: a lazy frame redrawn from its recipe first (the backend is gone)
     for (const FastJob &j : gbatch_) {
       int64_t c[3] = {0, 0, 0};
       fast_rows_(j, 0, 1, c);
@@ -1641,11 +1674,99 @@ void GlRaster::gpu_submit_() {
       stats.fast_px += c[2];
     }
   }
-  pixel_gpu_note_batch(static_cast<int64_t>(gbatch_.size()), ok, mirror,
+  pixel_gpu_note_batch(static_cast<int64_t>(nbatch), ok, mirror,
                        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
   gbatch_.clear();
   gsent_ = 0;
 }
+// ---- P17A fix 3: the lazy frame and the GPU back surface (gl_raster.h)
+void GlRaster::replay_(const Recipe &r, std::vector<uint16_t> &dst) {
+  std::fill(dst.begin(), dst.end(), r.fill);
+  int64_t c[3] = {0, 0, 0};
+  for (const std::shared_ptr<const std::vector<FastJob>> &seg : r.segs)
+    for (const FastJob &j : *seg) {
+      FastJob jj = j;
+      jj.fb = dst.data();
+      fast_rows_(jj, 0, 1, c);
+    }
+}
+void GlRaster::fb_sync_() const {
+  if (fb_cpu_) return;
+  GlRaster *self = const_cast<GlRaster *>(this);
+  const auto t0 = std::chrono::steady_clock::now();
+  if (rec_.segs.empty()) {   // only the fill
+    std::fill(self->fb_.begin(), self->fb_.end(), rec_.fill);
+  } else if (gpu_ && self->gpu_->read(w_, h_, self->fb_.data())) {
+    pixel_gpu_count(&GlGpuStats::syncs, 1);
+    pixel_gpu_count(&GlGpuStats::sync_ns,
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
+  } else {   // the backend failed or is gone: the fill and the batches since, on the CPU (exact)
+    replay_(rec_, self->fb_);
+    pixel_gpu_count(&GlGpuStats::replays, 1);
+    if (gpu_) {
+      self->gpu_.reset();
+      self->gpu_stale_();
+    }
+  }
+  self->fb_cpu_ = true;
+  self->rec_ = Recipe{};
+}
+void GlRaster::tex_sync_() {
+  if (fb_cpu_ && !back_gpu_) return;
+  pixel_gpu_count(&GlGpuStats::tex_syncs, 1);
+  fb_sync_();
+  back_sync_();
+}
+bool GlRaster::gpu_save_back(std::vector<uint16_t> &back) {
+  finish();
+  if (gpu_ && gpu_->lazy() && !fb_cpu_ && !rec_.segs.empty() && !gm_.full && !gm_.clear && gm_.y0 > gm_.y1 && gpu_->save_back()) {
+    back_gpu_ = true;
+    back_rec_ = rec_;
+    back_dst_ = &back;
+    if (back.size() != fb_.size()) back.assign(fb_.size(), 0);   // the size its users check; the words come with back_sync
+    pixel_gpu_count(&GlGpuStats::back_saves, 1);
+    return true;
+  }
+  back_gpu_ = false;   // the caller writes `back` on the CPU
+  back_rec_ = Recipe{};
+  back_dst_ = nullptr;
+  return false;
+}
+bool GlRaster::gpu_load_back() {
+  finish();
+  if (!(back_gpu_ && gpu_ && gpu_->lazy() && gpu_->load_back())) return false;
+  fb_cpu_ = false;
+  rec_ = back_rec_;
+  gm_ = GlMirror{};
+  gm_.full = false;   // the copy is the frame (= the back)
+  pixel_gpu_count(&GlGpuStats::back_loads, 1);
+  return true;
+}
+void GlRaster::back_sync(std::vector<uint16_t> &back) {
+  if (!back_gpu_) return;
+  const auto t0 = std::chrono::steady_clock::now();
+  if (back.size() == fb_.size() && gpu_ && gpu_->read_back(w_, h_, back.data())) {
+    pixel_gpu_count(&GlGpuStats::back_syncs, 1);
+    pixel_gpu_count(&GlGpuStats::back_sync_ns,
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
+  } else {
+    if (back.size() != fb_.size()) back.assign(fb_.size(), 0);
+    replay_(back_rec_, back);
+    pixel_gpu_count(&GlGpuStats::back_replays, 1);
+  }
+  back_gpu_ = false;
+  back_rec_ = Recipe{};
+  back_dst_ = nullptr;
+}
+void GlRaster::set_frame(const std::vector<uint16_t> &px) {
+  finish();
+  if (px.size() != fb_.size()) return;
+  fb_ = px;
+  fb_cpu_ = true;
+  rec_ = Recipe{};
+  gpu_stale_();
+}
+
 namespace {
 std::mutex g_gpu_mu;
 std::function<std::shared_ptr<GlPixelGpu>(int, int)> g_gpu_factory;
@@ -1676,6 +1797,10 @@ void pixel_gpu_note_part(int64_t ns) {
   std::lock_guard<std::mutex> lk(g_gpu_mu);
   ++g_gpu_stats.parts;
   g_gpu_stats.part_ns += ns;
+}
+void pixel_gpu_count(int64_t GlGpuStats::*f, int64_t v) {
+  std::lock_guard<std::mutex> lk(g_gpu_mu);
+  g_gpu_stats.*f += v;
 }
 void pixel_gpu_note_check(int64_t bad) {
   std::lock_guard<std::mutex> lk(g_gpu_mu);

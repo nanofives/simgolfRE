@@ -32,6 +32,10 @@ void *gpu_raster_frame(const portsim::gl::GlRaster &r);
 // P17B: P17A's submit thread idle (it and the drawing thread share the context one at a time; the world thread's hr planes use it
 // between passes, after this wait)
 void gpu_raster_context_wait();
+// P17A fix 3 (log/roadmap/P17/P17A_notes.md section 3): the world raster's frame kept on the GPU after each pass (read back on a CPU
+// reader's first touch, gl_raster.h GlRaster::frame_synced) while `on`; P17B's world backend turns it on when it is up and off when it
+// is lost (gpu_world.cpp). SG_P17_LAZY=0 or SG_APP_P17=off: never (the readback after every pass).
+void gpu_raster_lazy(bool on);
 
 }  // namespace portapp
 
