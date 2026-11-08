@@ -3355,6 +3355,47 @@ bool st_run(LiveTerrainWorld &W, GfxHrGpu *g, std::vector<StPlanes> &snaps) {
       snaps.push_back(std::move(p));
     }
   }
+  // P18B (log/roadmap/P18/P18B_notes.md): a sharp sample whose exact channel sum is on a rounding boundary, the case 2560 x 1440 met
+  // (pixel (426, 1285)): the world scale 2.4 (fw 1920, ph 1440: kx = ky = 2.4) and the art at half scale (Scale 1 / 2: fx = fy = 0.5), so
+  // world pixel (10, 7) samples texel fraction (0.25, 0.75) of texels (8, 5) .. (9, 6): bu 64, bv 192, sharp su 51, sb 205 (k = 1.2);
+  // three of those texels draw palette word 0x56ef (blue 15) and the fourth is 0xff, over 0x3227 (blue 7): cov 53248, sws 55081, and
+  // blue = (15 * 53248 + 7 * 12288) / 65536 + 0.5 = 14.0 exactly, so any fused multiply-add in the sums gives 13 (P18B: the RTX 3070's
+  // driver fused them until blit() guarded its products). The rest of the 12 x 8 art draws beside it (more pixels compared).
+  {
+    W.pw = 16;
+    W.ph = 1440;
+    W.fw = 1920;
+    W.ox = 0;
+    W.scene_e = 0;
+    W.hr_filter = 1;
+    W.hr_valid = false;
+    W.hrc_valid = false;
+    W.hrb_valid = false;
+    std::vector<uint16_t> root2(static_cast<size_t>(W.pw) * static_cast<size_t>(W.ph), 0x3227);
+    std::array<uint16_t, 256> pal2 = pal;
+    pal2[0x26] = 0x56ef;
+    Sprite8 a;
+    a.w = 12;
+    a.h = 8;
+    a.px.assign(static_cast<size_t>(a.w) * static_cast<size_t>(a.h), 0xff);
+    a.px[static_cast<size_t>(5) * 12 + 8] = 0x26;
+    a.px[static_cast<size_t>(5) * 12 + 9] = 0x26;
+    a.px[static_cast<size_t>(6) * 12 + 8] = 0x26;
+    g_hr_queue.cmds.clear();
+    g_hr_queue.w = nullptr;
+    hr_queue_begin_gpu(W, &root2);
+    hr_blit(W, a, 0, 0, Scale{1, 1, 2}, DrawBOp{pal2.data()});
+    hr_flush(W);
+    if (!W.hr_valid) return false;
+    StPlanes p;
+    if (g) {
+      if (!g->read(&p.hr, &p.cov, nullptr, nullptr, nullptr, nullptr, nullptr)) return false;
+    } else {
+      p.hr = W.hr;
+      p.cov = W.hr_cov;
+    }
+    snaps.push_back(std::move(p));
+  }
   return true;
 }
 }  // namespace

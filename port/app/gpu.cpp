@@ -448,8 +448,20 @@ uint texel(OOp o, int row, int col) {
   return oart[o.art_off + (uint)row * o.art_w + (uint)col] & 0xffu;
 }
 uint chan(uint v, uint sh) { return (v >> sh) & 31u; }
-uint fin(double c, double inv) {  // min(31, static_cast<uint32_t>(c * inv + 0.5))
-  precise double m = c * inv;
+// P18B (log/roadmap/P18/P18B_notes.md): a product that an add takes, kept a separate rounding. `precise` alone did not do it: on the
+// RTX 3070 (driver of 2026-11) the DXBC's dmul [precise] + dadd [precise] of `bs = bs + e * chan` ran as one fused multiply-add, so a
+// sharp sample whose exact channel sum is on a rounding boundary (2560 x 1440: 13.5 * 65536) gave 13 where hr_blit_rows gives 14.
+// max(p, lo) with lo below every product here is p, but the compiler cannot drop it (max(NaN, lo) is lo), so no add sees a multiply to
+// fuse with. lo comes from the record (a value the compiler cannot know). P18_NOFUSE_OFF (SG_P18_NOFUSE=0, development): the old form.
+double nofuse(double p, double lo) {
+#ifdef P18_NOFUSE_OFF
+  return p;
+#else
+  return max(p, lo);
+#endif
+}
+uint fin(double c, double inv, double lo) {  // min(31, static_cast<uint32_t>(c * inv + 0.5))
+  precise double m = nofuse(c * inv, lo);
   precise double v = m + 0.5;
   return min(31u, (uint)v);
 }
@@ -467,6 +479,7 @@ bool blit(ORec R, int X, int Y, inout uint d) {
   uint dd = d;
   uint r = 0u, gg = 0u, b = 0u;
   precise double rs = 0.0, gs = 0.0, bs = 0.0;
+  precise double lo = -1.0e7 - abs((double)R.x1);   // P18B: below every product (nofuse)
   bool any = false;
   [loop] for (int sj = 0; sj < nsy; ++sj) {
     uint bv = (uint)rw[sj].z;
@@ -513,15 +526,15 @@ bool blit(ORec R, int X, int Y, inout uint d) {
         precise double rest = 65536.0;
         [unroll] for (int k2 = 0; k2 < 4; ++k2) {
           if (c[k2] == 0xffu) continue;
-          precise double e = kk * (double)(usewt ? wt[k2] : ws[k2]);
+          precise double e = nofuse(kk * (double)(usewt ? wt[k2] : ws[k2]), lo);
           rest = rest - e;
-          rs = rs + e * (double)chan(res4[k2], 10u);
-          gs = gs + e * (double)chan(res4[k2], 5u);
-          bs = bs + e * (double)chan(res4[k2], 0u);
+          rs = rs + nofuse(e * (double)chan(res4[k2], 10u), lo);
+          gs = gs + nofuse(e * (double)chan(res4[k2], 5u), lo);
+          bs = bs + nofuse(e * (double)chan(res4[k2], 0u), lo);
         }
-        rs = rs + rest * (double)chan(dd, 10u);
-        gs = gs + rest * (double)chan(dd, 5u);
-        bs = bs + rest * (double)chan(dd, 0u);
+        rs = rs + nofuse(rest * (double)chan(dd, 10u), lo);
+        gs = gs + nofuse(rest * (double)chan(dd, 5u), lo);
+        bs = bs + nofuse(rest * (double)chan(dd, 0u), lo);
         continue;
       }
       [unroll] for (int k3 = 0; k3 < 4; ++k3) {
@@ -542,9 +555,9 @@ bool blit(ORec R, int X, int Y, inout uint d) {
     precise double tr = (double)r + rs;
     precise double tg = (double)gg + gs;
     precise double tb = (double)b + bs;
-    d = (fin(tr, inv) << 10) | (fin(tg, inv) << 5) | fin(tb, inv);
+    d = (fin(tr, inv, lo) << 10) | (fin(tg, inv, lo) << 5) | fin(tb, inv, lo);
   } else {
-    d = (fin((double)r, inv) << 10) | (fin((double)gg, inv) << 5) | fin((double)b, inv);
+    d = (fin((double)r, inv, lo) << 10) | (fin((double)gg, inv, lo) << 5) | fin((double)b, inv, lo);
   }
   return true;
 }
@@ -1182,7 +1195,9 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
       d.obj_why = "no typed UAV of R16_UINT";
     } else {
       ID3DBlob *b = nullptr, *err = nullptr;
-      const HRESULT h = compile(kHlslObj, sizeof(kHlslObj) - 1, "p15c.hlsl", nullptr, nullptr, "CSObj", "cs_5_0",
+      const char *nf = std::getenv("SG_P18_NOFUSE");   // P18B (development): blit()'s products not guarded (gpu_world.cpp's switch too)
+      const D3D_SHADER_MACRO off[] = {{"P18_NOFUSE_OFF", "1"}, {nullptr, nullptr}};
+      const HRESULT h = compile(kHlslObj, sizeof(kHlslObj) - 1, "p15c.hlsl", nf && nf[0] == '0' ? off : nullptr, nullptr, "CSObj", "cs_5_0",
                                 D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
       if (FAILED(h) || !b) {
         d.obj_why = std::string("CSObj failed") + (err ? std::string(": ") + static_cast<const char *>(err->GetBufferPointer()) : "");

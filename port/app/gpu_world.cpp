@@ -307,9 +307,13 @@ bool compile_world_shaders(std::vector<std::vector<uint8_t>> &code, std::string 
   const char *obj = gpu_objects_hlsl(n);
   const std::string text = std::string(obj, n) + kHlslWorld;
   const char *entry[6] = {"CSFlush", "CSNow", "CSHrc", "CSBoxClr", "CSCompose", "CSCmp"};
+  // P18B: SG_P18_NOFUSE=0 (development, the negative control of the self-test's boundary case): blit()'s products not guarded
+  const char *nf = std::getenv("SG_P18_NOFUSE");
+  const D3D_SHADER_MACRO off[] = {{"P18_NOFUSE_OFF", "1"}, {nullptr, nullptr}};
+  const D3D_SHADER_MACRO *defs = nf && nf[0] == '0' ? off : nullptr;
   for (int i = 0; i < 6; ++i) {
     ID3DBlob *b = nullptr, *err = nullptr;
-    const HRESULT hr = compile(text.data(), text.size(), "p17b.hlsl", nullptr, nullptr, entry[i], "cs_5_0",
+    const HRESULT hr = compile(text.data(), text.size(), "p17b.hlsl", defs, nullptr, entry[i], "cs_5_0",
                                D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
     if (FAILED(hr) || !b) {
       why = std::string(entry[i]) + " failed" + (err ? std::string(": ") + static_cast<const char *>(err->GetBufferPointer()) : "");
