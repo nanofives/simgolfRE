@@ -7151,6 +7151,11 @@ int Ph_0041c0c5(u32 F, int* h2in) {
     esi = cc("setDirtyFlagB");                     // ML+0xcb12 setDirtyFlagB -> esi (the key)
     FD(0x10) = esi;                           // ML+0xcb19
     eax = cc("setDirtyFlagA");                     // ML+0xcb1d setDirtyFlagA
+    // P19A (mainLoop.arrowKeyHeldRepeat = 0): no key code this frame while an arrow is held (g_char83821c, which root_handler's onKey
+    // sets for an arrow under the switch and onChar0 clears on a key-up) takes that arrow, as the key repeat would; FD(0x28) is read
+    // again only by the code switch at ML+0xe851
+    if (!SG_DEFECT(g_defect_arrow_held_repeat) && eax == 0 && G32(GS(g_char83821c)) >= 0x25 && G32(GS(g_char83821c)) <= 0x28)
+        eax = G32(GS(g_char83821c));
     FD(0x28) = eax;                           // ML+0xcb24 (second key/flags)
     if (esi == edi) goto a41c150;             // ML+0xcb28 cmp esi,edi; je
     if (!(G32(GS(g_flags)) & 0x8000)) goto a41c150;  // ML+0xcb2a test ah,0x80; je

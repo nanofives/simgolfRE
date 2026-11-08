@@ -693,6 +693,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.zoomInStopsAt4", 0},                 // P11A fix 2 (one zoom level closer: 8)
     {"mainLoop.zoom8Font", 0},                      // P13C (zoom 8 labels keep zoom 4's font)
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
+    {"mainLoop.arrowKeyHeldRepeat", 0},             // P19A item 1 (a held arrow steps the camera every frame from the press)
     {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)
     {"updateTerrainRender.syncTilesAfterEdit", 0},  // P13D item 5 (the terrain synced once at load: the first placement changes only its tiles)
     {"mainLoop.rightClickKeepsTool", 0},            // P13A (a right click with nothing to undo drops the tool)
@@ -1507,6 +1508,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       wo.on_undo_key = [&session](int op) { session.request_undo(op); };
       wo.undo_context = [&session]() { return session.in_frame_body(); };
     }
+  }
+  {  // P19A item 1: the focus-loss key-up only when the profile turns mainLoop.arrowKeyHeldRepeat on (0)
+    const int d = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");
+    wo.release_arrow_on_blur = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
   }
   if (o.close_prompt) wo.on_close_button = [&session]() { session.request_close(); };  // P5B item 3
   wo.focus_child_takes = [&session](uint32_t msg, uint32_t wp) { return session.focus_child_takes(msg, wp); };  // U-1616

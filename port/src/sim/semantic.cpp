@@ -26,6 +26,8 @@
 
 namespace portsim {
 
+extern int g_defect_arrow_held_repeat;  // tick.cpp mainLoop.arrowKeyHeldRepeat (P19A item 1)
+
 namespace {
 // Negative controls (mode 0 is the correct lowering):
 //   1 = a Click's left button is lowered with the right button's handlers (onPress2 / onUnpoint2)
@@ -154,7 +156,13 @@ int32_t apply_key(Ctx &ctx, const Command &cmd) {
     if (ch == 0) throw MissingResource{"semantic Key: neither a key nor a character"};
     return root(ctx, 7, static_cast<int32_t>(ch), cmd.arg[3], 0, 0, t);
   }
-  if (ch == 0) return root(ctx, 7, 0, static_cast<int32_t>(vk), 0, 0, t);  // a non-character key: onKey(0, vk)
+  if (ch == 0) {  // a non-character key: onKey(0, vk)
+    const int32_t r = root(ctx, 7, 0, static_cast<int32_t>(vk), 0, 0, t);
+    // P19A (mainLoop.arrowKeyHeldRepeat = 0): onKey keeps an arrow in the held-key word, which H1 then steps by every frame; a Key
+    // action is a tap, so its key-up (onChar0: that word cleared, nothing else) follows
+    if (!SG_DEFECT(g_defect_arrow_held_repeat) && vk >= 0x25 && vk <= 0x28) root(ctx, 9, 0, 0, 0, 0, 0);
+    return r;
+  }
   root(ctx, 8, static_cast<int32_t>(vk), 0, 0, 0, 0);                    // WM_KEYDOWN: onChar(vk)
   if (SG_NEGCTL(g_negctl_semantic) == 2) return 0;
   return root(ctx, 7, static_cast<int32_t>(ch), static_cast<int32_t>(vk), 0, 0, t);  // WM_CHAR: onKey(ch, vk)

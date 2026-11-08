@@ -274,6 +274,8 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
     }
     e.wp = wp;
   }
+  if (msg == kWmKeyDown) down_vk_ = wp & 0xff;  // P19A (rootWin_onChar / rootWin_onChar0 keep the same word in the game)
+  else if (msg == kWmKeyUp) down_vk_ = 0;
   if (opt_.before_translate) opt_.before_translate(msg, wp);
   if (opt_.remap && msg >= kWmMouseMove && msg <= 0x20a) {  // G32: a point over a moved HUD panel goes to its 800-space place
     int32_t x = static_cast<int16_t>(lp & 0xffff), y = static_cast<int16_t>(lp >> 16);
@@ -382,6 +384,12 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
     }
     case WM_ERASEBKGND:
       return 1;
+    case WM_KILLFOCUS:  // P19A item 1: the held arrow's key-up goes to the window taking the focus; give the game one
+      if (opt_.release_arrow_on_blur && down_vk_ >= VK_LEFT && down_vk_ <= VK_DOWN) {
+        ++blur_releases_;
+        input(kWmKeyUp, down_vk_, 0xc0000001u);
+      }
+      return DefWindowProcW(h, msg, wp, lp);
     case WM_DPICHANGED:
       if (!opt_.dpi) {
         if (opt_.resizable) {  // P5B item 4: the user's size, as Windows rescaled it for the new monitor

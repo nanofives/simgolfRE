@@ -135,6 +135,14 @@ int g_defect_tool_zoom4 = 1;
 // mainLoop.cameraStepFixed4 (P11F): the arrow keys (ML+0xe971..ML+0xea73) step the camera 4 tiles at every zoom; fixed (0): 2 tiles
 // at zoom 8 (the screen distance 4 tiles cover at zoom 4). The edge scroll (ML+0xebb4..ML+0xec89, 1 tile per frame) is unchanged.
 int g_defect_camera_step4 = 1;
+// mainLoop.arrowKeyHeldRepeat (P19A, Mariano's play-test 7 item 1 "i press once and moves a little, then it proceeds to keep moving,
+// i want just a constant moving"): H1 takes the key code once per frame (setDirtyFlagA's take-and-clear of gDirtyFlagA, which
+// rootWin_onKey(0, vk) writes on every WM_KEYDOWN of a key with no character, the arrows' path), so a held arrow moves the camera once
+// on its press and again only when Windows' key repeat starts after its delay, then once per frame. Fixed (0): rootWin_onKey also keeps
+// an arrow (0x25..0x28, no modifier) in the held-key word g_char83821c (rootWin_onChar writes it for character keys, rootWin_onChar0
+// clears it on every key-up; no code of the exe reads it), and a frame whose key code is 0 while that word holds an arrow takes that
+// arrow, so the camera steps once per frame from the press until the release (commands.cpp root_handler, semantic.cpp apply_key).
+int g_defect_arrow_held_repeat = 1;
 // mainLoop.zoom8Font (P13C item 3, Mariano 2026-11-06 "on the closest zoom level font changes"): four label sites pick the draw font
 // by `g_zoomScale > 4` (the golfer label queue_label ML+0x7518 / ML+0x7aa8 callers, P4_ballLabelDraw ML+0x71b7..ML+0x71c1): zoom 8
 // (P11A, unreachable in the original) took g_font51b360 where zoom 4 takes g_fontRef_519fd8. Fixed (0): the choice uses min(zoom, 4).
@@ -2125,6 +2133,11 @@ const DefectDef kDefects[] = {
     {"mainLoop.cameraStepFixed4", "P11F",
      "an arrow key moves the camera 4 tiles at every zoom; fixed: 2 tiles at zoom 8 (the same screen distance as 4 tiles at zoom 4)",
      &g_defect_camera_step4},
+    {"mainLoop.arrowKeyHeldRepeat", "P19A",
+     "a held arrow key moves the camera on its press and again only once Windows' key repeat starts (its delay), then one step per "
+     "frame; fixed: an arrow's key-down is kept in the held-key word until a key-up, and every frame without a key code takes that "
+     "arrow (one step per frame from the press to the release)",
+     &g_defect_arrow_held_repeat},
     {"mainLoop.rightClickKeepsTool", "P13A",
      "a right click on the course with a terrain tool held keeps the tool and marks the tile for the right-click undo; fixed: on a "
      "tile the undo has nothing to act on (no recorded edit, no placed object) it drops the tool instead",

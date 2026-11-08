@@ -25,6 +25,7 @@
 namespace portsim {
 
 extern int g_defect_undo_button_help;  // tick.cpp mainLoop.undoButtonHelpOnly (P13A; commands_panels.inc undo_button)
+extern int g_defect_arrow_held_repeat;  // tick.cpp mainLoop.arrowKeyHeldRepeat (P19A item 1)
 
 namespace {
 // Negative controls: mode 0 is the correct body.
@@ -212,6 +213,9 @@ int32_t root_handler(Ctx &ctx, const Command &c) {
       const int32_t a = c.a0, code = c.a1;
       gs.gDirtyFlagB = (code >= 0x60 && code <= 0x69 && mode != 3) ? 0 : a;
       gs.gDirtyFlagA = code;
+      // P19A (mainLoop.arrowKeyHeldRepeat = 0): an arrow's key-down (a key with no character: onKey(0, vk)) is also kept in the
+      // held-key word, which no code of the exe reads (onChar writes it, onChar0 clears it on every key-up); H1 steps by it
+      if (!SG_DEFECT(g_defect_arrow_held_repeat) && a == 0 && code >= 0x25 && code <= 0x28) gs.g_char83821c = code;
       gs.g_key838208 = code == 0x1000d ? 1 : 0;
       if (gs.g_audio5aa774 == 0 || c.t > gs.g_audio5aa774) gs.g_ui83ab9c = 0;
       return 1;

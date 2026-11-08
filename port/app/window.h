@@ -113,6 +113,9 @@ struct WindowOptions {
   // character and key-up messages are then never handed to the game. Null = both go to the game as before.
   std::function<void(int op)> on_undo_key;
   std::function<bool()> undo_context;
+  // P19A item 1: with the sim's play switch mainLoop.arrowKeyHeldRepeat on, a held arrow scrolls until its key-up; when the window
+  // loses the focus with an arrow down (its key-up then goes to another window), a key-up of that arrow is handed to the game
+  bool release_arrow_on_blur = false;
 };
 
 class AppWindow {
@@ -151,8 +154,11 @@ class AppWindow {
   // not to the client; that button's next client button-up is the end of a title-bar double-click or a frame click, not a click
   uint32_t nc_press_ = 0;
   uint32_t nc_ups_dropped_ = 0;
+  uint32_t down_vk_ = 0;       // P19A: the last key-down handed to the game, 0 after any key-up (the game's held-key word)
+  uint32_t blur_releases_ = 0;
 
  public:
+  uint32_t blur_releases() const { return blur_releases_; }
   uint32_t zoom_remaps() const { return zoom_remaps_; }
   uint32_t nc_ups_dropped() const { return nc_ups_dropped_; }
 
