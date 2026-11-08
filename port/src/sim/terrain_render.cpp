@@ -37,6 +37,7 @@ namespace {
 //  15 renderTileAtFiveOffsets draws nothing           16 renderTileAtFiveOffsets' second offset -10 (not -20)
 //  17 enableBlackLight1 gives light 1 the ambient (0.2, 0.2, 0.2, 1) (GlRaster models light 0 only: blind in its pixels)
 //  18 renderTileAtFiveOffsets swaps its 90 and 180 degree neighbour sets
+//  19 a turned fairway tile's piece-2 faces draw piece 0 (P13A fix 6; Tile::render.fairwayStripesFixed = 0 only)
 int32_t g_negctl_terrain_render = 0;
 int32_t g_cull_margin = 0;   // P8B: terrain_render_set_cull_margin
 
@@ -502,12 +503,12 @@ class Renderer {
     // P13A (Tile::render.fairwayStripesFixed = 0): a fairway / firm fairway tile (types 2 / 3) whose rotation (setType's third
     // argument: the exe's g_tileVariant byte, 12 + orientation % 12 for a tile the paint tool laid, mainLoop's H2_Terrain) has an
     // odd orientation takes the texture coordinates of the next view (Terrain.dll's table turns every (u, v) 90 degrees about the
-    // centre from one view to the next) on its faces, so its mowing stripes turn 90 degrees; Tab steps the orientation. The
-    // pieces' borders (FairwayA / FirmFairwayA 0001..0009: piece p is file p + 1) are the same on all four sides for pieces 0, 1,
-    // 3, 4 and 5..8, so those turn whole. Piece 2 has its border on two opposite sides only, which a turn would move to the other
-    // two; on a turned tile a piece-2 face draws piece 0's texture (plain) turned instead, so its stripes match the tile's and it
-    // has no border of its own (measured: kept unturned the tile showed stripes both ways, and piece 1 put a border inside the
-    // turned area; log/roadmap/P13/P13A_notes.md fix 6).
+    // centre from one view to the next) on its faces, so its mowing stripes turn 90 degrees; Tab steps the orientation. Every
+    // face turns whole, its own piece included: the pieces' borders (FairwayA / FirmFairwayA 0001..0009: piece p is file p + 1) are
+    // the same on all four sides (0 and 5..8 none, 1 a frame, 3 rounded, 4 the four corners rounded, 2 a small dark nub in each of
+    // the four corners, the rim of an inner corner), so a 90-degree turn leaves each where it was. P19B item 4: P13A fix 6 drew a
+    // turned tile's piece-2 faces with piece 0 (it took piece 2 for a two-sided border); that dropped the nubs and left light
+    // notches in the fairway's dark rim (log/roadmap/P19/P19B_notes.md).
     int32_t uv_turn = view;
     if (!SG_DEFECT(g_defect_fairway_stripes_fixed) && (tile_type(t) == 2 || tile_type(t) == 3)) {
       const int32_t r = i32(t + kTileRotation);
@@ -525,7 +526,7 @@ class Renderer {
       } else {
         tex = u32v(f + kFaceTexture);
       }
-      if (uv_turn != view && u8(f + kFaceSlot) == 2)   // P13A: a turned tile's two-sided border piece (see above)
+      if (uv_turn != view && u8(f + kFaceSlot) == 2 && g_negctl_terrain_render == 19)   // control 19: P13A fix 6's piece 0
         tex = texture(static_cast<uint32_t>(tile_type(t)), static_cast<uint32_t>(i32(t + kTileVariation)), 0u);
       if (tex != last || g_negctl_terrain_render == 2) {
         gl_.bind_texture(gl::kTexture2D, tex);

@@ -157,7 +157,7 @@ int g_defect_h_shot_style = 1;
 // g_tileVariant (H2_Terrain, ML+0x10fdd / ML+0x1108b), which syncTiles hands to Terrain::setType as the tile's rotation. Terrain.dll
 // reads that rotation for the sand trap (four rake textures by rotation % 4), the green (bit 0x80) and water, never for the fairway
 // (types 2 / 3: one texture set, vertical mowing stripes), so Tab does nothing visible on a fairway. Fixed (0): Tile::render
-// (terrain_render.cpp) draws a fairway tile whose orientation is odd with its plain faces' stripes turned 90 degrees.
+// (terrain_render.cpp) draws a fairway tile whose orientation is odd with every face's stripes turned 90 degrees.
 int g_defect_fairway_stripes_fixed = 1;
 // mainLoop.undoButtonHelpOnly (P13A item 12, Mariano's option C): the palettes' Undo button (the bulldozer) only shows the right-click
 // undo help; fixed (0): it toggles the game's dormant bulldoze mode (g_flags bit 27: a left click runs demolishObject on the cursor
