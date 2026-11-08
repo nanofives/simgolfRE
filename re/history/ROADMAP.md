@@ -1174,3 +1174,28 @@ Dev log SG_P17_JOBLOG (per job: submit / start / end, merges, GPU waits, the fra
 SG_P15_CHECK and SG_P14_VERIFY 0 differing, segments x64 = I25. Open: U-P17B-02 (an intermittent one-step A/B difference in a golfer
 name label's course text-run patch at 4K mood5; predates P17; log/roadmap/P17/P17B_uncertain.tsv), GPU exactness measured on the RTX
 3070 only (as U-P16B-01), the real 120 Hz numbers, and shorter world jobs (their rare 190-250 ms spikes cause the few merged pictures).
+
+## P18: the GPU at every window size, the first 4K job, the triangle set-up (2026-11-08)
+Brief log/roadmap/P18/BRIEF.md, notes log/roadmap/P18/P18{A,B}_notes.md, orchestrator handoff log/roadmap/P18/ORCH_HANDOFF.md. App-side
+changes off with SG_APP_P18=off (port/test/conftest.py). LIVING-PC rebooted at 05:44 for the kernel Token leak; the display came back at
+60 Hz, so the timed runs after it are "display on, 60 Hz" (DwmFlush 61/s), judged on world job time, world pictures/s, cores and missed
+vblanks rather than paints/s.
+P18A (89b7540d): the terrain raster's triangle set-up (emit's vertex rule and lighting, triangle()'s clipping, culling, texture rho and
+filter, box, snapped vertices, the GPU triangle record) moved off the world thread onto 4 set-up workers (gl_raster.cpp "P18A: THE
+SET-UP WORKERS", SG_P18_SETUP_THREADS, chunks of 256 triangles, SG_P18_CHUNK). The world thread files each block's inputs (48 bytes a
+vertex) with a state snapshot taken again only after a setter that changes it; the results are merged in stream order, so every job
+reaches the GPU parts exactly as before; the lazy recipe's batch storage is recycled. A GPU set-up was measured and rejected (notes
+section 1). The self-test gained a set-up section; negative control SG_P18_NEGCTL=1 (no specular term). t2 (60 Hz): 4K set-up 8.94 ->
+2.23 ms, world job 39.9 -> 34.0 ms, 1080 world job 17.0 -> 15.6 ms, 4K arrows z2 paint p95 61.7 -> 32.2 ms.
+P18B (042eb0b2, 17278a4e, 6ed3d391). Fix 1: the GPU hr pass was not exact at 2560 x 1440: the driver fused `bs = bs + e * chan` into one
+multiply-add in that kernel (fxc's DXBC holds only `dmul [precise]` / `dadd [precise]`; a small kernel stayed unfused in 1,000,000
+triples), so kHlslObj puts `max(p, lo)` around every product an add takes (lo below every product there, not known at compile time);
+SG_P18_NOFUSE=0 restores the old text, and the start-up self-test gained the exact case as a 9th queue. Fix 2: the raster device start,
+shader compile and self-test run on the preparation thread, readback pictures skip the zero fill, and the GPU backend is chosen from the
+job's own world size (it was decided at the 0 x 0 size): the first 4K job 695 -> 194 ms, the readback resize 5-96 -> 0.1 ms (old ways
+SG_P18_PREP_SYNC=1, SG_P18_READ_OLD=1, SG_P18_JOB_SIZE=0). Fix 3: --gpu-terrain / --gpu-world auto use the GPU at every window size (the
+1920 x 1200 limit dropped; SG_P18_AUTO_LIMIT=1 restores it): the matrix 1067 x 600 .. 2560 x 1440 x CPU / GPU x NVIDIA profile on / off x
+quiet / 8-core burner (P18B_notes.md section 3) had the GPU equal or better at every size, 0.4-2.8 fewer cores, and holding the world rate
+under the burner. The 4K 0-frame start was the driver's click race under load (fixed in log/roadmap/P17/P17B_drive.py, which re-posts
+the clicks); arrows z8 at about 1.5 world pictures/s is a still view (one new frame per arrow press, 12 changed frames in 8 s), not a
+defect. Every fix: per-pass checks, SG_P15_CHECK and SG_P14_VERIFY 0 differing, segments x64 = I25. Open: U-P17B-02 (predates P17).
