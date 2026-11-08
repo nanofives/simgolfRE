@@ -21,6 +21,7 @@
 #endif
 
 #include <algorithm>
+#include <atomic>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -28,6 +29,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 
 namespace portapp {
@@ -41,6 +43,9 @@ struct Stats {
   std::string st_result = "not run";
   int64_t st_words = 0, st_differing = 0;
   double st_ms = 0, st_compile_ms = 0;
+  bool st_sync = false;                                         // fix 2: the preparation ran on the world thread
+  double ready_ms = 0, first_ms = 0, backend_ms = 0;            // fix 2: since gpu_world_enable: shaders + self-test done, the backend made
+  int64_t jobs_waiting = 0;                                     // fix 2: jobs that wanted the backend while the preparation ran (CPU path)
   int64_t resets = 0, bases_copied = 0, bases_uploaded = 0, base_rows = 0, flushes = 0, flush_blocks = 0, flush_recs = 0, list_entries = 0;
   int64_t nows = 0, hrcs = 0, box_resets = 0, composes = 0, roots_copied = 0, roots_uploaded = 0, cursor_reads = 0, failures = 0;
   int64_t base_ns = 0, flush_ns = 0, now_ns = 0, compose_ns = 0, wait_ns = 0, read_ns = 0, gpu_flush_ns = 0, gpu_flush_n = 0;
@@ -48,6 +53,7 @@ struct Stats {
   int64_t art_bytes = 0, table_bytes = 0;
   int64_t jobs = 0, jobs_gpu = 0, jobs_lost = 0, ops_ns = 0, image_ns = 0, job_ns = 0;
   int64_t img_compared = 0, img_differing = 0, img_differing_words = 0;
+  int64_t pics_shared = 0, pics_unshared = 0, share_failures = 0;   // fix 2
 };
 std::mutex g_mu;
 Stats g_st;
@@ -268,6 +274,41 @@ struct Tex2 {
   }
 };
 
+// the five entry points of CSObj's text + kHlslWorld compiled (D3DCompile, the app's flags) into bytecode; false: why
+bool compile_world_shaders(std::vector<std::vector<uint8_t>> &code, std::string &why) {
+  code.clear();
+  HMODULE dc = LoadLibraryW(L"d3dcompiler_47.dll");
+  if (!dc) {
+    why = "no d3dcompiler_47.dll";
+    return false;
+  }
+  auto compile = reinterpret_cast<pD3DCompile>(reinterpret_cast<void *>(GetProcAddress(dc, "D3DCompile")));
+  if (!compile) {
+    why = "no D3DCompile";
+    return false;
+  }
+  size_t n = 0;
+  const char *obj = gpu_objects_hlsl(n);
+  const std::string text = std::string(obj, n) + kHlslWorld;
+  const char *entry[5] = {"CSFlush", "CSNow", "CSHrc", "CSBoxClr", "CSCompose"};
+  for (int i = 0; i < 5; ++i) {
+    ID3DBlob *b = nullptr, *err = nullptr;
+    const HRESULT hr = compile(text.data(), text.size(), "p17b.hlsl", nullptr, nullptr, entry[i], "cs_5_0",
+                               D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
+    if (FAILED(hr) || !b) {
+      why = std::string(entry[i]) + " failed" + (err ? std::string(": ") + static_cast<const char *>(err->GetBufferPointer()) : "");
+      rel(b);
+      rel(err);
+      return false;
+    }
+    rel(err);
+    const uint8_t *bp = static_cast<const uint8_t *>(b->GetBufferPointer());
+    code.emplace_back(bp, bp + b->GetBufferSize());
+    rel(b);
+  }
+  return true;
+}
+
 class D3DWorld final : public portsim::GfxHrGpu {
  public:
   D3DWorld(ID3D11Device *dev, ID3D11DeviceContext *ctx, int mode, bool selftest) : dev_(dev), ctx_(ctx), mode_(mode), selftest_(selftest) {
@@ -278,41 +319,13 @@ class D3DWorld final : public portsim::GfxHrGpu {
     rel(cs_flush_); rel(cs_now_); rel(cs_hrc_); rel(cs_boxclr_); rel(cs_compose_); rel(cb_);
     rel(q_dis_); rel(q_a_); rel(q_b_); rel(q_c_); rel(q_d_);
   }
-  // the shaders compiled (or, with `from`, shared with that backend: the compile takes seconds), the constant buffer and the queries
-  bool start(std::string &why, const D3DWorld *from = nullptr) {
-    if (from) {
-      ID3D11ComputeShader *const src[5] = {from->cs_flush_, from->cs_now_, from->cs_hrc_, from->cs_boxclr_, from->cs_compose_};
-      ID3D11ComputeShader **dst[5] = {&cs_flush_, &cs_now_, &cs_hrc_, &cs_boxclr_, &cs_compose_};
-      for (int i = 0; i < 5; ++i) {
-        *dst[i] = src[i];
-        if (src[i]) src[i]->AddRef();
-      }
-      return rest(why);
-    }
-    HMODULE dc = LoadLibraryW(L"d3dcompiler_47.dll");
-    if (!dc) return fail(why, "no d3dcompiler_47.dll");
-    auto compile = reinterpret_cast<pD3DCompile>(reinterpret_cast<void *>(GetProcAddress(dc, "D3DCompile")));
-    if (!compile) return fail(why, "no D3DCompile");
-    size_t n = 0;
-    const char *obj = gpu_objects_hlsl(n);
-    const std::string text = std::string(obj, n) + kHlslWorld;
-    const char *entry[5] = {"CSFlush", "CSNow", "CSHrc", "CSBoxClr", "CSCompose"};
+  // the shaders from the bytecode compile_world_shaders made (fix 2: on the preparation thread, once), the constant buffer, the queries
+  bool start(std::string &why, const std::vector<std::vector<uint8_t>> &code) {
     ID3D11ComputeShader **out[5] = {&cs_flush_, &cs_now_, &cs_hrc_, &cs_boxclr_, &cs_compose_};
-    for (int i = 0; i < 5; ++i) {
-      ID3DBlob *b = nullptr, *err = nullptr;
-      const HRESULT hr = compile(text.data(), text.size(), "p17b.hlsl", nullptr, nullptr, entry[i], "cs_5_0",
-                                 D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
-      if (FAILED(hr) || !b) {
-        const std::string w = std::string(entry[i]) + " failed" + (err ? std::string(": ") + static_cast<const char *>(err->GetBufferPointer()) : "");
-        rel(b);
-        rel(err);
-        return fail(why, w);
-      }
-      rel(err);
-      const HRESULT h2 = dev_->CreateComputeShader(b->GetBufferPointer(), b->GetBufferSize(), nullptr, out[i]);
-      rel(b);
-      if (FAILED(h2)) return fail(why, std::string("CreateComputeShader ") + entry[i]);
-    }
+    if (code.size() != 5) return fail(why, "no shader bytecode");
+    for (int i = 0; i < 5; ++i)
+      if (FAILED(dev_->CreateComputeShader(code[static_cast<size_t>(i)].data(), code[static_cast<size_t>(i)].size(), nullptr, out[i])))
+        return fail(why, "CreateComputeShader " + std::to_string(i));
     return rest(why);
   }
   bool rest(std::string &why) {
@@ -591,26 +604,31 @@ class D3DWorld final : public portsim::GfxHrGpu {
   void dead(const char *why) override { die(why ? why : "the caller saw a failure"); }
 
   // ---- the world image
-  bool compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> &root, const portsim::WorldFramePlan &p, std::vector<uint16_t> &px,
-               const portsim::WorldFramePlan *pt, std::vector<uint16_t> *pxt) {
+  bool compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> *root, const portsim::WorldFramePlan &p, std::vector<uint16_t> &px,
+               const portsim::WorldFramePlan *pt, std::vector<uint16_t> *pxt, std::shared_ptr<const GpuWorldPic> *pic) {
     if (dead_) return false;
     gpu_raster_context_wait();   // P17A's submit thread idle (it shares this context)
     const int64_t t0 = portsim::perf_now_ns();
     const int32_t pw = p.pw, ph = p.ph;
     const size_t np = static_cast<size_t>(pw) * static_cast<size_t>(ph);
-    if (pw <= 0 || ph <= 0 || root.size() != np) return false;
+    // fix 2: root null = w's raster: its GPU frame when current, else its CPU words (GlRaster::cpixels: read back on demand)
+    if (!root && !(w.raster && w.raster->width() == pw && w.raster->height() == ph)) return false;
+    if (pw <= 0 || ph <= 0 || (root && root->size() != np)) return false;
     if ((p.lay_hr || p.lay_hrc) && !(hr_.t && hr_.w == pw && hr_.h == ph)) return die("compose without planes");
     if (p.lay_hrc && !(hrc_.t && hrc_.w == pw && hrc_.h == ph)) return die("compose without hrc");
-    if (!root_.make(dev_, pw, ph, 1) || !out_[0].make(dev_, pw, ph, 2) || !stage_[0].make(dev_, pw, ph, 3)) return die("compose textures");
-    if (pt && pxt && (!out_[1].make(dev_, pw, ph, 2) || !stage_[1].make(dev_, pw, ph, 3))) return die("compose textures");
-    ID3D11Texture2D *f = nullptr;
-    if (w.raster && &w.raster->cpixels() == &root && w.raster->width() == pw && w.raster->height() == ph)
-      f = static_cast<ID3D11Texture2D *>(gpu_raster_frame(*w.raster));
+    if (pic) pic->reset();
+    // fix 2: the outputs are a free slot's shared textures (its keyed mutexes acquired), else this backend's own
+    Slot *sl = share_ ? take_slot(pw, ph, pt && pxt) : nullptr;
+    if (!root_.make(dev_, pw, ph, 1) || !stage_[0].make(dev_, pw, ph, 3) || (!sl && !out_[0].make(dev_, pw, ph, 2))) return die("compose textures");
+    if (pt && pxt && (!stage_[1].make(dev_, pw, ph, 3) || (!sl && !out_[1].make(dev_, pw, ph, 2)))) return die("compose textures");
+    ID3D11Texture2D *f = root ? nullptr : static_cast<ID3D11Texture2D *>(gpu_raster_frame(*w.raster));
     if (f) {
       ctx_->CopyResource(root_.t, f);
       count(&Stats::roots_copied);
     } else {
-      ctx_->UpdateSubresource(root_.t, 0, nullptr, root.data(), static_cast<UINT>(pw) * 2u, 0);
+      const std::vector<uint16_t> &r = root ? *root : w.raster->cpixels();
+      if (r.size() != np) return false;
+      ctx_->UpdateSubresource(root_.t, 0, nullptr, r.data(), static_cast<UINT>(pw) * 2u, 0);
       count(&Stats::roots_uploaded);
     }
     const bool timed = timing_open();
@@ -631,7 +649,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
       ctx_->UpdateSubresource(cb_, 0, nullptr, &c, 0, 0);
       ID3D11ShaderResourceView *srv[4] = {root_.srv, runs_[k].srv, col_[k].srv, row_[k].srv};
       ctx_->CSSetShaderResources(14, 4, srv);
-      ID3D11UnorderedAccessView *u[5] = {hr_.uav, hrc_.uav, nullptr, nullptr, out_[k].uav};
+      ID3D11UnorderedAccessView *u[5] = {hr_.uav, hrc_.uav, nullptr, nullptr, sl ? sl->u[k] : out_[k].uav};
       ctx_->CSSetUnorderedAccessViews(1, 5, u, nullptr);
       ctx_->CSSetConstantBuffers(0, 1, &cb_);
       ctx_->CSSetShader(cs_compose_, nullptr, 0);
@@ -641,7 +659,24 @@ class D3DWorld final : public portsim::GfxHrGpu {
       ctx_->CSSetShaderResources(14, 4, ns);
       ctx_->CSSetUnorderedAccessViews(1, 5, nu, nullptr);
       ctx_->CSSetShader(nullptr, nullptr, 0);
-      ctx_->CopyResource(stage_[k].t, out_[k].t);
+      ctx_->CopyResource(stage_[k].t, sl ? sl->t[k] : out_[k].t);
+    }
+    if (sl) {   // released to the window (key 1); the slot is held by the picture until the window's WorldImage lets it go
+      auto g = std::make_shared<GpuWorldPic>();
+      g->w = pw;
+      g->h = ph;
+      for (int k = 0; k < 2; ++k) {
+        if (!plans[k] || !sl->km[k]) continue;
+        sl->km[k]->ReleaseSync(1);
+        sl->key[k] = 1;
+        g->handle[k] = sl->h[k];
+        g->key[k] = &sl->key[k];
+      }
+      g->slot = std::shared_ptr<void>(static_cast<void *>(sl), [](void *v) { static_cast<Slot *>(v)->busy.store(false); });
+      if (pic) *pic = std::move(g);
+      count(&Stats::pics_shared);
+    } else if (share_) {
+      count(&Stats::pics_unshared);
     }
     if (timed) {
       ctx_->End(q_d_);
@@ -691,6 +726,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
     return true;
   }
   bool is_dead() const { return dead_; }
+  void share(bool on) { if (!on) share_ = false; }   // (a failure turns it off for the session; the switch only off)
 
  private:
   static bool fail(std::string &why, const std::string &w) {
@@ -853,6 +889,78 @@ class D3DWorld final : public portsim::GfxHrGpu {
   ID3D11Query *q_dis_ = nullptr, *q_a_ = nullptr, *q_b_ = nullptr, *q_c_ = nullptr, *q_d_ = nullptr;
   bool dis_open_ = false, dis_closed_ = false, have_flush_ = false, have_comp_ = false;
   Tex2 hr_, hrc_, hrb_, hrbc_, base_, root_, out_[2], stage_[2], stage32_;
+  // fix 2: the pool of shared picture pairs (GpuWorldPic). A slot is busy from its composition until the picture's last reference is
+  // dropped (the window's WorldImage); 4 cover the window's current and previous frames, a published one and the one being composed.
+  struct Slot {
+    ID3D11Texture2D *t[2] = {nullptr, nullptr};
+    ID3D11UnorderedAccessView *u[2] = {nullptr, nullptr};
+    IDXGIKeyedMutex *km[2] = {nullptr, nullptr};
+    void *h[2] = {nullptr, nullptr};
+    int key[2] = {0, 0};
+    int w = 0, hh = 0;
+    std::atomic<bool> busy{false};
+    void reset() {
+      for (int k = 0; k < 2; ++k) {
+        rel(km[k]);
+        rel(u[k]);
+        rel(t[k]);
+        h[k] = nullptr;
+        key[k] = 0;
+      }
+      w = hh = 0;
+    }
+    ~Slot() { reset(); }
+  };
+  Slot slots_[4];
+  bool share_ = true;
+  // a free slot of w x h (made again at another size), its keyed mutexes of the textures used acquired with their next keys; null: none
+  Slot *take_slot(int32_t w, int32_t h, bool text) {
+    for (Slot &s : slots_) {
+      bool expect = false;
+      if (!s.busy.compare_exchange_strong(expect, true)) continue;
+      if (s.w != w || s.hh != h || !s.t[0]) {
+        s.reset();
+        bool ok = true;
+        for (int k = 0; k < 2 && ok; ++k) {
+          D3D11_TEXTURE2D_DESC d = {};
+          d.Width = static_cast<UINT>(w);
+          d.Height = static_cast<UINT>(h);
+          d.MipLevels = 1;
+          d.ArraySize = 1;
+          d.Format = DXGI_FORMAT_R16_UINT;
+          d.SampleDesc.Count = 1;
+          d.Usage = D3D11_USAGE_DEFAULT;
+          d.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+          d.MiscFlags = D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+          IDXGIResource *r = nullptr;
+          HANDLE hd = nullptr;
+          ok = SUCCEEDED(dev_->CreateTexture2D(&d, nullptr, &s.t[k])) && SUCCEEDED(dev_->CreateUnorderedAccessView(s.t[k], nullptr, &s.u[k])) &&
+               SUCCEEDED(s.t[k]->QueryInterface(__uuidof(IDXGIKeyedMutex), reinterpret_cast<void **>(&s.km[k]))) &&
+               SUCCEEDED(s.t[k]->QueryInterface(__uuidof(IDXGIResource), reinterpret_cast<void **>(&r))) && SUCCEEDED(r->GetSharedHandle(&hd)) && hd;
+          rel(r);
+          s.h[k] = hd;
+        }
+        if (!ok) {
+          s.reset();
+          s.busy.store(false);
+          share_ = false;   // sharing is not available: the window uploads as before for the rest of the session
+          count(&Stats::share_failures);
+          return nullptr;
+        }
+        s.w = w;
+        s.hh = h;
+      }
+      for (int k = 0; k < (text ? 2 : 1); ++k)
+        if (s.km[k]->AcquireSync(static_cast<UINT64>(s.key[k]), 100) != S_OK) {
+          for (int j = 0; j < k; ++j) s.km[j]->ReleaseSync(static_cast<UINT64>(s.key[j]));
+          s.busy.store(false);
+          count(&Stats::share_failures);
+          return nullptr;
+        }
+      return &s;
+    }
+    return nullptr;
+  }
   Buf ops_buf_, recs_buf_, cols_buf_, rows_buf_, art_buf_, pal_buf_, lut_buf_, steps_buf_, planes_tab_, list_buf_, blk_buf_;
   Buf runs_[2], col_[2], row_[2];
   std::vector<OOpRec> ops_;
@@ -867,6 +975,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
 std::unique_ptr<D3DWorld> g_be;   // the world thread's (made and used by that thread only)
 bool g_tried = false;
 int g_mode = 0;
+bool g_share = true;   // fix 2: SG_P17_SHARE
 #endif  // _WIN32
 
 std::string esc(const std::string &s) {
@@ -882,52 +991,64 @@ std::string num(double v) {
 
 }  // namespace
 
-void gpu_world_enable(int mode) {
-  std::lock_guard<std::mutex> lk(g_mu);
-  g_st.mode = mode;
-  g_st.state = mode ? "not started" : "off";
 #ifdef _WIN32
-  g_mode = mode;
-#endif
-}
-
-portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
-#ifdef _WIN32
-  if (g_be) return g_be->is_dead() ? nullptr : g_be.get();
-  if (g_tried || g_mode == 0) return nullptr;
-  if (g_mode == 2 && static_cast<int64_t>(pw) * ph <= int64_t{1920} * 1200) return nullptr;   // auto: not made below the limit
-  g_tried = true;
-  const int64_t t0 = portsim::perf_now_ns();
-  double compile_ms = 0;
-  void *dv = nullptr, *cx = nullptr;
-  std::string why;
-  if (!gpu_raster_device(&dv, &cx, why)) {
-    std::lock_guard<std::mutex> lk(g_mu);
-    g_st.state = "device: " + why;
-    std::fprintf(stderr, "P17 GPU WORLD off: device: %s\n", why.c_str());
-    return nullptr;
+namespace {
+// fix 2: THE PREPARATION. The shaders' compile (seconds) and the START-UP SELF-TEST run on a thread of their own, started by
+// gpu_world_enable at the app's start, with a Direct3D 11 device of their own on the same (default) adapter; until it is done the world
+// thread keeps the CPU path (every picture published, exact), then makes its backend from the bytecode on its device. With
+// SG_P17_PREP_SYNC=1 (development, fix 1's way) the preparation runs on the world thread at its first job that wants the backend.
+struct Prep {
+  std::mutex m;
+  std::thread th;
+  std::atomic<int> state{0};   // 0 not started, 1 running, 2 done
+  bool pass = false;
+  std::vector<std::vector<uint8_t>> code;
+  ~Prep() {
+    if (th.joinable()) th.join();
   }
-  ID3D11Device *dev = static_cast<ID3D11Device *>(dv);
-  ID3D11DeviceContext *ctx = static_cast<ID3D11DeviceContext *>(cx);
-  // THE START-UP SELF-TEST: its own backend instance (its counters are not the session's)
-  auto be = std::make_unique<D3DWorld>(dev, ctx, g_mode, false);
-  auto test = std::make_unique<D3DWorld>(dev, ctx, 1, true);
-  std::string result;
+};
+Prep g_prep;
+int64_t g_t0 = 0;   // gpu_world_enable's time (the app's start)
+bool g_sync = false;
+
+void prep_run() {
+  const int64_t t0 = portsim::perf_now_ns();
+  std::vector<std::vector<uint8_t>> code;
+  std::string why, result;
   int64_t words = 0, differing = 0;
   bool pass = false;
-  const int64_t tc = portsim::perf_now_ns();
-  if (!be->start(why)) {
+  double compile_ms = 0;
+  if (!compile_world_shaders(code, why)) {
     result = "shaders: " + why;
-  } else if (!test->start(why, be.get())) {
-    result = "self-test backend: " + why;
   } else {
-    compile_ms = static_cast<double>(portsim::perf_now_ns() - tc) / 1e6;
-    pass = portsim::gfx_hr_gpu_selftest(*test, result, words, differing);
+    compile_ms = static_cast<double>(portsim::perf_now_ns() - t0) / 1e6;
+    ID3D11Device *dev = nullptr;
+    ID3D11DeviceContext *ctx = nullptr;
+    const D3D_FEATURE_LEVEL want[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0};
+    D3D_FEATURE_LEVEL got = D3D_FEATURE_LEVEL_10_0;
+    HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, want, 2, D3D11_SDK_VERSION, &dev, &got, &ctx);
+    if (FAILED(hr)) hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, want + 1, 1, D3D11_SDK_VERSION, &dev, &got, &ctx);
+    D3D11_FEATURE_DATA_DOUBLES fd = {};
+    D3D11_FEATURE_DATA_D3D11_OPTIONS fo = {};
+    if (FAILED(hr) || !dev) {
+      result = "device: no D3D11 hardware device at feature level 11";
+    } else if (!(SUCCEEDED(dev->CheckFeatureSupport(D3D11_FEATURE_DOUBLES, &fd, sizeof fd)) && fd.DoublePrecisionFloatShaderOps) ||
+               !(SUCCEEDED(dev->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fo, sizeof fo)) && fo.ExtendedDoublesShaderInstructions)) {
+      result = "device: no extended double-precision shader ops";
+    } else {
+      D3DWorld test(dev, ctx, 1, true);
+      if (!test.start(why, code)) result = "self-test backend: " + why;
+      else pass = portsim::gfx_hr_gpu_selftest(test, result, words, differing);
+    }
+    if (ctx) ctx->ClearState();
+    rel(ctx);
+    rel(dev);
   }
-  test.reset();
   const double ms = static_cast<double>(portsim::perf_now_ns() - t0) / 1e6;
+  const double since = static_cast<double>(portsim::perf_now_ns() - g_t0) / 1e6;
   const char *c = std::getenv("SG_P17_SELFTEST_CORRUPT");
-  std::fprintf(stderr, "P17 GPU WORLD self-test: %s (%.1f ms, of which the shader compile %.1f)%s\n", result.c_str(), ms, compile_ms,
+  std::fprintf(stderr, "P17 GPU WORLD self-test: %s (%.1f ms, of which the shader compile %.1f; ready %.1f ms after the start, %s)%s\n",
+               result.c_str(), ms, compile_ms, since, g_sync ? "on the world thread" : "on the preparation thread",
                pass ? "" : ": the CPU path for this session");
   {
     std::lock_guard<std::mutex> lk(g_mu);
@@ -939,12 +1060,84 @@ portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
     g_st.st_differing = differing;
     g_st.st_ms = ms;
     g_st.st_compile_ms = compile_ms;
+    g_st.ready_ms = since;
+    g_st.st_sync = g_sync;
     if (!pass) g_st.state = "self-test: " + result;
   }
+  {
+    std::lock_guard<std::mutex> lk(g_prep.m);
+    g_prep.pass = pass;
+    g_prep.code = std::move(code);
+  }
+  g_prep.state.store(2);
+}
+}  // namespace
+#endif
+
+void gpu_world_enable(int mode) {
+  std::lock_guard<std::mutex> lk(g_mu);
+  g_st.mode = mode;
+  g_st.state = mode ? "not started" : "off";
+#ifdef _WIN32
+  g_mode = mode;
+  const char *e = std::getenv("SG_P17_SHARE");   // fix 2: development switch (0 = the pictures not shared)
+  g_share = !(e && e[0] == '0');
+  g_t0 = portsim::perf_now_ns();
+  const char *ps = std::getenv("SG_P17_PREP_SYNC");
+  g_sync = ps && ps[0] == '1';
+  if (mode != 0 && !g_sync && g_prep.state.load() == 0) {   // fix 2: the preparation at once, beside the app's start
+    g_prep.state.store(1);
+    g_prep.th = std::thread([] {
+      SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+      prep_run();
+    });
+  }
+#endif
+}
+
+portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
+#ifdef _WIN32
+  if (g_be) return g_be->is_dead() ? nullptr : g_be.get();
+  if (g_tried || g_mode == 0) return nullptr;
+  if (g_mode == 2 && static_cast<int64_t>(pw) * ph <= int64_t{1920} * 1200) return nullptr;   // auto: not made below the limit
+  if (g_sync && g_prep.state.load() == 0) {   // SG_P17_PREP_SYNC=1: fix 1's way, on this thread
+    g_prep.state.store(1);
+    prep_run();
+  }
+  if (g_prep.state.load() != 2) {   // the preparation still runs: the CPU path for this job
+    std::lock_guard<std::mutex> lk(g_mu);
+    ++g_st.jobs_waiting;
+    return nullptr;
+  }
+  g_tried = true;
+  bool pass;
+  std::vector<std::vector<uint8_t>> code;
+  {
+    std::lock_guard<std::mutex> lk(g_prep.m);
+    pass = g_prep.pass;
+    code = g_prep.code;
+  }
   if (!pass) return nullptr;
+  void *dv = nullptr, *cx = nullptr;
+  std::string why;
+  if (!gpu_raster_device(&dv, &cx, why)) {
+    std::lock_guard<std::mutex> lk(g_mu);
+    g_st.state = "device: " + why;
+    std::fprintf(stderr, "P17 GPU WORLD off: device: %s\n", why.c_str());
+    return nullptr;
+  }
+  const int64_t tb = portsim::perf_now_ns();
+  auto be = std::make_unique<D3DWorld>(static_cast<ID3D11Device *>(dv), static_cast<ID3D11DeviceContext *>(cx), g_mode, false);
+  if (!be->start(why, code)) {
+    std::lock_guard<std::mutex> lk(g_mu);
+    g_st.state = "shaders: " + why;
+    return nullptr;
+  }
   {
     std::lock_guard<std::mutex> lk(g_mu);
     g_st.state = "on";
+    g_st.backend_ms = static_cast<double>(portsim::perf_now_ns() - tb) / 1e6;
+    g_st.first_ms = static_cast<double>(portsim::perf_now_ns() - g_t0) / 1e6;
   }
   g_be = std::move(be);
   gpu_raster_lazy(true);   // P17A fix 3: the raster's frame stays on the GPU (this backend reads it there)
@@ -966,13 +1159,23 @@ void gpu_world_image_check(int64_t differing) {
   }
 }
 
-bool gpu_world_compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> &root, const portsim::WorldFramePlan &p,
-                       std::vector<uint16_t> &px, const portsim::WorldFramePlan *pt, std::vector<uint16_t> *px_text) {
+bool gpu_world_compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> *root, const portsim::WorldFramePlan &p,
+                       std::vector<uint16_t> &px, const portsim::WorldFramePlan *pt, std::vector<uint16_t> *px_text,
+                       std::shared_ptr<const GpuWorldPic> *pic) {
 #ifdef _WIN32
-  return g_be && !g_be->is_dead() && g_be->compose(w, root, p, px, pt, px_text);
+  if (g_be) g_be->share(g_share);
+  return g_be && !g_be->is_dead() && g_be->compose(w, root, p, px, pt, px_text, pic);
 #else
-  (void)w; (void)root; (void)p; (void)px; (void)pt; (void)px_text;
+  (void)w; (void)root; (void)p; (void)px; (void)pt; (void)px_text; (void)pic;
   return false;
+#endif
+}
+
+void gpu_world_share(bool on) {
+#ifdef _WIN32
+  g_share = on;
+#else
+  (void)on;
 #endif
 }
 
@@ -1005,7 +1208,9 @@ std::string gpu_world_json() {
   return "{\"mode\":\"" + std::string(s.mode == 2 ? "auto" : s.mode == 1 ? "on" : "off") + "\",\"state\":\"" + esc(s.state) +
          "\",\"selftest\":{\"done\":" + (s.st_done ? "true" : "false") + ",\"pass\":" + (s.st_pass ? "true" : "false") + ",\"result\":\"" +
          esc(s.st_result) + "\",\"corrupt_switch\":" + (s.st_corrupt ? "true" : "false") + ",\"words\":" + std::to_string(s.st_words) +
-         ",\"differing\":" + std::to_string(s.st_differing) + ",\"ms\":" + num(s.st_ms) + ",\"compile_ms\":" + num(s.st_compile_ms) + "}" +
+         ",\"differing\":" + std::to_string(s.st_differing) + ",\"ms\":" + num(s.st_ms) + ",\"compile_ms\":" + num(s.st_compile_ms) + ",\"on_world_thread\":" + (s.st_sync ? "true" : "false") +
+         "},\"ready_ms\":" + num(s.ready_ms) + ",\"first_backend_ms\":" + num(s.first_ms) + ",\"backend_make_ms\":" + num(s.backend_ms) +
+         ",\"jobs_waiting\":" + std::to_string(s.jobs_waiting) +
          ",\"jobs\":" + std::to_string(s.jobs) + ",\"jobs_gpu\":" + std::to_string(s.jobs_gpu) + ",\"jobs_lost\":" + std::to_string(s.jobs_lost) +
          ",\"ops_ms_mean\":" + per(s.ops_ns, s.jobs_gpu) + ",\"image_ms_mean\":" + per(s.image_ns, s.jobs_gpu) +
          ",\"job_ms_mean\":" + per(s.job_ns, s.jobs_gpu) + ",\"resets\":" + std::to_string(s.resets) +
@@ -1021,7 +1226,8 @@ std::string gpu_world_json() {
          ",\"read_ms_mean\":" + per(s.read_ns, s.composes) + ",\"roots_copied\":" + std::to_string(s.roots_copied) +
          ",\"roots_uploaded\":" + std::to_string(s.roots_uploaded) + ",\"gpu_flush_ms_mean\":" + per(s.gpu_flush_ns, s.gpu_flush_n) +
          ",\"gpu_compose_ms_mean\":" + per(s.gpu_comp_ns, s.gpu_comp_n) +
-         ",\"cursor_reads\":" + std::to_string(s.cursor_reads) + ",\"failures\":" + std::to_string(s.failures) +
+         ",\"cursor_reads\":" + std::to_string(s.cursor_reads) + ",\"pics_shared\":" + std::to_string(s.pics_shared) +
+         ",\"pics_unshared\":" + std::to_string(s.pics_unshared) + ",\"share_failures\":" + std::to_string(s.share_failures) + ",\"failures\":" + std::to_string(s.failures) +
          ",\"art_mb\":" + num(static_cast<double>(s.art_bytes) / 1e6) + ",\"table_mb\":" + num(static_cast<double>(s.table_bytes) / 1e6) +
          ",\"sim\":{\"flushes\":" + std::to_string(h.flushes) + ",\"nows\":" + std::to_string(h.nows) + ",\"batch_cmds\":" +
          std::to_string(h.batch_cmds) + ",\"table_entries\":" + std::to_string(h.table_entries) + ",\"base_all\":" + std::to_string(h.base_all) +

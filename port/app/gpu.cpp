@@ -2,6 +2,7 @@
 #include "gpu.h"
 
 #include "present.h"
+#include "gpu_world.h"  // P17B fix 2
 #include "profile.h"
 #include "portsim/sim/perf.h"
 
@@ -811,6 +812,16 @@ struct GpuCompositor::Impl {
   const void *obj_scene = nullptr;
   uint64_t obj_world = ~0ull, obj_gen = ~0ull;  // the world upload / the presenter's mover_gen_ the GPU's copy is for
   uint64_t world_serial = 0;                     // upload_world's count (a new world image under wlive)
+  // P17B fix 2: the world thread's shared pictures opened on this device (by handle; a handle the world thread made again is a new
+  // entry), and the counts of pictures copied on the GPU / uploaded because the shared copy failed
+  struct Shared {
+    void *handle = nullptr;
+    ID3D11Texture2D *t = nullptr;
+    IDXGIKeyedMutex *km = nullptr;
+  };
+  std::vector<Shared> shared;
+  uint64_t world_gpu_copies = 0, world_gpu_fail = 0;
+  int64_t ns_world_gpu = 0;
   bool obj_live = false;
   std::vector<int32_t> op_slot;                  // per draw: its OOp, -1 none yet
   std::vector<OOpRec> ops_cpu;
@@ -954,6 +965,11 @@ void GpuCompositor::stop() {
   for (SBuf *b : {&d.oops, &d.osteps, &d.orecs, &d.ocols, &d.orows, &d.olist, &d.oregs}) b->reset();
   rel(d.cs_obj);
   rel(d.stage_w);
+  for (Impl::Shared &x : d.shared) {  // P17B fix 2
+    rel(x.km);
+    rel(x.t);
+  }
+  d.shared.clear();
   d.obj_ok = false;
   d.obj_scene = nullptr;
   d.obj_world = d.obj_gen = ~0ull;
@@ -1272,9 +1288,14 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
     d.cdirty.insert(d.cdirty.end(), P.world_dirty_.begin(), P.world_dirty_.end());  // P15C
   } else {
     d.wdirty_all = true;
-    if (!make_tex(d.dev, d.world, W.pw, W.ph, DXGI_FORMAT_R16_UINT, false)) return;
-    put_tex(d.ctx, d.world, 0, 0, W.pw, W.ph, wpx.data(), static_cast<uint32_t>(W.pw) * 2u);
-    ++d.world_uploads;
+    const int64_t tg = portsim::perf_now_ns();
+    if (world_from_shared(W, wtext)) {  // P17B fix 2: a GPU copy of the world thread's picture
+      d.ns_world_gpu += portsim::perf_now_ns() - tg;
+    } else {
+      if (!make_tex(d.dev, d.world, W.pw, W.ph, DXGI_FORMAT_R16_UINT, false)) return;
+      put_tex(d.ctx, d.world, 0, 0, W.pw, W.ph, wpx.data(), static_cast<uint32_t>(W.pw) * 2u);
+      ++d.world_uploads;
+    }
   }
   P.world_dirty_.clear();
   d.world_gen = P.world_px_gen_;  // P15C: world_px_gen_ (a GPU objects tick bumps world_gen_ only)
@@ -3094,6 +3115,46 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
   }
 }
 
+// P17B fix 2 (gpu_world.h GpuWorldPic): the shown picture copied from the world thread's shared texture into `world` on the GPU (the
+// same words the CPU copy holds); false: not done (no shared picture, another size, the handle not opened, the keyed mutex not had in
+// 100 ms): the caller uploads the words
+bool GpuCompositor::world_from_shared(const WorldImage &W, bool text) {
+  Impl &d = *d_;
+  const GpuWorldPic *g = W.gpu.get();
+  const int k = text ? 1 : 0;
+  if (!g || !g->handle[k] || !g->key[k] || g->w != W.pw || g->h != W.ph) return false;
+  Impl::Shared *x = nullptr;
+  for (Impl::Shared &e : d.shared)
+    if (e.handle == g->handle[k]) x = &e;
+  if (!x) {
+    if (d.shared.size() >= 16) {  // handles of slots made again at another size: the oldest dropped
+      rel(d.shared.front().km);
+      rel(d.shared.front().t);
+      d.shared.erase(d.shared.begin());
+    }
+    Impl::Shared e;
+    e.handle = g->handle[k];
+    if (FAILED(d.dev->OpenSharedResource(static_cast<HANDLE>(e.handle), __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&e.t))) ||
+        FAILED(e.t->QueryInterface(__uuidof(IDXGIKeyedMutex), reinterpret_cast<void **>(&e.km)))) {
+      rel(e.t);
+      ++d.world_gpu_fail;
+      return false;
+    }
+    d.shared.push_back(e);
+    x = &d.shared.back();
+  }
+  if (!make_tex(d.dev, d.world, W.pw, W.ph, DXGI_FORMAT_R16_UINT, false)) return false;
+  if (x->km->AcquireSync(1, 100) != S_OK) {
+    ++d.world_gpu_fail;
+    return false;
+  }
+  d.ctx->CopyResource(d.world.t, x->t);
+  x->km->ReleaseSync(0);
+  *g->key[k] = 0;   // the world thread acquires this texture with key 0 next time
+  ++d.world_gpu_copies;
+  return true;
+}
+
 std::string GpuCompositor::json() const {
   const Impl &d = *d_;
   auto esc = [](const std::string &s) {
@@ -3154,6 +3215,14 @@ std::string GpuCompositor::json() const {
                   static_cast<unsigned long long>(d.obj_px), static_cast<double>(d.ns_obj) / 1e6, d.ops_cpu.size(), d.art_cpu.size(),
                   static_cast<unsigned long long>(d.obj_checked), static_cast<unsigned long long>(d.obj_check_bad),
                   static_cast<unsigned long long>(d.obj_check_badpx));
+    j.pop_back();
+    j += e;
+  }
+  if (!j.empty() && j.back() == '}') {  // P17B fix 2
+    char e[200];
+    std::snprintf(e, sizeof e, ",\"p17b\":{\"world_gpu_copies\":%llu,\"world_gpu_fail\":%llu,\"ms_world_gpu\":%.1f,\"shared_open\":%zu}}",
+                  static_cast<unsigned long long>(d.world_gpu_copies), static_cast<unsigned long long>(d.world_gpu_fail),
+                  static_cast<double>(d.ns_world_gpu) / 1e6, d.shared.size());
     j.pop_back();
     j += e;
   }

@@ -197,6 +197,7 @@ struct CameraSnap {
 // False when either snapshot is not ok or the zoom or rotation differ.
 bool camera_shift(const CameraSnap &a, const CameraSnap &b, int32_t &dx, int32_t &dy);
 
+struct GpuWorldPic;  // P17B fix 2 (gpu_world.h)
 struct WorldImage {
   std::vector<uint16_t> px;
   std::vector<uint8_t> mask;
@@ -225,6 +226,9 @@ struct WorldImage {
   // P12A fix 2: the frame's window-resolution sprite queue (gfx.h GfxHrScene: its base and every draw with its source), for the
   // moving objects drawn between two game frames (null: none, or --smooth-objects off)
   std::shared_ptr<const portsim::GfxHrScene> hr_scene;
+  // P17B fix 2 (gpu_world.h): px and px_text as textures of the world thread's device shared with the window's (null: none); the GPU
+  // compositor copies the one it shows on the GPU instead of uploading the words (which stay for every CPU reader)
+  std::shared_ptr<const GpuWorldPic> gpu;
   bool empty() const { return px.empty(); }
 };
 

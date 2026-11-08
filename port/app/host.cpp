@@ -834,7 +834,7 @@ bool world_image_part(const portsim::LiveTerrainWorld &w, const std::vector<uint
 // same steps, world_frame_of's per-pixel copies done by the GPU from world_frame_plan_of (gpu_world.cpp) and read back into wi.px /
 // px_text; world_cursor_of runs on hrc / hrc_cov / the box planes read back first (only frames with previews). failed: the backend
 // failed (no picture).
-static bool world_image_part_gpu(portsim::LiveTerrainWorld &w, const std::vector<uint16_t> &root, const std::vector<uint16_t> &px, bool terrain,
+static bool world_image_part_gpu(portsim::LiveTerrainWorld &w, const std::vector<uint16_t> *rootp, const std::vector<uint16_t> &px, bool terrain,
                                  bool use, const portsim::GfxHudFrame &f, const portsim::GfxTextFrame *text, bool cursor, WorldImage &wi,
                                  bool &apart, bool &failed, bool cpu_planes) {
   failed = false;
@@ -843,7 +843,13 @@ static bool world_image_part_gpu(portsim::LiveTerrainWorld &w, const std::vector
     failed = true;
     return false;
   }
-  if (root.size() != np) return world_image_part(w, root, px, terrain, use, f, text, cursor, wi, apart);   // no hr laid (world_frame_of's rule)
+  // fix 2: rootp null = the root is w's raster, its words read only by the CPU fallback (GlRaster::cpixels)
+  static const std::vector<uint16_t> kNone;
+  const size_t root_n = rootp ? rootp->size() : w.raster ? static_cast<size_t>(w.raster->width()) * static_cast<size_t>(w.raster->height()) : 0;
+  if (root_n != np) {   // no hr laid (world_frame_of's rule): the CPU part
+    const std::vector<uint16_t> &root = rootp ? *rootp : w.raster ? w.raster->cpixels() : kNone;
+    return world_image_part(w, root, px, terrain, use, f, text, cursor, wi, apart);
+  }
   portsim::PerfDetailScope pd_cur(portsim::kPdCapCursor);
   apart = cursor && use && portsim::world_cursor_of(&w, wi.cur_px, wi.cur_cov, wi.cur_mask, &wi.cur_hi, &px);
   pd_cur.stop();
@@ -856,7 +862,7 @@ static bool world_image_part_gpu(portsim::LiveTerrainWorld &w, const std::vector
   const portsim::PerfDetailScope pd(portsim::kPdCapWorld);
   thread_local portsim::WorldFramePlan p, pt;
   const size_t hrc_n = w.hrc_valid ? np : 0;
-  if (!portsim::world_frame_plan_of(&w, root.size(), np, hrc_n, use ? f.base : px, terrain, false, apart, p, wi.mask)) return false;
+  if (!portsim::world_frame_plan_of(&w, root_n, np, hrc_n, use ? f.base : px, terrain, false, apart, p, wi.mask)) return false;
   if (apart) {   // world_image_part's cur_box scan
     const int32_t pw = w.pw, ph = w.ph;
     int32_t x0 = pw, y0 = ph, x1 = 0, y1 = 0;
@@ -884,9 +890,9 @@ static bool world_image_part_gpu(portsim::LiveTerrainWorld &w, const std::vector
     const std::vector<uint16_t> *src = nullptr;
     if (use && text->hud_serial == f.serial && text->base_clean.size() == f.base.size()) src = &text->base_clean;
     else if (!use && text->clean.size() == px.size()) src = &text->clean;
-    tp = src && portsim::world_frame_plan_of(&w, root.size(), np, hrc_n, *src, terrain, true, apart, pt, wi.mask_text);
+    tp = src && portsim::world_frame_plan_of(&w, root_n, np, hrc_n, *src, terrain, true, apart, pt, wi.mask_text);
   }
-  if (!portapp::gpu_world_compose(w, root, p, wi.px, tp ? &pt : nullptr, tp ? &wi.px_text : nullptr)) {
+  if (!portapp::gpu_world_compose(w, rootp, p, wi.px, tp ? &pt : nullptr, tp ? &wi.px_text : nullptr, &wi.gpu)) {  // fix 2: wi.gpu
     failed = true;
     return false;
   }
@@ -1086,11 +1092,15 @@ void LiveSession::run_world_job(WorldJob &j) {
     }
   } note{t_job, t_ops, *w2_};
   static const std::vector<uint16_t> kNoRoot;
-  // P15A fix 3: the world root of this present: the world thread's own raster after the job's ops (the sim's copy before)
-  const std::vector<uint16_t> &root = j.world_raster ? (w2_->raster ? w2_->raster->cpixels() : kNoRoot) : (j.root ? *j.root : kNoRoot);
+  // P15A fix 3: the world root of this present: the world thread's own raster after the job's ops (the sim's copy before). P17B fix 2:
+  // its CPU words are taken (GlRaster::cpixels) only by a CPU reader below; the GPU image part reads the raster's GPU frame
+  const bool root_raster = j.world_raster && w2_->raster;
+  auto root_cpu = [&]() -> const std::vector<uint16_t> & {
+    return j.world_raster ? (w2_->raster ? w2_->raster->cpixels() : kNoRoot) : (j.root ? *j.root : kNoRoot);
+  };
   if (j.check_root) {  // SG_P15_CHECK: the replayed root against the sim thread's whole root at the present
     ++wts_.root_checks;
-    if (px_digest(root) != j.root_digest) {
+    if (px_digest(root_cpu()) != j.root_digest) {
       if (!wts_.root_diff) std::fprintf(stderr, "P15A check: the world root of present %u differs\n", j.index);
       ++wts_.root_diff;
     }
@@ -1123,7 +1133,8 @@ void LiveSession::run_world_job(WorldJob &j) {
   if (w2_->hr_gpu) {
     static const int check = std::getenv("SG_P17_WORLDCHECK") ? std::max(0, std::atoi(std::getenv("SG_P17_WORLDCHECK"))) : 0;
     bool failed = false;
-    made = world_image_part_gpu(*w2_, root, j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart, failed, check > 0);
+    made = world_image_part_gpu(*w2_, root_raster ? nullptr : &root_cpu(), j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart,
+                                failed, check > 0);
     if (failed) {  // the backend is off for the session; the planes hold nothing on the CPU: no picture until the next queue start
       w2_->hr_valid = w2_->hrc_valid = w2_->hrb_valid = false;
       w2_->hr_gpu = false;
@@ -1135,7 +1146,7 @@ void LiveSession::run_world_job(WorldJob &j) {
     if (check > 0 && (serial++ % check) == 0) {
       WorldImage cw;
       bool ca = false;
-      const bool cm = world_image_part(*w2_, root, j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, cw, ca);
+      const bool cm = world_image_part(*w2_, root_cpu(), j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, cw, ca);
       int64_t bad = 0;
       auto cmp = [&bad](const auto &a, const auto &b) {
         if (a.size() != b.size()) {
@@ -1157,7 +1168,7 @@ void LiveSession::run_world_job(WorldJob &j) {
       portapp::gpu_world_image_check(bad);
     }
   } else {
-    made = world_image_part(*w2_, root, j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart);
+    made = world_image_part(*w2_, root_cpu(), j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart);
   }
   if (made) {
     ++presents_world_;
@@ -1228,6 +1239,7 @@ std::string LiveSession::world_thread_json() const {
 
 void LiveSession::recycle_world(WorldImage &&w) {  // P10A
   std::lock_guard<std::mutex> lk(frame_mu_);
+  w.gpu.reset();  // P17B fix 2: the shared picture back to the world thread's pool (the buffers are what is kept)
   if (w.px.capacity() > spare_world_.px.capacity()) spare_world_ = std::move(w);
 }
 
@@ -1243,6 +1255,7 @@ static void world_reset(WorldImage &w) {
   w.proj.ok = false;  // P10E (its tables keep their capacity)
   w.cam = CameraSnap{};  // P12A fix 1
   w.hr_scene.reset();    // P12A fix 2
+  w.gpu.reset();         // P17B fix 2: the shared picture back to the world thread's pool
 }
 
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {

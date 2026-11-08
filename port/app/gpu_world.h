@@ -9,6 +9,7 @@
 #define PORTAPP_GPU_WORLD_H
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,18 @@ struct WorldFramePlan;
 
 namespace portapp {
 
+// P17B fix 2: the composed pictures as textures shared with the window's device (DXGI shared handles of R16_UINT textures with a keyed
+// mutex: the world thread acquires key `key[k]` (0, or 1 when the window never took the last picture of that slot), writes, releases key
+// 1; the window acquires key 1, copies the texture into its own on the GPU, releases key 0 and stores 0 in key[k]). k = 0 the picture
+// (WorldImage::px), 1 the picture without the text runs (px_text). The slot goes back to the world thread's pool when the last reference
+// to this object is dropped (the WorldImage is destroyed, reset or recycled). The words equal px / px_text, which FIX 2 still reads back.
+struct GpuWorldPic {
+  void *handle[2] = {nullptr, nullptr};   // null: no such picture
+  int32_t w = 0, h = 0;
+  int *key[2] = {nullptr, nullptr};      // the slot's next acquire key per texture (written by the window after its release)
+  std::shared_ptr<void> slot;              // the slot's hold
+};
+
 // --gpu-world: 0 off, 1 on, 2 auto (planes above 1920 x 1200 pixels: P16B's / P15C's limit)
 void gpu_world_enable(int mode);
 // the calling thread's backend (the world thread's), made and self-tested at the first call with a world it wants (pw x ph: the world's
@@ -29,9 +42,14 @@ portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph);
 void gpu_world_image_check(int64_t differing);
 // world_frame_of's px from the backend's planes: the root (the raster's GPU frame when `root` is that raster's current frame, else
 // uploaded), then the plan's selection; pt / px_text: the same for the picture without the text runs (null: none). false: not done (the
-// backend failed: the caller has no picture from it)
-bool gpu_world_compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> &root, const portsim::WorldFramePlan &p,
-                       std::vector<uint16_t> &px, const portsim::WorldFramePlan *pt, std::vector<uint16_t> *px_text);
+// backend failed: the caller has no picture from it). pic (fix 2): the same pictures as shared textures (null when no slot of the pool is
+// free or sharing failed: the window uploads px / px_text as before)
+// fix 2: root null = w's raster (its GPU frame when current, else its CPU words)
+bool gpu_world_compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> *root, const portsim::WorldFramePlan &p,
+                       std::vector<uint16_t> &px, const portsim::WorldFramePlan *pt, std::vector<uint16_t> *px_text,
+                       std::shared_ptr<const GpuWorldPic> *pic);
+// fix 2: the shared pictures on / off (default on; development switch SG_P17_SHARE=0 = off: the window uploads the words as in fix 1)
+void gpu_world_share(bool on);
 // world_cursor_of's inputs: hrc / hrc_cov and the box planes (when hrb_valid) read back into w's vectors (pw x ph); false: failed
 bool gpu_world_read_cursor(portsim::LiveTerrainWorld &w);
 // session.json p17b

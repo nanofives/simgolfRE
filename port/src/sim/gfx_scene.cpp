@@ -670,6 +670,7 @@ struct GfxHrScene {
 };
 namespace {
 std::atomic<bool> g_hr_scene_on{false};  // P12A fix 2 (gfx_set_hr_scene): the app wants the published scenes
+thread_local bool t_hr_selftest = false;  // P17B: this thread runs gfx_hr_gpu_selftest (no publication; the process-wide switch untouched)
 std::atomic<int64_t> g_hr_pub_ns{0};      // P12A fix 3: the publications' time and count (gfx_hr_scene_cost)
 std::atomic<int64_t> g_hr_pub_n{0};
 thread_local GfxMoverSrc g_draw_src;      // P12A fix 2: the source of the queue entry b_queue_draw is drawing (hr_blit copies it)
@@ -1200,7 +1201,7 @@ void hr_flush(LiveTerrainWorld &w) {
   q.pub.reset();
   q.pub_taken = false;
   pd.stop();  // P15A
-  if (g_hr_scene_on.load(std::memory_order_relaxed)) {
+  if (g_hr_scene_on.load(std::memory_order_relaxed) && !t_hr_selftest) {
     const PerfDetailScope pd_pub(kPdHrPub);  // P15A
     struct PubTime {  // P12A fix 3: the publication's own cost on this thread (gfx_hr_scene_cost)
       std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
@@ -3262,7 +3263,8 @@ bool gfx_hr_gpu_selftest(GfxHrGpu &g, std::string &result, int64_t &words, int64
   GfxHrGpu *const prev = t_hr_gpu;
   const HrPass pass = g_hr_pass;
   g_hr_pass = HrPass{};
-  const bool scene_on = g_hr_scene_on.exchange(false);
+  const bool selftest = t_hr_selftest;
+  t_hr_selftest = true;   // (fix 2: it may run beside the world thread, so the process-wide publication switch is not touched)
   const GfxHrGpuCheck saved = g_hr_gpu_st;   // the stream's counters are not the session's
   t_hr_runner = true;
   std::vector<StPlanes> cpu, gpu;
@@ -3281,7 +3283,7 @@ bool gfx_hr_gpu_selftest(GfxHrGpu &g, std::string &result, int64_t &words, int64
   t_hr_gpu = prev;
   t_hr_gpu_dead = dead;
   g_hr_pass = pass;
-  g_hr_scene_on.store(scene_on);
+  t_hr_selftest = selftest;
   if (!ok_cpu || !ok_gpu || cpu.size() != gpu.size()) {
     result = !ok_cpu ? "FAIL: the CPU run drew no plane" : "FAIL: the backend failed during the stream";
     return false;
