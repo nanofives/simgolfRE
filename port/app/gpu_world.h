@@ -57,6 +57,11 @@ std::string gpu_world_json();
 // SG_P17_JOBLOG (development): the calling thread's GPU parts since the last call (ns): the start's compare, the base tiles' read, the
 // composition's wait and row copy, the whole composition, the flush; reset
 void gpu_world_take_parts(int64_t out[6]);
+// P18B (SG_P17_JOBLOG, development): the composition readback's parts since the last take, on the calling thread: [0] the pictures'
+// resize ns, [1] Map ns, [2] row copy ns, [3] the thread's cycles over the row copy (QueryThreadCycleTime), [4] pictures whose buffer was
+// reallocated (capacity below the size), [5] bytes copied, [6] the thread's cycles over the whole composition, [7] its wall ns,
+// [8] the base tiles' Map ns (read_base: the GPU wait), [9] their copy ns
+void gpu_world_take_reads(int64_t out[10]);
 // host.cpp: one world job's parts (ns): the hr ops, the composition with its readback, the whole job
 void gpu_world_job(int64_t ops_ns, int64_t image_ns, int64_t job_ns, bool gpu, bool lost);
 

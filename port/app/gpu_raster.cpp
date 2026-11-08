@@ -64,9 +64,14 @@ struct Stats {
   std::string st_result = "not run";
   int64_t st_words = 0, st_differing = 0, st_covered = 0, st_pass2 = 0, st_tris = 0;
   double st_device_ms = 0, st_test_ms = 0;
+  // P18B fix 2: the self-test (and the device's start: its shader compile) on a preparation thread at the app's start; the time from
+  // gpu_raster_enable to its end, and the drawing thread's wait for it at its first backend (0 when it was done before)
+  bool st_prep = false;
+  double st_ready_ms = 0, st_wait_ms = 0;
 };
 std::mutex g_mu;
 Stats g_st;
+std::condition_variable g_st_cv;   // P18B fix 2: st_done set (notified under g_mu)
 
 #ifdef _WIN32
 template <class T>
@@ -633,7 +638,9 @@ struct Dev {
     rel(ta); rel(tb); rel(dis); rel(cnt_uav); rel(cnt_rd); rel(cnt); rel(kcf_srv); rel(kcf); rel(kc_srv); rel(kc); rel(cb); rel(cs);
     rel(ctx); rel(dev);
   }
+  std::mutex start_mu;   // P18B fix 2: the preparation thread and the drawing thread can both ask; the second waits for the first
   bool start() {
+    std::lock_guard<std::mutex> lk(start_mu);
     if (tried) return ok;
     tried = true;
     HMODULE dc = LoadLibraryW(L"d3dcompiler_47.dll");
@@ -1828,6 +1835,23 @@ void selftest(const std::shared_ptr<Dev> &d) {
   g_st.st_device_ms = dev_ms;
   g_st.st_test_ms = test_ms;
   if (!pass) g_st.state = "self-test: " + result;
+  g_st_cv.notify_all();   // P18B fix 2
+}
+// P18B fix 2: the preparation thread (gpu_raster_enable): the shared device's start (the shader compile) and the self-test at the app's
+// start, below normal priority, so the drawing thread's first GPU raster does not wait for them (0.7-1.6 s at 4K on LIVING-PC, during
+// which the world thread published no picture). SG_P18_PREP_SYNC=1 (development) or SG_APP_P18=off: on the drawing thread as before.
+struct RasterPrep {
+  std::thread th;
+  ~RasterPrep() {
+    if (th.joinable()) th.join();
+  }
+};
+RasterPrep g_rprep;
+int64_t g_enable_ns = 0;
+bool prep_setting() {
+  const char *a = std::getenv("SG_APP_P18");
+  const char *s = std::getenv("SG_P18_PREP_SYNC");
+  return !(a && !std::strcmp(a, "off")) && !(s && s[0] == '1');
 }
 #endif  // _WIN32
 
@@ -1856,6 +1880,23 @@ void gpu_raster_enable(int mode) {
     g_st.state = on ? "not started" : "off";
   }
 #ifdef _WIN32
+  if (on && prep_setting() && !g_rprep.th.joinable()) {   // P18B fix 2: the device and the self-test at once, beside the app's start
+    std::shared_ptr<Dev> d;
+    {
+      std::lock_guard<std::mutex> lk(g_mu);
+      if (!g_dev) g_dev = std::make_shared<Dev>();
+      d = g_dev;
+      g_st.st_prep = true;
+    }
+    g_enable_ns = static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    g_rprep.th = std::thread([d] {
+      SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+      selftest(d);
+      const int64_t now = static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+      std::lock_guard<std::mutex> lk(g_mu);
+      g_st.st_ready_ms = static_cast<double>(now - g_enable_ns) / 1e6;
+    });
+  }
   if (on) {
     portsim::gl::set_pixel_gpu_factory([mode](int w, int h) -> std::shared_ptr<portsim::gl::GlPixelGpu> {
       // auto: the GPU raster only above 1920 x 1200 pixels (P15C's --object-rate auto limit): at 1920 x 1080 the CPU workers are at
@@ -1869,9 +1910,14 @@ void gpu_raster_enable(int mode) {
       std::shared_ptr<Dev> d;
       bool test = false;
       {
-        std::lock_guard<std::mutex> lk(g_mu);
+        std::unique_lock<std::mutex> lk(g_mu);
         if (!g_dev) g_dev = std::make_shared<Dev>();
         d = g_dev;
+        if (g_st.st_prep && !g_st.st_done) {   // P18B fix 2: the preparation thread runs it; wait for its end (counted)
+          const auto t0 = std::chrono::steady_clock::now();
+          g_st_cv.wait(lk, [] { return g_st.st_done; });
+          g_st.st_wait_ms += static_cast<double>(ns_since(t0)) / 1e6;
+        }
         test = !g_st.st_done;
       }
       if (test) selftest(d);   // once, before the first backend (one thread makes them: the world thread)
@@ -1893,9 +1939,15 @@ bool gpu_raster_device(void **dev, void **ctx, std::string &why) {
 #ifdef _WIN32
   std::shared_ptr<Dev> d;
   {
-    std::lock_guard<std::mutex> lk(g_mu);
+    std::unique_lock<std::mutex> lk(g_mu);
     if (!g_dev) g_dev = std::make_shared<Dev>();
     d = g_dev;
+    // P18B fix 2: the preparation thread's self-test uses this device's immediate context until it ends: wait for it (counted)
+    if (g_st.st_prep && !g_st.st_done) {
+      const auto t0 = std::chrono::steady_clock::now();
+      g_st_cv.wait(lk, [] { return g_st.st_done; });
+      g_st.st_wait_ms += static_cast<double>(ns_since(t0)) / 1e6;
+    }
   }
   if (!d->start()) {
     why = d->why;
@@ -1963,7 +2015,9 @@ std::string gpu_raster_json() {
        ",\"pass\":" + std::string(s.st_pass ? "true" : "false") + ",\"result\":\"" + st + "\",\"corrupt_switch\":" +
        std::string(s.st_corrupt ? "true" : "false") + ",\"triangles\":" + std::to_string(s.st_tris) + ",\"words\":" + std::to_string(s.st_words) +
        ",\"differing\":" + std::to_string(s.st_differing) + ",\"pixel_writes\":" + std::to_string(s.st_covered) +
-       ",\"pass2_writes\":" + std::to_string(s.st_pass2) + ",\"device_ms\":" + num(s.st_device_ms) + ",\"test_ms\":" + num(s.st_test_ms) + "}";
+       ",\"pass2_writes\":" + std::to_string(s.st_pass2) + ",\"device_ms\":" + num(s.st_device_ms) + ",\"test_ms\":" + num(s.st_test_ms) +
+       ",\"on_prep_thread\":" + std::string(s.st_prep ? "true" : "false") + ",\"ready_ms\":" + num(s.st_ready_ms) +
+       ",\"first_wait_ms\":" + num(s.st_wait_ms) + "}";
   o += ",\"force_exact\":" + std::string(s.force_exact ? "true" : "false") + ",\"batches\":" + std::to_string(s.batches) +
        ",\"tris\":" + std::to_string(s.tris) + ",\"pairs\":" + std::to_string(s.pairs) + ",\"groups\":" + std::to_string(s.groups) +
        ",\"dispatches\":" + std::to_string(s.dispatches) + ",\"slice\":" + std::to_string(s.slice) +

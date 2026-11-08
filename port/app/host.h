@@ -228,6 +228,7 @@ struct WorldJob {
   int32_t merged_in = 0;
   int32_t outcome = 0;
   bool overwrote = false;
+  int64_t ops_ns = 0, image_ns = 0;  // P18B (SG_P17_JOBLOG): run_world_job's hr ops (gfx_hr_job_run) and image part
 };
 
 class LiveSession : public portsim::LiveHost {

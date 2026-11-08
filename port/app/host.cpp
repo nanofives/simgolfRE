@@ -1018,6 +1018,12 @@ void move_world_planes(portsim::LiveTerrainWorld &s, portsim::LiveTerrainWorld &
 //   J <index> <seq> <capture> <submit> <start> <end> <merged_in> <outcome> <overwrote> <compare_ns> <base_ns> <wait_ns> <read_ns>
 //     <compose_ns> <flush_ns>
 //   T <t> <index>   (the window took a published frame: take_frame)
+//   K <index> <thread cpu_ns> <ops_ns> <image_ns> <gl_live_ns> <gl_live> <dirty_tiles> <base_all> <prep_ns> <flushes> <nows> <batch_cmds>
+//     (P18B, after its J line: the world thread's CPU time over the job, run_world_job's hr ops and image part, the raster replays, and
+//     the hr counters' deltas of gfx.h GfxHrGpuCheck), then <thread cycles> (QueryThreadCycleTime over the job)
+//   R <index> <resize_ns> <map_ns> <copy_ns> <copy cycles> <reallocated pictures> <bytes> <compose cycles> <compose ns> <base map_ns>
+//     <base copy_ns>  (P18B: the
+//     composition readback's parts, gpu_world_take_reads)
 namespace {
 struct JobLog {
   std::mutex m;
@@ -1075,11 +1081,40 @@ void LiveSession::world_loop() {
     static const int delay = std::getenv("SG_P15_WORLD_DELAY_MS") ? std::atoi(std::getenv("SG_P15_WORLD_DELAY_MS")) : 0;
     if (delay > 0) Sleep(static_cast<DWORD>(delay));
     const int64_t t0 = portsim::perf_now_ns();
+    // P18B (SG_P17_JOBLOG): the world thread's CPU time over the job (GetThreadTimes: what the long jobs spend running against waiting
+    // or preempted), the raster replays' time and the hr counters' deltas (gfx.h GfxWorldRun / GfxHrGpuCheck, written by this thread)
+    FILETIME jc0[4] = {}, jc1[4] = {};
+    ULONG64 cy0 = 0, cy1 = 0;
+    portsim::GfxWorldRun run0;
+    portsim::GfxHrGpuCheck hr0;
+    if (g_joblog.on) {
+      GetThreadTimes(GetCurrentThread(), &jc0[0], &jc0[1], &jc0[2], &jc0[3]);
+      QueryThreadCycleTime(GetCurrentThread(), &cy0);
+      run0 = portsim::gfx_world_run_stats();
+      hr0 = portsim::gfx_hr_gpu_stats();
+    }
     run_world_job(*j);
     const int64_t dt = portsim::perf_now_ns() - t0;
     if (g_joblog.on) {  // P17B
       int64_t parts[6] = {0, 0, 0, 0, 0, 0};
       portapp::gpu_world_take_parts(parts);
+      GetThreadTimes(GetCurrentThread(), &jc1[0], &jc1[1], &jc1[2], &jc1[3]);
+      QueryThreadCycleTime(GetCurrentThread(), &cy1);
+      int64_t rd[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+      portapp::gpu_world_take_reads(rd);
+      auto ft = [](const FILETIME &f) { return static_cast<int64_t>((static_cast<uint64_t>(f.dwHighDateTime) << 32) | f.dwLowDateTime); };
+      const int64_t cpu_ns = (ft(jc1[2]) - ft(jc0[2]) + ft(jc1[3]) - ft(jc0[3])) * 100;
+      const portsim::GfxWorldRun &run1 = portsim::gfx_world_run_stats();
+      const portsim::GfxHrGpuCheck &hr1 = portsim::gfx_hr_gpu_stats();
+      g_joblog.add("K " + std::to_string(j->index) + " " + std::to_string(cpu_ns) + " " + std::to_string(j->ops_ns) + " " +
+                   std::to_string(j->image_ns) + " " + std::to_string(run1.gl_live_ns - run0.gl_live_ns) + " " +
+                   std::to_string(run1.gl_live - run0.gl_live) + " " + std::to_string(hr1.dirty_tiles - hr0.dirty_tiles) + " " +
+                   std::to_string(hr1.base_all - hr0.base_all) + " " + std::to_string(hr1.prep_ns - hr0.prep_ns) + " " +
+                   std::to_string(hr1.flushes - hr0.flushes) + " " + std::to_string(hr1.nows - hr0.nows) + " " +
+                   std::to_string(hr1.batch_cmds - hr0.batch_cmds) + " " + std::to_string(static_cast<long long>(cy1 - cy0)));
+      g_joblog.add("R " + std::to_string(j->index) + " " + std::to_string(rd[0]) + " " + std::to_string(rd[1]) + " " + std::to_string(rd[2]) + " " +
+                   std::to_string(rd[3]) + " " + std::to_string(rd[4]) + " " + std::to_string(rd[5]) + " " + std::to_string(rd[6]) + " " +
+                   std::to_string(rd[7]) + " " + std::to_string(rd[8]) + " " + std::to_string(rd[9]));
       g_joblog.add("J " + std::to_string(j->index) + " " + std::to_string(j->seq) + " " + std::to_string(j->capture ? 1 : 0) + " " +
                    std::to_string(j->submit_ns) + " " + std::to_string(t0) + " " + std::to_string(t0 + dt) + " " + std::to_string(j->merged_in) +
                    " " + std::to_string(j->outcome) + " " + std::to_string(j->overwrote ? 1 : 0) + " " + std::to_string(parts[0]) + " " +
@@ -1123,7 +1158,14 @@ void LiveSession::run_world_job(WorldJob &j) {
   if (!w2_) w2_ = std::make_unique<portsim::LiveTerrainWorld>();
   // P17B: the GPU backend for the hr planes (made, after its self-test, once the world is larger than the auto limit or with --gpu-world on)
   const int64_t t_job = portsim::perf_now_ns();
-  portsim::gfx_set_hr_gpu(portapp::gpu_world_backend(w2_->pw, w2_->ph));
+  // P18B fix 2: the backend asked with the job's world size (the sim's planes at the present) when it carries one: w2_ gets that size
+  // only from the job's ops, so the first job at a new size (the course's first job) was decided with the old one (0 x 0 at the
+  // start) and drew every hr tile on the CPU (190-280 ms at 4K) before the GPU took over. SG_APP_P18=off or SG_P18_JOB_SIZE=0
+  // (development): w2_'s size as before.
+  static const bool job_size = !(std::getenv("SG_APP_P18") && !std::strcmp(std::getenv("SG_APP_P18"), "off")) &&
+                               !(std::getenv("SG_P18_JOB_SIZE") && std::getenv("SG_P18_JOB_SIZE")[0] == '0');
+  const bool use_job = job_size && j.planes.pw > 0 && j.planes.ph > 0;
+  portsim::gfx_set_hr_gpu(portapp::gpu_world_backend(use_job ? j.planes.pw : w2_->pw, use_job ? j.planes.ph : w2_->ph));
   if (j.hr) portsim::gfx_hr_job_run(*j.hr, *w2_);
   const int64_t t_ops = portsim::perf_now_ns();
   struct JobNote {  // P17B: the job's parts (session.json p17b)
@@ -1131,11 +1173,17 @@ void LiveSession::run_world_job(WorldJob &j) {
     const portsim::LiveTerrainWorld &w;
     int64_t t2 = 0;
     bool lost = false;
+    WorldJob *job = nullptr;  // P18B (SG_P17_JOBLOG): the parts into the job's J line
     ~JobNote() {
       const int64_t t3 = portsim::perf_now_ns();
       portapp::gpu_world_job(t1 - t0, t2 ? t3 - t2 : 0, t3 - t0, w.hr_gpu, lost);
+      if (job) {
+        job->ops_ns = t1 - t0;
+        job->image_ns = t2 ? t3 - t2 : 0;
+      }
     }
   } note{t_job, t_ops, *w2_};
+  note.job = &j;
   static const std::vector<uint16_t> kNoRoot;
   // P15A fix 3: the world root of this present: the world thread's own raster after the job's ops (the sim's copy before). P17B fix 2:
   // its CPU words are taken (GlRaster::cpixels) only by a CPU reader below; the GPU image part reads the raster's GPU frame

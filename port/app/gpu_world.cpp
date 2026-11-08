@@ -60,6 +60,7 @@ struct Stats {
 std::mutex g_mu;
 Stats g_st;
 thread_local int64_t t_parts[6] = {0, 0, 0, 0, 0, 0};   // gpu_world_take_parts
+thread_local int64_t t_rd[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};   // P18B: gpu_world_take_reads
 
 #ifdef _WIN32
 template <class T>
@@ -737,7 +738,10 @@ class D3DWorld final : public portsim::GfxHrGpu {
       }
     if (n) {
       D3D11_MAPPED_SUBRESOURCE m;
+      const int64_t tm = portsim::perf_now_ns();   // P18B (job log): the Map's wait and the tiles' copy apart
       if (FAILED(ctx_->Map(stageb_.t, 0, D3D11_MAP_READ, 0, &m))) return die("base tiles readback");
+      const int64_t tcp = portsim::perf_now_ns();
+      t_rd[8] += tcp - tm;
       for (int32_t j = 0; j < ty; ++j)
         for (int32_t i = 0; i < tx; ++i) {
           if (!tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) continue;
@@ -748,6 +752,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
                         static_cast<size_t>(x1 - x0) * 2u);
         }
       ctx_->Unmap(stageb_.t, 0);
+      t_rd[9] += portsim::perf_now_ns() - tcp;
     }
     if (!selftest_) {
       std::lock_guard<std::mutex> lk(g_mu);
@@ -852,14 +857,43 @@ class D3DWorld final : public portsim::GfxHrGpu {
     for (int k = 0; k < 2; ++k) {
       if (!plans[k]) continue;
       std::vector<uint16_t> &dst = k == 0 ? px : *pxt;
-      dst.resize(np);
+      const int64_t tr = portsim::perf_now_ns();   // P18B (job log): the resize, the Map and the row copy apart
+      if (dst.capacity() < np) ++t_rd[4];
+      // P18B fix 2: the rows appended into the reserved buffer (world_reset left it empty: resize wrote 2 x np zeros first, 7-14 ms per
+      // 4K job, which the copy then overwrote). SG_P18_READ_OLD=1 or SG_APP_P18=off: resize and memcpy as before
+      static const bool append = [] {
+        const char *a = std::getenv("SG_APP_P18");
+        const char *o = std::getenv("SG_P18_READ_OLD");
+        return !(a && !std::strcmp(a, "off")) && !(o && o[0] == '1');
+      }();
+      if (append) {
+        dst.clear();
+        dst.reserve(np);
+      } else {
+        dst.resize(np);
+      }
       D3D11_MAPPED_SUBRESOURCE m;
       const int64_t tm = portsim::perf_now_ns();
+      t_rd[0] += tm - tr;
       if (FAILED(ctx_->Map(stage_[k].t, 0, D3D11_MAP_READ, 0, &m))) return die("compose readback");
       wait += portsim::perf_now_ns() - tm;
-      for (int32_t y = 0; y < ph; ++y)
-        std::memcpy(dst.data() + static_cast<size_t>(y) * static_cast<size_t>(pw), static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch,
-                    static_cast<size_t>(pw) * 2u);
+      const int64_t tc = portsim::perf_now_ns();
+      t_rd[1] += tc - tm;
+      ULONG64 c0 = 0, c1 = 0;
+      QueryThreadCycleTime(GetCurrentThread(), &c0);
+      for (int32_t y = 0; y < ph; ++y) {
+        const uint8_t *row = static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch;
+        if (append) {
+          const uint16_t *r16 = reinterpret_cast<const uint16_t *>(row);
+          dst.insert(dst.end(), r16, r16 + pw);
+        } else {
+          std::memcpy(dst.data() + static_cast<size_t>(y) * static_cast<size_t>(pw), row, static_cast<size_t>(pw) * 2u);
+        }
+      }
+      QueryThreadCycleTime(GetCurrentThread(), &c1);
+      t_rd[2] += portsim::perf_now_ns() - tc;
+      t_rd[3] += static_cast<int64_t>(c1 - c0);
+      t_rd[5] += static_cast<int64_t>(np) * 2;
       ctx_->Unmap(stage_[k].t, 0);
     }
     if (FAILED(dev_->GetDeviceRemovedReason())) return die("device removed");
@@ -1316,6 +1350,12 @@ portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
 #endif
 }
 
+void gpu_world_take_reads(int64_t out[10]) {
+  for (int k = 0; k < 10; ++k) {
+    out[k] = t_rd[k];
+    t_rd[k] = 0;
+  }
+}
 void gpu_world_take_parts(int64_t out[6]) {
   for (int k = 0; k < 6; ++k) {
     out[k] = t_parts[k];
@@ -1338,7 +1378,14 @@ bool gpu_world_compose(const portsim::LiveTerrainWorld &w, const std::vector<uin
                        std::shared_ptr<const GpuWorldPic> *pic) {
 #ifdef _WIN32
   if (g_be) g_be->share(g_share);
-  return g_be && !g_be->is_dead() && g_be->compose(w, root, p, px, pt, px_text, pic);
+  ULONG64 c0 = 0, c1 = 0;   // P18B (job log): the composition's cycles and wall time
+  const int64_t t0 = portsim::perf_now_ns();
+  QueryThreadCycleTime(GetCurrentThread(), &c0);
+  const bool ok = g_be && !g_be->is_dead() && g_be->compose(w, root, p, px, pt, px_text, pic);
+  QueryThreadCycleTime(GetCurrentThread(), &c1);
+  t_rd[6] += static_cast<int64_t>(c1 - c0);
+  t_rd[7] += portsim::perf_now_ns() - t0;
+  return ok;
 #else
   (void)w; (void)root; (void)p; (void)px; (void)pt; (void)px_text; (void)pic;
   return false;
