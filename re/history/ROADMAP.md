@@ -1144,3 +1144,33 @@ above 1920 x 1200. 4K CPU per world picture 38.2 -> 27.3 ms, process cores at 4K
 30 ms). SG_P16_RASTERCHECK=n compares GPU passes word by word (0 differing in every run). Open: the real 120 Hz before / after
 (P16A_work/ab.sh, P16B_work/f1v.sh, keep the monitor awake), U-P16B-01 (GPU exactness measured on the RTX 3070 only; the self-test
 guards other GPUs with one fixed batch).
+
+## P17: the world picture at the game's rate at 4K (2026-11-07)
+Brief log/roadmap/P17/BRIEF.md (Mariano: "do all three" of P16B's options), workers P17A and P17B, notes
+log/roadmap/P17/P17{A,B}_notes.md. App-side changes off with SG_APP_P17=off (port/test/conftest.py). The monitor stayed asleep: every
+number is "display off, timer-paced". Option 3 (orchestrator): an NVIDIA driver profile "SimGolf port" sets Power management mode =
+Prefer maximum performance for simgolf_port.exe on LIVING-PC only (log/roadmap/P17/nvidia/nv_prefer_max.py show | apply | undo, DRS
+backup beside it); the RTX 3070 then stays at P0 1725 MHz and the raster pass's GPU time fell from 12.4 to about 1.8 ms at 1080 and
+11.6 to 5.5-6.1 ms at 4K. Player PCs have no such profile, so --gpu-terrain auto keeps its 1920 x 1200 limit.
+P17A (e6af5ae7, 54f25b84, c235de72): the GPU terrain pass's wall time. The pass is binned and dispatched in parts of 1024 triangles on
+a submit thread while the triangle set-up runs; (triangle, tile) pairs are expanded on the GPU (CSPairs fills box, W0 and Tc in exact
+double from 8-byte entries), tile tables are part-local, the readback uses streaming loads; the self-test gained a mesh with edges
+through pixel centres (the old one passed a negative control that the per-pass check caught). Then the readback became lazy while the
+GPU world backend is up: the result stays in frame_texture and the first CPU reader or writer of fb_ reads it back (a failed readback
+redraws the frame's recipe on the CPU); world_back_take's blits copy to and from a GPU back surface; terrain_overlay's lines force the
+readback (hole builds only). 4K replayed pass 22.4 -> 16.1 -> 15.4 -> 7.2 ms (quiet machine). Switches SG_P17_PART, SG_P17_GPU_PAIRS,
+SG_P17_STREAM, SG_P17_LAZY (negative controls SG_P17_PAIRS_NEGCTL, SG_P17_LAZY_NEGCTL).
+P17B (0ed77d53, f1a23867, 99cd614b): the rest of the world job on the GPU, --gpu-world auto|on|off (auto = on above 1920 x 1200).
+hr_flush's dirty tiles, hr_now / hr_box_now and world_frame_of's copies run as compute passes on the world thread's device (CSObj's
+blit / op_apply text reused, tile reuse decided by the same CPU code); hr_queue_begin's row compare runs on the GPU (CSCmp) and only the
+published base tiles are read back; the picture reaches the window through textures shared with its device (4 keyed-mutex slots, one
+GPU copy per picture; fallback = the old upload); shaders are compiled and the self-test (2,752,512 words) runs on a preparation thread
+from app start, the world thread keeping the CPU path until it is ready (the 7.4-7.7 s stall at the first 4K job is gone).
+SG_P17_WORLDCHECK=n compares planes, images, GPU starts and published tiles with the CPU path. 4K edge scroll: world job 65.5 ->
+48.8 ms after fix 1 and 39.2 -> 35.1 ms against 54f25b84's per-picture work after fix 3; window paint p95 at z4 16.8 -> 12.7 ms;
+process cores 4.3 -> 1.5-2.0; world pictures/s counted from events 10.5-10.9 at z2 / z4 / z8, equal to the game's 10.7-10.9 (the
+drivers' "world pictures/s", a mean of one-second profile lines, read about 0.3-1 low because the last line of a phase overruns it).
+Dev log SG_P17_JOBLOG (per job: submit / start / end, merges, GPU waits, the frame the window takes). Every fix: per-pass checks,
+SG_P15_CHECK and SG_P14_VERIFY 0 differing, segments x64 = I25. Open: U-P17B-02 (an intermittent one-step A/B difference in a golfer
+name label's course text-run patch at 4K mood5; predates P17; log/roadmap/P17/P17B_uncertain.tsv), GPU exactness measured on the RTX
+3070 only (as U-P16B-01), the real 120 Hz numbers, and shorter world jobs (their rare 190-250 ms spikes cause the few merged pictures).
