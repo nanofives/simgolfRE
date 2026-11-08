@@ -1582,6 +1582,116 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
 // vertex colours, blended and unblended triangles, every dither column phase (set_dither_dx), small triangles and frame-wide ones that
 // the clipper cuts, and degenerate ones; the GPU's counters say how many pixel writes pass 1's checked path and pass 2's exact path
 // made (st_covered / st_pass2). A difference, or a backend that fails, keeps the CPU raster for the session.
+// P18A (log/roadmap/P18/P18A_notes.md): THE SET-UP SECTION. The GPU raster files these blocks for its set-up workers (gl_raster.cpp
+// P18Work) and the CPU raster sets them up itself, so the frames compare the two set-ups too: lighting with a specular term under a
+// rotated modelview (emit's inverse, light direction and specular table), vertices from arrays with normals (array_element), triangle
+// fans crossing the frame's edges (the clipper's fans), culling with either front face, GL_REPLACE, a texture whose magnification is
+// GL_NEAREST and minification GL_LINEAR (the terrain's) under triangles whose texel-per-pixel ratio straddles the filter threshold, a
+// filter changed between blocks (the merge before a texture change), matrix and state changes between blocks (the snapshots), and
+// triangles past fast_triangle_'s 2^14 limit, inside the view volume and crossing it (the general loop under the block's state).
+template <class Uf>
+void selftest_setup(portsim::gl::GlRaster &r, int W, int H, Uf &uf) {
+  const uint32_t kTex2d = 0x0DE1, kMin = 0x2801, kMag = 0x2800, kCull = 0x0B44, kLighting = 0x0B50, kLight0 = 0x4000, kBlend = 0x0BE2;
+  const uint32_t kModelview = 0x1700, kEnv = 0x2300, kEnvMode = 0x2200, kModulate = 0x2100, kReplace = 0x1E01;
+  uint32_t tname[1] = {0};
+  r.gen_textures(1, tname);
+  {
+    const int tw = 64, th = 32;
+    std::vector<uint8_t> img(static_cast<size_t>(tw) * th * 3);
+    for (size_t i = 0; i < img.size(); ++i) img[i] = static_cast<uint8_t>((i * 37u + (i / 192u) * 11u) & 0xff);
+    r.bind_texture(kTex2d, tname[0]);
+    r.tex_parameteri(kTex2d, kMag, 0x2600);   // GL_NEAREST
+    r.tex_parameteri(kTex2d, kMin, 0x2601);   // GL_LINEAR
+    r.tex_image2d(kTex2d, 0, 0x1907, tw, th, 0, 0x1907, 0x1401, img.data());
+  }
+  r.enable(kTex2d);
+  r.disable(kBlend);
+  // past fast_triangle_'s 2^14 limit: a viewport of 40000 x 40000 pixels puts two vertices of each wedge beyond 16384 (the general loop
+  // draws the part of a narrow wedge that reaches the frame, drawn first so the blocks below stay visible); one inside the view volume,
+  // one crossing it (clipped: the fan's triangles take the general loop)
+  r.viewport(0, 0, 40000, 40000);
+  for (int i = 0; i < 2; ++i) {
+    const float ax = i ? -0.995f : -0.9995f, ay = i ? -0.9985f : -0.9995f;
+    r.begin(4);
+    r.color4f(0.9f, 0.4f, 0.2f, 1.0f);
+    r.tex_coord2f(0.0f, 0.0f);
+    r.vertex3f(ax, ay, 0.0f);
+    r.color4f(0.2f, 0.8f, 0.3f, 1.0f);
+    r.tex_coord2f(40.0f, 0.0f);
+    r.vertex3f(i ? 1.5f : 0.2f, i ? 1.2f : 0.0f, 0.0f);
+    r.color4f(0.3f, 0.2f, 0.9f, 1.0f);
+    r.tex_coord2f(0.0f, 30.0f);
+    r.vertex3f(i ? 1.2f : 0.0f, i ? 1.5f : 0.2f, 0.0f);
+    r.end();
+  }
+  r.viewport(0, 0, W, H);
+  // lighting: light 0 from the side with a specular term, the terrain's shininess, a rotated modelview; the diffuse term is weak and the
+  // normals lie around the half vector, so the lit colour stays below 1 (a saturated colour hides the specular term: the first version
+  // of this section passed SG_P18_NEGCTL=1)
+  const float amb[4] = {0.2f, 0.2f, 0.2f, 1.0f}, dif[4] = {0.3f, 0.35f, 0.3f, 1.0f}, spe[4] = {0.7f, 0.7f, 0.6f, 1.0f};
+  const float pos[4] = {1.0f, 0.0f, 0.3f, 0.0f}, mspec[4] = {0.6f, 0.5f, 0.7f, 1.0f};
+  r.matrix_mode(kModelview);
+  r.push_matrix();
+  r.rotatef(17.0f, 0.2f, 0.3f, 1.0f);
+  r.light(kLight0, 0x1200, amb);
+  r.light(kLight0, 0x1201, dif);
+  r.light(kLight0, 0x1202, spe);
+  r.light(kLight0, 0x1203, pos);
+  r.material(0x0408, 0x1202, mspec);
+  r.material_shininess(0x0408, 13);
+  r.enable(kLighting);
+  r.enable(kLight0);
+  for (int i = 0; i < 160; ++i) {
+    if (i % 40 == 20) r.rotatef(9.0f, 0.0f, 0.0f, 1.0f);   // a matrix change between blocks
+    if (i % 23 == 5) r.tex_parameteri(kTex2d, kMin, (i / 23) % 2 ? 0x2600 : 0x2601);   // a filter change between blocks
+    const bool fan = i % 3 == 0;
+    const int nv = fan ? 5 + i % 3 : 3;
+    const float cx = uf(-1.1f, 1.1f), cy = uf(-1.1f, 1.1f);
+    // texture span for a texel-per-pixel ratio near 1: 64 texels across about 64 pixels, scaled by 0.97 .. 1.03
+    const float k = 64.0f / static_cast<float>(W) * 2.0f, ts = uf(0.97f, 1.03f);
+    r.begin(fan ? 6 : 4);
+    for (int v = 0; v < nv; ++v) {
+      const float a = 6.2831853f * static_cast<float>(v) / static_cast<float>(nv);
+      const float px = fan && v == 0 ? cx : cx + k * 0.5f * std::cos(a) * uf(0.8f, 1.2f);
+      const float py = fan && v == 0 ? cy : cy + k * 0.5f * std::sin(a) * uf(0.8f, 1.2f);
+      r.normal3f(uf(0.3f, 0.9f), uf(-0.3f, 0.3f), uf(0.6f, 1.0f));
+      r.color4f(uf(0.0f, 1.0f), uf(0.0f, 1.0f), uf(0.0f, 1.0f), 1.0f);
+      r.tex_coord2f((px - cx) / k * ts + 0.5f, (py - cy) / k * 2.0f * ts + 0.5f);
+      r.vertex3f(px, py, 0.0f);
+    }
+    r.end();
+  }
+  // vertices from arrays with normals, culling with either front face, GL_REPLACE for some
+  std::vector<float> va, na;
+  for (int i = 0; i < 96; ++i) {
+    va.push_back(uf(-1.2f, 1.2f));
+    va.push_back(uf(-1.2f, 1.2f));
+    va.push_back(0.0f);
+    na.push_back(uf(0.3f, 0.9f));
+    na.push_back(uf(-0.3f, 0.3f));
+    na.push_back(uf(0.6f, 1.0f));
+  }
+  r.set_arrays(va.data(), 96, na.data(), 96);
+  r.enable(kCull);
+  for (int i = 0; i < 64; ++i) {
+    if (i % 16 == 0) r.front_face(i % 32 ? 0x0900 : 0x0901);   // GL_CW / GL_CCW
+    r.tex_envi(kEnv, kEnvMode, static_cast<int32_t>(i % 5 == 4 ? kReplace : kModulate));
+    r.begin(4);
+    for (int v = 0; v < 3; ++v) {
+      r.tex_coord2f(uf(-1.0f, 2.0f), uf(-1.0f, 2.0f));
+      r.color4f(uf(0.0f, 1.0f), uf(0.0f, 1.0f), uf(0.0f, 1.0f), 1.0f);
+      r.array_element(static_cast<int32_t>((i * 3 + v * 7) % 96));
+    }
+    r.end();
+  }
+  r.disable(kCull);
+  r.front_face(0x0901);
+  r.tex_envi(kEnv, kEnvMode, static_cast<int32_t>(kModulate));
+  r.disable(kLighting);
+  r.disable(kLight0);
+  r.pop_matrix();
+  r.flush();
+}
 void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx, std::vector<uint16_t> &back) {
   uint32_t seed = 0x2468ace1u;
   auto rnd = [&seed]() {
@@ -1651,6 +1761,8 @@ void selftest_feed(portsim::gl::GlRaster &r, int W, int H, int ddx, std::vector<
     }
   r.flush();
   }
+  // SG_P18_SELFTEST_OLD=1 (development): the self-test before P18A (its negative control is missed there)
+  if (!(std::getenv("SG_P18_SELFTEST_OLD") && std::getenv("SG_P18_SELFTEST_OLD")[0] == '1')) selftest_setup(r, W, H, uf);
   r.back_sync(back);
 }
 void selftest(const std::shared_ptr<Dev> &d) {
@@ -1712,7 +1824,7 @@ void selftest(const std::shared_ptr<Dev> &d) {
   g_st.st_differing = differing;
   g_st.st_covered = covered;
   g_st.st_pass2 = pass2;
-  g_st.st_tris = 400 + 2 * 2 * 11 * 8;   // P17A fix 2 / 3: the random stream and the mesh (11 x 8 squares) twice
+  g_st.st_tris = 400 + 2 * 2 * 11 * 8 + 334;   // P17A fix 2 / 3: the random stream and the mesh (11 x 8 squares) twice; P18A: the set-up section
   g_st.st_device_ms = dev_ms;
   g_st.st_test_ms = test_ms;
   if (!pass) g_st.state = "self-test: " + result;
@@ -1894,7 +2006,13 @@ std::string gpu_raster_json() {
        ",\"back_sync_ms_mean\":" + num(r.back_syncs ? r.back_sync_ns / 1e6 / static_cast<double>(r.back_syncs) : 0.0) +
        ",\"back_replays\":" + std::to_string(r.back_replays) + ",\"lazy_on\":" + std::string(g_lazy_json() ? "true" : "false") + "}" +
        ",\"check\":{\"passes\":" + std::to_string(r.checked) + ",\"bad\":" + std::to_string(r.check_bad) +
-       ",\"bad_px\":" + std::to_string(r.check_badpx) + "}}}";
+       ",\"bad_px\":" + std::to_string(r.check_badpx) + "}" +
+       ",\"p18a\":{\"on\":" + std::string(portsim::gl::p18_setup_setting() ? "true" : "false") + ",\"blocks\":" + std::to_string(r.p18_blocks) +
+       ",\"tris\":" + std::to_string(r.p18_tris) + ",\"chunks\":" + std::to_string(r.p18_chunks) + ",\"helped\":" + std::to_string(r.p18_helped) +
+       ",\"general\":" + std::to_string(r.p18_general) +
+       ",\"work_ms_per_batch\":" + num(r.batches ? r.p18_work_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
+       ",\"merge_ms_per_batch\":" + num(r.batches ? r.p18_merge_ns / 1e6 / static_cast<double>(r.batches) : 0.0) +
+       ",\"wait_ms_per_batch\":" + num(r.batches ? r.p18_wait_ns / 1e6 / static_cast<double>(r.batches) : 0.0) + "}}}";
   return o;
 }
 

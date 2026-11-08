@@ -9,12 +9,15 @@
 #include <chrono>
 #include <cmath>
 #include <condition_variable>
+#include <deque>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <type_traits>
+#include <initializer_list>
 
 #ifdef _WIN32
 #ifndef NOMINMAX
@@ -81,6 +84,18 @@ int wrap_repeat(int64_t i, uint32_t n) {
   const int64_t m = i % static_cast<int64_t>(n);
   return static_cast<int>(m < 0 ? m + n : m);
 }
+}  // namespace
+// P18A: the set-up changes of the rasters with a backend (gl_raster.h)
+bool p18_setup_setting() {
+  static const bool on = [] {
+    const char *a = std::getenv("SG_APP_P18");
+    if (a && std::strcmp(a, "off") == 0) return false;
+    const char *e = std::getenv("SG_P18_GPU_SETUP");
+    return !(e && e[0] == '0');
+  }();
+  return on;
+}
+namespace {
 
 // ---- helpers of the fast pixel loop (GlRaster::fast_triangle_, roadmap S3.10): each returns exactly what the general loop's
 // expression returns, without its CRT call or 64-bit division
@@ -216,6 +231,7 @@ GlRaster::GlRaster(int width, int height) : w_(width), h_(height), fb_(static_ca
 
 // ------------------------------------------------------------------------------------------------ matrices
 void GlRaster::mul(const Mat &b) {
+  ++p18_gen_;   // P18A: the state a filed block is set up with changed (P18Snap)
   Mat &a = cur();
   Mat c;
   for (int j = 0; j < 4; ++j)
@@ -244,6 +260,7 @@ void GlRaster::fmul_(const FMat &a, const FMat &b, FMat &r) {
   r = c;
 }
 void GlRaster::fpost_(const FMat &b) {
+  ++p18_gen_;
   if (mode_ == kProjection) {
     fmul_(fproj_, b, fproj_);
     fmul_(fproj_, fmv_, fmvp_);
@@ -253,6 +270,7 @@ void GlRaster::fpost_(const FMat &b) {
   }
 }
 void GlRaster::load_identity() {
+  ++p18_gen_;
   Mat &a = cur();
   std::memset(a.m, 0, sizeof a.m);
   a.m[0] = a.m[5] = a.m[10] = a.m[15] = 1.0;
@@ -272,6 +290,7 @@ void GlRaster::push_matrix() {
   }
 }
 void GlRaster::pop_matrix() {
+  ++p18_gen_;
   auto &st = stack_[mode_ == kProjection ? 1 : 0];
   if (st.empty()) return;
   cur() = st.back();
@@ -353,10 +372,11 @@ void GlRaster::ortho(double l, double r, double b, double t, double n, double f)
   for (int i = 0; i < 16; ++i) fo.m[i] = static_cast<float>(o.m[i]);
   fpost_(fo);
 }
-void GlRaster::viewport(int32_t x, int32_t y, int32_t w, int32_t h) { vp_x_ = x; vp_y_ = y; vp_w_ = w; vp_h_ = h; }
+void GlRaster::viewport(int32_t x, int32_t y, int32_t w, int32_t h) { vp_x_ = x; vp_y_ = y; vp_w_ = w; vp_h_ = h; ++p18_gen_; }
 
 // ------------------------------------------------------------------------------------------------ state
 void GlRaster::enable(uint32_t cap) {
+  ++p18_gen_;
   if (cap == 0x0DE1) texture2d_ = true;
   else if (cap == kCullFace) cull_ = true;
   else if (cap == kBlendCap) blend_ = true;
@@ -364,15 +384,18 @@ void GlRaster::enable(uint32_t cap) {
   else if (cap == 0x4000) light0_ = true;
 }
 void GlRaster::disable(uint32_t cap) {
+  ++p18_gen_;
   if (cap == 0x0DE1) texture2d_ = false;
   else if (cap == kCullFace) cull_ = false;
   else if (cap == kBlendCap) blend_ = false;
   else if (cap == 0x0B50) lighting_ = false;
   else if (cap == 0x4000) light0_ = false;
 }
-void GlRaster::front_face(uint32_t mode) { front_ = mode; }
+void GlRaster::front_face(uint32_t mode) { front_ = mode; ++p18_gen_; }
 void GlRaster::blend_func(uint32_t src, uint32_t dst) { blend_src_ = src; blend_dst_ = dst; }
 void GlRaster::tex_param_(uint32_t pname, uint32_t value) {
+  if (p18p_) finish();   // P18A: filed blocks read the texture objects until they are merged
+  tex_cache_clear_();
   Tex &t = textures_[bound_];
   if (pname == 0x2800) t.mag = value;
   else if (pname == 0x2801) t.min = value;
@@ -382,8 +405,10 @@ void GlRaster::tex_param_(uint32_t pname, uint32_t value) {
 void GlRaster::tex_env_(uint32_t target, uint32_t pname, uint32_t value) {
   // glTexEnvi(GL_TEXTURE_2D, ...) as the original calls it is GL_INVALID_ENUM and changes nothing: the mode stays GL_MODULATE
   if (target == 0x2300 && pname == 0x2200) env_mode_ = value;
+  ++p18_gen_;
 }
 void GlRaster::light(uint32_t light, uint32_t pname, const float *v) {
+  ++p18_gen_;
   if (!ctx_ || light != 0x4000) return;
   if (pname == 0x1200) std::memcpy(light_[0], v, 16);
   else if (pname == 0x1201) std::memcpy(light_[1], v, 16);
@@ -394,9 +419,11 @@ void GlRaster::light(uint32_t light, uint32_t pname, const float *v) {
   }
 }
 void GlRaster::material(uint32_t, uint32_t pname, const float *v) {
+  ++p18_gen_;
   if (ctx_ && pname == 0x1202) std::memcpy(mat_spec_, v, 16);
 }
 void GlRaster::material_shininess(uint32_t, int32_t sh) {
+  ++p18_gen_;
   if (ctx_) shininess_ = static_cast<float>(sh);
 }
 void GlRaster::tex_parameteri(uint32_t, uint32_t pname, int32_t v) {
@@ -425,6 +452,7 @@ void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t 
   tex_sync_();   // P17A fix 3: so do the lazy frame's and the GPU back's batches
   if (!ctx_ || level != 0 || w <= 0 || h <= 0 || !data) return;
   const uint32_t width = static_cast<uint32_t>(w), height = static_cast<uint32_t>(h);
+  tex_cache_clear_();   // P18A
   Tex &t = textures_[bound_];
   t.w = width;
   t.h = height;
@@ -440,6 +468,7 @@ void GlRaster::delete_textures(int32_t n, const uint32_t *ids) {
   for (int i = 0; i < n; ++i) {
     textures_.erase(ids[i]);
     used_names_.erase(ids[i]);
+    tex_cache_clear_();   // P18A
   }
 }
 void GlRaster::bind_texture(uint32_t, uint32_t id) {
@@ -453,6 +482,7 @@ void GlRaster::flush() { finish(); }
 // P15A fix 3 (gl_raster.h)
 void GlRaster::set_mask(std::vector<uint8_t> rows, int cx0, int cx1) {
   finish();   // queued jobs read the mask through a pointer
+  ++p18_gen_;
   if (!rows.empty()) rows.resize(static_cast<size_t>(h_), 0);
   mask_rows_ = std::move(rows);
   mask_cx0_ = cx0;
@@ -520,6 +550,7 @@ void GlRaster::begin(uint32_t mode) {
   prim_ = mode;
   in_begin_ = true;
   verts_.clear();
+  p18_block_ = p18_ && (mode == kTriangles || mode == kTriangleFan) && p18_defer_();   // P18A: filed for the set-up workers
 }
 // the specular table (SPECULAR above): t = 0.0005^(1 / shininess), entry i = (t + i / scale)^shininess, scale = 255 / (1 - t); the
 // 256 entries are computed once per shininess by the same expressions (roadmap S3.10)
@@ -537,6 +568,10 @@ double GlRaster::spec_lookup_(double nh, double shininess) {
 
 void GlRaster::emit(double x, double y, double z, const float *normal) {
   if (discard_) return;   // P15A fix 3: set_discard
+  if (p18_block_) {   // P18A: the inputs only (the set-up workers run the rest of this function, P18Work::emit)
+    p18_raw_(x, y, z, normal);
+    return;
+  }
   // object -> eye -> clip (orthographic here, but the divide is done) -> window
   const double *m = mv_.m, *p = proj_.m;
   const bool g32 = (tune[5] & 2) != 0;   // experiment: float32 geometry (every intermediate rounded to single precision)
@@ -657,7 +692,37 @@ void GlRaster::window_of_(const float c[4], Vtx &v) const {
 // is t = d_in / (d_in - d_out) (d = w +- coordinate, float) and every attribute is in + t (out - in) in float, from the inside
 // vertex; the polygon is drawn as the fan of its first vertex. Without it (GlRaster before S3.21, tune 29 = 1) the unclipped
 // triangle's attribute planes stand where the real GL has the fan triangles', the residue in the bands at the viewport edges.
+namespace {
+// P18A: a vector of at most N trivially copyable values in a fixed array (clip_body_<true>: Sutherland-Hodgman at most doubles a polygon
+// per plane, so 6 planes take a triangle to at most 3 * 2^6 = 192 vertices)
+template <class T, size_t N>
+struct FixedVec {
+  T a[N];
+  size_t n = 0;
+  FixedVec() = default;
+  FixedVec(std::initializer_list<T> l) {
+    for (const T &v : l) a[n++] = v;
+  }
+  explicit FixedVec(size_t k) : n(k) {}
+  size_t size() const { return n; }
+  bool empty() const { return n == 0; }
+  void clear() { n = 0; }
+  void push_back(const T &v) { a[n++] = v; }
+  T &operator[](size_t i) { return a[i]; }
+  const T &operator[](size_t i) const { return a[i]; }
+  void swap(FixedVec &o) {
+    const size_t m = n > o.n ? n : o.n;
+    for (size_t i = 0; i < m; ++i) std::swap(a[i], o.a[i]);
+    std::swap(n, o.n);
+  }
+};
+constexpr size_t kClipMax = 192;
+}  // namespace
 bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
+  return p18_ ? clip_body_<true>(a, b, c) : clip_body_<false>(a, b, c);
+}
+template <bool kFixed>
+bool GlRaster::clip_body_(const Vtx &a, const Vtx &b, const Vtx &c) {
   const Vtx *in3[3] = {&a, &b, &c};
   bool out = false;
   const float kx = clip_kx_;   // P8B (set_clip_x): 1 = the original's planes (the branches below then run the old expressions)
@@ -683,7 +748,10 @@ bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
     r.r = static_cast<float>(v.r); r.g = static_cast<float>(v.g); r.b = static_cast<float>(v.b); r.a = static_cast<float>(v.a);
     return r;
   };
-  std::vector<CV> poly = {to(a), to(b), to(c)}, next;
+  using PolyV = typename std::conditional<kFixed, FixedVec<CV, kClipMax>, std::vector<CV>>::type;
+  using DistV = typename std::conditional<kFixed, FixedVec<float, kClipMax>, std::vector<float>>::type;
+  using VtxV = typename std::conditional<kFixed, FixedVec<Vtx, kClipMax>, std::vector<Vtx>>::type;
+  PolyV poly = {to(a), to(b), to(c)}, next;
   auto dist = [kx](const CV &v, int plane) {
     const int k = plane >> 1;
     if (k == 0 && kx != 1.0f) {   // P8B: the moved x planes
@@ -702,7 +770,7 @@ bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
   };
   for (int plane = 0; plane < 6 && !poly.empty(); ++plane) {
     const size_t n = poly.size();
-    std::vector<float> d(n);
+    DistV d(n);
     bool all_in = true;
     for (size_t i = 0; i < n; ++i) { d[i] = dist(poly[i], plane); all_in = all_in && d[i] >= 0; }
     if (all_in) continue;
@@ -728,7 +796,7 @@ bool GlRaster::clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c) {
   }
   if (poly.size() < 3) return true;
   // the unclipped vertices keep their own values (the clipper copies them); new ones take the window rule of their clip coordinates
-  std::vector<Vtx> vs(poly.size());
+  VtxV vs(poly.size());
   for (size_t i = 0; i < poly.size(); ++i) {
     const CV &p = poly[i];
     Vtx &v = vs[i];
@@ -762,6 +830,12 @@ void GlRaster::end() {
     verts_.clear();
     return;
   }
+  if (p18_block_) {   // P18A: filed for the set-up workers
+    p18_block_ = false;
+    p18_end_();
+    return;
+  }
+  if (p18p_) p18_merge_(true);   // P18A: the blocks filed before this one first
   if (prim_ == kTriangles) {
     for (size_t i = 0; i + 2 < verts_.size(); i += 3) triangle(verts_[i], verts_[i + 1], verts_[i + 2]);
   } else if (prim_ == kTriangleFan) {
@@ -778,17 +852,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
   const bool front = (front_ == 0x0901) ? area > 0 : area < 0;
   if (!in_clip_ && cull_ && (tune[11] == 7 ? front : !front)) { ++stats.culled; return; }
   const auto tit = textures_.find(bound_);
-  // A texture object with no image (id 0, or never loaded) is incomplete, and OpenGL then draws without texturing: the
-  // fragment is the lit colour. A white 1x1 texel stands in for it (modulated by the colour, it is the colour).
-  static const Tex kWhite = [] {
-    Tex t;
-    t.w = t.h = 1;
-    t.fmt = kGlRgb;
-    t.data = {255, 255, 255};
-    t.mag = t.min = kNearest;
-    t.serial = 1;   // P16B
-    return t;
-  }();
+  const Tex &kWhite = white_tex_();   // P18A: the white stand-in shared with the set-up workers
   const bool textured = texture2d_ && tit != textures_.end() && tit->second.w != 0;
   if (!textured) ++stats.bad_texture;
   const Tex &tex = textured ? tit->second : kWhite;
@@ -1216,6 +1280,693 @@ struct GlRaster::Pool {
   }
 };
 
+// ================================================================================================ P18A: THE SET-UP WORKERS
+// (log/roadmap/P18/P18A_notes.md). On a raster with a backend (p18_) the default pipeline's begin..end blocks are not set up by the
+// calling thread: begin() decides (p18_defer_), emit() keeps only the vertex's inputs (P18Raw), and end() files the block (P18Blk:
+// its vertices, the texture it binds, and the state snapshot P18Snap, taken again only after a call that bumped p18_gen_) into the
+// open chunk. A chunk of kP18ChunkTris triangles goes to the set-up threads, which run P18Work on it: emit's vertex rule and lighting,
+// triangle_'s clipping, culling, filter choice and box, and fast_triangle_'s job, the same expressions in the same order as those
+// functions with every tune knob 0, no mask, no float diagnostics and fast_mode 1 or 2 (the only blocks filed). The calling thread
+// merges the chunks in order (p18_merge_: as they finish while it goes on filing, and all of them at finish()): each job goes to gbatch_
+// and the parts exactly as fast_triangle_ hands it on, an island as fast_triangle_ draws it, and a triangle fast_triangle_ refuses (its
+// 2^14 limits) through triangle_ itself with the block's state put back for the call (the general loop reads that state).
+// Ordering: every pixel gets its writes in stream order (gbatch_ is appended in order; an island or a general-loop triangle submits the
+// batch before it as before). What a worker reads stays fixed until the merge: the texture objects (tex_param_, tex_image2d and
+// delete_textures run finish() first), fb_ (resize_frame runs finish()), fast_mode and the tune knobs (checked per block).
+// SG_P18_SETUP_THREADS=<n> (default 4): the workers; 0 = the calling thread sets every chunk up while merging. SG_P18_NEGCTL=1
+// (development): the workers' lighting leaves out the specular term (the per-pass checks and the extended self-test must read RED).
+namespace {
+int p18_threads_setting() {
+  static const int n = [] {
+    const char *e = std::getenv("SG_P18_SETUP_THREADS");
+    return e ? std::max(0, std::min(32, std::atoi(e))) : 4;
+  }();
+  return n;
+}
+int p18_chunk_setting() {
+  static const int n = [] {
+    const char *e = std::getenv("SG_P18_CHUNK");
+    return e ? std::max(16, std::atoi(e)) : 256;
+  }();
+  return n;
+}
+bool p18_negctl() {
+  static const bool on = [] {
+    const char *e = std::getenv("SG_P18_NEGCTL");
+    return e && e[0] == '1';
+  }();
+  return on;
+}
+}  // namespace
+
+struct GlRaster::P18Snap {
+  float fmvp[16];
+  double inv[9];                       // emit's inverse of the modelview's upper 3x3 (when lighting)
+  double lx, ly, lz, hx, hy, hz;       // emit's light direction and half vector, normalised as there (when light 0 is on)
+  float light[4][4], mat_spec[4], shininess;
+  bool lighting, light0, cull, texture2d, blend;
+  uint32_t front, env_mode;
+  int32_t vp_x, vp_y, vp_w, vp_h;
+  float kx;
+  int ddx, w, h, cx0, cx1, fast_mode;
+  uint16_t *fb;
+};
+struct GlRaster::P18Raw {
+  float o[3], n[3], s, t, c[4];   // emit's object coordinates (as floats: its vertex rule's operands), normal, texture coordinates, colour
+};
+struct GlRaster::P18Blk {
+  uint32_t first, n, prim, snap;   // its vertices in the chunk's raw, GL_TRIANGLES / GL_TRIANGLE_FAN, its snapshot
+  uint32_t bound;                  // the bound texture name (the state triangle_ is called with for a general-loop triangle)
+  bool textured;                   // triangle_'s `textured`
+  const Tex *tex;                  // the texture object (textured)
+};
+struct GlRaster::P18Chunk {
+  std::vector<P18Raw> raw;
+  std::vector<P18Blk> blk;
+  std::vector<P18Snap> snaps;
+  uint64_t gen = 0;   // p18_gen_ when snaps.back() was taken
+  int tris = 0;       // triangles filed
+  // the results in stream order: kind 0 a job (jobs[idx]; why: gpu_ok_, covers: covers_ when why != 0), 1 a general-loop triangle
+  // (gens[idx], in_clip: drawn as a clipped fan's triangle, blk: its block)
+  struct Out {
+    uint8_t kind, in_clip, covers;
+    int8_t why;
+    uint32_t idx, blk;
+  };
+  std::vector<Out> out;
+  std::vector<FastJob> jobs;
+  std::vector<GlGpuTri> gt;   // jobs[i] as gpu_tris_ converts it (its texture index given at the merge)
+  std::vector<std::array<Vtx, 3>> gens;
+  int64_t triangles = 0, culled = 0, bad_texture = 0, work_ns = 0, blocks = 0;
+  std::atomic<int> state{0};   // 0 filling, 1 queued, 2 being set up, 3 done
+  void reset() {
+    raw.clear(); blk.clear(); snaps.clear(); out.clear(); jobs.clear(); gt.clear(); gens.clear();
+    gen = 0; tris = 0; triangles = culled = bad_texture = work_ns = blocks = 0;
+    state.store(0);
+  }
+};
+// the set-up of a chunk, on a snapshot (a worker's own specular table)
+struct GlRaster::P18Work {
+  const GlRaster &r;
+  P18Chunk &c;
+  double spec_sh = -1.0, spec_t = 0.0, spec_scale = 0.0, spec_tab[256] = {};
+  std::vector<Vtx> vs;
+
+  // spec_lookup_
+  double spec(double nh, double shininess) {
+    if (shininess != spec_sh) {
+      spec_sh = shininess;
+      spec_t = std::pow(0.0005, 1.0 / shininess);
+      spec_scale = 255.0 / (1.0 - spec_t);
+      for (int i = 0; i < 256; ++i) spec_tab[i] = std::pow(spec_t + static_cast<double>(i) / spec_scale, shininess);
+    }
+    if (nh <= spec_t) return 0.0;
+    const double i = std::min(255.0, std::floor((nh - spec_t) * spec_scale + 0.5));
+    return spec_tab[static_cast<int>(i)];
+  }
+  // window_of_
+  static void window_of(const P18Snap &s, const float c[4], Vtx &v) {
+    float nx = c[0], ny = c[1];
+    if (c[3] != 1.0f) {
+      volatile float inv = 1.0f / c[3];
+      volatile float a = c[0] * inv, b = c[1] * inv;
+      nx = a; ny = b;
+    }
+    const double hx = s.vp_w * 0.5, hy = s.vp_h * 0.5;
+    volatile float px = nx * static_cast<float>(hx - 1.0 / 256.0), py = ny * static_cast<float>(hy - 1.0 / 256.0);
+    const double wx = static_cast<double>(px) + (s.vp_x + hx), wy = static_cast<double>(py) + (s.vp_y + hy);
+    v.x = wx;
+    v.y = wy;
+    v.qx = std::nearbyint(256.0 * wx) / 256.0;
+    v.qy = std::nearbyint(256.0 * wy) / 256.0;
+  }
+  // emit with tune 28 = 0 (the double model's x / y are replaced by the vertex rule's; its z is read by nothing after emit)
+  void emit(const P18Snap &s, const P18Raw &in, Vtx &v) {
+    const float *M = s.fmvp;
+    float clip[4];
+    for (int k = 0; k < 4; ++k) {
+      volatile float acc = M[12 + k];
+      for (int j = 0; j < 3; ++j) {
+        volatile float term = in.o[j] * M[k + 4 * j];
+        acc = acc + term;
+      }
+      clip[k] = acc;
+    }
+    v.z = 0.0;
+    std::memcpy(v.c, clip, sizeof clip);
+    window_of(s, clip, v);
+    v.s = in.s;
+    v.t = in.t;
+    v.r = in.c[0]; v.g = in.c[1]; v.b = in.c[2]; v.a = in.c[3];
+    if (s.lighting) {
+      const float *normal = in.n;
+      const double i00 = s.inv[0], i01 = s.inv[1], i02 = s.inv[2], i10 = s.inv[3], i11 = s.inv[4], i12 = s.inv[5];
+      const double i20 = s.inv[6], i21 = s.inv[7], i22 = s.inv[8];
+      const double nx = i00 * normal[0] + i10 * normal[1] + i20 * normal[2];
+      const double ny = i01 * normal[0] + i11 * normal[1] + i21 * normal[2];
+      const double nz = i02 * normal[0] + i12 * normal[1] + i22 * normal[2];
+      double col[3];
+      for (int k = 0; k < 3; ++k) col[k] = 0.2 * 0.2;
+      if (s.light0) {
+        const double lx = s.lx, ly = s.ly, lz = s.lz;
+        const double ndotl = std::max(0.0, nx * lx + ny * ly + nz * lz);
+        for (int k = 0; k < 3; ++k) col[k] += s.light[0][k] * 0.2 + ndotl * s.light[1][k] * 0.8;
+        if (ndotl > 0 && !p18_negctl()) {
+          const double ndoth = std::max(0.0, nx * s.hx + ny * s.hy + nz * s.hz);
+          const double nh = ndoth;
+          double f;
+          if (s.shininess > 0) f = spec(nh, s.shininess);
+          else f = nh > 0 ? std::pow(nh, s.shininess) : 0.0;
+          for (int k = 0; k < 3; ++k) col[k] += f * s.light[2][k] * s.mat_spec[k];
+        }
+      }
+      v.r = std::min(1.0, std::max(0.0, col[0]));
+      v.g = std::min(1.0, std::max(0.0, col[1]));
+      v.b = std::min(1.0, std::max(0.0, col[2]));
+    }
+  }
+  void general(const P18Blk &b, const Vtx &a, const Vtx &bb, const Vtx &cc, bool in_clip) {
+    c.out.push_back(P18Chunk::Out{1, static_cast<uint8_t>(in_clip ? 1 : 0), 1, 0, static_cast<uint32_t>(c.gens.size()),
+                                  static_cast<uint32_t>(&b - c.blk.data())});
+    c.gens.push_back({a, bb, cc});
+  }
+  // triangle_ (and triangle(): clipping first unless in_clip)
+  void tri(const P18Snap &s, const P18Blk &bk, const Vtx &a, const Vtx &b, const Vtx &cv, bool in_clip) {
+    if (!in_clip && clip(s, bk, a, b, cv)) return;
+    ++c.triangles;
+    const double area = edge(a.x, a.y, b.x, b.y, cv.x, cv.y);
+    if (area == 0) return;
+    const bool front = (s.front == 0x0901) ? area > 0 : area < 0;
+    if (!in_clip && s.cull && !front) { ++c.culled; return; }
+    if (!bk.textured) ++c.bad_texture;
+    const Tex &tex = bk.textured ? *bk.tex : white_tex_();
+    const Vtx *v0 = &a, *v1 = &b, *v2 = &cv;
+    double ar = area;
+    if (ar < 0) { std::swap(v1, v2); ar = -ar; }
+    const double u0 = v0->s * tex.w, u1 = v1->s * tex.w, u2 = v2->s * tex.w;
+    const double t0 = v0->t * tex.h, t1 = v1->t * tex.h, t2 = v2->t * tex.h;
+    const double dudx = ((u1 - u0) * (v2->y - v0->y) - (u2 - u0) * (v1->y - v0->y)) / ar;
+    const double dudy = ((u2 - u0) * (v1->x - v0->x) - (u1 - u0) * (v2->x - v0->x)) / ar;
+    const double dvdx = ((t1 - t0) * (v2->y - v0->y) - (t2 - t0) * (v1->y - v0->y)) / ar;
+    const double dvdy = ((t2 - t0) * (v1->x - v0->x) - (t1 - t0) * (v2->x - v0->x)) / ar;
+    const double rho = std::max(std::sqrt(dudx * dudx + dvdx * dvdx), std::sqrt(dudy * dudy + dvdy * dvdy));
+    const uint32_t filter = rho <= 1.0 + 1e-6 ? tex.mag : tex.min;
+    const bool linear = filter == kLinear || filter == 0x2701 || filter == 0x2703;
+    const int minx = std::max(0, static_cast<int>(std::floor(std::min({v0->x, v1->x, v2->x}))));
+    const int maxx = std::min(s.w - 1, static_cast<int>(std::ceil(std::max({v0->x, v1->x, v2->x}))));
+    const int miny = std::max(0, static_cast<int>(std::floor(std::min({v0->y, v1->y, v2->y}))));
+    const int maxy = std::min(s.h - 1, static_cast<int>(std::ceil(std::max({v0->y, v1->y, v2->y}))));
+    // the fixed-point set-up vertices: the vertex rule's snapped positions; coverage from them (tune 23 = 0)
+    const double sx[3] = {v0->qx, v1->qx, v2->qx}, sy[3] = {v0->qy, v1->qy, v2->qy};
+    // the tie-break with tune 10 = 0 (rule 2): an edge owns its centres when it points to +y, or to +x on a horizontal edge
+    auto inclusive = [&sx, &sy](int p, int q) {
+      const double ex = sx[q] - sx[p], ey = sy[q] - sy[p];
+      return ey > 0 || (ey == 0 && ex > 0);
+    };
+    const bool inc[3] = {inclusive(1, 2), inclusive(2, 0), inclusive(0, 1)};
+    fast(s, bk, v0, v1, v2, ar, tex, linear, minx, maxx, miny, maxy, inc, sx, sy, a, b, cv, in_clip);
+  }
+  // fast_triangle_ up to the hand-over (the merge does the hand-over)
+  void fast(const P18Snap &s, const P18Blk &bk, const Vtx *v0, const Vtx *v1, const Vtx *v2, double ar, const Tex &tex, bool linear,
+            int minx, int maxx, int miny, int maxy, const bool inc[3], const double sx[3], const double sy[3], const Vtx &a,
+            const Vtx &b, const Vtx &cv, bool in_clip) {
+    constexpr double kLim = 16384.0;   // 2^14
+    bool ok = s.w < 16384 && s.h < 16384;
+    for (int i = 0; i < 3 && ok; ++i) ok = std::fabs(sx[i]) < kLim && std::fabs(sy[i]) < kLim;
+    if (!ok) {   // fast_triangle_ refuses it: triangle_'s general loop, at the merge (which counts it again: the counts here undone)
+      --c.triangles;
+      if (!bk.textured) --c.bad_texture;
+      general(bk, a, b, cv, in_clip);
+      return;
+    }
+    c.jobs.emplace_back();
+    FastJob &j = c.jobs.back();
+    j.fb = s.fb;
+    j.fbw = s.w;
+    j.ddx = s.ddx;
+    j.minx = minx; j.maxx = maxx; j.miny = miny; j.maxy = maxy;
+    j.dith = 0;
+    j.modulate = s.env_mode == 0x2100;
+    j.blend = s.blend;
+    j.white = false;
+    for (int i = 0; i < 3; ++i) { j.X[i] = static_cast<int64_t>(sx[i] * 256.0); j.Y[i] = static_cast<int64_t>(sy[i] * 256.0); }
+    for (int i = 0; i < 3; ++i) {
+      const int p = (i + 1) % 3, q = (i + 2) % 3;
+      j.A[i] = j.X[q] - j.X[p];
+      j.B[i] = j.Y[q] - j.Y[p];
+      j.inc[i] = inc[i];
+    }
+    j.arA = std::fabs(edge(sx[0], sy[0], sx[1], sy[1], sx[2], sy[2]));
+    j.div_st = linear ? j.arA : ar;
+    j.linear = linear;
+    j.bpp = tex.fmt == kGlRgba ? 4 : 3;
+    j.td = tex.data.data();
+    j.tser = tex.serial;
+    j.tw = tex.w;
+    j.th = tex.h;
+    j.twd = static_cast<double>(tex.w);
+    j.thd = static_cast<double>(tex.h);
+    j.s0 = v0->s; j.s1 = v1->s; j.s2 = v2->s; j.t0 = v0->t; j.t1 = v1->t; j.t2 = v2->t;
+    j.r0 = v0->r; j.r1 = v1->r; j.r2 = v2->r; j.g0 = v0->g; j.g1 = v1->g; j.g2 = v2->g; j.b0 = v0->b; j.b1 = v1->b; j.b2 = v2->b;
+    j.sloppy = s.fast_mode == 3;
+    j.wctl = false;
+    j.walk = nullptr;
+    j.wfinal = true;
+    j.rmask = nullptr;
+    j.cx0 = s.cx0;
+    j.cx1 = s.cx1;
+    bool approx = (s.fast_mode == 1 || s.fast_mode == 3 || s.fast_mode == 4) && j.div_st > 0 && j.div_st < 1e300 && j.arA > 0 &&
+                  j.arA < 1e300;
+    for (const Vtx *p : {v0, v1, v2})
+      approx = approx && p->r >= 0 && p->r <= 1 && p->g >= 0 && p->g <= 1 && p->b >= 0 && p->b <= 1 && std::isfinite(p->s) &&
+               std::isfinite(p->t);
+    j.approx = approx;
+    j.inv_st = approx ? 1.0 / j.div_st : 0.0;
+    j.inv_a = approx ? 1.0 / j.arA : 0.0;
+    const int why = r.gpu_ok_(j);
+    const bool covers = why == 0 || covers_(j);
+    c.gt.emplace_back();   // gpu_tris_'s conversion
+    GlGpuTri &t = c.gt.back();
+    for (int k = 0; k < 3; ++k) {
+      t.X[k] = static_cast<int32_t>(j.X[k]);
+      t.Y[k] = static_cast<int32_t>(j.Y[k]);
+    }
+    t.minx = j.minx; t.maxx = j.maxx; t.miny = j.miny; t.maxy = j.maxy;
+    t.flags = (j.inc[0] ? kGtInc0 : 0u) | (j.inc[1] ? kGtInc0 << 1 : 0u) | (j.inc[2] ? kGtInc0 << 2 : 0u) | (j.linear ? kGtLinear : 0u) |
+              (j.modulate ? kGtModulate : 0u) | (j.blend ? kGtBlend : 0u) | (j.bpp == 4 ? kGtRgba : 0u) |
+              (static_cast<uint32_t>(j.ddx & 3) << 8);
+    t.tex = 0;
+    t.s[0] = j.s0; t.s[1] = j.s1; t.s[2] = j.s2; t.t[0] = j.t0; t.t[1] = j.t1; t.t[2] = j.t2;
+    t.r[0] = j.r0; t.r[1] = j.r1; t.r[2] = j.r2; t.g[0] = j.g0; t.g[1] = j.g1; t.g[2] = j.g2; t.b[0] = j.b0; t.b[1] = j.b1; t.b[2] = j.b2;
+    t.div_st = j.div_st;
+    t.arA = j.arA;
+    c.out.push_back(P18Chunk::Out{0, static_cast<uint8_t>(in_clip ? 1 : 0), static_cast<uint8_t>(covers ? 1 : 0), static_cast<int8_t>(why),
+                                  static_cast<uint32_t>(c.jobs.size() - 1), static_cast<uint32_t>(&bk - c.blk.data())});
+  }
+  // clip_body_<true>: true when the triangle was handled here
+  bool clip(const P18Snap &s, const P18Blk &bk, const Vtx &a, const Vtx &b, const Vtx &cv) {
+    const Vtx *in3[3] = {&a, &b, &cv};
+    bool out = false;
+    const float kx = s.kx;
+    for (const Vtx *p : in3)
+      for (int k = 0; k < 3; ++k) {
+        if (k == 0 && kx != 1.0f) {
+          const float wx = kx * p->c[3];
+          out = out || !(p->c[0] >= -wx && p->c[0] <= wx);
+        } else {
+          out = out || !(p->c[k] >= -p->c[3] && p->c[k] <= p->c[3]);
+        }
+      }
+    if (!out) return false;
+    const double area = edge(a.qx, a.qy, b.qx, b.qy, cv.qx, cv.qy);
+    const bool front = (s.front == 0x0901) ? area >= 0 : area <= 0;
+    ++c.triangles;
+    if (s.cull && !front) { ++c.culled; return true; }
+    struct CV { float c[4]; float s, t, r, g, b, a; };
+    auto to = [](const Vtx &v) {
+      CV q;
+      std::memcpy(q.c, v.c, sizeof q.c);
+      q.s = static_cast<float>(v.s); q.t = static_cast<float>(v.t);
+      q.r = static_cast<float>(v.r); q.g = static_cast<float>(v.g); q.b = static_cast<float>(v.b); q.a = static_cast<float>(v.a);
+      return q;
+    };
+    FixedVec<CV, kClipMax> poly = {to(a), to(b), to(cv)}, next;
+    auto dist = [kx](const CV &v, int plane) {
+      const int k = plane >> 1;
+      if (k == 0 && kx != 1.0f) {
+        volatile float wx = kx * v.c[3];
+        volatile float dx = (plane & 1) ? wx - v.c[0] : wx + v.c[0];
+        return static_cast<float>(dx);
+      }
+      volatile float d = (plane & 1) ? v.c[3] - v.c[k] : v.c[3] + v.c[k];
+      return static_cast<float>(d);
+    };
+    auto lerp = [](float p, float q, float t) {
+      volatile float d = q - p;
+      volatile float m = t * d;
+      volatile float res = p + m;
+      return static_cast<float>(res);
+    };
+    for (int plane = 0; plane < 6 && !poly.empty(); ++plane) {
+      const size_t n = poly.size();
+      FixedVec<float, kClipMax> d(n);
+      bool all_in = true;
+      for (size_t i = 0; i < n; ++i) { d[i] = dist(poly[i], plane); all_in = all_in && d[i] >= 0; }
+      if (all_in) continue;
+      next.clear();
+      for (size_t i = 0; i < n; ++i) {
+        const size_t pi = (i + n - 1) % n;
+        const float dp = d[pi], dc = d[i];
+        if ((dp >= 0) != (dc >= 0)) {
+          const CV &ii = dp >= 0 ? poly[pi] : poly[i];
+          const CV &oo = dp >= 0 ? poly[i] : poly[pi];
+          const float di = dp >= 0 ? dp : dc, dout = dp >= 0 ? dc : dp;
+          volatile float den = di - dout;
+          volatile float t = di / den;
+          CV nv;
+          for (int k = 0; k < 4; ++k) nv.c[k] = lerp(ii.c[k], oo.c[k], t);
+          nv.s = lerp(ii.s, oo.s, t); nv.t = lerp(ii.t, oo.t, t);
+          nv.r = lerp(ii.r, oo.r, t); nv.g = lerp(ii.g, oo.g, t); nv.b = lerp(ii.b, oo.b, t); nv.a = lerp(ii.a, oo.a, t);
+          next.push_back(nv);
+        }
+        if (dc >= 0) next.push_back(poly[i]);
+      }
+      poly.swap(next);
+    }
+    if (poly.size() < 3) return true;
+    FixedVec<Vtx, kClipMax> fv(poly.size());
+    for (size_t i = 0; i < poly.size(); ++i) {
+      const CV &p = poly[i];
+      Vtx &v = fv[i];
+      const Vtx *orig = nullptr;
+      for (const Vtx *q : in3)
+        if (std::memcmp(q->c, p.c, sizeof p.c) == 0 && static_cast<float>(q->s) == p.s && static_cast<float>(q->t) == p.t) orig = q;
+      if (orig) { v = *orig; continue; }
+      std::memcpy(v.c, p.c, sizeof p.c);
+      window_of(s, p.c, v);
+      v.z = 0.5;
+      v.s = p.s; v.t = p.t; v.r = p.r; v.g = p.g; v.b = p.b; v.a = p.a;
+    }
+    for (size_t i = 1; i + 1 < fv.size(); ++i) tri(s, bk, fv[0], fv[i], fv[i + 1], true);
+    --c.triangles;
+    return true;
+  }
+  void run() {
+    const auto t0 = std::chrono::steady_clock::now();
+    for (const P18Blk &bk : c.blk) {
+      const P18Snap &s = c.snaps[bk.snap];
+      vs.resize(bk.n);
+      for (uint32_t i = 0; i < bk.n; ++i) emit(s, c.raw[bk.first + i], vs[i]);
+      if (bk.prim == kTriangles) {
+        for (size_t i = 0; i + 2 < vs.size(); i += 3) tri(s, bk, vs[i], vs[i + 1], vs[i + 2], false);
+      } else {
+        for (size_t i = 1; i + 1 < vs.size(); ++i) tri(s, bk, vs[0], vs[i], vs[i + 1], false);
+      }
+    }
+    c.work_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count();
+  }
+};
+struct GlRaster::P18Pool {
+  std::mutex m;
+  std::condition_variable cv_work, cv_done;
+  std::deque<P18Chunk *> queue;                  // filed chunks no worker took yet
+  std::deque<std::unique_ptr<P18Chunk>> order;   // every filed chunk not merged yet, in stream order
+  std::vector<std::unique_ptr<P18Chunk>> spare;
+  P18Chunk *open = nullptr;                      // the chunk being filled (order.back())
+  bool stop = false;
+  std::vector<std::thread> threads;
+  const GlRaster *r = nullptr;
+
+  void set_up(P18Chunk &c) {
+    P18Work w{*r, c};
+    w.run();
+  }
+  void work() {
+    for (;;) {
+      P18Chunk *c = nullptr;
+      {
+        std::unique_lock<std::mutex> lk(m);
+        cv_work.wait(lk, [&] { return stop || !queue.empty(); });
+        if (queue.empty()) return;
+        c = queue.front();
+        queue.pop_front();
+        c->state.store(2);
+      }
+      set_up(*c);
+      {
+        std::lock_guard<std::mutex> lk(m);
+        c->state.store(3);
+      }
+      cv_done.notify_all();
+    }
+  }
+  ~P18Pool() {
+    {
+      std::lock_guard<std::mutex> lk(m);
+      stop = true;
+    }
+    cv_work.notify_all();
+    for (std::thread &t : threads) t.join();
+  }
+};
+const GlRaster::Tex &GlRaster::white_tex_() {
+  // A texture object with no image (id 0, or never loaded) is incomplete, and OpenGL then draws without texturing: the
+  // fragment is the lit colour. A white 1x1 texel stands in for it (modulated by the colour, it is the colour).
+  static const Tex kWhite = [] {
+    Tex t;
+    t.w = t.h = 1;
+    t.fmt = kGlRgb;
+    t.data = {255, 255, 255};
+    t.mag = t.min = kNearest;
+    t.serial = 1;   // P16B
+    return t;
+  }();
+  return kWhite;
+}
+bool GlRaster::p18_defer_() {
+  if (!p18_ || !gpu_ || discard_ || keep_float_ || worker_ctl != 0 || !(fast_mode == 1 || fast_mode == 2) || !mask_rows_.empty())
+    return false;
+  static const int kZero[kTunes] = {};
+  if (std::memcmp(tune, kZero, sizeof kZero) != 0) return false;
+  if (!p18p_) {
+    p18p_ = std::make_unique<P18Pool>();
+    p18p_->r = this;
+    const int n = p18_threads_setting();
+#ifdef _WIN32
+    const int prio = GetThreadPriority(GetCurrentThread());   // the workers run at the priority of the thread that files the blocks
+#endif
+    for (int k = 0; k < n; ++k) {
+      P18Pool *p = p18p_.get();
+      p18p_->threads.emplace_back([p] { p->work(); });
+#ifdef _WIN32
+      if (prio != THREAD_PRIORITY_ERROR_RETURN) SetThreadPriority(p18p_->threads.back().native_handle(), prio);
+#endif
+    }
+  }
+  P18Pool &p = *p18p_;
+  if (!p.open) {
+    std::unique_ptr<P18Chunk> c;
+    if (!p.spare.empty()) {
+      c = std::move(p.spare.back());
+      p.spare.pop_back();
+    } else {
+      c = std::make_unique<P18Chunk>();
+    }
+    c->reset();
+    p.open = c.get();
+    p.order.push_back(std::move(c));
+  }
+  P18Chunk &c = *p.open;   // vertices of a block begun and never ended are dropped (begin() starts a new one, as verts_.clear())
+  c.raw.resize(c.blk.empty() ? 0 : c.blk.back().first + c.blk.back().n);
+  return true;
+}
+void GlRaster::p18_snap_(P18Snap &s) const {
+  std::memcpy(s.fmvp, fmvp_.m, sizeof s.fmvp);
+  s.lighting = lighting_;
+  s.light0 = light0_;
+  std::memcpy(s.light, light_, sizeof s.light);
+  std::memcpy(s.mat_spec, mat_spec_, sizeof s.mat_spec);
+  s.shininess = shininess_;
+  std::memset(s.inv, 0, sizeof s.inv);
+  s.lx = s.ly = s.lz = s.hx = s.hy = s.hz = 0.0;
+  if (lighting_) {   // emit's per-modelview inverse, the same expressions
+    const double *m = mv_.m;
+    const double key[9] = {m[0], m[4], m[8], m[1], m[5], m[9], m[2], m[6], m[10]};
+    const double a0 = key[0], a1 = key[1], a2 = key[2], b0 = key[3], b1 = key[4], b2 = key[5], c0 = key[6], c1 = key[7], c2 = key[8];
+    const double det = a0 * (b1 * c2 - b2 * c1) - a1 * (b0 * c2 - b2 * c0) + a2 * (b0 * c1 - b1 * c0);
+    s.inv[0] = (b1 * c2 - b2 * c1) / det; s.inv[1] = (a2 * c1 - a1 * c2) / det; s.inv[2] = (a1 * b2 - a2 * b1) / det;
+    s.inv[3] = (b2 * c0 - b0 * c2) / det; s.inv[4] = (a0 * c2 - a2 * c0) / det; s.inv[5] = (a2 * b0 - a0 * b2) / det;
+    s.inv[6] = (b0 * c1 - b1 * c0) / det; s.inv[7] = (a1 * c0 - a0 * c1) / det; s.inv[8] = (a0 * b1 - a1 * b0) / det;
+    // emit's light direction and half vector (computed there per vertex from the same values)
+    double lx = light_[3][0], ly = light_[3][1], lz = light_[3][2];
+    const double ln = std::sqrt(lx * lx + ly * ly + lz * lz);
+    if (ln > 0) { lx /= ln; ly /= ln; lz /= ln; }
+    double hx = lx, hy = ly, hz = lz + 1.0;
+    const double hn = std::sqrt(hx * hx + hy * hy + hz * hz);
+    if (hn > 0) { hx /= hn; hy /= hn; hz /= hn; }
+    s.lx = lx; s.ly = ly; s.lz = lz; s.hx = hx; s.hy = hy; s.hz = hz;
+  }
+  s.cull = cull_;
+  s.texture2d = texture2d_;
+  s.blend = blend_;
+  s.front = front_;
+  s.env_mode = env_mode_;
+  s.vp_x = vp_x_; s.vp_y = vp_y_; s.vp_w = vp_w_; s.vp_h = vp_h_;
+  s.kx = clip_kx_;
+  s.ddx = dither_dx_;
+  s.w = w_;
+  s.h = h_;
+  s.cx0 = mask_cx0_;
+  s.cx1 = mask_cx1_;
+  s.fast_mode = fast_mode;
+  s.fb = const_cast<uint16_t *>(fb_.data());   // the job's frame pointer, as fast_triangle_ takes it
+}
+void GlRaster::p18_end_() {
+  P18Pool &p = *p18p_;
+  P18Chunk &c = *p.open;
+  const uint32_t first = static_cast<uint32_t>(c.blk.empty() ? 0 : c.blk.back().first + c.blk.back().n);
+  const uint32_t n = static_cast<uint32_t>(c.raw.size()) - first;
+  const int tris = prim_ == kTriangles ? static_cast<int>(n / 3) : (n >= 2 ? static_cast<int>(n) - 2 : 0);
+  if (tris <= 0) {   // nothing to draw (end() would draw no triangle): its vertices dropped
+    c.raw.resize(first);
+    return;
+  }
+  if (c.snaps.empty() || c.gen != p18_gen_) {
+    c.snaps.emplace_back();
+    p18_snap_(c.snaps.back());
+    c.gen = p18_gen_;
+  }
+  TexSlot &ts = tex_cache_[bound_ & 63];
+  if (!ts.used || ts.id != bound_) {
+    const auto tit = textures_.find(bound_);
+    ts.id = bound_;
+    ts.t = tit != textures_.end() ? &tit->second : nullptr;
+    ts.used = true;
+  }
+  const bool textured = texture2d_ && ts.t && ts.t->w != 0;   // triangle_'s `textured`
+  c.blk.push_back(P18Blk{first, n, prim_, static_cast<uint32_t>(c.snaps.size() - 1), bound_, textured, textured ? ts.t : nullptr});
+  c.tris += tris;
+  ++c.blocks;
+  if (c.tris >= p18_chunk_setting()) {   // to the workers; the next block opens a new chunk
+    p.open = nullptr;
+    if (!p.threads.empty()) {
+      {
+        std::lock_guard<std::mutex> lk(p.m);
+        c.state.store(1);
+        p.queue.push_back(&c);
+      }
+      p.cv_work.notify_one();
+    } else {
+      c.state.store(1);
+    }
+    p18_merge_(false);
+  }
+}
+void GlRaster::p18_merge_(bool all) {
+  if (!p18p_ || p18_merging_) return;
+  P18Pool &p = *p18p_;
+  if (p.order.empty()) return;
+  const auto t0 = std::chrono::steady_clock::now();
+  int64_t wait_ns = 0, helped = 0, chunks = 0, general = 0, tris = 0, work_ns = 0, blocks = 0;
+  p18_merging_ = true;
+  while (!p.order.empty()) {
+    P18Chunk &c = *p.order.front();
+    if (&c == p.open) {
+      if (!all || p18_block_) break;   // a block being assembled stays in the open chunk
+      p.open = nullptr;
+      if (c.blk.empty()) {   // nothing filed in it
+        p.spare.push_back(std::move(p.order.front()));
+        p.order.pop_front();
+        continue;
+      }
+      c.state.store(1);   // not queued: set up here
+    }
+    if (c.state.load() != 3) {
+      if (!all) break;
+      bool mine = false;
+      {
+        std::lock_guard<std::mutex> lk(p.m);
+        if (c.state.load() == 1) {   // not taken by a worker: set up here
+          const auto it = std::find(p.queue.begin(), p.queue.end(), &c);
+          if (it != p.queue.end()) p.queue.erase(it);
+          c.state.store(2);
+          mine = true;
+        }
+      }
+      if (mine) {
+        p.set_up(c);
+        c.state.store(3);
+        ++helped;
+      } else {
+        const auto tw = std::chrono::steady_clock::now();
+        std::unique_lock<std::mutex> lk(p.m);
+        p.cv_done.wait(lk, [&] { return c.state.load() == 3; });
+        wait_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - tw).count();
+      }
+    }
+    // the chunk's results in order: fast_triangle_'s hand-over, or triangle_ under the block's state
+    stats.triangles += c.triangles;
+    stats.culled += c.culled;
+    stats.bad_texture += c.bad_texture;
+    blocks += c.blocks;
+    for (const P18Chunk::Out &o : c.out) {
+      if (o.kind == 0) {
+        const FastJob &j = c.jobs[o.idx];
+        if (gpu_) {
+          if (o.why == 0) {
+            gbatch_.push_back(j);
+            if (gtri_ok_) {   // gpu_tris_'s list, appended: the texture's index in the order of first use
+              GlGpuTri t = c.gt[o.idx];
+              uint32_t ti = 0;
+              while (ti < gtexs_.size() && gtexs_[ti].serial != j.tser) ++ti;
+              if (ti == gtexs_.size()) gtexs_.push_back(GlGpuTex{j.tser, j.tw, j.th, static_cast<uint32_t>(j.bpp), j.td});
+              t.tex = ti;
+              gtris_.push_back(t);
+            }
+            if (gpart_ && gbatch_.size() - gsent_ >= gpart_) gpu_part_();
+          } else if (!o.covers) {
+            pixel_gpu_note_island(o.why, true);
+          } else {
+            gpu_submit_();
+            fb_sync_();
+            gpu_dirty_(j.miny, j.maxy);
+            pixel_gpu_note_island(o.why, false);
+            cpu_job_(j);
+          }
+        } else {
+          cpu_job_(j);
+        }
+        ++tris;
+        continue;
+      }
+      // a triangle fast_triangle_ refuses: triangle_ with the state its block was filed with (what triangle_ and the general loop read
+      // of the state: the texture, culling, blending, the environment and the viewport; the rest is fixed until the merge)
+      const P18Blk &bk = c.blk[o.blk];
+      const P18Snap &s = c.snaps[bk.snap];
+      const std::array<Vtx, 3> &v = c.gens[o.idx];
+      const uint32_t sv_bound = bound_, sv_env = env_mode_, sv_front = front_;
+      const bool sv_tex = texture2d_, sv_cull = cull_, sv_blend = blend_, sv_clip = in_clip_;
+      const int32_t sv_vp[4] = {vp_x_, vp_y_, vp_w_, vp_h_};
+      bound_ = bk.bound; texture2d_ = s.texture2d; cull_ = s.cull; blend_ = s.blend; env_mode_ = s.env_mode; front_ = s.front;
+      vp_x_ = s.vp_x; vp_y_ = s.vp_y; vp_w_ = s.vp_w; vp_h_ = s.vp_h;
+      in_clip_ = o.in_clip != 0;
+      triangle(v[0], v[1], v[2]);
+      bound_ = sv_bound; texture2d_ = sv_tex; cull_ = sv_cull; blend_ = sv_blend; env_mode_ = sv_env; front_ = sv_front;
+      vp_x_ = sv_vp[0]; vp_y_ = sv_vp[1]; vp_w_ = sv_vp[2]; vp_h_ = sv_vp[3];
+      in_clip_ = sv_clip;
+      ++general;
+    }
+    ++chunks;
+    work_ns += c.work_ns;
+    p.spare.push_back(std::move(p.order.front()));
+    p.order.pop_front();
+  }
+  p18_merging_ = false;
+  if (chunks) {
+    pixel_gpu_count(&GlGpuStats::p18_chunks, chunks);
+    pixel_gpu_count(&GlGpuStats::p18_blocks, blocks);
+    pixel_gpu_count(&GlGpuStats::p18_tris, tris);
+    pixel_gpu_count(&GlGpuStats::p18_helped, helped);
+    pixel_gpu_count(&GlGpuStats::p18_general, general);
+    pixel_gpu_count(&GlGpuStats::p18_work_ns, work_ns);
+    pixel_gpu_count(&GlGpuStats::p18_wait_ns, wait_ns);
+    pixel_gpu_count(&GlGpuStats::p18_merge_ns,
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
+  }
+}
+
+void GlRaster::p18_raw_(double x, double y, double z, const float *normal) {
+  P18Raw r;
+  r.o[0] = static_cast<float>(x);
+  r.o[1] = static_cast<float>(y);
+  r.o[2] = static_cast<float>(z);
+  std::memcpy(r.n, normal, sizeof r.n);
+  r.s = cur_s_;
+  r.t = cur_t_;
+  std::memcpy(r.c, cur_c_, sizeof r.c);
+  p18p_->open->raw.push_back(r);
+}
+
 GlRaster::~GlRaster() { set_threads(1); }
 
 void GlRaster::set_threads(int n) {
@@ -1252,6 +2003,7 @@ void GlRaster::set_threads(int n) {
 int GlRaster::threads() const { return pool_ ? pool_->parts : 1; }
 
 void GlRaster::finish() {
+  p18_merge_(true);   // P18A: every filed block set up and handed on first
   pool_wait_();
   if (!gbatch_.empty()) gpu_submit_();   // P16B (every job queued to the workers precedes the batch)
 }
@@ -1495,6 +2247,7 @@ bool GlRaster::fast_triangle_(const Vtx *v0, const Vtx *v1, const Vtx *v2, doubl
     const int why = gpu_ok_(j);
     if (why == 0) {
       gbatch_.push_back(std::move(j));
+      gtri_ok_ = false;   // P18A: gtris_ no longer gbatch_'s (gpu_tris_ converts at the hand-over)
       if (gpart_ && gbatch_.size() - gsent_ >= gpart_) gpu_part_();   // P17A: the backend starts on these while the set-up goes on
       return true;
     }
@@ -1590,23 +2343,33 @@ void GlRaster::gpu_tris_(size_t from, std::vector<GlGpuTri> &tris, std::vector<G
 void GlRaster::gpu_part_() {
   const auto t0 = std::chrono::steady_clock::now();
   if (gsent_ == 0) pool_wait_();   // the islands queued to the workers are in fb_ before the mirror's rows are read
-  std::vector<GlGpuTri> tris;
-  std::vector<GlGpuTex> texs;
-  gpu_tris_(gsent_, tris, texs);
+  std::vector<GlGpuTri> ltris;
+  std::vector<GlGpuTex> ltexs;
+  std::vector<GlGpuTri> &tris = p18_ ? gtris_ : ltris;   // P18A: kept between parts (the backend copies them)
+  std::vector<GlGpuTex> &texs = p18_ ? gtexs_ : ltexs;
+  if (!(p18_ && gtri_ok_ && gtris_.size() == gbatch_.size() - gsent_)) gpu_tris_(gsent_, tris, texs);   // P18A: the merge's list
   GlMirror m;
   if (gsent_ == 0) m = gm_;
   else m.full = false;   // the backend's copy holds the earlier parts
   gpu_->part(w_, h_, fb_.data(), m, tris, texs);
   gsent_ = gbatch_.size();
+  if (p18_) {   // P18A: the mirror starts again at gsent_
+    gtris_.clear();
+    gtexs_.clear();
+    gtri_ok_ = true;
+  }
   pixel_gpu_note_part(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
 }
 void GlRaster::gpu_submit_() {
   if (gbatch_.empty()) return;
   pool_wait_();   // every job queued to the workers (islands) precedes the batch: fb_ must hold them before it is uploaded or written
   const auto t0 = std::chrono::steady_clock::now();
-  std::vector<GlGpuTri> tris;
-  std::vector<GlGpuTex> texs;
-  gpu_tris_(gsent_, tris, texs);   // P17A: the triangles after the last part (all of them without parts)
+  std::vector<GlGpuTri> ltris;
+  std::vector<GlGpuTex> ltexs;
+  std::vector<GlGpuTri> &tris = p18_ ? gtris_ : ltris;   // P18A: kept between batches
+  std::vector<GlGpuTex> &texs = p18_ ? gtexs_ : ltexs;
+  if (!(p18_ && gtri_ok_ && gtris_.size() == gbatch_.size() - gsent_))   // P18A: the merge's list
+    gpu_tris_(gsent_, tris, texs);   // P17A: the triangles after the last part (all of them without parts)
   GlMirror mirror = gm_;
   if (gsent_ != 0) {   // P17A: the first part carried the mirror
     mirror = GlMirror{};
@@ -1630,8 +2393,15 @@ void GlRaster::gpu_submit_() {
   if (ok && lazy) {
     gm_ = GlMirror{};
     gm_.full = false;   // the copy is the frame
-    rec_.segs.push_back(std::make_shared<const std::vector<FastJob>>(std::move(gbatch_)));
-    gbatch_ = std::vector<FastJob>{};
+    if (p18_) {   // P18A: the storage of a batch no recipe names any more is the next batch's
+      seg_pool_.push_back(std::make_shared<std::vector<FastJob>>(std::move(gbatch_)));
+      rec_.segs.push_back(seg_pool_.back());
+      gbatch_ = std::vector<FastJob>{};
+      seg_recycle_();
+    } else {
+      rec_.segs.push_back(std::make_shared<const std::vector<FastJob>>(std::move(gbatch_)));
+      gbatch_ = std::vector<FastJob>{};
+    }
     pixel_gpu_count(&GlGpuStats::lazy_draws, 1);
   } else if (ok) {
     gm_ = GlMirror{};
@@ -1678,6 +2448,30 @@ void GlRaster::gpu_submit_() {
                        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0).count());
   gbatch_.clear();
   gsent_ = 0;
+  gtris_.clear();   // P18A
+  gtexs_.clear();
+  gtri_ok_ = true;
+}
+// P18A: the pool's batches that no recipe names (only the pool holds them): the first one's storage becomes gbatch_'s (emptied, its
+// capacity kept), and at most one more is kept for later
+void GlRaster::seg_recycle_() {
+  bool took = false, spare = false;
+  for (size_t i = 0; i < seg_pool_.size();) {
+    if (seg_pool_[i].use_count() != 1) {
+      ++i;
+      continue;
+    }
+    if (!took) {
+      gbatch_.swap(*seg_pool_[i]);
+      gbatch_.clear();
+      took = true;
+    } else if (!spare) {
+      spare = true;
+      ++i;
+      continue;
+    }
+    seg_pool_.erase(seg_pool_.begin() + static_cast<std::ptrdiff_t>(i));
+  }
 }
 // ---- P17A fix 3: the lazy frame and the GPU back surface (gl_raster.h)
 void GlRaster::replay_(const Recipe &r, std::vector<uint16_t> &dst) {

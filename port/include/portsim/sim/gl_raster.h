@@ -85,6 +85,8 @@ class GlPixelGpu {
 // maker may decline by size, --gpu-terrain auto)
 void set_pixel_gpu_factory(std::function<std::shared_ptr<GlPixelGpu>(int, int)> f);
 std::shared_ptr<GlPixelGpu> make_pixel_gpu(int w, int h);
+// P18A (log/roadmap/P18/P18A_notes.md): the set-up changes of the rasters with a backend; off with SG_P18_GPU_SETUP=0 or SG_APP_P18=off
+bool p18_setup_setting();
 // P16B: what the backends of the process did (summed over rasters; counters only)
 struct GlGpuStats {
   int64_t batches = 0, tris = 0, islands = 0, uploads = 0, clears = 0, failures = 0, fallback_tris = 0;
@@ -102,6 +104,10 @@ struct GlGpuStats {
   // SG_P16_RASTERCHECK=<n> (development): every n-th batch is also drawn by the CPU loops on a copy of the frame and compared word by
   // word (stderr `P16 RASTERCHECK` on a difference)
   int64_t checked = 0, check_bad = 0, check_badpx = 0;
+  // P18A: the set-up workers (gl_raster.cpp "P18A: THE SET-UP WORKERS"): blocks and triangles filed, chunks, chunks the calling thread
+  // set up itself while merging (helped), triangles taken through triangle_ under the block's state (general), the workers' set-up time,
+  // the calling thread's merge time and the part of it spent waiting for a worker
+  int64_t p18_blocks = 0, p18_tris = 0, p18_chunks = 0, p18_helped = 0, p18_general = 0, p18_work_ns = 0, p18_merge_ns = 0, p18_wait_ns = 0;
 };
 GlGpuStats pixel_gpu_stats();
 
@@ -148,6 +154,7 @@ class GlRaster : public GlSink {
     back_sync_();
     gpu_ = std::move(g);
     gpart_ = gpu_ ? static_cast<size_t>(gpu_->part_tris() > 0 ? gpu_->part_tris() : 0) : 0;
+    p18_ = gpu_ && p18_setup_setting();
     gpu_stale_();
   }
   bool has_gpu() const { return gpu_ != nullptr; }
@@ -181,15 +188,16 @@ class GlRaster : public GlSink {
   // P8B (widescreen stage 2, log/roadmap/P8/P8B_notes.md): the x clip planes at |x| <= kx * w instead of |x| <= w, so a buffer
   // wider than the viewport is drawn beyond the viewport's sides with the same clip coordinates (the world layer of
   // LiveTerrain). 1 (the default) keeps the original's planes and the code path unchanged.
-  void set_clip_x(float kx) { finish(); clip_kx_ = kx; }
+  void set_clip_x(float kx) { finish(); clip_kx_ = kx; ++p18_gen_; }
   float clip_x() const { return clip_kx_; }
   // P8B: the 4x4 dither matrix's column index taken from (x + dx) & 3 instead of x & 3 (a world layer whose 800 x 600 frame starts
   // at column ox sets dx = ox & 3 at render scale 1, so its central columns keep the frame's dither phase); 0 = the original's
-  void set_dither_dx(int dx) { finish(); dither_dx_ = dx & 3; }
+  void set_dither_dx(int dx) { finish(); dither_dx_ = dx & 3; ++p18_gen_; }
   // P8B (G32: the world layer follows window resizes): a new framebuffer of w x h words (0), textures, matrices, lights and every
   // other state kept; the caller sets the viewport again
   void resize_frame(int w, int h) {
     finish();
+    ++p18_gen_;
     w_ = w;
     h_ = h;
     fb_.assign(static_cast<size_t>(w) * static_cast<size_t>(h), 0);
@@ -324,6 +332,7 @@ class GlRaster : public GlSink {
   struct Mat {
     double m[16];         // column-major
   };
+  static const Tex &white_tex_();   // the white 1 x 1 texel of an untextured triangle (triangle())
 
   void tex_param_(uint32_t pname, uint32_t value);
   void tex_env_(uint32_t target, uint32_t pname, uint32_t value);
@@ -394,6 +403,8 @@ class GlRaster : public GlSink {
   void window_of_(const float c[4], Vtx &v) const;
   // frustum clipping (tune 29 = 0): true when the triangle was handled (culled, clipped and drawn as a fan, or clipped away)
   bool clip_triangle_(const Vtx &a, const Vtx &b, const Vtx &c);
+  template <bool kFixed>
+  bool clip_body_(const Vtx &a, const Vtx &b, const Vtx &c);   // P18A: kFixed = the polygons in fixed arrays (no allocation)
   bool in_clip_ = false;
   // the default pipeline's pixel loop (roadmap S3.10): the same values as triangle()'s general loop, computed with exact integer
   // edge functions and row spans; false (nothing written) when its preconditions do not hold
@@ -419,6 +430,40 @@ class GlRaster : public GlSink {
   std::vector<FastJob> gbatch_;
   GlMirror gm_;
   size_t gpart_ = 0, gsent_ = 0;   // P17A: triangles per part (0: no parts), and the batch's triangles already handed over in parts
+  // P18A: the set-up changes are on (a backend, p18_setup_setting); the batches handed to lazy recipes, whose storage a later batch
+  // takes over once no recipe names it (no allocation per pass), and the triangle lists of parts and draws (kept between batches)
+  bool p18_ = false;
+  std::vector<std::shared_ptr<std::vector<FastJob>>> seg_pool_;
+  std::vector<GlGpuTri> gtris_;
+  std::vector<GlGpuTex> gtexs_;
+  bool gtri_ok_ = true;   // P18A: gtris_ / gtexs_ are gbatch_[gsent_..]'s (the merge appends them; a job filed otherwise clears it)
+  void seg_recycle_();
+  // P18A: the texture objects by name for end() of a filed block (a small cache; texture calls that add, change or remove one empty it)
+  struct TexSlot {
+    uint32_t id = 0;
+    const Tex *t = nullptr;
+    bool used = false;
+  };
+  TexSlot tex_cache_[64];
+  void tex_cache_clear_() { for (TexSlot &s : tex_cache_) s.used = false; }
+  // P18A: THE SET-UP WORKERS (gl_raster.cpp "P18A: THE SET-UP WORKERS"): the state a deferred block is set up with (P18Snap), a
+  // vertex's inputs (P18Raw), a filed block (P18Blk), a chunk of blocks with its results (P18Chunk), the threads (P18Pool) and the set-up
+  // itself (P18Work: emit, triangle_, clip_body_<true> and fast_triangle_ for the default pipeline, on a snapshot)
+  struct P18Snap;
+  struct P18Raw;
+  struct P18Blk;
+  struct P18Chunk;
+  struct P18Pool;
+  struct P18Work;
+  std::unique_ptr<P18Pool> p18p_;
+  bool p18_block_ = false;     // the begin..end block being assembled is filed for the workers
+  bool p18_merging_ = false;   // p18_merge_ runs (a finish() inside it does not merge again)
+  uint64_t p18_gen_ = 1;       // bumped by every call that changes what P18Snap holds
+  bool p18_defer_();           // begin(): whether this block can be filed (and the pool made)
+  void p18_end_();             // end() of a filed block
+  void p18_merge_(bool all);   // the finished chunks merged in order (all: every filed block, waiting / helping as needed)
+  void p18_snap_(P18Snap &s) const;
+  void p18_raw_(double x, double y, double z, const float *normal);   // emit() of a filed block
   // P17A fix 3: the lazy frame. fb_cpu_: fb_ holds the frame; else the frame is rec_ (its fill, then its batches in order), which the
   // backend's copy holds unless no batch was drawn since the fill (rec_.segs empty: fb_ is only to be filled). The GPU back surface:
   // back_gpu_ with its recipe back_rec_ and the vector its reader keeps (back_dst_, brought up to date before a texture change).

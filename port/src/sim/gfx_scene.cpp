@@ -3168,6 +3168,61 @@ void gfx_hr_job_merge(std::shared_ptr<GfxHrJob> &into, const std::shared_ptr<Gfx
 }
 namespace {
 GfxWorldRun g_world_run;   // P15A fix 3: gfx_world_run_stats (the job thread's)
+// P18A (development, SG_P18_DUMP=<file>): the world raster's recorded GL streams and the ops around them that bound its batches, for
+// log/roadmap/P18/P18A_work/setup_bench.cpp. Records: u32 kind (1 GL stream, 2 the raster made / resized, 3 fill, 4 blit 1, 5 blit 0),
+// i32 width, i32 height, then for kind 1: u8 discard, u8 draws, u32 words + the words, u32 arrays + per array u32 id, u32 floats (the
+// floats follow when the id is new), u32 blobs + per blob u32 id, u32 bytes (the bytes when new). SG_P18_DUMP_PASSES=<n> (default 150):
+// the streams that draw, at most.
+struct P18Dump {
+  std::FILE *f = nullptr;
+  int left = 0;
+  std::map<const void *, uint32_t> ids;
+  std::vector<std::shared_ptr<const void>> keep;   // the arrays and images named, kept alive (their addresses stay unique)
+};
+P18Dump *p18_dump() {
+  static P18Dump *d = [] {
+    const char *e = std::getenv("SG_P18_DUMP");
+    if (!e || !e[0]) return static_cast<P18Dump *>(nullptr);
+    auto *x = new P18Dump;
+    x->f = std::fopen(e, "wb");
+    const char *n = std::getenv("SG_P18_DUMP_PASSES");
+    x->left = n ? std::atoi(n) : 150;
+    return x->f ? x : static_cast<P18Dump *>(nullptr);
+  }();
+  return d && d->left > 0 ? d : nullptr;
+}
+void p18_put(P18Dump &d, uint32_t v) { std::fwrite(&v, 4, 1, d.f); }
+template <class T>
+void p18_put_shared(P18Dump &d, const std::shared_ptr<const std::vector<T>> &v) {
+  const auto it = d.ids.find(v.get());
+  const bool fresh = it == d.ids.end();
+  const uint32_t id = fresh ? static_cast<uint32_t>(d.ids.size()) : it->second;
+  if (fresh) {
+    d.ids[v.get()] = id;
+    d.keep.push_back(v);
+  }
+  p18_put(d, id);
+  p18_put(d, static_cast<uint32_t>(v->size()));
+  if (fresh && !v->empty()) std::fwrite(v->data(), sizeof(T), v->size(), d.f);
+}
+void p18_dump_op(uint32_t kind, LiveTerrainWorld &w, const gl::GlRec *g, bool discard) {
+  P18Dump *d = p18_dump();
+  if (!d || !w.raster) return;
+  p18_put(*d, kind);
+  p18_put(*d, static_cast<uint32_t>(w.raster->width()));
+  p18_put(*d, static_cast<uint32_t>(w.raster->height()));
+  if (kind == 1) {
+    const uint8_t b[2] = {static_cast<uint8_t>(discard ? 1 : 0), static_cast<uint8_t>(g->draws ? 1 : 0)};
+    std::fwrite(b, 1, 2, d->f);
+    p18_put(*d, static_cast<uint32_t>(g->w.size()));
+    std::fwrite(g->w.data(), 4, g->w.size(), d->f);
+    p18_put(*d, static_cast<uint32_t>(g->arrays.size()));
+    for (const auto &a : g->arrays) p18_put_shared(*d, a);
+    p18_put(*d, static_cast<uint32_t>(g->blobs.size()));
+    for (const auto &a : g->blobs) p18_put_shared(*d, a);
+    if (g->draws && !discard && --d->left == 0) std::fflush(d->f);
+  }
+}
 }  // namespace
 void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w) {
   t_hr_runner = true;
@@ -3203,6 +3258,7 @@ void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w) {
       }
       gl::GlRaster &r = *w.raster;
       const bool discard = !live[i];
+      p18_dump_op(1, w, op.gl.get(), discard);
       const auto t0 = std::chrono::steady_clock::now();
       r.set_discard(discard);
       gl::gl_replay(*op.gl, r);
@@ -3227,6 +3283,8 @@ void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w) {
       default: break;
     }
     if (op.f) op.f(w);
+    if (op.kind == kGwReset || op.kind == kGwFill || op.kind == kGwBlit1 || op.kind == kGwBlit0)   // P18A: SG_P18_DUMP
+      p18_dump_op(op.kind == kGwReset ? 2u : op.kind == kGwFill ? 3u : op.kind == kGwBlit1 ? 4u : 5u, w, nullptr, false);
   }
   t_hr_runner = false;
 }
