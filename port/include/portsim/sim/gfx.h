@@ -535,6 +535,12 @@ class GfxHrGpu {
   virtual bool read(std::vector<uint16_t> *hr, std::vector<uint8_t> *hr_cov, std::vector<uint16_t> *hrc, std::vector<uint8_t> *hrc_cov,
                     std::vector<uint16_t> *hrb_lo, std::vector<uint16_t> *hrb_hi, std::vector<uint8_t> *hrb_cov) = 0;
   virtual void dead(const char *why) = 0;   // a failure seen by the caller (the backend is not used again)
+  // fix 3: hr_queue_begin's compare on the GPU. The root (`root`, or with null w's raster: its GPU frame when current, else its CPU
+  // words) against the base: per row y whose words differ, the span (y, x0, x1) of its first and last differing word (x1 exclusive:
+  // hr_queue_begin's loop), then the base = the root. 1 done, -1 failed.
+  virtual int compare(const LiveTerrainWorld &w, const std::vector<uint16_t> *root, std::vector<int32_t> &spans) = 0;
+  // fix 3: the base's 32 x 32 tiles flagged in `tiles` (tx x ty) into dst (pw x ph words; the other words untouched)
+  virtual bool read_base(const std::vector<uint8_t> &tiles, int32_t tx, int32_t ty, uint16_t *dst) = 0;
 };
 // the calling thread's backend (null: none; the world thread's host installs it before gfx_hr_job_run)
 void gfx_set_hr_gpu(GfxHrGpu *g);
@@ -545,6 +551,9 @@ struct GfxHrGpuCheck {
   int64_t flushes = 0, nows = 0, compared = 0, differing = 0, differing_words = 0;
   int64_t failures = 0, lost_jobs = 0, batch_cmds = 0, table_entries = 0, base_all = 0, base_spans = 0, dirty_tiles = 0;
   int64_t prep_ns = 0;   // the commands' tables and ops on the CPU (flush and now)
+  // fix 3: queue starts compared on the GPU, of them checked against the CPU loop (SG_P17_WORLDCHECK) / differing; publications whose
+  // base tiles came from the GPU, of them checked / differing
+  int64_t starts_gpu = 0, start_checks = 0, start_differing = 0, pubs_gpu = 0, pub_checks = 0, pub_differing = 0;
 };
 const GfxHrGpuCheck &gfx_hr_gpu_stats();
 // the START-UP SELF-TEST: a fixed synthetic world (256 x 192) drawn with and without `g` (two queues with the five ops, the filters,

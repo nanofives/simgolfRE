@@ -54,6 +54,8 @@ struct Stats {
   int64_t jobs = 0, jobs_gpu = 0, jobs_lost = 0, ops_ns = 0, image_ns = 0, job_ns = 0;
   int64_t img_compared = 0, img_differing = 0, img_differing_words = 0;
   int64_t pics_shared = 0, pics_unshared = 0, share_failures = 0;   // fix 2
+  int64_t compares = 0, compare_ns = 0, compare_rows = 0, cmp_frames = 0, cmp_uploads = 0;   // fix 3: the queue starts' compares on the GPU
+  int64_t base_reads = 0, base_read_ns = 0, base_read_px = 0;                                // fix 3: the published base tiles read back
 };
 std::mutex g_mu;
 Stats g_st;
@@ -152,6 +154,19 @@ void CSBoxClr(uint3 dt : SV_DispatchThreadID) {
   if (X >= wx1 || Y >= wy1) return;
   whrb[int2(X, Y)] = 0x7fff0000u;
   whrbc[int2(X, Y)] = 0u;
+}
+// fix 3: hr_queue_begin's compare: per row, the first and the last column where the root differs from the base (atomics; the row
+// untouched = no difference)
+RWStructuredBuffer<uint> wrmin : register(u6);
+RWStructuredBuffer<uint> wrmax : register(u7);
+[numthreads(64, 1, 1)]
+void CSCmp(uint3 dt : SV_DispatchThreadID) {
+  int X = (int)dt.x, Y = (int)dt.y;
+  if (X >= wpw || Y >= wph) return;
+  if ((wroot.Load(int3(X, Y, 0)) & 0xffffu) != (obase.Load(int3(X, Y, 0)) & 0xffffu)) {
+    InterlockedMin(wrmin[Y], (uint)X);
+    InterlockedMax(wrmax[Y], (uint)X);
+  }
 }
 // world_frame_of: the run of the logical pixel when there is one, else hrc where laid and covered, else hr where laid and covered, else root
 [numthreads(8, 8, 1)]
@@ -290,8 +305,8 @@ bool compile_world_shaders(std::vector<std::vector<uint8_t>> &code, std::string 
   size_t n = 0;
   const char *obj = gpu_objects_hlsl(n);
   const std::string text = std::string(obj, n) + kHlslWorld;
-  const char *entry[5] = {"CSFlush", "CSNow", "CSHrc", "CSBoxClr", "CSCompose"};
-  for (int i = 0; i < 5; ++i) {
+  const char *entry[6] = {"CSFlush", "CSNow", "CSHrc", "CSBoxClr", "CSCompose", "CSCmp"};
+  for (int i = 0; i < 6; ++i) {
     ID3DBlob *b = nullptr, *err = nullptr;
     const HRESULT hr = compile(text.data(), text.size(), "p17b.hlsl", nullptr, nullptr, entry[i], "cs_5_0",
                                D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err);
@@ -316,14 +331,19 @@ class D3DWorld final : public portsim::GfxHrGpu {
     corrupt_ = selftest && c && c[0] == '1';
   }
   ~D3DWorld() override {
-    rel(cs_flush_); rel(cs_now_); rel(cs_hrc_); rel(cs_boxclr_); rel(cs_compose_); rel(cb_);
+    rel(cs_flush_); rel(cs_now_); rel(cs_hrc_); rel(cs_boxclr_); rel(cs_compose_); rel(cs_cmp_); rel(cb_);
+    for (int k = 0; k < 2; ++k) {
+      rel(rows_uav_[k]);
+      rel(rows_b_[k]);
+      rel(rows_rd_[k]);
+    }
     rel(q_dis_); rel(q_a_); rel(q_b_); rel(q_c_); rel(q_d_);
   }
   // the shaders from the bytecode compile_world_shaders made (fix 2: on the preparation thread, once), the constant buffer, the queries
   bool start(std::string &why, const std::vector<std::vector<uint8_t>> &code) {
-    ID3D11ComputeShader **out[5] = {&cs_flush_, &cs_now_, &cs_hrc_, &cs_boxclr_, &cs_compose_};
-    if (code.size() != 5) return fail(why, "no shader bytecode");
-    for (int i = 0; i < 5; ++i)
+    ID3D11ComputeShader **out[6] = {&cs_flush_, &cs_now_, &cs_hrc_, &cs_boxclr_, &cs_compose_, &cs_cmp_};
+    if (code.size() != 6) return fail(why, "no shader bytecode");
+    for (int i = 0; i < 6; ++i)
       if (FAILED(dev_->CreateComputeShader(code[static_cast<size_t>(i)].data(), code[static_cast<size_t>(i)].size(), nullptr, out[i])))
         return fail(why, "CreateComputeShader " + std::to_string(i));
     return rest(why);
@@ -603,6 +623,134 @@ class D3DWorld final : public portsim::GfxHrGpu {
   }
   void dead(const char *why) override { die(why ? why : "the caller saw a failure"); }
 
+  // ---- fix 3: hr_queue_begin's compare and the published base tiles
+  int compare(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> *root, std::vector<int32_t> &spans) override {
+    spans.clear();
+    if (dead_) return -1;
+    gpu_raster_context_wait();   // P17A's submit thread idle (it shares this context)
+    const int64_t t0 = portsim::perf_now_ns();
+    const int32_t pw = pw_, ph = ph_;
+    const size_t np = static_cast<size_t>(pw) * static_cast<size_t>(ph);
+    if (!base_.t || base_.w != pw || base_.h != ph || !root_.make(dev_, pw, ph, 1)) return die("compare textures") ? 1 : -1;
+    if (rows_n_ != ph) {
+      for (int k = 0; k < 2; ++k) {
+        rel(rows_uav_[k]);
+        rel(rows_b_[k]);
+        rel(rows_rd_[k]);
+        D3D11_BUFFER_DESC d = {};
+        d.ByteWidth = static_cast<UINT>(ph) * 4u;
+        d.Usage = D3D11_USAGE_DEFAULT;
+        d.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
+        d.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+        d.StructureByteStride = 4;
+        if (FAILED(dev_->CreateBuffer(&d, nullptr, &rows_b_[k])) || FAILED(dev_->CreateUnorderedAccessView(rows_b_[k], nullptr, &rows_uav_[k])))
+          return die("compare buffers") ? 1 : -1;
+        d.Usage = D3D11_USAGE_STAGING;
+        d.BindFlags = 0;
+        d.MiscFlags = 0;
+        d.StructureByteStride = 0;
+        d.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        if (FAILED(dev_->CreateBuffer(&d, nullptr, &rows_rd_[k]))) return die("compare buffers") ? 1 : -1;
+      }
+      rows_n_ = ph;
+    }
+    // the root: the raster's GPU frame when current, else the CPU words
+    ID3D11Texture2D *f = nullptr;
+    if (!root && w.raster && w.raster->width() == pw && w.raster->height() == ph) f = static_cast<ID3D11Texture2D *>(gpu_raster_frame(*w.raster));
+    if (f) {
+      ctx_->CopyResource(root_.t, f);
+      count(&Stats::cmp_frames);
+    } else {
+      const std::vector<uint16_t> *r = root ? root : w.raster ? &w.raster->cpixels() : nullptr;
+      if (!r || r->size() != np) return die("compare root") ? 1 : -1;
+      ctx_->UpdateSubresource(root_.t, 0, nullptr, r->data(), static_cast<UINT>(pw) * 2u, 0);
+      count(&Stats::cmp_uploads);
+    }
+    const UINT hi[4] = {0xffffffffu, 0xffffffffu, 0xffffffffu, 0xffffffffu}, lo[4] = {0, 0, 0, 0};
+    ctx_->ClearUnorderedAccessViewUint(rows_uav_[0], hi);
+    ctx_->ClearUnorderedAccessViewUint(rows_uav_[1], lo);
+    WCB c = {pw, ph, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    ctx_->UpdateSubresource(cb_, 0, nullptr, &c, 0, 0);
+    ID3D11ShaderResourceView *b11 = base_.srv, *b14 = root_.srv;
+    ctx_->CSSetShaderResources(11, 1, &b11);
+    ctx_->CSSetShaderResources(14, 1, &b14);
+    ctx_->CSSetUnorderedAccessViews(6, 2, rows_uav_, nullptr);
+    ctx_->CSSetConstantBuffers(0, 1, &cb_);
+    ctx_->CSSetShader(cs_cmp_, nullptr, 0);
+    ctx_->Dispatch(static_cast<UINT>((pw + 63) / 64), static_cast<UINT>(ph), 1);
+    ID3D11ShaderResourceView *ns = nullptr;
+    ID3D11UnorderedAccessView *nu[2] = {nullptr, nullptr};
+    ctx_->CSSetShaderResources(11, 1, &ns);
+    ctx_->CSSetShaderResources(14, 1, &ns);
+    ctx_->CSSetUnorderedAccessViews(6, 2, nu, nullptr);
+    ctx_->CSSetShader(nullptr, nullptr, 0);
+    ctx_->CopyResource(base_.t, root_.t);   // the base = the root (hr_queue_begin's copy into last_base, everywhere)
+    ctx_->CopyResource(rows_rd_[0], rows_b_[0]);
+    ctx_->CopyResource(rows_rd_[1], rows_b_[1]);
+    D3D11_MAPPED_SUBRESOURCE m0, m1;
+    if (FAILED(ctx_->Map(rows_rd_[0], 0, D3D11_MAP_READ, 0, &m0))) return die("compare readback") ? 1 : -1;
+    if (FAILED(ctx_->Map(rows_rd_[1], 0, D3D11_MAP_READ, 0, &m1))) {
+      ctx_->Unmap(rows_rd_[0], 0);
+      return die("compare readback") ? 1 : -1;
+    }
+    const uint32_t *mn = static_cast<const uint32_t *>(m0.pData), *mx = static_cast<const uint32_t *>(m1.pData);
+    for (int32_t y = 0; y < ph; ++y)
+      if (mn[y] != 0xffffffffu) spans.insert(spans.end(), {y, static_cast<int32_t>(mn[y]), static_cast<int32_t>(mx[y]) + 1});
+    ctx_->Unmap(rows_rd_[0], 0);
+    ctx_->Unmap(rows_rd_[1], 0);
+    if (!selftest_) {
+      std::lock_guard<std::mutex> lk(g_mu);
+      ++g_st.compares;
+      g_st.compare_ns += portsim::perf_now_ns() - t0;
+      g_st.compare_rows += static_cast<int64_t>(spans.size() / 3);
+    }
+    return 1;
+  }
+  bool read_base(const std::vector<uint8_t> &tiles, int32_t tx, int32_t ty, uint16_t *dst) override {
+    if (dead_) return false;
+    gpu_raster_context_wait();   // P17A's submit thread idle (it shares this context)
+    const int64_t t0 = portsim::perf_now_ns();
+    const int32_t T = portsim::kGfxHrTile;
+    if (!base_.t || tiles.size() != static_cast<size_t>(tx) * static_cast<size_t>(ty) || !stageb_.make(dev_, pw_, ph_, 3)) return die("base tiles");
+    int64_t n = 0;
+    for (int32_t j = 0; j < ty; ++j)   // runs of flagged tiles of each tile row copied into the staging texture at their place
+      for (int32_t i = 0; i < tx;) {
+        if (!tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) {
+          ++i;
+          continue;
+        }
+        int32_t k = i + 1;
+        while (k < tx && tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(k)]) ++k;
+        const UINT x0 = static_cast<UINT>(i * T), x1 = static_cast<UINT>(std::min(pw_, k * T));
+        const UINT y0 = static_cast<UINT>(j * T), y1 = static_cast<UINT>(std::min(ph_, (j + 1) * T));
+        D3D11_BOX b = {x0, y0, 0, x1, y1, 1};
+        ctx_->CopySubresourceRegion(stageb_.t, 0, x0, y0, 0, base_.t, 0, &b);
+        n += static_cast<int64_t>(x1 - x0) * static_cast<int64_t>(y1 - y0);
+        i = k;
+      }
+    if (n) {
+      D3D11_MAPPED_SUBRESOURCE m;
+      if (FAILED(ctx_->Map(stageb_.t, 0, D3D11_MAP_READ, 0, &m))) return die("base tiles readback");
+      for (int32_t j = 0; j < ty; ++j)
+        for (int32_t i = 0; i < tx; ++i) {
+          if (!tiles[static_cast<size_t>(j) * static_cast<size_t>(tx) + static_cast<size_t>(i)]) continue;
+          const int32_t x0 = i * T, x1 = std::min(pw_, x0 + T);
+          for (int32_t y = j * T; y < std::min(ph_, (j + 1) * T); ++y)
+            std::memcpy(dst + static_cast<size_t>(y) * static_cast<size_t>(pw_) + static_cast<size_t>(x0),
+                        static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch + static_cast<size_t>(x0) * 2u,
+                        static_cast<size_t>(x1 - x0) * 2u);
+        }
+      ctx_->Unmap(stageb_.t, 0);
+    }
+    if (!selftest_) {
+      std::lock_guard<std::mutex> lk(g_mu);
+      ++g_st.base_reads;
+      g_st.base_read_ns += portsim::perf_now_ns() - t0;
+      g_st.base_read_px += n;
+    }
+    return true;
+  }
+
   // ---- the world image
   bool compose(const portsim::LiveTerrainWorld &w, const std::vector<uint16_t> *root, const portsim::WorldFramePlan &p, std::vector<uint16_t> &px,
                const portsim::WorldFramePlan *pt, std::vector<uint16_t> *pxt, std::shared_ptr<const GpuWorldPic> *pic) {
@@ -619,8 +767,10 @@ class D3DWorld final : public portsim::GfxHrGpu {
     if (pic) pic->reset();
     // fix 2: the outputs are a free slot's shared textures (its keyed mutexes acquired), else this backend's own
     Slot *sl = share_ ? take_slot(pw, ph, pt && pxt) : nullptr;
-    if (!root_.make(dev_, pw, ph, 1) || !stage_[0].make(dev_, pw, ph, 3) || (!sl && !out_[0].make(dev_, pw, ph, 2))) return die("compose textures");
-    if (pt && pxt && (!stage_[1].make(dev_, pw, ph, 3) || (!sl && !out_[1].make(dev_, pw, ph, 2)))) return die("compose textures");
+    // fix 3: the composition writes the backend's own textures (writing the shared ones raised its GPU time 7.6 -> 19.2 ms at 4K) and
+    // the slot gets one GPU copy of each
+    if (!root_.make(dev_, pw, ph, 1) || !stage_[0].make(dev_, pw, ph, 3) || !out_[0].make(dev_, pw, ph, 2)) return die("compose textures");
+    if (pt && pxt && (!stage_[1].make(dev_, pw, ph, 3) || !out_[1].make(dev_, pw, ph, 2))) return die("compose textures");
     ID3D11Texture2D *f = root ? nullptr : static_cast<ID3D11Texture2D *>(gpu_raster_frame(*w.raster));
     if (f) {
       ctx_->CopyResource(root_.t, f);
@@ -649,7 +799,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
       ctx_->UpdateSubresource(cb_, 0, nullptr, &c, 0, 0);
       ID3D11ShaderResourceView *srv[4] = {root_.srv, runs_[k].srv, col_[k].srv, row_[k].srv};
       ctx_->CSSetShaderResources(14, 4, srv);
-      ID3D11UnorderedAccessView *u[5] = {hr_.uav, hrc_.uav, nullptr, nullptr, sl ? sl->u[k] : out_[k].uav};
+      ID3D11UnorderedAccessView *u[5] = {hr_.uav, hrc_.uav, nullptr, nullptr, out_[k].uav};
       ctx_->CSSetUnorderedAccessViews(1, 5, u, nullptr);
       ctx_->CSSetConstantBuffers(0, 1, &cb_);
       ctx_->CSSetShader(cs_compose_, nullptr, 0);
@@ -659,7 +809,8 @@ class D3DWorld final : public portsim::GfxHrGpu {
       ctx_->CSSetShaderResources(14, 4, ns);
       ctx_->CSSetUnorderedAccessViews(1, 5, nu, nullptr);
       ctx_->CSSetShader(nullptr, nullptr, 0);
-      ctx_->CopyResource(stage_[k].t, sl ? sl->t[k] : out_[k].t);
+      ctx_->CopyResource(stage_[k].t, out_[k].t);
+      if (sl) ctx_->CopyResource(sl->t[k], out_[k].t);   // fix 3
     }
     if (sl) {   // released to the window (key 1); the slot is held by the picture until the window's WorldImage lets it go
       auto g = std::make_shared<GpuWorldPic>();
@@ -885,6 +1036,11 @@ class D3DWorld final : public portsim::GfxHrGpu {
   bool selftest_, corrupt_ = false, dead_ = false;
   int32_t pw_ = 0, ph_ = 0;
   ID3D11ComputeShader *cs_flush_ = nullptr, *cs_now_ = nullptr, *cs_hrc_ = nullptr, *cs_boxclr_ = nullptr, *cs_compose_ = nullptr;
+  ID3D11ComputeShader *cs_cmp_ = nullptr;   // fix 3
+  ID3D11Buffer *rows_b_[2] = {nullptr, nullptr}, *rows_rd_[2] = {nullptr, nullptr};   // fix 3: per row the min / max differing column
+  ID3D11UnorderedAccessView *rows_uav_[2] = {nullptr, nullptr};
+  int32_t rows_n_ = 0;
+  Tex2 stageb_;   // fix 3: the base's tiles read back
   ID3D11Buffer *cb_ = nullptr;
   ID3D11Query *q_dis_ = nullptr, *q_a_ = nullptr, *q_b_ = nullptr, *q_c_ = nullptr, *q_d_ = nullptr;
   bool dis_open_ = false, dis_closed_ = false, have_flush_ = false, have_comp_ = false;
@@ -1227,15 +1383,23 @@ std::string gpu_world_json() {
          ",\"roots_uploaded\":" + std::to_string(s.roots_uploaded) + ",\"gpu_flush_ms_mean\":" + per(s.gpu_flush_ns, s.gpu_flush_n) +
          ",\"gpu_compose_ms_mean\":" + per(s.gpu_comp_ns, s.gpu_comp_n) +
          ",\"cursor_reads\":" + std::to_string(s.cursor_reads) + ",\"pics_shared\":" + std::to_string(s.pics_shared) +
-         ",\"pics_unshared\":" + std::to_string(s.pics_unshared) + ",\"share_failures\":" + std::to_string(s.share_failures) + ",\"failures\":" + std::to_string(s.failures) +
+         ",\"pics_unshared\":" + std::to_string(s.pics_unshared) + ",\"share_failures\":" + std::to_string(s.share_failures) +
+         ",\"compares\":" + std::to_string(s.compares) + ",\"compare_ms_mean\":" + per(s.compare_ns, s.compares) +
+         ",\"compare_rows_mean\":" + num(s.compares ? static_cast<double>(s.compare_rows) / static_cast<double>(s.compares) : 0.0) +
+         ",\"compare_frames\":" + std::to_string(s.cmp_frames) + ",\"compare_uploads\":" + std::to_string(s.cmp_uploads) +
+         ",\"base_reads\":" + std::to_string(s.base_reads) + ",\"base_read_ms_mean\":" + per(s.base_read_ns, s.base_reads) +
+         ",\"base_read_px_mean\":" + num(s.base_reads ? static_cast<double>(s.base_read_px) / static_cast<double>(s.base_reads) : 0.0) + ",\"failures\":" + std::to_string(s.failures) +
          ",\"art_mb\":" + num(static_cast<double>(s.art_bytes) / 1e6) + ",\"table_mb\":" + num(static_cast<double>(s.table_bytes) / 1e6) +
          ",\"sim\":{\"flushes\":" + std::to_string(h.flushes) + ",\"nows\":" + std::to_string(h.nows) + ",\"batch_cmds\":" +
          std::to_string(h.batch_cmds) + ",\"table_entries\":" + std::to_string(h.table_entries) + ",\"base_all\":" + std::to_string(h.base_all) +
          ",\"base_spans\":" + std::to_string(h.base_spans) + ",\"dirty_tiles\":" + std::to_string(h.dirty_tiles) +
          ",\"prep_ms_mean\":" + per(h.prep_ns, h.flushes + h.nows) + ",\"failures\":" + std::to_string(h.failures) +
+         ",\"starts_gpu\":" + std::to_string(h.starts_gpu) + ",\"pubs_gpu\":" + std::to_string(h.pubs_gpu) +
          "},\"check\":{\"compared\":" + std::to_string(h.compared) + ",\"differing\":" + std::to_string(h.differing) +
          ",\"differing_words\":" + std::to_string(h.differing_words) + ",\"images_compared\":" + std::to_string(s.img_compared) +
-         ",\"images_differing\":" + std::to_string(s.img_differing) + ",\"image_differing_words\":" + std::to_string(s.img_differing_words) + "}}";
+         ",\"images_differing\":" + std::to_string(s.img_differing) + ",\"image_differing_words\":" + std::to_string(s.img_differing_words) +
+         ",\"start_checks\":" + std::to_string(h.start_checks) + ",\"start_differing\":" + std::to_string(h.start_differing) +
+         ",\"pub_checks\":" + std::to_string(h.pub_checks) + ",\"pub_differing\":" + std::to_string(h.pub_differing) + "}}";
 }
 
 }  // namespace portapp

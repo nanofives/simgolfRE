@@ -696,6 +696,7 @@ struct HrQueue {
   int32_t tx = 0, ty = 0;
   size_t defer_np = 0;                 // P15A: the frame thread's queue start recorded with an hr plane of this size (0: none)
   bool gpu = false;                    // P17B: the planes (hr, hr_cov, hrc, hrb) live in the thread's GPU backend (gfx.h GfxHrGpu)
+  bool base_stale = false;             // P17B fix 3: last_base's words are not kept (the backend's base is the queue's base); size only
 };
 thread_local HrQueue g_hr_queue;
 constexpr int32_t kHrTile = 32;
@@ -975,11 +976,12 @@ void hr_queue_begin(LiveTerrainWorld &w, const std::vector<uint16_t> &wp) {
   const bool cpu = !G || hr_gpu_check_every() > 0;
   const bool planes = (!cpu || (w.hr.size() == np && w.hr_cov.size() == np)) && (G ? q.gpu && G->planes(w.pw, w.ph) : !q.gpu);
   const bool reuse = hr_reuse_on() && q.last_ok && q.last_w == &w && q.last_pw == w.pw && q.last_ph == w.ph &&
-                     q.last_base.size() == np && planes && wp.size() == np;
+                     q.last_base.size() == np && planes && wp.size() == np && !q.base_stale;
   std::vector<int32_t> spans;   // P17B: the row spans copied into last_base (y, x0, x1)
   if (!reuse) {
     q.last_ok = false;
     q.last_base = wp;
+    q.base_stale = false;   // fix 3
     if (cpu) {
       w.hr.assign(np, 0);
       w.hr_cov.assign(np, 0);
@@ -1027,6 +1029,76 @@ void hr_queue_begin(LiveTerrainWorld &w, const std::vector<uint16_t> &wp) {
     q.gpu = false;
     w.hr_gpu = false;
   }
+}
+
+// P17B fix 3: a queue start whose compare runs on the GPU backend (gfx.h GfxHrGpu::compare): when the planes are there for this size
+// and the start reuses them (the conditions of hr_queue_begin's reuse), the root (`root`, or with null the world's raster, read on the
+// GPU when its frame is current) is compared there with the backend's base; the dirty tiles are marked from the returned row spans
+// exactly as hr_queue_begin marks them, and last_base's words are no longer kept (base_stale: the publication reads its tiles from the
+// backend). Under SG_P17_WORLDCHECK the CPU loop runs too (last_base kept) and its spans are compared. Anything else: hr_queue_begin.
+void hr_queue_begin_gpu(LiveTerrainWorld &w, const std::vector<uint16_t> *root) {
+  static const std::vector<uint16_t> kNone;
+  HrQueue &q = g_hr_queue;
+  const size_t np = static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph);
+  GfxHrGpu *G = hr_gpu_alive();
+  const bool rok = root ? root->size() == np : (w.raster && w.raster->width() == w.pw && w.raster->height() == w.ph);
+  const bool check = hr_gpu_check_every() > 0;
+  static const bool on = [] {   // development switch SG_P17_GPU_START=0: the compare on the CPU (fix 2's way)
+    const char *e = std::getenv("SG_P17_GPU_START");
+    return !(e && e[0] == '0');
+  }();
+  const bool can = on && G && rok && np > 0 && G->want(w.pw, w.ph) && q.gpu && G->planes(w.pw, w.ph) && hr_reuse_on() && q.last_ok &&
+                   q.last_w == &w && q.last_pw == w.pw && q.last_ph == w.ph && q.last_base.size() == np &&
+                   (!check || (!q.base_stale && w.hr.size() == np && w.hr_cov.size() == np));
+  auto cpu_words = [&]() -> const std::vector<uint16_t> & { return root ? *root : w.raster ? w.raster->cpixels() : kNone; };
+  if (!can) {
+    hr_queue_begin(w, cpu_words());
+    return;
+  }
+  std::vector<int32_t> spans;
+  if (G->compare(w, root, spans) != 1) {
+    hr_gpu_failed(w, "compare");   // the CPU path from here: hr_queue_begin makes the planes again (no reuse)
+    hr_queue_begin(w, cpu_words());
+    return;
+  }
+  q.cmds.clear();
+  q.w = nullptr;
+  q.tx = (w.pw + kHrTile - 1) / kHrTile;
+  q.ty = (w.ph + kHrTile - 1) / kHrTile;
+  q.dirty.assign(static_cast<size_t>(q.tx) * static_cast<size_t>(q.ty), 0);
+  auto mark = [&](const HrBox &b) {
+    if (b.empty()) return;
+    for (int32_t j = b.y0 / kHrTile; j <= (b.y1 - 1) / kHrTile; ++j)
+      for (int32_t i = b.x0 / kHrTile; i <= (b.x1 - 1) / kHrTile; ++i)
+        q.dirty[static_cast<size_t>(j) * static_cast<size_t>(q.tx) + static_cast<size_t>(i)] = 1;
+  };
+  for (size_t k = 0; k + 2 < spans.size(); k += 3) mark(HrBox{spans[k + 1], spans[k], spans[k + 2], spans[k] + 1});
+  ++g_hr_gpu_st.starts_gpu;
+  if (check) {   // SG_P17_WORLDCHECK: hr_queue_begin's loop over the CPU words and last_base (kept), its spans against the GPU's
+    const std::vector<uint16_t> &wp = cpu_words();
+    std::vector<int32_t> cs;
+    for (int32_t y = 0; y < w.ph; ++y) {
+      const uint16_t *a = wp.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+      uint16_t *b = q.last_base.data() + static_cast<size_t>(y) * static_cast<size_t>(w.pw);
+      if (!std::memcmp(a, b, sizeof(uint16_t) * static_cast<size_t>(w.pw))) continue;
+      int32_t x0 = 0, x1 = w.pw;
+      while (x0 < w.pw && a[x0] == b[x0]) ++x0;
+      while (x1 > x0 && a[x1 - 1] == b[x1 - 1]) --x1;
+      std::copy(a + x0, a + x1, b + x0);
+      cs.insert(cs.end(), {y, x0, x1});
+    }
+    ++g_hr_gpu_st.start_checks;
+    if (cs != spans) {
+      if (!g_hr_gpu_st.start_differing)
+        std::fprintf(stderr, "P17 WORLDCHECK: queue start: the GPU's %zu row spans differ from the CPU loop's %zu\n", spans.size() / 3, cs.size() / 3);
+      ++g_hr_gpu_st.start_differing;
+    }
+  } else {
+    q.base_stale = true;
+  }
+  for (const HrBox &b : q.post_boxes) mark(b);
+  q.post_boxes.clear();
+  w.hr_gpu = true;
 }
 
 // the queued commands over the hr plane (renderSpriteQueue's end). The plane is the last flush's except in the DIRTY tiles: where
@@ -1237,6 +1309,7 @@ void hr_flush(LiveTerrainWorld &w) {
           uint8_t &t = sc->base_tile[static_cast<size_t>(j) * static_cast<size_t>(sc->base_tx) + static_cast<size_t>(i)];
           if (t) continue;
           t = 1;
+          if (q.base_stale) continue;   // P17B fix 3: the tiles come from the backend below
           const int32_t tx0 = i * kHrTile, tx1 = std::min(w.pw, tx0 + kHrTile);
           for (int32_t y = j * kHrTile; y < std::min(w.ph, (j + 1) * kHrTile); ++y) {
             const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(tx0);
@@ -1244,6 +1317,39 @@ void hr_flush(LiveTerrainWorld &w) {
           }
         }
     }
+    // P17B fix 3: last_base's words not kept: the flagged tiles read from the backend's base (the same words); SG_P17_WORLDCHECK (last_base
+    // kept): read too and compared
+    GfxHrGpu *const Gp = q.gpu ? hr_gpu_alive() : nullptr;
+    bool pub_ok = true;
+    if (q.base_stale) {
+      pub_ok = Gp && Gp->read_base(sc->base_tile, sc->base_tx, sc->base_ty, sc->base.get());
+      if (pub_ok) ++g_hr_gpu_st.pubs_gpu;
+    } else if (Gp && hr_gpu_check_every() > 0) {
+      std::unique_ptr<uint16_t[]> gb(new uint16_t[nb]);
+      if (Gp->read_base(sc->base_tile, sc->base_tx, sc->base_ty, gb.get())) {
+        int64_t bad = 0;
+        for (int32_t j = 0; j < sc->base_ty; ++j)
+          for (int32_t i = 0; i < sc->base_tx; ++i) {
+            if (!sc->base_tile[static_cast<size_t>(j) * static_cast<size_t>(sc->base_tx) + static_cast<size_t>(i)]) continue;
+            const int32_t tx0 = i * kHrTile, tx1 = std::min(w.pw, tx0 + kHrTile);
+            for (int32_t y = j * kHrTile; y < std::min(w.ph, (j + 1) * kHrTile); ++y)
+              for (int32_t x = tx0; x < tx1; ++x) {
+                const size_t o = static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(x);
+                bad += gb[o] != sc->base[o] ? 1 : 0;
+              }
+          }
+        ++g_hr_gpu_st.pub_checks;
+        if (bad) {
+          if (!g_hr_gpu_st.pub_differing) std::fprintf(stderr, "P17 WORLDCHECK: publication: %lld base words differ\n", static_cast<long long>(bad));
+          ++g_hr_gpu_st.pub_differing;
+        }
+      }
+    }
+    if (!pub_ok) {   // no base for the published scene: no publication (the window draws this frame's objects where the frame has them)
+      hr_gpu_failed(w, "base tiles");
+      sc.reset();
+    }
+    if (sc) {
     sc->cmds.reserve(q.cmds.size());
     sc->draws.reserve(q.cmds.size());
     for (const auto &c : q.cmds) {
@@ -1263,6 +1369,7 @@ void hr_flush(LiveTerrainWorld &w) {
       sc->draws.push_back(d);
     }
     q.pub = std::move(sc);
+    }  // P17B fix 3 (sc)
   }
   q.cmds.clear();
   q.w = nullptr;
@@ -2546,7 +2653,8 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
         g_hr_queue.cmds.clear();
         g_hr_queue.w = nullptr;
         static const std::vector<uint16_t> kNone;
-        hr_queue_begin(W, W.raster ? W.raster->cpixels() : kNone);
+        (void)kNone;
+        hr_queue_begin_gpu(W, nullptr);   // P17B fix 3: the compare on the GPU when the planes are there (else hr_queue_begin over cpixels)
       }, nullptr, 0);
       w->tag.assign(w->scene.size(), 0);
     } else if (w->hr_open) {
@@ -3212,7 +3320,7 @@ bool st_run(LiveTerrainWorld &W, GfxHrGpu *g, std::vector<StPlanes> &snaps) {
       W.hrb_valid = false;
       g_hr_queue.cmds.clear();
       g_hr_queue.w = nullptr;
-      hr_queue_begin(W, root);
+      hr_queue_begin_gpu(W, &root);   // fix 3: with the backend, a reusing start compares on the GPU (hr_queue_begin without it)
       uint32_t cs = 0x2468u + static_cast<uint32_t>(f) * 31u;
       for (int k = 0; k < 18; ++k) {
         const Sprite8 a = st_art(cs, 6 + static_cast<int32_t>(st_rnd(cs) % 30), 5 + static_cast<int32_t>(st_rnd(cs) % 26));
