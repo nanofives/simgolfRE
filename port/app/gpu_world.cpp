@@ -377,7 +377,7 @@ class D3DWorld final : public portsim::GfxHrGpu {
   bool want(int32_t pw, int32_t ph) override {
     if (dead_) return false;
     if (selftest_ || mode_ == 1) return true;
-    return mode_ == 2 && static_cast<int64_t>(pw) * ph > int64_t{1920} * 1200;
+    return mode_ == 2 && (gpu_auto_every_size() || static_cast<int64_t>(pw) * ph > int64_t{1920} * 1200);   // P18B fix 3: every size
   }
   bool planes(int32_t pw, int32_t ph) const override { return !dead_ && hr_.t && hr_.w == pw && hr_.h == ph; }
   bool reset(int32_t pw, int32_t ph) override {
@@ -1300,7 +1300,8 @@ portsim::GfxHrGpu *gpu_world_backend(int32_t pw, int32_t ph) {
 #ifdef _WIN32
   if (g_be) return g_be->is_dead() ? nullptr : g_be.get();
   if (g_tried || g_mode == 0) return nullptr;
-  if (g_mode == 2 && static_cast<int64_t>(pw) * ph <= int64_t{1920} * 1200) return nullptr;   // auto: not made below the limit
+  // auto: not made below the limit; P18B fix 3: made at every size unless SG_APP_P18=off / SG_P18_AUTO_LIMIT=1 (gpu_auto_every_size)
+  if (g_mode == 2 && !gpu_auto_every_size() && static_cast<int64_t>(pw) * ph <= int64_t{1920} * 1200) return nullptr;
   if (g_sync && g_prep.state.load() == 0) {   // SG_P17_PREP_SYNC=1: fix 1's way, on this thread
     g_prep.state.store(1);
     prep_run();

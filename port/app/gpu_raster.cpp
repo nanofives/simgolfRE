@@ -1863,6 +1863,15 @@ std::string num(double v) {
 
 }  // namespace
 
+bool gpu_auto_every_size() {
+  static const bool every = [] {
+    const char *a = std::getenv("SG_APP_P18");
+    const char *l = std::getenv("SG_P18_AUTO_LIMIT");
+    return !(a && !std::strcmp(a, "off")) && !(l && l[0] == '1');
+  }();
+  return every;
+}
+
 void gpu_raster_lazy(bool on) {
 #ifdef _WIN32
   g_lazy.store(on);
@@ -1900,8 +1909,9 @@ void gpu_raster_enable(int mode) {
   if (on) {
     portsim::gl::set_pixel_gpu_factory([mode](int w, int h) -> std::shared_ptr<portsim::gl::GlPixelGpu> {
       // auto: the GPU raster only above 1920 x 1200 pixels (P15C's --object-rate auto limit): at 1920 x 1080 the CPU workers are at
-      // least as fast with the GPU at idle clocks, at 4K the GPU gives back 2-3 cores (P16B_notes.md section 2)
-      if (mode == 2 && static_cast<int64_t>(w) * h <= int64_t{1920} * 1200) {
+      // least as fast with the GPU at idle clocks, at 4K the GPU gives back 2-3 cores (P16B_notes.md section 2). P18B fix 3: at every
+      // size (gpu_auto_every_size; P18B_notes.md section 3 measured 1067 x 600 to 2560 x 1440 against the CPU workers)
+      if (mode == 2 && !gpu_auto_every_size() && static_cast<int64_t>(w) * h <= int64_t{1920} * 1200) {
         std::lock_guard<std::mutex> lk(g_mu);
         ++g_st.auto_off;
         if (!g_st.st_done) g_st.state = "auto: CPU raster at this size";
@@ -2010,7 +2020,7 @@ std::string gpu_raster_json() {
   for (char c : s.state) o += (c == '"' || c == '\\' || c < 0x20) ? ' ' : c;
   std::string st;
   for (char c : s.st_result) st += (c == '"' || c == '\\' || c < 0x20) ? ' ' : c;
-  o += "\",\"mode\":\"" + std::string(s.mode == 2 ? "auto" : s.mode == 1 ? "on" : "off") + "\",\"auto_off\":" + std::to_string(s.auto_off) +
+  o += "\",\"mode\":\"" + std::string(s.mode == 2 ? "auto" : s.mode == 1 ? "on" : "off") + "\",\"auto_every_size\":" + std::string(gpu_auto_every_size() ? "true" : "false") + ",\"auto_off\":" + std::to_string(s.auto_off) +
        ",\"backends\":" + std::to_string(s.auto_on) + ",\"selftest\":{\"done\":" + std::string(s.st_done ? "true" : "false") +
        ",\"pass\":" + std::string(s.st_pass ? "true" : "false") + ",\"result\":\"" + st + "\",\"corrupt_switch\":" +
        std::string(s.st_corrupt ? "true" : "false") + ",\"triangles\":" + std::to_string(s.st_tris) + ",\"words\":" + std::to_string(s.st_words) +

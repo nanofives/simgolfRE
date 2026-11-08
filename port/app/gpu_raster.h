@@ -16,7 +16,7 @@ class GlRaster;
 namespace portapp {
 
 // the backend factory for the world rasters made (or resized) after the call (terrain_live.cpp record_reset): mode 0 none (off), 1 every
-// raster (on), 2 rasters above 1920 x 1200 pixels (auto, P16B fix 2). Before the first backend the device runs the START-UP SELF-TEST
+// raster (on), 2 auto (every raster since P18B fix 3; above 1920 x 1200 pixels only without gpu_auto_every_size, P16B fix 2). Before the first backend the device runs the START-UP SELF-TEST
 // (gpu_raster.cpp selftest): a fixed GL stream drawn by the GPU and by the CPU loops and compared word by word; on a difference, or a
 // device that does not start, the factory gives no backend for the rest of the session (the CPU raster). SG_P16_SELFTEST_CORRUPT=1
 // (development) flips one word of the self-test's GPU result (the forced mismatch).
@@ -36,6 +36,10 @@ void gpu_raster_context_wait();
 // reader's first touch, gl_raster.h GlRaster::frame_synced) while `on`; P17B's world backend turns it on when it is up and off when it
 // is lost (gpu_world.cpp). SG_P17_LAZY=0 or SG_APP_P17=off: never (the readback after every pass).
 void gpu_raster_lazy(bool on);
+// P18B fix 3 (log/roadmap/P18/P18B_notes.md section 3): the auto rule of --gpu-terrain / --gpu-world. true (the default): auto turns the
+// GPU path on at every world size once the device starts and the self-tests pass; false (SG_APP_P18=off or SG_P18_AUTO_LIMIT=1): only
+// above 1920 x 1200 pixels, as P16B fix 2 / P17B decided
+bool gpu_auto_every_size();
 
 }  // namespace portapp
 

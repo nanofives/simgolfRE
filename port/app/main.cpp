@@ -108,12 +108,14 @@
 //   P15A fix 3: --world-raster-thread on|off (default on; SG_APP_P15=off: off; needs the world thread, never with --world-check) the
 //   world layer's terrain passes drawn on the world thread too: the sim thread draws only the world pixels its wide scene samples
 //   (host.h HostOptions::world_raster_thread); session.json p15 raster_thread.
-//   P16B: --gpu-terrain auto|on|off (default auto = on for a world raster above 1920 x 1200 pixels, P16B fix 2; SG_APP_P16=off: off;
+//   P16B: --gpu-terrain auto|on|off (default auto = on at every world size since P18B fix 3, above 1920 x 1200 pixels only with
+//   SG_APP_P18=off or SG_P18_AUTO_LIMIT=1 as P16B fix 2 had it; SG_APP_P16=off: off;
 //   needs --world-raster-thread and --gpu) the world thread's terrain passes drawn by the GPU, after a start-up self-test against the
 //   CPU loops (a difference keeps the CPU raster for the session): GlRaster's pixel loop as a compute pass on a Direct3D 11 device of the world thread's own, the same
 //   words as the CPU loops (gpu_raster.h, log/roadmap/P16/P16B_notes.md); any failure hands the pass back to the CPU. session.json
 //   p16b. SG_P16_RASTERCHECK=<n>: every n-th pass also drawn by the CPU and compared (stderr `P16 RASTERCHECK`, p16b.raster.check).
-//   P17B: --gpu-world auto|on|off (default auto = on for a world layer above 1920 x 1200 pixels; SG_APP_P17=off: off; needs the world
+//   P17B: --gpu-world auto|on|off (default auto = on at every world size since P18B fix 3, above 1920 x 1200 pixels only with
+//   SG_APP_P18=off or SG_P18_AUTO_LIMIT=1; SG_APP_P17=off: off; needs the world
 //   thread and --gpu) the world thread's sprite planes (hr_flush, hr_now / hr_box_now) and its world image (world_frame_of) drawn by the
 //   GPU on the raster's device, after a start-up self-test against the CPU (a difference keeps the CPU path for the session); the image
 //   read back into the WorldImage (gpu_world.h, log/roadmap/P17/P17B_notes.md). session.json p17b. SG_P17_WORLDCHECK=<n>: the CPU planes

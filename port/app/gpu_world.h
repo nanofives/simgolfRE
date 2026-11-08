@@ -33,7 +33,7 @@ struct GpuWorldPic {
   std::shared_ptr<void> slot;              // the slot's hold
 };
 
-// --gpu-world: 0 off, 1 on, 2 auto (planes above 1920 x 1200 pixels: P16B's / P15C's limit)
+// --gpu-world: 0 off, 1 on, 2 auto (planes above 1920 x 1200 pixels: P16B's / P15C's limit); P18B fix 3: auto at every size while gpu_auto_every_size (gpu_raster.h)
 void gpu_world_enable(int mode);
 // the calling thread's backend (the world thread's), made and self-tested at the first call with a world it wants (pw x ph: the world's
 // size before the job; auto: above the limit); null: off, failed or not started
