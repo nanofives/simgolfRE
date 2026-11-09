@@ -1057,6 +1057,21 @@ static void hud_publish(Gfx &g) {
       f.line_word = c.line_word;
     }
     hud_pieces_publish(g, f);  // P9E
+    // P19C item 8: where the golfer strip's layer goes: right of the left-anchored panel pixels that share its rows
+    for (GfxHudLayer &sl : f.layers) {
+      if (sl.id != kGfxLayerStrip) continue;
+      int32_t xr = -1;
+      for (const GfxHudLayer &pl : f.layers) {
+        if (pl.id == kGfxLayerStrip || pl.anchor >= 0) continue;
+        for (int32_t y = std::max(sl.y0, pl.y0); y < std::min(sl.y1, pl.y1); ++y)
+          for (int32_t x = pl.x1 - 1; x >= std::max(pl.x0, xr); --x)
+            if (pl.at(x, y)) {
+              xr = std::max(xr, x + 1);
+              break;
+            }
+      }
+      sl.strip_x = xr;
+    }
   } else {
     f.none = c.depth > 0 ? 2 : 1;
   }

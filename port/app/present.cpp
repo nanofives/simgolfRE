@@ -750,8 +750,11 @@ int32_t Presenter::layer_dx(const portsim::GfxHudLayer &l, const Viewport &vp, i
   if (l.id == portsim::kGfxLayerStrip && strip_right_ && l.x1 > l.x0 && vp.client_w > 0) {
     // the palette ends at the content rectangle's right edge once moved left (client x = client_w); the strip's first face
     // starts there: its own 800-space left edge x0 maps to origin_x + x0 * scale before the move
+    // P19C item 8: or right of the left-anchored panel that is still open in the strip's rows (l.strip_x, gfx.cpp hud_publish): the
+    // Build palette's end while it is open, the control cluster's when it is closed
     const int32_t at = vp.origin_x + static_cast<int32_t>(static_cast<int64_t>(l.x0) * vp.client_w / kLogicalW);
-    return vp.client_w - at;
+    const int32_t to = l.strip_x >= 0 && strip_near_ ? static_cast<int32_t>(static_cast<int64_t>(l.strip_x) * vp.client_w / kLogicalW) : vp.client_w;
+    return to - at;
   }
   return l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
 }

@@ -270,6 +270,7 @@ class Presenter {
   // P13C item 10: the golfer strip's faces (kGfxLayerStrip) at the right of the Build palette (the palette's right end is the
   // content rectangle's right edge once the bottom band is moved to the left edge) instead of under it
   void set_strip_right(bool on) { strip_right_ = on; }
+  void set_strip_near(bool on) { strip_near_ = on; }  // P19C item 8
   int8_t layer_anchor(int32_t id) const {
     if (id == portsim::kGfxLayerStrip && strip_right_) return 0;  // P13C: popups its faces open stay centred
     return id == portsim::kGfxLayerPanel ? panel_anchor_ : portsim::gfx_layer_anchor(id);
@@ -575,6 +576,7 @@ class Presenter {
   bool text_boxes_ = false;  // P10C fix 4
   int8_t panel_anchor_ = 1;  // P11B fix 1 (set_panel_anchor)
   bool strip_right_ = false;  // P13C item 10 (set_strip_right)
+  bool strip_near_ = false;   // P19C item 8 (set_strip_near): the strip right of the panel still open, not of the palette's end
   // P13C: a layer's client offset (the anchor's, or the strip's own place right of the palette)
   int32_t layer_dx(const portsim::GfxHudLayer &l, const Viewport &vp, int32_t dxl, int32_t dxr) const;
   mutable std::vector<int32_t> piece_dx_;

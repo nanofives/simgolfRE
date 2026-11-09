@@ -105,6 +105,9 @@ struct GfxHudLayer {
   // the side bands), and its kind-4 pixels are then that dim (already applied)
   uint8_t dim = 0;
   uint16_t dim_src = 0;
+  // P19C item 8: for the golfer strip's layer, the 800-space x just right of the left-anchored panel pixels in the strip's rows
+  // (hud_publish): the strip sits there (the open Build palette's end, else the round control cluster's), -1 = none found
+  int32_t strip_x = -1;
   // P9E: a centred gap made while popups were recorded (gfx_set_hud_popups): its pixels whose GfxHudFrame::owner names a piece are
   // that popup's and are composed at the piece's opener panel's place
   uint8_t popups = 0;

@@ -70,6 +70,7 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P17", "off")
     # P18 (log/roadmap/P18/BRIEF.md): P18A the terrain set-up workers on the GPU raster's world thread, P18B the GPU paths' auto policy
     os.environ.setdefault("SG_APP_P18", "off")
+    os.environ.setdefault("SG_APP_P19", "off")  # P19C item 8 (P19A / B / D add theirs here: whoever lands first)
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")
     for m in ("static", "port", "x87"):

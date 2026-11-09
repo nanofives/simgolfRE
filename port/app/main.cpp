@@ -85,6 +85,7 @@
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
 //   game = a highlight changes only when the game draws its next frame.
+//   P19C item 8: --hud-strip near (the default; SG_APP_P19=off: right) the strip right of the panel still open on the left.
 //   P13C item 10: --hud-strip right|left (default right; SG_APP_P13=off: left) the golfer strip's faces right of the Build palette
 //   (present.h set_strip_right, kGfxLayerStrip), clicks remapped with them.
 //   P11B fix 1: --hud-panel left|right (default left; SG_APP_P11=off: right) the edge the panels opened from the radial menu's
@@ -450,6 +451,7 @@ struct Options {
                                    // (SG_APP_P13=off: sharp; SG_APP_P10=off: smooth)
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
+  bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
@@ -514,6 +516,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_text_boxes(o.hud_textbox);  // P10C fix 4 (the presenter's popup pieces)
   p.set_panel_anchor(o.panel_left ? -1 : 1);  // P11B fix 1
   p.set_strip_right(o.strip_right);           // P13C item 10
+  p.set_strip_near(o.strip_right && o.strip_near);  // P19C item 8
   p.set_line_native(line_res_on(o));  // P10I fix 1
 }
 
@@ -3174,8 +3177,9 @@ bool parse(int argc, char **argv, Options &o) {
       o.sprite_native = v == "native";
     }
     else if (a == "--hud-strip") {  // P13C item 10
-      if (!val(v) || (v != "left" && v != "right")) return false;
-      o.strip_right = v == "right";
+      if (!val(v) || (v != "left" && v != "right" && v != "near")) return false;  // P19C item 8: near
+      o.strip_right = v != "left";
+      o.strip_near = v == "near";
     }
     else if (a == "--hud-panel") {  // P11B fix 1
       if (!val(v) || (v != "left" && v != "right")) return false;
@@ -3408,6 +3412,8 @@ int main(int argc, char **argv) {
       o.strip_right = false;  // P13C item 10
       o.map_bands = false;  // P13B item 18
     }
+  if (const char *ep = std::getenv("SG_APP_P19"))  // P19: the seventh play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.strip_near = false;  // P19C item 8
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
