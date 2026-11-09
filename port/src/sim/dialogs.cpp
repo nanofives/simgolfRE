@@ -13,6 +13,7 @@
 #include "commands_internal.h"
 #include "gfx_reports.h"
 #include "portsim/arith.h"
+#include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
@@ -43,6 +44,13 @@ int g_negctl_scroll_text = 0;
 int g_negctl_bulletin = 0;
 int g_negctl_pair_select = 0;  // P13B: showGolferPairSelect (1 the list starts one golfer later, 2 the second swap into lastGolfer)
 int g_negctl_none = 0;
+// P19D (Mariano's play-test 7 item 6, log/roadmap/P19/P19D_notes.md): showBulletinBoard.photoLastPostOnly. 1 = the original: one
+// pending photo (f_w_4e3db8: the record id, then its x; the y in g_scrollTextWin + 0x54) that every postEvent overwrites, so of the
+// records openHole posts in one call (on Easy: record 0 the first dogleg right hole, 1 the first dogleg left, 4 the first par 5; the
+// same date, the hole's green as the position) only the last one's photo is saved; the others' polaroids stay empty (or show the
+// polaroid before them). 0 = the capture also saves the same picture for every other record of the same date whose photo file is
+// missing.
+int g_defect_bulletin_photo_last = 1;
 
 using cm::call_peer;
 using cm::cat;
@@ -1007,6 +1015,33 @@ void pump_input_blocking(Ctx &ctx, const char *where) {
     for (const Command &c : batch) apply_command(ctx, c);
   ctx.gs().g_inputPhase = 0;
 }
+// a NUL-ended string of the address space (at most 0x100 characters)
+std::string mem_string(const Memory &m, uint32_t va) {
+  std::string s;
+  for (uint32_t i = 0; i < 0x100; ++i) {
+    const char c = static_cast<char>(m.load<uint8_t>(va + i));
+    if (c == 0) break;
+    s += c;
+  }
+  return s;
+}
+// P19D (showBulletinBoard.photoLastPostOnly = 0): the capture at (sx, sy) also saved for every other record dated as record `id`
+// whose photo (`snapshots\accomp` + __itoa(record) + `.bmp`, the board's name) is not in the files yet
+void capture_same_day(Ctx &ctx, int32_t id, uint32_t sx, uint32_t sy) {
+  if (u32(id) >= 22u || !ctx.files_ptr) return;
+  const Memory &m = ctx.mem;
+  const uint32_t ev = GS(g_bulletinEvents) + 0x28;   // 22 records of 0x30: date, course index, ...
+  const int32_t date = m.load<int32_t>(ev + 0x30 * u32(id));
+  if (date == 0) return;
+  const std::string head = mem_string(m, GS(f_strpool_4e3e7c)), tail = mem_string(m, GS(f_strpool_4c4970) + 0x4d0);
+  for (int32_t k = 0; k < 22; ++k) {
+    if (k == id || m.load<int32_t>(ev + 0x30 * u32(k)) != date) continue;
+    Scratch digits(ctx, 16);
+    itoa10(ctx, k, digits.va);
+    if (ctx.files().exists(head + mem_string(m, digits.va) + tail)) continue;
+    gfxr::ScreenDraw(ctx).gx("showBulletinBoard.capture", {sx, sy, digits.va});
+  }
+}
 }  // namespace
 
 // showBulletinBoard (): the end-of-season board (P5 calls it every unpaused frame). No pending photo (f_w_4e3db8[0] ==
@@ -1040,6 +1075,8 @@ void show_bulletin_board(Ctx &ctx) {
       itoa10(ctx, m.load<int32_t>(photo), numbuf);   // the file name; clamp and the rectangle only feed saveBmp
       // roadmap S3.18: saveBmp's capture of the root for an attached graphics backend (gfx_bulletin.cpp; nothing without one)
       gfxr::ScreenDraw(ctx).gx("showBulletinBoard.capture", {m.load<uint32_t>(out.va), m.load<uint32_t>(out.va + 4), numbuf});
+      if (!SG_DEFECT(g_defect_bulletin_photo_last))   // P19D: the records posted with it (openHole's siblings) get the picture too
+        capture_same_day(ctx, m.load<int32_t>(photo), m.load<uint32_t>(out.va), m.load<uint32_t>(out.va + 4));
       m.store<int32_t>(photo + 4, -1);
     }
   }
@@ -1405,8 +1442,15 @@ const FuncDef kFuncs[] = {
      [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(show_golfer_pair_select(c)); },
      &g_negctl_pair_select},
 };
+const DefectDef kDefects[] = {
+    {"showBulletinBoard.photoLastPostOnly", "P19D",
+     "one pending photo slot that every postEvent overwrites: of the records posted before the next board call (openHole's first dogleg right / "
+     "dogleg left / par 5 hole) only the last gets its photo file",
+     &g_defect_bulletin_photo_last},
+};
 }  // namespace
 
-extern const ModuleDef kModule_dialogs = {"dialogs", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_dialogs = {"dialogs", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                          sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

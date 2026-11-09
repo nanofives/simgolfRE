@@ -708,6 +708,7 @@ const ProfileMember kPlayProfile[] = {
     {"pickCharEditor.escIgnored", 0},               // P9A item 2: Esc = the look picker's cancel
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
+    {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
