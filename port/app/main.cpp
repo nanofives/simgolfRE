@@ -97,7 +97,8 @@
 //   line per frame (development).
 //   P12A fix 2: --smooth-objects on|off (default on with --sprite-res native and the world layer; SG_APP_P12=off: off) walking
 //   golfers, staff, animals, flyers and residents are drawn between two game frames at the blend of their two places (one frame
-//   late), the ball in flight and its shadow ahead by their last step (present.h Presenter::objects_tick; the frame code tags its
+//   late), the ball in flight and its shadow too, between their exact places (P19A item 7; they were drawn ahead by their last
+//   whole-pixel step, which wobbled) (present.h Presenter::objects_tick; the frame code tags its
 //   queue entries render-only: gfx.h gfx_mover_source). P12A fix 3: --object-rate <hz> (default 30; 0 = every pacer tick) the most
 //   object redraws per second (a camera slide still paints at the pacer's rate). P14A fix 2: --object-rate auto (the default) = every
 //   pacer tick while the GPU path paints a client of at most 1920 x 1200 pixels, else 30 (P14A_notes.md section 4).

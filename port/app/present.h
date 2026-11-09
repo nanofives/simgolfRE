@@ -15,6 +15,7 @@
 
 #include <array>  // P12A fix 2
 #include <cstdint>
+#include <map>  // P19A (objects_start)
 #include <memory>
 #include <mutex>
 #include <string>  // P14A
@@ -361,8 +362,10 @@ class Presenter {
   // entries' own placements, GfxHrDraw::ex / ey), and a plausible step (world
   // distance and 800-space distance within kMover*); the previous placement is moved by the camera's shift between the two
   // pictures. objects_tick draws each matched object at its blended place: characters (golfers, walkers, animals, flyers,
-  // residents) from the previous frame's place to the new one over the frame period (shown one frame late), the ball and its
-  // shadow from the new place on by the last step (extrapolated: not late; a bounce or a stop is corrected by the next frame). Only
+  // residents) from the previous frame's place to the new one over the frame period (shown one frame late). The ball and its
+  // shadow too (P19A item 7: they were drawn ahead by the last step, and the frame's places are whole 800-space pixels, so the
+  // steps zig-zagged and every frame pulled the ball back: a wobble), between their EXACT places (the place plus the sim's
+  // render-only residual GfxMoverSrc::fx / fy: worldToScreen and the height without their integer divisions). Only
   // the rectangles the objects leave and enter are redrawn (gfx_hr_scene_redraw: every draw of the queue over its base, in queue
   // order, so the frame's sort order is kept), into the world image's pixels where a draw covered them before or after the move.
   // Their name labels (text runs with GfxTextRun::mover) move with them.
@@ -515,7 +518,8 @@ class Presenter {
   struct Mover {
     size_t k = 0;            // the draw (GfxHrScene draws index)
     double dx = 0, dy = 0;   // previous place - new place (800-space)
-    bool extrap = false;     // the ball / shadow: drawn ahead by the last step instead of behind
+    double rx = 0, ry = 0;   // P19A: the new place's residual (exact - drawn, GfxMoverSrc::fx / fy): the offset at the period's end
+    // (P19A: dx / dy start from the place drawn when the frame came, Presenter::set_frame_world, so an early frame does not jump)
     portsim::GfxMoverSrc src;
     double ox = 0, oy = 0;   // the offset drawn now (800-space)
   };
@@ -549,7 +553,8 @@ class Presenter {
   void objects_sync(int32_t x0, int32_t y0, int32_t x1, int32_t y1) const;  // world rectangle
   void objects_sync_view(const Viewport &vs) const;  // compose_world: the world pixels the canvas reads at viewport vs
   void objects_undo() const;
-  void objects_start(const WorldImage &prev);  // set_frame_world
+  // set_frame_world; drawn: the old movers' drawn offsets by their old draw index (P19A item 7)
+  void objects_start(const WorldImage &prev, const std::map<size_t, std::pair<double, double>> &drawn);
   void slide_start(const WorldImage &w);  // set_frame_world
   void fill_gap(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vs, int32_t slx, int32_t sly) const;
   // P9C

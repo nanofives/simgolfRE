@@ -277,6 +277,9 @@ struct GfxMoverSrc {
   int8_t kind = kGfxMoverNone;
   int32_t index = -1;
   int32_t wx = 0, wy = 0;  // the object's world position at the draw (1024 per tile), for the plausibility of a move
+  // P19A item 7: the exact (unrounded) place minus the drawn one, 800-space pixels (the ball and its shadow; 0 for the others):
+  // worldToScreen's projection and the ball's height computed without their integer divisions (bridge.h world_to_screen_exact)
+  float fx = 0, fy = 0;
   bool operator==(const GfxMoverSrc &o) const { return kind == o.kind && index == o.index; }
 };
 struct GfxTextRun {
@@ -354,7 +357,8 @@ extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on
 // ---- P12A fix 2 (log/roadmap/P12/P12A_notes.md): the moving objects of the sprite queue, drawn between two game frames by the app.
 // RENDER-ONLY: a thread-local side table of the queue's 1024 entries (not GameState), written by enqueueSprite with the source the
 // frame code named right before the call (gfx_mover_source), cleared by resetSpriteQueue. Nothing the simulation reads changes.
-void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy);  // the next enqueueSprite's source (this thread)
+// the next enqueueSprite's source (this thread); fx / fy: GfxMoverSrc::fx / fy (P19A)
+void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy, float fx = 0, float fy = 0);
 void gfx_mover_queued(int32_t n);   // enqueueSprite: entry n takes the pending source (none when none was named); clears it
 void gfx_mover_reset();             // resetSpriteQueue
 GfxMoverSrc gfx_mover_of(int32_t n);

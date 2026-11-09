@@ -3106,12 +3106,14 @@ const GfxBodyDef kBodies[] = {
 }  // namespace
 
 // ---- P12A fix 2 (gfx.h): the queue entries' sources and the published hr scene
-void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy) {
+void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy, float fx, float fy) {
   GfxMoverSrc s;
   s.kind = kind;
   s.index = index;
   s.wx = wx;
   s.wy = wy;
+  s.fx = fx;  // P19A item 7
+  s.fy = fy;
   g_mover_next = s;
 }
 void gfx_mover_queued(int32_t n) {

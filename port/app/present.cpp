@@ -144,6 +144,12 @@ Viewport fit_viewport(int32_t cw, int32_t ch) {
 bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, WorldImage &&world) {
   const bool stale = defect_ == PresentDefect::Stale && !frame_.empty();
   WorldImage old = std::move(world_);  // P10A: handed back in `world` below (set_frame clears world_)
+  // P19A item 7: where each moving object is drawn now (its draw index in the old scene -> offset), taken before set_frame clears
+  // them: a frame that arrives before the last one's period ended starts its objects there, not at the last frame's exact place
+  std::map<size_t, std::pair<double, double>> drawn;
+  if (objects_on_)
+    for (const Mover &m : movers_)
+      if (m.ox < 1e8) drawn[m.k] = {m.ox, m.oy};
   const bool ok = set_frame(px, band);
   if (ok && !stale) {
     const bool sane = !world.empty() && world.pw > 0 && world.ph > 0 &&
@@ -154,7 +160,7 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
     for (portsim::GfxHudLayer &l : world_.hud.layers)
       if (l.id == portsim::kGfxLayerPanel) l.anchor = panel_anchor_;
     slide_start(world_);  // P12A fix 1
-    objects_start(old);   // P12A fix 2
+    objects_start(old, drawn);  // P12A fix 2
   }
   if (!stale) world = std::move(old);  // P10A: the previous world image's buffers go back to the caller
   else world_ = std::move(old);
@@ -345,7 +351,18 @@ bool Presenter::slide_tick(int64_t now_ns, const Viewport &vp) {
 }
 
 // ---- P12A fix 2: the moving objects between two game frames (present.h objects_tick)
-void Presenter::objects_start(const WorldImage &prev) {
+namespace {
+// development (P19A item 7): SG_P19_BALLLOG=<file>: `F` one line per ball / shadow draw of each new frame (time us, frame, kind,
+// record, occurrence, world x / y, entry placement ex / ey, the match: 1 moved, 0 new, -1 rejected, step dx / dy (previous - new,
+// whole placements), period ms, residual fx / fy) and
+// `T` one line per drawn offset of a ball / shadow mover (time us, frame, kind, record, t, offset x / y)
+std::FILE *ball_log() {
+  static std::FILE *f = std::getenv("SG_P19_BALLLOG") ? std::fopen(std::getenv("SG_P19_BALLLOG"), "w") : nullptr;
+  return f;
+}
+}  // namespace
+
+void Presenter::objects_start(const WorldImage &prev, const std::map<size_t, std::pair<double, double>> &drawn) {
   movers_.clear();
   patched_.clear();
   objects_t0_ = portsim::perf_now_ns();
@@ -374,7 +391,17 @@ void Presenter::objects_start(const WorldImage &prev) {
     if (s.kind == portsim::kGfxMoverNone) continue;
     const int32_t o = cnt[{s.kind, s.index}]++;
     const auto it = pm.find({s.kind, s.index, o});
-    if (it == pm.end()) continue;  // new this frame: drawn where the frame has it
+    std::FILE *bl = (s.kind == portsim::kGfxMoverBall || s.kind == portsim::kGfxMoverShadow) ? ball_log() : nullptr;
+    auto blog = [&](int how, double ddx, double ddy) {
+      if (bl)
+        std::fprintf(bl, "F\t%lld\t%u\t%d\t%d\t%d\t%d\t%d\t%.3f\t%.3f\t%d\t%.3f\t%.3f\t%.2f\t%.4f\t%.4f\n",
+                     static_cast<long long>(objects_t0_ / 1000), static_cast<unsigned>(object_stats_.frames), s.kind, s.index, o, s.wx,
+                     s.wy, nd[k].ex, nd[k].ey, how, ddx, ddy, period_ns_ / 1e6, s.fx, s.fy);
+    };
+    if (it == pm.end()) {  // new this frame: drawn where the frame has it
+      blog(0, 0, 0);
+      continue;
+    }
     const portsim::GfxHrDraw &a = pd[it->second], &b = nd[k];
     // the step from the entries' own placements (GfxHrDraw::ex / ey: the same for every animation cel, whose art and trim differ;
     // the cel itself is the frame's, drawn at the blended place)
@@ -385,18 +412,30 @@ void Presenter::objects_start(const WorldImage &prev) {
     if (std::llabs(static_cast<int64_t>(a.src.wx) - b.src.wx) > lim || std::llabs(static_cast<int64_t>(a.src.wy) - b.src.wy) > lim ||
         std::fabs(dx) > kMoverMaxStep || std::fabs(dy) > kMoverMaxStep) {
       ++object_stats_.rejected_far;  // a teleport (the next tee, a new ball): drawn where the frame has it
+      blog(-1, dx, dy);
       continue;
     }
+    blog(1, dx, dy);
     ++object_stats_.matched;
-    if (dx == 0.0 && dy == 0.0) continue;
+    // P19A item 7: the step from where the object is drawn now (the previous frame's exact place, its residual a.src.fx / fy, when
+    // that frame's period had ended or it never moved) to the new exact place (the residuals are 0 but for the ball and its shadow)
+    double sx = a.src.fx, sy = a.src.fy;
+    const auto dw = drawn.find(it->second);
+    if (dw != drawn.end()) {
+      sx = dw->second.first;
+      sy = dw->second.second;
+    }
+    const double ex = dx + sx - b.src.fx, ey = dy + sy - b.src.fy;
+    if (ex == 0.0 && ey == 0.0) continue;
     Mover m;
     m.k = k;
-    m.dx = dx;
-    m.dy = dy;
-    m.extrap = ball;
+    m.dx = ex;
+    m.dy = ey;
+    m.rx = b.src.fx;
+    m.ry = b.src.fy;
     m.src = s;
-    m.ox = ball ? 0.0 : dx;  // the place drawn at the frame's arrival
-    m.oy = ball ? 0.0 : dy;
+    m.ox = m.rx + ex;  // the place drawn at the frame's arrival: the previous exact place
+    m.oy = m.ry + ey;
     movers_.push_back(m);
     if (s.kind > 0 && s.kind < 8) ++object_stats_.moved_kind[static_cast<size_t>(s.kind)];
   }
@@ -441,13 +480,18 @@ bool Presenter::objects_tick(int64_t now_ns) {
   // the offsets now, to a quarter of a world pixel; nothing to draw when none changed
   bool changed = false;
   for (Mover &m : movers_) {
-    const double ox = m.extrap ? -m.dx * t : m.dx * (1.0 - t), oy = m.extrap ? -m.dy * t : m.dy * (1.0 - t);
+    const double ox = m.rx + m.dx * (1.0 - t), oy = m.ry + m.dy * (1.0 - t);  // P19A: every mover one frame late, ball included
     const double qx = std::round(ox * kx * 4) / (kx * 4), qy = std::round(oy * ky * 4) / (ky * 4);
     if (qx != m.ox || qy != m.oy) changed = true;
     m.ox = qx;
     m.oy = qy;
   }
   if (!changed) return false;
+  if (std::FILE *bl = ball_log())
+    for (const Mover &m : movers_)
+      if (m.src.kind == portsim::kGfxMoverBall || m.src.kind == portsim::kGfxMoverShadow)
+        std::fprintf(bl, "T\t%lld\t%u\t%d\t%d\t%.3f\t%.3f\t%.3f\n", static_cast<long long>(now_ns / 1000),
+                     static_cast<unsigned>(object_stats_.frames), m.src.kind, m.src.index, t, m.ox, m.oy);
   object_last_ns_ = now_ns;
   const int64_t t0 = portsim::perf_now_ns();
   if (movers_gpu_) {  // P15C: the rectangles and offsets only (the same as below); the GPU path draws them at the next paint

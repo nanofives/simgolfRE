@@ -26,6 +26,11 @@ namespace portsim {
 // min of cornerRange; TTA_LEVEL_MAX: g_tileLevel; else cornerHeights 5 / 7 / 1 / 3, bilinear when they differ), applies the
 // doubling word and tests again; 1 = on screen. cornerHeights / heightBlend (phase 3.1a) are called by name.
 int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &sy, int32_t m);
+// P19A item 7, RENDER-ONLY: world_to_screen also computes, beside its integer result, the same projection without its integer
+// divisions (the zoom's >> 7, the screen-size scaling, the 20 / 32 of y, the terrain height's / 4 and / 1024) in doubles, and keeps
+// it for its last call on this thread. This returns that exact (ex, ey) when the last call was for (wx, wy), returned 1 and gave
+// (sx, sy); false otherwise. Nothing the simulation reads changes; no call is added.
+bool world_to_screen_exact(int32_t wx, int32_t wy, int32_t sx, int32_t sy, double &ex, double &ey);
 
 // playSoundAt (the simulation part; no audio): projects (wx, wy) with margin 0; off screen with field34 != -1 returns 0;
 // field34 == -1 (on or off screen) clamps the point to 0..799 / 0..599 and plays with field34 0; on screen otherwise applies

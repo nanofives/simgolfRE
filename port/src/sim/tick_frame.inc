@@ -4211,7 +4211,14 @@ eax = (eax) + 1; // ML+0x6113  inc eax
 stk[--sp] = (int)(ecx); // ML+0x6114  push ecx
 stk[--sp] = (int)(eax); // ML+0x6115  push eax
 stk[--sp] = (int)(edx); // ML+0x6116  push edx
-gfx_mover_source(kGfxMoverShadow, FD(0x14), G32(ebp + (GS(g_golfers) + 0xd4)), G32(ebp + (GS(g_golfers) + 0xd8)));  // P12A fix 2 (render-only)
+{  // P12A fix 2 (render-only); P19A item 7: with the exact place's residual from worldToScreen's last call (ML+0x5ff1, the shadow's
+   // place [F+0x88] / [F+0x70]; ML+0x6146 projects the same point again)
+    double ex = 0, ey = 0;
+    const int32_t bx = G32(ebp + (GS(g_golfers) + 0xd4)), by = G32(ebp + (GS(g_golfers) + 0xd8));
+    const bool exact = world_to_screen_exact(bx, by, FD(0x88), FD(0x70), ex, ey);
+    gfx_mover_source(kGfxMoverShadow, FD(0x14), bx, by, exact ? static_cast<float>(ex - FD(0x88)) : 0.0f,
+                     exact ? static_cast<float>(ey - FD(0x70)) : 0.0f);
+}
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x6117
 eax = G32(ebp + (GS(g_golfers) + 220)); // ML+0x611c  mov eax, dword ptr [ebp + g_golfers+0xdc]
 sp += 8; // ML+0x6122  add esp, 0x20  (caller stack cleanup)
@@ -4259,7 +4266,17 @@ eax = ((int)(eax)) >> (4); // ML+0x61a2  sar eax, 4
 esi = (esi) - (eax); // ML+0x61a5  sub esi, eax
 stk[--sp] = (int)(esi); // ML+0x61a7  push esi
 stk[--sp] = (int)(edx); // ML+0x61a8  push edx
-gfx_mover_source(kGfxMoverBall, FD(0x14), G32(ebp + (GS(g_golfers) + 0xd4)), G32(ebp + (GS(g_golfers) + 0xd8)));  // P12A fix 2 (render-only)
+{  // P12A fix 2 (render-only); P19A item 7: the ball's residual: the projection's (the shadow's place, re-projected at ML+0x6146) and
+   // its height's: ML+0x616a..ML+0x61a2 subtract h = (S * zoom * height / 5) / 16 with both divisions truncated toward zero
+   // (S = f_w_4c2e00, height = record +0xdc); the exact height is S * zoom * height / 80
+    double ex = 0, ey = 0;
+    const int32_t bx = G32(ebp + (GS(g_golfers) + 0xd4)), by = G32(ebp + (GS(g_golfers) + 0xd8));
+    const bool exact = world_to_screen_exact(bx, by, FD(0x88), FD(0x70), ex, ey);
+    const int32_t hp = mul32(mul32(G32(GS(f_w_4c2e00)), G32(GS(g_zoomScale))), G32(ebp + (GS(g_golfers) + 220)));
+    const double hr = static_cast<double>(hp) / 80.0 - static_cast<double>((hp / 5) / 16);  // exact height - drawn height
+    gfx_mover_source(kGfxMoverBall, FD(0x14), bx, by, exact ? static_cast<float>(ex - FD(0x88)) : 0.0f,
+                     exact ? static_cast<float>(ey - FD(0x70) - hr) : 0.0f);
+}
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x61a9
 esi = G32(GS(f_w_4c2e00)); // ML+0x61ae  mov esi, dword ptr [f_w_4c2e00]
 eax = 0x66666667; // ML+0x61b4  mov eax, 66666667

@@ -3,6 +3,7 @@
 #include "portsim/sim/bridge.h"
 #include <vector>
 #include <memory>
+#include <cmath>    // P19A: fabs (world_to_screen_exact)
 #include <cstring>
 
 #include <initializer_list>
@@ -332,42 +333,78 @@ int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_wi
 int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 
 // ------------------------------------------------------------------------------------------------ worldToScreen
+namespace {
+// P19A item 7 (bridge.h world_to_screen_exact): the last call's exact projection on this thread (render-only)
+struct W2sExact {
+  bool ok = false;
+  int32_t wx = 0, wy = 0, sx = 0, sy = 0;
+  double ex = 0, ey = 0;
+};
+thread_local W2sExact g_w2s_exact;
+}  // namespace
+
+bool world_to_screen_exact(int32_t wx, int32_t wy, int32_t sx, int32_t sy, double &ex, double &ey) {
+  const W2sExact &e = g_w2s_exact;
+  if (!e.ok || e.wx != wx || e.wy != wy || e.sx != sx || e.sy != sy) return false;
+  ex = e.ex;
+  ey = e.ey;
+  return true;
+}
+
 int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &sy, int32_t m) {
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_world_to_screen);
+  g_w2s_exact.ok = false;
   const int32_t Z = gs.g_zoomScale;
   int32_t ix = sar32(mul32(sub32(sub32(wx, shl32(gs.gCameraTileX, 10)), 0x200), Z), 7);
   int32_t iy = sar32(mul32(sub32(sub32(wy, shl32(gs.gCameraTileY, 10)), 0x200), Z), 7);
+  // P19A: the same values without the integer divisions (exs / eys follow sx / sy below)
+  double ixe = static_cast<double>(sub32(sub32(wx, shl32(gs.gCameraTileX, 10)), 0x200)) * Z / 128.0;
+  double iye = static_cast<double>(sub32(sub32(wy, shl32(gs.gCameraTileY, 10)), 0x200)) * Z / 128.0;
+  double exs = 0, eys = 0;
   int32_t W = gs.g_screenWidth;
   if (W == 0x400) {
     ix = mul32(ix, 80) / 64;
     iy = mul32(iy, 52) / 40;
+    ixe = ixe * 80 / 64;
+    iye = iye * 52 / 40;
   } else if (W == 0x500) {
     ix = mul32(ix, 104) / 64;
     iy = mul32(iy, 68) / 40;
+    ixe = ixe * 104 / 64;
+    iye = iye * 68 / 40;
   }
   const int32_t H = gs.g_screenHeight;
   const int32_t ax = mul32(ix, 20) / 32, ay = mul32(iy, 20) / 32;
+  const double axe = ixe * 20 / 32, aye = iye * 20 / 32;
   // four separate equality tests, as in the original (the width is re-read after each block)
   if (gs.g_cameraRot == 0) {
     sx = add32(add32(add32(iy, W / 2), mul32(Z, 8)), ix);
     sy = add32(sub32(ay, ax), H / 2);
+    exs = iye + W / 2 + Z * 8 + ixe;
+    eys = aye - axe + H / 2;
     W = gs.g_screenWidth;
   }
   if (gs.g_cameraRot == 2) {
     sx = add32(sub32(W / 2, ix), iy);
     const int32_t z5 = mul32(gs.g_zoomScale, 5);
     sy = add32(add32(sub32(mul32(ix, -20) / 32, ay), H / 2), mode == 1 ? z5 : neg32(z5));
+    exs = W / 2 - ixe + iye;
+    eys = ixe * -20 / 32 - aye + H / 2 - z5;
     W = gs.g_screenWidth;
   }
   if (gs.g_cameraRot == 4) {
     sx = sub32(sub32(sub32(W / 2, mul32(gs.g_zoomScale, 8)), iy), ix);
     sy = add32(sub32(ax, ay), H / 2);
+    exs = W / 2 - gs.g_zoomScale * 8 - iye - ixe;
+    eys = axe - aye + H / 2;
     W = gs.g_screenWidth;
   }
   if (gs.g_cameraRot == 6) {
     sx = add32(sub32(W / 2, iy), ix);
     sy = add32(add32(add32(ay, ax), H / 2), mul32(gs.g_zoomScale, 5));
+    exs = W / 2 - iye + ixe;
+    eys = aye + axe + H / 2 + gs.g_zoomScale * 5;
     W = gs.g_screenWidth;
   }
   // P8B: with worldToScreen.wideViewVisibility at 0 the x window is the wide view's (E more on each side); E = 0 at 1
@@ -385,9 +422,11 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
     if (f & 2) {
       const int32_t mn = corner_range_min(ctx, tx, ty);
       sy = add32(sy, neg32(mul32(mul32(sub32(mn, 3), S), gs.g_zoomScale) / 4));
+      eys -= static_cast<double>(mul32(mul32(sub32(mn, 3), S), gs.g_zoomScale)) / 4;
     } else if (f & 4) {
       const int32_t h = state_arr(ctx, &GameState::g_tileLevel)[cell] - (mode == 3 ? 0 : 3);
       sy = sub32(sy, mul32(mul32(h, S), gs.g_zoomScale) / 4);
+      eys -= static_cast<double>(mul32(mul32(h, S), gs.g_zoomScale)) / 4;
     } else {
       const int32_t c5 = corner_heights(ctx, tx, ty, 5, 1) - 3;
       const int32_t c7 = corner_heights(ctx, tx, ty, 7, 1) - 3;
@@ -396,12 +435,14 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
       int32_t dz;
       if (c5 == c7 && c5 == c1 && c5 == c3) {
         dz = neg32(mul32(mul32(S, gs.g_zoomScale), c5) / 4);
+        eys -= static_cast<double>(mul32(mul32(S, gs.g_zoomScale), c5)) / 4;
       } else {
         const int32_t dx = sub32(wx, shl32(tx, 10)), dy = sub32(wy, shl32(ty, 10));
         const int32_t b = add32(mul32(add32(mul32(sub32(0x400, dx), c7), mul32(dx, c1)), sub32(0x400, dy)),
                                 mul32(add32(mul32(sub32(0x400, dx), c5), mul32(dx, c3)), dy));
         const int32_t scaled = mul32(mul32(b, S), gs.g_zoomScale);
         dz = (neg32(scaled / 1024) / 1024) / 4;
+        eys -= static_cast<double>(scaled) / (1024.0 * 1024.0 * 4.0);
       }
       sy = add32(sy, dz);
     }
@@ -409,10 +450,15 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
   if (gs.unk_005a9cc0 != 0) {
     sx = sub32(mul32(sx, 2), 400);
     sy = sub32(mul32(sy, 2), 300);
+    exs = exs * 2 - 400;
+    eys = eys * 2 - 300;
   }
   const int32_t m2 = mode == 2 ? 0 : m, h2 = mode == 2 ? 0 : half;
   if (sx < sub32(neg32(m2), E) || sx >= add32(add32(gs.g_screenWidth, m2), E)) return 0;
   if (sy < neg32(h2) || sy >= add32(h2, gs.g_screenHeight)) return 0;
+  // P19A: kept only when the exact place lies within 8 pixels of the integer one (the truncations above add up to about 3; a wrapped
+  // product is far outside)
+  if (std::fabs(exs - sx) <= 8.0 && std::fabs(eys - sy) <= 8.0) g_w2s_exact = W2sExact{true, wx, wy, sx, sy, exs, eys};
   return 1;
 }
 
