@@ -1199,3 +1199,11 @@ quiet / 8-core burner (P18B_notes.md section 3) had the GPU equal or better at e
 under the burner. The 4K 0-frame start was the driver's click race under load (fixed in log/roadmap/P17/P17B_drive.py, which re-posts
 the clicks); arrows z8 at about 1.5 world pictures/s is a still view (one new frame per arrow press, 12 changed frames in 8 s), not a
 defect. Every fix: per-pass checks, SG_P15_CHECK and SG_P14_VERIFY 0 differing, segments x64 = I25. Open: U-P17B-02 (predates P17).
+The real 120 Hz numbers (2026-11-09, display awake at 3840 x 2160 120 Hz, DwmFlush 120-121/s, main 6ed3d391, display-paced, wait_quiet
+35 % outside the lock; log/roadmap/P17/P17Z_120.sh + P17Z_120_rest.sh, summary log/roadmap/P18/P18Z_120_summ_all.txt). Edge scroll at
+z4, arms main / SG_APP_P18=off / +P17 off / +P16 off: 4K paints 116 / 118 / 113 / 17 per s, paint p95 15.4 / 15.8 / 19.4 / 236 ms,
+world pictures/s 10.5 / 10.5 / 7.4 / 5.9, cores 2.2 / 2.1 / 4.1 / 3.4; 4K with the mood5 golfers main 113 paints/s, p95 15.7 ms, 10.4
+world/s, 2.0 cores against the P15 state's 60, 85.5 ms, 7.6, 5.4. 1080 (main = GPU since fix 3; P18 off = CPU raster): paints 117.5 in
+both, cores 1.9 against 3.9 (edge z2 2.3 against 5.1). P18's gains (first 4K job, 1440p exactness, GPU at every size) do not show in
+4K paints/s, where main was already at 113-118 of 120. In every arm arrows z2 reads 7.1-7.2 world/s and arrows z8 1.5-1.7 (the game's
+own frames for those arrow presses).
