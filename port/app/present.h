@@ -500,6 +500,10 @@ class Presenter {
   bool slide_on_ = false;
   double s0x_ = 0, s0y_ = 0, period_ns_ = 0;  // the start offset (client pixels), the game frame period (mean present interval)
   double slide_ns_ = 0;                        // this slide's length
+  // P21B: whether a slide was running when the new frame came and where it would have ended (set_frame clears slide_on_ before
+  // slide_start runs, so set_frame_world keeps them for it)
+  bool slide_was_on_ = false;
+  int64_t slide_was_end_ = 0;
   int32_t s0x_i_ = 0, s0y_i_ = 0;             // the start offset rounded (the underlay's place at the start)
   int64_t t0_ns_ = 0, last_present_ns_ = 0;
   double lat_ns_ = 0;                          // P16A: mean present-to-arrival latency (slide_start)

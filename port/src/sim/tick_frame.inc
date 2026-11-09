@@ -212,10 +212,56 @@ void SV_dateStory(u32 F, int count) {
 // fill the label-pointer table, refresh the terrain render, detect a camera move and set up the tile stride.
 // Falls through to P1 (Ph_00410604); no register is live there beyond the frame slots P1 documents.
 // ====================================================================================================================
+// P21B (mainLoop.arrowStepAfterDraw = 0): the arrow key switch's camera step (ML+0xe956..ML+0xea73, P11F's step size) for `code`
+void P21_ArrowStep(int code) {
+    int dir = code == 0x26 ? 0 : code == 0x27 ? 2 : code == 0x28 ? 4 : 6;  // ML+0xe93f / ML+0xe943 / ML+0xe94a / ML+0xe951
+    const int camStep = (!SG_DEFECT(g_defect_camera_step4) && G32(GS(g_zoomScale)) == 8) ? 2 : 4;
+    dir = (dir + G32(GS(g_cameraRot))) & 7;                                  // ML+0xe956..ML+0xe95e
+    const int dx = dir == 0 || dir == 2 ? camStep : dir == 4 || dir == 6 ? -camStep : 0;
+    const int dy = dir == 2 || dir == 4 ? camStep : dir == 0 || dir == 6 ? -camStep : 0;
+    if (dx == 0) return;                                                     // rotations 1 / 3 / 5: no case (ML+0xe96a)
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, 0, 0x31);
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, 0, 0x31);
+}
+// P21B: before the frame's picture, what the host took at the frame head runs as the frame's P6 pump would have run it, in queue
+// order: a key-up (rootWin_onChar0), the arrow key-down (rootWin_onKey(0, code), then taken as H1 takes it: setDirtyFlagA), a
+// key-up; with no key-down, P19A's held arrow; then the camera steps. View block word +20 tells H1 that this frame has stepped.
+// When H1 stepped in the last frame (word +28) that step is in this frame's picture already: the key-down goes to rootWin_onKey
+// but is left for this frame's H1 to take, and no held step is taken (one step per picture, as in the original).
+void P21_ArrowEarly() {
+    if (!ctx.view) return;
+    ctx.mem.store<int32_t>(kPortViewArrowStepVa, 0);
+    const bool late = ctx.mem.load<int32_t>(kPortViewArrowLateVa) != 0;
+    ctx.mem.store<int32_t>(kPortViewArrowLateVa, 0);
+    int32_t code = 0, ups = 0;
+    uint32_t t = 0;
+    const bool took = view_take_arrow(ctx, code, t, ups);
+    auto root = [&](uint32_t handler, int32_t a1) {
+        Command c;
+        c.kind = CmdKind::RootHandler;
+        c.handler = handler;
+        c.a0 = 0;
+        c.a1 = a1;
+        c.t = t;
+        apply_commands(ctx, {c});
+    };
+    if (took && (ups & 1)) root(9, 0);
+    if (code != 0) {
+        root(7, code);
+        code = late ? 0 : cc("setDirtyFlagA");
+    }
+    if (took && (ups & 2)) root(9, 0);
+    if (code == 0 && !late && !SG_DEFECT(g_defect_arrow_held_repeat)) code = G32(GS(g_char83821c));
+    if (code < 0x25 || code > 0x28) return;
+    P21_ArrowStep(code);
+    ctx.mem.store<int32_t>(kPortViewArrowStepVa, 1);
+}
+
 void FramePreamble(u32 F, int retile) {
     if (retile)
         cc("rebuildTileCoverage");                             // ML+0x664 rebuildTileCoverage() (only on the ML+0x664 entry)
     FU(0x1EC) = clock_head();                   // ML+0x669/ML+0x66f timeGetTime -> [F+0x1ec]
+    if (!SG_DEFECT(g_defect_arrow_step_after_draw)) P21_ArrowEarly();  // P21B: the arrow step before the frame's picture
 
     // ML+0x676..ML+0x6a4 : clear the two 0x14-dword arrays, reset [g_buildingKindMask], re-cap [g_cash_div100] in sandbox
     for (int i = 0; i < 0x14; i++) G32(GS(g_objectTypeLevel) + 4 * i) = 0;   // ML+0x676..ML+0x682
@@ -7202,7 +7248,13 @@ int Ph_0041c0c5(u32 F, int* h2in) {
     // P19A (mainLoop.arrowKeyHeldRepeat = 0): no key code this frame while an arrow is held (g_char83821c, which root_handler's onKey
     // sets for an arrow under the switch and onChar0 clears on a key-up) takes that arrow, as the key repeat would; FD(0x28) is read
     // again only by the code switch at ML+0xe851
-    if (!SG_DEFECT(g_defect_arrow_held_repeat) && eax == 0 && G32(GS(g_char83821c)) >= 0x25 && G32(GS(g_char83821c)) <= 0x28)
+    // P21B (mainLoop.arrowStepAfterDraw = 0): a frame that stepped before its picture (P21_ArrowEarly) takes no second arrow, and
+    // the held arrow is taken there instead
+    const bool earlyArrows = !SG_DEFECT(g_defect_arrow_step_after_draw) && ctx.view;
+    if (earlyArrows && ctx.mem.load<int32_t>(kPortViewArrowStepVa) != 0 && eax >= 0x25 && eax <= 0x28) eax = 0;
+    if (earlyArrows) ctx.mem.store<int32_t>(kPortViewArrowLateVa, eax >= 0x25 && eax <= 0x28 ? 1 : 0);  // the key switch steps it
+    if (!SG_DEFECT(g_defect_arrow_held_repeat) && !earlyArrows && eax == 0 && G32(GS(g_char83821c)) >= 0x25 &&
+        G32(GS(g_char83821c)) <= 0x28)
         eax = G32(GS(g_char83821c));
     FD(0x28) = eax;                           // ML+0xcb24 (second key/flags)
     if (esi == edi) goto a41c150;             // ML+0xcb28 cmp esi,edi; je

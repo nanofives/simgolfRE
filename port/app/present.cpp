@@ -150,6 +150,10 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
   if (objects_on_)
     for (const Mover &m : movers_)
       if (m.ox < 1e8) drawn[m.k] = {m.ox, m.oy};
+  // P21B: a slide running now, and its end (set_frame below clears slide_on_; slide_start finishes it by that end when the new
+  // frame does not move the camera)
+  slide_was_on_ = slide_on_;
+  slide_was_end_ = t0_ns_ + static_cast<int64_t>(slide_ns_);
   const bool ok = set_frame(px, band);
   if (ok && !stale) {
     const bool sane = !world.empty() && world.pw > 0 && world.ph > 0 &&
@@ -233,8 +237,12 @@ void Presenter::slide_start(const WorldImage &w) {
     }
     last_arrival_ns_ = now;
   }
-  const bool was_on = slide_on_;
-  const int64_t end_prev = t0_ns_ + static_cast<int64_t>(slide_ns_);
+  // P21B (log/roadmap/P21/P21B_notes.md): taken from set_frame_world, which saw them before set_frame cleared slide_on_; read here
+  // from slide_on_ they were always false, so every frame without a camera move restarted a whole slide from the offset left
+  // (two thirds of the rest per frame: the view crept on for 0.4-0.7 s after a press)
+  const bool was_on = slide_was_on_;
+  const int64_t end_prev = slide_was_end_;
+  slide_was_on_ = false;
   slide_on_ = false;
   cur_x_ = cur_y_ = 0;
   nd_x_ = nd_y_ = 0;
@@ -277,6 +285,8 @@ void Presenter::slide_start(const WorldImage &w) {
   st.reason = reason;
   st.s0x = s0x;
   st.s0y = s0y;
+  latlog('A', now, w.cam.t_ns, w.cam.cam_x, w.cam.cam_y, w.cam.next_x, w.cam.next_y, dx, dy, std::lround(s0x), std::lround(s0y),
+         reason);  // P21B (SG_P21_LATLOG)
   slide_start_ = st;
   if (reason == 1) ++slide_stats_.snaps_cam;
   if (reason == 2) ++slide_stats_.snaps_view;
@@ -323,6 +333,7 @@ void Presenter::slide_start(const WorldImage &w) {
                                                : std::max<double>(static_cast<double>(end_prev - now), 16e6);
   cur_x_ = s0x_i_;
   cur_y_ = s0y_i_;
+  latlog('L', now, static_cast<int64_t>(slide_ns_), frames_set());  // P21B (SG_P21_LATLOG)
 }
 
 bool Presenter::slide_tick(int64_t now_ns, const Viewport &vp) {

@@ -79,6 +79,23 @@ int32_t view_width(Ctx &ctx) {
   return w < 800 ? 800 : w;
 }
 bool view_click_vacated(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPortViewVacatedVa) != 0; }  // P9E fix 3
+bool view_take_arrow(Ctx &ctx, int32_t &code, uint32_t &t, int32_t &ups) {  // P21B
+  code = 0;
+  t = 0;
+  ups = 0;
+  if (!ctx.view) return false;
+  const int32_t c = ctx.mem.load<int32_t>(kPortViewArrowVa);
+  const int32_t u = ctx.mem.load<int32_t>(kPortViewArrowUpVa);
+  if (c == 0 && u == 0) return false;
+  t = ctx.mem.load<uint32_t>(kPortViewArrowTVa);
+  ctx.mem.store<int32_t>(kPortViewArrowVa, 0);
+  ctx.mem.store<uint32_t>(kPortViewArrowTVa, 0);
+  ctx.mem.store<int32_t>(kPortViewArrowUpVa, 0);
+  code = c >= 0x25 && c <= 0x28 ? c : 0;
+  ups = u & 3;
+  if (code == 0) ups &= 1;  // no key-down: one key-up (bit 0)
+  return code != 0 || ups != 0;
+}
 // ------------------------------------------------------------------------------------------------ course undo (P11D)
 // The original's own undo is one level per tile: setGrids keeps the tile's previous content (code) and the price charged
 // (refund), and a right click then a second right click on the tile (mainLoop ML+0xfbac..ML+0xfc4b) runs demolishObject, which

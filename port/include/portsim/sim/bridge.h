@@ -76,6 +76,24 @@ bool view_click_vacated(Ctx &ctx);
 // nothing reads it. The words from +0x100 on (the edit journal, the redo list, the press counter) are written by sim code only,
 // so a replay rebuilds them from the same input.
 constexpr uint32_t kPortViewUndoVa = kPortViewVa + 8u;
+// P21B (Mariano's play-test 8 item 2: the delay from an arrow key to the camera; log/roadmap/P21/P21B_notes.md). Word +12 is an
+// arrow key-down (its key code 0x25..0x28) and word +16 its timeGetTime value (Command::t) that a live host took from its input
+// queue at a frame head, as recorded harness writes (DELIVER w32), so a replay applies them before the same frame body. The `play`
+// switch mainLoop.arrowStepAfterDraw (0) consumes them before the frame's picture (view_take_arrow, then rootWin_onKey(0, code) as
+// the frame's pump would have run it) and clears both; at 1 (the original) no host writes them and nothing reads them. Word +20 is
+// written by sim code only (1 = this frame's camera step was taken before the picture), so a replay rebuilds it. Word +24 (host,
+// recorded like +12): key-ups (rootWin_onChar0) the host took at the same head, bit 0 one before the arrow key-down, bit 1 one
+// after it (a key-up that waited for the frame's pump would come after the step, and P19A's held arrow would step a second time).
+constexpr uint32_t kPortViewArrowVa = kPortViewVa + 12u;
+constexpr uint32_t kPortViewArrowTVa = kPortViewVa + 16u;
+constexpr uint32_t kPortViewArrowStepVa = kPortViewVa + 20u;
+constexpr uint32_t kPortViewArrowUpVa = kPortViewVa + 24u;
+// Word +28 (sim code only): 1 = H1 stepped the camera for an arrow in the last frame (after its picture, so the step is in the next
+// picture already): the next frame steps nothing more before its picture.
+constexpr uint32_t kPortViewArrowLateVa = kPortViewVa + 28u;
+// what the host took at the frame head: the arrow key-down (code 0 = none) and its time, the key-up bits of word +24 (false: none
+// of them, or no view block); clears words +12 / +16 / +24
+bool view_take_arrow(Ctx &ctx, int32_t &code, uint32_t &t, int32_t &ups);
 extern int g_defect_course_undo;  // mainLoop.courseUndo: 1 = the original (no journal, the request word ignored)
 // setGrids's journal entry (called by setGrids before it stores, with the tile's previous code / refund and the new ones)
 void course_undo_note(Ctx &ctx, int32_t x, int32_t y, int32_t old_code, int32_t old_refund, int32_t new_code,
