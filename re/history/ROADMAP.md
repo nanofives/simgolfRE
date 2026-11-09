@@ -1207,3 +1207,35 @@ world/s, 2.0 cores against the P15 state's 60, 85.5 ms, 7.6, 5.4. 1080 (main = G
 both, cores 1.9 against 3.9 (edge z2 2.3 against 5.1). P18's gains (first 4K job, 1440p exactness, GPU at every size) do not show in
 4K paints/s, where main was already at 113-118 of 120. In every arm arrows z2 reads 7.1-7.2 world/s and arrows z8 1.5-1.7 (the game's
 own frames for those arrow presses).
+
+## P19: seventh play-test feedback (2026-11-08 .. 2026-11-09)
+Brief log/roadmap/P19/BRIEF.md, notes log/roadmap/P19/P19{A,B,C,D}_notes.md, screenshots fb_*.png beside them. App option off switch
+SG_APP_P19=off (port/test/conftest.py). Merge checks ran on their own tree P19Z with lock step ORCHM (log/roadmap/P19/P19Z_merge_check.sh)
+because the 120 Hz measure held P15Z. Published a53dbf69 (with P18B fix 3) and 8d187253.
+- Item 1, held arrow keys (P19A fix 1, a53dbf69, class b): play switch mainLoop.arrowKeyHeldRepeat. An arrow reaches rootWin_onKey with
+  no character, so the frame loop saw one key code per WM_KEYDOWN (a step, Windows' repeat delay, then a step per frame); at 0 onKey keeps
+  the arrow in the held-key word g_char83821c (read by no exe code, cleared by rootWin_onChar0 on any key-up) and each frame without a key
+  code takes it; the app sends a key-up on WM_KILLFOCUS while an arrow is down.
+- Item 4, fairway notches (P19B fix 1, 448d4965, class a for the port's own switch): P13A fix 6 drew a Tab-turned fairway tile's piece-2
+  faces with piece 0; piece 2 carries the inner-corner rim nubs. Every face now turns with its own piece (negctl terrain_render 19). One
+  GL stream feeds every rasteriser, so the per-pass checks (GPU vs CPU of the same stream) could not see it.
+- Item 5, shot line cut at the screen edge (P19B fix 2, e88a7f4a, class b): play switch mainLoop.holeLineEndsOnScreen. The original draws
+  a segment only when worldToScreen and tileToScreen both find its end on screen; at 0 the off-screen ends are projected past the screen
+  and drawMapLine clips at the edge; mirror_line_px walks only each row's line band. Open: U-P19B-01 (3 px of the HUD badge's soft edge
+  where the line passes under it, GPU presenter only).
+- Item 6, empty first SimFoto (P19D fix 1, 091e1465, class b): play switch showBulletinBoard.photoLastPostOnly. The board keeps one pending
+  photo (0x004e3db8) and openHole can post two or three records in one call, so only the last got accomp<id>.bmp (the original does the
+  same, confirmed with every hook off); at 0 every record of that date without a photo file gets the same picture. Not the GPU world path:
+  the photo comes from the sim's 800 x 600 root. The original's other world-to-file writers (SimFoto 'y' save, snapshot JPG, save
+  thumbnails) are not in the port on any path.
+- Item 7, ball wobble (P19A fix 2, 1bc1a1f3, class a): the sim's ball places are whole 800-space pixels and P12A extrapolated by the
+  rounded last step. world_to_screen keeps its unrounded result (render-only), the ball / shadow tags carry the residual, and the presenter
+  interpolates every mover instead of extrapolating (the ball one game frame late, like the golfers): frame-change move median 5.4 -> 0
+  tick moves.
+- Item 8, mood strip (P19C fix 1, 8d187253, app option --hud-strip near): the strip sits right of the left-anchored panel pixels in its
+  rows, at the Build palette's end when open and next to the control cluster when closed.
+- Items 2 (golfer name label clipped at a cliff edge) and 3 (tutorial banner text cut at the strip's end): class (c), not reproduced. The
+  tutorial (via P11D_drive.py --career) held its whole sentence at 1080 and 4K; label cuts were seen only behind later sprites (a tree, a
+  water spout). Waiting for Mariano's saves.
+Orchestration lessons (auto-memory): a killed w8_lock holder never releases w8_heavy.lock (the lock sat under a dead ORCHg from 19:35 to
+01:38 and every queued run waited); one take per step name; never edit a running bash script (launch from a copy).
