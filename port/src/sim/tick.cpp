@@ -102,6 +102,14 @@ int g_defect_camera_follow_offgrid = 1;
 // the reversal turn (updateGolfers+0x29cf..updateGolfers+0x29e6) and the step overshoot can take a golfer past the edge
 // (log/c3/c3fyl/audit123.md, U1). Fixed (0): the golfer's world position is clamped to 0..0xc7ff after the step.
 int g_defect_golfer_walk_offgrid = 1;
+// updateGolfers.partnerWaitBlocksTee (P20A, Mariano's "the golfers are stuck", log/roadmap/P20/P20A_notes.md): a golfer at its ball
+// with swing counter 1 holds its shot while some golfer k of its hole (older or equal arrival order, not its partner, flag bit 10,
+// more strokes) stands within 0x64 of the hole's tee (updateGolfers+0x380a..updateGolfers+0x383e). A k that already played and
+// walked back to the tee to wait for a partner who has not (the partner-ahead flag L34, updateGolfers+0x893..updateGolfers+0x905)
+// then never moves while the partner's own shot is held by the group ahead: the three wait for each other for good (the player's
+// golfer and its partner in his save, identical in golf_clean.exe). Fixed (0): such a k is not held against the shot by the tee
+// test; the ball, target and line-of-fire tests of the same loop still apply to it.
+int g_defect_partner_wait_blocks_tee = 1;
 // mainLoop.treesHiddenFarZoom (P11A fix 1, Mariano's play-test 5: "furthest zoom is not rendering trees"): the tile pass of
 // mainLoop P3 queues the sprite of a tile whose type class byte (g_tileTypeAttrs + 0x26 of its 48-byte row) is 0xd (the
 // forest trees, tropical trees and palms) only while g_zoomScale > 1 (ML+0x4aba cmp / ML+0x4ac1 jle past the whole block), so
@@ -2118,6 +2126,11 @@ const DefectDef kDefects[] = {
     {"updateGolfers.walkOffGrid", "P6A",
      "a golfer's walking step has no grid test (reversal turn, step overshoot); fixed: the position is clamped to the grid after the step",
      &g_defect_golfer_walk_offgrid},
+    {"updateGolfers.partnerWaitBlocksTee", "P20A",
+     "a golfer holds its shot while a golfer of its hole with more strokes stands near the tee, also one that already played and "
+     "only waits there for its partner, whose own shot is held by the group ahead: they wait for each other for good; fixed: a "
+     "golfer waiting at the tee for its partner does not hold the shots of the golfers ahead",
+     &g_defect_partner_wait_blocks_tee},
     {"mainLoop.treesHiddenFarZoom", "P11A",
      "at the furthest zoom (g_zoomScale 1) the tile pass queues no tree, tropical tree or palm sprite (type class 0xd): forests "
      "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "

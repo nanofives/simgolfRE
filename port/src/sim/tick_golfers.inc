@@ -78,6 +78,16 @@
 #define kRateTile(...) cc("golferShotReach", ##__VA_ARGS__)// golferShotReach(g)
 
 int Rand(int n) { return kRandomRange((u32)(GS(g_rng)), 0, n); }
+// P20A updateGolfers.partnerWaitBlocksTee: golfer k waits for its partner, the condition that sets the partner-ahead flag L34 for
+// k (updateGolfers+0x893..updateGolfers+0x905: the partner +0xa2 on k's hole, k has flag bit 10, the partner has not), which sends
+// k back to its hole's tee (updateGolfers+0x150e / updateGolfers+0x16ca) to wait there. The partner index is range-checked here (the
+// original indexes record +0xa2 unchecked).
+bool P20A_WaitsForPartner(int k) {
+    int p = GW(k, (GS(g_golfers) + 162));
+    if (p < 0 || p >= 0x98) return false;
+    signed char hp = GC(p, (GS(g_golfers) + 33));
+    return hp != 0 && hp == GC(k, (GS(g_golfers) + 33)) && (FLAGS(k) & (1u << 10)) != 0 && (FLAGS(p) & (1u << 10)) == 0;
+}
 int Dx8(int d) { return G<int>(GS(f_tab_dirDx_4c2878) + 4 * static_cast<unsigned>(d)); }
 int Dy8(int d) { return G<int>(GS(f_tab_dirDy_4c2898) + 4 * static_cast<unsigned>(d)); }
 // direction 0..7 from a 16.16 angle: `sar 0x1c; and 0xf; inc; sar 1; and 7`
@@ -1183,7 +1193,8 @@ int updateGolfers() {
                     if (k == i) continue;                                               // updateGolfers+0x37dd..updateGolfers+0x37e1
                     if ((FLAGS(k) & 0x400) == 0) continue;                              // updateGolfers+0x37e7..updateGolfers+0x37f0
                     if (GC(k, (GS(g_golfers) + 34)) <= GC(i, (GS(g_golfers) + 34))) continue;                   // updateGolfers+0x37f6..updateGolfers+0x3804
-                    if (kTileDistance(GD(k, GS(g_golfers)), GD(k, (GS(g_golfers) + 4)), HD(h, (GS(g_holes) + 8)), HD(h, (GS(g_holes) + 12))) < 0x64) {   // updateGolfers+0x380a..updateGolfers+0x383e
+                    if (kTileDistance(GD(k, GS(g_golfers)), GD(k, (GS(g_golfers) + 4)), HD(h, (GS(g_holes) + 8)), HD(h, (GS(g_holes) + 12))) < 0x64 &&   // updateGolfers+0x380a..updateGolfers+0x383e
+                        (SG_DEFECT(g_defect_partner_wait_blocks_tee) || !P20A_WaitsForPartner(k))) {   // P20A updateGolfers.partnerWaitBlocksTee
                         keep = 0;                                                       // updateGolfers+0x3966
                         continue;
                     }
