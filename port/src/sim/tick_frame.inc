@@ -1812,7 +1812,10 @@ stk[--sp] = (int)(edx); // ML+0x41c3  push edx
 eax = cc("worldToScreen", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4]); // worldToScreen  ML+0x41c4
 sp += 9; // ML+0x41c9  add esp, 0x24  (caller stack cleanup)
 // ML+0x41cc  test eax, eax
-if (((eax)) == 0) goto La_413837; // ML+0x41ce  je ML+0x4277
+if (((eax)) == 0) {  // ML+0x41ce  je ML+0x4277
+    if (!SG_DEFECT(g_defect_hole_line_ends_on_screen) && P19B_HoleLineEnds(F, false)) goto La_P19B_draw;   // P19B item 5
+    goto La_413837;
+}
 edx = G32((GS(g_golfers) + 39632)); // ML+0x41d4  mov edx, dword ptr [g_golfers+0x9ad0]
 eax = FA(0x170); // ML+0x41da  lea eax, [F+0x170]
 ecx = FA(0x14c); // ML+0x41e1  lea ecx, [F+0x14c]
@@ -1824,7 +1827,11 @@ stk[--sp] = (int)(eax); // ML+0x41f0  push eax
 eax = cc("tileToScreen", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3]); // tileToScreen  ML+0x41f1
 sp += 4; // ML+0x41f6  add esp, 0x10  (caller stack cleanup)
 // ML+0x41f9  test eax, eax
-if (((eax)) == 0) goto La_413837; // ML+0x41fb  je ML+0x4277
+if (((eax)) == 0) {  // ML+0x41fb  je ML+0x4277
+    if (!SG_DEFECT(g_defect_hole_line_ends_on_screen) && P19B_HoleLineEnds(F, true)) goto La_P19B_draw;    // P19B item 5
+    goto La_413837;
+}
+La_P19B_draw:;
 ecx = FD(0x128); // ML+0x41fd  mov ecx, dword ptr [F+0x128]
 edx = FD(0x14c); // ML+0x4204  mov edx, dword ptr [F+0x14c]
 eax = (int)(esi + esi*2 + -3); // ML+0x420b  lea eax, [esi + esi*2 - 3]
@@ -5746,6 +5753,30 @@ void P11E_BoxScale() {
 // P13A: would openHole (events_news.inc open_hole) open hole [g_holesPlusOne] now? Its own refusal test (the tee dword +0x8 and the
 // green dword +0x18 of the 0x208-byte record set, and the second tee +0x10 when bit 6 of g_flags' low byte is set), the hole below
 // 0x13, and its par byte +0 still 0 (not open: openHole sets it to 2..6, H2_Select's hole-marker click tests the same byte).
+// mainLoop.holeLineEndsOnScreen (P19B item 5): the hole's shot line, one segment per probe shot from the previous point (g_golfers
+// +0x9ac4 / +0x9ac8, world units) to the next probe point (+0x9acc / +0x9ad0, tiles), is drawn only when worldToScreen (ML+0x41c4)
+// finds the first end and tileToScreen (ML+0x41f1) the second end on screen (margin 0); a segment with an end off screen is not
+// drawn at all, so on a hole partly in view the line stops short of the screen's edge. Fixed (0): such a segment's ends are
+// projected with worldToScreen and a margin wider than any screen (the same projection: the margin only takes part in the screen
+// test), into the frame slots the original's two calls fill (F+0x128 / F+0x174 the first end, F+0x14c / F+0x170 the second), and
+// the segment is drawn when it can reach the view (the wide view's columns in `play`); drawMapLine's clip cuts it at the edge
+// (terrain_overlay.cpp draw_line, mirror_line_px). tileToScreen is not called here, so its screen cache g_tileScreenX / Y holds
+// what the original's calls left there. Returns false when the segment lies wholly past one edge (nothing to draw).
+bool P19B_HoleLineEnds(u32 F, bool firstOnScreen) {
+    const int kFar = 1 << 24;   // any screen point of the 50 x 50 map passes the screen test with this margin
+    if (!firstOnScreen)
+        cc("worldToScreen", (int)G32(GS(g_golfers) + 39620), (int)G32(GS(g_golfers) + 39624), FA(0x128), FA(0x174), kFar);
+    const int tx = G32(GS(g_golfers) + 39628), ty = G32(GS(g_golfers) + 39632);
+    cc("worldToScreen", (tx << 10) + 0x200, (ty << 10) + 0x200, FA(0x14c), FA(0x170), kFar);
+    const int E = wide_view_margin_w2s(ctx), W = ctx.gs().g_screenWidth, H = ctx.gs().g_screenHeight, pad = 16;
+    const int x1 = FD(0x128), y1 = FD(0x174), x2 = FD(0x14c), y2 = FD(0x170);
+    if (x1 < -E - pad && x2 < -E - pad) return false;
+    if (x1 >= W + E + pad && x2 >= W + E + pad) return false;
+    if (y1 < -pad && y2 < -pad) return false;
+    if (y1 >= H + pad && y2 >= H + pad) return false;
+    return true;
+}
+
 bool P13A_HoleReady() {
     const int h = G32(GS(g_holesPlusOne));
     if (h < 0 || h >= 0x13) return false;

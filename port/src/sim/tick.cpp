@@ -172,6 +172,11 @@ int g_defect_fairway_stripes_fixed = 1;
 // tile), a right click on the course clears it (tick_frame.inc Ph_0041ecbb), and the tips call the button "Bulldoze"
 // (gfx_text.cpp undo_name; commands_panels.inc undo_button).
 int g_defect_undo_button_help = 1;
+// mainLoop.holeLineEndsOnScreen (P19B, Mariano's play-test 7 item 5 "line of the trajectory of the ball is still not rendering
+// properly on the edges of the screen if the hole is not all visible"): mainLoop draws a hole's shot-line segment only when
+// worldToScreen (ML+0x41c4) and tileToScreen (ML+0x41f1) find both its ends on screen. Fixed (0): a segment with an end off screen
+// is drawn too, clipped at the view's edge (tick_frame.inc P19B_HoleLineEnds).
+int g_defect_hole_line_ends_on_screen = 1;
 int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
@@ -2155,6 +2160,10 @@ const DefectDef kDefects[] = {
      "game's bulldoze mode (each left click on the map removes that tile's last edit with its refund, or asks before demolishing a "
      "building), a second click, a right click, Esc or a new tool drops it, and its tip reads Bulldoze",
      &g_defect_undo_button_help},
+    {"mainLoop.holeLineEndsOnScreen", "P19B",
+     "a hole's shot line is drawn segment by segment and a segment with an end off screen is left out, so on a hole partly in view "
+     "the line stops short of the screen's edge; fixed: that segment is drawn too, cut at the edge of the view",
+     &g_defect_hole_line_ends_on_screen},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

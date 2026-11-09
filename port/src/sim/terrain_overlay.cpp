@@ -314,9 +314,23 @@ bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t f
   const int32_t xe = std::min(pw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
   const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
   const int32_t ye = std::min(ph - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
-  for (int32_t y = y0; y <= ye; ++y)
-    for (int32_t x = x0; x <= xe; ++x) {
-      const double qx = x + 0.5 - ax, qy = y + 0.5 - ay;
+  // P19B item 5: per row only the columns the line's band can cover (|n| < half + 0.5, the coverage's first factor), widened by 2
+  // pixels for rounding, so a long line (a hole's shot line reaching past the view) does not walk its whole bounding box; the
+  // pixels skipped are those whose coverage is 0. A near-horizontal line (|uy| below 1e-9) keeps the box's columns.
+  const double band = half + 0.5;
+  for (int32_t y = y0; y <= ye; ++y) {
+    int32_t xa = x0, xb = xe;
+    if (std::fabs(uy) > 1e-9) {
+      const double ry = y + 0.5 - ay;
+      const double l0 = (ry * ux - band) / uy, l1 = (ry * ux + band) / uy;
+      const double lo = ax - 0.5 + std::min(l0, l1), hi = ax - 0.5 + std::max(l0, l1);
+      if (hi < static_cast<double>(x0) - 2.0 || lo > static_cast<double>(xe) + 2.0) continue;
+      xa = std::max(x0, static_cast<int32_t>(std::floor(std::max(lo, static_cast<double>(x0) - 2.0))) - 2);
+      xb = std::min(xe, static_cast<int32_t>(std::ceil(std::min(hi, static_cast<double>(xe) + 2.0))) + 2);
+    }
+    const double qy = y + 0.5 - ay;
+    for (int32_t x = xa; x <= xb; ++x) {
+      const double qx = x + 0.5 - ax;
       const double t = qx * ux + qy * uy, n = -qx * uy + qy * ux;
       const double cov = clamp01(half + 0.5 - std::fabs(n)) * clamp01(t + 0.5) * clamp01(len - t + 0.5);
       if (cov <= 0.0) continue;
@@ -328,6 +342,7 @@ bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t f
       const double vb = cb * 255.0 * al + db * 255.0 / 31.0 * (1.0 - al);
       d = static_cast<uint16_t>((quantize(vr, x, y) << 10) | (quantize(vg, x, y) << 5) | quantize(vb, x, y));
     }
+  }
   return true;
 }
 void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,

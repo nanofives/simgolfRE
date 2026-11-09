@@ -701,6 +701,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.hKeyShotStyleFirst", 0},             // P13A ('h' opens a ready hole during the player's shot too)
     {"Tile::render.fairwayStripesFixed", 0},        // P13A (Tab turns a fairway's mowing stripes)
     {"mainLoop.undoButtonHelpOnly", 0},             // P13A (the bulldozer button arms the game's bulldoze mode)
+    {"mainLoop.holeLineEndsOnScreen", 0},           // P19B item 5 (a hole's shot line reaches the screen's edge)
     {"courseActionMenu.escIgnored", 0},             // P9A item 2: Esc = the world map's Back
     {"showBuyLandScreen.escIgnored", 0},            // P9A item 2: Esc = Done
     {"showCharacterEditor.escIgnored", 0},          // P9A item 2: Esc = Exit
