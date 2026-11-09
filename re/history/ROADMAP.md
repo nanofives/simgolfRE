@@ -1254,3 +1254,23 @@ because the 120 Hz measure held P15Z. Published a53dbf69 (with P18B fix 3) and 8
   water spout). Waiting for Mariano's saves.
 Orchestration lessons (auto-memory): a killed w8_lock holder never releases w8_heavy.lock (the lock sat under a dead ORCHg from 19:35 to
 01:38 and every queued run waited); one take per step name; never edit a running bash script (launch from a copy).
+
+## P20: the stuck golfers (2026-11-09)
+Mariano: "the golfers are stuck" (release 8d187253 on MARIANO-PC). Brief log/roadmap/P20/BRIEF.md, notes log/roadmap/P20/P20A_notes.md.
+His data folder (%LOCALAPPDATA%\SimGolfPort: saves, snapshots, the last session's recording) was copied by a child on MARIANO-PC into
+`SimGolf Test\saves_copy` and pulled with remote_pull into log/roadmap/P20/mariano_pc/; P20_look.py loads a save in an app build through
+Continue Saved Game (the browser skips `&` names: copy the save under another name) and reads back shots.
+- Class (b), the original's own deadlock (P20A fix 1, e11669e6): play switch updateGolfers.partnerWaitBlocksTee. Four golfers on hole 3 of
+  his Ocean's Edge wait for each other for good, identical in every save from 16 Aug to 8 Sep: golfer 0 (on the green, 1 stroke) is held
+  by updateGolfers' look-ahead (0x0042c178..0x0042c35d) because golfer 13 counts as ahead of it near the tee (same arrival order 0, flag
+  0x400, more strokes, tileDistance < 0x64 at 0x0042c1ea..0x0042c21e); 13 is the player's golfer, already played, back at the tee waiting
+  for partner 12 (0x004292b4..0x004292e5, 0x0042ad59..0x0042ae94); 12 is held because golfer 0 and its ball sit at 12's target
+  (0x0042c224..0x0042c270); 1 waits for 0. The player's golfer skips the look-ahead result (0x0042c363..0x0042c36c) and customizeCharacter
+  never stamps an arrival order, which lets the loop form. golf_clean.exe with every hook off stays frozen for about 7 game months at x32
+  (fun rating 141 -> -199); the port replays the same (framehash 702 / 702). At 0 a golfer waiting at the tee for its partner is not held
+  against the shot by the tee test (ball, target and line-of-fire tests stay); no new state, so stuck saves clear too: 0 and 1 hole out,
+  12 tees off, 13 reaches its ball and the shot-style panel waits for the player. Negative control: switch 1 keeps the deadlock; mood5.sve
+  replays identically with the switch at 0 or 1. Open: U-P20A-01 (how 13 got 2 strokes with its partner at 0: the forming session's start
+  save is gone).
+- Merge check (P19Z, SEGS=1): builds x64 + Win32 0 warnings, test_static 6, segments 205 / 205 = I25, smoke 1080 + 4K clean. Published
+  e11669e6 at once (release_due said NOT_DUE: Mariano's play-test rule, one fix per delivery). P10_cleanup.py now accepts P2x trees.
