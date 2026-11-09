@@ -1207,6 +1207,21 @@ world/s, 2.0 cores against the P15 state's 60, 85.5 ms, 7.6, 5.4. 1080 (main = G
 both, cores 1.9 against 3.9 (edge z2 2.3 against 5.1). P18's gains (first 4K job, 1440p exactness, GPU at every size) do not show in
 4K paints/s, where main was already at 113-118 of 120. In every arm arrows z2 reads 7.1-7.2 world/s and arrows z8 1.5-1.7 (the game's
 own frames for those arrow presses).
+P18C (2026-11-09, item 4, brief log/roadmap/P18/P18C_BRIEF.md, notes P18C_notes.md, tools P18C_work/): FINDINGS, no fix. The 4K
+"one refresh in six to eight missed" (paint interval p95 15.4 ms against 8.9 at 1080) was paintlog.py's metric, not the screen: its
+interval and missed columns come from the times Present RETURNED. The swap chain is flip model with sync interval 1 (gpu.cpp), so a
+present is never dropped and the refreshes that repeated a picture = vblanks - presents; the swap chain's own frame statistics (each
+paint's present id against the refresh it was shown on, 83-93 % of 4K presents, 0 dropped) agree. 4K edge z4: 3.9 repeated refreshes/s
+against the column's 16.2; 4K edge z8 / z2 2.3 / 2.8, 1080 2.5 / 3.9 / 1.6. At 4K Present blocks until a queue slot frees, so after a new
+world picture's longer first paint one Present returns at once and the next blocks a whole refresh: two returns 15 ms apart while the
+display still shows a new picture at every refresh, once per world picture. Every remaining repeat at both sizes is a refresh with
+nothing new to show (the window handled the tick and asked for no paint: the edge scroll reversing at the phase's midpoint, an arrow
+slide and the movers reaching the newest picture before the next one, idle frame periods with nothing moving); the window thread, the
+GPU and Present lost none (busy = repeats - still ticks = 0 +- 1.5/s in every phase of 6ed3d391 and 7f837f1e). The 120 Hz summary
+(log/roadmap/P17/P17Z_120_summ.py) now prints rep/s beside the old column, renamed end-iv. Open: U-P18C-01 (which DWM path each
+size takes: the 4K chain gets frame statistics, the 1080 one rarely; needs PresentMon / ETW, admin), U-P18C-02 (one loaded 4K run at
+32 % had 264-388 ms without a world picture, quiet runs 108-152 ms, not traced); log/roadmap/P18/P18C_uncertain.tsv. Lead, one run per
+arm: SG_P14_LATENCY=1 at 4K shows a present 3 refreshes after its return instead of 4, same repeats, about +0.2-0.3 cores.
 
 ## P19: seventh play-test feedback (2026-11-08 .. 2026-11-09)
 Brief log/roadmap/P19/BRIEF.md, notes log/roadmap/P19/P19{A,B,C,D}_notes.md, screenshots fb_*.png beside them. App option off switch
