@@ -142,6 +142,10 @@ struct GfxHudFrame {
   uint64_t serial = 0;
   // P9D: why the publish made no layers (0 = it made them; 1 = no layer opened since the last publish; 2 = inside an open layer)
   int8_t none = 0;
+  // P21C: a layer-less modal frame (none != 0) whose screen dimmed every root pixel with one word (end of year: drawn before
+  // any panel layer of its frame): the presenter dims the part of the window outside the 800 x 600 root with dim_src
+  uint8_t dim_all = 0;
+  uint16_t dim_src = 0;
   // P9D: the frame of a modal screen drawn over the last layered frame (its base and layers carried, the screen's drawing since
   // then in a centred layer after them): gfx_set_hud_modal
   uint8_t carried = 0;

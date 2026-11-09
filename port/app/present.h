@@ -209,6 +209,10 @@ struct WorldImage {
   // P9D: the frame was published by the modal capture (gfx.h gfx_set_hud_modal) without layers: no panel of it is a layer (a
   // screen drawn before this frame's HUD, the end-of-year screen), so it is shown unmoved instead of by G32's rectangles
   bool hud_none = false;
+  // P21C: a hud_none frame whose screen dimmed every root pixel with dim_src (GfxHudFrame::dim_all): the presenter dims the
+  // window outside the 800 x 600 rectangle the same way
+  uint8_t dim_all = 0;
+  uint16_t dim_src = 0;
   // P9C: the frame's text runs (the host fills it with --text-res native, published with this back buffer; the presenter takes it
   // with Presenter::set_text whether or not the frame has a world layer)
   portsim::GfxTextFrame text;

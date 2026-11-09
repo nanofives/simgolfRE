@@ -148,6 +148,10 @@ class Gfx {
     std::vector<GfxHudLayer> carry_layers;  // the last layered frame's layers without its child-window composition
     uint32_t dim_gen = 0;     // a whole-frame dim was drawn in the segment of blend generation dim_gen (dim_set), source dim_src
     bool dim_set = false;
+    // P21C: a whole-frame dim drawn while no layer was open (a screen drawn before any panel of its frame: end of year); kept
+    // until the next frame starts (hud_carry_drop) and published on the layer-less frame (GfxHudFrame::dim_all)
+    bool nl_dim = false;
+    uint16_t nl_src = 0;
     uint16_t dim_src = 0;
     // P9E (gfx.h gfx_set_hud_popups): the popups since the frame's picture started
     bool popups = false;              // the feature is on (the app's host)

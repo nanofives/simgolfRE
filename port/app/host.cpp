@@ -959,6 +959,8 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
     wi.hud = std::move(f);
   }
   wi.hud_none = layered && !use && portsim::gfx_hud_modal(ctx);  // P9D
+  wi.dim_all = wi.hud_none ? f.dim_all : 0;  // P21C
+  wi.dim_src = f.dim_src;
   return true;
 }
 
@@ -1273,6 +1275,8 @@ void LiveSession::run_world_job(WorldJob &j) {
     wi.cam = j.cam;
     if (j.use) wi.hud = std::move(j.f);
     wi.hud_none = j.hud_none;
+    wi.dim_all = j.hud_none ? j.dim_all : 0;  // P21C
+    wi.dim_src = j.dim_src;
     if (!wi.hud.empty()) ++presents_layered_;  // P9B
   }
   wi.cam.t_ns = j.t_ns;  // P12A fix 1: the present's time
@@ -1349,6 +1353,7 @@ static void world_reset(WorldImage &w) {
   w.pw = w.ph = w.fw = w.ox = 0;
   w.hud = portsim::GfxHudFrame{};
   w.hud_none = false;
+  w.dim_all = 0;  // P21C
   w.text = portsim::GfxTextFrame{};
   for (int32_t &b : w.cur_box) b = 0;
   w.proj.ok = false;  // P10E (its tables keep their capacity)
@@ -1470,6 +1475,8 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       j->terrain = portsim::gfx_back_terrain(ctx);
       j->layered = opt_.hud_layers;
       j->use = opt_.hud_layers && portsim::gfx_hud_frame(ctx, j->f) && !j->f.empty() && j->f.back == px;
+      j->dim_all = j->f.dim_all;  // P21C (kept when the frame itself is dropped below)
+      j->dim_src = j->f.dim_src;
       if (!j->use) j->f = portsim::GfxHudFrame{};
       j->cursor = opt_.cursor_previews;
       const bool proj = opt_.cursor_previews && opt_.cursor_live;
