@@ -698,6 +698,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.zoomInStopsAt4", 0},                 // P11A fix 2 (one zoom level closer: 8)
     {"mainLoop.zoom8Font", 0},                      // P13C (zoom 8 labels keep zoom 4's font)
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
+    {"mainLoop.pKeyPausesGame", 0},                 // P21A (p / P pause; the Improvements palette moves to a)
     {"mainLoop.arrowKeyHeldRepeat", 0},             // P19A item 1 (a held arrow steps the camera every frame from the press)
     {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)
     {"updateTerrainRender.syncTilesAfterEdit", 0},  // P13D item 5 (the terrain synced once at load: the first placement changes only its tiles)

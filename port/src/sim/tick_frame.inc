@@ -7384,6 +7384,10 @@ a41c54e:
 a41c553:
     // ---- ML+0xcf93  key dispatch loop head ----
     esi = FD(0x10);                           // ML+0xcf93 mov esi,[F+0x10]
+    if (!SG_DEFECT(g_defect_p_key_pauses)) {   // P21A mainLoop.pKeyPausesGame: p / P pause, a / A open the Improvements palette
+        if (esi == 0x70) esi = 0x50;
+        else if (esi == 0x61 || esi == 0x41) esi = 0x70;
+    }
     if (esi == ebp) goto a41c587;             // ML+0xcf97 cmp esi,ebp; je
     {
         s8 al = G8(GS(g_ui_569498));               // ML+0xcf9b mov al,[g_ui_569498]
