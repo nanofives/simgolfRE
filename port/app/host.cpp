@@ -253,6 +253,8 @@ void LiveSession::update_view_target() {
   int32_t w = static_cast<int32_t>(static_cast<int64_t>(kLogicalW) * cw / vp_.client_w);
   if (!opt_.wide || w < kLogicalW) w = kLogicalW;
   want_w_ = w;
+  // P22D fix 2: the golfer list's added columns right of its left-anchored panel (its art ends at 800-space x 800)
+  want_cols_ = opt_.list_columns && opt_.wide ? std::min<int32_t>(portsim::kViewListColsMax, (w - kLogicalW) / 0x79) : 0;
   if (opt_.world_mode == 2) {
     want_pw_ = opt_.wide ? std::max(cw, vp_.client_w) : vp_.client_w;
     want_ph_ = vp_.client_h;
@@ -281,6 +283,19 @@ void LiveSession::apply_view(portsim::Ctx &ctx) {
       ++view_writes_;
     }
     applied_w_ = w;
+  }
+  {  // P22D fix 2: the golfer list's added columns (view block word +0x40), recorded like the width
+    int32_t cols;
+    {
+      std::lock_guard<std::mutex> lk(mu_);
+      cols = want_cols_;
+    }
+    if (cols != applied_cols_ && portsim::view_map(ctx)) {
+      ctx.mem.store<int32_t>(portsim::kPortViewListColsVa, cols);
+      if (writes) writes->wrote(portsim::kPortViewListColsVa, static_cast<uint32_t>(cols));
+      ++view_writes_;
+      applied_cols_ = cols;
+    }
   }
   if (pw > 0 && ph > 0 && (pw != applied_pw_ || ph != applied_ph_) && terrain_log && terrain_log->live) {
     const portsim::LiveTerrainWorld *cur = terrain_log->live->world();

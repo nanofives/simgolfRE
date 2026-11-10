@@ -155,6 +155,10 @@ struct HostOptions {
   // 800) is written into the view block (portsim bridge.h kPortViewWidthVa) at the next frame head after it changes, as a recorded
   // harness write (DELIVER w32), and the world layer is resized: world_mode 2 = the client's pixels (native), 1 = W x 600, 0 = kept
   bool wide = false;
+  // P22D fix 2 (main.cpp --golfer-list wide, with --wide and the golfer list panel at the left edge): the golfer list columns that
+  // fit right of the panel, (W - 800) / 0x79 (at most portsim::kViewListColsMax), go into the view block's word +0x40
+  // (kPortViewListColsVa) at the frame head after they change, as a recorded harness write; off: nothing is written (0)
+  bool list_columns = false;
   int world_mode = 0;
   const PanelRemap *remap = nullptr;  // G32: the HUD compositor's remap for the system cursor's answers (main.cpp)
   bool text_native = false;  // P9C: presents carry the frame's text runs (gfx.h GfxTextFrame) in WorldImage::text
@@ -467,6 +471,7 @@ class LiveSession : public portsim::LiveHost {
   // G32: the view the window asks for (window thread, under mu_) and the one applied at a frame head (sim thread)
   int32_t want_w_ = 800, want_pw_ = 0, want_ph_ = 0;
   int32_t applied_w_ = -1, applied_pw_ = 0, applied_ph_ = 0;
+  int32_t want_cols_ = 0, applied_cols_ = 0;  // P22D fix 2 (the view block starts at 0)
   uint64_t view_writes_ = 0, world_resizes_ = 0;
   void update_view_target();   // under mu_
   void apply_view(portsim::Ctx &ctx);

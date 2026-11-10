@@ -65,6 +65,13 @@ bool gfx_hover_help(Ctx &ctx);
 // cursor with no tool held). On by default (P11C's rule); the app's host sets it off unless --hover-help course or SG_APP_P13=off,
 // so the Build palette's, its slots' and the amenities' lines stay and nothing is drawn over the course while nothing is selected.
 void gfx_set_hover_help_course(Ctx &ctx, bool on);
+// P22D fix 3 (Mariano's play-test 9 item 8: "hovering over these icons should tell what they do"; log/roadmap/P22/P22D_notes.md):
+// the status boxes' tips, set by the app's host (--meter-tips on, the default; SG_APP_P22=off: off). With it on, P6's status bar
+// (mainLoop ML+0x9ef5..ML+0xa1ba, inside the meters layer) draws, once the cursor rested over the cash, fun rating or skill rating
+// box for the HUD tips' dwell, the game's own name for it as the game's one-line tip (drawPanelBackdrop) left of the box. Drawing
+// only: the GameState is never written. Off (the default): nothing.
+void gfx_set_meter_tips(Ctx &ctx, bool on);
+bool gfx_meter_tips(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
 }
@@ -109,6 +116,11 @@ struct GfxHudLayer {
   // P19C item 8: for the golfer strip's layer, the 800-space x just right of the left-anchored panel pixels in the strip's rows
   // (hud_publish): the strip sits there (the open Build palette's end, else the round control cluster's), -1 = none found
   int32_t strip_x = -1;
+  // P22D fix 2: the golfer list's added columns (b_view_panel, gfx_hud.cpp): a presenter places the layer `shift` 800-space columns
+  // right of its anchor's place, and a point over it reaches the game `shift` columns right of the layer's own 800-space point
+  // (the list's columns past the original four: hitEmployeeSlot435570 takes them with the play switch drawEmployeeViewPanel.fourColumns
+  // at 0); 0 for every other layer
+  int32_t shift = 0;
   // P9E: a centred gap made while popups were recorded (gfx_set_hud_popups): its pixels whose GfxHudFrame::owner names a piece are
   // that popup's and are composed at the piece's opener panel's place
   uint8_t popups = 0;

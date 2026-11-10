@@ -48,6 +48,7 @@
 
 #include "commands_internal.h"
 #include "gfx_body.h"
+#include "portsim/sim/bridge.h"  // P22D fix 2: view_list_columns
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
 #include "portsim/arith.h"
@@ -1852,6 +1853,145 @@ void dwell(Gfx &g, Ctx &ctx, int32_t hover, const char *tip, const std::function
 // (signed compares, the last that holds wins). With a count n: the scroll bar fillWindowRect(g_rootWindow, top + 0x15f,
 // 0x24e, bottom - top - 1, 6, 0x8000739f), top = clamp(s 400 / n, 0, 0x18f), bottom = clamp((s + page) 400 / n, 1, 0x190),
 // page 0x10 wide / 0x30 compact. Last setDrawTarget(g_fontRef_519fd8) and the dwell tip (-4, -3, -2 have texts).
+// P22D fix 2 (log/roadmap/P22/P22D_notes.md item 5b): the golfer list's added columns (k = 4 .. 3 + used) as layers right of the
+// panel, with the panel's own art. Called after the panel's layer (index pi of g.hud.layers) was closed, with the root as the frame
+// has it; the root is given back unchanged (every layer made here is drawn into the root and the root restored, so the 800 x 600
+// frame is the original's). MemberPanel (the art cut g_sprites541a18 + 0xb0, loadInterfaceArt+0x567c, x 0xd7..0x31f) row by row:
+// x 405..643 of every row is one column repeated (top border, list colour, scroll track), the list's right border is x 795..799
+// (rows 0x1da..0x24a and 0x257), and rows 0x24b..0x256 hold the scroll track's right end and the page arrows from x 750 on. With
+// E = 0x79 used:
+// - the panel: its right end (from x 795, rows 0x24b..0x256 from x 750) becomes the repeated column (pixels its own drawing put
+//   over the border stay);
+// - a layer of that right end, `shift` E (the presenter puts it E columns right; a point over it reaches the game E right, the next
+//   page arrow's moved place in hitEmployeeSlot435570);
+// - per four added columns m, a layer drawn in the root at the list's columns 0..3 (shift 0x1e4 (m + 1)) over the art, cut to its
+//   columns' place and with the art's own pixels replaced by the repeated column.
+void view_panel_wide(Gfx &g, Ctx &ctx, size_t pi, int32_t used, std::vector<std::pair<std::function<void(int32_t)>, int32_t>> &cols,
+                     const std::function<void()> &art) {
+  Gfx::HudCapture &c = g.hud;
+  if (used <= 0 || pi >= c.layers.size()) return;
+  constexpr int32_t kRep = 600;            // a column of x 405..643 (the repeated one)
+  constexpr int32_t kTrackY0 = 0x24b, kTrackY1 = 0x257;  // the scroll track's rows (half-open)
+  constexpr int32_t kStep = 0x79, kGroup = 4 * 0x79;
+  auto end_x = [&](int32_t y) { return y >= kTrackY0 && y < kTrackY1 ? 750 : 795; };  // the right end's first column per row
+  auto get = [](const GfxHudLayer &l, int32_t x, int32_t y) {
+    if (x < l.x0 || x >= l.x1 || y < l.y0 || y >= l.y1) return GfxLayerPx{};
+    return l.px[static_cast<size_t>(y - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(x - l.x0)];
+  };
+  auto set = [](GfxHudLayer &l, int32_t x, int32_t y, const GfxLayerPx &p) {
+    if (x < l.x0 || x >= l.x1 || y < l.y0 || y >= l.y1) return;
+    l.px[static_cast<size_t>(y - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(x - l.x0)] = p;
+  };
+  auto same = [](const GfxLayerPx &a, const GfxLayerPx &b) { return a.kind == b.kind && a.px == b.px && a.src == b.src && a.k == b.k; };
+  const std::vector<uint16_t> frame = g.root.px;
+  auto restore = [&]() {
+    g.root.px = frame;
+    c.mark = frame;
+  };
+  // the art alone (its pixels and blend records), taken out of the frame's layers again
+  gfx_layer_begin(ctx, kGfxLayerPanel);
+  art();
+  const size_t nb = c.layers.size();
+  gfx_layer_end(ctx);
+  if (c.layers.size() != nb + 1) {
+    restore();
+    return;
+  }
+  const GfxHudLayer B = c.layers.back();
+  c.layers.pop_back();
+  restore();
+  const int32_t E = kStep * used;
+  GfxHudLayer &P = c.layers[pi];
+  GfxHudLayer R;
+  R.id = P.id;
+  R.anchor = P.anchor;
+  R.shift = E;
+  R.x0 = 746;  // four columns of the repeated one before the right end: the smooth taps at its left edge see the list's colour
+  R.x1 = std::max(P.x1, 800);
+  R.y0 = P.y0;
+  R.y1 = P.y1;
+  R.px.assign(static_cast<size_t>(R.x1 - R.x0) * static_cast<size_t>(R.y1 - R.y0), GfxLayerPx{});
+  for (int32_t y = P.y0; y < P.y1; ++y) {
+    const bool track = y >= kTrackY0 && y < kTrackY1;
+    const GfxLayerPx rep = get(B, kRep, y);
+    for (int32_t x = R.x0; x < R.x1; ++x) {
+      if (x < end_x(y)) {
+        set(R, x, y, rep);
+        continue;
+      }
+      const GfxLayerPx p = get(P, x, y);
+      set(R, x, y, track ? p : get(B, x, y));  // the arrows (and the -6 hover image) move; the border is the art's own
+      if (track || same(p, get(B, x, y))) set(P, x, y, rep);
+    }
+  }
+  c.layers.push_back(std::move(R));
+  // the added columns, four per layer
+  const int32_t groups = (used + 3) / 4;
+  for (int32_t m = 0; m < groups; ++m) {
+    const int32_t S = kGroup * (m + 1);
+    gfx_layer_begin(ctx, kGfxLayerPanel);
+    art();
+    for (auto &e : cols)
+      if (e.second >= 4 + 4 * m && e.second < 8 + 4 * m && e.second < 4 + used) e.first(S);
+    const size_t nx = c.layers.size();
+    gfx_layer_end(ctx);
+    if (c.layers.size() != nx + 1) {
+      restore();
+      continue;
+    }
+    GfxHudLayer &X = c.layers.back();
+    X.shift = S;
+    const int32_t lo = 794 + kGroup * m;
+    for (int32_t y = X.y0; y < X.y1; ++y) {
+      const int32_t hi = m + 1 == groups ? end_x(y) + E : 794 + kGroup * (m + 1);
+      const GfxLayerPx rep = get(B, kRep, y);
+      for (int32_t x = X.x0; x < X.x1; ++x) {
+        const int32_t vx = x + S;
+        if (vx < lo || vx >= hi) {
+          set(X, x, y, GfxLayerPx{});
+          continue;
+        }
+        if (same(get(X, x, y), get(B, x, y))) set(X, x, y, rep);
+      }
+    }
+    restore();
+  }
+}
+
+// P22D fix 3 (gfx.h gfx_set_meter_tips; log/roadmap/P22/P22D_notes.md item 8): the status boxes' tips, from P6_StatusBar with the
+// cursor's view point (F+0xb8, F+0xb0 after its View_toLocal). The boxes are its three framed images: drawScaledSprite421b90 of
+// g_sprites520590 + 0x2c / + 0x58 / + 0x84 at (0x289, 0xd), (0x2a5, 0x37), (0x2bb, 0x63), cut 0x8a x 0x24, 0x6e x 0x25, 0x58 x 0x24
+// (loadInterfaceArt+0x493e / +0x495c / +0x497a). A box under the cursor for more status bars than the HUD tips' dwell
+// (hover_tip_dwell: hoverTip.tenFrameDwell) gets the game's own name for it: "Cash" (f_strpool_4c8808 + 0xe0) and "Fun Rating"
+// (+ 0xd4), the save browser's column titles (loadGameBrowserScreen), and "Skill Rating" (f_strpool_4c615c + 0x60 without its
+// ": ", the label mainLoop copies and erases before it draws the skill value), as drawPanelBackdrop centred left of the box.
+void b_meter_tips(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (!g.meter_tips) return;
+  struct Box {
+    int32_t x, y, w, h;
+    uint32_t text;
+  };
+  const Box boxes[3] = {{0x289, 0xd, 0x8a, 0x24, GSO(f_strpool_4c8808, 0xe0)},
+                        {0x2a5, 0x37, 0x6e, 0x25, GSO(f_strpool_4c8808, 0xd4)},
+                        {0x2bb, 0x63, 0x58, 0x24, GSO(f_strpool_4c615c, 0x60)}};
+  const int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]);
+  int32_t hit = -1;
+  for (int32_t k = 0; k < 3; ++k)
+    if (x >= boxes[k].x && x < boxes[k].x + boxes[k].w && y >= boxes[k].y && y < boxes[k].y + boxes[k].h) hit = k;
+  if (hit != g.meter_prev) {
+    g.meter_prev = hit;
+    g.meter_count = 0;
+    return;
+  }
+  ++g.meter_count;
+  if (hit < 0 || g.meter_count <= hover_tip_dwell()) return;
+  const Box &b = boxes[hit];
+  std::string s = gfxb::vstring(ctx.mem, va(ctx, b.text));
+  while (!s.empty() && (s.back() == ' ' || s.back() == ':')) s.pop_back();
+  const int32_t half = 3 * static_cast<int32_t>(s.size());  // drawPanelBackdrop's half width (3 per character)
+  gfxt::meter_tip(g, ctx, s, b.x - half - 6, b.y + b.h / 2 + 5);
+}
+
 void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   GameState &gs = ctx.gs();
@@ -1911,7 +2051,16 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const Gfx::HudCapture &hc = g.hud;
   const bool defer = hc.on && hc.depth == 1 && hc.cur == kGfxLayerPanel && hc.any && !hc.aborted && mode() != 16;
   std::vector<std::function<void()>> beyond;
-  const int32_t limit = compact ? 0x2f3 : 0x2b7;
+  // P22D fix 2 (play switch drawEmployeeViewPanel.fourColumns = 0, the host's view block word +0x40 = n): 4 + n wide columns. The
+  // added ones (column 4 on, x1 0x136 + 0x79 k past the root's width) are drawn by view_panel_wide below into layers the presenter
+  // places right of the panel; the scroll bar's page is 4 (4 + n) golfers
+  const int32_t ext = compact ? 0 : view_list_columns(ctx);
+  struct Added {
+    std::function<void(int32_t)> draw;  // the entry at its column's places moved left by the argument
+    int32_t col;
+  };
+  std::vector<Added> added;
+  const int32_t limit = compact ? 0x2f3 : 0x2b7 + 0x79 * ext;
   for (int32_t i = 0; i < 0x98; ++i) {
     const int32_t gi = mod32(add32(sub32(gs.g_lastAllocatedGolfer, i), 0x98), 0x98);
     const bool active = sbyte(gi, 0x21) > 0;
@@ -1959,10 +2108,14 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
         scaled(face(gi), efa, ey + 2);
       }
     };
+    const int32_t col = compact ? 0 : (x1 - 0x136) / 0x79;
     if (defer && fd > limit) {  // P22D fix 1: a column past the limit, after the layer
       beyond.push_back([entry, x1, fa, fb, fc, fd, ly]() { entry(x1, fa, fb, fc, fd, ly); });
       // the font the entry leaves selected is what the next entry or the scroll bar would see (font(small) after a wide entry)
       if (!compact) font(small);
+    } else if (defer && ext > 0 && col >= 4) {  // P22D fix 2: an added column, drawn by view_panel_wide
+      added.push_back({[entry, x1, fa, fb, fc, fd, ly](int32_t s) { entry(x1 - s, fa - s, fb - s, fc - s, fd - s, ly); }, col});
+      font(small);
     } else {
       entry(x1, fa, fb, fc, fd, ly);
     }
@@ -1970,7 +2123,7 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (count != 0) {
     const int32_t top = clampv(div32(mul32(skip, 400), count), 0, 0x18f);
-    const int32_t page = compact ? 0x30 : 0x10;
+    const int32_t page = compact ? 0x30 : 4 * (4 + ext);  // P22D fix 2 (n = 0: the original's 0x10)
     const int32_t bottom = clampv(div32(mul32(add32(skip, page), 400), count), 1, 0x190);
     const uint32_t fr[5] = {static_cast<uint32_t>(top + 0x15f), 0x24e, static_cast<uint32_t>(bottom - top - 1), mode() == 12 ? 7u : 6u,
                             0x8000739fu};
@@ -1982,11 +2135,23 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   dwell(g, ctx, hover, "tooltip: drawEmployeeViewPanel's dwell tip (drawMapLine bar and centred text)", [&]() {
     gfxt::view_panel_tip(g, ctx, hover, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
   });
-  if (!beyond.empty()) {  // P22D fix 1: the columns past the limit, outside every layer (the panel's layer is reopened, empty)
+  if (!beyond.empty() || !added.empty()) {  // P22D fix 1: the columns past the limit, outside every layer (the panel's layer is
+                                            // reopened, empty); fix 2: the added columns' layers
+    const size_t before = g.hud.layers.size();
     gfx_layer_end(ctx);
     for (const std::function<void()> &f : beyond) f();
     font(big);  // the selection the function leaves (set before the tip)
     g.hud.mark = g.root.px;  // their pixels are no layer's: the next boundary's gap does not see them
+    if (!added.empty() && g.hud.layers.size() == before + 1 && g.hud.layers.back().id == kGfxLayerPanel) {
+      int32_t used = 0;
+      for (const Added &e : added) used = std::max(used, e.col - 3);
+      std::vector<std::pair<std::function<void(int32_t)>, int32_t>> cols;
+      for (Added &e : added) cols.emplace_back(std::move(e.draw), e.col);
+      view_panel_wide(g, ctx, before, std::min(used, ext), cols, [&]() {
+        call(g, ctx, "Surface_stretchBlit", {va(ctx, GSO(g_sprites541a18, 0xb0)), va(ctx, GSO(g_sprites58b390, 0xb0)), root, 0xd7, 0x1da, 0});
+      });
+      font(big);
+    }
     gfx_layer_begin(ctx, kGfxLayerPanel);
   }
 }
@@ -2254,6 +2419,7 @@ const GfxBodyDef kBodies[] = {
     {"showInfoCursorPanel.draw", b_info_panel},
     {"drawGolferActionPanel.draw", b_action_panel},
     {"drawEmployeeViewPanel.draw", b_view_panel},
+    {"statusBar.tips", b_meter_tips},  // P22D fix 3
     {"drawEmployeeDetailPanel.draw", b_detail_panel},
     {"gfx_hud.recordPanels", b_record_panels},
 };

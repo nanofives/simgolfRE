@@ -89,6 +89,10 @@
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
 //   game = a highlight changes only when the game draws its next frame.
+//   P22D fix 3: --meter-tips on|off (default on; SG_APP_P22=off: off) the cash, fun rating and skill rating boxes show their name
+//   as the game's one-line tip after the HUD tips' dwell (gfx.h gfx_set_meter_tips; drawing only)
+//   P22D fix 2: --golfer-list wide|four (default wide; SG_APP_P22=off: four) the golfer list gets as many more columns right of its
+//   left-anchored panel as the wide view has room for (view block word +0x40, read by the play switch drawEmployeeViewPanel.fourColumns)
 //   P19C item 8: --hud-strip near (the default; SG_APP_P19=off: right) the strip right of the panel still open on the left.
 //   P13C item 10: --hud-strip right|left (default right; SG_APP_P13=off: left) the golfer strip's faces right of the Build palette
 //   (present.h set_strip_right, kGfxLayerStrip), clicks remapped with them.
@@ -457,6 +461,8 @@ struct Options {
   bool edge_previews = true;       // P22E item 7: --edge-previews on|off (SG_APP_P22=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
+  bool list_wide = true;           // P22D fix 2: --golfer-list wide|four (SG_APP_P22=off: four)
+  bool meter_tips = true;          // P22D fix 3: --meter-tips on|off (SG_APP_P22=off: off)
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
@@ -724,6 +730,7 @@ const ProfileMember kPlayProfile[] = {
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
     {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo
+    {"drawEmployeeViewPanel.fourColumns", 0},      // P22D fix 2: the golfer list's added columns (the host's view block word +0x40)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1121,6 +1128,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7
       if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
       if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
+      if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1395,6 +1403,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7: the placement box whole (gfx.h; records only)
   if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
+  if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -1451,6 +1460,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.world = o.wide || (o.render_scale != "1" && o.render_scale != "auto");  // P8B: presents carry the world layer (when one exists)
   ho.wide_edge = o.wide && o.wide_edge && ho.world;   // P8B
   ho.wide = o.wide;                                    // G32: W follows the window
+  // P22D fix 2: the added columns are layers right of the left-anchored panel (the layered capture with its write marks draws them)
+  ho.list_columns = hud_layers_on(o) && o.hud_writes && o.list_wide && o.panel_left;
   static PanelRemap g_remap;                           // G32: the HUD compositor's remap (window and sim threads)
   if (o.wide && o.hud_anchor) ho.remap = &g_remap;
   ho.hud_layers = hud_layers_on(o);                    // P9B
@@ -1983,6 +1994,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          ",\"paints\":" + std::to_string(hover_paints) + "}";
   }
   s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
+  s += ",\"p22d\":{\"golfer_list\":\"" + std::string(o.list_wide ? "wide" : "four") + "\",\"meter_tips\":" +
+       std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
   s += ",\"p16a\":{\"prio\":" + std::to_string(p16_prio ? 1 : 0) + ",\"pace_forced_hz\":" +  // P16A
        std::to_string(std::getenv("SG_P16_PACE_HZ") ? std::atoi(std::getenv("SG_P16_PACE_HZ")) : 0) + "}";
   {  // P12A fix 1
@@ -3272,6 +3285,14 @@ bool parse(int argc, char **argv, Options &o) {
       o.strip_right = v != "left";
       o.strip_near = v == "near";
     }
+    else if (a == "--meter-tips") {  // P22D fix 3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.meter_tips = v == "on";
+    }
+    else if (a == "--golfer-list") {  // P22D fix 2
+      if (!val(v) || (v != "wide" && v != "four")) return false;
+      o.list_wide = v == "wide";
+    }
     else if (a == "--hud-panel") {  // P11B fix 1
       if (!val(v) || (v != "left" && v != "right")) return false;
       o.panel_left = v == "left";
@@ -3510,7 +3531,10 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P19"))  // P19: the seventh play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.strip_near = false;  // P19C item 8
   if (const char *ep = std::getenv("SG_APP_P22"))  // P22: the ninth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.edge_previews = false;  // P22E item 7
+    if (!std::strcmp(ep, "off")) {
+      o.edge_previews = false;  // P22E item 7
+      o.list_wide = o.meter_tips = false;  // P22D fixes 2 and 3
+    }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win

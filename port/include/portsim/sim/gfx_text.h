@@ -42,6 +42,8 @@ void terrain_toolbar_tip(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b);
 // drawGolferActionPanel's / drawEmployeeViewPanel's / drawEmployeeDetailPanel's tip of the hovered control at the cursor (x, y)
 void action_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y);
+// P22D fix 3 (gfx.h gfx_set_meter_tips): `text` as the game's one-line tip, drawPanelBackdrop(x, y) (centre x, text row y - 5)
+void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y);
 void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 // drawAmenitiesPanel's dwell tip of item L and its mode-4 hovered building row r, at the cursor (a, b)
 void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);

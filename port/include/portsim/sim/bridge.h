@@ -119,6 +119,16 @@ void course_undo_object(Ctx &ctx, int32_t x, int32_t y, int32_t rec, int32_t pri
                         bool undoable);
 void course_undo_press(Ctx &ctx);  // onPoint (a left press): the next edits form a new undo step
 void course_undo_reset(Ctx &ctx);  // a course was set up or loaded: the journal and the redo list are emptied
+// P22D fix 2 (Mariano's play-test 9 item 5: "if there's more golfers than what can be displayed the UI should extend to the
+// right"; log/roadmap/P22/P22D_notes.md). Word +0x40 is the number of golfer list columns the host can show right of the list's
+// four (the room right of its left-anchored panel in the wide view, in 0x79-wide columns; 0 = none), written by a live host at a
+// frame head as a recorded harness write (DELIVER w32) when it changes, so a replay applies it before the same frame body. Read
+// only through view_list_columns: 0 unless the `play` switch drawEmployeeViewPanel.fourColumns is 0; then drawEmployeeViewPanel,
+// hitEmployeeSlot435570 and clickEmployeeView take 4 + n columns and page by 4 (4 + n) golfers.
+constexpr uint32_t kPortViewListColsVa = kPortViewVa + 0x40u;
+constexpr int32_t kViewListColsMax = 8;
+extern int g_defect_list_four_columns;  // drawEmployeeViewPanel.fourColumns: 1 = the original (four columns, the word ignored)
+int32_t view_list_columns(Ctx &ctx);    // 0 .. kViewListColsMax
 // the frame body's click point: takes a pending request (switch 0 only). 0 none, 1 an undo (run here), 2 a redo: the caller
 // runs the game's build path on course_redo_take's tiles between course_redo_begin and course_redo_end (P11D fix 2)
 int32_t course_undo_step(Ctx &ctx);

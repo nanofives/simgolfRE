@@ -133,6 +133,8 @@ int32_t draw_employee_view_panel(Ctx &ctx, int32_t x, int32_t y) {
   const uint32_t golfers = state_va(ctx, &GameState::g_golfers);
   const auto rec = [&](int32_t g) { return golfers + (u32(g) << 8); };
   int32_t row = 0, d = 0x145, count = 0;
+  // P22D fix 2 (play switch drawEmployeeViewPanel.fourColumns = 0): n more wide columns, a page of 4 (4 + n) golfers; 0 = the original
+  const int32_t ext = gs.g_zoomScale < 4 ? 0 : view_list_columns(ctx);
   Ptr<int32_t> out = out0;
   for (int32_t i = 0; i < 0x98; ++i) {
     const int32_t g = mod32(add32(sub32(gs.g_lastAllocatedGolfer, i), 0x98), 0x98);
@@ -151,10 +153,14 @@ int32_t draw_employee_view_panel(Ctx &ctx, int32_t x, int32_t y) {
     if (old == (compact ? 6 : 4)) {
       row = 1;
       d = add32(d, compact ? 0x3c : 0x79);
-      if (d > (compact ? 0x2f3 : (mode == 1 ? 0x2af : 0x2b7))) continue;
+      if (d > (compact ? 0x2f3 : (mode == 1 ? 0x2af : 0x2b7) + 0x79 * ext)) continue;
     }
     out.set(g);
     out = out + 1;
+  }
+  if (ext > 0) {  // P22D fix 2: the page of 4 (4 + n); never below 0 (n can change with the window between two pages)
+    if (count != 0 && gs.g_ui_5aa6b8[4] > count) gs.g_ui_5aa6b8[4] = std::max(0, gs.g_ui_5aa6b8[4] - 4 * (4 + ext));
+    return 0;
   }
   if (count != 0 && gs.g_ui_5aa6b8[4] > count) gs.g_ui_5aa6b8[4] = sub32(gs.g_ui_5aa6b8[4], 0x10);
   return 0;

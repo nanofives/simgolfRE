@@ -101,6 +101,12 @@ bool view_arrow_held_due(Ctx &ctx, uint32_t head) {  // P22A
   const uint32_t down = ctx.mem.load<uint32_t>(kPortViewArrowHeldTVa) + ctx.mem.load<uint32_t>(kPortViewClockOffVa);
   return static_cast<int32_t>(head - down) >= kArrowHoldMs;
 }
+int g_defect_list_four_columns = 1;  // P22D fix 2: drawEmployeeViewPanel.fourColumns
+int32_t view_list_columns(Ctx &ctx) {
+  if (SG_DEFECT(g_defect_list_four_columns) || !ctx.view) return 0;
+  const int32_t n = ctx.mem.load<int32_t>(kPortViewListColsVa);
+  return n < 0 ? 0 : n > kViewListColsMax ? kViewListColsMax : n;
+}
 // ------------------------------------------------------------------------------------------------ course undo (P11D)
 // The original's own undo is one level per tile: setGrids keeps the tile's previous content (code) and the price charged
 // (refund), and a right click then a second right click on the tile (mainLoop ML+0xfbac..ML+0xfc4b) runs demolishObject, which
@@ -651,6 +657,12 @@ const DefectDef kDefects[] = {
      "again through the game's terrain-tool click path (H2_Terrain) at today's price; a placed object (H2_Build) is undone as the "
      "bulldozer removes it (clearObjectFootprint, no popup) with exactly its placement charge back, and redone through H2_Build",
      &g_defect_course_undo},
+    {"drawEmployeeViewPanel.fourColumns", "P22D",
+     "the golfer list has four columns of four golfers (a column whose name x passes 0x2b7 is dropped) and its arrows page by 0x10, "
+     "whatever room the host's view has; fixed: with the view block's word +0x40 = n (the host's room right of the list, in 0x79-wide "
+     "columns) drawEmployeeViewPanel lists 4 + n columns, hitEmployeeSlot435570 hits them and the next-page arrow at its moved place "
+     "(0x304 + 0x79 n), and the arrows page by 4 (4 + n); the host draws the added columns right of the panel",
+     &g_defect_list_four_columns},
 };
 extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
                                          sizeof(kDefects) / sizeof(kDefects[0])};

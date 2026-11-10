@@ -1410,6 +1410,8 @@ void action_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y) {
 // drawEmployeeViewPanel's tip (c3fb.cpp DrawEmployeeViewPanel_re): -4 f_strpool_4c80d0 + 0x1f8, -3 the golfer type record 0's
 // text (g_golferTypes + 0x10), -2 f_strpool_4c5d20 + 0xa8, else empty; n = 3 strlen: the bar drawMapLine(x - n, y - 5, x + n,
 // y - 5) and drawCenteredText(text, x, y - 10, 0x80007fff)
+void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y) { backdrop(g, ctx, text, x, y); }  // P22D fix 3
+
 void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y) {
   std::string text;
   if (hover == -4) text = pool(ctx, GSO(f_strpool_4c80d0, 0x1f8));

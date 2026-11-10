@@ -104,6 +104,9 @@ struct RemapLayer {
   int8_t anchor = 0;
   bool fixed = false;  // P9E: the layer (a popup's pixels) sits at `dx` client pixels instead of its anchor's offset
   int32_t dx = 0;
+  // P22D fix 2: client pixels added to a point the layer maps (its GfxHudLayer::shift at the window's scale): the game sees the
+  // golfer list's added columns at their own 800-space place right of the root
+  int32_t vx = 0;
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   std::vector<uint8_t> cover;  // (x1 - x0) * (y1 - y0): 1 where the layer drew
   // P12A fix 1: 1 where a centred layer's pixel is part of the course picture the camera slide moves (the tool previews at the

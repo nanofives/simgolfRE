@@ -6112,6 +6112,10 @@ void P6_StatusBar(u32 F) {
     StrCpy(kBuf, (GS(f_strpool_4c615c) + 80));                   // ML+0xa151..ML+0xa179
     cc("appendNumber", G32((GS(g_ui_56d1a8) + 8)));            // ML+0xa160 / ML+0xa17b appendNumber
     tc("View_toLocal", GS(g_rootWindow), FA(0xb8), FA(0xb0));   // ML+0xa198 View_toLocal
+    if (gfx_meter_tips(ctx)) {  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips, drawing only, in the meters layer
+        const uint32_t d[2] = {static_cast<uint32_t>(FD(0xb8)), static_cast<uint32_t>(FD(0xb0))};
+        gfx_drop(ctx, "statusBar.tips", d, 2);
+    }
     cc("capsLockOff");                             // ML+0xa19d capsLockOff
     P6_DisplaySlot9c();                         // ML+0xa1a2..ML+0xa1b4
 }

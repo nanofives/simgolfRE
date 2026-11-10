@@ -25,14 +25,16 @@ int32_t hit_golfer_panel(Ctx &ctx, int32_t x, int32_t y) {
 }
 
 // hitEmployeeSlot435570: the 4x4 employee-view grid (row + 4 * column) or one of five round buttons (-2..-6), else -1
-int32_t hit_employee_slot(Ctx &, int32_t x, int32_t y) {
+// P22D fix 2 (drawEmployeeViewPanel.fourColumns = 0, view_list_columns n > 0): columns 0 .. 3 + n, the -6 arrow 0x79 n further right
+int32_t hit_employee_slot(Ctx &ctx, int32_t x, int32_t y) {
+  const int32_t ext = view_list_columns(ctx);
   int32_t r = -1;
-  if (x >= 0x136 && y >= 0x1f2) r = add32(clamp(sub32(y, 0x1f2) / (SG_NEGCTL(g_negctl_hit_employee_slot) == 1 ? 20 : 21), 0, 3), mul32(clamp(sub32(x, 0x136) / 121, 0, 3), 4));
+  if (x >= 0x136 && y >= 0x1f2) r = add32(clamp(sub32(y, 0x1f2) / (SG_NEGCTL(g_negctl_hit_employee_slot) == 1 ? 20 : 21), 0, 3), mul32(clamp(sub32(x, 0x136) / 121, 0, 3 + ext), 4));
   if (approx_distance(sub32(x, 0x11d), sub32(y, 0x1ec)) < 20) r = -2;
   if (approx_distance(sub32(x, 0x100), sub32(y, 0x1fe)) < 20) r = -3;
   if (approx_distance(sub32(x, 0xe8), sub32(y, 0x21a)) < 20) r = -4;
   if (approx_distance(sub32(x, 0x14c), mul32(sub32(y, 0x250), 3)) < 20) r = -5;
-  if (approx_distance(sub32(x, 0x304), mul32(sub32(y, 0x250), 3)) < 20) r = -6;
+  if (approx_distance(sub32(x, 0x304 + 0x79 * ext), mul32(sub32(y, 0x250), 3)) < 20) r = -6;
   return r;
 }
 
@@ -220,9 +222,11 @@ int32_t employee_view_action(Ctx &ctx, int32_t r) {
     gs.g_ui_59ca54 = 1;
     gs.g_ui_561254 = 1;
   } else if (r == -5) {
-    if (gs.g_ui_5aa6b8[4] != 0) gs.g_ui_5aa6b8[4] = sub32(gs.g_ui_5aa6b8[4], 0x10);
+    const int32_t ext = view_list_columns(ctx);  // P22D fix 2: a page of 4 (4 + n) golfers, never below 0
+    if (ext > 0) gs.g_ui_5aa6b8[4] = std::max(0, gs.g_ui_5aa6b8[4] - 4 * (4 + ext));
+    else if (gs.g_ui_5aa6b8[4] != 0) gs.g_ui_5aa6b8[4] = sub32(gs.g_ui_5aa6b8[4], 0x10);
   } else if (r == -6) {
-    gs.g_ui_5aa6b8[4] = add32(gs.g_ui_5aa6b8[4], 0x10);
+    gs.g_ui_5aa6b8[4] = add32(gs.g_ui_5aa6b8[4], 4 * (4 + view_list_columns(ctx)));  // P22D fix 2 (n = 0: 0x10)
   }
   return -1;
 }

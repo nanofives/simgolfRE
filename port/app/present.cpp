@@ -767,7 +767,9 @@ int32_t Presenter::layer_dx(const portsim::GfxHudLayer &l, const Viewport &vp, i
     const int32_t to = l.strip_x >= 0 && strip_near_ ? static_cast<int32_t>(static_cast<int64_t>(l.strip_x) * vp.client_w / kLogicalW) : vp.client_w;
     return to - at;
   }
-  return l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
+  // P22D fix 2: the golfer list's added columns and its moved right end, `shift` 800-space columns right of the anchor's place
+  const int32_t sh = l.shift != 0 && vp.client_w > 0 ? static_cast<int32_t>(static_cast<int64_t>(l.shift) * vp.client_w / kLogicalW) : 0;
+  return (l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0) + sh;
 }
 
 // ---- G32: PanelRemap
@@ -862,7 +864,7 @@ void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count, int
       const size_t i = static_cast<size_t>(ly - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(lx - l.x0);
       if (!l.cover[i]) continue;
       if (dx != 0) {
-        x = sx;
+        x = sx + l.vx;  // P22D fix 2: vx (0 for every layer but the golfer list's added columns)
         if (count) ++remapped_;
         return;
       }
@@ -1482,6 +1484,11 @@ void Presenter::layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, i
       if (anchor && l.id == portsim::kGfxLayerStrip && strip_right_) {  // P13C item 10: the strip at its own place
         r.fixed = true;
         r.dx = layer_dx(l, vp, dxl, dxr);
+      }
+      if (anchor && l.shift != 0 && vp.client_w > 0) {  // P22D fix 2: at its shifted place; the game sees its point `shift` right
+        r.fixed = true;
+        r.dx = layer_dx(l, vp, dxl, dxr);
+        r.vx = static_cast<int32_t>(static_cast<int64_t>(l.shift) * vp.client_w / kLogicalW);
       }
       r.x0 = l.x0;
       r.y0 = l.y0;
