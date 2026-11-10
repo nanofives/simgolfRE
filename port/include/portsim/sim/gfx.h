@@ -248,11 +248,17 @@ void gfx_set_frame_edge_text(Ctx &ctx, bool on);
 //   of colour 0x80000000 inside a cursor pass).
 // - kGfxWideRange: the Place Landmark tool's range circle round the cursor tile (P7's drawCircle(.., 0x80007fff), the only drawCircle
 //   inside a cursor pass: its lineTo steps, width 2, alpha 7).
+// - kGfxWideRuler: the drag distance ruler (P6_Cursor: four drawMinimapSegment(.., 0x80000000 / 0x80007ff0, 2, 7) from the cursor to
+//   the drag's start, after the sprite queue and outside the cursor passes), the lines drawn inside a GfxWideLineScope of that bit.
+//   Its yards label is a frame text (the edge-text rule for frame texts, not this record).
 // Records only: the frame, the root, the back buffer and the GameState are unchanged. Set by the app's host (--wide-lines) after
 // gfx_set_hud_lines; 0 (the default): nothing recorded.
 constexpr uint32_t kGfxWideArc = 1u << 0;
 constexpr uint32_t kGfxWideRange = 1u << 1;
+constexpr uint32_t kGfxWideRuler = 1u << 2;
 void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows);
+// P23E: the frame code's draws of one kGfxWide* row outside the cursor passes (inert without the capture)
+void gfx_wide_line_scope(Ctx &ctx, uint32_t row, bool open);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box = false);  // P10C fix 4: text_box
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
@@ -296,6 +302,26 @@ struct GfxCursorScope {
   GfxCursorScope(const GfxCursorScope &) = delete;
   GfxCursorScope &operator=(const GfxCursorScope &) = delete;
 };
+// P23E fix 4 (gfx_wide_line_scope)
+struct GfxWideLineScope {
+  Ctx *ctx = nullptr;
+  uint32_t row = 0;
+  GfxWideLineScope(Ctx &c, uint32_t r) : row(r) {
+    if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) {
+      ctx = &c;
+      gfx_wide_line_scope(c, row, true);
+    }
+  }
+  ~GfxWideLineScope() {
+    if (ctx) gfx_wide_line_scope(*ctx, row, false);
+  }
+  GfxWideLineScope(const GfxWideLineScope &) = delete;
+  GfxWideLineScope &operator=(const GfxWideLineScope &) = delete;
+};
+inline void gfx_wide_line_scope_close(GfxWideLineScope &s) {  // the scope's end before its block's
+  if (s.ctx) gfx_wide_line_scope(*s.ctx, s.row, false);
+  s.ctx = nullptr;
+}
 
 // ------------------------------------------------------------------------------------------------ P9C: text runs
 // Text at the window's resolution (log/roadmap/P9/P9C_notes.md). Every text the backend draws reaches the screen through one

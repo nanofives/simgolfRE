@@ -3893,6 +3893,12 @@ void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows) {
   if (!g) return;
   g->hud.wide_lines = g->hud.on ? rows : 0u;
 }
+void gfx_wide_line_scope(Ctx &ctx, uint32_t row, bool open) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  if (open) g->hud.wide_scope |= row;
+  else g->hud.wide_scope &= ~row;
+}
 void gfx_cursor_sprites_begin(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.cursor_sprites) return;

@@ -83,7 +83,7 @@
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
-//   player's shot (fix 3: and the Place Landmark tool's range circle) drawn whole in a wide window where the 800 frame's edge cut them (gfx.h gfx_set_hud_wide_lines: still native lines
+//   player's shot (fix 3: and the Place Landmark tool's range circle; fix 4: the drag distance ruler's lines) drawn whole in a wide window where the 800 frame's edge cut them (gfx.h gfx_set_hud_wide_lines: still native lines
 //   over the world picture); off = cut at the frame's columns, where the original's screen ends.
 //   P13B item 18: --map-bands clamp|same (default clamp; SG_APP_P13=off: same) the world map shown before a session (courseActionMenu:
 //   the only loop that hands the host a 50 ms timed pass) gets side bands that repeat its outermost column, cleaned by a vertical
@@ -557,7 +557,7 @@ static bool edge_previews_on(const Options &o) { return line_res_on(o) && o.edge
 static bool edge_texts_on(const Options &o) { return text_native_on(o) && o.edge_texts; }  // P23F fix 1
 // P23E: the wide audit's still lines (gfx.h kGfxWide* bits) need the native lines too
 static uint32_t wide_lines_rows(const Options &o) {
-  return line_res_on(o) && o.wide_lines ? portsim::kGfxWideArc | portsim::kGfxWideRange : 0u;
+  return line_res_on(o) && o.wide_lines ? portsim::kGfxWideArc | portsim::kGfxWideRange | portsim::kGfxWideRuler : 0u;
 }
 static void setup_text(Presenter &p, const Options &o) {
   p.set_text_res(text_native_on(o));

@@ -6251,6 +6251,7 @@ int P6_Cursor(u32 F) {
     int q = (dist * 25) / (zoom * 11);          // ML+0xa4d5..ML+0xa4e5 idiv
     if (q <= 0x19) return G32((GS(f_w_4c2848) + 12));      // ML+0xa4e9 / ML+0xa4ec -> ML+0xa652
 
+    GfxWideLineScope ruler_scope(ctx, kGfxWideRuler);  // P23E: the ruler's four lines (gfx.h; records only)
     cc("drawMinimapSegment", FD(0x68) + 1, FD(0x58) + 1, G32((GS(g_rootInput) + 52)) + 1, G32((GS(g_rootInput) + 56)) + 1,
        0x80000000u, 2, 7);                      // ML+0xa4f2..ML+0xa516 drawMinimapSegment
     cc("drawMinimapSegment", FD(0x68), FD(0x58) + 1, G32((GS(g_rootInput) + 52)), G32((GS(g_rootInput) + 56)) + 1,
@@ -6259,6 +6260,7 @@ int P6_Cursor(u32 F) {
        0x80007FF0u, 2, 7);                      // ML+0xa545..ML+0xa56c drawMinimapSegment
     cc("drawMinimapSegment", FD(0x68) + 1, FD(0x58), G32((GS(g_rootInput) + 52)) + 1, G32((GS(g_rootInput) + 56)),
        0x80007FF0u, 2, 7);                      // ML+0xa571..ML+0xa596 drawMinimapSegment
+    gfx_wide_line_scope_close(ruler_scope);
     tc("setDrawTarget", Root(), GS(g_font519928), 0, 0, 0);   // ML+0xa5ac setDrawTarget
     GU8(kBuf) = 0;                              // ML+0xa5b9
     int r = Itoa(q, GS(g_textBuf), 10);            // ML+0xa5c0 __itoa

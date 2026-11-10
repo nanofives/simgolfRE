@@ -515,7 +515,10 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   // its lineTo steps (body_draw_circle: width 2, alpha 7), recorded as still lines
   const bool range = !tee && !box && cursor_rec && (g.hud.wide_lines & kGfxWideRange) != 0 && g_circle_depth > 0 && alpha == 7 &&
                      !std::strcmp(who, "lineTo");
-  const bool still = box || tip || arc || range;
+  // P23E kGfxWideRuler: the drag ruler's drawMinimapSegment lines (P6_Cursor, inside its GfxWideLineScope), recorded as still lines
+  const bool ruler = !tee && !box && g.hud.lines_on && (g.hud.wide_lines & g.hud.wide_scope & kGfxWideRuler) != 0 &&
+                     !std::strcmp(who, "drawMinimapSegment") && g.root.w == 800 && g.root.h == 600;
+  const bool still = box || tip || arc || range || ruler;
   const bool rec = tee || still;
   std::vector<uint16_t> before;
   // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
