@@ -1239,6 +1239,9 @@ int updateGolfers() {
                         keep = 0;                                                       // updateGolfers+0x3966
                         continue;
                     }
+                    // P23B updateGolfers.playerPairBlocksShots: the player's golfer holding its handed-over shot, or its partner on its
+                    // hole, holds nobody's shot by the ball-near-target, golfer-at-target and line-of-fire tests below
+                    if (!SG_DEFECT(g_defect_player_pair_blocks_shots) && P20A2_PlayerHolds(k)) continue;
                     if (kTileDistance(GD(k, (GS(g_golfers) + 212)), GD(k, (GS(g_golfers) + 216)), GD(i, (GS(g_golfers) + 204)), GD(i, (GS(g_golfers) + 208))) < 0x25) keep = 0;   // updateGolfers+0x3844..updateGolfers+0x3867
                     if (kTileDistance(GD(k, GS(g_golfers)), GD(k, (GS(g_golfers) + 4)), GD(i, (GS(g_golfers) + 204)), GD(i, (GS(g_golfers) + 208))) < 0x25) {   // updateGolfers+0x3869..updateGolfers+0x3890
                         keep = 0;                                                       // updateGolfers+0x3966

@@ -127,6 +127,16 @@ int g_defect_partner_wait_blocks_tee = 1;
 // updateGolfers+0x1044..updateGolfers+0x1060) those two golfers are not counted in the tee queue and not held against the shots of
 // others by the near-tee test; the ball, target and line-of-fire tests stay, so nobody hits into him.
 int g_defect_player_wait_blocks_course = 1;
+// updateGolfers.playerPairBlocksShots (P23B, Mariano's "golfers stuck" on release 342dd9e8, log/roadmap/P23/P23B_notes.md section 5):
+// with playerWaitBlocksCourse at 0 the groups behind tee up while the player's shot waits, but the look-ahead before every shot
+// (updateGolfers+0x3844..updateGolfers+0x395f) still holds a golfer while a golfer k of its hole (older or equal arrival order, not its
+// partner, flag bit 10, more strokes) has its ball within 0x25 of the golfer's target, stands within 0x25 of it, or stands nearer the
+// tee than the golfer is to its target within 0xaaaaaaa of its aim: the player's pair ahead on the hole (his partner at the cup waiting
+// for his handed-over shot, his golfer in the line of fire) holds every group behind for as long as he does not play, as in
+// golf_clean.exe with his Ocean's Edge 25 July 2004 save. Fixed (0): outside a championship or pro match, while his shot is handed
+// over and not played (P20A2_PlayerHolds), he and his partner hold nobody's shot by those three tests. The ball has no collision
+// with golfers (the only reaction, updateGolfers+0x490b..updateGolfers+0x497f, is a thought for golfers of other holes).
+int g_defect_player_pair_blocks_shots = 1;
 // mainLoop.treesHiddenFarZoom (P11A fix 1, Mariano's play-test 5: "furthest zoom is not rendering trees"): the tile pass of
 // mainLoop P3 queues the sprite of a tile whose type class byte (g_tileTypeAttrs + 0x26 of its 48-byte row) is 0xd (the
 // forest trees, tropical trees and palms) only while g_zoomScale > 1 (ML+0x4aba cmp / ML+0x4ac1 jle past the whole block), so
@@ -2192,6 +2202,11 @@ const DefectDef kDefects[] = {
      "every later golfer of the hole and hold the shots near the tee: the whole course waits for the player; fixed: outside a "
      "championship or pro match the groups behind tee off and play through (the ball, target and line-of-fire tests stay)",
      &g_defect_player_wait_blocks_course},
+    {"updateGolfers.playerPairBlocksShots", "P23B",
+     "while the player's own golfer has a shot handed to the player and not played, it and its partner ahead on the hole hold the "
+     "shots of every group behind by the ball-near-target, golfer-at-target and line-of-fire tests: the hole waits for the player; "
+     "fixed: outside a championship or pro match they hold nobody's shot by those tests",
+     &g_defect_player_pair_blocks_shots},
     {"mainLoop.treesHiddenFarZoom", "P11A",
      "at the furthest zoom (g_zoomScale 1) the tile pass queues no tree, tropical tree or palm sprite (type class 0xd): forests "
      "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "
