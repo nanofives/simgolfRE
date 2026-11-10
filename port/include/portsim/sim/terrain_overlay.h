@@ -62,10 +62,18 @@ struct LineGl {
   float line_width = 1.0f;       // GL's line width (it outlasts the call)
 };
 
+// P22A item 9: the rectangle a draw_line call can write (x0..xe, y0..ye inclusive; xe < x0 = it wrote nothing) and its pixels
+// before the call (row-major, (xe - x0 + 1) x (ye - y0 + 1)), filled when the caller passes one
+struct LineTouch {
+  int32_t x0 = 0, y0 = 0, xe = -1, ye = -1;
+  std::vector<uint16_t> before;
+};
+
 // One Terrain::drawLine into an RGB555 buffer of fb_w x fb_h (row 0 = window y 0, the viewport 0, 0, fb_w, fb_h); returns the
-// pixels written. Updates gl.line_width as glLineWidth does.
+// pixels written. Updates gl.line_width as glLineWidth does. touch (optional): the rectangle every write of the call lies in and its
+// pixels before it (P22A).
 int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
-                  int32_t width, int32_t alpha);
+                  int32_t width, int32_t alpha, LineTouch *touch = nullptr);
 
 // drawLine's lasting GL state changes, given to the terrain rasteriser (lighting and texturing on, blending off with its function
 // set, the colour, matrix mode GL_MODELVIEW)

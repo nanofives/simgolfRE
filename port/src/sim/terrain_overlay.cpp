@@ -345,8 +345,32 @@ bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t f
   }
   return true;
 }
+// P22A item 9 (Mariano: "moving camera while picking a groundskeeper lags everything"): the 800 root's pixels the line changed are
+// found inside the rectangle draw_line wrote (LineTouch), not by a copy and a compare of the whole 800 x 600 root per line: a
+// carried employee's two circles are 50 lines a frame, which cost 20-22 ms of the sim thread's frame. Same result: draw_line writes
+// nothing outside that rectangle. SG_P22_LINES_FULL=1 (development, the before arm) keeps the whole-root copy and compare;
+// SG_P22_LINES_CHECK=1 runs both and counts the terrain800 words where they differ (stderr `P22 lines`).
+bool lines_full() {
+  static const bool on = std::getenv("SG_P22_LINES_FULL") && std::atoi(std::getenv("SG_P22_LINES_FULL")) == 1;
+  return on;
+}
+bool lines_check() {
+  static const bool on = std::getenv("SG_P22_LINES_CHECK") && std::atoi(std::getenv("SG_P22_LINES_CHECK")) == 1;
+  return on;
+}
+// terrain800 takes the root's new word where the line changed a pixel that showed the terrain (before == terrain800)
+void lines_into_terrain800(const std::vector<uint16_t> &root, std::vector<uint16_t> &t800, int32_t rw, const LineTouch &touch) {
+  if (touch.xe < touch.x0 || touch.ye < touch.y0) return;
+  const size_t bw = static_cast<size_t>(touch.xe - touch.x0 + 1);
+  for (int32_t y = touch.y0; y <= touch.ye; ++y)
+    for (int32_t x = touch.x0; x <= touch.xe; ++x) {
+      const size_t i = static_cast<size_t>(y) * static_cast<size_t>(rw) + static_cast<size_t>(x);
+      const uint16_t b = touch.before[static_cast<size_t>(y - touch.y0) * bw + static_cast<size_t>(x - touch.x0)];
+      if (b != root[i] && b == t800[i]) t800[i] = root[i];
+    }
+}
 void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
-                       int32_t alpha, const std::vector<uint16_t> &before) {
+                       int32_t alpha, const std::vector<uint16_t> &before, const LineTouch &touch) {
   std::vector<uint16_t> &px = w.raster->pixels();
   if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
   ++w.gen;  // P15A
@@ -358,9 +382,29 @@ void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1
       if (W.raster) mirror_line_px(W.raster->pixels(), pw, ph, fw, ox, gl, x1, y1, x2, y2, colour, alpha);
     });
   }
-  if (before.size() == g.root.px.size() && w.terrain800.size() == g.root.px.size())
-    for (size_t i = 0; i < before.size(); ++i)
-      if (before[i] != g.root.px[i] && before[i] == w.terrain800[i]) w.terrain800[i] = g.root.px[i];
+  if (w.terrain800.size() != g.root.px.size()) return;
+  auto full = [&](std::vector<uint16_t> &t800) {
+    if (before.size() == g.root.px.size())
+      for (size_t i = 0; i < before.size(); ++i)
+        if (before[i] != g.root.px[i] && before[i] == t800[i]) t800[i] = g.root.px[i];
+  };
+  if (lines_check()) {  // P22A (development): both ways, the words where they differ counted
+    static uint64_t checked = 0, differ = 0;
+    std::vector<uint16_t> ref = w.terrain800;
+    full(ref);
+    lines_into_terrain800(g.root.px, w.terrain800, g.root.w, touch);
+    for (size_t i = 0; i < ref.size(); ++i) differ += ref[i] != w.terrain800[i] ? 1u : 0u;
+    if (++checked % 200 == 0) {  // the portsim DLL's stderr does not reach the app's: SG_P22_LINES_CHECK_LOG=<file> appends there
+      static std::FILE *log = std::getenv("SG_P22_LINES_CHECK_LOG") ? std::fopen(std::getenv("SG_P22_LINES_CHECK_LOG"), "a") : nullptr;
+      std::FILE *out = log ? log : stderr;
+      std::fprintf(out, "P22 lines checked %llu differ %llu\n", static_cast<unsigned long long>(checked),
+                   static_cast<unsigned long long>(differ));
+      std::fflush(out);
+    }
+    return;
+  }
+  if (lines_full()) full(w.terrain800);
+  else lines_into_terrain800(g.root.px, w.terrain800, g.root.w, touch);
 }
 
 // Terrain::drawLine into the backend's root surface
@@ -418,11 +462,12 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   LiveTerrainWorld *const world = lt->world();
   const bool mirror = !rec && world && world->valid && world->lines_open && world->raster && g.hud.cursor_depth == 0 &&
                       (gl.context || mode() == 9) && mode() != 14;
-  if (rec || mirror) before = g.root.px;
-  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha);
+  if (rec || (mirror && (lines_full() || lines_check()))) before = g.root.px;  // P22A: a mirrored line keeps only its rectangle
+  LineTouch touch;
+  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror ? &touch : nullptr);
   if (mirror) {
     const PerfDetailScope pd(kPdLines);  // P15A
-    mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before);   // gl.line_width: this call's
+    mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before, touch);   // gl.line_width: this call's
   }
   if (rec && before.size() == g.root.px.size()) {
     Gfx::HudCapture &c = g.hud;
@@ -453,7 +498,7 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
 }  // namespace
 
 int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
-                  int32_t width, int32_t alpha) {
+                  int32_t width, int32_t alpha, LineTouch *touch) {
   if (!gl.context && mode() != 9) return 0;   // no current context: the driver ignores every call
   if (width > 0) gl.line_width = static_cast<float>(width);   // glLineWidth(w <= 0) is GL_INVALID_VALUE: the width stays
   const double wd = mode() == 8 ? static_cast<double>(gl.line_width) : std::min(static_cast<double>(gl.line_width), 10.0);
@@ -505,6 +550,17 @@ int64_t draw_line(uint16_t *fb, int32_t fb_w, int32_t fb_h, LineGl &gl, int32_t 
   const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
   const int32_t ye = std::min(fb_h - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
   LineDump dump(fb, fb_w, fb_h, x0, y0, xe, ye);
+  if (touch && xe >= x0 && ye >= y0) {  // P22A: every write below lies in x0..xe, y0..ye (the loops' bounds)
+    touch->x0 = x0;
+    touch->y0 = y0;
+    touch->xe = xe;
+    touch->ye = ye;
+    const size_t bw = static_cast<size_t>(xe - x0 + 1);
+    touch->before.resize(bw * static_cast<size_t>(ye - y0 + 1));
+    for (int32_t y = y0; y <= ye; ++y)
+      std::memcpy(&touch->before[static_cast<size_t>(y - y0) * bw], fb + static_cast<size_t>(y) * static_cast<size_t>(fb_w) + x0,
+                  bw * sizeof(uint16_t));
+  }
   if (dump.on()) dump.head(x1, y1, x2, y2, colour, width, alpha, gl);
   // the span rule (roadmap S3.24): per column of the major axis the real GL draws N = floor(w * L / |major|) + 2 pixels, the
   // pixel centres whose minor offset s from the line centre (o times the tie sign) lies in [-N/2, N/2)
