@@ -82,6 +82,9 @@
 //   cut them, or wholly past it (gfx.h gfx_set_frame_edge_text); off = cut at the frame's columns, where the original's screen ends.
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
+//   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
+//   player's shot drawn whole in a wide window where the 800 frame's edge cut them (gfx.h gfx_set_hud_wide_lines: still native lines
+//   over the world picture); off = cut at the frame's columns, where the original's screen ends.
 //   P13B item 18: --map-bands clamp|same (default clamp; SG_APP_P13=off: same) the world map shown before a session (courseActionMenu:
 //   the only loop that hands the host a 50 ms timed pass) gets side bands that repeat its outermost column, cleaned by a vertical
 //   median over +-33 logical rows (present.cpp fill_bands_map), instead of the --wide-fill bands; every other screen keeps them.
@@ -488,6 +491,7 @@ struct Options {
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   bool edge_previews = true;       // P22E item 7: --edge-previews on|off (SG_APP_P22=off: off)
   bool line_tiles = true;          // P23E fix 1: --line-tiles on|off (SG_APP_P23=off: off)
+  bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
   bool list_wide = true;           // P22D fix 2: --golfer-list wide|four (SG_APP_P22=off: four)
@@ -551,6 +555,8 @@ static bool line_res_on(const Options &o) { return hud_layers_on(o) && o.hud_cur
 // P22E item 7: the placement box and its labels whole past the frame's columns need the native lines (P10I's record and drawing)
 static bool edge_previews_on(const Options &o) { return line_res_on(o) && o.edge_previews; }
 static bool edge_texts_on(const Options &o) { return text_native_on(o) && o.edge_texts; }  // P23F fix 1
+// P23E: the wide audit's still lines (gfx.h kGfxWide* bits) need the native lines too
+static uint32_t wide_lines_rows(const Options &o) { return line_res_on(o) && o.wide_lines ? portsim::kGfxWideArc : 0u; }
 static void setup_text(Presenter &p, const Options &o) {
   p.set_text_res(text_native_on(o));
   p.set_text_aa(o.text_aa == "cleartype" ? TextAa::ClearType : o.text_aa == "grey" ? TextAa::Grey : TextAa::System);
@@ -1167,6 +1173,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
       if (ok && edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7
       if (ok && edge_texts_on(o)) portsim::gfx_set_frame_edge_text(*ctx, true);  // P23F fix 1
+      if (ok && wide_lines_rows(o)) portsim::gfx_set_hud_wide_lines(*ctx, wide_lines_rows(o));  // P23E
       if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
       if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
@@ -1445,6 +1452,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
   if (edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7: the placement box whole (gfx.h; records only)
   if (edge_texts_on(o)) portsim::gfx_set_frame_edge_text(*ctx, true);  // P23F fix 1: the frame's texts whole (gfx.h; records only)
+  if (wide_lines_rows(o)) portsim::gfx_set_hud_wide_lines(*ctx, wide_lines_rows(o));  // P23E: the wide audit's lines (gfx.h; records only)
   if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
@@ -3523,6 +3531,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.line_tiles = v == "on";
     }
+    else if (a == "--wide-lines") {  // P23E fix 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.wide_lines = v == "on";
+    }
     else if (a == "--terrain-filter") {  // P13D item 4
       if (!val(v) || (v != "sharp" && v != "linear" && v != "nearest")) return false;
       o.terrain_filter = v == "sharp" ? 2 : v == "linear" ? 1 : 0;
@@ -3706,6 +3718,7 @@ int main(int argc, char **argv) {
       o.edge_texts = false;    // P23F fix 1
       o.wide_grid = false;  // P23D fix 1
       o.line_tiles = false;  // P23E fix 1
+      o.wide_lines = false;  // P23E fix 2
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

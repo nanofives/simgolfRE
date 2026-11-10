@@ -239,6 +239,17 @@ void gfx_set_hud_edge(Ctx &ctx, bool on);
 // right edge cut gets its whole ink columns (GfxTextRun::ex0 / ex1), and one whose whole ink lies past that edge becomes an edge
 // run (published with every frame until the next frame's terrain picture). Records only. Set by the app's host (--edge-texts).
 void gfx_set_frame_edge_text(Ctx &ctx, bool on);
+// P23E (Mariano's tenth play-test, item 5's wide audit rows 3, 2, 4, 17): more lines the frame code draws into the 800 x 600 root
+// only, recorded as still lines (GfxHudLine::still) with the root pixels they changed, so a presenter draws them whole past the
+// frame's columns at the window's resolution, over the world picture (the world picture itself is not changed). Bits:
+// - kGfxWideArc: the player's shot, P7's swing-arc box (mainLoop's cursor pass Ph_00419d06, the swing-arc block after the shot
+//   panel's texts: setLinePoint, then per step drawMinimapSegment(.., 0x80000000, width, 7) for the shadow and
+//   lineTo(.., 0x80007fff, width, 7) for the arc; the only lineTo calls outside a drawCircle and the only drawMinimapSegment calls
+//   of colour 0x80000000 inside a cursor pass).
+// Records only: the frame, the root, the back buffer and the GameState are unchanged. Set by the app's host (--wide-lines) after
+// gfx_set_hud_lines; 0 (the default): nothing recorded.
+constexpr uint32_t kGfxWideArc = 1u << 0;
+void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box = false);  // P10C fix 4: text_box
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)

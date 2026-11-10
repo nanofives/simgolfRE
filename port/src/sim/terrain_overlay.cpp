@@ -398,6 +398,8 @@ void lines_into_terrain800(const std::vector<uint16_t> &root, std::vector<uint16
 // P22C item 3 fix 3 (gfx.h gfx_set_trail_glide): the golfer whose trail segment the golfer loop is drawing (thread of the frame), the
 // lines kept off the world layer since the frame's terrain picture began, and the app's switch
 thread_local int32_t g_trail_golfer = -1;
+// P23E: open drawCircle bodies (their lineTo steps are the circle's, not P7's swing arc)
+thread_local int32_t g_circle_depth = 0;
 thread_local std::vector<GfxTrailLine> g_trails;
 std::atomic<bool> g_trail_glide_on{false};
 void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
@@ -502,15 +504,24 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   // drawMapLine(.., 0x80000000, 10, 5): recorded the same way, as a still line
   const bool tip = !tee && !box && g.hud.tip_edge && g.hud.lines_on && !std::strcmp(who, "drawMapLine") && width == 10 &&
                    alpha == 5 && colour == 0x80000000u && g.root.w == 800 && g.root.h == 600;
-  const bool rec = tee || box || tip;
+  // P23E kGfxWideArc (gfx.h gfx_set_hud_wide_lines): P7's swing-arc box in the player's shot (Ph_00419d06's swing-arc block):
+  // lineTo(.., 0x80007fff, width, 7) and its shadow drawMinimapSegment(.., 0x80000000, width, 7), the only lineTo calls outside a
+  // drawCircle and the only drawMinimapSegment calls of colour 0x80000000 inside a cursor pass: recorded as still lines
+  const bool cursor_rec = g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && g.root.w == 800 && g.root.h == 600;
+  const bool arc = !tee && !box && cursor_rec && (g.hud.wide_lines & kGfxWideArc) != 0 && g_circle_depth == 0 && alpha == 7 &&
+                   ((!std::strcmp(who, "lineTo") && colour == 0x80007fffu) ||
+                    (!std::strcmp(who, "drawMinimapSegment") && colour == 0x80000000u));
+  const bool still = box || tip || arc;
+  const bool rec = tee || still;
   std::vector<uint16_t> before;
   // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
   LiveTerrainWorld *const world = lt->world();
   const bool mirror = !rec && world && world->valid && world->lines_open && world->raster && g.hud.cursor_depth == 0 &&
                       (gl.context || mode() == 9) && mode() != 14;
-  if (rec || (mirror && (lines_full() || lines_check()))) before = g.root.px;  // P22A: a mirrored line keeps only its rectangle
+  // P23E: a recorded line keeps only its rectangle too (draw_line writes nothing outside it), not a copy of the whole root per line
+  if (mirror && (lines_full() || lines_check())) before = g.root.px;  // P22A: a mirrored line keeps only its rectangle
   LineTouch touch;
-  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror ? &touch : nullptr);
+  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror || rec ? &touch : nullptr);
   // P22C fix 3: the golfer loop's trail segment with --trail-glide: not drawn on the world layer (the window draws it under the sprites
   // at the ball's drawn offset, gfx.h gfx_trail_take); terrain800 still takes the root's line pixels, so the 800 line is not shown
   const bool trail = mirror && g_trail_golfer >= 0 && g_trail_glide_on.load(std::memory_order_relaxed) &&
@@ -549,17 +560,24 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
     const PerfDetailScope pd(kPdLines);  // P15A
     mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before, touch);   // gl.line_width: this call's
   }
-  if (rec && before.size() == g.root.px.size()) {
+  if (rec) {
     Gfx::HudCapture &c = g.hud;
-    if (c.line800.size() != before.size()) {
-      c.line800.assign(before.size(), 0);
-      c.line_word.assign(before.size(), 0);
+    const size_t n = g.root.px.size();
+    if (c.line800.size() != n) {
+      c.line800.assign(n, 0);
+      c.line_word.assign(n, 0);
     }
-    for (size_t i = 0; i < before.size(); ++i)
-      if (before[i] != g.root.px[i]) {
-        c.line800[i] = 1;
-        c.line_word[i] = g.root.px[i];
-      }
+    if (touch.xe >= touch.x0 && touch.ye >= touch.y0) {  // (an empty rectangle: the line changed no root pixel, it is still recorded)
+      const size_t bw = static_cast<size_t>(touch.xe - touch.x0 + 1);
+      for (int32_t y = touch.y0; y <= touch.ye; ++y)
+        for (int32_t x = touch.x0; x <= touch.xe; ++x) {
+          const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+          if (touch.before[static_cast<size_t>(y - touch.y0) * bw + static_cast<size_t>(x - touch.x0)] != g.root.px[i]) {
+            c.line800[i] = 1;
+            c.line_word[i] = g.root.px[i];
+          }
+        }
+    }
     GfxHudLine l;
     l.x1 = x1;
     l.y1 = y1;
@@ -568,7 +586,7 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
     l.colour = colour;
     l.width = gl.line_width;
     l.alpha = alpha;
-    l.still = box || tip;  // P22E item 7, P23F fix 2
+    l.still = still;  // P22E item 7, P23F fix 2, P23E
     c.lines.push_back(l);
   }
   ws.width = gl.line_width;
@@ -743,6 +761,10 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const std::vector<CirclePoint> pts =
       circle_points(ctx, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]));
   int32_t prev = -1;
+  struct Depth {  // P23E
+    Depth() { ++g_circle_depth; }
+    ~Depth() { --g_circle_depth; }
+  } depth;
   for (const CirclePoint &p : pts) {
     if (!p.visible) {
       prev = -1;

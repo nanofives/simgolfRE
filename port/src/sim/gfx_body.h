@@ -168,6 +168,7 @@ class Gfx {
     bool edge_frame = false;          // P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course too
     int32_t wide_e = 0;               // P23F fix 2: the wide scene's side columns (800-space) at this frame's queue (0: none)
     bool tip_edge = false;            // P23F fix 2: inside P11C's course tip drawn at a cursor near or past the frame's edge
+    uint32_t wide_lines = 0;          // P23E (gfx.h gfx_set_hud_wide_lines): kGfxWide* bits, more still lines recorded
     std::vector<GfxHudLine> lines;    // P10I fix 1: those lines (cleared at the queue's start, as cursor2d)
     std::vector<uint8_t> line800;     // P10I fix 1: the root pixels they changed
     std::vector<uint16_t> line_word;  // P10I fix 1: the word each left there

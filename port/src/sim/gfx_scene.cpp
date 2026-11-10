@@ -3887,6 +3887,12 @@ void gfx_set_frame_edge_text(Ctx &ctx, bool on) {
   g->hud.edge_frame = on;
   if (!on) g->text.frame_edge_runs.clear();
 }
+// ---- P23E (gfx.h gfx_set_hud_wide_lines): more still lines (terrain_overlay.cpp terrain_draw_line)
+void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.wide_lines = g->hud.on ? rows : 0u;
+}
 void gfx_cursor_sprites_begin(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.cursor_sprites) return;
