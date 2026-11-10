@@ -246,9 +246,12 @@ void gfx_set_frame_edge_text(Ctx &ctx, bool on);
 //   panel's texts: setLinePoint, then per step drawMinimapSegment(.., 0x80000000, width, 7) for the shadow and
 //   lineTo(.., 0x80007fff, width, 7) for the arc; the only lineTo calls outside a drawCircle and the only drawMinimapSegment calls
 //   of colour 0x80000000 inside a cursor pass).
+// - kGfxWideRange: the Place Landmark tool's range circle round the cursor tile (P7's drawCircle(.., 0x80007fff), the only drawCircle
+//   inside a cursor pass: its lineTo steps, width 2, alpha 7).
 // Records only: the frame, the root, the back buffer and the GameState are unchanged. Set by the app's host (--wide-lines) after
 // gfx_set_hud_lines; 0 (the default): nothing recorded.
 constexpr uint32_t kGfxWideArc = 1u << 0;
+constexpr uint32_t kGfxWideRange = 1u << 1;
 void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box = false);  // P10C fix 4: text_box
 void gfx_hud_popup_end(Ctx &ctx);

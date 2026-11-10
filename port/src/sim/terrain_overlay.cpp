@@ -511,7 +511,11 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   const bool arc = !tee && !box && cursor_rec && (g.hud.wide_lines & kGfxWideArc) != 0 && g_circle_depth == 0 && alpha == 7 &&
                    ((!std::strcmp(who, "lineTo") && colour == 0x80007fffu) ||
                     (!std::strcmp(who, "drawMinimapSegment") && colour == 0x80000000u));
-  const bool still = box || tip || arc;
+  // P23E kGfxWideRange: P7's Place Landmark range circle, drawCircle round the cursor tile (the only drawCircle inside a cursor pass):
+  // its lineTo steps (body_draw_circle: width 2, alpha 7), recorded as still lines
+  const bool range = !tee && !box && cursor_rec && (g.hud.wide_lines & kGfxWideRange) != 0 && g_circle_depth > 0 && alpha == 7 &&
+                     !std::strcmp(who, "lineTo");
+  const bool still = box || tip || arc || range;
   const bool rec = tee || still;
   std::vector<uint16_t> before;
   // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
