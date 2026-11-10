@@ -387,6 +387,13 @@ extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on
 void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy, float fx = 0, float fy = 0);
 void gfx_mover_queued(int32_t n);   // enqueueSprite: entry n takes the pending source (none when none was named); clears it
 void gfx_mover_reset();             // resetSpriteQueue
+// P22C (development): SG_P22_TRAILLOG=<file>: one line per ball trail segment the golfer loop draws (drawMinimapSegment from the
+// ball's place to the place kept from the last frame, golfer flag bit 22): time us, golfer, the two ends (800-space)
+void gfx_mover_trail_log(int32_t golfer, int32_t x1, int32_t y1, int32_t x2, int32_t y2);
+// P22C item 3: true = a ball the golfer loop draws a trail segment for (golfer flag bit 22, a place kept from the last frame) is
+// not tagged as a mover, so its ball and shadow stay at the frame's place, the trail's end, as the game draws them. Negative control
+// (development): SG_P22_TRAILPIN=0 tags them as before (drawn one game frame late, the trail ahead of the ball).
+bool gfx_mover_trail_pin();
 GfxMoverSrc gfx_mover_of(int32_t n);
 GfxMoverSrc gfx_mover_label();      // the source of the queue entry whose label is being drawn (none outside drawQueuedSprite.label)
 

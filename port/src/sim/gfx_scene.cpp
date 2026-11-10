@@ -3117,6 +3117,16 @@ void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy, float 
   s.fy = fy;
   g_mover_next = s;
 }
+void gfx_mover_trail_log(int32_t golfer, int32_t x1, int32_t y1, int32_t x2, int32_t y2) {  // P22C (development)
+  static std::FILE *f = std::getenv("SG_P22_TRAILLOG") ? std::fopen(std::getenv("SG_P22_TRAILLOG"), "w") : nullptr;
+  if (!f) return;
+  std::fprintf(f, "%lld\t%d\t%d\t%d\t%d\t%d\n", static_cast<long long>(perf_now_ns() / 1000), golfer, x1, y1, x2, y2);
+  std::fflush(f);
+}
+bool gfx_mover_trail_pin() {  // P22C item 3 (gfx.h)
+  static const bool on = !(std::getenv("SG_P22_TRAILPIN") && std::strcmp(std::getenv("SG_P22_TRAILPIN"), "0") == 0);
+  return on;
+}
 void gfx_mover_queued(int32_t n) {
   if (n >= 0 && n < static_cast<int32_t>(g_mover_tab.size())) g_mover_tab[static_cast<size_t>(n)] = g_mover_next;
   g_mover_next = GfxMoverSrc{};

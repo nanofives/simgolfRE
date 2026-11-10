@@ -4223,7 +4223,13 @@ stk[--sp] = (int)(edx); // ML+0x6116  push edx
     double ex = 0, ey = 0;
     const int32_t bx = G32(ebp + (GS(g_golfers) + 0xd4)), by = G32(ebp + (GS(g_golfers) + 0xd8));
     const bool exact = world_to_screen_exact(bx, by, FD(0x88), FD(0x70), ex, ey);
-    gfx_mover_source(kGfxMoverShadow, FD(0x14), bx, by, exact ? static_cast<float>(ex - FD(0x88)) : 0.0f,
+    // P22C item 3: the trail test the frame makes after the two enqueues (ML+0x621b: golfer flags +0x10 bit 22; ML+0x6225..ML+0x622f:
+    // g_ballTrailX of this golfer not -1; nothing between here and there writes either). With a trail the frame draws a segment from
+    // the ball's place kept from the last frame to its place now (drawMinimapSegment ML+0x6249), so the ball and its shadow are not
+    // tagged: they stay where the frame draws them, at the segment's end (drawn one frame late they ran behind it, the segment ahead)
+    const bool trail = gfx_mover_trail_pin() && (G32(ebp + (GS(g_golfers) + 16)) & (1u << 22)) != 0 &&
+                       G32(GS(g_ballTrailX) + 4 * FD(0x14)) != -1;
+    gfx_mover_source(trail ? kGfxMoverNone : kGfxMoverShadow, FD(0x14), bx, by, exact ? static_cast<float>(ex - FD(0x88)) : 0.0f,
                      exact ? static_cast<float>(ey - FD(0x70)) : 0.0f);
 }
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x6117
@@ -4281,7 +4287,9 @@ stk[--sp] = (int)(edx); // ML+0x61a8  push edx
     const bool exact = world_to_screen_exact(bx, by, FD(0x88), FD(0x70), ex, ey);
     const int32_t hp = mul32(mul32(G32(GS(f_w_4c2e00)), G32(GS(g_zoomScale))), G32(ebp + (GS(g_golfers) + 220)));
     const double hr = static_cast<double>(hp) / 80.0 - static_cast<double>((hp / 5) / 16);  // exact height - drawn height
-    gfx_mover_source(kGfxMoverBall, FD(0x14), bx, by, exact ? static_cast<float>(ex - FD(0x88)) : 0.0f,
+    const bool trail = gfx_mover_trail_pin() && (G32(ebp + (GS(g_golfers) + 16)) & (1u << 22)) != 0 &&
+                       G32(GS(g_ballTrailX) + 4 * FD(0x14)) != -1;  // P22C item 3 (as the shadow's above)
+    gfx_mover_source(trail ? kGfxMoverNone : kGfxMoverBall, FD(0x14), bx, by, exact ? static_cast<float>(ex - FD(0x88)) : 0.0f,
                      exact ? static_cast<float>(ey - FD(0x70) - hr) : 0.0f);
 }
 eax = cc("enqueueSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6], stk[sp+7]); // enqueueSprite  ML+0x61a9
@@ -4327,6 +4335,7 @@ stk[--sp] = (int)(ecx); // ML+0x6245  push ecx
 stk[--sp] = (int)(edx); // ML+0x6246  push edx
 stk[--sp] = (int)(eax); // ML+0x6247  push eax
 stk[--sp] = (int)(ebx); // ML+0x6248  push ebx
+gfx_mover_trail_log(edi, ebx, eax, edx, ecx);  // P22C (development, render-only): the ball trail segment
 eax = cc("drawMinimapSegment", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6]); // drawMinimapSegment  ML+0x6249
 esi = G32(GS(f_w_4c2e00)); // ML+0x624e  mov esi, dword ptr [f_w_4c2e00]
 ecx = FD(0x70); // ML+0x6254  mov ecx, dword ptr [F+0x70]
