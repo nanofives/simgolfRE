@@ -1,6 +1,7 @@
 // The app's game files (saves.h): the install read-only, the saves overlay under the app's data directory.
 #include "saves.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <cwctype>
 #include <filesystem>
@@ -148,7 +149,35 @@ std::vector<portsim::DirEntry> AppFiles::list(const std::string &pattern) const 
   const bool exists = fs::is_directory(fs::path(install_) / rdir, ec) || fs::is_directory(fs::path(data_) / "files" / rdir, ec);
   std::vector<portsim::DirEntry> names;
   for (auto &kv : merged) names.push_back(kv.second);
-  return make_listing(component, std::move(names), exists);
+  std::vector<portsim::DirEntry> out = make_listing(component, std::move(names), exists);
+  if (newest_first_ && dir == "saved games") {
+    // P23A item 2: the load browser's list (listMatchingFiles over "Saved Games\*.sve") gets the newest write first. The
+    // original lists in NTFS name order; "." and ".." stay first, a name with no file on disk (fixture) counts as oldest,
+    // equal times keep the name order.
+    auto stamp = [&](const portsim::DirEntry &e) {
+      std::error_code tec;
+      const fs::path rel = fs::path("Saved Games") / e.name;
+      fs::file_time_type best = fs::file_time_type::min();
+      for (const fs::path &root : {fs::path(data_) / "files", fs::path(install_)}) {
+        const fs::file_time_type t = fs::last_write_time(root / rel, tec);
+        if (!tec) {
+          best = t;  // the data directory's copy shadows the install's
+          break;
+        }
+        tec.clear();
+      }
+      return best;
+    };
+    size_t first = 0;
+    while (first < out.size() && (out[first].name == "." || out[first].name == "..")) ++first;
+    std::vector<std::pair<fs::file_time_type, size_t>> key;
+    for (size_t i = first; i < out.size(); ++i) key.emplace_back(stamp(out[i]), i);
+    std::stable_sort(key.begin(), key.end(), [](const auto &a, const auto &b) { return a.first > b.first; });
+    std::vector<portsim::DirEntry> sorted(out.begin(), out.begin() + static_cast<std::ptrdiff_t>(first));
+    for (const auto &k : key) sorted.push_back(out[k.second]);
+    return sorted;
+  }
+  return out;
 }
 
 bool AppFiles::write(const std::string &name, const std::vector<uint8_t> &bytes) {

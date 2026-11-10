@@ -468,6 +468,7 @@ struct Options {
   bool list_wide = true;           // P22D fix 2: --golfer-list wide|four (SG_APP_P22=off: four)
   bool meter_tips = true;          // P22D fix 3: --meter-tips on|off (SG_APP_P22=off: off)
   bool trail_glide = true;         // P22C fix 3: --trail-glide on|off (SG_APP_P22=off: off)
+  bool newest_saves = true;        // P23A item 2: --newest-saves on|off (SG_APP_P23=off: off) the load browser lists the newest save first
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
@@ -2192,6 +2193,21 @@ void selftest_saves(Tests &t, SavesDefect defect) {
     t.add("saves.list_merged_sorted", names == std::vector<std::string>({"a.sve", "b.sve", "c.sve"}));
     auto l2 = f.list("Saved Games\\*");
     t.add("saves.list_dot_entries", l2.size() == 5 && l2[0].name == "." && l2[1].name == "..");
+    {  // P23A item 2: newest write first; "." / ".." stay on top; every entry still there
+      std::error_code tec;
+      const auto now = fs::file_time_type::clock::now();
+      fs::last_write_time(inst / "Saved Games" / "a.sve", now - std::chrono::hours(5), tec);
+      fs::last_write_time(inst / "Saved Games" / "b.sve", now - std::chrono::hours(2), tec);
+      fs::last_write_time(data / "files" / "Saved Games" / "c.sve", now - std::chrono::hours(9), tec);
+      f.set_newest_first(true);
+      std::vector<std::string> nn;
+      for (auto &e : f.list("Saved Games\\*.sve")) nn.push_back(e.name);
+      t.add("saves.list_newest_first", nn == std::vector<std::string>({"b.sve", "a.sve", "c.sve"}));
+      std::vector<std::string> n2l;
+      for (auto &e : f.list("Saved Games\\*")) n2l.push_back(e.name);
+      t.add("saves.list_newest_first_dots", n2l.size() == 5 && n2l[0] == "." && n2l[1] == "..");
+      f.set_newest_first(false);
+    }
     t.add("saves.remove_install_file_tombstone", f.remove("Saved Games/b.sve") && f.size("Saved Games/b.sve") == -1 &&
                                                      fs::exists(inst / "Saved Games" / "b.sve"));
     t.add("saves.remove_data_file", f.remove("Saved Games/c.sve") && !fs::exists(data / "files" / "Saved Games" / "c.sve"));
@@ -3300,6 +3316,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.trail_glide = v == "on";
     }
+    else if (a == "--newest-saves") {  // P23A item 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.newest_saves = v == "on";
+    }
     else if (a == "--meter-tips") {  // P22D fix 3
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.meter_tips = v == "on";
@@ -3551,6 +3571,8 @@ int main(int argc, char **argv) {
       o.list_wide = o.meter_tips = false;  // P22D fixes 2 and 3
       o.trail_glide = false;  // P22C fix 3
     }
+  if (const char *ep = std::getenv("SG_APP_P23"))  // P23: the tenth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.newest_saves = false;  // P23A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
@@ -3602,6 +3624,7 @@ int main(int argc, char **argv) {
   if (o.negctl == "saves-noreadback") sd = SavesDefect::NoReadBack;
   if (o.negctl == "saves-inside") sd = SavesDefect::AllowInsideInstall;
   AppFiles files(o.install, o.data, sd);
+  files.set_newest_first(o.newest_saves);  // P23A item 2
   if (!files.ok()) {
     std::fprintf(stderr, "saves overlay refused: %s\n", files.error().c_str());
     return 3;
