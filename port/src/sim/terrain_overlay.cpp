@@ -733,7 +733,59 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
 }
 
+// P23D fix 1 (gfx.h gfx_set_wide_grid): mainLoop's grid overlay P1_grid (ML+0x108e..ML+0x11fe: g_flags bit 1, set by the frame
+// preamble while the terrain palette's pick is held) draws two edges of every visible cell with Widget_fillRect(root, .., 0x80000000)
+// -> line16 into the 800 x 600 root only, so in a wide window the grid stopped at the frame's edge although the per-tile loop visits
+// the side columns' cells too (worldToScreen / tileToScreen.wideViewVisibility). Drawn here on the world layer as well, as P13D's
+// overlay lines are (mirror_line_world): the root pixel (x, y) is the window point (x + 0.5, y + 0.5) of the root's rows (flip_y), the
+// width 1 scales by ph / 600, opaque; the root's changed pixels go into terrain800 (one line, one resolution inside the frame).
+// Drawing only: the root, the GameState and the address space are unchanged.
+std::atomic<bool> g_wide_grid_on{false};
+void root_line_world(Gfx &g, Ctx &ctx, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour, const LineTouch &touch) {
+  if (!g_wide_grid_on.load(std::memory_order_relaxed) || mode() == 14 || g.hud.cursor_depth != 0) return;
+  if (g.root.w != 800 || g.root.h != 600 || !g.root_terrain) return;
+  LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+  LiveTerrainWorld *const w = lt ? lt->world() : nullptr;
+  if (!w || !w->valid || !w->lines_open || !w->raster) return;
+  std::vector<uint16_t> &px = w->raster->pixels();
+  if (w->pw <= 0 || w->ph <= 0 || w->fw <= 0 || px.size() != static_cast<size_t>(w->pw) * static_cast<size_t>(w->ph)) return;
+  LineGl gl;
+  gl.flip_y = true;
+  gl.screen_h = 600;
+  gl.line_width = 1.0f;
+  const double ax = x1 + 0.5, ay = y1 + 0.5, bx = x2 + 0.5, by = y2 + 0.5;
+  const PerfDetailScope pd(kPdLines);
+  ++w->gen;  // P15A
+  const int32_t pw = w->pw, ph = w->ph, fw = w->fw, ox = w->ox;
+  if (x1 == x2 && y1 == y2) {  // line16 puts the one pixel; a segment of length 0 would draw nothing: a pixel-wide stub instead
+    line_px_body(px.data(), pw, ph, fw, ox, gl, ax - 0.5, ay, ax + 0.5, ay, colour, 10, 0, 0, pw, ph, nullptr);
+    if (w->rec) {
+      if (w->sample && w->sample->pixels().size() == px.size())
+        line_px_body(w->sample->pixels().data(), pw, ph, fw, ox, gl, ax - 0.5, ay, ax + 0.5, ay, colour, 10, 0, 0, pw, ph, nullptr);
+      gfx_world_op(kGwLines, [=](LiveTerrainWorld &W) {
+        if (W.raster && W.raster->pixels().size() == static_cast<size_t>(pw) * static_cast<size_t>(ph))
+          line_px_body(W.raster->pixels().data(), pw, ph, fw, ox, gl, ax - 0.5, ay, ax + 0.5, ay, colour, 10, 0, 0, pw, ph, nullptr);
+      });
+    }
+  } else {
+    line_px_body(px.data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
+    if (w->rec) {  // P15A fix 3: on the check's sample and on the world thread's raster too
+      if (w->sample && w->sample->pixels().size() == px.size())
+        line_px_body(w->sample->pixels().data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
+      gfx_world_op(kGwLines, [=](LiveTerrainWorld &W) {
+        if (W.raster && W.raster->pixels().size() == static_cast<size_t>(pw) * static_cast<size_t>(ph))
+          line_px_body(W.raster->pixels().data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
+      });
+    }
+  }
+  if (w->terrain800.size() == g.root.px.size()) lines_into_terrain800(g.root.px, w->terrain800, g.root.w, touch);
+}
+
 }  // namespace overlay
+
+// ---- P23D fix 1 (gfx.h)
+void gfx_set_wide_grid(bool on) { overlay::g_wide_grid_on.store(on, std::memory_order_relaxed); }
+bool gfx_wide_grid() { return overlay::g_wide_grid_on.load(std::memory_order_relaxed); }
 
 // ---- P22C item 3 fix 3 (gfx.h)
 void gfx_set_trail_glide(bool on) { overlay::g_trail_glide_on.store(on, std::memory_order_relaxed); }
