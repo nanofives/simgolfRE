@@ -2569,6 +2569,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
   g.hud.cursor2d.clear();  // P9E fix 4: the cursor passes come after the queue
   g.hud.lines.clear();     // P10I fix 1: so do their tee lines
+  g.text.edge_runs.clear();  // P22E item 7: and their texts past the root's edge
   g.hud.line800.clear();
   g.hud.line_word.clear();
   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
@@ -3805,6 +3806,13 @@ void gfx_set_hud_lines(Ctx &ctx, bool on) {
   Gfx *g = gfx(ctx);
   if (!g) return;
   g->hud.lines_on = on && g->hud.on;
+}
+// ---- P22E item 7 (gfx.h gfx_set_hud_edge): the placement box's edges (terrain_overlay.cpp) and the edge-cut texts (gfx.cpp
+// text_run_end) of the cursor passes
+void gfx_set_hud_edge(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.edge_on = on && g->hud.on;
 }
 void gfx_cursor_sprites_begin(Ctx &ctx) {
   Gfx *g = gfx(ctx);

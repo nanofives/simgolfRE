@@ -12,6 +12,7 @@
 #ifndef PORTSIM_SIM_GFX_H
 #define PORTSIM_SIM_GFX_H
 
+#include <algorithm>  // P22E: GfxTextRun::box_x0 / box_x1
 #include <atomic>
 #include <cstdint>
 #include <functional>  // P15A fix 3: gfx_world_op
@@ -129,11 +130,15 @@ struct GfxHudPiece {
 // P10I fix 1 (gfx.h gfx_set_hud_lines): one line from the tee to the cursor (or from the green, the tee tool's arm) a cursor pass
 // drew: Terrain::drawLine's arguments as drawMinimapSegment passed them (800-space ends, the first the tee / green, the second the
 // cursor tile's screen point), the GL line width after the call and the alpha argument (tenths)
+// P22E item 7 (gfx_set_hud_edge): also the four edges of P7's placement box (drawMinimapSegment width 1, alpha 7, colour 0x80007fff
+// or 0x80007d08 inside a cursor pass), `still`: neither end follows the cursor previews (the box stays with its label until the
+// next frame, as its 800-space pixels did), so the presenter draws the whole box, past the 800 frame's columns too
 struct GfxHudLine {
   int32_t x1 = 0, y1 = 0, x2 = 0, y2 = 0;
   uint32_t colour = 0;
   float width = 1.0f;
   int32_t alpha = 10;
+  bool still = false;
 };
 struct GfxHudFrame {
   std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
@@ -208,6 +213,14 @@ void gfx_set_hud_lines(Ctx &ctx, bool on);
 void gfx_set_hud_writes(Ctx &ctx, bool on);
 void gfx_cursor_sprites_begin(Ctx &ctx);
 void gfx_cursor_sprites_end(Ctx &ctx);
+// P22E item 7 (Mariano's ninth play-test: "placing a home site on the edge of the screen makes the area invisible"): the tool
+// previews at the cursor whole in a wide window. The frame code draws P7's placement box (four drawMinimapSegment edges) and its
+// labels (drawCenteredText2) into the 800 x 600 root, which the root's right / left edge cuts, while the wide scene shows the
+// course on past it (the original's screen ends there). With this on (and gfx_set_hud_lines' recording) the box's edges are
+// recorded as still lines (GfxHudLine::still) and a cursor pass's text run the root's edge cut gets its whole ink columns
+// (GfxTextRun::ex0 / ex1), so a presenter draws both past the frame's columns. Records only: the frame, the root, the back buffer
+// and the GameState are unchanged. Set by the app's host (--edge-previews); off (the default): nothing recorded.
+void gfx_set_hud_edge(Ctx &ctx, bool on);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box = false);  // P10C fix 4: text_box
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
@@ -301,7 +314,16 @@ struct GfxTextRun {
   std::vector<uint8_t> vis;               // (x1 - x0) * (y1 - y0): 1 where the run shows in the back buffer (non-layered path)
   std::vector<uint8_t> vis_layer;         // the same in its layer or the base (layered path; empty unless layer >= -1)
   GfxMoverSrc mover;                      // P12A fix 2: a golfer name label drawn with queue entry k: that entry's source
+  // P22E item 7 (gfx_set_hud_edge): a text of a cursor pass (the placement box's name / value labels, the tool label) whose ink the
+  // 800 x 600 root's left or right edge cut: the 800-space columns [ex0, ex1) of its whole ink plus the box margin (ex1 > ex0 only
+  // then). The columns of that range outside the root (x < 0 or x >= 800, rows y0 .. y1) count as visible, so a presenter of a
+  // wide scene draws the whole string there; inside the root vis decides as before
+  int32_t ex0 = 0, ex1 = 0;
+  static constexpr int32_t kRootW = 800;
+  int32_t box_x0() const { return ex1 > ex0 ? std::min(x0, ex0) : x0; }   // the columns a presenter may draw in
+  int32_t box_x1() const { return ex1 > ex0 ? std::max(x1, ex1) : x1; }
   uint8_t visible(int32_t px, int32_t py, bool layered) const {
+    if (ex1 > ex0 && (px < 0 || px >= kRootW)) return px >= ex0 && px < ex1 && py >= y0 && py < y1 ? 1 : 0;
     if (px < x0 || px >= x1 || py < y0 || py >= y1) return 0;
     const std::vector<uint8_t> &v = layered ? vis_layer : vis;
     const size_t i = static_cast<size_t>(py - y0) * static_cast<size_t>(x1 - x0) + static_cast<size_t>(px - x0);
@@ -353,6 +375,7 @@ bool gfx_text_banner(Ctx &ctx, GfxTextFrame &out);
 // provider's table does not hold (left in 800-space)
 struct GfxTextStats {
   uint64_t captured = 0, published = 0, dropped = 0, no_font = 0, frames = 0, merged = 0;  // merged: repeats (gfx.cpp)
+  uint64_t edge = 0;  // P22E item 7: cursor-pass runs the root's edge cut, given their whole columns (GfxTextRun::ex0 / ex1)
 };
 GfxTextStats gfx_text_stats(Ctx &ctx);
 extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on

@@ -194,15 +194,16 @@ struct TextRaster::Prep {
 
 bool TextRaster::prep(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, Prep &p) {
 #ifdef _WIN32
-  if (vp.client_w <= 0 || vp.client_h <= 0 || r.text.empty() || r.x1 <= r.x0 || r.y1 <= r.y0) return false;
+  if (vp.client_w <= 0 || vp.client_h <= 0 || r.text.empty() || r.box_x1() <= r.box_x0() || r.y1 <= r.y0) return false;  // (P22E)
   const bool unit = vp.client_w == kLogicalW && vp.client_h == kLogicalH;
   const double sx = static_cast<double>(vp.client_w) / kLogicalW, sy = static_cast<double>(vp.client_h) / kLogicalH;
   int32_t height = static_cast<int32_t>(std::lround(r.size * sy));
   if (defect_ == TextDefect::WrongScale) height = r.size;
   if (height < 1) height = 1;
   // the run's box in client pixels (the presenter's floor mapping inverted), and a margin around it for ink that reaches past it
-  p.bx0 = vp.origin_x + dx + first_client(r.x0, vp.client_w, kLogicalW);
-  p.bx1 = vp.origin_x + dx + first_client(r.x1, vp.client_w, kLogicalW);
+  // (P22E item 7: a run the root's edge cut takes its whole columns, GfxTextRun::box_x0 / box_x1)
+  p.bx0 = vp.origin_x + dx + first_client(r.box_x0(), vp.client_w, kLogicalW);
+  p.bx1 = vp.origin_x + dx + first_client(r.box_x1(), vp.client_w, kLogicalW);
   p.by0 = vp.origin_y + first_client(r.y0, vp.client_h, kLogicalH);
   p.by1 = vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH);
   const int32_t m = std::max<int32_t>(4, height);

@@ -1644,7 +1644,9 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
       if (ca <= 0.0) continue;
       const double half = std::min(static_cast<double>(ln.width), 10.0) * (sx + sy) / 4.0;
       const double ax = vp.origin_x + slx + ln.x1 * sx, ay = vp.origin_y + sly + ln.y1 * sy;  // P12A: + the slide
-      const double bx = vp.origin_x + cdx + shx + slx + ln.x2 * sx, by = vp.origin_y + shy + sly + ln.y2 * sy;
+      // P22E item 7: a still line (the placement box's edges) keeps both ends, past the frame's columns too
+      const int32_t mx = ln.still ? 0 : cdx + shx, my = ln.still ? 0 : shy;
+      const double bx = vp.origin_x + mx + slx + ln.x2 * sx, by = vp.origin_y + my + sly + ln.y2 * sy;
       const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
       if (!(len > 0.0)) continue;
       const double ux = dx / len, uy = dy / len, reach = half + 1.5;

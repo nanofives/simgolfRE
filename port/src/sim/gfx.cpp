@@ -458,6 +458,15 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   const uint32_t ref = r | (gr << 8) | (b << 16);
   TextRunScope ts;  // P9C: the run (inert with text capture off)
   text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
+  // P22E item 7: a cursor pass's text: its whole columns (the centred width measured above, else measured here)
+  if (ts.on && g.hud.edge_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && !g.text.wide && va != 0) {
+    int32_t tw = width;
+    if (centre || tm->glyph_width(ctx, font, va, static_cast<int32_t>(text.size()), tw)) {
+      ts.ink = tw > 0;
+      ts.ink_x0 = x;
+      ts.ink_x1 = add32(x, tw);
+    }
+  }
   if (!tm->draw_glyphs(ctx, font, text, x, y, ref, g.root.px.data(), g.root.w, g.root.h))
     g.unsup(std::string(who) + ": the provider cannot draw");
   const int32_t clip[4] = {0, 0, g.root.w, g.root.h};
@@ -550,7 +559,40 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     y0 = std::min(y0, yy);
     y1 = yy;
   }
-  if (x1 < 0) return;  // the call changed no pixel: nothing to redraw
+  if (x1 < 0) {  // the call changed no pixel: nothing to redraw, unless its whole ink lies past the root's edge (P22E item 7)
+    const bool edge_only = s.ink && target == 0 && !g.text.wide && ox == 0 && oy == 0 && w == GfxTextRun::kRootW && clip[0] <= 0 &&
+                           clip[2] >= w && (s.ink_x1 <= 0 || s.ink_x0 >= w);
+    if (!edge_only) return;
+    GameFont ef;
+    try {
+      ef = game_font(ctx, fontref);
+    } catch (const MissingResource &) {
+      ++g.text.stats.no_font;
+      return;
+    }
+    const int32_t em = std::max<int32_t>(3, ef.size / 3);
+    GfxTextRun e;
+    e.fontref = fontref;
+    e.face = ef.face;
+    e.size = ef.size;
+    e.style = ef.style;
+    e.colorref = colorref;
+    e.x = x;
+    e.y = y;
+    e.text = text;
+    e.x0 = e.x1 = s.ink_x1 <= 0 ? 0 : w;  // an empty box at the edge: every column it shows lies outside the root
+    // the rows: the baseline TA_BASELINE origin y, the font's size above it and a third below, the box's margin around them
+    e.y0 = std::max<int32_t>(0, y - ef.size - em);
+    e.y1 = std::min<int32_t>(h, y + ef.size / 3 + em + 1);
+    e.ex0 = s.ink_x0 - em;
+    e.ex1 = s.ink_x1 + em;
+    e.layer = -1;
+    e.target = 0;
+    if (e.y1 <= e.y0) return;
+    g.text.edge_runs.push_back(std::move(e));
+    ++g.text.stats.edge;
+    return;
+  }
   ++g.text.stats.captured;
   GameFont gf;
   try {
@@ -588,6 +630,16 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   r.info.x1 = x1 + ox;
   r.info.y1 = y1 + oy;
   r.info.mover = gfx_mover_label();  // P12A fix 2: a golfer name label moves with its figure between game frames
+  // P22E item 7 (gfx.h gfx_set_hud_edge): a cursor pass's text on the root whose whole columns the root's edge cut, and whose
+  // changed pixels reach that edge's margin: the presenter may draw it past the edge (GfxTextRun::ex0 / ex1)
+  if (s.ink && target == 0 && ox == 0 && w == GfxTextRun::kRootW && clip[0] <= 0 && clip[2] >= w) {
+    const int32_t e0 = s.ink_x0 - kMargin, e1 = s.ink_x1 + kMargin;
+    if ((e0 < 0 && x0 == 0) || (e1 > w && x1 == w)) {
+      r.info.ex0 = e0;
+      r.info.ex1 = e1;
+      ++g.text.stats.edge;
+    }
+  }
   const size_t bw = static_cast<size_t>(x1 - x0);
   r.before.resize(bw * static_cast<size_t>(y1 - y0));
   r.after.resize(r.before.size());
@@ -801,6 +853,8 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
     for (const GfxTextLayerPatch &q : f.patches)
       if (q.layer >= 0 && q.layer < n) c.carry_patches.push_back(q);
   }
+  // P22E item 7: the cursor passes' texts wholly past the root's edge (the base's, after its other runs)
+  f.runs.insert(f.runs.end(), c.edge_runs.begin(), c.edge_runs.end());
   // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
   if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
   c.stats.published = f.runs.size();

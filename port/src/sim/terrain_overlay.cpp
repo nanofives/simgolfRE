@@ -403,8 +403,16 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   log_call(g, who, x1, y1, x2, y2, colour, width, alpha, gl.context);
   // P10I fix 1 (gfx.h gfx_set_hud_lines): P7's tee-to-cursor line (ML+0xb9b1) and the tee tool's green-to-cursor arm (ML+0xbb2a),
   // drawMinimapSegment(.., 0x80007fff, 2, 7) inside a cursor pass, are recorded with the root pixels they change. Records only.
-  const bool rec = g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && !std::strcmp(who, "drawMinimapSegment") &&
+  const bool tee = g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && !std::strcmp(who, "drawMinimapSegment") &&
                    width == 2 && alpha == 7 && colour == 0x80007fffu && g.root.w == 800 && g.root.h == 600;
+  // P22E item 7 (gfx.h gfx_set_hud_edge): P7's placement box, drawMinimapSegment(.., colour, 1, 7) four times from the cursor
+  // tile's corners (mainLoop ML+0xa8aa / ML+0xa8ff / ML+0xa957 / ML+0xa9ac; colour 0x80007fff where evalPlacementArea's rating is
+  // not -1, else 0x80007d08: ML+0xa80b..ML+0xa824), the only width-1 drawMinimapSegment calls inside a cursor pass: recorded the
+  // same way, as still lines
+  const bool box = !tee && g.hud.edge_on && g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 &&
+                   !std::strcmp(who, "drawMinimapSegment") && width == 1 && alpha == 7 &&
+                   (colour == 0x80007fffu || colour == 0x80007d08u) && g.root.w == 800 && g.root.h == 600;
+  const bool rec = tee || box;
   std::vector<uint16_t> before;
   // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
   LiveTerrainWorld *const world = lt->world();
@@ -435,6 +443,7 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
     l.colour = colour;
     l.width = gl.line_width;
     l.alpha = alpha;
+    l.still = box;  // P22E item 7
     c.lines.push_back(l);
   }
   ws.width = gl.line_width;

@@ -1951,8 +1951,9 @@ Rect run_box(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32
     const int64_t p = static_cast<int64_t>(v) * n;
     return static_cast<int32_t>(p >= 0 ? p / d : -((-p + d - 1) / d));
   };
-  return Rect{vp.origin_x + dx + lo(r.x0, vp.client_w, kLogicalW) - 1, vp.origin_y + my + lo(r.y0, vp.client_h, kLogicalH) - 1,
-              vp.origin_x + dx + lo(r.x1, vp.client_w, kLogicalW) + 2, vp.origin_y + my + lo(r.y1, vp.client_h, kLogicalH) + 2};
+  // P22E item 7: a run the root's edge cut reaches its whole columns (GfxTextRun::box_x0 / box_x1)
+  return Rect{vp.origin_x + dx + lo(r.box_x0(), vp.client_w, kLogicalW) - 1, vp.origin_y + my + lo(r.y0, vp.client_h, kLogicalH) - 1,
+              vp.origin_x + dx + lo(r.box_x1(), vp.client_w, kLogicalW) + 2, vp.origin_y + my + lo(r.y1, vp.client_h, kLogicalH) + 2};
 }
 }  // namespace
 
@@ -2099,7 +2100,8 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
       for (const portsim::GfxHudLine &ln : f.lines) {
         const double half = std::min(static_cast<double>(ln.width), 10.0) * (sx + sy) / 4.0;
         const double ax = vp.origin_x + slx + ln.x1 * sx, ay = vp.origin_y + sly + ln.y1 * sy;
-        const double bx = vp.origin_x + cdx + shx + slx + ln.x2 * sx, by = vp.origin_y + shy + sly + ln.y2 * sy;
+        const int32_t mx = ln.still ? 0 : cdx + shx, my = ln.still ? 0 : shy;  // P22E item 7 (present.cpp draw_lines)
+        const double bx = vp.origin_x + mx + slx + ln.x2 * sx, by = vp.origin_y + my + sly + ln.y2 * sy;
         const double reach = half + 1.5;
         const Rect b = clip(Rect{static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)) - 1,
                                  static_cast<int32_t>(std::floor(std::min(ay, by) - reach)) - 1,
