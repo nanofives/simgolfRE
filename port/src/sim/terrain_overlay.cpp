@@ -300,8 +300,11 @@ void log_call(Gfx &g, const char *who, int32_t x1, int32_t y1, int32_t x2, int32
 // run on the world thread's raster (gfx.h kGwLines)
 // P22C item 3 fix 3: the body with double 800-space ends (an int end gives the same value: x1 * kx with x1 promoted), drawn only
 // inside [cx0, cx1) x [cy0, cy1) (every pixel's value depends on its own x, y only), cover (optional) set where it wrote
-bool line_px_body(uint16_t *pxd, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, double x1, double y1, double x2,
-                  double y2, uint32_t colour, int32_t alpha, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1, uint8_t *cover) {
+// P23D fix 2: the walk of line_px_body (every pixel the line covers inside [cx0, cx1) x [cy0, cy1), with its alpha al = alpha / 10 *
+// coverage), shared by the direct blend and the patch builder so both see the same pixels and the same al. false: length 0.
+template <class F>
+bool line_walk(int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, double x1, double y1, double x2, double y2,
+               int32_t alpha, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1, F &&f) {
   const double s = static_cast<double>(ph) / 600.0, kx = static_cast<double>(fw) / 800.0;
   auto wy = [&](double y) { return (gl.flip_y ? y : static_cast<double>(gl.screen_h) - y) * s; };
   const double ax = ox + x1 * kx, ay = wy(y1), bx = ox + x2 * kx, by = wy(y2);
@@ -309,8 +312,6 @@ bool line_px_body(uint16_t *pxd, int32_t pw, int32_t ph, int32_t fw, int32_t ox,
   if (len == 0.0) return false;
   const double wd = std::min(static_cast<double>(gl.line_width), 10.0) * s;
   const double ux = dx / len, uy = dy / len, half = wd / 2.0, reach = half + 1.5;
-  const double cr = clamp01(channel((colour >> 7) & 0xf8u)), cg = clamp01(channel((colour >> 2) & 0xf8u)),
-               cb = clamp01(channel((colour << 3) & 0xf8u));
   const double ca = clamp01(static_cast<float>(alpha) / 10.0f);
   const int32_t x0 = std::max(std::max(0, cx0), static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
   const int32_t xe = std::min(std::min(pw, cx1) - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
@@ -337,17 +338,26 @@ bool line_px_body(uint16_t *pxd, int32_t pw, int32_t ph, int32_t fw, int32_t ox,
       const double cov = clamp01(half + 0.5 - std::fabs(n)) * clamp01(t + 0.5) * clamp01(len - t + 0.5);
       if (cov <= 0.0) continue;
       const double al = ca * cov;
-      const size_t at = static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x);
-      if (cover) cover[at] = 1;
-      uint16_t &d = pxd[at];
-      const int dr = (d >> 10) & 31, dg = (d >> 5) & 31, db = d & 31;
-      const double vr = cr * 255.0 * al + dr * 255.0 / 31.0 * (1.0 - al);
-      const double vg = cg * 255.0 * al + dg * 255.0 / 31.0 * (1.0 - al);
-      const double vb = cb * 255.0 * al + db * 255.0 / 31.0 * (1.0 - al);
-      d = static_cast<uint16_t>((quantize(vr, x, y) << 10) | (quantize(vg, x, y) << 5) | quantize(vb, x, y));
+      f(x, y, static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x), al);
     }
   }
   return true;
+}
+// one channel's 5-bit result over a destination channel dc (0..31): the blend and the dither of line_px_body
+int line_blend(double c, double al, int dc, int32_t x, int32_t y) {
+  const double v = c * 255.0 * al + dc * 255.0 / 31.0 * (1.0 - al);
+  return quantize(v, x, y);
+}
+bool line_px_body(uint16_t *pxd, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, double x1, double y1, double x2,
+                  double y2, uint32_t colour, int32_t alpha, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1, uint8_t *cover) {
+  const double cr = clamp01(channel((colour >> 7) & 0xf8u)), cg = clamp01(channel((colour >> 2) & 0xf8u)),
+               cb = clamp01(channel((colour << 3) & 0xf8u));
+  return line_walk(pw, ph, fw, ox, gl, x1, y1, x2, y2, alpha, cx0, cy0, cx1, cy1, [&](int32_t x, int32_t y, size_t at, double al) {
+    if (cover) cover[at] = 1;
+    uint16_t &d = pxd[at];
+    const int dr = (d >> 10) & 31, dg = (d >> 5) & 31, db = d & 31;
+    d = static_cast<uint16_t>((line_blend(cr, al, dr, x, y) << 10) | (line_blend(cg, al, dg, x, y) << 5) | line_blend(cb, al, db, x, y));
+  });
 }
 bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, int32_t x1, int32_t y1,
                     int32_t x2, int32_t y2, uint32_t colour, int32_t alpha) {
@@ -398,10 +408,21 @@ void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1
   if (!mirror_line_px(px, w.pw, w.ph, w.fw, w.ox, gl, x1, y1, x2, y2, colour, alpha)) return;   // a line of length 0
   if (w.rec) {  // P15A fix 3: on the check's sample and on the world thread's raster too
     if (w.sample) mirror_line_px(w.sample->pixels(), w.pw, w.ph, w.fw, w.ox, gl, x1, y1, x2, y2, colour, alpha);
-    const int32_t pw = w.pw, ph = w.ph, fw = w.fw, ox = w.ox;
-    gfx_world_op(kGwLines, [=](LiveTerrainWorld &W) {
-      if (W.raster) mirror_line_px(W.raster->pixels(), pw, ph, fw, ox, gl, x1, y1, x2, y2, colour, alpha);
-    });
+    GfxWorldLine l;  // P23D fix 2: with the job's other lines, as one patch (world_lines_run)
+    l.x1 = x1;
+    l.y1 = y1;
+    l.x2 = x2;
+    l.y2 = y2;
+    l.colour = colour;
+    l.alpha = alpha;
+    l.line_width = gl.line_width;
+    l.flip_y = gl.flip_y;
+    l.screen_h = gl.screen_h;
+    l.pw = w.pw;
+    l.ph = w.ph;
+    l.fw = w.fw;
+    l.ox = w.ox;
+    gfx_world_lines_chunk()->push_back(l);
   }
   if (w.terrain800.size() != g.root.px.size()) return;
   auto full = [&](std::vector<uint16_t> &t800) {
@@ -782,10 +803,21 @@ void grid_line_draw(LiveTerrainWorld &w, const LiveTerrainWorld::GridLine &l) {
   // P15A fix 3: on the check's sample and on the world thread's raster too
   if (w.sample && w.sample->pixels().size() == px.size())
     line_px_body(w.sample->pixels().data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
-  gfx_world_op(kGwLines, [=](LiveTerrainWorld &W) {
-    if (W.raster && W.raster->pixels().size() == static_cast<size_t>(pw) * static_cast<size_t>(ph))
-      line_px_body(W.raster->pixels().data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
-  });
+  GfxWorldLine wl;  // P23D fix 2: with the job's other lines, as one patch (world_lines_run)
+  wl.x1 = ax;
+  wl.y1 = ay;
+  wl.x2 = bx;
+  wl.y2 = by;
+  wl.colour = colour;
+  wl.alpha = 10;
+  wl.line_width = gl.line_width;
+  wl.flip_y = gl.flip_y;
+  wl.screen_h = gl.screen_h;
+  wl.pw = pw;
+  wl.ph = ph;
+  wl.fw = fw;
+  wl.ox = ox;
+  gfx_world_lines_chunk()->push_back(wl);
 }
 // a skipped frame that turned out to differ: the back put on the root (blit 0's copy and count), then this frame's lines so far
 void grid_redo(LiveTerrainWorld &w) {
@@ -870,6 +902,87 @@ void grid_queue_begin(LiveTerrainWorld &w) {
 }
 
 }  // namespace overlay
+
+// ---- P23D fix 2 (terrain_live.h gfx_world_lines_chunk): the lines of a world-thread op as one patch of its raster
+namespace {
+bool patch_on() {  // SG_P23_PATCH=0 (development, the before arm): each line on the raster's pixels (a lazy frame is read back)
+  static const bool on = !(std::getenv("SG_P23_PATCH") && std::atoi(std::getenv("SG_P23_PATCH")) == 0);
+  return on;
+}
+}  // namespace
+// the lines of one op as a patch (gl_raster.h GlPatch): each pixel a line covers with its alpha (line_walk, as line_px_body), the
+// line's colour as c * 255.0 per channel (line_blend's first product), the n-th line at a pixel in layer n. Whether the GPU or the
+// CPU applies it, every channel gets line_blend's value over the channel under it, in the lines' order.
+void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines) {
+  if (!w.raster || lines.empty()) return;
+  const int32_t pw = w.raster->width(), ph = w.raster->height();
+  for (const GfxWorldLine &l : lines)
+    if (l.pw != pw || l.ph != ph) return;   // drawn for another size (line_px_body's callers checked the same)
+  if (!patch_on()) {
+    std::vector<uint16_t> &px = w.raster->pixels();
+    for (const GfxWorldLine &l : lines) {
+      overlay::LineGl gl;
+      gl.flip_y = l.flip_y;
+      gl.screen_h = l.screen_h;
+      gl.line_width = l.line_width;
+      overlay::line_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
+    }
+    return;
+  }
+  thread_local std::vector<uint8_t> layer_of;   // per pixel the lines of this op so far (0 between ops)
+  thread_local std::vector<uint32_t> touched;
+  if (layer_of.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph)) layer_of.assign(static_cast<size_t>(pw) * static_cast<size_t>(ph), 0);
+  std::vector<std::vector<gl::GlPatchEntry>> layers;
+  gl::GlPatch p;
+  bool over = false;
+  for (const GfxWorldLine &l : lines) {
+    overlay::LineGl gl;
+    gl.flip_y = l.flip_y;
+    gl.screen_h = l.screen_h;
+    gl.line_width = l.line_width;
+    const uint32_t col = static_cast<uint32_t>(p.col.size() / 3);
+    for (const uint32_t bits : {(l.colour >> 7) & 0xf8u, (l.colour >> 2) & 0xf8u, (l.colour << 3) & 0xf8u})
+      p.col.push_back(overlay::clamp01(overlay::channel(bits)) * 255.0);
+    overlay::line_walk(pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.alpha, 0, 0, pw, ph,
+                       [&](int32_t, int32_t, size_t at, double al) {
+      uint8_t &n = layer_of[at];
+      if (n == 0) touched.push_back(static_cast<uint32_t>(at));
+      if (n == 255) {
+        over = true;
+        return;
+      }
+      if (layers.size() <= n) layers.resize(static_cast<size_t>(n) + 1);
+      gl::GlPatchEntry q;
+      q.at = static_cast<uint32_t>(at);
+      q.col = col;
+      q.al = al;
+      layers[n].push_back(q);
+      ++n;
+    });
+  }
+  for (const uint32_t a : touched) layer_of[a] = 0;
+  touched.clear();
+  if (over) {  // a pixel under more than 255 lines of one op: drawn directly
+    std::vector<uint16_t> &px = w.raster->pixels();
+    for (const GfxWorldLine &l : lines) {
+      overlay::LineGl gl;
+      gl.flip_y = l.flip_y;
+      gl.screen_h = l.screen_h;
+      gl.line_width = l.line_width;
+      overlay::line_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
+    }
+    return;
+  }
+  size_t n = 0;
+  for (const auto &v : layers) n += v.size();
+  p.e.reserve(n);
+  for (const auto &v : layers) {
+    p.layer.push_back(static_cast<uint32_t>(p.e.size()));
+    p.e.insert(p.e.end(), v.begin(), v.end());
+  }
+  p.layer.push_back(static_cast<uint32_t>(p.e.size()));
+  w.raster->apply_patch(std::move(p));
+}
 
 // ---- P23D fix 1 (gfx.h)
 void gfx_set_wide_grid(bool on) { overlay::g_wide_grid_on.store(on, std::memory_order_relaxed); }

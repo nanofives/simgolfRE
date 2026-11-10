@@ -2474,15 +2474,75 @@ void GlRaster::seg_recycle_() {
   }
 }
 // ---- P17A fix 3: the lazy frame and the GPU back surface (gl_raster.h)
-void GlRaster::replay_(const Recipe &r, std::vector<uint16_t> &dst) {
+void GlRaster::replay_(const Recipe &r, std::vector<uint16_t> &dst) const {
   std::fill(dst.begin(), dst.end(), r.fill);
   int64_t c[3] = {0, 0, 0};
-  for (const std::shared_ptr<const std::vector<FastJob>> &seg : r.segs)
-    for (const FastJob &j : *seg) {
+  size_t pi = 0;   // P23D fix 2: the patches in their place among the segs
+  auto patches_upto = [&](size_t k) {
+    for (; pi < r.patches.size() && r.patches[pi].first <= k; ++pi) apply_patch_cpu(*r.patches[pi].second, dst.data(), w_);
+  };
+  patches_upto(0);
+  for (size_t s = 0; s < r.segs.size(); ++s) {
+    for (const FastJob &j : *r.segs[s]) {
       FastJob jj = j;
       jj.fb = dst.data();
       fast_rows_(jj, 0, 1, c);
     }
+    patches_upto(s + 1);
+  }
+  patches_upto(static_cast<size_t>(-1));
+}
+// ---- P23D fix 2: the patch (gl_raster.h GlPatch)
+void GlRaster::apply_patch_cpu(const GlPatch &p, uint16_t *fb, int w) {
+  static const int kD[4][4] = {{15, 7, 13, 5}, {3, 11, 1, 9}, {12, 4, 14, 6}, {0, 8, 2, 10}};
+  for (const GlPatchEntry &q : p.e) {
+    const int x = static_cast<int>(q.at % static_cast<uint32_t>(w)), y = static_cast<int>(q.at / static_cast<uint32_t>(w));
+    const double dd = (kD[y & 3][x & 3] + 0.5) / 16.0;
+    const uint32_t v = fb[q.at];
+    const int dc[3] = {static_cast<int>((v >> 10) & 31u), static_cast<int>((v >> 5) & 31u), static_cast<int>(v & 31u)};
+    int o[3];
+    for (int c = 0; c < 3; ++c) {
+      const double b = p.col[3 * q.col + c] * q.al + dc[c] * 255.0 / 31.0 * (1.0 - q.al);
+      const int t = static_cast<int>(std::floor(b * 31.0 / 255.0 + dd));
+      o[c] = t < 0 ? 0 : (t > 31 ? 31 : t);
+    }
+    fb[q.at] = static_cast<uint16_t>((o[0] << 10) | (o[1] << 5) | o[2]);
+  }
+}
+void GlRaster::apply_patch(GlPatch &&pp) {
+  finish();
+  if (pp.e.empty()) return;
+  static const bool check = std::getenv("SG_P23_PATCHCHECK") && std::atoi(std::getenv("SG_P23_PATCHCHECK")) == 1;
+  auto p = std::make_shared<const GlPatch>(std::move(pp));
+  if (gpu_ && gpu_->lazy() && !fb_cpu_ && !rec_.segs.empty() && rec_.segs.size() + rec_.patches.size() < 256) {
+    std::vector<uint16_t> ref;
+    if (check && gpu_->read(w_, h_, fb_.data())) {   // (development) the frame before, the patch on the CPU
+      ref = fb_;
+      apply_patch_cpu(*p, ref.data(), w_);
+    }
+    if (gpu_->patch(w_, h_, *p)) {
+      rec_.patches.emplace_back(rec_.segs.size(), p);
+      pixel_gpu_count(&GlGpuStats::lazy_patches, 1);
+      pixel_gpu_count(&GlGpuStats::patch_px, static_cast<int64_t>(p->e.size()));
+      if (!ref.empty() && gpu_->read(w_, h_, fb_.data())) {
+        int64_t bad = 0;
+        for (size_t i = 0; i < ref.size(); ++i) bad += ref[i] != fb_[i] ? 1 : 0;
+        pixel_gpu_count(&GlGpuStats::patch_checked, 1);
+        pixel_gpu_count(&GlGpuStats::patch_bad, bad);
+      }
+      return;
+    }
+  }
+  fb_sync_();
+  apply_patch_cpu(*p, fb_.data(), w_);
+  int y0 = h_, y1 = -1;
+  for (const GlPatchEntry &q : p->e) {
+    const int y = static_cast<int>(q.at / static_cast<uint32_t>(w_));
+    y0 = y < y0 ? y : y0;
+    y1 = y > y1 ? y : y1;
+  }
+  if (y1 >= y0) gpu_dirty_(y0, y1);
+  pixel_gpu_count(&GlGpuStats::cpu_patches, 1);
 }
 void GlRaster::fb_sync_() const {
   if (fb_cpu_) return;

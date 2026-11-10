@@ -882,6 +882,7 @@ struct GfxHrJob {
     std::function<void(LiveTerrainWorld &)> f;
     GfxWorldOp kind = kGwHr;
     std::shared_ptr<gl::GlRec> gl;
+    std::shared_ptr<std::vector<GfxWorldLine>> lines;   // P23D fix 2: a kGwLines op's lines (terrain_live.h gfx_world_lines_chunk)
     Op() = default;
     Op(std::function<void(LiveTerrainWorld &)> fn, GfxWorldOp k = kGwHr) : f(std::move(fn)), kind(k) {}
   };
@@ -3351,6 +3352,16 @@ gl::GlRec *gfx_world_gl_chunk() {
     j.ops.push_back(std::move(op));
   }
   return j.ops.back().gl.get();
+}
+std::vector<GfxWorldLine> *gfx_world_lines_chunk() {   // P23D fix 2
+  GfxHrJob &j = hr_job();
+  if (j.ops.empty() || j.ops.back().kind != kGwLines || !j.ops.back().lines) {
+    auto l = std::make_shared<std::vector<GfxWorldLine>>();
+    GfxHrJob::Op op([l](LiveTerrainWorld &W) { world_lines_run(W, *l); }, kGwLines);
+    op.lines = l;
+    j.ops.push_back(std::move(op));
+  }
+  return j.ops.back().lines.get();
 }
 const GfxWorldRun &gfx_world_run_stats() { return g_world_run; }
 

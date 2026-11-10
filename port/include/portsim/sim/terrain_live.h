@@ -190,6 +190,20 @@ int terrain_world_raster_threads();
 // P15A fix 3 (gfx.h GfxWorldOp, gfx_scene.cpp): frame thread: the GL stream at the end of the job being recorded (a new kGwGl op when
 // the last op is another kind)
 gl::GlRec *gfx_world_gl_chunk();
+// P23D fix 2 (log/roadmap/P23/P23D_notes.md): frame thread: the overlay lines at the end of the job being recorded (a new kGwLines op
+// when the last op is another kind). The op draws them on the world thread's raster in order as one patch (terrain_overlay.cpp
+// world_lines_run: no read back of a frame the GPU holds), each as line_px_body draws it.
+struct GfxWorldLine {
+  double x1 = 0, y1 = 0, x2 = 0, y2 = 0;   // the 800-space ends as line_px_body takes them
+  uint32_t colour = 0;
+  int32_t alpha = 0;
+  float line_width = 1.0f;
+  bool flip_y = true;
+  int32_t screen_h = 600;
+  int32_t pw = 0, ph = 0, fw = 0, ox = 0;   // the world it was drawn for
+};
+std::vector<GfxWorldLine> *gfx_world_lines_chunk();
+void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines);
 // P15A fix 3: a world rasteriser's size-dependent state (the x clip planes and the dither phase of a pw x ph world)
 void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph);
 

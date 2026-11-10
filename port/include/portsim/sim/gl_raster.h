@@ -48,6 +48,21 @@ struct GlMirror {
   uint16_t value = 0;
   int32_t y0 = 0, y1 = -1;
 };
+// P23D fix 2 (log/roadmap/P23/P23D_notes.md): THE PATCH, an overlay line's pixels blended over the frame: per entry a pixel (at =
+// y * w + x), its alpha al (the line's alpha times its coverage there) and a colour of the patch's table (col: three doubles c * 255.0,
+// r g b). Each channel becomes quantize(c255 * al + d * 255.0 / 31.0 * (1.0 - al)) with the 4x4 dither of (x, y) (terrain_overlay.cpp
+// line_blend's arithmetic, in its order), d the channel under it; bit 15 is cleared. Entries are in layers: within a layer every
+// pixel is distinct, and a pixel's later lines are in later layers (applied in order).
+struct GlPatchEntry {
+  uint32_t at = 0;
+  uint32_t col = 0;
+  double al = 0;
+};
+struct GlPatch {
+  std::vector<double> col;            // 3 per colour
+  std::vector<GlPatchEntry> e;        // layer k = e[layer[k] .. layer[k + 1])
+  std::vector<uint32_t> layer;        // the layers' starts, then e.size()
+};
 class GlPixelGpu {
  public:
   virtual ~GlPixelGpu() = default;
@@ -80,6 +95,8 @@ class GlPixelGpu {
   virtual bool save_back() { return false; }
   virtual bool load_back() { return false; }
   virtual bool read_back(int w, int h, uint16_t *dst) { (void)w; (void)h; (void)dst; return false; }
+  // P23D fix 2: the patch applied on the backend's copy, in order after what it holds (false = not done: the caller applies it on fb)
+  virtual bool patch(int w, int h, const GlPatch &p) { (void)w; (void)h; (void)p; return false; }
 };
 // the process-wide maker of pixel backends (the app registers one; null = none) and its use, for a w x h frame (P16B fix 2: the
 // maker may decline by size, --gpu-terrain auto)
@@ -101,6 +118,9 @@ struct GlGpuStats {
   // loads: frame = back), its reads (back_syncs) and replays, and syncs forced by a texture change (tex_syncs)
   int64_t lazy_draws = 0, lazy_fills = 0, syncs = 0, sync_ns = 0, replays = 0;
   int64_t back_saves = 0, back_loads = 0, back_syncs = 0, back_sync_ns = 0, back_replays = 0, tex_syncs = 0;
+  // P23D fix 2: patches applied on the backend's copy of a lazy frame (and their pixels), patches applied on fb_ (the frame was
+  // there, or the backend refused), and SG_P23_PATCHCHECK's compared patches and differing words
+  int64_t lazy_patches = 0, patch_px = 0, cpu_patches = 0, patch_checked = 0, patch_bad = 0;
   // SG_P16_RASTERCHECK=<n> (development): every n-th batch is also drawn by the CPU loops on a copy of the frame and compared word by
   // word (stderr `P16 RASTERCHECK` on a difference)
   int64_t checked = 0, check_bad = 0, check_badpx = 0;
@@ -182,6 +202,11 @@ class GlRaster : public GlSink {
   bool back_on_gpu() const { return back_gpu_; }
   // P17A fix 3: the frame replaced by px (px.size() words; else nothing): no read of the old frame first
   void set_frame(const std::vector<uint16_t> &px);
+  // P23D fix 2: the patch applied to the frame (GlPatchEntry; entries at distinct pixels). A lazy frame on the backend takes it there
+  // (it joins the recipe: no read back); else on fb_ (rows marked for the backend's copy). SG_P23_PATCHCHECK=1 (development): a
+  // patch on the backend is also applied on the CPU to the frame read back before, and compared with the copy read back after.
+  void apply_patch(GlPatch &&p);
+  static void apply_patch_cpu(const GlPatch &p, uint16_t *fb, int w);
 
   int width() const { return w_; }
   int height() const { return h_; }
@@ -470,6 +495,8 @@ class GlRaster : public GlSink {
   struct Recipe {
     uint16_t fill = 0;
     std::vector<std::shared_ptr<const std::vector<FastJob>>> segs;
+    // P23D fix 2: the patches applied after the first `first` segs, in order
+    std::vector<std::pair<size_t, std::shared_ptr<const GlPatch>>> patches;
   };
   mutable bool fb_cpu_ = true;
   mutable Recipe rec_;
@@ -480,7 +507,7 @@ class GlRaster : public GlSink {
   void back_sync_() { if (back_gpu_ && back_dst_) back_sync(*back_dst_); }
   void tex_sync_();
   void lazy_reset_() { fb_cpu_ = true; rec_ = Recipe{}; back_gpu_ = false; back_rec_ = Recipe{}; back_dst_ = nullptr; }
-  static void replay_(const Recipe &r, std::vector<uint16_t> &dst);
+  void replay_(const Recipe &r, std::vector<uint16_t> &dst) const;   // P23D fix 2: not static (the patches need the width)
   void gpu_stale_() { gm_ = GlMirror{}; }
   void gpu_dirty_(int y0, int y1) {   // rows written on the CPU (a full upload covers them already)
     if (gm_.full) return;

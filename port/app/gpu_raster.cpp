@@ -106,6 +106,51 @@ void rel(T *&p) {
 // decide is handed to pass 2 (CSResume, a thread per handed pixel) with the pair index and its value there, and pass 2 finishes that
 // pixel in order with the exact path where needed. Every pixel still gets every write in triangle order.
 // SG_P16_EXACT=1 (development) hands every covered pixel to pass 2 at its first write (the exact path everywhere).
+// P23D fix 2 (gl_raster.h GlPatch): THE PATCH, one thread per entry of a layer: the frame word read from the copy of the layer's rows
+// (src), each channel blended as terrain_overlay.cpp line_blend does (precise doubles in its order, kc's constants as the CPU's own
+// bits: d * 255.0 / 31.0 and the dither offsets), written with bit 15 clear
+const char kHlslPatch[] = R"HLSL(
+struct PatchE { uint at; uint col; uint2 al; };
+cbuffer PatchCB : register(b0) { uint gFirst; uint gN; uint gW; uint gPad; };
+StructuredBuffer<PatchE> gEntries : register(t0);
+StructuredBuffer<uint2> gCols : register(t1);   // per colour three doubles c * 255.0
+StructuredBuffer<uint2> kc : register(t5);
+Texture2D<uint> src : register(t6);
+RWTexture2D<uint> dst : register(u0);
+double D(uint2 v) { return asdouble(v.x, v.y); }
+int floor_i(double v) {
+  int i = (int)v;
+  return (v < (double)i) ? i - 1 : i;
+}
+uint quant(double c, double d) {
+  precise double m = c * 31.0;
+  precise double q = m / 255.0;
+  precise double v = q + d;
+  int o = floor_i(v);
+  return (uint)clamp(o, 0, 31);
+}
+uint blend(double c255, double al, double oma, uint dc, double dd) {
+  precise double p = c255 * al;
+  precise double e = D(kc[dc]) * oma;
+  precise double b = p + e;
+  return quant(b, dd);
+}
+[numthreads(64, 1, 1)]
+void CSPatch(uint3 id : SV_DispatchThreadID) {
+  if (id.x >= gN) return;
+  PatchE e = gEntries[gFirst + id.x];
+  uint x = e.at % gW, y = e.at / gW;
+  uint v = src[uint2(x, y)];
+  double al = D(e.al);
+  precise double oma = 1.0 - al;
+  double dd = D(kc[32u + (y & 3u) * 4u + (x & 3u)]);
+  uint r = blend(D(gCols[3u * e.col]), al, oma, (v >> 10) & 31u, dd);
+  uint g = blend(D(gCols[3u * e.col + 1u]), al, oma, (v >> 5) & 31u, dd);
+  uint b = blend(D(gCols[3u * e.col + 2u]), al, oma, v & 31u, dd);
+  dst[uint2(x, y)] = (r << 10) | (g << 5) | b;
+}
+)HLSL";
+
 const char kHlslRaster[] = R"HLSL(
 #ifndef FORCE_EXACT
 #define FORCE_EXACT 0
@@ -619,6 +664,8 @@ struct Dev {
   ID3D11Device *dev = nullptr;
   ID3D11DeviceContext *ctx = nullptr;
   ID3D11ComputeShader *cs = nullptr, *cs_args = nullptr, *cs_resume = nullptr, *cs_acc = nullptr, *cs_pairs = nullptr;
+  ID3D11ComputeShader *cs_patch = nullptr;   // P23D fix 2 (null: patches are applied on the CPU)
+  ID3D11Buffer *patch_cb = nullptr;
   ID3D11Buffer *args = nullptr;
   ID3D11UnorderedAccessView *args_uav = nullptr;
   ID3D11Buffer *cb = nullptr;
@@ -636,6 +683,7 @@ struct Dev {
     rel(acc_uav); rel(acc); rel(cs_acc); rel(cs_pairs);
     rel(args_uav); rel(args); rel(cs_resume); rel(cs_args);
     rel(ta); rel(tb); rel(dis); rel(cnt_uav); rel(cnt_rd); rel(cnt); rel(kcf_srv); rel(kcf); rel(kc_srv); rel(kc); rel(cb); rel(cs);
+    rel(patch_cb); rel(cs_patch);   // P23D fix 2
     rel(ctx); rel(dev);
   }
   std::mutex start_mu;   // P18B fix 2: the preparation thread and the drawing thread can both ask; the second waits for the first
@@ -702,6 +750,24 @@ struct Dev {
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     if (FAILED(dev->CreateBuffer(&bd, nullptr, &cb))) return fail("constant buffer");
+    {  // P23D fix 2: the patch shader and its constants; a failure here only leaves patches to the CPU
+      ID3DBlob *b = nullptr, *err = nullptr;
+      if (SUCCEEDED(compile(kHlslPatch, sizeof(kHlslPatch) - 1, "p23d.hlsl", nullptr, nullptr, "CSPatch", "cs_5_0",
+                            D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_IEEE_STRICTNESS, 0, &b, &err)) && b) {
+        D3D11_BUFFER_DESC pd = {};
+        pd.ByteWidth = 16;
+        pd.Usage = D3D11_USAGE_DYNAMIC;
+        pd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        pd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        if (FAILED(dev->CreateComputeShader(b->GetBufferPointer(), b->GetBufferSize(), nullptr, &cs_patch)) ||
+            FAILED(dev->CreateBuffer(&pd, nullptr, &patch_cb))) {
+          rel(cs_patch);
+          rel(patch_cb);
+        }
+      }
+      rel(b);
+      rel(err);
+    }
     // the constants the CPU computes by expression, as its own bits: dst * 255.0 / 31.0 (FastTables::expand5) and the dither
     // offsets (kDither[y][x] + 0.5) / 16.0 (FastTables::dither[0]); and the same as floats for the checked path
     static const int kD[4][4] = {{15, 7, 13, 5}, {3, 11, 1, 9}, {12, 4, 14, 6}, {0, 8, 2, 10}};
@@ -997,6 +1063,55 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
     if (dead_.load() || !btex_) return false;
     d_->ctx->CopyResource(mtex_, btex_);
     bump_(&Stats::back_loads, 1);
+    return true;
+  }
+  // P23D fix 2 (gl_raster.h GlPixelGpu::patch): per layer, its rows copied to the source surface, then one thread per entry
+  bool patch(int w, int h, const portsim::gl::GlPatch &p) override {
+    if (d_->worker) d_->worker->wait();
+    if (dead_.load() || w != fw_ || h != fh_ || !d_->cs_patch || !d_->patch_cb || p.e.empty() || pass_open_ || !d_->kc_srv) return false;
+    static_assert(sizeof(portsim::gl::GlPatchEntry) == 16, "the shader's PatchE");
+    if (p.layer.size() < 2 || p.layer.back() != p.e.size() || p.col.empty()) return false;
+    ID3D11DeviceContext *ctx = d_->ctx;
+    if (!patchbuf_.fill(d_->dev, ctx, p.e.data(), p.e.size() * sizeof(portsim::gl::GlPatchEntry), sizeof(portsim::gl::GlPatchEntry), false) ||
+        !patchcol_.fill(d_->dev, ctx, p.col.data(), p.col.size() * sizeof(double), 8, false))
+      return false;
+    ctx->CSSetShader(d_->cs_patch, nullptr, 0);
+    ID3D11ShaderResourceView *srv2[2] = {patchbuf_.srv, patchcol_.srv};
+    ctx->CSSetShaderResources(0, 2, srv2);
+    ctx->CSSetShaderResources(5, 1, &d_->kc_srv);
+    ID3D11UnorderedAccessView *uav = muav_;
+    for (size_t k = 0; k + 1 < p.layer.size(); ++k) {
+      const uint32_t a = p.layer[k], b = p.layer[k + 1];
+      if (b <= a) continue;
+      uint32_t y0 = static_cast<uint32_t>(h), y1 = 0;
+      for (uint32_t i = a; i < b; ++i) {
+        const uint32_t y = p.e[i].at / static_cast<uint32_t>(w);
+        y0 = y < y0 ? y : y0;
+        y1 = y > y1 ? y : y1;
+      }
+      if (y1 >= static_cast<uint32_t>(h)) return false;
+      D3D11_MAPPED_SUBRESOURCE m;
+      if (FAILED(ctx->Map(d_->patch_cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &m))) return false;
+      const uint32_t cbv[4] = {a, b - a, static_cast<uint32_t>(w), 0};
+      std::memcpy(m.pData, cbv, sizeof cbv);
+      ctx->Unmap(d_->patch_cb, 0);
+      ID3D11UnorderedAccessView *nu = nullptr;
+      ID3D11ShaderResourceView *ns = nullptr;
+      ctx->CSSetUnorderedAccessViews(0, 1, &nu, nullptr);   // the frame is a copy source between the layers
+      ctx->CSSetShaderResources(6, 1, &ns);
+      D3D11_BOX box = {0, y0, 0, static_cast<UINT>(w), y1 + 1, 1};
+      ctx->CopySubresourceRegion(stex_, 0, 0, y0, 0, mtex_, 0, &box);
+      ctx->CSSetConstantBuffers(0, 1, &d_->patch_cb);
+      ctx->CSSetShaderResources(6, 1, &ssrv_);
+      ctx->CSSetUnorderedAccessViews(0, 1, &uav, nullptr);
+      ctx->Dispatch(static_cast<UINT>((b - a + 63) / 64), 1, 1);
+    }
+    ID3D11ShaderResourceView *none[2] = {nullptr, nullptr};
+    ctx->CSSetShaderResources(0, 2, none);
+    ctx->CSSetShaderResources(5, 1, none);
+    ctx->CSSetShaderResources(6, 1, none);
+    ID3D11UnorderedAccessView *nu = nullptr;
+    ctx->CSSetUnorderedAccessViews(0, 1, &nu, nullptr);
     return true;
   }
   bool read_back(int w, int h, uint16_t *dst) override {
@@ -1568,6 +1683,7 @@ class D3DRaster : public portsim::gl::GlPixelGpu {
   std::vector<ID3D11Query *> stamps_;   // P17A: a timestamp pair per submission of the pass
   DynBuf tribuf_, rangebuf_, pairbuf_, tilebuf_;
   DynBuf cpairbuf_;   // P17A: per pair (triangle, tile), the CPU's binning
+  DynBuf patchbuf_, patchcol_;   // P23D fix 2: the patch entries and colours
   RwBuf pairrw_;      // P17A: the pairs CSPairs fills in
   bool gpu_pairs_ = gpu_pairs_setting();
   bool stream_ = stream_setting();
@@ -2068,7 +2184,10 @@ std::string gpu_raster_json() {
        ",\"back_saves\":" + std::to_string(r.back_saves) + ",\"back_loads\":" + std::to_string(r.back_loads) +
        ",\"back_syncs\":" + std::to_string(r.back_syncs) +
        ",\"back_sync_ms_mean\":" + num(r.back_syncs ? r.back_sync_ns / 1e6 / static_cast<double>(r.back_syncs) : 0.0) +
-       ",\"back_replays\":" + std::to_string(r.back_replays) + ",\"lazy_on\":" + std::string(g_lazy_json() ? "true" : "false") + "}" +
+       ",\"back_replays\":" + std::to_string(r.back_replays) + ",\"lazy_on\":" + std::string(g_lazy_json() ? "true" : "false") +
+       ",\"patches\":" + std::to_string(r.lazy_patches) + ",\"patch_px\":" + std::to_string(r.patch_px) +   // P23D fix 2
+       ",\"cpu_patches\":" + std::to_string(r.cpu_patches) + ",\"patch_checked\":" + std::to_string(r.patch_checked) +
+       ",\"patch_bad\":" + std::to_string(r.patch_bad) + "}" +
        ",\"check\":{\"passes\":" + std::to_string(r.checked) + ",\"bad\":" + std::to_string(r.check_bad) +
        ",\"bad_px\":" + std::to_string(r.check_badpx) + "}" +
        ",\"p18a\":{\"on\":" + std::string(portsim::gl::p18_setup_setting() ? "true" : "false") + ",\"blocks\":" + std::to_string(r.p18_blocks) +
