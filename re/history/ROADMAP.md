@@ -1299,3 +1299,41 @@ checked (P19Z merge check, SEGS=1) and published on its own.
   mostly queueing (w8_lock behind the workers' runs, the test-slot memory gate reserving 8 GB per run over an 18-20 GB baseline); Mariano
   asked for a faster routine: log/roadmap/FAST/fast_check.sh (tree updated in place by fast_tree.py, x64 only, segments only when needed,
   one 1080 smoke, real memory needs) per fix, the full check once per batch (auto-memory fast-per-fix-release-routine).
+
+## P22: ninth play-test feedback, the lag on Mariano's PC (2026-11-09 .. 2026-11-10)
+Brief log/roadmap/P22/BRIEF.md (nine items; the fast per-fix testing routine), notes log/roadmap/P22/P22{A..E}_notes.md and
+log/roadmap/P20/P20A_notes.md (resumed). His saves and recordings were copied from MARIANO-PC by a small claude2 child into
+`SimGolf Test\saves_copy_p22*` and pulled with remote_pull (log/roadmap/P22/mariano_pc*/).
+- The lag ("lagging a whole lot, players are sliding"): his 71fe8883 session painted 10.96 times/s (morning 8d187253: 135). P21B and
+  P21C were reverted at once (e6fa77c6, published), but neither was the cause: on LIVING-PC both paint 93-110/s on the default course
+  and 71-74/s on his 2004 save at his size. His session's p10e showed the P10E pacer ticking 374 times in 60 s (morning 11,712 in 82 s):
+  the pacer waits IDXGIOutput::WaitForVBlank with no timeout, and on his display (variable refresh, by reading) it returned about 6
+  times/s. P22A fix 1 (add39481): a vblank wait over 1.5 refresh periods switches the pacer to timer ticks on absolute deadlines, the
+  hold doubling per slow probe (2..60 s, reset by a fast one); p10e vblank_slow / timer_ticks / vblank_probes / tick_gap_max_ms. Test
+  with SG_P22_SLOW_VBLANK_MS=150: off 17 paints/s and 5.4 ticks/s (his case), on 114 / 119 / 112 paints/s, longest gap 159 ms (one
+  probe). The same fix re-landed P21B and made an arrow tap one step (the held repeat from 250 ms after the key-down on the key's own
+  clock; his taps had moved 4 / 8 / 12 tiles: 40 of 40 taps now move 4).
+- Item 9, camera lag while carrying a groundskeeper (P22A fix 2, db2b2f65, class a): every overlay line mirrored onto the world layer
+  (P13D item 7) compared the whole 800 x 600 root, about 50 lines a frame for the two work-area circles, 21 ms of sim time; the
+  mirror now compares only the rectangle the line wrote (1.6 ms, 0 differing on 7,800 lines).
+- Ball ghost (P22C fix 1, 65207a8e, class a): a mishit / lie-roll shot draws a pale segment from the ball's last place to its place
+  now (ML+0x6249); P19A fix 2 draws the ball one frame late, so it left its segment. Trail frames are not interpolated.
+- Names under trees (P22C fix 2, 1e3cbf52, class b, = P19 item 2): drawQueuedSprite draws a label right after its golfer in the depth
+  walk; play switch renderSpriteQueue.labelUnderLaterSprites draws the walk's labels after its last sprite.
+- Golfer list (P22D): fix 1 (25ad24c1, class a) the 5th column (x 794+) drawn outside the panel layer; fix 2 (030d884a, class b) play
+  switch drawEmployeeViewPanel.fourColumns + --golfer-list wide: up to 8 more columns in the wide scene, clicks remapped; fix 3
+  (030d884a, class b) --meter-tips: Cash / Fun Rating / Skill Rating tips on the right meters (the original has none).
+- Placement outlines at the edge (P22E fix 1, 6819a404, class b): the original cuts the box and labels at its 800 edge;
+  --edge-previews draws them whole in the wide scene (the landmark circle and the swing-arc box still cut).
+- Shot panel (P22B, b155d904): play switch mainLoop.shotButtonsReadBallTile (buttons 5..7 read typeAtPos(ball x, golfer y), the Lie
+  text the ball's tile; class b, shown only by the code and a negative control) and updateGolfers.foreignGreenAutoPutt (a ball on a
+  green not 8-connected to the cup's green gets the shot panel, Mariano's request; 8 of 8 shots on an edited save).
+- Stuck golfers again (P20A resumed, class c): records frozen since 2002 are free slots (hole 0, never drawn); the course was waiting
+  for the player's own golfer's tee shot, as golf_clean.exe does with the same save. Options asked of Mariano.
+- Process: the fast per-fix check (log/roadmap/FAST/fast_check.sh + fast_tree.py, auto-memory fast-per-fix-release-routine): x64
+  only, segments only when needed, a 1080 smoke with every exactness check plus a no-check real-display run whose paints/s must be
+  at least 60% of the vblanks (the merge smoke had passed 71fe8883 while his PC painted 11/s), then publish.sh, now incremental
+  (scripts/lan_release/sync_build_tree.py, bf7caeed). Failures met: a deadlock (P15Z_segs.sh took the w8 lock before its test slot;
+  fixed to slot first), fast_tree's commit-time stamps hiding changes from MSBuild, `/c/...` paths mangled inside test-slot strings,
+  an --amend that folded a records commit into a fix (split back before any push), %TEMP% at 1.2 M entries (match_permute's perm_
+  folders, fixed 13cb39b8; m36e_lib_ / m7_ / vc6_ leftovers deleted; Mashed's matcher still leaks m7_ folders).
