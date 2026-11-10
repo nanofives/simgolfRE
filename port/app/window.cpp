@@ -10,6 +10,7 @@
 #define NOMINMAX
 #endif
 #include <windows.h>
+#include <shellapi.h>
 #include <mmsystem.h>
 
 #include <cstdio>
@@ -196,6 +197,20 @@ bool AppWindow::create() {
     return false;
   }
   hwnd_ = h;
+  // P23A item 1: the game's own icon, read at run time from the install's exe (nothing of it is in the repo or the build);
+  // without the file or its icon the default stays and one line says so
+  if (!opt_.icon_exe.empty()) {
+    HICON big = nullptr, small = nullptr;
+    const std::wstring wexe(opt_.icon_exe.begin(), opt_.icon_exe.end());
+    if (ExtractIconExW(wexe.c_str(), 0, &big, &small, 1) >= 1 && (big || small)) {
+      if (big) SendMessageW(h, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(big));
+      if (small) SendMessageW(h, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(small));
+      if (!big) SendMessageW(h, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(small));
+      if (!small) SendMessageW(h, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(big));
+    } else {
+      std::fprintf(stderr, "window icon: no icon in %s, default icon kept\n", opt_.icon_exe.c_str());
+    }
+  }
   size_for_dpi(opt_.dpi ? opt_.dpi : GetDpiForWindow(h), nullptr);
   ShowWindow(h, opt_.activate ? SW_SHOW : SW_SHOWNOACTIVATE);
   UpdateWindow(h);

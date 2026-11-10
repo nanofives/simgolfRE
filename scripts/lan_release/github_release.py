@@ -22,6 +22,8 @@ import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 STAGE = ROOT / "port" / "build" / "lan_release"
+# P23A item 1: the staged simgolf_port.exe carries the game's icon (LAN only); the release zips the plain build's exe
+PLAIN_EXE = ROOT / "port" / "build" / "lan_build" / "port" / "build" / "x64" / "app" / "Release" / "simgolf_port.exe"
 PORT_FILES = ["simgolf_port.exe", "freetype.dll", "msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll"]
 
 BAT = r"""@echo off
@@ -72,14 +74,22 @@ def main() -> int:
     full = sh(["git", "rev-parse", commit]).stdout.strip()
     if sh(["git", "merge-base", "--is-ancestor", full, "origin/main"]).returncode != 0:
         sys.exit(f"{commit} is not on origin/main: push first")
+    def source(f):
+        return PLAIN_EXE if f == "simgolf_port.exe" else STAGE / f
+
     for f in PORT_FILES:
-        if not (STAGE / f).is_file():
-            sys.exit(f"missing {STAGE / f}")
+        if not source(f).is_file():
+            sys.exit(f"missing {source(f)}")
+    import pefile  # the public zip never carries the game's icon (RT_GROUP_ICON = 14)
+    pe = pefile.PE(str(PLAIN_EXE), fast_load=True)
+    pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_RESOURCE"]])
+    if any(e.id == 14 for e in getattr(getattr(pe, "DIRECTORY_ENTRY_RESOURCE", None), "entries", [])):
+        sys.exit(f"{PLAIN_EXE} carries an icon resource: the GitHub zip takes the plain build only")
     tag = f"port-{date}-{commit}"
     out = pathlib.Path(tempfile.mkdtemp(prefix="ghrel_")) / f"simgolf_port_{date}_{commit}.zip"
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for f in PORT_FILES:
-            z.write(STAGE / f, f"simgolf_port/{f}")
+            z.write(source(f), f"simgolf_port/{f}")
         z.writestr("simgolf_port/Play SimGolf.bat", BAT.replace("\n", "\r\n"))
         z.writestr("simgolf_port/README.txt", README.format(commit=commit, date=date).replace("\n", "\r\n"))
         assert not any(n.startswith("simgolf_port/game") for n in z.namelist())

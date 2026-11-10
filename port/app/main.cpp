@@ -1554,6 +1554,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   wo.activate = o.activate;
   wo.input_defect = o.negctl == "input-bypass" ? InputDefect::Bypass : InputDefect::None;
   wo.resizable = o.resizable;  // P5B item 4
+  wo.icon_exe = o.exe;  // P23A item 1
   wo.zoom_keys = static_cast<uint8_t>(o.zoom_keys == "all" ? 2 : o.zoom_keys == "numpad" ? 1 : 0);  // P5B item 2
   wo.zoom_context = [&session]() { return session.in_frame_body(); };
   {  // P11D: Ctrl+Z / Ctrl+Y only when the profile turns the sim's play switch mainLoop.courseUndo on (0)
@@ -3709,6 +3710,7 @@ int main(int argc, char **argv) {
   wo.activate = o.activate;
   wo.input_defect = o.negctl == "input-bypass" ? InputDefect::Bypass : InputDefect::None;
   wo.resizable = o.resizable;  // P5B item 4
+  wo.icon_exe = o.exe;  // P23A item 1
   presenter.set_scale(scale_mode(o.scale));
   AppWindow win(presenter, wo);
   if (!win.create()) {

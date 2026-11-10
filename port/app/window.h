@@ -82,6 +82,7 @@ struct WindowOptions {
   // the translator; null = none
   const class PanelRemap *remap = nullptr;
   std::string title = "SimGolf (port)";
+  std::string icon_exe;       // P23A item 1: the exe whose first icon the window shows (the install's golf_clean.exe); "" = default
   uint32_t dpi = 0;           // 0 = the monitor's (GetDpiForWindow), else fixed
   bool activate = true;       // false: shown without taking the focus (test runs)
   InputDefect input_defect = InputDefect::None;

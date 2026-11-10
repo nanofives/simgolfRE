@@ -62,6 +62,43 @@ def sha256(p):
     return h.hexdigest()
 
 
+def stamp_icon(exe, game_exe):
+    """P23A item 1 (Mariano: "Game icon, LAN only"): copy the game's RT_GROUP_ICON and its RT_ICON entries from game_exe into
+    the STAGED copy `exe` (UpdateResource). Never run on the build tree's exe and never on what github_release.py zips."""
+    import ctypes
+    from ctypes import wintypes
+    import pefile
+    pe = pefile.PE(game_exe)
+    res = {}  # (type, id) -> (lang, bytes)
+    for t in pe.DIRECTORY_ENTRY_RESOURCE.entries:
+        if t.id not in (3, 14):  # RT_ICON, RT_GROUP_ICON
+            continue
+        for n in t.directory.entries:
+            for l in n.directory.entries:
+                d = l.data.struct
+                res[(t.id, n.id)] = (l.id, pe.get_data(d.OffsetToData, d.Size))
+    if not any(k[0] == 14 for k in res):
+        sys.exit("[!] no RT_GROUP_ICON in %s" % game_exe)
+    k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    k32.BeginUpdateResourceW.restype = wintypes.HANDLE
+    k32.BeginUpdateResourceW.argtypes = [wintypes.LPCWSTR, wintypes.BOOL]
+    k32.UpdateResourceW.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, wintypes.WORD, ctypes.c_void_p, wintypes.DWORD]
+    k32.EndUpdateResourceW.argtypes = [wintypes.HANDLE, wintypes.BOOL]
+    h = k32.BeginUpdateResourceW(exe, False)
+    if not h:
+        sys.exit("[!] BeginUpdateResource %s: error %d" % (exe, ctypes.get_last_error()))
+    keep = []
+    for (t, i), (lang, data) in sorted(res.items()):
+        buf = ctypes.create_string_buffer(data, len(data))
+        keep.append(buf)
+        if not k32.UpdateResourceW(h, t, i, lang, buf, len(data)):
+            k32.EndUpdateResourceW(h, True)
+            sys.exit("[!] UpdateResource %d/%d: error %d" % (t, i, ctypes.get_last_error()))
+    if not k32.EndUpdateResourceW(h, False):
+        sys.exit("[!] EndUpdateResource: error %d" % ctypes.get_last_error())
+    print("[+] stamped %d icon resources from %s into %s" % (len(res), os.path.basename(game_exe), os.path.basename(exe)))
+
+
 def vc_redist_dir():
     hits = sorted(glob.glob(VC_REDIST_GLOB))
     for d in reversed(hits):
@@ -89,6 +126,15 @@ def main():
         if not os.path.isfile(src):
             sys.exit("[!] missing %s" % src)
         place(src, os.path.join(out, f)); wanted.add(f)
+    # P23A item 1: the staged exe gets the game's icon. It is a COPY (place() may hardlink the build's exe, which stays plain:
+    # github_release.py zips the build's exe, not this one).
+    staged_exe = os.path.join(out, "simgolf_port.exe")
+    os.remove(staged_exe)
+    shutil.copy2(os.path.join(a.app, "simgolf_port.exe"), staged_exe)
+    game_exe = os.path.join(a.install, "golf_clean.exe")
+    if not os.path.isfile(game_exe):
+        sys.exit("[!] %s has no golf_clean.exe" % a.install)
+    stamp_icon(staged_exe, game_exe)
     vc = vc_redist_dir()
     for f in VC_RUNTIME:
         place(os.path.join(vc, f), os.path.join(out, f)); wanted.add(f)
