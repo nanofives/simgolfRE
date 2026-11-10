@@ -248,6 +248,7 @@ void world_check(LiveTerrainWorld &w) {
   w.diff_px += d;
 }
 void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const uint32_t *a, const std::vector<uint16_t> &before) {
+  overlay::grid_touch(w);  // P23D fix 1: a frame left as the last one is settled before the root changes
   const PerfScope perf_scope(kPerfTerrainWorld);  // P10A (perf.h)
   {
     const PerfDetailScope pd(kPdWorldT);  // P15A
@@ -314,6 +315,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.hud_pieces_reset();  // P9E: and its popups
   if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
     const PerfDetailScope pd(kPdWorldCopy);  // P15A
+    overlay::grid_touch(*w);  // P23D fix 1
     world_fill(*w);  // P15A fix 3
     ++w->gen;  // P15A
     w->terrain800 = g.root.px;
@@ -421,6 +423,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     v.back_terrain = g.root_terrain;
     if (world) {
       const PerfDetailScope pd(kPdWorldCopy);  // P15A
+      overlay::grid_touch(*world);  // P23D fix 1: the back is taken from a settled root
       // P15A fix 2: no copy when back already equals the root (no root change since they were made equal)
       if (world->back_gen != world->gen || !world_back_ok(*world))
         world_back_take(*world);  // P15A fix 3
@@ -440,8 +443,12 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.hud_pieces_reset();  // P9E: and its popups
   if (world) {
     const PerfDetailScope pd(kPdWorldCopy);  // P15A
+    bool grid_kept = false;  // P23D fix 1
     if (world->strip_full) {
+      overlay::grid_touch(*world);  // P23D fix 1
       world->strip_full = false;
+    } else if (world_back_ok(*world) && overlay::grid_restore(*world)) {
+      grid_kept = true;  // P23D fix 1: the root holds back + the last frame's grid and nothing changed since: left as it is
     } else if (world->back_gen != world->gen || !world_back_ok(*world)) {  // P15A fix 2: else equal
       world_back_put(*world);  // P15A fix 3
       ++world->gen;  // P15A
@@ -453,7 +460,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     world->lines_open = true;  // P13D item 7
     gfx_trail_reset();  // P22C fix 3: the trail lines kept for this frame
     gfxb::text_frame_start(g);  // P23F: the last frame's frame-text edge runs
-    world_check(*world);
+    if (!grid_kept) world_check(*world);  // (a kept root holds the grid lines the check's terrain800 has not taken yet)
   }
 }
 
@@ -471,6 +478,7 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   LiveTerrainWorld *w = lt->world();
   if (!w || !w->dirty || !w->has_last) return;
   const PerfDetailScope pd(kPdWorldCopy);  // P15A
+  overlay::grid_touch(*w);  // P23D fix 1
   world_threads(*w);  // P15A fix 2 / fix 3
   TerrainGlobals &tg = lt->globals();
   const int32_t view = tg.view_index;
@@ -503,5 +511,12 @@ const GfxBodyDef kBodies[] = {
 extern const GfxFamily kGfxFamily_terrain = {"terrain", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
 
 int terrain_world_raster_threads() { return world_raster_threads(); }   // P15A fix 3 (terrain_live.h)
+
+// P23D fix 1 (terrain_overlay.h): blit 0's copy and count, for a grid frame left as the last one that turned out to differ
+void gfx_world_restore_back(LiveTerrainWorld &w) {
+  world_back_put(w);  // P15A fix 3
+  ++w.gen;  // P15A
+  w.back_gen = w.gen;
+}
 
 }  // namespace portsim

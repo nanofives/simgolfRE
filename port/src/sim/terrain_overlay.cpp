@@ -494,6 +494,7 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   // at the ball's drawn offset, gfx.h gfx_trail_take); terrain800 still takes the root's line pixels, so the 800 line is not shown
   const bool trail = mirror && g_trail_golfer >= 0 && g_trail_glide_on.load(std::memory_order_relaxed) &&
                      !std::strcmp(who, "drawMinimapSegment");
+  if (mirror) grid_touch(*world);  // P23D fix 1: a frame left as the last one is settled before the root changes
   if (mirror && trail) {
     if (line_world_len(world->ph, world->fw, world->ox, gl, x1, y1, x2, y2)) {  // (mirror_line_world: a line of length 0 changes nothing)
       GfxTrailLine l;
@@ -737,7 +738,151 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
 }
 
+// P23D fix 1 (gfx.h gfx_set_wide_grid): mainLoop's grid overlay P1_grid (ML+0x108e..ML+0x11fe: g_flags bit 1, set by the frame
+// preamble while the terrain palette's pick is held) draws two edges of every visible cell with Widget_fillRect(root, .., 0x80000000)
+// -> line16 into the 800 x 600 root only, so in a wide window the grid stopped at the frame's edge although the per-tile loop visits
+// the side columns' cells too (worldToScreen / tileToScreen.wideViewVisibility). Drawn here on the world layer as well, as P13D's
+// overlay lines are (mirror_line_world): the root pixel (x, y) is the window point (x + 0.5, y + 0.5) of the root's rows (flip_y), the
+// width 1 scales by ph / 600, opaque; the root's changed pixels go into terrain800 (one line, one resolution inside the frame).
+// Drawing only: the root, the GameState and the address space are unchanged.
+std::atomic<bool> g_wide_grid_on{false};
+std::atomic<uint64_t> g_grid_kept{0}, g_grid_drawn{0}, g_grid_mismatch{0}, g_grid_checked{0}, g_grid_check_px{0};
+// SG_P23_GRID_CHECK=1 (development): every kept frame's root compared with the back put back and the frame's lines drawn again
+bool grid_check_on() {
+  static const bool on = std::getenv("SG_P23_GRID_CHECK") && std::atoi(std::getenv("SG_P23_GRID_CHECK")) == 1;
+  return on;
+}
+// a grid line's pixels on a world surface of the world's size: line16 puts the end pixels too, so the root pixel (x, y) is the window
+// point (x + 0.5, y + 0.5); a segment of length 0 would draw nothing: a pixel-wide stub instead
+void grid_line_px(uint16_t *px, const LiveTerrainWorld &w, const LiveTerrainWorld::GridLine &l) {
+  LineGl gl;
+  gl.flip_y = true;
+  gl.screen_h = 600;
+  gl.line_width = 1.0f;
+  const bool dot = l.x1 == l.x2 && l.y1 == l.y2;
+  const double ax = dot ? l.x1 : l.x1 + 0.5, ay = l.y1 + 0.5, bx = dot ? l.x1 + 1.0 : l.x2 + 0.5, by = dot ? ay : l.y2 + 0.5;
+  line_px_body(px, w.pw, w.ph, w.fw, w.ox, gl, ax, ay, bx, by, l.colour, 10, 0, 0, w.pw, w.ph, nullptr);
+}
+// one grid line on the world root (and, recording, on the check's sample and as a world-thread op); the root's count moves
+void grid_line_draw(LiveTerrainWorld &w, const LiveTerrainWorld::GridLine &l) {
+  std::vector<uint16_t> &px = w.raster->pixels();
+  if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
+  LineGl gl;
+  gl.flip_y = true;
+  gl.screen_h = 600;
+  gl.line_width = 1.0f;
+  const bool dot = l.x1 == l.x2 && l.y1 == l.y2;
+  const double ax = dot ? l.x1 : l.x1 + 0.5, ay = l.y1 + 0.5, bx = dot ? l.x1 + 1.0 : l.x2 + 0.5, by = dot ? ay : l.y2 + 0.5;
+  const uint32_t colour = l.colour;
+  const PerfDetailScope pd(kPdLines);
+  ++w.gen;  // P15A
+  const int32_t pw = w.pw, ph = w.ph, fw = w.fw, ox = w.ox;
+  grid_line_px(px.data(), w, l);
+  if (!w.rec) return;
+  // P15A fix 3: on the check's sample and on the world thread's raster too
+  if (w.sample && w.sample->pixels().size() == px.size())
+    line_px_body(w.sample->pixels().data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
+  gfx_world_op(kGwLines, [=](LiveTerrainWorld &W) {
+    if (W.raster && W.raster->pixels().size() == static_cast<size_t>(pw) * static_cast<size_t>(ph))
+      line_px_body(W.raster->pixels().data(), pw, ph, fw, ox, gl, ax, ay, bx, by, colour, 10, 0, 0, pw, ph, nullptr);
+  });
+}
+// a skipped frame that turned out to differ: the back put on the root (blit 0's copy and count), then this frame's lines so far
+void grid_redo(LiveTerrainWorld &w) {
+  w.grid_defer = false;
+  g_grid_mismatch.fetch_add(1, std::memory_order_relaxed);
+  gfx_world_restore_back(w);
+  w.grid_cur_ok = w.gen == w.back_gen;
+  for (const LiveTerrainWorld::GridLine &l : w.grid_cur) grid_line_draw(w, l);
+  w.grid_lines_gen = w.gen;
+}
+void root_line_world(Gfx &g, Ctx &ctx, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour, const LineTouch &touch) {
+  if (!g_wide_grid_on.load(std::memory_order_relaxed) || mode() == 14 || g.hud.cursor_depth != 0) return;
+  if (g.root.w != 800 || g.root.h != 600 || !g.root_terrain) return;
+  LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+  LiveTerrainWorld *const w = lt ? lt->world() : nullptr;
+  if (!w || !w->valid || !w->lines_open || !w->raster) return;
+  LiveTerrainWorld::GridLine l;
+  l.x1 = x1;
+  l.y1 = y1;
+  l.x2 = x2;
+  l.y2 = y2;
+  l.colour = colour;
+  if (w->grid_defer) {  // a frame left as the last one: compare only, until a line differs
+    const size_t i = w->grid_cur.size();
+    w->grid_cur.push_back(l);
+    if (i >= w->grid_prev.size() || !(w->grid_prev[i] == l)) grid_redo(*w);
+  } else {
+    if (w->grid_cur.empty()) w->grid_cur_ok = w->gen == w->back_gen;   // the first line: on the back as it was put back or taken
+    else if (w->gen != w->grid_lines_gen) w->grid_cur_ok = false;       // something else changed the root between the lines
+    w->grid_cur.push_back(l);
+    grid_line_draw(*w, l);
+    w->grid_lines_gen = w->gen;
+  }
+  if (w->terrain800.size() == g.root.px.size()) lines_into_terrain800(g.root.px, w->terrain800, g.root.w, touch);
+}
+bool grid_restore(LiveTerrainWorld &w) {
+  grid_touch(w);  // (a frame without a queue start leaves nothing pending: settled here all the same)
+  w.grid_cur.clear();
+  const bool keep = g_wide_grid_on.load(std::memory_order_relaxed) && w.grid_prev_ok && !w.grid_prev.empty() &&
+                    w.gen == w.grid_after_gen && w.back_gen == w.grid_back_gen && w.raster && mode() != 14;
+  if (!keep) return false;
+  w.grid_defer = true;
+  w.grid_cur_ok = true;
+  w.grid_lines_gen = w.gen;
+  return true;
+}
+void grid_touch(LiveTerrainWorld &w) {
+  if (!w.grid_defer) return;
+  if (w.grid_cur == w.grid_prev) {  // every line of the last frame came again: the root is right as it is
+    w.grid_defer = false;
+    w.grid_matched = true;
+    return;
+  }
+  grid_redo(w);
+}
+void grid_queue_begin(LiveTerrainWorld &w) {
+  grid_touch(w);
+  const bool kept = w.grid_matched;
+  w.grid_matched = false;
+  if (kept && grid_check_on() && w.raster && !w.grid_cur.empty()) {  // (development) the kept root against a restore and a redraw
+    const std::vector<uint16_t> &now = w.raster->cpixels();
+    std::vector<uint16_t> ref = now;
+    if (w.rec) w.raster->copy_masked(w.back_m, ref);
+    else if (w.back && w.back->size() == ref.size()) ref = *w.back;
+    for (const LiveTerrainWorld::GridLine &l : w.grid_cur) grid_line_px(ref.data(), w, l);
+    uint64_t d = 0;
+    for (size_t i = 0; i < ref.size(); ++i) d += ref[i] != now[i] ? 1u : 0u;
+    g_grid_checked.fetch_add(1, std::memory_order_relaxed);
+    g_grid_check_px.fetch_add(d, std::memory_order_relaxed);
+  }
+  if (w.grid_cur.empty()) {
+    w.grid_prev.clear();
+    w.grid_prev_ok = false;
+    return;
+  }
+  (kept ? g_grid_kept : g_grid_drawn).fetch_add(1, std::memory_order_relaxed);
+  w.grid_prev_ok = w.grid_cur_ok && w.gen == w.grid_lines_gen;
+  w.grid_prev.swap(w.grid_cur);
+  w.grid_cur.clear();
+  w.grid_after_gen = w.gen;
+  w.grid_back_gen = w.back_gen;
+}
+
 }  // namespace overlay
+
+// ---- P23D fix 1 (gfx.h)
+void gfx_set_wide_grid(bool on) { overlay::g_wide_grid_on.store(on, std::memory_order_relaxed); }
+bool gfx_wide_grid() { return overlay::g_wide_grid_on.load(std::memory_order_relaxed); }
+void gfx_wide_grid_stats(uint64_t &kept, uint64_t &drawn, uint64_t &mismatch) {
+  kept = overlay::g_grid_kept.load(std::memory_order_relaxed);
+  drawn = overlay::g_grid_drawn.load(std::memory_order_relaxed);
+  mismatch = overlay::g_grid_mismatch.load(std::memory_order_relaxed);
+}
+void gfx_wide_grid_check(uint64_t &checked, uint64_t &differing_px) {
+  checked = overlay::g_grid_checked.load(std::memory_order_relaxed);
+  differing_px = overlay::g_grid_check_px.load(std::memory_order_relaxed);
+}
 
 // ---- P22C item 3 fix 3 (gfx.h)
 void gfx_set_trail_glide(bool on) { overlay::g_trail_glide_on.store(on, std::memory_order_relaxed); }

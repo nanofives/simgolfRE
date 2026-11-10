@@ -96,6 +96,10 @@
 //   its trail segment (golfer flag bit 22: the mishit and lie rolls) glides like the others, and the segment moves with it: it is kept
 //   off the world layer and drawn under the sprites at the ball's drawn offset by the objects redraw (gfx.h gfx_set_trail_glide;
 //   such frames take the CPU objects path). off = P22C fix 1: that ball and its shadow stay at the frame's place.
+//   P23D fix 1: --wide-grid on|off (default on; SG_APP_P23=off: off; needs the world layer) the grid the terrain palette shows
+//   (mainLoop's grid overlay, lines on the 800 root) is drawn on the wide view's world layer too, so it covers the side columns
+//   (gfx.h gfx_set_wide_grid; drawing only). A frame whose grid equals the last one's keeps the world picture as it is (no back
+//   restore, no line drawn). off = the grid stops at the 800 frame's edge, as the original's screen ends there.
 //   P22D fix 3: --meter-tips on|off (default on; SG_APP_P22=off: off) the cash, fun rating and skill rating boxes show their name
 //   as the game's one-line tip after the HUD tips' dwell (gfx.h gfx_set_meter_tips; drawing only)
 //   P22D fix 2: --golfer-list wide|four (default wide; SG_APP_P22=off: four) the golfer list gets as many more columns right of its
@@ -486,6 +490,7 @@ struct Options {
   bool list_wide = true;           // P22D fix 2: --golfer-list wide|four (SG_APP_P22=off: four)
   bool meter_tips = true;          // P22D fix 3: --meter-tips on|off (SG_APP_P22=off: off)
   bool trail_glide = true;         // P22C fix 3: --trail-glide on|off (SG_APP_P22=off: off)
+  bool wide_grid = true;           // P23D fix 1: --wide-grid on|off (SG_APP_P23=off: off)
   bool newest_saves = true;        // P23A item 2: --newest-saves on|off (SG_APP_P23=off: off) the load browser lists the newest save first
   bool edge_texts = true;          // P23F fix 1: --edge-texts on|off (SG_APP_P23=off: off) frame texts the 800 frame's edge cut drawn whole
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
@@ -1510,6 +1515,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   ho.smooth_objects = o.smooth_objects && o.sprite_native && ho.world;
   portsim::gfx_set_hr_scene(ho.smooth_objects);
   portsim::gfx_set_trail_glide(ho.smooth_objects && o.trail_glide);  // P22C fix 3 (the moving objects draw the trail lines)
+  portsim::gfx_set_wide_grid(ho.world && o.wide_grid);  // P23D fix 1 (the grid on the world layer)
   ho.world_thread = o.world_thread && ho.world;  // P15A (the hr work recorded for it only with a world layer)
   portsim::gfx_set_hr_defer(ho.world_thread);
   // P15A fix 3: the world raster on the world thread (not with the render-scale-1 gate, which reads the sim's whole world root)
@@ -2087,6 +2093,16 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p22d\":{\"golfer_list\":\"" + std::string(o.list_wide ? "wide" : "four") + "\",\"meter_tips\":" +
        std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
+  {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
+    // whose lines turned out to differ)
+    uint64_t kept = 0, drawn = 0, mismatch = 0;
+    portsim::gfx_wide_grid_stats(kept, drawn, mismatch);
+    uint64_t checked = 0, check_px = 0;
+    portsim::gfx_wide_grid_check(checked, check_px);
+    s += ",\"p23d\":{\"wide_grid\":" + std::to_string(portsim::gfx_wide_grid() ? 1 : 0) + ",\"kept\":" + std::to_string(kept) +
+         ",\"drawn\":" + std::to_string(drawn) + ",\"mismatch\":" + std::to_string(mismatch) + ",\"checked\":" +
+         std::to_string(checked) + ",\"check_px\":" + std::to_string(check_px) + "}";
+  }
   s += ",\"p16a\":{\"prio\":" + std::to_string(p16_prio ? 1 : 0) + ",\"pace_forced_hz\":" +  // P16A
        std::to_string(std::getenv("SG_P16_PACE_HZ") ? std::atoi(std::getenv("SG_P16_PACE_HZ")) : 0) + "}";
   {  // P12A fix 1
@@ -3409,6 +3425,10 @@ bool parse(int argc, char **argv, Options &o) {
       o.strip_right = v != "left";
       o.strip_near = v == "near";
     }
+    else if (a == "--wide-grid") {  // P23D fix 1
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.wide_grid = v == "on";
+    }
     else if (a == "--trail-glide") {  // P22C fix 3
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.trail_glide = v == "on";
@@ -3676,6 +3696,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.newest_saves = false;  // P23A item 2
       o.edge_texts = false;    // P23F fix 1
+      o.wide_grid = false;  // P23D fix 1
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

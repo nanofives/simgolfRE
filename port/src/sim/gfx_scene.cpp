@@ -92,6 +92,7 @@
 #include "portsim/sim/gfx_hud.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"   // G32: the wide scene
+#include "portsim/sim/terrain_overlay.h"  // P23D fix 1: grid_queue_begin
 #include "portsim/sim/perf.h"   // P15A: detail counters
 
 namespace portsim {
@@ -2586,6 +2587,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.hud.line_word.clear();
   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
   LiveTerrainWorld *w = lt ? lt->world() : nullptr;
+  if (w) overlay::grid_queue_begin(*w);  // P23D fix 1: the grid lines' frame settled and kept as the next one's reference
   if (w) w->lines_open = false;  // P13D item 7: the overlay lines drawn before the queue went on the world layer too
   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
     if (w) w->scene_w = 0;

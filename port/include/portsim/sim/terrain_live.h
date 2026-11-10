@@ -148,6 +148,19 @@ struct LiveTerrainWorld {
   uint64_t gen = 0;
   // P15A fix 2: `back` equals the root since the root's count was back_gen (blit 1 / 0 copy only when it changed since)
   uint64_t back_gen = ~0ull;
+  // P23D fix 1 (gfx.h gfx_set_wide_grid; terrain_overlay.cpp grid_*): the grid lines' frame-coherent skip. grid_prev: the grid lines
+  // drawn on the root after it was made equal to `back` (back_gen grid_back_gen), the root's count after them grid_after_gen;
+  // grid_prev_ok: the root is exactly back + grid_prev now. When the next frame's blit 0 finds nothing changed since (gen ==
+  // grid_after_gen, back_gen == grid_back_gen), the root is left as it is (grid_defer) and the frame's lines are only compared
+  // (grid_cur); the first that differs, or any other change of the root, puts the back and the lines so far on the root then.
+  struct GridLine {
+    int32_t x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+    uint32_t colour = 0;
+    bool operator==(const GridLine &o) const { return x1 == o.x1 && y1 == o.y1 && x2 == o.x2 && y2 == o.y2 && colour == o.colour; }
+  };
+  std::vector<GridLine> grid_prev, grid_cur;
+  bool grid_prev_ok = false, grid_cur_ok = false, grid_defer = false, grid_matched = false;
+  uint64_t grid_after_gen = 0, grid_back_gen = 0, grid_lines_gen = 0;
   int64_t copies_skipped = 0, skip_checked = 0, skip_differing = 0;   // fix 2 (session.json world p15a; SG_P15_SKIP_CHECK=1 compares)
   // P15A fix 3 (log/roadmap/P15/P15A_notes.md section 5; gfx.h gfx_set_world_raster_defer): THE WORLD RASTER ON THE WORLD THREAD.
   // With rec every surface operation of this world is also recorded into the frame thread's job: the setup's and the passes' GL

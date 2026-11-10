@@ -50,6 +50,7 @@
 //   (the screen bodies' modes are listed at each body; 101..103 are the underlay, not controls)
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <string>
@@ -59,6 +60,8 @@
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx_scene.h"
+#include "portsim/sim/gfx.h"              // P23D fix 1: gfx_wide_grid
+#include "portsim/sim/terrain_overlay.h"  // P23D fix 1: root_line_world
 
 namespace portsim {
 
@@ -409,8 +412,23 @@ void b_widget_fill_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     x1 = sub32(x1, 1);
     x2 = sub32(x2, 1);
   }
-  line16(g.root, c, x1, static_cast<int32_t>(a[2]), x2, static_cast<int32_t>(a[4]),
-         static_cast<uint16_t>(a[5] & 0xffffu));
+  const int32_t y1 = static_cast<int32_t>(a[2]), y2 = static_cast<int32_t>(a[4]);
+  // P23D fix 1 (gfx.h gfx_set_wide_grid): the grid overlay's lines (P1_grid, colour 0x80000000) on the wide view's world layer too;
+  // the other black Widget_fillRect calls of a game frame (ML+0x91d3..ML+0x920c, the HUD) come after the sprite queue closed it
+  const bool grid = a[5] == 0x80000000u && gfx_wide_grid();
+  overlay::LineTouch touch;
+  if (grid) {  // the rectangle line16 can write in the clip, and its pixels before the call
+    touch.x0 = std::max(c[0], std::min(x1, x2));
+    touch.xe = std::min(c[2] - 1, std::max(x1, x2));
+    touch.y0 = std::max(c[1], std::min(y1, y2));
+    touch.ye = std::min(c[3] - 1, std::max(y1, y2));
+    if (touch.xe >= touch.x0 && touch.ye >= touch.y0)
+      for (int32_t y = touch.y0; y <= touch.ye; ++y)
+        touch.before.insert(touch.before.end(), g.root.px.begin() + static_cast<ptrdiff_t>(y) * g.root.w + touch.x0,
+                            g.root.px.begin() + static_cast<ptrdiff_t>(y) * g.root.w + touch.xe + 1);
+  }
+  line16(g.root, c, x1, y1, x2, y2, static_cast<uint16_t>(a[5] & 0xffffu));
+  if (grid) overlay::root_line_world(g, ctx, x1, y1, x2, y2, a[5], touch);
 }
 
 // ------------------------------------------------------------------------------------------------ the underlay (tests)

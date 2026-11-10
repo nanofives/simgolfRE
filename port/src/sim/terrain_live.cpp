@@ -360,6 +360,9 @@ bool LiveTerrain::resize_world(int32_t pw, int32_t ph) {
   if (pw == world_->pw && ph == world_->ph) return true;
   world_->raster->resize_frame(pw, ph);
   ++world_->gen;  // P15A
+  world_->grid_defer = world_->grid_prev_ok = false;  // P23D fix 1: a new root holds no grid
+  world_->grid_prev.clear();
+  world_->grid_cur.clear();
   if (world_->sample) world_->sample->resize_frame(pw, ph);  // P15A fix 3
   if (world_->rec) record_reset(pw, ph, true);
   world_geometry(*world_, pw, ph);

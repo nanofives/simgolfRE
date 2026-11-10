@@ -94,6 +94,26 @@ void body_set_line_point(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_line_to(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 
+// P23D fix 1 (gfx.h gfx_set_wide_grid): a Widget_fillRect line of mainLoop's grid overlay (root ends x1, y1 .. x2, y2, colour
+// 0x8000RGB555) on the world layer too, while the overlay lines' window is open; touch = the root rectangle line16 could write and
+// its pixels before the call (the changed ones go into terrain800). Does nothing with the switch off.
+void root_line_world(Gfx &g, Ctx &ctx, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour, const LineTouch &touch);
+}  // namespace overlay
+struct LiveTerrainWorld;
+// P23D fix 1 (gfx_terrain.cpp): blit 0's world part (the back put on the world root, its count moved, back_gen = the count)
+void gfx_world_restore_back(LiveTerrainWorld &w);
+namespace overlay {
+// P23D fix 1, the grid lines' frame-coherent skip (terrain_live.h LiveTerrainWorld::grid_*):
+// grid_restore (blit 0, before the back is put back): true = the root is left as it is for this frame (it holds back + the last
+// frame's grid and nothing changed since); the caller then skips the copy and the count.
+bool grid_restore(LiveTerrainWorld &w);
+// grid_touch: any other change of the world root (a pass, windowPaint, blit 1, a mirrored line, the frame-end redraw, a resize):
+// first settle a skipped frame (the back and this frame's lines put on the root unless they equal the last frame's)
+void grid_touch(LiveTerrainWorld &w);
+// grid_queue_begin (renderSpriteQueue's start, the overlay lines' window closes): settle, then keep this frame's lines as the next
+// frame's reference
+void grid_queue_begin(LiveTerrainWorld &w);
+
 }  // namespace overlay
 
 // negative controls (sg_negctl_set "overlay.rasterLine"): 1 hard-edged line (no coverage ramp), 2 alpha ignored, 3 no clipping
