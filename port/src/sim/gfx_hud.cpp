@@ -27,6 +27,7 @@
 //   (roadmap S3.6b, the employee panels) 11 the golfer list's names one pixel right   12 the golfer list's scroll bar 7 px tall
 //   13 the detail panel's list-slot images (entries 8..15) one pixel lower   14 the detail panel's text block one pixel lower
 //   15 the detail panel's three buttons with no selection take the selection branch's images
+//   16 (P22D fix 1) the golfer list's columns past its limit drawn inside the panel's layer again (the badges cut at its right border)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -1902,6 +1903,15 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   int32_t x1 = 0x136, row = 0, fa = 0x19c, fb = 0x146, fc = 0x156, fd = 0x145, ly = 0x1f2, count = 0;
   const int32_t skip = gs.g_ui_5aa6b8[4];
   const bool compact = gs.g_zoomScale < 4;
+  // P22D fix 1 (log/roadmap/P22/P22D_notes.md item 5a): a column past the limit (the original skips only its first golfer, so the
+  // rest of it is drawn at x1 0x136 + 4 * 0x79 = 794 and beyond, and the root keeps the hole badges' first 6 columns at the panel's
+  // right border) is drawn here only without the layered capture. With it (the app's wide HUD), its calls run after the panel's
+  // layer is closed and belong to no layer: the root gets the same pixels (nothing the original draws later in this function
+  // reaches x 794: the scroll bar ends at 0x15f + 0x190, the -6 arrow image at 0x2f4 + 0x24), the panel layer shows the border whole
+  const Gfx::HudCapture &hc = g.hud;
+  const bool defer = hc.on && hc.depth == 1 && hc.cur == kGfxLayerPanel && hc.any && !hc.aborted && mode() != 16;
+  std::vector<std::function<void()>> beyond;
+  const int32_t limit = compact ? 0x2f3 : 0x2b7;
   for (int32_t i = 0; i < 0x98; ++i) {
     const int32_t gi = mod32(add32(sub32(gs.g_lastAllocatedGolfer, i), 0x98), 0x98);
     const bool active = sbyte(gi, 0x21) > 0;
@@ -1920,34 +1930,43 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       const int32_t step = compact ? 0x3c : 0x79;
       x1 += step, fd += step, fc += step, fb += step, fa += step;
       ly = 0x1f2;
-      if (fd > (compact ? 0x2f3 : 0x2b7)) continue;
+      if (fd > limit) continue;
     }
-    if (compact) {
-      const uint32_t c = colour(gi);
-      scaled(face(gi), x1, ly);
-      text(buffer_text(ctx, "buildGolferName", {static_cast<uint32_t>(gi), 0}), mode() == 11 ? fd + 1 : fd, ly + 1, c);
-      ly += 0xe;
-      continue;
-    }
-    font(big);
-    if (gi & 1) {
-      scaled(pics, x1, ly);
-      const int32_t st = sbyte(gi, 0x21);
-      std::string s = std::to_string(st);
-      if (st == 0x13) s = gfxb::vstring(m, va(ctx, GSO(f_strpool_4c61dc, 8)));
-      if (st <= 0) s = std::to_string(sbyte(sword(gi, 0xa2), 0x21));
-      text(s, x1 + (st >= 10 ? 5 : 8), ly + 0xf, 0x80000000u);
-      if (sword(gi, 0xb0) != -1) {
-        for (int32_t k = 0; k < 4; ++k) scaled(pics + 0x2c0, fc + 10 * k, ly + 0x11);
-        for (int32_t k = 0; k < sword(gi, 0xb2); ++k) scaled(pics + 0x23c, fc + 10 * k, ly + 0x11);
+    // one golfer's entry at the column's places (x1, fa, fb, fc, fd) and row y
+    auto entry = [&, gi, active](int32_t ex1, int32_t efa, int32_t efb, int32_t efc, int32_t efd, int32_t ey) {
+      if (compact) {
+        const uint32_t c = colour(gi);
+        scaled(face(gi), ex1, ey);
+        text(buffer_text(ctx, "buildGolferName", {static_cast<uint32_t>(gi), 0}), mode() == 11 ? efd + 1 : efd, ey + 1, c);
+        return;
       }
+      font(big);
+      if (gi & 1) {
+        scaled(pics, ex1, ey);
+        const int32_t st = sbyte(gi, 0x21);
+        std::string s = std::to_string(st);
+        if (st == 0x13) s = gfxb::vstring(m, va(ctx, GSO(f_strpool_4c61dc, 8)));
+        if (st <= 0) s = std::to_string(sbyte(sword(gi, 0xa2), 0x21));
+        text(s, ex1 + (st >= 10 ? 5 : 8), ey + 0xf, 0x80000000u);
+        if (sword(gi, 0xb0) != -1) {
+          for (int32_t k = 0; k < 4; ++k) scaled(pics + 0x2c0, efc + 10 * k, ey + 0x11);
+          for (int32_t k = 0; k < sword(gi, 0xb2); ++k) scaled(pics + 0x23c, efc + 10 * k, ey + 0x11);
+        }
+      }
+      font(small);
+      if (active) {
+        text(buffer_text(ctx, "buildGolferName", {static_cast<uint32_t>(gi), 0}), mode() == 11 ? efb + 1 : efb, ey + 5, colour(gi));
+        scaled(face(gi), efa, ey + 2);
+      }
+    };
+    if (defer && fd > limit) {  // P22D fix 1: a column past the limit, after the layer
+      beyond.push_back([entry, x1, fa, fb, fc, fd, ly]() { entry(x1, fa, fb, fc, fd, ly); });
+      // the font the entry leaves selected is what the next entry or the scroll bar would see (font(small) after a wide entry)
+      if (!compact) font(small);
+    } else {
+      entry(x1, fa, fb, fc, fd, ly);
     }
-    font(small);
-    if (active) {
-      text(buffer_text(ctx, "buildGolferName", {static_cast<uint32_t>(gi), 0}), mode() == 11 ? fb + 1 : fb, ly + 5, colour(gi));
-      scaled(face(gi), fa, ly + 2);
-    }
-    ly += 0x15;
+    ly += compact ? 0xe : 0x15;
   }
   if (count != 0) {
     const int32_t top = clampv(div32(mul32(skip, 400), count), 0, 0x18f);
@@ -1963,6 +1982,13 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   dwell(g, ctx, hover, "tooltip: drawEmployeeViewPanel's dwell tip (drawMapLine bar and centred text)", [&]() {
     gfxt::view_panel_tip(g, ctx, hover, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
   });
+  if (!beyond.empty()) {  // P22D fix 1: the columns past the limit, outside every layer (the panel's layer is reopened, empty)
+    gfx_layer_end(ctx);
+    for (const std::function<void()> &f : beyond) f();
+    font(big);  // the selection the function leaves (set before the tip)
+    g.hud.mark = g.root.px;  // their pixels are no layer's: the next boundary's gap does not see them
+    gfx_layer_begin(ctx, kGfxLayerPanel);
+  }
 }
 
 // drawEmployeeDetailPanel.draw(x, y) (c3fc.cpp DrawEmployeeDetailPanel_re, the drawing). The positions P(i) are the word
