@@ -1274,3 +1274,28 @@ Continue Saved Game (the browser skips `&` names: copy the save under another na
   save is gone).
 - Merge check (P19Z, SEGS=1): builds x64 + Win32 0 warnings, test_static 6, segments 205 / 205 = I25, smoke 1080 + 4K clean. Published
   e11669e6 at once (release_due said NOT_DUE: Mariano's play-test rule, one fix per delivery). P10_cleanup.py now accepts P2x trees.
+
+## P21: eighth play-test feedback (2026-11-09)
+Brief log/roadmap/P21/BRIEF.md, notes log/roadmap/P21/P21{A,B,C}_notes.md, three parallel workers on claude2, one fix each, each merged,
+checked (P19Z merge check, SEGS=1) and published on its own.
+- Item 1, "P should pause, move pathway to another key" (P21A fix 1, e1072f39, class b): play switch mainLoop.pKeyPausesGame. H1's key
+  switch (table ML+0x1235c) has the pause toggle on capital P (0x50: xor [g_flags] bit 4, the Paused label) and the Improvements palette
+  (Pathway first) on lower-case p (0x70); the game clears caps lock, so a plain P press never paused. At 0, p and P take the pause case and
+  a / A (free in the table) open the Improvements palette: one remap of esi at the key dispatch loop head ML+0xcf93. No game text names the key.
+- Item 3, year-end report filter on the wide sides (P21C fix 1, faf944e1, class a): the end-of-year report draws before any panel layer of
+  its frame, and P9D recorded the whole-frame 0.25-alpha dim only while a layer scope was open, so the frame was published layer-less and
+  the dim lived only in the 800 x 600 root. The dim is now also recorded with no layer open (HudCapture::nl_dim, GfxHudFrame::dim_all), carried
+  to WorldImage and applied by Presenter::render_impl outside the 800 x 600 rectangle with the same formula (layer-less frames are CPU
+  composed on every world path). Off with --hud-modal off. The per-pass checks see no layered frame there (0 checks on it).
+- Item 2, arrow key to camera delay (P21B fix 1, 71fe8883): measured from the key-down (24 presses, ms): original golf_clean.exe shows the
+  whole step at 315 (new camera drawn 132; its camera frame itself takes 182 before its present); the app before, 1920: first moved paint
+  273, half 348, slide end 872; after: first moved paint 158, half 242, slide end 277. Two causes: (a) Presenter::set_frame cleared slide_on_
+  before slide_start read it, so every frame after a press restarted a whole slide from the offset left (the view crept for 0.4-0.7 s);
+  (b) the original draws a frame's picture before it reads input, so a key-down from the frame wait shows one game frame later: play switch
+  mainLoop.arrowStepAfterDraw, at 0 the live host takes leading arrow key-downs / key-ups at the frame head (recorded view block writes) and
+  FramePreamble runs rootWin_onKey / onChar0 and the camera step before the picture (P21_ArrowEarly, P21_ArrowStep), P19A's held arrow
+  stepping there too, one step per picture. Dev log SG_P21_LATLOG times each stage. Not done: a shorter slide for a lone press (asked of Mariano).
+- Published e1072f39, faf944e1 and 71fe8883, each after a full P19Z merge check (SEGS=1, all green). Those checks took 13 to 101 min,
+  mostly queueing (w8_lock behind the workers' runs, the test-slot memory gate reserving 8 GB per run over an 18-20 GB baseline); Mariano
+  asked for a faster routine: log/roadmap/FAST/fast_check.sh (tree updated in place by fast_tree.py, x64 only, segments only when needed,
+  one 1080 smoke, real memory needs) per fix, the full check once per batch (auto-memory fast-per-fix-release-routine).
