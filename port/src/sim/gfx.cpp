@@ -533,8 +533,9 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   // for a string with no address, its ink drawn on a scratch surface), as P22E's cursor-pass texts. A golfer name label of the
   // sprite queue (drawQueuedSprite.label, a mover source) is left out: the wide scene draws it whole beside the frame (a world run,
   // moving with its figure), and a second copy here would not move with it
-  if (ts.on && !cursor_text && g.hud.edge_frame && g.root_terrain && gfx_mover_label().kind == kGfxMoverNone && !g.hud.any &&
-      !g.text.wide && g.root.w == GfxTextRun::kRootW) {
+  // (P23F fix 2: and P11C's course tip held past the frame's edge, drawn after the HUD's layers began)
+  if (ts.on && !cursor_text && g.hud.edge_frame && g.root_terrain && gfx_mover_label().kind == kGfxMoverNone &&
+      (!g.hud.any || g.hud.tip_edge) && !g.text.wide && g.root.w == GfxTextRun::kRootW) {
     int32_t c0 = x, c1 = x;
     bool got = false;
     if (va != 0) {
@@ -592,8 +593,11 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.fonts[1] = g.fonts[2] = g.fonts[3] = 0;
   const int32_t w = mul32(static_cast<int32_t>(vstrlen(ctx.mem, text)), 3);
   int32_t half = static_cast<int32_t>(a[0]);
-  if (half < w) half = w;
-  if (half > sub32(0x320, w)) half = sub32(0x320, w);
+  // P23F fix 2 (gfx_text.cpp hover_help_terrain): P11C's course tip at a cursor near or past the frame's edge is held inside the
+  // window's columns (the side columns' width wide_e each side) instead of the 800 frame's
+  const int32_t side = g.hud.tip_edge ? g.hud.wide_e : 0;
+  if (half < sub32(w, side)) half = sub32(w, side);
+  if (half > add32(sub32(0x320, w), side)) half = add32(sub32(0x320, w), side);
   // roadmap S3.8: the bar is Terrain::drawLine through the overlay body (terrain_overlay.h); without a GL context it draws nothing
   if (GfxBody bar = gfxb::find_body("drawMapLine")) {
     const uint32_t la[7] = {static_cast<uint32_t>(sub32(half, w)), a[1], static_cast<uint32_t>(add32(half, w)), a[1], 0x80000000u, 0xau, 5u};

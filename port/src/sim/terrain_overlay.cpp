@@ -477,7 +477,11 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   const bool box = !tee && g.hud.edge_on && g.hud.lines_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 &&
                    !std::strcmp(who, "drawMinimapSegment") && width == 1 && alpha == 7 &&
                    (colour == 0x80007fffu || colour == 0x80007d08u) && g.root.w == 800 && g.root.h == 600;
-  const bool rec = tee || box;
+  // P23F fix 2 (gfx_text.cpp hover_help_terrain): the bar of P11C's course tip held past the frame's edge, drawPanelBackdrop's
+  // drawMapLine(.., 0x80000000, 10, 5): recorded the same way, as a still line
+  const bool tip = !tee && !box && g.hud.tip_edge && g.hud.lines_on && !std::strcmp(who, "drawMapLine") && width == 10 &&
+                   alpha == 5 && colour == 0x80000000u && g.root.w == 800 && g.root.h == 600;
+  const bool rec = tee || box || tip;
   std::vector<uint16_t> before;
   // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
   LiveTerrainWorld *const world = lt->world();
@@ -542,7 +546,7 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
     l.colour = colour;
     l.width = gl.line_width;
     l.alpha = alpha;
-    l.still = box;  // P22E item 7
+    l.still = box || tip;  // P22E item 7, P23F fix 2
     c.lines.push_back(l);
   }
   ws.width = gl.line_width;

@@ -166,6 +166,8 @@ class Gfx {
     bool lines_on = false;            // P10I fix 1 (gfx.h gfx_set_hud_lines): the tee lines of the cursor passes are recorded
     bool edge_on = false;             // P22E item 7 (gfx.h gfx_set_hud_edge): the placement box's edges too, and the edge-cut texts
     bool edge_frame = false;          // P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course too
+    int32_t wide_e = 0;               // P23F fix 2: the wide scene's side columns (800-space) at this frame's queue (0: none)
+    bool tip_edge = false;            // P23F fix 2: inside P11C's course tip drawn at a cursor near or past the frame's edge
     std::vector<GfxHudLine> lines;    // P10I fix 1: those lines (cleared at the queue's start, as cursor2d)
     std::vector<uint8_t> line800;     // P10I fix 1: the root pixels they changed
     std::vector<uint16_t> line_word;  // P10I fix 1: the word each left there

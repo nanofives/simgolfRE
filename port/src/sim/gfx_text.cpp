@@ -1378,6 +1378,14 @@ void hover_help_terrain(Gfx &g, Ctx &ctx, int32_t cx, int32_t cy) {
   }
   const std::string text = hover_help_line(ctx, t);
   if (text.empty()) return;
+  // P23F fix 2 (gfx.h gfx_set_frame_edge_text): in a wide window a cursor near or past the frame's edge keeps its tip at the
+  // cursor (drawPanelBackdrop holds it inside the window's columns, its bar and text are drawn past the frame's edge)
+  const int32_t w3 = mul32(static_cast<int32_t>(text.size()), 3);
+  struct TipScope {
+    Gfx &g;
+    explicit TipScope(Gfx &gg, bool on) : g(gg) { g.hud.tip_edge = on; }
+    ~TipScope() { g.hud.tip_edge = false; }
+  } tip(g, g.hud.edge_frame && g.hud.wide_e > 0 && (cx < w3 || cx > sub32(0x320, w3)));
   backdrop(g, ctx, text, cx, cy < 0x30 ? add32(cy, 0x24) : sub32(cy, 0x12));
 }
 

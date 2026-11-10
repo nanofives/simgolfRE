@@ -2581,6 +2581,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.hud.cursor2d.clear();  // P9E fix 4: the cursor passes come after the queue
   g.hud.lines.clear();     // P10I fix 1: so do their tee lines
   g.text.edge_runs.clear();  // P22E item 7: and their texts past the root's edge
+  g.hud.wide_e = 0;          // P23F fix 2
   g.hud.line800.clear();
   g.hud.line_word.clear();
   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
@@ -2594,6 +2595,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   const int32_t W = 800 + 2 * E;
   w->scene_e = E;
   w->scene_w = W;
+  g.hud.wide_e = E;  // P23F fix 2
   const PerfDetailScope pd(kPdQueueBegin);  // P15A
   w->scene_base.assign(static_cast<size_t>(W) * 600, 0);
   const std::vector<uint16_t> &wp = w->raster->pixels();
