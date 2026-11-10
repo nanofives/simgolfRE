@@ -165,6 +165,7 @@ class Gfx {
     std::vector<uint8_t> cursor2d;    // P9E fix 4: the root pixels their sprite draws changed (cleared at the queue's start)
     bool lines_on = false;            // P10I fix 1 (gfx.h gfx_set_hud_lines): the tee lines of the cursor passes are recorded
     bool edge_on = false;             // P22E item 7 (gfx.h gfx_set_hud_edge): the placement box's edges too, and the edge-cut texts
+    bool edge_frame = false;          // P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course too
     std::vector<GfxHudLine> lines;    // P10I fix 1: those lines (cleared at the queue's start, as cursor2d)
     std::vector<uint8_t> line800;     // P10I fix 1: the root pixels they changed
     std::vector<uint16_t> line_word;  // P10I fix 1: the word each left there
@@ -208,6 +209,9 @@ class Gfx {
     // changed no root pixel, so nothing peels them): the base's runs with an empty box in the root and their columns in ex0 / ex1,
     // published with every frame until the next queue's start clears them (as the tee lines)
     std::vector<GfxTextRun> edge_runs;
+    // P23F (gfx.h gfx_set_frame_edge_text): the same for the frame's own texts over the course; cleared when the next frame's
+    // terrain picture is made (text_frame_start), published with every frame until then
+    std::vector<GfxTextRun> frame_edge_runs;
   } text;
   // P9B: a blend primitive wrote word `res` at root pixel i: kind 2 (mask blend: src, k) or 3 (shade table k). Recorded only
   // from the first layer of a frame to its publish (in a layer or in the centred gap after one) while the pixel still holds
@@ -308,6 +312,7 @@ struct TextRunScope {
   // draw_text_string before text_run_end (ink false: not measured)
   bool ink = false;
   int32_t ink_x0 = 0, ink_x1 = 0;
+  bool frame = false;  // P23F: a frame text (gfx.h gfx_set_frame_edge_text): its edge run goes to frame_edge_runs
 };
 void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s);
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
@@ -317,6 +322,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
 // over the banner picture `img`
 void text_banner_begin(Gfx &g);
 // the wide scene's runs (gfx_scene.cpp, G32): forgotten at the queue's start, peeled off the scene at its end (gfx.cpp)
+void text_frame_start(Gfx &g);  // P23F: the frame's terrain picture: the last frame's frame-text edge runs go
 void text_wide_begin(Gfx &g);
 void text_wide_end(Gfx &g, const std::vector<uint16_t> &scene, int32_t scene_w, int32_t scene_e, std::vector<uint16_t> &scene_text);
 }  // namespace gfxb

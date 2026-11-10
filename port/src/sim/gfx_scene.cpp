@@ -3865,6 +3865,13 @@ void gfx_set_hud_edge(Ctx &ctx, bool on) {
   if (!g) return;
   g->hud.edge_on = on && g->hud.on;
 }
+// ---- P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course (gfx.cpp draw_text_string / text_run_end)
+void gfx_set_frame_edge_text(Ctx &ctx, bool on) {
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.edge_frame = on;
+  if (!on) g->text.frame_edge_runs.clear();
+}
 void gfx_cursor_sprites_begin(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.cursor_sprites) return;

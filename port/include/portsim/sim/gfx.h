@@ -233,6 +233,12 @@ void gfx_cursor_sprites_end(Ctx &ctx);
 // (GfxTextRun::ex0 / ex1), so a presenter draws both past the frame's columns. Records only: the frame, the root, the back buffer
 // and the GameState are unchanged. Set by the app's host (--edge-previews); off (the default): nothing recorded.
 void gfx_set_hud_edge(Ctx &ctx, bool on);
+// P23F (Mariano's tenth play-test, item 5, the wide audit's rows 5, 6, 10, 11, 16, 24): the same rule for the frame's own texts
+// over the course (golfer and walker name labels, placed-object and tile labels, the hole HUD, the g_flags bit 5 numbers): a text
+// drawn on the root while it holds the frame's terrain picture, before the frame's first HUD layer, whose ink the root's left or
+// right edge cut gets its whole ink columns (GfxTextRun::ex0 / ex1), and one whose whole ink lies past that edge becomes an edge
+// run (published with every frame until the next frame's terrain picture). Records only. Set by the app's host (--edge-texts).
+void gfx_set_frame_edge_text(Ctx &ctx, bool on);
 void gfx_hud_popup_begin(Ctx &ctx, int32_t cx, int32_t cy, bool click, bool text_box = false);  // P10C fix 4: text_box
 void gfx_hud_popup_end(Ctx &ctx);
 // P9D: GfxLayerPx kind 4 (the quarter blend of drawAlpha's draw16_1002ed60, gfx_reports.cpp quarter_blend)
@@ -388,6 +394,7 @@ bool gfx_text_banner(Ctx &ctx, GfxTextFrame &out);
 struct GfxTextStats {
   uint64_t captured = 0, published = 0, dropped = 0, no_font = 0, frames = 0, merged = 0;  // merged: repeats (gfx.cpp)
   uint64_t edge = 0;  // P22E item 7: cursor-pass runs the root's edge cut, given their whole columns (GfxTextRun::ex0 / ex1)
+  uint64_t frame_edge = 0;  // P23F: frame texts the root's edge cut (whole columns) or wholly past it (edge runs)
 };
 GfxTextStats gfx_text_stats(Ctx &ctx);
 extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on

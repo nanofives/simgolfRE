@@ -460,6 +460,28 @@ static void b_set_draw_target(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // measure of the whole text in the base font when the text holds no markup token). drawTextWithColor(text, x, y, colour)
 // (c3dq.cpp): the same setQuad, then drawText (c3ek.cpp: no font or a font whose +4 is 0 draws nothing) -> drawRichText at x.
 // Modelled: text without a markup or tab character, a direct colour, no shadow (setQuad's -1).
+// P23F: the 800-space ink columns [c0, c1) of `text` drawn from origin x by the provider (TA_BASELINE), measured on a scratch
+// surface (nothing of the root, the back buffer or the GameState is touched); false when the provider draws no ink
+static bool text_ink_columns(Ctx &ctx, TextMetrics &tm, uint32_t font, const std::string &text, int32_t x, int32_t ascent,
+                             int32_t &c0, int32_t &c1) {
+  const int32_t a = std::max<int32_t>(ascent, 8);
+  const int32_t pad = 2 * a + 8, n = static_cast<int32_t>(text.size());
+  const int32_t sw = 2 * pad + n * 2 * a, sh = 3 * a + 8, base = 2 * a + 4;
+  if (n <= 0 || sw > 16384) return false;
+  std::vector<uint16_t> s(static_cast<size_t>(sw) * static_cast<size_t>(sh), 0);
+  if (!tm.draw_glyphs(ctx, font, text, pad, base, 0xffffffu, s.data(), sw, sh)) return false;
+  int32_t lo = sw, hi = -1;
+  for (int32_t yy = 0; yy < sh; ++yy)
+    for (int32_t xx = 0; xx < sw; ++xx)
+      if (s[static_cast<size_t>(yy) * static_cast<size_t>(sw) + static_cast<size_t>(xx)] != 0) {
+        lo = std::min(lo, xx);
+        hi = std::max(hi, xx);
+      }
+  if (hi < 0) return false;
+  c0 = add32(x, lo - pad);
+  c1 = add32(x, hi + 1 - pad);
+  return true;
+}
 void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x0, int32_t y0, uint32_t colour, bool centre,
                       const char *who) {
   g.ensure_root(ctx);
@@ -497,12 +519,36 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   TextRunScope ts;  // P9C: the run (inert with text capture off)
   text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
   // P22E item 7: a cursor pass's text: its whole columns (the centred width measured above, else measured here)
-  if (ts.on && g.hud.edge_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0 && !g.text.wide && va != 0) {
+  const bool cursor_text = g.hud.edge_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0;
+  if (ts.on && cursor_text && !g.text.wide && va != 0) {
     int32_t tw = width;
     if (centre || tm->glyph_width(ctx, font, va, static_cast<int32_t>(text.size()), tw)) {
       ts.ink = tw > 0;
       ts.ink_x0 = x;
       ts.ink_x1 = add32(x, tw);
+    }
+  }
+  // P23F (gfx.h gfx_set_frame_edge_text): a frame text over the course (the root holds the frame's terrain picture, no HUD layer
+  // has begun) whose columns reach past the root's left or right edge: its whole columns, the advance the provider measures (or,
+  // for a string with no address, its ink drawn on a scratch surface), as P22E's cursor-pass texts. A golfer name label of the
+  // sprite queue (drawQueuedSprite.label, a mover source) is left out: the wide scene draws it whole beside the frame (a world run,
+  // moving with its figure), and a second copy here would not move with it
+  if (ts.on && !cursor_text && g.hud.edge_frame && g.root_terrain && gfx_mover_label().kind == kGfxMoverNone && !g.hud.any &&
+      !g.text.wide && g.root.w == GfxTextRun::kRootW) {
+    int32_t c0 = x, c1 = x;
+    bool got = false;
+    if (va != 0) {
+      int32_t tw = width;
+      got = (centre || tm->glyph_width(ctx, font, va, static_cast<int32_t>(text.size()), tw)) && tw > 0;
+      c1 = add32(x, tw);
+    } else if (x < 0 || add32(x, mul32(static_cast<int32_t>(text.size()), add32(ascent, ascent))) > g.root.w) {
+      got = text_ink_columns(ctx, *tm, font, text, x, ascent, c0, c1);
+    }
+    if (got && (c0 < 0 || c1 > g.root.w)) {
+      ts.ink = true;
+      ts.ink_x0 = c0;
+      ts.ink_x1 = c1;
+      ts.frame = true;
     }
   }
   if (!tm->draw_glyphs(ctx, font, text, x, y, ref, g.root.px.data(), g.root.w, g.root.h))
@@ -627,6 +673,13 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     e.layer = -1;
     e.target = 0;
     if (e.y1 <= e.y0) return;
+    if (s.frame) {  // P23F: a frame text's, kept until the next frame's terrain picture
+      g.text.frame_edge_runs.push_back(std::move(e));
+      constexpr size_t kMaxFrameEdge = 512;  // a frame with no terrain picture to clear them (no world layer): the oldest go first
+      if (g.text.frame_edge_runs.size() > kMaxFrameEdge) g.text.frame_edge_runs.erase(g.text.frame_edge_runs.begin());
+      ++g.text.stats.frame_edge;
+      return;
+    }
     g.text.edge_runs.push_back(std::move(e));
     ++g.text.stats.edge;
     return;
@@ -675,7 +728,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     if ((e0 < 0 && x0 == 0) || (e1 > w && x1 == w)) {
       r.info.ex0 = e0;
       r.info.ex1 = e1;
-      ++g.text.stats.edge;
+      ++(s.frame ? g.text.stats.frame_edge : g.text.stats.edge);
     }
   }
   const size_t bw = static_cast<size_t>(x1 - x0);
@@ -893,6 +946,8 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
   }
   // P22E item 7: the cursor passes' texts wholly past the root's edge (the base's, after its other runs)
   f.runs.insert(f.runs.end(), c.edge_runs.begin(), c.edge_runs.end());
+  // P23F: the frame texts wholly past the root's edge (the base's, kept until the next frame's terrain picture)
+  f.runs.insert(f.runs.end(), c.frame_edge_runs.begin(), c.frame_edge_runs.end());
   // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
   if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
   c.stats.published = f.runs.size();
@@ -902,6 +957,7 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
 
 // gfx_scene.cpp (G32's wide scene): the queue's start forgets the scene's runs; its end peels them off `scene` into `scene_text`
 // (a copy) and keeps those not inside the frame's columns [0, 800) as world runs
+void text_frame_start(Gfx &g) { g.text.frame_edge_runs.clear(); }
 void text_wide_begin(Gfx &g) {
   g.text.wide_runs.clear();
   g.text.wide_published.clear();

@@ -77,6 +77,9 @@
 //   building tool (the Home Site's red / white outline) and the texts the cursor passes draw (its name and value labels, the tool
 //   label) drawn whole in a wide window where the 800 frame's edge cut them (gfx.h gfx_set_hud_edge): the box's edges as still
 //   native lines, the cut texts over their whole width; off = cut at the frame's columns, where the original's screen ends.
+//   P23F fix 1: --edge-texts on|off (default on with --text-res native; SG_APP_P23=off: off) the frame's own texts over the course
+//   (golfer and walker name labels, object and tile labels, the hole HUD) drawn whole in a wide window where the 800 frame's edge
+//   cut them, or wholly past it (gfx.h gfx_set_frame_edge_text); off = cut at the frame's columns, where the original's screen ends.
 //   P13B item 18: --map-bands clamp|same (default clamp; SG_APP_P13=off: same) the world map shown before a session (courseActionMenu:
 //   the only loop that hands the host a 50 ms timed pass) gets side bands that repeat its outermost column, cleaned by a vertical
 //   median over +-33 logical rows (present.cpp fill_bands_map), instead of the --wide-fill bands; every other screen keeps them.
@@ -484,6 +487,7 @@ struct Options {
   bool meter_tips = true;          // P22D fix 3: --meter-tips on|off (SG_APP_P22=off: off)
   bool trail_glide = true;         // P22C fix 3: --trail-glide on|off (SG_APP_P22=off: off)
   bool newest_saves = true;        // P23A item 2: --newest-saves on|off (SG_APP_P23=off: off) the load browser lists the newest save first
+  bool edge_texts = true;          // P23F fix 1: --edge-texts on|off (SG_APP_P23=off: off) frame texts the 800 frame's edge cut drawn whole
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
@@ -538,6 +542,7 @@ static bool text_native_on(const Options &o) { return o.text_res == "native"; }
 static bool line_res_on(const Options &o) { return hud_layers_on(o) && o.hud_cursor && o.line_native; }
 // P22E item 7: the placement box and its labels whole past the frame's columns need the native lines (P10I's record and drawing)
 static bool edge_previews_on(const Options &o) { return line_res_on(o) && o.edge_previews; }
+static bool edge_texts_on(const Options &o) { return text_native_on(o) && o.edge_texts; }  // P23F fix 1
 static void setup_text(Presenter &p, const Options &o) {
   p.set_text_res(text_native_on(o));
   p.set_text_aa(o.text_aa == "cleartype" ? TextAa::ClearType : o.text_aa == "grey" ? TextAa::Grey : TextAa::System);
@@ -1152,6 +1157,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
       if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
       if (ok && edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7
+      if (ok && edge_texts_on(o)) portsim::gfx_set_frame_edge_text(*ctx, true);  // P23F fix 1
       if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
       if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
@@ -1363,7 +1369,8 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
        std::to_string(text_cap.captured) + ",\"published_last\":" + std::to_string(text_cap.published) + ",\"dropped\":" +
        std::to_string(text_cap.dropped) + ",\"no_font\":" + std::to_string(text_cap.no_font) + ",\"frames\":" +
        std::to_string(text_cap.frames) + ",\"merged\":" + std::to_string(text_cap.merged) + ",\"edge_runs\":" +
-       std::to_string(text_cap.edge) + ",\"shot_runs\":" + std::to_string(shot_text.runs) + ",\"shot_clipped_runs\":" +
+       std::to_string(text_cap.edge) + ",\"frame_edge_runs\":" + std::to_string(text_cap.frame_edge) +  // P23F fix 1
+       ",\"shot_runs\":" + std::to_string(shot_text.runs) + ",\"shot_clipped_runs\":" +
        std::to_string(shot_text.clipped_runs) + ",\"shot_clipped_px\":" + std::to_string(shot_text.clipped_px) +
        ",\"shot_failed\":" + std::to_string(shot_text.failed) + ",\"shot_render_us\":" + std::to_string(shot_render_us) + "}";
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made[0]) + ",\"w\":" + std::to_string(made[1]) + ",\"m\":" +
@@ -1428,6 +1435,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
   if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
   if (edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7: the placement box whole (gfx.h; records only)
+  if (edge_texts_on(o)) portsim::gfx_set_frame_edge_text(*ctx, true);  // P23F fix 1: the frame's texts whole (gfx.h; records only)
   if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
@@ -3483,6 +3491,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.edge_previews = v == "on";
     }
+    else if (a == "--edge-texts") {  // P23F fix 1
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.edge_texts = v == "on";
+    }
     else if (a == "--terrain-filter") {  // P13D item 4
       if (!val(v) || (v != "sharp" && v != "linear" && v != "nearest")) return false;
       o.terrain_filter = v == "sharp" ? 2 : v == "linear" ? 1 : 0;
@@ -3661,7 +3673,10 @@ int main(int argc, char **argv) {
       o.trail_glide = false;  // P22C fix 3
     }
   if (const char *ep = std::getenv("SG_APP_P23"))  // P23: the tenth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.newest_saves = false;  // P23A item 2
+    if (!std::strcmp(ep, "off")) {
+      o.newest_saves = false;  // P23A item 2
+      o.edge_texts = false;    // P23F fix 1
+    }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
