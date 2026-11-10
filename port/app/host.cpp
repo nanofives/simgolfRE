@@ -1080,6 +1080,8 @@ void copy_world_planes(const portsim::LiveTerrainWorld &s, portsim::LiveTerrainW
   d.tag_pre = s.tag_pre;
   d.box800 = s.box800;
   d.box_word = s.box_word;
+  d.bub800 = s.bub800;      // P23D fix 3
+  d.bub_word = s.bub_word;
 }
 void move_world_planes(portsim::LiveTerrainWorld &s, portsim::LiveTerrainWorld &d) {
   d.pw = s.pw;
@@ -1104,6 +1106,8 @@ void move_world_planes(portsim::LiveTerrainWorld &s, portsim::LiveTerrainWorld &
   d.tag_pre.swap(s.tag_pre);
   d.box800.swap(s.box800);
   d.box_word.swap(s.box_word);
+  d.bub800.swap(s.bub800);      // P23D fix 3
+  d.bub_word.swap(s.bub_word);
 }
 
 // ---- P17B (development): SG_P17_JOBLOG=<file>: the world thread's jobs, written at world_stop. Lines (times in perf_now_ns):

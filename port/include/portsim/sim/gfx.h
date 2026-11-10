@@ -323,6 +323,30 @@ inline void gfx_wide_line_scope_close(GfxWideLineScope &s) {  // the scope's end
   s.ctx = nullptr;
 }
 
+// P23D fix 3 (app option --wide-bubbles, log/roadmap/P23/P23D_notes.md): RENDER-ONLY. The frame code's comment bubbles drawn after
+// the sprite queue (P4_walkerOne's six pieces, mainLoop ML+0x7b09..ML+0x7c3d; inside GfxBubbleScope) go into the wide scene's hr
+// plane too, at the window's resolution (scene position = root position + scene_e), so a bubble crossing the 800 frame's edge or
+// standing in a side column shows whole; the root pixels they wrote are marked (LiveTerrainWorld::bub800 / bub_word), so inside
+// the frame the world image shows them (one resolution). Off (the default): the 800 root only.
+void gfx_set_wide_bubbles(bool on);
+bool gfx_wide_bubbles();
+void gfx_bubble_begin(Ctx &c);
+void gfx_bubble_end(Ctx &c);
+struct GfxBubbleScope {
+  Ctx *ctx = nullptr;
+  explicit GfxBubbleScope(Ctx &c) {
+    if (gfx_wide_bubbles()) {
+      ctx = &c;
+      gfx_bubble_begin(c);
+    }
+  }
+  ~GfxBubbleScope() {
+    if (ctx) gfx_bubble_end(*ctx);
+  }
+  GfxBubbleScope(const GfxBubbleScope &) = delete;
+  GfxBubbleScope &operator=(const GfxBubbleScope &) = delete;
+};
+
 // ------------------------------------------------------------------------------------------------ P9C: text runs
 // Text at the window's resolution (log/roadmap/P9/P9C_notes.md). Every text the backend draws reaches the screen through one
 // call, the provider's TextMetrics::draw_glyphs (jgld's TextOutA: draw_text_string, the text family's run drawer for the root

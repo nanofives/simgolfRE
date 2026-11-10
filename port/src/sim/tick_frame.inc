@@ -5127,12 +5127,15 @@ void P4_walkerOne(u32 F, u32 ebx, int ebp) {
         u32 tgt = (G32(GS(g_zoomScale)) > 4 && SG_DEFECT(g_defect_zoom8_font)) ? GS(g_font51b360) : GS(g_fontRef_519fd8);          // ML+0x7aa8..ML+0x7ab7
         tc("setDrawTarget", Root(), (int)tgt, 0, 0, 0);                            // setDrawTarget ML+0x7ac9
     }
-    tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x20, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7b09
-    tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x40, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7b47
-    tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0), FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);          // Surface_drawScaled2 ML+0x7b83
-    tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x60, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7bc1
-    tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) + 0x20, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7bff
-    tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) + 0x40, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7c3d
+    {  // P23D fix 3 (gfx.h GfxBubbleScope): the bubble's pieces also into the wide scene (render only; inert with --wide-bubbles off)
+        GfxBubbleScope bubble_scope(ctx);
+        tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x20, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7b09
+        tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x40, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7b47
+        tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0), FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);          // Surface_drawScaled2 ML+0x7b83
+        tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) - 0x60, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7bc1
+        tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) + 0x20, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7bff
+        tc("Surface_drawScaled2", GS(g_sprite5787d0), Root(), FD(0xa0) + 0x40, FD(0x80) - G32(GS(g_zoomScale)) * 10, G32(GS(g_halfBrightLut)), 1, 1, 1, 0);   // Surface_drawScaled2 ML+0x7c3d
+    }
     u32 g = FU(0x14) << 8;                                                    // ML+0x7c42 / ML+0x7c46
     u8 a = GU8(g + (GS(g_golfers) + 132));                                               // ML+0x7c49
     u8 c = GU8(ebx - 3);                                                      // ML+0x7c4f

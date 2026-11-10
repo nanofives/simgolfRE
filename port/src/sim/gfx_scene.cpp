@@ -2653,6 +2653,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   w->hr_valid = false;
   w->hrc_valid = false;  // P10D fix 2
   w->box800.clear();     // P10F
+  w->bub800.clear();     // P23D fix 3
   w->hrb_valid = false;  // P10F
   g_hr_queue.cmds.clear();
   g_hr_queue.w = nullptr;
@@ -3899,6 +3900,38 @@ void gfx_wide_line_scope(Ctx &ctx, uint32_t row, bool open) {
   if (open) g->hud.wide_scope |= row;
   else g->hud.wide_scope &= ~row;
 }
+// ---- P23D fix 3 (gfx.h gfx_set_wide_bubbles)
+namespace {
+std::atomic<bool> g_wide_bubbles{false};
+}
+void gfx_set_wide_bubbles(bool on) { g_wide_bubbles.store(on, std::memory_order_relaxed); }
+bool gfx_wide_bubbles() { return g_wide_bubbles.load(std::memory_order_relaxed); }
+void gfx_bubble_begin(Ctx &ctx) {
+  if (Gfx *g = gfx(ctx)) ++g->hud.bubble_depth;
+}
+void gfx_bubble_end(Ctx &ctx) {
+  if (Gfx *g = gfx(ctx)) g->hud.bubble_depth = g->hud.bubble_depth > 0 ? g->hud.bubble_depth - 1 : 0;
+}
+namespace gfxs {
+void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, const uint16_t *lut, size_t n) {
+  if (g.hud.bubble_depth <= 0 || g_hr_pass.hr || g.root.w != 800 || g.root.h != 600 || mode() != 0) return;
+  LiveTerrainWorld *w = wide_world(ctx);
+  if (!w || w->hr_open || !w->hr_valid || w->scene_w <= 0 || w->scene.size() != static_cast<size_t>(w->scene_w) * 600) return;
+  if (w->bub800.size() != g.root.px.size()) w->bub800.assign(g.root.px.size(), 0);
+  if (w->bub_word.size() != g.root.px.size()) w->bub_word.assign(g.root.px.size(), 0);
+  // the root pixels the piece wrote (draw_g16_lut's loop: every sprite byte below 0xff), with the word they hold now
+  const int32_t l = std::max(x, 0), t = std::max(y, 0), r = std::min(x + s.w, g.root.w), b = std::min(y + s.h, g.root.h);
+  for (int32_t yy = t; yy < b; ++yy)
+    for (int32_t xx = l; xx < r; ++xx) {
+      if (s.px[static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x)] >= 0xff) continue;
+      const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx);
+      w->bub800[i] = 1;
+      w->bub_word[i] = g.root.px[i];
+    }
+  ShadeOp op{s.pal.data(), lut, n};
+  hr_now(*w, s, add32(x, w->scene_e), y, Scale{1, 1, 1}, op, false);
+}
+}  // namespace gfxs
 void gfx_cursor_sprites_begin(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.cursor_sprites) return;

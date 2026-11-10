@@ -129,6 +129,10 @@ struct LiveTerrainWorld {
   // (hrb_valid false; the planes are kept and only hrb_area, the box's world rectangle since their last reset, is reset).
   std::vector<uint8_t> box800;
   std::vector<uint16_t> box_word;
+  // P23D fix 3 (gfx.h gfx_set_wide_bubbles): the root pixels the frame's comment bubbles wrote after the queue (bub800) and the word
+  // they left (bub_word); world_frame_of shows the world image there while the presented frame still holds that word
+  std::vector<uint8_t> bub800;
+  std::vector<uint16_t> bub_word;
   std::vector<uint16_t> hrb_lo, hrb_hi;
   std::vector<uint8_t> hrb_cov;
   bool hrb_valid = false;

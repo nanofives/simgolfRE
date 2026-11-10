@@ -473,6 +473,9 @@ bool world_frame_of(const LiveTerrainWorld *wp, const std::vector<uint16_t> &roo
   const bool s0_ok = w.s0.size() == back800.size();
   for (size_t i = 0; i < back800.size(); ++i)
     mask[i] = back800[i] == w.terrain800[i] || (back800[i] == w.s1[i] && (!s0_ok || w.s1[i] != w.s0[i])) ? 1 : 0;
+  if (w.bub800.size() == back800.size() && w.bub_word.size() == back800.size())   // P23D fix 3: the bubbles drawn in hr too
+    for (size_t i = 0; i < back800.size(); ++i)
+      if (w.bub800[i] && back800[i] == w.bub_word[i]) mask[i] = 1;
   return true;
 }
 
@@ -535,6 +538,9 @@ bool world_frame_plan_of(const LiveTerrainWorld *wp, size_t root_n, size_t hr_n,
   const bool s0_ok = w.s0.size() == back800.size();
   for (size_t i = 0; i < back800.size(); ++i)
     mask[i] = back800[i] == w.terrain800[i] || (back800[i] == w.s1[i] && (!s0_ok || w.s1[i] != w.s0[i])) ? 1 : 0;
+  if (w.bub800.size() == back800.size() && w.bub_word.size() == back800.size())   // P23D fix 3: the bubbles drawn in hr too
+    for (size_t i = 0; i < back800.size(); ++i)
+      if (w.bub800[i] && back800[i] == w.bub_word[i]) mask[i] = 1;
   return true;
 }
 

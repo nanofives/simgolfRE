@@ -32,6 +32,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "portsim/sim/gfx_hud.h"
+#include "portsim/sim/gfx_scene.h"   // P23D fix 3: gfxs::bubble_shade
 
 #include <algorithm>
 #include <array>
@@ -1013,6 +1014,7 @@ void blit2(Gfx &g, Ctx &ctx, uint32_t self, uint32_t dst, int32_t x, int32_t y, 
     return;
   }
   gfxb::draw_g16_lut(g, *s, g.root, add32(x, s->left), add32(y, s->top), t, n);
+  if (g.hud.bubble_depth > 0) gfxs::bubble_shade(g, ctx, *s, add32(x, s->left), add32(y, s->top), t, n);   // P23D fix 3
 }
 
 void b_blit2(Gfx &g, Ctx &ctx, const uint32_t *a, int) {

@@ -71,7 +71,7 @@ def pytest_configure(config):
     # P18 (log/roadmap/P18/BRIEF.md): P18A the terrain set-up workers on the GPU raster's world thread, P18B the GPU paths' auto policy
     os.environ.setdefault("SG_APP_P18", "off")
     os.environ.setdefault("SG_APP_P19", "off")  # P19C item 8 (P19A / B / D add theirs here: whoever lands first)
-    os.environ.setdefault("SG_APP_P23", "off")  # P23A item 2 --newest-saves, P23F fix 1 --edge-texts, P23D fix 1 --wide-grid, P23E --line-tiles / --wide-lines
+    os.environ.setdefault("SG_APP_P23", "off")  # P23A item 2 --newest-saves, P23F fix 1 --edge-texts, P23D fix 1 --wide-grid / fix 3 --wide-bubbles, P23E --line-tiles / --wide-lines
     os.environ.setdefault("SG_APP_P22", "off")  # P22E item 7 --edge-previews, P22D --golfer-list / --meter-tips, P22C --trail-glide
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

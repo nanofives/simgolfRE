@@ -20,6 +20,7 @@ namespace portsim {
 
 class Ctx;
 class Gfx;
+struct Sprite8;   // P23D fix 3 (gfx_body.h)
 
 namespace gfxs {
 
@@ -45,6 +46,9 @@ bool image_draw(Gfx &g, Ctx &ctx, const uint32_t *a);
 // quarter band at (1, 1, 1) with no mask (log/roadmap/S3/5_merge.md). Returns true.
 bool surface_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a);
 
+// P23D fix 3 (gfx.h gfx_set_wide_bubbles): a comment bubble's piece the HUD body drew on the root at (x, y) (Sprite::drawG with the
+// table lut), also into the wide scene's hr plane after the queue and marked for the world image (inert outside GfxBubbleScope)
+void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, const uint16_t *lut, size_t n);
 }  // namespace gfxs
 }  // namespace portsim
 
