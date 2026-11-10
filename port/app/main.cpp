@@ -1649,6 +1649,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   std::atomic<uint64_t> vblank_slow{0}, timer_ticks{0};  // P22A: vblank waits over 1.5 periods, and the timer ticks after them
   std::atomic<uint64_t> vblank_probes{0};                  // P22A: vblank waits right after a timer hold
   std::atomic<int64_t> tick_gap_max_ns{0};                 // P22A: the longest gap between two ticks after the first slow wait
+  // P23B (Mariano's 342dd9e8 sessions: p10e ticks 722 in 168 s with tick_gap_max_ms 9.19): a tick the window never took left
+  // tick_pending set, and the pacer then posted no tick for the rest of the process. pacer_posts: ticks posted; tick_reposts:
+  // ticks posted again after one stayed pending over kTickRepostNs; modal_ticks: ticks the window procedure took (a modal loop's)
+  std::atomic<uint64_t> tick_reposts{0}, pacer_posts{0};
+  uint64_t modal_ticks = 0;
   std::thread pacer;
   int pace_hz = 0;
   if (ho.cursor_live || presenter.hover() || smooth_camera || ho.smooth_objects) {  // P10I fix 2: the hover highlights take the same ticks; P12A: the slide
@@ -1668,8 +1673,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     const int slow_vblank_ms = std::getenv("SG_P22_SLOW_VBLANK_MS") ? std::atoi(std::getenv("SG_P22_SLOW_VBLANK_MS")) : 0;
     // development (P22A's before arm): SG_P22_VBLANK_FALLBACK=0 keeps waiting for the vblank however long it takes
     const bool vblank_fallback = !(std::getenv("SG_P22_VBLANK_FALLBACK") && std::atoi(std::getenv("SG_P22_VBLANK_FALLBACK")) == 0);
+    // development (P23B): SG_P23_TICK_REPOST=0 (the before arm) never posts a pending tick again and leaves a modal loop's tick to
+    // DefWindowProc; =2 leaves the modal loop's tick to DefWindowProc and keeps the repost (the safety net alone)
+    const bool tick_repost = !(std::getenv("SG_P23_TICK_REPOST") && std::atoi(std::getenv("SG_P23_TICK_REPOST")) == 0);
     pacer = std::thread([&tick_pending, &pacer_stop, &presenter, &vblank_slow, &timer_ticks, &vblank_probes, &tick_gap_max_ns, hwnd,
-                         pace_hz, force_hz, p16_prio, slow_vblank_ms, vblank_fallback]() {
+                         &tick_reposts, &pacer_posts, pace_hz, force_hz, p16_prio, slow_vblank_ms, vblank_fallback, tick_repost]() {
       // P22A: after a slow vblank wait the timer ticks for hold_ns, then one vblank wait probes the display again; each slow probe in
       // a row doubles the hold (2 s, 4 s, 8 s ... 60 s: on a display that stays slow, every probe is one long wait with no tick), a
       // probe within 1.5 periods sets it back to 2 s
@@ -1679,10 +1687,25 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       bool probing = false;     // the next vblank wait is a probe (a timer hold just ended)
       bool fell_back = false;   // a slow vblank wait was seen (the tick gaps are measured from then on)
       int64_t last_tick = 0;
+      // P23B: a tick still pending this long after its post was lost (dropped by a window procedure that did not take it, or a
+      // failed post): it is posted again
+      static constexpr int64_t kTickRepostNs = 250000000LL;
+      int64_t posted_at = 0;
+      auto post = [&](int64_t now) {
+        if (!tick_pending.exchange(true)) {
+          PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+          posted_at = now;
+          pacer_posts.fetch_add(1);
+        } else if (tick_repost && now - posted_at > kTickRepostNs) {
+          PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+          posted_at = now;
+          tick_reposts.fetch_add(1);
+        }
+      };
       auto tick = [&](int64_t now) {  // post the tick (at most one waiting); the longest gap between ticks after the first fallback
         if (fell_back && last_tick > 0 && now - last_tick > tick_gap_max_ns.load()) tick_gap_max_ns.store(now - last_tick);
         last_tick = now;
-        if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+        post(now);
       };
       if (p16_prio) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);  // P16A
 #ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
@@ -1707,7 +1730,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
           const int64_t now = portsim::perf_now_ns();
           if (next_ns < now) next_ns = now + period_ns;  // late by more than a period: the missed ticks are not made up
           winlog_vblank(now);
-          if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+          post(now);  // P23B
           continue;
         }
         // P22A (Mariano's 71fe8883 session: p10e ticks 374 in about 60 s at hz 165, so the vblank wait returned about 6 times a
@@ -1826,22 +1849,50 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   std::vector<uint16_t> px;
   const UINT msg_shot = RegisterWindowMessageW(L"SimGolfPort.P14Shot");  // P14A: the harness's capture of the GPU picture
   const char *shot_dir = std::getenv("SG_P14_SHOT");
+  auto on_tick = [&]() {  // P10E: one pacer tick on the window thread
+    const bool wl = winlog_on();  // P16A (SG_P16_PAINTLOG)
+    const int64_t wl_t0 = wl ? portsim::perf_now_ns() : 0;
+    const uint64_t wl_c0 = wl ? winlog_cycles() : 0;
+    tick_pending.store(false);
+    ++ticks;
+    slide_tick();  // P12A fix 1
+    if (ho.cursor_live) cursor_tick();
+    hover_tick();  // P10I fix 2
+    if (wl) winlog_event('T', wl_t0, wl_c0);
+  };
+  // P23B: a modal loop (the frame's move / size tracking, the maximize button, the system menu) dispatches the pacer's tick to the
+  // window procedure, where DefWindowProc dropped it with tick_pending still set: the window procedure now takes it the same way
+  // (SG_P23_TICK_REPOST=0 the before arm, =2 the repost alone: counted, then left to DefWindowProc as before)
+  const int p23_arm = std::getenv("SG_P23_TICK_REPOST") ? std::atoi(std::getenv("SG_P23_TICK_REPOST")) : 1;
+  const bool modal_take = p23_arm != 0 && p23_arm != 2;
+  win.set_app_message([&, modal_take](uint32_t msg) {
+    if (msg != kMsgCursorTick) return false;
+    ++modal_ticks;
+    if (!modal_take) return false;
+    on_tick();
+    return true;
+  });
+  // development (P23B): SG_P23_MODAL_TEST=1 opens the window's system menu (TrackPopupMenu, Windows' own modal menu loop) for
+  // wParam ms on the registered message SimGolfPort.P23Modal, closed by a timer's EndMenu: a modal loop with no input
+  const UINT msg_modal = std::getenv("SG_P23_MODAL_TEST") && std::atoi(std::getenv("SG_P23_MODAL_TEST")) == 1
+                             ? RegisterWindowMessageW(L"SimGolfPort.P23Modal")
+                             : 0;
   while (GetMessageW(&m, nullptr, 0, 0) > 0) {
     if (m.hwnd == hwnd && msg_shot && m.message == msg_shot) {  // P14A
       if (shot_dir) presenter.gpu_shot(std::string(shot_dir) + "/shot_" + std::to_string(m.wParam) + ".bmp");
       win.invalidate();
       continue;
     }
+    if (m.hwnd == hwnd && msg_modal && m.message == msg_modal) {  // P23B (development)
+      SetTimer(hwnd, 0x5023, static_cast<UINT>(m.wParam), [](HWND h, UINT, UINT_PTR id, DWORD) {
+        KillTimer(h, id);
+        EndMenu();
+      });
+      TrackPopupMenu(GetSystemMenu(hwnd, FALSE), TPM_LEFTALIGN | TPM_TOPALIGN | TPM_NONOTIFY, 0, 0, 0, hwnd, nullptr);
+      continue;
+    }
     if (m.hwnd == hwnd && m.message == kMsgCursorTick) {  // P10E
-      const bool wl = winlog_on();  // P16A (SG_P16_PAINTLOG)
-      const int64_t wl_t0 = wl ? portsim::perf_now_ns() : 0;
-      const uint64_t wl_c0 = wl ? winlog_cycles() : 0;
-      tick_pending.store(false);
-      ++ticks;
-      slide_tick();  // P12A fix 1
-      if (ho.cursor_live) cursor_tick();
-      hover_tick();  // P10I fix 2
-      if (wl) winlog_event('T', wl_t0, wl_c0);
+      on_tick();
       continue;
     }
     if (m.hwnd == hwnd && m.message == LiveSession::kMsgPresent) {
@@ -1994,6 +2045,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        ",\"vblank_slow\":" + std::to_string(vblank_slow.load()) + ",\"timer_ticks\":" + std::to_string(timer_ticks.load()) +  // P22A
        ",\"vblank_probes\":" + std::to_string(vblank_probes.load()) +
        ",\"tick_gap_max_ms\":" + std::to_string(static_cast<double>(tick_gap_max_ns.load()) / 1e6) +
+       ",\"pacer_posts\":" + std::to_string(pacer_posts.load()) + ",\"tick_reposts\":" +  // P23B
+       std::to_string(tick_reposts.load()) + ",\"modal_ticks\":" + std::to_string(modal_ticks) +
        ",\"slow_vblank_ms\":" +
        std::to_string(std::getenv("SG_P22_SLOW_VBLANK_MS") ? std::atoi(std::getenv("SG_P22_SLOW_VBLANK_MS")) : 0) + "}";
   {  // P10I fix 2

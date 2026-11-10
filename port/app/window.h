@@ -135,6 +135,9 @@ class AppWindow {
   Viewport viewport() const { return fit_viewport(cw_, ch_); }
 
   void set_sink(std::function<void(const InputEvent &)> sink) { sink_ = std::move(sink); }
+  // P23B: the app's own posted messages (WM_APP and above) that reach the window procedure: a modal loop (the frame's move / size
+  // tracking, the maximize button, the system menu) dispatches posted messages there instead of the app's loop; true = handled
+  void set_app_message(std::function<bool(uint32_t msg)> fn) { app_message_ = std::move(fn); }
   void invalidate();           // repaint from the presenter's current frame
   uint32_t paints() const { return paints_; }
 
@@ -174,6 +177,7 @@ class AppWindow {
   uint32_t seq_ = 0;
   Translator tr_;
   std::function<void(const InputEvent &)> sink_;
+  std::function<bool(uint32_t msg)> app_message_;  // P23B
 };
 
 // JSON line of an event (input.jsonl) and its parser (the offline `--translate` check).

@@ -461,6 +461,7 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
       PostQuitMessage(0);
       return 0;
     default:
+      if (msg >= WM_APP && msg <= 0xbfff && app_message_ && app_message_(msg)) return 0;  // P23B
       return DefWindowProcW(h, msg, wp, lp);
   }
 }
