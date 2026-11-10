@@ -26,7 +26,7 @@ to register names and by instructions already at their original position. Varian
 The best variant goes to log/permute/<addr>.cpp either way. Variants that do not compile are skipped."""
 from __future__ import annotations
 
-import argparse, concurrent.futures, contextlib, difflib, io, pathlib, random, re, sys, tempfile
+import argparse, concurrent.futures, contextlib, difflib, io, pathlib, random, re, shutil, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "re" / "tools"))
@@ -390,6 +390,8 @@ def score(text: str, path: pathlib.Path, addr: int):
         res = match.compare(tmp, "", False, only=addr, quiet=True)
     except SystemExit:
         return None
+    finally:  # one folder per scored variant: never kept (474,131 were left in %TEMP% by 2026-11-09)
+        shutil.rmtree(tmp.parent, ignore_errors=True)
     if not res:
         return None
     acc, a, b = res[0][4], res[0][5], res[0][6]
