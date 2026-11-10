@@ -433,6 +433,7 @@ class LiveSession : public portsim::LiveHost {
   uint32_t last_index_ = 0;
   uint64_t title_reposts_ = 0;
   uint64_t guarded_reads_ = 0;        // cursor reads answered with last_inside_
+  uint64_t title_unguarded_ = 0;      // P23C fix 2: reads outside the client / window on the title menu answered as they are
   // presents
   std::mutex frame_mu_;
   std::vector<uint16_t> frame_slot_, last_presented_, previous_;

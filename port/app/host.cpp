@@ -1852,6 +1852,17 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
     GetClientRect(h, &c);
     const bool inside = p.x >= c.left && p.x < c.right && p.y >= c.top && p.y < c.bottom;
     const bool top = GetForegroundWindow() == h && WindowFromPoint(screen) == h;
+    // P23C fix 2 (Mariano's play-test 10: "sandbox mode looks selected when the mouse is not over it"): the title menu's loop (and
+    // the screens it opens before a frame runs: title_seen_) has no edge scroll, and there the original's unclamped point is what
+    // unlights an item when the cursor leaves the window or another window takes the front (its hover loop reads it every pass,
+    // ML+0x11a90). The last inside answer kept the item under it lit until the cursor came back
+    if ((!inside || !top) && title_seen_.load()) {
+      ++title_unguarded_;
+      x = l.x;
+      y = l.y;
+      note_answer(l);
+      return;
+    }
     if (!inside || !top) {
       ++guarded_reads_;
       x = std::min(std::max(last_inside_.x, 1), kLogicalW - 2);
@@ -2321,7 +2332,7 @@ std::string LiveSession::summary_json(const Result &r) const {
          ",\"frame\":" + std::to_string(lr.frame) + "}";
   }
   s += "]";
-  s += ",\"edge_guard\":" + std::to_string(opt_.edge_guard ? 1 : 0) + ",\"guarded_cursor_reads\":" + std::to_string(guarded_reads_);
+  s += ",\"edge_guard\":" + std::to_string(opt_.edge_guard ? 1 : 0) + ",\"guarded_cursor_reads\":" + std::to_string(guarded_reads_) + ",\"title_unguarded_reads\":" + std::to_string(title_unguarded_);
   s += ",\"presents\":" + std::to_string(presents_.size()) + ",\"idle_passes\":" + std::to_string(idle_passes_);
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made_[0]) + ",\"w\":" + std::to_string(made_[1]) +
        ",\"m\":" + std::to_string(made_[2]) + ",\"p\":" + std::to_string(made_[3]) + "}";
