@@ -761,6 +761,7 @@ struct GpuCompositor::Impl {
   int32_t fstat_h = 0, atlas_fw = 0;
   std::vector<uint32_t> fbuf;
   uint64_t final_static_rects = 0, final_dep_rects = 0, final_rect_renders = 0, final_overflow = 0;
+  uint64_t final_line_rects = 0;  // P23E fix 1: the line pieces rendered (--line-tiles)
   bool classify_ok = true;   // upload_frame: no blitPair1 channel overflow, the shade tables monotone
   bool c2_any = false;       // upload_frame: the frame's cursor2d plane has a pixel (a 2D tool preview)
   uint64_t classify_off = 0;
@@ -2104,6 +2105,9 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
     }
     const bool lines = P.line_native_ && !f.lines.empty() && f.line800.size() == static_cast<size_t>(kLogicalW) * kLogicalH &&
                        f.line_word.size() == f.line800.size();
+    std::vector<Rect> lrects;  // P23E fix 1
+    constexpr int64_t kLineJoinPx = 12288;  // P23E fix 1: about one render's own cost in pixels (below)
+    auto line_area = [](const Rect &r) { return static_cast<int64_t>(r.x1 - r.x0) * static_cast<int64_t>(r.y1 - r.y0); };
     if (lines && vp.client_w > 0 && vp.client_h > 0) {  // draw_lines' box of each line, the same ends
       const double sx = static_cast<double>(vp.client_w) / kLogicalW, sy = static_cast<double>(vp.client_h) / kLogicalH;
       for (const portsim::GfxHudLine &ln : f.lines) {
@@ -2112,14 +2116,63 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
         const int32_t mx = ln.still ? 0 : cdx + shx, my = ln.still ? 0 : shy;  // P22E item 7 (present.cpp draw_lines)
         const double bx = vp.origin_x + mx + slx + ln.x2 * sx, by = vp.origin_y + my + sly + ln.y2 * sy;
         const double reach = half + 1.5;
-        const Rect b = clip(Rect{static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)) - 1,
-                                 static_cast<int32_t>(std::floor(std::min(ay, by) - reach)) - 1,
-                                 static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)) + 2,
-                                 static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)) + 2});
-        if (b.x1 > b.x0 && b.y1 > b.y0) drects.push_back(b);
+        auto box = [&](double x0, double y0, double x1, double y1) {
+          return clip(Rect{static_cast<int32_t>(std::floor(std::min(x0, x1) - reach)) - 1,
+                           static_cast<int32_t>(std::floor(std::min(y0, y1) - reach)) - 1,
+                           static_cast<int32_t>(std::ceil(std::max(x0, x1) + reach)) + 2,
+                           static_cast<int32_t>(std::ceil(std::max(y0, y1) + reach)) + 2});
+        };
+        if (!P.line_tiles_) {
+          const Rect b = box(ax, ay, bx, by);
+          if (b.x1 > b.x0 && b.y1 > b.y0) drects.push_back(b);
+          continue;
+        }
+        // P23E fix 1 (--line-tiles): a long slanted line's box is mostly picture the line does not touch, and the dynamic rectangles
+        // are rendered on the CPU at every build. The line's own pieces instead, about kLineTile client pixels each, the consecutive
+        // ones joined while the joined box adds at most kLineJoinPx pixels to the two boxes (a render costs about that many pixels
+        // by itself: from the swing arc's runs about 0.13 ms + 15 ms per million pixels at 1920 x 1080 and 0.25 ms + 20 ms per
+        // million at 3840 x 2108), then the pieces of all lines joined by the same rule (the arc and its shadow run side by side);
+        // never merged with the other rectangles (an overlap is rendered twice: the same pixels)
+        constexpr double kLineTile = 48.0;
+        const double len = std::sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
+        const int32_t n = std::clamp(static_cast<int32_t>(std::ceil(len / kLineTile)), 1, 4096);
+        Rect cur{0, 0, 0, 0};
+        bool have = false;
+        for (int32_t i = 0; i < n; ++i) {
+          const double t0 = static_cast<double>(i) / n, t1 = static_cast<double>(i + 1) / n;
+          const Rect b = box(ax + (bx - ax) * t0, ay + (by - ay) * t0, ax + (bx - ax) * t1, ay + (by - ay) * t1);
+          if (!(b.x1 > b.x0 && b.y1 > b.y0)) continue;
+          if (have) {
+            const Rect u{std::min(cur.x0, b.x0), std::min(cur.y0, b.y0), std::max(cur.x1, b.x1), std::max(cur.y1, b.y1)};
+            if (line_area(u) - line_area(cur) - line_area(b) <= kLineJoinPx) {
+              cur = u;
+              continue;
+            }
+            lrects.push_back(cur);
+          }
+          cur = b;
+          have = true;
+        }
+        if (have) lrects.push_back(cur);
       }
     }
+    for (bool again = P.line_tiles_; again;) {  // P23E fix 1: the pieces of different lines, by the same rule
+      again = false;
+      for (size_t i = 0; i < lrects.size() && !again; ++i)
+        for (size_t j = i + 1; j < lrects.size(); ++j) {
+          const Rect &ra = lrects[i], &rb = lrects[j];
+          const Rect u{std::min(ra.x0, rb.x0), std::min(ra.y0, rb.y0), std::max(ra.x1, rb.x1), std::max(ra.y1, rb.y1)};
+          if (line_area(u) - line_area(ra) - line_area(rb) <= kLineJoinPx) {
+            lrects[i] = u;
+            lrects.erase(lrects.begin() + static_cast<std::ptrdiff_t>(j));
+            again = true;
+            break;
+          }
+        }
+    }
     merge_rects(drects, 4);
+    drects.insert(drects.end(), lrects.begin(), lrects.end());  // P23E fix 1: the line pieces, after the merge
+    d.final_line_rects += lrects.size();
   }
   // fill_gap's underlay (render_rect reads the presenter's scene_prev_; the GPU path keeps it on the GPU): read back once per slide
   // when a rectangle to render lies outside the slid world rectangle
@@ -3211,6 +3264,7 @@ std::string GpuCompositor::json() const {
                 "\"verify_max_px\":%llu,\"verify_first\":\"%s\",\"shots\":%llu,\"world_rect_uploads\":%llu,\"ms_frame_uploads\":%.1f,"
                 "\"ms_world_uploads\":%.1f,\"ms_course_patches\":%.1f,\"ms_final_patches\":%.1f,\"ms_draw_calls\":%.1f,"
                 "\"final_static_rects\":%llu,\"final_dep_rects\":%llu,\"final_rect_renders\":%llu,\"final_overflow\":%llu,"
+                "\"final_line_rects\":%llu,"
                 "\"prev_fetches\":%llu,\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f,"
                 "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu,\"paints_flat\":%llu,"
                 "\"p15_text\":%d,\"text_sets\":%llu,\"text_tables_made\":%llu,\"text_tables_reused\":%llu,\"text_runs_tabled\":%llu,"
@@ -3230,6 +3284,7 @@ std::string GpuCompositor::json() const {
                 static_cast<double>(d.ns_draw) / 1e6,
                 static_cast<unsigned long long>(d.final_static_rects), static_cast<unsigned long long>(d.final_dep_rects),
                 static_cast<unsigned long long>(d.final_rect_renders), static_cast<unsigned long long>(d.final_overflow),
+                static_cast<unsigned long long>(d.final_line_rects),
                 static_cast<unsigned long long>(d.prev_fetches), d.shade_mono, static_cast<unsigned long long>(d.classify_off), d.latency,
                 static_cast<double>(d.ns_wait) / 1e6, static_cast<double>(d.ns_present) / 1e6,
                 static_cast<unsigned long long>(d.final_dep_renders), static_cast<unsigned long long>(d.final_dep_kept),

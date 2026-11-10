@@ -80,6 +80,8 @@
 //   P23F fix 1: --edge-texts on|off (default on with --text-res native; SG_APP_P23=off: off) the frame's own texts over the course
 //   (golfer and walker name labels, object and tile labels, the hole HUD) drawn whole in a wide window where the 800 frame's edge
 //   cut them, or wholly past it (gfx.h gfx_set_frame_edge_text); off = cut at the frame's columns, where the original's screen ends.
+//   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
+//   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P13B item 18: --map-bands clamp|same (default clamp; SG_APP_P13=off: same) the world map shown before a session (courseActionMenu:
 //   the only loop that hands the host a 50 ms timed pass) gets side bands that repeat its outermost column, cleaned by a vertical
 //   median over +-33 logical rows (present.cpp fill_bands_map), instead of the --wide-fill bands; every other screen keeps them.
@@ -485,6 +487,7 @@ struct Options {
                                    // (SG_APP_P13=off: sharp; SG_APP_P10=off: smooth)
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   bool edge_previews = true;       // P22E item 7: --edge-previews on|off (SG_APP_P22=off: off)
+  bool line_tiles = true;          // P23E fix 1: --line-tiles on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
   bool list_wide = true;           // P22D fix 2: --golfer-list wide|four (SG_APP_P22=off: four)
@@ -562,6 +565,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_strip_right(o.strip_right);           // P13C item 10
   p.set_strip_near(o.strip_right && o.strip_near);  // P19C item 8
   p.set_line_native(line_res_on(o));  // P10I fix 1
+  p.set_line_tiles(o.line_tiles);  // P23E fix 1
 }
 
 // P5B item 4: --scale
@@ -3515,6 +3519,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.edge_texts = v == "on";
     }
+    else if (a == "--line-tiles") {  // P23E fix 1
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.line_tiles = v == "on";
+    }
     else if (a == "--terrain-filter") {  // P13D item 4
       if (!val(v) || (v != "sharp" && v != "linear" && v != "nearest")) return false;
       o.terrain_filter = v == "sharp" ? 2 : v == "linear" ? 1 : 0;
@@ -3697,6 +3705,7 @@ int main(int argc, char **argv) {
       o.newest_saves = false;  // P23A item 2
       o.edge_texts = false;    // P23F fix 1
       o.wide_grid = false;  // P23D fix 1
+      o.line_tiles = false;  // P23E fix 1
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
