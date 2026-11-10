@@ -2138,6 +2138,7 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
         const int32_t n = std::clamp(static_cast<int32_t>(std::ceil(len / kLineTile)), 1, 4096);
         Rect cur{0, 0, 0, 0};
         bool have = false;
+        std::vector<Rect> pieces;
         for (int32_t i = 0; i < n; ++i) {
           const double t0 = static_cast<double>(i) / n, t1 = static_cast<double>(i + 1) / n;
           const Rect b = box(ax + (bx - ax) * t0, ay + (by - ay) * t0, ax + (bx - ax) * t1, ay + (by - ay) * t1);
@@ -2148,12 +2149,18 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
               cur = u;
               continue;
             }
-            lrects.push_back(cur);
+            pieces.push_back(cur);
           }
           cur = b;
           have = true;
         }
-        if (have) lrects.push_back(cur);
+        if (have) pieces.push_back(cur);
+        // P23E fix 1b: a short line stays whole: its box costs no more than its pieces plus one render's own cost per extra piece
+        const Rect whole = box(ax, ay, bx, by);
+        int64_t parts = kLineJoinPx * (static_cast<int64_t>(pieces.size()) - 1);
+        for (const Rect &r : pieces) parts += line_area(r);
+        if (pieces.size() > 1 && whole.x1 > whole.x0 && whole.y1 > whole.y0 && line_area(whole) <= parts) lrects.push_back(whole);
+        else lrects.insert(lrects.end(), pieces.begin(), pieces.end());
       }
     }
     for (bool again = P.line_tiles_; again;) {  // P23E fix 1: the pieces of different lines, by the same rule
