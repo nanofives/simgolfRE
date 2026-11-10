@@ -338,7 +338,7 @@ def replay(s: Session, positions: list[int], terrain: bool = True) -> dict:
     chunks = [positions[i:i + SNAP_CHUNK] for i in range(0, len(positions), SNAP_CHUNK)] or [[]]
     hashes, out, last = [], {}, None
     for ci, chunk in enumerate(chunks):
-        st, done = LV.boot_state(lib, None)
+        st, done = LV.boot_state(lib, None, LV.saves_order_of(s.session))
         try:
             st.call("gfx.attach", [])
             for p in chunk:

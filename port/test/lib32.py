@@ -32,7 +32,7 @@ DEFAULT_CW = 0x027F
 (OP_QUIT, OP_HELLO, OP_FUNCS, OP_NEGCTL_SET, OP_NEGCTL_GET, OP_NEGCTL_RESET, OP_DEFECTS, OP_DEFECT_SET, OP_DEFECT_GET,
  OP_DEFECT_RESET, OP_EXE_LOAD, OP_EXE_LOADED, OP_EXE_CONST, OP_OBJECTS, OP_HASH_BYTES, OP_STATE_NEW, OP_STATE_FREE,
  OP_CALL, OP_HASH_CLASS, OP_RUN_FRAMES, OP_EXE_FILL, OP_FILES_PUT, OP_FILES_CLEAR, OP_FILES_ROOT, OP_FILES_SIZE,
- OP_SYNC, OP_FILES_READ, OP_RUN_BOOT, OP_LIVE_ATTACH, OP_LIVE_DETACH, OP_LIVE_OBJECT, OP_LIVE_LOG, OP_LIVE_SNAPSHOT) = range(33)
+ OP_SYNC, OP_FILES_READ, OP_RUN_BOOT, OP_LIVE_ATTACH, OP_LIVE_DETACH, OP_LIVE_OBJECT, OP_LIVE_LOG, OP_LIVE_SNAPSHOT, OP_FILES_SAVES_ORDER) = range(34)
 P_BASE, P_MAP, P_UNMAP = 1, 2, 3
 
 
@@ -391,6 +391,11 @@ class State32(L.State):
 
     def files_root(self, directory=None):
         self._tx(OP_FILES_ROOT, struct.pack("<I", 0 if directory is None else 1) + _s(str(directory or "")))
+
+    def files_saves_order(self, names):
+        code, _ = self._tx(OP_FILES_SAVES_ORDER, _s(chr(10).join(names)))
+        if code != 0:
+            raise L.SgError(code, "files_saves_order")
 
     def files_size(self, name: str) -> int:
         _, r = self._tx(OP_FILES_SIZE, _s(name))

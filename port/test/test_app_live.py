@@ -249,7 +249,7 @@ def replay(s: Session, snapshots: list[int] | None = None, draws: bool = False):
     hashes: list[int | None] = []
     out = {}
     for ci, chunk in enumerate(chunks):
-        st, done = LV.boot_state(lib, None)
+        st, done = LV.boot_state(lib, None, LV.saves_order_of(s.session))
         try:
             st.call("gfx.attach", [])
             for p in chunk:
@@ -394,7 +394,7 @@ def _hover_frames(s: Session, hashes: list[int]) -> list[np.ndarray]:
     lib = L.load(str(DLL))
     pos = [next(p["pos"] for p in s.presents if p["hash"] == h) for h in hashes]
     order = sorted(range(len(pos)), key=lambda i: pos[i])
-    st, done = LV.boot_state(lib, None)
+    st, done = LV.boot_state(lib, None, LV.saves_order_of(s.session))
     try:
         st.call("gfx.attach", [])
         for i in order:

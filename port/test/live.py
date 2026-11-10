@@ -116,7 +116,15 @@ def run_builtin(st, kind: int, data: bytes, frame_ra: int, max_records: int) -> 
                    stats, detail)
 
 
-def boot_state(lib, scenario: str | None):
+def saves_order_of(session: dict | None) -> list[str] | None:
+    """P23B fix 3: the listing order a recording's session.json carries (`saves_newest_first`, `saves_order`: the saved games
+    ranked when the session began, newest first), None for a recording made with the option off (name order)"""
+    if not session or not session.get("saves_newest_first"):
+        return None
+    return [str(n) for n in session.get("saves_order") or []]
+
+
+def boot_state(lib, scenario: str | None, saves_order: list[str] | None = None):
     """A fresh state set up as port/test/boot.py sets one up: the exe's initialised data at the original data base, the
     install (and the scenario's own files) as game files, the GDI text provider. Returns (state, cleanup)."""
     why = lib.exe_load()
@@ -131,6 +139,8 @@ def boot_state(lib, scenario: str | None):
     if scenario:
         for fname, data in segment_files.files_for(scenario).items():
             st.files_put(fname, data)
+    if saves_order is not None:   # after the fixture files: they stay unranked, as in the app
+        st.files_saves_order(saves_order)
     gdi = lib.has("gditext.attach") and os.environ.get("SG_TEXT_METRICS", "gdi") == "gdi"
     if gdi:
         st.call("gditext.attach", [])

@@ -50,7 +50,12 @@ class AppFiles : public portsim::GameFiles {
   bool remove(const std::string &name) override;
 
   // P23A item 2: list the "Saved Games" directory newest write first (the original: name order). Off by default here.
-  void set_newest_first(bool on) { newest_first_ = on; }
+  // P23B fix 3: the order is by EVENTS (portsim::SavesOrder), so a recording replays anywhere: the saves present now are ranked
+  // once by their write times (newest first, equal times in name order), later writes go to the front in write order.
+  // session.json carries saves_order = that initial ranking; the replay gives it to sg_files_saves_order.
+  void set_newest_first(bool on);
+  bool newest_first() const { return saves_.on(); }
+  const std::vector<std::string> &saves_order() const { return saves_.initial(); }
 
   // A file of the install the recording ran against that the user's install lacks (a scenario's fixture save, port/test/
   // segment_files.py): kept in memory, read after the data directory and before the install, listed with the install.
@@ -75,7 +80,7 @@ class AppFiles : public portsim::GameFiles {
   portsim::MemoryGameFiles fixtures_;                     // add_fixture
   std::set<std::string> deleted_;                         // normalised names hidden from the install
   uint32_t refused_ = 0;
-  bool newest_first_ = false;
+  portsim::SavesOrder saves_;
 };
 
 }  // namespace portapp

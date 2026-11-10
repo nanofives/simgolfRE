@@ -620,6 +620,23 @@ int sg_files_root(sg_ctx *ctx, const char *dir) {
   return SG_OK;
 }
 
+int sg_files_saves_order(sg_ctx *ctx, const char *names) {
+  if (!ctx || !names || !ctx->dir_files) return SG_E_ARG;
+  std::vector<std::string> v;
+  std::string cur;
+  for (const char *p = names;; ++p) {
+    if (*p == '\n' || *p == 0) {
+      if (!cur.empty()) v.push_back(cur);
+      cur.clear();
+      if (*p == 0) break;
+    } else {
+      cur += *p;
+    }
+  }
+  ctx->dir_files->set_saves_order(v);
+  return SG_OK;
+}
+
 int64_t sg_files_size(sg_ctx *ctx, const char *name) {
   if (!ctx || !name || !ctx->ctx.files_ptr) return -1;
   return ctx->ctx.files_ptr->size(name);

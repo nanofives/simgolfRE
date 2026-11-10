@@ -101,6 +101,59 @@ std::vector<uint8_t> GameFiles::read_all(const std::string &name) const {
   return out;
 }
 
+void SavesOrder::enable(const std::vector<std::string> &initial) {
+  on_ = true;
+  seq_ = 0;
+  written_.clear();
+  rank_.clear();
+  initial_.clear();
+  for (const std::string &n : initial) {
+    const std::string k = GameFiles::normalize(n);
+    if (rank_.emplace(k, initial_.size()).second) initial_.push_back(k);
+  }
+}
+
+void SavesOrder::touch(const std::string &name) {
+  if (on_) written_[GameFiles::normalize(name)] = ++seq_;
+}
+
+void SavesOrder::forget(const std::string &name) {
+  written_.erase(GameFiles::normalize(name));
+}
+
+void SavesOrder::sort(const std::string &dir, std::vector<DirEntry> &out, size_t first) const {
+  if (!on_ || first >= out.size()) return;
+  const std::string prefix = dir.empty() ? std::string() : dir + "/";
+  struct Key {
+    int group;       // 0 written this session, 1 ranked at the start, 2 neither
+    uint64_t order;  // group 0: descending sequence (stored negated), group 1: rank, group 2: 0
+    size_t index;    // the incoming (name) order breaks ties
+  };
+  std::vector<std::pair<Key, DirEntry>> v;
+  for (size_t i = first; i < out.size(); ++i) {
+    const std::string k = prefix + GameFiles::normalize(out[i].name);
+    Key key{2, 0, i};
+    auto w = written_.find(k);
+    if (w != written_.end()) {
+      key.group = 0;
+      key.order = ~w->second;
+    } else {
+      auto r = rank_.find(k);
+      if (r != rank_.end()) {
+        key.group = 1;
+        key.order = r->second;
+      }
+    }
+    v.emplace_back(key, out[i]);
+  }
+  std::stable_sort(v.begin(), v.end(), [](const auto &a, const auto &b) {
+    if (a.first.group != b.first.group) return a.first.group < b.first.group;
+    if (a.first.order != b.first.order) return a.first.order < b.first.order;
+    return a.first.index < b.first.index;
+  });
+  for (size_t i = 0; i < v.size(); ++i) out[first + i] = std::move(v[i].second);
+}
+
 void MemoryGameFiles::put(const std::string &name, std::vector<uint8_t> bytes) {
   Entry e;
   e.name = name;
@@ -232,10 +285,17 @@ std::vector<DirEntry> DirGameFiles::list(const std::string &pattern) const {
   overlay_.collect_dir(dir, extra, extra_exists);
   for (DirEntry &e : extra)
     if (seen.insert(normalize(e.name)).second) names.push_back(std::move(e));
-  return make_listing(component, std::move(names), exists || (extra_exists && !dir.empty()));
+  std::vector<DirEntry> out = make_listing(component, std::move(names), exists || (extra_exists && !dir.empty()));
+  if (saves_.on() && dir == "saved games") {
+    size_t first = 0;
+    while (first < out.size() && (out[first].name == "." || out[first].name == "..")) ++first;
+    saves_.sort(dir, out, first);
+  }
+  return out;
 }
 
 bool DirGameFiles::write(const std::string &name, const std::vector<uint8_t> &bytes) {
+  saves_.touch(name);
   if (!write_through_) {
     deleted_.erase(normalize(name));
     overlay_.put(name, bytes);
@@ -252,6 +312,7 @@ bool DirGameFiles::write(const std::string &name, const std::vector<uint8_t> &by
 }
 
 bool DirGameFiles::remove(const std::string &name) {
+  saves_.forget(name);
   if (!write_through_) {
     const bool existed = size(name) >= 0;
     overlay_.remove(name);

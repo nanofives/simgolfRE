@@ -216,6 +216,10 @@ SG_API int sg_exe_fill_state(sg_ctx *ctx, int32_t mode);
 SG_API int sg_files_put(sg_ctx *ctx, const char *name, const uint8_t *data, size_t n);
 SG_API void sg_files_clear(sg_ctx *ctx);
 SG_API int sg_files_root(sg_ctx *ctx, const char *dir);     /* read <dir>/<name> instead (NULL: back to memory) */
+/* P23B fix 3: list "Saved Games" newest first by event order (portsim/gamefiles.h SavesOrder) on the directory view of
+   sg_files_root; `names` = the logical names ranked at the session start, newest first, newline-separated ("" = none).
+   Call after the fixture files were put. SG_E_ARG without a root directory. */
+SG_API int sg_files_saves_order(sg_ctx *ctx, const char *names);
 SG_API int64_t sg_files_size(sg_ctx *ctx, const char *name); /* -1 when absent */
 /* up to cap bytes of `name` from `offset` as the port sees it (overlay writes included); bytes read, -1 when absent */
 SG_API int64_t sg_files_read(sg_ctx *ctx, const char *name, uint64_t offset, uint8_t *buf, uint64_t cap);

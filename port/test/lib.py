@@ -92,7 +92,7 @@ def _sig(dll):
         ("sg_exe_load", C.c_int, [C.c_char_p, C.c_char_p, SZ]), ("sg_exe_loaded", I32, []),
         ("sg_exe_const", C.c_int, [C.c_char_p, P, U32, C.POINTER(U32)]), ("sg_exe_fill_state", C.c_int, [P, I32]),
         ("sg_files_put", C.c_int, [P, C.c_char_p, C.c_char_p, SZ]), ("sg_files_clear", None, [P]),
-        ("sg_files_root", C.c_int, [P, C.c_char_p]), ("sg_files_size", C.c_int64, [P, C.c_char_p]),
+        ("sg_files_root", C.c_int, [P, C.c_char_p]), ("sg_files_saves_order", C.c_int, [P, C.c_char_p]), ("sg_files_size", C.c_int64, [P, C.c_char_p]),
         ("sg_files_read", C.c_int64, [P, C.c_char_p, C.c_uint64, C.c_char_p, C.c_uint64]),
     ]:
         f = getattr(dll, name)
@@ -279,6 +279,13 @@ class State:
 
     def files_root(self, directory=None):
         self.lib.dll.sg_files_root(self.ctx, str(directory).encode() if directory is not None else None)
+
+    def files_saves_order(self, names):
+        """P23B fix 3: list "Saved Games" newest first by event order (names: the logical names ranked at the session start,
+        newest first); after the fixture files were put"""
+        r = self.lib.dll.sg_files_saves_order(self.ctx, chr(10).join(names).encode())
+        if r != SG_OK:
+            raise SgError(r, "files_saves_order")
 
     def files_size(self, name: str) -> int:
         return int(self.lib.dll.sg_files_size(self.ctx, name.encode()))

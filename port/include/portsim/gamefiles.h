@@ -90,6 +90,28 @@ class NullGameFiles : public GameFiles {
   int64_t read(const std::string &, uint64_t, void *, uint64_t) const override { return -1; }
 };
 
+// P23B fix 3: the "Saved Games" listing newest first, ordered by EVENTS and not by file times, so a recording replays on any
+// machine: the names that existed when the session began carry the rank the host gave them (`initial`, newest first, logical
+// names), every file written after enable() is newer than all of them (the last write first), the rest keep name order. Off
+// (the default) = the original's NTFS name order. The host app records `initial` in session.json (saves_order).
+class SavesOrder {
+ public:
+  bool on() const { return on_; }
+  const std::vector<std::string> &initial() const { return initial_; }
+  void enable(const std::vector<std::string> &initial);
+  void touch(const std::string &name);   // a write (no effect while off)
+  void forget(const std::string &name);  // a delete
+  // reorders out[first..) (the entries after "." and ".."); the entries are files of the directory `dir` (normalised)
+  void sort(const std::string &dir, std::vector<DirEntry> &out, size_t first) const;
+
+ private:
+  bool on_ = false;
+  uint64_t seq_ = 0;
+  std::vector<std::string> initial_;
+  std::map<std::string, size_t> rank_;      // normalised logical name -> position in initial_
+  std::map<std::string, uint64_t> written_;  // normalised logical name -> write sequence
+};
+
 class MemoryGameFiles : public GameFiles {
  public:
   void put(const std::string &name, std::vector<uint8_t> bytes);
@@ -131,6 +153,8 @@ class DirGameFiles : public GameFiles {
   bool write(const std::string &name, const std::vector<uint8_t> &bytes) override;
   bool writable() const override { return true; }
   bool remove(const std::string &name) override;
+  // P23B fix 3: list "Saved Games" newest first by event order (see SavesOrder); call after the fixture files were put
+  void set_saves_order(const std::vector<std::string> &initial) { saves_.enable(initial); }
 
  private:
   std::string path_of(const std::string &name) const;
@@ -138,6 +162,7 @@ class DirGameFiles : public GameFiles {
   bool write_through_ = false;
   MemoryGameFiles overlay_;
   std::set<std::string> deleted_;  // normalised logical names removed from the disk's view
+  SavesOrder saves_;
 };
 
 }  // namespace portsim

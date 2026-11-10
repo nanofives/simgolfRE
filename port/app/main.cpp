@@ -301,6 +301,21 @@ std::string jesc(const std::string &s) {
   return o;
 }
 
+// P23B fix 3: session.json's saved-games listing order: `saves_newest_first` and, when on, `saves_order` = the logical names
+// ranked when the session began, newest first. A replay (port/test/app_replay.py) hands them to sg_files_saves_order, so the
+// listing answers match the recording on any machine (the order of later writes is the write order the trace replays).
+std::string saves_json(const AppFiles &files) {
+  std::string s = std::string(",\"saves_newest_first\":") + (files.newest_first() ? "true" : "false");
+  s += ",\"saves_order\":[";
+  bool first = true;
+  for (const std::string &n : files.saves_order()) {
+    if (!first) s += ",";
+    first = false;
+    s += "\"" + jesc(n) + "\"";
+  }
+  return s + "]";
+}
+
 // The address of the exe's .data section (ImageBase + VirtualAddress) from the file's PE header: the GameState's base, so
 // the 32-bit pointers the state holds to its own objects resolve as in the original.
 bool exe_data_va(const std::vector<uint8_t> &f, uint32_t &va) {
@@ -1336,6 +1351,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
   std::string s = "{\"app\":\"simgolf_port\",\"mode\":\"live-trace\",\"trace\":\"" + jesc(tp) + "\",\"terrain\":\"" + o.terrain + "\"";
   s += profile_json(o.profile);  // S7.12
   s += ",\"error\":\"" + jesc(err) + "\",\"code\":" + std::to_string(code) + ",\"detail\":\"" + jesc(detail.substr(0, 2000)) + "\"";
+  s += saves_json(files);  // P23B fix 3
   s += ",\"stop\":\"" + jesc(res.stop) + "\",\"records\":" + std::to_string(res.records);
   s += ",\"violations\":" + std::to_string(res.violations) + ",\"presents\":" + std::to_string(presents.size());
   s += ",\"snapshots_requested\":" + std::to_string(o.snapshot_list.size()) + ",\"snapshots_taken\":" + std::to_string(snaps_taken);
@@ -2103,6 +2119,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"negctl\":\"" + jesc(o.negctl) + "\",\"input_events\":" + std::to_string(events);
   s += ",\"frames_shown\":" + std::to_string(presenter.frames_set() > 1 ? presenter.frames_set() - 1 : 0);
   s += ",\"saves_refused\":" + std::to_string(files.refused());
+  s += saves_json(files);  // P23B fix 3
   s += ",\"terrain\":\"" + o.terrain + "\",\"terrain_calls\":" + std::to_string(lo.terrain_calls) +
        ",\"terrain_passes\":" + std::to_string(lo.terrain_passes);
   s += ",\"client\":[" + std::to_string(win.client_w()) + "," + std::to_string(win.client_h()) + "],\"dpi\":" + std::to_string(win.dpi());
@@ -2260,6 +2277,23 @@ void selftest_saves(Tests &t, SavesDefect defect) {
       std::vector<std::string> n2l;
       for (auto &e : f.list("Saved Games\\*")) n2l.push_back(e.name);
       t.add("saves.list_newest_first_dots", n2l.size() == 5 && n2l[0] == "." && n2l[1] == "..");
+      {  // P23B fix 3: by event order: a write goes to the front, a delete leaves, the ranking is the session.json list
+        f.write("Saved Games/d.sve", {1});
+        std::vector<std::string> wr;
+        for (auto &e : f.list("Saved Games/*.sve")) wr.push_back(e.name);
+        t.add("saves.order_write_first", wr == std::vector<std::string>({"d.sve", "b.sve", "a.sve", "c.sve"}));
+        f.remove("Saved Games/d.sve");
+        std::vector<std::string> rm;
+        for (auto &e : f.list("Saved Games/*.sve")) rm.push_back(e.name);
+        t.add("saves.order_delete_leaves", rm == std::vector<std::string>({"b.sve", "a.sve", "c.sve"}));
+        t.add("saves.order_initial_recorded", f.saves_order() == std::vector<std::string>({"saved games/b.sve", "saved games/a.sve", "saved games/c.sve"}));
+        portsim::DirGameFiles rp(inst.string());  // the replay's view: no file times, only the recorded ranking
+        rp.set_saves_order(f.saves_order());
+        rp.write("Saved Games/c.sve", {2});
+        std::vector<std::string> rl;
+        for (auto &e : rp.list("Saved Games/*.sve")) rl.push_back(e.name);
+        t.add("saves.order_replay_side", rl.size() >= 2 && rl[0] == "c.sve" && rl[1] == "b.sve");
+      }
       f.set_newest_first(false);
     }
     t.add("saves.remove_install_file_tombstone", f.remove("Saved Games/b.sve") && f.size("Saved Games/b.sve") == -1 &&
