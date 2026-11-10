@@ -212,7 +212,43 @@ void win_fill(Gfx &g, Ctx &ctx, uint32_t surf, const uint32_t *a, const char *wh
   const int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]);
   int32_t b = add32(y, static_cast<int32_t>(a[3]));
   if (mode() == 1) b = sub32(b, 1);
-  gfxf::fill_rect16(g.root, x, y, add32(x, static_cast<int32_t>(a[2])), b, static_cast<uint16_t>(c & 0xffff));
+  const int32_t r = add32(x, static_cast<int32_t>(a[2]));
+  // P23E fix 6 (gfx.h kGfxWideMarks): the terrain tool's dots (P4_holeGrid, inside its GfxWideLineScope) are recorded as still
+  // filled rectangles with the root pixels they change, as terrain_draw_line records its lines (records only)
+  Gfx::HudCapture &hc = g.hud;
+  const bool rec = hc.lines_on && (hc.wide_lines & hc.wide_scope & kGfxWideMarks) != 0 && g.root.w == 800 && g.root.h == 600 &&
+                   g.root.px.size() == static_cast<size_t>(800 * 600);
+  const int32_t cx0 = std::max(0, x), cy0 = std::max(0, y), cx1 = std::min(g.root.w, r), cy1 = std::min(g.root.h, b);
+  std::vector<uint16_t> before;
+  if (rec && cx1 > cx0 && cy1 > cy0)
+    for (int32_t yy = cy0; yy < cy1; ++yy)
+      before.insert(before.end(), g.root.px.begin() + yy * g.root.w + cx0, g.root.px.begin() + yy * g.root.w + cx1);
+  gfxf::fill_rect16(g.root, x, y, r, b, static_cast<uint16_t>(c & 0xffff));
+  if (!rec) return;
+  if (hc.line800.size() != g.root.px.size()) {
+    hc.line800.assign(g.root.px.size(), 0);
+    hc.line_word.assign(g.root.px.size(), 0);
+  }
+  size_t k = 0;
+  if (cx1 > cx0 && cy1 > cy0)
+    for (int32_t yy = cy0; yy < cy1; ++yy)
+      for (int32_t xx = cx0; xx < cx1; ++xx, ++k) {
+        const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(g.root.w) + static_cast<size_t>(xx);
+        if (before[k] != g.root.px[i]) {
+          hc.line800[i] = 1;
+          hc.line_word[i] = g.root.px[i];
+        }
+      }
+  GfxHudLine l;
+  l.x1 = x;
+  l.y1 = y;
+  l.x2 = r;
+  l.y2 = b;
+  l.colour = c;
+  l.alpha = 10;
+  l.still = true;
+  l.fill = true;
+  hc.lines.push_back(l);
 }
 
 void b_fill_window_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) {

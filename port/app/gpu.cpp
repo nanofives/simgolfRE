@@ -2122,6 +2122,14 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
                            static_cast<int32_t>(std::ceil(std::max(x0, x1) + reach)) + 2,
                            static_cast<int32_t>(std::ceil(std::max(y0, y1) + reach)) + 2});
         };
+        if (ln.fill) {  // P23E fix 6: a filled rectangle (present.cpp draw_lines): its own box
+          const Rect b = clip(Rect{static_cast<int32_t>(std::floor(vp.origin_x + slx + ln.x1 * sx)) - 1,
+                                   static_cast<int32_t>(std::floor(vp.origin_y + sly + ln.y1 * sy)) - 1,
+                                   static_cast<int32_t>(std::ceil(vp.origin_x + slx + ln.x2 * sx)) + 1,
+                                   static_cast<int32_t>(std::ceil(vp.origin_y + sly + ln.y2 * sy)) + 1});
+          if (b.x1 > b.x0 && b.y1 > b.y0) (P.line_tiles_ ? lrects : drects).push_back(b);
+          continue;
+        }
         if (!P.line_tiles_) {
           const Rect b = box(ax, ay, bx, by);
           if (b.x1 > b.x0 && b.y1 > b.y0) drects.push_back(b);

@@ -1740,6 +1740,20 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
                    cb = static_cast<double>((ln.colour << 3) & 0xf8u);
       const double ca = std::clamp(static_cast<double>(ln.alpha) / 10.0, 0.0, 1.0);
       if (ca <= 0.0) continue;
+      if (ln.fill) {  // P23E fix 6: a still filled rectangle (the terrain tool's dots): the client pixels whose centre lies inside it
+        const double fx0 = vp.origin_x + slx + ln.x1 * sx, fy0 = vp.origin_y + sly + ln.y1 * sy;
+        const double fx1 = vp.origin_x + slx + ln.x2 * sx, fy1 = vp.origin_y + sly + ln.y2 * sy;
+        const int32_t xa = std::max<int32_t>(kx0, static_cast<int32_t>(std::ceil(fx0 - 0.5)));
+        const int32_t xb = std::min<int32_t>(kx1, static_cast<int32_t>(std::ceil(fx1 - 0.5)));
+        const int32_t ya = std::max<int32_t>(ky0, static_cast<int32_t>(std::ceil(fy0 - 0.5)));
+        const int32_t yb = std::min<int32_t>(ky1, static_cast<int32_t>(std::ceil(fy1 - 0.5)));
+        const uint32_t word = rgb555_to_bgra(static_cast<uint16_t>(ln.colour & 0x7fffu));  // the word the fill wrote, as the frame shows it
+        for (int32_t y = ya; y < yb && xb > xa; ++y) {
+          uint32_t *dst = &px_at(xa, y) - xa;
+          for (int32_t x = xa; x < xb; ++x) dst[x] = word;
+        }
+        continue;
+      }
       const double half = std::min(static_cast<double>(ln.width), 10.0) * (sx + sy) / 4.0;
       const double ax = vp.origin_x + slx + ln.x1 * sx, ay = vp.origin_y + sly + ln.y1 * sy;  // P12A: + the slide
       // P22E item 7: a still line (the placement box's edges) keeps both ends, past the frame's columns too

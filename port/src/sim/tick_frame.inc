@@ -4668,6 +4668,7 @@ void P4_holeGrid(u32 F) {
     if ((GU8(GS(g_flags)) & 2) == 0) return;                                   // ML+0x6902 / ML+0x6909
     int ecx = G32(GS(g_ui_542f20));                                                // ML+0x690f
     if (ecx == 3) return;                                                     // ML+0x6915 / ML+0x6918
+    GfxWideLineScope marks_scope(ctx, kGfxWideMarks);  // P23E fix 6: the marks' lines and dots (gfx.h; records only)
     int ebp = G32(GS(g_cursorTileX));                                                // ML+0x691e
     int edx = ((ecx - 1) != 0 ? -1 : 0) + 2 + ebp;                            // ML+0x6924..ML+0x6935 (dec, neg, sbb, add 2)
     int eax = ebp - 1;                                                        // ML+0x692b

@@ -151,6 +151,9 @@ struct GfxHudLine {
   float width = 1.0f;
   int32_t alpha = 10;
   bool still = false;
+  // P23E fix 6 (kGfxWideMarks): a filled rectangle, x1 .. x2 by y1 .. y2 half-open in 800 space, colour the 555 word it wrote (alpha
+  // 10, still); a presenter fills the client pixels whose centre lies inside
+  bool fill = false;
 };
 struct GfxHudFrame {
   std::vector<uint16_t> base;  // the root before the first layer opened (800 x 600); empty = no layer this frame
@@ -253,12 +256,16 @@ void gfx_set_frame_edge_text(Ctx &ctx, bool on);
 //   Its yards label is a frame text (the edge-text rule for frame texts, not this record).
 // - kGfxWideStaff: the Staff panel's circle round the selected employee (drawEmployeeDetailPanel's drawCircle, gfx_hud.cpp
 //   b_detail_panel: its lineTo steps).
+// - kGfxWideMarks: the terrain tool's marks round the cursor cell (P4_holeGrid, after the sprite queue: drawMapLine(.., 0x80006090,
+//   3, 7) edges and fillWindowRect dots of 0x80006090, inside its GfxWideLineScope); a dot is a still record with `fill` set. Its
+//   height numbers are frame texts (the edge-text rule for frame texts, not this record).
 // Records only: the frame, the root, the back buffer and the GameState are unchanged. Set by the app's host (--wide-lines) after
 // gfx_set_hud_lines; 0 (the default): nothing recorded.
 constexpr uint32_t kGfxWideArc = 1u << 0;
 constexpr uint32_t kGfxWideRange = 1u << 1;
 constexpr uint32_t kGfxWideRuler = 1u << 2;
 constexpr uint32_t kGfxWideStaff = 1u << 3;
+constexpr uint32_t kGfxWideMarks = 1u << 4;
 void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows);
 // P23E: the frame code's draws of one kGfxWide* row outside the cursor passes (inert without the capture)
 void gfx_wide_line_scope(Ctx &ctx, uint32_t row, bool open);
