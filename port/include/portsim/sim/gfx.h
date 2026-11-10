@@ -251,11 +251,14 @@ void gfx_set_frame_edge_text(Ctx &ctx, bool on);
 // - kGfxWideRuler: the drag distance ruler (P6_Cursor: four drawMinimapSegment(.., 0x80000000 / 0x80007ff0, 2, 7) from the cursor to
 //   the drag's start, after the sprite queue and outside the cursor passes), the lines drawn inside a GfxWideLineScope of that bit.
 //   Its yards label is a frame text (the edge-text rule for frame texts, not this record).
+// - kGfxWideStaff: the Staff panel's circle round the selected employee (drawEmployeeDetailPanel's drawCircle, gfx_hud.cpp
+//   b_detail_panel: its lineTo steps).
 // Records only: the frame, the root, the back buffer and the GameState are unchanged. Set by the app's host (--wide-lines) after
 // gfx_set_hud_lines; 0 (the default): nothing recorded.
 constexpr uint32_t kGfxWideArc = 1u << 0;
 constexpr uint32_t kGfxWideRange = 1u << 1;
 constexpr uint32_t kGfxWideRuler = 1u << 2;
+constexpr uint32_t kGfxWideStaff = 1u << 3;
 void gfx_set_hud_wide_lines(Ctx &ctx, uint32_t rows);
 // P23E: the frame code's draws of one kGfxWide* row outside the cursor passes (inert without the capture)
 void gfx_wide_line_scope(Ctx &ctx, uint32_t row, bool open);

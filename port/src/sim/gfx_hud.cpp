@@ -2254,7 +2254,17 @@ void b_detail_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     if (gfxb::find_body("drawCircle")) {
       const int32_t zoom = gs.g_zoomScale;
       gs.g_zoomScale = gs.g_ui_5a34e4[1];
+      // P23E fix 5: the circle is drawn over the course round the employee, not on the panel. Inside the panel's HUD layer
+      // (drawEmployeeDetailPanel is a kGfxLayerPanel callee) a presenter moved it with the panel's anchor, away from the employee in
+      // a wide window (the original draws it round the employee): the layer is closed for the circle (its pixels are the centred
+      // gap's) and the same layer opens again after it. Only with the HUD capture on (depth 1: the callee's own layer).
+      const int32_t layer = g.hud.on && g.hud.depth == 1 ? g.hud.cur : -1;
+      if (layer >= 0) gfx_layer_end(ctx);
+      const uint32_t scope = g.hud.wide_scope;  // P23E fix 5 (gfx.h kGfxWideStaff): the circle's lines are recorded as still lines
+      g.hud.wide_scope |= kGfxWideStaff;
       call(g, ctx, "drawCircle", {static_cast<uint32_t>(cx), static_cast<uint32_t>(cy), static_cast<uint32_t>(25 * size), c});
+      g.hud.wide_scope = scope;
+      if (layer >= 0) gfx_layer_begin(ctx, layer);
       gs.g_zoomScale = zoom;
     } else {
       g.unsup("drawCircle: the selected employee's circle over the course (lineTo: the overlay lines)");
