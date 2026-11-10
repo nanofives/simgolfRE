@@ -300,6 +300,7 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
   ++w.gen;  // P15A
   w.valid = true;
   w.lines_open = true;  // P13D item 7: the overlay lines until the sprite queue (terrain_live.h)
+  gfx_trail_reset();  // P22C fix 3: the trail lines kept for this frame
   world_check(w);
 }
 
@@ -316,6 +317,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
     ++w->gen;  // P15A
     w->terrain800 = g.root.px;
     w->lines_open = true;  // P13D item 7
+    gfx_trail_reset();  // P22C fix 3: the trail lines kept for this frame
     world_check(*w);
   }
 }
@@ -447,6 +449,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     }
     world->terrain800 = g.root.px;
     world->lines_open = true;  // P13D item 7
+    gfx_trail_reset();  // P22C fix 3: the trail lines kept for this frame
     world_check(*world);
   }
 }

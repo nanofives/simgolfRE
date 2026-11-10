@@ -89,6 +89,10 @@
 //   display's rate between game frames: the presenter learns each control's box and looks from the frames (hover.cpp) and swaps
 //   a box to the look its nearest observation gives at the live cursor point; the next frame shows the game's own picture.
 //   game = a highlight changes only when the game draws its next frame.
+//   P22C item 3 fix 3: --trail-glide on|off (default on; SG_APP_P22=off: off; needs the moving objects) a ball whose golfer loop draws
+//   its trail segment (golfer flag bit 22: the mishit and lie rolls) glides like the others, and the segment moves with it: it is kept
+//   off the world layer and drawn under the sprites at the ball's drawn offset by the objects redraw (gfx.h gfx_set_trail_glide;
+//   such frames take the CPU objects path). off = P22C fix 1: that ball and its shadow stay at the frame's place.
 //   P22D fix 3: --meter-tips on|off (default on; SG_APP_P22=off: off) the cash, fun rating and skill rating boxes show their name
 //   as the game's one-line tip after the HUD tips' dwell (gfx.h gfx_set_meter_tips; drawing only)
 //   P22D fix 2: --golfer-list wide|four (default wide; SG_APP_P22=off: four) the golfer list gets as many more columns right of its
@@ -463,6 +467,7 @@ struct Options {
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
   bool list_wide = true;           // P22D fix 2: --golfer-list wide|four (SG_APP_P22=off: four)
   bool meter_tips = true;          // P22D fix 3: --meter-tips on|off (SG_APP_P22=off: off)
+  bool trail_glide = true;         // P22C fix 3: --trail-glide on|off (SG_APP_P22=off: off)
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
   bool panel_left = true;          // P11B fix 1: --hud-panel left|right (SG_APP_P11=off: right)
   bool undo_keys = true;           // P11D: --undo-keys on|off (SG_APP_P11=off: off)
@@ -1477,6 +1482,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   // P12A fix 2: the moving objects need the window-resolution sprite queue (--sprite-res native) and the world layer
   ho.smooth_objects = o.smooth_objects && o.sprite_native && ho.world;
   portsim::gfx_set_hr_scene(ho.smooth_objects);
+  portsim::gfx_set_trail_glide(ho.smooth_objects && o.trail_glide);  // P22C fix 3 (the moving objects draw the trail lines)
   ho.world_thread = o.world_thread && ho.world;  // P15A (the hr work recorded for it only with a world layer)
   portsim::gfx_set_hr_defer(ho.world_thread);
   // P15A fix 3: the world raster on the world thread (not with the render-scale-1 gate, which reads the sim's whole world root)
@@ -1999,6 +2005,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
   s += ",\"p22d\":{\"golfer_list\":\"" + std::string(o.list_wide ? "wide" : "four") + "\",\"meter_tips\":" +
        std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
+  s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   s += ",\"p16a\":{\"prio\":" + std::to_string(p16_prio ? 1 : 0) + ",\"pace_forced_hz\":" +  // P16A
        std::to_string(std::getenv("SG_P16_PACE_HZ") ? std::atoi(std::getenv("SG_P16_PACE_HZ")) : 0) + "}";
   {  // P12A fix 1
@@ -3288,6 +3295,10 @@ bool parse(int argc, char **argv, Options &o) {
       o.strip_right = v != "left";
       o.strip_near = v == "near";
     }
+    else if (a == "--trail-glide") {  // P22C fix 3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.trail_glide = v == "on";
+    }
     else if (a == "--meter-tips") {  // P22D fix 3
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.meter_tips = v == "on";
@@ -3537,6 +3548,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.edge_previews = false;  // P22E item 7
       o.list_wide = o.meter_tips = false;  // P22D fixes 2 and 3
+      o.trail_glide = false;  // P22C fix 3
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

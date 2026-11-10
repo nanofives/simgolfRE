@@ -230,6 +230,9 @@ struct WorldImage {
   // P12A fix 2: the frame's window-resolution sprite queue (gfx.h GfxHrScene: its base and every draw with its source), for the
   // moving objects drawn between two game frames (null: none, or --smooth-objects off)
   std::shared_ptr<const portsim::GfxHrScene> hr_scene;
+  // P22C item 3 fix 3 (--trail-glide): the ball trail segments the frame kept off the world layer (gfx.h gfx_trail_take); the
+  // presenter draws them under the sprites at their ball's drawn offset (Presenter::objects_tick)
+  std::vector<portsim::GfxTrailLine> trails;
   // P17B fix 2 (gpu_world.h): px and px_text as textures of the world thread's device shared with the window's (null: none); the GPU
   // compositor copies the one it shows on the GPU instead of uploading the words (which stay for every CPU reader)
   std::shared_ptr<const GpuWorldPic> gpu;
@@ -533,6 +536,13 @@ class Presenter {
   };
   bool objects_on_ = false;
   std::vector<Mover> movers_;
+  // P22C item 3 fix 3 (--trail-glide): this frame's trail segments (world_.trails) are drawn by objects_tick (the CPU redraw) under
+  // the sprites at their ball's offset; trail_ok_: the scene can draw them, trail_drawn_: drawn once since the frame came
+  bool trail_ok_ = false, trail_drawn_ = false;
+  std::vector<std::array<double, 2>> trail_off_;  // the offset each line was last drawn at
+  uint64_t trail_frames_ = 0, trail_fallback_ = 0, trail_ticks_ = 0;
+  void trail_offsets(std::vector<double> &ldx, std::vector<double> &ldy) const;  // each line's ball offset now (0: no mover)
+  void trail_fallback();  // a frame whose trails the scene cannot draw: over the world image at the frame's place
   std::shared_ptr<const portsim::GfxHrScene> prev_scene_;
   CameraSnap prev_cam_;
   int64_t objects_t0_ = 0;
@@ -617,6 +627,9 @@ class Presenter {
   mutable uint64_t world_gen_ = 0;    // bumped by objects_tick when it rewrote world pixels
   mutable uint64_t world_px_gen_ = 0;  // P15C: bumped when the CPU world image the GPU uploads changed (not by a GPU objects tick)
   mutable std::vector<std::array<int32_t, 4>> world_dirty_;  // the world rectangles objects_tick rewrote since the GPU's upload
+  // P22C fix 3: a new world image (set_frame) not yet uploaded whole: the GPU uploads it whole even when objects_tick already rewrote
+  // rectangles of it (set_frame_world draws a frame's trail lines before its first paint), then those rectangles over a shared picture
+  mutable bool world_whole_ = true;
   mutable uint64_t swap_gen_ = 0;     // bumped where slide_start swaps scene_prev_ / scene_last_
   mutable bool overlay_frozen_ = false;  // overlay_freeze
   mutable ProfLine overlay_line_;

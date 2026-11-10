@@ -9,6 +9,7 @@
 #include "portsim/sim/terrain_overlay.h"
 
 #include <algorithm>
+#include <atomic>  // P22C fix 3
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -297,11 +298,12 @@ void log_call(Gfx &g, const char *who, int32_t x1, int32_t y1, int32_t x2, int32
 // Drawing only: the root, the GameState and the address space are unchanged.
 // P15A fix 3: the line's pixels on a world surface px of pw x ph (frame width fw, left edge ox); the body of mirror_line_world, also
 // run on the world thread's raster (gfx.h kGwLines)
-bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, int32_t x1, int32_t y1,
-                    int32_t x2, int32_t y2, uint32_t colour, int32_t alpha) {
-  if (px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph)) return false;
+// P22C item 3 fix 3: the body with double 800-space ends (an int end gives the same value: x1 * kx with x1 promoted), drawn only
+// inside [cx0, cx1) x [cy0, cy1) (every pixel's value depends on its own x, y only), cover (optional) set where it wrote
+bool line_px_body(uint16_t *pxd, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, double x1, double y1, double x2,
+                  double y2, uint32_t colour, int32_t alpha, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1, uint8_t *cover) {
   const double s = static_cast<double>(ph) / 600.0, kx = static_cast<double>(fw) / 800.0;
-  auto wy = [&](int32_t y) { return (gl.flip_y ? static_cast<double>(y) : static_cast<double>(gl.screen_h - y)) * s; };
+  auto wy = [&](double y) { return (gl.flip_y ? y : static_cast<double>(gl.screen_h) - y) * s; };
   const double ax = ox + x1 * kx, ay = wy(y1), bx = ox + x2 * kx, by = wy(y2);
   const double dx = bx - ax, dy = by - ay, len = std::sqrt(dx * dx + dy * dy);
   if (len == 0.0) return false;
@@ -310,10 +312,10 @@ bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t f
   const double cr = clamp01(channel((colour >> 7) & 0xf8u)), cg = clamp01(channel((colour >> 2) & 0xf8u)),
                cb = clamp01(channel((colour << 3) & 0xf8u));
   const double ca = clamp01(static_cast<float>(alpha) / 10.0f);
-  const int32_t x0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
-  const int32_t xe = std::min(pw - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
-  const int32_t y0 = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
-  const int32_t ye = std::min(ph - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
+  const int32_t x0 = std::max(std::max(0, cx0), static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
+  const int32_t xe = std::min(std::min(pw, cx1) - 1, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)));
+  const int32_t y0 = std::max(std::max(0, cy0), static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
+  const int32_t ye = std::min(std::min(ph, cy1) - 1, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)));
   // P19B item 5: per row only the columns the line's band can cover (|n| < half + 0.5, the coverage's first factor), widened by 2
   // pixels for rounding, so a long line (a hole's shot line reaching past the view) does not walk its whole bounding box; the
   // pixels skipped are those whose coverage is 0. A near-horizontal line (|uy| below 1e-9) keeps the box's columns.
@@ -335,7 +337,9 @@ bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t f
       const double cov = clamp01(half + 0.5 - std::fabs(n)) * clamp01(t + 0.5) * clamp01(len - t + 0.5);
       if (cov <= 0.0) continue;
       const double al = ca * cov;
-      uint16_t &d = px[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x)];
+      const size_t at = static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x);
+      if (cover) cover[at] = 1;
+      uint16_t &d = pxd[at];
       const int dr = (d >> 10) & 31, dg = (d >> 5) & 31, db = d & 31;
       const double vr = cr * 255.0 * al + dr * 255.0 / 31.0 * (1.0 - al);
       const double vg = cg * 255.0 * al + dg * 255.0 / 31.0 * (1.0 - al);
@@ -344,6 +348,18 @@ bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t f
     }
   }
   return true;
+}
+bool mirror_line_px(std::vector<uint16_t> &px, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, int32_t x1, int32_t y1,
+                    int32_t x2, int32_t y2, uint32_t colour, int32_t alpha) {
+  if (px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph)) return false;
+  return line_px_body(px.data(), pw, ph, fw, ox, gl, x1, y1, x2, y2, colour, alpha, 0, 0, pw, ph, nullptr);
+}
+// P22C fix 3: the length test of mirror_line_px (a line of length 0 draws nothing and changes nothing)
+bool line_world_len(int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
+  const double s = static_cast<double>(ph) / 600.0, kx = static_cast<double>(fw) / 800.0;
+  auto wy = [&](double y) { return (gl.flip_y ? y : static_cast<double>(gl.screen_h) - y) * s; };
+  const double dx = (ox + x2 * kx) - (ox + x1 * kx), dy = wy(y2) - wy(y1);
+  return std::sqrt(dx * dx + dy * dy) != 0.0;
 }
 // P22A item 9 (Mariano: "moving camera while picking a groundskeeper lags everything"): the 800 root's pixels the line changed are
 // found inside the rectangle draw_line wrote (LineTouch), not by a copy and a compare of the whole 800 x 600 root per line: a
@@ -369,6 +385,11 @@ void lines_into_terrain800(const std::vector<uint16_t> &root, std::vector<uint16
       if (b != root[i] && b == t800[i]) t800[i] = root[i];
     }
 }
+// P22C item 3 fix 3 (gfx.h gfx_set_trail_glide): the golfer whose trail segment the golfer loop is drawing (thread of the frame), the
+// lines kept off the world layer since the frame's terrain picture began, and the app's switch
+thread_local int32_t g_trail_golfer = -1;
+thread_local std::vector<GfxTrailLine> g_trails;
+std::atomic<bool> g_trail_glide_on{false};
 void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
                        int32_t alpha, const std::vector<uint16_t> &before, const LineTouch &touch) {
   std::vector<uint16_t> &px = w.raster->pixels();
@@ -465,7 +486,40 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   if (rec || (mirror && (lines_full() || lines_check()))) before = g.root.px;  // P22A: a mirrored line keeps only its rectangle
   LineTouch touch;
   draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror ? &touch : nullptr);
-  if (mirror) {
+  // P22C fix 3: the golfer loop's trail segment with --trail-glide: not drawn on the world layer (the window draws it under the sprites
+  // at the ball's drawn offset, gfx.h gfx_trail_take); terrain800 still takes the root's line pixels, so the 800 line is not shown
+  const bool trail = mirror && g_trail_golfer >= 0 && g_trail_glide_on.load(std::memory_order_relaxed) &&
+                     !std::strcmp(who, "drawMinimapSegment");
+  if (mirror && trail) {
+    if (line_world_len(world->ph, world->fw, world->ox, gl, x1, y1, x2, y2)) {  // (mirror_line_world: a line of length 0 changes nothing)
+      GfxTrailLine l;
+      l.golfer = g_trail_golfer;
+      l.x1 = x1;
+      l.y1 = y1;
+      l.x2 = x2;
+      l.y2 = y2;
+      l.colour = colour;
+      l.alpha = alpha;
+      l.line_width = gl.line_width;
+      l.flip_y = gl.flip_y;
+      l.screen_h = gl.screen_h;
+      l.pw = world->pw;
+      l.ph = world->ph;
+      l.fw = world->fw;
+      l.ox = world->ox;
+      g_trails.push_back(l);
+      ++world->gen;  // P15A (as mirror_line_world)
+      if (world->terrain800.size() == g.root.px.size()) {
+        if (lines_full() || lines_check()) {
+          if (before.size() == g.root.px.size())
+            for (size_t i = 0; i < before.size(); ++i)
+              if (before[i] != g.root.px[i] && before[i] == world->terrain800[i]) world->terrain800[i] = g.root.px[i];
+        } else {
+          lines_into_terrain800(g.root.px, world->terrain800, g.root.w, touch);
+        }
+      }
+    }
+  } else if (mirror) {
     const PerfDetailScope pd(kPdLines);  // P15A
     mirror_line_world(g, *world, gl, x1, y1, x2, y2, colour, alpha, before, touch);   // gl.line_width: this call's
   }
@@ -680,6 +734,39 @@ void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 
 }  // namespace overlay
+
+// ---- P22C item 3 fix 3 (gfx.h)
+void gfx_set_trail_glide(bool on) { overlay::g_trail_glide_on.store(on, std::memory_order_relaxed); }
+bool gfx_trail_glide() { return overlay::g_trail_glide_on.load(std::memory_order_relaxed); }
+void gfx_trail_scope(int32_t golfer) { overlay::g_trail_golfer = golfer; }
+std::vector<GfxTrailLine> gfx_trail_take() {
+  std::vector<GfxTrailLine> v;
+  v.swap(overlay::g_trails);
+  return v;
+}
+void gfx_trail_reset() { overlay::g_trails.clear(); }
+bool gfx_trail_line_px(const GfxTrailLine &l, double dx, double dy, uint16_t *px, int32_t pw, int32_t ph, int32_t cx0, int32_t cy0,
+                       int32_t cx1, int32_t cy1, uint8_t *cover) {
+  if (!px || pw != l.pw || ph != l.ph || l.fw <= 0) return false;
+  overlay::LineGl gl;
+  gl.flip_y = l.flip_y;
+  gl.screen_h = l.screen_h;
+  gl.line_width = l.line_width;
+  return overlay::line_px_body(px, pw, ph, l.fw, l.ox, gl, l.x1 + dx, l.y1 + dy, l.x2 + dx, l.y2 + dy, l.colour, l.alpha, cx0, cy0, cx1,
+                               cy1, cover);
+}
+bool gfx_trail_line_box(const GfxTrailLine &l, double dx, double dy, int32_t box[4]) {
+  if (l.pw <= 0 || l.ph <= 0 || l.fw <= 0) return false;
+  const double s = static_cast<double>(l.ph) / 600.0, kx = static_cast<double>(l.fw) / 800.0;
+  auto wy = [&](double y) { return (l.flip_y ? y : static_cast<double>(l.screen_h) - y) * s; };
+  const double ax = l.ox + (l.x1 + dx) * kx, ay = wy(l.y1 + dy), bx = l.ox + (l.x2 + dx) * kx, by = wy(l.y2 + dy);
+  const double reach = std::min(static_cast<double>(l.line_width), 10.0) * s / 2.0 + 1.5;
+  box[0] = std::max(0, static_cast<int32_t>(std::floor(std::min(ax, bx) - reach)));
+  box[1] = std::max(0, static_cast<int32_t>(std::floor(std::min(ay, by) - reach)));
+  box[2] = std::min(l.pw, static_cast<int32_t>(std::ceil(std::max(ax, bx) + reach)) + 1);
+  box[3] = std::min(l.ph, static_cast<int32_t>(std::ceil(std::max(ay, by) + reach)) + 1);
+  return box[2] > box[0] && box[3] > box[1];
+}
 
 namespace {
 

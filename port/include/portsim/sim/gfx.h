@@ -406,6 +406,33 @@ void gfx_mover_trail_log(int32_t golfer, int32_t x1, int32_t y1, int32_t x2, int
 // not tagged as a mover, so its ball and shadow stay at the frame's place, the trail's end, as the game draws them. Negative control
 // (development): SG_P22_TRAILPIN=0 tags them as before (drawn one game frame late, the trail ahead of the ball).
 bool gfx_mover_trail_pin();
+// P22C item 3 fix 3 (app option --trail-glide, log/roadmap/P22/P22C_notes.md): RENDER-ONLY. With gfx_set_trail_glide(true)
+// (process-wide; the app's main only, with the moving objects on) a ball with a trail is a mover again (gfx_mover_trail_pin is
+// false) and its trail segment (drawMinimapSegment at mainLoop ML+0x6249, inside gfx_trail_scope(golfer)) is not drawn on the
+// world layer: the line's description is kept for the present (gfx_trail_take) and the window draws it between the base and the
+// sprite queue at the ball's drawn offset (gfx_hr_scene_redraw's lines). The 800 x 600 root and terrain800 are as before.
+struct GfxTrailLine {
+  int32_t golfer = -1;
+  int32_t x1 = 0, y1 = 0, x2 = 0, y2 = 0;  // 800-space ends (the ball now, the ball's place kept from the last frame)
+  uint32_t colour = 0;
+  int32_t alpha = 0;
+  float line_width = 1.0f;                   // the GL line width in force (terrain_overlay.h LineGl)
+  bool flip_y = true;
+  int32_t screen_h = 600;
+  int32_t pw = 0, ph = 0, fw = 0, ox = 0;    // the world layer it was meant for
+};
+void gfx_set_trail_glide(bool on);
+bool gfx_trail_glide();
+void gfx_trail_scope(int32_t golfer);        // the golfer loop: the golfer whose trail segment is drawn next; -1 after it
+std::vector<GfxTrailLine> gfx_trail_take();  // the lines kept since the frame's terrain picture began (cleared)
+void gfx_trail_reset();                      // the frame's terrain picture begins (the overlay lines' window opens)
+// the line moved by (dx, dy) 800-space pixels on a pw x ph surface, as mirror_line_px draws it (the same coverage, blend and
+// dither at every pixel), only inside [cx0, cx1) x [cy0, cy1); cover (optional, pw x ph) gets 1 where it wrote. false: nothing
+// drawn (another surface size, a line of length 0)
+bool gfx_trail_line_px(const GfxTrailLine &l, double dx, double dy, uint16_t *px, int32_t pw, int32_t ph, int32_t cx0, int32_t cy0,
+                       int32_t cx1, int32_t cy1, uint8_t *cover);
+// the world-pixel box (x0, y0, x1, y1 exclusive) the moved line can write; false: none
+bool gfx_trail_line_box(const GfxTrailLine &l, double dx, double dy, int32_t box[4]);
 GfxMoverSrc gfx_mover_of(int32_t n);
 GfxMoverSrc gfx_mover_label();      // the source of the queue entry whose label is being drawn (none outside drawQueuedSprite.label)
 
@@ -436,6 +463,11 @@ int32_t gfx_hr_scene_ph(const GfxHrScene &s);
 // the hr word and 1 where a draw covered it. Any thread.
 void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
                          const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov);
+// P22C item 3 fix 3: the same with trail lines drawn over the base before the queue's draws, line i moved by (ldx[i], ldy[i])
+// 800-space pixels (gfx_trail_line_px); their pixels count as covered
+void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
+                         const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov,
+                         const std::vector<GfxTrailLine> &lines, const std::vector<double> &ldx, const std::vector<double> &ldy);
 
 // ---- P15C (log/roadmap/P15/P15C_notes.md): the same redraw on the app's GPU. RENDER-ONLY, any thread, the scene unchanged.
 // gfx_hr_scene_redraw's per-pixel work split in two: what the GPU cannot do exactly (the double arithmetic that places the samples:

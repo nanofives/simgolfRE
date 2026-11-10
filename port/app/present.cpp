@@ -165,6 +165,11 @@ bool Presenter::set_frame_world(const std::vector<uint16_t> &px, BandFill band, 
       if (l.id == portsim::kGfxLayerPanel) l.anchor = panel_anchor_;
     slide_start(world_);  // P12A fix 1
     objects_start(old, drawn);  // P12A fix 2
+    if (!world_.trails.empty()) {  // P22C fix 3: the trail lines before the first paint of this frame
+      ++trail_frames_;
+      if (trail_ok_) objects_tick(portsim::perf_now_ns());
+      else trail_fallback();
+    }
   }
   if (!stale) world = std::move(old);  // P10A: the previous world image's buffers go back to the caller
   else world_ = std::move(old);
@@ -377,15 +382,29 @@ void Presenter::objects_start(const WorldImage &prev, const std::map<size_t, std
   movers_.clear();
   patched_.clear();
   objects_t0_ = portsim::perf_now_ns();
+  trail_ok_ = trail_drawn_ = false;  // P22C fix 3
+  trail_off_.assign(world_.trails.size(), {0.0, 0.0});
   if (!objects_on_) return;
   ++object_stats_.frames;
   const std::shared_ptr<const portsim::GfxHrScene> &ns = world_.hr_scene, &ps = prev.hr_scene;
-  if (!ns || !ps || ns == ps) return;  // no queue, or the same queue presented again (nothing moved)
+  // P22C fix 3: a frame with trail lines and a scene of the world image's size draws them through the CPU redraw (objects_tick), with
+  // or without moved objects; the GPU objects pass does not draw lines
+  auto trails_only = [&]() {
+    if (world_.trails.empty() || !ns ||
+        world_.px.size() != static_cast<size_t>(portsim::gfx_hr_scene_pw(*ns)) * static_cast<size_t>(portsim::gfx_hr_scene_ph(*ns)))
+      return;
+    movers_.clear();
+    trail_ok_ = true;
+    movers_gpu_ = false;
+    px_orig_ = world_.px;
+    pxt_orig_ = world_.px_text;
+  };
+  if (!ns || !ps || ns == ps) return trails_only();  // no queue, or the same queue presented again (nothing moved)
   if (portsim::gfx_hr_scene_pw(*ns) != portsim::gfx_hr_scene_pw(*ps) || portsim::gfx_hr_scene_ph(*ns) != portsim::gfx_hr_scene_ph(*ps) ||
       world_.px.size() != static_cast<size_t>(portsim::gfx_hr_scene_pw(*ns)) * static_cast<size_t>(portsim::gfx_hr_scene_ph(*ns)))
-    return;
+    return trails_only();
   int32_t cdx = 0, cdy = 0;  // the camera's shift between the two pictures (800-space)
-  if (!camera_shift(prev.cam, world_.cam, cdx, cdy)) return;
+  if (!camera_shift(prev.cam, world_.cam, cdx, cdy)) return trails_only();
   const std::vector<portsim::GfxHrDraw> &nd = portsim::gfx_hr_scene_draws(*ns), &pd = portsim::gfx_hr_scene_draws(*ps);
   // the previous frame's tagged draws by (kind, record, occurrence)
   std::map<std::tuple<int, int32_t, int32_t>, size_t> pm;
@@ -450,12 +469,13 @@ void Presenter::objects_start(const WorldImage &prev, const std::map<size_t, std
     movers_.push_back(m);
     if (s.kind > 0 && s.kind < 8) ++object_stats_.moved_kind[static_cast<size_t>(s.kind)];
   }
-  if (movers_.empty()) return;
+  if (movers_.empty()) return trails_only();
   ++object_stats_.moved;
   for (Mover &m : movers_) m.ox = m.oy = 1e9;  // objects_tick draws the first place
+  trail_ok_ = !world_.trails.empty();  // P22C fix 3 (the scene's size was checked above)
   // P15C: the GPU draws them when it is on and able to, and every draw of the queue is one it draws (else the CPU, as before)
   movers_gpu_ = false;
-  if (gpu_objects_ && gpu_on() && gpu_->objects_ok()) {
+  if (gpu_objects_ && gpu_on() && gpu_->objects_ok() && !trail_ok_) {  // P22C fix 3: a frame with trail lines: the CPU redraw
     bool all = true;
     portsim::GfxHrGpuOp op;
     for (size_t k = 0; all && k < nd.size(); ++k) all = portsim::gfx_hr_scene_gpu_op(*ns, k, op);
@@ -474,7 +494,7 @@ void Presenter::objects_start(const WorldImage &prev, const std::map<size_t, std
 
 bool Presenter::objects_tick(int64_t now_ns) {
   ++object_stats_.ticks;
-  if (movers_.empty() || !world_.hr_scene) return false;
+  if ((movers_.empty() && !trail_ok_) || !world_.hr_scene) return false;  // P22C fix 3: or the trail lines alone
   const portsim::GfxHrScene &sc = *world_.hr_scene;
   const int32_t pw = portsim::gfx_hr_scene_pw(sc), ph = portsim::gfx_hr_scene_ph(sc);
   if (world_.px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph) || (!movers_gpu_ && px_orig_.size() != world_.px.size()) ||
@@ -486,7 +506,7 @@ bool Presenter::objects_tick(int64_t now_ns) {
   // P14A fix 2: --object-rate auto decides the cap from the path and the client size of the last paint
   const int auto_hz = object_auto_ ? object_rate_now() : 0;
   const double min_ns = object_auto_ ? (auto_hz > 0 ? 1e9 / auto_hz : 0.0) : object_min_ns_;
-  if (min_ns > 0 && t < 1.0 && static_cast<double>(now_ns - object_last_ns_) < min_ns) return false;
+  if (min_ns > 0 && t < 1.0 && static_cast<double>(now_ns - object_last_ns_) < min_ns && (!trail_ok_ || trail_drawn_)) return false;
   const double kx = static_cast<double>(world_.fw) / kLogicalW, ky = static_cast<double>(ph) / kLogicalH;
   // the offsets now, to a quarter of a world pixel; nothing to draw when none changed
   bool changed = false;
@@ -496,6 +516,14 @@ bool Presenter::objects_tick(int64_t now_ns) {
     if (qx != m.ox || qy != m.oy) changed = true;
     m.ox = qx;
     m.oy = qy;
+  }
+  // P22C fix 3: the trail lines follow their ball's offset (drawn at least once per frame)
+  std::vector<double> ldx, ldy;
+  if (trail_ok_) {
+    trail_offsets(ldx, ldy);
+    if (!trail_drawn_) changed = true;
+    for (size_t i = 0; i < ldx.size(); ++i)
+      if (i < trail_off_.size() && (trail_off_[i][0] != ldx[i] || trail_off_[i][1] != ldy[i])) changed = true;
   }
   if (!changed) return false;
   if (std::FILE *bl = ball_log())
@@ -571,12 +599,31 @@ bool Presenter::objects_tick(int64_t now_ns) {
   }
   // (P12A fix 3: the rectangles are not merged: each lies inside its object's base rectangle of the scene, gfx.h kGfxMoverMaxStep;
   // where two overlap, both redraws hold every moved draw, so the pixels they share are the same)
+  // P22C fix 3: each trail line's box at the frame's place and at its offset now (the line is drawn in every rectangle's redraw)
+  for (size_t i = 0; trail_ok_ && i < world_.trails.size(); ++i) {
+    int32_t a0[4], a1[4];
+    const bool h0 = portsim::gfx_trail_line_box(world_.trails[i], 0.0, 0.0, a0);
+    const bool h1 = portsim::gfx_trail_line_box(world_.trails[i], ldx[i], ldy[i], a1);
+    if (!h0 && !h1) continue;
+    std::array<int32_t, 4> r = h0 ? std::array<int32_t, 4>{a0[0], a0[1], a0[2], a0[3]} : std::array<int32_t, 4>{a1[0], a1[1], a1[2], a1[3]};
+    if (h1) r = {std::min(r[0], a1[0]), std::min(r[1], a1[1]), std::max(r[2], a1[2]), std::max(r[3], a1[3])};
+    r = {std::max(0, r[0] - 2), std::max(0, r[1] - 2), std::min(pw, r[2] + 2), std::min(ph, r[3] + 2)};
+    if (r[2] > r[0] && r[3] > r[1]) regs.push_back(r);
+    trail_off_[i] = {ldx[i], ldy[i]};
+  }
+  if (trail_ok_) {
+    trail_drawn_ = true;
+    ++trail_ticks_;
+  }
   std::vector<uint16_t> out, out0;
   std::vector<uint8_t> cov, cov0;
   const std::vector<double> none;
+  const std::vector<double> lzero(world_.trails.size(), 0.0);
+  static const std::vector<portsim::GfxTrailLine> no_lines;
+  const std::vector<portsim::GfxTrailLine> &lines = trail_ok_ ? world_.trails : no_lines;
   for (const auto &r : regs) {
-    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], dxv, dyv, out, cov);
-    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], none, none, out0, cov0);  // where the frame's draws covered
+    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], dxv, dyv, out, cov, lines, ldx, ldy);
+    portsim::gfx_hr_scene_redraw(sc, r[0], r[1], r[2], r[3], none, none, out0, cov0, lines, lzero, lzero);  // where the frame's draws covered
     if (out.size() != static_cast<size_t>(r[2] - r[0]) * static_cast<size_t>(r[3] - r[1]) || out0.size() != out.size()) continue;
     const size_t rw = static_cast<size_t>(r[2] - r[0]);
     for (int32_t y = r[1]; y < r[3]; ++y)
@@ -684,14 +731,46 @@ void Presenter::objects_sync_view(const Viewport &vs) const {
   objects_sync(std::max(0, x0), std::max(0, y0), std::min(world_.pw, x1), std::min(world_.ph, y1));
 }
 
+// P22C fix 3: each trail line's offset now: its ball's drawn offset (the ball mover of the line's golfer), else 0 (not moved)
+void Presenter::trail_offsets(std::vector<double> &ldx, std::vector<double> &ldy) const {
+  ldx.assign(world_.trails.size(), 0.0);
+  ldy.assign(world_.trails.size(), 0.0);
+  for (size_t i = 0; i < world_.trails.size(); ++i)
+    for (const Mover &m : movers_)
+      if (m.src.kind == portsim::kGfxMoverBall && m.src.index == world_.trails[i].golfer && m.ox < 1e8) {
+        ldx[i] = m.ox;
+        ldy[i] = m.oy;
+      }
+}
+
+// P22C fix 3: trail lines the scene cannot draw (no scene of the world image's size, the objects off): drawn over the world image at
+// the frame's place, as mirror_line_px draws them (over the sprites there: the frame's sprites are already in the image)
+void Presenter::trail_fallback() {
+  const int32_t pw = world_.pw, ph = world_.ph;
+  if (pw <= 0 || ph <= 0 || world_.px.size() != static_cast<size_t>(pw) * static_cast<size_t>(ph)) return;
+  const bool text = world_.px_text.size() == world_.px.size();
+  for (const portsim::GfxTrailLine &l : world_.trails) {
+    int32_t b[4];
+    if (!portsim::gfx_trail_line_box(l, 0.0, 0.0, b)) continue;
+    portsim::gfx_trail_line_px(l, 0.0, 0.0, world_.px.data(), pw, ph, b[0], b[1], b[2], b[3], nullptr);
+    if (text) portsim::gfx_trail_line_px(l, 0.0, 0.0, world_.px_text.data(), pw, ph, b[0], b[1], b[2], b[3], nullptr);
+    world_dirty_.push_back({b[0], b[1], b[2], b[3]});
+    ++trail_fallback_;
+  }
+  ++world_gen_;
+  ++world_px_gen_;
+  changed_pending_ = true;
+}
+
 std::string Presenter::objects_json() const {  // P15C
   char b[512];
   std::snprintf(b, sizeof b,
                 "{\"gpu_objects\":%d,\"gpu_frames\":%llu,\"gpu_refused\":%llu,\"gpu_ticks\":%llu,\"tick_ms\":%.1f,\"sync_calls\":%llu,"
-                "\"sync_px\":%llu,\"sync_ms\":%.1f}",
+                "\"sync_px\":%llu,\"sync_ms\":%.1f,\"trail_frames\":%llu,\"trail_ticks\":%llu,\"trail_fallback\":%llu}",
                 gpu_objects_ ? 1 : 0, static_cast<unsigned long long>(gpu_frames_), static_cast<unsigned long long>(gpu_refused_),
                 static_cast<unsigned long long>(gpu_ticks_), static_cast<double>(tick_ns_) / 1e6, static_cast<unsigned long long>(sync_calls_),
-                static_cast<unsigned long long>(sync_px_), static_cast<double>(sync_ns_) / 1e6);
+                static_cast<unsigned long long>(sync_px_), static_cast<double>(sync_ns_) / 1e6, static_cast<unsigned long long>(trail_frames_),
+                static_cast<unsigned long long>(trail_ticks_), static_cast<unsigned long long>(trail_fallback_));
   return b;
 }
 
@@ -940,6 +1019,7 @@ bool Presenter::set_frame(const std::vector<uint16_t> &px, BandFill band) {
   movers_.clear();  // P12A fix 2 (objects_start may find new ones)
   patched_.clear();
   world_dirty_.clear();  // P14A: a new world image is uploaded whole
+  world_whole_ = true;   // P22C fix 3
   sync_undo_.clear();    // P15C: the world they were taken from is gone
   synced_.clear();
   mregs_.clear();

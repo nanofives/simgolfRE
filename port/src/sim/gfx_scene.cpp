@@ -3155,7 +3155,7 @@ void gfx_mover_trail_log(int32_t golfer, int32_t x1, int32_t y1, int32_t x2, int
 }
 bool gfx_mover_trail_pin() {  // P22C item 3 (gfx.h)
   static const bool on = !(std::getenv("SG_P22_TRAILPIN") && std::strcmp(std::getenv("SG_P22_TRAILPIN"), "0") == 0);
-  return on;
+  return on && !gfx_trail_glide();  // P22C fix 3: with --trail-glide the ball glides and its trail moves with it
 }
 void gfx_mover_queued(int32_t n) {
   if (n >= 0 && n < static_cast<int32_t>(g_mover_tab.size())) g_mover_tab[static_cast<size_t>(n)] = g_mover_next;
@@ -3591,6 +3591,13 @@ int32_t gfx_hr_scene_pw(const GfxHrScene &s) { return s.w ? s.w->pw : 0; }
 int32_t gfx_hr_scene_ph(const GfxHrScene &s) { return s.w ? s.w->ph : 0; }
 void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
                          const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov) {
+  static const std::vector<GfxTrailLine> none;
+  static const std::vector<double> nd;
+  gfx_hr_scene_redraw(s, x0, y0, x1, y1, dx, dy, out, cov, none, nd, nd);
+}
+void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1, int32_t y1, const std::vector<double> &dx,
+                         const std::vector<double> &dy, std::vector<uint16_t> &out, std::vector<uint8_t> &cov,
+                         const std::vector<GfxTrailLine> &lines, const std::vector<double> &ldx, const std::vector<double> &ldy) {
   out.clear();
   cov.clear();
   if (!s.w) return;
@@ -3619,6 +3626,10 @@ void gfx_hr_scene_redraw(const GfxHrScene &s, int32_t x0, int32_t y0, int32_t x1
     std::fill(cover.begin() + static_cast<std::ptrdiff_t>(o), cover.begin() + static_cast<std::ptrdiff_t>(o + static_cast<size_t>(x1 - x0)),
               uint8_t(0));
   }
+  // P22C fix 3: the trail lines over the base, under every draw of the queue (where the frame drew them: before renderSpriteQueue)
+  for (size_t i = 0; i < lines.size(); ++i)
+    gfx_trail_line_px(lines[i], i < ldx.size() ? ldx[i] : 0.0, i < ldy.size() ? ldy[i] : 0.0, plane.data(), w.pw, w.ph, x0, y0, x1, y1,
+                      cover.data());
   const HrPass keep = g_hr_pass;
   g_hr_pass = HrPass{};  // no scene tags on this thread
   for (size_t k = 0; k < s.cmds.size(); ++k) {

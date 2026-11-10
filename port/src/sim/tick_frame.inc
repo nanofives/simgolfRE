@@ -4384,7 +4384,9 @@ stk[--sp] = (int)(edx); // ML+0x6246  push edx
 stk[--sp] = (int)(eax); // ML+0x6247  push eax
 stk[--sp] = (int)(ebx); // ML+0x6248  push ebx
 gfx_mover_trail_log(edi, ebx, eax, edx, ecx);  // P22C (development, render-only): the ball trail segment
+gfx_trail_scope(edi);  // P22C fix 3 (render-only): the segment is golfer edi's (gfx.h gfx_set_trail_glide)
 eax = cc("drawMinimapSegment", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk[sp+5], stk[sp+6]); // drawMinimapSegment  ML+0x6249
+gfx_trail_scope(-1);  // P22C fix 3
 esi = G32(GS(f_w_4c2e00)); // ML+0x624e  mov esi, dword ptr [f_w_4c2e00]
 ecx = FD(0x70); // ML+0x6254  mov ecx, dword ptr [F+0x70]
 sp += 7; // ML+0x625b  add esp, 0x1c  (caller stack cleanup)

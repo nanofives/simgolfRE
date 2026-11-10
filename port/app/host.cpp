@@ -1371,6 +1371,7 @@ void LiveSession::run_world_job(WorldJob &j) {
   }
   wi.cam.t_ns = j.t_ns;  // P12A fix 1: the present's time
   if (j.smooth_objects && !wi.empty() && j.scene_slot) wi.hr_scene = *j.scene_slot;  // P12A fix 2: the queue's draws (taken by its op)
+  if (j.smooth_objects && !wi.empty()) wi.trails = j.trails;  // P22C fix 3
   if (j.check) {  // SG_P15_CHECK: the same present's image made at the present as without the world thread
     const uint64_t d = wi_digest(wi);
     ++wts_.check_frames;
@@ -1448,6 +1449,7 @@ static void world_reset(WorldImage &w) {
   w.proj.ok = false;  // P10E (its tables keep their capacity)
   w.cam = CameraSnap{};  // P12A fix 1
   w.hr_scene.reset();    // P12A fix 2
+  w.trails.clear();      // P22C fix 3
   w.gpu.reset();         // P17B fix 2: the shared picture back to the world thread's pool
 }
 
@@ -1608,6 +1610,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       }
     }
     j->t_ns = portsim::perf_now_ns();
+    j->trails = portsim::gfx_trail_take();  // P22C fix 3: the frame's trail segments (taken at every present)
     if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
       if (text) last_text_ = tf;
       else last_text_ = portsim::GfxTextFrame{};
@@ -1686,6 +1689,10 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   if (opt_.smooth_objects && !wi.empty()) {
     const portsim::PerfDetailScope pd(portsim::kPdCapHrScene);  // P15A
     wi.hr_scene = portsim::gfx_hr_scene(ctx);  // P12A fix 2: the queue's draws
+  }
+  {
+    std::vector<portsim::GfxTrailLine> tr = portsim::gfx_trail_take();  // P22C fix 3 (taken at every present)
+    if (opt_.smooth_objects && !wi.empty()) wi.trails = std::move(tr);
   }
   if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
     if (text) last_text_ = tf;

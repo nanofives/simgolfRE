@@ -226,6 +226,7 @@ struct WorldJob {
   std::shared_ptr<const std::vector<uint16_t>> root;
   portsim::LiveTerrainWorld planes;  // the frame-scale planes and the geometry (no rasteriser, no hr planes)
   std::shared_ptr<std::shared_ptr<const portsim::GfxHrScene>> scene_slot;  // the hr scene, taken by an op of `hr` (P12A fix 2)
+  std::vector<portsim::GfxTrailLine> trails;  // P22C fix 3: the frame's trail segments kept off the world layer (gfx_trail_take)
   bool check = false;         // SG_P15_CHECK: check_digest = the image make_world_image gave at the present (host.cpp wi_digest)
   uint64_t check_digest = 0;
   // P15A fix 3: the root is the world thread's own raster after the job's ops (HostOptions::world_raster_thread); with the check

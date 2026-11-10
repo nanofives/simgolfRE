@@ -1291,7 +1291,7 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
   d.world_text = wtext;  // P15C
   const int64_t t0 = portsim::perf_now_ns();
   const bool same = d.world.t && d.world.w == W.pw && d.world.h == W.ph && d.world_gen != ~0ull;
-  if (same && !P.world_dirty_.empty() && P.world_dirty_.size() < 256) {  // only the rectangles objects_tick rewrote
+  if (same && !P.world_whole_ && !P.world_dirty_.empty() && P.world_dirty_.size() < 256) {  // only the rectangles objects_tick rewrote
     for (const std::array<int32_t, 4> &r : P.world_dirty_) {
       const int32_t x0 = std::max(0, r[0]), y0 = std::max(0, r[1]), x1 = std::min(W.pw, r[2]), y1 = std::min(W.ph, r[3]);
       if (x1 <= x0 || y1 <= y0) continue;
@@ -1306,6 +1306,14 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
     const int64_t tg = portsim::perf_now_ns();
     if (world_from_shared(W, wtext)) {  // P17B fix 2: a GPU copy of the world thread's picture
       d.ns_world_gpu += portsim::perf_now_ns() - tg;
+      // P22C fix 3: the rectangles objects_tick already rewrote in the CPU words (a frame's trail lines before its first paint): the
+      // shared picture is the world thread's, without them
+      for (const std::array<int32_t, 4> &r : P.world_dirty_) {
+        const int32_t x0 = std::max(0, r[0]), y0 = std::max(0, r[1]), x1 = std::min(W.pw, r[2]), y1 = std::min(W.ph, r[3]);
+        if (x1 <= x0 || y1 <= y0) continue;
+        put_tex(d.ctx, d.world, x0, y0, x1 - x0, y1 - y0,
+                wpx.data() + static_cast<size_t>(y0) * static_cast<size_t>(W.pw) + static_cast<size_t>(x0), static_cast<uint32_t>(W.pw) * 2u);
+      }
     } else {
       if (!make_tex(d.dev, d.world, W.pw, W.ph, DXGI_FORMAT_R16_UINT, false)) return;
       put_tex(d.ctx, d.world, 0, 0, W.pw, W.ph, wpx.data(), static_cast<uint32_t>(W.pw) * 2u);
@@ -1313,6 +1321,7 @@ void GpuCompositor::upload_world(const Presenter &P, bool text) {
     }
   }
   P.world_dirty_.clear();
+  P.world_whole_ = false;  // P22C fix 3
   d.world_gen = P.world_px_gen_;  // P15C: world_px_gen_ (a GPU objects tick bumps world_gen_ only)
   ++d.world_serial;
   d.ns_world += portsim::perf_now_ns() - t0;
