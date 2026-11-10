@@ -88,6 +88,35 @@ bool P20A_WaitsForPartner(int k) {
     signed char hp = GC(p, (GS(g_golfers) + 33));
     return hp != 0 && hp == GC(k, (GS(g_golfers) + 33)) && (FLAGS(k) & (1u << 10)) != 0 && (FLAGS(p) & (1u << 10)) == 0;
 }
+// P22B updateGolfers.foreignGreenAutoPutt: the green (tile type 1, 8-connected) that holds hole h's cup tile (g_holes +24 / +28 are the cup
+// tile x / y, the tile of kTileDistance's target), tested for the ball's tile (bx, by). The player's shot is handed over only off the
+// green in the original (the L14 != 1 test of the hand-over condition), so a ball on any green, this hole's or another hole's, gets the
+// automatic putt towards this hole's cup. With the switch at 0 only the ball on the cup's own green keeps that.
+bool P22B_OnHoleGreen(int h, int bx, int by) {
+    if (bx < 0 || bx > 49 || by < 0 || by > 49) return false;
+    const int cx = HD(h, (GS(g_holes) + 24)), cy = HD(h, (GS(g_holes) + 28));
+    if (cx < 0 || cx > 49 || cy < 0 || cy > 49) return true;   // no cup tile to compare with: the original's behaviour
+    unsigned char seen[50 * 50] = {};
+    int stack[50 * 50 * 2];
+    int n = 0;
+    auto isGreen = [&](int x, int y) { return G<signed char>(GS(g_tileType) + y + x * 50) == 1; };
+    auto push = [&](int x, int y) {
+        if (x < 0 || x > 49 || y < 0 || y > 49 || seen[x * 50 + y] || !isGreen(x, y)) return;
+        seen[x * 50 + y] = 1;
+        stack[n++] = x;
+        stack[n++] = y;
+    };
+    for (int dx = -1; dx <= 1; dx++)
+        for (int dy = -1; dy <= 1; dy++) push(cx + dx, cy + dy);   // the cup tile and its neighbours seed the fill
+    if (n == 0) return true;   // the cup is on no green tile: the original's behaviour
+    while (n > 0) {
+        const int y = stack[--n], x = stack[--n];
+        if (x == bx && y == by) return true;
+        for (int dx = -1; dx <= 1; dx++)
+            for (int dy = -1; dy <= 1; dy++) push(x + dx, y + dy);
+    }
+    return false;
+}
 int Dx8(int d) { return G<int>(GS(f_tab_dirDx_4c2878) + 4 * static_cast<unsigned>(d)); }
 int Dy8(int d) { return G<int>(GS(f_tab_dirDy_4c2898) + 4 * static_cast<unsigned>(d)); }
 // direction 0..7 from a 16.16 angle: `sar 0x1c; and 0xf; inc; sar 1; and 7`
@@ -1112,7 +1141,7 @@ int updateGolfers() {
             kMatchUpdate(i);                                                            // updateGolfers+0x3407..updateGolfers+0x340c
             continue;                                                                   // updateGolfers+0x3414
         }
-        if ((FLAGS(i) & 0x200) && L14 != 1 &&
+        if ((FLAGS(i) & 0x200) && (L14 != 1 || (!SG_DEFECT(g_defect_foreign_green_auto) && !P22B_OnHoleGreen(h, L18, L20))) &&   // P22B updateGolfers.foreignGreenAutoPutt
             kTileDistance(GD(i, (GS(g_golfers) + 212)), GD(i, (GS(g_golfers) + 216)), HD(h, (GS(g_holes) + 24)), HD(h, (GS(g_holes) + 28))) >= 0x19) {   // updateGolfers+0x3419..updateGolfers+0x346b
             // the player's own golfer: hand the shot to the player
             if (GD(i, (GS(g_golfers) + 204)) == 0) {                                                 // updateGolfers+0x3471..updateGolfers+0x3477

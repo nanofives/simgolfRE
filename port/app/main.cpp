@@ -710,6 +710,8 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.treesHiddenFarZoom", 0},             // P11A fix 1 (trees at the furthest zoom)
     {"mainLoop.zoomInStopsAt4", 0},                 // P11A fix 2 (one zoom level closer: 8)
     {"mainLoop.zoom8Font", 0},                      // P13C (zoom 8 labels keep zoom 4's font)
+    {"mainLoop.shotButtonsReadBallTile", 0},        // P22B (shot buttons follow the ball tile of the Lie text)
+    {"updateGolfers.foreignGreenAutoPutt", 0},      // P22B (a ball on another hole's green gets the shot panel)
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
     {"mainLoop.pKeyPausesGame", 0},                 // P21A (p / P pause; the Improvements palette moves to a)
     {"renderSpriteQueue.labelUnderLaterSprites", 0},  // P22C item 6 (golfer name labels over the sprites in front)

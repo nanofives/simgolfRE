@@ -58,6 +58,7 @@
 namespace portsim {
 
 extern int g_defect_undo_button_help;  // tick.cpp mainLoop.undoButtonHelpOnly (P13A item 12)
+extern int g_defect_shot_lie_mixed_tile;  // tick.cpp mainLoop.shotButtonsReadBallTile (P22B; b_action_panel)
 namespace {
 // P13A: the bulldoze mode the bulldozer armed (g_flags bit 27, commands_panels.inc undo_button): the Build palette (slot 0x15)
 // draws the button lit, with the art of its own hover, while it is set (drawTerrainToolbar, which pickBuilding's -3 shares, already
@@ -1710,7 +1711,7 @@ void b_action_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       call(g, ctx, "Image_draw", {va(ctx, GSO(g_sprites541a18, 0x108)), root, 0x129, 0x1ed, 0});
       match_scoreboard(g, ctx, p);
     } else {
-      const int32_t t = static_cast<int32_t>(cm::call_peer(ctx, "typeAtPos", {ctx.mem.load<uint32_t>(rec + 0xd4), ctx.mem.load<uint32_t>(rec + 4)}).eax);
+      const int32_t t = static_cast<int32_t>(cm::call_peer(ctx, "typeAtPos", {ctx.mem.load<uint32_t>(rec + 0xd4), ctx.mem.load<uint32_t>(rec + (SG_DEFECT(g_defect_shot_lie_mixed_tile) ? 4u : 0xd8u))}).eax);   // P22B mainLoop.shotButtonsReadBallTile
       const bool rough = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(g_tileTypeAttrs, 0x22)) + 0x30u * static_cast<uint32_t>(t))) <= 0;
       int32_t fa, fc;
       auto pick = [&](int32_t want, int32_t k) {

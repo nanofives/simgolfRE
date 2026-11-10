@@ -206,6 +206,19 @@ int g_defect_fairway_stripes_fixed = 1;
 // tile), a right click on the course clears it (tick_frame.inc Ph_0041ecbb), and the tips call the button "Bulldoze"
 // (gfx_text.cpp undo_name; commands_panels.inc undo_button).
 int g_defect_undo_button_help = 1;
+// mainLoop.shotButtonsReadBallTile (P22B, Mariano's play-test 9 item 2 "it lets me choose all shot types but i'm on regular grass"):
+// drawGolferActionPanel decides greyed (lie class > 0, g_tileTypeAttrs +0x22) or enabled shot buttons 5..7 from
+// typeAtPos(ball x +0xd4, golfer y +0x04) (drawGolferActionPanel+0x167..+0x175: the ball's x with the golfer's y), while the "Lie:"
+// text of the same panel (mainLoop's panel text block) reads typeAtPos(+0xd4, +0xd8), the ball's tile. After a shot the two differ, so
+// the buttons follow another tile than the lie shown (rough shown, buttons enabled). Fixed (0): the buttons read the ball's tile too.
+int g_defect_shot_lie_mixed_tile = 1;
+// updateGolfers.foreignGreenAutoPutt (P22B, Mariano's play-test 9 item 4 "if i land on another hole's green that's disconnected from the
+// current hole it should let me select direction and type of hit instead of doing it automatically"): updateGolfers hands the shot to
+// the player's golfer (updateGolfers+0x3419..updateGolfers+0x346b: flag bit 9, ball tile type not 1, ball at least 0x19 from the cup)
+// only off the green; a ball on any green, also another hole's, takes the automatic shot towards the current hole's cup
+// (prepareShot with x == -1, updateGolfers+0x35f7..updateGolfers+0x3610). Fixed (0): a ball on a green tile that is not connected
+// (8 neighbours, type 1 tiles) to the green of the current hole's cup is handed to the player like a ball off the green.
+int g_defect_foreign_green_auto = 1;
 // mainLoop.holeLineEndsOnScreen (P19B, Mariano's play-test 7 item 5 "line of the trajectory of the ball is still not rendering
 // properly on the edges of the screen if the hole is not all visible"): mainLoop draws a hole's shot-line segment only when
 // worldToScreen (ML+0x41c4) and tileToScreen (ML+0x41f1) find both its ends on screen. Fixed (0): a segment with an end off screen
@@ -2195,6 +2208,14 @@ const DefectDef kDefects[] = {
      "a golfer's name label is drawn right after the golfer in the depth-sorted sprite walk, so a tree or anything else in front "
      "covers it; fixed: the walk's name labels are drawn after its last sprite (the golfer itself stays behind what is in front)",
      &g_defect_label_under_sprites},
+    {"mainLoop.shotButtonsReadBallTile", "P22B",
+     "the shot-style panel enables or greys shot buttons 5..7 from the tile at the ball's x and the golfer's y (a mixed pair), so "
+     "they can be enabled while the Lie text says rough; fixed: they read the tile at the ball, the tile the Lie text names",
+     &g_defect_shot_lie_mixed_tile},
+    {"updateGolfers.foreignGreenAutoPutt", "P22B",
+     "a player's ball that stops on any green tile gets the automatic shot towards the current hole's cup, also when the green belongs "
+     "to another hole; fixed: on a green not connected to the current hole's green the player chooses the direction and the shot type",
+     &g_defect_foreign_green_auto},
     {"mainLoop.rightClickKeepsTool", "P13A",
      "a right click on the course with a terrain tool held keeps the tool and marks the tile for the right-click undo; fixed: on a "
      "tile the undo has nothing to act on (no recorded edit, no placed object) it drops the tool instead",
