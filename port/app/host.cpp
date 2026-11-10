@@ -303,75 +303,6 @@ void LiveSession::apply_undo(portsim::Ctx &ctx) {
   ++undo_writes_;
 }
 
-// P21B (host.h HostOptions::arrow_head): at a frame head, the leading queued key messages when they are [a key-up] arrow
-// key-downs of one arrow [a key-up] (Windows' key repeat gives several key-downs) into the view block's words +12 / +16 / +24
-// (recorded writes); their commands leave the queue (their event rows get dispatch -2). Mouse moves before or between them stay
-// queued; a button or any other message stops the scan, and so does a second key-up or a key-down of another key.
-void LiveSession::apply_arrow(portsim::Ctx &ctx) {
-  if (!opt_.arrow_head || !portsim::view_map(ctx)) return;
-  std::lock_guard<std::mutex> lk(mu_);
-  auto msg_of = [&](uint32_t seq) -> uint32_t {
-    for (auto it = event_rows_.rbegin(); it != event_rows_.rend(); ++it)
-      if (it->seq == seq) return it->msg;
-    return 0;
-  };
-  auto one_cmd = [&](size_t i) { return i + 1 >= queue_.size() || queue_seq_[i + 1] != queue_seq_[i]; };
-  auto arrow_of = [&](size_t i) -> int32_t {  // the arrow of the event at queue index i when its only command is onKey(0, arrow)
-    const portsim::Command &c = queue_[i];
-    if (!one_cmd(i) || c.kind != portsim::CmdKind::RootHandler || c.handler != 7 || c.a0 != 0 || c.a1 < 0x25 || c.a1 > 0x28) return 0;
-    return c.a1;
-  };
-  auto is_up = [&](size_t i) {  // its only command is onChar0 (a WM_KEYUP)
-    const portsim::Command &c = queue_[i];
-    return one_cmd(i) && c.kind == portsim::CmdKind::RootHandler && c.handler == 9;
-  };
-  int32_t code = 0, ups = 0;
-  uint32_t t = 0;
-  std::vector<size_t> take;
-  for (size_t i = 0; i < queue_.size(); ++i) {
-    if (i > 0 && queue_seq_[i] == queue_seq_[i - 1]) continue;  // one look per event
-    const uint32_t m = msg_of(queue_seq_[i]);
-    if (m == kWmMouseMove) continue;
-    if (m == kWmKeyUp && is_up(i)) {
-      if (ups & 2) break;
-      ups |= code == 0 ? 1 : 2;
-      take.push_back(i);
-      if (ups & 2) break;  // [up] downs up: the scan ends at the arrow's key-up
-      continue;
-    }
-    if (m == kWmKeyDown) {
-      const int32_t a = arrow_of(i);
-      if (a == 0 || (code != 0 && a != code)) break;
-      code = a;
-      t = queue_[i].t;
-      take.push_back(i);
-      continue;
-    }
-    break;  // a button, a character or any other message: the head takes nothing past it
-  }
-  if (code == 0) ups &= 1;
-  if (take.empty()) return;
-  const uint32_t s_first = queue_seq_[take.front()], s_last = queue_seq_[take.back()];
-  for (auto it = take.rbegin(); it != take.rend(); ++it) {
-    const uint32_t seq = queue_seq_[*it];
-    for (EventRow &er : event_rows_)
-      if (er.seq == seq) er.dispatch = -2;
-    queue_.erase(queue_.begin() + static_cast<std::ptrdiff_t>(*it));
-    queue_seq_.erase(queue_seq_.begin() + static_cast<std::ptrdiff_t>(*it));
-  }
-  ctx.mem.store<int32_t>(portsim::kPortViewArrowVa, code);
-  ctx.mem.store<uint32_t>(portsim::kPortViewArrowTVa, t);
-  ctx.mem.store<int32_t>(portsim::kPortViewArrowUpVa, ups);
-  if (writes) {
-    writes->wrote(portsim::kPortViewArrowVa, static_cast<uint32_t>(code));
-    writes->wrote(portsim::kPortViewArrowTVa, t);
-    writes->wrote(portsim::kPortViewArrowUpVa, static_cast<uint32_t>(ups));
-  }
-  ++arrow_heads_;
-  arrow_head_events_ += static_cast<uint32_t>(take.size());
-  latlog('E', portsim::perf_now_ns(), frame_, code, s_first, s_last, static_cast<int64_t>(take.size()), ups);  // P21B (SG_P21_LATLOG)
-}
-
 void LiveSession::on_input(const InputEvent &e) {
   last_input_ms_.store(timeGetTime());  // P6B item 2
   {
@@ -1028,8 +959,6 @@ bool make_world_image(portsim::LiveTerrain &live, portsim::Ctx &ctx, const std::
     wi.hud = std::move(f);
   }
   wi.hud_none = layered && !use && portsim::gfx_hud_modal(ctx);  // P9D
-  wi.dim_all = wi.hud_none ? f.dim_all : 0;  // P21C
-  wi.dim_src = f.dim_src;
   return true;
 }
 
@@ -1344,8 +1273,6 @@ void LiveSession::run_world_job(WorldJob &j) {
     wi.cam = j.cam;
     if (j.use) wi.hud = std::move(j.f);
     wi.hud_none = j.hud_none;
-    wi.dim_all = j.hud_none ? j.dim_all : 0;  // P21C
-    wi.dim_src = j.dim_src;
     if (!wi.hud.empty()) ++presents_layered_;  // P9B
   }
   wi.cam.t_ns = j.t_ns;  // P12A fix 1: the present's time
@@ -1422,7 +1349,6 @@ static void world_reset(WorldImage &w) {
   w.pw = w.ph = w.fw = w.ox = 0;
   w.hud = portsim::GfxHudFrame{};
   w.hud_none = false;
-  w.dim_all = 0;  // P21C
   w.text = portsim::GfxTextFrame{};
   for (int32_t &b : w.cur_box) b = 0;
   w.proj.ok = false;  // P10E (its tables keep their capacity)
@@ -1544,8 +1470,6 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       j->terrain = portsim::gfx_back_terrain(ctx);
       j->layered = opt_.hud_layers;
       j->use = opt_.hud_layers && portsim::gfx_hud_frame(ctx, j->f) && !j->f.empty() && j->f.back == px;
-      j->dim_all = j->f.dim_all;  // P21C (kept when the frame itself is dropped below)
-      j->dim_src = j->f.dim_src;
       if (!j->use) j->f = portsim::GfxHudFrame{};
       j->cursor = opt_.cursor_previews;
       const bool proj = opt_.cursor_previews && opt_.cursor_live;
@@ -1706,7 +1630,6 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   if (stopping()) return false;
   Profiler::get().frame_head();  // P10A: closes the previous game frame
   head_t_ = timeGetTime();  // pacing runs on the real clock; the core gets now() (clock_origin)
-  latlog('H', portsim::perf_now_ns(), frame);  // P21B (SG_P21_LATLOG)
   t = now();
   frame_ = frame;
   frame_now_.store(frame);
@@ -1723,7 +1646,6 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   }
   apply_view(ctx);                // G32: the window's view width and world size (recorded write, before the frame body)
   apply_undo(ctx);                // P11D: Ctrl+Z / Ctrl+Y (recorded write, before the frame body)
-  apply_arrow(ctx);               // P21B: an arrow key-down (recorded writes, before the frame body)
   track_screen(ctx, true);        // P7: a frame head is the frame loop
   world_map_ = false;             // P13B item 18
   title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
@@ -2063,7 +1985,6 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
                               p.may_deliver ? 1u : 0u, p.must_deliver ? 1u : 0u, static_cast<uint32_t>(n), s0, s1});
     delivered_cmds_ += n;
     ++deliveries_;
-    latlog('D', portsim::perf_now_ns(), p.frame, h1 ? 1 : 0, s0, s1, static_cast<int64_t>(n), p.body ? 1 : 0, body_call);  // P21B
     return portsim::LiveReply::Deliver;
   };
   // P6 / H1, and a world load's pump (PumpKind::Load, loadFlic: what arrived before the load began): never waits
@@ -2284,7 +2205,6 @@ std::string LiveSession::summary_json(const Result &r) const {
        ",\"close_exit\":{\"title_exits\":" + std::to_string(exit_title_) + ",\"esc_posted\":" + std::to_string(exit_esc_) +
        ",\"fallback_stops\":" + std::to_string(exit_fallback_) + "}";
   s += ",\"undo_writes\":" + std::to_string(undo_writes_);  // P11D
-  s += ",\"arrow_heads\":" + std::to_string(arrow_heads_) + ",\"arrow_head_events\":" + std::to_string(arrow_head_events_);  // P21B
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
   s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";
   for (size_t i = 0; i < loads_.size(); ++i) {

@@ -700,7 +700,6 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
     {"mainLoop.pKeyPausesGame", 0},                 // P21A (p / P pause; the Improvements palette moves to a)
     {"mainLoop.arrowKeyHeldRepeat", 0},             // P19A item 1 (a held arrow steps the camera every frame from the press)
-    {"mainLoop.arrowStepAfterDraw", 0},             // P21B item 2 (an arrow moves the camera before the frame's picture: one frame sooner)
     {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)
     {"updateTerrainRender.syncTilesAfterEdit", 0},  // P13D item 5 (the terrain synced once at load: the first placement changes only its tiles)
     {"mainLoop.rightClickKeepsTool", 0},            // P13A (a right click with nothing to undo drops the tool)
@@ -1472,12 +1471,6 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
   if (o.negctl == "present-point-off") ho.defect = HostDefect::NoPresentPoint;
   if (o.negctl == "view-write-unrecorded") ho.defect = HostDefect::ViewWriteUnrecorded;  // G32
-  {  // P21B item 2: the frame head takes arrow key-downs only when the profile turns mainLoop.arrowStepAfterDraw on (0)
-    const int d = portsim::defect_find("mainLoop.arrowStepAfterDraw");
-    // development (P21B's A / B): SG_P21_EARLY=0 puts the switch back to the original's 1 for this run
-    if (d >= 0 && std::getenv("SG_P21_EARLY") && std::atoi(std::getenv("SG_P21_EARLY")) == 0) *portsim::defect_at(d, nullptr)->flag = 1;
-    ho.arrow_head = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
-  }
   LiveSession session(ho, rec.string());
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
@@ -1593,7 +1586,6 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     g_close_prev = reinterpret_cast<WNDPROC>(
         SetWindowLongPtrW(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&audio_close_proc)));
   winlog_open_env();  // P16A (SG_P16_PAINTLOG)
-  latlog_open_env();  // P21B (SG_P21_LATLOG)
   // P16A (log/roadmap/P16/P16A_notes.md): the window thread ahead of the rasteriser workers (normal) and the world thread (below
   // normal), level with the sim thread (above normal), and the pacer above it, so a due paint is not queued behind them on a busy
   // machine. Nothing the game computes depends on it. SG_APP_P16=off or SG_P16_PRIO=0: both at normal as before.
@@ -1864,7 +1856,6 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   pacer_stop.store(true);  // P10E
   if (pacer.joinable()) pacer.join();
   winlog_close();  // P16A
-  latlog_close();  // P21B
   session.request_stop();
   sim.join();
   if (log) std::fclose(log);

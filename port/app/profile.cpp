@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <atomic>
 #include <cstdlib>
-#include <mutex>
 #include <string>
 #include <vector>
 #ifdef _WIN32
@@ -446,54 +445,6 @@ void winlog_close() {
       for (int i = 1; i < 8; ++i) std::fprintf(f, " %lld", static_cast<long long>(e.a[i]));
       for (int i = 0; i < 7; ++i) std::fprintf(f, " %lld", static_cast<long long>(e.st[i]));
     }
-    std::fputc('\n', f);
-  }
-  std::fclose(f);
-}
-
-// P21B: SG_P21_LATLOG (profile.h)
-namespace {
-struct LatEv {
-  char kind;
-  int64_t t;
-  int64_t a[10];
-};
-struct LatLog {
-  std::atomic<bool> on{false};
-  std::mutex mu;
-  std::string path;
-  std::vector<LatEv> ev;
-};
-LatLog g_ll;
-}  // namespace
-
-bool latlog_on() { return g_ll.on.load(std::memory_order_relaxed); }
-
-void latlog_open_env() {
-  const char *p = std::getenv("SG_P21_LATLOG");
-  if (!p || !*p || latlog_on()) return;
-  g_ll.path = p;
-  g_ll.ev.reserve(1u << 20);
-  g_ll.on.store(true);
-}
-
-void latlog(char kind, int64_t t, int64_t a0, int64_t a1, int64_t a2, int64_t a3, int64_t a4, int64_t a5, int64_t a6, int64_t a7,
-            int64_t a8, int64_t a9) {
-  if (!latlog_on()) return;
-  std::lock_guard<std::mutex> lk(g_ll.mu);
-  if (g_ll.ev.size() < g_ll.ev.capacity()) g_ll.ev.push_back(LatEv{kind, t, {a0, a1, a2, a3, a4, a5, a6, a7, a8, a9}});
-}
-
-void latlog_close() {
-  if (!latlog_on()) return;
-  g_ll.on.store(false);
-  std::lock_guard<std::mutex> lk(g_ll.mu);
-  std::FILE *f = std::fopen(g_ll.path.c_str(), "wb");
-  if (!f) return;
-  std::fprintf(f, "# kind t_ns a0..a9 (profile.h latlog)\n");
-  for (const LatEv &e : g_ll.ev) {
-    std::fprintf(f, "%c %lld", e.kind, static_cast<long long>(e.t));
-    for (int i = 0; i < 10; ++i) std::fprintf(f, " %lld", static_cast<long long>(e.a[i]));
     std::fputc('\n', f);
   }
   std::fclose(f);

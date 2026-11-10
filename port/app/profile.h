@@ -151,18 +151,6 @@ void winlog_paint_gpu(int64_t wait_ns, int64_t present_ns, uint32_t last_present
 void winlog_paint_stages(const int64_t *cum, int n);
 void winlog_close();
 
-// P21B (log/roadmap/P21/P21B_notes.md): development switch SG_P21_LATLOG=<file>, the stages from an arrow key-down to the screen.
-// One line per event, kept in memory (any thread, under a lock) and written once at the end (latlog_close). Kinds: K an input
-// message the window took (msg, wp, lp, seq), H a game frame head (frame), D a delivery of input to the game (frame, H1 or not,
-// first seq, last seq), A a world picture taken by the window (the sim present's time, the camera, the next camera, D, the slide's
-// start offset and length), O a paint (the slide offset painted, the frame index, the swap chain's present count). Clock:
-// portsim::perf_now_ns. Nothing in the game or the picture reads any of it.
-bool latlog_on();
-void latlog_open_env();
-void latlog(char kind, int64_t t, int64_t a0 = 0, int64_t a1 = 0, int64_t a2 = 0, int64_t a3 = 0, int64_t a4 = 0, int64_t a5 = 0,
-            int64_t a6 = 0, int64_t a7 = 0, int64_t a8 = 0, int64_t a9 = 0);
-void latlog_close();
-
 }  // namespace portapp
 
 #endif

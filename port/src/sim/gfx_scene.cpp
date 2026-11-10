@@ -2029,7 +2029,7 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
   AlphaOp op{pal, &kAlphaPrograms[body + member], static_cast<uint8_t>(flag) != 0};
   // P9D: the quarter member's pixels recorded for the modal capture (gfx_reports.cpp records the same blend at scale 1)
   const bool quarter = !std::strcmp(op.prog->body, "draw16_1002ed60") && mode() != 7;
-  if (quarter && g.hud.on && g.hud.modal && dst == g.root_va(ctx)) op.rec = &g;  // P21C: on, not any (see gfx_reports.cpp)
+  if (quarter && g.hud.any && g.hud.modal && dst == g.root_va(ctx)) op.rec = &g;
   // P10F: a draw of a cursor pass kept apart onto the 800 root while the hr plane holds the queue's sprites (P7's translucent
   // placement box at the cursor tile, mainLoop ML+0xb53b / ML+0xb6ae at alpha 0.5): the same art also at the window's resolution
   // (hr_box_now: hrc and the blend pair hrb_lo / hrb_hi; scene position = root position + scene_e), and the root pixels it wrote
