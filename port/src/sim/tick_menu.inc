@@ -48,6 +48,10 @@ void MV_blitFull(int self) {
 
 int Menu(u32 F) {
     int ebx;  // the running selection; persists block E -> F -> H -> remap -> exit
+    // P23C fix 1 (mainLoop.titleHotspotRange = 0): the five labelled buttons' hover shape (gfx.cpp gfxb::title_hover_rows), made at
+    // each entry to the menu after its background load; empty = the picture could not be read (then the whole cut rectangle)
+    std::vector<int16_t> hoverRows;
+    int32_t hoverAt[5] = {0, 0, 0, 0, 0};
 
 menu_top:  // ML+0x11875
     // --- reset state + draw the title background (ML+0x11875..ML+0x11913) ---
@@ -65,6 +69,7 @@ menu_top:  // ML+0x11875
     // loadImage(this=g_image568d10, f_strpool_4c6ba4+0x98, g_palette5199c8, 0, 0x100, 0)      ML+0x118e7
     tc("loadImage", GS(g_image568d10), (GS(f_strpool_4c6ba4) + 152), GS(g_palette5199c8), 0, 0x100, 0);
     MV_blitFull(GS(g_image568d10));                                         // ML+0x11913
+    if (!SG_DEFECT(g_defect_title_hotspot_range) && !gfxb::title_hover_rows(ctx, hoverRows, hoverAt)) hoverRows.clear();
 
     // --- draw the 7 menu items (ML+0x11918..ML+0x11a31) ---
     for (ebx = 0; ebx < 7; ebx++) {                                // ML+0x11918 / ML+0x11a2e
@@ -112,12 +117,19 @@ hover_loop:  // ML+0x11a65
                        FD(0x1E4) - (int)FW(0xF4 + esi * 4),
                        (FD(0x1D8) - (int)FW(0xF6 + esi * 4)) * 4 - 0x18);
             if (esi < 5 && !SG_DEFECT(g_defect_title_hotspot_range)) {
-                // P9A fix (mainLoop.titleHotspotRange = 0): a labelled item only inside its button art's box (showTitleScreen's
-                // source rectangle showTitleScreen+0x2e4..showTitleScreen+0x3b9, drawn at the item's own position F+0x150 / F+0x152); among boxes
-                // holding the cursor the original's distance still decides (the boxes of items 3 and 4 overlap by 13 x 23 px)
+                // P9A fix (mainLoop.titleHotspotRange = 0): a labelled item only over its button art (showTitleScreen's source
+                // rectangle showTitleScreen+0x2e4..showTitleScreen+0x3b9, drawn at the item's own position F+0x150 / F+0x152); among
+                // items holding the cursor the original's distance still decides. P23C fix 1 (Mariano's play-test 10: "sandbox mode looks
+                // selected when the mouse is not over it"): over the highlighted art's pixels, not its whole rectangle, whose transparent
+                // corners (30 % of Sandbox Mode's) lay over the golf ball and the background: per row the hull of the opaque columns of
+                // the picture the highlighted buttons are cut from (hoverRows, made at the menu's entry)
                 static const short kArtW[5] = {0x144, 0x16B, 0x10F, 0x120, 0x11F}, kArtH[5] = {0x79, 0x8D, 0x6F, 0x73, 0x73};
                 const int bx = FD(0x1E4) - (int)FW(0x150 + esi * 4), by = FD(0x1D8) - (int)FW(0x152 + esi * 4);
-                const bool in = bx >= 0 && bx < kArtW[esi] && by >= 0 && by < kArtH[esi];
+                bool in = bx >= 0 && bx < kArtW[esi] && by >= 0 && by < kArtH[esi];
+                if (in && !hoverRows.empty()) {
+                    const size_t k = 2 * (static_cast<size_t>(hoverAt[esi]) + static_cast<size_t>(by));
+                    in = hoverRows[k] >= 0 && bx >= hoverRows[k] && bx <= hoverRows[k + 1];
+                }
                 d = in ? (d < bestDist ? d : bestDist - 1) : bestDist;
             }
             if (esi == 5 && !SG_DEFECT(g_defect_title_exit_hotspot)) {

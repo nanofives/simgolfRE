@@ -53,6 +53,11 @@ bool results_control(int m);
 // roadmap S3.26: a frame-code read that lands inside a SpriteRef the graphics backend holds (gfx_pixel.cpp), for P4's
 // selected-golfer sprite when the selection word is not a golfer index (tick_frame.inc P4_selectedSprite)
 bool gfx_sprite_ref_read(Ctx &ctx, uint32_t va, uint32_t size, uint32_t &v);
+// P23C fix 1: the title buttons' hover shape from the highlighted buttons' picture (gfx.cpp), for tick_menu.inc's
+// mainLoop.titleHotspotRange arm
+namespace gfxb {
+bool title_hover_rows(Ctx &ctx, std::vector<int16_t> &rows, int32_t at[5]);
+}
 // Compatibility switch (port/CORE.md "Defects"), 1 = behave like the original.
 //   mainLoop.cashLowWordOnly  model_defects#23 (D23): the month histories store the cash g_cash_div100's low word into the
 //                            int16 ring g_cashHistory (mainLoop ML+0x83d5 / ML+0x83f4 and ML+0x86f3 / ML+0x870e), and the
@@ -79,9 +84,10 @@ int g_defect_title_default_item = 1;
 // mainLoop.titleHotspotRange (P9A, the same report: "near a button (but not over) and it would be detected as a hover"): a
 // labelled item is chosen when distance(x - hx, (y - hy) * 4 - 0x18) < 0xa0 (ML+0x11aaf..ML+0x11ae1) around its text centre,
 // an area about 0x140 px wide, mostly outside the button art (Sandbox Mode lights with the cursor 0x9f px to the right of its
-// text, inside the golf ball). Fixed (0): an item is chosen only inside its button art's box (showTitleScreen's source
-// rectangles showTitleScreen+0x2e4..showTitleScreen+0x3b9, which the menu draws at the item's position F+0x150 / F+0x152); among boxes holding the
-// cursor the original's distance decides. The exit icon (hotspot 5) is mainLoop.titleExitHotspotWide's.
+// text, inside the golf ball). Fixed (0): an item is chosen only over its lit button art (showTitleScreen's source
+// rectangles showTitleScreen+0x2e4..showTitleScreen+0x3b9, which the menu draws at the item's position F+0x150 / F+0x152; P23C: per row
+// the hull of the opaque pixels of the picture the highlighted buttons are cut from, read at the menu's entry, not the whole
+// rectangle); among items holding the cursor the original's distance decides. The exit icon (hotspot 5) is mainLoop.titleExitHotspotWide's.
 int g_defect_title_hotspot_range = 1;
 // mainLoop.vacatedPanelClick (P9E fix 3, the widescreen HUD of G32 / P9B: "a click where a moved panel used to be still reaches
 // that panel"): the frame's click dispatch sends a press below y 0x1b8 to the System menu (x < 0xc8: showSystemMenu's
@@ -2162,7 +2168,7 @@ const DefectDef kDefects[] = {
      &g_defect_title_default_item},
     {"mainLoop.titleHotspotRange", "P9A",
      "a labelled title-menu item is chosen within distance 0xa0 of its text centre (about 0x140 px wide, mostly outside its art); "
-     "fixed: only inside the item's button art box",
+     "fixed: only over the item's lit button art (per row the hull of its opaque pixels; P23C, was its art box)",
      &g_defect_title_hotspot_range},
     {"mainLoop.vacatedPanelClick", "P9E",
      "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "

@@ -288,6 +288,47 @@ void draw16(const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
 
 static uint32_t sref(Ctx &ctx, SpriteRef (GameState::*arr)[14], uint32_t k) { return state_va(ctx, arr) + 0x2c * k; }
 
+// showTitleScreen's button cuts (x, y, w, h in both title button pictures, and the SpriteRef index of the unselected one)
+struct TitleButton { int x, y, w, h, unsel; };
+static const TitleButton kTitleButtons[7] = {{0x2a, 0x15, 0x144, 0x79, 0},  {0x1a0, 0x1f, 0x16b, 0x8d, 2}, {0x1fe, 0x167, 0x10f, 0x6f, 4},
+                                             {0x11f, 0x1da, 0x120, 0x73, 6}, {0xd, 0x17e, 0x11f, 0x73, 8},   {0xa8, 0xc6, 0x1d8, 0xb0, 12},
+                                             {0x2d1, 0x210, 0x3a, 0x39, 10}};
+
+// P23C fix 1 (tick_menu.inc, mainLoop.titleHotspotRange = 0; not a body: the menu calls it once per entry): the hover shape of
+// the five labelled title buttons. The picture showTitleScreen cuts the highlighted buttons from (its fourth load below, the
+// string pool's first name, the same arguments) is decoded again from the game files, without a backend, so the shape is the
+// same with or without one attached; for each row of each button's cut rectangle, the first and the last column whose index is
+// not 0xff (crop_sprite's transparent index, the pixels the menu's Image_draw leaves out), -1 / -1 for an empty row. rows[2k],
+// rows[2k + 1] for row k counted over the buttons in order; at[i] = button i's first row. False (rows empty) when the picture
+// cannot be read or a rectangle lies outside it.
+bool title_hover_rows(Ctx &ctx, std::vector<int16_t> &rows, int32_t at[5]) {
+  rows.clear();
+  if (ctx.files_ptr == nullptr) return false;
+  Gfx tmp;   // decode_pcx8's reports only
+  Image8 img;
+  if (load_image(tmp, ctx, state_va(ctx, &GameState::f_strpool_4c89ac) + 0x00, 0, 0, 0x100, 2, img) != 0) return false;
+  for (int i = 0; i < 5; ++i) {
+    const TitleButton &b = kTitleButtons[i];
+    if (b.x < 0 || b.y < 0 || b.x + b.w > img.w || b.y + b.h > img.h) {
+      rows.clear();
+      return false;
+    }
+    at[i] = static_cast<int32_t>(rows.size() / 2);
+    for (int32_t r = 0; r < b.h; ++r) {
+      const uint8_t *p = img.px.data() + static_cast<size_t>(b.y + r) * static_cast<size_t>(img.pitch) + static_cast<size_t>(b.x);
+      int32_t lo = -1, hi = -1;
+      for (int32_t c = 0; c < b.w; ++c)
+        if (p[c] != 0xff) {
+          if (lo < 0) lo = c;
+          hi = c;
+        }
+      rows.push_back(static_cast<int16_t>(lo));
+      rows.push_back(static_cast<int16_t>(hi));
+    }
+  }
+  return true;
+}
+
 // showTitleScreen (c3fb.cpp ShowTitleScreen_re): the drawing part. Its frame Image takes four loads with flags 2; the
 // first two are cut into the 8-piece window-frame sets g_spriteRef_562368 / g_spriteRef_59d920 (4 sets, kind 1, no trim),
 // the last two into the 7 title buttons, unselected into g_spriteRef_53b7e0[2b], highlighted into [2b + 1] (kind 1, trim).
@@ -297,10 +338,7 @@ static void b_show_title_screen(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   static const Piece kFrame[8] = {{1, 0, 0, 0x10, 0x10},    {2, 0, 0x11, 0x10, 0x10},     {3, 0, 0x22, 0x10, 0x1a},
                                   {4, 0x11, 0, 0x10, 0x10}, {5, 0x22, 0, 0x1a, 0x10},     {6, 0x22, 0x11, 0x1a, 0x10},
                                   {7, 0x22, 0x22, 0x1a, 0x1a}, {0, 0x11, 0x22, 0x10, 0x1a}};
-  struct Button { int x, y, w, h, unsel; };
-  static const Button kButtons[7] = {{0x2a, 0x15, 0x144, 0x79, 0},  {0x1a0, 0x1f, 0x16b, 0x8d, 2}, {0x1fe, 0x167, 0x10f, 0x6f, 4},
-                                     {0x11f, 0x1da, 0x120, 0x73, 6}, {0xd, 0x17e, 0x11f, 0x73, 8},   {0xa8, 0xc6, 0x1d8, 0xb0, 12},
-                                     {0x2d1, 0x210, 0x3a, 0x39, 10}};
+  const TitleButton (&kButtons)[7] = kTitleButtons;
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c89ac);
   Image8 img;
   auto cut_frames = [&](uint32_t base) {
@@ -313,10 +351,10 @@ static void b_show_title_screen(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (load_image(g, ctx, pool + 0x48, 0, 0, 0x100, 2, img) == 0) cut_frames(state_va(ctx, &GameState::g_spriteRef_562368));
   if (load_image(g, ctx, pool + 0x2c, 0, 0, 0x100, 2, img) == 0) cut_frames(state_va(ctx, &GameState::g_spriteRef_59d920));
   if (load_image(g, ctx, pool + 0x14, 0, 0, 0x100, 2, img) == 0)
-    for (const Button &b : kButtons)
+    for (const TitleButton &b : kButtons)
       crop_sprite(g, sref(ctx, &GameState::g_spriteRef_53b7e0, b.unsel), img, b.x, b.y, b.w, b.h, true);
   if (load_image(g, ctx, pool + 0x00, 0, 0, 0x100, 2, img) == 0)
-    for (const Button &b : kButtons)
+    for (const TitleButton &b : kButtons)
       crop_sprite(g, sref(ctx, &GameState::g_spriteRef_53b7e0, b.unsel + 1), img, b.x, b.y, b.w, b.h, true);
 }
 
