@@ -94,11 +94,6 @@ void body_set_line_point(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_line_to(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 
-// P23D fix 1 (gfx.h gfx_set_wide_grid): a Widget_fillRect line of mainLoop's grid overlay (root ends x1, y1 .. x2, y2, colour
-// 0x8000RGB555) on the world layer too, while the overlay lines' window is open; touch = the root rectangle line16 could write and
-// its pixels before the call (the changed ones go into terrain800). Does nothing with the switch off.
-void root_line_world(Gfx &g, Ctx &ctx, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour, const LineTouch &touch);
-
 }  // namespace overlay
 
 // negative controls (sg_negctl_set "overlay.rasterLine"): 1 hard-edged line (no coverage ramp), 2 alpha ignored, 3 no clipping

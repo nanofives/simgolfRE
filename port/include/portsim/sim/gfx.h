@@ -423,12 +423,6 @@ struct GfxTrailLine {
 };
 void gfx_set_trail_glide(bool on);
 bool gfx_trail_glide();
-// P23D fix 1 (app option --wide-grid, log/roadmap/P23/P23D_notes.md): RENDER-ONLY. With gfx_set_wide_grid(true) (process-wide; the
-// app's main only) the grid overlay mainLoop draws while the terrain palette's pick is held (P1_grid: Widget_fillRect colour
-// 0x80000000 on the root between the frame's terrain picture and the sprite queue, outside cursor passes) is drawn on the world
-// layer too, so it covers the wide view's side columns (terrain_overlay.h root_line_world). Off (the default): the 800 root only.
-void gfx_set_wide_grid(bool on);
-bool gfx_wide_grid();
 void gfx_trail_scope(int32_t golfer);        // the golfer loop: the golfer whose trail segment is drawn next; -1 after it
 std::vector<GfxTrailLine> gfx_trail_take();  // the lines kept since the frame's terrain picture began (cleared)
 void gfx_trail_reset();                      // the frame's terrain picture begins (the overlay lines' window opens)
