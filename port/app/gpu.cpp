@@ -3097,6 +3097,18 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
     wl_present = portsim::perf_now_ns() - p0;  // P16A
     d.ns_present += wl_present;
   }
+  if (latlog_on()) {  // P21B (SG_P21_LATLOG): this present's id and the swap chain's frame statistics, the sync vblank's QPC time
+    UINT last = 0;
+    DXGI_FRAME_STATISTICS st{};
+    d.sc->GetLastPresentCount(&last);
+    LARGE_INTEGER qf;
+    QueryPerformanceFrequency(&qf);
+    if (SUCCEEDED(d.sc->GetFrameStatistics(&st)))
+      latlog('G', portsim::perf_now_ns(), last, st.PresentCount, st.PresentRefreshCount, st.SyncRefreshCount,
+             static_cast<int64_t>(static_cast<double>(st.SyncQPCTime.QuadPart) * 1e9 / static_cast<double>(qf.QuadPart)));
+    else
+      latlog('G', portsim::perf_now_ns(), last, 0, 0, 0, 0);
+  }
   if (winlog_on()) {  // P16A: the swap chain's frame statistics after this Present (development log only)
     const int64_t cum[7] = {d.ns_frame, d.ns_world, d.ns_course, d.ns_final, d.ns_draw, d.ns_text, d.ns_obj};
     winlog_paint_stages(cum, 7);

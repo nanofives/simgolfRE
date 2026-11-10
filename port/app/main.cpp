@@ -707,6 +707,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
     {"mainLoop.pKeyPausesGame", 0},                 // P21A (p / P pause; the Improvements palette moves to a)
     {"mainLoop.arrowKeyHeldRepeat", 0},             // P19A item 1 (a held arrow steps the camera every frame from the press)
+    {"mainLoop.arrowStepAfterDraw", 0},             // P21B item 2 (an arrow moves the camera before the frame's picture: one frame sooner)
     {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)
     {"updateTerrainRender.syncTilesAfterEdit", 0},  // P13D item 5 (the terrain synced once at load: the first placement changes only its tiles)
     {"mainLoop.rightClickKeepsTool", 0},            // P13A (a right click with nothing to undo drops the tool)
@@ -1481,6 +1482,14 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
   if (o.negctl == "present-point-off") ho.defect = HostDefect::NoPresentPoint;
   if (o.negctl == "view-write-unrecorded") ho.defect = HostDefect::ViewWriteUnrecorded;  // G32
+  {  // P21B item 2: the frame head takes arrow key-downs only when the profile turns mainLoop.arrowStepAfterDraw on (0)
+    const int d = portsim::defect_find("mainLoop.arrowStepAfterDraw");
+    // development (P21B's A / B): SG_P21_EARLY=0 puts the switch back to the original's 1 for this run
+    if (d >= 0 && std::getenv("SG_P21_EARLY") && std::atoi(std::getenv("SG_P21_EARLY")) == 0) *portsim::defect_at(d, nullptr)->flag = 1;
+    ho.arrow_head = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
+    const int h = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");  // P22A: the held arrow's delay needs the clock offset
+    ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;
+  }
   LiveSession session(ho, rec.string());
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
@@ -1596,6 +1605,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     g_close_prev = reinterpret_cast<WNDPROC>(
         SetWindowLongPtrW(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&audio_close_proc)));
   winlog_open_env();  // P16A (SG_P16_PAINTLOG)
+  latlog_open_env();  // P21B (SG_P21_LATLOG)
   // P16A (log/roadmap/P16/P16A_notes.md): the window thread ahead of the rasteriser workers (normal) and the world thread (below
   // normal), level with the sim thread (above normal), and the pacer above it, so a due paint is not queued behind them on a busy
   // machine. Nothing the game computes depends on it. SG_APP_P16=off or SG_P16_PRIO=0: both at normal as before.
@@ -1613,6 +1623,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   constexpr UINT kMsgCursorTick = WM_APP + 4;
   std::atomic<bool> tick_pending{false}, pacer_stop{false};
   uint64_t ticks = 0, live_moves = 0;
+  std::atomic<uint64_t> vblank_slow{0}, timer_ticks{0};  // P22A: vblank waits over 1.5 periods, and the timer ticks after them
+  std::atomic<uint64_t> vblank_probes{0};                  // P22A: vblank waits right after a timer hold
+  std::atomic<int64_t> tick_gap_max_ns{0};                 // P22A: the longest gap between two ticks after the first slow wait
   std::thread pacer;
   int pace_hz = 0;
   if (ho.cursor_live || presenter.hover() || smooth_camera || ho.smooth_objects) {  // P10I fix 2: the hover highlights take the same ticks; P12A: the slide
@@ -1627,7 +1640,27 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     if (const char *e = std::getenv("SG_P16_PACE_HZ")) force_hz = std::atoi(e);
     if (force_hz >= 30 && force_hz <= 1000) pace_hz = force_hz;
     else force_hz = 0;
-    pacer = std::thread([&tick_pending, &pacer_stop, &presenter, hwnd, pace_hz, force_hz, p16_prio]() {
+    // development (P22A): SG_P22_SLOW_VBLANK_MS=<n> sleeps n ms after every vblank wait (a display whose vblank wait follows the
+    // game frames), to test the slow-vblank fallback
+    const int slow_vblank_ms = std::getenv("SG_P22_SLOW_VBLANK_MS") ? std::atoi(std::getenv("SG_P22_SLOW_VBLANK_MS")) : 0;
+    // development (P22A's before arm): SG_P22_VBLANK_FALLBACK=0 keeps waiting for the vblank however long it takes
+    const bool vblank_fallback = !(std::getenv("SG_P22_VBLANK_FALLBACK") && std::atoi(std::getenv("SG_P22_VBLANK_FALLBACK")) == 0);
+    pacer = std::thread([&tick_pending, &pacer_stop, &presenter, &vblank_slow, &timer_ticks, &vblank_probes, &tick_gap_max_ns, hwnd,
+                         pace_hz, force_hz, p16_prio, slow_vblank_ms, vblank_fallback]() {
+      // P22A: after a slow vblank wait the timer ticks for hold_ns, then one vblank wait probes the display again; each slow probe in
+      // a row doubles the hold (2 s, 4 s, 8 s ... 60 s: on a display that stays slow, every probe is one long wait with no tick), a
+      // probe within 1.5 periods sets it back to 2 s
+      constexpr int64_t kHoldMinNs = 2000000000LL, kHoldMaxNs = 60000000000LL;
+      int64_t hold_ns = kHoldMinNs;
+      int64_t timer_until = 0;  // the timer ticks until this time (0 = wait for the vblank)
+      bool probing = false;     // the next vblank wait is a probe (a timer hold just ended)
+      bool fell_back = false;   // a slow vblank wait was seen (the tick gaps are measured from then on)
+      int64_t last_tick = 0;
+      auto tick = [&](int64_t now) {  // post the tick (at most one waiting); the longest gap between ticks after the first fallback
+        if (fell_back && last_tick > 0 && now - last_tick > tick_gap_max_ns.load()) tick_gap_max_ns.store(now - last_tick);
+        last_tick = now;
+        if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+      };
       if (p16_prio) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);  // P16A
 #ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
 #define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
@@ -1654,16 +1687,56 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
           if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
           continue;
         }
+        // P22A (Mariano's 71fe8883 session: p10e ticks 374 in about 60 s at hz 165, so the vblank wait returned about 6 times a
+        // second and the window painted once per game frame): after a slow vblank the pacer ticks from the timer on absolute
+        // deadlines for hold_ns, then waits for a vblank again (the probe)
+        if (timer_until > 0) {
+          const int64_t now0 = portsim::perf_now_ns();
+          if (now0 < timer_until) {
+            const int64_t left = next_ns - now0;
+            if (left > 0) {
+              LARGE_INTEGER dl;
+              dl.QuadPart = -(left / 100);
+              if (t && SetWaitableTimer(t, &dl, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
+              else Sleep(static_cast<DWORD>(left / 1000000));
+            }
+            next_ns += period_ns;
+            const int64_t now = portsim::perf_now_ns();
+            if (next_ns < now) next_ns = now + period_ns;
+            timer_ticks.fetch_add(1);
+            winlog_vblank(now);
+            tick(now);
+            continue;
+          }
+          timer_until = 0;
+          probing = true;
+        }
         // P14A: with the GPU path, the tick comes right after the monitor's vertical blank (IDXGIOutput::WaitForVBlank), so the paint
         // composes and presents for the next refresh without waiting inside the paint; a wait that returns at once (an output that
         // reports no vblank) falls back to the timer
         const int64_t v0 = portsim::perf_now_ns();
-        const bool vb = presenter.gpu_wait_vblank() && portsim::perf_now_ns() - v0 > 1000000;
+        bool vb = presenter.gpu_wait_vblank();
+        if (slow_vblank_ms > 0) Sleep(static_cast<DWORD>(slow_vblank_ms));  // P22A development: a vblank wait that takes this long
+        const int64_t waited = portsim::perf_now_ns() - v0;
+        vb = vb && waited > 1000000;
+        if (probing) vblank_probes.fetch_add(1);
+        const bool slow = vb && waited > period_ns * 3 / 2;  // P22A: a vblank wait longer than 1.5 refresh periods
+        if (slow) fell_back = true;                          // (the tick gaps are measured from here, with or without the fallback)
+        if (vblank_fallback && slow) {                       // the timer for hold_ns
+          vblank_slow.fetch_add(1);
+          const int64_t now = portsim::perf_now_ns();
+          timer_until = now + hold_ns;
+          next_ns = now + period_ns;
+          hold_ns = std::min(hold_ns * 2, kHoldMaxNs);
+        } else if (probing) {
+          hold_ns = kHoldMinNs;
+        }
+        probing = false;
         if (vb) {
           winlog_vblank(portsim::perf_now_ns());  // P16A (SG_P16_PAINTLOG)
         } else if (t && SetWaitableTimer(t, &due, 0, nullptr, nullptr, FALSE)) WaitForSingleObject(t, 1000);
         else Sleep(1000 / pace_hz);
-        if (!tick_pending.exchange(true)) PostMessageW(hwnd, kMsgCursorTick, 0, 0);
+        tick(portsim::perf_now_ns());
       }
       if (t) CloseHandle(t);
     });
@@ -1866,6 +1939,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   pacer_stop.store(true);  // P10E
   if (pacer.joinable()) pacer.join();
   winlog_close();  // P16A
+  latlog_close();  // P21B
   session.request_stop();
   sim.join();
   if (log) std::fclose(log);
@@ -1893,7 +1967,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p10a\":{\"fps\":\"" + o.fps + "\",\"overlay\":" + std::to_string(presenter.overlay()) +  // P10A
        ",\"profile_csv\":\"" + jesc(o.profile_csv) + "\",\"profiler\":" + Profiler::get().summary_json() + "}";
   s += ",\"p10e\":{\"paint_rate\":\"" + o.paint_rate + "\",\"live\":" + std::to_string(ho.cursor_live ? 1 : 0) +  // P10E
-       ",\"hz\":" + std::to_string(pace_hz) + ",\"ticks\":" + std::to_string(ticks) + ",\"moves\":" + std::to_string(live_moves) + "}";
+       ",\"hz\":" + std::to_string(pace_hz) + ",\"ticks\":" + std::to_string(ticks) + ",\"moves\":" + std::to_string(live_moves) +
+       ",\"vblank_slow\":" + std::to_string(vblank_slow.load()) + ",\"timer_ticks\":" + std::to_string(timer_ticks.load()) +  // P22A
+       ",\"vblank_probes\":" + std::to_string(vblank_probes.load()) +
+       ",\"tick_gap_max_ms\":" + std::to_string(static_cast<double>(tick_gap_max_ns.load()) / 1e6) +
+       ",\"slow_vblank_ms\":" +
+       std::to_string(std::getenv("SG_P22_SLOW_VBLANK_MS") ? std::atoi(std::getenv("SG_P22_SLOW_VBLANK_MS")) : 0) + "}";
   {  // P10I fix 2
     const HoverStats hs = presenter.hover_stats();
     s += ",\"p11b\":{\"hud_panel\":\"" + std::string(o.panel_left ? "left" : "right") + "\"}";  // P11B fix 1

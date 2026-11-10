@@ -215,7 +215,11 @@ int32_t root_handler(Ctx &ctx, const Command &c) {
       gs.gDirtyFlagA = code;
       // P19A (mainLoop.arrowKeyHeldRepeat = 0): an arrow's key-down (a key with no character: onKey(0, vk)) is also kept in the
       // held-key word, which no code of the exe reads (onChar writes it, onChar0 clears it on every key-up); H1 steps by it
-      if (!SG_DEFECT(g_defect_arrow_held_repeat) && a == 0 && code >= 0x25 && code <= 0x28) gs.g_char83821c = code;
+      // P22A: a new held arrow (not a Windows repeat of the one held) also keeps its key-down time in view block word +32
+      if (!SG_DEFECT(g_defect_arrow_held_repeat) && a == 0 && code >= 0x25 && code <= 0x28) {
+        if (gs.g_char83821c != code && ctx.view) ctx.mem.store<uint32_t>(kPortViewArrowHeldTVa, c.t);
+        gs.g_char83821c = code;
+      }
       gs.g_key838208 = code == 0x1000d ? 1 : 0;
       if (gs.g_audio5aa774 == 0 || c.t > gs.g_audio5aa774) gs.g_ui83ab9c = 0;
       return 1;

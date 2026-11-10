@@ -165,6 +165,14 @@ struct HostOptions {
   // to 1 when the press's message was made in a moved panel's vacated place (InputEvent::vacated), else 0, as a recorded
   // harness write when it changes (the play switch mainLoop.vacatedPanelClick reads it)
   bool vacated_clicks = false;
+  // P21B: at each frame head the first queued key message, when it is an arrow key-down (rootWin_onKey(0, 0x25..0x28)) with no
+  // button message before it, goes to the view block's words +12 / +16 (bridge.h kPortViewArrowVa) as recorded harness writes
+  // instead of the next pump (the play switch mainLoop.arrowStepAfterDraw = 0 runs it before the frame's picture); key-downs of the
+  // same arrow right after it (Windows' key repeat) go with it
+  bool arrow_head = false;
+  // P22A: the play switch mainLoop.arrowKeyHeldRepeat is 0: with clock_origin, the first frame head writes the clock offset
+  // (now() - timeGetTime) into view block word +36 (bridge.h kPortViewClockOffVa) as a recorded harness write
+  bool arrow_clock = false;
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
@@ -370,6 +378,7 @@ class LiveSession : public portsim::LiveHost {
   uint32_t close_written_ = 0, close_direct_ = 0, close_cancelled_ = 0;
   std::atomic<int> undo_req_{0};     // P11D: the undo / redo op the next frame head writes (0 none)
   uint32_t undo_writes_ = 0;         // P11D: undo / redo requests written
+  uint32_t arrow_heads_ = 0, arrow_head_events_ = 0;  // P21B: frame heads that took an arrow key-down, and the events they took
   bool close_check(portsim::Ctx &ctx, bool at_head, bool body);  // sim thread: true = stop the session now (item 3)
   // P6B item 1 (request_close): title_seen_ the title menu's loop ran since the last frame head; exit_req_ a close press there
   // (window thread), exiting_ the menu took its exit (sim thread); exit_esc_ Esc keys posted to end the credits
@@ -462,6 +471,9 @@ class LiveSession : public portsim::LiveHost {
   void update_view_target();   // under mu_
   void apply_view(portsim::Ctx &ctx);
   void apply_undo(portsim::Ctx &ctx);  // P11D
+  void apply_arrow(portsim::Ctx &ctx);  // P21B
+  void apply_arrow_clock(portsim::Ctx &ctx);  // P22A
+  bool arrow_clock_written_ = false;          // P22A
   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
   uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers
   uint64_t presents_text_ = 0, text_runs_ = 0;  // P9C: presents with the frame's text runs, and the runs they carried

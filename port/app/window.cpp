@@ -251,6 +251,8 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
   InputEvent e;
   e.seq = ++seq_;
   e.msg = msg;
+  if (latlog_on() && (msg == kWmKeyDown || msg == kWmKeyUp))  // P21B (SG_P21_LATLOG)
+    latlog('K', portsim::perf_now_ns(), msg, wp, lp, e.seq);
   e.wp = wp;
   e.lp = lp;
   e.vp = tr_.viewport();
@@ -380,6 +382,11 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
       EndPaint(h, &ps);
       ++paints_;
       if (wl) winlog_event('P', wl_t0, wl_c0);
+      if (latlog_on()) {  // P21B (SG_P21_LATLOG): the paint, the slide offset it drew
+        int32_t ox = 0, oy = 0;
+        presenter_.slide_offset(ox, oy);
+        latlog('O', portsim::perf_now_ns(), wl_t0, ox, oy, presenter_.frames_set());
+      }
       return 0;
     }
     case WM_ERASEBKGND:

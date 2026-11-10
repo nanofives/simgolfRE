@@ -150,6 +150,9 @@ int g_defect_camera_step4 = 1;
 // an arrow (0x25..0x28, no modifier) in the held-key word g_char83821c (rootWin_onChar writes it for character keys, rootWin_onChar0
 // clears it on every key-up; no code of the exe reads it), and a frame whose key code is 0 while that word holds an arrow takes that
 // arrow, so the camera steps once per frame from the press until the release (commands.cpp root_handler, semantic.cpp apply_key).
+// P22A (play-test 9 item 1, a light tap moved one, two or three steps by where it fell against the frame clock): the held arrow
+// steps again only from the first frame head kArrowHoldMs (250 ms) or more after its key-down time (Command::t, kept in view block
+// word +32 by root_handler; bridge.h view_arrow_held_due), so a tap is one step and a held key scrolls one step per frame after that.
 int g_defect_arrow_held_repeat = 1;
 // mainLoop.pKeyPausesGame (P21A, Mariano's play-test 8 item 1 "letter P should pause the game, change pathway to another hotkey"):
 // H1's key switch (ML+0xcfec, byte table ML+0x1235c) maps the capital P (0x50) to the pause toggle (case ML+0xda60: xor [g_flags], 4,
@@ -158,6 +161,15 @@ int g_defect_arrow_held_repeat = 1;
 // Fixed (0): both p and P take the pause case, and the Improvements palette moves to the free key a (0x61, and A 0x41), the first
 // free letter of "path"; no key code of the original's table (ML+0x1235c) is taken.
 int g_defect_p_key_pauses = 1;
+// mainLoop.arrowStepAfterDraw (P21B, Mariano's play-test 8 item 2 "there's a major delay in between me pressing the arrow key to
+// move the camera until it actually does"): a frame draws its picture (updateTerrainRender ML+0xf13, the sprites) with the camera
+// of the frame's start, then takes the input (the P6 / H1 pumps, setDirtyFlagA ML+0xcb1d) and steps the camera for an arrow at the
+// key switch (ML+0xe971..ML+0xea73) after that picture: a key-down that arrives during the frame wait shows only in the picture of
+// the frame after the next one. Fixed (0): an arrow key-down a live host took at the frame head (bridge.h view block words +12 / +16)
+// goes to rootWin_onKey before the picture and the camera steps there (the same step: direction, 4 tiles or P11F's 2, clamp), as does
+// P19A's held arrow; at most one step per frame (an arrow H1 then takes in a frame that stepped already is dropped, as a second
+// key-down within one frame overwrites the first in the original's gDirtyFlagA).
+int g_defect_arrow_step_after_draw = 1;
 // mainLoop.zoom8Font (P13C item 3, Mariano 2026-11-06 "on the closest zoom level font changes"): four label sites pick the draw font
 // by `g_zoomScale > 4` (the golfer label queue_label ML+0x7518 / ML+0x7aa8 callers, P4_ballLabelDraw ML+0x71b7..ML+0x71c1): zoom 8
 // (P11A, unreachable in the original) took g_font51b360 where zoom 4 takes g_fontRef_519fd8. Fixed (0): the choice uses min(zoom, 4).
@@ -2161,12 +2173,17 @@ const DefectDef kDefects[] = {
     {"mainLoop.arrowKeyHeldRepeat", "P19A",
      "a held arrow key moves the camera on its press and again only once Windows' key repeat starts (its delay), then one step per "
      "frame; fixed: an arrow's key-down is kept in the held-key word until a key-up, and every frame without a key code takes that "
-     "arrow (one step per frame from the press to the release)",
+     "arrow (one step per frame from the press to the release) once the key has been down 250 ms (a shorter tap: one step)",
      &g_defect_arrow_held_repeat},
     {"mainLoop.pKeyPausesGame", "P21A",
      "the lower-case p opens the Improvements palette (paths, benches, trees) and only the capital P pauses; fixed: p and P pause "
      "(again resumes), and the Improvements palette opens on a (or A)",
      &g_defect_p_key_pauses},
+    {"mainLoop.arrowStepAfterDraw", "P21B",
+     "an arrow key moves the camera at the key switch after the frame has drawn its picture, so a press shows in the picture of the "
+     "frame after the next; fixed: an arrow key-down the host took at the frame head moves the camera before the frame's picture "
+     "(one game frame sooner on the screen)",
+     &g_defect_arrow_step_after_draw},
     {"mainLoop.rightClickKeepsTool", "P13A",
      "a right click on the course with a terrain tool held keeps the tool and marks the tile for the right-click undo; fixed: on a "
      "tile the undo has nothing to act on (no recorded edit, no placed object) it drops the tool instead",
