@@ -531,10 +531,11 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   // P23F (gfx.h gfx_set_frame_edge_text): a frame text over the course (the root holds the frame's terrain picture, no HUD layer
   // has begun) whose columns reach past the root's left or right edge: its whole columns, the advance the provider measures (or,
   // for a string with no address, its ink drawn on a scratch surface), as P22E's cursor-pass texts. A golfer name label of the
-  // sprite queue (drawQueuedSprite.label, a mover source) is left out: the wide scene draws it whole beside the frame (a world run,
-  // moving with its figure), and a second copy here would not move with it
+  // sprite queue (drawQueuedSprite.label) is left out: the wide scene draws it whole beside the frame (a world run, moving with
+  // its figure), and a second copy here would not move with it (P23F fix 3: told by TextCapture::queue_label, set around the
+  // label's frame copy, whether or not the entry has a mover source)
   // (P23F fix 2: and P11C's course tip held past the frame's edge, drawn after the HUD's layers began)
-  if (ts.on && !cursor_text && g.hud.edge_frame && g.root_terrain && gfx_mover_label().kind == kGfxMoverNone &&
+  if (ts.on && !cursor_text && g.hud.edge_frame && g.root_terrain && !g.text.queue_label &&
       (!g.hud.any || g.hud.tip_edge) && !g.text.wide && g.root.w == GfxTextRun::kRootW) {
     int32_t c0 = x, c1 = x;
     bool got = false;
@@ -594,8 +595,8 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t w = mul32(static_cast<int32_t>(vstrlen(ctx.mem, text)), 3);
   int32_t half = static_cast<int32_t>(a[0]);
   // P23F fix 2 (gfx_text.cpp hover_help_terrain): P11C's course tip at a cursor near or past the frame's edge is held inside the
-  // window's columns (the side columns' width wide_e each side) instead of the 800 frame's
-  const int32_t side = g.hud.tip_edge ? g.hud.wide_e : 0;
+  // window's columns (the side columns' width wide_in each side) instead of the 800 frame's
+  const int32_t side = g.hud.tip_edge ? g.hud.wide_in : 0;  // (P23F fix 3: the window's columns, as the text's edge columns)
   if (half < sub32(w, side)) half = sub32(w, side);
   if (half > add32(sub32(0x320, w), side)) half = add32(sub32(0x320, w), side);
   // roadmap S3.8: the bar is Terrain::drawLine through the overlay body (terrain_overlay.h); without a GL context it draws nothing
@@ -672,11 +673,13 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     // the rows: the baseline TA_BASELINE origin y, the font's size above it and a third below, the box's margin around them
     e.y0 = std::max<int32_t>(0, y - ef.size - em);
     e.y1 = std::min<int32_t>(h, y + ef.size / 3 + em + 1);
-    e.ex0 = s.ink_x0 - em;
-    e.ex1 = s.ink_x1 + em;
+    // P23F fix 3: the edge columns end where the window does (HudCapture::wide_in): the presenter's course picture at the camera
+    // slide's offset 0 holds no column past it, so a part beyond it would be drawn by the CPU path only, over the slide's gap
+    e.ex0 = std::max(s.ink_x0 - em, -g.hud.wide_in);
+    e.ex1 = std::min(s.ink_x1 + em, w + g.hud.wide_in);
     e.layer = -1;
     e.target = 0;
-    if (e.y1 <= e.y0) return;
+    if (e.y1 <= e.y0 || e.ex1 <= e.ex0 || (e.x0 == 0 && e.ex0 >= 0) || (e.x0 == w && e.ex1 <= w)) return;
     if (s.frame) {  // P23F: a frame text's, kept until the next frame's terrain picture
       g.text.frame_edge_runs.push_back(std::move(e));
       constexpr size_t kMaxFrameEdge = 512;  // a frame with no terrain picture to clear them (no world layer): the oldest go first
@@ -725,10 +728,12 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   r.info.x1 = x1 + ox;
   r.info.y1 = y1 + oy;
   r.info.mover = gfx_mover_label();  // P12A fix 2: a golfer name label moves with its figure between game frames
+  r.frame = g.text.frame_gen;        // P23F fix 3
   // P22E item 7 (gfx.h gfx_set_hud_edge): a cursor pass's text on the root whose whole columns the root's edge cut, and whose
   // changed pixels reach that edge's margin: the presenter may draw it past the edge (GfxTextRun::ex0 / ex1)
   if (s.ink && target == 0 && ox == 0 && w == GfxTextRun::kRootW && clip[0] <= 0 && clip[2] >= w) {
-    const int32_t e0 = s.ink_x0 - kMargin, e1 = s.ink_x1 + kMargin;
+    // (P23F fix 3: not past the window's columns, HudCapture::wide_in, as the edge runs above)
+    const int32_t e0 = std::max(s.ink_x0 - kMargin, -g.hud.wide_in), e1 = std::min(s.ink_x1 + kMargin, w + g.hud.wide_in);
     if ((e0 < 0 && x0 == 0) || (e1 > w && x1 == w)) {
       r.info.ex0 = e0;
       r.info.ex1 = e1;
@@ -927,6 +932,8 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
       continue;
     }
     if (!keep[k]) std::fill(live[k].info.vis.begin(), live[k].info.vis.end(), uint8_t(0));
+    // P23F fix 3 (TextCapture::frame_gen): a run of an earlier frame keeps only its visible root pixels, not its edge columns
+    if (live[k].frame != c.frame_gen) live[k].info.ex0 = live[k].info.ex1 = 0;
     f.runs.push_back(live[k].info);
     if (keep[k] || (live[k].seg == cseg && in_layer)) next.push_back(std::move(live[k]));
     else ++c.stats.dropped;
@@ -961,7 +968,10 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
 
 // gfx_scene.cpp (G32's wide scene): the queue's start forgets the scene's runs; its end peels them off `scene` into `scene_text`
 // (a copy) and keeps those not inside the frame's columns [0, 800) as world runs
-void text_frame_start(Gfx &g) { g.text.frame_edge_runs.clear(); }
+void text_frame_start(Gfx &g) {
+  g.text.frame_edge_runs.clear();
+  ++g.text.frame_gen;  // P23F fix 3
+}
 void text_wide_begin(Gfx &g) {
   g.text.wide_runs.clear();
   g.text.wide_published.clear();

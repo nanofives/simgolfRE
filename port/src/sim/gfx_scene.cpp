@@ -2584,6 +2584,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.hud.lines.clear();     // P10I fix 1: so do their tee lines
   g.text.edge_runs.clear();  // P22E item 7: and their texts past the root's edge
   g.hud.wide_e = 0;          // P23F fix 2
+  g.hud.wide_in = 0;         // P23F fix 3
   g.hud.line800.clear();
   g.hud.line_word.clear();
   LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
@@ -2599,6 +2600,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   w->scene_e = E;
   w->scene_w = W;
   g.hud.wide_e = E;  // P23F fix 2
+  g.hud.wide_in = w->ox > 0 ? static_cast<int32_t>(static_cast<int64_t>(w->ox) * 800 / w->fw) : 0;  // P23F fix 3
   const PerfDetailScope pd(kPdQueueBegin);  // P15A
   w->scene_base.assign(static_cast<size_t>(W) * 600, 0);
   const std::vector<uint16_t> &wp = w->raster->pixels();
@@ -2788,7 +2790,9 @@ void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     explicit LabelScope(int32_t i) { g_label_src = gfx_mover_of(i); }
     ~LabelScope() { g_label_src = GfxMoverSrc{}; }
   } label_scope(static_cast<int32_t>(a[0]));
+  g.text.queue_label = true;  // P23F fix 3: the frame copy is not a frame text (gfx.cpp draw_text_string's edge rule)
   queue_label(g, ctx, a, 0);
+  g.text.queue_label = false;
   if (LiveTerrainWorld *w = wide_world(ctx))   // G32
     on_wide(g, *w, [&] {
       // P10D fix 1: the label (text and bars, other families' bodies) is not a sprite: the scene words it changed in the band

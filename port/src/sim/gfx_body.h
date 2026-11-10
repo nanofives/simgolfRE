@@ -168,6 +168,7 @@ class Gfx {
     bool edge_on = false;             // P22E item 7 (gfx.h gfx_set_hud_edge): the placement box's edges too, and the edge-cut texts
     bool edge_frame = false;          // P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course too
     int32_t wide_e = 0;               // P23F fix 2: the wide scene's side columns (800-space) at this frame's queue (0: none)
+    int32_t wide_in = 0;              // P23F fix 3: the 800-space columns each side of the frame that lie inside the window (floor)
     bool tip_edge = false;            // P23F fix 2: inside P11C's course tip drawn at a cursor near or past the frame's edge
     uint32_t wide_lines = 0;          // P23E (gfx.h gfx_set_hud_wide_lines): kGfxWide* bits, more still lines recorded
     uint32_t wide_scope = 0;          // P23E (gfx.h GfxWideLineScope): the kGfxWide* rows whose draws are open
@@ -193,6 +194,7 @@ class Gfx {
       GfxTextRun info;                     // box in back-buffer coordinates
       std::vector<uint16_t> before, after;  // the box's words before / after the call
       int64_t seg = -1;                    // the HUD segment it was drawn in, -1 = the base (before the frame's first layer)
+      uint64_t frame = 0;                  // P23F fix 3: frame_gen when it was drawn (a run kept from an earlier frame loses ex0 / ex1)
     };
     std::vector<Run> live;                 // on the root and the window targets, oldest first
     std::vector<Run> *sink = nullptr;      // where new runs go (live, or the banner's own list while loading.banner runs)
@@ -217,6 +219,11 @@ class Gfx {
     // P23F (gfx.h gfx_set_frame_edge_text): the same for the frame's own texts over the course; cleared when the next frame's
     // terrain picture is made (text_frame_start), published with every frame until then
     std::vector<GfxTextRun> frame_edge_runs;
+    // P23F fix 3: the frames whose terrain picture was made (text_frame_start); a run drawn in an earlier frame that the peel keeps
+    // (a few of its pixels still hold its after words, e.g. a label that moved a few pixels over its old place) shows only those
+    // pixels: text_publish clears its edge columns, which GfxTextRun::visible would count as visible whole
+    uint64_t frame_gen = 0;
+    bool queue_label = false;  // P23F fix 3: inside drawQueuedSprite.label's frame copy (gfx_scene.cpp b_queue_label)
   } text;
   // P9B: a blend primitive wrote word `res` at root pixel i: kind 2 (mask blend: src, k) or 3 (shade table k). Recorded only
   // from the first layer of a frame to its publish (in a layer or in the centred gap after one) while the pixel still holds
