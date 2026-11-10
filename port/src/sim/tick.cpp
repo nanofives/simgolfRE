@@ -170,6 +170,13 @@ int g_defect_p_key_pauses = 1;
 // P19A's held arrow; at most one step per frame (an arrow H1 then takes in a frame that stepped already is dropped, as a second
 // key-down within one frame overwrites the first in the original's gDirtyFlagA).
 int g_defect_arrow_step_after_draw = 1;
+// renderSpriteQueue.labelUnderLaterSprites (P22C item 6, Mariano's play-test 9 "shadows cut text off": Gary Golf's name label half
+// hidden by a tree): drawQueuedSprite draws a golfer's name label (drawCenteredText and the two Widget_fillRect bars) right after the
+// golfer's own sprite, inside renderSpriteQueue's walk in depth order, so every entry after it (a tree, a water spout, a cliff face, a
+// golfer in front) is drawn over the label. Fixed (0): the labels of the walk are drawn after its last entry, in queue order, each with
+// the name text its entry built (gfx_scene.cpp b_queue_label / b_queue_end): the golfer sprite keeps the original's occlusion, its
+// label is never covered by a sprite. Drawing only.
+int g_defect_label_under_sprites = 1;
 // mainLoop.zoom8Font (P13C item 3, Mariano 2026-11-06 "on the closest zoom level font changes"): four label sites pick the draw font
 // by `g_zoomScale > 4` (the golfer label queue_label ML+0x7518 / ML+0x7aa8 callers, P4_ballLabelDraw ML+0x71b7..ML+0x71c1): zoom 8
 // (P11A, unreachable in the original) took g_font51b360 where zoom 4 takes g_fontRef_519fd8. Fixed (0): the choice uses min(zoom, 4).
@@ -2184,6 +2191,10 @@ const DefectDef kDefects[] = {
      "frame after the next; fixed: an arrow key-down the host took at the frame head moves the camera before the frame's picture "
      "(one game frame sooner on the screen)",
      &g_defect_arrow_step_after_draw},
+    {"renderSpriteQueue.labelUnderLaterSprites", "P22C",
+     "a golfer's name label is drawn right after the golfer in the depth-sorted sprite walk, so a tree or anything else in front "
+     "covers it; fixed: the walk's name labels are drawn after its last sprite (the golfer itself stays behind what is in front)",
+     &g_defect_label_under_sprites},
     {"mainLoop.rightClickKeepsTool", "P13A",
      "a right click on the course with a terrain tool held keeps the tool and marks the tile for the right-click undo; fixed: on a "
      "tile the undo has nothing to act on (no recorded edit, no placed object) it drops the tool instead",

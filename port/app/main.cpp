@@ -712,6 +712,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.zoom8Font", 0},                      // P13C (zoom 8 labels keep zoom 4's font)
     {"mainLoop.cameraStepFixed4", 0},               // P11F (arrow keys step 2 tiles at zoom 8)
     {"mainLoop.pKeyPausesGame", 0},                 // P21A (p / P pause; the Improvements palette moves to a)
+    {"renderSpriteQueue.labelUnderLaterSprites", 0},  // P22C item 6 (golfer name labels over the sprites in front)
     {"mainLoop.arrowKeyHeldRepeat", 0},             // P19A item 1 (a held arrow steps the camera every frame from the press)
     {"mainLoop.arrowStepAfterDraw", 0},             // P21B item 2 (an arrow moves the camera before the frame's picture: one frame sooner)
     {"mainLoop.toolForcesZoom4", 0},                // P11E / P13A (the build tools keep every zoom)

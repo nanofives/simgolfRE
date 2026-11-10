@@ -96,6 +96,7 @@
 
 namespace portsim {
 extern int g_defect_zoom8_font;  // tick.cpp mainLoop.zoom8Font (P13C)
+extern int g_defect_label_under_sprites;  // tick.cpp renderSpriteQueue.labelUnderLaterSprites (P22C item 6)
 
 int g_negctl_gfx_scene = 0;
 extern int g_defect_tool_zoom4;  // tick.cpp mainLoop.toolForcesZoom4 (P11E / P13A: draw_alpha's offsets at zooms 1 and 2)
@@ -675,6 +676,14 @@ std::atomic<int64_t> g_hr_pub_ns{0};      // P12A fix 3: the publications' time 
 std::atomic<int64_t> g_hr_pub_n{0};
 thread_local GfxMoverSrc g_draw_src;      // P12A fix 2: the source of the queue entry b_queue_draw is drawing (hr_blit copies it)
 thread_local GfxMoverSrc g_label_src;     // P12A fix 2: the source of the queue entry b_queue_label is drawing the label of
+// P22C item 6 (renderSpriteQueue.labelUnderLaterSprites = 0): the golfer name labels of renderSpriteQueue's walk, kept with the name
+// text the simulation part left in g_textBuffer for them, drawn at the walk's end (b_queue_end) over every sprite of the queue
+struct DeferredLabel {
+  uint32_t entry = 0;
+  std::string text;
+};
+thread_local bool g_queue_walk = false;
+thread_local std::vector<DeferredLabel> g_deferred_labels;
 // P12A fix 2: the queue's render-only side table (gfx.h gfx_mover_source): entry n's source, and the one named for the next entry
 thread_local std::array<GfxMoverSrc, 1024> g_mover_tab;
 thread_local GfxMoverSrc g_mover_next;
@@ -2566,6 +2575,8 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
 }
 // renderSpriteQueue's start: the wide surface's base
 void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  g_queue_walk = true;  // P22C item 6
+  g_deferred_labels.clear();
   g.ensure_root(ctx);
   g.hud.cursor2d.clear();  // P9E fix 4: the cursor passes come after the queue
   g.hud.lines.clear();     // P10I fix 1: so do their tee lines
@@ -2761,6 +2772,12 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // drawQueuedSprite's golfer label: after the simulation part built the name in g_textBuffer
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff);
 void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (g_queue_walk && !SG_DEFECT(g_defect_label_under_sprites)) {  // P22C item 6: drawn at the walk's end (b_queue_end)
+    const GameState &gs = ctx.gs();
+    const char *t = reinterpret_cast<const char *>(gs.g_textBuffer);
+    g_deferred_labels.push_back({a[0], std::string(t, strnlen(t, sizeof gs.g_textBuffer - 1))});
+    return;
+  }
   struct LabelScope {  // P12A fix 2: the text runs of this label carry the entry's source (gfx.cpp capture: GfxTextRun::mover)
     explicit LabelScope(int32_t i) { g_label_src = gfx_mover_of(i); }
     ~LabelScope() { g_label_src = GfxMoverSrc{}; }
@@ -3002,6 +3019,19 @@ void b_blit_test(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // for (gfx_scene.captureQueueAt) writes the root surface to `$gfx/queue_<ordinal>.555` (the ORIGINAL's at the same return is
 // recorded by log/roadmap/S3/5_tools/scene_rec.py)
 void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  g_queue_walk = false;  // P22C item 6: the labels the walk kept, in queue order, each with its own name text in g_textBuffer
+  if (!g_deferred_labels.empty()) {
+    std::vector<DeferredLabel> v;
+    v.swap(g_deferred_labels);
+    GameState &gs = ctx.gs();
+    std::vector<int8_t> keep(gs.g_textBuffer, gs.g_textBuffer + sizeof gs.g_textBuffer);
+    for (const DeferredLabel &l : v) {
+      std::memcpy(gs.g_textBuffer, l.text.c_str(), l.text.size() + 1);
+      const uint32_t e[1] = {l.entry};
+      b_queue_label(g, ctx, e, 1);
+    }
+    std::memcpy(gs.g_textBuffer, keep.data(), keep.size());  // the buffer as the walk left it (drawing only)
+  }
   if (LiveTerrainWorld *w = wide_world(ctx)) {   // G32: the frame at the queue's end
     g.ensure_root(ctx);
     PerfDetailScope pd(kPdQueueEnd);  // P15A
