@@ -278,7 +278,9 @@ freeze); never reintroduce a fixed-address page. `original\` is still scanned: n
 
 ### LAN release of the port (mini-server)
 `scripts/lan_release/` (2026-10-29, copied from SimCity's re/scripts/lan_release, itself TD5RE's): `publish_simgolf.bat`
-(`publish.sh`) builds a clean `git archive HEAD` of port/ + re/model/include into port/build/lan_build, stages
+(`publish.sh`) builds `git archive HEAD` of port/ + re/model/include in port/build/lan_build (since 2026-11-09 incremental:
+`sync_build_tree.py` writes only the source files that differ from the archive, 5 s with no change, ~85 s for a 13-file fix;
+`--clean` rebuilds from empty), stages
 port/build/lan_release with `stage_lan_release.py` (simgolf_port.exe, freetype.dll, the app-local VC143 runtime, game\ =
 original\ minus the SafeDisc files, shim, dev logs, JPEG.lib and saved games; manifest.json of sha256 per file) and
 `deploy_lan_release.sh` pushes only changed files over SSH to the td5re-files nginx: http://mariano-server.local:8088/simgolf/
