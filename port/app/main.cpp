@@ -703,6 +703,7 @@ const ProfileMember kPlayProfile[] = {
     {"updateWalkers.cursorTargetOffGrid", 0},      // P6A (Mariano's play-test 2, 2026-11-03)
     {"updateGolfers.walkOffGrid", 0},               // P6A
     {"updateGolfers.partnerWaitBlocksTee", 0},      // P20A (a golfer waiting at the tee for its partner holds no shot ahead)
+    {"updateGolfers.playerWaitBlocksCourse", 0},    // P20A fix 2 (groups play through while the player's golfer waits for his shot)
     {"mainLoop.cameraFollowOffGrid", 0},            // P6A
     {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)
     {"infoCursorTip.fixedBox", 0},                  // P11B fix 2 (the palette tool tip box fitted to its text, above the palette)

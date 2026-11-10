@@ -88,6 +88,17 @@ bool P20A_WaitsForPartner(int k) {
     signed char hp = GC(p, (GS(g_golfers) + 33));
     return hp != 0 && hp == GC(k, (GS(g_golfers) + 33)) && (FLAGS(k) & (1u << 10)) != 0 && (FLAGS(p) & (1u << 10)) == 0;
 }
+// P20A fix 2 updateGolfers.playerWaitBlocksCourse: golfer k is the player's own golfer while its shot is handed to the player and not
+// played (g_playerGolfer's target x +0xcc = -1, updateGolfers+0x34a8 / updateGolfers+0x35b5), or that golfer's partner on its hole,
+// outside a championship or pro match (g_flags 0x4200000 clear, as at updateGolfers+0x1044..updateGolfers+0x1060).
+bool P20A2_PlayerHolds(int k) {
+    if (GameFlags() & 0x4200000) return false;
+    const int pg = G<int>(GS(g_playerGolfer));
+    if (pg < 0 || pg >= 0x98 || GD(pg, (GS(g_golfers) + 204)) != -1) return false;
+    const signed char hp = GC(pg, (GS(g_golfers) + 33));
+    if (hp == 0) return false;
+    return k == pg || (k == GW(pg, (GS(g_golfers) + 162)) && GC(k, (GS(g_golfers) + 33)) == hp);
+}
 // P22B updateGolfers.foreignGreenAutoPutt: the green (tile type 1, 8-connected) that holds hole h's cup tile (g_holes +24 / +28 are the cup
 // tile x / y, the tile of kTileDistance's target), tested for the ball's tile (bx, by). The player's shot is handed over only off the
 // green in the original (the L14 != 1 test of the hand-over condition), so a ball on any green, this hole's or another hole's, gets the
@@ -446,7 +457,7 @@ int updateGolfers() {
                     kPatronEvent(k);                                                    // updateGolfers+0x1062..updateGolfers+0x1063
                     kPatronEvent(k ^ 1);                                                // updateGolfers+0x1068..updateGolfers+0x106e
                     base = G<int>(GS(g_nextArrivalOrder));                                          // updateGolfers+0x1073
-                } else {
+                } else if (SG_DEFECT(g_defect_player_wait_blocks_course) || !P20A2_PlayerHolds(k)) {   // P20A updateGolfers.playerWaitBlocksCourse
                     L38++;                                                              // updateGolfers+0x107e
                 }
             }
@@ -1223,7 +1234,8 @@ int updateGolfers() {
                     if ((FLAGS(k) & 0x400) == 0) continue;                              // updateGolfers+0x37e7..updateGolfers+0x37f0
                     if (GC(k, (GS(g_golfers) + 34)) <= GC(i, (GS(g_golfers) + 34))) continue;                   // updateGolfers+0x37f6..updateGolfers+0x3804
                     if (kTileDistance(GD(k, GS(g_golfers)), GD(k, (GS(g_golfers) + 4)), HD(h, (GS(g_holes) + 8)), HD(h, (GS(g_holes) + 12))) < 0x64 &&   // updateGolfers+0x380a..updateGolfers+0x383e
-                        (SG_DEFECT(g_defect_partner_wait_blocks_tee) || !P20A_WaitsForPartner(k))) {   // P20A updateGolfers.partnerWaitBlocksTee
+                        (SG_DEFECT(g_defect_partner_wait_blocks_tee) || !P20A_WaitsForPartner(k)) &&   // P20A updateGolfers.partnerWaitBlocksTee
+                        (SG_DEFECT(g_defect_player_wait_blocks_course) || !P20A2_PlayerHolds(k))) {   // P20A updateGolfers.playerWaitBlocksCourse
                         keep = 0;                                                       // updateGolfers+0x3966
                         continue;
                     }

@@ -110,6 +110,17 @@ int g_defect_golfer_walk_offgrid = 1;
 // golfer and its partner in his save, identical in golf_clean.exe). Fixed (0): such a k is not held against the shot by the tee
 // test; the ball, target and line-of-fire tests of the same loop still apply to it.
 int g_defect_partner_wait_blocks_tee = 1;
+// updateGolfers.playerWaitBlocksCourse (P20A fix 2, Mariano's choice "let groups play through while my golfer waits",
+// log/roadmap/P20/P20A_notes.md section 8): while the shot of the player's own golfer (g_playerGolfer) is handed to the player and not
+// played (target x +0xcc = -1, written at updateGolfers+0x34a8), that golfer and its partner on its hole stay 0-stroke golfers of an
+// arrival order older than every group, so the tee queue count of every later golfer of that hole (updateGolfers+0x1018..
+// updateGolfers+0x107e, L38) never returns to 0 and nobody tees up (updateGolfers+0x2581..updateGolfers+0x2595); the near-tee test of
+// the look-ahead before a shot (updateGolfers+0x380a..updateGolfers+0x383e) holds the shots of the groups on the tee the same way
+// when he holds a shot near it. The course stops for as long as he does not play (golf_clean.exe: 5 game months). Fixed (0): outside
+// a championship or pro match (g_flags 0x4200000 clear, the same condition as the original's own player-pair exception at
+// updateGolfers+0x1044..updateGolfers+0x1060) those two golfers are not counted in the tee queue and not held against the shots of
+// others by the near-tee test; the ball, target and line-of-fire tests stay, so nobody hits into him.
+int g_defect_player_wait_blocks_course = 1;
 // mainLoop.treesHiddenFarZoom (P11A fix 1, Mariano's play-test 5: "furthest zoom is not rendering trees"): the tile pass of
 // mainLoop P3 queues the sprite of a tile whose type class byte (g_tileTypeAttrs + 0x26 of its 48-byte row) is 0xd (the
 // forest trees, tropical trees and palms) only while g_zoomScale > 1 (ML+0x4aba cmp / ML+0x4ac1 jle past the whole block), so
@@ -2170,6 +2181,11 @@ const DefectDef kDefects[] = {
      "only waits there for its partner, whose own shot is held by the group ahead: they wait for each other for good; fixed: a "
      "golfer waiting at the tee for its partner does not hold the shots of the golfers ahead",
      &g_defect_partner_wait_blocks_tee},
+    {"updateGolfers.playerWaitBlocksCourse", "P20A",
+     "while the player's own golfer has a shot handed to the player and not played, it and its partner count in the tee queue of "
+     "every later golfer of the hole and hold the shots near the tee: the whole course waits for the player; fixed: outside a "
+     "championship or pro match the groups behind tee off and play through (the ball, target and line-of-fire tests stay)",
+     &g_defect_player_wait_blocks_course},
     {"mainLoop.treesHiddenFarZoom", "P11A",
      "at the furthest zoom (g_zoomScale 1) the tile pass queues no tree, tropical tree or palm sprite (type class 0xd): forests "
      "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "
