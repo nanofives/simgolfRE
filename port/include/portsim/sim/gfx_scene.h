@@ -49,6 +49,13 @@ bool surface_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a);
 // P23D fix 3 (gfx.h gfx_set_wide_bubbles): a comment bubble's piece the HUD body drew on the root at (x, y) (Sprite::drawG with the
 // table lut), also into the wide scene's hr plane after the queue and marked for the world image (inert outside GfxBubbleScope)
 void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, const uint16_t *lut, size_t n);
+// P23D fix 4: a golfer comment's bar the overlay drew on the root inside [x0, xe] x [y0, ye] (before: those pixels before it, row-major):
+// the pixels it changed are marked for the world image and their bounding box is drawn into the hr plane as a black band through
+// drawAlpha's half program (P10F's placement box op), so it lies under the frame's text runs on every path; where the box reaches the
+// root's left or right edge it runs on to the line's own end lx0 / lx1 (800-space), past the root; a bar that changed no root pixel
+// (before null: wholly past the root's edge) is the band of rows yc - 5 .. yc + 4 between its ends
+void bubble_bar(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t xe, int32_t ye, const uint16_t *before, int32_t lx0, int32_t lx1,
+                int32_t yc);
 }  // namespace gfxs
 }  // namespace portsim
 

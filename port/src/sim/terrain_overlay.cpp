@@ -20,6 +20,7 @@
 #include "portsim/arith.h"
 #include "portsim/sim/perf.h"  // P15A: detail counters
 #include "portsim/sim/gfx.h"   // P15A fix 3: gfx_world_op
+#include "portsim/sim/gfx_scene.h"   // P23D fix 4: gfxs::bubble_bar
 #include "portsim/ptr.h"
 #include "portsim/sim/bridge.h"
 #include "portsim/sim/gl_raster.h"
@@ -504,6 +505,11 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   // drawMapLine(.., 0x80000000, 10, 5): recorded the same way, as a still line
   const bool tip = !tee && !box && g.hud.tip_edge && g.hud.lines_on && !std::strcmp(who, "drawMapLine") && width == 10 &&
                    alpha == 5 && colour == 0x80000000u && g.root.w == 800 && g.root.h == 600;
+  // P23D fix 4 (gfx.h GfxBubbleScope): the same bar under a golfer's comment (P4_golferOne's panel style, drawMapLine ML+0x77b5)
+  // after the queue: drawn into the wide scene's hr plane as a half-alpha black band over the root pixels it changed (gfx_scene.cpp
+  // gfxs::bubble_bar), so the frame's text runs stay above it; not a recorded line
+  const bool bubble_bar = !tee && !box && !tip && g.hud.bubble_depth > 0 && !std::strcmp(who, "drawMapLine") && width == 10 &&
+                          alpha == 5 && colour == 0x80000000u && g.root.w == 800 && g.root.h == 600;
   // P23E kGfxWideArc (gfx.h gfx_set_hud_wide_lines): P7's swing-arc box in the player's shot (Ph_00419d06's swing-arc block):
   // lineTo(.., 0x80007fff, width, 7) and its shadow drawMinimapSegment(.., 0x80000000, width, 7), the only lineTo calls outside a
   // drawCircle and the only drawMinimapSegment calls of colour 0x80000000 inside a cursor pass: recorded as still lines
@@ -534,7 +540,13 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   // P23E: a recorded line keeps only its rectangle too (draw_line writes nothing outside it), not a copy of the whole root per line
   if (mirror && (lines_full() || lines_check())) before = g.root.px;  // P22A: a mirrored line keeps only its rectangle
   LineTouch touch;
-  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror || rec ? &touch : nullptr);
+  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror || rec || bubble_bar ? &touch : nullptr);
+  if (bubble_bar) {   // P23D fix 4: rows from the changed pixels, or (a bar wholly past the root) from the line's centre row
+    const int32_t yc = gl.flip_y ? y1 : gl.screen_h - y1;
+    const bool hit = touch.xe >= touch.x0 && touch.ye >= touch.y0;
+    gfxs::bubble_bar(g, ctx, touch.x0, touch.y0, touch.xe, touch.ye, hit ? touch.before.data() : nullptr, std::min(x1, x2),
+                     std::max(x1, x2), yc);
+  }
   // P22C fix 3: the golfer loop's trail segment with --trail-glide: not drawn on the world layer (the window draws it under the sprites
   // at the ball's drawn offset, gfx.h gfx_trail_take); terrain800 still takes the root's line pixels, so the 800 line is not shown
   const bool trail = mirror && g_trail_golfer >= 0 && g_trail_glide_on.load(std::memory_order_relaxed) &&

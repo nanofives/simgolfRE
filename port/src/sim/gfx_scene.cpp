@@ -3935,6 +3935,47 @@ void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, cons
   ShadeOp op{s.pal.data(), lut, n};
   hr_now(*w, s, add32(x, w->scene_e), y, Scale{1, 1, 1}, op, false);
 }
+void bubble_bar(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t xe, int32_t ye, const uint16_t *before, int32_t lx0, int32_t lx1,
+                int32_t yc) {
+  if (g.hud.bubble_depth <= 0 || g_hr_pass.hr || g.root.w != 800 || g.root.h != 600 || mode() != 0) return;
+  LiveTerrainWorld *w = wide_world(ctx);
+  if (!w || w->hr_open || !w->hr_valid || w->scene_w <= 0 || w->scene.size() != static_cast<size_t>(w->scene_w) * 600) return;
+  if (w->bub800.size() != g.root.px.size()) w->bub800.assign(g.root.px.size(), 0);
+  if (w->bub_word.size() != g.root.px.size()) w->bub_word.assign(g.root.px.size(), 0);
+  const int32_t bw = xe - x0 + 1;
+  int32_t bx0 = xe + 1, by0 = ye + 1, bx1 = x0 - 1, by1 = y0 - 1;
+  if (!before) {   // wholly past the root: the band between the line's ends, rows yc - 5 .. yc + 4
+    bx0 = std::max(lx0, -w->scene_e);
+    bx1 = std::min(lx1 - 1, 799 + w->scene_e);
+    by0 = std::max(yc - 5, 0);
+    by1 = std::min(yc + 4, 599);
+    y0 = 1;
+    ye = 0;   // no root pixel to mark
+  }
+  for (int32_t y = y0; y <= ye; ++y)
+    for (int32_t x = x0; x <= xe; ++x) {
+      const size_t i = static_cast<size_t>(y) * 800 + static_cast<size_t>(x);
+      if (before[static_cast<size_t>(y - y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - x0)] == g.root.px[i]) continue;
+      w->bub800[i] = 1;
+      w->bub_word[i] = g.root.px[i];
+      bx0 = std::min(bx0, x);
+      by0 = std::min(by0, y);
+      bx1 = std::max(bx1, x);
+      by1 = std::max(by1, y);
+    }
+  if (bx1 < bx0 || by1 < by0) return;
+  if (before && bx0 == 0 && lx0 < 0) bx0 = std::max(lx0, -w->scene_e);           // cut by the root's left edge: the band to the line's end
+  if (before && bx1 == 799 && lx1 > 800) bx1 = std::min(lx1 - 1, 799 + w->scene_e);   // and by its right edge
+  Sprite8 s;   // the band: black art of the changed pixels' box, drawn at scale 1 (each texel one 800-space pixel)
+  s.w = bx1 - bx0 + 1;
+  s.h = by1 - by0 + 1;
+  s.px.assign(static_cast<size_t>(s.w) * static_cast<size_t>(s.h), 0);
+  s.pal.fill(0);
+  const int body = alpha_body(0.5f);
+  if (body < 0) return;
+  AlphaOp op{s.pal.data(), &kAlphaPrograms[body + 15], false};
+  hr_now(*w, s, add32(bx0, w->scene_e), by0, Scale{1, 1, 1}, op, false);
+}
 }  // namespace gfxs
 void gfx_cursor_sprites_begin(Ctx &ctx) {
   Gfx *g = gfx(ctx);

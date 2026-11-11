@@ -107,7 +107,7 @@
 //   (gfx.h gfx_set_wide_grid; drawing only). A frame whose grid equals the last one's keeps the world picture as it is (no back
 //   restore, no line drawn). off = the grid stops at the 800 frame's edge, as the original's screen ends there.
 //   P23D fix 3: --wide-bubbles on|off (default on; SG_APP_P23=off: off; needs the world layer and its hr plane) the comment
-//   bubbles the frame draws after the sprite queue (the staff walkers' six-piece bubble) go into the wide scene's hr plane too, so
+//   bubbles the frame draws after the sprite queue (the staff walkers' six-piece bubble; P23D fix 4: the golfers' panel bar and pointer) go into the wide scene's hr plane too, so
 //   they show whole across the 800 frame's edge and in the side columns (gfx.h gfx_set_wide_bubbles; drawing only).
 //   P22D fix 3: --meter-tips on|off (default on; SG_APP_P22=off: off) the cash, fun rating and skill rating boxes show their name
 //   as the game's one-line tip after the HUD tips' dwell (gfx.h gfx_set_meter_tips; drawing only)

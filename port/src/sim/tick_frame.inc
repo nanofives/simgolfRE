@@ -5023,6 +5023,7 @@ void P4_golferOne(u32 F, u32 esi) {
         // ML+0x7783
         color = ebp;
         if ((GU8(GS(g_preferences)) & 0x10) != 0) {                                  // ML+0x7783 / ML+0x778a
+            GfxBubbleScope bubble_scope(ctx);  // P23D fix 4 (gfx.h GfxBubbleScope): the panel's bar and pointer in the wide scene too
             int e = FD(0x74) - ebx + 5;                                       // ML+0x778c / ML+0x7792 / ML+0x779b
             int h = ecx / 2;                                                  // ML+0x779e / ML+0x77a8..ML+0x77ab
             int c = FD(0x78);                                                 // ML+0x77a0
