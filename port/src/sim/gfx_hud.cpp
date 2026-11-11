@@ -1105,6 +1105,7 @@ void draw_scaled(Gfx &g, Ctx &ctx, const uint32_t *a, uint32_t nx, uint32_t ny, 
   const int32_t px = add32(static_cast<int32_t>(a[2]), mul32(s->left, n) / d);
   const int32_t py = add32(static_cast<int32_t>(a[3]), mul32(s->top, m) / d);
   draw_b16(g, *s, px, py, n, m, d, who);
+  if (g.hud.bubble_depth > 0) gfxs::bubble_scaled(g, ctx, *s, px, py, n, m, d);   // P23D fix 5
 }
 void b_draw_scaled(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_scaled(g, ctx, a, a[4], a[5], a[6], a[7], "Surface_drawScaled"); }
 void b_draw_scaled_421b60(Gfx &g, Ctx &ctx, const uint32_t *a, int) {

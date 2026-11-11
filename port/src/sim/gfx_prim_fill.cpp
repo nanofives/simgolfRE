@@ -40,6 +40,7 @@
 #include "gfx_body.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/gfx_scene.h"   // P23D fix 5: gfxs::bubble_fill
 
 namespace portsim {
 
@@ -224,6 +225,7 @@ void win_fill(Gfx &g, Ctx &ctx, uint32_t surf, const uint32_t *a, const char *wh
     for (int32_t yy = cy0; yy < cy1; ++yy)
       before.insert(before.end(), g.root.px.begin() + yy * g.root.w + cx0, g.root.px.begin() + yy * g.root.w + cx1);
   gfxf::fill_rect16(g.root, x, y, r, b, static_cast<uint16_t>(c & 0xffff));
+  if (hc.bubble_depth > 0) gfxs::bubble_fill(g, ctx, x, y, r, b, static_cast<uint16_t>(c & 0xffff));   // P23D fix 5
   if (!rec) return;
   if (hc.line800.size() != g.root.px.size()) {
     hc.line800.assign(g.root.px.size(), 0);

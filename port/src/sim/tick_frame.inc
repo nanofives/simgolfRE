@@ -4913,11 +4913,17 @@ void P4_golferOne(u32 F, u32 esi) {
         }
     }
     // ML+0x7455
+    // P23D fix 5 (development, the pictures of the thought form): SG_P23_THOUGHT_ALL=1 draws every visible golfer's comment as the
+    // thought form (comment 0x32, timer 1 where none): local values only, nothing is written; unset (always outside these pictures)
+    // (2: and every one in the branch without flag 0x100000, whose icon is drawn mirrored at ML+0x7754)
+    static const int thought_mode = std::getenv("SG_P23_THOUGHT_ALL") ? std::atoi(std::getenv("SG_P23_THOUGHT_ALL")) : 0;
+    static const bool thought_all = thought_mode == 1 || thought_mode == 2;
     u8 c7c = GU8(esi + 0x7c);                                                 // ML+0x7455
+    if (thought_all && (c7c == 0 || c7c > 7)) c7c = 1;
     if (c7c == 0) return;                                                     // ML+0x745a
     if (c7c > 7) return;                                                      // ML+0x7460 / ML+0x7462 ja
     if (edx <= 2) return;                                                     // ML+0x7468 / ML+0x746b jle
-    u8 a7d = GU8(esi + 0x7d);                                                 // ML+0x7471
+    u8 a7d = thought_all ? 0x32 : GU8(esi + 0x7d);                            // ML+0x7471
     GU8(GS(g_textBuffer)) = 0;                                                      // ML+0x7474
     int idx;
     if ((a7d & 0x80) != 0)                                                    // ML+0x747b / ML+0x747d
@@ -4927,8 +4933,8 @@ void P4_golferOne(u32 F, u32 esi) {
     int w94 = GU16(esi + 0x94) & 0x3fff;                                      // ML+0x748c / ML+0x7496
     int b7e = GU8(esi + 0x7e);                                                // ML+0x7494 / ML+0x749c
     cc("buildGolferComment", (int)(a7d & 0x7f), w94, b7e, idx);                         // buildGolferComment ML+0x74a5
-    u8 al = GU8(esi + 0x7c);                                                  // ML+0x74aa
-    u8 cl = GU8(esi + 0x7d);                                                  // ML+0x74ad
+    u8 al = thought_all ? c7c : GU8(esi + 0x7c);                              // ML+0x74aa
+    u8 cl = thought_all ? a7d : GU8(esi + 0x7d);                              // ML+0x74ad
     int ebp = (int)(((al < 5) ? 0xFFFFE319u : 0u) + 0x80007FFFu);             // ML+0x74b3..ML+0x74bd (cmp, sbb, and, add)
     FD(0xc) = ebp;                                                            // ML+0x74c6
     if ((cl & 0x80) == 0 && cl == (u8)(GU8(esi + 0x68) & 0x7f)) {             // ML+0x74c3 / ML+0x74ca / ML+0x74cc..ML+0x74d4
@@ -4964,9 +4970,10 @@ void P4_golferOne(u32 F, u32 esi) {
     }
     // ML+0x759e
     int color;
-    if ((GU8(esi + 0x7d) & 0x7f) == 0x32) {                                   // ML+0x759e..ML+0x75a5 jne ML+0x7783
+    if (((thought_all ? a7d : GU8(esi + 0x7d)) & 0x7f) == 0x32) {             // ML+0x759e..ML+0x75a5 jne ML+0x7783
+        GfxBubbleScope bubble_scope(ctx);  // P23D fix 5 (gfx.h GfxBubbleScope): the thought bubble's pieces and box in the wide scene too
         int eax = G32(edi + (GS(g_golfers) + 12)) - G32(esi + 4);                       // ML+0x75ab / ML+0x75b1 / ML+0x75b7
-        int c8 = G32(esi + 8) & 0x100000;                                     // ML+0x75b4 / ML+0x75ba
+        int c8 = thought_mode == 2 ? 0 : (G32(esi + 8) & 0x100000);   // (P23D fix 5 development: 2 = the mirrored branch)                                     // ML+0x75b4 / ML+0x75ba
         eax = eax / 2;                                                        // ML+0x75b9 / ML+0x75c0 / ML+0x75c4 (cdq, sub, sar 1)
         int e = (c8 != 0 ? 0xe : 0) + -7;                                     // ML+0x75c2..ML+0x75cd (neg, sbb, and 0xe, add -7)
         e -= eax;                                                             // ML+0x75d0

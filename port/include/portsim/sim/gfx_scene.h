@@ -54,6 +54,10 @@ void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, cons
 // drawAlpha's half program (P10F's placement box op), so it lies under the frame's text runs on every path; where the box reaches the
 // root's left or right edge it runs on to the line's own end lx0 / lx1 (800-space), past the root; a bar that changed no root pixel
 // (before null: wholly past the root's edge) is the band of rows yc - 5 .. yc + 4 between its ends
+// P23D fix 5: a thought bubble's Surface_drawScaled piece the HUD body drew at (x, y) under the display scale (nx, ny, den; nx < 0 the
+// mirrored body), and its fillWindowRect box [x0, x1) x [y0, y1) of colour word: also into the hr plane after the queue, marked
+void bubble_scaled(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den);
+void bubble_fill(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint16_t word);
 void bubble_bar(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t xe, int32_t ye, const uint16_t *before, int32_t lx0, int32_t lx1,
                 int32_t yc);
 }  // namespace gfxs

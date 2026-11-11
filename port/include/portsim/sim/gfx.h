@@ -336,7 +336,8 @@ inline void gfx_wide_line_scope_close(GfxWideLineScope &s) {  // the scope's end
 
 // P23D fix 3 (app option --wide-bubbles, log/roadmap/P23/P23D_notes.md): RENDER-ONLY. The frame code's comment bubbles drawn after
 // the sprite queue (P4_walkerOne's six pieces, mainLoop ML+0x7b09..ML+0x7c3d; P23D fix 4: P4_golferOne's panel pointer ML+0x77ef,
-// and its bar drawMapLine ML+0x77b5 recorded as a still line like P23F's tip bar; inside GfxBubbleScope) go into the wide scene's hr
+// and its bar drawMapLine ML+0x77b5, drawn in hr as a half-alpha band; P23D fix 5: the thought bubble's two Surface_drawScaled pieces
+// ML+0x7640 / ML+0x7754, one mirrored, and its fillWindowRect box ML+0x7778; inside GfxBubbleScope) go into the wide scene's hr
 // plane too, at the window's resolution (scene position = root position + scene_e), so a bubble crossing the 800 frame's edge or
 // standing in a side column shows whole; the root pixels they wrote are marked (LiveTerrainWorld::bub800 / bub_word), so inside
 // the frame the world image shows them (one resolution). Off (the default): the 800 root only.

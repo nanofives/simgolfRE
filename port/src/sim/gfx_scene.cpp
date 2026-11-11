@@ -3935,6 +3935,73 @@ void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, cons
   ShadeOp op{s.pal.data(), lut, n};
   hr_now(*w, s, add32(x, w->scene_e), y, Scale{1, 1, 1}, op, false);
 }
+// P23D fix 5 (gfx_scene.h): a thought bubble's Surface_drawScaled piece and its fillWindowRect box (P4_golferOne ML+0x7640 / ML+0x7754
+// / ML+0x7778), each also into the hr plane after the queue (DrawBOp: drawB's rule; a mirrored piece as the art mirrored, which is
+// what draw_b16's mirrored body reads over the same rectangle) and the root pixels it wrote marked
+LiveTerrainWorld *bubble_world(Gfx &g, Ctx &ctx) {
+  if (g.hud.bubble_depth <= 0 || g_hr_pass.hr || g.root.w != 800 || g.root.h != 600 || mode() != 0) return nullptr;
+  LiveTerrainWorld *w = wide_world(ctx);
+  if (!w || w->hr_open || !w->hr_valid || w->scene_w <= 0 || w->scene.size() != static_cast<size_t>(w->scene_w) * 600) return nullptr;
+  if (w->bub800.size() != g.root.px.size()) w->bub800.assign(g.root.px.size(), 0);
+  if (w->bub_word.size() != g.root.px.size()) w->bub_word.assign(g.root.px.size(), 0);
+  return w;
+}
+void bubble_mark(Gfx &g, LiveTerrainWorld &w, int32_t x, int32_t y) {
+  const size_t i = static_cast<size_t>(y) * 800 + static_cast<size_t>(x);
+  w.bub800[i] = 1;
+  w.bub_word[i] = g.root.px[i];
+}
+void bubble_scaled(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den) {
+  LiveTerrainWorld *w = bubble_world(g, ctx);
+  if (!w || s.w <= 0 || s.h <= 0) return;
+  const bool mirror = nx < 0 && nx != INT32_MIN && -nx != den;
+  const int32_t ax = mirror ? -nx : nx;
+  if (ax <= 0 || ny <= 0 || den <= 0) return;
+  if (ax == den && ny == den) {   // draw_b16's unscaled copy (draw16): every byte below 0xfe at (x, y)
+    for (int32_t yy = std::max(y, 0); yy < std::min(y + s.h, 600); ++yy)
+      for (int32_t xx = std::max(x, 0); xx < std::min(x + s.w, 800); ++xx)
+        if (s.px[static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x)] < 0xfe) bubble_mark(g, *w, xx, yy);
+  } else {   // draw_b16's scaled walk (its rectangle, steps and mirrored column)
+    const float fx = static_cast<float>(ax) / static_cast<float>(den), fy = static_cast<float>(ny) / static_cast<float>(den);
+    const int32_t L = add32(x, static_cast<int32_t>(fx)), T = add32(y, static_cast<int32_t>(fy));
+    const int32_t W = static_cast<int32_t>(static_cast<double>(s.w) * static_cast<double>(fx));
+    const int32_t H = static_cast<int32_t>(static_cast<double>(s.h) * static_cast<double>(fy));
+    const uint64_t stx = static_cast<uint64_t>(static_cast<uint32_t>(den << 16) / static_cast<uint32_t>(ax));
+    const uint64_t sty = static_cast<uint64_t>(static_cast<uint32_t>(den << 16) / static_cast<uint32_t>(ny));
+    for (int32_t yy = std::max(T, 0); yy < std::min(add32(T, H), 600); ++yy) {
+      const uint64_t sr = (sty * static_cast<uint64_t>(yy - T)) >> 16;
+      for (int32_t xx = std::max(L, 0); xx < std::min(add32(L, W), 800); ++xx) {
+        uint64_t sc = (stx * static_cast<uint64_t>(xx - L)) >> 16;
+        if (mirror) sc = static_cast<uint64_t>(s.w) - 1u - sc;
+        if (sr >= static_cast<uint64_t>(s.h) || sc >= static_cast<uint64_t>(s.w)) continue;
+        if (s.px[static_cast<size_t>(sr) * static_cast<size_t>(s.w) + static_cast<size_t>(sc)] < 0xfe) bubble_mark(g, *w, xx, yy);
+      }
+    }
+  }
+  Sprite8 m;
+  const Sprite8 *a = &s;
+  if (mirror) {
+    m = s;
+    for (int32_t r = 0; r < m.h; ++r) std::reverse(m.px.begin() + static_cast<ptrdiff_t>(r) * m.w, m.px.begin() + static_cast<ptrdiff_t>(r + 1) * m.w);
+    a = &m;
+  }
+  DrawBOp op{a->pal.data()};
+  hr_now(*w, *a, add32(x, w->scene_e), y, Scale{ax, ny, den}, op, false);
+}
+void bubble_fill(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint16_t word) {
+  LiveTerrainWorld *w = bubble_world(g, ctx);
+  if (!w || x1 <= x0 || y1 <= y0) return;
+  for (int32_t y = std::max(y0, 0); y < std::min(y1, 600); ++y)
+    for (int32_t x = std::max(x0, 0); x < std::min(x1, 800); ++x) bubble_mark(g, *w, x, y);
+  Sprite8 s;   // the box: one-colour art of its size at scale 1
+  s.w = x1 - x0;
+  s.h = y1 - y0;
+  s.px.assign(static_cast<size_t>(s.w) * static_cast<size_t>(s.h), 0);
+  s.pal.fill(0);
+  s.pal[0] = word;
+  DrawBOp op{s.pal.data()};
+  hr_now(*w, s, add32(x0, w->scene_e), y0, Scale{1, 1, 1}, op, false);
+}
 void bubble_bar(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t xe, int32_t ye, const uint16_t *before, int32_t lx0, int32_t lx1,
                 int32_t yc) {
   if (g.hud.bubble_depth <= 0 || g_hr_pass.hr || g.root.w != 800 || g.root.h != 600 || mode() != 0) return;
