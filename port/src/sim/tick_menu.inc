@@ -182,6 +182,7 @@ hover_loop:  // ML+0x11a65
         }
     }
 
+    if (io.live) io.live->title_menu_overlay();  // P24D: the app's language selector over the frame (draws on the root only)
     // Window::refreshFull(g_rootWindow, 0)                             ML+0x11ca5
     tc("Window::refreshFull", GS(g_rootWindow), 0);
     if (io.live) io.live->title_menu_pass();  // P6B: a notification for a live host (tick_hook.h); nothing changes here

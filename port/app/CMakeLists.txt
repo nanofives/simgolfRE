@@ -53,7 +53,7 @@ if(PORTAPP_SHELL AND WIN32 AND TARGET portsim)
   # through mainCRTStartup; stdout / stderr: stdio_log.h). simgolf_port_console.exe is the same objects linked for the
   # console subsystem (a terminal that wants to wait for it). Both are built by the `simgolf_port` target.
   # P14A: gpu.cpp, the GPU compositor (Direct3D 11 + DXGI, OS libraries; d3dcompiler_47.dll is loaded at run time)
-  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp profile.cpp hover.cpp gpu.cpp gpu_raster.cpp gpu_world.cpp)
+  add_library(simgolf_port_objs OBJECT main.cpp window.cpp present.cpp textres.cpp pacing.cpp saves.cpp host.cpp stdio_log.cpp profile.cpp hover.cpp gpu.cpp gpu_raster.cpp gpu_world.cpp lang_ui.cpp)
   target_link_libraries(simgolf_port_objs PRIVATE portapp_input portapp_audio portsim)
   target_compile_definitions(simgolf_port_objs PRIVATE UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
   add_executable(simgolf_port WIN32 $<TARGET_OBJECTS:simgolf_port_objs>)

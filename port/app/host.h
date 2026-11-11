@@ -291,6 +291,8 @@ class LiveSession : public portsim::LiveHost {
   // P5B item 2: whether the game is in its frame body (the last pump call was P6 / H1), where + and - may be read as the
   // zoom keys; false in every modal loop (text entry, popups, reports, the title menu)
   bool in_frame_body() const { return body_mode_.load(); }
+  // P24D: the picture on screen is the title menu's (its latest refreshFull followed title_menu_overlay); the window thread asks
+  bool at_title() const { return rpoint_seq_.load() == title_mark_.load() + 1; }
   // the newest presented frame (WM_APP + 2); false when none is waiting. `band` (P7): Extend when the frame is a full-screen
   // 2D screen shown before a game's frame loop runs (boot loading screens, title menu, its sub-screens, the location screen,
   // the world-load screens), Black once the frame loop runs (the course view, and every report or dialog over it)
@@ -325,6 +327,7 @@ class LiveSession : public portsim::LiveHost {
   void present_point(portsim::Ctx &) override;  // S7.8: present where the original's Display::present runs ('r')
   void frame_end(portsim::Ctx &, uint32_t frame) override;  // S7.8: the terrain log bound and the memory samples
   void title_menu(portsim::Ctx &) override;  // P6B item 1: a pass of the title menu's hover loop ended
+  void title_menu_overlay(portsim::Ctx &) override;  // P24D: the language selector over the title menu (lang_ui.h)
   bool blocking() const override { return true; }
   TerrainLogBound *terrain_log = nullptr;  // S7.8 (main.cpp sets it with the LiveTerrain; read only inside run)
   MemSampler memory;                        // S7.8
@@ -390,6 +393,7 @@ class LiveSession : public portsim::LiveHost {
   // P6B item 1 (request_close): title_seen_ the title menu's loop ran since the last frame head; exit_req_ a close press there
   // (window thread), exiting_ the menu took its exit (sim thread); exit_esc_ Esc keys posted to end the credits
   std::atomic<bool> title_seen_{false}, exit_req_{false};
+  std::atomic<uint64_t> rpoint_seq_{0}, title_mark_{~0ull - 1};  // P24D: present_point calls; their count at title_menu_overlay
   std::atomic<uint32_t> exit_req_ms_{0};
   bool exiting_ = false, exit_arm_ = false;
   uint32_t exit_begin_ms_ = 0, last_esc_ms_ = 0;

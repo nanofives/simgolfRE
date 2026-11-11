@@ -310,6 +310,7 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
     gfxb::TextRunScope ts;  // P9C: the run (inert with text capture off)
     if (!t_target) {
       gfxb::text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
+      lang::note("glyph", seg, false);  // P24D: SG_LANG_DUMP
       const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, g.root.px.data(), g.root.w, g.root.h);
       const int32_t clip[4] = {0, 0, g.root.w, g.root.h};
       gfxb::text_run_end(g, ctx, ts, g.root.px.data(), g.root.w, g.root.h, 0, 0, clip, font, seg, px, py, ref, 0);
@@ -320,6 +321,7 @@ int32_t draw_run(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y
     const bool placed = gfxe::window_origin(g, &d, wx, wy);
     if (placed) gfxb::text_run_begin(g, d.px.data(), d.w, d.h, ts);
     std::vector<uint16_t> tmp = d.px;
+    lang::note("glyph", seg, false);  // P24D: SG_LANG_DUMP
     const bool ok = tm->draw_glyphs(ctx, font, seg, px, py, ref, tmp.data(), d.w, d.h);
     const int32_t *c = t_target->clip;
     for (int32_t yy = std::max(c[1], 0); yy < std::min(c[3], d.h); ++yy)
@@ -815,7 +817,8 @@ void text_surface(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t 
 // i = e; y > 0x248 stops. A pending line (acc > 0, y <= 0x248) is drawn the same way at the end. Returns y.
 // P11B fix 2: draw = false measures only (the end y of the same wrap; nothing drawn, the text object's markup state put back)
 int32_t message_buffer_impl(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour, bool draw) {
-  const std::string buf = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer));
+  // P24D: wrapped in the current language
+  const std::string buf = lang::tr(gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer)));
   if (!text_metrics(ctx) && !rec().on) {
     if (draw) g.unsup("drawMessageBuffer: no text provider");
     return y;
@@ -1244,10 +1247,10 @@ std::string hover_help_line(Ctx &ctx, int32_t t) {
   for (const std::string &s : c) {
     const int w = words(s);
     if (n + w > kHoverWords) continue;
-    out += out.empty() ? s : ", " + s;
+    out += out.empty() ? lang::tr(s) : ", " + lang::tr(s);  // P24D: each clause and the name in the current language
     n += w;
   }
-  return out.empty() ? name : name + ": " + out;
+  return out.empty() ? lang::tr(name) : lang::tr(name) + ": " + out;
 }
 
 // the palette tool sel's line, drawn the way the game's one-line tips are (drawPanelBackdrop: the dark bar and the centred text
@@ -1310,7 +1313,7 @@ void hover_help_slot(Gfx &g, Ctx &ctx, int32_t sel) {
   const std::string effect = hover_help_slot_text(sel);
   if (effect.empty()) return;
   const std::string name = sel == 0x15 && p13a_bulldoze() ? std::string("Bulldoze") : pool(ctx, GSO(f_strpool_4c7f1c, kName[sel - 0x14]));  // P13A
-  const std::string text = name + ": " + effect;
+  const std::string text = lang::tr(name) + ": " + lang::tr(effect);  // P24D
   const int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
   const int32_t py = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel + 2)));
   backdrop(g, ctx, text, add32(px, 0x14), sub32(py, kHoverSlotRise));
@@ -1325,7 +1328,7 @@ void hover_help_amenity(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b) {
   if (ci > 11) return;
   std::string name = kName[ci] >= 0 ? pool(ctx, GSO(f_strpool_4c80d0, kName[ci])) : pool(ctx, GSO(f_strpool_4c7f1c, 0x10));
   if ((ci == 9 || ci == 10) && p13a_bulldoze()) name = "Bulldoze";  // P13A
-  const std::string text = name + ": " + effect;
+  const std::string text = lang::tr(name) + ": " + lang::tr(effect);  // P24D
   int32_t x = a, y = b;
   if (L >= 0) {
     x = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c7a88, 0x10 + 4 * L)));
@@ -1526,9 +1529,10 @@ void string_right_at(Gfx &g, Ctx &ctx, const uint32_t *a) {
   }
   const uint32_t font = g.fonts[0];
   if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return;
-  const std::string s = gfxb::vstring(ctx.mem, a[1]);
+  const uint32_t tva = lang::redirect(ctx, a[1]);  // P24D: the current language's text, whole (the count is the English one's)
+  const std::string s = gfxb::vstring(ctx.mem, tva);
   int32_t n = static_cast<int32_t>(s.size());
-  if (static_cast<int32_t>(a[4]) < n) n = static_cast<int32_t>(a[4]);
+  if (tva == a[1] && static_cast<int32_t>(a[4]) < n) n = static_cast<int32_t>(a[4]);
   if (n <= 0) return;
   TextObj &o = root_obj(g, ctx);
   const int32_t w = markup_width(g, ctx, s, n);
@@ -1552,7 +1556,7 @@ void b_text_put(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     return;
   }
   g.has_value = true;
-  g.value = a[1] == 0 ? 0 : gfxt::text_put(g, ctx, gfxb::vstring(ctx.mem, a[1]));
+  g.value = a[1] == 0 ? 0 : gfxt::text_put(g, ctx, gfxb::vstring(ctx.mem, lang::redirect(ctx, a[1])));  // P24D
   if (mode() == 5) g.value = add32(g.value, 8);
 }
 
@@ -1659,6 +1663,45 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.root_terrain = saved_terrain;
 }
 
+// lang.selector(lang, open, hover) (P24D, app/lang_ui.h): the title menu's language dropdown on the root, before the menu's
+// refreshFull, in the look of the game's banners (loading.banner): drawFrameR3 boxes and drawTextSurface's white in the base banner
+// font g_font51b360. The closed box at (0x2a8, 4, 0x70, 0x20) names the current language (0 English, 1 Spanish) beside a small
+// down arrow; open = 1 adds the list box under it, one 0x18 row per language, the row `hover` in the text-frame gold. The
+// backend's fonts and the root text object are put back afterwards; nothing of the GameState is written.
+void b_lang_selector(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  g.ensure_root(ctx);
+  uint32_t fonts[4];
+  std::memcpy(fonts, g.fonts, sizeof(fonts));
+  TextObj &o = root_obj(g, ctx);
+  const TextObj saved = o;
+  const uint32_t root = g.root_va(ctx);
+  constexpr int32_t X = 0x2a8, Y = 4, W = 0x70, H = 0x20, R = 0x18;
+  static const char *const kName[2] = {"English", "Espa\xf1ol"};
+  const int32_t cur = a[0] == 1 ? 1 : 0;
+  auto arrow = [&](int32_t ax, int32_t ay, uint16_t c) {  // a down triangle 9 px wide, 5 rows, a dark shadow one row down
+    for (int pass = 0; pass < 2; ++pass)
+      for (int32_t r = 0; r < 5; ++r)
+        for (int32_t k = r; k < 9 - r; ++k) {
+          const int32_t px = ax + k, py = ay + r + (pass == 0 ? 1 : 0);
+          if (px >= 0 && py >= 0 && px < g.root.w && py < g.root.h)
+            g.root.px[static_cast<size_t>(py) * g.root.w + px] = pass == 0 ? 0x2108 : c;
+        }
+  };
+  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  call(g, ctx, "drawFrameR3", {u(X), u(Y), u(W), u(H), 1});
+  call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  text_surface(g, ctx, kName[cur], X + 0xa, Y + 8, 0x80007fffu);
+  arrow(X + W - 0x14, Y + 0xe, 0x7fff);
+  if (a[1] == 1) {
+    call(g, ctx, "drawFrameR3", {u(X), u(Y + H), u(W), u(2 * R), 1});
+    call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+    for (int32_t i = 0; i < 2; ++i)
+      text_surface(g, ctx, kName[i], X + 0xa, Y + H + R * i + 4, static_cast<int32_t>(a[2]) == i ? 0x80007fe7u : 0x80007fffu);
+  }
+  o = saved;
+  std::memcpy(g.fonts, fonts, sizeof(fonts));
+}
+
 // hover.terrain(cx, cy) (P11C, gfx.h gfx_set_hover_help): the frame code's call with the cursor point View_toLocal gave (P6's
 // frame words +0x68 / +0x58); draws only with the help on (the app's host), never writes the GameState
 void b_hover_terrain(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -1669,6 +1712,7 @@ void b_hover_terrain(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 
 const GfxBodyDef kBodies[] = {
     {"loading.banner", b_loading_banner},
+    {"lang.selector", b_lang_selector},  // P24D
     {"hover.terrain", b_hover_terrain},
     {"Widget_setQuad70", b_set_quad70},
     {"Widget_setQuad74", b_set_quad74},

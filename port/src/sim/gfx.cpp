@@ -494,6 +494,19 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
     return;
   }
   if (text.empty()) return;
+  // P24D: the text in the current language (a text at an address is redirected to its translation, so the provider measures
+  // the translation; a text the caller built is looked up as it is)
+  if (lang::language() != lang::kEnglish) {
+    if (va != 0) {
+      const uint32_t nva = lang::redirect(ctx, va);
+      if (nva != va && text == vstring(ctx.mem, va)) {
+        va = nva;
+        text = vstring(ctx.mem, va);
+      }
+    } else {
+      text = lang::tr(text);
+    }
+  }
   // roadmap S3.7: markup, tabs and run-palette colours are the text family's (gfx_text.cpp gfxt::draw_string)
   bool rich = !(colour & 0x80000000u);
   for (char c : text)
@@ -558,6 +571,7 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
       ts.frame = true;
     }
   }
+  lang::note("glyph", text, false);  // P24D: SG_LANG_DUMP's record of what reaches the provider
   if (!tm->draw_glyphs(ctx, font, text, x, y, ref, g.root.px.data(), g.root.w, g.root.h))
     g.unsup(std::string(who) + ": the provider cannot draw");
   const int32_t clip[4] = {0, 0, g.root.w, g.root.h};
@@ -1932,7 +1946,7 @@ static int32_t widget_value(Gfx &g, Ctx &ctx) {
 // colour 1 one pixel down) is the run palette's entry 1 as prim_text2 measured it (U-1230; U-1072 before roadmap S2.11).
 void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
   TextMetrics *tm = text_metrics(ctx);
-  const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+  const uint32_t buf = lang::redirect(ctx, state_va(ctx, &GameState::g_textBuffer));  // P24D: wrapped in the current language
   const Memory &m = ctx.mem;
   int32_t H = sub32(widget_value(g, ctx), 4);
   if (H < 10) H = 10;

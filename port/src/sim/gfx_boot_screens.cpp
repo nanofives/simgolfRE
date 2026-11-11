@@ -135,6 +135,7 @@ int32_t widget_value(Gfx &g, Ctx &ctx) {
 
 // drawMessageBuffer(cols, x, y, colour) over the NUL-terminated text at `src` (the bytes the original has in the text buffer)
 void draw_message(Gfx &g, Ctx &ctx, uint32_t src, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
+  src = lang::redirect(ctx, src);  // P24D: wrapped in the current language
   TextMetrics *tm = text_metrics(ctx);
   if (!tm) {
     g.unsup("showLoadingScreen.draw: no text provider");

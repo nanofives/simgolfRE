@@ -20,6 +20,7 @@
 #include <fstream>
 
 #include "gpu_world.h"  // P17B
+#include "lang_ui.h"    // P24D
 #include "pacing.h"
 #include "profile.h"  // P10A
 
@@ -30,6 +31,7 @@
 #include "portsim/sim/bridge.h"  // G32: the view block
 #include "portsim/sim/flic.h"
 #include "portsim/sim/gditext.h"  // P10A: the overlay's font (game_font)
+#include "portsim/sim/lang.h"  // P24D
 #include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P8B: gfx_back_terrain  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/util.h"  // P10E: distance (proj_tile)
@@ -513,6 +515,16 @@ void LiveSession::end_load(portsim::Ctx &ctx) {
   // the next load's bar is scaled by this one's pump count (the first by the Monterey load's, measured: P6B_notes.md item 2)
   load_expected_ = load_pumps_;
   if (opt_.loading_overlay && title_ever_) post_loading(ctx, 0);
+}
+
+// P24D (lang_ui.h): the language selector, drawn by the gfx body `lang.selector` on the root before the menu's refreshFull
+void LiveSession::title_menu_overlay(portsim::Ctx &ctx) {
+  LangUi &u = lang_ui();
+  title_mark_.store(rpoint_seq_.load());  // the next present is the title menu's own refreshFull (at_title)
+  if (!u.available.load()) return;
+  const uint32_t a[3] = {static_cast<uint32_t>(portsim::lang::language()), u.open.load() ? 1u : 0u,
+                         static_cast<uint32_t>(u.hover.load())};
+  portsim::gfx_drop(ctx, "lang.selector", a, 3);
 }
 
 // P6B item 1 (host.h request_close)
@@ -1809,6 +1821,18 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
     y = kExitIconY;
     return;
   }
+  // P24D: over the title menu's language selector the game's cursor is a point of no item (the bottom left corner), so no
+  // menu item lights under the selector or its open list
+  struct TitleGuard {
+    const LiveSession &s;
+    int32_t &x, &y;
+    ~TitleGuard() {
+      if (s.at_title() && lang_ui().covers(x, y)) {
+        x = 2;
+        y = 0x255;
+      }
+    }
+  } title_guard{*this, x, y};
   std::lock_guard<std::mutex> lk(mu_);
   if (opt_.cursor == CursorSource::Message) {
     // P12A fix 1: H1's edge-scroll read takes the message's point without the camera slide's move (the window's own edges); any
@@ -2170,6 +2194,7 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
 
 // S7.8 (U-1642): the frame code ran Window::refreshFull, where the original's back buffer reaches the window (host.h)
 void LiveSession::present_point(portsim::Ctx &ctx) {
+  rpoint_seq_.fetch_add(1);  // P24D (at_title)
   if (opt_.defect == HostDefect::NoPresentPoint) return;  // negative control: S7.5's present points only
   present(ctx, 'r');
   w_check_ = false;

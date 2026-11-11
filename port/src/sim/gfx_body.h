@@ -27,6 +27,7 @@
 
 #include "portsim/registry.h"
 #include "portsim/sim/gfx.h"
+#include "portsim/sim/lang.h"  // P24D: the display fetches translate (lang::redirect / lang::tr)
 
 namespace portsim {
 

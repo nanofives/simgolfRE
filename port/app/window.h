@@ -114,6 +114,9 @@ struct WindowOptions {
   // character and key-up messages are then never handed to the game. Null = both go to the game as before.
   std::function<void(int op)> on_undo_key;
   std::function<bool()> undo_context;
+  // P24D: a mouse move / left press / release at the game's logical point (x, y) goes here first; true = taken (the game and the
+  // recording never see it). Null = every mouse message goes to the game as before.
+  std::function<bool(uint32_t msg, int32_t x, int32_t y)> on_mouse;
   // P19A item 1: with the sim's play switch mainLoop.arrowKeyHeldRepeat on, a held arrow scrolls until its key-up; when the window
   // loses the focus with an arrow down (its key-up then goes to another window), a key-up of that arrow is handed to the game
   bool release_arrow_on_blur = false;

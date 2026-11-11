@@ -381,6 +381,15 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
     }
     default: break;
   }
+  if (opt_.on_mouse && (msg == WM_MOUSEMOVE || msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP || msg == WM_LBUTTONDBLCLK)) {
+    const Point p = Translator(viewport()).lparam_point(static_cast<uint32_t>(lp));  // P24D (WindowOptions::on_mouse)
+    if (opt_.on_mouse(static_cast<uint32_t>(msg), p.x, p.y)) {
+      // taken: the game gets a move to the client's corner instead (outside every title item, so none lights under the
+      // selector, and its menu pass runs and draws the selector's change)
+      input(WM_MOUSEMOVE, 0, 0);
+      return 0;
+    }
+  }
   if (is_input(msg)) {
     input(msg, static_cast<uint32_t>(wp), static_cast<uint32_t>(lp));
     if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) return DefWindowProcW(h, msg, wp, lp);  // Alt+F4

@@ -134,6 +134,9 @@ class LiveHost {
   virtual void present_point(Ctx &) {}
   // P6B: a pass of the title menu's hover loop ended (tick_hook.h LiveIo::title_menu_pass): a notification, no answer
   virtual void title_menu(Ctx &) {}
+  // P24D: the title menu's frame is drawn and its refreshFull is next (tick_hook.h LiveIo::title_menu_overlay): the host may
+  // draw over the root surface through the gfx backend (never the GameState)
+  virtual void title_menu_overlay(Ctx &) {}
   // whether a must_deliver decline is asked again (a host that waits for its player); false: the decline stands
   virtual bool blocking() const { return true; }
   // the core's write log (set by run_live before boot)

@@ -11,6 +11,8 @@ The folder is what a player PC keeps:
                               exes and driver, the RE shim (winmm.dll and its ini / log), dev logs, JPEG.lib and the
                               saved games of the dev PC.
   Play SimGolf.bat            starts the app on game\ (the updater also makes a "SimGolf (port)" shortcut)
+  game\Lang\simgolf_es.txt    P24D: the Spanish language pack, from the repo's gitignored lang\ folder when it is there (LAN
+                              build only: the public repo and github_release.py's zips never carry it)
   simgolf_update.ps1, update.bat   the updater (copies of the files beside this script)
   README.txt
   manifest.json               {label, generated, files: [{path, size, sha256, seed}]}
@@ -159,6 +161,13 @@ def main():
                 continue
             dst_rel = os.path.join("game", rel)
             place(src, os.path.join(out, dst_rel)); wanted.add(dst_rel)
+
+    # P24D: the language pack (game text, never in the repository: lang\ is gitignored) goes beside the game's own text files
+    pack = os.path.join(HERE, "..", "..", "lang", "simgolf_es.txt")
+    if os.path.isfile(pack):
+        dst_rel = os.path.join("game", "Lang", "simgolf_es.txt")
+        place(pack, os.path.join(out, dst_rel)); wanted.add(dst_rel)
+        print("[+] language pack: %s" % dst_rel)
 
     for f in CLIENT_FILES:
         place(os.path.join(HERE, f), os.path.join(out, f)); wanted.add(f)

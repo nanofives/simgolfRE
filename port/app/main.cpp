@@ -273,6 +273,8 @@
 #include "gpu_world.h"   // P17B
 #include "host.h"
 #include "input_map.h"
+#include "lang_ui.h"  // P24D
+#include "portsim/sim/lang.h"  // P24D: --selftest-p24d
 #include "pacing.h"
 #include "present.h"
 #include "profile.h"  // P10A
@@ -457,6 +459,7 @@ struct Options {
   bool selftest_p9b = false;  // P9B
   bool selftest_p9c = false;  // P9C
   bool selftest_p9d = false;  // P9D
+  bool selftest_p24d = false;  // P24D
   std::string text_res = "native";  // P9C: --text-res native|frame (SG_APP_P9C=off: frame)
   std::string text_aa = "system";   // P9C: --text-aa system|cleartype|grey
   bool text_unit_redraw = false;    // P9C: --text-unit-redraw (live-trace measurement)
@@ -1623,6 +1626,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       wo.undo_context = [&session]() { return session.in_frame_body(); };
     }
   }
+  if (lang_ui().available.load())  // P24D: the title menu's language selector takes its own clicks (lang_ui.h)
+    wo.on_mouse = [&session](uint32_t msg, int32_t x, int32_t y) { return session.at_title() && lang_ui().mouse(msg, x, y); };
   {  // P19A item 1: the focus-loss key-up only when the profile turns mainLoop.arrowKeyHeldRepeat on (0)
     const int d = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");
     wo.release_arrow_on_blur = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
@@ -3200,6 +3205,31 @@ void selftest_p9c(Tests &t, TextDefect td) {
   }
 }
 
+// P24D (lang_ui.h, portsim/sim/lang.h): the language pack's matcher on a synthetic pack (no game text). `p24d-mismatch` loads the
+// pattern row with its conversions swapped: the load count, the refusal count and the pattern rows read FAIL.
+void selftest_p24d(Tests &t, bool mismatch) {
+  namespace lang = portsim::lang;
+  const std::string pack = std::string("# comment\nAlpha\tAlfa\nBeta one\tBeta uno\nTotal: %d of %s\t") +
+                           (mismatch ? "%s de %d: Total" : "Total: %d de %s") +
+                           "\nSay %s.\tDile %s.\nPct %d%%\tPorc %d%%\nBad %s\tMal %d\nEsc\\tTab\tEsc\\tTab ES\nCaf\xC3\xA9\tCaf\xC3\xA9 ES\n";
+  std::vector<std::string> errors;
+  const int n = lang::load_pack(lang::kSpanish, pack, &errors);
+  t.add("p24d-load-counts", n == 7);
+  t.add("p24d-refuses-conversion-mismatch", errors.size() == 1u);
+  lang::set_language(lang::kEnglish);
+  t.add("p24d-english-unchanged", lang::tr("Alpha") == "Alpha");
+  lang::set_language(lang::kSpanish);
+  t.add("p24d-exact", lang::tr("Alpha") == "Alfa" && lang::tr("Beta one") == "Beta uno");
+  t.add("p24d-miss-unchanged", lang::tr("Gamma") == "Gamma");
+  t.add("p24d-trailing-blanks-kept", lang::tr("Alpha  ") == "Alfa  ");
+  t.add("p24d-pattern-number-text", lang::tr("Total: 1,250 of Hole 3") == "Total: 1,250 de Hole 3");
+  t.add("p24d-pattern-capture-translated", lang::tr("Say Alpha.") == "Dile Alfa.");
+  t.add("p24d-percent-literal", lang::tr("Pct 40%") == "Porc 40%");
+  t.add("p24d-escapes", lang::tr("Esc\tTab") == "Esc\tTab ES");
+  t.add("p24d-utf8-to-cp1252", lang::tr("Caf\xe9") == "Caf\xe9 ES" && lang::cp1252_to_utf8("Espa\xf1ol") == "Espa\xC3\xB1ol");
+  lang::set_language(lang::kEnglish);
+}
+
 int run_selftest(const Options &o) {
   Tests t;
   if (o.selftest_p5b) {
@@ -3222,6 +3252,10 @@ int run_selftest(const Options &o) {
     selftest_p9b(t, o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque
                     : o.negctl == "p9b-rect-move"  ? PresentDefect::LayerRectMove
                                                    : PresentDefect::None);
+    return t.print();
+  }
+  if (o.selftest_p24d) {  // P24D
+    selftest_p24d(t, o.negctl == "p24d-mismatch");
     return t.print();
   }
   if (o.selftest_p9d) {  // P9D
@@ -3408,6 +3442,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--selftest-p9b") o.selftest = o.selftest_p9b = true;  // P9B
     else if (a == "--selftest-p9c") o.selftest = o.selftest_p9c = true;  // P9C
     else if (a == "--selftest-p9d") o.selftest = o.selftest_p9d = true;  // P9D
+    else if (a == "--selftest-p24d") o.selftest = o.selftest_p24d = true;  // P24D
     else if (a == "--wide") {  // P7: a bare flag, or --wide on|off
       o.wide = true;
       if (i + 1 < argc && (!std::strcmp(argv[i + 1], "on") || !std::strcmp(argv[i + 1], "off"))) o.wide = !std::strcmp(argv[++i], "on");
@@ -3807,6 +3842,7 @@ int main(int argc, char **argv) {
   if (o.negctl == "saves-inside") sd = SavesDefect::AllowInsideInstall;
   AppFiles files(o.install, o.data, sd);
   files.set_newest_first(o.newest_saves);  // P23A item 2
+  lang_ui().startup(o.install, o.data);  // P24D: the language pack and the remembered language (lang_ui.h)
   if (!files.ok()) {
     std::fprintf(stderr, "saves overlay refused: %s\n", files.error().c_str());
     return 3;

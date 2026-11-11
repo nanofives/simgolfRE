@@ -61,3 +61,5 @@ re/fid/*.fidb
 # Downloaded third-party tarballs (the sources used are vendored in re/match/vendor/)
 tools/libsrc/
 instances/
+# P24D: language packs and their extracted English sources hold game text (the LAN build's stager ships them in game\Lang\)
+lang/

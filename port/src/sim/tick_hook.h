@@ -144,6 +144,9 @@ struct LiveIo {
   // P6B: one pass of the title menu's hover loop ran (ML+0x11a65..ML+0x11ca5). A notification only (it changes nothing):
   // the app learns that the title menu is on screen (trace runs have no LiveIo)
   virtual void title_menu_pass() {}
+  // P24D: the title menu's frame is drawn, its refreshFull comes next (ML+0x11ca5): the app may draw over the root surface
+  // (the language selector, lang_ui.h); nothing of the GameState is written
+  virtual void title_menu_overlay() {}
 };
 
 // What a converted body needs from the frame driver: the clock values of the frame and the asynchronous key state.
