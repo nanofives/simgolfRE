@@ -10,6 +10,11 @@ a point posted at client (x, y) reaches the app as (x, y).
 prints one JSON object: the app's READY facts, the posted messages, the module list and the capture's size.
 Library use (port/test/test_app_shell.py): launch(), App.capture(), App.post(), App.click(), App.key(), App.close(),
 modules(pid).
+
+The app's stderr (from the start) and stdout (after its READY line) are read on threads to their end and kept in the recording
+directory as stderr.txt / stdout.txt (App.stderr_path / App.stdout_path, App.stderr_text()): an unread pipe blocks the app once it is
+full (P23E fix 7: a run printing many P14 VERIFY lines stopped presenting and was ended by close()). app.proc.stderr / .stdout are
+then views of those threads' lines (readline, iteration, read), so a caller that drains them itself reads every line as before.
 """
 from __future__ import annotations
 
@@ -21,6 +26,7 @@ import os
 import pathlib
 import subprocess
 import sys
+import threading
 import time
 
 user32 = C.WinDLL("user32", use_last_error=True)
@@ -107,11 +113,117 @@ def modules(pid: int) -> list[str]:
         kernel32.CloseHandle(h)
 
 
+class _Drain:
+    """P23E fix 7: the only reader of one of the app's pipes: a thread reads it to its end and keeps every line, in memory and,
+    once keep() names a directory, in <dir>/<name> (closed when the pipe ends: the app exited). reader() gives the pipe's
+    readline / iteration / read to a caller (every line from the first, in order), so the drivers that drain app.proc.stderr /
+    .stdout themselves read the same text as before."""
+
+    def __init__(self, f, name: str):
+        self.f, self.name = f, name
+        self.cond = threading.Condition()
+        self.lines: list[str] = []
+        self.out = None
+        self.path: pathlib.Path | None = None
+        self.done = False
+        self.t = threading.Thread(target=self._run, name=f"app_drive {name}", daemon=True)
+        self.t.start()
+
+    def _run(self):
+        try:
+            for line in self.f:
+                with self.cond:
+                    self.lines.append(line)
+                    if self.out:
+                        self.out.write(line)
+                        self.out.flush()
+                    self.cond.notify_all()
+        except (OSError, ValueError):
+            pass
+        finally:
+            with self.cond:
+                self.done = True
+                if self.out:
+                    self.out.close()
+                    self.out = None
+                self.cond.notify_all()
+
+    def keep(self, d: pathlib.Path):
+        with self.cond:
+            try:
+                d.mkdir(parents=True, exist_ok=True)
+                self.path = d / self.name
+                out = open(self.path, "w", encoding="utf-8", errors="replace")
+            except OSError:
+                self.path = None
+                return
+            out.writelines(self.lines)
+            out.flush()
+            if self.done:
+                out.close()
+            else:
+                self.out = out
+
+    def text(self) -> str:
+        with self.cond:
+            return "".join(self.lines)
+
+    def join(self, timeout: float):
+        self.t.join(timeout)
+
+    def reader(self) -> "_DrainReader":
+        return _DrainReader(self)
+
+
+class _DrainReader:
+    """a pipe-like view of a _Drain (readline returns "" at the end, as a text pipe's does)"""
+
+    def __init__(self, d: _Drain):
+        self.d, self.pos = d, 0
+        self.closed = False
+
+    def readline(self) -> str:
+        with self.d.cond:
+            while self.pos >= len(self.d.lines) and not self.d.done:
+                self.d.cond.wait()
+            if self.pos >= len(self.d.lines):
+                return ""
+            self.pos += 1
+            return self.d.lines[self.pos - 1]
+
+    def __iter__(self):
+        return iter(self.readline, "")
+
+    def read(self) -> str:
+        with self.d.cond:
+            while not self.d.done:
+                self.d.cond.wait()
+            s = "".join(self.d.lines[self.pos:])
+            self.pos = len(self.d.lines)
+            return s
+
+    def close(self):
+        self.closed = True
+
+
 class App:
-    def __init__(self, proc: subprocess.Popen, ready: dict, lines: list[str]):
+    def __init__(self, proc: subprocess.Popen, ready: dict, lines: list[str], err: _Drain | None = None, out: _Drain | None = None):
         self.proc, self.ready, self.lines = proc, ready, lines
         self.hwnd = ready["hwnd"]
         self.posted: list[tuple[int, int, int]] = []
+        self._err, self._out = err, out  # P23E fix 7
+
+    @property
+    def stderr_path(self) -> pathlib.Path | None:
+        return self._err.path if self._err else None
+
+    @property
+    def stdout_path(self) -> pathlib.Path | None:
+        return self._out.path if self._out else None
+
+    def stderr_text(self) -> str:
+        """the app's stderr so far (the tail, when it is long; the whole of it is in stderr_path)"""
+        return self._err.text() if self._err else ""
 
     @property
     def record(self) -> pathlib.Path:
@@ -187,10 +299,14 @@ class App:
         if self.proc.poll() is None and user32.IsWindow(self.hwnd):
             user32.PostMessageW(self.hwnd, WM_CLOSE, 0, 0)
         try:
-            return self.proc.wait(timeout)
+            rc = self.proc.wait(timeout)
         except subprocess.TimeoutExpired:
-            self.proc.kill()
-            return self.proc.wait(10)
+            self.proc.kill()  # (TerminateProcess(handle, 1): a killed app's code is 1)
+            rc = self.proc.wait(10)
+        for d in (self._err, self._out):  # P23E fix 7: the pipes' last lines, and their files closed before a caller removes them
+            if d:
+                d.join(5.0)
+        return rc
 
 
 def matched(posted: list[tuple[int, int, int]], events: list[dict]) -> int:
@@ -207,20 +323,28 @@ def launch(exe, args: list[str], cwd=None, timeout: float = 300.0) -> App:
     """Starts the app (no console window) and waits for its READY line: hwnd, client size, dpi, recording directory."""
     proc = subprocess.Popen([str(pathlib.Path(exe).resolve()), *args], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
                             creationflags=CREATE_NO_WINDOW | priority_flags())
+    err = _Drain(proc.stderr, "stderr.txt")  # P23E fix 7: read from the start, kept in the recording directory once it is known
     lines: list[str] = []
     end = time.time() + timeout
     while time.time() < end:
         line = proc.stdout.readline()
         if not line:
             if proc.poll() is not None:
-                raise RuntimeError(f"app exited {proc.returncode}: {proc.stderr.read()[-2000:]}")
+                err.join(5.0)
+                raise RuntimeError(f"app exited {proc.returncode}: {err.text()[-2000:]}")
             continue
         lines.append(line.rstrip())
         if line.startswith("READY "):
             f = dict(kv.split("=", 1) for kv in line.split()[1:])
             cw, ch = (int(v) for v in f["client"].split("x"))
             ready = {"hwnd": int(f["hwnd"], 16), "client": (cw, ch), "dpi": int(f["dpi"]), "record": f["record"]}
-            return App(proc, ready, lines)
+            out = _Drain(proc.stdout, "stdout.txt")  # P23E fix 7: the rest of stdout, read too
+            proc.stdout = out.reader()  # (the drivers that drain app.proc.stdout / .stderr read these views)
+            proc.stderr = err.reader()
+            if ready["record"]:
+                err.keep(pathlib.Path(ready["record"]))
+                out.keep(pathlib.Path(ready["record"]))
+            return App(proc, ready, lines, err, out)
     proc.kill()
     raise TimeoutError("no READY line from the app")
 
