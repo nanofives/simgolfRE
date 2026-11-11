@@ -4773,18 +4773,25 @@ void P4_ballLabelDraw(u32 F) {
     int h = (w + 8) / 2;                                                      // ML+0x71ef / ML+0x71f2 / ML+0x71f5 / ML+0x71f7
     int edi = ecx + 5;                                                        // ML+0x71f9
     ecx = FD(0x140);                                                          // ML+0x71fc
-    cc("drawMapLine", ecx - h, edi, h + ecx, edi, (int)0x80000000, 0xa, 5);      // drawMapLine ML+0x7215
-    int y = FD(0x130);                                                        // ML+0x721a
-    int s = G32(GS(g_halfBrightLut));                                                  // ML+0x7221
-    int x = FD(0x140) + 4;                                                    // ML+0x7227 / ML+0x7233
-    y = y - esi + 0xa;                                                        // ML+0x7231 / ML+0x723c
-    tc("Surface_drawScaled2", GS(g_sprite5a4100), Root(), x, y, s, 1, 1, 1, 0);                  // Surface_drawScaled2 ML+0x724f
+    {
+        GfxBubbleScope bubble_scope(ctx);  // P23D fix 7 (gfx.h GfxBubbleScope): the banner's bar and pointer in the wide scene too (fix 4's path)
+        cc("drawMapLine", ecx - h, edi, h + ecx, edi, (int)0x80000000, 0xa, 5);      // drawMapLine ML+0x7215
+        int y = FD(0x130);                                                        // ML+0x721a
+        int s = G32(GS(g_halfBrightLut));                                                  // ML+0x7221
+        int x = FD(0x140) + 4;                                                    // ML+0x7227 / ML+0x7233
+        y = y - esi + 0xa;                                                        // ML+0x7231 / ML+0x723c
+        tc("Surface_drawScaled2", GS(g_sprite5a4100), Root(), x, y, s, 1, 1, 1, 0);                  // Surface_drawScaled2 ML+0x724f
+    }
     cc("drawCenteredText", (int)kBuf, FD(0x140), FD(0x130) - esi, (int)0x80007FFF);   // drawCenteredText ML+0x7270
 }
 
 void P4_ballLabel(u32 F) {
-    if (G32(GS(g_difficulty)) != 0) return;                                         // ML+0x6d45 / ML+0x6d4c
-    if (G32(GS(g_date)) >= 0x2000) return;                                    // ML+0x6d52 / ML+0x6d5c
+    // P23D fix 7 (development, the pictures of the banner): SG_P23_BALL_LABEL=1 skips the difficulty and date gates below and takes the
+    // first arm's date-flag test as set, so Gary Golf's banner shows on a course without a hole at any difficulty or date. It changes
+    // branch decisions only (the branch it opens fills the text buffer, as the game's own does); unset in normal runs.
+    static const int ball_mode = std::getenv("SG_P23_BALL_LABEL") ? std::atoi(std::getenv("SG_P23_BALL_LABEL")) : 0;
+    if (G32(GS(g_difficulty)) != 0 && ball_mode == 0) return;                       // ML+0x6d45 / ML+0x6d4c
+    if (G32(GS(g_date)) >= 0x2000 && ball_mode == 0) return;                  // ML+0x6d52 / ML+0x6d5c
     if (GU8((GS(g_walkers) + 18)) == 0) return;                                         // ML+0x6d62 / ML+0x6d69
     if (GU8((GS(g_walkers) + 19)) != 0xfa) return;                                      // ML+0x6d6f / ML+0x6d76
     if (GU8((GS(g_walkers) + 21)) != 0) return;                                         // ML+0x6d7c / ML+0x6d83
@@ -4806,7 +4813,7 @@ void P4_ballLabel(u32 F) {
             if (G32(GS(g_panelListMode)) != 0)                                         // ML+0x6ea7 / ML+0x6eae
                 StrCpy(kBuf, (GS(f_strpool_4c64a8) + 856));                                     // ML+0x6eb0..ML+0x6ed3
         }
-        if ((bl & 0x18) != 0) {                                               // ML+0x6ed5 / ML+0x6ed8 jne ML+0x71a0
+        if ((bl & 0x18) != 0 || ball_mode != 0) {                             // ML+0x6ed5 / ML+0x6ed8 jne ML+0x71a0 (P23D fix 7 staging)
             P4_ballLabelDraw(F);
             return;
         }

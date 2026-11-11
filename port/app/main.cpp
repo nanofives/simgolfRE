@@ -112,7 +112,9 @@
 //   SG_P23_GROUND_LOG=<file> (development) appends one line per queued mark: queue number, x0 y0 x1 y1 (800-space), word, 1 past the edge.
 //   P23D fix 3: --wide-bubbles on|off (default on; SG_APP_P23=off: off; needs the world layer and its hr plane) the comment
 //   bubbles the frame draws after the sprite queue (the staff walkers' six-piece bubble; P23D fix 4: the golfers' panel bar and pointer) go into the wide scene's hr plane too, so
-//   they show whole across the 800 frame's edge and in the side columns (gfx.h gfx_set_wide_bubbles; drawing only).
+//   they show whole across the 800 frame's edge and in the side columns (gfx.h gfx_set_wide_bubbles; drawing only). P23D fix 7: the
+//   same for Gary Golf's banner (P4_ballLabelDraw's bar and pointer); SG_P23_BALL_LABEL=1 (development) shows that banner on any
+//   course without a hole (the difficulty and date gates skipped).
 //   P22D fix 3: --meter-tips on|off (default on; SG_APP_P22=off: off) the cash, fun rating and skill rating boxes show their name
 //   as the game's one-line tip after the HUD tips' dwell (gfx.h gfx_set_meter_tips; drawing only)
 //   P22D fix 2: --golfer-list wide|four (default wide; SG_APP_P22=off: four) the golfer list gets as many more columns right of its
