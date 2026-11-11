@@ -428,6 +428,9 @@ void b_widget_fill_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
                             g.root.px.begin() + static_cast<ptrdiff_t>(y) * g.root.w + touch.xe + 1);
   }
   line16(g.root, c, x1, y1, x2, y2, static_cast<uint16_t>(a[5] & 0xffffu));
+  if (g.hud.ground_depth > 0 && (x1 == x2 || y1 == y2))   // P23D fix 6: the golfer-target mark (ML+0x608d), an axis line = a rectangle
+    g.hud.ground.push_back({std::min(x1, x2), std::min(y1, y2), std::max(x1, x2) + 1, std::max(y1, y2) + 1,
+                            static_cast<uint16_t>(a[5] & 0xffffu)});
   if (grid) overlay::root_line_world(g, ctx, x1, y1, x2, y2, a[5], touch);
 }
 

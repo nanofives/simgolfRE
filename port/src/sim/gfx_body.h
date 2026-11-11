@@ -165,6 +165,14 @@ class Gfx {
     std::vector<uint8_t> cursor2d;    // P9E fix 4: the root pixels their sprite draws changed (cleared at the queue's start)
     bool lines_on = false;            // P10I fix 1 (gfx.h gfx_set_hud_lines): the tee lines of the cursor passes are recorded
     int bubble_depth = 0;             // P23D fix 3 (gfx.h GfxBubbleScope): inside the frame code's comment bubbles
+    // P23D fix 6 (gfx.h GfxGroundScope): inside the frame code's ground marks drawn before the queue; their rectangles (800-space,
+    // [x0, x1) x [y0, y1), the word) wait for renderSpriteQueue's start
+    int ground_depth = 0;
+    struct GroundRect {
+      int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+      uint16_t word = 0;
+    };
+    std::vector<GroundRect> ground;
     bool edge_on = false;             // P22E item 7 (gfx.h gfx_set_hud_edge): the placement box's edges too, and the edge-cut texts
     bool edge_frame = false;          // P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course too
     int32_t wide_e = 0;               // P23F fix 2: the wide scene's side columns (800-space) at this frame's queue (0: none)

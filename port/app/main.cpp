@@ -106,6 +106,10 @@
 //   (mainLoop's grid overlay, lines on the 800 root) is drawn on the wide view's world layer too, so it covers the side columns
 //   (gfx.h gfx_set_wide_grid; drawing only). A frame whose grid equals the last one's keeps the world picture as it is (no back
 //   restore, no line drawn). off = the grid stops at the 800 frame's edge, as the original's screen ends there.
+//   P23D fix 6: --wide-ground on|off (default on; SG_APP_P23=off: off; needs the world layer's hr plane) the ground marks the frame
+//   draws before the sprite queue (the golfer ball records' rectangles, the golfer-target mark) go into the hr plane as the queue's
+//   first draws, so they run past the 800 frame's edge under the sprites (gfx.h gfx_set_wide_ground; drawing only).
+//   SG_P23_GROUND_LOG=<file> (development) appends one line per queued mark: queue number, x0 y0 x1 y1 (800-space), word, 1 past the edge.
 //   P23D fix 3: --wide-bubbles on|off (default on; SG_APP_P23=off: off; needs the world layer and its hr plane) the comment
 //   bubbles the frame draws after the sprite queue (the staff walkers' six-piece bubble; P23D fix 4: the golfers' panel bar and pointer) go into the wide scene's hr plane too, so
 //   they show whole across the 800 frame's edge and in the side columns (gfx.h gfx_set_wide_bubbles; drawing only).
@@ -503,6 +507,7 @@ struct Options {
   bool trail_glide = true;         // P22C fix 3: --trail-glide on|off (SG_APP_P22=off: off)
   bool wide_grid = true;           // P23D fix 1: --wide-grid on|off (SG_APP_P23=off: off)
   bool wide_bubbles = true;        // P23D fix 3: --wide-bubbles on|off (SG_APP_P23=off: off)
+  bool wide_ground = true;         // P23D fix 6: --wide-ground on|off (SG_APP_P23=off: off)
   bool newest_saves = true;        // P23A item 2: --newest-saves on|off (SG_APP_P23=off: off) the load browser lists the newest save first
   bool edge_texts = true;          // P23F fix 1: --edge-texts on|off (SG_APP_P23=off: off) frame texts the 800 frame's edge cut drawn whole
   bool strip_right = true;         // P13C item 10: --hud-strip right|left (SG_APP_P13=off: left)
@@ -1537,6 +1542,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   portsim::gfx_set_hr_scene(ho.smooth_objects);
   portsim::gfx_set_trail_glide(ho.smooth_objects && o.trail_glide);  // P22C fix 3 (the moving objects draw the trail lines)
   portsim::gfx_set_wide_grid(ho.world && o.wide_grid);  // P23D fix 1 (the grid on the world layer)
+  portsim::gfx_set_wide_ground(ho.world && o.wide_ground);  // P23D fix 6 (the ground marks drawn before the queue, in hr)
   portsim::gfx_set_wide_bubbles(ho.world && o.wide_bubbles);  // P23D fix 3 (the comment bubbles in the wide scene's hr plane)
   ho.world_thread = o.world_thread && ho.world;  // P15A (the hr work recorded for it only with a world layer)
   portsim::gfx_set_hr_defer(ho.world_thread);
@@ -2121,7 +2127,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     portsim::gfx_wide_grid_stats(kept, drawn, mismatch);
     uint64_t checked = 0, check_px = 0;
     portsim::gfx_wide_grid_check(checked, check_px);
-    s += ",\"p23d\":{\"wide_grid\":" + std::to_string(portsim::gfx_wide_grid() ? 1 : 0) + ",\"wide_bubbles\":" +
+    uint64_t gq = 0, gp = 0;   // P23D fix 6
+    portsim::gfx_wide_ground_stats(gq, gp);
+    s += ",\"p23d\":{\"ground_queued\":" + std::to_string(gq) + ",\"ground_past_edge\":" + std::to_string(gp) +
+         ",\"wide_grid\":" + std::to_string(portsim::gfx_wide_grid() ? 1 : 0) + ",\"wide_bubbles\":" +
          std::to_string(portsim::gfx_wide_bubbles() ? 1 : 0) + ",\"kept\":" + std::to_string(kept) +
          ",\"drawn\":" + std::to_string(drawn) + ",\"mismatch\":" + std::to_string(mismatch) + ",\"checked\":" +
          std::to_string(checked) + ",\"check_px\":" + std::to_string(check_px) + "}";
@@ -3448,6 +3457,10 @@ bool parse(int argc, char **argv, Options &o) {
       o.strip_right = v != "left";
       o.strip_near = v == "near";
     }
+    else if (a == "--wide-ground") {  // P23D fix 6
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.wide_ground = v == "on";
+    }
     else if (a == "--wide-bubbles") {  // P23D fix 3
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wide_bubbles = v == "on";
@@ -3733,6 +3746,7 @@ int main(int argc, char **argv) {
       o.edge_texts = false;    // P23F fix 1
       o.wide_grid = false;  // P23D fix 1
       o.wide_bubbles = false;  // P23D fix 3
+      o.wide_ground = false;  // P23D fix 6
       o.line_tiles = false;  // P23E fix 1
       o.wide_lines = false;  // P23E fix 2
     }

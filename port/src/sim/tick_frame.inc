@@ -4222,7 +4222,7 @@ stk[--sp] = (int)(edx); // ML+0x6085  push edx
 stk[--sp] = (int)(eax); // ML+0x6086  push eax
 stk[--sp] = (int)(ecx); // ML+0x6087  push ecx
 ecx = (GS(g_rootWindow) + 628); // ML+0x6088  mov ecx, g_rootWindow+0x274
-eax = tc("Widget_fillRect", ecx, stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4]); sp += 5; // Widget_fillRect  ML+0x608d
+{ GfxGroundScope ground_scope(ctx); eax = tc("Widget_fillRect", ecx, stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4]); } sp += 5; // Widget_fillRect  ML+0x608d (P23D fix 6: in GfxGroundScope)
 esi = G32(GS(f_w_4c2e00)); // ML+0x6092  mov esi, dword ptr [f_w_4c2e00]
 ecx = FD(0x70); // ML+0x6098  mov ecx, dword ptr [F+0x70]
 La_41565c:;
@@ -5248,7 +5248,7 @@ void P4_holeHud(u32 F) {
 // ---------------------------------------------------------------------------------------------------------------
 // entry: ML+0x6287..ML+0x8032, the phases in the original's order; falls through to ML+0x8032.
 void Ph_00415847(u32 F) {
-    P4_records5736b8(F);        // ML+0x6287..ML+0x63ae
+    { GfxGroundScope ground_scope(ctx); P4_records5736b8(F); }   // ML+0x6287..ML+0x63ae (P23D fix 6: the ground marks)
     P4_flyingBall(F);           // ML+0x63ae..ML+0x6437
     P4_selectedSprite(F);       // ML+0x6437..ML+0x6484
     P4_markerCircle(F);         // ML+0x6484..ML+0x64b7

@@ -2575,6 +2575,47 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
   std::swap(g.root, wide);
   wide.px.swap(w.scene);
 }
+// P23D fix 6 (gfx.h gfx_set_wide_ground): the frame's ground marks kept since the last queue, queued into hr before any queue entry
+// (DrawBOp over a one-colour art of each rectangle at scale 1, no mover source), the root pixels still holding their word marked
+std::atomic<uint64_t> g_ground_queued{0}, g_ground_past{0};   // P23D fix 6: rectangles queued into hr, of them past the root's edge
+void ground_flush(Gfx &g, LiveTerrainWorld &w) {
+  static std::FILE *glog = std::getenv("SG_P23_GROUND_LOG") ? std::fopen(std::getenv("SG_P23_GROUND_LOG"), "a") : nullptr;   // development
+  static uint32_t queue_n = 0;
+  ++queue_n;
+  std::vector<Gfx::HudCapture::GroundRect> list;
+  list.swap(g.hud.ground);
+  if (list.empty() || !gfx_wide_ground() || !w.hr_open || w.scene_w <= 0 || mode() != 0) return;
+  if (w.bub800.size() != g.root.px.size()) w.bub800.assign(g.root.px.size(), 0);
+  if (w.bub_word.size() != g.root.px.size()) w.bub_word.assign(g.root.px.size(), 0);
+  const GfxMoverSrc keep = g_draw_src;
+  g_draw_src = GfxMoverSrc{};
+  for (const Gfx::HudCapture::GroundRect &r : list) {
+    if (r.x1 <= r.x0 || r.y1 <= r.y0) continue;
+    for (int32_t y = std::max(r.y0, 0); y < std::min(r.y1, 600); ++y)
+      for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, 800); ++x) {
+        const size_t i = static_cast<size_t>(y) * 800 + static_cast<size_t>(x);
+        if (g.root.px[i] != r.word) continue;   // covered since by a later mark of another colour
+        w.bub800[i] = 1;
+        w.bub_word[i] = r.word;
+      }
+    Sprite8 s;
+    s.w = r.x1 - r.x0;
+    s.h = r.y1 - r.y0;
+    s.px.assign(static_cast<size_t>(s.w) * static_cast<size_t>(s.h), 0);
+    s.pal.fill(0);
+    s.pal[0] = r.word;
+    DrawBOp op{s.pal.data()};
+    hr_blit(w, s, add32(r.x0, w.scene_e), r.y0, Scale{1, 1, 1}, op);
+    g_ground_queued.fetch_add(1, std::memory_order_relaxed);
+    const bool past = r.x0 < 0 || r.x1 > 800;
+    if (past) g_ground_past.fetch_add(1, std::memory_order_relaxed);
+    if (glog) {   // every rectangle; the last column is 1 past the root's edge
+      std::fprintf(glog, "%u %d %d %d %d %04x %d\n", queue_n, r.x0, r.y0, r.x1, r.y1, r.word, past ? 1 : 0);
+      std::fflush(glog);
+    }
+  }
+  g_draw_src = keep;
+}
 // renderSpriteQueue's start: the wide surface's base
 void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g_queue_walk = true;  // P22C item 6
@@ -2593,6 +2634,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (w) w->lines_open = false;  // P13D item 7: the overlay lines drawn before the queue went on the world layer too
   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
     if (w) w->scene_w = 0;
+    g.hud.ground.clear();  // P23D fix 6
     return;
   }
   const int32_t E = w->ox > 0 ? static_cast<int32_t>((static_cast<int64_t>(w->ox) * 800 + w->fw - 1) / w->fw) : 0;
@@ -2729,6 +2771,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   }
   w->tag_pre.clear();
   w->hr_prep_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hr_t0).count();
+  ground_flush(g, *w);  // P23D fix 6: the ground marks drawn before the queue, as its first hr commands
 }
 // P10D fix 1: f() draws on the wide scene (inside on_wide) with every word it writes tagged `val`; with `hr` the blitter
 // skeleton also draws into that world's hr plane
@@ -3910,6 +3953,21 @@ std::atomic<bool> g_wide_bubbles{false};
 }
 void gfx_set_wide_bubbles(bool on) { g_wide_bubbles.store(on, std::memory_order_relaxed); }
 bool gfx_wide_bubbles() { return g_wide_bubbles.load(std::memory_order_relaxed); }
+namespace {
+std::atomic<bool> g_wide_ground{false};   // P23D fix 6
+}
+void gfx_set_wide_ground(bool on) { g_wide_ground.store(on, std::memory_order_relaxed); }
+bool gfx_wide_ground() { return g_wide_ground.load(std::memory_order_relaxed); }
+void gfx_wide_ground_stats(uint64_t &queued, uint64_t &past) {
+  queued = g_ground_queued.load(std::memory_order_relaxed);
+  past = g_ground_past.load(std::memory_order_relaxed);
+}
+void gfx_ground_begin(Ctx &ctx) {
+  if (Gfx *g = gfx(ctx)) ++g->hud.ground_depth;
+}
+void gfx_ground_end(Ctx &ctx) {
+  if (Gfx *g = gfx(ctx)) g->hud.ground_depth = g->hud.ground_depth > 0 ? g->hud.ground_depth - 1 : 0;
+}
 void gfx_bubble_begin(Ctx &ctx) {
   if (Gfx *g = gfx(ctx)) ++g->hud.bubble_depth;
 }

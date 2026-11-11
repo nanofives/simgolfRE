@@ -360,6 +360,31 @@ struct GfxBubbleScope {
   GfxBubbleScope &operator=(const GfxBubbleScope &) = delete;
 };
 
+// P23D fix 6 (app option --wide-ground, log/roadmap/P23/P23D_notes.md): RENDER-ONLY. The ground marks the frame draws BEFORE the
+// sprite queue (P4_records5736b8's three fillWindowRect at mainLoop ML+0x62f0 / ML+0x6350 / ML+0x639a, the golfer-target mark
+// Widget_fillRect ML+0x608d; inside GfxGroundScope) are kept as rectangles and, at renderSpriteQueue's start, queued into the wide
+// scene's hr plane as its first commands (under every queue sprite, as in the root), with the root pixels they left marked
+// (LiveTerrainWorld::bub800 / bub_word) so inside the frame the world image shows them. Off (the default): the 800 root only.
+void gfx_set_wide_ground(bool on);
+bool gfx_wide_ground();
+void gfx_wide_ground_stats(uint64_t &queued, uint64_t &past);   // rectangles queued into hr so far, and of them past the root's edge
+void gfx_ground_begin(Ctx &c);
+void gfx_ground_end(Ctx &c);
+struct GfxGroundScope {
+  Ctx *ctx = nullptr;
+  explicit GfxGroundScope(Ctx &c) {
+    if (gfx_wide_ground()) {
+      ctx = &c;
+      gfx_ground_begin(c);
+    }
+  }
+  ~GfxGroundScope() {
+    if (ctx) gfx_ground_end(*ctx);
+  }
+  GfxGroundScope(const GfxGroundScope &) = delete;
+  GfxGroundScope &operator=(const GfxGroundScope &) = delete;
+};
+
 // ------------------------------------------------------------------------------------------------ P9C: text runs
 // Text at the window's resolution (log/roadmap/P9/P9C_notes.md). Every text the backend draws reaches the screen through one
 // call, the provider's TextMetrics::draw_glyphs (jgld's TextOutA: draw_text_string, the text family's run drawer for the root
