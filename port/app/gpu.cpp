@@ -345,6 +345,40 @@ uint hud(int X, int Y) {
 float4 PSHud(float4 pos : SV_Position) : SV_Target { return unpack(hud((int)pos.x, (int)pos.y)); }
 float4 PSFull(float4 pos : SV_Position) : SV_Target { return unpack(tfull.Load(int3((int)pos.x, (int)pos.y, 0))); }
 
+// P24C fix 2b: the course text runs (the wide scene's world runs, then the base's: draw_runs' -3 then -1) as tables over the course
+// picture (tcourse = a copy of the course target), each at its offset (a golfer label's mover offset) and the slide, clipped to the
+// course picture's rectangle at offset 0 (course_span, as build_course_patches clamped its patches). The runs of a pixel come from
+// its 64 x 64 tile's list, in draw order; each run's word per channel from its entry at that channel's level (text_runs' rule).
+struct CRun { int x0, y0, x1, y1, ibase, dx, dy, pad0; };
+StructuredBuffer<CRun> cruns : register(t25);
+StructuredBuffer<uint> cidx : register(t26);
+StructuredBuffer<uint> clut : register(t27);
+StructuredBuffer<uint2> ctile : register(t28);
+StructuredBuffer<uint> clist : register(t29);
+cbuffer CTCB : register(b3) { int ct_tw, ct_th, ct_x0, ct_y0, ct_x1, ct_y1, ct_sx0, ct_sy0, ct_sx1, ct_sy1, ctp0, ctp1; };
+uint clutw(uint e, uint L) { uint w = clut[e * 16u + (L >> 1)]; return (L & 1u) != 0 ? (w >> 16) : (w & 0xffffu); }
+uint PSCText(float4 pos : SV_Position) : SV_Target {
+  int X = (int)pos.x, Y = (int)pos.y;
+  uint d = tcourse.Load(int3(X, Y, 0));
+  if (X < ct_x0 || X >= ct_x1 || Y < ct_y0 || Y >= ct_y1) return d;
+  int px = X - slx, py = Y - sly;  // the course picture at offset 0
+  if (px < ct_sx0 || px >= ct_sx1 || py < ct_sy0 || py >= ct_sy1) return d;
+  int tx = X >> 6, ty = Y >> 6;
+  if (tx >= ct_tw || ty >= ct_th) return d;
+  uint2 T = ctile[ty * ct_tw + tx];
+  [loop] for (uint k = 0; k < T.y; ++k) {
+    CRun R = cruns[clist[T.x + k]];
+    int x = px - R.dx, y = py - R.dy;
+    if (x < R.x0 || x >= R.x1 || y < R.y0 || y >= R.y1) continue;
+    uint e = cidx[R.ibase + (y - R.y0) * (R.x1 - R.x0) + (x - R.x0)];
+    if (e == 0) continue;
+    uint w = to555(d);
+    uint v = (clutw(e - 1u, (w >> 10) & 31u) & 0x7c00u) | (clutw(e - 1u, (w >> 5) & 31u) & 0x03e0u) | (clutw(e - 1u, w & 31u) & 0x001fu);
+    if (v != w) d = bgra(v);
+  }
+  return d;
+}
+
 // ---- patches: atlas rectangles drawn at (dx + qox, dy + qoy)
 struct QV {
   float4 pos : SV_Position;
@@ -623,6 +657,13 @@ struct LayerRec {
 struct TextCB {  // P15B (HLSL TCB)
   int32_t ov_on, ov_li, ov_x0, ov_x1, ov_y0, ov_y1, pad0, pad1;
 };
+struct CTextCB {  // P24C fix 2b (HLSL CTCB)
+  int32_t tw, th, x0, y0, x1, y1, sx0, sy0, sx1, sy1, pad0, pad1;
+};
+static_assert(sizeof(CTextCB) % 16 == 0, "cbuffer rows");
+struct CRunRec {  // P24C fix 2b (HLSL CRun)
+  int32_t x0, y0, x1, y1, ibase, dx, dy, pad0;
+};
 struct QuadRec {
   int32_t dx, dy, w, h, sx, sy, p0, p1;
 };
@@ -718,6 +759,7 @@ struct GpuCompositor::Impl {
   ID3D11RenderTargetView *bb_rtv = nullptr;
   ID3D11VertexShader *vs_full = nullptr, *vs_quad = nullptr;
   ID3D11PixelShader *ps_course = nullptr, *ps_hud = nullptr, *ps_full = nullptr, *ps_quad_u = nullptr, *ps_quad_f = nullptr;
+  ID3D11PixelShader *ps_ctext = nullptr;  // P24C fix 2b
   ID3D11Buffer *cb = nullptr, *qcb = nullptr;
   ID3D11RasterizerState *rs = nullptr;
   int32_t w = 0, h = 0;  // the swap chain's size
@@ -900,6 +942,28 @@ struct GpuCompositor::Impl {
   SBuf tlay, truns, tidx, tlut;
   uint64_t text_sets = 0, text_tables_made = 0, text_tables_reused = 0, text_runs_tabled = 0, text_entries = 0;
   int64_t ns_text = 0;
+  // P24C fix 2b (log/roadmap/P24/P24C_notes.md): the course text runs (layers -3 and -1, golfer labels included) as tables the course
+  // text pass applies over the course picture (build_course_tables at each new frame or client, course_text at every paint: the labels'
+  // mover offsets, the tiles). Before, build_course_patches rendered every course run on the CPU again at every object tick (5 ms a
+  // paint on his 41-golfer course at 2560 x 1351). Development: SG_P24C_CTABLES=0 keeps P14A's course patches for every run.
+  bool ct_on = true;
+  std::string ct_key;
+  std::vector<uint8_t> ctabled;  // per run of the text frame: drawn by its course table (no course patch)
+  struct CTab {
+    size_t run = 0;
+    bool mover = false;
+    TextTable t;  // (a copy: the HUD tables' pruning may drop the cache entry)
+    int32_t ibase = 0;
+  };
+  std::vector<CTab> ctabs;     // in draw order (the -3 runs, then the -1 runs)
+  bool ct_upload = false;      // cidx / clut stale
+  int32_t ct_n = 0;            // runs bound for the pass (0 = no pass)
+  std::vector<Rect> ct_boxes;  // the last paint's run boxes (client, offsets and slide included)
+  SBuf cruns, cidx, clut, ctile, clist;
+  ID3D11Buffer *ctcb = nullptr;
+  Tex course2;                 // the course picture the pass reads
+  uint64_t ct_builds = 0, ct_runs = 0, ct_entries = 0, ct_passes = 0;
+  int64_t ns_ct = 0;
 };
 
 namespace {
@@ -1000,6 +1064,9 @@ void GpuCompositor::stop() {
   d.obj_live = false;
   d.oprev.clear();
   for (SBuf *s : {&d.tlay, &d.truns, &d.tidx, &d.tlut}) s->reset();  // P15B (the table cache is CPU data: kept)
+  for (SBuf *s : {&d.cruns, &d.cidx, &d.clut, &d.ctile, &d.clist}) s->reset();  // P24C fix 2b
+  d.course2.reset();
+  d.ct_upload = true;
   d.tset_key.clear();
   d.tbound = false;
   rel(d.stage_bb);
@@ -1015,6 +1082,8 @@ void GpuCompositor::stop() {
   rel(d.ps_full);
   rel(d.ps_quad_u);
   rel(d.ps_quad_f);
+  rel(d.ps_ctext);  // P24C fix 2b
+  rel(d.ctcb);
   rel(d.cb);
   rel(d.qcb);
   rel(d.tcb);  // P15B
@@ -1047,6 +1116,7 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   stop();
   d.hwnd = static_cast<HWND>(hwnd);
   if (const char *e = std::getenv("SG_P14_VERIFY")) d.verify_every = std::max(0, std::atoi(e));
+  if (const char *e = std::getenv("SG_P24C_CTABLES")) d.ct_on = e[0] != '0';  // P24C fix 2b (development)
   if (const char *e = std::getenv("SG_P14_VERIFY_DIR")) d.verify_dir = e;
   if (const char *e = std::getenv("SG_P15_OBJCHECK")) d.obj_check = std::max(0, std::atoi(e));  // P15C
   auto fail = [&](const std::string &w) {
@@ -1152,7 +1222,7 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
     const char *entry;
     ID3D11PixelShader **ps;
   } pss[] = {{"PSCourse", &d.ps_course}, {"PSHud", &d.ps_hud}, {"PSFull", &d.ps_full}, {"PSQuadU", &d.ps_quad_u},
-             {"PSQuadF", &d.ps_quad_f}};
+             {"PSQuadF", &d.ps_quad_f}, {"PSCText", &d.ps_ctext}};
   for (const PsDef &p : pss) {
     ID3DBlob *b = nullptr;
     if (!blob(p.entry, "ps_5_0", b)) return fail(d.why);
@@ -1176,6 +1246,8 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   if (FAILED(d.dev->CreateBuffer(&bd, nullptr, &d.qcb))) return fail("constant buffer");
   bd.ByteWidth = sizeof(TextCB);  // P15B
   if (FAILED(d.dev->CreateBuffer(&bd, nullptr, &d.tcb))) return fail("constant buffer");
+  bd.ByteWidth = sizeof(CTextCB);  // P24C fix 2b
+  if (FAILED(d.dev->CreateBuffer(&bd, nullptr, &d.ctcb))) return fail("constant buffer");
   D3D11_RASTERIZER_DESC rd = {};
   rd.FillMode = D3D11_FILL_SOLID;
   rd.CullMode = D3D11_CULL_NONE;
@@ -2034,6 +2106,193 @@ static bool pack_patches(ID3D11Device *dev, ID3D11DeviceContext *ctx, const Pres
   return true;
 }
 
+// P24C fix 2b: the course runs' tables (TextRaster::table of draw_runs' call: layered, dx 0), made when the frame, the client, the
+// viewport, the text options or the objects' motion changed. Each is made on a canvas 1024 pixels larger on every side (the viewport
+// moved by 1024, then the table moved back), so it also holds the ink the window's edges cut at offset 0, which a label's mover offset
+// or the slide brings into the window (TextRaster's positions are the viewport origin plus the run's scaled place: a whole-pixel move
+// of the origin moves every pixel by it; only the canvas clips).
+void GpuCompositor::build_course_tables(const Presenter &P, const Viewport &vp, bool text) {
+  Impl &d = *d_;
+  const int32_t cw = d.w, ch = d.h;
+  const bool movers = P.objects_on_ && !P.movers_.empty();
+  char b[256];
+  const bool on = d.ct_on && P.course_tables_;  // --course-tables, SG_P24C_CTABLES
+  std::snprintf(b, sizeof b, "%llu/%d,%d/%d/%d/%d,%d,%d,%d/%d,%d,%d/%d/%zu", static_cast<unsigned long long>(P.content_gen_), cw, ch,
+                text ? 1 : 0, movers ? 1 : 0, vp.origin_x, vp.origin_y, vp.client_w, vp.client_h, static_cast<int>(P.text_aa_),
+                P.text_fit_ ? 1 : 0, static_cast<int>(P.text_defect_), on ? 1 : 0, P.text_.runs.size());
+  if (d.ct_key == b) return;
+  const int64_t t0 = portsim::perf_now_ns();
+  d.ct_key = b;
+  ++d.ct_builds;
+  d.ct_upload = true;
+  d.ctabs.clear();
+  d.ctabled.assign(P.text_.runs.size(), 0);
+  if (!on || !text) return;
+  if (!d.traster) d.traster.reset(new TextRaster());
+  d.traster->set_defect(P.text_defect_);
+  d.traster->set_aa(P.text_aa_);
+  d.traster->set_fit(P.text_fit_);
+  ++d.tbuild;  // (the table cache's clock)
+  constexpr int32_t kE = 1024;
+  Viewport ve = vp;
+  ve.origin_x += kE;
+  ve.origin_y += kE;
+  std::string key;
+  auto put = [&key](int64_t v) { key.append(reinterpret_cast<const char *>(&v), sizeof v); };
+  for (int32_t layer : {-3, -1}) {  // draw_runs' order: the wide scene's world runs, then the base's
+    for (size_t i = 0; i < P.text_.runs.size(); ++i) {
+      const portsim::GfxTextRun &r = P.text_.runs[i];
+      if (r.layer != layer) continue;
+      d.ctabled[i] = 1;
+      if (r.target == 2 && P.world_.empty()) continue;  // draw_runs skips it: nothing to draw
+      key.assign("P24C");
+      key += r.face;
+      key += '\0';
+      key += r.text;
+      key += '\0';
+      for (int64_t v : {static_cast<int64_t>(r.size), static_cast<int64_t>(r.style), static_cast<int64_t>(r.colorref),
+                        static_cast<int64_t>(r.x), static_cast<int64_t>(r.y), static_cast<int64_t>(r.x0), static_cast<int64_t>(r.y0),
+                        static_cast<int64_t>(r.x1), static_cast<int64_t>(r.y1), static_cast<int64_t>(r.ex0), static_cast<int64_t>(r.ex1),
+                        static_cast<int64_t>(vp.origin_x), static_cast<int64_t>(vp.origin_y), static_cast<int64_t>(vp.client_w),
+                        static_cast<int64_t>(vp.client_h), static_cast<int64_t>(cw), static_cast<int64_t>(ch),
+                        static_cast<int64_t>(P.text_aa_), static_cast<int64_t>(P.text_fit_ ? 1 : 0),
+                        static_cast<int64_t>(P.text_defect_), static_cast<int64_t>(r.vis_layer.size())})
+        put(v);
+      key.append(reinterpret_cast<const char *>(r.vis_layer.data()), r.vis_layer.size());
+      auto it = d.tcache.find(key);
+      if (it == d.tcache.end()) {
+        Impl::TCache c;
+        if (d.traster->table(r, true, ve, 0, cw + 2 * kE, ch + 2 * kE, c.t)) {  // false = draw draws nothing either
+          c.t.x0 -= kE;
+          c.t.x1 -= kE;
+          c.t.y0 -= kE;
+          c.t.y1 -= kE;
+        } else {
+          c.t = TextTable{};
+        }
+        it = d.tcache.emplace(key, std::move(c)).first;
+        ++d.text_tables_made;
+      } else {
+        ++d.text_tables_reused;
+      }
+      it->second.used = d.tbuild;
+      ++d.ct_runs;
+      if (it->second.t.idx.empty()) continue;
+      Impl::CTab t;
+      t.run = i;
+      t.mover = r.mover.kind != portsim::kGfxMoverNone;
+      t.t = it->second.t;
+      d.ctabs.push_back(t);
+    }
+  }
+  if (d.tcache.size() > 1024)
+    for (auto it = d.tcache.begin(); it != d.tcache.end();)
+      it = it->second.used + 8 < d.tbuild ? d.tcache.erase(it) : std::next(it);
+  d.ns_ct += portsim::perf_now_ns() - t0;
+}
+
+// P24C fix 2b: the course text pass's buffers for this paint: each table's offset (a golfer label's mover offset, as
+// build_course_patches placed its patch), its box in the window at the slide, the 64 x 64 tiles' run lists; the boxes left and entered
+// go to cchanged (the final patches over them see a changed course picture, as the course patches' places did)
+void GpuCompositor::course_text(const Presenter &P, const Viewport &vp, int32_t slx, int32_t sly) {
+  Impl &d = *d_;
+  const int32_t cw = d.w, ch = d.h;
+  d.ct_n = 0;
+  if (d.ctabs.empty()) {
+    for (const Rect &r : d.ct_boxes) d.cchanged.push_back(r);
+    d.ct_boxes.clear();
+    return;
+  }
+  const int64_t t0 = portsim::perf_now_ns();
+  if (d.ct_upload) {
+    std::vector<uint32_t> idx, lut;
+    for (Impl::CTab &t : d.ctabs) {
+      t.ibase = static_cast<int32_t>(idx.size());
+      const uint32_t off = static_cast<uint32_t>(lut.size() / 16);
+      for (uint32_t v : t.t.idx) idx.push_back(v ? v + off : 0u);
+      for (size_t k = 0; k + 1 < t.t.lut.size(); k += 2)
+        lut.push_back(static_cast<uint32_t>(t.t.lut[k]) | (static_cast<uint32_t>(t.t.lut[k + 1]) << 16));
+    }
+    d.ct_entries += lut.size() / 16;
+    const ProfScope prof(Phase::Upload);
+    if (!make_sbuf(d.dev, d.ctx, d.cidx, 4, static_cast<uint32_t>(idx.size()), idx.data()) ||
+        !make_sbuf(d.dev, d.ctx, d.clut, 4, static_cast<uint32_t>(lut.size()), lut.data())) {
+      d.ns_ct += portsim::perf_now_ns() - t0;
+      return;  // (no pass: the runs show without text this paint; the next upload tries again)
+    }
+    d.ct_upload = false;
+  }
+  const bool movers = P.objects_on_ && !P.movers_.empty();
+  const Rect span = course_span(P.world_, vp);
+  std::vector<CRunRec> recs;
+  std::vector<Rect> boxes;
+  recs.reserve(d.ctabs.size());
+  int32_t ux0 = cw, uy0 = ch, ux1 = 0, uy1 = 0;
+  for (const Impl::CTab &t : d.ctabs) {
+    int32_t mx = 0, my = 0;
+    if (movers && t.mover) P.mover_offset(P.text_.runs[t.run].mover, vp, mx, my);
+    recs.push_back(CRunRec{t.t.x0, t.t.y0, t.t.x1, t.t.y1, t.ibase, mx, my, 0});
+    // its pixels in the window: the table's box moved by its offset, clipped to the course picture at offset 0, moved by the slide
+    const int32_t x0 = std::max(t.t.x0 + mx, span.x0) + slx, y0 = std::max(t.t.y0 + my, span.y0) + sly;
+    const int32_t x1 = std::min(t.t.x1 + mx, span.x1) + slx, y1 = std::min(t.t.y1 + my, span.y1) + sly;
+    const Rect b{std::max(0, x0), std::max(0, y0), std::min(cw, x1), std::min(ch, y1)};
+    boxes.push_back(b);
+    if (b.x1 > b.x0 && b.y1 > b.y0) {
+      ux0 = std::min(ux0, b.x0);
+      uy0 = std::min(uy0, b.y0);
+      ux1 = std::max(ux1, b.x1);
+      uy1 = std::max(uy1, b.y1);
+    }
+  }
+  // the boxes that changed since the last paint (a label that moved, a new frame's runs)
+  if (boxes.size() != d.ct_boxes.size()) {
+    for (const Rect &r : d.ct_boxes) d.cchanged.push_back(r);
+    for (const Rect &r : boxes) d.cchanged.push_back(r);
+  } else {
+    for (size_t k = 0; k < boxes.size(); ++k)
+      if (boxes[k].x0 != d.ct_boxes[k].x0 || boxes[k].y0 != d.ct_boxes[k].y0 || boxes[k].x1 != d.ct_boxes[k].x1 ||
+          boxes[k].y1 != d.ct_boxes[k].y1) {
+        d.cchanged.push_back(d.ct_boxes[k]);
+        d.cchanged.push_back(boxes[k]);
+      }
+  }
+  const int32_t tw = (cw + 63) / 64, th = (ch + 63) / 64;
+  std::vector<std::vector<uint32_t>> per(static_cast<size_t>(tw) * static_cast<size_t>(th));
+  for (size_t k = 0; k < boxes.size(); ++k) {
+    const Rect &b = boxes[k];
+    if (!(b.x1 > b.x0 && b.y1 > b.y0)) continue;
+    for (int32_t ty = b.y0 >> 6; ty <= (b.y1 - 1) >> 6 && ty < th; ++ty)
+      for (int32_t tx = b.x0 >> 6; tx <= (b.x1 - 1) >> 6 && tx < tw; ++tx)
+        per[static_cast<size_t>(ty) * static_cast<size_t>(tw) + static_cast<size_t>(tx)].push_back(static_cast<uint32_t>(k));
+  }
+  std::vector<uint32_t> tiles, list;
+  tiles.reserve(per.size() * 2);
+  for (const std::vector<uint32_t> &v : per) {
+    tiles.push_back(static_cast<uint32_t>(list.size()));
+    tiles.push_back(static_cast<uint32_t>(v.size()));
+    list.insert(list.end(), v.begin(), v.end());
+  }
+  d.ct_boxes = std::move(boxes);
+  if (ux1 <= ux0 || uy1 <= uy0) {
+    d.ns_ct += portsim::perf_now_ns() - t0;
+    return;
+  }
+  {
+    const ProfScope prof(Phase::Upload);
+    if (!make_sbuf(d.dev, d.ctx, d.cruns, sizeof(CRunRec), static_cast<uint32_t>(recs.size()), recs.data()) ||
+        !make_sbuf(d.dev, d.ctx, d.ctile, 8, static_cast<uint32_t>(tiles.size() / 2), tiles.data()) ||
+        !make_sbuf(d.dev, d.ctx, d.clist, 4, static_cast<uint32_t>(list.size()), list.data()) ||
+        !make_tex(d.dev, d.course2, cw, ch, DXGI_FORMAT_R32_UINT, false)) {
+      d.ns_ct += portsim::perf_now_ns() - t0;
+      return;
+    }
+    const CTextCB c = {tw, th, ux0, uy0, ux1, uy1, span.x0, span.y0, span.x1, span.y1, 0, 0};
+    d.ctx->UpdateSubresource(d.ctcb, 0, nullptr, &c, 0, 0);
+  }
+  d.ct_n = static_cast<int32_t>(recs.size());
+  d.ns_ct += portsim::perf_now_ns() - t0;
+}
+
 void GpuCompositor::build_course_patches(const Presenter &P, const Viewport &vp, bool text) {
   Impl &d = *d_;
   std::vector<Rect> rects;
@@ -2041,9 +2300,11 @@ void GpuCompositor::build_course_patches(const Presenter &P, const Viewport &vp,
     // the course picture's rectangle at offset 0 (course_span)
     const Rect span = course_span(P.world_, vp);
     const int32_t rx0 = span.x0, rx1 = span.x1, ry0 = span.y0, ry1 = span.y1;
-    for (const portsim::GfxTextRun &r : P.text_.runs) {
+    for (size_t i = 0; i < P.text_.runs.size(); ++i) {
+      const portsim::GfxTextRun &r = P.text_.runs[i];
       if (r.layer != -1 && r.layer != -3) continue;
       if (r.target == 2 && P.world_.empty()) continue;
+      if (i < d.ctabled.size() && d.ctabled[i]) continue;  // P24C fix 2b: drawn by its course table
       int32_t mx = 0, my = 0;
       if (P.objects_on_ && r.mover.kind != portsim::kGfxMoverNone && !P.movers_.empty()) P.mover_offset(r.mover, vp, mx, my);
       Rect b = run_box(r, vp, mx, my);
@@ -2687,11 +2948,17 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   P.draw_order(f, cur, lines, cur_layer, line_layer);
   {
     const ProfScope prof(Phase::Patch);
+    // P24C fix 2b: the course runs' tables (their runs get no course patch), the pass's buffers for this paint
+    build_course_tables(P, vp, text);
+    course_text(P, vp, slx, sly);
     // the course patches change with the frame, the client, and (mover labels) the objects' offsets
     bool mover_runs = false;
     if (P.objects_on_ && !P.movers_.empty())
-      for (const portsim::GfxTextRun &r : P.text_.runs)
-        if ((r.layer == -1 || r.layer == -3) && r.mover.kind != portsim::kGfxMoverNone) mover_runs = true;
+      for (size_t i = 0; i < P.text_.runs.size(); ++i) {
+        const portsim::GfxTextRun &r = P.text_.runs[i];
+        if ((r.layer == -1 || r.layer == -3) && r.mover.kind != portsim::kGfxMoverNone && !(i < d.ctabled.size() && d.ctabled[i]))
+          mover_runs = true;
+      }
     const uint64_t ck = P.content_gen_ * 1000003ull + (mover_runs ? P.world_gen_ * 7919ull : 0ull) + static_cast<uint64_t>(cw) * 31ull +
                         static_cast<uint64_t>(ch);
     if (ck == d.course_key && !d.cdirty.empty() && !d.qc.empty() && W.fw > 0 && W.ph > 0) {  // P15C: a course patch over moved pixels
@@ -2852,6 +3119,22 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
     x->PSSetShader(d.ps_quad_u, nullptr, 0);
     x->DrawInstanced(6, static_cast<UINT>(d.qc.size()), 0, 0);
     x->VSSetShader(d.vs_full, nullptr, 0);
+  }
+  // 2b. P24C fix 2b: the course runs' tables over the course picture (a copy of it read, the course target written)
+  if (d.ct_n > 0 && d.ps_ctext && d.course2.t) {
+    x->OMSetRenderTargets(0, nullptr, nullptr);
+    x->CopyResource(d.course2.t, d.course.t);
+    x->OMSetRenderTargets(1, &d.course.rtv, nullptr);
+    ID3D11ShaderResourceView *sc[6] = {d.course2.srv, d.cruns.srv, d.cidx.srv, d.clut.srv, d.ctile.srv, d.clist.srv};
+    x->PSSetShaderResources(4, 1, &sc[0]);
+    x->PSSetShaderResources(25, 5, &sc[1]);
+    x->PSSetConstantBuffers(3, 1, &d.ctcb);
+    x->PSSetShader(d.ps_ctext, nullptr, 0);
+    x->Draw(3, 0);
+    ID3D11ShaderResourceView *nul[6] = {};
+    x->PSSetShaderResources(4, 1, nul);
+    x->PSSetShaderResources(25, 5, nul);
+    ++d.ct_passes;
   }
   // 3. the HUD layers into the back buffer
   x->OMSetRenderTargets(1, &d.bb_rtv, nullptr);
@@ -3415,6 +3698,16 @@ std::string GpuCompositor::json() const {
                 static_cast<unsigned long long>(d.ov_builds), static_cast<unsigned long long>(d.ov_patch_paints),
                 static_cast<unsigned long long>(d.oraster ? d.oraster->table_draws : 0ull));
   std::string j = b;
+  if (!j.empty() && j.back() == '}') {  // P24C fix 2b
+    char e[256];
+    std::snprintf(e, sizeof e, ",\"p24c\":{\"ct_on\":%d,\"builds\":%llu,\"runs\":%llu,\"entries\":%llu,\"passes\":%llu,\"ms\":%.1f,\"raster_draws\":%llu,\"raster_reuses\":%llu}}",
+                  d.ct_on ? 1 : 0, static_cast<unsigned long long>(d.ct_builds), static_cast<unsigned long long>(d.ct_runs),
+                  static_cast<unsigned long long>(d.ct_entries), static_cast<unsigned long long>(d.ct_passes),
+                  static_cast<double>(d.ns_ct) / 1e6, static_cast<unsigned long long>(d.traster ? d.traster->raster_draws : 0ull),
+                  static_cast<unsigned long long>(d.traster ? d.traster->raster_reuses : 0ull));
+    j.pop_back();
+    j += e;
+  }
   if (!j.empty() && j.back() == '}') {  // P15C
     char e[768];
     std::snprintf(e, sizeof e,

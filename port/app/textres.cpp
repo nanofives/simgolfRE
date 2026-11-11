@@ -50,6 +50,15 @@ struct TextRaster::Impl {
     bool ok = false;
   };
   std::map<std::tuple<std::string, int32_t, uint32_t, int, std::string>, Ink> inks;
+  // P24C fix 2b: table's 32 level pictures of a string, relative to its TA_BASELINE origin: res[L][(y - ry0) * rw + x - rx0] is GDI's
+  // word at (origin.x + x, origin.y + y) over level L. GDI draws at a whole-pixel origin, so these words do not depend on where the
+  // origin lies: a run that moved (a walking golfer's label, each game frame) is made from them without drawing again. Key: the font
+  // handle, the colour, the string and the fitted advances. A request whose rectangle the kept one does not hold draws again over both.
+  struct Raster {
+    int32_t rx0 = 0, ry0 = 0, rw = 0, rh = 0;
+    std::vector<uint16_t> res;
+  };
+  std::map<std::string, Raster> rasters;
   HDC mdc = nullptr;
   HBITMAP mbmp = nullptr;
   void *mbits = nullptr;
@@ -348,10 +357,69 @@ bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewpor
       vis[static_cast<size_t>(y - y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - x0)] = r.visible(lx, ly, layered) ? 1 : 0;
     }
   }
-  const size_t pitch = static_cast<size_t>((impl_->w + 1) & ~1);
-  uint16_t *bits = static_cast<uint16_t *>(impl_->bits);
   // res[L][box pixel]: GDI's word over level L
   std::vector<uint16_t> res(static_cast<size_t>(32) * vis.size());
+  // P24C fix 2b: from the string's kept level pictures (Impl::Raster), drawn again only when they do not hold this box. The box
+  // relative to the origin: client (x, y) is the origin plus (x - gx, y - gy)
+  const int32_t gx = p.dx0 + p.ox, gy = p.dy0 + p.oy;
+  const int32_t nx0 = x0 - gx, ny0 = y0 - gy, nx1 = x1 - gx, ny1 = y1 - gy;
+  std::string key(reinterpret_cast<const char *>(&p.f), sizeof p.f);
+  key.append(reinterpret_cast<const char *>(&p.ref), sizeof p.ref);
+  key += r.text;
+  key += '\0';
+  if (!p.adv.empty()) key.append(reinterpret_cast<const char *>(p.adv.data()), p.adv.size() * sizeof(int));
+  Impl::Raster *ras = nullptr;
+  {
+    auto it = impl_->rasters.find(key);
+    if (it != impl_->rasters.end() && it->second.rx0 <= nx0 && it->second.ry0 <= ny0 && it->second.rx0 + it->second.rw >= nx1 &&
+        it->second.ry0 + it->second.rh >= ny1)
+      ras = &it->second;
+  }
+  if (!ras) {
+    // the box and the kept rectangle (if any), and 8 pixels more each side for the next frames' moves of the box around the origin
+    int32_t ax0 = nx0 - 8, ay0 = ny0 - 8, ax1 = nx1 + 8, ay1 = ny1 + 8;
+    auto it = impl_->rasters.find(key);
+    if (it != impl_->rasters.end()) {
+      ax0 = std::min(ax0, it->second.rx0);
+      ay0 = std::min(ay0, it->second.ry0);
+      ax1 = std::max(ax1, it->second.rx0 + it->second.rw);
+      ay1 = std::max(ay1, it->second.ry0 + it->second.rh);
+    }
+    const int32_t rw = ax1 - ax0, rh = ay1 - ay0;
+    if (rw <= 0 || rh <= 0 || rw > 8192 || rh > 8192 || !impl_->dib(rw, rh)) {
+      ++stats.failed;
+      return false;
+    }
+    if (impl_->rasters.size() > 512) impl_->rasters.clear();
+    Impl::Raster nr;
+    nr.rx0 = ax0;
+    nr.ry0 = ay0;
+    nr.rw = rw;
+    nr.rh = rh;
+    nr.res.resize(static_cast<size_t>(32) * static_cast<size_t>(rw) * static_cast<size_t>(rh));
+    const size_t pitch = static_cast<size_t>((impl_->w + 1) & ~1);
+    uint16_t *bits = static_cast<uint16_t *>(impl_->bits);
+    Prep q = p;  // the origin at (-ax0, -ay0) of the DIB
+    q.ox = -ax0;
+    q.oy = -ay0;
+    for (uint32_t L = 0; L < 32; ++L) {
+      const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
+      GdiFlush();
+      for (int32_t y = 0; y < rh; ++y) {
+        uint16_t *row = bits + pitch * static_cast<size_t>(y);
+        for (int32_t x = 0; x < rw; ++x) row[x] = g;
+      }
+      gdi(r, q);
+      ++table_draws;
+      uint16_t *dst = nr.res.data() + static_cast<size_t>(L) * static_cast<size_t>(rw) * static_cast<size_t>(rh);
+      for (int32_t y = 0; y < rh; ++y)
+        std::memcpy(dst + static_cast<size_t>(y) * static_cast<size_t>(rw), bits + pitch * static_cast<size_t>(y), static_cast<size_t>(rw) * 2u);
+    }
+    ras = &(impl_->rasters[key] = std::move(nr));
+    ++raster_draws;
+  } else {
+    ++raster_reuses;
+  }
   for (uint32_t L = 0; L < 32; ++L) {
     const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
     uint16_t *dst = res.data() + static_cast<size_t>(L) * vis.size();
@@ -359,17 +427,11 @@ bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewpor
       std::fill(dst, dst + vis.size(), g);
       continue;
     }
-    GdiFlush();
-    for (int32_t y = 0; y < p.h; ++y) {
-      uint16_t *row = bits + pitch * static_cast<size_t>(y);
-      for (int32_t x = 0; x < p.w; ++x) row[x] = g;
-    }
-    gdi(r, p);
-    ++table_draws;
-    for (int32_t y = y0; y < y1; ++y) {
-      const uint16_t *row = bits + pitch * static_cast<size_t>(y - p.dy0) + static_cast<size_t>(x0 - p.dx0);
-      std::memcpy(dst + static_cast<size_t>(y - y0) * static_cast<size_t>(bw), row, static_cast<size_t>(bw) * 2u);
-    }
+    const uint16_t *src = ras->res.data() + static_cast<size_t>(L) * static_cast<size_t>(ras->rw) * static_cast<size_t>(ras->rh);
+    for (int32_t y = y0; y < y1; ++y)
+      std::memcpy(dst + static_cast<size_t>(y - y0) * static_cast<size_t>(bw),
+                  src + static_cast<size_t>(y - gy - ras->ry0) * static_cast<size_t>(ras->rw) + static_cast<size_t>(x0 - gx - ras->rx0),
+                  static_cast<size_t>(bw) * 2u);
   }
   // the entries (one per distinct 32-word column), and the ink's box. First the pixels with ink (some level's word differs from
   // the level), level by level over the box; then each ink pixel's column, found again by its hash (the words compared)

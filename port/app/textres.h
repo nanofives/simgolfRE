@@ -83,6 +83,7 @@ class TextRaster {
              uint32_t levels = 32);
   TextResStats stats;
   uint64_t table_draws = 0;  // P15B: GDI draws made for tables
+  uint64_t raster_draws = 0, raster_reuses = 0;  // P24C fix 2b: tables made from new / kept level pictures (Impl::Raster)
 
  private:
   struct Prep;

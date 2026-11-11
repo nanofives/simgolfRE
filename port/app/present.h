@@ -426,6 +426,8 @@ class Presenter {
   void set_line_native(bool on) { line_native_ = on; }
   // P23E fix 1: the GPU presenter renders a native line's CPU patch as pieces along the line, not its whole box (--line-tiles)
   void set_line_tiles(bool on) { line_tiles_ = on; }
+  // P24C fix 2b: the GPU presenter draws the course runs from tables over its course picture, not as CPU course patches (--course-tables)
+  void set_course_tables(bool on) { course_tables_ = on; }
   // P10I fix 2 (hover.cpp): the HUD's hover highlights between game frames (--hover-rate display). hover_observe after each new frame
   // (set_frame / set_frame_world and set_text) with the 800-space cursor point the sim's hover tests read for it (LiveSession::
   // frame_cursor) learns, per surface (each HUD panel layer, or the whole frame of a screen without layers), the boxes of the controls
@@ -498,6 +500,7 @@ class Presenter {
   CursorLive live_;                                        // P10E
   bool line_native_ = false;                               // P10I fix 1
   bool line_tiles_ = false;                                // P23E fix 1
+  bool course_tables_ = false;                             // P24C fix 2b
   bool hover_on_ = false;                                  // P10I fix 2
   std::shared_ptr<HoverModel> hover_;                      // P10I fix 2 (hover.cpp)
   // P10I fix 2: the frame's own layer pixels of the layers a hover swap changed (by layer index; empty = unchanged), so the click

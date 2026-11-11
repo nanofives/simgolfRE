@@ -80,6 +80,9 @@
 //   P23F fix 1: --edge-texts on|off (default on with --text-res native; SG_APP_P23=off: off) the frame's own texts over the course
 //   (golfer and walker name labels, object and tile labels, the hole HUD) drawn whole in a wide window where the 800 frame's edge
 //   cut them, or wholly past it (gfx.h gfx_set_frame_edge_text); off = cut at the frame's columns, where the original's screen ends.
+//   P24C fix 2b: --course-tables on|off (default on; SG_APP_P24=off: off) the GPU presenter draws the course's text runs (the base's and
+//   the wide scene's world runs, the golfer name labels at their objects' offsets) from tables over its own course picture instead of
+//   rendering each again on the CPU at every object tick (GpuCompositor::build_course_tables / course_text; log/roadmap/P24/P24C_notes.md)
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
@@ -507,6 +510,7 @@ struct Options {
   bool line_native = true;         // P10I fix 1: --line-res native|frame (SG_APP_P10=off: frame)
   bool edge_previews = true;       // P22E item 7: --edge-previews on|off (SG_APP_P22=off: off)
   bool line_tiles = true;          // P23E fix 1: --line-tiles on|off (SG_APP_P23=off: off)
+  bool course_tables = true;       // P24C fix 2b: --course-tables on|off (SG_APP_P24=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -594,6 +598,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_strip_near(o.strip_right && o.strip_near);  // P19C item 8
   p.set_line_native(line_res_on(o));  // P10I fix 1
   p.set_line_tiles(o.line_tiles);  // P23E fix 1
+  p.set_course_tables(o.course_tables);  // P24C fix 2b
 }
 
 // P5B item 4: --scale
@@ -3601,6 +3606,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.line_tiles = v == "on";
     }
+    else if (a == "--course-tables") {  // P24C fix 2b
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.course_tables = v == "on";
+    }
     else if (a == "--wide-lines") {  // P23E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wide_lines = v == "on";
@@ -3792,6 +3801,8 @@ int main(int argc, char **argv) {
       o.line_tiles = false;  // P23E fix 1
       o.wide_lines = false;  // P23E fix 2
     }
+  if (const char *ep = std::getenv("SG_APP_P24"))  // P24: the eleventh play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.course_tables = false;  // P24C fix 2b
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win

@@ -66,6 +66,8 @@ class GpuCompositor {
   bool world_from_shared(const struct WorldImage &w, bool text);  // P17B fix 2
   void run_objects(const Presenter &p);  // P15C
   void build_course_patches(const Presenter &p, const Viewport &vp, bool text);
+  void build_course_tables(const Presenter &p, const Viewport &vp, bool text);  // P24C fix 2b
+  void course_text(const Presenter &p, const Viewport &vp, int32_t slx, int32_t sly);  // P24C fix 2b
   void build_final_patches(const Presenter &p, const Viewport &vp, bool text, int32_t slx, int32_t sly, int32_t cdx, int32_t shx,
                            int32_t shy, bool moving_tools);
   void build_text_tables(const Presenter &p, const Viewport &vp, bool text);  // P15B
