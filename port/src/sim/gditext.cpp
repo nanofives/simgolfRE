@@ -25,6 +25,9 @@
 #endif
 #include "portsim/sim/gditext.h"
 
+#include <algorithm>
+#include <cstdint>
+#include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <map>
@@ -484,17 +487,73 @@ bool GdiTextMetrics::draw_glyphs(Ctx &ctx, uint32_t fontref, const std::string &
   }
   const size_t pitch = static_cast<size_t>((w + 1) & ~1);   // allocDrawBuffer's 16-bit pitch: (w + 1) >> 1 << 1 words
   uint16_t *bits = static_cast<uint16_t *>(dib.bits);
-  GdiFlush();
-  for (int32_t r = 0; r < h; ++r) std::memcpy(bits + pitch * r, px + static_cast<size_t>(w) * r, 2u * w);
-  SelectObject(dib.dc, f.h);
-  SetTextColor(dib.dc, colorref);
-  TextOutA(dib.dc, x, y, text.data(), static_cast<int>(text.size()));
-  SelectObject(dib.dc, GetStockObject(SYSTEM_FONT));
-  GdiFlush();
-  for (int32_t r = 0; r < h; ++r) std::memcpy(px + static_cast<size_t>(w) * r, bits + pitch * r, 2u * w);
+  // P24C fix 1: only the rows TextOutA can change go into the DIB section and back (glyph_rows: the font's cell and a line of
+  // slack each side). The words outside them are never read or written by the call, so the surface ends the same as with the
+  // whole copy; the DIB's other rows keep older words nobody reads. Before, every string copied the whole surface in and back
+  // (2 x 0.96 MB for the 800 x 600 root, more for the wide scene), about 200 strings a frame on a busy course.
+  int32_t r0 = 0, r1 = h;
+  const bool band = glyph_rows(ctx, fontref, y, h, r0, r1);
+  auto draw = [&](uint16_t *dst, int32_t a, int32_t b) {
+    if (b <= a) return;  // no row of the surface can change (a string above or below it)
+    GdiFlush();
+    for (int32_t r = a; r < b; ++r) std::memcpy(bits + pitch * r, dst + static_cast<size_t>(w) * r, 2u * w);
+    SelectObject(dib.dc, f.h);
+    SetTextColor(dib.dc, colorref);
+    TextOutA(dib.dc, x, y, text.data(), static_cast<int>(text.size()));
+    SelectObject(dib.dc, GetStockObject(SYSTEM_FONT));
+    GdiFlush();
+    for (int32_t r = a; r < b; ++r) std::memcpy(dst + static_cast<size_t>(w) * r, bits + pitch * r, 2u * w);
+  };
+  // development (P24C): SG_P24C_TEXTCHECK=1 draws every string a second time with the whole copy on a copy of the surface and
+  // compares the two results (stderr `P24C TEXTCHECK`: strings checked, strings differing, the first differing ones)
+  static const bool check = [] {
+    const char *e = std::getenv("SG_P24C_TEXTCHECK");
+    return e && e[0] == '1';
+  }();
+  if (check && band) {
+    static thread_local uint64_t checked = 0, bad = 0;
+    std::vector<uint16_t> full(px, px + static_cast<size_t>(w) * static_cast<size_t>(h));
+    draw(px, r0, r1);
+    draw(full.data(), 0, h);
+    ++checked;
+    if (std::memcmp(full.data(), px, full.size() * 2u) != 0) {
+      ++bad;
+      if (bad <= 20)
+        std::fprintf(stderr, "P24C TEXTCHECK differ: '%s' y %d rows %d..%d surface %dx%d\n", text.c_str(), y, r0, r1, w, h);
+      std::memcpy(px, full.data(), full.size() * 2u);
+    }
+    if ((checked & 4095u) == 0) std::fprintf(stderr, "P24C TEXTCHECK checked %llu differing %llu\n",
+                                             static_cast<unsigned long long>(checked), static_cast<unsigned long long>(bad));
+    return true;
+  }
+  draw(px, r0, r1);
   return true;
 #else
   (void)ctx; (void)fontref; (void)text; (void)x; (void)y; (void)colorref; (void)px; (void)w; (void)h;
+  return false;
+#endif
+}
+
+// P24C fix 1: TextOutA with TA_BASELINE at baseline y draws the glyph cells, rows y - tmAscent .. y + tmDescent; the band adds a
+// whole line height (tmHeight + tmExternalLeading) and 4 rows above and below, which also holds draw_text_string's box margin
+// (a third of the font size, at least 3). Development: SG_P24C_FULLTEXT=1 answers false (every string copies the whole surface,
+// as before P24C).
+bool GdiTextMetrics::glyph_rows(Ctx &ctx, uint32_t fontref, int32_t y, int32_t h, int32_t &lo, int32_t &hi) {
+#ifdef _WIN32
+  static const bool full = [] {
+    const char *e = std::getenv("SG_P24C_FULLTEXT");
+    return e && e[0] == '1';
+  }();
+  if (full || scripted() || h <= 0) return false;
+  const Impl::Font &f = resolve(*impl_, ctx, fontref);
+  const int64_t pad = static_cast<int64_t>(std::max<int32_t>(f.metrics[0], 8)) + 4;
+  const int64_t a = static_cast<int64_t>(y) - f.metrics[3] - pad, b = static_cast<int64_t>(y) + f.metrics[4] + pad + 1;
+  lo = static_cast<int32_t>(std::min<int64_t>(std::max<int64_t>(a, 0), h));
+  hi = static_cast<int32_t>(std::min<int64_t>(std::max<int64_t>(b, 0), h));
+  if (hi < lo) hi = lo;
+  return true;
+#else
+  (void)ctx; (void)fontref; (void)y; (void)h; (void)lo; (void)hi;
   return false;
 #endif
 }

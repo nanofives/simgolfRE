@@ -185,6 +185,11 @@ class TextMetrics {
                            uint32_t /*colorref*/, uint16_t * /*px*/, int32_t /*w*/, int32_t /*h*/) {
     return false;
   }
+  // P24C fix 1: the rows [lo, hi) of an h-row surface that draw_glyphs of the FontRef's font at baseline y can change (the
+  // font's cell and a whole line of slack above and below it); false = any row (the caller then snapshots the whole surface)
+  virtual bool glyph_rows(Ctx &, uint32_t /*fontref*/, int32_t /*y*/, int32_t /*h*/, int32_t & /*lo*/, int32_t & /*hi*/) {
+    return false;
+  }
 };
 void set_text_metrics(Ctx &ctx, TextMetrics *tm);  // not owned; nullptr detaches
 TextMetrics *text_metrics(Ctx &ctx);               // or nullptr

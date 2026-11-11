@@ -116,6 +116,8 @@ class GdiTextMetrics : public MarkupTextMetrics {
   bool glyph_ascent(Ctx &ctx, uint32_t fontref, int32_t &a) override;
   bool draw_glyphs(Ctx &ctx, uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
                    uint16_t *px, int32_t w, int32_t h) override;
+  // P24C fix 1: draw_glyphs copies only these rows into its DIB section and back (TextOutA changes no pixel outside them)
+  bool glyph_rows(Ctx &ctx, uint32_t fontref, int32_t y, int32_t h, int32_t &lo, int32_t &hi) override;
 
   struct Impl;
 

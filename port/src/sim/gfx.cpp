@@ -533,7 +533,10 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   const uint32_t r = (colour >> 7) & 0xf8, gr = (colour >> 2) & 0xf8, b = (colour << 3) & 0xff;
   const uint32_t ref = r | (gr << 8) | (b << 16);
   TextRunScope ts;  // P9C: the run (inert with text capture off)
-  text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
+  // P24C fix 1: only the rows the provider's TextOutA can change (TextMetrics::glyph_rows), not the whole surface
+  int32_t band_lo = 0, band_hi = -1;
+  if (!tm->glyph_rows(ctx, font, y, g.root.h, band_lo, band_hi)) band_lo = 0, band_hi = -1;
+  text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts, band_lo, band_hi);
   // P22E item 7: a cursor pass's text: its whole columns (the centred width measured above, else measured here)
   // (P23E fix 4b: and the drag ruler's yards label, drawn inside P6_Cursor's GfxWideLineScope(kGfxWideRuler), after the queue)
   const bool cursor_text = g.hud.edge_on && ((g.hud.cursor_sprites && g.hud.cursor_depth > 0) ||
@@ -647,17 +650,24 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 
 // ---- P9C: text runs (gfx.h GfxTextRun, gfx_body.h Gfx::TextCapture)
-void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s) {
+void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s, int32_t lo, int32_t hi) {
   s.on = g.text.on && w > 0 && h > 0;
-  if (s.on) s.snap.assign(px, px + static_cast<size_t>(w) * static_cast<size_t>(h));
+  if (hi < lo) {  // the whole surface
+    lo = 0;
+    hi = h;
+  }
+  s.lo = std::max<int32_t>(0, std::min(lo, h));
+  s.hi = std::max<int32_t>(s.lo, std::min(hi, h));
+  if (s.on)
+    s.snap.assign(px + static_cast<size_t>(s.lo) * static_cast<size_t>(w), px + static_cast<size_t>(s.hi) * static_cast<size_t>(w));
 }
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
                   const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
                   uint8_t target) {
-  if (!s.on || !g.text.on || s.snap.size() != static_cast<size_t>(w) * static_cast<size_t>(h)) return;
+  if (!s.on || !g.text.on || s.hi > h || s.snap.size() != static_cast<size_t>(w) * static_cast<size_t>(s.hi - s.lo)) return;
   int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
-  for (int32_t yy = 0; yy < h; ++yy) {
-    const uint16_t *a = s.snap.data() + static_cast<size_t>(yy) * w, *b = px + static_cast<size_t>(yy) * w;
+  for (int32_t yy = s.lo; yy < s.hi; ++yy) {  // P24C fix 1: the snapshotted rows (no other row changed)
+    const uint16_t *a = s.snap.data() + static_cast<size_t>(yy - s.lo) * w, *b = px + static_cast<size_t>(yy) * w;
     if (std::memcmp(a, b, static_cast<size_t>(w) * 2) == 0) continue;
     for (int32_t xx = 0; xx < w; ++xx)
       if (a[xx] != b[xx]) {
@@ -724,9 +734,9 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   const int32_t kMargin = std::max<int32_t>(3, gf.size / 3);
   const int32_t cx0 = std::max(clip[0], 0), cy0 = std::max(clip[1], 0), cx1 = std::min(clip[2], w), cy1 = std::min(clip[3], h);
   x0 = std::max(x0 - kMargin, cx0);
-  y0 = std::max(y0 - kMargin, cy0);
+  y0 = std::max(std::max(y0 - kMargin, cy0), s.lo);  // (P24C fix 1: inside the snapshot's rows; the band holds the margin)
   x1 = std::min(x1 + 1 + kMargin, cx1);
-  y1 = std::min(y1 + 1 + kMargin, cy1);
+  y1 = std::min(std::min(y1 + 1 + kMargin, cy1), s.hi);
   if (x1 <= x0 || y1 <= y0) return;
   Gfx::TextCapture::Run r;
   r.info.fontref = fontref;
@@ -766,7 +776,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     for (int32_t xx = x0; xx < x1; ++xx) {
       const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(w) + static_cast<size_t>(xx);
       const size_t j = static_cast<size_t>(yy - y0) * bw + static_cast<size_t>(xx - x0);
-      r.before[j] = s.snap[i];
+      r.before[j] = s.snap[i - static_cast<size_t>(s.lo) * static_cast<size_t>(w)];
       r.after[j] = px[i];
     }
   // the HUD segment it belongs to (P9B's layers are made on the root only)

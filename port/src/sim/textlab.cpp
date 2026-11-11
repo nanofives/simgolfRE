@@ -168,6 +168,9 @@ class WrapRecorder : public TextMetrics {
     return inner_->glyph_width(ctx, f, s, n, w);
   }
   bool glyph_ascent(Ctx &ctx, uint32_t f, int32_t &a) override { return inner_->glyph_ascent(ctx, f, a); }
+  bool glyph_rows(Ctx &ctx, uint32_t f, int32_t y, int32_t h, int32_t &lo, int32_t &hi) override {  // P24C fix 1
+    return inner_->glyph_rows(ctx, f, y, h, lo, hi);
+  }
   bool draw_glyphs(Ctx &ctx, uint32_t f, const std::string &text, int32_t x, int32_t y, uint32_t colorref, uint16_t *px,
                    int32_t w, int32_t h) override {
     return log.record(ctx, f, text, x, y, colorref, px, w, h, [&](uint32_t c, uint16_t *p) {

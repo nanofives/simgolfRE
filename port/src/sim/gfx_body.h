@@ -344,13 +344,16 @@ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, u
 struct TextRunScope {
   std::vector<uint16_t> snap;
   bool on = false;
+  int32_t lo = 0, hi = 0;  // P24C fix 1: the rows snap holds, [lo, hi) of the surface (the whole surface unless a band was given)
   // P22E item 7: the string's whole 800-space columns [ink_x0, ink_x1) (its origin and the provider's measured advance), set by
   // draw_text_string before text_run_end (ink false: not measured)
   bool ink = false;
   int32_t ink_x0 = 0, ink_x1 = 0;
   bool frame = false;  // P23F: a frame text (gfx.h gfx_set_frame_edge_text): its edge run goes to frame_edge_runs
 };
-void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s);
+// (P24C fix 1: with lo <= hi, only rows [lo, hi) are snapshotted and compared: the caller guarantees the draw changes no other row,
+// and that the run's box margin stays inside them, as TextMetrics::glyph_rows does)
+void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s, int32_t lo = 0, int32_t hi = -1);
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
                   const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
                   uint8_t target);
