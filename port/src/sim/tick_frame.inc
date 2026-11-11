@@ -8681,7 +8681,9 @@ a41e541:
     if (eax >= 0x80) goto a41e57a;                     // ML+0xef86 cmp eax,0x80; jge (signed)
     {
         s8 cl = G8(GS(g_cursorTileX));                        // ML+0xef8d mov cl,byte[g_cursorTileX]
-        int a2 = (eax + eax * 8) * 2;                  // ML+0xef93 lea edx,[eax+eax*8]; lea eax,[eax+edx*2]
+        // P24A fix 1: eax + 2 * (9 eax) = 19 eax, then shl 2: the walker record (0x4c bytes); the transcription had 18 eax
+        // (0x48 per record), so the new post of every walker but the first went into the wrong bytes and it never moved
+        int a2 = eax + (eax + eax * 8) * 2;            // ML+0xef93 lea edx,[eax+eax*8]; ML+0xef96 lea eax,[eax+edx*2]
         s8 dl = G8(GS(g_cursorTileY));                        // ML+0xef99 mov dl,byte[g_cursorTileY]
         a2 <<= 2;                                      // ML+0xef9f shl eax,2
         G8(a2 + (GS(g_walkers) + 16)) = cl;                      // ML+0xefa2
