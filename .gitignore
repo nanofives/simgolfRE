@@ -62,4 +62,4 @@ re/fid/*.fidb
 tools/libsrc/
 instances/
 # P24D: language packs and their extracted English sources hold game text (the LAN build's stager ships them in game\Lang\)
-lang/
+/lang/
