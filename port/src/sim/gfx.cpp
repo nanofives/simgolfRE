@@ -519,7 +519,9 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   TextRunScope ts;  // P9C: the run (inert with text capture off)
   text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, ts);
   // P22E item 7: a cursor pass's text: its whole columns (the centred width measured above, else measured here)
-  const bool cursor_text = g.hud.edge_on && g.hud.cursor_sprites && g.hud.cursor_depth > 0;
+  // (P23E fix 4b: and the drag ruler's yards label, drawn inside P6_Cursor's GfxWideLineScope(kGfxWideRuler), after the queue)
+  const bool cursor_text = g.hud.edge_on && ((g.hud.cursor_sprites && g.hud.cursor_depth > 0) ||
+                                             (g.hud.wide_lines & g.hud.wide_scope & kGfxWideRuler) != 0);
   if (ts.on && cursor_text && !g.text.wide && va != 0) {
     int32_t tw = width;
     if (centre || tm->glyph_width(ctx, font, va, static_cast<int32_t>(text.size()), tw)) {

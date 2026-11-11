@@ -253,7 +253,8 @@ void gfx_set_frame_edge_text(Ctx &ctx, bool on);
 //   inside a cursor pass: its lineTo steps, width 2, alpha 7).
 // - kGfxWideRuler: the drag distance ruler (P6_Cursor: four drawMinimapSegment(.., 0x80000000 / 0x80007ff0, 2, 7) from the cursor to
 //   the drag's start, after the sprite queue and outside the cursor passes), the lines drawn inside a GfxWideLineScope of that bit.
-//   Its yards label is a frame text (the edge-text rule for frame texts, not this record).
+//   Its yards label (drawCenteredText2, inside the same scope since fix 4b) gets a cursor pass's text treatment (P22E: its whole
+//   columns, gfx.cpp draw_text_string), with gfx_set_hud_edge.
 // - kGfxWideStaff: the Staff panel's circle round the selected employee (drawEmployeeDetailPanel's drawCircle, gfx_hud.cpp
 //   b_detail_panel: its lineTo steps).
 // - kGfxWideMarks: the terrain tool's marks round the cursor cell (P4_holeGrid, after the sprite queue: drawMapLine(.., 0x80006090,
