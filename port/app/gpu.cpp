@@ -762,6 +762,9 @@ struct GpuCompositor::Impl {
   std::vector<uint32_t> fbuf;
   uint64_t final_static_rects = 0, final_dep_rects = 0, final_rect_renders = 0, final_overflow = 0;
   uint64_t final_line_rects = 0;  // P23E fix 1: the line pieces rendered (--line-tiles)
+  // P23D fix 9: the course runs' strips past the course patch's clamp drawn as dynamic final patches at a slide (one per strip and
+  // build), by side (the left / right / top / bottom of the clamp), and their pixels
+  uint64_t slide_strips_l = 0, slide_strips_r = 0, slide_strips_v = 0, slide_strip_px = 0;
   bool classify_ok = true;   // upload_frame: no blitPair1 channel overflow, the shade tables monotone
   bool c2_any = false;       // upload_frame: the frame's cursor2d plane has a pixel (a 2D tool preview)
   uint64_t classify_off = 0;
@@ -769,6 +772,13 @@ struct GpuCompositor::Impl {
   int32_t gin[4] = {0, 0, 0, 0};  // fill_gap's world rectangle at this paint's slide (x0, x1, y0, y1)
   uint64_t prev_fetch_gen = ~0ull;
   uint64_t prev_fetches = 0;
+  int64_t ns_prev_fetch = 0;  // P23D fix 9: the time fetch_prev spends (the slide strips need the gap's underlay)
+  // P23D fix 9: fill_gap's underlay read back per rectangle (build_final_patches' fetch_part): the previous course picture's pixels
+  // in prev_part where part_rects say so, valid for the swap generation part_gen
+  std::vector<uint32_t> prev_part;
+  std::vector<Rect> part_rects;
+  uint64_t part_gen = ~0ull, prev_part_fetches = 0, prev_part_px = 0;
+  int64_t ns_prev_part = 0;
   // fix 2: what changed under the final patches since their last build
   std::vector<std::array<int32_t, 4>> wdirty;  // world rectangles uploaded (upload_world)
   bool wdirty_all = false;                    // the whole world image was uploaded
@@ -1965,6 +1975,17 @@ Rect run_box(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32
   return Rect{vp.origin_x + dx + lo(r.box_x0(), vp.client_w, kLogicalW) - 1, vp.origin_y + my + lo(r.y0, vp.client_h, kLogicalH) - 1,
               vp.origin_x + dx + lo(r.box_x1(), vp.client_w, kLogicalW) + 2, vp.origin_y + my + lo(r.y1, vp.client_h, kLogicalH) + 2};
 }
+// the course picture's rectangle at offset 0 (fill_gap's rx0 .. rx1 before the window clamp, the content rows): a course patch holds
+// the CPU's picture rendered at offset 0, which has no pixels outside it, so build_course_patches clamps each run's rectangle to it
+Rect course_span(const WorldImage &w, const Viewport &vp) {
+  auto fdiv = [](int64_t a, int64_t b) { return a >= 0 ? a / b : -((-a + b - 1) / b); };
+  int32_t rx0 = vp.origin_x, rx1 = vp.origin_x + vp.client_w;
+  if (w.fw > 0) {
+    rx0 = std::min<int32_t>(rx0, vp.origin_x + static_cast<int32_t>(fdiv(static_cast<int64_t>(-w.ox) * vp.client_w, w.fw)));
+    rx1 = std::max<int32_t>(rx1, vp.origin_x - static_cast<int32_t>(fdiv(-static_cast<int64_t>(w.pw - w.ox) * vp.client_w, w.fw)));
+  }
+  return Rect{rx0, vp.origin_y, rx1, vp.origin_y + vp.client_h};
+}
 }  // namespace
 
 // packs rendered rectangles into an atlas texture and its quad list
@@ -2017,15 +2038,9 @@ void GpuCompositor::build_course_patches(const Presenter &P, const Viewport &vp,
   Impl &d = *d_;
   std::vector<Rect> rects;
   if (text) {
-    // the course picture's rectangle at offset 0 (fill_gap's rx0 .. rx1 before the window clamp, the content rows)
-    const WorldImage &w = P.world_;
-    auto fdiv = [](int64_t a, int64_t b) { return a >= 0 ? a / b : -((-a + b - 1) / b); };
-    int32_t rx0 = vp.origin_x, rx1 = vp.origin_x + vp.client_w;
-    if (w.fw > 0) {
-      rx0 = std::min<int32_t>(rx0, vp.origin_x + static_cast<int32_t>(fdiv(static_cast<int64_t>(-w.ox) * vp.client_w, w.fw)));
-      rx1 = std::max<int32_t>(rx1, vp.origin_x - static_cast<int32_t>(fdiv(-static_cast<int64_t>(w.pw - w.ox) * vp.client_w, w.fw)));
-    }
-    const int32_t ry0 = vp.origin_y, ry1 = vp.origin_y + vp.client_h;
+    // the course picture's rectangle at offset 0 (course_span)
+    const Rect span = course_span(P.world_, vp);
+    const int32_t rx0 = span.x0, rx1 = span.x1, ry0 = span.y0, ry1 = span.y1;
     for (const portsim::GfxTextRun &r : P.text_.runs) {
       if (r.layer != -1 && r.layer != -3) continue;
       if (r.target == 2 && P.world_.empty()) continue;
@@ -2101,6 +2116,36 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
         P.mover_offset(r.mover, vp, mx, my);
         const Rect b = clip(run_box(r, vp, dd + mx, my));
         if (b.x1 > b.x0 && b.y1 > b.y0) drects.push_back(b);
+      }
+    }
+    // P23D fix 9: a course text run (the base's or the wide scene's world layer) whose box reaches past the course picture's rectangle
+    // at offset 0 (course_span): build_course_patches clamps its patch to that rectangle, and paint_layered draws the patch moved by
+    // the slide, while Presenter::render draws the run itself moved by the slide and clipped only to the canvas. The run's columns /
+    // rows past the clamp, moved by the slide, are dynamic rectangles (the CPU's picture there, fill_gap's underlay included), made
+    // at each build; empty when the moved clamp holds the moved box (no slide, or the run inside the course picture)
+    if (text) {
+      const Rect span = course_span(P.world_, vp);
+      const Rect s{span.x0 + slx, span.y0 + sly, span.x1 + slx, span.y1 + sly};
+      for (const portsim::GfxTextRun &r : P.text_.runs) {
+        if (r.layer != -1 && r.layer != -3) continue;
+        if (r.target == 2 && P.world_.empty()) continue;  // build_course_patches' and draw_runs' skip
+        int32_t mx = 0, my = 0;
+        if (movers && r.mover.kind != portsim::kGfxMoverNone) P.mover_offset(r.mover, vp, mx, my);
+        const Rect u = run_box(r, vp, mx, my);
+        if (u.x0 >= span.x0 && u.x1 <= span.x1 && u.y0 >= span.y0 && u.y1 <= span.y1) continue;  // the course patch holds it whole
+        const Rect b = clip(Rect{u.x0 + slx, u.y0 + sly, u.x1 + slx, u.y1 + sly});
+        if (!(b.x1 > b.x0 && b.y1 > b.y0)) continue;
+        auto strip = [&](const Rect &q, uint64_t &n) {
+          if (!(q.x1 > q.x0 && q.y1 > q.y0)) return;
+          drects.push_back(q);
+          ++n;
+          d.slide_strip_px += static_cast<uint64_t>(q.x1 - q.x0) * static_cast<uint64_t>(q.y1 - q.y0);
+        };
+        strip(Rect{b.x0, b.y0, std::min(b.x1, s.x0), b.y1}, d.slide_strips_l);
+        strip(Rect{std::max(b.x0, s.x1), b.y0, b.x1, b.y1}, d.slide_strips_r);
+        const int32_t x0 = std::max(b.x0, s.x0), x1 = std::min(b.x1, s.x1);
+        strip(Rect{x0, b.y0, x1, std::min(b.y1, s.y0)}, d.slide_strips_v);
+        strip(Rect{x0, std::max(b.y0, s.y1), x1, b.y1}, d.slide_strips_v);
       }
     }
     const bool lines = P.line_native_ && !f.lines.empty() && f.line800.size() == static_cast<size_t>(kLogicalW) * kLogicalH &&
@@ -2195,10 +2240,61 @@ void GpuCompositor::build_final_patches(const Presenter &P, const Viewport &vp, 
   auto need_prev = [&](const Rect &r) {
     return gap && !(r.x0 >= d.gin[0] && r.x1 <= d.gin[1] && r.y0 >= d.gin[2] && r.y1 <= d.gin[3]);
   };
+  // P23D fix 9: fill_gap reads, for a canvas pixel p in the gap, the previous picture at p - (ux, uy) clamped to the client; so a
+  // rectangle's render needs only that rectangle of it. Read back into prev_part (kept for the swap generation; scene_prev_ is not
+  // touched, the CPU paths keep their own) and lent to render_rect as scene_prev_. A full read back is ~10 ms at 2560 x 1080 and
+  // 30-80 ms at 3840 x 2108 (the stall of the paint after each pan); false = the whole picture is read back already, or no staging
+  const int32_t gux = slx - P.s0x_i_, guy = sly - P.s0y_i_;
+  auto fetch_part = [&](const Rect &r) -> bool {
+    if (d.prev_fetch_gen == d.swap_gen && P.scene_prev_.size() == static_cast<size_t>(cw) * static_cast<size_t>(ch)) return false;
+    const int32_t sx0 = std::clamp(r.x0 - gux, 0, cw - 1), sx1 = std::clamp(r.x1 - 1 - gux, 0, cw - 1) + 1;
+    const int32_t sy0 = std::clamp(r.y0 - guy, 0, ch - 1), sy1 = std::clamp(r.y1 - 1 - guy, 0, ch - 1) + 1;
+    if (d.part_gen != d.swap_gen || d.prev_part.size() != static_cast<size_t>(cw) * static_cast<size_t>(ch)) {
+      d.prev_part.resize(static_cast<size_t>(cw) * static_cast<size_t>(ch));  // (its pixels count only inside part_rects)
+      d.part_rects.clear();
+      d.part_gen = d.swap_gen;
+    }
+    for (const Rect &q : d.part_rects)
+      if (sx0 >= q.x0 && sx1 <= q.x1 && sy0 >= q.y0 && sy1 <= q.y1) return true;
+    if (!d.stage_u) {
+      D3D11_TEXTURE2D_DESC td = {};
+      td.Width = static_cast<UINT>(cw);
+      td.Height = static_cast<UINT>(ch);
+      td.MipLevels = 1;
+      td.ArraySize = 1;
+      td.Format = DXGI_FORMAT_R32_UINT;
+      td.SampleDesc.Count = 1;
+      td.Usage = D3D11_USAGE_STAGING;
+      td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+      if (FAILED(d.dev->CreateTexture2D(&td, nullptr, &d.stage_u))) return false;
+    }
+    const int64_t t0 = portsim::perf_now_ns();
+    const ProfScope prof(Phase::Upload);
+    D3D11_BOX b = {static_cast<UINT>(sx0), static_cast<UINT>(sy0), 0, static_cast<UINT>(sx1), static_cast<UINT>(sy1), 1};
+    d.ctx->CopySubresourceRegion(d.stage_u, 0, static_cast<UINT>(sx0), static_cast<UINT>(sy0), 0, d.prev.t, 0, &b);
+    D3D11_MAPPED_SUBRESOURCE m;
+    if (FAILED(d.ctx->Map(d.stage_u, 0, D3D11_MAP_READ, 0, &m))) return false;
+    for (int32_t y = sy0; y < sy1; ++y)
+      std::memcpy(d.prev_part.data() + static_cast<size_t>(y) * static_cast<size_t>(cw) + static_cast<size_t>(sx0),
+                  static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch + static_cast<size_t>(sx0) * 4u,
+                  static_cast<size_t>(sx1 - sx0) * 4u);
+    d.ctx->Unmap(d.stage_u, 0);
+    d.part_rects.push_back(Rect{sx0, sy0, sx1, sy1});
+    ++d.prev_part_fetches;
+    d.prev_part_px += static_cast<uint64_t>(sx1 - sx0) * static_cast<uint64_t>(sy1 - sy0);
+    d.ns_prev_part += portsim::perf_now_ns() - t0;
+    return true;
+  };
   auto render_into = [&](const Rect &r, int32_t ax, int32_t ay, bool with_overlay) {
     const int32_t w = r.x1 - r.x0, h = r.y1 - r.y0;
-    if (need_prev(r)) fetch_prev(P);
+    bool lent = false;
+    if (need_prev(r)) {
+      lent = fetch_part(r);
+      if (lent) P.scene_prev_.swap(d.prev_part);
+      else fetch_prev(P);
+    }
     P.render_rect(cw, ch, r.x0, r.y0, w, h, false, d.tmp);
+    if (lent) P.scene_prev_.swap(d.prev_part);
     if (with_overlay) P.draw_overlay_rect(d.tmp, cw, ch, r.x0, r.y0, w, h);
     if (d.tmp.size() != static_cast<size_t>(w) * static_cast<size_t>(h)) return;
     for (int32_t y = 0; y < h; ++y)
@@ -2976,6 +3072,7 @@ void GpuCompositor::fetch_prev(const Presenter &P) {
   Impl &d = *d_;
   const int32_t cw = d.w, ch = d.h;
   if (d.prev_fetch_gen == d.swap_gen && P.scene_prev_.size() == static_cast<size_t>(cw) * static_cast<size_t>(ch)) return;
+  const int64_t t0 = portsim::perf_now_ns();
   const int32_t x0 = 0, y0 = 0, x1 = cw, y1 = ch;
   if (!d.stage_u) {
     D3D11_TEXTURE2D_DESC td = {};
@@ -3002,6 +3099,7 @@ void GpuCompositor::fetch_prev(const Presenter &P) {
                 static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch + static_cast<size_t>(x0) * 4u,
                 static_cast<size_t>(x1 - x0) * 4u);
   d.ctx->Unmap(d.stage_u, 0);
+  d.ns_prev_fetch += portsim::perf_now_ns() - t0;
 }
 
 // the A/B check (SG_P14_VERIFY=<n>): the CPU path at the same state against the back buffer
@@ -3279,8 +3377,9 @@ std::string GpuCompositor::json() const {
                 "\"verify_max_px\":%llu,\"verify_first\":\"%s\",\"shots\":%llu,\"world_rect_uploads\":%llu,\"ms_frame_uploads\":%.1f,"
                 "\"ms_world_uploads\":%.1f,\"ms_course_patches\":%.1f,\"ms_final_patches\":%.1f,\"ms_draw_calls\":%.1f,"
                 "\"final_static_rects\":%llu,\"final_dep_rects\":%llu,\"final_rect_renders\":%llu,\"final_overflow\":%llu,"
-                "\"final_line_rects\":%llu,"
-                "\"prev_fetches\":%llu,\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f,"
+                "\"final_line_rects\":%llu,\"slide_strips_l\":%llu,\"slide_strips_r\":%llu,\"slide_strips_v\":%llu,\"slide_strip_px\":%llu,"
+                "\"prev_fetches\":%llu,\"ms_prev_fetches\":%.1f,\"prev_part_fetches\":%llu,\"prev_part_px\":%llu,\"ms_prev_part\":%.1f,"
+                "\"shade_monotone\":%d,\"classify_off\":%llu,\"latency\":%d,\"ms_wait\":%.1f,\"ms_present\":%.1f,"
                 "\"final_dep_renders\":%llu,\"final_dep_kept\":%llu,\"paints_flat\":%llu,"
                 "\"p15_text\":%d,\"text_sets\":%llu,\"text_tables_made\":%llu,\"text_tables_reused\":%llu,\"text_runs_tabled\":%llu,"
                 "\"text_table_draws\":%llu,\"text_entries\":%llu,\"ms_text_tables\":%.1f,\"text_cache\":%zu,\"ov_builds\":%llu,"
@@ -3299,8 +3398,13 @@ std::string GpuCompositor::json() const {
                 static_cast<double>(d.ns_draw) / 1e6,
                 static_cast<unsigned long long>(d.final_static_rects), static_cast<unsigned long long>(d.final_dep_rects),
                 static_cast<unsigned long long>(d.final_rect_renders), static_cast<unsigned long long>(d.final_overflow),
-                static_cast<unsigned long long>(d.final_line_rects),
-                static_cast<unsigned long long>(d.prev_fetches), d.shade_mono, static_cast<unsigned long long>(d.classify_off), d.latency,
+                static_cast<unsigned long long>(d.final_line_rects), static_cast<unsigned long long>(d.slide_strips_l),
+                static_cast<unsigned long long>(d.slide_strips_r), static_cast<unsigned long long>(d.slide_strips_v),
+                static_cast<unsigned long long>(d.slide_strip_px),
+                static_cast<unsigned long long>(d.prev_fetches), static_cast<double>(d.ns_prev_fetch) / 1e6,
+                static_cast<unsigned long long>(d.prev_part_fetches), static_cast<unsigned long long>(d.prev_part_px),
+                static_cast<double>(d.ns_prev_part) / 1e6, d.shade_mono,
+                static_cast<unsigned long long>(d.classify_off), d.latency,
                 static_cast<double>(d.ns_wait) / 1e6, static_cast<double>(d.ns_present) / 1e6,
                 static_cast<unsigned long long>(d.final_dep_renders), static_cast<unsigned long long>(d.final_dep_kept),
                 static_cast<unsigned long long>(d.paints_flat), d.p15 ? 1 : 0, static_cast<unsigned long long>(d.text_sets),
