@@ -100,7 +100,8 @@ struct Pattern {
 };
 struct Pack {
   std::unordered_map<std::string, std::string> exact;
-  std::vector<Pattern> pats;                                     // most literal bytes first
+  std::unordered_map<std::string, std::string> exact_flat;  // the exact keys flattened (flat): a wrapped text's lookup
+  std::vector<Pattern> pats;                                    // most literal bytes first
   std::unordered_map<unsigned char, std::vector<size_t>> first;  // patterns by their first literal byte
   std::vector<size_t> open;                                      // patterns that start with a conversion
 };
@@ -247,16 +248,43 @@ size_t core_len(const std::string &s) {
   return n;
 }
 
-bool lookup_core(const Pack &p, const std::string &s, std::string &out);
-// the lookup itself (g_mu held): the text without its trailing blanks, which are put back after the translation
+bool lookup_core(const Pack &p, const std::string &s, std::string &out, int depth = 0);
+// a text with its line breaks and '^' marks as spaces, trailing blanks dropped: wrapMessageBuffer (commands.cpp) turns the space
+// at each break into LF, and a '^' into a space with LF after it, in g_textBuffer before the drawers read it
+std::string flat(const std::string &s) {
+  std::string f = s;
+  for (char &c : f)
+    if (c == '\n' || c == '^') c = ' ';
+  f.resize(core_len(f));
+  return f;
+}
+// the lookup itself (g_mu held): the text without its trailing blanks, which are put back after the translation; a text with a
+// line break and no line of its own is looked up flattened (the translation then has no breaks: the drawer wraps it again)
 bool lookup(const Pack &p, const std::string &s, std::string &out) {
   const size_t n = core_len(s);
-  if (n == s.size()) return lookup_core(p, s, out);
-  if (!lookup_core(p, s.substr(0, n), out)) return false;
+  const std::string core = s.substr(0, n);
+  if (s.find('\n') != std::string::npos || s.find('^') != std::string::npos) {
+    // a wrapped text: its own line first (a key that holds the breaks), then flattened (exact, then patterns), and only then
+    // the patterns over the text as it is (a pattern ending in "%s looks on in amazement." would otherwise take the first lines
+    // of a wrapped narration as its %s)
+    auto x = p.exact.find(core);
+    if (x != p.exact.end()) {
+      out = x->second + s.substr(n);
+      return true;
+    }
+    const std::string f = flat(s);
+    auto e = p.exact_flat.find(f);
+    if (e != p.exact_flat.end()) {
+      out = e->second;
+      return true;
+    }
+    if (lookup_core(p, f, out)) return true;
+  }
+  if (!lookup_core(p, core, out)) return false;
   out += s.substr(n);
   return true;
 }
-bool lookup_core(const Pack &p, const std::string &s, std::string &out) {
+bool lookup_core(const Pack &p, const std::string &s, std::string &out, int depth) {
   auto e = p.exact.find(s);
   if (e != p.exact.end()) {
     out = e->second;
@@ -285,9 +313,13 @@ bool lookup_core(const Pack &p, const std::string &s, std::string &out) {
     if (!v.conv) {
       out += v.text;
     } else if (c < best_caps.size()) {
-      // a %s part that is itself an exact line is translated too ("Club: %s" over "Club: Driver"); one level only
-      auto x = v.cls == 's' ? p.exact.find(best_caps[c]) : p.exact.end();
-      out += x != p.exact.end() ? x->second : best_caps[c];
+      // a %s part that has a translation of its own is translated too ("Club: %s" over "Club: Driver", "... at %s!" over
+      // "Hole 5"), two levels deep at most
+      std::string sub;
+      if (v.cls == 's' && depth < 2 && lookup_core(p, best_caps[c], sub, depth + 1))
+        out += sub;
+      else
+        out += best_caps[c];
       ++c;
     }
   }
@@ -421,6 +453,7 @@ int load_pack(int id, const std::string &utf8, std::vector<std::string> *errors)
       for (const Piece &x : pt.key) k += x.text;
       for (const Piece &x : pt.val) v += x.text;
       pack->exact[k] = v;
+      pack->exact_flat[flat(k)] = v;
       continue;
     }
     for (const Piece &x : pt.key)

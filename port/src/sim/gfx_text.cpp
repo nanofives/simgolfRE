@@ -816,9 +816,12 @@ void text_surface(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t 
 // H > 16 and colour is 0x80007fff, else drawTextWithColor (setQuad(colour, -1, 2, 2)), y += H, st = e + 1 (e + 2 after a '^'),
 // i = e; y > 0x248 stops. A pending line (acc > 0, y <= 0x248) is drawn the same way at the end. Returns y.
 // P11B fix 2: draw = false measures only (the end y of the same wrap; nothing drawn, the text object's markup state put back)
+// P24D: drawWindow's text in the current language, wrapped again (b_draw_window); null = g_textBuffer through lang::tr
+thread_local const std::string *t_msg_text = nullptr;
 int32_t message_buffer_impl(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour, bool draw) {
-  // P24D: wrapped in the current language
-  const std::string buf = lang::tr(gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer)));
+  // P24D: in the current language
+  const std::string buf =
+      t_msg_text ? *t_msg_text : lang::tr(gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer)));
   if (!text_metrics(ctx) && !rec().on) {
     if (draw) g.unsup("drawMessageBuffer: no text provider");
     return y;
@@ -895,6 +898,51 @@ void window_frame(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h, 
   piece(0x210, sub32(x, 4));
 }
 
+// P24D: wrapMessageBuffer's rule (commands.cpp wrap_message_buffer) over a host text `t` in place: a '^' becomes a space with a
+// LF after it, an existing LF counts, a span [S, i) wider than cols * 8 (Text_put in the root's current fonts) breaks at its last
+// space (that byte becomes LF), '_' becomes ' '. Returns the number of breaks. The root text object's markup words are put back
+// (Text_put moves them). Results are kept per (text, cols): the ticker draws the same text every frame.
+int32_t wrap_like_sim(Gfx &g, Ctx &ctx, std::string &t, int32_t cols) {
+  static thread_local std::map<std::pair<std::string, int32_t>, std::pair<std::string, int32_t>> memo;
+  const auto key = std::make_pair(t, cols);
+  auto f = memo.find(key);
+  if (f != memo.end()) {
+    t = f->second.first;
+    return f->second.second;
+  }
+  TextObj &o = root_obj(g, ctx);
+  const TextObj saved = o;
+  int32_t count = 0, S = 0, L = -1;
+  for (int32_t i = 0; i < static_cast<int32_t>(t.size()); ++i) {
+    if (t[static_cast<size_t>(i)] == '^') {
+      t[static_cast<size_t>(i)] = ' ';
+      S = i + 2;
+      ++count;
+      if (static_cast<size_t>(i) + 1 < t.size()) t[static_cast<size_t>(i) + 1] = '\n';
+    }
+    if (t[static_cast<size_t>(i)] == '\n') {
+      ++count;
+      S = i + 1;
+    }
+    if (i > S) {
+      const int32_t w = gfxt::text_put(g, ctx, t.substr(static_cast<size_t>(S), static_cast<size_t>(i - S)));
+      if (w > mul32(cols, 8) && L != -1) {
+        i = L;
+        ++count;
+        L = -1;
+        t[static_cast<size_t>(i)] = '\n';
+        S = i + 1;
+      }
+    }
+    if (t[static_cast<size_t>(i)] == '_') t[static_cast<size_t>(i)] = ' ';
+    if (t[static_cast<size_t>(i)] == ' ') L = i;
+  }
+  o = saved;
+  if (memo.size() > 512) memo.clear();
+  memo.emplace(key, std::make_pair(t, count));
+  return count;
+}
+
 // drawWindow(x, y, p3, mode) (c3ei.cpp DrawWindow_re), the drawing after the window height (the port's layout already wrapped
 // g_textBuffer with wrapMessageBuffer and stored H in g_value587ea0): a[4] = h = 15 r + 0x20 of that wrap when the caller
 // passes it (n == 5), else h = H. sel = f_w_4c2e00 + 8. With a golfer or picture (sel != -1) the window moves to (x + 0x1c,
@@ -916,11 +964,28 @@ void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
   g.ensure_root(ctx);
   GameState &gs = ctx.gs();
   int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), mode = static_cast<int32_t>(a[3]);
-  const int32_t H = gs.g_value587ea0;
-  const int32_t h = n >= 5 ? static_cast<int32_t>(a[4]) : H;
+  int32_t H = gs.g_value587ea0;
+  int32_t h = n >= 5 ? static_cast<int32_t>(a[4]) : H;
   int32_t sel = gs.f_w_4c2e00[2];
   const uint32_t root = g.root_va(ctx);
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  // P24D: the text in the current language. The simulation wrapped the English text (wrapMessageBuffer: LF at the breaks, H from
+  // its line count); a translation is wrapped again by the same rule in the same font and H / h follow its line count, for this
+  // drawing only (g_textBuffer and g_value587ea0 are not written)
+  std::string msg_tr;
+  struct MsgScope {
+    ~MsgScope() { t_msg_text = nullptr; }
+  } msg_scope;
+  if (lang::language() != lang::kEnglish) {
+    const std::string src = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::g_textBuffer));
+    msg_tr = lang::tr(src);
+    if (msg_tr != src) {
+      const int32_t r = wrap_like_sim(g, ctx, msg_tr, sel != -1 ? 0x25 : 0x2c);
+      h = add32(mul32(r, 15), 0x20);
+      H = sel != -1 && h < 0x60 ? 0x60 : h;
+      t_msg_text = &msg_tr;
+    }
+  }
   if (sel != -1) {
     if (n < 5 && H == 0x60) g.unsup("drawWindow: a golfer window whose wrapped line count is not known");
     y = add32(y, 0x2c);

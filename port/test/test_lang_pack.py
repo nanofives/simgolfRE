@@ -35,7 +35,7 @@ def rows(args: list[str]) -> dict[str, bool]:
 
 def test_selftest_p24d_all_pass():
     r = rows(["--selftest-p24d"])
-    assert len(r) == 11 and all(r.values()), r
+    assert len(r) == 12 and all(r.values()), r
 
 
 def test_selftest_p24d_control_reads_red():

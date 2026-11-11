@@ -3226,6 +3226,8 @@ void selftest_p24d(Tests &t, bool mismatch) {
   t.add("p24d-pattern-capture-translated", lang::tr("Say Alpha.") == "Dile Alfa.");
   t.add("p24d-percent-literal", lang::tr("Pct 40%") == "Porc 40%");
   t.add("p24d-escapes", lang::tr("Esc\tTab") == "Esc\tTab ES");
+  // a text the simulation wrapped (wrapMessageBuffer: LF at the break) finds its line flattened, ahead of a pattern over it
+  t.add("p24d-wrapped-flat", lang::tr("Beta\none") == "Beta uno" && lang::tr("Say Alpha\nnow.") == "Dile Alpha now.");
   t.add("p24d-utf8-to-cp1252", lang::tr("Caf\xe9") == "Caf\xe9 ES" && lang::cp1252_to_utf8("Espa\xf1ol") == "Espa\xC3\xB1ol");
   lang::set_language(lang::kEnglish);
 }
