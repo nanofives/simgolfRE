@@ -165,7 +165,7 @@ void b_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t l = std::max(x, cl), t = std::max(y, ct), r = std::min(x + s.w, cr), b = std::min(y + s.h, cb);
   // P9D (gfx.h gfx_set_hud_modal): with the modal capture each blended pixel is recorded as a kind-4 layer pixel, and a blend of
   // every root pixel with one source word marks the segment as a whole-frame dim
-  const bool rec = g.hud.any && g.hud.modal;
+  const bool rec = g.hud.on && g.hud.modal;  // P21C: also with no layer open (note_dim keeps that dim for the layer-less frame)
   size_t n = 0;
   bool one_src = true;
   uint16_t src0 = 0;

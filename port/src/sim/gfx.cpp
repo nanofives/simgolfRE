@@ -1241,6 +1241,10 @@ static void hud_publish(Gfx &g) {
     }
   } else {
     f.none = c.depth > 0 ? 2 : 1;
+    if (c.nl_dim && c.modal) {  // P21C: the screen dimmed the whole frame with no layer open (end of year)
+      f.dim_all = 1;
+      f.dim_src = c.nl_src;
+    }
   }
   if (c.depth > 0) c.aborted = true;
   c.layers.clear();
@@ -1276,6 +1280,7 @@ void Gfx::hud_carry_arm(bool again) {
 // carried gap's runs become the next frame's base runs, as every kept run does at a publish
 void Gfx::hud_carry_drop() {
   HudCapture &c = hud;
+  c.nl_dim = false;  // P21C: a new frame starts
   if (c.wr_gap) {  // P13D item 17: the gap's marking ends with the carry
     g_hud_wm = HudWriteMark{};
     c.wr_gap = false;
@@ -1314,7 +1319,12 @@ void Gfx::hud_modal_mark() {
 }
 // the report screens' dim covered every root pixel with one source word (gfx_reports.cpp Surface_drawSprite)
 void Gfx::note_dim(uint16_t src) {
-  if (!hud.any || !hud.modal) return;
+  if (!hud.on || !hud.modal) return;
+  if (!hud.any) {  // P21C: no layer in this frame: the dim goes on the layer-less frame (hud_publish)
+    hud.nl_dim = true;
+    hud.nl_src = src;
+    return;
+  }
   hud.dim_set = true;
   hud.dim_gen = hud.gen;
   hud.dim_src = src;

@@ -216,6 +216,8 @@ struct WorldJob {
   int32_t fc_x = -1, fc_y = -1;
   BandFill band = BandFill::Black;
   bool terrain = false, use = false, cursor = false, layered = false, hud_none = false, smooth_objects = false;
+  uint8_t dim_all = 0;  // P21C (WorldImage::dim_all)
+  uint16_t dim_src = 0;
   portsim::GfxHudFrame f;
   bool text = false;
   portsim::GfxTextFrame tf;

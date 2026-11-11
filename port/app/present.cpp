@@ -1111,6 +1111,25 @@ void Presenter::render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, 
   }
   auto tail = [&]() {  // the world, then (layered) the uncovered pixels, the course runs, the kept picture and the HUD layers
     if (!world_.empty()) compose_world(out, cw, ch, vs);  // P8B
+    // P21C: a layer-less modal frame whose screen dimmed the whole root (end of year, drawn before any panel layer): the root's
+    // 800 x 600 pixels are dimmed already, so the wide scene outside that rectangle gets the same quarter blend
+    if (!layered() && world_.hud_none && world_.dim_all && !world_.empty() && !course_only_ && defect_ != PresentDefect::DimLocal) {
+      const int32_t kx0 = std::max(0, C.x0), kx1 = std::min(cw, C.x0 + C.w), ky0 = std::max(0, C.y0), ky1 = std::min(ch, C.y0 + C.h);
+      auto to555 = [](uint32_t c) -> uint16_t {
+        return static_cast<uint16_t>((((c >> 19) & 31) << 10) | (((c >> 11) & 31) << 5) | ((c >> 3) & 31));
+      };
+      for (int32_t y = ky0; y < ky1; ++y) {
+        uint32_t *row = &out[static_cast<size_t>(y - C.y0) * static_cast<size_t>(C.w)] - C.x0;
+        const bool in_y = y >= vs.origin_y && y < vs.origin_y + vs.client_h;
+        for (int32_t x = kx0; x < kx1; ++x) {
+          if (in_y && x >= vs.origin_x && x < vs.origin_x + vs.client_w) {
+            x = std::min(kx1, vs.origin_x + vs.client_w) - 1;  // inside the rectangle: dimmed by the frame
+            continue;
+          }
+          row[x] = rgb555_to_bgra(static_cast<uint16_t>(portsim::gfx_layer_quarter(world_.dim_src, to555(row[x])) & 0x7fff)) | 0xff000000u;
+        }
+      }
+    }
     if (layered()) {
       if (slx != 0 || sly != 0) fill_gap(out, cw, ch, vs, slx, sly);
       if (text) {  // P9C (moved here from compose_layers by P12A: the same calls, before every layer)
