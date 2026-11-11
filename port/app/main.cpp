@@ -109,7 +109,10 @@
 //   P23D fix 6: --wide-ground on|off (default on; SG_APP_P23=off: off; needs the world layer's hr plane) the ground marks the frame
 //   draws before the sprite queue (the golfer ball records' rectangles, the golfer-target mark) go into the hr plane as the queue's
 //   first draws, so they run past the 800 frame's edge under the sprites (gfx.h gfx_set_wide_ground; drawing only).
-//   SG_P23_GROUND_LOG=<file> (development) appends one line per queued mark: queue number, x0 y0 x1 y1 (800-space), word, 1 past the edge.
+//   P23D fix 8: the same for the sprite and image the frame draws before the queue (the message golfer's marker, the player's mood
+//   image). SG_P23_GROUND_LOG=<file> (development) appends one line per queued mark: queue number, x0 y0 x1 y1 (800-space), word
+//   (0x8000 | kind for a sprite or image: 1 Sprite_draw, 5 drawB), 1 past the edge. SG_P23_MARKER=1 (development) draws the marker
+//   over the first golfer with byte +0x19 set when no message names one.
 //   P23D fix 3: --wide-bubbles on|off (default on; SG_APP_P23=off: off; needs the world layer and its hr plane) the comment
 //   bubbles the frame draws after the sprite queue (the staff walkers' six-piece bubble; P23D fix 4: the golfers' panel bar and pointer) go into the wide scene's hr plane too, so
 //   they show whole across the 800 frame's edge and in the side columns (gfx.h gfx_set_wide_bubbles; drawing only). P23D fix 7: the

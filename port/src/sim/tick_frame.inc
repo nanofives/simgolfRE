@@ -4475,20 +4475,30 @@ void P4_flyingBall(u32 F) {
 // (gfx_sprite_ref_read; roadmap S3.26); they decide only the dropped Sprite_draw and its position, no GameState byte.
 void P4_selectedSprite(u32 F) {
     (void)F;
-    if (GU8(GS(g_ui_569498)) != 1) return;                                         // ML+0x643e
-    int eax = G32((GS(f_w_4c2e00) + 8));                                                // ML+0x6440
-    if (eax == -1) return;                                                    // ML+0x6448
-    u32 g = (u32)eax << 8;                                                    // ML+0x644a
+    // P23D fix 8 (development, the pictures of the marker): SG_P23_MARKER=1 draws the marker over the first golfer whose byte +0x19
+    // is set when no message names one (the [g_ui_569498] and [f_w_4c2e00+0x8] tests skipped). Branch decisions and a local golfer
+    // index only, nothing written; unset in normal runs.
+    static const int marker_mode = std::getenv("SG_P23_MARKER") ? std::atoi(std::getenv("SG_P23_MARKER")) : 0;
     const bool gx = g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr;
     auto rd = [&](u32 va, u32 size) -> u32 {
         uint32_t v = 0;
         if (gx && gfx_sprite_ref_read(ctx, va, size, v)) return v;
         return size == 1 ? GU8(va) : (u32)G32(va);
     };
+    int eax = -1;
+    if (GU8(GS(g_ui_569498)) == 1) eax = G32((GS(f_w_4c2e00) + 8));             // ML+0x643e / ML+0x6440
+    if (marker_mode != 0 && (eax == -1 || rd(((u32)eax << 8) + (GS(g_golfers) + 33), 1) == 0)) {
+        eax = -1;
+        for (int k = 0; k < 0x99 && eax == -1; ++k)
+            if (rd(((u32)k << 8) + (GS(g_golfers) + 33), 1) != 0 && (int)rd(((u32)k << 8) + (GS(g_golfers) + 8), 4) > 0) eax = k;
+    }
+    if (eax == -1) return;                                                    // ML+0x6448
+    u32 g = (u32)eax << 8;                                                    // ML+0x644a
     if (rd(g + (GS(g_golfers) + 33), 1) == 0) return;                                     // ML+0x644d / ML+0x6455
     int edx = G32(GS(g_color16Lut));                                                // ML+0x6457
     int ecx = (int)rd(g + (GS(g_golfers) + 12), 4) - 0xa;                                 // ML+0x645d / ML+0x6471
     int x = (int)rd(g + (GS(g_golfers) + 8), 4) - 0x14;                                  // ML+0x6466 / ML+0x6474
+    GfxGroundScope ground_scope(ctx);  // P23D fix 8 (gfx.h GfxGroundScope): the marker also into the hr plane, under the queue's sprites
     tc("Sprite_draw", GS(g_sprite5423e8), Root(), x, ecx, edx, 0);                       // Sprite_draw ML+0x647f
 }
 
@@ -4539,6 +4549,7 @@ void P4_animalsAndImage(u32 F) {
     if (!draw) return;
     int y = G32(g + (GS(g_golfers) + 12)) - G32(GS(g_zoomScale)) * 10;                       // ML+0x6575..ML+0x6587
     int x = G32(g + (GS(g_golfers) + 8)) + 2;                                          // ML+0x6589 / ML+0x658f
+    GfxGroundScope ground_scope(ctx);  // P23D fix 8 (gfx.h GfxGroundScope): the mood image also into the hr plane, under the queue's sprites
     tc("Image_draw", (int)(GS(g_surfaces59b050) + 44u * (u32)c), Root(), x, y, 0);       // Image_draw ML+0x65a8 (this ML+0x659a..ML+0x65a1)
 }
 

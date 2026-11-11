@@ -437,7 +437,10 @@ static void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   int32_t x = add32(s.left, static_cast<int32_t>(a[2]));
   const int32_t y = add32(s.top, static_cast<int32_t>(a[3]));
   if (SG_NEGCTL(g_negctl_gfx) == 1) x = add32(x, 1);
+  gfxs::GroundSnap gsnap;   // P23D fix 8 (gfx_scene.h): inside GfxGroundScope the image is also kept for the hr plane (drawB)
+  const bool gr = g.hud.ground_depth > 0 && gfxs::ground_snap(g, s, x, y, 1, 1, 1, gsnap);
   draw16(s, g.root, x, y);
+  if (gr) gfxs::ground_art(g, s, s.pal.data(), 5, x, y, 1, 1, 1, gsnap);
 }
 
 // setDrawTarget(this, surf, a, b, c) (c3k.cpp SetDrawTarget_re): the font words of the root surface

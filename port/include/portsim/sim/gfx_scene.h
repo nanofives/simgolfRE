@@ -15,6 +15,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <vector>
 
 namespace portsim {
 
@@ -60,6 +61,18 @@ void bubble_scaled(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, int
 void bubble_fill(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint16_t word);
 void bubble_bar(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t xe, int32_t ye, const uint16_t *before, int32_t lx0, int32_t lx1,
                 int32_t yc);
+// P23D fix 8 (gfx.h GfxGroundScope): a sprite or image the frame code draws on the root before the queue (P4_selectedSprite's
+// marker, P4_animalsAndImage's mood image). ground_snap keeps the root pixels the draw can reach (false: not recording, outside the
+// scope or with --wide-ground off); ground_art, after the draw, marks the pixels it changed and keeps the art for the hr plane, where
+// renderSpriteQueue's start draws it with the frame's ground marks, under every sprite (kind 1 Sprite_draw's plane body, 5 drawB)
+struct GroundSnap {
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;   // 800-space, clipped to the root
+  int32_t ux0 = 0, ux1 = 0;                 // unclipped columns
+  std::vector<uint16_t> px;
+};
+bool ground_snap(Gfx &g, const Sprite8 &s, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den, GroundSnap &o);
+void ground_art(Gfx &g, const Sprite8 &s, const uint16_t *pal, uint8_t kind, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den,
+                const GroundSnap &o);
 }  // namespace gfxs
 }  // namespace portsim
 

@@ -1625,9 +1625,25 @@ void hr_box_now(LiveTerrainWorld &w, const Sprite8 &s, int32_t x, int32_t y, Sca
   ++w.hr_draws;
 }
 
+// P23D fix 8 (gfx.h GfxGroundScope): the ops a draw before the queue is kept with (Sprite_draw's plane body, drawB) and their palette
+struct PlaneOp;
+struct DrawBOp;
+const uint16_t *ground_pal(const PlaneOp &o, uint8_t &kind);
+const uint16_t *ground_pal(const DrawBOp &o, uint8_t &kind);
+template <class Op>
+const uint16_t *ground_pal(const Op &, uint8_t &kind) {
+  kind = 0;
+  return nullptr;
+}
+
 template <class Op>
 void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale sc, const char *who, Op &op) {
+  uint8_t gk = 0;   // P23D fix 8: inside GfxGroundScope, the draw is also kept for the hr plane
+  const uint16_t *gp = g.hud.ground_depth > 0 && &d == &g.root && !g_hr_pass.hr ? ground_pal(op, gk) : nullptr;
+  gfxs::GroundSnap gsnap;
+  const bool gr = gp != nullptr && gfxs::ground_snap(g, s, x, y, sc.nx, sc.ny, sc.den, gsnap);
   blit16_core(g, s, d, x, y, sc, who, op);
+  if (gr) gfxs::ground_art(g, s, gp, gk, x, y, sc.nx, sc.ny, sc.den, gsnap);
   if (g_hr_pass.hr && &d == &g.root) {
     if (g_hr_pass.plane == 0) {
       hr_blit(*g_hr_pass.hr, s, x, y, sc, op);
@@ -1885,6 +1901,14 @@ struct DrawBOp {
     put(w, pal[c]);
   }
 };
+const uint16_t *ground_pal(const PlaneOp &o, uint8_t &kind) {   // P23D fix 8
+  kind = 1;
+  return o.pal;
+}
+const uint16_t *ground_pal(const DrawBOp &o, uint8_t &kind) {
+  kind = 5;
+  return o.pal;
+}
 
 // P15C (gfx.h GfxHrGpuOp): the ops' parameters for the app's GPU path; each body above is transcribed there
 bool hr_gpu_op(const PlaneOp &o, GfxHrGpuOp &r) {
@@ -2584,12 +2608,41 @@ void ground_flush(Gfx &g, LiveTerrainWorld &w) {
   ++queue_n;
   std::vector<Gfx::HudCapture::GroundRect> list;
   list.swap(g.hud.ground);
+  std::vector<Gfx::HudCapture::GroundArt> arts;   // P23D fix 8
+  arts.swap(g.hud.ground_art);
   if (list.empty() || !gfx_wide_ground() || !w.hr_open || w.scene_w <= 0 || mode() != 0) return;
   if (w.bub800.size() != g.root.px.size()) w.bub800.assign(g.root.px.size(), 0);
   if (w.bub_word.size() != g.root.px.size()) w.bub_word.assign(g.root.px.size(), 0);
   const GfxMoverSrc keep = g_draw_src;
   g_draw_src = GfxMoverSrc{};
   for (const Gfx::HudCapture::GroundRect &r : list) {
+    if (r.art >= 0) {   // P23D fix 8: a sprite or image, in its frame-code order among the marks
+      if (static_cast<size_t>(r.art) >= arts.size()) continue;
+      const Gfx::HudCapture::GroundArt &a = arts[static_cast<size_t>(r.art)];
+      for (const auto &m : a.marks) {
+        if (m.first >= g.root.px.size() || g.root.px[m.first] != m.second) continue;   // drawn over since
+        w.bub800[m.first] = 1;
+        w.bub_word[m.first] = m.second;
+      }
+      const Scale sc{a.nx, a.ny, a.den};
+      if (a.kind == 1) {
+        PlaneOp op{g, a.pal.data()};
+        hr_blit(w, a.s, add32(a.x, w.scene_e), a.y, sc, op);
+      } else if (a.kind == 5) {
+        DrawBOp op{a.pal.data()};
+        hr_blit(w, a.s, add32(a.x, w.scene_e), a.y, sc, op);
+      } else {
+        continue;
+      }
+      const bool past = r.x0 < 0 || r.x1 > 800;
+      g_ground_queued.fetch_add(1, std::memory_order_relaxed);
+      if (past) g_ground_past.fetch_add(1, std::memory_order_relaxed);
+      if (glog) {   // the word column is 0x8000 | kind for a sprite or image (a mark's word never has bit 15)
+        std::fprintf(glog, "%u %d %d %d %d %04x %d\n", queue_n, r.x0, r.y0, r.x1, r.y1, 0x8000u | a.kind, past ? 1 : 0);
+        std::fflush(glog);
+      }
+      continue;
+    }
     if (r.x1 <= r.x0 || r.y1 <= r.y0) continue;
     for (int32_t y = std::max(r.y0, 0); y < std::min(r.y1, 600); ++y)
       for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, 800); ++x) {
@@ -2635,6 +2688,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
     if (w) w->scene_w = 0;
     g.hud.ground.clear();  // P23D fix 6
+    g.hud.ground_art.clear();  // P23D fix 8
     return;
   }
   const int32_t E = w->ox > 0 ? static_cast<int32_t>((static_cast<int64_t>(w->ox) * 800 + w->fw - 1) / w->fw) : 0;
@@ -3871,6 +3925,52 @@ bool image_draw(Gfx &g, Ctx &ctx, const uint32_t *a) {
   blit16(g, s, g.root, add32(trim(s.left, sc.nx, sc.den), static_cast<int32_t>(a[2])),
          add32(trim(s.top, sc.ny, sc.den), static_cast<int32_t>(a[3])), sc, who, op);
   return true;
+}
+
+// P23D fix 8 (gfx_scene.h): the root rectangle a draw at (x, y) of s under (nx, ny, den) can reach, one pixel wider each side
+bool ground_snap(Gfx &g, const Sprite8 &s, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den, GroundSnap &o) {
+  if (g.hud.ground_depth <= 0 || !gfx_wide_ground() || g.root.w != 800 || g.root.h != 600 || mode() != 0 || den <= 0) return false;
+  const int64_t w = static_cast<int64_t>(s.w) * std::abs(static_cast<int64_t>(nx)) / den + 2;
+  const int64_t h = static_cast<int64_t>(s.h) * std::abs(static_cast<int64_t>(ny)) / den + 2;
+  const int64_t ux0 = static_cast<int64_t>(x) - 1 - (nx < 0 ? w : 0), ux1 = static_cast<int64_t>(x) + 1 + (nx < 0 ? 0 : w);
+  const int64_t uy0 = static_cast<int64_t>(y) - 1 - (ny < 0 ? h : 0), uy1 = static_cast<int64_t>(y) + 1 + (ny < 0 ? 0 : h);
+  auto c32 = [](int64_t v) { return static_cast<int32_t>(std::max<int64_t>(INT32_MIN, std::min<int64_t>(INT32_MAX, v))); };
+  o.ux0 = c32(ux0);
+  o.ux1 = c32(ux1);
+  o.x0 = static_cast<int32_t>(std::clamp<int64_t>(ux0, 0, 800));
+  o.x1 = static_cast<int32_t>(std::clamp<int64_t>(ux1, 0, 800));
+  o.y0 = static_cast<int32_t>(std::clamp<int64_t>(uy0, 0, 600));
+  o.y1 = static_cast<int32_t>(std::clamp<int64_t>(uy1, 0, 600));
+  o.px.clear();
+  if (o.x1 > o.x0 && o.y1 > o.y0) {
+    o.px.resize(static_cast<size_t>(o.x1 - o.x0) * static_cast<size_t>(o.y1 - o.y0));
+    for (int32_t r = o.y0; r < o.y1; ++r)
+      std::copy(g.root.px.begin() + static_cast<ptrdiff_t>(r) * 800 + o.x0, g.root.px.begin() + static_cast<ptrdiff_t>(r) * 800 + o.x1,
+                o.px.begin() + static_cast<ptrdiff_t>(r - o.y0) * (o.x1 - o.x0));
+  }
+  return true;
+}
+// P23D fix 8: after the draw, the pixels it changed, and the art kept for renderSpriteQueue's start (gfx_scene.cpp ground_flush)
+void ground_art(Gfx &g, const Sprite8 &s, const uint16_t *pal, uint8_t kind, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den,
+                const GroundSnap &o) {
+  Gfx::HudCapture &hc = g.hud;
+  Gfx::HudCapture::GroundArt a;
+  a.s = s;
+  std::copy(pal, pal + 256, a.pal.begin());
+  a.kind = kind;
+  a.x = x, a.y = y, a.nx = nx, a.ny = ny, a.den = den;
+  const int32_t bw = o.x1 - o.x0;
+  for (int32_t r = o.y0; r < o.y1; ++r)
+    for (int32_t c = o.x0; c < o.x1; ++c) {
+      const uint32_t i = static_cast<uint32_t>(r) * 800u + static_cast<uint32_t>(c);
+      const uint16_t now = g.root.px[i];
+      if (now != o.px[static_cast<size_t>(r - o.y0) * static_cast<size_t>(bw) + static_cast<size_t>(c - o.x0)]) a.marks.emplace_back(i, now);
+    }
+  Gfx::HudCapture::GroundRect e;
+  e.x0 = o.ux0, e.x1 = o.ux1, e.y0 = o.y0, e.y1 = o.y1;
+  e.art = static_cast<int32_t>(hc.ground_art.size());
+  hc.ground_art.push_back(std::move(a));
+  hc.ground.push_back(e);
 }
 
 // Surface_drawSprite(this, dst, x, y, alpha, mask, flag) (c3da.cpp SurfaceDrawSprite_re: handle slot +0x94 = Sprite::drawAlpha

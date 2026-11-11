@@ -171,8 +171,19 @@ class Gfx {
     struct GroundRect {
       int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
       uint16_t word = 0;
+      int32_t art = -1;   // P23D fix 8: >= 0, the index of the sprite / image draw in ground_art this entry stands for
     };
     std::vector<GroundRect> ground;
+    // P23D fix 8: a sprite (Sprite_draw's plane body) or an image (drawB) drawn inside the scope: the art, its palette, the place and
+    // scale blit16 drew it at, and the root pixels the draw changed (index, word)
+    struct GroundArt {
+      Sprite8 s;
+      std::array<uint16_t, 256> pal{};
+      uint8_t kind = 0;   // 1 PlaneOp, 5 DrawBOp
+      int32_t x = 0, y = 0, nx = 1, ny = 1, den = 1;
+      std::vector<std::pair<uint32_t, uint16_t>> marks;
+    };
+    std::vector<GroundArt> ground_art;
     bool edge_on = false;             // P22E item 7 (gfx.h gfx_set_hud_edge): the placement box's edges too, and the edge-cut texts
     bool edge_frame = false;          // P23F (gfx.h gfx_set_frame_edge_text): the frame's own texts over the course too
     int32_t wide_e = 0;               // P23F fix 2: the wide scene's side columns (800-space) at this frame's queue (0: none)
