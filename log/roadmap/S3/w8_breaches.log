@@ -32,3 +32,8 @@
 2026-11-01 18:40:58	lock taken by hand: '(no owner.txt)'	while S3.30 waited via w8_lock.py
 2026-11-01 18:40:58	lock taken by hand: '(no owner.txt)'	while I22 waited via w8_lock.py
 2026-11-02 05:01:23	lock taken by hand: '(no owner.txt)'	while S3.31 waited via w8_lock.py
+2026-11-06 12:35:26	lock taken by hand: '(no owner.txt)'	while P13C waited via w8_lock.py
+2026-11-10 03:02:55	lock taken by hand: '(no owner.txt)'	while P22B waited via w8_lock.py
+2026-11-10 10:56:24	lock taken by hand: '(no owner.txt)'	while P23C2 waited via w8_lock.py
+2026-11-10 13:41:29	lock taken by hand: '(no owner.txt)'	while P23F_checks waited via w8_lock.py
+2026-11-10 17:02:58	lock taken by hand: '(empty owner.txt)'	while P23F_v waited via w8_lock.py

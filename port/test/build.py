@@ -84,7 +84,17 @@ def build(arch: str | None = None, config: str = "Release", negctl: int = 1, qui
     cm = cmake_exe()
     bd = build_dir(arch)
     run = dict(capture_output=quiet, text=True, errors="replace")
-    r = subprocess.run([cm, "-S", str(PORT), "-B", str(bd), "-A", arch, f"-DPORTSIM_NEGCTL={'ON' if negctl else 'OFF'}"], **run)
+    args = [cm, "-S", str(PORT), "-B", str(bd), "-A", arch, f"-DPORTSIM_NEGCTL={'ON' if negctl else 'OFF'}"]
+    # A build dir configured once without SG_FREETYPE_ROOT keeps PORTSIM_FREETYPE_ROOT empty and freetype_DIR-NOTFOUND in its
+    # cache, so a later SG_FREETYPE_ROOT was ignored and fttext stayed unlinked (gates.py's FreeType gates all ERROR,
+    # 2026-11-04). Pass the root every time and drop a cached NOTFOUND so find_package looks again.
+    ft_root = os.environ.get("SG_FREETYPE_ROOT")
+    if ft_root:
+        args.append(f"-DPORTSIM_FREETYPE_ROOT={ft_root}")
+        cache = bd / "CMakeCache.txt"
+        if cache.exists() and "freetype_DIR-NOTFOUND" in cache.read_text(encoding="utf-8", errors="replace"):
+            args.append("-Ufreetype_DIR")
+    r = subprocess.run(args, **run)
     if r.returncode:
         raise RuntimeError(f"cmake configure failed\n{(r.stdout or '')[-4000:]}{(r.stderr or '')[-2000:]}")
     r = subprocess.run([cm, "--build", str(bd), "--config", config, "--parallel"], **run)

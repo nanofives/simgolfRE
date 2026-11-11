@@ -42,8 +42,7 @@ def checker(arch: str) -> pathlib.Path | None:
     env = os.environ.get("SG_AUDIO_CHECK_" + arch.upper())
     cands = [pathlib.Path(env)] if env else []
     sub = "x64" if arch == "x64" else "w32"
-    cands += [ROOT / "port" / "build" / r / "port" / "build" / sub / "app" / "Release" / "simgolf_audio_check.exe"
-              for r in ("S7_11_root", "S7_10_root")]
+    # only the current build (2026-11-04): old step trees (S7_10_root / S7_11_root / S7_12_root) left on disk predate later fixes
     cands += [ROOT / "port" / "build" / d / "app" / "Release" / "simgolf_audio_check.exe"  # integrator / inside a mirror
               for d in (("x64",) if arch == "x64" else ("Win32", "w32"))]
     return next((c for c in cands if c.exists()), None)
@@ -279,9 +278,8 @@ def test_title_capture_equivalent_controls(defect, tmp_path):
 # ---- the app: the sim context with audio out attached --------------------------------------------------------------------
 def app_exe() -> pathlib.Path:
     env = os.environ.get("SG_APP_EXE")
+    # only the current build (2026-11-04): old step trees (S7_10_root / S7_11_root / S7_12_root) left on disk predate later fixes
     cands = ([pathlib.Path(env)] if env else []) + [
-        ROOT / "port" / "build" / "S7_11_root" / "port" / "build" / "x64" / "app" / "Release" / "simgolf_port.exe",
-        ROOT / "port" / "build" / "S7_10_root" / "port" / "build" / "x64" / "app" / "Release" / "simgolf_port.exe",
         ROOT / "port" / "build" / "x64" / "app" / "Release" / "simgolf_port.exe"]
     exe = next((c for c in cands if c.exists()), None)
     if exe is None:

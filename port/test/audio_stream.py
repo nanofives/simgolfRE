@@ -241,7 +241,7 @@ def mirror_dll() -> pathlib.Path:
         return pathlib.Path(os.environ["SG_PORTSIM_DLL"])
     for sub in ("x64_all", "x64"):        # 10_mirror.py --modules all --tag _all (every S4 module), else its default build
         m = MIRROR / sub / "Release" / "portsim_c.dll"
-        if m.exists():
+        if os.environ.get("SG_S4_MIRROR") and m.exists():     # only when asked for: a leftover mirror predates later renames
             return m
     return L.B.dll_path("x64")
 

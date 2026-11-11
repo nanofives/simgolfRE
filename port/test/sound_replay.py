@@ -473,8 +473,10 @@ def mirror_dll() -> pathlib.Path:
     port/build/S4_2b_mirror), else the integrator's build."""
     if os.environ.get("SG_PORTSIM_DLL"):
         return pathlib.Path(os.environ["SG_PORTSIM_DLL"])
+    # the S4 modules are merged: a leftover mirror build on disk (S4_2b_mirror, 2026-10-25) predates the S11.4 renames
+    # and made test_audio_chan report `no such function` (2026-11-04), so the mirror is used only when asked for
     m = MIRROR / "x64" / "Release" / "portsim_c.dll"
-    return m if m.exists() else L.B.dll_path("x64")
+    return m if (os.environ.get("SG_S4_MIRROR") and m.exists()) else L.B.dll_path("x64")
 
 
 def load_lib():
@@ -492,7 +494,7 @@ def load_w32():
     from port.test import lib32 as L32
     exe = MIRROR / "w32" / "Release" / "portsim_runner32.exe"
     dll = MIRROR / "w32" / "Release" / "portsim_c.dll"
-    if not exe.exists() or not dll.exists():
+    if not os.environ.get("SG_S4_MIRROR") or not exe.exists() or not dll.exists():
         return L32.load32()
     obj = L32.Lib32.__new__(L32.Lib32)
     obj.path = exe

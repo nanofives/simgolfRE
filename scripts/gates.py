@@ -45,13 +45,21 @@ PY = sys.executable
 PYTEST = [PY, "-m", "pytest", "-q", "-p", "no:cacheprovider"]
 W32_ENV = {"SG_BACKEND": "win32"}
 FT_ENV = {"SG_TEXT_METRICS": "freetype"}
+# row statuses that are never a pass (a census FAIL is a measured pixel difference, so the census gates use their own set)
+BAD_ROWS = frozenset({"ERROR", "FAIL", "LOAD_FAILED", "CHAIN_INVALID", "NOT_RUN", "UNJUDGED", "", None})
+CENSUS_BAD = frozenset({"ERROR", "NOT_RUN", "UNJUDGED", "", None})
 
 
 class Gate:
-    def __init__(self, name, cmd, *, env=None, tsv=False, slot=True, doc="", key=1, grep=None):
+    def __init__(self, name, cmd, *, env=None, tsv=False, slot=True, doc="", key=1, grep=None, status_col="status",
+                 bad=None):
         # grep: a regex; the summary is every log line matching it, joined (default: the log's last line)
+        # status_col: the TSV column the summary counts and the verdict reads; bad: row statuses that FAIL the gate even
+        # when the command exits 0 (2026-11-04: an all-ERROR segs_ft_x64 and a MemoryError chain both read PASS)
         self.name, self.cmd, self.env, self.tsv, self.slot, self.doc, self.key, self.grep = (
             name, cmd, env or {}, tsv, slot, doc, key, grep)
+        self.status_col = status_col
+        self.bad = BAD_ROWS if bad is None else frozenset(bad)
 
 
 def _gates(out: pathlib.Path) -> dict[str, Gate]:
@@ -84,9 +92,10 @@ def _gates(out: pathlib.Path) -> dict[str, Gate]:
         Gate("chain", [PY, "-m", "port.test.integrator", "chain", "--backend", "x64", "--all", "--jobs", "4", "--out", t("chain")],
              tsv=True, doc="segment chains as one run (gate c)"),
         Gate("census", [PY, "-m", "port.test.framegate", "--all", "--jobs", "2", "--no-probe", "--out", t("census"), "--resume"],
-             tsv=True, key=2, doc="frame census, GlRaster (raw)"),
+             tsv=True, key=2, bad=CENSUS_BAD, doc="frame census, GlRaster (raw)"),
         Gate("census_split", [PY, "-m", "port.test.framegate", "--all", "--jobs", "2", "--no-probe", "--split",
-                              "--out", t("census_split"), "--resume"], tsv=True, key=2, doc="frame census, split verdict (G18)"),
+                              "--out", t("census_split"), "--resume"], tsv=True, key=2, status_col="split_status", bad=CENSUS_BAD,
+             doc="frame census, split verdict (G18)"),
         Gate("terrain", [PY, str(ROOT / "log/roadmap/S3/2_census.py"), "terrain", "--jobs", "3", "--out", t("terrain")], tsv=True,
              doc="S3.2 terrain verdicts"),
         Gate("segs0_x64", [PY, str(ROOT / "log/roadmap/S7/12_lead_segs_sw0.py"), t("segs0_x64")], tsv=True,
@@ -259,11 +268,17 @@ def run_gate(g: Gate, i: int, m: int, a, tree: pathlib.Path, out: pathlib.Path, 
     tsv = out / f"{g.name}.tsv"
     if g.tsv and tsv.exists():
         rows = read_tsv(tsv)
-        if rows and "status" in rows[0]:
+        col = g.status_col if rows and g.status_col in rows[0] else "status"
+        if rows and col in rows[0]:
             counts = {}
             for r in rows:
-                counts[r["status"]] = counts.get(r["status"], 0) + 1
+                counts[r[col]] = counts.get(r[col], 0) + 1
             summary = " ".join(f"{k} {v}" for k, v in sorted(counts.items(), key=lambda kv: -kv[1]))
+            nbad = sum(v for k, v in counts.items() if k in g.bad)
+            if nbad and ok:
+                ok, summary = False, f"{nbad} bad rows; {summary}"
+        elif g.tsv and ok:
+            ok, summary = False, f"{tsv.name} has no {g.status_col} column; {summary}"
         if a.compare:
             cmp = compare(g, tsv, pathlib.Path(a.compare) / f"{g.name}.tsv", out / f"{g.name}.cmp.txt")
     elif g.tsv and ok:

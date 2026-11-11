@@ -211,8 +211,8 @@ def test_control_slot_check_ignores_the_alias_red(portlib):
 # ---- (c) the app's profile ------------------------------------------------------------------------------------------------
 def app_exe() -> pathlib.Path:
     env = os.environ.get("SG_APP_EXE")
+    # only the current build (2026-11-04): old step trees (S7_10_root / S7_11_root / S7_12_root) left on disk predate later fixes
     cands = ([pathlib.Path(env)] if env else []) + [
-        ROOT / "port" / "build" / "S7_12_root" / "port" / "build" / "x64" / "app" / "Release" / "simgolf_port.exe",
         ROOT / "port" / "build" / "x64" / "app" / "Release" / "simgolf_port.exe"]  # the integrator's / inside the mirror
     exe = next((c for c in cands if c.exists()), None)
     if exe is None:

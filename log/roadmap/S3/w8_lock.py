@@ -125,6 +125,13 @@ def stamp():
 
 
 def take(step, what="", need_gb=8.0, max_wait=None, priority=False):
+    # 2026-11-06 (P13 orchestrator): LIVING-PC sits at 4-7 GB free commit, so an 8 GB take at the head of the queue blocks every
+    # waiter behind it (the lock is strictly first-in-line). Cap the need at W8_NEED_GB_CAP (default 4); test-slot still caps each
+    # run at 8 GB and waits for memory itself. Set W8_NEED_GB_CAP=0 to restore the old behaviour.
+    cap = float(os.environ.get("W8_NEED_GB_CAP", "4") or 0)
+    if cap > 0 and need_gb > cap:
+        print(f"[w8_lock] {step}: --need-gb {need_gb:g} capped at {cap:g} (W8_NEED_GB_CAP)", flush=True)
+        need_gb = cap
     wp = wait_path(step)
     if wp.exists():
         kv = read_kv(wp) or {}
