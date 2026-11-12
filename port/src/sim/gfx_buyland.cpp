@@ -143,11 +143,21 @@ void b_draw_right(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const uint32_t self = a[0];
   uint32_t text = a[1];
   if (text == 0) return;
-  const uint32_t font = g.fonts[0];
+  uint32_t font = g.fonts[0];
   if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return;
+  struct FontBack {  // P24D fix 5d: the backend's font put back after a fitted draw
+    Gfx &g;
+    uint32_t f;
+    ~FontBack() { g.fonts[0] = f; }
+  } font_back{g, font};
   // P24D fix 5: the text in the current language before it is measured (its own width ends it at x + w; taken whole)
   const uint32_t tv = lang::language() != lang::kEnglish ? lang::redirect(ctx, text) : text;
   const int32_t cap = tv != text ? 0x7fffffff : static_cast<int32_t>(a[5]);
+  if (tv != text) {  // P24D fix 5d: a smaller game font when the translation runs well past the English
+    font = gfxb::lang_fit_font(ctx, font, text, std::min(static_cast<int32_t>(vstrlen(ctx.mem, text)), static_cast<int32_t>(a[5])), tv,
+                               static_cast<int32_t>(vstrlen(ctx.mem, tv)));
+    g.fonts[0] = font;
+  }
   text = tv;
   std::string s = gfxb::vstring(ctx.mem, text);
   const int32_t n = std::min(static_cast<int32_t>(s.size()), cap);

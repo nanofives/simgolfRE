@@ -196,9 +196,13 @@ void aligned(Gfx &g, Ctx &ctx, const uint32_t *a, Align al, const char *who) {
   int32_t len = static_cast<int32_t>(al == Align::InWidth ? a[6] : a[5]);
   // P24D fix 5: the text in the current language BEFORE it is measured, so centring and right alignment use its own width
   // (the count cap is the English text's: a translation is taken whole)
+  uint32_t en_va = 0;
+  int32_t en_n = 0;
   if (text != 0 && lang::language() != lang::kEnglish) {
     const uint32_t tv = lang::redirect(ctx, text);
     if (tv != text) {
+      en_va = text;
+      en_n = std::min(static_cast<int32_t>(vstrlen(ctx.mem, text)), len);
       text = tv;
       len = 0x7fffffff;
     }
@@ -218,6 +222,8 @@ void aligned(Gfx &g, Ctx &ctx, const uint32_t *a, Align al, const char *who) {
     g.fonts[0] = font;
     g.fonts[1] = g.fonts[2] = 0;
   }
+  if (en_va != 0 && g.fonts[0] != 0 && ctx.mem.load<uint32_t>(g.fonts[0] + 4) != 0)  // P24D fix 5d: a smaller game font when needed
+    g.fonts[0] = gfxb::lang_fit_font(ctx, g.fonts[0], en_va, en_n, text, static_cast<int32_t>(vstrlen(ctx.mem, text)));
   const uint32_t f = g.fonts[0];
   if (f == 0 || ctx.mem.load<uint32_t>(f + 4) == 0) return;
   std::string s = gfxb::vstring(ctx.mem, text);

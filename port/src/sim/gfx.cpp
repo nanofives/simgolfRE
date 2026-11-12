@@ -485,6 +485,41 @@ static bool text_ink_columns(Ctx &ctx, TextMetrics &tm, uint32_t font, const std
   c1 = add32(x, hi + 1 - pad);
   return true;
 }
+uint32_t lang_fit_font(Ctx &ctx, uint32_t font, uint32_t en_va, int32_t en_n, uint32_t tr_va, int32_t tr_n) {
+  if (lang::language() == lang::kEnglish || font == 0 || en_va == 0 || tr_va == 0 || en_n <= 0 || tr_n <= 0) return font;
+  TextMetrics *tm = text_metrics(ctx);
+  if (!tm) return font;
+  int32_t en_w = 0, tr_w = 0;
+  if (!tm->glyph_width(ctx, font, en_va, en_n, en_w) || !tm->glyph_width(ctx, font, tr_va, tr_n, tr_w)) return font;
+  const int32_t bound = add32(en_w + en_w / 10, 2);
+  if (tr_w <= bound) return font;
+  GameFont me;
+  try {
+    me = game_font(ctx, font);
+  } catch (...) {
+    return font;
+  }
+  // the game's smaller fonts of this face and style, largest first
+  std::vector<std::pair<int32_t, uint32_t>> ladder;
+  for (size_t i = 0; i < game_font_count(); ++i) {
+    const uint32_t r = game_font_ref(ctx, i);
+    if (r == font || ctx.mem.load<uint32_t>(r + 4) == 0) continue;
+    try {
+      const GameFont f = game_font(ctx, r);
+      if (f.face == me.face && f.style == me.style && f.size < me.size && f.size >= 9) ladder.emplace_back(f.size, r);
+    } catch (...) {
+    }
+  }
+  std::sort(ladder.begin(), ladder.end(), [](const auto &a, const auto &b) { return a.first > b.first; });
+  uint32_t pick = font;
+  for (const auto &l : ladder) {
+    pick = l.second;
+    int32_t w = 0;
+    if (tm->glyph_width(ctx, pick, tr_va, tr_n, w) && w <= bound) break;
+  }
+  return pick;
+}
+
 void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x0, int32_t y0, uint32_t colour, bool centre,
                       const char *who) {
   g.ensure_root(ctx);
@@ -496,10 +531,14 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   if (text.empty()) return;
   // P24D: the text in the current language (a text at an address is redirected to its translation, so the provider measures
   // the translation; a text the caller built is looked up as it is)
+  uint32_t en_va = 0;  // P24D fix 5d: the English text a translation replaced (its width bounds the box)
+  int32_t en_n = 0;
   if (lang::language() != lang::kEnglish) {
     if (va != 0) {
       const uint32_t nva = lang::redirect(ctx, va);
       if (nva != va && text == vstring(ctx.mem, va)) {
+        en_va = va;
+        en_n = static_cast<int32_t>(text.size());
         va = nva;
         text = vstring(ctx.mem, va);
       }
@@ -515,8 +554,9 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
     gfxt::draw_string(g, ctx, text, x0, y0, colour, centre, who);
     return;
   }
-  const uint32_t font = g.fonts[0];
+  uint32_t font = g.fonts[0];
   if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return;   // drawText's guard: no font, nothing drawn
+  if (en_va != 0) font = lang_fit_font(ctx, font, en_va, en_n, va, static_cast<int32_t>(text.size()));  // P24D fix 5d
   int32_t width = 0, ascent = 0;
   if (centre && (va == 0 || !tm->glyph_width(ctx, font, va, static_cast<int32_t>(text.size()), width))) {
     g.unsup(std::string(who) + ": the provider cannot measure");

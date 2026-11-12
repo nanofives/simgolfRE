@@ -328,6 +328,11 @@ void draw_g16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y);
 void draw_g16_lut(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, const uint16_t *lut, size_t lut_n);
 // block 1 of build16BitColorTable in RGB555 (the table g_color16Lut points at)
 const std::array<uint16_t, 0x8000> &shade_lut();
+// P24D fix 5d: the font a translation at tr_va (tr_n bytes) is drawn in where its English at en_va (en_n bytes) sat in `font`:
+// `font` itself when the translation is at most 10 % (+ 2 pixels) wider than the English; else the largest smaller FontRef of
+// the game with the same face and style (size >= 9) that brings it within that bound, or the smallest of them. The English
+// fitted its box, so its width bounds the box from below. Only for a language other than English (else `font`).
+uint32_t lang_fit_font(Ctx &ctx, uint32_t font, uint32_t en_va, int32_t en_n, uint32_t tr_va, int32_t tr_n);
 // the text drawers' common path (drawRichText's run drawer): plain text, a direct colour, through the context's TextMetrics
 void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x0, int32_t y0, uint32_t colour, bool centre,
                       const char *who);
