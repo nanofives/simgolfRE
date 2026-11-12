@@ -189,10 +189,20 @@ void b_draw_sprite(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 enum class Align { Left, Centre, Right, InWidth };
 
 void aligned(Gfx &g, Ctx &ctx, const uint32_t *a, Align al, const char *who) {
-  const uint32_t self = a[0], font = a[1], text = a[2];
+  const uint32_t self = a[0], font = a[1];
+  uint32_t text = a[2];
   int32_t x = static_cast<int32_t>(a[3]), y = static_cast<int32_t>(a[4]);
   const int32_t w = al == Align::InWidth ? static_cast<int32_t>(a[5]) : 0;
-  const int32_t len = static_cast<int32_t>(al == Align::InWidth ? a[6] : a[5]);
+  int32_t len = static_cast<int32_t>(al == Align::InWidth ? a[6] : a[5]);
+  // P24D fix 5: the text in the current language BEFORE it is measured, so centring and right alignment use its own width
+  // (the count cap is the English text's: a translation is taken whole)
+  if (text != 0 && lang::language() != lang::kEnglish) {
+    const uint32_t tv = lang::redirect(ctx, text);
+    if (tv != text) {
+      text = tv;
+      len = 0x7fffffff;
+    }
+  }
   if (text == 0) return;
   const uint32_t saved[3] = {g.fonts[0], g.fonts[1], g.fonts[2]};
   struct Restore {

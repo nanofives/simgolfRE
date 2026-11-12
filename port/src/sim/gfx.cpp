@@ -614,7 +614,8 @@ static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const uint32_t font = state_va(ctx, &GameState::g_fontRef_519fd8);
   if (ctx.mem.load<uint32_t>(font + 4) != 0) g.fonts[0] = font;
   g.fonts[1] = g.fonts[2] = g.fonts[3] = 0;
-  const int32_t w = mul32(static_cast<int32_t>(vstrlen(ctx.mem, text)), 3);
+  // P24D fix 5: 3 per byte of the text in the current language (the one drawn below)
+  const int32_t w = mul32(static_cast<int32_t>(vstrlen(ctx.mem, lang::redirect(ctx, text))), 3);
   int32_t half = static_cast<int32_t>(a[0]);
   // P23F fix 2 (gfx_text.cpp hover_help_terrain): P11C's course tip at a cursor near or past the frame's edge is held inside the
   // window's columns (the side columns' width wide_in each side) instead of the 800 frame's

@@ -1235,6 +1235,7 @@ void info_panel_slot_tip(Gfx &g, Ctx &ctx, int32_t sel) {
   else if (sel == 0x16) text = pool(ctx, GSO(f_strpool_4c7f1c, 0));
   const int32_t px = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel)));
   const int32_t py = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_point16_4c79b4, 4 * sel + 2)));
+  text = lang::tr(text);  // P24D fix 5: the bar spans the text in the current language
   const int32_t n3 = mul32(static_cast<int32_t>(text.size()), 3);
   map_bar(g, ctx, sub32(add32(px, 0x14), n3), add32(add32(px, 0x14), n3), add32(py, 1));
   centred(g, ctx, text, add32(px, 0x14), sub32(py, 4));
@@ -1493,6 +1494,7 @@ void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y) {
   if (hover == -4) text = pool(ctx, GSO(f_strpool_4c80d0, 0x1f8));
   else if (hover == -3) text = pool(ctx, GSO(g_golferTypes, 0x10));
   else if (hover == -2) text = pool(ctx, GSO(f_strpool_4c5d20, 0xa8));
+  text = lang::tr(text);  // P24D fix 5
   const int32_t n3 = mul32(static_cast<int32_t>(text.size()), 3);
   map_bar(g, ctx, sub32(x, n3), add32(x, n3), sub32(y, 5));
   centred(g, ctx, text, x, sub32(y, 10));
@@ -1549,6 +1551,7 @@ void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b) {
     if (c.src >= 0) v = ctx.mem.load<int16_t>(va(ctx, GSO(f_tab_buildItems_4c26b0, c.src)));
     else if (c.src == -2) v = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(g_tileTypeAttrs, 0x323))));
   }
+  text = lang::tr(text);  // P24D fix 5
   const int32_t n3 = mul32(static_cast<int32_t>(text.size()), 3);
   const int32_t x0 = add32(sub32(x, n3), 0x14), x1 = add32(add32(n3, x), 0x14);
   map_bar(g, ctx, x0, x1, add32(y, 0xa));

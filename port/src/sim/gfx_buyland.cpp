@@ -140,12 +140,17 @@ void b_draw_text_lines_at(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 
 void b_draw_right(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
-  const uint32_t self = a[0], text = a[1];
+  const uint32_t self = a[0];
+  uint32_t text = a[1];
   if (text == 0) return;
   const uint32_t font = g.fonts[0];
   if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return;
+  // P24D fix 5: the text in the current language before it is measured (its own width ends it at x + w; taken whole)
+  const uint32_t tv = lang::language() != lang::kEnglish ? lang::redirect(ctx, text) : text;
+  const int32_t cap = tv != text ? 0x7fffffff : static_cast<int32_t>(a[5]);
+  text = tv;
   std::string s = gfxb::vstring(ctx.mem, text);
-  const int32_t n = std::min(static_cast<int32_t>(s.size()), static_cast<int32_t>(a[5]));
+  const int32_t n = std::min(static_cast<int32_t>(s.size()), cap);
   if (n <= 0) return;
   s.resize(static_cast<size_t>(n));
   TextMetrics *tm = text_metrics(ctx);
