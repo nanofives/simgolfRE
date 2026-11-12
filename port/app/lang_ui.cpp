@@ -55,6 +55,7 @@ void LangUi::startup(const std::string &install, const std::string &data_dir) {
     std::printf("LANG en (no pack at %s)\n", pack.string().c_str());
     return;
   }
+  art_dir = (pack.parent_path() / "es").string();  // the redrawn art beside the pack (scripts/lang/redraw_art.py)
   std::vector<std::string> errors;
   const int n = lang::load_pack(lang::kSpanish, read_all(pack), &errors);
   for (size_t i = 0; i < errors.size() && i < 20; ++i) std::printf("LANG pack %s\n", errors[i].c_str());

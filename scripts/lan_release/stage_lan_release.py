@@ -168,6 +168,18 @@ def main():
         dst_rel = os.path.join("game", "Lang", "simgolf_es.txt")
         place(pack, os.path.join(out, dst_rel)); wanted.add(dst_rel)
         print("[+] language pack: %s" % dst_rel)
+        # the redrawn art (scripts/lang/redraw_art.py writes lang\es\<install path>) beside it, read in place of the install's
+        art = os.path.join(HERE, "..", "..", "lang", "es")
+        n_art = 0
+        for root, dirs, files in os.walk(art):
+            dirs.sort()
+            for fn in sorted(files):
+                rel = os.path.relpath(os.path.join(root, fn), art)
+                dst_rel = os.path.join("game", "Lang", "es", rel)
+                place(os.path.join(root, fn), os.path.join(out, dst_rel)); wanted.add(dst_rel)
+                n_art += 1
+        if n_art:
+            print("[+] language art: %d files in game\\Lang\\es" % n_art)
 
     for f in CLIENT_FILES:
         place(os.path.join(HERE, f), os.path.join(out, f)); wanted.add(f)

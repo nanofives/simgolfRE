@@ -61,6 +61,10 @@ class AppFiles : public portsim::GameFiles {
   // segment_files.py): kept in memory, read after the data directory and before the install, listed with the install.
   void add_fixture(const std::string &name, std::vector<uint8_t> bytes) { fixtures_.put(name, std::move(bytes)); }
 
+  // P24D (lang_ui.h): while portsim::lang::language() is `lang`, a name the directory `dir` holds (the language's redrawn art,
+  // game\Lang\es\<name> in the LAN build) is read from there instead of the install (after the data directory's saves)
+  void set_lang_overlay(int lang, const std::string &dir);
+
   // whether a logical name stays inside a root directory (no `..`, drive, stream or absolute part)
   static bool safe_name(const std::string &name);
   // the default data directory: %LOCALAPPDATA%\SimGolfPort (else the current directory's SimGolfPort)
@@ -76,6 +80,9 @@ class AppFiles : public portsim::GameFiles {
   SavesDefect defect_;
   std::unique_ptr<portsim::DirGameFiles> install_files_;  // read-only use: write / remove are never called on it
   std::unique_ptr<portsim::DirGameFiles> data_files_;     // write-through: its writes land under data_
+  std::unique_ptr<portsim::DirGameFiles> lang_files_;     // P24D: set_lang_overlay (read-only use)
+  int lang_id_ = -1;
+  mutable std::set<std::string> lang_served_;  // P24D: the names served from lang_files_ (logged once)
   portsim::MemoryGameFiles memory_;                       // '$' names
   portsim::MemoryGameFiles fixtures_;                     // add_fixture
   std::set<std::string> deleted_;                         // normalised names hidden from the install

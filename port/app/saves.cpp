@@ -1,7 +1,10 @@
 // The app's game files (saves.h): the install read-only, the saves overlay under the app's data directory.
 #include "saves.h"
 
+#include "portsim/sim/lang.h"  // P24D: set_lang_overlay
+
 #include <algorithm>
+#include <cstdio>
 #include <cstdlib>
 #include <cwctype>
 #include <filesystem>
@@ -89,6 +92,14 @@ AppFiles::AppFiles(const std::string &install, const std::string &data, SavesDef
     if (!line.empty()) deleted_.insert(line);
 }
 
+void AppFiles::set_lang_overlay(int lang, const std::string &dir) {
+  std::error_code ec;
+  if (!fs::is_directory(fs::path(dir), ec)) return;
+  lang_files_ = std::make_unique<portsim::DirGameFiles>(dir);
+  lang_files_->set_write_through(false);
+  lang_id_ = lang;
+}
+
 bool AppFiles::tombstoned(const std::string &name) const { return deleted_.count(normalize(name)) != 0; }
 
 void AppFiles::save_tombstones() const {
@@ -104,6 +115,10 @@ int64_t AppFiles::size(const std::string &name) const {
     if (d >= 0) return d;
   }
   if (tombstoned(name)) return -1;
+  if (lang_files_ && portsim::lang::language() == lang_id_) {  // P24D
+    const int64_t l = lang_files_->size(name);
+    if (l >= 0) return l;
+  }
   const int64_t f = fixtures_.size(name);
   if (f >= 0) return f;
   return install_files_->size(name);
@@ -114,6 +129,13 @@ int64_t AppFiles::read(const std::string &name, uint64_t offset, void *buf, uint
   if (!ok()) return -1;
   if (defect_ != SavesDefect::NoReadBack && data_files_->size(name) >= 0) return data_files_->read(name, offset, buf, cap);
   if (tombstoned(name)) return -1;
+  if (lang_files_ && portsim::lang::language() == lang_id_ && lang_files_->size(name) >= 0) {  // P24D
+    if (lang_served_.insert(normalize(name)).second) {  // once per name, into the app's log
+      std::printf("LANG art %s\n", name.c_str());
+      std::fflush(stdout);
+    }
+    return lang_files_->read(name, offset, buf, cap);
+  }
   if (fixtures_.size(name) >= 0) return fixtures_.read(name, offset, buf, cap);
   return install_files_->read(name, offset, buf, cap);
 }

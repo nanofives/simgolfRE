@@ -24,6 +24,7 @@ struct LangUi {
   std::atomic<bool> open{false};       // the list is shown
   std::atomic<int> hover{-1};          // the list row under the cursor (-1 none)
   std::string settings;                // <data>\settings.ini
+  std::string art_dir;                 // the pack's folder + es: the redrawn art (AppFiles::set_lang_overlay)
 
   // load the pack and the remembered language; prints one `LANG ...` line
   void startup(const std::string &install, const std::string &data_dir);

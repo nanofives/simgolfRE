@@ -3856,6 +3856,10 @@ int main(int argc, char **argv) {
   AppFiles files(o.install, o.data, sd);
   files.set_newest_first(o.newest_saves);  // P23A item 2
   lang_ui().startup(o.install, o.data);  // P24D: the language pack and the remembered language (lang_ui.h)
+  {  // P24D: the redrawn art (SG_LANG_ART=off: none)
+    const char *art = std::getenv("SG_LANG_ART");
+    if (lang_ui().available.load() && !(art && !std::strcmp(art, "off"))) files.set_lang_overlay(portsim::lang::kSpanish, lang_ui().art_dir);
+  }
   if (!files.ok()) {
     std::fprintf(stderr, "saves overlay refused: %s\n", files.error().c_str());
     return 3;
