@@ -250,6 +250,7 @@ size_t core_len(const std::string &s) {
 
 // how many levels of %s parts are translated inside a pattern's match (lookup_core; set_capture_depth, g_mu held to read)
 int g_cap_depth = kCaptureDepth;
+bool g_lead_blanks = true;  // P24K (set_leading_blanks)
 bool lookup_core(const Pack &p, const std::string &s, std::string &out, int depth = 0);
 // a text with its line breaks and '^' marks as spaces, trailing blanks dropped: wrapMessageBuffer (commands.cpp) turns the space
 // at each break into LF, and a '^' into a space with LF after it, in g_textBuffer before the drawers read it
@@ -260,9 +261,23 @@ std::string flat(const std::string &s) {
   f.resize(core_len(f));
   return f;
 }
-// the lookup itself (g_mu held): the text without its trailing blanks, which are put back after the translation; a text with a
-// line break and no line of its own is looked up flattened (the translation then has no breaks: the drawer wraps it again)
+// the lookup of one text (g_mu held; lookup below adds the leading blanks): the text without its trailing blanks, which are
+// put back after the translation; a text with a line break and no line of its own is looked up flattened (the translation then
+// has no breaks: the drawer wraps it again)
+bool lookup_text(const Pack &p, const std::string &s, std::string &out);
+// P24K: leading blanks too. showPopup (commands_popup.inc draw_popup_pass) draws each option line by itself, and an option line
+// starts with a space (that space is what marks it as an option), so " <option>" reaches the drawer. A key written with its
+// leading blanks wins (the story replies of batch 8b); otherwise the text without them is looked up and they are put back.
 bool lookup(const Pack &p, const std::string &s, std::string &out) {
+  if (lookup_text(p, s, out)) return true;
+  if (!g_lead_blanks) return false;
+  size_t lead = 0;
+  while (lead < s.size() && (s[lead] == ' ' || s[lead] == '\t')) ++lead;
+  if (lead == 0 || lead >= core_len(s) || !lookup_text(p, s.substr(lead), out)) return false;
+  out = s.substr(0, lead) + out;
+  return true;
+}
+bool lookup_text(const Pack &p, const std::string &s, std::string &out) {
   const size_t n = core_len(s);
   const std::string core = s.substr(0, n);
   if (s.find('\n') != std::string::npos || s.find('^') != std::string::npos) {
@@ -318,12 +333,25 @@ bool lookup_core(const Pack &p, const std::string &s, std::string &out, int dept
       // a %s part that has a translation of its own is translated too ("Club: %s" over "Club: Driver", "... at %s!" over
       // "Hole 5"), three levels deep at most (P24J: the tile inside a quoted thought inside a comment tip is the third); a part
       // is looked up only when it is shorter than the text holding it, so a level can never see the same text again
+      // P24K: a part with blanks around it (a word with its trailing space before a number, a clause with its leading space
+      // after one) is looked up as it is first, then without them (keys never end in a blank: load_pack trims them), and the
+      // blanks are put back
+      const std::string &cap = best_caps[c];
       std::string sub;
-      if (v.cls == 's' && depth < g_cap_depth && best_caps[c].size() < s.size() &&
-          lookup_core(p, best_caps[c], sub, depth + 1))
-        out += sub;
-      else
-        out += best_caps[c];
+      bool done = false;
+      if (v.cls == 's' && depth < g_cap_depth && cap.size() < s.size()) {
+        done = lookup_core(p, cap, sub, depth + 1);
+        if (!done && g_lead_blanks) {
+          size_t a = 0;
+          while (a < cap.size() && (cap[a] == ' ' || cap[a] == '\t')) ++a;
+          const size_t b = core_len(cap);
+          if (b > a && (a > 0 || b < cap.size()) && lookup_core(p, cap.substr(a, b - a), sub, depth + 1)) {
+            sub = cap.substr(0, a) + sub + cap.substr(b);
+            done = true;
+          }
+        }
+      }
+      out += done ? sub : cap;
       ++c;
     }
   }
@@ -486,6 +514,13 @@ bool has_pack(int id) {
 void set_capture_depth(int levels) {
   std::lock_guard<std::mutex> lk(g_mu);
   g_cap_depth = levels < 0 ? 0 : levels;
+  for (auto &c : g_cache) c.clear();
+  for (auto &a : g_arena) a.second->lang = -1;
+}
+
+void set_leading_blanks(bool on) {
+  std::lock_guard<std::mutex> lk(g_mu);
+  g_lead_blanks = on;
   for (auto &c : g_cache) c.clear();
   for (auto &a : g_arena) a.second->lang = -1;
 }

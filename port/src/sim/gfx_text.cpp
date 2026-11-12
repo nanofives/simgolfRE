@@ -1723,7 +1723,7 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
   call(g, ctx, "drawFrameR3", {u(x - 8), u(y - 8), 0x1a0, 0x50, 1});
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
-  text_surface(g, ctx, "Loading...", x + 0xc, y + 0x10, 0x80007fffu);
+  text_surface(g, ctx, lang::tr("Loading..."), x + 0xc, y + 0x10, 0x80007fffu);  // P24K: drawRichText runs skip the lookup
   const int32_t tx = x + 0xc, ty = y + 0x30, tw = 0x1a0 - 0x28, th = 12;
   const double f = a[1] ? std::min(0.95, static_cast<double>(a[0]) / a[1]) : 0.5;
   const int32_t fw = static_cast<int32_t>((tw - 4) * f);

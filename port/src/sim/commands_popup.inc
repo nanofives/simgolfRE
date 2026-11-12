@@ -67,7 +67,12 @@ void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_
     if (m.load<uint8_t>(buf + k) != 0x0a) continue;
     const uint32_t line = buf + seg;
     m.store<uint8_t>(buf + k, 0);
-    if (m.load<uint8_t>(line) == ' ') {
+    // P24K: a translated line fits the popup's own free width (the box from the widest English line, less the text's x for an
+    // option, a margin each side for a caption) instead of its own English width, so the lines keep one font size where they
+    // fit; gfx body text.box, drawing only
+    const bool option_line = m.load<uint8_t>(line) == ' ';
+    popup_gx(ctx, "text.box", {u32(option_line ? sub32(box_w, 0x24 + 8) : sub32(box_w, 0x10))});
+    if (option_line) {
       if (first == -1) first = line_idx;
       const int32_t idx = line_idx - first;
       const uint32_t bit = 1u << (u32(idx) & 31);
@@ -93,6 +98,7 @@ void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_
     line_y = add32(line_y, (first != -1 ? 6 : 0) + 0x12);
     ++line_idx;
   }
+  popup_gx(ctx, "text.box", {0});  // P24K
   popup_gx(ctx, "Window::refreshFull", {win, 0});
 }
 

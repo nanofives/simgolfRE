@@ -41,6 +41,9 @@ void set_language(int id);  // kEnglish (the game's own text) or a language with
 // tip -> 'thought' Name -> thought -> tile: three). set_capture_depth changes it (clears the cached results; tools' checks only)
 constexpr int kCaptureDepth = 3;
 void set_capture_depth(int levels);
+// P24K: a text with leading blanks (a popup's option line) is looked up without them when it has no key of its own, and a %s
+// part with blanks around it is translated without them (blanks kept); off only for the tools' checks (clears the cached results)
+void set_leading_blanks(bool on);
 int language();
 // The translation of `s` (code page 1252 bytes) in the current language; `s` when there is none (always in English)
 std::string tr(const std::string &s);

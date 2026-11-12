@@ -3339,17 +3339,20 @@ void lang_bench(Tests &t, const char *pack_path) {
 
 // P24D (lang_ui.h, portsim/sim/lang.h): the language pack's matcher on a synthetic pack (no game text). `p24d-mismatch` loads the
 // pattern row with its conversions swapped: the load count, the refusal count and the pattern rows read FAIL. `p24j-depth2` keeps
-// the capture depth at 2 (before P24J): the two depth-3 rows read FAIL.
-void selftest_p24d(Tests &t, bool mismatch, bool depth2) {
+// the capture depth at 2 (before P24J): the two depth-3 rows read FAIL. `p24k-no-leading` turns P24K's blank trimming off:
+// the option row and the capture-blanks row read FAIL.
+void selftest_p24d(Tests &t, bool mismatch, bool depth2, bool no_lead) {
   namespace lang = portsim::lang;
   const std::string pack = std::string("# comment\nAlpha\tAlfa\nBeta one\tBeta uno\nTotal: %d of %s\t") +
                            (mismatch ? "%s de %d: Total" : "Total: %d de %s") +
                            "\nSay %s.\tDile %s.\nPct %d%%\tPorc %d%%\nBad %s\tMal %d\nEsc\\tTab\tEsc\\tTab ES\nCaf\xC3\xA9\tCaf\xC3\xA9 ES\n"
                            // P24J: a comment tip's nesting (tip -> 'thought' Name -> thought -> tile)
-                           "Tip: %s\tPista: %s\n'%s' %s\t'%s' %s\nDarn, in the %s!\t\xC2\xA1Rayos, en el %s!\nwater\tagua\n";
+                           "Tip: %s\tPista: %s\n'%s' %s\t'%s' %s\nDarn, in the %s!\t\xC2\xA1Rayos, en el %s!\nwater\tagua\n"
+                           // P24K: a key written with its leading blank
+                           " Beta one\t Beta UNO\n";
   std::vector<std::string> errors;
   const int n = lang::load_pack(lang::kSpanish, pack, &errors);
-  t.add("p24d-load-counts", n == 11);
+  t.add("p24d-load-counts", n == 12);
   t.add("p24d-refuses-conversion-mismatch", errors.size() == 1u);
   lang::set_language(lang::kEnglish);
   t.add("p24d-english-unchanged", lang::tr("Alpha") == "Alpha");
@@ -3363,6 +3366,14 @@ void selftest_p24d(Tests &t, bool mismatch, bool depth2) {
   t.add("p24d-escapes", lang::tr("Esc\tTab") == "Esc\tTab ES");
   // a text the simulation wrapped (wrapMessageBuffer: LF at the break) finds its line flattened, ahead of a pattern over it
   t.add("p24d-wrapped-flat", lang::tr("Beta\none") == "Beta uno" && lang::tr("Say Alpha\nnow.") == "Dile Alpha now.");
+  // P24K: a popup's option line (leading blank) finds the key without it, blanks put back; a key with its own blank wins; a
+  // captured part with blanks around it is translated without them (blanks kept)
+  lang::set_leading_blanks(!no_lead);
+  t.add("p24k-leading-blank-option", lang::tr(" Alpha") == " Alfa" && lang::tr("  Say Alpha.") == "  Dile Alfa.");
+  t.add("p24k-leading-key-wins", lang::tr(" Beta one") == " Beta UNO" && lang::tr("Beta one") == "Beta uno");
+  t.add("p24k-blank-only-unchanged", lang::tr("   ") == "   ");
+  t.add("p24k-capture-blanks", lang::tr("Say Alpha .") == "Dile Alfa ." && lang::tr("Say  Alpha.") == "Dile  Alfa.");
+  lang::set_leading_blanks(true);
   t.add("p24d-utf8-to-cp1252", lang::tr("Caf\xe9") == "Caf\xe9 ES" && lang::cp1252_to_utf8("Espa\xf1ol") == "Espa\xC3\xB1ol");
   // P24J: the tile three levels down is translated; with two levels (the depth before P24J) it stays English
   const std::string tip = "Tip: 'Darn, in the water!' Bob";
@@ -3404,7 +3415,7 @@ int run_selftest(const Options &o) {
     return t.print();
   }
   if (o.selftest_p24d) {  // P24D
-    selftest_p24d(t, o.negctl == "p24d-mismatch", o.negctl == "p24j-depth2");
+    selftest_p24d(t, o.negctl == "p24d-mismatch", o.negctl == "p24j-depth2", o.negctl == "p24k-no-leading");
     return t.print();
   }
   if (o.selftest_p9d) {  // P9D
