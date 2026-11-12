@@ -1684,6 +1684,22 @@ void match_scoreboard(Gfx &g, Ctx &ctx, int32_t who) {
 // skill bytes g_playerSkills[i] != 0 the text club name (f_ptrtab_4c2c3c[i]) + f_strpool_4c60c8 + decimal 10 n +
 // f_strpool_4c60c4 in g_fontRef_519fd8 at (col, ly), ly += 0xc, at ly >= 0x258 col 0x281 and ly 0x21c again (from 0x1ee,
 // 0x21c). The dwell tip after ten calls on the same button (drawPanelBackdrop) is a tooltip: reported.
+// P24G: whether the tournament field (loadGolfPro's records 0 .. 0x23, two per hole) has taken a stroke: a record on a hole
+// (1 .. 18) with strokes on its current hole or on any hole's card. Until then the tournament is still starting (its dialogs, the
+// walk from the clubhouse to the tees).
+bool tourney_started(Ctx &ctx) {
+  const uint32_t base = va(ctx, GSO(g_golfers, 0));
+  for (uint32_t r = 0; r < 0x24; ++r) {
+    const uint32_t rec = base + (r << 8);
+    const int8_t hole = static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x21));
+    if (hole < 1 || hole > 18) continue;
+    if (ctx.mem.load<uint8_t>(rec + 0x22) != 0) return true;
+    for (uint32_t k = 1; k <= 18; ++k)
+      if (ctx.mem.load<uint8_t>(rec + 0x23 + k) != 0) return true;
+  }
+  return false;
+}
+constexpr int32_t kTourneyTipY = 0x1fe;  // P24G: the shot buttons' row (y 0x1f9), empty while no player golfer is out
 void b_action_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   GameState &gs = ctx.gs();
@@ -1742,9 +1758,12 @@ void b_action_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       shot(0x580, fa, fc, 8);
     }
   } else {
-    if (gs.g_holesPlusOne <= 1) img(imgs + 0x108, 1);
-    if (!(gs.g_flags & 0x2000u) || gs.g_holesPlusOne <= 1 || gs.g_proChallenger == -1) img(imgs + 0x1b8, 2);
-    if ((gs.g_flags & (1u << 22)) == 0) img(imgs + 0x268, 3);
+    // P24G (gfx.h gfx_set_tourney_hold): greyed under clickGolferPanel's own mask, the tip until the field's first stroke
+    const bool hold = g.tourney_hold && (gs.g_flags & ((1u << 26) | (1u << 21))) != 0;
+    if (gs.g_holesPlusOne <= 1 || hold) img(imgs + 0x108, 1);
+    if (hold || !(gs.g_flags & 0x2000u) || gs.g_holesPlusOne <= 1 || gs.g_proChallenger == -1) img(imgs + 0x1b8, 2);
+    if (hold || (gs.g_flags & (1u << 22)) == 0) img(imgs + 0x268, 3);
+    if (hold && (gs.g_flags & (1u << 21)) != 0 && !tourney_started(ctx)) gfxt::tourney_starting_tip(g, ctx, 0x23c, kTourneyTipY);
     call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});
     const std::string sep = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::f_strpool_4c60c8));
     const std::string end = gfxb::vstring(ctx.mem, state_va(ctx, &GameState::f_strpool_4c60c4));

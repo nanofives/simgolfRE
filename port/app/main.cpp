@@ -90,6 +90,9 @@
 //   800 frame (the world map, the course map F5: no course under it, so no world layer) fills the window's sides as the screens
 //   before a session do (the world map's edge columns repeated, --map-bands; the --wide-fill bands for the others) instead of black
 //   (host.h HostOptions::screen_bands; log/roadmap/P24/P24F_notes.md)
+//   P24G: --tourney-hold on|off (default on; SG_APP_P24=off: off) the golfer panel draws Practice Round, Play <pro> and Begin
+//   Tournament greyed while a tournament is on (the sim ignores them then) and "Starting tournament..." until the field's first stroke
+//   (gfx.h gfx_set_tourney_hold; drawing only; log/roadmap/P24/P24G_notes.md)
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
@@ -520,6 +523,7 @@ struct Options {
   bool course_tables = true;       // P24C fix 2b: --course-tables on|off (SG_APP_P24=off: off)
   bool sound_limit = true;         // P24I item 9: --sound-limit on|off (SG_APP_P24=off: off)
   bool screen_bands = true;        // P24F fixes 2-3: --screen-bands on|off (SG_APP_P24=off: off)
+  bool tourney_hold = true;        // P24G: --tourney-hold on|off (SG_APP_P24=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -1216,6 +1220,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
       if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
+      if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1496,6 +1501,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
+  if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -3632,6 +3638,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.screen_bands = v == "on";
     }
+    else if (a == "--tourney-hold") {  // P24G
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.tourney_hold = v == "on";
+    }
     else if (a == "--wide-lines") {  // P23E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wide_lines = v == "on";
@@ -3828,6 +3838,7 @@ int main(int argc, char **argv) {
       o.course_tables = false;  // P24C fix 2b
       o.sound_limit = false;    // P24I item 9
       o.screen_bands = false;   // P24F fixes 2-3
+      o.tourney_hold = false;   // P24G
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

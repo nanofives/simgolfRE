@@ -1489,6 +1489,9 @@ void action_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y) {
   backdrop(g, ctx, text, x, sub32(y, mode() == 10 ? 4 : 5));
 }
 
+// P24G (gfx.h gfx_set_tourney_hold): drawPanelBackdrop over the line, in the current language
+void tourney_starting_tip(Gfx &g, Ctx &ctx, int32_t x, int32_t y) { backdrop(g, ctx, lang::tr("Starting tournament..."), x, y); }
+
 // drawEmployeeViewPanel's tip (c3fb.cpp DrawEmployeeViewPanel_re): -4 f_strpool_4c80d0 + 0x1f8, -3 the golfer type record 0's
 // text (g_golferTypes + 0x10), -2 f_strpool_4c5d20 + 0xa8, else empty; n = 3 strlen: the bar drawMapLine(x - n, y - 5, x + n,
 // y - 5) and drawCenteredText(text, x, y - 10, 0x80007fff)

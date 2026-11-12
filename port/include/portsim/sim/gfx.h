@@ -71,6 +71,14 @@ void gfx_set_hover_help_course(Ctx &ctx, bool on);
 // box for the HUD tips' dwell, the game's own name for it as the game's one-line tip (drawPanelBackdrop) left of the box. Drawing
 // only: the GameState is never written. Off (the default): nothing.
 void gfx_set_meter_tips(Ctx &ctx, bool on);
+// P24G (Mariano's play-test 11 item 7: "an intermediate UI / indicator when tournament is starting, otherwise I can keep clicking on
+// tournament button or practice"; log/roadmap/P24/P24G_notes.md), set by the app's host (--tourney-hold on, the default;
+// SG_APP_P24=off: off). clickGolferPanel ignores Practice Round, Play <pro> and Begin Tournament while g_flags bit 21 (a tournament
+// is on) or bit 26 is set, but drawGolferActionPanel greys them only by the hole count, the challenge and the offer bit 22, which a
+// tournament keeps. With it on, the three are drawn greyed (the game's own covers) under that same mask, and until the first stroke
+// of the tournament field the game's one-line tip "Starting tournament..." sits in the panel's empty shot row. Drawing only: the
+// GameState is never written. Off (the default): the original's drawing.
+void gfx_set_tourney_hold(Ctx &ctx, bool on);
 bool gfx_meter_tips(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
