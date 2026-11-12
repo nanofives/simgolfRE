@@ -620,3 +620,4 @@
 - 2026-11-12 11:51 P24J merged 0f3b5e70 (+121 pack rows); fast check killed while queued (reboot warning). Handoff log/roadmap/P24/HANDOFF_P24J.md
 
 - 2026-11-12 12:51 P24J: fast check 0f3b5e70 PASS (x64 0/0, static 6, SEGCMP 205/205 0, smoke OK p14 744/0); LAN + GitHub port-2026-11-12-0f3b5e70 published; worker tree P24J deleted.
+- 2026-11-12 18:35 P24K merged eaf4d822 (Spanish pack full coverage: popups, events, intros, tutorials, tables, labels; check_coverage 0 uncovered); fast check PASS (x64 0/0, static 6, smoke OK p14 738/0; segs by the worker on the same code 205/205); LAN + GitHub port-2026-11-12-eaf4d822 published.
