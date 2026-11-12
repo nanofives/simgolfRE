@@ -614,3 +614,9 @@
 - 2026-11-12 0x:xx P24G FIX 1 (its READY message was lost in the orchestrator restart; found by reading its session): --tourney-hold, buttons greyed + 'Starting tournament...' tip, drawing only; merged 8ec76eec via commit-tree on 6b47d41c + cherry-pick, main.cpp / conftest hand-merged. P24G DONE, closed. Fast check with segs (P24D option 2 + P24G sim gfx) then publish
 - 2026-11-12 0x:xx fast check 8ec76eec green (x64 0/0, static 6, SEGCMP 205/205 0, p14 703 / 0). Publishing 8ec76eec (P24D option 2, P24G fix 1)
 - 2026-11-12 0x:xx published 8ec76eec + GitHub release. P24 open: item 8 (pause UI jump) waits for his video; every other item shipped
+
+- 2026-11-12 08:20 P24J: Fable review (claude3) of the Spanish pack: 368 fixes (43 error / 278 minor / 47 style) applied to lang/simgolf_es.txt + 7 art rows redrawn (backups P24D_pack_backup/*_pre_P24J). Worker cmwdgiin065jqsc1bqwtwnwpe (claude2, opus/medium): text.cpp capture depth 2->3 + SG_LANG_DUMP confirmation of the 219 new rows. Publish after merge.
+
+- 2026-11-12 11:51 P24J merged 0f3b5e70 (+121 pack rows); fast check killed while queued (reboot warning). Handoff log/roadmap/P24/HANDOFF_P24J.md
+
+- 2026-11-12 12:51 P24J: fast check 0f3b5e70 PASS (x64 0/0, static 6, SEGCMP 205/205 0, smoke OK p14 744/0); LAN + GitHub port-2026-11-12-0f3b5e70 published; worker tree P24J deleted.
