@@ -1420,6 +1420,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
        std::to_string(text_cap.dropped) + ",\"no_font\":" + std::to_string(text_cap.no_font) + ",\"frames\":" +
        std::to_string(text_cap.frames) + ",\"merged\":" + std::to_string(text_cap.merged) + ",\"edge_runs\":" +
        std::to_string(text_cap.edge) + ",\"frame_edge_runs\":" + std::to_string(text_cap.frame_edge) +  // P23F fix 1
+       ",\"edge_held\":" + std::to_string(text_cap.edge_held) + ",\"root_covered\":" + std::to_string(text_cap.root_covered) +  // P24F fix 1
        ",\"shot_runs\":" + std::to_string(shot_text.runs) + ",\"shot_clipped_runs\":" +
        std::to_string(shot_text.clipped_runs) + ",\"shot_clipped_px\":" + std::to_string(shot_text.clipped_px) +
        ",\"shot_failed\":" + std::to_string(shot_text.failed) + ",\"shot_render_us\":" + std::to_string(shot_render_us) + "}";

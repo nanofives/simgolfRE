@@ -956,6 +956,10 @@ void peel_kept(std::vector<uint16_t> &img, int32_t w, int32_t h, std::vector<Gfx
 static void text_publish(Gfx &g, const GfxHudFrame *hud) {
   Gfx::TextCapture &c = g.text;
   if (!c.on) return;
+  static const bool edge_keep = [] {  // P24F fix 1, SG_P24F_EDGEKEEP=1 (development): the edge columns as before
+    const char *e = std::getenv("SG_P24F_EDGEKEEP");
+    return e && e[0] == '1';
+  }();
   std::vector<Gfx::TextCapture::Run> &live = c.live;
   GfxTextFrame f;
   f.serial = ++c.serial;
@@ -1005,6 +1009,11 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
     // P23F fix 3 (TextCapture::frame_gen): a run of an earlier frame keeps only its visible root pixels, not its edge columns
     if (live[k].frame != c.frame_gen) live[k].info.ex0 = live[k].info.ex1 = 0;
     f.runs.push_back(live[k].info);
+    // P24F fix 1: over a root that holds no terrain picture (the world map, the course map: a screen over the whole root) the
+    // run's edge columns would show beside a picture it was not drawn over. A frame whose HUD layers began before the screen
+    // opened publishes the course frame's base runs (in_layer) with no visible root pixel, and the presenter drew their edge columns
+    // whole past the 800 frame. The published copy keeps only its visible pixels (SG_P24F_EDGEKEEP=1: as before).
+    if (!g.root_terrain && !edge_keep) f.runs.back().ex0 = f.runs.back().ex1 = 0;
     if (keep[k] || (live[k].seg == cseg && in_layer)) next.push_back(std::move(live[k]));
     else ++c.stats.dropped;
   }
@@ -1025,10 +1034,19 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
     for (const GfxTextLayerPatch &q : f.patches)
       if (q.layer >= 0 && q.layer < n) c.carry_patches.push_back(q);
   }
-  // P22E item 7: the cursor passes' texts wholly past the root's edge (the base's, after its other runs)
-  f.runs.insert(f.runs.end(), c.edge_runs.begin(), c.edge_runs.end());
-  // P23F: the frame texts wholly past the root's edge (the base's, kept until the next frame's terrain picture)
-  f.runs.insert(f.runs.end(), c.frame_edge_runs.begin(), c.frame_edge_runs.end());
+  // P24F fix 1: the edge runs below belong to the terrain picture they were drawn beside. A screen drawn over the whole root (the
+  // world map courseActionMenu, the course map showRoutingMapScreen, the full-screen reports: Gfx::note_root_write cleared
+  // root_terrain) draws no terrain picture, so nothing cleared them, and they showed past its 800 frame over the bands or the wide
+  // scene. They are published only while the root holds a terrain picture (a picture restored by terrain.blit counts again).
+  // SG_P24F_EDGEKEEP=1 (development, edge_keep above): published with every frame, as before.
+  if (g.root_terrain || edge_keep) {
+    // P22E item 7: the cursor passes' texts wholly past the root's edge (the base's, after its other runs)
+    f.runs.insert(f.runs.end(), c.edge_runs.begin(), c.edge_runs.end());
+    // P23F: the frame texts wholly past the root's edge (the base's, kept until the next frame's terrain picture)
+    f.runs.insert(f.runs.end(), c.frame_edge_runs.begin(), c.frame_edge_runs.end());
+  } else if (!c.edge_runs.empty() || !c.frame_edge_runs.empty()) {
+    ++c.stats.edge_held;
+  }
   // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
   if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
   c.stats.published = f.runs.size();
@@ -1717,6 +1735,41 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (SG_NEGCTL(g_negctl_gfx) == 4) return;
   g.back.px = g.root.px;
+  // P24F fix 1 (gfxb::root_covered): a root that 2D draws covered in pieces holds no terrain picture either (as one whole-surface
+  // write, Gfx::note_root_write): no world layer beside it, no edge runs. SG_P24F_COVER=0 (development): the flag as before.
+  static const bool cover_off = [] {
+    const char *e = std::getenv("SG_P24F_COVER");
+    return e && e[0] == '0';
+  }();
+  if (g.root_terrain && !cover_off) {
+    // SG_P24F_COVER_LOG=1 (development): the test's calls, covered calls and time on stderr every 100 calls
+    static const bool cover_log = [] {
+      const char *e = std::getenv("SG_P24F_COVER_LOG");
+      return e && e[0] == '1';
+    }();
+    const int64_t t0 = cover_log ? perf_now_ns() : 0;
+    const bool covered = gfxb::root_covered(g, ctx);
+    if (covered) {
+      g.root_terrain = 0;
+      ++g.text.stats.root_covered;
+    }
+    if (cover_log) {
+      static uint64_t calls = 0, hits = 0;
+      static int64_t ns = 0, ns_max = 0, ns_hit = 0;
+      const int64_t d = perf_now_ns() - t0;
+      ++calls;
+      ns += d;
+      ns_max = std::max(ns_max, d);
+      if (covered) {
+        ++hits;
+        ns_hit += d;
+      }
+      if (calls % 100 == 0)
+        std::fprintf(stderr, "P24F cover calls %llu covered %llu mean_us %.2f max_us %.1f covered_mean_us %.1f\n",
+                     static_cast<unsigned long long>(calls), static_cast<unsigned long long>(hits), ns * 1e-3 / calls,
+                     ns_max * 1e-3, hits ? ns_hit * 1e-3 / hits : 0.0);
+    }
+  }
   gfxe::compose(g, ctx);   // roadmap S3.19: Window::blitToTarget of every shown child window over the root's copy
   hud_publish(g);          // P9B: the frame's HUD layers (inert with capture off)
   text_publish(g, g.hud.on ? &g.hud.published : nullptr);  // P9C: the frame's text runs (inert with capture off)

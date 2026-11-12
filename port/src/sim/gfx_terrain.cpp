@@ -311,6 +311,7 @@ void b_window_paint(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (SG_NEGCTL(g_negctl_gfx_terrain) == 5) return;
   std::fill(g.root.px.begin(), g.root.px.end(), static_cast<uint16_t>(0));
   g.root_terrain = 0;
+  g.root_dimmed = 0;  // P24F fix 1
   g.hud_carry_drop();  // P9D: a new frame's picture ends a carried HUD capture (gfx.h gfx_set_hud_modal)
   g.hud_pieces_reset();  // P9E: and its popups
   if (LiveTerrainWorld *w = world_of(g, ctx)) {   // P8B
@@ -397,6 +398,7 @@ void b_pass(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   perf_800.reset();  // P10A
   g.root_terrain = 1;
+  g.root_dimmed = 0;  // P24F fix 1
   g.hud_carry_drop();  // P9D: a terrain pass starts a new frame's picture
   g.hud_pieces_reset();  // P9E: and its popups
   if (world && SG_NEGCTL(g_negctl_gfx_terrain) != 3) world_pass(g, ctx, *lt, *world, a, world_before);   // P8B
@@ -439,6 +441,7 @@ void b_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   copy16(v.back_surface, v.back_w, v.back_h, g.root.px, g.root.w, g.root.h, sx, sy, tx, ty, w, h);
   g.root_terrain = (g.root_terrain || v.back_terrain) ? 1 : 0;
+  g.root_dimmed = 0;  // P24F fix 1: the saved terrain picture restored
   g.hud_carry_drop();  // P9D: the saved terrain picture restored starts a new frame's picture
   g.hud_pieces_reset();  // P9E: and its popups
   if (world) {
@@ -511,6 +514,55 @@ const GfxBodyDef kBodies[] = {
 extern const GfxFamily kGfxFamily_terrain = {"terrain", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
 
 int terrain_world_raster_threads() { return world_raster_threads(); }   // P15A fix 3 (terrain_live.h)
+
+// P24F fix 1 (gfx_body.h gfxb::root_covered): whether 2D draws have covered every part of the root where the frame's terrain picture
+// (LiveTerrainWorld::terrain800, the root as the terrain passes left it) could still show. A full-screen screen drawn in pieces (the
+// course map showRoutingMapScreen: two backdrop images, neither the whole surface, so Gfx::note_root_write never fires) leaves the
+// root flagged as a terrain picture, and the presenter then showed the last course frame's wide scene and its edge texts beside it.
+// The root is cut into 16 x 15 blocks; a block whose terrain picture is not one flat word (the black off-map ground) shows the
+// terrain when at least half of its pixels still hold the terrain picture's words. Covered = no such block, and at least one block
+// could be judged (a terrain picture with no judgeable block, e.g. all off-map ground, is never called covered). No world, another
+// root size: false (the flag stays as it is). Drawing only: nothing here reads or writes the GameState.
+namespace gfxb {
+bool root_covered(Gfx &g, Ctx &ctx) {
+  const LiveTerrainWorld *w = world_of(g, ctx);
+  if (!w || g.root_dimmed || g.root.w != 800 || g.root.h != 600 || w->terrain800.size() != g.root.px.size()) return false;
+  constexpr int32_t kBw = 16, kBh = 15;
+  const uint16_t *r = g.root.px.data(), *t = w->terrain800.data();
+  // a quick probe first: on a 40 x 30 grid of points (terrain words other than 0, the off-map ground), at least 15 % that still
+  // hold the terrain picture's words is a root the terrain shows through (a dense course view: trees, golfers and labels over
+  // most blocks made the block scan below run long, up to 1 ms); only the block scan calls a root covered
+  {
+    int32_t n = 0, same = 0;
+    for (int32_t y = 10; y < 600; y += 20)
+      for (int32_t x = 10; x < 800; x += 20) {
+        const size_t i = static_cast<size_t>(y) * 800 + static_cast<size_t>(x);
+        if (t[i] == 0) continue;
+        ++n;
+        if (r[i] == t[i]) ++same;
+      }
+    if (n >= 100 && same * 100 >= n * 15) return false;
+  }
+  bool judged = false;
+  for (int32_t by = 0; by < 600; by += kBh)
+    for (int32_t bx = 0; bx < 800; bx += kBw) {
+      int32_t same = 0;
+      bool flat = true;
+      const uint16_t t0 = t[static_cast<size_t>(by) * 800 + static_cast<size_t>(bx)];
+      for (int32_t y = by; y < by + kBh; ++y) {
+        const size_t o = static_cast<size_t>(y) * 800 + static_cast<size_t>(bx);
+        for (int32_t x = 0; x < kBw; ++x) {
+          if (t[o + x] != t0) flat = false;
+          if (r[o + x] == t[o + x]) ++same;
+        }
+      }
+      if (flat) continue;
+      judged = true;
+      if (same * 2 >= kBw * kBh) return false;  // the terrain picture shows here
+    }
+  return judged;
+}
+}  // namespace gfxb
 
 // P23D fix 1 (terrain_overlay.h): blit 0's copy and count, for a grid frame left as the last one that turned out to differ
 void gfx_world_restore_back(LiveTerrainWorld &w) {

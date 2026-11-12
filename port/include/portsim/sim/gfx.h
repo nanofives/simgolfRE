@@ -501,6 +501,8 @@ struct GfxTextStats {
   uint64_t captured = 0, published = 0, dropped = 0, no_font = 0, frames = 0, merged = 0;  // merged: repeats (gfx.cpp)
   uint64_t edge = 0;  // P22E item 7: cursor-pass runs the root's edge cut, given their whole columns (GfxTextRun::ex0 / ex1)
   uint64_t frame_edge = 0;  // P23F: frame texts the root's edge cut (whole columns) or wholly past it (edge runs)
+  uint64_t edge_held = 0;  // P24F fix 1: publishes that left out the edge runs (the root held no terrain picture)
+  uint64_t root_covered = 0;  // P24F fix 1: refreshFulls whose root 2D draws had covered in pieces (gfxb::root_covered)
 };
 GfxTextStats gfx_text_stats(Ctx &ctx);
 extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on

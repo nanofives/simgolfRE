@@ -1820,11 +1820,13 @@ struct AlphaOp {
   // each written pixel is recorded as a kind-4 layer pixel; n / one_src / src0 tell a dim of every root pixel with one source word
   Gfx *rec = nullptr;
   size_t n = 0;
+  size_t blended = 0;  // P24F fix 1: every pixel written (rec or not)
   bool one_src = true;
   uint16_t src0 = 0;
   void operator()(uint8_t c, uint16_t &w) {
     if (c >= 0xff) return;
     if (flag && c >= 0xf8) return;
+    ++blended;
     const uint16_t before = w;
     struct Note {
       AlphaOp &o;
@@ -2090,6 +2092,7 @@ void draw_alpha(Gfx &g, Ctx &ctx, uint32_t key, uint32_t dst, int32_t x, int32_t
   }
   // every root pixel blended once with one word (the sprite covers the root at this scale): a whole-frame dim
   if (op.rec && op.one_src && op.n == g.root.px.size()) g.note_dim(op.src0);
+  if (op.blended == g.root.px.size()) g.root_dimmed = 1;  // P24F fix 1
 }
 
 // ------------------------------------------------------------------------------------------------ composeGolferSprite

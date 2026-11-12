@@ -612,6 +612,17 @@ void LiveSession::track_screen(portsim::Ctx &ctx, bool frame_loop) {
     in_game_ = true;
 }
 
+// P24F (development, SG_P24F_RUNLOG=<file>): the text runs of every in-game present whose root holds no terrain picture, one
+// line each (present index, box, edge columns, layer, target, text)
+static void p24f_run_log(portsim::Ctx &ctx, const portsim::GfxTextFrame &tf, uint32_t index) {
+  static std::FILE *f = std::getenv("SG_P24F_RUNLOG") ? std::fopen(std::getenv("SG_P24F_RUNLOG"), "wb") : nullptr;
+  if (!f || portsim::gfx_back_terrain(ctx)) return;
+  for (const portsim::GfxTextRun &r : tf.runs)
+    std::fprintf(f, "%u\t%d,%d-%d,%d\tex %d,%d\tlayer %d\ttarget %d\t%s\n", index, r.x0, r.y0, r.x1, r.y1, r.ex0, r.ex1, r.layer,
+                 static_cast<int>(r.target), r.text.c_str());
+  std::fflush(f);
+}
+
 bool banner_text(const portsim::GfxTextFrame &under, const portsim::GfxTextFrame &own, const std::vector<uint16_t> &px,
                  portsim::GfxTextFrame &out) {
   const size_t n = static_cast<size_t>(kLogicalW) * kLogicalH;
@@ -1572,6 +1583,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     j->hr = portsim::gfx_hr_take_job();
     portsim::GfxTextFrame tf;  // P9C
     const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
+    if (text) p24f_run_log(ctx, tf, index);  // P24F (development)
     portsim::LiveTerrain *live = opt_.world && terrain_log ? terrain_log->live : nullptr;
     const portsim::LiveTerrainWorld *w = live ? live->world() : nullptr;
     if (w && portsim::gfx_hr_check_on()) {  // SG_P15_CHECK: the image as the present made it before (the frame thread ran the hr ops too)
@@ -1701,6 +1713,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   portsim::GfxTextFrame tf;  // P9C
   portsim::PerfDetailScope pd_text(portsim::kPdCapText);  // P15A
   const bool text = opt_.text_native && take_text_frame(ctx, px, tf);
+  if (text) p24f_run_log(ctx, tf, index);  // P24F (development)
   pd_text.stop();
   if (opt_.world && terrain_log && terrain_log->live)
     if (make_world_image(*terrain_log->live, ctx, px, opt_.hud_layers, wi, text ? &tf : nullptr, opt_.cursor_previews,

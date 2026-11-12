@@ -108,6 +108,9 @@ class Gfx {
   // the terrain picture (gfx_terrain.cpp), cleared by a 2D write that covers the whole root surface, copied to the back buffer
   // at Window::refreshFull; each snapshot keeps the back buffer's (gfx.log `snapshot_terrain`)
   int root_terrain = 0, back_terrain = 0;
+  // P24F fix 1: a translucent draw blended every root pixel since the terrain picture (the quarter blend of a dimming screen: the
+  // end-of-year report); gfxb::root_covered never calls such a root covered (the terrain shows dimmed under the screen)
+  int root_dimmed = 0;
   // a value a body computed for the frame code (roadmap S3.7: Text_put's width), taken once by gfx_take_value
   bool has_value = false;
   int32_t value = 0;
@@ -367,6 +370,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
 void text_banner_begin(Gfx &g);
 // the wide scene's runs (gfx_scene.cpp, G32): forgotten at the queue's start, peeled off the scene at its end (gfx.cpp)
 void text_frame_start(Gfx &g);  // P23F: the frame's terrain picture: the last frame's frame-text edge runs go
+bool root_covered(Gfx &g, Ctx &ctx);  // P24F fix 1 (gfx_terrain.cpp): 2D draws covered every part of the root's terrain picture
 void text_wide_begin(Gfx &g);
 void text_wide_end(Gfx &g, const std::vector<uint16_t> &scene, int32_t scene_w, int32_t scene_e, std::vector<uint16_t> &scene_text);
 }  // namespace gfxb
