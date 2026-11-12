@@ -38,7 +38,7 @@ def rows(args: list[str]) -> dict[str, bool]:
 
 def test_selftest_p24d_all_pass():
     r = rows(["--selftest-p24d"])
-    assert len(r) == 20 and all(r.values()), r  # P24J: + 4 capture-depth rows; P24K: + 4 blank-trimming rows
+    assert len(r) == 21 and all(r.values()), r  # P24J: + 4 capture-depth rows; P24K: + 4 blank-trimming rows; P24L: + 1
 
 
 def test_selftest_p24j_depth_control_reads_red():
@@ -53,6 +53,13 @@ def test_selftest_p24k_leading_control_reads_red():
     r = rows(["--selftest-p24d", "--negctl", "p24k-no-leading"])
     failed = {k for k, v in r.items() if not v}
     assert failed == {"p24k-leading-blank-option", "p24k-capture-blanks"}, r
+
+
+def test_selftest_p24l_empty_control_reads_red():
+    # P24L: without empty %s parts a message whose optional clause the sim left out ("a 285 yard par 4": no slope word) stays English
+    r = rows(["--selftest-p24d", "--negctl", "p24l-no-empty"])
+    failed = {k for k, v in r.items() if not v}
+    assert failed == {"p24l-empty-capture"}, r
 
 
 def test_selftest_p24d_control_reads_red():

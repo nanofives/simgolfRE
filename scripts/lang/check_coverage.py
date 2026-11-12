@@ -52,7 +52,7 @@ def to_regex(key: str) -> re.Pattern:
     for m in CONV.finditer(key):
         out += re.escape(key[i:m.start()])
         c = m.group(0)
-        out += "%" if c == "%%" else "(.)" if c.endswith("c") else "(.+?)" if c.endswith("s") else r"(-?\d(?:[\d]|[,.](?=\d))*)"
+        out += "%" if c == "%%" else "(.)" if c.endswith("c") else "(.*?)" if c.endswith("s") else r"(-?\d(?:[\d]|[,.](?=\d))*)"
         i = m.end()
     out += re.escape(key[i:])
     return re.compile(out + r"\Z", re.S)

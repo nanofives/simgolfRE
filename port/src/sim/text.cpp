@@ -159,6 +159,11 @@ bool split(const std::string &f, std::vector<Piece> &out) {
 
 bool digit(char c) { return c >= '0' && c <= '9'; }
 
+// P24L: a %s part may be empty (set_empty_captures): the sim leaves optional clauses out (hole opened: 'a 285 yard par 4' has
+// no slope word between 'yard ' and 'par', no dogleg clause before ', is now'), so a key written from the code with %s in
+// their place must match the text without them
+bool g_empty_caps = true;
+
 bool match(const std::vector<Piece> &k, size_t pi, const std::string &s, size_t si, std::vector<std::string> &caps) {
   if (pi == k.size()) return si == s.size();
   const Piece &p = k[pi];
@@ -195,16 +200,16 @@ bool match(const std::vector<Piece> &k, size_t pi, const std::string &s, size_t 
     }
     return false;
   }
-  // 's': non-empty, shortest first; a literal next is searched for directly
+  // 's': shortest first (empty allowed unless set_empty_captures(false)); a literal next is searched for directly
   const Piece *next = pi + 1 < k.size() ? &k[pi + 1] : nullptr;
   if (!next) {
-    if (si >= s.size()) return false;
+    if (si >= s.size() && !g_empty_caps) return false;
     caps.push_back(s.substr(si));
     if (match(k, pi + 1, s, s.size(), caps)) return true;
     caps.pop_back();
     return false;
   }
-  for (size_t e = si + 1; e <= s.size(); ++e) {
+  for (size_t e = g_empty_caps ? si : si + 1; e <= s.size(); ++e) {
     if (!next->conv) {
       const size_t f = s.find(next->text, e);
       if (f == std::string::npos) return false;
@@ -521,6 +526,13 @@ void set_capture_depth(int levels) {
 void set_leading_blanks(bool on) {
   std::lock_guard<std::mutex> lk(g_mu);
   g_lead_blanks = on;
+  for (auto &c : g_cache) c.clear();
+  for (auto &a : g_arena) a.second->lang = -1;
+}
+
+void set_empty_captures(bool on) {
+  std::lock_guard<std::mutex> lk(g_mu);
+  g_empty_caps = on;
   for (auto &c : g_cache) c.clear();
   for (auto &a : g_arena) a.second->lang = -1;
 }
