@@ -25,7 +25,9 @@
 #define PORTAPP_AUDIO_OUT_H
 
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
+#include <cstdio>
 #include <cstdint>
 #include <deque>
 #include <functional>
@@ -59,7 +61,19 @@ struct AudioOutOptions {
   // request loses its last argument slot; S7.11: 3 a device-less shadow keeps its thread and replays every request (the
   // engine's own early returns only), 4 stop() leaves the thread unjoined (detached: the leak the shutdown count must see)
   int control = 0;
+  // P24I item 9: the repetition limiter (--sound-limit on|off, default on; SG_APP_P24=off: off). A playSound request of an
+  // ambient / object sound (repeat_limit_gap_ms) is not copied to the shadow when the same sound id started less than its gap
+  // ago (the gap covers the sound's own length, so it never restarts while it plays); mainLoop's ambience, whose six sounds
+  // the game draws at random, plays the variant started longest ago instead when that one is due. Every other sound (UI, shots, cheers,
+  // music, voices) is copied as before. Only the mirror is thinned: the sim's own call and GameState are untouched.
+  bool repeat_limit = false;
+  // P24I: a log of every playSound request (ms since start, sound id, 1 copied / 0 limited / 2 dropped device-less, the id
+  // played or -1); empty = none
+  std::string sound_log;
 };
+
+// P24I: the limiter's gap for a sound id in ms (0 = not limited): the ambient / object sounds only
+uint32_t repeat_limit_gap_ms(uint32_t sound_id);
 
 // S7.11: the process's handle and thread counts (GetProcessHandleCount, Toolhelp32 threads of this process)
 struct ProcCounts {
@@ -89,6 +103,7 @@ struct AudioOutStats {
   int32_t sound_ready = -1;
   bool device_less = false, thread_ended = false;
   uint32_t dropped_requests = 0;
+  uint32_t limited = 0;  // P24I: playSound requests the repetition limiter kept from the shadow
   bool closed_early = false;  // S7.11: close_early() stopped the shadow (the window closed before the sim ended)
   uint32_t closed_drops = 0;  // S7.11: requests that arrived after close_early()
   HeapStats heap, heap_peak;  // S7.11 (U-1692): at the end / the largest live_bytes seen at a tick
@@ -163,6 +178,11 @@ class AudioOut {
   std::unique_ptr<DsSink> sink_;
   uint32_t tick_index_ = 0;
   bool init_done_ = false;
+  // P24I: the repetition limiter's last start per sound id (ms since t0_) and the request log
+  std::vector<int64_t> last_start_;
+  std::chrono::steady_clock::time_point t0_ = std::chrono::steady_clock::now();
+  std::FILE *sound_log_ = nullptr;
+  int64_t limit_request(const uint32_t *args, int nargs);
 };
 
 }  // namespace app

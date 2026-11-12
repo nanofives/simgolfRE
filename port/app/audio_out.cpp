@@ -7,7 +7,9 @@
 #include <tlhelp32.h>
 
 #include <algorithm>
+#include <iterator>
 #include <chrono>
+#include <climits>
 #include <cstdio>
 #include <cstring>
 
@@ -26,7 +28,10 @@ uint64_t ns_since(Clock::time_point t) {
 }
 }  // namespace
 
-AudioOut::~AudioOut() { stop(); }
+AudioOut::~AudioOut() {
+  stop();
+  if (sound_log_) std::fclose(sound_log_);  // P24I
+}
 
 void AudioOut::note_error(const std::string &what) {
   std::lock_guard<std::mutex> lk(mu_);
@@ -75,6 +80,12 @@ bool AudioOut::start(const AudioOutOptions &o, std::string *err) {
   if (started_) return true;
   opt_ = o;
   quit_ = ready_ = broken_ = false;
+  t0_ = Clock::now();  // P24I
+  last_start_.clear();
+  if (!o.sound_log.empty() && !sound_log_) {
+    sound_log_ = std::fopen(o.sound_log.c_str(), "w");
+    if (sound_log_) std::fprintf(sound_log_, "t_ms\tid\tcopied\tplayed\n");
+  }
   start_error_.clear();
   th_ = std::thread([this]() { thread_main(); });
   std::unique_lock<std::mutex> lk(mu_);
@@ -346,14 +357,89 @@ void AudioOut::attach(portsim::Ctx &sim) {
 }
 void AudioOut::detach(portsim::Ctx &sim) { portsim::audio_exe_set_observer(sim, {}); }
 
+// P24I item 9 (Mariano: "i want to avoid playing the same sound over and over (like cranes or animals"): the ambient / object
+// sounds the sim starts from the world (log/roadmap/P24/P24I_notes.md has the trigger of each, P24I_sound_table.tsv the wav):
+// the animals' playHabitatSound ids (moose, seriema, sheep, alligator, gila monster, snake), the hot air balloon and the sail
+// boat of drawWorldObjects' flyers, the fly by a golfer, and mainLoop's ambience (one frame in 100 draws one of lake, wind,
+// desert, forest, grass, spring). Each gap is longer than its wav (the longest, the sail boat, 6.9 s).
+uint32_t repeat_limit_gap_ms(uint32_t id) {
+  switch (id) {
+    case 0x3a: case 0x3b: case 0xc3: case 0xc4: case 0xc5: case 0xc6:  // playHabitatSound's animals
+    case 0x22:                                                          // the fly
+    case 0x1d: case 0x1e: case 0x1f: case 0x20: case 0x21: case 0x28:   // mainLoop's ambience (kAmbience)
+      return 8000;
+    case 0x39:  // the hot air balloon (3.6 s)
+      return 10000;
+    case 0xd1:  // the sail boat (6.9 s)
+      return 12000;
+    default:
+      return 0;
+  }
+}
+
+namespace {
+// the variants: mainLoop's ambience draw picks one of these six at random, so a repeat of one is played as the variant started
+// longest ago instead (when that one's gap has passed too)
+const uint32_t kAmbience[] = {0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x28};
+bool is_ambience(uint32_t id) { return std::find(std::begin(kAmbience), std::end(kAmbience), id) != std::end(kAmbience); }
+}  // namespace
+
+// P24I: the sound id the shadow plays for this playSound request: the requested one, a variant (the ambience), or -1 when it
+// is kept from the shadow (its id, and every variant, started less than its gap ago); records the start. Runs on the sim's
+// thread (the observer's), the only one that touches last_start_.
+int64_t AudioOut::limit_request(const uint32_t *args, int nargs) {
+  if (nargs < 1) return -1;
+  const uint32_t id = args[0];
+  const int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - t0_).count();
+  auto due = [&](uint32_t k) {
+    return k >= last_start_.size() || last_start_[k] == INT64_MIN ||
+           now - last_start_[k] >= static_cast<int64_t>(repeat_limit_gap_ms(k));
+  };
+  int64_t play = id;
+  if (opt_.repeat_limit && repeat_limit_gap_ms(id) != 0 && id < 0x1000u) {
+    if (last_start_.size() <= id) last_start_.resize(id + 1, INT64_MIN);
+    if (!due(id)) {
+      play = -1;
+      if (is_ambience(id)) {
+        int64_t oldest = INT64_MAX;
+        for (uint32_t k : kAmbience) {
+          const int64_t t = k < last_start_.size() ? last_start_[k] : INT64_MIN;
+          if (due(k) && t < oldest) {
+            oldest = t;
+            play = k;
+          }
+        }
+      }
+    }
+    if (play >= 0) {
+      if (last_start_.size() <= static_cast<uint64_t>(play)) last_start_.resize(static_cast<size_t>(play) + 1, INT64_MIN);
+      last_start_[static_cast<size_t>(play)] = now;
+    }
+  }
+  if (sound_log_)
+    std::fprintf(sound_log_, "%lld\t%u\t%d\t%lld\n", static_cast<long long>(now), id, play < 0 ? 0 : silent_ ? 2 : 1,
+                 static_cast<long long>(play));
+  return play;
+}
+
 void AudioOut::request(const char *name, const uint32_t *args, int nargs) {
   Item it;
   it.kind = 0;
   it.name = name ? name : "";
   it.args.assign(args, args + (nargs > 0 ? nargs : 0));
+  int64_t play = 0;
+  if (it.name == "playSound" && nargs >= 1) {  // P24I: the repetition limiter
+    play = limit_request(args, nargs);
+    if (play >= 0) it.args[0] = static_cast<uint32_t>(play);
+  }
+  const bool limited = play < 0;
   {
     std::lock_guard<std::mutex> lk(mu_);
     ++st_.requests;
+    if (limited) {  // P24I: the repetition limiter (the sim's call runs on, nothing is copied)
+      ++st_.limited;
+      return;
+    }
     if (silent_) {  // S7.11: device-less shadow: the sim's call runs on, nothing is copied
       ++st_.dropped_requests;
       return;

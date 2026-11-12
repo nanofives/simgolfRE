@@ -83,6 +83,9 @@
 //   P24C fix 2b: --course-tables on|off (default on; SG_APP_P24=off: off) the GPU presenter draws the course's text runs (the base's and
 //   the wide scene's world runs, the golfer name labels at their objects' offsets) from tables over its own course picture instead of
 //   rendering each again on the CPU at every object tick (GpuCompositor::build_course_tables / course_text; log/roadmap/P24/P24C_notes.md)
+//   P24I item 9: --sound-limit on|off (default on; SG_APP_P24=off: off) an ambient / object sound (animals, the fly, the balloon,
+//   the sail boat) is not started again within a few seconds of its last start (app::repeat_limit_gap_ms, audio_out.cpp); only
+//   the audio mirror is thinned, the sim's calls stay the same. SG_P24I_SOUNDLOG=<file> logs every playSound request
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
@@ -511,6 +514,7 @@ struct Options {
   bool edge_previews = true;       // P22E item 7: --edge-previews on|off (SG_APP_P22=off: off)
   bool line_tiles = true;          // P23E fix 1: --line-tiles on|off (SG_APP_P23=off: off)
   bool course_tables = true;       // P24C fix 2b: --course-tables on|off (SG_APP_P24=off: off)
+  bool sound_limit = true;         // P24I item 9: --sound-limit on|off (SG_APP_P24=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -958,6 +962,8 @@ struct AudioGuard {
     ao.data_va = data_va;
     ao.hwnd = hwnd;
     ao.tick_clock_ms = 30;  // the timer's period: the model / capture device plays it between ticks
+    ao.repeat_limit = o.sound_limit;  // P24I item 9
+    if (const char *lp = std::getenv("SG_P24I_SOUNDLOG")) ao.sound_log = lp;  // P24I: the request log (development)
     ao.force_no_device = o.audio_no_device;                                               // S7.11
     ao.control = o.negctl == "audio-keep-thread" ? 3 : o.negctl == "audio-leak-thread" ? 4 : 0;  // S7.11 controls
     mode = o.audio;
@@ -1011,7 +1017,7 @@ struct AudioGuard {
         "{\"mode\":\"%s\",\"requests\":%u,\"replayed\":%u,\"failed\":%u,\"ticks\":%u,\"delivered\":%u,"
         "\"dropped\":%u,\"late_ticks\":%u,\"skipped_periods\":%u,\"tick_span_ns\":%llu,\"tick_ns_total\":%llu,"
         "\"tick_ns_max\":%llu,\"buffers\":%u,\"real_buffers\":%u,\"real_failures\":%u,\"init_eax\":%u,\"sound_ready\":%d,"
-        "\"device_less\":%s,\"thread_ended\":%s,\"dropped_requests\":%u,\"closed_early\":%s,\"closed_drops\":%u,\"window_at_stop\":%d,\"no_device_answers\":%u,"
+        "\"device_less\":%s,\"thread_ended\":%s,\"dropped_requests\":%u,\"limited\":%u,\"closed_early\":%s,\"closed_drops\":%u,\"window_at_stop\":%d,\"no_device_answers\":%u,"
         "\"heap_arena_bytes\":%u,\"heap_live_bytes\":%llu,\"heap_live_blocks\":%u,\"heap_peak_live_bytes\":%llu,"
         "\"heap_peak_arena_bytes\":%u,\"handles_before\":%u,\"threads_before\":%u,\"handles_after\":%u,"
         "\"threads_after\":%u,\"threads_added\":%u,\"files_present\":%u,\"files_absent\":%u,\"files_aliased\":%u,"
@@ -1019,7 +1025,7 @@ struct AudioGuard {
         mode.c_str(), s.requests, s.replayed, s.failed, s.ticks, s.delivered, s.dropped, s.late_ticks, s.skipped_periods,
         static_cast<unsigned long long>(s.tick_span_ns), static_cast<unsigned long long>(s.tick_ns_total),
         static_cast<unsigned long long>(s.tick_ns_max), s.sink.buffers, s.sink.real_buffers, s.sink.real_failures, s.init_eax,
-        s.sound_ready, s.device_less ? "true" : "false", s.thread_ended ? "true" : "false", s.dropped_requests,
+        s.sound_ready, s.device_less ? "true" : "false", s.thread_ended ? "true" : "false", s.dropped_requests, s.limited,
         s.closed_early ? "true" : "false", s.closed_drops, window_at_stop, s.sink.no_device_answers, s.heap.arena_bytes,
         static_cast<unsigned long long>(s.heap.live_bytes), s.heap.live_blocks,
         static_cast<unsigned long long>(s.heap_peak.live_bytes), s.heap_peak.arena_bytes, before.handles, before.threads,
@@ -3610,6 +3616,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.course_tables = v == "on";
     }
+    else if (a == "--sound-limit") {  // P24I item 9
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.sound_limit = v == "on";
+    }
     else if (a == "--wide-lines") {  // P23E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wide_lines = v == "on";
@@ -3802,7 +3812,10 @@ int main(int argc, char **argv) {
       o.wide_lines = false;  // P23E fix 2
     }
   if (const char *ep = std::getenv("SG_APP_P24"))  // P24: the eleventh play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.course_tables = false;  // P24C fix 2b
+    if (!std::strcmp(ep, "off")) {
+      o.course_tables = false;  // P24C fix 2b
+      o.sound_limit = false;    // P24I item 9
+    }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win
