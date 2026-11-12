@@ -600,3 +600,13 @@
 - 2026-11-11 22:xx P24F fix 1 cause: P23F frame edge runs + P22E cursor edge runs published every frame until the next terrain picture; the world map / course map loops draw none, so the last course frame's edge texts stayed on the bands; course map also kept root_terrain. Fix: publish edge runs only while root_terrain + gfxb::root_covered. Fixes 2+3 options A-E boards shown to Mariano: he picked A (--screen-bands: soft bands from the screen's own edges)
 - 2026-11-11 23:2x re-run fast check ce669848 green: paints 91 / 92 / 91% (the 60% was machine load), P14 520 / 0, P15/P16B/P17B 0. Publishing ce669848 (P24D 3 art, 5a, updater with the Deco address)
 - 2026-11-11 23:3x published ce669848 + GitHub release port-2026-11-11-ce669848; update.bat served through the Deco (192.168.1.64:8088) carries the Deco address
+- 2026-11-11 23:xx P24I FIX 1 (--sound-limit: per-id cooldown for ambient / animal sounds, ambience variants rotate; class b) merged 9be174ea. P24I DONE, closed. Fast check on 9be174ea (covers P24D 5d + P24I 1) then publish
+- 2026-11-12 00:xx P24H DONE, no fix: 32 bursts (P key, button instant / 120 / 300 ms held, 1920x1080 / 2560x1351 / 1334x750 dpi 120, default and 165 Hz pacing, popup open or not) show no HUD layer move; original shows none either; the popup double-draw darkening on the click frame is the original's too. Capture code kept in tree port/build/P24H. Asked Mariano for a phone video. Closed (resume cmwct0f854kncsc1bjdm1eqx7 when the video arrives)
+- 2026-11-12 00:xx P24E FIX 1 (play switch generateRandomCourse.startingFeatureOutside, nearest valid clubhouse spot, no RNG draw; 42/400 cut seeds inside, rest byte-equal; segs 205/205) merged ad6bbf5c. P24E DONE, closed
+- 2026-11-12 00:xx fast check 9be174ea green (x64 0/0, static 6, p14 706 / 0). Fast check ad6bbf5c with segs (P24E sim change; main sim moved since its base) then publish
+- 2026-11-12 00:xx P24F FIX 1 (edge runs only while root_terrain, root_covered; segs 205/205; P14/15/16B/17B 0) merged 4ddc3f4d; ships with the next check after ad6bbf5c
+- 2026-11-12 00:xx P24D FIX 5b (building panel tip grows, tool tip title translated; pack 1,588 + 476; segs 205/205) merged 5fcdddd7
+- 2026-11-12 01:xx P24F FIX 2 (--screen-bands, option A; clicks checked; 0.5 fps = readout of a still modal screen) merged 239562e1. P24F DONE, closed
+- 2026-11-12 01:xx fast check ad6bbf5c green (x64 0/0, static 6, SEGCMP 205/205 0, p14 692 / 0). Full check 239562e1 (SEGS=1: P24F fix 1 + P24D 5b sim) then publish
+- 2026-11-12 02:2x full check 239562e1 green: builds x64 + Win32 0/0, static 6, SEGCMP 205/205 0, 1080 / 4K p14 759 / 190, 0 bad, P15 / P16B 0. Publishing 239562e1
+- 2026-11-12 02:3x published 239562e1 + GitHub release port-2026-11-12-239562e1
