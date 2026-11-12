@@ -191,6 +191,10 @@ struct HostOptions {
   // P13B item 18: the world map shown before a session (courseActionMenu) presents with BandFill::ExtendClamp (its own edge
   // columns repeated) instead of Extend
   bool map_bands = false;
+  // P24F fixes 2-3 (log/roadmap/P24/P24F_notes.md): an in-game frame with no terrain picture under its root (the world map, the
+  // course map: a screen over the whole root, so no world layer) presents with the bands of the screens before a session
+  // (LiveSession::band_hint) instead of black ones
+  bool screen_bands = false;
   // P15A (log/roadmap/P15/P15A_notes.md): the world thread. The world image of a present (the hr planes' queue start, flush and
   // post-queue draws, world_cursor, both world_frame calls) is made on a thread of its own from a job the sim thread hands over at
   // the present (portsim gfx.h gfx_set_hr_defer), and the window gets the frame with its own world image when the job is done.
@@ -435,6 +439,8 @@ class LiveSession : public portsim::LiveHost {
   // kWorldMapPassMs), kept through the popups it opens, cleared at a frame head, a world load's pump and the title menu
   bool world_map_ = false;
   uint64_t presents_map_ = 0;
+  uint64_t presents_screen_ = 0;  // P24F fixes 2-3: in-game presents with the screens' bands (band_hint)
+  BandFill band_hint(portsim::Ctx &ctx);  // P7, P13B item 18, P24F fixes 2-3: the side-band hint of a present
   BandFill last_band_ = BandFill::Black;  // P10C fix 1: the band hint and index of last_presented_ (sim thread)
   uint32_t last_index_ = 0;
   uint64_t title_reposts_ = 0;

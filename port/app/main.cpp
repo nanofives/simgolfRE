@@ -86,6 +86,10 @@
 //   P24I item 9: --sound-limit on|off (default on; SG_APP_P24=off: off) an ambient / object sound (animals, the fly, the balloon,
 //   the sail boat) is not started again within a few seconds of its last start (app::repeat_limit_gap_ms, audio_out.cpp); only
 //   the audio mirror is thinned, the sim's calls stay the same. SG_P24I_SOUNDLOG=<file> logs every playSound request
+//   P24F fixes 2-3: --screen-bands on|off (default on; SG_APP_P24=off: off) in a wide window, an in-game screen drawn over the whole
+//   800 frame (the world map, the course map F5: no course under it, so no world layer) fills the window's sides as the screens
+//   before a session do (the world map's edge columns repeated, --map-bands; the --wide-fill bands for the others) instead of black
+//   (host.h HostOptions::screen_bands; log/roadmap/P24/P24F_notes.md)
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
@@ -515,6 +519,7 @@ struct Options {
   bool line_tiles = true;          // P23E fix 1: --line-tiles on|off (SG_APP_P23=off: off)
   bool course_tables = true;       // P24C fix 2b: --course-tables on|off (SG_APP_P24=off: off)
   bool sound_limit = true;         // P24I item 9: --sound-limit on|off (SG_APP_P24=off: off)
+  bool screen_bands = true;        // P24F fixes 2-3: --screen-bands on|off (SG_APP_P24=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -1577,6 +1582,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   portsim::gfx_set_hr_defer_check(ho.world_thread && std::getenv("SG_P15_CHECK") && std::getenv("SG_P15_CHECK")[0] == '1');  // P15A
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.map_bands = o.wide && o.map_bands;               // P13B item 18 (the world map's bands repeat its edge columns)
+  ho.screen_bands = o.wide && o.screen_bands;         // P24F fixes 2-3 (in-game full-screen screens get the pre-session bands)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1
   ho.world_mode = o.render_scale == "native" || (o.render_scale == "auto" && o.wide) ? 2 : (o.render_scale == "1" && o.wide ? 1 : 0);
@@ -3622,6 +3628,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.sound_limit = v == "on";
     }
+    else if (a == "--screen-bands") {  // P24F fixes 2-3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.screen_bands = v == "on";
+    }
     else if (a == "--wide-lines") {  // P23E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wide_lines = v == "on";
@@ -3817,6 +3827,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.course_tables = false;  // P24C fix 2b
       o.sound_limit = false;    // P24I item 9
+      o.screen_bands = false;   // P24F fixes 2-3
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

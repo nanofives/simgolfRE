@@ -1654,12 +1654,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       ++presents_text_;
       text_runs_ += tf.runs.size();
     }
-    BandFill band = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
-    if (!in_game_ && world_map_ && opt_.map_bands) {  // P13B item 18
-      band = BandFill::ExtendClamp;
-      ++presents_map_;
-    }
-    ++(in_game_ ? presents_black_ : presents_extend_);
+    const BandFill band = band_hint(ctx);  // P7, P13B item 18, P24F fixes 2-3
     bool direct = false;
     {
       std::lock_guard<std::mutex> lk(frame_mu_);
@@ -1739,18 +1734,14 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     text_runs_ += tf.runs.size();
     wi.text = std::move(tf);
   }
+  const BandFill band = band_hint(ctx);  // P7, P13B item 18, P24F fixes 2-3
   {
     std::lock_guard<std::mutex> lk(frame_mu_);
     frame_world_ = std::move(wi);
     frame_slot_ = std::move(show);
     frame_index_ = index;
     frame_cursor_ = fc;  // P10I fix 2
-    frame_band_ = in_game_ ? BandFill::Black : BandFill::Extend;  // P7
-    if (!in_game_ && world_map_ && opt_.map_bands) {  // P13B item 18
-      frame_band_ = BandFill::ExtendClamp;
-      ++presents_map_;
-    }
-    ++(in_game_ ? presents_black_ : presents_extend_);
+    frame_band_ = band;
     frame_waiting_ = true;
     last_band_ = frame_band_;  // P10C fix 1
     last_index_ = index;
@@ -1761,6 +1752,24 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     h = hwnd_;
   }
   if (h) PostMessageW(static_cast<HWND>(h), kMsgPresent, 0, 0);
+}
+
+// The side-band hint of a present (sim thread). P7: Extend for the full-screen 2D screens before a game's frame loop runs, Black once
+// it runs. P13B item 18: the world map shown before a session (world_map_) repeats its edge columns (ExtendClamp). P24F fixes 2-3
+// (HostOptions::screen_bands): in a game, a frame whose root holds no terrain picture (portsim gfx_back_terrain: a screen drawn
+// over the whole root, the world map courseActionMenu, the course map showRoutingMapScreen; P24F fix 1 also counts a root covered
+// in pieces) has no world layer, and gets the screens' bands before a session instead of black ones: the world map's own
+// (ExtendClamp with map_bands), Extend for the others.
+BandFill LiveSession::band_hint(portsim::Ctx &ctx) {
+  const bool screen = in_game_ && opt_.screen_bands && !portsim::gfx_back_terrain(ctx);
+  BandFill band = in_game_ && !screen ? BandFill::Black : BandFill::Extend;
+  if ((!in_game_ || screen) && world_map_ && opt_.map_bands) {
+    band = BandFill::ExtendClamp;
+    ++presents_map_;
+  }
+  if (screen) ++presents_screen_;
+  ++(band == BandFill::Black ? presents_black_ : presents_extend_);
+  return band;
 }
 
 bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
@@ -2388,7 +2397,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"present_points\":{\"r\":" + std::to_string(opportunities_[0]) + ",\"w\":" + std::to_string(opportunities_[1]) +
        ",\"m\":" + std::to_string(opportunities_[2]) + ",\"p\":" + std::to_string(opportunities_[3]) + "}";
   s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
-  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + "}";  // P7, P13B item 18
+  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + ",\"screen\":" + std::to_string(presents_screen_) + "}";  // P7, P13B item 18, P24F
   s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
        ",\"presents_world\":" + std::to_string(presents_world_) + ",\"presents_layered\":" + std::to_string(presents_layered_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
        ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
