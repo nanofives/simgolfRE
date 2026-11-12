@@ -42,7 +42,7 @@ if (Test-Path -LiteralPath (Join-Path $InstallRoot '.git')) {
 }
 if (-not $BaseUrl -or $BaseUrl.Count -eq 0) {
     # the .local name on a flat LAN; the server's static IP when mDNS cannot cross a second router
-    $BaseUrl = @('http://mariano-server.local:8088/simgolf', 'http://192.168.68.112:8088/simgolf')
+    $BaseUrl = @('http://mariano-server.local:8088/simgolf', 'http://192.168.68.112:8088/simgolf', 'http://192.168.1.64:8088/simgolf')
 }
 $BaseUrl = @($BaseUrl | ForEach-Object { $_.TrimEnd('/') })
 
@@ -77,7 +77,7 @@ $manifest = $null
 $tmpManifest = Join-Path ([System.IO.Path]::GetTempPath()) ("simgolf_manifest_" + [guid]::NewGuid().ToString("N") + ".json")
 foreach ($base in $BaseUrl) {
     try {
-        Invoke-WebRequest -Uri "$base/manifest.json" -OutFile $tmpManifest -UseBasicParsing -TimeoutSec 30
+        Invoke-WebRequest -Uri "$base/manifest.json" -OutFile $tmpManifest -UseBasicParsing -TimeoutSec 10
         $candidate = (Get-Content -LiteralPath $tmpManifest -Raw -Encoding UTF8) | ConvertFrom-Json
         if (@($candidate.files).Count -ge 1 -and $candidate.files[0].path) {
             $script:ResolvedBase = $base
