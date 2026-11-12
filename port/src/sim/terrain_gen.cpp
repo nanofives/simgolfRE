@@ -35,6 +35,15 @@ int g_defect_search_bound = 1;
 //                            no cell is accepted; fixed (0): the search gives up and the feature is skipped. A second
 //                            switch so that searchBound (D52b1, D52b2) keeps its meaning.
 int g_defect_placement_bound = 1;
+//   generateRandomCourse.startingFeatureOutside  P24E (play profile, Mariano's play-test 11 item 5): the clubhouse spot is drawn
+//                            in rows / columns 0xF..0x1F and the free feature of locations 2, 4, 9, 11, 14 (kinds 0xD, 9, 6,
+//                            0xE, 8: the practice green is kind 6) is stamped at (row - 1, column + 4), or (row - 1, column - 5)
+//                            when the tile (row, column + 5) is off the grid, with no test against the border sweep that runs
+//                            after them, so a clubhouse column of 30 or 31 on a 50-acre course puts the green past the edge.
+//                            1 = the original. 0 = when the drawn spot leaves a tile of the clubhouse or of the feature on a
+//                            tile the sweep will clear, the clubhouse takes the nearest spot of the same window that passes
+//                            the original's own test (base type, evalPlacementArea) and keeps both inside; no draw is added.
+int g_defect_feature_outside = 1;
 
 Ret call_peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
   const int i = registry_find(name);
@@ -403,6 +412,56 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         break;
       }
     }
+    if (!SG_DEFECT(g_defect_feature_outside)) {  // P24E: keep the clubhouse and its free feature inside the border sweep
+      // the sweep of section M: `count` from the acres; setting 2 clears an island edge of clamp(|x - 25|, 8, 50) + count
+      // - 12 + Random::range(3) cells per row / column (the worst case, 2, is taken: the draw comes later)
+      int32_t count = 0;
+      for (int32_t c = 0x19, e5 = rec.field(&CourseRecord::acres).get() * 10;;) {
+        ++count;
+        --c;
+        if (!(c * c * 4 > e5)) break;
+      }
+      const int8_t set = setting();
+      const auto island_lim = [&](int32_t v) { return clamp(abs32(v - 0x19), 8, 0x32) + count - 0xC + 2; };
+      const auto cleared = [&](int32_t r, int32_t c) {
+        if (r < 0 || r >= 50 || c < 0 || c >= 50) return true;
+        if (set == 2) return r < island_lim(c) || r > 49 - island_lim(c) || c < island_lim(r) || c > 49 - island_lim(r);
+        return r < count || r > 49 - count || c > 49 - count || (set == 0 && c < count);
+      };
+      const Ptr<int32_t> type_level = state_arr(ctx, &GameState::g_objectTypeLevel);
+      const auto footprint = [&](int32_t kind) {  // stampCourseTiles' side
+        const int32_t s = (state_arr(ctx, &GameState::f_tab_buildItems_4c26b0) + kind).field(&F_BuildItem::b10).get();
+        return kind >= 6 ? add32(s, type_level[kind]) : s;
+      };
+      const auto inside = [&](int32_t x, int32_t y, int32_t n) {
+        for (int32_t r = 0; r < n; ++r)
+          for (int32_t c = 0; c < n; ++c)
+            if (cleared(x + r, y + c)) return false;
+        return true;
+      };
+      const int32_t fkind = c0 == 2 ? 0xD : c0 == 4 ? 9 : c0 == 9 ? 6 : c0 == 11 ? 0xE : c0 == 14 ? 8 : -1;
+      const auto fits = [&](int32_t x, int32_t y) {
+        if (!inside(x, y, footprint(0xF))) return false;
+        if (fkind < 0) return true;
+        // the side section K's switch picks: tileBlocked(row, column + 5) reads a tile the clubhouse does not cover
+        const int32_t fy = tile_blocked(ctx, x, add32(y, 5)) == 0 ? add32(y, 4) : sub32(y, 5);
+        return inside(sub32(x, 1), fy, footprint(fkind));
+      };
+      if (!fits(cx, cy)) {
+        int32_t best = -1, bx = cx, by = cy;
+        for (int32_t a = 0xF; a < 0x20; ++a)
+          for (int32_t b = 0xF; b < 0x20; ++b) {
+            const int32_t d = abs32(a - cx) + abs32(b - cy);
+            if ((best < 0 || d < best) && ok(a, b) && fits(a, b)) {
+              best = d;
+              bx = a;
+              by = b;
+            }
+          }
+        cx = bx;  // no spot fits: the drawn one stays (the original's)
+        cy = by;
+      }
+    }
   }
   stamp_course_tiles(ctx, cx, cy, 0xF, 0x60);
   objects.field(&PlacedObject::flags).set(static_cast<uint8_t>(objects.field(&PlacedObject::flags).get() | 0x40));
@@ -745,6 +804,10 @@ const DefectDef kDefects[] = {
     {"generateRandomCourse.placementBound", "model_defects#52",
      "the feature-site searches gated by eval_placement_area (locations 4, 5, 6, 8, 12, 13, 15) never end when no cell is accepted",
      &g_defect_placement_bound},
+    {"generateRandomCourse.startingFeatureOutside", "P24E",
+     "the clubhouse spot and the free feature beside it (the practice green of location 9) are placed before the border sweep "
+     "and never tested against it, so they can lie partly past the course edge",
+     &g_defect_feature_outside},
 };
 }  // namespace
 

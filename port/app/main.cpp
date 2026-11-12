@@ -808,6 +808,7 @@ const ProfileMember kPlayProfile[] = {
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
     {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo
     {"drawEmployeeViewPanel.fourColumns", 0},      // P22D fix 2: the golfer list's added columns (the host's view block word +0x40)
+    {"generateRandomCourse.startingFeatureOutside", 0},  // P24E (play-test 11 item 5: the free practice green inside the course edge)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

@@ -327,3 +327,48 @@ def test_emulator_oracle_sees_negctl(portlib, mode, what):
     finally:
         portlib.negctl_reset()
     assert seen > 0, f"mode {mode} ({what}) is blind to the oracle"
+
+
+# ------------------------------------------------------------------------------- P24E: the free starting feature inside
+FEATURE_OUTSIDE = "generateRandomCourse.startingFeatureOutside"
+
+
+def _start(portlib, out: bytes, kind: int):
+    """(clubhouse spot, the feature's spot, the feature tiles the border sweep cleared)"""
+    o = objs(portlib)
+    hole19 = o["g_holes"][0] + 19 * 0x208
+    club = (_i32(out, hole19 + 8), _i32(out, hole19 + 0xC))
+    po = o["g_placed_objects"][0]
+    feat = next((struct.unpack_from("<hh", out, po + 16 * i + 2) for i in range(256)
+                 if struct.unpack_from("<h", out, po + 16 * i)[0] == kind), None)
+    types = out[o["g_tileType"][0]:][:2500]
+    side = out[o["f_tab_buildItems_4c26b0"][0] + 0x14 * kind + 0x10]
+    cut = [] if feat is None else [(feat[0] + r, feat[1] + c) for r in range(side) for c in range(side)
+                                   if types[(feat[0] + r) * 50 + feat[1] + c] == 0x14]
+    return club, feat, cut
+
+
+@need_exe
+def test_p24e_starting_feature_kept_inside(portlib):
+    """Mariano's play-test 11 item 5: Carolina (location 9, the practice green, kind 6) as career record 0 (50 acres,
+    setting 0: rows / columns 14..35 kept). Seed 10 draws the clubhouse at column 31 and the green at column 35, two of its
+    three columns cleared by the sweep (the original under Unicorn does the same: log/roadmap/P24/P24E_notes.md). The switch
+    at 0 takes the nearest spot that fits; a seed whose spot fits gives the same image at 1 and 0."""
+    def image(seed):
+        img = _fixed_image(portlib, n=0, loc=9, acres=50, relief=0, setting=0, ctype=0, difficulty=1)
+        return _put(portlib, img, "g_rng", struct.pack("<I", (seed * 0x9E3779B1 + 12345) & 0xFFFFFFFF))
+    try:
+        portlib.defect_reset()
+        _, on = port_call(portlib, image(10), 0)
+        portlib.defect(FEATURE_OUTSIDE, False)
+        _, off = port_call(portlib, image(10), 0)
+        _, off0 = port_call(portlib, image(0), 0)
+        portlib.defect_reset()
+        _, on0 = port_call(portlib, image(0), 0)
+    finally:
+        portlib.defect_reset()
+    club, feat, cut = _start(portlib, on, 6)
+    assert club == (22, 31) and feat == (21, 35) and len(cut) == 6
+    club, feat, cut = _start(portlib, off, 6)
+    assert club != (22, 31) and feat == (club[0] - 1, club[1] + 4) and cut == []
+    assert _start(portlib, on0, 6)[2] == [] and off0 == on0
