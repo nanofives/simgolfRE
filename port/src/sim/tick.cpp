@@ -35,6 +35,7 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/bridge.h"  // P8B: the view block (tick_render.inc, tick_boot.inc)
 #include "portsim/sim/gfx.h"
+#include "portsim/sim/lang.h"  // P24D fix 5b (tick_panels.inc drawBuildingPanel)
 #include "portsim/execonst.h"
 #include "portsim/sim/integrator.h"
 #include "portsim/sim/live.h"

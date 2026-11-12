@@ -1163,6 +1163,11 @@ void info_panel_tool_tip(Gfx &g, Ctx &ctx, int32_t sel) {
   std::string title = name + gfxb::vstring(ctx.mem, va(ctx, GSO(f_strpool_4c7f1c, 0xc0))) +
                       std::to_string(mul32(static_cast<int8_t>(ctx.mem.load<uint8_t>(rec + 0x23)), 100));
   title[0] = static_cast<char>(static_cast<uint8_t>(title[0]) + 0xe0);
+  if (lang::language() != lang::kEnglish && !name.empty()) {  // P24D: the tile's name (first letter raised, as above) translated
+    std::string cap = name;
+    cap[0] = static_cast<char>(static_cast<uint8_t>(cap[0]) + 0xe0);
+    title = lang::tr(cap) + title.substr(name.size());
+  }
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
   draw_string(g, ctx, title, sub32(X, 0xc), sub32(0x18a, dy), 0x80000000u, true, "showInfoCursorPanel tip");
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});

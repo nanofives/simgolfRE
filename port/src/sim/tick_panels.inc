@@ -43,8 +43,39 @@ int drawBuildingPanel(int a, int b) {
     if (sel == G<int>((GS(g_panelState) + 4)) && sel >= 0 && G<int>(GS(g_ui_5aa554)) > hover_tip_dwell()) {  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp); drawBuildingPanel+0x41 / drawBuildingPanel+0x47 / drawBuildingPanel+0x4d / drawBuildingPanel+0x55
         int base = (sel > 4) ? 0x1af : 0x187;                                // drawBuildingPanel+0x62..drawBuildingPanel+0x6c
         int rem = sel % 5;                                                   // drawBuildingPanel+0x73..drawBuildingPanel+0x79
-        int x = kClamp(add(base, mul(rem, 80)), 0x50, 0x2d0);                // drawBuildingPanel+0x8b
-        kDrawFrameS2(add(x, -0x50), 0x1cc, 0xa0, 0x64, 1);                   // drawBuildingPanel+0xa6
+        // P24D fix 5b (lang.h): in a language other than English the box is as wide as its widest line in that language (the
+        // three lines below built and measured with Text_put first, which the graphics backend answers for the translation),
+        // at least the original's 0xa0, rounded up to the frame's 16-pixel pieces, centred on the same point. The text buffer
+        // is rebuilt by the code below as before; in English nothing changes (0xa0, clamp 0x50..0x2d0).
+        int bw = 0xa0;
+        if (lang::language() != lang::kEnglish) {
+            kSetDrawTarget((u32)(G<int>(GS(f_stateptr_4c1570))), 0, GS(g_fontRef_519fd8), 0, 0, 0);
+            const int e6 = add(sel, 6);
+            const bool up6 = (e6 != 7) && G<int>(GS(g_objectTypeLevel) + 4u * static_cast<unsigned>(e6)) != 0;
+            const unsigned b20 = 20u * static_cast<unsigned>(sel);
+            int widest = 0;
+            for (int line = 0; line < 3; ++line) {
+                text[0] = 0;
+                if (line == 0) {
+                    if (up6) strcpy(text, vp<char>((GS(f_strpool_4c6980) + 40)));
+                    strcat(text, vp<char>((GS(f_tab_buildItems_4c26b0) + 120) + b20));
+                } else if (line == 1) {
+                    strcpy(text, vp<char>((GS(f_strpool_4c80d0) + 296)));
+                    const int v6 = G<short>((GS(f_tab_buildItems_4c26b0) + 138) + b20);
+                    const int t6 = mul(v6, 300);
+                    kAppendNumber(up6 ? (t6 - (t6 >> 31)) >> 1 : mul(v6, 100));
+                } else if (static_cast<unsigned>(add(e6, -5)) <= 9) {
+                    strcpy(text, vp<char>(kBuildingDesc[add(e6, -5)]));
+                }
+                const int w6 = tc("Text_put", G<int>(GS(f_stateptr_4c1570)), static_cast<int>(GS(g_textBuffer)));
+                if (w6 > widest) widest = w6;
+            }
+            text[0] = 0;
+            const int need = (widest + 16 + 15) & ~15;
+            if (need > bw) bw = need;
+        }
+        int x = kClamp(add(base, mul(rem, 80)), bw / 2, 0x320 - bw / 2);     // drawBuildingPanel+0x8b
+        kDrawFrameS2(add(x, -(bw / 2)), 0x1cc, bw, 0x64, 1);                 // drawBuildingPanel+0xa6
         kSetDrawTarget((u32)(G<int>(GS(f_stateptr_4c1570))), 0, GS(g_fontRef_519fd8), 0, 0, 0);   // drawBuildingPanel+0xbf
         int ebp = add(sel, 6);                                               // drawBuildingPanel+0xc4
         text[0] = 0;                                                         // drawBuildingPanel+0xc7
