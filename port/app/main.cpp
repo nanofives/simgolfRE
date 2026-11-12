@@ -277,6 +277,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <set>  // P24J: lang_bench
 #include <string>
 #include <thread>
 #include <vector>
@@ -3230,16 +3231,125 @@ void selftest_p9c(Tests &t, TextDefect td) {
   }
 }
 
+// P24J: the lookup cost per capture depth on real texts. SG_LANG_BENCH_PACK=<pack> SG_LANG_BENCH_TEXTS=<dump.tsv>[;<dump.tsv>...]
+// (SG_LANG_DUMP lines, `hit|miss<TAB>where<TAB>text`), SG_LANG_BENCH_OUT=<tsv>: every distinct text is looked up uncached at depth 2
+// and at depth kCaptureDepth (best of 3 timings); prints the totals and the slowest text and writes every text's results.
+void lang_bench(Tests &t, const char *pack_path) {
+  namespace lang = portsim::lang;
+  auto slurp = [](const std::string &path) {
+    std::ifstream f(path, std::ios::binary);
+    return std::string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+  };
+  auto unesc = [](const std::string &e) {
+    std::string o;
+    for (size_t i = 0; i < e.size(); ++i) {
+      if (e[i] == '\\' && i + 1 < e.size()) {
+        const char c = e[++i];
+        o += c == 'n' ? '\n' : c == 't' ? '\t' : c == 'r' ? '\r' : c;
+      } else {
+        o += e[i];
+      }
+    }
+    return o;
+  };
+  std::vector<std::string> errors;
+  const int n = lang::load_pack(lang::kSpanish, slurp(pack_path), &errors);
+  std::vector<std::string> texts;
+  std::set<std::string> seen;
+  const char *tp = std::getenv("SG_LANG_BENCH_TEXTS");
+  const std::string list = tp ? tp : "";
+  for (size_t a = 0; a < list.size();) {
+    size_t b = list.find(';', a);
+    if (b == std::string::npos) b = list.size();
+    const std::string body = slurp(list.substr(a, b - a));
+    a = b + 1;
+    for (size_t pos = 0; pos < body.size();) {
+      size_t eol = body.find('\n', pos);
+      if (eol == std::string::npos) eol = body.size();
+      std::string line = body.substr(pos, eol - pos);
+      pos = eol + 1;
+      if (!line.empty() && line.back() == '\r') line.pop_back();
+      const size_t t1 = line.find('\t');
+      const size_t t2 = t1 == std::string::npos ? t1 : line.find('\t', t1 + 1);
+      if (t2 == std::string::npos) continue;
+      const std::string s = lang::utf8_to_cp1252(unesc(line.substr(t2 + 1)));
+      if (!s.empty() && seen.insert(s).second) texts.push_back(s);
+    }
+  }
+  lang::set_language(lang::kSpanish);
+  const int depths[2] = {2, lang::kCaptureDepth};
+  std::vector<std::string> out[2];
+  std::vector<double> us[2];
+  for (int d = 0; d < 2; ++d) {
+    out[d].assign(texts.size(), std::string());
+    us[d].assign(texts.size(), 1e30);
+    for (int rep = 0; rep < 3; ++rep) {
+      lang::set_capture_depth(depths[d]);  // clears the cache: every lookup below runs the matcher
+      for (size_t i = 0; i < texts.size(); ++i) {
+        const auto t0 = std::chrono::steady_clock::now();
+        out[d][i] = lang::tr(texts[i]);
+        const double e = std::chrono::duration<double, std::micro>(std::chrono::steady_clock::now() - t0).count();
+        if (e < us[d][i]) us[d][i] = e;
+      }
+    }
+  }
+  lang::set_capture_depth(lang::kCaptureDepth);
+  lang::set_language(lang::kEnglish);
+  size_t differ = 0, slow = 0, longest = 0;
+  double sum[2] = {0, 0}, mx[2] = {0, 0};
+  for (size_t i = 0; i < texts.size(); ++i) {
+    for (int d = 0; d < 2; ++d) {
+      sum[d] += us[d][i];
+      mx[d] = std::max(mx[d], us[d][i]);
+    }
+    if (us[1][i] > us[1][slow]) slow = i;
+    if (texts[i].size() > texts[longest].size()) longest = i;
+    if (out[0][i] != out[1][i]) ++differ;
+  }
+  std::printf("p24j-bench: pack %d entries (%zu refused), %zu texts, longest %zu bytes (%.1f us at depth %d)\n", n, errors.size(),
+              texts.size(), texts.empty() ? size_t(0) : texts[longest].size(), texts.empty() ? 0.0 : us[1][longest],
+              lang::kCaptureDepth);
+  std::printf("p24j-bench: depth 2 total %.1f us max %.1f us | depth %d total %.1f us max %.1f us | %zu texts differ\n", sum[0],
+              mx[0], lang::kCaptureDepth, sum[1], mx[1], differ);
+  if (!texts.empty())
+    std::printf("p24j-bench: slowest at depth %d (%zu bytes, %.1f us): %s\n", lang::kCaptureDepth, texts[slow].size(), us[1][slow],
+                lang::cp1252_to_utf8(texts[slow].substr(0, 120)).c_str());
+  if (const char *op = std::getenv("SG_LANG_BENCH_OUT")) {
+    auto esc = [](const std::string &s) {  // the dump's escapes: one row per text
+      std::string o;
+      for (char c : lang::cp1252_to_utf8(s)) {
+        if (c == '\n') o += "\\n";
+        else if (c == '\t') o += "\\t";
+        else if (c == '\\') o += "\\\\";
+        else o += c;
+      }
+      return o;
+    };
+    if (FILE *f = std::fopen(op, "wb")) {
+      std::fprintf(f, "us_depth2\tus_depth3\ttext\tdepth2\tdepth3\n");
+      for (size_t i = 0; i < texts.size(); ++i)
+        std::fprintf(f, "%.1f\t%.1f\t%s\t%s\t%s\n", us[0][i], us[1][i], esc(texts[i]).c_str(),
+                     out[0][i] == out[1][i] ? "=" : esc(out[0][i]).c_str(), esc(out[1][i]).c_str());
+      std::fclose(f);
+    }
+  }
+  // bounded: no single lookup above 50 ms, and the deeper level costs at most 4x the whole set's time at depth 2
+  t.add("p24j-bench-bounded", !texts.empty() && mx[1] < 50000.0 && sum[1] <= 4.0 * sum[0] + 1000.0);
+}
+
 // P24D (lang_ui.h, portsim/sim/lang.h): the language pack's matcher on a synthetic pack (no game text). `p24d-mismatch` loads the
-// pattern row with its conversions swapped: the load count, the refusal count and the pattern rows read FAIL.
-void selftest_p24d(Tests &t, bool mismatch) {
+// pattern row with its conversions swapped: the load count, the refusal count and the pattern rows read FAIL. `p24j-depth2` keeps
+// the capture depth at 2 (before P24J): the two depth-3 rows read FAIL.
+void selftest_p24d(Tests &t, bool mismatch, bool depth2) {
   namespace lang = portsim::lang;
   const std::string pack = std::string("# comment\nAlpha\tAlfa\nBeta one\tBeta uno\nTotal: %d of %s\t") +
                            (mismatch ? "%s de %d: Total" : "Total: %d de %s") +
-                           "\nSay %s.\tDile %s.\nPct %d%%\tPorc %d%%\nBad %s\tMal %d\nEsc\\tTab\tEsc\\tTab ES\nCaf\xC3\xA9\tCaf\xC3\xA9 ES\n";
+                           "\nSay %s.\tDile %s.\nPct %d%%\tPorc %d%%\nBad %s\tMal %d\nEsc\\tTab\tEsc\\tTab ES\nCaf\xC3\xA9\tCaf\xC3\xA9 ES\n"
+                           // P24J: a comment tip's nesting (tip -> 'thought' Name -> thought -> tile)
+                           "Tip: %s\tPista: %s\n'%s' %s\t'%s' %s\nDarn, in the %s!\t\xC2\xA1Rayos, en el %s!\nwater\tagua\n";
   std::vector<std::string> errors;
   const int n = lang::load_pack(lang::kSpanish, pack, &errors);
-  t.add("p24d-load-counts", n == 7);
+  t.add("p24d-load-counts", n == 11);
   t.add("p24d-refuses-conversion-mismatch", errors.size() == 1u);
   lang::set_language(lang::kEnglish);
   t.add("p24d-english-unchanged", lang::tr("Alpha") == "Alpha");
@@ -3254,7 +3364,19 @@ void selftest_p24d(Tests &t, bool mismatch) {
   // a text the simulation wrapped (wrapMessageBuffer: LF at the break) finds its line flattened, ahead of a pattern over it
   t.add("p24d-wrapped-flat", lang::tr("Beta\none") == "Beta uno" && lang::tr("Say Alpha\nnow.") == "Dile Alpha now.");
   t.add("p24d-utf8-to-cp1252", lang::tr("Caf\xe9") == "Caf\xe9 ES" && lang::cp1252_to_utf8("Espa\xf1ol") == "Espa\xC3\xB1ol");
+  // P24J: the tile three levels down is translated; with two levels (the depth before P24J) it stays English
+  const std::string tip = "Tip: 'Darn, in the water!' Bob";
+  const int depth = depth2 ? 2 : lang::kCaptureDepth;
+  lang::set_capture_depth(depth);
+  t.add("p24j-depth3-tile-translated", lang::tr(tip) == "Pista: '\xa1Rayos, en el agua!' Bob");
+  lang::set_capture_depth(2);
+  t.add("p24j-depth2-leaves-tile", lang::tr(tip) == "Pista: '\xa1Rayos, en el water!' Bob");
+  lang::set_capture_depth(depth);
+  t.add("p24j-depth-restored", lang::tr(tip) == "Pista: '\xa1Rayos, en el agua!' Bob");
+  lang::set_capture_depth(lang::kCaptureDepth);
   lang::set_language(lang::kEnglish);
+  t.add("p24j-english-unchanged", lang::tr(tip) == tip);
+  if (const char *bp = std::getenv("SG_LANG_BENCH_PACK")) lang_bench(t, bp);
 }
 
 int run_selftest(const Options &o) {
@@ -3282,7 +3404,7 @@ int run_selftest(const Options &o) {
     return t.print();
   }
   if (o.selftest_p24d) {  // P24D
-    selftest_p24d(t, o.negctl == "p24d-mismatch");
+    selftest_p24d(t, o.negctl == "p24d-mismatch", o.negctl == "p24j-depth2");
     return t.print();
   }
   if (o.selftest_p9d) {  // P9D

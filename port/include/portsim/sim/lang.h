@@ -37,6 +37,10 @@ constexpr uint32_t kLangVa = 0xFC000000u, kLangSize = 4u << 20;  // the redirect
 int load_pack(int id, const std::string &utf8, std::vector<std::string> *errors);
 bool has_pack(int id);
 void set_language(int id);  // kEnglish (the game's own text) or a language with a pack; others are ignored
+// P24J: a %s part of a pattern's match that has a translation of its own is translated, this many levels deep (a comment tip is
+// tip -> 'thought' Name -> thought -> tile: three). set_capture_depth changes it (clears the cached results; tools' checks only)
+constexpr int kCaptureDepth = 3;
+void set_capture_depth(int levels);
 int language();
 // The translation of `s` (code page 1252 bytes) in the current language; `s` when there is none (always in English)
 std::string tr(const std::string &s);

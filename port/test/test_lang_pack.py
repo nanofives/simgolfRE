@@ -1,7 +1,8 @@
 """P24D (log/roadmap/P24/P24D_notes.md): the language pack's matcher (port/src/sim/text.cpp, lang section) through the app's --selftest-p24d,
 on a synthetic pack (no game text): exact lines, misses, trailing blanks, printf patterns with a translated %s capture, %%, escapes,
 code page 1252, English unchanged, and the refusal of a line whose conversions differ. The control `--negctl p24d-mismatch` swaps
-one pattern's conversions, so its load count, refusal and pattern rows read FAIL. Plus scripts/lang/check_pack.py's refusals."""
+one pattern's conversions, so its load count, refusal and pattern rows read FAIL. Plus scripts/lang/check_pack.py's refusals.
+P24J: %s parts are translated three levels deep (a comment tip's tile); `--negctl p24j-depth2` (the old depth) reads those rows FAIL."""
 from __future__ import annotations
 
 import os
@@ -35,7 +36,14 @@ def rows(args: list[str]) -> dict[str, bool]:
 
 def test_selftest_p24d_all_pass():
     r = rows(["--selftest-p24d"])
-    assert len(r) == 12 and all(r.values()), r
+    assert len(r) == 16 and all(r.values()), r  # P24J: + 4 capture-depth rows
+
+
+def test_selftest_p24j_depth_control_reads_red():
+    # P24J: at the old capture depth (2) the tile three levels down stays English
+    r = rows(["--selftest-p24d", "--negctl", "p24j-depth2"])
+    failed = {k for k, v in r.items() if not v}
+    assert failed == {"p24j-depth3-tile-translated", "p24j-depth-restored"}, r
 
 
 def test_selftest_p24d_control_reads_red():
