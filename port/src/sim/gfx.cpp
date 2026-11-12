@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>  // P24D: std::lround (the squeeze)
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -485,13 +486,13 @@ static bool text_ink_columns(Ctx &ctx, TextMetrics &tm, uint32_t font, const std
   c1 = add32(x, hi + 1 - pad);
   return true;
 }
-uint32_t lang_fit_font(Ctx &ctx, uint32_t font, uint32_t en_va, int32_t en_n, uint32_t tr_va, int32_t tr_n) {
+uint32_t lang_fit_font(Ctx &ctx, uint32_t font, uint32_t en_va, int32_t en_n, uint32_t tr_va, int32_t tr_n, int32_t bound_w) {
   if (lang::language() == lang::kEnglish || font == 0 || en_va == 0 || tr_va == 0 || en_n <= 0 || tr_n <= 0) return font;
   TextMetrics *tm = text_metrics(ctx);
   if (!tm) return font;
   int32_t en_w = 0, tr_w = 0;
   if (!tm->glyph_width(ctx, font, en_va, en_n, en_w) || !tm->glyph_width(ctx, font, tr_va, tr_n, tr_w)) return font;
-  const int32_t bound = add32(en_w + en_w / 10, 2);
+  const int32_t bound = bound_w > 0 ? bound_w : add32(en_w + en_w / 10, 2);
   if (tr_w <= bound) return font;
   GameFont me;
   try {
@@ -556,7 +557,7 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   }
   uint32_t font = g.fonts[0];
   if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return;   // drawText's guard: no font, nothing drawn
-  if (en_va != 0) font = lang_fit_font(ctx, font, en_va, en_n, va, static_cast<int32_t>(text.size()));  // P24D fix 5d
+  if (en_va != 0) font = lang_fit_font(ctx, font, en_va, en_n, va, static_cast<int32_t>(text.size()), g.lang_box_w);  // P24D fix 5d
   int32_t width = 0, ascent = 0;
   if (centre && (va == 0 || !tm->glyph_width(ctx, font, va, static_cast<int32_t>(text.size()), width))) {
     g.unsup(std::string(who) + ": the provider cannot measure");
@@ -572,6 +573,39 @@ void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x
   const int32_t y = add32(y0, ascent);
   const uint32_t r = (colour >> 7) & 0xf8, gr = (colour >> 2) & 0xf8, b = (colour << 3) & 0xff;
   const uint32_t ref = r | (gr << 8) | (b << 16);
+  // P24D fix 5 option 2: a translation the game's font ladder could not bring within its bound (lang_fit_font: 10 % + 2 pixels
+  // over the English it replaces) is squeezed to that bound: each byte drawn by itself at its pen position scaled by bound /
+  // width (the glyphs keep their shapes, the spacing tightens), centred on the same point. Every byte is its own text run, so
+  // the window-resolution text and the GPU text redraw each at its own origin. Never in English, never when the text fits.
+  // (only where the caller gave the box with text.box: the English width is a lower bound of a box, too loose to squeeze to)
+  if (en_va != 0 && va != 0 && !text.empty() && g.lang_box_w > 0) {
+    int32_t en_w = 0, tr_w = 0;
+    const int32_t n = static_cast<int32_t>(text.size());
+    if (tm->glyph_width(ctx, g.fonts[0], en_va, en_n, en_w) && tm->glyph_width(ctx, font, va, n, tr_w)) {
+      const int32_t bound = g.lang_box_w > 0 ? g.lang_box_w : add32(en_w + en_w / 10, 2);  // text.box when the caller gave one
+      if (tr_w > bound && tr_w > 0 && bound > 0) {
+        const double k = std::max(0.6, static_cast<double>(bound) / static_cast<double>(tr_w));  // at most to 60 %
+        lang::note("squeeze", text, true);  // SG_LANG_DUMP: the texts squeezed
+        const int32_t xs = centre ? sub32(x0, bound / 2) : x0;
+        for (int32_t i = 0; i < n; ++i) {
+          if (text[static_cast<size_t>(i)] == ' ') continue;
+          int32_t pre = 0;
+          if (i > 0 && !tm->glyph_width(ctx, font, va, i, pre)) pre = 0;
+          const int32_t px = add32(xs, static_cast<int32_t>(std::lround(pre * k)));
+          const std::string one(1, text[static_cast<size_t>(i)]);
+          TextRunScope t1;
+          int32_t lo = 0, hi = -1;
+          if (!tm->glyph_rows(ctx, font, y, g.root.h, lo, hi)) lo = 0, hi = -1;
+          text_run_begin(g, g.root.px.data(), g.root.w, g.root.h, t1, lo, hi);
+          if (!tm->draw_glyphs(ctx, font, one, px, y, ref, g.root.px.data(), g.root.w, g.root.h))
+            g.unsup(std::string(who) + ": the provider cannot draw");
+          const int32_t clip1[4] = {0, 0, g.root.w, g.root.h};
+          text_run_end(g, ctx, t1, g.root.px.data(), g.root.w, g.root.h, 0, 0, clip1, font, one, px, y, ref, 0);
+        }
+        return;
+      }
+    }
+  }
   TextRunScope ts;  // P9C: the run (inert with text capture off)
   // P24C fix 1: only the rows the provider's TextOutA can change (TextMetrics::glyph_rows), not the whole surface
   int32_t band_lo = 0, band_hi = -1;

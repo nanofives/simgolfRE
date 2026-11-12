@@ -1736,6 +1736,10 @@ void b_loading_banner(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.root_terrain = saved_terrain;
 }
 
+// text.box(w) (P24D fix 5 option 2): the box width the next translated texts must fit (0 = back to the English width + 10 %),
+// set by a caller around texts on a fixed plate (the world map's sites); drawing only
+void b_text_box(Gfx &g, Ctx &, const uint32_t *a, int n) { g.lang_box_w = n > 0 ? static_cast<int32_t>(a[0]) : 0; }
+
 // lang.selector(lang, open, hover) (P24D, app/lang_ui.h): the title menu's language dropdown on the root, before the menu's
 // refreshFull, in the look of the game's banners (loading.banner): drawFrameR3 boxes and drawTextSurface's white in the base banner
 // font g_font51b360. The closed box at (0x2a8, 4, 0x70, 0x20) names the current language (0 English, 1 Spanish) beside a small
@@ -1786,6 +1790,7 @@ void b_hover_terrain(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 const GfxBodyDef kBodies[] = {
     {"loading.banner", b_loading_banner},
     {"lang.selector", b_lang_selector},  // P24D
+    {"text.box", b_text_box},            // P24D fix 5 option 2
     {"hover.terrain", b_hover_terrain},
     {"Widget_setQuad70", b_set_quad70},
     {"Widget_setQuad74", b_set_quad74},

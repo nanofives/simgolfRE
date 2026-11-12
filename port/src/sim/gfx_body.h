@@ -99,6 +99,7 @@ class Gfx {
   std::map<uint32_t, Sprite8> sprites;  // exe SpriteRef objects (cropSprite)
   Surface16 root, back;                 // the root window's surface (g_rootWindow + 0x274) and the presented frame
   uint32_t fonts[4] = {0, 0, 0, 0};     // the root surface's +0x5c..+0x68 (setDrawTarget)
+  int32_t lang_box_w = 0;               // P24D: text.box(w): the width a translated text must fit (0 = the English width + 10 %)
   std::vector<uint32_t> snap_at;        // clock ordinals to snapshot past, ascending
   size_t snap_next = 0;
   std::vector<size_t> snap_unsupported;  // per snapshot: the distinct unsupported reasons that had occurred before it
@@ -335,7 +336,8 @@ const std::array<uint16_t, 0x8000> &shade_lut();
 // `font` itself when the translation is at most 10 % (+ 2 pixels) wider than the English; else the largest smaller FontRef of
 // the game with the same face and style (size >= 9) that brings it within that bound, or the smallest of them. The English
 // fitted its box, so its width bounds the box from below. Only for a language other than English (else `font`).
-uint32_t lang_fit_font(Ctx &ctx, uint32_t font, uint32_t en_va, int32_t en_n, uint32_t tr_va, int32_t tr_n);
+// bound_w > 0 replaces that bound (the box's own width, text.box)
+uint32_t lang_fit_font(Ctx &ctx, uint32_t font, uint32_t en_va, int32_t en_n, uint32_t tr_va, int32_t tr_n, int32_t bound_w = 0);
 // the text drawers' common path (drawRichText's run drawer): plain text, a direct colour, through the context's TextMetrics
 void draw_text_string(Gfx &g, Ctx &ctx, std::string text, uint32_t va, int32_t x0, int32_t y0, uint32_t colour, bool centre,
                       const char *who);

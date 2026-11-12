@@ -957,6 +957,7 @@ int32_t course_action_menu(Ctx &ctx) {
         }
         gx(ctx, "Image_draw", {plates + u32(st + kind * 4) * 0x2C, root, u32(x), u32(y), 0});
       }
+      gx(ctx, "text.box", {0x76});  // P24D: the site plate's text width (a translation fits it; drawing only)
       gx(ctx, "drawCenteredText", {text, u32(x + 0x60), u32(y + 4), kBlack});
       gx(ctx, "setDrawTarget", {root, f_small, 0, 0, 0});
       vstrcpy(ctx.mem, text, d + 0x41);   // the text
@@ -1004,6 +1005,7 @@ int32_t course_action_menu(Ctx &ctx) {
         }
         if ((gs.g_flags & 0x1000000u) == 0) gx(ctx, "drawCenteredText", {text, u32(x + 0x70), u32(y + 0x1E), kLabel});
       }
+      gx(ctx, "text.box", {0});  // P24D
       {  // the map pin: 2 bought, 1 affordable, 0 not, 3 the nearest site while bit 3 of the blink counter is set; its arrow
          // quadrant (4..7) from the definition's point against (0xc8, 0x12c), drawn at the point and again at the plate's end
         int32_t ms = gs.g_cash_div100 >= tier_price(c) ? 1 : 0;
