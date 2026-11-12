@@ -610,3 +610,7 @@
 - 2026-11-12 01:xx fast check ad6bbf5c green (x64 0/0, static 6, SEGCMP 205/205 0, p14 692 / 0). Full check 239562e1 (SEGS=1: P24F fix 1 + P24D 5b sim) then publish
 - 2026-11-12 02:2x full check 239562e1 green: builds x64 + Win32 0/0, static 6, SEGCMP 205/205 0, 1080 / 4K p14 759 / 190, 0 bad, P15 / P16B 0. Publishing 239562e1
 - 2026-11-12 02:3x published 239562e1 + GitHub release port-2026-11-12-239562e1
+- 2026-11-12 02:3x P24D option 2 (world-map plate squeeze; segs 205/205) merged 7a4336b8. P24D DONE, closed
+- 2026-11-12 0x:xx P24G FIX 1 (its READY message was lost in the orchestrator restart; found by reading its session): --tourney-hold, buttons greyed + 'Starting tournament...' tip, drawing only; merged 8ec76eec via commit-tree on 6b47d41c + cherry-pick, main.cpp / conftest hand-merged. P24G DONE, closed. Fast check with segs (P24D option 2 + P24G sim gfx) then publish
+- 2026-11-12 0x:xx fast check 8ec76eec green (x64 0/0, static 6, SEGCMP 205/205 0, p14 703 / 0). Publishing 8ec76eec (P24D option 2, P24G fix 1)
+- 2026-11-12 0x:xx published 8ec76eec + GitHub release. P24 open: item 8 (pause UI jump) waits for his video; every other item shipped
