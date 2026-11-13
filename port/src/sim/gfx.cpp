@@ -1695,8 +1695,21 @@ void gfx_layer_begin(Ctx &ctx, int32_t id) {
   g->ensure_root(ctx);
   // P9D: the next frame's first layer ends a carried capture. P9E fix 2: not a layer of the frame that closed a modal screen opened
   // inside a panel's scope (the carry continues: the gap since the screen's last publish is closed below as a centred layer)
+  // P25A fix 1: nor a layer opened after a publish outside every scope before the next frame's picture (terrain pass, its restore,
+  // a window paint: those end the carry first). mainLoop's command tail does that: a key or a click handled after the frame's
+  // refreshFull jumps back to the per-frame overlays (buildScenarioIntro .. showTournamentResults, then refreshFull again) with
+  // no new picture, and during a tournament showTournamentResults opens the title layer there. Ending the carry took the root, which
+  // holds the frame's panels at their 800-space places, as the base: for one present every panel showed in the centred frame
+  // (Mariano, P25 item 1: the UI moved for a frame on pause / unpause with a tournament on). The root still holds the carried
+  // frame, so the capture continues it, as the original's screen shows that root. SG_P25A_TAIL=0 (development): ended as before.
+  static const bool tail_off = [] {
+    const char *e = std::getenv("SG_P25A_TAIL");
+    return e && e[0] == '0';
+  }();
   if (c.close_keep && c.carry && c.carry_split) c.carry_split = false;
-  else g->hud_carry_drop();
+  else if (c.carry && !c.carry_split && !tail_off) {
+    // P25A fix 1: the carried capture continues (the gap since its publish is closed below as a centred layer)
+  } else g->hud_carry_drop();
   c.aborted = false;
   if (!c.any) {
     c.base = g->root.px;
