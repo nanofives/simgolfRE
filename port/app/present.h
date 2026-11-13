@@ -41,6 +41,7 @@ enum class PresentDefect : uint8_t {
   StaleRemap = 8,        // P26C item 4a: a frame without the world or layers keeps the previous frame's click remap
   HoverUnconfirmed = 9,  // P27C fix 1: hover_confirm ignored (a predicted hover look stays where the game's pass kept its picture)
   CarriedHudClicks = 10,  // P27B fix 4: a modal screen's carried panel pixels it overdrew still take clicks at their anchors
+  DimFrameHudClicks = 11,  // P27B fix 5: only carried frames get fix 4's rule (a modal screen's first, dimmed frame does not)
 };
 
 // The content rectangle for a client area of cw x ch.

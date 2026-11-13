@@ -1849,7 +1849,19 @@ void Presenter::layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, i
   // mask blend; not a shade or the whole-frame dim, under which the original still shows the panel) is at 800-space point j; a
   // panel pixel drawn before it there is shown but takes no click or cursor read (out of the layer's coverage)
   std::vector<int16_t> &over = over_;
-  if (f.carried && anchor && defect_ != PresentDefect::CarriedHudClicks) {
+  // P27B fix 5 (class a): a modal screen's first publish is not carried yet (the carry is armed by it): its panel layers and the
+  // screen's drawing as a centred layer with the whole-frame dim (GfxHudLayer::dim: one blend of every root pixel with one source
+  // word, Gfx::note_dim, the dim a report screen draws over the frame behind it). Until the screen's first redraw that frame kept
+  // the overdrawn panel pixels clickable
+  // (the happiness meter answered as showMembershipRoster's up arrow right after the roster opened), so it gets the same rule
+  bool modal = f.carried != 0;
+  if (!modal && defect_ != PresentDefect::DimFrameHudClicks)
+    for (const portsim::GfxHudLayer &c : f.layers)
+      if (c.id == portsim::kGfxLayerCentred && c.dim) {
+        modal = true;
+        break;
+      }
+  if (modal && anchor && defect_ != PresentDefect::CarriedHudClicks) {
     if (over_serial_ != f.serial) {
       over.assign(static_cast<size_t>(kLogicalW) * kLogicalH, -1);
       for (size_t li = 0; li < f.layers.size(); ++li) {
