@@ -155,7 +155,10 @@ void drawWalkers() {
                     CopyText((GS(g_golferTypes) + 16));                                               // drawWalkers+0x3a8..drawWalkers+0x3cb
                 else
                     kPickGolferName(FI(0x14));                                          // drawWalkers+0x3d8
-                const unsigned font = BR(0, G<int>(GS(g_zoomScale)) > 4) ? GS(g_font51b360) : GS(g_fontRef_519fd8);
+                // drawWalkers+0x3e0..drawWalkers+0x3ef: g_font51b360 when g_zoomScale > 4; P26D item 8 (mainLoop.zoom8Font = 0): zoom 8
+                // (P11A) keeps zoom 4's g_fontRef_519fd8, as the four label sites of P13C do
+                const bool z8 = BR(0, G<int>(GS(g_zoomScale)) > 4);
+                const unsigned font = (z8 && SG_DEFECT(g_defect_zoom8_font)) ? GS(g_font51b360) : GS(g_fontRef_519fd8);
                 kSetDrawTarget((u32)(G<unsigned>(GS(f_stateptr_4c1570))), nullptr, static_cast<int>(font), 0, 0, 0);   // drawWalkers+0x401
                 if (!BR(0, (G<unsigned char>(GS(g_flags)) & 0x20) == 0))
                     AppendText(static_cast<u32>(kItoa(FI(0x14), GS(g_flyBall4e9a88), 10)));  // drawWalkers+0x41b..drawWalkers+0x44b

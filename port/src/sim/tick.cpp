@@ -208,6 +208,8 @@ int g_defect_label_under_sprites = 1;
 // mainLoop.zoom8Font (P13C item 3, Mariano 2026-11-06 "on the closest zoom level font changes"): four label sites pick the draw font
 // by `g_zoomScale > 4` (the golfer label queue_label ML+0x7518 / ML+0x7aa8 callers, P4_ballLabelDraw ML+0x71b7..ML+0x71c1): zoom 8
 // (P11A, unreachable in the original) took g_font51b360 where zoom 4 takes g_fontRef_519fd8. Fixed (0): the choice uses min(zoom, 4).
+// P26D item 8 (Mariano's play-test 13 "names of the stuff on closest zoom are a different font and size"): the fifth site, drawWalkers'
+// staff / player name label (drawWalkers+0x3e0..drawWalkers+0x3ef), follows the same switch.
 int g_defect_zoom8_font = 1;
 // mainLoop.rightClickKeepsTool (P13A, Mariano's play-test 6 item 11 "right click to deselect"): a right click on the course
 // (Ph_0041ecbb, button word 2, ML+0xfbac) drops an object tool (f_w_4c2848[3] = -1, ML+0xfbe3) but leaves a terrain tool
@@ -2223,7 +2225,7 @@ const DefectDef kDefects[] = {
      &g_defect_tool_zoom4},
     {"mainLoop.zoom8Font", "P13C",
      "the golfer / ball labels pick their font by g_zoomScale > 4, so the closest zoom 8 (P11A) draws them in the larger "
-     "g_font51b360 where zoom 4 uses g_fontRef_519fd8; fixed: zoom 8 keeps zoom 4's face",
+     "g_font51b360 where zoom 4 uses g_fontRef_519fd8 (P26D: and drawWalkers' staff labels); fixed: zoom 8 keeps zoom 4's face",
      &g_defect_zoom8_font},
     {"mainLoop.cameraStepFixed4", "P11F",
      "an arrow key moves the camera 4 tiles at every zoom; fixed: 2 tiles at zoom 8 (the same screen distance as 4 tiles at zoom 4)",
