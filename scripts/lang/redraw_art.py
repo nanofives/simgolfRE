@@ -51,7 +51,7 @@ def plates(im: Image.Image, min_w: int = 60, min_h: int = 8, max_h: int = 24):
     return found
 
 
-def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path) -> Image.Image:
+def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path, info: list | None = None) -> Image.Image:
     x, y, w, h = rect
     rgb = im.convert("RGB")
     px = rgb.load()
@@ -158,6 +158,11 @@ def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path)
                 d.text((tx + k + 1, ty + 1), s, font=f, fill=sc)
         for k in range(1 + bold):  # bold=1: drawn twice, one pixel apart (the plates' heavy capitals)
             d.text((tx + k, ty), s, font=f, fill=col)
+        if info is not None and not rot:  # P26C (--sharp): the line as a text run: its ink box, pen origin, baseline, size
+            l2, t2, r2, b2 = d.textbbox((tx, ty), s, font=f)
+            info.append({"box": (l2, t2, r2 + bold, b2), "x": tx, "base": ty + f.getmetrics()[0], "size": size,
+                         "font": opts.get("font", "manu"), "bold": bold, "col": col[:3], "text": s,
+                         "shadow": opts.get("shadow", "-")})
     if layer is not None:
         layer = layer.rotate(rot, resample=Image.Resampling.BICUBIC, center=(x + w / 2, y + h / 2))
         base.paste(layer.convert("RGB"), (0, 0), layer)
@@ -176,6 +181,11 @@ def main() -> int:
     ap.add_argument("--out", default=str(ROOT / "lang" / "es"))
     ap.add_argument("--preview", default="")
     ap.add_argument("--list", default="")
+    # P26C (log/roadmap/P26/P26C_notes.md, item 11): for the port's sharp art text, beside each image only (the redrawn image itself
+    # is not written): <stem>.blank<ext>, the image with every row's words erased (a rotated row keeps its drawn words), and
+    # <stem>.runs.tsv, one line per drawn text line: x0,y0,x1,y1 (ink box) x baseline size font bold r,g,b text shadow (r,g,b of
+    # the dark copy one pixel down and right, or -) (image pixels)
+    ap.add_argument("--sharp", action="store_true")
     a = ap.parse_args()
     inst = pathlib.Path(a.install)
     if a.list:
@@ -191,6 +201,25 @@ def main() -> int:
             sys.exit(f"{a.spec} line {n}: image<TAB>x,y,w,h<TAB>text")
         opts = dict(o.split("=", 1) for o in p[3:] if "=" in o)
         rows.setdefault(p[0], []).append((tuple(int(v) for v in p[1].split(",")), p[2], opts))
+    if a.sharp:
+        for img, items in rows.items():
+            im, blank, runs = Image.open(inst / img), Image.open(inst / img), []
+            for rect, text, opts in items:
+                info = []
+                im = redraw(im, rect, text, opts, inst, info)
+                blank = redraw(blank, rect, text if float(opts.get("rot", 0)) else "~", opts, inst)
+                runs += info
+            src = pathlib.Path(img)
+            dst = pathlib.Path(a.out) / src.parent / (src.stem + ".blank" + src.suffix)
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            blank.save(dst)
+            with open(pathlib.Path(a.out) / src.parent / (src.stem + ".runs.tsv"), "w", encoding="utf-8", newline="") as o:
+                for r in runs:
+                    o.write("%d,%d,%d,%d\t%d\t%d\t%d\t%s\t%d\t%d,%d,%d\t%s\t%s\n" % (*r["box"], r["x"], r["base"], r["size"], r["font"],
+                                                                               r["bold"], *r["col"], r["text"], r["shadow"]))
+            same = (pathlib.Path(a.out) / img).exists() and list(Image.open(pathlib.Path(a.out) / img).getdata()) == list(im.getdata())
+            print(f"{img}: {len(runs)} runs, blank -> {dst} (the redrawn image equals {a.out}: {same})")
+        return 0
     for img, items in rows.items():
         im = Image.open(inst / img)
         for rect, text, opts in items:

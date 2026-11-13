@@ -109,6 +109,10 @@
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
+//   P26C item 11: --sharp-art on|off (default on; SG_APP_P26=off: off) the bulletin board's plate words (art pixels the Spanish
+//   art redraws) drawn as text runs at the window's resolution over their blank plates, where the language art has
+//   <image>.blank.pcx and <image>.runs.tsv (scripts/lang/redraw_art.py --sharp); the root keeps the art's pixels (gfx.h
+//   gfx_set_sharp_art; drawing only; log/roadmap/P26/P26C_notes.md)
 //   P26B item 3: --palette-names on|off (default on; SG_APP_P26=off: off) the Build Course palette's tool names: one font size for
 //   every name (no smaller font for a long translation), a name wider than its tile on two lines (broken at a space), the trees'
 //   names at their row's height (gfx.h gfx_set_palette_names; drawing only; log/roadmap/P26/P26B_notes.md)
@@ -549,6 +553,7 @@ struct Options {
   bool tourney_hold = true;        // P24G: --tourney-hold on|off (SG_APP_P24=off: off)
   bool closed_popups_hide = true;  // P25C fix 2: --closed-popups hide|keep (SG_APP_P25=off: keep)
   bool row_hover = true;           // P25B: --row-hover on|off (SG_APP_P25=off: off)
+  bool sharp_art = true;           // P26C item 11: --sharp-art on|off (SG_APP_P26=off: off)
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
@@ -1254,6 +1259,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
+      if (ok && o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11
       if (ok && o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2
       if (ok && o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3
       if (ok && o.staff_labels_top) portsim::gfx_set_walker_labels_top(*ctx, true);  // P26D item 9
@@ -1540,6 +1546,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
+  if (o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11: the bulletin board's art words as runs (gfx.h; drawing only)
   if (o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2: the match scorecard as wide as the course (gfx.h; drawing only)
   if (o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3: the palette's names (gfx.h; drawing only)
   if (o.staff_labels_top) portsim::gfx_set_walker_labels_top(*ctx, true);  // P26D item 9: staff labels over the sprites (drawing only)
@@ -3579,6 +3586,12 @@ bool parse(int argc, char **argv, Options &o) {
       return true;
     };
     std::string v;
+    // P26C item 11: before the else-if chain below, which is at MSVC's nesting limit (one more branch there: C1061)
+    if (a == "--sharp-art") {
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.sharp_art = v == "on";
+      continue;
+    }
     if (a == "--install") { if (!val(o.install)) return false; }
     else if (a == "--exe") { if (!val(o.exe)) return false; }
     else if (a == "--data") { if (!val(o.data)) return false; }
@@ -4071,6 +4084,7 @@ int main(int argc, char **argv) {
       o.arrow_glide = false;  // P26A
       o.palette_names = false;  // P26B item 3
       o.staff_labels_top = false;  // P26D item 9
+      o.sharp_art = false;  // P26C item 11
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

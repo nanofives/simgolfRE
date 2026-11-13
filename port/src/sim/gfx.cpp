@@ -740,7 +740,7 @@ void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunSco
 }
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
                   const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
-                  uint8_t target) {
+                  uint8_t target, const GameFont *font) {
   if (!s.on || !g.text.on || s.hi > h || s.snap.size() != static_cast<size_t>(w) * static_cast<size_t>(s.hi - s.lo)) return;
   int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
   for (int32_t yy = s.lo; yy < s.hi; ++yy) {  // P24C fix 1: the snapshotted rows (no other row changed)
@@ -760,7 +760,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     if (!edge_only) return;
     GameFont ef;
     try {
-      ef = game_font(ctx, fontref);
+      ef = font ? *font : game_font(ctx, fontref);
     } catch (const MissingResource &) {
       ++g.text.stats.no_font;
       return;
@@ -800,7 +800,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   ++g.text.stats.captured;
   GameFont gf;
   try {
-    gf = game_font(ctx, fontref);
+    gf = font ? *font : game_font(ctx, fontref);
   } catch (const MissingResource &) {
     ++g.text.stats.no_font;  // a font the provider's table does not hold: the run stays in 800-space
     return;
@@ -2331,6 +2331,10 @@ void gfx_set_meter_tips(Ctx &ctx, bool on) {
 // P25B (gfx.h gfx_set_row_hover)
 void gfx_set_row_hover(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->row_hover = on;
+}
+// P26C item 11 (gfx.h gfx_set_sharp_art)
+void gfx_set_sharp_art(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->sharp_art = on;
 }
 // P26E fix 2 (gfx.h gfx_set_card_width)
 void gfx_set_card_width(Ctx &ctx, bool on) {

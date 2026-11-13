@@ -1137,7 +1137,23 @@ void show_bulletin_board(Ctx &ctx) {
   }
   draw.gx("showBulletinBoard.fixed", {});
   draw.gx("Window::refreshFull", {draw.window(), 0});
+  bool tick_lit = false;
   for (;;) {
+    // P26C item 5 (class b, under the same switch: reportScreens.anyClickCloses = 0): the original's board loop makes no cursor
+    // read and never lights its tick; with the switch at 0 and a display, a read each pass lights the tick while the point is over
+    // it (showBulletinBoard.tickHover, drawing only). With the switch at 1 (every test profile but `play`) nothing is read.
+    if (!SG_DEFECT(g_defect_report_any_click) && gs.g_graphicsDevice != 0 && draw.on) {
+      int32_t px = 0, py = 0;
+      InputSource *src = input_source(ctx);
+      if (src && src->cursor(px, py)) {
+        const bool in = px >= 0x2dc && px < 0x2dc + 0x35 && py >= 0x1ff && py < 0x1ff + 0x34;
+        if (in != tick_lit) {
+          tick_lit = in;
+          draw.gx("showBulletinBoard.tickHover", {in ? 1u : 0u});
+          draw.gx("Window::refreshFull", {draw.window(), 0});
+        }
+      }
+    }
     pump_input_blocking(ctx, "showBulletinBoard");
     // P26C item 4b (reportScreens.anyClickCloses = 0): only a click on the tick (cell 36, loadInterfaceArt.bulletinArt's last cut
     // of the second load, drawn at its own place: gfx_bulletin.cpp) ends the board

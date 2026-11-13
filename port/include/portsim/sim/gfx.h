@@ -86,6 +86,10 @@ void gfx_set_tourney_hold(Ctx &ctx, bool on);
 // bridge, whose art covers its tile, gets the picked cell's blue, lightened, over the bridge. Drawing only: the GameState is never written. Off (the
 // default): the original's drawing.
 void gfx_set_row_hover(Ctx &ctx, bool on);
+// P26C item 11 (log/roadmap/P26/P26C_notes.md): the bulletin board's plates, where the language art beside the game's images has
+// `<image>.blank.pcx` and `<image>.runs.tsv` (scripts/lang/redraw_art.py --sharp), draw their words as text runs at the window's
+// resolution over the blank plate; the root keeps the redrawn art's pixels (drawing only)
+void gfx_set_sharp_art(Ctx &ctx, bool on);
 // P26E fix 2 (log/roadmap/P26/P26E_notes.md; app option --card-width, default on, SG_APP_P26=off: off). drawMatchScoreboard's grid
 // (the art cut g_sprites541a18 + 0x108) always has 18 hole columns and the total column; with it on and the HUD layer capture on,
 // a course of L < 18 holes gets a scorecard of L hole columns: the golfer panel's layer right of hole column L (the total column, the

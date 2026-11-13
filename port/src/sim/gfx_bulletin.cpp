@@ -54,10 +54,24 @@
 //   5 the capture writes green as (w >> 3) & 0xfc (the RGB565 arm)   6 the capture writes the rows top-down (no flipBmpRows)
 //   7 the capture ignores a missing directory    8 the photo surface is dropped at every event (a missing file draws nothing)
 //   9 the photo is blitted one pixel lower        10 the photo load does not flip a positive-height bitmap
+//   11 (P26C item 11) the sharp art blits the redrawn cell in place of the blank one (no word changes between the two: no run)
+//
+// P26C item 11 (Mariano's play-test 13: "font of this screen looks pixelated"; gfx.h gfx_set_sharp_art, drawing only): the plates'
+// and notes' words are pixels of the art (TROPHYparts / tacs&tees, redrawn in Spanish by scripts/lang/redraw_art.py), scaled with
+// the 800 x 600 frame. When the language art beside an image has `<image>.blank.pcx` (the same image with the words erased) and
+// `<image>.runs.tsv` (each drawn line: ink box, TextOutA origin and baseline, size, font, bold, colour, text; redraw_art.py
+// --sharp), loadInterfaceArt.bulletinArt also cuts the blank cell of every colour cell that holds a line, and blt draws such a
+// cell as: the blank cell, a text-run snapshot of each line's rows, the root put back, the redrawn cell, then each line recorded as
+// a run (gfxb::text_run_end with the line's face: manual / manual bold / klepto, at the redraw's size). The root ends with the
+// same pixels as before; the presenter peels each run to the blank plate and draws its words at the window's resolution.
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
+#include <map>
 #include <string>
 #include <vector>
+
+#include "portsim/sim/gditext.h"  // P26C item 11: the runs' faces
 
 #include "gfx_body.h"
 #include "portsim/arith.h"
@@ -88,19 +102,145 @@ void call_body(Gfx &g, Ctx &ctx, const char *name, std::initializer_list<uint32_
   b(g, ctx, args, n);
 }
 
+// ------------------------------------------------------------------------------------------------ P26C item 11: the art's words
+// one drawn line of the art (redraw_art.py --sharp's runs.tsv), in the pixels of the cell that holds it
+struct ArtRun {
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the line's ink box (half-open)
+  int32_t x = 0, base = 0, size = 0;       // TextOutA's origin (TA_BASELINE) and the face's size (lfHeight = -size)
+  bool klepto = false, bold = false;
+  uint32_t colorref = 0;                   // r | g << 8 | b << 16
+  bool shadow = false;                     // a dark copy one pixel down and right, drawn first (the engraved plate)
+  uint32_t shadow_ref = 0;
+  std::string text;                        // Windows-1252 bytes (the file is UTF-8)
+};
+struct SharpCell {
+  uint32_t blank = 0;  // the blank cell's sprite key
+  std::vector<ArtRun> runs;
+};
+struct SharpState {
+  std::map<uint32_t, SharpCell> cells;  // by the colour cell's SpriteRef
+};
+SharpState &sharp(Gfx &g) { return g.state_of<SharpState>("bulletin.sharp"); }
+
+// UTF-8 to Windows-1252 for the letters the language art uses (all below U+0100); anything else becomes '?'
+std::string to_1252(const std::string &u) {
+  std::string out;
+  for (size_t i = 0; i < u.size();) {
+    const uint8_t c = static_cast<uint8_t>(u[i]);
+    uint32_t cp = c, n = 1;
+    if (c >= 0xF0) cp = c & 0x07, n = 4;
+    else if (c >= 0xE0) cp = c & 0x0F, n = 3;
+    else if (c >= 0xC0) cp = c & 0x1F, n = 2;
+    for (uint32_t k = 1; k < n && i + k < u.size(); ++k) cp = (cp << 6) | (static_cast<uint8_t>(u[i + k]) & 0x3F);
+    i += n;
+    out += cp < 0x100 ? static_cast<char>(cp) : '?';
+  }
+  return out;
+}
+
+// the comma-separated integers of s into v (at most n); their count
+int ints(const std::string &s, int *v, int n) {
+  int k = 0;
+  for (size_t p = 0; k < n && p < s.size();) {
+    char *e = nullptr;
+    const long x = std::strtol(s.c_str() + p, &e, 10);
+    if (e == s.c_str() + p) break;
+    v[k++] = static_cast<int>(x);
+    p = static_cast<size_t>(e - s.c_str());
+    if (p < s.size() && s[p] == ',') ++p;
+    else break;
+  }
+  return k;
+}
+
+// runs.tsv: x0,y0,x1,y1 <TAB> x <TAB> baseline <TAB> size <TAB> font <TAB> bold <TAB> r,g,b <TAB> text <TAB> shadow r,g,b or -
+std::vector<ArtRun> parse_runs(const std::vector<uint8_t> &data) {
+  std::vector<ArtRun> out;
+  std::string s(data.begin(), data.end());
+  size_t p = 0;
+  while (p < s.size()) {
+    size_t e = s.find('\n', p);
+    if (e == std::string::npos) e = s.size();
+    std::string line = s.substr(p, e - p);
+    p = e + 1;
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+    std::vector<std::string> f;
+    for (size_t q = 0;;) {
+      const size_t t = line.find('\t', q);
+      f.push_back(line.substr(q, t == std::string::npos ? std::string::npos : t - q));
+      if (t == std::string::npos) break;
+      q = t + 1;
+    }
+    if (f.size() < 8) continue;
+    ArtRun r;
+    int c[4] = {}, rgb[3] = {};
+    if (ints(f[0], c, 4) != 4 || ints(f[6], rgb, 3) != 3) continue;
+    r.x0 = c[0], r.y0 = c[1], r.x1 = c[2], r.y1 = c[3];
+    r.x = std::atoi(f[1].c_str());
+    r.base = std::atoi(f[2].c_str());
+    r.size = std::atoi(f[3].c_str());
+    r.klepto = f[4] == "klepto";
+    r.bold = std::atoi(f[5].c_str()) != 0;
+    r.colorref = static_cast<uint32_t>(rgb[0] & 0xff) | static_cast<uint32_t>(rgb[1] & 0xff) << 8 | static_cast<uint32_t>(rgb[2] & 0xff) << 16;
+    r.text = to_1252(f[7]);
+    int sh[3] = {};
+    if (f.size() > 8 && ints(f[8], sh, 3) == 3) {
+      r.shadow = true;
+      r.shadow_ref = static_cast<uint32_t>(sh[0] & 0xff) | static_cast<uint32_t>(sh[1] & 0xff) << 8 | static_cast<uint32_t>(sh[2] & 0xff) << 16;
+      ++r.x1, ++r.y1;  // the shadow's column and row
+    }
+    if (r.size > 0 && r.x1 > r.x0 && r.y1 > r.y0 && !r.text.empty()) out.push_back(std::move(r));
+  }
+  return out;
+}
+
 // ------------------------------------------------------------------------------------------------ the art
 struct Cuts {
   Gfx &g;
   Ctx &ctx;
   Image8 img;
   bool have = false;
+  // P26C item 11: the loaded image's blank copy and its lines (image pixels), when the language art has them
+  Image8 blank;
+  std::vector<ArtRun> runs;
+  bool colour = false;  // the cuts go into the colour cells (the blank cells are cut for those only)
+  bool first_load = false;   // the set's first load (the plates, TROPHYparts): the only one whose lines become runs (P26C_notes.md)
   void load(uint32_t off) {
     img = Image8{};
     have = gfxb::load_image(g, ctx, pool(ctx) + off, 0, 0, 0x100, 2, img) == 0;
     if (!have) g.unsup("loadInterfaceArt.bulletinArt: a file that did not load");
+    blank = Image8{};
+    runs.clear();
+    if (!have || !colour || !first_load || !ctx.files_ptr) return;
+    std::string stem = gfxb::vstring(ctx.mem, pool(ctx) + off), ext = ".pcx";
+    const size_t dot = stem.rfind('.'), sep = stem.find_last_of("/\\");
+    if (dot != std::string::npos && (sep == std::string::npos || dot > sep)) {
+      ext = stem.substr(dot);
+      stem.resize(dot);
+    }
+    if (!ctx.files().exists(stem + ".runs.tsv")) return;
+    if (gfxb::load_image_named(g, ctx, stem + ".blank" + ext, 0, 0, 0x100, 2, blank) != 0) {
+      blank = Image8{};
+      return;
+    }
+    runs = parse_runs(ctx.files().read_all(stem + ".runs.tsv"));
   }
   void cut(uint32_t dest, int32_t x, int32_t y, int32_t w, int32_t h) {
     if (have) gfxb::crop_sprite(g, dest, img, x, y, w, h, false);
+    if (!have || runs.empty()) return;
+    // P26C item 11: the lines whose ink box's centre lies in this cell, and the cell's blank copy (a key of its own per cell)
+    SharpCell sc;
+    for (const ArtRun &r : runs) {
+      const int32_t cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2;
+      if (cx < x || cx >= x + w || cy < y || cy >= y + h) continue;
+      ArtRun q = r;
+      q.x0 -= x, q.x1 -= x, q.y0 -= y, q.y1 -= y, q.x -= x, q.base -= y;
+      sc.runs.push_back(std::move(q));
+    }
+    if (sc.runs.empty()) return;
+    sc.blank = gfx_local_key(0x7e000) + (dest - state_va(ctx, &GameState::g_sprites53fd48));
+    if (gfxb::crop_sprite(g, sc.blank, blank, x, y, w, h, false) != 0) return;
+    sharp(g).cells[dest] = std::move(sc);
   }
   void row(uint32_t dest, int n, int32_t x, int32_t y, int32_t dy, int32_t w, int32_t h) {
     for (int i = 0; i < n; ++i, dest += 0x2C, y += dy) cut(dest, x, y, w, h);
@@ -115,7 +255,10 @@ struct Cuts {
   }
   // one set: the colour cells into `s` or the masks into `s` (the same rectangles); first / second = the two loads
   void set(uint32_t s, uint32_t first, uint32_t second) {
+    colour = s == state_va(ctx, &GameState::g_sprites53fd48);  // P26C item 11
+    first_load = true;
     load(first);
+    first_load = false;
     row(s, 11, 9, 0xDD, 0x23, 0xF8, 0x1D);
     row(s + 0x2C * 11, 11, 0x223, 0xDD, 0x23, 0xF8, 0x1D);
     static const int16_t k12[7][4] = {{0x11B, 0x165, 0xF8, 0x92}, {0x114, 0x124, 0x101, 0x2F}, {0x13D, 0x1EA, 0xB7, 0x34},
@@ -134,23 +277,105 @@ struct Cuts {
 };
 
 void b_bulletin_art(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  sharp(g).cells.clear();  // P26C item 11
   Cuts c{g, ctx};
   c.set(state_va(ctx, &GameState::g_sprites53fd48), 0x3DC0, 0x3DAC);
   c.set(state_va(ctx, &GameState::g_sprites5a34f8), 0x3D94, 0x3D7C);
 }
 
 // ------------------------------------------------------------------------------------------------ the board
+// P26C item 11: the face of a line (manual for the plates, manual bold for a bold line, klepto for the notes: the FontRefs gameMain
+// and loadInterfaceArt create with those faces, gditext.cpp) at the redraw's size
+bool art_font(Ctx &ctx, const ArtRun &r, GameFont &f) {
+  const uint32_t ref = r.klepto ? state_va(ctx, &GameState::g_font51a028)
+                       : r.bold ? state_va(ctx, &GameState::g_font51b360)
+                                : state_va(ctx, &GameState::g_fontRef_821ee8);
+  try {
+    f = game_font(ctx, ref);
+  } catch (const MissingResource &) {
+    return false;
+  }
+  f.size = r.size;
+  if (r.bold) f.style |= 1u;  // the redraw's bold (drawn twice, one pixel apart): the face's bold weight
+  return true;
+}
+
 void blt(Gfx &g, Ctx &ctx, uint32_t cell, int32_t x, int32_t y) {
-  call_body(g, ctx, "Surface_stretchBlit",
-            {state_va(ctx, &GameState::g_sprites53fd48) + 0x2C * cell, state_va(ctx, &GameState::g_sprites5a34f8) + 0x2C * cell,
-             g.root_va(ctx), static_cast<uint32_t>(x), static_cast<uint32_t>(y), 0});
+  const uint32_t src = state_va(ctx, &GameState::g_sprites53fd48) + 0x2C * cell, mask = state_va(ctx, &GameState::g_sprites5a34f8) + 0x2C * cell;
+  const uint32_t ux = static_cast<uint32_t>(x), uy = static_cast<uint32_t>(y);
+  const SharpState &ss = sharp(g);
+  const auto it = g.sharp_art && g.text.on ? ss.cells.find(src) : ss.cells.end();
+  if (it == ss.cells.end()) {
+    call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
+    return;
+  }
+  // P26C item 11. B = the root with the blank cell, K = B with the redrawn cell over it. A line with a shadow is two runs whose
+  // pixels chain (a run is kept where its pixels show last, gfx.cpp peel_kept): the shadow's run from B to B plus K's pixels nearer
+  // the shadow's colour than the words' (its rows and ink columns), then the words' run from there to the redrawn cell; a line
+  // without one is the words' run from B. The root ends as the original's single blit leaves it (the kept root + the redrawn cell).
+  const SharpCell &sc = it->second;
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  const std::vector<uint16_t> keep = r.px;
+  call_body(g, ctx, "Surface_stretchBlit", {control(11) ? src : sc.blank, mask, g.root_va(ctx), ux, uy, 0});
+  const std::vector<uint16_t> blank_px = r.px;
+  call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
+  const std::vector<uint16_t> art_px = r.px;
+  r.px = blank_px;
+  const size_t n = sc.runs.size();
+  const int32_t clip[4] = {0, 0, r.w, r.h};
+  auto band0 = [&](const ArtRun &a) { return std::max(0, y + a.y0); };
+  auto band1 = [&](const ArtRun &a) { return std::min(r.h, y + a.y1); };
+  std::vector<GameFont> font(n);
+  std::vector<uint8_t> ok(n, 0);
+  for (size_t k = 0; k < n; ++k) ok[k] = art_font(ctx, sc.runs[k], font[k]) ? 1 : 0;
+  // squared distance of an RGB555 word from a COLORREF, in 5-bit channels
+  auto dist = [](uint16_t w, uint32_t c) {
+    const int32_t dr = ((w >> 10) & 31) - static_cast<int32_t>((c & 0xff) >> 3), dg = ((w >> 5) & 31) - static_cast<int32_t>((c >> 8 & 0xff) >> 3),
+                  db = (w & 31) - static_cast<int32_t>((c >> 16 & 0xff) >> 3);
+    return dr * dr + dg * dg + db * db;
+  };
+  std::vector<gfxb::TextRunScope> shadow(n), words(n);
+  for (size_t k = 0; k < n; ++k)
+    if (ok[k] && sc.runs[k].shadow) gfxb::text_run_begin(g, r.px.data(), r.w, r.h, shadow[k], band0(sc.runs[k]), band1(sc.runs[k]));
+  for (size_t k = 0; k < n; ++k) {
+    const ArtRun &a = sc.runs[k];
+    if (!ok[k] || !a.shadow) continue;
+    for (int32_t yy = band0(a); yy < band1(a); ++yy)
+      for (int32_t xx = std::max(0, x + a.x0); xx < std::min(r.w, x + a.x1); ++xx) {
+        const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(r.w) + static_cast<size_t>(xx);
+        if (art_px[i] != blank_px[i] && dist(art_px[i], a.shadow_ref) < dist(art_px[i], a.colorref)) r.px[i] = art_px[i];
+      }
+    gfxb::text_run_end(g, ctx, shadow[k], r.px.data(), r.w, r.h, 0, 0, clip, 0, a.text, x + a.x + 1, y + a.base + 1, a.shadow_ref, 0,
+                       &font[k]);
+  }
+  for (size_t k = 0; k < n; ++k)
+    if (ok[k]) gfxb::text_run_begin(g, r.px.data(), r.w, r.h, words[k], band0(sc.runs[k]), band1(sc.runs[k]));
+  r.px = keep;
+  call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
+  for (size_t k = 0; k < n; ++k) {
+    const ArtRun &a = sc.runs[k];
+    if (ok[k]) gfxb::text_run_end(g, ctx, words[k], r.px.data(), r.w, r.h, 0, 0, clip, 0, a.text, x + a.x, y + a.base, a.colorref, 0, &font[k]);
+  }
 }
 
 // the board's photo Image (roadmap S3.18): its 16-bit surface (w == 0: no surface yet), made with the board image and kept
 // for every event of the list
 struct BoardState {
   Surface16 photo;
+  // P26C item 5: the tick's box (cell 36 at 0x2dc, 0x1ff, 0x35 x 0x34) as the board drew it and as it was before the tick
+  std::vector<uint16_t> tick_plain, tick_under;
 };
+constexpr int32_t kTickX = 0x2DC, kTickY = 0x1FF, kTickW = 0x35, kTickH = 0x34;  // cell 36's cut and place (b_fixed)
+std::vector<uint16_t> grab(const Surface16 &r, int32_t x0, int32_t y0, int32_t w, int32_t h) {
+  std::vector<uint16_t> v(static_cast<size_t>(w) * static_cast<size_t>(h), 0);
+  for (int32_t yy = 0; yy < h; ++yy)
+    for (int32_t xx = 0; xx < w; ++xx)
+      if (x0 + xx >= 0 && x0 + xx < r.w && y0 + yy >= 0 && y0 + yy < r.h)
+        v[static_cast<size_t>(yy) * static_cast<size_t>(w) + static_cast<size_t>(xx)] =
+            r.px[static_cast<size_t>(y0 + yy) * static_cast<size_t>(r.w) + static_cast<size_t>(x0 + xx)];
+  return v;
+}
 BoardState &board(Gfx &g) { return g.state_of<BoardState>("bulletin"); }
 void reset_photo(Gfx &g) { board(g).photo = Surface16{}; }
 
@@ -346,7 +571,10 @@ void b_fixed(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   blt(g, ctx, 27, 0x207, 0x18B);
   blt(g, ctx, 28, 0xB1, 0x18B);
   blt(g, ctx, 35, 0x33, 0x1E2);
+  g.ensure_root(ctx);
+  board(g).tick_under = grab(g.root, kTickX, kTickY, kTickW, kTickH);  // P26C item 5
   blt(g, ctx, 36, 0x2DC, 0x1FF);
+  board(g).tick_plain = grab(g.root, kTickX, kTickY, kTickW, kTickH);
   int32_t ly = mul32(count, -0xE);
   blt(g, ctx, 23, 0x11C, add32(ly, 0x130));
   blt(g, ctx, 26, 0x120, add32(ly, 0x153));
@@ -365,7 +593,37 @@ void b_fixed(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   blt(g, ctx, 24, 0x139, 0x1E4);
 }
 
+// showBulletinBoard.tickHover(lit) (P26C item 5, dialogs.cpp; drawing only): lit = 1 draws the tick's pixels (those the tick
+// changed over the board, its rim excluded: a pixel next to an unchanged one is the art's blend with the board; and its near-black
+// drop shadow excluded: its 5-bit channels summing below 16) lightened toward white by 80 / 256, 0 puts the tick back as the board drew it
+void b_tick_hover(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
+  const BoardState &b = board(g);
+  const size_t cnt = static_cast<size_t>(kTickW) * static_cast<size_t>(kTickH);
+  if (b.tick_plain.size() != cnt || b.tick_under.size() != cnt) return;
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  const bool lit = n > 0 && a[0] != 0;
+  auto up = [](uint32_t c) { return c + ((31u - c) * 80u >> 8); };
+  auto tick = [&](int32_t xx, int32_t yy) {
+    if (xx < 0 || yy < 0 || xx >= kTickW || yy >= kTickH) return false;
+    const size_t j = static_cast<size_t>(yy) * static_cast<size_t>(kTickW) + static_cast<size_t>(xx);
+    return b.tick_plain[j] != b.tick_under[j];
+  };
+  for (int32_t yy = 0; yy < kTickH; ++yy)
+    for (int32_t xx = 0; xx < kTickW; ++xx) {
+      const int32_t X = kTickX + xx, Y = kTickY + yy;
+      if (X < 0 || X >= r.w || Y < 0 || Y >= r.h) continue;
+      const size_t j = static_cast<size_t>(yy) * static_cast<size_t>(kTickW) + static_cast<size_t>(xx);
+      uint16_t w = b.tick_plain[j];
+      const bool bright = (w >> 10 & 31u) + (w >> 5 & 31u) + (w & 31u) >= 16;
+      if (lit && bright && tick(xx, yy) && tick(xx - 1, yy) && tick(xx + 1, yy) && tick(xx, yy - 1) && tick(xx, yy + 1))
+        w = static_cast<uint16_t>((w & 0x8000u) | up(w >> 10 & 31u) << 10 | up(w >> 5 & 31u) << 5 | up(w & 31u));
+      r.px[static_cast<size_t>(Y) * static_cast<size_t>(r.w) + static_cast<size_t>(X)] = w;
+    }
+}
+
 const GfxBodyDef kBodies[] = {
+    {"showBulletinBoard.tickHover", b_tick_hover},
     {"loadInterfaceArt.bulletinArt", b_bulletin_art},
     {"showBulletinBoard.board", b_board},
     {"showBulletinBoard.capture", b_capture},

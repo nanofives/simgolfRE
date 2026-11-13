@@ -31,6 +31,8 @@
 
 namespace portsim {
 
+struct GameFont;  // portsim/sim/gditext.h (P26C item 11: gfxb::text_run_end's explicit font)
+
 // An 8 bpp image: jgld allocDrawBuffer's top-down DIB section (pitch (w + 3) & ~3) and the colour table the palette gives it.
 struct Image8 {
   int32_t w = 0, h = 0, pitch = 0;
@@ -120,6 +122,7 @@ class Gfx {
   bool meter_tips = false;  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips are drawn
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
   bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
+  bool sharp_art = false;  // P26C item 11 (gfx.h gfx_set_sharp_art): the bulletin board's art words as text runs
   bool card_width = false;  // P26E fix 2 (gfx.h gfx_set_card_width): the match scorecard as wide as the course's holes
   bool palette_names = false;  // P26B item 3 (gfx.h gfx_set_palette_names): the palette's tool names one size, wrapped, trees at row height
   bool walker_labels_top = false;  // P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' labels over the sprite walk
@@ -387,7 +390,7 @@ struct TextRunScope {
 void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s, int32_t lo = 0, int32_t hi = -1);
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
                   const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
-                  uint8_t target);
+                  uint8_t target, const GameFont *font = nullptr);  // P26C item 11: font = the run's face / size (no FontRef)
 // the banner's runs (text family's loading.banner): new runs go to a list of their own until text_banner_end publishes them
 // over the banner picture `img`
 void text_banner_begin(Gfx &g);
