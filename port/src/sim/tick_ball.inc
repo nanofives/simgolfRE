@@ -50,6 +50,8 @@ void AppendText(u32 s) { StrCat(kBuf, s); }
 void drawWalkers() {
     FrameSlots slots(*this, 0x34);
     const u32 F = slots.va;
+    // P26D item 9 (render-only): the backend's list of this frame's staff labels starts empty (gfx_scene.cpp b_walker_labels_begin)
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "drawWalkers.labelsBegin", nullptr, 0);
     const int sel = G<int>((GS(f_w_4c2e00) + 16));                                                 // drawWalkers
     if (!BR(0, sel < 0x80)) {
         const int g = sel - 0x80;                                                       // drawWalkers+0x17
@@ -166,7 +168,16 @@ void drawWalkers() {
                     !BR(0, G<int>(GS(g_zoomScale)) < 4) && !BR(0, G<int>(GS(g_panelListMode)) == 3)) {
                     // `and al, 0x10; neg al; sbb eax, eax; and eax, -759; add eax, 80007fff` (drawWalkers+0x46c..drawWalkers+0x482)
                     const int color = (R[0x12] & 0x10) ? static_cast<int>(0x80007d08u) : static_cast<int>(0x80007fffu);
+                    // P26D item 9 (render-only): the label's walker and font named to the backend around the draw, which keeps it
+                    // for renderSpriteQueue's end when gfx_set_walker_labels_top is on (gfx_scene.cpp b_walker_label)
+                    const bool gx = g_gfx_attached.load(std::memory_order_relaxed) != 0;
+                    if (gx) {
+                        const uint32_t la[4] = {static_cast<uint32_t>(k), static_cast<uint32_t>(*vp<int>(R)),
+                                                static_cast<uint32_t>(*vp<int>(R + 4)), static_cast<uint32_t>(font)};
+                        gfx_drop(ctx, "drawWalkers.label", la, 4);
+                    }
                     kDrawCenteredText(static_cast<int>(kBuf), FI(0x1c), FI(0x18), color);   // drawWalkers+0x48f
+                    if (gx) gfx_drop(ctx, "drawWalkers.labelEnd", nullptr, 0);
                 }
             }
             if (!BR(0, G<int>((GS(f_w_4c2e00) + 16)) != FI(0x14))) {

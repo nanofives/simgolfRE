@@ -98,6 +98,11 @@ void gfx_set_card_width(Ctx &ctx, bool on);
 // height (the original puts them at the tree art's top). Drawing only: the GameState is never written. Off (the default): the
 // original's drawing.
 void gfx_set_palette_names(Ctx &ctx, bool on);
+// P26D item 9 (log/roadmap/P26/P26D_notes.md; app option --staff-labels-top, default on, SG_APP_P26=off: off). drawWalkers draws the
+// staff / player name labels ("Chuck, club pro") before renderSpriteQueue, so the walker's own figure, the pin flag and its shadow
+// and every other sprite of the walk are drawn over them. With it on, those labels are drawn at the walk's end (with P22C's golfer
+// labels), over every sprite. Drawing only: the GameState is never written. Off (the default): the original's order.
+void gfx_set_walker_labels_top(Ctx &ctx, bool on);
 bool gfx_meter_tips(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);

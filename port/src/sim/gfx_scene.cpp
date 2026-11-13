@@ -12,6 +12,10 @@
 //                                 is set, else g_sprite58b384
 //   drawQueuedSprite.label(i)     the same function's golfer name label (after the simulation part built the text):
 //                                 setDrawTarget with the font by zoom, drawCenteredText and the two Widget_fillRect bars
+//   drawWalkers.labelsBegin / .label(k, wx, wy, font) / .labelEnd   P26D item 9 (render-only drops of drawWalkers, tick_ball.inc):
+//                                 with gfx_set_walker_labels_top on, the staff / player name label drawWalkers draws (drawCenteredText
+//                                 at drawWalkers+0x48f, before renderSpriteQueue) is kept and drawn at renderSpriteQueue.end, over
+//                                 every sprite of the walk, as P22C's golfer labels
 //   Sprite_draw(this, dst, x, y, mode, mask)              c3da.cpp SpriteDraw_re: handle slot +0x78 = Sprite::blt16a
 //   Surface_drawSprite(this, dst, x, y, alpha, mask, flag) c3da.cpp SurfaceDrawSprite_re: handle slot +0x94 = Sprite::drawAlpha
 //
@@ -685,6 +689,20 @@ struct DeferredLabel {
 };
 thread_local bool g_queue_walk = false;
 thread_local std::vector<DeferredLabel> g_deferred_labels;
+// P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' staff / player name labels, drawn before renderSpriteQueue in the
+// original (drawCenteredText at drawWalkers+0x48f; mainLoop calls drawWalkers at ML+0x63ae and renderSpriteQueue at ML+0x65ad), so
+// every sprite of the walk (the walker's own figure, the pin flag and its shadow, a tree) covers them. With the option on, the label
+// is kept here between drawWalkers.label and .labelEnd and drawn at renderSpriteQueue.end, before P22C's golfer labels.
+struct DeferredWalkerLabel {
+  std::string text;
+  int32_t x = 0, y = 0;
+  uint32_t col = 0, font = 0;
+  GfxMoverSrc src;
+};
+thread_local bool g_walker_label_open = false;
+thread_local uint32_t g_walker_label_font = 0;
+thread_local GfxMoverSrc g_walker_label_src;
+thread_local std::vector<DeferredWalkerLabel> g_walker_labels;
 // P12A fix 2: the queue's render-only side table (gfx.h gfx_mover_source): entry n's source, and the one named for the next entry
 thread_local std::array<GfxMoverSrc, 1024> g_mover_tab;
 thread_local GfxMoverSrc g_mover_next;
@@ -2877,6 +2895,65 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     });
 }
 
+// a world label's copy on the wide scene (G32), drawn by draw(): P10D fix 1: the label (text and bars, other families' bodies) is not
+// a sprite: with band, the scene words it changed in the band around its 800-space anchor (ax800, ay) get tag 0, so the label stays
+// over the hr plane (b_queue_label's golfer labels; P26D item 9: drawWalkers' labels)
+template <class F>
+void label_on_wide(Gfx &g, LiveTerrainWorld &w, bool band, int32_t ax800, int32_t ay, F draw) {
+  on_wide(g, w, [&] {
+    const bool b = band && w.tag.size() == g.root.px.size();
+    const auto lt0 = std::chrono::steady_clock::now();
+    int32_t bx0 = 0, bx1 = 0, by0 = 0, by1 = 0;
+    std::vector<uint16_t> before;
+    if (b) {
+      const int32_t ax = add32(ax800, w.scene_e);
+      bx0 = std::max(0, ax - 320), bx1 = std::min(g.root.w, ax + 320);
+      by0 = std::max(0, ay - 48), by1 = std::min(g.root.h, ay + 24);
+      for (int32_t y = by0; y < by1 && bx0 < bx1; ++y) {
+        const uint16_t *row = g.root.px.data() + static_cast<size_t>(y) * static_cast<size_t>(g.root.w);
+        before.insert(before.end(), row + bx0, row + bx1);
+      }
+    }
+    draw();
+    if (b) {
+      size_t n = 0;
+      for (int32_t y = by0; y < by1; ++y)
+        for (int32_t x = bx0; x < bx1; ++x, ++n) {
+          const size_t p = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+          if (g.root.px[p] != before[n]) w.tag[p] = 0;
+        }
+    }
+    w.hr_label_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - lt0).count();
+  });
+}
+
+// P26D item 9: a label kept for the walk's end is drawn over sprites, and where a sprite left the word the text writes (a white pin
+// pole under white text), the glyph pixel does not change: the text capture (P9C) then counts it as no glyph, the band above keeps
+// the sprite's hr tag, and the window shows the pole across the text. draw() runs with the band's pixels of those words moved one
+// blue step (w ^ 1), so every glyph pixel changes; the moved pixels the text did not cover get their word back (the 800-space
+// picture is the one the plain draw gives: a glyph pixel holds w either way).
+template <class F>
+void same_word_guard(Surface16 &s, int32_t ax, int32_t ay, std::initializer_list<uint16_t> words, F draw) {
+  std::vector<std::pair<size_t, uint16_t>> moved;
+  const int32_t x0 = std::max(0, ax - 320), x1 = std::min(s.w, ax + 320);
+  const int32_t y0 = std::max(0, ay - 48), y1 = std::min(s.h, ay + 24);
+  if (s.px.size() == static_cast<size_t>(s.w) * static_cast<size_t>(s.h))
+    for (int32_t y = y0; y < y1; ++y)
+      for (int32_t x = x0; x < x1; ++x) {
+        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(s.w) + static_cast<size_t>(x);
+        for (uint16_t w : words)
+          if (s.px[i] == w) {
+            s.px[i] = static_cast<uint16_t>(w ^ 1u);
+            moved.emplace_back(i, w);
+            break;
+          }
+      }
+  draw();
+  for (const auto &m : moved)
+    if (m.first < s.px.size() && s.px[m.first] == static_cast<uint16_t>(m.second ^ 1u)) s.px[m.first] = m.second;
+}
+thread_local bool g_label_guard = false;  // P26D item 9: set by b_queue_end around its kept labels (gfx_set_walker_labels_top on)
+
 // drawQueuedSprite's golfer label: after the simulation part built the name in g_textBuffer
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff);
 void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
@@ -2890,45 +2967,35 @@ void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     explicit LabelScope(int32_t i) { g_label_src = gfx_mover_of(i); }
     ~LabelScope() { g_label_src = GfxMoverSrc{}; }
   } label_scope(static_cast<int32_t>(a[0]));
+  // P26D item 9: the label's two text colours (queue_label) guarded at the walk's end
+  const int32_t gi = static_cast<int32_t>(a[0]);
+  const bool guard = g_label_guard && gi >= 0 && gi < 1024;
+  const int32_t gx = guard ? static_cast<int32_t>(ctx.gs().g_spriteAnchorX[static_cast<size_t>(gi)]) : 0;
+  const int32_t gy = guard ? static_cast<int32_t>(ctx.gs().g_spriteAnchorY[static_cast<size_t>(gi)]) : 0;
+  const auto label = [&](int32_t xoff) {
+    if (guard) {
+      g.ensure_root(ctx);
+      same_word_guard(g.root, add32(gx, xoff), gy, {0x7fff, 0x7d08}, [&] { queue_label(g, ctx, a, xoff); });
+    } else {
+      queue_label(g, ctx, a, xoff);
+    }
+  };
   g.text.queue_label = true;  // P23F fix 3: the frame copy is not a frame text (gfx.cpp draw_text_string's edge rule)
-  queue_label(g, ctx, a, 0);
+  label(0);
   g.text.queue_label = false;
-  if (LiveTerrainWorld *w = wide_world(ctx))   // G32
-    on_wide(g, *w, [&] {
-      // P10D fix 1: the label (text and bars, other families' bodies) is not a sprite: the scene words it changed in the band
-      // around its anchor get tag 0, so the label stays over the hr plane
-      const int32_t i = static_cast<int32_t>(a[0]);
-      // only a golfer entry has a label (queue_label's first returns: shade 0, flags -1 or without bit 8, golfer 0xff or past 0x97)
-      bool band = w->tag.size() == g.root.px.size() && i >= 0 && i < 1024;
-      if (band) {
-        const GameState &gs = ctx.gs();
-        const int32_t a8 = static_cast<int32_t>(gs.g_spriteFlags[static_cast<size_t>(i)]);
-        band = gs.g_spriteShade[static_cast<size_t>(i)] != 0 && a8 != -1 && (a8 & 0x100) && (a8 & 0xff) != 0xff && (a8 & 0xff) < 0x98;
-      }
-      const auto lt0 = std::chrono::steady_clock::now();
-      int32_t bx0 = 0, bx1 = 0, by0 = 0, by1 = 0;
-      std::vector<uint16_t> before;
-      if (band) {
-        const int32_t ax = add32(ctx.gs().g_spriteAnchorX[static_cast<size_t>(i)], w->scene_e);
-        const int32_t ay = ctx.gs().g_spriteAnchorY[static_cast<size_t>(i)];
-        bx0 = std::max(0, ax - 320), bx1 = std::min(g.root.w, ax + 320);
-        by0 = std::max(0, ay - 48), by1 = std::min(g.root.h, ay + 24);
-        for (int32_t y = by0; y < by1 && bx0 < bx1; ++y) {
-          const uint16_t *row = g.root.px.data() + static_cast<size_t>(y) * static_cast<size_t>(g.root.w);
-          before.insert(before.end(), row + bx0, row + bx1);
-        }
-      }
-      queue_label(g, ctx, a, w->scene_e);
-      if (band) {
-        size_t n = 0;
-        for (int32_t y = by0; y < by1; ++y)
-          for (int32_t x = bx0; x < bx1; ++x, ++n) {
-            const size_t p = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
-            if (g.root.px[p] != before[n]) w->tag[p] = 0;
-          }
-      }
-      w->hr_label_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - lt0).count();
-    });
+  if (LiveTerrainWorld *w = wide_world(ctx)) {   // G32
+    const int32_t i = static_cast<int32_t>(a[0]);
+    // only a golfer entry has a label (queue_label's first returns: shade 0, flags -1 or without bit 8, golfer 0xff or past 0x97)
+    bool band = i >= 0 && i < 1024;
+    if (band) {
+      const GameState &gs = ctx.gs();
+      const int32_t a8 = static_cast<int32_t>(gs.g_spriteFlags[static_cast<size_t>(i)]);
+      band = gs.g_spriteShade[static_cast<size_t>(i)] != 0 && a8 != -1 && (a8 & 0x100) && (a8 & 0xff) != 0xff && (a8 & 0xff) < 0x98;
+    }
+    const int32_t ax = band ? static_cast<int32_t>(ctx.gs().g_spriteAnchorX[static_cast<size_t>(i)]) : 0;
+    const int32_t ay = band ? static_cast<int32_t>(ctx.gs().g_spriteAnchorY[static_cast<size_t>(i)]) : 0;
+    label_on_wide(g, *w, band, ax, ay, [&] { label(w->scene_e); });
+  }
 }
 // the label of queue entry a[0], its x moved by xoff (G32: the wide scene)
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
@@ -2981,6 +3048,41 @@ void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
     const int32_t xe = add32(s4, add32(ax, mul32(s4, 2)));
     call_body(g, ctx, "Widget_fillRect", {root, u(add32(ax, -12)), u(y9), u(xe), u(y9), c2});
   }
+}
+
+// P26D item 9: drawWalkers' label drops (tick_ball.inc). labelsBegin: a new frame's walker labels; label(k, wx, wy, font): the
+// drawCenteredText that follows is walker k's label (world place wx, wy) in that font; labelEnd: it was drawn
+void b_walker_labels_begin(Gfx &, Ctx &, const uint32_t *, int) {
+  g_walker_labels.clear();
+  g_walker_label_open = false;
+}
+void b_walker_label(Gfx &g, Ctx &, const uint32_t *a, int) {
+  g_walker_label_open = g.walker_labels_top;
+  g_walker_label_font = a[3];
+  g_walker_label_src = GfxMoverSrc{};
+  g_walker_label_src.kind = kGfxMoverWalker;
+  g_walker_label_src.index = static_cast<int32_t>(a[0]);
+  g_walker_label_src.wx = static_cast<int32_t>(a[1]);
+  g_walker_label_src.wy = static_cast<int32_t>(a[2]);
+}
+void b_walker_label_end(Gfx &, Ctx &, const uint32_t *, int) { g_walker_label_open = false; }
+// one kept walker label, g_textBuffer holding its text: the root copy (not a frame text: P23F fix 3's rule for the queue's labels;
+// its runs move with the walker, P12A fix 2) and the wide scene's copy
+void walker_label_draw(Gfx &g, Ctx &ctx, const DeferredWalkerLabel &l) {
+  const uint32_t text = state_va(ctx, &GameState::g_textBuffer);
+  const auto draw = [&](int32_t xoff) {
+    g.ensure_root(ctx);
+    same_word_guard(g.root, add32(l.x, xoff), l.y, {static_cast<uint16_t>(l.col & 0x7fffu)}, [&] {
+      call_body(g, ctx, "setDrawTarget", {g.root_va(ctx), l.font, 0, 0, 0});
+      call_body(g, ctx, "drawCenteredText", {text, u(add32(l.x, xoff)), u(l.y), l.col});
+    });
+  };
+  g_label_src = l.src;
+  g.text.queue_label = true;
+  draw(0);
+  g.text.queue_label = false;
+  if (LiveTerrainWorld *w = wide_world(ctx)) label_on_wide(g, *w, true, l.x, l.y, [&] { draw(w->scene_e); });
+  g_label_src = GfxMoverSrc{};
 }
 
 // Sprite_draw(this, dst, x, y, table, mask) from the frame code: the table is g_color16Lut's at every call site, the mask
@@ -3129,7 +3231,26 @@ void b_blit_test(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // for (gfx_scene.captureQueueAt) writes the root surface to `$gfx/queue_<ordinal>.555` (the ORIGINAL's at the same return is
 // recorded by log/roadmap/S3/5_tools/scene_rec.py)
 void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
-  g_queue_walk = false;  // P22C item 6: the labels the walk kept, in queue order, each with its own name text in g_textBuffer
+  g_queue_walk = false;
+  struct GuardScope {  // P26D item 9
+    explicit GuardScope(bool on) { g_label_guard = on; }
+    ~GuardScope() { g_label_guard = false; }
+  } guard_scope(g.walker_labels_top);
+  if (!g_walker_labels.empty()) {  // P26D item 9: drawWalkers' kept labels, in its order, before the golfer labels
+    std::vector<DeferredWalkerLabel> v;
+    v.swap(g_walker_labels);
+    GameState &gs = ctx.gs();
+    std::vector<int8_t> keep(gs.g_textBuffer, gs.g_textBuffer + sizeof gs.g_textBuffer);
+    uint32_t fonts[4];
+    std::memcpy(fonts, g.fonts, sizeof fonts);
+    for (const DeferredWalkerLabel &l : v) {
+      std::memcpy(gs.g_textBuffer, l.text.c_str(), l.text.size() + 1);
+      walker_label_draw(g, ctx, l);
+    }
+    std::memcpy(g.fonts, fonts, sizeof fonts);
+    std::memcpy(gs.g_textBuffer, keep.data(), keep.size());  // the buffer as the frame left it (drawing only)
+  }
+  // P22C item 6: the labels the walk kept, in queue order, each with its own name text in g_textBuffer
   if (!g_deferred_labels.empty()) {
     std::vector<DeferredLabel> v;
     v.swap(g_deferred_labels);
@@ -3232,6 +3353,9 @@ const GfxBodyDef kBodies[] = {
     {"loadWorldAssets.palettes", b_world_palettes},
     {"drawQueuedSprite.draw", b_queue_draw},
     {"drawQueuedSprite.label", b_queue_label},
+    {"drawWalkers.labelsBegin", b_walker_labels_begin},  // P26D item 9
+    {"drawWalkers.label", b_walker_label},
+    {"drawWalkers.labelEnd", b_walker_label_end},
     {"Sprite_draw", b_sprite_draw},
     {"composeGolferSprite", b_compose},
     {"addSprite", b_add_sprite},
@@ -3245,6 +3369,24 @@ const GfxBodyDef kBodies[] = {
 };
 
 }  // namespace
+
+// P26D item 9 (gfx.cpp b_draw_centered_text): true when this drawCenteredText is a walker label kept for renderSpriteQueue.end
+namespace gfxb {
+bool walker_label_defer(Gfx &, Ctx &ctx, const uint32_t *a) {
+  if (!g_walker_label_open || a[0] != state_va(ctx, &GameState::g_textBuffer)) return false;
+  const GameState &gs = ctx.gs();
+  const char *t = reinterpret_cast<const char *>(gs.g_textBuffer);
+  DeferredWalkerLabel l;
+  l.text.assign(t, strnlen(t, sizeof gs.g_textBuffer - 1));
+  l.x = static_cast<int32_t>(a[1]);
+  l.y = static_cast<int32_t>(a[2]);
+  l.col = a[3];
+  l.font = g_walker_label_font;
+  l.src = g_walker_label_src;
+  g_walker_labels.push_back(std::move(l));
+  return true;
+}
+}  // namespace gfxb
 
 // ---- P12A fix 2 (gfx.h): the queue entries' sources and the published hr scene
 void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy, float fx, float fy) {

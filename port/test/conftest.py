@@ -74,7 +74,7 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P23", "off")  # P23A item 2 --newest-saves, P23F fix 1 --edge-texts, P23D fix 1 --wide-grid / fix 3 --wide-bubbles / fix 6 --wide-ground, P23E --line-tiles / --wide-lines
     os.environ.setdefault("SG_APP_P24", "off")  # P24D: no language pack (English, no title menu selector; app/lang_ui.h); P24I: no sound repetition limiter (app/audio_out.h); P24F --screen-bands off; P24G --tourney-hold
     os.environ.setdefault("SG_APP_P25", "off")  # P25C fix 2 --closed-popups keep, P25B --row-hover
-    os.environ.setdefault("SG_APP_P26", "off")  # P26E fix 2 --card-width, P26A --arrow-glide, P26B item 3 --palette-names
+    os.environ.setdefault("SG_APP_P26", "off")  # P26E fix 2 --card-width, P26A --arrow-glide, P26B item 3 --palette-names, P26D item 9 --staff-labels-top
     os.environ.setdefault("SG_APP_P22", "off")  # P22E item 7 --edge-previews, P22D --golfer-list / --meter-tips, P22C --trail-glide
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

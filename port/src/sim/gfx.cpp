@@ -666,7 +666,9 @@ static void set_quad_root(Gfx &g, Ctx &ctx, uint32_t colour, uint32_t shadow, ui
   const uint32_t qa[5] = {ctx.gs().f_stateptr_4c1570[0], colour, shadow, dx, dy};
   if (q) q(g, ctx, qa, 5);
 }
+bool walker_label_defer(Gfx &g, Ctx &ctx, const uint32_t *a);  // P26D item 9 (gfx_scene.cpp)
 static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (walker_label_defer(g, ctx, a)) return;  // P26D item 9: drawWalkers' label kept for renderSpriteQueue.end
   set_quad_root(g, ctx, a[3], 0xffffffffu, 2, 2);
   draw_text(g, ctx, a, true, "drawCenteredText");
 }
@@ -2337,6 +2339,10 @@ void gfx_set_card_width(Ctx &ctx, bool on) {
 // P26B item 3 (gfx.h gfx_set_palette_names)
 void gfx_set_palette_names(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->palette_names = on;
+}
+// P26D item 9 (gfx.h gfx_set_walker_labels_top)
+void gfx_set_walker_labels_top(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->walker_labels_top = on;
 }
 // P24G (gfx.h gfx_set_tourney_hold)
 void gfx_set_tourney_hold(Ctx &ctx, bool on) {
