@@ -570,6 +570,11 @@ int32_t show_routing_map_screen(Ctx &ctx) {
         }
       }
       if (cy >= 0x101) {   // a click below the map, or a key after one, ends the screen
+        // P26C item 4b (reportScreens.anyClickCloses = 0): a click there outside the quit button (route_hit's -2 box) redraws
+        if (clicked && !cm::tick_close_click(ctx, 0x296, 0x214, 0x50, 0x41)) {
+          redraw = true;
+          break;
+        }
         quit = true;
         break;
       }
@@ -965,6 +970,8 @@ int32_t show_membership_roster(Ctx &ctx) {
       if (hover == 1 && offset > 0) offset = sub32(offset, clamp(offset, 1, 3));
       if (hover == 2 && sub32(rd.count, 0x16) > offset) offset = add32(offset, clamp(sub32(sub32(rd.count, offset), 0x16), 1, 3));
     } else if (!left && !(mutant == 3 && hover > 0)) {
+      // P26C item 4b (reportScreens.anyClickCloses = 0): a right click outside the close button (zone 0) redraws
+      if (b == 2 && !cm::tick_close_click(ctx, 0x2dc, 0x224, 0x2c, 0x2c)) continue;
       break;
     }
   }

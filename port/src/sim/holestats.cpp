@@ -355,7 +355,8 @@ struct HoleStats {
       }
       for (;;) {
         pump();
-        if (ctx.gs().g_rootInput[kButton] != 0) break;
+        // P26C item 4b (reportScreens.anyClickCloses = 0): only a click on the close button ends the screen
+        if (ctx.gs().g_rootInput[kButton] != 0 && cm::tick_close_click(ctx, 0x23e, button_y, 0x2c, 0x2c)) break;
         if (cm::flush_redraw(ctx) != 0) break;
         cursor_read();  // waitTicks(1, 0) (dropped), View_toLocal
         if (page != page_of(clock(kHsClockPass), div2)) {

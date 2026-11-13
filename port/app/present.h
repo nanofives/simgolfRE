@@ -38,6 +38,7 @@ enum class PresentDefect : uint8_t {
   LayerBlendOpaque = 5,  // P9B: a layer's blended pixels drawn as the words they had in the frame (no re-blend at the new place)
   LayerRectMove = 6,     // P9B: the layers ignored, P8B's rectangle compositor used although the frame has layers
   DimLocal = 7,          // P9D: a whole-frame dim layer composed per pixel at its own place only (the window not dimmed under it)
+  StaleRemap = 8,        // P26C item 4a: a frame without the world or layers keeps the previous frame's click remap
 };
 
 // The content rectangle for a client area of cw x ch.
@@ -688,6 +689,7 @@ class Presenter {
   // P9E's piece offsets and P9B's click remap, as compose_layers sets them (factored out; remap only when not quiet)
   void layer_pieces(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const;
   void layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const;
+  void flat_remap_clear() const;  // P26C item 4a: a frame without world and layers remaps no point
   bool pieces_on(const portsim::GfxHudFrame &f, const Viewport &vp) const;
   // compose_layers' draw-order places of the previews and the tee lines (cached per frame / content generation)
   mutable const void *order_key_ = nullptr;

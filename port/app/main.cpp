@@ -840,6 +840,7 @@ const ProfileMember kPlayProfile[] = {
     {"drawEmployeeViewPanel.fourColumns", 0},      // P22D fix 2: the golfer list's added columns (the host's view block word +0x40)
     {"generateRandomCourse.startingFeatureOutside", 0},  // P24E (play-test 11 item 5: the free practice green inside the course edge)
     {"drawEmployeeViewPanel.scrollBarAlways", 0},  // P26E fix 1 (play-test 13 item 6: no scroll band when the golfer list fits)
+    {"reportScreens.anyClickCloses", 0},            // P26C item 4b (play-test 13: the full-screen screens close only with their tick)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1648,6 +1649,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
                      : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                      : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
+                     : o.negctl == "p26c-stale-remap" ? PresentDefect::StaleRemap        // P26C item 4a
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_wide(wide_fill(o));  // P7
@@ -4133,6 +4135,7 @@ int main(int argc, char **argv) {
                      : o.negctl == "p9b-blend-opaque" ? PresentDefect::LayerBlendOpaque  // P9B
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                      : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
+                     : o.negctl == "p26c-stale-remap" ? PresentDefect::StaleRemap        // P26C item 4a
                                                   : PresentDefect::None;
   Presenter presenter(pd);
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes

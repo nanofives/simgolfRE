@@ -103,6 +103,12 @@ int g_defect_esc_course_action = 1, g_defect_esc_buy_land = 1, g_defect_esc_char
 //                  record, its phrase lines, the golfer's skill bytes, the player's skills and the portrait slot counters a loaded
 //                  character file wrote) and leaves the editor without Exit's preference writes, then the exit path as Exit's
 int g_defect_editor_cancel_stays = 1;
+// P26C item 4b (Mariano's play-test 13: "for this and every menu i want to dismiss it ONLY with the tick button, not clicking
+// anywhere on the screen"): the full-screen screens with a tick (close) button end at the first click anywhere (the report
+// loops' button word test, the routing map's click below the map, the roster's right click, the bulletin board's click).
+//   reportScreens.anyClickCloses  fixed (0): with a graphics backend attached (the tick's box is known from its drawing), a click
+//                  outside the tick's box does not end the screen (cm::tick_close_click); a key still ends it as before
+int g_defect_report_any_click = 1;
 namespace {
 int g_negctl_hire_dialog = 0;
 int g_negctl_credits = 0;
@@ -337,6 +343,14 @@ int32_t take_code(Ctx &ctx) {
   const int32_t v = ctx.gs().gDirtyFlagA;
   ctx.gs().gDirtyFlagA = 0;
   return v;
+}
+
+// P26C item 4b: whether the pass's click may end a screen whose tick button is the box (x, y, w, h) in root coordinates: always
+// with the switch at 1 (the original), without a backend or an empty box; else only a click inside the box
+bool tick_close_click(Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h) {
+  if (SG_DEFECT(g_defect_report_any_click) || g_gfx_attached.load(std::memory_order_relaxed) == 0 || w <= 0 || h <= 0) return true;
+  const int32_t cx = root(ctx, kClickX), cy = root(ctx, kClickY);
+  return cx >= x && cx < add32(x, w) && cy >= y && cy < add32(y, h);
 }
 
 bool esc_pressed(Ctx &ctx, int sw) {
@@ -763,6 +777,10 @@ const DefectDef kDefects[] = {
      &g_defect_esc_popup_close},
     {"skillPointDialog.escIgnored", "P9A", "the skill point dialog ignores Esc; fixed: Esc acts as its OK button",
      &g_defect_esc_skill_points},
+    {"reportScreens.anyClickCloses", "P26C",
+     "a full-screen screen with a tick button (the reports, the routing map, the roster, the bulletin board) ends at a click "
+     "anywhere; fixed: only a click on its tick (or a key) ends it",
+     &g_defect_report_any_click},
     {"showCharacterEditor.cancelStaysOpen", "P13B",
      "the character editor's Cancel restores the type record and stays open; fixed: Cancel restores every edit and closes the editor",
      &g_defect_editor_cancel_stays},

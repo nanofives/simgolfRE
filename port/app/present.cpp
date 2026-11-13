@@ -1305,6 +1305,11 @@ void Presenter::render_rect(int32_t cw, int32_t ch, int32_t x0, int32_t y0, int3
   cv_ = was;
 }
 
+// P26C item 4a: see render_impl; also called by GpuCompositor::paint before its flat path (paint_flat never runs render)
+void Presenter::flat_remap_clear() const {
+  if (remap_ && world_.empty() && !layered() && defect_ != PresentDefect::StaleRemap) remap_->clear();
+}
+
 void Presenter::render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, Viewport *vpo) const {
   const ProfScope prof(Phase::Base);  // P10A
   const Viewport vp = fit_viewport(cw, ch);
@@ -1326,6 +1331,12 @@ void Presenter::render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, 
     scene_ok_ = prev_ok_ = false;
     painted_cam_ = CameraSnap{};
   }
+  // P26C item 4a (class a): a frame with neither the world nor HUD layers (the routing map, the bulletin board, the Top 10 page:
+  // full-screen screens drawn over their own backdrop) has no moved panel, so no point of it is remapped. Only compose_world and
+  // the layered path set the remap, so before this it kept the last in-game frame's layers: the Information menu's popup piece
+  // (anchored at the left HUD, -240 client pixels at 1920 x 1080) moved every click over the routing map's two left buttons
+  // (showRoutingMapScreen's boxes 0x3e..0x8e and 0xb7..0x107) by that offset, so they answered left of where they are drawn
+  if (side) flat_remap_clear();
   int32_t slx = 0, sly = 0;
   if (keep && !force_slide0_ && slide_on_ && prev_ok_ && prev_w_ == cw && prev_h_ == ch) {
     slx = cur_x_;

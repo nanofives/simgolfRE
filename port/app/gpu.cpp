@@ -3542,8 +3542,12 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
   const bool flat = !layered && W.empty() && !P.frame_.empty() && !P.layered() && P.defect_ == PresentDefect::None && cw <= 4096 &&
                     ch <= 4096 && !d.no_flat;
   if (layered) paint_layered(P, cw, ch, slx, sly);
-  else if (flat) paint_flat(P, cw, ch);
-  else paint_full(P, cw, ch);
+  else if (flat) {
+    P.flat_remap_clear();  // P26C item 4a (render_impl does it for paint_full)
+    paint_flat(P, cw, ch);
+  } else {
+    paint_full(P, cw, ch);
+  }
   if (d.verify_every > 0 && (d.verify_n++ % static_cast<uint64_t>(d.verify_every)) == 0) verify(P, cw, ch, layered);
   shot_if_asked(cw, ch);
   P.overlay_freeze(false);

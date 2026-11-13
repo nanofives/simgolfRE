@@ -6,16 +6,45 @@
 // the click-or-key loop of the report screens. button_first: the button word is tested before flushRedraw (the best
 // scores, comments and histograph screens); otherwise flushRedraw runs first and the button word is tested after it (the
 // financial report)
-void click_or_key_loop(Ctx &ctx, bool button_first, const char *where) {
+// P26C item 5 (class a): the OK button's hover. The original's loops of these four screens make a View_toLocal read every pass
+// before pumpMessages and draw the lit Image (the plain SpriteRef + 0x2c) while the point is inside the 0x2c x 0x2c button, the
+// plain one when it leaves, each with a refresh (c3en.cpp ShowBestScoresScreen_re, ShowHistographScreen_re,
+// ShowFinancialReport_re, ShowPlayerCommentsReport_re). The port left the read out, so the button never lit (and a trace-driven
+// source's CURSOR records of those passes went to the next read). Now the read is made when the display exists
+// (g_graphicsDevice != 0), as showCourseReport's report_loop and showHoleStatsScreen make theirs; its value only selects the
+// drawn image. Negative control: g_negctl_reports mode 4 leaves the read out.
+struct OkHover {
+  int32_t x = 0, y = 0;
+  uint32_t plain = 0;  // the plain image's SpriteRef; the lit one is the next (+0x2c)
+  bool lit = false;
+};
+void ok_hover(Ctx &ctx, OkHover *h) {
+  if (ctx.gs().g_graphicsDevice == 0 || SG_NEGCTL(g_negctl_reports) == 4) return;
+  InputSource *src = input_source(ctx);
+  int32_t px = 0, py = 0;
+  if (!src || !src->cursor(px, py)) return;
+  const gfxr::ScreenDraw d(ctx);
+  if (!h || !d.on || h->plain == 0) return;
+  const bool in = px >= h->x && px < add32(h->x, 0x2c) && py >= h->y && py < add32(h->y, 0x2c);
+  if (in == h->lit) return;
+  h->lit = in;
+  d.gx("Image_draw", {h->plain + (in ? 0x2cu : 0u), d.root(), u32(h->x), u32(h->y), 0});
+  d.gx("Window::refreshFull", {d.window(), 0});
+}
+void click_or_key_loop(Ctx &ctx, bool button_first, const char *where, OkHover *h = nullptr) {
   GameState &gs = ctx.gs();
   for (;;) {
+    ok_hover(ctx, h);
     pump_messages(ctx, PumpKind::Blocking, where);
+    // P26C item 4b (reportScreens.anyClickCloses = 0): only a click on the OK button ends the screen
+    const bool click = gs.g_rootInput[kButton] != 0 &&
+                       tick_close_click(ctx, h ? h->x : 0, h ? h->y : 0, h && h->plain ? 0x2c : 0, h && h->plain ? 0x2c : 0);
     if (button_first) {
-      if (gs.g_rootInput[kButton] != 0) break;
+      if (click) break;
       if (flush_redraw(ctx) != 0) break;
     } else {
       const bool key = flush_redraw(ctx) != 0;
-      if (gs.g_rootInput[kButton] != 0 || key) break;
+      if (click || key) break;
     }
   }
 }
@@ -32,6 +61,7 @@ void leave_report(Ctx &ctx, const char *where) {
 // cell's height + 0x2d, the foot cell and the OK button 0xe below it.
 int32_t show_best_scores_screen(Ctx &ctx) {
   const gfxr::ScreenDraw d(ctx);
+  OkHover ok;  // P26C item 5
   if (d.on) {
     const uint32_t root = d.root(), font_b = GS(g_fontRef_821ee8), art = GS(g_spriteRef_8222b8), pool = GS(f_strpool_4d32f0);
     d.gx("reports.begin", {});
@@ -68,9 +98,10 @@ int32_t show_best_scores_screen(Ctx &ctx) {
     const int32_t end_y = add32(add32(mul32(row_h, rows), head_h), gfxr::ScreenDraw::ctl(13) ? 0x2e : 0x2d);
     d.gx("Surface_stretchBlit", {art + 0xb0, art + 0xdc, root, 0xc3, u32(end_y), 0});
     d.gx("Image_draw", {GS(g_spriteRef_820f40), root, 0x220, u32(add32(end_y, 0xe)), 0});
+    ok = OkHover{0x220, add32(end_y, 0xe), GS(g_spriteRef_820f40)};
     d.gx("Window::refreshFull", {d.window(), 0});
   }
-  click_or_key_loop(ctx, true, "showBestScoresScreen");
+  click_or_key_loop(ctx, true, "showBestScoresScreen", &ok);
   leave_report(ctx, "showBestScoresScreen");
   return 0;
 }
@@ -173,7 +204,8 @@ int32_t show_histograph_screen(Ctx &ctx) {
     d.gx("Image_draw", {GS(g_spriteRef_820f40) + 0x84, root, 0x2c0, 0x227, 0});
     d.gx("Window::refreshFull", {d.window(), 0});
   }
-  click_or_key_loop(ctx, true, "showHistographScreen");
+  OkHover ok{0x2c0, 0x227, GS(g_spriteRef_820f40) + 0x84};  // P26C item 5 (lit: + 0xb0)
+  click_or_key_loop(ctx, true, "showHistographScreen", &ok);
   leave_report(ctx, "showHistographScreen");
   return 0;
 }
@@ -241,7 +273,8 @@ int32_t show_financial_report(Ctx &ctx) {
   }
   d.gx("Image_draw", {GS(g_spriteRef_820f40), root, 0x2d6, 0xf9, 0});
   d.gx("Window::refreshFull", {d.window(), 0});
-  click_or_key_loop(ctx, false, "showFinancialReport");
+  OkHover ok{0x2d6, 0xf9, GS(g_spriteRef_820f40)};  // P26C item 5
+  click_or_key_loop(ctx, false, "showFinancialReport", &ok);
   leave_report(ctx, "showFinancialReport");
   return 0;
 }
@@ -327,7 +360,8 @@ int32_t show_player_comments_report(Ctx &ctx) {
   d.gx("Surface_stretchBlit", {art + 0xb0, art + 0xdc, root, 0x94, u32(sprite_y), 0});
   d.gx("Image_draw", {GS(g_spriteRef_820f40), root, 0x24f, u32(add32(sprite_y, 0xe)), 0});
   d.gx("Window::refreshFull", {d.window(), 0});
-  click_or_key_loop(ctx, true, "showPlayerCommentsReport");
+  OkHover ok{0x24f, add32(sprite_y, 0xe), GS(g_spriteRef_820f40)};  // P26C item 5
+  click_or_key_loop(ctx, true, "showPlayerCommentsReport", &ok);
   leave_report(ctx, "showPlayerCommentsReport");
   return 0;
 }

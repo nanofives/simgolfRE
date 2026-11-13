@@ -71,6 +71,9 @@ int32_t take_code(Ctx &ctx);
 // taken (cleared) and true is returned; at 1 nothing is read. drop_stale_esc: at the screen's entry, with the switch at 0, an
 // Esc left in the char word from before the screen was opened is cleared, so it cannot close the screen on its first pass.
 bool esc_pressed(Ctx &ctx, int sw);
+// P26C item 4b (reportScreens.anyClickCloses): true when the pass's click (g_rootInput click x / y) may end a screen whose tick
+// button is the box (x, y, w, h): always with the switch at 1, without a backend or with an empty box
+bool tick_close_click(Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h);
 void drop_stale_esc(Ctx &ctx, int sw);
 
 // drawWindow (x, y, p3, mode) without its drawing: with no golfer selected (f_w_4c2e00[2] == -1) and mode 0 it
@@ -89,6 +92,7 @@ int32_t window_height(Ctx &ctx);
 }  // namespace cm
 extern int g_defect_esc_course_action, g_defect_esc_buy_land, g_defect_esc_char_editor, g_defect_esc_char_picker,
     g_defect_esc_popup_close, g_defect_esc_skill_points;
+extern int g_defect_report_any_click;  // P26C item 4b (commands.cpp reportScreens.anyClickCloses)
 extern int g_defect_editor_cancel_stays;  // P13B item 14: showCharacterEditor.cancelStaysOpen (commands.cpp)
 }  // namespace portsim
 

@@ -98,7 +98,10 @@ void report_loop(Ctx &ctx, bool left_only, const char *where, Hover *h = nullptr
       if (backend_on()) gx2(ctx, "Window::refreshFull", {state_va(ctx, &GameState::g_rootWindow), 0});
       if (made) hover(ctx, h, px, py);
     }
-    const int32_t button = gs.g_rootInput[4];
+    // P26C item 4b (reportScreens.anyClickCloses = 0): a click outside the page's OK / close button does not end the screen
+    const int32_t button = gs.g_rootInput[4] != 0 && !cm::tick_close_click(ctx, h ? h->x : 0, h ? h->y : 0, h ? 0x2c : 0, h ? 0x2c : 0)
+                               ? 0
+                               : gs.g_rootInput[4];
     if (!left_only) {
       if (button != 0) break;
       if (cm::flush_redraw(ctx) != 0) break;

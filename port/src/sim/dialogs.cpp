@@ -1139,7 +1139,9 @@ void show_bulletin_board(Ctx &ctx) {
   draw.gx("Window::refreshFull", {draw.window(), 0});
   for (;;) {
     pump_input_blocking(ctx, "showBulletinBoard");
-    if (gs.g_rootInput[kButton] != 0) break;
+    // P26C item 4b (reportScreens.anyClickCloses = 0): only a click on the tick (cell 36, loadInterfaceArt.bulletinArt's last cut
+    // of the second load, drawn at its own place: gfx_bulletin.cpp) ends the board
+    if (gs.g_rootInput[kButton] != 0 && cm::tick_close_click(ctx, 0x2dc, 0x1ff, 0x35, 0x34)) break;
     if (cm::flush_redraw(ctx) != 0) break;
   }
   const int16_t award = m.load<int16_t>(GS(g_skillMaskBlock) + 8);
