@@ -2191,7 +2191,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"idle_ms\":" + std::to_string(o.idle_ms) + ",\"pass_ms\":" + std::to_string(o.pass_ms) + ",\"cursor\":\"" + o.cursor + "\"";
   s += ",\"keys\":\"" + o.keys + "\",\"clock_origin\":" + std::to_string(o.clock_origin);
   s += ",\"p5b\":{\"edge_guard\":" + std::to_string(o.edge_guard ? 1 : 0) + ",\"zoom_keys\":\"" + o.zoom_keys +  // P5B
-       "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"flat_drops\":" + std::to_string(win.flat_drops()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
+       "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"flat_drops\":" + std::to_string(win.flat_drops()) + ",\"piece_presses\":" + std::to_string(win.piece_presses()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
        ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
   s += ",\"p7\":{\"wide\":" + std::to_string(o.wide ? 1 : 0) + ",\"wide_width\":" + std::to_string(o.wide_width) +
        ",\"wide_fill\":\"" + o.wide_fill + "\"}";  // P7

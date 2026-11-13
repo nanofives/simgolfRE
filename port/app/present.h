@@ -109,6 +109,7 @@ struct RemapLayer {
   // P22D fix 2: client pixels added to a point the layer maps (its GfxHudLayer::shift at the window's scale): the game sees the
   // golfer list's added columns at their own 800-space place right of the root
   int32_t vx = 0;
+  bool piece = false;  // P27A fix 2: a moved popup piece's pixels (Presenter::layer_remap)
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   std::vector<uint8_t> cover;  // (x1 - x0) * (y1 - y0): 1 where the layer drew
   // P12A fix 1: 1 where a centred layer's pixel is part of the course picture the camera slide moves (the tool previews at the
@@ -149,6 +150,10 @@ class PanelRemap {
   // P27A fix 1: client point (x, y) is a vacated place (`map`'s vacated: no moved layer pixel under it, its 800-space point inside a
   // moved layer's box): the window shows the course there while the game's tests would see the moved panel. Counts nothing.
   bool vacated(int32_t x, int32_t y) const;
+  // P27A fix 2: client point (x, y) shows no layer pixel (moved or centred) and its 800-space point lies inside the box of a moved
+  // popup piece (RemapLayer::piece: at its opener's anchor, or the centred text box): the window shows what is behind the popup
+  // there, while the popup's modal loop would read the point as one of its own. Counts nothing.
+  bool piece_vacated(int32_t x, int32_t y) const;
 
  private:
   // P10E; P12A: slide 0 = none, 1 = the game offset, 2 = the picture offset

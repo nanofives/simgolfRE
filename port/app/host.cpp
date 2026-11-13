@@ -1988,6 +1988,34 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
   // edge) answers a point of no HUD control, so a cursor over the course lights no button and opens no tip of the panel drawn at
   // the edge. A press there takes the world path already (P9E fix 3); the course's own reads (P6_Cursor's tile, H1's edge
   // scroll) keep the point.
+  // P27A fix 2 (class a): a modal loop's read (a popup open from a HUD panel: showPopup, the text boxes) of a point where the window
+  // shows no layer pixel but whose 800-space point lies in a popup piece drawn elsewhere (PanelRemap::piece_vacated: the piece is
+  // at its opener's anchor, -240 client pixels at 1920 x 1080) answers a point outside every popup, as a cursor beside the drawn
+  // popup is: the menu lights no row there and a press there closes it as one outside (showPopup returns the last hovered row).
+  // Before, the course right of the Information menu lit and opened its rows (Histograma at client 760,700).
+  if (modal && opt_.remap) {
+    bool raw = false;
+    int32_t rx = 0, ry = 0;
+    if (opt_.cursor == CursorSource::Message) {
+      raw = msg_raw_ok_;
+      rx = msg_raw_.x;
+      ry = msg_raw_.y;
+    } else if (hwnd_) {
+      POINT q = {0, 0};
+      GetCursorPos(&q);
+      ScreenToClient(static_cast<HWND>(hwnd_), &q);
+      raw = true;
+      rx = q.x;
+      ry = q.y;
+    }
+    if (raw && opt_.remap->piece_vacated(rx, ry)) {
+      ++piece_vacated_reads_;
+      x = kVacatedHoverX;
+      y = kVacatedHoverY;
+      note_answer(Point{x, y});
+      return;
+    }
+  }
   if (panels_read_ && opt_.remap) {
     bool raw = false;
     int32_t rx = 0, ry = 0;
@@ -2107,7 +2135,7 @@ bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx, bool hover) {
       rx = q.x;
       ry = q.y;
     }
-    if (raw && vacated_raw(rx, ry)) {
+    if (raw && (vacated_raw(rx, ry) || opt_.remap->piece_vacated(rx, ry))) {  // P27A fixes 1 and 2
       x = kVacatedHoverX;
       y = kVacatedHoverY;
       dx = 0;
@@ -2590,7 +2618,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + ",\"map_reposts\":" + std::to_string(map_reposts_) + ",\"screen\":" + std::to_string(presents_screen_) + "}";  // P7, P13B item 18, P24F
   s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
        ",\"presents_world\":" + std::to_string(presents_world_) + ",\"presents_layered\":" + std::to_string(presents_layered_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
-       ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"vacated_hover_reads\":" + std::to_string(vacated_hover_reads_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
+       ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"vacated_hover_reads\":" + std::to_string(vacated_hover_reads_) + ",\"piece_vacated_reads\":" + std::to_string(piece_vacated_reads_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
        ",\"view_writes\":" + std::to_string(view_writes_) + ",\"world_resizes\":" + std::to_string(world_resizes_) +
        ",\"view_width\":" + std::to_string(applied_w_) + ",\"hud_remapped\":" +
        std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32

@@ -1159,6 +1159,27 @@ bool PanelRemap::vacated(int32_t x, int32_t y) const {  // P27A fix 1
   map_impl(x, y, v, false, 0);
   return v;
 }
+bool PanelRemap::piece_vacated(int32_t x, int32_t y) const {  // P27A fix 2 (map_impl's layer walk, nothing counted)
+  std::lock_guard<std::mutex> lk(mu_);
+  if (!on_ || !layered_ || vp_.client_w <= 0 || vp_.client_h <= 0) return false;
+  if (y < vp_.origin_y || y >= vp_.origin_y + vp_.client_h) return false;
+  const int32_t dxl = -vp_.origin_x, dxr = cw_ - vp_.origin_x - vp_.client_w;
+  const int32_t ly = static_cast<int32_t>(static_cast<int64_t>(y - vp_.origin_y) * kLogicalH / vp_.client_h);
+  for (size_t k = layers_.size(); k-- > 0;) {  // a layer pixel under the point: it is drawn there
+    const RemapLayer &l = layers_[k];
+    const int32_t dx = l.fixed ? l.dx : l.anchor < 0 ? dxl : l.anchor > 0 ? dxr : 0;
+    const int32_t sx = x - dx;
+    if (sx < vp_.origin_x || sx >= vp_.origin_x + vp_.client_w) continue;
+    const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(sx - vp_.origin_x) * kLogicalW / vp_.client_w);
+    if (lx < l.x0 || lx >= l.x1 || ly < l.y0 || ly >= l.y1) continue;
+    if (l.cover[static_cast<size_t>(ly - l.y0) * static_cast<size_t>(l.x1 - l.x0) + static_cast<size_t>(lx - l.x0)]) return false;
+  }
+  if (x < vp_.origin_x || x >= vp_.origin_x + vp_.client_w) return false;
+  const int32_t lx = static_cast<int32_t>(static_cast<int64_t>(x - vp_.origin_x) * kLogicalW / vp_.client_w);
+  for (const RemapLayer &l : layers_)
+    if (l.piece && l.dx != 0 && lx >= l.x0 && lx < l.x1 && ly >= l.y0 && ly < l.y1) return true;
+  return false;
+}
 uint64_t PanelRemap::slid() const {  // P12A fix 1
   std::lock_guard<std::mutex> lk(mu_);
   return slid_;
@@ -1874,6 +1895,7 @@ void Presenter::layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, i
           slot[k] = static_cast<int32_t>(moved.size());
           RemapLayer m;
           m.fixed = true;
+          m.piece = true;  // P27A fix 2
           m.dx = piece_dx_[k];
           m.x0 = r.x0;
           m.y0 = r.y0;

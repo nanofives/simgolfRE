@@ -448,6 +448,7 @@ class LiveSession : public portsim::LiveHost {
   // panel hover test of the original takes a negative point)
   static constexpr int32_t kVacatedHoverX = -1, kVacatedHoverY = -1;
   bool vacated_raw(int32_t cx, int32_t cy) const { return opt_.remap && opt_.remap->vacated(cx, cy); }
+  uint64_t piece_vacated_reads_ = 0;  // P27A fix 2: modal reads answered kVacatedHoverX / Y (summary_json)
   Point plain_answer_{0, 0};          // P10E: plain_answer()
   // P10I fix 2 (under mu_): the points the sim's last cursor read and its first read since the last present got
   Point last_answer_{-1, -1}, first_answer_{-1, -1};

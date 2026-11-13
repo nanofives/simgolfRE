@@ -300,6 +300,14 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
     const int32_t x_in = x, y_in = y;
     int32_t slx = 0, sly = 0;  // P12A fix 1: the camera slide's move of a point over the course (PanelRemap::set_slide)
     opt_.remap->map(x, y, vacated, slx, sly);
+    // P27A fix 2 (log/roadmap/P27/P27A_notes.md, class a): a button press where the window shows no layer pixel but whose 800-space
+    // point lies in a popup piece drawn elsewhere (PanelRemap::piece_vacated: the popup sits at its opener's anchor) reaches the
+    // game outside every popup, as a press beside the drawn popup does: showPopup's check list tests the click point (its rows and
+    // its close box), the menus their last hovered row (LiveSession::cursor answers that read the same way). Only the press handed
+    // to the translation moves: the event keeps the mapped point (the host's --cursor message point and edge read: a remembered
+    // (-1, -1) scrolled the course to its corner through H1's edge test)
+    const bool piece_vac = msg != kWmMouseMove && opt_.remap->piece_vacated(x_in, y_in);
+    if (piece_vac) ++piece_presses_;
     e.remap_dx = x_in - x - slx;  // P9E fix 4 (the remap's own move)
     e.lp_edge = (static_cast<uint32_t>(static_cast<uint16_t>(y + sly)) << 16) | static_cast<uint16_t>(x + slx);  // P12A fix 1
     e.has_lp_edge = true;
@@ -307,6 +315,7 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
     e.vacated = vacated && msg != kWmMouseMove;  // P9E fix 3
     lp = (static_cast<uint32_t>(static_cast<uint16_t>(y)) << 16) | static_cast<uint16_t>(x);
     e.lp = lp;  // P9B: the event carries the point the game got (LiveSession's --cursor message answers read e.lp)
+    if (piece_vac) lp = 0xffffffffu;  // P27A fix 2: (-1, -1) for the press's translation only
   }
   if (opt_.input_defect == InputDefect::Bypass) {
     // the wrong path: client coordinates straight into a click, no reads
