@@ -3831,6 +3831,7 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--card-width") {  // P26E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.card_width = v == "on";
+    }
     else if (a == "--arrow-glide") {  // P26A
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.arrow_glide = v == "on";
