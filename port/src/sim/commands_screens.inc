@@ -541,7 +541,12 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
     else if (py >= 0x139 && py < 0x161) sel = 4 + (py >= 0x14d ? 1 : 0);
     else if (py >= 0x180 && py < 0x1a8) sel = 6 + (py >= 0x194 ? 1 : 0);
     else sel = -1;
-    const bool over = sel == -1 && px >= 0x229 && px < 0x251 && py >= 0x1a8 && py < 0x1cf;
+    // P27B fix 3 (showHireEmployeeDialog.pressWithoutRowHires = 0): the OK button answers over its drawn Image (0x229, 0x1a6,
+    // 0x2c square; its top two rows lie in row 7's band, where the OK wins) instead of the 0x28 x 0x27 box from y 0x1a8
+    const bool ok_img = !SG_DEFECT(g_defect_hire_no_row);
+    const bool in_ok = px >= 0x229 && px < 0x229 + 0x2c && py >= 0x1a6 && py < 0x1a6 + 0x2c;
+    if (ok_img && in_ok) sel = -1;
+    const bool over = sel == -1 && (ok_img ? in_ok : px >= 0x229 && px < 0x251 && py >= 0x1a8 && py < 0x1cf);
     d.gx("Surface_stretchBlit", {GS(g_infoSprites821070), GS(g_infoSprites821070) + 0x2c, root, 0, 0, 0});
     d.gx("Image_draw", {GS(g_spriteRef_820f40) + (over ? 0x2cu : 0u), root, 0x229, 0x1a6, 0});
     d.gx("setDrawTarget", {root, GS(g_fontRef_821020), 0, 0, 0});
@@ -587,6 +592,9 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
   }
   pump_light(ctx, "showHireEmployeeDialog");
   if (sel < 0 || sel > 0xc) sel = -1;
+  // P27B fix 3: a press with no row under the cursor (the OK button or anywhere off the rows) hires nobody; the original's
+  // arithmetic below turns sel -1 into 2, the row-1 answer (showHireEmployeeDialog's exit)
+  if (sel < 0 && !SG_DEFECT(g_defect_hire_no_row)) return -1;
   return add32(add32(mul32(sel / 2, 3), SG_NEGCTL(g_negctl_hire_dialog) == 1 ? 0 : 1), sel & 1);
 }
 

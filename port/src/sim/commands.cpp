@@ -114,6 +114,12 @@ int g_defect_report_any_click = 1;
 // 0x140) and from the text y (y >= 0x74), its input loop's list test: the bar's left 0xb columns and top row are dead.
 //   loadGameBrowser.rowPressPastText  fixed (0): a press counts from x 0x136 and from the bar's top (rows (y - 0x73) / 16)
 int g_defect_browser_row_press = 1;
+// P27B fix 3 (class b): showHireEmployeeDialog ends at any press with the row under the cursor; with no row there (the OK button,
+// lit only then, or anywhere off the rows) its exit arithmetic answers 2, the row-1 answer, so OK hires; and
+// OK's hover box (0x229..0x251 x 0x1a8..0x1cf) is 2 rows below and 4 columns narrower than its Image (0x229, 0x1a6).
+//   showHireEmployeeDialog.pressWithoutRowHires  fixed (0): a press with no row under the cursor hires nobody (-1), and OK lights
+//                  over its drawn Image (0x2c square at 0x229, 0x1a6; there the OK wins over row 7's band)
+int g_defect_hire_no_row = 1;
 namespace {
 int g_negctl_hire_dialog = 0;
 int g_negctl_credits = 0;
@@ -790,6 +796,10 @@ const DefectDef kDefects[] = {
      "the load browser's list takes a press only right of the text column (x > 0x140) and from the text row's top, while the "
      "selection bar is drawn from x 0x136 and one row higher; fixed: a press over the drawn bar counts",
      &g_defect_browser_row_press},
+    {"showHireEmployeeDialog.pressWithoutRowHires", "P27B",
+     "the hire dialog's OK (a press with no row under the cursor) answers the row-1 hire, and OK lights over a box 2 rows below "
+     "its image; fixed: such a press hires nobody and OK lights over its drawn image",
+     &g_defect_hire_no_row},
     {"showCharacterEditor.cancelStaysOpen", "P13B",
      "the character editor's Cancel restores the type record and stays open; fixed: Cancel restores every edit and closes the editor",
      &g_defect_editor_cancel_stays},
