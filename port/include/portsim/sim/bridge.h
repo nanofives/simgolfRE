@@ -103,6 +103,15 @@ constexpr int32_t kArrowHoldMs = 250;
 constexpr uint32_t kPortViewClockOffVa = kPortViewVa + 36u;
 // true when the held arrow may step at the frame head time `head` (no view block: always, as before P22A)
 bool view_arrow_held_due(Ctx &ctx, uint32_t head);
+// P26A (Mariano's play-test 13 items 1 / 2: the arrows' start delay and the slowdown then catch-up of a held arrow;
+// log/roadmap/P26/P26A_notes.md). Words +0x60 / +0x64 (host, recorded harness writes like +12): the camera step in tiles
+// (gCameraTileX / gCameraTileY) that the live host's arrow glide (app option --arrow-glide, port/app/present.h ArrowGlide) asks
+// for at a frame head. Taken (and cleared) by mainLoop.arrowStepAfterDraw = 0's frame-head step (view_take_glide) before the
+// frame's picture and clamped per axis as the key switch clamps; no host writes them otherwise.
+constexpr uint32_t kPortViewGlideXVa = kPortViewVa + 0x60u;
+constexpr uint32_t kPortViewGlideYVa = kPortViewVa + 0x64u;
+// the pending step (false: none, or no view block); clears words +0x60 / +0x64
+bool view_take_glide(Ctx &ctx, int32_t &dx, int32_t &dy);
 // what the host took at the frame head: the arrow key-down (code 0 = none) and its time, the key-up bits of word +24 (false: none
 // of them, or no view block); clears words +12 / +16 / +24
 bool view_take_arrow(Ctx &ctx, int32_t &code, uint32_t &t, int32_t &ups);

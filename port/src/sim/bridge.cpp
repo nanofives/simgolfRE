@@ -96,6 +96,16 @@ bool view_take_arrow(Ctx &ctx, int32_t &code, uint32_t &t, int32_t &ups) {  // P
   if (code == 0) ups &= 1;  // no key-down: one key-up (bit 0)
   return code != 0 || ups != 0;
 }
+bool view_take_glide(Ctx &ctx, int32_t &dx, int32_t &dy) {  // P26A
+  dx = dy = 0;
+  if (!ctx.view) return false;
+  dx = ctx.mem.load<int32_t>(kPortViewGlideXVa);
+  dy = ctx.mem.load<int32_t>(kPortViewGlideYVa);
+  if (dx == 0 && dy == 0) return false;
+  ctx.mem.store<int32_t>(kPortViewGlideXVa, 0);
+  ctx.mem.store<int32_t>(kPortViewGlideYVa, 0);
+  return true;
+}
 bool view_arrow_held_due(Ctx &ctx, uint32_t head) {  // P22A
   if (!ctx.view) return true;
   const uint32_t down = ctx.mem.load<uint32_t>(kPortViewArrowHeldTVa) + ctx.mem.load<uint32_t>(kPortViewClockOffVa);

@@ -195,6 +195,198 @@ bool camera_shift(const CameraSnap &a, const CameraSnap &b, int32_t &dx, int32_t
   return true;
 }
 
+// ---- P26A: the arrow glide (present.h ArrowGlide)
+bool camera_shift_f(int32_t zoom, int32_t rot, double X, double Y, double &sx, double &sy) {
+  sx = sy = 0;
+  const double Z = zoom;
+  switch (rot) {  // camera_shift's formula
+    case 0: sx = -8 * Z * (X + Y); sy = 5 * Z * (X - Y); break;
+    case 2: sx = 8 * Z * (X - Y); sy = 5 * Z * (X + Y); break;
+    case 4: sx = 8 * Z * (X + Y); sy = 5 * Z * (Y - X); break;
+    case 6: sx = 8 * Z * (Y - X); sy = -5 * Z * (X + Y); break;
+    default: return false;
+  }
+  return true;
+}
+namespace {
+constexpr double kGlideEps = 1e-6;
+constexpr double kGlideMax = 49.0;     // the key switch's clamp of each camera axis (0..0x31)
+constexpr double kGlideResync = 12.0;  // tiles: D this far from the picture's camera (a jump: a map click) restarts at it
+// the camera axes' move of one arrow at rotation rot (tick_frame.inc P21_ArrowStep: direction + rotation, & 7)
+void arrow_axes(uint32_t vk, int32_t rot, double &x, double &y) {
+  const int base = vk == 0x26 ? 0 : vk == 0x27 ? 2 : vk == 0x28 ? 4 : 6;
+  const int dir = (base + rot) & 7;
+  x = dir == 0 || dir == 2 ? 1 : dir == 4 || dir == 6 ? -1 : 0;
+  y = dir == 2 || dir == 4 ? 1 : dir == 0 || dir == 6 ? -1 : 0;
+}
+}  // namespace
+void ArrowGlide::dir_locked() {
+  double n[2] = {0, 0};
+  int arrows = 0;
+  for (uint32_t vk = 0x25; vk <= 0x28; ++vk)
+    if (held_ & (1u << (vk - 0x25))) {
+      double x = 0, y = 0;
+      arrow_axes(vk, rot_, x, y);
+      n[0] += x;
+      n[1] += y;
+      ++arrows;
+    }
+  if (arrows == 2 && (n[0] != 0 || n[1] != 0)) {  // a diagonal (two arrows at right angles): the same screen speed as one arrow
+    n[0] *= 0.70710678118654752;
+    n[1] *= 0.70710678118654752;
+  }
+  bool any = false;
+  for (int i = 0; i < 2; ++i) {
+    Axis &a = ax_[i];
+    if (n[i] != 0) {
+      if (a.ud == 0 || (a.ud > 0) != (n[i] > 0)) a.st = a.d;  // a new direction on this axis: the tap minimum counts from here
+      a.ud = n[i];
+      a.bounded = false;
+      any = true;
+    } else if (a.ud != 0 && !a.bounded) {  // this axis's keys went up: on to the next whole tile, one step from st at least
+      a.s = a.ud > 0 ? std::max(std::ceil(a.d - kGlideEps), a.st + step_) : std::min(std::floor(a.d + kGlideEps), a.st - step_);
+      a.s = std::clamp(a.s, 0.0, kGlideMax);
+      a.bounded = true;
+      any = true;
+    } else if (a.ud != 0) {
+      any = true;
+    }
+  }
+  moving_ = any;
+  if (any) settled_ = false;
+}
+bool ArrowGlide::key(uint32_t vk, bool down, int64_t t_ns) {
+  if (vk < 0x25 || vk > 0x28) return false;
+  std::lock_guard<std::mutex> lk(mu_);
+  const uint32_t bit = 1u << (vk - 0x25), before = held_;
+  held_ = down ? held_ | bit : held_ & ~bit;
+  if (held_ == before) return false;
+  ++st_.keys;
+  if (!engaged_) return false;
+  const bool rest = !moving_;
+  dir_locked();
+  if (rest && moving_) {
+    ++st_.starts;
+    last_ns_ = t_ns;
+    return true;
+  }
+  return false;
+}
+void ArrowGlide::release_all(int64_t t_ns) {
+  for (uint32_t vk = 0x25; vk <= 0x28; ++vk) key(vk, false, t_ns);
+}
+bool ArrowGlide::tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, double &ox, double &oy) {
+  std::lock_guard<std::mutex> lk(mu_);
+  ox = oy = 0;
+  const double dt = std::clamp(static_cast<double>(now_ns - last_ns_) / 1e9, 0.0, 0.1);
+  last_ns_ = now_ns;
+  const double c[2] = {static_cast<double>(cx), static_cast<double>(cy)};
+  if (!engaged_) return false;
+  if (rot != rot_) {
+    rot_ = rot;
+    if (held_) dir_locked();
+  }
+  if (std::fabs(ax_[0].d - c[0]) > kGlideResync || std::fabs(ax_[1].d - c[1]) > kGlideResync) {
+    ++st_.resyncs;
+    settled_ = true;
+    for (Axis &a : ax_) a.ud = 0, a.bounded = false;
+    moving_ = false;
+    if (held_) dir_locked();
+    ax_[0].d = c[0];
+    ax_[1].d = c[1];
+    for (Axis &a : ax_) a.st = a.d;
+  }
+  if (settled_ && !moving_) {  // at rest: D is the picture's camera (it follows any other camera move)
+    ax_[0].d = c[0];
+    ax_[1].d = c[1];
+    return false;
+  }
+  if (moving_) {
+    ++st_.ticks_moving;
+    bool any = false;
+    for (int i = 0; i < 2; ++i) {
+      Axis &a = ax_[i];
+      if (a.ud == 0) continue;
+      double nd = a.d + v_ * a.ud * dt;
+      if (a.bounded) nd = a.ud > 0 ? std::min(nd, a.s) : std::max(nd, a.s);
+      nd = std::clamp(nd, 0.0, kGlideMax);
+      // never past the newest picture's camera: what lies beyond it is not drawn yet
+      if (a.ud > 0 && nd > c[i]) {
+        nd = std::max(a.d, c[i]);
+        ++st_.caps;
+      } else if (a.ud < 0 && nd < c[i]) {
+        nd = std::min(a.d, c[i]);
+        ++st_.caps;
+      }
+      a.d = nd;
+      const bool edge = (a.ud > 0 && a.d >= kGlideMax - kGlideEps) || (a.ud < 0 && a.d <= kGlideEps);
+      if ((a.bounded && std::fabs(a.d - a.s) < kGlideEps) || edge) {  // this axis stopped, or met the game's clamp
+        if (a.bounded && !edge) a.d = a.s;
+        a.ud = 0;
+        a.bounded = false;
+      }
+      any = any || a.ud != 0;
+    }
+    moving_ = any;
+  }
+  ox = ax_[0].d - c[0];
+  oy = ax_[1].d - c[1];
+  if (!moving_ && std::fabs(ox) < kGlideEps && std::fabs(oy) < kGlideEps) settled_ = true;
+  return !settled_;
+}
+bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t &dx, int32_t &dy) {
+  std::lock_guard<std::mutex> lk(mu_);
+  dx = dy = 0;
+  v_ = v;
+  step_ = step;
+  if (!engaged_ || settled_) return false;
+  if (rot != rot_) {
+    rot_ = rot;
+    if (held_) dir_locked();
+  }
+  const int32_t c[2] = {cx, cy};
+  int32_t r[2] = {0, 0};
+  for (int i = 0; i < 2; ++i) {
+    const Axis &a = ax_[i];
+    double t = 0;
+    if (a.ud == 0) t = std::round(a.d);
+    else if (a.bounded) t = a.s;
+    else {
+      const double x = a.d + v_ * a.ud * lead_s_;
+      t = a.ud > 0 ? std::ceil(x - kGlideEps) : std::floor(x + kGlideEps);
+    }
+    t = std::clamp(t, 0.0, kGlideMax);
+    r[i] = static_cast<int32_t>(t) - c[i];
+  }
+  dx = r[0];
+  dy = r[1];
+  if (dx == 0 && dy == 0) return false;
+  ++st_.heads_req;
+  st_.tiles_req += static_cast<uint64_t>(std::abs(dx) + std::abs(dy));
+  return true;
+}
+void ArrowGlide::set_engaged(bool on) {
+  std::lock_guard<std::mutex> lk(mu_);
+  if (on == engaged_) return;
+  engaged_ = on;
+  for (Axis &a : ax_) a.ud = 0, a.bounded = false;
+  moving_ = false;
+  settled_ = true;  // (re)starts at rest on the next picture's camera
+  if (on && held_) dir_locked();
+}
+bool ArrowGlide::engaged() const {
+  std::lock_guard<std::mutex> lk(mu_);
+  return engaged_;
+}
+void ArrowGlide::set_lead_s(double s) {
+  std::lock_guard<std::mutex> lk(mu_);
+  lead_s_ = std::clamp(s, 0.05, 0.4);
+}
+ArrowGlide::Stats ArrowGlide::stats() const {
+  std::lock_guard<std::mutex> lk(mu_);
+  return st_;
+}
+
 void Presenter::slide_start(const WorldImage &w) {
   SlideStart st;
   ++slide_stats_.frames;
@@ -207,6 +399,15 @@ void Presenter::slide_start(const WorldImage &w) {
   if (w.cam.t_ns > 0) last_present_ns_ = w.cam.t_ns;
   if (period_ns_ <= 0) period_ns_ = 93e6;  // the original's 87 ms + one waitTicks quantum (P10A_notes.md)
   st.period_ms = period_ns_ / 1e6;
+  // P26A: a frame head's glide request has to cover the glide until the next picture arrives: one period, the frame's work and
+  // the hand-over to the window (the present-to-arrival mean below, from the last frame) and a margin for the arrival's spread
+  // the head-to-arrival time spreads (a late hand-over: 80-110 ms against 20-30 ms on a loaded PC), so the longest of the last 8
+  if (glide_ && w.cam.head_ns > 0) {
+    glide_arr_[glide_arr_i_++ % glide_arr_.size()] = static_cast<double>(portsim::perf_now_ns() - w.cam.head_ns);
+    double m = 0;
+    for (double x : glide_arr_) m = std::max(m, x);
+    glide_->set_lead_s((period_ns_ + m) / 1e9 + 0.02);
+  }
   slide_stats_.period_ms = st.period_ms;
   const int64_t now = portsim::perf_now_ns();
   // P16A (log/roadmap/P16/P16A_notes.md): since the world thread (P15A) a picture reaches the window 20-70 ms after the sim thread's
@@ -344,6 +545,39 @@ void Presenter::slide_start(const WorldImage &w) {
 bool Presenter::slide_tick(int64_t now_ns, const Viewport &vp) {
   ++slide_stats_.ticks;
   int32_t x = 0, y = 0;
+  if (glide_) {  // P26A: while the arrow glide moves (or has not yet reached the shown picture), its offset is the slide's
+    const CameraSnap &c = world_.cam;
+    const bool can = smooth_ && layered() && !world_.hud_none && c.ok && c.zoom > 0;
+    double tx = 0, ty = 0;
+    const bool on = can && glide_->tick(now_ns, c.cam_x, c.cam_y, c.rot, tx, ty);
+    const bool was = glide_on_;
+    if (on) {
+      double sx = 0, sy = 0;
+      camera_shift_f(c.zoom, c.rot, tx, ty, sx, sy);
+      x = static_cast<int32_t>(std::lround(sx * vp.client_w / kLogicalW));
+      y = static_cast<int32_t>(std::lround(sy * vp.client_h / kLogicalH));
+      slide_on_ = true;
+      glide_on_ = true;
+    } else if (glide_on_) {  // the glide has come to rest on the shown picture
+      glide_on_ = false;
+      slide_on_ = false;
+    }
+    if (on || was) {
+      const bool changed = x != cur_x_ || y != cur_y_;
+      cur_x_ = x;
+      cur_y_ = y;
+      if (remap_) {
+        const int32_t gx = vp.client_w > 0 ? static_cast<int32_t>(std::lround(static_cast<double>(nd_x_) * vp.client_w / kLogicalW)) : 0;
+        const int32_t gy = vp.client_h > 0 ? static_cast<int32_t>(std::lround(static_cast<double>(nd_y_) * vp.client_h / kLogicalH)) : 0;
+        remap_->set_slide(x, y, x - gx, y - gy);
+      }
+      if (changed) {
+        ++slide_stats_.moves;
+        ++glide_moves_;
+      }
+      return changed;
+    }
+  }
   if (slide_on_) {
     const double f = slide_ns_ > 0 ? static_cast<double>(now_ns - t0_ns_) / slide_ns_ : 1.0;
     if (f >= 1.0) {

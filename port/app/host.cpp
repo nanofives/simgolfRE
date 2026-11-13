@@ -142,19 +142,23 @@ bool write_file(const fs::path &p, const void *data, size_t n) {
 // when the session is asked to stop (input arriving during the wait is queued: the original dispatches nothing there).
 class WaitClock : public PaceClock {
  public:
-  WaitClock(std::mutex &mu, std::condition_variable &cv, const std::atomic<bool> &stop) : mu_(mu), cv_(cv), stop_(stop) {}
-  uint32_t now() override { return timeGetTime(); }
+  WaitClock(std::mutex &mu, std::condition_variable &cv, const std::atomic<bool> &stop, const std::atomic<bool> *wake = nullptr)
+      : mu_(mu), cv_(cv), stop_(stop), wake_(wake) {}
+  // P26A: once `wake` is set (an arrow started a glide) the clock reads far ahead, so frame_wait's loop ends at its next read
+  uint32_t now() override { return timeGetTime() + (woken() ? 0x10000u : 0u); }
   void idle_until(uint32_t t) override {
     const int32_t left = static_cast<int32_t>(t - timeGetTime());
-    if (left <= 0 || stop_.load()) return;
+    if (left <= 0 || stop_.load() || woken()) return;
     std::unique_lock<std::mutex> lk(mu_);
-    cv_.wait_for(lk, std::chrono::milliseconds(left), [&] { return stop_.load(); });
+    cv_.wait_for(lk, std::chrono::milliseconds(left), [&] { return stop_.load() || woken(); });
   }
+  bool woken() const { return wake_ && wake_->load(); }
 
  private:
   std::mutex &mu_;
   std::condition_variable &cv_;
   const std::atomic<bool> &stop_;
+  const std::atomic<bool> *wake_;
 };
 
 bool reg_call(portsim::Ctx &ctx, const char *name, uint32_t a0) {
@@ -399,8 +403,66 @@ void LiveSession::apply_arrow_clock(portsim::Ctx &ctx) {
   if (writes) writes->wrote(portsim::kPortViewClockOffVa, clk_off_);
 }
 
+// P26A (host.h HostOptions::glide): the queued events whose only command is onKey(0, arrow) (an arrow key-down, Windows' repeats
+// included) leave the queue (event rows dispatch -3): the glide moves the camera instead. Called with mu_ held, at frame heads and
+// before the frame loop's own pumps only, so a modal screen's pump still gets its arrows.
+size_t LiveSession::drop_glide_arrows() {
+  size_t n = 0;
+  for (size_t i = 0; i < queue_.size();) {
+    const portsim::Command &c = queue_[i];
+    const bool one = (i == 0 || queue_seq_[i - 1] != queue_seq_[i]) && (i + 1 >= queue_.size() || queue_seq_[i + 1] != queue_seq_[i]);
+    if (one && c.kind == portsim::CmdKind::RootHandler && c.handler == 7 && c.a0 == 0 && c.a1 >= 0x25 && c.a1 <= 0x28) {
+      const uint32_t seq = queue_seq_[i];
+      for (EventRow &er : event_rows_)
+        if (er.seq == seq) er.dispatch = -3;
+      queue_.erase(queue_.begin() + static_cast<std::ptrdiff_t>(i));
+      queue_seq_.erase(queue_seq_.begin() + static_cast<std::ptrdiff_t>(i));
+      ++n;
+      continue;
+    }
+    ++i;
+  }
+  glide_dropped_ += n;
+  return n;
+}
+// P26A: at a frame head of the frame loop, the glide's camera step for this frame (view block words +0x60 / +0x64, tiles, recorded
+// writes); the speed and the tap step follow the zoom the key switch would step with (P21_ArrowStep: 2 tiles at zoom 8 under P11F)
+void LiveSession::apply_glide(portsim::Ctx &ctx) {
+  if (!opt_.glide) return;
+  if (!portsim::view_map(ctx)) {
+    opt_.glide->set_engaged(false);
+    return;
+  }
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    drop_glide_arrows();
+  }
+  opt_.glide->set_engaged(true);
+  const bool z8 = opt_.glide_step2_z8 && ctx.gs().g_zoomScale == 8;
+  const double step = z8 ? 2.0 : 4.0;
+  const portsim::GameState &g = ctx.gs();
+  int32_t dx = 0, dy = 0;
+  if (!opt_.glide->head(opt_.glide_speed * step / 4.0, step, g.gCameraTileX, g.gCameraTileY, g.g_cameraRot, dx, dy)) return;
+  ctx.mem.store<int32_t>(portsim::kPortViewGlideXVa, dx);
+  ctx.mem.store<int32_t>(portsim::kPortViewGlideYVa, dy);
+  if (writes) {
+    writes->wrote(portsim::kPortViewGlideXVa, static_cast<uint32_t>(dx));
+    writes->wrote(portsim::kPortViewGlideYVa, static_cast<uint32_t>(dy));
+  }
+  ++glide_writes_;
+  latlog('V', portsim::perf_now_ns(), frame_, dx, dy, g.gCameraTileX, g.gCameraTileY);  // P26A (SG_P21_LATLOG)
+}
+
 void LiveSession::on_input(const InputEvent &e) {
   last_input_ms_.store(timeGetTime());  // P6B item 2
+  // P26A: an arrow's own key-down (not a Windows repeat: lParam bit 30) / key-up is the glide's key state
+  if (opt_.glide && (e.msg == kWmKeyDown || e.msg == kWmKeyUp) && e.wp >= 0x25 && e.wp <= 0x28 &&
+      !(e.msg == kWmKeyDown && (e.lp & (1u << 30)))) {
+    if (opt_.glide->key(e.wp, e.msg == kWmKeyDown, portsim::perf_now_ns())) {
+      glide_wake_.store(true);
+      ++glide_wakes_;
+    }
+  }
   {
     std::lock_guard<std::mutex> lk(mu_);
     for (const portsim::Command &c : e.commands) {
@@ -1609,6 +1671,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
         j->proj_taken = true;
       }
       j->cam = take_cam(ctx, j->use);
+      j->cam.head_ns = head_ns_;  // P26A
       if (j->use) layer_log(j->f);
       j->hud_none = opt_.hud_layers && !j->use && portsim::gfx_hud_modal(ctx);  // P9D
       j->smooth_objects = opt_.smooth_objects;
@@ -1717,6 +1780,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       if (!wi.hud.empty()) ++presents_layered_;  // P9B
     }
   wi.cam.t_ns = portsim::perf_now_ns();  // P12A fix 1: the present's time (the presenter's game frame period)
+  wi.cam.head_ns = head_ns_;  // P26A: its frame head's time (ArrowGlide's lead)
   if (opt_.smooth_objects && !wi.empty()) {
     const portsim::PerfDetailScope pd(portsim::kPdCapHrScene);  // P15A
     wi.hr_scene = portsim::gfx_hr_scene(ctx);  // P12A fix 2: the queue's draws
@@ -1793,6 +1857,9 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   }
   apply_view(ctx);                // G32: the window's view width and world size (recorded write, before the frame body)
   apply_undo(ctx);                // P11D: Ctrl+Z / Ctrl+Y (recorded write, before the frame body)
+  head_ns_ = portsim::perf_now_ns();  // P26A
+  glide_wake_.store(false);           // P26A: this head takes what woke the wait
+  apply_glide(ctx);               // P26A: the arrow glide's request (recorded writes, before the frame body)
   apply_arrow(ctx);               // P21B: an arrow key-down (recorded writes, before the frame body)
   apply_arrow_clock(ctx);         // P22A: the clock offset for the held arrow's delay (recorded write, once)
   track_screen(ctx, true);        // P7: a frame head is the frame loop
@@ -2163,6 +2230,7 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
   // P6 / H1, and a world load's pump (PumpKind::Load, loadFlic: what arrived before the load began): never waits
   if ((p.body && !p.must_deliver) || static_cast<uint32_t>(p.kind) == 3) {
     std::lock_guard<std::mutex> lk(mu_);
+    if (p.body && opt_.glide && opt_.glide->engaged()) drop_glide_arrows();  // P26A
     if (!queue_.empty() && p.may_deliver && (!h1 || h1_takes())) return deliver();
     return portsim::LiveReply::Decline;
   }
@@ -2236,13 +2304,14 @@ void LiveSession::wait_point(portsim::Ctx &ctx) {
   if (w_check_) present(ctx, 'w');
   else ++w_skipped_;
   if (opt_.defect == HostDefect::PacingOff) return;  // negative control: no frame wait
-  WaitClock clk(mu_, cv_, stop_);
+  WaitClock clk(mu_, cv_, stop_, opt_.glide ? &glide_wake_ : nullptr);  // P26A: an arrow that starts a glide ends the wait
   const uint32_t flags = ctx.mem.load<uint32_t>(portsim::state_va(ctx, &portsim::GameState::g_flags));
   WaitStats ws;
   {
     const ProfScope prof(Phase::Wait);  // P10A
     ws = frame_wait(clk, head_t_, flags, nullptr);
   }
+  if (clk.woken()) ws.end = timeGetTime();  // (the woken clock read ahead)
   if (waits_log_) {  // live frame, work ms, the wait's first read and its last read relative to the head, waitTicks steps, target,
                      // and (S7.5) the LiveTerrain's cumulative terrain passes and pixels drawn (0 0 with headless terrain)
     const long long tp = terrain_view ? static_cast<long long>(terrain_view->passes) : 0;
@@ -2380,6 +2449,13 @@ std::string LiveSession::summary_json(const Result &r) const {
        ",\"fallback_stops\":" + std::to_string(exit_fallback_) + "}";
   s += ",\"undo_writes\":" + std::to_string(undo_writes_);  // P11D
   s += ",\"arrow_heads\":" + std::to_string(arrow_heads_) + ",\"arrow_head_events\":" + std::to_string(arrow_head_events_);  // P21B
+  if (opt_.glide) {  // P26A
+    const ArrowGlide::Stats g = opt_.glide->stats();
+    s += ",\"glide\":{\"keys\":" + std::to_string(g.keys) + ",\"starts\":" + std::to_string(g.starts) + ",\"wakes\":" +
+         std::to_string(glide_wakes_) + ",\"dropped\":" + std::to_string(glide_dropped_) + ",\"writes\":" +
+         std::to_string(glide_writes_) + ",\"tiles\":" + std::to_string(g.tiles_req) + ",\"caps\":" + std::to_string(g.caps) +
+         ",\"ticks_moving\":" + std::to_string(g.ticks_moving) + ",\"resyncs\":" + std::to_string(g.resyncs) + "}";
+  }
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
   s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";
   for (size_t i = 0; i < loads_.size(); ++i) {

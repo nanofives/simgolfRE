@@ -101,6 +101,11 @@
 //   columns and the total) as wide as the course: L < 18 holes keep L hole columns, the total column and the panel's right border move
 //   in by 0x12 per missing hole and the course shows where they were (HUD layer capture only; gfx.h gfx_set_card_width; drawing only;
 //   log/roadmap/P26/P26E_notes.md)
+//   P26A: --arrow-glide on|off (default on; SG_APP_P26=off: off; `play` only: needs mainLoop.arrowStepAfterDraw = 0) the arrows
+//   move the camera at one constant speed while held (70 % of one key-switch step per 93 ms game frame: 30.1 tiles / s, half at
+//   zoom 8 under P11F) from the key-down and key-up, Windows' key repeat ignored; the window glides the course picture at that speed
+//   every present and the game steps whole tiles ahead of it at each frame head (present.h ArrowGlide, bridge.h kPortViewGlideXVa);
+//   an arrow that starts a glide ends the frame wait at once; a tap still moves one step (log/roadmap/P26/P26A_notes.md)
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
@@ -539,6 +544,7 @@ struct Options {
   bool closed_popups_hide = true;  // P25C fix 2: --closed-popups hide|keep (SG_APP_P25=off: keep)
   bool row_hover = true;           // P25B: --row-hover on|off (SG_APP_P25=off: off)
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
+  bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -1626,6 +1632,15 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     const int h = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");  // P22A: the held arrow's delay needs the clock offset
     ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;
   }
+  ArrowGlide glide;  // P26A: --arrow-glide on with the frame-head arrow step (the `play` profile)
+  if (o.arrow_glide && ho.arrow_head && ho.smooth_camera) {  // the window glides the picture (needs the camera slide)
+    ho.glide = &glide;
+    // 70 % of the original's steady speed: one 4-tile step of the key switch per game frame, whose period is the frame wait's
+    // 87 ms plus one waitTicks quantum (93 ms, Presenter::slide_start's default period; P10A_notes.md)
+    ho.glide_speed = 0.7 * 4.0 / 0.093;
+    const int s4 = portsim::defect_find("mainLoop.cameraStepFixed4");  // P11F: 2 tiles at zoom 8
+    ho.glide_step2_z8 = s4 >= 0 && *portsim::defect_at(s4, nullptr)->flag == 0;
+  }
   LiveSession session(ho, rec.string());
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
@@ -1651,6 +1666,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   const bool smooth_camera = ho.smooth_camera;  // P12A fix 1
   presenter.set_smooth_camera(smooth_camera);
+  if (ho.glide) presenter.set_glide(&glide);  // P26A
   presenter.set_smooth_objects(ho.smooth_objects);  // P12A fix 2
   if (o.object_rate < 0) presenter.set_object_rate_auto();  // P14A fix 2
   else presenter.set_object_rate(o.object_rate);         // P12A fix 3
@@ -1679,6 +1695,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     const int d = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");
     wo.release_arrow_on_blur = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
   }
+  if (ho.glide) wo.on_blur = [&glide]() { glide.release_all(portsim::perf_now_ns()); };  // P26A: every held arrow goes up
   if (o.close_prompt) wo.on_close_button = [&session]() { session.request_close(); };  // P5B item 3
   wo.focus_child_takes = [&session](uint32_t msg, uint32_t wp) { return session.focus_child_takes(msg, wp); };  // U-1616
   wo.before_translate = [&session](uint32_t msg, uint32_t wp) { session.before_translate(msg, wp); };  // S7.4
@@ -3806,6 +3823,9 @@ bool parse(int argc, char **argv, Options &o) {
     else if (a == "--card-width") {  // P26E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.card_width = v == "on";
+    else if (a == "--arrow-glide") {  // P26A
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.arrow_glide = v == "on";
     }
     else if (a == "--row-hover") {  // P25B
       if (!val(v) || (v != "on" && v != "off")) return false;
@@ -4025,6 +4045,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P26"))  // P26: the thirteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) {
       o.card_width = false;  // P26E fix 2
+      o.arrow_glide = false;  // P26A
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

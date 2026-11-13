@@ -228,9 +228,22 @@ void P21_ArrowStep(int code) {
 // key-up; with no key-down, P19A's held arrow; then the camera steps. View block word +20 tells H1 that this frame has stepped.
 // When H1 stepped in the last frame (word +28) that step is in this frame's picture already: the key-down goes to rootWin_onKey
 // but is left for this frame's H1 to take, and no held step is taken (one step per picture, as in the original).
+// P26A: the arrow glide's camera step (view_take_glide, tiles), each axis clamped 0..0x31 as the key switch's cases clamp it
+// (ML+0xe971..ML+0xea73)
+void P26_GlideStep(int32_t dx, int32_t dy) {
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, 0, 0x31);
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, 0, 0x31);
+}
 void P21_ArrowEarly(uint32_t head) {
     if (!ctx.view) return;
     ctx.mem.store<int32_t>(kPortViewArrowStepVa, 0);
+    {
+        int32_t gx = 0, gy = 0;  // P26A: the host's arrow glide (no host writes the words without --arrow-glide)
+        if (view_take_glide(ctx, gx, gy)) {
+            P26_GlideStep(gx, gy);
+            ctx.mem.store<int32_t>(kPortViewArrowStepVa, 1);
+        }
+    }
     const bool late = ctx.mem.load<int32_t>(kPortViewArrowLateVa) != 0;
     ctx.mem.store<int32_t>(kPortViewArrowLateVa, 0);
     int32_t code = 0, ups = 0;

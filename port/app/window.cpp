@@ -416,6 +416,7 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
     case WM_ERASEBKGND:
       return 1;
     case WM_KILLFOCUS:  // P19A item 1: the held arrow's key-up goes to the window taking the focus; give the game one
+      if (opt_.on_blur) opt_.on_blur();  // P26A
       if (opt_.release_arrow_on_blur && down_vk_ >= VK_LEFT && down_vk_ <= VK_DOWN) {
         ++blur_releases_;
         input(kWmKeyUp, down_vk_, 0xc0000001u);

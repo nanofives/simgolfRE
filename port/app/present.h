@@ -193,7 +193,61 @@ struct CameraSnap {
   int32_t cam_x = 0, cam_y = 0, zoom = 0, rot = 0;
   int32_t next_x = 0, next_y = 0, next_zoom = 0, next_rot = 0;
   int64_t t_ns = 0;
+  int64_t head_ns = 0;  // P26A: the frame head's time (perf_now_ns) of the frame that drew the picture
 };
+
+// P26A (Mariano's play-test 13 items 1 / 2, log/roadmap/P26/P26A_notes.md; app option --arrow-glide, `play` only): the arrows
+// move the camera at one constant speed from the key state (key-down / key-up, Windows' repeats ignored) instead of one 4-tile step
+// per key-down and one per frame after a hold delay. The glide camera D (tiles, fractional) moves at v tiles / s on each camera
+// axis the held arrows move (the key switch's directions plus the rotation: tick_frame.inc P21_ArrowStep), clamped to 0..0x31 per
+// axis as the game clamps. The window shows the course picture offset by D - the picture's camera (CameraSnap::cam_*), and D never
+// runs past the newest picture's camera (no undrawn ground ahead), so the move starts on the first present with a moved picture.
+// At each frame head the live host asks the game to step to the whole tiles D will reach by the time the next picture is due
+// (head; bridge.h kPortViewGlideXVa), so the pictures stay ahead of D. On the key-up each axis runs on to its next whole tile and
+// at least one key-switch step (4, 2 at zoom 8) from the last direction change (a tap moves one step, as in the original); then
+// the host steps the game back to D if the last request went past it. At rest D follows the picture's camera (other camera moves).
+// Thread safe: keys from the window thread (LiveSession::on_input), D from the presenter's ticks (window thread), requests from
+// the sim thread's frame heads.
+class ArrowGlide {
+ public:
+  // an arrow key (VK_LEFT .. VK_DOWN) went down / up at t_ns (perf_now_ns); returns true when it starts a glide from rest
+  bool key(uint32_t vk, bool down, int64_t t_ns);
+  void release_all(int64_t t_ns);  // the window lost the focus
+  // the presenter, at a tick: D advanced to now_ns for the shown picture's camera (cx, cy) and rotation; (ox, oy) = D - (cx, cy)
+  // in tiles; false = nothing to show (D at rest on the picture's camera, or not engaged)
+  bool tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, double &ox, double &oy);
+  // the host, at a frame head in the frame loop: the speed (tiles / s per axis for one arrow) and the key switch's step (tiles)
+  // for the zoom, the game's camera (gCameraTileX / Y) and rotation now; the step (dx, dy) to ask for (false: none)
+  bool head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t &dx, int32_t &dy);
+  void set_engaged(bool on);  // the host: the frame loop runs and the view block is mapped (false: D at rest)
+  bool engaged() const;
+  void set_lead_s(double s);  // the presenter: the time from a frame head to its picture's arrival plus one period
+  struct Stats {
+    uint64_t keys = 0, starts = 0, heads_req = 0, tiles_req = 0, caps = 0, ticks_moving = 0, resyncs = 0;
+  };
+  Stats stats() const;
+
+ private:
+  struct Axis {
+    double d = 0;                  // D on this axis (tiles)
+    double ud = 0;                 // the move per unit of speed (+-1, +-2 or +-sqrt 2 with two arrows; 0 = still)
+    double s = 0;                  // the stop tile after the key-up (bounded = true)
+    double st = 0;                 // D at the last direction change (the tap minimum counts from here)
+    bool bounded = false;
+  };
+  void dir_locked();
+  mutable std::mutex mu_;
+  uint32_t held_ = 0;  // bit 0 Left, 1 Up, 2 Right, 3 Down
+  Axis ax_[2];
+  bool moving_ = false, settled_ = true;  // settled: at rest on the picture's camera (D follows it)
+  int32_t rot_ = 0;
+  double v_ = 0, step_ = 4, lead_s_ = 0.15;
+  int64_t last_ns_ = 0;
+  bool engaged_ = false;
+  Stats st_;
+};
+// the 800-space screen vector of a camera move of (dx, dy) tiles (camera_shift's formula, fractional); false for an odd rotation
+bool camera_shift_f(int32_t zoom, int32_t rot, double dx, double dy, double &sx, double &sy);
 // The 800-space screen vector by which a camera move from `a` to `b` translates the course picture (new place - old place of a
 // world point): worldToScreen (bridge.cpp world_to_screen) is linear in (wx - (cam << 10)) scaled by zoom / 128, so a move of
 // (dX, dY) tiles moves every point by, for rotation 0: (-8Z (dX + dY), 5Z (dX - dY)); 2: (8Z (dX - dY), 5Z (dX + dY));
@@ -344,6 +398,8 @@ class Presenter {
   };
   static constexpr int32_t kSlideMaxX = 400, kSlideMaxY = 300;  // 800-space; a larger move is a jump (a map click)
   void set_smooth_camera(bool on) { smooth_ = on; }
+  void set_glide(ArrowGlide *g) { glide_ = g; }  // P26A (--arrow-glide on): the arrow glide drives the slide's offset
+  uint64_t glide_paints() const { return glide_moves_; }
   bool smooth_camera() const { return smooth_; }
   // the offset for `now_ns` (perf_now_ns), set on the presenter and the remap; true = it changed (the window repaints)
   bool slide_tick(int64_t now_ns, const Viewport &vp);
@@ -510,6 +566,11 @@ class Presenter {
   // P12A fix 1: the camera slide
   bool smooth_ = false;
   bool slide_on_ = false;
+  ArrowGlide *glide_ = nullptr;  // P26A
+  bool glide_on_ = false;        // P26A: the last tick's offset came from the glide
+  uint64_t glide_moves_ = 0;     // P26A: ticks whose glide offset changed
+  std::array<double, 8> glide_arr_{};  // P26A: the last pictures' frame-head-to-arrival times (ns)
+  size_t glide_arr_i_ = 0;
   double s0x_ = 0, s0y_ = 0, period_ns_ = 0;  // the start offset (client pixels), the game frame period (mean present interval)
   double slide_ns_ = 0;                        // this slide's length
   // P21B: whether a slide was running when the new frame came and where it would have ended (set_frame clears slide_on_ before

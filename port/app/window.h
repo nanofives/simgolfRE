@@ -120,6 +120,7 @@ struct WindowOptions {
   // P19A item 1: with the sim's play switch mainLoop.arrowKeyHeldRepeat on, a held arrow scrolls until its key-up; when the window
   // loses the focus with an arrow down (its key-up then goes to another window), a key-up of that arrow is handed to the game
   bool release_arrow_on_blur = false;
+  std::function<void()> on_blur;  // P26A: the window lost the focus (the arrow glide lets go of every held arrow)
 };
 
 class AppWindow {

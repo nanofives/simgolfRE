@@ -177,6 +177,14 @@ struct HostOptions {
   // P22A: the play switch mainLoop.arrowKeyHeldRepeat is 0: with clock_origin, the first frame head writes the clock offset
   // (now() - timeGetTime) into view block word +36 (bridge.h kPortViewClockOffVa) as a recorded harness write
   bool arrow_clock = false;
+  // P26A (--arrow-glide on, `play` only: needs mainLoop.arrowStepAfterDraw = 0): the arrows drive ArrowGlide (present.h) from
+  // their key-downs / key-ups (LiveSession::on_input); their onKey(0, arrow) commands never reach the frame loop's pumps or the
+  // frame head (dispatch -3); each frame head writes the glide's camera step (tiles) into view block words +0x60 / +0x64 (bridge.h
+  // kPortViewGlideXVa, recorded harness writes); an arrow that starts a glide ends the frame wait at once (wait_point), so the
+  // first moved picture is drawn without waiting for the rest of the 87 ms
+  ArrowGlide *glide = nullptr;
+  double glide_speed = 0;   // tiles / s per camera axis with a 4-tile key-switch step (zoom 1 / 2 / 4, zoom 8 without P11F)
+  bool glide_step2_z8 = false;  // P11F (mainLoop.cameraStepFixed4 = 0): the step is 2 tiles at zoom 8, the speed half
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
@@ -492,6 +500,11 @@ class LiveSession : public portsim::LiveHost {
   void apply_undo(portsim::Ctx &ctx);  // P11D
   void apply_arrow(portsim::Ctx &ctx);  // P21B
   void apply_arrow_clock(portsim::Ctx &ctx);  // P22A
+  void apply_glide(portsim::Ctx &ctx);        // P26A
+  size_t drop_glide_arrows();                 // P26A: removes the queued onKey(0, arrow) events (mu_ held)
+  std::atomic<bool> glide_wake_{false};       // P26A: an arrow started a glide: the frame wait ends
+  int64_t head_ns_ = 0;                       // P26A: the frame head's perf_now_ns (CameraSnap::head_ns)
+  uint64_t glide_wakes_ = 0, glide_dropped_ = 0, glide_writes_ = 0;  // P26A (session.json glide)
   bool arrow_clock_written_ = false;          // P22A
   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
   uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers
