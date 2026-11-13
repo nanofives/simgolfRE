@@ -45,7 +45,27 @@ int32_t draw_amenities_panel(Ctx &ctx, int32_t a, int32_t b) {
 // showInfoCursorPanel (x, y): with the amenities palette open (g_buildPanelSlot) it is drawAmenitiesPanel(x, y);
 // the info panel itself writes only hover counters and text. NOT PORTED: the info-panel path's store at writes
 // the value 6 into the caller's saved esi (re/c3_hold.tsv), which is mainLoop's register state (the frame step's).
+// P27A fix 3 (log/roadmap/P27/P27A_notes.md, class a): on the info-panel path, before its hitTestSlot432f90 call, the original
+// copies the course type's three toolbar points into the point table's entries 13..15 (showInfoCursorPanel+0x43..+0x73: for
+// j = 0..2, entry 13 + j = the words at f_tab_point16_4c79b4 + 0x74 + 24 t + 8 j (x) and + 4 (y), t = the signed byte
+// g_courseType), so hitTestSlot432f90 (the palette's clicks and hover) and the tool tips read them where the drawing puts the
+// icons (gfx_hud.cpp b_info_panel reads the same words). The port did not make the store: for course types 1..3 the last three
+// tools answered up to 18 rows away from their icons (type 3, Scenic Bridge's slot 14: drawn at y 512, hit at y 530).
+// Negative control: SG_NEGCTL(g_negctl_amenities_panel) == 2 skips the store (the table's own entries, the port before P27A).
+static void info_panel_tool_points(Ctx &ctx) {
+  if (SG_NEGCTL(g_negctl_amenities_panel) == 2) return;
+  const uint32_t table = state_va(ctx, &GameState::f_tab_point16_4c79b4);
+  const int32_t t = ctx.gs().g_courseType;
+  for (int32_t j = 0; j < 3; ++j) {
+    const uint32_t src = table + 0x74u + static_cast<uint32_t>(24 * t + 8 * j);
+    const uint32_t dst = table + static_cast<uint32_t>(4 * (13 + j));
+    ctx.mem.store<int16_t>(dst, ctx.mem.load<int16_t>(src));
+    ctx.mem.store<int16_t>(dst + 2u, ctx.mem.load<int16_t>(src + 4u));
+  }
+}
+
 int32_t show_info_cursor_panel(Ctx &ctx, int32_t x, int32_t y) {
+  if (ctx.gs().g_buildPanelSlot == 0) info_panel_tool_points(ctx);  // P27A fix 3 (before the drawing's hitTestSlot432f90)
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S3.6: the drawing (gfx_hud.cpp)
     const uint32_t d[2] = {u32(x), u32(y)};
     gfx_drop(ctx, "showInfoCursorPanel.draw", d, 2);
