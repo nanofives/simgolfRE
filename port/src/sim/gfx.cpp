@@ -2330,6 +2330,10 @@ void gfx_set_meter_tips(Ctx &ctx, bool on) {
 void gfx_set_row_hover(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->row_hover = on;
 }
+// P26E fix 2 (gfx.h gfx_set_card_width)
+void gfx_set_card_width(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->card_width = on;
+}
 // P24G (gfx.h gfx_set_tourney_hold)
 void gfx_set_tourney_hold(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->tourney_hold = on;

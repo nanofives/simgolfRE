@@ -97,6 +97,10 @@
 //   root (the Information or System menu under the report, map or dialog its option opens) are left out of the next screen's frames, so
 //   the course picture shows where the menu was; keep = as the original leaves them (dimmed under a report, at their 800-space place,
 //   away from the open menu's anchored place). Drawing only (gfx.h gfx_set_hud_left_hide; log/roadmap/P25/P25C_notes.md)
+//   P26E fix 2: --card-width on|off (default on; SG_APP_P26=off: off) the match scorecard (drawMatchScoreboard's grid, always 18 hole
+//   columns and the total) as wide as the course: L < 18 holes keep L hole columns, the total column and the panel's right border move
+//   in by 0x12 per missing hole and the course shows where they were (HUD layer capture only; gfx.h gfx_set_card_width; drawing only;
+//   log/roadmap/P26/P26E_notes.md)
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
@@ -534,6 +538,7 @@ struct Options {
   bool tourney_hold = true;        // P24G: --tourney-hold on|off (SG_APP_P24=off: off)
   bool closed_popups_hide = true;  // P25C fix 2: --closed-popups hide|keep (SG_APP_P25=off: keep)
   bool row_hover = true;           // P25B: --row-hover on|off (SG_APP_P25=off: off)
+  bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -1234,6 +1239,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
+      if (ok && o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1517,6 +1523,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
+  if (o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2: the match scorecard as wide as the course (gfx.h; drawing only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -3796,6 +3803,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.screen_bands = v == "on";
     }
+    else if (a == "--card-width") {  // P26E fix 2
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.card_width = v == "on";
+    }
     else if (a == "--row-hover") {  // P25B
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.row_hover = v == "on";
@@ -4010,6 +4021,10 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.closed_popups_hide = false;  // P25C fix 2
       o.row_hover = false;           // P25B
+    }
+  if (const char *ep = std::getenv("SG_APP_P26"))  // P26: the thirteenth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) {
+      o.card_width = false;  // P26E fix 2
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

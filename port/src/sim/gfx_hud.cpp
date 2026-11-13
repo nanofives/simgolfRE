@@ -29,6 +29,7 @@
 //   15 the detail panel's three buttons with no selection take the selection branch's images
 //   16 (P22D fix 1) the golfer list's columns past its limit drawn inside the panel's layer again (the badges cut at its right border)
 //   21 (P26E fix 1) the golfer list's scroll band drawn as the original's (track, bar, arrows) with the switch scrollBarAlways at 0
+//   22 (P26E fix 2) the match scorecard keeps its 18 hole columns with --card-width on
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -1744,6 +1745,36 @@ bool tourney_started(Ctx &ctx) {
   return false;
 }
 constexpr int32_t kTourneyTipY = 0x1fe;  // P24G: the shot buttons' row (y 0x1f9), empty while no player golfer is out
+// P26E fix 2 (gfx.h gfx_set_card_width): the scorecard as wide as the course. drawMatchScoreboard draws a column only for a hole
+// record with a non-zero par byte (g_holes + 0x208 col), over the grid image g_sprites541a18 + 0x108 (JoeCoolPanel, drawn at
+// (0x129, 0x1ed) with the art's own x): hole column col's box lies between the grid lines x 0x1b3 + 0x12 (col - 1) and 0x1b3 + 0x12
+// col (its centre 0x1aa + 0x12 col, the column's text), the total column's thick line starts at 0x1b3 + 0x12 * 18 and the panel's
+// right border ends at x 799. With L the last column with a par (1 .. 17), every pixel of the golfer panel's layer from row 0x1da
+// (drawGolferActionPanel's art) and column C = 0x1b3 + 0x12 L on takes the layer's pixel 0x12 (18 - L) columns right (the total
+// column, the line and the borders follow column L) and the last 0x12 (18 - L) columns hold no pixel (the course shows there). The
+// layer is closed for it and opened again (empty) for the rest of the function, as P22D fix 1 does; the root keeps the original's.
+void narrow_scorecard(Gfx &g, Ctx &ctx) {
+  Gfx::HudCapture &c = g.hud;
+  if (!g.card_width || mode() == 22) return;  // control 22: the original's 18 columns
+  if (!c.on || c.depth != 1 || c.cur != kGfxLayerPanel || !c.any || c.aborted) return;
+  int32_t last = 0;
+  for (int32_t col = 1; col <= 18; ++col)
+    if (static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(g_holes, 0)) + 0x208u * static_cast<uint32_t>(col))) != 0) last = col;
+  if (last <= 0 || last >= 18) return;
+  const int32_t cut = 0x1b3 + 0x12 * last, d = 0x12 * (18 - last);
+  const size_t before = c.layers.size();
+  gfx_layer_end(ctx);
+  if (c.layers.size() == before + 1 && c.layers.back().id == kGfxLayerPanel) {
+    GfxHudLayer &l = c.layers.back();
+    const int32_t bw = l.x1 - l.x0;
+    for (int32_t y = std::max(l.y0, 0x1da); y < l.y1; ++y) {
+      GfxLayerPx *row = l.px.data() + static_cast<size_t>(y - l.y0) * static_cast<size_t>(bw);
+      for (int32_t x = std::max(cut, l.x0); x < l.x1; ++x)
+        row[x - l.x0] = x + d < l.x1 ? row[x + d - l.x0] : GfxLayerPx{};
+    }
+  }
+  gfx_layer_begin(ctx, kGfxLayerPanel);
+}
 void b_action_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   GameState &gs = ctx.gs();
@@ -1773,6 +1804,7 @@ void b_action_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     if (ctx.mem.load<int32_t>(rec + 0xcc) != -1) {
       call(g, ctx, "Image_draw", {va(ctx, GSO(g_sprites541a18, 0x108)), root, 0x129, 0x1ed, 0});
       match_scoreboard(g, ctx, p);
+      narrow_scorecard(g, ctx);  // P26E fix 2
     } else {
       const int32_t t = static_cast<int32_t>(cm::call_peer(ctx, "typeAtPos", {ctx.mem.load<uint32_t>(rec + 0xd4), ctx.mem.load<uint32_t>(rec + (SG_DEFECT(g_defect_shot_lie_mixed_tile) ? 4u : 0xd8u))}).eax);   // P22B mainLoop.shotButtonsReadBallTile
       const bool rough = static_cast<int8_t>(ctx.mem.load<uint8_t>(va(ctx, GSO(g_tileTypeAttrs, 0x22)) + 0x30u * static_cast<uint32_t>(t))) <= 0;

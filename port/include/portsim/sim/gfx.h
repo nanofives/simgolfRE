@@ -86,6 +86,12 @@ void gfx_set_tourney_hold(Ctx &ctx, bool on);
 // bridge, whose art covers its tile, gets the picked cell's blue, lightened, over the bridge. Drawing only: the GameState is never written. Off (the
 // default): the original's drawing.
 void gfx_set_row_hover(Ctx &ctx, bool on);
+// P26E fix 2 (log/roadmap/P26/P26E_notes.md; app option --card-width, default on, SG_APP_P26=off: off). drawMatchScoreboard's grid
+// (the art cut g_sprites541a18 + 0x108) always has 18 hole columns and the total column; with it on and the HUD layer capture on,
+// a course of L < 18 holes gets a scorecard of L hole columns: the golfer panel's layer right of hole column L (the total column, the
+// grid's and the panel's right border) moves 0x12 (18 - L) columns left and the columns it leaves show the course. Drawing only
+// (the layer's pixels; the root and the GameState are never written). Off (the default): the original's drawing.
+void gfx_set_card_width(Ctx &ctx, bool on);
 bool gfx_meter_tips(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
